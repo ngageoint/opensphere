@@ -21,6 +21,7 @@
     "scss": "scss/opensphere.scss",
     "gcc": {
       "language_in": "ECMASCRIPT_2015",
+      "conformance_configs": "conformance_config.textproto",
       "externs": [
         "google-closure-compiler/contrib/externs/jquery-1.9.js",
         "google-closure-compiler/contrib/externs/angular-1.4-http-promise_templated.js",
