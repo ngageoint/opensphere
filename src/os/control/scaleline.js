@@ -1,6 +1,8 @@
 goog.provide('os.control.ScaleLine');
 
 goog.require('goog.dom');
+goog.require('goog.dom.safe');
+goog.require('goog.html.SafeHtml');
 goog.require('ol.control.ScaleLine');
 goog.require('ol.control.ScaleLineUnits');
 goog.require('ol.proj');
@@ -183,7 +185,7 @@ os.control.ScaleLine.prototype.updateElement_ = function() {
   }
   var html = displayNum + ' ' + suffix;
   if (this.renderedHTML_ != html) {
-    this.innerElement_.innerHTML = html;
+    goog.dom.safe.setInnerHtml(/** @type {!Element} */ (this.innerElement_), goog.html.SafeHtml.htmlEscape(html));
     this.renderedHTML_ = html;
   }
 

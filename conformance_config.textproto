@@ -1,0 +1,111 @@
+requirement: {
+  type: BANNED_NAME
+  error_message: 'eval is not allowed since it can be used to execute '
+                 'arbitrary JavaScript code. It is not typically necessary '
+                 'in ordinary programming.'
+
+  value: 'eval'
+
+  whitelist: 'javascript/closure/base.js'
+  whitelist: 'javascript/closure/json/json.js'
+}
+
+requirement: {
+  type: BANNED_PROPERTY
+  error_message: 'Arguments.prototype.callee is not allowed in ES5 Strict mode.'
+                 'The JavaScript compiler will also check this when '
+                 'CHECK_ES5_STRICT is enabled, but this conformance check also '
+                 'warns for possible violations.'
+
+  value: 'Arguments.prototype.callee'
+
+  whitelist: 'javascript/closure/base.js'  # goog.base uses arguments.callee
+  whitelist: 'javascript/closure/debug/'  # legacy stack trace support, etc
+}
+
+requirement: {
+  type: BANNED_PROPERTY_WRITE
+  error_message: 'Assignment to Element.prototype.innerHTML is not allowed '
+                 'since passing unsafe content can cause XSS vulnerabilities. '
+                 'Use goog.dom.safe.setInnerHtml instead.'
+
+  value: 'Element.prototype.innerHTML'
+
+  # Safe wrapper for this property.
+  whitelist: 'javascript/closure/dom/safe.js'
+
+  # Safely used in goog.string.unescapeEntitiesUsingDom_; the string assigned to
+  # innerHTML is a single HTML entity.
+  whitelist: 'javascript/closure/string/string.js'
+}
+
+requirement: {
+  type: BANNED_PROPERTY_WRITE
+  error_message: 'Assignment to Element.prototype.outerHTML is not allowed '
+                 'since passing unsafe content can cause XSS vulnerabilities. '
+                 'Use goog.dom.safe.setOuterHtml instead.'
+
+  value: 'Element.prototype.outerHTML'
+
+  # Safe wrapper for this property.
+  whitelist: 'javascript/closure/dom/safe.js'
+}
+
+requirement: {
+  type: BANNED_PROPERTY_WRITE
+  error_message: 'Assignment to Location.prototype.href is not allowed. '
+                 'Externally controlled content assigned to the href property '
+                 'can cause XSS vulnerabilities, such as executing '
+                 'javascript:evil() URLs. Use goog.dom.safe.setLocationHref '
+                 'instead.'
+
+  value: 'Location.prototype.href'
+
+  # Safe wrapper for this property.
+  whitelist: 'javascript/closure/dom/safe.js'
+}
+
+requirement: {
+  type: BANNED_PROPERTY_WRITE
+  error_message: 'Assignment to Window.prototype.location is not allowed.'
+                 'Externally controlled content assigned to the location '
+                 'object can cause XSS vulnerabilities, such as executing '
+                 'javascript:evil() URLs. Use goog.dom.safe.setLocationHref '
+                 'instead.'
+
+  value: 'Window.prototype.location'
+}
+
+requirement: {
+  type: BANNED_PROPERTY_WRITE
+  error_message: 'Assignment to .href property of Anchor, Link, etc elements, '
+                 'is not allowed.  Externally controlled content assigned '
+                 'to the href property can cause XSS vulnerabilities, such as '
+                 'executing javascript:evil() URLs. '
+                 'Use goog.dom.safe.setAnchorHref instead.'
+
+  # Types with .href properties that do not extend from Element.
+  value: 'StyleSheet.prototype.href'
+  value: 'CSSImportRule.prototype.href'
+
+  # All other types extend from Element.
+  value: 'Element.prototype.href'
+
+  # Safe wrapper for this property.
+  whitelist: 'javascript/closure/dom/safe.js'
+}
+
+requirement: {
+  type: BANNED_PROPERTY_WRITE
+  error_message: 'Use of document.domain is not allowed since it relaxes the '
+                 'the same origin protections of JavaScript and opens up the '
+                 'attack surface for the domain.'
+
+  value: 'Document.prototype.domain'
+}
+
+#requirement: {
+#  type: BANNED_NAME
+#  value: 'goog.bind'
+#  error_message: 'goog.bind(func, args) is not permitted. Use func.bind(args) instead.'
+#}
