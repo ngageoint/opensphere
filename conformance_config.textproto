@@ -104,6 +104,23 @@ requirement: {
   value: 'Document.prototype.domain'
 }
 
+requirement: {
+  type: BANNED_NAME
+  error_message: 'Number.MIN_SAFE_INTEGER and Number.MAX_SAFE_INTEGER are not '
+                 'defined in Internet Explorer.'
+
+  value: 'Number.MAX_SAFE_INTEGER'
+  value: 'Number.MIN_SAFE_INTEGER'
+}
+
+requirement: {
+  type: BANNED_NAME
+  error_message: 'Number.MIN_VALUE is the smallest fractional value, which is '
+                 'still greater than zero. Use Number.NEGATIVE_INFINITY instead.'
+
+  value: 'Number.MIN_VALUE'
+}
+
 #requirement: {
 #  type: BANNED_NAME
 #  value: 'goog.bind'
