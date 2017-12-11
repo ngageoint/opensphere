@@ -178,6 +178,9 @@ plugin.im.action.feature.ui.LabelConfigCtrl.prototype.saveAction = function() {
     }
 
     this.action.labelConfig = this.labelConfig;
+
+    // send a message indicating an update occurred
+    os.dispatcher.dispatchEvent(os.ui.im.action.EventType.UPDATE);
   }
 };
 

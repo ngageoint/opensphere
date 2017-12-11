@@ -1,13 +1,23 @@
 goog.provide('os.ui.im.action.EditFilterActionCtrl');
+goog.provide('os.ui.im.action.EventType');
 goog.provide('os.ui.im.action.editFilterActionDirective');
 
 goog.require('os.im.action');
 goog.require('os.im.action.FilterActionEntry');
+goog.require('os.ol.canvas');
 goog.require('os.ui.Module');
 goog.require('os.ui.filter.ui.EditFiltersCtrl');
 goog.require('os.ui.filter.ui.editFiltersDirective');
 goog.require('os.ui.window');
 
+
+/**
+ * event type for updates to actions
+ * @enum {string}
+ */
+os.ui.im.action.EventType = {
+  UPDATE: 'action:update'
+};
 
 /**
  * The edit filter action directive.
@@ -101,6 +111,11 @@ os.ui.im.action.EditFilterActionCtrl = function($scope, $element) {
 
   $scope.$on('$destroy', goog.bind(this.onDestroy, this));
   os.dataManager.listen(os.data.event.DataEventType.SOURCE_REMOVED, this.onSourceRemoved_, false, this);
+  /**
+   * @type {?angular.JQLite}
+   * @protected
+   */
+  this.element = $element;
 };
 goog.inherits(os.ui.im.action.EditFilterActionCtrl, os.ui.filter.ui.EditFiltersCtrl);
 
@@ -137,6 +152,7 @@ os.ui.im.action.EditFilterActionCtrl.prototype.removeAction = function(index) {
   if (index > -1 && index < this['actions'].length) {
     this['actions'].splice(index, 1);
     this.updateAvailableActions();
+    os.dispatcher.dispatchEvent(os.ui.im.action.EventType.UPDATE);
   }
 };
 goog.exportProperty(
@@ -158,6 +174,7 @@ os.ui.im.action.EditFilterActionCtrl.prototype.updateAction = function(index) {
       actionObj['action'] = action;
       this.updateAvailableActions();
     }
+    os.dispatcher.dispatchEvent(os.ui.im.action.EventType.UPDATE);
   }
 };
 goog.exportProperty(
