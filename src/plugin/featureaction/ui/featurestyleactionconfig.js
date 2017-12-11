@@ -8,6 +8,7 @@ goog.require('os.style');
 goog.require('os.ui.Module');
 goog.require('os.ui.file.kml');
 goog.require('os.ui.icon.IconPickerEventType');
+goog.require('os.ui.im.action.EventType');
 goog.require('os.ui.layer.vectorStyleControlsDirective');
 goog.require('plugin.im.action.feature.StyleAction');
 goog.require('plugin.im.action.feature.ui.ActionConfigCtrl');
@@ -137,6 +138,8 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.initialize = function() {
 plugin.im.action.feature.ui.StyleConfigCtrl.prototype.saveAction = function() {
   if (this.action && this.styleConfig) {
     this.action.styleConfig = this.styleConfig;
+    // send a message indicating an update occurred
+    os.dispatcher.dispatchEvent(os.ui.im.action.EventType.UPDATE);
   }
 };
 
