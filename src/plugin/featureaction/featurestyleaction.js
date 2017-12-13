@@ -97,12 +97,21 @@ plugin.im.action.feature.StyleAction.prototype.execute = function(items) {
   for (var i = 0; i < items.length; i++) {
     var item = items[i];
     if (item) {
-      var featureConfig =
-          /** @type {Object|undefined} */ (goog.object.unsafeClone(item.get(os.style.StyleType.FEATURE))) || {};
-      featureConfig['zIndex'] = 10;
+      // get the existing feature config or create a new one
+      var featureConfig = /** @type {Array|Object|undefined} */ (os.object.unsafeClone(
+          item.get(os.style.StyleType.FEATURE))) || {};
 
       // merge style changes into the feature config and set it on the feature
-      os.style.mergeConfig(this.styleConfig, featureConfig);
+      if (goog.isArray(featureConfig)) {
+        for (var j = 0; j < featureConfig.length; j++) {
+          featureConfig[j]['zIndex'] = 10;
+          os.style.mergeConfig(this.styleConfig, featureConfig[j]);
+        }
+      } else {
+        featureConfig['zIndex'] = 10;
+        os.style.mergeConfig(this.styleConfig, featureConfig);
+      }
+
       item.set(os.style.StyleType.FEATURE, featureConfig, true);
       item.set(plugin.im.action.feature.StyleAction.FEATURE_ID, this.uid, true);
 
