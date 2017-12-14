@@ -1,8 +1,10 @@
-goog.require('os.im.mapping.MGRSMapping');
 goog.require('ol.Feature');
+goog.require('os.im.mapping.MGRSMapping');
 goog.require('osasm.wait');
 
 describe('os.im.mapping.MGRSMapping', function() {
+  osasm.wait.waitForIt();
+
   it('should test MGRS position strings correctly', function() {
     var m = new os.im.mapping.MGRSMapping();
     expect(m.testField('13SED1714696655')).toBe(true);
