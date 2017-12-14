@@ -19,6 +19,8 @@ describe('os.feature', function() {
     return true;
   };
 
+  osasm.wait.waitForIt();
+
   it('should auto detect and apply mappings on features', function() {
     // use a local mapping manager for this test
     spyOn(os.im.mapping.MappingManager, 'getInstance').andCallFake(os.mock.getMockMappingManager);

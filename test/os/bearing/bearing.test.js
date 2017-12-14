@@ -12,6 +12,8 @@ describe('os.bearing', function() {
   var geodesic = os.interpolate.Method.GEODESIC;
   var rhumb = os.interpolate.Method.RHUMB;
 
+  osasm.wait.waitForIt();
+
   beforeEach(function() {
     if (!os.bearing.Geomag) {
       runs(function() {

@@ -8,6 +8,8 @@ goog.require('os.query');
 goog.require('osasm.wait');
 
 describe('os.geo', function() {
+  osasm.wait.waitForIt();
+
   it('should parse coordinates from DMS separated by space without delimiters or direction', function() {
     var result = os.geo.parseLatLon('103036 501545', undefined, 'DMS');
     expect(result.lon).toBeCloseTo(50.2625);
