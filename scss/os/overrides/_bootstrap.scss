@@ -1,0 +1,778 @@
+// Bootstrap (v2.3.2 slate theme) overrides
+
+a {
+  text-decoration: underline;
+}
+
+// Input element styles
+/////////////////////////////////////
+
+select,
+textarea {
+  @include transition(border linear .2s, box-shadow linear .2s);
+  background-color: $overrides-input-bg-color;
+  border: $overrides-border-width solid $overrides-border-color;
+  color: $overrides-text-color;
+  font-size: $overrides-font-size;
+  height: $overrides-input-height;
+  margin-bottom: $overrides-margin-bottom;
+  padding: $overrides-input-padding;
+}
+
+input {
+  &[type="text"],
+  &[type="password"],
+  &[type="datetime"],
+  &[type="datetime-local"],
+  &[type="date"],
+  &[type="month"],
+  &[type="time"],
+  &[type="week"],
+  &[type="number"],
+  &[type="email"],
+  &[type="url"],
+  &[type="search"],
+  &[type="tel"],
+  &[type="color"] {
+    @include transition(border linear .2s, box-shadow linear .2s);
+    background-color: $overrides-input-bg-color;
+    border: $overrides-border-width solid $overrides-border-color;
+    color: $overrides-text-color;
+    font-size: $overrides-font-size;
+    height: $overrides-input-height;
+    line-height: $overrides-input-height - 1;
+    margin-bottom: $overrides-margin-bottom;
+    padding: $overrides-input-padding;
+  }
+
+  &[type="file"] {
+    height: 24px;
+    line-height: 24px;
+  }
+
+  &[disabled] {
+    @include opacity($overrides-disabled-opacity);
+    background-color: $overrides-input-bg-color;
+    color: #bbbfc2;
+  }
+
+  &[type="button"][disabled],
+  &[type="reset"][disabled],
+  &[type="submit"][disabled],
+  &[readonly] {
+    @include opacity($overrides-disabled-opacity);
+    background-color: $overrides-input-bg-color;
+    color: #bbbfc2;
+  }
+
+  &[type="file"]:focus,
+  &[type="radio"]:focus,
+  &[type="checkbox"]:focus {
+    // scss-lint:disable DuplicateProperty
+    @include box-shadow(inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(82, 168, 236, .6));
+    border-color: rgba(82, 168, 236, .8);
+    outline: 0;
+    outline: thin dotted \9;
+  }
+}
+
+.uneditable-input {
+  @include transition(border linear .2s, box-shadow linear .2s);
+  background-color: $overrides-input-bg-color;
+  border: $overrides-border-width solid $overrides-border-color;
+  color: $overrides-text-color;
+  font-size: $overrides-font-size;
+  height: $overrides-input-height;
+  margin-bottom: $overrides-margin-bottom;
+  padding: $overrides-input-padding;
+}
+
+textarea {
+  height: auto;
+}
+
+.box {
+  select,
+  .select2-container .select2-choice,
+
+  textarea {
+    background-color: $overrides-box-bg-color;
+  }
+
+  input {
+    &[type="text"],
+    &[type="password"],
+    &[type="datetime"],
+    &[type="datetime-local"],
+    &[type="date"],
+    &[type="month"],
+    &[type="time"],
+    &[type="week"],
+    &[type="number"],
+    &[type="email"],
+    &[type="url"],
+    &[type="search"],
+    &[type="tel"],
+    &[type="color"] {
+      background-color: $overrides-box-bg-color;
+    }
+
+    &[type="button"][disabled],
+    &[type="reset"][disabled],
+    &[type="submit"][disabled],
+    &[readonly] {
+      background-color: $overrides-box-bg-color;
+    }
+  }
+
+  .uneditable-input {
+    background-color: $overrides-box-bg-color;
+  }
+
+  input[disabled],
+  select[disabled],
+  textarea[disabled] {
+    background-color: $overrides-box-bg-color;
+  }
+
+  select[readonly],
+  textarea[readonly] {
+    background-color: $overrides-box-bg-color;
+  }
+}
+
+.input-append .add-on,
+.input-prepend .add-on {
+  height: $overrides-input-height;
+}
+
+.close {
+  color: $color-white;
+}
+
+select {
+  height: 24px;
+  line-height: 24px;
+}
+
+select[disabled],
+textarea[disabled] {
+  @include opacity($overrides-disabled-opacity);
+  background-color: $overrides-input-bg-color;
+  color: #bbbfc2;
+}
+
+select[readonly],
+textarea[readonly] {
+  @include opacity($overrides-disabled-opacity);
+  background-color: $overrides-input-bg-color;
+  color: #bbbfc2;
+}
+
+select:focus {
+  // scss-lint:disable DuplicateProperty
+  @include box-shadow(inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(82, 168, 236, .6));
+  border-color: rgba(82, 168, 236, .8);
+  outline: 0;
+  outline: thin dotted \9;
+}
+
+// scss-lint:disable VendorPrefix
+
+$placeholder-text-color: #bbb;
+
+input::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder {
+  color: $placeholder-text-color;
+}
+
+input::-moz-placeholder,
+textarea::-moz-placeholder {
+  color: $placeholder-text-color;
+}
+
+input:-ms-input-placeholder,
+textarea:-ms-input-placeholder {
+  color: $placeholder-text-color;
+}
+
+// scss-lint:enable VendorPrefix
+
+label {
+  @include text-shadow(none);
+  color: $overrides-text-color;
+  font-size: $overrides-font-size;
+
+  &[disabled] {
+    @include opacity($overrides-disabled-opacity);
+  }
+}
+
+input,
+button,
+select,
+textarea,
+legend {
+  color: $overrides-text-color;
+  font-size: $overrides-font-size;
+}
+
+.table-striped tbody > tr:nth-child(odd) > {
+  td,
+  th {
+    background-color: #444;
+  }
+}
+
+form {
+  input.ng-invalid.ng-dirty,
+  span.ng-invalid.ng-dirty,
+  div:not([ng-form]).ng-invalid.ng-dirty,
+  select.ng-invalid.ng-dirty,
+  textarea.ng-invalid.ng-dirty {
+    background-color: #7d5e5e;
+    background-image: none;
+    color: $overrides-text-color;
+  }
+
+  .select2-container.ng-invalid.ng-dirty {
+    background-color: #7d5e5e;
+    background-image: none;
+
+    .select2-choice {
+      background-color: #7d5e5e;
+      background-image: none;
+    }
+  }
+
+  input.ng-pristine.ng-invalid,
+  span.ng-pristine.ng-invalid,
+  div:not([ng-form]).ng-pristine.ng-invalid,
+  select.ng-pristine.ng-invalid,
+  textarea.ng-pristine.ng-invalid {
+    background-color: $overrides-input-bg-color;
+    color: $overrides-text-color;
+  }
+
+  .ng-pristine.ng-invalid .select2-container {
+    background-color: $overrides-input-bg-color;
+    color: $overrides-text-color;
+
+    .select2-choice,
+    .select2-choices {
+      background-color: $overrides-box-bg-color;
+      color: $overrides-text-color;
+    }
+  }
+}
+
+.box form {
+  input.ng-pristine.ng-invalid,
+  span.ng-pristine.ng-invalid,
+  div:not([ng-form]).ng-pristine.ng-invalid,
+  select.ng-pristine.ng-invalid,
+  textarea.ng-pristine.ng-invalid {
+    background-color: $overrides-box-bg-color;
+  }
+
+  .select2-container.ng-pristine.ng-invalid {
+    background-color: $overrides-box-bg-color;
+
+    .select2-choice,
+    .select2-choices {
+      background-color: $overrides-box-bg-color;
+    }
+  }
+}
+
+
+
+.well {
+  @include box-shadow(none);
+  @include box-sizing(border-box);
+  background-color: $overrides-box-bg-color;
+  border: $overrides-border-width solid $overrides-border-color;
+  margin-bottom: $overrides-margin-bottom;
+  overflow: auto;
+  padding: 2px 5px;
+}
+
+.lead {
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 30px;
+  margin-bottom: $overrides-margin-bottom;
+}
+
+hr {
+  margin: 5px 0;
+}
+
+p {
+  margin: 0 0 5px;
+}
+
+td > input {
+  &[type="radio"],
+  &[type="checkbox"] {
+    margin: 0;
+  }
+}
+
+// this allows popovers to appear on top of windows instead of being clipped by the container
+
+.popover {
+  color: #fff;
+  position: fixed;
+  z-index: 10000;
+}
+
+// Modal style overrides
+/////////////////////////////////
+
+.modal {
+  background-color: rgba(46, 50, 54, 0);
+  z-index: 100001;
+}
+
+.modal-header {
+  background-color: rgba(46, 50, 54, 1);
+}
+
+.modal-borderless {
+  border: 1px solid rgba(0, 0, 0, 0);
+  box-shadow: rgba(0, 0, 0, 0) 0 3px 7px 0;
+}
+
+.modal-body {
+  background: $color-gray;
+}
+
+.modal-backdrop {
+  background: $overrides-text-color;
+  height: 100%;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 100000;
+}
+
+// Added for file import
+//////////////////////////////////
+
+.form-compact,
+.form-compressed {
+  margin: 0;
+}
+
+.form-compact label,
+.form-compressed label {
+  margin-bottom: $overrides-margin-bottom;
+}
+
+.form-compact .control-group,
+.form-compressed .control-group {
+  margin-bottom: 5px;
+}
+
+.form-compact .control-group:last-child,
+.form-compressed .control-group:last-child {
+  margin-bottom: $overrides-margin-bottom;
+}
+
+.form-compact {
+  input,
+  label,
+  textarea,
+  .help-inline,
+  .help-block {
+    line-height: $overrides-input-height;
+    margin-bottom: $overrides-margin-bottom;
+  }
+}
+
+.form-compressed {
+  input,
+  label,
+  textarea,
+  .help-inline,
+  .help-block {
+    line-height: $overrides-input-height;
+    margin-bottom: $overrides-margin-bottom;
+  }
+}
+
+// Removed text shadows because they make the alert
+// boxes look terrible.
+//////////////////////////////////////////////////
+
+.label,
+.alert {
+  @include text-shadow(none);
+  margin-bottom: 5px;
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 5px 0;
+}
+
+// Nav bar styles
+//////////////////////////////////////////////////
+
+.navbar {
+  margin-bottom: 0;
+
+  > .navbar-inner {
+    @include background-image(linear-gradient(#616972, #434c55 70%, #384149));
+    @include border-radius(0);
+    border: 0;
+    height: 32px;
+    min-height: 32px;
+    padding: 0;
+
+    > .container-fluid {
+      height: 26px;
+      min-height: 26px;
+      padding: 3px 5px;
+    }
+  }
+
+  ul.nav > li:not(:first-child) {
+    margin-left: 5px;
+  }
+
+  .btn,
+  .btn-group {
+    height: 26px;
+    margin: 0;
+    position: relative;
+  }
+}
+
+.nav > li > a:focus,
+.nav-list > .active > a:focus {
+  background-color: transparent;
+}
+
+.nav {
+  margin-bottom: $overrides-margin-bottom;
+
+  > li > a {
+    @include text-shadow(none);
+    background-color: transparent;
+    background-image: none;
+    color: $overrides-text-color;
+    font-weight: normal;
+
+    &:hover {
+      background-color: $overrides-input-bg-color;
+      color: $overrides-text-color;
+      cursor: pointer;
+    }
+  }
+
+  li.active > a {
+    background-color: #08c;
+    color: $overrides-text-color;
+
+    &:hover,
+    &:focus {
+      background-color: #08c;
+      color: $overrides-text-color;
+    }
+  }
+}
+
+.nav-pills > .active > a {
+  background-color: #08c;
+  color: $overrides-text-color;
+
+  &:hover {
+    background-color: #08c;
+    color: $overrides-text-color;
+  }
+}
+
+// Button and button icon styles
+//////////////////////////////////////////////////
+
+.btn {
+  @include background-image(linear-gradient(#5d6369, #3d4246));
+  background-color: $color-dark-gray;
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 18px;
+  padding: 2px 4px;
+
+  &:hover {
+    font-weight: normal;
+  }
+
+  .fa-check {
+    color: #0cf;
+  }
+
+  &.btn-success .fa-check {
+    color: $overrides-text-color;
+  }
+
+  &.no-text > i {
+    font-size: 18px;
+    vertical-align: middle;
+  }
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.btn-mini {
+  border-radius: 3px;
+  font-size: 10.5px;
+  padding: 0 4px;
+}
+
+.btn-info {
+  @include background-image(linear-gradient(#5bc0de, #2f96b4));
+  @include text-shadow(0 -1px 0 rgba(0, 0, 0, .25));
+  background-color: #49afcd;
+  background-repeat: repeat-x;
+  border-color: rgba(0, 0, 0, .1) rgba(0, 0, 0, .1) rgba(0, 0, 0, .25);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false,startColorstr='#5bc0de',endColorstr='#2f96b4',GradientType=0);
+}
+
+.btn-danger {
+  @include background-image(linear-gradient(#ee5f5b, #bd362f));
+  @include text-shadow(0 -1px 0 rgba(0, 0, 0, .25));
+  background-color: #da4f49;
+  background-repeat: repeat-x;
+  border-color: rgba(0, 0, 0, .1) rgba(0, 0, 0, .1) rgba(0, 0, 0, .25);
+  color: $overrides-text-color;
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false,startColorstr='#ee5f5b',endColorstr='#bd362f',GradientType=0);
+}
+
+.btn-primary {
+  @include background-image(linear-gradient(#08c, #04c));
+  @include text-shadow(0 -1px 0 rgba(0, 0, 0, .25));
+  background-color: #006dcc;
+  background-repeat: repeat-x;
+  border-color: rgba(0, 0, 0, .1) rgba(0, 0, 0, .1) rgba(0, 0, 0, .25);
+  color: $overrides-text-color;
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false,startColorstr='#08c',endColorstr='#04c',GradientType=0);
+
+  &:focus,
+  &:hover {
+    background-color: #04c;
+  }
+}
+
+.btn-success {
+  @include background-image(linear-gradient(#62c462, #51a351));
+  @include text-shadow(0 -1px 0 rgba(0, 0, 0, .25));
+  background-color: #5bb75b;
+  background-repeat: repeat-x;
+  border-color: rgba(0, 0, 0, .1) rgba(0, 0, 0, .1) rgba(0, 0, 0, .25);
+  color: $overrides-text-color;
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false,startColorstr='#62c462',endColorstr='#51a351',GradientType=0);
+}
+
+.btn-group > {
+
+  .btn-mini {
+    height: 22px;
+  }
+}
+
+.btn .fa {
+  font-size: 14px;
+}
+
+.btn-mini .fa {
+  font-size: 10.5px;
+}
+
+.btn.addon {
+  font-size: 0;
+  height: 24px;
+  line-height: 0;
+}
+
+.nav .btn.addon {
+  height: 26px;
+}
+
+.btn.addon .fa {
+  font-size: 10px;
+  font-weight: normal;
+}
+
+// style the arrow on a single button that opens a menu. aligns the arrow with the .btn.addon arrow.
+.btn-menu > .fa.menu-arrow {
+  font-size: 8px;
+  line-height: 19px;
+  vertical-align: top;
+}
+
+.btn-group > .btn.addon {
+  padding: 2px 1px;
+
+  > .fa {
+    font-size: 8px;
+  }
+}
+
+
+// Control styles
+/////////////////////////////////////////
+
+.control-group.error {
+  input,
+  select,
+  textarea {
+    border-color: #d00;
+  }
+
+  .help-block,
+  .help-inline {
+    color: #fff;
+  }
+
+  .checkbox,
+  .radio,
+  input,
+  select,
+  textarea {
+    color: $overrides-text-color;
+  }
+
+  .control-label {
+    color: inherit;
+  }
+}
+
+.control-label {
+  color: $overrides-text-color;
+}
+
+.form-horizontal .control-label {
+  padding-top: 3px;
+  width: 105px;
+}
+
+.form-horizontal .controls {
+  margin-left: 110px;
+  padding-top: 3px;
+}
+
+.form-horizontal .controls.controls__slider {
+  display: inline-block;
+  margin-left: 0;
+  padding-top: 0;
+  vertical-align: middle;
+  width: 220px;
+}
+
+.controls > {
+  .radio:first-child,
+  .checkbox:first-child {
+    padding-top: 0;
+  }
+}
+
+.radio.inline,
+.checkbox.inline {
+  padding-top: 0;
+}
+
+.panel .table {
+  margin-bottom: $overrides-margin-bottom;
+
+  tr {
+
+    &:first-child > {
+      th,
+      td {
+        border-top: 0;
+      }
+    }
+
+    &:last-child > {
+      th,
+      td {
+        border-bottom: $overrides-border-width solid #1c1e22;
+      }
+    }
+
+  }
+}
+
+.tooltip {
+  .tooltip-inner {
+    background-color: $color-white;
+    color: $color-black;
+  }
+
+  &.bottom .tooltip-arrow {
+    border-bottom-color: $color-white !important;
+  }
+
+  &.top .tooltip-arrow {
+    border-top-color: $color-white !important;
+  }
+
+  &.left .tooltip-arrow {
+    border-left-color: $color-white !important;
+  }
+
+  &.right .tooltip-arrow {
+    border-right-color: $color-white !important;
+  }
+}
+
+.accordion {
+  margin-bottom: 0;
+}
+
+.accordion-heading:hover {
+  background-color: #555;
+}
+
+.accordion-heading.open {
+  background-color: #444;
+}
+
+.btn-group.open .btn.dropdown-toggle {
+  background-color: #3a3e41;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, .15), 0 1px 2px rgba(0, 0, 0, .05);
+}
+
+.dropdown-menu {
+  background-color: #555;
+}
+
+.dropdown-menu>li>a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.dropdown-menu>li>a:hover,
+.dropdown-menu>li>a:focus,
+.dropdown-submenu:hover>a,
+.dropdown-submenu:focus>a {
+  background-color: #444;
+  background-image: inherit;
+  color: #fff;
+}
+
+input:focus:invalid,
+textarea:focus:invalid,
+select:focus:invalid {
+  color: $overrides-text-color;
+}

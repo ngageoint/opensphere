@@ -1,0 +1,43 @@
+<div class="c-filterexport window-content-wrapper">
+  <div class="window-content">
+    <div class="export-dialog">
+      <form name="exportForm" class="form-compact">
+        <div class="control-group">
+          <label class="control-label">Name:</label>
+          <div class="controls">
+            <input class="wide" type="text" name="title" required ng-model="ctrl.fileName" ng-maxlength="200" />
+          </div>
+        </div>
+
+        <label class="radio">
+          <input type="radio" name="exportmode" value="active" ng-model="ctrl.exportType" ng-change="ctrl.validate()">
+          Export Active (Checked)
+        </label>
+        <label class="radio">
+          <input type="radio" name="exportmode" value="selected" ng-model="ctrl.exportType" ng-change="ctrl.validate()">
+          Export Selected
+        </label>
+        <label class="radio">
+          <input type="radio" name="exportmode" value="all" ng-model="ctrl.exportType" ng-change="ctrl.validate()">
+          Export All
+        </label>
+      </form>
+      <div ng-if="ctrl.errorMsg">
+        <i class="fa fa-warning orange-icon"></i>
+        <em>{{ctrl.errorMsg}}</em>
+      </div>
+    </div>
+  </div>
+  <div class="window-footer">
+    <div class="pull-right">
+      <button class="btn btn-default" ng-click="ctrl.save()" ng-disabled="exportForm.$invalid || ctrl.errorMsg">
+        <i class="fa fa-check lt-blue-icon"></i>
+        OK
+      </button>
+      <button class="btn btn-default" ng-click="ctrl.cancel()">
+        <i class="fa fa-ban red-icon"></i>
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>

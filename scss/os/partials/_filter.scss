@@ -1,0 +1,49 @@
+// * Filter Window styles
+//  *******************************************
+
+.filters-header {
+  height: 30px;
+  width: 100%;
+}
+
+.filters-main {
+  @include calc(height, '100% - 30px');
+  width: 100%;
+}
+
+.filter-select {
+  height: 20px;
+  line-height: 20px;
+  width: auto;
+}
+
+.filter-container {
+  @include calc(height, '100% - 75px');
+}
+
+// * Filter builder styles
+// *******************************************
+
+.filterform,
+.filterbuilder {
+  height: 100%;
+}
+
+.exprs {
+  @include calc(height, '100% - 30px');
+  background: #444;
+  border: 1px solid $color-black;
+  margin-top: 5px;
+  overflow: auto;
+  padding: 5px;
+}
+
+.combinator-main {
+  @include box-sizing(border-box);
+  padding-top: 5px;
+  width: 100%;
+}
+
+.filters .slick-tree .fa-chain-broken {
+  font-size: 11px;
+}

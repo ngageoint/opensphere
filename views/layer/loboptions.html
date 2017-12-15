@@ -1,0 +1,102 @@
+<div class="ellipse-options">
+  <div class="c-labelcontainer">
+    <table class="wide">
+      <tr>
+        <td class="c-labelcontainer__fixedcell">Bearing:</td>
+        <td>
+          <select class="no-margin wide" ng-model="ctrl.bearingColumn" ng-change="ctrl.onBearingColumnChange()"
+              title="Sets the data field used for bearing" ng-options="col.field as col.name for col in ctrl.columns">
+              <option value="">-- None --</option>
+          </select>
+        </td>
+        <td class="c-labelcontainer__fixedcell"> degrees</td>
+      </tr>
+    </table>
+  </div>
+  <div class="c-labelcontainer">
+    <table class="wide">
+      <tr>
+        <td class="c-labelcontainer__fixedcell">Length:&nbsp;&nbsp;</td>
+        <td>
+          <input class="c-labelcontainer__wide" type="number" step="any" min="1" max="10000" ng-change="ctrl.onLengthChange()" ng-model="length" ng-required="true" />
+        </td>
+        <td class="c-labelcontainer__fixedcell"> * </td>
+        <td>
+          <select class="no-margin wide" ng-model="ctrl.lengthColumn" ng-change="ctrl.onLengthColumnChange()"
+              title="Sets the data field used for length" ng-options="col.field as col.name for col in ctrl.columns">
+            <option value="">1</option>
+          </select>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div class="c-labelcontainer">
+    <table class="wide">
+      <tr>
+        <td>
+          <label class="no-margin">
+            <input class="label-checkbox checkbox inline" type="checkbox" name="showArrow"
+            ng-model="ctrl.showArrow" ng-change="ctrl.onShowArrowChange()"/>
+            Show Arrow
+          </label>
+        </td>
+        <td>
+          <label ng-show="ctrl.showArrow" class="no-margin">
+            &nbsp; Size: <input class="c-labelcontainer__wide" type="number" step="any" min="1" max="10000" ng-change="ctrl.onSizeChange()" ng-model="size" ng-required="true" />
+          </label>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div class="c-labelcontainer">
+    <table class="wide">
+      <tr>
+        <td>
+          <label class="no-margin">
+            <input class="label-checkbox checkbox inline" type="checkbox" name="showError"
+            ng-model="ctrl.showError" ng-change="ctrl.onShowErrorChange()"/>
+            Show Error Range
+          </label>
+        </td>
+        <td class="c-labelcontainer__fixedcell"><popover x-title="'Line of Bearing Error'" x-content="ctrl.helpText"></popover>&nbsp;&nbsp;</td>
+        <td ng-if="ellipseSupport">
+          <label class="no-margin">
+            <input class="label-checkbox checkbox inline" type="checkbox" name="showEllipse"
+            ng-model="ctrl.showEllipse" ng-change="ctrl.onShowEllipseChange()"/>
+            Show Ellipse
+          </label>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div class="c-labelcontainer" ng-show="ctrl.showError">
+    <table class="wide">
+      <tr>
+        <td class="c-labelcontainer__fixedcell">Bearing&nbsp;Error:</td>
+        <td>
+          <input class="c-labelcontainer__wide" type="number" step="any" min="1" max="10000" ng-change="ctrl.onBearingErrorChange()" ng-model="bearingErrorMultiplier" ng-required="true" />
+        </td>
+        <td class="c-labelcontainer__fixedcell"> * </td>
+        <td>
+          <select class="no-margin wide" ng-model="ctrl.bearingErrorColumn" ng-change="ctrl.onBearingErrorColumnChange()"
+              title="Sets the data field used for bearing error" ng-options="col.field as col.name for col in ctrl.columns">
+              <option value="">-- None --</option>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td class="c-labelcontainer__fixedcell">Length&nbsp;Error:</td>
+        <td>
+          <input class="c-labelcontainer__wide" type="number" step="any" min="1" max="10000" ng-change="ctrl.onLengthErrorChange()" ng-model="lengthErrorMultiplier" ng-required="true" />
+        </td>
+        <td class="c-labelcontainer__fixedcell"> * </td>
+        <td>
+          <select class="no-margin wide" ng-model="ctrl.lengthErrorColumn" ng-change="ctrl.onLengthErrorColumnChange()"
+              title="Sets the data field used for length error" ng-options="col.field as col.name for col in ctrl.columns">
+              <option value="">-- None --</option>
+          </select>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>

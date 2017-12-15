@@ -1,0 +1,117 @@
+// * Search Box Styles
+// *******************************************
+
+.search-box {
+  button.search-button {
+    border-color: #272b30;
+    height: 26px;
+    padding: 0 10px;
+  }
+
+  .dropdown-menu {
+    margin-left: -22px;
+    right: 0;
+
+    > li > a {
+      color: $color-white;
+      overflow: hidden;
+      padding: 3px 10px;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .input-append,
+  .input-prepend {
+    margin: 0;
+  }
+
+  span.add-on {
+    border-color: #272b30;
+    padding: 2px 3px;
+  }
+
+  .input-clear {
+    background-color: $color-medium-gray;
+
+    &:hover {
+      text-shadow: 0 0 .8em;
+    }
+  }
+
+  input.search-query {
+    border-color: #272b30;
+    margin-bottom: 0;
+    padding: 2px 5px;
+    width: 233px;
+  }
+}
+
+.search-dropdown {
+  color: #fff;
+  top: 8px;
+}
+
+searchresults {
+  left: 0;
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+  top: 30px;
+  z-index: 4999;
+}
+
+.search-results {
+  max-height: calc(100vh - 98px);
+  overflow: auto;
+  pointer-events: all;
+}
+
+.search-results .box {
+  background-color: $overrides-box-bg-color;
+  border: 1px solid $color-dark-gray;
+  color: $color-white;
+  cursor: default;
+  font-size: 13px;
+  margin: 3px 0;
+
+  &.box-hover:hover {
+    background-color: #444;
+  }
+}
+
+.search-options {
+  z-index: 5000;
+}
+
+.search-header {
+  color: $color-white;
+}
+
+.shadowbox {
+  @include border-radius(4px);
+  @include box-shadow(2px 3px 3px $overrides-menu-box-shadow-color);
+  background-color: $color-medium-gray;
+  border: 1px solid $color-dark-gray;
+}
+
+.result-type {
+  color: rgba(255, 255, 255, .85);
+}
+
+.result-card .badge.badge-count {
+  @include text-shadow(none);
+  background-color: $color-medium-gray;
+  padding: 0 4px;
+  position: relative;
+  right: .8em;
+  top: .5em;
+}
+
+.copy-location-form {
+  textarea,
+  .select2-container {
+    @include box-sizing(border-box);
+    max-width: 100%;
+    width: 100%;
+  }
+}

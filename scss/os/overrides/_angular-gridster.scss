@@ -1,0 +1,38 @@
+// angular-gridster overrides
+
+.gridster .handle-se {
+  background-image: url('../images/ui-icons_cccccc_256x240.png');
+  background-position: -68px -228px;
+  background-repeat: no-repeat;
+  border-width: 0;
+  bottom: 0;
+  height: 10px;
+  overflow: hidden;
+  right: 0;
+  text-indent: -99999px;
+  width: 10px;
+}
+
+// This prevents things like popovers from being obscured by other widgets
+
+.gridster-item {
+  z-index: initial;
+
+  &.gridster-item-moving {
+    z-index: 2;
+  }
+}
+
+.gridster .gridster-item:hover .handle-se {
+  border: 0;
+}
+
+.gridster-loaded {
+  .gridster-item {
+    overflow: hidden;
+  }
+
+  .gridster-preview-holder {
+    display: none !important;
+  }
+}

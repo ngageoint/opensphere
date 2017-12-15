@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<WMS_Capabilities xmlns="http://www.opengis.net/wms" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.3.0" xsi:schemaLocation="http://www.opengis.net/wms https://example.com/ogc/schemas/wms/1.3.0/capabilities_1_3_0.xsd">
+  <Capability>
+    <Request>
+      <GetCapabilities>
+        <Format>text/xml</Format>
+        <DCPType>
+          <HTTP>
+            <Get>
+              <OnlineResource xlink:type="simple" xlink:href="https://example.com/ogc/wmsServer?"/>
+            </Get>
+          </HTTP>
+        </DCPType>
+      </GetCapabilities>
+      <GetMap>
+        <Format>image/png</Format>
+        <Format>image/png; color=GRAYSCALE</Format>
+        <Format>image/png; color=INDEXED</Format>
+        <Format>image/png; interlaced=true</Format>
+        <Format>application/zip; subtype=image/bil</Format>
+        <Format>image/bil</Format>
+        <Format>image/dds</Format>
+        <Format>image/gif</Format>
+        <Format>image/jpeg</Format>
+        <Format>image/jpeg; quality=10</Format>
+        <Format>image/jpeg; quality=100</Format>
+        <Format>image/jpeg; quality=50</Format>
+        <Format>image/jpeg; quality=90</Format>
+        <Format>image/tiff</Format>
+        <Format>image/tiff; compression=DEFLATE</Format>
+        <Format>image/tiff; compression=DEFLATE; level=1</Format>
+        <Format>image/tiff; compression=DEFLATE; level=9</Format>
+        <Format>image/tiff; compression=GROUP3_1D</Format>
+        <Format>image/tiff; compression=GROUP3_2D</Format>
+        <Format>image/tiff; compression=GROUP4</Format>
+        <Format>image/tiff; compression=JPEG_TTN2</Format>
+        <Format>image/tiff; compression=JPEG_TTN2; quality=10</Format>
+        <Format>image/tiff; compression=JPEG_TTN2; quality=100</Format>
+        <Format>image/tiff; compression=JPEG_TTN2; quality=50</Format>
+        <Format>image/tiff; compression=JPEG_TTN2; quality=90</Format>
+        <Format>image/tiff; compression=NONE</Format>
+        <Format>image/tiff; compression=PACKBITS</Format>
+        <Format>image/webp</Format>
+        <Format>image/webp; compression=lossless; quality=0</Format>
+        <Format>image/webp; compression=lossless; quality=25</Format>
+        <Format>image/webp; compression=lossless; quality=50</Format>
+        <Format>image/webp; compression=lossy; quality=10</Format>
+        <Format>image/webp; compression=lossy; quality=100</Format>
+        <Format>image/webp; compression=lossy; quality=50</Format>
+        <Format>image/webp; compression=lossy; quality=90</Format>
+        <DCPType>
+          <HTTP>
+            <Get>
+              <OnlineResource xlink:type="simple" xlink:href="https://example.com/ogc/wmsServer?"/>
+            </Get>
+          </HTTP>
+        </DCPType>
+      </GetMap>
+    </Request>
+    <Exception>
+      <Format>XML</Format>
+      <Format>INIMAGE</Format>
+      <Format>BLANK</Format>
+    </Exception>
+    <Layer queryable="false" opaque="false" fixedWidth="0" fixedHeight="0">
+      <Title>Root_Folder</Title>
+      <Abstract>This is the root folder</Abstract>
+      <CRS>EPSG:4326</CRS>
+      <CRS>CRS:84</CRS>
+      <CRS>EPSG:3857</CRS>
+      <BoundingBox CRS="EPSG:4326" minx="-90.0" miny="-180.0" maxx="90.0" maxy="180.0"/>
+      <BoundingBox CRS="CRS:84" minx="-180.0" miny="-90.0" maxx="180.0" maxy="90.0"/>
+      <Layer queryable="false" opaque="false" fixedWidth="0" fixedHeight="0">
+        <Name>inherit</Name>
+        <Title>inherit</Title>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>-180.0</westBoundLongitude>
+          <eastBoundLongitude>180.0</eastBoundLongitude>
+          <southBoundLatitude>-90.0</southBoundLatitude>
+          <northBoundLatitude>90.0</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:4326" minx="-90.0" miny="-180.0" maxx="90.0" maxy="180.0"/>
+        <BoundingBox CRS="CRS:84" minx="-180.0" miny="-90.0" maxx="180.0" maxy="90.0"/>
+      </Layer>
+      <Layer queryable="false" opaque="false" fixedWidth="0" fixedHeight="0">
+        <Name>add_crs</Name>
+        <Title>add_crs</Title>
+        <CRS>EPSG:3395</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>-180.0</westBoundLongitude>
+          <eastBoundLongitude>180.0</eastBoundLongitude>
+          <southBoundLatitude>-90.0</southBoundLatitude>
+          <northBoundLatitude>90.0</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:4326" minx="-90.0" miny="-180.0" maxx="90.0" maxy="180.0"/>
+        <BoundingBox CRS="CRS:84" minx="-180.0" miny="-90.0" maxx="180.0" maxy="90.0"/>
+      </Layer>
+    </Layer>
+  </Capability>
+</WMS_Capabilities>

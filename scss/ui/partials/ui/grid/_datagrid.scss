@@ -1,0 +1,25 @@
+// Styles for the data-grid directive
+
+.data-grid {
+  width: 100%;
+
+  .slick-viewport {
+    overflow-x: hidden !important;
+  }
+
+  .slick-row {
+    &.selected {
+      background-color: #08c;
+      color: #fff;
+    }
+
+    &:hover {
+      background-color: #9edb9e;
+      color: #333;
+    }
+  }
+
+  .slick-cell:first-child {
+    border-left: 1px dotted #c0c0c0;
+  }
+}

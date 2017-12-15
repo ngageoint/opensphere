@@ -1,0 +1,20 @@
+<div id="win-container" class="win-container">
+  <!-- If you add something to this file, you're (probably) doing it wrong! -->
+  <div class="flex-container drag-container dd-target" url-drag-drop>
+    <nav-top></nav-top>
+    <div class="d-flex flex-row flex-grow mh-0">
+      <date-panel ng-show="!mainCtrl.timeline"></date-panel>
+      <div list list-id="main-content" list-prefix="<div>" list-suffix="</div>"></div>
+      <map class="mw-0"></map>
+    </div>
+    <timeline-panel ng-if="mainCtrl.timeline"></timeline-panel>
+    <nav-bottom></nav-bottom>
+  </div>
+
+  <!-- ditch this? It isn't a typical window though -->
+  <legendguide ng-if="mainCtrl.legend" widget="true" close-flag="mainCtrl.legend"></legendguide>
+
+  <!-- these are OK since they are legitimately always in the DOM -->
+  <global-menu id="globalMenu"></global-menu>
+  <onboarding></onboarding>
+</div>

@@ -1,0 +1,4 @@
+<span ng-form name="exprForm" class="expression">
+  <select ng-model="expr.op" ng-options="value.getTitle() for value in ops" required/>
+  <spinner min="0" step="1" value="expr.literal" name="literal" live="true"></spinner>
+</span>

@@ -1,0 +1,12 @@
+<div class="user-setting">
+  <div>
+    <div class="user-setting-title">Unit of Measure:</div>
+    <div class="user-setting-input radio-setting">
+      <div ng-repeat="unit in unitsCtrl.allUnits" title="Always use {{unit.title}}">
+        <span>
+          <input type="radio" id="{{unit.system}}" value="{{unit.system}}" ng-model="unitsCtrl.units"><label for="{{unit.system}}">{{unit.title}}</label>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>

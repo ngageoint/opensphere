@@ -1,0 +1,18 @@
+<div class="file-import window-content-wrapper">
+  <div class="window-content">
+    <div>
+      <div><b>{{file.getFileName()}}</b></div>
+      <div><i class="fa fa-warning orange-icon"></i> The file type could not be detected.</div>
+      <div>Please choose from the list of supported types:</div>
+    </div>
+    <select ng-model="import" ng-options="importer.title for importer in importers"></select>
+  </div>
+  <div class="window-footer">
+    <div class="pull-right">
+      <button class="btn btn-default" ng-click="anytype.accept()" ng-disabled="!import" title="Import the file">
+        <i class="fa fa-check blue-icon"></i> OK
+      </button>
+      <button class="btn btn-default" ng-click="anytype.close()" title="Cancel import"><i class="fa fa-ban red-icon"></i> Cancel</button>
+    </div>
+  </div>
+</div>

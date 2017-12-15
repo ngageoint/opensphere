@@ -1,0 +1,62 @@
+// Onboarding styles
+
+$ob-bg-color-primary: $color-dark-gray;
+$ob-bg-color-secondary: $color-medium-gray;
+$ob-border-top-bottom-color: $color-dark-gray;
+$ob-border-left-right-color: $color-medium-gray;
+
+.onboarding-popover {
+  background-color: $ob-bg-color-secondary;
+
+  .close {
+    @include text-shadow(0 1px 0 $color-black);
+    @include opacity(.6);
+    color: $overrides-text-color;
+
+    &:hover {
+      @include opacity(.8);
+    }
+  }
+
+  &.onboarding-top .onboarding-arrow {
+    border-top-color: $ob-border-top-bottom-color;
+
+    &::after {
+      border-top-color: $ob-border-top-bottom-color;
+    }
+  }
+
+  &.onboarding-bottom .onboarding-arrow {
+    border-bottom-color: $ob-border-top-bottom-color;
+
+    &::after {
+      border-bottom-color: $ob-border-top-bottom-color;
+    }
+  }
+
+  &.onboarding-left .onboarding-arrow {
+    border-left-color: $ob-border-left-right-color;
+
+    &::after {
+      border-left-color: $ob-border-left-right-color;
+    }
+  }
+
+  &.onboarding-right .onboarding-arrow {
+    border-right-color: $ob-border-left-right-color;
+
+    &::after {
+      border-right-color: $ob-border-left-right-color;
+    }
+  }
+
+}
+
+.onboarding-popover-header {
+  background-color: $ob-bg-color-primary;
+  border-bottom: 1px solid #222;
+}
+
+.onboarding-popover-footer {
+  background-color: $ob-bg-color-primary;
+}

@@ -1,0 +1,60 @@
+<div class="wizard-step csvconfig">
+  <div class="step-content">
+    <div class="preview-sibling">
+      <div class="panel">
+        <form name="csvForm" class="form-horizontal form-compact">
+          <div class="row-fluid">
+            <div class="control-group span12">
+              <div class="row-fluid">
+                <div class="span6">
+                  <label class="control-label">Header Row:</label>
+                  <div class="controls">
+                    <spinner min="1" max="config.linePreview.length - 1" step="1" value="config.headerRow"
+                        name="headerRow" live="false" x-disabled="!config.useHeader"></spinner>
+                    <input type="checkbox" ng-model="config.useHeader" ng-change="configStep.updatePreview()">
+                  </div>
+                </div>
+                <div class="span6" title="Specify the character used to separate data fields in the file.">
+                  <label class="control-label">Delimiter:</label>
+                  <div class="controls">
+                    <select ng-model="config.delimiter" ng-change="configStep.updatePreview()" class="input-medium"
+                        ng-options="value as key for (key, value) in configStep.delimiters"></select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row-fluid">
+            <div class="control-group span12">
+              <div class="row-fluid">
+                <div class="span6">
+                  <label class="control-label">Data Row:</label>
+                  <div class="controls">
+                    <spinner min="config.useHeader ? (config.headerRow + 1) : 1" max="config.linePreview.length" step="1"
+                        value="config.dataRow" name="dataRow" live="false"></spinner>
+                  </div>
+                </div>
+                <div class="span6" title="Specify the comment character for the file. Lines beginning with this character will be ignored.">
+                  <label class="control-label">Comment:</label>
+                  <div class="controls">
+                    <select ng-model="config.commentChar" ng-change="configStep.updatePreview()" class="input-medium"
+                        ng-options="value as key for (key, value) in configStep.commentChars"></select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="line-preview">
+      <slickgrid
+          x-data="configStep.linePreviewRows"
+          columns="configStep.linePreviewColumns"
+          options="configStep.linePreviewOptions"
+          selected="previewSelection">
+      </slickgrid>
+    </div>
+    <wizardpreview config="config" resize-with=".window"></wizardpreview>
+  </div>
+</div>

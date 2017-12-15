@@ -1,0 +1,178 @@
+<div id="time-help" class="window-content-wrapper">
+  <div class="window-content">
+    <h5>Year, Month, and Day Tokens</h5>
+    <table class="table table-bordered table-striped table-condensed">
+      <thead>
+        <tr>
+          <th>Input</th>
+          <th>Example</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>YYYY</code></td>
+          <td><code>2014</code></td>
+          <td>4 digit year</td>
+        </tr>
+        <tr>
+          <td><code>YY</code></td>
+          <td><code>14</code></td>
+          <td>2 digit year</td>
+        </tr>
+        <tr>
+          <td><code>Q</code></td>
+          <td><code>1..4</code></td>
+          <td>Quarter of year. Sets month to first month in quarter.</td>
+        </tr>
+        <tr>
+          <td><code>M MM</code></td>
+          <td><code>1..12</code></td>
+          <td>Month number</td>
+        </tr>
+        <tr>
+          <td><code>MMM MMMM</code></td>
+          <td><code>January..Dec</code></td>
+          <td>Month name in locale.</td>
+        </tr>
+        <tr>
+          <td><code>D DD</code></td>
+          <td><code>1..31</code></td>
+          <td>Day of month</td>
+        </tr>
+        <tr>
+          <td><code>Do</code></td>
+          <td><code>1st..31st</code></td>
+          <td>Day of month with ordinal</td>
+        </tr>
+        <tr>
+          <td><code>DDD DDDD</code></td>
+          <td><code>1..365</code></td>
+          <td>Day of year</td>
+        </tr>
+        <tr>
+          <td><code>X</code></td>
+          <td><code>1410715640.579</code></td>
+          <td>Unix timestamp</td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <h5>Week year, Week, and Weekday tokens</h5>
+    <table class="table table-bordered table-striped table-condensed">
+      <thead>
+        <tr>
+          <th>Input</th>
+          <th>Example</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>gggg</code></td>
+          <td><code>2014</code></td>
+          <td>Locale 4 digit week year</td>
+        </tr>
+        <tr>
+          <td><code>gg</code></td>
+          <td><code>14</code></td>
+          <td>Locale 2 digit week year</td>
+        </tr>
+        <tr>
+          <td><code>w ww</code></td>
+          <td><code>1..53</code></td>
+          <td>Locale week of year</td>
+        </tr>
+        <tr>
+          <td><code>e</code></td>
+          <td><code>1..7</code></td>
+          <td>Locale day of week</td>
+        </tr>
+        <tr>
+          <td><code>GGGG</code></td>
+          <td><code>2014</code></td>
+          <td>ISO 4 digit week year</td>
+        </tr>
+        <tr>
+          <td><code>GG</code></td>
+          <td><code>14</code></td>
+          <td>ISO 2 digit week year</td>
+        </tr>
+        <tr>
+          <td><code>W WW</code></td>
+          <td><code>1..53</code></td>
+          <td>ISO week of year</td>
+        </tr>
+        <tr>
+          <td><code>E</code></td>
+          <td><code>1..7</code></td>
+          <td>ISO day of week</td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <h5>Hour, Minute, Second, Millisecond, and Offset Tokens</h5>
+    <table class="table table-bordered table-striped table-condensed">
+      <thead>
+        <tr>
+          <th>Input</th>
+          <th>Example</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>H HH</code></td>
+          <td><code>0..23</code></td>
+          <td>24 hour time</td>
+        </tr>
+        <tr>
+          <td><code>h hh</code></td>
+          <td><code>1..12</code></td>
+          <td>12 hour time used with <code>a A</code>.
+          </td>
+        </tr>
+        <tr>
+          <td><code>a A</code></td>
+          <td><code>am pm</code></td>
+          <td>Post or ante meridiem</td>
+        </tr>
+        <tr>
+          <td><code>m mm</code></td>
+          <td><code>0..59</code></td>
+          <td>Minutes</td>
+        </tr>
+        <tr>
+          <td><code>s ss</code></td>
+          <td><code>0..59</code></td>
+          <td>Seconds</td>
+        </tr>
+        <tr>
+          <td><code>S</code></td>
+          <td><code>0..9</code></td>
+          <td>Tenths of a second</td>
+        </tr>
+        <tr>
+          <td><code>SS</code></td>
+          <td><code>0..99</code></td>
+          <td>Hundreds of a second</td>
+        </tr>
+        <tr>
+          <td><code>SSS</code></td>
+          <td><code>0..999</code></td>
+          <td>Thousandths of a second</td>
+        </tr>
+        <tr>
+          <td><code>Z ZZ</code></td>
+          <td><code>+12:00</code></td>
+          <td>Offset from UTC as <code>+-HH:mm</code>, <code>+-HHmm</code>, or <code>Z</code></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="window-footer">
+    <div class="pull-right">
+      <button class="btn btn-default" ng-click="th.close()"><i class="btn-icon fa fa-check"></i> Close</button>
+    </div>
+  </div>
+</div>

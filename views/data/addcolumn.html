@@ -1,0 +1,20 @@
+<div class="window-content-wrapper">
+  <div class="window-content">
+    <form class="form-horizontal form-compact" name="addColumnForm" ng-submit="addcolumn.finish()" novalidate>
+      <addcolumnform name="addcolumn.name" value="addcolumn.value" validators="addcolumn.validators"></addcolumnform>
+      <input type="submit" class="hidden"/>
+    </form>
+  </div>
+  <div class="window-footer">
+    <div class="pull-right">
+      <button class="btn btn-default" ng-click="addcolumn.finish()" ng-disabled="addColumnForm.$invalid">
+        <i class="btn-icon fa fa-check color-add"></i>
+        OK
+      </button>
+      <button class="btn btn-default" ng-click="addcolumn.cancel()">
+        <i class="btn-icon fa fa-ban red-icon"></i>
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>

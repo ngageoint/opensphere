@@ -1,0 +1,43 @@
+.copy-filter__picker {
+  @include box-shadow(none);
+  @include box-sizing(border-box);
+  background-color: #777;
+  border: 1px solid #222;
+  border-radius: 3px;
+  margin-bottom: 5px;
+  padding: 4px 5px;
+
+  .control-group {
+    margin: 0;
+  }
+}
+
+.copy-filter__checkbox-section {
+  height: 192px;
+}
+
+.copy-filter__mapping-section {
+  margin-top: 5px;
+  max-height: 50%;
+}
+
+.copy-filter__column-name {
+  font-weight: bold;
+  max-width: 160px;
+  width: 54%;
+}
+
+.copy-filter__column {
+  max-width: 160px;
+}
+
+.copy-filter__table {
+  tr:nth-child(odd) {
+    background: #666;
+  }
+}
+
+.copy-filter__picker-pane {
+  height: 405px;
+  overflow: auto;
+}

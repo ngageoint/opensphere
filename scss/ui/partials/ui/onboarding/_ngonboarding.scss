@@ -1,0 +1,211 @@
+.onboarding-popover {
+  position: absolute;
+  z-index: 100001;
+  text-align: left;
+  white-space: normal;
+  background-color: #ffffff;
+  border-radius: 4px;
+  -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  background-clip: padding-box;
+  max-width: 800px;
+  max-height: 800px;
+  min-width: 100px;
+  min-height: 50px;
+}
+
+.onboarding-popover.onboarding-top {
+  margin-top: -10px;
+}
+
+.onboarding-popover.onboarding-right {
+  margin-left: 10px;
+}
+
+.onboarding-popover.onboarding-bottom {
+  margin-top: 10px;
+}
+
+.onboarding-popover.onboarding-left {
+  margin-left: -10px;
+}
+
+.onboarding-popover.onboarding-centered {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+}
+
+.onboarding-arrow,
+.onboarding-arrow:after {
+  position: absolute;
+  display: block;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+}
+
+.onboarding-arrow {
+  border-width: 11px;
+}
+
+.onboarding-arrow:after {
+  border-width: 10px;
+  content: "";
+}
+
+.onboarding-popover.onboarding-bottom .onboarding-arrow {
+  top: -11px;
+  left: 50%;
+  margin-left: -11px;
+  border-bottom-color: #cccccc;
+  border-top-width: 0;
+}
+
+.onboarding-popover.onboarding-bottom .onboarding-arrow:after {
+  content: " ";
+  top: 1px;
+  margin-left: -10px;
+  border-top-width: 0;
+  border-bottom-color: #ffffff;
+}
+
+.onboarding-popover.onboarding-top .onboarding-arrow {
+  bottom: -11px;
+  left: 50%;
+  margin-left: -11px;
+  border-top-color: #cccccc;
+  border-bottom-width: 0;
+}
+
+.onboarding-popover.onboarding-top .onboarding-arrow:after {
+  content: " ";
+  bottom: 1px;
+  margin-left: -10px;
+  border-bottom-width: 0;
+  border-top-color: #ffffff;
+}
+
+.onboarding-popover.onboarding-left .onboarding-arrow {
+  top: 50%;
+  right: -11px;
+  margin-top: -11px;
+  border-left-color: #cccccc;
+  border-right-width: 0;
+}
+
+.onboarding-popover.onboarding-left .onboarding-arrow:after {
+  content: " ";
+  right: 1px;
+  border-right-width: 0;
+  border-left-color: #ffffff;
+  bottom: -10px;
+}
+
+.onboarding-popover.onboarding-right .onboarding-arrow {
+  top: 50%;
+  left: -11px;
+  margin-top: -11px;
+  border-right-color: #cccccc;
+  border-left-width: 0;
+}
+
+.onboarding-popover.onboarding-right .onboarding-arrow:after {
+  content: " ";
+  left: 1px;
+  bottom: -10px;
+  border-left-width: 0;
+  border-right-color: #ffffff;
+}
+
+.onboarding-popover-title {
+  position: relative;
+  padding: 8px 14px;
+  margin: 0;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 18px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #ebebeb;
+  border-radius: 5px 5px 0 0;
+}
+
+.onboarding-popover-content {
+  padding: 7px 14px;
+}
+
+.onboarding-popover-content p {
+  margin: 0px;
+}
+
+.onboarding-popover-header {
+	padding: 5px 10px;
+  border-bottom: 1px solid #eee;
+  border-radius: 4px 4px 0px 0px;
+}
+
+.onboarding-popover-header.no-title {
+	padding: 5px 5px 0 0;
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.onboarding-popover-footer {
+	text-align: center;
+  padding: 5px 10px;
+  border-radius: 0px 0px 4px 4px;
+  display: block;
+  background-color: #f4f4f4;
+}
+
+.onboarding-button-container {
+	float: right;
+  margin-top: 8px;
+}
+
+.onboarding-button-container .btn + .btn {
+	margin-bottom: 0;
+	margin-left: 5px;
+}
+
+.onboarding-overlay {
+  position: absolute;
+  z-index: 99999;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #000000;
+}
+
+.onboarding-focus {
+  z-index: 100000 !important;
+  pointer-events: none;
+  -moz-transition:none !important;
+  -webkit-transition:none !important;
+  transition:none !important;
+}
+
+.onboarding-step-info {
+	float: left;
+  font-size: 0.8em;
+  font-style: italic;
+}
+
+.bits-onboarding-button-container {
+  padding-top: 8px;
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+}
+
+.bits-onboarding-step-info {
+  font-size: 0.8em;
+  line-height: 0.8em;
+  font-style: italic;
+}

@@ -1,0 +1,24 @@
+<div class="file-import window-content-wrapper">
+  <div class="window-content">
+    <form name="redirectForm" class="form-compact">
+      <div class="control-group" data-ng-class="{'error':redirectForm.title.$invalid && redirectForm.title.$dirty}">
+        <span ng-bind-html="redirectMessage"/>
+      </div>
+      <div class="pull-right">
+        <img ng-src="{{redirectAppImage}}" style="height:100px;"/>
+      </div>
+    </form>
+  </div>
+  <div class="window-footer">
+    <div class="pull-right">
+     <button ng-show="redirectAllowed" class="btn btn-default" ng-click="redirectCtrl.accept()" title="Open {{redirectAppName}}">
+       <i class="fa fa-check lt-blue-icon"></i>
+       {{redirectButtonLabel}}
+     </button>
+     <button class="btn btn-default" ng-click="redirectCtrl.cancel()" title="{{redirectCloseButtonTitle}}">
+      <i class="{{redirectStyle}}"></i>
+      {{redirectCloseButtonLabel}}
+     </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,24 @@
+<div class="window-content-wrapper">
+  <div class="window-content area-window">
+    <form name="areaForm" class="form-horizontal form-compact form-popover-help" ng-submit="ctrl.accept()">
+      <basicinfo config="config" columns="columns" help="ctrl.help"></basicinfo>
+
+      <div class="control-group" title="{{ctrl.help.replace}}">
+        <label class="control-label">Replace Areas:</label>
+        <div class="controls">
+          <input type="checkbox" class="no-margin" name="replace" ng-model="ctrl.replace"/>
+          <popover class="pull-right" ng-if="ctrl.help.replace" x-title="'Replace Areas'" x-content="ctrl.help.replace"
+              x-pos="'right'"></popover>
+        </div>
+      </div>
+
+      <input type="submit" style="display:none;">
+    </form>
+  </div>
+  <div class="window-footer">
+    <div class="pull-right">
+      <button class="btn btn-default" ng-click="ctrl.accept()" ng-disabled="areaForm.$invalid"><i class="btn-icon fa fa-check color-add"></i> Save</button>
+      <button class="btn btn-default" ng-click="ctrl.close()"><i class="btn-icon fa fa-ban red-icon"></i> Cancel</button>
+    </div>
+  </div>
+</div>

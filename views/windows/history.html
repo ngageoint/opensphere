@@ -1,0 +1,31 @@
+<div class="window-content-wrapper">
+  <div class="window-content">
+    <div class="scroll-pane-wrapper panel" style="padding:0px;">
+      <div id="historyScroll" class="scroll-pane">
+        <span ng-hide="historyView.commandHistory.length">There is no history to view.</span>
+        <ol ng-show="historyView.commandHistory.length" class="table nav nav-list">
+          <li ng-repeat="command in historyView.commandHistory" ng-class="{active:$index == historyView.current}">
+            <a class="history-row" ng-click="historyView.setIndex($index)" href=''>
+              <i class="fa" ng-class="{'fa-spin fa-cog': historyView.processingIndex == $index}"></i> 
+              <span ng-class="($index > historyView.current) && 'history-gray'"><span>{{$index + 1}}.</span> {{command.title}}
+                <i ng-if="command.state == 'error'" class="fa fa-lg color-red fa-exclamation-circle" title="{{command.details}}"></i> 
+              </span>
+            </a>
+          </li>
+          <li ng-if="historyView.newCommand">
+            <i class="fa fa-spin fa-cog"></i>
+            <span class="history-gray"><span>{{historyView.current + 2}}.</span> {{historyView.newCommand.title}}</span>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </div>
+  <div class="window-footer">
+    <div class="pull-right">
+      <button title="Clear all history" type="button" class="btn btn-default" ng-click="historyView.clearHistory()" ng-disabled="historyView.commandHistory.length <= 0">
+        <i class="fa fa-times"></i>
+        Clear History
+      </button>
+    </div>
+  </div>
+</div>

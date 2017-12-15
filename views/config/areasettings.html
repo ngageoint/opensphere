@@ -1,0 +1,25 @@
+<div class="user-setting">
+  <h5 class="no-margin">Include Options</h5>
+  <table>
+    <tr title="Sets the color of include areas">
+      <td class="control-label">Color:</td>
+      <td><colorpicker name="wpscolor" color="area.inColor"></colorpicker></td>
+    </tr>
+    <tr title="Sets the border width of include areas">
+      <td class="control-label">Width:</td>
+      <td><slider name="inwidth" min="1" max="20" step="1" value="area.inWidth" style="width:200px"></slider></td>
+    </tr>
+  </table>
+  <h5 class="no-margin">Exclude Options</h5>
+  <table>
+    <tr title="Sets the color of exclude areas">
+      <td class="control-label">Color:</td>
+      <td><colorpicker name="wpscolor" color="area.exColor"></colorpicker></td>
+    </tr>
+    <tr title="Sets the border width of exclude areas">
+      <td class="control-label">Width:</td>
+      <td><slider name="exwidth" min="1" max="20" step="1" value="area.exWidth" style="width:200px"></slider></td>
+    </tr>
+  </table>
+  <button class="btn btn-default btn-reset" style="margin-top:20px;" ng-click="area.reset()">Reset All</button>
+</div>

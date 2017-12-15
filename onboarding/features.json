@@ -1,0 +1,38 @@
+{
+  "title": "Features",
+  "config": {
+    "width": 450
+  },
+  "steps": [
+    {
+      "title": "Boom!",
+      "description": [
+        "Now that you have some features on the map, let's walk through some of the analysis options available at your ",
+        "fingertips."
+      ],
+      "position": "centered"
+    },
+    {
+      "title": "Timeline & Animation",
+      "description": [
+        "With the timeline, you can animate features to discover temporal patterns in loaded data."
+      ],
+      "attachTo": "#timelineButton",
+      "position": "bottom",
+      "horizontalAlign": "center",
+      "context": "navTop"
+    },
+    {
+      "title": "Layer Controls",
+      "description": [
+        "If you'd like to adjust the shape, size, or color of features, select the layer in the Layers window and ",
+        "use the controls at the bottom of the window. You can adjust the appearance of tile layers in the same ",
+        "fashion."
+      ],
+      "attachTo": ".window[label=Layers]",
+      "position": "right",
+      "verticalAlign": "center",
+      "context": "layers"
+    }
+  ]
+}

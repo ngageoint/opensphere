@@ -1,0 +1,164 @@
+<?xml version="1.0"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>KML Test</name>
+    <visibility>1</visibility>
+    <open>1</open>
+    <Folder>
+      <name>Basic Folder</name>
+      <Placemark id="basic-feature">
+        <name>basic-feature</name>
+        <TimeStamp>
+          <when>2010-02-01T18:03:30Z</when>
+        </TimeStamp>
+        <ExtendedData>
+          <Data name="testKey1">
+            <value>testVal1</value>
+          </Data>
+          <Data name="testKey2">
+            <value>testVal2</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>12.345,67.8910</coordinates>
+        </Point>
+        <description><![CDATA[<h5>Test Feature Description</h5><p>I'm a description!</p>]]></description>
+      </Placemark>
+    </Folder>
+    <Folder>
+      <name>Open Test</name>
+      <Folder>
+        <name>Default</name>
+        <Placemark id="open-default">
+          <name>open-default</name>
+          <TimeStamp>
+            <when>2010-02-01T10:00:00Z</when>
+          </TimeStamp>
+          <Point>
+            <coordinates>20,20</coordinates>
+          </Point>
+          <description><![CDATA[<h5>Test Feature Description</h5><p>I'm a description!</p>]]></description>
+        </Placemark>
+      </Folder>
+      <Folder>
+        <name>Open</name>
+        <open>1</open>
+        <Placemark id="open-true">
+          <name>open-true</name>
+          <TimeStamp>
+            <when>2010-02-01T10:10:00Z</when>
+          </TimeStamp>
+          <Point>
+            <coordinates>21,21</coordinates>
+          </Point>
+          <description><![CDATA[<h5>Test Feature Description</h5><p>I'm a description!</p>]]></description>
+        </Placemark>
+      </Folder>
+      <Folder>
+        <name>Closed</name>
+        <open>0</open>
+        <Placemark id="open-false">
+          <name>open-false</name>
+          <TimeStamp>
+            <when>2010-02-01T10:20:00Z</when>
+          </TimeStamp>
+          <Point>
+            <coordinates>22,22</coordinates>
+          </Point>
+          <description><![CDATA[<h5>Test Feature Description</h5><p>I'm a description!</p>]]></description>
+        </Placemark>
+      </Folder>
+    </Folder>
+    <Folder>
+      <name>Visibility Test</name>
+      <Folder>
+        <name>Default Folder</name>
+        <Placemark id="vis-default">
+          <name>default (visible)</name>
+          <TimeStamp>
+            <when>2010-02-01T18:00:00Z</when>
+          </TimeStamp>
+          <Point>
+            <coordinates>10,10</coordinates>
+          </Point>
+          <description><![CDATA[<h5>Test Feature Description</h5><p>I'm a description!</p>]]></description>
+        </Placemark>
+        <Placemark id="vis-true">
+          <name>visible</name>
+          <visibility>1</visibility>
+          <TimeStamp>
+            <when>2010-02-01T18:10:00Z</when>
+          </TimeStamp>
+          <Point>
+            <coordinates>11,11</coordinates>
+          </Point>
+          <description><![CDATA[<h5>Test Feature Description</h5><p>I'm a description!</p>]]></description>
+        </Placemark>
+        <Placemark id="vis-false">
+          <name>hidden</name>
+          <visibility>0</visibility>
+          <TimeStamp>
+            <when>2010-02-01T18:20:00Z</when>
+          </TimeStamp>
+          <Point>
+            <coordinates>12,12</coordinates>
+          </Point>
+          <description><![CDATA[<h5>Test Feature Description</h5><p>I'm a description!</p>]]></description>
+        </Placemark>
+      </Folder>
+      <Folder>
+        <name>Visible Folder/Hidden Placemark</name>
+        <visibility>1</visibility>
+        <Placemark id="vfhp-p1">
+          <name>hidden</name>
+          <visibility>0</visibility>
+          <TimeStamp>
+            <when>2010-02-01T18:20:00Z</when>
+          </TimeStamp>
+          <Point>
+            <coordinates>30,30</coordinates>
+          </Point>
+          <description><![CDATA[<h5>Test Feature Description</h5><p>I'm a description!</p>]]></description>
+        </Placemark>
+      </Folder>
+      <Folder>
+        <name>Hidden Folder/Visible Placemark</name>
+        <visibility>0</visibility>
+        <Placemark id="hfvp-p1">
+          <name>visible</name>
+          <visibility>1</visibility>
+          <TimeStamp>
+            <when>2010-02-01T18:20:00Z</when>
+          </TimeStamp>
+          <Point>
+            <coordinates>31,31</coordinates>
+          </Point>
+          <description><![CDATA[<h5>Test Feature Description</h5><p>I'm a description!</p>]]></description>
+        </Placemark>
+      </Folder>
+    </Folder>
+    <Folder>
+      <name>IFrame Test</name>
+      <Placemark id="1337h4x">
+        <name>Ermahgerd</name>
+        <TimeStamp>
+          <when>2010-02-01T18:05:30Z</when>
+        </TimeStamp>
+        <Point>
+          <coordinates>13,37</coordinates>
+        </Point>
+        <description>
+          <![CDATA[<iframe height="0" width="0" style="border:none;" src="https://example.com/iframe_test.html"></iframe>]]>
+        </description>
+      </Placemark>
+    </Folder>
+  </Document>
+  <Document>
+    <name>KML Test 2</name>
+    <visibility>1</visibility>
+    <open>1</open>
+    <Folder>
+      <name>Basic Folder 2</name>
+    </Folder>
+  </Document>
+</kml>

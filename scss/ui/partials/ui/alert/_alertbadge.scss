@@ -1,0 +1,65 @@
+.alert-badge-error {
+  @include opacity(.75);
+  background-color: #b94a48;
+  bottom: 15px;
+  padding: 2px 5px;
+  position: relative;
+  right: 15px;
+}
+
+.alert-badge-warning {
+  @include opacity(.85);
+  background-color: #f89406;
+  bottom: 15px;
+  padding: 2px 5px;
+  position: relative;
+  right: 15px;
+}
+
+.alert-badge-info {
+  @include opacity(.75);
+  background-color: $color-blue;
+  bottom: 15px;
+  padding: 2px 5px;
+  position: relative;
+  right: 15px;
+}
+
+.alert-badge {
+  @include opacity(.75);
+  bottom: 15px;
+  padding: 2px 5px;
+  position: relative;
+  right: 15px;
+}
+
+.badge-button {
+  position: relative;
+
+  .fa-badge {
+    bottom: -8px;
+    font-size: 15px !important;
+    pointer-events: none;
+    position: absolute;
+    right: -8px;
+    z-index: 50;
+  }
+}
+
+@include keyframes(badge-glow) {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: .5;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.badge-glow {
+  @include animation(badge-glow 2s infinite steps(15));
+}

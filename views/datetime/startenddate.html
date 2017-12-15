@@ -1,0 +1,23 @@
+<div ng-form="dateForm">
+  <div class="control-group" data-ng-class="{'error': startEndCtrl.checkStartForError()}">
+    <label class="control-label">{{startEndCtrl.startLabel}}:</label>
+    <div class="controls">
+      <input type="hidden" name="startDate" data-ng-required="startEndCtrl.startRequired" data-ng-model="startEndCtrl.start" />
+      <div data-date-time class="date-time" data-value="startEndCtrl.start" data-disabled="disabled" is-required="startEndCtrl.startRequired" data-invalid="startEndCtrl.startInvalid"></div>
+    </div>
+  </div>
+
+  <div class="control-group" data-ng-class="{'error': startEndCtrl.checkEndForError()}">
+    <label class="control-label">{{startEndCtrl.endLabel}}:</label>
+    <div class="controls">
+      <input type="hidden" name="endDate" data-ng-required="startEndCtrl.endRequired || startEndCtrl.endInvalid" data-ng-model="startEndCtrl.end" />
+      <div data-date-time class="date-time" data-value="startEndCtrl.end" data-disabled="disabled" is-required="startEndCtrl.endRequired" data-invalid="startEndCtrl.endInvalid"></div>
+    </div>
+  </div>
+
+  <div class="control-group error" data-ng-show="!startEndCtrl.orderValid">
+    <!-- Just require that its valid -->
+    <input type="hidden" data-ng-required="!startEndCtrl.orderValid" data-ng-model="startEndCtrl.orderValid"/>
+    <span class="controls help-inline">{{startEndCtrl.startLabel}} is after {{startEndCtrl.endLabel}}!</span>
+  </div>
+</div>

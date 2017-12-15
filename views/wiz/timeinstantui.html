@@ -1,0 +1,57 @@
+<div class="time-instant wide">
+  <div class="control-group">
+    <label class="control-label">{{label}} Type:</label>
+    <div class="controls">
+      <select ng-model="model.dateType" ng-options="type.id as type.label for type in tiUI.types" ng-change="tiUI.onDateType()"></select>
+    </div>
+  </div>
+  <div class="span12 control-group">
+    <div class="span4">
+      <label class="control-label">Date:</label>
+      <div class="controls">
+        <select ng-model="model.dateColumn" ng-change="tiUI.onDateColumn()"
+            ng-options="column.name as column.name for column in config.columns">
+        </select>
+      </div>
+    </div>
+    <div class="span4">
+      <label class="control-label">Format:</label>
+      <div class="controls">
+        <select ng-model="tiUI.dateFormat" ng-change="tiUI.onDateFormat()">
+          <option ng-repeat="format in (model.dateType == 'combined' ? tiUI.dtFormats : tiUI.dFormats)">{{format}}</option>
+          <option value="Custom">Custom</option>
+        </select>
+      </div>
+    </div>
+    <div class="span4 control-no-label" ng-if="tiUI.dateFormat == 'Custom'">
+      <input type="text" ng-model="model.dateFormat" ng-change="tiUI.change()">
+    </div>
+  </div>
+  <div ng-if="model.dateType == 'separate'">
+    <div class="span12 control-group">
+      <div class="span4">
+        <label class="control-label">Time:</label>
+        <div class="controls">
+          <select ng-model="model.timeColumn" ng-change="tiUI.onTimeColumn()"
+              ng-options="column.name as column.name for column in config.columns">
+          </select>
+        </div>
+      </div>
+      <div class="span4">
+        <label class="control-label">Format:</label>
+        <div class="controls">
+          <select ng-model="tiUI.timeFormat" ng-change="tiUI.onTimeFormat()">
+            <option ng-repeat="format in tiUI.tFormats">{{format}}</option>
+            <option value="Custom">Custom</option>
+          </select>
+        </div>
+      </div>
+      <div class="span4" ng-if="tiUI.timeFormat == 'Custom'">
+        <input type="text" ng-model="model.timeFormat" ng-change="tiUI.change()">
+      </div>
+    </div>
+  </div>
+  <div class="span12 nowrap">Sample: {{tiUI.sample}}</div>
+  <div class="span12 nowrap font-success" ng-if="tiUI.result != null">Result: {{tiUI.result}}</div>
+  <div class="span12 nowrap font-warning" ng-if="tiUI.result == null">Result: Could not parse time with the selected format!</div>
+</div>

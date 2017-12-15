@@ -1,0 +1,87 @@
+///////////////////////////////////////
+//
+// Definitions for opensphere
+//
+////////////////////////////////////////
+
+// basic colors (handy to reference when doing things like darken, color-contrast, etc)
+$color-bg: #666;
+$color-font: #fff;
+$color-font-alt: #a9a9a9;
+
+//scheme colors
+$color-scheme-primary: #357cc0;
+$color-scheme-primary-dark: #2f5aa9;
+$color-scheme-primary-dark-alt: #426a90;
+$color-scheme-primary-light: #4792cf;
+$color-scheme-primary-light-alt: #87b4e0;
+$color-scheme-compliment1: #74b874;
+$color-scheme-compliment1-dark: #648a64;
+$color-scheme-compliment1-dark-alt: #267726;
+$color-scheme-compliment1-light: #afdbaf;
+$color-scheme-compliment1-light-alt: #9edb9e;
+$color-scheme-compliment2: #e69191;
+$color-scheme-compliment2-dark: #ac7c7c;
+$color-scheme-compliment2-dark-alt: #953f2f;
+$color-scheme-compliment2-light: #f2c1c1;
+$color-scheme-compliment2-light-alt: #f2afaf;
+$color-scheme-compliment3: #e6c891;
+$color-scheme-compliment3-dark: #ac9c7c;
+$color-scheme-compliment3-dark-alt: #95722f;
+$color-scheme-compliment3-light: #f2e1c1;
+$color-scheme-compliment3-light-alt: #f2dbaf;
+
+//primary colors
+$color-white: #fff;
+$color-gray: #666;
+$color-very-light-gray: #bbb;
+$color-light-gray: #777;
+$color-medium-gray: #555;
+$color-dark-gray-1: #444;
+$color-dark-gray: #333;
+
+$color-green: #0f0;
+$color-yellow: #ff0;
+$color-black: #0a0a0a;
+$color-light-green: #3cb371;
+$color-blue: #08c;
+$color-dark-blue: #06a;
+$color-red: #b94a48;
+$color-orange: #f89406;
+$color-info: #3a87ad;
+$color-goldenrod: #daa520;
+$color-bright-red: #f00;
+
+.color-light-gray {
+  color: $color-very-light-gray !important;
+}
+
+// Icon Colors
+$color-red-icon: #d00;
+$color-orange-icon: #f92;
+$color-yellow-icon: #ee0;
+$color-gold-icon: #b9ad5c;
+$color-green-icon: #0d0;
+$color-lt-blue-icon: #0cf;
+$color-blue-icon: #0076cc;
+
+$color-alert-error:   #b94a48;
+$color-alert-warning: #c09853;
+$color-alert-info:    #777;
+$color-alert-success: #468847;
+
+// Drag and drop
+$color-dd-dragover: #f5fff5;
+$color-dd-dragover-border: #666;
+
+$color-success: $color-green;
+$color-warning: #f90;
+
+$color-font-error:   $color-bright-red;
+$color-font-warning: $color-warning;
+$color-font-info:    $color-very-light-gray;
+$color-font-success: $color-green;
+$color-primary-font: $color-white;
+
+// hover color styles
+$color-hover-background: #444;

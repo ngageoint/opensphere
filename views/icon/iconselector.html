@@ -1,0 +1,26 @@
+<div class="window-content-wrapper">
+  <div class="window-content">
+    <div class="feature-tabs">
+      <ul class="nav nav-tabs" ng-show="showtabs">
+        <li ng-repeat="tab in tabs" ng-class="{active: activeTab == tab.name, first: $first}"><a ng-click="selector.setTab(tab.name)">{{tab.name}}</a></li>
+      </ul>
+    </div>
+    <div class="tab-content selectable" autoheight siblings=".feature-tabs,.window-footer" list list-id="nav-icon-selectors"></div>
+  </div>
+  <div class="window-footer">
+    <div class="iconchosen" ng-if="selector.isValid()">
+      <img ng-src="{{selector.getPath(selected.path)}}"/>
+    </div>
+    <div class="pull-right">
+      <button class="btn btn-default" ng-click="selector.okay()" ng-disabled="!selector.isValid()"
+          title="Confirm the icon selection">
+        <i class="fa fa-check lt-blue-icon"></i>
+        OK
+      </button>
+      <button class="btn btn-default" ng-click="selector.cancel()" title="Cancel">
+        <i class="fa fa-ban red-icon"></i>
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>

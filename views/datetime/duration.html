@@ -1,0 +1,78 @@
+<div class="duration-picker" ng-form="durationForm">
+  <div class="inline-block" ng-if="useWeeks">
+    <spinner class="weeks-spinner"
+        min="0"
+        step="1"
+        value="durCtrl.weeks"
+        name="weekSpinner"
+        live="true"
+        disabled="disabled">
+    </spinner>
+    <div style="text-align:center;" ng-class="{'disabled': disabled}">
+      weeks
+    </div>
+  </div>
+
+  <div class="inline-block" ng-if="useDays">
+    <spinner class="days-spinner"
+        min="0"
+        step="1"
+        value="durCtrl.days"
+        name="daySpinner"
+        live="true"
+        disabled="disabled">
+    </spinner>
+    <div style="text-align:center;" ng-class="{'disabled': disabled}">
+      days
+    </div>
+  </div>
+
+  <div class="inline-block" ng-if="useHours">
+    <spinner class="hours-spinner"
+        min="0"
+        step="1"
+        value="durCtrl.hours"
+        name="hourSpinner"
+        live="true"
+        disabled="disabled">
+    </spinner>
+    <div style="text-align:center;" ng-class="{'disabled': disabled}">
+      hours
+    </div>
+  </div>
+
+  <div class="inline-block" ng-if="useMinutes">
+    <spinner class="minutes-spinner"
+        min="0"
+        step="1"
+        value="durCtrl.minutes"
+        name="minuteSpinner"
+        live="true"
+        disabled="disabled">
+    </spinner>
+    <div style="text-align:center;" ng-class="{'disabled': disabled}">
+      minutes
+    </div>
+  </div>
+
+  <div class="inline-block" ng-if="useSeconds">
+    <spinner class="seconds-spinner"
+        min="0"
+        step="1"
+        value="durCtrl.seconds"
+        name="secondSpinner"
+        live="true"
+        disabled="disabled">
+    </spinner>
+    <div style="text-align:center;" ng-class="{'disabled': disabled}">
+      seconds
+    </div>
+  </div>
+  <input type="hidden" name="duration" ng-model="durCtrl.valid" required/>
+  <div class="duration-help error" ng-if="durCtrl.errors.minDuration">
+    The duration is too short!
+  </div>
+  <div class="duration-help error" ng-if="durCtrl.errors.maxDuration">
+    The duration is too long!
+  </div>
+</div>

@@ -1,0 +1,8 @@
+<form class="wheel-date" ng-submit="wheelDate.updateScopeDate()">
+  <input class="date-picker" type="text" placeholder="date"
+      ui-date="wheelDate.dateOptions"
+      ng-disabled="disable"
+      ng-model="wheelDate.date"
+      ng-change="wheelDate.updateScopeDate()"
+      ng-required="required">
+</form>

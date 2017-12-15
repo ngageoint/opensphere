@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<title>Cross-tab communication example</title>
+<script src="xt.min.js"></script>
+<script>
+  // implement a handler
+  window.Handler = function() {
+  };
+
+  window.Handler.prototype.getTypes = function() {
+    return ['alert'];
+  };
+
+  window.Handler.prototype.process = function(data, type, sender, time) {
+    var el = document.getElementById('results');
+    el.innerHTML += '<div>msg: "' + data + '" recieved from ' + sender + '</div>';
+  };
+
+  // set up a peer
+  var peer = os.xt.Peer.getInstance();
+  peer.addHandler(new Handler());
+  peer.init();
+
+  function doit() {
+    peer.send('alert', 'Behold!');
+  }
+</script>
+Open me in more than one tab/window and click <button onclick="doit()">Send</button>
+<div id="results"></div>
+

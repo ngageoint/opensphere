@@ -1,0 +1,101 @@
+// basic colors (handy to reference when doing things like darken, color-contrast, etc)
+$color-bg: #fff;
+$color-bg-offset: #f5f5f5;
+$color-font: #000;
+$color-font-offset: #fff;
+$color-font-alt: #000;
+$color-border: #222;
+
+//scheme colors
+$color-scheme-primary: #357cc0;
+$color-scheme-primary-dark: #2f5aa9;
+$color-scheme-primary-dark-alt: #426a90;
+$color-scheme-primary-light: #4792cf;
+$color-scheme-primary-light-alt: #87b4e0;
+$color-scheme-compliment1: #74b874;
+$color-scheme-compliment1-dark: #648a64;
+$color-scheme-compliment1-dark-alt: #267726;
+$color-scheme-compliment1-light: #afdbaf;
+$color-scheme-compliment1-light-alt: #9edb9e;
+$color-scheme-compliment2: #e69191;
+$color-scheme-compliment2-dark: #ac7c7c;
+$color-scheme-compliment2-dark-alt: #953f2f;
+$color-scheme-compliment2-light: #f2c1c1;
+$color-scheme-compliment2-light-alt: #f2afaf;
+$color-scheme-compliment3: #e6c891;
+$color-scheme-compliment3-dark: #ac9c7c;
+$color-scheme-compliment3-dark-alt: #95722f;
+$color-scheme-compliment3-light: #f2e1c1;
+$color-scheme-compliment3-light-alt: #f2dbaf;
+
+//primary colors
+$color-white: #fff;
+$color-black: #0a0a0a;
+$color-dark-gray: #484848;
+$color-gray: #666;
+$color-light-gray: #ccc;
+$color-very-light-gray: #bbb;
+$color-medium-gray: #555;
+
+$color-green: #458b74;//#569c39;
+$color-light-green: #90ee90;
+
+$color-blue: #08c;
+$color-light-blue: #9cf;
+$color-dark-blue: #06a;
+
+$color-bright-red: #f00;
+$color-red: #b94a48;
+$color-light-red: #f99;
+
+$color-orange: #f89406;
+$color-light-orange: #ffc739;
+
+$color-yellow: #ff0;
+$color-light-yellow: #ffc;
+$color-info: #3a87ad;
+$color-goldenrod: #daa520;
+$color-darkgoldenrod: #b8860b;
+
+$color-cyan: #0ff;
+
+$color-purple: #800080;
+$color-light-purple: #dda0dd;
+
+$color-indigo: #4b0082;
+$color-light-indigo: #db8fd8;
+
+$color-pink: #ff1493;
+$color-light-pink: #ff69b4;
+
+// Icon Colors
+$color-red-icon: #d00;
+$color-orange-icon: #f92;
+$color-yellow-icon: #ee0;
+$color-gold-icon: #b9ad5c;
+$color-green-icon: #0d0;
+$color-lt-blue-icon: #0cf;
+$color-blue-icon: #0076cc;
+
+$color-alert-error:   #b94a48;
+$color-alert-warning: #c09853;
+$color-alert-info:    #777;
+$color-alert-success: #468847;
+
+$color-font-error:   $color-alert-error;
+$color-font-warning: $color-alert-warning;
+$color-font-info:    $color-alert-info;
+
+// Drag and drop
+$color-dd-dragover: #f5fff5;
+$color-dd-dragover-border: #666;
+
+
+// Status Colors
+$color-ok: $color-lt-blue-icon;
+
+// caret-tab colors
+$color-caret-color: #000;
+$color-caret-background: #f5f5f5;
+$color-caret-border-dark: #ccc;
+$color-caret-border-light: #fff;

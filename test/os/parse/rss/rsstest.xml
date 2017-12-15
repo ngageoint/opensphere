@@ -1,0 +1,46 @@
+<rss version="2.0" xmlns:ns1="/" xmlns:ns2="/">
+  <channel>
+    <title>Test Feed</title>
+    <link>http://opensphere.com/test</link>
+    <description>OpenSphere RSS Test</description>
+    <item>
+      <title>Test Item 0</title>
+      <description>Test Item 0 Description</description>
+      <pubDate>Thu, 16 Mar 2017 06:00:00 -0600</pubDate>
+      <link>http://opensphere.com/test/report/0</link>
+      <guid>test-id-0</guid>
+      <ns1:field0>item0 ns1 value0</ns1:field0>
+      <ns1:field1>item0 ns1 value1</ns1:field1>
+      <ns1:field2>item0 ns1 value2</ns1:field2>
+      <ns2:field0>item0 ns2 value0</ns2:field0>
+      <ns2:field1>item0 ns2 value1</ns2:field1>
+      <ns2:field2>item0 ns2 value2</ns2:field2>
+    </item>
+    <item>
+      <title>Test Item 1</title>
+      <description>Test Item 1 Description</description>
+      <pubDate>Thu, 16 Mar 2017 06:00:01 -0600</pubDate>
+      <link>http://opensphere.com/test/report/1</link>
+      <guid>test-id-1</guid>
+      <ns1:field0>item1 ns1 value0</ns1:field0>
+      <ns1:field1>item1 ns1 value1</ns1:field1>
+      <ns1:field2>item1 ns1 value2</ns1:field2>
+      <ns2:field0>item1 ns2 value0</ns2:field0>
+      <ns2:field1>item1 ns2 value1</ns2:field1>
+      <ns2:field2>item1 ns2 value2</ns2:field2>
+    </item>
+    <item>
+      <title>Test Item 2</title>
+      <description>Test Item 2 Description</description>
+      <pubDate>Thu, 16 Mar 2017 06:00:02 -0600</pubDate>
+      <link>http://opensphere.com/test/report/2</link>
+      <guid>test-id-2</guid>
+      <ns1:field0>item2 ns1 value0</ns1:field0>
+      <ns1:field1>item2 ns1 value1</ns1:field1>
+      <ns1:field2>item2 ns1 value2</ns1:field2>
+      <ns2:field0>item2 ns2 value0</ns2:field0>
+      <ns2:field1>item2 ns2 value1</ns2:field1>
+      <ns2:field2>item2 ns2 value2</ns2:field2>
+    </item>
+  </channel>
+</rss>

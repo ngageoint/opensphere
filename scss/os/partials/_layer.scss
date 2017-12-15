@@ -1,0 +1,103 @@
+// Layer Control Styles
+
+.layer-controls-group {
+  border: 1px solid #000;
+  border-radius: 0;
+  border-top: 0;
+  margin-bottom: 0;
+
+  .layer-controls-heading {
+    font-weight: bold;
+    padding: 2px;
+    padding-left: 10px;
+    text-decoration: initial;
+  }
+}
+
+.layer-controls {
+  border-top: 1px solid #000;
+  padding: 9px 10px;
+
+  select,
+  input {
+    line-height: 18px;
+  }
+
+  input.spinner {
+    height: 20px;
+    margin: 2px 18px 2px 5px;
+  }
+}
+
+.vector-style-controls {
+  .btn.btn-color-picker {
+    line-height: 16px;
+    padding: 2px 3px;
+  }
+
+  .btn.btn-icon-picker {
+    height: 24px;
+    width: 24px;
+  }
+
+  .style-controls > select {
+    @include calc(width, '100% - 52px');
+  }
+}
+
+// * Add Data/Layer Window styles
+// *******************************************
+.layers-header {
+  width: 100%;
+
+  .search {
+    @include calc(width, '100% - 14px');
+    margin-bottom: 0;
+    margin-top: 0;
+  }
+}
+
+.layers-main {
+  @include box-sizing(border-box);
+  padding-top: 5px;
+  width: 100%;
+}
+
+.areas-footer,
+.filters-footer {
+  padding-top: 5px;
+}
+
+.adw-header .groupby > select {
+  width: 250px;
+}
+
+.layers-header .search-box .input-clear,
+.adw-header .search-box .input-clear {
+  background: none;
+  padding: 2px 5px;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.panel.adw-info {
+  padding: 0 5px;
+  word-break: break-word;
+}
+
+// layer control styles
+
+.control-label {
+  cursor: default;
+  padding-right: 5px;
+  white-space: nowrap;
+}
+
+.label-control {
+  margin: 2px 0 0;
+}
+
+input.label-checkbox.checkbox.inline {
+  margin-top: 0;
+}

@@ -1,0 +1,48 @@
+{
+  "title": "Loading Tiles/Features",
+  "config": {
+    "width": 450
+  },
+  "steps": [
+    {
+      "title": "Loading Tiles and Features",
+      "description": [
+        "Now that you have some layers loaded on the map, let's walk through how to load some data!"
+      ],
+      "position": "centered"
+    },
+    {
+      "title": "Date Control",
+      "description": [
+        "Tiles and features are loaded for the time range chosen by the date control here. Pick a new date to ",
+        "load tiles (and eventually features) for a different time span. If you don't see any tiles on the map, ",
+        "check the layer's details in the Add Data window and make sure it has data within the chosen range."
+      ],
+      "attachTo": "#date-control",
+      "position": "bottom",
+      "horizontalAlign": "center",
+      "context": "navTop"
+    },
+    {
+      "title": "Loading Features",
+      "description": [
+        "Once you have tiles loaded, you can query features with additional metadata by drawing a query region on ",
+        "the map. Use the draw controls here to draw a query region, or use Shift+Click and drag to draw using the ",
+        "most recently selected control. Draw the query area on the map, then choose Load from the menu."
+      ],
+      "attachTo": ".draw-controls",
+      "position": "bottom",
+      "horizontalAlign": "center",
+      "context": "navTop"
+    },
+    {
+      "title": "Undo/Redo (Ctrl+Z/Ctrl+Y)",
+      "description": [
+        "Most actions in the application can be undone. Use the Undo/Redo actions to move back and forth through the ",
+        "state of the application. To view your command history, choose Windows > History."
+      ],
+      "position": "centered",
+      "focusOn": "button[title=History]"
+    }
+  ]
+}

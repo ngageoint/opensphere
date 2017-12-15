@@ -1,0 +1,48 @@
+{
+  "title": "{APP} Introduction",
+  "config": {
+    "width": 450
+  },
+  "steps": [
+    {
+      "title": "Welcome to {APP}!",
+      "description": [
+        "{APP} is a map-driven analysis tool designed for visualizing large volumes of geospatial and temporal data ",
+        "from a myriad of sources. Our goal is to simplify the discovery of patterns and anomalies across these ",
+        "large data sets. This tutorial will walk you through the core functionality of {APP}."
+      ],
+      "position": "centered"
+    },
+    {
+      "title": "Layers",
+      "description": [
+        "The Layers window shows what's currently displayed on the map. Here you can: ",
+        "<ul><li>Search and group your layers</li><li>Toggle visibility of layers</li>",
+        "<li>Change how layers appear</li><li>Remove layers from the map</li><li>Manage your areas and filters</li></ul>",
+        "We've added some map layers to get you started, so continue on and we'll explain how to add more."
+      ],
+      "attachTo": ".window[label=Layers]",
+      "position": "right",
+      "verticalAlign": "center",
+      "context": "layers"
+    },
+    {
+      "title": "Adding Layers",
+      "description": [
+        "To find new layers to add to the map, click the Add Data button. You can also import files using the ",
+        "drop-down menu, or by dragging files on your computer and dropping them on the map."
+      ],
+      "attachTo": ".add-data-group",
+      "position": "bottom",
+      "horizontalAlign": "center",
+      "width": 350,
+      "context": "navTop"
+    },
+    {
+      "title": "Try it out!",
+      "description": "Open the Add Data window and we'll get this show on the road!",
+      "position": "centered",
+      "width": 350
+    }
+  ]
+}

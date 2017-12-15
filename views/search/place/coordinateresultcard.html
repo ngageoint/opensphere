@@ -1,0 +1,8 @@
+<div class="coord-result-card pointer" ng-mouseover="coordResult.over()" ng-mouseout="coordResult.out()" ng-click="coordResult.goTo()">
+  <div class="result-card-header">
+    <i class="fa fa-map-marker"></i>
+    {{coordResult.lat}}, {{coordResult.lon}}
+    <span ng-if="coordResult.mgrs">({{coordResult.mgrs}})</span>
+  </div>
+  <div class="result-type">Coordinate</div>
+</div>

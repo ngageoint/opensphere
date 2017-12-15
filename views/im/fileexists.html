@@ -1,0 +1,15 @@
+<form name="choiceForm" class="form-compressed">
+  <span style="word-break:break-all;">The file "{{fileName}}" already exists in {{application}}!</span>
+  <label class="radio">
+    <input type="radio" name="fileExistsRadios" data-ng-model="confirmValue" value="saveNew">
+    Save as new file and import
+  </label>
+  <label class="radio">
+    <input type="radio" name="fileExistsRadios" data-ng-model="confirmValue" value="replace">
+    Replace (use previous import settings)
+  </label>
+  <label class="radio">
+    <input type="radio" name="fileExistsRadios" data-ng-model="confirmValue" value="replaceAndImport">
+    Replace and re-import
+  </label>
+</form>

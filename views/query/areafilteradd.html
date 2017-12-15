@@ -1,0 +1,49 @@
+<div class="window-content-wrapper">
+  <div class="window-content area-window">
+    <div class="filters-header">
+      <b style="display:block;margin-bottom:5px;">
+        <i class="fa fa-fw fa-filter"></i>Choose filters to add
+      </b>
+      <div class="search-box">
+        <input class="search top-gapxs" type="text" ng-model="filterTerm" ng-change="afa.searchFilters()" placeholder="Search filters"></input>
+      </div>
+    </div>
+    <div class="filter-tree slick-tree-container" autoheight="50%" siblings=".areas-header, .filters-header, area-tree">
+      <slicktree x-data="filters" selected="selected" show-root="true" multi-select="true"></slicktree>
+    </div>
+
+    <div class="areas-header" style="padding-top:5px;">
+      <b style="display:block;margin-bottom:5px;">
+        <i class="fa fa-fw fa-star-o"></i>Choose areas to add
+        <div class="inline-block pull-right">
+          <button class="btn btn-small" ng-click="afa.scrollToMap()" title="Scroll to the map to preview your areas"><i class="fa fa-globe color-globe"></i></button>
+          <button class="btn btn-small" ng-click="afa.launchAddObjectAreas()" title="Add areas from Objects">
+            <i class="fa fa-cubes color-globe"></i>
+            <i class="fa fa-plus fa-superscript-modifier color-add"></i>
+          </button>
+        </div>
+      </b>
+      <table style="width:100%;margin-bottom:5px;">
+        <tr>
+          <td class="control-label">Group By:</td>
+          <td style="width:100%;padding-left:5px;">
+            <select style="width:100%" class="no-margin" ng-model="areaView" ng-change="afa.searchAreas()" ng-options="key for (key, value) in areaViews"/>
+          </td>
+        </tr>
+      </table>
+      <div class="search-box">
+        <input class="search top-gapxs" type="text" ng-model="areaTerm" ng-change="afa.searchAreas()" placeholder="Search areas"></input>
+      </div>
+    </div>
+    <div class="area-tree slick-tree-container" autoheight="50%" siblings=".areas-header, .filters-header, filter-tree">
+      <slicktree x-data="areas" selected="selected" show-root="true" multi-select="true"></slicktree>
+    </div>
+  </div>
+  <div class="window-footer">
+    <span class="middle" ng-bind-html="afa.countText"></span>
+    <div class="pull-right">
+      <button class="btn btn-default" ng-click="afa.add()" ng-disabled="afa.addDisabled"><i class="fa fa-plus color-add"></i> Add</button>
+      <button class="btn btn-default" ng-click="afa.close()"><i class="fa fa-ban color-cancel"></i> Cancel</button>
+    </div>
+  </div>
+</div>

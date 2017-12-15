@@ -1,0 +1,43 @@
+<div class="file-support-prompt window-content-wrapper">
+  <div class="window-content">
+    <p class="file-support-info">
+      Your browser does not support storing local files. Locally imported data will be discarded when
+      {{ctrl.application}} is closed<span ng-if="ctrl.supportsUpload"> unless you choose to upload the file to a remote server</span>.
+    </p>
+
+    <div class="upload-choice" ng-if="ctrl.supportsUpload">
+      <label><strong>Please choose an option:</strong></label>
+      <form class="well form-horizontal form-compact no-margin" name="fileSupportForm" ng-submit="ctrl.confirm()" novalidate>
+        <label class="radio">
+          <input type="radio" name="fileSupportRadios" ng-model="ctrl.choice" value="local">
+          <strong>Load the file locally.</strong> Loaded data will be discarded when {{ctrl.application}} is closed.
+        </label>
+        <label class="radio">
+          <input type="radio" name="fileSupportRadios" ng-model="ctrl.choice" value="upload">
+          <strong>Upload the file.</strong> The file will be stored remotely so it can be retrieved the next time
+          {{ctrl.application}} is opened.
+        </label>
+      </form>
+    </div>
+
+    <h5 style="margin:10px 0 0;">Troubleshooting</h5>
+    <p>
+      To store local files in the browser, please verify you are using a modern browser (we recommend Chrome 30+, FF24+,
+      or IE10+), have cookies enabled, and are not in a private/incognito browsing session. This error can also be
+      caused by browser/system misconfiguration or a corrupt browser profile.
+    </p>
+    <p>If you need assistance, please contact <strong ng-bind-html="ctrl.supportContact"/>.</p>
+  </div>
+  <div class="window-footer">
+    <div class="pull-right">
+      <button type="submit" class="btn btn-default" ng-click="ctrl.confirm()">
+        <i class="fa fa-check lt-blue-icon"></i>
+        OK
+      </button>
+      <button type="button" class="btn btn-default" ng-click="ctrl.cancel()">
+        <i class="fa fa-ban red-icon"></i>
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>

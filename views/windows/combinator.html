@@ -1,0 +1,47 @@
+<div class="window-content-wrapper">
+  <div class="window-content combinator">
+    <div class="layers-header">
+      <table class="wide bot-gapxs">
+        <tr ng-show="!hideLayerChooser">
+          <td class="control-label">Layer:</td>
+          <td class="wide">
+            <select class="wide no-margin" ng-model="layer" ng-change="comboCtrl.selectLayer(true)"
+              ng-options="value.label for value in layers" required></select>
+          </td>
+        </tr>
+        <tr ng-show="advanced">
+          <td class="control-label">Group By:</td>
+          <td class="wide">
+            <select class="wide no-margin" ng-model="order" ng-change="comboCtrl.selectGroupBy(true)" ng-options="value for value in orders" />
+          </td>
+        </tr>
+      </table>
+      <div class="wide inline-block">
+        <addfilter layer="layer" btn-text="Add Filter"></addfilter>
+        <div class="pull-right">
+          <label class="checkbox inline" title="Advanced mode allows more specific combinations of layers, filters, and areas">
+            <input type="checkbox" style="height: inherit;" ng-model="advanced" ng-change="comboCtrl.advancedToggle(true)" style="height: inherit;">
+            Advanced
+          </label>
+          <button class="btn btn-default" ng-click="comboCtrl.toggle(false)" title="Expand all"><i class="fa fa-plus-square-o"></i></button>
+          <button class="btn btn-default" ng-click="comboCtrl.toggle(true)" title="Collapse all"><i class="fa fa-minus-square-o"></i></button>
+          <button class="btn btn-default" ng-click="comboCtrl.clear()" title="Clears all the checkboxes in the form">Reset</button>
+        </div>
+      </div>
+    </div>
+    <div class="combinator-main" autoheight siblings=".layers-header">
+      <slicktree x-data="pivots" selected="selected" multi-select="true" disposable="true"></slicktree>
+    </div>
+  </div>
+  <div class="window-footer">
+    <div class="pull-right">
+      <button class="btn btn-default" ng-click="comboCtrl.apply()"><i class="fa fa-fw fa-check"></i>Apply</button>
+      <button class="btn btn-default" ng-click="comboCtrl.close()"><i class="fa fa-fw fa-ban red-icon"></i>Close</button>
+    </div>
+    <button class="btn btn-default" ng-click="comboCtrl.launchExport()" ng-disabled="comboCtrl.exportDisabled()"><i class="fa fa-download yellow-icon"></i> Export</button>
+    <div class="import-group btn-group" ng-right-click="comboCtrl.openImportMenu()">
+      <button class="btn btn-default" ng-click="comboCtrl.import()"><i class="fa fa-sign-in color-import"></i> Import</button>
+      <button class="btn addon" ng-click="comboCtrl.openImportMenu()" ng-class="{active: importMenuOpen}"><i class="fa fa-chevron-down"></i></button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,15 @@
+<span ng-form="exprForm" class="mapping-expression">
+  <span class="pull-right">
+    <button class="btn btn-default" ng-click="$emit('columnmapping.remove', node)" title="Remove this expression">
+      <i class="fa fa-times red-icon"></i>
+    </button>
+  </span>
+  <div class="mapping-expression__field">
+    <div class="mapping-expression__label">Layer:</div>
+    <layerpicker layer="exprCtrl.layer" layers-filter="node.getFn()" formatter="exprCtrl.formatter"></layerpicker>
+  </div>
+  <div class="mapping-expression__field">
+    <div class="mapping-expression__label">Column:</div>
+    <select style="display:none;" placeholder="Select column..." class="mapping-expression__column-select" ng-model="exprCtrl.column" ng-options="value.name for value in exprCtrl.columns" required/>
+  </div>
+</span>

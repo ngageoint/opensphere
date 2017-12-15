@@ -1,0 +1,39 @@
+<div class="window-content-wrapper">
+  <div class="window-content">
+    <div ng-form name="filterForm" class="form-horizontal form-compact filterform">
+      <div class="control-group" ng-class="{'error': filterForm.title.$invalid}">
+        <label class="control-label" for="filterTitle">Title:</label>
+        <div class="control">
+          <input id="filterTitle" type="text" ng-model="filters.title" name="title" required/>
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="filterDesc">Description:</label>
+        <div class="control">
+          <input id="filterDesc" type="text" ng-model="filters.description" name="description"/>
+        </div>
+      </div>
+      <ul class="nav nav-tabs">
+        <li class="first" ng-class="{active: tab == 'basic'}"><a ng-click="filters.setTab('basic')">Basic</a></li>
+        <li ng-class="{active: tab == 'advanced'}"><a ng-click="filters.setTab('advanced')">Advanced</a></li>
+      </ul>
+
+      <div class="filter-container">
+        <div class="tab-content" autoheight siblings=".nav-tabs">
+          <div ng-if="tab == 'basic'" style="height:100%">
+            <basicfilterbuilder root="filters.root" columns="columns" is-complex="filters.isComplex"></basicfilterbuilder>
+          </div>
+          <div ng-if="tab == 'advanced'" style="height:100%">
+            <advancedfilterbuilder root="filters.root" columns="columns"></advancedfilterbuilder>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="window-footer">
+    <div class="pull-right">
+      <button class="btn btn-default" ng-click="filters.finish()" ng-disabled="filters.isInvalid()"><i class="btn-icon fa fa-check color-add"></i> OK</button>
+      <button class="btn btn-default" ng-click="filters.cancel()"><i class="btn-icon fa fa-ban red-icon"></i> Cancel</button>
+    </div>
+  </div>
+</div>

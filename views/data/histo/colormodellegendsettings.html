@@ -1,0 +1,25 @@
+<div class="color-model-legend-settings">
+  <div class="control-group">
+    <label class="checkbox inline" title="Show colors applied by Auto Color in Count By's, Charts, etc">
+      <input type="checkbox" name="showAuto" ng-model="legend.options.showAuto"
+          ng-change="legend.toggle('showAuto')"/>
+      Show auto colors
+    </label>
+  </div>
+  <div class="control-group">
+    <label class="checkbox inline" title="Show manual colors applied in Count By's, Charts, etc">
+      <input type="checkbox" name="showManual" ng-model="legend.options.showManual"
+          ng-change="legend.toggle('showManual')"/>
+      Show manual colors
+    </label>
+  </div>
+  <div class="control-group">
+    <label class="checkbox inline" title="Display the column within the label">
+      <input type="checkbox" name="showColumn"
+          ng-disabled="!legend.options.showAuto && !legend.options.showManual"
+          ng-model="legend.options.showColumn"
+          ng-change="legend.toggle('showColumn')"/>
+      Show column in label
+    </label>
+  </div>
+</div>

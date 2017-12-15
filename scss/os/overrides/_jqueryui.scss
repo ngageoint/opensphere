@@ -1,0 +1,101 @@
+// jQueryUI overrides
+
+$ui-menu-background-color: $color-medium-gray !default;
+$ui-menu-border-color: $color-dark-gray !default;
+$ui-menu-color: $color-white !default;
+
+$ui-menu-focus-color: $color-white !default;
+$ui-menu-focus-background-color: #444 !default;
+
+.ui-widget {
+  font-size: 13px;
+}
+
+.ui-resizable-ne {
+  height: 10px;
+  right: 0;
+  top: 0;
+  width: 10px;
+}
+
+.ui-resizable-nw {
+  height: 10px;
+  left: 0;
+  top: 0;
+  width: 10px;
+}
+
+.ui-resizable-se {
+  background-position: -68px -228px;
+  bottom: 0;
+  height: 10px;
+  right: 0;
+  width: 10px;
+}
+
+.ui-resizable-sw {
+  bottom: 0;
+  height: 10px;
+  left: 0;
+  width: 10px;
+}
+
+.ui-menu {
+  @include border-radius(4px);
+  @include box-shadow(2px 3px 3px rgba(54, 54, 54, .5));
+  background-color: $ui-menu-background-color;
+  border: 1px solid $ui-menu-border-color;
+  font-size: 14px;
+  min-width: 150px;
+  padding: 4px 0;
+  z-index: 100000;
+
+  &.ui-widget-content {
+    background: $ui-menu-background-color;
+    color: $ui-menu-color;
+
+    .ui-state-active,
+    .ui-state-focus {
+      background: $ui-menu-focus-background-color;
+      border: 0;
+      color: $ui-menu-focus-color;
+      font-weight: normal;
+    }
+  }
+
+  .ui-widget-header {
+    margin: 0;
+    padding: 3px 1em 3px .4em;
+  }
+
+  .ui-state-active,
+  .ui-state-focus {
+    margin: 0;
+  }
+
+  .ui-menu-item {
+    padding: 0 8px;
+    white-space: nowrap;
+
+    i {
+      margin-right: 7px;
+      width: 1em;
+    }
+  }
+
+  .ui-icon {
+    margin: 2px 0;
+  }
+}
+
+#menu {
+  min-width: 150px;
+  position: fixed;
+}
+
+// This avoids these items appearing to be disabled
+.ui-widget-content .ui-priority-secondary,
+.ui-widget-content .ui-priority-primary {
+  font-weight: normal;
+  opacity: 1;
+}

@@ -1,0 +1,205 @@
+<div class="wizard-step geometry">
+  <div class="step-content">
+    <div class="preview-sibling">
+      <button class="btn btn-default pull-right" ng-click="geomStep.launchHelp()" title="Help for location formats">
+        <i class="fa fa-question-circle lt-blue-icon"></i>
+        Format Help
+      </button>
+      <form name="geomForm" class="form-horizontal form-compact">
+        <label class="radio">
+          <input type="radio" name="geomTypeRadios" data-ng-model="step.geomType" value="none">
+          No Geometry (will not be displayed on the map)
+        </label>
+        <label class="radio">
+          <input type="radio" name="geomTypeRadios" data-ng-model="step.geomType" value="separate">
+          Separate Latitude and Longitude Fields
+        </label>
+        <label class="radio">
+          <input type="radio" name="geomTypeRadios" data-ng-model="step.geomType" value="single">
+          Single Geometry Field
+        </label>
+
+        <div class="panel">
+          <div ng-if="step.geomType == 'separate'">
+            <div class="span12 control-group" title="Column to use for latitude">
+              <div class="span6">
+                <label class="control-label">Latitude:</label>
+                <div class="controls">
+                  <select ng-model="step.latColumn" ng-change="geomStep.validate()"
+                      ng-options="column.name as column.name for column in geomStep.columns">
+                  </select>
+                </div>
+              </div>
+              <div class="span2">
+                <label class="checkbox control-label" title="Enable to autodetect latitude column">
+                  <input type="checkbox" style="margin-right:5px;margin-top:0;" ng-model="step.useGeoSeparateAutoFormat" ng-change="geomStep.validate()">
+                  Auto Format
+                </label>
+              </div>
+              <div class="span3">
+                <div class="control-no-label">
+                  <select ng-if="!step.useGeoSeparateAutoFormat" ng-model="step.geoSeparateFormat" ng-change="geomStep.validate()"
+                      ng-options="format.format as format.description for format in step.geoFormats">
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="span12 control-group" title="Column to use for longitude">
+              <div class="span6">
+                <label class="control-label">Longitude:</label>
+                <div class="controls">
+                  <select ng-model="step.lonColumn" ng-change="geomStep.validate()"
+                      ng-options="column.name as column.name for column in geomStep.columns">
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div ng-if="step.geomType == 'single'">
+            <div class="span12 control-group" title="Column to use for position">
+              <div class="span6">
+                <label class="control-label">Column:</label>
+                <div class="controls">
+                  <select ng-model="step.posColumn" ng-change="geomStep.validate()">
+                    <option ng-repeat="column in geomStep.columns">{{column.name}}</option>
+                  </select>
+                </div>
+              </div>
+              <div class="span3" ng-if="step.posType == 'Lat/Lon' || step.posType == 'Lon/Lat'">
+                <label class="checkbox control-label" title="Enable to autodetect lat/lon column">
+                  <input type="checkbox" style="margin-right:5px;margin-top:0;" ng-model="step.useGeoSingleAutoFormat" ng-change="geomStep.validate()">
+                  Auto Format
+                </label>
+              </div>
+              <div class="span3" ng-if="step.posType == 'Lat/Lon' || step.posType == 'Lon/Lat'">
+                <div class="control-no-label">
+                  <select ng-if="!step.useGeoSingleAutoFormat" ng-model="step.geoSingleFormat" ng-change="geomStep.validate()"
+                      ng-options="format.format as format.description for format in step.geoFormats">
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="span12 control-group" title="Position format of the data">
+              <div class="span6">
+                <label class="control-label">Type:</label>
+                <div class="controls">
+                  <select ng-model="step.posType" ng-change="geomStep.validate()">
+                    <option ng-repeat="(key, val) in geomStep.posTypes">{{key}}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="span12 nowrap" ng-if="geomStep.sample">Sample: {{geomStep.sample}}</div>
+          <div class="span12 nowrap font-success" ng-if="geomStep.result != null">{{geomStep.result}}</div>
+          <div class="span12 nowrap font-warning" ng-repeat="error in geomStep.errors">{{error}}</div>
+          <div class="span12 nowrap color-yellow" ng-repeat="warning in geomStep.warnings">{{warning}}</div>
+        </div>
+        <div class="control-group span12" ng-if="step.geomType == 'single' || step.geomType == 'separate'">
+          <div class="span6">
+            <label class="control-label">Altitude:</label>
+            <div class="controls column">
+              <select name="altitude" ng-model="step.altitude.column" ng-change="geomStep.validate()"
+                  ng-options="column.name as column.name for column in geomStep.columns">
+                <option value="">-- None --</option>
+              </select>
+            </div>
+          </div>
+          <div class="span3">
+            <label class="control-label">Units:</label>
+            <div class="controls units">
+             <select ng-model="step.altitude.units" ng-change="geomStep.validate()"
+                  ng-disabled="!step.altitude.column" ng-options="unit for unit in geomStep.altUnits"></select>
+            </div>
+          </div>
+          <br/>
+        </div>
+      </form>
+      <form name="ellipseForm" class="form-horizontal form-compact">
+        <label class="checkbox" ng-if="step.geomType != 'none'" title="Throw out empty rows">
+          <input type="checkbox" ng-model="step.ignoreMissingGeomRows" ng-change="geomStep.validate()">
+          Ignore rows missing geometry data
+          </label>
+        </label>
+        <br>
+        <label class="checkbox" ng-if="step.geomType != 'none'" title="Enable if the CSV has ellipse fields to configure">
+          <input type="checkbox" ng-model="step.showEllipse" ng-change="geomStep.validate()">
+          Ellipse Fields
+        </label>
+
+        <div class="panel ellipse-fields" ng-if="step.geomType != 'none' && step.showEllipse">
+          <div class="control-group span12">
+            <div class="span6">
+              <label class="control-label">Radius/CEP:</label>
+              <div class="controls column">
+                <select name="radius" ng-model="step.ellipse.radius.column" ng-change="geomStep.validate()"
+                    ng-options="column.name as column.name for column in geomStep.columns">
+                  <option value="">-- None --</option>
+                </select>
+              </div>
+            </div>
+            <div class="span3">
+              <label class="control-label">Units:</label>
+              <div class="controls units">
+                <select ng-model="step.ellipse.radius.units" ng-change="geomStep.validate()"
+                    ng-disabled="!step.ellipse.radius.column" ng-options="unit for unit in geomStep.units"></select>
+              </div>
+            </div>
+          </div>
+          <div class="control-group span12">
+            <div class="span6">
+              <label class="control-label">Semi Major:</label>
+              <div class="controls column">
+                <select name="semiMajor" ng-model="step.ellipse.semiMajor.column" ng-change="geomStep.validate()"
+                    ng-required="step.showEllipse && (step.ellipse.semiMinor.column || step.ellipse.orientation.column)"
+                    ng-options="column.name as column.name for column in geomStep.columns">
+                  <option value="">-- None --</option>
+                </select>
+              </div>
+            </div>
+            <div class="span3">
+              <label class="control-label">Units:</label>
+              <div class="controls units">
+                <select ng-model="step.ellipse.semiMajor.units" ng-change="geomStep.validate()" ng-disabled="!step.ellipse.semiMajor.column" ng-options="unit for unit in geomStep.units"></select>
+              </div>
+            </div>
+            <span class="font-warning help-inline" ng-show="ellipseForm.semiMajor.$error.required">Required!</span>
+          </div>
+          <div class="control-group span12">
+            <div class="span6">
+              <label class="control-label">Semi Minor:</label>
+              <div class="controls column">
+                <select name="semiMinor" ng-model="step.ellipse.semiMinor.column" ng-change="geomStep.validate()"
+                    ng-required="step.showEllipse && (step.ellipse.semiMajor.column || step.ellipse.orientation.column)"
+                    ng-options="column.name as column.name for column in geomStep.columns">
+                  <option value="">-- None --</option>
+                </select>
+              </div>
+            </div>
+            <div class="span3">
+              <label class="control-label">Units:</label>
+              <div class="controls units">
+                <select ng-model="step.ellipse.semiMinor.units" ng-change="geomStep.validate()" ng-disabled="!step.ellipse.semiMinor.column" ng-options="unit for unit in geomStep.units"></select>
+              </div>
+            </div>
+            <span class="font-warning help-inline" ng-show="ellipseForm.semiMinor.$error.required">Required!</span>
+          </div>
+          <div class="control-group span12">
+            <div class="span6">
+              <label class="control-label">Orientation:</label>
+              <div class="controls column">
+                <select name="orientation" ng-model="step.ellipse.orientation.column" ng-change="geomStep.validate()"
+                    ng-required="step.showEllipse && (step.ellipse.semiMajor.column || step.ellipse.semiMinor.column)"
+                    ng-options="column.name as column.name for column in geomStep.columns">
+                  <option value="">-- None --</option>
+                </select>
+              </div>
+            </div>
+            <span class="font-warning help-inline" ng-show="ellipseForm.orientation.$error.required">Required!</span>
+          </div>
+        </div>
+      </form>
+    </div>
+    <wizardpreview config="config" resize-with=".window"></wizardpreview>
+  </div>
+</div>

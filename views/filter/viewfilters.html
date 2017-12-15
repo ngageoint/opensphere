@@ -1,0 +1,23 @@
+<div class="window-content-wrapper">
+  <div class="window-content">
+    <div ng-form name="filterForm" class="form-horizontal form-compact filterform">
+      <div class="control-group" ng-class="{'error': filterForm.title.$invalid}">
+        <label class="control-label"><b>Title:</b></label>
+        <label class="control-label" style="text-align: left">{{filters.title}}</label>
+      </div>
+      <div class="control-group">
+        <label class="control-label"><b>Description:</b></label>
+        <label class="control-label" style="text-align: left">{{filters.description}}</label>
+      </div>
+      <hr>
+      <div class="filter-container">
+        <advancedfilterbuilder root="filters.root" columns="columns" viewonly="viewonly"></advancedfilterbuilder>
+      </div>
+    </div>
+  </div>
+  <div class="window-footer">
+    <div class="pull-right">
+      <button class="btn btn-default" ng-click="filters.cancel()"><i class="btn-icon fa fa-check green-icon"></i> OK</button>
+    </div>
+  </div>
+</div>

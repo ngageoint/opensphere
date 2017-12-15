@@ -1,0 +1,54 @@
+.combo-container {
+  @include border-radius($os-border-radius);
+  background: #fff;
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  vertical-align: middle;
+  width: 100%;
+
+  .combo-choice {
+    @include border-radius($os-border-radius);
+    border: 1px solid #aaa;
+    color: #444;
+    display: block;
+    height: 26px;
+    line-height: 26px;
+    overflow: hidden;
+    padding: 1px 1px 1px 8px;
+    text-decoration: none;
+    white-space: no-wrap;
+
+    &.open {
+      border-radius: 4px 4px 0 0;
+    }
+
+    &.disabled {
+      background: #eee;
+    }
+
+    &.form-focus:focus div {
+      border-bottom-color: rgba(82, 168, 236, .8);
+      border-right-color: rgba(82, 168, 236, .8);
+      border-top-color: rgba(82, 168, 236, .8);
+    }
+
+    div {
+      //filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#eee', endColorstr='#ccc', GradientType=0);
+      @include background(linear-gradient(to top, #ccc, #eee));
+      @include border-radius(0 4px 4px 0);
+      border: 1px solid #aaa;
+      display: block;
+      height: 28px;
+      position: absolute;
+      right: 0;
+      text-align: center;
+      top: 0;
+      width: 18px;
+
+      &.open {
+        @include border-radius(0 4px 0 0);
+      }
+    }
+  }
+}

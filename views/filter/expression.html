@@ -1,0 +1,5 @@
+<span ng-form="exprForm" class="expression">
+  <select ng-model="expr.column" ng-options="value.name for value in columns" required/>
+  <select ng-model="expr.op" ng-options="value.getTitle() for value in ops" required/>
+  <opuiswitch items="expr.op" directive-function="exprCtrl.getUi" generic="text" expr="expr"></opuiswitch>
+</span>

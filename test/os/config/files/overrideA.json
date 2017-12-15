@@ -1,0 +1,13 @@
+{
+  "admin": {
+    "A": {
+      "adminField": "A"
+    }
+  },
+
+  "user": {
+    "A": {
+      "userField": "A"
+    }
+  }
+}

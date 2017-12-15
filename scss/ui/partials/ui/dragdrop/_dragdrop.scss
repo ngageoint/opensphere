@@ -1,0 +1,63 @@
+// * Drag and Drop component styles
+// **********************************************************
+
+.dd-target {
+  @include transition(background 500ms ease);
+}
+
+.dd-target-dragover {
+  background: #f5fff5;
+}
+
+.dd-source {
+  cursor: grab;
+}
+
+.dd-source-dragging {
+  @include border-radius($os-border-radius);
+  @include opacity(.5);
+  background: #74b874;
+  border: dashed 2px #267726;
+  color: #f5f5f5;
+  cursor: grabbing;
+  font-size: 1.1em;
+  font-style: italic;
+  padding: 10px;
+  width: 236px;
+  z-index: 30;
+}
+
+//=== Drop Zones ===
+//Style drop targets for drag & drop
+//
+
+.drop-zone {
+  @include transition(outline 0s);
+  outline: dashed 3px transparent;
+
+  &.fade {
+    @include transition(outline 100ms ease-in 1000ms, background 300ms ease-in 1000ms);
+    @include opacity(1);
+    outline: dashed 0 transparent;
+
+    &.in,
+    &.hover {
+      @include transition(background 100ms ease-in);
+    }
+
+  }
+
+  &.in {
+    background: #bdf !important;
+    outline: dashed 3px #08c;
+  }
+
+  &.hover {
+    background: #afa !important;
+    outline: dashed 3px #08c;
+  }
+}
+
+.opacity .drop-zone.in img {
+  @include opacity(.3);
+}

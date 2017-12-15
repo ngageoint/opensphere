@@ -1,0 +1,159 @@
+{
+  "admin": {
+    "settingsStorage": {
+      "type": "local"
+    },
+    "about": {
+      "application": "OpenSphere",
+      "logoPath": "images/logo.png",
+      "appVendors": [
+        {
+          "name": "AngularJS",
+          "logoPath": "images/vendor/angular.png"
+        },
+        {
+          "name": "Closure",
+          "logoPath": "images/vendor/closure.png"
+        },
+        {
+          "name": "Bootstrap",
+          "logoPath": "images/vendor/bootstrap.png"
+        },
+        {
+          "name": "jQuery",
+          "logoPath": "images/vendor/jquery.png"
+        },
+        {
+          "name": "OpenLayers",
+          "logoPath": "images/vendor/ol3.png"
+        },
+        {
+          "name": "Cesium",
+          "logoPath": "images/vendor/cesium.png"
+        }
+      ]
+    },
+    "browserPage": "../misc/browser/",
+    "metrics": {
+      "enabled" : true
+    },
+    "helpVideoUrl": "",
+    "helpVideoCardUrl": "",
+    "initialOnboarding": "onboarding/intro.json",
+    "caInstructions": "",
+    "cesiumEnabled": false,
+    "maxFeatures": {
+      "2d": 50000,
+      "3d": 150000
+    },
+    "maxLabels": 5,
+    "enableReprojection": false,
+    "proxy": {
+      "url": "/proxy/{url}",
+      "methods": ["GET", "POST", "PUT", "DELETE"],
+      "encode": false
+    },
+    "providers": {
+      "basemap": {
+        "type": "basemap",
+        "defaults": {
+          "EPSG:4326": [],
+          "EPSG:3857": ["worldimagery", "streetmap"]
+        },
+        "failSet": {
+          "EPSG:4326": [],
+          "EPSG:3857": []
+        },
+        "maps": {
+          "streetmap": {
+            "title": "Street Map",
+            "type": "BaseMap",
+            "baseType": "XYZ",
+            "provider": "ArcGIS Online",
+            "url": "//services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
+            "minZoom": 2,
+            "maxZoom": 16,
+            "projection": "EPSG:3857",
+            "tileSize": 256,
+            "description": "This worldwide street map presents highway-level data for the world and street-level data for the United States, Canada, Europe, Southern Africa and elsewhere. This comprehensive street map includes highways, major roads, minor roads, railways, water features, administrative boundaries, cities, parks, and landmarks, overlaid on shaded relief imagery for added context. The street map was developed by Esri using DeLorme data and NAVTEQ street data. Coverage for street-level data elsewhere in the world includes Mexico (Mexico City only), Russia (Moscow, St. Petersburg only), and Turkey (Istanbul, Ankara only). For more information on this map, including our terms of use, visit us online at http://goto.arcgisonline.com/maps/ESRI_StreetMap_World_2D\n\nSources: Esri, DeLorme, NAVTEQ, USGS, NRCAN, METI, iPC, TomTom",
+            "attributions": ["Sources: Esri, DeLorme, NAVTEQ, USGS, NRCAN, METI, iPC, TomTom"]
+          },
+          "worldimagery": {
+            "title": "World Imagery",
+            "type": "BaseMap",
+            "baseType": "XYZ",
+            "provider": "ArcGIS Online",
+            "url": "//services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+            "minZoom": 12,
+            "maxZoom": 21,
+            "projection": "EPSG:3857",
+            "tileSize": 256,
+            "description": "World Imagery provides one meter or better satellite and aerial imagery in many parts of the world and lower resolution satellite imagery worldwide. The map includes 15m TerraColor imagery at small and mid-scales (591M down to 72k) and 2.5m SPOT Imagery (288k to 72k) for the world, and USGS 15m Landsat imagery for Antarctica. The map features 0.3m resolution imagery in the continental United States and 0.6m resolution imagery in parts of Western Europe from Digital Globe. Recent 1m USDA NAIP imagery is available in select states of the US. In other parts of the world, 1 meter resolution imagery is available from GeoEye IKONOS, AeroGRID, and IGN Spain. Additionally, imagery at different resolutions has been contributed by the GIS User Community. For more information on this map, including the terms of use, visit us online at http://goto.arcgisonline.com/maps/World_Imagery\n\nSource: Esri, DigitalGlobe, GeoEye, Earthstar Geographics, CNES/Airbus DS, USDA, USGS, AeroGRID, IGN, and the GIS User Community",
+            "attributions": ["Source: Esri, DigitalGlobe, GeoEye, Earthstar Geographics, CNES/Airbus DS, USDA, USGS, AeroGRID, IGN, and the GIS User Community"]
+          },
+	  "terrain": {
+	    "baseType": "cesium",
+	    "description": "3D terrain provided for Cesium by AGI",
+	    "options": {
+	      "url": "//assets.agi.com/stk-terrain/world"
+	    },
+	    "provider": "AGI",
+	    "type": "Terrain"
+	  }
+        }
+      },
+      "csv": {
+        "type": "csv"
+      },
+      "geojson":{
+        "type": "geojson"
+      },
+      "kml": {
+        "type": "kml"
+      },
+      "gpx": {
+        "type": "gpx"
+      },
+      "shp": {
+        "type": "shp"
+      },
+      "state": {
+        "type": "state"
+      }
+    },
+    "search": {
+      "enableAll": true
+    },
+    "facetedSearch": {
+      "categories": {
+        "collapse": ["Tag"]
+      }
+    },
+    "plugins": {
+    },
+    "bearing": {
+      "cofUrl": "vendor/geomag/WMM.COF",
+      "cofVersion": "2015-2020",
+      "magneticNorthHelpUrl": "https://www.ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml"
+    }
+  },
+  "user": {
+    "dataManager": {
+      "filterTime": true
+    },
+    "onboarding": {
+      "showOnboarding": true
+    },
+    "baseProjection": "EPSG:3857",
+    "ui": {
+      "clear": {
+        "exclusionAreas": true,
+        "queryAreas": true,
+        "nonQueryFeatures": true
+      }
+    },
+    "bearing": {
+      "type": "trueNorth"
+    }
+  }
+}

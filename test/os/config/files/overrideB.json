@@ -1,0 +1,20 @@
+{
+  "admin": {
+    "a": {
+      "adminField": "B",
+      "otherAdminField": "BB"
+    },
+    "B": {
+      "adminField": "B"
+    }
+  },
+
+  "user": {
+    "a": {
+      "userField": "B"
+    },
+    "B": {
+      "userField": "B"
+    }
+  }
+}

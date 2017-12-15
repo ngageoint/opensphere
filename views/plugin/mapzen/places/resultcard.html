@@ -1,0 +1,9 @@
+<div class="coord-result-card pointer" ng-mouseover="resultCtrl.over()" ng-mouseout="resultCtrl.out()" ng-click="resultCtrl.goTo()">
+  <div class="google-places result-card-header" 
+    <span><i class="fa fa-map-marker"></i> {{resultCtrl.getField('label')}}</span>
+  </div>
+  <div>
+    <span class="result-type">{{resultCtrl.getField('layer')}}</span>
+  </div>
+  <p>{{resultCtrl.getField('address')}}</p>
+</div>

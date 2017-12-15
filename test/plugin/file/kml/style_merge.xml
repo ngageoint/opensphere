@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>Base style is green diamond</name>
+    <visibility>1</visibility>
+    <open>1</open>
+
+    <!-- Base style for document -->
+    <Style>
+      <IconStyle>
+        <color>ff00ff00</color>
+        <Icon><href>http://maps.google.com/mapfiles/kml/shapes/open-diamond.png</href></Icon>
+      </IconStyle>
+      <LineStyle>
+        <color>ff00ff00</color>
+        <width>1</width>
+      </LineStyle>
+    </Style>
+
+    <!-- shared style for others -->
+    <Style id="bus">
+      <IconStyle>
+        <scale>2</scale>
+        <Icon><href>http://maps.google.com/mapfiles/kml/shapes/bus.png</href></Icon>
+      </IconStyle>
+    </Style>
+
+    <Placemark id="base-style">
+      <name>Inherit base style</name>
+      <Point>
+        <coordinates>-60,0</coordinates>
+      </Point>
+    </Placemark>
+
+    <Placemark id="modify-base-style">
+      <name>Change base color to blue</name>
+      <Style>
+        <IconStyle>
+          <color>ffff0000</color>
+        </IconStyle>
+      </Style>
+      <Point>
+        <coordinates>-40,0</coordinates>
+      </Point>
+    </Placemark>
+
+    <Placemark id="modify-base-style-with-url">
+      <name>Big pink bus</name>
+      <styleUrl>#bus</styleUrl>
+      <Style>
+        <IconStyle>
+          <color>ffff00ff</color>
+        </IconStyle>
+      </Style>
+      <Point>
+        <coordinates>-20,0</coordinates>
+      </Point>
+    </Placemark>
+
+    <Folder>
+      <name>Container with no style</name>
+
+      <Folder>
+        <name>Container style is red</name>
+
+        <Style>
+          <IconStyle>
+            <color>ff0000ff</color>
+          </IconStyle>
+          <LineStyle>
+            <color>ff0000ff</color>
+          </LineStyle>
+        </Style>
+
+        <Placemark id="container-style-line">
+          <name>Inherit container style line</name>
+          <LineString>
+            <coordinates>0,0 10,0</coordinates>
+          </LineString>
+        </Placemark>
+
+        <Placemark id="container-style">
+          <name>Inherit container style</name>
+          <Point>
+            <coordinates>20,0</coordinates>
+          </Point>
+        </Placemark>
+
+        <Placemark id="modify-container-style">
+          <name>Change icon to donut</name>
+          <Style>
+            <IconStyle>
+              <Icon><href>http://maps.google.com/mapfiles/kml/shapes/donut.png</href></Icon>
+            </IconStyle>
+          </Style>
+          <Point>
+            <coordinates>40,0</coordinates>
+          </Point>
+        </Placemark>
+
+        <Placemark id="modify-container-style-with-url">
+          <name>Small red bus</name>
+          <Style>
+            <IconStyle>
+              <scale>0.5</scale>
+            </IconStyle>
+          </Style>
+          <styleUrl>#bus</styleUrl>
+          <Point>
+            <coordinates>60,0</coordinates>
+          </Point>
+        </Placemark>
+      </Folder>
+    </Folder>
+  </Document>
+</kml>

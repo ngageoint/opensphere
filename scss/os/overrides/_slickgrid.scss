@@ -1,0 +1,107 @@
+
+// Slickgrid overrides
+
+.slick-sort-indicator {
+  background: none;
+  float: left;
+  font-family: FontAwesome;
+  font-style: normal;
+  font-weight: normal;
+  height: inherit;
+  line-height: 1;
+  margin: 0 2px 0 0;
+
+  &:not([class*='slick-sort-indicator-']) {
+    display: none;
+  }
+}
+
+.slick-column-name {
+  display: inline-block;
+  float: left;
+}
+
+.slick-sort-indicator-asc::after {
+  content: '\f0d8';
+}
+
+.slick-sort-indicator-desc::after {
+  content: '\f0dd';
+}
+
+.slick-grid {
+  @include box-sizing(border-box);
+  border: 1px solid #000;
+  width: 100%;
+
+  .slick-viewport.ps-container {
+    overflow: hidden !important;
+  }
+
+  .even {
+    background: $overrides-grid-even-color;
+  }
+
+  .odd {
+    background: $overrides-grid-odd-color;
+  }
+
+  .slick-cell {
+    border-bottom: 0;
+    border-left: 0;
+    border-right: 0;
+  }
+
+  .slick-header-column {
+    border-bottom: 1px solid #444;
+    border-right: 1px solid #444;
+  }
+
+  .slick-row {
+    &:hover,
+    &.hovered {
+      background: #98ff98;
+    }
+
+    &:hover .slick-cell,
+    &.hovered .slick-cell {
+      background: inherit;
+      color: #000;
+    }
+
+    &.selected {
+      color: #000;
+
+      &:not(:hover) {
+        background: #0cc;
+      }
+    }
+  }
+
+  &.dragdrop .slick-cell {
+    cursor: grab;
+  }
+}
+
+.source-grid {
+  .ps-scrollbar-x-rail,
+  .ps-scrollbar-y-rail {
+    z-index: 5000;
+  }
+}
+
+.slick-cell.color {
+  text-align: center;
+
+  > i {
+    font-size: 14px;
+  }
+}
+
+.slick-cell-link {
+  text-decoration: underline;
+}
+
+.ui-widget-content a.slick-cell-link {
+  color: inherit;
+}

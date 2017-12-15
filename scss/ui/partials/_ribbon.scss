@@ -1,0 +1,28 @@
+// * Corner Ribbon
+// *******************************************
+
+.ribbon-wrapper {
+  height: 88px;
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  right: -3px;
+  width: 85px;
+  z-index: 10;
+}
+
+.ribbon {
+  @include box-shadow(0 0 3px rgba(0, 0, 0, .3));
+  @include transform(rotate(45deg));
+  background-color: #008000;
+  font: bold 15px Sans-Serif;
+  left: -5px;
+  position: relative;
+  text-align: center;
+  top: 15px;
+  width: 120px;
+
+  &::after {
+    content: 'BETA';
+  }
+}

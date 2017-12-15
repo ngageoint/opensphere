@@ -1,0 +1,79 @@
+<div class="save-state-window window-content-wrapper">
+  <div class="window-content">
+    <form name="form" class="form-horizontal form-compact" ng-submit="stateForm.accept()">
+      <div class="control-group" ng-if="stateForm.isSaving">
+        <label class="control-label" for="persister">Save to:</label>
+        <div class="controls">
+          <select class="wide" name="persister" ng-model="stateForm.persister"
+              ng-options="value as key for (key, value) in stateForm.persisters">
+            <option ng-if="stateForm.appName" value="">{{stateForm.appName}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="title">Name:</label>
+        <div class="controls">
+          <input type="text" class="wide" name="title" statetitle ng-model="title"
+              ng-required="true" ng-maxlength="100"/>
+          <span class="help-inline" data-ng-show="form.title.$invalid && !form.title.$error.required && !form.title.$error.maxlength">
+            This name has already been used. Please try another.
+          </span>
+          <span class="help-inline" data-ng-show="form.title.$error.maxlength">Name is too long!</span>
+          <span class="help-inline" data-ng-show="form.title.$error.required">Required</span>
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="desc">Description:</label>
+        <div class="controls">
+          <input type="text" name="desc" class="wide" ng-model="description" ng-maxlength="4000"
+              placeholder="Add a custom description"/>
+          <span class="help-inline" data-ng-show="form.desc.$error.maxlength">Description is too long!</span>
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="tags">Tags:</label>
+        <div class="controls">
+          <input type="text" name="tags" class="wide" ng-model="tags" ng-maxlength="1000"
+              placeholder="Tags organize states: e.g. states, population"/>
+          <span class="help-inline" data-ng-show="form.tags.$error.maxlength">Tags field is too long!</span>
+        </div>
+      </div>
+      <div class="state-options-group">
+        <label class="checkbox" ng-if="stateForm.showClear && !stateForm.isSaving" title="Clear all currently loaded application data before activating the state">
+          <input type="checkbox" name="clear" ng-model="stateForm.clear">
+          Clear current application data
+        </label>
+        <label class="checkbox">
+          <input type="checkbox" name="showOptions" ng-model="stateForm.showOptions">
+          Choose which parts of the state to {{stateForm.isSaving && 'save' || 'import'}}
+        </label>
+
+        <div class="checklist" ng-if="stateForm.showOptions">
+          <label class="checkbox toggle-all" title="Enable/Disable All">
+            <input type="checkbox" name="all" ng-model="stateForm.all" ng-change="stateForm.toggleAll()">
+            All
+          </label>
+          <div class="checklist-items">
+            <label ng-repeat="s in stateForm.states" class="checkbox" title="{{stateForm.getDescription(s)}}">
+              <input type="checkbox" ng-model="s.enabled">
+              {{stateForm.getTitle(s)}}
+            </label>
+          </div>
+        </div>
+      </div>
+      <input type="submit" class="hidden">
+    </form>
+  </div>
+  <div class="window-footer">
+    <div class="pull-right">
+      <button class="btn btn-default" ng-click="stateForm.accept()" ng-disabled="form.$invalid">
+        <i class="fa fa-check lt-blue-icon"></i>
+        OK
+      </button>
+      <button class="btn btn-default" ng-click="stateForm.close()">
+        <i class="fa fa-ban red-icon"></i>
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>

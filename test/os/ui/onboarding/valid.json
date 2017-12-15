@@ -1,0 +1,23 @@
+{
+  "title": "Onboarding Test",
+  "config": {
+    "width": 1234
+  },
+  "steps": [
+    {
+      "description": "Do something cool!",
+      "position": "centered"
+    },
+    {
+      "title": "Oh Boy!",
+      "description": [
+        "I'm a multi-line description. ",
+        "I'll be combined later but should be parsed correctly."
+      ],
+      "attachTo": "#something-sweet",
+      "position": "bottom",
+      "width": 300,
+      "context": "somethingSweet"
+    }
+  ]
+}

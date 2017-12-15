@@ -1,0 +1,10 @@
+<div class="control-group">
+  <ng-pluralize count="ctrl.mappingCount"
+      when="{'0': 'These layers have no associated columns.',
+             'one': 'These layers have {} associated column.',
+             'other': 'These layers have {} associated columns.'}"></ng-pluralize>
+  <popover class="pull-right" x-title="'Column Associations'" x-content="ctrl.columnMappingHelp" x-pos="'right'"></popover>
+  <button class="btn block" type="button" ng-click="ctrl.launchColumnMappings()">
+    <i class="fa fa-columns lt-blue-icon"></i> Column Associations
+  </button>
+</div>

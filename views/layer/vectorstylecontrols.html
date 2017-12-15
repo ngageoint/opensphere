@@ -1,0 +1,32 @@
+<table class="vector-style-controls">
+  <tr title="Sets the opacity (inverse transparency) of the layer(s)">
+    <td class="control-label">Opacity:</td>
+    <td><slider min="0" max="1" step="0.02" value="opacity" name="opacity"></slider></td>
+  </tr>
+  <tr title="Sets the size of each item in the layer(s)">
+    <td class="control-label">Size:</td>
+    <td><slider min="1" max="10" step="1" value="size" live="false" name="size"></slider></td>
+  </tr>
+  <tr title="Sets the color/shape used to render features">
+    <td class="control-label">Style:</td>
+    <td class="style-controls wide">
+      <colorpicker name="color" class="no-text" color="color" show-reset="{{showColorReset}}">
+      </colorpicker>
+      <select ng-if="shapes && shapes.length > 0" ng-model="$parent.shape"
+          ng-change="ctrl.onShapeChange()"
+          ng-options="val for val in shapes">
+      </select>
+      <iconpicker ng-show="showIcon && icon && iconSet" ng-model="icon" icon-set="iconSet" icon-src="iconSrc"></iconpicker>
+      <iconpicker ng-show="ctrl.hasCenter() && showCenterIcon && centerIcon && iconSet" ng-model="centerIcon" icon-set="iconSet" icon-src="iconSrc"></iconpicker>
+    </td>
+  </tr>
+  <tr title="Sets the style of the ellipse center" ng-if="centerShapes && centerShapes.length > 0 && ctrl.hasCenter()">
+    <td class="control-label">Center:</td>
+    <td class="style-controls wide">
+      <select ng-model="$parent.centerShape"
+          ng-change="ctrl.onCenterShapeChange($parent.centerShape)"
+          ng-options="val for val in centerShapes">
+      </select>
+    </td>
+  </tr>
+</table>

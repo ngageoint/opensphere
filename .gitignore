@@ -1,0 +1,39 @@
+# Build Output #
+################
+dist/
+.build/
+index.html
+old.html
+
+# old build
+.sass-cache/
+target/
+styles/core-ui*
+
+# Dependencies #
+################
+node_modules/
+
+# Logs #
+########
+logs
+*.log
+npm-debug.log*
+
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

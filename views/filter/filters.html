@@ -1,0 +1,12 @@
+<div class="window-content-wrapper">
+  <div class="window-content" ng-form="filterForm">
+    <div class="filters-header">
+      <span class="pull-right" ng-show="type">
+        Match: <select class="no-margin" style="width: auto" ng-model="filters.group" ng-change="filters.onGroup()" ng-options="key for (key, value) in filters.groups" title="Whether results can match any filter or must match all filters."/>
+      </span>
+      <button class="btn btn-default" ng-click="filters.edit()"><i class="btn-icon fa fa-plus green-icon"></i> Add Filter</button>
+      <button class="btn btn-default" ng-click="filters.import()"><i class="btn-icon fa fa-sign-in color-import"></i> Import Filter</button>
+    </div>
+    <filtertree type="type"></filtertree>
+  </div>
+</div>
