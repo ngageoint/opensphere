@@ -1,0 +1,20 @@
+<span ng-switch="type">
+  <span ng-switch-when="cx" class="location-properties-link" ng-click="cell.viewCxReport()">Launch Report</span>
+  <span ng-switch-when="prop" class="location-properties-link" ng-click="cell.viewProperties()">Show Properties</span>
+  <span ng-switch-when="desc" class="location-properties-link" ng-click="cell.showDescription()">Show Description</span>
+  <span ng-switch-when="ca">
+    <span>{{property.value}} </span>
+    <span ng-if="actions.length == 1" class="col-act col-act-single" data-colvalue="property.value">
+      <a class="os-colact-anchor" href="{{action}}" target="_blank">
+        <i class="fa fa-external-link-square" title="{{description}}"></i>
+      </a>
+    </span>
+    <span ng-if="actions.length > 1" class="col-act col-act-mult" data-colvalue="property.value">
+      <span title="Multiple Column Actions" ng-click="cell.pickColumnAction()" style="vertical-align:baseline" class="fa-stack mult-colaction">
+        <i class="fa fa-square-o fa-stack-1x" style="left:-.3em;font-size:1.3em;bottom:.1em;"></i>
+        <i class="fa fa-stack fa-external-link-square"></i>
+      </span>
+    </span>
+  </span>
+  <span ng-switch-default class="pre" ng-bind-html="property.value"></span>
+</span>

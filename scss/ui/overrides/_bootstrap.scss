@@ -1,0 +1,78 @@
+// Bootstrap overrides
+// ***************************************************
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  @include text-shadow(none);
+}
+
+code,
+pre {
+  @include box-sizing(border-box);
+}
+
+input[disabled],
+select[disabled],
+textarea[disabled] {
+  cursor: default;
+}
+
+input {
+  &[type='button'][disabled],
+  &[type='reset'][disabled],
+  &[type='submit'][disabled],
+  &[readonly] {
+    cursor: default;
+  }
+}
+
+select[readonly],
+textarea[readonly],
+label,
+label[disabled] {
+  cursor: default;
+}
+
+.control-group.inline {
+  label,
+  .controls {
+    display: inline-block;
+  }
+}
+
+.nav-tabs {
+  margin-bottom: 12px;
+
+  li {
+    a {
+      padding: 4px 8px;
+
+      i.fa {
+        color: $color-gray;
+      }
+    }
+
+    &.active {
+      a {
+        i.fa {
+          color: initial;
+        }
+      }
+    }
+  }
+}
+
+.table-borderless,
+.table-borderless th,
+.table-borderless td {
+  border: 0;
+}
+
+.compact .table-condensed th,
+.compact .table-condensed td {
+  padding: 0 5px;
+}

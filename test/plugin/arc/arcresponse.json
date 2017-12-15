@@ -1,0 +1,22 @@
+{
+  "currentVersion": 10.31,
+  "folders": [
+    "Analysis",
+    "Elevation",
+    "Locators"
+  ],
+  "services": [
+    {
+      "name": "Blank",
+      "type": "MapServer"
+    },
+    {
+      "name": "Geometry",
+      "type": "MapServer"
+    },
+    {
+      "name": "GEONAMES",
+      "type": "MapServer"
+    }
+  ]
+}

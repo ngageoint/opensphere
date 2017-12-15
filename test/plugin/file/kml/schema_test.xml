@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://earth.google.com/kml/2.2">
+  <Document>
+    <name>Schema Test</name>
+    <Schema parent="typeA" name="typeB">
+      <SimpleField type="uint" name="fancyField"/>
+    </Schema>
+    <Schema parent="Placemark" name="typeA">
+      <SimpleField type="bool" name="boolean"/>
+      <SimpleField type="double" name="number"/>
+      <SimpleField type="string" name="string"/>
+      <SimpleField type="whatever" name="whatever"/>
+    </Schema>
+    <typeA>
+      <Point>
+        <coordinates>0,0,0</coordinates>
+      </Point>
+      <boolean>true</boolean>
+      <number>123.456</number>
+      <string>it works</string>
+      <whatever>default should be string</whatever>
+    </typeA>
+    <typeB>
+      <Point>
+        <coordinates>1,1,0</coordinates>
+      </Point>
+      <boolean>0</boolean>
+      <fancyField>     12     </fancyField>
+    </typeB>
+  </Document>
+</kml>

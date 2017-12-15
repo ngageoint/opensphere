@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<state xmlns="http://www.bit-sys.com/state/v2">
+  <title>543321</title>
+  <filters xmlns:ogc="http://www.opengis.net/ogc">
+    <filter active="true" filterType="single" title="State Filter 1" description="" type="default#LAYER_4#features" match="OR">
+      <ogc:And>
+        <ogc:PropertyIsEqualTo>
+          <ogc:PropertyName>TOI</ogc:PropertyName>
+          <ogc:Literal><![CDATA[12345]]></ogc:Literal>
+        </ogc:PropertyIsEqualTo>
+      </ogc:And>
+    </filter>
+    <filter active="true" filterType="single" title="State Filter 2" description="" type="default#LAYER_5#features" match="AND">
+      <ogc:And>
+        <ogc:PropertyIsEqualTo>
+          <ogc:PropertyName>NUM</ogc:PropertyName>
+          <ogc:Literal><![CDATA[71]]></ogc:Literal>
+        </ogc:PropertyIsEqualTo>
+      </ogc:And>
+    </filter>
+  </filters>
+  <time>
+    <interval>2015-09-18T00:00:00Z/2015-09-19T00:00:00Z</interval>
+    <current>2015-09-18T00:00:00Z/2015-09-19T00:00:00Z</current>
+    <advance>PT1S</advance>
+    <fade>
+      <out>P1D</out>
+    </fade>
+    <sequence>
+      <interval>2015-09-18T00:00:00Z/2015-09-19T00:00:00Z</interval>
+    </sequence>
+    <duration>day</duration>
+  </time>
+</state>

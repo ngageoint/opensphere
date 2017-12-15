@@ -1,0 +1,96 @@
+<Filter xmlns="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml" xmlns:smil20="http://www.w3.org/2001/SMIL20" xmlns:smil20lang="http://www.w3.org/2001/SMIL20/Language" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <And>
+    <And>
+      <PropertyIsGreaterThanOrEqualTo>
+        <PropertyName>validTime</PropertyName>
+        <Sub>
+          <Function name="GET_CURRENT_DATE_TIME"/>
+          <Literal>PT30M</Literal>
+        </Sub>
+      </PropertyIsGreaterThanOrEqualTo>
+    </And>
+    <Or>
+      <And description="This is an advanced filter of some kind" namehint="1 Billion Dollars">
+        <PropertyIsEqualTo>
+          <PropertyName>DOLLARS</PropertyName>
+          <Literal><![CDATA[1000000000]]></Literal>
+        </PropertyIsEqualTo>
+        <And hint="between">
+          <PropertyIsGreaterThanOrEqualTo>
+            <PropertyName>VALUE</PropertyName>
+            <Literal><![CDATA[1000]]></Literal>
+          </PropertyIsGreaterThanOrEqualTo>
+          <PropertyIsLessThanOrEqualTo>
+            <PropertyName>VALUE</PropertyName>
+            <Literal><![CDATA[2000]]></Literal>
+          </PropertyIsLessThanOrEqualTo>
+        </And>
+        <And hint="between">
+          <PropertyIsGreaterThanOrEqualTo>
+            <PropertyName>LAT</PropertyName>
+            <Literal><![CDATA[5]]></Literal>
+          </PropertyIsGreaterThanOrEqualTo>
+          <PropertyIsLessThanOrEqualTo>
+            <PropertyName>LAT</PropertyName>
+            <Literal><![CDATA[20]]></Literal>
+          </PropertyIsLessThanOrEqualTo>
+        </And>
+        <And>
+          <Or>
+            <And hint="between">
+              <PropertyIsGreaterThanOrEqualTo>
+                <PropertyName>LON</PropertyName>
+                <Literal><![CDATA[10]]></Literal>
+              </PropertyIsGreaterThanOrEqualTo>
+              <PropertyIsLessThanOrEqualTo>
+                <PropertyName>LON</PropertyName>
+                <Literal><![CDATA[50]]></Literal>
+              </PropertyIsLessThanOrEqualTo>
+            </And>
+            <And hint="between">
+              <PropertyIsGreaterThanOrEqualTo>
+                <PropertyName>VALUE</PropertyName>
+                <Literal><![CDATA[0.01]]></Literal>
+              </PropertyIsGreaterThanOrEqualTo>
+              <PropertyIsLessThanOrEqualTo>
+                <PropertyName>VALUE</PropertyName>
+                <Literal><![CDATA[0.5]]></Literal>
+              </PropertyIsLessThanOrEqualTo>
+            </And>
+          </Or>
+          <Or>
+            <And hint="between">
+              <PropertyIsGreaterThanOrEqualTo>
+                <PropertyName>VALUE</PropertyName>
+                <Literal><![CDATA[1000000]]></Literal>
+              </PropertyIsGreaterThanOrEqualTo>
+              <PropertyIsLessThanOrEqualTo>
+                <PropertyName>VALUE</PropertyName>
+                <Literal><![CDATA[1000000000]]></Literal>
+              </PropertyIsLessThanOrEqualTo>
+            </And>
+            <PropertyIsNull>
+              <PropertyName>VALUE</PropertyName>
+            </PropertyIsNull>
+          </Or>
+        </And>
+      </And>
+    </Or>
+    <And>
+      <And>
+        <Or>
+          <Intersects description="Some Description" namehint="Some Area" xmlns="http://www.opengis.net/ogc">
+            <PropertyName>GEOM</PropertyName>
+            <Polygon xmlns="http://www.opengis.net/gml">
+              <exterior>
+                <LinearRing>
+                  <posList>30.1407284591992 40.535032559090155 29.18375153953994 38.696323926102934 28.36123428369135 38.674804579292946 28.203425740418 38.70827911877518 27.95475773283589 38.849350392307365 27.7323911491326 39.0980183998895 27.64392272335819 39.08845424575171 27.58653779853151 39.1314929393717 27.44068444793047 39.124319823768374 27.32591459827717 39.191268902732794 27.31395940560495 39.37537886988496 27.48611418008493 39.47819352686604 27.4741589874271 39.76272711246483 27.61762129947931 39.86554176944591 27.75151945740818 39.87749696211815 27.95714877137033 40.07834419901141 28.29667624326132 40.09508146875252 28.6146843683423 40.22180651107802 28.6122933298079 40.336576360731314 30.1407284591992 40.535032559090155</posList>
+                </LinearRing>
+              </exterior>
+            </Polygon>
+          </Intersects>
+        </Or>
+      </And>
+    </And>
+  </And>
+</Filter>

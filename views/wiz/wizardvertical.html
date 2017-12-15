@@ -1,0 +1,43 @@
+<div>
+  <div class="row-fluid">
+    <ul class="span12 breadcrumb" scroll-header>
+      <li style="margin-top:5px;" ng-repeat="step in wiz.steps" ng-class="{'active': wiz.isActive(step)}">
+        <a ng-if="!wiz.isActive(step)" ng-click="wiz.setStepIndex($index)" ng-class="{'complete':'step-complete','error':'step-error'}[wiz.getStepState(step)]">
+          <i ng-if="wiz.getStepState(step) == 'complete'" class="fa fa-check-circle color-scheme-compliment1-dark-alt"></i>
+          <i ng-if="wiz.getStepState(step) == 'error'" class="fa fa-exclamation-circle color-red"></i>
+          {{$index + 1}}. {{step.getTitle()}}
+        </a>
+        <span ng-if="wiz.isActive(step)">
+          <i class="fa fa-chevron-circle-right"></i>
+          {{$index + 1}}. {{step.getTitle()}}
+        </span>
+        <span ng-if="!$last" class="divider">&nbsp;/&nbsp;</span>
+      </li>
+      <li class="pull-right">
+        <button type="btn" class="btn btn-inverse pull-left" ng-click="wiz.prev()" ng-disabled="wiz.activeIndex == 0">
+          <i class="fa fa-chevron-circle-left"></i> Previous
+        </button>
+        <button type="btn" class="btn btn-inverse pull-right" ng-click="wiz.next()" ng-if="wiz.activeIndex < wiz.steps.length - 1"  ng-disabled="wiz.getStepState(wiz.activeIndex) == 'error'">
+          <i class="fa fa-chevron-circle-right"></i> Next
+        </button>
+        <button type="btn" class="btn btn-primary pull-right" ng-if="wiz.activeIndex == wiz.steps.length - 1" ng-click="wiz.accept()" ng-disabled="wiz.getStepState(wiz.activeIndex) == 'error'">
+          <i class="fa fa-check"></i> Submit
+        </button>
+      </li>
+    </ul>
+  </div>
+  <div class="row-fluid">
+    <div id="wizard-step-content" class="box padded-med span12"></div>
+  </div>
+  <div class="pull-right">
+    <button type="btn" class="btn btn-inverse pull-left" ng-click="wiz.prev()" ng-disabled="wiz.activeIndex == 0">
+      <i class="fa fa-chevron-circle-left"></i> Previous
+    </button>
+    <button type="btn" class="btn btn-inverse pull-right" ng-click="wiz.next()" ng-if="wiz.activeIndex < wiz.steps.length - 1"  ng-disabled="wiz.getStepState(wiz.activeIndex) == 'error'">
+      <i class="fa fa-chevron-circle-right"></i> Next
+    </button>
+    <button type="btn" class="btn btn-primary pull-right" ng-if="wiz.activeIndex == wiz.steps.length - 1" ng-click="wiz.accept()" ng-disabled="wiz.getStepState(wiz.activeIndex) == 'error'">
+      <i class="fa fa-check"></i> Submit
+    </button>
+  </div>
+</div>

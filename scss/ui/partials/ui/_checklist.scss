@@ -1,0 +1,48 @@
+// styles for the checklist directive
+
+.checklist-container {
+  max-height: 300px;
+  padding: 5px;
+  position: relative;
+  width: 200px;
+  z-index: 100000;
+
+  &.shadowbox {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+}
+
+.checklist {
+  @include box-sizing(border-box);
+  border: 1px solid #000;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+
+  label {
+    margin: 0;
+    padding-left: 25px;
+    padding-top: 0;
+    text-shadow: none;
+  }
+
+  label.toggle-all {
+    @include background-image(linear-gradient(#727272, #575757 70%, #464646));
+    border-bottom: 1px solid #000;
+  }
+
+  .checklist-items {
+    background: #555;
+    height: 100%;
+    overflow: auto;
+
+    &.with-toggle {
+      @include calc(height, '100% - 22px');
+    }
+
+    label:nth-child(odd) {
+      background: #666;
+    }
+  }
+}

@@ -1,0 +1,53 @@
+<div class="kml-export" ng-form="kmlExportForm">
+  <table style="width:100%">
+    <tr ng-if="!simple">
+      <td class="control-group inline">
+        <label class="checkbox" title="If selected, icons will be colored with the current feature color. If unselected, icons will be unchanged.">
+          <input type="checkbox" name="useItemColor" ng-model="kmlexport.useItemColor">
+          Use Feature Colors
+        </label>
+      </td>
+    </tr>
+    <!-- <tr ng-if="!simple">
+      <td class="control-group inline">
+        <label class="checkbox" title="If selected, icons that are currently displayed will be used in the KML. If unselected, the default icon will be used.">
+          <input type="checkbox" name="useItemIcon" ng-model="kmlexport.useItemIcon">
+          Use Feature Icons
+        </label>
+      </td>
+    </tr> -->
+    <tr>
+      <td class="control-group inline">
+        <label class="checkbox" title="Selecting this will compress the KML into a KMZ, resulting in a smaller output file.">
+          <input type="checkbox" name="compress" ng-model="kmlexport.compress">
+          Compress as KMZ
+        </label>
+      </td>
+    </tr>
+    <tr ng-if="!simple">
+      <td class="control-group inline">
+        <label class="checkbox" title="Selecting this will export features as ellipses, when possible.">
+          <input type="checkbox" name="exportEllipses" ng-model="kmlexport.exportEllipses">
+          Export Ellipses
+        </label>
+      </td>
+    </tr>
+    <tr ng-if="!simple">
+      <td class="control-group inline">
+        <label class="checkbox" title="Selecting this will include the center point in the exported ellipse."
+            ng-show="kmlexport.exportEllipses">
+          <input type="checkbox" name="useCenterPoint" ng-model="kmlexport.useCenterPoint">
+          Include Center Point
+        </label>
+      </td>
+    </tr>
+  </table>
+  <table style="width:100%" ng-if="kmlexport.icon && !simple">
+    <tr title="The icon to use for each point">
+      <td class="wide">
+        Default Icon:
+        <iconpicker ng-model="kmlexport.icon" icon-set="kmlexport.iconSet" icon-src="kmlexport.iconSrc"></iconpicker>
+      </td>
+    </tr>
+  </table>
+</div>

@@ -1,0 +1,110 @@
+.palette {
+  cursor: default;
+  outline: none;
+
+  &.background {
+    background-color: #555;
+    border-radius: 4px;
+    padding: 2px;
+  }
+
+  &.fixed {
+    border: 1px solid #222;
+    position: fixed;
+    z-index: 20000;
+  }
+
+  .palette-table {
+    border: 1px solid #444;
+    border-collapse: collapse;
+    margin: 0;
+
+    .palette-cell {
+      border: 0;
+      cursor: pointer;
+      height: 18px;
+      margin: 0;
+      text-align: center;
+      vertical-align: middle;
+      width: 18px;
+
+      .palette-colorswatch {
+        border: 0;
+        font-size: x-small;
+        height: 18px;
+        position: relative;
+        width: 18px;
+      }
+
+      &.selected .palette-colorswatch {
+        border: 1px solid #333;
+        height: 16px;
+        width: 16px;
+      }
+
+      &:hover .palette-colorswatch {
+        border: 1px solid #fff;
+        height: 16px;
+        width: 16px;
+      }
+    }
+  }
+}
+
+.iconchooser {
+  display: inline-block;
+  height: 36px;
+  position: relative;
+  text-align: center;
+  width: 36px;
+
+  &:hover {
+    background-color: #444;
+  }
+
+  // dashed border around the selected icon
+  &.selected {
+    border: 2px dashed $color-white;
+  }
+
+  // transparent border around all other icons to prevent shifting when the selection changes
+  &:not(.selected) {
+    border: 2px dashed transparent;
+  }
+
+  > img {
+    height: 100%;
+    width: 100%;
+  }
+}
+
+.iconchosen {
+  border: 0;
+  display: inline-block;
+  height: 24px;
+  width: 24px;
+
+  > img {
+    height: 100%;
+    width: 100%;
+  }
+}
+
+.btn-icon-picker {
+  height: 28px;
+  margin: 0;
+  padding: 0;
+  width: 28px;
+}
+
+button.btn-invisible,
+button.btn-invisible[disabled] {
+  background: transparent;
+  border: 1px solid transparent;
+  box-shadow: none;
+  padding: 0;
+
+  &:hover {
+    border: 1px dotted $color-black;
+  }
+}

@@ -1,0 +1,8 @@
+<div class="search-results" ng-show="searchResults.loading || searchResults.results.length">
+  <div class="box box-hover" ng-if="searchResults.loading">
+    <span class="middle"><i class="fa fa-fw fa-spin fa-spinner"></i> Loading results ...</span>
+  </div>
+  <div class="box box-hover list-item" ng-repeat="result in searchResults.results track by searchResults.track(result)">
+    <resultcard result="result"></resultcard>
+  </div>
+</div>

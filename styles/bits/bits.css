@@ -1,0 +1,2552 @@
+/**
+ * Custom scrollbar for Webkit-based browsers. Sorry, Firefox/IE!
+ */
+::-webkit-scrollbar {
+  height: 10px;
+  width: 10px;
+  background-color: #eee;
+}
+
+::-webkit-scrollbar-corner {
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #999;
+  border-radius: 4px;
+}
+
+.simple-loc .simple-loc-location {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: middle;
+  margin-left: 0.5em;
+}
+
+.simple-loc .simple-loc-btn-group {
+  display: inline-block;
+}
+
+.simple-loc .btn.active {
+  background-image: none;
+  outline: 0;
+  -webkit-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
+  -moz-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/*
+  === Colors ===
+  color schemes, font color and icon colors (font-awesome) definitions
+ */
+.color-scheme-primary {
+  color:#357cc0!important;
+}
+
+.color-scheme-primary-dark {
+  color:#2f5aa9!important;
+}
+
+.color-scheme-primary-dark-alt {
+  color:#426a90!important;
+}
+
+.color-scheme-primary-light {
+  color:#4792cf!important;
+}
+
+.color-scheme-primary-light-alt {
+  color:#87b4e0!important;
+}
+
+.color-scheme-compliment1 {
+  color:#74b874!important;
+}
+
+.color-scheme-compliment1-dark {
+  color:#648a64!important;
+}
+
+.color-scheme-compliment1-dark-alt {
+  color:#267726!important;
+}
+
+.color-scheme-compliment1-light {
+  color:#afdbaf!important;
+}
+
+.color-scheme-compliment1-light-alt {
+  color:#9edb9e!important;
+}
+
+.color-scheme-compliment2 {
+  color:#e69191!important;
+}
+
+.color-scheme-compliment2-dark {
+  color:#ac7c7c!important;
+}
+
+.color-scheme-compliment2-dark-alt {
+  color:#953f2f!important;
+}
+
+.color-scheme-compliment2-light {
+  color:#f2c1c1!important;
+}
+
+.color-scheme-compliment2-light-alt {
+  color:#f2afaf!important;
+}
+
+.color-scheme-compliment3 {
+  color:#e6c891!important;
+}
+
+.color-scheme-compliment3-dark {
+  color:#ac9c7c!important;
+}
+
+.color-scheme-compliment3-dark-alt {
+  color:#95722f!important;
+}
+
+.color-scheme-compliment3-light {
+  color:#f2e1c1!important;
+}
+
+.color-scheme-compliment3-light-alt {
+  color:#f2dbaf!important;
+}
+
+/* Basic Colors */
+.color-white {
+  color: #ffffff !important;
+}
+
+.color-black {
+  color:#0a0a0a !important;
+}
+
+.color-dark-gray {
+  color:#484848 !important;
+}
+
+.color-gray {
+  color:#666666 !important;
+}
+
+.color-light-gray {
+  color:#cccccc !important;
+}
+
+.color-green {
+  color:#458B74 !important;
+  /*   color:#569c39 !important;   */
+}
+
+.color-light-green {
+  color:#3cb371 !important;
+}
+
+.color-blue {
+  color:#0088cc !important;
+}
+
+.color-dark-blue {
+  color:#0066AA !important;
+}
+
+.color-red {
+  color:#b94a48!important;
+}
+
+.color-orange {
+  color:#F89406!important;
+}
+
+.color-yellow {
+  color:yellow!important;
+}
+
+.color-info {
+  color:#3A87AD!important;
+}
+
+.color-goldenrod {
+  color:goldenrod!important;
+}
+
+[class*="-hover"] {
+  transition: color 200ms ease;
+  -o-transition: color 200ms ease;
+  -moz-transition: color 200ms ease;
+  -webkit-transition: color 200ms ease;
+}
+
+.color-hover:hover {
+  color:#0088cc!important;
+}
+
+.color-hover-white:hover {
+  color:#ffffff!important;
+}
+
+/*
+  === Icon colors ===
+  Colors for font-awesome icons
+ */
+
+.red-icon {
+  color: #d00;
+}
+
+.orange-icon {
+  color: #f92;
+}
+
+.yellow-icon {
+  color: #ee0;
+}
+
+.gold-icon {
+  color: #b9ad5c;
+}
+
+.green-icon {
+  color: #0d0;
+}
+
+.lt-blue-icon {
+  color: #0cf;
+}
+
+.blue-icon {
+  color: #0076CC;
+}
+
+/*
+  === Font sizes ===
+  Styles to compliment font-awesome icons
+  Font-size (and icon) definitions
+ */
+.font-size-4of5 {
+  font-size:0.8em;
+}
+
+.font-size-4x {
+  font-size:4em;
+}
+
+.font-size-5x {
+  font-size:5em;
+}
+
+.font-size-6x {
+  font-size:6em;
+}
+
+.font-size-7x {
+  font-size:7em;
+}
+
+.font-size-8x {
+  font-size:8em;
+}
+
+.font-size-9x {
+  font-size:9em;
+}
+
+.font-size-10x {
+  font-size:10em;
+}
+
+.font-size-11x {
+  font-size:11em;
+}
+
+.font-size-12x {
+  font-size:12em;
+}
+
+.font-size-xlarge {
+  font-size:24em;
+}
+
+@media (max-width: 1199px) {
+  .font-size-10x {
+    font-size:8em;
+}
+
+.font-size-11x {
+  font-size:9em;
+}
+
+.font-size-12x {
+  font-size:10em;
+}
+
+.font-size-xlarge {
+  font-size:20em;
+}
+}
+
+@media (max-width:979px){
+  .font-size-10x {
+    font-size:6em;
+  }
+
+  .font-size-11x {
+    font-size:7em;
+  }
+
+  .font-size-12x {
+    font-size:8em;
+  }
+
+  .font-size-xlarge {
+    font-size:15em;
+  }
+}
+
+/*
+=== Top Gaps ===
+ */
+.top-gap-3px {
+  margin-top: 3px
+}
+
+.top-gapxs {
+  margin-top: 5px
+}
+
+.top-gaps {
+  margin-top: 8px;
+}
+
+.top-gap {
+  margin-top: 15px;
+}
+
+.top-gapm {
+  margin-top: 22px;
+}
+
+.top-gapl {
+  margin-top: 35px;
+}
+
+.top-gapxl {
+  margin-top: 55px;
+}
+
+/* Convenience classes
+ ***************************************************/
+
+.unselectable {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
+.selectable {
+  -webkit-touch-callout: initial;
+  -webkit-user-select: initial;
+  -khtml-user-select: initial;
+  -moz-user-select: initial;
+  -ms-user-select: initial;
+  user-select: initial;
+}
+
+.nowrap {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wide {
+  width: 100%;
+}
+
+.centered {
+  text-align: center;
+}
+
+.top {
+  vertical-align: top;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.ellipsis-text {
+  overflow:hidden;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+}
+
+.middle {
+  vertical-align: middle;
+}
+
+.do-wrap {
+  white-space: normal;
+  word-break: break-word;
+}
+
+
+/* Bootstrap overrides
+ ***************************************************/
+
+input[disabled],
+select[disabled],
+textarea[disabled],
+input[type="button"][disabled],
+input[type="reset"][disabled],
+input[type="submit"][disabled],
+input[readonly],
+select[readonly],
+textarea[readonly] {
+  cursor: default;
+}
+
+label[disabled] {
+  cursor: default;
+}
+
+.control-group.inline label,
+.control-group.inline .controls {
+  display: inline-block;
+}
+
+table .control-group.inline label,
+table .control-group.inline .controls {
+  display: table-cell;
+}
+
+/* -- end bootstrap overrides --
+ ***************************************************/
+
+/*** For forms which place buttons outside of the form but still would
+ * like to use ngSubmit, just put this on your submit input */
+.hidden {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  display: none;
+}
+
+/*
+=== Popovers ===
+Styles for creating popovers
+Popovers are fixed on the page with absolute positioning just underneath the target element,
+and include an arrow pointing back to target element.  Popovers fill 80% of the screen.
+They open and close with css transition animations.
+ */
+.bits-modal-content {
+  background:#fff;
+  box-shadow:0 25px 50px #333333;
+  border-radius:4px;
+  border:solid 1px #333;
+  padding:4px;
+  margin-top:12px;
+  position:absolute;
+  left:25%;
+  width:50%;
+  min-width:675px;
+  max-width:1000px;
+  z-index:1015;
+  opacity:0;
+  visibility:hidden;
+  -webkit-transform:scaleX(0.7) scaleY(0.1);
+  -webkit-transform-origin:50% 0;
+  -moz-transform:scaleX(0.7) scaleY(0.1);
+  -moz-transform-origin:50% 0;
+  -ms-transform:scaleX(0.7) scaleY(0.1);
+  -ms-transform-origin:50% 0;
+  transform:scaleX(0.7) scaleY(0.1);
+  transform-origin:50% 0;
+  -webkit-transition:all 0.3s;
+  -moz-transition:all 0.3s;
+  transition:all 0.3s;
+}
+
+/* fast table rendering */
+table {
+  table-display: fixed;
+}
+
+.modal-full {
+  margin-left:0;
+  left:10%;
+  width:80%;
+}
+
+.modal-half {
+  margin-left: 0;
+  left: 20%;
+  width: 60%;
+}
+
+.modal .bits-modal-content {
+  position:fixed;
+  top:20%;
+}
+
+.modal .bits-modal-content .arrow {
+  display:none!important;
+}
+
+.bits-modal-container.bits-modal-show .bits-modal-content {
+  visibility:visible;
+  opacity:1;
+  -webkit-transform:scale(1);
+  -moz-transform:scale(1);
+  -ms-transform:scale(1);
+  transform:scale(1);
+}
+
+.bits-modal-content.bottom .arrow:after {
+  border-bottom-color: #FFFFFF;
+  border-top-width: 0;
+  margin-left: -10px;
+  top: 1px;
+}
+
+.bits-modal-content .arrow:after {
+  border-width: 10px;
+  content: "";
+}
+
+.bits-modal-content .arrow, .bits-modal-content .arrow:after {
+  border-color: transparent;
+  border-style: solid;
+  display: block;
+  height: 0;
+  position: absolute;
+  width: 0;
+}
+
+.bits-modal-content.bottom .arrow {
+  border-bottom-color: rgba(0, 0, 0, 0.25);
+  border-top-width: 0;
+  left: 50%;
+  margin-left: -11px;
+  top: -11px;
+}
+
+.bits-modal-content .arrow {
+  border-width: 11px;
+}
+
+.bits-modal-content .arrow, .bits-modal-content .arrow:after {
+  border-color: transparent;
+  border-style: solid;
+  display: block;
+  height: 0;
+  position: absolute;
+  width: 0;
+}
+
+@media (max-width:1199px){
+  .bits-modal-content {
+    left:10%;
+    width:80%;
+}
+}
+
+@media (max-width:767px){
+  .bits-modal-content {
+    left:5%;
+    width:90%;
+    min-width:550px;
+    max-width:550px;
+}
+}
+
+.popover-title {
+  font-weight:bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.popover-content {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+popover > i {
+  color: #666;
+}
+
+/*
+=== Drop Zones ===
+Style drop targets for drag & drop
+ */
+.drop-zone {
+  outline:dashed 3px transparent;
+  -moz-transition:outline 0s;
+}
+
+.drop-zone.fade {
+  transition: outline 100ms ease-in 1000ms, background 300ms ease-in 1000ms;
+  -moz-transition: outline 100ms ease-in 1000ms, background 300ms ease-in 1000ms;
+  -webkit-transition: outline 100ms ease-in 1000ms, background 300ms ease-in 1000ms;
+  opacity:1;
+  outline:dashed 0px transparent;
+}
+
+.drop-zone.in {
+  outline:dashed 3px #0088cc;
+  background:#bbddff!important;
+}
+
+.drop-zone.hover {
+  background:#aaffaa!important;
+  outline:dashed 3px #0088cc;
+}
+
+.drop-zone.fade.in, .drop-zone.fade.hover {
+  transition: background 100ms ease-in;
+  -moz-transition: background 100ms ease-in;
+  -webkit-transition: background 100ms ease-in;
+}
+
+.opacity .drop-zone.in img, .opacity .drop-zone.in img {
+  opacity:0.3;
+}
+
+/*
+=== Animations ===
+Styles used by ngAnimate
+ */
+.animate-fast {
+  -moz-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 200ms !important;
+  -webkit-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 200ms !important;
+  transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 200ms !important;
+}
+
+.ng-hide-add,
+.ng-hide-remove {
+  display:block!important;
+}
+
+/* Fade */
+.animate-fade {
+  -moz-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 500ms;
+  -webkit-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 500ms;
+  transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 500ms;
+}
+
+.animate-fade.ng-enter,
+.animate-fade.ng-hide,
+.animate-fade.ng-leave.ng-leave-active {
+  opacity:0;
+}
+
+.animate-fade.ng-leave,
+.animate-fade.ng-show,
+.animate-fade.ng-enter.ng-enter-active {
+  opacity:1;
+}
+
+.animate-fade-in.ng-enter,
+.animate-fade-in.ng-hide,
+.animate-fade-in.ng-leave.ng-leave-active {
+  -moz-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 500ms;
+  -webkit-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 500ms;
+  transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 500ms;
+  opacity:0;
+}
+
+.animate-fade-in.ng-leave,
+.animate-fade-in.ng-show,
+.animate-fade-in.ng-enter.ng-enter-active {
+  opacity:1;
+}
+
+/* Slide Vertically - element slides down*/
+/*
+ * Added -webkit-backface-visibility: hidden so animation will work in Chrome/Linux.
+ * This appears to be a Chrome/Webkit bug, preventing animations from firing properly.
+ */
+.animate-slide {
+  -webkit-transition:all  500ms;
+  -moz-transition:all  500ms;
+  -ms-transition:all  500ms;
+  transition:all 500ms;
+  -webkit-transform-origin:0 top;
+  -moz-transform-origin:0 top;
+  -ms-transform-origin:0 top;
+  transform-origin:0 top;
+  -webkit-backface-visibility: hidden;
+}
+
+.animate-slide.ng-enter,
+.animate-slide.ng-hide,
+.animate-slide.ng-leave.ng-leave-active {
+  opacity:0;
+  visibility:hidden;
+  -webkit-transform:scaleY(0.3);
+  -moz-transform:scaleY(0.3);
+  -ms-transform:scaleY(0.3);
+  transform:scaleY(0.3);
+}
+
+.animate-slide.ng-leave,
+.animate-slide.ng-show,
+.animate-slide.ng-enter.ng-enter-active {
+  visibility:visible;
+  opacity:1;
+  -webkit-transform:scaleY(1);
+  -moz-transform:scaleY(1);
+  -ms-transform:scaleY(1);
+  transform:scaleY(1);
+}
+
+/* Slide Horizontally - element slides right */
+.animate-slide-h {
+  -webkit-transition:all  500ms;
+  -moz-transition:all  500ms;
+  transition:all 500ms;
+  -webkit-transform-origin:0 0;
+  -moz-transform-origin:0 0;
+  -ms-transform-origin:0 0;
+  transform-origin:0 0;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Slide Horizontally - element slides left (west) */
+.animate-slide-w {
+  -webkit-transition:all  500ms;
+  -moz-transition:all  500ms;
+  transition:all 500ms;
+  -webkit-transform-origin:right;
+  -moz-transform-origin:right;
+  -ms-transform-origin:right;
+  transform-origin:right;
+  -webkit-backface-visibility: hidden;
+}
+
+.animate-slide-h.ng-enter,
+.animate-slide-h.ng-hide,
+.animate-slide-h.ng-leave.ng-leave-active,
+.animate-slide-w.ng-enter,
+.animate-slide-w.ng-hide,
+.animate-slide-w.ng-leave.ng-leave-active{
+  opacity:0;
+  visibility:hidden;
+  -webkit-transform:scaleX(0.3);
+  -moz-transform:scaleX(0.3);
+  -ms-transform:scaleX(0.3);
+  transform:scaleX(0.3);
+}
+
+.animate-slide-h.ng-leave,
+.animate-slide-h.ng-show,
+.animate-slide-h.ng-enter.ng-enter-active,
+.animate-slide-w.ng-leave,
+.animate-slide-w.ng-show,
+.animate-slide-w.ng-enter.ng-enter-active{
+  visibility:visible;
+  opacity:1;
+  -webkit-transform:scaleX(1);
+  -moz-transform:scaleX(1);
+  -ms-transform:scaleX(1);
+  transform:scaleX(1);
+}
+
+/* Scale Implode - element shrinks and falls away*/
+.animate-scale {
+  -webkit-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 500ms;
+  -moz-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 500ms;
+  transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 500ms;
+  -webkit-transform-origin:50% 50%;
+  -moz-transform-origin:50% 50%;
+  -ms-transform-origin:50% 50%;
+  transform-origin:50% 50%;
+}
+
+.animate-scale.ng-enter,
+.animate-scale.ng-hide,
+.animate-scale.ng-leave.ng-leave-active {
+  opacity:0;
+  -webkit-transform:scale(0.3);
+  -moz-transform:scale(0.3);
+  -ms-transform:scale(0.3);
+  transform:scale(0.3);
+}
+
+.animate-scale.ng-leave,
+.animate-scale.ng-show,
+.animate-scale.ng-enter.ng-enter-active {
+  opacity:1;
+  -webkit-transform:scale(1);
+  -moz-transform:scale(1);
+  -ms-transform:scale(1);
+  transform:scale(1);
+}
+
+/* Scale Explode - element expands and jumps out */
+.animate-scale-explode {
+  -moz-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 500ms;
+  -webkit-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 500ms;
+  transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 500ms;
+  -webkit-transform-origin:50% 50%;
+  -moz-transform-origin:50% 50%;
+  -ms-transform-origin:50% 50%;
+  transform-origin:50% 50%;
+}
+
+.animate-scale-explode.ng-enter,
+.animate-scale-explode.ng-hide,
+.animate-scale-explode.ng-leave.ng-leave-active {
+  opacity:0;
+  -webkit-transform:scale(3);
+  -moz-transform:scale(3);
+  -ms-transform:scale(3);
+  transform:scale(3);
+}
+
+.animate-scale-explode.ng-leave,
+.animate-scale-explode.ng-show,
+.animate-scale-explode.ng-enter.ng-enter-active {
+  opacity:1;
+  -webkit-transform:scale(1);
+  -moz-transform:scale(1);
+  -ms-transform:scale(1);
+  transform:scale(1);
+}
+
+/*
+Present - element finds its place by starting low and raising up
+(add 'animate-present-large' for large elements to reduce the displacement)
+(use 'animate-present-in'/'animate-present-out' as alternative options to only animate one direction)
+ */
+.animate-present {
+  -webkit-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 500ms;
+  -moz-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 500ms;
+  transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 500ms;
+}
+
+.animate-present.ng-enter,
+.animate-present.ng-hide,
+.animate-present.ng-leave.ng-leave-active {
+  opacity:0;
+  -webkit-transform:translateY(5%);
+  -moz-transform:translateY(5%);
+  -ms-transform:translateY(5%);
+  transform:translateY(5%);
+}
+
+.animate-present.animate-present-large.ng-enter,
+.animate-present.animate-present-large.ng-hide,
+.animate-present.animate-present-large.ng-leave.ng-leave-active {
+  -webkit-transform:translateY(2%);
+  -moz-transform:translateY(2%);
+  -ms-transform:translateY(2%);
+  transform:translateY(2%);
+}
+
+.animate-present.ng-leave,
+.animate-present.ng-show,
+.animate-present.ng-enter.ng-enter-active {
+  opacity:1;
+  -webkit-transform:translateY(0);
+  -moz-transform:translateY(0);
+  -ms-transform:translateY(0);
+  transform:translateY(0);
+}
+
+.animate-present-in.ng-hide-add {
+  -webkit-transition:none;
+  -moz-transition:none;
+  transition:none;
+}
+
+.animate-present-in.ng-hide-remove {
+  -webkit-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 500ms;
+  -moz-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 500ms;
+  transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 500ms;
+}
+
+.animate-present-in.ng-hide {
+  -webkit-transform:translateY(5%);
+  -moz-transform:translateY(5%);
+  -ms-transform:translateY(5%);
+  transform:translateY(5%);
+  opacity:0;
+}
+
+.animate-present-in.animate-present-large.ng-hide {
+  -webkit-transform:translateY(2%);
+  -moz-transform:translateY(2%);
+  -ms-transform:translateY(2%);
+  transform:translateY(2%);
+}
+
+.animate-present-out.ng-hide-add {
+  -webkit-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 500ms;
+  -moz-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 500ms;
+  transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 500ms;
+}
+
+.animate-present-out.ng-hide-remove {
+  -webkit-transition:none;
+  -moz-transition:none;
+  transition:none;
+}
+
+.animate-present-out.ng-hide {
+  -webkit-transform:translateY(5%);
+  -moz-transform:translateY(5%);
+  -ms-transform:translateY(5%);
+  transform:translateY(5%);
+  opacity:0;
+}
+
+.animate-present-out.animate-present-large.ng-hide {
+  -webkit-transform:translateY(2%);
+  -moz-transform:translateY(2%);
+  -ms-transform:translateY(2%);
+  transform:translateY(2%);
+}
+
+/*
+Flip Vertical, Horizontal - element does a 3D flip along x-axis or y-axis
+(requires animated element's parent to have 'animate-flip-parent' to get 3D effect)
+ */
+.animate-flip-parent {
+  -webkit-perspective:1300px;
+  -moz-perspective:1300px;
+  perspective:1300px;
+}
+
+.animate-flip-v,
+.animate-flip-h
+{
+  -webkit-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 500ms;
+  -moz-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 500ms;
+  transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 500ms;
+  -webkit-transform-style:preserve-3d;
+  -moz-transform-style:preserve-3d;
+  -ms-transform-style:preserve-3d;
+  transform-style:preserve-3d;
+}
+
+.animate-flip-v.ng-enter,
+.animate-flip-v.ng-hide,
+.animate-flip-v.ng-leave.ng-leave-active {
+  opacity:0;
+  -webkit-transform:rotateX(70deg);
+  -moz-transform:rotateX(70deg);
+  -ms-transform:rotateX(70deg);
+  transform:rotateX(70deg);
+}
+
+.animate-flip-v.ng-leave,
+.animate-flip-v.ng-show,
+.animate-flip-v.ng-enter.ng-enter-active {
+  opacity:1;
+  -webkit-transform:rotateX(0deg);
+  -moz-transform:rotateX(0deg);
+  -ms-transform:rotateX(0deg);
+  transform:rotateX(0deg);
+}
+
+.animate-flip-h.ng-enter,
+.animate-flip-h.ng-hide,
+.animate-flip-h.ng-leave.ng-leave-active {
+  opacity:0;
+  -webkit-transform:rotateY(-70deg);
+  -moz-transform:rotateY(-70deg);
+  -ms-transform:rotateY(-70deg);
+  transform:rotateY(-70deg);
+}
+
+.animate-flip-h.ng-leave,
+.animate-flip-h.ng-show,
+.animate-flip-h.ng-enter.ng-enter-active {
+  opacity:1;
+  -webkit-transform:rotateY(0deg);
+  -moz-transform:rotateY(0deg);
+  -ms-transform:rotateY(0deg);
+  transform:rotateY(0deg);
+}
+
+/*   Blur - blurs contents of element as it hides */
+.animate-blur {
+  -webkit-transition:all ease 500ms;
+  -moz-transition:all ease 500ms;
+  transition:all ease 500ms;
+}
+
+.animate-blur.ng-enter,
+.animate-blur.ng-hide,
+.animate-blur.ng-leave.ng-leave-active {
+  opacity:0.75;
+  -webkit-filter:blur(5px);
+  -moz-filter:blur(5px);
+  filter:blur(5px);
+}
+
+.animate-blur.ng-leave,
+.animate-blur.ng-show,
+.animate-blur.ng-enter.ng-enter-active {
+  opacity:1;
+  -webkit-filter:none;
+  -moz-filter:none;
+  filter:none;
+}
+
+/* Resize indicator - use with 'fa fa-ellipsis-v' */
+.resize-grippy {
+  position: absolute;
+  right: 3px;
+  top: 50%;
+  color: #777;
+}
+
+.ui-resizable-e {
+  width: 7px;
+  right: -2px;
+}
+
+/* Classification Banner */
+.classification-banner {
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 16px;
+  min-height: 0 !important;
+  text-align: center;
+  color: #FFFF00;
+}
+
+.classification-offset-top {
+  margin-top:16px;
+}
+
+.classification-offset-bottom {
+  margin-bottom:16px;
+}
+
+.classification-disclaimer {
+  font-size: 0.9em;
+  line-height: 0.9em;
+}
+
+.classification-disclaimer p {
+  display: inline;
+}
+
+/* Scroll panes
+ ************************************************************/
+.scroll-pane-wrapper {
+  overflow: hidden;
+}
+
+.scroll-pane-wrapper:before {
+  box-shadow: 0 10px 10px -10px #999999 inset;
+  content: "";
+  display: block;
+  height: 10px;
+  position: relative;
+  margin-bottom: -10px;
+  z-index: 1;
+}
+
+.scroll-pane-wrapper:after {
+  box-shadow: 0 -10px 10px -10px #999999 inset;
+  content: "";
+  display: block;
+  height: 10px;
+  position: relative;
+  margin-top:-10px;
+}
+
+.scroll-pane {
+  height: 600px;
+  overflow-x: hidden;
+  position: relative;
+}
+
+.scroll-pane.ps-container {
+  overflow: hidden !important;
+}
+
+/* Styles for the data-grid directive
+ ********************************************************/
+.data-grid {
+  width: 100%;
+}
+
+.data-grid .slick-viewport {
+  overflow-x: hidden !important;
+}
+
+.data-grid .slick-cell.selected {
+  background-color: #08c;
+  color: #fff;
+}
+
+.data-grid .slick-row:not(:hover) .selected {
+  background-color: #08c;
+  color: #fff;
+}
+
+.data-grid .slick-row:hover .slick-cell {
+  background-color: #9edb9e;
+  color: #333;
+}
+
+.data-grid .slick-cell:first-child {
+  border-left: 1px dotted silver;
+}
+
+/* Tri-state (a.k.a Schrodinger) checkbox styles
+ ************************************************************/
+.tristate {
+  width: 13px;
+  height: 13px;
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 15px auto;
+  position: relative;
+  cursor: pointer;
+  top: 0;
+  border-radius: 3px;
+  box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0,0,0,0.5);
+
+  background: #fcfff4;
+  background: -webkit-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+  background: -moz-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+  background: -o-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+  background: -ms-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+  background: linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fcfff4', endColorstr='#b3bead', GradientType=0);
+}
+
+.tristate label {
+  display: inline-block;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  content: '';
+  background: transparent;
+  width: 13px;
+  height: 13px;
+}
+
+.tristate-off label:after {
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+  opacity: 0;
+  content: '';
+  position: absolute;
+  width: 6px;
+  height: 2.5px;
+  border: 3px solid #555;
+  border-top: none;
+  border-right: none;
+
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  -o-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+}
+
+.tristate-off label:hover::after {
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=30)";
+  filter: alpha(opacity=30);
+  opacity: 0.5;
+}
+
+.tristate-on label {
+  width: 6px;
+  height: 2.5px;
+  border: 3px solid #555;
+  border-top: none;
+  border-right: none;
+
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  -o-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+}
+
+.tristate-both label {
+  top: 2px;
+  left: 2px;
+  width: 9px;
+  height: 9px;
+  background: #555;
+  border-radius: 2px;
+}
+
+/* prompt styles
+ ************************************************************/
+.prompt {
+  width: -webkit-calc(100% - 10px);
+  width: -moz-calc(100% - 10px);
+  width: calc(100% - 10px);
+}
+
+/* Grid styles
+ ************************************************************/
+.slick-grid {
+  width: calc(100% - 2px);
+  width: -moz-calc(100% - 2px);
+  width: -webkit-calc(100% - 2px);
+  height: 100%;
+}
+
+/* spinner styles
+ ************************************************************/
+.spinner {
+  width: 20px;
+}
+
+input.spinner[disabled] {
+  background: none;
+  cursor: default;
+}
+
+/* Tree styles
+ ************************************************************/
+.slick-tree {
+  width: 100%;
+  height: 100%;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.slick-tree .slick-header-columns {
+  height: 0px;
+}
+
+.slick-tree .slick-header.ui-state-default {
+  border: none;
+}
+
+.slick-tree .slick-cell {
+  border: none;
+  padding: 0px 2px 5px 2px;
+}
+
+.slick-tree .slick-viewport {
+  overflow-x: hidden !important;
+}
+
+.slick-tree .slick-viewport.ps-container {
+  overflow: hidden !important;
+}
+
+.tree-spacer {
+  display: inline-block;
+  height: 1px;
+}
+
+.tree-expand-collapse {
+  font-size: 0.8em;
+  width: 1.4em;
+}
+
+.tree-icons {
+  padding-right: 2px;
+}
+
+.fa-fw.compact {
+  width: 1.1em;
+}
+
+/* Tree and Grid row styles
+ ************************************************************/
+.slick-row:not(:hover) .selected {
+  background: #0cc;
+}
+
+.slick-row:hover, .slick-dragging {
+  background: #98ff98;
+}
+
+.slick-row.ui-widget-content {
+  background: none;
+}
+
+/* Types Tree
+ ************************************************************/
+ .types-search {
+  width: -webkit-calc(100% - 10px);
+  width: -moz-calc(100% - 10px);
+  width: calc(100% - 10px);
+  min-width: 200px;
+}
+
+/* Inline (Glyph) button styles
+ ************************************************************/
+.glyphs {
+  position: relative;
+  z-index: 1;
+}
+
+.glyph {
+  cursor: pointer;
+}
+
+.glyph:hover {
+  text-shadow: 0 0 0.3em;
+}
+
+.glyph-remove {
+  color: #D00;
+}
+
+.glyph-filter {
+  color: #0D0;
+}
+
+/* Window styles
+ ************************************************************/
+.window {
+  position: fixed;
+  margin-left: 0px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.window-header {
+  position: relative;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  padding: 0px 10px;
+  cursor: default;
+  line-height: 30px;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.window-header .header-text {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.window-wrapper {
+  overflow: hidden;
+  height: calc(100% - 30px);
+  height: -moz-calc(100% - 30px);
+  height: -webkit-calc(100% - 30px);
+  position: relative;
+  border-radius: 0 0 4px 4px;
+}
+
+.window-content-wrapper {
+  height: 100%;
+}
+
+.window-content {
+  position: relative;
+  left: 0px;
+  right: 0px;
+  padding: 5px;
+  overflow: auto;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  height: calc(100% - 35px);
+  height: -moz-calc(100% - 35px);
+  height: -webkit-calc(100% - 35px);
+}
+
+.window-content.scroll {
+  padding-right: 16px;
+}
+
+.no-footer {
+  height: 100%;
+}
+
+.window-close {
+  cursor: pointer;
+  opacity: 0.6;
+  border: 1px solid #CCC;
+  border-radius: 3px;
+  padding: 0 2px 0 1px;
+  font-size: 12px;
+}
+
+.window-close:hover {
+  opacity: 0.9;
+}
+
+.window-footer {
+  padding: 5px 7px;
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  height: 25px;
+}
+
+.ui-resizable-se {
+  right: -2px;
+  bottom: -2px;
+}
+
+.window-modal-bg {
+  z-index: 10000;
+  background: #fff;
+  height: 100%;
+  left: 0;
+  opacity: .5;
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+/* confirm directive styles
+ *******************************************/
+
+.confirm-window .confirm-text {
+  font-size: 13px;
+}
+
+.confirm-window .window-footer .btn {
+  min-width: 50px;
+}
+
+/* textprompt directive styles
+ *******************************************/
+.text-prompt input[readonly] {
+  cursor: text;
+  opacity: 1;
+}
+
+/* gridster widget styles
+ *******************************************/
+.widget {
+  position: absolute;
+  border: 1px solid #333;
+  border-radius: 4px;
+  height: 100%;
+  width: 100%;
+}
+
+.widget .window-header {
+  background-color: #2e3236;
+}
+
+.widget .widget-content {
+  height: calc(100% - 30px);
+  height: -moz-calc(100% - 30px);
+  height: -webkit-calc(100% - 30px);
+  width: 100%;
+}
+
+widget.unlocked .widget-content {
+  pointer-events: none;
+  opacity: 0.75;
+}
+
+widget.unlocked .widget {
+  border: 1px solid rgba(82,168,236,.6);
+  transition: outline 200ms ease 0;
+  -webkit-transition: outline 200ms ease 0;
+  -moz-transition: outline 200ms ease 0;
+  border-color: #72b2ff;
+  border-radius: 3px 3px 3px 3px;
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(82,168,236,.6);
+}
+
+/* Color Swatch and Palette styles
+ ************************************************************/
+.stroke {
+  text-shadow: -1px -1px 0 #777, -1px 1px 0 #777, 1px -1px 0 #777, 1px 1px 0 #777;
+}
+
+.btn-color-picker {
+  margin: 0px;
+  padding: 2px 6px;
+}
+
+.goog-popupcolorpicker {
+  position: fixed;
+  z-index: 100000;
+}
+
+.goog-palette {
+  cursor: default;
+  outline: none;
+}
+
+.goog-palette-table {
+  border: 1px solid #666;
+  border-collapse: collapse;
+  margin: 5px;
+}
+
+.goog-palette-cell {
+  border: 0;
+  border-right: 1px solid #666;
+  cursor: pointer;
+  height: 18px;
+  margin: 0;
+  text-align: center;
+  vertical-align: middle;
+  width: 18px;
+}
+
+.goog-palette-cell .goog-palette-colorswatch {
+  border: none;
+  font-size: x-small;
+  height: 18px;
+  position: relative;
+  width: 18px;
+}
+
+.goog-palette-cell-hover .goog-palette-colorswatch {
+  border: 1px solid #fff;
+  height: 16px;
+  width: 16px;
+}
+
+.goog-palette-cell-selected .goog-palette-colorswatch {
+  /* Client apps may override the URL at which they serve the sprite. */
+  background: url(//ssl.gstatic.com/editor/editortoolbar.png) no-repeat -368px 0;
+  border: 1px solid #333;
+  color: #fff;
+  font-weight: bold;
+  height: 16px;
+  width: 16px;
+}
+
+.goog-palette-customcolor {
+  background-color: #fafafa;
+  border: 1px solid #eee;
+  color: #666;
+  font-size: x-small;
+  height: 15px;
+  position: relative;
+  width: 15px;
+}
+
+.goog-palette-cell-hover .goog-palette-customcolor {
+  background-color: #fee;
+  border: 1px solid #f66;
+  color: #f66;
+}
+
+/* History View
+ ************************************************************/
+.history-view-container {
+  position:relative;
+}
+
+.history-gray {
+  color:#999999 !important;
+}
+
+li:not(:first-child)>.history-row {
+  border-top:1px solid #ddd !important;
+}
+
+/* Misc */
+.keep-height:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+/* Suck it, Firefox
+ ************************************************************/
+a:focus, button:focus, select:focus, textarea:focus, div:focus {
+  outline: none;
+}
+a::-moz-focus-inner, button::-moz-focus-inner, select::-moz-focus-inner, textarea::-moz-focus-inner, div::-moz-focus-inner {
+  border: 0;
+}
+
+/* Input button
+ ************************************************************/
+.btn-file {
+  position:relative;
+  overflow:hidden;
+}
+
+.btn-file input[type=file] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 100%;
+  min-height: 100%;
+  font-size: 999px;
+  text-align: right;
+  filter: alpha(opacity=0);
+  opacity: 0;
+  outline: none;
+  background: white;
+  cursor: inherit;
+  display: block;
+}
+
+.loading-container {
+  border: none;
+  height: 20px;
+  width: 400px;
+}
+
+.progress .bar.no-trans {
+  -moz-transition: none;
+  transition: none;
+}
+
+.loading-container .loading-text {
+  position: absolute;
+  width: 100%;
+  background: transparent;
+  font-weight: bold;
+  left: 0;
+  text-align: center;
+}
+
+.italic {
+  font-style: italic;
+}
+
+/* Alert Styles
+************************************************************/
+.alert {
+  padding: 8px 14px;
+}
+
+.alert-row {
+  padding: 1px;
+}
+
+.font-error {
+  color: #b94a48;
+}
+
+.font-warning {
+  color: #f89406;
+}
+
+.font-success {
+  color: #468847;
+}
+
+.font-info {
+  color: #777;
+}
+
+.alert-error {
+  color: #b94a48;
+  background-color: #f9cfce;
+  border-color: #a55;
+}
+
+.alert-warning {
+  color: #c09853;
+  background-color: #fcf8e3;
+  border-color: #c95;
+}
+
+.alert-info {
+  color: #777;
+  background-color: #eee;
+  border-color: #999;
+}
+
+.alert-success {
+  color: #468847;
+  background-color: #dff0d8;
+  border-color: #6a6;
+}
+
+.alert-info h4 {
+  color: #555;
+}
+
+.alert-badge-error {
+  position:relative;
+  right:15px;
+  bottom:15px;
+  opacity:.75;
+  padding:2px 5px 2px 5px;
+  background-color: #b94a48;
+}
+
+.alert-badge-warning {
+  position:relative;
+  right:15px;
+  bottom:15px;
+  opacity:.85;
+  padding:2px 5px 2px 5px;
+  background-color: #f89406;
+}
+
+.alert-badge {
+  position:relative;
+  right:15px;
+  bottom:15px;
+  opacity:.75;
+  padding:2px 5px 2px 5px;
+}
+
+.alert-viewer-popup {
+  position: fixed;
+  bottom: 5px;
+  right: 5px;
+  width: 33%;
+  max-width: 450px;
+  min-width: 350px;
+  line-height: 16px;
+  z-index: 10001;
+}
+
+.alert-viewer-popup .alert {
+  box-shadow: 0px 4px 8px 0px #CCCCCC;
+}
+
+.alert-viewer-popup .alert button.close {
+  position:relative;
+  right:-5px;
+}
+
+/* Date Time component styles
+************************************************************/
+#ui-datepicker-div {
+  z-index: 11000 !important;
+}
+
+.wheel-date {
+  margin: 0;
+  display: inline-block;
+}
+
+.date-time input {
+  max-width: 32px;
+  -webkit-max-logical-width: 32px;
+}
+
+.date-time .date-picker {
+  max-width: 85px;
+  width: 85px;
+}
+
+.any-date .inline {
+  display: inline-table;
+}
+
+.any-date .checkbox {
+  padding: 0 0 0 25px;
+}
+
+/* Histogram Styles
+************************************************************/
+.hist-group .bar {
+  shape-rendering: crispEdges;
+}
+
+.hist-group path {
+  fill: none;
+  stroke-width: 2;
+}
+
+.hist-group .line-point {
+  fill: #fff;
+  stroke-width: 2;
+}
+
+.hist-group .bar:hover {
+  opacity: 0.4;
+}
+
+.timeline-hist-tooltip,
+.hist-tooltip {
+  line-height: 1;
+  font-weight: bold;
+  padding: 5px;
+  font-size: 12px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 3px;
+  z-index: 2000;
+}
+
+.timeline-hist-tooltip:after,
+.hist-tooltip:after {
+  display: block;
+  margin-top: 2px;
+  margin-left: -5px;
+  font-size: 10px;
+  width: 100%;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.8);
+  content: '\25bc';
+  position: absolute;
+  text-align: center;
+}
+
+/* Timeline Styles
+************************************************************/
+.svg-timeline {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+.svg-timeline-main {
+  height: calc(100% - 11px);
+  height: -moz-calc(100% - 11px);
+  height: -webkit-calc(100% - 11px);
+  width: 100%;
+}
+
+.svg-timeline g.tick {
+  pointer-events: none;
+}
+
+.line, .axis path, .axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.axis-bg {
+  pointer-events: none;
+}
+
+.axis text {
+  font: 10px sans-serif;
+}
+
+.brush .left {
+  text-anchor: end;
+}
+
+.brush .background {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+.brush .extent {
+  shape-rendering: crispEdges;
+}
+
+.brush-window .extent {
+  fill-opacity: 0.2;
+  fill: #24e;
+  stroke: #02b;
+}
+
+.brush-window .fade-right {
+  fill-opacity: 0.2;
+}
+
+.brush-window .fade-left {
+  fill-opacity: 0.2;
+}
+
+.arrow-window,
+.brush-window .resize polygon {
+  fill: #02b;
+}
+
+.timeline-background {
+  fill-opacity: 0;
+}
+
+.no-margins {
+  margin:0;
+}
+
+.btn-separator {
+  color: #aaa;
+}
+
+.btn-separator:after {
+  content: '|';
+}
+
+/* Timeline Styles
+ *******************************************/
+
+.timeline-container {
+  width: 100%;
+  height: 200px;
+  background-color: #666;
+  border-top: 1px ridge #333;
+  border-bottom: 1px ridge #333;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  z-index: 200;
+}
+
+.timeline-controls {
+  text-align: center;
+}
+
+.timeline-controls .btn,
+.timeline-controls .btn.addon {
+  height: 26px;
+}
+
+.timeline-controls > .btn {
+  min-width: 23px;
+}
+
+.tile-axis text {
+  display: none;
+}
+
+.load {
+  color: #ff0;
+}
+
+.brush-select .extent,
+.brush-load .extent {
+  fill: none;
+  stroke: #ff0;
+  pointer-events: stroke;
+}
+
+.arrow-load,
+.brush-select .resize polygon,
+.brush-load .resize polygon {
+  fill: #ff0;
+}
+
+.brush-select .extent {
+  fill: #ff0;
+  fill-opacity: 0.2;
+  pointer-events: none;
+}
+
+.brush-select .resize {
+  pointer-events: none;
+}
+
+.axis-bg {
+  fill: #333;
+  fill-opacity: 0.8;
+}
+
+text, .axis text {
+  fill: #fff;
+}
+
+.axis path, .axis line {
+  stroke: #fff;
+}
+
+.axis.tile-axis path, .axis.tile-axis line {
+  stroke: #bbb !important;
+}
+
+.fps-slider {
+  vertical-align: middle;
+}
+
+.fps-slider .slider-container {
+  display: inline-block;
+  width: 100px;
+  margin-bottom: 1px;
+}
+
+.fps-slider .fps-text {
+  display: inline-block;
+  min-width: 3.5em;
+  text-align: center;
+}
+
+.play-icon:before {
+  color: #52ce52;
+  content: '\f04b';
+}
+
+.pause-icon:before {
+  color: #d6d625;
+  content: '\f04c';
+}
+
+/* Slider styles
+ *******************************************/
+.ui-slider {
+  border-radius: 0;
+  height: 0.4em;
+}
+
+.ui-slider-handle {
+  margin-left: -.2em !important;
+  width: 0.4em !important;
+  height: 0.8em !important;
+  border: 1px solid #444 !important;
+  border-radius: 0 !important;
+}
+
+/* Search Box Styles
+************************************************************/
+
+#search-bar {
+  position: relative;
+}
+
+#search-bar .typeahead {
+  text-align: left;
+  min-width: 296px;
+}
+
+.search-box {
+  position: relative;
+  z-index: 2;
+}
+
+.search-box .input-append .search-query {
+  border-radius:0;
+}
+
+.search-box input.search-query {
+  border: 1px solid #ccc;
+  padding-top:3px;
+  padding-bottom:5px;
+  padding-left:10px;
+  border-right:none;
+  border-left:none;
+  -webkit-box-shadow: inset 0 0px 0px rgba(0,0,0,0.075);
+  -moz-box-shadow: inset 0 0px 0px rgba(0,0,0,0.075);
+  box-shadow: inset 0 0px 0px rgba(0,0,0,0.075);
+}
+
+.search-box div.input-append > input:before {
+  -webkit-box-shadow: inset 0 1px 0px red;
+  -moz-box-shadow: inset 0 1px 0px red;
+  box-shadow: inset 0 0px 1px red;
+}
+
+.search-box .input-clear {
+  cursor: pointer;
+  background-color: #fff;
+  border-right: none;
+}
+
+.highlightSearchBox {
+  -webkit-box-shadow: 0 0 4px #08c;
+  -moz-box-shadow: 0 0 4px #08c;
+  box-shadow: 0 0 4px #08c;
+}
+
+.search-dropdown {
+  position: absolute;
+  left: 8px;
+  top: 10px;
+  font-size: 0.8em;
+  cursor: pointer;
+  color: #666;
+}
+
+.search-options {
+  position: fixed;
+  padding: 9px 5px 5px 5px;
+  margin-top: 5px;
+  width: 307px;
+  overflow-x: hidden;
+  z-index: 51;
+}
+
+.recent-searches {
+  padding-left: 5px;
+  padding-right: 5px
+}
+
+.search-header {
+  color: #666;
+  font-style: italic;
+  margin: 0;
+}
+
+.search-option {
+  cursor: pointer;
+  width: auto;
+}
+
+.search-option:hover {
+  background-color: #9edb9e;
+  color: #333;
+}
+
+.search-recent-type {
+  color: #999;
+  font-style: italic;
+}
+
+.selected-search {
+  font-weight: bold;
+}
+
+.result-card {
+  line-height: 16px;
+  font-size: 13px;
+}
+
+.result-card-header {
+  font-weight: bold;
+}
+
+.result-card .btn.btn-mini {
+  line-height: 10px;
+  height: 14px;
+  padding: 0px 5px;
+  vertical-align: baseline;
+}
+
+.result-card .btn.btn-mini > .fa {
+  font-size: 10px;
+}
+
+.result-card .linky {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.box {
+  background: #fcfcfc;
+  padding: 6px;
+  margin: 5px;
+  border: solid 1px #eee;
+  border-radius: 4px;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+}
+
+.box.box-hover {
+  -webkit-transition:background-color 250ms ease!important;
+  -moz-transition:background-color 250ms ease!important;
+  transition:background-color 250ms ease!important;
+}
+
+.box.box-hover:hover, .menu-item.menu-item-action:hover, .menu-item.dropdown-submenu:hover {
+  background-color: #afdbaf;
+}
+
+/* Drag and Drop component styles
+************************************************************/
+.dd-source, .dd-target {
+  -webkit-transition:background 500ms ease;
+  -moz-transition:background 500ms ease;
+  transition:background 500ms ease;
+}
+
+.dd-target-dragover {
+  background:#f5fff5;
+}
+
+.dd-source {
+  cursor:-webkit-grab;
+  cursor:-moz-grab;
+  cursor:grab;
+}
+
+.dd-source-dragging {
+  opacity:0.5;
+  width:236px;
+  color:#f5f5f5;
+  background:#74b874;
+  font-size:1.1em;
+  font-style:italic;
+  border:dashed 2px #267726;
+  border-radius:4px;
+  padding:10px;
+  cursor:-webkit-grabbing;
+  cursor:-moz-grabbing;
+  cursor:grabbing;
+  z-index: 30;
+}
+
+/* Import Wizard Styles
+************************************************************/
+
+#wizard {
+  width: 100%;
+  height: 100%;
+}
+
+#wizard-step-content {
+  width: -webkit-calc(100% - 180px);
+  width: -moz-calc(100% - 180px);
+  width: calc(100% - 180px);
+  height: 100%;
+}
+
+#wizard-steps-pane {
+  width: 175px;
+  height: 100%;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  background: #777;
+  padding: 0px;
+  font-size: 13px;
+}
+
+.wizard-steps.table tr {
+  cursor: pointer;
+}
+
+.wizard-steps.table tr.active {
+  background-color: #555;
+}
+
+.wizard-steps.table td {
+  padding: 0px 3px;
+}
+
+.step-status {
+  width: 15px;
+  display: inline-table;
+}
+
+.step-status > i {
+  margin-left: auto;
+  margin-right: auto;
+  display: table;
+}
+
+.wizard-step {
+  height: 100%;
+}
+
+.wizard-step h5 {
+  margin: 0 0 5px 0;
+}
+
+.wizard-step .step-content {
+  height: 100%;
+  font-size: 13px;
+}
+
+.wizard-step label.checkbox {
+  display: inline;
+  padding-left: 5px;
+  font-size: 13px;
+  margin: 0px;
+}
+
+.wizard-step label.checkbox input[type="checkbox"] {
+  margin: 4px 0px 0px 1px;
+  float: left;
+  width: auto;
+}
+
+.wizard-step label.radio {
+  display: table;
+}
+
+.wizard-step input[type="radio"] {
+  margin-top: 4px;
+}
+
+.wizard-step [class*="span"] {
+  margin-left: 0px;
+}
+
+.wizard-step .control-group [class*="span"]:not(:first-child) {
+  padding-left: 10px;
+}
+
+.wizard-step .span12 {
+  width: 100%;
+}
+
+.wizard-step .span3 {
+  width: -webkit-calc(25% - 10px);
+  width: -moz-calc(25% - 10px);
+  width: calc(25% - 10px);
+}
+
+.wizard-step .span4 {
+  width: -webkit-calc(33% - 10px);
+  width: -moz-calc(33% - 10px);
+  width: calc(33% - 10px);
+}
+
+.wizard-step .span6 {
+  width: -webkit-calc(50% - 10px);
+  width: -moz-calc(50% - 10px);
+  width: calc(50% - 10px);
+}
+
+.preview-sibling {
+  padding-bottom: 1px;
+}
+
+.wizard-preview .slick-grid {
+  box-sizing: content-box;
+}
+
+.wizard-preview.disabled {
+  opacity: 0.5;
+  cursor: pointer;
+  pointer-events: none;
+}
+
+.wizard-step.options .form-horizontal .control-label {
+  width: 75px;
+}
+
+.wizard-step.options .form-horizontal .controls {
+  margin-left: 80px;
+}
+
+/*
+ *************/
+.form-compressed label {
+  font-size: 13px;
+  margin-bottom: 0px;
+}
+
+/* Moment.js Help Styles
+************************************************************/
+#time-help {
+  font-size: 13px;
+}
+
+#time-help h5 {
+  margin-bottom: 5px;
+}
+
+#time-help h5:first-child {
+  margin-top: 0px;
+}
+
+/* Form Styles
+************************************************************/
+
+form input.ng-invalid.ng-dirty,
+form span.ng-invalid.ng-dirty,
+form div.ng-invalid.ng-dirty:not([ng-form]),
+form select.ng-invalid.ng-dirty,
+form textarea.ng-invalid.ng-dirty,
+form .ng-invalid.ng-dirty > .select2-container,
+form .ng-invalid.ng-dirty > .select2-container .select2-choice,
+form .ng-invalid.ng-dirty .select2-container .select2-choices {
+  background-color:#FFE8E8;
+  background-image:none;
+}
+
+form input.ng-pristine.ng-invalid,
+form span.ng-pristine.ng-invalid,
+form div.ng-pristine.ng-invalid:not([ng-form]),
+form select.ng-pristine.ng-invalid,
+form textarea.ng-pristine.ng-invalid,
+form .ng-pristine.ng-invalid .select2-container,
+form .ng-pristine.ng-invalid .select2-container .select2-choice,
+form .ng-pristine.ng-invalid .select2-container .select2-choices {
+  background-color:#fffff5;
+  background-image:none;
+}
+
+form .select2-container .select2-choices {
+  border-radius:5px;
+}
+
+.combo-drop {
+  z-index: 1000;
+}
+
+.type-combo {
+  background:#ffffff;
+  border-radius:0 0 4px 4px;
+  border-style:none solid solid;
+  border-width: 0 1px 1px;
+  border-color:#aaaaaa;
+  box-shadow:0 4px 4px #dddddd;
+  color:#000;
+  width:100%;
+  position:absolute;
+  z-index:1000;
+}
+
+ .combo-drop .grid-canvas {
+  width: 100% !important;
+}
+
+.combo-drop {
+  background: #ffffff;
+  border-radius: 0 4px 4px 4px;
+  border: 1px solid #aaa;
+  box-shadow: 0 4px 4px #ddd;
+  color: #000;
+  width: 80%;
+  position: absolute;
+}
+
+.form-focus:focus {
+  border-color: rgba(82,168,236,0.8) !important;
+  outline: 0 !important;
+  outline: thin dotted \9 !important;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(82,168,236,0.6);
+  -moz-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(82,168,236,0.6);
+  box-shadow: inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(82,168,236,0.6);
+}
+
+/* Save State Styles
+ *******************************************/
+.save-state-window .form-horizontal .control-label {
+  width: 70px;
+}
+
+.save-state-window .form-horizontal .controls {
+  margin-left: 75px;
+}
+
+/* Add Data Window styles
+ *******************************************/
+.adw-header {
+  width: 100%;
+  height: 70px;
+}
+
+.adw-header .search {
+  width: 300px;
+  margin-bottom: 5px;
+}
+
+.adw-main {
+  width: 100%;
+  height: calc(100% - 70px);
+}
+
+.adw-main .slick-tree {
+  width: calc(50% - 2.5px);
+  width: -moz-calc(50% - 2.5px);
+  width: -webkit-calc(50% - 2.5px);
+}
+
+.adw-info {
+  width: calc(50% - 2.5px);
+  width: -moz-calc(50% - 2.5px);
+  width: -webkit-calc(50% - 2.5px);
+  height: 100%;
+}
+
+.panel {
+  border: 1px solid black;
+  padding: 5px;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  overflow: auto;
+}
+
+/* Import styles
+ *******************************************/
+
+ .wizard-step.csvconfig .spinner-container {
+  display: inline-block;
+  width: 50px;
+}
+
+.wizard-step.csvconfig input[type=checkbox] {
+  width: auto;
+  margin-left: 2px;
+}
+
+.wizard-step.csvconfig .wizard-preview {
+  height: -webkit-calc(50% - 36px);
+  height: -moz-calc(50% - 36px);
+  height: calc(50% - 36px);
+}
+
+.line-preview {
+  height: -webkit-calc(50% - 36px);
+  height: -moz-calc(50% - 36px);
+  height: calc(50% - 36px);
+  padding-bottom: 5px;
+}
+
+.line-preview .slick-cell {
+  font-family: "Lucida Console", monospace;
+  font-size: 11px;
+}
+
+.line-preview .slick-grid {
+  box-sizing: content-box;
+}
+
+.line-preview .slick-header.ui-state-default {
+  border: none;
+}
+
+.line-preview .slick-header-columns {
+  height: 0;
+}
+
+.export-dialog h6 {
+  margin-bottom: 0px;
+}
+
+.import-dialog-input {
+  width: 100%;
+  width: -moz-available;
+}
+
+img.vendor-logo {
+  width: 100px;
+}
+
+.vendor-attribution {
+  display: inline-block;
+  margin-left: 20px;
+}
+
+.chart-controls {
+  margin-bottom: 5px;
+}
+
+
+.chart-header {
+  position: absolute;
+  left: 2px;
+  top: 32px;
+  z-index: 1;
+}
+
+.chart-header-collapse {
+  border-radius: 4px;
+  box-shadow: 5px 5px 5px #333;
+  margin-top: 3px;
+}
+
+.chart-header-menu {
+  border: 1px solid #333;
+  border-radius: 4px;
+  background-color: #777;
+  padding: 5px;
+  width: 300px;
+}
+
+.chart-content {
+  width: 100%;
+  height: 100%;
+}
+
+
+/*dont let zingchart go to the internets!*/
+.zc-license {
+  pointer-events: none;
+}

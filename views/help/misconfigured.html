@@ -1,0 +1,12 @@
+<div>
+  <div class="well">
+    <i class="fa fa-exclamation-circle red-icon"></i>
+    <em>The system is unable to connect to {{name}}</em>
+    <div ng-switch="reason" class="top-gap" list list-id="misconfigured"></div>
+  </div>
+  <hr style="margin:8px;">
+  <strong>Support</strong><br/>
+  <i class="fa fa-phone color-red"></i> {{contactPhone}}<br/>
+  <i class="fa fa-envelope-o"></i>
+  <a href="mailto:{{contactEmail}}">{{contactEmail}}</a>
+</div>

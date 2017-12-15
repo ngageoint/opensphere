@@ -1,0 +1,78 @@
+<div class="user-setting compact">
+  <h5 class="no-margin">Display Options</h5>
+  <div ng-if="display.show3DSettings">
+    <p>When you open {{appName}} show:</p>
+    <label class="radio" title="Start {{appName}} in the 2D equirectangular map mode.">
+      <input type="radio" value="2d" ng-model="display.mapMode">
+      2D Flat Map
+    </label>
+    <label class="radio" title="Start {{appName}} in the 3D globe mode.">
+      <input type="radio" value="3d" ng-model="display.mapMode">
+      3D Globe
+    </label>
+  </div>
+  <div ng-if="!display.show3DSettings">
+    <h3><i class="fa fa-warning color-yellow"></i> 3D Globe Not Supported.</h3>
+    <webglsupport></webglsupport>
+  </div>
+
+  <p>Specify the initial position and zoom level of the map.</p>
+  <label class="radio inline" title="Use the default map position and zoom level.">
+    <input type="radio" value="default" ng-model="display.cameraMode">
+    Default
+  </label>
+  <label class="radio inline" title="Set the map position and zoom level to a fixed value.">
+    <input type="radio" value="fixed" ng-model="display.cameraMode">
+    Fixed
+  </label>
+  <label class="radio inline" title="Remember the map position and zoom level when {{appName}} is closed.">
+    <input type="radio" value="last" ng-model="display.cameraMode">
+    Remember Last
+  </label>
+
+  <div class="well top-gapxs" style="width:265px;padding:5px 8px;">
+    <h6 class="no-margin">Initial Position/Zoom:</h6>
+    <table class="table table-borderless table-condensed no-margin" style="width:auto;" ng-if="display.cameraState">
+      <tr>
+        <td>Latitude:</td>
+        <td>{{display.cameraState.center[1].toFixed(4)}}</td>
+      </tr>
+      <tr>
+        <td>Longitude:</td>
+        <td>{{display.cameraState.center[0].toFixed(4)}}</td>
+      </tr>
+      <tr>
+        <td>Zoom:</td>
+        <td>{{display.getZoom()}}</td>
+      </tr>
+    </table>
+    <button class="btn btn-default" type="button" ng-if="display.cameraMode == 'fixed'"
+        ng-click="display.useCurrentPosition()">
+      Use Current
+    </button>
+  </div>
+
+  <div class="top-gaps" ng-if="display.show3DSettings">
+    <h5>3D Globe Options</h5>
+    <div class="control-group">
+      <label class="checkbox inline" title="{{display.help.sunlight}}">
+        <input type="checkbox" ng-model="display.sunlightEnabled" ng-change="display.updateSunlight()" />
+        Enable Sunlight
+      </label>
+      <popover content="display.help.sunlight" pos="'right'"></popover>
+    </div>
+    <div class="control-group">
+      <label class="checkbox inline" title="{{display.help.fog}}">
+        <input type="checkbox" ng-model="display.fogEnabled" ng-change="display.updateFog()" />
+        Enable Fog
+      </label>
+      <popover content="display.help.fog" pos="'right'"></popover>
+    </div>
+    <div class="control-group" ng-if="display.fogEnabled" title="{{display.help.fog}}">
+      <label class="control-label" for="persister">Fog Density:</label>
+      <div class="controls top-gaps" style="width:300px;margin-left:10px;">
+        <slider min="0" max="1" step="0.1" value="display.fogDensity" live="true" name="fogDensity"></slider>
+      </div>
+    </div>
+  </div>
+</div>

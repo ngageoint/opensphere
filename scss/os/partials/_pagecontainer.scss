@@ -1,0 +1,53 @@
+// Page Container Styles
+
+#map-container {
+  @include flex(1);
+  @include transition(opacity 500ms ease);
+  background-color: #000;
+  position: relative;
+
+  &.no-mouse .ol-viewport {
+    @include opacity(.4);
+  }
+
+  > .load-msg {
+    color: #ddd;
+    font-size: 13px;
+    position: fixed;
+    text-align: center;
+    top: 45%;
+    width: 100%;
+  }
+}
+
+//
+// Legacy table container
+//
+
+.table-container {
+  display: table;
+  height: 100%;
+  position: absolute;
+  table-layout: fixed;
+  width: 100%;
+}
+
+.table {
+  display: table;
+}
+
+.tr {
+  display: table-row;
+}
+
+.td {
+  display: table-cell;
+}
+
+.drag-container {
+  height: 100%;
+
+  &.dd-target-dragover #map-container {
+    @include opacity(.7);
+  }
+}

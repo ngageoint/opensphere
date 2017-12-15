@@ -1,0 +1,19 @@
+// Styles for the label container directive
+//
+
+.c-labelcontainer {
+  display: table;
+}
+
+.c-labelcontainer td {
+  padding: 1px 2px;
+}
+
+.c-labelcontrols__showlabels {
+  display: inline-block;
+  padding-left: 2px;
+}
+
+.c-labelcontainer__wide {
+  width: 70px;
+}

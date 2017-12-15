@@ -1,0 +1,16 @@
+<div class="feature-info-window window-content-wrapper">
+  <div class="window-content no-footer">
+    <div class="feature-info">
+      <simple-location latdeg="lat" londeg="lon" ng-if="lat !== undefined && lon !== undefined"
+          style="display:inline-block;margin-bottom:5px;">
+      </simple-location>
+    </div>
+    <div class="feature-grid" autoheight siblings=".feature-info">
+    <div class="well" autoheight siblings=".feature-info" ng-if="description" ng-bind-html="description" />
+    <div class="feature-grid" autoheight siblings=".feature-info" ng-if="!description">
+      <slickgrid x-data="properties" columns="gridCols" options="gridOptions" default-sort-column="field"
+          dbl-click-enabled="true">
+      </slickgrid>
+    </div>
+  </div>
+</div>

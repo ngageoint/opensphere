@@ -1,0 +1,14 @@
+<div class="clear-window window-content-wrapper">
+  <div class="window-content">
+    <div class="clear-header" style="font-size:13px;">Choose items to clear:</div>
+    <div class="clear-list" autoheight siblings=".clear-header">
+      <checklist class="tall" allow-multiple="true" items="clear.entries"></checklist>
+    </div>
+  </div>
+  <div class="window-footer">
+    <div class="pull-right">
+      <button class="btn btn-default" ng-click="clear.accept()"><i class="fa fa-check lt-blue-icon"></i> OK</button>
+      <button class="btn btn-default" ng-click="clear.cancel()"><i class="fa fa-ban red-icon"></i> Cancel</button>
+    </div>
+  </div>
+</div>

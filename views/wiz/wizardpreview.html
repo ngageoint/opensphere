@@ -1,0 +1,26 @@
+<div class="wizard-preview">
+  <div ng-if="config.columns[0].header" class="color-gray" style="padding-left:5px;">
+    <i class="fa fa-info-circle"></i>
+    The checkboxes indicate whether the column will be included upon import.  You must have at least two columns.
+  </div>
+  <div style="height:calc(100% - 20px);" ng-if="config.columns[0].header && config.preview.length > 0 && config.columns.length > 0">
+    <slickheaderbutton
+        x-data="config.preview"
+        columns="config.columns"
+        options="wizPreview.options"
+        selected="config.previewSelection"
+        on-command="wizPreview.onCommand"
+        resize-with=".window">
+    </slickheaderbutton>
+  </div>
+
+  <div style="height:100%"  ng-if="!config.columns[0].header && config.preview.length > 0 && config.columns.length > 0">
+    <slickgrid
+        x-data="config.preview"
+        columns="config.columns"
+        options="wizPreview.options"
+        selected="config.previewSelection"
+        resize-with=".window">
+    </slickgrid>
+  </div>
+</div>

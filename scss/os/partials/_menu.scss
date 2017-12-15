@@ -1,0 +1,165 @@
+// menu styles
+
+#globalMenu {
+  min-width: 150px;
+  position: fixed;
+  z-index: 100000;
+}
+
+.menu {
+  border-left: 1px solid transparent;
+  cursor: pointer;
+  list-style: none;
+  margin: 0;
+  padding: 5px 0;
+}
+
+.right-menu {
+  border-left: 1px solid transparent;
+  cursor: pointer;
+  list-style: none;
+  margin: 0;
+}
+
+.menu-item {
+  color: $color-white;
+  overflow: hidden;
+  padding: 0 8px;
+  text-decoration: none;
+  text-overflow: ellipsis;
+  text-shadow: none;
+  white-space: nowrap;
+
+  &.divider {
+    padding: 0;
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  &.menu-item-action:hover,
+  &.dropdown-submenu:hover {
+    background: #444;
+  }
+}
+
+.submenu {
+  overflow: visible;
+}
+
+.menu-item i,
+.ui-menu-item i {
+  margin-right: 7px;
+  width: 1em;
+}
+
+.menu-item-title {
+  display: inline-block;
+  float: left;
+}
+
+.menu-item-hotkey {
+  color: #bbb;
+  display: inline-block;
+  float: right;
+  font-size: .8em;
+}
+
+// This gives parents of submenus an arrow on the right
+.menu-container {
+  @include border-radius(4px);
+  @include box-shadow(0 4px 4px $color-black);
+  background: $color-gray;
+  border: 0;
+  position: absolute;
+  z-index: 100;
+}
+
+.menu-item > .menu-container {
+  left: 100%;
+  top: 0;
+}
+
+.right-menu .menu-item > .menu-container {
+  left: auto;
+  right: 100%;
+}
+
+.dropdown-submenu {
+  &:hover > a {
+    background: inherit;
+  }
+
+  > {
+    a::after {
+      overflow: visible;
+      position: relative;
+      right: 8px;
+    }
+
+    div > a::after {
+      border-color: transparent;
+      border-left-color: #ccc;
+      border-style: solid;
+      border-width: 5px 0 5px 5px;
+      content: ' ';
+      display: block;
+      float: right;
+      height: 0;
+      margin-right: -10px;
+      margin-top: 5px;
+      overflow: visible;
+      position: relative;
+      right: 10px;
+      width: 0;
+    }
+  }
+}
+
+.menu-anchor {
+  cursor: pointer;
+  margin-left: 5px;
+  position: relative;
+
+
+  .menu-target {
+    border: 1px solid transparent;
+    border-radius: 4px;
+  }
+
+  &:hover:not(.active) .menu-target {
+    @include border-radius(4px);
+    @include background-image(linear-gradient(left top, #eee, $color-white));
+    border: 1px solid #aaa;
+  }
+
+  &.onboarding-focus {
+    background-color: $color-white;
+  }
+
+  .menu {
+    display: block;
+    float: left;
+    left: 0;
+    position: relative;
+    top: 100%;
+    z-index: 100;
+  }
+
+  .hover-more {
+    border: 0;
+    display: block;
+    line-height: 10px;
+    margin-bottom: 2px;
+    padding-bottom: 2px;
+    width: 100%;
+  }
+}
+
+.menu .divider {
+  border-bottom: 1px solid #aaa;
+  height: 1px;
+  margin: 2px 1px;
+  overflow: hidden;
+}

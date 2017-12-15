@@ -1,0 +1,56 @@
+$app-background: rgb(102, 102, 102);
+$app-border-color-primary: rgb(0, 0, 0);
+
+
+
+.ui-metrics-container {
+
+  .metrics-defaults {
+    @include calc(height, '100% - 10px');
+    background-clip: border-box;
+    display: inline-block;
+    overflow-y: auto;
+    padding: 1px 3px;
+  }
+
+  .metrics-nav {
+    @include calc(height, '100% - 10px');
+    @include calc(width, '50% - 8px');
+    background-clip: border-box;
+    display: inline-block;
+    overflow-y: auto;
+    padding: 1px 3px;
+  }
+
+  .metrics-container {
+    @include calc(height, '100% - 10px');
+    @include calc(width, '50% - 8px');
+    background-clip: border-box;
+    display: inline-block;
+    overflow-y: auto;
+    padding: 1px 3px;
+  }
+
+  .user-metric {
+    h1 {
+      font-size: 14px;
+      line-height: 18px;
+
+      &:first-child {
+        margin-top: 0;
+      }
+
+      &:not(:first-child) {
+        margin-top: 10px;
+      }
+    }
+  }
+
+  .search-box > .input-clear {
+    background: none;
+    padding: 2px 5px;
+    position: absolute;
+    right: 0;
+    top: -4px;
+  }
+}

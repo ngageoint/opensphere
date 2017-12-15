@@ -1,0 +1,41 @@
+<div class="c-saveplaceswindow window-content-wrapper">
+  <div class="window-content">
+    <div class="c-saveplaces" ng-form="savePlacesForm">
+      <div class="c-saveplacesform">
+        <form name="savePlacesForm" class="form-compact form-horizontal form-popover-help">
+          <basicinfo config="ctrl.config" columns="ctrl.columns" help="ctrl.help"></basicinfo>
+        </form>
+
+        <div ng-if="ctrl.sourceItems.length > 0">
+          <div class="top-gapxs">
+            <h6>Source Features</h6>
+          </div>
+          <div style="margin-left:6px;">
+            <label class="checkbox inline"
+                title="If checked, only selected features will be saved. If unchecked or nothing is selected, all visible features will be saved.">
+              <input type="checkbox" name="ctrl.useSelected" ng-model="ctrl.useSelected" ng-change="ctrl.updateItems()">
+              Use Selected Features
+            </label>
+          </div>
+          <checklist name="sourcelist" allow-multiple="false" items="ctrl.sourceItems"></checklist>
+        </div>
+        <div ng-if="ctrl.sourceItems.length <= 0">
+          <i class="fa fa-warning orange-icon"></i>
+          <em>There are currently no visible sources. Please add at least one data source to the application and make sure it's visible.</em>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="window-footer">
+    <div class="pull-right">
+      <button class="btn btn-default" ng-click="ctrl.confirm()" ng-disabled="savePlacesForm.$invalid">
+        <i class="fa fa-check lt-blue-icon"></i>
+        OK
+      </button>
+      <button class="btn btn-default" ng-click="ctrl.cancel()">
+        <i class="fa fa-ban red-icon"></i>
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>

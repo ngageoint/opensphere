@@ -1,0 +1,42 @@
+<div class="c-kmltreeexport window-content-wrapper">
+  <div class="window-content">
+    <div class="export-dialog">
+      <form name="exportForm" class="form-horizontal form-compact">
+        <table style="width:100%">
+          <tr>
+            <td class="control-label">Name:</td>
+            <td class="wide">
+              <input class="wide" type="text" name="title" ng-model="treeExport.title" ng-maxlength="200" required/>
+              <span class="help-inline" ng-show="exportForm.title.$error.required">Required!</span>
+              <span class="help-inline" ng-show="exportForm.title.$error.maxlength">Title is too long!</span>
+            </td>
+          </tr>
+          <tr>
+            <td class="control-label">Save to:</td>
+            <td class="wide">
+              <select class="wide" ng-model="treeExport.persister"
+                  ng-options="value as key for (key, value) in treeExport.persisters"/>
+            </td>
+          </tr>
+        </table>
+
+        <h6>KML Options</h6>
+        <div class="well export-ui-container">
+          <kmlexport exporter="treeExport.exporter"></kmlexport>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="window-footer">
+    <div class="pull-right">
+      <button class="btn btn-default" ng-click="treeExport.confirm()" ng-disabled="exportForm.$invalid">
+        <i class="fa fa-check lt-blue-icon"></i>
+        OK
+      </button>
+      <button class="btn btn-default" ng-click="treeExport.cancel()">
+        <i class="fa fa-ban red-icon"></i>
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>

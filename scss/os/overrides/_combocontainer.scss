@@ -1,0 +1,36 @@
+.combo-container {
+  background: $overrides-input-bg-color;
+
+  .combo-choice {
+    @include background-clip(border-box);
+    @include box-shadow(none);
+    background-image: none;
+    border: $overrides-border-width solid $overrides-border-color;
+    color: $overrides-text-color;
+    height: $overrides-input-height;
+    line-height: $overrides-input-height;
+
+    // expand/collapse button
+    div {
+      background: transparent;
+      border: $overrides-border-width solid $overrides-border-color;
+      border-left: 0;
+      color: $color-black;
+      height: $overrides-input-height;
+      line-height: $overrides-input-height;
+      padding: 1px 0;
+    }
+  }
+}
+
+// boxes have a dark background, so the input BG needs to be lighter
+.box .combo-container {
+  background: $overrides-box-bg-color;
+}
+
+.combo-drop {
+  @include box-shadow(0 4px 6px rgba(51, 51, 51, .75));
+  background: $color-gray;
+  border: $overrides-border-width solid $overrides-border-color;
+  color: $overrides-text-color;
+}

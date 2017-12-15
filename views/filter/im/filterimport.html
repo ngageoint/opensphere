@@ -1,0 +1,75 @@
+<div class="window-content-wrapper filter-import">
+  <div class="window-content">
+    <div class="filter-import__section" ng-if="ctrl.notFound.length">
+      We were unable to match <b>{{ctrl.notFound.length}}</b> {{ctrl.getFilterTitle(ctrl.notFound.length)}} to a layer. Please choose layers to add them to:
+      <div class="filter-import__layer-picker">
+        <layerpicker class= is-required="false" layer="ctrl.layer" layers-filter="ctrl.getLayersFunction()" style="display: inline-block;width: calc(100% - 60px);"></layerpicker>
+        <button class="btn btn-default" ng-class="{'border-glow': !!ctrl.layer}" ng-click="ctrl.addNotFound()"
+            ng-disabled="!ctrl.hasMatchedFilters"
+            title="Add matching {{ctrl.getFilterTitle()}} to the list to import">
+          <i class="btn-icon fa fa-plus green-icon"></i>
+          Add
+        </button>
+      </div>
+      <div ng-if="ctrl.hasUnmatchedFilters">
+        <i class="fa fa-warning orange-icon"></i> Any {{ctrl.getFilterTitle(1)}} with a <i class="fa fa-times red-icon"></i> will be discarded.
+      </div>
+      <div class="filter-import__not-found-items">
+        <div class="filter-import__not-found-item" title="{{filter.tooltip}}" ng-repeat="filter in ctrl.notFound">
+          <div>
+            <span class="filter-import__left-text ellipsis-text">
+              <i class="fa color-close" ng-class="{'fa-times red-icon': !filter.matches, 'fa-check green-icon': filter.matches}"
+                  title="{{{false: 'This filter does not match the selected layer', true: 'This filter matches the columns for the selected layer'}[filter.matches]}}"></i>
+              {{filter.title}}
+            </span>
+            <span class="filter-import__right-text" title="This {{ctrl.getFilterTitle(1)}} most likely matches {{filter.type}}">
+              ({{filter.type}})
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="filter-import__section" ng-if="ctrl.foundCount > 0">
+      <i class="fa fa-check green-icon"></i>
+      <span>Importing <b>{{ctrl.foundCount}}</b> {{ctrl.getFilterTitle(ctrl.foundCount)}} to these layers:</span>
+      <div class="filter-import__found-items">
+        <div class="filter-import__found-item" ng-repeat="(layerId, layer) in ctrl.found">
+          <div>
+            <span class="ellipsis-text filter-import__left-text ellipsis-text" title="{{layer.layerTitle}}">
+              <span ng-bind-html="layer.layerIcon"></span>
+              {{layer.layerTitle}}
+            </span>
+            <span class="filter-import__remove" ng-click="ctrl.removeLayer(layerId)"
+                title="Don't import {{ctrl.getFilterTitle()}} for this layer">
+              <i class="fa fa-times glyph"></i>
+            </span>
+            <span class="filter-import__match-picker" ng-show="ctrl.showMatch"
+                title="Whether to pass all filters (AND) or any filter (OR)">
+              <span ng-click="layer.match = !layer.match">{{layer.match ? "All (AND)" : "Any (OR)"}}</span>
+            </span>
+          </div>
+
+          <div ng-repeat="filter in layer.filterModels" title="{{filter.tooltip}}" class="ellipsis-text filter-import__filter-text">
+            <i class="fa" ng-class="ctrl.getFilterIcon()"></i> {{filter.title}}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="filter-import__section" ng-if="ctrl.foundCount == 0">
+      Nothing to import.
+    </div>
+  </div>
+
+  <div class="window-footer">
+    <div class="pull-right">
+      <button class="btn btn-default" ng-click="ctrl.finish()" ng-disabled="!ctrl.foundCount">
+        <i class="btn-icon fa fa-check color-add"></i> Import
+      </button>
+      <button class="btn btn-default" ng-click="ctrl.cancel()">
+        <i class="btn-icon fa fa-ban red-icon"></i> Cancel
+      </button>
+    </div>
+  </div>
+</div>

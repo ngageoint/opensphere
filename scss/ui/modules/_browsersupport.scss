@@ -1,0 +1,24 @@
+// ***************************************************************************
+// *  Tell compass what browsers to support so that it does not create
+// *  Styles for those browsers.
+// *  TODO: This file makes more sense in a common area.
+// ***************************************************************************
+
+@import 'compass/support';
+
+
+
+// This setting will place inline comments in the css describing why a browser
+// specific support decision was made.
+
+//$debug-browser-support: true;
+$graceful-usage-threshold: -1;
+$critical-usage-threshold: -1;
+$transform-support-threshold: -1;
+$transition-support-threshold: -1;
+$box-shadow-support-threshold: -1;
+$filter-support-threshold: -1;
+
+//reject first param is an array, the rest are filter strings.
+$supported-browsers: browsers(reject(opera-mini, android, blackberry, android-firefox, ios-safari, opera, opera-mobile, safari, ie-mobile, android-chrome));
+$browser-minimum-versions: (firefox: '10', ie: '9', chrome: '28');

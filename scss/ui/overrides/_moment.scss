@@ -1,0 +1,13 @@
+// Moment.js Help Styles
+
+#time-help {
+  font-size: 13px;
+
+  h5 {
+    margin-bottom: 5px;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+}

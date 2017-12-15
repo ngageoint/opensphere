@@ -1,0 +1,34 @@
+<div class="stack modal window unselectable" ng-class="{'active': active}">
+  <div class="window-header modal-header" ng-dblclick="windowCtrl.toggle()">
+    <div class="pull-right">
+      <div ng-if="helpContext" style="display: inline-block;">
+        <context-onboarding context="{{helpContext}}"></context-onboarding>
+      </div>
+
+      <div ng-show="headerBtns.length" style="display:inline-block;">
+        <i ng-repeat="headerBtnCfg in headerBtns"
+          class="window-close {{headerBtnCfg.iconClass}}"
+          ng-click="windowCtrl.onHeaderBtnClick($event, headerBtnCfg);"
+          title="{{headerBtnCfg.tooltip}}"></i>
+      </div>
+
+      <div ng-if="!modal && !overlay" ng-click="windowCtrl.toggle()" title="{{collapsed ? 'Expand' : 'Collapse'}}" style="display:inline-block">
+        <i class="fa window-close" ng-class="{'fa-compress': !collapsed, 'fa-expand': collapsed}"></i>
+      </div>
+
+      <div ng-if="showClose" ng-click="windowCtrl.close(true)" title="Close" style="display: inline-block;">
+        <i class="fa fa-times window-close"></i>
+      </div>
+
+      <div ng-if="showHide" ng-click="windowCtrl.hide()" title="Hide" style="display: inline-block;">
+        <i class="fa fa-times window-close"></i>
+      </div>
+    </div>
+    <div class="header-text nowrap" title="{{label}}">
+      <i ng-if="icon" ng-class="icon"></i>
+      <span ng-if="iconHtml" ng-bind-html="iconHtml"></span>
+      {{label}}
+    </div>
+  </div>
+  <div class="window-wrapper" ng-transclude></div>
+</div>

@@ -1,0 +1,48 @@
+<div class="import-dialog window-content-wrapper">
+  <div class="window-content">
+    <form name="importForm" class="form-compact">
+      <label class="control-label" style="white-space:normal;">
+        Enter a URL<span ng-if="importdialog.fileSupported"> or click Browse to choose a file</span>:
+        <span class="pull-right" ng-if="importdialog.getImportDetails()">
+          <popover x-title="'Import Types'" x-content="importdialog.getImportDetails()" x-pos="'right'"></popover>
+        </span>
+      </label>
+      <table style="width:100%" ng-class="{'error': importForm.url.$invalid && importForm.url.$dirty}">
+        <tbody>
+          <tr>
+            <td class="wide">
+              <input class="import-dialog-input" type="text" name="url" ng-model="importdialog.url" ng-required="true"
+                  ng-maxlength="1000" ng-readonly="importdialog.fileChosen || importdialog.loading"/>
+              <span class="help-inline" ng-show="importForm.url.$error.maxlength">URL is too long!</span>
+            </td>
+            <td class="top" ng-if="importdialog.fileChosen">
+              <button class="btn btn-default" ng-click="importdialog.clearFile()" ng-disabled="importdialog.loading"
+                  title="Clear local file">
+                <i class="fa fa-times red-icon"></i>
+              </button>
+            </td>
+            <td class="top">
+              <button class="btn btn-default" ng-if="importdialog.fileSupported" ng-click="importdialog.openFileBrowser()"
+                  ng-disabled="importdialog.loading" title="Choose a local file">
+                Browse...
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </form>
+  </div>
+  <div class="window-footer">
+    <div class="pull-right">
+      <button class="btn btn-default" ng-click="importdialog.accept()"
+          ng-disabled="importForm.$invalid || importdialog.loading" title="Load the file for import">
+        <i class="fa" ng-class="importdialog.loading && 'fa-spin fa-spinner' || 'fa-chevron-circle-right lt-blue-icon'"></i>
+        <span>{{importdialog.loading ? 'Loading' : 'Next'}}</span>
+      </button>
+      <button class="btn btn-default" ng-click="importdialog.close()" title="Cancel file import">
+        <i class="fa fa-ban red-icon"></i>
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>

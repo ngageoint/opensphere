@@ -1,0 +1,85 @@
+
+// === Font sizes ===
+// Styles to compliment font-awesome icons
+// Font-size (and icon) definitions
+
+
+.font-size-4of5 {
+  font-size: .8em;
+}
+
+.font-size-4x {
+  font-size: 4em;
+}
+
+.font-size-5x {
+  font-size: 5em;
+}
+
+.font-size-6x {
+  font-size: 6em;
+}
+
+.font-size-7x {
+  font-size: 7em;
+}
+
+.font-size-8x {
+  font-size: 8em;
+}
+
+.font-size-9x {
+  font-size: 9em;
+}
+
+.font-size-10x {
+  font-size: 10em;
+}
+
+.font-size-11x {
+  font-size: 11em;
+}
+
+.font-size-12x {
+  font-size: 12em;
+}
+
+.font-size-xlarge {
+  font-size: 24em;
+}
+
+@media (max-width: 1199px) {
+  .font-size-10x {
+    font-size: 8em;
+  }
+
+  .font-size-11x {
+    font-size: 9em;
+  }
+
+  .font-size-12x {
+    font-size: 10em;
+  }
+
+  .font-size-xlarge {
+    font-size: 20em;
+  }
+}
+
+@media (max-width: 979px) {
+  .font-size-10x {
+    font-size: 6em;
+  }
+
+  .font-size-11x {
+    font-size: 7em;
+  }
+
+  .font-size-12x {
+    font-size: 8em;
+  }
+
+  .font-size-xlarge {
+    font-size: 15em;
+  }
+}

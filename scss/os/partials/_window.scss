@@ -1,0 +1,114 @@
+// * Window styles
+// *******************************************
+.window-content {
+  background: $color-gray;
+}
+
+.context-onboarding-button {
+  @include border-radius(7px);
+  @include opacity(.6);
+  border: 1px solid #ccc;
+  cursor: pointer;
+  font-size: 12px;
+  padding-right: 1px;
+  text-align: center;
+  width: 11px;
+
+  &:hover {
+    @include opacity(.9);
+  }
+}
+
+// * Clear Window Styles
+// *******************************************
+
+.clear-window .window-content {
+  padding-top: 0;
+}
+
+.save-state-window label.checkbox,
+.column-manager-window label.checkbox {
+  padding-left: 25px;
+}
+
+// * Color picker styles
+// *******************************************
+
+.goog-popupcolorpicker {
+  z-index: 20000;
+}
+
+.goog-palette-table {
+  border: 1px solid #444;
+}
+
+.goog-palette-cell {
+  border-right: 0;
+}
+
+// * File Import Window Styles
+// *******************************************
+
+.file-import {
+  .control-label {
+    color: #fff;
+    text-align: left;
+  }
+
+  .control-group.error {
+    .control-label,
+    .help-block,
+    .help-inline {
+      color: inherit;
+    }
+  }
+
+  input[type="text"] {
+    @include calc(width, '100% - 14px');
+    margin: 0;
+  }
+
+  .form-horizontal {
+    .control-label {
+      width: 60px;
+    }
+
+    .controls {
+      margin-left: 70px;
+    }
+  }
+}
+
+form input[type="text"] {
+  &.file-input,
+  &.url-input {
+    background-color: $color-medium-gray;
+    color: #fff;
+    margin: 0;
+  }
+}
+
+input {
+  &[type="text"].file-input {
+    cursor: pointer;
+  }
+
+  &[type="file"],
+  &.input-hidden {
+    position: absolute;
+    top: 0;
+    visibility: hidden;
+    width: 0;
+  }
+}
+
+.text-prompt input[readonly] {
+  color: $color-white;
+}
+
+
+// * History Window
+// *******************************************
+a.history-row {
+  text-decoration: none;
+}

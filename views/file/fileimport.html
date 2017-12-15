@@ -1,0 +1,21 @@
+<div class="file-import window-content-wrapper">
+  <div class="window-content">
+    <form name="fileForm" class="form-compact">
+      <div class="control-group" data-ng-class="{'error': fileForm.file.$invalid && fileForm.file.$dirty}">
+        <label class="control-label">Choose a file:</label>
+        <div class="controls">
+          <input class="file-input" type="text" name="text" ng-click="fileImport.openFileBrowser()" ng-model="fileImport.fileName" ng-required="true" placeholder="Click to choose file..." readOnly />
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="window-footer">
+    <div class="pull-right">
+      <button class="btn btn-default" ng-click="fileImport.accept()" ng-disabled="fileForm.$invalid || fileImport.loading" title="Import the file">
+        <i class="fa" ng-class="fileImport.loading && 'fa-spin fa-spinner' || 'fa-chevron-circle-right lt-blue-icon'"></i>
+        <span ng-if="fileImport.loading">Loading</span><span ng-if="!fileImport.loading"> Next</span>
+      </button>
+      <button class="btn btn-default" ng-click="fileImport.close()" title="Cancel file import"><i class="fa fa-ban red-icon"></i> Cancel</button>
+    </div>
+  </div>
+</div>

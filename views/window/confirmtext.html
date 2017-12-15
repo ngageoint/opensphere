@@ -1,0 +1,11 @@
+<div class="confirm-text" ng-form="textForm">
+  {{prompt}}
+  <div class="control-group">
+    <label class="control-label" for="title" ng-if="formLabel">{{formLabel}}:</label>
+    <div ng-class="formLabel && 'controls'">
+      <input type="text" class="wide" name="title" ng-model="confirmValue" required ng-maxlength="limit"/>
+      <span class="help-inline" ng-if="textForm.title.$error.required">Required!</span>
+      <span class="help-inline" ng-if="textForm.title.$error.maxlength">Too long!</span>
+    </div>
+  </div>
+</div>

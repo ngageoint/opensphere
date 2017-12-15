@@ -1,0 +1,16 @@
+<div class="draw-controls">
+  <div class="draw-controls-group ol-control">
+    <button style="margin-right: 0;"
+        ng-class="{on: drawControls.isActive(), active: drawControls.isActive()}"
+        ng-click="drawControls.activateControl(drawControls.selectedType)"
+        ng-right-click="drawControls.toggleMenu()"
+        title="Draws a {{drawControls.selectedType}} on the map for queries, zoom, and selection">
+      <i class="fa" ng-class="{'fa-square-o': drawControls.selectedType == 'box', 'fa-circle-o': drawControls.selectedType == 'circle', 'fa-long-arrow-right': drawControls.selectedType == 'line', 'fa-star-o': drawControls.selectedType == 'polygon'}"></i>
+    </button>
+    <button style="width: .625em; margin-left: 0;"
+        ng-click="drawControls.toggleMenu()"
+        ng-class="{active: drawControls.showMenu}">
+      <i class="fa fa-chevron-down" style="font-size: 8px"></i>
+    </button>
+  </div>
+</div>

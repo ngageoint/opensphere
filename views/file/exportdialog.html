@@ -1,0 +1,55 @@
+<div class="export-window window-content-wrapper">
+  <div class="window-content">
+    <div class="export-dialog">
+      <form name="exportForm" class="form-horizontal form-compact">
+        <table style="width:100%">
+          <tr>
+            <td class="control-label">Name:</td>
+            <td class="wide">
+              <input class="wide" type="text" name="title" ng-model="options.title" ng-maxlength="200" required/>
+              <span class="help-inline" ng-show="exportForm.title.$error.required">Required!</span>
+              <span class="help-inline" ng-show="exportForm.title.$error.maxlength">Title is too long!</span>
+            </td>
+          </tr>
+          <tr ng-show="!initialPersister">
+            <td class="control-label">Save to:</td>
+            <td class="wide">
+              <select class="wide" ng-model="persister"
+                  ng-options="value as key for (key, value) in exportdialog.persisters"/>
+            </td>
+          </tr>
+          <tr ng-show="!initialExporter">
+            <td class="control-label">Type:</td>
+            <td class="wide">
+              <select class="wide" ng-model="exporter"
+                  ng-options="value as key for (key, value) in exportdialog.exporters"/>
+            </td>
+          </tr>
+        </table>
+        <div class="export-ui" ng-show="exporter && exportdialog.getExporterUI()">
+          <h6>{{exportdialog.getExporterLabel()}} Options</h6>
+          <div class="well export-ui-container"></div>
+        </div>
+        <div class="custom-ui"></div>
+      </form>
+    </div>
+  </div>
+  <div class="window-footer">
+    <ng-pluralize count="options.items.length" style="vertical-align:middle;"
+        when="{'0': 'Nothing to export.',
+               'one': 'Exporting {} {{itemText}}.',
+               'other': 'Exporting {} {{itemText}}s.'}">
+    </ng-pluralize>
+    <div class="pull-right">
+      <button class="btn btn-default" ng-click="exportdialog.confirm()"
+          ng-disabled="exportForm.$invalid || options.items.length == 0">
+        <i class="fa fa-check lt-blue-icon"></i>
+        OK
+      </button>
+      <button class="btn btn-default" ng-click="exportdialog.cancel()">
+        <i class="fa fa-ban red-icon"></i>
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>

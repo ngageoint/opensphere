@@ -1,0 +1,38 @@
+<div class="window-content-wrapper">
+  <div class="window-content">
+    <div ng-if="!config.zipFile" class="shpareafiles">
+      <shpfilesstep></shpfilesstep>
+      <hr/>
+    </div>
+    <div ng-show="config.zipFile && config.columns.length == 0" class='row-fluid'>
+      <span class="middle"><i class="fa fa-spin fa-spinner" title="Loading..."></i> Loading Zip...</span>
+    </div>
+    <div ng-show="config.columns" ng-class="!config.zipFile && 'shpareafilemapper'">
+      <form name="areaForm" class="form-compact form-horizontal form-popover-help">
+        <basicinfo config="config" columns="config.merge ? null : config.columns" help="areaFiles.help"></basicinfo>
+
+        <div class="control-group">
+          <label class="control-label">Merge Areas:</label>
+          <div class="controls">
+            <input type="checkbox" name="merge" ng-model="config.merge"/>
+            <popover class="pull-right" ng-if="areaFiles.help.merge" x-title="'Merge Areas'"
+                x-content="areaFiles.help.merge" x-pos="'right'"></popover>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="window-footer">
+    <div class="pull-right">
+      <button class="btn btn-default" ng-disabled="areaFiles.invalid() || areaForm.$invalid || areaFiles.loading"
+          ng-click="areaFiles.finish()">
+        <i class="fa fa-fw lt-blue-icon" ng-class="areaFiles.loading && 'fa-spin fa-spinner' || 'fa-check'"></i>
+        {{areaFiles.loading ? 'Loading' : 'OK'}}
+      </button>
+      <button class="btn btn-default" ng-click="areaFiles.close()">
+        <i class="fa fa-fw fa-ban red-icon"></i>
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>

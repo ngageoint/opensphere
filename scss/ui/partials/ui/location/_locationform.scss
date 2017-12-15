@@ -1,0 +1,16 @@
+.copy-location-window {
+  .props-checkbox > * {
+    display: inline-block;
+    margin-right: .3em;
+  }
+
+  .props-checkbox label {
+    line-height: 1.6em;
+    vertical-align: text-top;
+  }
+
+  .custom-description {
+    height: 4em;
+    min-height: 3em;
+  }
+}

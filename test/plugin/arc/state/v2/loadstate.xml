@@ -1,0 +1,62 @@
+<state source="MIST Beta (dev (b1a38a6))" xmlns="http://www.bit-sys.com/state/v2">
+  <title>Arc State Again</title>
+  <layers type="data">
+    <layer type="arc">
+      <id>fakeId#tiles</id>
+      <layerType>Tile and Feature Groups</layerType>
+      <animate>true</animate>
+      <url>https://fake.server.com/arcgis/services/rest/SomeLayer/MapServer/query</url>
+      <params>
+        <f>json</f>
+        <inSR>4326</inSR>
+        <outSR>4326</outSR>
+        <outFields>*</outFields>
+        <geometryType>esriGeometryPolygon</geometryType>
+        <geometry>{geom}</geometry>
+        <returnIdsOnly>true</returnIdsOnly>
+        <time>{time}</time>
+      </params>
+      <usePost>true</usePost>
+      <title>My Arc Layer</title>
+      <spatial>true</spatial>
+      <temporal>true</temporal>
+      <filter>true</filter>
+      <load>true</load>
+      <dataProvider>ArcGIS Server</dataProvider>
+      <visible>true</visible>
+      <minResolution>0</minResolution>
+      <maxResolution>Infinity</maxResolution>
+      <showLabels>false</showLabels>
+      <shapeName>Default</shapeName>
+      <timeEnabled>true</timeEnabled>
+      <basicFeatureStyle>
+        <pointOpacity>255</pointOpacity>
+        <pointColor>ffffff</pointColor>
+        <pointSize>6</pointSize>
+        <labelSize>12</labelSize>
+      </basicFeatureStyle>
+    </layer>
+    <layer type="wms">
+      <id>fakeId#tiles</id>
+      <layerType>Tile and Feature Groups</layerType>
+      <providedBy>ArcGIS Server</providedBy>
+      <animate>true</animate>
+      <url>https://fake.server.com/arcgis/services/rest/SomeLayer/MapServer/export</url>
+      <params>
+        <layers>show: 3</layers>
+      </params>
+      <title>My Arc Layer</title>
+      <baseColor>0x8400a8</baseColor>
+      <timeParam>time</timeParam>
+      <timeFormat>{start},{end}</timeFormat>
+      <dateFormat>timestamp</dateFormat>
+      <visible>true</visible>
+      <minResolution>0</minResolution>
+      <maxResolution>Infinity</maxResolution>
+      <basicFeatureStyle>
+        <pointOpacity>255</pointOpacity>
+      </basicFeatureStyle>
+      <provider>ArcMap</provider>
+    </layer>
+  </layers>
+</state>

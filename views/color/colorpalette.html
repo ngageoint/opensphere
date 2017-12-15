@@ -1,0 +1,15 @@
+<div class="palette" ng-class="{'background': palette.showReset}">
+  <table class="palette-table" cellspacing="0" cellpadding="0">
+    <tbody class="palette-body">
+      <tr class="palette-row" ng-repeat="row in rows">
+        <td class="palette-cell" ng-repeat="color in row" ng-class="{'selected': value === color}">
+          <div class="palette-colorswatch" ng-style="{'background-color': color}" ng-click="palette.pick(color)"
+              title="{{palette.getTitle(color)}}"></div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div ng-if="palette.showReset">
+    <button type="button" class="btn btn-default btn-mini" ng-click="palette.reset()">Reset</button>
+  </div>
+</div>

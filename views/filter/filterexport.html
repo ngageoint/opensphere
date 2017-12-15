@@ -1,0 +1,32 @@
+
+<div class="c-filterexport window-content-wrapper">
+  <div class="window-content">
+    <div class="export-dialog">
+      <form name="exportForm" class="form-horizontal form-compact">
+        <div>
+          <label class="radio"><input type="radio" name="exportmode"
+            value="active" data-ng-model="filterexport['mode']" checked>Export active (checked) filters</label>
+          <label class="radio"><input type="radio" name="exportmode"
+            value="selected" data-ng-model="filterexport['mode']">Export selected filters</label>
+          <label class="radio"><input type="radio" name="exportmode"
+            value="all" data-ng-model="filterexport['mode']">Export all filters</label><br>
+          <span style="width:75%" class="control-label">Name:
+            <input class="wide" type="text" name="title" ng-model="filterexport['fileName']" ng-maxlength="200" required/>
+          </span>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="window-footer">
+    <div class="pull-right">
+      <button class="btn btn-default" ng-click="filterexport.save()" ng-disabled="exportForm.$invalid">
+        <i class="fa fa-check lt-blue-icon"></i>
+        OK
+      </button>
+      <button class="btn btn-default" ng-click="filterexport.cancel()">
+        <i class="fa fa-ban red-icon"></i>
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,20 @@
+<div class="filterbuilder">
+  <div style="height:100%;" ng-if="!isComplex">
+    <div class="advanced-filter-buttons">
+      <button class="btn btn-default" ng-click="basicCtrl.add()" title="Adds a new expression to the filter"><i class="btn-icon fa fa-plus green-icon"></i> Add Expression</button>
+      <span style="margin-left: 30px" class="form-inline">Match:
+        <label class="radio"><input type="radio" ng-model="root.grouping" value="And">All (AND)</label>
+        <label class="radio"><input type="radio" ng-model="root.grouping" value="Or">Any (OR)</label>
+      </span>
+    </div>
+    <div class="basic-tree" autoheight siblings=".advanced-filter-buttons">
+      <basicfiltertree x-data="root" disable-selection="true"></basicfiltertree>
+    </div>
+  </div>
+  <div ng-if="isComplex">
+    <p>
+      <i class="fa fa-exclamation-triangle font-warning"></i>
+      This filter is too complex to display in basic mode. Please go to the Advanced tab.
+    </p>
+  </div>
+</div>

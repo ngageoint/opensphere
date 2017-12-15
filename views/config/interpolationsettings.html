@@ -1,0 +1,31 @@
+<div class="user-setting">
+  <h4>Interpolation</h4>
+  <div class="user-setting-title"><p>The interpolation settings used by the application for line/polygon segments.</p></div>
+  <form name="interpolationForm">
+    <h5>Method</h5>
+    <div class="control-group">
+      <label class="radio" title="Use geodesic interpolation">
+        <input type="radio" ng-model="method" value="geodesic"/>
+        Geodesic
+      </label>
+      <p class="radio">Also known as "shortest arc" or "orthodrome", a Geodesic is the shortest path between two points
+      over the surface of the earth. This path follows a constantly-variable bearing and typically
+      requires computer navigation equipment to follow.</p>
+    </div>
+    <div class="control-group">
+      <label class="radio" title="Use rhumb interpolation">
+        <input type="radio" ng-model="method" value="rhumb"/>
+        Rhumb
+      </label>
+      <p class="radio">Also known as "loxodrome" or "azimuth". This path, while not the shortest distance, follows a constant bearing over the
+      surface of the earth. It is easier to navigate with a compass.</p>
+    </div>
+    <h5>Granularity</h5>
+    <div class="control-group">
+      <label class="radio" title="Distance between coordinates">
+        Distance between coordinates in kilometers
+        <input type="number" name="kilometers" step="1" min="10" max="1000" ng-model="kilometers"/>
+      </label>
+    </div>
+  </form>
+</div>

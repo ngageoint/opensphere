@@ -1,0 +1,17 @@
+<div class="accordion" id="layerControls">
+  <div class="accordion-group layer-controls-group">
+    <div class="accordion-heading" title="Style controls for the layer(s)">
+      <a class="accordion-toggle layer-controls-heading" data-toggle="collapse" data-parent="#layerControls" data-target="#layer-style" ng-click="defaultCtrl.setOpenSection('#layer-style')">Style</a>
+    </div>
+    <div id="layer-style" class="accordion-body collapse">
+      <div class="accordion-inner layer-controls">
+        <table>
+          <tr title="Sets the opacity (inverse transparency) of the layer(s)">
+            <td class="control-label">Opacity:</td>
+            <td style="width:100%"><slider min="0" max="1" step="0.02" value="opacity" name="opacity"></slider></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

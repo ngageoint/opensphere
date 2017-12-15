@@ -1,0 +1,29 @@
+// font-awesome overrides
+
+
+// The linear timing function used by font-awesome swallows CPU/GPU resources in Chrome. Reducing the number of
+// keyframes used by the animation prevents this from happening.
+.fa-spin {
+  @include animation(fa-spin 1.5s infinite steps(15));
+}
+
+// Smooth out the animation at the cost of additional resources. Use this for larger spinners
+.fa-spin.fa-smooth {
+  @include animation-timing-function(steps(35));
+}
+
+// creates an overlapping circle
+.fa-circle-thin-overlap::after {
+  content: '\f1db';
+  left: -8px;
+  position: relative;
+}
+
+// generic modifier that positions an fa icon as a superscript to another fa icon
+.fa-superscript-modifier {
+  font-size: 10px;
+  position: relative;
+  right: 5px;
+  top: -5px;
+  width: 2px;
+}

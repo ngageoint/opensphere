@@ -1,0 +1,534 @@
+/**
+ * @fileoverview KML parser convenience functions, parsers, etc.
+ * @suppress {accessControls}
+ */
+goog.provide('plugin.file.kml');
+
+goog.require('goog.asserts');
+goog.require('ol.format.KML');
+goog.require('ol.format.XSD');
+goog.require('ol.geom.GeometryCollection');
+goog.require('ol.style.Icon');
+goog.require('ol.style.IconAnchorUnits');
+goog.require('ol.style.IconOrigin');
+goog.require('ol.style.Style');
+goog.require('ol.xml');
+goog.require('os.data.RecordField');
+goog.require('os.mixin');
+goog.require('os.object');
+goog.require('os.time.TimeInstant');
+goog.require('os.time.TimeRange');
+goog.require('os.ui.file.kml');
+goog.require('os.xml');
+
+
+/**
+ * Key used to store the parsed KML style on features.
+ * @type {string}
+ */
+plugin.file.kml.STYLE_KEY = '_kmlStyle';
+
+
+/**
+ * The default KML style
+ * @type {Object<string, *>}
+ */
+plugin.file.kml.DEFAULT_STYLE = {
+  'image': {
+    'type': 'icon',
+    'anchorOrigin': ol.style.IconOrigin.BOTTOM_LEFT,
+    'anchorXUnits': ol.style.IconAnchorUnits.FRACTION,
+    'anchorYUnits': ol.style.IconAnchorUnits.FRACTION,
+    'crossOrigin': os.net.CrossOrigin.ANONYMOUS,
+    'rotation': 0,
+    'src': os.ui.file.kml.DEFAULT_ICON_PATH
+  },
+  'stroke': {
+    'color': os.style.DEFAULT_LAYER_COLOR,
+    'width': os.style.DEFAULT_STROKE_WIDTH
+  }
+};
+
+
+/**
+ * @type {Array<Object<string, *>>}
+ */
+plugin.file.kml.DEFAULT_STYLE_ARRAY = [plugin.file.kml.DEFAULT_STYLE];
+
+
+/**
+ * Replaces parsers in an OL3 KML parser map.
+ * @param {Object<string, Object<string, ol.XmlParser>>} obj The parser object with namespace keys
+ * @param {string} field The field to replace
+ * @param {ol.XmlParser} parser The new parser
+ * @private
+ */
+plugin.file.kml.replaceParsers_ = function(obj, field, parser) {
+  for (var ns in obj) {
+    if (obj[ns]) {
+      obj[ns][field] = parser;
+    }
+  }
+};
+
+
+/**
+ * Accessor for private OL3 code.
+ * @return {function(this: T, *, Array<*>, (string|undefined)): (Node|undefined)}
+ * @template T
+ */
+plugin.file.kml.OL_GEOMETRY_NODE_FACTORY = function() {
+  return ol.format.KML.GEOMETRY_NODE_FACTORY_;
+};
+
+
+/**
+ * Accessor for private OL3 code.
+ * @return {Object<string, Object<string, ol.XmlParser>>}
+ * @template T
+ */
+plugin.file.kml.OL_ICON_STYLE_PARSERS = function() {
+  return ol.format.KML.ICON_STYLE_PARSERS_;
+};
+
+
+/**
+ * Accessor for private OL3 code.
+ * @return {Object<string, Object<string, ol.XmlParser>>}
+ */
+plugin.file.kml.OL_LINK_PARSERS = function() {
+  return ol.format.KML.LINK_PARSERS_;
+};
+
+
+/**
+ * Accessor for private OL3 code.
+ * @return {Array<string>}
+ */
+plugin.file.kml.OL_NAMESPACE_URIS = function() {
+  return ol.format.KML.NAMESPACE_URIS_;
+};
+
+
+/**
+ * Accessor for private OL3 code.
+ * @return {Object<string, Object<string, ol.XmlParser>>}
+ */
+plugin.file.kml.OL_NETWORK_LINK_PARSERS = function() {
+  return ol.format.KML.NETWORK_LINK_PARSERS_;
+};
+
+
+/**
+ * Accessor for private OL3 code.
+ * @return {Object<string, Object<string, ol.XmlParser>>}
+ */
+plugin.file.kml.OL_PLACEMARK_PARSERS = function() {
+  return ol.format.KML.PLACEMARK_PARSERS_;
+};
+
+
+/**
+ * Access for private OL3 code.
+ * @return {Object<string, Object<string, ol.XmlSerializer>>}
+ */
+plugin.file.kml.OL_PLACEMARK_SERIALIZERS = function() {
+  return ol.format.KML.PLACEMARK_SERIALIZERS_;
+};
+
+
+/**
+ * Access for private OL3 code.
+ * @return {Object<string, Object<string, ol.XmlParser>>}
+ */
+plugin.file.kml.OL_STYLE_PARSERS = function() {
+  return ol.format.KML.STYLE_PARSERS_;
+};
+
+
+/**
+ * OL3's opacity parsing can result in 16 decimal precision, which breaks when converting to a string then back
+ * to an array. Since we convert everything to an rgba string, this can be pretty common. Normalize the color output,
+ * which we have overridden to fix opacity to 2 decimal places.
+ *
+ * @param {Node} node Node.
+ * @private
+ * @return {ol.Color|undefined} Color.
+ */
+plugin.file.kml.readColor_ = function(node) {
+  var s = ol.xml.getAllTextContent(node, false);
+  // The KML specification states that colors should not include a leading `#`
+  // but we tolerate them.
+  var m = /^\s*#?\s*([0-9A-Fa-f]{8})\s*$/.exec(s);
+  if (m) {
+    var hexColor = m[1];
+    var color = [
+      parseInt(hexColor.substr(6, 2), 16),
+      parseInt(hexColor.substr(4, 2), 16),
+      parseInt(hexColor.substr(2, 2), 16),
+      parseInt(hexColor.substr(0, 2), 16) / 255
+    ];
+    return ol.color.normalize(color, color);
+  } else {
+    return undefined;
+  }
+};
+plugin.file.kml.replaceParsers_(ol.format.KML.LABEL_STYLE_PARSERS_, 'color',
+    ol.xml.makeObjectPropertySetter(plugin.file.kml.readColor_));
+plugin.file.kml.replaceParsers_(ol.format.KML.LINE_STYLE_PARSERS_, 'color',
+    ol.xml.makeObjectPropertySetter(plugin.file.kml.readColor_));
+plugin.file.kml.replaceParsers_(ol.format.KML.POLY_STYLE_PARSERS_, 'color',
+    ol.xml.makeObjectPropertySetter(plugin.file.kml.readColor_));
+
+
+/**
+ * Accessor for private OL3 code.
+ * @param {Node} node Node.
+ * @param {Array<*>} objectStack Object stack.
+ * @return {Array<ol.style.Style>} Style.
+ */
+plugin.file.kml.readStyle = function(node, objectStack) {
+  return ol.format.KML.readStyle_(node, objectStack);
+};
+
+
+/**
+ * Parses a time node.
+ * @param {Node} node Node.
+ * @param {Array<*>} objectStack Object stack.
+ * @return {os.time.ITime} The parsed time, or null if none could be parsed
+ */
+plugin.file.kml.readTime = function(node, objectStack) {
+  goog.asserts.assert(node.localName == 'TimeStamp' || node.localName == 'TimeSpan',
+      'localName should be TimeStamp or TimeSpan');
+
+  var timeObj = ol.xml.pushParseAndPop({}, plugin.file.kml.TIMEFIELD_PARSERS, node, []);
+  var time = null;
+  if (goog.isDefAndNotNull(timeObj['when'])) {
+    time = new os.time.TimeInstant(timeObj['when']);
+  } else if (goog.isDefAndNotNull(timeObj['begin']) || goog.isDefAndNotNull(timeObj['end'])) {
+    time = new os.time.TimeRange(timeObj['begin'], timeObj['end']);
+  }
+
+  return time;
+};
+
+
+/**
+ * @type {Object<string, Object<string, ol.XmlParser>>}
+ * @const
+ */
+plugin.file.kml.LINK_PARSERS = ol.xml.makeStructureNS(
+    plugin.file.kml.OL_NAMESPACE_URIS(), {
+      'refreshInterval': ol.xml.makeObjectPropertySetter(ol.format.XSD.readNonNegativeInteger),
+      'refreshMode': ol.xml.makeObjectPropertySetter(ol.format.XSD.readString),
+      'viewRefreshMode': ol.xml.makeObjectPropertySetter(ol.format.XSD.readString),
+      'viewRefreshTime': ol.xml.makeObjectPropertySetter(ol.format.XSD.readNonNegativeInteger)
+    });
+
+
+/**
+ * Extend link parsers to include refresh options.
+ */
+os.object.merge(plugin.file.kml.LINK_PARSERS, plugin.file.kml.OL_LINK_PARSERS(), false);
+
+
+/**
+ * @type {Object<string, Object<string, ol.XmlParser>>}
+ * @const
+ * @suppress {accessControls}
+ */
+plugin.file.kml.ICON_STYLE_PARSERS = ol.xml.makeStructureNS(
+    plugin.file.kml.OL_NAMESPACE_URIS(), {
+      'color': ol.xml.makeObjectPropertySetter(plugin.file.kml.readColor_)
+    });
+
+
+/**
+ * Extend link parsers to include refresh options.
+ */
+os.object.merge(plugin.file.kml.ICON_STYLE_PARSERS, plugin.file.kml.OL_ICON_STYLE_PARSERS(), false);
+
+
+/**
+ * Parse KML time nodes to a os.time.ITime object.
+ * @type {Object<string, Object<string, ol.XmlParser>>}
+ * @const
+ */
+plugin.file.kml.TIME_PARSERS = ol.xml.makeStructureNS(
+    plugin.file.kml.OL_NAMESPACE_URIS(), {
+      'TimeStamp': ol.xml.makeObjectPropertySetter(plugin.file.kml.readTime, os.data.RecordField.TIME),
+      'TimeSpan': ol.xml.makeObjectPropertySetter(plugin.file.kml.readTime, os.data.RecordField.TIME)
+    });
+
+
+/**
+ * Parse Date objects from KML.
+ * @type {Object<string, Object<string, ol.XmlParser>>}
+ * @const
+ */
+plugin.file.kml.TIMEFIELD_PARSERS = ol.xml.makeStructureNS(
+    plugin.file.kml.OL_NAMESPACE_URIS(), {
+      'when': ol.xml.makeObjectPropertySetter(os.xml.readDateTime),
+      'begin': ol.xml.makeObjectPropertySetter(os.xml.readDateTime),
+      'end': ol.xml.makeObjectPropertySetter(os.xml.readDateTime)
+    });
+
+
+/**
+ * Add time parsers to the OL3 Placemark parsers. These will parse kml:TimeStamp into a time instant and kml:TimeSpan
+ * into a time range.
+ */
+os.object.merge(plugin.file.kml.TIME_PARSERS, plugin.file.kml.OL_PLACEMARK_PARSERS(), false);
+
+
+/**
+ * Override the href parser to use the asset map.
+ *
+ * Openlayers 3.18 updated this function to use the URL() API, which is not supported in IE. If goog.Uri is replaced
+ * here, a URL polyfill will be required.
+ *
+ * @param {Node} node
+ * @return {string} URI
+ * @protected
+ */
+plugin.file.kml.readURI = function(node) {
+  var s = ol.xml.getAllTextContent(node, false).trim();
+
+  // find the asset map
+  var assetMap = null;
+  var p = node;
+  while (p && !assetMap) {
+    assetMap = p.assetMap;
+    p = p.parentNode;
+  }
+
+  if (node.baseURI && (!assetMap || !(s in assetMap))) {
+    return goog.Uri.resolve(node.baseURI, s).toString();
+  }
+
+  return s;
+};
+
+
+/**
+ * Override for HREF parsing so that it will use our own readURI function above
+ */
+plugin.file.kml.HREF_OVERRIDE = ol.xml.makeStructureNS(
+    ol.format.KML.NAMESPACE_URIS_, {
+      'href': ol.xml.makeObjectPropertySetter(plugin.file.kml.readURI)
+    });
+
+os.object.merge(plugin.file.kml.HREF_OVERRIDE, ol.format.KML.LINK_PARSERS_, true);
+os.object.merge(plugin.file.kml.HREF_OVERRIDE, ol.format.KML.ICON_PARSERS_, true);
+
+
+/**
+ * Save a reference to the original OL3 writeMultiGeometry_ function.
+ * @param {Node} node Node.
+ * @param {ol.geom.Geometry} geometry Geometry.
+ * @param {Array<*>} objectStack Object stack.
+ * @private
+ */
+plugin.file.kml.olWriteMultiGeometry_ = ol.format.KML.writeMultiGeometry_;
+
+
+/**
+ * Adds support for writing geometries in a {@link ol.geom.GeometryCollection} to a kml:MultiGeometry node.
+ * @param {Node} node Node.
+ * @param {ol.geom.Geometry} geometry Geometry.
+ * @param {Array<*>} objectStack Object stack.
+ * @private
+ */
+plugin.file.kml.writeMultiGeometry_ = function(node, geometry, objectStack) {
+  if (geometry instanceof ol.geom.GeometryCollection) {
+    // this part should be PR'ed back to OL3
+    var /** @type {ol.XmlNodeStackItem} */ context = {node: node};
+    var geometries = geometry.getGeometries();
+    for (var i = 0, n = geometries.length; i < n; i++) {
+      ol.xml.pushSerializeAndPop(context, plugin.file.kml.OL_PLACEMARK_SERIALIZERS(),
+          plugin.file.kml.OL_GEOMETRY_NODE_FACTORY(), [geometries[i]], objectStack);
+    }
+  } else {
+    // call the original function for everything else
+    plugin.file.kml.olWriteMultiGeometry_(node, geometry, objectStack);
+  }
+};
+
+
+/**
+ * Override the OL3 Placemark serializers to add additional support.
+ * @type {Object<string, Object<string, ol.XmlSerializer>>}
+ * @const
+ */
+plugin.file.kml.PLACEMARK_SERIALIZERS = ol.xml.makeStructureNS(
+    plugin.file.kml.OL_NAMESPACE_URIS(), {
+      'MultiGeometry': ol.xml.makeChildAppender(
+          plugin.file.kml.writeMultiGeometry_)
+    });
+os.object.merge(plugin.file.kml.PLACEMARK_SERIALIZERS, plugin.file.kml.OL_PLACEMARK_SERIALIZERS(), true);
+
+
+/**
+ * {@link ol.geom.GeometryCollection} should be serialized as a kml:MultiGeometry.
+ */
+ol.format.KML.GEOMETRY_TYPE_TO_NODENAME_['GeometryCollection'] = 'MultiGeometry';
+
+
+/**
+ * This is literally replacing \d+ with \d* in the regular expression's altitude group so coordinates like
+ * "1,2,0." will work.
+ *
+ * @param {Node} node Node.
+ * @private
+ * @return {Array<number>|undefined} Flat coordinates.
+ *
+ * @suppress {duplicate}
+ */
+ol.format.KML.readFlatCoordinates_ = function(node) {
+  var s = ol.xml.getAllTextContent(node, false);
+  var flatCoordinates = [];
+
+  // The KML specification states that coordinate tuples should not include
+  // spaces, but we tolerate them.
+  var re = /^[^\d+.-]*([+\-]?\d*\.?\d+(?:e[+\-]?\d+)?)\s*,\s*([+\-]?\d*\.?\d+(?:e[+\-]?\d+)?)(?:\s*,\s*([+\-]?\d*\.?\d*(?:e[+\-]?\d+)?))?\s*/i;
+
+  var m;
+  while ((m = re.exec(s))) {
+    var x = parseFloat(m[1]);
+    var y = parseFloat(m[2]);
+    var z = m[3] ? parseFloat(m[3]) : 0;
+    flatCoordinates.push(x, y, z);
+    s = s.substr(m[0].length);
+  }
+  // if (s !== '') {
+  //   return undefined;
+  // }
+  return flatCoordinates;
+};
+plugin.file.kml.replaceParsers_(ol.format.KML.FLAT_LINEAR_RING_PARSERS_, 'coordinates',
+    ol.xml.makeReplacer(ol.format.KML.readFlatCoordinates_));
+plugin.file.kml.replaceParsers_(ol.format.KML.GEOMETRY_FLAT_COORDINATES_PARSERS_, 'coordinates',
+    ol.xml.makeReplacer(ol.format.KML.readFlatCoordinates_));
+
+
+/**
+ * Let's just go with the KML scale value instead of the square root, shall we?
+ *
+ * @param {Node} node Node.
+ * @return {number|undefined} Scale.
+ * @private
+ */
+plugin.file.kml.readScale_ = function(node) {
+  return ol.format.XSD.readDecimal(node);
+};
+plugin.file.kml.replaceParsers_(ol.format.KML.ICON_STYLE_PARSERS_, 'scale',
+    ol.xml.makeObjectPropertySetter(plugin.file.kml.readScale_));
+plugin.file.kml.replaceParsers_(ol.format.KML.LABEL_STYLE_PARSERS_, 'scale',
+    ol.xml.makeObjectPropertySetter(plugin.file.kml.readScale_));
+
+
+/**
+ * KML 2.0 support, yay!!!
+ *
+ * @param {Node} node Node.
+ * @param {Array<*>} objectStack Object stack.
+ * @private
+ */
+plugin.file.kml.UrlParser_ = function(node, objectStack) {
+  goog.asserts.assert(node.nodeType == goog.dom.NodeType.ELEMENT,
+      'node.nodeType should be ELEMENT');
+  goog.asserts.assert(node.localName == 'Url', 'localName should be Url');
+  ol.xml.parseNode(plugin.file.kml.OL_LINK_PARSERS(), node, objectStack);
+};
+plugin.file.kml.replaceParsers_(plugin.file.kml.OL_NETWORK_LINK_PARSERS(), 'Url', plugin.file.kml.UrlParser_);
+
+
+/**
+ * Added support for icon color.
+ *
+ * @param {Node} node Node.
+ * @param {Array.<*>} objectStack Object stack.
+ * @private
+ */
+plugin.file.kml.IconStyleParser_ = function(node, objectStack) {
+  goog.asserts.assert(node.nodeType == goog.dom.NodeType.ELEMENT, 'node.nodeType should be an ELEMENT');
+  goog.asserts.assert(node.localName == 'IconStyle', 'localName should be IconStyle');
+  // FIXME refreshMode
+  // FIXME refreshInterval
+  // FIXME viewRefreshTime
+  // FIXME viewBoundScale
+  // FIXME viewFormat
+  // FIXME httpQuery
+  var object = ol.xml.pushParseAndPop({}, ol.format.KML.ICON_STYLE_PARSERS_, node, objectStack);
+  if (!object) {
+    return;
+  }
+  var styleObject = /** @type {Object} */ (objectStack[objectStack.length - 1]);
+  goog.asserts.assert(goog.isObject(styleObject), 'styleObject should be an Object');
+  var IconObject = 'Icon' in object ? object['Icon'] : {};
+  var src;
+  var href = /** @type {string|undefined} */ (IconObject['href']);
+  if (href) {
+    src = href;
+  } else {
+    src = os.object.IGNORE_VAL;
+  }
+
+  var anchor;
+  var anchorXUnits;
+  var anchorYUnits;
+  var hotSpot = /** @type {ol.KMLVec2_|undefined} */ (object['hotSpot']);
+  if (hotSpot) {
+    anchor = [hotSpot.x, hotSpot.y];
+    anchorXUnits = hotSpot.xunits;
+    anchorYUnits = hotSpot.yunits;
+  }
+
+  var offset;
+  var x = /** @type {number|undefined} */ (IconObject['x']);
+  var y = /** @type {number|undefined} */ (IconObject['y']);
+  if (x !== undefined && y !== undefined) {
+    offset = [x, y];
+  }
+
+  var size;
+  var w = /** @type {number|undefined} */ (IconObject['w']);
+  var h = /** @type {number|undefined} */ (IconObject['h']);
+  if (w !== undefined && h !== undefined) {
+    size = [w, h];
+  }
+
+  var rotation;
+  var heading = /** @type {number} */ (object['heading']);
+  if (heading !== undefined) {
+    rotation = ol.math.toRadians(heading);
+  }
+
+  var scale = /** @type {number|undefined} */ (object['scale']);
+
+  // determine the crossOrigin from the provided URL. if 'none', use undefined so the attribute isn't set on the image.
+  var crossOrigin = src ? os.net.getCrossOrigin(src) : undefined;
+  if (crossOrigin == os.net.CrossOrigin.NONE) {
+    crossOrigin = undefined;
+  }
+
+  var color = /** @type {ol.Color} */ (object['color']);
+
+  var imageStyle = new ol.style.Icon({
+    anchor: anchor,
+    anchorOrigin: ol.style.IconOrigin.BOTTOM_LEFT,
+    anchorXUnits: anchorXUnits,
+    anchorYUnits: anchorYUnits,
+    color: color,
+    crossOrigin: crossOrigin,
+    offset: offset,
+    offsetOrigin: ol.style.IconOrigin.BOTTOM_LEFT,
+    rotation: rotation,
+    scale: scale,
+    size: size,
+    src: src
+  });
+  styleObject['imageStyle'] = imageStyle;
+};
+plugin.file.kml.replaceParsers_(plugin.file.kml.OL_STYLE_PARSERS(), 'IconStyle', plugin.file.kml.IconStyleParser_);

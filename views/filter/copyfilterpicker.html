@@ -1,0 +1,29 @@
+<div class="copy-filter__picker" ng-form="copyFilterPickerForm">
+  <table class="copy-filter__table">
+    <tr>
+      <td class="ellipsis-text copy-filter__column-name" title="{{sourceLayerName}} Column">
+        {{sourceLayerName}} Column
+      </td>
+      <td></td>
+      <td class="ellipsis-text copy-filter__column-name" title="{{models[0].name}} Column">
+        {{models[0].name}} Column
+      </td>
+    </tr>
+    <tr ng-repeat="model in models">
+      <td class="ellipsis-text copy-filter__column" title="{{model.sourceColumnName}}">
+        {{model.sourceColumnName}}
+      </td>
+      <td>
+        <i class="fa fa-long-arrow-right" style="width:40px;" title="Becomes..."></i>
+      </td>
+      <td>
+        <select class="pull-right" ng-change="copyFilterPickerCtrl.validate()" ng-model="model.selectedTargetColumn" ng-options="col.name for col in model.targetColumns" required/>
+      </td>
+    </tr>
+  </table>
+  <div class="copy-filter-picker__help-text">
+    <i class="fa fa-warning orange-icon" ng-if="copyFilterPickerForm.$error.duplicate || copyFilterPickerForm.$error.inUse"></i>
+    <span ng-if="copyFilterPickerForm.$error.duplicate" ng-bind-html="copyFilterPickerCtrl.duplicateText"></span>
+    <span ng-if="!copyFilterPickerForm.$error.duplicate && copyFilterPickerForm.$error.inUse" ng-bind-html="copyFilterPickerCtrl.inUseText"></span>
+  </div>
+</div>

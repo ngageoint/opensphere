@@ -1,0 +1,15 @@
+<form name="choiceForm" class="form-compressed">
+  <span style="word-break:break-all;">The URL "{{url}}" is already saved under the data source "{{current}}"!</span>
+  <label class="radio">
+    <input type="radio" name="urlExistsRadios" data-ng-model="confirmValue" value="activate">
+    Activate the current source
+  </label>
+  <label class="radio">
+    <input type="radio" name="urlExistsRadios" data-ng-model="confirmValue" value="reimport">
+    Reimport the current source
+  </label>
+  <label class="radio">
+    <input type="radio" name="urlExistsRadios" data-ng-model="confirmValue" value="createNew">
+    Create a new source and import the URL
+  </label>
+</form>

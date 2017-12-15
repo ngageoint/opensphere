@@ -1,0 +1,190 @@
+//  === Colors ===
+//  color schemes, font color and icon colors (font-awesome) definitions
+
+.color-scheme-primary {
+  color: $color-scheme-primary !important;
+}
+
+.color-scheme-primary-dark {
+  color: $color-scheme-primary-dark !important;
+}
+
+.color-scheme-primary-dark-alt {
+  color: $color-scheme-primary-dark-alt !important;
+}
+
+.color-scheme-primary-light {
+  color: $color-scheme-primary-light !important;
+}
+
+.color-scheme-primary-light-alt {
+  color: $color-scheme-primary-light-alt !important;
+}
+
+.color-scheme-compliment1 {
+  color: $color-scheme-compliment1 !important;
+}
+
+.color-scheme-compliment1-dark {
+  color: $color-scheme-compliment1-dark !important;
+}
+
+.color-scheme-compliment1-dark-alt {
+  color: $color-scheme-compliment1-dark-alt !important;
+}
+
+.color-scheme-compliment1-light {
+  color: $color-scheme-compliment1-light !important;
+}
+
+.color-scheme-compliment1-light-alt {
+  color: $color-scheme-compliment1-light-alt !important;
+}
+
+.color-scheme-compliment2 {
+  color: $color-scheme-compliment2 !important;
+}
+
+.color-scheme-compliment2-dark {
+  color: $color-scheme-compliment2-dark !important;
+}
+
+.color-scheme-compliment2-dark-alt {
+  color: $color-scheme-compliment2-dark !important;
+}
+
+.color-scheme-compliment2-light {
+  color: $color-scheme-compliment2-light !important;
+}
+
+.color-scheme-compliment2-light-alt {
+  color: $color-scheme-compliment2-light-alt !important;
+}
+
+.color-scheme-compliment3 {
+  color: $color-scheme-compliment3 !important;
+}
+
+.color-scheme-compliment3-dark {
+  color: $color-scheme-compliment3-dark !important;
+}
+
+.color-scheme-compliment3-dark-alt {
+  color: $color-scheme-compliment3-dark-alt !important;
+}
+
+.color-scheme-compliment3-light {
+  color: $color-scheme-compliment3-light !important;
+}
+
+.color-scheme-compliment3-light-alt {
+  color: $color-scheme-compliment3-light-alt !important;
+}
+
+// Basic Colors
+
+.color-white {
+  color: $color-white !important;
+}
+
+.color-black {
+  color: $color-black !important;
+}
+
+.color-dark-gray {
+  color: $color-dark-gray !important;
+}
+
+.color-gray {
+  color: $color-gray !important;
+}
+
+.color-light-gray {
+  color: $color-light-gray !important;
+}
+
+.color-green {
+  color: $color-green !important;
+}
+
+.color-light-green {
+  color: $color-light-green !important;
+}
+
+.color-blue {
+  color: $color-blue !important;
+}
+
+.color-dark-blue {
+  color: $color-dark-blue !important;
+}
+
+.color-red {
+  color: $color-red !important;
+}
+
+.color-orange {
+  color: $color-orange !important;
+}
+
+.color-yellow {
+  color: $color-yellow !important;
+}
+
+.color-info {
+  color: $color-info !important;
+}
+
+.color-goldenrod {
+  color: $color-goldenrod  !important;
+}
+
+
+//  === Icon colors ===
+//  Colors for font-awesome icons
+
+.red-icon {
+  color: $color-red-icon;
+}
+
+.orange-icon {
+  color: $color-orange-icon;
+}
+
+.yellow-icon {
+  color: $color-yellow-icon;
+}
+
+.gold-icon {
+  color: $color-gold-icon;
+}
+
+.green-icon {
+  color: $color-green-icon;
+}
+
+.lt-blue-icon {
+  color: $color-lt-blue-icon;
+}
+
+.blue-icon {
+  color: $color-blue-icon;
+}
+
+.cyan-icon {
+  color: $color-cyan;
+}
+
+.color-hover:hover {
+  color: $color-blue !important;
+}
+
+.color-hover-white:hover {
+  color: $color-white !important;
+}
+
+
+// === Status Colors ===
+.color-ok {
+  color: $color-lt-blue-icon;
+}

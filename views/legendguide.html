@@ -1,0 +1,8 @@
+<div class="c-legend" ng-class="legend.widget && 'c--widget'" ng-style="legendStyle">
+  <div class="c-legend__dragtarget" ng-show="legend.widget"></div>
+  <div class="c-legend__glyphs animate-fade" ng-if="legend.widget">
+    <i class="fa fa-gear glyph" title="Open settings" ng-click="legend.openSettings()"></i>
+    <i class="fa fa-times glyph" title="Close the legend" ng-click="legend.close()"></i>
+  </div>
+  <canvas></canvas>
+</div>

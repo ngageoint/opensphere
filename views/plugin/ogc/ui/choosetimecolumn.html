@@ -1,0 +1,28 @@
+<div class="window-content-wrapper">
+  <div class="window-content">
+    <form class="form-horizontal form-compact">
+      <label>Choose time columns for: {{title}}</label>
+      <div class="control-group">
+        <label class="control-label">Start Time:</label>
+        <div class="controls">
+          <select ng-model="chooseTime.start" ng-options="col.name as col.name for col in chooseTime.timeColumns"></select>
+          <span class="help-inline" ng-show="!chooseTime.start">Required!</span>
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label">End Time:</label>
+        <div class="controls">
+          <select ng-model="chooseTime.end" ng-options="col.name as col.name for col in chooseTime.timeColumns"></select>
+          <span class="help-inline" ng-show="!chooseTime.end">Required!</span>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="window-footer">
+    <div class="pull-right">
+      <button class="btn btn-default" ng-click="chooseTime.save()" ng-disabled="!chooseTime.start || !chooseTime.end">
+        <i class="fa fa-check blue-icon"></i> OK
+      </button>
+    </div>
+  </div>
+</div>

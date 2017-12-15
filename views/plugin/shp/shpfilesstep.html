@@ -1,0 +1,69 @@
+<div class="wizard-step shpfiles">
+  <div class="step-content">
+    Please provide the SHP and DBF files. Either enter a remote URL and click Load URL, or click Browse to choose a local file.
+    <form name="shpForm" class="form-horizontal form-compact" novalidate>
+      <div class="control-group">
+        <label class="control-label">
+          <i class="fa fa-exclamation-triangle orange-icon ng-scope" ng-if="!filesStep.shpValid"></i>
+          SHP:
+        </label>
+        <div class="controls">
+          <input class="url-input" type="text" ng-model="filesStep.shpName" ng-disabled="filesStep.shpValid" placeholder="URL to SHP file" required>
+          <input id="shpFile" type="file" accept=".shp">
+
+          <span ng-switch="filesStep.shpValid">
+            <button class="btn btn-default"
+                title="Attempts to load a SHP file from the provided URL"
+                ng-switch-when="false"
+                ng-click="filesStep.loadUrl('shp')"
+                ng-disabled="!filesStep.shpName">
+              Load URL
+            </button>
+            <button class="btn btn-default"
+                title="Choose a local SHP file"
+                ng-click="filesStep.onBrowse('shp')"
+                ng-switch-when="false">
+              Browse
+            </button>
+            <button class="btn btn-default" ng-click="filesStep.onClear('shp')" ng-switch-when="true" title="Reset SHP file selection">
+              <i class="fa fa-times red-icon"></i>
+              Clear
+            </button>
+          </span>
+        </div>
+        <div class="help-inline font-warning" ng-if="filesStep.shpError">{{filesStep.shpError}}</div>
+      </div>
+      <div class="control-group">
+        <label class="control-label">
+          <i class="fa fa-exclamation-triangle orange-icon ng-scope" ng-if="!filesStep.dbfValid"></i>
+          DBF:
+        </label>
+        <div class="controls">
+          <input class="url-input" type="text" ng-model="filesStep.dbfName" ng-disabled="filesStep.dbfValid" placeholder="URL to DBF file" required>
+          <input id="dbfFile" type="file" accept=".dbf">
+
+          <span ng-switch="filesStep.dbfValid">
+            <button class="btn btn-default"
+                title="Attempts to load a DBF file from the provided URL"
+                ng-switch-when="false"
+                ng-click="filesStep.loadUrl('dbf')"
+                ng-disabled="!filesStep.dbfName">
+              Load URL
+            </button>
+            <button class="btn btn-default"
+                title="Choose a local DBF file"
+                ng-click="filesStep.onBrowse('dbf')"
+                ng-switch-when="false">
+              Browse
+            </button>
+            <button class="btn btn-default" ng-click="filesStep.onClear('dbf')" ng-switch-when="true" title="Reset DBF file selection">
+              <i class="fa fa-times red-icon"></i>
+              Clear
+            </button>
+          </span>
+        </div>
+        <div class="help-inline font-warning" ng-if="filesStep.dbfError">{{filesStep.dbfError}}</div>
+      </div>
+    </form>
+  </div>
+</div>

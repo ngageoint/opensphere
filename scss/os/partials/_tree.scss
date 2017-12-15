@@ -1,0 +1,80 @@
+// Add Data tree checkbox on/off switches
+
+.toggle-switch {
+  @include border-radius(5px);
+  @include box-shadow(inset 0 1px 1px rgba(0, 0, 0, .5), 0 1px 0 rgba(255, 255, 255, .2));
+  background: $color-dark-gray;
+  cursor: pointer;
+  display: inline-block;
+  height: 15px;
+  vertical-align: middle;
+  width: 30px;
+
+  &.disabled {
+    @include opacity(.5);
+    cursor: default;
+  }
+}
+
+.toggle-switch-off label::after {
+  color: $color-black;
+  content: 'Off';
+}
+
+.toggle-switch-on label::after {
+  color: $color-black;
+  content: 'On';
+}
+
+.toggle-switch-both label::after {
+  content: '';
+}
+
+.toggle-switch label {
+  // this is a tricky set of rules to style the tree off/on box
+  // if the @include are re-ordered, we lose the gradient, so the lint check is turned off
+  // see THIN-6980
+
+  // scss-lint:disable DeclarationOrder
+
+  background: #fcfff4;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fcfff4', endColorstr='#b3bead',GradientType=0);
+  font-size: 10px;
+  height: 11px;
+  left: 2px;
+  line-height: 11px;
+  margin: 0;
+  position: relative;
+  text-align: center;
+  top: 2px;
+  width: 20px;
+
+  @include border-radius(3px);
+  @include box-shadow(0 2px 5px 0 rgba(0, 0, 0, .3));
+  @include transition(all .4s ease);
+  @include transition-property(left, background);
+  @include background-image(linear-gradient(#fcfff4 0%, #dfe5d7 40%, #b3bead 100%));
+
+}
+
+.toggle-switch-on label {
+  @include background-image(linear-gradient(#0f0 0%, #00e500 40%, #00be00 100%));
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0f0', endColorstr='#00be00',GradientType=0);
+  left: 8px;
+}
+
+.toggle-switch-both label {
+  left: 5px;
+}
+
+.toggle-switch.disabled label {
+  cursor: default;
+}
+
+// Add Data tree launch window plus box
+// *******************************************
+.window-launch {
+  line-height: 15px;
+  margin-bottom: 2px;
+  width: 30px;
+}

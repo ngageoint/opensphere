@@ -1,0 +1,80 @@
+<div class="c-legend tall user-setting">
+  <div class="c-legend__settings user-setting-input">
+  <i class="fa fa-question-circle"></i>
+  Use these settings to configure the map legend.
+    <div class="row show-grid">
+      <div class="span3">
+        <form name="legendForm" class="c-legend__form form-compact">
+          <h1>Legend Options</h1>
+          <div class="control-group">
+            <label class="checkbox inline" title="Show feature layers in the legend">
+              <input type="checkbox" name="showVector" ng-model="legend.options.showVector"
+                  ng-change="legend.toggle('showVector')"/>
+              Show feature layers
+            </label>
+          </div>
+          <div class="control-group">
+            <label class="checkbox inline" title="Show feature layers in the legend">
+              <input type="checkbox" name="showVectorType" ng-disabled="!legend.options.showVector"
+                  ng-model="legend.options.showVectorType"
+                  ng-change="legend.toggle('showVectorType')"/>
+              Show feature layer type
+            </label>
+          </div>
+          <div class="control-group">
+            <label class="checkbox inline" title="Show feature count in the legend">
+              <input type="checkbox" name="showCount" ng-disabled="!legend.options.showVector"
+                  ng-model="legend.options.showCount"
+                  ng-change="legend.toggle('showCount')"/>
+              Show feature count
+            </label>
+          </div>
+          <div class="control-group">
+            <label class="checkbox inline" title="Show tile layers in the legend">
+              <input type="checkbox" name="showTile" ng-model="legend.options.showTile"
+                  ng-change="legend.toggle('showTile')"/>
+              Show tile layers
+            </label>
+          </div>
+          <div class="plugin-settings-container"></div>
+          <h1>Display Options</h1>
+          <div class="control-group">
+            <label class="checkbox inline" title="Show legend background">
+              <input type="checkbox" name="showBackground" ng-model="legend.options.showBackground"
+                  ng-change="legend.toggle('showBackground')"/>
+              Show background
+            </label>
+          </div>
+          <div class="c-legend__buttons">
+            <button class="btn btn-default" ng-click="legend.toggleBold()"
+                ng-class="legend.options.bold && 'active'"
+                title="Toggle bold font">
+              <i class="fa fa-fw fa-bold" />
+            </button>
+            <button class="btn btn-default" ng-click="legend.decreaseFontSize()"
+                ng-disabled="!legend.canDecreaseFontSize()"
+                title="Decrease the font size">
+              <i class="fa fa-fw fa-minus" />
+            </button>
+            <button class="btn btn-default" ng-click="legend.increaseFontSize()"
+                ng-disabled="!legend.canIncreaseFontSize()"
+                title="Increase the font size">
+              <i class="fa fa-fw fa-plus" />
+            </button>
+            <colorpicker class="no-text" color="legend.options.bgColor" title="Change the legend background color"
+                disabled="!legend.options.showBackground">
+            </colorpicker>
+          </div>
+          <label class="control-label" for="persister">Opacity:</label>
+          <div class="controls top-gaps c-legend__slider">
+            <slider min="0.1" max="1" step="0.1" value="legend.options.opacity" live="true" name="opacity"></slider>
+          </div>
+        </form>
+      </div>
+      <div class="span4">
+        <h1>Preview</h1>
+        <legendguide></legendguide>
+      </div>
+    </div>
+  </div>
+</div>

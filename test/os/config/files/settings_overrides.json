@@ -1,0 +1,13 @@
+{
+  "overrides": ["/base/test/os/config/files/overrideA.json", "/base/test/os/config/files/overrideB.json"],
+
+  "admin": {
+    "a": {
+      "adminField": "a"
+    }
+  },
+
+  "user": {
+    "a": {"userField": "a"}
+  }
+}

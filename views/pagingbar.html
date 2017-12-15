@@ -1,0 +1,9 @@
+<div>
+  <ul ng-show="pageCtrl.pages.length > 0">
+    <li ng-repeat="page in pageCtrl.pages" ng-class="{'disabled': page.disabled || disabled, 'active': page.active}">
+      <a href ng-click="pageCtrl.onPageClick(page)">
+        {{page.text}}
+      </a>
+    </li>
+  </ul>
+</div>

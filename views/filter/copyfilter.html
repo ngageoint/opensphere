@@ -1,0 +1,26 @@
+<div class="window-content-wrapper copy-filter">
+  <div class="window-content">
+    <div class="copy-filter__checkbox-section">
+      <checklist name="layerlist" allow-multiple="true" items="copyFilterCtrl.layers"></checklist>
+    </div>
+    <div class="form-horizontal copy-filter__mapping-section" ng-form="copyFilterForm">
+      <div ng-show="copyFilterCtrl.hasUnmappedColumns()">
+        Unassociated Columns:
+        <popover class="pull-right" x-title="'Missing Columns'" x-content="copyFilterCtrl.helpText" x-pos="'right'"></popover>
+      </div>
+      <div class="copy-filter__picker-pane">
+        <copyfilterpicker ng-repeat="(layerId, models) in copyFilterCtrl.unmappedColumns" models="models" source-layer-name="copyFilterCtrl.sourceLayerName" source-filter-key="copyFilterCtrl.sourceFilterKey"></copyfilterpicker>
+      </div>
+    </div>
+  </div>
+  <div class="window-footer">
+    <div class="pull-right">
+      <button class="btn btn-default" ng-click="copyFilterCtrl.finish()" ng-disabled="copyFilterForm.$invalid || copyFilterCtrl.numLayersChecked === 0">
+        <i class="btn-icon fa fa-check color-add"></i> Copy
+      </button>
+      <button class="btn btn-default" ng-click="copyFilterCtrl.cancel()">
+        <i class="btn-icon fa fa-ban red-icon"></i> Cancel
+      </button>
+    </div>
+  </div>
+</div>

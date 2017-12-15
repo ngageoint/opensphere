@@ -1,0 +1,182 @@
+// * Import Wizard Styles
+// ***********************************************************
+
+#wizard {
+  height: 100%;
+  width: 100%;
+}
+
+#wizard-step-content {
+  @include calc(width, '100% - 180px');
+  height: 100%;
+}
+
+#wizard-steps-pane {
+  @include box-sizing(border-box);
+  background: #777;
+  font-size: 13px;
+  height: 100%;
+  padding: 0;
+  width: 175px;
+}
+
+.wizard-steps.table {
+  tr {
+    cursor: pointer;
+
+    &.active {
+      background-color: #555;
+    }
+  }
+
+  td {
+    padding: 0 3px;
+  }
+}
+
+.step-status {
+  display: inline-table;
+  width: 15px;
+
+  > i {
+    display: table;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+.wizard-step {
+  height: 100%;
+
+  h5 {
+    margin: 0 0 5px;
+  }
+
+  .step-content {
+    font-size: 13px;
+    height: 100%;
+  }
+
+  label {
+    &.checkbox {
+      display: inline;
+      font-size: 13px;
+      margin: 0;
+      padding-left: 5px;
+
+      input[type='checkbox'] {
+        float: left;
+        margin: 4px 0 0 1px;
+        width: auto;
+      }
+    }
+
+    &.radio {
+      display: table;
+    }
+  }
+
+  input[type='radio'] {
+    margin-top: 4px;
+  }
+
+  [class*='span'] {
+    margin-left: 0;
+  }
+
+  .control-group [class*='span']:not(:first-child) {
+    padding-left: 10px;
+  }
+
+  .span12 {
+    width: 100%;
+  }
+
+  .span3 {
+    @include calc(width, '25% - 10px');
+  }
+
+  .span4 {
+    @include calc(width, '33% - 10px');
+  }
+
+  .span6 {
+    @include calc(width, '50% - 10px');
+  }
+}
+
+.preview-sibling {
+  padding-bottom: 1px;
+}
+
+.wizard-preview {
+  .slick-grid {
+    @include box-sizing(content-box);
+  }
+
+  &.disabled {
+    @include opacity(.5);
+    cursor: pointer;
+    pointer-events: none;
+  }
+}
+
+.wizard-step.options .form-horizontal {
+  .control-label {
+    width: 75px;
+  }
+
+  .controls {
+    margin-left: 80px;
+  }
+}
+
+// * Import styles
+// *******************************************
+
+.wizard-step.csvconfig {
+  .spinner-container {
+    display: inline-block;
+    width: 50px;
+  }
+
+  input[type=checkbox] {
+    margin-left: 2px;
+    width: auto;
+  }
+
+  .wizard-preview {
+    @include calc(height, '50% - 36px')
+  }
+}
+
+.line-preview {
+  @include calc(height, '50% - 36px');
+  padding-bottom: 5px;
+
+  .slick-cell {
+    font-family: 'Lucida Console', monospace;
+    font-size: 11px;
+  }
+
+  .slick-grid {
+    box-sizing: content-box;
+  }
+
+  .slick-header.ui-state-default {
+    border: 0;
+  }
+
+  .slick-header-columns {
+    height: 0;
+  }
+}
+
+.export-dialog h6 {
+  margin-bottom: 0;
+}
+
+.import-dialog-input {
+  width: 100%;
+  width: -moz-available;
+}

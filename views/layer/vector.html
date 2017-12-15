@@ -1,0 +1,76 @@
+<div class="accordion" id="layerControls">
+  <div class="accordion-group layer-controls-group">
+    <div class="accordion-heading" title="Style controls for the layer(s)">
+      <a class="accordion-toggle layer-controls-heading" data-toggle="collapse" data-parent="#layerControls" data-target="#layer-style" ng-click="vector.setOpenSection('#layer-style')">Style</a>
+    </div>
+    <div id="layer-style" class="accordion-body collapse">
+      <div class="accordion-inner layer-controls">
+        <vectorstylecontrols
+            color="color"
+            opacity="opacity"
+            icon="icon"
+            center-icon="centerIcon"
+            icon-set="vector.iconSet"
+            icon-src="vector.iconSrc"
+            size="size"
+            shape="shape"
+            shapes="shapes"
+            center-shape="centerShape"
+            center-shapes="centerShapes"
+            show-color-reset="vector.showColorReset">
+        </vectorstylecontrols>
+        <uiswitch items="items" directive-function="vector.getShapeUI"></uiswitch>
+        <div ng-if="vector.showReplaceStyle">
+          <label class="checkbox inline"
+              title="If a feature has its own style defined, override it with the layer style. If unchecked, layer style choices will act as default values.">
+            <input class="label-checkbox checkbox inline" type="checkbox" name="replaceStyle"
+                ng-model="vector.replaceStyle" ng-change="vector.onReplaceStyleChange()"/>
+            Replace Feature Style
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="accordion-group layer-controls-group" ng-show="columns && items.length == 1">
+    <div class="accordion-heading" title="Configure how labels are displayed for the layer">
+      <a class="accordion-toggle layer-controls-heading" data-toggle="collapse" data-parent="#layerControls" data-target="#layer-label" ng-click="vector.setOpenSection('#layer-label')">Label</a>
+    </div>
+    <div id="layer-label" class="accordion-body collapse">
+      <div class="accordion-inner layer-controls">
+        <labelcontrols
+            labels="labels"
+            columns="columns"
+            show-labels="showLabels"
+            label-color="labelColor"
+            label-size="labelSize">
+        </labelcontrols>
+      </div>
+    </div>
+  </div>
+  <div ng-if="lockable || vector.showRefresh" class="accordion-group layer-controls-group">
+    <div class="accordion-heading" title="Configure how alerts are displayed for the layer">
+      <a class="accordion-toggle layer-controls-heading" data-toggle="collapse" data-parent="#layerControls" data-target="#layer-options" ng-click="vector.setOpenSection('#layer-options')">Options</a>
+    </div>
+    <div id="layer-options" class="accordion-body collapse">
+      <div class="accordion-inner layer-controls">
+        <table>
+          <tr ng-if="vector.showRefresh" title="Sets how often the layer will automatically refresh its data.">
+            <td class="control-label">Auto Refresh:</td>
+            <td class="style-controls wide">
+              <select class="wide" ng-model="vector.refresh" ng-change="vector.onRefreshChange()"
+                  ng-disabled="vector.lock"
+                  ng-options="val.label for val in vector.refreshOptions">
+              </select>
+            </td>
+          </tr>
+        </table>
+        <div ng-if="lockable">
+          <label class="checkbox inline" title="Lock this layer to prevent data from changing">
+            <input class="label-checkbox checkbox inline" type="checkbox" name="altitude"
+                ng-model="vector.lock" ng-change="vector.onLockChange()"/> Lock Layer
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,24 @@
+.column-mapping-form {
+  .slick-tree .slick-row {
+    margin-top: 5px;
+
+    &:hover {
+      background: inherit;
+    }
+  }
+}
+
+.column-mapping-form__description {
+  height: 40px;
+  max-height: 50px;
+  max-width: 50%;
+  width: 50%;
+}
+
+.column-mapping-form__help-text {
+  display: inline-block;
+  max-width: 600px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

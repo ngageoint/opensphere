@@ -1,0 +1,122 @@
+<div class="c-feature-edit window-content-wrapper">
+  <div class="window-content">
+    <form class="form-horizontal form-compact limitsimpleMDE-300" name="featureEditForm" novalidate>
+      <div class="control-group c-feature-edit__name">
+        <label class="control-label">Name:</label>
+        <div class="controls">
+          <input class="wide" type="text" name="name" ng-model="ctrl.name" ng-change="ctrl.updatePreview()" required="true" ng-maxlength="100"/>
+          <span class="help-inline" ng-if="featureEditForm.name.$error.required">Required</span>
+          <span class="help-inline" ng-if="featureEditForm.name.$error.maxlength">Name is too long!</span>
+        </div>
+      </div>
+      <div class="control-group c-feature-edit__description">
+        <label class="control-label">Description:</label>
+        <div class="controls">
+          <simplemde text="ctrl.description" edit="true" is-required="false" maxlength="4000"></simplemde>
+        </div>
+      </div>
+      <position ng-if="ctrl.pointGeometry" name="pointGeometry" geom="ctrl.pointGeometry" x-form="featureEditForm" map-support="true"></position>
+      <div class="c-feature-edit__ellipse-fields" ng-if="ctrl.isEllipse()">
+        <div class="control-group" title="{{ctrl.help.semiMajor}}">
+          <label class="control-label">Semi Major:</label>
+          <div class="controls">
+            <input type="number" name="semiMajor" ng-model="ctrl.semiMajor" ng-change="ctrl.onAxisChange()"
+                min="{{ctrl.getSemiMajorMin()}}" step="any" required="true" />
+            <select ng-model="ctrl.semiMajorUnits" ng-change="ctrl.updatePreview()"
+                ng-options="unit for unit in ctrl.units">
+            </select>
+            <popover x-title="'Semi-Major Axis'" x-content="ctrl.help.semiMajor" x-pos="'right'">
+            </popover>
+            <span class="help-inline" ng-if="featureEditForm.semiMajor.$error.required">Required!</span>
+            <span class="help-inline" ng-if="featureEditForm.semiMajor.$error.min">
+              Must be greater than {{ctrl.semiMinor ? 'or equal to Semi Minor' : 'zero'}}!
+            </span>
+          </div>
+        </div>
+        <div class="control-group" title="{{ctrl.help.semiMinor}}">
+          <label class="control-label">Semi Minor:</label>
+          <div class="controls">
+            <input type="number" name="semiMinor" ng-model="ctrl.semiMinor" ng-change="ctrl.onAxisChange()"
+                min="{{1e-16}}" step="any" required="true" />
+            <select ng-model="ctrl.semiMinorUnits" ng-change="ctrl.updatePreview()"
+                ng-options="unit for unit in ctrl.units">
+            </select>
+            <popover x-title="'Semi-Minor Axis'" x-content="ctrl.help.semiMinor" x-pos="'right'">
+            </popover>
+            <span class="help-inline" ng-if="featureEditForm.semiMinor.$error.required">Required!</span>
+            <span class="help-inline" ng-if="featureEditForm.semiMinor.$error.min">
+              Must be greater than zero!
+            </span>
+          </div>
+        </div>
+        <div class="control-group" title="{{ctrl.help.orientation}}">
+          <label class="control-label">Orientation:</label>
+          <div class="controls">
+            <input type="number" name="orientation" ng-model="ctrl.orientation" ng-change="ctrl.updatePreview()"
+                step="any" required="true" />
+            <popover x-title="'Ellipse Orientation'" x-content="ctrl.help.orientation" x-pos="'right'">
+            </popover>
+            <span class="help-inline" ng-show="featureEditForm.orientation.$error.required">Required!</span>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <div class="accordion" ng-attr-id="{{featureControlsID}}">
+      <div class="c-feature-edit__styleoptions accordion-group layer-controls-group">
+        <div class="accordion-heading" title="Style controls for the feature">
+          <a class="accordion-toggle layer-controls-heading" data-toggle="collapse" data-parent="#{{featureControlsID}}"
+              data-target="#{{featureStyleID}}" ng-click="ctrl.setOpenSection(featureStyleID)">Style Options</a>
+        </div>
+        <div ng-attr-id="{{featureStyleID}}" class="accordion-body collapse">
+          <div class="accordion-inner layer-controls">
+            <vectorstylecontrols
+                color="ctrl.color"
+                opacity="ctrl.opacity"
+                icon="ctrl.icon"
+                center-icon="ctrl.centerIcon"
+                show-center-icon="ctrl.showCenterIcon()"
+                icon-set="ctrl.iconSet"
+                icon-src="ctrl.iconSrc"
+                show-icon="ctrl.showIcon()"
+                size="ctrl.size"
+                shape="ctrl.shape"
+                shapes="ctrl.pointGeometry ? ctrl.shapes : undefined"
+                center-shape="ctrl.centerShape"
+                center-shapes="ctrl.pointGeometry ? ctrl.centerShapes : undefined">
+            </vectorstylecontrols>
+          </div>
+        </div>
+      </div>
+      <div class="c-feature-edit__labeloptions accordion-group layer-controls-group" ng-show="ctrl.labelColumns">
+        <div class="accordion-heading" title="Configure how labels are displayed for the feature">
+          <a class="accordion-toggle layer-controls-heading" data-toggle="collapse" data-parent="#{{featureControlsID}}" data-target="#{{featureLabelsID}}" ng-click="ctrl.setOpenSection(featureLabelsID)">Label Options</a>
+        </div>
+        <div ng-attr-id="{{featureLabelsID}}" class="accordion-body collapse">
+          <div class="accordion-inner layer-controls">
+            <labelcontrols
+                labels="ctrl.labels"
+                columns="ctrl.labelColumns"
+                show-labels="ctrl.showLabels"
+                label-color="ctrl.labelColor"
+                label-size="ctrl.labelSize">
+            </labelcontrols>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="window-footer">
+    <div class="pull-right">
+      <button class="btn btn-default" ng-click="ctrl.accept()" ng-disabled="featureEditForm.$invalid">
+        <i class="fa fa-check lt-blue-icon"></i>
+        OK
+      </button>
+      <button class="btn btn-default" ng-click="ctrl.cancel()">
+        <i class="fa fa-ban red-icon"></i>
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>

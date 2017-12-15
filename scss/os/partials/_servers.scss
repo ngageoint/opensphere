@@ -1,0 +1,73 @@
+.server-settings {
+  height: 100%;
+  overflow: none;
+
+  span.servers-info {
+    @include text-shadow(none);
+    color: #fff;
+    margin: 0;
+    padding-top: 0;
+  }
+
+  input[type="checkbox"] {
+    float: left;
+    margin: 4px 5px 0;
+  }
+}
+
+// * Server window styles
+// *******************************************
+.servers-header {
+  padding-bottom: 10px;
+}
+
+.servers-container {
+  @include box-sizing(border-box);
+
+  background: $color-light-gray;
+  border: 1px solid #000;
+  overflow: auto;
+  width: 100%;
+
+  label {
+    cursor: default;
+  }
+
+  div:nth-child(odd) {
+    background: $color-gray;
+  }
+}
+
+.servers-actions {
+  cursor: default;
+  float: right;
+  padding-right: 5px;
+
+  i {
+    cursor: pointer;
+  }
+}
+
+.server-form {
+  .control-label {
+    min-width: 50px;
+    width: auto;
+  }
+
+  .testing {
+    height: 100%;
+    margin-top: 20px;
+    text-align: center;
+    width: 100%;
+  }
+}
+
+.server-form.ogcserver-form .control-label {
+  width: 145px;
+}
+
+input.wide,
+.wide input {
+  height: 24px;
+}
+

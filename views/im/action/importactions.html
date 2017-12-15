@@ -1,0 +1,47 @@
+<div class="window-content-wrapper import-action-window">
+  <div class="window-content">
+    <div class="import-action-header bot-gapxs">
+      <button type="button" class="btn btn-default" ng-click="ctrl.editEntry()"
+          title="Create a new action">
+        <i class="fa fa-plus green-icon"></i>
+        Create
+      </button>
+      <popover class="pull-right" ng-show="helpTitle && helpText"
+          x-title="helpTitle"
+          x-content="helpText"
+          x-pos="'right'">
+      </popover>
+    </div>
+    <div class="entries-container" autoheight siblings=".import-action-header">
+      <slicktree
+          x-data="ctrl.entries"
+          drag-enabled="true"
+          multi-select="true"
+          no-root="true"
+          selected="ctrl.selected">
+      </slicktree>
+    </div>
+  </div>
+  <div class="window-footer">
+    <div class="pull-left">
+      <button type="button" class="btn btn-default" ng-click="ctrl.launchExport()" ng-disabled="!ctrl.entries.length">
+        <i class="fa fa-download yellow-icon"></i>
+        Export
+      </button>
+      <button type="button" class="btn btn-default" ng-click="ctrl.launchImport()">
+        <i class="fa fa-sign-in color-import"></i>
+        Import
+      </button>
+    </div>
+    <div class="pull-right">
+      <button class="btn btn-default" ng-click="ctrl.apply()">
+        <i class="fa fa-fw fa-check"></i>
+        Apply
+      </button>
+      <button class="btn btn-default" ng-click="ctrl.close()">
+        <i class="fa fa-fw fa-ban red-icon"></i>
+        Close
+      </button>
+    </div>
+  </div>
+</div>

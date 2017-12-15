@@ -1,0 +1,42 @@
+<div class="onboarding-container" ng-show="enabled">
+  <div class="onboarding-overlay" ng-style="{opacity: overlayOpacity}" ng-show="overlay"></div>
+  <div class="onboarding-popover {{ngOnboardCtrl.positionClass}}" ng-style="{width: width, height: height, left: left, top: top, right: right, bottom: bottom}">
+    <div class="onboarding-arrow"></div>
+    <div class="onboarding-popover-header keep-height" ng-class="{'no-title':!title}">
+      <h5 class="pull-left" style="margin:0px;" ng-show="title">
+        {{title}}
+      </h5>
+      <div class="pull-right" ng-click="ngOnboardCtrl.close()">
+        <i class="fa fa-times window-close"></i>
+      </div>
+    </div>
+    <div class="onboarding-popover-content">
+      <p ng-bind-html="ngOnboardCtrl.description"></p>
+    </div>
+    <div class="onboarding-popover-footer keep-height">
+      <div class="pull-left">
+        <button type="button" class="btn btn-small btn-danger" ng-click="ngOnboardCtrl.stopShowing()">
+          <i class="fa fa-ban"></i>
+          Stop Showing Tips
+        </button>
+      </div>
+      <div class="pull-right">
+        <div>
+          <button type="button" class="btn btn-default" ng-click="ngOnboardCtrl.previous()" ng-if="ngOnboardCtrl.showPreviousButton" >
+            <i class="fa fa-long-arrow-left"></i>
+            Prev
+          </button>
+          <button type="button" class="btn btn-primary" ng-click="ngOnboardCtrl.next()" ng-if="ngOnboardCtrl.showNextButton">
+            Next
+            <i class="fa fa-long-arrow-right"></i>
+          </button>
+          <button type="button" class="btn btn-success" ng-click="ngOnboardCtrl.close()" ng-if="ngOnboardCtrl.lastStep">
+            <i class="fa fa-check"></i>
+            Got it!
+          </button>
+        </div>
+        <span class="bits-onboarding-step-info">Step {{index + 1}} of {{ngOnboardCtrl.stepCount}}</span>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,22 @@
+.downloadcopy {
+  select,
+  input {
+    height: 26px;
+  }
+
+  input[readonly].copyslide {
+    border: 0;
+    opacity: .3;
+    padding: 0;
+    transition: all 400ms ease;
+    width: 0;
+
+    &.open {
+      border: 1px solid #222;
+      display: inline-block;
+      opacity: 1;
+      padding: 3px 6px;
+      width: 450px;
+    }
+  }
+}

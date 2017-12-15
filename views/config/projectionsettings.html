@@ -1,0 +1,7 @@
+<div class="user-setting">
+  <div>
+    <div class="user-setting-title">The base projection used by the application</div>
+    <select style="width:auto" ng-model="projCtrl.projection" ng-options="item.code + ' ' + item.title for item in projCtrl.projections track by item.code"></select>
+    <button class="btn btn-default" ng-show="projCtrl.projection !== projCtrl.appProjection" ng-click="projCtrl.apply()">Apply</button>
+  </div>
+</div>

@@ -1,0 +1,13 @@
+<div class="choose-area">
+  <div ng-show="areas && areas.length > 0">
+    <select class="wide" ng-model="area" ng-options="area as area.get('title') for area in areas" required="true"></select>
+    <popover class="pull-right" ng-if="helpTitle && helpContent"
+        x-title="helpTitle" x-content="helpContent" x-pos="'right'">
+    </popover>
+  </div>
+
+  <div ng-show="!areas || areas.length == 0">
+    <i class="fa fa-warning orange-icon"></i>
+    <em>No areas available.</em>
+  </div>
+</div>

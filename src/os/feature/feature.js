@@ -1,0 +1,976 @@
+goog.provide('os.feature');
+
+goog.require('goog.string');
+goog.require('ol.Feature');
+goog.require('ol.geom.Geometry');
+goog.require('ol.geom.LineString');
+goog.require('ol.geom.MultiLineString');
+goog.require('ol.geom.Point');
+goog.require('ol.geom.Polygon');
+goog.require('ol.source.Vector');
+goog.require('ol.source.VectorEventType');
+goog.require('os.Fields');
+goog.require('os.data.RecordField');
+goog.require('os.geo');
+goog.require('os.geom.Ellipse');
+goog.require('os.im.mapping.MappingManager');
+goog.require('os.map');
+goog.require('os.math.Units');
+goog.require('os.style.StyleField');
+goog.require('os.style.StyleType');
+goog.require('os.ui.filter.string');
+
+
+/**
+ * A function used to sort features.
+ * @typedef {function(!ol.Feature, !ol.Feature):number}
+ */
+os.feature.SortFn;
+
+
+/**
+ * Defines set of options for creating the line of bearing
+ * @typedef {{
+ *   arrowLength: (number|undefined),
+ *   bearingColumn: (string|undefined),
+ *   bearingError: (number|undefined),
+ *   bearingErrorColumn: (string|undefined),
+ *   length: (number|undefined),
+ *   lengthColumn: (string|undefined),
+ *   lengthError: (number|undefined),
+ *   lengthErrorColumn: (string|undefined),
+ *   showArrow: (boolean|undefined),
+ *   showEllipse: (boolean|undefined),
+ *   showError: (boolean|undefined)
+ * }}
+ */
+os.feature.LOBOptions;
+
+
+/**
+ * Regular expression to match a title field on a feature.
+ * @type {RegExp}
+ * @const
+ */
+os.feature.TITLE_REGEX = /^(name|title)$/i;
+
+
+/**
+ * Auto detect and apply column mappings to features.
+ * @param {!Array<!ol.Feature>} features The features
+ * @param {number=} opt_count Optional count of features for the automap to check, defaulting to 1.
+ */
+os.feature.autoMap = function(features, opt_count) {
+  if (features && features.length > 0) {
+    var mm = os.im.mapping.MappingManager.getInstance();
+    var detectFeatures = goog.isDef(opt_count) ? features.slice(0, opt_count) : [features[0]];
+    var mappings = mm.autoDetect(detectFeatures);
+    mappings.forEach(function(mapping) {
+      for (var i = 0; i < features.length; i++) {
+        mapping.execute(features[i]);
+      }
+    });
+  }
+};
+
+
+/**
+ * Simplify the geometry on a feature. Intended to reduce memory footprint and simplify geometry operations.
+ * @param {ol.Feature} feature The feature.
+ */
+os.feature.simplifyGeometry = function(feature) {
+  if (feature) {
+    var geom = feature.getGeometry();
+    if (geom) {
+      var flatGeom = os.geo.flattenGeometry(geom);
+      if (flatGeom != geom) {
+        feature.setGeometry(flatGeom);
+      }
+    }
+  }
+};
+
+
+/**
+ * Get the semi-major axis for a feature.
+ * @param {ol.Feature} feature The feature.
+ * @param {os.math.Units=} opt_units The desired units. Defaults to nautical miles.
+ * @return {number|undefined} The semi-major axis value, or undefined if not found.
+ */
+os.feature.getSemiMajor = function(feature, opt_units) {
+  var value = os.feature.getEllipseField_(feature,
+      os.fields.DEFAULT_SEMI_MAJ_COL_NAME,
+      os.Fields.SEMI_MAJOR,
+      os.Fields.SEMI_MAJOR_UNITS,
+      opt_units);
+
+  // don't return negative values, and treat 0 as undefined
+  return value ? Math.abs(value) : undefined;
+};
+
+
+/**
+ * Get the semi-minor axis for a feature.
+ * @param {ol.Feature} feature The feature.
+ * @param {os.math.Units=} opt_units The desired units. Defaults to nautical miles.
+ * @return {number|undefined} The semi-minor axis value, or undefined if not found.
+ */
+os.feature.getSemiMinor = function(feature, opt_units) {
+  var value = os.feature.getEllipseField_(feature,
+      os.fields.DEFAULT_SEMI_MIN_COL_NAME,
+      os.Fields.SEMI_MINOR,
+      os.Fields.SEMI_MINOR_UNITS,
+      opt_units);
+
+  // don't return negative values, and treat 0 as undefined
+  return value ? Math.abs(value) : undefined;
+};
+
+
+/**
+ * Get the orientation for a feature, in degrees.
+ * @param {ol.Feature} feature The feature.
+ * @return {number|undefined} The orientation value, or undefined if not found.
+ */
+os.feature.getOrientation = function(feature) {
+  var orientation = os.math.parseNumber(feature.get(os.Fields.ORIENTATION));
+  return !isNaN(orientation) ? orientation : undefined;
+};
+
+
+/**
+ * Get the radius for a feature.
+ * @param {ol.Feature} feature The feature.
+ * @param {os.math.Units=} opt_units The desired units. Defaults to nautical miles.
+ * @return {number|undefined} The radius axis value, or undefined if not found.
+ */
+os.feature.getRadius = function(feature, opt_units) {
+  var value = os.feature.getEllipseField_(feature,
+      undefined,
+      os.Fields.RADIUS,
+      os.Fields.RADIUS_UNITS,
+      opt_units);
+
+  // don't return negative values, and treat 0 as undefined
+  return value ? Math.abs(value) : undefined;
+};
+
+
+/**
+ * Get the bearing for a feature, in degrees.
+ * @param {ol.Feature} feature The feature.
+ * @return {number|undefined} The orientation value, or undefined if not found.
+ */
+os.feature.getBearing = function(feature) {
+  var bearing = os.math.parseNumber(feature.get(os.Fields.BEARING));
+  return !isNaN(bearing) ? bearing : undefined;
+};
+
+
+/**
+ * Get the semi-major axis for a feature.
+ * @param {ol.Feature} feature The feature.
+ * @param {string|undefined} nmiField The application mapped field containing the value in nautical miles.
+ * @param {string|undefined} defaultField The default field.
+ * @param {string|undefined} defaultUnitsField The default units field.
+ * @param {os.math.Units=} opt_units The desired units. Defaults to nautical miles.
+ * @return {number|undefined} The ellipse field value, or undefined if not found.
+ * @private
+ *
+ * @suppress {accessControls} To allow direct access to feature metadata.
+ */
+os.feature.getEllipseField_ = function(feature, nmiField, defaultField, defaultUnitsField, opt_units) {
+  var value = NaN;
+  var currentUnits;
+  var targetUnits = opt_units || os.math.Units.NAUTICAL_MILES;
+
+  if (feature) {
+    // try the mapped column first
+    if (nmiField) {
+      value = os.math.parseNumber(feature.values_[nmiField]);
+    }
+
+    if (!isNaN(value)) {
+      // semi-minor has been mapped to nmi
+      currentUnits = os.math.Units.NAUTICAL_MILES;
+    } else if (defaultField) {
+      // semi-minor has not been mapped, so try default field names
+      value = os.math.parseNumber(feature.values_[defaultField]);
+
+      if (defaultUnitsField) {
+        currentUnits = /** @type {string|undefined} */ (feature.values_[defaultUnitsField]);
+      }
+    }
+
+    if (!isNaN(value)) {
+      if (currentUnits && goog.object.containsValue(os.math.Units, currentUnits)) {
+        // units known, translate to target units
+        value = os.math.convertUnits(value, targetUnits, currentUnits);
+      } else {
+        // take a guess at what the units represent
+        value = os.geo.convertEllipseValue(value);
+      }
+    }
+  }
+
+  // don't return NaN
+  return !isNaN(value) ? value : undefined;
+};
+
+
+/**
+ * Creates an ellipse from a feature if it has the necessary data.
+ * @param {ol.Feature} feature The feature
+ * @param {boolean=} opt_replace If an existing ellipse should be replaced
+ * @return {os.geom.Ellipse|undefined} The ellipse, if one could be generated
+ *
+ * @suppress {accessControls} To allow direct access to feature metadata.
+ */
+os.feature.createEllipse = function(feature, opt_replace) {
+  var ellipse;
+
+  if (!opt_replace) {
+    ellipse = /** @type {(os.geom.Ellipse|undefined)} */ (feature.values_[os.data.RecordField.ELLIPSE]);
+    if (ellipse instanceof os.geom.Ellipse) {
+      // ellipse already created for this feature
+      return ellipse;
+    }
+  }
+
+  var geom = feature ? feature.getGeometry() : null;
+  if (geom instanceof ol.geom.Point) {
+    // the feature must have a center point, and either semi-major/semi-minor/orientation OR a radius to generate an
+    // ellipse. no values should ever be assumed.
+    var center = ol.proj.toLonLat(geom.getFirstCoordinate(), os.map.PROJECTION);
+    if (center) {
+      var semiMajor = os.feature.getSemiMajor(feature, os.math.Units.METERS);
+      var semiMinor = os.feature.getSemiMinor(feature, os.math.Units.METERS);
+      var orientation = os.feature.getOrientation(feature);
+      var radius = os.feature.getRadius(feature, os.math.Units.METERS);
+
+      if (semiMajor && semiMinor && orientation != null) {
+        ellipse = new os.geom.Ellipse(center, semiMajor, semiMinor, orientation);
+      } else if (radius) {
+        ellipse = new os.geom.Ellipse(center, radius);
+      }
+    }
+  }
+
+  // if an ellipse couldn't be created, use the original geometry so it's still rendered on the map
+  feature.set(os.data.RecordField.ELLIPSE, ellipse || geom);
+
+  return ellipse;
+};
+
+
+/**
+ * Returns a column value from a feature.
+ * If the column is not provided or doesn't exist it will return a default value or NaN
+ * If the column exists but is not a number it will return a NaN
+ * @param {ol.Feature} feature The feature
+ * @param {string=} opt_column column on feature to use
+ * @param {number=} opt_default fallback value if column doesn't exist
+ * @return {number} some value
+ * @suppress {accessControls} To allow direct access to feature metadata.
+ */
+os.feature.getColumnValue = function(feature, opt_column, opt_default) {
+  if (opt_column) {
+    if (feature.values_[opt_column]) {
+      var val = parseFloat(feature.values_[opt_column]);
+      if (val == feature.values_[opt_column]) { // this prevents against a partial conversion ie 7 != '7ate9'
+        return val;
+      }
+    }
+    return NaN; // invalid value in column
+  }
+  return opt_default ? opt_default : NaN; // column doesn't exist
+};
+
+
+/**
+ * Creates a line of bearing from a feature if it has the necessary data.
+ * @param {ol.Feature} feature The feature
+ * @param {boolean=} opt_replace If an existing lob should be replaced
+ * @param {os.feature.LOBOptions=} opt_lobOpts the options for rendering line of bearing
+ * @return {ol.geom.LineString|ol.geom.MultiLineString|ol.geom.Geometry|undefined} The lob, if one could be generated
+ * @suppress {accessControls} To allow direct access to feature metadata.
+ */
+os.feature.createLineOfBearing = function(feature, opt_replace, opt_lobOpts) {
+  var lob;
+
+  if (!opt_replace) {
+    lob = /** @type {(ol.geom.LineString|undefined)} */ (feature.values_[os.data.RecordField.LINE_OF_BEARING]);
+    if (lob instanceof ol.geom.MultiLineString) { // lob already created for this feature
+      return lob;
+    }
+  }
+
+  var geom = feature ? feature.getGeometry() : null;
+  if (opt_lobOpts && geom instanceof ol.geom.Point) {
+    // the feature must have a center point and a bearing to generate a lob. no values should ever be assumed.
+    var center = ol.proj.toLonLat(geom.getFirstCoordinate(), os.map.PROJECTION);
+    var bearing = os.feature.getColumnValue(feature, opt_lobOpts.bearingColumn);
+    var length = os.feature.getColumnValue(feature, opt_lobOpts.lengthColumn, os.style.DEFAULT_LOB_MULTIPLIER);
+    if (center && !goog.isNull(bearing) && !goog.isNull(length) && !isNaN(bearing) && !isNaN(length) && length != 0) {
+      // sanitize
+      bearing = bearing % 360;
+      bearing += bearing <= 0 ? 360 : 0;
+      var coords = [];
+      if (center.length < 3) {
+        center[2] = 0;
+      }
+
+      var multiplier = opt_lobOpts.length || os.style.DEFAULT_LOB_LENGTH;
+      var effectiveBearing = length < 0 ? (bearing + 180) % 360 : bearing; // flip it if the length will be negative
+      var effectiveLength = Math.min(Math.abs(length * multiplier), os.geo.MAX_LINE_LENGTH);
+
+      // now do some calcs
+      var end = osasm.geodesicDirect(center, effectiveBearing, effectiveLength);
+      end[2] = center[2];
+
+      // create the line and split it across the date line so it renders correctly on a 2D map
+      lob = new ol.geom.LineString([center, end], ol.geom.GeometryLayout.XYZM);
+      lob = os.geo.splitOnDateLine(lob);
+      if (lob instanceof ol.geom.LineString) {
+        coords.push(lob.getCoordinates());
+      }
+
+      if (opt_lobOpts.showArrow) {
+        var arrowLength = opt_lobOpts.arrowLength || os.style.DEFAULT_ARROW_SIZE;
+        var right = osasm.geodesicDirect(end, bearing + 180 - 45, arrowLength);
+        right.push(center[2]);
+        var rightArm = new ol.geom.LineString([end, right], ol.geom.GeometryLayout.XYZM);
+        rightArm = os.geo.splitOnDateLine(rightArm);
+        if (rightArm instanceof ol.geom.LineString) {
+          coords.push(rightArm.getCoordinates());
+        }
+
+        var left = osasm.geodesicDirect(end, bearing + 180 + 45, arrowLength);
+        left.push(center[2]);
+        var leftArm = new ol.geom.LineString([end, left], ol.geom.GeometryLayout.XYZM);
+        leftArm = os.geo.splitOnDateLine(leftArm);
+        if (leftArm instanceof ol.geom.LineString) {
+          coords.push(leftArm.getCoordinates());
+        }
+      }
+
+      // lob must be a ol.geom.MultiLineString
+      if (coords.length > 0) {
+        lob = new ol.geom.MultiLineString(coords, ol.geom.GeometryLayout.XYZM);
+        lob.set(os.geom.GeometryField.NORMALIZED, true);
+        lob.osTransform();
+      }
+
+      var plusArc = null;
+      var minusArc = null;
+      if (opt_lobOpts.showError) { // draw error arcs
+        var lengthError = Math.abs(os.feature.getColumnValue(feature, opt_lobOpts.lengthErrorColumn));
+        var lengthErrorMultiplier = opt_lobOpts.lengthError || os.style.DEFAULT_LOB_LENGTH_ERROR;
+        var bearingError = Math.abs(os.feature.getColumnValue(feature, opt_lobOpts.bearingErrorColumn));
+        var bearingErrorMultiplier = opt_lobOpts.bearingError || os.style.DEFAULT_LOB_BEARING_ERROR;
+        if (goog.isNull(bearingError) || isNaN(bearingError)) {
+          bearingError = 0;
+        }
+        if (goog.isNull(lengthError) || isNaN(lengthError)) {
+          lengthError = 0;
+        }
+        if (bearingError > 0) {
+          var plusPts = os.geo.interpolateArc(center, (length + lengthError * lengthErrorMultiplier) * multiplier,
+              Math.min(bearingError * 2 * bearingErrorMultiplier * 2, 360), bearing);
+          plusArc = new ol.geom.LineString(plusPts, ol.geom.GeometryLayout.XYZM);
+          plusArc = os.geo.splitOnDateLine(plusArc);
+          plusArc.set(os.geom.GeometryField.NORMALIZED, true);
+          plusArc.osTransform();
+
+          if (lengthError > 0) { // only draw one arc if it is zero
+            var pts = os.geo.interpolateArc(center, (length - lengthError * lengthErrorMultiplier) * multiplier,
+                Math.min(bearingError * 2 * bearingErrorMultiplier * 2, 360), bearing);
+            minusArc = new ol.geom.LineString(pts, ol.geom.GeometryLayout.XYZM);
+            minusArc = os.geo.splitOnDateLine(minusArc);
+            minusArc.set(os.geom.GeometryField.NORMALIZED, true);
+            minusArc.osTransform();
+          }
+        } else if (lengthError > 0) { // no bearing error so draw a (perpendicular) line instead of an arc
+          var uLineCenter = osasm.geodesicDirect(end, bearing + 180, -lengthError * lengthErrorMultiplier);
+          var uLineRight = osasm.geodesicDirect(uLineCenter, bearing + 90, -lengthError * lengthErrorMultiplier);
+          uLineRight.push(center[2]);
+          var uLineLeft = osasm.geodesicDirect(uLineCenter, bearing - 90, -lengthError * lengthErrorMultiplier);
+          uLineLeft.push(center[2]);
+          plusArc = new ol.geom.LineString([uLineLeft, uLineRight], ol.geom.GeometryLayout.XYZM);
+          plusArc = os.geo.splitOnDateLine(plusArc);
+          plusArc.set(os.geom.GeometryField.NORMALIZED, true);
+          plusArc.osTransform();
+
+          var bLineCenter = osasm.geodesicDirect(end, bearing + 180, lengthError * lengthErrorMultiplier);
+          var bLineRight = osasm.geodesicDirect(bLineCenter, bearing + 90, lengthError * lengthErrorMultiplier);
+          bLineRight.push(center[2]);
+          var bLineLeft = osasm.geodesicDirect(bLineCenter, bearing - 90, lengthError * lengthErrorMultiplier);
+          bLineLeft.push(center[2]);
+          minusArc = new ol.geom.LineString([bLineLeft, bLineRight], ol.geom.GeometryLayout.XYZM);
+          minusArc = os.geo.splitOnDateLine(minusArc);
+          minusArc.set(os.geom.GeometryField.NORMALIZED, true);
+          minusArc.osTransform();
+        }
+      }
+      feature.set(os.data.RecordField.LINE_OF_BEARING_ERROR_HIGH, plusArc);
+      feature.set(os.data.RecordField.LINE_OF_BEARING_ERROR_LOW, minusArc);
+
+      if (opt_lobOpts.showEllipse) { // TODO remove this if we ever allow independent styles
+        os.feature.createEllipse(feature);
+      } else {
+        feature.set(os.data.RecordField.ELLIPSE, null);
+      }
+    }
+  }
+
+  // if a lob couldn't be created, use the original geometry so it's still rendered on the map
+  feature.set(os.data.RecordField.LINE_OF_BEARING, lob || geom);
+
+  return lob;
+};
+
+
+/**
+ * Set the altitude component on a feature if it has a point geometry.
+ * @param {ol.Feature} feature The feature
+ * @param {string=} opt_field The altitude field
+ */
+os.feature.setAltitude = function(feature, opt_field) {
+  var field = opt_field || os.Fields.ALT;
+  var geom = feature.getGeometry();
+  if (geom instanceof ol.geom.Point) {
+    var coords = geom.getFlatCoordinates();
+    if (coords.length < 3 || coords[2] === 0) {
+      var altitude = Number(feature.get(field) || 0);
+      if (isNaN(altitude)) {
+        altitude = 0;
+      }
+
+      coords[2] = altitude;
+      geom.setFlatCoordinates(ol.geom.GeometryLayout.XYZ, coords);
+    }
+  }
+};
+
+
+/**
+ * Automatically populate coordinate fields on a feature. Requires a point geometry to set fields.
+ * @param {ol.Feature} feature The feature
+ * @param {boolean=} opt_replace If existing values should be replaced
+ * @param {ol.geom.Geometry=} opt_geometry Alternate geometry to populate the fields
+ *
+ * @suppress {accessControls} To allow direct access to feature metadata.
+ */
+os.feature.populateCoordFields = function(feature, opt_replace, opt_geometry) {
+  var changed = false;
+  var geom = opt_geometry || feature.getGeometry();
+  if (geom instanceof ol.geom.Point) {
+    var coords = geom.getFlatCoordinates();
+    if (coords.length > 1) {
+      coords = ol.proj.toLonLat(coords, os.map.PROJECTION);
+
+      if (opt_replace || feature.values_[os.Fields.MGRS] == undefined) {
+        feature.values_[os.Fields.MGRS] = osasm.toMGRS(coords);
+        changed = true;
+      }
+
+      if (opt_replace || feature.values_[os.Fields.LAT] == undefined) {
+        feature.values_[os.Fields.LAT] = coords[1];
+        changed = true;
+      }
+
+      if (opt_replace || feature.values_[os.Fields.LON] == undefined) {
+        feature.values_[os.Fields.LON] = coords[0];
+        changed = true;
+      }
+
+      if (opt_replace || feature.values_[os.Fields.ALT] == undefined) {
+        if (coords[2]) {
+          feature.values_[os.Fields.ALT] = coords[2];
+          changed = true;
+        }
+      }
+
+      if (opt_replace || feature.values_[os.Fields.LAT_DMS] == undefined) {
+        feature.values_[os.Fields.LAT_DMS] = os.geo.toSexagesimal(coords[1], false);
+        changed = true;
+      }
+
+      if (opt_replace || feature.values_[os.Fields.LON_DMS] == undefined) {
+        feature.values_[os.Fields.LON_DMS] = os.geo.toSexagesimal(coords[0], true);
+        changed = true;
+      }
+    }
+  }
+
+  // fire a change event if anything was updated, so the UI can update
+  if (changed) {
+    feature.changed();
+  }
+};
+
+
+/**
+ * Gets a field value from an {@link ol.Feature}.
+ * @param {ol.Feature} item
+ * @param {string} field
+ * @return {*} The value
+ */
+os.feature.getField = function(item, field) {
+  return item ? item.get(field) : undefined;
+};
+
+
+/**
+ * Get the title from a feature, matching a property (case insensitive) called 'name' or 'title'.
+ * @param {ol.Feature} feature The feature.
+ * @return {string|undefined} The feature title, or undefined if not found.
+ *
+ * @suppress {accessControls} To allow direct access to feature metadata.
+ */
+os.feature.getTitle = function(feature) {
+  var title;
+  if (feature) {
+    for (var key in feature.values_) {
+      if (os.feature.TITLE_REGEX.test(key)) {
+        var value = feature.values_[key];
+        if (value && typeof value === 'string') {
+          title = value;
+          break;
+        }
+      }
+    }
+  }
+
+  return title;
+};
+
+
+/**
+ * Get the field for the {@link ol.Feature#values_} property. This is necessary for compiled code because the `values_`
+ * property will be renamed by the Closure compiler.
+ * @type {string}
+ * @private
+ * @const
+ */
+os.feature.VALUES_FIELD_ = (
+    /**
+     * @return {string} The field name.
+     * @suppress {checkTypes}
+     */
+    function() {
+      var testField = '__valuestest__';
+      var feature = new ol.Feature();
+      feature.set(testField, true, true);
+
+      for (var key in feature) {
+        if (feature.hasOwnProperty(key) && typeof feature[key] == 'object' && feature[key][testField] == true) {
+          return key;
+        }
+      }
+
+      return 'values_';
+    }
+    )();
+
+
+/**
+ * Create a filter function expression to get a value from a feature.
+ * @param {string} itemVar The feature variable name.
+ * @param {string} field The field to get.
+ * @return {string} The get expression.
+ */
+os.feature.filterFnGetter = function(itemVar, field) {
+  // create the string: itemVar.values_["column_name"]
+  // make the field safe for use as an object property name, to prevent injection attacks
+  return itemVar + '.' + os.feature.VALUES_FIELD_ + '[' + os.ui.filter.string.quoteString(field) + ']';
+};
+
+
+/**
+ * If a field is internal to the application and should be skipped by user-facing features.
+ * @param {string} field The metadata field
+ * @return {boolean}
+ */
+os.feature.isInternalField = function(field) {
+  return os.data.RecordField.REGEXP.test(field) || os.style.StyleType.REGEXP.test(field) ||
+      os.style.StyleField.REGEXP.test(field);
+};
+
+
+/**
+ * Get the layer containing a feature. This accounts for features that may be rendered in a
+ * {@link os.layer.AnimationOverlay}, which uses an OL layer/source with hit detection disabled. In that case, find
+ * the original layer from the map.
+ * @param {ol.Feature} feature The feature
+ * @return {ol.layer.Layer}
+ */
+os.feature.getLayer = function(feature) {
+  var layer = null;
+  if (feature) {
+    var sourceId = /** @type {string|undefined} */ (feature.get(os.data.RecordField.SOURCE_ID));
+    if (sourceId) {
+      // look up the layer via the id
+      layer = os.MapContainer.getInstance().getLayer(sourceId);
+    }
+  }
+
+  return layer;
+};
+
+
+/**
+ * Get the source containing a feature. This accounts for features that may be rendered in a
+ * {@link os.layer.AnimationOverlay}, which uses an OL layer/source with hit detection disabled. In that case, find
+ * the original source from the data manager.
+ * @param {ol.Feature} feature The feature
+ * @param {ol.layer.Layer=} opt_layer The layer containing the feature
+ * @return {os.source.Vector} The source, if it can be found
+ */
+os.feature.getSource = function(feature, opt_layer) {
+  var source = null;
+  if (opt_layer != null) {
+    // layer was provided - make sure the source is an OS source
+    var layerSource = opt_layer.getSource();
+    if (os.instanceOf(layerSource, os.source.Vector.NAME)) {
+      source = /** @type {!os.source.Vector} */ (layerSource);
+    }
+  }
+
+  if (source == null && feature != null) {
+    // no layer or not an OS source, so check if the feature has the source id
+    var sourceId = /** @type {string|undefined} */ (feature.get(os.data.RecordField.SOURCE_ID));
+    if (sourceId) {
+      // have the source id - check if it's in the data manager
+      source = os.osDataManager.getSource(sourceId);
+    }
+  }
+
+  return source;
+};
+
+
+/**
+ * Get the color of a feature.
+ * @param {ol.Feature} feature The feature.
+ * @param {os.source.ISource=} opt_source The source containing the feature, or null to ignore source color.
+ * @param {*=} opt_default The default color.
+ * @return {*} The color.
+ *
+ * @suppress {accessControls} To allow direct access to feature metadata.
+ */
+os.feature.getColor = function(feature, opt_source, opt_default) {
+  if (feature) {
+    var color = /** @type {string|undefined} */ (feature.values_[os.data.RecordField.COLOR]);
+
+    if (!color) {
+      // check the layer config to see if it's replacing feature styles
+      var layerConfig = os.style.getLayerConfig(feature);
+      if (layerConfig && layerConfig[os.style.StyleField.REPLACE_STYLE]) {
+        color = /** @type {string|undefined} */ (os.style.getConfigColor(layerConfig, false));
+      }
+    }
+
+    if (!color) {
+      var featureConfig = /** @type {Object|undefined} */ (feature.values_[os.style.StyleType.FEATURE]);
+      if (featureConfig) {
+        color = os.style.getConfigColor(featureConfig) || undefined;
+      }
+    }
+
+    if (color) {
+      return color;
+    } else if (opt_source) {
+      return opt_source.getColor();
+    } else if (opt_source !== null) {
+      var source = os.feature.getSource(feature);
+      if (source) {
+        return source.getColor();
+      }
+    }
+  }
+
+  return opt_default !== undefined ? opt_default : os.style.DEFAULT_LAYER_COLOR;
+};
+
+
+/**
+ * Gets the shape name for a feature.
+ * @param {!ol.Feature} feature The feature
+ * @param {os.source.Vector=} opt_source The source containing the feature
+ * @param {boolean=} opt_preferSource If the source shape should be preferred over the feature shape.
+ * @return {string|undefined}
+ *
+ * @suppress {accessControls} To allow direct access to feature metadata.
+ */
+os.feature.getShapeName = function(feature, opt_source, opt_preferSource) {
+  var shapeName = /** @type {string|undefined} */ (feature.values_[os.style.StyleField.SHAPE]);
+
+  if (!shapeName || opt_preferSource) {
+    // get the source shape if the feature didn't define its own shape, or the source shape is preferred
+    var source = opt_source || os.feature.getSource(feature);
+    if (source && os.instanceOf(source, os.source.Vector.NAME)) {
+      var sourceShape = source.getGeometryShape();
+      if (opt_preferSource || sourceShape !== os.style.ShapeType.DEFAULT) {
+        shapeName = sourceShape;
+      }
+    }
+  }
+
+  return shapeName;
+};
+
+
+/**
+ * Gets the center shape name for a feature.
+ * @param {!ol.Feature} feature The feature
+ * @param {os.source.Vector=} opt_source The source containing the feature
+ * @param {boolean=} opt_preferSource If the source shape should be preferred over the feature shape.
+ * @return {string|undefined}
+ *
+ * @suppress {accessControls} To allow direct access to feature metadata.
+ */
+os.feature.getCenterShapeName = function(feature, opt_source, opt_preferSource) {
+  var shapeName = /** @type {string|undefined} */ (feature.values_[os.style.StyleField.CENTER_SHAPE]);
+
+  if (!shapeName || opt_preferSource) {
+    // get the source shape if the feature didn't define its own shape, or the source shape is preferred
+    var source = opt_source || os.feature.getSource(feature);
+    if (source && os.instanceOf(source, os.source.Vector.NAME)) {
+      var sourceShape = source.getCenterGeometryShape();
+      if (opt_preferSource || sourceShape !== os.style.ShapeType.DEFAULT) {
+        shapeName = sourceShape;
+      }
+    }
+  }
+
+  return shapeName;
+};
+
+
+/**
+ * Hides the label for a feature.
+ * @param {ol.Feature} feature The feature
+ * @return {boolean} If the label was hidden, or false if it was hidden already.
+ *
+ * @suppress {accessControls} To allow direct access to feature metadata.
+ */
+os.feature.hideLabel = function(feature) {
+  if (feature && feature.values_[os.style.StyleField.SHOW_LABELS] !== false) {
+    feature.values_[os.style.StyleField.SHOW_LABELS] = false;
+    return true;
+  }
+
+  return false;
+};
+
+
+/**
+ * Shows the label for a feature.
+ * @param {ol.Feature} feature The feature
+ * @return {boolean} If the label was hidden, or false if it was hidden already.
+ *
+ * @suppress {accessControls} To allow direct access to feature metadata.
+ */
+os.feature.showLabel = function(feature) {
+  if (feature && feature.values_[os.style.StyleField.SHOW_LABELS] !== true) {
+    feature.values_[os.style.StyleField.SHOW_LABELS] = true;
+    return true;
+  }
+
+  return false;
+};
+
+
+/**
+ * Updates the feature (typically after style changes)
+ * @param {ol.Feature} feature The feature
+ * @param {ol.source.Source=} opt_source The source containing the feature
+ */
+os.feature.update = function(feature, opt_source) {
+  if (!opt_source) {
+    opt_source = os.feature.getSource(feature);
+  }
+
+  if (!opt_source && os.MapContainer.getInstance().containsFeature(feature)) {
+    opt_source = os.MapContainer.getInstance().getLayer(os.MapContainer.DRAW_ID).getSource();
+  }
+
+  var id = feature.getId();
+  if (id && opt_source && /** @type {ol.source.Vector} */ (opt_source).getFeatureById(id)) {
+    // for 3D synchronizer
+    opt_source.dispatchEvent(new ol.source.Vector.Event(ol.source.VectorEventType.CHANGEFEATURE, feature));
+    // for 2D
+    opt_source.changed();
+  }
+};
+
+
+/**
+ * Remove features from application
+ * @param {!string} sourceId
+ * @param {Array<ol.Feature>} features
+ */
+os.feature.removeFeatures = function(sourceId, features) {
+  var source = os.osDataManager.getSource(sourceId);
+  if (source && features) {
+    source.removeFeatures(features);
+  }
+};
+
+
+/**
+ * Copy a feature, saving its current style as a local feature style.
+ * @param {!ol.Feature} feature The feature to copy
+ * @param {Object=} opt_layerConfig The feature's layer config
+ * @return {!ol.Feature}
+ */
+os.feature.copyFeature = function(feature, opt_layerConfig) {
+  var clone = feature.clone();
+  clone.setId(ol.getUid(clone));
+
+  // copy the feature's current style to a new config and set it on the cloned feature
+  // base config priority: feature config > layer config > default config
+  var baseConfig = /** @type {Object|undefined} */ (feature.get(os.style.StyleType.FEATURE)) || opt_layerConfig ||
+      os.style.DEFAULT_VECTOR_CONFIG;
+  var featureConfig = os.style.createFeatureConfig(feature, baseConfig, opt_layerConfig);
+  clone.set(os.style.StyleType.FEATURE, featureConfig);
+
+  var shapeName = os.feature.getShapeName(feature);
+  if (shapeName) {
+    // default shape is point for vector layers, icon for KML layers. check the config to see if it should be an icon.
+    if (shapeName == os.style.ShapeType.DEFAULT) {
+      shapeName = os.style.isIconConfig(featureConfig) ? os.style.ShapeType.ICON : os.style.ShapeType.POINT;
+    }
+
+    // places doesn't support selected styles
+    shapeName = shapeName.replace(/^Selected /, '');
+
+    clone.set(os.style.StyleField.SHAPE, shapeName);
+  }
+
+  var centerShapeName = os.feature.getCenterShapeName(feature);
+  if (centerShapeName) {
+    // default shape is point for vector layers, icon for KML layers. check the config to see if it should be an icon.
+    if (centerShapeName == os.style.ShapeType.DEFAULT) {
+      centerShapeName = os.style.isIconConfig(featureConfig) ? os.style.ShapeType.ICON : os.style.ShapeType.POINT;
+    }
+
+    // places doesn't support selected styles
+    centerShapeName = centerShapeName.replace(/^Selected /, '');
+
+    clone.set(os.style.StyleField.CENTER_SHAPE, centerShapeName);
+  }
+
+  return clone;
+};
+
+
+/**
+ * Sets an opacity multiplier on every feature in a set.
+ * @param {Array<!ol.Feature>} features
+ * @param {number} opacity
+ * @param {os.source.Vector=} opt_source
+ * @suppress {accessControls}
+ */
+os.feature.updateFeaturesFadeStyle = function(features, opacity, opt_source) {
+  var source = opt_source || os.feature.getSource(features[0]);
+
+  if (source) {
+    for (var i = 0, n = features.length; i < n; i++) {
+      // we need to make a copy/clone of the style to mess with the config
+      var feature = features[i];
+      var layerConfig = os.style.getLayerConfig(feature, source);
+      var baseConfig = /** @type {Object|undefined} */
+          (feature.values_[os.style.StyleType.FEATURE]) ||
+          layerConfig ||
+          os.style.DEFAULT_VECTOR_CONFIG;
+      os.style.setConfigOpacityColor(baseConfig, opacity);
+
+      var style = os.style.createFeatureStyle(feature, baseConfig, layerConfig);
+      feature.setStyle(style);
+    }
+  }
+};
+
+
+/**
+ * Test if a feature's source id matches the provided source id.
+ * @param {string} sourceId The source id to match
+ * @param {!ol.Feature} feature The feature to test
+ * @return {boolean}
+ *
+ * @suppress {accessControls} To allow direct access to feature metadata.
+ */
+os.feature.sourceIdEquals = function(sourceId, feature) {
+  return feature.values_[os.data.RecordField.SOURCE_ID] == sourceId;
+};
+
+
+/**
+ * Sorts two features by a field.
+ * @param {string} field The sort field
+ * @param {!ol.Feature} a The first feature
+ * @param {!ol.Feature} b The second feature
+ * @return {number}
+ *
+ * @suppress {accessControls} To allow direct access to feature metadata.
+ */
+os.feature.sortByField = function(field, a, b) {
+  var aValue = a.values_[field];
+  var bValue = b.values_[field];
+
+  if (aValue != null && bValue != null) {
+    if (typeof aValue == 'string' && typeof bValue == 'string') {
+      return goog.string.floatAwareCompare(aValue, bValue);
+    }
+
+    return goog.array.defaultCompare(aValue, bValue);
+  } else if (aValue != null) {
+    return -1;
+  } else if (bValue != null) {
+    return 1;
+  }
+
+  return 0;
+};
+
+
+/**
+ * Sorts two features by their start time, in ascending order.
+ * @param {!ol.Feature} a The first feature.
+ * @param {!ol.Feature} b The second feature.
+ * @return {number}
+ *
+ * @suppress {accessControls} To allow direct access to feature metadata.
+ */
+os.feature.sortByTime = function(a, b) {
+  var aTimeObj = /** @type {os.time.ITime|undefined} */ (a.values_[os.data.RecordField.TIME]);
+  var bTimeObj = /** @type {os.time.ITime|undefined} */ (b.values_[os.data.RecordField.TIME]);
+
+  if (aTimeObj && bTimeObj) {
+    var aTime = aTimeObj.getStart();
+    var bTime = bTimeObj.getStart();
+    return aTime > bTime ? 1 : aTime < bTime ? -1 : 0;
+  } else if (aTimeObj) {
+    return 1;
+  } else if (bTimeObj) {
+    return -1;
+  }
+
+  return 0;
+};
+
+
+/**
+ * Compares two features by their id.
+ * @param {!ol.Feature} a First feature
+ * @param {!ol.Feature} b Second feature
+ * @return {number}
+ *
+ * Inlined everything for performance reasons. Function calls are too expensive for how often this can be called.
+ * @suppress {accessControls}
+ */
+os.feature.idCompare = function(a, b) {
+  return a.id_ > b.id_ ? 1 : a.id_ < b.id_ ? -1 : 0;
+};

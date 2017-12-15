@@ -1,0 +1,77 @@
+{
+  "title": "Add Data Window",
+  "config": {
+    "width": 450
+  },
+  "steps": [
+    {
+      "title": "Adding Layers",
+      "description": [
+        "Welcome to the Add Data window! We've populated this window with every layer currently available to the ",
+        "application."
+      ],
+      "position": "centered",
+      "context": "addData"
+    },
+    {
+      "title": "Search",
+      "description": [
+        "To quickly find layers by name, tag, or description, type what you're looking for in the search box. The ",
+        "tree will be automatically updated to show matching layers."
+      ],
+      "attachTo": ".adw-header .search",
+      "focusOn": ".window[label='Add Data']",
+      "position": "bottom",
+      "horizontalAlign": "center",
+      "context": "addData"
+    },
+    {
+      "title": "Available Layers",
+      "description": [
+        "In the left panel you'll find all available layers, categorized by the Group By selection. Expand groups ",
+        "in the tree to drill down to individual layers and use the On/Off button to toggle which layers are ",
+        "displayed on the map. Icons next to the layer titles indicate what type of data is represented by each ",
+        "layer. Select a layer and details about it will be displayed to the right."
+      ],
+      "attachTo": ".adw-main .slick-viewport",
+      "focusOn": ".window[label='Add Data']",
+      "position": "right",
+      "verticalAlign": "center",
+      "context": "addData"
+    },
+    {
+      "title": "Layer Types",
+      "description": [
+        "Layers generally fall under one of three categories:",
+        "<ul>",
+        "<li><strong>Map layers</strong> provide map background images, such as streets, borders, or other reference information.</li>",
+        "<li><strong>Tile layers</strong> (<img src=\"images/tiles-base.png\"/>) summarize large amounts of ",
+        "geospatial data but have no additional metadata associated to them.</li>",
+        "<li><strong>Feature layers</strong> (<img src=\"images/features-base.png\"/>) are highly interactive, ",
+        "allowing users to manipulate and select individual records on the map. Features with a time component ",
+        "(<img src=\"images/time-base.png\"/>) in their metadata can be animated using the timeline.</li>",
+        "</ul>"
+      ],
+      "position": "centered",
+      "context": "addData"
+    },
+    {
+      "title": "Import Files",
+      "description": [
+        "Local or remote files can be imported via the Import Files button. Click the button to import a local file ",
+        "or use the dropdown to import a remote file. We currently support KML, CSV, and SHP, but support for ",
+        "additional types will be added in the future!"
+      ],
+      "attachTo": ".adw-header .add-data-group",
+      "focusOn": ".window[label='Add Data']",
+      "position": "bottom",
+      "horizontalAlign": "center",
+      "context": "addData"
+    },
+    {
+      "title": "Add some layers!",
+      "description": "Go ahead and add some layers to the map! Or don't. But you probably should.",
+      "position": "centered"
+    }
+  ]
+}

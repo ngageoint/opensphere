@@ -1,0 +1,23 @@
+$select-width: 320px;
+
+.mapping-expression {
+  // override the .layerpicker-div style to get rid of the block behavior
+  .layerpicker-div {
+    display: inline-block;
+    width: $select-width;
+  }
+}
+
+.mapping-expression__column-select {
+  width: $select-width;
+}
+
+.mapping-expression__field {
+  display: inline-block;
+  width: calc(50% - 20px);
+}
+
+.mapping-expression__label {
+  display: inline-block;
+  margin-left: 5px;
+}

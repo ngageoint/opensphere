@@ -1,0 +1,21 @@
+<div class="user-setting">
+  <h4>Bearing</h4>
+  <div class="user-setting-title"><p>Select how you would like bearings to be displayed:</p></div>
+  <form name="bearingForm">
+    <div class="control-group">
+      <label class="radio" title="Use true north for bearings">
+        <input type="radio" id="trueNorth" value="trueNorth" ng-model='ctrl.format'>
+        True North
+      </label>
+      <p class="radio">Show bearings relative to true geographic north.</p>
+    </div>
+    <div class="control-group">
+      <label class="radio" title="Use magnetic north for bearings">
+        <input type="radio" id="magnetic" value="magnetic" ng-model='ctrl.format'>
+        Magnetic North
+      </label>
+      <p class="radio">Show magnetic bearings by calculating magnetic declination via the joint NGA-DGC World Magnetic Model (WMM). The current coefficient data in use is the {{cofVersion}} version.</p>
+      <p class="radio" ng-if="helpUrl"><a ng-href="{{helpUrl}}" target="_blank">Click here</a> for more details on the WMM.</p>
+    </div>
+  </form>
+</div>

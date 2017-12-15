@@ -1,0 +1,21 @@
+<div class="animate-present-in history-view-container">
+  <p class="lead">History ({{historyViewCtrl.commandHistory.length}})</p>
+  <div class="scroll-pane-wrapper">
+    <div id="historyScroll" class="scroll-pane">
+      <ol ng-show="historyViewCtrl.commandHistory.length" class="table nav nav-list">
+        <li ng-repeat="command in historyViewCtrl.commandHistory" ng-class="{active:$index == historyViewCtrl.current}">
+          <a ng-click="historyViewCtrl.setIndex($index)" href='' style="border-top:1px solid #ddd">
+            <i class="fa" ng-class="{'fa-spin fa-cog': historyViewCtrl.processingIndex == $index}"></i> 
+            <span ng-class="($index > historyViewCtrl.current) && 'history-gray'"><span>{{$index + 1}}.</span> {{command.title}}
+            	<i ng-if="command.state == 'error'" class="fa fa-lg color-red fa-exclamation-circle" title="{{command.details}}"></i> 
+            </span>
+          </a>
+        </li>
+        <li ng-if="historyViewCtrl.newCommand">
+          <i class="fa fa-spin fa-cog"></i>
+          <span class="history-gray"><span>{{historyViewCtrl.current + 2}}.</span> {{historyViewCtrl.newCommand.title}}</span>
+        </li>
+      </ol>
+    </div>
+  </div>
+</div>

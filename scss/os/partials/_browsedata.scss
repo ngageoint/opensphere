@@ -1,0 +1,43 @@
+.bd-header {
+  height: 30px;
+
+  .search-box {
+    .input-clear {
+      background: none;
+      padding: 2px 5px;
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+  }
+}
+
+.bd-main {
+  width: 100%;
+
+  .slick-tree {
+    @include calc(width, '35% - 2.5px');
+  }
+
+  .tree-expand-collapse {
+    font-size: inherit;
+    font-weight: bold;
+    width: inherit;
+  }
+
+  .bd-results {
+    @include calc(width, '65% - 2.5px');
+    height: 100%;
+  }
+}
+
+.slick-cell .facet {
+  cursor: pointer;
+  position: absolute;
+  right: 0;
+
+  &.disabled {
+    color: #ccc;
+    cursor: default;
+  }
+}
