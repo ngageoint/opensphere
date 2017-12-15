@@ -7,8 +7,7 @@ both raster and vector data, import and export of various formats, saving files 
 sessions, and much more!
 
 Check it out!
-* [latest release](https://opensphere.io/web/release)
-* [master](https://opensphere.io/web/master)
+* Coming as soon as we roll out the website!
 
 In addition, OpenSphere (and its build system) can serve as a base library for GIS applications. Love
 what we've done with Openlayers and Cesium but want your own UI? You can do that!
@@ -46,8 +45,7 @@ Even though IE should work, if you use it, you are going to have a bad time. Edg
 
 ## Documentation
 
-* [API Documentation](https://opensphere.io/web/apidoc/master)
-* [Example plugins](somewhere)
+* Coming soon!
 
 ## Bugs
 
