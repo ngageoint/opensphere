@@ -134,7 +134,7 @@ os.array.removeDuplicates = function(arr, opt_rv, opt_hashFn) {
   var returnArray = opt_rv || arr;
   // this default function is different from the goog.array one
   // it checks if an object is also an array before just checking the uid, if it is an array then allow comparison of
-  // the flattened array
+  // the stringified array
   var defaultHashFn = function(item) {
     return goog.isObject(current) ?
       goog.isArray(current) ?
