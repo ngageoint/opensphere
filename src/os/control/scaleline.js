@@ -184,8 +184,8 @@ os.control.ScaleLine.prototype.updateElement_ = function() {
     displayNum = count.toExponential();
   }
   var html = displayNum + ' ' + suffix;
-  if (this.renderedHTML_ != html) {
-    goog.dom.safe.setInnerHtml(/** @type {!Element} */ (this.innerElement_), goog.html.SafeHtml.htmlEscape(html));
+  if (this.renderedHTML_ != html && this.innerElement_) {
+    goog.dom.safe.setInnerHtml(this.innerElement_, goog.html.SafeHtml.htmlEscape(html));
     this.renderedHTML_ = html;
   }
 
