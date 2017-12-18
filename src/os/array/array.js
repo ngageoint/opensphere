@@ -100,7 +100,7 @@ os.array.findDuplicates = function(arr, opt_hashFn) {
   var returnArray = [];
   var defaultHashFn = function(item) {
     return goog.isObject(current) ? 'o' + goog.getUid(current) :
-        (typeof current).charAt(0) + current;
+        (typeof current).slice(0, 2) + current;
   };
   var hashFn = opt_hashFn || defaultHashFn;
 
@@ -119,6 +119,48 @@ os.array.findDuplicates = function(arr, opt_hashFn) {
     }
   }
   return returnArray;
+};
+
+/**
+ * Based on the goog.array.removeDuplicates method but will also work when the items you are comparing are arrays,
+ * which is really common in our code. Also returns true if duplicate was found, for convenience
+ * @param {Array<T>} arr The array to search for duplicates
+ * @param {Array<T>=} opt_rv The array to copy the deduped array into. If provided, the original array remains intact
+ * @param {function(T):string=} opt_hashFn Optional function for determining uniqueness
+ * @return {boolean} returns true if a duplicate was found
+ * @template T
+ */
+os.array.removeDuplicates = function(arr, opt_rv, opt_hashFn) {
+  var returnArray = opt_rv || arr;
+  // this default function is different from the goog.array one
+  // it checks if an object is also an array before just checking the uid, if it is an array then allow comparison of
+  // the flattened array
+  var defaultHashFn = function(item) {
+    return goog.isObject(current) ?
+      goog.isArray(current) ?
+        'a' + JSON.stringify(current)
+        : 'o' + goog.getUid(current)
+      : (typeof current).slice(0, 2) + current;
+  };
+  var hashFn = opt_hashFn || defaultHashFn;
+
+  var seen = {};
+  var cursorInsert = 0;
+  var cursorRead = 0;
+  var duplicateFound = false;
+
+  while (cursorRead < arr.length) {
+    var current = arr[cursorRead++];
+    var key = hashFn(current);
+    if (!Object.prototype.hasOwnProperty.call(seen, key)) {
+      seen[key] = true;
+      returnArray[cursorInsert++] = current;
+    } else {
+      duplicateFound = true;
+    }
+  }
+  returnArray.length = cursorInsert;
+  return duplicateFound;
 };
 
 
