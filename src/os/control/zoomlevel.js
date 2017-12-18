@@ -238,9 +238,11 @@ os.control.ZoomLevel.prototype.updateAltitudeText = function() {
 
     // altitude value has been set, so update the displayed value
     var um = os.unit.UnitManager.getInstance();
-    goog.dom.safe.setInnerHtml(/** @type {!Element} */ (this.altElement_), goog.html.SafeHtml.htmlEscape(
-        'Altitude: ' + um.formatToBestFit('distance', altitude, 'm', um.getBaseSystem(), 3)));
-    goog.style.setElementShown(this.altElement_, true);
+    if (this.altElement_) {
+      goog.dom.safe.setInnerHtml(this.altElement_, goog.html.SafeHtml.htmlEscape(
+          'Altitude: ' + um.formatToBestFit('distance', altitude, 'm', um.getBaseSystem(), 3)));
+      goog.style.setElementShown(this.altElement_, true);
+    }
   }
 };
 
