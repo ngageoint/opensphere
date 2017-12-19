@@ -1,4 +1,5 @@
 goog.require('os.bearing');
+goog.require('os.interpolate');
 goog.require('os.net.Request');
 goog.require('os.osasm.wait');
 
