@@ -337,6 +337,12 @@ td > input {
   z-index: 100001;
 }
 
+@media (max-height: 800px) {
+  .modal:not(.window), .modal.fade.in {
+    top: 0;
+  }
+}
+
 .modal-header {
   background-color: rgba(46, 50, 54, 1);
 }
