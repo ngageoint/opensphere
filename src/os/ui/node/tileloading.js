@@ -36,12 +36,6 @@ os.ui.Module.directive('tileloading', [os.ui.node.tileLoadingDirective]);
  */
 os.ui.node.TileLoadingCtrl = function($scope, $element) {
   /**
-   * @type {?angular.Scope}
-   * @private
-   */
-  this.scope_ = $scope;
-
-  /**
    * @type {?angular.JQLite}
    * @private
    */
@@ -77,7 +71,6 @@ os.ui.node.TileLoadingCtrl.prototype.onDestroy_ = function() {
     ol.events.unlisten(this.source_, goog.events.EventType.PROPERTYCHANGE, this.onPropertyChange_, this);
   }
 
-  this.scope_ = null;
   this.element_ = null;
 };
 

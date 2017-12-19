@@ -34,12 +34,6 @@ os.style.Icon = function(opt_options) {
    */
   this.normalizedScale_ = 0;
 
-  /**
-   * @type {olx.style.IconOptions|undefined}
-   * @private
-   */
-  this.originalOptions_ = opt_options;
-
   this.listenImageChange(this.onImageChange, this);
 };
 goog.inherits(os.style.Icon, ol.style.Icon);
