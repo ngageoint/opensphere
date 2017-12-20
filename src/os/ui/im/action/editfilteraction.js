@@ -111,11 +111,6 @@ os.ui.im.action.EditFilterActionCtrl = function($scope, $element) {
 
   $scope.$on('$destroy', goog.bind(this.onDestroy, this));
   os.dataManager.listen(os.data.event.DataEventType.SOURCE_REMOVED, this.onSourceRemoved_, false, this);
-  /**
-   * @type {?angular.JQLite}
-   * @protected
-   */
-  this.element = $element;
 };
 goog.inherits(os.ui.im.action.EditFilterActionCtrl, os.ui.filter.ui.EditFiltersCtrl);
 

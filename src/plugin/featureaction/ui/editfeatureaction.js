@@ -122,6 +122,7 @@ plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.buildStylePreview = 
   this.styleCanvas = /** @type {HTMLCanvasElement} */ (document.createElement('canvas'));
   this.styleCanvas.setAttribute('class', 'styleCanvas');
   this.styleCanvas.height = 27;
+  this.styleCanvas.width = 150;
   this.styleCanvas.style.setProperty('vertical-align', 'middle');
 
   // only add this to the applicable action
@@ -219,7 +220,7 @@ plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.buildLabelPreview = 
   this.labelCanvas = /** @type {HTMLCanvasElement} */ (document.createElement('canvas'));
   this.labelCanvas.setAttribute('class', 'labelCanvas');
   this.labelCanvas.height = 24;
-  this.labelCanvas.width = 400;
+  this.labelCanvas.width = 150;
   this.labelCanvas.style.setProperty('vertical-align', 'middle');
 
   // only add this to the applicable action
@@ -240,17 +241,16 @@ plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.buildLabelPreview = 
     var lConfig = /** @type {!Object} */ (os.object.unsafeClone(labelAction.labelConfig));
 
     if (goog.isDefAndNotNull(lConfig)) {
-      var customName = lConfig['customName'] || undefined;
       var labelColor = os.style.toRgbaString(lConfig['color'] || os.style.DEFAULT_LAYER_COLOR);
       // var labelSize = parseInt(lConfig['size'], 10) || os.style.label.DEFAULT_SIZE;
-      var labels = /** @type {Array<!os.style.label.LabelConfig>} */ (lConfig['labels']);
-
+      var labels = /** @type {Array<!os.style.label.LabelConfig>} */ (os.object.unsafeClone(lConfig['labels']));
       labels = os.style.label.filterValid(labels);
       // update label fields on the feature if there is at least one valid label config defined
       if (goog.isDefAndNotNull(labels) && labels.length > 0) {
         // get the existing feature config or create a new one
         var featureConfig = /** @type {Object|undefined} */ (feature.get(os.style.StyleType.FEATURE)) || {};
-        // apply label config
+        // apply label config but change the label to be something generic
+        labels[0]['column'] = 'COLUMN';
         featureConfig[os.style.StyleField.LABELS] = labels;
         featureConfig[os.style.StyleField.LABEL_COLOR] = labelColor;
 
@@ -262,8 +262,7 @@ plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.buildLabelPreview = 
         // show the label on the feature
         feature.set(os.style.StyleField.SHOW_LABELS, true);
 
-        customName = labels[0]['column'];
-        feature.set(customName, 'VALUE');
+        feature.set(labels[0]['column'], 'VALUE');
         feature.setGeometry(new ol.geom.Point([20, 10]));
 
         // grab the label style
