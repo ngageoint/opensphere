@@ -7,6 +7,7 @@ goog.require('ol.geom.GeometryType');
 goog.require('ol.geom.LineString');
 goog.require('ol.geom.MultiLineString');
 goog.require('os.array');
+goog.require('os.extent');
 goog.require('os.geom.GeometryField');
 goog.require('os.mixin.geometry');
 
