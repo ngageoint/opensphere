@@ -361,13 +361,6 @@ os.style.label.updateShown = function() {
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
 os.style.label.createOrUpdate = function(feature, config, opt_layerConfig) {
-  if (feature) {
-    var featGeometry = feature.getGeometry();
-    if (featGeometry) {
-      os.extent.getFunctionalExtent(featGeometry);
-    }
-  }
-
   var labelStyles = [];
 
   // always show labels for highlighted features, otherwise show if the flag isn't explicity set to false. this is
