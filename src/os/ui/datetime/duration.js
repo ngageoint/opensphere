@@ -108,6 +108,26 @@ os.ui.datetime.DurationCtrl = function($scope, $timeout) {
   this['errors'] = {};
 
   /**
+   * @type {number}
+   */
+  this['maxdays'] = this.scope_['useWeeks'] === 'true' ? 6 : 1000;
+
+  /**
+   * @type {number}
+   */
+  this['maxhours'] = this.scope_['useDays'] === 'true' ? 23 : 1000;
+
+  /**
+   * @type {number}
+   */
+  this['maxminutes'] = this.scope_['useHours'] === 'true' ? 59 : 1000;
+
+  /**
+   * @type {number}
+   */
+  this['maxseconds'] = this.scope_['useMinutes'] === 'true' ? 59 : 1000;
+
+  /**
    * @type {?boolean}
    */
   this['valid'] = true;
@@ -195,10 +215,10 @@ os.ui.datetime.DurationCtrl.prototype.onDurationUpdate_ = function(newVal, oldVa
  */
 os.ui.datetime.DurationCtrl.prototype.updateDuration_ = function() {
   var dur = 1000 * (this['seconds'] +
-                               60 * this['minutes'] +
-                               60 * 60 * this['hours'] +
-                               60 * 60 * 24 * this['days'] +
-                               60 * 60 * 24 * 7 * this['weeks']);
+      60 * this['minutes'] +
+      60 * 60 * this['hours'] +
+      60 * 60 * 24 * this['days'] +
+      60 * 60 * 24 * 7 * this['weeks']);
 
   if (this.scope_['dur'] != dur) {
     this.scope_['dur'] = dur;
