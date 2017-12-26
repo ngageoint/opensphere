@@ -82,11 +82,9 @@ function populateCheckInfo(doSpin) {
   var result = document.getElementById('report');
   if (result) {
     var report = 'Unsupported Browser!';
-    if (checkCompat()) {
-      if (checkVersion()) {
+    if (checkVersion()) {
+      if (checkCompat()) {
         report = 'Supported Browser!';
-      } else {
-        report = 'Compatible Browser!';
       }
     }
     result.innerHTML = report;
@@ -197,19 +195,13 @@ function setContactInfo() {
           '<p>If you do not have one of these browsers installed, contact your local IT department for help.</p>' +
           '<a href="' + browserPage + '" class="btn btn-danger">Browser Download</a> <br> <br>';
 
-  if (!checkCompat()) {
-    if (checkVersion()) {
-      setWarn('Your browser has been configured to disable features required by this application.',
-          'Please enable those features or contact your IT department for support.');
-    } else {
-      setWarn(minSupportInfo);
-    }
+  if (!checkCompat() && checkVersion()) {
+    setWarn('<em>Your browser has been configured to disable features required by this application.</em>',
+        'Please enable those features or contact your IT department for support.');
+  } else if (checkVersion()) {
+    setWarn('');
   } else {
-    if (checkVersion()) {
-      setWarn('');
-    } else {
-      setWarn(minSupportInfo);
-    }
+    setWarn(minSupportInfo);
   }
   var browserInfo = document.getElementById('browserInfo');
   if (browserInfo && typeof (platform) != 'undefined') {
