@@ -86,8 +86,9 @@ function populateCheckInfo(doSpin) {
   if (result) {
     var report = 'Unsupported Browser!';
     if (checkVersion()) {
-      if (checkCompat()) {
-        report = 'Supported Browser!';
+      report = 'Supported Browser!';
+      if (!checkCompat()) {
+        report += ' <small><strong>(required features may be disabled!)</strong></small>';
       }
     }
     result.innerHTML = report;
@@ -199,7 +200,7 @@ function setContactInfo() {
           '<a href="' + browserPage + '" class="btn btn-danger">Browser Download</a> <br> <br>';
 
   if (!checkCompat() && checkVersion()) {
-    setWarn('<em>Your browser has been configured to disable features required by this application.</em>' +
+    setWarn('<em>Your browser has been configured to disable features required by this application.</em> ' +
       'Please enable those features or contact your IT department for support.',
         '<a href="' + browserPage + '" class="btn btn-danger">Browser Download</a> <br> <br>');
   } else if (checkVersion()) {
