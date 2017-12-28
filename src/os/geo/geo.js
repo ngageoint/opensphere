@@ -2334,7 +2334,9 @@ os.geo.splitOnDateLine = function(geometry) {
     var resultCoordinates = os.geo.splitMultiLineOnDateLine_(geometry);
     result = os.geo.createLineFromSegments_(resultCoordinates, geometry.getLayout());
   }
-  os.extent.getFunctionalExtent(result);
+  if (result instanceof ol.geom.Geometry) {
+    os.extent.getFunctionalExtent(result);
+  }
 
   // mark as normalized so coordinates will not be modified further
   result.set(os.geom.GeometryField.NORMALIZED, true);
