@@ -180,6 +180,7 @@ plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.buildStylePreview = 
           config['image']['anchor'] = [0.5, 0.5];
           // set the size to a fixed size to fit in the line
           os.style.setConfigSize(config, 2);
+          os.style.setConfigColor(config, config['image']['fill']['color']);
         }
       }
 
@@ -193,6 +194,8 @@ plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.buildStylePreview = 
 
         if (imageState < ol.ImageState.LOADED) {
           // icon isn't loaded yet, so load it now
+
+
           if (imageState == ol.ImageState.IDLE) {
             imageStyle.load();
           }
