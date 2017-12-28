@@ -191,10 +191,10 @@ function setContactInfo() {
     var browserPage = parsed['admin']['browserPage'];
   }
 
-  var minSupportInfo = '<strong>Minimum supported browsers:</strong>' +
+  var minSupportInfo = '<strong>Recommended browsers:</strong>' +
           '<ul>' +
-          '<li>Google Chrome version 29</li>' +
-          '<li>Mozilla Firefox version 28</li>' +
+          '<li>Google Chrome version 35+</li>' +
+          '<li>Mozilla Firefox version 31+</li>' +
           '</ul>' +
           '<p>If you do not have one of these browsers installed, contact your local IT department for help.</p>' +
           '<a href="' + browserPage + '" class="btn btn-danger">Browser Download</a> <br> <br>';
