@@ -108,6 +108,8 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.initialize = function() {
       this.scope['opacity'] = 1.0;
     }
 
+    os.style.setConfigColor(this.styleConfig, os.style.getConfigColor(this.styleConfig));
+
     this.scope['size'] = os.style.getConfigSize(this.styleConfig);
 
     this.scope['shape'] = this.styleConfig[os.style.StyleField.SHAPE] || os.style.DEFAULT_SHAPE;
