@@ -13,6 +13,18 @@ Start by [forking](https://github.com/ngageoint/opensphere/fork) the OpenSphere 
 
 Ensure that the executables `git`, `node`, and `java` are in your `PATH`.
 
+Clone the repository by running
+    
+    $ git clone https://github.com/<userid>/opensphere/
+
+where `<userid>` is your github user id. For example, if your user id is `bradh`, it would be:
+
+    $ git clone https://github.com/bradh/opensphere/
+
+Change directory into the cloned directory (`opensphere`).
+
+    $ cd opensphere
+
 Install the dependencies by running
 
     $ npm install
