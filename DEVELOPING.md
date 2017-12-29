@@ -2,7 +2,7 @@
 
 ## Setup
 
-Start by [forking](https://github.com/openlayers/openlayers/fork) the OpenSphere repository.
+Start by [forking](https://github.com/ngageoint/opensphere/fork) the OpenSphere repository.
 
 ### Prerequisites
 
