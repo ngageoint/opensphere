@@ -1,6 +1,6 @@
 {
   "name": "opensphere",
-  "version": "0.0.0-development",
+  "version": "1.0.0",
   "description": "OpenSphere is a pluggable GIS web application that supports both 2D and 3D views.",
   "main": "index.js",
   "directories": {
