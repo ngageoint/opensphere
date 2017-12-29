@@ -21,7 +21,7 @@ before_script:
 - sleep 3
 script:
 # ensure this is run with bash and not something else
-- npm run build
+- bash -c 'npm run build'
 - npm run test
 branches:
   except:
