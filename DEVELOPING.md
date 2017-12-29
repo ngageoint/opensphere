@@ -13,6 +13,8 @@ Start by [forking](https://github.com/ngageoint/opensphere/fork) the OpenSphere 
 
 Ensure that the executables `git`, `node`, and `java` are in your `PATH`.
 
+[Clone|https://help.github.com/articles/cloning-a-repository/] your repository, and change directory into the clone.
+
 Install the dependencies by running
 
     $ npm install
@@ -145,5 +147,5 @@ Fixed Example:
     // template
     <span ng-show="ctrl.isPositive(value)">{{value}} is positive</span>
 
-Now it works in compiled mode! Note that UI templates is not the only place were bracket notation is useful. It is useful wherever you want to have the compiler skip minification.
+Now it works in compiled mode! Note that UI templates is not the only place where bracket notation is useful. It is useful wherever you want to have the compiler skip minification.
 
