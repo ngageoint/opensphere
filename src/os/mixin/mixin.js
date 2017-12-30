@@ -106,7 +106,7 @@ ol.renderer.canvas.VectorLayer.prototype.forEachFeatureAtCoordinate = function(c
             features[key] = true;
             return callback.call(thisArg, feature, layer);
           }
-        });
+        }, null);
   }
 };
 

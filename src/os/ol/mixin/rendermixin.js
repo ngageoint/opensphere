@@ -24,7 +24,7 @@ os.ol.mixin.render.EMPTY_FILL = 'rgba(0,0,0,0)';
  * @suppress {duplicate|accessControls}
  */
 ol.render.canvas.PolygonReplay.prototype.drawPolygon = function(polygonGeometry, feature) {
-  var state = this.state_;
+  var state = this.state;
   this.setFillStrokeStyles_(polygonGeometry);
   this.beginGeometry(polygonGeometry, feature);
 
@@ -58,7 +58,7 @@ ol.render.canvas.PolygonReplay.prototype.drawPolygon = function(polygonGeometry,
  * @suppress {duplicate|accessControls}
  */
 ol.render.canvas.PolygonReplay.prototype.drawMultiPolygon = function(multiPolygonGeometry, feature) {
-  var state = this.state_;
+  var state = this.state;
   var fillStyle = state.fillStyle;
   var strokeStyle = state.strokeStyle;
   if (fillStyle === undefined && strokeStyle === undefined) {
@@ -102,7 +102,7 @@ ol.render.canvas.PolygonReplay.prototype.drawMultiPolygon = function(multiPolygo
  * @suppress {duplicate|accessControls}
  */
 ol.render.canvas.PolygonReplay.prototype.drawCircle = function(circleGeometry, feature) {
-  var state = this.state_;
+  var state = this.state;
   var fillStyle = state.fillStyle;
   var strokeStyle = state.strokeStyle;
   if (fillStyle === undefined && strokeStyle === undefined) {
