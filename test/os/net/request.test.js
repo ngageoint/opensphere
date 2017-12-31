@@ -297,7 +297,7 @@ describe('os.net.Request', function() {
     });
 
     it('should load a request and reject on errors', function() {
-      var r = new os.net.Request('http://bogus.local');
+      var r = new os.net.Request('http://localhost/doesnotexist.html');
       var count = 0;
 
       runs(function() {
