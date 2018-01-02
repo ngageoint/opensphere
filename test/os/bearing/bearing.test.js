@@ -47,7 +47,8 @@ describe('os.bearing', function() {
     expect(a).toBeCloseTo(b, 12);
   });
 
-  it('should get magnetic bearings correctly', function() {
+  // see https://github.com/cmweiss/geomagJS/issues/4 for why these are disabled
+  xit('should get magnetic bearings correctly', function() {
     os.settings.set(os.bearing.BearingSettingsKeys.BEARING_TYPE, os.bearing.BearingType.MAGNETIC);
 
     // this calculation seemed to vary sometimes... so use toBeCloseTo... maybe reinvestigate this in the future
@@ -66,7 +67,8 @@ describe('os.bearing', function() {
     expect(os.bearing.modifyBearing(165, [5, 10])).toBe(165);
   });
 
-  it('should format magnetic bearings correctly', function() {
+  // see https://github.com/cmweiss/geomagJS/issues/4 for why these are disabled
+  xit('should format magnetic bearings correctly', function() {
     os.settings.set(os.bearing.BearingSettingsKeys.BEARING_TYPE, os.bearing.BearingType.MAGNETIC);
 
     expect(os.bearing.modifyBearing(-150, [5, 10], date)).toBeCloseTo(211.2, 1);
