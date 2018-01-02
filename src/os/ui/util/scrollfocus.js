@@ -91,7 +91,7 @@ os.ui.util.ScrollFocusCtrl.prototype.firefoxScrollHandler_ = function(e) {
   var el = this.element_[0];
   if (!this['hasFocus']) {
     if (this.container) {
-      container.scrollBy(0, 19 * e.detail);
+      this.container.scrollBy(0, 19 * e.detail);
     } else {
       window.scrollBy(0, 19 * e.detail);
     }
