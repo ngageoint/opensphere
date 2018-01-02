@@ -36,6 +36,7 @@ module.exports = function(config) {
       {pattern: 'node_modules/cesium/Build/Cesium/Cesium.js', watched: false, included: true, served: true},
       {pattern: 'node_modules/xmllint/xmllint.js', watched: false, included: true, served: true},
       {pattern: 'vendor/geomag/geomag.min.js', watched: false, included: true, served: true},
+      {pattern: 'node_modules/lolex/lolex.js', watched: false, included: true, served: true},
       {pattern: 'node_modules/opensphere-state-schema/src/main/**/*.xsd', watched: false, included: false, served: true}
     ].concat(closureFiles).concat([
       // init
