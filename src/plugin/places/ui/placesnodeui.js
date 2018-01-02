@@ -61,7 +61,7 @@ goog.inherits(plugin.places.ui.PlacesNodeUICtrl, os.ui.node.DefaultLayerNodeUICt
 plugin.places.ui.PlacesNodeUICtrl.prototype.addFolder = function() {
   var node = /** @type {plugin.file.kml.ui.KMLLayerNode} */ (this.scope['item']);
   if (node) {
-    var rootNode = plugin.file.kml.ui.getKMLRoot(node);
+    var rootNode = plugin.places.getPlacesRoot(node);
     if (rootNode) {
       plugin.file.kml.ui.createOrEditFolder(/** @type {!plugin.file.kml.ui.FolderOptions} */ ({
         'parent': rootNode
@@ -81,7 +81,7 @@ goog.exportProperty(
 plugin.places.ui.PlacesNodeUICtrl.prototype.addPlace = function() {
   var node = /** @type {plugin.file.kml.ui.KMLLayerNode} */ (this.scope['item']);
   if (node) {
-    var rootNode = plugin.file.kml.ui.getKMLRoot(node);
+    var rootNode = plugin.places.getPlacesRoot(node);
     if (rootNode) {
       plugin.file.kml.ui.createOrEditPlace(/** @type {!plugin.file.kml.ui.PlacemarkOptions} */ ({
         'parent': rootNode
