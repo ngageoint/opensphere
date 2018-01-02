@@ -102,44 +102,26 @@ describe('os.time.TimelineController', function() {
 
   it('Playing timeline should fire os.time.TimelineEventType.SHOW event for each frame', function() {
     var runtime = 500;
-    var finished = false;
     var fps = 10;
+
+    var clock = lolex.install();
     controller.setFps(fps);
-    runs(function() {
-      controller.play();
-      setTimeout(function() {
-        finished = true;
-      }, runtime);
-    });
-
-    waitsFor(function() {
-      return finished;
-    }, 'Timeout waiting.');
-
-    runs(function() {
-      expect(getDispatchEventCallCount(os.time.TimelineEventType.SHOW)).toBeGreaterThan((fps * .5) - 2);
-    });
+    controller.play();
+    clock.tick(runtime);
+    expect(getDispatchEventCallCount(os.time.TimelineEventType.SHOW)).toBeGreaterThan((fps * runtime / 1000) - 2);
+    clock.uninstall();
   });
 
   it('Playing with higher fps should fire more os.time.TimelineEventType.SHOW event for each frame', function() {
     var runtime = 500;
-    var finished = false;
     var fps = 20;
+
+    var clock = lolex.install();
     controller.setFps(fps);
-    runs(function() {
-      controller.play();
-      setTimeout(function() {
-        finished = true;
-      }, runtime);
-    });
-
-    waitsFor(function() {
-      return finished;
-    }, 'Timeout waiting.');
-
-    runs(function() {
-      expect(getDispatchEventCallCount(os.time.TimelineEventType.SHOW)).toBeGreaterThan((fps * .5) - 2);
-    });
+    controller.play();
+    clock.tick(runtime);
+    expect(getDispatchEventCallCount(os.time.TimelineEventType.SHOW)).toBeGreaterThan((fps * runtime / 1000) - 2);
+    clock.uninstall();
   });
 
   it('adding range should fire range changed event', function() {
