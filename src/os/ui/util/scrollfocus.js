@@ -91,7 +91,7 @@ os.ui.util.ScrollFocusCtrl.prototype.firefoxScrollHandler_ = function(e) {
   var el = this.element_[0];
   if (!this['hasFocus']) {
     if (this.container) {
-      this.container.scrollBy(0, 19 * e.detail);
+      this.container.scrollTop(this.container.scrollTop() + (19 * e.detail));
     } else {
       window.scrollBy(0, 19 * e.detail);
     }
@@ -133,7 +133,7 @@ os.ui.util.ScrollFocusCtrl.prototype.scrollHandler_ = function(e) {
   }
   if (!this['hasFocus']) {
     if (this.container) {
-      this.container.scrollBy(x, y);
+      this.container.scrollTop(this.container.scrollTop() + y);
     } else {
       window.scrollBy(x, y);
     }
