@@ -1,8 +1,10 @@
 goog.provide('os.capture.AbstractVideoEncoder');
 
 goog.require('goog.events.EventTarget');
+goog.require('goog.html.TrustedResourceUrl');
 goog.require('goog.log');
 goog.require('goog.net.jsloader');
+goog.require('goog.string.Const');
 goog.require('os.capture.IVideoEncoder');
 
 
@@ -41,10 +43,10 @@ os.capture.AbstractVideoEncoder = function() {
 
   /**
    * The encoder script URL, if it should be lazy loaded.
-   * @type {?string}
+   * @type {string|undefined}
    * @protected
    */
-  this.scriptUrl = null;
+  this.scriptUrl = undefined;
 };
 goog.inherits(os.capture.AbstractVideoEncoder, goog.events.EventTarget);
 
@@ -103,11 +105,14 @@ os.capture.AbstractVideoEncoder.prototype.init = function(frameRate, opt_quality
 
 /**
  * @inheritDoc
+ * @suppress {accessControls} To allow creating a constant string from the URL, which varies by environment.
  */
 os.capture.AbstractVideoEncoder.prototype.process = function() {
   if (!this.isEncoderLoaded()) {
     if (this.scriptUrl) {
-      goog.net.jsloader.load(this.scriptUrl).addCallbacks(this.processInternal, this.onScriptLoadError, this);
+      var constUrl = goog.string.Const.create__googStringSecurityPrivate_(this.scriptUrl);
+      var trustedUrl = goog.html.TrustedResourceUrl.fromConstant(constUrl);
+      goog.net.jsloader.safeLoad(trustedUrl).addCallbacks(this.processInternal, this.onScriptLoadError, this);
     } else {
       this.handleError(this.title + ' encoder is not available');
     }
@@ -158,7 +163,7 @@ os.capture.AbstractVideoEncoder.prototype.handleError = function(msg, opt_error)
  * @protected
  */
 os.capture.AbstractVideoEncoder.prototype.onScriptLoadError = function(error) {
-  this.scriptUrl = null;
+  this.scriptUrl = undefined;
   this.handleError(error ? error.message : 'failed to load the ' + this.title + ' encoder');
 };
 

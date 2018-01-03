@@ -305,7 +305,6 @@ os.im.action.ImportActionManager.prototype.getEntryItems = function(type) {
  * Executes enabled import action entries of a type against a set of items.
  * @param {string} entryType The entry type.
  * @param {Array<T>=} opt_items The items to process.
- * @protected
  */
 os.im.action.ImportActionManager.prototype.processItems = function(entryType, opt_items) {
   var items = opt_items || this.getEntryItems(entryType);

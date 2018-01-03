@@ -16,6 +16,7 @@
   <div class="inline-block" ng-if="useDays">
     <spinner class="days-spinner"
         min="0"
+        max="durCtrl.maxdays"
         step="1"
         value="durCtrl.days"
         name="daySpinner"
@@ -30,6 +31,7 @@
   <div class="inline-block" ng-if="useHours">
     <spinner class="hours-spinner"
         min="0"
+        max="durCtrl.maxhours"
         step="1"
         value="durCtrl.hours"
         name="hourSpinner"
@@ -44,6 +46,7 @@
   <div class="inline-block" ng-if="useMinutes">
     <spinner class="minutes-spinner"
         min="0"
+        max="durCtrl.maxminutes"
         step="1"
         value="durCtrl.minutes"
         name="minuteSpinner"
@@ -58,6 +61,7 @@
   <div class="inline-block" ng-if="useSeconds">
     <spinner class="seconds-spinner"
         min="0"
+        max="durCtrl.maxseconds"
         step="1"
         value="durCtrl.seconds"
         name="secondSpinner"
