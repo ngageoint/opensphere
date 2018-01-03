@@ -111,11 +111,7 @@ goog.exportProperty(
  * Create buffer regions and close the window.
  */
 os.ui.buffer.BufferDialogCtrl.prototype.confirm = function() {
-  var bufferFn = window['exports']['functions']['createBufferFromConfig'];
-  if (bufferFn) {
-    bufferFn(this.config);
-  }
-
+  os.buffer.createFromConfig(this.config);
   this.cancel();
 };
 goog.exportProperty(

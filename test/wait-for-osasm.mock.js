@@ -1,11 +1,12 @@
-goog.provide('osasm.wait');
+goog.provide('os.osasm.wait');
 
-osasm.wait.waitForIt = function() {
+/**
+ * Waits for the `osasm` library to be loaded.
+ */
+os.osasm.wait.waitForIt = function() {
   beforeEach(function() {
     waitsFor(function() {
       return !!window.osasm;
-    }, 3000);
+    }, 3000, 'osasm to load');
   });
 };
-
-osasm.wait.waitForIt();

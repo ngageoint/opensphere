@@ -234,6 +234,11 @@ os.ui.file.method.UrlMethod.prototype.onLoad = function(event) {
       var match = re.exec(contentDisposition);
       if (match && match[1]) {
         fileName = match[1];
+      } else { // see if the filename was not in quotes
+        var rematch = contentDisposition.split('filename=');
+        if (rematch.length > 0 && rematch[1]) {
+          fileName = rematch[1];
+        }
       }
     }
   }

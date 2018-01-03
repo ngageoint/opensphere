@@ -13,7 +13,6 @@ goog.require('goog.log');
 goog.require('goog.log.Logger');
 goog.require('os.alert.AlertEventSeverity');
 goog.require('os.alert.AlertManager');
-goog.require('os.db');
 goog.require('os.storage.AsyncStorage');
 
 

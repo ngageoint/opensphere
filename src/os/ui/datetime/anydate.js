@@ -69,7 +69,7 @@ os.ui.datetime.AnyDateCtrl = function($scope, $element, $compile, $timeout) {
   /**
    * @type {string}
    */
-  this['dateType'] = $scope['initialType'] || os.ui.datetime.AnyDateType.NOTIME;
+  this['dateType'] = $scope['initialType'] || os.ui.datetime.AnyDateType.INSTANT;
 
   /**
    * @type {boolean}

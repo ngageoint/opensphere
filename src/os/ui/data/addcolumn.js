@@ -128,13 +128,12 @@ os.ui.data.AddColumnCtrl.prototype.finish = function() {
     var name = /** @type {string} */ (this['name']).toUpperCase();
 
     if (this.features_.length > 0) {
-      var setFeatureStyle = window['exports']['functions']['setFeatureStyle'];
       for (var i = 0, ii = this.features_.length; i < ii; i++) {
         // set the value on each feature and fire an event to notify that a change occurred
         var feature = this.features_[i];
         var oldVal = feature.get(name);
         feature.set(name, this['value']);
-        setFeatureStyle(feature);
+        os.style.setFeatureStyle(feature);
         feature.dispatchFeatureEvent(os.data.FeatureEventType.VALUECHANGE, this['value'], oldVal);
       }
 
@@ -145,11 +144,7 @@ os.ui.data.AddColumnCtrl.prototype.finish = function() {
 
       var layer = os.MapContainer.getInstance().getLayer(this.source_.getId());
       if (layer) {
-        // get the exported version to ensure that the events are created in the main window
-        var notifyStyleFn = window['exports']['functions']['notifyStyleChange'];
-        if (notifyStyleFn) {
-          notifyStyleFn(layer, this.features_);
-        }
+        os.style.notifyStyleChange(layer, this.features_);
       }
     }
 
