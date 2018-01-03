@@ -1,6 +1,6 @@
 goog.require('os.bearing');
 goog.require('os.net.Request');
-goog.require('osasm.wait');
+goog.require('os.osasm.wait');
 
 
 describe('os.bearing', function() {
@@ -11,6 +11,8 @@ describe('os.bearing', function() {
   var precision = 8;
   var geodesic = os.interpolate.Method.GEODESIC;
   var rhumb = os.interpolate.Method.RHUMB;
+
+  os.osasm.wait.waitForIt();
 
   beforeEach(function() {
     if (!os.bearing.Geomag) {

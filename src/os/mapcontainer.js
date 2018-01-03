@@ -1431,7 +1431,7 @@ os.MapContainer.prototype.initCesium_ = function() {
 
       var scene = this.olCesium_.getCesiumScene();
 
-      scene.globe.enableLighting = !!os.settings.get(os.config.DisplaySetting.ENABLE_LIGHTING, true);
+      scene.globe.enableLighting = !!os.settings.get(os.config.DisplaySetting.ENABLE_LIGHTING, false);
 
       // set the FOV to 45 degrees to match the desktop version
       scene.camera.frustum.fov = Cesium.Math.PI_OVER_FOUR;

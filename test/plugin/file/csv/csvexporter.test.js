@@ -1,9 +1,9 @@
-goog.require('os.Fields');
 goog.require('ol.Feature');
 goog.require('ol.geom.LineString');
 goog.require('ol.geom.Point');
+goog.require('os.Fields');
+goog.require('os.osasm.wait');
 goog.require('plugin.file.csv.CSVExporter');
-goog.require('osasm.wait');
 
 
 describe('plugin.file.csv.CSVExporter', function() {
@@ -11,6 +11,8 @@ describe('plugin.file.csv.CSVExporter', function() {
   var lineFeature;
   var pointFeature;
   var polygonFeature;
+
+  os.osasm.wait.waitForIt();
 
   beforeEach(function() {
     lineFeature = new ol.Feature(new ol.geom.LineString([[12, 34], [56, 78]]));
