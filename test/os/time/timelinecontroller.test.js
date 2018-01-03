@@ -104,24 +104,36 @@ describe('os.time.TimelineController', function() {
     var runtime = 500;
     var fps = 10;
 
+    var old = controller.getFps();
     var clock = lolex.install();
+    goog.Timer.defaultTimerObject = clock;
     controller.setFps(fps);
+    expect(controller.animationTimer_.timerObject_).toBe(clock);
     controller.play();
     clock.tick(runtime);
     expect(getDispatchEventCallCount(os.time.TimelineEventType.SHOW)).toBeGreaterThan((fps * runtime / 1000) - 2);
     clock.uninstall();
+    goog.Timer.defaultTimerObject = window;
+    controller.setFps(old);
+    expect(controller.animationTimer_.timerObject_).toBe(window);
   });
 
   it('Playing with higher fps should fire more os.time.TimelineEventType.SHOW event for each frame', function() {
     var runtime = 500;
     var fps = 20;
 
+    var old = controller.getFps();
     var clock = lolex.install();
+    goog.Timer.defaultTimerObject = clock;
     controller.setFps(fps);
+    expect(controller.animationTimer_.timerObject_).toBe(clock);
     controller.play();
     clock.tick(runtime);
     expect(getDispatchEventCallCount(os.time.TimelineEventType.SHOW)).toBeGreaterThan((fps * runtime / 1000) - 2);
     clock.uninstall();
+    goog.Timer.defaultTimerObject = window;
+    controller.setFps(old);
+    expect(controller.animationTimer_.timerObject_).toBe(window);
   });
 
   it('adding range should fire range changed event', function() {
