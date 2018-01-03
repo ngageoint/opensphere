@@ -22,7 +22,7 @@ os.ui.datetime.wheelDateDirective = function() {
     scope: {
       'date': '=',
       'disable': '=',
-      'required': '=',
+      'isRequired': '=',
       'blurOnSelect': '=?'
     },
     templateUrl: os.ROOT + 'views/datetime/wheeldate.html',

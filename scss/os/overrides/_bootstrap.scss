@@ -332,7 +332,15 @@ td > input {
 
 .modal {
   background-color: rgba(46, 50, 54, 0);
+  max-height: 100vh !important; // force all modals to fit in the view vertically.
+  overflow-y: auto; // if the modal content does overflow the viewport, handle it.
   z-index: 100001;
+}
+
+@media (max-height: 800px) {
+  .modal:not(.window), .modal.fade.in {
+    top: 0;
+  }
 }
 
 .modal-header {

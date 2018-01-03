@@ -113,12 +113,18 @@ os.ui.FeatureInfoCtrl.prototype.disposeInternal = function() {
 /**
  * Handle value change events by updating the table.
  * @param {os.data.FeatureEvent} event
+ * @suppress {checkTypes} To allow access to feature['id'].
  */
 os.ui.FeatureInfoCtrl.prototype.onValueChange = function(event) {
-  this.updateGeometry();
-  this.updateProperties();
+  if (event && this.scope) {
+    var feature = /** @type {ol.Feature|undefined} */ (this.scope['feature']);
+    if (feature && feature['id'] === event['id']) {
+      this.updateGeometry();
+      this.updateProperties();
 
-  os.ui.apply(this.scope);
+      os.ui.apply(this.scope);
+    }
+  }
 };
 
 

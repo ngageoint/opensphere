@@ -46,11 +46,8 @@ goog.inherits(os.ui.filter.RuleExpression, os.ui.filter.Expression);
  * @type {Array.<os.ui.filter.op.Rule>}
  */
 os.ui.filter.RuleExpression.OPS = [
-  new os.ui.filter.op.Rule('EqualTo', 'equal to', '='),
-  new os.ui.filter.op.Rule('LessThan', 'less than', '<'),
-  new os.ui.filter.op.Rule('LessThanOrEqualTo', 'less than or equal to', '<='),
-  new os.ui.filter.op.Rule('GreaterThan', 'greater than', '>'),
-  new os.ui.filter.op.Rule('GreaterThanOrEqualTo', 'greater than or equal to', '>=')
+  new os.ui.filter.op.Rule('GreaterThanOrEqualTo', 'at least', '>='),
+  new os.ui.filter.op.Rule('LessThanOrEqualTo', 'at most', '<=')
 ];
 
 

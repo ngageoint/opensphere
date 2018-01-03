@@ -466,6 +466,8 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
     $element.resizable(resizeConfig);
   }
 
+  $element.css('overflow-y', 'unset');
+
   $element.css('left', $scope['x'] + 'px');
   $element.css('top', $scope['y'] + 'px');
   $element.css('width', $scope['width'] + 'px');
