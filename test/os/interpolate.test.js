@@ -3,14 +3,14 @@ goog.require('ol.geom.LineString');
 goog.require('ol.geom.MultiPoint');
 goog.require('ol.geom.Point');
 goog.require('os.interpolate');
-goog.require('osasm.wait');
+goog.require('os.osasm.wait');
 
 describe('os.interpolate', function() {
   // The accuracy of the calls should be tested in the opensphere-asm project itself.
   // We're just going to test whether it exists and is setting the fields/coords we
   // expect on the feature.
 
-  osasm.wait.waitForIt();
+  os.osasm.wait.waitForIt();
 
   it('should not interpolate points', function() {
     os.interpolate.enabled_ = true;

@@ -2,7 +2,7 @@ goog.require('ol.Feature');
 goog.require('os.feature');
 goog.require('os.mock');
 goog.require('os.source.Vector');
-goog.require('osasm.wait');
+goog.require('os.osasm.wait');
 
 
 describe('os.feature', function() {
@@ -19,7 +19,7 @@ describe('os.feature', function() {
     return true;
   };
 
-  osasm.wait.waitForIt();
+  os.osasm.wait.waitForIt();
 
   it('should auto detect and apply mappings on features', function() {
     // use a local mapping manager for this test
