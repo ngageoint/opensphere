@@ -35,20 +35,21 @@ os.bearing.BearingSettingsKeys = {
 
 
 /**
- * The geomagnetic model of the earth. Used to calculate useful geomagnetic stuff.
- * @type {Geomag}
+ * A function that takes a lat, lon, altitude, and date and returns magnetic
+ * field details for that date and time (such as declination).
+ * @type {?GeoMagFunction}
+ * @private
  */
-os.bearing.Geomag = null;
+os.bearing.geomag_ = null;
 
 
 /**
  * Loads the geomagnetic model.
  */
 os.bearing.loadGeomag = function() {
-  if (!os.bearing.Geomag) {
+  if (!os.bearing.geomag_) {
     var url = os.ROOT + os.settings.get(os.bearing.BearingSettingsKeys.COF_URL);
-    var request = new os.net.Request();
-    request.setUri(url);
+    var request = new os.net.Request(url);
     request.listenOnce(goog.net.EventType.SUCCESS, os.bearing.onGeomag);
     request.listenOnce(goog.net.EventType.ERROR, os.bearing.onGeomag);
     request.load();
@@ -63,8 +64,8 @@ os.bearing.loadGeomag = function() {
 os.bearing.onGeomag = function(event) {
   if (event.type === goog.net.EventType.SUCCESS) {
     var response = /** @type {os.net.Request} */ (event.target).getResponse();
-    var geomag = new Geomag(/** @type {string} */ (response));
-    os.bearing.Geomag = geomag;
+    var wmm = cof2Obj(/** @type {string} */ (response));
+    os.bearing.geomag_ = geoMagFactory(wmm);
   }
 
   goog.dispose(event.target);
@@ -72,35 +73,54 @@ os.bearing.onGeomag = function(event) {
 
 
 /**
+ * @param {!ol.Coordinate} coord The coordinate
+ * @param {!Date} date The date
+ * @return {!Object} The magnetic model details for the given time and location
+ */
+os.bearing.geomag = function(coord, date) {
+  if (os.bearing.geomag_) {
+    // ensure coordinate is in lat/lon
+    var c = ol.proj.toLonLat(coord, os.map.PROJECTION);
+
+    if (c) {
+      // convert altitude from meters to feet
+      return os.bearing.geomag_(c[1], c[0], (c[2] || 0) * 3.28084, date);
+    }
+  }
+
+  return {};
+};
+
+
+/**
  * Gets the bearing between two points. Based on the current application setting, it will be the true north or magnetic
  * north version.
- * @param {ol.Coordinate} coord1 The starting coordinate
- * @param {ol.Coordinate} coord2 The ending coordinate
- * @param {os.interpolate.Method=} opt_method The method to use. Defaults to the user setting for interpolation method.
- * @param {Date=} opt_date Optional date, only useful for magnetic bearing calculation
+ * @param {!ol.Coordinate} coord1 The starting coordinate
+ * @param {!ol.Coordinate} coord2 The ending coordinate
+ * @param {!Date} date Optional date, only useful for magnetic bearing calculation
+ * @param {!os.interpolate.Method=} opt_method The method to use. Defaults to the user setting for interpolation method.
  * @return {number}
  */
-os.bearing.getBearing = function(coord1, coord2, opt_method, opt_date) {
+os.bearing.getBearing = function(coord1, coord2, date, opt_method) {
   opt_method = opt_method || os.interpolate.Method.GEODESIC;
 
   var bearing = opt_method === os.interpolate.Method.GEODESIC ? osasm.geodesicInverse(coord1, coord2).initialBearing :
       osasm.rhumbInverse(coord1, coord2).bearing;
-  return os.bearing.modifyBearing(bearing, coord1, opt_date);
+  return os.bearing.modifyBearing(bearing, coord1, date);
 };
 
 
 /**
  * Modifies a bearing by converting it to magnetic north (if applicable) and normalizing it.
- * @param {number} bearing The bearing to format
- * @param {ol.Coordinate} coord The coordinate at which the bearing is being calculated
- * @param {Date=} opt_date Optional date, only useful for magnetic bearing calculation
+ * @param {!number} bearing The bearing to format
+ * @param {!ol.Coordinate} coord The coordinate at which the bearing is being calculated
+ * @param {!Date} date Optional date, only useful for magnetic bearing calculation
  * @return {number} The formatted bearing
  */
-os.bearing.modifyBearing = function(bearing, coord, opt_date) {
+os.bearing.modifyBearing = function(bearing, coord, date) {
   var bearingType = os.settings.get(os.bearing.BearingSettingsKeys.BEARING_TYPE, os.bearing.BearingType.TRUE_NORTH);
-  if (bearingType == os.bearing.BearingType.MAGNETIC && os.bearing.Geomag) {
-    // calculate the magnetic declination value and subtract it from the true north bearing
-    var geomag = os.bearing.Geomag.calc(coord[1], coord[0], undefined, opt_date);
+  if (bearingType == os.bearing.BearingType.MAGNETIC && os.bearing.geomag_) {
+    var geomag = os.bearing.geomag(coord, date);
     bearing = bearing - geomag['dec'];
   }
 
@@ -110,7 +130,7 @@ os.bearing.modifyBearing = function(bearing, coord, opt_date) {
 
 /**
  * Gets a formatted bearing between two points. This appends a T (true) or M (magnetic) and the degree symbol.
- * @param {number} bearing The bearing to format
+ * @param {!number} bearing The bearing to format
  * @param {number=} opt_precision The precision to round to, defaults to 5
  * @return {string} String formatted version of the bearing.
  */
