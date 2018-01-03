@@ -5,10 +5,10 @@ goog.require('ol.geom.Point');
 goog.require('ol.geom.Polygon');
 goog.require('os.geo');
 goog.require('os.query');
-goog.require('osasm.wait');
+goog.require('os.osasm.wait');
 
 describe('os.geo', function() {
-  osasm.wait.waitForIt();
+  os.osasm.wait.waitForIt();
 
   it('should parse coordinates from DMS separated by space without delimiters or direction', function() {
     var result = os.geo.parseLatLon('103036 501545', undefined, 'DMS');
