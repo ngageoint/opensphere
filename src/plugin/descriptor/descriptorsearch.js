@@ -4,8 +4,11 @@ goog.require('goog.Promise');
 goog.require('goog.array');
 goog.require('goog.events.EventTarget');
 goog.require('goog.log');
+goog.require('os.net.JsonEncFormatter');
+goog.require('os.net.Request');
 goog.require('os.search.AbstractSearch');
 goog.require('os.search.IFacetedSearch');
+goog.require('os.search.IGeoSearch');
 goog.require('os.search.SearchEvent');
 goog.require('os.search.SearchEventType');
 goog.require('plugin.descriptor.DescriptorResult');
@@ -23,6 +26,7 @@ goog.require('plugin.descriptor.facet.Type');
  * @param {string} name
  * @extends {os.search.AbstractSearch}
  * @implements {os.search.IFacetedSearch}
+ * @implements {os.search.IGeoSearch}
  * @constructor
  */
 plugin.descriptor.DescriptorSearch = function(name) {
@@ -32,7 +36,7 @@ plugin.descriptor.DescriptorSearch = function(name) {
   this.type = plugin.descriptor.DescriptorSearch.ID;
 
   /**
-   * @type {Array<plugin.descriptor.DescriptorResult>}
+   * @type {!Array<plugin.descriptor.DescriptorResult>}
    * @private
    */
   this.results_ = [];
@@ -64,6 +68,7 @@ plugin.descriptor.DescriptorSearch = function(name) {
 };
 goog.inherits(plugin.descriptor.DescriptorSearch, os.search.AbstractSearch);
 os.implements(plugin.descriptor.DescriptorSearch, os.search.IFacetedSearch.ID);
+os.implements(plugin.descriptor.DescriptorSearch, os.search.IGeoSearch.ID);
 
 
 /**
@@ -114,7 +119,15 @@ plugin.descriptor.DescriptorSearch.prototype.cancel = function() {
  * @return {!Array<!os.data.IDataDescriptor>}
  */
 plugin.descriptor.DescriptorSearch.prototype.getDescriptors = function() {
-  return os.dataManager.getDescriptors();
+  var descriptors = os.dataManager.getDescriptors();
+
+  if (this.geoPayload) {
+    descriptors = descriptors.filter(function(d) {
+      return os.implements(d, os.ui.ogc.IOGCDescriptor.ID);
+    });
+  }
+
+  return descriptors;
 };
 
 
@@ -135,35 +148,72 @@ plugin.descriptor.DescriptorSearch.prototype.searchTerm = function(term, opt_sta
   this.results_.length = 0;
   this.searchTermFacet_.setTerm(term);
 
+  if (this.geoPayload) {
+    this.getGeoCounts().then(function(geoCounts) {
+      this.doSearch(term, opt_start, opt_pageSize, geoCounts);
+    }, undefined, this);
+  } else {
+    this.doSearch(term, opt_start, opt_pageSize);
+  }
+
+  return true;
+};
+
+
+/**
+ * @param {string} term
+ * @param {number=} opt_start
+ * @param {number=} opt_pageSize
+ * @param {Object=} opt_geoCounts
+ * @protected
+ */
+plugin.descriptor.DescriptorSearch.prototype.doSearch = function(term, opt_start, opt_pageSize, opt_geoCounts) {
   var descriptors = this.getDescriptors();
+
+  if (opt_geoCounts) {
+    descriptors = descriptors.filter(function(d) {
+      return /** @type {!os.ui.ogc.IOGCDescriptor} */ (d).getWfsName() in opt_geoCounts;
+    });
+  }
+
   var promises = [];
   var results = this.results_;
   var priority = this.getPriority();
 
-  if (descriptors) {
-    for (var i = 0, n = descriptors.length; i < n; i++) {
-      var d = descriptors[i];
+  for (var i = 0, n = descriptors.length; i < n; i++) {
+    var d = descriptors[i];
 
-      // ensure the provider is enabled
-      var provider = d.getDataProvider();
-      if (provider && !provider.getEnabled()) {
-        continue;
+    // ensure the provider is enabled
+    var provider = d.getDataProvider();
+    if (provider && !provider.getEnabled()) {
+      continue;
+    }
+
+    var maxGeoCount = 0;
+    if (opt_geoCounts) {
+      for (var key in opt_geoCounts) {
+        maxGeoCount = Math.max(opt_geoCounts[key], maxGeoCount);
       }
+    }
 
-      var result = this.testFacets(d);
-      var onResult = function(score) {
-        if (score) {
-          // add result
-          score = priority + score / 100;
-          results.push(new plugin.descriptor.DescriptorResult(d, score));
-        }
-      };
+    // if no term/facets are applied but geo search is enabled, add descriptors without a score
+    var isGeoOnly = !term && !!maxGeoCount && !goog.object.getCount(this.appliedFacets_);
 
-      if (result instanceof goog.Promise) {
-        promises.push(result.then(onResult));
-      } else {
-        onResult(result);
+    var result = this.testFacets(d);
+    var onResult = function(score) {
+      if (score || isGeoOnly) {
+        // add result
+        var count = opt_geoCounts ? opt_geoCounts[d.getWfsName()] : undefined;
+        var countScore = count ? (2 * count / maxGeoCount) : 0;
+        score = priority + countScore + score / 100;
+        results.push(new plugin.descriptor.DescriptorResult(d, score, count));
       }
+    };
+
+    if (result instanceof goog.Promise) {
+      promises.push(result.then(onResult));
+    } else {
+      onResult(result);
     }
   }
 
@@ -172,17 +222,67 @@ plugin.descriptor.DescriptorSearch.prototype.searchTerm = function(term, opt_sta
   });
 
   if (promises.length) {
-    var self = this;
     goog.Promise.all(promises).then(function(value) {
-      self.dispatchEvent(new os.search.SearchEvent(os.search.SearchEventType.SUCCESS,
-           self.term, os.search.pageResults(results, opt_start, opt_pageSize), results.length));
-    });
+      this.dispatchEvent(new os.search.SearchEvent(os.search.SearchEventType.SUCCESS,
+           this.term, os.search.pageResults(results, opt_start, opt_pageSize), results.length));
+    }, undefined, this);
   } else {
     this.dispatchEvent(new os.search.SearchEvent(os.search.SearchEventType.SUCCESS,
          this.term, os.search.pageResults(results, opt_start, opt_pageSize), results.length));
   }
+};
 
-  return true;
+
+/**
+ * Get counts for each layer in the current geo query.
+ * @return {!goog.Promise}
+ * @protected
+ */
+plugin.descriptor.DescriptorSearch.prototype.getGeoCounts = function() {
+  var url = /** @type {string} */ (os.settings.get('hackathon.layerElasticUrl', ''));
+  if (url) {
+    var request = new os.net.Request();
+    request.setUri(url);
+    request.setMethod(os.net.Request.METHOD_POST);
+    request.setDataFormatter(new os.net.JsonEncFormatter(this.geoPayload));
+    request.setHeader('Accept', 'application/json, text/plain, */*');
+
+    return request.getPromise().then(this.handleGeoResult, undefined, this);
+  }
+
+  return goog.Promise.resolve();
+};
+
+
+/**
+ * Handle result from the layer index.
+ * @param {string|undefined} response The server response.
+ * @return {!goog.Promise}
+ * @protected
+ */
+plugin.descriptor.DescriptorSearch.prototype.handleGeoResult = function(response) {
+  var geoCounts;
+
+  if (response) {
+    try {
+      var respData = /** @type {Object} */ (JSON.parse(response));
+      if (respData) {
+        var buckets = goog.object.getValueByKeys(respData, ['aggregations', 'byType', 'buckets']);
+        if (buckets) {
+          geoCounts = {};
+
+          for (var i = 0; i < buckets.length; i++) {
+            var bucket = buckets[i];
+            geoCounts[bucket['key']] = bucket['hits']['value'];
+          }
+        }
+      }
+    } catch (e) {
+      // intentional fall-through
+    }
+  }
+
+  return goog.Promise.resolve(geoCounts);
 };
 
 
@@ -332,5 +432,87 @@ plugin.descriptor.DescriptorSearch.prototype.testFacets = function(descriptor) {
     });
   } else {
     return onResults();
+  }
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.descriptor.DescriptorSearch.prototype.supportsGeoDistance = function() {
+  return false;
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.descriptor.DescriptorSearch.prototype.supportsGeoExtent = function() {
+  return false;
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.descriptor.DescriptorSearch.prototype.supportsGeoShape = function() {
+  return true;
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.descriptor.DescriptorSearch.prototype.setGeoDistance = function(center, distance) {
+  // not supported
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.descriptor.DescriptorSearch.prototype.setGeoExtent = function(extent, opt_center) {
+  // not supported
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.descriptor.DescriptorSearch.prototype.setGeoShape = function(shape) {
+  if (shape) {
+    this.geoPayload = {
+      'query': {
+        'bool': {
+          'must': {
+            'match_all': {}
+          },
+          'filter': {
+            'geo_shape': {
+              'bbox': {
+                'shape': shape,
+                'relation': 'intersects'
+              }
+            }
+          }
+        }
+      },
+      'aggs': {
+        'byType': {
+          'terms': {
+            'field': 'layer.keyword'
+          },
+          'aggs': {
+            'hits': {
+              'sum': {
+                'field': 'hitCount'
+              }
+            }
+          }
+        }
+      }
+    };
+  } else {
+    this.geoPayload = undefined;
   }
 };
