@@ -37,6 +37,14 @@ os.string.EMAIL = /^\s*[^@,; ]+@[^@,; ]+\.[^@,; ]+\s*(\s*,\s*[^@,; ]+@[^@,; ]+\.
 
 
 /**
+ * Regular expression to extract for emails from string
+ * @type {RegExp}
+ * @const
+ */
+os.string.EMAILS = /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi;
+
+
+/**
  * Tests if a string represents a boolean value
  * @param {string} str The string
  * @return {boolean} If the string represents a boolean value
