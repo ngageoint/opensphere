@@ -4,6 +4,8 @@ goog.require('goog.Promise');
 goog.require('goog.array');
 goog.require('goog.events.EventTarget');
 goog.require('goog.log');
+goog.require('os.alert.AlertEventSeverity');
+goog.require('os.alert.AlertManager');
 goog.require('os.net.JsonEncFormatter');
 goog.require('os.net.Request');
 goog.require('os.search.AbstractSearch');
@@ -149,9 +151,22 @@ plugin.descriptor.DescriptorSearch.prototype.searchTerm = function(term, opt_sta
   this.searchTermFacet_.setTerm(term);
 
   if (this.geoPayload) {
-    this.getGeoCounts().then(function(geoCounts) {
-      this.doSearch(term, opt_start, opt_pageSize, geoCounts);
-    }, undefined, this);
+    this.getGeoCounts().then(
+        function(geoCounts) {
+          this.doSearch(term, opt_start, opt_pageSize, geoCounts);
+        },
+        function() {
+          var supportContact = os.settings.get(['supportContact']);
+          os.alert.AlertManager.getInstance().sendAlert(
+              'Failed to search layers using Current View.' +
+                '<br/>HTTP response was at 400 or 500 level.' +
+                '<br/>Please contact <a href="mailto:' + supportContact + '">Support</a> for assistance.',
+              os.alert.AlertEventSeverity.ERROR,
+              this.log, 5, new goog.events.EventTarget());
+          this.doSearch(term, opt_start, opt_pageSize);
+        },
+        this
+    );
   } else {
     this.doSearch(term, opt_start, opt_pageSize);
   }
@@ -239,7 +254,7 @@ plugin.descriptor.DescriptorSearch.prototype.doSearch = function(term, opt_start
  * @protected
  */
 plugin.descriptor.DescriptorSearch.prototype.getGeoCounts = function() {
-  var url = /** @type {string} */ (os.settings.get('hackathon.layerElasticUrl', ''));
+  var url = this.getGeoCountsUrl_();
   if (url) {
     var request = new os.net.Request();
     request.setUri(url);
@@ -247,7 +262,13 @@ plugin.descriptor.DescriptorSearch.prototype.getGeoCounts = function() {
     request.setDataFormatter(new os.net.JsonEncFormatter(this.geoPayload));
     request.setHeader('Accept', 'application/json, text/plain, */*');
 
-    return request.getPromise().then(this.handleGeoResult, undefined, this);
+    return request.getPromise().then(
+        this.handleGeoResult,
+        function(rejection) {
+          return goog.Promise.reject(rejection);
+        },
+        this
+    );
   }
 
   return goog.Promise.resolve();
@@ -273,7 +294,7 @@ plugin.descriptor.DescriptorSearch.prototype.handleGeoResult = function(response
 
           for (var i = 0; i < buckets.length; i++) {
             var bucket = buckets[i];
-            geoCounts[bucket['key']] = bucket['hits']['value'];
+            geoCounts[bucket['key']] = bucket['sumBy']['value'];
           }
         }
       }
@@ -456,7 +477,7 @@ plugin.descriptor.DescriptorSearch.prototype.supportsGeoExtent = function() {
  * @inheritDoc
  */
 plugin.descriptor.DescriptorSearch.prototype.supportsGeoShape = function() {
-  return true;
+  return !goog.isNull(this.getGeoCountsUrl_());
 };
 
 
@@ -481,11 +502,18 @@ plugin.descriptor.DescriptorSearch.prototype.setGeoExtent = function(extent, opt
  */
 plugin.descriptor.DescriptorSearch.prototype.setGeoShape = function(shape) {
   if (shape) {
+    var currentTimeRange = os.time.TimelineController.getInstance().getCurrentTimeRange();
     this.geoPayload = {
       'query': {
         'bool': {
           'must': {
-            'match_all': {}
+            'range': {
+              'dateString': {
+                'gte': currentTimeRange.getStart().toString(),
+                'lte': currentTimeRange.getEnd().toString(),
+                'format': 'epoch_millis'
+              }
+            }
           },
           'filter': {
             'geo_shape': {
@@ -500,10 +528,11 @@ plugin.descriptor.DescriptorSearch.prototype.setGeoShape = function(shape) {
       'aggs': {
         'byType': {
           'terms': {
-            'field': 'layer.keyword'
+            'field': 'layer.keyword',
+            'size': 1000
           },
           'aggs': {
-            'hits': {
+            'sumBy': {
               'sum': {
                 'field': 'hitCount'
               }
@@ -515,4 +544,15 @@ plugin.descriptor.DescriptorSearch.prototype.setGeoShape = function(shape) {
   } else {
     this.geoPayload = undefined;
   }
+};
+
+
+/**
+ * Get the URL to use to perform layers geo query
+ * @return {?string}
+ * @private
+ */
+plugin.descriptor.DescriptorSearch.prototype.getGeoCountsUrl_ = function() {
+  var layerLookupIndexUrl = os.settings.get('gfb.elastic.layerLookupIndexUrl', null);
+  return goog.isString(layerLookupIndexUrl) ? layerLookupIndexUrl : null;
 };
