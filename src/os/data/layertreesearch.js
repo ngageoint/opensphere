@@ -114,14 +114,14 @@ os.data.LayerTreeSearch.prototype.fillListFromSearch = function(list) {
 
 /**
  * Creates groupings from layer id which have the same prefix: <providerId>#<sourceId>#
- * @param {?Array.<!os.structs.ITreeNode>} results
+ * @param {?Array<!os.structs.ITreeNode>} results
  * @param {!os.ui.slick.SlickTreeNode} parent
  * @private
  */
 os.data.LayerTreeSearch.prototype.makeGroups_ = function(results, parent) {
   if (results && results.length > 1) {
-    var idBuckets = /** @type {!Object.<string, !Array.<!os.structs.ITreeNode>>} */
-        (goog.array.bucket(results, this.getNodeGroup_));
+    var idBuckets = /** @type {!Object<string, !Array<!os.structs.ITreeNode>>} */
+        (goog.array.bucket(results, os.data.LayerTreeSearch.getNodeGroup_));
     results.length = 0;
 
     for (var id in idBuckets) {
@@ -174,7 +174,7 @@ os.data.LayerTreeSearch.prototype.makeGroups_ = function(results, parent) {
     i = label.indexOf('(');
 
     /**
-     * @type {Array.<string|number>}
+     * @type {Array<string|number>}
      */
     var counts = label.substring(i).split(/[^0-9]+/);
     label = label.substring(0, i);
@@ -204,11 +204,11 @@ os.data.LayerTreeSearch.prototype.makeGroups_ = function(results, parent) {
 /**
  * @param {!os.structs.ITreeNode} node
  * @param {number} index
- * @param {Array.<!os.structs.ITreeNode>} array
+ * @param {!IArrayLike<!os.structs.ITreeNode>} array
  * @return {string}
  * @private
  */
-os.data.LayerTreeSearch.prototype.getNodeGroup_ = function(node, index, array) {
+os.data.LayerTreeSearch.getNodeGroup_ = function(node, index, array) {
   var id = node.getId().split(os.ui.data.BaseProvider.ID_DELIMITER);
   id.pop();
 

@@ -8,6 +8,7 @@ goog.require('os.object');
 goog.require('os.source.PropertyChange');
 goog.require('os.style');
 goog.require('os.style.label');
+goog.require('os.ui.FeatureEditCtrl');
 goog.require('os.xml');
 
 
@@ -106,15 +107,24 @@ plugin.im.action.feature.LabelAction.prototype.execute = function(items) {
       // update label fields on the feature if there is at least one valid label config defined
       if (labels.length > 0) {
         // get the existing feature config or create a new one
-        var featureConfig = /** @type {Object|undefined} */ (item.get(os.style.StyleType.FEATURE)) || {};
+        var featureConfig = /** @type {Array|Object|undefined} */ (item.get(os.style.StyleType.FEATURE)) || {};
 
         // apply label config
-        featureConfig[os.style.StyleField.LABELS] = labels;
-        featureConfig[os.style.StyleField.LABEL_COLOR] = labelColor;
-        featureConfig[os.style.StyleField.LABEL_SIZE] = labelSize;
+        if (goog.isArray(featureConfig)) {
+          for (var j = 0; j < featureConfig.length; j++) {
+            featureConfig[j][os.style.StyleField.LABELS] = labels;
+            featureConfig[j][os.style.StyleField.LABEL_COLOR] = labelColor;
+            featureConfig[j][os.style.StyleField.LABEL_SIZE] = labelSize;
+          }
+        } else {
+          featureConfig[os.style.StyleField.LABELS] = labels;
+          featureConfig[os.style.StyleField.LABEL_COLOR] = labelColor;
+          featureConfig[os.style.StyleField.LABEL_SIZE] = labelSize;
+        }
 
-        // save the feature config to the feature
+        // save the feature config(s) to the feature, and persist the label config to the feature
         item.set(os.style.StyleType.FEATURE, featureConfig, true);
+        os.ui.FeatureEditCtrl.persistFeatureLabels(item);
       }
 
       // if a custom column was configured, set the value on the feature

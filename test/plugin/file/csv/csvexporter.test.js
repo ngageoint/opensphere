@@ -1,9 +1,9 @@
-goog.require('os.Fields');
 goog.require('ol.Feature');
 goog.require('ol.geom.LineString');
 goog.require('ol.geom.Point');
+goog.require('os.Fields');
+goog.require('os.osasm.wait');
 goog.require('plugin.file.csv.CSVExporter');
-goog.require('osasm.wait');
 
 
 describe('plugin.file.csv.CSVExporter', function() {

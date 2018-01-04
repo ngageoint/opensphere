@@ -1,8 +1,8 @@
 goog.require('ol.Feature');
 goog.require('os.feature');
 goog.require('os.mock');
+goog.require('os.osasm.wait');
 goog.require('os.source.Vector');
-goog.require('osasm.wait');
 
 
 describe('os.feature', function() {

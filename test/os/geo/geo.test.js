@@ -4,8 +4,8 @@ goog.require('ol.geom.MultiPolygon');
 goog.require('ol.geom.Point');
 goog.require('ol.geom.Polygon');
 goog.require('os.geo');
+goog.require('os.osasm.wait');
 goog.require('os.query');
-goog.require('osasm.wait');
 
 describe('os.geo', function() {
   it('should parse coordinates from DMS separated by space without delimiters or direction', function() {

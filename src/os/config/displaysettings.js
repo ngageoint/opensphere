@@ -158,8 +158,12 @@ os.config.DisplaySettingsCtrl = function($scope) {
    */
   this['fogDensity'] = density / os.olcs.MAX_FOG_DENSITY;
 
+  /**
+   * If Cesium sunlight is enabled.
+   * @type {boolean}
+   */
+  this['sunlightEnabled'] = /** @type {boolean} */ (os.settings.get(os.config.DisplaySetting.ENABLE_LIGHTING, false));
 
-  this['sunlightEnabled'] = /** @type {boolean} */ (os.settings.get(os.config.DisplaySetting.ENABLE_LIGHTING, true));
   $scope.$watch('display.fogEnabled', this.updateFog.bind(this));
   $scope.$watch('display.fogDensity', this.updateFog.bind(this));
 

@@ -1,3 +1,4 @@
+goog.require('os.state.v2.TimeState');
 goog.require('os.time.TimelineController');
 goog.require('os.ui.timeline.AbstractTimelineCtrl');
 goog.require('os.xml');

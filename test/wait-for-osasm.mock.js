@@ -1,11 +1,9 @@
-goog.provide('osasm.wait');
+goog.provide('os.osasm.wait');
 
-osasm.wait.waitForIt = function() {
+if (!window.osasm || !window.osasm.geodesicDirect) {
   beforeEach(function() {
     waitsFor(function() {
-      return !!window.osasm;
-    }, 3000);
+      return !!window.osasm && !!osasm.geodesicDirect;
+    }, 'osasm to load');
   });
-};
-
-osasm.wait.waitForIt();
+}

@@ -1,6 +1,6 @@
-goog.require('os.im.mapping.MGRSMapping');
 goog.require('ol.Feature');
-goog.require('osasm.wait');
+goog.require('os.im.mapping.MGRSMapping');
+goog.require('os.osasm.wait');
 
 describe('os.im.mapping.MGRSMapping', function() {
   it('should test MGRS position strings correctly', function() {

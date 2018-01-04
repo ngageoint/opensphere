@@ -3,7 +3,7 @@ goog.require('ol.geom.LineString');
 goog.require('ol.geom.MultiPoint');
 goog.require('ol.geom.Point');
 goog.require('os.interpolate');
-goog.require('osasm.wait');
+goog.require('os.osasm.wait');
 
 describe('os.interpolate', function() {
   // The accuracy of the calls should be tested in the opensphere-asm project itself.

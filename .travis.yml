@@ -1,9 +1,4 @@
 language: node_js
-sudo: required
-env:
-  global:
-  - secure: mdGhgx3VXG842UkOsHrAyFHKABKFKRrkbP0mVKQKMQQ3HW2q7tKfldFRIm2U6ozDga8AGMbcCy7lIPeP5MSAJVQwvQeUSrKGpzBm05yjC8nP3fiw1rSuGsvmxzPAkVgA5opLkvDo3RBOKXicxjW5kBHLAnLMtsXkh+JuumEAX/DNXpgBbgIyfs5TYxnzHgcZQTkuWy/L6GlS9O6wKYOTAlLvDetSZJVZw6ZIkp66NJbNaS5CLpX80rPTAXVlxn8iYnPy3xujp/bKgjMRspS/0OtsMVn/0QVoA+qrX3pOpmcwKsfu3v7WLguZ61JYQTxlGWKo8Oj7l5pDRWAIX8lXw02Gg9YaAsAeZ4PPTrP2b9mHr6JXpUeUgzrdagiF26lAvtU9LV1XGBZ7GOuRzZ6PB47ryI+jkEMLxByk8QMQBjpRFDfCn3+t1ankYXkJNEE0zlwK4fxIHIfPrXqRMau3KFCpKxb97n4QvvF36GGdOEzxW9si7y6QQhFoLGwlEAoABqpW/Wr05Zshqr5a5vSjx/7R00S6DOar607nfCHZC25bYL+oKTQIEG845GbampuHmd/1m9kzhh7M3Cs3v66QN09jM7vYCHEUv5t+eIc+BJlOJcB5F5n8N0oDR4f78BuekUQqvCV+9BdxejlODM2VFQgJQKVv6NDqe1+dPx8Ak4I=
-  - secure: NRUeGhV1Idxhz6hYJ1O0EgfTmAwZbLNoeX2/PPNrZC+ydkLkmtDJJbfMh9bK8QZI/td5M/PhGK1liiCqn7/hGaZoon0Zc866DufkbLIFoxAZKyi5YwVbtGTzsDtHmNYDKliHpp6oM+PlVRe9zC0kO/q/7F3FiZ4l0uOF9yWmePswb7ZstkgyZg7JeUlNR9kPURKVPvRqSYgRfU0EBkhcXdB8KJ4q0b1pnkhekAiHroopER7DvcCR6SGYNk8DopKiDpZPXQ5Su3waOA6Gi8xBOn2lETrjhHu1+/c9Z1Hg33QrYeoBLPaOvQp7mESONduEvIpcJVTAQ2VYS1rWHY2fiVRG7Ej6tJ/fnAGvEPMGYph80zoRiSLboZmPc/uJCZijcb0IID/KbMAfXgtr4m3wCH8jkYfvTFur/JHD81+CYbs5/tp3JVrxMT17b46WapjQ3L9wfYOPQxD78VD5GNo+jGV//FCMCY3qsoEx763MJiM+y+k3v5H4yVEdH0aam9Qpkqze/nCd6gC9W21zHE/qt1vPx3qHYMa81lX06bZocxzp+3U8G5zqSliZmqZQSe5tDo5wMI6AoyWITqxMGK7PWS/BEIe0IWAxhyH3fLf3RHdOLrcH+IIkddzv2+LJK1YKiqm8MGyKrRMgpsGYKkdHcENRs8ZDlCqHBb1iHvN0EDo=
 cache:
   directories:
   - "~/.npm"
@@ -15,13 +10,8 @@ os:
 - linux
 addons:
   chrome: stable
-before_script:
-- export DISPLAY=:99.0
-- sh -e /etc/init.d/xvfb start
-- sleep 3
 script:
-# ensure this is run with bash and not something else
-- bash -c 'npm run build'
+- npm run build
 - npm run test
 branches:
   except:
