@@ -67,26 +67,28 @@ function populateCheckInfo(doSpin) {
   }
   var ul = document.getElementById('checks');
   if (ul) { // do each check and add the result
-    append(ul, 'Canvas render - draws graphics like the map', typeof (Modernizr) != 'undefined' && Modernizr.canvas);
+    append(ul, 'Canvas render - draws graphics like the map',
+        typeof (Modernizr) != 'undefined' && Modernizr.canvas);
+    append(ul, 'Cross-Origin Resource Sharing - allows retrieving resources from other domains',
+        typeof (Modernizr) != 'undefined' && Modernizr.cors);
+    append(ul, 'Flexbox - used for layout and making things pretty',
+        typeof (Modernizr) != 'undefined' && Modernizr.flexbox);
+    append(ul, 'IndexedDB - allows data to be stored in local browser database',
+        typeof (Modernizr) != 'undefined' && Modernizr.indexeddb);
     append(ul, 'Local storage - stores settings & caches images',
         typeof (Modernizr) != 'undefined' && Modernizr.localstorage);
-    append(ul, 'svg render - draws 2D vectors like the legend and timeline',
+    append(ul, 'SVG render - draws 2D vectors like the legend and timeline',
         typeof (Modernizr) != 'undefined' && Modernizr.svg);
-    append(ul, 'webworkers - allows tasks to run in the background',
+    append(ul, 'Webworkers - allows tasks to run in the background',
         typeof (Modernizr) != 'undefined' && Modernizr.webworkers);
-    append(ul, 'indexedDB - allows data to be stored in local browser database',
-        typeof (Modernizr) != 'undefined' && Modernizr.indexeddb);
-    append(ul, 'flexbox - used for layout and making things pretty',
-        typeof (Modernizr) != 'undefined' && Modernizr.flexbox);
   }
   var result = document.getElementById('report');
   if (result) {
     var report = 'Unsupported Browser!';
-    if (checkCompat()) {
-      if (checkVersion()) {
-        report = 'Supported Browser!';
-      } else {
-        report = 'Compatible Browser!';
+    if (checkVersion()) {
+      report = 'Supported Browser!';
+      if (!checkCompat()) {
+        report += ' <small><strong>(required features may be disabled!)</strong></small>';
       }
     }
     result.innerHTML = report;
@@ -100,7 +102,7 @@ function populateCheckInfo(doSpin) {
  */
 function checkCompat() {
   return typeof (Modernizr) != 'undefined' && Modernizr.canvas && Modernizr.localstorage && Modernizr.svg &&
-      Modernizr.webworkers && Modernizr.flexbox;
+      Modernizr.webworkers && Modernizr.flexbox && Modernizr.indexeddb && Modernizr.cors;
 }
 
 
@@ -189,27 +191,22 @@ function setContactInfo() {
     var browserPage = parsed['admin']['browserPage'];
   }
 
-  var minSupportInfo = '<strong>Minimum supported browsers:</strong>' +
+  var minSupportInfo = '<strong>Recommended browsers:</strong>' +
           '<ul>' +
-          '<li>Google Chrome version 29</li>' +
-          '<li>Mozilla Firefox version 28</li>' +
+          '<li>Google Chrome version 35+</li>' +
+          '<li>Mozilla Firefox version 31+</li>' +
           '</ul>' +
           '<p>If you do not have one of these browsers installed, contact your local IT department for help.</p>' +
           '<a href="' + browserPage + '" class="btn btn-danger">Browser Download</a> <br> <br>';
 
-  if (!checkCompat()) {
-    if (checkVersion()) {
-      setWarn('Your browser has been configured to disable features required by this application.',
-          'Please enable those features or contact your IT department for support.');
-    } else {
-      setWarn(minSupportInfo);
-    }
+  if (!checkCompat() && checkVersion()) {
+    setWarn('<em>Your browser has been configured to disable features required by this application.</em> ' +
+      'Please enable those features or contact your IT department for support.',
+        '<a href="' + browserPage + '" class="btn btn-danger">Browser Download</a> <br> <br>');
+  } else if (checkVersion()) {
+    setWarn('');
   } else {
-    if (checkVersion()) {
-      setWarn('');
-    } else {
-      setWarn(minSupportInfo);
-    }
+    setWarn(minSupportInfo);
   }
   var browserInfo = document.getElementById('browserInfo');
   if (browserInfo && typeof (platform) != 'undefined') {

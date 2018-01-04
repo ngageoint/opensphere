@@ -7,6 +7,7 @@ goog.require('ol.geom.GeometryType');
 goog.require('ol.geom.LineString');
 goog.require('ol.geom.MultiLineString');
 goog.require('os.array');
+goog.require('os.extent');
 goog.require('os.geom.GeometryField');
 goog.require('os.mixin.geometry');
 
@@ -2332,6 +2333,9 @@ os.geo.splitOnDateLine = function(geometry) {
   } else if (geometry instanceof ol.geom.MultiLineString) {
     var resultCoordinates = os.geo.splitMultiLineOnDateLine_(geometry);
     result = os.geo.createLineFromSegments_(resultCoordinates, geometry.getLayout());
+  }
+  if (result instanceof ol.geom.Geometry) {
+    os.extent.getFunctionalExtent(result);
   }
 
   // mark as normalized so coordinates will not be modified further

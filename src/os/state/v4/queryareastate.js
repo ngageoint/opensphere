@@ -162,7 +162,8 @@ os.state.v4.QueryArea.prototype.remove = function(id) {
 
   if (id in os.state.v4.QueryArea.ADDED_) {
     var added = os.state.v4.QueryArea.ADDED_[id];
-    var toRemove = [];
+    var removeFeatures = [];
+    var removeEntries = [];
 
     for (var i = 0, n = added.length; i < n; i++) {
       var feature = added[i];
@@ -170,19 +171,21 @@ os.state.v4.QueryArea.prototype.remove = function(id) {
 
       for (var j = 0, m = entries.length; j < m; j++) {
         if (entries[j]['temp']) {
-          toRemove.push(entries[j]);
+          removeEntries.push(entries[j]);
         }
       }
 
       if (feature.get('temp')) {
-        am.remove(feature);
+        removeFeatures.push(feature);
       }
     }
 
-    if (toRemove.length) {
-      qm.removeEntriesArr(toRemove);
+    // the query entry remove must come before removing the area from the AreaManager
+    if (removeEntries.length) {
+      qm.removeEntriesArr(removeEntries);
     }
 
+    goog.array.forEach(removeFeatures, am.remove, am);
     delete os.state.v4.QueryArea.ADDED_[id];
   }
 };

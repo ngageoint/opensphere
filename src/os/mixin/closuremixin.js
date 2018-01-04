@@ -5,6 +5,7 @@
 
 goog.provide('os.mixin.closure');
 
+goog.require('goog.html.TrustedResourceUrl');
 goog.require('goog.object');
 
 
@@ -173,3 +174,16 @@ goog.object.unsafeClone = function(obj) {
 
   return obj;
 };
+
+
+/**
+ * Replace the trusted resource URL regexp. The original requires an absolute URL, which we cannot define at compile
+ * time since we often read these from settings.
+ *
+ * Removing this will require an alternative to `goog.net.jsloader.safeLoad`.
+ * @suppress {accessControls|const}
+ */
+os.mixin.replaceTrustedResourceUrl = function() {
+  goog.html.TrustedResourceUrl.BASE_URL_ = new RegExp('');
+};
+os.mixin.replaceTrustedResourceUrl();

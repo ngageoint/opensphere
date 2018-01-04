@@ -184,12 +184,9 @@ os.ui.buffer.BufferFormCtrl.prototype.updatePreview = function(opt_force) {
 
     if (this.scope && this.scope['config'] && (this.scope['config']['outside'] || this.scope['config']['inside'])) {
       var config = /** @type {!os.buffer.BufferConfig} */ (this.scope['config']);
-      var bufferFn = window['exports']['functions']['createBufferFromConfig'];
-      if (bufferFn) {
-        var features = bufferFn(config, true);
-        if (features && features.length > 0) {
-          this.previewAreas_ = os.MapContainer.getInstance().addFeatures(features, os.buffer.PREVIEW_STYLE);
-        }
+      var features = os.buffer.createFromConfig(config, true);
+      if (features && features.length > 0) {
+        this.previewAreas_ = os.MapContainer.getInstance().addFeatures(features, os.buffer.PREVIEW_STYLE);
       }
 
       this.previewFailed_ = !this.previewAreas_ || !this.previewAreas_.length;

@@ -28,10 +28,6 @@
                 is-required="anydate.dateType != 'notime' && !anydate.startUnknown">
             </date-time>
           </div>
-          <div class="checkbox inline" data-ng-show="anydate.dateType == 'range'">
-            <input type="checkbox" data-ng-model="anydate.startUnknown" data-ng-disabled="disabled">
-            None/Unknown
-          </div>
         </div>
         <span class="help-inline" data-ng-show="!anydate.startDate && !anydate.startUnknown">Required!</span>
       </div>
@@ -46,10 +42,6 @@
             <date-time class="date-time" data-value="anydate.endDate" x-disabled="anydate.endUnknown || disabled"
                 is-required="anydate.dateType == 'range' && !anydate.endUnknown">
             </date-time>
-          </div>
-          <div class="checkbox inline">
-            <input type="checkbox" data-ng-model="anydate.endUnknown" data-ng-disabled="disabled">
-            None/Unknown
           </div>
         </div>
         <span class="help-inline" data-ng-show="!anydate.endDate && !anydate.endUnknown">Required!</span>

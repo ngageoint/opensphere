@@ -224,7 +224,7 @@
     "crossfilter2": "^1.4.0-alpha.6",
     "d3": "^3.4.1",
     "font-awesome": "^4.6.3",
-    "google-closure-library": "^20161201.0.0",
+    "google-closure-library": "^20171203.0.0",
     "jquery": "^2.2.0",
     "jsts": "^1.5.0",
     "modernizr": "~3.3.x",
