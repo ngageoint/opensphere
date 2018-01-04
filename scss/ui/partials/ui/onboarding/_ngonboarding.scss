@@ -144,19 +144,19 @@
 }
 
 .onboarding-popover-header {
-	padding: 5px 10px;
+  padding: 5px 10px;
   border-bottom: 1px solid #eee;
   border-radius: 4px 4px 0px 0px;
 }
 
 .onboarding-popover-header.no-title {
-	padding: 5px 5px 0 0;
+  padding: 5px 5px 0 0;
   border-bottom: none;
   margin-bottom: 0;
 }
 
 .onboarding-popover-footer {
-	text-align: center;
+  text-align: center;
   padding: 5px 10px;
   border-radius: 0px 0px 4px 4px;
   display: block;
@@ -164,13 +164,13 @@
 }
 
 .onboarding-button-container {
-	float: right;
+  float: right;
   margin-top: 8px;
 }
 
 .onboarding-button-container .btn + .btn {
-	margin-bottom: 0;
-	margin-left: 5px;
+  margin-bottom: 0;
+  margin-left: 5px;
 }
 
 .onboarding-overlay {
@@ -186,13 +186,13 @@
 .onboarding-focus {
   z-index: 100000 !important;
   pointer-events: none;
-  -moz-transition:none !important;
-  -webkit-transition:none !important;
-  transition:none !important;
+  -moz-transition: none !important;
+  -webkit-transition: none !important;
+  transition: none !important;
 }
 
 .onboarding-step-info {
-	float: left;
+  float: left;
   font-size: 0.8em;
   font-style: italic;
 }
