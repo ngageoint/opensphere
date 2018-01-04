@@ -91,10 +91,9 @@ os.thread.Thread.prototype.isDeterminate = function() {
 
 /**
  * Handles timer tick
- * @param {goog.events.Event} e
  * @private
  */
-os.thread.Thread.prototype.onDelay_ = function(e) {
+os.thread.Thread.prototype.onDelay_ = function() {
   this.delay_.stop();
 
   try {
