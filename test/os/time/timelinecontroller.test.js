@@ -27,10 +27,11 @@ describe('os.time.TimelineController', function() {
     return result;
   };
 
-  var clock;
+  var clock = lolex.createClock();
   beforeEach(function() {
-    clock = lolex.install();
     goog.Timer.defaultTimerObject = clock;
+    clock.reset();
+    spyOn(goog, 'now').andReturn(clock.now);
 
     if (controller) {
       // Restore defautls
@@ -44,7 +45,7 @@ describe('os.time.TimelineController', function() {
 
   afterEach(function() {
     controller.stop();
-    clock.uninstall();
+    clock.reset();
     goog.Timer.defaultTimerObject = window;
   });
 
@@ -104,28 +105,34 @@ describe('os.time.TimelineController', function() {
     controller.stop();
     expect(controller.dispatchEvent).toHaveBeenCalledWith(os.time.TimelineEventType.STOP);
     expect(getDispatchEventCallCount(os.time.TimelineEventType.STOP)).toEqual(1);
-    console.log(controller.getSuppressShowEvents());
   });
 
   it('Playing timeline should fire os.time.TimelineEventType.SHOW event for each frame', function() {
     var runtime = 500;
     var fps = 10;
 
+    // eat this function since it starts a timer that we want to ignore
+    spyOn(os.settings, 'set');
+
+    expect(Object.keys(clock.timers).length).toBe(0);
     controller.setFps(fps);
-    expect(controller.animationTimer_.timerObject_).toBe(clock);
     controller.play();
+    expect(Object.keys(clock.timers).length).toBe(1);
     clock.tick(runtime);
     expect(getDispatchEventCallCount(os.time.TimelineEventType.SHOW)).toBeGreaterThan((fps * runtime / 1000) - 2);
-    console.log(controller.getSuppressShowEvents());
   });
 
   it('Playing with higher fps should fire more os.time.TimelineEventType.SHOW event for each frame', function() {
     var runtime = 500;
     var fps = 20;
 
+    // eat this function since it starts a timer that we want to ignore
+    spyOn(os.settings, 'set');
+
+    expect(Object.keys(clock.timers).length).toBe(0);
     controller.setFps(fps);
-    expect(controller.animationTimer_.timerObject_).toBe(clock);
     controller.play();
+    expect(Object.keys(clock.timers).length).toBe(1);
     clock.tick(runtime);
     expect(getDispatchEventCallCount(os.time.TimelineEventType.SHOW)).toBeGreaterThan((fps * runtime / 1000) - 2);
   });
