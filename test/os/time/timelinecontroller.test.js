@@ -27,7 +27,12 @@ describe('os.time.TimelineController', function() {
     return result;
   };
 
+  var clock = lolex.createClock();
   beforeEach(function() {
+    goog.Timer.defaultTimerObject = clock;
+    clock.reset();
+    spyOn(goog, 'now').andReturn(clock.now);
+
     if (controller) {
       // Restore defautls
       controller.clearAnimateRanges();
@@ -40,6 +45,8 @@ describe('os.time.TimelineController', function() {
 
   afterEach(function() {
     controller.stop();
+    clock.reset();
+    goog.Timer.defaultTimerObject = window;
   });
 
   it('should initialize the timeline controller', function() {
@@ -102,44 +109,32 @@ describe('os.time.TimelineController', function() {
 
   it('Playing timeline should fire os.time.TimelineEventType.SHOW event for each frame', function() {
     var runtime = 500;
-    var finished = false;
     var fps = 10;
+
+    // eat this function since it starts a timer that we want to ignore
+    spyOn(os.settings, 'set');
+
+    expect(Object.keys(clock.timers).length).toBe(0);
     controller.setFps(fps);
-    runs(function() {
-      controller.play();
-      setTimeout(function() {
-        finished = true;
-      }, runtime);
-    });
-
-    waitsFor(function() {
-      return finished;
-    }, 'Timeout waiting.');
-
-    runs(function() {
-      expect(getDispatchEventCallCount(os.time.TimelineEventType.SHOW)).toBeGreaterThan((fps * .5) - 2);
-    });
+    controller.play();
+    expect(Object.keys(clock.timers).length).toBe(1);
+    clock.tick(runtime);
+    expect(getDispatchEventCallCount(os.time.TimelineEventType.SHOW)).toBeGreaterThan((fps * runtime / 1000) - 2);
   });
 
   it('Playing with higher fps should fire more os.time.TimelineEventType.SHOW event for each frame', function() {
     var runtime = 500;
-    var finished = false;
     var fps = 20;
+
+    // eat this function since it starts a timer that we want to ignore
+    spyOn(os.settings, 'set');
+
+    expect(Object.keys(clock.timers).length).toBe(0);
     controller.setFps(fps);
-    runs(function() {
-      controller.play();
-      setTimeout(function() {
-        finished = true;
-      }, runtime);
-    });
-
-    waitsFor(function() {
-      return finished;
-    }, 'Timeout waiting.');
-
-    runs(function() {
-      expect(getDispatchEventCallCount(os.time.TimelineEventType.SHOW)).toBeGreaterThan((fps * .5) - 2);
-    });
+    controller.play();
+    expect(Object.keys(clock.timers).length).toBe(1);
+    clock.tick(runtime);
+    expect(getDispatchEventCallCount(os.time.TimelineEventType.SHOW)).toBeGreaterThan((fps * runtime / 1000) - 2);
   });
 
   it('adding range should fire range changed event', function() {
