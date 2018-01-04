@@ -81,6 +81,11 @@ goog.inherits(os.interaction.Measure, os.interaction.DrawPolygon);
  */
 os.interaction.Measure.nextId = 0;
 
+/**
+ * The decimal precision to use (number of digits after the decimal place)
+ * @type {number}
+ */
+os.interaction.Measure.numDecimalPlaces = 3;
 
 /**
  * @type {number}
@@ -367,13 +372,13 @@ os.interaction.Measure.prototype.getDistanceText_ = function(i, opt_noBearing) {
   var d = this.distances_[i];
   var coord = /** @type {ol.geom.Point} */ (this.waypoints_[i].getGeometry()).getCoordinates();
   var u = os.unit.UnitManager.getInstance();
-  var text = u.formatToBestFit('distance', d, 'm', u.getBaseSystem(), 3);
+  var text = u.formatToBestFit('distance', d, 'm', u.getBaseSystem(), os.interaction.Measure.numDecimalPlaces);
 
   var bearing = this.bearings_[i];
 
   if (bearing !== undefined && !opt_noBearing) {
     bearing = os.bearing.modifyBearing(bearing, coord);
-    var formattedBearing = os.bearing.getFormattedBearing(bearing);
+    var formattedBearing = os.bearing.getFormattedBearing(bearing, os.interaction.Measure.numDecimalPlaces);
     text += ' Bearing: ' + formattedBearing;
   }
 
@@ -420,7 +425,8 @@ os.interaction.Measure.prototype.onChange_ = function() {
       this.waypoints_[i].getText().setText(dist);
     }
     var um = os.unit.UnitManager.getInstance();
-    var totalDist = um.formatToBestFit('distance', this.getTotalDistance_(), 'm', um.getBaseSystem(), 3);
+    var totalDist = um.formatToBestFit('distance', this.getTotalDistance_(), 'm', um.getBaseSystem(),
+        os.interaction.Measure.numDecimalPlaces);
     this.waypoints_[n].getText().setText(totalDist);
 
     if (this.line2D) {
