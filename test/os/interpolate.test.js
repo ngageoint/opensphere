@@ -10,8 +10,6 @@ describe('os.interpolate', function() {
   // We're just going to test whether it exists and is setting the fields/coords we
   // expect on the feature.
 
-  os.osasm.wait.waitForIt();
-
   it('should not interpolate points', function() {
     os.interpolate.enabled_ = true;
     var point = new ol.Feature(new ol.geom.Point([0, 0]));

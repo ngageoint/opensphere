@@ -187,7 +187,7 @@ describe('os.command.SequenceCommand', function() {
 
     waitsFor(function() {
       return cmd.state === os.command.State.READY;
-    }, 600, 'command to revert');
+    }, 'command to revert');
 
     runs(function() {
       os.command.MockCommand.value = 0;
@@ -207,7 +207,7 @@ describe('os.command.SequenceCommand', function() {
 
     waitsFor(function() {
       return os.command.MockCommand.value == 3 && cmd.state !== os.command.State.EXECUTING;
-    }, 600, 'command to execute');
+    }, 'command to execute');
 
     runs(function() {
       expect(cmd.getCommands()[0].execute.calls.length).toBe(1);
@@ -231,7 +231,7 @@ describe('os.command.SequenceCommand', function() {
 
     waitsFor(function() {
       return cmd.state !== os.command.State.REVERTING;
-    }, 600, 'command to revert');
+    }, 'command to revert');
 
     runs(function() {
       expect(cmd.getCommands()[2].revert.calls.length).toBe(1);

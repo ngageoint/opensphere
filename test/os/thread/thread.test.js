@@ -1,11 +1,26 @@
+goog.require('mock.thread.Job');
 goog.require('os.thread.EventType');
 goog.require('os.thread.Thread');
-goog.require('mock.thread.Job');
 
 
 describe('os.thread.Thread', function() {
+  var clock = lolex.createClock();
+
+  beforeEach(function() {
+    goog.Timer.defaultTimerObject = clock;
+    clock.reset();
+    spyOn(goog, 'now').andReturn(clock.now);
+  });
+
+  afterEach(function() {
+    goog.Timer.defaultTimerObject = window;
+  });
+
   it('should execute properly', function() {
-    var job = new mock.thread.Job();
+    expect(goog.Timer.defaultTimerObject).toBe(clock);
+
+    var job = new mock.thread.Job(clock);
+    spyOn(job, 'executeNext').andCallThrough();
     var t = new os.thread.Thread(job);
 
     var count = {
@@ -22,25 +37,50 @@ describe('os.thread.Thread', function() {
     t.listen(os.thread.EventType.PROGRESS, listener);
     t.listen(os.thread.EventType.COMPLETE, listener);
 
-    runs(function() {
-      t.start();
-    });
+    expect(Object.keys(clock.timers).length).toBe(0);
+    t.start();
+    expect(Object.keys(clock.timers).length).toBe(1);
+    clock.next();
 
-    waitsFor(function() {
-      return count.threadComplete === 1;
-    }, 'thread start and completion');
+    expect(job.executeNext.calls.length).toBe(1);
+    expect(count.threadStart).toBe(1);
+    expect(count.threadProgress).toBe(1);
+    expect(count.threadComplete).toBe(0);
 
-    runs(function() {
-      expect(count.threadStart).toBe(1);
-      expect(count.threadProgress).toBe(3);
-      expect(count.threadComplete).toBe(1);
-      // job should not be disposed
-      expect(job.isDisposed()).toBe(false);
-    });
+    clock.next();
+
+    expect(job.executeNext.calls.length).toBe(2);
+    expect(count.threadStart).toBe(1);
+    expect(count.threadProgress).toBe(2);
+    expect(count.threadComplete).toBe(0);
+
+    clock.next();
+
+    expect(job.executeNext.calls.length).toBe(3);
+    expect(count.threadStart).toBe(1);
+    expect(count.threadProgress).toBe(3);
+    expect(count.threadComplete).toBe(1);
+
+    clock.next();
+
+    expect(job.executeNext.calls.length).toBe(3);
+    expect(count.threadStart).toBe(1);
+    expect(count.threadProgress).toBe(3);
+    expect(count.threadComplete).toBe(1);
+
+    expect(job.isDisposed()).toBe(false);
+    expect(t.isDisposed()).toBe(false);
+    t.dispose();
+    expect(job.isDisposed()).toBe(false);
+    expect(t.isDisposed()).toBe(true);
+    expect(Object.keys(clock.timers).length).toBe(0);
   });
 
   it('should stop when told', function() {
-    var job = new mock.thread.Job();
+    expect(goog.Timer.defaultTimerObject).toBe(clock);
+
+    var job = new mock.thread.Job(clock);
+    spyOn(job, 'executeNext').andCallThrough();
     var t = new os.thread.Thread(job);
 
     var count = {
@@ -57,19 +97,25 @@ describe('os.thread.Thread', function() {
     t.listen(os.thread.EventType.PROGRESS, listener);
     t.listen(os.thread.EventType.COMPLETE, listener);
 
-    runs(function() {
-      t.start();
-    });
+    expect(Object.keys(clock.timers).length).toBe(0);
+    t.start();
+    expect(Object.keys(clock.timers).length).toBe(1);
+    clock.next();
+    expect(job.executeNext.calls.length).toBe(1);
+    clock.next();
+    expect(job.executeNext.calls.length).toBe(2);
+    t.stop();
+    expect(Object.keys(clock.timers).length).toBe(0);
+    clock.next();
+    expect(job.executeNext.calls.length).toBe(2);
 
-    waitsFor(function() {
-      return count.threadProgress === 2;
-    }, 'thread to get going');
+    expect(count.threadStart).toBe(1);
+    expect(count.threadProgress).toBe(2);
+    expect(count.threadComplete).toBe(0);
 
-    runs(function() {
-      t.stop();
-      expect(count.threadStart).toBe(1);
-      expect(count.threadProgress).toBe(2);
-      expect(count.threadComplete).toBe(0);
-    });
+    // job should not be disposed
+    expect(job.isDisposed()).toBe(false);
+    job.dispose();
+    expect(Object.keys(clock.timers).length).toBe(0);
   });
 });
