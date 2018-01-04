@@ -97,6 +97,11 @@ os.ui.datetime.DateTimeCtrl = function($scope) {
     }
   });
 
+  $scope.$watch('isRequired', function(val, old) {
+    // If its disabled, not required. Otherwise, check if its required
+    $scope['required'] = $scope['disabled'] ? false : $scope['isRequired'];
+  });
+
   $scope.$on('reset', function(event, val) {
     if (val == this.scope_['value']) {
       var initialDate = new Date(this.scope_['value']);
