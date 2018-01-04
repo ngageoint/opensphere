@@ -322,7 +322,8 @@ os.interaction.Measure.prototype.cleanup = function() {
 os.interaction.Measure.prototype.end = function(mapBrowserEvent) {
   if (this.drawing) {
     var um = os.unit.UnitManager.getInstance();
-    var text = um.formatToBestFit('distance', this.getTotalDistance_(), 'm', um.getBaseSystem(), 3);
+    var text = um.formatToBestFit('distance', this.getTotalDistance_(), 'm', um.getBaseSystem(),
+        os.feature.measure.numDecimalPlaces);
 
     if (this.waypoints_) {
       var waypoint = new ol.style.Style({
@@ -367,13 +368,13 @@ os.interaction.Measure.prototype.getDistanceText_ = function(i, opt_noBearing) {
   var d = this.distances_[i];
   var coord = /** @type {ol.geom.Point} */ (this.waypoints_[i].getGeometry()).getCoordinates();
   var u = os.unit.UnitManager.getInstance();
-  var text = u.formatToBestFit('distance', d, 'm', u.getBaseSystem(), 3);
+  var text = u.formatToBestFit('distance', d, 'm', u.getBaseSystem(), os.feature.measure.numDecimalPlaces);
 
   var bearing = this.bearings_[i];
 
   if (bearing !== undefined && !opt_noBearing) {
     bearing = os.bearing.modifyBearing(bearing, coord);
-    var formattedBearing = os.bearing.getFormattedBearing(bearing);
+    var formattedBearing = os.bearing.getFormattedBearing(bearing, os.feature.measure.numDecimalPlaces);
     text += ' Bearing: ' + formattedBearing;
   }
 
@@ -420,7 +421,8 @@ os.interaction.Measure.prototype.onChange_ = function() {
       this.waypoints_[i].getText().setText(dist);
     }
     var um = os.unit.UnitManager.getInstance();
-    var totalDist = um.formatToBestFit('distance', this.getTotalDistance_(), 'm', um.getBaseSystem(), 3);
+    var totalDist = um.formatToBestFit('distance', this.getTotalDistance_(), 'm', um.getBaseSystem(),
+        os.feature.measure.numDecimalPlaces);
     this.waypoints_[n].getText().setText(totalDist);
 
     if (this.line2D) {
