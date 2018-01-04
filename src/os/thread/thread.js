@@ -1,6 +1,6 @@
 goog.provide('os.thread');
 goog.provide('os.thread.Thread');
-goog.require('goog.Timer');
+goog.require('goog.async.Delay');
 goog.require('goog.events.EventTarget');
 goog.require('goog.log');
 goog.require('goog.log.Logger');
@@ -26,11 +26,10 @@ os.thread.Thread = function(job) {
   this.job_ = job;
 
   /**
-   * @type {goog.Timer}
+   * @type {goog.async.Delay}
    * @private
    */
-  this.timer_ = new goog.Timer(5);
-  this.timer_.listen(goog.Timer.TICK, this.onTick_, false, this);
+  this.delay_ = new goog.async.Delay(this.onDelay_, 5, this);
 };
 goog.inherits(os.thread.Thread, goog.events.EventTarget);
 
@@ -50,8 +49,8 @@ os.thread.Thread.LOGGER_ = goog.log.getLogger('os.thread.Thread');
 os.thread.Thread.prototype.disposeInternal = function() {
   os.thread.Thread.superClass_.disposeInternal.call(this);
   this.job_ = null;
-  this.timer_.dispose();
-  this.timer_ = null;
+  this.delay_.dispose();
+  this.delay_ = null;
 };
 
 
@@ -59,7 +58,7 @@ os.thread.Thread.prototype.disposeInternal = function() {
  * Starts the thread
  */
 os.thread.Thread.prototype.start = function() {
-  this.timer_.start();
+  this.delay_.start();
   this.dispatchEvent(new os.thread.ThreadEvent(os.thread.EventType.START, this.job_));
 };
 
@@ -68,7 +67,7 @@ os.thread.Thread.prototype.start = function() {
  * Stops or pauses the thread. Processing may resume by calling <code>start()</code>.
  */
 os.thread.Thread.prototype.stop = function() {
-  this.timer_.stop();
+  this.delay_.stop();
   this.dispatchEvent(new os.thread.ThreadEvent(os.thread.EventType.STOP, this.job_));
 };
 
@@ -77,7 +76,7 @@ os.thread.Thread.prototype.stop = function() {
  * Terminates the thread and cleans up resources. Processing cannot resume.
  */
 os.thread.Thread.prototype.terminate = function() {
-  this.timer_.stop();
+  this.delay_.stop();
   this.dispatchEvent(new os.thread.ThreadEvent(os.thread.EventType.COMPLETE, this.job_));
 };
 
@@ -92,11 +91,10 @@ os.thread.Thread.prototype.isDeterminate = function() {
 
 /**
  * Handles timer tick
- * @param {goog.events.Event} e
  * @private
  */
-os.thread.Thread.prototype.onTick_ = function(e) {
-  this.timer_.stop();
+os.thread.Thread.prototype.onDelay_ = function() {
+  this.delay_.stop();
 
   try {
     var done = this.job_.executeNext();
@@ -105,7 +103,7 @@ os.thread.Thread.prototype.onTick_ = function(e) {
     if (done) {
       this.terminate();
     } else {
-      this.timer_.start();
+      this.delay_.start();
     }
   } catch (err) {
     if (!this.isDisposed()) {

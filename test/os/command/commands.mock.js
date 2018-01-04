@@ -3,10 +3,10 @@ goog.provide('os.command.AsyncMockCommandString');
 goog.provide('os.command.MockCommand');
 goog.provide('os.command.MockCommandString');
 
-goog.require('os.command.State');
 goog.require('goog.disposable.IDisposable');
 goog.require('goog.events.Event');
 goog.require('goog.events.EventTarget');
+goog.require('os.command.State');
 
 
 
@@ -70,7 +70,7 @@ os.command.AsyncMockCommand.prototype.execute = function() {
   me.state = os.command.State.EXECUTING;
   setTimeout(function() {
     me.onExecute();
-  }, 100);
+  }, 1000);
 
   return true;
 };
@@ -87,7 +87,7 @@ os.command.AsyncMockCommand.prototype.revert = function() {
   me.state = os.command.State.REVERTING;
   setTimeout(function() {
     me.onRevert();
-  }, 100);
+  }, 1000);
 
   return true;
 };
