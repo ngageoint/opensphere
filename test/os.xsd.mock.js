@@ -49,7 +49,7 @@ os.test.xsd.substituteImports = function(xsd, substutions) {
  * @return {goog.promise}
  */
 os.test.xsd.loadStateXsdFiles = function() {
-  var stateFileRoot = '/base/node_modules/opensphere-state-schema/src/main/xsd/';
+  var stateFileRoot = '/opensphere-state-schema/src/main/xsd/';
   var p = goog.Promise.withResolver();
 
   // retun the cached result, if it exists.
