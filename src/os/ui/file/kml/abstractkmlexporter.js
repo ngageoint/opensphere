@@ -512,7 +512,7 @@ os.ui.file.kml.AbstractKMLExporter.prototype.processFolder = function(element, i
  */
 os.ui.file.kml.AbstractKMLExporter.prototype.processPlacemark = function(element, item) {
   var styleId = this.getStyleId(item);
-  if (!goog.string.isEmptySafe(styleId)) {
+  if (!goog.string.isEmptyOrWhitespace(goog.string.makeSafe(styleId))) {
     os.xml.appendElementNS('styleUrl', this.kmlNS, element, '#' + styleId);
   }
 
@@ -567,7 +567,7 @@ os.ui.file.kml.AbstractKMLExporter.prototype.processPlacemark = function(element
           // strip out carriage returns, because screw windows
           val.replace(/\r/g, '');
 
-          if (!goog.string.isEmptySafe(val)) {
+          if (!goog.string.isEmptyOrWhitespace(goog.string.makeSafe(val))) {
             descEl = os.xml.appendElementNS('description', this.kmlNS, element);
 
             var cdata = this.doc.createCDATASection(val);
