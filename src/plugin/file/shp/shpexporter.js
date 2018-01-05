@@ -303,7 +303,7 @@ plugin.file.shp.SHPExporter.prototype.parseColumns = function() {
             'name': column['name'],
             'field': column['field']
           };
-          if (columns[j]['visible'] && !goog.string.isEmptySafe(colNameField['name'])) {
+          if (columns[j]['visible'] && !goog.string.isEmptyOrWhitespace(goog.string.makeSafe(colNameField['name']))) {
             this.parseColumn_(item, colNameField);
           }
         }
@@ -315,7 +315,7 @@ plugin.file.shp.SHPExporter.prototype.parseColumns = function() {
             'name': column,
             'field': column
           };
-          if (!goog.string.isEmptySafe(colNameField['name'])) {
+          if (!goog.string.isEmptyOrWhitespace(goog.string.makeSafe(colNameField['name']))) {
             this.parseColumn_(item, colNameField);
           }
         }

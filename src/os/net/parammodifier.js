@@ -91,9 +91,9 @@ os.net.ParamModifier.prototype.setParam = function(param) {
  * @inheritDoc
  */
 os.net.ParamModifier.prototype.modify = function(uri) {
-  goog.asserts.assert(!goog.string.isEmptySafe(this.param_),
+  goog.asserts.assert(!goog.string.isEmptyOrWhitespace(goog.string.makeSafe(this.param_)),
       'The parameter for modifier ' + this.getId() + ' was not set. Request will not load.');
-  goog.asserts.assert(!goog.string.isEmptySafe(this.replaceTerm_),
+  goog.asserts.assert(!goog.string.isEmptyOrWhitespace(goog.string.makeSafe(this.replaceTerm_)),
       'The replacement term for modifier ' + this.getId() + ' was not set. Request will not load.');
   goog.asserts.assert(goog.isDefAndNotNull(this.replacement_),
       'The replacement for modifier ' + this.getId() + ' was not set. Request will not load.');

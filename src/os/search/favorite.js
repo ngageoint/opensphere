@@ -28,7 +28,8 @@ os.search.Favorite = function(name, uri, title, opt_type) {
  */
 os.search.Favorite.fromBookmark = function(bookmark, opt_type) {
   if (bookmark) {
-    var uri = goog.string.isEmptySafe(bookmark['key']) ? bookmark['key2'] : bookmark['key'];
+    var uri = goog.string.isEmptyOrWhitespace(goog.string.makeSafe(bookmark['key'])) ?
+        bookmark['key2'] : bookmark['key'];
     return new os.search.Favorite(bookmark['value'], uri, uri, opt_type);
   }
   return null;

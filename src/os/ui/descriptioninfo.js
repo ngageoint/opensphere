@@ -63,7 +63,7 @@ os.ui.DescriptionInfoCtrl = function($scope, $element) {
   this.element_ = $element;
 
   var sanitized = os.ui.sanitize(this.scope_.description || '');
-  if (!goog.string.isEmptySafe(sanitized)) {
+  if (!goog.string.isEmptyOrWhitespace(goog.string.makeSafe(sanitized))) {
     // force anchor tags to launch a new tab
     sanitized = sanitized.replace(/<a /g, '<a target="_blank" ');
 
