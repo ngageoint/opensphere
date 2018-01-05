@@ -50,6 +50,9 @@
         "/google-closure-library/",
         "/openlayers/",
         "/ol-cesium/"
+      ],
+      "jscomp_off": [
+        "missingOverride"
       ]
     }
   },
