@@ -22,6 +22,7 @@ goog.require('ol.Feature');
 goog.require('ol.geom.Point');
 goog.require('os.im.action');
 goog.require('os.im.action.FilterActionEntry');
+goog.require('os.instanceOf');
 goog.require('os.ol.canvas');
 goog.require('os.ui.Module');
 goog.require('os.ui.filter.ui.EditFiltersCtrl');
@@ -98,9 +99,9 @@ plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.showActionPreview = 
 
   for (var i = 0; i < this['actions'].length; i++) {
     var curAction = this['actions'][i]['action'];
-    if (curAction instanceof plugin.im.action.feature.StyleAction) {
+    if (curAction['id'] == 'featureStyleAction') {
       this.buildStylePreview(curAction);
-    } else if (curAction instanceof plugin.im.action.feature.LabelAction) {
+    } else if (curAction['id'] == 'featureLabelAction') {
       this.buildLabelPreview(curAction);
     }
   }
