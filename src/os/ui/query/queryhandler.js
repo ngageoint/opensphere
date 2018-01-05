@@ -403,7 +403,7 @@ os.ui.query.QueryHandler.prototype.wrap = function(filter, order, excludes, grou
 
       result = this.exclusionFormatter.wrapMultiple(result);
     }
-  } else if (this.filterFormatter && !goog.string.isEmptySafe(filter)) {
+  } else if (this.filterFormatter && !goog.string.isEmptyOrWhitespace(goog.string.makeSafe(filter))) {
     // don't do this if filter is an empty string, otherwise this will add an empty group
     result += this.filterFormatter.wrap(filter, group);
   }

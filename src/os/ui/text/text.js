@@ -11,7 +11,7 @@ goog.require('os.ui.window');
  * @param {string} text
  */
 os.ui.text.copy = function(text) {
-  if (text && !goog.string.isEmptySafe(text)) {
+  if (text && !goog.string.isEmptyOrWhitespace(goog.string.makeSafe(text))) {
     var textArea = document.createElement('textarea');
     textArea.style.top = '-2000px';
     textArea.style.left = '-2000px';
