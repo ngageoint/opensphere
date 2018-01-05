@@ -373,7 +373,7 @@ os.style.label.createOrUpdate = function(feature, config, opt_layerConfig) {
 
     if (labelConfigs) {
       var labelText = os.style.label.getLabelsText(feature, labelConfigs);
-      if (!goog.string.isEmptySafe(labelText)) {
+      if (!goog.string.isEmptyOrWhitespace(goog.string.makeSafe(labelText))) {
         var labels = labelText.split('\n');
 
         labelStyles =

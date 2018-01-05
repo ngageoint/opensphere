@@ -226,7 +226,9 @@ os.source.getExportFields = function(source, opt_internal) {
         //  - already in the list
         //  - are internal to opensphere (unless specified otherwise)
         //
-        if (column['visible'] && !goog.string.isEmptySafe(field) && !goog.array.contains(fields, field) &&
+        if (column['visible'] &&
+            !goog.string.isEmptyOrWhitespace(goog.string.makeSafe(field)) &&
+            !goog.array.contains(fields, field) &&
             (opt_internal || !os.feature.isInternalField(field))) {
           fields.push(field);
         }

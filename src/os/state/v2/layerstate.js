@@ -359,7 +359,8 @@ os.state.v2.LayerState.prototype.layerToXML = function(layer, options, opt_exclu
           break;
         case os.style.StyleField.LABELS:
           var labelColumn = /** @type {Array<os.style.label.LabelConfig>} */ (value);
-          if (bfs && labelColumn.length > 0 && !goog.string.isEmptySafe(labelColumn[0]['column'])) {
+          if (bfs && labelColumn.length > 0 &&
+              !goog.string.isEmptyOrWhitespace(goog.string.makeSafe(labelColumn[0]['column']))) {
             // Support legacy
             os.xml.appendElement(os.state.v2.LayerTag.LABEL_COLUMN, bfs, labelColumn[0]['column']);
 
@@ -374,7 +375,7 @@ os.state.v2.LayerState.prototype.layerToXML = function(layer, options, opt_exclu
           }
           break;
         case os.style.StyleField.LABEL_COLOR:
-          if (bfs && goog.isString(value) && !goog.string.isEmptySafe(value)) {
+          if (bfs && goog.isString(value) && !goog.string.isEmptyOrWhitespace(goog.string.makeSafe(value))) {
             var color = os.color.toHexString(value).replace(/^#/, '');
             os.xml.appendElement(os.state.v2.LayerTag.LABEL_COLOR, bfs, color);
           }
@@ -659,7 +660,8 @@ os.state.v2.LayerState.prototype.xmlToOptions = function(node) {
                   }
                   var source = this.getSource(node);
                   if (source && source.indexOf('MIST3D') > -1) {
-                    options[os.style.StyleField.SHOW_LABELS] = !goog.string.isEmptySafe(column);
+                    options[os.style.StyleField.SHOW_LABELS] =
+                        !goog.string.isEmptyOrWhitespace(goog.string.makeSafe(column));
                   }
                   break;
                 case os.state.v2.LayerTag.LABEL_COLUMNS:
