@@ -3,10 +3,11 @@ goog.provide('os.ui.measureButtonDirective');
 
 goog.require('os.interaction.Measure');
 goog.require('os.metrics.keys');
-goog.require('os.ui.MenuButtonCtrl');
 goog.require('os.ui.Module');
-goog.require('os.ui.action.Action');
-goog.require('os.ui.action.ActionManager');
+goog.require('os.ui.menu.Menu');
+goog.require('os.ui.menu.MenuButtonCtrl');
+goog.require('os.ui.menu.MenuItem');
+goog.require('os.ui.menu.MenuItemType');
 goog.require('os.ui.ol.interaction.AbstractDraw');
 
 /**
@@ -46,28 +47,19 @@ os.ui.Module.directive('measureButton', [os.ui.measureButtonDirective]);
  * Controller function for the nav-top directive
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element The element
- * @extends {os.ui.MenuButtonCtrl}
+ * @extends {os.ui.menu.MenuButtonCtrl}
  * @constructor
  * @ngInject
  */
 os.ui.MeasureButtonCtrl = function($scope, $element) {
   os.ui.MeasureButtonCtrl.base(this, 'constructor', $scope, $element);
-  this.menu = new os.ui.action.ActionManager();
-  this.menu.registerTempActionFunc(os.ui.MeasureButtonCtrl.modActions_.bind(this.menu));
+
+  this.menu = os.ui.MeasureButtonCtrl.MEASURE;
+  this.menu.listen(os.interpolate.Method.GEODESIC, this.onMeasureTypeChange_, false, this);
+  this.menu.listen(os.interpolate.Method.RHUMB, this.onMeasureTypeChange_, false, this);
+
   this.flag = 'measure';
   this.metricKey = os.metrics.keys.Map.MEASURE_TOGGLE;
-
-  var geodesic = new os.ui.action.Action(os.interpolate.Method.GEODESIC,
-      'Measure Geodesic', 'Measures the shortest distance between two points (variable bearing).',
-      'fa-square-o');
-  this.menu.addAction(geodesic);
-  this.menu.listen(geodesic.getEventType(), this.onMeasureTypeChange_, false, this);
-
-  var rhumb = new os.ui.action.Action(os.interpolate.Method.RHUMB,
-      'Measure Rhumb Line', 'Measures the path of constant bearing between two points.',
-      'fa-square-o');
-  this.menu.addAction(rhumb);
-  this.menu.listen(rhumb.getEventType(), this.onMeasureTypeChange_, false, this);
 
   this.scope['measuring'] = false;
 
@@ -88,7 +80,26 @@ os.ui.MeasureButtonCtrl = function($scope, $element) {
   os.interaction.Measure.method = /** @type {os.interpolate.Method} */ (
       os.settings.get(this.key_, os.interaction.Measure.method));
 };
-goog.inherits(os.ui.MeasureButtonCtrl, os.ui.MenuButtonCtrl);
+goog.inherits(os.ui.MeasureButtonCtrl, os.ui.menu.MenuButtonCtrl);
+
+
+/**
+ * @type {os.ui.menu.Menu<undefined>|undefined}
+ */
+os.ui.MeasureButtonCtrl.MEASURE = new os.ui.menu.Menu(new os.ui.menu.MenuItem({
+  type: os.ui.menu.MenuItemType.ROOT,
+  children: [{
+    label: 'Measure Geodesic',
+    eventType: os.interpolate.Method.GEODESIC,
+    tooltip: 'Measures the shortest distance between two points (variable bearing).',
+    beforeRender: os.ui.MeasureButtonCtrl.updateIcons
+  }, {
+    label: 'Measure Rhumb Line',
+    eventType: os.interpolate.Method.RHUMB,
+    tooltip: 'Measures the path of constant bearing between two points.',
+    beforeRender: os.ui.MeasureButtonCtrl.updateIcons
+  }]
+}));
 
 
 /**
@@ -163,7 +174,7 @@ os.ui.MeasureButtonCtrl.prototype.getMeasureInteraction_ = function() {
 
 
 /**
- * @param {os.ui.action.ActionEvent} evt The event from the menu
+ * @param {os.ui.menu.MenuEvent<Array<number>>} evt The event from the menu
  * @private
  */
 os.ui.MeasureButtonCtrl.prototype.onMeasureTypeChange_ = function(evt) {
@@ -174,13 +185,14 @@ os.ui.MeasureButtonCtrl.prototype.onMeasureTypeChange_ = function(evt) {
 
 
 /**
- * Modifies the checked state of the actions before the menu fires
- * @this {os.ui.action.ActionManager}
- * @private
+ * Helper function for changing icons.
+ * @this {os.ui.menu.MenuItem}
  */
-os.ui.MeasureButtonCtrl.modActions_ = function() {
-  this.getEnabledActions().forEach(function(a) {
-    a.setIcon(a.getEventType() === os.interaction.Measure.method ? 'fa-dot-circle-o' : 'fa-circle-o');
-  });
+os.ui.MeasureButtonCtrl.updateIcons = function() {
+  if (this.eventType === os.interaction.Measure.method) {
+    this.icons = ['<i class="fa fa-fw fa-dot-circle-o"></i>'];
+  } else {
+    this.icons = ['<i class="fa fa-fw fa-circle-o"></i>'];
+  }
 };
 
