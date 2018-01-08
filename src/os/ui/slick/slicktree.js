@@ -949,10 +949,10 @@ os.ui.slick.SlickTreeCtrl.prototype.doMove = function(rows, insertBefore) {
     } else {
       // Collapse all the data back down
       goog.array.forEach(data, function(row) {
-        if (!row.getParent()) {
+        if (!row.getParent() || (this.scope['showRoot'] && row === this.root_)) {
           unflatten.push(row);
         }
-      });
+      }, this);
     }
   } else {
     // Track the original insert position to rearrange the children
