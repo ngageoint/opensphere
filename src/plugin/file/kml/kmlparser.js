@@ -379,9 +379,9 @@ plugin.file.kml.KMLParser.prototype.loadExternalStyles = function() {
     var style = goog.dom.getTextContent(styles[i]);
 
     if (style) {
-      // remove the fragment
+      // remove the fragment, if url is incorrectly formatted, kml is bad and this url should be skipped
       var url = style.replace(/#.*/, '').trim();
-
+      url = encodeURI(url) === url ? url : undefined;
       if (url) {
         extStylesFound = true;
         goog.dom.setTextContent(styles[i], '#' + style.replace('#', '_'));
@@ -414,7 +414,8 @@ plugin.file.kml.KMLParser.prototype.loadExternalStyles = function() {
 plugin.file.kml.KMLParser.prototype.onExtStyleLoad = function(evt) {
   var req = /** @type {os.net.Request} */ (evt.target);
   var url = req.getUri().toString();
-  delete this.extStyles_[url];
+  var safeUrl = this.extStyles_[url] ? this.extStyles_[url] : this.extStyles_[decodeURI(url)];
+  console.log(delete this.extStyles_[safeUrl]);
 
   var resp = /** @type {string} */ (req.getResponse());
   req.dispose();
