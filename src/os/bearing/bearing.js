@@ -97,7 +97,7 @@ os.bearing.geomag = function(coord, date) {
  * north version.
  * @param {!ol.Coordinate} coord1 The starting coordinate
  * @param {!ol.Coordinate} coord2 The ending coordinate
- * @param {!Date} date Optional date, only useful for magnetic bearing calculation
+ * @param {!Date} date The date, only useful for magnetic bearing calculation
  * @param {!os.interpolate.Method=} opt_method The method to use. Defaults to the user setting for interpolation method.
  * @return {number}
  */

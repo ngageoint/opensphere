@@ -14,12 +14,9 @@ describe('os.bearing', function() {
   var rhumb = os.interpolate.Method.RHUMB;
 
   beforeEach(function() {
-    if (!os.bearing.Geomag) {
+    if (!os.bearing.geomag_) {
       runs(function() {
-        // load the model
-        var url = '/base/test/resources/WMM.COF';
-        var request = new os.net.Request();
-        request.setUri(url);
+        var request = new os.net.Request('/base/vendor/geomag/WMM.COF');
         request.listenOnce(goog.net.EventType.SUCCESS, os.bearing.onGeomag);
         request.listenOnce(goog.net.EventType.ERROR, os.bearing.onGeomag);
         request.load();
@@ -49,12 +46,11 @@ describe('os.bearing', function() {
   it('should get magnetic bearings correctly', function() {
     os.settings.set(os.bearing.BearingSettingsKeys.BEARING_TYPE, os.bearing.BearingType.MAGNETIC);
 
-    // this calculation seemed to vary sometimes... so use toBeCloseTo... maybe reinvestigate this in the future
-    expect(os.bearing.getBearing([5, 10], [15, 20], date)).toBeCloseTo(44.22244309187904, precision);
-    expect(os.bearing.getBearing([5, 10], [15, 20], date, rhumb)).toBeCloseTo(45.37388000911791, precision);
+    expect(os.bearing.getBearing([5, 10], [15, 20], date)).toBeCloseTo(44.222366214530524, precision);
+    expect(os.bearing.getBearing([5, 10], [15, 20], date, rhumb)).toBeCloseTo(45.37380313176939, precision);
 
-    expect(os.bearing.getBearing([-50, 80], [75, -60], date)).toBeCloseTo(112.16177561564162, precision);
-    expect(os.bearing.getBearing([-50, 80], [75, -60], date, rhumb)).toBeCloseTo(189.87237463643038, precision);
+    expect(os.bearing.getBearing([-50, 80], [75, -60], date)).toBeCloseTo(112.16118943404994, precision);
+    expect(os.bearing.getBearing([-50, 80], [75, -60], date, rhumb)).toBeCloseTo(189.87178845483868, precision);
   });
 
   it('should format bearings correctly', function() {
