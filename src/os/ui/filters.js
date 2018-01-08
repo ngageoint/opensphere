@@ -2,7 +2,6 @@ goog.provide('os.ui.FiltersCtrl');
 goog.provide('os.ui.filtersDirective');
 
 goog.require('os.MapContainer');
-goog.require('os.action.query.import');
 goog.require('os.command.SequenceCommand');
 goog.require('os.data.FilterTreeSearch');
 goog.require('os.defines');

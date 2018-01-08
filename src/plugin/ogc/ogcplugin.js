@@ -1,6 +1,5 @@
 goog.provide('plugin.ogc.OGCPlugin');
 
-goog.require('os.action.query.import');
 goog.require('os.data.DataManager');
 goog.require('os.data.ProviderEntry');
 goog.require('os.ogc');
