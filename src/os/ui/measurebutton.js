@@ -174,7 +174,7 @@ os.ui.MeasureButtonCtrl.prototype.getMeasureInteraction_ = function() {
 
 
 /**
- * @param {os.ui.menu.MenuEvent<Array<number>>} evt The event from the menu
+ * @param {os.ui.menu.MenuEvent<undefined>} evt The event from the menu
  * @private
  */
 os.ui.MeasureButtonCtrl.prototype.onMeasureTypeChange_ = function(evt) {
