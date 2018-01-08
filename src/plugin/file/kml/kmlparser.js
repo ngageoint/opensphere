@@ -414,8 +414,8 @@ plugin.file.kml.KMLParser.prototype.loadExternalStyles = function() {
 plugin.file.kml.KMLParser.prototype.onExtStyleLoad = function(evt) {
   var req = /** @type {os.net.Request} */ (evt.target);
   var url = req.getUri().toString();
-  var safeUrl = this.extStyles_[url] ? this.extStyles_[url] : this.extStyles_[decodeURI(url)];
-  console.log(delete this.extStyles_[safeUrl]);
+  var safeUrl = this.extStyles_[url] ? url : decodeURI(url);
+  delete this.extStyles_[safeUrl];
 
   var resp = /** @type {string} */ (req.getResponse());
   req.dispose();
