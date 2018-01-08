@@ -144,7 +144,8 @@ plugin.places.action.isTreeActionSupported_ = function(context) {
     var node = context[0];
     if (node instanceof plugin.file.kml.ui.KMLNode) {
       var pm = plugin.places.PlacesManager.getInstance();
-      var isPlacesNode = pm.getPlacesRoot() == node.getRoot();
+      var placesRoot = pm.getPlacesRoot().getRoot();
+      var isPlacesNode = placesRoot === node.getRoot();
       if (!isPlacesNode) {
         return false;
       }
@@ -158,7 +159,6 @@ plugin.places.action.isTreeActionSupported_ = function(context) {
         case plugin.places.action.EventType.EDIT_PLACEMARK:
           return !node.isFolder() && node.editable;
         case plugin.places.action.EventType.EXPORT:
-          var placesRoot = plugin.places.PlacesManager.getInstance().getPlacesRoot();
           return placesRoot != null && node.getRoot() == placesRoot;
         default:
           return node.isFolder();
@@ -429,7 +429,7 @@ plugin.places.action.canSaveToPlaces = function(context) {
     }
 
     if (context[0] instanceof plugin.file.kml.ui.KMLLayerNode) {
-      var kmlRoot = plugin.file.kml.ui.getKMLRoot(context[0]);
+      var kmlRoot = plugin.places.getPlacesRoot(context[0]);
       return kmlRoot != null && kmlRoot != rootNode;
     } else if (context[0] instanceof os.data.LayerNode) {
       var layer = /** @type {os.data.LayerNode} */ (context[0]).getLayer();
@@ -446,7 +446,7 @@ plugin.places.action.canSaveToPlaces = function(context) {
       }
     } else if (context[0] instanceof plugin.file.kml.ui.KMLNode) {
       var features = context[0].getFeatures();
-      return (context[0].getRoot() != rootNode) && (features.length > 0);
+      return (context[0].getRoot() != rootNode.getRoot()) && (features.length > 0);
     }
   } else if (os.instanceOf(context, os.source.Vector.NAME)) {
     // can launch a save dialog for a source
