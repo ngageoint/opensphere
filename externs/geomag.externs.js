@@ -6,20 +6,24 @@
  */
 
 
+/**
+ * Takes lat, lon, altitude, and a date and returns the magnetic field properties
+ * for that time and location.
+ *
+ * @typedef {function(!number, !number, !number, !Date):!Object}
+ */
+var GeoMagFunction;
 
 /**
- * @param {string} model
- * @constructor
+ * @param {string} cof The WMM.cof file
+ * @return {Object} The World Magnetic Model as an object
  */
-var Geomag = function(model) {};
-
+var cof2Obj = function(cof) {};
 
 /**
- * Calculates the geomagnetic information for a given place and time on earth.
- * @param {number} lat
- * @param {number} lon
- * @param {number=} opt_alt
- * @param {Date=} opt_date
- * @return {Object}
+ * @param {Object} wmm The World Magnetic Model
+ * @return {GeoMagFunction}
  */
-Geomag.prototype.calc = function(lat, lon, opt_alt, opt_date) {};
+var geoMagFactory = function(wmm) {};
+
+
