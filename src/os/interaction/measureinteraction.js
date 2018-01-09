@@ -371,9 +371,10 @@ os.interaction.Measure.prototype.getDistanceText_ = function(i, opt_noBearing) {
   var text = u.formatToBestFit('distance', d, 'm', u.getBaseSystem(), os.feature.measure.numDecimalPlaces);
 
   var bearing = this.bearings_[i];
+  var date = new Date(os.time.TimelineController.getInstance().getCurrent());
 
-  if (bearing !== undefined && !opt_noBearing) {
-    bearing = os.bearing.modifyBearing(bearing, coord);
+  if (bearing !== undefined && !opt_noBearing && coord) {
+    bearing = os.bearing.modifyBearing(bearing, coord, date);
     var formattedBearing = os.bearing.getFormattedBearing(bearing, os.feature.measure.numDecimalPlaces);
     text += ' Bearing: ' + formattedBearing;
   }

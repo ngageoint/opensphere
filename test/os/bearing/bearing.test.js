@@ -14,60 +14,54 @@ describe('os.bearing', function() {
   var rhumb = os.interpolate.Method.RHUMB;
 
   beforeEach(function() {
-    if (!os.bearing.Geomag) {
+    if (!os.bearing.geomag_) {
       runs(function() {
-        // load the model
-        var url = '/base/test/resources/WMM.COF';
-        var request = new os.net.Request();
-        request.setUri(url);
+        var request = new os.net.Request('/base/vendor/geomag/WMM.COF');
         request.listenOnce(goog.net.EventType.SUCCESS, os.bearing.onGeomag);
         request.listenOnce(goog.net.EventType.ERROR, os.bearing.onGeomag);
         request.load();
       });
 
       waitsFor(function() {
-        return !!os.bearing.Geomag;
+        return !!os.bearing.geomag_;
       });
     }
   });
 
   it('should get bearings correctly', function() {
-    expect(os.bearing.getBearing([5, 10], [15, 20])).toBeCloseTo(42.99295488831754, precision);
-    expect(os.bearing.getBearing([5, 10], [15, 20], rhumb)).toBeCloseTo(44.14439180550811, precision);
+    expect(os.bearing.getBearing([5, 10], [15, 20], date)).toBeCloseTo(42.99295488831754, precision);
+    expect(os.bearing.getBearing([5, 10], [15, 20], date, rhumb)).toBeCloseTo(44.14439180550811, precision);
 
-    expect(os.bearing.getBearing([-50, 80], [75, -60])).toBeCloseTo(72.0382868370632, precision);
-    expect(os.bearing.getBearing([-50, 80], [75, -60], rhumb)).toBeCloseTo(149.74888585793278, precision);
+    expect(os.bearing.getBearing([-50, 80], [75, -60], date)).toBeCloseTo(72.0382868370632, precision);
+    expect(os.bearing.getBearing([-50, 80], [75, -60], date, rhumb)).toBeCloseTo(149.74888585793278, precision);
   });
 
   it('should default to geodesic', function() {
-    var a = os.bearing.getBearing([5, 10], [15, 20]);
-    var b = os.bearing.getBearing([5, 10], [15, 20], geodesic);
+    var a = os.bearing.getBearing([5, 10], [15, 20], date);
+    var b = os.bearing.getBearing([5, 10], [15, 20], date, geodesic);
 
     expect(a).toBeCloseTo(b, 12);
   });
 
-  // see https://github.com/cmweiss/geomagJS/issues/4 for why these are disabled
-  xit('should get magnetic bearings correctly', function() {
+  it('should get magnetic bearings correctly', function() {
     os.settings.set(os.bearing.BearingSettingsKeys.BEARING_TYPE, os.bearing.BearingType.MAGNETIC);
 
-    // this calculation seemed to vary sometimes... so use toBeCloseTo... maybe reinvestigate this in the future
-    expect(os.bearing.getBearing([5, 10], [15, 20], undefined, date)).toBeCloseTo(44.22244309187904, precision);
-    expect(os.bearing.getBearing([5, 10], [15, 20], rhumb, date)).toBeCloseTo(45.37388000911791, precision);
+    expect(os.bearing.getBearing([5, 10], [15, 20], date)).toBeCloseTo(44.222366214530524, precision);
+    expect(os.bearing.getBearing([5, 10], [15, 20], date, rhumb)).toBeCloseTo(45.37380313176939, precision);
 
-    expect(os.bearing.getBearing([-50, 80], [75, -60], undefined, date)).toBeCloseTo(112.16177561564162, precision);
-    expect(os.bearing.getBearing([-50, 80], [75, -60], rhumb, date)).toBeCloseTo(189.87237463643038, precision);
+    expect(os.bearing.getBearing([-50, 80], [75, -60], date)).toBeCloseTo(112.16118943404994, precision);
+    expect(os.bearing.getBearing([-50, 80], [75, -60], date, rhumb)).toBeCloseTo(189.87178845483868, precision);
   });
 
   it('should format bearings correctly', function() {
     os.settings.set(os.bearing.BearingSettingsKeys.BEARING_TYPE, os.bearing.BearingType.TRUE_NORTH);
 
-    expect(os.bearing.modifyBearing(-150, [5, 10])).toBe(210);
-    expect(os.bearing.modifyBearing(-50, [5, 10])).toBe(310);
-    expect(os.bearing.modifyBearing(165, [5, 10])).toBe(165);
+    expect(os.bearing.modifyBearing(-150, [5, 10], date)).toBe(210);
+    expect(os.bearing.modifyBearing(-50, [5, 10], date)).toBe(310);
+    expect(os.bearing.modifyBearing(165, [5, 10], date)).toBe(165);
   });
 
-  // see https://github.com/cmweiss/geomagJS/issues/4 for why these are disabled
-  xit('should format magnetic bearings correctly', function() {
+  it('should format magnetic bearings correctly', function() {
     os.settings.set(os.bearing.BearingSettingsKeys.BEARING_TYPE, os.bearing.BearingType.MAGNETIC);
 
     expect(os.bearing.modifyBearing(-150, [5, 10], date)).toBeCloseTo(211.2, 1);
