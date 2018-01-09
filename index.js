@@ -200,7 +200,7 @@ const sharedResources = [
   {
     source: 'vendor/geomag',
     target: 'vendor/geomag',
-    scripts: ['geomag.min.js'],
+    scripts: ['cof2Obj.js', 'geomag.js'],
     files: ['WMM.COF']
   },
   {
