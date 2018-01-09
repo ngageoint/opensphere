@@ -237,3 +237,14 @@ plugin.places.saveFromSource = function(config) {
 
   os.commandStack.addCommand(cmd);
 };
+
+
+/**
+ * Gets the root node for places. Places are assumed to have only 1 document.
+ * @param {!plugin.file.kml.ui.KMLLayerNode} layerNode The layer node
+ * @return {plugin.file.kml.ui.KMLNode}
+ */
+plugin.places.getPlacesRoot = function(layerNode) {
+  var root = plugin.file.kml.ui.getKMLRoot(layerNode);
+  return root ? /** @type {plugin.file.kml.ui.KMLNode} */ (root.getChildren()[0]) : null;
+};
