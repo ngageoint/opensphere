@@ -22,24 +22,24 @@ describe('os.state.v4.TimeState', function() {
     var state = new os.state.v4.TimeState();
     var tlc = os.time.TimelineController.getInstance();
     // Ensure the timeline controler is initalized
-    var startDate = os.time.parseMoment('1970-01-01T00:16:39.999Z', [os.state.v2.TimeState.DATE_FORMAT], true);
-    var endDate = os.time.parseMoment('1974-03-15T02:21:41.010Z', [os.state.v2.TimeState.DATE_FORMAT], true);
+    var startDate = os.time.parseMoment('1970-01-01T00:16:39Z', [os.state.v4.TimeState.DATE_FORMAT], true);
+    var endDate = os.time.parseMoment('1974-03-15T02:21:41Z', [os.state.v4.TimeState.DATE_FORMAT], true);
     tlc.setRange(tlc.buildRange(startDate.valueOf(), endDate.valueOf()));
     tlc.setDuration('month');
     // Animate range
-    var animateStartDate = os.time.parseMoment('1971-01-01T00:16:39.999Z',
-        [os.state.v2.TimeState.DATE_FORMAT], true);
-    var animateEndDate = os.time.parseMoment('1973-03-15T02:21:41.010Z',
-        [os.state.v2.TimeState.DATE_FORMAT], true);
+    var animateStartDate = os.time.parseMoment('1971-01-01T00:16:39Z',
+        [os.state.v4.TimeState.DATE_FORMAT], true);
+    var animateEndDate = os.time.parseMoment('1973-03-15T02:21:41Z',
+        [os.state.v4.TimeState.DATE_FORMAT], true);
     var animateRange = new goog.math.Range(animateStartDate.valueOf(), animateEndDate.valueOf());
     tlc.clearAnimateRanges();
     tlc.addAnimateRange(animateRange);
 
     // Hold range
-    var holdStartDate = os.time.parseMoment('1971-03-01T00:16:39.999Z',
-        [os.state.v2.TimeState.DATE_FORMAT], true);
-    var holdEndDate = os.time.parseMoment('1971-06-12T01:15:11.010Z',
-        [os.state.v2.TimeState.DATE_FORMAT], true);
+    var holdStartDate = os.time.parseMoment('1971-03-01T00:16:39Z',
+        [os.state.v4.TimeState.DATE_FORMAT], true);
+    var holdEndDate = os.time.parseMoment('1971-06-12T01:15:11Z',
+        [os.state.v4.TimeState.DATE_FORMAT], true);
     var holdRange = new goog.math.Range(holdStartDate.valueOf(), holdEndDate.valueOf());
     // make sure this is empty bfeore the test.
     tlc.clearHoldRanges();
