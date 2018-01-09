@@ -7,10 +7,10 @@ const resolver = require('opensphere-build-resolver/utils');
 
 module.exports = function(config) {
   var closureFiles = helper.readManifest(path.resolve('.build', 'gcc-test-manifest'))
-    .filter(function(item) {
-      return item.indexOf('/src/core/debugutil.js') === -1 &&
-        item.indexOf('test/') !== 0;
-    });
+      .filter(function(item) {
+        return item.indexOf('/src/core/debugutil.js') === -1 &&
+          item.indexOf(__dirname + '/test/') !== 0;
+      });
 
   config.set({
     // base path, that will be used to resolve files and exclude
