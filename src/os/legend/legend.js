@@ -15,6 +15,7 @@ goog.require('ol.style.Text');
 goog.require('os.histo.NumericBinMethod');
 goog.require('os.implements');
 goog.require('os.legend.ILegendRenderer');
+goog.require('os.ol.canvas');
 goog.require('os.style');
 
 
@@ -603,7 +604,7 @@ os.legend.queueVectorConfig = function(config, options, label, offsetX, opt_useD
     style = os.legend.DASH_STYLE;
   } else if (os.style.ELLIPSE_REGEXP.test(config['shape'])) {
     var includeCenter = os.style.CENTER_LOOKUP[config['shape']];
-    geometry = os.legend.createEllipseGeometry(center, options.fontSize, includeCenter);
+    geometry = os.ol.canvas.createEllipseGeometry(center, options.fontSize, includeCenter);
 
     // scale the stroke width and center point size for ellipses, clamped within a reasonable range
     if (includeCenter) {
@@ -644,44 +645,6 @@ os.legend.createDashGeometry = function(center, size) {
   var yRadius = xRadius / 3;
   var extent = [center[0] - xRadius, center[1] - yRadius, center[0] + xRadius, center[1] + yRadius];
   return ol.geom.Polygon.fromExtent(extent);
-};
-
-
-/**
- * Create an ellipse geometry to render in the legend.
- * @param {!ol.Coordinate} center The center of the ellipse.
- * @param {number} size The ellipse size, in pixels.
- * @param {boolean=} opt_showCenter If the center point should be displayed.
- * @return {!(ol.geom.GeometryCollection|ol.geom.Polygon)} The ellipse geometry.
- */
-os.legend.createEllipseGeometry = function(center, size, opt_showCenter) {
-  var geometry;
-  var showCenter = !!opt_showCenter;
-
-  // ellipse interpolation assumes cartesian coordinates and adjusts based on the ellipsoid. reduce the center
-  // pixel coordinates drastically so the computation assumes we're near the equator and provides a clean ellipse.
-  //
-  // welcome to the legend, land of rendering hackery.
-  //
-  var factor = 10000;
-  var ellipseCenter = [center[0] / factor, center[1] / factor];
-
-  var a = size / 250;
-  var b = a * 0.66;
-  var points = os.geo.interpolateEllipse(ellipseCenter, a, b, -45);
-  for (var i = 0; i < points.length - 1; i++) {
-    points[i][0] = points[i][0] * factor;
-    points[i][1] = points[i][1] * factor;
-  }
-
-  var ellipse = new ol.geom.Polygon([points]);
-  if (showCenter) {
-    geometry = new ol.geom.GeometryCollection([ellipse, new ol.geom.Point(center)]);
-  } else {
-    geometry = ellipse;
-  }
-
-  return geometry;
 };
 
 
