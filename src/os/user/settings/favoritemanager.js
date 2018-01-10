@@ -53,13 +53,6 @@ os.user.settings.FavoriteManager = function() {
   this.manager = null;
 
   /**
-   * Url to manager
-   * @type {string}
-   * @private
-   */
-  this.managerLink_ = '';
-
-  /**
    * The key for this page
    * @type {string}
    * @private

@@ -1,0 +1,20 @@
+language: node_js
+cache:
+  directories:
+  - "~/.npm"
+notifications:
+  email: false
+node_js:
+- stable
+os:
+- linux
+addons:
+  chrome: stable
+script:
+- set -e
+- npm run build
+- npm run test
+- set +e
+branches:
+  except:
+  - "/^v\\d+\\.\\d+\\.\\d+$/"

@@ -215,11 +215,11 @@ os.ui.FeatureInfoCtrl.prototype.updateProperties = function() {
       var description = properties[os.data.RecordField.HTML_DESCRIPTION];
       if (!description) {
         description = /** @type {string|undefined} */ (goog.object.findValue(properties, function(val, key) {
-          return os.fields.DESC_REGEXP.test(key) && !goog.string.isEmptySafe(val);
+          return os.fields.DESC_REGEXP.test(key) && !goog.string.isEmptyOrWhitespace(goog.string.makeSafe(val));
         })) || '';
       }
 
-      if (!goog.string.isEmptySafe(description)) {
+      if (!goog.string.isEmptyOrWhitespace(goog.string.makeSafe(description))) {
         // force anchor tags to launch a new tab - we may want to instead just launch a new window for the entire
         // description
         description = description.replace(/<a /g, '<a target="_blank" ');

@@ -171,7 +171,7 @@ os.string.split = function(str, opt_removeSpaces, opt_precedence) {
     }
     result = delim ? trimmed.split(delim) : [trimmed];
     result = goog.array.filter(result, function(r) {
-      return !goog.string.isEmptySafe(r);
+      return !goog.string.isEmptyOrWhitespace(goog.string.makeSafe(r));
     });
   }
   return result || [];

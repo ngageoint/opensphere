@@ -2,7 +2,7 @@
 
 ## Setup
 
-Start by [forking](https://github.com/openlayers/openlayers/fork) the OpenSphere repository.
+Start by [forking](https://github.com/ngageoint/opensphere/fork) the OpenSphere repository.
 
 ### Prerequisites
 
@@ -12,6 +12,8 @@ Start by [forking](https://github.com/openlayers/openlayers/fork) the OpenSphere
 * Python (optional)
 
 Ensure that the executables `git`, `node`, and `java` are in your `PATH`.
+
+[Clone|https://help.github.com/articles/cloning-a-repository/] your repository, and change directory into the clone.
 
 Install the dependencies by running
 
@@ -32,7 +34,7 @@ If you are working on several plugins and config projects, you may end up with a
 
 ### Serving the application
 
-While not required, we highly recommend setting up nginx or Apache httpd to server up your workspace from your local machine. This will allow you to easily proxy remote servers and mock up services to develop against in addition to serving the application exactly as it will be served from production rather than accessing it via a file path in the browser or serving it with a node-based server.
+While not required, we highly recommend setting up nginx or Apache httpd to serve up your workspace from your local machine. This will allow you to easily proxy remote servers and mock up services to develop against in addition to serving the application exactly as it will be served from production rather than accessing it via a file path in the browser or serving it with a node-based server.
 
 ## The Build
 
@@ -145,5 +147,5 @@ Fixed Example:
     // template
     <span ng-show="ctrl.isPositive(value)">{{value}} is positive</span>
 
-Now it works in compiled mode! Note that UI templates is not the only place were bracket notation is useful. It is useful wherever you want to have the compiler skip minification.
+Now it works in compiled mode! Note that UI templates is not the only place where bracket notation is useful. It is useful wherever you want to have the compiler skip minification.
 

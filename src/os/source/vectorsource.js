@@ -676,7 +676,7 @@ os.source.Vector.prototype.getEmptyColumns = function() {
     for (var i = 0; i < features.length && empty.length > 0; i++) {
       var j = empty.length;
       while (j--) {
-        if (!goog.string.isEmptySafe(features[i].values_[empty[j]['field']])) {
+        if (!goog.string.isEmptyOrWhitespace(goog.string.makeSafe(features[i].values_[empty[j]['field']]))) {
           // if a value is encountered, remove the column so it's no longer considered
           empty.splice(j, 1);
         }

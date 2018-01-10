@@ -17,7 +17,7 @@ olcs.OLCesium.prototype.resizeTimeout;
 
 /**
  * @private
- * @suppress {accessControls|duplicate}
+ * @suppress {accessControls|duplicate|unusedPrivateMembers}
  */
 olcs.OLCesium.prototype.handleResize_ = function() {
   var width = this.canvas_.clientWidth;

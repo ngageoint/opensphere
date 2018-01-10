@@ -6,9 +6,11 @@ goog.require('os.thread.IThreadJob');
 /**
  * A mock job for testing threads
  * @implements {os.thread.IThreadJob}
+ * @param {?} clock The lolex clock
  * @constructor
  */
-mock.thread.Job = function() {
+mock.thread.Job = function(clock) {
+  this.clock = clock;
   this.loaded = 0;
   this.total = 3;
   this.disposed = false;
@@ -22,12 +24,8 @@ goog.inherits(mock.thread.Job, goog.Disposable);
  */
 mock.thread.Job.prototype.executeNext = function() {
   if (this.loaded < this.total) {
-    var s = goog.now();
-
-    while (goog.now() - s < 10) {
-      this.count++;
-    }
-
+    // pretend this takes 10ms
+    this.clock.setSystemTime(this.clock.now + 10);
     this.loaded++;
   }
 
