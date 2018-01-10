@@ -92,7 +92,8 @@ os.query.TemporalQueryManager.prototype.hasHandler = function(id) {
  * @param {os.query.TemporalHandler} handler The handler
  */
 os.query.TemporalQueryManager.prototype.registerHandler = function(id, handler) {
-  goog.asserts.assert(!goog.string.isEmptySafe(id), 'Cannot register handler with empty/null id!');
+  goog.asserts.assert(!goog.string.isEmptyOrWhitespace(goog.string.makeSafe(id)),
+      'Cannot register handler with empty/null id!');
   goog.asserts.assert(handler != null, 'Cannot register null handler (id = ' + id + ')');
 
   this.handlers_[id] = handler;

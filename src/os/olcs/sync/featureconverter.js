@@ -263,7 +263,7 @@ os.olcs.sync.FeatureConverter.prototype.wrapFillAndOutlineGeometries = function(
 os.olcs.sync.FeatureConverter.prototype.createLabels = function(feature, geometry, labels, context) {
   var allOptions = [];
   goog.array.forEach(labels, function(label) {
-    if (!goog.string.isEmptySafe(label.getText())) {
+    if (!goog.string.isEmptyOrWhitespace(goog.string.makeSafe(label.getText()))) {
       var options = /** @type {!Cesium.optionsLabelCollection} */ ({
         heightReference: this.getHeightReference(context.layer, feature, geometry)
       });

@@ -238,7 +238,8 @@ os.state.v4.BaseLayerState.prototype.load = function(obj, id) {
 os.state.v4.BaseLayerState.prototype.getLayerType_ = function(layer) {
   if (layer.getLayerOptions()) {
     var type = layer.getLayerOptions()['type'];
-    return goog.string.isEmptySafe(type) ? '' : /** @type {string} */ (layer.getLayerOptions()['type']);
+    return goog.string.isEmptyOrWhitespace(goog.string.makeSafe(type)) ?
+        '' : /** @type {string} */ (layer.getLayerOptions()['type']);
   }
   return '';
 };
@@ -467,7 +468,8 @@ os.state.v4.BaseLayerState.prototype.configKeyToXML = function(layerConfig, type
       break;
     case os.style.StyleField.LABELS:
       var labelColumn = /** @type {Array<os.style.label.LabelConfig>} */ (value);
-      if (bfs && labelColumn.length > 0 && !goog.string.isEmptySafe(labelColumn[0]['column'])) {
+      if (bfs && labelColumn.length > 0 &&
+          !goog.string.isEmptyOrWhitespace(goog.string.makeSafe(labelColumn[0]['column']))) {
         // New Multi column
         var labelColumns = os.xml.appendElement(os.state.v4.LayerTag.LABEL_COLUMNS, bfs);
         goog.array.forEach(labelColumn, function(label) {
@@ -479,7 +481,7 @@ os.state.v4.BaseLayerState.prototype.configKeyToXML = function(layerConfig, type
       }
       break;
     case os.style.StyleField.LABEL_COLOR:
-      if (bfs && goog.isString(value) && !goog.string.isEmptySafe(value)) {
+      if (bfs && goog.isString(value) && !goog.string.isEmptyOrWhitespace(goog.string.makeSafe(value))) {
         var color = os.color.toServerString(value);
         os.xml.appendElement(os.state.v4.LayerTag.LABEL_COLOR, bfs, color);
       }
@@ -879,7 +881,7 @@ os.state.v4.BaseLayerState.prototype.xmlToConfigKey = function(node, child, name
             }
             var source = this.getSource(node);
             if (source && source.indexOf('MIST3D') > -1) {
-              options[os.style.StyleField.SHOW_LABELS] = !goog.string.isEmptySafe(column);
+              options[os.style.StyleField.SHOW_LABELS] = !goog.string.isEmptyOrWhitespace(goog.string.makeSafe(column));
             }
             break;
           case os.state.v4.LayerTag.LABEL_COLUMNS:
@@ -1091,7 +1093,7 @@ os.state.v4.BaseLayerState.prototype.colorModeOptionsFromXml_ = function(node) {
     valElement = pairElement.querySelector(os.state.v4.LayerTag.COLOR_MODEL_VALUE);
     name = os.xml.getElementValueOrDefault(nameElement, null);
     value = os.xml.getElementValueOrDefault(valElement, null);
-    if (!goog.string.isEmptySafe(name)) {
+    if (!goog.string.isEmptyOrWhitespace(goog.string.makeSafe(name))) {
       result['manualColors'][name] = value;
     }
   }

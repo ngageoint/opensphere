@@ -284,7 +284,7 @@ os.metrics.Metrics.prototype.hasMetric_ = function(key, obj) {
  */
 os.metrics.Metrics.prototype.updateMetric = function(key, value) {
   try {
-    if (this.enabled_ && !goog.string.isEmptySafe(key)) {
+    if (this.enabled_ && !goog.string.isEmptyOrWhitespace(goog.string.makeSafe(key))) {
       // send to metric service, if defined.
       if (this.metricServiceProvider_) {
         // add on the app name so it's clear what app is being used
@@ -334,7 +334,7 @@ os.metrics.Metrics.prototype.recordClickEvent = function(args) {
     var element = args.target;
     var attr = element.attributes.getNamedItem('metric');
     var metricKey = attr ? attr.value : null;
-    if (goog.string.isEmptySafe(metricKey) && element.parentElement) {
+    if (goog.string.isEmptyOrWhitespace(goog.string.makeSafe(metricKey)) && element.parentElement) {
       attr = element.parentElement.attributes.getNamedItem('metric');
       metricKey = attr ? attr.value : null;
     }

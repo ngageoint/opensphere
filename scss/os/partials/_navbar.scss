@@ -33,6 +33,7 @@
 .nav-btn-group .nav-btn {
   &:first-child {
     @include border-radius(4px 0 0 4px);
+
     button {
       @include border-radius(2px 0 0 2px);
       margin-right: 0;
@@ -45,6 +46,7 @@
 
   &:last-child {
     @include border-radius(0 4px 4px 0);
+
     button {
       @include border-radius(0 2px 2px 0);
       margin-left: 0;
@@ -72,7 +74,7 @@
     border: 0;
     color: #fff;
     display: block;
-    font-family: 'Lucida Grande',Verdana,Geneva,Lucida,Arial,Helvetica,sans-serif;
+    font-family: 'Lucida Grande', Verdana, Geneva, Lucida, Arial, Helvetica, sans-serif;
     font-size: 14px;
     height: 22px;
     margin: 1px;

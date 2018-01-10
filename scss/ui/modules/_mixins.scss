@@ -14,7 +14,7 @@ $searchbar-height: 20px;
 @mixin unselectable {
   @include touch-callout(none);
   @include user-select(none);
- // @include tap-highlight-color(none);
+  // @include tap-highlight-color(none);
 }
 
 @mixin selectable {

@@ -49,15 +49,15 @@ Even though IE should work, if you use it, you are going to have a bad time. Edg
 
 ## Bugs
 
-Please use the [issue tracker](https://github.com/opensphere/opensphere/issues) for all bugs and feature requests. Remember to search first to see if the problem has already been reported.
+Please use the [issue tracker](https://github.com/ngageoint/opensphere/issues) for all bugs and feature requests. Remember to search first to see if the problem has already been reported.
 
 ## Development
 
-Our general [development guide](https://github.com/opensphere/opensphere/blob/master/DEVELOPING.md) will help with contributions, plugins, and apps. For plugin development, start with our [plugin guide](https://github.com/opensphere/opensphere/blob/master/PLUGIN_DEVELOPMENT.md).  To use OpenSphere as a library and build your own app on top of it, check out our [application guide](https://github.com/opensphere/opensphere/blob/master/APP_DEVELOPMENT.md).
+Our general [development guide](https://github.com/ngageoint/opensphere/blob/master/DEVELOPING.md) will help with contributions, plugins, and apps. For plugin development, start with our [plugin guide](https://github.com/ngageoint/opensphere/blob/master/PLUGIN_DEVELOPMENT.md).  To use OpenSphere as a library and build your own app on top of it, check out our [application guide](https://github.com/ngageoint/opensphere/blob/master/APP_DEVELOPMENT.md).
 
 ## Contributing
 
-To get involved with OpenSphere directly, see our [contributing guide](https://github.com/opensphere/opensphere/blob/master/CONTRIBUTING.md).
+To get involved with OpenSphere directly, see our [contributing guide](https://github.com/ngageoint/opensphere/blob/master/CONTRIBUTING.md).
 
 ## About
 
