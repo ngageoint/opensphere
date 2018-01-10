@@ -7,7 +7,7 @@ both raster and vector data, import and export of various formats, saving files 
 sessions, and much more!
 
 Check it out!
-* Coming as soon as we roll out the website!
+* [master](https://master-branch-opensphere-ngageoint.surge.sh)
 
 In addition, OpenSphere (and its build system) can serve as a base library for GIS applications. Love
 what we've done with Openlayers and Cesium but want your own UI? You can do that!
