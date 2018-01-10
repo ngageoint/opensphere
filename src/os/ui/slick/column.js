@@ -29,9 +29,6 @@ os.ui.slick.column.FIX_HEADER = 'ui-widget ui-state-default';
  * @type {Object.<string, Object>}
  */
 os.ui.slick.column.fix = {
-  'ID': {
-    order: -100
-  },
   'TIME': {
     order: -95,
     width: os.ui.measureText('0000-00-00 00:00:00Z', os.ui.slick.column.FIX_CELL).width + 10
