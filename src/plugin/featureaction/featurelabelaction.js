@@ -9,6 +9,7 @@ goog.require('os.source.PropertyChange');
 goog.require('os.style');
 goog.require('os.style.label');
 goog.require('os.ui.FeatureEditCtrl');
+goog.require('os.ui.im.action.EventType');
 goog.require('os.xml');
 
 
