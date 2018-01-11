@@ -586,7 +586,7 @@ os.ui.WindowCtrl.prototype.addModalBg = function() {
 os.ui.WindowCtrl.prototype.removeModalBg = function() {
   if (this.modalElement) {
     $('.window-modal-bg').first().remove();
-    $(this.scope['windowContainer']).css('overflow', 'visible');
+    $(this.scope['windowContainer']).css('overflow', 'auto');
     this.modalElement = null;
   }
 };
