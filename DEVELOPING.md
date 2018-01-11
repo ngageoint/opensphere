@@ -9,19 +9,26 @@ Start by [forking](https://github.com/ngageoint/opensphere/fork) the OpenSphere 
 * git
 * Java 1.7.0+
 * Node 6+ and npm
+* [Yarn](https://yarnpkg.com/en/) (optional)
 * Python (optional)
 
 Ensure that the executables `git`, `node`, and `java` are in your `PATH`.
 
-[Clone|https://help.github.com/articles/cloning-a-repository/] your repository, and change directory into the clone.
+### Workspace Setup
 
-Install the dependencies by running
+#### Yarn
 
-    $ npm install
+Clone [opensphere-yarn-workspace](https://github.com/ngageoint/opensphere-yarn-workspace), and change directory into `opensphere-yarn-workspace/workspace`.
+
+Clone your fork, then run `yarn install`.
+
+#### NPM
+
+Clone your fork, then change directory to the clone. Run `npm install`.
 
 ### Linking
 
-If you are working on several plugins and config projects, you may end up with a workspace like
+If you are working on several plugins and config projects, you may end up with a workspace like:
 
     workspace/
         opensphere/
@@ -30,7 +37,7 @@ If you are working on several plugins and config projects, you may end up with a
         opensphere-plugin-x/
         opensphere-plugin-y/
 
-`npm link` is designed to help with this, but can get cumbersome to maintain manually with many projects. We recommend [npm-workspace](https://www.npmjs.com/package/npm-workspace) to automate the links.
+`npm link` is designed to help with this, but can get cumbersome to maintain manually with many projects. We recommend [Yarn](https://yarnpkg.com/en/) with [opensphere-yarn-workspace](https://github.com/ngageoint/opensphere-yarn-workspace) to automate the links. If you prefer to use NPM, [npm-workspace](https://www.npmjs.com/package/npm-workspace) can be used instead.
 
 ### Serving the application
 
@@ -45,11 +52,11 @@ OpenSphere has all of its build targets as npm scripts. Therefore you can run an
 The most common targets are
 
     $ npm run build       # runs the full build for both debug and compiled mode
-    $ npm run build:debug # runs the debug build only (requires Python) 
+    $ npm run build:debug # runs the debug build only (requires Python)
     $ npm run test        # runs the unit tests
     $ npm run test:debug  # runs the unit tests with a configuration more suited to debugging
     $ npm run apidoc      # generates api documentation
-    
+
 Each target runs its individual pieces through npm scripts as well. Several of those pieces are highly useful when run by themselves just to see if you fixed an error in that part of the build before restarting the entire thing.
 
     $ npm run lint             # runs the linter to check code style
@@ -57,7 +64,7 @@ Each target runs its individual pieces through npm scripts as well. Several of t
     # npm run compile:gcc      # runs the google-closure-compiler to produce the compiled JS
     # npm run compile:css      # runs node-sass to produce the minified/combined css
 
-### The resolver
+### The Resolver
 
 [opensphere-build-resolver](https://github.com/ngageoint/opensphere-build-resolver) runs through all of an applications dependencies, plugins (opensphere-plugin-x), or config projects (opensphere-config-y) and then the resolver's plugins produce arguments for the compiler, arguments for node-sass, page templates for conversion, and more! All of these files are written to the `.build` directory and used later in the build.
 
