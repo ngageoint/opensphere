@@ -43,6 +43,5 @@ then
     DEPLOY_SUBDOMAIN=`echo "$DEPLOY_SUBDOMAIN_UNFORMATTED" | sed -r 's/[\/|\.]+/\-/g'`
     DEPLOY_DOMAIN=https://${DEPLOY_SUBDOMAIN}-${REPO_NAME}-${REPO_OWNER}.surge.sh
     surge --project ${DEPLOY_PATH} --domain $DEPLOY_DOMAIN;
-    echo "Deployed to $DEPLOY_DOMAIN"
   done
 fi
