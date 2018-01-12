@@ -510,7 +510,7 @@ plugin.descriptor.DescriptorSearch.prototype.setGeoShape = function(shape) {
             'range': {
               'dateString': {
                 'gte': currentTimeRange.getStart().toString(),
-                'lte': currentTimeRange.getEnd().toString(),
+                'lt': currentTimeRange.getEnd().toString(),
                 'format': 'epoch_millis'
               }
             }
