@@ -7,10 +7,10 @@ const resolver = require('opensphere-build-resolver/utils');
 
 module.exports = function(config) {
   var closureFiles = helper.readManifest(path.resolve('.build', 'gcc-test-manifest'))
-    .filter(function(item) {
-      return item.indexOf('/src/core/debugutil.js') === -1 &&
-        item.indexOf('test/') !== 0;
-    });
+      .filter(function(item) {
+        return item.indexOf('/src/core/debugutil.js') === -1 &&
+          item.indexOf(__dirname + '/test/') !== 0;
+      });
 
   config.set({
     // base path, that will be used to resolve files and exclude
@@ -37,7 +37,9 @@ module.exports = function(config) {
       {pattern: resolver.resolveModulePath('papaparse/papaparse.min.js', __dirname), watched: false, included: true, served: true},
       {pattern: resolver.resolveModulePath('cesium/Build/Cesium/Cesium.js', __dirname), watched: false, included: true, served: true},
       {pattern: resolver.resolveModulePath('xmllint/xmllint.js', __dirname), watched: false, included: true, served: true},
-      {pattern: 'vendor/geomag/geomag.min.js', watched: false, included: true, served: true},
+      {pattern: 'vendor/geomag/WMM.COF', watched: false, included: false, served: true},
+      {pattern: 'vendor/geomag/cof2Obj.js', watched: false, included: true, served: true},
+      {pattern: 'vendor/geomag/geomag.js', watched: false, included: true, served: true},
       {pattern: resolver.resolveModulePath('lolex/lolex.js', __dirname), watched: false, included: true, served: true},
       {pattern: resolver.resolveModulePath('opensphere-state-schema/src/main/**/*.xsd', __dirname), watched: false, included: false, served: true}
     ].concat(closureFiles).concat([
