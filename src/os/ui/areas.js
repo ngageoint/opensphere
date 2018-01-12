@@ -2,7 +2,6 @@ goog.provide('os.ui.AreasCtrl');
 goog.provide('os.ui.areasDirective');
 
 goog.require('goog.async.Delay');
-goog.require('os.action.query.import');
 goog.require('os.data.AreaTreeSearch');
 goog.require('os.data.groupby.SourceGroupBy');
 goog.require('os.defines');
@@ -12,6 +11,7 @@ goog.require('os.ui.Module');
 goog.require('os.ui.data.groupby.TagGroupBy');
 goog.require('os.ui.ex.AreaExportCtrl');
 goog.require('os.ui.im.ImportEvent');
+goog.require('os.ui.menu.areaImport');
 goog.require('os.ui.menu.spatial');
 goog.require('os.ui.query.ui.CombinatorCtrl');
 goog.require('os.ui.query.ui.editAreaDirective');
@@ -106,10 +106,14 @@ goog.exportProperty(os.ui.AreasCtrl.prototype, 'launch', os.ui.AreasCtrl.prototy
  * Opens the area import menu.
  */
 os.ui.AreasCtrl.prototype.openImportMenu = function() {
-  if (os.action.query.import && os.action.query.import.manager) {
-    var target = this.element.find('.import-group');
-    var offset = target.offset();
-    os.ui.openMenu(os.action.query.import.manager, {x: offset.left, y: offset.top + target.outerHeight() + 4});
+  var target = this.element.find('.import-group');
+  var menu = os.ui.menu.areaImport.MENU;
+  if (menu && target && target.length) {
+    menu.open(undefined, {
+      my: 'left top+4',
+      at: 'left bottom',
+      of: target
+    });
   }
 };
 goog.exportProperty(

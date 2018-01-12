@@ -58,6 +58,10 @@ beforeEach(function() {
   if (!os.settings.isLoaded() || !os.settings.isInitialized()) {
     os.settings.getStorageRegistry().addStorage(new os.config.storage.SettingsObjectStorage(['unit']));
     test.os.config.SettingsUtil.initAndLoad(os.settings);
+
+    waitsFor(function() {
+      return os.settings.isLoaded() && os.settings.isInitialized();
+    });
   }
 
   // interpolation can break some tests, it should really only be on for the interpolation tests

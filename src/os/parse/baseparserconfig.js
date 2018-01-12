@@ -1,5 +1,5 @@
 goog.provide('os.parse.BaseParserConfig');
-goog.require('os.parse.IColumnDefinition');
+goog.require('os.data.ColumnDefinition');
 
 
 
@@ -10,7 +10,7 @@ goog.require('os.parse.IColumnDefinition');
  */
 os.parse.BaseParserConfig = function() {
   /**
-   * @type {Array.<os.parse.IColumnDefinition>}
+   * @type {Array.<os.data.ColumnDefinition>}
    */
   this['columns'] = [];
 
