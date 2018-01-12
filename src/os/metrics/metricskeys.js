@@ -255,7 +255,6 @@ os.metrics.Layer = {
   RENAME: 'layers.contextMenu.rename',
   EXPORT: 'layers.contextMenu.export',
   CREATE_BUFFER: 'layers.contextMenu.createBuffer',
-  CONVOLVE: 'layers.contextMenu.convolve',
   SHOW_DESCRIPTION: 'layers.contextMenu.showDescription'
 };
 
