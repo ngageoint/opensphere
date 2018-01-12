@@ -26,11 +26,11 @@ plugin.vectortools.Icons = {
  * @enum {number}
  */
 plugin.vectortools.Options = {
-  ALL: 1,
-  SHOWN: 2,
-  SELECTED: 3,
-  UNSELECTED: 4,
-  HIDDEN: 5
+  ALL: 0,
+  SHOWN: 1,
+  SELECTED: 2,
+  UNSELECTED: 3,
+  HIDDEN: 4
 };
 
 
@@ -62,47 +62,6 @@ plugin.vectortools.getFeatures = function(source, opt_which) {
     default:
       return [];
   }
-};
-
-
-/**
- * @param {*=} opt_actionArgs
- * @return {boolean}
- */
-plugin.vectortools.isMultiVector = function(opt_actionArgs) {
-  var actionArgs = goog.isDefAndNotNull(opt_actionArgs) ? opt_actionArgs : null;
-
-  if (actionArgs && actionArgs.length > 1) {
-    return plugin.vectortools.isVector(opt_actionArgs);
-  }
-
-  return false;
-};
-
-
-/**
- * @param {*=} opt_actionArgs
- * @return {boolean}
- */
-plugin.vectortools.isVector = function(opt_actionArgs) {
-  var actionArgs = goog.isDefAndNotNull(opt_actionArgs) ? opt_actionArgs : null;
-
-  if (actionArgs && actionArgs.length > 0) {
-    for (var i = 0, n = actionArgs.length; i < n; i++) {
-      if (actionArgs[i] instanceof os.data.LayerNode) {
-        var layer = /** @type {os.data.LayerNode} */ (actionArgs[i]).getLayer();
-        if (!layer || !(layer instanceof os.layer.Vector) || layer.getId() === os.MapContainer.DRAW_ID) {
-          return false;
-        }
-      } else {
-        return false;
-      }
-    }
-
-    return true;
-  }
-
-  return false;
 };
 
 

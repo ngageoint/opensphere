@@ -2,7 +2,6 @@ goog.provide('os.action.windows');
 
 goog.require('os.action.EventType');
 goog.require('os.action.common');
-goog.require('os.action.export');
 goog.require('os.config.ServerSettings');
 goog.require('os.metrics.keys');
 goog.require('os.ui.action.windows');

@@ -13,7 +13,7 @@ goog.require('plugin.file.kml.KMLFeatureParser');
 goog.require('plugin.file.kml.KMLLayerConfig');
 goog.require('plugin.file.kml.KMLParser');
 goog.require('plugin.file.kml.KMLProvider');
-goog.require('plugin.file.kml.action');
+goog.require('plugin.file.kml.menu');
 goog.require('plugin.file.kml.type.KMLTypeMethod');
 goog.require('plugin.file.kml.ui.KMLImportUI');
 goog.require('plugin.file.kml.ui.placemarkEditDirective');
@@ -83,5 +83,5 @@ plugin.file.kml.KMLPlugin.prototype.init = function() {
   os.ui.exportManager.registerExportMethod(new plugin.file.kml.KMLExporter());
 
   // set up actions
-  plugin.file.kml.action.treeSetup();
+  plugin.file.kml.menu.treeSetup();
 };

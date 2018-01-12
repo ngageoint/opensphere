@@ -26,6 +26,7 @@ goog.require('os.ui.events.UIEvent');
 goog.require('os.ui.events.UIEventType');
 goog.require('os.ui.layer.defaultLayerUIDirective');
 goog.require('os.ui.layerTreeDirective');
+goog.require('os.ui.menu.layer');
 goog.require('os.ui.slick.AbstractGroupByTreeSearchCtrl');
 goog.require('os.ui.uiSwitchDirective');
 goog.require('os.ui.util.autoHeightDirective');
@@ -74,8 +75,8 @@ os.ui.Module.directive('layerswin', [os.ui.layersWindowDirective]);
 
 /**
  * Controller for Layers window
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
+ * @param {!angular.Scope} $scope The Angular scope.
+ * @param {!angular.JQLite} $element The root DOM element.
  * @extends {os.ui.slick.AbstractGroupByTreeSearchCtrl}
  * @constructor
  * @ngInject
@@ -85,7 +86,7 @@ os.ui.LayersCtrl = function($scope, $element) {
 
   this.title = 'layers';
   try {
-    this.scope['contextMenu'] = os.action.layer.manager;
+    this.scope['contextMenu'] = os.ui.menu.layer.MENU;
   } catch (e) {
   }
 
@@ -98,7 +99,7 @@ os.ui.LayersCtrl = function($scope, $element) {
   this.treeSearch = new os.data.LayerTreeSearch('layerTree', $scope);
 
   /**
-   * @type {Object.<string, os.ui.action.ActionManager>}
+   * @type {Object<string, os.ui.action.ActionManager>}
    * @private
    */
   this.menus_ = {};
@@ -122,7 +123,7 @@ goog.inherits(os.ui.LayersCtrl, os.ui.slick.AbstractGroupByTreeSearchCtrl);
 
 /**
  * The view options for grouping layers
- * @type {!Object.<string, os.data.groupby.INodeGroupBy>}
+ * @type {!Object<string, os.data.groupby.INodeGroupBy>}
  */
 os.ui.LayersCtrl.VIEWS = {
   'Favorites': new os.data.groupby.FavoriteGroupBy(),

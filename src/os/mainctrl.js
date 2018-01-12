@@ -9,9 +9,7 @@ goog.require('ol.ViewHint');
 goog.require('os.MapContainer');
 goog.require('os.MapEvent');
 goog.require('os.action.EventType');
-goog.require('os.action.buffer');
 goog.require('os.action.import');
-goog.require('os.action.layer');
 goog.require('os.action.windows');
 goog.require('os.bearing.BearingSettings');
 goog.require('os.buffer');
@@ -112,7 +110,9 @@ goog.require('os.ui.im.ImportEventType');
 goog.require('os.ui.im.ImportManager');
 goog.require('os.ui.menu');
 goog.require('os.ui.menu.areaImport');
+goog.require('os.ui.menu.buffer');
 goog.require('os.ui.menu.filter');
+goog.require('os.ui.menu.layer');
 goog.require('os.ui.menu.map');
 goog.require('os.ui.menu.save');
 goog.require('os.ui.menu.spatial');
@@ -282,6 +282,7 @@ os.MainCtrl = function($scope, $element, $compile, $timeout, $injector) {
   // set up menus
   os.ui.menu.filter.setup();
   os.ui.menu.map.setup();
+  os.ui.menu.layer.setup();
   os.ui.menu.save.setup();
   os.ui.menu.spatial.setup();
   os.ui.menu.unit.setup();
@@ -292,8 +293,7 @@ os.MainCtrl = function($scope, $element, $compile, $timeout, $injector) {
 
   // set up actions
   os.action.import.setup();
-  os.action.layer.setup();
-  os.action.buffer.setup();
+  os.ui.menu.buffer.setup();
   os.action.windows.setup();
 
   os.ui.state.action.setup();
@@ -356,13 +356,13 @@ os.MainCtrl.prototype.destroy = function() {
   this.removeListeners();
 
   os.action.import.dispose();
-  os.action.layer.dispose();
   os.ui.state.action.dispose();
-  os.action.buffer.dispose();
+  os.ui.menu.buffer.dispose();
   os.ui.menu.areaImport.dispose();
 
   os.ui.menu.filter.dispose();
   os.ui.menu.map.dispose();
+  os.ui.menu.layer.dispose();
   os.ui.menu.save.dispose();
   os.ui.menu.spatial.dispose();
   os.ui.menu.timeline.dispose();
