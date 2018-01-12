@@ -797,9 +797,9 @@ os.geo.jsts.buffer = function(geometry, distance, opt_skipTransform) {
         //  - a positive value means the geometry can be split, buffered, and merged accurately
         //  - a negative value means the geometry cannot be accurately buffered with this approach
         //
-        var splitOffset = os.geo.jsts.getSplitOffset(clone, distance);
+        var extent = clone.getExtent();
+        var splitOffset = os.geo.jsts.getSplitOffset(extent, distance);
         if (!splitOffset) {
-          var extent = clone.getExtent();
           var avgLon = (extent[0] + extent[2]) / 2;
           buffer = os.geo.jsts.tmercBuffer_(clone, distance, avgLon);
         } else if (splitOffset > 0) {
@@ -889,14 +889,13 @@ os.geo.jsts.bufferPoint_ = function(point, distance) {
 
 /**
  * Get the offset to use when splitting a geometry for buffering.
- * @param {ol.geom.Geometry} geometry The geometry.
+ * @param {ol.Extent} extent The geometry's extent.
  * @param {number} distance The buffer distance.
  * @return {number} The offset between boxes to accurately buffer the geometry.
  */
-os.geo.jsts.getSplitOffset = function(geometry, distance) {
+os.geo.jsts.getSplitOffset = function(extent, distance) {
   var boxWidth = os.geo.jsts.UTM_WIDTH_DEGREES;
-  var extent = geometry.getExtent();
-  if (extent[2] - extent[0] > boxWidth) {
+  if (extent && extent[2] - extent[0] > boxWidth) {
     if (distance < 0) {
       // negative buffer distances require reducing the offset as the geometry approaches the poles. this is due to
       // splitting the geometry in EPSG:4326, where the lateral distance approaches 0 near the poles.
@@ -937,7 +936,7 @@ os.geo.jsts.getBoxesForExtent_ = function(geometry, distance) {
   var boxes;
 
   var extent = geometry.getExtent();
-  var offset = os.geo.jsts.getSplitOffset(geometry, distance);
+  var offset = os.geo.jsts.getSplitOffset(extent, distance);
   if (offset >= 0) {
     boxes = [];
 
