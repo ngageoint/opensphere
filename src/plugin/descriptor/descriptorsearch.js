@@ -11,6 +11,7 @@ goog.require('os.net.Request');
 goog.require('os.search.AbstractSearch');
 goog.require('os.search.IFacetedSearch');
 goog.require('os.search.IGeoSearch');
+goog.require('os.search.ITemporalSearch');
 goog.require('os.search.SearchEvent');
 goog.require('os.search.SearchEventType');
 goog.require('plugin.descriptor.DescriptorResult');
@@ -29,6 +30,7 @@ goog.require('plugin.descriptor.facet.Type');
  * @extends {os.search.AbstractSearch}
  * @implements {os.search.IFacetedSearch}
  * @implements {os.search.IGeoSearch}
+ * @implements {os.search.ITemporalSearch}
  * @constructor
  */
 plugin.descriptor.DescriptorSearch = function(name) {
@@ -62,6 +64,16 @@ plugin.descriptor.DescriptorSearch = function(name) {
   this.searchTermFacet_ = new plugin.descriptor.facet.SearchTerm();
 
   /**
+   * @type {Date|undefined|null}
+   */
+  this.startDate_ = null;
+
+  /**
+   * @type {Date|undefined|null}
+   */
+  this.endDate_ = null;
+
+  /**
    * @type {!Array<!plugin.descriptor.facet.BaseFacet>}
    * @private
    */
@@ -71,6 +83,7 @@ plugin.descriptor.DescriptorSearch = function(name) {
 goog.inherits(plugin.descriptor.DescriptorSearch, os.search.AbstractSearch);
 os.implements(plugin.descriptor.DescriptorSearch, os.search.IFacetedSearch.ID);
 os.implements(plugin.descriptor.DescriptorSearch, os.search.IGeoSearch.ID);
+os.implements(plugin.descriptor.DescriptorSearch, os.search.ITemporalSearch.ID);
 
 
 /**
@@ -502,19 +515,24 @@ plugin.descriptor.DescriptorSearch.prototype.setGeoExtent = function(extent, opt
  */
 plugin.descriptor.DescriptorSearch.prototype.setGeoShape = function(shape) {
   if (shape) {
-    var currentTimeRange = os.time.TimelineController.getInstance().getCurrentTimeRange();
+    var must = {
+      'match_all': {}
+    };
+    if (this.startDate_ && this.endDate_) {
+      must = {
+        'range': {
+          'dateString': {
+            'gte': this.startDate_.getTime().toString(),
+            'lt': this.endDate_.getTime().toString(),
+            'format': 'epoch_millis'
+          }
+        }
+      };
+    }
     this.geoPayload = {
       'query': {
         'bool': {
-          'must': {
-            'range': {
-              'dateString': {
-                'gte': currentTimeRange.getStart().toString(),
-                'lt': currentTimeRange.getEnd().toString(),
-                'format': 'epoch_millis'
-              }
-            }
-          },
+          'must': must,
           'filter': {
             'geo_shape': {
               'bbox': {
@@ -546,6 +564,57 @@ plugin.descriptor.DescriptorSearch.prototype.setGeoShape = function(shape) {
   }
 };
 
+
+/**
+ * @inheritDoc
+ */
+plugin.descriptor.DescriptorSearch.prototype.setDateRange = function(startDate, endDate) {
+  this.setStartDate(startDate);
+  this.setEndDate(endDate);
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.descriptor.DescriptorSearch.prototype.setStartDate = function(startDate) {
+  this.startDate_ = startDate;
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.descriptor.DescriptorSearch.prototype.setEndDate = function(endDate) {
+  this.endDate_ = endDate;
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.descriptor.DescriptorSearch.prototype.supportsDateRange = function() {
+  return true;
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.descriptor.DescriptorSearch.prototype.supportsStartDate = function() {
+  // only want to support date range
+  return false;
+};
+
+
+
+/**
+ * @inheritDoc
+ */
+plugin.descriptor.DescriptorSearch.prototype.supportsEndDate = function() {
+  // only want to support date range
+  return false;
+};
 
 /**
  * Get the URL to use to perform layers geo query
