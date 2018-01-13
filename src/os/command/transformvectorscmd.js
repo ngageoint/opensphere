@@ -127,8 +127,18 @@ os.command.TransformVectors.prototype.transform = function(sourceProjection, tar
           var geoms = [];
 
           for (var j = 0, m = features.length; j < m; j++) {
-            geoms.push(features[j].getGeometry());
-            geoms.push(/** @type {ol.geom.Geometry} */ (features[j].get(os.interpolate.ORIGINAL_GEOM_FIELD)));
+            var geometry = features[j].getGeometry();
+            if (geometry) {
+              geoms.push(geometry);
+
+              // if the original geometry is the same, don't re-add it or it will be transformed twice. this will
+              // happen for any geometry that is not interpolated.
+              var origGeometry = /** @type {ol.geom.Geometry} */ (features[j].get(os.interpolate.ORIGINAL_GEOM_FIELD));
+              if (origGeometry !== geometry) {
+                geoms.push(origGeometry);
+              }
+            }
+
             geoms.push(/** @type {(os.geom.Ellipse|undefined)} */ (features[j].get(os.data.RecordField.ELLIPSE)));
             geoms.push(/** @type {(ol.geom.LineString|undefined)} */
                 (features[j].get(os.data.RecordField.LINE_OF_BEARING)));
