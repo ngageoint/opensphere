@@ -22,7 +22,7 @@ The Plugin
 Add a basic plugin class.
 
 .. literalinclude:: src/plugin/georss/georssplugin.js
-  :caption: src/plugin/georss/georssplugin.js
+  :caption: ``src/plugin/georss/georssplugin.js``
   :linenos:
   :language: javascript
 
@@ -40,14 +40,14 @@ Parser
 The first thing we need is a parser that can take the file and turn it into usable ``ol.Feature`` instances.
 
 .. literalinclude:: src/plugin/georss/georssparser.js
-  :caption: src/plugin/georss/georssparser.js
+  :caption: ``src/plugin/georss/georssparser.js``
   :linenos:
   :language: javascript
 
 Whew. That was a lot for one step. We should probably write some tests for it.
 
-.. literalinclude:: src/plugin/georss/georssparser.test.js
-  :caption:: test/plugin/georss/georssparser.test.js
+.. literalinclude:: test/plugin/georss/georssparser.test.js
+  :caption:: ``test/plugin/georss/georssparser.test.js``
   :linenos:
   :language: javascript
 
@@ -68,7 +68,7 @@ OpenSphere looks up the registered layer config class for the type ``georss``, i
 Let's create that class.
 
 .. literalinclude:: src/plugin/georss/georsslayerconfig.js
-  :caption: src/plugin/georss/georsslayerconfig.js
+  :caption: ``src/plugin/georss/georsslayerconfig.js``
   :linenos:
   :language: javascript
 
@@ -77,7 +77,7 @@ The parent class, ``os.layer.config.AbstractDataSourceLayerConfig`` handles most
 And, since we are good developers, here is a test for it.
 
 .. literalinclude:: test/plugin/georss/georsslayerconfig.test.js
-  :caption: test/plugin/georss/georsslayerconfig.test.js
+  :caption: ``test/plugin/georss/georsslayerconfig.test.js``
   :linenos:
   :language: javascript
 
