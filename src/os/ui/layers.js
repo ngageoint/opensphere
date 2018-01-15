@@ -20,7 +20,6 @@ goog.require('os.metrics.keys');
 goog.require('os.object');
 goog.require('os.ui');
 goog.require('os.ui.Module');
-goog.require('os.ui.action.windows');
 goog.require('os.ui.data.groupby.TagGroupBy');
 goog.require('os.ui.events.UIEvent');
 goog.require('os.ui.events.UIEventType');
@@ -28,6 +27,7 @@ goog.require('os.ui.layer.defaultLayerUIDirective');
 goog.require('os.ui.layerTreeDirective');
 goog.require('os.ui.menu.import');
 goog.require('os.ui.menu.layer');
+goog.require('os.ui.menu.windows');
 goog.require('os.ui.slick.AbstractGroupByTreeSearchCtrl');
 goog.require('os.ui.uiSwitchDirective');
 goog.require('os.ui.util.autoHeightDirective');
@@ -242,7 +242,7 @@ os.ui.LayersCtrl.prototype.onMenuClose = function(evt) {
  * @param {string} flagName The name of the flag to toggle
  */
 os.ui.LayersCtrl.prototype.toggle = function(flagName) {
-  if (!os.ui.action.windows.openWindow(flagName)) {
+  if (!os.ui.menu.windows.openWindow(flagName)) {
     var event = new os.ui.events.UIEvent(os.ui.events.UIEventType.TOGGLE_UI, flagName);
     os.dispatcher.dispatchEvent(event);
   }

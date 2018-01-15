@@ -1,11 +1,11 @@
 goog.provide('os.ui.menu.import');
 
 goog.require('os.metrics.keys');
-goog.require('os.ui.action.windows');
 goog.require('os.ui.im.ImportEventType');
 goog.require('os.ui.menu.Menu');
 goog.require('os.ui.menu.MenuItem');
 goog.require('os.ui.menu.MenuItemType');
+goog.require('os.ui.menu.windows');
 
 
 /**
@@ -60,7 +60,7 @@ os.ui.menu.import.setup = function() {
           eventType: 'openwindow.addData',
           tooltip: 'Browse the data catalog',
           icons: ['<i class="fa fa-fw fa-plus green-icon"></i>'],
-          handler: os.ui.action.windows.openWindow,
+          handler: os.ui.menu.windows.openWindow,
           metricKey: os.metrics.keys.AddData.OPEN,
           sort: 0
         }, {

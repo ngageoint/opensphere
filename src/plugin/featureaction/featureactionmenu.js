@@ -1,6 +1,5 @@
 goog.provide('plugin.im.action.feature.menu');
 
-goog.require('os.action.common');
 goog.require('os.im.action');
 goog.require('os.ui.menu.layer');
 goog.require('plugin.im.action.feature');
