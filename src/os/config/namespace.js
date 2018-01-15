@@ -4,9 +4,9 @@
  * and make them available to either an individual app or common to all apps.
  */
 goog.provide('os.config.namespace');
+
 goog.require('goog.array');
 goog.require('goog.string');
-goog.require('goog.structs.Set');
 goog.require('os.config');
 goog.require('os.object');
 
@@ -33,9 +33,9 @@ os.config.namespace.CORE_KEYS = [
  * Obsolete keys that have actually been encountered somewhere in settings.  This list is populated as settings are
  * loaded and is cleared by the settings manager once the keys have been deleted.
  * E.G.: 'app.storage.writeType'
- * @type {!goog.structs.Set.<!string>}
+ * @type {!Array<!string>}
  */
-os.config.namespace.keysToDelete = new goog.structs.Set();
+os.config.namespace.keysToDelete = [];
 
 
 /**
@@ -88,7 +88,7 @@ os.config.namespace.removeObsoleteKeys = function(obj) {
     goog.array.forEach(keys, function(key) {
       if (goog.object.containsKey(reduced, key)) {
         delete reduced[key];
-        os.config.namespace.keysToDelete.add(key);
+        goog.array.insert(os.config.namespace.keysToDelete, key);
       }
     });
     return os.object.expand(reduced);

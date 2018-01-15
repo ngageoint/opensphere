@@ -10,8 +10,6 @@ goog.require('goog.events.EventType');
 goog.require('goog.log');
 goog.require('goog.log.Logger');
 goog.require('goog.string');
-goog.require('goog.structs');
-goog.require('goog.structs.Set');
 goog.require('os.alert.AlertManager');
 goog.require('os.xt.IMessageHandler');
 goog.require('os.xt.events');
@@ -109,7 +107,7 @@ os.xt.Peer = function(opt_storage) {
 
   /**
    * Message handler list
-   * @type {Array.<os.xt.IMessageHandler>}
+   * @type {Array<os.xt.IMessageHandler>}
    * @private
    */
   this.handlers_ = [];
@@ -139,7 +137,7 @@ os.xt.Peer = function(opt_storage) {
 
   /**
    * An array of records that track clients waiting for peers to become available in this peer's group
-   * @type {Array.<os.xt.Peer.WaitRecord_>}
+   * @type {Array<os.xt.Peer.WaitRecord_>}
    * @private
    */
   this.waitList_ = [];
@@ -434,20 +432,20 @@ os.xt.Peer.prototype.addHandler = function(handler) {
 
 /**
  * Gets all supported message types
- * @return {Array.<string>}
+ * @return {!Array<string>}
  */
 os.xt.Peer.prototype.getTypes = function() {
-  var set = new goog.structs.Set();
+  var set = [];
 
   for (var i = 0, n = this.handlers_.length; i < n; i++) {
     var types = this.handlers_[i].getTypes ? this.handlers_[i].getTypes() : this.handlers_[i]['getTypes']();
 
     for (var j = 0, m = types.length; j < m; j++) {
-      set.add(types[j]);
+      goog.array.insert(set, types[j]);
     }
   }
 
-  return goog.structs.getValues(set);
+  return set;
 };
 
 
@@ -726,13 +724,13 @@ os.xt.Peer.prototype.becomeMaster_ = function() {
  * support that message type are returned.
  * @param {string=} opt_type The optional message type
  * @param {boolean=} opt_includeDead Whether or not to include dead peers in the list.  Defaults to false.
- * @return {!Array.<!string>} The list of peer IDs
+ * @return {!Array<!string>} The list of peer IDs
  */
 os.xt.Peer.prototype.getPeers = function(opt_type, opt_includeDead) {
   var includeDeadPeers = opt_includeDead || false;
 
   /** @type {string} */ var needle = 'xt.' + this.group_ + '.';
-  /** @type {!Array.<!string>} */ var list = [];
+  /** @type {!Array<!string>} */ var list = [];
   /** @type {number} */ var keyCount = this.storage_.length;
 
   for (var cursor = keyCount - 1; cursor >= 0; cursor--) {
@@ -745,7 +743,7 @@ os.xt.Peer.prototype.getPeers = function(opt_type, opt_includeDead) {
           list.indexOf(parts[2]) === -1) {
         if (includeDeadPeers || this.isPeerAlive_(parts[2])) {
           if (opt_type) {
-            var types = /** @type {Array.<string>} */ (JSON.parse(
+            var types = /** @type {Array<string>} */ (JSON.parse(
                 this.storage_.getItem(parts.slice(0, 3).join('.') + '.types') || '[]'));
             if (types.indexOf(opt_type) > -1) {
               list.push(parts[2]);
@@ -799,7 +797,7 @@ os.xt.Peer.prototype.mapIdToInfo_ = function(id, i, arr) {
 /**
  * This is the exact same thing as getPeers(), but returns full peer info objects.
  * @param {string=} opt_type The optional message type.
- * @return {Array.<os.xt.PeerInfo>} The peer info list
+ * @return {Array<os.xt.PeerInfo>} The peer info list
  */
 os.xt.Peer.prototype.getPeerInfo = function(opt_type) {
   return this.getPeers(opt_type).map(this.mapIdToInfo_, this);
@@ -808,7 +806,7 @@ os.xt.Peer.prototype.getPeerInfo = function(opt_type) {
 
 /**
  * An array of items to exclue from processing
- * @type {Array.<string>}
+ * @type {Array<string>}
  * @private
  */
 os.xt.Peer.notThese_ = ['ping', 'title', 'details', 'types'];
@@ -825,7 +823,7 @@ os.xt.Peer.prototype.onStorage_ = function(event) {
     parts = event.key.split('.');
   }
 
-  // ensure that the key starts with xt.<group>.<id> or xt.<group>.public
+  // ensure that the key starts with xt<group><id> or xt<group>.public
   if (parts.length === 4 && parts[0] === 'xt' && parts[1] === this.group_ &&
       (parts[2] === this.id_ || parts[2] == 'public') && event.newValue) {
     // ignore info changes and messages from ourselves
@@ -956,7 +954,7 @@ os.xt.Peer.prototype.processWaitList_ = function() {
  * @param {string} id The ID
  * @param {string=} opt_title The title
  * @param {string=} opt_details The details
- * @param {Array.<string>=} opt_types The types
+ * @param {Array<string>=} opt_types The types
  * @constructor
  */
 os.xt.PeerInfo = function(group, id, opt_title, opt_details, opt_types) {
@@ -985,7 +983,7 @@ os.xt.PeerInfo = function(group, id, opt_title, opt_details, opt_types) {
 
   /**
    * The types of messages that the peer supports
-   * @type {Array.<string>}
+   * @type {Array<string>}
    */
   this.types = opt_types || [];
 };
@@ -1008,7 +1006,7 @@ os.xt.PeerInfo.load = function(group, id, storage) {
     return null;
   }
   var prefix = 'xt.' + group + '.' + id + '.';
-  var types = /** @type {Array.<string>} */ (JSON.parse(storage.getItem(prefix + 'types') || '[]'));
+  var types = /** @type {Array<string>} */ (JSON.parse(storage.getItem(prefix + 'types') || '[]'));
   var title = storage.getItem(prefix + 'title') || '';
   var details = storage.getItem(prefix + 'details') || '';
   return new os.xt.PeerInfo(group, id, title, details, types);
