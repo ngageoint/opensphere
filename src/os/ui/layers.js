@@ -26,6 +26,7 @@ goog.require('os.ui.events.UIEvent');
 goog.require('os.ui.events.UIEventType');
 goog.require('os.ui.layer.defaultLayerUIDirective');
 goog.require('os.ui.layerTreeDirective');
+goog.require('os.ui.menu.import');
 goog.require('os.ui.menu.layer');
 goog.require('os.ui.slick.AbstractGroupByTreeSearchCtrl');
 goog.require('os.ui.uiSwitchDirective');
@@ -99,14 +100,13 @@ os.ui.LayersCtrl = function($scope, $element) {
   this.treeSearch = new os.data.LayerTreeSearch('layerTree', $scope);
 
   /**
-   * @type {Object<string, os.ui.action.ActionManager>}
+   * @type {!Object<string, !os.ui.menu.Menu>}
    * @private
    */
   this.menus_ = {};
 
-  try {
-    this.menus_['.add-data-group'] = os.action.import.manager;
-  } catch (e) {
+  if (os.ui.menu.import.MENU) {
+    this.menus_['.add-data-group'] = os.ui.menu.import.MENU;
   }
 
   var map = os.MapContainer.getInstance();
@@ -206,17 +206,21 @@ goog.exportProperty(os.ui.LayersCtrl.prototype, 'isWindowActive', os.ui.LayersCt
 
 /**
  * Opens the specified menu.
- * @param {string} selector
+ * @param {string} selector The menu target selector.
  */
 os.ui.LayersCtrl.prototype.openMenu = function(selector) {
-  if (goog.isDefAndNotNull(this.menus_[selector])) {
-    var menu = this.menus_[selector];
+  var menu = this.menus_[selector];
+  if (menu) {
     var target = this.element.find(selector);
     if (target && target.length > 0) {
       this.scope['menu'] = selector;
       os.dispatcher.listenOnce(os.ui.GlobalMenuEventType.MENU_CLOSE, this.onMenuClose, false, this);
-      menu.refreshEnabledActions();
-      os.ui.openMenu(menu, 'left', target);
+
+      menu.open(undefined, {
+        my: 'left top',
+        at: 'left bottom',
+        of: target
+      });
     }
   }
 };
@@ -224,7 +228,8 @@ goog.exportProperty(os.ui.LayersCtrl.prototype, 'openMenu', os.ui.LayersCtrl.pro
 
 
 /**
- * @param {goog.events.Event} evt
+ * Handle menu close event.
+ * @param {goog.events.Event} evt The event.
  * @protected
  */
 os.ui.LayersCtrl.prototype.onMenuClose = function(evt) {
