@@ -280,7 +280,6 @@ os.ui.state.StateManager.prototype.finishImport = function(file, options) {
  * @param {os.ex.IPersistenceMethod=} opt_method The persistence method
  */
 os.ui.state.StateManager.prototype.startExport = function(opt_method) {
-  os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.SAVE_STATE, 1);
   var scopeOptions = {
     'defaultMethod': opt_method
   };
