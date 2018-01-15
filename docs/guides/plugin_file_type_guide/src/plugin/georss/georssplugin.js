@@ -29,8 +29,7 @@ plugin.georss.ID = 'georss';
  * @inheritDoc
  */
 plugin.georss.GeoRSSPlugin.prototype.init = function() {
-  var lcm = os.layer.config.LayerConfigManager.getInstance();
-  lcm.registerLayerConfig(plugin.georss.ID, plugin.georss.GeoRSSLayerConfig);
+  // plugin does not do anything yet
 };
 
 
