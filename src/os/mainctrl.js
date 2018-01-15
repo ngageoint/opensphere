@@ -124,8 +124,8 @@ goog.require('os.ui.route.RouteManager');
 goog.require('os.ui.search.NoResult');
 goog.require('os.ui.search.place.CoordinateSearch');
 goog.require('os.ui.slick.column');
-goog.require('os.ui.state.action');
 goog.require('os.ui.state.cmd.StateClear');
+goog.require('os.ui.state.menu');
 goog.require('os.ui.timelinePanelDirective');
 goog.require('os.ui.urlDragDropDirective');
 goog.require('os.ui.user.settings.LocationSettings');
@@ -287,6 +287,7 @@ os.MainCtrl = function($scope, $element, $compile, $timeout, $injector) {
   os.ui.menu.spatial.setup();
   os.ui.menu.unit.setup();
   os.ui.menu.timeline.setup();
+  os.ui.state.menu.setup();
 
   // assign the spatial menu
   os.ui.draw.MENU = os.ui.menu.SPATIAL;
@@ -295,8 +296,6 @@ os.MainCtrl = function($scope, $element, $compile, $timeout, $injector) {
   os.action.import.setup();
   os.ui.menu.buffer.setup();
   os.action.windows.setup();
-
-  os.ui.state.action.setup();
 
   // register base legend plugins
   os.data.histo.legend.registerLegendPlugin();
@@ -356,7 +355,6 @@ os.MainCtrl.prototype.destroy = function() {
   this.removeListeners();
 
   os.action.import.dispose();
-  os.ui.state.action.dispose();
   os.ui.menu.buffer.dispose();
   os.ui.menu.areaImport.dispose();
 
@@ -367,6 +365,7 @@ os.MainCtrl.prototype.destroy = function() {
   os.ui.menu.spatial.dispose();
   os.ui.menu.timeline.dispose();
   os.ui.menu.unit.dispose();
+  os.ui.state.menu.dispose();
 
   this.scope_ = null;
   this.timeout_ = null;
