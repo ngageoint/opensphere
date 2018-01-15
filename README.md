@@ -64,7 +64,7 @@ Please use the [issue tracker](https://github.com/ngageoint/opensphere/issues) f
 
 ## Development
 
-Our general [development guide](https://github.com/ngageoint/opensphere/blob/master/DEVELOPING.md) will help with contributions, plugins, and apps. For plugin development, start with our [plugin guide](https://github.com/ngageoint/opensphere/blob/master/PLUGIN_DEVELOPMENT.md).  To use OpenSphere as a library and build your own app on top of it, check out our [application guide](https://github.com/ngageoint/opensphere/blob/master/APP_DEVELOPMENT.md).
+Our general [development guide](http://opensphere.readthedocs.io/en/latest/getting_started.html) will help with contributions, plugins, and apps. For plugin development, start with our [plugin guide](http://opensphere.readthedocs.io/en/latest/guides/plugin_guide.html). To use OpenSphere as a library and build your own app on top of it, check out our [application guide](http://opensphere.readthedocs.io/en/latest/guides/app_guide.html)
 
 ## Contributing
 
