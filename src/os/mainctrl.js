@@ -9,7 +9,6 @@ goog.require('ol.ViewHint');
 goog.require('os.MapContainer');
 goog.require('os.MapEvent');
 goog.require('os.action.EventType');
-goog.require('os.action.import');
 goog.require('os.action.windows');
 goog.require('os.bearing.BearingSettings');
 goog.require('os.buffer');
@@ -112,6 +111,7 @@ goog.require('os.ui.menu');
 goog.require('os.ui.menu.areaImport');
 goog.require('os.ui.menu.buffer');
 goog.require('os.ui.menu.filter');
+goog.require('os.ui.menu.import');
 goog.require('os.ui.menu.layer');
 goog.require('os.ui.menu.map');
 goog.require('os.ui.menu.save');
@@ -281,6 +281,7 @@ os.MainCtrl = function($scope, $element, $compile, $timeout, $injector) {
 
   // set up menus
   os.ui.menu.filter.setup();
+  os.ui.menu.import.setup();
   os.ui.menu.map.setup();
   os.ui.menu.layer.setup();
   os.ui.menu.save.setup();
@@ -288,13 +289,12 @@ os.MainCtrl = function($scope, $element, $compile, $timeout, $injector) {
   os.ui.menu.unit.setup();
   os.ui.menu.timeline.setup();
   os.ui.state.menu.setup();
+  os.ui.menu.buffer.setup();
 
   // assign the spatial menu
   os.ui.draw.MENU = os.ui.menu.SPATIAL;
 
   // set up actions
-  os.action.import.setup();
-  os.ui.menu.buffer.setup();
   os.action.windows.setup();
 
   // register base legend plugins
@@ -354,7 +354,7 @@ os.MainCtrl.LOGGER_ = goog.log.getLogger('os.MainCtrl');
 os.MainCtrl.prototype.destroy = function() {
   this.removeListeners();
 
-  os.action.import.dispose();
+  os.ui.menu.import.dispose();
   os.ui.menu.buffer.dispose();
   os.ui.menu.areaImport.dispose();
 
