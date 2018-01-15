@@ -22,6 +22,7 @@ The Plugin
 Add a basic plugin class to ``src/plugin/georss/georssplugin.js``:
 
 .. literalinclude:: src/plugin/georss/georssplugin.js
+  :caption: ``src/plugin/georss/georssplugin.js``
   :linenos:
   :language: javascript
 
