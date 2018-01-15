@@ -44,7 +44,7 @@ Linking
 
 If you are working on several plugins and config projects, you may end up with a workspace like:
 
-.. code-block::
+.. code-block:: none
 
   workspace/
     opensphere/
@@ -67,13 +67,13 @@ The Build
 
 OpenSphere has all of its build targets as npm scripts. Therefore you can run any particular target by running:
 
-.. code-block::
+.. code-block:: none
 
   $ npm run <target>
 
 The most common targets are
 
-.. code-block::
+.. code-block:: none
 
   $ npm run build       # runs the full build for both debug and compiled mode
   $ npm run build:debug # runs the debug build only (requires Python)
@@ -83,7 +83,7 @@ The most common targets are
 
 Each target runs its individual pieces through npm scripts as well. Several of those pieces are highly useful when run by themselves just to see if you fixed an error in that part of the build before restarting the entire thing.
 
-.. code-block::
+.. code-block:: none
 
   $ npm run lint             # runs the linter to check code style
   $ npm run compile:resolve  # runs the resolver to check dependency/plugin/config resolution
