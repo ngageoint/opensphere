@@ -4,8 +4,8 @@ goog.require('goog.asserts');
 goog.require('ol.Feature');
 goog.require('ol.geom.Point');
 goog.require('os.action.EventType');
-goog.require('os.action.common');
 goog.require('os.buffer');
+goog.require('os.ui.menu.common');
 goog.require('os.ui.menu.layer');
 goog.require('os.ui.menu.map');
 goog.require('os.ui.menu.spatial');
@@ -186,7 +186,7 @@ os.ui.menu.buffer.handleLayerBufferEvent = function(event) {
     event.stopPropagation();
 
     // only use the first source unless we ever support multiple in the picker
-    var sources = os.action.common.getSourcesFromContext(context);
+    var sources = os.ui.menu.common.getSourcesFromContext(context);
     os.buffer.launchDialog({
       'sources': sources && sources.length > 0 ? [sources[0]] : []
     });

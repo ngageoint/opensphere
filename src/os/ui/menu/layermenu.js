@@ -4,7 +4,6 @@ goog.require('goog.Timer');
 goog.require('goog.date.UtcDateTime');
 goog.require('ol.extent');
 goog.require('os.action.EventType');
-goog.require('os.action.common');
 goog.require('os.command.FlyToExtent');
 goog.require('os.fn');
 goog.require('os.metrics.keys');
@@ -12,6 +11,7 @@ goog.require('os.ui.ex.ExportDirective');
 goog.require('os.ui.menu.Menu');
 goog.require('os.ui.menu.MenuItem');
 goog.require('os.ui.menu.MenuItemType');
+goog.require('os.ui.menu.common');
 goog.require('os.ui.window');
 
 
@@ -353,7 +353,7 @@ os.ui.menu.layer.onDescription_ = function(event) {
 os.ui.menu.layer.onExport_ = function(event) {
   var context = event.getContext();
   if (context) {
-    os.ui.ex.startExport(os.action.common.getSourcesFromContext(context));
+    os.ui.ex.startExport(os.ui.menu.common.getSourcesFromContext(context));
   }
 };
 

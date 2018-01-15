@@ -9,7 +9,6 @@ goog.require('ol.ViewHint');
 goog.require('os.MapContainer');
 goog.require('os.MapEvent');
 goog.require('os.action.EventType');
-goog.require('os.action.windows');
 goog.require('os.bearing.BearingSettings');
 goog.require('os.buffer');
 goog.require('os.column.ColumnMappingManager');
@@ -82,7 +81,6 @@ goog.require('os.style.StyleManager');
 goog.require('os.time');
 goog.require('os.time.TimelineController');
 goog.require('os.ui.AbstractMainCtrl');
-goog.require('os.ui.action.windows');
 goog.require('os.ui.alertsDirective');
 goog.require('os.ui.areasDirective');
 goog.require('os.ui.clear.ClearEntry');
@@ -118,6 +116,8 @@ goog.require('os.ui.menu.save');
 goog.require('os.ui.menu.spatial');
 goog.require('os.ui.menu.timeline');
 goog.require('os.ui.menu.unit');
+goog.require('os.ui.menu.windows');
+goog.require('os.ui.menu.windows.default');
 goog.require('os.ui.ngRightClickDirective');
 goog.require('os.ui.query.cmd.QueryEntriesClear');
 goog.require('os.ui.route.RouteManager');
@@ -290,12 +290,10 @@ os.MainCtrl = function($scope, $element, $compile, $timeout, $injector) {
   os.ui.menu.timeline.setup();
   os.ui.state.menu.setup();
   os.ui.menu.buffer.setup();
+  os.ui.menu.windows.default.setup();
 
   // assign the spatial menu
   os.ui.draw.MENU = os.ui.menu.SPATIAL;
-
-  // set up actions
-  os.action.windows.setup();
 
   // register base legend plugins
   os.data.histo.legend.registerLegendPlugin();
@@ -716,7 +714,7 @@ os.MainCtrl.prototype.handleKeyEvent_ = function(event) {
       case goog.events.KeyCodes.L:
         if (event.altKey) {
           os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.OPEN_LAYERS_KB, 1);
-          os.ui.action.windows.openWindow('layers');
+          os.ui.menu.windows.openWindow('layers');
         }
         break;
       case goog.events.KeyCodes.O:
@@ -885,7 +883,7 @@ os.MainCtrl.prototype.onToggleUI_ = function(event) {
       os.ui.apply(this.scope);
     }
   } else {
-    os.ui.action.windows.openWindow(event.id);
+    os.ui.menu.windows.openWindow(event.id);
   }
 
   if (event.metricKey) {
