@@ -10,7 +10,7 @@ Here we will walk though creating a plugin for a new vector file type, georss-si
 Plugin Boilerplate
 ------------------
 
-If you wish for this to be an external, separately released plugin, then fork [opensphere-plugin-example] and follow the instructions in its readme as a starting point.
+If you wish for this to be an external, separately released plugin, then fork opensphere-plugin-example_ and follow the instructions in its readme as a starting point.
 
 .. _opensphere-plugin-example: https://github.com/ngageoint/opensphere-plugin-example
 
@@ -19,10 +19,10 @@ If you wish for this to be a core plugin included with OpenSphere then simply be
 The Plugin
 -------------
 
-Add a basic plugin class to ``src/plugin/georss/georssplugin.js``:
+Add a basic plugin class.
 
 .. literalinclude:: src/plugin/georss/georssplugin.js
-  :caption: ``src/plugin/georss/georssplugin.js``
+  :caption: src/plugin/georss/georssplugin.js
   :linenos:
   :language: javascript
 
@@ -39,17 +39,15 @@ Parser
 
 The first thing we need is a parser that can take the file and turn it into usable ``ol.Feature`` instances.
 
-In ``src/plugin/georss/georssparser.js``:
-
 .. literalinclude:: src/plugin/georss/georssparser.js
+  :caption: src/plugin/georss/georssparser.js
   :linenos:
   :language: javascript
 
 Whew. That was a lot for one step. We should probably write some tests for it.
 
-In ``test/plugin/georss/georssparser.test.js``:
-
 .. literalinclude:: src/plugin/georss/georssparser.test.js
+  :caption:: test/plugin/georss/georssparser.test.js
   :linenos:
   :language: javascript
 
@@ -69,9 +67,8 @@ OpenSphere looks up the registered layer config class for the type ``georss``, i
 
 Let's create that class.
 
-In ``src/plugin/georss/georsslayerconfig.js``:
-
 .. literalinclude:: src/plugin/georss/georsslayerconfig.js
+  :caption: src/plugin/georss/georsslayerconfig.js
   :linenos:
   :language: javascript
 
@@ -79,15 +76,17 @@ The parent class, ``os.layer.config.AbstractDataSourceLayerConfig`` handles most
 
 And, since we are good developers, here is a test for it.
 
-.. literalinclude:: test/plugin.georss/georsslayerconfig.test.js
+.. literalinclude:: test/plugin/georss/georsslayerconfig.test.js
+  :caption: test/plugin/georss/georsslayerconfig.test.js
   :linenos:
   :language: javascript
 
 Now that we have that tested, we need to modify our plugin and register the layer config:
 
-Add this to ``src/plugin/georss/georssplugin.js:init()``
+Add this to your plugin ``init()`` method.
 
 .. code-block:: javascript
+  :caption: src/plugin/georss/georssplugin.js:init()
   :linenos:
 
   var lcm = os.layer.config.LayerConfigManager.getInstance();
