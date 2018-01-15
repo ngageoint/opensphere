@@ -44,12 +44,14 @@ Linking
 
 If you are working on several plugins and config projects, you may end up with a workspace like:
 
-    workspace/
-        opensphere/
-        opensphere-config-developer/
-        some-common-lib/
-        opensphere-plugin-x/
-        opensphere-plugin-y/
+.. code-block::
+
+  workspace/
+    opensphere/
+    opensphere-config-developer/
+    some-common-lib/
+    opensphere-plugin-x/
+    opensphere-plugin-y/
 
 ``npm link`` is designed to help with this, but can get cumbersome to maintain manually with many projects. We recommend Yarn_ with opensphere-yarn-workspace_ to automate the links. If you prefer to use NPM, npm-workspace_ can be used instead.
 
@@ -65,22 +67,28 @@ The Build
 
 OpenSphere has all of its build targets as npm scripts. Therefore you can run any particular target by running:
 
-    $ npm run <target>
+.. code-block::
+
+  $ npm run <target>
 
 The most common targets are
 
-    $ npm run build       # runs the full build for both debug and compiled mode
-    $ npm run build:debug # runs the debug build only (requires Python)
-    $ npm run test        # runs the unit tests
-    $ npm run test:debug  # runs the unit tests with a configuration more suited to debugging
-    $ npm run apidoc      # generates api documentation
+.. code-block::
+
+  $ npm run build       # runs the full build for both debug and compiled mode
+  $ npm run build:debug # runs the debug build only (requires Python)
+  $ npm run test        # runs the unit tests
+  $ npm run test:debug  # runs the unit tests with a configuration more suited to debugging
+  $ npm run apidoc      # generates api documentation
 
 Each target runs its individual pieces through npm scripts as well. Several of those pieces are highly useful when run by themselves just to see if you fixed an error in that part of the build before restarting the entire thing.
 
-    $ npm run lint             # runs the linter to check code style
-    $ npm run compile:resolve  # runs the resolver to check dependency/plugin/config resolution
-    # npm run compile:gcc      # runs the google-closure-compiler to produce the compiled JS
-    # npm run compile:css      # runs node-sass to produce the minified/combined css
+.. code-block::
+
+  $ npm run lint             # runs the linter to check code style
+  $ npm run compile:resolve  # runs the resolver to check dependency/plugin/config resolution
+  $ npm run compile:gcc      # runs the google-closure-compiler to produce the compiled JS
+  $ npm run compile:css      # runs node-sass to produce the minified/combined css
 
 The Resolver
 ============
@@ -96,7 +104,7 @@ Use of the `Closure Compiler`_ has been limited among the open source community.
 
 .. _Closure Compiler: https://developers.google.com/closure/compiler/
 
-We use the compiler's `ADVANCED` compilation level, which is `described in detail here`_. Also check out the annotations_ available for the compiler.
+We use the compiler's ``ADVANCED`` compilation level, which is `described in detail here`_. Also check out the annotations_ available for the compiler.
 
 .. _described in detail here: https://developers.google.com/closure/compiler/docs/api-tutorial3
 .. _annotations: https://developers.google.com/closure/compiler/docs/js-for-compiler
@@ -112,9 +120,7 @@ The ``index-template.html`` and its corresponding ``index.js`` file define how t
 
 .. _opensphere-build-index: https://github.com/ngageoint/opensphere-build-index
 
-If you set up nginx or httpd as recommended above, accessing it might be accomplished by pointing your browser at
-
-    http://localhost:8080/workspace/opensphere
+If you set up nginx or httpd as recommended above, accessing it might be accomplished by pointing your browser at http://localhost:8080/workspace/opensphere 
 
 Note: because the debug instance references each individual Javascript file in place, it can result in the debug page referencing thousands of individual files. The only browser that handles this gracefully (as of this writing) is Chrome. Firefox technically works but is much more painful.
 

@@ -15,7 +15,7 @@ The code is open source, and `available on GitHub`_.
 .. _master branch here: https://master-branch-opensphere-ngageoint.surge.sh
 .. _available on GitHub: https://github.com/ngageoint/opensphere
 
-. _dev-docs:
+.. _dev-docs:
 
 .. toctree::
    :maxdepth: 2
