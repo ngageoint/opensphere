@@ -2,7 +2,6 @@ goog.provide('plugin.georss.GeoRSSPlugin');
 
 goog.require('os.plugin.AbstractPlugin');
 goog.require('os.plugin.PluginManager');
-goog.require('plugin.georss.GeoRSSLayerConfig');
 
 
 /**

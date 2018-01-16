@@ -4,7 +4,7 @@ Plugin Guide
 OpenSphere plugins can add new layer types, new file formats for importing and exporting, new provider or server types for listing available data from various services, new search implementations, new UI elements or windows, and much, much more!
 
 .. toctree::
-  :maxdepth: 2
+  :maxdepth: 1
   :caption: Guides
 
   plugin_file_type_guide/index
