@@ -164,7 +164,7 @@ function setContactInfo() {
       var text = parsed['admin']['supportWebsiteText'];
       if (link && text) {
         contactEl.setAttribute('href', link);
-        contactEl.setClass('btn btn-success');
+        contactEl.className = 'btn btn btn-default';
         contactEl.innerHTML = text;
       }
     }
