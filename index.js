@@ -64,6 +64,11 @@ const overrideVersion = fs.existsSync(overrideVersionFile) ? fs.readFileSync(ove
  */
 const sharedResources = [
   {
+    source: 'src/electron',
+    target: 'electron',
+    scripts: ['electronvendorpre.js']
+  },
+  {
     source: buildPath,
     target: '',
     scripts: ['modernizr.js']
@@ -222,6 +227,11 @@ const sharedResources = [
     source: resolver.resolveModulePath('navigator.sendbeacon', __dirname),
     target: 'vendor/sendbeacon',
     scripts: ['sendbeacon.js']
+  },
+  {
+    source: 'src/electron',
+    target: 'electron',
+    scripts: ['electronvendorpost.js']
   }
 ];
 
