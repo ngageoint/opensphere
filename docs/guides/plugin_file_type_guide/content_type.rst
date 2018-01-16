@@ -10,16 +10,10 @@ The first thing we need to do for a file type is to detect the file type given a
 
 Now we will have our plugin register our content type class.
 
-.. code-block:: javascript
+.. literalinclude:: src/plugin/georss/georssplugin.js-content_type
   :caption: ``src/plugin/georss/georssplugin.js``
-
-  // import the new class at the top
-  goog.require('plugin.georss.GeoRSSTypeMethod');
-
-  // add this to init()
-
-  // register the georss file type method
-  var fm = os.file.FileManager.getInstance();
-  fm.registerContentTypeMethod(new plugin.georss.GeoRSSTypeMethod());
+  :linenos:
+  :language: javascript
+  :emphasize-lines: 6,36-38
 
 Save and run the build. You should now be able to import any atom feed (assuming the remote server has CORS configured; download it and import it as a file otherwise) into OpenSphere! Once it loads, it will complain that it does not have an import UI registered for 'georss', which is fine for now.
