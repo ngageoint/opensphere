@@ -64,7 +64,7 @@ Note that some of the plugins have corresponding views_ and tests_.
 .. _params: https://github.com/ngageoint/opensphere/tree/master/src/plugin/params
 .. _places: https://github.com/ngageoint/opensphere/tree/master/src/plugin/places
 .. _suncalc: https://github.com/ngageoint/opensphere/tree/master/src/plugin/suncalc
-.. _vectortooles: https://github.com/ngageoint/opensphere/tree/master/src/plugin/vectortools
+.. _vectortools: https://github.com/ngageoint/opensphere/tree/master/src/plugin/vectortools
 .. _weather: https://github.com/ngageoint/opensphere/tree/master/src/plugin/weather
 .. _xyz:  https://github.com/ngageoint/opensphere/tree/master/src/plugin/xyz
 .. _views: https://github.com/ngageoint/opensphere/tree/master/views/plugin
