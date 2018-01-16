@@ -8,7 +8,7 @@ The first thing we need is a parser that can take the file and turn it into usab
   :linenos:
   :language: javascript
 
-Whew. That was a lot for one step. We should probably write some tests for it.
+Whew. That was a lot for one step. It is not exhaustive, and a full implementation would want to support RSS in addition to Atom as well as the ``<georss:elev>`` tag. However, it still would not be complete without some tests.
 
 .. literalinclude:: test/plugin/georss/georssparser.test.js
   :caption:: ``test/plugin/georss/georssparser.test.js``

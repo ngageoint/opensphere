@@ -40,7 +40,7 @@ Running ``yarn build`` and viewing the debug instance of the application should 
 
 .. code-block:: javascript
 
-  os.command.CommandProcessor.getInstance().addCommand(
+  os.commandStack.addCommand(
     new os.command.LayerAdd({
       type: plugin.georss.ID,
       id: goog.string.getRandomString(),
