@@ -30,20 +30,15 @@ And, since we are good developers, here is a test for it.
 
 Now that we have that tested, we need to modify our plugin and register the layer config:
 
-Add this to your plugin ``init()`` method.
-
-.. code-block:: javascript
-  :caption: src/plugin/georss/georssplugin.js:init()
+.. literalinclude:: src/plugin/georss/georssplugin.js-layer_config
+  :caption: ``src/plugin/georss/georssplugin.js``
   :linenos:
-
-  var lcm = os.layer.config.LayerConfigManager.getInstance();
-  lcm.registerLayerConfig(plugin.georss.ID, plugin.georss.GeoRSSLayerConfig);
-
-Also do not forget to ``goog.require`` the layer config class at the top.
+  :language: javascript
+  :emphasize-lines: 5,32-33
 
 Running ``yarn build`` and viewing the debug instance of the application should allow you to drop this in the console and have a GeoRSS layer:
 
-.. code-block:: javascript`
+.. code-block:: javascript
 
   os.command.CommandProcessor.getInstance().addCommand(
     new os.command.LayerAdd({
