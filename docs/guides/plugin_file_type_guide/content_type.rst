@@ -8,6 +8,15 @@ The first thing we need to do for a file type is to detect the file type given a
   :linenos:
   :language: javascript
 
+As always, let's test it.
+
+.. literalinclude:: test/plugin/georss/georsstypemethod.test.js
+  :caption: ``src/plugin/georss/georsstypemethod.test.js``
+  :linenos:
+  :language: javascript
+
+Run ``yarn test`` to try that out. 
+
 Now we will have our plugin register our content type class.
 
 .. literalinclude:: src/plugin/georss/georssplugin.js-content_type
