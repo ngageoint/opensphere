@@ -11,7 +11,7 @@ The first thing we need to do for a file type is to detect the file type given a
 As always, let's test it.
 
 .. literalinclude:: test/plugin/georss/georsstypemethod.test.js
-  :caption: ``src/plugin/georss/georsstypemethod.test.js``
+  :caption: ``test/plugin/georss/georsstypemethod.test.js``
   :linenos:
   :language: javascript
 

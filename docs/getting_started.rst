@@ -16,6 +16,10 @@ Prerequisites
 - Node 6+ and npm
 - Yarn_
 - Python (optional)
+- POSIX-compatible shell environment
+-- along with cat, cp, echo, grep, perl, xargs
+- Chrome Browser (59+ required in default tests; plus you probably want this for development)
+- Firefox Browser (57+ required in default tests)
 
 .. _Yarn: https://yarnpkg.com
 

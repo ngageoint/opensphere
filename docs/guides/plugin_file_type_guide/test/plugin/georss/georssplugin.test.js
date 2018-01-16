@@ -5,7 +5,7 @@ describe('plugin.georss.GeoRSSPlugin', function() {
     expect(new plugin.georss.GeoRSSPlugin().id).toBe('georss');
   });
 
-  it('should not throw an error', function() {
+  it('should not throw an error on init', function() {
     var fn = function() {
       var p = new plugin.georss.GeoRSSPlugin();
       p.init();
