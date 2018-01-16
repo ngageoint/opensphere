@@ -14,3 +14,5 @@ Whew. That was a lot for one step. We should probably write some tests for it.
   :caption:: ``test/plugin/georss/georssparser.test.js``
   :linenos:
   :language: javascript
+
+There. Now we can fully test our parser with ``yarn test``.
