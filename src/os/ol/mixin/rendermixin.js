@@ -39,7 +39,7 @@ ol.render.canvas.PolygonReplay.prototype.drawPolygon = function(polygonGeometry,
     this.hitDetectionInstructions.push([
       ol.render.canvas.Instruction.SET_STROKE_STYLE,
       state.strokeStyle, state.lineWidth, state.lineCap, state.lineJoin,
-      state.miterLimit, state.lineDash, state.lineDashOffset, true, 1
+      state.miterLimit, state.lineDash, state.lineDashOffset
     ]);
   }
   var ends = polygonGeometry.getEnds();
@@ -77,7 +77,7 @@ ol.render.canvas.PolygonReplay.prototype.drawMultiPolygon = function(multiPolygo
     this.hitDetectionInstructions.push([
       ol.render.canvas.Instruction.SET_STROKE_STYLE,
       state.strokeStyle, state.lineWidth, state.lineCap, state.lineJoin,
-      state.miterLimit, state.lineDash, state.lineDashOffset, true, 1
+      state.miterLimit, state.lineDash, state.lineDashOffset
     ]);
   }
   var endss = multiPolygonGeometry.getEndss();
@@ -121,7 +121,7 @@ ol.render.canvas.PolygonReplay.prototype.drawCircle = function(circleGeometry, f
     this.hitDetectionInstructions.push([
       ol.render.canvas.Instruction.SET_STROKE_STYLE,
       state.strokeStyle, state.lineWidth, state.lineCap, state.lineJoin,
-      state.miterLimit, state.lineDash, state.lineDashOffset, true, 1
+      state.miterLimit, state.lineDash, state.lineDashOffset
     ]);
   }
   var flatCoordinates = circleGeometry.getFlatCoordinates();

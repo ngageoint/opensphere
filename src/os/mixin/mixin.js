@@ -49,33 +49,6 @@ ol.color.normalize = function(color, opt_color) {
 
 
 /**
- * The OL3 fitExtent function adjusts the constrained resolution at whole zoom level increments, while we only want to
- * adjust by 1/10 increments. The constrainResolution function is also prone to minor rounding differences, which is
- * why {@link goog.math.nearlyEquals} is used.
- *
- * Fit the map view to the passed extent and size. The size is pixel dimensions
- * of the box to fit the extent into. In most cases you will want to use the map
- * size, that is `map.getSize()`.
- * @param {ol.Extent} extent Extent.
- * @param {ol.Size} size Box pixel size.
- *
- * @suppress {accessControls|duplicate}
- */
-ol.View.prototype.fitExtent = function(extent, size) {
-  if (!ol.extent.isEmpty(extent)) {
-    this.setCenter(ol.extent.getCenter(extent));
-    var resolution = this.getResolutionForExtent(extent, size);
-    var constrainedResolution = this.constrainResolution(resolution, 0, 0);
-    if (constrainedResolution < resolution && !goog.math.nearlyEquals(constrainedResolution, resolution, 1E-15)) {
-      constrainedResolution =
-          this.constrainResolution(constrainedResolution, -0.1, 0);
-    }
-    this.setResolution(constrainedResolution);
-  }
-};
-
-
-/**
  * Mixin to override the non-use of the frameState.skippedFeatureUids property. OL3's renderer does not skip
  * hidden features for the sake of hit detection, which is not only slower, but also causes them to be highlighted
  * on hover even if they are hidden. Fixes THIN-7359.
