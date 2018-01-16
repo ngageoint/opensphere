@@ -97,7 +97,7 @@
     "build:index": "xargs -n 1 os-index < .build/resources-pages",
     "build:debugindex": "xargs -n 1 os-index --debug < .build/resources-pages",
     "build:xt": "mkdirp .build dist/opensphere; os-compile $(cat src/os/xt/gcc-args); cp src/os/xt/xt-example.html dist/opensphere",
-    "package:update": "if git diff --name-only ORIG_HEAD HEAD | grep --quiet package.json; then npm install && npm update; fi",
+    "package:update": "if git diff --name-only ORIG_HEAD HEAD | grep --quiet package.json; then echo 'UPDATE: package.json was updated, consider running yarn in your workspace root'; fi",
     "perms": "chmod -R u+rwX,go+rX,go-w .",
     "commitmsg": "validate-commit-msg",
     "postmerge": "npm run package:update",

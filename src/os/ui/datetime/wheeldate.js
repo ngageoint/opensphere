@@ -114,6 +114,7 @@ os.ui.datetime.WheelDateCtrl = function($scope, $element, $timeout) {
     'currentText': 'Today',
     'showButtonPanel': true,
     'yearRange': '1900:+10',
+    'dateFormat': 'yy-mm-dd', // ISO-8601
     'onSelect':
         /**
          * @param {string} dateText
@@ -308,13 +309,13 @@ os.ui.datetime.WheelDateCtrl.prototype.handleWheelEvent_ = function(event) {
     var origEnd = input.selectionEnd;
     var delta = event.deltaY < 0 ? 1 : -1;
 
-    // date is formatted as mm/dd/yyyy, so handle the wheel event accordingly
-    if (origEnd < 3) {
-      this['date'].setMonth(this['date'].getMonth() + delta);
-    } else if (origEnd < 6) {
-      this['date'].setDate(this['date'].getDate() + delta);
-    } else {
+    // Format ISO-8601 (YYYY-MM-DD). This will need update if we support other formats.
+    if (origEnd < 5) {
       this['date'].setFullYear(this['date'].getFullYear() + delta);
+    } else if (origEnd < 8) {
+      this['date'].setMonth(this['date'].getMonth() + delta);
+    } else {
+      this['date'].setDate(this['date'].getDate() + delta);
     }
 
     // update the jquery date picker. this will reset the selection position, so set it back to the original values.
