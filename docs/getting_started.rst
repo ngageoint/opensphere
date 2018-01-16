@@ -65,6 +65,8 @@ While not required, we highly recommend setting up nginx or Apache httpd to serv
 The Build
 *********
 
+Note: The build does not work in Windows. Consider using an Ubuntu Docker container or VM to run the build.
+
 OpenSphere has all of its build targets as npm scripts. Therefore you can run any particular target by running:
 
 .. code-block:: none
