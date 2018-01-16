@@ -37,7 +37,7 @@ function append(el, msg, test) {
 function runBrowserCheck() {
   var baseUrl = 'old.html';
   var currentLocation = window.location.toString();
-  if (!checkCompat()) {
+  if (!checkCompat() && !checkVersion()) {
     if (currentLocation.indexOf('/' + baseUrl) == -1) {
       // old.html is in the version directory, so prepend if we have a version string
       // version string will be replaced by the build. if not, clear it out so it doesn't affect the target url.
@@ -156,56 +156,42 @@ function getConfig() {
  */
 function setContactInfo() {
   var parsed = getConfig();
+  var browserPage = '';
   if (parsed) {
     var contactEl = document.getElementById('contactInfo');
     if (parsed && parsed['admin'] && contactEl) {
-      var secphone = parsed['admin']['supportPhone'];
-      var email = parsed['admin']['supportContact'];
-      if (secphone || email) {
-        var strong = document.createElement('strong');
-        strong.innerHTML = 'Support';
-        contactEl.appendChild(strong);
-        contactEl.appendChild(document.createElement('br'));
-      }
-      if (secphone) {
-        var i = document.createElement('i');
-        i.className = 'fa fa-phone';
-        var span = document.createElement('span');
-        span.innerHTML = ' ' + secphone;
-        i.appendChild(span);
-        contactEl.appendChild(i);
-        contactEl.appendChild(document.createElement('br'));
-      }
-      if (email) {
-        var i = document.createElement('i');
-        i.className = 'fa fa-envelope-o';
-        contactEl.appendChild(i);
-        var a = document.createElement('a');
-        a.setAttribute('href', 'mailto:' + email);
-        a.innerHTML = ' ' + email;
-        contactEl.appendChild(a);
-        contactEl.appendChild(document.createElement('br'));
+      var link = parsed['admin']['supportWebsite'];
+      var text = parsed['admin']['supportWebsiteText'];
+      if (link && text) {
+        contactEl.setAttribute('href', link);
+        contactEl.setClass('btn btn-success');
+        contactEl.innerHTML = text;
       }
     }
-
-    var browserPage = parsed['admin']['browserPage'];
+    browserPage = parsed['admin']['browserPage'];
   }
 
-  var minSupportInfo = '<strong>Recommended browsers:</strong>' +
+  if (!checkCompat() && checkVersion()) {
+    var warn = '<em>Your browser has been configured to disable features required by this application.</em> ' +
+      '<p>Please enable those features or contact your IT department for support.</p>';
+    if (platform.name == 'Firefox' && (!Modernizr.localstorage || !Modernizr.indexeddb)) {
+      var parsed = getConfig();
+      if (parsed && parsed['admin'] && parsed['admin']['firefoxCompatibleVersionLocalStorageOrIndexedDBErrorLink']) {
+        warn += '<p>For local storage or indexedDB related issues, see <a href="' +
+          parsed['admin']['firefoxCompatibleVersionLocalStorageOrIndexedDBErrorLink'] + '">this article</a></p>';
+      }
+    }
+    setWarn(warn, '<a href="' + browserPage + '" class="btn btn-danger">Browser Download</a> <br> <br>');
+  } else if (checkVersion()) {
+    setWarn('');
+  } else {
+    var minSupportInfo = '<strong>Recommended Browsers:</strong>' +
           '<ul>' +
           '<li>Google Chrome version 35+</li>' +
           '<li>Mozilla Firefox version 31+</li>' +
           '</ul>' +
           '<p>If you do not have one of these browsers installed, contact your local IT department for help.</p>' +
           '<a href="' + browserPage + '" class="btn btn-danger">Browser Download</a> <br> <br>';
-
-  if (!checkCompat() && checkVersion()) {
-    setWarn('<em>Your browser has been configured to disable features required by this application.</em> ' +
-      'Please enable those features or contact your IT department for support.',
-        '<a href="' + browserPage + '" class="btn btn-danger">Browser Download</a> <br> <br>');
-  } else if (checkVersion()) {
-    setWarn('');
-  } else {
     setWarn(minSupportInfo);
   }
   var browserInfo = document.getElementById('browserInfo');
@@ -249,14 +235,6 @@ function showBrowserWaitSpin(doSpin) {
   if (spin) {
     spin.style.display = doSpin ? '' : 'none';
   }
-}
-
-
-/**
- * redirects to previous page
- */
-function refresh() {
-  window.history.back();
 }
 
 
