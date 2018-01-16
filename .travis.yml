@@ -15,6 +15,7 @@ script:
 - set -e
 - npm run build
 - npm run test
+- npm run apidoc
 - set +e
 after_success:
 - chmod ugo+x ./deploy.sh
