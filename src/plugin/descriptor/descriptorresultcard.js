@@ -49,6 +49,17 @@ plugin.descriptor.ResultCardCtrl = function($scope, $element) {
   this.scope_['short'] = false;
   this.scope_['showFullDescription'] = false;
   this.updateIcons();
+
+  /**
+   * @type {number|undefined}
+   */
+  this['featureCount'] = undefined;
+
+  var result = /** @type {plugin.descriptor.DescriptorResult} */ (this.scope_['result']);
+  if (result && result.featureCount != null) {
+    this['featureCount'] = result.featureCount;
+  }
+
   $scope.$on('$destroy', this.destroy_.bind(this));
 };
 

@@ -1,11 +1,19 @@
-<div class="descriptor-result-card">
-  <div class="result-card-header">
-    <span class="icons"></span>
-    {{ctrl.getField('title')}}
+<div class="descriptor-result-card c-result-card">
+    <div class="c-result-card-header__title">
+      <span class="icons"></span>
+      {{ctrl.getField('title')}}
+    </div>
   </div>
-  <div class="result-type">{{ctrl.getField('type')}} | {{ctrl.getField('provider')}}</div>
-  <div class="result-snippet" ng-if="!showFullDescription">{{ctrl.getField('snippet')}} <a ng-if="short" class="pointer" ng-click="ctrl.showFullDescription(true)"> More</a></div>
-  <div class="result-snippet" ng-if="showFullDescription">{{ctrl.getField('description')}} <a  class="pointer"ng-click="ctrl.showFullDescription(false)"> Less</a></div>
+  <div>{{ctrl.getField('type')}} | {{ctrl.getField('provider')}}</div>
+  <div ng-if="ctrl.featureCount != null" title="Number of features available within the current map view">
+    Current View: {{ctrl.featureCount}} features
+  </div>
+  <div class="result-snippet" ng-if="!showFullDescription">
+    {{ctrl.getField('snippet')}} <a ng-if="short" class="pointer" ng-click="ctrl.showFullDescription(true)"> More</a>
+  </div>
+  <div class="result-snippet" ng-if="showFullDescription">
+    {{ctrl.getField('description')}} <a  class="pointer"ng-click="ctrl.showFullDescription(false)"> Less</a>
+  </div>
   <div class="result-actions">
     <button class="btn btn-default" ng-click="ctrl.toggle()">
       <i class="fa fa-{{ctrl.getField('active') ? 'times red' : 'plus green'}}-icon"></i> {{ctrl.getField('active') ? 'Remove' : 'Add'}}
