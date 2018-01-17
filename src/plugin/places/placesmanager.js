@@ -402,7 +402,7 @@ plugin.places.PlacesManager.prototype.initializeNode_ = function(node) {
   if (node) {
     node.canAddChildren = node.isFolder();
 
-    if (node.getParent()) {
+    if (node !== this.placesRoot_) {
       node.editable = true;
       node.internalDrag = true;
       node.removable = true;

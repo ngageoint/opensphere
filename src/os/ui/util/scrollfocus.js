@@ -69,6 +69,11 @@ os.ui.util.ScrollFocusCtrl = function($element) {
    */
   this['hasFocus'] = false;
 
+  /**
+   * @type {!angular.JQLite}
+   */
+  this.container = angular.element(document.querySelector('#win-container'));
+
   // tabindex allows divs to have focus; the 0 allows the focus without mucking up the tab order
   this.element_[0].setAttribute('tabindex', 0);
   this.initScrollHandler_();
@@ -85,7 +90,11 @@ os.ui.util.ScrollFocusCtrl = function($element) {
 os.ui.util.ScrollFocusCtrl.prototype.firefoxScrollHandler_ = function(e) {
   var el = this.element_[0];
   if (!this['hasFocus']) {
-    window.scrollBy(0, 19 * e.detail);
+    if (this.container) {
+      this.container.scrollTop(this.container.scrollTop() + (19 * e.detail));
+    } else {
+      window.scrollBy(0, 19 * e.detail);
+    }
     e.stopPropagation();
     e.preventDefault();
   } else if (this['hasFocus'] && this.hasScrollBar_()) {
@@ -123,7 +132,11 @@ os.ui.util.ScrollFocusCtrl.prototype.scrollHandler_ = function(e) {
     wheelY = 0;
   }
   if (!this['hasFocus']) {
-    window.scrollBy(x, y);
+    if (this.container) {
+      this.container.scrollTop(this.container.scrollTop() + y);
+    } else {
+      window.scrollBy(x, y);
+    }
     e.stopPropagation();
     e.preventDefault();
   } else if (this['hasFocus'] && this.hasScrollBar_()) {
