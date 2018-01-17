@@ -21,5 +21,5 @@ If you wish for this to be a core plugin included with OpenSphere then simply be
   layer_config
   content_type
   launcher
-  import_ui
   provider
+  import_ui
