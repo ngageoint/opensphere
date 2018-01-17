@@ -7,8 +7,10 @@
   <!--VENDOR_CSS-->
   <!--VENDOR_JS-->
   <style>
-    ul { padding-left: 20px; list-style: none }
     li { margin-bottom: 10px; }
+    p a { text-decoration: underline; }
+    .btn { text-decoration: none; }
+    ul { padding-left: 20px; list-style: none }
     li:before {
       font-family: 'FontAwesome';
       margin: 0 5px 0 -15px;
@@ -21,10 +23,27 @@
       content: '\f00d';
       color: #d00;
     }
+    .container {
+      margin-bottom: 16px;
+    }
+    .classification-banner {
+      color: #ff0;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: bold;
+      line-height: 16px;
+      min-height: 0 !important;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
   <noscript>Javascript is disabled in your browser. Turn it on and refresh the page.</noscript>
+  <div class="tr" style="height: 16px;">
+  <div class="classification-banner ng-binding ng-isolate-scope" style="background: rgb(0, 128, 0);">
+  UNCLASSIFIED//FOR OFFICIAL USE ONLY
+  </div>
+  </div>
   <div class="container">
     <div class="span8 offset2">
       <h3 id="report"></h3>
@@ -40,14 +59,20 @@
         <li>Mozilla Firefox version 31 or higher</li>
       </ul>
       <p id="browserInfo"></p>
-      <p>If you have any questions and/or comments, please feel free to contact us.</p>
-      <div id="contactInfo"></div>
+      <p><a id="contactInfo"></a></p>
       <div id="fullList"></div>
       <div>
         <button class="btn btn-info" style="margin-right: 10px;" onClick="toggleFullList()">Show/Hide All Detected Capabilities</button>
-        <button class="btn btn-success" onClick="refresh();">Go Back and Try Again</button>
+        <a class="btn btn-success" href="/">Go Home</a>
       </div>
     </div>
+  </div>
+  <div class="navbar-fixed-bottom">
+  <div class="tr" style="height: 16px;">
+  <div class="classification-banner ng-binding ng-isolate-scope" style="background: rgb(0, 128, 0);">
+  UNCLASSIFIED//FOR OFFICIAL USE ONLY
+  </div>
+  </div>
   </div>
 </body>
 </html>
