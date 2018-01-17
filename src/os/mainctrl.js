@@ -12,7 +12,6 @@ goog.require('os.action.EventType');
 goog.require('os.action.buffer');
 goog.require('os.action.import');
 goog.require('os.action.layer');
-goog.require('os.action.query.import');
 goog.require('os.action.windows');
 goog.require('os.bearing.BearingSettings');
 goog.require('os.buffer');
@@ -112,6 +111,7 @@ goog.require('os.ui.im.ImportEvent');
 goog.require('os.ui.im.ImportEventType');
 goog.require('os.ui.im.ImportManager');
 goog.require('os.ui.menu');
+goog.require('os.ui.menu.areaImport');
 goog.require('os.ui.menu.filter');
 goog.require('os.ui.menu.map');
 goog.require('os.ui.menu.save');
@@ -319,7 +319,7 @@ os.MainCtrl = function($scope, $element, $compile, $timeout, $injector) {
   // init query manager
   os.queryManager = os.query.QueryManager.getInstance();
   os.ui.queryManager = os.queryManager;
-  os.action.query.import.setup();
+  os.ui.menu.areaImport.setup();
 
   // initialize the area/filter import/file managers
   os.areaImportManager = new os.ui.im.ImportManager();
@@ -359,7 +359,7 @@ os.MainCtrl.prototype.destroy = function() {
   os.action.layer.dispose();
   os.ui.state.action.dispose();
   os.action.buffer.dispose();
-  os.action.query.import.dispose();
+  os.ui.menu.areaImport.dispose();
 
   os.ui.menu.filter.dispose();
   os.ui.menu.map.dispose();

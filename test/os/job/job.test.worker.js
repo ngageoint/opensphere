@@ -1,5 +1,5 @@
 // Import Worker libraries
-var CLOSURE_BASE_PATH = '/base/node_modules/google-closure-library/closure/goog/';
+var CLOSURE_BASE_PATH = '/google-closure-library/closure/goog/';
 importScripts(
     CLOSURE_BASE_PATH + 'bootstrap/webworkers.js',
     CLOSURE_BASE_PATH + 'base.js',

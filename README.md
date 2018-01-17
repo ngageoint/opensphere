@@ -7,10 +7,9 @@ both raster and vector data, import and export of various formats, saving files 
 sessions, and much more!
 
 Check it out!
-* Coming as soon as we roll out the website!
+* [master](https://master-branch-opensphere-ngageoint.surge.sh)
 
-In addition, OpenSphere (and its build system) can serve as a base library for GIS applications. Love
-what we've done with Openlayers and Cesium but want your own UI? You can do that!
+In addition, OpenSphere (and its build system) can serve as a base library for GIS applications. Love what we've done with Openlayers and Cesium but want your own UI? You can do that!
 
 ## Prerequisites
 
@@ -19,8 +18,21 @@ what we've done with Openlayers and Cesium but want your own UI? You can do that
 
 ## Getting Started
 
-The build will not run natively in Windows. Perhaps try Cygwin or Linux via a VM or Docker container. 
-It should run great on OS X and typical Linux distributions.
+The build will not run natively in Windows. Perhaps try Cygwin or Linux via a VM or Docker container. It should run great on OS X and typical Linux distributions.
+
+### Yarn
+
+[Yarn](https://yarnpkg.com/en/) is recommended for dependency management over npm, particularly when using plugins and configuration projects. It will automatically link related projects and dependencies in your workspace.
+
+* Clone [opensphere-yarn-workspace](https://github.com/ngageoint/opensphere-yarn-workspace)
+* Clone OpenSphere to the `workspace` directory
+* `yarn install`
+* `npm run build`
+* Point your browser at `dist/opensphere`
+
+### NPM
+
+If you prefer to use NPM, that's fine too:
 
 * Clone the project
 * `npm install`
@@ -29,7 +41,7 @@ It should run great on OS X and typical Linux distributions.
 
 ## Installing plugins
 
-Got a cool plugin you want to install? Either
+Got a cool plugin you want to install? Either:
 
 * `cd opensphere; npm install opensphere-plugin-x`
 * or clone the plugin project as a sibling to `opensphere`
@@ -38,8 +50,7 @@ Then do `npm run build` in `opensphere` and it will pick up the plugin.
 
 ## Supported Browsers
 
-The 2D view _should_ be supported by IE10+, FF17+, and Chrome 28+. 3D support depends on proper
-graphics card drivers and WebGL support by the browser (and also a specific revision of IE11).
+The 2D view _should_ be supported by IE10+, FF17+, and Chrome 28+. 3D support depends on proper graphics card drivers and WebGL support by the browser (and also a specific revision of IE11).
 
 Even though IE should work, if you use it, you are going to have a bad time. Edge is only slightly better.
 
@@ -49,20 +60,19 @@ Even though IE should work, if you use it, you are going to have a bad time. Edg
 
 ## Bugs
 
-Please use the [issue tracker](https://github.com/opensphere/opensphere/issues) for all bugs and feature requests. Remember to search first to see if the problem has already been reported.
+Please use the [issue tracker](https://github.com/ngageoint/opensphere/issues) for all bugs and feature requests. Remember to search first to see if the problem has already been reported.
 
 ## Development
 
-Our general [development guide](https://github.com/opensphere/opensphere/blob/master/DEVELOPING.md) will help with contributions, plugins, and apps. For plugin development, start with our [plugin guide](https://github.com/opensphere/opensphere/blob/master/PLUGIN_DEVELOPMENT.md).  To use OpenSphere as a library and build your own app on top of it, check out our [application guide](https://github.com/opensphere/opensphere/blob/master/APP_DEVELOPMENT.md).
+Our general [development guide](https://github.com/ngageoint/opensphere/blob/master/DEVELOPING.md) will help with contributions, plugins, and apps. For plugin development, start with our [plugin guide](https://github.com/ngageoint/opensphere/blob/master/PLUGIN_DEVELOPMENT.md).  To use OpenSphere as a library and build your own app on top of it, check out our [application guide](https://github.com/ngageoint/opensphere/blob/master/APP_DEVELOPMENT.md).
 
 ## Contributing
 
-To get involved with OpenSphere directly, see our [contributing guide](https://github.com/opensphere/opensphere/blob/master/CONTRIBUTING.md).
+To get involved with OpenSphere directly, see our [contributing guide](https://github.com/ngageoint/opensphere/blob/master/CONTRIBUTING.md).
 
 ## About
 
-OpenSphere is an application used to visualize temporal/geospatial data. The application represents data using both two and three-dimensional models of the earth, and has the ability to handle large volumes of features and tiles. The core of the application is
-based on Open Geospatial Consortium (OGC) standards. 
+OpenSphere is an application used to visualize temporal/geospatial data. The application represents data using both two and three-dimensional models of the earth, and has the ability to handle large volumes of features and tiles. The core of the application is based on Open Geospatial Consortium (OGC) standards.
 
 OpenSphere was developed at the National Geospatial-Intelligence Agency (NGA) in collaboration with BIT Systems. The government has "unlimited rights" and is releasing this software to increase the impact of government investments by providing developers with the opportunity to take things in new directions. The software use, modification, and distribution rights are stipulated within the Apache license.
 

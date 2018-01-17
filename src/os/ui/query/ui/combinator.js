@@ -4,7 +4,6 @@ goog.provide('os.ui.query.ui.combinatorDirective');
 goog.require('goog.asserts');
 goog.require('goog.async.Delay');
 goog.require('goog.string');
-goog.require('os.action.query.import');
 goog.require('os.alertManager');
 goog.require('os.command.SequenceCommand');
 goog.require('os.events.PropertyChangeEvent');
@@ -21,6 +20,7 @@ goog.require('os.ui.filter.ui.editFiltersDirective');
 goog.require('os.ui.filter.ui.filterExportDirective');
 goog.require('os.ui.filter.ui.viewFiltersDirective');
 goog.require('os.ui.im.ImportEvent');
+goog.require('os.ui.menu.areaImport');
 goog.require('os.ui.query');
 goog.require('os.ui.query.QueryManager');
 goog.require('os.ui.query.cmd.AreaRemove');
@@ -1253,8 +1253,14 @@ goog.exportProperty(
  */
 os.ui.query.ui.CombinatorCtrl.prototype.openImportMenu = function() {
   var target = this.element_.find('.import-group');
-  var offset = target.offset();
-  os.ui.openMenu(os.action.query.import.manager, {x: offset.left, y: offset.top + target.outerHeight() + 4});
+  var menu = os.ui.menu.areaImport.MENU;
+  if (menu && target && target.length) {
+    menu.open(undefined, {
+      my: 'left top+4',
+      at: 'left bottom',
+      of: target
+    });
+  }
 };
 goog.exportProperty(
     os.ui.query.ui.CombinatorCtrl.prototype,

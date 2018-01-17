@@ -20,23 +20,46 @@ describe('os.histo.DateBinMethod', function() {
     var utcItems = [
       {field: '2014-01-30T12:34:56Z'},
       {field: '2014-01-30T12:34:56+0000'},
-      {field: '01/30/2014 12:34:56 UTC'},
       {field: d},
       {field: new os.time.TimeInstant(d.getTime())},
       {field: new os.time.TimeRange(d.getTime(), d.getTime())},
-      {field: d.toString()}
+      {field: d.toISOString()}
     ];
     for (var i = 0, n = utcItems.length; i < n; i++) {
       expect(method.getValue(utcItems[i])).toBe(d.getTime());
     }
+  });
 
-    // todo: These may have worked in the past. Need to speak with Will.
-    var notSupportedItems = [
+  it('should convert time values that are deprecated by moment, but still supported', function() {
+    var d = new Date();
+    d.setUTCFullYear(2014, 0, 30);
+    d.setUTCHours(12, 34, 56, 0);
+
+    // Values that are supported but deprecated by moment. If these tests start failing, move them to the unsupported
+    // test.
+    var deprecatedItems = [
+      {field: '01/30/2014 12:34:56 UTC'},
+      {field: d.toString()},
+    ];
+
+    for (var i = 0, n = deprecatedItems.length; i < n; i++) {
+      expect(method.getValue(deprecatedItems[i])).toBe(d.getTime());
+    }
+  });
+
+  it('should not convert time values that are not supported by moment', function() {
+    var d = new Date();
+    d.setUTCFullYear(2014, 0, 30);
+    d.setUTCHours(12, 34, 56, 0);
+
+    // Values that are unsupported by moment
+    var unsupportedItems = [
       {field: '30/01/2014 12:34:56 UTC'},
       {field: d.getTime()}
     ];
-    for (var i = 0, n = notSupportedItems.length; i < n; i++) {
-      expect(method.getValue(notSupportedItems[i])).toBe(os.histo.DateBinMethod.MAGIC);
+
+    for (var i = 0, n = unsupportedItems.length; i < n; i++) {
+      expect(method.getValue(unsupportedItems[i])).toBe(os.histo.DateBinMethod.MAGIC);
     }
   });
 

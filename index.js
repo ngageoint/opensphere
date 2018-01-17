@@ -4,6 +4,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const resolver = require('opensphere-build-resolver/utils');
 
 
 /**
@@ -18,13 +19,6 @@ const buildDir = '.build';
  * @type {string}
  */
 const buildPath = path.join(__dirname, buildDir);
-
-
-/**
- * Path to the node_modules directory.
- * @type {string}
- */
-const modulesPath = path.join(__dirname, 'node_modules');
 
 
 /**
@@ -80,12 +74,12 @@ const sharedResources = [
     scripts: ['browserCheck.js']
   },
   {
-    source: path.join(modulesPath, 'openlayers/dist'),
+    source: resolver.resolveModulePath('openlayers/dist', __dirname),
     target: 'vendor/openlayers',
     css: ['ol.css']
   },
   {
-    source: path.join(modulesPath, 'jquery/dist'),
+    source: resolver.resolveModulePath('jquery/dist', __dirname),
     target: 'vendor/jquery',
     scripts: ['jquery.min.js']
   },
@@ -135,44 +129,44 @@ const sharedResources = [
     files: ['images']
   },
   {
-    source: path.join(modulesPath, 'simplemde/dist'),
+    source: resolver.resolveModulePath('simplemde/dist', __dirname),
     target: 'vendor/simplemde',
     css: ['simplemde.min.css'],
     scripts: ['simplemde.min.js']
   },
   {
-    source: path.join(modulesPath, 'crossfilter2/'),
+    source: resolver.resolveModulePath('crossfilter2', __dirname),
     target: 'vendor/crossfilter',
     scripts: ['crossfilter.min.js']
   },
   {
-    source: path.join(modulesPath, 'font-awesome'),
+    source: resolver.resolveModulePath('font-awesome', __dirname),
     target: 'vendor/font-awesome',
     css: ['css/font-awesome.min.css'],
     files: ['fonts']
   },
   {
-    source: path.join(modulesPath, 'moment/min'),
+    source: resolver.resolveModulePath('moment/min', __dirname),
     target: 'vendor/moment',
     scripts: ['moment.min.js']
   },
   {
-    source: path.join(modulesPath, 'angular'),
+    source: resolver.resolveModulePath('angular', __dirname),
     target: 'vendor/angular',
     scripts: ['angular.min.js']
   },
   {
-    source: path.join(modulesPath, 'angular-animate'),
+    source: resolver.resolveModulePath('angular-animate', __dirname),
     target: 'vendor/angular',
     scripts: ['angular-animate.min.js']
   },
   {
-    source: path.join(modulesPath, 'angular-sanitize'),
+    source: resolver.resolveModulePath('angular-sanitize', __dirname),
     target: 'vendor/angular',
     scripts: ['angular-sanitize.min.js']
   },
   {
-    source: path.join(modulesPath, 'angular-route'),
+    source: resolver.resolveModulePath('angular-route', __dirname),
     target: 'vendor/angular',
     scripts: ['angular-route.min.js']
   },
@@ -186,7 +180,7 @@ const sharedResources = [
     ]
   },
   {
-    source: path.join(modulesPath, 'text-encoding', 'lib'),
+    source: resolver.resolveModulePath('text-encoding/lib', __dirname),
     target: 'vendor/text-encoding',
     scripts: [
       'encoding-indexes.js',
@@ -206,11 +200,11 @@ const sharedResources = [
   {
     source: 'vendor/geomag',
     target: 'vendor/geomag',
-    scripts: ['geomag.min.js'],
+    scripts: ['cof2Obj.js', 'geomag.js'],
     files: ['WMM.COF']
   },
   {
-    source: path.join(modulesPath, 'cesium/Build/Cesium'),
+    source: resolver.resolveModulePath('cesium/Build/Cesium', __dirname),
     target: 'vendor/cesium',
     scripts: ['Cesium.js'],
     files: [
@@ -220,12 +214,12 @@ const sharedResources = [
     ]
   },
   {
-    source: path.join(modulesPath, 'jsts/dist'),
+    source: resolver.resolveModulePath('jsts/dist', __dirname),
     target: 'vendor/jsts',
     scripts: ['jsts.min.js']
   },
   {
-    source: path.join(modulesPath, 'navigator.sendbeacon'),
+    source: resolver.resolveModulePath('navigator.sendbeacon', __dirname),
     target: 'vendor/sendbeacon',
     scripts: ['sendbeacon.js']
   }
@@ -243,7 +237,7 @@ const indexResources = sharedResources.concat([
     files: ['icons']
   },
   {
-    source: path.join(modulesPath, 'opensphere-asm/dist'),
+    source: resolver.resolveModulePath('opensphere-asm/dist', __dirname),
     target: '',
     scripts: ['os-load.js'],
     files: [
@@ -254,7 +248,7 @@ const indexResources = sharedResources.concat([
     ]
   },
   {
-    source: path.join(modulesPath, 'd3'),
+    source: resolver.resolveModulePath('d3', __dirname),
     target: 'vendor/d3',
     scripts: ['d3.min.js']
   },
@@ -264,22 +258,22 @@ const indexResources = sharedResources.concat([
     scripts: ['d3-tip.js']
   },
   {
-    source: path.join(modulesPath, 'save-svg-as-png'),
+    source: resolver.resolveModulePath('save-svg-as-png', __dirname),
     target: 'vendor/save-svg-as-png',
     scripts: ['saveSvgAsPng.js']
   },
   {
-    source: path.join(modulesPath, 'papaparse'),
+    source: resolver.resolveModulePath('papaparse', __dirname),
     target: 'vendor/papaparse',
     scripts: ['papaparse.min.js']
   },
   {
-    source: path.join(modulesPath, 'proj4', 'dist'),
+    source: resolver.resolveModulePath('proj4/dist', __dirname),
     target: 'vendor/proj4',
     scripts: ['proj4.js']
   },
   {
-    source: path.join(modulesPath, 'suncalc'),
+    source: resolver.resolveModulePath('suncalc', __dirname),
     target: 'vendor/suncalc',
     scripts: ['suncalc.js']
   },
@@ -307,7 +301,7 @@ const oldResources = [
     scripts: ['browserCheck.js']
   },
   {
-    source: path.join(modulesPath, 'platform'),
+    source: resolver.resolveModulePath('platform', __dirname),
     target: '',
     scripts: ['platform.js']
   },
@@ -322,7 +316,7 @@ const oldResources = [
     css: ['slate/bootstrap.min.css']
   },
   {
-    source: path.join(modulesPath, 'font-awesome'),
+    source: resolver.resolveModulePath('font-awesome', __dirname),
     target: 'vendor/font-awesome',
     css: ['css/font-awesome.min.css'],
     files: ['fonts']

@@ -12,8 +12,6 @@ describe('plugin.file.csv.CSVExporter', function() {
   var pointFeature;
   var polygonFeature;
 
-  os.osasm.wait.waitForIt();
-
   beforeEach(function() {
     lineFeature = new ol.Feature(new ol.geom.LineString([[12, 34], [56, 78]]));
     pointFeature = new ol.Feature(new ol.geom.Point([12, 34]));

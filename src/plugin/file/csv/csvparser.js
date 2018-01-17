@@ -90,7 +90,7 @@ plugin.file.csv.CSVParser.prototype.processResult = function(result, opt_mapping
 
     // if both lat and lon aren't set, throw the feature out
     if (goog.isDefAndNotNull(lat) && goog.isDefAndNotNull(lon)) {
-      if (goog.string.isEmpty(lat) || goog.string.isEmpty(lon)) {
+      if (goog.string.isEmptyOrWhitespace(lat) || goog.string.isEmptyOrWhitespace(lon)) {
         return null;
       }
     } else {

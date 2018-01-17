@@ -19,6 +19,13 @@ os.feature.measure.updateAll = function() {
 
 
 /**
+ * The decimal precision (number of digits after the decimal place) to use in formatting.
+ * @type {number}
+ */
+os.feature.measure.numDecimalPlaces = 3;
+
+
+/**
  * @param {ol.Feature} feature
  * @suppress {accessControls}
  */
@@ -34,6 +41,7 @@ os.feature.measure.update = function(feature) {
 
     var um = os.unit.UnitManager.getInstance();
     var coords = geom.getCoordinates();
+    var date = new Date(os.time.TimelineController.getInstance().getCurrent());
 
     if (coords) {
       var total = 0;
@@ -42,9 +50,13 @@ os.feature.measure.update = function(feature) {
         var result = osasm.geodesicInverse(coord, coords[i]);
         var d = result.distance;
         total += d;
-        var bearing = os.bearing.modifyBearing(result.initialBearing, coord);
-        var formattedBearing = os.bearing.getFormattedBearing(bearing);
-        var label = um.formatToBestFit('distance', d, 'm', um.getBaseSystem(), 3) + ' Bearing: ' + formattedBearing;
+
+        if (coord) {
+          var bearing = os.bearing.modifyBearing(result.initialBearing, coord, date);
+          var formattedBearing = os.bearing.getFormattedBearing(bearing);
+          var label = um.formatToBestFit('distance', d, 'm', um.getBaseSystem(), os.feature.measure.numDecimalPlaces) +
+              ' Bearing: ' + formattedBearing;
+        }
         // get the style for the beginning of the segment
         // the first style is the style for the overall line
 
@@ -64,7 +76,8 @@ os.feature.measure.update = function(feature) {
           }
 
           if (i + 1 === n && n < styleArrs[j].length) {
-            var totalLabel = um.formatToBestFit('distance', total, 'm', um.getBaseSystem(), 3);
+            var totalLabel = um.formatToBestFit('distance', total, 'm', um.getBaseSystem(),
+                os.feature.measure.numDecimalPlaces);
             style = styleArrs[j][n];
             if (style) {
               text = style.getText();

@@ -483,7 +483,7 @@ os.ui.filter.filterColumns = function(col, c, arr) {
 os.ui.filter.getFilterableTypes = function(type) {
   var types = [];
 
-  if (!goog.string.isEmpty(type)) {
+  if (!goog.string.isEmptyOrWhitespace(type)) {
     // find the filterable descriptor to which that filter belongs
     var descriptors = os.dataManager.getDescriptors();
     var filterables = /** @type {!Array<!os.filter.IFilterable>} */ (descriptors.filter(
