@@ -1,7 +1,5 @@
 goog.provide('os.data.ColumnDefinition');
 goog.require('os.IPersistable');
-goog.require('os.parse.IColumnDefinition');
-
 
 
 /**
@@ -9,7 +7,6 @@ goog.require('os.parse.IColumnDefinition');
  * @param {string=} opt_name
  * @param {string=} opt_field
  * @implements {os.IPersistable}
- * @implements {os.parse.IColumnDefinition}
  * @constructor
  */
 os.data.ColumnDefinition = function(opt_name, opt_field) {

@@ -38,7 +38,7 @@ describe('os.ui.filter.fn', function() {
   var notXml =
       '<Not>' +
         '<PropertyIsNull>' +
-          '<PropertyName>NOT1</PropertyName></Literal>' +
+          '<PropertyName>NOT1</PropertyName>' +
         '</PropertyIsNull>' +
       '</Not>';
   var notNode = goog.dom.xml.loadXml(notXml).firstChild;

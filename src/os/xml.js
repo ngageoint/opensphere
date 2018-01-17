@@ -244,7 +244,7 @@ os.xml.serialize = function(xml) {
  * @return {*}
  */
 os.xml.getElementValueOrDefault = function(element, defaultValue) {
-  if (element && !goog.string.isEmptySafe(element.textContent)) {
+  if (element && !goog.string.isEmptyOrWhitespace(goog.string.makeSafe(element.textContent))) {
     return element.textContent;
   }
   return defaultValue;

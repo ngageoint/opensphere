@@ -54,33 +54,33 @@ os.ui.column.ColumnManagerCtrl = function($scope, $element) {
   this.element_ = $element;
 
   /**
-   * @type {Object.<string, os.parse.IColumnDefinition>}
+   * @type {Object.<string, os.data.ColumnDefinition>}
    * @private
    */
   this.sourceColumns_ = {};
 
   /**
-   * @type {Array.<os.parse.IColumnDefinition>}
+   * @type {Array.<os.data.ColumnDefinition>}
    */
   this['shownColumns'] = [];
 
   /**
-   * @type {?Array.<os.parse.IColumnDefinition>}
+   * @type {?Array.<os.data.ColumnDefinition>}
    */
   this['shownSelected'] = [];
 
   /**
-   * @type {Array.<os.parse.IColumnDefinition>}
+   * @type {Array.<os.data.ColumnDefinition>}
    */
   this['hiddenColumns'] = [];
 
   /**
-   * @type {?Array.<os.parse.IColumnDefinition>}
+   * @type {?Array.<os.data.ColumnDefinition>}
    */
   this['hiddenSelected'] = [];
 
   /**
-   * @type {Array.<Object.<os.parse.IColumnDefinition, string>>}
+   * @type {Array.<{col: os.data.ColumnDefinition, list: string}>}
    */
   this['searchResults'] = [];
 
@@ -342,7 +342,7 @@ os.ui.column.ColumnManagerCtrl.prototype.validate_ = function() {
 
 /**
  * Generate row content in slick table
- * @param {os.parse.IColumnDefinition} column
+ * @param {os.data.ColumnDefinition} column
  * @param {(os.data.ColumnDefinition|string)} col
  * @return {string} The value
  * @private
@@ -355,7 +355,7 @@ os.ui.column.ColumnManagerCtrl.prototype.getColumnValue_ = function(column, col)
 /**
  * @param {string} term
  * @param {string} columnName
- * @return {Array.<Object.<os.parse.IColumnDefinition, string>>}
+ * @return {Array.<{col: os.data.ColumnDefinition, list: string}>}
  * @private
  */
 os.ui.column.ColumnManagerCtrl.prototype.find_ = function(term, columnName) {
@@ -473,7 +473,7 @@ os.ui.column.ColumnManagerCtrl.prototype.handleKeyEvent_ = function(event) {
 
 /**
  * Launches a column manager window with the given columns
- * @param {Array.<os.parse.IColumnDefinition>} columns
+ * @param {Array.<os.data.ColumnDefinition>} columns
  * @param {Function} callback
  */
 os.ui.column.launchColumnManager = function(columns, callback) {

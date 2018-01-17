@@ -140,15 +140,15 @@ describe('os.state.v2.TimeState', function() {
     var rootObj = os.xml.createElement(os.state.v2.TimeTag.FILTERS);
 
     // Full time range.
-    var startDate = os.time.parseMoment('1970-01-01T00:16:39.999Z', [os.state.v2.TimeState.DATE_FORMAT], true);
-    var endDate = os.time.parseMoment('1974-03-15T02:21:41.010Z', [os.state.v2.TimeState.DATE_FORMAT], true);
+    var startDate = os.time.parseMoment('1970-01-01T00:16:39Z', [os.state.v2.TimeState.DATE_FORMAT], true);
+    var endDate = os.time.parseMoment('1974-03-15T02:21:41Z', [os.state.v2.TimeState.DATE_FORMAT], true);
     tlc.setRange(tlc.buildRange(startDate.valueOf(), endDate.valueOf()));
     var fullRangeString = state.rangeToDateFormatString_(tlc.getRange());
     tlc.setDuration('month');
     // Animate range
-    var animateStartDate = os.time.parseMoment('1971-01-01T00:16:39.999Z',
+    var animateStartDate = os.time.parseMoment('1971-01-01T00:16:39Z',
         [os.state.v2.TimeState.DATE_FORMAT], true);
-    var animateEndDate = os.time.parseMoment('1973-03-15T02:21:41.010Z',
+    var animateEndDate = os.time.parseMoment('1973-03-15T02:21:41Z',
         [os.state.v2.TimeState.DATE_FORMAT], true);
     var animateRange = new goog.math.Range(animateStartDate.valueOf(), animateEndDate.valueOf());
     var animateRangeString = state.rangeToDateFormatString_(animateRange);
@@ -156,9 +156,9 @@ describe('os.state.v2.TimeState', function() {
     tlc.addAnimateRange(animateRange);
 
     // Hold range
-    var holdStartDate = os.time.parseMoment('1971-03-01T00:16:39.999Z',
+    var holdStartDate = os.time.parseMoment('1971-03-01T00:16:39Z',
         [os.state.v2.TimeState.DATE_FORMAT], true);
-    var holdEndDate = os.time.parseMoment('1971-06-12T01:15:11.010Z',
+    var holdEndDate = os.time.parseMoment('1971-06-12T01:15:11Z',
         [os.state.v2.TimeState.DATE_FORMAT], true);
     var holdRange = new goog.math.Range(holdStartDate.valueOf(), holdEndDate.valueOf());
     var holdRangeString = state.rangeToDateFormatString_(holdRange);

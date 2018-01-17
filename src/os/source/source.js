@@ -3,6 +3,7 @@ goog.provide('os.source');
 goog.require('goog.Timer');
 goog.require('ol.layer.Property');
 goog.require('os');
+goog.require('os.data.ColumnDefinition');
 goog.require('os.data.RecordField');
 goog.require('os.filter.IFilterable');
 goog.require('os.implements');
@@ -89,12 +90,23 @@ os.source.getFilterColumns = function(source, opt_local) {
     if (!columns) {
       var filterable = os.ui.filter.FilterManager.getInstance().getFilterable(source.getId());
       if (filterable) {
-        columns = filterable.getFilterColumns();
+        columns = filterable.getFilterColumns().map(os.source.mapFilterColumns);
       }
     }
   }
 
   return columns;
+};
+
+
+/**
+ * @param {!os.ogc.FeatureTypeColumn} c The feature type column to convert
+ * @return {!os.data.ColumnDefinition}
+ */
+os.source.mapFilterColumns = function(c) {
+  var col = new os.data.ColumnDefinition(c.name);
+  col['type'] = c.type;
+  return col;
 };
 
 
@@ -226,7 +238,9 @@ os.source.getExportFields = function(source, opt_internal) {
         //  - already in the list
         //  - are internal to opensphere (unless specified otherwise)
         //
-        if (column['visible'] && !goog.string.isEmptySafe(field) && !goog.array.contains(fields, field) &&
+        if (column['visible'] &&
+            !goog.string.isEmptyOrWhitespace(goog.string.makeSafe(field)) &&
+            !goog.array.contains(fields, field) &&
             (opt_internal || !os.feature.isInternalField(field))) {
           fields.push(field);
         }
