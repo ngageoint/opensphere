@@ -1,6 +1,7 @@
 goog.provide('os.webgl');
 
 goog.require('goog.userAgent');
+goog.require('ol.webgl');
 
 
 /**
@@ -24,4 +25,26 @@ os.webgl.isSupported = function() {
   }
 
   return false;
+};
+
+/**
+ * Checks if WebGL will be rendered with degraded performance
+ * @return {boolean|null}
+ */
+os.webgl.hasPerformanceCaveat = function() {
+  try {
+    var contextOptions = {
+      failIfMajorPerformanceCaveat: true
+    };
+    var canvas = /** @type {HTMLCanvasElement} */ (document.createElement('canvas'));
+    if (ol.webgl.getContext(canvas, contextOptions)) {
+      return false;
+    }
+    if (ol.webgl.getContext(canvas)) {
+      return true;
+    }
+  } catch (e) {
+    // Handle and return null
+  }
+  return null;
 };
