@@ -5,7 +5,7 @@
     },
     "about": {
       "application": "OpenSphere",
-      "logoPath": "images/logo.png",
+      "logoPath": "images/logo.svg",
       "appVendors": [
         {
           "name": "AngularJS",
