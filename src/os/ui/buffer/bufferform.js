@@ -2,7 +2,9 @@ goog.provide('os.ui.buffer.BufferFormCtrl');
 goog.provide('os.ui.buffer.bufferFormDirective');
 
 goog.require('goog.userAgent');
+goog.require('ol.proj');
 goog.require('os.defines');
+goog.require('os.geo.jsts');
 goog.require('os.math.UnitLabels');
 goog.require('os.math.Units');
 goog.require('os.ui.Module');
@@ -245,10 +247,17 @@ os.ui.buffer.BufferFormCtrl.prototype.getWarningMessage = function() {
     if (features && features.length) {
       var distanceMeters = os.math.convertUnits(config['distance'], os.math.Units.METERS, config['units']);
       if (config['inside']) {
-        var offset = os.geo.jsts.getSplitOffset(features[0].getGeometry(), -distanceMeters);
-        if (offset < 0) {
-          return 'The current buffer distance cannot be used to produce an accurate inner buffer. Please reduce the ' +
-              'buffer distance.';
+        var geometry = features[0].getGeometry();
+        var extent = geometry ? geometry.getExtent() : undefined;
+        if (extent) {
+          // transform to EPSG:4326 (assumed by getSplitOffset)
+          extent = ol.proj.transformExtent(extent, os.map.PROJECTION, os.proj.EPSG4326);
+
+          var offset = os.geo.jsts.getSplitOffset(extent, -distanceMeters);
+          if (offset < 0) {
+            return 'The current buffer distance cannot be used to produce an accurate inner buffer. Please reduce ' +
+                'the buffer distance.';
+          }
         }
       }
 

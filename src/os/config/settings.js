@@ -444,7 +444,7 @@ os.config.Settings.prototype.save = function() {
       goog.log.fine(os.config.Settings.LOGGER_, 'Saving settings...');
 
       var keysToDelete = goog.array.clone(os.config.namespace.getObsoleteKeys());
-      goog.array.insertArrayAt(keysToDelete, goog.array.clone(os.config.namespace.keysToDelete.getValues()));
+      goog.array.insertArrayAt(keysToDelete, os.config.namespace.keysToDelete.slice());
 
       // return a promise that is resolved when settings have been saved, or rejected on error.
       return new goog.Promise(function(resolve, reject) {
@@ -480,7 +480,7 @@ os.config.Settings.prototype.save = function() {
 os.config.Settings.prototype.onSaveSuccess_ = function() {
   goog.log.fine(os.config.Settings.LOGGER_, 'Settings saved');
   this.writeStorageChanged_ = false;
-  os.config.namespace.keysToDelete.clear();
+  os.config.namespace.keysToDelete.length = 0;
   os.config.namespace.clearObsoleteKeys();
   var type = this.storageRegistry_.getWriteStorageType();
   if (type) {
@@ -753,7 +753,7 @@ os.config.Settings.prototype.delete = function(keys) {
     this.markKeysForDelete_(keys, undefined, oldVal);
   } else {
     // delete the key entirely
-    os.config.namespace.keysToDelete.add(os.config.namespace.getPrefixedKey(keys.join('.')));
+    goog.array.insert(os.config.namespace.keysToDelete, os.config.namespace.getPrefixedKey(keys.join('.')));
   }
 
   this.dispatchChange_(keys, undefined, oldVal);
@@ -816,7 +816,8 @@ os.config.Settings.prototype.markKeysForDelete_ = function(keys, newVal, oldVal)
     var keysAsStr = keys.join('.');
     goog.array.forEach(oldObjKeys, function(oldObjKey) {
       if (!goog.array.contains(newObjKeys, oldObjKey)) {
-        os.config.namespace.keysToDelete.add(os.config.namespace.getPrefixedKey(keysAsStr + '.' + oldObjKey));
+        goog.array.insert(os.config.namespace.keysToDelete, os.config.namespace.getPrefixedKey(keysAsStr + '.' +
+            oldObjKey));
       }
     });
   }
