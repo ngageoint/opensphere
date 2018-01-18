@@ -16,6 +16,6 @@ There are `readme.md` files placed in various packages to help explain the diffe
 
 ## Contributing Code
 
-Our [developer guide](https://github.com/ngageoint/opensphere/blob/master/DEVELOPING.md) has an overview of the build system, development, and testing the application in both compiled and debug modes.
+Our [developer guide](http://opensphere.readthedocs.io/en/latest/getting_started.html) has an overview of the build system, development, and testing the application in both compiled and debug modes.
 
 We prefer that all contributions take place through [pull requests](https://help.github.com/articles/using-pull-requests). Please ensure that your pull request passes our pull request checklist below before submitting it.

@@ -12,45 +12,123 @@ os.control.Attribution = function(opt_options) {
 };
 goog.inherits(os.control.Attribution, ol.control.Attribution);
 
+/**
+ * Whether to check if a layer is visible at the current resolution before adding to attribution.
+ *
+ * If true, the layer attribution will be added only if the layer would be shown. If false,
+ * the layer attribution will not be resolution sensitive.
+ *
+ * @type {boolean}
+ */
+os.control.Attribution.CheckVisibleAtResolution = true;
 
 /**
- * @inheritDoc
+ * Get a list of visible attributions.
+ * @param {olx.FrameState} frameState Frame state.
+ * @return {Array.<string>} Attributions.
+ * @suppress {accessControls}
  */
-os.control.Attribution.prototype.getSourceAttributions = function(frameState) {
+os.control.Attribution.prototype.getSourceAttributions_ = function(frameState) {
+  /**
+   * Used to determine if an attribution already exists.
+   * @type {Object.<string, boolean>}
+   */
+  var lookup = {};
+
+  /**
+   * A list of visible attributions.
+   * @type {Array.<string>}
+   */
+  var visibleAttributions = [];
+
   var layerStatesArray = frameState.layerStatesArray;
+  var resolution = frameState.viewState.resolution;
+  for (var i = 0, ii = layerStatesArray.length; i < ii; ++i) {
+    var layerState = layerStatesArray[i];
+    if (os.control.Attribution.CheckVisibleAtResolution) {
+      if (!ol.layer.Layer.visibleAtResolution(layerState, resolution)) {
+        continue;
+      }
+    }
 
-  /** @type {Object.<string, ol.Attribution>} */
-  var attributions = ol.obj.assign({}, frameState.attributions);
-
-  /** @type {Object.<string, ol.Attribution>} */
-  var hiddenAttributions = {};
-
-  for (var i = 0, ii = layerStatesArray.length; i < ii; i++) {
-    var source = layerStatesArray[i].layer.getSource();
+    var source = layerState.layer.getSource();
     if (!source) {
       continue;
     }
 
-    var sourceAttributions = source.getAttributions();
-    if (!sourceAttributions) {
+    var attributionGetter = source.getAttributions2();
+    if (!attributionGetter) {
       continue;
     }
 
-    for (var j = 0, jj = sourceAttributions.length; j < jj; j++) {
-      var sourceAttribution = sourceAttributions[j];
-      var sourceAttributionKey = ol.getUid(sourceAttribution).toString();
+    var attributions = attributionGetter(frameState);
+    if (!attributions) {
+      continue;
+    }
 
-      if (layerStatesArray[i].layer.getVisible()) {
-        attributions[sourceAttributionKey] = sourceAttribution;
-      } else {
-        hiddenAttributions[sourceAttributionKey] = sourceAttribution;
+    if (Array.isArray(attributions)) {
+      for (var j = 0, jj = attributions.length; j < jj; ++j) {
+        if (!(attributions[j] in lookup)) {
+          visibleAttributions.push(attributions[j]);
+          lookup[attributions[j]] = true;
+        }
       }
+    } else if (!(attributions in lookup)) {
+      visibleAttributions.push(attributions);
+      lookup[attributions] = true;
     }
   }
-
-  return [attributions, hiddenAttributions];
+  return visibleAttributions;
 };
 
+/**
+ * @suppress {accessControls}
+ * @param {?olx.FrameState} frameState Frame state.
+ */
+os.control.Attribution.prototype.updateElement_ = function(frameState) {
+  if (!frameState) {
+    if (this.renderedVisible_) {
+      this.element.style.display = 'none';
+      this.renderedVisible_ = false;
+    }
+    return;
+  }
+
+  var attributions = this.getSourceAttributions_(frameState);
+  if (ol.array.equals(attributions, this.renderedAttributions_)) {
+    return;
+  }
+
+  // remove everything
+  this.ulElement_.innerHTML = '';
+
+  // add the label
+  var label = document.createElement('LI');
+  if (attributions.length > 1) {
+    label.innerHTML = 'Sources:';
+  } else {
+    label.innerHTML = 'Source:';
+  }
+  this.ulElement_.appendChild(label);
+
+  // append the attributions
+  for (var i = 0, ii = attributions.length - 1; i < ii; ++i) {
+    var element = document.createElement('LI');
+    element.innerHTML = attributions[i] + ',';
+    this.ulElement_.appendChild(element);
+  }
+  var lastItem = document.createElement('LI');
+  lastItem.innerHTML = attributions[attributions.length - 1];
+  this.ulElement_.appendChild(lastItem);
+
+  var visible = attributions.length > 0;
+  if (this.renderedVisible_ != visible) {
+    this.element.style.display = visible ? '' : 'none';
+    this.renderedVisible_ = visible;
+  }
+
+  this.renderedAttributions_ = attributions;
+};
 
 /**
  * @suppress {accessControls}

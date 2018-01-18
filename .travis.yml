@@ -16,7 +16,6 @@ script:
 - npm run build
 - npm run test
 - npm run apidoc
-- mv dist/apidoc dist/opensphere
 - set +e
 after_success:
 - chmod ugo+x ./deploy.sh

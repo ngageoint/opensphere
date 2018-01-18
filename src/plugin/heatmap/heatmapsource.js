@@ -229,7 +229,7 @@ plugin.heatmap.HeatmapSource.prototype.getImageInternal = function(extent, resol
     ctx.drawImage(canvas, 0, 0);
 
     // cache the image and its data URL for the synchronizer
-    this.currentCanvas_ = new ol.ImageCanvas(extent, resolution, pixelRatio, this.getAttributions(), c);
+    this.currentCanvas_ = new ol.ImageCanvas(extent, resolution, pixelRatio, c);
     this.set('url', c.toDataURL());
     this.dirty_ = false;
   }
