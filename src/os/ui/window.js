@@ -40,6 +40,7 @@ os.ui.windowDirective = function() {
       'iconHtml': '@',
       'showClose': '=',
       'showHide': '=',
+      'showCollapse': '=',
       'noScroll': '@',
       'overlay': '@',
       'modal': '=',
@@ -717,7 +718,7 @@ goog.exportProperty(os.ui.WindowCtrl.prototype, 'toggle', os.ui.WindowCtrl.proto
  * @private
  */
 os.ui.WindowCtrl.prototype.updateContent_ = function() {
-  if (this.scope['noScroll'] === 'true') {
+  if (this.scope && this.scope['noScroll'] === 'true') {
     this.element.find('.window-content').css('overflow', 'hidden');
   }
 };
