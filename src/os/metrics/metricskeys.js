@@ -170,6 +170,7 @@ os.metrics.keys.Map = {
   UNITS_NAUTICALMILE: 'map.units.nauticalmile',
   UNITS_YARD: 'map.units.yard',
   WEBGL_FAILED: 'map.stats.error-webglInitFailed',
+  WEBGL_PERFORMANCE_CAVEAT: 'map.stats.error-webglPerfCaveat',
   WEBGL_UNSUPPORTED: 'map.stats.error-webglUnsupported'
 };
 

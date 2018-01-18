@@ -40,8 +40,10 @@ os.ui.window.launchConfirm = function(opt_options) {
     'cancelCallback': options.cancel || goog.nullFunction,
     'yesText': options.yesText || 'OK',
     'yesIcon': options.yesIcon || 'fa fa-check lt-blue-icon',
+    'yesButtonTitle': options.yesButtonTitle || '',
     'noText': options.noText || 'Cancel',
     'noIcon': options.noIcon || 'fa fa-ban red-icon',
+    'noButtonTitle': options.noButtonTitle || '',
     'formClass': options.formClass || 'form-horizontal'
   };
 
