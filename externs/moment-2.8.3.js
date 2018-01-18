@@ -442,6 +442,16 @@ moment.duration.prototype.asSeconds = function() {};
  */
 moment.duration.prototype.asMinutes = function() {};
 
+/**
+ * @return {number}
+ */
+moment.duration.prototype.asHours = function() {};
+
+/**
+ * @return {number}
+ */
+moment.duration.prototype.asDays = function() {};
+
 
 /**
  * @return {number}
