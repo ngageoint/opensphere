@@ -1,0 +1,49 @@
+<div class="file-import window-content-wrapper">
+  <div class="window-content">
+    <form name="georssForm" class="form-compact">
+      <div class="control-group" data-ng-class="{'error':georssForm.title.$invalid && georssForm.title.$dirty}">
+        <label class="control-label">Layer Title:</label>
+        <div class="controls">
+          <input type="text" name="title" ng-model="config.title" ng-required="true" ng-maxlength="50"/>
+          <span class="help-inline" data-ng-show="georssForm.title.$error.required">Required!</span>
+          <span class="help-inline" data-ng-show="georssForm.title.$error.maxlength">Title is too long!</span>
+          <span class="help-inline" data-ng-show="georssForm.title.$error.exists">Title is already in use by another layer!</span>
+        </div>
+      </div>
+      <div class="control-group" data-ng-class="{'error': georssForm.desc.$invalid && georssForm.desc.$dirty}">
+        <label class="control-label">Description:</label>
+        <div class="controls">
+          <input type="text" name="desc" ng-model="config.description" ng-maxlength="2000"
+              placeholder="Add a custom description"/>
+          <span class="help-inline" data-ng-show="georssForm.desc.$error.maxlength">Description is too long!</span>
+        </div>
+      </div>
+      <div class="control-group" data-ng-class="{'error':georssForm.tags.$invalid && georssForm.tags.$dirty}">
+        <label class="control-label">Tags:</label>
+        <div class="controls">
+          <input type="text" name="tags" ng-model="config.tags" ng-maxlength="2000"
+              placeholder="Tags organize layers: e.g. states, population"/>
+          <span class="help-inline" data-ng-show="georssForm.tags.$error.maxlength">Tags are too long!</span>
+        </div>
+      </div>
+      <div class="control-group inline">
+        <label class="control-label">Color:</label>
+        <div class="controls">
+          <colorpicker name="color" class="no-text" color="config.color">
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="window-footer">
+    <div class="pull-right">
+      <button class="btn btn-default" ng-click="georssImport.accept()" ng-disabled="georssForm.$invalid" title="Import the file">
+        <i class="fa fa-check lt-blue-icon"></i>
+        OK
+      </button>
+      <button class="btn btn-default" ng-click="georssImport.cancel()" title="Cancel file import">
+        <i class="fa fa-ban red-icon"></i>
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>
