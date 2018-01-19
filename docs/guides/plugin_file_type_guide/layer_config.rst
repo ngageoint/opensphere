@@ -48,6 +48,6 @@ Running ``yarn build`` and viewing the debug instance of the application should 
       url: 'https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.atom',
       color: 'FFFF00'
     })
-  });
+  );
 
 Cool! But unfortunately this layer is not saved across sessions and it does not support the OpenSphere file/URL import flow. We will do that next!
