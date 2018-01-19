@@ -26,6 +26,7 @@ describe('plugin.georss.GeoRSSTypeMethod', function() {
     var xml = '<?xml version="1.0" encoding="utf-8"?><something xmlns="http://something.com/schema"/>';
     var file = new os.file.File();
     file.setContent(xml);
+    var typeMethod = new plugin.georss.GeoRSSTypeMethod();
     expect(typeMethod.isType(file)).toBe(false);
   });
 
