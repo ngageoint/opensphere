@@ -2,7 +2,7 @@ goog.provide('plugin.params.ParamsPlugin');
 
 goog.require('os.plugin.AbstractPlugin');
 goog.require('plugin.params');
-goog.require('plugin.params.action');
+goog.require('plugin.params.menu');
 
 
 
@@ -26,7 +26,7 @@ goog.addSingletonGetter(plugin.params.ParamsPlugin);
  */
 plugin.params.ParamsPlugin.prototype.disposeInternal = function() {
   plugin.params.ParamsPlugin.base(this, 'disposeInternal');
-  plugin.params.action.layerDispose();
+  plugin.params.menu.layerDispose();
 };
 
 
@@ -34,5 +34,5 @@ plugin.params.ParamsPlugin.prototype.disposeInternal = function() {
  * @inheritDoc
  */
 plugin.params.ParamsPlugin.prototype.init = function() {
-  plugin.params.action.layerSetup();
+  plugin.params.menu.layerSetup();
 };

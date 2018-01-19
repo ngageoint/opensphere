@@ -179,7 +179,8 @@ os.ui.slick.SlickGridCtrl = function($scope, $element, $compile) {
   }, this));
 
   /**
-   * @type {os.ui.action.ActionManager}
+   * The column menu.
+   * @type {os.ui.menu.Menu<os.ui.slick.ColumnContext>}
    * @protected
    */
   this.columnMenu = ($scope['columnMenuEnabled'] && $scope['columnMenuEnabled'] !== 'false') ?
@@ -476,7 +477,7 @@ os.ui.slick.SlickGridCtrl.prototype.getColumnsInternal = function() {
 
 /**
  * Get the column menu for this grid.
- * @return {os.ui.action.ActionManager}
+ * @return {os.ui.menu.Menu<os.ui.slick.ColumnContext>}
  */
 os.ui.slick.SlickGridCtrl.prototype.getColumnMenu = function() {
   return this.columnMenu;
@@ -857,11 +858,11 @@ os.ui.slick.SlickGridCtrl.prototype.onColumnsResized_ = function(e, args) {
 
 /**
  * Handle the column reset event.
- * @param {os.ui.action.ActionEvent} event
+ * @param {os.ui.menu.MenuEvent<os.ui.slick.ColumnContext>} event The column menu event.
  * @protected
  */
 os.ui.slick.SlickGridCtrl.prototype.onColumnReset = function(event) {
-  var context = /** @type {os.ui.slick.ColumnContext} */ (event.getContext());
+  var context = event.getContext();
   if (context && context.grid === this) {
     var columns = this.getColumnsInternal();
     columns.forEach(function(column) {
@@ -877,11 +878,11 @@ os.ui.slick.SlickGridCtrl.prototype.onColumnReset = function(event) {
 
 /**
  * Handle a column being removed from the grid.
- * @param {os.ui.action.ActionEvent} event
+ * @param {os.ui.menu.MenuEvent<os.ui.slick.ColumnContext>} event The column menu event.
  * @protected
  */
 os.ui.slick.SlickGridCtrl.prototype.onColumnRemove = function(event) {
-  var context = /** @type {os.ui.slick.ColumnContext} */ (event.getContext());
+  var context = event.getContext();
   if (context && context.grid === this && context.column) {
     var columns = this.getColumnsInternal();
     var index = goog.array.findIndex(columns,
@@ -895,46 +896,12 @@ os.ui.slick.SlickGridCtrl.prototype.onColumnRemove = function(event) {
 
 
 /**
- * Handle a column being added back to the grid.
- * @param {os.data.ColumnDefinition} column
- * @param {os.ui.action.ActionEvent} event
- */
-os.ui.slick.SlickGridCtrl.prototype.onColumnAdd = function(column, event) {
-  var context = /** @type {os.ui.slick.ColumnContext} */ (event.getContext());
-  if (column && context && context.grid === this) {
-    var columns = this.getColumnsInternal();
-    var index = goog.array.findIndex(columns,
-        os.ui.slick.column.findByField.bind(this, 'id', column['id']));
-    if (index > -1) {
-      columns[index]['visible'] = true;
-
-      if (context.column && context.column['id']) {
-        // if we have a reference to the right-clicked column, drop the added column in its place
-        var targetIndex = goog.array.findIndex(columns,
-            os.ui.slick.column.findByField.bind(this, 'id', context.column['id']));
-        if (targetIndex > -1) {
-          // goog.array.moveItem breaks if you move an item to an index after its original
-          if (targetIndex > index) {
-            targetIndex--;
-          }
-          var removed = columns.splice(index, 1);
-          columns.splice(targetIndex, 0, removed[0]);
-        }
-      }
-
-      this.onUserColumnsChange([columns[index]]);
-    }
-  }
-};
-
-
-/**
  * Handler to move a column to the front of the array.
- * @param {os.ui.action.ActionEvent} event
+ * @param {os.ui.menu.MenuEvent<os.ui.slick.ColumnContext>} event The column menu event.
  * @protected
  */
 os.ui.slick.SlickGridCtrl.prototype.onColumnFirst = function(event) {
-  var context = /** @type {os.ui.slick.ColumnContext} */ (event.getContext());
+  var context = event.getContext();
   if (context && context.grid === this && context.column) {
     var columns = this.getColumnsInternal();
     var index = goog.array.findIndex(columns,
@@ -949,11 +916,11 @@ os.ui.slick.SlickGridCtrl.prototype.onColumnFirst = function(event) {
 
 /**
  * Handler to move a column to the back of the array.
- * @param {os.ui.action.ActionEvent} event
+ * @param {os.ui.menu.MenuEvent<os.ui.slick.ColumnContext>} event The column menu event.
  * @protected
  */
 os.ui.slick.SlickGridCtrl.prototype.onColumnLast = function(event) {
-  var context = /** @type {os.ui.slick.ColumnContext} */ (event.getContext());
+  var context = event.getContext();
   if (context && context.grid === this && context.column) {
     var columns = this.getColumnsInternal();
     var index = goog.array.findIndex(columns,
@@ -968,7 +935,7 @@ os.ui.slick.SlickGridCtrl.prototype.onColumnLast = function(event) {
 
 /**
  * Handler to launch the column manager window
- * @param {os.ui.action.ActionEvent|angular.Scope.Event} event
+ * @param {os.ui.menu.MenuEvent<os.ui.slick.ColumnContext>|angular.Scope.Event} event The column menu event.
  * @protected
  */
 os.ui.slick.SlickGridCtrl.prototype.onColumnManager = function(event) {
@@ -1084,17 +1051,16 @@ os.ui.slick.SlickGridCtrl.prototype.onContextMenu_ = function(event, opt_positio
 
 
 /**
- * Handle a header context menu event.
- * @param {(angular.Scope.Event|goog.events.BrowserEvent)} event
- * @param {Array<number>=} opt_position The menu position
+ * Handle a header context menu open event.
+ * @param {(angular.Scope.Event|goog.events.BrowserEvent)} event The menu open event.
+ * @param {jQuery.PositionOptions=} opt_position The menu position options.
  * @private
  */
 os.ui.slick.SlickGridCtrl.prototype.onHeaderContextMenu_ = function(event, opt_position) {
   event.preventDefault();
 
   var headerColumn;
-  var menuX = 0;
-  var menuY = 0;
+  var position;
 
   if (event instanceof goog.events.BrowserEvent) {
     // event was triggered by right clicking a column
@@ -1104,24 +1070,24 @@ os.ui.slick.SlickGridCtrl.prototype.onHeaderContextMenu_ = function(event, opt_p
     headerColumn = goog.dom.classlist.contains(contextTarget, 'slick-header-column') ?
         event.target : goog.dom.getAncestorByClass(contextTarget, 'slick-header-column');
 
-    menuX = event.clientX;
-    menuY = event.clientY;
-  } else if (opt_position && opt_position.length == 2) {
+    position = {
+      my: 'left top',
+      at: 'left+' + event.clientX + ' top+' + event.clientY,
+      of: '#win-container'
+    };
+  } else if (goog.isObject(opt_position)) {
     // event was fired on the scope
-    menuX = opt_position[0];
-    menuY = opt_position[1];
+    position = opt_position;
   }
 
-  if (this.columnMenu) {
+  if (this.columnMenu && position) {
     var column = headerColumn ? /** @type {os.data.ColumnDefinition} */ ($(headerColumn).data('column')) : undefined;
     if (!column || !column['internal']) {
-      this.columnMenu.withActionArgs({
+      this.columnMenu.open(/** @type {!os.ui.slick.ColumnContext} */ ({
         columns: this.getColumnsInternal(),
         column: column,
         grid: this
-      });
-      this.columnMenu.refreshEnabledActions();
-      os.ui.openMenu(this.columnMenu, {x: menuX, y: menuY});
+      }), position);
     }
   }
 };

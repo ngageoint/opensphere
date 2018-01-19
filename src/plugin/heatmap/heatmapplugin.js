@@ -1,6 +1,5 @@
 goog.provide('plugin.heatmap.HeatmapPlugin');
 
-goog.require('os.action.layer');
 goog.require('os.data.DataManager');
 goog.require('os.layer.config.LayerConfigManager');
 goog.require('os.plugin.AbstractPlugin');
@@ -9,7 +8,7 @@ goog.require('os.ui.action.MenuOptions');
 goog.require('plugin.heatmap');
 goog.require('plugin.heatmap.HeatmapLayerConfig');
 goog.require('plugin.heatmap.HeatmapSynchronizer');
-goog.require('plugin.heatmap.action');
+goog.require('plugin.heatmap.menu');
 
 
 
@@ -34,14 +33,14 @@ plugin.heatmap.HeatmapPlugin.prototype.init = function() {
       plugin.heatmap.HeatmapLayerConfig);
 
   // setup the layer action manager
-  plugin.heatmap.action.setup();
+  plugin.heatmap.menu.setup();
 
   // listen for source add so that we can set the action as supported
   var dm = os.dataManager;
   dm.listen(os.data.event.DataEventType.SOURCE_ADDED, function(event) {
     var source = event.source;
     if (source && source instanceof os.source.Vector) {
-      source.setSupportsAction(plugin.heatmap.action.EventType.GENERATE_HEATMAP, true);
+      source.setSupportsAction(plugin.heatmap.menu.EventType.GENERATE_HEATMAP, true);
     }
   });
 

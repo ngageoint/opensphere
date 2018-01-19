@@ -7,9 +7,9 @@ goog.require('ol.proj');
 goog.require('os.interpolate');
 goog.require('os.metrics.MapMetrics');
 goog.require('os.metrics.Metrics');
-goog.require('os.ui.action.ActionEvent');
 goog.require('os.ui.im.ImportEvent');
 goog.require('os.ui.im.ImportProcess');
+goog.require('os.ui.menu.MenuEvent');
 goog.require('os.ui.query.cmd.AreaAdd');
 goog.require('os.ui.query.ui.area.userAreaDirective');
 
@@ -25,7 +25,7 @@ os.query.addArea = function(area, opt_active) {
   // Make sure the area is enabled if it is in the app
   os.ui.areaManager.toggle(area, active);
   os.command.CommandProcessor.getInstance().addCommand(new os.ui.query.cmd.AreaAdd(area, active));
-  os.dispatcher.dispatchEvent(new os.ui.action.ActionEvent(os.ui.action.EventType.ZOOM, {
+  os.dispatcher.dispatchEvent(new os.ui.menu.MenuEvent(os.ui.action.EventType.ZOOM, {
     'feature': area,
     'geometry': area.getGeometry()
   }));

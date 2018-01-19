@@ -1,10 +1,12 @@
 goog.provide('os.ui.query.ui.AddFilterCtrl');
 goog.provide('os.ui.query.ui.addFilterDirective');
+
 goog.require('os.filter.FilterEntry');
 goog.require('os.ui.Module');
-goog.require('os.ui.action.Action');
-goog.require('os.ui.action.ActionManager');
 goog.require('os.ui.filter.ui.editFiltersDirective');
+goog.require('os.ui.menu.Menu');
+goog.require('os.ui.menu.MenuItem');
+goog.require('os.ui.menu.MenuItemType');
 goog.require('os.ui.query');
 goog.require('os.ui.window');
 
@@ -57,10 +59,13 @@ os.ui.query.ui.AddFilterCtrl = function($scope, $element) {
   this.scope = $scope;
 
   /**
-   * @type {os.ui.action.ActionManager}
+   * @type {os.ui.menu.Menu|undefined}
    * @protected
    */
-  this.layerMenu = new os.ui.action.ActionManager();
+  this.layerMenu = new os.ui.menu.Menu(new os.ui.menu.MenuItem({
+    type: os.ui.menu.MenuItemType.ROOT,
+    children: []
+  }));
 
   /**
    * The list of layers
@@ -68,7 +73,6 @@ os.ui.query.ui.AddFilterCtrl = function($scope, $element) {
    * @protected
    */
   this.layers = [];
-  this.updateLayers();
 
   os.ui.queryManager.listen(goog.events.EventType.PROPERTYCHANGE, this.updateLayers, false, this);
   $scope.$on('$destroy', this.onDestroy.bind(this));
@@ -82,6 +86,9 @@ os.ui.query.ui.AddFilterCtrl = function($scope, $element) {
 os.ui.query.ui.AddFilterCtrl.prototype.onDestroy = function() {
   os.ui.queryManager.unlisten(goog.events.EventType.PROPERTYCHANGE, this.updateLayers, false, this);
 
+  goog.dispose(this.layerMenu);
+  this.layerMenu = undefined;
+
   this.scope = null;
   this.element_ = null;
 };
@@ -92,9 +99,18 @@ os.ui.query.ui.AddFilterCtrl.prototype.onDestroy = function() {
  * @protected
  */
 os.ui.query.ui.AddFilterCtrl.prototype.updateLayers = function() {
+  if (!this.layerMenu) {
+    return;
+  }
+
+  // drop existing menu items
+  var menuRoot = this.layerMenu.getRoot();
+  if (menuRoot.children) {
+    menuRoot.children = undefined;
+  }
+
   var qm = os.ui.queryManager;
   var set = qm.getLayerSet();
-  this.layerMenu.removeActions();
   var layers = [];
 
   for (var key in set) {
@@ -127,9 +143,11 @@ os.ui.query.ui.AddFilterCtrl.prototype.updateLayers = function() {
 
   for (var i = 0, n = layers.length; i < n; i++) {
     var id = layers[i]['id'];
-    var menuItem = new os.ui.action.Action(id, layers[i]['label'], null, 'hide');
-    menuItem.handleWith(this.addFilter.bind(this, id));
-    this.layerMenu.addAction(menuItem);
+    menuRoot.addChild({
+      label: layers[i]['label'],
+      eventType: id,
+      handler: this.addFilter.bind(this, id)
+    });
   }
 
   this.layers = layers;
@@ -142,8 +160,12 @@ os.ui.query.ui.AddFilterCtrl.prototype.updateLayers = function() {
 os.ui.query.ui.AddFilterCtrl.prototype.add = function() {
   if (this.scope['layer'] && this.scope['layer']['id']) {
     this.addFilter(this.scope['layer']['id']);
-  } else if (this.element_) {
-    os.ui.openMenu(this.layerMenu, 'top', this.element_);
+  } else if (this.layerMenu && this.element_) {
+    this.layerMenu.open(undefined, {
+      my: 'left top',
+      at: 'left bottom',
+      of: this.element_
+    });
   }
 };
 goog.exportProperty(
@@ -182,7 +204,7 @@ os.ui.query.ui.AddFilterCtrl.prototype.onFilterReady_ = function(entry) {
  * @return {boolean}
  */
 os.ui.query.ui.AddFilterCtrl.prototype.canAdd = function() {
-  return !!this.layerMenu && this.layerMenu.hasEnabledActions();
+  return !!this.layers && this.layers.length > 0;
 };
 goog.exportProperty(
     os.ui.query.ui.AddFilterCtrl.prototype,

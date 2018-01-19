@@ -6,6 +6,7 @@ goog.require('os.defines');
 goog.require('os.metrics.Metrics');
 goog.require('os.metrics.keys');
 goog.require('os.ui.Module');
+goog.require('os.ui.menu.layer');
 goog.require('os.ui.window.confirmDirective');
 goog.require('os.ui.window.confirmTextDirective');
 goog.require('plugin.file.kml.ui');
@@ -38,13 +39,16 @@ os.ui.Module.directive('places', [plugin.places.ui.placesDirective]);
 
 /**
  * Controller function for the places directive
- * @param {!angular.Scope} $scope
+ * @param {!angular.Scope} $scope The Angular scope.
  * @extends {goog.Disposable}
  * @constructor
  * @ngInject
  */
 plugin.places.ui.PlacesCtrl = function($scope) {
+  plugin.places.ui.PlacesCtrl.base(this, 'constructor');
+
   /**
+   * The Angular scope.
    * @type {?angular.Scope}
    * @private
    */
@@ -53,6 +57,7 @@ plugin.places.ui.PlacesCtrl = function($scope) {
   var pm = plugin.places.PlacesManager.getInstance();
 
   /**
+   * The Places root KML node.
    * @type {plugin.file.kml.ui.KMLNode}
    * @private
    */
@@ -61,22 +66,20 @@ plugin.places.ui.PlacesCtrl = function($scope) {
     pm.listenOnce(os.config.EventType.LOADED, this.onPlacesReady_, false, this);
   }
 
-  try {
-    this['contextMenu'] = os.action.layer.manager;
-  } catch (e) {
-  }
-
   /**
-   * @type {string}
+   * The context menu for Places.
+   * @type {os.ui.menu.Menu<os.ui.menu.layer.Context>|undefined}
    */
-  this['help'] = null;
+  this['contextMenu'] = os.ui.menu.layer.MENU;
 
   /**
+   * The Places KML tree.
    * @type {!Array<Object>}
    */
   this['treeData'] = this.placesRoot_ ? [this.placesRoot_] : [];
 
   /**
+   * The selected node in the tree.
    * @type {plugin.file.kml.ui.KMLNode}
    */
   this['selected'] = null;

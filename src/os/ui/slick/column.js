@@ -5,10 +5,9 @@ goog.provide('os.ui.slick.column');
 goog.require('goog.array');
 goog.require('os.data.ColumnDefinition');
 goog.require('os.ui');
-goog.require('os.ui.action.Action');
-goog.require('os.ui.action.ActionEvent');
-goog.require('os.ui.action.ActionManager');
-goog.require('os.ui.action.MenuOptions');
+goog.require('os.ui.menu.Menu');
+goog.require('os.ui.menu.MenuItem');
+goog.require('os.ui.menu.MenuItemType');
 goog.require('os.ui.slick.formatter');
 
 
@@ -26,7 +25,7 @@ os.ui.slick.column.FIX_HEADER = 'ui-widget ui-state-default';
 
 /**
  * Initial column width/order settings.
- * @type {Object.<string, Object>}
+ * @type {Object<string, Object>}
  */
 os.ui.slick.column.fix = {
   'TIME': {
@@ -181,47 +180,66 @@ os.ui.slick.column.color = function() {
 
 
 /**
- * Creates a new column action manager
- * @return {os.ui.action.ActionManager} The column action manager
+ * Creates a new column menu instance.
+ * @return {!os.ui.menu.Menu<os.ui.slick.ColumnContext>} The column menu.
  */
 os.ui.slick.createColumnActions = function() {
-  var manager = new os.ui.action.ActionManager();
-
-  var manageColumns = new os.ui.action.Action(os.ui.slick.ColumnEventType.MANAGE, 'Manage Columns',
-      'Display a window where you can manage your columns', 'fa-columns', null,
-      new os.ui.action.MenuOptions(null, os.ui.slick.ColumnGroupType.ORDER, 0));
-  manager.addAction(manageColumns);
-
-  var first = new os.ui.action.Action(os.ui.slick.ColumnEventType.FIRST, 'First',
-      'Move the column to the beginning', 'fa-angle-double-left', null,
-      new os.ui.action.MenuOptions(null, os.ui.slick.ColumnGroupType.ORDER, 1));
-  first.enableWhen(os.ui.slick.column.hasColumn_);
-  manager.addAction(first);
-
-  var last = new os.ui.action.Action(os.ui.slick.ColumnEventType.LAST, 'Last',
-      'Move the column to the end', 'fa-angle-double-right', null,
-      new os.ui.action.MenuOptions(null, os.ui.slick.ColumnGroupType.ORDER, 4));
-  last.enableWhen(os.ui.slick.column.hasColumn_);
-  manager.addAction(last);
-
-  var remove = new os.ui.action.Action(os.ui.slick.ColumnEventType.REMOVE, 'Hide Column',
-      'Removes the column from the grid', 'fa-eye-slash', null,
-      new os.ui.action.MenuOptions(null, os.ui.slick.ColumnGroupType.EDIT, 1))
-      .enableWhen(os.ui.slick.column.checkColumnRemove_);
-  manager.addAction(remove);
-
-  var resetColumns = new os.ui.action.Action(os.ui.slick.ColumnEventType.RESET, 'Reset Columns',
-      'Show all columns and reset their widths', 'fa-refresh', null,
-      new os.ui.action.MenuOptions(null, os.ui.slick.ColumnGroupType.EDIT, 2));
-  manager.addAction(resetColumns);
-
-  return manager;
+  return new os.ui.menu.Menu(new os.ui.menu.MenuItem({
+    type: os.ui.menu.MenuItemType.ROOT,
+    children: [{
+      label: os.ui.slick.ColumnMenuGroup.ORDER,
+      type: os.ui.menu.MenuItemType.GROUP,
+      sort: 0,
+      children: [{
+        label: 'Manage Columns',
+        eventType: os.ui.slick.ColumnEventType.MANAGE,
+        tooltip: 'Display a window where you can manage your columns',
+        icons: ['<i class="fa fa-fw fa-columns"></i>'],
+        sort: 0
+      },
+      {
+        label: 'First',
+        eventType: os.ui.slick.ColumnEventType.FIRST,
+        tooltip: 'Move the column to the beginning',
+        icons: ['<i class="fa fa-fw fa-angle-double-left"></i>'],
+        beforeRender: os.ui.slick.column.visibleIfHasColumn_,
+        sort: 1
+      },
+      {
+        label: 'Last',
+        eventType: os.ui.slick.ColumnEventType.LAST,
+        tooltip: 'Move the column to the end',
+        icons: ['<i class="fa fa-fw fa-angle-double-right"></i>'],
+        beforeRender: os.ui.slick.column.visibleIfHasColumn_,
+        sort: 2
+      }]
+    }, {
+      label: os.ui.slick.ColumnMenuGroup.EDIT,
+      type: os.ui.menu.MenuItemType.GROUP,
+      sort: 1,
+      children: [{
+        label: 'Hide Column',
+        eventType: os.ui.slick.ColumnEventType.REMOVE,
+        tooltip: 'Removes the column from the grid',
+        icons: ['<i class="fa fa-fw fa-eye-slash"></i>'],
+        beforeRender: os.ui.slick.column.visibleIfCanRemove_,
+        sort: 0
+      },
+      {
+        label: 'Reset Columns',
+        eventType: os.ui.slick.ColumnEventType.RESET,
+        tooltip: 'Show all columns and reset their widths',
+        icons: ['<i class="fa fa-fw fa-refresh"></i>'],
+        sort: 100
+      }]
+    }]
+  }));
 };
 
 
 /**
  * @typedef {{
- *   columns: Array.<os.data.ColumnDefinition>,
+ *   columns: Array<os.data.ColumnDefinition>,
  *   column: os.data.ColumnDefinition,
  *   grid: os.ui.slick.SlickGridCtrl
  * }}
@@ -230,12 +248,12 @@ os.ui.slick.ColumnContext;
 
 
 /**
- * Default groups in the list menu.
+ * Default groups in the column menu.
  * @enum {string}
  */
-os.ui.slick.ColumnGroupType = {
-  ORDER: '0:Column Order',
-  EDIT: '1:Edit Columns'
+os.ui.slick.ColumnMenuGroup = {
+  ORDER: 'Column Order',
+  EDIT: 'Edit Columns'
 };
 
 
@@ -262,38 +280,38 @@ os.ui.slick.ColumnEventType = {
 
 
 /**
- * Checks whether a column is provided in the action arguments.
- * @param {os.ui.slick.ColumnContext} actionArgs
- * @return {boolean}
+ * Show a menu item if the context has a column.
+ * @param {os.ui.slick.ColumnContext} context The column menu context.
+ * @this {os.ui.menu.MenuItem}
  * @private
  */
-os.ui.slick.column.hasColumn_ = function(actionArgs) {
-  return actionArgs != null && actionArgs.column != null;
+os.ui.slick.column.visibleIfHasColumn_ = function(context) {
+  this.visible = !!context && !!context.column;
 };
 
 
 /**
- * Checks whether the column remove action should be enabled. If it finds more than 1 visible column,
- * the remove action will be available.
- * @param {os.ui.slick.ColumnContext} actionArgs
- * @return {boolean}
+ * Show a menu item if the context contains more than one visible column.
+ * @param {os.ui.slick.ColumnContext} context The column menu context.
+ * @this {os.ui.menu.MenuItem}
  * @private
  */
-os.ui.slick.column.checkColumnRemove_ = function(actionArgs) {
-  var count = 0;
-  if (actionArgs && actionArgs.column && actionArgs.columns) {
-    var columns = /** @type {Array.<os.data.ColumnDefinition>} */ (actionArgs.columns);
-    for (var i = 0; i < columns.length; i++) {
-      if (columns[i].visible) {
-        count++;
-        if (count > 1) {
-          return true;
+os.ui.slick.column.visibleIfCanRemove_ = function(context) {
+  this.visible = false;
+
+  var foundOne = false;
+  if (context && context.column && context.columns) {
+    for (var i = 0; i < context.columns.length; i++) {
+      if (context.columns[i].visible) {
+        if (foundOne) {
+          this.visible = true;
+          return;
+        } else {
+          foundOne = true;
         }
       }
     }
   }
-
-  return false;
 };
 
 
@@ -322,7 +340,7 @@ os.ui.slick.column.findColumn = function(columns, fieldOrName) {
  * @param {*} value
  * @param {os.data.ColumnDefinition} column
  * @param {number} index
- * @param {Array.<os.data.ColumnDefinition>} array
+ * @param {Array<os.data.ColumnDefinition>} array
  * @return {boolean}
  */
 os.ui.slick.column.findByField = function(key, value, column, index, array) {

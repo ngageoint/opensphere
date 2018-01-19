@@ -1,25 +1,22 @@
-goog.provide('os.action.windows');
+goog.provide('os.ui.menu.windows.default');
 
-goog.require('os.action.EventType');
-goog.require('os.action.common');
-goog.require('os.action.export');
 goog.require('os.config.ServerSettings');
 goog.require('os.metrics.keys');
-goog.require('os.ui.action.windows');
 goog.require('os.ui.events.UIEvent');
 goog.require('os.ui.events.UIEventType');
 goog.require('os.ui.ex.ExportDirective');
+goog.require('os.ui.menu.windows');
 
 
 /**
- * Sets up layer actions
+ * Add default windows to the Windows menu.
  */
-os.action.windows.setup = function() {
-  os.ui.action.windows.setup();
+os.ui.menu.windows.default.setup = function() {
+  os.ui.menu.windows.setup();
 
   // add windows
-  os.ui.action.windows.addWindow('addData', {
-    'icon': 'fa fa-plus green-icon',
+  os.ui.menu.windows.addWindow('addData', {
+    'icon': 'fa-plus green-icon',
     'label': 'Add Data',
     'description': 'Add data to the map',
     'x': 'center',
@@ -36,9 +33,9 @@ os.action.windows.setup = function() {
     'html': 'adddata'
   }, true);
 
-  var layers = os.ui.action.windows.addWindow('layers', {
+  var layers = os.ui.menu.windows.addWindow('layers', {
     'key': 'layers',
-    'icon': 'orange-icon fa fa-align-justify',
+    'icon': 'orange-icon fa-align-justify',
     'label': 'Layers',
     'description': 'View and manipulate layers on the map',
     'x': '20',
@@ -58,10 +55,12 @@ os.action.windows.setup = function() {
   }, true);
 
   // layers is open by default
-  os.ui.action.windows.manager.invoke(layers);
+  if (layers) {
+    os.ui.menu.windows.openWindow('layers');
+  }
 
-  os.ui.action.windows.addWindow('timeline', {
-    'icon': 'fa fa-clock-o yellow-icon',
+  os.ui.menu.windows.addWindow('timeline', {
+    'icon': 'fa-clock-o yellow-icon',
     'label': 'Timeline',
     'metricKey': os.metrics.keys.Timeline.OPEN
   }, true, function() {
@@ -69,8 +68,8 @@ os.action.windows.setup = function() {
     os.dispatcher.dispatchEvent(event);
   });
 
-  os.ui.action.windows.addWindow('settings', {
-    'icon': 'fa fa-gears',
+  os.ui.menu.windows.addWindow('settings', {
+    'icon': 'fa-gears',
     'label': 'Settings',
     'description': 'Change application settings',
     'x': 'center',
@@ -86,8 +85,8 @@ os.action.windows.setup = function() {
     'html': 'settings'
   }, true);
 
-  os.ui.action.windows.addWindow('alerts', {
-    'icon': 'fa fa-bell',
+  os.ui.menu.windows.addWindow('alerts', {
+    'icon': 'fa-bell',
     'label': 'Alerts',
     'description': 'View notifications and alerts',
     'x': 'center',
@@ -103,8 +102,8 @@ os.action.windows.setup = function() {
     'html': '<alerts resize-with=".window"></alerts>'
   });
 
-  os.ui.action.windows.addWindow('clear', {
-    'icon': 'fa fa-times red-icon',
+  os.ui.menu.windows.addWindow('clear', {
+    'icon': 'fa-times red-icon',
     'label': 'Clear',
     'description': 'Clear data from the map',
     'x': 'center',
@@ -119,8 +118,8 @@ os.action.windows.setup = function() {
     'html': 'clear'
   });
 
-  os.ui.action.windows.addWindow('history', {
-    'icon': 'fa fa-history',
+  os.ui.menu.windows.addWindow('history', {
+    'icon': 'fa-history',
     'label': 'History',
     'description': 'View undo history',
     'x': 'center',
@@ -137,8 +136,8 @@ os.action.windows.setup = function() {
   });
 
   if (os.settings.get('metrics.enabled', false)) {
-    os.ui.action.windows.addWindow('metrics', {
-      'icon': 'orange-icon fa fa-cubes',
+    os.ui.menu.windows.addWindow('metrics', {
+      'icon': 'orange-icon fa-cubes',
       'label': '{APP} Capabilities',
       'description': 'Explore {APP} Capabilities',
       'x': 'center',
@@ -155,14 +154,14 @@ os.action.windows.setup = function() {
     });
   }
 
-  os.ui.action.windows.addWindow('legend', {
+  os.ui.menu.windows.addWindow('legend', {
     'icon': os.legend.ICON,
     'label': 'Legend',
     'description': 'Shows a legend for all the data on the map'
   }, false, os.ui.menu.map.showLegend);
 
-  os.ui.action.windows.addWindow('log', {
-    'icon': 'fa fa-terminal',
+  os.ui.menu.windows.addWindow('log', {
+    'icon': 'fa-terminal',
     'label': 'Log'
   }, false, function() {
     if (!os.logWindow.isEnabled()) {
@@ -170,14 +169,14 @@ os.action.windows.setup = function() {
     }
   });
 
-  os.ui.action.windows.addWindow('servers', {
-    'icon': 'fa fa-database',
+  os.ui.menu.windows.addWindow('servers', {
+    'icon': 'fa-database',
     'label': 'Servers'
-  }, false, os.action.windows.openServers);
+  }, false, os.ui.menu.windows.default.openServers);
 };
 
 
 /**
  * @type {function()}
  */
-os.action.windows.openServers = goog.partial(os.ui.action.windows.openSettingsTo, os.config.ServerSettings.ID);
+os.ui.menu.windows.default.openServers = goog.partial(os.ui.menu.windows.openSettingsTo, os.config.ServerSettings.ID);

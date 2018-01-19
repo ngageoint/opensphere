@@ -1,7 +1,9 @@
 goog.require('os.data.event.DataEvent');
 goog.require('os.source.Vector');
+goog.require('os.ui.menu.layer');
 goog.require('plugin.heatmap.HeatmapLayerConfig');
 goog.require('plugin.heatmap.HeatmapPlugin');
+goog.require('plugin.heatmap.menu');
 
 
 describe('plugin.heatmap.HeatmapPlugin', function() {
@@ -22,6 +24,8 @@ describe('plugin.heatmap.HeatmapPlugin', function() {
   };
 
   it('should register the appropriate stuffs', function() {
+    os.ui.menu.layer.setup();
+
     var p = new plugin.heatmap.HeatmapPlugin();
     p.init();
 
@@ -41,10 +45,12 @@ describe('plugin.heatmap.HeatmapPlugin', function() {
 
     var event = new os.data.event.DataEvent(os.data.event.DataEventType.SOURCE_ADDED, source);
     dm.dispatchEvent(event);
-    expect(source.getSupportsAction(plugin.heatmap.action.EventType.GENERATE_HEATMAP)).toBe(true);
+    expect(source.getSupportsAction(plugin.heatmap.menu.EventType.GENERATE_HEATMAP)).toBe(true);
 
-    var manager = os.action.layer.manager;
-    expect(manager.getAction(plugin.heatmap.action.EventType.EXPORT)).not.toBe(null);
-    expect(manager.getAction(plugin.heatmap.action.EventType.GENERATE_HEATMAP)).not.toBe(null);
+    var menu = os.ui.menu.layer.MENU;
+    expect(menu.getRoot().find(plugin.heatmap.menu.EventType.EXPORT)).not.toBe(null);
+    expect(menu.getRoot().find(plugin.heatmap.menu.EventType.GENERATE_HEATMAP)).not.toBe(null);
+
+    os.ui.menu.layer.dispose();
   });
 });
