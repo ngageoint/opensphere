@@ -22,4 +22,5 @@ If you wish for this to be a core plugin included with OpenSphere then simply be
   content_type
   launcher
   provider
+  descriptor
   import_ui
