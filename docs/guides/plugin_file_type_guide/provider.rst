@@ -44,6 +44,6 @@ Similarly to layer configs, providers are instantiated by type. Pull up the debu
 .. code-block:: javascript
 
   os.dataManager.getProviderRoot().getChildren().filter(
-    p => p instanceof plugine.georss.GeoRSSProvider)
+    p => p instanceof plugin.georss.GeoRSSProvider)
 
 If it is not there, you may have a cache issue with your settings file. You can either navigate to the settings file directly and give it a hard refresh (ctrl/cmd+shift+r in Chrome), clear your full cache, or use the Dev Tools to disable the cache.
