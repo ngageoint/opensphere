@@ -1,0 +1,64 @@
+goog.provide('plugin.georss.GeoRSSPlugin');
+
+goog.require('os.data.ProviderEntry');
+goog.require('os.plugin.AbstractPlugin');
+goog.require('os.plugin.PluginManager');
+goog.require('plugin.georss.GeoRSSDescriptor');
+goog.require('plugin.georss.GeoRSSImportUI');
+goog.require('plugin.georss.GeoRSSLayerConfig');
+goog.require('plugin.georss.GeoRSSProvider');
+goog.require('plugin.georss.GeoRSSTypeMethod');
+
+
+/**
+ * Provides an interface to the OSM overpass API
+ * @extends {os.plugin.AbstractPlugin}
+ * @constructor
+ */
+plugin.georss.GeoRSSPlugin = function() {
+  plugin.georss.GeoRSSPlugin.base(this, 'constructor');
+  this.id = plugin.georss.ID;
+  this.errorMessage = null;
+};
+goog.inherits(plugin.georss.GeoRSSPlugin, os.plugin.AbstractPlugin);
+
+
+/**
+ * @type {string}
+ * @const
+ */
+plugin.georss.ID = 'georss';
+
+
+/**
+ * @inheritDoc
+ */
+plugin.georss.GeoRSSPlugin.prototype.init = function() {
+  var lcm = os.layer.config.LayerConfigManager.getInstance();
+  lcm.registerLayerConfig(plugin.georss.ID, plugin.georss.GeoRSSLayerConfig);
+
+  // register the georss file type method
+  var fm = os.file.FileManager.getInstance();
+  fm.registerContentTypeMethod(new plugin.georss.GeoRSSTypeMethod());
+
+  var im = os.ui.im.ImportManager.getInstance();
+  im.registerImportDetails('GeoRSS', true);
+  im.registerImportUI(plugin.georss.ID, new plugin.georss.GeoRSSImportUI());
+
+  // register georss provider type
+  var dm = os.data.DataManager.getInstance();
+  var title = 'GeoRSS Layers';
+  dm.registerProviderType(new os.data.ProviderEntry(
+      plugin.georss.ID,               // the type
+      plugin.georss.GeoRSSProvider,   // the class
+      title, // the title
+      title  // the description
+      ));
+
+  // register the geojson descriptor type
+  dm.registerDescriptorType(plugin.georss.ID, plugin.georss.GeoRSSDescriptor);
+};
+
+
+// add the plugin to the application
+os.plugin.PluginManager.getInstance().addPlugin(new plugin.georss.GeoRSSPlugin());
