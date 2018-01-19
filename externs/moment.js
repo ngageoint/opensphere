@@ -1,5 +1,5 @@
 /**
- * @fileoverview Externs for MomentJS 2.8.3.
+ * @fileoverview Externs for MomentJS.
  * @see http://ssdn-belford.stwan.bits/docs/momentjs/momentjs.com/docs/index.html
  * @externs
  */
