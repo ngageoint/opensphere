@@ -24,3 +24,4 @@ If you wish for this to be a core plugin included with OpenSphere then simply be
   provider
   descriptor
   import_ui
+  time_support

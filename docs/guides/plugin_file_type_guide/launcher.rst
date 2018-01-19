@@ -3,7 +3,7 @@ Import UI Launcher
 
 Import UI Launchers are small classes that configure and launch a UI to let the user set options on the layer. Minimally this should let the user set the layer title and adjust the color.
 
-.. literalinclude:: src/plugin/georss/georssimportui.js
+.. literalinclude:: src/plugin/georss/georssimportui.js-launcher
   :caption: ``src/plugin/georss/georssimportui.js``: 
   :linenos:
   :language: javascript
