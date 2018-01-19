@@ -6,7 +6,7 @@ goog.require('plugin.georss.GeoRSSLayerConfig');
 
 
 /**
- * Provides an interface to the OSM overpass API
+ * Provides support for the GeoRSS format.
  * @extends {os.plugin.AbstractPlugin}
  * @constructor
  */
