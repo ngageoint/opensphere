@@ -1,8 +1,6 @@
 File Type Plugin Guide
 ======================
 
-(work-in-progress: Will is actively writing this up)
-
 Here we will walk though creating a plugin for a new vector file type, georss-simple_.
 
 .. _georss-simple: http://www.georss.org/simple.html
