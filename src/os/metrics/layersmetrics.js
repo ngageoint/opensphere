@@ -240,10 +240,5 @@ os.metrics.LayersMetrics = function() {
     description: 'Creates buffered region from data in this layer.',
     key: os.metrics.Layer.CREATE_BUFFER
   });
-  this.addChild(contextFeatureLayersMenuLeaf, {
-    label: 'Convolve',
-    description: 'Convolve ellipse data in this layer.',
-    key: os.metrics.Layer.CONVOLVE
-  });
 };
 goog.inherits(os.metrics.LayersMetrics, os.ui.metrics.MetricsPlugin);

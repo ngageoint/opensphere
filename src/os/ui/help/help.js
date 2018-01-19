@@ -16,6 +16,7 @@ goog.require('os.ui.menu.Menu');
 goog.require('os.ui.menu.MenuButtonCtrl');
 goog.require('os.ui.menu.MenuItem');
 goog.require('os.ui.menu.MenuItemType');
+goog.require('os.ui.menu.windows');
 goog.require('os.ui.modal.aboutModalDirective');
 goog.require('os.ui.onboarding.OnboardingManager');
 goog.require('os.ui.util.ResetSettings');
@@ -274,7 +275,7 @@ os.ui.help.HelpCtrl.prototype.onHelpAction_ = function(event) {
  */
 os.ui.help.showAlertsWindow_ = function() {
   var flag = 'alerts';
-  if (flag && !os.ui.action.windows.openWindow(flag)) {
+  if (flag && !os.ui.menu.windows.openWindow(flag)) {
     var evt = new os.ui.events.UIEvent(os.ui.events.UIEventType.TOGGLE_UI, flag);
     os.dispatcher.dispatchEvent(evt);
   }

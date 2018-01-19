@@ -1,13 +1,12 @@
-goog.provide('os.action.buffer');
+goog.provide('os.ui.menu.buffer');
 
 goog.require('goog.asserts');
 goog.require('ol.Feature');
 goog.require('ol.geom.Point');
-goog.require('os.action.common');
-goog.require('os.action.layer');
+goog.require('os.action.EventType');
 goog.require('os.buffer');
-goog.require('os.ui.action.Action');
-goog.require('os.ui.action.MenuOptions');
+goog.require('os.ui.menu.common');
+goog.require('os.ui.menu.layer');
 goog.require('os.ui.menu.map');
 goog.require('os.ui.menu.spatial');
 
@@ -15,40 +14,41 @@ goog.require('os.ui.menu.spatial');
 /**
  * Set up buffer region listeners.
  */
-os.action.buffer.setup = function() {
-  os.action.buffer.layerSetup();
-  os.action.buffer.mapSetup();
-  os.action.buffer.spatialSetup();
+os.ui.menu.buffer.setup = function() {
+  os.ui.menu.buffer.layerSetup();
+  os.ui.menu.buffer.mapSetup();
+  os.ui.menu.buffer.spatialSetup();
 };
 
 
 /**
  * Clean up buffer region listeners.
  */
-os.action.buffer.dispose = function() {
-  os.action.buffer.layerDispose();
-  os.action.buffer.mapDispose();
-  os.action.buffer.spatialDispose();
+os.ui.menu.buffer.dispose = function() {
+  os.ui.menu.buffer.layerDispose();
+  os.ui.menu.buffer.mapDispose();
+  os.ui.menu.buffer.spatialDispose();
 };
 
 
 /**
  * Set up buffer region listeners in the layers window.
  */
-os.action.buffer.layerSetup = function() {
-  if (!os.action.layer.manager) {
-    os.action.layer.setup();
-  }
+os.ui.menu.buffer.layerSetup = function() {
+  var menu = os.ui.menu.layer.MENU;
+  if (menu && !menu.getRoot().find(os.action.EventType.BUFFER)) {
+    var group = menu.getRoot().find(os.ui.menu.layer.GroupLabel.TOOLS);
+    goog.asserts.assert(group, 'Group should exist! Check spelling?');
 
-  var manager = os.action.layer.manager;
-  if (!manager.getAction(os.action.EventType.BUFFER)) {
-    var buffer = new os.ui.action.Action(os.action.EventType.BUFFER,
-        'Create Buffer Region...', 'Create buffer regions around loaded data', os.buffer.ICON, null,
-        new os.ui.action.MenuOptions(null, os.action.layer.GroupType.TOOLS),
-        os.metrics.Layer.CREATE_BUFFER);
-    buffer.enableWhen(os.action.layer.isLayerActionSupported.bind(buffer, os.action.EventType.BUFFER));
-    manager.addAction(buffer);
-    manager.listen(os.action.EventType.BUFFER, os.action.buffer.handleLayerBufferEvent);
+    group.addChild({
+      label: 'Create Buffer Region...',
+      eventType: os.action.EventType.BUFFER,
+      tooltip: 'Create buffer regions around loaded data',
+      icons: ['<i class="fa fa-fw ' + os.buffer.ICON + '"></i>'],
+      beforeRender: os.ui.menu.layer.visibleIfSupported,
+      handler: os.ui.menu.buffer.handleLayerBufferEvent,
+      metricKey: os.metrics.Layer.CREATE_BUFFER
+    });
   }
 };
 
@@ -56,10 +56,11 @@ os.action.buffer.layerSetup = function() {
 /**
  * Clean up buffer region listeners in the layers window.
  */
-os.action.buffer.layerDispose = function() {
-  if (os.action && os.action.layer && os.action.layer.manager) {
-    os.action.layer.manager.removeAction(os.action.EventType.BUFFER);
-    os.action.layer.manager.unlisten(os.action.EventType.BUFFER, os.action.buffer.handleLayerBufferEvent);
+os.ui.menu.buffer.layerDispose = function() {
+  var menu = os.ui.menu.layer.MENU;
+  var group = menu ? menu.getRoot().find(os.ui.menu.layer.GroupLabel.TOOLS) : undefined;
+  if (group) {
+    group.removeChild(os.action.EventType.BUFFER);
   }
 };
 
@@ -67,7 +68,7 @@ os.action.buffer.layerDispose = function() {
 /**
  * Set up buffer region listeners on the map.
  */
-os.action.buffer.mapSetup = function() {
+os.ui.menu.buffer.mapSetup = function() {
   var menu = os.ui.menu.MAP;
   if (menu && !menu.getRoot().find(os.action.EventType.BUFFER)) {
     var group = menu.getRoot().find('Coordinate');
@@ -78,7 +79,7 @@ os.action.buffer.mapSetup = function() {
       eventType: os.action.EventType.BUFFER,
       tooltip: 'Create a buffer region around the clicked coordinate',
       icons: ['<i class="fa fa-fw ' + os.buffer.ICON + '"></i>'],
-      handler: os.action.buffer.handleCoordinateBufferEvent
+      handler: os.ui.menu.buffer.handleCoordinateBufferEvent
     });
   }
 };
@@ -87,11 +88,13 @@ os.action.buffer.mapSetup = function() {
 /**
  * Clean up buffer region listeners on the map.
  */
-os.action.buffer.mapDispose = function() {
+os.ui.menu.buffer.mapDispose = function() {
   var menu = os.ui.menu.MAP;
   if (menu) {
     var group = menu.getRoot().find('Coordinate');
-    group.removeChild(os.action.EventType.BUFFER);
+    if (group) {
+      group.removeChild(os.action.EventType.BUFFER);
+    }
   }
 };
 
@@ -99,7 +102,7 @@ os.action.buffer.mapDispose = function() {
 /**
  * Set up buffer region listeners on the map.
  */
-os.action.buffer.spatialSetup = function() {
+os.ui.menu.buffer.spatialSetup = function() {
   var menu = os.ui.menu.SPATIAL;
   if (menu) {
     var root = menu.getRoot();
@@ -111,8 +114,8 @@ os.action.buffer.spatialSetup = function() {
       label: 'Create Buffer Region...',
       tooltip: 'Create a buffer region from the feature(s)',
       icons: ['<i class="fa fa-fw ' + os.buffer.ICON + '"></i>'],
-      beforeRender: os.action.buffer.visibleIfCanBuffer,
-      handler: os.action.buffer.handleSpatialBufferEvent
+      beforeRender: os.ui.menu.buffer.visibleIfCanBuffer,
+      handler: os.ui.menu.buffer.handleSpatialBufferEvent
     });
   }
 };
@@ -121,7 +124,7 @@ os.action.buffer.spatialSetup = function() {
 /**
  * Clean up buffer region listeners on the spatial.
  */
-os.action.buffer.spatialDispose = function() {
+os.ui.menu.buffer.spatialDispose = function() {
   var menu = os.ui.menu.SPATIAL;
   if (menu) {
     var root = menu.getRoot();
@@ -138,30 +141,29 @@ os.action.buffer.spatialDispose = function() {
  * @param {Object|undefined} context The menu context.
  * @this {os.ui.menu.MenuItem}
  */
-os.action.buffer.visibleIfCanBuffer = function(context) {
+os.ui.menu.buffer.visibleIfCanBuffer = function(context) {
   // polygonal geometries are generally drawn as areas, so don't clutter the menu with the buffer option
-  var visible = false;
+  this.visible = false;
 
   var features = os.ui.menu.spatial.getFeaturesFromContext(context);
   if (features.length > 0) {
     // feature is on the map, buffer it
-    visible = true;
+    this.visible = true;
   } else {
     var geometries = os.ui.menu.spatial.getGeometriesFromContext(context);
     if (geometries.length === 1 && !os.geo.isGeometryPolygonal(geometries[0])) {
       // drawing a non-polygonal geometry, buffer it
-      visible = true;
+      this.visible = true;
     }
   }
-
-  this.visible = visible;
 };
 
 
 /**
- * @param {os.ui.menu.MenuEvent<ol.Coordinate>} event
+ * Handle buffer event from the map menu.
+ * @param {!os.ui.menu.MenuEvent<ol.Coordinate>} event
  */
-os.action.buffer.handleCoordinateBufferEvent = function(event) {
+os.ui.menu.buffer.handleCoordinateBufferEvent = function(event) {
   event.preventDefault();
 
   os.buffer.launchDialog({
@@ -171,10 +173,10 @@ os.action.buffer.handleCoordinateBufferEvent = function(event) {
 
 
 /**
- * Handle buffer region events.
- * @param {!os.ui.action.ActionEvent} event The event.
+ * Handle buffer event from the layer menu.
+ * @param {!os.ui.menu.MenuEvent<os.ui.menu.layer.Context>} event The menu event.
  */
-os.action.buffer.handleLayerBufferEvent = function(event) {
+os.ui.menu.buffer.handleLayerBufferEvent = function(event) {
   var context = event.getContext();
   if (context && event instanceof goog.events.Event && !os.inIframe()) {
     // Here's a fun exploitation of the whole window context and instanceof problem.
@@ -183,10 +185,8 @@ os.action.buffer.handleLayerBufferEvent = function(event) {
     event.preventDefault();
     event.stopPropagation();
 
-    context = /** @type {Object} */ (context);
-
     // only use the first source unless we ever support multiple in the picker
-    var sources = os.action.common.getSourcesFromContext(context);
+    var sources = os.ui.menu.common.getSourcesFromContext(context);
     os.buffer.launchDialog({
       'sources': sources && sources.length > 0 ? [sources[0]] : []
     });
@@ -195,10 +195,10 @@ os.action.buffer.handleLayerBufferEvent = function(event) {
 
 
 /**
- * Handle buffer events from the spatial menu.
+ * Handle buffer event from the spatial menu.
  * @param {!os.ui.menu.MenuEvent} event The event.
  */
-os.action.buffer.handleSpatialBufferEvent = function(event) {
+os.ui.menu.buffer.handleSpatialBufferEvent = function(event) {
   var context = event.getContext();
   if (context && event instanceof goog.events.Event && !os.inIframe()) {
     // Here's a fun exploitation of the whole window context and instanceof problem.
