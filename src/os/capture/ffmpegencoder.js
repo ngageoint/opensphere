@@ -64,7 +64,7 @@ os.capture.ffmpegEncoder.SCRIPT_URL = os.ROOT + os.capture.ffmpegEncoder.SCRIPT_
  */
 os.capture.ffmpegEncoder.prototype.processInWebWorker = function() {
   var ffmpegPath = window.location.href + os.capture.ffmpegEncoder.SCRIPT_LOCATION;
-  var blob = URL.createObjectURL(new Blob(['importScripts("' + ffmpegPath + '");' + 
+  var blob = URL.createObjectURL(new Blob(['importScripts("' + ffmpegPath + '");' +
     'var now = Date.now;' +
     'function print(text) {postMessage({"type": "stdout", "data": text});};' +
     'onmessage = function(event) {var message = event.data;' +
@@ -84,8 +84,8 @@ os.capture.ffmpegEncoder.prototype.processInWebWorker = function() {
     'postMessage({"type": "stdout", "data": "Finished processing (took " + totalTime + "ms"});' +
     'postMessage({"type": "done", "data": result, "time": totalTime});}};' +
     'postMessage({"type": "ready"});'], {
-        type: 'application/Javascript'
-      }
+      type: 'application/Javascript'
+    }
     )
   );
 
@@ -117,18 +117,30 @@ os.capture.ffmpegEncoder.prototype.isEncoderLoaded = function() {
 /**
  * @param {ProgressEvent} event
  */
- os.capture.ffmpegEncoder.prototype.toMP4 = function(event) {
+os.capture.ffmpegEncoder.prototype.toMP4 = function(event) {
+  // try {
+  //   this.images = []; // convert canvas to array of bytes
+  //   for (var i = 0; i < this.frames.length; i++) {
+  //     this.images.push(this.frames[i].toDataURL('image/png'));
+  //   }
+  // } catch (e) {
+  //   this.images = [];
+  //   this.handleError('failed generating images');
+  // }
+
   if (!this.worker && event) {
     var stdout = '';
     this.worker = this.processInWebWorker();
     this.worker.onmessage = function(evt) {
-      var message evt.data;
+      var message = evt.data;
       switch (message.type) {
         case 'ready':
           this.worker.postMessage({
             type: 'command',
             arguments: ['-i', 'video.gif', 'test.mp4'],
             files: [{name: 'video.gif', data: new Uint8Array(event.target.result)}]
+            // arguments: ['-i', 'video.mp4', 'test.mp4'],
+            // files: [{name: 'video.mp4', data: new Uint8Array(event.target.result)}]
           });
           break;
         case 'start':
@@ -138,7 +150,7 @@ os.capture.ffmpegEncoder.prototype.isEncoderLoaded = function() {
           stdout += message.data + '/n';
           break;
         case 'done':
-          if (mesage.data && message.data.length > 0 && message.data[0]) {
+          if (message.data && message.data.length > 0 && message.data[0]) {
             this.output = message.data[0];
           }
           var blob = new Blob([this.output], {'type': os.capture.ContentType.MP4});
@@ -157,7 +169,7 @@ os.capture.ffmpegEncoder.prototype.isEncoderLoaded = function() {
       }
     }.bind(this);
   }
- };
+};
 
 /**
  * Complete callback for the WebM video compile function.
@@ -165,25 +177,35 @@ os.capture.ffmpegEncoder.prototype.isEncoderLoaded = function() {
  * @private
  */
 os.capture.ffmpegEncoder.prototype.onVideoReady_ = function(data) {
-  var fileReader = new FileReader();
-  fileReader.onloadend = this.toMP4.bind(this);
-  fileReader.readAsArrayBuffer(data);
+  if (typeof data == 'function') {
+    var fileReader = new FileReader();
+    fileReader.onloadend = this.toMP4.bind(this);
+    fileReader.readAsArrayBuffer(data);
+  }
 };
 
 /**
  * @inheritDoc
+ * @suppress {accessControls} To allow creating a constant string from the URL, which varies by environment.
  */
 os.capture.ffmpegEncoder.prototype.processInternal = function() {
+  // if (window['Whammy'] == null) {
+  //   var constUrl = goog.string.Const.create__googStringSecurityPrivate_(os.capture.WebMEncoder.SCRIPT_URL);
+  //   var trustedUrl = goog.html.TrustedResourceUrl.fromConstant(constUrl);
+  //   goog.net.jsloader.safeLoad(trustedUrl).addCallbacks(this.processInternal_, this.onScriptLoadError, this);
+  // } else {
   if (window['GIF'] == null) {
-    goog.net.jsloader.load(os.capture.GifEncoder.SCRIPT_URL).addCallbacks(this.processInternal_, this.onScriptLoadError_, this);
+    var constUrl = goog.string.Const.create__googStringSecurityPrivate_(os.capture.GifEncoder.SCRIPT_URL);
+    var trustedUrl = goog.html.TrustedResourceUrl.fromConstant(constUrl);
+    goog.net.jsloader.safeLoad(trustedUrl).addCallbacks(this.processInternal_, this.onScriptLoadError, this);
   } else {
     this.processInternal_();
   }
-}
+};
 
 
 /**
- * @inheritDoc
+ * gif encoding
  */
 os.capture.ffmpegEncoder.prototype.processInternal_ = function() {
   try {
@@ -219,6 +241,25 @@ os.capture.ffmpegEncoder.prototype.processInternal_ = function() {
     this.handleError('failed generating GIF', e);
   }
 };
+
+
+/**
+ * webm encoding
+ */
+// os.capture.ffmpegEncoder.prototype.processInternal_ = function() {
+//   try {
+//     this.webm_ = new Whammy.Video(this.frameRate, this.quality);
+//     this.setStatus('Generating WebM video...');
+
+//     for (var i = 0; i < this.frames.length; i++) {
+//       this.webm_.add(this.frames[i]);
+//     }
+
+//     this.webm_.compile(false, this.onVideoReady_.bind(this));
+//   } catch (e) {
+//     this.handleError('failed generating WebM video', e);
+//   }
+// };
 
 
 /**
