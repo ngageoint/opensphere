@@ -41,7 +41,15 @@ Because many import UIs configure mappings, it helps the user if those default t
 
 After picking any of those options, fire up the debug instance and load your URL. Open the timeline by clicking the yellow clock icon in the Date Control at the top or choosing Windows > Timeline. If you were using a recent feed, you should see your data for today immediately and you can hit the Play button to animate it. If your data is older, you can zoom/pan to it and draw (or explicitly set) a new Load or Animation range before playing.
 
-That concludes the File Type Plugin Guide! If you have any further questions or requests for new guides, please feel free to use our `GitHub issues`_. Also, do not forget to check out the `core plugins`_ as examples for other things you can do!.
+To complete testing of the importer, we can extend the tests as shown below:
+
+.. literalinclude:: test/plugin/georsslayerconfig.test.js_importer
+  :caption: ``test/plugin/georss/georsslayerconfig.test.js``
+  :linenos: 1-14
+  :language: javascript
+  :emphasize-lines: 10-13
+
+That concludes the File Type Plugin Guide! If you have any further questions or requests for new guides, please feel free to use our `GitHub issues`_. Also, remember to check out the `core plugins`_ as examples for other things you can do!.
 
 .. _GitHub issues: https://github.com/ngageoint/opensphere/issues
 .. _core plugins: https://github.com/ngageoint/opensphere/tree/master/src/plugin
