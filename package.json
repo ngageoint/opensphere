@@ -102,7 +102,8 @@
     "commitmsg": "validate-commit-msg",
     "postmerge": "npm run package:update",
     "postrewrite": "npm run package:update",
-    "semantic-release": "semantic-release"
+    "semantic-release": "semantic-release",
+    "start-server": "http-server ../ -p 8282 -c-1 -o -U"
   },
   "keywords": [
     "geospatial",
@@ -192,6 +193,7 @@
     "eslint-plugin-google-camelcase": "^0.0.2",
     "eslint-plugin-opensphere": "^1.0.0",
     "google-closure-compiler": "^20171203.0.0",
+    "http-server": "^0.11.1",
     "husky": "^0.13.3",
     "jasmine-core": "^2.5.2",
     "js-dossier": "^0.12.0",
