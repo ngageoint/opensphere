@@ -34,9 +34,10 @@ Cool. Now let's undo our launcher changes from the last step and make it look li
 
 To test that Import UI, we need a few tests:
 
-.. literalinclude:: src/plugin/georss/georssimportui.test.js
-  :caption: ``src/plugin/georss/georssimportui.test.js``
-  :linenos: 1-33
+.. literalinclude:: test/plugin/georss/georssimportui.test.js
+  :caption: ``test/plugin/georss/georssimportui.test.js``
+  :linenos:
+  :lines: 1-33
   :language: javascript
 
 
