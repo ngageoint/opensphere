@@ -1,9 +1,9 @@
 goog.provide('os.ui.StateButtonCtrl');
 goog.provide('os.ui.stateButtonDirective');
 
-goog.require('os.ui.MenuButtonCtrl');
 goog.require('os.ui.Module');
-goog.require('os.ui.state.action');
+goog.require('os.ui.menu.MenuButtonCtrl');
+goog.require('os.ui.state.menu');
 
 /**
  * The window button directive
@@ -37,12 +37,12 @@ os.ui.Module.directive('stateButton', [os.ui.stateButtonDirective]);
  * Controller function for the nav-top directive
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element The element
- * @extends {os.ui.MenuButtonCtrl}
+ * @extends {os.ui.menu.MenuButtonCtrl}
  * @constructor
  * @ngInject
  */
 os.ui.StateButtonCtrl = function($scope, $element) {
   os.ui.StateButtonCtrl.base(this, 'constructor', $scope, $element);
-  this.menu = os.ui.state.action.manager;
+  this.menu = os.ui.state.MENU;
 };
-goog.inherits(os.ui.StateButtonCtrl, os.ui.MenuButtonCtrl);
+goog.inherits(os.ui.StateButtonCtrl, os.ui.menu.MenuButtonCtrl);

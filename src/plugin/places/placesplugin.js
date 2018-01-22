@@ -7,7 +7,7 @@ goog.require('os.ui.clearManager');
 goog.require('plugin.places');
 goog.require('plugin.places.PlacesClear');
 goog.require('plugin.places.PlacesManager');
-goog.require('plugin.places.action');
+goog.require('plugin.places.menu');
 
 
 
@@ -40,10 +40,9 @@ plugin.places.PlacesPlugin.LOGGER_ = goog.log.getLogger('plugin.places.PlacesPlu
 plugin.places.PlacesPlugin.prototype.disposeInternal = function() {
   plugin.places.PlacesPlugin.base(this, 'disposeInternal');
 
-  plugin.places.action.layerDispose();
-  plugin.places.action.mapDispose();
-  plugin.places.action.spatialDispose();
-  os.dispatcher.unlisten(plugin.places.action.EventType.SAVE_TO, plugin.places.action.saveToPlaces);
+  plugin.places.menu.layerDispose();
+  plugin.places.menu.mapDispose();
+  plugin.places.menu.spatialDispose();
 };
 
 
@@ -57,10 +56,9 @@ plugin.places.PlacesPlugin.prototype.init = function() {
     manager.initialize();
 
     // register places actions
-    plugin.places.action.layerSetup();
-    plugin.places.action.mapSetup();
-    plugin.places.action.spatialSetup();
-    os.dispatcher.listen(plugin.places.action.EventType.SAVE_TO, plugin.places.action.saveToPlaces);
+    plugin.places.menu.layerSetup();
+    plugin.places.menu.mapSetup();
+    plugin.places.menu.spatialSetup();
   } catch (e) {
     goog.log.error(plugin.places.PlacesPlugin.LOGGER_, 'Failed initializing Places plugin:', e);
   }

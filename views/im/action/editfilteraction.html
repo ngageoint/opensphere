@@ -52,10 +52,6 @@
           </div>
           <div class="slick-table-container action-container" autoheight siblings=".filter-action-controls">
             <div class="filter-action-row" style="padding:2px 0;" ng-repeat="action in ctrl.actions">
-              <span class="handle" ng-if="ctrl.actions.length > 1"
-                  title="Click and Drag to reorder actions. Actions will be executed from top to bottom.">
-                <i class="fa fa-bars"></i>
-              </span>
               <select ng-model="action.id"
                   ng-options="val.id as val.label for val in ctrl.availableActions.concat(action.action)"
                   ng-change="ctrl.updateAction($index, val.id)">

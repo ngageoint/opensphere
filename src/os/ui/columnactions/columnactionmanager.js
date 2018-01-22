@@ -1,6 +1,6 @@
 goog.provide('os.ui.columnactions.ColumnActionManager');
+
 goog.require('goog.events.EventTarget');
-goog.require('goog.structs.Map');
 goog.require('os.ui.columnactions.actions.UrlColumnAction');
 goog.require('os.ui.columnactions.launchColumnActionPrompt');
 
@@ -30,11 +30,11 @@ os.ui.columnactions.ColumnActionManager = function() {
   os.ui.columnactions.ColumnActionManager.base(this, 'constructor');
 
   /**
-   * The registry of actionEntries
-   * @type {goog.structs.Map}
+   * The registry of column action entries.
+   * @type {!Object<string, !os.ui.columnactions.AbstractColumnAction>}
    * @private
    */
-  this.actionEntries_ = new goog.structs.Map();
+  this.actionEntries_ = {};
   this.init_();
 };
 goog.inherits(os.ui.columnactions.ColumnActionManager, goog.events.EventTarget);
@@ -62,73 +62,52 @@ os.ui.columnactions.ColumnActionManager.PERFORM_COLUMN_ACTION = 'PERFORM_COLUMN_
  * @private
  */
 os.ui.columnactions.ColumnActionManager.prototype.init_ = function() {
-  var includes = new goog.structs.Map(os.settings.get([os.ui.columnactions.ColumnActionManager.KEY]));
-  includes.forEach(this.loadInclude_, this);
-};
+  var includes = /** @type {Object<string, Object>|undefined} */ (os.settings.get(
+      os.ui.columnactions.ColumnActionManager.KEY));
 
-
-/**
- *
- * @param {?Object} include
- * @param {string} index
- * @param {?Object} object
- * @private
- */
-os.ui.columnactions.ColumnActionManager.prototype.loadInclude_ = function(include, index, object) {
-  var ca = os.ui.columnactions.ColumnActionManager.getFromConfig(include, index);
-  if (ca) {
-    this.actionEntries_.set(index, ca);
+  if (includes) {
+    for (var key in includes) {
+      var columnAction = os.ui.columnactions.ColumnActionManager.getFromConfig(includes[key], key);
+      if (columnAction) {
+        this.actionEntries_[key] = columnAction;
+      }
+    }
   }
 };
 
 
 /**
- *
- * @param {Object.<string, *>} context
+ * @param {Object<string, *>} context
  * @param {os.ui.columnactions.IColumnActionModel} column
  * @param {?*} value
- * @return {Array.<os.ui.columnactions.AbstractColumnAction>}
+ * @return {!Array<!os.ui.columnactions.AbstractColumnAction>}
  */
 os.ui.columnactions.ColumnActionManager.prototype.getActions = function(context, column, value) {
   var matched = [];
-  this.actionEntries_.forEach(goog.partial(this.testAction_, context, column, value, matched), this);
+  for (var key in this.actionEntries_) {
+    var columnAction = this.actionEntries_[key];
+    if (columnAction && columnAction.matches(context, column, value)) {
+      matched.push(columnAction);
+    }
+  }
+
   return matched;
 };
 
 
 /**
- *
- * @param {Object.<string, *>} context
+ * @param {Object<string, *>} context
  * @param {os.ui.columnactions.IColumnActionModel} column
  * @param {?*} value
  * @return {number}
  */
 os.ui.columnactions.ColumnActionManager.prototype.numActions = function(context, column, value) {
-  var matched = [];
-  this.actionEntries_.forEach(goog.partial(this.testAction_, context, column, value, matched), this);
-  return matched.length;
+  return this.getActions(context, column, value).length;
 };
 
 
 /**
- * @param {Object.<string, *>} context
- * @param {os.ui.columnactions.IColumnActionModel} column
- * @param {?*} value
- * @param {Array.<os.ui.columnactions.AbstractColumnAction>} matched
- * @param {?os.ui.columnactions.AbstractColumnAction} ca
- * @private
- */
-os.ui.columnactions.ColumnActionManager.prototype.testAction_ = function(context, column, value, matched, ca) {
-  if (ca.matches(context, column, value)) {
-    matched.push(ca);
-  }
-};
-
-
-/**
- *
  * @param {*} event
- *
  */
 os.ui.columnactions.ColumnActionManager.prototype.onColumnActionEvent = function(event) {
   var value = event.getValue();
@@ -140,22 +119,25 @@ os.ui.columnactions.ColumnActionManager.prototype.onColumnActionEvent = function
 
 /**
  *
- * @param {Object.<string, *>} include
+ * @param {Object<string, *>} include
  * @param {string} index
- * @return {os.ui.columnactions.AbstractColumnAction}
+ * @return {os.ui.columnactions.AbstractColumnAction|undefined}
  */
 os.ui.columnactions.ColumnActionManager.getFromConfig = function(include, index) {
-  var type = include['type'];
   var ca;
-  switch (type) {
-    case 'url':
-      ca = new os.ui.columnactions.actions.UrlColumnAction();
-      ca.setRegExps(/** @type {?Object.<string, string>} */(include['regex']));
-      ca.setDescription(/** @type {string} */ (include['description']));
-      ca.setAction(include['action']);
-      break;
-    default:
-      break;
+  if (include) {
+    var type = include['type'];
+    switch (type) {
+      case 'url':
+        ca = new os.ui.columnactions.actions.UrlColumnAction();
+        ca.setRegExps(/** @type {?Object<string, string>} */(include['regex']));
+        ca.setDescription(/** @type {string} */ (include['description']));
+        ca.setAction(include['action']);
+        break;
+      default:
+        break;
+    }
   }
-  return /** @type {?os.ui.columnactions.AbstractColumnAction} */ (ca);
+
+  return ca;
 };

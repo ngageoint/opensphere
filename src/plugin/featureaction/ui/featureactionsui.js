@@ -5,6 +5,8 @@ goog.require('os.source');
 goog.require('os.ui.Module');
 goog.require('os.ui.im.action.FilterActionsCtrl');
 goog.require('os.ui.util.autoHeightDirective');
+goog.require('plugin.im.action.feature.ui.EditFeatureActionCtrl');
+goog.require('plugin.im.action.feature.ui.editFeatureActionDirective');
 
 
 /**
@@ -132,3 +134,19 @@ plugin.im.action.feature.ui.FeatureActionsCtrl.prototype.getExportName = functio
 
   return name;
 };
+
+
+/**
+ * @inheritDoc
+ */
+plugin.im.action.feature.ui.FeatureActionsCtrl.prototype.editEntry = function(opt_entry) {
+  if (this.entryType) {
+    var entry = opt_entry ? /** @type {!os.im.action.FilterActionEntry<T>} */ (opt_entry.clone()) : undefined;
+    plugin.im.action.feature.ui.launchEditFeatureAction(this.entryType, this.getColumns(),
+        this.onEditComplete.bind(this, opt_entry), entry);
+  }
+};
+goog.exportProperty(
+    plugin.im.action.feature.ui.FeatureActionsCtrl.prototype,
+    'editEntry',
+    plugin.im.action.feature.ui.FeatureActionsCtrl.prototype.editEntry);
