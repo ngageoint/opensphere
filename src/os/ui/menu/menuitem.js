@@ -65,7 +65,7 @@ os.ui.menu.MenuItem = function(options) {
   this.icons = options.icons;
   this.tooltip = options.tooltip;
   this.shortcut = options.shortcut;
-  this.sort = options.sort || 0;
+  this.sort = options.sort != null ? options.sort : Infinity;
 
   /**
    * @type {Array<!os.ui.menu.MenuItem<T>>|undefined}
@@ -183,11 +183,8 @@ os.ui.menu.MenuItem.prototype.render = function(context, opt_target) {
     return childHtml;
   }
 
-  if (!childHtml && type === types.SUBMENU) {
-    enabled = false;
-  }
-
-  if (!childHtml && type === types.GROUP) {
+  // hide groups/submenus without children from the menu
+  if (!childHtml && (type === types.GROUP || type === types.SUBMENU)) {
     visible = false;
   }
 

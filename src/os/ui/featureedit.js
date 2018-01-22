@@ -867,11 +867,13 @@ os.ui.FeatureEditCtrl.prototype.loadFromFeature_ = function(feature) {
 
   var geometry = feature.getGeometry();
   if (geometry) {
-    this.originalGeometry_ = geometry.clone();
-    geometry.toLonLat();
+    this.originalGeometry_ = geometry;
 
     if (geometry instanceof ol.geom.Point) {
-      var coordinate = geometry.getFirstCoordinate();
+      var clone = /** @type {!ol.geom.Point} */ (geometry.clone());
+      clone.toLonLat();
+
+      var coordinate = clone.getFirstCoordinate();
       if (coordinate) {
         this['pointGeometry'] = {
           'lon': coordinate[0],

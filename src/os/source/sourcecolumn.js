@@ -102,10 +102,6 @@ os.source.column.addDefaults = function(source) {
   });
 
   // add missing default columns
-  if (!hasID) {
-    source.addColumn(os.Fields.ID);
-  }
-
   if (!hasMGRS && hasLAT && hasLON) {
     source.addColumn(os.Fields.MGRS);
   }
@@ -137,5 +133,9 @@ os.source.column.addDefaults = function(source) {
 
   if (hasSemiMinor) {
     source.addColumn(os.fields.DEFAULT_SEMI_MIN_COL_NAME);
+  }
+
+  if (!hasID) {
+    source.addColumn(os.Fields.ID);
   }
 };

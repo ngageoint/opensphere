@@ -230,8 +230,8 @@ describe('os.source.Vector', function() {
     var source = new os.source.Vector(undefined);
     source.setColumns(columns);
     expect(source.columns.length).toBe(2);
-    expect(source.columns[0]['id']).toBe('ID');
-    expect(source.columns[1]['id']).toBe('TIME');
+    expect(source.columns[0]['id']).toBe('TIME');
+    expect(source.columns[1]['id']).toBe('ID');
   });
 
   it('should not sort columns if they are marked as user-modified', function() {
