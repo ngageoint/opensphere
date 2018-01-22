@@ -171,10 +171,11 @@ When modifying this guide, you can build it locally to ensure it builds/displays
 
 .. code-block:: none
 
-  pip install sphinx
-  pip install sphinx_rtd_theme
+  pip install sphinx sphinx-autobuild sphinx_rtd_theme
 
 Once dependencies are installed, generate the guide with ``npm run guide``. The output will be available in ``docs/_build/html``.
+
+The ``sphinx-autobuild`` application monitors changes to the guide and triggers a rebuild when files change. While editing the docs, use ``npm run guide:auto`` to start ``sphinx-autobuild``.
 
 Compiler Caveats
 ****************
