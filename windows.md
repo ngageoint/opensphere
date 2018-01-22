@@ -10,20 +10,20 @@ https://docs.microsoft.com/en-us/windows/wsl/install-win10
 
 After installing the WSL feature and selecting a distribution, the following OpenSphere project prerequisites need to be installed using the WSL shell environment.
 
-	* [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
-	* [NodeJS 8](https://nodejs.org/en/download/package-manager/)
-	* Oracle Java 8 SDK, OpenJDK should also work
-    * [Ubuntu](https://www.digitalocean.com/community/tutorials/how-to-install-java-with-apt-get-on-ubuntu-16-04)
-    * [Open SUSE](https://en.opensuse.org/SDB:Installing_Java)
-	* [Yarn](https://yarnpkg.com/lang/en/docs/install/#linux-tab)
+* [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+* [NodeJS 8](https://nodejs.org/en/download/package-manager/)
+* Oracle Java 8 SDK, OpenJDK should also work
+* [Ubuntu](https://www.digitalocean.com/community/tutorials/how-to-install-java-with-apt-get-on-ubuntu-16-04)
+* [Open SUSE](https://en.opensuse.org/SDB:Installing_Java)
+* [Yarn](https://yarnpkg.com/lang/en/docs/install/#linux-tab)
 
 After all prerequisites have been installed and verified, the OpenSphere getting started instructions should work.
 
 ## Working with Windows
 
-The WSL environment has convenient mounts for all of the windows drives, so it easy to share files/folders with WSL and Windows by utilizing the drive mounts in WSL ```/mnt/<drive>/<path>```. For example, you could configured the following path in Windows for the OpenSphere related projects:
+The WSL environment has convenient mounts for all of the windows drives, so it easy to share files/folders with WSL and Windows by utilizing the drive mounts in WSL `/mnt/<drive>/<path>`. For example, you could configured the following path in Windows for the OpenSphere related projects:
 
-```c:\source\ngageoint```
+`c:\source\ngageoint`
 
 ## Opening a WSL shell
 
@@ -31,30 +31,31 @@ The windows WSL environment can be opened in a few ways, open a normal command p
 
 ## Cloning OpenSphere
 
-From within the (WSL) shell, cd to your working directory. Using the example, this would be cd ```/mnt/c/source/ngageoint```
+From within the (WSL) shell, cd to your working directory. Using the example, this would be cd `/mnt/c/source/ngageoint`
 
 From this point forward, we can follow the Getting Started instructions provided by the OpenSphere project.
 
-	* Fork/Clone the https://github.com/ngageoint/opensphere project in your project working directory ```/mnt/c/source/ngageoint``
-	* Fork/Clone the https://github.com/ngageoint/opensphere-yarn-workspace project to your working directory ```/mnt/c/source/ngageoint``
+* Fork/Clone the https://github.com/ngageoint/opensphere project in your project working directory `/mnt/c/source/ngageoint`
+* Fork/Clone the https://github.com/ngageoint/opensphere-yarn-workspace project to your working directory `/mnt/c/source/ngageoint`
 
 ### Windows/Git
 
 Git commands can be done from either Windows dos/powershell or WSL environment, however, be aware of Operating System end of line differences. Linux and Windows use different end of line markers, it's strongly recommend that the following commands be run from within each OpenSphere project to ensure files do not get changed by git/windows. 
 
-  ```	git config core.eol lf ```
-
-  ```	git config core.autocrlf false ```
+```
+git config core.eol lf
+git config core.autocrlf false
+```
 
 ## Setting up the OpenSphere workspace
 
-Now that the projects are cloned and ready, all ``` npm/node/yarn ``` related commands should be run from the WSL environment.
+Now that the projects are cloned and ready, all `npm/node/yarn` related commands should be run from the WSL environment.
 
 Following the example:
 ```
-	cd /mnt/c/source/ngageoint/opensphere
-	yarn install
-	npm run build
+cd /mnt/c/source/ngageoint/opensphere
+yarn install
+npm run build
 ````
 
 ## Hosting
@@ -115,6 +116,3 @@ The following is a workspace file that defines a number of settings that are con
 	}
 }
 ```
-
-
-
