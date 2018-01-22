@@ -17,8 +17,7 @@ In addition, OpenSphere (and its build system) can serve as a base library for G
 * Node/NPM
 
 ## Getting Started
-
-The build will not run natively in Windows. Perhaps try Cygwin or Linux via a VM or Docker container. It should run great on OS X and typical Linux distributions.
+OpenSphere is natively developed on Linux and should run great on OS X and typical Linux distributions. Windows support is limited, as the build system requires a Linux shell. Windows 10 introduced the Windows Subsystem for Linux (WSL) which works great, see [here](windows.md) for instructions on setting up a Windows 10/WSL environment to work on OpenSphere projects. Other Windows distributions, perhaps try Cygwin or Linux via a VM or Docker container.
 
 ### Yarn
 
@@ -38,6 +37,24 @@ If you prefer to use NPM, that's fine too:
 * `npm install`
 * `npm run build`
 * Point your browser at `dist/opensphere`
+
+## Hosting 
+
+OpenSphere is a web application and needs to be hosted by a http server. Any HTTP server will work fine. To get started quickly, a very simple to use node [http-server](https://github.com/indexzero/http-server) is pre-configured, it only needs to be installed:
+
+ ``` npm install http-server -g ```
+
+To start:
+
+``` npm run start-server ```
+
+This will start http-server rooted at the project workspace on port 8282.
+
+If developing locally, navigating to:
+ http://localhost:8282/opensphere  will open a debug-able build, where as
+ http://localhost:8282/opensphere/dist/opensphere will open the compiled/optimized version.
+
+The debug path can be reloaded in the browser to pick up any changes, generally without re-compiling. This allows for much simpler and rapid development. The compiled/optimized path requires rebuilding to pick up any changes. e.g. ``` npm run build ```
 
 ## Installing plugins
 
