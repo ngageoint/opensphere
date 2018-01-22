@@ -32,7 +32,15 @@ Cool. Now let's undo our launcher changes from the last step and make it look li
   :language: javascript
   :emphasize-lines: 5-6, 47-64
 
-Save, build, and pull it up.
+To test that Import UI, we need a few tests:
+
+.. literalinclude:: src/plugin/georss/georssimportui.test.js
+  :caption: ``src/plugin/georss/georssimportui.test.js``
+  :linenos: 1-33
+  :language: javascript
+
+
+Save, build, test, and pull it up.
 
 #. Go to Add Data > GeoRSS Files and delete any entries under there by highlighting and clicking the trash can
 #. Import https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.atom or your URL again
