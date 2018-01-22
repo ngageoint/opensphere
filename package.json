@@ -58,6 +58,7 @@
   },
   "scripts": {
     "apidoc": "npm run compile:resolve && npm run compile:gcc && npm run compile:dossier",
+    "guide": "make -C docs clean html",
     "modernizr": "modernizr -c modernizr.config.json -u -d .build/modernizr.js",
     "test:gcc": "os-compile $(cat .build/gcc-test-args)",
     "test:init": "npm run modernizr && npm run compile:resolve && npm run test:gcc",

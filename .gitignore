@@ -2,6 +2,7 @@
 ################
 dist/
 .build/
+docs/_build/
 index.html
 old.html
 
