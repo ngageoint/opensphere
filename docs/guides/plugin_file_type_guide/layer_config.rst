@@ -6,8 +6,7 @@ Now that we have a parser, we can hook that up to a layer. OpenSphere automatica
 .. code-block:: json
 
   {
-    "type": "georss",
-    ...
+    "type": "georss"
   }
 
 OpenSphere looks up the registered layer config class for the type ``georss``, instantiates it, and passes it that JSON object to create the layer.
