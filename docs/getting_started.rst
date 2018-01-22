@@ -167,15 +167,15 @@ See our `application guide`_ to get started using OpenSphere as a library for yo
 Building the Read the Docs Guide
 ********************************
 
-When modifying this guide, you can build it locally to ensure it builds/displays correctly. This requires Python, Sphinx, and the Read the Docs theme for Sphinx. The Sphinx dependencies can be installed via ``pip``:
+When modifying this guide, we recommend building it locally to ensure there are no errors/warnings in the build, and that everything displays correctly. The guide is built using Sphinx and the Read the Docs theme, which requires Python to install. To install the build dependencies:
 
 .. code-block:: none
 
-  pip install sphinx sphinx-autobuild sphinx_rtd_theme
+  pip install sphinx sphinx_rtd_theme sphinx-autobuild
 
 Once dependencies are installed, generate the guide with ``npm run guide``. The output will be available in ``docs/_build/html``.
 
-The ``sphinx-autobuild`` application monitors changes to the guide and triggers a rebuild when files change. While editing the docs, use ``npm run guide:auto`` to start ``sphinx-autobuild``.
+If you would like to automatically rebuild the guide as files change, use ``npm run guide:auto``. This starts the ``sphinx-autobuild`` application to monitor the ``docs`` directory for changes and update the documentation accordingly. It also starts a live reload enabled web server to view changes as you make them, accessible at http://127.0.0.1:8000.
 
 Compiler Caveats
 ****************
