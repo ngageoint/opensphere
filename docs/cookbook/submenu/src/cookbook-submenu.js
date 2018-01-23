@@ -95,6 +95,7 @@ plugin.cookbook_submenu.CookbookSubmenu.prototype.init = function() {
 /**
  * If our example group should be shown.
  * @param {Object|undefined} context The menu context.
+ * @this {os.ui.menu.MenuItem}
  * @private
  */
 plugin.cookbook_submenu.shouldShowGroup_ = function(context) {
@@ -106,6 +107,7 @@ plugin.cookbook_submenu.shouldShowGroup_ = function(context) {
 /**
  * If our item should be shown.
  * @param {Object|undefined} context The menu context.
+ * @this {os.ui.menu.MenuItem}
  * @private
  */
 plugin.cookbook_submenu.visibileIfIsPointInSouthernHemisphere_ = function(context) {
