@@ -2,6 +2,7 @@ goog.provide('os.ui.text.SimpleMDE');
 goog.provide('os.ui.text.SimpleMDECtrl');
 goog.provide('os.ui.text.simpleMDEDirective');
 
+goog.require('goog.dom.safe');
 goog.require('os.ui.Module');
 
 
@@ -37,16 +38,20 @@ os.ui.Module.directive('simplemde', [os.ui.text.simpleMDEDirective]);
  * @param {Element} el
  */
 os.ui.text.SimpleMDE.wordCount = function(el) {
-  var scope = $(el).scope();
-  if (scope) {
-    var len = scope['text'] ? scope['text'].length : 0;
-    var value = len;
-    if (scope['maxlength']) {
-      value += ' / ' + scope['maxlength'];
+  if (el) {
+    var scope = $(el).scope();
+    var html = '';
+
+    if (scope) {
+      var len = scope['text'] ? scope['text'].length : 0;
+      var value = len;
+      if (scope['maxlength']) {
+        value += ' / ' + scope['maxlength'];
+      }
+      html = value;
     }
-    el.innerHTML = value;
-  } else {
-    el.innerHTML = '';
+
+    goog.dom.safe.setInnerHtml(el, goog.html.SafeHtml.htmlEscape(html));
   }
 };
 
