@@ -4,6 +4,8 @@ goog.provide('os.control.ZoomLevelOptions');
 goog.require('goog.dom');
 goog.require('goog.dom.TagName');
 goog.require('goog.dom.classes');
+goog.require('goog.dom.safe');
+goog.require('goog.html.SafeHtml');
 goog.require('ol.control.Control');
 goog.require('ol.control.ScaleLineUnits');
 goog.require('ol.css');
@@ -236,8 +238,11 @@ os.control.ZoomLevel.prototype.updateAltitudeText = function() {
 
     // altitude value has been set, so update the displayed value
     var um = os.unit.UnitManager.getInstance();
-    this.altElement_.innerHTML = 'Altitude: ' + um.formatToBestFit('distance', altitude, 'm', um.getBaseSystem(), 3);
-    goog.style.setElementShown(this.altElement_, true);
+    if (this.altElement_) {
+      goog.dom.safe.setInnerHtml(this.altElement_, goog.html.SafeHtml.htmlEscape(
+          'Altitude: ' + um.formatToBestFit('distance', altitude, 'm', um.getBaseSystem(), 3)));
+      goog.style.setElementShown(this.altElement_, true);
+    }
   }
 };
 
@@ -283,7 +288,8 @@ os.control.ZoomLevel.prototype.updateZoomText = function() {
     if (zoom == null || zoom == Infinity || isNaN(zoom)) {
       this.hideZoom();
     } else {
-      this.zoomElement_.innerHTML = 'Zoom: ' + zoom.toFixed(1);
+      goog.dom.safe.setInnerHtml(/** @type {!Element} */ (this.zoomElement_),
+          goog.html.SafeHtml.htmlEscape('Zoom: ' + zoom.toFixed(1)));
       goog.style.setElementShown(this.zoomElement_, true);
     }
   }
