@@ -1,5 +1,7 @@
 goog.provide('os.control.Attribution');
 
+goog.require('goog.dom.safe');
+goog.require('goog.html.SafeHtml');
 goog.require('ol.control.Attribution');
 
 /**
@@ -100,26 +102,23 @@ os.control.Attribution.prototype.updateElement_ = function(frameState) {
   }
 
   // remove everything
-  this.ulElement_.innerHTML = '';
+  goog.dom.removeChildren(this.ulElement_);
 
   // add the label
-  var label = document.createElement('LI');
+  var label;
   if (attributions.length > 1) {
-    label.innerHTML = 'Sources:';
+    label = goog.html.SafeHtml.create('li', undefined, 'Sources:');
   } else {
-    label.innerHTML = 'Source:';
+    label = goog.html.SafeHtml.create('li', undefined, 'Sources:');
   }
-  this.ulElement_.appendChild(label);
+
+  goog.dom.appendChild(this.ulElement_, goog.dom.safeHtmlToNode(label));
 
   // append the attributions
-  for (var i = 0, ii = attributions.length - 1; i < ii; ++i) {
-    var element = document.createElement('LI');
-    element.innerHTML = attributions[i] + ',';
-    this.ulElement_.appendChild(element);
+  for (var i = 0, ii = attributions.length; i < ii; ++i) {
+    label = goog.html.SafeHtml.create('li', undefined, (i > 0 ? ',' : '') + attributions[i]);
+    goog.dom.appendChild(this.ulElement_, goog.dom.safeHtmlToNode(label));
   }
-  var lastItem = document.createElement('LI');
-  lastItem.innerHTML = attributions[attributions.length - 1];
-  this.ulElement_.appendChild(lastItem);
 
   var visible = attributions.length > 0;
   if (this.renderedVisible_ != visible) {
