@@ -1,9 +1,12 @@
+.. _file-type-guide:
+
 File Type Plugin Guide
 ======================
 
-Here we will walk though creating a plugin for a new vector file type, georss-simple_.
+Here we will walk through creating a plugin for a new vector file type, georss-simple_. There are many other examples of file type support within OpenSphere itself, so have a `look  here`_ for more examples.
 
 .. _georss-simple: http://www.georss.org/simple.html
+.. _look here: https://github.com/ngageoint/opensphere/tree/master/src/plugin/file
 
 If you wish for this to be an external, separately released plugin, then fork opensphere-plugin-example_ and follow the instructions in its readme as a starting point.
 

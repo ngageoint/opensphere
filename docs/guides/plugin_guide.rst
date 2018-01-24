@@ -8,6 +8,7 @@ OpenSphere plugins can add new layer types, new file formats for importing and e
   :caption: Guides
 
   plugin_file_type_guide/index
+  plugin_server_guide/index
 
 
 New Server/Provider Types
