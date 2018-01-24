@@ -35,14 +35,14 @@ node(getLabel()) {
       } catch (NoSuchMethodError e) {
       }
 
-      stage('docs')
+      /* stage('docs')
       sh 'npm run compile:dossier'
 
       stage('deploy-docs')
       try {
         deployDocs()
       } catch (NoSuchMethodError e) {
-      }
+      } */
 
       stage('package')
       dir('dist') {
