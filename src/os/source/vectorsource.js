@@ -1647,7 +1647,7 @@ os.source.Vector.prototype.processFeatures = function(features) {
   var totalCount = os.data.DataManager.getInstance().getTotalFeatureCount();
   var maxFeatures = os.ogc.getMaxFeatures();
 
-  if (totalCount + features.length > maxFeatures) {
+  if (totalCount + features.length >= maxFeatures) {
     // max feature count hit, only add features up to the limit
     features.length = Math.max(maxFeatures - totalCount, 0);
     os.source.handleMaxFeatureCount(maxFeatures);
