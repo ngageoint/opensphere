@@ -12,7 +12,7 @@
           title="{{headerBtnCfg.tooltip}}"></i>
       </div>
 
-      <div ng-if="!modal && !overlay" ng-click="windowCtrl.toggle()" title="{{collapsed ? 'Expand' : 'Collapse'}}" style="display:inline-block">
+      <div ng-if="showCollapse && !modal && !overlay" ng-click="windowCtrl.toggle()" title="{{collapsed ? 'Expand' : 'Collapse'}}" style="display:inline-block">
         <i class="fa window-close" ng-class="{'fa-compress': !collapsed, 'fa-expand': collapsed}"></i>
       </div>
 
