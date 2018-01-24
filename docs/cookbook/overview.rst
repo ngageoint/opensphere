@@ -10,6 +10,7 @@ For extended examples, see the Guides.
   :caption: Cookbook
 
   submenu/index
+  logging/index
 
 
 
