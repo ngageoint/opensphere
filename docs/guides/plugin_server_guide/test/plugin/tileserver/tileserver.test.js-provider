@@ -1,0 +1,95 @@
+goog.require('goog.Promise');
+goog.require('plugin.tileserver.Tileserver');
+
+describe('plugin.tileserver.Tileserver', function() {
+  it('should configure properly', function() {
+    var p = new plugin.tileserver.Tileserver();
+    var conf = {
+      type: plugin.tileserver.ID,
+      label: 'Test Server',
+      url: 'http://localhost/doesnotexist.json'
+    };
+
+    p.configure(conf);
+
+    expect(p.getLabel()).toBe(conf.label);
+    expect(p.getUrl()).toBe(conf.url);
+  });
+
+  it('should load valid JSON', function() {
+    var p = new plugin.tileserver.Tileserver();
+    p.setUrl('/something');
+
+    // we're going to spy on the getPromise method and return a promise resolving
+    // to valid JSON
+    spyOn(os.net.Request.prototype, 'getPromise').andReturn(goog.Promise.resolve('[]'));
+
+    spyOn(p, 'onLoad').andCallThrough();
+    spyOn(p, 'onError').andCallThrough();
+
+    runs(function() {
+      p.load();
+    });
+
+    waitsFor(function() {
+      return p.onLoad.calls.length;
+    });
+
+    runs(function() {
+      expect(p.onLoad).toHaveBeenCalled();
+      expect(p.onError).not.toHaveBeenCalled();
+    });
+  });
+
+  it('should error on invalid JSON', function() {
+    var p = new plugin.tileserver.Tileserver();
+    p.setUrl('/something');
+
+    // we're going to spy on the getPromise method and return a promise resolving
+    // to invalid JSON
+    spyOn(os.net.Request.prototype, 'getPromise').andReturn(goog.Promise.resolve('[wut'));
+
+    spyOn(p, 'onLoad').andCallThrough();
+    spyOn(p, 'onError').andCallThrough();
+
+    runs(function() {
+      p.load();
+    });
+
+    waitsFor(function() {
+      return p.onLoad.calls.length;
+    });
+
+    runs(function() {
+      expect(p.onLoad).toHaveBeenCalled();
+      expect(p.onError).toHaveBeenCalled();
+    });
+  });
+
+  it('should error on request error', function() {
+    var p = new plugin.tileserver.Tileserver();
+    p.setUrl('/something');
+
+    // we're going to spy on the getPromise method and return a promise rejecting
+    // with errors
+    spyOn(os.net.Request.prototype, 'getPromise').andReturn(
+        // request rejects with arrays of all errors that occurred
+        goog.Promise.reject(['something awful happend']));
+
+    spyOn(p, 'onLoad').andCallThrough();
+    spyOn(p, 'onError').andCallThrough();
+
+    runs(function() {
+      p.load();
+    });
+
+    waitsFor(function() {
+      return p.onError.calls.length;
+    });
+
+    runs(function() {
+      expect(p.onLoad).not.toHaveBeenCalled();
+      expect(p.onError).toHaveBeenCalled();
+    });
+  });
+});

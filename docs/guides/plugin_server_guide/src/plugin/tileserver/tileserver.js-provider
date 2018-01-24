@@ -1,0 +1,58 @@
+goog.provide('plugin.tileserver.Tileserver');
+
+goog.require('os.data.IDataProvider');
+goog.require('os.net.Request');
+goog.require('os.ui.server.AbstractLoadingServer');
+
+
+/**
+ * The Tileserver provider
+ *
+ * @implements {os.data.IDataProvider}
+ * @extends {os.ui.server.AbstractLoadingServer}
+ * @constructor
+ */
+plugin.tileserver.Tileserver = function() {
+  plugin.tileserver.Tileserver.base(this, 'constructor');
+  this.providerType = plugin.tileserver.ID;
+};
+goog.inherits(plugin.tileserver.Tileserver, os.ui.server.AbstractLoadingServer);
+
+
+/**
+ * @inheritDoc
+ */
+plugin.tileserver.Tileserver.prototype.load = function(opt_ping) {
+  plugin.tileserver.Tileserver.base(this, 'load', opt_ping);
+
+  // load the JSON
+  new os.net.Request(this.getUrl()).getPromise().
+      then(this.onLoad, this.onError, this).
+      thenCatch(this.onError, this);
+};
+
+
+/**
+ * @param {string} response
+ * @protected
+ */
+plugin.tileserver.Tileserver.prototype.onLoad = function(response) {
+  try {
+    var json = JSON.parse(response);
+  } catch (e) {
+    this.onError('Malformed JSON');
+    return;
+  }
+
+  console.log('parsed json', json);
+};
+
+
+/**
+ * @param {*} e
+ * @protected
+ */
+plugin.tileserver.Tileserver.prototype.onError = function(e) {
+  var msg = goog.isArray(e) ? e.join(' ') : e.toString();
+  this.setErrorMessage(msg);
+};
