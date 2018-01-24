@@ -16,7 +16,7 @@ os.ui.menu.windows.default.setup = function() {
 
   // add windows
   os.ui.menu.windows.addWindow('addData', {
-    'icon': 'fa-plus green-icon',
+    'icon': 'fa fa-plus green-icon',
     'label': 'Add Data',
     'description': 'Add data to the map',
     'x': 'center',
@@ -35,7 +35,7 @@ os.ui.menu.windows.default.setup = function() {
 
   var layers = os.ui.menu.windows.addWindow('layers', {
     'key': 'layers',
-    'icon': 'orange-icon fa-align-justify',
+    'icon': 'orange-icon fa fa-align-justify',
     'label': 'Layers',
     'description': 'View and manipulate layers on the map',
     'x': '20',
@@ -60,7 +60,7 @@ os.ui.menu.windows.default.setup = function() {
   }
 
   os.ui.menu.windows.addWindow('timeline', {
-    'icon': 'fa-clock-o yellow-icon',
+    'icon': 'fa fa-clock-o yellow-icon',
     'label': 'Timeline',
     'metricKey': os.metrics.keys.Timeline.OPEN
   }, true, function() {
@@ -69,7 +69,7 @@ os.ui.menu.windows.default.setup = function() {
   });
 
   os.ui.menu.windows.addWindow('settings', {
-    'icon': 'fa-gears',
+    'icon': 'fa fa-gears',
     'label': 'Settings',
     'description': 'Change application settings',
     'x': 'center',
@@ -86,7 +86,7 @@ os.ui.menu.windows.default.setup = function() {
   }, true);
 
   os.ui.menu.windows.addWindow('alerts', {
-    'icon': 'fa-bell',
+    'icon': 'fa fa-bell',
     'label': 'Alerts',
     'description': 'View notifications and alerts',
     'x': 'center',
@@ -103,7 +103,7 @@ os.ui.menu.windows.default.setup = function() {
   });
 
   os.ui.menu.windows.addWindow('clear', {
-    'icon': 'fa-times red-icon',
+    'icon': 'fa fa-times red-icon',
     'label': 'Clear',
     'description': 'Clear data from the map',
     'x': 'center',
@@ -119,7 +119,7 @@ os.ui.menu.windows.default.setup = function() {
   });
 
   os.ui.menu.windows.addWindow('history', {
-    'icon': 'fa-history',
+    'icon': 'fa fa-history',
     'label': 'History',
     'description': 'View undo history',
     'x': 'center',
@@ -137,7 +137,7 @@ os.ui.menu.windows.default.setup = function() {
 
   if (os.settings.get('metrics.enabled', false)) {
     os.ui.menu.windows.addWindow('metrics', {
-      'icon': 'orange-icon fa-cubes',
+      'icon': 'orange-icon fa fa-cubes',
       'label': '{APP} Capabilities',
       'description': 'Explore {APP} Capabilities',
       'x': 'center',
@@ -161,7 +161,7 @@ os.ui.menu.windows.default.setup = function() {
   }, false, os.ui.menu.map.showLegend);
 
   os.ui.menu.windows.addWindow('log', {
-    'icon': 'fa-terminal',
+    'icon': 'fa fa-terminal',
     'label': 'Log'
   }, false, function() {
     if (!os.logWindow.isEnabled()) {
@@ -170,7 +170,7 @@ os.ui.menu.windows.default.setup = function() {
   });
 
   os.ui.menu.windows.addWindow('servers', {
-    'icon': 'fa-database',
+    'icon': 'fa fa-database',
     'label': 'Servers'
   }, false, os.ui.menu.windows.default.openServers);
 };
