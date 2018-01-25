@@ -10,18 +10,29 @@ describe('os.ui.slick.column', function() {
       new os.data.ColumnDefinition('column3')
     ];
 
-    var args = {
+    var thisArg = {};
+    var context = {
       columns: cols,
       column: cols[1],
       grid: {}
     };
 
-    expect(os.ui.slick.column.checkColumnRemove_(args)).toBe(true);
+    os.ui.slick.column.visibleIfCanRemove_.call(thisArg, context);
+    expect(thisArg.visible).toBe(true);
+
+    delete thisArg.visible;
     cols[0].visible = false;
-    expect(os.ui.slick.column.checkColumnRemove_(args)).toBe(true);
+    os.ui.slick.column.visibleIfCanRemove_.call(thisArg, context);
+    expect(thisArg.visible).toBe(true);
+
+    delete thisArg.visible;
     cols[1].visible = false;
-    expect(os.ui.slick.column.checkColumnRemove_(args)).toBe(false);
+    os.ui.slick.column.visibleIfCanRemove_.call(thisArg, context);
+    expect(thisArg.visible).toBe(false);
+
+    delete thisArg.visible;
     cols[1].visible = true;
-    expect(os.ui.slick.column.checkColumnRemove_(args)).toBe(true);
+    os.ui.slick.column.visibleIfCanRemove_.call(thisArg, context);
+    expect(thisArg.visible).toBe(true);
   });
 });

@@ -2,6 +2,8 @@ goog.provide('plugin.georss.GeoRSSImportUI');
 
 goog.require('os.parse.FileParserConfig');
 goog.require('os.ui.im.FileImportUI');
+goog.require('os.ui.window');
+goog.require('plugin.georss.georssImportDirective');
 
 
 /**
@@ -17,6 +19,9 @@ goog.inherits(plugin.georss.GeoRSSImportUI, os.ui.im.FileImportUI);
 /**
  * @inheritDoc
  */
+// Let's be honest, testing getters like this is pedantic. Let's ignore it
+// this time.
+/* istanbul ignore next */
 plugin.georss.GeoRSSImportUI.prototype.getTitle = function() {
   return 'GeoRSS';
 };
@@ -25,6 +30,9 @@ plugin.georss.GeoRSSImportUI.prototype.getTitle = function() {
 /**
  * @inheritDoc
  */
+// TODO: This function doesn't do much yet, after it does, let's test the
+// finished product.
+/* istanbul ignore next */
 plugin.georss.GeoRSSImportUI.prototype.launchUI = function(file, opt_config) {
   var config = new os.parse.FileParserConfig();
 
@@ -36,5 +44,22 @@ plugin.georss.GeoRSSImportUI.prototype.launchUI = function(file, opt_config) {
   config['file'] = file;
   config['title'] = file.getFileName();
 
-  // our config is all set up but we have no UI to launch yet!
+  var scopeOptions = {
+    'config': config
+  };
+  var windowOptions = {
+    'label': 'Import GeoRSS',
+    'icon': 'fa fa-file-text lt-blue-icon',
+    'x': 'center',
+    'y': 'center',
+    'width': 350,
+    'min-width': 350,
+    'max-width': 600,
+    'height': 'auto',
+    'modal': true,
+    'show-close': true,
+    'no-scroll': true
+  };
+  var template = '<georssimport></georssimport>';
+  os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
 };

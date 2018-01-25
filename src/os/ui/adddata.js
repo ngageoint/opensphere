@@ -1,7 +1,6 @@
 goog.provide('os.ui.AddDataCtrl');
 goog.provide('os.ui.addDataDirective');
 
-goog.require('os.action.windows');
 goog.require('os.data.groupby.DateGroupBy');
 goog.require('os.data.groupby.FavoriteGroupBy');
 goog.require('os.data.groupby.RecentGroupBy');
@@ -10,9 +9,10 @@ goog.require('os.data.groupby.TypeGroupBy');
 goog.require('os.defines');
 goog.require('os.metrics.Metrics');
 goog.require('os.ui.Module');
-goog.require('os.ui.action.windows');
 goog.require('os.ui.data.AddDataCtrl');
 goog.require('os.ui.data.groupby.TagGroupBy');
+goog.require('os.ui.menu.windows');
+goog.require('os.ui.menu.windows.default');
 goog.require('os.ui.util.autoHeightDirective');
 
 
@@ -66,11 +66,11 @@ os.ui.AddDataCtrl = function($scope, $element) {
    */
   $scope['filterName'] = null;
 
-  if (os.action && os.action.windows) {
-    $scope['openServers'] = os.action.windows.openServers;
+  if (os.action && os.ui.menu.windows.default) {
+    $scope['openServers'] = os.ui.menu.windows.default.openServers;
   }
-  if (os.ui.action && os.ui.action.windows) {
-    $scope['openAlerts'] = os.ui.action.windows.openWindow.bind(undefined, 'alerts');
+  if (os.ui.action && os.ui.menu.windows) {
+    $scope['openAlerts'] = os.ui.menu.windows.openWindow.bind(undefined, 'alerts');
   }
 
   $scope.$on('os.ui.window.params', this.onParamsChange_.bind(this));

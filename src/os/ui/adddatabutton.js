@@ -2,9 +2,10 @@ goog.provide('os.ui.AddDataButtonCtrl');
 goog.provide('os.ui.addDataButtonDirective');
 
 goog.require('os.metrics.keys');
-goog.require('os.ui.MenuButtonCtrl');
 goog.require('os.ui.Module');
 goog.require('os.ui.im.ImportEventType');
+goog.require('os.ui.menu.MenuButtonCtrl');
+goog.require('os.ui.menu.import');
 
 /**
  * The add data button bar directive
@@ -46,17 +47,17 @@ os.ui.Module.directive('addDataButton', [os.ui.addDataButtonDirective]);
  * Controller function for the nav-top directive
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element The element
- * @extends {os.ui.MenuButtonCtrl}
+ * @extends {os.ui.menu.MenuButtonCtrl}
  * @constructor
  * @ngInject
  */
 os.ui.AddDataButtonCtrl = function($scope, $element) {
   os.ui.AddDataButtonCtrl.base(this, 'constructor', $scope, $element);
-  this.menu = os.action.import.manager;
+  this.menu = os.ui.menu.import.MENU;
   this.flag = 'addData';
   this.metricKey = os.metrics.keys.AddData.OPEN;
 };
-goog.inherits(os.ui.AddDataButtonCtrl, os.ui.MenuButtonCtrl);
+goog.inherits(os.ui.AddDataButtonCtrl, os.ui.menu.MenuButtonCtrl);
 
 /**
  * Opens a file or URL

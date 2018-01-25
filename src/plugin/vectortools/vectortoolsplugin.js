@@ -1,11 +1,11 @@
 goog.provide('plugin.vectortools.VectorToolsPlugin');
 
-goog.require('os.action.EventType');
 goog.require('os.command.ParallelCommand');
 goog.require('os.data.OSDataManager');
+goog.require('os.fn');
 goog.require('os.plugin.AbstractPlugin');
-goog.require('os.ui.action.Action');
-goog.require('os.ui.action.MenuOptions');
+goog.require('os.ui.menu.MenuItemType');
+goog.require('os.ui.menu.layer');
 goog.require('plugin.vectortools');
 goog.require('plugin.vectortools.CopyLayer');
 
@@ -33,10 +33,12 @@ plugin.vectortools.VectorToolsPlugin.prototype.nextId = 1;
  * @inheritDoc
  */
 plugin.vectortools.VectorToolsPlugin.prototype.init = function() {
-  if (os.action.layer && os.action.layer.manager) {
-    var manager = os.action.layer.manager;
+  var menu = os.ui.menu.layer.MENU;
+  if (menu) {
+    var group = menu.getRoot().find(os.ui.menu.layer.GroupLabel.TOOLS);
+    goog.asserts.assert(group, 'Group should exist! Check spelling?');
 
-    var labels = ['', 'All', 'Shown', 'Selected', 'Unselected', 'Hidden'];
+    var labels = ['All', 'Shown', 'Selected', 'Unselected', 'Hidden'];
     var parents = [{
       label: 'Copy',
       type: plugin.vectortools.EventType.COPY,
@@ -55,12 +57,23 @@ plugin.vectortools.VectorToolsPlugin.prototype.init = function() {
     }];
 
     parents.forEach(function(p) {
-      for (var i = 1, n = labels.length; i < n; i++) {
-        var action = new os.ui.action.Action(p.type + ' ' + i, labels[i], p.tooltip, p.icon, null,
-            new os.ui.action.MenuOptions(os.action.layer.GroupType.TOOLS + '/' + p.label));
-        action.enableWhen(plugin.vectortools.isVector);
-        manager.addAction(action);
-        manager.listen(action.getEventType(), plugin.vectortools.onAction);
+      var subMenu = group.addChild({
+        label: p.label,
+        type: os.ui.menu.MenuItemType.SUBMENU,
+        icons: ['<i class="fa fa-fw ' + p.icon + '"></i>'],
+        sort: os.ui.menu.layer.GroupSort.GROUPS++
+      });
+
+      for (var i = 0, n = labels.length; i < n; i++) {
+        subMenu.addChild({
+          label: labels[i],
+          eventType: p.type + ' ' + i,
+          tooltip: p.tooltip,
+          icons: ['<i class="fa fa-fw ' + p.icon + '"></i>'],
+          beforeRender: plugin.vectortools.visibleIfIsVector,
+          handler: plugin.vectortools.handleMenuEvent_,
+          sort: i
+        });
       }
     });
   }
@@ -78,21 +91,46 @@ plugin.vectortools.EventType = {
 
 
 /**
- * @param {os.ui.action.ActionEvent} evt
+ * Shows a menu item if the context contains all vector layers.
+ * @param {os.ui.menu.layer.Context} context The menu context.
+ * @this {os.ui.menu.MenuItem}
  */
-plugin.vectortools.onAction = function(evt) {
-  var parts = evt.type.split(/\s+/);
+plugin.vectortools.visibleIfIsVector = function(context) {
+  this.visible = false;
+
+  if (context && context.length > 0) {
+    this.visible = context.every(function(item) {
+      if (item instanceof os.data.LayerNode) {
+        var layer = /** @type {!os.data.LayerNode} */ (item).getLayer();
+        if (layer && layer instanceof os.layer.Vector && layer.getId() !== os.MapContainer.DRAW_ID) {
+          return true;
+        }
+      }
+
+      return false;
+    });
+  }
+};
+
+
+/**
+ * Handle layer menu events.
+ * @param {!os.ui.menu.MenuEvent<os.ui.menu.layer.Context>} event The menu event.
+ * @private
+ */
+plugin.vectortools.handleMenuEvent_ = function(event) {
+  var parts = event.type.split(/\s+/);
   var type = parts[0];
 
   if (parts.length > 1) {
     plugin.vectortools.option = /** @type {plugin.vectortools.Options} */ (parseInt(parts[1], 10));
   }
 
-  var context = evt.getContext();
+  var context = event.getContext();
   if (context && context.length > 0) {
     switch (type) {
       case plugin.vectortools.EventType.COPY:
-        var sources = context.map(plugin.vectortools.nodeToSource_);
+        var sources = context.map(plugin.vectortools.nodeToSource_).filter(os.fn.filterFalsey);
         var count = sources.reduce(function(previous, source) {
           return previous + source.getFeatures().length;
         }, 0);
@@ -111,9 +149,7 @@ plugin.vectortools.onAction = function(evt) {
           return;
         }
 
-        var cmds = context.map(plugin.vectortools.nodeTo_);
-        cmds = cmds.filter(goog.isDefAndNotNull);
-
+        var cmds = context.map(plugin.vectortools.nodeToCopyCommand_).filter(os.fn.filterFalsey);
         if (cmds.length) {
           var cmd = new os.command.ParallelCommand();
           cmd.setCommands(cmds);
@@ -123,7 +159,7 @@ plugin.vectortools.onAction = function(evt) {
         break;
       case plugin.vectortools.EventType.MERGE:
       case plugin.vectortools.EventType.JOIN:
-        var layerIds = context.map(plugin.vectortools.nodeToId_);
+        var layerIds = context.map(plugin.vectortools.nodeToId_).filter(os.fn.filterFalsey);
         if (layerIds.length < 2) {
           // show the option for 1 layer, but give an alert if only one is selected
           var msg = 'You need to pick at least 2 layers for this operation. Please select another layer and try again.';
@@ -142,47 +178,40 @@ plugin.vectortools.onAction = function(evt) {
 
 
 /**
- * @param {os.data.LayerNode} node The layer node
- * @return {?string} The layer id
+ * Map a tree node to layer id.
+ * @param {os.structs.ITreeNode} node The tree node.
+ * @return {string|undefined} The layer id.
  * @private
  */
 plugin.vectortools.nodeToId_ = function(node) {
-  var layer = node.getLayer();
-  if (layer) {
-    return layer.getId();
-  }
-
-  return null;
+  var layer = os.fn.mapNodeToLayer(node);
+  return layer ? layer.getId() : undefined;
 };
 
 
 /**
- * @param {os.data.LayerNode} node The layer node
- * @return {?os.source.ISource} The source
+ * Map a tree node to data source.
+ * @param {os.structs.ITreeNode} node The tree node.
+ * @return {os.source.ISource|undefined} The data source.
  * @private
  */
 plugin.vectortools.nodeToSource_ = function(node) {
-  var layer = node.getLayer();
+  var layer = os.fn.mapNodeToLayer(node);
   if (layer) {
-    var source = os.osDataManager.getSource(layer.getId());
-    if (source) {
-      return source;
-    }
+    return os.osDataManager.getSource(layer.getId()) || undefined;
   }
 
-  return null;
+  return undefined;
 };
 
 
 /**
- * @param {os.data.LayerNode} node
- * @return {?os.command.ICommand}
+ * Map a tree node to Copy Layer command.
+ * @param {os.structs.ITreeNode} node The tree node.
+ * @return {os.command.ICommand|undefined}
  * @private
  */
-plugin.vectortools.nodeTo_ = function(node) {
-  var layer = node.getLayer();
-  if (layer) {
-    return new plugin.vectortools.CopyLayer(layer.getId());
-  }
-  return null;
+plugin.vectortools.nodeToCopyCommand_ = function(node) {
+  var layer = os.fn.mapNodeToLayer(node);
+  return layer ? new plugin.vectortools.CopyLayer(layer.getId()) : undefined;
 };

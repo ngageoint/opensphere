@@ -17,7 +17,9 @@ Prerequisites
 - Yarn_
 - Python (optional)
 - POSIX-compatible shell environment
--- along with cat, cp, echo, grep, perl, xargs
+
+  - Along with ``cat``, ``cp``, ``echo``, ``grep``, ``perl``, ``xargs``
+
 - Chrome Browser (59+ required in default tests; plus you probably want this for development)
 - Firefox Browser (57+ required in default tests)
 
@@ -77,7 +79,7 @@ OpenSphere has all of its build targets as npm scripts. Therefore you can run an
 
   $ npm run <target>
 
-The most common targets are
+The most common targets are:
 
 .. code-block:: none
 
@@ -86,6 +88,7 @@ The most common targets are
   $ npm run test        # runs the unit tests
   $ npm run test:debug  # runs the unit tests with a configuration more suited to debugging
   $ npm run apidoc      # generates api documentation
+  $ npm run guide       # generates this documentation (requires Python and Sphinx)
 
 Each target runs its individual pieces through npm scripts as well. Several of those pieces are highly useful when run by themselves just to see if you fixed an error in that part of the build before restarting the entire thing.
 
@@ -126,7 +129,7 @@ The ``index-template.html`` and its corresponding ``index.js`` file define how t
 
 .. _opensphere-build-index: https://github.com/ngageoint/opensphere-build-index
 
-If you set up nginx or httpd as recommended above, accessing it might be accomplished by pointing your browser at http://localhost:8080/workspace/opensphere 
+If you set up nginx or httpd as recommended above, accessing it might be accomplished by pointing your browser at http://localhost:8080/workspace/opensphere
 
 Note: because the debug instance references each individual Javascript file in place, it can result in the debug page referencing thousands of individual files. The only browser that handles this gracefully (as of this writing) is Chrome. Firefox technically works but is much more painful.
 
@@ -161,6 +164,19 @@ See our `application guide`_ to get started using OpenSphere as a library for yo
 
 .. _application guide: guides/app_guide.html
 
+Building the Read the Docs Guide
+********************************
+
+When modifying this guide, we recommend building it locally to ensure there are no errors/warnings in the build, and that everything displays correctly. The guide is built using Sphinx and the Read the Docs theme, which requires Python to install. To install the build dependencies:
+
+.. code-block:: none
+
+  pip install sphinx sphinx_rtd_theme sphinx-autobuild
+
+Once dependencies are installed, generate the guide with ``npm run guide``. The output will be available in ``docs/_build/html``.
+
+If you would like to automatically rebuild the guide as files change, use ``npm run guide:auto``. This starts the ``sphinx-autobuild`` application to monitor the ``docs`` directory for changes and update the documentation accordingly. It also starts a live reload enabled web server to view changes as you make them, accessible at http://127.0.0.1:8000.
+
 Compiler Caveats
 ****************
 
@@ -184,7 +200,9 @@ Broken Example:
       return value > 0;
     };
 
-    // template
+.. code-block:: html
+
+    <!-- Angular template -->
     <span ng-show="ctrl.isPositive(value)">{{value}} is positive</span>
 
 This will work great in debug mode (no minification), but will fail in compiled mode. To fix this, we need to ensure that the compiled build does not minify the two items we used in the template.
@@ -209,7 +227,9 @@ Fixed Example:
     // we highly recommend making this a snippet
     goog.exportProperty(package.DirCtrl.prototype, 'isPositive', package.DirCtrl.prototype.isPositive);
 
-    // template
+.. code-block:: html
+
+    <!-- Angular template -->
     <span ng-show="ctrl.isPositive(value)">{{value}} is positive</span>
 
 Now it works in compiled mode! Note that UI templates is not the only place where bracket notation is useful. It is useful wherever you want to have the compiler skip minification.

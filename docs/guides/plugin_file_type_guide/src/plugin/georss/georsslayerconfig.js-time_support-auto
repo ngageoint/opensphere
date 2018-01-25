@@ -1,0 +1,37 @@
+goog.provide('plugin.georss.GeoRSSLayerConfig');
+goog.require('os.layer.config.AbstractDataSourceLayerConfig');
+goog.require('os.ui.im.ImportManager');
+goog.require('plugin.georss.GeoRSSParser');
+
+
+/**
+ * @extends {os.layer.config.AbstractDataSourceLayerConfig}
+ * @constructor
+ */
+plugin.georss.GeoRSSLayerConfig = function() {
+  plugin.georss.GeoRSSLayerConfig.base(this, 'constructor');
+};
+goog.inherits(plugin.georss.GeoRSSLayerConfig, os.layer.config.AbstractDataSourceLayerConfig);
+
+
+/**
+ * @inheritDoc
+ */
+plugin.georss.GeoRSSLayerConfig.prototype.getParser = function(options) {
+  return new plugin.georss.GeoRSSParser();
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.georss.GeoRSSLayerConfig.prototype.getImporter = function(options) {
+  var importer = plugin.georss.GeoRSSLayerConfig.base(this, 'getImporter', options);
+
+  // Auto detect the time from the fields.
+  // This should only be called for mappings not explicitly set by the user in
+  // the import UI. See other file types for examples.
+  importer.selectAutoMappings([os.im.mapping.time.DateTimeMapping.ID]);
+
+  return importer;
+};

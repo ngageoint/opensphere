@@ -1,8 +1,10 @@
 goog.provide('plugin.vectortools.MappingCounterCtrl');
 goog.provide('plugin.vectortools.mappingCounterDirective');
+
 goog.require('os.column.ColumnMappingManager');
 goog.require('os.defines');
 goog.require('os.ui.Module');
+goog.require('os.ui.menu.windows');
 
 
 /**
@@ -97,7 +99,7 @@ plugin.vectortools.MappingCounterCtrl.prototype.onColumnMappingsChange_ = functi
  * Launches the settings window for managing column mappings.
  */
 plugin.vectortools.MappingCounterCtrl.prototype.launchColumnMappings = function() {
-  os.ui.action.windows.openSettingsTo(os.ui.column.mapping.ColumnMappingSettings.ID);
+  os.ui.menu.windows.openSettingsTo(os.ui.column.mapping.ColumnMappingSettings.ID);
 };
 goog.exportProperty(plugin.vectortools.MappingCounterCtrl.prototype,
     'launchColumnMappings',

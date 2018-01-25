@@ -5,7 +5,7 @@ goog.require('os.plugin.PluginManager');
 
 
 /**
- * Provides an interface to the OSM overpass API
+ * Provides support for the GeoRSS format.
  * @extends {os.plugin.AbstractPlugin}
  * @constructor
  */

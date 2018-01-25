@@ -1,0 +1,37 @@
+goog.provide('plugin.tileserver.TileserverPlugin');
+
+goog.require('os.plugin.AbstractPlugin');
+goog.require('os.plugin.PluginManager');
+
+
+/**
+ * Provides Tileserver support
+ * @extends {os.plugin.AbstractPlugin}
+ * @constructor
+ */
+plugin.tileserver.TileserverPlugin = function() {
+  plugin.tileserver.TileserverPlugin.base(this, 'constructor');
+  this.id = plugin.tileserver.ID;
+  this.errorMessage = null;
+};
+goog.inherits(plugin.tileserver.TileserverPlugin, os.plugin.AbstractPlugin);
+
+
+/**
+ * @type {string}
+ * @const
+ */
+plugin.tileserver.ID = 'tileserver';
+
+
+/**
+ * @inheritDoc
+ */
+plugin.tileserver.TileserverPlugin.prototype.init = function() {
+  // our plugin doesn't do anything yet
+};
+
+
+
+// add the plugin to the application
+os.plugin.PluginManager.getInstance().addPlugin(new plugin.tileserver.TileserverPlugin());

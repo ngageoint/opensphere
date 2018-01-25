@@ -1,0 +1,59 @@
+goog.provide('plugin.georss.GeoRSSImportUI');
+
+goog.require('os.data.DescriptorEvent');
+goog.require('os.data.DescriptorEventType');
+goog.require('os.parse.FileParserConfig');
+goog.require('os.ui.im.FileImportUI');
+
+
+/**
+ * @extends {os.ui.im.FileImportUI}
+ * @constructor
+ */
+plugin.georss.GeoRSSImportUI = function() {
+  plugin.georss.GeoRSSImportUI.base(this, 'constructor');
+};
+goog.inherits(plugin.georss.GeoRSSImportUI, os.ui.im.FileImportUI);
+
+
+/**
+ * @inheritDoc
+ */
+// Let's be honest, testing getters like this is pedantic. Let's ignore it
+// this time.
+/* istanbul ignore next */
+plugin.georss.GeoRSSImportUI.prototype.getTitle = function() {
+  return 'GeoRSS';
+};
+
+
+/**
+ * @inheritDoc
+ */
+// TODO: This function doesn't do much yet, after it does, let's test the
+// finished product.
+/* istanbul ignore next */
+plugin.georss.GeoRSSImportUI.prototype.launchUI = function(file, opt_config) {
+  var config = new os.parse.FileParserConfig();
+
+  // if an existing config was provided, merge it in
+  if (opt_config) {
+    this.mergeConfig(opt_config, config);
+  }
+
+  config['file'] = file;
+  config['title'] = file.getFileName();
+
+  var descriptor = plugin.georss.GeoRSSDescriptor.createFromConfig(config);
+
+  // add the descriptor to the data manager first
+  os.dataManager.addDescriptor(descriptor);
+
+  // followed by the provider
+  plugin.georss.GeoRSSProvider.getInstance().addDescriptor(descriptor);
+
+  if (descriptor.isActive()) {
+    os.dispatcher.dispatchEvent(new os.data.DescriptorEvent(
+        os.data.DescriptorEventType.USER_TOGGLED, descriptor));
+  }
+};
