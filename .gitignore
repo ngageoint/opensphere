@@ -2,6 +2,7 @@
 ################
 dist/
 .build/
+docs/_build/
 index.html
 old.html
 
@@ -37,3 +38,8 @@ npm-debug.log*
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+
+# node generated files #
+########################
+package-lock.json

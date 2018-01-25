@@ -1,0 +1,136 @@
+goog.provide('plugin.tileserver.Tileserver');
+
+goog.require('os.data.ConfigDescriptor');
+goog.require('os.data.IDataProvider');
+goog.require('os.fn');
+goog.require('os.net.Request');
+goog.require('os.ui.data.DescriptorNode');
+goog.require('os.ui.server.AbstractLoadingServer');
+
+// We require these two just to ensure they exist. We do not actually need them directly in this class.
+// This also ensures that things like the plugin IDs exist for the tests
+goog.require('plugin.basemap.BaseMapPlugin');
+goog.require('plugin.xyz.XYZPlugin');
+
+
+/**
+ * The Tileserver provider
+ *
+ * @implements {os.data.IDataProvider}
+ * @extends {os.ui.server.AbstractLoadingServer}
+ * @constructor
+ */
+plugin.tileserver.Tileserver = function() {
+  plugin.tileserver.Tileserver.base(this, 'constructor');
+  this.providerType = plugin.tileserver.ID;
+};
+goog.inherits(plugin.tileserver.Tileserver, os.ui.server.AbstractLoadingServer);
+
+
+/**
+ * @inheritDoc
+ */
+plugin.tileserver.Tileserver.prototype.load = function(opt_ping) {
+  plugin.tileserver.Tileserver.base(this, 'load', opt_ping);
+
+  // clear out any children we already have
+  this.setChildren(null);
+
+  // load the JSON
+  new os.net.Request(this.getUrl()).getPromise().
+      then(this.onLoad, this.onError, this).
+      thenCatch(this.onError, this);
+};
+
+
+/**
+ * @param {string} response
+ * @protected
+ */
+plugin.tileserver.Tileserver.prototype.onLoad = function(response) {
+  try {
+    var layers = JSON.parse(response);
+  } catch (e) {
+    this.onError('Malformed JSON');
+    return;
+  }
+
+  if (!goog.isArray(layers)) {
+    // not sure what we got but it isn't an array of layers
+    this.onError('Expected an array of layers but got something else');
+    return;
+  }
+
+  var children = /** @type {Array<!os.structs.ITreeNode>} */ (
+      layers.map(this.toChildNode, this).filter(os.fn.filterFalsey));
+  this.setChildren(children);
+  this.finish();
+};
+
+
+/**
+ * @param {Object<string, *>} layer The layer JSON
+ * @return {?os.ui.data.DescriptorNode} The child node for the provider
+ * @protected
+ */
+plugin.tileserver.Tileserver.prototype.toChildNode = function(layer) {
+  if (!layer['tilejson']) {
+    return null;
+  }
+
+  if (!/^(png|jpe?g|gif)$/i.test(layer['format'])) {
+    // not our format
+    return null;
+  }
+
+  var id = this.getId() + os.ui.data.BaseProvider.ID_DELIMITER + layer['name'];
+
+  var config = {
+    'type': 'XYZ',
+    'id': id,
+    'title': layer['name'],
+    'urls': layer['tiles'],
+    'extent': layer['bounds'],
+    'extentProjection': os.proj.EPSG4326,
+    'projection': os.proj.EPSG3857,
+    'minZoom': Math.max(os.map.MIN_ZOOM, layer['minzoom']),
+    'maxZoom': Math.min(os.map.MAX_ZOOM, layer['maxzoom']),
+    'attribution': layer['attribution'],
+    // this delays enabling the descriptor on startup until this provider marks it as ready
+    'delayUpdateActive': true
+  };
+
+  if (layer['type'] === 'baselayer') {
+    config['baseType'] = config['type'];
+    config['type'] = plugin.basemap.ID;
+    config['layerType'] = plugin.basemap.LAYER_TYPE;
+  }
+
+  var descriptor = /** @type {os.data.ConfigDescriptor} */ (os.dataManager.getDescriptor(id));
+  if (!descriptor) {
+    descriptor = new os.data.ConfigDescriptor();
+  }
+
+  descriptor.setBaseConfig(config);
+
+  // add the descriptor to the data manager
+  os.dataManager.addDescriptor(descriptor);
+
+  // mark the descriptor as ready if the user had it enabled previously
+  descriptor.updateActiveFromTemp();
+
+  var node = new os.ui.data.DescriptorNode();
+  node.setDescriptor(descriptor);
+
+  return node;
+};
+
+
+/**
+ * @param {*} e
+ * @protected
+ */
+plugin.tileserver.Tileserver.prototype.onError = function(e) {
+  var msg = goog.isArray(e) ? e.join(' ') : e.toString();
+  this.setErrorMessage(msg);
+};

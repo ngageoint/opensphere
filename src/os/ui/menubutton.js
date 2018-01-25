@@ -1,8 +1,8 @@
 goog.provide('os.ui.MenuButtonCtrl');
 
-goog.require('os.ui.action.windows');
 goog.require('os.ui.events.UIEvent');
 goog.require('os.ui.events.UIEventType');
+goog.require('os.ui.menu.windows');
 
 /**
  * Controller function for the menu button directive. Any button wishing
@@ -96,7 +96,7 @@ os.ui.MenuButtonCtrl.prototype.onMenuClose = function() {
  * Toggles a window
  */
 os.ui.MenuButtonCtrl.prototype.toggle = function() {
-  if (this.flag && !os.ui.action.windows.openWindow(this.flag)) {
+  if (this.flag && !os.ui.menu.windows.openWindow(this.flag)) {
     var event = new os.ui.events.UIEvent(os.ui.events.UIEventType.TOGGLE_UI, this.flag, null, null, this.metricKey);
     os.dispatcher.dispatchEvent(event);
   }

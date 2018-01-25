@@ -1,4 +1,5 @@
 goog.provide('os.ui.state.StateImportUI');
+
 goog.require('goog.dom.xml');
 goog.require('os.parse.StateParserConfig');
 goog.require('os.state.Tag');
@@ -38,7 +39,11 @@ os.ui.state.StateImportUI.prototype.launchUI = function(file, opt_config) {
   if (content) {
     if (goog.isString(content)) {
       if (contentType == 'application/json') {
-        rawState = goog.json.parse(content);
+        try {
+          rawState = /** @type {Object} */ (JSON.parse(content));
+        } catch (e) {
+          rawState = undefined;
+        }
       } else {
         rawState = goog.dom.xml.loadXml(content);
       }

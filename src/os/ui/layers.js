@@ -20,12 +20,14 @@ goog.require('os.metrics.keys');
 goog.require('os.object');
 goog.require('os.ui');
 goog.require('os.ui.Module');
-goog.require('os.ui.action.windows');
 goog.require('os.ui.data.groupby.TagGroupBy');
 goog.require('os.ui.events.UIEvent');
 goog.require('os.ui.events.UIEventType');
 goog.require('os.ui.layer.defaultLayerUIDirective');
 goog.require('os.ui.layerTreeDirective');
+goog.require('os.ui.menu.import');
+goog.require('os.ui.menu.layer');
+goog.require('os.ui.menu.windows');
 goog.require('os.ui.slick.AbstractGroupByTreeSearchCtrl');
 goog.require('os.ui.uiSwitchDirective');
 goog.require('os.ui.util.autoHeightDirective');
@@ -74,8 +76,8 @@ os.ui.Module.directive('layerswin', [os.ui.layersWindowDirective]);
 
 /**
  * Controller for Layers window
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
+ * @param {!angular.Scope} $scope The Angular scope.
+ * @param {!angular.JQLite} $element The root DOM element.
  * @extends {os.ui.slick.AbstractGroupByTreeSearchCtrl}
  * @constructor
  * @ngInject
@@ -85,7 +87,7 @@ os.ui.LayersCtrl = function($scope, $element) {
 
   this.title = 'layers';
   try {
-    this.scope['contextMenu'] = os.action.layer.manager;
+    this.scope['contextMenu'] = os.ui.menu.layer.MENU;
   } catch (e) {
   }
 
@@ -98,14 +100,13 @@ os.ui.LayersCtrl = function($scope, $element) {
   this.treeSearch = new os.data.LayerTreeSearch('layerTree', $scope);
 
   /**
-   * @type {Object.<string, os.ui.action.ActionManager>}
+   * @type {!Object<string, !os.ui.menu.Menu>}
    * @private
    */
   this.menus_ = {};
 
-  try {
-    this.menus_['.add-data-group'] = os.action.import.manager;
-  } catch (e) {
+  if (os.ui.menu.import.MENU) {
+    this.menus_['.add-data-group'] = os.ui.menu.import.MENU;
   }
 
   var map = os.MapContainer.getInstance();
@@ -122,7 +123,7 @@ goog.inherits(os.ui.LayersCtrl, os.ui.slick.AbstractGroupByTreeSearchCtrl);
 
 /**
  * The view options for grouping layers
- * @type {!Object.<string, os.data.groupby.INodeGroupBy>}
+ * @type {!Object<string, os.data.groupby.INodeGroupBy>}
  */
 os.ui.LayersCtrl.VIEWS = {
   'Favorites': new os.data.groupby.FavoriteGroupBy(),
@@ -205,17 +206,21 @@ goog.exportProperty(os.ui.LayersCtrl.prototype, 'isWindowActive', os.ui.LayersCt
 
 /**
  * Opens the specified menu.
- * @param {string} selector
+ * @param {string} selector The menu target selector.
  */
 os.ui.LayersCtrl.prototype.openMenu = function(selector) {
-  if (goog.isDefAndNotNull(this.menus_[selector])) {
-    var menu = this.menus_[selector];
+  var menu = this.menus_[selector];
+  if (menu) {
     var target = this.element.find(selector);
     if (target && target.length > 0) {
       this.scope['menu'] = selector;
       os.dispatcher.listenOnce(os.ui.GlobalMenuEventType.MENU_CLOSE, this.onMenuClose, false, this);
-      menu.refreshEnabledActions();
-      os.ui.openMenu(menu, 'left', target);
+
+      menu.open(undefined, {
+        my: 'left top',
+        at: 'left bottom',
+        of: target
+      });
     }
   }
 };
@@ -223,7 +228,8 @@ goog.exportProperty(os.ui.LayersCtrl.prototype, 'openMenu', os.ui.LayersCtrl.pro
 
 
 /**
- * @param {goog.events.Event} evt
+ * Handle menu close event.
+ * @param {goog.events.Event} evt The event.
  * @protected
  */
 os.ui.LayersCtrl.prototype.onMenuClose = function(evt) {
@@ -236,7 +242,7 @@ os.ui.LayersCtrl.prototype.onMenuClose = function(evt) {
  * @param {string} flagName The name of the flag to toggle
  */
 os.ui.LayersCtrl.prototype.toggle = function(flagName) {
-  if (!os.ui.action.windows.openWindow(flagName)) {
+  if (!os.ui.menu.windows.openWindow(flagName)) {
     var event = new os.ui.events.UIEvent(os.ui.events.UIEventType.TOGGLE_UI, flagName);
     os.dispatcher.dispatchEvent(event);
   }

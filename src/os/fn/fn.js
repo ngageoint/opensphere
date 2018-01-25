@@ -87,24 +87,30 @@ os.fn.mapFeatureToGeometry = function(feature) {
 
 
 /**
- * @param {?os.data.LayerNode} node The layer node
- * @return {?os.layer.ILayer} layer The layer instance
+ * Map a tree node to a layer.
+ * @param {os.structs.ITreeNode} node The tree node.
+ * @return {os.layer.ILayer|undefined} layer The layer, or undefined if not a layer node.
  */
-os.fn.mapLayerNodeToLayer = function(node) {
-  return node instanceof os.data.LayerNode ? node.getLayer() : null;
+os.fn.mapNodeToLayer = function(node) {
+  return node instanceof os.data.LayerNode ? node.getLayer() : undefined;
 };
 
 
 /**
- * @param {?(Array<?os.data.LayerNode>|os.data.LayerNode)} nodes The layer nodes
- * @return {!Array<!os.layer.ILayer>} layers The layers
+ * Map tree node(s) to layers.
+ * @param {Array<os.structs.ITreeNode>|os.structs.ITreeNode|undefined} nodes The tree nodes.
+ * @return {!Array<!os.layer.ILayer>} layers The layers.
  */
 os.fn.nodesToLayers = function(nodes) {
+  if (!nodes) {
+    return [];
+  }
+
   if (!goog.isArray(nodes)) {
     nodes = [nodes];
   }
 
-  return nodes.map(os.fn.mapLayerNodeToLayer).filter(os.fn.filterFalsey);
+  return nodes.map(os.fn.mapNodeToLayer).filter(os.fn.filterFalsey);
 };
 
 

@@ -22,4 +22,6 @@ The code is open source, and `available on GitHub`_.
    :caption: Developer Documentation
 
    getting_started
+   guides/app_guide
    guides/plugin_guide
+   cookbook/overview
