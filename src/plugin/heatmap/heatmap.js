@@ -1,6 +1,9 @@
 goog.provide('plugin.heatmap');
 goog.provide('plugin.heatmap.HeatmapField');
 goog.provide('plugin.heatmap.SynchronizerType');
+
+goog.require('ol.Feature');
+goog.require('ol.geom.Point');
 goog.require('os.events.LayerConfigEvent');
 goog.require('os.ex.ZipExporter');
 goog.require('os.file.File');
@@ -36,6 +39,96 @@ plugin.heatmap.HeatmapPropertyType = {
 
 
 /**
+ * Factor to use for scaling Openlayers extents to render the heatmap properly.
+ * @type {number}
+ * @const
+ */
+plugin.heatmap.EXTENT_SCALE_FACTOR = 1.5;
+
+
+/**
+ * Clones a feature. This avoids copying style information since we handle styles very differently than base OL3.
+ * @param {!ol.Feature} feature The feature to clone
+ * @return {?ol.Feature} The cloned feature
+ */
+plugin.heatmap.cloneFeature = function(feature) {
+  var clone = null;
+  var geometry = feature.getGeometry();
+
+  if (geometry && geometry.getExtent().indexOf(Infinity) === -1) {
+    clone = new ol.Feature();
+
+    // get the real geometry name and put it on the feature
+    var geometryType = geometry.getType();
+    clone.set(plugin.heatmap.HeatmapField.GEOMETRY_TYPE, geometryType);
+
+    // put a clone of the geometry on the feature
+    clone.set(plugin.heatmap.HeatmapField.HEATMAP_GEOMETRY, os.ol.feature.cloneGeometry(geometry));
+
+    // get the ellipse and put it on the feature (if applicable)
+    var ellipse = feature.get(os.data.RecordField.ELLIPSE);
+    var shapeName = os.feature.getShapeName(feature);
+    if (ellipse && (shapeName == os.style.ShapeType.ELLIPSE || shapeName == os.style.ShapeType.ELLIPSE_CENTER)) {
+      clone.set(plugin.heatmap.HeatmapField.GEOMETRY_TYPE, ellipse.getType());
+      clone.set(plugin.heatmap.HeatmapField.HEATMAP_GEOMETRY, os.ol.feature.cloneGeometry(ellipse));
+    }
+
+    // generate the centerpoint and center the feature there for rendering
+    var extent = geometry.getExtent();
+    var center = ol.extent.getCenter(extent);
+    var pointGeometry = new ol.geom.Point(center);
+    clone.setGeometry(pointGeometry);
+  }
+
+  return clone;
+};
+
+
+/**
+ * Get features to use for a heatmap from a source.
+ * @param {string|undefined} sourceId The source id.
+ * @return {Array<!ol.Feature>|undefined} The features.
+ */
+plugin.heatmap.getSourceFeatures = function(sourceId) {
+  var source = sourceId ? os.osDataManager.getSource(sourceId) : undefined;
+  return source ? source.getFeatures().map(function(feature, idx, arr) {
+    if (feature) {
+      var clone = plugin.heatmap.cloneFeature(feature);
+      if (clone) {
+        clone.setId(idx);
+        return clone;
+      }
+    }
+
+    return undefined;
+  }).filter(os.fn.filterFalsey) : undefined;
+};
+
+
+/**
+ * Takes a list of color strings and constructs a gradient image data array.
+ * @param {Array<string>} colors
+ * @return {Uint8ClampedArray} An array.
+ */
+plugin.heatmap.createGradient = function(colors) {
+  var width = 1;
+  var height = 256;
+  var context = ol.dom.createCanvasContext2D(width, height);
+
+  var gradient = context.createLinearGradient(0, 0, width, height);
+  var step = 1 / (colors.length - 1);
+  for (var i = 0, ii = colors.length; i < ii; ++i) {
+    gradient.addColorStop(i * step, colors[i]);
+  }
+
+  context.fillStyle = gradient;
+  context.fillRect(0, 0, width, height);
+
+  return context.getImageData(0, 0, width, height).data;
+};
+
+
+/**
  * Create a heatmap based on the passed layer.
  * @param {os.layer.ILayer} layer
  */
@@ -61,9 +154,8 @@ plugin.heatmap.createHeatmap = function(layer) {
  * @param {plugin.heatmap.Heatmap} layer
  */
 plugin.heatmap.exportHeatmap = function(layer) {
-  var source = /** @type {plugin.heatmap.HeatmapSource} */ (layer.getSource());
-  var currentCanvas = source.getCurrentCanvas();
-  var canvas = currentCanvas.getImage();
+  var lastImage = layer.getLastImage();
+  var canvas = lastImage.getImage();
   var dataUrl = canvas.toDataURL();
 
   var jobUrl = os.ROOT + os.worker.DIR + 'dataurltoarray.js';

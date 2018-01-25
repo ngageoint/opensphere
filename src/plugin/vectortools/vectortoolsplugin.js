@@ -102,9 +102,8 @@ plugin.vectortools.visibleIfIsVector = function(context) {
     this.visible = context.every(function(item) {
       if (item instanceof os.data.LayerNode) {
         var layer = /** @type {!os.data.LayerNode} */ (item).getLayer();
-        if (layer && layer instanceof os.layer.Vector && layer.getId() !== os.MapContainer.DRAW_ID) {
-          return true;
-        }
+        return layer instanceof os.layer.Vector && layer.getId() !== os.MapContainer.DRAW_ID &&
+            layer.getOSType() !== os.layer.LayerType.IMAGE;
       }
 
       return false;
