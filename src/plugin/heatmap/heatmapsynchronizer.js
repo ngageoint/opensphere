@@ -13,7 +13,7 @@ goog.require('os.olcs.sync.AbstractSynchronizer');
  * @param {!plugin.heatmap.Heatmap} layer
  * @param {!ol.Map} map
  * @param {!Cesium.Scene} scene
- * @extends {os.olcs.sync.AbstractSynchronizer.<plugin.heatmap.Heatmap>}
+ * @extends {os.olcs.sync.AbstractSynchronizer<plugin.heatmap.Heatmap>}
  * @constructor
  */
 plugin.heatmap.HeatmapSynchronizer = function(layer, map, scene) {
@@ -112,9 +112,7 @@ plugin.heatmap.HeatmapSynchronizer.prototype.synchronizeInternal = function() {
   }
 
   // get the image
-  var source = this.layer.getSource();
-  var img = /** @type {string} */ (source.get('url'));
-
+  var img = /** @type {string|undefined} */ (this.layer.get('url'));
   if (!img) {
     // if we don't have it, create it (that function re-calls this one)
     this.createHeatmap();
@@ -122,7 +120,10 @@ plugin.heatmap.HeatmapSynchronizer.prototype.synchronizeInternal = function() {
   }
 
   if (img) {
-    var extent = this.layer.getExtent();
+    // scale back the extent so the image is positioned in the correct location
+    var extent = this.layer.getExtent().slice();
+    ol.extent.scaleFromCenter(extent, 1 / plugin.heatmap.EXTENT_SCALE_FACTOR);
+
     this.activeLayer_ = this.cesiumLayers_.addImageryProvider(new Cesium.SingleTileImageryProvider({
       url: img,
       rectangle: Cesium.Rectangle.fromDegrees(extent[0], extent[1], extent[2], extent[3])
@@ -196,6 +197,10 @@ plugin.heatmap.HeatmapSynchronizer.prototype.createHeatmap = function(opt_event)
     if (layer === this.layer) {
       frameState.layerStatesArray[i].visible = true;
       frameState.layerStatesArray[i].extent = undefined;
+
+      var extent = frameState.extent.slice();
+      ol.extent.scaleFromCenter(extent, 2);
+      frameState.extent = extent;
     }
   }
 

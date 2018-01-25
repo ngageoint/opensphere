@@ -1,9 +1,10 @@
 goog.provide('plugin.heatmap.HeatmapLayerConfig');
+
 goog.require('goog.log');
 goog.require('goog.log.Logger');
+goog.require('ol.source.Vector');
 goog.require('os.layer.config.AbstractLayerConfig');
 goog.require('plugin.heatmap.Heatmap');
-goog.require('plugin.heatmap.HeatmapSource');
 
 
 
@@ -62,7 +63,7 @@ plugin.heatmap.HeatmapLayerConfig.prototype.createLayer = function(options) {
 
 
 /**
- * @param {plugin.heatmap.HeatmapSource} source The layer source.
+ * @param {ol.source.Vector} source The layer source.
  * @param {Object<string, *>} options
  * @return {plugin.heatmap.Heatmap}
  * @protected
@@ -77,11 +78,16 @@ plugin.heatmap.HeatmapLayerConfig.prototype.getLayer = function(source, options)
 
 /**
  * @param {Object} options Layer configuration options.
- * @return {plugin.heatmap.HeatmapSource}
+ * @return {ol.source.Vector}
  * @protected
  *
  * @suppress {checkTypes}
  */
 plugin.heatmap.HeatmapLayerConfig.prototype.getSource = function(options) {
-  return new plugin.heatmap.HeatmapSource(options);
+  options = options || {};
+
+  var sourceId = /** @type {string|undefined} */ (options['sourceId']);
+  options.features = plugin.heatmap.getSourceFeatures(sourceId);
+
+  return new ol.source.Vector(options);
 };

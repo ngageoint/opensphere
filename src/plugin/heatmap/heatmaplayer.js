@@ -3,7 +3,6 @@ goog.provide('plugin.heatmap.Heatmap');
 goog.require('goog.string');
 goog.require('ol.events');
 goog.require('ol.geom.GeometryType');
-goog.require('ol.layer.Heatmap');
 goog.require('ol.render.Event');
 goog.require('ol.style.Icon');
 goog.require('ol.style.Style');
@@ -12,7 +11,7 @@ goog.require('os.events.PropertyChangeEvent');
 goog.require('os.implements');
 goog.require('os.layer');
 goog.require('os.layer.ILayer');
-goog.require('os.layer.Image');
+goog.require('os.layer.Vector');
 goog.require('os.registerClass');
 goog.require('os.source');
 goog.require('os.source.Request');
@@ -30,38 +29,71 @@ goog.require('plugin.heatmap.heatmapLayerUIDirective');
  * images to represent each feature in the original layer. These are drawn as alpha < 1 monochrome images that are
  * then composited together and colored with a gradient (in the heatmap source). The more features that overlap in
  * a given area, the higher the alpha in that area and the more intense the color in the final image.
- * @extends {os.layer.Image}
- * @param {olx.layer.ImageOptions} options
+ * @extends {os.layer.Vector}
+ * @param {olx.layer.VectorOptions} options
  * @constructor
  */
 plugin.heatmap.Heatmap = function(options) {
+  options = options || {};
+
+  // Openlayers 4.6.0 moved vector image rendering to ol.layer.Vector with renderMode: 'image'
+  if (!options['renderMode']) {
+    options['renderMode'] = 'image';
+  }
+
   plugin.heatmap.Heatmap.base(this, 'constructor', options);
 
   /**
+   * The array of hex colors. Used for external interface.
+   * @type {Array<string>}
+   * @private
+   */
+  this.gradient_ = os.color.THERMAL_HEATMAP_GRADIENT_HEX;
+
+  /**
+   * The array of rgba values used to actually apply the gradient
+   * @type {Uint8ClampedArray}
+   * @private
+   */
+  this.actualGradient_ = plugin.heatmap.createGradient(this.gradient_);
+
+  /**
+   * The last modified image.
+   * @type {?ol.ImageCanvas}
+   * @private
+   */
+  this.lastImage_ = null;
+
+  /**
+   * The number of features for max intensity.
    * @type {number}
    * @private
    */
   this.intensity_ = 25;
 
   /**
+   * Draw radius for each feature.
    * @type {number}
    * @private
    */
   this.size_ = 5;
 
   /**
+   * Point blur factor.
    * @type {number}
    * @private
    */
   this.pointBlur_ = 5;
 
   /**
+   * Line blur factor.
    * @type {number}
    * @private
    */
   this.lineStringBlur_ = 5;
 
   /**
+   * Polygon blur factor.
    * @type {number}
    * @private
    */
@@ -69,7 +101,7 @@ plugin.heatmap.Heatmap = function(options) {
 
   /**
    * Caches point images. Significantly speeds up point rendering because they don't need to be redrawn.
-   * @type {Object<string, Array.<ol.style.Style>>}
+   * @type {Object<number, !Array<!ol.style.Style>>}
    * @private
    */
   this.pointStyleCache_ = {};
@@ -78,15 +110,23 @@ plugin.heatmap.Heatmap = function(options) {
   this.setHidden(false);
   this.setLayerUI('heatmaplayerui');
   this.setSynchronizerType(plugin.heatmap.SynchronizerType.HEATMAP);
+  this.setOSType(os.layer.LayerType.IMAGE);
+  this.setExplicitType(os.layer.ExplicitLayerType.IMAGE);
+  this.setDoubleClickHandler(null);
 
   if (options['title']) {
     this.setTitle('Heatmap - ' + options['title']);
   }
 
-  var source = /** @type {plugin.heatmap.HeatmapSource} */ (this.getSource());
-  source.setStyle(this.styleFunc.bind(this));
+  this.setStyle(this.styleFunc.bind(this));
+
+  // For performance reasons, don't sort the features before rendering.
+  // The render order is not relevant for a heatmap representation.
+  this.setRenderOrder(null);
+
+  ol.events.listen(this, ol.render.EventType.PRECOMPOSE, this.onPreCompose_, this);
 };
-goog.inherits(plugin.heatmap.Heatmap, os.layer.Image);
+goog.inherits(plugin.heatmap.Heatmap, os.layer.Vector);
 os.implements(plugin.heatmap.Heatmap, os.layer.ILayer.ID);
 
 
@@ -101,6 +141,68 @@ plugin.heatmap.Heatmap.prototype.disposeInternal = function() {
 
 
 /**
+ * @param {!ol.render.Event} event The render event.
+ * @private
+ * @suppress {accessControls}
+ */
+plugin.heatmap.Heatmap.prototype.onPreCompose_ = function(event) {
+  if (event && event.context) {
+    var mapContainer = os.MapContainer.getInstance();
+    var map = mapContainer.getMap();
+    var layer = /** @type {ol.layer.Layer} */ (event.target);
+    var layerRenderer = /** @type {ol.renderer.canvas.ImageLayer} */ (map.getRenderer().getLayerRenderer(layer));
+    var image = layerRenderer ? /** @type {ol.ImageCanvas} */ (layerRenderer.image_) : undefined;
+
+    if (!image || image === this.lastImage_) {
+      // image isn't ready or has already been colored - nothing to do.
+      return;
+    }
+
+    // save the last image that was updated so we don't try to modify it further
+    this.lastImage_ = image;
+
+    var canvas = image.getImage();
+    var context = canvas.getContext('2d');
+    var frameState = event.frameState;
+    var extent = frameState ? frameState.extent : undefined;
+    var pixelRatio = frameState ? frameState.pixelRatio : undefined;
+    var resolution = frameState ? frameState.viewState.resolution : undefined;
+
+    if (context && canvas && extent && pixelRatio != null && resolution != null) {
+      // Apply the gradient pixel by pixel. This is slow, so should be done as infrequently as possible.
+      var imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+      var view8 = imageData.data;
+      var alpha;
+      for (var i = 0, ii = view8.length; i < ii; i += 4) {
+        alpha = view8[i + 3] * 4;
+        if (alpha) {
+          view8[i] = this.actualGradient_[alpha];
+          view8[i + 1] = this.actualGradient_[alpha + 1];
+          view8[i + 2] = this.actualGradient_[alpha + 2];
+          view8[i + 3] = alpha * 4;
+        }
+      }
+      context.putImageData(imageData, 0, 0);
+
+      // scale the extent so the heatmap isn't clipped
+      extent = extent.slice();
+      ol.extent.scaleFromCenter(extent, plugin.heatmap.EXTENT_SCALE_FACTOR);
+
+      // copy the image
+      var c = /** @type {HTMLCanvasElement} */ (document.createElement('canvas'));
+      c.width = canvas.width;
+      c.height = canvas.height;
+      var ctx = c.getContext('2d');
+      ctx.drawImage(canvas, 0, 0);
+
+      // cache the image and its data URL for the synchronizer
+      this.set('url', c.toDataURL());
+    }
+  }
+};
+
+
+/**
  * Creates the heatmap styles for each feature to draw to the canvas.
  * @param {ol.Feature} feature
  * @param {number} resolution
@@ -108,14 +210,12 @@ plugin.heatmap.Heatmap.prototype.disposeInternal = function() {
  */
 plugin.heatmap.Heatmap.prototype.styleFunc = function(feature, resolution) {
   var style;
-  var index;
   var opacity = 1 / this.intensity_;
   var useCache = feature.get(plugin.heatmap.HeatmapField.HEATMAP_GEOMETRY) instanceof ol.geom.Point;
 
   if (useCache) {
-    // point geometries are cached by <id>|<opacity>
-    index = feature.getId() + '|' + opacity;
-    style = this.pointStyleCache_[index];
+    // point styles are indexed by intensity
+    style = this.pointStyleCache_[this.intensity_];
   }
 
   if (!style) {
@@ -133,8 +233,8 @@ plugin.heatmap.Heatmap.prototype.styleFunc = function(feature, resolution) {
       })
     ];
 
-    if (index) {
-      this.pointStyleCache_[index] = style;
+    if (useCache) {
+      this.pointStyleCache_[this.intensity_] = style;
     }
   }
 
@@ -354,10 +454,33 @@ plugin.heatmap.Heatmap.prototype.drawLineString = function(geom) {
 
 
 /**
+ * Gets the last rendered image canvas.
+ * @return {?ol.ImageCanvas} The image canvas, or null.
+ */
+plugin.heatmap.Heatmap.prototype.getLastImage = function() {
+  return this.lastImage_;
+};
+
+
+/**
  * @inheritDoc
  */
 plugin.heatmap.Heatmap.prototype.getExtent = function() {
-  return /** @type {plugin.heatmap.HeatmapSource} */ (this.getSource()).getExtent();
+  var extent = null;
+
+  var canvas = this.getLastImage();
+  if (canvas) {
+    // get it from the canvas
+    extent = canvas.getExtent().slice();
+  } else {
+    // use the full map extent if the canvas isn't ready
+    extent = os.MapContainer.getInstance().getViewExtent().slice();
+  }
+
+  // scale the extent so the image is positioned properly
+  ol.extent.scaleFromCenter(extent, plugin.heatmap.EXTENT_SCALE_FACTOR);
+
+  return extent;
 };
 
 
@@ -376,7 +499,7 @@ plugin.heatmap.Heatmap.prototype.getIntensity = function() {
  */
 plugin.heatmap.Heatmap.prototype.setIntensity = function(value) {
   this.intensity_ = value;
-  this.markSourceDirty(plugin.heatmap.HeatmapPropertyType.INTENSITY);
+  this.updateSource(plugin.heatmap.HeatmapPropertyType.INTENSITY);
 };
 
 
@@ -395,7 +518,7 @@ plugin.heatmap.Heatmap.prototype.getSize = function() {
  */
 plugin.heatmap.Heatmap.prototype.setSize = function(value) {
   this.size_ = value;
-  this.markSourceDirty(plugin.heatmap.HeatmapPropertyType.SIZE);
+  this.updateSource(plugin.heatmap.HeatmapPropertyType.SIZE);
 };
 
 
@@ -404,12 +527,7 @@ plugin.heatmap.Heatmap.prototype.setSize = function(value) {
  * @return {Array<string>}
  */
 plugin.heatmap.Heatmap.prototype.getGradient = function() {
-  var source = /** @type {plugin.heatmap.HeatmapSource} */ (this.getSource());
-  if (source) {
-    return source.getGradient();
-  }
-
-  return null;
+  return this.gradient_;
 };
 
 
@@ -418,26 +536,20 @@ plugin.heatmap.Heatmap.prototype.getGradient = function() {
  * @param {Array<string>} value
  */
 plugin.heatmap.Heatmap.prototype.setGradient = function(value) {
-  var source = /** @type {plugin.heatmap.HeatmapSource} */ (this.getSource());
-  if (source) {
-    source.setGradient(value);
-    this.markSourceDirty(plugin.heatmap.HeatmapPropertyType.GRADIENT);
-  }
+  this.gradient_ = value;
+  this.actualGradient_ = plugin.heatmap.createGradient(this.gradient_);
+  this.updateSource(plugin.heatmap.HeatmapPropertyType.GRADIENT);
 };
 
 
 /**
- * Marks the source as dirty and fires a change event to force a rerender. Necessary because the heatmap source
- * deliberately avoids rerendering the heatmap as much as possible.
+ * Trigger a render on the source. Necessary because the heatmap source deliberately avoids rerendering the heatmap as
+ * much as possible.
  * @param {string=} opt_eventType Optional type for the style event.
  */
-plugin.heatmap.Heatmap.prototype.markSourceDirty = function(opt_eventType) {
+plugin.heatmap.Heatmap.prototype.updateSource = function(opt_eventType) {
   this.pointStyleCache_ = {};
-  var source = /** @type {plugin.heatmap.HeatmapSource} */ (this.getSource());
-  if (source) {
-    source.markDirty();
-    os.style.notifyStyleChange(this, undefined, opt_eventType);
-  }
+  os.style.notifyStyleChange(this, undefined, opt_eventType);
 };
 
 
