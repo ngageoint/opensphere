@@ -34,7 +34,7 @@ The last layer is a vector format, which we will ignore in this guide. The first
   :caption: ``src/plugin/tileserver/tileserver.js``
   :linenos:
   :language: javascript
-  :emphasize-lines: 3, 5, 7, 10-13, 58-67, 71-125
+  :emphasize-lines: 3, 5, 7, 10-13, 36-37, 58-67, 71-126
 
 Let's test it.
 
