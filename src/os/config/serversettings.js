@@ -28,7 +28,7 @@ os.config.ServerSettings.ID = 'servers';
 
 
 /**
- * @return {string}
+ * @inheritDoc
  */
 os.config.ServerSettings.prototype.getId = function() {
   return os.config.ServerSettings.ID;

@@ -31,8 +31,7 @@ os.command.SwitchView = function(projection) {
 
 
 /**
- * The current state of the command
- * @type {!os.command.State}
+ * @inheritDoc
  */
 os.command.SwitchView.prototype.state = os.command.State.READY;
 

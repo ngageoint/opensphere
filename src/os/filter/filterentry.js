@@ -177,8 +177,7 @@ os.filter.FilterEntry.prototype.setTemporary = function(value) {
 
 
 /**
- * Gets the filter
- * @return {?string}
+ * @inheritDoc
  */
 os.filter.FilterEntry.prototype.getFilter = function() {
   return this.filter_;
@@ -186,8 +185,7 @@ os.filter.FilterEntry.prototype.getFilter = function() {
 
 
 /**
- * Sets the filter
- * @param {?string} filter
+ * @inheritDoc
  */
 os.filter.FilterEntry.prototype.setFilter = function(filter) {
   var old = this.filter_;

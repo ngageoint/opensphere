@@ -45,10 +45,7 @@ goog.inherits(os.interaction.DragCircle, os.ui.ol.interaction.DragCircle);
 
 
 /**
- * Updates the 2D version
- * @param {ol.Coordinate} start
- * @param {ol.Coordinate} end
- * @protected
+ * @inheritDoc
  */
 os.interaction.DragCircle.prototype.update2D = function(start, end) {
   if (start && end) {

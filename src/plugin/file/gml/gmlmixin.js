@@ -10,6 +10,7 @@ goog.require('ol.format.GMLBase');
  * @param {Node} node
  * @suppress {accessControls|duplicate}
  * @return {ol.proj.Projection}
+ * @override
  */
 ol.format.GMLBase.prototype.readProjectionFromNode = function(node) {
   var attr = 'srsName';

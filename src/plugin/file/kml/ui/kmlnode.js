@@ -614,8 +614,7 @@ plugin.file.kml.ui.KMLNode.prototype.formatIcons = function() {
 
 
 /**
- * Performs a node action.
- * @param {string} type The action type
+ * @inheritDoc
  */
 plugin.file.kml.ui.KMLNode.prototype.performAction = function(type) {
   if (type == plugin.file.kml.ui.KMLNodeAction.FEATURE_INFO) {
@@ -628,9 +627,7 @@ plugin.file.kml.ui.KMLNode.prototype.performAction = function(type) {
 
 
 /**
- * Handles changes to children.
- * @param {!os.events.PropertyChangeEvent} e The change event
- * @protected
+ * @inheritDoc
  */
 plugin.file.kml.ui.KMLNode.prototype.onChildChange = function(e) {
   var p = e.getProperty();

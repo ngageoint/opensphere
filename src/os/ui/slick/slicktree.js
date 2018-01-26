@@ -509,9 +509,7 @@ os.ui.slick.SlickTreeCtrl.prototype.onDblClick = function(e, args) {
 
 
 /**
- * @param {*} e The event
- * @param {Object} args The args
- * @protected
+ * @inheritDoc
  */
 os.ui.slick.SlickTreeCtrl.prototype.onMouseEnter = function(e, args) {
   if (!this.inEvent) {
@@ -540,9 +538,7 @@ os.ui.slick.SlickTreeCtrl.prototype.onMouseEnter = function(e, args) {
 
 
 /**
- * @param {*} e The event
- * @param {Object} args The args
- * @protected
+ * @inheritDoc
  */
 os.ui.slick.SlickTreeCtrl.prototype.onMouseLeave = function(e, args) {
   if (!this.inEvent) {
@@ -666,9 +662,7 @@ os.ui.slick.SlickTreeCtrl.prototype.onItemAction_ = function(item, type) {
 
 
 /**
- * Gets the data for the grid
- * @return {!Array}
- * @protected
+ * @inheritDoc
  */
 os.ui.slick.SlickTreeCtrl.prototype.getData = function() {
   var data = this.scope['data'] || [];
@@ -833,10 +827,7 @@ os.ui.slick.SlickTreeCtrl.prototype.canDragMove = function(rows, insertBefore) {
 
 
 /**
- * @param {goog.events.EventLike} e The event
- * @param {Object.<string, *>} dragInfo The drag object
- * @return {boolean}
- * @protected
+ * @inheritDoc
  */
 os.ui.slick.SlickTreeCtrl.prototype.onDrag = function(e, dragInfo) {
   if (!this.dragging) {

@@ -210,46 +210,44 @@ os.Map.prototype.handleBrowserEvent = function(browserEvent, opt_type) {
  * ourselves after resetting the canvas size. We override it to fix a bug in Firefox where the computed style is
  * null in a hidden IFrame and for IE 10 sizing issues. Without this override, map initialization will fail.
  *
- * @param {goog.events.Event=} opt_e
+ * @override
  */
-os.Map.prototype.updateSize = function(opt_e) {
-  if (!opt_e) {
-    var targetElement = this.getTargetElement();
+os.Map.prototype.updateSize = function() {
+  var targetElement = this.getTargetElement();
 
-    if (!targetElement) {
-      this.setSize(undefined);
-    } else {
-      var computedStyle = getComputedStyle(targetElement);
-      if (computedStyle) {
-        if (goog.userAgent.IE && (targetElement.offsetWidth == 0 || targetElement.offsetHeight == 0)) {
-          // IE 10 hack - element offsetHeight is sometimes 0, so manually determine values
-          var navbars = document.getElementsByClassName('navbar');
-          var navbarHeight = 0;
-          for (var i = 0; i < navbars.length; i++) {
-            navbarHeight += navbars[0].offsetHeight;
-          }
-          var height = document.documentElement.clientHeight - navbarHeight;
-          height = height > 0 ? height : 0;
-          var width = document.documentElement.clientWidth;
-
-          this.setSize([width, height]);
-        } else {
-          this.setSize([
-            targetElement.offsetWidth -
-                parseFloat(computedStyle['borderLeftWidth']) -
-                parseFloat(computedStyle['paddingLeft']) -
-                parseFloat(computedStyle['paddingRight']) -
-                parseFloat(computedStyle['borderRightWidth']),
-            targetElement.offsetHeight -
-                parseFloat(computedStyle['borderTopWidth']) -
-                parseFloat(computedStyle['paddingTop']) -
-                parseFloat(computedStyle['paddingBottom']) -
-                parseFloat(computedStyle['borderBottomWidth'])
-          ]);
+  if (!targetElement) {
+    this.setSize(undefined);
+  } else {
+    var computedStyle = getComputedStyle(targetElement);
+    if (computedStyle) {
+      if (goog.userAgent.IE && (targetElement.offsetWidth == 0 || targetElement.offsetHeight == 0)) {
+        // IE 10 hack - element offsetHeight is sometimes 0, so manually determine values
+        var navbars = document.getElementsByClassName('navbar');
+        var navbarHeight = 0;
+        for (var i = 0; i < navbars.length; i++) {
+          navbarHeight += navbars[0].offsetHeight;
         }
+        var height = document.documentElement.clientHeight - navbarHeight;
+        height = height > 0 ? height : 0;
+        var width = document.documentElement.clientWidth;
+
+        this.setSize([width, height]);
       } else {
-        this.setSize(undefined);
+        this.setSize([
+          targetElement.offsetWidth -
+              parseFloat(computedStyle['borderLeftWidth']) -
+              parseFloat(computedStyle['paddingLeft']) -
+              parseFloat(computedStyle['paddingRight']) -
+              parseFloat(computedStyle['borderRightWidth']),
+          targetElement.offsetHeight -
+              parseFloat(computedStyle['borderTopWidth']) -
+              parseFloat(computedStyle['paddingTop']) -
+              parseFloat(computedStyle['paddingBottom']) -
+              parseFloat(computedStyle['borderBottomWidth'])
+        ]);
       }
+    } else {
+      this.setSize(undefined);
     }
   }
 };

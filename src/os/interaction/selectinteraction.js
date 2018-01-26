@@ -73,8 +73,7 @@ goog.inherits(os.interaction.Select, ol.interaction.Interaction);
 
 
 /**
- * Whether or not this interaction is supported in 3D mode
- * @return {boolean}
+ * @inheritDoc
  */
 os.interaction.Select.prototype.is3DSupported = function() {
   return this.supports3D_;

@@ -37,8 +37,7 @@ ol.source.TileImage.prototype.tileFilters = null;
 
 
 /**
- * Adds a tile filter function to the source.
- * @param {os.tile.TileFilterFn} fn
+ * @inheritDoc
  */
 ol.source.TileImage.prototype.addTileFilter = function(fn) {
   if (!this.tileFilters) {
@@ -51,8 +50,7 @@ ol.source.TileImage.prototype.addTileFilter = function(fn) {
 
 
 /**
- * Removes a tile filter function from the source.
- * @param {os.tile.TileFilterFn} fn
+ * @inheritDoc
  */
 ol.source.TileImage.prototype.removeTileFilter = function(fn) {
   if (!this.tileFilters) {
@@ -65,8 +63,7 @@ ol.source.TileImage.prototype.removeTileFilter = function(fn) {
 
 
 /**
- * Gets the set of tile filters.
- * @return {Array<os.tile.TileFilterFn>}
+ * @inheritDoc
  */
 ol.source.TileImage.prototype.getTileFilters = function() {
   if (!this.tileFilters) {
@@ -78,7 +75,7 @@ ol.source.TileImage.prototype.getTileFilters = function() {
 
 
 /**
- * Resets the tile filter on every cached tile in the source. Then forces a rerender of the map to reapply the filters.
+ * @inheritDoc
  */
 ol.source.TileImage.prototype.applyTileFilters = function() {
   var tiles = this.tileCache.getValues();

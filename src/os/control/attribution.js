@@ -25,9 +25,7 @@ goog.inherits(os.control.Attribution, ol.control.Attribution);
 os.control.Attribution.CheckVisibleAtResolution = true;
 
 /**
- * Get a list of visible attributions.
- * @param {olx.FrameState} frameState Frame state.
- * @return {Array.<string>} Attributions.
+ * @inheritDoc
  * @suppress {accessControls}
  */
 os.control.Attribution.prototype.getSourceAttributions_ = function(frameState) {
@@ -84,8 +82,8 @@ os.control.Attribution.prototype.getSourceAttributions_ = function(frameState) {
 };
 
 /**
+ * @inheritDoc
  * @suppress {accessControls}
- * @param {?olx.FrameState} frameState Frame state.
  */
 os.control.Attribution.prototype.updateElement_ = function(frameState) {
   if (!frameState) {
