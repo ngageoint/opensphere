@@ -23,3 +23,4 @@ If you wish for this to be a core plugin included with OpenSphere then simply be
   plugin
   provider
   parsing
+  server_ui

@@ -144,7 +144,7 @@ os.data.ConfigDescriptor.prototype.getLayerOptions = function() {
  * @inheritDoc
  */
 os.data.ConfigDescriptor.prototype.matchesURL = function(url) {
-  return url == this.get('url');
+  return url == this.get('url') || this.get('urls').indexOf(url) > -1;
 };
 
 

@@ -1,0 +1,48 @@
+goog.provide('plugin.tileserver.TileserverPlugin');
+
+goog.require('os.data.ConfigDescriptor');
+goog.require('os.data.ProviderEntry');
+goog.require('os.plugin.AbstractPlugin');
+goog.require('os.plugin.PluginManager');
+goog.require('plugin.tileserver.Tileserver');
+
+
+/**
+ * Provides Tileserver support
+ * @extends {os.plugin.AbstractPlugin}
+ * @constructor
+ */
+plugin.tileserver.TileserverPlugin = function() {
+  plugin.tileserver.TileserverPlugin.base(this, 'constructor');
+  this.id = plugin.tileserver.ID;
+  this.errorMessage = null;
+};
+goog.inherits(plugin.tileserver.TileserverPlugin, os.plugin.AbstractPlugin);
+
+
+/**
+ * @type {string}
+ * @const
+ */
+plugin.tileserver.ID = 'tileserver';
+
+
+/**
+ * @inheritDoc
+ */
+plugin.tileserver.TileserverPlugin.prototype.init = function() {
+  var dm = os.data.DataManager.getInstance();
+  dm.registerProviderType(new os.data.ProviderEntry(
+      plugin.tileserver.ID,           // the type
+      plugin.tileserver.Tileserver,   // the class
+      'Tileserver',         // the title
+      'Tileserver layers'   // the description
+      ));
+
+  dm.registerDescriptorType(plugin.tileserver.ID, os.data.ConfigDescriptor);
+};
+
+
+
+// add the plugin to the application
+os.plugin.PluginManager.getInstance().addPlugin(new plugin.tileserver.TileserverPlugin());

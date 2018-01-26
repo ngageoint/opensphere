@@ -18,7 +18,7 @@ Run ``yarn build`` in OpenSphere (not in your plugin if it is external). It shou
 
 Just for good measure, let's test it.
 
-.. literalinclude:: test/plugin/tileserver/tileserverplugin.test.js
+.. literalinclude:: test/plugin/tileserver/tileserverplugin.test.js-plugin
   :caption: ``test/plugin/tileserver/tileserverplugin.test.js``
   :linenos:
   :language: javascript

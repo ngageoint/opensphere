@@ -95,7 +95,8 @@ plugin.tileserver.Tileserver.prototype.toChildNode = function(layer) {
     'projection': os.proj.EPSG3857,
     'minZoom': Math.max(os.map.MIN_ZOOM, layer['minzoom']),
     'maxZoom': Math.min(os.map.MAX_ZOOM, layer['maxzoom']),
-    'attribution': layer['attribution'],
+    'attributions': [layer['attribution']],
+    'provider': this.getLabel(),
     // this delays enabling the descriptor on startup until this provider marks it as ready
     'delayUpdateActive': true
   };
@@ -104,6 +105,7 @@ plugin.tileserver.Tileserver.prototype.toChildNode = function(layer) {
     config['baseType'] = config['type'];
     config['type'] = plugin.basemap.ID;
     config['layerType'] = plugin.basemap.LAYER_TYPE;
+    config['noClear'] = true;
   }
 
   var descriptor = /** @type {os.data.ConfigDescriptor} */ (os.dataManager.getDescriptor(id));
