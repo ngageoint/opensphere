@@ -87,7 +87,7 @@ goog.inherits(plugin.heatmap.HeatmapSource, ol.source.ImageVector);
 
 
 /**
- * Clean up.
+ * @inheritDoc
  */
 plugin.heatmap.HeatmapSource.prototype.disposeInternal = function() {
   plugin.heatmap.HeatmapSource.base(this, 'disposeInternal');

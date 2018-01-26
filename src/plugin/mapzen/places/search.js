@@ -80,6 +80,7 @@ plugin.mapzen.places.Search.prototype.getSearchUrl = function(term, opt_start, o
 /**
  * @param {goog.events.Event} evt
  * @suppress {accessControls}
+ * @override
  */
 plugin.mapzen.places.Search.prototype.onSearchSuccess = function(evt) {
   var request = /** @type {os.net.Request} */ (evt.target);

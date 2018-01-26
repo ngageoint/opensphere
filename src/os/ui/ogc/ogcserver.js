@@ -383,7 +383,7 @@ os.ui.ogc.OGCServer.prototype.setWpsUrl = function(value) {
 
 
 /**
- * Initialize the server.
+ * @inheritDoc
  */
 os.ui.ogc.OGCServer.prototype.init = function() {
   os.ui.ogc.OGCServer.base(this, 'init');

@@ -15,8 +15,7 @@ os.command.InterpolateFeatures = function() {
 
 
 /**
- * The current state of the command
- * @type {!os.command.State}
+ * @inheritDoc
  */
 os.command.InterpolateFeatures.prototype.state = os.command.State.READY;
 

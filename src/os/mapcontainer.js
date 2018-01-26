@@ -231,14 +231,6 @@ os.MapContainer.DRAW_ID = os.layer.Drawing.ID;
 
 
 /**
- * The ID for the search layer
- * @type {string}
- * @const
- */
-os.MapContainer.SEARCH_ID = 'search';
-
-
-/**
  * The map target element id.
  * @type {string}
  * @const
@@ -599,6 +591,7 @@ os.MapContainer.prototype.updateSize = function() {
 
 /**
  * @return {os.Map}
+ * @override
  */
 os.MapContainer.prototype.getMap = function() {
   return this.map_;
@@ -1785,33 +1778,13 @@ os.MapContainer.prototype.onRemoveLayerEvent_ = function(event) {
 
 
 /**
- * Adds a feature to the drawing layer. Features can be added by coordinate if the feature needs to be created in the
- * context of the map. This is useful when adding features from external windows.
- * @param {!(ol.Feature|ol.Coordinate)} feature The feature or coordinate to add
- * @param {Object=} opt_style Optional feature style
- * @param {ol.layer.Layer=} opt_layer Optional layer if you don't want to use the drawing one
- * @return {(ol.Feature|undefined)} The feature's id, or undefined if the feature wasn't added
- *
+ * @inheritDoc
  * @export Prevent the compiler from moving the function off the prototype.
  */
-os.MapContainer.prototype.addFeature = function(feature, opt_style, opt_layer) {
+os.MapContainer.prototype.addFeature = function(feature, opt_style) {
   if (feature != undefined) {
     os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.ADD_FEATURE, 1);
-    if (goog.isArray(feature)) {
-      if (!(feature instanceof Array)) {
-        feature = goog.array.clone(feature);
-      }
-
-      var geometry = new ol.geom.Point(/** @type {ol.Coordinate} */ (feature));
-      feature = new ol.Feature();
-
-      // if the style provides a custom geometry field, set it on the feature
-      if (opt_style && opt_style['geometry']) {
-        feature.setGeometryName(opt_style['geometry']);
-      }
-
-      feature.setGeometry(geometry);
-    } else if (!(feature instanceof ol.Feature)) {
+    if (!(feature instanceof ol.Feature)) {
       // created in another context
       feature = os.ol.feature.clone(feature);
     }
@@ -1823,7 +1796,7 @@ os.MapContainer.prototype.addFeature = function(feature, opt_style, opt_layer) {
       os.style.setFeatureStyle(feature);
     }
 
-    var drawLayer = opt_layer ? opt_layer : this.getLayer(os.MapContainer.DRAW_ID);
+    var drawLayer = this.getLayer(os.MapContainer.DRAW_ID);
     if (drawLayer) {
       // make sure the feature has an id or we won't be able to look it up for removal
       if (!feature.getId()) {
@@ -1833,10 +1806,13 @@ os.MapContainer.prototype.addFeature = function(feature, opt_style, opt_layer) {
       // set the layer id so we can look up the layer
       feature.set(os.data.RecordField.SOURCE_ID, /** @type {os.layer.ILayer} */ (drawLayer).getId());
 
-      var drawSource = /** @type {ol.source.Vector} */ (drawLayer.getSource());
-      os.interpolate.interpolateFeature(feature);
-      drawSource.addFeature(feature);
-      return feature;
+      var drawSource = drawLayer.getSource();
+
+      if (drawSource instanceof ol.source.Vector) {
+        os.interpolate.interpolateFeature(feature);
+        drawSource.addFeature(feature);
+        return feature;
+      }
     }
   }
 
@@ -1845,11 +1821,7 @@ os.MapContainer.prototype.addFeature = function(feature, opt_style, opt_layer) {
 
 
 /**
- * Adds an array of features to the drawing layer.
- * @param {!Array<!ol.Feature>} features The features to add
- * @param {Object=} opt_style Optional style to apply to all features
- * @return {!Array<!ol.Feature>}
- *
+ * @inheritDoc
  * @export Prevent the compiler from moving the function off the prototype.
  */
 os.MapContainer.prototype.addFeatures = function(features, opt_style) {
@@ -1866,16 +1838,13 @@ os.MapContainer.prototype.addFeatures = function(features, opt_style) {
 
 
 /**
- * Removes a feature from the drawing layer
- * @param {ol.Feature|number|string|undefined} feature The feature or feature id
- * @param {boolean=} opt_dispose If the feature should be disposed
- * @param {ol.layer.Layer=} opt_layer Optional layer if you don't want to use the drawing one
+ * @inheritDoc
  * @export Prevent the compiler from moving the function off the prototype.
  */
-os.MapContainer.prototype.removeFeature = function(feature, opt_dispose, opt_layer) {
+os.MapContainer.prototype.removeFeature = function(feature, opt_dispose) {
   if (goog.isDefAndNotNull(feature)) {
     os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.REMOVE_FEATURE, 1);
-    var layer = opt_layer ? opt_layer : this.getLayer(os.MapContainer.DRAW_ID);
+    var layer = this.getLayer(os.MapContainer.DRAW_ID);
     var source = /** @type {ol.source.Vector} */ (layer.getSource());
     if (goog.isString(feature) || goog.isNumber(feature)) {
       feature = source.getFeatureById(feature);
@@ -1895,8 +1864,7 @@ os.MapContainer.prototype.removeFeature = function(feature, opt_dispose, opt_lay
 
 
 /**
- * @param {ol.Feature|number|string|undefined} feature
- * @return {boolean} True if the feature is on the map, false otherwise
+ * @inheritDoc
  */
 os.MapContainer.prototype.containsFeature = function(feature) {
   if (goog.isDefAndNotNull(feature)) {
@@ -1915,10 +1883,7 @@ os.MapContainer.prototype.containsFeature = function(feature) {
 
 
 /**
- * Removes an array of features from the drawing layer.
- * @param {!Array<!ol.Feature>} features The features to remove
- * @param {boolean=} opt_dispose If the feature should be disposed
- *
+ * @inheritDoc
  * @export Prevent the compiler from moving the function off the prototype.
  */
 os.MapContainer.prototype.removeFeatures = function(features, opt_dispose) {
@@ -1931,10 +1896,9 @@ os.MapContainer.prototype.removeFeatures = function(features, opt_dispose) {
 
 /**
  * Gets the array of features in the drawing layer.
- * @param {ol.layer.Layer=} opt_layer
  * @return {Array<ol.Feature>}
  */
-os.MapContainer.prototype.getFeatures = function(opt_layer) {
+os.MapContainer.prototype.getFeatures = function() {
   return this.drawingLayer_ ? this.drawingLayer_.getSource().getFeatures() : [];
 };
 
@@ -1986,11 +1950,7 @@ os.MapContainer.prototype.getLayerCount = function(clazz) {
 
 
 /**
- * Gets a layer by ID
- * @param {!(string|ol.layer.Layer|ol.Feature)} layerOrFeature
- * @param {ol.Collection=} opt_search
- * @param {boolean=} opt_remove This is for INTERNAL use only.
- * @return {?ol.layer.Layer} The layer or null if no layer was found
+ * @inheritDoc
  */
 os.MapContainer.prototype.getLayer = function(layerOrFeature, opt_search, opt_remove) {
   if (!goog.isDefAndNotNull(opt_remove)) {

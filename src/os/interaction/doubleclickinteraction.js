@@ -33,8 +33,7 @@ goog.inherits(os.interaction.DoubleClick, ol.interaction.Interaction);
 
 
 /**
- * Whether or not this interaction is supported in 3D mode
- * @return {boolean}
+ * @inheritDoc
  */
 os.interaction.DoubleClick.prototype.is3DSupported = function() {
   return this.supports3D_;

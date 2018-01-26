@@ -75,7 +75,7 @@ plugin.file.kml.ui.PlacemarkEditCtrl.prototype.disposeInternal = function() {
 
 
 /**
- * Accept changes, saving the place.
+ * @inheritDoc
  */
 plugin.file.kml.ui.PlacemarkEditCtrl.prototype.accept = function() {
   // create a new feature if necessary

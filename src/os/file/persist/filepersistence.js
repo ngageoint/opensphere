@@ -30,8 +30,7 @@ os.file.persist.FilePersistence.prototype.isSupported = function() {
 
 
 /**
- * Whether the persistence method requires a user action in the call stack
- * @return {boolean}
+ * @inheritDoc
  */
 os.file.persist.FilePersistence.prototype.requiresUserAction = function() {
   return true;

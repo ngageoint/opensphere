@@ -117,10 +117,7 @@ os.ui.filter.op.IsLikeNumeric.prototype.getRangeFromLiteral = function(literal) 
 
 
 /**
- * Validates the value against the pattern associated to the key.
- * @param {string|null|undefined} value
- * @param {string} key
- * @return {boolean} Whether or not the column type is supported
+ * @inheritDoc
  */
 os.ui.filter.op.IsLikeNumeric.prototype.validate = function(value, key) {
   if (!value) {
@@ -140,10 +137,7 @@ os.ui.filter.op.IsLikeNumeric.prototype.validate = function(value, key) {
 
 
 /**
- * There are two literals in the filter, this returns the first one to represent
- * what the user entered initially
- * @param {angular.JQLite} el
- * @return {string} the literal
+ * @inheritDoc
  */
 os.ui.filter.op.IsLikeNumeric.prototype.getLiteral = function(el) {
   return el.find('PropertyIsGreaterThanOrEqualTo Literal').text() + '*';

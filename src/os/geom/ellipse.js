@@ -61,8 +61,7 @@ os.geom.Ellipse.toPolygon = function(ellipse) {
 
 
 /**
- * Make a complete copy of the geometry.
- * @return {!os.geom.Ellipse} Clone.
+ * @inheritDoc
  */
 os.geom.Ellipse.prototype.clone = function() {
   return new os.geom.Ellipse(this.center, this.semiMajor, this.semiMinor, this.orientation);

@@ -168,7 +168,7 @@ os.source.MultiRequest.prototype.refresh = function() {
 
 
 /**
- * @return {?os.im.IImporter.<ol.Feature>} The importer
+ * @inheritDoc
  */
 os.source.MultiRequest.prototype.getImporter = function() {
   return this.importer_;
@@ -176,8 +176,7 @@ os.source.MultiRequest.prototype.getImporter = function() {
 
 
 /**
- * Sets the importer
- * @param {?os.im.IImporter.<ol.Feature>} importer
+ * @inheritDoc
  */
 os.source.MultiRequest.prototype.setImporter = function(importer) {
   if (importer !== this.importer_) {
