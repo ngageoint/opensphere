@@ -4,7 +4,7 @@ OpenStreetMap
 Problem
 -------
 
-You'd like to use an alternative base map, such as OpenStreetMap, for cartographic styling reasons or to provide a suitable base map on an isolated network.
+You'd like to use an alternative base map, such as OpenStreetMap (OSM), for cartographic styling reasons or to provide a suitable base map on an isolated network.
 
 
 Solution
@@ -64,6 +64,35 @@ The XYZ plugin supports a standard, efficient way of transferring maps as gridde
 .. note:: Review the terms of service for any tile server you are using, especially acceptable usage limits and attribution requirements.
 
 The key parts of the configuration are the :code:`url`, which includes placeholders for the zoom level, and X/Y indices for tiles. There are other tile servers available, which will have different URL content, potentially including requiring the placeholders in a different order. Note that the URL text does not include the protocol part. Also note that the URL is sometimes shown with :code:`${z}` style placeholders, which are not supported by OpenSphere. However :code:`%z` style placeholders are supported as an alternative to the :code:`{z}` style.
+
+If your provider supports multiple URLs (which is the case for most OSM styles), you can replace the :code:`url` with :code:`urls`, as shown below:
+
+.. code-block:: json
+  :caption: ``config/settings.json``
+
+  {
+    "providers": {
+      "basemap": {
+        "maps": {
+          "osm": {
+            "title": "OpenStreetMap",
+            "type": "BaseMap",
+            "baseType": "XYZ",
+            "provider": "OSM",
+            "urls": ["//a.tile.openstreetmap.org/{z}/{x}/{y}.png",
+              "//b.tile.openstreetmap.org/{z}/{x}/{y}.png",
+              "//c.tile.openstreetmap.org/{z}/{x}/{y}.png"],
+            "minZoom": 2,
+            "maxZoom": 19,
+            "projection": "EPSG:3857",
+            "tileSize": 256,
+            "description": "OpenStreetMap rendered tiles.",
+            "attributions": ["© <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors"]
+          }
+        }
+      }
+    }
+  }
 
 Other important values are the :code:`minZoom` and :code:`maxZoom` values, which specify the zoom levels that OpenSphere will show this base map at. Different OSM tile servers will support different zoom levels (e.g. the Humanitarian style is provided to zoom level 20).
 
