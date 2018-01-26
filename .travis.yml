@@ -1,7 +1,7 @@
 language: node_js
 cache:
   directories:
-  - "~/.npm"
+  - "node_modules"
 notifications:
   email: false
 node_js:
@@ -12,11 +12,13 @@ addons:
   chrome: stable
   apt:
     sources:
-    - key_url: 'https://dl.yarnpkg.com/debian/pubkey.gpg'
-    - sourceline: 'deb https://dl.yarnpkg.com/debian/ stable main'
+    - key_url: "https://dl.yarnpkg.com/debian/pubkey.gpg"
+    - sourceline: "deb https://dl.yarnpkg.com/debian/ stable main"
     packages:
     - yarn
 install:
+- yarn cache dir
+- yarn config list
 - yarn
 script:
 - set -e
