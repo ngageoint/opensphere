@@ -1,5 +1,6 @@
 language: node_js
 cache:
+  yarn: true
   directories:
   - "node_modules"
 notifications:
@@ -17,7 +18,6 @@ addons:
     packages:
     - yarn
 install:
-- yarn cache dir
 - yarn config list
 - yarn
 script:
