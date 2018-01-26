@@ -27,7 +27,7 @@ Run ``yarn test`` to see if it tests properly. Now we need to register our provi
   :language: javascript
   :emphasize-lines: 3, 6, 33-39
 
-Lastly, we need to update our config so that the application instatiates a copy of our provider.
+Lastly, we need to update our config so that the application instantiates a copy of our provider.
 
 .. code-block:: json
   :caption: ``config/settings.json``
