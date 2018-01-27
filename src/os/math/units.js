@@ -1,4 +1,3 @@
-goog.provide('os.math.AngleUnitLabels');
 goog.provide('os.math.AngleUnits');
 goog.provide('os.math.OLUnits');
 goog.provide('os.math.UnitLabels');

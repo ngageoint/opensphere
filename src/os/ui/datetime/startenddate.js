@@ -251,21 +251,19 @@ os.ui.datetime.StartEndDateCtrl.getDate = function(date) {
  * @return {boolean}
  */
 os.ui.datetime.StartEndDateCtrl.prototype.checkStartForError = function() {
-  if (this.scope) {
-    // if not dirty never show error
-    if (!this.scope['dateForm']['startDate']['$dirty']) {
-      return false;
-    }
+  // if not dirty never show error
+  if (!this.scope['dateForm']['startDate']['$dirty']) {
+    return false;
+  }
 
-    // if required and not set
-    if (this['startRequired'] && !this['start']) {
-      return true;
-    }
+  // if required and not set
+  if (this['startRequired'] && !this['start']) {
+    return true;
+  }
 
-    // if order is not valid
-    if (!this['orderValid']) {
-      return true;
-    }
+  // if order is not valid
+  if (!this['orderValid']) {
+    return true;
   }
 
   return false;
@@ -279,25 +277,23 @@ goog.exportProperty(os.ui.datetime.StartEndDateCtrl.prototype, 'checkStartForErr
  * @return {boolean}
  */
 os.ui.datetime.StartEndDateCtrl.prototype.checkEndForError = function() {
-  if (this.scope) {
-    if (!this.scope['dateForm']['endDate']) {
-      return false;
-    }
+  if (!this.scope['dateForm']['endDate']) {
+    return false;
+  }
 
-    // if not dirty never show error
-    if (!this.scope['dateForm']['endDate']['$dirty']) {
-      return false;
-    }
+  // if not dirty never show error
+  if (!this.scope['dateForm']['endDate']['$dirty']) {
+    return false;
+  }
 
-    // if required and not set
-    if (this['endRequired'] && !this['end']) {
-      return true;
-    }
+  // if required and not set
+  if (this['endRequired'] && !this['end']) {
+    return true;
+  }
 
-    // if order is not valid
-    if (!this['orderValid']) {
-      return true;
-    }
+  // if order is not valid
+  if (!this['orderValid']) {
+    return true;
   }
 
   return false;
