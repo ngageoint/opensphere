@@ -9,7 +9,9 @@ goog.require('os.ui.Module');
 goog.require('os.ui.file.kml');
 goog.require('os.ui.icon.IconPickerEventType');
 goog.require('os.ui.im.action.EventType');
+goog.require('os.ui.layer.iconStyleControlsDirective');
 goog.require('os.ui.layer.vectorStyleControlsDirective');
+goog.require('os.ui.uiSwitchDirective');
 goog.require('plugin.im.action.feature.StyleAction');
 goog.require('plugin.im.action.feature.ui.ActionConfigCtrl');
 
@@ -25,7 +27,9 @@ plugin.im.action.feature.ui.styleConfigDirective = function() {
     template: '<div><vectorstylecontrols color="color" opacity="opacity" size="size" ' +
         'icon="icon" center-icon="centerIcon" icon-set="ctrl.iconSet" icon-src="ctrl.iconSrc" ' +
         'shape="shape" shapes="shapes" center-shape="centerShape" center-shapes="centerShapes" ' +
-        'show-color-reset="true"></vectorstylecontrols></div>',
+        'show-color-reset="true"></vectorstylecontrols>' +
+        '<iconstylecontrols ng-show="ctrl.showRotationOption()" columns="columns" show-rotation="showRotation" ' +
+        'rotation-column="rotationColumn"></iconstylecontrols></div>',
     controller: plugin.im.action.feature.ui.StyleConfigCtrl,
     controllerAs: 'ctrl'
   };
@@ -88,7 +92,8 @@ plugin.im.action.feature.ui.StyleConfigCtrl = function($scope, $element) {
   $scope.$on(os.ui.icon.IconPickerEventType.CHANGE, this.onIconChange.bind(this));
   $scope.$on(os.ui.layer.VectorStyleControlsEventType.SHAPE_CHANGE, this.onShapeChange.bind(this));
   $scope.$on(os.ui.layer.VectorStyleControlsEventType.CENTER_SHAPE_CHANGE, this.onCenterShapeChange.bind(this));
-
+  $scope.$on(os.ui.layer.VectorStyleControlsEventType.SHOW_ROTATION_CHANGE, this.onShowRotationChange_.bind(this));
+  $scope.$on(os.ui.layer.VectorStyleControlsEventType.ROTATION_COLUMN_CHANGE, this.onRotationColumnChange_.bind(this));
   this.initialize();
 };
 goog.inherits(plugin.im.action.feature.ui.StyleConfigCtrl, plugin.im.action.feature.ui.ActionConfigCtrl);
@@ -116,6 +121,8 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.initialize = function() {
     this.updateIcon_();
     this.scope['centerShape'] = this.styleConfig[os.style.StyleField.CENTER_SHAPE] || os.style.DEFAULT_CENTER_SHAPE;
     this.updateCenterIcon_();
+    this.scope['showRotation'] = this.styleConfig[os.style.StyleField.SHOW_ROTATION] || false;
+    this.scope['rotationColumn'] = this.styleConfig[os.style.StyleField.ROTATION_COLUMN] || '';
 
     if (this.type) {
       var dm = os.data.DataManager.getInstance();
@@ -126,6 +133,12 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.initialize = function() {
         var shapes = goog.object.getKeys(os.style.SHAPES);
         this.scope['shapes'] = goog.array.filter(shapes, source.supportsShape, source);
         this.scope['centerShapes'] = goog.array.filter(shapes, source.isNotEllipseOrLOBOrDefault, source);
+        this.scope['columns'] = os.ui.layer.getColumnsFromSource(source);
+
+        if (goog.string.isEmpty(this.scope['rotationColumn']) && source.hasColumn(os.Fields.BEARING)) { // autodetect
+          this.scope['rotationColumn'] = os.Fields.BEARING;
+          this.onRotationColumnChange_(undefined, this.scope['rotationColumn']);
+        }
       }
     }
   }
@@ -306,4 +319,58 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.updateCenterIcon_ = functi
   }
 
   this.onIconChange(null, this.scope['centerIcon']);
+};
+
+
+/**
+ * When to show the icon rotation option
+ * @return {boolean}
+ */
+plugin.im.action.feature.ui.StyleConfigCtrl.prototype.showRotationOption = function() {
+  if (this.scope != null) {
+    var shape = this.scope['shape'] || '';
+    var center = this.scope['centerShape'] || '';
+    return shape == os.style.ShapeType.ICON ||
+      ((os.style.ELLIPSE_REGEXP.test(shape) || os.style.LOB_REGEXP.test(shape)) && center == os.style.ShapeType.ICON);
+  }
+
+  return false;
+};
+goog.exportProperty(
+    plugin.im.action.feature.ui.StyleConfigCtrl.prototype,
+    'showRotationOption',
+    plugin.im.action.feature.ui.StyleConfigCtrl.prototype.showRotationOption);
+
+
+/**
+ * Handle changes to the Show Rotation option.
+ * @param {angular.Scope.Event} event
+ * @param {boolean} value
+ * @private
+ */
+plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onShowRotationChange_ = function(event, value) {
+  if (event) {
+    event.stopPropagation();
+  }
+
+  if (this.styleConfig) {
+    this.styleConfig[os.style.StyleField.SHOW_ROTATION] = value;
+  }
+};
+
+
+/**
+ * Handles column changes to the rotation
+ * @param {angular.Scope.Event=} opt_event
+ * @param {string=} opt_value
+ * @private
+ */
+plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onRotationColumnChange_ = function(opt_event, opt_value) {
+  if (opt_event) {
+    opt_event.stopPropagation();
+  }
+
+  if (opt_value && this.styleConfig) {
+    this.styleConfig[os.style.StyleField.ROTATION_COLUMN] = opt_value;
+  }
 };

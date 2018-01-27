@@ -29,6 +29,16 @@ goog.inherits(plugin.track.TrackSource, plugin.file.kml.KMLSource);
 
 
 /**
+ * Class name
+ * @type {string}
+ * @const
+ */
+plugin.track.TrackSource.NAME = 'plugin.track.TrackSource';
+os.registerClass(plugin.track.TrackSource.NAME, plugin.track.TrackSource);
+
+
+
+/**
  * @inheritDoc
  */
 plugin.track.TrackSource.prototype.getFilteredFeatures = function(opt_allTime) {
