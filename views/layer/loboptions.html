@@ -74,7 +74,7 @@
       <tr>
         <td class="c-labelcontainer__fixedcell">Bearing&nbsp;Error:</td>
         <td>
-          <input class="c-labelcontainer__wide" type="number" step="any" min="1" max="10000" ng-change="ctrl.onBearingErrorChange()" ng-model="bearingErrorMultiplier" ng-required="true" />
+          <input class="c-labelcontainer__wide" type="number" step="any" min="0" max="10000" ng-change="ctrl.onBearingErrorChange()" ng-model="bearingErrorMultiplier" ng-required="true" />
         </td>
         <td class="c-labelcontainer__fixedcell"> * </td>
         <td>
@@ -87,7 +87,7 @@
       <tr>
         <td class="c-labelcontainer__fixedcell">Length&nbsp;Error:</td>
         <td>
-          <input class="c-labelcontainer__wide" type="number" step="any" min="1" max="10000" ng-change="ctrl.onLengthErrorChange()" ng-model="lengthErrorMultiplier" ng-required="true" />
+          <input class="c-labelcontainer__wide" type="number" step="any" min="0" max="10000" ng-change="ctrl.onLengthErrorChange()" ng-model="lengthErrorMultiplier" ng-required="true" />
         </td>
         <td class="c-labelcontainer__fixedcell"> * </td>
         <td>
