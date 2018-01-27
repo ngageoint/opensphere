@@ -376,7 +376,7 @@ os.feature.createLineOfBearing = function(feature, opt_replace, opt_lobOpts) {
         }
         if (bearingError > 0) {
           var plusPts = os.geo.interpolateArc(center, (length + lengthError * lengthErrorMultiplier) * multiplier,
-              Math.min(bearingError * 2 * bearingErrorMultiplier * 2, 360), bearing);
+              Math.min(bearingError * bearingErrorMultiplier * 2, 360), bearing);
           plusArc = new ol.geom.LineString(plusPts, ol.geom.GeometryLayout.XYZM);
           plusArc = os.geo.splitOnDateLine(plusArc);
           plusArc.set(os.geom.GeometryField.NORMALIZED, true);
@@ -384,7 +384,7 @@ os.feature.createLineOfBearing = function(feature, opt_replace, opt_lobOpts) {
 
           if (lengthError > 0) { // only draw one arc if it is zero
             var pts = os.geo.interpolateArc(center, (length - lengthError * lengthErrorMultiplier) * multiplier,
-                Math.min(bearingError * 2 * bearingErrorMultiplier * 2, 360), bearing);
+                Math.min(bearingError * bearingErrorMultiplier * 2, 360), bearing);
             minusArc = new ol.geom.LineString(pts, ol.geom.GeometryLayout.XYZM);
             minusArc = os.geo.splitOnDateLine(minusArc);
             minusArc.set(os.geom.GeometryField.NORMALIZED, true);
