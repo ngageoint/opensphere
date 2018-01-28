@@ -56,7 +56,7 @@ plugin.mapzen.places.Search.LOGGER_ = goog.log.getLogger('plugin.mapzen.places.S
 plugin.mapzen.places.Search.prototype.getSearchUrl = function(term, opt_start, opt_pageSize) {
   var url = /** @type {?string} */ (os.settings.get(['plugin', 'mapzen', 'places', 'url']));
 
-  var boundary = /** @type {string} */ (os.settings.get(['plugin', 'mapzen', 'places', 'extentParams']));
+  var boundary = /** @type {boolean} */ (os.settings.get(['plugin', 'mapzen', 'places', 'extentParams']));
 
   if (boundary) {
     // if the view is small enough, we'll apply a bounding rectangle to the search
@@ -69,10 +69,26 @@ plugin.mapzen.places.Search.prototype.getSearchUrl = function(term, opt_start, o
     var distance = osasm.geodesicInverse(extent.slice(0, 2), extent.slice(2, 4)).distance;
 
     if (distance <= threshold) {
-      url += boundary;
+      var boundaryText = '&boundary.rect.min_lat=' + extent[1]
+        + '&boundary.rect.min_lon=' + extent[0]
+        + '&boundary.rect.max_lat=' + extent[3]
+        + '&boundary.rect.max_lon=' + extent[2];
+      url += boundaryText;
     }
   }
 
+  // Add the focus.point modifiers to the URL if enabled and we are zoomed in to at least zoom level 4.
+  var focuspoint = /** @type {boolean} */ (os.settings.get(['plugin', 'mapzen', 'places', 'focusPoint']));
+  if (focuspoint) {
+    var threshold = /** @type {number} */ (os.settings.get(['plugin', 'mapzen', 'places', 'focusPointMinZoom'], 4.0));
+    var currentZoom = /** @type {number} */ (os.MapContainer.getInstance().getMap().getView().getZoom());
+    if (currentZoom >= threshold) {
+      var centre = /** @type {Array<number>} */ (os.MapContainer.getInstance().getMap().getView().getCenter());
+      var centreLonLat = ol.proj.toLonLat(centre, os.map.PROJECTION);
+      var focusPointText = '&focus.point.lat=' + centreLonLat[1] + '&focus.point.lon=' + centreLonLat[0];
+      url += focusPointText;
+    }
+  }
   return url;
 };
 

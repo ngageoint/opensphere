@@ -1,3 +1,4 @@
+goog.require('os.mock');
 goog.require('os.search.SearchEventType');
 goog.require('plugin.mapzen.places.Plugin');
 goog.require('plugin.mapzen.places.Search');
@@ -38,7 +39,25 @@ describe('plugin.mapzen.places.Search', function() {
       [0, 0, 1, 1] // diagonal ~110km
     );
 
-    expect(search.getSearchUrl()).toBe(url + boundary);
+    expect(search.getSearchUrl()).toBe(url + '&boundary.rect.min_lat=0&boundary.rect.min_lon=0&boundary.rect.max_lat=1&boundary.rect.max_lon=1');
+  });
+
+  it('should add focus point if so configured', function() {
+    var search = new plugin.mapzen.places.Search();
+    os.settings.set('plugin.mapzen.places.focusPoint', true);
+    spyOn(ol.proj, 'toLonLat').andReturn([150.1, -35.2]);
+    spyOn(os.MapContainer.getInstance().getMap().getView(), 'getZoom').andReturn(10.0);
+
+    expect(search.getSearchUrl()).toBe(url + '&focus.point.lat=-35.2&focus.point.lon=150.1');
+  });
+
+  it('should should not add focus point at low zoom levels', function() {
+    var search = new plugin.mapzen.places.Search();
+    os.settings.set('plugin.mapzen.places.focusPoint', true);
+    spyOn(ol.proj, 'toLonLat').andReturn([150.1, -35.2]);
+    spyOn(os.MapContainer.getInstance().getMap().getView(), 'getZoom').andReturn(3.0);
+
+    expect(search.getSearchUrl()).toBe(url);
   });
 
   var loadAndRun = function(search, url, term, func) {
