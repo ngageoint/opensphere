@@ -1,4 +1,4 @@
-goog.provide('plugin.mapzen.places.Search');
+goog.provide('plugin.pelias.geocoder.Search');
 
 goog.require('goog.log');
 goog.require('goog.log.Logger');
@@ -10,20 +10,20 @@ goog.require('os.alert.AlertManager');
 goog.require('os.config.Settings');
 goog.require('os.geo');
 goog.require('os.search.AbstractUrlSearch');
-goog.require('plugin.mapzen.places.AttrResult');
-goog.require('plugin.mapzen.places.Result');
+goog.require('plugin.pelias.geocoder.AttrResult');
+goog.require('plugin.pelias.geocoder.Result');
 
 
 
 /**
- * Searches via the Mapzen search API
+ * Searches via the Pelias Geocoder API
  * @param {string} name
  * @extends {os.search.AbstractUrlSearch}
  * @constructor
  */
-plugin.mapzen.places.Search = function(name) {
-  plugin.mapzen.places.Search.base(this, 'constructor', plugin.mapzen.places.Plugin.ID, name);
-  this.type = plugin.mapzen.places.Plugin.ID;
+plugin.pelias.geocoder.Search = function(name) {
+  plugin.pelias.geocoder.Search.base(this, 'constructor', plugin.pelias.geocoder.Plugin.ID, name);
+  this.type = plugin.pelias.geocoder.Plugin.ID;
 
   /**
    * @type {ol.format.GeoJSON}
@@ -36,9 +36,9 @@ plugin.mapzen.places.Search = function(name) {
    * @type {goog.log.Logger}
    * @private
    */
-  this.log_ = plugin.mapzen.places.Search.LOGGER_;
+  this.log_ = plugin.pelias.geocoder.Search.LOGGER_;
 };
-goog.inherits(plugin.mapzen.places.Search, os.search.AbstractUrlSearch);
+goog.inherits(plugin.pelias.geocoder.Search, os.search.AbstractUrlSearch);
 
 
 /**
@@ -47,21 +47,22 @@ goog.inherits(plugin.mapzen.places.Search, os.search.AbstractUrlSearch);
  * @private
  * @const
  */
-plugin.mapzen.places.Search.LOGGER_ = goog.log.getLogger('plugin.mapzen.places.Search');
+plugin.pelias.geocoder.Search.LOGGER_ = goog.log.getLogger('plugin.pelias.geocoder.Search');
 
 
 /**
  * @inheritDoc
  */
-plugin.mapzen.places.Search.prototype.getSearchUrl = function(term, opt_start, opt_pageSize) {
-  var url = /** @type {?string} */ (os.settings.get(['plugin', 'mapzen', 'places', 'url']));
+plugin.pelias.geocoder.Search.prototype.getSearchUrl = function(term, opt_start, opt_pageSize) {
+  var url = /** @type {?string} */ (os.settings.get(['plugin', 'pelias', 'geocoder', 'url']));
 
-  var boundary = /** @type {boolean} */ (os.settings.get(['plugin', 'mapzen', 'places', 'extentParams']));
+  var boundary = /** @type {boolean} */ (os.settings.get(['plugin', 'pelias', 'geocoder', 'extentParams']));
 
   if (boundary) {
     // if the view is small enough, we'll apply a bounding rectangle to the search
     // defaults to 200km
-    var threshold = /** @type {number} */ (os.settings.get(['plugin', 'mapzen', 'places', 'extentThreshold'], 200000));
+    var threshold =
+        /** @type {number} */ (os.settings.get(['plugin', 'pelias', 'geocoder', 'extentThreshold'], 200000));
     var extent = os.MapContainer.getInstance().getMap().getExtent();
 
     // translate to lon/lat
@@ -78,9 +79,9 @@ plugin.mapzen.places.Search.prototype.getSearchUrl = function(term, opt_start, o
   }
 
   // Add the focus.point modifiers to the URL if enabled and we are zoomed in to at least zoom level 4.
-  var focuspoint = /** @type {boolean} */ (os.settings.get(['plugin', 'mapzen', 'places', 'focusPoint']));
+  var focuspoint = /** @type {boolean} */ (os.settings.get(['plugin', 'pelias', 'geocoder', 'focusPoint']));
   if (focuspoint) {
-    var threshold = /** @type {number} */ (os.settings.get(['plugin', 'mapzen', 'places', 'focusPointMinZoom'], 4.0));
+    var threshold = /** @type {number} */ (os.settings.get(['plugin', 'pelias', 'geocoder', 'focusPointMinZoom'], 4.0));
     var currentZoom = /** @type {number} */ (os.MapContainer.getInstance().getMap().getView().getZoom());
     if (currentZoom >= threshold) {
       var centre = /** @type {Array<number>} */ (os.MapContainer.getInstance().getMap().getView().getCenter());
@@ -98,7 +99,7 @@ plugin.mapzen.places.Search.prototype.getSearchUrl = function(term, opt_start, o
  * @suppress {accessControls}
  * @override
  */
-plugin.mapzen.places.Search.prototype.onSearchSuccess = function(evt) {
+plugin.pelias.geocoder.Search.prototype.onSearchSuccess = function(evt) {
   var request = /** @type {os.net.Request} */ (evt.target);
 
   try {
@@ -133,7 +134,7 @@ plugin.mapzen.places.Search.prototype.onSearchSuccess = function(evt) {
               props['postalcode']].join(', ');
           }
 
-          this.results.push(new plugin.mapzen.places.Result(feature));
+          this.results.push(new plugin.pelias.geocoder.Result(feature));
         } catch (e) {
           goog.log.error(this.log_, 'There was an error parsing a result', e);
         }
@@ -142,5 +143,5 @@ plugin.mapzen.places.Search.prototype.onSearchSuccess = function(evt) {
   }
 
   // superclass takes care of cleaning up request listeners and firing the result event
-  plugin.mapzen.places.Search.base(this, 'onSearchSuccess', evt);
+  plugin.pelias.geocoder.Search.base(this, 'onSearchSuccess', evt);
 };

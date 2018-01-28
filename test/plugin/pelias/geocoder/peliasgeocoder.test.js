@@ -1,25 +1,25 @@
 goog.require('os.mock');
 goog.require('os.search.SearchEventType');
-goog.require('plugin.mapzen.places.Plugin');
-goog.require('plugin.mapzen.places.Search');
+goog.require('plugin.pelias.geocoder.Plugin');
+goog.require('plugin.pelias.geocoder.Search');
 
-describe('plugin.mapzen.places.Search', function() {
-  var url = '/mapzen-places?text={s}';
+describe('plugin.pelias.geocoder.Search', function() {
+  var url = '/pelias.geocoder?text={s}';
   var boundary = '&boundary=true';
 
   it('should get a blank search url by default', function() {
-    var search = new plugin.mapzen.places.Search();
+    var search = new plugin.pelias.geocoder.Search();
     expect(search.getSearchUrl()).toBeFalsy();
   });
 
   it('should get a defined search url', function() {
-    var search = new plugin.mapzen.places.Search();
-    os.settings.set('plugin.mapzen.places.url', url);
+    var search = new plugin.pelias.geocoder.Search();
+    os.settings.set('plugin.pelias.geocoder.url', url);
     expect(search.getSearchUrl()).toBe(url);
   });
 
   it('should not add boundary parameters if boundary not defined', function() {
-    var search = new plugin.mapzen.places.Search();
+    var search = new plugin.pelias.geocoder.Search();
     spyOn(os.MapContainer.getInstance().getMap(), 'getExtent').andReturn(
       [0, 0, 1, 1] // diagonal ~110km
     );
@@ -28,13 +28,13 @@ describe('plugin.mapzen.places.Search', function() {
   });
 
   it('should not add boundary if the view diagonal is not within the threshold', function() {
-    var search = new plugin.mapzen.places.Search();
-    os.settings.set('plugin.mapzen.places.extentParams', boundary);
+    var search = new plugin.pelias.geocoder.Search();
+    os.settings.set('plugin.pelias.geocoder.extentParams', boundary);
     expect(search.getSearchUrl()).toBe(url);
   });
 
   it('should add boundary if the view diagonal is within the threshold', function() {
-    var search = new plugin.mapzen.places.Search();
+    var search = new plugin.pelias.geocoder.Search();
     spyOn(os.MapContainer.getInstance().getMap(), 'getExtent').andReturn(
       [0, 0, 1, 1] // diagonal ~110km
     );
@@ -43,8 +43,8 @@ describe('plugin.mapzen.places.Search', function() {
   });
 
   it('should add focus point if so configured', function() {
-    var search = new plugin.mapzen.places.Search();
-    os.settings.set('plugin.mapzen.places.focusPoint', true);
+    var search = new plugin.pelias.geocoder.Search();
+    os.settings.set('plugin.pelias.geocoder.focusPoint', true);
     spyOn(ol.proj, 'toLonLat').andReturn([150.1, -35.2]);
     spyOn(os.MapContainer.getInstance().getMap().getView(), 'getZoom').andReturn(10.0);
 
@@ -52,8 +52,8 @@ describe('plugin.mapzen.places.Search', function() {
   });
 
   it('should should not add focus point at low zoom levels', function() {
-    var search = new plugin.mapzen.places.Search();
-    os.settings.set('plugin.mapzen.places.focusPoint', true);
+    var search = new plugin.pelias.geocoder.Search();
+    os.settings.set('plugin.pelias.geocoder.focusPoint', true);
     spyOn(ol.proj, 'toLonLat').andReturn([150.1, -35.2]);
     spyOn(os.MapContainer.getInstance().getMap().getView(), 'getZoom').andReturn(3.0);
 
@@ -61,7 +61,7 @@ describe('plugin.mapzen.places.Search', function() {
   });
 
   var loadAndRun = function(search, url, term, func) {
-    os.settings.set('plugin.mapzen.places.url', url);
+    os.settings.set('plugin.pelias.geocoder.url', url);
     var count = 0;
     var listener = function() {
       count++;
@@ -78,10 +78,10 @@ describe('plugin.mapzen.places.Search', function() {
   };
 
   it('should handle malformed JSON in results', function() {
-    var search = new plugin.mapzen.places.Search();
+    var search = new plugin.pelias.geocoder.Search();
     loadAndRun(
         search,
-        '/base/test/plugin/mapzen/places/malformed.json',
+        '/base/test/plugin/pelias/geocoder/malformed.json',
         'nope',
         function() {
           expect(search.results.length).toBe(0);
@@ -89,10 +89,10 @@ describe('plugin.mapzen.places.Search', function() {
   });
 
   it('should handle valid JSON without features', function() {
-    var search = new plugin.mapzen.places.Search();
+    var search = new plugin.pelias.geocoder.Search();
     loadAndRun(
         search,
-        '/base/test/plugin/mapzen/places/nofeatures.json',
+        '/base/test/plugin/pelias/geocoder/nofeatures.json',
         'nope',
         function() {
           expect(search.results.length).toBe(0);
@@ -100,32 +100,32 @@ describe('plugin.mapzen.places.Search', function() {
   });
 
   it('should handle JSON with invalid features', function() {
-    var search = new plugin.mapzen.places.Search();
+    var search = new plugin.pelias.geocoder.Search();
     loadAndRun(
         search,
-        '/base/test/plugin/mapzen/places/badfeatures.json',
+        '/base/test/plugin/pelias/geocoder/badfeatures.json',
         'nope',
         function() {
           expect(search.results.length).toBe(1);
 
           search.results.forEach(function(item) {
-            expect(item instanceof plugin.mapzen.places.Result).toBeTruthy();
+            expect(item instanceof plugin.pelias.geocoder.Result).toBeTruthy();
             expect(item.getResult() instanceof ol.Feature).toBeTruthy();
           });
         });
   });
 
   it('should parse results', function() {
-    var search = new plugin.mapzen.places.Search();
+    var search = new plugin.pelias.geocoder.Search();
     loadAndRun(
         search,
-        '/base/test/plugin/mapzen/places/mapzen-result.json',
+        '/base/test/plugin/pelias/geocoder/pelias-result.json',
         'nope',
         function() {
           expect(search.results.length).toBe(10);
 
           search.results.forEach(function(item) {
-            expect(item instanceof plugin.mapzen.places.Result).toBeTruthy();
+            expect(item instanceof plugin.pelias.geocoder.Result).toBeTruthy();
             expect(item.getResult() instanceof ol.Feature).toBeTruthy();
           });
 
@@ -136,16 +136,16 @@ describe('plugin.mapzen.places.Search', function() {
   });
 
   it('should parse results with addresses', function() {
-    var search = new plugin.mapzen.places.Search();
+    var search = new plugin.pelias.geocoder.Search();
     loadAndRun(
         search,
-        '/base/test/plugin/mapzen/places/mapzen-result2.json',
+        '/base/test/plugin/pelias/geocoder/pelias-result2.json',
         'nope',
         function() {
           expect(search.results.length).toBe(10);
 
           search.results.forEach(function(item) {
-            expect(item instanceof plugin.mapzen.places.Result).toBeTruthy();
+            expect(item instanceof plugin.pelias.geocoder.Result).toBeTruthy();
             expect(item.getResult() instanceof ol.Feature).toBeTruthy();
           });
 
