@@ -7,6 +7,12 @@ goog.provide('os.data.IExtent');
  */
 os.data.IExtent = function() {};
 
+/**
+ * @const
+ * @type {string}
+ */
+os.data.IExtent.ID = 'os.data.IExtent';
+
 
 /**
  * @return {?ol.Extent} The extent or null
