@@ -1,0 +1,20 @@
+{
+  "build": {
+    "config": "config/settings.json",
+    "type": "app",
+    "index": "index.js",
+    "scss": "scss/example.scss",
+    "gcc": {
+      "define": [
+        "os.SETTINGS=config/settings.json",
+        "os.config.appNs='example'"
+      ],
+      "entry_point": [
+        "goog:example"
+      ],
+      "hide_warnings_for": [
+        "/opensphere/"
+      ]
+    }
+  }
+}
