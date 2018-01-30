@@ -365,32 +365,34 @@ os.feature.createLineOfBearing = function(feature, opt_replace, opt_lobOpts) {
       var minusArc = null;
       if (opt_lobOpts.showError) { // draw error arcs
         var lengthError = Math.abs(os.feature.getColumnValue(feature, opt_lobOpts.lengthErrorColumn));
-        var lengthErrorMultiplier = opt_lobOpts.lengthError || os.style.DEFAULT_LOB_LENGTH_ERROR;
+        var lengthErrorMultiplier = goog.isDef(opt_lobOpts.lengthError) ?
+            opt_lobOpts.lengthError : os.style.DEFAULT_LOB_LENGTH_ERROR;
         var bearingError = Math.abs(os.feature.getColumnValue(feature, opt_lobOpts.bearingErrorColumn));
-        var bearingErrorMultiplier = opt_lobOpts.bearingError || os.style.DEFAULT_LOB_BEARING_ERROR;
+        var bearingErrorMultiplier = goog.isDef(opt_lobOpts.bearingError) ?
+            opt_lobOpts.bearingError : os.style.DEFAULT_LOB_BEARING_ERROR;
         if (goog.isNull(bearingError) || isNaN(bearingError)) {
           bearingError = 0;
         }
         if (goog.isNull(lengthError) || isNaN(lengthError)) {
           lengthError = 0;
         }
-        if (bearingError > 0) {
+        if (bearingError > 0 && bearingErrorMultiplier > 0) {
           var plusPts = os.geo.interpolateArc(center, (length + lengthError * lengthErrorMultiplier) * multiplier,
-              Math.min(bearingError * 2 * bearingErrorMultiplier * 2, 360), bearing);
+              Math.min(bearingError * bearingErrorMultiplier * 2, 360), bearing);
           plusArc = new ol.geom.LineString(plusPts, ol.geom.GeometryLayout.XYZM);
           plusArc = os.geo.splitOnDateLine(plusArc);
           plusArc.set(os.geom.GeometryField.NORMALIZED, true);
           plusArc.osTransform();
 
-          if (lengthError > 0) { // only draw one arc if it is zero
+          if (lengthError > 0 && lengthErrorMultiplier > 0) { // only draw one arc if it is zero
             var pts = os.geo.interpolateArc(center, (length - lengthError * lengthErrorMultiplier) * multiplier,
-                Math.min(bearingError * 2 * bearingErrorMultiplier * 2, 360), bearing);
+                Math.min(bearingError * bearingErrorMultiplier * 2, 360), bearing);
             minusArc = new ol.geom.LineString(pts, ol.geom.GeometryLayout.XYZM);
             minusArc = os.geo.splitOnDateLine(minusArc);
             minusArc.set(os.geom.GeometryField.NORMALIZED, true);
             minusArc.osTransform();
           }
-        } else if (lengthError > 0) { // no bearing error so draw a (perpendicular) line instead of an arc
+        } else if (lengthError > 0 && lengthErrorMultiplier > 0) { // no bearing error so draw a (perpendicular) line instead of an arc
           var uLineCenter = osasm.geodesicDirect(end, bearing + 180, -lengthError * lengthErrorMultiplier);
           var uLineRight = osasm.geodesicDirect(uLineCenter, bearing + 90, -lengthError * lengthErrorMultiplier);
           uLineRight.push(center[2]);
