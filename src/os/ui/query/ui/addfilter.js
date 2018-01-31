@@ -74,6 +74,7 @@ os.ui.query.ui.AddFilterCtrl = function($scope, $element) {
    */
   this.layers = [];
 
+  this.updateLayers();
   os.ui.queryManager.listen(goog.events.EventType.PROPERTYCHANGE, this.updateLayers, false, this);
   $scope.$on('$destroy', this.onDestroy.bind(this));
 };
