@@ -1,5 +1,5 @@
 /**
- * @fileoverview Externs for MomentJS 2.8.3.
+ * @fileoverview Externs for MomentJS.
  * @see http://ssdn-belford.stwan.bits/docs/momentjs/momentjs.com/docs/index.html
  * @externs
  */
@@ -441,6 +441,16 @@ moment.duration.prototype.asSeconds = function() {};
  * @return {number}
  */
 moment.duration.prototype.asMinutes = function() {};
+
+/**
+ * @return {number}
+ */
+moment.duration.prototype.asHours = function() {};
+
+/**
+ * @return {number}
+ */
+moment.duration.prototype.asDays = function() {};
 
 
 /**
