@@ -159,16 +159,19 @@ function setContactInfo() {
   var browserPage = '';
   if (parsed) {
     var contactEl = document.getElementById('contactInfo');
-    if (parsed && parsed['admin'] && contactEl) {
-      var link = parsed['admin']['supportWebsite'];
-      var text = parsed['admin']['supportWebsiteText'];
-      if (link && text) {
-        contactEl.setAttribute('href', link);
-        contactEl.className = 'btn btn btn-default';
-        contactEl.innerHTML = text;
+    if (parsed && parsed['admin']) {
+      browserPage = parsed['admin']['browserPage'];
+
+      if (contactEl) {
+        var link = parsed['admin']['supportWebsite'];
+        var text = parsed['admin']['supportWebsiteText'];
+        if (link && text) {
+          contactEl.setAttribute('href', link);
+          contactEl.className = 'btn btn btn-default';
+          contactEl.innerHTML = text;
+        }
       }
     }
-    browserPage = parsed['admin']['browserPage'];
   }
 
   if (!checkCompat() && checkVersion()) {
@@ -181,17 +184,24 @@ function setContactInfo() {
           parsed['admin']['firefoxCompatibleVersionLocalStorageOrIndexedDBErrorLink'] + '">this article</a></p>';
       }
     }
-    setWarn(warn, '<a href="' + browserPage + '" class="btn btn-danger">Browser Download</a> <br> <br>');
+    var link = '';
+    if (browserPage) {
+      link = '<a href="' + browserPage + '" class="btn btn-danger">Browser Download</a> <br> <br>';
+    }
+    setWarn(warn, link);
   } else if (checkVersion()) {
     setWarn('');
   } else {
     var minSupportInfo = '<strong>Recommended Browsers:</strong>' +
-          '<ul>' +
-          '<li>Google Chrome version 35+</li>' +
-          '<li>Mozilla Firefox version 31+</li>' +
-          '</ul>' +
-          '<p>If you do not have one of these browsers installed, contact your local IT department for help.</p>' +
-          '<a href="' + browserPage + '" class="btn btn-danger">Browser Download</a> <br> <br>';
+      '<ul>' +
+      '<li>Google Chrome version 35+</li>' +
+      '<li>Mozilla Firefox version 31+</li>' +
+      '</ul>' +
+      '<p>If you do not have one of these browsers installed, contact your local IT department for help.</p>';
+
+    if (browserPage) {
+      minSupportInfo += '<a href="' + browserPage + '" class="btn btn-danger">Browser Download</a> <br> <br>';
+    }
     setWarn(minSupportInfo);
   }
   var browserInfo = document.getElementById('browserInfo');
