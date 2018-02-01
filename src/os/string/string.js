@@ -176,3 +176,13 @@ os.string.split = function(str, opt_removeSpaces, opt_precedence) {
   }
   return result || [];
 };
+
+
+/**
+ * @suppress {accessControls} To allow creating a constant string from the URL, which varies by environment.
+ * @param {!string} str
+ * @return {!goog.string.Const}
+ */
+os.string.createConstant = function(str) {
+  return goog.string.Const.create__googStringSecurityPrivate_(str);
+};
