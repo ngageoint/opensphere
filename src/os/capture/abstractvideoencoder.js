@@ -105,13 +105,11 @@ os.capture.AbstractVideoEncoder.prototype.init = function(frameRate, opt_quality
 
 /**
  * @inheritDoc
- * @suppress {accessControls} To allow creating a constant string from the URL, which varies by environment.
  */
 os.capture.AbstractVideoEncoder.prototype.process = function() {
   if (!this.isEncoderLoaded()) {
     if (this.scriptUrl) {
-      var constUrl = goog.string.Const.create__googStringSecurityPrivate_(this.scriptUrl);
-      var trustedUrl = goog.html.TrustedResourceUrl.fromConstant(constUrl);
+      var trustedUrl = goog.html.TrustedResourceUrl.fromConstant(os.string.createConstant(this.scriptUrl));
       goog.net.jsloader.safeLoad(trustedUrl).addCallbacks(this.processInternal, this.onScriptLoadError, this);
     } else {
       this.handleError(this.title + ' encoder is not available');
