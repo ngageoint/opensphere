@@ -247,14 +247,6 @@ os.MapContainer.TARGET = 'map-container';
 
 
 /**
- * View changed event string
- * @type {string}
- * @const
- */
-os.MapContainer.VIEW_CHANGED = 'viewChanged';
-
-
-/**
  * @type {number}
  * @const
  */
@@ -422,10 +414,7 @@ os.MapContainer.prototype.handleViewChange_ = function() {
     }
   }
 
-  this.dispatchEvent(os.MapContainer.VIEW_CHANGED); // let other tools know the view is done changing
-
   os.style.label.updateShown();
-
   this.dispatchEvent(os.MapEvent.VIEW_CHANGE);
 };
 
@@ -641,7 +630,7 @@ os.MapContainer.isTileLayer = function(layer) {
  * @return {boolean}
  */
 os.MapContainer.isVectorLayer = function(layer) {
-  return layer instanceof ol.layer.Vector;
+  return layer instanceof ol.layer.Vector && !os.MapContainer.isImageLayer(layer);
 };
 
 
@@ -651,7 +640,8 @@ os.MapContainer.isVectorLayer = function(layer) {
  * @return {boolean}
  */
 os.MapContainer.isImageLayer = function(layer) {
-  return layer instanceof ol.layer.Image;
+  return layer instanceof ol.layer.Image ||
+      (layer instanceof os.layer.Vector && layer.getOSType() === os.layer.LayerType.IMAGE);
 };
 
 
