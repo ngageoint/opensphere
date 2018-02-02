@@ -79,6 +79,7 @@ goog.require('os.style.label');
 goog.require('os.ui.GlobalMenuCtrl');
 goog.require('os.ui.action.ActionEvent');
 goog.require('os.ui.help.Controls');
+goog.require('os.ui.help.webGLPerfCaveatDirective');
 goog.require('os.ui.help.webGLSupportDirective');
 goog.require('os.ui.ol.IMap');
 goog.require('os.ui.window');
@@ -126,6 +127,12 @@ os.MapContainer = function() {
    * @private
    */
   this.is3DSupported_ = undefined;
+
+  /**
+   * @type {boolean|undefined|null}
+   * @private
+   */
+  this.hasPerformanceCaveat_ = undefined;
 
   /**
    * Cesium terrain provider
@@ -202,6 +209,12 @@ os.MapContainer = function() {
    * @private
    */
   this.vsm_ = new goog.dom.ViewportSizeMonitor();
+
+  /**
+   * @type {boolean}
+   * @private
+   */
+  this.overrideFailIfMajorPerformanceCaveat_ = false;
 
   os.dispatcher.listen(os.ui.action.EventType.ZOOM, this.onZoom_, false, this);
 
@@ -923,7 +936,7 @@ os.MapContainer.prototype.addHelpControls_ = function() {
       [goog.events.KeyCodes.PAGE_UP, 'or', goog.events.KeyCodes.PAGE_DOWN]);
   controls.addControl(zoomGrp, 3, 'Zoom In/Out', null, ['+', '/', '=', 'or', '-', '/', '_']);
 
-  if (this.is3DSupported()) {
+  if (this.is3DSupported() && !this.failPerformanceCaveat()) {
     var grp3D = '3D Controls';
     controls = os.ui.help.Controls.getInstance();
     controls.addControl(grp3D, 4, 'Tilt Globe',
@@ -1136,8 +1149,14 @@ os.MapContainer.prototype.onToggleView_ = function() {
   var useCesium = !this.is3DEnabled();
 
   // prompt the user if they try to enable Cesium and it isn't supported
-  if (useCesium && !this.is3DSupported()) {
-    os.ui.help.launchWebGLSupportDialog('3D Globe Not Supported');
+  if (useCesium) {
+    if (this.failPerformanceCaveat()) {
+      var preventOverride =
+        /** @type {boolean} */ (os.settings.get('webgl.performanceCaveat.preventOverride', false));
+
+      os.ui.help.launchWebGLPerfCaveatDialog('3D Globe Performance Issue',
+          preventOverride ? undefined : this.overrideFailIfPerformanceCaveat.bind(this));
+    }
   }
 
   var code = os.map.PROJECTION.getCode();
@@ -1145,6 +1164,15 @@ os.MapContainer.prototype.onToggleView_ = function() {
     var cmd = new os.command.ToggleCesium(useCesium);
     os.command.CommandProcessor.getInstance().addCommand(cmd);
   }
+};
+
+
+/**
+ * User opts to override the performance
+ */
+os.MapContainer.prototype.overrideFailIfPerformanceCaveat = function() {
+  this.overrideFailIfMajorPerformanceCaveat_ = true;
+  this.setCesiumEnabled(true);
 };
 
 
@@ -1346,7 +1374,7 @@ os.MapContainer.prototype.setCesiumEnabled = function(useCesium, opt_silent) {
 
   // change the view if different than current
   if (useCesium != this.is3DEnabled()) {
-    if (useCesium && this.is3DSupported() && !this.olCesium_) {
+    if (useCesium && this.is3DSupported() && !this.failPerformanceCaveat() && !this.olCesium_) {
       // initialize cesium
       this.initCesium_();
     }
@@ -1365,15 +1393,15 @@ os.MapContainer.prototype.setCesiumEnabled = function(useCesium, opt_silent) {
       this.rootSynchronizer_.reset();
     }
 
-    if (this.is3DEnabled() != useCesium && !opt_silent) {
-      // if we tried enabling cesium and it isn't supported or enabling failed, disable support and display an error
-      this.is3DSupported_ = false;
-      os.ui.help.launchWebGLSupportDialog('3D Globe Not Supported');
-
-      os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.WEBGL_FAILED, 1);
-    }
-
     this.dispatchEvent(os.events.EventType.MAP_MODE);
+  }
+
+  if (this.is3DEnabled() != useCesium && !this.failPerformanceCaveat() && !opt_silent) {
+    // if we tried enabling cesium and it isn't supported or enabling failed, disable support and display an error
+    this.is3DSupported_ = false;
+    os.ui.help.launchWebGLSupportDialog('3D Globe Not Supported');
+
+    os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.WEBGL_FAILED, 1);
   }
 
   // save the current map mode to settings after the stack clears. this will prevent conflicts with Angular caused by
@@ -1563,6 +1591,30 @@ os.MapContainer.prototype.is3DSupported = function() {
   }
 
   return this.is3DSupported_;
+};
+
+
+/**
+ * Checks if WebGL will be rendered with degraded performance
+ * @return {boolean|undefined|null}
+ */
+os.MapContainer.prototype.failPerformanceCaveat = function() {
+  if (this.overrideFailIfMajorPerformanceCaveat_) {
+    return false;
+  } else {
+    if (this.hasPerformanceCaveat_ == undefined) {
+      var failIfMajorPerformanceCaveat_ =
+        /** @type {boolean} */ (os.settings.get('webgl.performanceCaveat.failIf', false));
+      this.hasPerformanceCaveat_ = failIfMajorPerformanceCaveat_ ?
+          os.webgl.hasPerformanceCaveat() : false;
+    }
+
+    if (this.hasPerformanceCaveat_) {
+      os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.WEBGL_PERFORMANCE_CAVEAT, 1);
+    }
+
+    return this.hasPerformanceCaveat_;
+  }
 };
 
 

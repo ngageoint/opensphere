@@ -7,11 +7,11 @@
   </div>
   <div class="window-footer">
     <div class="pull-right">
-      <button type="submit" ng-class="yesButtonClass" class="btn btn-default" ng-click="confirm.confirm()" ng-disabled="confirmForm.$invalid || !valid">
+      <button type="submit" ng-class="yesButtonClass" class="btn btn-default" ng-click="confirm.confirm()" ng-disabled="confirmForm.$invalid || !valid" title="{{yesButtonTitle}}">
         <i ng-class="yesIcon" ng-if="yesIcon"></i>
         {{yesText}}
       </button>
-      <button type="button" ng-class="noButtonClass" class="btn btn-default" ng-if="!hideCancel" ng-click="confirm.cancel()">
+      <button type="button" ng-class="noButtonClass" class="btn btn-default" ng-if="!hideCancel" ng-click="confirm.cancel()" title="{{noButtonTitle}}">
         <i ng-class="noIcon" ng-if="noIcon"></i>
         {{noText}}
       </button>
