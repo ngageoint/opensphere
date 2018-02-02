@@ -81,7 +81,6 @@ plugin.position.launchCopy = function(opt_coord) {
   if (mousePos) {
     var positionString = mousePos.getPositionString(opt_coord);
     if (positionString) {
-      positionString = positionString.replace('+', '').replace('+', '');
       plugin.position.CopyPositionCtrl.launch(positionString);
     }
   }
