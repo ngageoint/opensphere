@@ -1,0 +1,47 @@
+goog.require('os.file.File');
+// os.mock sets up a bunch of basic opensphere APIs, like settings, which is
+// used in our example plugin
+goog.require('os.mock');
+goog.require('plugin.tileserver.TileserverPlugin');
+
+describe('plugin.tileserver.TileserverPlugin', function() {
+  it('should have the proper ID', function() {
+    expect(new plugin.tileserver.TileserverPlugin().id).toBe('tileserver');
+  });
+
+  it('should not throw an error', function() {
+    var fn = function() {
+      var p = new plugin.tileserver.TileserverPlugin();
+      p.init();
+    };
+
+    expect(fn).not.toThrow();
+  });
+
+  it('should detect tileserver responses', function() {
+    var file = new os.file.File;
+    file.setUrl('http://something/index.json');
+    file.setContent('  [{"format":"png","tilejson":"2.0.0"}] ');
+
+    expect(plugin.tileserver.isTileServerResponse(file)).toBe(3);
+  });
+
+  it('should not detect non-tileserver responses', function() {
+    // no file
+    var fn = plugin.tileserver.isTileServerResponse;
+    expect(fn()).toBe(0);
+
+    // local file
+    var file = new os.file.File();
+    file.setUrl(os.file.getLocalUrl('somefile.whatever'));
+    expect(fn(file)).toBe(0);
+
+    // no content
+    file.setUrl('http://something.com/index.json');
+    expect(fn(file)).toBe(0);
+
+    // does not match
+    file.setContent('this is not the droid you\'re looking for');
+    expect(fn(file)).toBe(0);
+  });
+});

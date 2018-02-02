@@ -1,0 +1,67 @@
+goog.provide('plugin.tileserver.TileserverPlugin');
+
+goog.require('os.data.ConfigDescriptor');
+goog.require('os.data.ProviderEntry');
+goog.require('os.plugin.AbstractPlugin');
+goog.require('os.plugin.PluginManager');
+goog.require('plugin.tileserver.Tileserver');
+
+
+/**
+ * Provides Tileserver support
+ * @extends {os.plugin.AbstractPlugin}
+ * @constructor
+ */
+plugin.tileserver.TileserverPlugin = function() {
+  plugin.tileserver.TileserverPlugin.base(this, 'constructor');
+  this.id = plugin.tileserver.ID;
+  this.errorMessage = null;
+};
+goog.inherits(plugin.tileserver.TileserverPlugin, os.plugin.AbstractPlugin);
+
+
+/**
+ * @type {string}
+ * @const
+ */
+plugin.tileserver.ID = 'tileserver';
+
+
+/**
+ * @inheritDoc
+ */
+plugin.tileserver.TileserverPlugin.prototype.init = function() {
+  var dm = os.data.DataManager.getInstance();
+  dm.registerProviderType(new os.data.ProviderEntry(
+      plugin.tileserver.ID,           // the type
+      plugin.tileserver.Tileserver,   // the class
+      'Tileserver',         // the title
+      'Tileserver layers'   // the description
+      ));
+
+  dm.registerDescriptorType(os.data.ConfigDescriptor.ID, os.data.ConfigDescriptor);
+};
+
+
+/**
+ * @param {os.file.File} file The file representing the URL and its content
+ * @return {number} The score
+ */
+plugin.tileserver.isTileServerResponse = function(file) {
+  var score = 0;
+
+  if (file && !os.file.isLocal(file)) {
+    var content = file.getContent();
+    if (goog.isString(content) && /^\s*\[\{.*"tilejson"/.test(content)) {
+      // doesn't really matter as long as it is non-zero, but it could potentially
+      // compete with other detection functions
+      score += 3;
+    }
+  }
+
+  return score;
+};
+
+
+// add the plugin to the application
+os.plugin.PluginManager.getInstance().addPlugin(new plugin.tileserver.TileserverPlugin());

@@ -13,6 +13,7 @@ goog.require('os.layer.ILayer');
 os.layer.MockLayer = function() {
   this.id = this.title = goog.string.getRandomString();
   this.loading = false;
+  this.explicitType = 'mock';
 };
 os.implements(os.layer.MockLayer, os.layer.ILayer.ID);
 
@@ -91,14 +92,16 @@ os.layer.MockLayer.prototype.setType = function(value) {};
  * @inheritDoc
  */
 os.layer.MockLayer.prototype.getExplicitType = function() {
-  return 'mock';
+  return this.explicitType;
 };
 
 
 /**
  * @inheritDoc
  */
-os.layer.MockLayer.prototype.setExplicitType = function(value) {};
+os.layer.MockLayer.prototype.setExplicitType = function(value) {
+  this.explicitType = value;
+};
 
 
 /**
