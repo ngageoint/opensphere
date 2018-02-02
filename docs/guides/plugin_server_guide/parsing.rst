@@ -30,18 +30,32 @@ The first two layers are XYZ (see ``tiles`` template) PNG (``format = 'png'``) l
 
 The last layer is a vector format, which we will ignore in this guide. The first two JSON objects are very similar to the layer config JSON needed to create XYZ layers. So all we have to do is translate them.
 
-.. literalinclude:: src/plugin/tileserver/tileserver.js
+.. literalinclude:: src/plugin/tileserver/tileserver.js-parsing
   :caption: ``src/plugin/tileserver/tileserver.js``
   :linenos:
   :language: javascript
-  :emphasize-lines: 3, 5, 7, 10-13, 58-67, 71-125
+  :emphasize-lines: 3, 5, 7, 10-13, 36-37, 58-67, 71-128
 
 Let's test it.
 
-.. literalinclude:: test/plugin/tileserver/tileserver.test.js
+.. literalinclude:: test/plugin/tileserver/tileserver.test.js-parsing
   :caption: ``test/plugin/tileserver/tileserver.test.js``
   :linenos:
   :language: javascript
   :emphasize-lines: 2, 97-183
 
-``yarn test`` should result in a clean test run. Now run the build and open up the debug instance again. This time the server should complete its loading and a couple of child nodes. Toggling those nodes should enable the given layers. That's pretty much it for providers. If you want to connect to a provider using formats not already supported by OpenSphere, then follow the :ref:`file-parser` and :ref:`file-layer-config` sections of the :ref:`file-type-guide`.
+``yarn test`` should result in a clean test run. Now let's ensure that our descriptor type is registered in our plugin.
+
+.. literalinclude:: src/plugin/tileserver/tileserverplugin.js-parsing
+  :caption: ``src/plugin/tileserver/tileserverplugin.js``
+  :linenos:
+  :language: javascript
+  :emphasize-lines: 3, 42
+
+Since ``ConfigDescriptor`` is highly resuable, it is possible that several plugins make that same registration. That's fine.
+
+Now run the build and open up the debug instance again. This time the server should complete its loading and a couple of child nodes. Toggling those nodes should enable the given layers, and those layers should persist on refresh.
+
+We've got the provider working if added by an admin in config, but what about the user? Let's handle that next.
+
+

@@ -63,6 +63,24 @@ os.layer.config.AbstractTileLayerConfig.LOGGER_ = goog.log.getLogger('os.layer.c
 
 
 /**
+ * Regular expression matcher for rotating tile server names in alpha range.
+ * @type {RegExp}
+ * @private
+ * @const
+ */
+os.layer.config.AbstractTileLayerConfig.RotatingAlphaRegexp = new RegExp(/{[a-zA-Z]-[a-zA-Z]}/g);
+
+
+/**
+ * Regular expression matcher for rotating tile server names in numerical range.
+ * @type {RegExp}
+ * @private
+ * @const
+ */
+os.layer.config.AbstractTileLayerConfig.RotatingNumericRegexp = new RegExp(/{\d-\d}/g);
+
+
+/**
  * @inheritDoc
  */
 os.layer.config.AbstractTileLayerConfig.prototype.initializeConfig = function(options) {
@@ -77,6 +95,9 @@ os.layer.config.AbstractTileLayerConfig.prototype.initializeConfig = function(op
     // remove the "url" property to avoid confusion
     options['url'] = undefined;
   }
+
+  this.expandUrls();
+  options['urls'] = this.urls;
 
   var width = this.getTileWidth(options);
   var height = this.getTileHeight(options);
@@ -238,10 +259,87 @@ os.layer.config.AbstractTileLayerConfig.prototype.getUrlPattern = function(url) 
   url = url.replace(/{-?[zxy]}/g, '\\d+');
 
   // replace {0-9} ranges for rotating tile servers
-  url = url.replace(/{\d-\d}/g, '\\d');
+  url = url.replace(os.layer.config.AbstractTileLayerConfig.RotatingNumericRegexp, '\\d');
 
   // replace {a-z} ranges for rotating tile servers
-  url = url.replace(/{[a-zA-Z]-[a-zA-Z]}/g, '[a-zA-Z]');
+  url = url.replace(os.layer.config.AbstractTileLayerConfig.RotatingAlphaRegexp, '[a-zA-Z]');
 
   return new RegExp('^' + url);
 };
+
+
+/**
+ * Expand URLs that contain ranges for rotating tile servers.
+ * @protected
+ */
+os.layer.config.AbstractTileLayerConfig.prototype.expandUrls = function() {
+  var expandedUrls = [];
+  for (var i = 0; i < this.urls.length; i++) {
+    var url = this.urls[i];
+    if (goog.isString(url)) {
+      var expanded = /** @type {Array<string>} */ (os.layer.config.AbstractTileLayerConfig.expandUrl(url));
+      for (var j = 0; j < expanded.length; j++) {
+        var expandedUrl = /** @type {string} */ (expanded[j]);
+        expandedUrls.push(expandedUrl);
+      }
+    } else {
+      // pass through.
+      expandedUrls.push(url);
+    }
+  }
+  goog.log.fine(os.layer.config.AbstractTileLayerConfig.LOGGER_,
+      'Potentially expanded URL set: ' + expandedUrls.join());
+  this.urls = expandedUrls;
+};
+
+/**
+ * Expand a URL that contains a range for rotating tile servers.
+ *
+ * URLs that do not contain a range are returned as a single element array.
+ *
+ * @param {string} url the url to expand
+ * @return {Array<string>} the full list of urls corresponding to the url range.
+ * @protected
+ */
+os.layer.config.AbstractTileLayerConfig.expandUrl = function(url) {
+  var urls = [];
+  if (os.layer.config.AbstractTileLayerConfig.RotatingAlphaRegexp.test(url)) {
+    goog.log.fine(os.layer.config.AbstractTileLayerConfig.LOGGER_, 'Expanding URL with alpha range: ' + url);
+    var match = url.match(os.layer.config.AbstractTileLayerConfig.RotatingAlphaRegexp)[0];
+    urls = urls.concat(os.layer.config.AbstractTileLayerConfig.expandUrlMatch(url, match));
+  } else if (os.layer.config.AbstractTileLayerConfig.RotatingNumericRegexp.test(url)) {
+    goog.log.fine(os.layer.config.AbstractTileLayerConfig.LOGGER_, 'Expanding URL with numeric range: ' + url);
+    var match = url.match(os.layer.config.AbstractTileLayerConfig.RotatingNumericRegexp)[0];
+    urls = urls.concat(os.layer.config.AbstractTileLayerConfig.expandUrlMatch(url, match));
+  } else {
+    goog.log.fine(os.layer.config.AbstractTileLayerConfig.LOGGER_, 'Not expanding URL: ' + url);
+    urls.push(url);
+  }
+  return urls;
+};
+
+/**
+ * Expand a URL match.
+ *
+ * URLs that do not contain a range are returned as a single element array.
+ *
+ * @param {string} url the url to expand
+ * @param {string} match the matched values
+ * @return {Array<string>} the full list of urls corresponding to the url.
+ * @protected
+ */
+os.layer.config.AbstractTileLayerConfig.expandUrlMatch = function(url, match) {
+  var urls = [];
+  var range = match.slice(1, -1);
+  var parts = range.split('-');
+  var start = parts[0];
+  var end = parts[1];
+  for (var i = start.charCodeAt(0); i <= end.charCodeAt(0); i++) {
+    var replace = String.fromCharCode(i);
+    var expandedUrl = url.replace(match, replace);
+    urls.push(expandedUrl);
+  }
+  return urls;
+};
+
+

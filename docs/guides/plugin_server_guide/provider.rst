@@ -3,7 +3,15 @@ Data Provider
 
 Here we will add a provider class that reads the ``/index.json`` file from Tileserver and produces layers from it.
 
-A Provider is represented visually by the root nodes in the Add Data window (in its default view). Its goal is to query its server and produce leaf nodes containing Data Descriptors. These leaf nodes are represented visually by the nodes with on/off sliders in that same view. While most descriptors activate layers, a custom descriptor could activate or launch anything.
+A Provider is represented visually by the root nodes in the Add Data window (in its default view). Its goal is to query its server and produce leaf nodes containing Data Descriptors. These leaf nodes are represented visually by the nodes with on/off sliders in that same view, as shown below:
+
+.. image:: images/serveradddata.png
+
+When a layer is turned on, it appears as a node in the layers menu, as shown below:
+
+.. image:: images/layernodes.png
+
+While most descriptors activate layers, a custom descriptor could activate or launch anything.
 
 First let's just get the JSON loaded.
 
@@ -22,12 +30,12 @@ Here's our test for it. Note that this uses the same Jasmine 1.3 that OpenSphere
 Run ``yarn test`` to see if it tests properly. Now we need to register our provider type in our plugin.
 
 .. literalinclude:: src/plugin/tileserver/tileserverplugin.js-provider
-  :caption: ``srcplugin/tileserer/tileserverplugin.js``
+  :caption: ``src/plugin/tileserer/tileserverplugin.js``
   :linenos:
   :language: javascript
   :emphasize-lines: 3, 6, 33-39
 
-Lastly, we need to update our config so that the application instatiates a copy of our provider.
+Lastly, we need to update our config so that the application instantiates a copy of our provider.
 
 .. code-block:: json
   :caption: ``config/settings.json``

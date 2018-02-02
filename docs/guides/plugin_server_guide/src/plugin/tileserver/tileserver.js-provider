@@ -38,13 +38,13 @@ plugin.tileserver.Tileserver.prototype.load = function(opt_ping) {
  */
 plugin.tileserver.Tileserver.prototype.onLoad = function(response) {
   try {
-    var json = JSON.parse(response);
+    var layers = JSON.parse(response);
   } catch (e) {
     this.onError('Malformed JSON');
     return;
   }
 
-  console.log('parsed json', json);
+  console.log('parsed json', layers);
 };
 
 

@@ -7,7 +7,7 @@ Here we walk through creating a plugin for a new server or provider type: `Tiles
 .. _OGC: https://github.com/ngageoint/opensphere/tree/master/src/plugin/ogc
 .. _Tileserver-GL: https://github.com/klokantech/tileserver-gl
 
-With any server type, it is important to have an instance we can hit for testing. Follow the instructions in the `Tileserver-GL`_ README (download a datafile and fire up the Docker container). If you have installed httpd or nginx, you may want to pick a different port mapping from those instructions so that the ports do not conflict.
+With any server type, it is important to have an instance we can hit for testing. Follow the instructions in the `Tileserver-GL`_ README (download a datafile and fire up the Docker container). If you have installed httpd or nginx, you may want to pick a different port mapping from those instructions so that the ports do not conflict. This guide assumes port 8081.
 
 After that is done, you should be able to hit ``http://localhost:<port>/index.json``. This is the file that our server type will read.
 
@@ -23,3 +23,4 @@ If you wish for this to be a core plugin included with OpenSphere then simply be
   plugin
   provider
   parsing
+  server_ui
