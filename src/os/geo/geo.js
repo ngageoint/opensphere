@@ -677,6 +677,7 @@ os.geo.parseLatLon = function(str, opt_order, opt_format) {
     if (result) {
       var ptIdx = result[conf.coords[0].deg].indexOf('.');
       var negIdx = result[conf.coords[0].deg].indexOf('-');
+      var negIdx = negIdx == -1 ? result[conf.coords[0].deg].indexOf('+') : negIdx;
       var numDigits = negIdx != -1 ? 4 : 3;
 
       var dir0 = result[conf.coords[0].dir[0]] || result[conf.coords[0].dir[1]];
@@ -974,6 +975,7 @@ os.geo.parse_ = function(deg, min, sec, dir) {
     var ptIdx = deg.indexOf('.');
     /** @type {number} */
     var negIdx = deg.indexOf('-');
+    negIdx = negIdx == -1 ? deg.indexOf('+') : negIdx;
     /** @type {number} */
     var numOfDigits = negIdx != -1 ? 5 : 4;
 
