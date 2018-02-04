@@ -2591,11 +2591,9 @@ Cesium.RuntimeError = function(opt_msg) {};
 
 /**
  * @constructor
- * @param {string=} opt_text
- * @param {string=} opt_imageUrl
- * @param {string=} opt_link
+ * @param {Object} options
  */
-Cesium.Credit = function(opt_text, opt_imageUrl, opt_link) {};
+Cesium.Credit = function(options) {};
 
 
 

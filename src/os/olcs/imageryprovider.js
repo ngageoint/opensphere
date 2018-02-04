@@ -291,7 +291,7 @@ os.olcs.ImageryProvider.createCreditForSource = function(source) {
   }
 
   return (goog.isDef(imageUrl) || text.length > 0) ?
-         new Cesium.Credit(text, imageUrl, link) : null;
+         new Cesium.Credit({'text': text, 'imageUrl': imageUrl, 'link': link}) : null;
 };
 
 
