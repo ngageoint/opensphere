@@ -109,14 +109,14 @@ os.control.Attribution.prototype.updateElement_ = function(frameState) {
   if (attributions.length > 1) {
     label = goog.html.SafeHtml.create('li', undefined, 'Sources:');
   } else {
-    label = goog.html.SafeHtml.create('li', undefined, 'Sources:');
+    label = goog.html.SafeHtml.create('li', undefined, 'Source:');
   }
 
   goog.dom.appendChild(this.ulElement_, goog.dom.safeHtmlToNode(label));
 
   // append the attributions
   for (var i = 0, ii = attributions.length; i < ii; ++i) {
-    label = goog.html.SafeHtml.create('li', undefined, (i > 0 ? ',' : '') + attributions[i]);
+    label = goog.html.SafeHtml.create('li', undefined, attributions[i] + (i > (ii - 1) ? ',' : ''));
     goog.dom.appendChild(this.ulElement_, goog.dom.safeHtmlToNode(label));
   }
 
