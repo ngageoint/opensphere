@@ -676,9 +676,10 @@ os.geo.parseLatLon = function(str, opt_order, opt_format) {
 
     if (result) {
       var ptIdx = result[conf.coords[0].deg].indexOf('.');
-      var negIdx = result[conf.coords[0].deg].indexOf('-');
-      negIdx = negIdx == -1 ? result[conf.coords[0].deg].indexOf('+') : negIdx;
-      var numDigits = negIdx != -1 ? 4 : 3;
+      var signIdx = result[conf.coords[0].deg].indexOf('-');
+      // if no negative sign, check for explicit positive since the spec allows that too
+      signIdx = signIdx == -1 ? result[conf.coords[0].deg].indexOf('+') : signIdx;
+      var numDigits = signIdx != -1 ? 4 : 3;
 
       var dir0 = result[conf.coords[0].dir[0]] || result[conf.coords[0].dir[1]];
       var dir1 = result[conf.coords[1].dir[0]] || result[conf.coords[1].dir[1]];
@@ -974,10 +975,10 @@ os.geo.parse_ = function(deg, min, sec, dir) {
     /** @type {number} */
     var ptIdx = deg.indexOf('.');
     /** @type {number} */
-    var negIdx = deg.indexOf('-');
-    negIdx = negIdx == -1 ? deg.indexOf('+') : negIdx;
+    var signIdx = deg.indexOf('-');
+    signIdx = signIdx == -1 ? deg.indexOf('+') : signIdx;
     /** @type {number} */
-    var numOfDigits = negIdx != -1 ? 5 : 4;
+    var numOfDigits = signIdx != -1 ? 5 : 4;
 
     if ((ptIdx == -1 || ptIdx >= numOfDigits)) {
       // clearly someone means DMS
@@ -986,7 +987,7 @@ os.geo.parse_ = function(deg, min, sec, dir) {
       }
 
       var l;
-      if (negIdx == -1) {
+      if (signIdx == -1) {
         l = ptIdx % 2 === 1 ? 3 : 2;
       } else {
         l = ptIdx % 2 === 0 ? 4 : 3;
