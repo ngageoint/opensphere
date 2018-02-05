@@ -84,7 +84,7 @@ os.query.queryWorld = function() {
 os.query.isWorldQuery = function(geometry) {
   var world = os.query.WORLD_GEOM;
   if (world && geometry && geometry instanceof ol.geom.Polygon) {
-    if (geometry.getArea() >= world.getArea() || geometry.getArea() == 0) {
+    if (goog.math.nearlyEquals(geometry.getArea(), world.getArea()) || geometry.getArea() == 0) {
       geometry.setCoordinates(world.getCoordinates());
       return true;
     }
