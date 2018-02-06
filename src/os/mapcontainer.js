@@ -1607,10 +1607,9 @@ os.MapContainer.prototype.failPerformanceCaveat = function() {
         /** @type {boolean} */ (os.settings.get('webgl.performanceCaveat.failIf', false));
       this.hasPerformanceCaveat_ = failIfMajorPerformanceCaveat_ ?
           os.webgl.hasPerformanceCaveat() : false;
-    }
-
-    if (this.hasPerformanceCaveat_) {
-      os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.WEBGL_PERFORMANCE_CAVEAT, 1);
+      if (this.hasPerformanceCaveat_) {
+        os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.WEBGL_PERFORMANCE_CAVEAT, 1);
+      }
     }
 
     return this.hasPerformanceCaveat_;
