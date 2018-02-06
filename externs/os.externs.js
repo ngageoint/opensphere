@@ -341,8 +341,10 @@ osx.window.WindowOptions;
  *   cancel: (Function|undefined),
  *   yesText: (string|undefined),
  *   yesIcon: (string|undefined),
+ *   yesButtonTitle: (string|undefined),
  *   noText: (string|undefined),
  *   noIcon: (string|undefined),
+ *   noButtonTitle: (string|undefined),
  *   formClass: (string|undefined),
  *
  *   windowOptions: (osx.window.WindowOptions|undefined),
