@@ -105,7 +105,7 @@ os.ui.search.FeatureResultCardCtrl.prototype.disposeInternal = function() {
 
   if (!source.getFeatures().length) {
     this.layer.setRemovable(true);
-    mm.removeLayer(os.ui.search.FeatureResultCardCtrl.SEARCH_LAYER_ID);
+    mm.removeLayer(this.layer);
   }
 
   this.feature = null;
@@ -218,9 +218,7 @@ goog.exportProperty(os.ui.search.FeatureResultCardCtrl.prototype, 'goTo',
 os.ui.search.FeatureResultCardCtrl.prototype.over = function() {
   this.feature.set(os.style.StyleType.HIGHLIGHT, os.style.DEFAULT_HIGHLIGHT_CONFIG);
   os.style.setFeatureStyle(this.feature);
-  os.style.notifyStyleChange(
-      os.MapContainer.getInstance().getLayer(os.ui.search.FeatureResultCardCtrl.SEARCH_LAYER_ID),
-      [this.feature]);
+  os.style.notifyStyleChange(this.layer, [this.feature]);
 };
 goog.exportProperty(os.ui.search.FeatureResultCardCtrl.prototype, 'over',
     os.ui.search.FeatureResultCardCtrl.prototype.over);
@@ -232,9 +230,7 @@ goog.exportProperty(os.ui.search.FeatureResultCardCtrl.prototype, 'over',
 os.ui.search.FeatureResultCardCtrl.prototype.out = function() {
   this.feature.set(os.style.StyleType.HIGHLIGHT, undefined);
   os.style.setFeatureStyle(this.feature);
-  os.style.notifyStyleChange(
-      os.MapContainer.getInstance().getLayer(os.ui.search.FeatureResultCardCtrl.SEARCH_LAYER_ID),
-      [this.feature]);
+  os.style.notifyStyleChange(this.layer, [this.feature]);
 };
 goog.exportProperty(os.ui.search.FeatureResultCardCtrl.prototype, 'out',
     os.ui.search.FeatureResultCardCtrl.prototype.out);
