@@ -823,7 +823,7 @@ goog.exportProperty(
 
 
 /**
- * Handles column changes to the bearing
+ * Handles changes to the length type
  * @protected
  */
 os.ui.layer.LobOptionsCtrl.prototype.onLengthTypeChange = function() {
@@ -833,7 +833,28 @@ os.ui.layer.LobOptionsCtrl.prototype.onLengthTypeChange = function() {
        * @return {os.command.ICommand}
        */
       function(layer) {
-        return new os.command.VectorLayerBearing(layer.getId(), this['lengthType']);
+        return new os.command.VectorLayerLOBType(layer.getId(), this['lengthType']);
+      }, this);
+
+  this.createCommand(fn);
+};
+goog.exportProperty(
+    os.ui.layer.LobOptionsCtrl.prototype,
+    'onLengthTypeChange',
+    os.ui.layer.LobOptionsCtrl.prototype.onLengthTypeChange);
+
+/**
+ * Handles column changes to the bearing
+ * @protected
+ */
+os.ui.layer.LobOptionsCtrl.prototype.onBearingColumnChange = function() {
+  var fn = goog.bind(
+      /**
+       * @param {os.layer.ILayer} layer
+       * @return {os.command.ICommand}
+       */
+      function(layer) {
+        return new os.command.VectorLayerBearing(layer.getId(), this['bearingColumn']);
       }, this);
 
   this.createCommand(fn);
@@ -841,7 +862,7 @@ os.ui.layer.LobOptionsCtrl.prototype.onLengthTypeChange = function() {
 goog.exportProperty(
     os.ui.layer.LobOptionsCtrl.prototype,
     'onBearingColumnChange',
-    os.ui.layer.LobOptionsCtrl.prototype.onLengthTypeChange);
+    os.ui.layer.LobOptionsCtrl.prototype.onBearingColumnChange);
 
 
 /**
