@@ -129,14 +129,16 @@ os.ui.layer.LobOptionsCtrl = function($scope, $element) {
    * @type {Array<os.math.Units>}
    */
   this['units'] = [];
+  this.scope['maxSize'] = {};
   for (var unit in os.math.Units) {
     this['units'].push(os.math.Units[unit]);
+    this.scope['maxSize'][os.math.Units[unit]] = os.math.convertUnits(os.geo.MAX_LINE_LENGTH, os.math.Units[unit],
+        os.style.DEFAULT_UNITS);
   }
 
   this.scope['columnLength'] = os.style.DEFAULT_LOB_LENGTH;
   this.scope['length'] = os.style.DEFAULT_LOB_LENGTH;
   this.scope['size'] = os.style.DEFAULT_ARROW_SIZE;
-  this.scope['maxSize'] = 20000000;
   this.scope['lengthErrorMultiplier'] = os.style.DEFAULT_LOB_LENGTH_ERROR;
   this.scope['bearingErrorMultiplier'] = os.style.DEFAULT_LOB_BEARING_ERROR;
 
