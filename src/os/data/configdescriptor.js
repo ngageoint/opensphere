@@ -158,7 +158,7 @@ os.data.ConfigDescriptor.prototype.canReimport = function() {
 
 
 /**
- * Re-imports the options
+ * @inheritDoc
  */
 os.data.ConfigDescriptor.prototype.reimport = function() {
   var config = this.getBaseConfig();

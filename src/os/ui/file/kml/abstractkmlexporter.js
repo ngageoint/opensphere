@@ -708,8 +708,7 @@ os.ui.file.kml.AbstractKMLExporter.prototype.getFields = function(item) {
 
 
 /**
- * Set the fields to export for an item.
- * @param {Array<string>} value The fields to export
+ * @inheritDoc
  */
 os.ui.file.kml.AbstractKMLExporter.prototype.setFields = function(value) {
   this.fields = value;

@@ -55,6 +55,7 @@ os.style.FallbackIconImage.DATA_URL_RX = new RegExp('^data', 'i');
 
 
 /**
+ * @inheritDoc
  * @suppress {accessControls}
  */
 os.style.FallbackIconImage.prototype.handleImageError_ = function() {

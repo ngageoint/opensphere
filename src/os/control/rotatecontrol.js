@@ -22,7 +22,7 @@ goog.inherits(os.control.Rotate, ol.control.Rotate);
 
 
 /**
- * @private
+ * @inheritDoc
  * @suppress {accessControls}
  */
 os.control.Rotate.prototype.resetNorth_ = function() {

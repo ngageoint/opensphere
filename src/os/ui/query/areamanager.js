@@ -382,6 +382,7 @@ os.ui.query.AreaManager.prototype.filterFeatures = function(features) {
  * @param {boolean=} opt_bulk - just show/hide on bulk
  * @return {boolean}
  * @protected
+ * @override
  */
 os.ui.query.AreaManager.prototype.addInternal = function(feature, opt_bulk) {
   var bulk = opt_bulk || false;

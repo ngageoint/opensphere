@@ -88,7 +88,7 @@ ol.renderer.canvas.VectorLayer.prototype.forEachFeatureAtCoordinate = function(c
   var originalRenderFrame = ol.renderer.canvas.Map.prototype.renderFrame;
 
   /**
-   * @param {?olx.FrameState} frameState The frame state
+   * @inheritDoc
    * @suppress {accessControls}
    */
   ol.renderer.canvas.Map.prototype.renderFrame = function(frameState) {

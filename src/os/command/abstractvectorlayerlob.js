@@ -25,9 +25,7 @@ goog.inherits(os.command.AbstractVectorLayerLOB, os.command.AbstractVectorStyle)
 
 
 /**
- * Applies a value to the style config
- * @param {Object} config The style config
- * @param {T} value The value to apply
+ * @inheritDoc
  * @suppress {accessControls}
  */
 os.command.AbstractVectorLayerLOB.prototype.applyValue = function(config, value) {

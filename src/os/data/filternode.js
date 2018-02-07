@@ -44,8 +44,7 @@ os.data.FilterNode.prototype.disposeInternal = function() {
 
 
 /**
- * Sets the filter
- * @param {?os.filter.FilterEntry} value
+ * @inheritDoc
  */
 os.data.FilterNode.prototype.setEntry = function(value) {
   if (value !== this.entry) {

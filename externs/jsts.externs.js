@@ -385,12 +385,6 @@ jsts.geom.LineString = function(points, opt_factory) {};
 
 
 /**
- * @return {Array<jsts.geom.Coordinate>}
- */
-jsts.geom.LineString.prototype.getCoordinates = function() {};
-
-
-/**
  * @param {number} n
  * @return {jsts.geom.Coordinate}
  */
@@ -417,13 +411,6 @@ jsts.geom.LineString.prototype.isClosed = function() {};
  * @extends {jsts.geom.Geometry}
  */
 jsts.geom.LinearRing = function(points, opt_factory) {};
-
-
-/**
- * @return {Array<jsts.geom.Coordinate>}
- */
-jsts.geom.LinearRing.prototype.getCoordinates = function() {};
-
 
 
 /**

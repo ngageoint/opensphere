@@ -200,9 +200,7 @@ os.ol.control.MousePosition.prototype.handleMouseMove = function(event) {
 
 
 /**
- * @param {?ol.Pixel} pixel Pixel.
- * @private
- *
+ * @inheritDoc
  * @suppress {accessControls}
  */
 os.ol.control.MousePosition.prototype.updateHTML_ = function(pixel) {

@@ -97,7 +97,7 @@ goog.inherits(os.ui.action.Action, goog.Disposable);
 
 
 /**
- * Destroys the action object.
+ * @inheritDoc
  */
 os.ui.action.Action.prototype.disposeInternal = function() {
   os.ui.action.Action.base(this, 'disposeInternal');

@@ -42,9 +42,7 @@ plugin.file.shp.SHPDescriptor.prototype.getType = function() {
 
 
 /**
- * Assemble the options required to add the layer.
- * @return {Object.<string, *>}
- * @protected
+ * @inheritDoc
  */
 plugin.file.shp.SHPDescriptor.prototype.getLayerOptions = function() {
   var options = plugin.file.shp.SHPDescriptor.base(this, 'getLayerOptions');

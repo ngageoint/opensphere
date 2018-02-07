@@ -169,7 +169,7 @@ ol.source.UrlTile.prototype.onRefreshTimer = function() {
 
 
 /**
- * Refreshes the source
+ * @inheritDoc
  */
 ol.source.UrlTile.prototype.refresh = function() {
   this.tileCache.clear();

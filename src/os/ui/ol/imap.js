@@ -31,6 +31,7 @@ os.ui.ol.IMap.prototype.addFeature;
 /**
  * Adds an array of features to the drawing layer.
  * @param {!Array<!ol.Feature>} features The features to add
+ * @param {Object=} opt_style Optional feature style
  * @return {!Array<!ol.Feature>}
  */
 os.ui.ol.IMap.prototype.addFeatures;

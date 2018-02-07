@@ -75,8 +75,7 @@ plugin.arc.query.ArcQueryHandler.prototype.getActiveEntries = function() {
 
 
 /**
- * Creates the SQL-like filter.
- * @return {string}
+ * @inheritDoc
  */
 plugin.arc.query.ArcQueryHandler.prototype.createFilter = function() {
   var result = '';

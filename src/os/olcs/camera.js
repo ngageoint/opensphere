@@ -86,7 +86,7 @@ os.olcs.Camera.prototype.setEnabled = function(value) {
 
 
 /**
- * @return {number|undefined} Heading in radians.
+ * @inheritDoc
  */
 os.olcs.Camera.prototype.getHeading = function() {
   return this.cam_.heading;
@@ -94,7 +94,7 @@ os.olcs.Camera.prototype.getHeading = function() {
 
 
 /**
- * @param {number} heading In radians.
+ * @inheritDoc
  */
 os.olcs.Camera.prototype.setHeading = function(heading) {
   var carto = this.cam_.positionCartographic;
@@ -110,7 +110,7 @@ os.olcs.Camera.prototype.setHeading = function(heading) {
 
 
 /**
- * @return {number} Tilt in radians.
+ * @inheritDoc
  */
 os.olcs.Camera.prototype.getTilt = function() {
   return this.tilt_;
@@ -118,7 +118,7 @@ os.olcs.Camera.prototype.getTilt = function() {
 
 
 /**
- * @param {number} tilt In radians.
+ * @inheritDoc
  */
 os.olcs.Camera.prototype.setTilt = function(tilt) {
   this.tilt_ = tilt;
@@ -127,8 +127,7 @@ os.olcs.Camera.prototype.setTilt = function(tilt) {
 
 
 /**
- * Shortcut for ol.View.getCenter().
- * @return {ol.Coordinate|undefined} Same projection as the ol.View.
+ * @inheritDoc
  */
 os.olcs.Camera.prototype.getCenter = function() {
   var view = this.map_.getView();
@@ -142,8 +141,7 @@ os.olcs.Camera.prototype.getCenter = function() {
 
 
 /**
- * Shortcut for ol.View.setCenter().
- * @param {ol.Coordinate} center Same projection as the ol.View.
+ * @inheritDoc
  */
 os.olcs.Camera.prototype.setCenter = function(center) {
   this.flyTo(center);
@@ -151,8 +149,7 @@ os.olcs.Camera.prototype.setCenter = function(center) {
 
 
 /**
- * Sets the position of the camera.
- * @param {ol.Coordinate} position Same projection as the ol.View.
+ * @inheritDoc
  */
 os.olcs.Camera.prototype.setPosition = function(position) {
   this.flyTo(position);
@@ -160,7 +157,7 @@ os.olcs.Camera.prototype.setPosition = function(position) {
 
 
 /**
- * @return {number} Altitude in meters.
+ * @inheritDoc
  */
 os.olcs.Camera.prototype.getAltitude = function() {
   return this.cam_.positionCartographic.height;
@@ -168,7 +165,7 @@ os.olcs.Camera.prototype.getAltitude = function() {
 
 
 /**
- * @param {number} altitude In meters.
+ * @inheritDoc
  */
 os.olcs.Camera.prototype.setAltitude = function(altitude) {
   this.flyTo(undefined, altitude);
@@ -300,6 +297,7 @@ os.olcs.Camera.prototype.zoomByDelta = function(delta) {
  * Updates the state of the underlying Cesium.Camera
  * according to the current values of the properties.
  * @private
+ * @override
  */
 os.olcs.Camera.prototype.updateCamera_ = function() {
   var view = this.map_.getView();
@@ -340,7 +338,7 @@ os.olcs.Camera.prototype.updateCamera_ = function() {
 
 
 /**
- * Calculates the values of the properties from the current ol.View state.
+ * @inheritDoc
  */
 os.olcs.Camera.prototype.readFromView = function() {
   var view = this.map_.getView();
@@ -365,8 +363,7 @@ os.olcs.Camera.prototype.readFromView = function() {
 
 
 /**
- * Calculates the values of the properties from the current Cesium.Camera state.
- * Modifies the center, resolution and rotation properties of the view.
+ * @inheritDoc
  */
 os.olcs.Camera.prototype.updateView = function() {
   var view = this.map_.getView();
@@ -445,8 +442,7 @@ os.olcs.Camera.prototype.updateView = function() {
 
 
 /**
- * Check if the underlying camera state has changed and ensure synchronization.
- * @param {boolean=} opt_dontSync Do not synchronize the view.
+ * @inheritDoc
  */
 os.olcs.Camera.prototype.checkCameraChange = function(opt_dontSync) {
   var old = this.lastCameraViewMatrix_;
@@ -462,9 +458,7 @@ os.olcs.Camera.prototype.checkCameraChange = function(opt_dontSync) {
 
 
 /**
- * @param {number} resolution Number of map units per pixel.
- * @param {number} latitude Latitude in radians.
- * @return {number} The calculated distance.
+ * @inheritDoc
  */
 os.olcs.Camera.prototype.calcDistanceForResolution = function(resolution, latitude) {
   var canvas = this.scene_.canvas;
@@ -505,9 +499,7 @@ os.olcs.Camera.prototype.calcDistanceForResolution = function(resolution, latitu
 
 
 /**
- * @param {number} distance
- * @param {number} latitude
- * @return {number} The calculated resolution.
+ * @inheritDoc
  */
 os.olcs.Camera.prototype.calcResolutionForDistance = function(distance, latitude) {
   // See the reverse calculation (calcDistanceForResolution) for details

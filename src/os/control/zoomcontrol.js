@@ -19,9 +19,7 @@ goog.inherits(os.control.Zoom, ol.control.Zoom);
 
 
 /**
- * @param {number} delta Zoom delta.
- * @private
- *
+ * @inheritDoc
  * @suppress {accessControls}
  */
 os.control.Zoom.prototype.zoomByDelta_ = function(delta) {
