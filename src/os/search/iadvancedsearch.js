@@ -11,6 +11,15 @@ goog.require('os.search.ISearch');
  */
 os.search.IAdvancedSearch = function() {};
 
+
+/**
+ * See os.implements
+ * @type {string}
+ * @const
+ */
+os.search.IAdvancedSearch.ID = 'os.search.IAdvancedSearch';
+
+
 /**
  * Load the options for this category
  * @param {string} title
@@ -18,20 +27,24 @@ os.search.IAdvancedSearch = function() {};
  */
 os.search.IAdvancedSearch.prototype.loadAdvOptions;
 
+
 /**
  * @return {Array<os.search.FacetDefinition>}
  */
 os.search.IAdvancedSearch.prototype.getAvailableAdvDefinitions;
+
 
 /**
  * @return {core.search.Expression}
  */
 os.search.IAdvancedSearch.prototype.getAppliedAdv;
 
+
 /**
  * Loads and presisists all the possible options for advanced dropdowns
  */
 os.search.IAdvancedSearch.prototype.requestAdvDefinition;
+
 
 /**
  * Apply the advanced query
