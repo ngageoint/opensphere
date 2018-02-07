@@ -99,6 +99,13 @@ osx.map.CameraState;
  * @typedef {{
  *   altitude: (number|undefined),
  *   center: (ol.Coordinate|undefined),
+ *   duration: (number|undefined),
+ *   flightMode: (os.FlightMode|undefined),
+ *   positionCamera: (boolean|undefined),
+ *   heading: (number|undefined),
+ *   pitch: (number|undefined),
+ *   range: (number|undefined),
+ *   roll: (number|undefined),
  *   zoom: (number|undefined)
  * }}
  */
