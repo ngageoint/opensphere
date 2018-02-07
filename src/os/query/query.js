@@ -49,7 +49,7 @@ os.query.launchQueryImport = function(opt_config) {
  */
 os.query.launchCoordinates = function() {
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.LOAD_FROM_COORDINATES, 1);
-  os.ui.query.ui.area.getUserArea().then(os.query.addArea);
+  os.ui.query.ui.area.getUserArea().then(os.query.addArea, goog.nullFunction);
 };
 
 
