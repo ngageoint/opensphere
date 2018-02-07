@@ -34,10 +34,10 @@
     <table class="wide">
       <tr>
         <td>
-          <spinner min="1" max="maxSize" step="1" value="length" live="false" css="large-spinner" name="length"></spinner>
+          <spinner min="1" max="maxSize[ctrl.lengthUnits]" step="1" value="length" live="false" css="large-spinner" name="length"></spinner>
         </td>
         <td class="wide">
-          <slider min="1" max="maxSize" step="1" value="length" live="false" name="length"></slider>
+          <slider min="1" max="maxSize[ctrl.lengthUnits]" step="1" value="length" live="false" name="length"></slider>
         </td>
         <td>
           <select style="width:55px;" class="no-margin wide" ng-model="ctrl.lengthUnits" ng-change="ctrl.onLengthUnitChange()"
@@ -63,7 +63,7 @@
         </td>
         <td class="c-labelcontainer__fixedcell"> x </td>
         <td>
-          <input class="c-labelcontainer__wide" type="number" step="any" min="1" max="maxSize" ng-change="ctrl.onColumnLengthChange()" ng-model="columnLength" ng-required="true" />
+          <input class="c-labelcontainer__wide" type="number" step="any" min="1" max="maxSize[ctrl.lengthUnits]" ng-change="ctrl.onColumnLengthChange()" ng-model="columnLength" ng-required="true" />
         </td>
       </tr>
     </table>
@@ -80,7 +80,7 @@
         </td>
         <td>
           <label ng-show="ctrl.showArrow" class="no-margin">
-            &nbsp; Size: <input class="c-labelcontainer__wide" type="number" step="any" min="1" max="maxSize" ng-change="ctrl.onSizeChange()" ng-model="size" ng-required="true" />
+            &nbsp; Size: <input class="c-labelcontainer__wide" type="number" step="any" min="1" max="maxSize[ctrl.lengthUnits]" ng-change="ctrl.onSizeChange()" ng-model="size" ng-required="true" />
           </label>
         </td>
         <td>
@@ -126,7 +126,7 @@
           <td class="c-labelcontainer__fixedcell">+/-&nbsp;deg</td>
           <td class="c-labelcontainer__fixedcell"> x </td>
           <td>
-            <input style="width: 50px;" class="c-labelcontainer__wide" type="number" step="any" min="0" max="maxSize" ng-change="ctrl.onBearingErrorChange()" ng-model="bearingErrorMultiplier" ng-required="true" />
+            <input style="width: 50px;" class="c-labelcontainer__wide" type="number" step="any" min="0" max="maxSize[ctrl.lengthUnits]" ng-change="ctrl.onBearingErrorChange()" ng-model="bearingErrorMultiplier" ng-required="true" />
           </td>
         </tr>
       </table>
@@ -149,7 +149,7 @@
           </td>
           <td class="c-labelcontainer__fixedcell"> x </td>
           <td>
-            <input style="width: 50px;" class="c-labelcontainer__wide" type="number" step="any" min="0" max="maxSize" ng-change="ctrl.onLengthErrorChange()" ng-model="lengthErrorMultiplier" ng-required="true" />
+            <input style="width: 50px;" class="c-labelcontainer__wide" type="number" step="any" min="0" max="maxSize[ctrl.lengthUnits]" ng-change="ctrl.onLengthErrorChange()" ng-model="lengthErrorMultiplier" ng-required="true" />
           </td>
         </tr>
       </table>
