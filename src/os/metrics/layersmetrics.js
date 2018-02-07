@@ -101,7 +101,7 @@ os.metrics.LayersMetrics = function() {
   this.addChild(styleLeaf, {
     label: 'Line of Bearing Length Column Multiplier',
     description: 'The multiplier on the length of a line of bearing, column option.',
-    key: os.metrics.Layer.LOB_COLUMN_LENGTH
+    key: os.metrics.Layer.VECTOR_LOB_COLUMN_LENGTH
   });
   this.addChild(styleLeaf, {
     label: 'Line of Bearing Length Units',

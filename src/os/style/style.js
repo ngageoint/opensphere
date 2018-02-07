@@ -72,14 +72,14 @@ os.style.DEFAULT_LOB_LENGTH = 1000;
 
 
 /**
- * @type {number}
+ * @type {string}
  * @const
  */
 os.style.DEFAULT_UNITS = os.math.Units.METERS;
 
 
 /**
- * @type {number}
+ * @type {string}
  * @const
  */
 os.style.DEFAULT_LOB_LENGTH_TYPE = 'manual';
