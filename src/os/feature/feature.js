@@ -312,7 +312,7 @@ os.feature.createLineOfBearing = function(feature, opt_replace, opt_lobOpts) {
 
   var geom = feature ? feature.getGeometry() : null;
   if (opt_lobOpts && geom instanceof ol.geom.Point) {
-    var use3D = os.MapContainer.getInstance().is3DEnabled();
+    // var use3D = os.MapContainer.getInstance().is3DEnabled();
     // the feature must have a center point and a bearing to generate a lob. no values should ever be assumed.
     var center = ol.proj.toLonLat(geom.getFirstCoordinate(), os.map.PROJECTION);
     var bearing = os.feature.getColumnValue(feature, opt_lobOpts.bearingColumn);
@@ -335,8 +335,7 @@ os.feature.createLineOfBearing = function(feature, opt_replace, opt_lobOpts) {
       var effectiveLength = Math.min(Math.abs(convertedLength * multiplier), os.geo.MAX_LINE_LENGTH);
 
       // now do some calcs
-      var end = use3D ? osasm.geodesicDirect(center, effectiveBearing, effectiveLength) :
-        osasm.rhumbDirect(center, effectiveBearing, effectiveLength);
+      var end = osasm.geodesicDirect(center, effectiveBearing, effectiveLength);
       end[2] = center[2];
       var inverse = osasm.geodesicInverse(center, end);
       var endBearing = inverse.finalBearing;
@@ -353,8 +352,7 @@ os.feature.createLineOfBearing = function(feature, opt_replace, opt_lobOpts) {
         var arrowLength = opt_lobOpts.arrowLength || os.style.DEFAULT_ARROW_SIZE;
         var convertedArrowLength = os.math.convertUnits(arrowLength, os.style.DEFAULT_UNITS, arrowUnits);
         var effectiveArrowLength = Math.min(convertedArrowLength, os.geo.MAX_LINE_LENGTH);
-        var right = use3D ? osasm.geodesicDirect(end, endBearing + 180 - 45, effectiveArrowLength) :
-          osasm.rhumbDirect(end, endBearing + 180 - 45, effectiveArrowLength);
+        var right = osasm.geodesicDirect(end, endBearing + 180 - 45, effectiveArrowLength);
         right.push(center[2]);
         var rightArm = new ol.geom.LineString([end, right], ol.geom.GeometryLayout.XYZM);
         rightArm = os.geo.splitOnDateLine(rightArm);
@@ -362,8 +360,7 @@ os.feature.createLineOfBearing = function(feature, opt_replace, opt_lobOpts) {
           coords.push(rightArm.getCoordinates());
         }
 
-        var left = use3D ? osasm.geodesicDirect(end, endBearing + 180 + 45, effectiveArrowLength) :
-          osasm.rhumbDirect(end, endBearing + 180 + 45, effectiveArrowLength);
+        var left = osasm.geodesicDirect(end, endBearing + 180 + 45, effectiveArrowLength);
         left.push(center[2]);
         var leftArm = new ol.geom.LineString([end, left], ol.geom.GeometryLayout.XYZM);
         leftArm = os.geo.splitOnDateLine(leftArm);
@@ -413,30 +410,20 @@ os.feature.createLineOfBearing = function(feature, opt_replace, opt_lobOpts) {
             minusArc.osTransform();
           }
         } else if (lengthError > 0 && lengthErrorMultiplier > 0) { // no bearing error perpendicular line instead of arc
-          var uLineCenter = use3D ? osasm.geodesicDirect(end, endBearing + 180, -cLengthError * lengthErrorMultiplier) :
-            osasm.rhumbDirect(end, endBearing + 180, -cLengthError * lengthErrorMultiplier);
-          var uLineRight = use3D ?
-            osasm.geodesicDirect(uLineCenter, endBearing + 90, -cLengthError * lengthErrorMultiplier) :
-            osasm.rhumbDirect(uLineCenter, endBearing + 90, -cLengthError * lengthErrorMultiplier);
+          var uLineCenter = osasm.geodesicDirect(end, endBearing + 180, -cLengthError * lengthErrorMultiplier);
+          var uLineRight = osasm.geodesicDirect(uLineCenter, endBearing + 90, -cLengthError * lengthErrorMultiplier);
           uLineRight.push(center[2]);
-          var uLineLeft = use3D ?
-            osasm.geodesicDirect(uLineCenter, endBearing - 90, -cLengthError * lengthErrorMultiplier) :
-            osasm.rhumbDirect(uLineCenter, endBearing - 90, -cLengthError * lengthErrorMultiplier);
+          var uLineLeft = osasm.geodesicDirect(uLineCenter, endBearing - 90, -cLengthError * lengthErrorMultiplier);
           uLineLeft.push(center[2]);
           plusArc = new ol.geom.LineString([uLineLeft, uLineRight], ol.geom.GeometryLayout.XYZM);
           plusArc = os.geo.splitOnDateLine(plusArc);
           plusArc.set(os.geom.GeometryField.NORMALIZED, true);
           plusArc.osTransform();
 
-          var bLineCenter = use3D ? osasm.geodesicDirect(end, endBearing + 180, cLengthError * lengthErrorMultiplier) :
-            bLineCenter = osasm.rhumbDirect(end, endBearing + 180, cLengthError * lengthErrorMultiplier);
-          var bLineRight = use3D ?
-            osasm.geodesicDirect(bLineCenter, endBearing + 90, cLengthError * lengthErrorMultiplier) :
-            osasm.rhumbDirect(bLineCenter, endBearing + 90, cLengthError * lengthErrorMultiplier);
+          var bLineCenter = osasm.geodesicDirect(end, endBearing + 180, cLengthError * lengthErrorMultiplier);
+          var bLineRight = osasm.geodesicDirect(bLineCenter, endBearing + 90, cLengthError * lengthErrorMultiplier);
           bLineRight.push(center[2]);
-          var bLineLeft = use3D ?
-            osasm.geodesicDirect(bLineCenter, endBearing - 90, cLengthError * lengthErrorMultiplier) :
-            osasm.rhumbDirect(bLineCenter, endBearing - 90, cLengthError * lengthErrorMultiplier);
+          var bLineLeft = osasm.geodesicDirect(bLineCenter, endBearing - 90, cLengthError * lengthErrorMultiplier);
           bLineLeft.push(center[2]);
           minusArc = new ol.geom.LineString([bLineLeft, bLineRight], ol.geom.GeometryLayout.XYZM);
           minusArc = os.geo.splitOnDateLine(minusArc);
@@ -444,9 +431,7 @@ os.feature.createLineOfBearing = function(feature, opt_replace, opt_lobOpts) {
           minusArc.osTransform();
         }
       }
-      if (!use3D) {
-        os.interpolate.interpolateGeom(lob);
-      }
+      os.interpolate.interpolateGeom(lob);
       feature.set(os.data.RecordField.LINE_OF_BEARING_ERROR_HIGH, plusArc);
       feature.set(os.data.RecordField.LINE_OF_BEARING_ERROR_LOW, minusArc);
 
