@@ -39,7 +39,11 @@ ol.interaction.DoubleClickZoom.handleEvent = function(mapBrowserEvent) {
         var currentAltitude = camera.getAltitude();
         var altitude = mapBrowserEvent.originalEvent.ctrlKey ? (currentAltitude * 2) : (currentAltitude / 2);
 
-        camera.flyTo(anchor, altitude, this.duration_);
+        camera.flyTo(/** @type {!osx.map.FlyToOptions} */ ({
+          center: anchor,
+          altitude: altitude,
+          duration: this.duration_
+        }));
       }
     } else {
       var delta = mapBrowserEvent.originalEvent.ctrlKey ? -this.delta_ : this.delta_;
