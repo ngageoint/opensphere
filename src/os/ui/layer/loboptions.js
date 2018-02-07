@@ -130,10 +130,13 @@ os.ui.layer.LobOptionsCtrl = function($scope, $element) {
    */
   this['units'] = [];
   this.scope['maxSize'] = {};
+  this.scope['maxSliderSize'] = {};
   for (var unit in os.math.Units) {
     this['units'].push(os.math.Units[unit]);
     this.scope['maxSize'][os.math.Units[unit]] = os.math.convertUnits(os.geo.MAX_LINE_LENGTH, os.math.Units[unit],
-        os.style.DEFAULT_UNITS);
+        os.style.DEFAULT_UNITS); // allow the spinner to go to the max range
+    this.scope['maxSliderSize'][os.math.Units[unit]] = os.math.convertUnits(1000, os.math.Units[unit],
+        os.math.Units.NAUTICAL_MILES); // cap the  slider at a smaller scale
   }
 
   this.scope['columnLength'] = os.style.DEFAULT_LOB_LENGTH;
