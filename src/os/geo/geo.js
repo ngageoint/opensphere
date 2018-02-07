@@ -74,7 +74,7 @@ os.geo.EPSILON = 1E-12;
  * @type {number}
  * @const
  */
-os.geo.MAX_LINE_LENGTH = 3000000;
+os.geo.MAX_LINE_LENGTH = 19000000; // meters
 
 
 /**

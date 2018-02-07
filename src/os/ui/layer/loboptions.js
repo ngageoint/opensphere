@@ -2,19 +2,27 @@ goog.provide('os.ui.layer.LobOptionsCtrl');
 goog.provide('os.ui.layer.lobOptionsDirective');
 goog.require('goog.async.Delay');
 goog.require('os.command.VectorLayerArrowSize');
+goog.require('os.command.VectorLayerArrowUnits');
 goog.require('os.command.VectorLayerBearing');
 goog.require('os.command.VectorLayerBearingError');
 goog.require('os.command.VectorLayerBearingErrorColumn');
+goog.require('os.command.VectorLayerLOBColumnLength');
 goog.require('os.command.VectorLayerLOBError');
 goog.require('os.command.VectorLayerLOBLength');
 goog.require('os.command.VectorLayerLOBLengthError');
+goog.require('os.command.VectorLayerLOBLengthErrorUnits');
+goog.require('os.command.VectorLayerLOBLengthUnits');
 goog.require('os.command.VectorLayerLOBMultiplier');
+goog.require('os.command.VectorLayerLOBType');
 goog.require('os.command.VectorLayerShowArrow');
 goog.require('os.command.VectorLayerShowEllipse');
 goog.require('os.command.VectorLayerShowError');
+goog.require('os.math.Units');
 goog.require('os.style');
 goog.require('os.ui.Module');
 goog.require('os.ui.layer.AbstractLayerUICtrl');
+goog.require('os.ui.sliderDirective');
+goog.require('os.ui.spinnerDirective');
 
 
 /**
@@ -69,6 +77,12 @@ os.ui.layer.LobOptionsCtrl = function($scope, $element) {
   this['showEllipse'] = false;
 
   /**
+   * The length type - whether to use a column or not
+   * @type {string}
+   */
+  this['lengthType'] = os.style.DEFAULT_LOB_LENGTH_TYPE;
+
+  /**
    * The column used for the length multiplier
    * @type {string}
    */
@@ -92,8 +106,37 @@ os.ui.layer.LobOptionsCtrl = function($scope, $element) {
    */
   this['bearingErrorColumn'] = '';
 
+  /**
+   * The column used for the length units
+   * @type {os.math.Units}
+   */
+  this['lengthUnits'] = os.style.DEFAULT_UNITS;
+
+  /**
+   * The column used for the arrow length units
+   * @type {os.math.Units}
+   */
+  this['arrowUnits'] = os.style.DEFAULT_UNITS;
+
+  /**
+   * The column used for the length error units
+   * @type {os.math.Units}
+   */
+  this['lengthErrorUnits'] = os.style.DEFAULT_UNITS;
+
+  /**
+   * Units for distance measurements
+   * @type {Array<os.math.Units>}
+   */
+  this['units'] = [];
+  for (var unit in os.math.Units) {
+    this['units'].push(os.math.Units[unit]);
+  }
+
+  this.scope['columnLength'] = os.style.DEFAULT_LOB_LENGTH;
   this.scope['length'] = os.style.DEFAULT_LOB_LENGTH;
   this.scope['size'] = os.style.DEFAULT_ARROW_SIZE;
+  this.scope['maxSize'] = 20000000;
   this.scope['lengthErrorMultiplier'] = os.style.DEFAULT_LOB_LENGTH_ERROR;
   this.scope['bearingErrorMultiplier'] = os.style.DEFAULT_LOB_BEARING_ERROR;
 
@@ -103,13 +146,17 @@ os.ui.layer.LobOptionsCtrl = function($scope, $element) {
    */
   this.lengthDelay_ = new goog.async.Delay(this.onLengthDelay_, 1000, this);
 
+  /**
+   * @type {goog.async.Delay}
+   * @private
+   */
+  this.columnLengthDelay_ = new goog.async.Delay(this.onColumnLengthDelay_, 1000, this);
 
   /**
    * @type {goog.async.Delay}
    * @private
    */
   this.lengthErrorDelay_ = new goog.async.Delay(this.onLengthErrorDelay_, 1000, this);
-
 
   /**
    * @type {goog.async.Delay}
@@ -129,6 +176,9 @@ os.ui.layer.LobOptionsCtrl = function($scope, $element) {
   this['helpText'] = '<p>Line of Bearing Error allows you to show a +/- error range on the line length and ' +
     'orientation with arcs. Absence of bearing error shows lines instead of arcs. Absence of length error shows a ' +
     'single arc.</p><img src="' + os.ROOT + '/images/loberror.png"></img>';
+
+  $scope.$on('length.slidestop', this.onLengthChange.bind(this));
+  $scope.$on('length.spinstop', this.onLengthChange.bind(this));
 };
 goog.inherits(os.ui.layer.LobOptionsCtrl, os.ui.layer.AbstractLayerUICtrl);
 
@@ -144,11 +194,16 @@ os.ui.layer.LobOptionsCtrl.prototype.initUI = function() {
     this['showArrow'] = this.getShowArrow_();
     this['showError'] = this.getShowError_();
     this['showEllipse'] = this.getShowEllipse_();
+    this['lengthType'] = this.getLengthType_();
     this['lengthColumn'] = this.getLengthColumn_();
+    this['lengthUnits'] = this.getLengthUnits_();
+    this['arrowUnits'] = this.getArrowUnits_();
     this['lengthErrorColumn'] = this.getLengthErrorColumn_();
+    this['lengthErrorUnits'] = this.getLengthErrorUnits_();
     this['bearingColumn'] = this.getBearingColumn_();
     this['bearingErrorColumn'] = this.getBearingErrorColumn_();
     this.scope['length'] = this.getLOBLength_();
+    this.scope['columnLength'] = this.getLOBColumnLength_();
     this.scope['size'] = this.getSize_();
     this.scope['ellipseSupport'] = this.supportsEllipse();
     this.scope['lengthErrorMultiplier'] = this.getLengthErrorMultiplier_();
@@ -219,6 +274,24 @@ os.ui.layer.LobOptionsCtrl.prototype.getLOBLength_ = function() {
 
 
 /**
+ * The lob column length
+ * @return {number}
+ * @private
+ */
+os.ui.layer.LobOptionsCtrl.prototype.getLOBColumnLength_ = function() {
+  var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
+  if (items && items.length > 0) {
+    var config = os.style.StyleManager.getInstance().getLayerConfig(items[0].getId());
+    if (config) {
+      return config[os.style.StyleField.LOB_COLUMN_LENGTH];
+    }
+  }
+
+  return os.style.DEFAULT_LOB_LENGTH;
+};
+
+
+/**
  * The lob length error multipler
  * @return {number}
  * @private
@@ -233,6 +306,24 @@ os.ui.layer.LobOptionsCtrl.prototype.getLengthErrorMultiplier_ = function() {
   }
 
   return os.style.DEFAULT_LOB_LENGTH_ERROR;
+};
+
+
+/**
+ * The lob length error units
+ * @return {string}
+ * @private
+ */
+os.ui.layer.LobOptionsCtrl.prototype.getLengthErrorUnits_ = function() {
+  var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
+  if (items && items.length > 0) {
+    var config = os.style.StyleManager.getInstance().getLayerConfig(items[0].getId());
+    if (config) {
+      return config[os.style.StyleField.LOB_LENGTH_ERROR_UNITS];
+    }
+  }
+
+  return os.style.DEFAULT_UNITS;
 };
 
 
@@ -255,6 +346,24 @@ os.ui.layer.LobOptionsCtrl.prototype.getBearingErrorMultiplier_ = function() {
 
 
 /**
+ * The type for the lob length
+ * @return {string}
+ * @private
+ */
+os.ui.layer.LobOptionsCtrl.prototype.getLengthType_ = function() {
+  var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
+  if (items && items.length > 0) {
+    var config = os.style.StyleManager.getInstance().getLayerConfig(items[0].getId());
+    if (config) {
+      return config[os.style.StyleField.LOB_LENGTH_TYPE];
+    }
+  }
+
+  return os.style.DEFAULT_LOB_LENGTH_TYPE;
+};
+
+
+/**
  * The column for the lob length multiplier
  * @return {string}
  * @private
@@ -269,6 +378,24 @@ os.ui.layer.LobOptionsCtrl.prototype.getLengthColumn_ = function() {
   }
 
   return '';
+};
+
+
+/**
+ * The column for the lob length units
+ * @return {string}
+ * @private
+ */
+os.ui.layer.LobOptionsCtrl.prototype.getLengthUnits_ = function() {
+  var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
+  if (items && items.length > 0) {
+    var config = os.style.StyleManager.getInstance().getLayerConfig(items[0].getId());
+    if (config) {
+      return config[os.style.StyleField.LOB_LENGTH_UNITS];
+    }
+  }
+
+  return os.style.DEFAULT_UNITS;
 };
 
 
@@ -341,6 +468,24 @@ os.ui.layer.LobOptionsCtrl.prototype.getShowArrow_ = function() {
   }
 
   return false;
+};
+
+
+/**
+ * The column for the lob length units
+ * @return {string}
+ * @private
+ */
+os.ui.layer.LobOptionsCtrl.prototype.getArrowUnits_ = function() {
+  var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
+  if (items && items.length > 0) {
+    var config = os.style.StyleManager.getInstance().getLayerConfig(items[0].getId());
+    if (config) {
+      return config[os.style.StyleField.ARROW_UNITS];
+    }
+  }
+
+  return os.style.DEFAULT_UNITS;
 };
 
 
@@ -529,6 +674,41 @@ os.ui.layer.LobOptionsCtrl.prototype.onLengthDelay_ = function() {
 
 
 /**
+ * Handles changes to lob column length
+ * @param {angular.Scope.Event} event
+ * @param {number} value
+ * @protected
+ */
+os.ui.layer.LobOptionsCtrl.prototype.onColumnLengthChange = function(event, value) {
+  if (!this.isDisposed()) {
+    this.columnLengthDelay_.start();
+  }
+};
+goog.exportProperty(
+    os.ui.layer.LobOptionsCtrl.prototype,
+    'onColumnLengthChange',
+    os.ui.layer.LobOptionsCtrl.prototype.onColumnLengthChange);
+
+
+/**
+ * Actually creates the command after the lob length delay fires
+ * @private
+ */
+os.ui.layer.LobOptionsCtrl.prototype.onColumnLengthDelay_ = function() {
+  var fn = goog.bind(
+      /**
+       * @param {os.layer.ILayer} layer
+       * @return {os.command.ICommand}
+       */
+      function(layer) {
+        return new os.command.VectorLayerLOBColumnLength(layer.getId(), this.scope['columnLength']);
+      }, this);
+
+  this.createCommand(fn);
+};
+
+
+/**
  * Handles changes to bearing error multiplier
  * @param {angular.Scope.Event} event
  * @param {number} value
@@ -646,14 +826,14 @@ goog.exportProperty(
  * Handles column changes to the bearing
  * @protected
  */
-os.ui.layer.LobOptionsCtrl.prototype.onBearingColumnChange = function() {
+os.ui.layer.LobOptionsCtrl.prototype.onLengthTypeChange = function() {
   var fn = goog.bind(
       /**
        * @param {os.layer.ILayer} layer
        * @return {os.command.ICommand}
        */
       function(layer) {
-        return new os.command.VectorLayerBearing(layer.getId(), this['bearingColumn']);
+        return new os.command.VectorLayerLOBType(layer.getId(), this['lengthType']);
       }, this);
 
   this.createCommand(fn);
@@ -661,7 +841,29 @@ os.ui.layer.LobOptionsCtrl.prototype.onBearingColumnChange = function() {
 goog.exportProperty(
     os.ui.layer.LobOptionsCtrl.prototype,
     'onBearingColumnChange',
-    os.ui.layer.LobOptionsCtrl.prototype.onBearingColumnChange);
+    os.ui.layer.LobOptionsCtrl.prototype.onLengthTypeChange);
+
+
+/**
+ * Handles changes to the length type
+ * @protected
+ */
+os.ui.layer.LobOptionsCtrl.prototype.onLengthTypeChange = function() {
+  var fn = goog.bind(
+      /**
+       * @param {os.layer.ILayer} layer
+       * @return {os.command.ICommand}
+       */
+      function(layer) {
+        return new os.command.VectorLayerLOBType(layer.getId(), this['lengthType']);
+      }, this);
+
+  this.createCommand(fn);
+};
+goog.exportProperty(
+    os.ui.layer.LobOptionsCtrl.prototype,
+    'onLengthTypeChange',
+    os.ui.layer.LobOptionsCtrl.prototype.onLengthTypeChange);
 
 
 /**
@@ -684,3 +886,69 @@ goog.exportProperty(
     os.ui.layer.LobOptionsCtrl.prototype,
     'onBearingErrorColumnChange',
     os.ui.layer.LobOptionsCtrl.prototype.onBearingErrorColumnChange);
+
+
+/**
+ * Handles length unit changes
+ * @protected
+ */
+os.ui.layer.LobOptionsCtrl.prototype.onLengthUnitChange = function() {
+  var fn = goog.bind(
+      /**
+       * @param {os.layer.ILayer} layer
+       * @return {os.command.ICommand}
+       */
+      function(layer) {
+        return new os.command.VectorLayerLOBLengthUnits(layer.getId(), this['lengthUnits']);
+      }, this);
+
+  this.createCommand(fn);
+};
+goog.exportProperty(
+    os.ui.layer.LobOptionsCtrl.prototype,
+    'onLengthUnitChange',
+    os.ui.layer.LobOptionsCtrl.prototype.onLengthUnitChange);
+
+
+/**
+ * Handles arrow unit changes
+ * @protected
+ */
+os.ui.layer.LobOptionsCtrl.prototype.onArrowUnitChange = function() {
+  var fn = goog.bind(
+      /**
+       * @param {os.layer.ILayer} layer
+       * @return {os.command.ICommand}
+       */
+      function(layer) {
+        return new os.command.VectorLayerArrowUnits(layer.getId(), this['arrowUnits']);
+      }, this);
+
+  this.createCommand(fn);
+};
+goog.exportProperty(
+    os.ui.layer.LobOptionsCtrl.prototype,
+    'onArrowUnitChange',
+    os.ui.layer.LobOptionsCtrl.prototype.onArrowUnitChange);
+
+
+/**
+ * Handles length error unit changes
+ * @protected
+ */
+os.ui.layer.LobOptionsCtrl.prototype.onLengthErrorUnitChange = function() {
+  var fn = goog.bind(
+      /**
+       * @param {os.layer.ILayer} layer
+       * @return {os.command.ICommand}
+       */
+      function(layer) {
+        return new os.command.VectorLayerLOBLengthErrorUnits(layer.getId(), this['lengthErrorUnits']);
+      }, this);
+
+  this.createCommand(fn);
+};
+goog.exportProperty(
+    os.ui.layer.LobOptionsCtrl.prototype,
+    'onLengthErrorUnitChange',
+    os.ui.layer.LobOptionsCtrl.prototype.onLengthErrorUnitChange);
