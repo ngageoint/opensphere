@@ -833,7 +833,7 @@ os.ui.layer.LobOptionsCtrl.prototype.onLengthTypeChange = function() {
        * @return {os.command.ICommand}
        */
       function(layer) {
-        return new os.command.VectorLayerLOBType(layer.getId(), this['lengthType']);
+        return new os.command.VectorLayerBearing(layer.getId(), this['lengthType']);
       }, this);
 
   this.createCommand(fn);
