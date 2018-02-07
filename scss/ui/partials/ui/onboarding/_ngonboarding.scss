@@ -3,7 +3,7 @@
   z-index: 100001;
   text-align: left;
   white-space: normal;
-  background-color: #ffffff;
+  background-color: #fff;
   border-radius: 4px;
   -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
@@ -63,7 +63,7 @@
   top: -11px;
   left: 50%;
   margin-left: -11px;
-  border-bottom-color: #cccccc;
+  border-bottom-color: #ccc;
   border-top-width: 0;
 }
 
@@ -72,14 +72,14 @@
   top: 1px;
   margin-left: -10px;
   border-top-width: 0;
-  border-bottom-color: #ffffff;
+  border-bottom-color: #fff;
 }
 
 .onboarding-popover.onboarding-top .onboarding-arrow {
   bottom: -11px;
   left: 50%;
   margin-left: -11px;
-  border-top-color: #cccccc;
+  border-top-color: #ccc;
   border-bottom-width: 0;
 }
 
@@ -88,14 +88,14 @@
   bottom: 1px;
   margin-left: -10px;
   border-bottom-width: 0;
-  border-top-color: #ffffff;
+  border-top-color: #fff;
 }
 
 .onboarding-popover.onboarding-left .onboarding-arrow {
   top: 50%;
   right: -11px;
   margin-top: -11px;
-  border-left-color: #cccccc;
+  border-left-color: #ccc;
   border-right-width: 0;
 }
 
@@ -103,7 +103,7 @@
   content: " ";
   right: 1px;
   border-right-width: 0;
-  border-left-color: #ffffff;
+  border-left-color: #fff;
   bottom: -10px;
 }
 
@@ -111,7 +111,7 @@
   top: 50%;
   left: -11px;
   margin-top: -11px;
-  border-right-color: #cccccc;
+  border-right-color: #ccc;
   border-left-width: 0;
 }
 
@@ -120,7 +120,7 @@
   left: 1px;
   bottom: -10px;
   border-left-width: 0;
-  border-right-color: #ffffff;
+  border-right-color: #fff;
 }
 
 .onboarding-popover-title {
@@ -130,7 +130,7 @@
   font-size: 14px;
   font-weight: bold;
   line-height: 18px;
-  background-color: #ffffff;
+  background-color: #fff;
   border-bottom: 1px solid #ebebeb;
   border-radius: 5px 5px 0 0;
 }
@@ -180,7 +180,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: #000000;
+  background-color: #000;
 }
 
 .onboarding-focus {
