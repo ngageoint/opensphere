@@ -323,10 +323,7 @@ os.structs.TreeNode.prototype.removeChildInternal = function(index) {
 
 
 /**
- * Does a depth-first search for the first item which matches the given field/value combination.
- * @param {string} field
- * @param {*} value
- * @return {?os.structs.ITreeNode}
+ * @inheritDoc
  */
 os.structs.TreeNode.prototype.find = function(field, value) {
   if (field in this && this[field] == value) {
@@ -385,9 +382,7 @@ os.structs.TreeNode.prototype.onChildChange = function(e) {
 
 
 /**
- * Clone is really only intended for handling leaf nodes in multiple categories. Therefore,
- * the children of a node are not cloned.
- * @return {!os.structs.ITreeNode} The cloned node
+ * @inheritDoc
  */
 os.structs.TreeNode.prototype.clone = function() {
   var other = new this.constructor();

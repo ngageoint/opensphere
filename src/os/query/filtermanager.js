@@ -32,7 +32,7 @@ goog.object.extend(os.ui.filter.FilterManager, {
 
 
 /**
- * Loads the filter data
+ * @inheritDoc
  */
 os.query.FilterManager.prototype.load = function() {
   var obj = os.settings.get(os.FILTER_STORAGE_KEY);

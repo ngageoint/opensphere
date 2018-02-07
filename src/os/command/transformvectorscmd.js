@@ -28,8 +28,7 @@ os.command.TransformVectors = function(source, target) {
 
 
 /**
- * The current state of the command
- * @type {!os.command.State}
+ * @inheritDoc
  */
 os.command.TransformVectors.prototype.state = os.command.State.READY;
 

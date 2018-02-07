@@ -415,12 +415,6 @@ os.layer.Terrain.prototype.getLayerVisible = function() {
 /**
  * @inheritDoc
  */
-os.layer.Terrain.prototype.setLayerVisible = function(value) {};
-
-
-/**
- * @inheritDoc
- */
 os.layer.Terrain.prototype.setBaseVisible = function(value) {};
 
 
@@ -555,6 +549,9 @@ os.layer.Terrain.prototype.getLayerStatesArray = function() {
 };
 
 
+/**
+ * @inheritDoc
+ */
 os.layer.Terrain.prototype.setLayerVisible = function(value) {
   // turn the terrain off but leave the descriptor on
   os.MapContainer.getInstance().showTerrain(value);

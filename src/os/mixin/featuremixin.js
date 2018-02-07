@@ -93,9 +93,7 @@ ol.Feature.prototype.getStyleFn = function(resolution) {
 
 
 /**
- * Disable events on features by default to reduce event overhead while parsing data.
- * @type {boolean}
- * @protected
+ * @inheritDoc
  */
 ol.Feature.prototype.eventsEnabled = false;
 

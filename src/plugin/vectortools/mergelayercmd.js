@@ -54,6 +54,7 @@ plugin.vectortools.MergeLayer = function(sourceIds, opt_name, opt_options) {
 
 /**
  * The current state of the command
+ * @override
  * @type {!os.command.State}
  */
 plugin.vectortools.MergeLayer.prototype.state = os.command.State.READY;

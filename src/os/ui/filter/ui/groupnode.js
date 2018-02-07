@@ -89,11 +89,7 @@ os.ui.filter.ui.GroupNode.prototype.updateFrom = function(other) {
 
 
 /**
- * Formats the node
- * @param {number} row The row number
- * @param {number} cell The cell number
- * @param {string} value The value of the cell
- * @return {string} An HTML string for the cell
+ * @inheritDoc
  */
 os.ui.filter.ui.GroupNode.prototype.format = function(row, cell, value) {
   var html = this.getSpacer(19 * this.depth);

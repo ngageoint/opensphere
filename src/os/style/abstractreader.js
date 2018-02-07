@@ -35,16 +35,13 @@ os.style.AbstractReader = function() {
 
 
 /**
- * Get a style from the cache, or create a new one and add it to the cache.
- * @param {Object<string, *>} config The style configuration
- * @return {T}
+ * @inheritDoc
  */
 os.style.AbstractReader.prototype.getOrCreateStyle = goog.abstractMethod;
 
 
 /**
- * Sets reader map
- * @param {!Object<string, os.style.IStyleReader>} readers
+ * @inheritDoc
  */
 os.style.AbstractReader.prototype.setReaders = function(readers) {
   this.readers = readers;

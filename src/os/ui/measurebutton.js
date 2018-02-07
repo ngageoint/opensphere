@@ -104,6 +104,7 @@ os.ui.MeasureButtonCtrl.MEASURE = new os.ui.menu.Menu(new os.ui.menu.MenuItem({
 
 /**
  * @param {boolean=} opt_value The toggle value
+ * @override
  */
 os.ui.MeasureButtonCtrl.prototype.toggle = function(opt_value) {
   var measure = this.getMeasureInteraction_();

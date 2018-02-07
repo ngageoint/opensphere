@@ -150,7 +150,7 @@ os.ui.ol.interaction.AbstractDraw.prototype.getGeometry = goog.abstractMethod;
 
 
 /**
- * @return {?Object<string, *>} The properties associated with the geometry
+ * @inheritDoc
  */
 os.ui.ol.interaction.AbstractDraw.prototype.getProperties = function() {
   return null;
@@ -201,8 +201,7 @@ os.ui.ol.interaction.AbstractDraw.prototype.setActive = function(active) {
 
 
 /**
- * @param {ol.MapBrowserEvent} mapBrowserEvent
- * @return {boolean} `false` to stop event propagation
+ * @inheritDoc
  */
 os.ui.ol.interaction.AbstractDraw.prototype.handleEvent = function(mapBrowserEvent) {
   var stopEvent = false;

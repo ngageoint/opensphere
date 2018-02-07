@@ -89,9 +89,7 @@ plugin.arc.source.ArcRequestSource.prototype.abortRequest = function() {
 
 
 /**
- * Request success handler.
- * @param {goog.events.Event} event
- * @protected
+ * @inheritDoc
  */
 plugin.arc.source.ArcRequestSource.prototype.onRequestComplete = function(event) {
   var msg = 'Request complete for ' + this.getTitle();

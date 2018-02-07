@@ -102,6 +102,7 @@ moment.prototype.toISOString = function() {};
 
 /**
  * @return {Object}
+ * @override
  */
 moment.prototype.toJSON = function() {};
 

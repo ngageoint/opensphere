@@ -88,7 +88,7 @@ goog.inherits(os.ui.state.StateExportCtrl, os.ui.state.AbstractStateFormCtrl);
 
 
 /**
- * Save the state
+ * @inheritDoc
  */
 os.ui.state.StateExportCtrl.prototype.accept = function() {
   var method = this['persister'] || null;
