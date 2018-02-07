@@ -194,7 +194,7 @@ plugin.places.menu.mapSetup = function() {
         label: 'Save to Places...',
         eventType: plugin.places.menu.EventType.SAVE_TO,
         tooltip: 'Creates a new saved place from this location',
-        icons: ['<i class="fa fa-w ' + plugin.places.ICON + '"></i>'],
+        icons: ['<i class="fa fa-fw ' + plugin.places.ICON + '"></i>'],
         handler: plugin.places.menu.saveCoordinateToPlaces
       });
     }
