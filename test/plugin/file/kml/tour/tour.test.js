@@ -96,7 +96,7 @@ describe('plugin.file.kml.tour.Tour', function() {
     });
 
     waitsFor(function() {
-      return tour.playlistIndex_ === 2;
+      return tour.playlistIndex_ === 2 && tour.currentPromise_ !== undefined;
     }, 'tour to continue playing');
 
     runs(function() {
@@ -211,7 +211,7 @@ describe('plugin.file.kml.tour.Tour', function() {
 
     waitsFor(function() {
       // wait until execution is waiting on the third item
-      return tour.playlistIndex_ === 2;
+      return tour.playlistIndex_ === 2 && tour.currentPromise_ !== undefined;
     }, 'tour to continue playing');
 
     runs(function() {

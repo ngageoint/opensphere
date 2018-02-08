@@ -7,7 +7,7 @@ goog.require('plugin.file.kml.tour.parseTour');
 
 describe('plugin.file.kml.tour.parseTour', function() {
   // match opening/closing tags for a KML tour element, with a trailing space (has attributes) or GT (no attributes)
-  var tourElRegexp = /(<\/?)(Tour|Playlist|FlyTo|TourControl|Wait|duration|flyToMode)([ >])/g;
+  var tourElRegexp = /(<\/?)(Tour|Playlist|FlyTo|SoundCue|TourControl|Wait|delayedStart|duration|flyToMode)([ >])/g;
 
   /**
    * Prefix KML tour element names.
@@ -193,6 +193,31 @@ describe('plugin.file.kml.tour.parseTour', function() {
         // tilt converted to Cesium pitch
         expect(flyTo.options_.tilt).toBeUndefined();
         expect(flyTo.options_.pitch).toBe(42 - 90);
+      });
+
+      it('parses a ' + namespace + 'SoundCue element', function() {
+        var href = 'https://test.com/test.mp3';
+        var delayedStart = 10;
+        var text =
+            '<Tour>' +
+            '  <name>Test Tour</name>' +
+            '  <description>Test Tour Description</description>' +
+            '  <Playlist>' +
+            '    <SoundCue>' +
+            '      <href>' + href + '</href>' +
+            '      <delayedStart>' + delayedStart + '</delayedStart>' +
+            '    </SoundCue>' +
+            '  </Playlist>' +
+            '</Tour>';
+
+        var tour = plugin.file.kml.tour.parseTour(getTourNode(text));
+        expect(tour).toBeDefined();
+
+        var playlist = tour.getPlaylist();
+        expect(playlist.length).toBe(1);
+        expect(playlist[0] instanceof plugin.file.kml.tour.SoundCue).toBe(true);
+        expect(playlist[0].href_).toBe(href);
+        expect(playlist[0].delayedStart_).toBe(delayedStart);
       });
 
       it('parses a ' + namespace + 'TourControl element', function() {

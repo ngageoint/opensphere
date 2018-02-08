@@ -1,16 +1,18 @@
 goog.provide('plugin.file.kml.tour.Wait');
 
 goog.require('goog.Promise');
-goog.require('plugin.file.kml.tour.ITourPrimitive');
+goog.require('plugin.file.kml.tour.AbstractTourPrimitive');
 
 
 /**
  * Holds the camera still for a specified amount of time.
  * @param {number} duration How long to wait, in milliseconds.
- * @implements {plugin.file.kml.tour.ITourPrimitive}
+ * @extends {plugin.file.kml.tour.AbstractTourPrimitive}
  * @constructor
  */
 plugin.file.kml.tour.Wait = function(duration) {
+  plugin.file.kml.tour.Wait.base(this, 'constructor');
+
   /**
    * The wait duration, in milliseconds.
    * @type {number}
@@ -39,6 +41,7 @@ plugin.file.kml.tour.Wait = function(duration) {
    */
   this.timeoutId_ = undefined;
 };
+goog.inherits(plugin.file.kml.tour.Wait, plugin.file.kml.tour.AbstractTourPrimitive);
 
 
 /**

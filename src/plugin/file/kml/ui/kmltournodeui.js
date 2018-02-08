@@ -3,6 +3,7 @@ goog.provide('plugin.file.kml.ui.kmlTourNodeUIDirective');
 
 goog.require('os.ui.Module');
 goog.require('os.ui.slick.AbstractNodeUICtrl');
+goog.require('plugin.file.kml.tour.EventType');
 
 
 /**
@@ -44,8 +45,32 @@ os.ui.Module.directive('kmltournodeui', [plugin.file.kml.ui.kmlTourNodeUIDirecti
  */
 plugin.file.kml.ui.KMLTourNodeUICtrl = function($scope, $element) {
   plugin.file.kml.ui.KMLTourNodeUICtrl.base(this, 'constructor', $scope, $element);
+
+  /**
+   * The KML tour.
+   * @type {plugin.file.kml.tour.Tour|undefined}
+   * @private
+   */
+  this.tour_ = this.getTour();
+
+  if (this.tour_) {
+    this.tour_.listen(plugin.file.kml.tour.EventType.PLAYING, this.onTourEvent, false, this);
+  }
 };
 goog.inherits(plugin.file.kml.ui.KMLTourNodeUICtrl, os.ui.slick.AbstractNodeUICtrl);
+
+
+/**
+ * @inheritDoc
+ */
+plugin.file.kml.ui.KMLTourNodeUICtrl.prototype.destroy = function() {
+  plugin.file.kml.ui.KMLTourNodeUICtrl.base(this, 'destroy');
+
+  if (this.tour_) {
+    this.tour_.unlisten(plugin.file.kml.tour.EventType.PLAYING, this.onTourEvent, false, this);
+    this.tour_ = undefined;
+  }
+};
 
 
 /**
@@ -64,12 +89,21 @@ plugin.file.kml.ui.KMLTourNodeUICtrl.prototype.getTour = function() {
 
 
 /**
+ * Handle events from the KML tour.
+ * @param {!goog.events.Event} event The event.
+ * @protected
+ */
+plugin.file.kml.ui.KMLTourNodeUICtrl.prototype.onTourEvent = function(event) {
+  os.ui.apply(this.scope);
+};
+
+
+/**
  * If the tour is playing.
  * @return {boolean}
  */
 plugin.file.kml.ui.KMLTourNodeUICtrl.prototype.isPlaying = function() {
-  var tour = this.getTour();
-  return tour != null && tour['playing'];
+  return this.tour_ != null && this.tour_['playing'];
 };
 goog.exportProperty(
     plugin.file.kml.ui.KMLTourNodeUICtrl.prototype,
@@ -78,12 +112,23 @@ goog.exportProperty(
 
 
 /**
+ * @inheritDoc
+ */
+plugin.file.kml.ui.KMLTourNodeUICtrl.prototype.show = function() {
+  return plugin.file.kml.ui.KMLTourNodeUICtrl.base(this, 'show') || this.isPlaying();
+};
+goog.exportProperty(
+    plugin.file.kml.ui.KMLTourNodeUICtrl.prototype,
+    'show',
+    plugin.file.kml.ui.KMLTourNodeUICtrl.prototype.show);
+
+
+/**
  * Play the tour.
  */
 plugin.file.kml.ui.KMLTourNodeUICtrl.prototype.play = function() {
-  var tour = this.getTour();
-  if (tour) {
-    tour.play();
+  if (this.tour_) {
+    this.tour_.play();
   }
 };
 goog.exportProperty(
@@ -96,9 +141,8 @@ goog.exportProperty(
  * Pause the tour.
  */
 plugin.file.kml.ui.KMLTourNodeUICtrl.prototype.pause = function() {
-  var tour = this.getTour();
-  if (tour) {
-    tour.pause();
+  if (this.tour_) {
+    this.tour_.pause();
   }
 };
 goog.exportProperty(
@@ -111,9 +155,8 @@ goog.exportProperty(
  * Reset the tour.
  */
 plugin.file.kml.ui.KMLTourNodeUICtrl.prototype.reset = function() {
-  var tour = this.getTour();
-  if (tour) {
-    tour.reset();
+  if (this.tour_) {
+    this.tour_.reset();
   }
 };
 goog.exportProperty(

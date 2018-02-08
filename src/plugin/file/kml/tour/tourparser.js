@@ -8,6 +8,7 @@ goog.require('ol.format.KML');
 goog.require('ol.format.XSD');
 goog.require('ol.xml');
 goog.require('plugin.file.kml.tour.FlyTo');
+goog.require('plugin.file.kml.tour.SoundCue');
 goog.require('plugin.file.kml.tour.Tour');
 goog.require('plugin.file.kml.tour.TourControl');
 goog.require('plugin.file.kml.tour.Wait');
@@ -134,6 +135,25 @@ plugin.file.kml.tour.parseLookAt_ = function(node, objectStack) {
 
 
 /**
+ * Parses a tour SoundCue element.
+ * @param {Node} node Node.
+ * @param {Array<*>} objectStack Object stack.
+ * @return {plugin.file.kml.tour.SoundCue|undefined}
+ * @private
+ */
+plugin.file.kml.tour.parseSoundCue_ = function(node, objectStack) {
+  var soundCue;
+  var soundCueOptions = ol.xml.pushParseAndPop({}, plugin.file.kml.tour.SOUNDCUE_PARSERS_, node, objectStack);
+  if (soundCueOptions['href']) {
+    var href = /** @type {string} */ (soundCueOptions['href']);
+    var delayedStart = /** @type {number|undefined} */ (soundCueOptions['delayedStart']);
+    soundCue = new plugin.file.kml.tour.SoundCue(href, delayedStart);
+  }
+  return soundCue;
+};
+
+
+/**
  * Parses a tour TourControl element.
  * @param {Node} node Node.
  * @param {Array<*>} objectStack Object stack.
@@ -189,6 +209,7 @@ plugin.file.kml.tour.TOUR_PARSERS_ = ol.xml.makeStructureNS(
 plugin.file.kml.tour.PLAYLIST_PARSERS_ = ol.xml.makeStructureNS(
     plugin.file.kml.tour.NAMESPACE_URIS_, {
       'FlyTo': ol.xml.makeArrayPusher(plugin.file.kml.tour.parseFlyTo_),
+      'SoundCue': ol.xml.makeArrayPusher(plugin.file.kml.tour.parseSoundCue_),
       'TourControl': ol.xml.makeArrayPusher(plugin.file.kml.tour.parseTourControl_),
       'Wait': ol.xml.makeArrayPusher(plugin.file.kml.tour.parseWait_)
     });
@@ -242,6 +263,19 @@ plugin.file.kml.tour.LOOKAT_PARSERS_ = ol.xml.makeStructureNS(
       'tilt': ol.xml.makeObjectPropertySetter(ol.format.XSD.readDecimal),
       'range': ol.xml.makeObjectPropertySetter(ol.format.XSD.readDecimal),
       'altitudeMode': ol.xml.makeObjectPropertySetter(ol.format.XSD.readString)
+    });
+
+
+/**
+ * Parsers for a KML SoundCue element.
+ * @type {Object<string, Object<string, ol.XmlParser>>}
+ * @private
+ * @const
+ */
+plugin.file.kml.tour.SOUNDCUE_PARSERS_ = ol.xml.makeStructureNS(
+    plugin.file.kml.tour.NAMESPACE_URIS_, {
+      'href': ol.xml.makeObjectPropertySetter(ol.format.XSD.readString),
+      'delayedStart': ol.xml.makeObjectPropertySetter(ol.format.XSD.readDecimal)
     });
 
 

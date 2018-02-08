@@ -1,15 +1,17 @@
 goog.provide('plugin.file.kml.tour.MockTourPrimitive');
 
-goog.require('plugin.file.kml.tour.ITourPrimitive');
+goog.require('plugin.file.kml.tour.AbstractTourPrimitive');
 
 
 /**
  * Mock tour primitive.
  * @param {boolean=} opt_waitForResolve If the execute function should wait to resolve the promise.
- * @implements {plugin.file.kml.tour.ITourPrimitive}
+ * @extends {plugin.file.kml.tour.AbstractTourPrimitive}
  * @constructor
  */
 plugin.file.kml.tour.MockTourPrimitive = function(opt_waitForResolve) {
+  plugin.file.kml.tour.MockTourPrimitive.base(this, 'constructor');
+
   /**
    * How many times the pause function was called.
    * @type {number}
@@ -40,6 +42,7 @@ plugin.file.kml.tour.MockTourPrimitive = function(opt_waitForResolve) {
    */
   this.resolver = undefined;
 };
+goog.inherits(plugin.file.kml.tour.MockTourPrimitive, plugin.file.kml.tour.AbstractTourPrimitive);
 
 
 /**

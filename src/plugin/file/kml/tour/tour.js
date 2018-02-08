@@ -1,6 +1,8 @@
+goog.provide('plugin.file.kml.tour.EventType');
 goog.provide('plugin.file.kml.tour.Tour');
 
 goog.require('goog.async.nextTick');
+goog.require('goog.events.EventTarget');
 
 
 /**
@@ -16,10 +18,13 @@ plugin.file.kml.tour.EventType = {
  * Represents a KML tour, from a `gx:Tour` (KML 2.2) or `Tour` (KML 2.3) element.
  * @param {string=} opt_name The name of the tour.
  * @param {string=} opt_description The tour description.
- * @param {Array<!plugin.file.kml.tour.ITourPrimitive>=} opt_playlist The tour playlist.
+ * @param {Array<!plugin.file.kml.tour.AbstractTourPrimitive>=} opt_playlist The tour playlist.
+ * @extends {goog.events.EventTarget}
  * @constructor
  */
 plugin.file.kml.tour.Tour = function(opt_name, opt_description, opt_playlist) {
+  plugin.file.kml.tour.Tour.base(this, 'constructor');
+
   /**
    * The name of the tour.
    * @type {string}
@@ -46,7 +51,7 @@ plugin.file.kml.tour.Tour = function(opt_name, opt_description, opt_playlist) {
 
   /**
    * The tour playlist.
-   * @type {!Array<!plugin.file.kml.tour.ITourPrimitive>}
+   * @type {!Array<!plugin.file.kml.tour.AbstractTourPrimitive>}
    * @private
    */
   this.playlist_ = opt_playlist || [];
@@ -65,11 +70,12 @@ plugin.file.kml.tour.Tour = function(opt_name, opt_description, opt_playlist) {
    */
   this.currentPromise_ = undefined;
 };
+goog.inherits(plugin.file.kml.tour.Tour, goog.events.EventTarget);
 
 
 /**
  * Get the tour playlist.
- * @return {!Array<!plugin.file.kml.tour.ITourPrimitive>}
+ * @return {!Array<!plugin.file.kml.tour.AbstractTourPrimitive>}
  */
 plugin.file.kml.tour.Tour.prototype.getPlaylist = function() {
   return this.playlist_;
@@ -78,7 +84,7 @@ plugin.file.kml.tour.Tour.prototype.getPlaylist = function() {
 
 /**
  * Set the tour playlist.
- * @param {!Array<!plugin.file.kml.tour.ITourPrimitive>} value The tour playlist.
+ * @param {!Array<!plugin.file.kml.tour.AbstractTourPrimitive>} value The tour playlist.
  */
 plugin.file.kml.tour.Tour.prototype.setPlaylist = function(value) {
   this.playlist_ = value;
@@ -88,11 +94,23 @@ plugin.file.kml.tour.Tour.prototype.setPlaylist = function(value) {
 
 /**
  * Add a tour primitive to the playlist.
- * @param {!plugin.file.kml.tour.ITourPrimitive} value The tour playlist.
+ * @param {!plugin.file.kml.tour.AbstractTourPrimitive} value The tour playlist.
  */
 plugin.file.kml.tour.Tour.prototype.addToPlaylist = function(value) {
   this.playlist_.push(value);
   this.reset();
+};
+
+
+/**
+ * Set if the tour is playing.
+ * @param {boolean} value If the tour is playing.
+ */
+plugin.file.kml.tour.Tour.prototype.setPlaying = function(value) {
+  if (this['playing'] !== value) {
+    this['playing'] = value;
+    this.dispatchEvent(plugin.file.kml.tour.EventType.PLAYING);
+  }
 };
 
 
@@ -107,7 +125,17 @@ plugin.file.kml.tour.Tour.prototype.play = function() {
     // wait until the stack clears (so the active promise can be cancelled), then play the tour
     goog.async.nextTick(this.play, this);
   } else {
-    this['playing'] = true;
+    this.setPlaying(true);
+
+    // execute any asynchronous tour primitives
+    for (var i = 0; i < this.playlistIndex_; i++) {
+      var item = this.playlist_[i];
+      if (item && item.isAsync) {
+        item.execute();
+      }
+    }
+
+    // execute the next primitive
     this.playNext_();
   }
 };
@@ -117,7 +145,7 @@ plugin.file.kml.tour.Tour.prototype.play = function() {
  * Pause the tour.
  */
 plugin.file.kml.tour.Tour.prototype.pause = function() {
-  this['playing'] = false;
+  this.setPlaying(false);
 
   if (this.currentPromise_) {
     this.currentPromise_.cancel();
@@ -136,7 +164,7 @@ plugin.file.kml.tour.Tour.prototype.pause = function() {
 plugin.file.kml.tour.Tour.prototype.reset = function() {
   // reset the tour to start from the beginning
   this.playlistIndex_ = 0;
-  this['playing'] = false;
+  this.setPlaying(false);
 
   if (this.currentPromise_) {
     this.currentPromise_.cancel();
