@@ -682,7 +682,7 @@ os.MainCtrl.prototype.handleKeyEvent_ = function(event) {
   var target = /** @type {Element} */ (event.target);
   var ctrlOr = os.isOSX() ? event.metaKey : event.ctrlKey;
 
-  if (!document.querySelector('.modal-backdrop')) {
+  if (!document.querySelector(os.ui.MODAL_SELECTOR)) {
     if (target.tagName !== goog.dom.TagName.INPUT.toString() &&
         target.tagName !== goog.dom.TagName.TEXTAREA.toString()) {
       switch (event.keyCode) {
