@@ -264,34 +264,33 @@ os.olcs.ImageryProvider.resolver = function(filterFns, deferred, image) {
  * @return {?Cesium.Credit}
  */
 os.olcs.ImageryProvider.createCreditForSource = function(source) {
-  var text = '';
+  var creditOptions = /** @type {Cesium.CreditOptions} */ ({});
+  creditOptions.text = '';
   var attributions = source.getAttributions();
   if (!goog.isNull(attributions)) {
     goog.array.forEach(attributions, function(el, i, arr) {
       // strip html tags (not supported in Cesium)
-      text += el.getHTML().replace(/<\/?[^>]+(>|$)/g, '') + ' ';
+      creditOptions.text += el.getHTML().replace(/<\/?[^>]+(>|$)/g, '') + ' ';
     });
   }
 
-  var imageUrl;
-  var link;
-  if (text.length == 0) {
+  if (creditOptions.text.length == 0) {
     // only use logo if no text is specified
     // otherwise the Cesium will automatically skip the text:
     // "The text to be displayed on the screen if no imageUrl is specified."
     var logo = source.getLogo();
     if (goog.isDef(logo)) {
       if (goog.isString(logo)) {
-        imageUrl = logo;
+        creditOptions.imageUrl = logo;
       } else {
-        imageUrl = logo.src;
-        link = logo.href;
+        creditOptions.imageUrl = logo.src;
+        creditOptions.link = logo.href;
       }
     }
   }
 
-  return (goog.isDef(imageUrl) || text.length > 0) ?
-         new Cesium.Credit(text, imageUrl, link) : null;
+  return (goog.isDef(creditOptions.imageUrl) || creditOptions.text.length > 0) ?
+         new Cesium.Credit(creditOptions) : null;
 };
 
 
