@@ -392,38 +392,39 @@ os.feature.createLineOfBearing = function(feature, opt_replace, opt_lobOpts) {
         if (goog.isNull(lengthError) || isNaN(lengthError)) {
           lengthError = 1;
         }
-        var cLengthError = os.math.convertUnits(lengthError, os.style.DEFAULT_UNITS, lengthErrorUnits);
+        var cLengthError = os.math.convertUnits(lengthError, os.style.DEFAULT_UNITS, lengthErrorUnits) *
+          lengthErrorMultiplier;
         if (bearingError > 0 && bearingErrorMultiplier > 0) {
-          var plusPts = os.geo.interpolateArc(center, (length + cLengthError * lengthErrorMultiplier) * multiplier,
-              Math.min(bearingError * bearingErrorMultiplier * 2, 360), endBearing);
+          var plusPts = os.geo.interpolateArc(center, effectiveLength + cLengthError,
+              Math.min(bearingError * bearingErrorMultiplier * 2, 360), bearing);
           plusArc = new ol.geom.LineString(plusPts, ol.geom.GeometryLayout.XYZM);
           plusArc = os.geo.splitOnDateLine(plusArc);
           plusArc.set(os.geom.GeometryField.NORMALIZED, true);
           plusArc.osTransform();
 
           if (lengthError > 0 && lengthErrorMultiplier > 0) { // only draw one arc if it is zero
-            var pts = os.geo.interpolateArc(center, (length - cLengthError * lengthErrorMultiplier) * multiplier,
-                Math.min(bearingError * bearingErrorMultiplier * 2, 360), inverse.finalBearing);
+            var pts = os.geo.interpolateArc(center, effectiveLength - cLengthError,
+                Math.min(bearingError * bearingErrorMultiplier * 2, 360), bearing);
             minusArc = new ol.geom.LineString(pts, ol.geom.GeometryLayout.XYZM);
             minusArc = os.geo.splitOnDateLine(minusArc);
             minusArc.set(os.geom.GeometryField.NORMALIZED, true);
             minusArc.osTransform();
           }
         } else if (lengthError > 0 && lengthErrorMultiplier > 0) { // no bearing error perpendicular line instead of arc
-          var uLineCenter = osasm.geodesicDirect(end, endBearing + 180, -cLengthError * lengthErrorMultiplier);
-          var uLineRight = osasm.geodesicDirect(uLineCenter, endBearing + 90, -cLengthError * lengthErrorMultiplier);
+          var uLineCenter = osasm.geodesicDirect(end, endBearing + 180, -cLengthError);
+          var uLineRight = osasm.geodesicDirect(uLineCenter, endBearing + 90, -cLengthError);
           uLineRight.push(center[2]);
-          var uLineLeft = osasm.geodesicDirect(uLineCenter, endBearing - 90, -cLengthError * lengthErrorMultiplier);
+          var uLineLeft = osasm.geodesicDirect(uLineCenter, endBearing - 90, -cLengthError);
           uLineLeft.push(center[2]);
           plusArc = new ol.geom.LineString([uLineLeft, uLineRight], ol.geom.GeometryLayout.XYZM);
           plusArc = os.geo.splitOnDateLine(plusArc);
           plusArc.set(os.geom.GeometryField.NORMALIZED, true);
           plusArc.osTransform();
 
-          var bLineCenter = osasm.geodesicDirect(end, endBearing + 180, cLengthError * lengthErrorMultiplier);
-          var bLineRight = osasm.geodesicDirect(bLineCenter, endBearing + 90, cLengthError * lengthErrorMultiplier);
+          var bLineCenter = osasm.geodesicDirect(end, endBearing + 180, cLengthError);
+          var bLineRight = osasm.geodesicDirect(bLineCenter, endBearing + 90, cLengthError);
           bLineRight.push(center[2]);
-          var bLineLeft = osasm.geodesicDirect(bLineCenter, endBearing - 90, cLengthError * lengthErrorMultiplier);
+          var bLineLeft = osasm.geodesicDirect(bLineCenter, endBearing - 90, cLengthError);
           bLineLeft.push(center[2]);
           minusArc = new ol.geom.LineString([bLineLeft, bLineRight], ol.geom.GeometryLayout.XYZM);
           minusArc = os.geo.splitOnDateLine(minusArc);
