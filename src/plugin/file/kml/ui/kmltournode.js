@@ -17,7 +17,7 @@ plugin.file.kml.ui.KMLTourNode = function(tour) {
 
   /**
    * The KML tour.
-   * @type {!plugin.file.kml.tour.Tour}
+   * @type {plugin.file.kml.tour.Tour|undefined}
    * @private
    */
   this.tour_ = tour;
@@ -26,8 +26,19 @@ goog.inherits(plugin.file.kml.ui.KMLTourNode, plugin.file.kml.ui.KMLNode);
 
 
 /**
+ * @inheritDoc
+ */
+plugin.file.kml.ui.KMLTourNode.prototype.disposeInternal = function() {
+  plugin.file.kml.ui.KMLTourNode.base(this, 'disposeInternal');
+
+  goog.dispose(this.tour_);
+  this.tour_ = undefined;
+};
+
+
+/**
  * Get the KML tour object for the node.
- * @return {!plugin.file.kml.tour.Tour}
+ * @return {plugin.file.kml.tour.Tour|undefined}
  */
 plugin.file.kml.ui.KMLTourNode.prototype.getTour = function() {
   return this.tour_;
@@ -62,5 +73,5 @@ plugin.file.kml.ui.KMLTourNode.prototype.getToolTip = function() {
  * @inheritDoc
  */
 plugin.file.kml.ui.KMLTourNode.prototype.formatIcons = function() {
-  return '<i class="fa fa-globe fa-fw" title="KML Tour"></i>';
+  return '<i class="fa fa-video-camera fa-fw" title="KML Tour"></i>';
 };

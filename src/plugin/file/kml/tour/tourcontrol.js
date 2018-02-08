@@ -2,16 +2,18 @@ goog.provide('plugin.file.kml.tour.TourControl');
 
 goog.require('goog.Promise');
 goog.require('goog.async.nextTick');
-goog.require('plugin.file.kml.tour.ITourPrimitive');
+goog.require('plugin.file.kml.tour.AbstractTourPrimitive');
 
 
 /**
  * Enables the tour to be paused until a user takes action to continue the tour.
  * @param {!plugin.file.kml.tour.Tour} tour The tour object.
- * @implements {plugin.file.kml.tour.ITourPrimitive}
+ * @extends {plugin.file.kml.tour.AbstractTourPrimitive}
  * @constructor
  */
 plugin.file.kml.tour.TourControl = function(tour) {
+  plugin.file.kml.tour.TourControl.base(this, 'constructor');
+
   /**
    * The tour object.
    * @type {!plugin.file.kml.tour.Tour}
@@ -26,6 +28,7 @@ plugin.file.kml.tour.TourControl = function(tour) {
    */
   this.paused_ = false;
 };
+goog.inherits(plugin.file.kml.tour.TourControl, plugin.file.kml.tour.AbstractTourPrimitive);
 
 
 /**
@@ -45,12 +48,6 @@ plugin.file.kml.tour.TourControl.prototype.execute = function() {
     }, this);
   }, this);
 };
-
-
-/**
- * @inheritDoc
- */
-plugin.file.kml.tour.TourControl.prototype.pause = goog.nullFunction;
 
 
 /**
