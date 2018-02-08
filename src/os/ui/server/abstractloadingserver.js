@@ -285,7 +285,7 @@ os.ui.server.AbstractLoadingServer.prototype.setPing = function(value) {
 
 
 /**
- * @return {boolean}
+ * @inheritDoc
  */
 os.ui.server.AbstractLoadingServer.prototype.isLoading = function() {
   return this.isLoading_;
@@ -297,7 +297,7 @@ goog.exportProperty(
 
 
 /**
- * @param {boolean} value
+ * @inheritDoc
  */
 os.ui.server.AbstractLoadingServer.prototype.setLoading = function(value) {
   if (this.isLoading_ != value) {

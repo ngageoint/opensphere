@@ -104,8 +104,7 @@ goog.define('os.FILTER_STORAGE_KEY', 'filters');
 
 
 /**
- * Saves the filter data
- * @protected
+ * @inheritDoc
  */
 os.ui.filter.FilterManager.prototype.disposeInternal = function() {
   os.dispatcher.unlisten(os.ui.filter.FilterEventType.ADD_FILTER, this.onAddFilterEvent_, false, this);

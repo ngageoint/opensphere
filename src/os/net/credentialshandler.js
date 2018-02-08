@@ -41,8 +41,7 @@ os.net.CredentialsHandler.prototype.getHandlerType = function() {
 
 
 /**
- * Handles a completed request
- * @param {goog.events.EventLike=} opt_event The event
+ * @inheritDoc
  */
 os.net.CredentialsHandler.prototype.onXhrComplete = function(opt_event) {
   var lastUri = this.req.getLastUri();

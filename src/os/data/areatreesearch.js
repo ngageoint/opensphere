@@ -20,8 +20,7 @@ goog.inherits(os.data.AreaTreeSearch, os.ui.slick.AbstractGroupByTreeSearch);
 
 
 /**
- * Overridden in inheriting class
- * @return {!Array}
+ * @inheritDoc
  */
 os.data.AreaTreeSearch.prototype.getSearchItems = function() {
   return os.ui.areaManager.getAll();
@@ -29,9 +28,7 @@ os.data.AreaTreeSearch.prototype.getSearchItems = function() {
 
 
 /**
- * Overridden in inheriting class
- * @param {Object} item - search item to setup as a node
- * @return {!os.structs.ITreeNode}
+ * @inheritDoc
  */
 os.data.AreaTreeSearch.prototype.setupNode = function(item) {
   var node = new os.data.AreaNode();

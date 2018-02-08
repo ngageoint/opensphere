@@ -52,8 +52,7 @@ os.data.AreaNode.prototype.getMenu = function() {
 
 
 /**
- * Sets the area
- * @param {?ol.Feature} area the area
+ * @inheritDoc
  */
 os.data.AreaNode.prototype.setArea = function(area) {
   if (area !== this.area) {

@@ -115,6 +115,8 @@ plugin.basemap.BaseMapDescriptor.prototype.getProvider = function() {
  * Basemaps need to be more careful about their initial restoration. It's possible for a basemap to have been active in
  * a different projection from the one the application is currently in, causing the application to  immediately
  * try to switch projections upon loading. This works around that problem.
+ *
+ * @override
  */
 plugin.basemap.BaseMapDescriptor.prototype.updateActiveFromTemp = function() {
   if (this.getLayerOptions()['projection'] === os.map.PROJECTION.getCode() && this.tempActive === true) {

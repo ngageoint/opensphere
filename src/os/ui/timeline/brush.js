@@ -231,7 +231,7 @@ os.ui.timeline.Brush.prototype.getClass = function() {
 
 
 /**
- * @return {Array.<number>} The extent
+ * @inheritDoc
  */
 os.ui.timeline.Brush.prototype.getExtent = function() {
   return os.ui.timeline.normalizeExtent(this.brush_.extent() || this.initExtent_);

@@ -69,10 +69,7 @@ goog.inherits(os.ui.ol.interaction.ContextMenu, ol.interaction.Interaction);
 
 
 /**
- * Handle map browser events.
- * @param {ol.MapBrowserEvent} event The map browser event
- * @return {boolean} Always returns true to allow event propagation to continue.
- * @protected
+ * @inheritDoc
  */
 os.ui.ol.interaction.ContextMenu.prototype.handleEvent = function(event) {
   // save the right-down info...

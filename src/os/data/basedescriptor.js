@@ -283,8 +283,7 @@ goog.exportProperty(
 
 
 /**
- * Sets the title of the descriptor
- * @param {?string} value The title
+ * @inheritDoc
  */
 os.data.BaseDescriptor.prototype.setTitle = function(value) {
   var old = this.title_;
@@ -391,8 +390,7 @@ os.data.BaseDescriptor.prototype.getIcons = function() {
 
 
 /**
- * Sets the description of the descriptor
- * @param {?string} value The description
+ * @inheritDoc
  */
 os.data.BaseDescriptor.prototype.setDescription = function(value) {
   this.desc_ = value;
@@ -591,8 +589,7 @@ os.data.BaseDescriptor.prototype.getTags = function() {
 
 
 /**
- * Sets the tags
- * @param {?Array<!string>} value The tags
+ * @inheritDoc
  */
 os.data.BaseDescriptor.prototype.setTags = function(value) {
   this.tags = value;

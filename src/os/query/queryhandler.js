@@ -64,8 +64,7 @@ os.query.QueryHandler.prototype.getSource = function() {
 
 
 /**
- * Get the layer name associated to this handler
- * @return {?string}
+ * @inheritDoc
  */
 os.query.QueryHandler.prototype.getLayerName = function() {
   return this.source ? this.source.getTitle() : '';

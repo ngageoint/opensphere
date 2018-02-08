@@ -78,9 +78,7 @@ os.data.FileDescriptor.prototype.getNodeUI = function() {
 
 
 /**
- * Assemble the options required to add the layer.
- * @return {Object.<string, *>}
- * @protected
+ * @inheritDoc
  */
 os.data.FileDescriptor.prototype.getLayerOptions = function() {
   var options = {};

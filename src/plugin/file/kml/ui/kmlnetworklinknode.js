@@ -309,8 +309,7 @@ plugin.file.kml.ui.KMLNetworkLinkNode.prototype.onRefreshTimer_ = function() {
 
 
 /**
- * Set the KML source for this node.
- * @param {plugin.file.kml.KMLSource} source The source
+ * @inheritDoc
  */
 plugin.file.kml.ui.KMLNetworkLinkNode.prototype.setSource = function(source) {
   if (this.source) {

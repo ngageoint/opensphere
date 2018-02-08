@@ -26,6 +26,7 @@ goog.inherits(plugin.ogc.wms.TileWMSSource, ol.source.TileWMS);
 
 /**
  * @return {?(string|osx.ogc.TileStyle)}
+ * @override
  */
 plugin.ogc.wms.TileWMSSource.prototype.getStyle = function() {
   var params = this.getParams();
@@ -40,6 +41,7 @@ plugin.ogc.wms.TileWMSSource.prototype.getStyle = function() {
 
 /**
  * @param {?(string|osx.ogc.TileStyle)} value
+ * @override
  */
 plugin.ogc.wms.TileWMSSource.prototype.setStyle = function(value) {
   var style = typeof value == 'string' ? value : value != null ? value.data : '';

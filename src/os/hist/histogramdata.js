@@ -23,9 +23,7 @@ goog.inherits(os.hist.HistogramData, os.hist.AbstractHistogramData);
 
 
 /**
- * Get the counts for the histogram. Counts are represented as key/value pairs of the histogram bin
- * and its associated count.
- * @return {!Object.<string, number>}
+ * @inheritDoc
  */
 os.hist.HistogramData.prototype.getCounts = function() {
   return this.counts_;
@@ -33,8 +31,7 @@ os.hist.HistogramData.prototype.getCounts = function() {
 
 
 /**
- * Set the counts for the histogram as key/value pairs.
- * @param {!Object.<string, number>} value
+ * @inheritDoc
  */
 os.hist.HistogramData.prototype.setCounts = function(value) {
   this.counts_ = value;
