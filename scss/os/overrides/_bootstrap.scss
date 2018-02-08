@@ -338,7 +338,8 @@ td > input {
 }
 
 @media (max-height: 800px) {
-  .modal:not(.window), .modal.fade.in {
+  .modal:not(.window),
+  .modal.fade.in {
     top: 0;
   }
 }
