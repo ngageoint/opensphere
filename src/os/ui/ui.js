@@ -32,6 +32,14 @@ os.ui.sanitize_;
 
 
 /**
+ * CSS selector for modal backdrops.
+ * @type {string}
+ * @const
+ */
+os.ui.MODAL_SELECTOR = '.modal-backdrop,.window-modal-bg';
+
+
+/**
  * Sanitizes a string to remove potentally malicious HTML content. Note that if the entire string is disallowed by the
  * $sanitize service, you'll get an empty string back.
  * @param {string} value The value to sanitize
