@@ -56,13 +56,13 @@
       border-left: 0;
 
       b {
+        -moz-osx-font-smoothing: grayscale;
+        -webkit-font-smoothing: antialiased;
         background: transparent;
         color: $color-black;
         display: inline-block;
         font: normal normal normal 14px/1 FontAwesome;
         font-size: inherit;
-        -moz-osx-font-smoothing: grayscale;
-        -webkit-font-smoothing: antialiased;
         height: 100%;
         padding-top: 2px;
         text-align: center;
