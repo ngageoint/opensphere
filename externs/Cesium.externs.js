@@ -2590,12 +2590,20 @@ Cesium.RuntimeError = function(opt_msg) {};
 
 
 /**
- * @constructor
- * @param {string=} opt_text
- * @param {string=} opt_imageUrl
- * @param {string=} opt_link
+ * @typedef {{
+ *   text: (string|undefined),
+ *   imageUrl: (string|undefined),
+ *   link: (string|undefined),
+ * }}
  */
-Cesium.Credit = function(opt_text, opt_imageUrl, opt_link) {};
+Cesium.CreditOptions;
+
+
+/**
+ * @constructor
+ * @param {Cesium.CreditOptions} options
+ */
+Cesium.Credit = function(options) {};
 
 
 
