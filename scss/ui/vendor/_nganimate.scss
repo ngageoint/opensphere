@@ -74,18 +74,18 @@
   &.ng-hide,
   &.cloak {
     @include opacity(0);
-    @include scaleY(.3);
+    @include scaleY(.3);  // sass-lint:disable-line mixin-name-format
     visibility: hidden;
   }
 
   &.ng-leave {
     @include opacity(1);
-    @include scaleY(1);
+    @include scaleY(1);  // sass-lint:disable-line mixin-name-format
     visibility: visible;
 
     &.ng-leave-active {
       @include opacity(0);
-      @include scaleY(.3);
+      @include scaleY(.3);  // sass-lint:disable-line mixin-name-format
       visibility: hidden;
     }
   }
@@ -93,7 +93,7 @@
   &.ng-show,
   &.ng-enter.ng-enter-active {
     @include opacity(1);
-    @include scaleY(1);
+    @include scaleY(1);  // sass-lint:disable-line mixin-name-format
     visibility: visible;
   }
 }
@@ -107,18 +107,18 @@
   &.ng-hide,
   &.cloak {
     @include opacity(0);
-    @include scaleY(.3);
+    @include scaleY(.3);  // sass-lint:disable-line mixin-name-format
     visibility: hidden;
   }
 
   &.ng-leave {
     @include opacity(1);
-    @include scaleY(1);
+    @include scaleY(1);  // sass-lint:disable-line mixin-name-format
     visibility: visible;
 
     &.ng-leave-active {
       @include opacity(0);
-      @include scaleY(.3);
+      @include scaleY(.3);  // sass-lint:disable-line mixin-name-format
       visibility: hidden;
     }
   }
@@ -126,7 +126,7 @@
   &.ng-show,
   &.ng-enter.ng-enter-active {
     @include opacity(1);
-    @include scaleY(1);
+    @include scaleY(1);  // sass-lint:disable-line mixin-name-format
     visibility: visible;
   }
 }
@@ -141,18 +141,18 @@
   &.ng-hide,
   &.cloak {
     @include opacity(0);
-    @include scaleX(.3);
+    @include scaleX(.3);  // sass-lint:disable-line mixin-name-format
     visibility: hidden;
   }
 
   &.ng-leave {
     @include opacity(1);
-    @include scaleX(1);
+    @include scaleX(1);  // sass-lint:disable-line mixin-name-format
     visibility: visible;
 
     &.ng-leave-active {
       @include opacity(0);
-      @include scaleX(.3);
+      @include scaleX(.3);  // sass-lint:disable-line mixin-name-format
       visibility: hidden;
     }
   }
@@ -160,7 +160,7 @@
   &.ng-show,
   &.ng-enter.ng-enter-active {
     @include opacity(1);
-    @include scaleX(1);
+    @include scaleX(1);  // sass-lint:disable-line mixin-name-format
     visibility: visible;
   }
 }
@@ -174,18 +174,18 @@
   &.ng-hide,
   &.cloak {
     @include opacity(0);
-    @include scaleX(.3);
+    @include scaleX(.3);  // sass-lint:disable-line mixin-name-format
     visibility: hidden;
   }
 
   &.ng-leave {
     @include opacity(1);
-    @include scaleX(1);
+    @include scaleX(1);  // sass-lint:disable-line mixin-name-format
     visibility: visible;
 
     &.ng-leave-active {
       @include opacity(0);
-      @include scaleX(.3);
+      @include scaleX(.3);  // sass-lint:disable-line mixin-name-format
       visibility: hidden;
     }
   }
@@ -193,7 +193,7 @@
   &.ng-show,
   &.ng-enter.ng-enter-active {
     @include opacity(1);
-    @include scaleX(1);
+    @include scaleX(1); // sass-lint:disable-line mixin-name-format
     visibility: visible;
   }
 }
@@ -269,14 +269,14 @@
   &.ng-hide,
   &.ng-leave.ng-leave-active {
     @include opacity(0);
-    @include translateY(5%);
+    @include translateY(5%); // sass-lint:disable-line mixin-name-format
   }
 
   &.animate-present-large {
     &.ng-enter,
     &.ng-hide,
     &.ng-leave.ng-leave-active {
-      @include translateY(2%);
+      @include translateY(2%); // sass-lint:disable-line mixin-name-format
     }
   }
 
@@ -284,7 +284,7 @@
   &.ng-show,
   &.ng-enter.ng-enter-active {
     @include opacity(1);
-    @include translateY(0);
+    @include translateY(0); // sass-lint:disable-line mixin-name-format
   }
 }
 
@@ -298,12 +298,12 @@
   }
 
   &.ng-hide {
-    @include translateY(5%);
+    @include translateY(5%); // sass-lint:disable-line mixin-name-format
     @include opacity(0);
   }
 
   &.animate-present-large.ng-hide {
-    @include translateY(2%);
+    @include translateY(2%); // sass-lint:disable-line mixin-name-format
   }
 }
 
@@ -318,12 +318,12 @@
   }
 
   &.ng-hide {
-    @include translateY(5%);
+    @include translateY(5%); // sass-lint:disable-line mixin-name-format
     @include opacity(0);
   }
 
   &.animate-present-large.ng-hide {
-    @include translateY(2%);
+    @include translateY(2%); // sass-lint:disable-line mixin-name-format
   }
 }
 
@@ -344,23 +344,23 @@
   &.ng-enter,
   &.ng-hide {
     @include opacity(0);
-    @include rotateX(70deg);
+    @include rotateX(70deg); // sass-lint:disable-line mixin-name-format
   }
 
   &.ng-leave {
     @include opacity(1);
-    @include rotateX(0deg);
+    @include rotateX(0deg); // sass-lint:disable-line mixin-name-format
 
     &.ng-leave-active {
       @include opacity(0);
-      @include rotateX(70deg);
+      @include rotateX(70deg); // sass-lint:disable-line mixin-name-format
     }
   }
 
   &.ng-show,
   &.ng-enter.ng-enter-active {
     @include opacity(1);
-    @include rotateX(0deg);
+    @include rotateX(0deg); // sass-lint:disable-line mixin-name-format
   }
 }
 
@@ -368,23 +368,23 @@
   &.ng-enter,
   &.ng-hide {
     @include opacity(0);
-    @include rotateY(-70deg);
+    @include rotateY(-70deg); // sass-lint:disable-line mixin-name-format
   }
 
   &.ng-leave {
     @include opacity(1);
-    @include rotateY(0deg);
+    @include rotateY(0deg); // sass-lint:disable-line mixin-name-format
 
     &.ng-leave-active {
       @include opacity(0);
-      @include rotateY(-70deg);
+      @include rotateY(-70deg); // sass-lint:disable-line mixin-name-format
     }
   }
 
   &.ng-show,
   &.ng-enter.ng-enter-active {
     @include opacity(1);
-    @include rotateY(0deg);
+    @include rotateY(0deg); // sass-lint:disable-line mixin-name-format
   }
 }
 
