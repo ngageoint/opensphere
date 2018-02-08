@@ -180,7 +180,8 @@ os.ui.layer.LobOptionsCtrl = function($scope, $element) {
    */
   this['helpText'] = '<p>Line of Bearing Error allows you to show a +/- error range on the line length and ' +
     'orientation with arcs. Absence of bearing error shows lines instead of arcs. Absence of length error shows a ' +
-    'single arc.</p><img src="' + os.ROOT + '/images/loberror.png"></img>';
+    'single arc. Note that the bearing error is not accurate for line lengths greater than 10,0000km!' +
+    '</p><img src="' + os.ROOT + '/images/loberror.png"></img>';
 
   $scope.$on('length.slidestop', this.onLengthChange.bind(this));
   $scope.$on('length.spinstop', this.onLengthChange.bind(this));
