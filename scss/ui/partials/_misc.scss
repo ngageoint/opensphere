@@ -300,48 +300,57 @@ div::-moz-focus-inner {
 @include keyframes(ellipsis1) {
   0%,
   20% {
-    @include translateY(0); opacity: .5;
+    @include translateY(0); // sass-lint:disable-line mixin-name-format
+    opacity: .5; 
   }
 
   30% {
-    @include translateY(-4px); opacity: 1;
+    @include translateY(-4px); // sass-lint:disable-line mixin-name-format
+    opacity: 1;
   }
 
   40%,
   100% {
-    @include translateY(0); opacity: .5;
+    @include translateY(0); // sass-lint:disable-line mixin-name-format
+    opacity: .5;
   }
 }
 
 @include keyframes(ellipsis2) {
   0%,
   40% {
-    @include translateY(0); opacity: .5;
+    @include translateY(0); // sass-lint:disable-line mixin-name-format
+    opacity: .5;
   }
 
   50% {
-    @include translateY(-4px); opacity: 1;
+    @include translateY(-4px); // sass-lint:disable-line mixin-name-format
+    opacity: 1;
   }
 
   60%,
   100% {
-    @include translateY(0); opacity: .5;
+    @include translateY(0); // sass-lint:disable-line mixin-name-format
+    opacity: .5;
   }
 }
 
 @include keyframes(ellipsis3) {
   0%,
   60% {
-    @include translateY(0); opacity: .5;
+    @include translateY(0); // sass-lint:disable-line mixin-name-format
+    opacity: .5;
   }
 
   70% {
-    @include translateY(-4px); opacity: 1;
+    @include translateY(-4px); // sass-lint:disable-line mixin-name-format
+    opacity: 1;
   }
 
   80%,
   100% {
-    @include translateY(0); opacity: .5;
+    @include translateY(0); // sass-lint:disable-line mixin-name-format
+    opacity: .5;
   }
 }
 
