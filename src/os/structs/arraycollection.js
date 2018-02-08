@@ -345,10 +345,7 @@ os.structs.ArrayCollection.prototype.removeFiltered_ = function(item) {
 
 
 /**
- * Query whether the collection contains the give item.
- * @param {T} item the item of interest
- * @return {boolean} true if the collection contains the given item,
- * false otherwise
+ * @inheritDoc
  */
 os.structs.ArrayCollection.prototype.contains = function(item) {
   return this.getItemIndex(item) > -1;
@@ -356,7 +353,7 @@ os.structs.ArrayCollection.prototype.contains = function(item) {
 
 
 /**
- * @return {number} the number of items in the collections
+ * @inheritDoc
  */
 os.structs.ArrayCollection.prototype.getCount = function() {
   return this.view_ ? this.view_.length : this.source_.length;

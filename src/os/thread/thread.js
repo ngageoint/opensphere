@@ -44,7 +44,7 @@ os.thread.Thread.LOGGER_ = goog.log.getLogger('os.thread.Thread');
 
 
 /**
- * Cleanup
+ * @inheritDoc
  */
 os.thread.Thread.prototype.disposeInternal = function() {
   os.thread.Thread.superClass_.disposeInternal.call(this);

@@ -46,14 +46,7 @@ os.storage.AsyncStorage.prototype.getAll = goog.abstractMethod;
 
 
 /**
- * Set a value for a key.
- *
- * @param {string} key The key to set.
- * @param {T} value The string to save.
- * @param {boolean=} opt_replace If an existing item should be replaced
- * @return {!goog.async.Deferred} A deferred that resolves when the value has been stored.
- *
- * @template T
+ * @inheritDoc
  */
 os.storage.AsyncStorage.prototype.set = goog.abstractMethod;
 

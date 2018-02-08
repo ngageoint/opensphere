@@ -98,10 +98,7 @@ os.ui.filter.op.LikeListNumeric.prototype.getFilter = function(column, literal) 
 
 
 /**
- * Validates the value against the pattern associated to the key.
- * @param {string|null|undefined} value
- * @param {string} key
- * @return {boolean} Whether or not the column type is supported
+ * @inheritDoc
  */
 os.ui.filter.op.LikeListNumeric.prototype.validate = function(value, key) {
   var valid = false;
@@ -137,10 +134,7 @@ os.ui.filter.op.LikeListNumeric.prototype.matches = function(el) {
 
 
 /**
- * This returns the literal list that the user entered formatted correctly with the wildcards
- * what the user entered initially
- * @param {angular.JQLite} el
- * @return {string} the literal
+ * @inheritDoc
  */
 os.ui.filter.op.LikeListNumeric.prototype.getLiteral = function(el) {
   var arr = el.find('PropertyIsGreaterThanOrEqualTo Literal');

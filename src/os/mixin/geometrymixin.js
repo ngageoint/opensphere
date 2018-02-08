@@ -70,6 +70,7 @@ ol.geom.Geometry.prototype.toLonLat = function() {
   /**
    * Openlayers' implementation does not actually clone the underlying geometries
    * @return {!ol.geom.GeometryCollection} The clone
+   * @override
    */
   ol.geom.GeometryCollection.prototype.clone = function() {
     // at the time of this writing, GeometryCollection.prototype.getGeometries() returns a new

@@ -202,7 +202,7 @@ plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.buildStylePreview = 
           }
 
           // listen for the image to change state
-          imageStyle.listenImageChange(plugin.im.action.feature.ui.onIconChange_, imageStyle);
+          imageStyle.listenImageChange(plugin.im.action.feature.ui.onImageChange_, imageStyle);
 
           // image isn't loaded, so don't try to render it yet
           return;
@@ -283,11 +283,12 @@ plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.buildLabelPreview = 
 
 
 /**
- * Handler for when we receive notice that an icon loaded
+ * Handler for when we receive notice that an image loaded
+ * @this ol.style.Image
  * @private
  */
-plugin.im.action.feature.ui.onIconChange_ = function() {
-  this.unlistenImageChange(plugin.im.action.feature.ui.onIconChange_, this);
+plugin.im.action.feature.ui.onImageChange_ = function() {
+  this.unlistenImageChange(plugin.im.action.feature.ui.onImageChange_, this);
 
   if (this.getImageState() < ol.ImageState.ERROR) {
     // if the image loaded, trigger a showPreview

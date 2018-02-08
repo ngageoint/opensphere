@@ -248,8 +248,7 @@ os.ui.state.AbstractStateDescriptor.prototype.getNodeUI = function() {
 
 
 /**
- * Get the items that will be loaded in the state file.
- * @return {Array.<string>}
+ * @inheritDoc
  */
 os.ui.state.AbstractStateDescriptor.prototype.getLoadItems = function() {
   return this.loadItems_ ? this.loadItems_.slice() : null;
@@ -257,8 +256,7 @@ os.ui.state.AbstractStateDescriptor.prototype.getLoadItems = function() {
 
 
 /**
- * Set the items that will be loaded in the state file.
- * @param {Array.<string>} value
+ * @inheritDoc
  */
 os.ui.state.AbstractStateDescriptor.prototype.setLoadItems = function(value) {
   this.loadItems_ = value;

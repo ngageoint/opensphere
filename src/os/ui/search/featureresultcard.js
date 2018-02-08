@@ -52,15 +52,34 @@ os.ui.search.FeatureResultCardCtrl = function($scope, $element) {
    */
   this.feature = this.result.getResult();
 
-  var layer = os.MapContainer.getInstance().getLayer(os.MapContainer.SEARCH_ID);
-  layer = !layer ? this.addSearchLayer() : layer;
-  ol.events.listen(layer.getSource(), goog.events.EventType.PROPERTYCHANGE, this.onSourceChange_, this);
+  /**
+   * @type {os.layer.Vector}
+   * @protected
+   */
+  this.layer;
 
+  var l = os.MapContainer.getInstance().getLayer(os.ui.search.FeatureResultCardCtrl.SEARCH_LAYER_ID);
+  if (l instanceof os.layer.Vector) {
+    this.layer = l;
+  }
+
+  if (!this.layer) {
+    this.layer = this.addSearchLayer();
+  }
+
+  this.layer.getSource().addFeature(this.feature);
+
+  ol.events.listen(this.layer.getSource(), goog.events.EventType.PROPERTYCHANGE, this.onSourceChange_, this);
   $scope.$on('$destroy', this.dispose.bind(this));
-  os.MapContainer.getInstance().addFeature(this.feature, undefined, layer);
 };
 goog.inherits(os.ui.search.FeatureResultCardCtrl, goog.Disposable);
 
+
+/**
+ * @const
+ * @type {string}
+ */
+os.ui.search.FeatureResultCardCtrl.SEARCH_LAYER_ID = 'search';
 
 /**
  * Logger for os.ui.search.FeatureResultCardCtrl
@@ -78,18 +97,15 @@ os.ui.search.FeatureResultCardCtrl.prototype.disposeInternal = function() {
   os.ui.search.FeatureResultCardCtrl.base(this, 'disposeInternal');
 
   var mm = os.MapContainer.getInstance();
-  var searchLayer = /** @type {os.layer.Vector} */ (mm.getLayer(os.MapContainer.SEARCH_ID));
 
-  mm.removeFeature(this.feature, undefined, searchLayer);
+  ol.events.unlisten(this.layer.getSource(), goog.events.EventType.PROPERTYCHANGE, this.onSourceChange_, this);
 
-  if (searchLayer) {
-    var source = /** @type {os.source.Vector} */ (searchLayer.getSource());
-    ol.events.unlisten(source, goog.events.EventType.PROPERTYCHANGE, this.onSourceChange_, this);
-    var features = source.getFeatures();
-    if (features.length === 0) {
-      searchLayer.setRemovable(true);
-      mm.removeLayer(os.MapContainer.SEARCH_ID);
-    }
+  var source = this.layer.getSource();
+  source.removeFeature(this.feature);
+
+  if (!source.getFeatures().length) {
+    this.layer.setRemovable(true);
+    mm.removeLayer(this.layer);
   }
 
   this.feature = null;
@@ -106,7 +122,7 @@ os.ui.search.FeatureResultCardCtrl.prototype.disposeInternal = function() {
 os.ui.search.FeatureResultCardCtrl.prototype.addSearchLayer = function() {
   var src = new os.source.Vector();
   src.setTitle('Search Results');
-  src.setId(os.MapContainer.SEARCH_ID);
+  src.setId(os.ui.search.FeatureResultCardCtrl.SEARCH_LAYER_ID);
   src.setSupportsAction(os.action.EventType.BUFFER, false);
   src.setSupportsAction(os.action.EventType.EXPORT, false);
   var searchLayer = new os.layer.Vector({
@@ -114,7 +130,7 @@ os.ui.search.FeatureResultCardCtrl.prototype.addSearchLayer = function() {
   });
 
   searchLayer.setTitle('Search Results');
-  searchLayer.setId(os.MapContainer.SEARCH_ID);
+  searchLayer.setId(os.ui.search.FeatureResultCardCtrl.SEARCH_LAYER_ID);
   searchLayer.setStyle(os.style.StyleManager.getInstance().getOrCreateStyle(os.style.DEFAULT_VECTOR_CONFIG));
   searchLayer.setExplicitType('');
   searchLayer.setRemovable(false);
@@ -123,11 +139,13 @@ os.ui.search.FeatureResultCardCtrl.prototype.addSearchLayer = function() {
   searchLayer.setSticky(true);
   searchLayer.renderLegend = goog.nullFunction;
 
-  var layerConfig = os.style.StyleManager.getInstance().getOrCreateLayerConfig(os.MapContainer.SEARCH_ID);
+  var layerConfig = os.style.StyleManager.getInstance().getOrCreateLayerConfig(
+      os.ui.search.FeatureResultCardCtrl.SEARCH_LAYER_ID);
   layerConfig[os.style.StyleField.SHOW_LABELS] = true;
 
   var mm = os.MapContainer.getInstance();
   mm.addLayer(searchLayer);
+
   return searchLayer;
 };
 
@@ -200,9 +218,7 @@ goog.exportProperty(os.ui.search.FeatureResultCardCtrl.prototype, 'goTo',
 os.ui.search.FeatureResultCardCtrl.prototype.over = function() {
   this.feature.set(os.style.StyleType.HIGHLIGHT, os.style.DEFAULT_HIGHLIGHT_CONFIG);
   os.style.setFeatureStyle(this.feature);
-  os.style.notifyStyleChange(
-      os.MapContainer.getInstance().getLayer(os.MapContainer.SEARCH_ID),
-      [this.feature]);
+  os.style.notifyStyleChange(this.layer, [this.feature]);
 };
 goog.exportProperty(os.ui.search.FeatureResultCardCtrl.prototype, 'over',
     os.ui.search.FeatureResultCardCtrl.prototype.over);
@@ -214,9 +230,7 @@ goog.exportProperty(os.ui.search.FeatureResultCardCtrl.prototype, 'over',
 os.ui.search.FeatureResultCardCtrl.prototype.out = function() {
   this.feature.set(os.style.StyleType.HIGHLIGHT, undefined);
   os.style.setFeatureStyle(this.feature);
-  os.style.notifyStyleChange(
-      os.MapContainer.getInstance().getLayer(os.MapContainer.SEARCH_ID),
-      [this.feature]);
+  os.style.notifyStyleChange(this.layer, [this.feature]);
 };
 goog.exportProperty(os.ui.search.FeatureResultCardCtrl.prototype, 'out',
     os.ui.search.FeatureResultCardCtrl.prototype.out);

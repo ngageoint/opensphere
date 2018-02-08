@@ -27,6 +27,7 @@ goog.inherits(plugin.position.PositionInteraction, ol.interaction.Interaction);
 /**
  * Whether or not this interaction is supported in 3D mode
  * @return {boolean}
+ * @override
  */
 plugin.position.PositionInteraction.prototype.is3DSupported = function() {
   return true;

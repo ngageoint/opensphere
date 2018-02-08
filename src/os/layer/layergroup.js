@@ -112,8 +112,7 @@ os.layer.LayerGroup.prototype.getSource = function() {
 
 
 /**
- * Whether or not the layer is loading
- * @return {boolean}
+ * @inheritDoc
  */
 os.layer.LayerGroup.prototype.isLoading = function() {
   for (var i = 0, n = this.layers_.length; i < n; i++) {

@@ -56,8 +56,7 @@ goog.inherits(os.ui.CombinatorCtrl, os.ui.query.ui.CombinatorCtrl);
 
 
 /**
- * Updates the list of layers in the combo box
- * @protected
+ * @inheritDoc
  */
 os.ui.CombinatorCtrl.prototype.updateLayers = function() {
   if (this.scope['hideLayerChooser'] && this.scope['layerId']) {

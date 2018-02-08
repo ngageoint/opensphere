@@ -115,7 +115,7 @@ os.ui.state.StateImportCtrl.prototype.onDestroy = function() {
 
 
 /**
- * Save the state
+ * @inheritDoc
  */
 os.ui.state.StateImportCtrl.prototype.accept = function() {
   if (this['showClear']) {

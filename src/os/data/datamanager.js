@@ -81,8 +81,7 @@ os.data.DataManager.LOGGER_ = goog.log.getLogger('os.data.DataManager');
 
 
 /**
- * Registers a provider type
- * @param {!os.data.ProviderEntry} entry The provider type entry
+ * @inheritDoc
  */
 os.data.DataManager.prototype.registerProviderType = function(entry) {
   if (entry.type in this.providerTypes_) {
@@ -95,8 +94,7 @@ os.data.DataManager.prototype.registerProviderType = function(entry) {
 
 
 /**
- * @param {?string} type
- * @return {?os.data.ProviderEntry} The entry or null if not found
+ * @inheritDoc
  */
 os.data.DataManager.prototype.getProviderEntry = function(type) {
   return type && type in this.providerTypes_ ? this.providerTypes_[type] : null;
@@ -104,9 +102,7 @@ os.data.DataManager.prototype.getProviderEntry = function(type) {
 
 
 /**
- * Gets a provider type by file
- * @param {!os.file.File} file
- * @return {?string} The type or null if it could not be found
+ * @inheritDoc
  */
 os.data.DataManager.prototype.getProviderTypeByFile = function(file) {
   var best = null;
@@ -130,9 +126,7 @@ os.data.DataManager.prototype.getProviderTypeByFile = function(file) {
 
 
 /**
- * Gets a provider type by class
- * @param {Function} clazz The class
- * @return {?string} The type or null if it could not be found
+ * @inheritDoc
  */
 os.data.DataManager.prototype.getProviderTypeByClass = function(clazz) {
   for (var type in this.providerTypes_) {
@@ -148,10 +142,7 @@ os.data.DataManager.prototype.getProviderTypeByClass = function(clazz) {
 
 
 /**
- * Registers a descriptor type
- * @param {!string} type The type
- * @param {!function()} clazz The class
- * @param {boolean=} opt_override Use this to force an override of a descriptor type
+ * @inheritDoc
  */
 os.data.DataManager.prototype.registerDescriptorType = function(type, clazz, opt_override) {
   type = type.toLowerCase();
@@ -170,9 +161,7 @@ os.data.DataManager.prototype.registerDescriptorType = function(type, clazz, opt
 
 
 /**
- * Creates a new data provider for the given type
- * @param {!string} type The type
- * @return {?os.data.IDataProvider} The data provider
+ * @inheritDoc
  */
 os.data.DataManager.prototype.createProvider = function(type) {
   if (type) {
@@ -200,9 +189,7 @@ os.data.DataManager.prototype.createProvider = function(type) {
 
 
 /**
- * Creates a new data descriptor from the given type
- * @param {!string} type The type
- * @return {?os.data.IDataDescriptor} The data descriptor
+ * @inheritDoc
  */
 os.data.DataManager.prototype.createDescriptor = function(type) {
   type = type.toLowerCase();
@@ -218,10 +205,7 @@ os.data.DataManager.prototype.createDescriptor = function(type) {
 
 
 /**
- * Updates a data descriptor by replacing it.
- * The update was created because some providers on a REMOVE event would execute a delete on the server.
- * @param {!os.data.IDataDescriptor} oldDescriptor The old descriptor
- * @param {!os.data.IDataDescriptor} newDescriptor The new descriptor
+ * @inheritDoc
  */
 os.data.DataManager.prototype.updateDescriptor = function(oldDescriptor, newDescriptor) {
   if (oldDescriptor.getId() && newDescriptor.getId()) {
@@ -246,8 +230,7 @@ os.data.DataManager.prototype.updateDescriptor = function(oldDescriptor, newDesc
 
 
 /**
- * Adds a data descriptor
- * @param {!os.data.IDataDescriptor} descriptor The descriptor
+ * @inheritDoc
  */
 os.data.DataManager.prototype.addDescriptor = function(descriptor) {
   if (descriptor.getId()) {
@@ -266,8 +249,7 @@ os.data.DataManager.prototype.addDescriptor = function(descriptor) {
 
 
 /**
- * Removes a data descriptor
- * @param {!os.data.IDataDescriptor} descriptor The descriptor
+ * @inheritDoc
  */
 os.data.DataManager.prototype.removeDescriptor = function(descriptor) {
   if (descriptor.getId()) {
@@ -286,9 +268,7 @@ os.data.DataManager.prototype.removeDescriptor = function(descriptor) {
 
 
 /**
- * Gets a data descriptor
- * @param {string} id The descriptor ID to get
- * @return {?os.data.IDataDescriptor} The descriptor or <code>null</code> if none was found
+ * @inheritDoc
  */
 os.data.DataManager.prototype.getDescriptor = function(id) {
   if (id in this.descriptors_) {
@@ -317,9 +297,7 @@ os.data.DataManager.prototype.getDescriptorByUrl = function(url) {
 
 
 /**
- * Gets all data descriptors whose IDs start with the opt_prefix, or all data descriptors if undefined.
- * @param {string=} opt_prefix
- * @return {!Array<!os.data.IDataDescriptor>} The descriptors which matched
+ * @inheritDoc
  */
 os.data.DataManager.prototype.getDescriptors = function(opt_prefix) {
   var list = [];
@@ -338,8 +316,7 @@ os.data.DataManager.prototype.getDescriptors = function(opt_prefix) {
 
 
 /**
- * Gets the data provider root node
- * @return {!os.structs.ITreeNode} The root node
+ * @inheritDoc
  */
 os.data.DataManager.prototype.getProviderRoot = function() {
   return this.providerRoot_;
@@ -347,8 +324,7 @@ os.data.DataManager.prototype.getProviderRoot = function() {
 
 
 /**
- * Updates the data manager and providers from settings
- * @param {os.config.Settings} settings the settings
+ * @inheritDoc
  */
 os.data.DataManager.prototype.updateFromSettings = function(settings) {
   var sets = ['providers', 'userProviders'];
@@ -396,8 +372,7 @@ os.data.DataManager.prototype.updateFromSettings = function(settings) {
 
 
 /**
- * Adds a data provider
- * @param {!os.data.IDataProvider} dp The provider
+ * @inheritDoc
  */
 os.data.DataManager.prototype.addProvider = function(dp) {
   if (this.getProvider(dp.getId())) {
@@ -413,8 +388,7 @@ os.data.DataManager.prototype.addProvider = function(dp) {
 
 
 /**
- * Removes a data provider
- * @param {!string} id
+ * @inheritDoc
  */
 os.data.DataManager.prototype.removeProvider = function(id) {
   var provider = this.getProvider(id);
@@ -445,9 +419,7 @@ os.data.DataManager.prototype.onProviderChange = function(event) {
 
 
 /**
- * Removes a data provider
- * @param {!string} id
- * @param {boolean} enabled
+ * @inheritDoc
  */
 os.data.DataManager.prototype.setProviderEnabled = function(id, enabled) {
   var provider = this.getProvider(id);
@@ -459,10 +431,7 @@ os.data.DataManager.prototype.setProviderEnabled = function(id, enabled) {
 
 
 /**
- * Get a provider by id
- * @param {string} id The provider id
- * @param {?string=} opt_url The provider url
- * @return {?os.data.IDataProvider}
+ * @inheritDoc
  */
 os.data.DataManager.prototype.getProvider = function(id, opt_url) {
   // Get the base id for the provider
@@ -486,9 +455,7 @@ os.data.DataManager.prototype.getProvider = function(id, opt_url) {
 
 
 /**
- * Get a provider by label
- * @param {string} label The provider label
- * @return {?os.data.IDataProvider}
+ * @inheritDoc
  */
 os.data.DataManager.prototype.getProviderByLabel = function(label) {
   var list = this.providerRoot_.getChildren();
@@ -538,7 +505,7 @@ os.data.DataManager.prototype.hasError = function() {
 
 
 /**
- * Persist the descriptors
+ * @inheritDoc
  */
 os.data.DataManager.prototype.persistDescriptors = function() {
   var list = [];
@@ -580,7 +547,7 @@ os.data.DataManager.prototype.persistDescriptors = function() {
 
 
 /**
- * Restore the descriptors
+ * @inheritDoc
  */
 os.data.DataManager.prototype.restoreDescriptors = function() {
   var list = os.settings.get(this.getDescriptorKey());
@@ -618,8 +585,7 @@ os.data.DataManager.DESCRIPTOR_KEY_ = os.NAMESPACE + '.descriptors';
 
 
 /**
- * Gets the localStorage descriptor key for the datamanager to persist descriptors to.
- * @return {!string}
+ * @inheritDoc
  */
 os.data.DataManager.prototype.getDescriptorKey = function() {
   return os.data.DataManager.DESCRIPTOR_KEY_;

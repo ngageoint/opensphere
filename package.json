@@ -27,6 +27,7 @@
         "google-closure-compiler/contrib/externs/angular-1.4-http-promise_templated.js",
         "google-closure-compiler/contrib/externs/angular-1.4-resource.js",
         "google-closure-compiler/contrib/externs/angular-1.4-q_templated.js",
+        "google-closure-compiler/contrib/externs/svg.js",
         "openlayers/src/ol/typedefs.js",
         "openlayers/externs/closure-compiler.js",
         "openlayers/externs/geojson.js",
@@ -51,9 +52,6 @@
         "/google-closure-library/",
         "/openlayers/",
         "/ol-cesium/"
-      ],
-      "jscomp_off": [
-        "missingOverride"
       ]
     }
   },

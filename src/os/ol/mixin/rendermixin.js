@@ -19,9 +19,11 @@ os.ol.mixin.render.EMPTY_FILL = 'rgba(0,0,0,0)';
  * polygon fill. It must iterate over the entire hitDetectionInstructions array and fix them all.
  * THIN-4636: The saga continues. We are now entirely replacing drawPolygon because the other hack
  * sucked worse.
+ *
  * @param {ol.geom.Polygon|ol.render.Feature} polygonGeometry
  * @param {ol.Feature|ol.render.Feature} feature
  * @suppress {duplicate|accessControls}
+ * @override
  */
 ol.render.canvas.PolygonReplay.prototype.drawPolygon = function(polygonGeometry, feature) {
   var state = this.state;
@@ -53,9 +55,11 @@ ol.render.canvas.PolygonReplay.prototype.drawPolygon = function(polygonGeometry,
 /**
  * THIN-4636: The saga continues. We are now entirely replacing drawMultiPolygon because the other hack
  * sucked worse.
+ *
  * @param {ol.geom.MultiPolygon} multiPolygonGeometry
  * @param {ol.Feature} feature
  * @suppress {duplicate|accessControls}
+ * @override
  */
 ol.render.canvas.PolygonReplay.prototype.drawMultiPolygon = function(multiPolygonGeometry, feature) {
   var state = this.state;
@@ -100,6 +104,7 @@ ol.render.canvas.PolygonReplay.prototype.drawMultiPolygon = function(multiPolygo
  * @param {ol.geom.Circle} circleGeometry
  * @param {ol.Feature} feature
  * @suppress {duplicate|accessControls}
+ * @override
  */
 ol.render.canvas.PolygonReplay.prototype.drawCircle = function(circleGeometry, feature) {
   var state = this.state;
