@@ -876,34 +876,32 @@ goog.exportProperty(
 os.ui.timeline.AbstractTimelineCtrl.prototype.openMenu = function(selector) {
   var menu = this.menus_[selector];
   if (menu) {
-    if (menu === this.zoomMenu) {
-      // clear the previous data actions
-      var dataGroup = menu.getRoot().find('Data');
-      goog.asserts.assert(!!dataGroup, 'Group "Data" should exist!');
-      dataGroup.children.length = 1;
+    // clear the previous data actions
+    var dataGroup = menu.getRoot().find('Data');
+    goog.asserts.assert(!!dataGroup, 'Group "Data" should exist!');
+    dataGroup.children.length = 1;
 
-      // add data actions
-      var histData = /** @type {?Array<!os.hist.HistogramData>} */ (this['histData']);
-      if (histData) {
-        var prefix = menu === this.loadMenu ? 'load:' : 'zoom:';
-        var tip = menu === this.loadMenu ? 'Zooms to and loads ' : 'Zooms to ';
-        var sort = 100;
+    // add data actions
+    var histData = /** @type {?Array<!os.hist.HistogramData>} */ (this['histData']);
+    if (histData) {
+      var prefix = menu === this.loadMenu ? 'load:' : 'zoom:';
+      var tip = menu === this.loadMenu ? 'Zooms to and loads ' : 'Zooms to ';
+      var sort = 100;
 
-        for (var i = 0; i < histData.length; i++) {
-          var hd = histData[i];
-          var range = hd.getRange();
-          var label = hd.getTitle();
+      for (var i = 0; i < histData.length; i++) {
+        var hd = histData[i];
+        var range = hd.getRange();
+        var label = hd.getTitle();
 
-          if (hd.getVisible() && os.ui.timeline.AbstractTimelineCtrl.isSafeRange(range)) {
-            dataGroup.addChild({
-              eventType: prefix + hd.getId(),
-              label: label,
-              tooltip: tip + label,
-              icons: ['<i class="fa fa-fw fa-bars"></i>'],
-              sort: sort++,
-              handler: this.onMenuEvent.bind(this)
-            });
-          }
+        if (hd.getVisible() && os.ui.timeline.AbstractTimelineCtrl.isSafeRange(range)) {
+          dataGroup.addChild({
+            eventType: prefix + hd.getId(),
+            label: label,
+            tooltip: tip + label,
+            icons: ['<i class="fa fa-fw fa-bars"></i>'],
+            sort: sort++,
+            handler: this.onMenuEvent.bind(this)
+          });
         }
       }
     }
@@ -1381,6 +1379,11 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.initMenus = function() {
           handler: this.onMenuEvent.bind(this),
           sort: 0
         }]
+      }, {
+        type: os.ui.menu.MenuItemType.GROUP,
+        label: 'Data',
+        sort: 20,
+        children: []
       }]
     }));
 
