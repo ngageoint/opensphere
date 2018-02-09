@@ -1,19 +1,18 @@
 goog.provide('plugin.file.kml.tour.SoundCue');
 
 goog.require('goog.Promise');
-goog.require('goog.async.nextTick');
-goog.require('plugin.file.kml.tour.AbstractTourPrimitive');
+goog.require('plugin.file.kml.tour.Wait');
 
 
 /**
  * Plays an audio file during the tour.
  * @param {string} href The URL to the audio file.
  * @param {number=} opt_delayedStart Delay before playing the file.
- * @extends {plugin.file.kml.tour.AbstractTourPrimitive}
+ * @extends {plugin.file.kml.tour.Wait}
  * @constructor
  */
 plugin.file.kml.tour.SoundCue = function(href, opt_delayedStart) {
-  plugin.file.kml.tour.SoundCue.base(this, 'constructor');
+  plugin.file.kml.tour.SoundCue.base(this, 'constructor', opt_delayedStart || 0);
   this.isAsync = true;
 
   /**
@@ -29,51 +28,32 @@ plugin.file.kml.tour.SoundCue = function(href, opt_delayedStart) {
    * @private
    */
   this.href_ = href;
-
-  /**
-   * Delay before playing the audio file.
-   * @type {number}
-   * @private
-   */
-  this.delayedStart_ = Math.max(opt_delayedStart || 0, 0);
-
-  /**
-   * Remaining duration on the wait.
-   * @type {number|undefined}
-   * @private
-   */
-  this.remaining_ = undefined;
-
-  /**
-   * The last time the wait was started.
-   * @type {number}
-   * @private
-   */
-  this.start_ = 0;
-
-  /**
-   * The active timeout id.
-   * @type {number|undefined}
-   * @private
-   */
-  this.timeoutId_ = undefined;
 };
-goog.inherits(plugin.file.kml.tour.SoundCue, plugin.file.kml.tour.AbstractTourPrimitive);
+goog.inherits(plugin.file.kml.tour.SoundCue, plugin.file.kml.tour.Wait);
 
 
 /**
  * @inheritDoc
  */
-plugin.file.kml.tour.SoundCue.prototype.execute = function() {
-  var interval = this.getInterval();
-  if (!this.audio_ && interval > 0) {
-    this.timeoutId_ = setTimeout(this.playAudio_.bind(this), interval);
-    this.start_ = Date.now();
-  } else {
+plugin.file.kml.tour.SoundCue.prototype.executeWait = function(opt_resolve, opt_reject) {
+  if (this.audio_) {
+    // audio was already created, so resume playback
     this.playAudio_();
+  } else {
+    // audio not created yet, wait for the delayed start
+    plugin.file.kml.tour.SoundCue.base(this, 'executeWait', opt_resolve, opt_reject); // .then(goog.nullFunction, goog.nullFunction);
   }
+};
 
-  return goog.Promise.resolve();
+
+/**
+ * @inheritDoc
+ */
+plugin.file.kml.tour.SoundCue.prototype.onWaitComplete = function(opt_resolve, opt_reject) {
+  plugin.file.kml.tour.SoundCue.base(this, 'onWaitComplete', opt_resolve, opt_reject);
+
+  // delayed start is complete, start audio playback
+  this.playAudio_();
 };
 
 
@@ -82,12 +62,6 @@ plugin.file.kml.tour.SoundCue.prototype.execute = function() {
  * @private
  */
 plugin.file.kml.tour.SoundCue.prototype.playAudio_ = function() {
-  // cancel the timeout if one is pending
-  if (this.timeoutId_ !== undefined) {
-    clearTimeout(this.timeoutId_);
-    this.timeoutId_ = undefined;
-  }
-
   if (!this.audio_) {
     this.audio_ = /** @type {!HTMLAudioElement} */ (document.createElement('audio'));
     this.audio_.src = this.href_;
@@ -101,16 +75,10 @@ plugin.file.kml.tour.SoundCue.prototype.playAudio_ = function() {
  * @inheritDoc
  */
 plugin.file.kml.tour.SoundCue.prototype.pause = function() {
-  if (this.timeoutId_ !== undefined) {
-    // cancel the timeout
-    clearTimeout(this.timeoutId_);
-    this.timeoutId_ = undefined;
+  plugin.file.kml.tour.SoundCue.base(this, 'pause');
 
-    // save how much time is remaining to wait for the next execute call
-    var elapsed = Date.now() - this.start_;
-    var interval = this.getInterval();
-    this.remaining_ = Math.max(interval - elapsed, 0);
-  } else if (this.audio_) {
+  // pause the audio clip, but keep it around in case the tour starts again
+  if (this.audio_) {
     this.audio_.pause();
   }
 };
@@ -120,22 +88,11 @@ plugin.file.kml.tour.SoundCue.prototype.pause = function() {
  * @inheritDoc
  */
 plugin.file.kml.tour.SoundCue.prototype.reset = function() {
-  this.pause();
+  plugin.file.kml.tour.SoundCue.base(this, 'reset');
 
-  // reset the wait status
-  this.remaining_ = undefined;
-  this.start_ = 0;
-
-  // drop audio reference
-  this.audio_ = undefined;
-};
-
-
-/**
- * Get the remaining time on the wait operation.
- * @return {number} The remaining wait interval, in milliseconds.
- * @protected
- */
-plugin.file.kml.tour.SoundCue.prototype.getInterval = function() {
-  return this.remaining_ !== undefined ? this.remaining_ : this.delayedStart_;
+  // stop playback and drop the audio reference
+  if (this.audio_) {
+    this.audio_.pause();
+    this.audio_ = undefined;
+  }
 };

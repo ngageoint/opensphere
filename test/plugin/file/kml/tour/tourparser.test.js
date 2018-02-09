@@ -217,7 +217,7 @@ describe('plugin.file.kml.tour.parseTour', function() {
         expect(playlist.length).toBe(1);
         expect(playlist[0] instanceof plugin.file.kml.tour.SoundCue).toBe(true);
         expect(playlist[0].href_).toBe(href);
-        expect(playlist[0].delayedStart_).toBe(delayedStart);
+        expect(playlist[0].duration_).toBe(delayedStart * 1000);
       });
 
       it('parses a ' + namespace + 'TourControl element', function() {
@@ -240,13 +240,14 @@ describe('plugin.file.kml.tour.parseTour', function() {
       });
 
       it('parses a ' + namespace + 'Wait element', function() {
+        var duration = 10;
         var text =
             '<Tour>' +
             '  <name>Test Tour</name>' +
             '  <description>Test Tour Description</description>' +
             '  <Playlist>' +
             '    <Wait>' +
-            '      <duration>10</duration>' +
+            '      <duration>' + duration + '</duration>' +
             '    </Wait>' +
             '  </Playlist>' +
             '</Tour>';
@@ -257,7 +258,7 @@ describe('plugin.file.kml.tour.parseTour', function() {
         var playlist = tour.getPlaylist();
         expect(playlist.length).toBe(1);
         expect(playlist[0] instanceof plugin.file.kml.tour.Wait).toBe(true);
-        expect(playlist[0].duration_).toBe(10000);
+        expect(playlist[0].duration_).toBe(duration * 1000);
       });
     });
   };

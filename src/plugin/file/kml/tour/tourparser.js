@@ -146,7 +146,7 @@ plugin.file.kml.tour.parseSoundCue_ = function(node, objectStack) {
   var soundCueOptions = ol.xml.pushParseAndPop({}, plugin.file.kml.tour.SOUNDCUE_PARSERS_, node, objectStack);
   if (soundCueOptions['href']) {
     var href = /** @type {string} */ (soundCueOptions['href']);
-    var delayedStart = /** @type {number|undefined} */ (soundCueOptions['delayedStart']);
+    var delayedStart = /** @type {number|undefined} */ (soundCueOptions['delayedStart'] || 0) * 1000;
     soundCue = new plugin.file.kml.tour.SoundCue(href, delayedStart);
   }
   return soundCue;

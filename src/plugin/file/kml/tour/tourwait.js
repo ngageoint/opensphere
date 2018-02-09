@@ -48,15 +48,14 @@ goog.inherits(plugin.file.kml.tour.Wait, plugin.file.kml.tour.AbstractTourPrimit
  * @inheritDoc
  */
 plugin.file.kml.tour.Wait.prototype.execute = function() {
-  return new goog.Promise(function(resolve, reject) {
-    var interval = this.getInterval();
-    if (interval > 0) {
-      this.timeoutId_ = setTimeout(this.onComplete.bind(this, resolve), interval);
-      this.start_ = Date.now();
-    } else {
-      this.onComplete(resolve);
-    }
-  }, this);
+  if (this.isAsync) {
+    // asynchronous primitives should run the timeout routine but resolve immediately
+    this.executeWait();
+    return goog.Promise.resolve();
+  } else {
+    // synchronous primitives should resolve the promise after the timeout completes
+    return new goog.Promise(this.executeWait, this);
+  }
 };
 
 
@@ -104,22 +103,45 @@ plugin.file.kml.tour.Wait.prototype.getInterval = function() {
 
 
 /**
+ * Handle wait completion.
+ * @param {function()=} opt_resolve The promise resolve function to call when done.
+ * @param {function()=} opt_reject The promise reject function to call on failure.
+ * @protected
+ */
+plugin.file.kml.tour.Wait.prototype.executeWait = function(opt_resolve, opt_reject) {
+  var interval = this.getInterval();
+  if (interval > 0) {
+    // start the timeout
+    this.timeoutId_ = setTimeout(this.onWaitComplete.bind(this, opt_resolve, opt_reject), interval);
+    this.start_ = Date.now();
+  } else {
+    // timeout duration 0 or already completed
+    this.onWaitComplete(opt_resolve, opt_reject);
+  }
+};
+
+
+/**
  * If the wait is currently active.
  * @return {boolean}
  * @protected
  */
-plugin.file.kml.tour.Wait.prototype.isTimeoutActive = function() {
+plugin.file.kml.tour.Wait.prototype.isWaitActive = function() {
   return this.timeoutId_ !== undefined;
 };
 
 
 /**
  * Handle wait completion.
- * @param {function()} resolve The promise resolve function to call when done.
+ * @param {function()=} opt_resolve The promise resolve function to call when done.
+ * @param {function()=} opt_reject The promise reject function to call on failure.
  * @protected
  */
-plugin.file.kml.tour.Wait.prototype.onComplete = function(resolve) {
+plugin.file.kml.tour.Wait.prototype.onWaitComplete = function(opt_resolve, opt_reject) {
   // reset everything and resolve the promise
   this.reset();
-  resolve();
+
+  if (opt_resolve) {
+    opt_resolve();
+  }
 };
