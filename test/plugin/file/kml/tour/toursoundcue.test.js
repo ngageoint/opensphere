@@ -21,7 +21,7 @@ describe('plugin.file.kml.tour.SoundCue', function() {
     delayedStarts.forEach(function(delayedStart) {
       var soundCue = new plugin.file.kml.tour.SoundCue(href, delayedStart);
       expect(soundCue.href_).toBe(href);
-      expect(soundCue.delayedStart_).toBe(delayedStart > 0 ? delayedStart : 0);
+      expect(soundCue.duration_).toBe(delayedStart > 0 ? delayedStart : 0);
       expect(soundCue.remaining_).toBeUndefined();
       expect(soundCue.start_).toBe(0);
       expect(soundCue.timeoutId_).toBeUndefined();
@@ -30,7 +30,7 @@ describe('plugin.file.kml.tour.SoundCue', function() {
 
   it('gets the correct interval', function() {
     var soundCue = new plugin.file.kml.tour.SoundCue(href, delayedStart);
-    expect(soundCue.getInterval()).toBe(soundCue.delayedStart_);
+    expect(soundCue.getInterval()).toBe(soundCue.duration_);
 
     soundCue.remaining_ = 42;
     expect(soundCue.getInterval()).toBe(soundCue.remaining_);
@@ -39,7 +39,7 @@ describe('plugin.file.kml.tour.SoundCue', function() {
     expect(soundCue.getInterval()).toBe(soundCue.remaining_);
 
     soundCue.remaining_ = undefined;
-    expect(soundCue.getInterval()).toBe(soundCue.delayedStart_);
+    expect(soundCue.getInterval()).toBe(soundCue.duration_);
   });
 
   it('resolves execute promise immediately', function() {

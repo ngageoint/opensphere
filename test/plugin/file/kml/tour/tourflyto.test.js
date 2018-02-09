@@ -93,7 +93,7 @@ describe('plugin.file.kml.tour.FlyTo', function() {
     expect(flightCancelled).toBe(false);
 
     // make it think it's active and pause/reset should cancel flight
-    spyOn(flyTo, 'isTimeoutActive').andReturn(true);
+    spyOn(flyTo, 'isWaitActive').andReturn(true);
 
     flyTo.pause();
     expect(flightCancelled).toBe(true);

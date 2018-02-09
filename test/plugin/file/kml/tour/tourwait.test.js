@@ -47,7 +47,7 @@ describe('plugin.file.kml.tour.Wait', function() {
     spyOn(window, 'setTimeout').andCallFake(fakeSetTimeout);
     spyOn(window, 'clearTimeout');
 
-    spyOn(wait, 'onComplete').andCallThrough();
+    spyOn(wait, 'onWaitComplete').andCallThrough();
     spyOn(wait, 'reset').andCallThrough();
 
     var beforeStart = Date.now() - 1;
@@ -70,7 +70,7 @@ describe('plugin.file.kml.tour.Wait', function() {
       expect(waitPromise.state_).toBe(goog.Promise.State_.PENDING);
 
       // these shouldn't be called until timeout fires
-      expect(wait.onComplete).not.toHaveBeenCalled();
+      expect(wait.onWaitComplete).not.toHaveBeenCalled();
       expect(wait.reset).not.toHaveBeenCalled();
 
       // fire the timeout callback
@@ -83,8 +83,8 @@ describe('plugin.file.kml.tour.Wait', function() {
     }, 'promise to resolve');
 
     runs(function() {
-      // timeout callback should have been onComplete, which should have reset and resolved the promise
-      expect(wait.onComplete).toHaveBeenCalled();
+      // timeout callback should have been onWaitComplete, which should have reset and resolved the promise
+      expect(wait.onWaitComplete).toHaveBeenCalled();
       expect(wait.reset).toHaveBeenCalled();
       expect(waitPromise.state_).toBe(goog.Promise.State_.FULFILLED);
 
@@ -140,7 +140,7 @@ describe('plugin.file.kml.tour.Wait', function() {
 
     spyOn(window, 'setTimeout');
     spyOn(window, 'clearTimeout');
-    spyOn(wait, 'onComplete');
+    spyOn(wait, 'onWaitComplete');
 
     runs(function() {
       wait.remaining_ = 0;
@@ -148,13 +148,13 @@ describe('plugin.file.kml.tour.Wait', function() {
     });
 
     waitsFor(function() {
-      return wait.onComplete.calls.length > 0;
-    }, 'onComplete to be called');
+      return wait.onWaitComplete.calls.length > 0;
+    }, 'onWaitComplete to be called');
 
     runs(function() {
       expect(window.setTimeout).not.toHaveBeenCalled();
       expect(window.clearTimeout).not.toHaveBeenCalled();
-      expect(wait.onComplete).toHaveBeenCalled();
+      expect(wait.onWaitComplete).toHaveBeenCalled();
     });
   });
 

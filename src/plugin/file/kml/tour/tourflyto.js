@@ -66,7 +66,7 @@ plugin.file.kml.tour.FlyTo.prototype.execute = function() {
  * @inheritDoc
  */
 plugin.file.kml.tour.FlyTo.prototype.pause = function() {
-  if (this.isTimeoutActive()) {
+  if (this.isWaitActive()) {
     os.MapContainer.getInstance().cancelFlight();
   }
 
@@ -78,7 +78,7 @@ plugin.file.kml.tour.FlyTo.prototype.pause = function() {
  * @inheritDoc
  */
 plugin.file.kml.tour.FlyTo.prototype.reset = function() {
-  if (this.isTimeoutActive()) {
+  if (this.isWaitActive()) {
     os.MapContainer.getInstance().cancelFlight();
   }
 
