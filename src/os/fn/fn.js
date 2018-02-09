@@ -37,16 +37,10 @@ os.fn.reduceExtentFromLayers = function(extent, layer) {
     if (!ex) {
       var source = olayer.getSource();
 
-      // We are explicitly ignoring tile sources. Extents from tile layers are
-      // often automatically computed from the underlying vector data in the back-end WMS
-      // or Arc services. For many sources this results in a large, but not quite
-      // full-world, extent.
-      //
-      // Will: I'll argue that it is the user's fault if they select a tile layer and do
-      //    something with its extent (generally zoom I guess?) and that the check should
-      //    be removed entirely.
-      if (source instanceof ol.source.Vector) {
-        ex = /** @type {ol.source.Vector} */ (source).getExtent();
+      if (source instanceof ol.source.Vector ||
+          source instanceof ol.source.Image ||
+          source instanceof ol.source.Tile) {
+        ex = source.getExtent();
       }
     }
 
@@ -78,6 +72,15 @@ os.fn.reduceExtentFromGeometries = function(extent, geometry) {
 
 
 /**
+ * @param {undefined|null|ol.layer.Layer} layer The layer
+ * @return {undefined|ol.source.Source} The source, if any
+ */
+os.fn.mapLayerToSource = function(layer) {
+  return layer ? layer.getSource() : undefined;
+};
+
+
+/**
  * @param {undefined|null|ol.Feature} feature The feature
  * @return {undefined|ol.geom.Geometry} The geom
  */
@@ -86,9 +89,10 @@ os.fn.mapFeatureToGeometry = function(feature) {
 };
 
 
+
 /**
  * Map a tree node to a layer.
- * @param {os.structs.ITreeNode} node The tree node.
+ * @param {undefined|null|os.structs.ITreeNode} node The tree node.
  * @return {os.layer.ILayer|undefined} layer The layer, or undefined if not a layer node.
  */
 os.fn.mapNodeToLayer = function(node) {
