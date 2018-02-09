@@ -17,7 +17,7 @@ goog.require('os.source');
 goog.require('os.style');
 goog.require('os.ui.Icons');
 goog.require('os.ui.featureInfoDirective');
-goog.require('os.ui.node.defaultLayerNodeUIDirective');
+goog.require('os.ui.layer.defaultLayerUIDirective');
 goog.require('os.ui.renamelayer');
 goog.require('os.ui.window');
 
@@ -94,7 +94,7 @@ os.layer.Image = function(options) {
    * @type {string}
    * @private
    */
-  this.layerUi_ = 'imagelayerui';
+  this.layerUi_ = 'defaultlayerui';
 
   /**
    * @type {boolean}
@@ -505,11 +505,6 @@ os.layer.Image.prototype.supportsAction = function(type, opt_actionArgs) {
         return true;
       case os.action.EventType.RENAME:
         return !!opt_actionArgs && goog.isArrayLike(opt_actionArgs) && opt_actionArgs.length === 1;
-      case os.action.EventType.EXPORT:
-      case os.action.EventType.DISABLE_TIME:
-      case os.action.EventType.ENABLE_TIME:
-      case os.action.EventType.MOST_RECENT:
-        return false;
       case os.action.EventType.REMOVE_LAYER:
         return this.isRemovable();
       case os.action.EventType.REFRESH:
@@ -531,11 +526,6 @@ os.layer.Image.prototype.callAction = function(type) {
     switch (type) {
       case os.action.EventType.IDENTIFY:
         this.identify();
-        break;
-      case os.action.EventType.DISABLE_TIME:
-      case os.action.EventType.ENABLE_TIME:
-      case os.action.EventType.MOST_RECENT:
-      case os.action.EventType.REFRESH:
         break;
       case os.action.EventType.REMOVE_LAYER:
         var removeEvent = new os.events.LayerEvent(os.events.LayerEventType.REMOVE, this.getId());
