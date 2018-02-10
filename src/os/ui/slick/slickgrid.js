@@ -1006,6 +1006,7 @@ os.ui.slick.SlickGridCtrl.prototype.getContextMenuFromSelected = function() {
  * @param {(angular.Scope.Event|goog.events.BrowserEvent)} event
  * @param {Array<number>=} opt_position The menu position
  * @private
+ * @suppress {deprecated}
  */
 os.ui.slick.SlickGridCtrl.prototype.onContextMenu_ = function(event, opt_position) {
   event.preventDefault();
