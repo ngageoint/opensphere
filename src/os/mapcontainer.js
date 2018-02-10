@@ -22,7 +22,6 @@ goog.require('ol.ObjectEventType');
 goog.require('ol.View');
 goog.require('ol.ViewHint');
 goog.require('ol.events');
-goog.require('ol.geom.Point');
 goog.require('ol.layer.Tile');
 goog.require('ol.layer.Vector');
 goog.require('ol.proj');
@@ -1201,10 +1200,8 @@ os.MapContainer.prototype.persistCameraState = function() {
     // always translate the center point to EPSG:4326
     var center = view.getCenter() || os.map.DEFAULT_CENTER;
     if (os.map.PROJECTION != os.proj.EPSG4326) {
-      var point = new ol.geom.Point(center);
-      point.transform(os.map.PROJECTION, os.proj.EPSG4326);
-      os.geo.normalizeGeometryCoordinates(point);
-      center = point.getFirstCoordinate();
+      center = ol.proj.toLonLat(center, os.map.PROJECTION);
+      center[0] = os.geo.normalizeLongitude(center[0]);
     }
 
     var resolution = view.getResolution();
@@ -1288,14 +1285,8 @@ os.MapContainer.prototype.restoreCameraStateInternal_ = function(cameraState) {
         zoom = this.resolutionToZoom(resolution);
       }
 
-      // camera state is saved in EPSG:4326, so translate back to the current projection if different
-      var center = cameraState.center;
-      if (os.map.PROJECTION != os.proj.EPSG4326) {
-        var point = new ol.geom.Point(center);
-        point.transform(os.proj.EPSG4326, os.map.PROJECTION);
-        center = point.getFirstCoordinate();
-      }
-
+      // camera state is saved in EPSG:4326
+      var center = ol.proj.fromLonLat(cameraState.center, os.map.PROJECTION);
       view.setCenter(center);
       view.setRotation(goog.math.toRadians(cameraState.heading));
       view.setZoom(zoom);
