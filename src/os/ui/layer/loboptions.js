@@ -22,7 +22,6 @@ goog.require('os.style');
 goog.require('os.ui.Module');
 goog.require('os.ui.layer.AbstractLayerUICtrl');
 goog.require('os.ui.sliderDirective');
-goog.require('os.ui.spinnerDirective');
 
 
 /**
@@ -180,11 +179,10 @@ os.ui.layer.LobOptionsCtrl = function($scope, $element) {
    */
   this['helpText'] = '<p>Line of Bearing Error allows you to show a +/- error range on the line length and ' +
     'orientation with arcs. Absence of bearing error shows lines instead of arcs. Absence of length error shows a ' +
-    'single arc. Note that the bearing error is not accurate for line lengths greater than 10,0000km!' +
+    'single arc. Note that the bearing error is not accurate for line lengths greater than 10,000km!' +
     '</p><img src="' + os.ROOT + '/images/loberror.png"></img>';
 
   $scope.$on('length.slidestop', this.onLengthChange.bind(this));
-  $scope.$on('length.spinstop', this.onLengthChange.bind(this));
 };
 goog.inherits(os.ui.layer.LobOptionsCtrl, os.ui.layer.AbstractLayerUICtrl);
 

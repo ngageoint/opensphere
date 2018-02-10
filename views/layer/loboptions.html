@@ -34,13 +34,13 @@
     <table class="wide">
       <tr>
         <td>
-          <spinner min="1" max="maxSize[ctrl.lengthUnits]" step="1" value="length" live="false" css="large-spinner" name="length"></spinner>
+          <input class="c-labelcontainer__wide" type="number" step="any" min="1" max="maxSize[ctrl.lengthUnits]" ng-change="ctrl.onLengthChange()" ng-model="length" ng-required="true" />
         </td>
         <td class="wide">
           <slider min="1" max="maxSliderSize[ctrl.lengthUnits]" step="1" value="length" live="false" name="length"></slider>
         </td>
         <td>
-          <select style="width:55px;" class="no-margin wide" ng-model="ctrl.lengthUnits" ng-change="ctrl.onLengthUnitChange()"
+          <select class="label-units no-margin wide" ng-model="ctrl.lengthUnits" ng-change="ctrl.onLengthUnitChange()"
               title="Sets the units field used for length" ng-options="item for item in ctrl.units">
           </select>
         </td>
@@ -57,7 +57,7 @@
           </select>
         </td>
         <td>
-          <select style="width:55px;" class="no-margin wide" ng-model="ctrl.lengthUnits" ng-change="ctrl.onLengthUnitChange()"
+          <select class="label-units no-margin wide" ng-model="ctrl.lengthUnits" ng-change="ctrl.onLengthUnitChange()"
               title="Sets the units field used for length" ng-options="item for item in ctrl.units">
           </select>
         </td>
@@ -80,11 +80,11 @@
         </td>
         <td>
           <label ng-show="ctrl.showArrow" class="no-margin">
-            &nbsp; Size: <input class="c-labelcontainer__wide" type="number" step="any" min="1" max="maxSize[ctrl.lengthUnits]" ng-change="ctrl.onSizeChange()" ng-model="size" ng-required="true" />
+            &nbsp; Size: <input class="c-labelcontainer__wide" type="number" step="any" min="1" max="maxSize[ctrl.arrowUnits]" ng-change="ctrl.onSizeChange()" ng-model="size" ng-required="true" />
           </label>
         </td>
         <td>
-          <select ng-show="ctrl.showArrow" style="width:55px;" class="no-margin wide" ng-model="ctrl.arrowUnits" ng-change="ctrl.onArrowUnitChange()"
+          <select ng-show="ctrl.showArrow" class="label-units no-margin wide" ng-model="ctrl.arrowUnits" ng-change="ctrl.onArrowUnitChange()"
               title="Sets the units field used for arrow size" ng-options="item for item in ctrl.units">
           </select>
         </td>
@@ -126,7 +126,7 @@
           <td class="c-labelcontainer__fixedcell">+/-&nbsp;deg</td>
           <td class="c-labelcontainer__fixedcell"> x </td>
           <td>
-            <input style="width: 50px;" class="c-labelcontainer__wide" type="number" step="any" min="0" max="maxSize[ctrl.lengthUnits]" ng-change="ctrl.onBearingErrorChange()" ng-model="bearingErrorMultiplier" ng-required="true" />
+            <input class="label-units" type="number" step="any" min="0" max="360" ng-change="ctrl.onBearingErrorChange()" ng-model="bearingErrorMultiplier" ng-required="true" />
           </td>
         </tr>
       </table>
@@ -142,14 +142,14 @@
             </select>
           </td>
           <td class="c-labelcontainer__fixedcell">+/-</td>
-          <td style="width: 55px;">
+          <td class="label-units">
             <select class="no-margin wide" ng-model="ctrl.lengthErrorUnits" ng-change="ctrl.onLengthErrorUnitChange()"
                 title="Sets the units field used for length" ng-options="item for item in ctrl.units">
             </select>
           </td>
           <td class="c-labelcontainer__fixedcell"> x </td>
           <td>
-            <input style="width: 50px;" class="c-labelcontainer__wide" type="number" step="any" min="0" max="maxSize[ctrl.lengthUnits]" ng-change="ctrl.onLengthErrorChange()" ng-model="lengthErrorMultiplier" ng-required="true" />
+            <input class="c-labelcontainer__wide" type="number" step="any" min="0" max="maxSize[ctrl.lengthErrorUnits]" ng-change="ctrl.onLengthErrorChange()" ng-model="lengthErrorMultiplier" ng-required="true" />
           </td>
         </tr>
       </table>
