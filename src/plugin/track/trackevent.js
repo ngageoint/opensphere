@@ -9,7 +9,6 @@ goog.require('goog.events.Event');
  * @enum {string}
  */
 plugin.track.EventType = {
-  TRACK_GEOMETRY: 'track:geometryChange',
   CREATE_TRACK: 'track:create',
   ADD_TO: 'track:addTo',
   FOLLOW: 'track:followTrack',

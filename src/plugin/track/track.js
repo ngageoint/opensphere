@@ -7,7 +7,10 @@ goog.require('ol.geom.MultiLineString');
 goog.require('ol.geom.Point');
 goog.require('os.config');
 goog.require('os.data.RecordField');
+goog.require('os.events.PropertyChangeEvent');
 goog.require('os.feature');
+goog.require('os.feature.DynamicFeature');
+goog.require('os.feature.DynamicPropertyChange');
 goog.require('os.interpolate');
 goog.require('os.ogc.filter.OGCFilterOverride');
 goog.require('os.olcs');
@@ -211,14 +214,14 @@ plugin.track.isTrackFeature = function(feature) {
 /**
  * Get the track layer, creating it if one doesn't exist.
  * @param {boolean=} opt_create If the track layer should be created if it doesn't exist
- * @return {plugin.track.TrackLayer}
+ * @return {plugin.file.kml.KMLLayer}
  */
 plugin.track.getTrackLayer = function(opt_create) {
   var osMap = os.MapContainer.getInstance();
-  var layer = /** @type {plugin.track.TrackLayer} */ (osMap.getLayer(plugin.track.ID));
+  var layer = /** @type {plugin.file.kml.KMLLayer} */ (osMap.getLayer(plugin.track.ID));
   if (!layer && opt_create) {
     var options = plugin.track.getDefaultLayerOptions();
-    layer = /** @type {plugin.track.TrackLayer} */ (os.layer.createFromOptions(options));
+    layer = /** @type {plugin.file.kml.KMLLayer} */ (os.layer.createFromOptions(options));
 
     if (layer) {
       osMap.addLayer(layer);
@@ -360,7 +363,16 @@ plugin.track.createTrack = function(features, opt_name, opt_color, opt_field, op
   }
 
   // create the track feature
-  var track = new ol.Feature(geometry);
+  var track;
+  if (sortField === os.data.RecordField.TIME) {
+    track = new os.feature.DynamicFeature(geometry,
+        plugin.track.initDynamic,
+        plugin.track.disposeDynamic,
+        plugin.track.updateDynamic);
+  } else {
+    track = new ol.Feature(geometry);
+  }
+
   var trackId = opt_id || (plugin.track.ID + '-' + goog.string.getRandomString());
   track.setId(trackId);
   track.set(os.Fields.ID, trackId);
@@ -592,7 +604,7 @@ plugin.track.setGeometry = function(track, geometry) {
   geometry.set(os.olcs.DIRTY_BIT, true);
 
   // notify listeners that the track geometry has changed
-  track.dispatchEvent(plugin.track.EventType.TRACK_GEOMETRY);
+  track.dispatchEvent(new os.events.PropertyChangeEvent(os.feature.DynamicPropertyChange.GEOMETRY));
 };
 
 
@@ -909,4 +921,253 @@ plugin.track.promptForField = function(columns, prompt) {
       })
     }));
   });
+};
+
+
+/**
+ * Switch the track to its animating state.
+ * @param {!ol.Feature} track The track feature.
+ */
+plugin.track.initDynamic = function(track) {
+  // switch the displayed track geometry to show the "current" line
+  var trackStyles = /** @type {Array<Object<string, *>>} */ (track.get(os.style.StyleType.FEATURE));
+  var trackStyle = trackStyles ? trackStyles[0] : null;
+  if (trackStyle) {
+    trackStyle['geometry'] = plugin.track.TrackField.CURRENT_LINE;
+
+    os.ui.FeatureEditCtrl.restoreFeatureLabels(track);
+    os.style.setFeatureStyle(track);
+  }
+};
+
+
+/**
+ * Switch the track to its non-animating state.
+ * @param {!ol.Feature} track The track feature.
+ * @param {boolean=} opt_disposing If the feature is being disposed.
+ */
+plugin.track.disposeDynamic = function(track, opt_disposing) {
+  // dispose of the current track geometry and remove it from the feature
+  plugin.track.disposeAnimationGeometries(track);
+
+  if (!opt_disposing) {
+    // switch the style back to rendering the original track
+    var trackStyles = /** @type {Array<Object<string, *>>} */ (track.get(os.style.StyleType.FEATURE));
+    var trackStyle = trackStyles ? trackStyles[0] : null;
+    if (trackStyle) {
+      delete trackStyle['geometry'];
+      os.style.setFeatureStyle(track);
+    }
+
+    // reset coordinate fields and update time/distance to the full track
+    plugin.track.updateDistance(track);
+    plugin.track.updateDuration(track);
+    plugin.track.updateCurrentPosition(track);
+  }
+};
+
+
+/**
+ * Update a track feature to represent the track at a provided timestamp.
+ * @param {!ol.Feature} track The track.
+ * @param {number} timestamp The timestamp.
+ */
+plugin.track.updateDynamic = function(track, timestamp) {
+  var sortField = track.get(plugin.track.TrackField.SORT_FIELD);
+  if (sortField !== os.data.RecordField.TIME) {
+    // isn't sorted by time - can't create a current track
+    return;
+  }
+
+  var trackGeometry = track.getGeometry();
+  if (!(trackGeometry instanceof ol.geom.MultiLineString)) {
+    // shouldn't happen, but this will fail if the track isn't a multi-line
+    return;
+  }
+
+  var flatCoordinates = trackGeometry.getFlatCoordinates();
+  var stride = trackGeometry.getStride();
+  var ends = trackGeometry.getEnds();
+  var geomLayout = trackGeometry.getLayout();
+  if (!flatCoordinates || !ends ||
+      (geomLayout !== ol.geom.GeometryLayout.XYM && geomLayout !== ol.geom.GeometryLayout.XYZM)) {
+    // something is wrong with this line - abort!!
+    return;
+  }
+
+  var timeIndex = plugin.track.getTimeIndex(flatCoordinates, timestamp, stride);
+  plugin.track.updateCurrentLine(track, timestamp, timeIndex, flatCoordinates, stride, ends);
+
+  plugin.track.updateDistance(track);
+  plugin.track.updateDuration(track);
+  track.changed();
+};
+
+
+/**
+ * Get the closest index in the timestamp array for a time value.
+ * @param {!Array<number>} coordinates The timestamp array
+ * @param {number} value The time value to find
+ * @param {number} stride The coordinate array stride.
+ * @return {number}
+ */
+plugin.track.getTimeIndex = function(coordinates, value, stride) {
+  // find the closest timestamp to the current timeline position
+  var index = os.array.binaryStrideSearch(coordinates, value, stride, stride - 1);
+  if (index < 0) {
+    // if current isn't in the array, goog.array.binarySearch will return (-(insertion point) - 1)
+    index = -index - 1;
+  }
+
+  return index;
+};
+
+
+/**
+ * Get the position of a track at a given time. If the time falls between known points on the track, the position will
+ * be linearly interpolated between the known points.
+ * @param {!ol.Feature} track The track.
+ * @param {number} timestamp The timestamp.
+ * @param {number} index The index of the most recent known coordinate.
+ * @param {!Array<number>} coordinates The flat track coordinate array.
+ * @param {number} stride The stride of the coordinate array.
+ * @return {ol.Coordinate|undefined}
+ */
+plugin.track.getTrackPositionAt = function(track, timestamp, index, coordinates, stride) {
+  var position;
+
+  if (index === 0) {
+    // current is before the track starts - show the first position
+    position = coordinates.slice(0, stride);
+  } else if (index === coordinates.length) {
+    // current is after the track ends - show the last position
+    position = coordinates.slice(coordinates.length - stride);
+  } else {
+    // interpolate the current position based on the timestamp/coordinate on either side of the timestamp
+    var prevTime = coordinates[index - 1];
+    var nextTime = coordinates[index + stride - 1];
+    var scale = (timestamp - prevTime) / (nextTime - prevTime);
+
+    // get the start index of each coordinate to avoid slicing the array (and resulting GC)
+    var prevIndex = index - stride;
+    var nextIndex = index;
+    position = [
+      goog.math.lerp(coordinates[prevIndex], coordinates[nextIndex], scale),
+      goog.math.lerp(coordinates[prevIndex + 1], coordinates[nextIndex + 1], scale)
+    ];
+
+    // interpolate altitude if present
+    if (stride === 4) {
+      position.push(goog.math.lerp(coordinates[prevIndex + 2], coordinates[nextIndex + 2], scale));
+    }
+
+    position.push(timestamp);
+  }
+
+  return position;
+};
+
+
+/**
+ * Update the track's line geometry to display its position up to the provided timestamp.
+ * @param {!ol.Feature} track The track.
+ * @param {number} timestamp The timestamp.
+ * @param {number} index The index of the most recent known coordinate.
+ * @param {!Array<number>} coordinates The flat track coordinate array.
+ * @param {number} stride The stride of the coordinate array.
+ * @param {!Array<number>} ends The end indicies of each line in the multi-line.
+ *
+ * @suppress {accessControls} To allow direct access to line string coordinates.
+ */
+plugin.track.updateCurrentLine = function(track, timestamp, index, coordinates, stride, ends) {
+  var currentLine = /** @type {ol.geom.MultiLineString|undefined} */ (track.get(plugin.track.TrackField.CURRENT_LINE));
+  var layout = stride === 4 ? ol.geom.GeometryLayout.XYZM : ol.geom.GeometryLayout.XYM;
+  if (!currentLine) {
+    // create the line geometry if it doesn't exist yet. must use an empty coordinate array instead of null, or the
+    // layout will be set to XY
+    currentLine = new ol.geom.MultiLineString([], layout);
+    track.set(plugin.track.TrackField.CURRENT_LINE, currentLine);
+  }
+
+  var flatCoordinates = currentLine.flatCoordinates;
+  if (flatCoordinates.length === index &&
+      flatCoordinates[flatCoordinates.length - stride] === coordinates[coordinates.length - stride]) {
+    // target is the last coordinate and it's already equal, so the line doesn't need to be modified
+    return;
+  }
+
+  // strip the last coordinate, because it's probably the "most recent" and not part of the original track
+  if (flatCoordinates.length > stride) {
+    flatCoordinates.length = flatCoordinates.length - stride;
+  }
+
+  if (flatCoordinates.length >= index) {
+    // the current line is longer than the expected line, so remove extra coordinates
+    flatCoordinates.length = index;
+  } else if (index > 0) {
+    // the expected line is longer, so push missing coordinates to the array. the array is modified in place to avoid
+    // having to set the coordinates on the line string.
+    for (var i = flatCoordinates.length; i < index; i++) {
+      flatCoordinates.push(coordinates[i]);
+    }
+  }
+
+  // add ends indices that are in the current line
+  var currentEnds = ends.filter(function(end) {
+    return end <= flatCoordinates.length;
+  });
+
+  if (flatCoordinates.length < coordinates.length) {
+    // not showing the full track, so interpolate the current position
+    var position = plugin.track.getTrackPositionAt(track, timestamp, index, coordinates, stride);
+    if (position) {
+      for (var i = 0; i < position.length; i++) {
+        flatCoordinates.push(position[i]);
+      }
+    }
+
+    // add the end location of the last line segment
+    currentEnds.push(flatCoordinates.length);
+  }
+
+  // update the current position marker
+  plugin.track.updateCurrentPosition(track);
+
+  // mark the line as dirty so the Cesium feature converter recreates it
+  currentLine.set(os.olcs.DIRTY_BIT, true);
+
+  // update the line geometry
+  currentLine.setFlatCoordinates(layout, flatCoordinates, currentEnds);
+};
+
+
+/**
+ * Update the z-index for a list of tracks. Ensures the current position icon for all tracks will be displayed on top
+ * of the line string for every other track passed to the function.
+ * @param {!Array<!ol.Feature>} tracks The track features.
+ */
+plugin.track.updateTrackZIndex = function(tracks) {
+  // save the top z-index so current position icons can be displayed above tracks
+  var topTrackZIndex = tracks.length + 1;
+  for (var i = 0; i < tracks.length; i++) {
+    var track = tracks[i];
+    var trackStyles = /** @type {!Array<!Object<string, *>>} */ (track.get(os.style.StyleType.FEATURE));
+    if (!goog.isArray(trackStyles)) {
+      trackStyles = [trackStyles];
+    }
+
+    for (var j = 0; j < trackStyles.length; j++) {
+      var style = trackStyles[j];
+      style['zIndex'] = tracks.length - i;
+
+      // display current position icon above track lines
+      if (style['geometry'] == plugin.track.TrackField.CURRENT_POSITION) {
+        style['zIndex'] += topTrackZIndex;
+      }
+    }
+
+    // update styles on the track and
+    os.style.setFeatureStyle(track);
+    track.changed();
+  }
 };

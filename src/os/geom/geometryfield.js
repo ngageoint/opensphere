@@ -6,6 +6,5 @@ goog.provide('os.geom.GeometryField');
  * @enum {string}
  */
 os.geom.GeometryField = {
-  DYNAMIC: '_dynamic',
   NORMALIZED: '_normalized'
 };
