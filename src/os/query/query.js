@@ -89,7 +89,7 @@ os.query.isWorldQuery = function(geometry) {
     // transform the world extent to the current projection to compute the area
     var worldExtent = ol.proj.transformExtent(os.query.WORLD_EXTENT, os.proj.EPSG4326, os.map.PROJECTION);
     var worldArea = ol.extent.getArea(worldExtent);
-    if (geometry.getArea() >= worldArea || geometry.getArea() == 0) {
+    if (goog.math.nearlyEquals(geometry.getArea(), worldArea) || geometry.getArea() == 0) {
       geometry.setCoordinates(world.getCoordinates());
       return true;
     }
@@ -97,7 +97,6 @@ os.query.isWorldQuery = function(geometry) {
 
   return false;
 };
-
 
 /**
  * The world extent in EPSG:4326. This is the max precision that a polygon can handle.
