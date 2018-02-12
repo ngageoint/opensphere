@@ -1,0 +1,5 @@
+#!/bin/bash
+
+set -e
+validate-commit-msg "$@"
+scripts/prevent-issue-collision.sh "$@"
