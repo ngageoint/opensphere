@@ -879,7 +879,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.openMenu = function(selector) {
     // clear the previous data actions
     var dataGroup = menu.getRoot().find('Data');
     goog.asserts.assert(!!dataGroup, 'Group "Data" should exist!');
-    dataGroup.children.length = 1;
+    dataGroup.children.length = menu === this.zoomMenu ? 1 : 0;
 
     // add data actions
     var histData = /** @type {?Array<!os.hist.HistogramData>} */ (this['histData']);
@@ -1382,8 +1382,8 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.initMenus = function() {
       }, {
         type: os.ui.menu.MenuItemType.GROUP,
         label: 'Data',
-        sort: 20,
-        children: []
+        children: [],
+        sort: 20
       }]
     }));
 
