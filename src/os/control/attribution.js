@@ -46,7 +46,7 @@ os.control.Attribution.prototype.getSourceAttributions_ = function(frameState) {
   for (var i = 0, ii = layerStatesArray.length; i < ii; ++i) {
     var layerState = layerStatesArray[i];
     if (os.control.Attribution.CheckVisibleAtResolution) {
-      if (!ol.layer.Layer.visibleAtResolution(layerState, resolution)) {
+      if (!os.control.Attribution.visibleAtResolution(layerState, resolution)) {
         continue;
       }
     }
@@ -131,3 +131,17 @@ os.control.Attribution.prototype.updateElement_ = function(frameState) {
  * @suppress {accessControls}
  */
 ol.control.Attribution.prototype.insertLogos_ = goog.nullFunction;
+
+
+/**
+ * Replaces `ol.layer.Layer.visibleAtResolution` because Openlayers only checks the layerState for visibility. This does
+ * not work when Cesium is up.
+ *
+ * @param {ol.LayerState} layerState Layer state.
+ * @param {number} resolution Resolution.
+ * @return {boolean} The layer is visible at the given resolution.
+ */
+os.control.Attribution.visibleAtResolution = function(layerState, resolution) {
+  return layerState.layer.getVisible() && resolution >= layerState.minResolution &&
+      resolution < layerState.maxResolution;
+};
