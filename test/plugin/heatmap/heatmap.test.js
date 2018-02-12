@@ -1,11 +1,10 @@
 goog.require('plugin.heatmap');
-goog.require('plugin.heatmap.HeatmapSource');
 
 
-describe('plugin.heatmap.HeatmapSource', function() {
+describe('plugin.heatmap', function() {
   it('clones features', function() {
     var feature = new ol.Feature(new ol.geom.MultiPoint([[5, 10], [30, 50], [25, 12]]));
-    var clone = plugin.heatmap.HeatmapSource.clone(feature);
+    var clone = plugin.heatmap.cloneFeature(feature);
 
     var pointGeom = clone.getGeometry();
     var type = /** @type {string} */ (clone.get(plugin.heatmap.HeatmapField.GEOMETRY_TYPE));
@@ -22,8 +21,8 @@ describe('plugin.heatmap.HeatmapSource', function() {
   });
 
   it('creates gradients', function() {
-    var thermal = plugin.heatmap.HeatmapSource.createGradient(os.color.THERMAL_HEATMAP_GRADIENT_HEX);
-    var rainbow = plugin.heatmap.HeatmapSource.createGradient(os.color.RAINBOW_HEATMAP_GRADIENT_HEX);
+    // var thermal = plugin.heatmap.createGradient(os.color.THERMAL_HEATMAP_GRADIENT_HEX);
+    // var rainbow = plugin.heatmap.createGradient(os.color.RAINBOW_HEATMAP_GRADIENT_HEX);
 
     // expect(thermal).toBe([]);
     // expect(rainbow).toBe([]);

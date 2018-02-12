@@ -157,7 +157,7 @@ os.ui.state.menu.refreshMenu = function() {
   // Remove all groups from the menu
   var menuRoot = os.ui.state.MENU.getRoot();
   if (menuRoot.children) {
-    goog.array.removeIf(menuRoot.children, function(item) {
+    goog.array.removeAllIf(menuRoot.children, function(item) {
       return item.type === os.ui.menu.MenuItemType.GROUP;
     });
   }

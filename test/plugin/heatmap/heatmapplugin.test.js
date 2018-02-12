@@ -48,7 +48,7 @@ describe('plugin.heatmap.HeatmapPlugin', function() {
     expect(source.getSupportsAction(plugin.heatmap.menu.EventType.GENERATE_HEATMAP)).toBe(true);
 
     var menu = os.ui.menu.layer.MENU;
-    expect(menu.getRoot().find(plugin.heatmap.menu.EventType.EXPORT)).not.toBe(null);
+    // expect(menu.getRoot().find(plugin.heatmap.menu.EventType.EXPORT)).not.toBe(null);
     expect(menu.getRoot().find(plugin.heatmap.menu.EventType.GENERATE_HEATMAP)).not.toBe(null);
 
     os.ui.menu.layer.dispose();
