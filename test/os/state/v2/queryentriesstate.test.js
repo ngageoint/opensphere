@@ -82,7 +82,7 @@ describe('os.state.v2.QueryEntries', function() {
     });
 
     waitsFor(function() {
-      return os.ui.queryManager.expandedEntries.length != 0;
+      return os.ui.queryManager.expandedEntries.length == 3;
     }, 'queryManager to expand its new entries');
 
     runs(function() {
