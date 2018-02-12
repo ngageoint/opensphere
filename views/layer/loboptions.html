@@ -9,31 +9,69 @@
               <option value="">-- None --</option>
           </select>
         </td>
-        <td class="c-labelcontainer__fixedcell"> degrees</td>
+        <td class="c-labelcontainer__fixedcell"> deg</td>
       </tr>
     </table>
   </div>
-  <div class="c-labelcontainer">
+  <div>
+    <table>
+      <tr>
+        <td class="control-label">Length:&nbsp;&nbsp;</td>
+        <td>
+          <label class="control-label no-margin">
+            <input class="no-margin" type="radio" name="len" value="manual" ng-model="ctrl.lengthType" ng-change="ctrl.onLengthTypeChange()"/>&nbsp;Manual
+          </label>
+        </td>
+        <td>
+          <label class="control-label no-margin">
+            <input class="no-margin" type="radio" name="len" value ="column" ng-model="ctrl.lengthType" ng-change="ctrl.onLengthTypeChange()"/>&nbsp;Column
+          </label>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div ng-show="ctrl.lengthType == 'manual'">
     <table class="wide">
       <tr>
-        <td class="c-labelcontainer__fixedcell">Length:&nbsp;&nbsp;</td>
         <td>
-          <input class="c-labelcontainer__wide" type="number" step="any" min="1" max="10000" ng-change="ctrl.onLengthChange()" ng-model="length" ng-required="true" />
+          <input class="c-labelcontainer__wide" type="number" step="any" min="1" max="maxSize[ctrl.lengthUnits]" ng-change="ctrl.onLengthChange()" ng-model="length" ng-required="true" />
         </td>
-        <td class="c-labelcontainer__fixedcell"> * </td>
+        <td class="wide">
+          <slider class="right-gapxxs" min="0" max="1000" step="100" value="length" live="false" name="length"></slider>
+        </td>
         <td>
-          <select class="no-margin wide" ng-model="ctrl.lengthColumn" ng-change="ctrl.onLengthColumnChange()"
-              title="Sets the data field used for length" ng-options="col.field as col.name for col in ctrl.columns">
-            <option value="">1</option>
+          <select class="label-units no-margin wide" ng-model="ctrl.lengthUnits" ng-change="ctrl.onLengthUnitChange()"
+              title="Sets the units field used for length" ng-options="item for item in ctrl.units">
           </select>
         </td>
       </tr>
     </table>
   </div>
-  <div class="c-labelcontainer">
+  <div class="c-labelcontainer" ng-show="ctrl.lengthType == 'column'">
     <table class="wide">
       <tr>
         <td>
+          <select class="no-margin wide" ng-model="ctrl.lengthColumn" ng-change="ctrl.onLengthColumnChange()"
+              title="Sets the data field used for length" ng-options="col.field as col.name for col in ctrl.columns">
+              <option value="">-- None --</option>
+          </select>
+        </td>
+        <td>
+          <select class="label-units no-margin wide" ng-model="ctrl.lengthUnits" ng-change="ctrl.onLengthUnitChange()"
+              title="Sets the units field used for length" ng-options="item for item in ctrl.units">
+          </select>
+        </td>
+        <td class="c-labelcontainer__fixedcell"> x </td>
+        <td>
+          <input class="c-labelcontainer__wide" type="number" step="any" min="1" max="maxSize[ctrl.lengthUnits]" ng-change="ctrl.onColumnLengthChange()" ng-model="columnLength" ng-required="true" />
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div class="c-labelcontainer">
+    <table class="wide">
+      <tr>
+        <td class="no-padding">
           <label class="no-margin">
             <input class="label-checkbox checkbox inline" type="checkbox" name="showArrow"
             ng-model="ctrl.showArrow" ng-change="ctrl.onShowArrowChange()"/>
@@ -42,8 +80,13 @@
         </td>
         <td>
           <label ng-show="ctrl.showArrow" class="no-margin">
-            &nbsp; Size: <input class="c-labelcontainer__wide" type="number" step="any" min="1" max="10000" ng-change="ctrl.onSizeChange()" ng-model="size" ng-required="true" />
+            &nbsp; Size: <input class="c-labelcontainer__wide" type="number" step="any" min="1" max="maxSize[ctrl.arrowUnits]" ng-change="ctrl.onSizeChange()" ng-model="size" ng-required="true" />
           </label>
+        </td>
+        <td>
+          <select ng-show="ctrl.showArrow" class="label-units no-margin wide" ng-model="ctrl.arrowUnits" ng-change="ctrl.onArrowUnitChange()"
+              title="Sets the units field used for arrow size" ng-options="item for item in ctrl.units">
+          </select>
         </td>
       </tr>
     </table>
@@ -55,10 +98,10 @@
           <label class="no-margin">
             <input class="label-checkbox checkbox inline" type="checkbox" name="showError"
             ng-model="ctrl.showError" ng-change="ctrl.onShowErrorChange()"/>
-            Show Error Range
+            Show Error
           </label>
         </td>
-        <td class="c-labelcontainer__fixedcell"><popover x-title="'Line of Bearing Error'" x-content="ctrl.helpText"></popover>&nbsp;&nbsp;</td>
+        <td class="c-labelcontainer__fixedcell"><popover x-title="'Line of Bearing Error'" x-content="ctrl.helpText" pos="'top'"></popover>&nbsp;&nbsp;</td>
         <td ng-if="ellipseSupport">
           <label class="no-margin">
             <input class="label-checkbox checkbox inline" type="checkbox" name="showEllipse"
@@ -69,34 +112,47 @@
       </tr>
     </table>
   </div>
-  <div class="c-labelcontainer" ng-show="ctrl.showError">
-    <table class="wide">
-      <tr>
-        <td class="c-labelcontainer__fixedcell">Bearing&nbsp;Error:</td>
-        <td>
-          <input class="c-labelcontainer__wide" type="number" step="any" min="0" max="10000" ng-change="ctrl.onBearingErrorChange()" ng-model="bearingErrorMultiplier" ng-required="true" />
-        </td>
-        <td class="c-labelcontainer__fixedcell"> * </td>
-        <td>
-          <select class="no-margin wide" ng-model="ctrl.bearingErrorColumn" ng-change="ctrl.onBearingErrorColumnChange()"
-              title="Sets the data field used for bearing error" ng-options="col.field as col.name for col in ctrl.columns">
-              <option value="">-- None --</option>
-          </select>
-        </td>
-      </tr>
-      <tr>
-        <td class="c-labelcontainer__fixedcell">Length&nbsp;Error:</td>
-        <td>
-          <input class="c-labelcontainer__wide" type="number" step="any" min="0" max="10000" ng-change="ctrl.onLengthErrorChange()" ng-model="lengthErrorMultiplier" ng-required="true" />
-        </td>
-        <td class="c-labelcontainer__fixedcell"> * </td>
-        <td>
-          <select class="no-margin wide" ng-model="ctrl.lengthErrorColumn" ng-change="ctrl.onLengthErrorColumnChange()"
-              title="Sets the data field used for length error" ng-options="col.field as col.name for col in ctrl.columns">
-              <option value="">-- None --</option>
-          </select>
-        </td>
-      </tr>
-    </table>
+  <div ng-show="ctrl.showError">
+    <div class="c-labelcontainer">
+      <table class="wide">
+        <tr>
+          <td class="c-labelcontainer__fixedcell">Bearing&nbsp;Err:</td>
+          <td>
+            <select class="no-margin wide" ng-model="ctrl.bearingErrorColumn" ng-change="ctrl.onBearingErrorColumnChange()"
+                title="Sets the data field used for bearing error" ng-options="col.field as col.name for col in ctrl.columns">
+                <option value="">1</option>
+            </select>
+          </td>
+          <td class="c-labelcontainer__fixedcell">+/-&nbsp;deg</td>
+          <td class="c-labelcontainer__fixedcell"> x </td>
+          <td>
+            <input class="label-units" type="number" step="any" min="0" max="360" ng-change="ctrl.onBearingErrorChange()" ng-model="bearingErrorMultiplier" ng-required="true" />
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="c-labelcontainer">
+      <table class="wide">
+        <tr>
+          <td class="c-labelcontainer__fixedcell">Length&nbsp;Err:</td>
+          <td>
+            <select class="no-margin wide" ng-model="ctrl.lengthErrorColumn" ng-change="ctrl.onLengthErrorColumnChange()"
+                title="Sets the data field used for length error" ng-options="col.field as col.name for col in ctrl.columns">
+                <option value="">1</option>
+            </select>
+          </td>
+          <td class="c-labelcontainer__fixedcell">+/-</td>
+          <td class="label-units">
+            <select class="no-margin wide" ng-model="ctrl.lengthErrorUnits" ng-change="ctrl.onLengthErrorUnitChange()"
+                title="Sets the units field used for length" ng-options="item for item in ctrl.units">
+            </select>
+          </td>
+          <td class="c-labelcontainer__fixedcell"> x </td>
+          <td>
+            <input class="c-labelcontainer__wide" type="number" step="any" min="0" max="maxSize[ctrl.lengthErrorUnits]" ng-change="ctrl.onLengthErrorChange()" ng-model="lengthErrorMultiplier" ng-required="true" />
+          </td>
+        </tr>
+      </table>
+    </div>
   </div>
 </div>

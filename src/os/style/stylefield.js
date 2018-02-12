@@ -7,6 +7,7 @@ goog.provide('os.style.StyleField');
  */
 os.style.StyleField = {
   ARROW_SIZE: 'arrowSize',
+  ARROW_UNITS: 'arrowUnits',
   CENTER_SHAPE: 'centerShape',
   COLOR: 'color',
   FILL: 'fill',
@@ -20,10 +21,14 @@ os.style.StyleField = {
   LOB_BEARING_COLUMN: 'lobBearingColumn',
   LOB_BEARING_ERROR: 'lobBearingError',
   LOB_BEARING_ERROR_COLUMN: 'lobBearingErrorColumn',
+  LOB_COLUMN_LENGTH: 'lobColumnLength',
   LOB_LENGTH: 'lobLength',
+  LOB_LENGTH_TYPE: 'lobLengthType',
   LOB_LENGTH_COLUMN: 'lobLengthColumn',
+  LOB_LENGTH_UNITS: 'lobLengthUnits',
   LOB_LENGTH_ERROR: 'lobLengthError',
   LOB_LENGTH_ERROR_COLUMN: 'lobLengthErrorColumn',
+  LOB_LENGTH_ERROR_UNITS: 'lobLengthErrorUnits',
   OPACITY: 'opacity',
   REPLACE_STYLE: 'replaceStyle',
   SHAPE: 'shape',
