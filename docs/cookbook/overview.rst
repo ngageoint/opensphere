@@ -12,6 +12,7 @@ For extended examples, see the Guides.
   submenu/index
   logging/index
   osm/index
+  audionotification/index
 
 
 
