@@ -37,7 +37,7 @@
           <input class="c-labelcontainer__wide" type="number" step="any" min="1" max="maxSize[ctrl.lengthUnits]" ng-change="ctrl.onLengthChange()" ng-model="length" ng-required="true" />
         </td>
         <td class="wide">
-          <slider style="margin-right: 2px;" min="0" max="1000" step="100" value="length" live="false" name="length"></slider>
+          <slider class="right-gapxxs" min="0" max="1000" step="100" value="length" live="false" name="length"></slider>
         </td>
         <td>
           <select class="label-units no-margin wide" ng-model="ctrl.lengthUnits" ng-change="ctrl.onLengthUnitChange()"
@@ -71,7 +71,7 @@
   <div class="c-labelcontainer">
     <table class="wide">
       <tr>
-        <td>
+        <td class="no-padding">
           <label class="no-margin">
             <input class="label-checkbox checkbox inline" type="checkbox" name="showArrow"
             ng-model="ctrl.showArrow" ng-change="ctrl.onShowArrowChange()"/>
