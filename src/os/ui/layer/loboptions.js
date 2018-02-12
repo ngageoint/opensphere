@@ -148,12 +148,6 @@ os.ui.layer.LobOptionsCtrl = function($scope, $element) {
    * @type {goog.async.Delay}
    * @private
    */
-  this.lengthDelay_ = new goog.async.Delay(this.onLengthDelay_, 1000, this);
-
-  /**
-   * @type {goog.async.Delay}
-   * @private
-   */
   this.columnLengthDelay_ = new goog.async.Delay(this.onColumnLengthDelay_, 1000, this);
 
   /**
@@ -649,21 +643,11 @@ os.ui.layer.LobOptionsCtrl.prototype.onSizeDelay_ = function() {
  * @protected
  */
 os.ui.layer.LobOptionsCtrl.prototype.onLengthChange = function(event, value) {
-  if (!this.isDisposed()) {
-    this.lengthDelay_.start();
+  if (event) {
+    event.stopPropagation();
   }
-};
-goog.exportProperty(
-    os.ui.layer.LobOptionsCtrl.prototype,
-    'onLengthChange',
-    os.ui.layer.LobOptionsCtrl.prototype.onLengthChange);
-
-
-/**
- * Actually creates the command after the lob length delay fires
- * @private
- */
-os.ui.layer.LobOptionsCtrl.prototype.onLengthDelay_ = function() {
+  var result = goog.isDef(value) ? value : this.scope['length'];
+  this.scope['length'] = result == 0 ? 1 : result;
   var fn = goog.bind(
       /**
        * @param {os.layer.ILayer} layer
@@ -675,6 +659,10 @@ os.ui.layer.LobOptionsCtrl.prototype.onLengthDelay_ = function() {
 
   this.createCommand(fn);
 };
+goog.exportProperty(
+    os.ui.layer.LobOptionsCtrl.prototype,
+    'onLengthChange',
+    os.ui.layer.LobOptionsCtrl.prototype.onLengthChange);
 
 
 /**

@@ -37,7 +37,7 @@
           <input class="c-labelcontainer__wide" type="number" step="any" min="1" max="maxSize[ctrl.lengthUnits]" ng-change="ctrl.onLengthChange()" ng-model="length" ng-required="true" />
         </td>
         <td class="wide">
-          <slider min="1" max="maxSliderSize[ctrl.lengthUnits]" step="1" value="length" live="false" name="length"></slider>
+          <slider style="margin-right: 2px;" min="0" max="1000" step="100" value="length" live="false" name="length"></slider>
         </td>
         <td>
           <select class="label-units no-margin wide" ng-model="ctrl.lengthUnits" ng-change="ctrl.onLengthUnitChange()"
