@@ -9,22 +9,6 @@ goog.require('ol.layer.Base');
 goog.require('ol.layer.Property');
 
 
-
-/**
- * Overridden because OpenLayers only checks the layerState for visibility. This does
- * not work when Cesium is up.
- *
- * @param {ol.LayerState} layerState Layer state.
- * @param {number} resolution Resolution.
- * @return {boolean} The layer is visible at the given resolution.
- * @suppress {duplicate}
- */
-ol.layer.Layer.visibleAtResolution = function(layerState, resolution) {
-  return layerState.layer.getVisible() && resolution >= layerState.minResolution &&
-      resolution < layerState.maxResolution;
-};
-
-
 /**
  * @type {string}
  */
