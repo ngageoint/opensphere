@@ -137,3 +137,20 @@ os.ui.layer.getColorize = function(layer) {
 os.ui.layer.setColorize = function(layer, value) {
   /** @type {os.layer.Tile} */ (layer).setColorize(value);
 };
+
+
+/**
+ * Get the unique ID column for a layer
+ * @param {os.layer.ILayer} layer
+ * @return {os.data.ColumnDefinition}
+ */
+os.ui.layer.getUniqueId = function(layer) {
+  var value = null;
+  var source = /** @type {os.layer.Vector} */ (layer).getSource();
+  if (source && os.instanceOf(source, os.source.Vector.NAME)) {
+    source = /** @type {!os.source.Vector} */ (source);
+    value = source.getUniqueId();
+  }
+
+  return value;
+};

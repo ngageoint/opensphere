@@ -63,6 +63,14 @@
               </select>
             </td>
           </tr>
+          <tr title="Choose a unique identifier column for the layer." ng-show="columns && items.length == 1">
+            <td class="control-label">Unique Identifier:</td>
+            <td class="style-controls wide">
+              <select class="wide" ng-model="vector.uniqueId" ng-change="vector.onUniqueIdChange()"
+                  ng-options="col as col.name for col in columns track by col.field">
+              </select>
+            </td>
+          </tr>
         </table>
         <div ng-if="lockable">
           <label class="checkbox inline" title="Lock this layer to prevent data from changing">

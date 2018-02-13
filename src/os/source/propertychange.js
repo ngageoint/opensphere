@@ -32,5 +32,6 @@ os.source.PropertyChange = {
   TIME_FILTER: 'timeFilter',
   TIME_MODEL: 'timeModel',
   TITLE: 'title',
-  VISIBLE: 'visible'
+  VISIBLE: 'visible',
+  UNIQUE_ID: 'uniqueId'
 };
