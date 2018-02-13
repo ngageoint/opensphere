@@ -1063,6 +1063,7 @@ os.layer.Vector.prototype.persist = function(opt_to) {
 
   if (config) {
     opt_to[os.style.StyleField.ARROW_SIZE] = config[os.style.StyleField.ARROW_SIZE];
+    opt_to[os.style.StyleField.ARROW_UNITS] = config[os.style.StyleField.ARROW_UNITS];
     opt_to[os.style.StyleField.COLOR] = os.style.getConfigColor(config);
     opt_to[os.style.StyleField.REPLACE_STYLE] = config[os.style.StyleField.REPLACE_STYLE];
     opt_to[os.style.StyleField.SIZE] = os.style.getConfigSize(config);
@@ -1070,10 +1071,14 @@ os.layer.Vector.prototype.persist = function(opt_to) {
     opt_to[os.style.StyleField.LABELS] = config[os.style.StyleField.LABELS];
     opt_to[os.style.StyleField.LABEL_COLOR] = config[os.style.StyleField.LABEL_COLOR];
     opt_to[os.style.StyleField.LABEL_SIZE] = config[os.style.StyleField.LABEL_SIZE];
+    opt_to[os.style.StyleField.LOB_COLUMN_LENGTH] = config[os.style.StyleField.LOB_COLUMN_LENGTH];
     opt_to[os.style.StyleField.LOB_LENGTH] = config[os.style.StyleField.LOB_LENGTH];
+    opt_to[os.style.StyleField.LOB_LENGTH_TYPE] = config[os.style.StyleField.LOB_LENGTH_TYPE];
     opt_to[os.style.StyleField.LOB_LENGTH_COLUMN] = config[os.style.StyleField.LOB_LENGTH_COLUMN];
     opt_to[os.style.StyleField.LOB_LENGTH_ERROR] = config[os.style.StyleField.LOB_LENGTH_ERROR];
     opt_to[os.style.StyleField.LOB_LENGTH_ERROR_COLUMN] = config[os.style.StyleField.LOB_LENGTH_ERROR_COLUMN];
+    opt_to[os.style.StyleField.LOB_LENGTH_ERROR_UNITS] = config[os.style.StyleField.LOB_LENGTH_ERROR_UNITS];
+    opt_to[os.style.StyleField.LOB_LENGTH_UNITS] = config[os.style.StyleField.LOB_LENGTH_UNITS];
     opt_to[os.style.StyleField.LOB_BEARING_COLUMN] = config[os.style.StyleField.LOB_BEARING_COLUMN];
     opt_to[os.style.StyleField.LOB_BEARING_ERROR] = config[os.style.StyleField.LOB_BEARING_ERROR];
     opt_to[os.style.StyleField.LOB_BEARING_ERROR_COLUMN] = config[os.style.StyleField.LOB_BEARING_ERROR_COLUMN];
@@ -1185,12 +1190,21 @@ os.layer.Vector.prototype.restore = function(config) {
   }
 
   styleConf[os.style.StyleField.ARROW_SIZE] = config[os.style.StyleField.ARROW_SIZE] || os.style.DEFAULT_ARROW_SIZE;
+  styleConf[os.style.StyleField.ARROW_UNITS] = config[os.style.StyleField.ARROW_UNITS] || os.style.DEFAULT_UNITS;
+  styleConf[os.style.StyleField.LOB_COLUMN_LENGTH] = config[os.style.StyleField.LOB_COLUMN_LENGTH] ||
+    os.style.DEFAULT_LOB_LENGTH;
   styleConf[os.style.StyleField.LOB_LENGTH] = config[os.style.StyleField.LOB_LENGTH] || os.style.DEFAULT_LOB_LENGTH;
   styleConf[os.style.StyleField.LOB_LENGTH_ERROR] = config[os.style.StyleField.LOB_LENGTH_ERROR] ||
     os.style.DEFAULT_LOB_LENGTH_ERROR;
+  styleConf[os.style.StyleField.LOB_LENGTH_TYPE] = config[os.style.StyleField.LOB_LENGTH_TYPE] ||
+    os.style.DEFAULT_LOB_LENGTH_TYPE;
   styleConf[os.style.StyleField.LOB_LENGTH_COLUMN] = config[os.style.StyleField.LOB_LENGTH_COLUMN] || '';
   styleConf[os.style.StyleField.LOB_LENGTH_ERROR_COLUMN] = config[os.style.StyleField.LOB_LENGTH_ERROR_COLUMN] || '';
   styleConf[os.style.StyleField.LOB_BEARING_COLUMN] = config[os.style.StyleField.LOB_BEARING_COLUMN] || '';
+  styleConf[os.style.StyleField.LOB_LENGTH_ERROR_UNITS] = config[os.style.StyleField.LOB_LENGTH_ERROR_UNITS] ||
+    os.style.DEFAULT_UNITS;
+  styleConf[os.style.StyleField.LOB_LENGTH_UNITS] = config[os.style.StyleField.LOB_LENGTH_UNITS] ||
+    os.style.DEFAULT_UNITS;
   styleConf[os.style.StyleField.LOB_BEARING_ERROR] = config[os.style.StyleField.LOB_BEARING_ERROR] ||
     os.style.DEFAULT_LOB_BEARING_ERROR;
   styleConf[os.style.StyleField.LOB_BEARING_ERROR_COLUMN] = config[os.style.StyleField.LOB_BEARING_ERROR_COLUMN] || '';
