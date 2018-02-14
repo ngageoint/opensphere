@@ -35,13 +35,13 @@ A programmatic approach is shown below:
   audioManager.addSound(os.ROOT + 'sounds/cowbell.wav', 'label');
   audioManager.play('label');
 
-User upload uses the normal Import Data dialog. Note that it only works if the target is a HTTP or HTTPS URL.
+User upload uses the normal Import Data dialog. Note that it only works in a standard browser environment if the target is a HTTP or HTTPS URL (different rules apply in a "wrapped" environment like [Electron](https://electronjs.org/)).
 
 
 Discussion
 ----------
 
-Level of audio support, including file formats that are supported, depends on browser capabilities. 
+The level of audio support, including the file formats and associated codecs that are supported, depends on browser capabilities. 
 
 In addition to the API shown earlier, AudioManager also supports muting the notifications. If your plugin makes use of audio notifications, we strongly suggest supporting global muting, as well as selective enable / disable of alerts.
 
