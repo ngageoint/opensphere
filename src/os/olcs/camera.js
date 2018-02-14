@@ -187,7 +187,8 @@ os.olcs.Camera.prototype.setAltitude = function(altitude) {
 os.olcs.Camera.prototype.getExtent = function() {
   var rect = this.cam_.computeViewRectangle();
   if (rect) {
-    return [rect.west, rect.south, rect.east, rect.north];
+    // the values are returned in radians, so map them to degrees
+    return [rect.west, rect.south, rect.east, rect.north].map(Cesium.Math.toDegrees);
   }
 };
 
