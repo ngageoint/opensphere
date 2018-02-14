@@ -83,6 +83,14 @@ plugin.track.TOTAL_ZERO = 'Unknown';
 
 
 /**
+ * A type representing a track geometry. Tracks will use a `ol.geom.MultiLineString` if they cross the date line (to
+ * render correctly in Openlayers), or if they represent a multi-track.
+ * @typedef {ol.geom.LineString|ol.geom.MultiLineString}
+ */
+plugin.track.TrackLike;
+
+
+/**
  * @typedef {{
  *   entry: !os.filter.FilterEntry,
  *   mappings: !Array<!Object>,
@@ -97,7 +105,7 @@ plugin.track.QueryOptions;
 /**
  * @typedef {{
  *   features: (Array<!ol.Feature>|undefined),
- *   geometry: (ol.geom.LineString|undefined),
+ *   geometry: (plugin.track.TrackLike|undefined),
  *   id: (string|undefined),
  *   color: (string|undefined),
  *   name: (string|undefined),
@@ -396,15 +404,19 @@ plugin.track.createTrack = function(options) {
     return undefined;
   }
 
-  geometry.toLonLat();
-  geometry = os.geo.splitOnDateLine(geometry);
-  geometry.osTransform();
-
-  // tracks must be a ol.geom.MultiLineString
   if (geometry instanceof ol.geom.LineString) {
-    geometry = new ol.geom.MultiLineString([geometry.getCoordinates()], ol.geom.GeometryLayout.XYZM);
-    geometry.set(os.geom.GeometryField.NORMALIZED, true);
+    geometry.toLonLat();
+    geometry = os.geo.splitOnDateLine(geometry);
+    geometry.osTransform();
+
+    // tracks must be a ol.geom.MultiLineString. if it isn't one now, it doesn't cross the date line and was not split.
+    // if (geometry instanceof ol.geom.LineString) {
+    //   geometry = new ol.geom.MultiLineString([geometry.getCoordinates()], ol.geom.GeometryLayout.XYZM);
+    // }
   }
+
+  // prevent any further normalization of the geometry
+  geometry.set(os.geom.GeometryField.NORMALIZED, true);
 
   // create the track feature
   var track;
@@ -492,7 +504,7 @@ plugin.track.addFeaturesToTrack = function(track, features) {
       plugin.track.getFeatureValue.bind(null, sortField);
 
   // add point(s) to the original geometry, in case the track was interpolated
-  var geometry = /** @type {!ol.geom.MultiLineString} */ (track.get(os.interpolate.ORIGINAL_GEOM_FIELD) ||
+  var geometry = /** @type {!plugin.track.TrackLike} */ (track.get(os.interpolate.ORIGINAL_GEOM_FIELD) ||
       track.getGeometry());
 
   // merge the split line so features can be added in the correct location
@@ -560,7 +572,7 @@ plugin.track.addFeaturesToTrack = function(track, features) {
  */
 plugin.track.clamp = function(track, start, end) {
   // add point(s) to the original geometry, in case the track was interpolated
-  var geometry = /** @type {!ol.geom.MultiLineString} */ (track.get(os.interpolate.ORIGINAL_GEOM_FIELD) ||
+  var geometry = /** @type {!(plugin.track.TrackLike)} */ (track.get(os.interpolate.ORIGINAL_GEOM_FIELD) ||
       track.getGeometry());
 
   // merge the split line so features can be added in the correct location
@@ -626,10 +638,12 @@ plugin.track.setGeometry = function(track, geometry) {
   geometry.osTransform();
 
   // tracks must be a ol.geom.MultiLineString
-  if (geometry instanceof ol.geom.LineString) {
-    geometry = new ol.geom.MultiLineString([geometry.getCoordinates()], geometry.getLayout());
-    geometry.set(os.geom.GeometryField.NORMALIZED, true);
-  }
+  // if (geometry instanceof ol.geom.LineString) {
+  //   geometry = new ol.geom.MultiLineString([geometry.getCoordinates()], geometry.getLayout());
+  // }
+
+  // prevent further normalization of the geometry
+  geometry.set(os.geom.GeometryField.NORMALIZED, true);
 
   // recreate animation geometries
   plugin.track.disposeAnimationGeometries(track);
@@ -1027,17 +1041,16 @@ plugin.track.updateDynamic = function(track, timestamp) {
   }
 
   var trackGeometry = track.getGeometry();
-  if (!(trackGeometry instanceof ol.geom.MultiLineString)) {
-    // shouldn't happen, but this will fail if the track isn't a multi-line
+  if (!(trackGeometry instanceof ol.geom.LineString || trackGeometry instanceof ol.geom.MultiLineString)) {
+    // shouldn't happen, but this will fail if the track isn't a line
     return;
   }
 
   var flatCoordinates = trackGeometry.getFlatCoordinates();
   var stride = trackGeometry.getStride();
-  var ends = trackGeometry.getEnds();
+  var ends = trackGeometry instanceof ol.geom.MultiLineString ? trackGeometry.getEnds() : undefined;
   var geomLayout = trackGeometry.getLayout();
-  if (!flatCoordinates || !ends ||
-      (geomLayout !== ol.geom.GeometryLayout.XYM && geomLayout !== ol.geom.GeometryLayout.XYZM)) {
+  if (!flatCoordinates || (geomLayout !== ol.geom.GeometryLayout.XYM && geomLayout !== ol.geom.GeometryLayout.XYZM)) {
     // something is wrong with this line - abort!!
     return;
   }
@@ -1122,17 +1135,17 @@ plugin.track.getTrackPositionAt = function(track, timestamp, index, coordinates,
  * @param {number} index The index of the most recent known coordinate.
  * @param {!Array<number>} coordinates The flat track coordinate array.
  * @param {number} stride The stride of the coordinate array.
- * @param {!Array<number>} ends The end indicies of each line in the multi-line.
+ * @param {Array<number>=} opt_ends The end indicies of each line in a multi-line. Undefined if not a multi-line.
  *
  * @suppress {accessControls} To allow direct access to line string coordinates.
  */
-plugin.track.updateCurrentLine = function(track, timestamp, index, coordinates, stride, ends) {
-  var currentLine = /** @type {ol.geom.MultiLineString|undefined} */ (track.get(plugin.track.TrackField.CURRENT_LINE));
+plugin.track.updateCurrentLine = function(track, timestamp, index, coordinates, stride, opt_ends) {
+  var currentLine = /** @type {plugin.track.TrackLike|undefined} */ (track.get(plugin.track.TrackField.CURRENT_LINE));
   var layout = stride === 4 ? ol.geom.GeometryLayout.XYZM : ol.geom.GeometryLayout.XYM;
   if (!currentLine) {
     // create the line geometry if it doesn't exist yet. must use an empty coordinate array instead of null, or the
     // layout will be set to XY
-    currentLine = new ol.geom.MultiLineString([], layout);
+    currentLine = opt_ends ? new ol.geom.MultiLineString([], layout) : new ol.geom.LineString([], layout);
     track.set(plugin.track.TrackField.CURRENT_LINE, currentLine);
   }
 
@@ -1160,12 +1173,14 @@ plugin.track.updateCurrentLine = function(track, timestamp, index, coordinates, 
   }
 
   // add ends indices that are in the current line
-  var currentEnds = ends.filter(function(end) {
+  var currentEnds = opt_ends ? opt_ends.filter(function(end) {
     return end <= flatCoordinates.length;
-  });
+  }) : undefined;
 
-  if (flatCoordinates.length < coordinates.length) {
-    // not showing the full track, so interpolate the current position
+  // interpolate the current position if we haven't exhausted the available coordinates and the last known position
+  // isn't at one of the ends. if the current position is an end, the current time is between tracks in a multi track.
+  if (flatCoordinates.length < coordinates.length &&
+      (!currentEnds || !currentEnds.length || currentEnds[currentEnds.length - 1] !== flatCoordinates.length)) {
     var position = plugin.track.getTrackPositionAt(track, timestamp, index, coordinates, stride);
     if (position) {
       for (var i = 0; i < position.length; i++) {
@@ -1173,8 +1188,10 @@ plugin.track.updateCurrentLine = function(track, timestamp, index, coordinates, 
       }
     }
 
-    // add the end location of the last line segment
-    currentEnds.push(flatCoordinates.length);
+    // end the current line segment at the interpolated position
+    if (currentEnds) {
+      currentEnds.push(flatCoordinates.length);
+    }
   }
 
   // update the current position marker
@@ -1183,8 +1200,12 @@ plugin.track.updateCurrentLine = function(track, timestamp, index, coordinates, 
   // mark the line as dirty so the Cesium feature converter recreates it
   currentLine.set(os.olcs.DIRTY_BIT, true);
 
-  // update the line geometry
-  currentLine.setFlatCoordinates(layout, flatCoordinates, currentEnds);
+  // update the current line geometry
+  if (currentLine instanceof ol.geom.LineString) {
+    currentLine.setFlatCoordinates(layout, flatCoordinates);
+  } else if (currentEnds) {
+    currentLine.setFlatCoordinates(layout, flatCoordinates, currentEnds);
+  }
 };
 
 
