@@ -97,6 +97,7 @@ plugin.track.QueryOptions;
 /**
  * @typedef {{
  *   features: (Array<!ol.Feature>|undefined),
+ *   geometry: (ol.geom.LineString|undefined),
  *   id: (string|undefined),
  *   color: (string|undefined),
  *   name: (string|undefined),
@@ -331,13 +332,14 @@ plugin.track.removeTrackById = function(id) {
 
 
 /**
- * Creates a track from a a track options object.
- * @param {plugin.track.CreateOptions} options The options object for the track.
- * @return {?ol.Feature} The track feature
+ * Create a track geometry (`ol.geom.LineString` with an XYZM coordinate layout) from a set of features. The features
+ * must have a common field with values that can be naturally sorted. Any features lacking a point geometry or a value
+ * in the sort field will be ignored. If sorted by `os.data.RecordField.TIME`, the track may be animated over time.
+ * @param {!Array<!ol.Feature>} features The features.
+ * @param {string} sortField The track sort field.
+ * @return {ol.geom.LineString|undefined} The track, or undefined if no coordinates were found.
  */
-plugin.track.createTrack = function(options) {
-  var features = options.features;
-  var sortField = options.sortField || os.data.RecordField.TIME;
+plugin.track.createTrackGeometry = function(features, sortField) {
   var sortFn = sortField == os.data.RecordField.TIME ? os.feature.sortByTime :
       os.feature.sortByField.bind(null, sortField);
   var getValueFn = sortField == os.data.RecordField.TIME ? plugin.track.getStartTime :
@@ -348,29 +350,52 @@ plugin.track.createTrack = function(options) {
 
   var coords = features.map(function(feature) {
     var geom = feature.getGeometry();
-    if (geom instanceof ol.geom.Point) {
-      var value = /** @type {number|undefined} */ (getValueFn(feature));
+    var value = /** @type {number|undefined} */ (getValueFn(feature));
+    if (geom instanceof ol.geom.Point && value != null) {
       var pointCoord = geom.getFirstCoordinate();
       if (pointCoord.length < 3) {
+        // add altitude for consistency across all track geometries
         pointCoord.push(0);
       }
 
-      if (value != null) {
-        pointCoord.push(value);
-        return pointCoord;
-      }
+      // add the sort value
+      pointCoord.push(value);
+      return pointCoord;
     }
 
     return undefined;
   }).filter(os.fn.filterFalsey);
 
-  if (!coords.length) {
-    // no valid features to create the track from, so don't return one
-    return null;
+  // create the line geometry
+  return coords.length ? new ol.geom.LineString(coords, ol.geom.GeometryLayout.XYZM) : undefined;
+};
+
+
+/**
+ * Creates a track from the provided options.
+ * @param {!plugin.track.CreateOptions} options The track creation options.
+ * @return {os.feature.DynamicFeature|ol.Feature|undefined} The track feature.
+ */
+plugin.track.createTrack = function(options) {
+  var sortField = options.sortField || os.data.RecordField.TIME;
+  var featureColor;
+  var sourceColor;
+
+  var geometry = options.geometry;
+  if (!geometry && options.features && options.features.length) {
+    geometry = plugin.track.createTrackGeometry(options.features, sortField);
+    featureColor = /** @type {string|undefined} */ (options.features[0].get(os.data.RecordField.COLOR));
+
+    var source = os.feature.getSource(options.features[0]);
+    if (source) {
+      sourceColor = source ? source.getColor() : undefined;
+    }
   }
 
-  // create the line and split it across the date line so it renders correctly on a 2D map
-  var geometry = new ol.geom.LineString(coords, ol.geom.GeometryLayout.XYZM);
+  if (!geometry) {
+    return undefined;
+  }
+
   geometry.toLonLat();
   geometry = os.geo.splitOnDateLine(geometry);
   geometry.osTransform();
@@ -409,9 +434,6 @@ plugin.track.createTrack = function(options) {
   plugin.track.updateDuration(track);
   plugin.track.updateTime(track);
 
-  var source = os.feature.getSource(features[0]);
-  var sourceColor = source ? source.getColor() : undefined;
-
   // create the track and current position styles. color is the first defined value in:
   //  - color override parameter
   //  - feature color
@@ -420,8 +442,7 @@ plugin.track.createTrack = function(options) {
   //
   var trackStyle = /** @type {!Object<string, *>} */ (os.object.unsafeClone(plugin.track.TRACK_CONFIG));
   var currentStyle = /** @type {!Object<string, *>} */ (os.object.unsafeClone(plugin.track.CURRENT_CONFIG));
-  var trackColor = options.color || /** @type {string|undefined} */ (features[0].get(os.data.RecordField.COLOR)) ||
-      sourceColor || os.style.DEFAULT_LAYER_COLOR;
+  var trackColor = options.color || featureColor || sourceColor || os.style.DEFAULT_LAYER_COLOR;
   if (trackColor) {
     os.style.setConfigColor(trackStyle, trackColor, [os.style.StyleField.STROKE]);
     os.style.setConfigColor(currentStyle, trackColor, [os.style.StyleField.IMAGE]);
@@ -455,7 +476,7 @@ plugin.track.createTrack = function(options) {
  *
  * @suppress {accessControls} To allow direct access to line coordinates.
  */
-plugin.track.addToTrack = function(track, features) {
+plugin.track.addFeaturesToTrack = function(track, features) {
   var sortField = /** @type {string|undefined} */ (track.get(plugin.track.TrackField.SORT_FIELD));
   if (!sortField) {
     goog.log.error(plugin.track.LOGGER_, 'Unable to add features to track: track is missing sorting data.');
@@ -632,10 +653,10 @@ plugin.track.setGeometry = function(track, geometry) {
 
 
 /**
- * Creates a track from a set a features and add it to the tracks layer.
- * @param {plugin.track.CreateOptions} options The options object for the track.
+ * Creates a track and adds it to the tracks layer.
+ * @param {!plugin.track.CreateOptions} options The options object for the track.
  */
-plugin.track.createFromFeatures = function(options) {
+plugin.track.createAndAdd = function(options) {
   var track = plugin.track.createTrack(options);
 
   if (!track) {

@@ -317,20 +317,20 @@ plugin.track.menu.handleLayerEvent_ = function(event) {
             var trackTitle = layer.getTitle() + ' Track';
             plugin.track.promptForTitle(trackTitle).then(function(title) {
               plugin.track.getSortField(features[0]).then(function(sortField) {
-                var options = /** @type {plugin.track.CreateOptions} */ ({
+                var options = /** @type {!plugin.track.CreateOptions} */ ({
                   features: features,
                   name: title,
                   sortField: sortField
                 });
 
-                plugin.track.createFromFeatures(options);
+                plugin.track.createAndAdd(options);
               });
             });
             break;
           case plugin.track.EventType.ADD_TO:
             plugin.track.promptForTrack().then(function(track) {
               if (track) {
-                plugin.track.addToTrack(track, features);
+                plugin.track.addFeaturesToTrack(track, features);
               }
             });
             break;
