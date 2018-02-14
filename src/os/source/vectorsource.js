@@ -2188,7 +2188,8 @@ os.source.Vector.prototype.updateAnimationOverlay = function() {
           hasDynamic = true;
 
           var featureTime = /** @type {os.time.ITime|undefined} */ (dynamicFeature.get(os.data.RecordField.TIME));
-          if (featureTime && (featureTime.getStart() > displayEnd || featureTime.getEnd() < displayStart)) {
+          if (featureTime && (featureTime.getStart() > displayEnd || featureTime.getEnd() < displayStart) &&
+              !this.isHidden(dynamicFeature)) {
             displayedFeatures.push(dynamicFeature);
           }
         }
