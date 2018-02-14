@@ -4,7 +4,7 @@
       <div class="control-group" data-ng-class="{'error':kmlForm.title.$invalid && kmlForm.title.$dirty}">
         <label class="control-label">Layer Title:</label>
         <div class="controls">
-          <input type="text" name="title" ng-model="config.title" ng-required="true" ng-maxlength="50"/>
+          <input type="text" name="title" ng-model="config.title" ng-required="true" ng-maxlength="500"/>
           <span class="help-inline" data-ng-show="kmlForm.title.$error.required">Required!</span>
           <span class="help-inline" data-ng-show="kmlForm.title.$error.maxlength">Title is too long!</span>
           <span class="help-inline" data-ng-show="kmlForm.title.$error.exists">Title is already in use by another layer!</span>
