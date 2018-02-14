@@ -126,10 +126,6 @@
   }
 }
 
-.ol-attribution li:not(:first-child):before {
+.ol-attribution li:nth-child(n+2):not(:last-child):after {
   content: ", "
-}
-
-.ol-attribution li:not(:last-child):after {
-  content: ""
 }
