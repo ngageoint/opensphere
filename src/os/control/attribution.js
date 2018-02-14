@@ -114,7 +114,7 @@ os.control.Attribution.prototype.updateElement_ = function(frameState) {
 
   // append the attributions
   for (var i = 0, ii = attributions.length; i < ii; ++i) {
-    label = goog.html.SafeHtml.create('li', undefined, attributions[i] + (i > (ii - 1) ? ',' : ''));
+    label = goog.html.SafeHtml.create('li', undefined, attributions[i]);
     goog.dom.appendChild(this.ulElement_, goog.dom.safeHtmlToNode(label));
   }
 

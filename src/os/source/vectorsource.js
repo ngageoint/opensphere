@@ -29,6 +29,8 @@ goog.require('os.events.SelectionType');
 goog.require('os.feature');
 goog.require('os.geo');
 goog.require('os.geo.jsts');
+goog.require('os.hist.HistogramData');
+goog.require('os.hist.IHistogramProvider');
 goog.require('os.implements');
 goog.require('os.interpolate');
 goog.require('os.layer.AnimationOverlay');
@@ -51,6 +53,7 @@ goog.require('os.ui.slick.column');
 /**
  * @extends {ol.source.Vector}
  * @implements {os.source.ISource}
+ * @implements {os.hist.IHistogramProvider}
  * @param {olx.source.VectorOptions=} opt_options OpenLayers vector source options.
  * @constructor
  */
@@ -356,6 +359,7 @@ os.source.Vector = function(opt_options) {
   os.source.Vector.base(this, 'constructor', /** @type {!olx.source.VectorOptions} */ (options));
 };
 goog.inherits(os.source.Vector, ol.source.Vector);
+os.implements(os.source.Vector, os.hist.IHistogramProvider.ID);
 os.implements(os.source.Vector, os.source.ISource.ID);
 
 
@@ -1323,6 +1327,53 @@ os.source.Vector.prototype.updateAnimationState_ = function() {
 
     this.disposeAnimationOverlay();
   }
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.source.Vector.prototype.getHistogram = function(options) {
+  var start = options.start;
+  var end = options.end;
+  var interval = options.interval;
+
+  if (interval > 0) {
+    var model = this.getTimeModel();
+    if (model && this.getVisible() && this.getTimeEnabled()) {
+      var counts = {};
+      var lastRange = model.getLastRange();
+
+      var min = Math.floor(start / interval) * interval;
+      while (min <= end) {
+        var next = min + interval;
+        var matches = model.intersection(new os.time.TimeRange(min, next), false, true).length;
+        counts[min] = matches;
+        min = next;
+      }
+
+      // reset time filters on the model to the last used range, or groupData calls will use the last range of this
+      // histogram
+      if (lastRange) {
+        model.intersection(lastRange, false, true);
+      }
+
+      if (goog.object.getCount(counts) > 0) {
+        var sourceHisto = new os.hist.HistogramData();
+        sourceHisto.setId(this.getId());
+        sourceHisto.setColor(os.color.toHexString(this.getColor()));
+        sourceHisto.setCounts(counts);
+        sourceHisto.setOptions(options);
+        sourceHisto.setTitle(this.getTitle());
+        sourceHisto.setVisible(this.getVisible());
+        sourceHisto.setRange(model.getRange());
+
+        return sourceHisto;
+      }
+    }
+  }
+
+  return null;
 };
 
 
