@@ -106,6 +106,12 @@ os.ui.geo.PositionCtrl = function($scope, $element) {
   }
 
   /**
+   * The precision to use for display.
+   * @type {number}
+   */
+  this.precision = Math.pow(10, os.ui.geo.PositionCtrl.DEFAULT_COORD_PRECISION);
+
+  /**
    * @type {string}
    */
   $scope['popoverContent'] = 'Takes DMS, Decimal Degrees, or MGRS. If Lat/Lon, the first coordinate is assumed to ' +
@@ -140,7 +146,7 @@ os.ui.geo.PositionCtrl = function($scope, $element) {
  * @type {number}
  * @const
  */
-os.ui.geo.PositionCtrl.COORD_PRECISION = 1e12;
+os.ui.geo.PositionCtrl.DEFAULT_COORD_PRECISION = 8;
 
 
 /**
@@ -196,17 +202,31 @@ os.ui.geo.PositionCtrl.prototype.onCoord_ = function() {
     if (this.scope_['posText']) {
       var result = os.geo.parseLatLon(this.scope_['posText'], this.scope_['order']);
       if (goog.isDefAndNotNull(result)) {
-        if (Math.abs(result.lat - this.scope_['geom']['lat']) > 1E-12 ||
-            Math.abs(result.lon - this.scope_['geom']['lon']) > 1E-12) {
-          this.scope_['posText'] = '' + this.scope_['geom']['lat'] + 'N ' + this.scope_['geom']['lon'] + 'E';
+        if (Math.abs(result.lat - this.scope_['geom']['lat']) > os.geo.EPSILON ||
+            Math.abs(result.lon - this.scope_['geom']['lon']) > os.geo.EPSILON) {
+          this.formatLatLon_();
         }
       }
     } else {
-      this.scope_['posText'] = '' + this.scope_['geom']['lat'] + 'N ' + this.scope_['geom']['lon'] + 'E';
+      this.formatLatLon_();
     }
   } else {
     this.scope_['posText'] = '';
   }
+};
+
+
+/**
+ * Correctly format coordinates.
+ * @private
+ */
+os.ui.geo.PositionCtrl.prototype.formatLatLon_ = function() {
+  var lat = this.scope_['geom']['lat'];
+  var lon = this.scope_['geom']['lon'];
+  var latHemisphere = lat >= 0 ? 'N ' : 'S ';
+  var lonHemisphere = lon >= 0 ? 'E' : 'W';
+  var coordsFormatted = '' + Math.abs(lat) + latHemisphere + Math.abs(lon) + lonHemisphere;
+  this.scope_['posText'] = coordsFormatted;
 };
 
 
@@ -231,12 +251,10 @@ goog.exportProperty(
  */
 os.ui.geo.PositionCtrl.prototype.onMapClick_ = function(event, coordinates, opt_disable) {
   if (!this.scope_['disabled'] && coordinates && coordinates.length > 1) {
-    // this is basically millimeter precision, but makes the string fit within the input
-    var multiplier = os.ui.geo.PositionCtrl.COORD_PRECISION;
-    this.scope_['geom']['lon'] = Math.round(coordinates[0] * multiplier) / multiplier;
-    this.scope_['geom']['lat'] = Math.round(coordinates[1] * multiplier) / multiplier;
+    this.scope_['geom']['lon'] = Math.round(coordinates[0] * this.precision) / this.precision;
+    this.scope_['geom']['lat'] = Math.round(coordinates[1] * this.precision) / this.precision;
 
-    this.scope_['posText'] = '' + this.scope_['geom']['lat'] + 'N ' + this.scope_['geom']['lon'] + 'E';
+    this.formatLatLon_();
 
     if (opt_disable) {
       this.setMapEnabled_(false);
