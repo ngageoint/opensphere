@@ -152,6 +152,7 @@ goog.require('plugin.params.ParamsPlugin');
 goog.require('plugin.places.PlacesPlugin');
 goog.require('plugin.position.PositionPlugin');
 goog.require('plugin.suncalc.Plugin');
+goog.require('plugin.track.TrackPlugin');
 goog.require('plugin.vectortools.VectorToolsPlugin');
 goog.require('plugin.weather.WeatherPlugin');
 goog.require('plugin.xyz.XYZPlugin');
@@ -510,6 +511,7 @@ os.MainCtrl.prototype.addPlugins = function() {
   os.ui.pluginManager.addPlugin(plugin.heatmap.HeatmapPlugin.getInstance());
   os.ui.pluginManager.addPlugin(plugin.params.ParamsPlugin.getInstance());
   os.ui.pluginManager.addPlugin(plugin.suncalc.Plugin.getInstance());
+  os.ui.pluginManager.addPlugin(plugin.track.TrackPlugin.getInstance());
 };
 
 
@@ -680,7 +682,7 @@ os.MainCtrl.prototype.handleKeyEvent_ = function(event) {
   var target = /** @type {Element} */ (event.target);
   var ctrlOr = os.isOSX() ? event.metaKey : event.ctrlKey;
 
-  if (!document.querySelector('.modal-backdrop')) {
+  if (!document.querySelector(os.ui.MODAL_SELECTOR)) {
     if (target.tagName !== goog.dom.TagName.INPUT.toString() &&
         target.tagName !== goog.dom.TagName.TEXTAREA.toString()) {
       switch (event.keyCode) {
