@@ -1493,6 +1493,7 @@ Cesium.Polygon.prototype.material;
  * @typedef {{
  *   color: (Cesium.Color|undefined),
  *   horizontal: (boolean|undefined),
+ *   image: (string|undefined),
  *   repeat: (number|undefined),
  *   evenColor: (Cesium.Color|undefined),
  *   oddColor: (Cesium.Color|undefined)
@@ -1586,6 +1587,30 @@ Cesium.Material.prototype.uniforms;
 Cesium.Material.ColorType;
 
 
+
+/**
+ * @typedef {{
+ *  flat: (boolean|undefined),
+ *  faceForward: (boolean|undefined),
+ *  translucent: (boolean|undefined),
+ *  closed: (boolean|undefined),
+ *  material: (Cesium.Material|HTMLCanvasElement|HTMLVideoElement|Image|undefined),
+ *  vertexShaderSource: (string|undefined),
+ *  fragmentShaderSource: (string|undefined),
+ *  renderState: (Cesium.optionsRenderState|undefined)
+ *  }}
+ */
+Cesium.MaterialAppearanceOptions;
+
+
+/**
+ * @constructor
+ * @param {Cesium.MaterialAppearanceOptions} options
+ * @extends {Cesium.Appearance}
+ */
+Cesium.MaterialAppearance = function(options) {};
+
+
 /**
  * @typedef {{
  *   material: (Cesium.Material|undefined),
@@ -1643,9 +1668,32 @@ Cesium.Polyline.prototype.width;
 
 
 /**
+ * @typedef {{
+ *   translucent: (boolean|undefined),
+ *   closed: (boolean|undefined),
+ *   material: (Cesium.Material|undefined),
+ *  }}
+ */
+Cesium.AppearanceOptions
+
+
+/**
+ * @param {Cesium.AppearanceOptions} options
  * @constructor
  */
-Cesium.Appearance = function() {};
+Cesium.Appearance = function(options) {};
+
+
+/**
+ * @type {Cesium.Material}
+ */
+Cesium.Appearance.prototype.material;
+
+
+/**
+ * @type {boolean}
+ */
+Cesium.Appearance.prototype.translucent;
 
 
 /**
@@ -1653,6 +1701,7 @@ Cesium.Appearance = function() {};
  *   asynchronous: (boolean|undefined),
  *   releaseGeometryInstances: (boolean|undefined),
  *   geometryInstances: !Cesium.GeometryInstance,
+ *   show: (boolean|undefined),
  *   appearance: !Cesium.Appearance
  * }}
  */
@@ -1709,6 +1758,24 @@ Cesium.Primitive.prototype.geomRevision;
  * @type {boolean}
  */
 Cesium.Primitive.prototype.ready;
+
+
+/**
+ * @type {Promise<!Cesium.Primitive>}
+ */
+Cesium.Primitive.prototype.readyPromise;
+
+
+/**
+ * @type {boolean}
+ */
+Cesium.Primitive.prototype.show;
+
+
+/**
+ * @type {!Cesium.Appearance}
+ */
+Cesium.Primitive.prototype.appearance;
 
 
 /**
