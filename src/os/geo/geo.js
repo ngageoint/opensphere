@@ -127,7 +127,7 @@ os.geo.COORD_CLEANER = /[^NEWSnews\d\s.-]/g;
  * The parse config for os.geoUtils
  * @constructor
  * @param {RegExp} regex The regular expression for parsing
- * @param {Array.<{deg: number, min: number, sec: number, dir: number}>}
+ * @param {Array<{deg: number, min: number, sec: number, dir: number}>}
  * coords The coords array
  */
 os.geo.ParseConf = function(regex, coords) {
@@ -145,7 +145,7 @@ os.geo.ParseConf.prototype.regex = null;
 
 /**
  * The array of group positions
- * @type {Array.<{deg: !number, min: number, sec: number, dir: number}>}
+ * @type {Array<{deg: !number, min: number, sec: number, dir: number}>}
  */
 os.geo.ParseConf.prototype.coords = null;
 
@@ -323,7 +323,7 @@ os.geo.DECIMAL_RELAXED_ = os.geo.DECIMAL_LON_;
 
 
 /**
- * @type {Array.<Array.<os.geo.ParseConf>>}
+ * @type {Array<Array<os.geo.ParseConf>>}
  * @const
  * @private
  */
@@ -359,7 +359,7 @@ os.geo.parseConfigsMixedDDdMS_ = [
 
 
 /**
- * @type {Array.<Array.<os.geo.ParseConf>>}
+ * @type {Array<Array<os.geo.ParseConf>>}
  * @const
  * @private
  */
@@ -396,7 +396,7 @@ os.geo.parseConfigsMixeDMM_ = [
 
 
 /**
- * @type {Array.<Array.<os.geo.ParseConf>>}
+ * @type {Array<Array<os.geo.ParseConf>>}
  * @const
  * @private
  */
@@ -457,7 +457,7 @@ os.geo.parseConfigsMixedDMSdMM_ = [
 
 
 /**
- * @type {Array.<Array.<os.geo.ParseConf>>}
+ * @type {Array<Array<os.geo.ParseConf>>}
  * @const
  * @private
  */
@@ -476,7 +476,7 @@ os.geo.parseConfigsDD_ = [
 
 
 /**
- * @type {Array.<os.geo.ParseConf>}
+ * @type {Array<os.geo.ParseConf>}
  * @const
  * @private
  */
@@ -488,7 +488,7 @@ os.geo.parseConfigsDDRELAXED_ = [
 
 
 /**
- * @type {Array.<Array.<os.geo.ParseConf>>}
+ * @type {Array<Array<os.geo.ParseConf>>}
  * @const
  * @private
  */
@@ -525,7 +525,7 @@ os.geo.parseConfigsDMS_ = [
 
 
 /**
- * @type {Array.<os.geo.ParseConf>}
+ * @type {Array<os.geo.ParseConf>}
  * @const
  * @private
  */
@@ -546,7 +546,7 @@ os.geo.parseConfigsDMSRELAXED_ = [
 
 
 /**
- * @type {Array.<Array.<os.geo.ParseConf>>}
+ * @type {Array<Array<os.geo.ParseConf>>}
  * @const
  * @private
  */
@@ -583,7 +583,7 @@ os.geo.parseConfigsDMM_ = [
 
 
 /**
- * @type {Array.<os.geo.ParseConf>}
+ * @type {Array<os.geo.ParseConf>}
  * @const
  * @private
  */
@@ -614,7 +614,7 @@ os.geo.parseConfigsDMMRELAXED_ = [
 
 /**
  * Assumes lat/lon are in the same geo format ... if they aren't there are ways to detect that provided as well
- * @type {Array.<Array.<os.geo.ParseConf>>}
+ * @type {Array<Array<os.geo.ParseConf>>}
  * @const
  * @private
  */
@@ -737,7 +737,7 @@ os.geo.parseLatLon = function(str, opt_order, opt_format) {
  * Returns a specific config, with the relaxed standard
  * @param {number} order
  * @param {string=} opt_format Custom format string
- * @return {Array.<os.geo.ParseConf>}
+ * @return {Array<os.geo.ParseConf>}
  */
 os.geo.getLatLonFormatConfiguration = function(order, opt_format) {
   if (goog.isDef(opt_format)) { // only allow relaxed in manual override
@@ -1052,12 +1052,12 @@ os.geo.parse_ = function(deg, min, sec, dir) {
 
 /**
  * Interpolates an arc defined by center point, radius, and angleRange with a defined number of points.
- * @param {Array.<number>} center Center coordinates in [lon, lat] format
+ * @param {Array<number>} center Center coordinates in [lon, lat] format
  * @param {number} radius Radius of the arc in meters
  * @param {number} angleRange range of angle to draw arc in degrees (clockwise from north)
  * @param {number=} opt_startAngle center of arc, defaulting to 0
  * @param {number=} opt_points Number of points, defaulting to 10.
- * @return {Array.<Array.<number>>} Array of locations as [[x1, y1], [x2, y2] ... [xn, yn]]
+ * @return {Array<Array<number>>} Array of locations as [[x1, y1], [x2, y2] ... [xn, yn]]
  */
 os.geo.interpolateArc = function(center, radius, angleRange, opt_startAngle, opt_points) {
   var altitude = center.length > 2 ? center[2] : 0;
@@ -1077,10 +1077,10 @@ os.geo.interpolateArc = function(center, radius, angleRange, opt_startAngle, opt
 
 /**
  * Interpolates a circle defined by center point and radius as a polygon with a defined number of points per quadrant.
- * @param {Array.<number>} center Center coordinates in [lon, lat] format
+ * @param {Array<number>} center Center coordinates in [lon, lat] format
  * @param {number} radius Radius of the circle.
  * @param {number=} opt_pointsPerQuad Number of points per quadrant, defaulting to 10.
- * @return {Array.<Array.<number>>} Array of locations as [[x1, y1], [x2, y2] ... [xn, yn]]
+ * @return {Array<Array<number>>} Array of locations as [[x1, y1], [x2, y2] ... [xn, yn]]
  */
 os.geo.interpolateCircle = function(center, radius, opt_pointsPerQuad) {
   var pointsPerQuad = opt_pointsPerQuad || 10;
@@ -1112,12 +1112,12 @@ os.geo.interpolateCircle = function(center, radius, opt_pointsPerQuad) {
 /**
  * Interpolates an ellipse defined by center point, axes and orientation with a defined number of points per half.
  *
- * @param {Array.<number>} center Center point of the ellipse.
+ * @param {Array<number>} center Center point of the ellipse.
  * @param {number} a Semi-major axis of the ellipse in meters
  * @param {number} b Semi-minor axis of the ellipse in meters
  * @param {number} t Tilt/orientation of the ellipse in degrees clockwise from true north
- * @param {number=} opt_steps Number of points per each half of the ellipse, defaulting to 20.
- * @return {Array.<Array.<number>>} Array of locations as [[x1, y1], [x2, y2] ... [xn, yn]]
+ * @param {number=} opt_steps Number of points per each half of the ellipse, defaulting to 32.
+ * @return {Array<Array<number>>} Array of locations as [[x1, y1], [x2, y2] ... [xn, yn]]
  */
 os.geo.interpolateEllipse = function(center, a, b, t, opt_steps) {
   var altitude = center.length > 2 ? center[2] : 0;
@@ -1175,12 +1175,12 @@ os.geo.convertEllipseValue = function(value) {
 
 /**
  * Calculates an ending location from a location, distance, and bearing using Vincenty's algorithm.
- * @param {Array.<number>} location The start location
+ * @param {Array<number>} location The start location
  * @param {number} distance The distance from the start location in kilometers
  * @param {number} bearing The bearing (in degrees) where north is 0
  * @param {os.geo.Ellipsoid=} opt_ellipsoid The Vincenty Ellipsoid (with properties a, b, and f). Defaults to the WGS-84
  *     ellipsoid.
- * @return {Array.<number>} The resulting location
+ * @return {Array<number>} The resulting location
  * @deprecated Please use osasm.geodesicDirect(location, bearing, distance) instead. NOTE: The units for the new one are
  *  meters and not kilometers
  */
@@ -1402,7 +1402,7 @@ os.geo.getEllipseEasingFunction_ = function(a, b) {
 
 /**
  * Tests to see if the coordinate array is closed (the first coordinate is the same as the last).
- * @param {Array.<Array.<number>>} coords The coordinate array
+ * @param {Array<Array<number>>} coords The coordinate array
  * @return {boolean} If the first coordinate is the same as the last
  */
 os.geo.isClosed = function(coords) {
@@ -1421,7 +1421,7 @@ os.geo.isClosed = function(coords) {
 
 /**
  * Tests to see if a set of coordinates represent a polygon.
- * @param {Array.<Array.<number>>} coords The coordinate array
+ * @param {Array<Array<number>>} coords The coordinate array
  * @return {boolean} If the set of coordinates represent a polygon
  */
 os.geo.isPolygon = function(coords) {
@@ -1455,8 +1455,8 @@ os.geo.calculateCenter = function(coords) {
 
 /**
  * Tests to see if a set of coordinates represent a rectangle.
- * @param {Array.<Array.<number>>} coords The coordinate array of the os.geometry
- * @param {Array.<number>} extent The extent of the os.geometry as [minx, miny, maxx, maxy]
+ * @param {Array<Array<number>>} coords The coordinate array of the os.geometry
+ * @param {Array<number>} extent The extent of the os.geometry as [minx, miny, maxx, maxy]
  * @return {boolean} If the set of coordinates is rectangular
  */
 os.geo.isRectangular = function(coords, extent) {
@@ -1526,7 +1526,7 @@ os.geo.isGeometryPolygonal = function(geometry) {
 
 /**
  * Tests to see if any coordinate in coords has an altitude value.
- * @param {Array.<Array.<number>>} coords The coordinate array of the os.geometry
+ * @param {Array<Array<number>>} coords The coordinate array of the os.geometry
  * @param {boolean=} opt_quick if true, only the 1st coordinate is checked.
  * @return {boolean} If coords has an element with altitude.
  */
@@ -1662,7 +1662,7 @@ os.geo.hasAltitudeGeometry = function(geometry, opt_quick) {
 
 /**
  * Returns the average of the altitude component for all coordinates in coords.
- * @param {Array.<Array.<number>>} coords The coordinate array of the geometry
+ * @param {Array<Array<number>>} coords The coordinate array of the geometry
  * @return {number} Average of altitude compoments.
  */
 os.geo.getAverageAltitude = function(coords) {
@@ -1686,8 +1686,8 @@ os.geo.getAverageAltitude = function(coords) {
 
 /**
  * Tests to see if two coordinates are in the same spot.
- * @param {Array.<number>} c1 The first coordinate
- * @param {Array.<number>} c2 The second coordinate
+ * @param {Array<number>} c1 The first coordinate
+ * @param {Array<number>} c2 The second coordinate
  * @return {boolean} If the coordinates are the same
  */
 os.geo.isSameCoordinate = function(c1, c2) {
@@ -2210,7 +2210,7 @@ os.geo.isCCW = function(coords) {
  * Determine if we should normalize these Coordinates
  * If the set of coordinates are fully outside of -180 to 180, then normalize it
  * If its a mixture, don't so it shows across the dateline correctly
- * @param {Array.<Array.<number>>} coords
+ * @param {Array<Array<number>>} coords
  * @return {boolean} - if true, normalize the polygon
  */
 os.geo.shouldNormalize = function(coords) {
