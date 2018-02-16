@@ -1056,7 +1056,7 @@ os.geo.parse_ = function(deg, min, sec, dir) {
  * @param {number} radius Radius of the arc in meters
  * @param {number} angleRange range of angle to draw arc in degrees (clockwise from north)
  * @param {number=} opt_startAngle center of arc, defaulting to 0
- * @param {number=} opt_points Number of points, defaulting to 10.
+ * @param {number=} opt_points Number of points, defaulting to 20.
  * @return {Array<Array<number>>} Array of locations as [[x1, y1], [x2, y2] ... [xn, yn]]
  */
 os.geo.interpolateArc = function(center, radius, angleRange, opt_startAngle, opt_points) {
