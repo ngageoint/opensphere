@@ -1,7 +1,16 @@
 goog.provide('os.ui.menu.MenuEvent');
+goog.provide('os.ui.menu.MenuEventType');
 
 goog.require('goog.events.Event');
 
+
+
+/**
+ * @enum {string}
+ */
+os.ui.menu.MenuEventType = {
+  OPEN: 'menu:open'
+};
 
 
 /**
