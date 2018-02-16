@@ -1053,8 +1053,8 @@ os.geo.parse_ = function(deg, min, sec, dir) {
 /**
  * Interpolates an arc defined by center point, radius, and angleRange with a defined number of points.
  * @param {Array.<number>} center Center coordinates in [lon, lat] format
- * @param {number} radius Radius of the arc.
- * @param {number} angleRange range of angle to draw arc
+ * @param {number} radius Radius of the arc in meters
+ * @param {number} angleRange range of angle to draw arc in degrees (clockwise from north)
  * @param {number=} opt_startAngle center of arc, defaulting to 0
  * @param {number=} opt_points Number of points, defaulting to 10.
  * @return {Array.<Array.<number>>} Array of locations as [[x1, y1], [x2, y2] ... [xn, yn]]
@@ -1112,18 +1112,11 @@ os.geo.interpolateCircle = function(center, radius, opt_pointsPerQuad) {
 /**
  * Interpolates an ellipse defined by center point, axes and orientation with a defined number of points per half.
  *
- * By default, makes the following assumptions about units:
- *  - If the axis value is >= 250, assumes meters.
- *  - Otherwise assumes nautical miles.
- *
- * To avoid unit conversion, convert axis values to meters and set the opt_skipConvert flag to true.
- *
  * @param {Array.<number>} center Center point of the ellipse.
- * @param {number} a Semi-major axis of the ellipse.
- * @param {number} b Semi-minor axis of the ellipse.
- * @param {number} t Tilt/orientation of the ellipse.
+ * @param {number} a Semi-major axis of the ellipse in meters
+ * @param {number} b Semi-minor axis of the ellipse in meters
+ * @param {number} t Tilt/orientation of the ellipse in degrees clockwise from true north
  * @param {number=} opt_steps Number of points per each half of the ellipse, defaulting to 20.
- *
  * @return {Array.<Array.<number>>} Array of locations as [[x1, y1], [x2, y2] ... [xn, yn]]
  */
 os.geo.interpolateEllipse = function(center, a, b, t, opt_steps) {
