@@ -899,17 +899,21 @@ os.feature.updateFeaturesFadeStyle = function(features, opacity, opt_source) {
 
   if (source) {
     for (var i = 0, n = features.length; i < n; i++) {
-      // we need to make a copy/clone of the style to mess with the config
       var feature = features[i];
-      var layerConfig = os.style.getLayerConfig(feature, source);
-      var baseConfig = /** @type {Object|undefined} */
-          (feature.values_[os.style.StyleType.FEATURE]) ||
-          layerConfig ||
-          os.style.DEFAULT_VECTOR_CONFIG;
-      os.style.setConfigOpacityColor(baseConfig, opacity);
 
-      var style = os.style.createFeatureStyle(feature, baseConfig, layerConfig);
-      feature.setStyle(style);
+      // don't fade dynamic features because they are always displayed
+      if (feature && !(feature instanceof os.feature.DynamicFeature)) {
+        // we need to make a copy/clone of the style to mess with the config
+        var layerConfig = os.style.getLayerConfig(feature, source);
+        var baseConfig = /** @type {Object|undefined} */
+            (feature.values_[os.style.StyleType.FEATURE]) ||
+            layerConfig ||
+            os.style.DEFAULT_VECTOR_CONFIG;
+        os.style.setConfigOpacityColor(baseConfig, opacity);
+
+        var style = os.style.createFeatureStyle(feature, baseConfig, layerConfig);
+        feature.setStyle(style);
+      }
     }
   }
 };

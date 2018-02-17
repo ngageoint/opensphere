@@ -22,7 +22,9 @@ os.olcs.AbstractTerrainProvider = function(options) {
 
   var credit = options.credit;
   if (goog.isString(credit)) {
-    credit = new Cesium.Credit(credit);
+    var creditOptions = /** @type {Cesium.CreditOptions} */ ({});
+    creditOptions.text = credit;
+    credit = new Cesium.Credit(creditOptions);
   }
 
   /**

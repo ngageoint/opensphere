@@ -115,7 +115,7 @@ os.layer.config.AbstractLayerConfig.prototype.initializeConfig = function(option
   if (goog.isString(options['params'])) {
     this.params = new goog.Uri.QueryData(options['params']);
   } else if (options['params']) {
-    this.params = options['params'];
+    this.params = goog.Uri.QueryData.createFromMap(options['params']);
   }
 
   this.alpha = goog.math.clamp(options['alpha'] || options['opacity'] || 1, 0, 1);

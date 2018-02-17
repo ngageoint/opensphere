@@ -1393,7 +1393,7 @@ os.olcs.sync.FeatureConverter.prototype.olMultiGeometryToCesium = function(featu
       geometry = /** @type {!ol.geom.MultiLineString} */ (geometry);
       subGeos = geometry.getLineStrings();
 
-      if (geometry.get(os.geom.GeometryField.DYNAMIC)) {
+      if (feature instanceof os.feature.DynamicFeature) {
         // dynamic lines may change frequently and should use Cesium.Polyline to avoid recreating on each change,
         // which will cause a flicker while the new Primitive is loaded to the GPU.
         subGeos.forEach(function(subGeo) {
@@ -1562,7 +1562,7 @@ os.olcs.sync.FeatureConverter.prototype.olGeometryToCesium = function(feature, g
         geometry = /** @type {!ol.geom.LineString} */ (geometry);
 
         // TODO: both of these should be replaced by the Entity API (polyline/polylineVolume)
-        if (geometry.get(os.geom.GeometryField.DYNAMIC)) {
+        if (feature instanceof os.feature.DynamicFeature) {
           // dynamic lines may change frequently and should use Cesium.Polyline to avoid recreating on each change,
           // which will cause a flicker while the new Primitive is loaded to the GPU.
           this.createOrUpdatePolyline(feature, geometry, context, style);
