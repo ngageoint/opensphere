@@ -50,10 +50,11 @@ body {
 
 // * Custom scrollbar for webkit browsers - sorry FF/IE!
 // *******************************************************
-
+// sass-lint:disable no-vendor-prefixes
 ::-webkit-scrollbar {
   background-color: $color-medium-gray;
 }
+// sass-lint:enable no-vendor-prefixes
 
 .panel {
   @include box-sizing(border-box);

@@ -12,6 +12,7 @@
 
 .date-time {
   input {
+    // sass-lint:disable no-vendor-prefixes
     -webkit-max-logical-width: 32px;
     max-width: 32px;
   }
