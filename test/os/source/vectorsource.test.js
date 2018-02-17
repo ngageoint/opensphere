@@ -3,27 +3,43 @@ goog.require('goog.net.EventType');
 goog.require('goog.net.XhrIo');
 goog.require('goog.object');
 goog.require('ol.Feature');
+goog.require('ol.geom.Point');
 goog.require('os.Fields');
 goog.require('os.data.ColumnDefinition');
 goog.require('os.data.filter.OddFilter');
 goog.require('os.events.EventType');
+goog.require('os.events.PropertyChangeEvent');
 goog.require('os.events.SelectionType');
+goog.require('os.feature.DynamicFeature');
 goog.require('os.im.Importer');
+goog.require('os.layer.MockLayer');
 goog.require('os.mock');
 goog.require('os.source.Vector');
 goog.require('os.style');
+goog.require('os.time.TimeRange');
 goog.require('os.ui.formatter.PropertiesFormatter');
 goog.require('plugin.file.geojson.GeoJSONParser');
 
 
 describe('os.source.Vector', function() {
+  var dynamicFeatures = null;
   var features = null;
   var source;
+
+  var displayStart = Date.now();
+  var displayEnd = displayStart + 5000;
+  var displayRange = new os.time.TimeRange(displayStart, displayEnd);
 
   var waitForTestObject = function() {
     if (!source) {
       source = new os.source.Vector(undefined);
+      source.setDisplayRange(displayRange, false);
     }
+
+    // make sure the timeline controller doesn't change our expected range
+    spyOn(source.tlc, 'getLastEvent').andReturn({
+      getRange: goog.functions.constant(displayRange)
+    });
 
     if (features) {
       return;
@@ -56,6 +72,40 @@ describe('os.source.Vector', function() {
     waitsFor(function() {
       return features != null;
     }, 'importer to finish', 2 * jasmine.DEFAULT_TIMEOUT_INTERVAL);
+  };
+
+  var initDynamicFeatures = function() {
+    if (!dynamicFeatures) {
+      dynamicFeatures = [];
+
+      for (var i = 0; i < 5; i++) {
+        var df = new os.feature.DynamicFeature(new ol.geom.Point([0, 0]));
+        df.setId('df' + i);
+        dynamicFeatures.push(df);
+      }
+    }
+  };
+
+  var addDynamicSpies = function() {
+    dynamicFeatures.forEach(function(df) {
+      spyOn(df, 'initDynamic');
+      spyOn(df, 'disposeDynamic');
+      spyOn(df, 'updateDynamic');
+    });
+  };
+
+  var fakeMapContainer = function() {
+    // Create a fake layer object to mock functions used by vector source.
+    var layer = new os.layer.MockLayer();
+
+    // Create a fake map container to return our fake layer.
+    var mapContainer = {
+      getLayer: goog.functions.constant(layer),
+      getMap: goog.functions.NULL,
+      is3DEnabled: goog.functions.FALSE
+    };
+
+    spyOn(os.MapContainer, 'getInstance').andReturn(mapContainer);
   };
 
   beforeEach(waitForTestObject);
@@ -578,5 +628,172 @@ describe('os.source.Vector', function() {
     var newSource = new os.source.Vector(undefined);
     newSource.addFeature(f);
     expect(f.getGeometry()).toBe(null);
+  });
+
+  describe('dynamic features', function() {
+    it('should add dynamic features to the source', function() {
+      initDynamicFeatures();
+      addDynamicSpies();
+
+      source.addFeatures(dynamicFeatures);
+
+      dynamicFeatures.forEach(function(df) {
+        var id = df.getId();
+        expect(source.dynamicFeatures_[id]).toBe(df);
+        expect(source.dynamicListeners_[id]).toBeUndefined();
+
+        expect(df.initDynamic).not.toHaveBeenCalled();
+        expect(df.disposeDynamic).not.toHaveBeenCalled();
+        expect(df.updateDynamic).not.toHaveBeenCalled();
+      });
+    });
+
+    it('should init dynamic features when animation enabled', function() {
+      addDynamicSpies();
+      fakeMapContainer();
+
+      // enable animation on the source
+      source.setTimeEnabled(true);
+      source.setAnimationEnabled(true);
+
+      dynamicFeatures.forEach(function(df) {
+        var id = df.getId();
+        expect(source.dynamicFeatures_[id]).toBe(df);
+        expect(source.dynamicListeners_[id]).toBeDefined();
+
+        expect(df.initDynamic).toHaveBeenCalled();
+        expect(df.disposeDynamic).not.toHaveBeenCalled();
+        expect(df.updateDynamic).not.toHaveBeenCalled();
+      });
+    });
+
+    it('should update dynamic features during animation', function() {
+      addDynamicSpies();
+
+      // update the animation overlay on the source
+      source.updateAnimationOverlay();
+
+      dynamicFeatures.forEach(function(df) {
+        var id = df.getId();
+        expect(source.dynamicFeatures_[id]).toBe(df);
+        expect(source.dynamicListeners_[id]).toBeDefined();
+
+        // updates to the animation overlay should update the dynamic feature
+        expect(df.initDynamic).not.toHaveBeenCalled();
+        expect(df.disposeDynamic).not.toHaveBeenCalled();
+        expect(df.updateDynamic).toHaveBeenCalledWith(displayEnd);
+      });
+    });
+
+    it('should respond to changes in dynamic feature geometry', function() {
+      addDynamicSpies();
+
+      spyOn(source, 'onDynamicFeatureChange').andCallThrough();
+
+      var df = dynamicFeatures[0];
+      df.dispatchEvent(new os.events.PropertyChangeEvent(os.feature.DynamicPropertyChange.GEOMETRY));
+
+      // feature is already initialized so this shouldn't be called
+      expect(df.initDynamic).not.toHaveBeenCalled();
+
+      // dynamic content from the old geometry should have been disposed
+      expect(df.disposeDynamic).toHaveBeenCalledWith(true);
+
+      // and the dynamic content updated for the new geometry
+      expect(df.updateDynamic).toHaveBeenCalledWith(displayEnd);
+
+      // remaining dynamic features should be updated with the animation overlay update
+      for (var i = 1; i < dynamicFeatures.length; i++) {
+        expect(dynamicFeatures[i].initDynamic).not.toHaveBeenCalled();
+        expect(dynamicFeatures[i].disposeDynamic).not.toHaveBeenCalled();
+        expect(dynamicFeatures[i].updateDynamic).toHaveBeenCalledWith(displayEnd);
+      }
+    });
+
+    it('should clean up dynamic features when animation disabled', function() {
+      addDynamicSpies();
+
+      // disable animation/time model for further tests
+      source.setAnimationEnabled(false);
+      source.setTimeEnabled(false);
+
+      dynamicFeatures.forEach(function(df) {
+        var id = df.getId();
+        expect(source.dynamicFeatures_[id]).toBe(df);
+        expect(source.dynamicListeners_[id]).toBeUndefined();
+
+        expect(df.initDynamic).not.toHaveBeenCalled();
+        expect(df.disposeDynamic).toHaveBeenCalled();
+        expect(df.updateDynamic).not.toHaveBeenCalled();
+      });
+    });
+
+    it('should remove dynamic features from the source', function() {
+      addDynamicSpies();
+
+      source.removeFeatures(dynamicFeatures);
+
+      dynamicFeatures.forEach(function(df) {
+        var id = df.getId();
+        expect(source.dynamicFeatures_[id]).toBeUndefined();
+        expect(source.dynamicListeners_[id]).toBeUndefined();
+
+        expect(df.disposeDynamic).toHaveBeenCalledWith(true);
+      });
+
+      dynamicFeatures = null;
+    });
+
+    it('should init dynamic features if added while animation is enabled', function() {
+      initDynamicFeatures();
+      addDynamicSpies();
+      fakeMapContainer();
+
+      source.setTimeEnabled(true);
+      source.setAnimationEnabled(true);
+      source.addFeatures(dynamicFeatures);
+
+      dynamicFeatures.forEach(function(df) {
+        var id = df.getId();
+        expect(source.dynamicFeatures_[id]).toBe(df);
+        expect(source.dynamicListeners_[id]).toBeDefined();
+
+        // each feature should have been initialized, but not updated yet
+        expect(df.initDynamic).toHaveBeenCalled();
+        expect(df.updateDynamic).not.toHaveBeenCalled();
+        expect(df.disposeDynamic).not.toHaveBeenCalled();
+      });
+
+      waitsFor(function() {
+        return dynamicFeatures[0].updateDynamic.calls.length;
+      });
+
+      runs(function() {
+        dynamicFeatures.forEach(function(df) {
+          // deferred processing should have updated the animation overlay, along with dynamic features
+          expect(df.updateDynamic).toHaveBeenCalledWith(displayEnd);
+        });
+      });
+    });
+
+    it('should dispose dynamic features if removed while animation is enabled', function() {
+      addDynamicSpies();
+
+      source.removeFeatures(dynamicFeatures);
+
+      dynamicFeatures.forEach(function(df) {
+        var id = df.getId();
+        expect(source.dynamicFeatures_[id]).toBeUndefined();
+        expect(source.dynamicListeners_[id]).toBeUndefined();
+
+        expect(df.disposeDynamic).toHaveBeenCalledWith(true);
+      });
+
+      dynamicFeatures = null;
+
+      // disable animation/time model for further tests
+      source.setAnimationEnabled(false);
+      source.setTimeEnabled(false);
+    });
   });
 });

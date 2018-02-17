@@ -8,8 +8,8 @@
 
 .bits-modal-content {
   @include opacity(0);
-  @include scaleX(.7);
-  @include scaleY(.1);
+  @include scaleX(.7); // sass-lint:disable-line mixin-name-format
+  @include scaleY(.1); // sass-lint:disable-line mixin-name-format
   @include transform-origin(50%, 0);
   @include transition(all .3s);
   @include box-shadow(0 25px 50px #333);

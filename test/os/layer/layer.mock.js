@@ -300,3 +300,12 @@ os.layer.MockLayer.prototype.getHidden = function() {
  * @inheritDoc
  */
 os.layer.MockLayer.prototype.setHidden = function(value) {};
+
+
+/**
+ * Return the Z-index of the layer.
+ * @return {number} The Z-index of the layer.
+ */
+os.layer.MockLayer.prototype.getZIndex = function() {
+  return 0;
+};

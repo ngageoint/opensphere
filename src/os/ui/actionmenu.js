@@ -208,6 +208,7 @@ os.ui.ActionMenuCtrl.prototype.constructMenu_ = function(actions) {
  * @param {Object} menuStructure JSON object structure which declares the depth and placement of the menu items
  * @param {Array} menuItems The list of menu items to which the converted menuStructure actions are placed.
  * @private
+ * @suppress {deprecated}
  */
 os.ui.ActionMenuCtrl.prototype.insertMenuItems_ = function(menuStructure, menuItems) {
   // insert item is sorted order
