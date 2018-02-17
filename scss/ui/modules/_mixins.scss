@@ -4,10 +4,12 @@ $os-border-radius: 4px;
 $searchbar-height: 20px;
 
 @mixin touch-callout($param) {
+  // sass-lint:disable no-vendor-prefixes
   -webkit-touch-callout: $param;
 }
 
 @mixin tap-highlight-color($param) {
+  // sass-lint:disable no-vendor-prefixes
   -webkit-tap-highlight-color: $param;
 }
 
@@ -24,7 +26,7 @@ $searchbar-height: 20px;
 }
 
 // disable linting of mixins, grabbing must be defined here
-// scss-lint:disable all
+// sass-lint:disable no-duplicate-properties no-vendor-prefixes
 // usage @include calc(width, '25% - 1em');  quote the expression.
 @mixin calc($property, $expression) {
   #{$property}: -webkit-calc(#{$expression});
