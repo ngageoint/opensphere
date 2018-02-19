@@ -42,6 +42,21 @@ os.command.VectorUniqueIdCmd.prototype.getOldValue = function() {
 /**
  * @inheritDoc
  */
+os.command.AbstractStyle.prototype.setValue = function(value) {
+  var layer = /** @type {os.layer.Vector} */ (this.getLayer());
+  goog.asserts.assert(layer, 'layer must be defined');
+
+  var config = this.getLayerConfig(layer);
+  goog.asserts.assert(config, 'layer config must be defined');
+
+  this.applyValue(config, value);
+  this.finish(config);
+};
+
+
+/**
+ * @inheritDoc
+ */
 os.command.VectorUniqueIdCmd.prototype.applyValue = function(config, value) {
   var layer = this.getLayer();
   var source = /** @type {os.source.Vector} */ (layer.getSource());
