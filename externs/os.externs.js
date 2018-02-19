@@ -411,12 +411,12 @@ osx.window.ConfirmColumnOptions;
 
 /**
  * @typedef {{
- *   features: !Array<!ol.Feature>,
- *   name: (string|undefined),
- *   color: (string|undefined),
- *   sortField: (string|undefined),
+ *   features: (Array<!ol.Feature>|undefined),
  *   id: (string|undefined),
+ *   color: (string|undefined),
+ *   name: (string|undefined),
+ *   sortField: (string|undefined),
  *   label: (string|undefined)
  * }}
  */
-osx.track.Options;
+plugin.track.CreateOptions;

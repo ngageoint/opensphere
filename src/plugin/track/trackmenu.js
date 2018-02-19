@@ -317,7 +317,13 @@ plugin.track.menu.handleLayerEvent_ = function(event) {
             var trackTitle = layer.getTitle() + ' Track';
             plugin.track.promptForTitle(trackTitle).then(function(title) {
               plugin.track.getSortField(features[0]).then(function(sortField) {
-                plugin.track.createFromFeatures(features, title, sortField);
+                var options = /** @type {plugin.track.CreateOptions} */ ({
+                  features: features,
+                  name: title,
+                  sortField: sortField
+                });
+
+                plugin.track.createFromFeatures(options);
               });
             });
             break;
