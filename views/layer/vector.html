@@ -68,6 +68,7 @@
             <td class="style-controls wide">
               <select class="wide" ng-model="vector.uniqueId" ng-change="vector.onUniqueIdChange()"
                   ng-options="col as col.name for col in columns track by col.field">
+                  <option value="">-- None --</option>
               </select>
             </td>
           </tr>
