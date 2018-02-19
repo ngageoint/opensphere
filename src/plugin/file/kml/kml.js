@@ -30,6 +30,22 @@ plugin.file.kml.STYLE_KEY = '_kmlStyle';
 
 
 /**
+ * Namespace URI used for KML nodes.
+ * @type {string}
+ * @const
+ */
+plugin.file.kml.KML_NS = 'http://www.opengis.net/kml/2.2';
+
+
+/**
+ * Namespace URI used for gx nodes.
+ * @type {string}
+ * @const
+ */
+plugin.file.kml.GX_NS = 'http://www.google.com/kml/ext/2.2';
+
+
+/**
  * The default KML style
  * @type {Object<string, *>}
  */
@@ -385,6 +401,39 @@ os.object.merge(plugin.file.kml.PLACEMARK_TRACK_PARSERS, plugin.file.kml.OL_PLAC
 
 
 /**
+ * Override the Openlayers function to support exporting Track and MultiTrack nodes.
+ * @param {*} value Value.
+ * @param {Array<*>} objectStack Object stack.
+ * @param {string=} opt_nodeName Node name.
+ * @return {Node|undefined} Node.
+ *
+ * @suppress {duplicate}
+ */
+ol.format.KML.GEOMETRY_NODE_FACTORY_ = function(value, objectStack, opt_nodeName) {
+  if (value instanceof ol.geom.SimpleGeometry) {
+    var parentNode = objectStack[objectStack.length - 1].node;
+    var namespaceURI = parentNode.namespaceURI;
+
+    var geometryType = value.getType();
+    var layout = value.getLayout();
+    var nodeType = ol.format.KML.GEOMETRY_TYPE_TO_NODENAME_[geometryType];
+
+    if (layout === ol.geom.GeometryLayout.XYM || layout === ol.geom.GeometryLayout.XYZM) {
+      if (geometryType === ol.geom.GeometryType.LINE_STRING) {
+        nodeType = 'gx:Track';
+        namespaceURI = plugin.file.kml.GX_NS;
+      } else if (geometryType === ol.geom.GeometryType.MULTI_LINE_STRING) {
+        nodeType = 'gx:MultiTrack';
+        namespaceURI = plugin.file.kml.GX_NS;
+      }
+    }
+
+    return ol.xml.createElementNS(namespaceURI, nodeType);
+  }
+};
+
+
+/**
  * Override the href parser to use the asset map.
  *
  * Openlayers 3.18 updated this function to use the URL() API, which is not supported in IE. If goog.Uri is replaced
@@ -459,15 +508,71 @@ plugin.file.kml.writeMultiGeometry_ = function(node, geometry, objectStack) {
 
 
 /**
+ * Adds support for writing Track nodes.
+ * @param {Node} node Node.
+ * @param {ol.geom.Geometry} geometry Geometry.
+ * @param {Array<*>} objectStack Object stack.
+ * @private
+ */
+plugin.file.kml.writeMultiTrack_ = function(node, geometry, objectStack) {
+  if (geometry instanceof ol.geom.MultiLineString) {
+    var lineStrings = geometry.getLineStrings();
+    for (var i = 0; i < lineStrings.length; i++) {
+      var trackNode = ol.xml.createElementNS(plugin.file.kml.GX_NS, 'gx:Track');
+      plugin.file.kml.writeTrack_(trackNode, lineStrings[i], objectStack);
+      node.appendChild(trackNode);
+    }
+  }
+};
+
+
+
+/**
+ * Adds support for writing Track nodes.
+ * @param {Node} node Node.
+ * @param {ol.geom.Geometry} geometry Geometry.
+ * @param {Array<*>} objectStack Object stack.
+ * @private
+ */
+plugin.file.kml.writeTrack_ = function(node, geometry, objectStack) {
+  if (geometry instanceof ol.geom.LineString) {
+    var flatCoordinates = geometry.getFlatCoordinates();
+    var stride = geometry.getStride();
+
+    for (var i = 0; i < flatCoordinates.length; i += stride) {
+      var coordNode = ol.xml.createElementNS(plugin.file.kml.GX_NS, 'gx:coord');
+      var coordText = flatCoordinates[i] + ' ' + flatCoordinates[i + 1];
+      if (stride > 3) {
+        coordText += ' ' + flatCoordinates[i + 2];
+      }
+      ol.format.XSD.writeStringTextNode(coordNode, coordText);
+
+      var whenNode = ol.xml.createElementNS(plugin.file.kml.KML_NS, 'when');
+      var whenText = new Date(flatCoordinates[i + stride - 1]).toISOString();
+      ol.format.XSD.writeStringTextNode(whenNode, whenText);
+
+      node.appendChild(coordNode);
+      node.appendChild(whenNode);
+    }
+  }
+};
+
+
+/**
  * Override the Openlayers Placemark serializers to add additional support.
  * @type {Object<string, Object<string, ol.XmlSerializer>>}
  * @const
  */
 plugin.file.kml.PLACEMARK_SERIALIZERS = ol.xml.makeStructureNS(
     plugin.file.kml.OL_NAMESPACE_URIS(), {
-      'MultiGeometry': ol.xml.makeChildAppender(
-          plugin.file.kml.writeMultiGeometry_)
-    });
+      'MultiGeometry': ol.xml.makeChildAppender(plugin.file.kml.writeMultiGeometry_)
+    }, ol.xml.makeStructureNS(
+        plugin.file.kml.OL_GX_NAMESPACE_URIS(), {
+          // add serializers for gx:Track and gx:MultiTrack
+          'MultiTrack': ol.xml.makeChildAppender(plugin.file.kml.writeMultiTrack_),
+          'Track': ol.xml.makeChildAppender(plugin.file.kml.writeTrack_)
+        }
+    ));
 os.object.merge(plugin.file.kml.PLACEMARK_SERIALIZERS, plugin.file.kml.OL_PLACEMARK_SERIALIZERS(), true);
 
 
