@@ -9,6 +9,12 @@ goog.require('os.olcs.RenderLoop');
  */
 (function() {
   var origEnable = olcs.AutoRenderLoop.prototype.enable;
+
+  /**
+   * Overridden to listen to <code>os.olcs.RenderLoop.REPAINT</code> events in addition
+   * to timeline show events for rendering the scene.
+   * @override
+   */
   olcs.AutoRenderLoop.prototype.enable = function() {
     os.dispatcher.listen(os.olcs.RenderLoop.REPAINT, this.notifyRepaintRequired, false, this);
     os.time.TimelineController.getInstance().listen(os.time.TimelineEventType.SHOW,
@@ -17,6 +23,12 @@ goog.require('os.olcs.RenderLoop');
   };
 
   var origDisable = olcs.AutoRenderLoop.prototype.disable;
+
+  /**
+   * Overridden to unlisten to <code>os.olcs.RenderLoop.REPAINT</code> events in addition
+   * to timeline show events for rendering the scene.
+   * @override
+   */
   olcs.AutoRenderLoop.prototype.disable = function() {
     os.dispatcher.unlisten(os.olcs.RenderLoop.REPAINT, this.notifyRepaintRequired, false, this);
     os.time.TimelineController.getInstance().unlisten(os.time.TimelineEventType.SHOW,
@@ -25,6 +37,11 @@ goog.require('os.olcs.RenderLoop');
   };
 
   var origNotify = olcs.AutoRenderLoop.prototype.notifyRepaintRequired;
+
+  /**
+   * Overridden because we only care about mouse events if a button is down
+   * @override
+   */
   olcs.AutoRenderLoop.prototype.notifyRepaintRequired = function(opt_evt) {
     if (opt_evt && opt_evt.type && opt_evt.type.indexOf('move') > -1) {
       // we only care about move events when a button is down

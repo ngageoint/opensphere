@@ -60,6 +60,9 @@ os.ui.util.comboContainerLink = function($scope, $element, $attrs) {
     $('body').append(comboEl);
     $element.find('.combo-box').remove();
 
+    /**
+     * Updates the combo position
+     */
     updateComboPosition = function() {
       var top = $element.offset().top + $element.height();
       var left = $element.offset().left;
