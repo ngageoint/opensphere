@@ -142,10 +142,16 @@ olcs.OLCesium.prototype.setEnabled = function(enable) {
 Cesium.loadImage.createImage = function(url, crossOrigin, deferred) {
   var image = new Image();
 
+  /**
+   * @param {Event} e
+   */
   image.onload = function(e) {
     deferred.resolve(image);
   };
 
+  /**
+   * @param {Event} e
+   */
   image.onerror = function(e) {
     deferred.reject(e);
   };
