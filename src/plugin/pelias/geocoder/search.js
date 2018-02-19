@@ -82,12 +82,14 @@ plugin.pelias.geocoder.Search.prototype.getSearchUrl = function(term, opt_start,
   var focuspoint = /** @type {boolean} */ (os.settings.get(['plugin', 'pelias', 'geocoder', 'focusPoint']));
   if (focuspoint) {
     var threshold = /** @type {number} */ (os.settings.get(['plugin', 'pelias', 'geocoder', 'focusPointMinZoom'], 4.0));
-    var currentZoom = /** @type {number} */ (os.MapContainer.getInstance().getMap().getView().getZoom());
+    var currentZoom = os.MapContainer.getInstance().getMap().getView().getZoom();
     if (currentZoom >= threshold) {
-      var centre = /** @type {Array<number>} */ (os.MapContainer.getInstance().getMap().getView().getCenter());
-      var centreLonLat = ol.proj.toLonLat(centre, os.map.PROJECTION);
-      var focusPointText = '&focus.point.lat=' + centreLonLat[1] + '&focus.point.lon=' + centreLonLat[0];
-      url += focusPointText;
+      var centre = os.MapContainer.getInstance().getMap().getView().getCenter();
+      if (centre) {
+        var centreLonLat = ol.proj.toLonLat(centre, os.map.PROJECTION);
+        var focusPointText = '&focus.point.lat=' + centreLonLat[1] + '&focus.point.lon=' + centreLonLat[0];
+        url += focusPointText;
+      }
     }
   }
   return url;
