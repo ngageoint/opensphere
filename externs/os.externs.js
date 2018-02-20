@@ -407,16 +407,3 @@ osx.window.TextPromptOptions;
  * }}
  */
 osx.window.ConfirmColumnOptions;
-
-
-/**
- * @typedef {{
- *   features: (Array<!ol.Feature>|undefined),
- *   id: (string|undefined),
- *   color: (string|undefined),
- *   name: (string|undefined),
- *   sortField: (string|undefined),
- *   label: (string|undefined)
- * }}
- */
-plugin.track.CreateOptions;

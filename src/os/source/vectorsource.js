@@ -1125,6 +1125,7 @@ os.source.Vector.prototype.getMaxDate = function() {
  * Gets the layer title
  * @param {boolean=} opt_doNoUseTypeInName turns off the inclusion of the explicit type in the name
  * @return {!string} The title
+ * @override
  */
 os.source.Vector.prototype.getTitle = function(opt_doNoUseTypeInName) {
   var layer = /** @type {os.layer.ILayer} */ (os.MapContainer.getInstance().getLayer(this.getId()));
