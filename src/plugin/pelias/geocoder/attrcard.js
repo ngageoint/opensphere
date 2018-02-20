@@ -1,5 +1,5 @@
-goog.provide('plugin.mapzen.places.AttrCardCtrl');
-goog.provide('plugin.mapzen.places.attrCardDirective');
+goog.provide('plugin.pelias.geocoder.AttrCardCtrl');
+goog.provide('plugin.pelias.geocoder.attrCardDirective');
 
 goog.require('os.defines');
 goog.require('os.ui.Module');
@@ -9,11 +9,11 @@ goog.require('os.ui.Module');
  * The geonames result card directive for displaying search results.
  * @return {angular.Directive}
  */
-plugin.mapzen.places.attrCardDirective = function() {
+plugin.pelias.geocoder.attrCardDirective = function() {
   return {
     restrict: 'E',
-    templateUrl: os.ROOT + 'views/plugin/mapzen/places/attrcard.html',
-    controller: plugin.mapzen.places.AttrCardCtrl,
+    templateUrl: os.ROOT + 'views/plugin/pelias/geocoder/attrcard.html',
+    controller: plugin.pelias.geocoder.AttrCardCtrl,
     controllerAs: 'attrCtrl'
   };
 };
@@ -22,7 +22,7 @@ plugin.mapzen.places.attrCardDirective = function() {
 /**
  * Register the directive.
  */
-os.ui.Module.directive('mapzenplacesattrcard', [plugin.mapzen.places.attrCardDirective]);
+os.ui.Module.directive('peliasgeocoderattrcard', [plugin.pelias.geocoder.attrCardDirective]);
 
 
 
@@ -32,9 +32,9 @@ os.ui.Module.directive('mapzenplacesattrcard', [plugin.mapzen.places.attrCardDir
  * @constructor
  * @ngInject
  */
-plugin.mapzen.places.AttrCardCtrl = function($scope, $element) {
+plugin.pelias.geocoder.AttrCardCtrl = function($scope, $element) {
   // just plop the result HTML in
-  var attrs = /** @type {plugin.mapzen.places.AttrResult} */ ($scope['result']).getResult();
+  var attrs = /** @type {plugin.pelias.geocoder.AttrResult} */ ($scope['result']).getResult();
 
   var html = '';
   for (var i = 0, n = attrs.length; i < n; i++) {
