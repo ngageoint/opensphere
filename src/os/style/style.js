@@ -72,6 +72,20 @@ os.style.DEFAULT_LOB_LENGTH = 1000;
 
 
 /**
+ * @type {string}
+ * @const
+ */
+os.style.DEFAULT_UNITS = os.math.Units.METERS;
+
+
+/**
+ * @type {string}
+ * @const
+ */
+os.style.DEFAULT_LOB_LENGTH_TYPE = 'manual';
+
+
+/**
  * @type {number}
  * @const
  */
@@ -919,13 +933,18 @@ os.style.verifyGeometries = function(feature, config, opt_layerConfig) {
     if (opt_layerConfig) {
       var lobOptions = /** type {os.feature.LOBOptions} */ {
         arrowLength: opt_layerConfig[os.style.StyleField.ARROW_SIZE],
+        arrowUnits: opt_layerConfig[os.style.StyleField.ARROW_UNITS],
         bearingColumn: opt_layerConfig[os.style.StyleField.LOB_BEARING_COLUMN],
         bearingError: opt_layerConfig[os.style.StyleField.LOB_BEARING_ERROR],
         bearingErrorColumn: opt_layerConfig[os.style.StyleField.LOB_BEARING_ERROR_COLUMN],
+        columnLength: opt_layerConfig[os.style.StyleField.LOB_COLUMN_LENGTH],
         length: opt_layerConfig[os.style.StyleField.LOB_LENGTH],
+        lengthType: opt_layerConfig[os.style.StyleField.LOB_LENGTH_TYPE],
         lengthColumn: opt_layerConfig[os.style.StyleField.LOB_LENGTH_COLUMN],
+        lengthUnits: opt_layerConfig[os.style.StyleField.LOB_LENGTH_UNITS],
         lengthError: opt_layerConfig[os.style.StyleField.LOB_LENGTH_ERROR],
         lengthErrorColumn: opt_layerConfig[os.style.StyleField.LOB_LENGTH_ERROR_COLUMN],
+        lengthErrorUnits: opt_layerConfig[os.style.StyleField.LOB_LENGTH_ERROR_UNITS],
         showArrow: opt_layerConfig[os.style.StyleField.SHOW_ARROW],
         showEllipse: opt_layerConfig[os.style.StyleField.SHOW_ELLIPSE],
         showError: opt_layerConfig[os.style.StyleField.SHOW_ERROR]
