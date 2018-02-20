@@ -47,3 +47,19 @@ The :code:`extentParams` and :code:`extentThreshold` parts are optional, and cha
 
 Similarly, the :code:`focusPoint` and :code:`focusPointMinZoom` parts are optional. :code:`focusPoint` enables (set false or leave out to disable) a hint towards results that are close to the centre of the map. It only takes effect if the map is zoomed in to at least the :code:`focusPointMinZoom` value (or 4.0 if not specified). Unlike the extent values that make a hard constraint, this is a hint on prioritisation, and results from long distances away may also be provided.
 
+If you do need to use an API key, but don't want to expose it to every user, a reverse proxy server to add the API key to the query may be useful. One option is to the Apache mod_proxy and mod_rewrite capabilities. A typical configuration might look like:
+
+
+.. code-block:: apache
+
+  SSLProxyEngine On
+  SSLProxyCheckPeerCN on
+  SSLProxyCheckPeerExpire on
+
+  RewriteEngine  on
+  RewriteRule ^/v1/search https://api.geocode.earth/v1/search?api_key=REPLACE_THIS [QSA,P]
+  ProxyPassReverse "/v1/search" "https://api.geocode.earth/v1/search"
+
+Note your API key goes in place of the REPLACE_THIS part of the :code:`RewriteRule`. This will also need some modules to be loaded (if not already in place): proxy, proxy_http, rewrite and ssl.  You can now use a :code:`url` of something like :code:`https://MY_SERVER/v1/search?text={s}` (or :code:`http://MY_SERVER/v1/search?text={s}` if your server is not configured for HTTPS, which you probably should consider fixing) where the MY_SERVER part is replaced with your reverse proxy server hostname or IP address.
+
+You should also consider the extent to which you need to secure your reverse proxy server. Consult the applicable server documentation for authentication options for your deployment scenario.
