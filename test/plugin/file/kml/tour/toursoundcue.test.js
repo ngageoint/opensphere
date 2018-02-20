@@ -45,10 +45,14 @@ describe('plugin.file.kml.tour.SoundCue', function() {
   it('resolves execute promise immediately', function() {
     var soundCue = new plugin.file.kml.tour.SoundCue(href, delayedStart);
     var fakeAudio = {
-      played: false,
+      playing: false,
       play: function() {
-        this.played = true;
+        this.playing = true;
       },
+      pause: function() {
+        this.playing = false;
+      },
+      muted: false,
       src: undefined
     };
 
@@ -83,15 +87,38 @@ describe('plugin.file.kml.tour.SoundCue', function() {
       // fire the timeout callback
       stFn();
 
-      // audio created and played
+      // audio created and playing
       expect(soundCue.playAudio_).toHaveBeenCalled();
       expect(soundCue.audio_).toBe(fakeAudio);
       expect(fakeAudio.src).toBe(href);
-      expect(fakeAudio.played).toBe(true);
+      expect(fakeAudio.playing).toBe(true);
+      expect(fakeAudio.muted).toBe(false);
 
       // and timeout cleared
       expect(window.clearTimeout).toHaveBeenCalledWith(timeoutId);
       expect(soundCue.timeoutId_).toBeUndefined();
+
+      // respects global mute setting
+      var am = os.audio.AudioManager.getInstance();
+
+      am.setMute(true);
+      expect(fakeAudio.muted).toBe(true);
+
+      am.setMute(false);
+      expect(fakeAudio.muted).toBe(false);
+
+      // pauses
+      soundCue.pause();
+      expect(fakeAudio.playing).toBe(false);
+
+      // plays again
+      soundCue.execute();
+      expect(fakeAudio.playing).toBe(true);
+
+      // cleans up
+      soundCue.reset();
+      expect(soundCue.audio_).toBeUndefined();
+      expect(fakeAudio.playing).toBe(false);
     });
   });
 });

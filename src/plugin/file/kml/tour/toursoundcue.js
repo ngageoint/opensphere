@@ -1,6 +1,8 @@
 goog.provide('plugin.file.kml.tour.SoundCue');
 
 goog.require('goog.Promise');
+goog.require('os.audio.AudioManager');
+goog.require('os.audio.AudioSetting');
 goog.require('plugin.file.kml.tour.Wait');
 
 
@@ -65,9 +67,25 @@ plugin.file.kml.tour.SoundCue.prototype.playAudio_ = function() {
   if (!this.audio_) {
     this.audio_ = /** @type {!HTMLAudioElement} */ (document.createElement('audio'));
     this.audio_.src = this.href_;
+
+    // respect the global volume mute setting
+    this.updateMute_();
+    os.settings.listen(os.audio.AudioSetting.MUTE, this.updateMute_, false, this);
   }
 
   this.audio_.play();
+};
+
+
+/**
+ * Handle changes to the global mute setting.
+ * @private
+ */
+plugin.file.kml.tour.SoundCue.prototype.updateMute_ = function() {
+  if (this.audio_) {
+    var am = os.audio.AudioManager.getInstance();
+    this.audio_.muted = am.getMute();
+  }
 };
 
 
@@ -92,6 +110,8 @@ plugin.file.kml.tour.SoundCue.prototype.reset = function() {
 
   // stop playback and drop the audio reference
   if (this.audio_) {
+    os.settings.unlisten(os.audio.AudioSetting.MUTE, this.updateMute_, false, this);
+
     this.audio_.pause();
     this.audio_ = undefined;
   }
