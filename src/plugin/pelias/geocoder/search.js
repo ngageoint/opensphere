@@ -67,6 +67,7 @@ plugin.pelias.geocoder.Search.prototype.getSearchUrl = function(term, opt_start,
 
     // translate to lon/lat
     extent = ol.proj.transformExtent(extent, os.map.PROJECTION, os.proj.EPSG4326);
+    extent = plugin.pelias.geocoder.Search.normaliseLongitudeExtent_(extent);
     var distance = osasm.geodesicInverse(extent.slice(0, 2), extent.slice(2, 4)).distance;
 
     if (distance <= threshold) {
@@ -93,6 +94,36 @@ plugin.pelias.geocoder.Search.prototype.getSearchUrl = function(term, opt_start,
     }
   }
   return url;
+};
+
+/**
+ * Normalise the longitudes in an extent.
+ *
+ * @param {ol.Extent} extent The extent to be normalised
+ * @return {ol.Extent} The extent with longitudes normalised to [-180,180)
+ * @private
+ */
+plugin.pelias.geocoder.Search.normaliseLongitudeExtent_ = function(extent) {
+  var normalisedExtent = extent;
+  normalisedExtent[0] = os.geo.normalizeLongitude(extent[0]);
+  normalisedExtent[2] = os.geo.normalizeLongitude(extent[2]);
+  return normalisedExtent;
+};
+
+
+/**
+ * Normalise a longitude.
+ *
+ * @param {number} lon The longitude to be normalised.
+ * @return {number} The longitude normalised to [-180,180)
+ * @private
+ */
+plugin.pelias.geocoder.Search.normaliseLongitude_ = function(lon) {
+  if (lon < -180.0) {
+    var loops = (Math.abs(lon) + 360.0) / 360;
+    lon = lon + (Math.floor(loops) * 360.0);
+  }
+  return ((lon + 180.0) % 360.0) - 180.0;
 };
 
 

@@ -152,5 +152,20 @@ describe('plugin.pelias.geocoder.Search', function() {
           expect(search.results[0].getResult().get('address')).toBe('4004 West 38th Avenue, Denver, CO, 80212');
         });
   });
+
+  it('should normalise longitudes greater than 180.0', function() {
+    expect(plugin.pelias.geocoder.Search.normaliseLongitudeExtent_([190.2, 20.3, 230.4, 40.1])[0]).toBeCloseTo([-169.8, 20.3, -129.6, 40.1][0]);
+    expect(plugin.pelias.geocoder.Search.normaliseLongitudeExtent_([190.2, 20.3, 230.4, 40.1])[1]).toBeCloseTo([-169.8, 20.3, -129.6, 40.1][1]);
+    expect(plugin.pelias.geocoder.Search.normaliseLongitudeExtent_([190.2, 20.3, 230.4, 40.1])[2]).toBeCloseTo([-169.8, 20.3, -129.6, 40.1][2]);
+    expect(plugin.pelias.geocoder.Search.normaliseLongitudeExtent_([190.2, 20.3, 230.4, 40.1])[3]).toBeCloseTo([-169.8, 20.3, -129.6, 40.1][3]);
+  });
+
+  it('should normalise longitudes less than -180.0', function() {
+    expect(plugin.pelias.geocoder.Search.normaliseLongitudeExtent_([-230.4, 20.3, -190.2, 40.1])[0]).toBeCloseTo([129.6, 20.3, 169.8, 40.1][0]);
+    expect(plugin.pelias.geocoder.Search.normaliseLongitudeExtent_([-230.4, 20.3, -190.2, 40.1])[1]).toBeCloseTo([129.6, 20.3, 169.8, 40.1][1]);
+    expect(plugin.pelias.geocoder.Search.normaliseLongitudeExtent_([-230.4, 20.3, -190.2, 40.1])[2]).toBeCloseTo([129.6, 20.3, 169.8, 40.1][2]);
+    expect(plugin.pelias.geocoder.Search.normaliseLongitudeExtent_([-230.4, 20.3, -190.2, 40.1])[3]).toBeCloseTo([129.6, 20.3, 169.8, 40.1][3]);
+  });
+
 });
 
