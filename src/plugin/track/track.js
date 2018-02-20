@@ -94,6 +94,20 @@ plugin.track.QueryOptions;
 
 
 /**
+ * @typedef {{
+ *   features: (Array<!ol.Feature>|undefined),
+ *   id: (string|undefined),
+ *   color: (string|undefined),
+ *   name: (string|undefined),
+ *   sortField: (string|undefined),
+ *   label: (string|undefined)
+ * }}
+ */
+plugin.track.CreateOptions;
+
+
+
+/**
  * Feature metadata fields used by tracks
  * @enum {string}
  */
@@ -322,7 +336,7 @@ plugin.track.removeTrackById = function(id) {
  */
 plugin.track.createTrack = function(options) {
   var features = options.features;
-  var sortField = options.field || os.data.RecordField.TIME;
+  var sortField = options.sortField || os.data.RecordField.TIME;
   var sortFn = sortField == os.data.RecordField.TIME ? os.feature.sortByTime :
       os.feature.sortByField.bind(null, sortField);
   var getValueFn = sortField == os.data.RecordField.TIME ? plugin.track.getStartTime :
