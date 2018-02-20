@@ -112,22 +112,6 @@ plugin.pelias.geocoder.Search.normaliseLongitudeExtent_ = function(extent) {
 
 
 /**
- * Normalise a longitude.
- *
- * @param {number} lon The longitude to be normalised.
- * @return {number} The longitude normalised to [-180,180)
- * @private
- */
-plugin.pelias.geocoder.Search.normaliseLongitude_ = function(lon) {
-  if (lon < -180.0) {
-    var loops = (Math.abs(lon) + 360.0) / 360;
-    lon = lon + (Math.floor(loops) * 360.0);
-  }
-  return ((lon + 180.0) % 360.0) - 180.0;
-};
-
-
-/**
  * @param {goog.events.Event} evt
  * @suppress {accessControls}
  * @override
