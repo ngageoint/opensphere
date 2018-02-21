@@ -177,6 +177,7 @@
 }
 
 .import-dialog-input {
+  // sass-lint:disable no-duplicate-properties no-vendor-prefixes
   width: 100%;
   width: -moz-available;
 }

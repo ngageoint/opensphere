@@ -8,7 +8,7 @@ $color-layer: #f92;
 // ********************************************************************
 // * Custom scrollbar for Webkit-based browsers. Sorry, Firefox/IE!
 // *
-
+// sass-lint:disable no-vendor-prefixes
 ::-webkit-scrollbar {
   background-color: #eee;
   height: 10px;
@@ -23,6 +23,7 @@ $color-layer: #f92;
   background-color: #999;
   border-radius: 4px;
 }
+// sass-lint:enable no-vendor-prefixes
 
 [class*='-hover'] {
   @include transition(color 200ms ease);
@@ -129,12 +130,6 @@ form.form-popover-help {
   position: absolute;
   width: 1px;
   z-index: -1;
-}
-
-// fast table rendering
-
-table {
-  //table-display: fixed;
 }
 
 // Resize indicator - use with 'fa fa-ellipsis-v'
@@ -246,6 +241,7 @@ div:focus {
   outline: none;
 }
 
+// sass-lint:disable no-vendor-prefixes
 a::-moz-focus-inner,
 button::-moz-focus-inner,
 select::-moz-focus-inner,
@@ -253,6 +249,7 @@ textarea::-moz-focus-inner,
 div::-moz-focus-inner {
   border: 0;
 }
+// sass-lint:enable no-vendor-prefixes
 
 .form-compressed label {
   font-size: 13px;
