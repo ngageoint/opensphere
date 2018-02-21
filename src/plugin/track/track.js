@@ -5,6 +5,7 @@ goog.require('ol.Feature');
 goog.require('ol.geom.LineString');
 goog.require('ol.geom.MultiLineString');
 goog.require('ol.geom.Point');
+goog.require('os.alert.AlertEventSeverity');
 goog.require('os.config');
 goog.require('os.data.RecordField');
 goog.require('os.events.PropertyChangeEvent');
@@ -332,7 +333,7 @@ plugin.track.removeTrackById = function(id) {
 /**
  * Creates a track from a a track options object.
  * @param {plugin.track.CreateOptions} options The options object for the track.
- * @return {!ol.Feature} The track feature
+ * @return {?ol.Feature} The track feature
  */
 plugin.track.createTrack = function(options) {
   var features = options.features;
@@ -360,6 +361,11 @@ plugin.track.createTrack = function(options) {
 
     return undefined;
   }).filter(os.fn.filterFalsey);
+
+  if (!coords.length) {
+    // no valid features to create the track from, so don't return one
+    return null;
+  }
 
   // create the line and split it across the date line so it renders correctly on a 2D map
   var geometry = new ol.geom.LineString(coords, ol.geom.GeometryLayout.XYZM);
@@ -629,6 +635,13 @@ plugin.track.setGeometry = function(track, geometry) {
  */
 plugin.track.createFromFeatures = function(options) {
   var track = plugin.track.createTrack(options);
+
+  if (!track) {
+    var msg = 'Track creation failed. There were no valid features to create a track from.';
+    os.alertManager.sendAlert(msg, os.alert.AlertEventSeverity.WARNING);
+    return;
+  }
+
   var trackNode = plugin.file.kml.ui.updatePlacemark({
     'feature': track
   });
