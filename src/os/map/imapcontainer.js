@@ -1,14 +1,15 @@
-goog.provide('os.ui.ol.IMap');
+goog.provide('os.map.IMapContainer');
+
 goog.require('goog.events.Listenable');
 
 
 
 /**
- * Interface representing a wrapper class for an OL3 map.
+ * Interface representing a wrapper class for an Openlayers map.
  * @extends {goog.events.Listenable}
  * @interface
  */
-os.ui.ol.IMap = function() {};
+os.map.IMapContainer = function() {};
 
 
 /**
@@ -16,7 +17,7 @@ os.ui.ol.IMap = function() {};
  * @param {ol.Feature|number|string|undefined} feature
  * @return {boolean} True if the feature is on the map, false otherwise
  */
-os.ui.ol.IMap.prototype.containsFeature;
+os.map.IMapContainer.prototype.containsFeature;
 
 
 /**
@@ -25,7 +26,7 @@ os.ui.ol.IMap.prototype.containsFeature;
  * @param {Object=} opt_style Optional feature style
  * @return {(ol.Feature|undefined)} The feature's id, or undefined if the feature wasn't added
  */
-os.ui.ol.IMap.prototype.addFeature;
+os.map.IMapContainer.prototype.addFeature;
 
 
 /**
@@ -34,7 +35,7 @@ os.ui.ol.IMap.prototype.addFeature;
  * @param {Object=} opt_style Optional feature style
  * @return {!Array<!ol.Feature>}
  */
-os.ui.ol.IMap.prototype.addFeatures;
+os.map.IMapContainer.prototype.addFeatures;
 
 
 /**
@@ -42,7 +43,7 @@ os.ui.ol.IMap.prototype.addFeatures;
  * @param {ol.Feature|number|string|undefined} feature The feature or feature id
  * @param {boolean=} opt_dispose If the feature should be disposed
  */
-os.ui.ol.IMap.prototype.removeFeature;
+os.map.IMapContainer.prototype.removeFeature;
 
 
 /**
@@ -50,7 +51,7 @@ os.ui.ol.IMap.prototype.removeFeature;
  * @param {!Array<!ol.Feature>} features The features to remove
  * @param {boolean=} opt_dispose If the feature should be disposed
  */
-os.ui.ol.IMap.prototype.removeFeatures;
+os.map.IMapContainer.prototype.removeFeatures;
 
 
 /**
@@ -58,12 +59,13 @@ os.ui.ol.IMap.prototype.removeFeatures;
  * @param {!(string|ol.layer.Layer|ol.Feature)} layerOrFeature
  * @param {ol.Collection=} opt_search
  * @param {boolean=} opt_remove This is for INTERNAL use only.
- * @return {?ol.layer.Layer} The layer or null if no layer was found
+ * @return {ol.layer.Layer} The layer or null if no layer was found
  */
-os.ui.ol.IMap.prototype.getLayer;
+os.map.IMapContainer.prototype.getLayer;
 
 
 /**
- * @return {?ol.Map}
+ * Get the Openlayers map reference.
+ * @return {ol.PluggableMap}
  */
-os.ui.ol.IMap.prototype.getMap;
+os.map.IMapContainer.prototype.getMap;
