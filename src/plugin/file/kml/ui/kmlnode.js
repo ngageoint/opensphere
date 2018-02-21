@@ -215,8 +215,25 @@ plugin.file.kml.ui.KMLNode.prototype.onFeatureChange = function(event) {
 
 
 /**
+ * If the node has one or more features beneath it.
+ * @param {boolean=} opt_unchecked If unchecked nodes should be included, defaults to false.
+ * @return {boolean} If the node has one or more features beneath it.
+ */
+plugin.file.kml.ui.KMLNode.prototype.hasFeatures = function(opt_unchecked) {
+  if (this.feature_) {
+    return true;
+  }
+
+  var children = this.getChildren();
+  return !!children && children.some(function(child) {
+    return (opt_unchecked || child.getState() != os.structs.TriState.OFF) && child.hasFeatures(opt_unchecked);
+  });
+};
+
+
+/**
  * Get the feature(s) associated with this node.
- * @param {boolean=} opt_unchecked If unchecked nodes should be included, defaults to false
+ * @param {boolean=} opt_unchecked If unchecked nodes should be included, defaults to false.
  * @return {!Array<!ol.Feature>} The features
  */
 plugin.file.kml.ui.KMLNode.prototype.getFeatures = function(opt_unchecked) {
@@ -334,28 +351,6 @@ plugin.file.kml.ui.KMLNode.prototype.getOverlays = function(opt_unchecked) {
   }
 
   return overlays;
-};
-
-
-/**
- * If the node has one or more features under it.
- * @return {boolean}
- */
-plugin.file.kml.ui.KMLNode.prototype.hasFeatures = function() {
-  if (this.feature_) {
-    return true;
-  }
-
-  var children = this.getChildren();
-  if (children) {
-    for (var i = 0, n = children.length; i < n; i++) {
-      if (children[i].hasFeatures()) {
-        return true;
-      }
-    }
-  }
-
-  return false;
 };
 
 
