@@ -6,8 +6,16 @@ goog.provide('os.map');
 goog.require('goog.asserts');
 goog.require('ol.math');
 goog.require('ol.tilegrid');
+goog.require('os.map.IMapContainer');
 goog.require('os.ol');
 goog.require('os.proj');
+
+
+/**
+ * Reference to the global map container instance.
+ * @type {os.map.IMapContainer|undefined}
+ */
+os.map.mapContainer = undefined;
 
 
 /**
