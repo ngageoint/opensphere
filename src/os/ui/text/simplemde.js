@@ -226,7 +226,7 @@ os.ui.text.SimpleMDECtrl.prototype.init = function(opt_toolbar) {
       'spellChecker': false,
       'toolbar': toolbar,
       'status': os.ui.text.SimpleMDE.STATUS,
-      'previewRender': goog.bind(this.cleanHtml, this)
+      'previewRender': this.cleanHtml
     };
 
     this.simplemde = new SimpleMDE(options);
