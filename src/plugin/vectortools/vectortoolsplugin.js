@@ -56,12 +56,14 @@ plugin.vectortools.VectorToolsPlugin.prototype.init = function() {
       tooltip: 'Joins layers by a primary key'
     }];
 
+    // position these submenus after other menu items
+    var baseSort = 1000;
     parents.forEach(function(p) {
       var subMenu = group.addChild({
         label: p.label,
         type: os.ui.menu.MenuItemType.SUBMENU,
         icons: ['<i class="fa fa-fw ' + p.icon + '"></i>'],
-        sort: os.ui.menu.layer.GroupSort.GROUPS++
+        sort: baseSort++
       });
 
       for (var i = 0, n = labels.length; i < n; i++) {
