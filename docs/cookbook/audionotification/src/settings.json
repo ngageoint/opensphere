@@ -1,0 +1,5 @@
+{
+  "admin": { 
+    "sounds": { "sound1" : "sounds/cowbell.wav" }
+  }
+}
