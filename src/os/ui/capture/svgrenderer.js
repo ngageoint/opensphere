@@ -42,6 +42,10 @@ os.ui.capture.SvgRenderer.prototype.onSvgUriReady_ = function(resolve, reject, o
   if (opt_uri) {
     var image = new Image();
     image.onload = this.onSvgImageReady_.bind(this, resolve, reject, image);
+
+    /**
+     * @param {Event} event
+     */
     image.onerror = function(event) {
       resolve(null);
     };

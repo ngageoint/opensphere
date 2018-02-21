@@ -411,7 +411,8 @@ os.ui.replaceDirective = function(name, module, directiveFn, opt_priority) {
 
       // Select2 has trouble with Bootstrap modals in IE only
       if (goog.userAgent.IE) {
-        $.fn.modal['Constructor'].prototype['enforceFocus'] = function() {};
+        // so tell it to do nothing
+        $.fn.modal['Constructor'].prototype['enforceFocus'] = goog.nullFunction;
       }
 
       // Overwriting enforceFocus and extending functionality
