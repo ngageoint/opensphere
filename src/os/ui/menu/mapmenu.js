@@ -96,24 +96,23 @@ os.ui.menu.map.BG_COLOR_ = 'bgColor';
 os.ui.menu.map.setup = function() {
   var menu = os.ui.menu.MAP;
 
-  var x = menu.getRoot().find('Coordinate');
-  if (x) {
-    x.beforeRender =
-      /**
-       * @param {ol.Coordinate} coord
-       * @this {os.ui.menu.MenuItem}
-       */
-      function(coord) {
-        this.visible = Boolean(coord && coord.length > 1);
-      };
+  var coordGroup = menu.getRoot().find('Coordinate');
+  if (coordGroup) {
+    /**
+     * @param {ol.Coordinate} coord
+     * @this {os.ui.menu.MenuItem}
+     */
+    coordGroup.beforeRender = function(coord) {
+      this.visible = Boolean(coord && coord.length > 1);
+    };
   }
 
-  x = menu.getRoot().find(os.ui.menu.map.MAP_BG_COLOR_);
-  if (x) {
+  var mapBGColor = menu.getRoot().find(os.ui.menu.map.MAP_BG_COLOR_);
+  if (mapBGColor) {
     /**
      * @this {os.ui.menu.MenuItem}
      */
-    x.beforeRender = function() {
+    mapBGColor.beforeRender = function() {
       var color = os.settings.get(os.ui.menu.map.BG_COLOR_, '#000000');
       this.icons[0] = '<i class="fa fa-fw fa-tint" style="color:' + color + '"></i>';
     };

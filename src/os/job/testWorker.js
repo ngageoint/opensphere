@@ -144,12 +144,13 @@ var max = 10;
 var interval = 250;
 
 
+var oldPause = pause;
+
 /**
  * Override to clear the timeout on pause. Note that typically you would just
  * add to the pause function in the boilerplate code above, but I wanted that
  * to be pasteable without the extra stuff for this example.
  */
-var oldPause = pause;
 pause = function() {
   if (timeout) {
     clearTimeout(timeout);
@@ -158,12 +159,13 @@ pause = function() {
 };
 
 
+var oldStart = start;
+
 /**
  * Override to start the timeout on start. Note that typically you would just
  * add to the start function in the boilerplate code above, but I wanted that
  * to be pasteable without the extra stuff for this example.
  */
-var oldStart = start;
 start = function() {
   oldStart();
   timeout = setTimeout(process, interval);

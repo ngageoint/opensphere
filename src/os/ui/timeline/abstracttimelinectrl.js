@@ -167,9 +167,7 @@ os.ui.timeline.AbstractTimelineCtrl = function($scope, $element, $timeout) {
   this.windowBrush = new os.ui.timeline.Brush();
   this.windowBrush.setClamp(false);
   this.windowBrush.setToolTip('The currently-displayed time window');
-  this.windowBrush.drawFlagCheck = function() {
-    return !os.ui.timeline.AbstractTimelineCtrl.collapsed;
-  };
+  this.windowBrush.drawFlagCheck = os.ui.timeline.AbstractTimelineCtrl.drawFlagCheck;
 
   /**
    * @type {os.ui.timeline.SelectBrush}
@@ -281,6 +279,14 @@ os.ui.timeline.AbstractTimelineCtrl.FPS_VALUES_ = [0.5, 1, 2, 4, 6, 8, 18, 24, 3
  * @type {boolean}
  */
 os.ui.timeline.AbstractTimelineCtrl.collapsed = false;
+
+
+/**
+ * @return {boolean} Whether or not to draw "flags" on brushes
+ */
+os.ui.timeline.AbstractTimelineCtrl.drawFlagCheck = function() {
+  return !os.ui.timeline.AbstractTimelineCtrl.collapsed;
+};
 
 
 /**
@@ -1046,9 +1052,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.getSliceBrush = function(range) {
   brush.setClass('slice');
   brush.setToolTip('The slice range');
   brush.canDelete = true;
-  brush.drawFlagCheck = function() {
-    return !os.ui.timeline.AbstractTimelineCtrl.collapsed;
-  };
+  brush.drawFlagCheck = os.ui.timeline.AbstractTimelineCtrl.drawFlagCheck;
   brush.setExtent([range.start, range.end]);
   brush.listen('deleted', this.sliceBrushDeleted_.bind(this));
   brush.listen(goog.events.EventType.PROPERTYCHANGE, this.sliceBrushPropertyChanged_.bind(this));
@@ -1074,9 +1078,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.getLoadBrush = function(range) {
   brush.setSilentDrag(true);
   brush.setEventType(os.ui.timeline.Brush.EventType.BRUSH_END);
   brush.canDelete = this.tlc.getLoadRanges().length > 1;
-  brush.drawFlagCheck = function() {
-    return !os.ui.timeline.AbstractTimelineCtrl.collapsed;
-  };
+  brush.drawFlagCheck = os.ui.timeline.AbstractTimelineCtrl.drawFlagCheck;
   brush.setExtent([range.start, range.end]);
   brush.listen('deleted', this.loadBrushDeleted_.bind(this));
   brush.listen(goog.events.EventType.PROPERTYCHANGE, this.loadBrushPropertyChanged_.bind(this));
@@ -1096,9 +1098,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.getAnimateBrush = function(range) 
   brush.setEventType(os.ui.timeline.Brush.EventType.BRUSH_END);
   brush.setToolTip('The playback loop');
   brush.canDelete = true;
-  brush.drawFlagCheck = function() {
-    return !os.ui.timeline.AbstractTimelineCtrl.collapsed;
-  };
+  brush.drawFlagCheck = os.ui.timeline.AbstractTimelineCtrl.drawFlagCheck;
   brush.setExtent([range.start, range.end]);
   brush.listen('deleted', this.animateBrushDeleted_.bind(this));
   brush.listen(goog.events.EventType.PROPERTYCHANGE, this.animateBrushPropertyChanged_.bind(this));
@@ -1119,9 +1119,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.getHoldBrush = function(range) {
   brush.setClass('hold');
   brush.setToolTip('The hold range');
   brush.canDelete = true;
-  brush.drawFlagCheck = function() {
-    return !os.ui.timeline.AbstractTimelineCtrl.collapsed;
-  };
+  brush.drawFlagCheck = os.ui.timeline.AbstractTimelineCtrl.drawFlagCheck;
   brush.setExtent([range.start, range.end]);
   brush.listen('deleted', this.holdBrushDeleted_.bind(this));
   brush.listen(goog.events.EventType.PROPERTYCHANGE, this.holdBrushPropertyChanged_.bind(this));

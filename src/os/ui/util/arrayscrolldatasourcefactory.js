@@ -97,6 +97,9 @@ os.ui.util.ArrayScrollDataSource = function(array, scope) {
   };
 
 
+  /**
+   * Cleanup
+   */
   this.disposeInternal = function() {
     os.ui.util.ArrayScrollDataSource.superClass_.disposeInternal.call(this);
     datasource_ = null;

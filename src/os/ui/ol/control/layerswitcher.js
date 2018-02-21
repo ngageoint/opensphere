@@ -42,10 +42,16 @@ os.ui.ol.control.LayerSwitcher = function(opt_options) {
 
   var this_ = this;
 
+  /**
+   * @param {Event} e
+   */
   element.onmouseover = function(e) {
     this_.showPanel();
   };
 
+  /**
+   * @param {Event} e
+   */
   element.onmouseout = function(e) {
     e = e || window.event;
     if (!element.contains(e.toElement)) {
