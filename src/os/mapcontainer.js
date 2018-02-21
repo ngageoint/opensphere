@@ -60,6 +60,7 @@ goog.require('os.layer.LayerType');
 goog.require('os.layer.Terrain');
 goog.require('os.layer.Vector');
 goog.require('os.map');
+goog.require('os.map.IMapContainer');
 goog.require('os.metrics');
 goog.require('os.metrics.Metrics');
 goog.require('os.mixin.renderloop');
@@ -80,7 +81,6 @@ goog.require('os.ui.action.ActionEvent');
 goog.require('os.ui.help.Controls');
 goog.require('os.ui.help.webGLPerfCaveatDirective');
 goog.require('os.ui.help.webGLSupportDirective');
-goog.require('os.ui.ol.IMap');
 goog.require('os.ui.window');
 goog.require('os.webgl');
 goog.require('plugin.position.copyPositionDirective');
@@ -88,8 +88,8 @@ goog.require('plugin.position.copyPositionDirective');
 
 
 /**
- * Wrapper for the ol3 map.
- * @implements {os.ui.ol.IMap}
+ * Wrapper for the Openlayers map.
+ * @implements {os.map.IMapContainer}
  * @extends {goog.events.EventTarget}
  * @constructor
  */
@@ -97,18 +97,21 @@ os.MapContainer = function() {
   os.MapContainer.base(this, 'constructor');
 
   /**
+   * The Openlayers map.
    * @type {os.Map}
    * @private
    */
   this.map_ = null;
 
   /**
+   * The Openlayers/Cesium synchronizer.
    * @type {olcs.OLCesium}
    * @private
    */
   this.olCesium_ = null;
 
   /**
+   * The root Cesium synchronizer.
    * @type {os.olcs.sync.RootSynchronizer}
    * @private
    */
@@ -872,8 +875,8 @@ os.MapContainer.prototype.resetRotation = function() {
 
 /**
  * Fix focus. For whatever reason, the canvas is not considered focusable by the browser. This is usually fixed by
- * adding tabindex="0" to the canvas, but OL3 and Cesium control those elements. Instead, we'll just manually blur
- * the active element when the map viewport is clicked.
+ * adding tabindex="0" to the canvas, but Openlayers and Cesium control those elements. Instead, we'll just manually
+ * blur the active element when the map viewport is clicked.
  *
  * @private
  */
