@@ -16,6 +16,7 @@
             data-ng-disabled="disabled">
         Range
       </label>
+      <popover ng-if="help" title="help.title" content="help.content" pos="help.pos"></popover>
     </div>
   </div>
 
@@ -51,7 +52,7 @@
 
     <div class="control-group error" data-ng-show="anydate.dateType == 'range' && !anydate.timesValid">
       <input type="hidden" data-ng-required="anydate.dateType == 'range'" data-ng-model="anydate.timesValid"/>
-      <span class="controls help-inline">Start date is after end date!</span>
+      <span class="controls help-inline">End date must be after start date!</span>
     </div>
   </div>
 </div>

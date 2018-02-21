@@ -37,7 +37,6 @@ plugin.track.TrackSource.NAME = 'plugin.track.TrackSource';
 os.registerClass(plugin.track.TrackSource.NAME, plugin.track.TrackSource);
 
 
-
 /**
  * @inheritDoc
  */
@@ -71,4 +70,12 @@ plugin.track.TrackSource.prototype.updateVisibilityFromNodes = function() {
  */
 plugin.track.TrackSource.prototype.updateTrackZIndex = function() {
   plugin.track.updateTrackZIndex(this.rootNode.getFeatures(false));
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.track.TrackSource.prototype.isTimeEditEnabled = function() {
+  return false;
 };

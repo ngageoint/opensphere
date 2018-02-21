@@ -186,6 +186,13 @@ os.source.ISource.prototype.setTimeEnabled;
 
 
 /**
+ * Whether or not time is editable.
+ * @return {boolean}
+ */
+os.source.ISource.prototype.isTimeEditEnabled;
+
+
+/**
  * Get visibility of the data source.
  * @return {boolean}
  */

@@ -10,12 +10,18 @@ goog.require('ol.Feature');
 goog.require('ol.MapBrowserEventType');
 goog.require('ol.events');
 goog.require('ol.geom.Point');
+goog.require('os.action.EventType');
 goog.require('os.data.ColumnDefinition');
 goog.require('os.map');
 goog.require('os.ol.feature');
 goog.require('os.style');
 goog.require('os.style.label');
+goog.require('os.time.TimeInstant');
+goog.require('os.time.TimeRange');
 goog.require('os.ui.Module');
+goog.require('os.ui.datetime.AnyDateCtrl');
+goog.require('os.ui.datetime.AnyDateHelp');
+goog.require('os.ui.datetime.AnyDateType');
 goog.require('os.ui.file.kml');
 goog.require('os.ui.geo.PositionEventType');
 goog.require('os.ui.geo.positionDirective');
@@ -207,6 +213,21 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
   this['pointGeometry'] = null;
 
   /**
+   * @type {!os.ui.datetime.AnyDateType}
+   */
+  this['dateType'] = os.ui.datetime.AnyDateType.NOTIME;
+
+  /**
+   * @type {number|undefined}
+   */
+  this['startTime'] = undefined;
+
+  /**
+   * @type {number|undefined}
+   */
+  this['endTime'] = undefined;
+
+  /**
    * @type {string}
    */
   this['description'] = '';
@@ -339,10 +360,26 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
   this['showLabels'] = true;
 
   /**
+   * @type {os.ui.datetime.AnyDateHelp}
+   */
+  this['timeHelp'] = {
+    title: 'Time Selection',
+    content: 'Add a time to enable interaction with the Timeline. ' +
+        'If \'No Time\' is selected, the Place will always be visible',
+    pos: 'right'
+  };
+
+  /**
    * @type {!os.ui.FeatureEditOptions}
    * @protected
    */
   this.options = /** @type {!os.ui.FeatureEditOptions} */ ($scope['options'] || {});
+
+  /**
+   * @type {boolean}
+   */
+  this['timeEditEnabled'] = goog.isDef(this.options['timeEditEnabled']) ?
+      this.options['timeEditEnabled'] : true;
 
   /**
    * @type {Function}
@@ -372,6 +409,9 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
       this['labelColumns'] = source.getColumns().filter(function(column) {
         return !os.feature.isInternalField(column['field']);
       });
+
+      // set time edit support
+      this['timeEditEnabled'] = source.isTimeEditEnabled();
     }
 
     // when editing, we update the existing feature so we don't have to worry about hiding it or overlapping a
@@ -462,6 +502,26 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
   $scope.$on('labelColor.reset', this.onLabelColorReset.bind(this));
   $scope.$on(os.ui.geo.PositionEventType.MAP_ENABLED, this.onMapEnabled_.bind(this));
   $scope.$on(os.ui.layer.LabelControlsEventType.COLUMN_CHANGE, this.onColumnChange.bind(this));
+
+  $scope.$on(os.ui.datetime.AnyDateCtrl.CHANGE, function(event, instant, start, end) {
+    event.stopPropagation();
+
+    if (start || end) {
+      this['dateType'] = os.ui.datetime.AnyDateType.RANGE;
+      this['startTime'] = (new Date(start)).getTime();
+      this['endTime'] = (new Date(end)).getTime();
+    } else if (instant) {
+      this['dateType'] = os.ui.datetime.AnyDateType.INSTANT;
+      this['startTime'] = (new Date(instant)).getTime();
+      this['endTime'] = undefined;
+    } else {
+      this['dateType'] = os.ui.datetime.AnyDateType.NOTIME;
+      this['startTime'] = undefined;
+      this['endTime'] = undefined;
+    }
+
+    this.updatePreview();
+  }.bind(this));
 
   $scope.$on('$destroy', this.dispose.bind(this));
 
@@ -618,6 +678,7 @@ os.ui.FeatureEditCtrl.prototype.cancel = function() {
       os.style.notifyStyleChange(layer, [feature]);
     }
   }
+  os.dispatcher.dispatchEvent(os.action.EventType.RESTORE_FEATURE);
 
   this.close();
 };
@@ -817,6 +878,21 @@ os.ui.FeatureEditCtrl.prototype.loadFromFeature_ = function(feature) {
   this['description'] = feature.get(os.ui.FeatureEditCtrl.Field.MD_DESCRIPTION) ||
       feature.get(os.ui.FeatureEditCtrl.Field.DESCRIPTION);
 
+  var time = feature.get(os.data.RecordField.TIME);
+  if (time) {
+    this['startTime'] = time.getStart();
+    this['startTimeISO'] = this['startTime'] ? new Date(this['startTime']).toISOString() : undefined;
+    this['endTime'] = time.getEnd() === this['startTime'] ? undefined : time.getEnd();
+    this['endTimeISO'] = this['endTime'] ? new Date(this['endTime']).toISOString() : undefined;
+    if (this['endTime'] > this['startTime']) {
+      this['dateType'] = os.ui.datetime.AnyDateType.RANGE;
+    } else {
+      this['dateType'] = os.ui.datetime.AnyDateType.INSTANT;
+    }
+  } else {
+    this['dateType'] = os.ui.datetime.AnyDateType.NOTIME;
+  }
+
   var featureShape = feature.get(os.style.StyleField.SHAPE);
   if (this['shapes'].indexOf(featureShape) > -1) {
     this['shape'] = featureShape;
@@ -960,6 +1036,20 @@ os.ui.FeatureEditCtrl.prototype.saveToFeature = function(feature) {
         os.ui.text.SimpleMDE.removeMarkdown(this['description'], true));
     feature.set(os.ui.FeatureEditCtrl.Field.MD_DESCRIPTION, this['description']);
 
+    switch (this['dateType']) {
+      case os.ui.datetime.AnyDateType.NOTIME:
+        feature.set(os.data.RecordField.TIME, undefined);
+        break;
+      case os.ui.datetime.AnyDateType.INSTANT:
+        feature.set(os.data.RecordField.TIME, new os.time.TimeInstant(this['startTime']));
+        break;
+      case os.ui.datetime.AnyDateType.RANGE:
+        feature.set(os.data.RecordField.TIME, new os.time.TimeRange(this['startTime'], this['endTime']));
+        break;
+      default:
+        break;
+    }
+
     var configs;
 
     // determine where to start with style configs
@@ -1007,6 +1097,8 @@ os.ui.FeatureEditCtrl.prototype.saveToFeature = function(feature) {
     os.ui.FeatureEditCtrl.restoreFeatureLabels(feature);
 
     os.style.setFeatureStyle(feature);
+
+    os.dispatcher.dispatchEvent(os.action.EventType.SAVE_FEATURE);
   }
 };
 
