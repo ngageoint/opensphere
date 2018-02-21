@@ -306,6 +306,9 @@ os.MainCtrl = function($scope, $element, $compile, $timeout, $injector) {
 
   map.listenOnce(os.MapEvent.MAP_READY, this.onMapReady_, false, this);
 
+  // set the global map container reference
+  os.map.mapContainer = os.MapContainer.getInstance();
+
   // init filter manager
   os.filterManager = os.query.FilterManager.getInstance();
   os.ui.filterManager = os.filterManager;
