@@ -42,7 +42,7 @@ os.command.VectorUniqueIdCmd.prototype.getOldValue = function() {
 /**
  * @inheritDoc
  */
-os.command.AbstractStyle.prototype.setValue = function(value) {
+os.command.VectorUniqueIdCmd.prototype.setValue = function(value) {
   var layer = /** @type {os.layer.Vector} */ (this.getLayer());
   goog.asserts.assert(layer, 'layer must be defined');
 

@@ -1098,6 +1098,7 @@ os.olcs.sync.FeatureConverter.prototype.getHeightReference = function(layer, fea
  * @param {!os.olcs.VectorContext} context
  * @param {!ol.style.Style} style The OL3 style
  * @param {(Cesium.Billboard|Cesium.optionsBillboardCollectionAdd)=} opt_billboard The billboard, for updates
+ * @suppress {checkTypes}
  */
 os.olcs.sync.FeatureConverter.prototype.createOrUpdateBillboard = function(feature, geometry, context, style,
     opt_billboard) {
@@ -1131,7 +1132,7 @@ os.olcs.sync.FeatureConverter.prototype.createOrUpdateBillboard = function(featu
         }
 
         // try creating/updating again as long as the image isn't in the error state
-        if (imageStyle.getImageState() < ol.ImageState.ERROR) {
+        if (imageStyle.getImageState() < ol.ImageState.ERROR && context.featureToShownMap[feature['id']]) {
           // if the billboard has already been created, make sure it's still in the collection
           if (!(opt_billboard instanceof Cesium.Billboard) ||
               (context.billboards && context.billboards.contains(opt_billboard))) {
