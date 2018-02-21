@@ -65,7 +65,7 @@ os.ui.menu.MenuItem = function(options) {
   this.icons = options.icons;
   this.tooltip = options.tooltip;
   this.shortcut = options.shortcut;
-  this.sort = options.sort != null ? options.sort : Infinity;
+  this.sort = options.sort || 0;
 
   /**
    * @type {Array<!os.ui.menu.MenuItem<T>>|undefined}
