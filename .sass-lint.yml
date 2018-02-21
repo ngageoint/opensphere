@@ -26,90 +26,90 @@ rules:
     - 0
     - max-depth: 1
   border-zero:
-    - 1
+    - 2
   brace-style:
-    - 1
+    - 2
     - allow-single-line: true
   class-name-format:
     - 0
     - convention: hyphenatedlowercase
   clean-import-paths:
-    - 1
+    - 2
     - filename-extension: false
       leading-underscore: false
   empty-line-between-blocks:
-    - 1
+    - 2
     - ignore-single-line-rulesets: true
-  extends-before-declarations: 1
-  extends-before-mixins: 1
+  extends-before-declarations: 2
+  extends-before-mixins: 2
   final-newline:
-    - 1
+    - 2
     - include: true
   force-attribute-nesting: 0
   force-element-nesting: 0
   force-pseudo-nesting: 0
   function-name-format:
-    - 1
+    - 2
     - allow-leading-underscore: true
       convention: hyphenatedlowercase
   hex-length:
-    - 1
+    - 2
     - style: short
   hex-notation:
-    - 1
+    - 2
     - style: lowercase
   id-name-format:
     - 0
     - convention: hyphenatedlowercase
   indentation:
-    - 1
+    - 2
     - size: 2
   leading-zero:
-    - 1
+    - 2
     - include: false
   mixin-name-format:
-    - 1
+    - 2
     - allow-leading-underscore: true
       convention: hyphenatedlowercase
-  mixins-before-declarations: 1
+  mixins-before-declarations: 2
   nesting-depth:
     - 0
     - max-depth: 3
-  no-color-keywords: 1
+  no-color-keywords: 2
   no-color-literals: 0
-  no-css-comments: 1
-  no-debug: 1
-  no-duplicate-properties: 1
-  no-empty-rulesets: 1
+  no-css-comments: 2
+  no-debug: 2
+  no-duplicate-properties: 2
+  no-empty-rulesets: 2
   no-extends: 0
   no-ids: 0
   no-important: 0
-  no-invalid-hex: 1
-  no-mergeable-selectors: 1
+  no-invalid-hex: 2
+  no-mergeable-selectors: 2
   no-misspelled-properties:
-    - 1
-    - extra-properties: []
+    - 2
+    - extra-properties: [-moz-filter, -o-filter]
   no-qualifying-elements:
     - 0
     - allow-element-with-attribute: false
       allow-element-with-class: false
       allow-element-with-id: false
-  no-trailing-zero: 1
+  no-trailing-zero: 2
   no-transition-all: 0
-  no-url-protocols: 1
+  no-url-protocols: 2
   no-vendor-prefixes:
-    - 1
+    - 2
     - additional-identifiers: []
       excluded-identifiers: []
-  placeholder-in-extend: 1
+  placeholder-in-extend: 2
   placeholder-name-format:
     - 0
     - convention: hyphenatedlowercase
   property-sort-order:
-    - 1
+    - 2
     - ignore-custom-properties: false
   property-units:
-    - 1
+    - 2
     - global:
         - ch
         - em
@@ -140,41 +140,41 @@ rules:
         - '%'
       per-property: {}
   quotes:
-    - 1
+    - 2
     - style: single
   shorthand-values:
-    - 1
+    - 2
     - allowed-shorthands:
         - 1
         - 2
         - 3
-  single-line-per-selector: 1
+  single-line-per-selector: 2
   space-after-bang:
-    - 1
+    - 2
     - include: false
   space-after-colon:
-    - 1
+    - 2
     - include: true
   space-after-comma:
-    - 1
+    - 2
     - include: true
   space-before-bang:
-    - 1
+    - 2
     - include: true
   space-before-brace:
-    - 1
+    - 2
     - include: true
-  space-before-colon: 1
+  space-before-colon: 2
   space-between-parens:
-    - 1
+    - 2
     - include: false
-  trailing-semicolon: 1
+  trailing-semicolon: 2
   url-quotes: 1
   variable-for-property:
     - 0
     - properties: []
   variable-name-format:
-    - 1
+    - 2
     - allow-leading-underscore: true
       convention: hyphenatedlowercase
-  zero-unit: 1
+  zero-unit: 2

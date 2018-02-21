@@ -68,6 +68,7 @@
   vertical-align: middle;
 
   button {
+    // sass-lint:disable no-vendor-prefixes
     @include border-radius(2px);
     -webkit-appearance: none;
     background: $color-medium-gray;

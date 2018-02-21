@@ -1,3 +1,4 @@
+
 .select2-default {
   color: $overrides-text-color !important;
   // select2 is an ass and used !important so we have to use it too
@@ -16,7 +17,7 @@
   }
 }
 
-.select2-search > input[type="text"] {
+.select2-search > input[type='text'] {
   color: $color-black;
 }
 
@@ -56,6 +57,7 @@
       border-left: 0;
 
       b {
+        // sass-lint:disable no-vendor-prefixes
         -moz-osx-font-smoothing: grayscale;
         -webkit-font-smoothing: antialiased;
         background: transparent;
