@@ -187,11 +187,12 @@ os.ui.im.ImportManager.prototype.registerImportUI = function(type, ui) {
   type = type.toLowerCase();
 
   if (type in this.importUIs_) {
+    // log a warning, but allow it.
     var msg = 'The import UI "' + type + '" has already been registered with the import manager!';
     goog.log.warning(os.ui.im.ImportManager.LOGGER_, msg);
-  } else {
-    this.importUIs_[type] = ui;
   }
+
+  this.importUIs_[type] = ui;
 };
 
 
