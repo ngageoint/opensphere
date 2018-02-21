@@ -1,8 +1,19 @@
 goog.provide('os.ui.datetime.AnyDateCtrl');
+goog.provide('os.ui.datetime.AnyDateHelp');
 goog.provide('os.ui.datetime.AnyDateType');
 goog.provide('os.ui.datetime.anyDateDirective');
 goog.require('os.ui.Module');
 goog.require('os.ui.datetime.dateTimeDirective');
+
+
+/**
+   * @typedef {{
+   *   name: string,
+   *   content: string,
+   *   pos: string
+   * }}
+   */
+os.ui.datetime.AnyDateHelp;
 
 
 /**
@@ -24,7 +35,8 @@ os.ui.datetime.anyDateDirective = function() {
       'initialStart': '=initialstart',
       'initialEnd': '=initialend',
       'initialType': '=initialtype',
-      'disabled': '=?'
+      'disabled': '=?',
+      'help': '=?'
     },
     templateUrl: os.ROOT + 'views/datetime/anydate.html',
     controller: os.ui.datetime.AnyDateCtrl,
@@ -95,6 +107,11 @@ os.ui.datetime.AnyDateCtrl = function($scope, $element, $compile, $timeout) {
    * @type {boolean}
    */
   this['endUnknown'] = this['dateType'] == os.ui.datetime.AnyDateType.RANGE && !this['endDate'];
+
+  /**
+   * @type {os.ui.datetime.AnyDateHelp|undefined}
+   */
+  this['help'] = this.scope_['help'];
 
   $scope.$watch('anydate.dateType', function(newVal, oldVal) {
     if (newVal != oldVal) {
@@ -226,7 +243,7 @@ os.ui.datetime.AnyDateCtrl.prototype.validateTimes_ = function() {
       !this['startUnknown'] && !this['endUnknown']) {
     var startDate = new Date(this['startDate']).getTime();
     var endDate = new Date(this['endDate']).getTime();
-    this['timesValid'] = (endDate >= startDate) ? true : undefined;
+    this['timesValid'] = (endDate > startDate) ? true : undefined;
   } else {
     this['timesValid'] = true;
   }

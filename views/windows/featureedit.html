@@ -16,6 +16,10 @@
         </div>
       </div>
       <position ng-if="ctrl.pointGeometry" name="pointGeometry" geom="ctrl.pointGeometry" x-form="featureEditForm" map-support="true"></position>
+      <div class="control-group c-feature-edit__time" ng-if="ctrl.timeEditEnabled">
+        <label class="control-label">Time:</label>
+        <anydate initialstart="ctrl.startTimeISO" initialend="ctrl.endTimeISO" initialtype="ctrl.dateType" x-disabled="disabled" help="ctrl.timeHelp"></anydate>
+      </div>
       <div class="c-feature-edit__ellipse-fields" ng-if="ctrl.isEllipse()">
         <div class="control-group" title="{{ctrl.help.semiMajor}}">
           <label class="control-label">Semi Major:</label>
