@@ -16,6 +16,7 @@ goog.require('os.layer.PropertyChange');
 goog.require('os.legend.ILegendRenderer');
 goog.require('os.math');
 goog.require('os.ogc');
+goog.require('os.source.IStyle');
 goog.require('os.style');
 goog.require('os.ui');
 goog.require('os.ui.Icons');
@@ -407,11 +408,11 @@ os.layer.Tile.prototype.getDefaultStyle = function() {
 os.layer.Tile.prototype.getStyle = function() {
   var style = this.style_;
   if (!style) {
-    try {
-      var source = /** @type {os.source.IStyle} */ (this.getSource());
-      var styles = this.getStyles();
+    var source = this.getSource();
 
-      style = source.getStyle();
+    if (os.implements(source, os.source.IStyle.ID)) {
+      style = /** @type {os.source.IStyle} */ (source).getStyle();
+      var styles = this.getStyles();
 
       if (styles) {
         // find style in styles and return that
@@ -421,8 +422,6 @@ os.layer.Tile.prototype.getStyle = function() {
           }
         }
       }
-    } catch (e) {
-      // whatever
     }
   }
 

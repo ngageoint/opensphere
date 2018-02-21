@@ -32,12 +32,17 @@ os.feature.SortFn;
  * Defines set of options for creating the line of bearing
  * @typedef {{
  *   arrowLength: (number|undefined),
+ *   arrowUnits: (string|undefined),
  *   bearingColumn: (string|undefined),
  *   bearingError: (number|undefined),
  *   bearingErrorColumn: (string|undefined),
+ *   columnLength: (number|undefined),
  *   length: (number|undefined),
+ *   lengthUnits: (string|undefined),
  *   lengthColumn: (string|undefined),
+ *   lengthType: (string|undefined),
  *   lengthError: (number|undefined),
+ *   lengthErrorUnits: (string|undefined),
  *   lengthErrorColumn: (string|undefined),
  *   showArrow: (boolean|undefined),
  *   showEllipse: (boolean|undefined),
@@ -307,10 +312,12 @@ os.feature.createLineOfBearing = function(feature, opt_replace, opt_lobOpts) {
 
   var geom = feature ? feature.getGeometry() : null;
   if (opt_lobOpts && geom instanceof ol.geom.Point) {
+    // var use3D = os.MapContainer.getInstance().is3DEnabled();
     // the feature must have a center point and a bearing to generate a lob. no values should ever be assumed.
     var center = ol.proj.toLonLat(geom.getFirstCoordinate(), os.map.PROJECTION);
     var bearing = os.feature.getColumnValue(feature, opt_lobOpts.bearingColumn);
-    var length = os.feature.getColumnValue(feature, opt_lobOpts.lengthColumn, os.style.DEFAULT_LOB_MULTIPLIER);
+    var length = opt_lobOpts.lengthType == 'column' ? // get from column unless manual
+      os.feature.getColumnValue(feature, opt_lobOpts.lengthColumn, os.style.DEFAULT_LOB_MULTIPLIER) : 1;
     if (center && !goog.isNull(bearing) && !goog.isNull(length) && !isNaN(bearing) && !isNaN(length) && length != 0) {
       // sanitize
       bearing = bearing % 360;
@@ -320,13 +327,18 @@ os.feature.createLineOfBearing = function(feature, opt_replace, opt_lobOpts) {
         center[2] = 0;
       }
 
-      var multiplier = opt_lobOpts.length || os.style.DEFAULT_LOB_LENGTH;
+      var multiplier = opt_lobOpts.lengthType == 'column' ? opt_lobOpts.columnLength : opt_lobOpts.length;
+      multiplier = multiplier || os.style.DEFAULT_LOB_LENGTH;
+      var lengthUnits = opt_lobOpts.lengthUnits || os.style.DEFAULT_UNITS;
+      var convertedLength = os.math.convertUnits(length, os.style.DEFAULT_UNITS, lengthUnits);
       var effectiveBearing = length < 0 ? (bearing + 180) % 360 : bearing; // flip it if the length will be negative
-      var effectiveLength = Math.min(Math.abs(length * multiplier), os.geo.MAX_LINE_LENGTH);
+      var effectiveLength = Math.min(Math.abs(convertedLength * multiplier), os.geo.MAX_LINE_LENGTH);
 
       // now do some calcs
       var end = osasm.geodesicDirect(center, effectiveBearing, effectiveLength);
       end[2] = center[2];
+      var inverse = osasm.geodesicInverse(center, end);
+      var endBearing = inverse.finalBearing;
 
       // create the line and split it across the date line so it renders correctly on a 2D map
       lob = new ol.geom.LineString([center, end], ol.geom.GeometryLayout.XYZM);
@@ -336,8 +348,11 @@ os.feature.createLineOfBearing = function(feature, opt_replace, opt_lobOpts) {
       }
 
       if (opt_lobOpts.showArrow) {
+        var arrowUnits = opt_lobOpts.arrowUnits || os.style.DEFAULT_UNITS;
         var arrowLength = opt_lobOpts.arrowLength || os.style.DEFAULT_ARROW_SIZE;
-        var right = osasm.geodesicDirect(end, bearing + 180 - 45, arrowLength);
+        var convertedArrowLength = os.math.convertUnits(arrowLength, os.style.DEFAULT_UNITS, arrowUnits);
+        var effectiveArrowLength = Math.min(convertedArrowLength, os.geo.MAX_LINE_LENGTH);
+        var right = osasm.geodesicDirect(end, endBearing + 180 - 45, effectiveArrowLength);
         right.push(center[2]);
         var rightArm = new ol.geom.LineString([end, right], ol.geom.GeometryLayout.XYZM);
         rightArm = os.geo.splitOnDateLine(rightArm);
@@ -345,7 +360,7 @@ os.feature.createLineOfBearing = function(feature, opt_replace, opt_lobOpts) {
           coords.push(rightArm.getCoordinates());
         }
 
-        var left = osasm.geodesicDirect(end, bearing + 180 + 45, arrowLength);
+        var left = osasm.geodesicDirect(end, endBearing + 180 + 45, effectiveArrowLength);
         left.push(center[2]);
         var leftArm = new ol.geom.LineString([end, left], ol.geom.GeometryLayout.XYZM);
         leftArm = os.geo.splitOnDateLine(leftArm);
@@ -364,6 +379,7 @@ os.feature.createLineOfBearing = function(feature, opt_replace, opt_lobOpts) {
       var plusArc = null;
       var minusArc = null;
       if (opt_lobOpts.showError) { // draw error arcs
+        var lengthErrorUnits = opt_lobOpts.lengthErrorUnits || os.style.DEFAULT_UNITS;
         var lengthError = Math.abs(os.feature.getColumnValue(feature, opt_lobOpts.lengthErrorColumn));
         var lengthErrorMultiplier = goog.isDef(opt_lobOpts.lengthError) ?
             opt_lobOpts.lengthError : os.style.DEFAULT_LOB_LENGTH_ERROR;
@@ -371,13 +387,15 @@ os.feature.createLineOfBearing = function(feature, opt_replace, opt_lobOpts) {
         var bearingErrorMultiplier = goog.isDef(opt_lobOpts.bearingError) ?
             opt_lobOpts.bearingError : os.style.DEFAULT_LOB_BEARING_ERROR;
         if (goog.isNull(bearingError) || isNaN(bearingError)) {
-          bearingError = 0;
+          bearingError = 1;
         }
         if (goog.isNull(lengthError) || isNaN(lengthError)) {
-          lengthError = 0;
+          lengthError = 1;
         }
+        var cLengthError = os.math.convertUnits(lengthError, os.style.DEFAULT_UNITS, lengthErrorUnits) *
+          lengthErrorMultiplier;
         if (bearingError > 0 && bearingErrorMultiplier > 0) {
-          var plusPts = os.geo.interpolateArc(center, (length + lengthError * lengthErrorMultiplier) * multiplier,
+          var plusPts = os.geo.interpolateArc(center, effectiveLength + cLengthError,
               Math.min(bearingError * bearingErrorMultiplier * 2, 360), bearing);
           plusArc = new ol.geom.LineString(plusPts, ol.geom.GeometryLayout.XYZM);
           plusArc = os.geo.splitOnDateLine(plusArc);
@@ -385,28 +403,28 @@ os.feature.createLineOfBearing = function(feature, opt_replace, opt_lobOpts) {
           plusArc.osTransform();
 
           if (lengthError > 0 && lengthErrorMultiplier > 0) { // only draw one arc if it is zero
-            var pts = os.geo.interpolateArc(center, (length - lengthError * lengthErrorMultiplier) * multiplier,
+            var pts = os.geo.interpolateArc(center, effectiveLength - cLengthError,
                 Math.min(bearingError * bearingErrorMultiplier * 2, 360), bearing);
             minusArc = new ol.geom.LineString(pts, ol.geom.GeometryLayout.XYZM);
             minusArc = os.geo.splitOnDateLine(minusArc);
             minusArc.set(os.geom.GeometryField.NORMALIZED, true);
             minusArc.osTransform();
           }
-        } else if (lengthError > 0 && lengthErrorMultiplier > 0) { // no bearing error so draw a (perpendicular) line instead of an arc
-          var uLineCenter = osasm.geodesicDirect(end, bearing + 180, -lengthError * lengthErrorMultiplier);
-          var uLineRight = osasm.geodesicDirect(uLineCenter, bearing + 90, -lengthError * lengthErrorMultiplier);
+        } else if (lengthError > 0 && lengthErrorMultiplier > 0) { // no bearing error perpendicular line instead of arc
+          var uLineCenter = osasm.geodesicDirect(end, endBearing + 180, -cLengthError);
+          var uLineRight = osasm.geodesicDirect(uLineCenter, endBearing + 90, -cLengthError);
           uLineRight.push(center[2]);
-          var uLineLeft = osasm.geodesicDirect(uLineCenter, bearing - 90, -lengthError * lengthErrorMultiplier);
+          var uLineLeft = osasm.geodesicDirect(uLineCenter, endBearing - 90, -cLengthError);
           uLineLeft.push(center[2]);
           plusArc = new ol.geom.LineString([uLineLeft, uLineRight], ol.geom.GeometryLayout.XYZM);
           plusArc = os.geo.splitOnDateLine(plusArc);
           plusArc.set(os.geom.GeometryField.NORMALIZED, true);
           plusArc.osTransform();
 
-          var bLineCenter = osasm.geodesicDirect(end, bearing + 180, lengthError * lengthErrorMultiplier);
-          var bLineRight = osasm.geodesicDirect(bLineCenter, bearing + 90, lengthError * lengthErrorMultiplier);
+          var bLineCenter = osasm.geodesicDirect(end, endBearing + 180, cLengthError);
+          var bLineRight = osasm.geodesicDirect(bLineCenter, endBearing + 90, cLengthError);
           bLineRight.push(center[2]);
-          var bLineLeft = osasm.geodesicDirect(bLineCenter, bearing - 90, lengthError * lengthErrorMultiplier);
+          var bLineLeft = osasm.geodesicDirect(bLineCenter, endBearing - 90, cLengthError);
           bLineLeft.push(center[2]);
           minusArc = new ol.geom.LineString([bLineLeft, bLineRight], ol.geom.GeometryLayout.XYZM);
           minusArc = os.geo.splitOnDateLine(minusArc);
@@ -414,6 +432,7 @@ os.feature.createLineOfBearing = function(feature, opt_replace, opt_lobOpts) {
           minusArc.osTransform();
         }
       }
+      os.interpolate.interpolateGeom(lob);
       feature.set(os.data.RecordField.LINE_OF_BEARING_ERROR_HIGH, plusArc);
       feature.set(os.data.RecordField.LINE_OF_BEARING_ERROR_LOW, minusArc);
 
@@ -880,17 +899,21 @@ os.feature.updateFeaturesFadeStyle = function(features, opacity, opt_source) {
 
   if (source) {
     for (var i = 0, n = features.length; i < n; i++) {
-      // we need to make a copy/clone of the style to mess with the config
       var feature = features[i];
-      var layerConfig = os.style.getLayerConfig(feature, source);
-      var baseConfig = /** @type {Object|undefined} */
-          (feature.values_[os.style.StyleType.FEATURE]) ||
-          layerConfig ||
-          os.style.DEFAULT_VECTOR_CONFIG;
-      os.style.setConfigOpacityColor(baseConfig, opacity);
 
-      var style = os.style.createFeatureStyle(feature, baseConfig, layerConfig);
-      feature.setStyle(style);
+      // don't fade dynamic features because they are always displayed
+      if (feature && !(feature instanceof os.feature.DynamicFeature)) {
+        // we need to make a copy/clone of the style to mess with the config
+        var layerConfig = os.style.getLayerConfig(feature, source);
+        var baseConfig = /** @type {Object|undefined} */
+            (feature.values_[os.style.StyleType.FEATURE]) ||
+            layerConfig ||
+            os.style.DEFAULT_VECTOR_CONFIG;
+        os.style.setConfigOpacityColor(baseConfig, opacity);
+
+        var style = os.style.createFeatureStyle(feature, baseConfig, layerConfig);
+        feature.setStyle(style);
+      }
     }
   }
 };

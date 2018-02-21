@@ -125,3 +125,7 @@
     color: #000;
   }
 }
+
+.ol-attribution li:nth-child(n+2):not(:last-child):after {
+  content: ", "
+}
