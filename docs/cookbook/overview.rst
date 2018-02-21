@@ -13,6 +13,4 @@ For extended examples, see the Guides.
   logging/index
   osm/index
   audionotification/index
-
-
-
+  pelias/index

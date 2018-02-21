@@ -962,4 +962,33 @@ describe('os.geo', function() {
     expect(merged instanceof ol.geom.LineString).toBe(true);
     expect(goog.array.equals(geometry.getFlatCoordinates(), merged.getFlatCoordinates())).toBe(true);
   });
+
+  it('should normalise longitudes greater than 180.0', function() {
+    expect(os.geo.normalizeLongitude(190.0)).toBe(-170.0);
+  });
+
+  it('should normalise longitudes less than -180.0', function() {
+    expect(os.geo.normalizeLongitude(-190.0)).toBe(170.0);
+  });
+
+  it('should normalise longitudes less than -540.0', function() {
+    expect(os.geo.normalizeLongitude(-550.0)).toBe(170.0);
+  });
+
+  it('should normalise longitudes less than -720.0', function() {
+    expect(os.geo.normalizeLongitude(-730.0)).toBe(-10.0);
+  });
+
+  it('should normalise longitudes greater than 720.0', function() {
+    expect(os.geo.normalizeLongitude(730.0)).toBe(10.0);
+  });
+
+  it('should not modify normalise longitudes less than 180.0', function() {
+    expect(os.geo.normalizeLongitude(170.0)).toBe(170.0);
+  });
+
+  it('should not modify normalise longitudes greater than -180.0', function() {
+    expect(os.geo.normalizeLongitude(-170.0)).toBe(-170.0);
+  });
+
 });

@@ -79,14 +79,34 @@ os.metrics.LayersMetrics = function() {
     key: os.metrics.Layer.VECTOR_ARROW_SIZE
   });
   this.addChild(styleLeaf, {
+    label: 'Line of Bearing Arrow Length Units',
+    description: 'The units of the length of an arrow drawn with lines of bearing.',
+    key: os.metrics.Layer.VECTOR_ARROW_UNITS
+  });
+  this.addChild(styleLeaf, {
     label: 'Line of Bearing Length Multiplier',
     description: 'The multiplier on the length of a line of bearing.',
     key: os.metrics.Layer.VECTOR_LOB_LENGTH
   });
   this.addChild(styleLeaf, {
+    label: 'Line of Bearing Length Type',
+    description: 'The type of the length of a line of bearing (manual or column).',
+    key: os.metrics.Layer.VECTOR_LOB_LENGTH_TYPE
+  });
+  this.addChild(styleLeaf, {
     label: 'Line of Bearing Length',
     description: 'The length of a line of bearing. Can be defined by a column.',
     key: os.metrics.Layer.VECTOR_LOB_LENGTH_COLUMN
+  });
+  this.addChild(styleLeaf, {
+    label: 'Line of Bearing Length Column Multiplier',
+    description: 'The multiplier on the length of a line of bearing, column option.',
+    key: os.metrics.Layer.VECTOR_LOB_COLUMN_LENGTH
+  });
+  this.addChild(styleLeaf, {
+    label: 'Line of Bearing Length Units',
+    description: 'The units on the length of a line of bearing.',
+    key: os.metrics.Layer.VECTOR_LOB_LENGTH_UNITS
   });
   this.addChild(styleLeaf, {
     label: 'Line of Bearing Length Error',
@@ -97,6 +117,11 @@ os.metrics.LayersMetrics = function() {
     label: 'Line of Bearing Length Error Multiplier',
     description: 'The multiplier on the error length of a line of bearing.',
     key: os.metrics.Layer.VECTOR_LOB_LENGTH_ERROR
+  });
+  this.addChild(styleLeaf, {
+    label: 'Line of Bearing Length Error Units',
+    description: 'The units of the length error of a line of bearing.',
+    key: os.metrics.Layer.VECTOR_LOB_LENGTH_ERROR_UNITS
   });
   this.addChild(styleLeaf, {
     label: 'Line of Bearing Orientation',

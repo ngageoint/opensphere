@@ -144,14 +144,15 @@ goog.require('plugin.file.shp.SHPPlugin');
 goog.require('plugin.google.places.Plugin');
 goog.require('plugin.heatmap.HeatmapPlugin');
 goog.require('plugin.im.action.feature.Plugin');
-goog.require('plugin.mapzen.places.Plugin');
 goog.require('plugin.ogc.OGCPlugin');
 goog.require('plugin.osm.nom.NominatimPlugin');
 goog.require('plugin.overview.OverviewPlugin');
 goog.require('plugin.params.ParamsPlugin');
+goog.require('plugin.pelias.geocoder.Plugin');
 goog.require('plugin.places.PlacesPlugin');
 goog.require('plugin.position.PositionPlugin');
 goog.require('plugin.suncalc.Plugin');
+goog.require('plugin.track.TrackPlugin');
 goog.require('plugin.vectortools.VectorToolsPlugin');
 goog.require('plugin.weather.WeatherPlugin');
 goog.require('plugin.xyz.XYZPlugin');
@@ -494,7 +495,7 @@ os.MainCtrl.prototype.addPlugins = function() {
   os.ui.pluginManager.addPlugin(new plugin.xyz.XYZPlugin());
   os.ui.pluginManager.addPlugin(new plugin.basemap.BaseMapPlugin());
   os.ui.pluginManager.addPlugin(new plugin.google.places.Plugin());
-  os.ui.pluginManager.addPlugin(new plugin.mapzen.places.Plugin());
+  os.ui.pluginManager.addPlugin(new plugin.pelias.geocoder.Plugin());
   os.ui.pluginManager.addPlugin(new plugin.osm.nom.NominatimPlugin());
   os.ui.pluginManager.addPlugin(new plugin.file.csv.CSVPlugin());
   os.ui.pluginManager.addPlugin(new plugin.file.kml.KMLPlugin());
@@ -510,6 +511,7 @@ os.MainCtrl.prototype.addPlugins = function() {
   os.ui.pluginManager.addPlugin(plugin.heatmap.HeatmapPlugin.getInstance());
   os.ui.pluginManager.addPlugin(plugin.params.ParamsPlugin.getInstance());
   os.ui.pluginManager.addPlugin(plugin.suncalc.Plugin.getInstance());
+  os.ui.pluginManager.addPlugin(plugin.track.TrackPlugin.getInstance());
 };
 
 
@@ -680,7 +682,7 @@ os.MainCtrl.prototype.handleKeyEvent_ = function(event) {
   var target = /** @type {Element} */ (event.target);
   var ctrlOr = os.isOSX() ? event.metaKey : event.ctrlKey;
 
-  if (!document.querySelector('.modal-backdrop')) {
+  if (!document.querySelector(os.ui.MODAL_SELECTOR)) {
     if (target.tagName !== goog.dom.TagName.INPUT.toString() &&
         target.tagName !== goog.dom.TagName.TEXTAREA.toString()) {
       switch (event.keyCode) {

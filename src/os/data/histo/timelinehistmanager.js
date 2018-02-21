@@ -9,6 +9,7 @@ goog.require('os.data.OSDataManager');
 goog.require('os.data.event.DataEvent');
 goog.require('os.data.event.DataEventType');
 goog.require('os.events.PropertyChangeEvent');
+goog.require('os.fn');
 goog.require('os.hist.HistogramData');
 goog.require('os.source.PropertyChange');
 goog.require('os.time.TimeRange');
@@ -43,6 +44,9 @@ os.data.histo.TimelineHistManager = function() {
 
   os.dataManager.listen(os.data.event.DataEventType.SOURCE_ADDED, this.onSourceAdded_, false, this);
   os.dataManager.listen(os.data.event.DataEventType.SOURCE_REMOVED, this.onSourceRemoved_, false, this);
+
+  os.dispatcher.listen(os.events.LayerEventType.ADD, this.fireChangeEvent_, false, this);
+  os.dispatcher.listen(os.events.LayerEventType.REMOVE, this.fireChangeEvent_, false, this);
 };
 goog.inherits(os.data.histo.TimelineHistManager, goog.events.EventTarget);
 goog.addSingletonGetter(os.data.histo.TimelineHistManager);
@@ -54,6 +58,9 @@ goog.addSingletonGetter(os.data.histo.TimelineHistManager);
 os.data.histo.TimelineHistManager.prototype.disposeInternal = function() {
   this.changeThrottle_.dispose();
   this.changeThrottle_ = null;
+
+  os.dispatcher.unlisten(os.events.LayerEventType.ADD, this.fireChangeEvent_, false, this);
+  os.dispatcher.unlisten(os.events.LayerEventType.REMOVE, this.fireChangeEvent_, false, this);
 
   os.dataManager.unlisten(os.data.event.DataEventType.SOURCE_ADDED, this.onSourceAdded_, false, this);
   os.dataManager.unlisten(os.data.event.DataEventType.SOURCE_REMOVED, this.onSourceRemoved_, false, this);
@@ -146,47 +153,22 @@ os.data.histo.TimelineHistManager.prototype.onSourcePropertyChange_ = function(e
  */
 os.data.histo.TimelineHistManager.prototype.getHistograms = function(options) {
   var histograms = [];
-  var start = options.start;
-  var end = options.end;
-  var interval = options.interval;
 
-  if (interval > 0) {
-    var sources = os.osDataManager.getSources();
-    for (var i = 0, n = sources.length; i < n; i++) {
-      var source = sources[i];
-      var model = source.getTimeModel();
-      if (model && source.getVisible() && source.getTimeEnabled()) {
-        var counts = {};
-        var lastRange = model.getLastRange();
+  if (options.interval > 0) {
+    var layers = os.MapContainer.getInstance().getLayers();
+    var sources = layers.map(os.fn.mapLayerToSource).filter(os.fn.filterFalsey);
 
-        var min = Math.floor(start / interval) * interval;
-        while (min <= end) {
-          var next = min + interval;
-          var matches = model.intersection(new os.time.TimeRange(min, next), false, true).length;
-          counts[min] = matches;
-          min = next;
-        }
-
-        // reset time filters on the model to the last used range, or groupData calls will use the last range of this
-        // histogram
-        if (lastRange) {
-          model.intersection(lastRange, false, true);
-        }
-
-        if (goog.object.getCount(counts) > 0) {
-          var sourceHisto = new os.hist.HistogramData();
-          sourceHisto.setId(source.getId());
-          sourceHisto.setColor(os.color.toHexString(source.getColor()));
-          sourceHisto.setCounts(counts);
-          sourceHisto.setOptions(options);
-          sourceHisto.setTitle(source.getTitle());
-          sourceHisto.setVisible(source.getVisible());
-          sourceHisto.setRange(model.getRange());
-
-          histograms.push(sourceHisto);
-        }
-      }
+    if (!sources.length) {
+      sources = os.osDataManager.getSources();
     }
+
+    histograms = sources.map(function(source) {
+      if (os.implements(source, os.hist.IHistogramProvider.ID)) {
+        return /** @type {os.hist.IHistogramProvider} */ (source).getHistogram(options);
+      }
+
+      return null;
+    }).filter(os.fn.filterFalsey);
   }
 
   return histograms;

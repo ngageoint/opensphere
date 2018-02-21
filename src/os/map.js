@@ -198,7 +198,7 @@ os.Map.prototype.handleBrowserEvent = function(browserEvent, opt_type) {
     var target = /** @type {Element} */ (browserEvent.target);
     if (target.tagName !== goog.dom.TagName.INPUT.toString() &&
         target.tagName !== goog.dom.TagName.TEXTAREA.toString() &&
-        !document.querySelector('.modal-backdrop')) {
+        !document.querySelector(os.ui.MODAL_SELECTOR)) {
       os.Map.superClass_.handleBrowserEvent.call(this, browserEvent, opt_type);
     }
   }

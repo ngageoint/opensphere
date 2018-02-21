@@ -1,6 +1,7 @@
 goog.provide('plugin.ogc.wms.TileWMSSource');
 goog.require('ol.source.TileWMS');
 goog.require('os.events.PropertyChangeEvent');
+goog.require('os.implements');
 goog.require('os.ol.source.ILoadingSource');
 goog.require('os.source.IFilterableTileSource');
 goog.require('os.source.IStyle');
@@ -22,6 +23,7 @@ plugin.ogc.wms.TileWMSSource = function(opt_options) {
   this.refreshEnabled = true;
 };
 goog.inherits(plugin.ogc.wms.TileWMSSource, ol.source.TileWMS);
+os.implements(plugin.ogc.wms.TileWMSSource, os.source.IStyle.ID);
 
 
 /**
