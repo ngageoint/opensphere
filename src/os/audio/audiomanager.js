@@ -1,10 +1,20 @@
 goog.provide('os.audio.AudioManager');
+goog.provide('os.audio.AudioSetting');
 
 goog.require('goog.log');
 goog.require('goog.log.Logger');
 goog.require('goog.object');
 goog.require('os.config.Settings');
 goog.require('os.defines');
+
+
+/**
+ * Audio settings keys.
+ * @enum {string}
+ */
+os.audio.AudioSetting = {
+  MUTE: 'mute'
+};
 
 
 
@@ -18,7 +28,7 @@ os.audio.AudioManager = function() {
    * @type {boolean}
    * @private
    */
-  this.mute_ = /** @type {boolean} */ (os.settings.get(['mute'], false));
+  this.mute_ = /** @type {boolean} */ (os.settings.get(os.audio.AudioSetting.MUTE, false));
 
   /**
    * Set of sounds
@@ -76,7 +86,7 @@ os.audio.AudioManager.prototype.getMute = function() {
  */
 os.audio.AudioManager.prototype.setMute = function(mute) {
   this.mute_ = mute;
-  os.settings.set(['mute'], this.mute_);
+  os.settings.set(os.audio.AudioSetting.MUTE, this.mute_);
 };
 
 
