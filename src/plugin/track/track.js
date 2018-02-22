@@ -355,8 +355,10 @@ plugin.track.createTrack = function(options) {
         pointCoord.push(0);
       }
 
-      pointCoord.push(value);
-      return pointCoord;
+      if (value != null) {
+        pointCoord.push(value);
+        return pointCoord;
+      }
     }
 
     return undefined;
