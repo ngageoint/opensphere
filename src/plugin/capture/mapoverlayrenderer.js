@@ -75,10 +75,10 @@ plugin.capture.MapOverlayRenderer.prototype.getCanvas = function() {
 
         // draw the box
         ctx.strokeRect(
-          pixelRatio * (boxRect.left - originalRect.left),
-          pixelRatio * (boxRect.top - originalRect.top),
-          pixelRatio * boxRect.width,
-          pixelRatio * boxRect.height);
+            pixelRatio * (boxRect.left - originalRect.left),
+            pixelRatio * (boxRect.top - originalRect.top),
+            pixelRatio * boxRect.width,
+            pixelRatio * boxRect.height);
       }
     }
   }
@@ -91,7 +91,8 @@ plugin.capture.MapOverlayRenderer.prototype.getCanvas = function() {
  * @inheritDoc
  */
 plugin.capture.MapOverlayRenderer.prototype.getPosition = function(canvas) {
-  var x = 0, y = 0;
+  var x = 0;
+  var y = 0;
 
   // NOTE: For High DPI Displays such as Apple Retina Screens, canvas
   // pixels do not directly correspond to CSS pixels.
