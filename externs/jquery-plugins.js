@@ -57,6 +57,12 @@ jQuery.prototype.scrollspy = function(opt_options) {};
 jQuery.prototype.scrollParent = function(opt_value) {};
 
 /**
+ * @param {*} arg1
+ * @return {!jQuery}
+ */
+jQuery.prototype.select2 = function(arg1) {};
+
+/**
  * @param {number=} opt_options
  * @return {!jQuery}
  */
