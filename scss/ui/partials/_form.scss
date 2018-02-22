@@ -64,6 +64,7 @@ select.ng-invalid option {
 
 // display an asterisk on required fields
 .mark-required .control-label.required::after {
+  // sass-lint:disable no-vendor-prefixes
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   color: #da3030;

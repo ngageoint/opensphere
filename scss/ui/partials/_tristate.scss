@@ -5,7 +5,6 @@
   // this is a tricky set of rules to style the tri-state checkbox
   // if the @include are moved to the top, we lose the gradient, so the lint check is turned off
   // see THIN-6979
-  // scss-lint:disable DeclarationOrder
   // sass-lint:disable mixins-before-declarations
 
   background: #fcfff4;

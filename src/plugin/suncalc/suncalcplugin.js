@@ -56,6 +56,9 @@ plugin.suncalc.Plugin.prototype.init = function() {
 
       var x = group.find(os.config.DisplaySetting.ENABLE_LIGHTING);
       if (x) {
+        /**
+         * @this {os.ui.menu.MenuItem}
+         */
         x.beforeRender = function() {
           this.visible = os.MapContainer.getInstance().is3DEnabled();
           this.selected = !!os.settings.get(os.config.DisplaySetting.ENABLE_LIGHTING, false);

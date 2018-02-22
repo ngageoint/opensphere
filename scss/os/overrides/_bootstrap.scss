@@ -20,20 +20,20 @@ textarea {
 }
 
 input {
-  &[type="text"],
-  &[type="password"],
-  &[type="datetime"],
-  &[type="datetime-local"],
-  &[type="date"],
-  &[type="month"],
-  &[type="time"],
-  &[type="week"],
-  &[type="number"],
-  &[type="email"],
-  &[type="url"],
-  &[type="search"],
-  &[type="tel"],
-  &[type="color"] {
+  &[type='text'],
+  &[type='password'],
+  &[type='datetime'],
+  &[type='datetime-local'],
+  &[type='date'],
+  &[type='month'],
+  &[type='time'],
+  &[type='week'],
+  &[type='number'],
+  &[type='email'],
+  &[type='url'],
+  &[type='search'],
+  &[type='tel'],
+  &[type='color'] {
     @include transition(border linear .2s, box-shadow linear .2s);
     background-color: $overrides-input-bg-color;
     border: $overrides-border-width solid $overrides-border-color;
@@ -45,7 +45,7 @@ input {
     padding: $overrides-input-padding;
   }
 
-  &[type="file"] {
+  &[type='file'] {
     height: 24px;
     line-height: 24px;
   }
@@ -56,19 +56,19 @@ input {
     color: #bbbfc2;
   }
 
-  &[type="button"][disabled],
-  &[type="reset"][disabled],
-  &[type="submit"][disabled],
+  &[type='button'][disabled],
+  &[type='reset'][disabled],
+  &[type='submit'][disabled],
   &[readonly] {
     @include opacity($overrides-disabled-opacity);
     background-color: $overrides-input-bg-color;
     color: #bbbfc2;
   }
 
-  &[type="file"]:focus,
-  &[type="radio"]:focus,
-  &[type="checkbox"]:focus {
-    // scss-lint:disable DuplicateProperty
+  &[type='file']:focus,
+  &[type='radio']:focus,
+  &[type='checkbox']:focus {
+    // sass-lint:disable no-duplicate-properties
     @include box-shadow(inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(82, 168, 236, .6));
     border-color: rgba(82, 168, 236, .8);
     outline: 0;
@@ -100,26 +100,26 @@ textarea {
   }
 
   input {
-    &[type="text"],
-    &[type="password"],
-    &[type="datetime"],
-    &[type="datetime-local"],
-    &[type="date"],
-    &[type="month"],
-    &[type="time"],
-    &[type="week"],
-    &[type="number"],
-    &[type="email"],
-    &[type="url"],
-    &[type="search"],
-    &[type="tel"],
-    &[type="color"] {
+    &[type='text'],
+    &[type='password'],
+    &[type='datetime'],
+    &[type='datetime-local'],
+    &[type='date'],
+    &[type='month'],
+    &[type='time'],
+    &[type='week'],
+    &[type='number'],
+    &[type='email'],
+    &[type='url'],
+    &[type='search'],
+    &[type='tel'],
+    &[type='color'] {
       background-color: $overrides-box-bg-color;
     }
 
-    &[type="button"][disabled],
-    &[type="reset"][disabled],
-    &[type="submit"][disabled],
+    &[type='button'][disabled],
+    &[type='reset'][disabled],
+    &[type='submit'][disabled],
     &[readonly] {
       background-color: $overrides-box-bg-color;
     }
@@ -170,14 +170,14 @@ textarea[readonly] {
 }
 
 select:focus {
-  // scss-lint:disable DuplicateProperty
+  // sass-lint:disable no-duplicate-properties
   @include box-shadow(inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(82, 168, 236, .6));
   border-color: rgba(82, 168, 236, .8);
   outline: 0;
   outline: thin dotted \9;
 }
 
-// scss-lint:disable VendorPrefix
+// sass-lint:disable no-vendor-prefixes
 
 $placeholder-text-color: #bbb;
 
@@ -196,7 +196,7 @@ textarea:-ms-input-placeholder {
   color: $placeholder-text-color;
 }
 
-// scss-lint:enable VendorPrefix
+// sass-lint:enable no-vendor-prefixes
 
 label {
   @include text-shadow(none);
@@ -313,8 +313,8 @@ p {
 }
 
 td > input {
-  &[type="radio"],
-  &[type="checkbox"] {
+  &[type='radio'],
+  &[type='checkbox'] {
     margin: 0;
   }
 }

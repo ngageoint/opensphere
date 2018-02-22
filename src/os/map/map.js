@@ -61,6 +61,16 @@ os.CameraMode = {
 
 
 /**
+ * Modes for flying to positions on the map.
+ * @enum {string}
+ */
+os.FlightMode = {
+  BOUNCE: 'bounce',
+  SMOOTH: 'smooth'
+};
+
+
+/**
  * Default center position for the map.
  * @type {!ol.Coordinate}
  * @const

@@ -202,7 +202,7 @@ os.ui.menu.layer.setup = function() {
         beforeRender: os.ui.menu.layer.visibleIfSupported,
         handler: os.ui.menu.layer.onExport_,
         metricKey: os.metrics.Layer.EXPORT,
-        sort: os.ui.menu.layer.GroupSort.TOOLS++
+        sort: -1000 // commonly used, so prioritize above other items
       }]
     }]
   }));

@@ -38,14 +38,13 @@ os.interaction.Select = function(opt_options) {
       layerFilter = options.layers;
     } else {
       var layers = options.layers;
-      layerFilter =
-          /**
-           * @param {ol.layer.Layer} layer Layer.
-           * @return {boolean} Include.
-           */
-          function(layer) {
-            return goog.array.contains(layers, layer);
-          };
+      /**
+       * @param {ol.layer.Layer} layer Layer.
+       * @return {boolean} Include.
+       */
+      layerFilter = function(layer) {
+        return goog.array.contains(layers, layer);
+      };
     }
   } else {
     layerFilter = os.interaction.defaultLayerFilter;

@@ -34,8 +34,6 @@
   // this is a tricky set of rules to style the tree off/on box
   // if the @include are re-ordered, we lose the gradient, so the lint check is turned off
   // see THIN-6980
-
-  // scss-lint:disable DeclarationOrder
   // sass-lint:disable mixins-before-declarations
 
   background: #fcfff4;

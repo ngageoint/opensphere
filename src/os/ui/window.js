@@ -178,6 +178,10 @@ os.ui.window.toggleVisibility = function(opt_id) {
     if (modalbg) {
       modalbg.removeClass('window-modal-bg');
     }
+
+    /**
+     * callback removes the hidden class and adds modal background if necessary
+     */
     callback = function() {
       wins.removeClass('hidden');
       if (modalbg) {
@@ -185,6 +189,7 @@ os.ui.window.toggleVisibility = function(opt_id) {
       }
     };
   }
+
   return callback;
 };
 

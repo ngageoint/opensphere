@@ -1,9 +1,10 @@
 .onboarding-popover {
-  -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  // sass-lint:disable no-vendor-prefixes
+  -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
   background-clip: padding-box;
   background-color: #fff;
   border-radius: 4px;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
   max-height: 800px;
   max-width: 800px;
   min-height: 50px;
@@ -31,6 +32,7 @@
 }
 
 .onboarding-popover.onboarding-centered {
+  // sass-lint:disable no-vendor-prefixes
   -moz-transform: translate(-50%, -50%);
   -ms-transform: translate(-50%, -50%);
   -o-transform: translate(-50%, -50%);
@@ -56,7 +58,7 @@
 
 .onboarding-arrow:after {
   border-width: 10px;
-  content: "";
+  content: '';
 }
 
 .onboarding-popover.onboarding-bottom .onboarding-arrow {
@@ -70,7 +72,7 @@
 .onboarding-popover.onboarding-bottom .onboarding-arrow:after {
   border-bottom-color: #fff;
   border-top-width: 0;
-  content: " ";
+  content: ' ';
   margin-left: -10px;
   top: 1px;
 }
@@ -87,7 +89,7 @@
   border-bottom-width: 0;
   border-top-color: #fff;
   bottom: 1px;
-  content: " ";
+  content: ' ';
   margin-left: -10px;
 }
 
@@ -103,7 +105,7 @@
   border-left-color: #fff;
   border-right-width: 0;
   bottom: -10px;
-  content: " ";
+  content: ' ';
   right: 1px;
 }
 
@@ -119,7 +121,7 @@
   border-left-width: 0;
   border-right-color: #fff;
   bottom: -10px;
-  content: " ";
+  content: ' ';
   left: 1px;
 }
 
@@ -140,24 +142,24 @@
 }
 
 .onboarding-popover-content p {
-  margin: 0px;
+  margin: 0;
 }
 
 .onboarding-popover-header {
   border-bottom: 1px solid #eee;
-  border-radius: 4px 4px 0px 0px;
+  border-radius: 4px 4px 0 0;
   padding: 5px 10px;
 }
 
 .onboarding-popover-header.no-title {
-  border-bottom: none;
+  border-bottom: 0;
   margin-bottom: 0;
   padding: 5px 5px 0 0;
 }
 
 .onboarding-popover-footer {
   background-color: #f4f4f4;
-  border-radius: 0px 0px 4px 4px;
+  border-radius: 0 0 4px 4px;
   display: block;
   padding: 5px 10px;
   text-align: center;
@@ -184,6 +186,7 @@
 }
 
 .onboarding-focus {
+  // sass-lint:disable no-vendor-prefixes
   -moz-transition: none !important;
   -webkit-transition: none !important;
   pointer-events: none;
@@ -193,7 +196,7 @@
 
 .onboarding-step-info {
   float: left;
-  font-size: 0.8em;
+  font-size: .8em;
   font-style: italic;
 }
 
@@ -205,7 +208,7 @@
 }
 
 .bits-onboarding-step-info {
-  font-size: 0.8em;
+  font-size: .8em;
   font-style: italic;
-  line-height: 0.8em;
+  line-height: .8em;
 }
