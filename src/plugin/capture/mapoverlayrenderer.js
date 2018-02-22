@@ -29,11 +29,19 @@ plugin.capture.MapOverlayRenderer.prototype.getCanvas = function() {
     return goog.Promise.reject('The HTML 2D canvas has been tainted');
   }
 
+  // NOTE: For High DPI Displays such as Apple Retina Screens, canvas
+  // pixels do not directly correspond to CSS pixels.
+
   if (original) {
     // create a new canvas and write the overlay to it
     canvas = /** @type {HTMLCanvasElement} */ (document.createElement('canvas'));
     canvas.width = original.width;
     canvas.height = original.height;
+
+    // since OpenLayers allows for specifying the pixel ratio on a map (rather than always
+    // using window.devicePixelRatio directly), we will calculate it
+    var originalRect = original.getBoundingClientRect();
+    var pixelRatio = canvas.width / originalRect.width;
 
     var ctx = canvas.getContext('2d');
     var bgColor = os.settings.get(['bgColor'], '#000');
@@ -42,50 +50,35 @@ plugin.capture.MapOverlayRenderer.prototype.getCanvas = function() {
     ctx.fillStyle = bgColor;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // overlay the original canvas
+    // copy the overview map canvas to our separate canvas
     os.capture.overlayCanvas(original, canvas, 0, 0);
 
-    // draw an opaque border
+    // draw an opaque border to mimic the CSS border
     ctx.strokeStyle = bgColor;
-    ctx.lineWidth = 3;
+    ctx.lineWidth = 3 * pixelRatio;
+    ctx.strokeRect(0, 0, canvas.width, canvas.height);
 
-    ctx.beginPath();
-    ctx.moveTo(0, 0);
-    ctx.lineTo(canvas.width, 0);
-    ctx.lineTo(canvas.width, canvas.height);
-    ctx.lineTo(0, canvas.height);
-    ctx.lineTo(0, 0);
-    ctx.stroke();
-
+    // draw the little red dashed region if it exists
     var box = /** @type {HTMLCanvasElement} */ (document.querySelector('.ol-overviewmap-box'));
     if (box) {
-      // check if the context box is visible
-      var height = $(box).outerHeight();
-      var width = $(box).outerWidth();
-      if (height <= original.height && width <= original.width) {
-        // determine the box positioning
-        var originalRect = original.getBoundingClientRect();
-        var boxOffset = $(box).offset();
-        var boxX = boxOffset['left'] - originalRect.left;
-        var boxY = boxOffset['top'] - originalRect.top;
-        var boxExtent = [boxX, boxY, boxX + width, boxY + height];
+      var boxRect = box.getBoundingClientRect();
 
+      // check if the context box is visible
+      if (boxRect.height <= originalRect.height && boxRect.width <= originalRect.width) {
         // set up the box style (2px dotted #f00)
         ctx.strokeStyle = '#f00';
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 2 * pixelRatio;
 
         if (ol.has.CANVAS_LINE_DASH) {
-          ctx.setLineDash([2, 2]);
+          ctx.setLineDash([2 * pixelRatio, 2 * pixelRatio]);
         }
 
         // draw the box
-        ctx.beginPath();
-        ctx.moveTo(boxExtent[0], boxExtent[1]);
-        ctx.lineTo(boxExtent[2], boxExtent[1]);
-        ctx.lineTo(boxExtent[2], boxExtent[3]);
-        ctx.lineTo(boxExtent[0], boxExtent[3]);
-        ctx.lineTo(boxExtent[0], boxExtent[1]);
-        ctx.stroke();
+        ctx.strokeRect(
+            pixelRatio * (boxRect.left - originalRect.left),
+            pixelRatio * (boxRect.top - originalRect.top),
+            pixelRatio * boxRect.width,
+            pixelRatio * boxRect.height);
       }
     }
   }
@@ -98,18 +91,24 @@ plugin.capture.MapOverlayRenderer.prototype.getCanvas = function() {
  * @inheritDoc
  */
 plugin.capture.MapOverlayRenderer.prototype.getPosition = function(canvas) {
-  var x;
-  var y;
+  var x = 0;
+  var y = 0;
 
+  // NOTE: For High DPI Displays such as Apple Retina Screens, canvas
+  // pixels do not directly correspond to CSS pixels.
   var mapCanvas = plugin.capture.getMapCanvas();
   var overlayCanvas = this.getRenderElement();
+
   if (mapCanvas && overlayCanvas) {
-    // determine the overlay's position over the map
+    // Since OpenLayers allows for specifying the pixel ratio on a map (rather than always
+    // using window.devicePixelRatio directly), we will calculate it
     var mapRect = mapCanvas.getBoundingClientRect();
-    x = mapRect.right - overlayCanvas.width - 10;
-    y = 10;
-  } else {
-    x = y = 0;
+    var pixelRatio = mapCanvas.width / mapRect.width;
+
+    var overlayRect = overlayCanvas.getBoundingClientRect();
+    // determine the overlay's position over the map
+    x = pixelRatio * (mapRect.right - overlayRect.width - 10);
+    y = pixelRatio * 10;
   }
 
   return [x, y];
