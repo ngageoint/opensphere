@@ -63,7 +63,7 @@
     }
   }
 
-  input[type="text"] {
+  input[type='text'] {
     @include calc(width, '100% - 14px');
     margin: 0;
   }
@@ -79,7 +79,7 @@
   }
 }
 
-form input[type="text"] {
+form input[type='text'] {
   &.file-input,
   &.url-input {
     background-color: $color-medium-gray;
@@ -89,11 +89,11 @@ form input[type="text"] {
 }
 
 input {
-  &[type="text"].file-input {
+  &[type='text'].file-input {
     cursor: pointer;
   }
 
-  &[type="file"],
+  &[type='file'],
   &.input-hidden {
     position: absolute;
     top: 0;

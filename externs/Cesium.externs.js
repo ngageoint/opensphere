@@ -615,6 +615,12 @@ Cesium.Camera.prototype.moveEnd;
 
 
 /**
+ *
+ */
+Cesium.Camera.prototype.cancelFlight = function() {};
+
+
+/**
  * @param {!Cesium.Cartesian2} windowPosition
  * @param {Cesium.Ray=} opt_result
  * @return {!Cesium.Ray}
@@ -963,6 +969,20 @@ Cesium.Camera.prototype.moveUp = function(amount) {};
  * @return {!Cesium.Cartesian3} .
  */
 Cesium.Camera.prototype.pickEllipsoid = function(windowPos, opt_ellipsoid) {};
+
+
+/**
+ * @type {!Object<string, !function(number):number>}
+ */
+Cesium.EasingFunction;
+
+
+/**
+ * @param {number} n
+ * @return {number}
+ * @private
+ */
+Cesium.EasingFunction.LINEAR_NONE = function(n) {};
 
 
 /**

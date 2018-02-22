@@ -246,5 +246,10 @@ plugin.places.saveFromSource = function(config) {
  */
 plugin.places.getPlacesRoot = function(layerNode) {
   var root = plugin.file.kml.ui.getKMLRoot(layerNode);
-  return root ? /** @type {plugin.file.kml.ui.KMLNode} */ (root.getChildren()[0]) : null;
+  if (root) {
+    var children = root.getChildren();
+    return children && children.length ? /** @type {plugin.file.kml.ui.KMLNode} */ (children[0]) : null;
+  }
+
+  return null;
 };

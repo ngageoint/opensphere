@@ -89,6 +89,11 @@ os.storage.ObjectMechanism.prototype.__iterator__ = function(opt_keys) {
   var i = 0;
   var array = opt_keys ? goog.object.getKeys(this.storage_) : goog.object.getValues(this.storage_);
   var newIter = new goog.iter.Iterator();
+
+  /**
+   * Next implementation for iterator
+   * @return {*}
+   */
   newIter.next = function() {
     if (i >= array.length) {
       throw goog.iter.StopIteration;

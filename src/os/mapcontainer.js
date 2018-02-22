@@ -21,6 +21,7 @@ goog.require('ol.MapEventType');
 goog.require('ol.ObjectEventType');
 goog.require('ol.View');
 goog.require('ol.ViewHint');
+goog.require('ol.easing');
 goog.require('ol.events');
 goog.require('ol.layer.Tile');
 goog.require('ol.layer.Vector');
@@ -654,50 +655,72 @@ os.MapContainer.isImageLayer = function(layer) {
 
 
 /**
+ * Cancels the current camera flight if one is in progress. The camera is left at it's current location.
+ */
+os.MapContainer.prototype.cancelFlight = function() {
+  if (this.is3DEnabled()) {
+    var camera = this.getCesiumCamera();
+    if (camera) {
+      camera.cancelFlight();
+    }
+  } else {
+    var map = this.getMap();
+    var view = map ? map.getView() : undefined;
+    if (view) {
+      view.cancelAnimations();
+    }
+  }
+};
+
+
+/**
  * Flies to the provided coordinate/zoom level.
- * @param {!osx.map.FlyToOptions} options The fly to options
+ * @param {!osx.map.FlyToOptions} options The fly to options.
  */
 os.MapContainer.prototype.flyTo = function(options) {
   var map = this.getMap();
-  if (map && (goog.isDef(options.center) || goog.isDef(options.zoom) || goog.isDef(options.altitude))) {
+  if (map) {
     os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.FLY_TO, 1);
     var view = map.getView();
     goog.asserts.assert(view);
 
-    var oldCenter = view.getCenter();
-    var oldResolution = view.getResolution();
-    goog.asserts.assert(goog.isDef(oldCenter));
-    goog.asserts.assert(oldResolution);
-
-    var newCenter = options.center || oldCenter;
+    var center = options.destination || options.center || view.getCenter();
+    var duration = options.duration || os.MapContainer.FLY_ZOOM_DURATION;
 
     if (this.is3DEnabled()) {
       var camera = this.getCesiumCamera();
       if (camera) {
-        var altitude;
-
         // favor altitude over zoom in 3D mode
-        if (goog.isDef(options.altitude)) {
-          altitude = options.altitude;
-        } else if (goog.isDef(options.zoom)) {
-          altitude = camera.calcDistanceForResolution(this.zoomToResolution(options.zoom),
-              ol.math.toRadians(newCenter[1]));
+        if (options.altitude === undefined && options.zoom !== undefined) {
+          options.altitude = camera.calcDistanceForResolution(this.zoomToResolution(options.zoom),
+              ol.math.toRadians(center[1]));
+          delete options.zoom;
         }
 
-        camera.flyTo(newCenter, altitude, os.MapContainer.FLY_ZOOM_DURATION);
+        camera.flyTo(options);
       }
     } else {
       var animateOptions = /** @type {!olx.AnimationOptions} */ ({
-        center: newCenter,
-        duration: os.MapContainer.FLY_ZOOM_DURATION
+        center: center,
+        duration: duration
       });
 
-      // favor zoom over altitude in 2D mode
-      if (options.zoom != null) {
+      if (options.zoom !== undefined) {
+        // prioritize zoom in 2D mode
         animateOptions.zoom = goog.math.clamp(options.zoom, os.map.MIN_ZOOM, os.map.MAX_ZOOM);
-      } else if (options.altitude != null) {
+      } else if (!options.positionCamera && options.range !== undefined) {
+        // telling the camera where to look, so a range will generally be specified
+        var resolution = os.map.resolutionForDistance(this.getMap(), options.range, 0);
+        animateOptions.resolution = goog.math.clamp(resolution, os.map.MIN_RESOLUTION, os.map.MAX_RESOLUTION);
+      } else if (options.altitude !== undefined) {
+        // try altitude last, because it will generally be 0 if positioning the camera
         var resolution = os.map.resolutionForDistance(this.getMap(), options.altitude, 0);
         animateOptions.resolution = goog.math.clamp(resolution, os.map.MIN_RESOLUTION, os.map.MAX_RESOLUTION);
+      }
+
+      // 'bounce' uses default easing, 'smooth' uses linear.
+      if (options.flightMode === os.FlightMode.SMOOTH) {
+        animateOptions.easing = ol.easing.linear;
       }
 
       view.animate(animateOptions);
@@ -769,7 +792,11 @@ os.MapContainer.prototype.flyToExtent = function(extent, opt_buffer, opt_maxZoom
           }
 
           var altitude = camera.calcDistanceForResolution(resolution, 0);
-          camera.flyTo(center, altitude, os.MapContainer.FLY_ZOOM_DURATION);
+          camera.flyTo(/** @type {!osx.map.FlyToOptions} */ ({
+            center: center,
+            altitude: altitude,
+            duration: os.MapContainer.FLY_ZOOM_DURATION
+          }));
         }
       }
     }
@@ -1037,6 +1064,8 @@ os.MapContainer.prototype.init = function() {
       referenceGroup,
       imageGroup
     ]),
+    // prevents a blank map while flyTo animates
+    loadTilesWhileAnimating: true,
     renderer: ol.renderer.Type.CANVAS,
     target: os.MapContainer.TARGET,
     view: view,
@@ -1438,8 +1467,8 @@ os.MapContainer.prototype.initCesium_ = function() {
 
       scene.globe.enableLighting = !!os.settings.get(os.config.DisplaySetting.ENABLE_LIGHTING, false);
 
-      // set the FOV to 45 degrees to match the desktop version
-      scene.camera.frustum.fov = Cesium.Math.PI_OVER_FOUR;
+      // set the FOV to 60 degrees to match Google Earth
+      scene.camera.frustum.fov = Cesium.Math.PI_OVER_THREE;
 
       // update the globe base color from application settings
       var bgColor = /** @type {string} */ (os.settings.get(['bgColor'], '#000000'));

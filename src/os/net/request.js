@@ -525,6 +525,10 @@ os.net.Request.prototype.getPromise = function() {
   var listener = null;
 
   return new goog.Promise(function(resolve, reject) {
+    /**
+     * request listener to finish promise
+     * @param {goog.events.Event} evt
+     */
     listener = function(evt) {
       if (listener) {
         that.unlisten(goog.net.EventType.SUCCESS, listener);

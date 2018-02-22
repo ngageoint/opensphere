@@ -111,8 +111,7 @@ plugin.file.kml.menu.treeSetup = function() {
       tooltip: 'Creates buffer regions around loaded data',
       icons: ['<i class="fa fa-fw ' + os.buffer.ICON + '"></i>'],
       beforeRender: plugin.file.kml.menu.visibleIfSupported_,
-      handler: plugin.file.kml.menu.onLayerEvent_,
-      sort: os.ui.menu.layer.GroupSort.TOOLS++
+      handler: plugin.file.kml.menu.onLayerEvent_
     });
   }
 };
@@ -130,18 +129,16 @@ plugin.file.kml.menu.visibleIfSupported_ = function(context) {
   if (this.eventType && context && context.length == 1) {
     var node = context[0];
     if (node instanceof plugin.file.kml.ui.KMLNode) {
-      var features = node.getFeatures();
-
       switch (this.eventType) {
         case plugin.file.kml.menu.EventType.BUFFER:
-          this.visible = features.length > 0;
+          this.visible = node.hasFeatures();
           break;
         case plugin.file.kml.menu.EventType.SELECT:
         case plugin.file.kml.menu.EventType.DESELECT:
-          this.visible = node.isFolder() && features.length > 0;
+          this.visible = node.isFolder() && node.hasFeatures();
           break;
         case plugin.file.kml.menu.EventType.GOTO:
-          this.visible = !!node.getImage() || features.length > 0;
+          this.visible = !!node.getImage() || node.hasFeatures();
           break;
         case plugin.file.kml.menu.EventType.LOAD:
           this.visible = node instanceof plugin.file.kml.ui.KMLNetworkLinkNode &&

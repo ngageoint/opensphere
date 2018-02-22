@@ -25,8 +25,14 @@ goog.require('os.ui.ScreenOverlayCtrl');
 goog.require('os.ui.file.kml');
 goog.require('os.xml');
 goog.require('plugin.file.kml');
+goog.require('plugin.file.kml.tour.FlyTo');
+goog.require('plugin.file.kml.tour.Tour');
+goog.require('plugin.file.kml.tour.TourControl');
+goog.require('plugin.file.kml.tour.Wait');
+goog.require('plugin.file.kml.tour.parseTour');
 goog.require('plugin.file.kml.ui.KMLNetworkLinkNode');
 goog.require('plugin.file.kml.ui.KMLNode');
+goog.require('plugin.file.kml.ui.KMLTourNode');
 
 
 /**
@@ -200,7 +206,7 @@ goog.inherits(plugin.file.kml.KMLParser, os.parse.AsyncParser);
  * @type {Array<string>}
  * @const
  */
-plugin.file.kml.KMLParser.KML_THINGS = ['NetworkLink', 'Placemark', 'GroundOverlay', 'ScreenOverlay'];
+plugin.file.kml.KMLParser.KML_THINGS = ['NetworkLink', 'Placemark', 'GroundOverlay', 'ScreenOverlay', 'Tour'];
 
 
 /**
@@ -847,6 +853,11 @@ plugin.file.kml.KMLParser.prototype.examineElement_ = function(el) {
     if (overlay) {
       node = new plugin.file.kml.ui.KMLNode();
       node.setOverlay(overlay);
+    }
+  } else if (el.localName === 'Tour') {
+    var tour = plugin.file.kml.tour.parseTour(el);
+    if (tour) {
+      node = new plugin.file.kml.ui.KMLTourNode(tour);
     }
   } else if (this.kmlThingRegex_ && this.kmlThingRegex_.test(el.localName) && el.localName != 'NetworkLinkControl') {
     var feature = this.readPlacemark_(el);
