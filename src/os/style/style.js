@@ -1102,7 +1102,7 @@ os.style.createFeatureStyle = function(feature, baseConfig, opt_layerConfig) {
         } else if (replaceStyle && isFeatureIcon && isShapeIcon) {
           // replace the icon
           os.style.setConfigIcon(featureConfig, os.style.getConfigIcon(opt_layerConfig));
-          os.style.setConfigIconRotationFromObject(featureConfig, feature.values_, feature);
+          os.style.setConfigIconRotationFromObject(featureConfig, featureConfig, feature);
         }
 
         os.style.mergeConfig(shapeConfig, featureConfig);
