@@ -595,7 +595,7 @@ os.style.setConfigIconRotationFromObject = function(config, origin, feature) {
   var showRotation = origin[os.style.StyleField.SHOW_ROTATION] || false;
   var rotationColumn = origin[os.style.StyleField.ROTATION_COLUMN];
   rotationColumn = goog.isString(rotationColumn) ? rotationColumn : '';
-  var rotateAmount = feature.values_[rotationColumn];
+  var rotateAmount = Number(feature.values_[rotationColumn]);
   rotateAmount = goog.isNumber(rotateAmount) ? rotateAmount : 0;
   os.style.setConfigIconRotation(config, showRotation, rotateAmount);
 };
@@ -1102,7 +1102,7 @@ os.style.createFeatureStyle = function(feature, baseConfig, opt_layerConfig) {
         } else if (replaceStyle && isFeatureIcon && isShapeIcon) {
           // replace the icon
           os.style.setConfigIcon(featureConfig, os.style.getConfigIcon(opt_layerConfig));
-          os.style.setConfigIconRotationFromObject(featureConfig, featureConfig, feature);
+          os.style.setConfigIconRotationFromObject(featureConfig, feature.values_, feature);
         }
 
         os.style.mergeConfig(shapeConfig, featureConfig);
