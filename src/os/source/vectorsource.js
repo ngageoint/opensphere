@@ -17,6 +17,7 @@ goog.require('os');
 goog.require('os.Fields');
 goog.require('os.alert.AlertEventSeverity');
 goog.require('os.alert.AlertManager');
+goog.require('os.data.ColumnDefinition');
 goog.require('os.data.DataManager');
 goog.require('os.data.RecordField');
 goog.require('os.data.event.DataEvent');
@@ -356,9 +357,16 @@ os.source.Vector = function(opt_options) {
   this.refreshEnabled = false;
 
   /**
+   * Features queued to be cleared.
    * @type {?Array<ol.Feature>}
    */
   this.toClear = null;
+
+  /**
+   * Unique ID column.
+   * @type {?os.data.ColumnDefinition}
+   */
+  this.uniqueId_ = null;
 
   if (!options['disableAreaSelection']) {
     os.dispatcher.listen(os.action.EventType.SELECT, this.onFeatureAction_, false, this);
@@ -3146,6 +3154,26 @@ os.source.Vector.prototype.defaultFeatureHover_ = function(feature) {
 
 
 /**
+ * Gets the unique ID used by features in the source.
+ * @return {os.data.ColumnDefinition}
+ */
+os.source.Vector.prototype.getUniqueId = function() {
+  return this.uniqueId_;
+};
+
+
+/**
+ * Sets the unique ID used by features in the source.
+ * @param {os.data.ColumnDefinition} value
+ */
+os.source.Vector.prototype.setUniqueId = function(value) {
+  var old = this.uniqueId_;
+  this.uniqueId_ = value;
+  this.dispatchEvent(new os.events.PropertyChangeEvent(os.source.PropertyChange.UNIQUE_ID, value, old));
+};
+
+
+/**
  * @inheritDoc
  */
 os.source.Vector.prototype.persist = function(opt_to) {
@@ -3155,6 +3183,10 @@ os.source.Vector.prototype.persist = function(opt_to) {
   options['timeEnabled'] = this.getTimeEnabled();
   options['altitudeEnabled'] = this.hasAltitudeEnabled();
   options['refreshInterval'] = this.refreshInterval;
+
+  if (this.uniqueId_) {
+    options['uniqueId'] = this.uniqueId_.persist();
+  }
 
   if (this.colorModel) {
     options['colorModel'] = this.colorModel.persist();
@@ -3197,5 +3229,11 @@ os.source.Vector.prototype.restore = function(config) {
     colorModel.restore(config['colorModel']);
 
     this.setColorModel(colorModel);
+  }
+
+  if (config['uniqueId']) {
+    var columnDef = new os.data.ColumnDefinition();
+    columnDef.restore(config['uniqueId']);
+    this.setUniqueId(columnDef);
   }
 };
