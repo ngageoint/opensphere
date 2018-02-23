@@ -40,7 +40,7 @@ os.net.ExtDomainHandler.MIXED_CONTENT_ENABLED = false;
  */
 os.net.ExtDomainHandler.prototype.handles = function(method, uri) {
   if (window) {
-    if (uri.getDomain() && uri.getScheme() != os.file.File.URL_SCHEME) {
+    if (uri.getDomain() && uri.getScheme() != os.file.FileScheme.LOCAL) {
       var local = new goog.Uri(window.location);
 
       var localScheme = local.getScheme().toLowerCase();

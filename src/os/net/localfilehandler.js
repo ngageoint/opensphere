@@ -71,7 +71,7 @@ os.net.LocalFileHandler.prototype.getScore = function() {
  * @inheritDoc
  */
 os.net.LocalFileHandler.prototype.handles = function(method, uri) {
-  return uri.getScheme() == os.file.File.URL_SCHEME;
+  return uri.getScheme() == os.file.FileScheme.LOCAL;
 };
 
 
