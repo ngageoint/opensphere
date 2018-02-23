@@ -914,7 +914,7 @@ os.MainCtrl.prototype.handleFileDrop_ = function(files) {
   var file = files[0];
 
   if (file) {
-    if (file.path) {
+    if (file.path && os.file.FILE_URL_ENABLED) {
       // running in Electron, so request the file with a file:// URL
       this.handleURLDrop_(os.file.getFileUrl(file.path));
     } else {

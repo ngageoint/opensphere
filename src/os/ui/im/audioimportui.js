@@ -28,7 +28,7 @@ os.ui.im.AudioImportUI.prototype.launchUI = function(file, opt_config) {
   var url = file.getUrl();
 
   var msg = null;
-  if (url && !os.file.isLocal(url)) {
+  if (url && !os.file.isLocal(url) && (os.file.FILE_URL_ENABLED || !os.file.isFileSystem(url))) {
     var label = os.audio.AudioManager.getInstance().addSound(url);
 
     msg = 'Added new sound "' + label + '"';

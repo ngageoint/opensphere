@@ -152,7 +152,7 @@ os.ui.file.ImportDialogCtrl.prototype.accept = function() {
     if (this['fileChosen']) {
       var file = /** @type {File|undefined} */ (this['file']);
       if (file) {
-        if (file.path) {
+        if (file.path && os.file.FILE_URL_ENABLED) {
           // running in Electron, so request the file with a file:// URL
           url = os.file.getFileUrl(file.path);
         } else {
