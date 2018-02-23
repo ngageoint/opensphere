@@ -913,9 +913,16 @@ os.MainCtrl.prototype.onToggleUI_ = function(event) {
 os.MainCtrl.prototype.handleFileDrop_ = function(files) {
   var file = files[0];
 
-  var reader = os.file.createFromFile(file);
-  if (reader) {
-    reader.addCallbacks(this.handleResult_, this.handleError_, this);
+  if (file) {
+    if (file.path) {
+      // running in Electron, so request the file with a file:// URL
+      this.handleURLDrop_(os.file.getFileUrl(file.path));
+    } else {
+      var reader = os.file.createFromFile(file);
+      if (reader) {
+        reader.addCallbacks(this.handleResult_, this.handleError_, this);
+      }
+    }
   }
 };
 

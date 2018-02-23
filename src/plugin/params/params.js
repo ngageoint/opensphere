@@ -37,6 +37,16 @@ plugin.params.Metrics = {
 
 
 /**
+ * If a URI supports parameter modification.
+ * @param {!goog.Uri} uri The URI.
+ * @return {boolean}
+ */
+plugin.params.isUriSupported = function(uri) {
+  return uri.getScheme() !== os.file.FileScheme.FILE && uri.getScheme() !== os.file.FileScheme.LOCAL;
+};
+
+
+/**
  * Check if a layer supports request parameter overrides.
  * @param {ol.layer.Layer} layer The layer.
  * @return {boolean} If the layer supports request parameter overrides.
@@ -47,7 +57,7 @@ plugin.params.supportsParamOverrides = function(layer) {
     var request = source.getRequest();
     if (request) {
       var uri = request.getUri();
-      return uri != null && uri.getScheme() !== os.file.File.URL_SCHEME;
+      return uri != null && plugin.params.isUriSupported(uri);
     }
   } else if (os.implements(layer, os.layer.ILayer.ID) && os.implements(source, os.ol.source.IUrlSource.ID)) {
     return true;
@@ -70,7 +80,7 @@ plugin.params.getParamsFromLayer = function(layer) {
     var request = source.getRequest();
     if (request) {
       var uri = request.getUri();
-      if (uri && uri.getScheme() !== os.file.File.URL_SCHEME) {
+      if (uri && plugin.params.isUriSupported(uri)) {
         // copy the existing params onto the object
         params = os.url.queryDataToObject(uri.getQueryData());
       }
@@ -100,7 +110,7 @@ plugin.params.setParamsForLayer = function(layer, params, opt_remove) {
     var request = source.getRequest();
     if (request) {
       var uri = request.getUri();
-      if (uri && uri.getScheme() !== os.file.File.URL_SCHEME) {
+      if (uri && plugin.params.isUriSupported(uri)) {
         var qd = uri.getQueryData();
         if (!qd) {
           qd = new goog.Uri.QueryData();

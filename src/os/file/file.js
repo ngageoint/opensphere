@@ -2,7 +2,6 @@ goog.provide('os.file');
 goog.provide('os.file.File');
 
 goog.require('goog.async.Deferred');
-goog.require('goog.crypt.base64');
 goog.require('goog.fs.FileReader');
 goog.require('goog.net.jsloader');
 goog.require('os.IPersistable');
@@ -66,10 +65,13 @@ os.file.File.MAX_CONTENT_LEN = 1024 * 1024 * 100;
 
 
 /**
- * @type {string}
- * @const
+ * File URL schemes.
+ * @enum {string}
  */
-os.file.File.URL_SCHEME = 'local';
+os.file.FileScheme = {
+  FILE: 'file',
+  LOCAL: 'local'
+};
 
 
 /**
@@ -313,18 +315,43 @@ os.file.createFromContent = function(fileName, url, originalFile, content) {
 
 
 /**
- * Creates a local:// url used by file storage
- * @param {string} fileName The file name to use in generating the url
+ * Creates a `file://` url to reference files on the file system.
+ * @param {string} path The path to the file.
  * @return {string}
  */
-os.file.getLocalUrl = function(fileName) {
-  return os.file.File.URL_SCHEME + '://' + goog.crypt.base64.encodeString(fileName);
+os.file.getFileUrl = function(path) {
+  return os.file.FileScheme.FILE + '://' + path;
 };
 
 
 /**
- * Checks if a file was loaded locally (URL prefixed with local://)
+ * Creates a `local://` url used by file storage.
+ * @param {string} fileName The file name to use in generating the url.
+ * @return {string}
+ */
+os.file.getLocalUrl = function(fileName) {
+  return os.file.FileScheme.LOCAL + '://' + btoa(fileName);
+};
+
+
+/**
+ * Checks if a file was loaded from the file system (URL prefixed with `file://`).
  * @param {os.file.File|string|undefined} file The file or file's url
+ * @return {boolean}
+ */
+os.file.isFileSystem = function(file) {
+  if (!file) {
+    return false;
+  }
+
+  var url = goog.isString(file) ? file : file.getUrl();
+  return !!url && goog.string.startsWith(url, os.file.FileScheme.FILE + '://');
+};
+
+
+/**
+ * Checks if a file was loaded from file storage (URL prefixed with `local://`).
+ * @param {os.file.File|string|undefined} file The file or file's url.
  * @return {boolean}
  */
 os.file.isLocal = function(file) {
@@ -333,7 +360,7 @@ os.file.isLocal = function(file) {
   }
 
   var url = goog.isString(file) ? file : file.getUrl();
-  return !!url && goog.string.startsWith(url, os.file.File.URL_SCHEME + '://');
+  return !!url && goog.string.startsWith(url, os.file.FileScheme.LOCAL + '://');
 };
 
 
