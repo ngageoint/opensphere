@@ -75,6 +75,13 @@ os.file.FileScheme = {
 
 
 /**
+ * If `file://` URL's should be supported by the application. Defaults to false.
+ * @type {boolean}
+ */
+os.file.FILE_URL_ENABLED = false;
+
+
+/**
  * @return {?(Object|string)}
  */
 os.file.File.prototype.getContent = function() {
