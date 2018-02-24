@@ -31,7 +31,8 @@ os.capture.ID = 'capture';
 os.capture.ContentType = {
   GIF: 'image/gif',
   PNG: 'image/png',
-  WEBM: 'video/webm'
+  WEBM: 'video/webm',
+  MP4: 'video/mp4'
 };
 
 
@@ -264,7 +265,7 @@ os.capture.saveCanvas = function(canvas, opt_fileName) {
   try {
     dataUrl = canvas.toDataURL();
   } catch (e) {
-    // TODO (THIN-6294): provide a better explanation/help steps to the user
+    // TODO: provide a better explanation/help steps to the user
     var support = /** @type {string} */ (os.config.getSupportContact('your system administrator'));
     support = os.string.linkify(support);
     os.alertManager.sendAlert('Unable to save canvas due to cross-origin content. Please contact <b>' + support +
@@ -352,7 +353,7 @@ os.capture.getTimestamp = function() {
  * Tainting can happen for a number of reasons including trying to use the canvas to
  * render an image from a server with CORS issues
  *
- * @see THIN-8273
+ * this fixes a bug
  *
  * @param {HTMLCanvasElement} canvas
  * @return {boolean}

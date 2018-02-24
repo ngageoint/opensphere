@@ -5,6 +5,7 @@ goog.require('os.alert.AlertEventSeverity');
 goog.require('os.alertManager');
 goog.require('os.capture');
 goog.require('os.capture.GifEncoder');
+goog.require('os.capture.ffmpegEncoder');
 goog.require('os.file.persist.FilePersistence');
 goog.require('os.ui.Module');
 goog.require('os.ui.exportManager');
@@ -109,7 +110,7 @@ os.ui.capture.RecordingUI = function($scope, $element) {
   // @note This has been disabled because on some machines it consistently reports changes in frame width.
   //
   // if (goog.userAgent.WEBKIT) {
-  //   this['encoders'].push(new os.capture.WebMEncoder());
+  this['encoders'].push(new os.capture.ffmpegEncoder());
   // }
 
   /**
@@ -287,7 +288,7 @@ os.ui.capture.RecordingUI.prototype.onRecordingStatus_ = function(event) {
 os.ui.capture.RecordingUI.prototype.onRecordingComplete_ = function(event) {
   if (this['persister'] && this.recorder_ && this.recorder_.data) {
     var name = this['title'] + '.' + this['encoder'].extension;
-    this['persister'].save(name, this.recorder_.data, os.capture.ContentType.GIF, this['title']);
+    this['persister'].save(name, this.recorder_.data, os.capture.ContentType.MP4, this['title']);
   } else {
     os.alertManager.sendAlert('Unable to create recording: recording data missing.',
         os.alert.AlertEventSeverity.ERROR);

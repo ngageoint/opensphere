@@ -293,9 +293,9 @@ const indexResources = sharedResources.concat([
     files: ['gif.js', 'gif.worker.js']
   },
   {
-    source: 'vendor/whammy',
-    target: 'vendor/whammy',
-    files: ['whammy.min.js']
+    source: 'vendor/ffmpeg',
+    target: 'vendor/ffmpeg',
+    files: ['ffmpeg_asm.js']
   }
 ]);
 
