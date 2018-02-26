@@ -910,8 +910,27 @@ os.source.Vector.prototype.setGeometryShape = function(value) {
     }
   } else if (os.style.LOB_REGEXP.test(value)) {
     var features = this.getFeatures();
+    var layerConf = os.style.StyleManager.getInstance().getLayerConfig(this.getId());
+    var lobOptions = /** type {os.feature.LOBOptions} */ {
+      arrowLength: layerConf[os.style.StyleField.ARROW_SIZE],
+      arrowUnits: layerConf[os.style.StyleField.ARROW_UNITS],
+      bearingColumn: layerConf[os.style.StyleField.LOB_BEARING_COLUMN],
+      bearingError: layerConf[os.style.StyleField.LOB_BEARING_ERROR],
+      bearingErrorColumn: layerConf[os.style.StyleField.LOB_BEARING_ERROR_COLUMN],
+      columnLength: layerConf[os.style.StyleField.LOB_COLUMN_LENGTH],
+      length: layerConf[os.style.StyleField.LOB_LENGTH],
+      lengthType: layerConf[os.style.StyleField.LOB_LENGTH_TYPE],
+      lengthColumn: layerConf[os.style.StyleField.LOB_LENGTH_COLUMN],
+      lengthUnits: layerConf[os.style.StyleField.LOB_LENGTH_UNITS],
+      lengthError: layerConf[os.style.StyleField.LOB_LENGTH_ERROR],
+      lengthErrorColumn: layerConf[os.style.StyleField.LOB_LENGTH_ERROR_COLUMN],
+      lengthErrorUnits: layerConf[os.style.StyleField.LOB_LENGTH_ERROR_UNITS],
+      showArrow: layerConf[os.style.StyleField.SHOW_ARROW],
+      showEllipse: layerConf[os.style.StyleField.SHOW_ELLIPSE],
+      showError: layerConf[os.style.StyleField.SHOW_ERROR]
+    };
     for (var i = 0, n = features.length; i < n; i++) {
-      os.feature.createLineOfBearing(features[i]);
+      os.feature.createLineOfBearing(features[i], true, lobOptions);
     }
   }
 };

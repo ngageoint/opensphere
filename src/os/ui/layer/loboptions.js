@@ -21,7 +21,9 @@ goog.require('os.math.Units');
 goog.require('os.style');
 goog.require('os.ui.Module');
 goog.require('os.ui.layer.AbstractLayerUICtrl');
+goog.require('os.ui.layer.ellipseOptionsDirective');
 goog.require('os.ui.sliderDirective');
+goog.require('os.ui.uiSwitchDirective');
 
 
 /**
@@ -943,3 +945,16 @@ goog.exportProperty(
     os.ui.layer.LobOptionsCtrl.prototype,
     'onLengthErrorUnitChange',
     os.ui.layer.LobOptionsCtrl.prototype.onLengthErrorUnitChange);
+
+
+/**
+ * Adds ellipse options when rendering ellispe
+ * @return {string}
+ */
+os.ui.layer.LobOptionsCtrl.prototype.getEllipseUI = function() {
+  return 'ellipseoptions';
+};
+goog.exportProperty(
+    os.ui.layer.LobOptionsCtrl.prototype,
+    'getEllipseUI',
+    os.ui.layer.LobOptionsCtrl.prototype.getEllipseUI);
