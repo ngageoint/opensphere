@@ -21,6 +21,8 @@ plugin.im.action.feature.StyleActionTagName = {
   COLOR: 'color',
   ICON_SRC: 'iconSrc',
   OPACITY: 'opacity',
+  ROTATION_COLUMN: 'rotationColumn',
+  SHOW_ROTATION: 'showRotation',
   SHAPE: 'shape',
   SIZE: 'size'
 };
@@ -202,6 +204,12 @@ plugin.im.action.feature.StyleAction.prototype.toXml = function() {
     os.xml.appendElement(plugin.im.action.feature.StyleActionTagName.ICON_SRC, element, icon.path);
   }
 
+  var showRotation = this.styleConfig[os.style.StyleField.SHOW_ROTATION] || false;
+  os.xml.appendElement(plugin.im.action.feature.StyleActionTagName.SHOW_ROTATION, element, String(showRotation));
+
+  var rotationColumn = this.styleConfig[os.style.StyleField.ROTATION_COLUMN] || false;
+  os.xml.appendElement(plugin.im.action.feature.StyleActionTagName.ROTATION_COLUMN, element, String(rotationColumn));
+
   return element;
 };
 
@@ -248,6 +256,11 @@ plugin.im.action.feature.StyleAction.prototype.fromXml = function(xml) {
         }));
       }
     }
+
+    styleConfig[os.style.StyleField.SHOW_ROTATION] = Boolean(os.xml.getChildValue(xml,
+        plugin.im.action.feature.StyleActionTagName.SHOW_ROTATION));
+    styleConfig[os.style.StyleField.ROTATION_COLUMN] = os.xml.getChildValue(xml,
+        plugin.im.action.feature.StyleActionTagName.ROTATION_COLUMN);
   }
 
   this.styleConfig = styleConfig;

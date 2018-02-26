@@ -19,6 +19,7 @@
             center-shapes="centerShapes"
             show-color-reset="vector.showColorReset">
         </vectorstylecontrols>
+        <iconstylecontrols ng-if="vector.showRotationOption()" columns="columns" show-rotation="vector.showRotation" rotation-column="vector.rotationColumn"></iconstylecontrols>
         <uiswitch items="items" directive-function="vector.getShapeUI"></uiswitch>
         <div ng-if="vector.showReplaceStyle">
           <label class="checkbox inline"

@@ -39,6 +39,8 @@ os.style.StyleField = {
   SHOW_GROUND_REF: 'showGroundRef',
   SHOW_LABELS: 'showLabels',
   SHOW_LABEL_COLUMNS: 'showLabelColumns',
+  SHOW_ROTATION: 'showRotation',
+  ROTATION_COLUMN: 'rotationColumn',
   SIZE: 'size',
   SKIP_LAYER_STYLE: 'skipLayerStyle',
   STROKE: 'stroke',

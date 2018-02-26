@@ -72,6 +72,8 @@ os.state.v4.LayerTag = {
   SHOW_ELLIPSOIDS: 'showEllipsoids',
   SHOW_ERROR: 'showError',
   SHOW_GROUND_REF: 'showGroundRef',
+  SHOW_ROTATION: 'showRotation',
+  ROTATION_COLUMN: 'rotationColumn',
   STYLES: 'styles',
   TAGS: 'tags',
   TIME_ENABLED: 'timeEnabled',

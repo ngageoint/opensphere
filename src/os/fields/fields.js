@@ -74,6 +74,14 @@ os.fields.DEFAULT_ALT_COL_NAME = os.Fields.ALT + ' (' +
 
 
 /**
+ * Default field/column name for Bearing
+ * @type {string}
+ */
+os.fields.DEFAULT_BEARING_COL_NAME = os.Fields.BEARING + ' (' +
+    os.fields.DEFAULT_BEARING_UNIT + ')' + os.fields.DERIVED_COL_INDICATOR;
+
+
+/**
  * Default field/column name for Semi Minor
  * @type {string}
  */
@@ -105,7 +113,8 @@ os.fields.hideSpecialColumns = function(colDef) {
   var field = colDef['field'];
   // hide units columns and any other columns we are creating derived columns from
   if (field == os.Fields.ALT_UNITS || field == os.Fields.SEMI_MINOR_UNITS ||
-      field == os.Fields.SEMI_MAJOR_UNITS || field == os.Fields.BEARING || field == os.Fields.ALT ||
+      field == os.Fields.SEMI_MAJOR_UNITS || field == os.Fields.BEARING ||
+      field == os.Fields.BEARING || field == os.Fields.ALT ||
       field == os.Fields.SEMI_MINOR || field == os.Fields.SEMI_MAJOR) {
     colDef['visible'] = false;
   }
@@ -129,4 +138,3 @@ os.fields.markDerived = function(colDef) {
     colDef['derivedFrom'] = os.Fields.ALT;
   }
 };
-

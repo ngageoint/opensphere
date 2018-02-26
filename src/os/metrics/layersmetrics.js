@@ -139,6 +139,16 @@ os.metrics.LayersMetrics = function() {
     key: os.metrics.Layer.VECTOR_LOB_BEARING_ERROR
   });
   this.addChild(styleLeaf, {
+    label: 'Toggle Show Icon Rotation',
+    description: 'Whether or not icons are shown with rotation.',
+    key: os.metrics.Layer.VECTOR_SHOW_ROTATION
+  });
+  this.addChild(styleLeaf, {
+    label: 'Icon Rotation Column',
+    description: 'The orientation of an icon. Can be defined by a column.',
+    key: os.metrics.Layer.VECTOR_ROTATION_COLUMN
+  });
+  this.addChild(styleLeaf, {
     label: 'Change Feature Auto Refresh',
     description: 'How often the layer will automatically refresh its data.',
     key: os.metrics.Layer.VECTOR_AUTO_REFRESH
