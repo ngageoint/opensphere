@@ -224,9 +224,8 @@ os.ui.layer.VectorLayerUICtrl.prototype.getShapeUIInternal = function() {
 os.ui.layer.VectorLayerUICtrl.prototype.showRotationOption = function() {
   if (this.scope != null) {
     var shape = this.scope['shape'] || '';
-    var center = this.scope['centerShape'] || '';
-    return shape == os.style.ShapeType.ICON ||
-      ((os.style.ELLIPSE_REGEXP.test(shape) || os.style.LOB_REGEXP.test(shape)) && center == os.style.ShapeType.ICON);
+    var centr = this.scope['centerShape'] || '';
+    return shape == os.style.ShapeType.ICON || (os.style.CENTER_REGEXP.test(shape) && centr == os.style.ShapeType.ICON);
   }
 
   return false;
