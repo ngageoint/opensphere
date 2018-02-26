@@ -54,7 +54,8 @@ plugin.places.EXPORT_FIELDS_ = [
   os.Fields.SEMI_MINOR,
   os.Fields.SEMI_MAJOR_UNITS,
   os.Fields.SEMI_MINOR_UNITS,
-  os.Fields.ORIENTATION
+  os.Fields.ORIENTATION,
+  os.Fields.BEARING
 ];
 
 
