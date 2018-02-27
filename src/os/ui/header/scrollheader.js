@@ -114,7 +114,7 @@ os.ui.header.ScrollHeaderCtrl = function($scope, $element, $timeout, $attrs) {
   this.processScrollHandler_ = this.processScroll_.fire.bind(this.processScroll_);
 
   this.updatePositions_();
-  $scope.$on(os.ui.header.ScrollHeaderEvents.RESET, this.updatePositions_.bind(this));
+  $scope.$on(os.ui.header.ScrollHeaderEvents.RESET, this.processScrollHandler_.bind(this));
   $element.bind('DOMNodeInserted', this.updateHeight_.bind(this));
   this.scrollEl_.on('scroll', this.processScrollHandler_);
   this.element_.on('$destroy', this.destroyElement_.bind(this));

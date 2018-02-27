@@ -48,7 +48,7 @@ $ui-menu-focus-background-color: #444 !default;
   font-size: 14px;
   min-width: 150px;
   padding: 4px 0;
-  z-index: 100000;
+  z-index: $overrides-modal-zindex - 1;
 
   &.ui-widget-content {
     background: $ui-menu-background-color;

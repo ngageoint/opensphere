@@ -334,7 +334,7 @@ td > input {
   background-color: rgba(46, 50, 54, 0);
   max-height: 100vh !important; // force all modals to fit in the view vertically.
   overflow-y: auto; // if the modal content does overflow the viewport, handle it.
-  z-index: 100001;
+  z-index: $overrides-modal-zindex;
 }
 
 @media (max-height: 800px) {
@@ -364,7 +364,7 @@ td > input {
   position: fixed;
   top: 0;
   width: 100%;
-  z-index: 100000;
+  z-index: $overrides-modal-zindex - 1;
 }
 
 // Added for file import

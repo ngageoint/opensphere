@@ -16,6 +16,12 @@ jQuery.prototype.datepicker = function(opt_arg1, opt_arg2) {};
  * @param {(string|Object)=} opt_arg1
  * @return {!jQuery}
  */
+jQuery.prototype.draggable = function(opt_arg1) {};
+
+/**
+ * @param {(string|Object)=} opt_arg1
+ * @return {!jQuery}
+ */
 jQuery.prototype.modal = function(opt_arg1) {};
 
 /**
@@ -49,6 +55,12 @@ jQuery.prototype.scrollspy = function(opt_options) {};
  * @return {!jQuery}
  */
 jQuery.prototype.scrollParent = function(opt_value) {};
+
+/**
+ * @param {*} arg1
+ * @return {!jQuery}
+ */
+jQuery.prototype.select2 = function(arg1) {};
 
 /**
  * @param {number=} opt_options
