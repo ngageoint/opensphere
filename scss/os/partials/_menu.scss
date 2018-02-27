@@ -3,7 +3,7 @@
 #globalMenu {
   min-width: 150px;
   position: fixed;
-  z-index: 100000;
+  z-index: $overrides-modal-zindex - 1;
 }
 
 .menu {

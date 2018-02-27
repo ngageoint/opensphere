@@ -201,35 +201,42 @@ os.ui.text.SimpleMDECtrl.prototype.cleanHtml = function(plainText) {
 
 
 /**
+ * @param {Object=} opt_toolbar
+ * @return {Object}
+ */
+os.ui.text.SimpleMDECtrl.prototype.getOptions = function(opt_toolbar) {
+  var toolbar = os.ui.text.SimpleMDE.TOOLBAR;
+  if (this.scope_['basictoolbar']) {
+    toolbar = os.ui.text.SimpleMDE.BASICTOOLBAR;
+  }
+
+  if (opt_toolbar) {
+    toolbar = opt_toolbar;
+  }
+
+  return {
+    'autoDownloadFontAwesome': false,
+    'autofocus': false,
+    'autosave': {
+      'enabled': false
+    },
+    'element': this.element_.find('.simplemdetextarea')[0],
+    'initialValue': this.scope_['text'],
+    'spellChecker': false,
+    'toolbar': toolbar,
+    'status': os.ui.text.SimpleMDE.STATUS,
+    'previewRender': this.cleanHtml
+  };
+};
+
+
+/**
  * Initialize simplemde
  * @param {Object=} opt_toolbar custom toolbar
  */
 os.ui.text.SimpleMDECtrl.prototype.init = function(opt_toolbar) {
   if (this.element_) {
-    var toolbar = os.ui.text.SimpleMDE.TOOLBAR;
-    if (this.scope_['basictoolbar']) {
-      toolbar = os.ui.text.SimpleMDE.BASICTOOLBAR;
-    }
-
-    if (opt_toolbar) {
-      toolbar = opt_toolbar;
-    }
-
-    var options = {
-      'autoDownloadFontAwesome': false,
-      'autofocus': false,
-      'autosave': {
-        'enabled': false
-      },
-      'element': this.element_.find('.simplemdetextarea')[0],
-      'initialValue': this.scope_['text'],
-      'spellChecker': false,
-      'toolbar': toolbar,
-      'status': os.ui.text.SimpleMDE.STATUS,
-      'previewRender': goog.bind(this.cleanHtml, this)
-    };
-
-    this.simplemde = new SimpleMDE(options);
+    this.simplemde = new SimpleMDE(this.getOptions(opt_toolbar));
     this.scope_['previewText'] = os.ui.text.SimpleMDE.removeMarkdown(this.scope_['text'], true);
 
     // Watch to see if something changes the text and update the value

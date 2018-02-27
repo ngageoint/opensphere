@@ -219,9 +219,10 @@ os.search.SearchManager.prototype.getSort = function() {
  * @param {string=} opt_sortBy The sort by string
  * @param {boolean=} opt_force Force a search
  * @param {boolean=} opt_noFacets flag for indicating facet search is not needed
+ * @param {string=} opt_sortOrder The sort order
  */
 os.search.SearchManager.prototype.search = function(term, opt_start, opt_pageSize,
-    opt_sortBy, opt_force, opt_noFacets) {
+    opt_sortBy, opt_force, opt_noFacets, opt_sortOrder) {
   this.term_ = term;
   this.providerResults_ = {};
   this.results_ = [];
@@ -253,7 +254,7 @@ os.search.SearchManager.prototype.search = function(term, opt_start, opt_pageSiz
 
       // do search
       for (var i = 0, n = enabled.length; i < n; i++) {
-        enabled[i].search(term, opt_start, opt_pageSize, opt_sortBy, opt_noFacets);
+        enabled[i].search(term, opt_start, opt_pageSize, opt_sortBy, opt_noFacets, opt_sortOrder);
       }
     } else {
       // nothing enabled - can't search! tell the user why.
