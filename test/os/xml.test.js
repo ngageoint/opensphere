@@ -93,6 +93,11 @@ describe('os.xml', function() {
     el = os.xml.createElementNS(testTagNs, testNs, doc);
     testDate = os.xml.readDateTime(el);
     expect(testDate).toBeNull();
+
+    // test tag with spaces
+    var el = os.xml.createElementNS(testTagNs, testNs, doc, now.toISOString() + '   ');
+    var testDate = os.xml.readDateTime(el);
+    expect(testDate.getTime()).toBe(now.getTime());
   });
 
   it('should return a node value or default', function() {

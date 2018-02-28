@@ -5,6 +5,7 @@ goog.require('ol.Feature');
 goog.require('ol.geom.LineString');
 goog.require('ol.geom.MultiLineString');
 goog.require('ol.geom.Point');
+goog.require('os.alert.AlertEventSeverity');
 goog.require('os.config');
 goog.require('os.data.RecordField');
 goog.require('os.events.PropertyChangeEvent');
@@ -91,6 +92,20 @@ plugin.track.TOTAL_ZERO = 'Unknown';
  * }}
  */
 plugin.track.QueryOptions;
+
+
+/**
+ * @typedef {{
+ *   features: (Array<!ol.Feature>|undefined),
+ *   id: (string|undefined),
+ *   color: (string|undefined),
+ *   name: (string|undefined),
+ *   sortField: (string|undefined),
+ *   label: (string|undefined)
+ * }}
+ */
+plugin.track.CreateOptions;
+
 
 
 /**
@@ -316,16 +331,13 @@ plugin.track.removeTrackById = function(id) {
 
 
 /**
- * Creates a track from a set a features.
- * @param {!Array<!ol.Feature>} features The features used to assemble the track
- * @param {string=} opt_name The track name
- * @param {string=} opt_color The default track color
- * @param {string=} opt_field The sort function to use
- * @param {string=} opt_id The track id
- * @return {!ol.Feature} The track feature
+ * Creates a track from a a track options object.
+ * @param {plugin.track.CreateOptions} options The options object for the track.
+ * @return {?ol.Feature} The track feature
  */
-plugin.track.createTrack = function(features, opt_name, opt_color, opt_field, opt_id) {
-  var sortField = opt_field || os.data.RecordField.TIME;
+plugin.track.createTrack = function(options) {
+  var features = options.features;
+  var sortField = options.sortField || os.data.RecordField.TIME;
   var sortFn = sortField == os.data.RecordField.TIME ? os.feature.sortByTime :
       os.feature.sortByField.bind(null, sortField);
   var getValueFn = sortField == os.data.RecordField.TIME ? plugin.track.getStartTime :
@@ -343,12 +355,19 @@ plugin.track.createTrack = function(features, opt_name, opt_color, opt_field, op
         pointCoord.push(0);
       }
 
-      pointCoord.push(value);
-      return pointCoord;
+      if (value != null) {
+        pointCoord.push(value);
+        return pointCoord;
+      }
     }
 
     return undefined;
   }).filter(os.fn.filterFalsey);
+
+  if (!coords.length) {
+    // no valid features to create the track from, so don't return one
+    return null;
+  }
 
   // create the line and split it across the date line so it renders correctly on a 2D map
   var geometry = new ol.geom.LineString(coords, ol.geom.GeometryLayout.XYZM);
@@ -373,7 +392,7 @@ plugin.track.createTrack = function(features, opt_name, opt_color, opt_field, op
     track = new ol.Feature(geometry);
   }
 
-  var trackId = opt_id || (plugin.track.ID + '-' + goog.string.getRandomString());
+  var trackId = options.id || (plugin.track.ID + '-' + goog.string.getRandomString());
   track.setId(trackId);
   track.set(os.Fields.ID, trackId);
 
@@ -381,7 +400,7 @@ plugin.track.createTrack = function(features, opt_name, opt_color, opt_field, op
   plugin.track.updateCurrentPosition(track);
 
   // set the track name, defaulting to the id if one isn't provided
-  track.set(plugin.file.kml.KMLField.NAME, opt_name || trackId);
+  track.set(plugin.file.kml.KMLField.NAME, options.name || trackId);
 
   // keep a copy of the features used to assemble the track
   track.set(plugin.track.TrackField.SORT_FIELD, sortField);
@@ -401,7 +420,7 @@ plugin.track.createTrack = function(features, opt_name, opt_color, opt_field, op
   //
   var trackStyle = /** @type {!Object<string, *>} */ (os.object.unsafeClone(plugin.track.TRACK_CONFIG));
   var currentStyle = /** @type {!Object<string, *>} */ (os.object.unsafeClone(plugin.track.CURRENT_CONFIG));
-  var trackColor = opt_color || /** @type {string|undefined} */ (features[0].get(os.data.RecordField.COLOR)) ||
+  var trackColor = options.color || /** @type {string|undefined} */ (features[0].get(os.data.RecordField.COLOR)) ||
       sourceColor || os.style.DEFAULT_LAYER_COLOR;
   if (trackColor) {
     os.style.setConfigColor(trackStyle, trackColor, [os.style.StyleField.STROKE]);
@@ -413,7 +432,11 @@ plugin.track.createTrack = function(features, opt_name, opt_color, opt_field, op
 
   // configure default label for the track
   os.feature.showLabel(track);
-  track.set(os.style.StyleField.LABELS, plugin.file.kml.KMLField.NAME);
+  var labelStyle = {
+    'column': options.label || plugin.file.kml.KMLField.NAME,
+    'showColumn': false
+  };
+  currentStyle[os.style.StyleField.LABELS] = [labelStyle];
 
   // display the current position as an icon
   track.set(os.style.StyleField.SHAPE, os.style.ShapeType.ICON);
@@ -610,14 +633,17 @@ plugin.track.setGeometry = function(track, geometry) {
 
 /**
  * Creates a track from a set a features and add it to the tracks layer.
- * @param {!Array<!ol.Feature>} features The features used to assemble the track
- * @param {string=} opt_name The track name
- * @param {string=} opt_sortField The sort field
- * @param {string=} opt_id The track id
+ * @param {plugin.track.CreateOptions} options The options object for the track.
  */
-plugin.track.createFromFeatures = function(features, opt_name, opt_sortField, opt_id) {
-  var sortField = opt_sortField || os.data.RecordField.TIME;
-  var track = plugin.track.createTrack(features, opt_name, undefined, sortField, opt_id);
+plugin.track.createFromFeatures = function(options) {
+  var track = plugin.track.createTrack(options);
+
+  if (!track) {
+    var msg = 'Track creation failed. There were no valid features to create a track from.';
+    os.alertManager.sendAlert(msg, os.alert.AlertEventSeverity.WARNING);
+    return;
+  }
+
   var trackNode = plugin.file.kml.ui.updatePlacemark({
     'feature': track
   });
@@ -625,7 +651,7 @@ plugin.track.createFromFeatures = function(features, opt_name, opt_sortField, op
   var rootNode = plugin.track.getTrackNode(true);
   if (rootNode) {
     var cmd = new plugin.file.kml.cmd.KMLNodeAdd(trackNode, rootNode);
-    cmd.title = 'Create track from ' + features.length + ' features';
+    cmd.title = 'Create track from ' + options.features.length + ' features';
     os.command.CommandProcessor.getInstance().addCommand(cmd);
   } else {
     goog.log.error(plugin.track.LOGGER_, 'Unable to create track: track layer missing');

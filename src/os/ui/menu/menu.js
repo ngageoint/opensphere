@@ -6,6 +6,7 @@ goog.require('goog.dom');
 goog.require('goog.events.EventTarget');
 goog.require('os.ui');
 goog.require('os.ui.menu.MenuEvent');
+goog.require('os.ui.menu.MenuEventType');
 goog.require('os.ui.menu.MenuItem');
 
 
@@ -131,6 +132,8 @@ os.ui.menu.Menu.prototype.open = function(context, position, opt_target) {
 
   this.menu_['position'](position);
   this.listenerDelay_.start();
+
+  this.dispatchEvent(os.ui.menu.MenuEventType.OPEN);
 
   // jQuery menu is outside of the Angular lifecycle, so the menu needs to trigger a digest on its own
   os.ui.apply(os.ui.injector.get('$rootScope'));
