@@ -1,6 +1,5 @@
 goog.provide('os.ui.file.FileImportCtrl');
 goog.provide('os.ui.file.fileImportDirective');
-goog.require('goog.crypt.base64');
 goog.require('goog.events.EventType');
 goog.require('goog.fs.FileReader');
 goog.require('goog.log');

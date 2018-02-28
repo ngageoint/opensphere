@@ -63,7 +63,7 @@ os.net.SameDomainHandler.prototype.handles = function(method, uri) {
     if (!uri.getDomain()) {
       // relative is local, so we're good
       return true;
-    } else if (uri.getScheme() != os.file.File.URL_SCHEME) {
+    } else if (uri.getScheme() != os.file.FileScheme.LOCAL) {
       var local = new goog.Uri(window.location);
       return local.hasSameDomainAs(uri);
     }
