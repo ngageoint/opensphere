@@ -13,6 +13,7 @@ goog.require('os.command.VectorLayerReplaceStyle');
 goog.require('os.command.VectorLayerShape');
 goog.require('os.command.VectorLayerShowLabel');
 goog.require('os.command.VectorLayerSize');
+goog.require('os.command.VectorUniqueIdCmd');
 goog.require('os.data.OSDataManager');
 goog.require('os.defines');
 goog.require('os.style');
@@ -142,6 +143,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.initUI = function() {
     if (this.scope['items'] && this.scope['items'].length == 1) {
       // NOTE: This initUI method can get called a-lot, depending on some events that get routed to this method.
       this.scope['columns'] = this.getValue(os.ui.layer.getColumns);
+      this['uniqueId'] = this.getValue(os.ui.layer.getUniqueId);
 
       this.reconcileLabelsState_();
 
@@ -829,3 +831,28 @@ goog.exportProperty(
     os.ui.layer.VectorLayerUICtrl.prototype,
     'onAltitudeChange',
     os.ui.layer.VectorLayerUICtrl.prototype.onAltitudeChange);
+
+
+/**
+ * Set the unique ID field of the source.
+ */
+os.ui.layer.VectorLayerUICtrl.prototype.onUniqueIdChange = function() {
+  var nodes = this.getLayerNodes();
+  if (nodes && nodes.length > 0) {
+    var uniqueId = /** @type {os.data.ColumnDefinition} */ (this['uniqueId']);
+    var fn =
+        /**
+         * @param {os.layer.ILayer} layer
+         * @return {os.command.ICommand}
+         */
+        function(layer) {
+          return new os.command.VectorUniqueIdCmd(layer.getId(), uniqueId);
+        };
+
+    this.createCommand(fn);
+  }
+};
+goog.exportProperty(
+    os.ui.layer.VectorLayerUICtrl.prototype,
+    'onUniqueIdChange',
+    os.ui.layer.VectorLayerUICtrl.prototype.onUniqueIdChange);

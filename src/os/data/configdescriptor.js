@@ -144,7 +144,19 @@ os.data.ConfigDescriptor.prototype.getLayerOptions = function() {
  * @inheritDoc
  */
 os.data.ConfigDescriptor.prototype.matchesURL = function(url) {
-  return url == this.get('url') || this.get('urls').indexOf(url) > -1;
+  if (url) {
+    var myUrl = this.get('url');
+    if (url == myUrl) {
+      return true;
+    }
+
+    var myUrls = this.get('urls');
+    if (Array.isArray(myUrls) && myUrls.indexOf(url) > -1) {
+      return true;
+    }
+  }
+
+  return false;
 };
 
 

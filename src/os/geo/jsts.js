@@ -874,15 +874,7 @@ os.geo.jsts.buffer = function(geometry, distance, opt_skipTransform) {
  */
 os.geo.jsts.bufferPoint_ = function(point, distance) {
   var start = point.getFirstCoordinate();
-  var csCircle = os.olcs.generateCirclePositions(Cesium.Cartesian3.fromDegrees(start[0], start[1]), distance);
-  var circle = [];
-  for (var i = 0; i < csCircle.length; i++) {
-    var pos = Cesium.Cartographic.fromCartesian(csCircle[i]);
-    circle.push([goog.math.toDegrees(pos.longitude), goog.math.toDegrees(pos.latitude), 0]);
-  }
-
-  os.geo.normalizeCoordinates(circle, start[0]);
-
+  var circle = os.geo.interpolateEllipse(start, distance, distance, 0);
   return new ol.geom.Polygon([circle]);
 };
 

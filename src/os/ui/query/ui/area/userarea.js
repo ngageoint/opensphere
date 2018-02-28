@@ -12,6 +12,7 @@ goog.require('ol.geom.Polygon');
 goog.require('os.events.EventType');
 goog.require('os.geo.jsts');
 goog.require('os.interpolate');
+goog.require('os.map');
 goog.require('os.style');
 goog.require('os.ui.Module');
 goog.require('os.ui.action.ActionEvent');
@@ -447,16 +448,16 @@ goog.exportProperty(
  * @protected
  */
 os.ui.query.ui.area.UserAreaCtrl.prototype.setArea = function(area) {
-  if (this['area']) {
+  if (this['area'] && os.map.mapContainer) {
     // remove the existing preview
-    os.MapContainer.getInstance().removeFeature(this['area']);
+    os.map.mapContainer.removeFeature(this['area']);
   }
 
   this['area'] = area;
 
-  if (area) {
+  if (area && os.map.mapContainer) {
     // display and fly to a preview of the area
-    var mapContainer = os.MapContainer.getInstance();
+    var mapContainer = os.map.mapContainer;
     mapContainer.addFeature(area, os.style.PREVIEW_CONFIG);
     mapContainer.flyToExtent(area.getGeometry().getExtent(), 1.5);
   }
@@ -525,6 +526,7 @@ os.ui.query.ui.area.UserAreaCtrl.prototype.onUpdateDelay = function() {
         area.set(os.data.RecordField.DRAWING_LAYER_NODE, false, true);
         area.set(os.interpolate.METHOD_FIELD, interpolationMethod, true);
         area.set('title', this['name'], true);
+        area.setId(ol.getUid(geometry));
         geometry.osTransform();
       }
     }
