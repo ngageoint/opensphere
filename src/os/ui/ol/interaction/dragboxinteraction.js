@@ -88,20 +88,22 @@ os.ui.ol.interaction.DragBox.prototype.begin = function(mapBrowserEvent) {
 os.ui.ol.interaction.DragBox.prototype.update = function(mapBrowserEvent) {
   this.endCoord = mapBrowserEvent.coordinate || this.endCoord;
 
-  if (!this.extent) {
-    this.extent = [];
-  }
+  if (this.startCoord && this.endCoord) {
+    if (!this.extent) {
+      this.extent = [];
+    }
 
-  var start = ol.proj.toLonLat(this.startCoord, this.getMap().getView().getProjection());
-  var end = ol.proj.toLonLat(this.endCoord, this.getMap().getView().getProjection());
+    var start = ol.proj.toLonLat(this.startCoord, this.getMap().getView().getProjection());
+    var end = ol.proj.toLonLat(this.endCoord, this.getMap().getView().getProjection());
 
-  if (start && end) {
-    this.extent[0] = os.geo.normalizeLongitude(Math.min(start[0], end[0]), start[0] - 180, start[0] + 180);
-    this.extent[1] = Math.min(start[1], end[1]);
-    this.extent[2] = os.geo.normalizeLongitude(Math.max(start[0], end[0]), start[0] - 180, start[0] + 180);
-    this.extent[3] = Math.max(start[1], end[1]);
+    if (start && end) {
+      this.extent[0] = os.geo.normalizeLongitude(Math.min(start[0], end[0]), start[0] - 180, start[0] + 180);
+      this.extent[1] = Math.min(start[1], end[1]);
+      this.extent[2] = os.geo.normalizeLongitude(Math.max(start[0], end[0]), start[0] - 180, start[0] + 180);
+      this.extent[3] = Math.max(start[1], end[1]);
 
-    this.update2D(this.startCoord, this.endCoord);
+      this.update2D(this.startCoord, this.endCoord);
+    }
   }
 };
 
