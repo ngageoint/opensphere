@@ -50,7 +50,7 @@ os.ui.file.FileXTHandler.prototype.process = function(data, type, sender, time) 
   var url = /** @type {string} */ (data.url);
 
   if (type === os.ui.file.FileXTHandler.TYPE) {
-    if (goog.string.startsWith(url, os.file.File.URL_SCHEME + '://')) { // local file
+    if (goog.string.startsWith(url, os.file.FileScheme.LOCAL + '://')) { // local file
       var fs = new os.file.FileStorage(os.SHARED_FILE_DB_NAME); // read into memory
       fs.getFile(url).addCallbacks(this.onFileReady_, this.onFileError_, this); // local file handler??
     } else {

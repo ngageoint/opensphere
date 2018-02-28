@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * @fileoverview Definitions for externs that are either missing or incorrect
  * in the current release version of the closure compiler we use.
@@ -110,3 +111,12 @@ DeviceOrientationEvent.prototype.webkitCompassHeading;
 
 /** @type {Storage} */
 var localStorage;
+
+
+/**
+ * Added by Electron to expose the file's real path on filesystem.
+ * @type {string|undefined}
+ *
+ * @see https://electronjs.org/docs/api/file-object
+ */
+File.prototype.path;

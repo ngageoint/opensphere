@@ -3,7 +3,7 @@ goog.provide('os.ui.im.AudioImportUI');
 goog.require('os.alert.AlertEventSeverity');
 goog.require('os.alert.AlertManager');
 goog.require('os.audio.AudioManager');
-goog.require('os.file.File');
+goog.require('os.file');
 goog.require('os.ui.im.AbstractImportUI');
 
 
@@ -28,7 +28,7 @@ os.ui.im.AudioImportUI.prototype.launchUI = function(file, opt_config) {
   var url = file.getUrl();
 
   var msg = null;
-  if (url && url.indexOf('file') !== 0 && url.indexOf(os.file.File.URL_SCHEME) !== 0) {
+  if (url && !os.file.isLocal(url) && (os.file.FILE_URL_ENABLED || !os.file.isFileSystem(url))) {
     var label = os.audio.AudioManager.getInstance().addSound(url);
 
     msg = 'Added new sound "' + label + '"';

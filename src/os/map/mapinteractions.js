@@ -8,7 +8,6 @@ goog.require('ol.interaction.Interaction');
 goog.require('os.interaction.ContextMenu');
 goog.require('os.interaction.DoubleClick');
 goog.require('os.interaction.DoubleClickZoom');
-goog.require('os.interaction.DragAndDrop');
 goog.require('os.interaction.DragBox');
 goog.require('os.interaction.DragCircle');
 goog.require('os.interaction.DragZoom');
