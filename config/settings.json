@@ -33,7 +33,6 @@
         }
       ]
     },
-    "browserPage": "../misc/browser.html",
     "metrics": {
       "enabled" : true
     },
