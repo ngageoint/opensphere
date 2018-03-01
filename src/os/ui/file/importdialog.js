@@ -1,6 +1,5 @@
 goog.provide('os.ui.file.ImportDialogCtrl');
 goog.provide('os.ui.file.importDialogDirective');
-goog.require('goog.crypt.base64');
 goog.require('goog.events.EventType');
 goog.require('goog.fs.FileReader');
 goog.require('goog.log');
@@ -148,16 +147,30 @@ os.ui.file.ImportDialogCtrl.prototype.accept = function() {
     this['loading'] = true;
 
     var method = /** @type {os.ui.file.method.ImportMethod} */ (this.scope_['method']);
+    var url;
+
     if (this['fileChosen']) {
-      // load a local file
-      var keepFile = method.getKeepFile();
-      var reader = os.file.createFromFile(this['file'], keepFile);
-      if (reader) {
-        reader.addCallbacks(this.onFileReady_, this.onFileError_, this);
+      var file = /** @type {File|undefined} */ (this['file']);
+      if (file) {
+        if (file.path && os.file.FILE_URL_ENABLED) {
+          // running in Electron, so request the file with a file:// URL
+          url = os.file.getFileUrl(file.path);
+        } else {
+          // load a local file
+          var keepFile = method.getKeepFile();
+          var reader = os.file.createFromFile(this['file'], keepFile);
+          if (reader) {
+            reader.addCallbacks(this.onFileReady_, this.onFileError_, this);
+          }
+        }
       }
     } else {
+      url = this['url'];
+    }
+
+    if (url) {
       // load a remote url
-      method.setUrl(this['url']);
+      method.setUrl(url);
       method.listenOnce(os.events.EventType.COMPLETE, this.onLoadComplete_, false, this);
       method.listenOnce(os.events.EventType.CANCEL, this.onLoadComplete_, false, this);
       method.listenOnce(os.events.EventType.ERROR, this.onLoadError_, false, this);

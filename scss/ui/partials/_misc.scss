@@ -306,7 +306,7 @@ div::-moz-focus-inner {
   0%,
   20% {
     @include translateY(0); // sass-lint:disable-line mixin-name-format
-    opacity: .5; 
+    opacity: .5;
   }
 
   30% {

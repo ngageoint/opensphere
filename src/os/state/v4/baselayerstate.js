@@ -168,6 +168,18 @@ os.state.v4.BaseLayerState.prototype.hasLocalData = function(layerOptions) {
 
 
 /**
+ * Checks if a layer was loaded from the file system.
+ * @param {Object.<string, *>} layerOptions The layer options.
+ * @return {boolean} If the layer was loaded from the file system.
+ * @protected
+ */
+os.state.v4.BaseLayerState.prototype.hasFileSystemData = function(layerOptions) {
+  return os.file.isFileSystem(/** @type {string|undefined} */ (layerOptions['url'])) ||
+      os.file.isFileSystem(/** @type {string|undefined} */ (layerOptions['url2']));
+};
+
+
+/**
  * Checks if the provided layer is valid for addition to the state file
  * @param {os.layer.ILayer} layer The layer
  * @return {boolean} If the layer should be added
@@ -187,8 +199,8 @@ os.state.v4.BaseLayerState.prototype.isValid = function(layer) {
       return false;
     }
 
-    // skip local data (these are handled separately)
-    return !this.hasLocalData(layerOptions);
+    // skip local/file system data (these are handled separately)
+    return !this.hasLocalData(layerOptions) && !this.hasFileSystemData(layerOptions);
   } catch (e) {
     // may not be a os.layer.ILayer... so don't persist it
   }

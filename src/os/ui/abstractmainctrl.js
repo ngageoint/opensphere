@@ -213,7 +213,11 @@ os.ui.AbstractMainCtrl.prototype.initialize = function() {
   // set up URL replacements
   os.net.URLModifier.configure(/** @type {Object<string, string>} */ (os.settings.get('urlReplace')));
 
+  // set if mixed content should be enabled
   os.net.ExtDomainHandler.MIXED_CONTENT_ENABLED = /** @type {boolean} */ (os.settings.get('mixedContent', false));
+
+  // set if file:// URL's should be supported
+  os.file.FILE_URL_ENABLED = /** @type {boolean} */ (os.settings.get('fileUrls', false));
 
   // set up cross origin config
   os.net.loadCrossOriginCache();
