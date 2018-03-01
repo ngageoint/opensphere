@@ -21,12 +21,6 @@ goog.require('plugin.file.geojson.GeoJSONParser');
  */
 plugin.file.geojson.GeoJSONSimpleStyleParser = function() {
   plugin.file.geojson.GeoJSONSimpleStyleParser.base(this, 'constructor');
-
-  /**
-   * The binding.
-   * @private
-   */
-  this.binding_ = this.process_.bind(this);
 };
 goog.inherits(plugin.file.geojson.GeoJSONSimpleStyleParser, plugin.file.geojson.GeoJSONParser);
 
@@ -46,33 +40,17 @@ plugin.file.geojson.GeoJSONSimpleStyleParser.LOGGER_ =
  */
 plugin.file.geojson.GeoJSONSimpleStyleParser.prototype.parseNext = function() {
   var features = plugin.file.geojson.GeoJSONSimpleStyleParser.base(this, 'parseNext');
-  features.forEach(this.binding_);
+  features.forEach(this.process, this);
   return features;
 };
 
 
 /**
- * @param {!ol.Feature} feature
- * @private
+ * @inheritDoc
  */
-plugin.file.geojson.GeoJSONSimpleStyleParser.prototype.process_ = function(feature) {
-  // apparently these people missed out on GeoJSON spec section 2.2 where
-  // the id goes directly on the feature object.
-  var id = /** @type {string|undefined} */ (feature.get('id'));
-  if (id) {
-    feature.setId(id);
-    feature.set('id', undefined);
-  }
+plugin.file.geojson.GeoJSONSimpleStyleParser.prototype.process = function(feature) {
+  plugin.file.geojson.GeoJSONSimpleStyleParser.base(this, 'process', feature);
 
-  this.processStyle_(feature);
-};
-
-
-/**
- * @param {!ol.Feature} feature
- * @private
- */
-plugin.file.geojson.GeoJSONSimpleStyleParser.prototype.processStyle_ = function(feature) {
   try {
     // Extract all simplestyle-spec values.
     // These are not used to style.
