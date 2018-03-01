@@ -21,6 +21,7 @@ The code is open source, and `available on GitHub`_.
    :maxdepth: 2
    :caption: Developer Documentation
 
+   contributing
    getting_started
    guides/app_guide
    guides/plugin_guide
