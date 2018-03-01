@@ -183,7 +183,8 @@ os.ui.ol.draw.DrawControlsCtrl.prototype.destroyControlMenu_ = function() {
 
 
 /**
- * @return {?ol.Map}
+ * Get the Openlayers map instance for the controller.
+ * @return {ol.PluggableMap}
  */
 os.ui.ol.draw.DrawControlsCtrl.prototype.getMap = function() {
   return this.olMap_ ? this.olMap_.getMap() : null;

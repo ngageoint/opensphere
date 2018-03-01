@@ -6,8 +6,10 @@ goog.provide('os.fn');
 
 goog.require('ol.extent');
 goog.require('ol.layer.Layer');
+goog.require('os.data.IExtent');
 goog.require('os.extent');
 goog.require('os.geo');
+goog.require('os.implements');
 
 
 /**
@@ -37,10 +39,8 @@ os.fn.reduceExtentFromLayers = function(extent, layer) {
     if (!ex) {
       var source = olayer.getSource();
 
-      if (source instanceof ol.source.Vector ||
-          source instanceof ol.source.Image ||
-          source instanceof ol.source.Tile) {
-        ex = source.getExtent();
+      if (os.implements(source, os.data.IExtent.ID)) {
+        ex = /** @type {!os.data.IExtent} */ (source).getExtent();
       }
     }
 
@@ -96,7 +96,7 @@ os.fn.mapFeatureToGeometry = function(feature) {
  * @return {os.layer.ILayer|undefined} layer The layer, or undefined if not a layer node.
  */
 os.fn.mapNodeToLayer = function(node) {
-  return node instanceof os.data.LayerNode ? node.getLayer() : undefined;
+  return node instanceof os.data.LayerNode ? /** @type {!os.data.LayerNode} */ (node).getLayer() : undefined;
 };
 
 

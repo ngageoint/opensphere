@@ -1,10 +1,12 @@
 goog.provide('os.query.FilterManager');
+
 goog.require('goog.array');
 goog.require('goog.events.EventTarget');
 goog.require('goog.string');
 goog.require('os.config.Settings');
 goog.require('os.filter.FilterEntry');
 goog.require('os.filter.IFilterable');
+goog.require('os.map');
 goog.require('os.ui.filter.FilterEvent');
 goog.require('os.ui.filter.FilterManager');
 goog.require('os.ui.filter.FilterType');
@@ -84,10 +86,11 @@ os.query.FilterManager.prototype.isEnabled = function(filter, opt_type) {
  * @inheritDoc
  */
 os.query.FilterManager.prototype.getFilterable = function(layerId) {
-  var layer = os.MapContainer.getInstance().getLayer(layerId);
-
-  if (layer instanceof os.layer.Vector) {
-    return /** @type {os.filter.IFilterable} */ (layer);
+  if (os.map.mapContainer) {
+    var layer = os.map.mapContainer.getLayer(layerId);
+    if (layer instanceof os.layer.Vector) {
+      return /** @type {os.filter.IFilterable} */ (layer);
+    }
   }
 
   return os.query.FilterManager.base(this, 'getFilterable', layerId);
@@ -129,7 +132,8 @@ os.query.FilterManager.prototype.open = function(opt_type, opt_columns) {
 
     var scopeOptions = {};
     if (opt_type) {
-      var layer = /** @type {os.layer.ILayer} */ (os.MapContainer.getInstance().getLayer(opt_type));
+      var layer = os.map.mapContainer ?
+          /** @type {os.layer.ILayer} */ (os.map.mapContainer.getLayer(opt_type)) : undefined;
       if (layer) {
         if (!opt_columns) {
           try {

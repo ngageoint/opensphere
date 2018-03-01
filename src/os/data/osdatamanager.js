@@ -12,6 +12,7 @@ goog.require('os.data.event.DataEvent');
 goog.require('os.events.LayerEvent');
 goog.require('os.events.LayerEventType');
 goog.require('os.events.PropertyChangeEvent');
+goog.require('os.map');
 goog.require('os.structs.ArrayCollection');
 goog.require('os.ui.slick.SlickTreeNode');
 
@@ -50,9 +51,11 @@ os.data.OSDataManager = function() {
 
   this.init_();
 
-  var map = os.MapContainer.getInstance();
-  map.listen(os.events.LayerEventType.ADD, this.onLayerAdded_, false, this);
-  map.listen(os.events.LayerEventType.REMOVE, this.onLayerRemoved_, false, this);
+  var map = os.map.mapContainer;
+  if (map) {
+    map.listen(os.events.LayerEventType.ADD, this.onLayerAdded_, false, this);
+    map.listen(os.events.LayerEventType.REMOVE, this.onLayerRemoved_, false, this);
+  }
 };
 goog.inherits(os.data.OSDataManager, os.data.DataManager);
 goog.addSingletonGetter(os.data.OSDataManager);
@@ -97,9 +100,11 @@ os.data.OSDataManagerSetting = {
 os.data.OSDataManager.prototype.disposeInternal = function() {
   os.data.OSDataManager.base(this, 'disposeInternal');
 
-  var map = os.MapContainer.getInstance();
-  map.unlisten(os.events.LayerEventType.ADD, this.onLayerAdded_, false, this);
-  map.unlisten(os.events.LayerEventType.REMOVE, this.onLayerRemoved_, false, this);
+  var map = os.map.mapContainer;
+  if (map) {
+    map.unlisten(os.events.LayerEventType.ADD, this.onLayerAdded_, false, this);
+    map.unlisten(os.events.LayerEventType.REMOVE, this.onLayerRemoved_, false, this);
+  }
 };
 
 

@@ -5,7 +5,6 @@ goog.require('goog.array');
 goog.require('os.data.event.DataEvent');
 goog.require('os.data.event.DataEventType');
 goog.require('os.events.SelectionType');
-goog.require('os.feature');
 goog.require('os.source');
 goog.require('os.source.PropertyChange');
 goog.require('os.ui');

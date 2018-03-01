@@ -5,6 +5,7 @@ goog.require('ol.layer.Layer');
 goog.require('os.command.ICommand');
 goog.require('os.command.State');
 goog.require('os.layer');
+goog.require('os.map');
 goog.require('os.metrics.Metrics');
 
 
@@ -101,12 +102,18 @@ os.command.AbstractLayer.prototype.add = function(options) {
     return false;
   }
 
+  if (!os.map.mapContainer) {
+    this.state = os.command.State.ERROR;
+    this.details = 'Map container has not been set.';
+    return false;
+  }
+
   var layer = os.layer.createFromOptions(options);
   if (layer instanceof ol.layer.Layer) {
     // don't add duplicate layers to the map. this may happen for legit reasons. one example is a single layer from
     // a state file being removed, the whole state file being removed, then undo both removes.
-    if (!os.MapContainer.getInstance().getLayer(layer.getId())) {
-      os.MapContainer.getInstance().addLayer(/** @type {!ol.layer.Layer} */ (layer));
+    if (!os.map.mapContainer.getLayer(layer.getId())) {
+      os.map.mapContainer.addLayer(/** @type {!ol.layer.Layer} */ (layer));
       os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.AddData.ADD_LAYER_COMMAND, 1);
       return true;
     }
@@ -134,7 +141,13 @@ os.command.AbstractLayer.prototype.remove = function(options) {
     return false;
   }
 
-  os.MapContainer.getInstance().removeLayer(/** @type {string} */ (options['id']));
+  if (!os.map.mapContainer) {
+    this.state = os.command.State.ERROR;
+    this.details = 'Map container has not been set.';
+    return false;
+  }
+
+  os.map.mapContainer.removeLayer(/** @type {string} */ (options['id']));
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.AddData.REMOVE_LAYER_COMMAND, 1);
   return true;
 };

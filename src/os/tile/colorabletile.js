@@ -33,7 +33,7 @@ os.tile.ColorableTile = function(tileCoord, state, src, crossOrigin, tileLoadFun
    */
   this.olSource_ = null;
 };
-ol.inherits(os.tile.ColorableTile, ol.ImageTile);
+goog.inherits(os.tile.ColorableTile, ol.ImageTile);
 
 
 /**

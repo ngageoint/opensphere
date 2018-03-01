@@ -65,7 +65,50 @@ os.map.IMapContainer.prototype.getLayer;
 
 
 /**
+ * Get all map layers ordered from top to bottom.
+ * @return {!Array<!ol.layer.Layer>}
+ */
+os.map.IMapContainer.prototype.getLayers;
+
+
+/**
  * Get the Openlayers map reference.
  * @return {ol.PluggableMap}
  */
 os.map.IMapContainer.prototype.getMap;
+
+
+/**
+ * Add a layer to the map.
+ * @param {!(os.layer.ILayer|ol.layer.Layer)} layer The layer to add.
+ */
+os.map.IMapContainer.prototype.addLayer;
+
+
+/**
+ * Remove a layer from the map.
+ * @param {!(os.layer.ILayer|ol.layer.Layer|string)} layer The layer to remove.
+ * @param {boolean=} opt_dispose If the layer should be disposed. Defaults to true.
+ */
+os.map.IMapContainer.prototype.removeLayer;
+
+
+/**
+ * If the 3D globe is the active view.
+ * @return {boolean}
+ */
+os.map.IMapContainer.prototype.is3DEnabled;
+
+
+/**
+ * If a WebGL 3D globe is supported by the map container.
+ * @return {boolean}
+ */
+os.map.IMapContainer.prototype.is3DSupported;
+
+
+/**
+ * Get the extent of the current view.
+ * @return {ol.Extent}
+ */
+os.map.IMapContainer.prototype.getViewExtent;
