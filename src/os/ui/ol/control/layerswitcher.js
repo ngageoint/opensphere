@@ -1,5 +1,7 @@
 goog.provide('os.ui.ol.control.LayerSwitcher');
 
+goog.require('goog.dom.safe');
+goog.require('goog.html.SafeHtml');
 goog.require('ol.Map');
 goog.require('ol.Observable');
 goog.require('ol.control.Control');
@@ -8,11 +10,11 @@ goog.require('ol.layer.Group');
 
 
 /**
- * OpenLayers 3 Layer Switcher Control.
+ * OpenLayers Layer Switcher Control.
  * See [the examples](./examples) for usage.
- * @constructor
- * @extends {ol.control.Control}
  * @param {Object=} opt_options Control options, extends olx.control.ControlOptions adding:
+ * @extends {ol.control.Control}
+ * @constructor
  */
 os.ui.ol.control.LayerSwitcher = function(opt_options) {
   var options = opt_options || {};
@@ -64,7 +66,7 @@ os.ui.ol.control.LayerSwitcher = function(opt_options) {
     target: options.target
   });
 };
-ol.inherits(os.ui.ol.control.LayerSwitcher, ol.control.Control);
+goog.inherits(os.ui.ol.control.LayerSwitcher, ol.control.Control);
 
 
 /**
@@ -105,8 +107,9 @@ os.ui.ol.control.LayerSwitcher.prototype.renderPanel = function() {
 
 
 /**
- * Set the map instance the control is associated with.
- * @param {ol.Map} map The map instance.
+ * Set the Openlayers map instance the control is associated with.
+ * @param {ol.PluggableMap} map The Openlayers map instance.
+ * @override
  */
 os.ui.ol.control.LayerSwitcher.prototype.setMap = function(map) {
   // Clean up listeners associated with the previous map
@@ -114,12 +117,12 @@ os.ui.ol.control.LayerSwitcher.prototype.setMap = function(map) {
   this.mapListeners.length = 0;
 
   // Wire up listeners etc. and store reference to new map
-  ol.control.Control.prototype.setMap.call(this, map);
+  os.ui.ol.control.LayerSwitcher.base(this, 'setMap', map);
+
   if (map) {
-    var this_ = this;
-    this.mapListeners.push(map.on('pointerdown', function() {
-      this_.hidePanel();
-    }));
+    this.mapListeners.push(ol.events.listen(map, 'pointerdown', function() {
+      this.hidePanel();
+    }, this));
     this.renderPanel();
   }
 };
@@ -168,19 +171,19 @@ os.ui.ol.control.LayerSwitcher.prototype.setVisible_ = function(lyr, visible) {
  * Render all layers that are children of a group.
  * @param {ol.layer.Base} lyr Layer to be rendered (should have a title property).
  * @param {number} idx Position in parent group list.
- * @return {Element} [description]
+ * @return {Element}
  * @private
  */
 os.ui.ol.control.LayerSwitcher.prototype.renderLayer_ = function(lyr, idx) {
   var this_ = this;
   var li = document.createElement('li');
-  var lyrTitle = lyr.get('title');
+  var lyrTitle = goog.html.SafeHtml.htmlEscape(/** @type {string|undefined} */ (lyr.get('title')) || '');
   var lyrId = lyr.get('title').replace(' ', '-') + '_' + idx;
   var label = document.createElement('label');
 
   if (lyr instanceof ol.layer.Group) {
     li.className = 'group';
-    label.innerHTML = lyrTitle;
+    goog.dom.safe.setInnerHtml(label, lyrTitle);
     li.appendChild(label);
     var ul = document.createElement('ul');
     li.appendChild(ul);
@@ -200,7 +203,7 @@ os.ui.ol.control.LayerSwitcher.prototype.renderLayer_ = function(lyr, idx) {
     }, this);
     li.appendChild(input);
     label.htmlFor = lyrId;
-    label.innerHTML = lyrTitle;
+    goog.dom.safe.setInnerHtml(label, lyrTitle);
     li.appendChild(label);
   }
 
@@ -211,7 +214,7 @@ os.ui.ol.control.LayerSwitcher.prototype.renderLayer_ = function(lyr, idx) {
 /**
  * Render all layers that are children of a group.
  * @private
- * @param {(ol.layer.Group|ol.Map)} lyr Group layer whos children will be rendered.
+ * @param {(ol.layer.Group|ol.PluggableMap)} lyr Group layer whos children will be rendered.
  * @param {Element} elm DOM element that children will be appended to.
  */
 os.ui.ol.control.LayerSwitcher.prototype.renderLayers_ = function(lyr, elm) {
@@ -228,14 +231,14 @@ os.ui.ol.control.LayerSwitcher.prototype.renderLayers_ = function(lyr, elm) {
 /**
  * **Static** Call the supplied function for each layer in the passed layer group
  * recursing nested groups.
- * @param {(ol.layer.Group|ol.Map)} lyr The layer group to start iterating from.
+ * @param {(ol.layer.Group|ol.PluggableMap)} lyr The layer group to start iterating from.
  * @param {Function} fn Callback which will be called for each `ol.layer.Base`
  * found under `lyr`. The signature for `fn` is the same as `ol.Collection#forEach`
  */
 os.ui.ol.control.LayerSwitcher.forEachRecursive = function(lyr, fn) {
   lyr.getLayers().forEach(function(lyr, idx, a) {
     fn(lyr, idx, a);
-    if (lyr instanceof ol.layer.Group || lyr instanceof ol.Map) {
+    if (lyr instanceof ol.layer.Group || lyr instanceof ol.PluggableMap) {
       os.ui.ol.control.LayerSwitcher.forEachRecursive(lyr, fn);
     }
   });

@@ -2,6 +2,7 @@ goog.provide('os.ui.ol.OLMap');
 
 goog.require('goog.events.EventTarget');
 goog.require('goog.events.MouseWheelHandler');
+goog.require('goog.log');
 goog.require('goog.math.Coordinate');
 goog.require('ol');
 goog.require('ol.Feature');
@@ -71,6 +72,15 @@ os.ui.ol.OLMap = function() {
   os.dispatcher.listen(os.ui.action.EventType.ZOOM, this.onZoom_, false, this);
 };
 goog.inherits(os.ui.ol.OLMap, goog.events.EventTarget);
+
+
+/**
+ * Logger
+ * @type {goog.log.Logger}
+ * @private
+ * @const
+ */
+os.ui.ol.OLMap.LOGGER_ = goog.log.getLogger('os.ui.ol.OLMap');
 
 
 /**
@@ -491,6 +501,42 @@ os.ui.ol.OLMap.prototype.getLayer = function(layerOrFeature, opt_search, opt_rem
 
   return l;
 };
+
+
+/**
+ * @inheritDoc
+ */
+os.ui.ol.OLMap.prototype.getLayers = goog.abstractMethod;
+
+
+/**
+ * @inheritDoc
+ */
+os.ui.ol.OLMap.prototype.addLayer = goog.abstractMethod;
+
+
+/**
+ * @inheritDoc
+ */
+os.ui.ol.OLMap.prototype.removeLayer = goog.abstractMethod;
+
+
+/**
+ * @inheritDoc
+ */
+os.ui.ol.OLMap.prototype.getViewExtent = goog.abstractMethod;
+
+
+/**
+ * @inheritDoc
+ */
+os.ui.ol.OLMap.prototype.is3DEnabled = goog.functions.FALSE;
+
+
+/**
+ * @inheritDoc
+ */
+os.ui.ol.OLMap.prototype.is3DSupported = goog.functions.FALSE;
 
 
 /**

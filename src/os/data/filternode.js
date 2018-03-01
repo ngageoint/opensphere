@@ -7,7 +7,6 @@ goog.require('os.command.FilterEnable');
 goog.require('os.command.SequenceCommand');
 goog.require('os.data.ISearchable');
 goog.require('os.events.PropertyChangeEvent');
-goog.require('os.feature');
 goog.require('os.structs.TriState');
 goog.require('os.ui.filter.ui.FilterNode');
 goog.require('os.ui.filter.ui.filterNodeUIDirective');

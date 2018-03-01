@@ -5,6 +5,7 @@ goog.require('goog.Timer');
 goog.require('goog.log');
 goog.require('os.layer.ILayer');
 goog.require('os.layer.config.LayerConfigManager');
+goog.require('os.map');
 goog.require('os.source.ISource');
 
 
@@ -112,7 +113,7 @@ os.layer.getTitle = function(layerId, opt_explicit) {
   var title = '';
 
   // no layer name specified, so try to assemble one to provide context
-  var layer = os.MapContainer.getInstance().getLayer(layerId);
+  var layer = os.map.mapContainer.getLayer(layerId);
   if (os.implements(layer, os.layer.ILayer.ID)) {
     layer = /** @type {os.layer.ILayer} */ (layer);
 
@@ -152,15 +153,19 @@ os.layer.getUniqueTitle = function(baseTitle) {
  * @return {boolean}
  */
 os.layer.hasLayer = function(title) {
-  var layers = os.MapContainer.getInstance().getLayers();
-  return layers.some(function(layer) {
-    try {
-      // catch errors in case a base OL3 layer is added
-      return /** @type {os.layer.ILayer} */ (layer).getTitle() == title;
-    } catch (e) {}
+  if (os.map.mapContainer) {
+    var layers = os.map.mapContainer.getLayers();
+    return layers.some(function(layer) {
+      try {
+        // catch errors in case a base OL3 layer is added
+        return /** @type {os.layer.ILayer} */ (layer).getTitle() == title;
+      } catch (e) {}
 
-    return false;
-  });
+      return false;
+    });
+  }
+
+  return false;
 };
 
 

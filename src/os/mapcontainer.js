@@ -367,8 +367,7 @@ os.MapContainer.prototype.getCesiumCameraController = function() {
 
 
 /**
- * Get the extent of the current view.
- * @return {ol.Extent}
+ * @inheritDoc
  */
 os.MapContainer.prototype.getViewExtent = function() {
   var view = this.map_.getView();
@@ -1584,8 +1583,7 @@ os.MapContainer.prototype.onCesiumCameraMoveChange_ = function(isMoving) {
 
 
 /**
- * Checks if the Cesium globe is the active view.
- * @return {boolean}
+ * @inheritDoc
  */
 os.MapContainer.prototype.is3DEnabled = function() {
   return !!this.olCesium_ && this.olCesium_.getEnabled();
@@ -1593,8 +1591,7 @@ os.MapContainer.prototype.is3DEnabled = function() {
 
 
 /**
- * Checks if WebGL/Cesium are supported by the browser.
- * @return {boolean}
+ * @inheritDoc
  */
 os.MapContainer.prototype.is3DSupported = function() {
   if (this.is3DSupported_ == undefined) {
@@ -1657,8 +1654,7 @@ os.MapContainer.prototype.setBGColor = function(color) {
 
 
 /**
- * Adds a layer to the map
- * @param {!(os.layer.ILayer|ol.layer.Layer)} layer The layer to add
+ * @inheritDoc
  */
 os.MapContainer.prototype.addLayer = function(layer) {
   if (this.map_ && layer instanceof ol.layer.Layer) {
@@ -1750,9 +1746,7 @@ os.MapContainer.prototype.addGroup = function(group) {
 
 
 /**
- * Removes a layer from the map
- * @param {!(os.layer.ILayer|ol.layer.Layer|string)} layer
- * @param {boolean=} opt_dispose If the layer should be disposed. Defaults to true.
+ * @inheritDoc
  */
 os.MapContainer.prototype.removeLayer = function(layer, opt_dispose) {
   var dispose = opt_dispose != null ? opt_dispose : true;
@@ -1977,8 +1971,7 @@ os.MapContainer.prototype.getDrawingLayer = function() {
 
 
 /**
- * Gets an array of layers ordered from top to bottom
- * @return {!Array<!ol.layer.Layer>}
+ * @inheritDoc
  */
 os.MapContainer.prototype.getLayers = function() {
   var layers = [];

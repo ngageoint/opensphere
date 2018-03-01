@@ -9,6 +9,8 @@ goog.require('ol.source.UrlTile');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.implements');
 goog.require('os.ol.source.IUrlSource');
+goog.require('os.source');
+goog.require('os.source.PropertyChange');
 
 
 // add support for providing custom URL parameters

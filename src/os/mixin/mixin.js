@@ -11,6 +11,7 @@ goog.require('ol.extent');
 goog.require('ol.math');
 goog.require('ol.renderer.canvas.Map');
 goog.require('ol.renderer.canvas.VectorLayer');
+goog.require('os.map');
 goog.require('os.mixin.ResolutionConstraint');
 goog.require('os.mixin.TileImage');
 goog.require('os.mixin.UrlTileSource');
@@ -92,7 +93,7 @@ ol.renderer.canvas.VectorLayer.prototype.forEachFeatureAtCoordinate = function(c
    * @suppress {accessControls}
    */
   ol.renderer.canvas.Map.prototype.renderFrame = function(frameState) {
-    if (frameState && os.MapContainer.getInstance().is3DEnabled()) {
+    if (frameState && os.map.mapContainer && os.map.mapContainer.is3DEnabled()) {
       frameState.viewState.rotation = 0;
     }
 

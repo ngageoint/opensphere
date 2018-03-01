@@ -162,15 +162,15 @@ os.style.label.TRUNCATE_LENGTH = 50;
  */
 os.style.label.updateShown_ = function() {
   // if the map/view aren't ready, return false so the conditional delay will keep trying
-  var map = os.MapContainer.getInstance();
-  var view = null;
-  if (map.getMap() && map.getMap().getView()) {
+  var map = os.map.mapContainer;
+  var view;
+  if (map && map.getMap() && map.getMap().getView()) {
     view = map.getMap().getView();
   } else {
     return false;
   }
 
-  var resolution = view.getResolution();
+  var resolution = view ? view.getResolution() : undefined;
   if (!goog.isDef(resolution)) {
     return false;
   }

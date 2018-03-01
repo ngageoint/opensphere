@@ -15,6 +15,7 @@ goog.require('ol.geom.Geometry');
 goog.require('ol.source.Vector');
 goog.require('os');
 goog.require('os.Fields');
+goog.require('os.action.EventType');
 goog.require('os.alert.AlertEventSeverity');
 goog.require('os.alert.AlertManager');
 goog.require('os.data.ColumnDefinition');
@@ -37,6 +38,7 @@ goog.require('os.implements');
 goog.require('os.interpolate');
 goog.require('os.layer.AnimationOverlay');
 goog.require('os.load.LoadingManager');
+goog.require('os.map');
 goog.require('os.ogc');
 goog.require('os.registerClass');
 goog.require('os.source');
@@ -1128,7 +1130,7 @@ os.source.Vector.prototype.getMaxDate = function() {
  * @override
  */
 os.source.Vector.prototype.getTitle = function(opt_doNoUseTypeInName) {
-  var layer = /** @type {os.layer.ILayer} */ (os.MapContainer.getInstance().getLayer(this.getId()));
+  var layer = /** @type {os.layer.ILayer} */ (os.map.mapContainer.getLayer(this.getId()));
   var explicitType = !opt_doNoUseTypeInName && layer ? layer.getExplicitType() : '';
   if (explicitType) {
     return this.title_ + ' ' + explicitType;
@@ -1201,7 +1203,7 @@ os.source.Vector.prototype.setCesiumEnabled = function(value) {
       this.dispatchAnimationFrame(this.animationOverlay.getFeatures());
 
       // set the map so the overlay is rendered again, and fire the change event to trigger a refresh
-      this.animationOverlay.setMap(os.MapContainer.getInstance().getMap());
+      this.animationOverlay.setMap(os.map.mapContainer.getMap());
       this.animationOverlay.changed();
     }
   }
@@ -2056,13 +2058,13 @@ os.source.Vector.prototype.getAnimationOverlay = function() {
  */
 os.source.Vector.prototype.createAnimationOverlay = function() {
   if (!this.animationOverlay) {
-    var layer = os.MapContainer.getInstance().getLayer(this.getId());
+    var layer = os.map.mapContainer.getLayer(this.getId());
     var opacity = /** @type {os.layer.ILayer} */ (layer).getOpacity();
     var zIndex = layer.getZIndex();
 
     // only set the map in 2D mode. we don't want the overlay to render while in 3D.
     this.animationOverlay = new os.layer.AnimationOverlay({
-      map: this.cesiumEnabled ? null : os.MapContainer.getInstance().getMap(),
+      map: this.cesiumEnabled ? null : os.map.mapContainer.getMap(),
       opacity: opacity,
       zIndex: zIndex
     });

@@ -228,7 +228,7 @@ os.ui.node.DefaultLayerNodeUICtrl.prototype.updateFilters_ = function(opt_event)
 
   var layer = this.getLayer();
   if (os.implements(layer, os.filter.IFilterable.ID)) {
-    this['filtersEnabled'] = layer.isFilterable();
+    this['filtersEnabled'] = /** @type {!os.filter.IFilterable} */ (layer).isFilterable();
   } else {
     this['filtersEnabled'] = false;
   }

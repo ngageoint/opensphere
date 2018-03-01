@@ -4,7 +4,6 @@ goog.require('goog.array');
 goog.require('goog.events');
 goog.require('os.data.RecordField');
 goog.require('os.histo.Bin');
-goog.require('os.style');
 
 
 

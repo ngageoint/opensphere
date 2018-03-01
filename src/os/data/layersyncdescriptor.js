@@ -13,6 +13,7 @@ goog.require('os.events.LayerEventType');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.layer.ILayer');
 goog.require('os.layer.PropertyChange');
+goog.require('os.map');
 goog.require('os.ui.node.defaultLayerNodeUIDirective');
 
 
@@ -234,7 +235,7 @@ os.data.LayerSyncDescriptor.prototype.onLayerRemoved = function(evt) {
  */
 os.data.LayerSyncDescriptor.prototype.createLayers_ = function() {
   var options = this.getOptions();
-  if (options) {
+  if (options && os.map.mapContainer) {
     for (var i = 0; i < options.length; i++) {
       var layerOptions = options[i];
 
@@ -243,12 +244,12 @@ os.data.LayerSyncDescriptor.prototype.createLayers_ = function() {
       if (layerId) {
         goog.array.insert(this.layerIds, layerId);
 
-        var layer = os.MapContainer.getInstance().getLayer(layerId);
+        var layer = os.map.mapContainer.getLayer(layerId);
         if (!layer) {
           layer = os.layer.createFromOptions(layerOptions);
 
           if (layer) {
-            os.MapContainer.getInstance().addLayer(layer);
+            os.map.mapContainer.addLayer(layer);
           }
         } else {
           this.addLayer(/** @type {!os.layer.ILayer} */ (layer));
@@ -267,12 +268,14 @@ os.data.LayerSyncDescriptor.prototype.removeLayers_ = function() {
   // save the config prior to removing layers
   this.layerConfig = this.persistLayerConfig();
 
-  for (var i = this.layers.length - 1; i >= 0; i--) {
-    var layer = this.layers[i];
-    if (layer) {
-      // remove it from the map
-      os.MapContainer.getInstance().removeLayer(layer);
-      goog.array.remove(this.layerIds, layer.getId());
+  if (os.map.mapContainer) {
+    for (var i = this.layers.length - 1; i >= 0; i--) {
+      var layer = this.layers[i];
+      if (layer) {
+        // remove it from the map
+        os.map.mapContainer.removeLayer(layer);
+        goog.array.remove(this.layerIds, layer.getId());
+      }
     }
   }
 

@@ -8,12 +8,13 @@ goog.require('ol.Feature');
 goog.require('ol.layer.Vector');
 goog.require('ol.render.EventType');
 goog.require('ol.source.Vector');
+goog.require('os.map');
 
 
 /**
  * @typedef {{
  *   features: (Array<!ol.Feature>|undefined),
- *   map: (ol.Map|undefined),
+ *   map: (ol.PluggableMap|undefined),
  *   style: (ol.style.Style|Array<ol.style.Style>|ol.StyleFunction|undefined),
  *   opacity: (number|undefined),
  *   zIndex: (number|undefined)
@@ -102,7 +103,7 @@ os.layer.AnimationOverlay.prototype.disposeInternal = function() {
  * not in the hidden root layer group.
  */
 os.layer.AnimationOverlay.prototype.changed = function() {
-  if (this.source_ && !os.MapContainer.getInstance().is3DEnabled()) {
+  if (this.source_ && os.map.mapContainer && !os.map.mapContainer.is3DEnabled()) {
     this.source_.changed();
   }
 };

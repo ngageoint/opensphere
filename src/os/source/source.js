@@ -5,9 +5,11 @@ goog.require('ol.layer.Property');
 goog.require('os');
 goog.require('os.data.ColumnDefinition');
 goog.require('os.data.RecordField');
+goog.require('os.data.event.DataEventType');
 goog.require('os.filter.IFilterable');
 goog.require('os.implements');
 goog.require('os.layer');
+goog.require('os.map');
 goog.require('os.time.ITime');
 goog.require('os.ui.slick.column');
 
@@ -33,8 +35,8 @@ os.source.RefreshTimers = {};
  */
 os.source.identifySource = function(source) {
   var overlay = source.getAnimationOverlay();
-  if (overlay && !os.MapContainer.getInstance().is3DEnabled()) {
-    // 2D  (OL3) will blink the entire layer regardless of what's in the timeline window
+  if (overlay && os.map.mapContainer && !os.map.mapContainer.is3DEnabled()) {
+    // 2D (Openlayers) will blink the entire layer regardless of what's in the timeline window
     // so we need to add and remove the exact features
     var tickCount = 0;
     var oldFeatures = overlay.getFeatures().splice(0, overlay.getFeatures().length);
@@ -54,8 +56,8 @@ os.source.identifySource = function(source) {
       featureTimer.listen(goog.Timer.TICK, toggleFeatures);
       featureTimer.start();
     }
-  } else {
-    var layer = /** @type {os.layer.Vector} */ (os.MapContainer.getInstance().getLayer(source.getId()));
+  } else if (os.map.mapContainer) {
+    var layer = /** @type {os.layer.Vector} */ (os.map.mapContainer.getLayer(source.getId()));
     if (layer) {
       os.layer.identifyLayer(layer);
     }
@@ -120,8 +122,8 @@ os.source.isFilterable = function(source) {
     var descriptor = os.dataManager.getDescriptor(id);
     if (descriptor && os.implements(descriptor, os.filter.IFilterable.ID)) {
       return /** @type {os.filter.IFilterable} */ (descriptor).isFilterable();
-    } else {
-      var layer = os.MapContainer.getInstance().getLayer(id);
+    } else if (os.map.mapContainer) {
+      var layer = os.map.mapContainer.getLayer(id);
       if (layer && os.implements(layer, os.filter.IFilterable.ID)) {
         return /** @type {os.filter.IFilterable} */ (layer).isFilterable();
       }
@@ -263,8 +265,8 @@ os.source.handleMaxFeatureCount = os.debounce(function(count) {
       'applying filters, shrinking your query areas, or removing some feature layers.';
 
   // when supported, prompt the user to try 3D mode if they are in 2D
-  var mm = os.MapContainer.getInstance();
-  if (!mm.is3DEnabled() && mm.is3DSupported()) {
+  var mc = os.map.mapContainer;
+  if (mc && !mc.is3DEnabled() && mc.is3DSupported()) {
     warning += ' Switching to 3D mode will also allow more data to be loaded. To enable 3D mode, right-click the map ' +
         'and choose Toggle 2D/3D Mode.';
   }
