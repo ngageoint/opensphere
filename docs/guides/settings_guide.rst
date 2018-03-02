@@ -238,7 +238,7 @@ metrics
 -------
 ``admin.metrics``
 
-OpenSphere has a metrics API that can be used to gather stats about usage. We want to stress that these metrics *not sent anywhere*. If you would like to have your metrics optionally sent somewhere, you will have to write a plugin to upload them and add that to your OpenSphere build.
+OpenSphere has a metrics API that can be used to gather stats about usage. We want to stress that these metrics are *not sent anywhere*. If you would like to have your metrics sent somewhere, you will have to write a plugin to upload them and add that to your OpenSphere build.
 
 However, for the overly paranoid:
 
