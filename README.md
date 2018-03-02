@@ -10,7 +10,7 @@ sessions, and much more!
 
 Things to try:
 * Load a KML, GeoJSON, or GPX file (and more!)
-* Add and browser servers such as Geoserver, ArcGIS, and more!
+* Add and browse servers such as Geoserver, ArcGIS, and more!
 * Animate data in the timeline
 
 In addition, OpenSphere (and its build system) can serve as a base library for GIS applications. Love what we've done with Openlayers and Cesium but want your own UI? You can do that!
@@ -91,7 +91,7 @@ Our general [development guide](http://opensphere.readthedocs.io/en/latest/getti
 
 ## Contributing
 
-To get involved with OpenSphere directly, see our [contributing guide](http://localhost:8080/workspace/os/workspace/opensphere/docs/_build/html/contributing.html).
+To get involved with OpenSphere directly, see our [contributing guide](http://opensphere.readthedocs.io/en/latest/contributing.html).
 
 ## About
 
