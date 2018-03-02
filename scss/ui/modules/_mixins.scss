@@ -51,7 +51,6 @@ $searchbar-height: 20px;
 @mixin filter ($expression) {
   -moz-filter: $expression;
   -ms-filter: $expression;
-  -o-filter: $expression;
   -webkit-filter: $expression;
   filter: $expression;
 }
