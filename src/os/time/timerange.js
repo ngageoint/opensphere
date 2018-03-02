@@ -75,7 +75,19 @@ os.time.TimeRange.prototype.compare = function(other) {
           // greater if this time starts at or after the other ends
           return 1;
         } else if (other.getStart() >= this.getEnd()) {
-          // less if this time ends at or after the other starts
+          // less if the other time starts after this one ends
+          return -1;
+        } else if (other.getStart() < this.getStart()) {
+          // greater if this time starts after the other starts
+          return 1;
+        } else if (other.getStart() > this.getStart()) {
+          // less if this time starts after the other starts
+          return -1;
+        } else if (other.getEnd() < this.getEnd()) {
+          // greater if this time ends after the other ends
+          return 1;
+        } else if (other.getEnd() > this.getEnd()) {
+          // less if this time ends before the other ends
           return -1;
         }
       } else {
