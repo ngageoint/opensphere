@@ -1,8 +1,8 @@
-goog.require('os.time.TimeInstant');
-goog.require('os.time.TimeRange');
 goog.require('goog.date.Date');
 goog.require('goog.date.DateTime');
 goog.require('goog.date.UtcDateTime');
+goog.require('os.time.TimeInstant');
+goog.require('os.time.TimeRange');
 
 
 describe('os.time.TimeInstant', function() {
@@ -83,7 +83,7 @@ describe('os.time.TimeInstant', function() {
     var t = new os.time.TimeInstant(h);
     var o = new os.time.TimeRange(0, 2 * h);
 
-    expect(t.compare(o)).toBe(0);
+    expect(t.compare(o)).toBe(1);
     t = new os.time.TimeInstant(0);
     expect(t.compare(o)).toBe(0);
     t = new os.time.TimeInstant(2 * h);
