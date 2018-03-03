@@ -263,9 +263,9 @@ const indexResources = sharedResources.concat([
     scripts: ['d3.min.js']
   },
   {
-    source: 'vendor/d3',
+    source: resolver.resolveModulePath('d3-tip', __dirname),
     target: 'vendor/d3',
-    scripts: ['d3-tip.js']
+    scripts: ['index.js']
   },
   {
     source: resolver.resolveModulePath('save-svg-as-png', __dirname),
