@@ -365,6 +365,7 @@ os.source.Vector = function(opt_options) {
   /**
    * Unique ID column.
    * @type {?os.data.ColumnDefinition}
+   * @private
    */
   this.uniqueId_ = null;
 
@@ -958,7 +959,7 @@ os.source.Vector.prototype.setCenterGeometryShape = function(value) {
  */
 os.source.Vector.prototype.isNotEllipseOrLOBOrDefault = function(shapeName) {
   return !os.style.ELLIPSE_REGEXP.test(shapeName) && !os.style.DEFAULT_REGEXP.test(shapeName) &&
-    !os.style.LOB_REGEXP.test(shapeName);
+      !os.style.LOB_REGEXP.test(shapeName);
 };
 
 
@@ -1320,6 +1321,14 @@ os.source.Vector.prototype.setTimeFilterEnabled = function(value) {
  */
 os.source.Vector.prototype.getTimeFilterEnabled = function() {
   return this.timeFilterEnabled_;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.source.Vector.prototype.isTimeEditEnabled = function() {
+  return false;
 };
 
 
@@ -1895,13 +1904,13 @@ os.source.Vector.prototype.processNow = function() {
 
 
 /**
- * Handle a feature being removed from the source. Always process removed features on a timer because Openlayers doesn't have
- * bulk remove.
+ * Handle a feature being removed from the source. Always process removed features on a timer
+ * because Openlayers doesn't have bulk remove.
  * @param {!ol.Feature} feature
  * @protected
  *
- * @todo Switch this back to unprocessFeatures when (if) Openlayers supports bulk removal and refactor to work similarly to
- *       processFeatures.
+ * @todo Switch this back to unprocessFeatures when (if) Openlayers supports bulk removal and
+ *       refactor to work similarly to processFeatures.
  */
 os.source.Vector.prototype.unprocessFeature = function(feature) {
   feature.suppressEvents();
