@@ -710,6 +710,14 @@ plugin.file.kml.KMLSource.prototype.setMinRefreshPeriod = function(value) {
 /**
  * @inheritDoc
  */
+plugin.file.kml.KMLSource.prototype.isTimeEditEnabled = function() {
+  return true;
+};
+
+
+/**
+ * @inheritDoc
+ */
 plugin.file.kml.KMLSource.prototype.persist = function(opt_to) {
   var options = plugin.file.kml.KMLSource.base(this, 'persist', opt_to);
   options['minRefreshPeriod'] = this.minRefreshPeriod;
