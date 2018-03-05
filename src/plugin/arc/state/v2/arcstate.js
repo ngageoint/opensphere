@@ -1,4 +1,6 @@
 goog.provide('plugin.arc.state.v2.arcstate');
+
+goog.require('ol.xml');
 goog.require('os.ogc.spatial');
 goog.require('os.state.v2.FilterTag');
 goog.require('os.xml');
@@ -22,7 +24,7 @@ plugin.arc.state.v2.arcstate.load = function(el) {
     var layer = wmsLayers[i];
     var providerEle = layer.querySelector('provider');
     if (providerEle) {
-      var content = goog.dom.getTextContent(providerEle);
+      var content = ol.xml.getAllTextContent(providerEle, true).trim();
       if (content === 'ArcMap') {
         // we found an Arc layer, modify it to match what opensphere expects
         goog.dom.removeNode(providerEle);
@@ -32,7 +34,7 @@ plugin.arc.state.v2.arcstate.load = function(el) {
 
     var urlElement = layer.querySelector('url');
     if (urlElement) {
-      var url = goog.dom.getTextContent(urlElement);
+      var url = ol.xml.getAllTextContent(urlElement, true).trim();
       if (goog.string.endsWith(url, '/export')) {
         // prune off the /export since OL3's TileArcGISRestSource doesn't like it
         var newUrl = url.substring(0, url.length - 7);
@@ -69,7 +71,7 @@ plugin.arc.state.v2.arcstate.save = function(el) {
     // check whether the URL ends with /export
     var urlElement = layer.querySelector('url');
     if (urlElement) {
-      var url = goog.dom.getTextContent(urlElement);
+      var url = ol.xml.getAllTextContent(urlElement, true).trim();
       if (!goog.string.endsWith(url, '/export')) {
         // add /export to the end since 2D expects that
         var newUrl = url + '/export';
