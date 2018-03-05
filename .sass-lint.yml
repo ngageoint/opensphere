@@ -35,7 +35,7 @@ rules:
   no-mergeable-selectors: 2
   no-misspelled-properties:
     - 2
-    - extra-properties: [-moz-filter, -o-filter]
+    - extra-properties: [-moz-filter]
   no-qualifying-elements: 0
   no-trailing-whitespace: 2
   no-trailing-zero: 2
