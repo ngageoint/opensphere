@@ -382,11 +382,10 @@ plugin.file.kml.KMLParser.prototype.loadExternalStyles = function() {
   var extStylesFound = false;
 
   for (var i = 0, n = styles.length; i < n; i++) {
-    var style = goog.dom.getTextContent(styles[i]);
-
+    var style = ol.xml.getAllTextContent(styles[i], true).trim();
     if (style) {
       // remove the fragment, if url is incorrectly formatted, kml is bad and this url should be skipped
-      var url = style.replace(/#.*/, '').trim();
+      var url = style.replace(/#.*/, '');
       url = encodeURI(url) === url ? url : undefined;
       if (url) {
         extStylesFound = true;
@@ -1550,7 +1549,7 @@ plugin.file.kml.KMLParser.setNodeLabel_ = function(node, el) {
   goog.asserts.assert(el.localName == 'name', 'localName should be name');
 
   // default to null and a default label will be created later
-  node.setLabel(goog.dom.getTextContent(el) || null);
+  node.setLabel(ol.xml.getAllTextContent(el, true).trim() || null);
 };
 
 
@@ -1564,7 +1563,7 @@ plugin.file.kml.KMLParser.setNodeCollapsed_ = function(node, el) {
   goog.asserts.assert(el.localName == 'open', 'localName should be open');
 
   // default to collapsed, so only expand if the text is '1'.
-  node.collapsed = goog.dom.getTextContent(el) !== '1';
+  node.collapsed = ol.xml.getAllTextContent(el, true).trim() !== '1';
 };
 
 
@@ -1577,8 +1576,8 @@ plugin.file.kml.KMLParser.setNodeCollapsed_ = function(node, el) {
 plugin.file.kml.KMLParser.setNodeVisibility_ = function(node, el) {
   goog.asserts.assert(el.localName == 'visibility', 'localName should be visibility');
 
-  var content = goog.dom.getTextContent(el);
-  if (goog.isDefAndNotNull(content)) {
+  var content = ol.xml.getAllTextContent(el, true).trim();
+  if (content) {
     // this only handles turning the node off so we can honor our node defaults. this is specifically for network links,
     // which we always default to being turned off.
     var visibility = ol.format.XSD.readBooleanString(content);

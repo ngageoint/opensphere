@@ -265,7 +265,7 @@ os.ui.filter.getColumnName = function(children) {
   var s = '';
 
   if (children && children[0]) {
-    s = goog.dom.getTextContent(children[0]);
+    s = ol.xml.getAllTextContent(children[0], true).trim();
   }
 
   return s;
