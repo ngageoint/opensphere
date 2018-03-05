@@ -4,6 +4,7 @@ goog.require('goog.dom');
 goog.require('goog.dom.NodeType');
 goog.require('goog.dom.xml');
 goog.require('goog.string');
+goog.require('ol.xml');
 goog.require('os.time');
 
 
@@ -172,8 +173,8 @@ os.xml.readDateTime = function(node) {
   // this should handle any ISO strings and is by far the fastest way to parse dates. if we run into time fields that
   // aren't being parsed correctly, be VERY careful with changes to this function and compare the difference in the
   // browser's CPU profiler. use a large (5MB+) KML with time fields as a test case.
-  var text = goog.dom.getTextContent(node);
-  var date = new Date(text ? text.trim() : undefined);
+  var text = ol.xml.getAllTextContent(node, true).trim();
+  var date = new Date(text || undefined);
   return !isNaN(date.getTime()) ? date : null;
 };
 
