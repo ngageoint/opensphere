@@ -915,31 +915,25 @@ os.source.Vector.prototype.setGeometryShape = function(value) {
   if (ellipseTest || lobTest || revertIndexTest) {
     var features = this.getFeatures();
     for (var i = 0, n = features.length; i < n; i++) {
-      var geom = features[i].getGeometry();
-      var geom2 = null;
-      var extent = null;
+      var geoms = [features[i].getGeometry()];
 
       if (ellipseTest) {
         os.feature.createEllipse(features[i]);
-        geom2 = /** @type {ol.geom.Geometry} */ (features[i].get(os.data.RecordField.ELLIPSE));
-      } else if (lobTest) {
+        geoms.push(/** @type {ol.geom.Geometry} */ (features[i].get(os.data.RecordField.ELLIPSE)));
+      }
+
+      if (lobTest) {
         os.feature.createLineOfBearing(features[i]);
-        geom2 = /** @type {ol.geom.Geometry} */ (features[i].get(os.data.RecordField.LINE_OF_BEARING));
+
+        // This picks up cached ellipses even if the user has them off. While that's not ideal, we
+        // don't have a choice until we can refactor both ellipse and LOB into "derived geometries"
+        // and give them a better setup form in the app
+        geoms.push(/** @type {ol.geom.Geometry} */ (features[i].get(os.data.RecordField.ELLIPSE)));
+        geoms.push(/** @type {ol.geom.Geometry} */ (features[i].get(os.data.RecordField.LINE_OF_BEARING)));
       }
 
-      if (geom) {
-        extent = geom.getExtent();
-      }
-
-      if (geom2) {
-        if (extent) {
-          ol.extent.extend(extent, geom2.getExtent());
-        } else {
-          extent = geom2.getExtent();
-        }
-      }
-
-      if (extent) {
+      var extent = geoms.reduce(os.fn.reduceExtentFromGeometries, ol.extent.createEmpty());
+      if (!ol.extent.isEmpty(extent)) {
         this.featuresRtree_.update(extent, features[i]);
       }
     }
