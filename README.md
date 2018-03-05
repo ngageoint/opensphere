@@ -6,10 +6,16 @@ WMS/WFS services), XYZ, TMS, KML, GeoJSON, Shapefiles, CSVs, and more! Other fea
 both raster and vector data, import and export of various formats, saving files and layers between
 sessions, and much more!
 
-Check it out!
-* [master](https://master-branch-opensphere-ngageoint.surge.sh)
+[Check it out!](https://master-branch-opensphere-ngageoint.surge.sh)
+
+Things to try:
+* Load a KML, GeoJSON, or GPX file (and more!)
+* Add and browse servers such as Geoserver, ArcGIS, and more!
+* Animate data in the timeline
 
 In addition, OpenSphere (and its build system) can serve as a base library for GIS applications. Love what we've done with Openlayers and Cesium but want your own UI? You can do that!
+
+Questions? Ask them in the [forum](https://groups.google.com/forum/#!forum/opensphere).
 
 ## Prerequisites
 
@@ -38,7 +44,7 @@ If you prefer to use NPM, that's fine too:
 * `npm run build`
 * Point your browser at `dist/opensphere`
 
-## Hosting 
+## Hosting
 
 OpenSphere is a web application and needs to be hosted by a http server. Any HTTP server will work fine. To get started quickly, a very simple to use node [http-server](https://github.com/indexzero/http-server) is pre-configured, it only needs to be installed:
 
@@ -85,7 +91,7 @@ Our general [development guide](http://opensphere.readthedocs.io/en/latest/getti
 
 ## Contributing
 
-To get involved with OpenSphere directly, see our [contributing guide](https://github.com/ngageoint/opensphere/blob/master/CONTRIBUTING.md).
+To get involved with OpenSphere directly, see our [contributing guide](http://opensphere.readthedocs.io/en/latest/contributing.html).
 
 ## About
 
