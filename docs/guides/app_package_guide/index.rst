@@ -20,6 +20,7 @@ The ``build`` property is used to instruct the resolver during the build. For th
 * ``index``: The index file used by opensphere-build-index_.
 * ``scss``: The root SCSS file for the application.
 * ``gcc``: Additional instructions for the `Google Closure Compiler`_.
+* ``moduleDefines``: ``goog.define`` properties that should be resolved to a ``node_module`` path in uncompiled mode.
 
 GCC
 ***
@@ -33,6 +34,16 @@ The ``build.gcc`` object has a number of properties available that affect what a
 .. note::
 
   2.x versions of the resolver will automatically add source files in the ``<app>/src`` directory. A future major release will likely change this behavior to explicitly define where to find source files with the ``build.gcc.js`` option. This ties in with the compiler ``--js`` flags that the resolver generates.
+
+
+Module Defines
+**************
+
+When using Yarn workspaces, dependencies may be hoisted to a parent ``node_modules`` directory. This makes the location of the module unpredictable and we must resolve it. This can be done directly for resources included via ``index.js``, but any resources that need to be accessed programmatically will need their path resolved and defined for the uncompiled (debug) build.
+
+This is accomplished by defining a ``moduleDefines`` property in the ``build`` section of the ``package.json``. This property is a map of ``goog.define`` property names to the path of the resource being accessed. The path *must* begin with the module's package name (or it will not be resolved, resulting in an error), and any additional path is optional. In the example, we resolve the entire path to a minified JS file that could be lazily loaded in the application. The path could also be the root path of the package (just the package name), a directory, etc.
+
+For the compiled build, set the default ``goog.define`` property value to the location you intend to copy the required resources to in ``index.js``. For lazily loaded scripts, ``index.js`` should reference them in the ``files`` list instead of ``scripts`` so they aren't included in the ``index.html``.
 
 Directories
 -----------
