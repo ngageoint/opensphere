@@ -1,6 +1,8 @@
+/* eslint-disable */
 /**
- * @fileoverview Externs for zip.js (version ??).
- * @see http://ssdn-belford.stwan.bits/docs/zip.js/
+ * @fileoverview Externs for zip.js.
+ * @see {@link http://gildas-lormeau.github.io/zip.js/} For API documentation.
+ * @see {@link https://www.npmjs.com/package/zip-js} For npm releases.
  * @externs
  */
 
