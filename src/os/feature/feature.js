@@ -317,8 +317,8 @@ os.feature.createLineOfBearing = function(feature, opt_replace, opt_lobOpts) {
     var center = ol.proj.toLonLat(geom.getFirstCoordinate(), os.map.PROJECTION);
     var bearing = os.feature.getColumnValue(feature, opt_lobOpts.bearingColumn);
     var length = opt_lobOpts.lengthType == 'column' ? // get from column unless manual
-      os.feature.getColumnValue(feature, opt_lobOpts.lengthColumn, os.style.DEFAULT_LOB_MULTIPLIER) : 1;
-    if (center && !goog.isNull(bearing) && !goog.isNull(length) && !isNaN(bearing) && !isNaN(length) && length != 0) {
+      os.feature.getColumnValue(feature, opt_lobOpts.lengthColumn, 0) : 1;
+    if (center && bearing != null && !isNaN(bearing) && length) {
       // sanitize
       bearing = bearing % 360;
       bearing += bearing <= 0 ? 360 : 0;
@@ -435,12 +435,12 @@ os.feature.createLineOfBearing = function(feature, opt_replace, opt_lobOpts) {
       os.interpolate.interpolateGeom(lob);
       feature.set(os.data.RecordField.LINE_OF_BEARING_ERROR_HIGH, plusArc);
       feature.set(os.data.RecordField.LINE_OF_BEARING_ERROR_LOW, minusArc);
+    }
 
-      if (opt_lobOpts.showEllipse) { // TODO remove this if we ever allow independent styles
-        os.feature.createEllipse(feature);
-      } else {
-        feature.set(os.data.RecordField.ELLIPSE, null);
-      }
+    if (opt_lobOpts.showEllipse) { // TODO remove this if we ever allow independent styles
+      os.feature.createEllipse(feature);
+    } else {
+      feature.set(os.data.RecordField.ELLIPSE, null);
     }
   }
 
