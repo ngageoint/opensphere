@@ -55,7 +55,7 @@ describe('os.time.TimeRange', function() {
     var o = new os.time.TimeRange(h, 2 * h);
 
     // contained range
-    expect(r.compare(o)).toBe(0);
+    expect(r.compare(o)).toBe(-1);
 
     // same range
     o.setStart(0);
@@ -64,12 +64,12 @@ describe('os.time.TimeRange', function() {
     // intersected range from start
     o.setStart(os.time.TimeInstant.MIN_TIME);
     o.setEnd(h);
-    expect(r.compare(o)).toBe(0);
+    expect(r.compare(o)).toBe(1);
 
     // intersected range from end
     o.setStart(h);
     o.setEnd(os.time.TimeInstant.MAX_TIME);
-    expect(r.compare(o)).toBe(0);
+    expect(r.compare(o)).toBe(-1);
 
     // other end same as start
     o.setStart(os.time.TimeInstant.MIN_TIME);
@@ -93,9 +93,9 @@ describe('os.time.TimeRange', function() {
     r.setStart(os.time.TimeInstant.MAX_TIME);
     r.setEnd(os.time.TimeInstant.MIN_TIME);
 
-    //TimeRage.getStart() should alaways return the min of the timerange
+    // TimeRage.getStart() should alaways return the min of the timerange
     expect(r.getStart()).toBe(os.time.TimeInstant.MIN_TIME);
-    //TimeRage.getEnd() should alaways return the max of the timerange
+    // TimeRage.getEnd() should alaways return the max of the timerange
     expect(r.getEnd()).toBe(os.time.TimeInstant.MAX_TIME);
   });
 
@@ -104,7 +104,7 @@ describe('os.time.TimeRange', function() {
     var t = new os.time.TimeInstant(h);
 
     // contained
-    expect(r.compare(t)).toBe(0);
+    expect(r.compare(t)).toBe(-1);
 
     // at start
     t.setStart(0);
