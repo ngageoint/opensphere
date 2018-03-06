@@ -284,4 +284,23 @@ describe('plugin.file.kml.KMLParser', function() {
       expect(features[6].values_._style.image.rotation).toBe(0);
     });
   });
+
+  it('should support schema without name', function() {
+    openFileAndRun('schema_noname_test.xml', function(feat) {
+      expect(feat.length).toBe(1);
+    });
+  });
+
+  it('should have a regexp that only matches the right elements', function() {
+    var regexp = parser.getKmlThingRegex();
+    expect(regexp.test('Placemark')).toBe(true);
+    expect(regexp.test('MyPlacemark')).toBe(false);
+    expect(regexp.test('NetworkLink')).toBe(true);
+    expect(regexp.test('GroundOverlay')).toBe(true);
+    expect(regexp.test('ScreenOverlay')).toBe(true);
+    expect(regexp.test('Tour')).toBe(true);
+    expect(regexp.test('tour')).toBe(false);
+    expect(regexp.test('GroundOverlay3')).toBe(false);
+  });
+
 });

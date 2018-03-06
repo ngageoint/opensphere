@@ -1475,7 +1475,14 @@ plugin.file.kml.KMLParser.prototype.parseSchema_ = function(el) {
   var schemas = os.xml.getChildrenByTagName(el, 'Schema');
   for (var i = 0, n = schemas.length; i < n; i++) {
     var name = schemas[i].name || schemas[i].getAttribute('name');
-    this.kmlThings_.push(name);
+    if (!name) {
+      continue;
+    }
+
+    if (this.kmlThings_.indexOf(name) === -1) {
+      this.kmlThings_.push(name);
+    }
+
     var fields = os.xml.getChildrenByTagName(schemas[i], 'SimpleField');
 
     /**
@@ -1532,7 +1539,7 @@ plugin.file.kml.KMLParser.prototype.parseSchema_ = function(el) {
  * @return {RegExp} The KML regex.
  */
 plugin.file.kml.KMLParser.prototype.getKmlThingRegex = function() {
-  return new RegExp('^' + this.kmlThings_.join('|') + '$');
+  return new RegExp('^(' + this.kmlThings_.join('|') + ')$');
 };
 
 
