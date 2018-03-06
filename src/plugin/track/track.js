@@ -83,6 +83,14 @@ plugin.track.TOTAL_ZERO = 'Unknown';
 
 
 /**
+ * A type representing a track geometry. Tracks will use a `ol.geom.MultiLineString` if they cross the date line (to
+ * render correctly in Openlayers), or if they represent a multi-track.
+ * @typedef {ol.geom.LineString|ol.geom.MultiLineString}
+ */
+plugin.track.TrackLike;
+
+
+/**
  * @typedef {{
  *   entry: !os.filter.FilterEntry,
  *   mappings: !Array<!Object>,
@@ -97,6 +105,7 @@ plugin.track.QueryOptions;
 /**
  * @typedef {{
  *   features: (Array<!ol.Feature>|undefined),
+ *   geometry: (plugin.track.TrackLike|undefined),
  *   id: (string|undefined),
  *   color: (string|undefined),
  *   name: (string|undefined),
@@ -331,13 +340,14 @@ plugin.track.removeTrackById = function(id) {
 
 
 /**
- * Creates a track from a a track options object.
- * @param {plugin.track.CreateOptions} options The options object for the track.
- * @return {?ol.Feature} The track feature
+ * Create a track geometry (`ol.geom.LineString` with an XYZM coordinate layout) from a set of features. The features
+ * must have a common field with values that can be naturally sorted. Any features lacking a point geometry or a value
+ * in the sort field will be ignored. If sorted by `os.data.RecordField.TIME`, the track may be animated over time.
+ * @param {!Array<!ol.Feature>} features The features.
+ * @param {string} sortField The track sort field.
+ * @return {ol.geom.LineString|undefined} The track, or undefined if no coordinates were found.
  */
-plugin.track.createTrack = function(options) {
-  var features = options.features;
-  var sortField = options.sortField || os.data.RecordField.TIME;
+plugin.track.createTrackGeometry = function(features, sortField) {
   var sortFn = sortField == os.data.RecordField.TIME ? os.feature.sortByTime :
       os.feature.sortByField.bind(null, sortField);
   var getValueFn = sortField == os.data.RecordField.TIME ? plugin.track.getStartTime :
@@ -348,38 +358,65 @@ plugin.track.createTrack = function(options) {
 
   var coords = features.map(function(feature) {
     var geom = feature.getGeometry();
-    if (geom instanceof ol.geom.Point) {
-      var value = /** @type {number|undefined} */ (getValueFn(feature));
+    var value = /** @type {number|undefined} */ (getValueFn(feature));
+    if (geom instanceof ol.geom.Point && value != null) {
       var pointCoord = geom.getFirstCoordinate();
       if (pointCoord.length < 3) {
+        // add altitude for consistency across all track geometries
         pointCoord.push(0);
       }
 
-      if (value != null) {
-        pointCoord.push(value);
-        return pointCoord;
-      }
+      // add the sort value
+      pointCoord.push(value);
+      return pointCoord;
     }
 
     return undefined;
   }).filter(os.fn.filterFalsey);
 
-  if (!coords.length) {
-    // no valid features to create the track from, so don't return one
-    return null;
+  // create the line geometry
+  return coords.length ? new ol.geom.LineString(coords, ol.geom.GeometryLayout.XYZM) : undefined;
+};
+
+
+/**
+ * Creates a track from the provided options.
+ * @param {!plugin.track.CreateOptions} options The track creation options.
+ * @return {os.feature.DynamicFeature|ol.Feature|undefined} The track feature.
+ */
+plugin.track.createTrack = function(options) {
+  var sortField = options.sortField || os.data.RecordField.TIME;
+  var featureColor;
+  var sourceColor;
+
+  var geometry = options.geometry;
+  if (!geometry && options.features && options.features.length) {
+    geometry = plugin.track.createTrackGeometry(options.features, sortField);
+    featureColor = /** @type {string|undefined} */ (options.features[0].get(os.data.RecordField.COLOR));
+
+    var source = os.feature.getSource(options.features[0]);
+    if (source) {
+      sourceColor = source ? source.getColor() : undefined;
+    }
   }
 
-  // create the line and split it across the date line so it renders correctly on a 2D map
-  var geometry = new ol.geom.LineString(coords, ol.geom.GeometryLayout.XYZM);
-  geometry.toLonLat();
-  geometry = os.geo.splitOnDateLine(geometry);
-  geometry.osTransform();
+  if (!geometry) {
+    return undefined;
+  }
 
-  // tracks must be a ol.geom.MultiLineString
   if (geometry instanceof ol.geom.LineString) {
-    geometry = new ol.geom.MultiLineString([geometry.getCoordinates()], ol.geom.GeometryLayout.XYZM);
-    geometry.set(os.geom.GeometryField.NORMALIZED, true);
+    geometry.toLonLat();
+    geometry = os.geo.splitOnDateLine(geometry);
+    geometry.osTransform();
+
+    // tracks must be a ol.geom.MultiLineString. if it isn't one now, it doesn't cross the date line and was not split.
+    // if (geometry instanceof ol.geom.LineString) {
+    //   geometry = new ol.geom.MultiLineString([geometry.getCoordinates()], ol.geom.GeometryLayout.XYZM);
+    // }
   }
+
+  // prevent any further normalization of the geometry
+  geometry.set(os.geom.GeometryField.NORMALIZED, true);
 
   // create the track feature
   var track;
@@ -409,9 +446,6 @@ plugin.track.createTrack = function(options) {
   plugin.track.updateDuration(track);
   plugin.track.updateTime(track);
 
-  var source = os.feature.getSource(features[0]);
-  var sourceColor = source ? source.getColor() : undefined;
-
   // create the track and current position styles. color is the first defined value in:
   //  - color override parameter
   //  - feature color
@@ -420,8 +454,7 @@ plugin.track.createTrack = function(options) {
   //
   var trackStyle = /** @type {!Object<string, *>} */ (os.object.unsafeClone(plugin.track.TRACK_CONFIG));
   var currentStyle = /** @type {!Object<string, *>} */ (os.object.unsafeClone(plugin.track.CURRENT_CONFIG));
-  var trackColor = options.color || /** @type {string|undefined} */ (features[0].get(os.data.RecordField.COLOR)) ||
-      sourceColor || os.style.DEFAULT_LAYER_COLOR;
+  var trackColor = options.color || featureColor || sourceColor || os.style.DEFAULT_LAYER_COLOR;
   if (trackColor) {
     os.style.setConfigColor(trackStyle, trackColor, [os.style.StyleField.STROKE]);
     os.style.setConfigColor(currentStyle, trackColor, [os.style.StyleField.IMAGE]);
@@ -455,7 +488,7 @@ plugin.track.createTrack = function(options) {
  *
  * @suppress {accessControls} To allow direct access to line coordinates.
  */
-plugin.track.addToTrack = function(track, features) {
+plugin.track.addFeaturesToTrack = function(track, features) {
   var sortField = /** @type {string|undefined} */ (track.get(plugin.track.TrackField.SORT_FIELD));
   if (!sortField) {
     goog.log.error(plugin.track.LOGGER_, 'Unable to add features to track: track is missing sorting data.');
@@ -471,7 +504,7 @@ plugin.track.addToTrack = function(track, features) {
       plugin.track.getFeatureValue.bind(null, sortField);
 
   // add point(s) to the original geometry, in case the track was interpolated
-  var geometry = /** @type {!ol.geom.MultiLineString} */ (track.get(os.interpolate.ORIGINAL_GEOM_FIELD) ||
+  var geometry = /** @type {!plugin.track.TrackLike} */ (track.get(os.interpolate.ORIGINAL_GEOM_FIELD) ||
       track.getGeometry());
 
   // merge the split line so features can be added in the correct location
@@ -539,7 +572,7 @@ plugin.track.addToTrack = function(track, features) {
  */
 plugin.track.clamp = function(track, start, end) {
   // add point(s) to the original geometry, in case the track was interpolated
-  var geometry = /** @type {!ol.geom.MultiLineString} */ (track.get(os.interpolate.ORIGINAL_GEOM_FIELD) ||
+  var geometry = /** @type {!(plugin.track.TrackLike)} */ (track.get(os.interpolate.ORIGINAL_GEOM_FIELD) ||
       track.getGeometry());
 
   // merge the split line so features can be added in the correct location
@@ -605,10 +638,12 @@ plugin.track.setGeometry = function(track, geometry) {
   geometry.osTransform();
 
   // tracks must be a ol.geom.MultiLineString
-  if (geometry instanceof ol.geom.LineString) {
-    geometry = new ol.geom.MultiLineString([geometry.getCoordinates()], geometry.getLayout());
-    geometry.set(os.geom.GeometryField.NORMALIZED, true);
-  }
+  // if (geometry instanceof ol.geom.LineString) {
+  //   geometry = new ol.geom.MultiLineString([geometry.getCoordinates()], geometry.getLayout());
+  // }
+
+  // prevent further normalization of the geometry
+  geometry.set(os.geom.GeometryField.NORMALIZED, true);
 
   // recreate animation geometries
   plugin.track.disposeAnimationGeometries(track);
@@ -632,10 +667,10 @@ plugin.track.setGeometry = function(track, geometry) {
 
 
 /**
- * Creates a track from a set a features and add it to the tracks layer.
- * @param {plugin.track.CreateOptions} options The options object for the track.
+ * Creates a track and adds it to the tracks layer.
+ * @param {!plugin.track.CreateOptions} options The options object for the track.
  */
-plugin.track.createFromFeatures = function(options) {
+plugin.track.createAndAdd = function(options) {
   var track = plugin.track.createTrack(options);
 
   if (!track) {
@@ -1006,17 +1041,16 @@ plugin.track.updateDynamic = function(track, timestamp) {
   }
 
   var trackGeometry = track.getGeometry();
-  if (!(trackGeometry instanceof ol.geom.MultiLineString)) {
-    // shouldn't happen, but this will fail if the track isn't a multi-line
+  if (!(trackGeometry instanceof ol.geom.LineString || trackGeometry instanceof ol.geom.MultiLineString)) {
+    // shouldn't happen, but this will fail if the track isn't a line
     return;
   }
 
   var flatCoordinates = trackGeometry.getFlatCoordinates();
   var stride = trackGeometry.getStride();
-  var ends = trackGeometry.getEnds();
+  var ends = trackGeometry instanceof ol.geom.MultiLineString ? trackGeometry.getEnds() : undefined;
   var geomLayout = trackGeometry.getLayout();
-  if (!flatCoordinates || !ends ||
-      (geomLayout !== ol.geom.GeometryLayout.XYM && geomLayout !== ol.geom.GeometryLayout.XYZM)) {
+  if (!flatCoordinates || (geomLayout !== ol.geom.GeometryLayout.XYM && geomLayout !== ol.geom.GeometryLayout.XYZM)) {
     // something is wrong with this line - abort!!
     return;
   }
@@ -1101,17 +1135,17 @@ plugin.track.getTrackPositionAt = function(track, timestamp, index, coordinates,
  * @param {number} index The index of the most recent known coordinate.
  * @param {!Array<number>} coordinates The flat track coordinate array.
  * @param {number} stride The stride of the coordinate array.
- * @param {!Array<number>} ends The end indicies of each line in the multi-line.
+ * @param {Array<number>=} opt_ends The end indicies of each line in a multi-line. Undefined if not a multi-line.
  *
  * @suppress {accessControls} To allow direct access to line string coordinates.
  */
-plugin.track.updateCurrentLine = function(track, timestamp, index, coordinates, stride, ends) {
-  var currentLine = /** @type {ol.geom.MultiLineString|undefined} */ (track.get(plugin.track.TrackField.CURRENT_LINE));
+plugin.track.updateCurrentLine = function(track, timestamp, index, coordinates, stride, opt_ends) {
+  var currentLine = /** @type {plugin.track.TrackLike|undefined} */ (track.get(plugin.track.TrackField.CURRENT_LINE));
   var layout = stride === 4 ? ol.geom.GeometryLayout.XYZM : ol.geom.GeometryLayout.XYM;
   if (!currentLine) {
     // create the line geometry if it doesn't exist yet. must use an empty coordinate array instead of null, or the
     // layout will be set to XY
-    currentLine = new ol.geom.MultiLineString([], layout);
+    currentLine = opt_ends ? new ol.geom.MultiLineString([], layout) : new ol.geom.LineString([], layout);
     track.set(plugin.track.TrackField.CURRENT_LINE, currentLine);
   }
 
@@ -1139,12 +1173,14 @@ plugin.track.updateCurrentLine = function(track, timestamp, index, coordinates, 
   }
 
   // add ends indices that are in the current line
-  var currentEnds = ends.filter(function(end) {
+  var currentEnds = opt_ends ? opt_ends.filter(function(end) {
     return end <= flatCoordinates.length;
-  });
+  }) : undefined;
 
-  if (flatCoordinates.length < coordinates.length) {
-    // not showing the full track, so interpolate the current position
+  // interpolate the current position if we haven't exhausted the available coordinates and the last known position
+  // isn't at one of the ends. if the current position is an end, the current time is between tracks in a multi track.
+  if (flatCoordinates.length < coordinates.length &&
+      (!currentEnds || !currentEnds.length || currentEnds[currentEnds.length - 1] !== flatCoordinates.length)) {
     var position = plugin.track.getTrackPositionAt(track, timestamp, index, coordinates, stride);
     if (position) {
       for (var i = 0; i < position.length; i++) {
@@ -1152,8 +1188,10 @@ plugin.track.updateCurrentLine = function(track, timestamp, index, coordinates, 
       }
     }
 
-    // add the end location of the last line segment
-    currentEnds.push(flatCoordinates.length);
+    // end the current line segment at the interpolated position
+    if (currentEnds) {
+      currentEnds.push(flatCoordinates.length);
+    }
   }
 
   // update the current position marker
@@ -1162,8 +1200,12 @@ plugin.track.updateCurrentLine = function(track, timestamp, index, coordinates, 
   // mark the line as dirty so the Cesium feature converter recreates it
   currentLine.set(os.olcs.DIRTY_BIT, true);
 
-  // update the line geometry
-  currentLine.setFlatCoordinates(layout, flatCoordinates, currentEnds);
+  // update the current line geometry
+  if (currentLine instanceof ol.geom.LineString) {
+    currentLine.setFlatCoordinates(layout, flatCoordinates);
+  } else if (currentEnds) {
+    currentLine.setFlatCoordinates(layout, flatCoordinates, currentEnds);
+  }
 };
 
 

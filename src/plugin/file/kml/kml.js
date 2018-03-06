@@ -30,6 +30,22 @@ plugin.file.kml.STYLE_KEY = '_kmlStyle';
 
 
 /**
+ * Namespace URI used for KML nodes.
+ * @type {string}
+ * @const
+ */
+plugin.file.kml.KML_NS = 'http://www.opengis.net/kml/2.2';
+
+
+/**
+ * Namespace URI used for gx nodes.
+ * @type {string}
+ * @const
+ */
+plugin.file.kml.GX_NS = 'http://www.google.com/kml/ext/2.2';
+
+
+/**
  * The default KML style
  * @type {Object<string, *>}
  */
@@ -57,7 +73,7 @@ plugin.file.kml.DEFAULT_STYLE_ARRAY = [plugin.file.kml.DEFAULT_STYLE];
 
 
 /**
- * Replaces parsers in an OL3 KML parser map.
+ * Replaces parsers in an Openlayers KML parser map.
  * @param {Object<string, Object<string, ol.XmlParser>>} obj The parser object with namespace keys
  * @param {string} field The field to replace
  * @param {ol.XmlParser} parser The new parser
@@ -73,7 +89,7 @@ plugin.file.kml.replaceParsers_ = function(obj, field, parser) {
 
 
 /**
- * Accessor for private OL3 code.
+ * Accessor for private Openlayers code.
  * @return {function(this: T, *, Array<*>, (string|undefined)): (Node|undefined)}
  * @template T
  */
@@ -83,7 +99,7 @@ plugin.file.kml.OL_GEOMETRY_NODE_FACTORY = function() {
 
 
 /**
- * Accessor for private OL3 code.
+ * Accessor for private Openlayers code.
  * @return {Object<string, Object<string, ol.XmlParser>>}
  * @template T
  */
@@ -93,7 +109,7 @@ plugin.file.kml.OL_ICON_STYLE_PARSERS = function() {
 
 
 /**
- * Accessor for private OL3 code.
+ * Accessor for private Openlayers code.
  * @return {Object<string, Object<string, ol.XmlParser>>}
  */
 plugin.file.kml.OL_LINK_PARSERS = function() {
@@ -102,7 +118,7 @@ plugin.file.kml.OL_LINK_PARSERS = function() {
 
 
 /**
- * Accessor for private OL3 code.
+ * Accessor for private Openlayers code.
  * @return {Array<string>}
  */
 plugin.file.kml.OL_NAMESPACE_URIS = function() {
@@ -111,7 +127,16 @@ plugin.file.kml.OL_NAMESPACE_URIS = function() {
 
 
 /**
- * Accessor for private OL3 code.
+ * Accessor for private Openlayers code.
+ * @return {Array<string>}
+ */
+plugin.file.kml.OL_GX_NAMESPACE_URIS = function() {
+  return ol.format.KML.GX_NAMESPACE_URIS_;
+};
+
+
+/**
+ * Accessor for private Openlayers code.
  * @return {Object<string, Object<string, ol.XmlParser>>}
  */
 plugin.file.kml.OL_NETWORK_LINK_PARSERS = function() {
@@ -120,7 +145,7 @@ plugin.file.kml.OL_NETWORK_LINK_PARSERS = function() {
 
 
 /**
- * Accessor for private OL3 code.
+ * Accessor for private Openlayers code.
  * @return {Object<string, Object<string, ol.XmlParser>>}
  */
 plugin.file.kml.OL_PLACEMARK_PARSERS = function() {
@@ -129,7 +154,7 @@ plugin.file.kml.OL_PLACEMARK_PARSERS = function() {
 
 
 /**
- * Access for private OL3 code.
+ * Access for private Openlayers code.
  * @return {Object<string, Object<string, ol.XmlSerializer>>}
  */
 plugin.file.kml.OL_PLACEMARK_SERIALIZERS = function() {
@@ -138,7 +163,7 @@ plugin.file.kml.OL_PLACEMARK_SERIALIZERS = function() {
 
 
 /**
- * Access for private OL3 code.
+ * Access for private Openlayers code.
  * @return {Object<string, Object<string, ol.XmlParser>>}
  */
 plugin.file.kml.OL_STYLE_PARSERS = function() {
@@ -147,7 +172,7 @@ plugin.file.kml.OL_STYLE_PARSERS = function() {
 
 
 /**
- * OL3's opacity parsing can result in 16 decimal precision, which breaks when converting to a string then back
+ * Openlayers' opacity parsing can result in 16 decimal precision, which breaks when converting to a string then back
  * to an array. Since we convert everything to an rgba string, this can be pretty common. Normalize the color output,
  * which we have overridden to fix opacity to 2 decimal places.
  *
@@ -182,7 +207,7 @@ plugin.file.kml.replaceParsers_(ol.format.KML.POLY_STYLE_PARSERS_, 'color',
 
 
 /**
- * Accessor for private OL3 code.
+ * Accessor for private Openlayers code.
  * @param {Node} node Node.
  * @param {Array<*>} objectStack Object stack.
  * @return {Array<ol.style.Style>} Style.
@@ -276,10 +301,136 @@ plugin.file.kml.TIMEFIELD_PARSERS = ol.xml.makeStructureNS(
 
 
 /**
- * Add time parsers to the OL3 Placemark parsers. These will parse kml:TimeStamp into a time instant and kml:TimeSpan
- * into a time range.
+ * Add time parsers to the Openlayers Placemark parsers. These will parse kml:TimeStamp into a time instant and
+ * kml:TimeSpan into a time range.
  */
 os.object.merge(plugin.file.kml.TIME_PARSERS, plugin.file.kml.OL_PLACEMARK_PARSERS(), false);
+
+
+/**
+ * Read a MultiTrack node.
+ * @param {Node} node Node.
+ * @param {Array<*>} objectStack Object stack.
+ * @return {ol.geom.MultiLineString|undefined} MultiLineString.
+ */
+plugin.file.kml.readMultiTrack = function(node, objectStack) {
+  var geometry = ol.format.KML.readGxMultiTrack_(node, objectStack);
+
+  var properties = ol.xml.pushParseAndPop({}, plugin.file.kml.MULTITRACK_PROPERTY_PARSERS, node, objectStack);
+  if (properties) {
+    geometry.setProperties(properties);
+  }
+
+  return geometry;
+};
+
+
+/**
+ * Geometry parsers for MultiTrack nodes.
+ * @type {Object<string, Object<string, ol.XmlParser>>}
+ * @const
+ */
+plugin.file.kml.MULTITRACK_GEOMETRY_PARSERS = ol.xml.makeStructureNS(
+    plugin.file.kml.OL_NAMESPACE_URIS(), {
+      // add kml:Track parser to support the 2.3 spec
+      'Track': ol.xml.makeArrayPusher(ol.format.KML.readGxTrack_)
+    });
+
+
+/**
+ * Property parsers for MultiTrack nodes.
+ * @type {Object<string, Object<string, ol.XmlParser>>}
+ * @const
+ */
+plugin.file.kml.MULTITRACK_PROPERTY_PARSERS = ol.xml.makeStructureNS(
+    plugin.file.kml.OL_NAMESPACE_URIS(), {
+      'altitudeMode': ol.xml.makeObjectPropertySetter(ol.format.XSD.readString),
+      'interpolate': ol.xml.makeObjectPropertySetter(ol.format.XSD.readBoolean)
+    }, ol.xml.makeStructureNS(
+        plugin.file.kml.OL_GX_NAMESPACE_URIS(), {
+          // also include gx:interpolate to support 2.2 extension values
+          'interpolate': ol.xml.makeObjectPropertySetter(ol.format.XSD.readBoolean)
+        }
+    ));
+
+
+/**
+ * Track/MultiTrack parsers for Placemark nodes.
+ * @type {Object<string, Object<string, ol.XmlParser>>}
+ * @const
+ */
+plugin.file.kml.PLACEMARK_TRACK_PARSERS = ol.xml.makeStructureNS(
+    plugin.file.kml.OL_NAMESPACE_URIS(), {
+      // add kml:Track and kml:MultiTrack parsers to support the 2.3 spec
+      'MultiTrack': ol.xml.makeObjectPropertySetter(plugin.file.kml.readMultiTrack, 'geometry'),
+      'Track': ol.xml.makeObjectPropertySetter(ol.format.KML.readGxTrack_, 'geometry')
+    }, ol.xml.makeStructureNS(
+        plugin.file.kml.OL_GX_NAMESPACE_URIS(), {
+          // replace gx:MultiTrack parser with ours
+          'MultiTrack': ol.xml.makeObjectPropertySetter(plugin.file.kml.readMultiTrack, 'geometry')
+        }
+    ));
+
+
+/**
+ * @type {Object<string, Object<string, ol.XmlParser>>}
+ * @const
+ */
+plugin.file.kml.GX_TRACK_PARSERS = ol.xml.makeStructureNS(
+    plugin.file.kml.OL_NAMESPACE_URIS(), {
+      'coord': ol.format.KML.gxCoordParser_
+    });
+
+
+/**
+ * Extend the Openlayers MultiTrack geometry parsers.
+ */
+os.object.merge(plugin.file.kml.MULTITRACK_GEOMETRY_PARSERS, ol.format.KML.GX_MULTITRACK_GEOMETRY_PARSERS_, false);
+
+
+/**
+ * Extend the Openlayers Track node parsers.
+ */
+os.object.merge(plugin.file.kml.GX_TRACK_PARSERS, ol.format.KML.GX_TRACK_PARSERS_, false);
+
+
+/**
+ * Add/replace Track/MultiTrack parsers for Placemark nodes.
+ */
+os.object.merge(plugin.file.kml.PLACEMARK_TRACK_PARSERS, plugin.file.kml.OL_PLACEMARK_PARSERS(), true);
+
+
+/**
+ * Override the Openlayers function to support exporting Track and MultiTrack nodes.
+ * @param {*} value Value.
+ * @param {Array<*>} objectStack Object stack.
+ * @param {string=} opt_nodeName Node name.
+ * @return {Node|undefined} Node.
+ *
+ * @suppress {duplicate}
+ */
+ol.format.KML.GEOMETRY_NODE_FACTORY_ = function(value, objectStack, opt_nodeName) {
+  if (value instanceof ol.geom.SimpleGeometry) {
+    var parentNode = objectStack[objectStack.length - 1].node;
+    var namespaceURI = parentNode.namespaceURI;
+
+    var geometryType = value.getType();
+    var layout = value.getLayout();
+    var nodeType = ol.format.KML.GEOMETRY_TYPE_TO_NODENAME_[geometryType];
+
+    if (layout === ol.geom.GeometryLayout.XYM || layout === ol.geom.GeometryLayout.XYZM) {
+      if (geometryType === ol.geom.GeometryType.LINE_STRING) {
+        nodeType = 'gx:Track';
+        namespaceURI = plugin.file.kml.GX_NS;
+      } else if (geometryType === ol.geom.GeometryType.MULTI_LINE_STRING) {
+        nodeType = 'gx:MultiTrack';
+        namespaceURI = plugin.file.kml.GX_NS;
+      }
+    }
+
+    return ol.xml.createElementNS(namespaceURI, nodeType);
+  }
+};
 
 
 /**
@@ -324,7 +475,7 @@ os.object.merge(plugin.file.kml.HREF_OVERRIDE, ol.format.KML.ICON_PARSERS_, true
 
 
 /**
- * Save a reference to the original OL3 writeMultiGeometry_ function.
+ * Save a reference to the original Openlayers writeMultiGeometry_ function.
  * @param {Node} node Node.
  * @param {ol.geom.Geometry} geometry Geometry.
  * @param {Array<*>} objectStack Object stack.
@@ -342,7 +493,7 @@ plugin.file.kml.olWriteMultiGeometry_ = ol.format.KML.writeMultiGeometry_;
  */
 plugin.file.kml.writeMultiGeometry_ = function(node, geometry, objectStack) {
   if (geometry instanceof ol.geom.GeometryCollection) {
-    // this part should be PR'ed back to OL3
+    // this part should be PR'ed back to Openlayers
     var /** @type {ol.XmlNodeStackItem} */ context = {node: node};
     var geometries = geometry.getGeometries();
     for (var i = 0, n = geometries.length; i < n; i++) {
@@ -357,15 +508,71 @@ plugin.file.kml.writeMultiGeometry_ = function(node, geometry, objectStack) {
 
 
 /**
- * Override the OL3 Placemark serializers to add additional support.
+ * Adds support for writing Track nodes.
+ * @param {Node} node Node.
+ * @param {ol.geom.Geometry} geometry Geometry.
+ * @param {Array<*>} objectStack Object stack.
+ * @private
+ */
+plugin.file.kml.writeMultiTrack_ = function(node, geometry, objectStack) {
+  if (geometry instanceof ol.geom.MultiLineString) {
+    var lineStrings = geometry.getLineStrings();
+    for (var i = 0; i < lineStrings.length; i++) {
+      var trackNode = ol.xml.createElementNS(plugin.file.kml.GX_NS, 'gx:Track');
+      plugin.file.kml.writeTrack_(trackNode, lineStrings[i], objectStack);
+      node.appendChild(trackNode);
+    }
+  }
+};
+
+
+
+/**
+ * Adds support for writing Track nodes.
+ * @param {Node} node Node.
+ * @param {ol.geom.Geometry} geometry Geometry.
+ * @param {Array<*>} objectStack Object stack.
+ * @private
+ */
+plugin.file.kml.writeTrack_ = function(node, geometry, objectStack) {
+  if (geometry instanceof ol.geom.LineString) {
+    var flatCoordinates = geometry.getFlatCoordinates();
+    var stride = geometry.getStride();
+
+    for (var i = 0; i < flatCoordinates.length; i += stride) {
+      var coordNode = ol.xml.createElementNS(plugin.file.kml.GX_NS, 'gx:coord');
+      var coordText = flatCoordinates[i] + ' ' + flatCoordinates[i + 1];
+      if (stride > 3) {
+        coordText += ' ' + flatCoordinates[i + 2];
+      }
+      ol.format.XSD.writeStringTextNode(coordNode, coordText);
+
+      var whenNode = ol.xml.createElementNS(plugin.file.kml.KML_NS, 'when');
+      var whenText = new Date(flatCoordinates[i + stride - 1]).toISOString();
+      ol.format.XSD.writeStringTextNode(whenNode, whenText);
+
+      node.appendChild(coordNode);
+      node.appendChild(whenNode);
+    }
+  }
+};
+
+
+/**
+ * Override the Openlayers Placemark serializers to add additional support.
  * @type {Object<string, Object<string, ol.XmlSerializer>>}
  * @const
  */
 plugin.file.kml.PLACEMARK_SERIALIZERS = ol.xml.makeStructureNS(
     plugin.file.kml.OL_NAMESPACE_URIS(), {
-      'MultiGeometry': ol.xml.makeChildAppender(
-          plugin.file.kml.writeMultiGeometry_)
-    });
+      'MultiGeometry': ol.xml.makeChildAppender(plugin.file.kml.writeMultiGeometry_)
+    }, ol.xml.makeStructureNS(
+        plugin.file.kml.OL_GX_NAMESPACE_URIS(), {
+          // add serializers for gx:Track and gx:MultiTrack
+          'MultiTrack': ol.xml.makeChildAppender(plugin.file.kml.writeMultiTrack_),
+          'Track': ol.xml.makeChildAppender(plugin.file.kml.writeTrack_)
+        }
+    ));
 os.object.merge(plugin.file.kml.PLACEMARK_SERIALIZERS, plugin.file.kml.OL_PLACEMARK_SERIALIZERS(), true);
 
 
@@ -448,7 +655,7 @@ plugin.file.kml.replaceParsers_(plugin.file.kml.OL_NETWORK_LINK_PARSERS(), 'Url'
  * Added support for icon color.
  *
  * @param {Node} node Node.
- * @param {Array.<*>} objectStack Object stack.
+ * @param {Array<*>} objectStack Object stack.
  * @private
  */
 plugin.file.kml.IconStyleParser_ = function(node, objectStack) {
