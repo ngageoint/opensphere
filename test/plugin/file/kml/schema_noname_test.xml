@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2">
+<Document>
+<open>1</open>
+<visibility>1</visibility>
+<name>Doc name</name>
+<Schema id="schema">
+<gx:SimpleArrayField name="x1" type="int">
+<displayName>X1</displayName>
+</gx:SimpleArrayField>
+</Schema>
+<Placemark>
+<name>PM1</name>
+<Point>
+<coordinates>153.2,-45.1,537.3</coordinates>
+</Point>
+</Placemark>
+</Document>
+</kml>
