@@ -15,6 +15,9 @@
       "hide_warnings_for": [
         "/opensphere/"
       ]
+    },
+    "moduleDefines": {
+      "my.module.PATH": "my-module/dist/my-module.min.js"
     }
   }
 }
