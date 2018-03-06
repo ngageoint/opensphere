@@ -1013,7 +1013,7 @@ os.style.verifyGeometries = function(feature, config, opt_layerConfig) {
         showEllipse: opt_layerConfig[os.style.StyleField.SHOW_ELLIPSE],
         showError: opt_layerConfig[os.style.StyleField.SHOW_ERROR]
       };
-      os.feature.createLineOfBearing(feature, false, lobOptions);
+      os.feature.createLineOfBearing(feature, true, lobOptions);
     } else {
       os.feature.createLineOfBearing(feature);
     }
