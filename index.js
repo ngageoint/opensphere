@@ -197,10 +197,10 @@ const sharedResources = [
     scripts: ['blob.js', 'filesaver.js', 'string.js', 'typedarray.js']
   },
   {
-    source: 'vendor/zip',
-    target: 'vendor/zip',
+    source: resolver.resolveModulePath('zip-js/WebContent', __dirname),
+    target: 'vendor/zip-js',
     scripts: ['zip.js', 'zip-ext.js'],
-    files: ['deflate.js', 'inflate.js']
+    files: ['deflate.js', 'inflate.js', 'z-worker.js']
   },
   {
     source: 'vendor/geomag',
