@@ -59,8 +59,8 @@ os.unit.MetricUnits.prototype.getConversionFactor = function() {
  * @inheritDoc
  */
 os.unit.MetricUnits.prototype.initMultipliers = function() {
-  this.multipliers.push(new os.unit.Multiplier('fm', 1E-9, false, 'femtometers'));
-  this.multipliers.push(new os.unit.Multiplier('nm', 1E-6, false, 'nanometers'));
+  this.multipliers.push(new os.unit.Multiplier('nm', 1E-9, false, 'nanometers'));
+  this.multipliers.push(new os.unit.Multiplier('um', 1E-6, false, 'micrometers'));
   this.multipliers.push(new os.unit.Multiplier('mm', 1E-3, false, 'millimeters'));
   this.multipliers.push(new os.unit.Multiplier('cm', 1E-2, true, 'centimeters'));
   this.multipliers.push(new os.unit.Multiplier('dm', 1E-1, false, 'decimeters'));
