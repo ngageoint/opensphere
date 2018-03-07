@@ -552,7 +552,7 @@ os.style.getConfigIcon = function(config) {
 
 /**
  * Sets all color values on the config. Colors are always set as an rgba string to minimize conversion both in
- * MIST style functions and OL3 rendering functions.
+ * Open Sphere style functions and OL3 rendering functions.
  * @param {Object} config
  * @param {?osx.icon.Icon} icon
  */
@@ -563,6 +563,58 @@ os.style.setConfigIcon = function(config, icon) {
       imageConfig['src'] = icon['path'];
     }
   }
+};
+
+
+/**
+ * Sets the rotation of an icon
+ * Open Sphere style functions and OL3 rendering functions.
+ * @param {Object} config
+ * @param {boolean} showRotation
+ * @param {number} rotateAmount
+ */
+os.style.setConfigIconRotation = function(config, showRotation, rotateAmount) {
+  var rotation = {
+    'image': {
+      'rotation': showRotation ? goog.math.toRadians(rotateAmount) : 0
+    }
+  };
+  os.style.mergeConfig(rotation, config);
+};
+
+
+/**
+ * Sets the rotation of an icon from a config object
+ * Open Sphere style functions and OL3 rendering functions.
+ * @param {Object} config
+ * @param {Object} origin
+ * @param {!ol.Feature} feature The feature
+ * @suppress {accessControls} To allow direct access to feature metadata.
+ */
+os.style.setConfigIconRotationFromObject = function(config, origin, feature) {
+  var showRotation = origin[os.style.StyleField.SHOW_ROTATION] || false;
+  var rotationColumn = origin[os.style.StyleField.ROTATION_COLUMN];
+  rotationColumn = goog.isString(rotationColumn) ? rotationColumn : '';
+  var rotateAmount = Number(feature.values_[rotationColumn]);
+  rotateAmount = goog.isNumber(rotateAmount) ? rotateAmount : 0;
+  os.style.setConfigIconRotation(config, showRotation, rotateAmount);
+};
+
+
+/**
+ * Gets the icon rotation column used in a config.
+ * @param {Object|undefined} config The style config.
+ * @return {number} The icon or null if none was found.
+ */
+os.style.getConfigIconRotation = function(config) {
+  if (config) {
+    var imageConfig = config[os.style.StyleField.IMAGE];
+    if (imageConfig && imageConfig['rotation']) {
+      return imageConfig['rotation'];
+    }
+  }
+
+  return 0;
 };
 
 
@@ -892,6 +944,15 @@ os.style.createFeatureConfig = function(feature, baseConfig, opt_layerConfig) {
           featureConfig[os.style.StyleField.IMAGE]);
     }
 
+    // rotate icon as specified
+    if (goog.isDef(featureConfig[os.style.StyleField.SHOW_ROTATION]) && // feature action
+        goog.isDef(featureConfig[os.style.StyleField.ROTATION_COLUMN])) {
+      os.style.setConfigIconRotationFromObject(featureConfig, featureConfig, feature);
+    } else if (goog.isDef(feature.values_[os.style.StyleField.SHOW_ROTATION]) && // place
+        goog.isDef(feature.values_[os.style.StyleField.ROTATION_COLUMN])) {
+      os.style.setConfigIconRotationFromObject(featureConfig, feature.values_, feature);
+    }
+
     var strokeConfig = featureConfig[os.style.StyleField.STROKE];
     if (strokeConfig) {
       // merge the layer size into the feature size
@@ -904,6 +965,9 @@ os.style.createFeatureConfig = function(feature, baseConfig, opt_layerConfig) {
       os.style.mergeConfig(opt_layerConfig[os.style.StyleField.STROKE],
           featureConfig[os.style.StyleField.STROKE]);
     }
+  } else if (opt_layerConfig && goog.isDef(opt_layerConfig[os.style.StyleField.SHOW_ROTATION]) && // rotate icon
+      goog.isDef(opt_layerConfig[os.style.StyleField.ROTATION_COLUMN])) {
+    os.style.setConfigIconRotationFromObject(featureConfig, opt_layerConfig, feature);
   }
 
   if (colorOverride) {
@@ -1015,13 +1079,13 @@ os.style.createFeatureStyle = function(feature, baseConfig, opt_layerConfig) {
             isShapeIcon = os.style.isIconConfig(centerShape['config']);
           }
         }
+
         if (isFeatureIcon && !isShapeIcon) {
           // changing an icon config to a non-icon config. we need to dump all of the anchor config so it doesn't
           // affect the positioning of the shape
           var iconConfig = featureConfig[os.style.StyleField.IMAGE];
 
-          var color = os.style.toRgbaString(os.style.getConfigColor(featureConfig) ||
-              os.style.DEFAULT_LAYER_COLOR);
+          var color = os.style.toRgbaString(os.style.getConfigColor(featureConfig) || os.style.DEFAULT_LAYER_COLOR);
           var size = iconConfig['scale'] != null ? os.style.scaleToSize(iconConfig['scale']) :
               os.style.DEFAULT_FEATURE_SIZE;
 
@@ -1038,6 +1102,7 @@ os.style.createFeatureStyle = function(feature, baseConfig, opt_layerConfig) {
         } else if (replaceStyle && isFeatureIcon && isShapeIcon) {
           // replace the icon
           os.style.setConfigIcon(featureConfig, os.style.getConfigIcon(opt_layerConfig));
+          os.style.setConfigIconRotationFromObject(featureConfig, featureConfig, feature);
         }
 
         os.style.mergeConfig(shapeConfig, featureConfig);

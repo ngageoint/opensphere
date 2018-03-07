@@ -1,0 +1,22 @@
+<div class="ellipse-options">
+  <div class="c-labelcontainer">
+    <table class="wide">
+      <tr>
+        <td>
+          <label class="no-margin">
+            <input class="label-checkbox checkbox inline" type="checkbox" name="showRotation" ng-model="showRotation" ng-change="ctrl.onShowRotation()"/>
+          </label>
+        </td>
+        <td class="c-labelcontainer__fixedcell" ng-click="ctrl.toggleShowRotation()">
+          <label class="no-margin">Rotation:</label>
+        </td>
+        <td class="wide">
+          <select class="no-margin wide" ng-model="rotationColumn" ng-change="ctrl.onRotationColumnChange()"
+              title="Sets the data field used for bearing" ng-options="col.field as col.name for col in columns">
+          </select>
+        </td>
+        <td class="c-labelcontainer__fixedcell">degrees</td>
+      </tr>
+    </table>
+  </div>
+</div>

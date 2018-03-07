@@ -76,14 +76,22 @@ os.ui.layer.getLabelSize = function(layer) {
  * @return {Array<os.data.ColumnDefinition>}
  */
 os.ui.layer.getColumns = function(layer) {
-  var columns = null;
   var source = /** @type {os.layer.Vector} */ (layer).getSource();
   if (source && os.instanceOf(source, os.source.Vector.NAME)) {
-    source = /** @type {!os.source.Vector} */ (source);
-
-    columns = source.getColumns().slice();
-    columns.sort(os.ui.slick.column.nameCompare);
+    return os.ui.layer.getColumnsFromSource(/** @type {!os.source.Vector} */ (source));
   }
+  return null;
+};
+
+
+/**
+ * Get the available columns for the source
+ * @param {os.source.Vector} source
+ * @return {Array<os.data.ColumnDefinition>}
+ */
+os.ui.layer.getColumnsFromSource = function(source) {
+  var columns = source.getColumns().slice();
+  columns.sort(os.ui.slick.column.nameCompare);
   return columns;
 };
 

@@ -45,6 +45,7 @@ goog.require('os.im.FeatureImporter');
 goog.require('os.im.ImportProcess');
 goog.require('os.im.mapping');
 goog.require('os.im.mapping.AltMapping');
+goog.require('os.im.mapping.BearingMapping');
 goog.require('os.im.mapping.LatMapping');
 goog.require('os.im.mapping.LonMapping');
 goog.require('os.im.mapping.MappingManager');
@@ -767,6 +768,7 @@ os.MainCtrl.prototype.registerMappings_ = function() {
   mm.registerMapping(new os.im.mapping.LatMapping());
   mm.registerMapping(new os.im.mapping.LonMapping());
   mm.registerMapping(new os.im.mapping.PositionMapping());
+  mm.registerMapping(new os.im.mapping.BearingMapping());
   mm.registerMapping(new os.im.mapping.AltMapping());
 
   // register ellipse mappings

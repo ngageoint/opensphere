@@ -9,7 +9,7 @@
   border: $overrides-border-width solid $overrides-border-color;
   color: $overrides-text-color;
   padding-top: 2px;
-  z-index: 100002;
+  z-index: $overrides-modal-zindex * 99 !important;
 
   .select2-search .select2-input {
     background: #777;

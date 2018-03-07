@@ -1082,6 +1082,8 @@ os.layer.Vector.prototype.persist = function(opt_to) {
     opt_to[os.style.StyleField.LOB_BEARING_COLUMN] = config[os.style.StyleField.LOB_BEARING_COLUMN];
     opt_to[os.style.StyleField.LOB_BEARING_ERROR] = config[os.style.StyleField.LOB_BEARING_ERROR];
     opt_to[os.style.StyleField.LOB_BEARING_ERROR_COLUMN] = config[os.style.StyleField.LOB_BEARING_ERROR_COLUMN];
+    opt_to[os.style.StyleField.ROTATION_COLUMN] = config[os.style.StyleField.ROTATION_COLUMN];
+    opt_to[os.style.StyleField.SHOW_ROTATION] = config[os.style.StyleField.SHOW_ROTATION];
     opt_to[os.style.StyleField.SHOW_ARROW] = config[os.style.StyleField.SHOW_ARROW];
     opt_to[os.style.StyleField.SHOW_ELLIPSE] = config[os.style.StyleField.SHOW_ELLIPSE];
     opt_to[os.style.StyleField.SHOW_ERROR] = config[os.style.StyleField.SHOW_ERROR];
@@ -1189,6 +1191,10 @@ os.layer.Vector.prototype.restore = function(config) {
     styleConf[os.style.StyleField.SHOW_GROUND_REF] = config[os.style.StyleField.SHOW_GROUND_REF];
   }
 
+  if (config[os.style.StyleField.SHOW_ROTATION] != null) {
+    styleConf[os.style.StyleField.SHOW_ROTATION] = config[os.style.StyleField.SHOW_ROTATION];
+  }
+
   styleConf[os.style.StyleField.ARROW_SIZE] = config[os.style.StyleField.ARROW_SIZE] || os.style.DEFAULT_ARROW_SIZE;
   styleConf[os.style.StyleField.ARROW_UNITS] = config[os.style.StyleField.ARROW_UNITS] || os.style.DEFAULT_UNITS;
   styleConf[os.style.StyleField.LOB_COLUMN_LENGTH] = config[os.style.StyleField.LOB_COLUMN_LENGTH] ||
@@ -1208,7 +1214,7 @@ os.layer.Vector.prototype.restore = function(config) {
   styleConf[os.style.StyleField.LOB_BEARING_ERROR] = config[os.style.StyleField.LOB_BEARING_ERROR] ||
     os.style.DEFAULT_LOB_BEARING_ERROR;
   styleConf[os.style.StyleField.LOB_BEARING_ERROR_COLUMN] = config[os.style.StyleField.LOB_BEARING_ERROR_COLUMN] || '';
-
+  styleConf[os.style.StyleField.ROTATION_COLUMN] = config[os.style.StyleField.ROTATION_COLUMN] || '';
   styleConf[os.style.StyleField.LABELS] = config[os.style.StyleField.LABELS] || [os.style.label.cloneConfig()];
   styleConf[os.style.StyleField.LABEL_COLOR] = config[os.style.StyleField.LABEL_COLOR];
   styleConf[os.style.StyleField.LABEL_SIZE] = config[os.style.StyleField.LABEL_SIZE] || os.style.label.DEFAULT_SIZE;

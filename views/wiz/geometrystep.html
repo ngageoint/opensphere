@@ -114,6 +114,18 @@
           </div>
           <br/>
         </div>
+        <div class="control-group span12" ng-if="step.geomType == 'single' || step.geomType == 'separate'">
+          <div class="span6">
+            <label class="control-label">Bearing:</label>
+            <div class="controls column">
+              <select name="bearing" ng-model="step.bearing.column" ng-change="geomStep.validate()"
+                  ng-options="column.name as column.name for column in geomStep.columns">
+                <option value="">-- None --</option>
+              </select>
+            </div>
+          </div>
+          <br/>
+        </div>
       </form>
       <form name="ellipseForm" class="form-horizontal form-compact">
         <label class="checkbox" ng-if="step.geomType != 'none'" title="Throw out empty rows">
