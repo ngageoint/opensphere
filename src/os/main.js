@@ -66,6 +66,9 @@ os.Module.config(os.Module.configureModule);
     return !!osasm.geodesicInverse;
   });
 
+  /**
+   * After osasm loads, kick off the rest of the application
+   */
   appWait.onSuccess = function() {
     if (os.isMainWindow()) {
       try {
