@@ -123,6 +123,11 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
   this.scope['featureStyleID'] = uid + 'featureStyle';
 
   /**
+   * @type {Array<string>}
+   */
+  this.scope['columns'] = [];
+
+  /**
    * The open accordion section.
    * @type {?string}
    * @protected
@@ -144,6 +149,8 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
     'semiMajor': 'Semi-major axis of the ellipse in the specified units.',
     'semiMinor': 'Semi-minor axis of the ellipse in the specified units.',
     'orientation': 'Orientation of the ellipse in degrees from north between 0° and 360°. Values outside this range ' +
+        'will be adjusted automatically.',
+    'iconRotation': 'Rotation of the icon in degrees from north between 0° and 360°. Values outside this range ' +
         'will be adjusted automatically.'
   };
 
@@ -276,6 +283,18 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
    * @type {number|undefined}
    */
   this['orientation'] = undefined;
+
+  /**
+   * Icon Rotation, in degrees.
+   * @type {number|undefined}
+   */
+  this['iconRotation'] = undefined;
+
+  /**
+   * Icon Rotation column, if present
+   * @type {string}
+   */
+  this['rotationColumn'] = '';
 
   /**
    * Supported ellipse axis units.
@@ -501,6 +520,7 @@ os.ui.FeatureEditCtrl.Field = {
 os.ui.FeatureEditCtrl.FIELDS = [
   os.ui.FeatureEditCtrl.Field.NAME,
   os.ui.FeatureEditCtrl.Field.DESCRIPTION,
+  os.Fields.BEARING, // for icon
   os.Fields.LAT,
   os.Fields.LON,
   os.Fields.LAT_DMS,
@@ -510,7 +530,7 @@ os.ui.FeatureEditCtrl.FIELDS = [
   os.Fields.SEMI_MINOR,
   os.Fields.SEMI_MAJOR_UNITS,
   os.Fields.SEMI_MINOR_UNITS,
-  os.Fields.ORIENTATION,
+  os.Fields.ORIENTATION, // for ellipse
   os.style.StyleField.SHAPE,
   os.style.StyleField.CENTER_SHAPE,
   os.style.StyleField.LABELS,
@@ -891,6 +911,22 @@ os.ui.FeatureEditCtrl.prototype.loadFromFeature_ = function(feature) {
     }
   }
 
+  // use columns if it is a track
+  var source = os.feature.getSource(feature);
+  if (os.instanceOf(source, plugin.track.TrackSource.NAME)) {
+    source = /** @type {!os.source.Vector} */ (source);
+    this.scope['columns'] = os.ui.layer.getColumnsFromSource(source);
+  }
+
+  if (this.scope['columns'].length > 0) {
+    this['rotationColumn'] = feature.get(os.style.StyleField.ROTATION_COLUMN) || '';
+    if (goog.string.isEmpty(this['rotationColumn']) && source.hasColumn(os.Fields.BEARING)) { // autodetect
+      this['rotationColumn'] = os.Fields.BEARING;
+    }
+  } else {
+    this['iconRotation'] = this.getNumericField_(feature, os.Fields.BEARING);
+  }
+
   this.updatePreview();
 };
 
@@ -941,6 +977,15 @@ os.ui.FeatureEditCtrl.prototype.saveToFeature = function(feature) {
     // set the shape to use and apply shape config
     feature.set(os.style.StyleField.SHAPE, this['shape']);
     feature.set(os.style.StyleField.CENTER_SHAPE, this['centerShape']);
+
+    if (this.scope['columns'].length < 1) {
+      feature.set(os.Fields.BEARING, this['iconRotation'] % 360);
+      feature.set(os.style.StyleField.SHOW_ROTATION, this.showIcon() || this.showCenterIcon());
+      feature.set(os.style.StyleField.ROTATION_COLUMN, os.Fields.BEARING);
+    } else {
+      feature.set(os.style.StyleField.SHOW_ROTATION, !goog.string.isEmpty(this.scope['columns']));
+      feature.set(os.style.StyleField.ROTATION_COLUMN, this['rotationColumn']);
+    }
     os.ui.FeatureEditCtrl.updateFeatureStyle(feature);
 
     if (configs instanceof Array) {
@@ -1042,6 +1087,20 @@ os.ui.FeatureEditCtrl.prototype.saveGeometry_ = function(feature) {
         feature.set(os.Fields.ORIENTATION, undefined);
         feature.set(os.data.RecordField.ELLIPSE, undefined);
         feature.set(os.data.RecordField.LINE_OF_BEARING, undefined);
+      }
+
+      if ((this.showIcon() || this.showCenterIcon()) &&
+          ((this['iconRotation'] != null && this.scope['columns'].length < 1) || this.scope['columns'].length > 0)) {
+        feature.set(os.style.StyleField.SHOW_ROTATION, true);
+        if (this.scope['columns'].length < 1) {
+          feature.set(os.Fields.BEARING, this['iconRotation'] % 360);
+          this['rotationColumn'] = os.Fields.BEARING;
+        }
+        feature.set(os.style.StyleField.ROTATION_COLUMN, this['rotationColumn']);
+      } else {
+        feature.set(os.Fields.BEARING, undefined);
+        feature.set(os.style.StyleField.SHOW_ROTATION, false);
+        feature.set(os.style.StyleField.ROTATION_COLUMN, '');
       }
     }
   } else if (this.originalGeometry_) {
@@ -1359,6 +1418,12 @@ os.ui.FeatureEditCtrl.updateFeatureStyle = function(feature) {
           if (shape == os.style.ShapeType.NONE) {
             os.style.setConfigOpacityColor(config, 0);
           }
+        } else {
+          var source = os.feature.getSource(feature);
+          var rotationColumn = os.instanceOf(source, plugin.track.TrackSource.NAME) ?
+              feature.get(os.style.StyleField.ROTATION_COLUMN) : os.Fields.BEARING;
+          config['image']['rotation'] =
+              goog.math.toRadians(/** @type {number} */ (feature.get(/** @type {string} */ (rotationColumn))));
         }
       }
     }

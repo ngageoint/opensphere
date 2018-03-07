@@ -190,7 +190,7 @@
   -webkit-transition: none !important;
   pointer-events: none;
   transition: none !important;
-  z-index: 100000 !important;
+  z-index: $overrides-modal-zindex - 1 !important;
 }
 
 .onboarding-step-info {

@@ -6,6 +6,7 @@ goog.require('goog.async.Delay');
 goog.require('os.defines');
 goog.require('os.geo');
 goog.require('os.im.mapping.AltMapping');
+goog.require('os.im.mapping.BearingMapping');
 goog.require('os.im.mapping.LatMapping');
 goog.require('os.im.mapping.LonMapping');
 goog.require('os.im.mapping.OrientationMapping');
@@ -90,6 +91,13 @@ os.ui.wiz.GeometryStep = function() {
   /**
    * @type {Object<string, *>}
    */
+  this['bearing'] = {
+    'column': ''
+  };
+
+  /**
+   * @type {Object<string, *>}
+   */
   this['altitude'] = {
     'column': '',
     'units': 'autodetect'
@@ -158,6 +166,8 @@ os.ui.wiz.GeometryStep.prototype.initialize = function(config) {
         this['posColumn'] = m.field;
         this['posType'] = 'WKT';
         this['geomType'] = 'single';
+      } else if (m instanceof os.im.mapping.BearingMapping) { // must be before RadiusMapping
+        this['bearing']['column'] = m.field;
       } else if (m instanceof os.im.mapping.SemiMajorMapping) {
         this['ellipse']['semiMajor']['column'] = m.field;
         this['ellipse']['semiMajor']['units'] = /** @type {os.im.mapping.RadiusMapping} */ (m).getUnits();
@@ -272,6 +282,12 @@ os.ui.wiz.GeometryStep.prototype.createMappings = function() {
       }
       mappings.push(lonm);
     }
+  }
+
+  if (this['bearing']['column']) {
+    var bm = new os.im.mapping.BearingMapping();
+    bm.field = this['bearing']['column'];
+    mappings.push(bm);
   }
 
   if (this['showEllipse']) {

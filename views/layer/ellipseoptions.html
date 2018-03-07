@@ -1,18 +1,22 @@
 <div class="ellipse-options">
-  <div class="control-group no-margin" ng-if="ctrl.is3DEnabled">
-    <label class="checkbox inline"
-        title="Show ellipses as a 3D ellipsoid. Uses the ellipse semi-minor axis as the z-axis.">
-      <input class="label-checkbox checkbox inline" type="checkbox" name="showEllipsoids"
-          ng-model="ctrl.showEllipsoids" ng-change="ctrl.onShowEllipsoidsChange()"/>
-      Show Ellipsoids
-    </label>
-  </div>
-  <div class="control-group no-margin" ng-if="ctrl.is3DEnabled">
-    <label class="checkbox inline"
-        title="Show a line from the center of the ellipse/ellipsoid to the ground.">
-      <input class="label-checkbox checkbox inline" type="checkbox" name="showGroundReference"
-          ng-model="ctrl.showGroundReference" ng-change="ctrl.onShowGroundReferenceChange()"/>
-      Show Ground Reference
-    </label>
+  <div class="c-labelcontainer" ng-if="ctrl.is3DEnabled">
+    <table class="wide">
+      <tr>
+        <td>
+          <label class="no-margin" title="Show ellipses as a 3D ellipsoid. Uses the ellipse semi-minor axis as the z-axis.">
+            <input class="label-checkbox checkbox inline" type="checkbox" name="showEllipsoids"
+                ng-model="ctrl.showEllipsoids" ng-change="ctrl.onShowEllipsoidsChange()"/>
+            Show Ellipsoids
+          </label>
+        </td>
+        <td>
+          <label class="no-margin" title="Show a line from the center of the ellipse/ellipsoid to the ground.">
+            <input class="label-checkbox checkbox inline" type="checkbox" name="showGroundReference"
+                ng-model="ctrl.showGroundReference" ng-change="ctrl.onShowGroundReferenceChange()"/>
+            Show Ground Ref
+          </label>
+        </td>
+      </tr>
+    </table>
   </div>
 </div>

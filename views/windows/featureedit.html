@@ -60,6 +60,22 @@
           </div>
         </div>
       </div>
+      <div class="c-feature-edit__ellipse-fields" ng-if="ctrl.showIcon() || ctrl.showCenterIcon()">
+        <div class="control-group" title="{{ctrl.help.iconRotation}}">
+          <label class="control-label">Icon Rotation:</label>
+          <div class="controls">
+            <input ng-if="columns.length < 1" type="number" name="iconRotation" ng-model="ctrl.iconRotation" ng-change="ctrl.updatePreview()"
+                step="any" />
+            <select ng-if="columns.length > 0" style="width:150px" ng-model="ctrl.rotationColumn" ng-change="ctrl.updatePreview()"
+                ng-options="col.field as col.name for col in columns">
+                <option value="">-- None --</option>
+            </select>
+            degrees
+            <popover x-title="'Icon Rotation'" x-content="ctrl.help.iconRotation" x-pos="'right'">
+            </popover>
+          </div>
+        </div>
+      </div>
     </form>
 
     <div class="accordion" ng-attr-id="{{featureControlsID}}">
