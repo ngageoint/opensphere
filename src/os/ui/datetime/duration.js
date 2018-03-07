@@ -52,26 +52,6 @@ os.ui.datetime.DurationCtrl = function($scope) {
 
   /**
    * @type {number}
-   * @private
-   */
-  this.minDuration_ = goog.isNumber($scope['min']) ? $scope['min'] : parseInt($scope['min'], 10);
-
-  if (!this.minDuration_) {
-    this.minDuration_ = 0;
-  }
-
-  /**
-   * @type {number}
-   * @private
-   */
-  this.maxDuration_ = goog.isNumber($scope['max']) ? $scope['max'] : parseInt($scope['max'], 10);
-
-  if (!this.maxDuration_) {
-    this.maxDuration_ = Infinity;
-  }
-
-  /**
-   * @type {number}
    */
   this['weeks'] = 0;
 
@@ -131,6 +111,8 @@ os.ui.datetime.DurationCtrl = function($scope) {
   $scope.$watch('durCtrl.hours', this.onHoursChange_.bind(this));
   $scope.$watch('durCtrl.minutes', this.onMinutesChange_.bind(this));
   $scope.$watch('durCtrl.seconds', this.onSecondsChange_.bind(this));
+  $scope.$watch('min', this.calculateTime_.bind(this));
+  $scope.$watch('max', this.calculateTime_.bind(this));
   $scope.$on('$destroy', this.destroy_.bind(this));
 
   this.calculateTime_();
@@ -153,10 +135,22 @@ os.ui.datetime.DurationCtrl.prototype.destroy_ = function() {
  */
 os.ui.datetime.DurationCtrl.prototype.calculateTime_ = function() {
   if (this.scope_) {
+    var minDuration = goog.isNumber(this.scope_['min']) ? this.scope_['min'] : parseInt(this.scope_['min'], 10);
+
+    if (!minDuration) {
+      minDuration = 0;
+    }
+
+    var maxDuration = goog.isNumber(this.scope_['max']) ? this.scope_['max'] : parseInt(this.scope_['max'], 10);
+
+    if (!maxDuration) {
+      maxDuration = Infinity;
+    }
+
     var r = goog.string.toNumber(this.scope_['dur']);
-    r < this.minDuration_ ? this['errors']['minDuration'] = true : delete this['errors']['minDuration'];
-    r > this.maxDuration_ ? this['errors']['maxDuration'] = true : delete this['errors']['maxDuration'];
-    this['valid'] = goog.object.isEmpty(this['errors']) ? true : null;
+    r < minDuration ? this['errors']['minDuration'] = true : delete this['errors']['minDuration'];
+    r > maxDuration ? this['errors']['maxDuration'] = true : delete this['errors']['maxDuration'];
+    this['valid'] = goog.object.isEmpty(this['errors']) && !this.scope_['disabled'] ? true : null;
 
     if (this.scope_['useWeeks'] === 'true') {
       this['weeks'] = Math.floor(r / 604800000);
