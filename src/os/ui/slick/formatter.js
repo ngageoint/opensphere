@@ -205,3 +205,21 @@ os.ui.slick.formatter.columnActionFormatter = function(row, cell, value, columnD
 
   return formatted;
 };
+
+
+/**
+ * Formats the source column
+ * @param {number} row The row number
+ * @param {number} cell The cell number in the row
+ * @param {string} value The value
+ * @param {Object} columnDef The column definition
+ * @param {os.ui.slick.SlickTreeNode} node The node
+ * @return {string} The HTML for the cell
+ */
+os.ui.slick.formatter.imgPreviewFormatter = function(row, cell, value, columnDef, node) {
+  if (!value) {
+    return '';
+  }
+
+  return goog.string.buildString('<img style="height:100%;" src="', value, '"/>');
+};
