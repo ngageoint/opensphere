@@ -941,8 +941,8 @@ os.ui.FeatureEditCtrl.prototype.loadFromFeature_ = function(feature) {
  */
 os.ui.FeatureEditCtrl.prototype.getNumericField_ = function(feature, field, opt_default) {
   var defaultValue = opt_default || undefined;
-  var value = Number(feature.get(field));
-  return value != null && !isNaN(value) ? value : defaultValue;
+  var value = feature.get(field);
+  return value != null && !isNaN(value) && !goog.string.isEmpty(value) ? Number(value) : defaultValue;
 };
 
 
@@ -978,11 +978,12 @@ os.ui.FeatureEditCtrl.prototype.saveToFeature = function(feature) {
     feature.set(os.style.StyleField.SHAPE, this['shape']);
     feature.set(os.style.StyleField.CENTER_SHAPE, this['centerShape']);
 
-    if (this.scope['columns'].length < 1) {
-      feature.set(os.Fields.BEARING, this['iconRotation'] % 360);
+    if (this.scope['columns'].length < 1 && (this.showIcon() || this.showCenterIcon())) {
+      feature.set(os.Fields.BEARING, goog.isNumber(this['iconRotation']) ? this['iconRotation'] % 360 : undefined);
       feature.set(os.style.StyleField.SHOW_ROTATION, this.showIcon() || this.showCenterIcon());
       feature.set(os.style.StyleField.ROTATION_COLUMN, os.Fields.BEARING);
     } else {
+      feature.set(os.Fields.BEARING, undefined);
       feature.set(os.style.StyleField.SHOW_ROTATION, !goog.string.isEmpty(this.scope['columns']));
       feature.set(os.style.StyleField.ROTATION_COLUMN, this['rotationColumn']);
     }
@@ -1095,6 +1096,8 @@ os.ui.FeatureEditCtrl.prototype.saveGeometry_ = function(feature) {
         if (this.scope['columns'].length < 1) {
           feature.set(os.Fields.BEARING, this['iconRotation'] % 360);
           this['rotationColumn'] = os.Fields.BEARING;
+        } else {
+          feature.set(os.Fields.BEARING, undefined);
         }
         feature.set(os.style.StyleField.ROTATION_COLUMN, this['rotationColumn']);
       } else {
