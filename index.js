@@ -211,8 +211,8 @@ const sharedResources = [
   {
     source: resolver.resolveModulePath('cesium/Build/Cesium', __dirname),
     target: 'vendor/cesium',
-    scripts: ['Cesium.js'],
     files: [
+      'Cesium.js',
       'Assets',
       'ThirdParty',
       'Workers'

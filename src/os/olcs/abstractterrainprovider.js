@@ -95,18 +95,6 @@ os.olcs.AbstractTerrainProvider = function(options) {
   this.tileSize = options.tileSize || os.olcs.AbstractTerrainProvider.DEFAULT_TILE_SIZE_;
 
   /**
-   * @type {?os.layer.Terrain}
-   * @protected
-   */
-  this.layer = null;
-
-  /**
-   * @type {string}
-   * @protected
-   */
-  this.layerId = /** @type {string} */ (options['id']);
-
-  /**
    * @type {number}
    * @protected
    */
@@ -140,7 +128,6 @@ os.olcs.AbstractTerrainProvider = function(options) {
    */
   this.useProxy = options.useProxy || false;
 };
-goog.inherits(os.olcs.AbstractTerrainProvider, Cesium.TerrainProvider);
 
 
 /**
@@ -300,34 +287,4 @@ os.olcs.AbstractTerrainProvider.prototype.getLevelMaximumGeometricError = functi
  */
 os.olcs.AbstractTerrainProvider.prototype.getTileDataAvailable = function(x, y, level) {
   return true;
-};
-
-
-/**
- * Attempt incrementing the tile load count on the layer.
- * @protected
- */
-os.olcs.AbstractTerrainProvider.prototype.incrementLoading = function() {
-  try {
-    if (!this.layer) {
-      this.layer = /** @type {os.layer.Terrain} */ (os.MapContainer.getInstance().getLayer(this.layerId));
-    }
-
-    this.layer.incrementLoading();
-  } catch (e) {}
-};
-
-
-/**
- * Attempt decrementing the tile load count on the layer.
- * @protected
- */
-os.olcs.AbstractTerrainProvider.prototype.decrementLoading = function() {
-  try {
-    if (!this.layer) {
-      this.layer = /** @type {os.layer.Terrain} */ (os.MapContainer.getInstance().getLayer(this.layerId));
-    }
-
-    this.layer.decrementLoading();
-  } catch (e) {}
 };

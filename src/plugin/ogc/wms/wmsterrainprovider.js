@@ -81,8 +81,6 @@ plugin.ogc.wms.TerrainProvider.prototype.requestTileGeometry = function(x, y, le
     promise = Cesium.loadArrayBuffer(url);
   }
 
-  this.incrementLoading();
-
   var childMask = this.getTerrainChildMask(x, y, level);
   return Cesium.when(promise, this.arrayToHeightmap_.bind(this, childMask));
 };
@@ -151,8 +149,6 @@ plugin.ogc.wms.TerrainProvider.prototype.getRequestUrl_ = function(x, y, level, 
  * @private
  */
 plugin.ogc.wms.TerrainProvider.prototype.arrayToHeightmap_ = function(childTileMask, buffer) {
-  this.decrementLoading();
-
   var heightBuffer = this.postProcessArray_(buffer);
   if (!goog.isDef(heightBuffer)) {
     throw new Cesium.DeveloperError('unexpected height buffer size');

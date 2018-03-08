@@ -1,12 +1,11 @@
 goog.provide('os.olcs.sync.ImageSynchronizer');
+
 goog.require('goog.asserts');
 goog.require('goog.events.EventType');
 goog.require('ol.layer.Tile');
 goog.require('os.events.SelectionType');
 goog.require('os.layer.PropertyChange');
 goog.require('os.olcs');
-goog.require('os.olcs.ImageryProvider');
-goog.require('os.olcs.WMSImageryProvider');
 goog.require('os.olcs.sync.AbstractSynchronizer');
 goog.require('os.source.Vector');
 

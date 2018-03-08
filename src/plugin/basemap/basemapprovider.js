@@ -166,28 +166,23 @@ plugin.basemap.BaseMapProvider.prototype.addBaseMapFromConfig = function(config)
       if (conf) {
         var type = conf['type'] ? conf['type'].toLowerCase() : null;
         if (type == plugin.basemap.TERRAIN_TYPE) {
+          // if multiple terrain descriptors are configured, the last one will win
+          os.MapContainer.getInstance().setTerrainProvider(
+              /** @type {string} */ (conf['baseType']),
+              /** @type {osx.olcs.TerrainProviderOptions} */ (conf['options']));
+
           var terrainId = this.getId() + os.data.BaseDescriptor.ID_DELIMITER + 'terrain';
           var d = dm.getDescriptor(terrainId);
-
-          if (d) {
-            // if the terrain options have changed, recreate the descriptor
-            var currTerrainOptions = d.getTerrainOptions();
-            if (!currTerrainOptions || currTerrainOptions['url'] !== conf['options']['url']) {
-              dm.removeDescriptor(d);
-              d = undefined;
-            }
-          }
-
           if (!d) {
-            // only create one terrain descriptor, since Cesium can only have one provider. first one in config wins.
+            // create a descriptor that will inform the user on where terrain was moved to
             d = new plugin.basemap.TerrainDescriptor();
             d.setId(terrainId);
-            d.setTerrainOptions(/** @type {osx.olcs.TerrainProviderOptions} */ (conf['options']));
-            d.setTerrainType(/** @type {string} */ (conf['baseType']));
             d.setProvider(conf['provider'] || this.getLabel());
             d.setTitle('Terrain');
-            d.setDescription(conf['description']);
             dm.addDescriptor(d);
+          } else {
+            // update the description on the saved descriptor
+            d.setDescription(plugin.basemap.TerrainDescriptor.DESCRIPTION);
           }
         } else if (type == plugin.basemap.TYPE) {
           var mapId = this.getId() + os.data.BaseDescriptor.ID_DELIMITER + id;
