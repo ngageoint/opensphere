@@ -10,7 +10,6 @@ goog.require('os.config.SettingsInitializer');
 goog.require('os.debug.FancierWindow');
 goog.require('os.defines');
 goog.require('os.mixin');
-goog.require('os.mixin.cesium');
 goog.require('os.net');
 goog.require('os.ui.Module');
 goog.require('os.ui.addDataDirective');

@@ -20,26 +20,32 @@ goog.require('os.ui.ol.interaction.DragCircle');
  */
 os.interaction.DragCircle = function() {
   os.interaction.DragCircle.base(this, 'constructor');
-  this.style3D_ = new Cesium.ColorGeometryInstanceAttribute(0, 1, 1, 1);
   this.circle2D.setUnits(os.unit.UnitManager.getInstance().getSelectedSystem());
 
   /**
+   * @type {Cesium.Primitive|undefined}
    * @private
-   * @type {Cesium.Primitive}
    */
-  this.circle3D_ = null;
+  this.circle3D_ = undefined;
 
   /**
+   * @type {Cesium.LabelCollection|undefined}
    * @private
-   * @type {Cesium.LabelCollection}
    */
-  this.labels3D_ = null;
+  this.labels3D_ = undefined;
 
   /**
+   * @type {Cesium.Label|undefined}
    * @private
-   * @type {Cesium.Label}
    */
-  this.label3D_ = null;
+  this.label3D_ = undefined;
+
+  /**
+   * The Cesium style.
+   * @type {Cesium.ColorGeometryInstanceAttribute|undefined}
+   * @private
+   */
+  this.style3D_ = undefined;
 };
 goog.inherits(os.interaction.DragCircle, os.ui.ol.interaction.DragCircle);
 
@@ -154,15 +160,19 @@ os.interaction.DragCircle.prototype.is3DSupported = function() {
 
 
 /**
- * @return {Cesium.ColorGeometryInstanceAttribute}
+ * @return {!Cesium.ColorGeometryInstanceAttribute}
  */
 os.interaction.DragCircle.prototype.get3DStyle = function() {
+  if (!this.style3D_) {
+    this.style3D_ = new Cesium.ColorGeometryInstanceAttribute(0, 1, 1, 1);
+  }
+
   return this.style3D_;
 };
 
 
 /**
- * @param {Cesium.ColorGeometryInstanceAttribute} style
+ * @param {Cesium.ColorGeometryInstanceAttribute|undefined} style
  */
 os.interaction.DragCircle.prototype.set3DStyle = function(style) {
   this.style3D_ = style;

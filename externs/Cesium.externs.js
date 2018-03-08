@@ -3776,7 +3776,7 @@ Cesium.Scene.prototype.screenSpaceCameraController;
 
 
 /**
- * @type {Cesium.TerrainProvider}
+ * @type {Cesium.TerrainProvider|undefined}
  */
 Cesium.Scene.prototype.terrainProvider;
 

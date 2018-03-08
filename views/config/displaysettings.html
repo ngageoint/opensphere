@@ -62,6 +62,13 @@
       <popover content="display.help.sunlight" pos="'right'"></popover>
     </div>
     <div class="control-group">
+      <label class="checkbox inline" title="{{display.help.terrain}}">
+        <input type="checkbox" ng-model="display.terrainEnabled" ng-change="display.updateTerrain()" />
+        Enable Terrain
+      </label>
+      <popover content="display.help.terrain" pos="'right'"></popover>
+    </div>
+    <div class="control-group">
       <label class="checkbox inline" title="{{display.help.fog}}">
         <input type="checkbox" ng-model="display.fogEnabled" ng-change="display.updateFog()" />
         Enable Fog

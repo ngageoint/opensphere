@@ -1,7 +1,7 @@
 goog.provide('os.layer.config.MockLayerConfig');
+goog.require('ol.source.TileWMS');
 goog.require('os.layer.Tile');
 goog.require('os.layer.config.AbstractLayerConfig');
-goog.require('ol.source.TileWMS');
 
 
 
@@ -17,7 +17,9 @@ os.layer.config.MockLayerConfig.TYPE = 'MockLayerConfig';
 os.layer.config.MockLayerConfig.prototype.createLayer = function(options) {
   var layer = new os.layer.Tile({
     source: new ol.source.TileWMS(/** @type {olx.source.TileWMSOptions} */ ({
-      params: { 'LAYERS': 'dontcare' },
+      params: {
+        'LAYERS': 'dontcare'
+      },
       projection: 'EPSG:4326'
     }))
   });
