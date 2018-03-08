@@ -924,7 +924,14 @@ os.ui.FeatureEditCtrl.prototype.loadFromFeature_ = function(feature) {
       this['rotationColumn'] = os.Fields.BEARING;
     }
   } else {
-    this['iconRotation'] = this.getNumericField_(feature, os.Fields.BEARING);
+    var rotation = feature.get(os.Fields.BEARING);
+    if (goog.isString(rotation) && !goog.string.isEmpty(rotation)) {
+      rotation = Number(rotation);
+    }
+    if (rotation == null || isNaN(rotation)) {
+      rotation = undefined;
+    }
+    this['iconRotation'] = rotation;
   }
 
   this.updatePreview();
@@ -941,8 +948,8 @@ os.ui.FeatureEditCtrl.prototype.loadFromFeature_ = function(feature) {
  */
 os.ui.FeatureEditCtrl.prototype.getNumericField_ = function(feature, field, opt_default) {
   var defaultValue = opt_default || undefined;
-  var value = feature.get(field);
-  return value != null && !isNaN(value) && !goog.string.isEmpty(value) ? Number(value) : defaultValue;
+  var value = Number(feature.get(field));
+  return value != null && !isNaN(value) ? value : defaultValue;
 };
 
 
