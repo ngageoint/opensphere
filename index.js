@@ -197,10 +197,10 @@ const sharedResources = [
     scripts: ['blob.js', 'filesaver.js', 'string.js', 'typedarray.js']
   },
   {
-    source: 'vendor/zip',
-    target: 'vendor/zip',
+    source: resolver.resolveModulePath('zip-js/WebContent', __dirname),
+    target: 'vendor/zip-js',
     scripts: ['zip.js', 'zip-ext.js'],
-    files: ['deflate.js', 'inflate.js']
+    files: ['deflate.js', 'inflate.js', 'z-worker.js']
   },
   {
     source: 'vendor/geomag',
@@ -263,9 +263,9 @@ const indexResources = sharedResources.concat([
     scripts: ['d3.min.js']
   },
   {
-    source: 'vendor/d3',
+    source: resolver.resolveModulePath('d3-tip', __dirname),
     target: 'vendor/d3',
-    scripts: ['d3-tip.js']
+    scripts: ['index.js']
   },
   {
     source: resolver.resolveModulePath('save-svg-as-png', __dirname),

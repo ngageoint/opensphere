@@ -121,6 +121,9 @@ os.unit.BaseUnit.prototype.getBestFitMultiplier = function(value) {
   var um = os.unit.UnitManager.getInstance();
   var bestMult;
   var baseMult = um.getBaseUnits(this.getUnitType());
+  if (value == 0.0) {
+    return baseMult.getDefaultMultiplier();
+  }
   var size = this.bestFitCandidates.length;
   if (baseMult) {
     var baseMultKey = baseMult.getDefaultMultiplier().getName();

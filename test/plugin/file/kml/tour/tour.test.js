@@ -315,7 +315,7 @@ describe('plugin.file.kml.tour.Tour', function() {
     });
 
     waitsFor(function() {
-      return tour.playlistIndex_ === 2;
+      return tour.playlistIndex_ === 2 && tour.currentPromise_ != null;
     }, 'tour to continue playing');
 
     runs(function() {

@@ -121,6 +121,20 @@ requirement: {
   value: 'Number.MIN_VALUE'
 }
 
+requirement: {
+  type: BANNED_NAME
+  value: 'goog.dom.getTextContent'
+  error_message: 'goog.dom.getTextContent(node) is not permitted. Use '
+                 'ol.xml.getAllTextContent(node, true) instead.'
+}
+
+requirement: {
+  type: BANNED_NAME
+  value: 'goog.dom.getRawTextContent'
+  error_message: 'goog.dom.getRawTextContent(node) is not permitted. Use '
+                 'ol.xml.getAllTextContent(node, false) instead.'
+}
+
 #requirement: {
 #  type: BANNED_NAME
 #  value: 'goog.bind'

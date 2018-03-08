@@ -12,6 +12,8 @@ goog.require('goog.object');
 goog.require('ol.Feature');
 goog.require('ol.format.Feature');
 goog.require('ol.format.XSD');
+goog.require('ol.geom.LineString');
+goog.require('ol.geom.flat.inflate');
 goog.require('ol.layer.Image');
 goog.require('ol.source.ImageStatic');
 goog.require('ol.xml');
@@ -33,6 +35,7 @@ goog.require('plugin.file.kml.tour.parseTour');
 goog.require('plugin.file.kml.ui.KMLNetworkLinkNode');
 goog.require('plugin.file.kml.ui.KMLNode');
 goog.require('plugin.file.kml.ui.KMLTourNode');
+goog.require('plugin.track');
 
 
 /**
@@ -382,11 +385,10 @@ plugin.file.kml.KMLParser.prototype.loadExternalStyles = function() {
   var extStylesFound = false;
 
   for (var i = 0, n = styles.length; i < n; i++) {
-    var style = goog.dom.getTextContent(styles[i]);
-
+    var style = ol.xml.getAllTextContent(styles[i], true).trim();
     if (style) {
       // remove the fragment, if url is incorrectly formatted, kml is bad and this url should be skipped
-      var url = style.replace(/#.*/, '').trim();
+      var url = style.replace(/#.*/, '');
       url = encodeURI(url) === url ? url : undefined;
       if (url) {
         extStylesFound = true;
@@ -959,7 +961,7 @@ plugin.file.kml.KMLParser.prototype.readNetworkLink_ = function(el) {
 /**
  * Parses a KML Placemark element into a map feature
  * @param {Element} el The XML element
- * @return {ol.Feature} The map feature
+ * @return {os.feature.DynamicFeature|ol.Feature|undefined} The map feature
  * @private
  *
  * I don't care what you think, compiler.
@@ -983,15 +985,18 @@ plugin.file.kml.KMLParser.prototype.readPlacemark_ = function(el) {
     set = set.parent ? this.parsersByPlacemarkTag_[set.parent] : null;
   }
 
-  if (!goog.isDef(object)) {
+  if (!object) {
     return null;
   }
 
   // set geometry fields on the object
-  if (goog.isDefAndNotNull(object.geometry)) {
+  var geometry = /** @type {ol.geom.Geometry|undefined} */ (object['geometry']);
+  delete object['geometry'];
+
+  if (geometry) {
     // grab the lon/lat coordinate before we potentially convert it to god knows what
-    if (object.geometry.getType() == ol.geom.GeometryType.POINT) {
-      var coord = /** @type {!ol.geom.Point} */ (object.geometry).getFirstCoordinate();
+    if (geometry.getType() == ol.geom.GeometryType.POINT) {
+      var coord = /** @type {!ol.geom.Point} */ (geometry).getFirstCoordinate();
       if (coord.length > 1) {
         object[os.Fields.LAT] = object[os.Fields.LAT] || coord[1];
         object[os.Fields.LON] = object[os.Fields.LON] || coord[0];
@@ -1003,7 +1008,7 @@ plugin.file.kml.KMLParser.prototype.readPlacemark_ = function(el) {
     }
 
     // convert to application projection
-    object.geometry = object.geometry.osTransform();
+    geometry.osTransform();
   }
 
   // make sure parsed styles don't appear as a source column
@@ -1012,28 +1017,52 @@ plugin.file.kml.KMLParser.prototype.readPlacemark_ = function(el) {
     delete object['Style'];
   }
 
-  var feature = new ol.Feature();
+  var feature;
+  if ((geometry instanceof ol.geom.LineString || geometry instanceof ol.geom.MultiLineString) &&
+      geometry.getLayout() === ol.geom.GeometryLayout.XYZM) {
+    // Openlayers parses KML tracks into a LineString/MultiLineString with the XYZM layout (lon, lat, alt, time). if one
+    // of these is encountered, create a track so it can be animated on the timeline.
 
-  // files containing duplicate network links will create features with duplicate id's. this allows us to merge features
-  // on refresh, while still creating an id that's unique from other network links (which will use a different parser)
-  var baseId = ol.getUid(feature);
-  var id = this.id_ + '#' + baseId;
-  feature.setId(id);
-  object[os.Fields.ID] = object[os.Fields.ID] || baseId;
+    if (geometry instanceof ol.geom.MultiLineString && geometry.get('interpolate')) {
+      // if a multi track should be interpolated, join it into a single line. the track updates will handle the
+      // interpolation between known positions.
+      var flatCoordinates = geometry.getFlatCoordinates();
+      var coordinates = ol.geom.flat.inflate.coordinates(flatCoordinates, 0, flatCoordinates.length, 4);
+      geometry = new ol.geom.LineString(coordinates);
+    }
 
-  feature.setProperties(object);
-
-  // create/modify the set of columns detected in the file. for now, just keep a basic set to keep this as low overhead
-  // as possible.
-  if (!this.columnMap_) {
-    this.columnMap_ = [];
+    feature = plugin.track.createTrack(/** @type {!plugin.track.CreateOptions} */ ({
+      geometry: geometry,
+      name: /** @type {string|undefined} */ (object['name'])
+    }));
+  } else {
+    feature = new ol.Feature(geometry);
   }
 
-  for (var key in object) {
-    this.columnMap_[key] = true;
+  if (feature) {
+    // files containing duplicate network links will create features with duplicate id's. this allows us to merge
+    // features on refresh, while still creating an id that's unique from other network links (which will use a
+    // different parser)
+    var baseId = ol.getUid(feature);
+    var id = this.id_ + '#' + baseId;
+    feature.setId(id);
+    object[os.Fields.ID] = object[os.Fields.ID] || baseId;
+
+    feature.setProperties(object);
+
+    // create/modify the set of columns detected in the file. for now, just keep a basic set to keep this as low
+    // overhead as possible.
+    if (!this.columnMap_) {
+      this.columnMap_ = [];
+    }
+
+    for (var key in object) {
+      this.columnMap_[key] = true;
+    }
+
+    this.applyStyles_(el, feature);
   }
 
-  this.applyStyles_(el, feature);
   return feature;
 };
 
@@ -1315,7 +1344,20 @@ plugin.file.kml.KMLParser.prototype.applyStyles_ = function(el, feature) {
   // reduce style sets to single set
   var mergedStyle = styleSets.reduce(plugin.file.kml.KMLParser.reduceStyles_, null);
   if (mergedStyle) {
-    feature.set(os.style.StyleType.FEATURE, mergedStyle, true);
+    var existingStyle = /** @type {Array<!Object>|Object|undefined} */ (feature.get(os.style.StyleType.FEATURE));
+    if (existingStyle) {
+      // if the feature already has a style config, merge in the KML style
+      if (goog.isArray(existingStyle)) {
+        for (var i = 0; i < existingStyle.length; i++) {
+          os.object.merge(mergedStyle, existingStyle[i]);
+        }
+      } else {
+        os.object.merge(mergedStyle, existingStyle);
+      }
+    } else {
+      // set the style config for the feature
+      feature.set(os.style.StyleType.FEATURE, mergedStyle, true);
+    }
 
     if (highlightStyle && highlightStyle.length) {
       feature.set(os.style.StyleType.CUSTOM_HIGHLIGHT, highlightStyle[0], true);
@@ -1331,6 +1373,7 @@ plugin.file.kml.KMLParser.prototype.applyStyles_ = function(el, feature) {
       feature.set(os.style.StyleField.CENTER_SHAPE, os.style.ShapeType.ICON);
     }
 
+    // apply the feature style
     os.style.setFeatureStyle(feature);
   }
 
@@ -1432,7 +1475,14 @@ plugin.file.kml.KMLParser.prototype.parseSchema_ = function(el) {
   var schemas = os.xml.getChildrenByTagName(el, 'Schema');
   for (var i = 0, n = schemas.length; i < n; i++) {
     var name = schemas[i].name || schemas[i].getAttribute('name');
-    this.kmlThings_.push(name);
+    if (!name) {
+      continue;
+    }
+
+    if (this.kmlThings_.indexOf(name) === -1) {
+      this.kmlThings_.push(name);
+    }
+
     var fields = os.xml.getChildrenByTagName(schemas[i], 'SimpleField');
 
     /**
@@ -1489,7 +1539,7 @@ plugin.file.kml.KMLParser.prototype.parseSchema_ = function(el) {
  * @return {RegExp} The KML regex.
  */
 plugin.file.kml.KMLParser.prototype.getKmlThingRegex = function() {
-  return new RegExp('^' + this.kmlThings_.join('|') + '$');
+  return new RegExp('^(' + this.kmlThings_.join('|') + ')$');
 };
 
 
@@ -1550,7 +1600,7 @@ plugin.file.kml.KMLParser.setNodeLabel_ = function(node, el) {
   goog.asserts.assert(el.localName == 'name', 'localName should be name');
 
   // default to null and a default label will be created later
-  node.setLabel(goog.dom.getTextContent(el) || null);
+  node.setLabel(ol.xml.getAllTextContent(el, true).trim() || null);
 };
 
 
@@ -1564,7 +1614,7 @@ plugin.file.kml.KMLParser.setNodeCollapsed_ = function(node, el) {
   goog.asserts.assert(el.localName == 'open', 'localName should be open');
 
   // default to collapsed, so only expand if the text is '1'.
-  node.collapsed = goog.dom.getTextContent(el) !== '1';
+  node.collapsed = ol.xml.getAllTextContent(el, true).trim() !== '1';
 };
 
 
@@ -1577,8 +1627,8 @@ plugin.file.kml.KMLParser.setNodeCollapsed_ = function(node, el) {
 plugin.file.kml.KMLParser.setNodeVisibility_ = function(node, el) {
   goog.asserts.assert(el.localName == 'visibility', 'localName should be visibility');
 
-  var content = goog.dom.getTextContent(el);
-  if (goog.isDefAndNotNull(content)) {
+  var content = ol.xml.getAllTextContent(el, true).trim();
+  if (content) {
     // this only handles turning the node off so we can honor our node defaults. this is specifically for network links,
     // which we always default to being turned off.
     var visibility = ol.format.XSD.readBooleanString(content);

@@ -3,6 +3,7 @@ goog.provide('os.ui.text.SimpleMDECtrl');
 goog.provide('os.ui.text.simpleMDEDirective');
 
 goog.require('goog.dom.safe');
+goog.require('ol.xml');
 goog.require('os.ui.Module');
 
 
@@ -293,11 +294,7 @@ os.ui.text.SimpleMDE.removeMarkdown = function(rawText, opt_keepLineBreaks) {
     var cleanText = rawText;
     var node = os.ui.text.SimpleMDE.getHtmlNode(rawText);
     if (node) {
-      if (opt_keepLineBreaks) {
-        cleanText = goog.dom.getRawTextContent(node);
-      } else {
-        cleanText = goog.dom.getTextContent(node);
-      }
+      cleanText = ol.xml.getAllTextContent(node, !opt_keepLineBreaks);
     }
     return os.ui.sanitize(cleanText);
   } else {

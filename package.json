@@ -53,6 +53,9 @@
         "/openlayers/",
         "/ol-cesium/"
       ]
+    },
+    "moduleDefines": {
+      "os.file.ZIP_PATH": "zip-js/WebContent"
     }
   },
   "scripts": {
@@ -210,7 +213,7 @@
     "opensphere-build-closure-helper": "^1.0.0",
     "opensphere-build-docs": "^1.0.0",
     "opensphere-build-index": "^1.0.0",
-    "opensphere-build-resolver": "^2.1.2",
+    "opensphere-build-resolver": "^2.3.0",
     "opensphere-state-schema": "^2.0.8",
     "replace": "^0.3.0",
     "rimraf": "^2.5.4",
@@ -227,8 +230,9 @@
     "angular-sanitize": "~1.5.x",
     "cesium": "=1.41.0",
     "compass-mixins": "^0.12.10",
+    "d3": "^3.5.17",
+    "d3-tip": "=0.6.8",
     "crossfilter2": "^1.4.5",
-    "d3": "^3.4.1",
     "font-awesome": "^4.6.3",
     "google-closure-library": "^20171203.0.0",
     "jquery": "^2.2.0",
@@ -245,6 +249,7 @@
     "save-svg-as-png": "^1.1.0",
     "simplemde": "^1.11.2",
     "suncalc": "^1.8.0",
-    "text-encoding": "^0.6.4"
+    "text-encoding": "^0.6.4",
+    "zip-js": "^0.0.2"
   }
 }

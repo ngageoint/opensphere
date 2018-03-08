@@ -693,9 +693,15 @@ os.feature.getColor = function(feature, opt_source, opt_default) {
     }
 
     if (!color) {
-      var featureConfig = /** @type {Object|undefined} */ (feature.values_[os.style.StyleType.FEATURE]);
+      var featureConfig = /** @type {Array<Object>|Object|undefined} */ (feature.values_[os.style.StyleType.FEATURE]);
       if (featureConfig) {
-        color = os.style.getConfigColor(featureConfig) || undefined;
+        if (Array.isArray(featureConfig)) {
+          for (var i = 0; !color && i < featureConfig.length; i++) {
+            color = os.style.getConfigColor(featureConfig[i]) || undefined;
+          }
+        } else {
+          color = os.style.getConfigColor(featureConfig) || undefined;
+        }
       }
     }
 

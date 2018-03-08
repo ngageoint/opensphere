@@ -1,8 +1,8 @@
 goog.provide('os.ui.filter.fn');
 
 goog.require('goog.array');
-goog.require('goog.dom');
 goog.require('goog.functions');
+goog.require('ol.xml');
 goog.require('os.string');
 goog.require('os.ui.filter');
 goog.require('os.ui.filter.Expression');
@@ -112,9 +112,9 @@ os.ui.filter.fn.createVarMap = function(node) {
   var propNameNodes = node.querySelectorAll('PropertyName');
   var propNames = [];
   for (var i = 0; i < propNameNodes.length; i++) {
-    var nodeText = goog.dom.getTextContent(propNameNodes[i]);
+    var nodeText = ol.xml.getAllTextContent(propNameNodes[i], true).trim();
     if (nodeText && propNames.indexOf(nodeText) == -1) {
-      propNames.push(nodeText.trim());
+      propNames.push(nodeText);
     }
   }
 

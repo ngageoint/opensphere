@@ -217,13 +217,19 @@ os.file.File.prototype.restore = function(config) {
 
 
 /**
+ * @define {string}
+ */
+goog.define('os.file.ZIP_PATH', 'vendor/zip-js');
+
+
+/**
  * Configure zip.js if it has been loaded.
  * @suppress {checkTypes}
  */
 (function() {
   // zip.js definds 'zip' as global var.  If application is not using zip.js, skip this
   if (window.zip) {
-    var zipPath = os.ROOT + 'vendor/zip/';
+    var zipPath = os.ROOT + os.file.ZIP_PATH + '/';
     if (!Modernizr.webworkers) {
       // disable web workers
       zip.useWebWorkers = false;
