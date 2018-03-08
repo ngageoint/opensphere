@@ -1619,51 +1619,10 @@ os.source.Vector.prototype.addFeatures = function(features) {
     this.unprocessNow();
 
     // remove duplicates and process features before adding them to the source
-    this.dedupeFeatures(features);
     this.processFeatures(features);
 
     // add to the source
     os.source.Vector.base(this, 'addFeatures', features);
-  }
-};
-
-
-/**
- * Deduplicate features prior to adding them to the source.
- * @param {!Array<!ol.Feature>} features The features.
- * @protected
- *
- * @suppress {accessControls} To allow direct access to feature id.
- */
-os.source.Vector.prototype.dedupeFeatures = function(features) {
-  var toRemove = [];
-  var addedIds = {};
-
-  var i = features.length;
-  while (i--) {
-    var id = features[i].id_;
-    if (id != null) {
-      var existing = this.getFeatureById(id);
-      if (existing) {
-        if (this.replaceDupes_) {
-          // remove the existing feature and replace with the duplicate
-          toRemove.push(existing);
-        } else {
-          // drop the duplicate
-          features.splice(i, 1);
-        }
-      } else if (addedIds[id]) {
-        // don't add the same id twice - assume it's a duplicate feature and drop it
-        features.splice(i, 1);
-      } else {
-        addedIds[id] = true;
-      }
-    }
-  }
-
-  if (toRemove.length > 0) {
-    this.removeFeatures(toRemove);
-    this.unprocessNow();
   }
 };
 
