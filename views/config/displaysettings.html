@@ -61,7 +61,7 @@
       </label>
       <popover content="display.help.sunlight" pos="'right'"></popover>
     </div>
-    <div class="control-group">
+    <div class="control-group" ng-if="display.supportsTerrain()">
       <label class="checkbox inline" title="{{display.help.terrain}}">
         <input type="checkbox" ng-model="display.terrainEnabled" ng-change="display.updateTerrain()" />
         Enable Terrain

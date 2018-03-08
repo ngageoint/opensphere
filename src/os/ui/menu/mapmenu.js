@@ -208,7 +208,8 @@ os.ui.menu.map.onColorSettingChange_ = function(event) {
  * @this {os.ui.menu.MenuItem}
  */
 os.ui.menu.map.updateTerrainItem = function() {
-  this.visible = os.MapContainer.getInstance().is3DEnabled();
+  var mc = os.MapContainer.getInstance();
+  this.visible = mc.is3DEnabled() && mc.hasTerrain();
   this.selected = !!os.settings.get(os.config.DisplaySetting.ENABLE_TERRAIN, false);
 };
 
