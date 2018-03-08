@@ -5,12 +5,18 @@ goog.require('plugin.basemap');
 
 
 /**
- * Provides terrain data in opensphere
+ * Placeholder descriptor to point users at the new terrain control location.
  * @extends {os.data.BaseDescriptor}
  * @constructor
  */
 plugin.basemap.TerrainDescriptor = function() {
   plugin.basemap.TerrainDescriptor.base(this, 'constructor');
+  this.setDescription(plugin.basemap.TerrainDescriptor.DESCRIPTION);
+  this.setProvider(null);
+  this.setTags(['GEOINT', 'Terrain', 'Elevation']);
+  this.setTitle('Terrain');
+  this.setType(null);
+  this.descriptorType = plugin.basemap.TERRAIN_ID;
 
   /**
    * If the alert has been displayed.
@@ -18,11 +24,6 @@ plugin.basemap.TerrainDescriptor = function() {
    * @private
    */
   this.alertDisplayed_ = false;
-
-  this.setDescription(plugin.basemap.TerrainDescriptor.DESCRIPTION);
-  this.setTags(['GEOINT', 'Terrain', 'Elevation']);
-  this.setType(plugin.basemap.LAYER_TYPE);
-  this.descriptorType = plugin.basemap.TERRAIN_ID;
 };
 goog.inherits(plugin.basemap.TerrainDescriptor, os.data.BaseDescriptor);
 
@@ -33,7 +34,7 @@ goog.inherits(plugin.basemap.TerrainDescriptor, os.data.BaseDescriptor);
  * @const
  */
 plugin.basemap.TerrainDescriptor.DESCRIPTION = 'Terrain is no longer managed from the Add Data window. It can now ' +
-    'be toggled from either right-clicking the map, or in the Map Display section of the Settings window.';
+    'be toggled by right-clicking the map, or in the Map Display section of Settings.';
 
 
 /**
@@ -54,4 +55,29 @@ plugin.basemap.TerrainDescriptor.prototype.setActiveInternal = function() {
   }
 
   return plugin.basemap.TerrainDescriptor.base(this, 'setActiveInternal');
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.basemap.TerrainDescriptor.prototype.getLastActive = function() {
+  // don't remember last active
+  return NaN;
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.basemap.TerrainDescriptor.prototype.touchLastActive = function() {
+  // don't remember last active
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.basemap.TerrainDescriptor.prototype.restore = function(from) {
+  // don't restore this descriptor
 };

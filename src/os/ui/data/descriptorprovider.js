@@ -87,7 +87,7 @@ os.ui.data.DescriptorProvider.prototype.getDescriptors = function() {
 /**
  * @param {T} descriptor
  * @return {?os.ui.data.DescriptorNode}
-  * @template T
+ * @template T
  */
 os.ui.data.DescriptorProvider.prototype.findNode = function(descriptor) {
   var node = null;

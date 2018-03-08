@@ -426,6 +426,19 @@ os.config.DisplaySettingsCtrl.prototype.onTerrainChange_ = function(event) {
 
 
 /**
+ * If terrain is available in the application.
+ * @return {boolean}
+ */
+os.config.DisplaySettingsCtrl.prototype.supportsTerrain = function() {
+  return os.MapContainer.getInstance().hasTerrain();
+};
+goog.exportProperty(
+    os.config.DisplaySettingsCtrl.prototype,
+    'supportsTerrain',
+    os.config.DisplaySettingsCtrl.prototype.supportsTerrain);
+
+
+/**
  * Update the globe sunlight display.
  */
 os.config.DisplaySettingsCtrl.prototype.updateSunlight = function() {

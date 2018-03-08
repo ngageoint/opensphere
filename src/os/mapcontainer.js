@@ -465,6 +465,15 @@ os.MapContainer.prototype.handleViewChange_ = function() {
 
 
 /**
+ * If a terrain provider has been configured.
+ * @return {boolean}
+ */
+os.MapContainer.prototype.hasTerrain = function() {
+  return !!this.terrainType_;
+};
+
+
+/**
  * Set the Cesium terrain provider.
  * @param {string|undefined} type The terrain provider type.
  * @param {Object=} opt_options The terrain provider options.
@@ -474,24 +483,41 @@ os.MapContainer.prototype.setTerrainProvider = function(type, opt_options) {
   this.terrainOptions_ = opt_options || {};
 
   if (this.is3DEnabled()) {
-    this.updateTerrainProvider();
+    this.updateTerrainProvider_();
+  }
+};
+
+
+/**
+ * Clean up the terrain provider.
+ * @private
+ */
+os.MapContainer.prototype.removeTerrainProvider_ = function() {
+  if (this.terrainProvider_) {
+    this.terrainProvider_.errorEvent.removeEventListener(this.onTerrainError, this);
+    this.terrainProvider_ = undefined;
   }
 };
 
 
 /**
  * Update the terrain provider.
+ * @private
  */
-os.MapContainer.prototype.updateTerrainProvider = function() {
+os.MapContainer.prototype.updateTerrainProvider_ = function() {
   if (this.terrainType_ && this.terrainType_ in this.terrainProviderTypes_) {
-    // instruct Cesium to trust terrain servers, that are controlled by app configuration
+      // clean up existing provider
+    this.removeTerrainProvider_();
+
+    // instruct Cesium to trust terrain servers (controlled by app configuration)
     if (this.terrainOptions_) {
       os.olcs.addTrustedServer(this.terrainOptions_['url']);
     }
 
     this.terrainProvider_ = new this.terrainProviderTypes_[this.terrainType_](this.terrainOptions_);
+    this.terrainProvider_.errorEvent.addEventListener(this.onTerrainError, this);
   } else {
-    this.terrainProvider_ = undefined;
+    this.removeTerrainProvider_();
 
     if (this.terrainType_) {
       goog.log.error(os.MapContainer.LOGGER_, 'Unknown terrain provider type: ' + this.terrainType_);
@@ -502,6 +528,27 @@ os.MapContainer.prototype.updateTerrainProvider = function() {
   this.showTerrain(showTerrain);
 
   os.dispatcher.dispatchEvent(os.olcs.RenderLoop.REPAINT);
+};
+
+
+/**
+ * Handle error raised from a Cesium terrain provider.
+ * @param {Cesium.TileProviderError} error The tile provider error.
+ * @protected
+ */
+os.MapContainer.prototype.onTerrainError = function(error) {
+  // notify the user that terrain will be disabled
+  goog.log.error(os.MapContainer.LOGGER_, 'Terrain provider initialization error: ' + error.message);
+  os.alertManager.sendAlert('Terrain provider failed to initialize and will be disabled. Please see the log for ' +
+      'more details.', os.alert.AlertEventSeverity.ERROR);
+
+  // disable the terrain provider and switch to the default
+  this.terrainType_ = undefined;
+  this.removeTerrainProvider_();
+  os.settings.set(os.config.DisplaySetting.ENABLE_TERRAIN, false);
+
+  // notify that terrain has been disabled
+  this.dispatchEvent(os.MapEvent.TERRAIN_DISABLED);
 };
 
 
@@ -1533,7 +1580,7 @@ os.MapContainer.prototype.initCesium_ = function() {
           //
           // reduce the quality further in Firefox since it is not as fast
           Cesium.TerrainProvider.heightmapTerrainQuality = goog.userAgent.GECKO ? 0.05 : 0.25;
-          this.updateTerrainProvider();
+          this.updateTerrainProvider_();
 
           // configure Cesium fog
           scene.fog.enabled = /** @type {boolean} */ (os.settings.get(os.config.DisplaySetting.FOG_ENABLED,

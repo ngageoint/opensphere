@@ -7,8 +7,8 @@ goog.require('os.data.DataProviderEventType');
 goog.require('os.data.IDataProvider');
 goog.require('os.map');
 goog.require('os.proj.switch');
-goog.require('os.ui.data.BaseProvider');
 goog.require('os.ui.data.DescriptorNode');
+goog.require('os.ui.data.DescriptorProvider');
 goog.require('plugin.basemap');
 goog.require('plugin.basemap.BaseMapDescriptor');
 goog.require('plugin.basemap.TerrainDescriptor');
@@ -20,7 +20,7 @@ goog.require('plugin.basemap.layer.BaseMap');
  * The base map provider provides access to pre-configured map layers
  *
  * @implements {os.data.IDataProvider}
- * @extends {os.ui.data.BaseProvider}
+ * @extends {os.ui.data.DescriptorProvider}
  * @constructor
  * @see {@link plugin.basemap.BaseMapPlugin} for configuration instructions
  */
@@ -53,9 +53,10 @@ plugin.basemap.BaseMapProvider = function() {
   os.proj.switch.SwitchProjection.getInstance().listen(
       os.proj.switch.BinnedLayersEvent.TYPE, this.onSwitchProjectionBins, false, this);
 
+  os.MapContainer.getInstance().listen(os.MapEvent.TERRAIN_DISABLED, this.onTerrainDisabled, false, this);
   os.dispatcher.listen('basemapAddFailover', this.activateFailSet, false, this);
 };
-goog.inherits(plugin.basemap.BaseMapProvider, os.ui.data.BaseProvider);
+goog.inherits(plugin.basemap.BaseMapProvider, os.ui.data.DescriptorProvider);
 
 
 /**
@@ -63,6 +64,7 @@ goog.inherits(plugin.basemap.BaseMapProvider, os.ui.data.BaseProvider);
  */
 plugin.basemap.BaseMapProvider.prototype.disposeInternal = function() {
   plugin.basemap.BaseMapProvider.base(this, 'disposeInternal');
+  os.MapContainer.getInstance().unlisten(os.MapEvent.TERRAIN_DISABLED, this.onTerrainDisabled, false, this);
   os.dispatcher.unlisten('basemapAddFailover', this.activateFailSet, false, this);
 };
 
@@ -93,28 +95,25 @@ plugin.basemap.BaseMapProvider.prototype.configure = function(config) {
  */
 plugin.basemap.BaseMapProvider.prototype.load = function(ping) {
   this.dispatchEvent(new os.data.DataProviderEvent(os.data.DataProviderEventType.LOADING, this));
-  var anyActive = false;
-  var dm = os.dataManager;
 
+  var anyActive = false;
   if (!this.getChildren()) {
-    var list = dm.getDescriptors(this.getId() + os.data.BaseDescriptor.ID_DELIMITER);
+    var list = this.getDescriptors();
 
     for (var i = 0, n = list.length; i < n; i++) {
-      var node = new os.ui.data.DescriptorNode();
-      node.setDescriptor(list[i]);
+      var descriptor = list[i];
+      this.addDescriptor(descriptor, false, false);
 
-      if (list[i].getDescriptorType() == plugin.basemap.ID && list[i].isActive()) {
+      if (descriptor.getDescriptorType() == plugin.basemap.ID && descriptor.isActive()) {
         anyActive = true;
       }
-
-      this.addChild(node);
     }
   }
 
   var d;
-  if (!anyActive && dm && this.defaults_ && this.defaults_.length > 0) {
+  if (!anyActive && os.dataManager && this.defaults_ && this.defaults_.length > 0) {
     for (i = 0, n = this.defaults_.length; i < n; i++) {
-      d = dm.getDescriptor(this.getId() + os.data.BaseDescriptor.ID_DELIMITER + this.defaults_[i]);
+      d = os.dataManager.getDescriptor(this.getId() + os.data.BaseDescriptor.ID_DELIMITER + this.defaults_[i]);
 
       if (d) {
         d.setActive(true);
@@ -171,18 +170,13 @@ plugin.basemap.BaseMapProvider.prototype.addBaseMapFromConfig = function(config)
               /** @type {string} */ (conf['baseType']),
               /** @type {osx.olcs.TerrainProviderOptions} */ (conf['options']));
 
-          var terrainId = this.getId() + os.data.BaseDescriptor.ID_DELIMITER + 'terrain';
+          var terrainId = this.getTerrainId();
           var d = dm.getDescriptor(terrainId);
           if (!d) {
             // create a descriptor that will inform the user on where terrain was moved to
             d = new plugin.basemap.TerrainDescriptor();
             d.setId(terrainId);
-            d.setProvider(conf['provider'] || this.getLabel());
-            d.setTitle('Terrain');
             dm.addDescriptor(d);
-          } else {
-            // update the description on the saved descriptor
-            d.setDescription(plugin.basemap.TerrainDescriptor.DESCRIPTION);
           }
         } else if (type == plugin.basemap.TYPE) {
           var mapId = this.getId() + os.data.BaseDescriptor.ID_DELIMITER + id;
@@ -260,3 +254,27 @@ plugin.basemap.BaseMapProvider.prototype.onSwitchProjectionBins = function(evt) 
 };
 
 
+/**
+ * Get the id to use for the terrain descriptor.
+ * @return {string}
+ * @protected
+ */
+plugin.basemap.BaseMapProvider.prototype.getTerrainId = function() {
+  return this.getId() + os.data.BaseDescriptor.ID_DELIMITER + 'terrain';
+};
+
+
+/**
+ * Handle terrain disabled event from the map container.
+ * @param {goog.events.Event} event The event.
+ * @protected
+ */
+plugin.basemap.BaseMapProvider.prototype.onTerrainDisabled = function(event) {
+  var descriptor = os.dataManager.getDescriptor(this.getTerrainId());
+  if (descriptor) {
+    // remove the descriptor from the data manager
+    os.dataManager.removeDescriptor(descriptor);
+    this.removeDescriptor(descriptor);
+    goog.dispose(descriptor);
+  }
+};
