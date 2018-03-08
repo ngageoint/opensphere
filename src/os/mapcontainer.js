@@ -1188,6 +1188,7 @@ os.MapContainer.prototype.init = function() {
 
 /**
  * Initializes settings and adds listeners for settings changes.
+ * @protected
  */
 os.MapContainer.prototype.initSettings = function() {
   if (os.config && os.config.DisplaySetting) {
@@ -1195,25 +1196,33 @@ os.MapContainer.prototype.initSettings = function() {
 
     var mapMode = os.settings.get(os.config.DisplaySetting.MAP_MODE, os.MapMode.VIEW_3D);
     if (mapMode === os.MapMode.VIEW_3D || mapMode === os.MapMode.AUTO) {
-      // don't display Cesium errors on initialization
-      this.setCesiumEnabled(true, true);
+      // don't display errors on initialization, and wait until the globe is ready to initialize the camera
+      this.setCesiumEnabled(true, true).then(this.initCameraSettings, this.initCameraSettings, this);
+    } else {
+      this.initCameraSettings();
     }
+  }
+};
 
-    var cameraState = /** @type {string|undefined} */ (os.settings.get(
-        os.config.DisplaySetting.CAMERA_STATE));
-    if (cameraState) {
-      try {
-        cameraState = /** @type {!osx.map.CameraState} */ (JSON.parse(cameraState));
-      } catch (e) {
-        goog.log.error(os.MapContainer.LOGGER_, 'Failed restoring camera state:', e);
-        cameraState = undefined;
-      }
-    }
 
-    // if a camera state was saved to settings, restore it now
-    if (cameraState) {
-      this.restoreCameraState(/** @type {!osx.map.CameraState} */ (cameraState));
+/**
+ * Initializes camera settings.
+ * @protected
+ */
+os.MapContainer.prototype.initCameraSettings = function() {
+  var cameraState = /** @type {string|undefined} */ (os.settings.get(os.config.DisplaySetting.CAMERA_STATE));
+  if (cameraState) {
+    try {
+      cameraState = /** @type {!osx.map.CameraState} */ (JSON.parse(cameraState));
+    } catch (e) {
+      goog.log.error(os.MapContainer.LOGGER_, 'Failed restoring camera state:', e);
+      cameraState = undefined;
     }
+  }
+
+  // if a camera state was saved to settings, restore it now
+  if (cameraState) {
+    this.restoreCameraState(/** @type {!osx.map.CameraState} */ (cameraState));
   }
 };
 
@@ -1458,6 +1467,7 @@ os.MapContainer.prototype.getAltitude = function() {
  * Enable/disable Cesium.
  * @param {boolean} useCesium If Cesium should be enabled
  * @param {boolean=} opt_silent If errors should be ignored
+ * @return {!(goog.Promise|goog.async.Deferred)}
  */
 os.MapContainer.prototype.setCesiumEnabled = function(useCesium, opt_silent) {
   var code = os.map.PROJECTION.getCode();
@@ -1475,7 +1485,7 @@ os.MapContainer.prototype.setCesiumEnabled = function(useCesium, opt_silent) {
       // initialize cesium
       this.initializingView_ = true;
 
-      this.initCesium_().then(function() {
+      return this.initCesium_().then(function() {
         // initialize succeeded - call again to activate Cesium
         this.initializingView_ = false;
         this.setCesiumEnabled(useCesium, opt_silent);
@@ -1485,8 +1495,6 @@ os.MapContainer.prototype.setCesiumEnabled = function(useCesium, opt_silent) {
         this.is3DSupported_ = false;
         this.setCesiumEnabled(useCesium, opt_silent);
       }, this);
-
-      return;
     }
 
     this.setView_(useCesium);
@@ -1517,6 +1525,8 @@ os.MapContainer.prototype.setCesiumEnabled = function(useCesium, opt_silent) {
   // save the current map mode to settings after the stack clears. this will prevent conflicts with Angular caused by
   // failed changes in settings.
   setTimeout(this.saveMapMode_.bind(this), 0);
+
+  return goog.Promise.resolve();
 };
 
 
