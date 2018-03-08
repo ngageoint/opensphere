@@ -1,6 +1,8 @@
 goog.provide('os.tag');
+
 goog.require('goog.dom');
 goog.require('goog.string');
+goog.require('ol.xml');
 goog.require('os.xml');
 
 
@@ -69,7 +71,7 @@ os.tag.tagsFromXML = function(node) {
     tags = [];
 
     for (var i = 0, n = children.length; i < n; i++) {
-      tags.push(goog.dom.getTextContent(children[i]));
+      tags.push(ol.xml.getAllTextContent(children[i], true).trim());
     }
   }
 

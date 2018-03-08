@@ -183,7 +183,7 @@ os.ui.ol.draw.DrawControlsCtrl.prototype.destroyControlMenu_ = function() {
 
 
 /**
- * @return {?ol.Map}
+ * @return {ol.PluggableMap}
  */
 os.ui.ol.draw.DrawControlsCtrl.prototype.getMap = function() {
   return this.olMap_ ? this.olMap_.getMap() : null;

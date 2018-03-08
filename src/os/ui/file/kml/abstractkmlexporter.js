@@ -57,6 +57,13 @@ os.ui.file.kml.AbstractKMLExporter = function() {
   this.kmlNS = 'http://www.opengis.net/kml/2.2';
 
   /**
+   * The KML gx extension namespace to use for export.
+   * @type {string}
+   * @protected
+   */
+  this.gxNS = 'http://www.google.com/kml/ext/2.2';
+
+  /**
    * @type {!Object<string, function(!Element, T)>}
    * @protected
    */
@@ -366,6 +373,9 @@ os.ui.file.kml.AbstractKMLExporter.prototype.processItems = function() {
   this.doc = goog.dom.xml.createDocument('kml', this.kmlNS);
 
   var kml = /** @type {!Element} */ (goog.dom.getFirstElementChild(this.doc));
+
+  var xmlnsUri = 'http://www.w3.org/2000/xmlns/';
+  ol.xml.setAttributeNS(kml, xmlnsUri, 'xmlns:gx', this.gxNS);
 
   // create the Document element
   this.kmlDoc = os.xml.appendElementNS('Document', this.kmlNS, kml);

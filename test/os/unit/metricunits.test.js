@@ -13,5 +13,9 @@ describe('os.unit.MetricUnits', function() {
     expect(eUnit.getSuffix()).toBe('');
     expect(eUnit.getMultipliers().length).toEqual(12);
     expect(eUnit.getMultiplier('Hectometers').getMultiplier()).toBe(1E2);
+    expect(eUnit.getMultiplier('Kilometers').getMultiplier()).toBe(1E3);
+    expect(eUnit.getMultiplier('millimeters').getMultiplier()).toBe(1E-3);
+    expect(eUnit.getMultiplier('micrometers').getMultiplier()).toBe(1E-6);
+    expect(eUnit.getMultiplier('nanometers').getMultiplier()).toBe(1E-9);
   }));
 });

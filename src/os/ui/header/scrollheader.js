@@ -135,7 +135,7 @@ os.ui.header.ScrollHeaderCtrl.prototype.updatePositions_ = function() {
 
   if (!this.isFixed_ && navTop <= 1) {
     this.isFixed_ = true;
-    this.resetHeight_ = this.scrollEl_.scrollTop();
+    this.resetHeight_ = /** @type {number} */ (this.scrollEl_.scrollTop());
     if (!this.supportsSticky_) {
       this.filler_ = $('<div>').css('height', this.offsetHeight_)
           .addClass('scroll-header-filler').insertAfter(this.element_);

@@ -899,20 +899,24 @@ os.source.Vector.prototype.getGeometryShape = function() {
 /**
  * Sets the geometry shape used by features in the source.
  * @param {string} value
+ * @suppress {accessControls}
  */
 os.source.Vector.prototype.setGeometryShape = function(value) {
+  var oldGeomShape = this.geometryShape_;
   this.geometryShape_ = value;
   this.testShapeFields_(value);
 
-  if (os.style.ELLIPSE_REGEXP.test(value)) {
-    var features = this.getFeatures();
-    for (var i = 0, n = features.length; i < n; i++) {
-      os.feature.createEllipse(features[i]);
-    }
-  } else if (os.style.LOB_REGEXP.test(value)) {
+  // we are converting to an ellipse shape
+  var ellipseTest = os.style.ELLIPSE_REGEXP.test(value);
+  // we are converting to a lob shape
+  var lobTest = os.style.LOB_REGEXP.test(value);
+  // we are converting back from an ellipse or lob shape and need to reindex the original
+  var revertIndexTest = os.style.ELLIPSE_REGEXP.test(oldGeomShape) || os.style.LOB_REGEXP.test(oldGeomShape);
+
+  if (ellipseTest || lobTest || revertIndexTest) {
     var features = this.getFeatures();
     var layerConf = os.style.StyleManager.getInstance().getLayerConfig(this.getId());
-    var lobOptions = /** type {os.feature.LOBOptions} */ {
+    var lobOptions = /** type {os.feature.LOBOptions} */ ({
       arrowLength: layerConf[os.style.StyleField.ARROW_SIZE],
       arrowUnits: layerConf[os.style.StyleField.ARROW_UNITS],
       bearingColumn: layerConf[os.style.StyleField.LOB_BEARING_COLUMN],
@@ -929,9 +933,30 @@ os.source.Vector.prototype.setGeometryShape = function(value) {
       showArrow: layerConf[os.style.StyleField.SHOW_ARROW],
       showEllipse: layerConf[os.style.StyleField.SHOW_ELLIPSE],
       showError: layerConf[os.style.StyleField.SHOW_ERROR]
-    };
+    });
+
     for (var i = 0, n = features.length; i < n; i++) {
-      os.feature.createLineOfBearing(features[i], true, lobOptions);
+      var geoms = [features[i].getGeometry()];
+
+      if (ellipseTest) {
+        os.feature.createEllipse(features[i]);
+        geoms.push(/** @type {ol.geom.Geometry} */ (features[i].get(os.data.RecordField.ELLIPSE)));
+      }
+
+      if (lobTest) {
+        os.feature.createLineOfBearing(features[i], true, lobOptions);
+
+        // This picks up cached ellipses even if the user has them off. While that's not ideal, we
+        // don't have a choice until we can refactor both ellipse and LOB into "derived geometries"
+        // and give them a better setup form in the app
+        geoms.push(/** @type {ol.geom.Geometry} */ (features[i].get(os.data.RecordField.ELLIPSE)));
+        geoms.push(/** @type {ol.geom.Geometry} */ (features[i].get(os.data.RecordField.LINE_OF_BEARING)));
+      }
+
+      var extent = geoms.reduce(os.fn.reduceExtentFromGeometries, ol.extent.createEmpty());
+      if (!ol.extent.isEmpty(extent)) {
+        this.featuresRtree_.update(extent, features[i]);
+      }
     }
   }
 };
@@ -2175,7 +2200,8 @@ os.source.Vector.prototype.updateAnimationOverlay = function() {
           hasDynamic = true;
 
           var featureTime = /** @type {os.time.ITime|undefined} */ (dynamicFeature.get(os.data.RecordField.TIME));
-          if (featureTime && (featureTime.getStart() > displayEnd || featureTime.getEnd() < displayStart)) {
+          if (featureTime && (featureTime.getStart() > displayEnd || featureTime.getEnd() < displayStart) &&
+              !this.isHidden(dynamicFeature)) {
             displayedFeatures.push(dynamicFeature);
           }
         }

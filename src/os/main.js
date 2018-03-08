@@ -1,6 +1,7 @@
 goog.provide('os.Module');
 goog.provide('osmain');
 
+goog.require('goog.async.ConditionalDelay');
 goog.require('os');
 goog.require('os.MainCtrl');
 goog.require('os.config');
@@ -56,30 +57,40 @@ os.Module.configureModule = function($routeProvider) {
 
 os.Module.config(os.Module.configureModule);
 
-
 /**
  * Load the settings, then manually bootstrap angular.
  * @todo should we display an informative error message if there are no settings?
  */
 (function() {
-  if (os.isMainWindow()) {
-    try {
-      // the main application doesn't care what opened it, and accessing window.opener may cause an exception. get rid
-      // of it so things like os.instanceOf don't try using it.
-      window.opener = null;
-    } catch (e) {
-      // this doesn't seem to fail in any browser, but in the off chance it does don't break everything
+  var appWait = new goog.async.ConditionalDelay(function() {
+    return !!osasm.geodesicInverse;
+  });
+
+  /**
+   * After osasm loads, kick off the rest of the application
+   */
+  appWait.onSuccess = function() {
+    if (os.isMainWindow()) {
+      try {
+        // the main application doesn't care what opened it, and accessing window.opener may cause an exception. get rid
+        // of it so things like os.instanceOf don't try using it.
+        window.opener = null;
+      } catch (e) {
+        // this doesn't seem to fail in any browser, but in the off chance it does don't break everything
+      }
+
+      os.logWindow = new os.debug.FancierWindow('os');
+
+      // set up request handlers
+      os.net.addDefaultHandlers();
+
+      // initialize settings for this app
+      var settingsInitializer = new os.config.SettingsInitializer();
+      settingsInitializer.init();
     }
+  };
 
-    os.logWindow = new os.debug.FancierWindow('os');
-
-    // set up request handlers
-    os.net.addDefaultHandlers();
-
-    // initialize settings for this app
-    var settingsInitializer = new os.config.SettingsInitializer();
-    settingsInitializer.init();
-  }
+  appWait.start(50, 10000);
 })();
 
 

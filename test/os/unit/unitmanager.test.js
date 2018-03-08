@@ -78,6 +78,9 @@ describe('os.unit.UnitManager', function() {
     expect(um.formatToBestFit('distance', 1000, 'm', um.getBaseSystem(), 0)).toBe('1 km');
     expect(um.formatToBestFit('distance', 999, 'm', um.getBaseSystem(), 0)).toBe('999 m');
 
+    // Test zero to default
+    expect(um.formatToBestFit('distance', .0, 'm', um.getBaseSystem(), 2)).toBe('0.00 m');
+
     // Test the boundaries (mi to ft)
     um.setSelectedSystem('imperial');
     expect(um.formatToBestFit('distance', 161, 'm', um.getBaseSystem(), 3)).toBe('0.100 mi');
