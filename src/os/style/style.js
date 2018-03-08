@@ -596,7 +596,7 @@ os.style.setConfigIconRotationFromObject = function(config, origin, feature) {
   var rotationColumn = origin[os.style.StyleField.ROTATION_COLUMN];
   rotationColumn = goog.isString(rotationColumn) ? rotationColumn : '';
   var rotateAmount = Number(feature.values_[rotationColumn]);
-  rotateAmount = goog.isNumber(rotateAmount) ? rotateAmount : 0;
+  rotateAmount = goog.isNumber(rotateAmount) && !isNaN(rotateAmount) ? rotateAmount : 0;
   os.style.setConfigIconRotation(config, showRotation, rotateAmount);
 };
 
