@@ -57,13 +57,14 @@ os.Module.configureModule = function($routeProvider) {
 
 os.Module.config(os.Module.configureModule);
 
+
 /**
  * Load the settings, then manually bootstrap angular.
  * @todo should we display an informative error message if there are no settings?
  */
 (function() {
   var appWait = new goog.async.ConditionalDelay(function() {
-    return !!osasm.geodesicInverse;
+    return window.osasm && !!osasm.geodesicInverse;
   });
 
   /**
