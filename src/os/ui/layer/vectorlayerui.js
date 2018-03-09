@@ -157,7 +157,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.initUI = function() {
     this['columns'] = this.getValue(os.ui.layer.getColumns);
     this['showRotation'] = this.getShowRotation_();
     this['rotationColumn'] = this.getRotationColumn_();
-    if (goog.string.isEmpty(this['rotationColumn']) && this.canUseBearing()) { // try to autodetect bearing if undefined
+    if (goog.string.isEmptyOrWhitespace(this['rotationColumn']) && this.canUseBearing()) { // try to autodetect bearing if undefined
       this['rotationColumn'] = os.Fields.BEARING;
       this.onRotationColumnChange(this['rotationColumn']);
     }

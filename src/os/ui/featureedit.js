@@ -920,7 +920,7 @@ os.ui.FeatureEditCtrl.prototype.loadFromFeature_ = function(feature) {
 
   if (this.scope['columns'].length > 0) {
     this['rotationColumn'] = feature.get(os.style.StyleField.ROTATION_COLUMN) || '';
-    if (goog.string.isEmpty(this['rotationColumn']) && source.hasColumn(os.Fields.BEARING)) { // autodetect
+    if (goog.string.isEmptyOrWhitespace(this['rotationColumn']) && source.hasColumn(os.Fields.BEARING)) { // autodetect
       this['rotationColumn'] = os.Fields.BEARING;
     }
   } else {
@@ -983,7 +983,7 @@ os.ui.FeatureEditCtrl.prototype.saveToFeature = function(feature) {
       feature.set(os.style.StyleField.SHOW_ROTATION, this.showIcon() || this.showCenterIcon());
       feature.set(os.style.StyleField.ROTATION_COLUMN, os.Fields.BEARING);
     } else {
-      feature.set(os.style.StyleField.SHOW_ROTATION, !goog.string.isEmpty(this.scope['columns']));
+      feature.set(os.style.StyleField.SHOW_ROTATION, !goog.string.isEmptyOrWhitespace(this.scope['columns']));
       feature.set(os.style.StyleField.ROTATION_COLUMN, this['rotationColumn']);
     }
     os.ui.FeatureEditCtrl.updateFeatureStyle(feature);
