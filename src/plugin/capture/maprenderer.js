@@ -3,6 +3,7 @@ goog.provide('plugin.capture.MapRenderer');
 goog.require('goog.Promise');
 goog.require('os.olcs');
 goog.require('os.ui.capture.CanvasRenderer');
+goog.require('plugin.cesium');
 
 
 
@@ -25,11 +26,9 @@ goog.inherits(plugin.capture.MapRenderer, os.ui.capture.CanvasRenderer);
 plugin.capture.MapRenderer.prototype.beforeOverlay = function() {
   var mapContainer = os.MapContainer.getInstance();
   if (mapContainer.is3DEnabled()) {
-    var olcs = mapContainer.getOLCesium();
-    if (olcs) {
-      var scene = olcs.getCesiumScene();
-      scene.initializeFrame();
-      scene.render(os.MapContainer.getJulianDate());
+    var webGL = mapContainer.getWebGLRenderer();
+    if (webGL) {
+      webGL.renderSync();
     }
   } else {
     var olMap = mapContainer.getMap();

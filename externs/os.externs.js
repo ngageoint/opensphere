@@ -113,6 +113,20 @@ osx.map.FlyToOptions;
 
 
 /**
+ * @typedef {{
+ *   type: (string|undefined),
+ *   url: (string|undefined),
+ *   credit: (Cesium.Credit|string|undefined),
+ *   maxLevel: (number|undefined),
+ *   minLevel: (number|undefined),
+ *   tileSize: (number|undefined),
+ *   useProxy: (boolean|undefined)
+ * }}
+ */
+osx.map.TerrainProviderOptions;
+
+
+/**
  * Namespace.
  * @type {Object}
  */
@@ -144,62 +158,6 @@ osx.layer;
  * }}
  */
 osx.layer.RefreshOption;
-
-
-/**
- * Namespace.
- * @type {Object}
- */
-osx.olcs;
-
-
-/**
- * @typedef {{
- *   url: string,
- *   credit: (Cesium.Credit|string|undefined),
- *   maxLevel: (number|undefined),
- *   minLevel: (number|undefined),
- *   tileSize: (number|undefined),
- *   useProxy: (boolean|undefined)
- * }}
- */
-osx.olcs.TerrainProviderOptions;
-
-
-/**
- * Namespace.
- * @type {Object}
- */
-osx.ogc;
-
-
-/**
- * Namespace.
- * @type {Object}
- */
-osx.ogc.wms;
-
-
-/**
- * @typedef {{
- *   layerName: string,
- *   maxLevel: number,
- *   minLevel: number
- * }}
- */
-osx.ogc.wms.TerrainLayerOptions;
-
-
-/**
- * @typedef {{
- *   layers: !Array<!osx.ogc.wms.TerrainLayerOptions>,
- *   url: string,
- *   credit: (Cesium.Credit|string|undefined),
- *   tileSize: (number|undefined),
- *   useProxy: (boolean|undefined)
- * }}
- */
-osx.ogc.wms.TerrainProviderOptions;
 
 
 /**
@@ -407,3 +365,32 @@ osx.window.TextPromptOptions;
  * }}
  */
 osx.window.ConfirmColumnOptions;
+
+
+/**
+ * Namespace.
+ * @type {Object}
+ */
+osx.cesium;
+
+
+/**
+ * @typedef {{
+ *   layerName: string,
+ *   maxLevel: number,
+ *   minLevel: number
+ * }}
+ */
+osx.cesium.WMSTerrainLayerOptions;
+
+
+/**
+ * @typedef {{
+ *   layers: !Array<!osx.cesium.WMSTerrainLayerOptions>,
+ *   url: string,
+ *   credit: (Cesium.Credit|string|undefined),
+ *   tileSize: (number|undefined),
+ *   useProxy: (boolean|undefined)
+ * }}
+ */
+osx.cesium.WMSTerrainProviderOptions;

@@ -1,4 +1,5 @@
 goog.require('os.data.event.DataEvent');
+goog.require('os.olcs.sync.SynchronizerManager');
 goog.require('os.source.Vector');
 goog.require('os.ui.menu.layer');
 goog.require('plugin.heatmap.HeatmapLayerConfig');

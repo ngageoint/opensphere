@@ -2,7 +2,7 @@
  * @fileoverview mixins for Cesium
  * @suppress {missingProvide}
  */
-goog.provide('os.mixin.cesium');
+goog.provide('plugin.cesium.mixin');
 
 goog.require('goog.Uri');
 goog.require('olcs.OLCesium');
@@ -169,7 +169,7 @@ os.mixin.cesium.createImage = function(url, crossOrigin, deferred) {
  * Load Cesium mixins.
  * @throws {Error} If Cesium has not been loaded.
  */
-os.mixin.cesium.loadCesiumMixins = function() {
+plugin.cesium.mixin.loadCesiumMixins = function() {
   if (window.Cesium === undefined) {
     throw new Error('Cesium has not been loaded!');
   }

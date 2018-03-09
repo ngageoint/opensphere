@@ -384,7 +384,7 @@ os.layer.Image.prototype.onMapChange_ = function(event) {
 
     var source = this.getSource();
     if (source instanceof os.source.Vector) {
-      /** @type {os.source.Vector} */ (source).setCesiumEnabled(enabled);
+      /** @type {os.source.Vector} */ (source).setWebGLEnabled(enabled);
     }
   }
 };

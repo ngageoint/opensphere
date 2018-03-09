@@ -1,11 +1,12 @@
 goog.provide('os.olcs.AbstractTerrainProvider');
+
 goog.require('goog.asserts');
 
 
 
 /**
  * Base Cesium terrain provider.
- * @param {!osx.olcs.TerrainProviderOptions} options
+ * @param {!osx.map.TerrainProviderOptions} options
  * @extends {Cesium.TerrainProvider}
  * @constructor
  */

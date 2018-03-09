@@ -1,4 +1,5 @@
-goog.provide('plugin.ogc.wms.TerrainProvider');
+goog.provide('plugin.cesium.WMSTerrainProvider');
+
 goog.require('goog.asserts');
 goog.require('ol.proj');
 goog.require('os.net.ProxyHandler');
@@ -8,21 +9,22 @@ goog.require('os.olcs.AbstractTerrainProvider');
 
 /**
  * WMS Cesium terrain provider.
- * @param {!osx.ogc.wms.TerrainProviderOptions} options
+ * @param {!osx.cesium.WMSTerrainProviderOptions} options
  * @extends {os.olcs.AbstractTerrainProvider}
  * @constructor
  */
-plugin.ogc.wms.TerrainProvider = function(options) {
-  plugin.ogc.wms.TerrainProvider.base(this, 'constructor', /** @type {!osx.olcs.TerrainProviderOptions} */ (options));
+plugin.cesium.WMSTerrainProvider = function(options) {
+  plugin.cesium.WMSTerrainProvider.base(this, 'constructor', /** @type {!osx.map.TerrainProviderOptions} */ (options));
 
   goog.asserts.assert(goog.isDefAndNotNull(options.layers) && options.layers.length > 0, 'layers not defined');
 
   /**
-   * @type {!Array<!osx.ogc.wms.TerrainLayerOptions>}
+   * Configured WMS layers to use for terrain.
+   * @type {!Array<!osx.cesium.WMSTerrainLayerOptions>}
    * @private
    */
   this.layers_ = options.layers;
-  this.layers_.sort(plugin.ogc.wms.terrainLayerCompare);
+  this.layers_.sort(plugin.cesium.wmsTerrainLayerCompare);
 
   // for now, name the provider based on the first layer name so it can be of use in the layers window
   // we could change name based on zoom level but it's problematic because tiles are requested for multiple zoom levels
@@ -37,21 +39,21 @@ plugin.ogc.wms.TerrainProvider = function(options) {
   // mark as ready so Cesium will start requesting terrain
   this.ready = true;
 };
-goog.inherits(plugin.ogc.wms.TerrainProvider, os.olcs.AbstractTerrainProvider);
+goog.inherits(plugin.cesium.WMSTerrainProvider, os.olcs.AbstractTerrainProvider);
 
 
 /**
  * @inheritDoc
  */
-plugin.ogc.wms.TerrainProvider.prototype.getTileDataAvailable = function(x, y, level) {
-  return plugin.ogc.wms.TerrainProvider.base(this, 'getTileDataAvailable', x, y, level) && level < this.maxLevel;
+plugin.cesium.WMSTerrainProvider.prototype.getTileDataAvailable = function(x, y, level) {
+  return plugin.cesium.WMSTerrainProvider.base(this, 'getTileDataAvailable', x, y, level) && level < this.maxLevel;
 };
 
 
 /**
  * @inheritDoc
  */
-plugin.ogc.wms.TerrainProvider.prototype.requestTileGeometry = function(x, y, level, throttleRequests) {
+plugin.cesium.WMSTerrainProvider.prototype.requestTileGeometry = function(x, y, level, throttleRequests) {
   var layerName = this.getLayerForLevel_(level);
   if (!layerName) {
     // no terrain at this zoom level
@@ -91,7 +93,7 @@ plugin.ogc.wms.TerrainProvider.prototype.requestTileGeometry = function(x, y, le
  * @return {string|undefined}
  * @private
  */
-plugin.ogc.wms.TerrainProvider.prototype.getLayerForLevel_ = function(level) {
+plugin.cesium.WMSTerrainProvider.prototype.getLayerForLevel_ = function(level) {
   var layerName = undefined;
   if (level < this.maxLevel && level >= this.minLevel) {
     for (var i = 0, n = this.layers_.length; i < n; i++) {
@@ -116,7 +118,7 @@ plugin.ogc.wms.TerrainProvider.prototype.getLayerForLevel_ = function(level) {
  * @return {string}
  * @private
  */
-plugin.ogc.wms.TerrainProvider.prototype.getRequestUrl_ = function(x, y, level, layerName) {
+plugin.cesium.WMSTerrainProvider.prototype.getRequestUrl_ = function(x, y, level, layerName) {
   var url = this.url + '?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&CRS=EPSG%3A4326&STYLES=';
 
   // add the elevation layer
@@ -148,7 +150,7 @@ plugin.ogc.wms.TerrainProvider.prototype.getRequestUrl_ = function(x, y, level, 
  * @return {Cesium.HeightmapTerrainData}
  * @private
  */
-plugin.ogc.wms.TerrainProvider.prototype.arrayToHeightmap_ = function(childTileMask, buffer) {
+plugin.cesium.WMSTerrainProvider.prototype.arrayToHeightmap_ = function(childTileMask, buffer) {
   var heightBuffer = this.postProcessArray_(buffer);
   if (!goog.isDef(heightBuffer)) {
     throw new Cesium.DeveloperError('unexpected height buffer size');
@@ -171,7 +173,7 @@ plugin.ogc.wms.TerrainProvider.prototype.arrayToHeightmap_ = function(childTileM
  * @return {Int16Array|undefined}
  * @private
  */
-plugin.ogc.wms.TerrainProvider.prototype.postProcessArray_ = function(buffer) {
+plugin.cesium.WMSTerrainProvider.prototype.postProcessArray_ = function(buffer) {
   var result;
   var viewerIn = new DataView(buffer);
   var littleEndianBuffer = new ArrayBuffer(this.tileSize * this.tileSize * 2);
@@ -207,7 +209,7 @@ plugin.ogc.wms.TerrainProvider.prototype.postProcessArray_ = function(buffer) {
  * @param {Object} b
  * @return {number}
  */
-plugin.ogc.wms.terrainLayerCompare = function(a, b) {
+plugin.cesium.wmsTerrainLayerCompare = function(a, b) {
   // sort in order of descending maxLevel
   return goog.array.defaultCompare(b.maxLevel, a.maxLevel);
 };

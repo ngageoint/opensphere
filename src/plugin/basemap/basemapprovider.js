@@ -53,7 +53,7 @@ plugin.basemap.BaseMapProvider = function() {
   os.proj.switch.SwitchProjection.getInstance().listen(
       os.proj.switch.BinnedLayersEvent.TYPE, this.onSwitchProjectionBins, false, this);
 
-  os.MapContainer.getInstance().listen(os.MapEvent.TERRAIN_DISABLED, this.onTerrainDisabled, false, this);
+  os.dispatcher.listen(os.MapEvent.TERRAIN_DISABLED, this.onTerrainDisabled, false, this);
   os.dispatcher.listen('basemapAddFailover', this.activateFailSet, false, this);
 };
 goog.inherits(plugin.basemap.BaseMapProvider, os.ui.data.DescriptorProvider);
@@ -64,7 +64,7 @@ goog.inherits(plugin.basemap.BaseMapProvider, os.ui.data.DescriptorProvider);
  */
 plugin.basemap.BaseMapProvider.prototype.disposeInternal = function() {
   plugin.basemap.BaseMapProvider.base(this, 'disposeInternal');
-  os.MapContainer.getInstance().unlisten(os.MapEvent.TERRAIN_DISABLED, this.onTerrainDisabled, false, this);
+  os.dispatcher.unlisten(os.MapEvent.TERRAIN_DISABLED, this.onTerrainDisabled, false, this);
   os.dispatcher.unlisten('basemapAddFailover', this.activateFailSet, false, this);
 };
 
@@ -165,15 +165,26 @@ plugin.basemap.BaseMapProvider.prototype.addBaseMapFromConfig = function(config)
       if (conf) {
         var type = conf['type'] ? conf['type'].toLowerCase() : null;
         if (type == plugin.basemap.TERRAIN_TYPE) {
-          // if multiple terrain descriptors are configured, the last one will win
-          os.MapContainer.getInstance().setTerrainProvider(
-              /** @type {string} */ (conf['baseType']),
-              /** @type {osx.olcs.TerrainProviderOptions} */ (conf['options']));
+          //
+          // TODO: terrain config is still set in base maps because we're adding a descriptor to inform the user that
+          //       the controls for it have moved. after a release cycle, remove the descriptor and update configs to
+          //       use the new key (os.config.DisplaySetting.TERRAIN_OPTIONS).
+          //
 
+          // if multiple terrain descriptors are configured, the last one will win
+          var terrainOptions = /** @type {osx.map.TerrainProviderOptions|undefined} */ (conf['options']);
+          if (terrainOptions && terrainOptions.url) {
+            var terrainType = /** @type {string|undefined} */ (conf['baseType']);
+            if (terrainType) {
+              terrainOptions.type = terrainType;
+              os.settings.set(os.config.DisplaySetting.TERRAIN_OPTIONS, terrainOptions);
+            }
+          }
+
+          // create a descriptor that will inform the user on where terrain was moved to
           var terrainId = this.getTerrainId();
           var d = dm.getDescriptor(terrainId);
           if (!d) {
-            // create a descriptor that will inform the user on where terrain was moved to
             d = new plugin.basemap.TerrainDescriptor();
             d.setId(terrainId);
             dm.addDescriptor(d);
@@ -268,6 +279,8 @@ plugin.basemap.BaseMapProvider.prototype.getTerrainId = function() {
  * Handle terrain disabled event from the map container.
  * @param {goog.events.Event} event The event.
  * @protected
+ *
+ * @todo Remove when the descriptor is no longer used.
  */
 plugin.basemap.BaseMapProvider.prototype.onTerrainDisabled = function(event) {
   var descriptor = os.dataManager.getDescriptor(this.getTerrainId());
