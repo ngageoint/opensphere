@@ -658,7 +658,7 @@ plugin.track.setGeometry = function(track, geometry) {
   plugin.track.updateTime(track);
   plugin.track.updateCurrentPosition(track);
 
-  // mark the line as dirty so the Cesium feature converter recreates it
+  // mark the line as dirty so the WebGL feature converter recreates it
   geometry.set(os.olcs.DIRTY_BIT, true);
 
   // notify listeners that the track geometry has changed
@@ -1197,7 +1197,7 @@ plugin.track.updateCurrentLine = function(track, timestamp, index, coordinates, 
   // update the current position marker
   plugin.track.updateCurrentPosition(track);
 
-  // mark the line as dirty so the Cesium feature converter recreates it
+  // mark the line as dirty so the WebGL feature converter recreates it
   currentLine.set(os.olcs.DIRTY_BIT, true);
 
   // update the current line geometry

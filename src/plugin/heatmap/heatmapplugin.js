@@ -2,6 +2,7 @@ goog.provide('plugin.heatmap.HeatmapPlugin');
 
 goog.require('os.data.DataManager');
 goog.require('os.layer.config.LayerConfigManager');
+goog.require('os.olcs.sync.SynchronizerManager');
 goog.require('os.plugin.AbstractPlugin');
 goog.require('os.ui.action.Action');
 goog.require('os.ui.action.MenuOptions');

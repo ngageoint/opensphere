@@ -135,7 +135,7 @@ ol.control.Attribution.prototype.insertLogos_ = goog.nullFunction;
 
 /**
  * Replaces `ol.layer.Layer.visibleAtResolution` because Openlayers only checks the layerState for visibility. This does
- * not work when Cesium is up.
+ * not work when using a WebGL renderer.
  *
  * @param {ol.LayerState} layerState Layer state.
  * @param {number} resolution Resolution.
