@@ -12,7 +12,7 @@
   z-index: $overrides-modal-zindex*99 !important;
 
   .select2-search .select2-input {
-    background: #777;
+    background: transparent;
     color: $overrides-text-color;
   }
 }
