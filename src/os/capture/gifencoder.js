@@ -35,7 +35,7 @@ goog.inherits(os.capture.GifEncoder, os.capture.AbstractVideoEncoder);
 
 
 /**
- * The URL to the Whammy Javascript library.
+ * The URL to the GIF Javascript library.
  * @type {string}
  * @const
  */
