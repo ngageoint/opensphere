@@ -104,14 +104,6 @@ os.ui.capture.RecordingUI = function($scope, $element) {
    */
   this['encoder'] = this['encoders'][0];
 
-  // only Chrome supports creating WebM videos
-  //
-  // @note This has been disabled because on some machines it consistently reports changes in frame width.
-  //
-  // if (goog.userAgent.WEBKIT) {
-  //   this['encoders'].push(new os.capture.WebMEncoder());
-  // }
-
   /**
    * @type {os.ex.IPersistenceMethod}
    */
