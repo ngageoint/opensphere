@@ -51,23 +51,22 @@ plugin.suncalc.Plugin.prototype.init = function() {
         label: 'Sunlight',
         eventType: os.config.DisplaySetting.ENABLE_LIGHTING,
         type: os.ui.menu.MenuItemType.CHECK,
-        tooltip: 'Light the 3D globe with the Sun'
+        tooltip: 'Light the 3D globe with the Sun',
+        handler: plugin.suncalc.onEnableLighting,
+        beforeRender: plugin.suncalc.updateSunlightItem
       });
-
-      var x = group.find(os.config.DisplaySetting.ENABLE_LIGHTING);
-      if (x) {
-        /**
-         * @this {os.ui.menu.MenuItem}
-         */
-        x.beforeRender = function() {
-          this.visible = os.MapContainer.getInstance().is3DEnabled();
-          this.selected = !!os.settings.get(os.config.DisplaySetting.ENABLE_LIGHTING, false);
-        };
-
-        x.handler = plugin.suncalc.onEnableLighting;
-      }
     }
   }
+};
+
+
+/**
+ * Update the Sunlight menu item.
+ * @this {os.ui.menu.MenuItem}
+ */
+plugin.suncalc.updateSunlightItem = function() {
+  this.visible = os.MapContainer.getInstance().is3DEnabled();
+  this.selected = !!os.settings.get(os.config.DisplaySetting.ENABLE_LIGHTING, false);
 };
 
 
@@ -77,21 +76,7 @@ plugin.suncalc.Plugin.prototype.init = function() {
  * @this {os.ui.menu.MenuItem}
  */
 plugin.suncalc.onEnableLighting = function(evt) {
-  plugin.suncalc.setLightingEnabled(!this.selected);
-};
-
-
-/**
- * @param {boolean} value The value
- */
-plugin.suncalc.setLightingEnabled = function(value) {
-  os.settings.set(os.config.DisplaySetting.ENABLE_LIGHTING, value);
-
-  var mc = os.MapContainer.getInstance();
-  if (mc.is3DEnabled()) {
-    mc.getOLCesium().getCesiumScene().globe.enableLighting = value;
-    os.dispatcher.dispatchEvent(os.olcs.RenderLoop.REPAINT);
-  }
+  os.settings.set(os.config.DisplaySetting.ENABLE_LIGHTING, !this.selected);
 };
 
 

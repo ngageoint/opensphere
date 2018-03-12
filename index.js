@@ -209,16 +209,6 @@ const sharedResources = [
     files: ['WMM.COF']
   },
   {
-    source: resolver.resolveModulePath('cesium/Build/Cesium', __dirname),
-    target: 'vendor/cesium',
-    scripts: ['Cesium.js'],
-    files: [
-      'Assets',
-      'ThirdParty',
-      'Workers'
-    ]
-  },
-  {
     source: resolver.resolveModulePath('jsts/dist', __dirname),
     target: 'vendor/jsts',
     scripts: ['jsts.min.js']
@@ -255,6 +245,16 @@ const indexResources = sharedResources.concat([
       'os-wasm.wasm',
       'os-asm.js',
       'os-asm.js.mem'
+    ]
+  },
+  {
+    source: resolver.resolveModulePath('cesium/Build/Cesium', __dirname),
+    target: 'vendor/cesium',
+    files: [
+      'Cesium.js',
+      'Assets',
+      'ThirdParty',
+      'Workers'
     ]
   },
   {

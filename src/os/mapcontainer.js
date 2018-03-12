@@ -1,7 +1,6 @@
 goog.provide('os.MapContainer');
 
 goog.require('goog.Promise');
-goog.require('goog.Uri');
 goog.require('goog.array');
 goog.require('goog.asserts');
 goog.require('goog.async.ConditionalDelay');
@@ -58,18 +57,19 @@ goog.require('os.layer.Drawing');
 goog.require('os.layer.Group');
 goog.require('os.layer.ILayer');
 goog.require('os.layer.LayerType');
-goog.require('os.layer.Terrain');
 goog.require('os.layer.Vector');
 goog.require('os.map');
 goog.require('os.map.IMapContainer');
 goog.require('os.metrics');
 goog.require('os.metrics.Metrics');
+goog.require('os.mixin.cesium');
 goog.require('os.mixin.renderloop');
 goog.require('os.object');
 goog.require('os.ogc');
 goog.require('os.ol.control.MousePosition');
 goog.require('os.ol.feature');
 goog.require('os.olcs.Camera');
+goog.require('os.olcs.WMSImageryProvider');
 goog.require('os.olcs.sync.RootSynchronizer');
 goog.require('os.proj');
 goog.require('os.proj.switch');
@@ -105,6 +105,13 @@ os.MapContainer = function() {
   this.map_ = null;
 
   /**
+   * If the map container is asynchronously initializing a view. Disables toggling the view.
+   * @type {boolean}
+   * @private
+   */
+  this.initializingView_ = false;
+
+  /**
    * The Openlayers/Cesium synchronizer.
    * @type {olcs.OLCesium}
    * @private
@@ -138,27 +145,32 @@ os.MapContainer = function() {
   this.hasPerformanceCaveat_ = undefined;
 
   /**
-   * Cesium terrain provider
-   * @type {!Cesium.TerrainProvider}
+   * The Cesium terrain provider type.
+   * @type {string|undefined}
    * @private
    */
-  this.terrainProvider_ = os.MapContainer.getDefaultTerrainProvider_();
+  this.terrainType_ = undefined;
 
   /**
-   * Layer grouping for terrain, special handling required for these layers
-   * @type {os.layer.Group}
+   * The Cesium terrain provider type.
+   * @type {!Object}
    * @private
    */
-  this.terrainGroup_ = new os.layer.Group();
+  this.terrainOptions_ = {};
 
   /**
-   * Map of terrain provider types
+   * Cesium terrain provider.
+   * @type {Cesium.TerrainProvider|undefined}
+   * @private
+   */
+  this.terrainProvider_ = undefined;
+
+  /**
+   * Map of terrain provider types.
    * @type {!Object<string, !os.olcs.TerrainProviderFn>}
    * @private
    */
-  this.terrainProviderTypes_ = {
-    'cesium': Cesium.CesiumTerrainProvider
-  };
+  this.terrainProviderTypes_ = {};
 
   /**
    * Cesium event listeners
@@ -229,6 +241,9 @@ os.MapContainer = function() {
 
   os.dispatcher.listen(os.MapEvent.RENDER, this.render, false, this);
   os.dispatcher.listen(os.MapEvent.RENDER_SYNC, this.renderSync, false, this);
+
+  os.settings.listen(os.config.DisplaySetting.ENABLE_LIGHTING, this.onSettingChange_, false, this);
+  os.settings.listen(os.config.DisplaySetting.ENABLE_TERRAIN, this.onSettingChange_, false, this);
 };
 goog.inherits(os.MapContainer, goog.events.EventTarget);
 goog.addSingletonGetter(os.MapContainer);
@@ -318,6 +333,9 @@ os.MapContainer.prototype.disposeInternal = function() {
 
   os.dispatcher.unlisten(os.events.LayerEventType.REMOVE, this.onRemoveLayerEvent_, false, this);
 
+  os.settings.unlisten(os.config.DisplaySetting.ENABLE_LIGHTING, this.onSettingChange_, false, this);
+  os.settings.unlisten(os.config.DisplaySetting.ENABLE_TERRAIN, this.onSettingChange_, false, this);
+
   os.MapContainer.base(this, 'disposeInternal');
 };
 
@@ -363,6 +381,25 @@ os.MapContainer.prototype.getCesiumCameraController = function() {
   }
 
   return null;
+};
+
+
+/**
+ * Handle settings changes that affect the map container.
+ * @param {os.events.SettingChangeEvent} event The event.
+ * @private
+ */
+os.MapContainer.prototype.onSettingChange_ = function(event) {
+  switch (event.type) {
+    case os.config.DisplaySetting.ENABLE_LIGHTING:
+      this.showSunlight(!!event.newVal);
+      break;
+    case os.config.DisplaySetting.ENABLE_TERRAIN:
+      this.showTerrain(!!event.newVal);
+      break;
+    default:
+      break;
+  }
 };
 
 
@@ -428,86 +465,123 @@ os.MapContainer.prototype.handleViewChange_ = function() {
 
 
 /**
+ * If a terrain provider has been configured.
+ * @return {boolean}
+ */
+os.MapContainer.prototype.hasTerrain = function() {
+  return !!this.terrainType_;
+};
+
+
+/**
  * Set the Cesium terrain provider.
- * @param {?string} type
- * @param {Object=} opt_options
+ * @param {string|undefined} type The terrain provider type.
+ * @param {Object=} opt_options The terrain provider options.
  */
 os.MapContainer.prototype.setTerrainProvider = function(type, opt_options) {
-  type = type ? type.toLowerCase() : null;
-  opt_options = opt_options || {};
+  this.terrainType_ = type ? type.toLowerCase() : undefined;
+  this.terrainOptions_ = opt_options || {};
 
-  var layer = new os.layer.Terrain();
+  if (this.is3DEnabled()) {
+    this.updateTerrainProvider_();
+  }
+};
 
-  if (goog.isNull(type)) {
-    this.terrainProvider_ = os.MapContainer.getDefaultTerrainProvider_();
 
-    // remove the old terrain layer
-    this.terrainGroup_.getLayers().clear();
-    var event = new os.events.LayerEvent(os.events.LayerEventType.REMOVE, layer);
-    this.dispatchEvent(event);
-    os.dispatcher.dispatchEvent(event);
-  } else if (type in this.terrainProviderTypes_) {
-    if ('url' in opt_options && os.net.getCrossOrigin(opt_options['url']) === os.net.CrossOrigin.USE_CREDENTIALS) {
-      // add URL to Cesium.TrustedServers
-      var uri = new goog.Uri(opt_options['url']);
-      var port = uri.getPort();
-      if (!port) {
-        var scheme = uri.getScheme();
-        if (!scheme) {
-          var local = new goog.Uri(window.location);
-          scheme = local.getScheme();
-        }
+/**
+ * Clean up the terrain provider.
+ * @private
+ */
+os.MapContainer.prototype.removeTerrainProvider_ = function() {
+  if (this.terrainProvider_) {
+    this.terrainProvider_.errorEvent.removeEventListener(this.onTerrainError, this);
+    this.terrainProvider_ = undefined;
+  }
+};
 
-        port = scheme === 'https' ? 443 : scheme === 'http' ? 80 : port;
-      }
 
-      if (port) {
-        Cesium.TrustedServers.add(uri.getDomain(), port);
-      }
+/**
+ * Update the terrain provider.
+ * @private
+ */
+os.MapContainer.prototype.updateTerrainProvider_ = function() {
+  if (this.terrainType_ && this.terrainType_ in this.terrainProviderTypes_) {
+      // clean up existing provider
+    this.removeTerrainProvider_();
+
+    // instruct Cesium to trust terrain servers (controlled by app configuration)
+    if (this.terrainOptions_) {
+      os.olcs.addTrustedServer(this.terrainOptions_['url']);
     }
 
-    this.terrainProvider_ = new this.terrainProviderTypes_[type](opt_options);
-
-    // add the terrain layer
-    if (typeof this.terrainProvider_.getName == 'function') {
-      layer.setTitle(this.terrainProvider_.getName());
-    }
-
-    if (opt_options && opt_options['id']) {
-      layer.setId(opt_options['id']);
-    }
-
-    this.terrainGroup_.getLayers().push(layer);
-    var event = new os.events.LayerEvent(os.events.LayerEventType.ADD, layer);
-    this.dispatchEvent(event);
-    os.dispatcher.dispatchEvent(event);
+    this.terrainProvider_ = new this.terrainProviderTypes_[this.terrainType_](this.terrainOptions_);
+    this.terrainProvider_.errorEvent.addEventListener(this.onTerrainError, this);
   } else {
-    goog.log.error(os.MapContainer.LOGGER_, 'Unknown terrain provider type: ' + type);
-  }
+    this.removeTerrainProvider_();
 
-  if (this.olCesium_) {
-    var scene = this.olCesium_.getCesiumScene();
-    if (scene) {
-      scene.terrainProvider = this.terrainProvider_;
+    if (this.terrainType_) {
+      goog.log.error(os.MapContainer.LOGGER_, 'Unknown terrain provider type: ' + this.terrainType_);
     }
   }
+
+  var showTerrain = !!os.settings.get(os.config.DisplaySetting.ENABLE_TERRAIN, false);
+  this.showTerrain(showTerrain);
 
   os.dispatcher.dispatchEvent(os.olcs.RenderLoop.REPAINT);
 };
 
 
 /**
- * Show/Hide the terrain, similar to calling setTerrainProvider without the eventing
- * @param {boolean} value
+ * Handle error raised from a Cesium terrain provider.
+ * @param {Cesium.TileProviderError} error The tile provider error.
+ * @protected
+ */
+os.MapContainer.prototype.onTerrainError = function(error) {
+  // notify the user that terrain will be disabled
+  goog.log.error(os.MapContainer.LOGGER_, 'Terrain provider initialization error: ' + error.message);
+  os.alertManager.sendAlert('Terrain provider failed to initialize and will be disabled. Please see the log for ' +
+      'more details.', os.alert.AlertEventSeverity.ERROR);
+
+  // disable the terrain provider and switch to the default
+  this.terrainType_ = undefined;
+  this.removeTerrainProvider_();
+  os.settings.set(os.config.DisplaySetting.ENABLE_TERRAIN, false);
+
+  // notify that terrain has been disabled
+  this.dispatchEvent(os.MapEvent.TERRAIN_DISABLED);
+};
+
+
+/**
+ * Toggle if sunlight is displayed on the 3D globe.
+ * @param {boolean} value If sunlight should be displayed.
+ */
+os.MapContainer.prototype.showSunlight = function(value) {
+  if (this.olCesium_) {
+    var scene = this.olCesium_.getCesiumScene();
+    if (scene) {
+      scene.globe.enableLighting = value;
+      os.dispatcher.dispatchEvent(os.olcs.RenderLoop.REPAINT);
+    }
+  }
+};
+
+
+/**
+ * Toggle if terrain is displayed on the 3D globe.
+ * @param {boolean} value If terrain should be displayed.
  */
 os.MapContainer.prototype.showTerrain = function(value) {
   if (this.olCesium_) {
     var scene = this.olCesium_.getCesiumScene();
     if (scene) {
-      if (!value) {
-        scene.terrainProvider = os.MapContainer.getDefaultTerrainProvider_(); // hidden
-      } else {
-        scene.terrainProvider = this.terrainProvider_; // visible
+      // use the configured provider if terrain is enabled, falling back on the default provider
+      var provider = (value ? this.terrainProvider_ : undefined) || os.MapContainer.getDefaultTerrainProvider_();
+
+      // only change this if there is a provider to switch to. Cesium will render a blank globe without any terrain
+      // provider.
+      if (provider) {
+        scene.terrainProvider = provider;
       }
 
       os.dispatcher.dispatchEvent(os.olcs.RenderLoop.REPAINT);
@@ -1031,8 +1105,6 @@ os.MapContainer.prototype.init = function() {
   referenceGroup.setPriority(100);
   referenceGroup.setOSType(os.layer.LayerType.REF);
 
-  this.terrainGroup_.setOSType(os.layer.LayerType.TERRAIN + ' - 3D');
-
   os.map.PROJECTION = ol.proj.get(/** @type {string} */ (
       os.settings.get(os.map.PROJECTION_KEY, os.map.PROJECTION.getCode())));
 
@@ -1058,7 +1130,6 @@ os.MapContainer.prototype.init = function() {
     controls: this.controlFunction_ ? this.controlFunction_() : undefined,
     interactions: this.interactionFunction_ ? this.interactionFunction_() : undefined,
     layers: new ol.Collection([
-      this.terrainGroup_,
       tileGroup,
       vectorGroup,
       referenceGroup,
@@ -1117,6 +1188,7 @@ os.MapContainer.prototype.init = function() {
 
 /**
  * Initializes settings and adds listeners for settings changes.
+ * @protected
  */
 os.MapContainer.prototype.initSettings = function() {
   if (os.config && os.config.DisplaySetting) {
@@ -1124,25 +1196,33 @@ os.MapContainer.prototype.initSettings = function() {
 
     var mapMode = os.settings.get(os.config.DisplaySetting.MAP_MODE, os.MapMode.VIEW_3D);
     if (mapMode === os.MapMode.VIEW_3D || mapMode === os.MapMode.AUTO) {
-      // don't display Cesium errors on initialization
-      this.setCesiumEnabled(true, true);
+      // don't display errors on initialization, and wait until the globe is ready to initialize the camera
+      this.setCesiumEnabled(true, true).then(this.initCameraSettings, this.initCameraSettings, this);
+    } else {
+      this.initCameraSettings();
     }
+  }
+};
 
-    var cameraState = /** @type {string|undefined} */ (os.settings.get(
-        os.config.DisplaySetting.CAMERA_STATE));
-    if (cameraState) {
-      try {
-        cameraState = /** @type {!osx.map.CameraState} */ (JSON.parse(cameraState));
-      } catch (e) {
-        goog.log.error(os.MapContainer.LOGGER_, 'Failed restoring camera state:', e);
-        cameraState = undefined;
-      }
-    }
 
-    // if a camera state was saved to settings, restore it now
-    if (cameraState) {
-      this.restoreCameraState(/** @type {!osx.map.CameraState} */ (cameraState));
+/**
+ * Initializes camera settings.
+ * @protected
+ */
+os.MapContainer.prototype.initCameraSettings = function() {
+  var cameraState = /** @type {string|undefined} */ (os.settings.get(os.config.DisplaySetting.CAMERA_STATE));
+  if (cameraState) {
+    try {
+      cameraState = /** @type {!osx.map.CameraState} */ (JSON.parse(cameraState));
+    } catch (e) {
+      goog.log.error(os.MapContainer.LOGGER_, 'Failed restoring camera state:', e);
+      cameraState = undefined;
     }
+  }
+
+  // if a camera state was saved to settings, restore it now
+  if (cameraState) {
+    this.restoreCameraState(/** @type {!osx.map.CameraState} */ (cameraState));
   }
 };
 
@@ -1170,6 +1250,10 @@ os.MapContainer.prototype.onMapModeChange_ = function(event) {
  * @private
  */
 os.MapContainer.prototype.onToggleView_ = function() {
+  if (this.initializingView_) {
+    return;
+  }
+
   var useCesium = !this.is3DEnabled();
 
   // prompt the user if they try to enable Cesium and it isn't supported
@@ -1383,6 +1467,7 @@ os.MapContainer.prototype.getAltitude = function() {
  * Enable/disable Cesium.
  * @param {boolean} useCesium If Cesium should be enabled
  * @param {boolean=} opt_silent If errors should be ignored
+ * @return {!(goog.Promise|goog.async.Deferred)}
  */
 os.MapContainer.prototype.setCesiumEnabled = function(useCesium, opt_silent) {
   var code = os.map.PROJECTION.getCode();
@@ -1390,9 +1475,26 @@ os.MapContainer.prototype.setCesiumEnabled = function(useCesium, opt_silent) {
 
   // change the view if different than current
   if (useCesium != this.is3DEnabled()) {
+    var viewport = this.map_.getViewport();
+    var olCanvas = viewport ? viewport.querySelector('canvas') : undefined;
+    if (olCanvas) {
+      olCanvas.style.visibility = useCesium ? 'hidden' : '';
+    }
+
     if (useCesium && this.is3DSupported() && !this.failPerformanceCaveat() && !this.olCesium_) {
       // initialize cesium
-      this.initCesium_();
+      this.initializingView_ = true;
+
+      return this.initCesium_().then(function() {
+        // initialize succeeded - call again to activate Cesium
+        this.initializingView_ = false;
+        this.setCesiumEnabled(useCesium, opt_silent);
+      }, function() {
+        // initialize failed - disable 3D support and call again to report the WebGL error
+        this.initializingView_ = false;
+        this.is3DSupported_ = false;
+        this.setCesiumEnabled(useCesium, opt_silent);
+      }, this);
     }
 
     this.setView_(useCesium);
@@ -1423,6 +1525,8 @@ os.MapContainer.prototype.setCesiumEnabled = function(useCesium, opt_silent) {
   // save the current map mode to settings after the stack clears. this will prevent conflicts with Angular caused by
   // failed changes in settings.
   setTimeout(this.saveMapMode_.bind(this), 0);
+
+  return goog.Promise.resolve();
 };
 
 
@@ -1447,59 +1551,71 @@ os.MapContainer.getJulianDate = function() {
 
 /**
  * Initialize the Cesium globe.
+ * @return {!(goog.Promise|goog.async.Deferred)}
  * @private
  *
  * @suppress {accessControls|checkTypes}
  */
 os.MapContainer.prototype.initCesium_ = function() {
   if (!this.olCesium_ && this.map_) {
-    try {
-      this.olCesium_ = new olcs.OLCesium({
-        cameraClass: os.olcs.Camera,
-        createSynchronizers: this.createCesiumSynchronizers_.bind(this),
-        map: this.map_,
-        time: os.MapContainer.getJulianDate
-      });
+    return new goog.Promise(function(resolve, reject) {
+      os.olcs.loadCesium().then(function() {
+        try {
+          os.mixin.cesium.loadCesiumMixins();
+          os.olcs.WMSImageryProvider.init();
+          this.registerTerrainProviderType('cesium', Cesium.CesiumTerrainProvider);
 
-      this.olCesium_.setTargetFrameRate(os.MapContainer.TARGET_FRAME_RATE_);
+          this.olCesium_ = new olcs.OLCesium({
+            cameraClass: os.olcs.Camera,
+            createSynchronizers: this.createCesiumSynchronizers_.bind(this),
+            map: this.map_,
+            time: os.MapContainer.getJulianDate
+          });
 
-      var scene = this.olCesium_.getCesiumScene();
+          this.olCesium_.setTargetFrameRate(os.MapContainer.TARGET_FRAME_RATE_);
 
-      scene.globe.enableLighting = !!os.settings.get(os.config.DisplaySetting.ENABLE_LIGHTING, false);
+          var scene = this.olCesium_.getCesiumScene();
 
-      // set the FOV to 60 degrees to match Google Earth
-      scene.camera.frustum.fov = Cesium.Math.PI_OVER_THREE;
+          scene.globe.enableLighting = !!os.settings.get(os.config.DisplaySetting.ENABLE_LIGHTING, false);
 
-      // update the globe base color from application settings
-      var bgColor = /** @type {string} */ (os.settings.get(['bgColor'], '#000000'));
-      scene.globe.baseColor = Cesium.Color.fromCssColorString(bgColor);
+          // set the FOV to 60 degrees to match Google Earth
+          scene.camera.frustum.fov = Cesium.Math.PI_OVER_THREE;
 
-      // only render 25% of the terrain data to improve performance. terrain data is typically much denser than
-      // necessary to render a quality terrain model.
-      //
-      // reduce the quality further in Firefox since it is not as fast
-      Cesium.TerrainProvider.heightmapTerrainQuality = goog.userAgent.GECKO ? 0.05 : 0.25;
-      scene.terrainProvider = this.terrainProvider_;
+          // update the globe base color from application settings
+          var bgColor = /** @type {string} */ (os.settings.get(['bgColor'], '#000000'));
+          scene.globe.baseColor = Cesium.Color.fromCssColorString(bgColor);
 
-      // configure Cesium fog
-      scene.fog.enabled = /** @type {boolean} */ (os.settings.get(os.config.DisplaySetting.FOG_ENABLED,
-          true));
-      scene.fog.density = /** @type {boolean} */ (os.settings.get(os.config.DisplaySetting.FOG_DENSITY,
-          os.olcs.DEFAULT_FOG_DENSITY));
+          // only render 25% of the terrain data to improve performance. terrain data is typically much denser than
+          // necessary to render a quality terrain model.
+          //
+          // reduce the quality further in Firefox since it is not as fast
+          Cesium.TerrainProvider.heightmapTerrainQuality = goog.userAgent.GECKO ? 0.05 : 0.25;
+          this.updateTerrainProvider_();
 
-      // create our camera handler
-      this.olCesium_.camera_ = new os.olcs.Camera(scene, this.map_);
+          // configure Cesium fog
+          scene.fog.enabled = /** @type {boolean} */ (os.settings.get(os.config.DisplaySetting.FOG_ENABLED,
+              true));
+          scene.fog.density = /** @type {boolean} */ (os.settings.get(os.config.DisplaySetting.FOG_DENSITY,
+              os.olcs.DEFAULT_FOG_DENSITY));
 
-      // configure camera interactions. do not move this before the camera is created!
-      var sscc = scene.screenSpaceCameraController;
-      os.interaction.configureCesium(sscc);
+          // create our camera handler
+          this.olCesium_.camera_ = new os.olcs.Camera(scene, this.map_);
 
-      this.olCesium_.enableAutoRenderLoop();
-    } catch (e) {
-      goog.log.error(os.MapContainer.LOGGER_, 'Failed to create 3D view!', e);
-      this.is3DSupported_ = false;
-    }
+          // configure camera interactions. do not move this before the camera is created!
+          var sscc = scene.screenSpaceCameraController;
+          os.interaction.configureCesium(sscc);
+
+          this.olCesium_.enableAutoRenderLoop();
+          resolve();
+        } catch (e) {
+          goog.log.error(os.MapContainer.LOGGER_, 'Failed to create 3D view!', e);
+          reject();
+        }
+      }, reject, this);
+    }, this);
   }
+
+  return goog.Promise.resolve();
 };
 
 
@@ -2223,12 +2339,12 @@ os.MapContainer.defaultTerrainProvider_ = undefined;
 
 /**
  * Get the default Cesium terrain provider.
- * @return {!Cesium.EllipsoidTerrainProvider}
+ * @return {Cesium.EllipsoidTerrainProvider|undefined}
  * @private
  */
 os.MapContainer.getDefaultTerrainProvider_ = function() {
   // lazy init so Cesium isn't invoked by requiring this file
-  if (!os.MapContainer.defaultTerrainProvider_) {
+  if (!os.MapContainer.defaultTerrainProvider_ && window.Cesium !== undefined) {
     os.MapContainer.defaultTerrainProvider_ = new Cesium.EllipsoidTerrainProvider();
   }
 

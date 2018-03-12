@@ -28,6 +28,7 @@ goog.require('os.math');
  */
 os.interaction.Measure = function(opt_options) {
   os.interaction.Measure.base(this, 'constructor');
+  this.color = [255, 0, 0, 1];
   this.type = 'measure';
 
   /**
@@ -50,23 +51,21 @@ os.interaction.Measure = function(opt_options) {
 
   this.setStyle(new ol.style.Style({
     stroke: new ol.style.Stroke({
-      color: [0xff, 0, 0, 1.0],
+      color: this.color,
       lineCap: 'square',
       width: 2
     })
   }));
 
-  this.set3DStyle(new Cesium.ColorGeometryInstanceAttribute(1, 0, 0, 1));
-
   /**
-   * @private
    * @type {Cesium.LabelCollection}
+   * @private
    */
   this.labels3D_ = null;
 
   /**
-   * @private
    * @type {!Array<!ol.style.Style>}
+   * @private
    */
   this.waypoints_ = [];
 

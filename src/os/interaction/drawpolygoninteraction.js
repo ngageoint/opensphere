@@ -25,13 +25,26 @@ goog.require('os.ui.ol.interaction.DrawPolygon');
  */
 os.interaction.DrawPolygon = function() {
   os.interaction.DrawPolygon.base(this, 'constructor');
-  this.style3D_ = new Cesium.ColorGeometryInstanceAttribute(0.2, 1, 1, 1);
 
   /**
-   * @private
-   * @type {Cesium.PolylineCollection}
+   * The box color.
+   * @type {!ol.Color}
+   * @protected
    */
-  this.lines3D_ = null;
+  this.color = [51, 255, 255, 1];
+
+  /**
+   * @type {Cesium.PolylineCollection|undefined}
+   * @private
+   */
+  this.lines3D_ = undefined;
+
+  /**
+   * The Cesium style.
+   * @type {Cesium.ColorGeometryInstanceAttribute|undefined}
+   * @private
+   */
+  this.style3D_ = undefined;
 };
 goog.inherits(os.interaction.DrawPolygon, os.ui.ol.interaction.DrawPolygon);
 
@@ -132,15 +145,24 @@ os.interaction.DrawPolygon.prototype.is3DSupported = function() {
 
 
 /**
- * @return {Cesium.ColorGeometryInstanceAttribute}
+ * @return {!Cesium.ColorGeometryInstanceAttribute}
  */
 os.interaction.DrawPolygon.prototype.get3DStyle = function() {
+  if (!this.style3D_) {
+    // Openlayers color values are from 0-255, Cesium range is 0-1
+    this.style3D_ = new Cesium.ColorGeometryInstanceAttribute(
+        this.color[0] / 255,
+        this.color[1] / 255,
+        this.color[2] / 255,
+        this.color[3]);
+  }
+
   return this.style3D_;
 };
 
 
 /**
- * @param {Cesium.ColorGeometryInstanceAttribute} style
+ * @param {Cesium.ColorGeometryInstanceAttribute|undefined} style
  */
 os.interaction.DrawPolygon.prototype.set3DStyle = function(style) {
   this.style3D_ = style;

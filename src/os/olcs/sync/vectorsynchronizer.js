@@ -121,7 +121,7 @@ os.olcs.sync.VectorSynchronizer.prototype.createLayerPrimitives_ = function() {
   if (this.csContext) {
     // add the primitive collection to Cesium and initialize all features in the source
     this.initializePrimitives_(this.source.getFeatures());
-    this.scene.primitives.add(this.csContext);
+    this.scene.primitives.add(this.csContext.collection);
 
     // add layer listeners
     ol.events.listen(this.layer, 'change:visible', this.onLayerVisibility_, this);
@@ -167,7 +167,7 @@ os.olcs.sync.VectorSynchronizer.prototype.disposeLayerPrimitives_ = function() {
 
     // remove the primitive collection from Cesium. this will cascade the destroy to the layer primitives.
     this.csContext.dispose();
-    this.scene.primitives.remove(this.csContext);
+    this.scene.primitives.remove(this.csContext.collection);
     this.csContext = null;
 
     os.dispatcher.dispatchEvent(os.olcs.RenderLoop.REPAINT);
