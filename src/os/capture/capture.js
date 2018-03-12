@@ -30,8 +30,7 @@ os.capture.ID = 'capture';
  */
 os.capture.ContentType = {
   GIF: 'image/gif',
-  PNG: 'image/png',
-  WEBM: 'video/webm'
+  PNG: 'image/png'
 };
 
 
