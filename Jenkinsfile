@@ -9,31 +9,51 @@ class Global {
 node(getLabel()) {
   timestamps {
     try {
-      stage('scm')
+      initScmEnv()
 
-      try {
-        beforeCheckout()
-      } catch (NoSuchMethodError e) {
+      stage('scm') {
+        try {
+          beforeCheckout()
+        } catch (NoSuchMethodError e) {
+        }
+      
+        installPlugins('master', env.YARN_WORKSPACE_REPO)
+
+        dir('workspace') {
+          dir('opensphere') {
+            checkout scm
+
+            try {
+              afterCheckout()
+            } catch (NoSuchMethodError e) {
+            }
+            
+            try {
+              this_version = sh(script: 'git describe --exact-match HEAD', returnStdout: true).trim()
+            } catch (e) {
+              this_version = sh(script: "echo '${env.BRANCH_NAME}-${env.BUILD_NUMBER}'", returnStdout: true).trim()
+            }
+            echo "${this_version}"
+          }
+        }
       }
 
-      checkout scm
-
-      try {
-        afterCheckout()
-      } catch (NoSuchMethodError e) {
+      stage('yarn') {
+        yarnInstall()
       }
 
-      stage('npm')
-      npmInstall()
+      dir('workspace/opensphere') {
+        
+        stage('build') {
+          sh 'yarn run build'
+        }
 
-      stage('build')
-      sh 'npm run build'
-
-      stage('test')
-      try {
-        test()
-      } catch (NoSuchMethodError e) {
-      }
+        stage('test') {        
+          try {
+            test()
+          } catch (NoSuchMethodError e) {
+          }
+        }
 
       /* stage('docs')
       sh 'npm run compile:dossier'
@@ -43,33 +63,37 @@ node(getLabel()) {
         deployDocs()
       } catch (NoSuchMethodError e) {
       } */
+        
+        stage('package') {
+          dir('dist') {
+            sh "zip -q -r opensphere-${env.BRANCH_NAME}-${env.BUILD_NUMBER}.zip opensphere"
 
-      stage('package')
-      dir('dist') {
-        sh "zip -q -r opensphere-${env.BRANCH_NAME}-${env.BUILD_NUMBER}.zip opensphere"
+            try {
+              // newer
+              archiveArtifacts '*.zip'
+            } catch (NoSuchMethodError e) {
+              // older
+              archive '*.zip'
+            }
+          }
+        }
+
+        stage('deploy') {
+          try {
+            deploy('opensphere')
+          } catch (NoSuchMethodError e) {
+            error 'Please define "deploy" through a shared pipeline library for this network'
+          }
+        }        
       }
 
-      try {
-        // newer
-        archiveArtifacts 'dist/*.zip'
-      } catch (NoSuchMethodError e) {
-        // older
-        archive 'dist/*.zip'
-      }
-
-      stage('deploy')
-      try {
-        deploy('opensphere')
-      } catch (NoSuchMethodError e) {
-        error 'Please define "deploy" through a shared pipeline library for this network'
-      }
-
-      stage('publish')
-      if (env.BRANCH_NAME == 'master') {
-        try {
-          npmPublish()
-        } catch (NoSuchMethodError e) {
-          error 'Please define "npmPublish" through a shared pipeline library for this network'
+      stage('publish') {
+        if (env.BRANCH_NAME == 'master') {
+          try {
+            npmPublish()
+          } catch (NoSuchMethodError e) {
+            error 'Please define "npmPublish" through a shared pipeline library for this network'
+          }
         }
       }
 
