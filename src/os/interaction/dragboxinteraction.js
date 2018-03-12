@@ -1,33 +1,55 @@
 goog.provide('os.interaction.DragBox');
 
 goog.require('ol.MapBrowserEvent');
+goog.require('ol.color');
+goog.require('ol.style.Stroke');
+goog.require('ol.style.Style');
 goog.require('os.I3DSupport');
 goog.require('os.geo');
-goog.require('os.map');
 goog.require('os.olcs');
 goog.require('os.ui.ol.interaction.DragBox');
 
 
-
 /**
- * Draws a rectangluar query area on the map.
- * This interaction is only supported for mouse devices.
- *
- * @constructor
- * @implements {os.I3DSupport}
- * @extends {os.ui.ol.interaction.DragBox}
+ * Draws a rectangluar query area on the map. This interaction is only supported for mouse devices.
  * @param {olx.interaction.PointerOptions=} opt_options
+ * @extends {os.ui.ol.interaction.DragBox}
+ * @implements {os.I3DSupport}
+ * @constructor
  */
 os.interaction.DragBox = function(opt_options) {
-  os.interaction.DragBox.base(this, 'constructor', opt_options);
-  this.style3D_ = goog.isDef(opt_options) && goog.isDef(opt_options.style3d) ?
-      opt_options.style3d : new Cesium.ColorGeometryInstanceAttribute(0, 1, 1, 1);
+  var options = opt_options || {};
+  var color = /** @type {ol.Color|string} */ (options.color) || 'rgba(0,255,255,1)';
+  options.style = options.style || new ol.style.Style({
+    stroke: new ol.style.Stroke({
+      color: color,
+      lineCap: 'square',
+      width: 2
+    })
+  });
+
+  os.interaction.DragBox.base(this, 'constructor', options);
 
   /**
-   * @private
-   * @type {Cesium.Primitive}
+   * The box color.
+   * @type {ol.Color}
+   * @protected
    */
-  this.box3D_ = null;
+  this.color = ol.color.asArray(color) || [0, 255, 255, 1];
+
+  /**
+   * The Cesium primitive.
+   * @type {Cesium.Primitive|undefined}
+   * @private
+   */
+  this.box3D_ = undefined;
+
+  /**
+   * The Cesium style.
+   * @type {Cesium.ColorGeometryInstanceAttribute|undefined}
+   * @private
+   */
+  this.style3D_ = undefined;
 };
 goog.inherits(os.interaction.DragBox, os.ui.ol.interaction.DragBox);
 
@@ -114,15 +136,24 @@ os.interaction.DragBox.prototype.is3DSupported = function() {
 
 
 /**
- * @return {Cesium.ColorGeometryInstanceAttribute}
+ * @return {!Cesium.ColorGeometryInstanceAttribute}
  */
 os.interaction.DragBox.prototype.get3DStyle = function() {
+  if (!this.style3D_) {
+    // Openlayers color values are from 0-255, Cesium range is 0-1
+    this.style3D_ = new Cesium.ColorGeometryInstanceAttribute(
+        this.color[0] / 255,
+        this.color[1] / 255,
+        this.color[2] / 255,
+        this.color[3]);
+  }
+
   return this.style3D_;
 };
 
 
 /**
- * @param {Cesium.ColorGeometryInstanceAttribute} style
+ * @param {Cesium.ColorGeometryInstanceAttribute|undefined} style
  */
 os.interaction.DragBox.prototype.set3DStyle = function(style) {
   this.style3D_ = style;
