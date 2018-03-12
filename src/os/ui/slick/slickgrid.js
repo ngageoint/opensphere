@@ -39,7 +39,8 @@ os.ui.slick.SlickGridEvent = {
   SELECTION_CHANGE: 'slickgrid.selectionChange',
   SCROLL_TO: 'slickgrid.scrollToItem',
   SCROLL_TO_CELL: 'slickgrid.scrollToCell',
-  SORT_SELECTED: 'slickgrid.sortSelected'
+  SORT_SELECTED: 'slickgrid.sortSelected',
+  SORT_CHANGED: 'slickgrid.sortChanged'
 };
 
 
@@ -167,7 +168,9 @@ os.ui.slick.SlickGridCtrl = function($scope, $element, $compile) {
   this.destroyers.push($scope.$watch('selected', this.onSelectedChange.bind(this)));
   this.destroyers.push($scope.$on('$destroy', this.dispose.bind(this)));
   var unWatchSortColumn = $scope.$watch('defaultSortColumn', goog.bind(function(newVal) {
-    if (newVal) {
+    if (newVal && goog.array.find($scope['columns'], function(col) {
+      return newVal == col['id'];
+    })) {
       setTimeout(goog.bind(function() {
         unWatchSortColumn();
         if (this.grid) {
@@ -1227,6 +1230,8 @@ os.ui.slick.SlickGridCtrl.prototype.onSortChange = function(opt_e, opt_args) {
 
   // slickgrid doesn't update the active cell correctly on sort, so clear it
   this.grid.resetActiveCell();
+
+  this.scope.$emit(os.ui.slick.SlickGridEvent.SORT_CHANGED, cols);
 };
 
 
