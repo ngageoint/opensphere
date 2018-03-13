@@ -1506,12 +1506,12 @@ os.olcs.sync.FeatureConverter.prototype.olGeometryToCesium = function(feature, g
   // if the outline width changed, we need to recreate the primitive since Cesium can't change the width on a geometry
   // instance
   if (primitive && primitive['olLineWidth'] != null) {
-    var dirty = geometry.get(os.olcs.DIRTY_BIT);
+    var dirty = geometry.get(os.geom.GeometryField.DIRTY);
     var width = this.extractLineWidthFromOlStyle(style);
     if (dirty || primitive['olLineWidth'] != width) {
       wasPrimitiveShown = primitive.show;
       context.removePrimitive(primitive);
-      geometry.set(os.olcs.DIRTY_BIT, false);
+      geometry.set(os.geom.GeometryField.DIRTY, false);
       primitive = null;
     }
   }

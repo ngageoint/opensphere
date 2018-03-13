@@ -3,6 +3,7 @@ goog.provide('os.olcs.sync.ImageSynchronizer');
 goog.require('goog.asserts');
 goog.require('goog.events.EventType');
 goog.require('ol.layer.Tile');
+goog.require('os.MapEvent');
 goog.require('os.events.SelectionType');
 goog.require('os.layer.PropertyChange');
 goog.require('os.olcs');
@@ -122,7 +123,7 @@ os.olcs.sync.ImageSynchronizer.prototype.onLayerPropertyChange_ = function(event
     if (p == os.layer.PropertyChange.VISIBLE) {
       this.visible_ = /** @type {boolean} */ (event.getNewValue());
       this.synchronize();
-      os.dispatcher.dispatchEvent(os.olcs.RenderLoop.REPAINT);
+      os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
     }
   }
 };

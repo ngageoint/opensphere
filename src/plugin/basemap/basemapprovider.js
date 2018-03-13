@@ -1,5 +1,6 @@
 goog.provide('plugin.basemap.BaseMapProvider');
 
+goog.require('os.MapEvent');
 goog.require('os.data.BaseDescriptor');
 goog.require('os.data.DataManager');
 goog.require('os.data.DataProviderEvent');

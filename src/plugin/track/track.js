@@ -12,9 +12,9 @@ goog.require('os.events.PropertyChangeEvent');
 goog.require('os.feature');
 goog.require('os.feature.DynamicFeature');
 goog.require('os.feature.DynamicPropertyChange');
+goog.require('os.geom.GeometryField');
 goog.require('os.interpolate');
 goog.require('os.ogc.filter.OGCFilterOverride');
-goog.require('os.olcs');
 goog.require('os.style');
 goog.require('os.time.TimeRange');
 goog.require('os.ui.file.kml');
@@ -659,7 +659,7 @@ plugin.track.setGeometry = function(track, geometry) {
   plugin.track.updateCurrentPosition(track);
 
   // mark the line as dirty so the WebGL feature converter recreates it
-  geometry.set(os.olcs.DIRTY_BIT, true);
+  geometry.set(os.geom.GeometryField.DIRTY, true);
 
   // notify listeners that the track geometry has changed
   track.dispatchEvent(new os.events.PropertyChangeEvent(os.feature.DynamicPropertyChange.GEOMETRY));
@@ -1198,7 +1198,7 @@ plugin.track.updateCurrentLine = function(track, timestamp, index, coordinates, 
   plugin.track.updateCurrentPosition(track);
 
   // mark the line as dirty so the WebGL feature converter recreates it
-  currentLine.set(os.olcs.DIRTY_BIT, true);
+  currentLine.set(os.geom.GeometryField.DIRTY, true);
 
   // update the current line geometry
   if (currentLine instanceof ol.geom.LineString) {

@@ -38,14 +38,6 @@ os.olcs.OUTLINE_REGEXP = /outline/i;
 
 
 /**
- * Field used to mark geometries as dirty.
- * @type {string}
- * @const
- */
-os.olcs.DIRTY_BIT = 'dirty';
-
-
-/**
  * Selector to retrieve the Cesium canvas element.
  * @type {string}
  * @const

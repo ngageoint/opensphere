@@ -5,6 +5,7 @@ goog.require('ol.color');
 goog.require('ol.style.Stroke');
 goog.require('ol.style.Style');
 goog.require('os.I3DSupport');
+goog.require('os.MapEvent');
 goog.require('os.geo');
 goog.require('os.olcs');
 goog.require('os.ui.ol.interaction.DragBox');
@@ -102,7 +103,7 @@ os.interaction.DragBox.prototype.update3D = function(start, end) {
       });
 
       scene.primitives.add(this.box3D_);
-      os.dispatcher.dispatchEvent(os.olcs.RenderLoop.REPAINT);
+      os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
     }
   }
 };

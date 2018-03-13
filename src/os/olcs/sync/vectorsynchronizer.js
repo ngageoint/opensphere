@@ -6,6 +6,7 @@ goog.require('ol.geom.SimpleGeometry');
 goog.require('ol.layer.Vector');
 goog.require('ol.source.Vector');
 goog.require('ol.source.VectorEventType');
+goog.require('os.MapEvent');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.events.SelectionType');
 goog.require('os.layer.PropertyChange');
@@ -170,7 +171,7 @@ os.olcs.sync.VectorSynchronizer.prototype.disposeLayerPrimitives_ = function() {
     this.scene.primitives.remove(this.csContext.collection);
     this.csContext = null;
 
-    os.dispatcher.dispatchEvent(os.olcs.RenderLoop.REPAINT);
+    os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
   }
 };
 
@@ -183,7 +184,7 @@ os.olcs.sync.VectorSynchronizer.prototype.onLayerVisibility_ = function(opt_even
   if (this.csContext && this.layer) {
     // hide the collection on the context
     this.csContext.collection.show = this.layer.getVisible();
-    os.dispatcher.dispatchEvent(os.olcs.RenderLoop.REPAINT);
+    os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
   }
 };
 
@@ -423,7 +424,7 @@ os.olcs.sync.VectorSynchronizer.prototype.updateFeature_ = function(feature) {
         this.initializePrimitives_([feature]);
       }
 
-      os.dispatcher.dispatchEvent(os.olcs.RenderLoop.REPAINT);
+      os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
     }
   }
 };
@@ -465,7 +466,7 @@ os.olcs.sync.VectorSynchronizer.prototype.resetFeatures_ = function(features, op
       this.updatePrimitiveVisibility_(feature, shown);
     }
 
-    os.dispatcher.dispatchEvent(os.olcs.RenderLoop.REPAINT);
+    os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
   }
 };
 
@@ -488,7 +489,7 @@ os.olcs.sync.VectorSynchronizer.prototype.addFeature = function(feature) {
       this.initializePrimitive(primitives[i], feature);
     }
 
-    os.dispatcher.dispatchEvent(os.olcs.RenderLoop.REPAINT);
+    os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
   } else {
     // primitive(s) haven't been created, so mark if they should be shown on creation. this typically happens when an
     // icon needs to be loaded prior to creating a billboard.
@@ -508,7 +509,7 @@ os.olcs.sync.VectorSynchronizer.prototype.removeFeature = function(feature) {
 
   if (!goog.isNull(feature) && this.csContext) {
     this.csContext.cleanup(feature);
-    os.dispatcher.dispatchEvent(os.olcs.RenderLoop.REPAINT);
+    os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
   }
 };
 
@@ -564,7 +565,7 @@ os.olcs.sync.VectorSynchronizer.prototype.initializePrimitives_ = function(featu
     }
   }
 
-  os.dispatcher.dispatchEvent(os.olcs.RenderLoop.REPAINT);
+  os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
 };
 
 
@@ -637,7 +638,7 @@ os.olcs.sync.VectorSynchronizer.prototype.updatePrimitiveVisibility_ = function(
     }
   }
 
-  os.dispatcher.dispatchEvent(os.olcs.RenderLoop.REPAINT);
+  os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
 };
 
 

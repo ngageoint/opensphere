@@ -1,5 +1,4 @@
 goog.provide('os.MapChange');
-goog.provide('os.MapEvent');
 goog.provide('os.MapMode');
 goog.provide('os.map');
 
@@ -25,18 +24,6 @@ os.MapChange = {
   VIEW3D: 'map:change:view3d',
   INIT3D: 'map:change:init3d',
   THROTTLE: 'map:change:throttle'
-};
-
-
-/**
- * @enum {string}
- */
-os.MapEvent = {
-  MAP_READY: 'map:ready',
-  RENDER: 'map:render',
-  RENDER_SYNC: 'map:renderSync',
-  VIEW_CHANGE: 'map:viewChange',
-  TERRAIN_DISABLED: 'map:terrainDisabled'
 };
 
 

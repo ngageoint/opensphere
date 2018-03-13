@@ -2,6 +2,8 @@ goog.provide('plugin.cesium.Plugin');
 
 goog.require('os.plugin.AbstractPlugin');
 goog.require('plugin.cesium.CesiumRenderer');
+goog.require('plugin.cesium.mixin.olcs');
+goog.require('plugin.cesium.mixin.renderloop');
 
 
 /**
