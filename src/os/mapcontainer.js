@@ -312,35 +312,11 @@ os.MapContainer.prototype.setWebGLRenderer = function(value) {
 
 
 /**
- * @return {olcs.OLCesium|undefined}
- *
- * @todo Remove/refactor!!
+ * Get the WebGL camera.
+ * @return {os.webgl.IWebGLCamera|undefined}
  */
-os.MapContainer.prototype.getOLCesium = function() {
-  return this.webGLRenderer_ ? this.webGLRenderer_.getOLCesium() : undefined;
-};
-
-
-/**
- * Get the OLCS camera.
- * @return {os.olcs.Camera|undefined}
- * @suppress {checkTypes}
- *
- * @todo Remove/refactor!!
- */
-os.MapContainer.prototype.getCesiumCamera = function() {
-  return this.webGLRenderer_ ? this.webGLRenderer_.getCesiumCamera() : undefined;
-};
-
-
-/**
- * Get the Cesium scene object.
- * @return {Cesium.Scene|undefined}
- *
- * @todo Remove/refactor!!
- */
-os.MapContainer.prototype.getCesiumScene = function() {
-  return this.webGLRenderer_ ? this.webGLRenderer_.getCesiumScene() : undefined;
+os.MapContainer.prototype.getWebGLCamera = function() {
+  return this.webGLRenderer_ ? this.webGLRenderer_.getCamera() : undefined;
 };
 
 
@@ -543,7 +519,7 @@ os.MapContainer.isImageLayer = function(layer) {
  */
 os.MapContainer.prototype.cancelFlight = function() {
   if (this.is3DEnabled()) {
-    var camera = this.getCesiumCamera();
+    var camera = this.getWebGLCamera();
     if (camera) {
       camera.cancelFlight();
     }
@@ -572,7 +548,7 @@ os.MapContainer.prototype.flyTo = function(options) {
     var duration = options.duration || os.MapContainer.FLY_ZOOM_DURATION;
 
     if (this.is3DEnabled()) {
-      var camera = this.getCesiumCamera();
+      var camera = this.getWebGLCamera();
       if (camera) {
         // favor altitude over zoom in 3D mode
         if (options.altitude === undefined && options.zoom !== undefined) {
@@ -664,7 +640,7 @@ os.MapContainer.prototype.flyToExtent = function(extent, opt_buffer, opt_maxZoom
           constrainResolution: true
         });
       } else {
-        var camera = this.getCesiumCamera();
+        var camera = this.getWebGLCamera();
         var size = map.getSize();
         if (camera && size) {
           var center = ol.extent.getCenter(extent);
@@ -730,7 +706,7 @@ os.MapContainer.prototype.resetView = function() {
   view.setZoom(3);
 
   if (this.is3DEnabled()) {
-    var camera = this.getCesiumCamera();
+    var camera = this.getWebGLCamera();
     if (camera) {
       camera.setTilt(0);
       camera.readFromView();
@@ -746,7 +722,7 @@ os.MapContainer.prototype.resetView = function() {
  */
 os.MapContainer.prototype.resetTilt = function() {
   if (this.is3DEnabled()) {
-    var camera = this.getCesiumCamera();
+    var camera = this.getWebGLCamera();
     if (camera) {
       camera.setTilt(0);
     }
@@ -760,7 +736,7 @@ os.MapContainer.prototype.resetTilt = function() {
  */
 os.MapContainer.prototype.resetRoll = function() {
   if (this.is3DEnabled()) {
-    var camera = this.getCesiumCamera();
+    var camera = this.getWebGLCamera();
     if (camera) {
       camera.setHeading(0);
     }
@@ -1133,33 +1109,7 @@ os.MapContainer.prototype.saveMapMode_ = function() {
  */
 os.MapContainer.prototype.persistCameraState = function() {
   if (this.is3DEnabled()) {
-    var csCamera = this.getOLCesium().getCesiumScene().camera;
-    goog.asserts.assert(!!csCamera, 'camera not defined');
-
-    var carto = csCamera.positionCartographic;
-    var latitude = os.math.roundWithPrecision(goog.math.toDegrees(carto.latitude), 12) || 0;
-    var longitude = os.math.roundWithPrecision(goog.math.toDegrees(carto.longitude), 12) || 0;
-
-    var altitude = carto.height;
-    var zoom = this.resolutionToZoom(os.map.resolutionForDistance(this.getMap(), altitude), 1);
-
-    // Cesium heading and roll follow the KML spec
-    var heading = goog.math.toDegrees(csCamera.heading);
-    var roll = goog.math.toDegrees(csCamera.roll);
-
-    // translate Cesium pitch to the KML tilt spec:
-    //   Cesium pitch: -90 is perpendicular to the globe, 0 is parallel.
-    //   KML pitch: 0 is perpendicular to the globe, 90 is parallel.
-    var tilt = goog.math.clamp(goog.math.toDegrees(csCamera.pitch), -90, 0) + 90;
-
-    return /** @type {!osx.map.CameraState} */ ({
-      center: [longitude, latitude],
-      altitude: altitude,
-      heading: heading,
-      roll: roll,
-      tilt: tilt,
-      zoom: zoom
-    });
+    return this.getWebGLCamera().persist();
   } else {
     var view = this.getMap().getView();
     goog.asserts.assert(!!view, 'view not defined');
@@ -1213,23 +1163,7 @@ os.MapContainer.prototype.restoreCameraState = function(cameraState) {
 os.MapContainer.prototype.restoreCameraStateInternal_ = function(cameraState) {
   try {
     if (this.is3DEnabled()) {
-      var csCamera = this.getOLCesium().getCesiumScene().camera;
-      goog.asserts.assert(!!csCamera, 'camera not defined');
-
-      var carto = new Cesium.Cartographic(goog.math.toRadians(cameraState.center[0]),
-          goog.math.toRadians(cameraState.center[1]), cameraState.altitude);
-
-      // translate from KML spec for tilt back to Cesium pitch:
-      //   Cesium pitch: -90 is perpendicular to the globe, 0 is parallel
-      //   KML pitch: 0 is perpendicular to the globe, 90 is parallel
-      csCamera.setView({
-        destination: Cesium.Ellipsoid.WGS84.cartographicToCartesian(carto),
-        orientation: /** @type {Cesium.optionsOrientation} */ ({
-          heading: goog.math.toRadians(cameraState.heading),
-          pitch: goog.math.toRadians(cameraState.tilt - 90),
-          roll: goog.math.toRadians(cameraState.roll)
-        })
-      });
+      this.getWebGLCamera().restore(cameraState);
     } else {
       var view = this.getMap().getView();
       goog.asserts.assert(goog.isDef(view));
@@ -1273,7 +1207,7 @@ os.MapContainer.prototype.restoreCameraStateInternal_ = function(cameraState) {
 os.MapContainer.prototype.getAltitude = function() {
   var altitude = 0;
   if (this.is3DEnabled()) {
-    var camera = this.getCesiumCamera();
+    var camera = this.getWebGLCamera();
     if (!camera) {
       return altitude;
     }
@@ -1924,12 +1858,7 @@ os.MapContainer.prototype.zoomToResolution = function(zoom) {
  */
 os.MapContainer.prototype.resolutionToZoom = function(resolution, opt_precision) {
   var projection = this.getMap().getView().getProjection();
-  var zoom = os.map.resolutionToZoom(resolution, projection);
-  if (opt_precision != null) {
-    zoom = Number(zoom.toFixed(opt_precision));
-  }
-
-  return zoom;
+  return os.map.resolutionToZoom(resolution, projection, opt_precision);
 };
 
 
@@ -2050,4 +1979,23 @@ os.MapContainer.launch2DPerformanceDialog = function() {
     var template = '<confirm>' + text + '</confirm>';
     os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
   });
+};
+
+// --------------------------------------------------------------------------------------------------------------------
+// TODO: Everything below this line needs to be refactored to abstract Cesium out of the WebGL renderer usage
+// --------------------------------------------------------------------------------------------------------------------
+
+/**
+ * @return {olcs.OLCesium|undefined}
+ */
+os.MapContainer.prototype.getOLCesium = function() {
+  return this.webGLRenderer_ ? this.webGLRenderer_.getOLCesium() : undefined;
+};
+
+/**
+ * Get the Cesium scene object.
+ * @return {Cesium.Scene|undefined}
+ */
+os.MapContainer.prototype.getCesiumScene = function() {
+  return this.webGLRenderer_ ? this.webGLRenderer_.getCesiumScene() : undefined;
 };

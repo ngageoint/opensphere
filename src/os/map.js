@@ -26,11 +26,9 @@ goog.inherits(os.Map, ol.Map);
 os.Map.prototype.getExtent = function() {
   var mc = os.MapContainer.getInstance();
   if (mc.is3DEnabled()) {
-    var camera = mc.getOLCesium().getCamera();
-
-    if (camera instanceof os.olcs.Camera) {
+    var camera = mc.getWebGLCamera();
+    if (camera) {
       var extent = camera.getExtent();
-
       if (extent) {
         return ol.proj.transformExtent(extent, os.proj.EPSG4326, os.map.PROJECTION);
       }

@@ -102,14 +102,14 @@ olcs.OLCesium.prototype.setEnabled = function(enable) {
       }
     }
 
-    // enable the cesium camera and update it from ol3 view
-    /** @type {os.olcs.Camera} */ (this.camera_).setEnabled(true);
+    // enable the cesium camera and update it from OpenLayers view
+    /** @type {plugin.cesium.Camera} */ (this.camera_).setEnabled(true);
     this.camera_.readFromView();
     this.render_();
   } else {
-    // update the ol3 view from the cesium camera, then disable the camera
+    // update the OpenLayers view from the cesium camera, then disable the camera
     this.camera_.updateView();
-    /** @type {os.olcs.Camera} */ (this.camera_).setEnabled(false);
+    /** @type {plugin.cesium.Camera} */ (this.camera_).setEnabled(false);
 
     if (this.isOverMap_) {
       interactions = this.map_.getInteractions();

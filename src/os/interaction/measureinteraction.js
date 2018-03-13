@@ -22,9 +22,10 @@ goog.require('os.math');
 
 
 /**
- * @constructor
- * @extends {os.interaction.DrawPolygon}
+ * Interaction to measure the distance between drawn points on the map.
  * @param {olx.interaction.PointerOptions=} opt_options
+ * @extends {os.interaction.DrawPolygon}
+ * @constructor
  */
 os.interaction.Measure = function(opt_options) {
   os.interaction.Measure.base(this, 'constructor');
@@ -266,7 +267,7 @@ os.interaction.Measure.prototype.update3D = function() {
 
   if (lonlats.length > 1 && olCesium) {
     var scene = olCesium.getCesiumScene();
-    var camera = os.MapContainer.getInstance().getCesiumCamera();
+    var camera = os.MapContainer.getInstance().getWebGLCamera();
 
     if (!this.labels3D_) {
       this.labels3D_ = new Cesium.LabelCollection();

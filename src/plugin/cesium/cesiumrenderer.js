@@ -6,11 +6,11 @@ goog.require('olcs.OLCesium');
 goog.require('olcs.core');
 goog.require('os.MapEvent');
 goog.require('os.olcs');
-goog.require('os.olcs.Camera');
 goog.require('os.olcs.WMSImageryProvider');
 goog.require('os.olcs.sync.RootSynchronizer');
 goog.require('os.webgl.AbstractWebGLRenderer');
 goog.require('plugin.cesium');
+goog.require('plugin.cesium.Camera');
 goog.require('plugin.cesium.WMSTerrainProvider');
 goog.require('plugin.cesium.mixin');
 
@@ -102,7 +102,7 @@ plugin.cesium.CesiumRenderer.prototype.initialize = function() {
           this.registerTerrainProviderType('wms', plugin.cesium.WMSTerrainProvider);
 
           this.olCesium_ = new olcs.OLCesium({
-            cameraClass: os.olcs.Camera,
+            cameraClass: plugin.cesium.Camera,
             createSynchronizers: this.createCesiumSynchronizers_.bind(this),
             map: this.map,
             time: plugin.cesium.getJulianDate
@@ -134,7 +134,7 @@ plugin.cesium.CesiumRenderer.prototype.initialize = function() {
               plugin.cesium.DEFAULT_FOG_DENSITY));
 
           // create our camera handler
-          this.olCesium_.camera_ = new os.olcs.Camera(scene, this.map);
+          this.olCesium_.camera_ = new plugin.cesium.Camera(scene, this.map);
 
           // configure camera interactions. do not move this before the camera is created!
           var sscc = scene.screenSpaceCameraController;
@@ -193,6 +193,15 @@ plugin.cesium.CesiumRenderer.prototype.setEnabled = function(value) {
 
     this.csListeners_.length = 0;
   }
+};
+
+
+/**
+ * @inheritDoc
+ * @suppress {checkTypes}
+ */
+plugin.cesium.CesiumRenderer.prototype.getCamera = function() {
+  return this.olCesium_ ? /** @type {plugin.cesium.Camera} */ (this.olCesium_.getCamera()) : undefined;
 };
 
 
@@ -522,16 +531,6 @@ plugin.cesium.CesiumRenderer.prototype.onCesiumCameraMoveChange_ = function(isMo
  */
 plugin.cesium.CesiumRenderer.prototype.getOLCesium = function() {
   return this.olCesium_;
-};
-
-
-/**
- * Get the OLCS camera.
- * @return {os.olcs.Camera|undefined}
- * @suppress {checkTypes}
- */
-plugin.cesium.CesiumRenderer.prototype.getCesiumCamera = function() {
-  return this.olCesium_ ? /** @type {os.olcs.Camera} */ (this.olCesium_.getCamera()) : undefined;
 };
 
 
