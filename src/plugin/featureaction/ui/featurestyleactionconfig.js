@@ -135,7 +135,8 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.initialize = function() {
         this.scope['centerShapes'] = goog.array.filter(shapes, source.isNotEllipseOrLOBOrDefault, source);
         this.scope['columns'] = os.ui.layer.getColumnsFromSource(source);
 
-        if (goog.string.isEmpty(this.scope['rotationColumn']) && source.hasColumn(os.Fields.BEARING)) { // autodetect
+        // autodetect
+        if (goog.string.isEmptyOrWhitespace(this.scope['rotationColumn']) && source.hasColumn(os.Fields.BEARING)) {
           this.scope['rotationColumn'] = os.Fields.BEARING;
           this.onRotationColumnChange_(undefined, this.scope['rotationColumn']);
         }
