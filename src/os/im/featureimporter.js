@@ -72,6 +72,7 @@ os.im.FeatureImporter.prototype.setTrustHTML = function(value) {
 
 /**
  * @inheritDoc
+ * @suppress {accessControls} For speed.
  */
 os.im.FeatureImporter.prototype.addItemInternal = function(item) {
   var feature;
@@ -81,8 +82,13 @@ os.im.FeatureImporter.prototype.addItemInternal = function(item) {
 
   if (feature) {
     // make sure an id is set on the feature
-    if (!feature.getId()) {
+    if (!feature.id_) {
       feature.setId(ol.getUid(feature) + '');
+    } else {
+      // this works around inadvertant duplicate IDs, but maintains the original ID
+      var realId = feature.id_;
+      feature.setId(ol.getUid(feature) + '');
+      feature.values_[os.Fields.ID] = realId;
     }
 
     // simplify the geometry if possible
@@ -96,7 +102,7 @@ os.im.FeatureImporter.prototype.addItemInternal = function(item) {
 
   if (feature) {
     // if our internal time field is set, but not a time instance, move it to an uppercased field to avoid conflicts
-    var time = feature.get(os.data.RecordField.TIME);
+    var time = feature.values_[os.data.RecordField.TIME];
     if (time != null && !os.implements(time, os.time.ITime.ID)) {
       feature.set(os.data.RecordField.TIME.toUpperCase(), time);
       feature.set(os.data.RecordField.TIME, undefined);

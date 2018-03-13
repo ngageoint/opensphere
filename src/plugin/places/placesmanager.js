@@ -70,6 +70,10 @@ plugin.places.PlacesManager = function() {
 
   // clear storage when the reset event is fired
   os.dispatcher.listen(os.events.EventType.RESET, this.onSettingsReset_, false, this);
+
+  // // handle edit time change/cancel
+  os.dispatcher.listen(os.action.EventType.SAVE_FEATURE, this.reindexTimeModel_, false, this);
+  os.dispatcher.listen(os.action.EventType.RESTORE_FEATURE, this.reindexTimeModel_, false, this);
 };
 goog.inherits(plugin.places.PlacesManager, goog.events.EventTarget);
 goog.addSingletonGetter(plugin.places.PlacesManager);
@@ -258,7 +262,7 @@ plugin.places.PlacesManager.prototype.getOptions = function() {
   //   storage URL.
   //
   var options = {
-    'animate': false,
+    'animate': true,
     'color': os.style.DEFAULT_LAYER_COLOR,
     'collapsed': true,
     'columns': plugin.file.kml.SOURCE_FIELDS,
@@ -470,3 +474,13 @@ plugin.places.PlacesManager.prototype.onRootChange_ = function(e) {
     this.saveDelay_.start();
   }
 };
+
+
+/**
+ * Reindex the source time model
+ * @private
+ */
+plugin.places.PlacesManager.prototype.reindexTimeModel_ = function() {
+  this.placesSource_.reindexTimeModel();
+};
+

@@ -59,6 +59,8 @@ os.action.EventType = {
   REMOVE: 'remove',
   REMOVE_FEATURE: 'spatial:removeFeature',
   REMOVE_FEATURES: 'spatial:removeFeatures',
+  SAVE_FEATURE: 'spatial:updateFeature',
+  RESTORE_FEATURE: 'spatial:restoreFeature',
   EXCLUDE: 'exclude',
   ADD_EXCLUDE: 'add_exclude',
 

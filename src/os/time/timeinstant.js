@@ -101,6 +101,13 @@ os.time.TimeInstant.prototype.compare = function(other) {
       } else if (this.start >= other.getEnd()) {
         // greater if this time starts at or after the end of other
         return 1;
+        // intersection
+      } else if (this.start == other.getStart()) {
+        // same start time
+        return 0;
+      } else {
+        // this starts after the other
+        return 1;
       }
     }
 
@@ -125,7 +132,10 @@ os.time.TimeInstant.prototype.equals = function(other) {
  * @inheritDoc
  */
 os.time.TimeInstant.prototype.intersects = function(other) {
-  return this.compare(other) === 0;
+  if (other) {
+    return other.getStart() <= this.start && this.start <= other.getEnd();
+  }
+  return false;
 };
 
 
