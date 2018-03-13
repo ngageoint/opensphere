@@ -1433,7 +1433,7 @@ os.ui.FeatureEditCtrl.updateFeatureStyle = function(feature) {
           var rotationColumn = os.instanceOf(source, plugin.track.TrackSource.NAME) ?
               feature.get(os.style.StyleField.ROTATION_COLUMN) : os.Fields.BEARING;
           config['image']['rotation'] =
-              goog.math.toRadians(/** @type {number} */ (feature.get(/** @type {string} */ (rotationColumn))) || 0);
+              goog.math.toRadians(/** @type {number} */ (feature.get(/** @type {string} */ (rotationColumn))));
         }
       }
     }
