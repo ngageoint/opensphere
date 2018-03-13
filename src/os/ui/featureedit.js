@@ -123,11 +123,6 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
   this.scope['featureStyleID'] = uid + 'featureStyle';
 
   /**
-   * @type {Array<string>}
-   */
-  this.scope['columns'] = [];
-
-  /**
    * The open accordion section.
    * @type {?string}
    * @protected
@@ -289,12 +284,6 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
    * @type {number|undefined}
    */
   this['iconRotation'] = undefined;
-
-  /**
-   * Icon Rotation column, if present
-   * @type {string}
-   */
-  this['rotationColumn'] = '';
 
   /**
    * Supported ellipse axis units.
@@ -695,6 +684,20 @@ goog.exportProperty(
 
 
 /**
+ * If the feature is dynamic, which means it is a time based track
+ * @return {boolean}
+ */
+os.ui.FeatureEditCtrl.prototype.isFeatureDynamic = function() {
+  var feature = /** @type {ol.Feature|undefined} */ (this.options['feature']);
+  return feature instanceof os.feature.DynamicFeature;
+};
+goog.exportProperty(
+    os.ui.FeatureEditCtrl.prototype,
+    'isFeatureDynamic',
+    os.ui.FeatureEditCtrl.prototype.isFeatureDynamic);
+
+
+/**
  * Handles if map clicks are propagated down to the location form.
  * @param {angular.Scope.Event} event The Angular event
  * @param {boolean} isEnabled If the map should be used for location clicks.
@@ -911,19 +914,7 @@ os.ui.FeatureEditCtrl.prototype.loadFromFeature_ = function(feature) {
     }
   }
 
-  // use columns if it is a track
-  var source = os.feature.getSource(feature);
-  if (os.instanceOf(source, plugin.track.TrackSource.NAME)) {
-    source = /** @type {!os.source.Vector} */ (source);
-    this.scope['columns'] = os.ui.layer.getColumnsFromSource(source);
-  }
-
-  if (this.scope['columns'].length > 0) {
-    this['rotationColumn'] = feature.get(os.style.StyleField.ROTATION_COLUMN) || '';
-    if (goog.string.isEmpty(this['rotationColumn']) && source.hasColumn(os.Fields.BEARING)) { // autodetect
-      this['rotationColumn'] = os.Fields.BEARING;
-    }
-  } else {
+  if (!this.isFeatureDynamic()) {
     var rotation = feature.get(os.Fields.BEARING);
     if (goog.isString(rotation) && !goog.string.isEmpty(rotation)) {
       rotation = Number(rotation);
@@ -985,14 +976,14 @@ os.ui.FeatureEditCtrl.prototype.saveToFeature = function(feature) {
     feature.set(os.style.StyleField.SHAPE, this['shape']);
     feature.set(os.style.StyleField.CENTER_SHAPE, this['centerShape']);
 
-    if (this.scope['columns'].length < 1 && (this.showIcon() || this.showCenterIcon())) {
+    if (!this.isFeatureDynamic() && (this.showIcon() || this.showCenterIcon())) {
       feature.set(os.Fields.BEARING, goog.isNumber(this['iconRotation']) ? this['iconRotation'] % 360 : undefined);
-      feature.set(os.style.StyleField.SHOW_ROTATION, this.showIcon() || this.showCenterIcon());
+      feature.set(os.style.StyleField.SHOW_ROTATION, true);
       feature.set(os.style.StyleField.ROTATION_COLUMN, os.Fields.BEARING);
     } else {
       feature.set(os.Fields.BEARING, undefined);
-      feature.set(os.style.StyleField.SHOW_ROTATION, !goog.string.isEmpty(this.scope['columns']));
-      feature.set(os.style.StyleField.ROTATION_COLUMN, this['rotationColumn']);
+      feature.set(os.style.StyleField.SHOW_ROTATION, false);
+      feature.set(os.style.StyleField.ROTATION_COLUMN, undefined);
     }
     os.ui.FeatureEditCtrl.updateFeatureStyle(feature);
 
@@ -1097,16 +1088,10 @@ os.ui.FeatureEditCtrl.prototype.saveGeometry_ = function(feature) {
         feature.set(os.data.RecordField.LINE_OF_BEARING, undefined);
       }
 
-      if ((this.showIcon() || this.showCenterIcon()) &&
-          ((this['iconRotation'] != null && this.scope['columns'].length < 1) || this.scope['columns'].length > 0)) {
+      if (!this.isFeatureDynamic() && (this.showIcon() || this.showCenterIcon()) && this['iconRotation'] != null) {
         feature.set(os.style.StyleField.SHOW_ROTATION, true);
-        if (this.scope['columns'].length < 1) {
-          feature.set(os.Fields.BEARING, this['iconRotation'] % 360);
-          this['rotationColumn'] = os.Fields.BEARING;
-        } else {
-          feature.set(os.Fields.BEARING, undefined);
-        }
-        feature.set(os.style.StyleField.ROTATION_COLUMN, this['rotationColumn']);
+        feature.set(os.Fields.BEARING, this['iconRotation'] % 360);
+        feature.set(os.style.StyleField.ROTATION_COLUMN, os.Fields.BEARING);
       } else {
         feature.set(os.Fields.BEARING, undefined);
         feature.set(os.style.StyleField.SHOW_ROTATION, false);
@@ -1429,11 +1414,7 @@ os.ui.FeatureEditCtrl.updateFeatureStyle = function(feature) {
             os.style.setConfigOpacityColor(config, 0);
           }
         } else {
-          var source = os.feature.getSource(feature);
-          var rotationColumn = os.instanceOf(source, plugin.track.TrackSource.NAME) ?
-              feature.get(os.style.StyleField.ROTATION_COLUMN) : os.Fields.BEARING;
-          config['image']['rotation'] =
-              goog.math.toRadians(/** @type {number} */ (feature.get(/** @type {string} */ (rotationColumn))) || 0);
+          config['image']['rotation'] = goog.math.toRadians(/** @type {number} */(feature.get(os.Fields.BEARING)) || 0);
         }
       }
     }
