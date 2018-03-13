@@ -1187,6 +1187,20 @@ os.MapContainer.prototype.init = function() {
 
 
 /**
+ * Toggle if the Openlayers canvas is displayed.
+ * @param {boolean} shown If the canvas should be displayed.
+ * @protected
+ */
+os.MapContainer.prototype.toggle2DCanvas = function(shown) {
+  var viewport = this.map_ ? this.map_.getViewport() : undefined;
+  var olCanvas = viewport ? viewport.querySelector('canvas') : undefined;
+  if (olCanvas) {
+    olCanvas.style.visibility = shown ? '' : 'hidden';
+  }
+};
+
+
+/**
  * Initializes settings and adds listeners for settings changes.
  * @protected
  */
@@ -1196,8 +1210,17 @@ os.MapContainer.prototype.initSettings = function() {
 
     var mapMode = os.settings.get(os.config.DisplaySetting.MAP_MODE, os.MapMode.VIEW_3D);
     if (mapMode === os.MapMode.VIEW_3D || mapMode === os.MapMode.AUTO) {
+      // hide the Openlayers canvas while 3D mode is initialized
+      this.toggle2DCanvas(false);
+
       // don't display errors on initialization, and wait until the globe is ready to initialize the camera
-      this.setCesiumEnabled(true, true).then(this.initCameraSettings, this.initCameraSettings, this);
+      this.setCesiumEnabled(true, true).thenAlways(function() {
+        // show the Openlayers canvas again
+        this.toggle2DCanvas(true);
+
+        // initialize the camera/view
+        this.initCameraSettings();
+      }, this);
     } else {
       this.initCameraSettings();
     }
