@@ -81,7 +81,7 @@ os.olcs.DEFAULT_FOG_DENSITY = os.olcs.MAX_FOG_DENSITY / 2;
 
 
 /**
- * Default timeout for loading Cesium.
+ * Default timeout for loading Cesium. Override by setting `cesium.loadTimeout` in the app configuration.
  * @type {number}
  * @const
  */
