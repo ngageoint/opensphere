@@ -94,6 +94,20 @@
   <div class="c-labelcontainer">
     <table class="wide">
       <tr>
+        <td ng-if="ellipseSupport">
+          <label class="no-margin">
+            <input class="label-checkbox checkbox inline" type="checkbox" name="showEllipse"
+            ng-model="ctrl.showEllipse" ng-change="ctrl.onShowEllipseChange()"/>
+            Show Ellipse
+          </label>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <uiswitch ng-if="ctrl.showEllipse" items="items" directive-function="ctrl.getEllipseUI"></uiswitch>
+  <div class="c-labelcontainer">
+    <table class="wide">
+      <tr>
         <td>
           <label class="no-margin">
             <input class="label-checkbox checkbox inline" type="checkbox" name="showError"
@@ -102,13 +116,6 @@
           </label>
         </td>
         <td class="c-labelcontainer__fixedcell"><popover x-title="'Line of Bearing Error'" x-content="ctrl.helpText" pos="'top'"></popover>&nbsp;&nbsp;</td>
-        <td ng-if="ellipseSupport">
-          <label class="no-margin">
-            <input class="label-checkbox checkbox inline" type="checkbox" name="showEllipse"
-            ng-model="ctrl.showEllipse" ng-change="ctrl.onShowEllipseChange()"/>
-            Show Ellipse
-          </label>
-        </td>
       </tr>
     </table>
   </div>

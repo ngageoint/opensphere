@@ -365,6 +365,7 @@ os.source.Vector = function(opt_options) {
   /**
    * Unique ID column.
    * @type {?os.data.ColumnDefinition}
+   * @private
    */
   this.uniqueId_ = null;
 
@@ -914,6 +915,26 @@ os.source.Vector.prototype.setGeometryShape = function(value) {
 
   if (ellipseTest || lobTest || revertIndexTest) {
     var features = this.getFeatures();
+    var layerConf = os.style.StyleManager.getInstance().getLayerConfig(this.getId());
+    var lobOptions = /** type {os.feature.LOBOptions} */ ({
+      arrowLength: layerConf[os.style.StyleField.ARROW_SIZE],
+      arrowUnits: layerConf[os.style.StyleField.ARROW_UNITS],
+      bearingColumn: layerConf[os.style.StyleField.LOB_BEARING_COLUMN],
+      bearingError: layerConf[os.style.StyleField.LOB_BEARING_ERROR],
+      bearingErrorColumn: layerConf[os.style.StyleField.LOB_BEARING_ERROR_COLUMN],
+      columnLength: layerConf[os.style.StyleField.LOB_COLUMN_LENGTH],
+      length: layerConf[os.style.StyleField.LOB_LENGTH],
+      lengthType: layerConf[os.style.StyleField.LOB_LENGTH_TYPE],
+      lengthColumn: layerConf[os.style.StyleField.LOB_LENGTH_COLUMN],
+      lengthUnits: layerConf[os.style.StyleField.LOB_LENGTH_UNITS],
+      lengthError: layerConf[os.style.StyleField.LOB_LENGTH_ERROR],
+      lengthErrorColumn: layerConf[os.style.StyleField.LOB_LENGTH_ERROR_COLUMN],
+      lengthErrorUnits: layerConf[os.style.StyleField.LOB_LENGTH_ERROR_UNITS],
+      showArrow: layerConf[os.style.StyleField.SHOW_ARROW],
+      showEllipse: layerConf[os.style.StyleField.SHOW_ELLIPSE],
+      showError: layerConf[os.style.StyleField.SHOW_ERROR]
+    });
+
     for (var i = 0, n = features.length; i < n; i++) {
       var geoms = [features[i].getGeometry()];
 
@@ -923,7 +944,7 @@ os.source.Vector.prototype.setGeometryShape = function(value) {
       }
 
       if (lobTest) {
-        os.feature.createLineOfBearing(features[i]);
+        os.feature.createLineOfBearing(features[i], true, lobOptions);
 
         // This picks up cached ellipses even if the user has them off. While that's not ideal, we
         // don't have a choice until we can refactor both ellipse and LOB into "derived geometries"
@@ -982,7 +1003,7 @@ os.source.Vector.prototype.setCenterGeometryShape = function(value) {
  */
 os.source.Vector.prototype.isNotEllipseOrLOBOrDefault = function(shapeName) {
   return !os.style.ELLIPSE_REGEXP.test(shapeName) && !os.style.DEFAULT_REGEXP.test(shapeName) &&
-    !os.style.LOB_REGEXP.test(shapeName);
+      !os.style.LOB_REGEXP.test(shapeName);
 };
 
 
@@ -1348,6 +1369,14 @@ os.source.Vector.prototype.getTimeFilterEnabled = function() {
 
 
 /**
+ * @inheritDoc
+ */
+os.source.Vector.prototype.isTimeEditEnabled = function() {
+  return false;
+};
+
+
+/**
  * Enables/disables the animation overlay. Enabling the overlay will greatly increase animation performance,
  * at the cost of interaction performance when features are off the screen. Interaction performance will be
  * uniform regardless of how many features are within the viewable extent because all features will be drawn
@@ -1615,51 +1644,10 @@ os.source.Vector.prototype.addFeatures = function(features) {
     this.unprocessNow();
 
     // remove duplicates and process features before adding them to the source
-    this.dedupeFeatures(features);
     this.processFeatures(features);
 
     // add to the source
     os.source.Vector.base(this, 'addFeatures', features);
-  }
-};
-
-
-/**
- * Deduplicate features prior to adding them to the source.
- * @param {!Array<!ol.Feature>} features The features.
- * @protected
- *
- * @suppress {accessControls} To allow direct access to feature id.
- */
-os.source.Vector.prototype.dedupeFeatures = function(features) {
-  var toRemove = [];
-  var addedIds = {};
-
-  var i = features.length;
-  while (i--) {
-    var id = features[i].id_;
-    if (id != null) {
-      var existing = this.getFeatureById(id);
-      if (existing) {
-        if (this.replaceDupes_) {
-          // remove the existing feature and replace with the duplicate
-          toRemove.push(existing);
-        } else {
-          // drop the duplicate
-          features.splice(i, 1);
-        }
-      } else if (addedIds[id]) {
-        // don't add the same id twice - assume it's a duplicate feature and drop it
-        features.splice(i, 1);
-      } else {
-        addedIds[id] = true;
-      }
-    }
-  }
-
-  if (toRemove.length > 0) {
-    this.removeFeatures(toRemove);
-    this.unprocessNow();
   }
 };
 
@@ -1919,13 +1907,13 @@ os.source.Vector.prototype.processNow = function() {
 
 
 /**
- * Handle a feature being removed from the source. Always process removed features on a timer because Openlayers doesn't have
- * bulk remove.
+ * Handle a feature being removed from the source. Always process removed features on a timer
+ * because Openlayers doesn't have bulk remove.
  * @param {!ol.Feature} feature
  * @protected
  *
- * @todo Switch this back to unprocessFeatures when (if) Openlayers supports bulk removal and refactor to work similarly to
- *       processFeatures.
+ * @todo Switch this back to unprocessFeatures when (if) Openlayers supports bulk removal and
+ *       refactor to work similarly to processFeatures.
  */
 os.source.Vector.prototype.unprocessFeature = function(feature) {
   feature.suppressEvents();

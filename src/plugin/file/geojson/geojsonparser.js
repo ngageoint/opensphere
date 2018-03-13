@@ -113,15 +113,26 @@ plugin.file.geojson.GeoJSONParser.prototype.parseNext = function() {
   // unshift is very slow in browsers other than Chrome, so leave the array intact while parsing
   var nextFeature = this.features[this.nextIndex++];
   if (nextFeature) {
-    return this.format_.readFeatures(nextFeature, {
+    var features = this.format_.readFeatures(nextFeature, {
       // We don't set the data projection because that can technically be specified in the GeoJSON. The
       // GeoJSON format has a default projection of EPSG:4326 if one is not specified
       featureProjection: os.map.PROJECTION
     });
+
+    features.forEach(this.process, this);
+
+    return features;
   }
 
   return null;
 };
+
+
+/**
+ * Method for doing additional processing on features parsed by the GeoJSON format.
+ * @param {ol.Feature} feature
+ */
+plugin.file.geojson.GeoJSONParser.prototype.process = goog.nullFunction;
 
 
 /**
