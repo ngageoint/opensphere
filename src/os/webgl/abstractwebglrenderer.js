@@ -181,6 +181,12 @@ os.webgl.AbstractWebGLRenderer.prototype.setEnabled = goog.abstractMethod;
 
 
 /**
+ * @inheritDoc
+ */
+os.webgl.AbstractWebGLRenderer.prototype.getCamera = goog.abstractMethod;
+
+
+/**
  * Handle settings changes that affect the renderer.
  * @param {!os.events.SettingChangeEvent} event The event.
  * @protected

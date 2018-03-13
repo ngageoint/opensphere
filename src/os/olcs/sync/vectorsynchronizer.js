@@ -18,7 +18,7 @@ goog.require('os.style');
 
 
 /**
- * Synchronizes a single OL3 vector layer to Cesium.
+ * Synchronizes a single OpenLayers vector layer to Cesium.
  * @param {!ol.layer.Vector} layer
  * @param {!ol.Map} map
  * @param {!Cesium.Scene} scene
@@ -108,7 +108,7 @@ os.olcs.sync.VectorSynchronizer.prototype.reset = function() {
 
 
 /**
- * Create Cesium primitives for the OL3 vector layer.
+ * Create Cesium primitives for the OpenLayers vector layer.
  * @private
  */
 os.olcs.sync.VectorSynchronizer.prototype.createLayerPrimitives_ = function() {
@@ -210,8 +210,8 @@ os.olcs.sync.VectorSynchronizer.prototype.onLayerPropertyChange_ = function(even
 
   var p;
   try {
-    // ol3's ol.ObjectEventType.PROPERTYCHANGE is the same as goog.events.EventType.PROPERTYCHANGE, so make sure the
-    // event is from us
+    // openlayers' ol.ObjectEventType.PROPERTYCHANGE is the same as goog.events.EventType.PROPERTYCHANGE, so make sure
+    // the event is from us
     p = event.getProperty();
   } catch (e) {
     return;
@@ -280,8 +280,8 @@ os.olcs.sync.VectorSynchronizer.prototype.clearFeatures_ = function(opt_event) {
 os.olcs.sync.VectorSynchronizer.prototype.onSourcePropertyChange_ = function(event) {
   var p;
   try {
-    // ol3's ol.ObjectEventType.PROPERTYCHANGE is the same as goog.events.EventType.PROPERTYCHANGE, so make sure the
-    // event is from us
+    // openlayers' ol.ObjectEventType.PROPERTYCHANGE is the same as goog.events.EventType.PROPERTYCHANGE, so make sure
+    // the event is from us
     p = event.getProperty();
   } catch (e) {
     return;
@@ -515,7 +515,7 @@ os.olcs.sync.VectorSynchronizer.prototype.removeFeature = function(feature) {
 
 /**
  * Check if a feature is hidden on the source.
- * @param {!ol.Feature} feature The OL3 feature
+ * @param {!ol.Feature} feature The OpenLayers feature
  * @return {boolean} If the feature is hidden on the source.
  * @protected
  */
@@ -531,7 +531,7 @@ os.olcs.sync.VectorSynchronizer.prototype.shouldShowFeature = function(feature) 
 /**
  * Performs initialization actions on a Cesium primitive.
  * @param {!Cesium.PrimitiveLike} primitive The Cesium primitive
- * @param {!ol.Feature} feature The OL3 feature
+ * @param {!ol.Feature} feature The OpenLayers feature
  * @protected
  * @suppress {checkTypes}
  */
@@ -597,7 +597,7 @@ os.olcs.sync.VectorSynchronizer.prototype.updateHighlightedItems_ = function(fea
  */
 os.olcs.sync.VectorSynchronizer.prototype.updateLabelOffsets = function() {
   // Find the z-index step from the camera altitude
-  var cameraDistance = os.MapContainer.getInstance().getCesiumCamera().getDistanceToCenter();
+  var cameraDistance = os.MapContainer.getInstance().getWebGLCamera().getDistanceToCenter();
   var zIndexStep = Math.round(cameraDistance / (this.zIndexMax_ * 10));
   var newOffset = -(this.zIndex_ * zIndexStep);
   this.converter.setLabelEyeOffsetDefault(new Cesium.Cartesian3(0.0, 0.0, newOffset));
@@ -614,7 +614,7 @@ os.olcs.sync.VectorSynchronizer.prototype.updateLabelOffsets = function() {
 
 
 /**
- * @param {!ol.Feature} feature The OL3 feature or feature id to update
+ * @param {!ol.Feature} feature The OpenLayers feature or feature id to update
  * @param {boolean} shown If the feature is shown
  * @private
  * @suppress {checkTypes}
@@ -649,13 +649,13 @@ os.olcs.sync.VectorSynchronizer.prototype.updatePrimitiveVisibility_ = function(
  * @todo Only Billboards/Labels have eyeOffset support. What if this is a line or polygon?
  */
 os.olcs.sync.VectorSynchronizer.prototype.setFeatureHighlight_ = function(prim, value) {
-  var csCamera = os.MapContainer.getInstance().getCesiumCamera();
+  var camera = /** @type {plugin.cesium.Camera} */ (os.MapContainer.getInstance().getWebGLCamera());
 
   if (prim instanceof Cesium.Billboard) {
-    if (value && csCamera) {
+    if (value) {
       // boost the feature so it's rendered on top of others nearby. don't allow the offset to exceed the camera
       // distance or the feature will not appear on the screen.
-      var cameraDistance = csCamera.getDistanceToPosition(prim.position);
+      var cameraDistance = camera.getDistanceToPosition(prim.position);
       if (cameraDistance != null) {
         prim.eyeOffset = new Cesium.Cartesian3(0.0, 0.0, -cameraDistance * 0.99);
       }
@@ -664,8 +664,8 @@ os.olcs.sync.VectorSynchronizer.prototype.setFeatureHighlight_ = function(prim, 
       prim.eyeOffset = this.converter.getEyeOffset();
     }
   } else if (prim instanceof Cesium.Label) {
-    if (value && this.scene && csCamera) {
-      var cameraDistance = csCamera.getDistanceToPosition(prim.position);
+    if (value && this.scene && camera) {
+      var cameraDistance = camera.getDistanceToPosition(prim.position);
       if (cameraDistance != null) {
         this.converter.setLabelEyeOffset(prim, this.scene, new Cesium.Cartesian3(0.0, 0.0, -cameraDistance * 0.99));
       }
@@ -698,7 +698,7 @@ os.olcs.sync.VectorSynchronizer.prototype.reposition = function(start, end) {
  */
 os.olcs.sync.VectorSynchronizer.prototype.updateBillboardOffsets = function() {
   // Find the z-index step from the camera altitude
-  var cameraDistance = os.MapContainer.getInstance().getCesiumCamera().getDistanceToCenter();
+  var cameraDistance = os.MapContainer.getInstance().getWebGLCamera().getDistanceToCenter();
   var zIndexStep = Math.round(cameraDistance / (this.zIndexMax_ * 100));
   var newOffset = -(this.zIndex_ * zIndexStep);
 

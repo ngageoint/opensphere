@@ -163,18 +163,25 @@ os.map.ZERO_EXTENT = [0, 0, 0, 0];
 
 
 /**
- * Gets the zoom level from the given resolution
- * @param {number} resolution
- * @param {ol.proj.Projection} projection
+ * Gets the zoom level from the given resolution.
+ * @param {number} resolution The view resolution.
+ * @param {ol.proj.Projection} projection The map projection.
+ * @param {number=} opt_precision The decimal precision
  * @return {number} zoom
  */
-os.map.resolutionToZoom = function(resolution, projection) {
+os.map.resolutionToZoom = function(resolution, projection, opt_precision) {
   var extent = projection.getExtent();
   var size = extent[2] - extent[0];
 
   // todo: replace "Math.LN2" with the log of the view's zoom factor, which does not
   // appear to be accessible through the api at the moment.
-  return Math.log(size / (256 * resolution)) / Math.LN2;
+  var zoom = Math.log(size / (256 * resolution)) / Math.LN2;
+
+  if (opt_precision != null) {
+    zoom = Number(zoom.toFixed(opt_precision));
+  }
+
+  return zoom;
 };
 
 
@@ -280,7 +287,7 @@ os.map.distanceForResolution = function(size, resolution, opt_latitude) {
 /**
  * Calculate the view resolution for a camera distance.
  *
- * @param {os.Map} map The map.
+ * @param {ol.PluggableMap} map The map.
  * @param {number} distance The camera distance.
  * @param {number=} opt_latitude The latitude to use in the calculation, defaults to 0.
  *

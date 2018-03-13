@@ -69,7 +69,7 @@ os.interaction.getZoomDelta = function(boost, inverse) {
  */
 os.interaction.configureCesium = function(sscc) {
   var map = os.MapContainer.getInstance();
-  var camera = map.getCesiumCamera();
+  var camera = map.getWebGLCamera();
   if (camera) {
     // allow zooming out further in the 3D view
     var maxResolution = os.map.zoomToResolution(0, os.map.PROJECTION);

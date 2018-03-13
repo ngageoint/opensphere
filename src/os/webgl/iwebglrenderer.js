@@ -1,6 +1,7 @@
 goog.provide('os.webgl.IWebGLRenderer');
 
 goog.require('goog.disposable.IDisposable');
+goog.require('os.webgl.IWebGLCamera');
 
 
 /**
@@ -49,6 +50,13 @@ os.webgl.IWebGLRenderer.prototype.getEnabled;
  * @param {boolean} value If the renderer should be enabled.
  */
 os.webgl.IWebGLRenderer.prototype.setEnabled;
+
+
+/**
+ * Get the WebGL camera.
+ * @return {os.webgl.IWebGLCamera|undefined}
+ */
+os.webgl.IWebGLRenderer.prototype.getCamera;
 
 
 /**
