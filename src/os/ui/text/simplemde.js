@@ -20,7 +20,8 @@ os.ui.text.simpleMDEDirective = function() {
       'edit': '=',
       'maxlength': '=',
       'isRequired': '=',
-      'basictoolbar': '=?'
+      'basictoolbar': '=?',
+      'toolbar': '=?'
     },
     templateUrl: os.ROOT + 'views/text/simplemde.html',
     controller: os.ui.text.SimpleMDECtrl
@@ -159,6 +160,17 @@ os.ui.text.SimpleMDECtrl = function($scope, $element, $timeout) {
    */
   this.simplemde = null;
 
+  /**
+   * the simplemde toolbar definition
+   * @type {Object}
+   * @protected
+   */
+  this.toolbar = $scope['toolbar'] || os.ui.text.SimpleMDE.TOOLBAR;
+  // Leaving for backward compatibility
+  if (this.scope_['basictoolbar']) {
+    this.toolbar = os.ui.text.SimpleMDE.BASICTOOLBAR;
+  }
+
   $scope['text'] = $scope['text'] || '';
 
   $scope.$watch('edit', goog.bind(function() {
@@ -202,18 +214,10 @@ os.ui.text.SimpleMDECtrl.prototype.cleanHtml = function(plainText) {
 
 
 /**
- * @param {Object=} opt_toolbar
  * @return {Object}
  */
-os.ui.text.SimpleMDECtrl.prototype.getOptions = function(opt_toolbar) {
-  var toolbar = os.ui.text.SimpleMDE.TOOLBAR;
-  if (this.scope_['basictoolbar']) {
-    toolbar = os.ui.text.SimpleMDE.BASICTOOLBAR;
-  }
-
-  if (opt_toolbar) {
-    toolbar = opt_toolbar;
-  }
+os.ui.text.SimpleMDECtrl.prototype.getOptions = function() {
+  var toolbar = this.toolbar;
 
   return {
     'autoDownloadFontAwesome': false,
@@ -233,11 +237,10 @@ os.ui.text.SimpleMDECtrl.prototype.getOptions = function(opt_toolbar) {
 
 /**
  * Initialize simplemde
- * @param {Object=} opt_toolbar custom toolbar
  */
-os.ui.text.SimpleMDECtrl.prototype.init = function(opt_toolbar) {
+os.ui.text.SimpleMDECtrl.prototype.init = function() {
   if (this.element_) {
-    this.simplemde = new SimpleMDE(this.getOptions(opt_toolbar));
+    this.simplemde = new SimpleMDE(this.getOptions());
     this.scope_['previewText'] = os.ui.text.SimpleMDE.removeMarkdown(this.scope_['text'], true);
 
     // Watch to see if something changes the text and update the value
