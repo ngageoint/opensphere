@@ -4,6 +4,7 @@ goog.require('goog.Disposable');
 goog.require('goog.asserts');
 goog.require('goog.async.Delay');
 goog.require('ol.events');
+goog.require('os.MapEvent');
 goog.require('os.data.ZOrderEventType');
 goog.require('os.layer.Group');
 goog.require('os.layer.Image');
@@ -174,7 +175,7 @@ os.olcs.sync.RootSynchronizer.prototype.synchronizeLayer_ = function(layer) {
       this.synchronizers_[layerId] = synchronizer;
       synchronizer.setActive(this.active);
       synchronizer.synchronize();
-      os.dispatcher.dispatchEvent(os.olcs.RenderLoop.REPAINT);
+      os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
     }
   }
 };
@@ -241,7 +242,7 @@ os.olcs.sync.RootSynchronizer.prototype.updateGroupZ_ = function(group) {
       }
     }
 
-    os.dispatcher.dispatchEvent(os.olcs.RenderLoop.REPAINT);
+    os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
   }
 };
 

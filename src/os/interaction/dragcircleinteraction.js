@@ -3,6 +3,7 @@ goog.provide('os.interaction.DragCircle');
 goog.require('goog.string');
 goog.require('ol');
 goog.require('os.I3DSupport');
+goog.require('os.MapEvent');
 goog.require('os.geo');
 goog.require('os.map');
 goog.require('os.olcs');
@@ -118,7 +119,7 @@ os.interaction.DragCircle.prototype.update3D = function(start, end) {
       this.label3D_.show = true;
 
       scene.primitives.add(this.circle3D_);
-      os.dispatcher.dispatchEvent(os.olcs.RenderLoop.REPAINT);
+      os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
     }
   }
 };

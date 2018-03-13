@@ -61,7 +61,6 @@ goog.require('os.map');
 goog.require('os.map.IMapContainer');
 goog.require('os.metrics');
 goog.require('os.metrics.Metrics');
-goog.require('os.mixin.renderloop');
 goog.require('os.object');
 goog.require('os.ogc');
 goog.require('os.ol.control.MousePosition');

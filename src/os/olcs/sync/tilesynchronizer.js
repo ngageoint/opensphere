@@ -5,6 +5,7 @@ goog.require('goog.async.Delay');
 goog.require('goog.events.EventType');
 goog.require('ol.layer.Tile');
 goog.require('ol.source.TileWMS');
+goog.require('os.MapEvent');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.events.SelectionType');
 goog.require('os.layer.AnimatedTile');
@@ -277,7 +278,7 @@ os.olcs.sync.TileSynchronizer.prototype.disposeSingle_ = function() {
     this.cesiumLayers_.remove(this.activeLayer_, true);
     this.activeLayer_ = null;
 
-    os.dispatcher.dispatchEvent(os.olcs.RenderLoop.REPAINT);
+    os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
   }
 };
 
@@ -363,7 +364,7 @@ os.olcs.sync.TileSynchronizer.prototype.updateAnimationCache_ = function() {
   }
 
   this.animationCache_ = newCache;
-  os.dispatcher.dispatchEvent(os.olcs.RenderLoop.REPAINT);
+  os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
 };
 
 
@@ -510,7 +511,7 @@ os.olcs.sync.TileSynchronizer.prototype.onChange_ = function(event) {
     }
   }
 
-  os.dispatcher.dispatchEvent(os.olcs.RenderLoop.REPAINT);
+  os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
 };
 
 
@@ -536,5 +537,5 @@ os.olcs.sync.TileSynchronizer.prototype.onLayerPropertyChange_ = function(event)
     }
   }
 
-  os.dispatcher.dispatchEvent(os.olcs.RenderLoop.REPAINT);
+  os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
 };

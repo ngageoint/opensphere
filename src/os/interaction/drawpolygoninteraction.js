@@ -10,6 +10,7 @@ goog.require('ol.geom.Polygon');
 goog.require('ol.layer.Vector');
 goog.require('ol.source.Vector');
 goog.require('os.I3DSupport');
+goog.require('os.MapEvent');
 goog.require('os.geo');
 goog.require('os.interpolate');
 goog.require('os.map');
@@ -100,7 +101,7 @@ os.interaction.DrawPolygon.prototype.update3D = function() {
         width: 2
       });
 
-      os.dispatcher.dispatchEvent(os.olcs.RenderLoop.REPAINT);
+      os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
     }
   }
 };

@@ -319,7 +319,7 @@ plugin.cesium.CesiumRenderer.prototype.resetSync = function() {
 plugin.cesium.CesiumRenderer.prototype.setBGColor = function(value) {
   if (this.olCesium_) {
     this.olCesium_.getCesiumScene().globe.baseColor = Cesium.Color.fromCssColorString(value);
-    os.dispatcher.dispatchEvent(os.olcs.RenderLoop.REPAINT);
+    os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
   }
 };
 
@@ -331,7 +331,7 @@ plugin.cesium.CesiumRenderer.prototype.showFog = function(value) {
   var scene = this.olCesium_ ? this.olCesium_.getCesiumScene() : undefined;
   if (scene && scene.fog.enabled != value) {
     scene.fog.enabled = value;
-    os.dispatcher.dispatchEvent(os.olcs.RenderLoop.REPAINT);
+    os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
   }
 };
 
@@ -346,7 +346,7 @@ plugin.cesium.CesiumRenderer.prototype.setFogDensity = function(value) {
     if (scene.fog.density != newDensity) {
       scene.fog.density = newDensity;
     }
-    os.dispatcher.dispatchEvent(os.olcs.RenderLoop.REPAINT);
+    os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
   }
 };
 
@@ -358,7 +358,7 @@ plugin.cesium.CesiumRenderer.prototype.showSunlight = function(value) {
   var scene = this.olCesium_ ? this.olCesium_.getCesiumScene() : undefined;
   if (scene) {
     scene.globe.enableLighting = value;
-    os.dispatcher.dispatchEvent(os.olcs.RenderLoop.REPAINT);
+    os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
   }
 };
 
@@ -380,7 +380,7 @@ plugin.cesium.CesiumRenderer.prototype.showTerrain = function(value) {
         scene.terrainProvider = provider;
       }
 
-      os.dispatcher.dispatchEvent(os.olcs.RenderLoop.REPAINT);
+      os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
     }
   }
 };

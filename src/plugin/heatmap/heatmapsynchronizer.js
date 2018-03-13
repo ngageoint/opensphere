@@ -1,7 +1,9 @@
 goog.provide('plugin.heatmap.HeatmapSynchronizer');
+
 goog.require('goog.asserts');
 goog.require('goog.async.Delay');
 goog.require('goog.events.EventType');
+goog.require('os.MapEvent');
 goog.require('os.layer.PropertyChange');
 goog.require('os.olcs');
 goog.require('os.olcs.sync.AbstractSynchronizer');
@@ -132,7 +134,7 @@ plugin.heatmap.HeatmapSynchronizer.prototype.synchronizeInternal = function() {
     goog.asserts.assert(this.activeLayer_);
     goog.asserts.assert(this.layer);
     os.olcs.updateCesiumLayerProperties(this.layer, this.activeLayer_);
-    os.dispatcher.dispatchEvent(os.olcs.RenderLoop.REPAINT);
+    os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
   }
 };
 
@@ -151,7 +153,7 @@ plugin.heatmap.HeatmapSynchronizer.prototype.onLayerPropertyChange_ = function(e
 
       if (this.layer && this.activeLayer_) {
         os.olcs.updateCesiumLayerProperties(this.layer, this.activeLayer_);
-        os.dispatcher.dispatchEvent(os.olcs.RenderLoop.REPAINT);
+        os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
       }
     } else if (p == 'intensity' || p == 'size' || p == 'gradient') {
       this.createHeatmap();
@@ -169,7 +171,7 @@ plugin.heatmap.HeatmapSynchronizer.prototype.onStyleChange_ = function(event) {
   goog.asserts.assert(!goog.isNull(this.layer));
   goog.asserts.assert(!goog.isNull(this.activeLayer_));
   os.olcs.updateCesiumLayerProperties(this.layer, this.activeLayer_);
-  os.dispatcher.dispatchEvent(os.olcs.RenderLoop.REPAINT);
+  os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
 };
 
 
