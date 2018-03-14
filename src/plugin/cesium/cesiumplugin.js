@@ -1,9 +1,14 @@
 goog.provide('plugin.cesium.Plugin');
 
 goog.require('os.plugin.AbstractPlugin');
+goog.require('os.webgl.SynchronizerManager');
 goog.require('plugin.cesium.CesiumRenderer');
 goog.require('plugin.cesium.mixin.olcs');
 goog.require('plugin.cesium.mixin.renderloop');
+goog.require('plugin.cesium.sync.DrawingLayerSynchronizer');
+goog.require('plugin.cesium.sync.ImageSynchronizer');
+goog.require('plugin.cesium.sync.TileSynchronizer');
+goog.require('plugin.cesium.sync.VectorSynchronizer');
 
 
 /**
@@ -31,4 +36,11 @@ plugin.cesium.Plugin.ID = 'cesium';
  */
 plugin.cesium.Plugin.prototype.init = function() {
   os.MapContainer.getInstance().setWebGLRenderer(new plugin.cesium.CesiumRenderer());
+
+  // register the default set of synchronizers
+  var sm = os.webgl.SynchronizerManager.getInstance();
+  sm.registerSynchronizer(os.layer.SynchronizerType.VECTOR, plugin.cesium.sync.VectorSynchronizer);
+  sm.registerSynchronizer(os.layer.SynchronizerType.TILE, plugin.cesium.sync.TileSynchronizer);
+  sm.registerSynchronizer(os.layer.SynchronizerType.IMAGE, plugin.cesium.sync.ImageSynchronizer);
+  sm.registerSynchronizer(os.layer.SynchronizerType.DRAW, plugin.cesium.sync.DrawingLayerSynchronizer);
 };

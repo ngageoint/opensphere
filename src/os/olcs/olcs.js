@@ -1,13 +1,6 @@
 goog.provide('os.olcs');
 
-goog.require('ol.layer.Tile');
-goog.require('ol.proj');
-goog.require('ol.source.TileImage');
-goog.require('ol.source.WMTS');
 goog.require('olcs.core');
-goog.require('os.net');
-goog.require('os.olcs.ImageryProvider');
-goog.require('os.proj');
 
 
 /**
@@ -18,77 +11,6 @@ os.olcs.GeometryInstanceId = {
   ELLIPSOID_OUTLINE: 'ellipsoidOutline',
   GEOM: 'geometry',
   GEOM_OUTLINE: 'geometryOutline'
-};
-
-
-/**
- * Regular expression to match ellipsoid geometry instance id's.
- * @type {RegExp}
- * @const
- */
-os.olcs.ELLIPSOID_REGEXP = /ellipsoid/i;
-
-
-/**
- * Regular expression to match outline geometry instance id's.
- * @type {RegExp}
- * @const
- */
-os.olcs.OUTLINE_REGEXP = /outline/i;
-
-
-/**
- * Creates Cesium.ImageryLayer best corresponding to the given ol.layer.Layer. Only supports raster layers.
- * This replaces {@link olcs.core.tileLayerToImageryLayer} to use our custom provider supporting tile load counts.
- * @param {!ol.layer.Layer} olLayer
- * @param {?ol.proj.Projection} viewProj Projection of the view.
- * @return {?Cesium.ImageryLayer} null if not possible (or supported)
- */
-os.olcs.tileLayerToImageryLayer = function(olLayer, viewProj) {
-  if (!(olLayer instanceof ol.layer.Tile)) {
-    return null;
-  }
-
-  var source = olLayer.getSource();
-  var provider = null;
-
-  // handle special cases before the general synchronization
-  if (source instanceof ol.source.WMTS) {
-    // WMTS uses different TileGrid which is not currently supported
-    return null;
-  }
-
-  if (source instanceof ol.source.TileImage) {
-    var projection = source.getProjection();
-
-    if (!projection) {
-      // if not explicit, assume the same projection as view
-      projection = viewProj;
-    }
-
-    var is3857 = projection === ol.proj.get(os.proj.EPSG3857);
-    var is4326 = projection === ol.proj.get(os.proj.EPSG4326);
-    if (is3857 || is4326) {
-      provider = new os.olcs.ImageryProvider(source, viewProj);
-    } else {
-      return null;
-    }
-  } else {
-    // sources other than TileImage are currently not supported
-    return null;
-  }
-
-  // the provider is always non-null if we got this far
-
-  var layerOptions = {};
-
-  var ext = olLayer.getExtent();
-  if (goog.isDefAndNotNull(ext) && !goog.isNull(viewProj)) {
-    layerOptions.rectangle = olcs.core.extentToRectangle(ext, viewProj);
-  }
-
-  var cesiumLayer = new Cesium.ImageryLayer(provider, layerOptions);
-  return cesiumLayer;
 };
 
 
@@ -195,46 +117,4 @@ os.olcs.generateCirclePositions = function(center, radius) {
 
   // Return an array of cartesians
   return positions;
-};
-
-
-/**
- * Synchronizes the layer rendering properties (opacity, visible) to the given Cesium ImageryLayer.
- * @param {!ol.layer.Base} olLayer
- * @param {!Cesium.ImageryLayer} csLayer
- */
-os.olcs.updateCesiumLayerProperties = function(olLayer, csLayer) {
-  // call the ol3-cesium function first
-  olcs.core.updateCesiumLayerProperties(/** @type {olcsx.LayerWithParents} */ ({
-    layer: olLayer,
-    parents: []
-  }), csLayer);
-
-  // saturation and contrast are working ok
-  var saturation = olLayer.getSaturation();
-  if (saturation != null) {
-    csLayer.saturation = saturation;
-  }
-
-  // that little guy? I wouldn't worry about that little guy.
-  //
-  // if contrast is 1 (default value) and hue is changed from the default (0) on *any* layer, transparent pixels are
-  // blacked out.
-  var contrast = olLayer.getContrast();
-  csLayer.contrast = contrast == null || contrast == 1 ? 1.01 : contrast;
-
-  // Cesium actually operates in YIQ space -> hard to emulate
-  // The following values are only a rough approximations:
-
-  // The hue in Cesium has different meaning than the OL equivalent.
-  var hue = olLayer.getHue();
-  if (hue != null) {
-    csLayer.hue = hue * Cesium.Math.RADIANS_PER_DEGREE;
-  }
-
-  var brightness = olLayer.getBrightness();
-  if (brightness != null) {
-    // rough estimation
-    csLayer.brightness = Math.pow(1 + parseFloat(brightness), 2);
-  }
 };

@@ -5,14 +5,13 @@ goog.require('goog.log');
 goog.require('olcs.OLCesium');
 goog.require('olcs.core');
 goog.require('os.MapEvent');
-goog.require('os.olcs');
-goog.require('os.olcs.WMSImageryProvider');
-goog.require('os.olcs.sync.RootSynchronizer');
 goog.require('os.webgl.AbstractWebGLRenderer');
 goog.require('plugin.cesium');
 goog.require('plugin.cesium.Camera');
+goog.require('plugin.cesium.WMSImageryProvider');
 goog.require('plugin.cesium.WMSTerrainProvider');
 goog.require('plugin.cesium.mixin');
+goog.require('plugin.cesium.sync.RootSynchronizer');
 
 
 /**
@@ -33,7 +32,7 @@ plugin.cesium.CesiumRenderer = function() {
 
   /**
    * The root Cesium synchronizer.
-   * @type {os.olcs.sync.RootSynchronizer|undefined}
+   * @type {plugin.cesium.sync.RootSynchronizer|undefined}
    * @private
    */
   this.rootSynchronizer_ = undefined;
@@ -96,7 +95,7 @@ plugin.cesium.CesiumRenderer.prototype.initialize = function() {
       plugin.cesium.loadCesium().then(function() {
         try {
           plugin.cesium.mixin.loadCesiumMixins();
-          os.olcs.WMSImageryProvider.init();
+          plugin.cesium.WMSImageryProvider.init();
 
           this.registerTerrainProviderType('cesium', Cesium.CesiumTerrainProvider);
           this.registerTerrainProviderType('wms', plugin.cesium.WMSTerrainProvider);
@@ -491,7 +490,7 @@ plugin.cesium.CesiumRenderer.prototype.onTerrainError_ = function(error) {
  */
 plugin.cesium.CesiumRenderer.prototype.createCesiumSynchronizers_ = function(map, scene) {
   if (!this.rootSynchronizer_) {
-    this.rootSynchronizer_ = new os.olcs.sync.RootSynchronizer(map, scene);
+    this.rootSynchronizer_ = new plugin.cesium.sync.RootSynchronizer(map, scene);
   }
 
   return [this.rootSynchronizer_];
