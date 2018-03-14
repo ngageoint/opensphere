@@ -1,4 +1,4 @@
-goog.provide('os.olcs.sync.RootSynchronizer');
+goog.provide('plugin.cesium.sync.RootSynchronizer');
 
 goog.require('goog.Disposable');
 goog.require('goog.asserts');
@@ -9,86 +9,95 @@ goog.require('os.data.ZOrderEventType');
 goog.require('os.layer.Group');
 goog.require('os.layer.Image');
 goog.require('os.layer.Tile');
-goog.require('os.olcs.sync.SynchronizerManager');
-
+goog.require('os.webgl.SynchronizerManager');
 
 
 /**
- * @param {!ol.Map} map
- * @param {!Cesium.Scene} scene
+ * The root synchronizer for the Cesium renderer.
+ * @param {!ol.PluggableMap} map The OpenLayers map.
+ * @param {!Cesium.Scene} scene The Cesium scene.
  * @extends {goog.Disposable}
  * @constructor
  */
-os.olcs.sync.RootSynchronizer = function(map, scene) {
+plugin.cesium.sync.RootSynchronizer = function(map, scene) {
+  plugin.cesium.sync.RootSynchronizer.base(this, 'constructor');
+
   /**
+   * If the synchronizer is active.
    * @type {boolean}
    * @protected
    */
   this.active = false;
 
   /**
+   * If the synchronizer is initialized.
    * @type {boolean}
    * @private
    */
   this.initialized_ = false;
 
   /**
+   * OpenLayers layer listen keys.
    * @type {!Array<ol.EventsKey>}
    * @private
    */
   this.listenKeys_ = [];
 
   /**
-   * @type {ol.Map}
+   * The OpenLayers map.
+   * @type {ol.PluggableMap|undefined}
    * @private
    */
   this.map_ = map;
 
   /**
-   * @type {Cesium.Scene}
+   * The Cesium scene.
+   * @type {Cesium.Scene|undefined}
    * @private
    */
   this.scene_ = scene;
 
   /**
-   * @type {Object.<string, os.olcs.sync.AbstractSynchronizer>}
+   * Map of layer id to Cesium synchronizer.
+   * @type {!Object<string, !os.webgl.AbstractWebGLSynchronizer>}
    * @private
    */
   this.synchronizers_ = {};
 
   /**
-   * @type {goog.async.Delay}
+   * Delay to debounce z order updates.
+   * @type {goog.async.Delay|undefined}
    * @private
    */
   this.updateZDelay_ = new goog.async.Delay(this.updateZOrder_, 250, this);
 
-  // Initialize os library
+  // Initialize ol-cesium library
   olcs.core.glAliasedLineWidthRange = this.scene_.maximumAliasedLineWidth;
 };
-goog.inherits(os.olcs.sync.RootSynchronizer, goog.Disposable);
+goog.inherits(plugin.cesium.sync.RootSynchronizer, goog.Disposable);
 
 
 /**
  * @inheritDoc
  */
-os.olcs.sync.RootSynchronizer.prototype.disposeInternal = function() {
+plugin.cesium.sync.RootSynchronizer.prototype.disposeInternal = function() {
   this.listenKeys_.forEach(ol.events.unlistenByKey);
   this.listenKeys_.length = 0;
 
   goog.dispose(this.updateZDelay_);
-  this.updateZDelay_ = null;
+  this.updateZDelay_ = undefined;
 
-  this.scene_ = null;
-  this.map_ = null;
+  this.scene_ = undefined;
+  this.map_ = undefined;
 
-  os.olcs.sync.RootSynchronizer.base(this, 'disposeInternal');
+  plugin.cesium.sync.RootSynchronizer.base(this, 'disposeInternal');
 };
 
 
 /**
  * Synchronizes all layers on the map.
  */
-os.olcs.sync.RootSynchronizer.prototype.synchronize = function() {
+plugin.cesium.sync.RootSynchronizer.prototype.synchronize = function() {
   if (this.initialized_) {
     return;
   }
@@ -112,7 +121,7 @@ os.olcs.sync.RootSynchronizer.prototype.synchronize = function() {
 /**
  * Reset synchronizers to make sure the state is in sync with 2D.
  */
-os.olcs.sync.RootSynchronizer.prototype.reset = function() {
+plugin.cesium.sync.RootSynchronizer.prototype.reset = function() {
   for (var key in this.synchronizers_) {
     this.synchronizers_[key].reset();
   }
@@ -123,7 +132,7 @@ os.olcs.sync.RootSynchronizer.prototype.reset = function() {
  * Set if the synchronizer should be actively used.
  * @param {boolean} value
  */
-os.olcs.sync.RootSynchronizer.prototype.setActive = function(value) {
+plugin.cesium.sync.RootSynchronizer.prototype.setActive = function(value) {
   this.active = value;
 
   for (var key in this.synchronizers_) {
@@ -137,7 +146,7 @@ os.olcs.sync.RootSynchronizer.prototype.setActive = function(value) {
  * @param {!os.layer.Group} group
  * @private
  */
-os.olcs.sync.RootSynchronizer.prototype.synchronizeGroup_ = function(group) {
+plugin.cesium.sync.RootSynchronizer.prototype.synchronizeGroup_ = function(group) {
   var layers = group.getLayers().getArray();
   for (var i = 0, n = layers.length; i < n; i++) {
     var layer = layers[i];
@@ -153,7 +162,7 @@ os.olcs.sync.RootSynchronizer.prototype.synchronizeGroup_ = function(group) {
  * @param {!ol.layer.Layer} layer
  * @private
  */
-os.olcs.sync.RootSynchronizer.prototype.synchronizeLayer_ = function(layer) {
+plugin.cesium.sync.RootSynchronizer.prototype.synchronizeLayer_ = function(layer) {
   goog.asserts.assert(!goog.isNull(this.map_));
   goog.asserts.assert(!goog.isNull(this.scene_));
   goog.asserts.assert(layer);
@@ -164,7 +173,7 @@ os.olcs.sync.RootSynchronizer.prototype.synchronizeLayer_ = function(layer) {
     var synchronizer = this.synchronizers_[layerId];
 
     if (!synchronizer) {
-      var sm = os.olcs.sync.SynchronizerManager.getInstance();
+      var sm = os.webgl.SynchronizerManager.getInstance();
       var constructor = sm.getSynchronizer(osLayer);
       if (constructor) {
         synchronizer = new constructor(layer, this.map_, this.scene_);
@@ -186,7 +195,7 @@ os.olcs.sync.RootSynchronizer.prototype.synchronizeLayer_ = function(layer) {
  * @param {goog.events.Event} event
  * @private
  */
-os.olcs.sync.RootSynchronizer.prototype.onGroupZOrder_ = function(event) {
+plugin.cesium.sync.RootSynchronizer.prototype.onGroupZOrder_ = function(event) {
   var group = event.target;
   if (group instanceof os.layer.Group) {
     this.updateGroupZ_(group);
@@ -198,7 +207,7 @@ os.olcs.sync.RootSynchronizer.prototype.onGroupZOrder_ = function(event) {
  * Update the z-order of all groups.
  * @private
  */
-os.olcs.sync.RootSynchronizer.prototype.updateZOrder_ = function() {
+plugin.cesium.sync.RootSynchronizer.prototype.updateZOrder_ = function() {
   var groups = this.map_.getLayers().getArray();
   for (var i = 0, n = groups.length; i < n; i++) {
     var group = groups[i];
@@ -214,7 +223,7 @@ os.olcs.sync.RootSynchronizer.prototype.updateZOrder_ = function() {
  * @param {!os.layer.Group} group The group to update.
  * @private
  */
-os.olcs.sync.RootSynchronizer.prototype.updateGroupZ_ = function(group) {
+plugin.cesium.sync.RootSynchronizer.prototype.updateGroupZ_ = function(group) {
   var layers = group.getLayers().getArray();
   if (layers.length > 0) {
     var layerCount = 0;
@@ -254,7 +263,7 @@ os.olcs.sync.RootSynchronizer.prototype.updateGroupZ_ = function(group) {
  * @return {number} The first index in the layers array
  * @private
  */
-os.olcs.sync.RootSynchronizer.prototype.getGroupStartIndex_ = function(group) {
+plugin.cesium.sync.RootSynchronizer.prototype.getGroupStartIndex_ = function(group) {
   var startIndex = 0;
 
   var groups = this.map_.getLayers().getArray();
@@ -287,7 +296,7 @@ os.olcs.sync.RootSynchronizer.prototype.getGroupStartIndex_ = function(group) {
  * @return {number} The first index in the layers array
  * @private
  */
-os.olcs.sync.RootSynchronizer.prototype.getVectorGroupStartIndex_ = function(group) {
+plugin.cesium.sync.RootSynchronizer.prototype.getVectorGroupStartIndex_ = function(group) {
   var startIndex = 0;
 
   var groups = this.map_.getLayers().getArray();
@@ -312,7 +321,7 @@ os.olcs.sync.RootSynchronizer.prototype.getVectorGroupStartIndex_ = function(gro
  * @param {os.events.LayerEvent} event
  * @private
  */
-os.olcs.sync.RootSynchronizer.prototype.onLayerAdd_ = function(event) {
+plugin.cesium.sync.RootSynchronizer.prototype.onLayerAdd_ = function(event) {
   if (event && event.layer) {
     var layer = goog.isString(event.layer) ?
         /** @type {os.layer.ILayer} */ (os.MapContainer.getInstance().getLayer(event.layer)) :
@@ -334,7 +343,7 @@ os.olcs.sync.RootSynchronizer.prototype.onLayerAdd_ = function(event) {
  * @param {os.events.LayerEvent} event
  * @private
  */
-os.olcs.sync.RootSynchronizer.prototype.onLayerRemove_ = function(event) {
+plugin.cesium.sync.RootSynchronizer.prototype.onLayerRemove_ = function(event) {
   if (event && event.layer) {
     var layer = goog.isString(event.layer) ?
         /** @type {os.layer.ILayer} */ (os.MapContainer.getInstance().getLayer(event.layer)) :
@@ -358,7 +367,7 @@ os.olcs.sync.RootSynchronizer.prototype.onLayerRemove_ = function(event) {
 /**
  * Update any Cesium primitives that must change based on camera movement.
  */
-os.olcs.sync.RootSynchronizer.prototype.updateFromCamera = function() {
+plugin.cesium.sync.RootSynchronizer.prototype.updateFromCamera = function() {
   for (var key in this.synchronizers_) {
     var synchronizer = this.synchronizers_[key];
     synchronizer.updateFromCamera();

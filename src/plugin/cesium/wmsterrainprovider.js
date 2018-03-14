@@ -3,14 +3,14 @@ goog.provide('plugin.cesium.WMSTerrainProvider');
 goog.require('goog.asserts');
 goog.require('ol.proj');
 goog.require('os.net.ProxyHandler');
-goog.require('os.olcs.AbstractTerrainProvider');
+goog.require('plugin.cesium.AbstractTerrainProvider');
 
 
 
 /**
  * WMS Cesium terrain provider.
  * @param {!osx.cesium.WMSTerrainProviderOptions} options
- * @extends {os.olcs.AbstractTerrainProvider}
+ * @extends {plugin.cesium.AbstractTerrainProvider}
  * @constructor
  */
 plugin.cesium.WMSTerrainProvider = function(options) {
@@ -39,7 +39,7 @@ plugin.cesium.WMSTerrainProvider = function(options) {
   // mark as ready so Cesium will start requesting terrain
   this.ready = true;
 };
-goog.inherits(plugin.cesium.WMSTerrainProvider, os.olcs.AbstractTerrainProvider);
+goog.inherits(plugin.cesium.WMSTerrainProvider, plugin.cesium.AbstractTerrainProvider);
 
 
 /**

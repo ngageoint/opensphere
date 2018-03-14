@@ -1,4 +1,4 @@
-goog.provide('os.olcs.sync.VectorSynchronizer');
+goog.provide('plugin.cesium.sync.VectorSynchronizer');
 
 goog.require('goog.events.EventType');
 goog.require('ol.events');
@@ -10,34 +10,33 @@ goog.require('os.MapEvent');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.events.SelectionType');
 goog.require('os.layer.PropertyChange');
-goog.require('os.olcs.sync.AbstractSynchronizer');
-goog.require('os.olcs.sync.FeatureConverter');
 goog.require('os.source.PropertyChange');
 goog.require('os.source.Vector');
 goog.require('os.style');
-
+goog.require('plugin.cesium.sync.CesiumSynchronizer');
+goog.require('plugin.cesium.sync.FeatureConverter');
 
 
 /**
  * Synchronizes a single OpenLayers vector layer to Cesium.
- * @param {!ol.layer.Vector} layer
- * @param {!ol.Map} map
- * @param {!Cesium.Scene} scene
- * @param {os.olcs.sync.FeatureConverter=} opt_converter
- * @extends {os.olcs.sync.AbstractSynchronizer<os.layer.Vector>}
+ * @param {!ol.layer.Vector} layer The vector layer.
+ * @param {!ol.PluggableMap} map The OpenLayers map.
+ * @param {!Cesium.Scene} scene The Cesium scene.
+ * @param {plugin.cesium.sync.FeatureConverter=} opt_converter
+ * @extends {plugin.cesium.sync.CesiumSynchronizer<os.layer.Vector>}
  * @constructor
  */
-os.olcs.sync.VectorSynchronizer = function(layer, map, scene, opt_converter) {
-  os.olcs.sync.VectorSynchronizer.base(this, 'constructor', layer, map, scene);
+plugin.cesium.sync.VectorSynchronizer = function(layer, map, scene, opt_converter) {
+  plugin.cesium.sync.VectorSynchronizer.base(this, 'constructor', layer, map, scene);
 
   /**
-   * @type {!os.olcs.sync.FeatureConverter}
+   * @type {!plugin.cesium.sync.FeatureConverter}
    * @protected
    */
-  this.converter = opt_converter || new os.olcs.sync.FeatureConverter(scene);
+  this.converter = opt_converter || new plugin.cesium.sync.FeatureConverter(scene);
 
   /**
-   * @type {os.olcs.VectorContext}
+   * @type {plugin.cesium.VectorContext}
    * @protected
    */
   this.csContext = null;
@@ -63,7 +62,7 @@ os.olcs.sync.VectorSynchronizer = function(layer, map, scene, opt_converter) {
    */
   this.zIndexMax_ = 1;
 };
-goog.inherits(os.olcs.sync.VectorSynchronizer, os.olcs.sync.AbstractSynchronizer);
+goog.inherits(plugin.cesium.sync.VectorSynchronizer, plugin.cesium.sync.CesiumSynchronizer);
 
 
 /**
@@ -72,7 +71,7 @@ goog.inherits(os.olcs.sync.VectorSynchronizer, os.olcs.sync.AbstractSynchronizer
  * @private
  * @const
  */
-os.olcs.sync.VectorSynchronizer.REFRESH_PROPERTIES_ = [
+plugin.cesium.sync.VectorSynchronizer.REFRESH_PROPERTIES_ = [
   os.layer.PropertyChange.LABEL_VISIBILITY,
   os.layer.PropertyChange.STYLE
 ];
@@ -81,18 +80,18 @@ os.olcs.sync.VectorSynchronizer.REFRESH_PROPERTIES_ = [
 /**
  * @inheritDoc
  */
-os.olcs.sync.VectorSynchronizer.prototype.disposeInternal = function() {
+plugin.cesium.sync.VectorSynchronizer.prototype.disposeInternal = function() {
   this.disposeLayerPrimitives_();
   this.source = null;
 
-  os.olcs.sync.VectorSynchronizer.base(this, 'disposeInternal');
+  plugin.cesium.sync.VectorSynchronizer.base(this, 'disposeInternal');
 };
 
 
 /**
  * @inheritDoc
  */
-os.olcs.sync.VectorSynchronizer.prototype.synchronize = function() {
+plugin.cesium.sync.VectorSynchronizer.prototype.synchronize = function() {
   this.disposeLayerPrimitives_();
   this.createLayerPrimitives_();
 };
@@ -101,7 +100,7 @@ os.olcs.sync.VectorSynchronizer.prototype.synchronize = function() {
 /**
  * @inheritDoc
  */
-os.olcs.sync.VectorSynchronizer.prototype.reset = function() {
+plugin.cesium.sync.VectorSynchronizer.prototype.reset = function() {
   if (this.source) {
     this.resetFeatures_(this.source.getFeatures(), true);
   }
@@ -112,7 +111,7 @@ os.olcs.sync.VectorSynchronizer.prototype.reset = function() {
  * Create Cesium primitives for the OpenLayers vector layer.
  * @private
  */
-os.olcs.sync.VectorSynchronizer.prototype.createLayerPrimitives_ = function() {
+plugin.cesium.sync.VectorSynchronizer.prototype.createLayerPrimitives_ = function() {
   goog.asserts.assertInstanceof(this.layer, ol.layer.Vector);
   goog.asserts.assert(!goog.isNull(this.view));
 
@@ -148,7 +147,7 @@ os.olcs.sync.VectorSynchronizer.prototype.createLayerPrimitives_ = function() {
  * Dispose of all Cesium primitives.
  * @private
  */
-os.olcs.sync.VectorSynchronizer.prototype.disposeLayerPrimitives_ = function() {
+plugin.cesium.sync.VectorSynchronizer.prototype.disposeLayerPrimitives_ = function() {
   if (this.csContext) {
     // clean up layer listeners
     ol.events.unlisten(this.layer, 'change:visible', this.onLayerVisibility_, this);
@@ -180,7 +179,7 @@ os.olcs.sync.VectorSynchronizer.prototype.disposeLayerPrimitives_ = function() {
  * @param {ol.Object.Event=} opt_event
  * @private
  */
-os.olcs.sync.VectorSynchronizer.prototype.onLayerVisibility_ = function(opt_event) {
+plugin.cesium.sync.VectorSynchronizer.prototype.onLayerVisibility_ = function(opt_event) {
   if (this.csContext && this.layer) {
     // hide the collection on the context
     this.csContext.collection.show = this.layer.getVisible();
@@ -194,7 +193,7 @@ os.olcs.sync.VectorSynchronizer.prototype.onLayerVisibility_ = function(opt_even
  * @param {goog.events.Event} event
  * @private
  */
-os.olcs.sync.VectorSynchronizer.prototype.onLayerOpacity_ = function(event) {
+plugin.cesium.sync.VectorSynchronizer.prototype.onLayerOpacity_ = function(event) {
   if (this.source) {
     this.refreshFeatures_(this.source.getFeatures());
   }
@@ -206,7 +205,7 @@ os.olcs.sync.VectorSynchronizer.prototype.onLayerOpacity_ = function(event) {
  * @param {os.events.PropertyChangeEvent} event
  * @private
  */
-os.olcs.sync.VectorSynchronizer.prototype.onLayerPropertyChange_ = function(event) {
+plugin.cesium.sync.VectorSynchronizer.prototype.onLayerPropertyChange_ = function(event) {
   goog.asserts.assertInstanceof(this.layer, os.layer.Vector, 'not an os layer');
 
   var p;
@@ -218,7 +217,7 @@ os.olcs.sync.VectorSynchronizer.prototype.onLayerPropertyChange_ = function(even
     return;
   }
 
-  if (this.source && p && os.olcs.sync.VectorSynchronizer.REFRESH_PROPERTIES_.indexOf(p) > -1) {
+  if (this.source && p && plugin.cesium.sync.VectorSynchronizer.REFRESH_PROPERTIES_.indexOf(p) > -1) {
     var features = /** @type {Array<!ol.Feature>} */ (event.getNewValue() || this.source.getFeatures());
     this.refreshFeatures_(features);
   }
@@ -230,7 +229,7 @@ os.olcs.sync.VectorSynchronizer.prototype.onLayerPropertyChange_ = function(even
  * @param {ol.source.Vector.Event} event
  * @private
  */
-os.olcs.sync.VectorSynchronizer.prototype.onAddFeature_ = function(event) {
+plugin.cesium.sync.VectorSynchronizer.prototype.onAddFeature_ = function(event) {
   var feature = event.feature;
   goog.asserts.assert(goog.isDefAndNotNull(feature));
   this.addFeature(feature);
@@ -242,7 +241,7 @@ os.olcs.sync.VectorSynchronizer.prototype.onAddFeature_ = function(event) {
  * @param {ol.source.Vector.Event} event
  * @private
  */
-os.olcs.sync.VectorSynchronizer.prototype.onRemoveFeature_ = function(event) {
+plugin.cesium.sync.VectorSynchronizer.prototype.onRemoveFeature_ = function(event) {
   var feature = event.feature;
   goog.asserts.assert(goog.isDefAndNotNull(feature));
   this.removeFeature(feature);
@@ -254,7 +253,7 @@ os.olcs.sync.VectorSynchronizer.prototype.onRemoveFeature_ = function(event) {
  * @param {ol.source.Vector.Event} event
  * @private
  */
-os.olcs.sync.VectorSynchronizer.prototype.onChangeFeature_ = function(event) {
+plugin.cesium.sync.VectorSynchronizer.prototype.onChangeFeature_ = function(event) {
   var feature = event.feature;
   goog.asserts.assert(goog.isDefAndNotNull(feature));
   this.updateFeature_(feature);
@@ -266,7 +265,7 @@ os.olcs.sync.VectorSynchronizer.prototype.onChangeFeature_ = function(event) {
  * @param {ol.source.Vector.Event=} opt_event
  * @private
  */
-os.olcs.sync.VectorSynchronizer.prototype.clearFeatures_ = function(opt_event) {
+plugin.cesium.sync.VectorSynchronizer.prototype.clearFeatures_ = function(opt_event) {
   goog.object.forEach(this.csContext.featureToCesiumMap, function(val, key) {
     this.removeFeature(key);
   }, this);
@@ -278,7 +277,7 @@ os.olcs.sync.VectorSynchronizer.prototype.clearFeatures_ = function(opt_event) {
  * @param {os.events.PropertyChangeEvent} event
  * @private
  */
-os.olcs.sync.VectorSynchronizer.prototype.onSourcePropertyChange_ = function(event) {
+plugin.cesium.sync.VectorSynchronizer.prototype.onSourcePropertyChange_ = function(event) {
   var p;
   try {
     // openlayers' ol.ObjectEventType.PROPERTYCHANGE is the same as goog.events.EventType.PROPERTYCHANGE, so make sure
@@ -410,7 +409,7 @@ os.olcs.sync.VectorSynchronizer.prototype.onSourcePropertyChange_ = function(eve
  *
  * @suppress {accessControls|checkTypes} To allow checking if the feature exists on the source without a function call.
  */
-os.olcs.sync.VectorSynchronizer.prototype.updateFeature_ = function(feature) {
+plugin.cesium.sync.VectorSynchronizer.prototype.updateFeature_ = function(feature) {
   // make sure the feature is still on the source in case an update was triggered post-removal
   if (this.view && this.csContext && this.source && this.source.idIndex_[feature.id_] != null) {
     var resolution = this.view.getResolution();
@@ -435,7 +434,7 @@ os.olcs.sync.VectorSynchronizer.prototype.updateFeature_ = function(feature) {
  * @param {Array<!ol.Feature>} features The features to refresh
  * @private
  */
-os.olcs.sync.VectorSynchronizer.prototype.refreshFeatures_ = function(features) {
+plugin.cesium.sync.VectorSynchronizer.prototype.refreshFeatures_ = function(features) {
   if (this.active) {
     for (var i = 0, n = features.length; i < n; i++) {
       this.updateFeature_(features[i]);
@@ -451,7 +450,7 @@ os.olcs.sync.VectorSynchronizer.prototype.refreshFeatures_ = function(features) 
  * @private
  * @suppress {checkTypes}
  */
-os.olcs.sync.VectorSynchronizer.prototype.resetFeatures_ = function(features, opt_force) {
+plugin.cesium.sync.VectorSynchronizer.prototype.resetFeatures_ = function(features, opt_force) {
   if (this.active || opt_force) {
     for (var i = 0, n = features.length; i < n; i++) {
       var feature = features[i];
@@ -476,7 +475,7 @@ os.olcs.sync.VectorSynchronizer.prototype.resetFeatures_ = function(features, op
  * @protected
  * @suppress {checkTypes}
  */
-os.olcs.sync.VectorSynchronizer.prototype.addFeature = function(feature) {
+plugin.cesium.sync.VectorSynchronizer.prototype.addFeature = function(feature) {
   goog.asserts.assert(!goog.isNull(this.view));
   goog.asserts.assert(!goog.isNull(this.csContext));
 
@@ -502,7 +501,7 @@ os.olcs.sync.VectorSynchronizer.prototype.addFeature = function(feature) {
  * @param {ol.Feature|number|string} feature Feature or feature id.
  * @protected
  */
-os.olcs.sync.VectorSynchronizer.prototype.removeFeature = function(feature) {
+plugin.cesium.sync.VectorSynchronizer.prototype.removeFeature = function(feature) {
   if (goog.isNumber(feature) || goog.isString(feature)) {
     feature = this.source.getFeatureById(feature);
   }
@@ -520,7 +519,7 @@ os.olcs.sync.VectorSynchronizer.prototype.removeFeature = function(feature) {
  * @return {boolean} If the feature is hidden on the source.
  * @protected
  */
-os.olcs.sync.VectorSynchronizer.prototype.shouldShowFeature = function(feature) {
+plugin.cesium.sync.VectorSynchronizer.prototype.shouldShowFeature = function(feature) {
   if (this.source instanceof os.source.Vector) {
     return !this.source.isHidden(feature) && (!this.source.getTimeEnabled() || !this.source.getAnimationEnabled());
   }
@@ -536,7 +535,7 @@ os.olcs.sync.VectorSynchronizer.prototype.shouldShowFeature = function(feature) 
  * @protected
  * @suppress {checkTypes}
  */
-os.olcs.sync.VectorSynchronizer.prototype.initializePrimitive = function(primitive, feature) {
+plugin.cesium.sync.VectorSynchronizer.prototype.initializePrimitive = function(primitive, feature) {
   if (this.source instanceof os.source.Vector) {
     var featureId = feature['id'];
     this.csContext.featureToShownMap[featureId] = this.shouldShowFeature(feature);
@@ -552,7 +551,7 @@ os.olcs.sync.VectorSynchronizer.prototype.initializePrimitive = function(primiti
  * @private
  * @suppress {checkTypes}
  */
-os.olcs.sync.VectorSynchronizer.prototype.initializePrimitives_ = function(features) {
+plugin.cesium.sync.VectorSynchronizer.prototype.initializePrimitives_ = function(features) {
   for (var i = 0, n = features.length; i < n; i++) {
     var feature = features[i];
     if (feature) {
@@ -575,7 +574,7 @@ os.olcs.sync.VectorSynchronizer.prototype.initializePrimitives_ = function(featu
  * @private
  * @suppress {checkTypes}
  */
-os.olcs.sync.VectorSynchronizer.prototype.updateHighlightedItems_ = function(features, value) {
+plugin.cesium.sync.VectorSynchronizer.prototype.updateHighlightedItems_ = function(features, value) {
   for (var i = 0, n = features.length; i < n; i++) {
     var feature = features[i];
 
@@ -596,7 +595,7 @@ os.olcs.sync.VectorSynchronizer.prototype.updateHighlightedItems_ = function(fea
 /**
  * Update the eye offsets of all labels in the collection.
  */
-os.olcs.sync.VectorSynchronizer.prototype.updateLabelOffsets = function() {
+plugin.cesium.sync.VectorSynchronizer.prototype.updateLabelOffsets = function() {
   // Find the z-index step from the camera altitude
   var cameraDistance = os.MapContainer.getInstance().getWebGLCamera().getDistanceToCenter();
   var zIndexStep = Math.round(cameraDistance / (this.zIndexMax_ * 10));
@@ -620,7 +619,7 @@ os.olcs.sync.VectorSynchronizer.prototype.updateLabelOffsets = function() {
  * @private
  * @suppress {checkTypes}
  */
-os.olcs.sync.VectorSynchronizer.prototype.updatePrimitiveVisibility_ = function(feature, shown) {
+plugin.cesium.sync.VectorSynchronizer.prototype.updatePrimitiveVisibility_ = function(feature, shown) {
   // There are some cases where the primitives are created asynchronously (icon primitives mostly), and thus
   // it is possible to get this event before they exist. Therefore, we'll store it on another map and use that
   // when creating it.
@@ -649,7 +648,7 @@ os.olcs.sync.VectorSynchronizer.prototype.updatePrimitiveVisibility_ = function(
  *
  * @todo Only Billboards/Labels have eyeOffset support. What if this is a line or polygon?
  */
-os.olcs.sync.VectorSynchronizer.prototype.setFeatureHighlight_ = function(prim, value) {
+plugin.cesium.sync.VectorSynchronizer.prototype.setFeatureHighlight_ = function(prim, value) {
   var camera = /** @type {plugin.cesium.Camera} */ (os.MapContainer.getInstance().getWebGLCamera());
 
   if (prim instanceof Cesium.Billboard) {
@@ -681,7 +680,7 @@ os.olcs.sync.VectorSynchronizer.prototype.setFeatureHighlight_ = function(prim, 
 /**
  * @inheritDoc
  */
-os.olcs.sync.VectorSynchronizer.prototype.reposition = function(start, end) {
+plugin.cesium.sync.VectorSynchronizer.prototype.reposition = function(start, end) {
   if (this.zIndex_ != start || this.zIndexMax_ != end) {
     this.zIndex_ = start;
     this.zIndexMax_ = end;
@@ -697,7 +696,7 @@ os.olcs.sync.VectorSynchronizer.prototype.reposition = function(start, end) {
 /**
  * Update the billboard offsets
  */
-os.olcs.sync.VectorSynchronizer.prototype.updateBillboardOffsets = function() {
+plugin.cesium.sync.VectorSynchronizer.prototype.updateBillboardOffsets = function() {
   // Find the z-index step from the camera altitude
   var cameraDistance = os.MapContainer.getInstance().getWebGLCamera().getDistanceToCenter();
   var zIndexStep = Math.round(cameraDistance / (this.zIndexMax_ * 100));
@@ -718,7 +717,7 @@ os.olcs.sync.VectorSynchronizer.prototype.updateBillboardOffsets = function() {
  * Updates labels and billboards after the Cesium camera changes.
  * @inheritDoc
  */
-os.olcs.sync.VectorSynchronizer.prototype.updateFromCamera = function() {
+plugin.cesium.sync.VectorSynchronizer.prototype.updateFromCamera = function() {
   this.updateLabelOffsets();
   this.updateBillboardOffsets();
 };
@@ -729,7 +728,7 @@ os.olcs.sync.VectorSynchronizer.prototype.updateFromCamera = function() {
  * @private
  * @suppress {checkTypes}
  */
-os.olcs.sync.VectorSynchronizer.prototype.setEyeOffset_ = function(feature) {
+plugin.cesium.sync.VectorSynchronizer.prototype.setEyeOffset_ = function(feature) {
   var prims = this.csContext.featureToCesiumMap[feature['id']];
   if (prims) {
     for (var i = 0, j = prims.length; i < j; i++) {
@@ -744,7 +743,7 @@ os.olcs.sync.VectorSynchronizer.prototype.setEyeOffset_ = function(feature) {
  * @param {!Cesium.PrimitiveLike} prim The Cesium primitive
  * @private
  */
-os.olcs.sync.VectorSynchronizer.prototype.setPrimEyeOffset_ = function(prim) {
+plugin.cesium.sync.VectorSynchronizer.prototype.setPrimEyeOffset_ = function(prim) {
   if (prim instanceof Cesium.Billboard) {
     prim.eyeOffset = this.converter.getEyeOffset();
   }
