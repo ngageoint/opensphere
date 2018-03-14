@@ -60,6 +60,30 @@ os.FlightMode = {
 
 
 /**
+ * Selector for the OpenLayers map canvas.
+ * @type {string}
+ * @const
+ */
+os.map.OPENLAYERS_CANVAS = '.ol-viewport > canvas';
+
+
+/**
+ * Class name for the WebGL canvas.
+ * @type {string}
+ * @const
+ */
+os.map.WEBGL_CANVAS_CLASS = 'webgl-canvas';
+
+
+/**
+ * Selector for the WebGL canvas.
+ * @type {string}
+ * @const
+ */
+os.map.WEBGL_CANVAS = 'canvas.' + os.map.WEBGL_CANVAS_CLASS;
+
+
+/**
  * Default center position for the map.
  * @type {!ol.Coordinate}
  * @const

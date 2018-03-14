@@ -38,14 +38,6 @@ os.olcs.OUTLINE_REGEXP = /outline/i;
 
 
 /**
- * Selector to retrieve the Cesium canvas element.
- * @type {string}
- * @const
- */
-os.olcs.CESIUM_CANVAS_SELECTOR = '#map-container .ol-viewport > div > canvas';
-
-
-/**
  * Creates Cesium.ImageryLayer best corresponding to the given ol.layer.Layer. Only supports raster layers.
  * This replaces {@link olcs.core.tileLayerToImageryLayer} to use our custom provider supporting tile load counts.
  * @param {!ol.layer.Layer} olLayer

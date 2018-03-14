@@ -272,7 +272,7 @@ plugin.cesium.Camera.prototype.flyTo = function(options) {
  */
 plugin.cesium.Camera.prototype.getDistanceToCenter = function() {
   var center;
-  var canvas = /** @type {HTMLCanvasElement} */ (document.querySelector(os.olcs.CESIUM_CANVAS_SELECTOR));
+  var canvas = /** @type {HTMLCanvasElement} */ (document.querySelector(os.map.WEBGL_CANVAS));
   if (canvas) {
     center = this.cam_.pickEllipsoid(new Cesium.Cartesian2(canvas.width / 2, canvas.height / 2));
   }
@@ -296,7 +296,7 @@ plugin.cesium.Camera.prototype.getDistanceToPosition = function(position) {
   var pixel = Cesium.SceneTransforms.wgs84ToWindowCoordinates(this.scene_, position);
   if (pixel && pixel.x > 0 && pixel.y > 0) {
     // make sure the pixel is within the bounds of the canvas
-    var canvas = /** @type {HTMLCanvasElement} */ (document.querySelector(os.olcs.CESIUM_CANVAS_SELECTOR));
+    var canvas = /** @type {HTMLCanvasElement} */ (document.querySelector(os.map.WEBGL_CANVAS));
     if (pixel.x <= canvas.width && pixel.y <= canvas.height) {
       // get the distance to the position
       distance = Cesium.Cartesian3.distance(position, this.cam_.positionWC);
