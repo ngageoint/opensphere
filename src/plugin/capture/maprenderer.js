@@ -1,7 +1,7 @@
 goog.provide('plugin.capture.MapRenderer');
 
 goog.require('goog.Promise');
-goog.require('os.olcs');
+goog.require('os.map');
 goog.require('os.ui.capture.CanvasRenderer');
 goog.require('plugin.cesium');
 
@@ -72,9 +72,9 @@ plugin.capture.MapRenderer.prototype.getFill = function() {
 plugin.capture.getMapCanvas = function() {
   var mapCanvas;
   if (os.MapContainer.getInstance().is3DEnabled()) {
-    mapCanvas = /** @type {HTMLCanvasElement} */ (document.querySelector(os.olcs.CESIUM_CANVAS_SELECTOR));
+    mapCanvas = /** @type {HTMLCanvasElement} */ (document.querySelector(os.map.WEBGL_CANVAS));
   } else {
-    mapCanvas = /** @type {HTMLCanvasElement} */ (document.querySelector('.ol-viewport > canvas'));
+    mapCanvas = /** @type {HTMLCanvasElement} */ (document.querySelector(os.map.OPENLAYERS_CANVAS));
   }
 
   return mapCanvas || null;

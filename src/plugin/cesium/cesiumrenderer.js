@@ -108,6 +108,8 @@ plugin.cesium.CesiumRenderer.prototype.initialize = function() {
             time: plugin.cesium.getJulianDate
           });
 
+          goog.dom.classlist.add(this.olCesium_.canvas_, os.map.WEBGL_CANVAS_CLASS);
+
           this.olCesium_.setTargetFrameRate(this.targetFrameRate);
 
           var scene = this.olCesium_.getCesiumScene();
