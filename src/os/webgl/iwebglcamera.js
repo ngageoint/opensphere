@@ -112,6 +112,48 @@ os.webgl.IWebGLCamera.prototype.zoomByDelta;
 
 
 /**
+ * Rotates the camera around the center of the camera's reference frame by angle to the left.
+ * @param {number=} opt_value The angle, in radians, to rotate by.
+ */
+os.webgl.IWebGLCamera.prototype.rotateLeft;
+
+
+/**
+ * Rotates the camera around the center of the camera's reference frame by angle to the right.
+ * @param {number=} opt_value The angle, in radians, to rotate by.
+ */
+os.webgl.IWebGLCamera.prototype.rotateRight;
+
+
+/**
+ * Rotates the camera around the center of the camera's reference frame by angle upwards.
+ * @param {number=} opt_value The angle, in radians, to rotate by.
+ */
+os.webgl.IWebGLCamera.prototype.rotateUp;
+
+
+/**
+ * Rotates the camera around the center of the camera's reference frame by angle downwards.
+ * @param {number=} opt_value The angle, in radians, to rotate by.
+ */
+os.webgl.IWebGLCamera.prototype.rotateDown;
+
+
+/**
+ * Rotate the camera counter-clockwise around its direction vector by amount, in radians.
+ * @param {number=} opt_value The angle, in radians.
+ */
+os.webgl.IWebGLCamera.prototype.twistLeft;
+
+
+/**
+ * Rotate the camera clockwise around its direction vector by amount, in radians.
+ * @param {number=} opt_value The angle, in radians.
+ */
+os.webgl.IWebGLCamera.prototype.twistRight;
+
+
+/**
  * Persist the camera state.
  * @override
  */

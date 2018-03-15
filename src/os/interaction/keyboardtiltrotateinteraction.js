@@ -13,11 +13,11 @@ goog.require('os.ui.ol.interaction');
 
 
 /**
- * Overridden to use smaller zoom increments
- * @constructor
- * @implements {os.I3DSupport}
- * @extends {ol.interaction.Interaction}
+ * Interaction to tilt/rotate/spin the 3D globe with the keyboard.
  * @param {olx.interaction.MouseWheelZoomOptions=} opt_options Options.
+ * @extends {ol.interaction.Interaction}
+ * @implements {os.I3DSupport}
+ * @constructor
  */
 os.interaction.KeyboardTiltRotate = function(opt_options) {
   var options = opt_options || {};
@@ -34,10 +34,11 @@ os.interaction.KeyboardTiltRotate = function(opt_options) {
   this.lastKeyCode_ = 0;
 
   /**
-   * @private
+   * Condition to trigger handling the event.
    * @type {ol.EventsConditionType}
+   * @private
    */
-  this.condition_ = goog.isDef(options.condition) ? options.condition :
+  this.condition_ = options.condition != null ? options.condition :
       goog.functions.and(ol.events.condition.noModifierKeys,
           ol.events.condition.targetNotEditable);
 };
@@ -45,14 +46,23 @@ goog.inherits(os.interaction.KeyboardTiltRotate, ol.interaction.Interaction);
 
 
 /**
+ * Multiplier to use when spinning the globe. This is based off of using the view resolution, which is measured in
+ * units per pixel.
+ * @type {number}
+ * @const
+ */
+os.interaction.KeyboardTiltRotate.SPIN_DELTA = 100;
+
+
+/**
+ * Handle the map browser event.
  * @param {ol.MapBrowserEvent} mapBrowserEvent Map browser event.
  * @return {boolean} `false` to stop event propagation.
  * @this os.interaction.KeyboardTiltRotate
- * @suppress {duplicate}
  */
 os.interaction.KeyboardTiltRotate.handleEvent = function(mapBrowserEvent) {
   if (!os.MapContainer.getInstance().is3DEnabled) {
-    // Only handle things in 3d
+    // Only handle things in 3D
     return false;
   }
 
@@ -91,20 +101,19 @@ os.interaction.KeyboardTiltRotate.handleEvent = function(mapBrowserEvent) {
 
 
 /**
- * Spin the globe
+ * Tilt the globe.
  * @param {ol.MapBrowserEvent} mapBrowserEvent Map browser event
  * @return {boolean}
  */
 os.interaction.KeyboardTiltRotate.prototype.tilt = function(mapBrowserEvent) {
   var stopEvent = false;
   var map = os.MapContainer.getInstance();
-  if (map.is3DEnabled()) {
+  var camera = map.getWebGLCamera();
+  if (map.is3DEnabled() && camera) {
     var keyCode = mapBrowserEvent.originalEvent.keyCode;
-
-    var cesium = map.getOLCesium();
-    var camera = cesium.getCamera();
     var mapUnitsDelta = .05;
     var delta = 0;
+
     if (keyCode == goog.events.KeyCodes.DOWN) {
       delta = mapUnitsDelta;
     } else {
@@ -119,24 +128,24 @@ os.interaction.KeyboardTiltRotate.prototype.tilt = function(mapBrowserEvent) {
 
 
 /**
- * Spin the globe
+ * Rotate the globe.
  * @param {ol.MapBrowserEvent} mapBrowserEvent Map browser event.
  * @return {boolean}
  */
 os.interaction.KeyboardTiltRotate.prototype.rotate = function(mapBrowserEvent) {
-  // Only rotate if in 3D
   var stopEvent = false;
-  var map = os.MapContainer.getInstance();
-  if (map.is3DEnabled()) {
-    var keyCode = mapBrowserEvent.originalEvent.keyCode;
 
-    var cesium = map.getOLCesium();
-    var camera = cesium.getCesiumScene().camera;
+  // Only rotate if in 3D
+  var map = os.MapContainer.getInstance();
+  var camera = map.getWebGLCamera();
+  if (map.is3DEnabled() && camera) {
+    var keyCode = mapBrowserEvent.originalEvent.keyCode;
     if (keyCode == goog.events.KeyCodes.LEFT) {
       camera.twistLeft();
     } else {
       camera.twistRight();
     }
+
     stopEvent = true;
   }
   return stopEvent;
@@ -144,31 +153,42 @@ os.interaction.KeyboardTiltRotate.prototype.rotate = function(mapBrowserEvent) {
 
 
 /**
- * Spin the globe
+ * Spin the globe.
  * @param {ol.MapBrowserEvent} mapBrowserEvent Map browser event.
  * @return {boolean}
  */
 os.interaction.KeyboardTiltRotate.prototype.spin = function(mapBrowserEvent) {
   var stopEvent = false;
   var map = os.MapContainer.getInstance();
-  if (map.is3DEnabled()) {
+  var camera = map.getWebGLCamera();
+  if (map.is3DEnabled() && camera) {
     var keyCode = mapBrowserEvent.originalEvent.keyCode;
 
-    var cesium = map.getOLCesium();
-    var camera = cesium.getCesiumScene().camera;
     var view = map.getMap().getView();
     goog.asserts.assert(!goog.isNull(view), 'view should not be null');
     var viewState = view.getState();
-    var mapUnitsDelta = viewState.resolution * 2;
-    if (keyCode == goog.events.KeyCodes.DOWN) {
-      camera.rotateUp(mapUnitsDelta);
-    } else if (keyCode == goog.events.KeyCodes.LEFT) {
-      camera.rotateLeft(mapUnitsDelta);
-    } else if (keyCode == goog.events.KeyCodes.RIGHT) {
-      camera.rotateRight(mapUnitsDelta);
-    } else {
-      camera.rotateDown(mapUnitsDelta);
+
+    // transform the resolution to degrees, then to radians for the camera
+    var ll = ol.proj.transform([viewState.resolution, 0], os.map.PROJECTION, os.proj.EPSG4326);
+    var mapUnitsDelta = goog.math.toRadians(ll[0] * os.interaction.KeyboardTiltRotate.SPIN_DELTA);
+
+    switch (keyCode) {
+      case goog.events.KeyCodes.UP:
+        camera.rotateDown(mapUnitsDelta);
+        break;
+      case goog.events.KeyCodes.DOWN:
+        camera.rotateUp(mapUnitsDelta);
+        break;
+      case goog.events.KeyCodes.LEFT:
+        camera.rotateLeft(mapUnitsDelta);
+        break;
+      case goog.events.KeyCodes.RIGHT:
+        camera.rotateRight(mapUnitsDelta);
+        break;
+      default:
+        break;
     }
+
     stopEvent = true;
   }
   return stopEvent;
