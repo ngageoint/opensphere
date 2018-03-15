@@ -105,11 +105,11 @@ os.MapContainer = function() {
   this.map_ = null;
 
   /**
-   * If the map container is asynchronously initializing a view. Disables toggling the view.
+   * If the WebGL renderer is initializing. Disables toggling the view.
    * @type {boolean}
    * @private
    */
-  this.initializingView_ = false;
+  this.initializingWebGL_ = false;
 
   /**
    * The Openlayers/Cesium synchronizer.
@@ -1187,6 +1187,20 @@ os.MapContainer.prototype.init = function() {
 
 
 /**
+ * Toggle if the Openlayers canvas is displayed.
+ * @param {boolean} shown If the canvas should be displayed.
+ * @protected
+ */
+os.MapContainer.prototype.toggle2DCanvas = function(shown) {
+  var viewport = this.map_ ? this.map_.getViewport() : undefined;
+  var olCanvas = viewport ? viewport.querySelector('canvas') : undefined;
+  if (olCanvas) {
+    olCanvas.style.visibility = shown ? '' : 'hidden';
+  }
+};
+
+
+/**
  * Initializes settings and adds listeners for settings changes.
  * @protected
  */
@@ -1196,8 +1210,17 @@ os.MapContainer.prototype.initSettings = function() {
 
     var mapMode = os.settings.get(os.config.DisplaySetting.MAP_MODE, os.MapMode.VIEW_3D);
     if (mapMode === os.MapMode.VIEW_3D || mapMode === os.MapMode.AUTO) {
+      // hide the Openlayers canvas while 3D mode is initialized
+      this.toggle2DCanvas(false);
+
       // don't display errors on initialization, and wait until the globe is ready to initialize the camera
-      this.setCesiumEnabled(true, true).then(this.initCameraSettings, this.initCameraSettings, this);
+      this.setCesiumEnabled(true, true).thenAlways(function() {
+        // show the Openlayers canvas again
+        this.toggle2DCanvas(true);
+
+        // initialize the camera/view
+        this.initCameraSettings();
+      }, this);
     } else {
       this.initCameraSettings();
     }
@@ -1250,7 +1273,7 @@ os.MapContainer.prototype.onMapModeChange_ = function(event) {
  * @private
  */
 os.MapContainer.prototype.onToggleView_ = function() {
-  if (this.initializingView_) {
+  if (this.isInitializingWebGL()) {
     return;
   }
 
@@ -1464,6 +1487,28 @@ os.MapContainer.prototype.getAltitude = function() {
 
 
 /**
+ * If the map container is initializing the WebGL renderer.
+ * @return {boolean}
+ */
+os.MapContainer.prototype.isInitializingWebGL = function() {
+  return this.initializingWebGL_;
+};
+
+
+/**
+ * Set if the map container is initializing the WebGL renderer.
+ * @param {boolean} value If WebGL is being initialized.
+ * @protected
+ */
+os.MapContainer.prototype.setInitializingWebGL = function(value) {
+  if (this.initializingWebGL_ != value) {
+    this.initializingWebGL_ = value;
+    this.dispatchEvent(new os.events.PropertyChangeEvent(os.MapChange.INIT3D, value));
+  }
+};
+
+
+/**
  * Enable/disable Cesium.
  * @param {boolean} useCesium If Cesium should be enabled
  * @param {boolean=} opt_silent If errors should be ignored
@@ -1475,23 +1520,17 @@ os.MapContainer.prototype.setCesiumEnabled = function(useCesium, opt_silent) {
 
   // change the view if different than current
   if (useCesium != this.is3DEnabled()) {
-    var viewport = this.map_.getViewport();
-    var olCanvas = viewport ? viewport.querySelector('canvas') : undefined;
-    if (olCanvas) {
-      olCanvas.style.visibility = useCesium ? 'hidden' : '';
-    }
-
     if (useCesium && this.is3DSupported() && !this.failPerformanceCaveat() && !this.olCesium_) {
       // initialize cesium
-      this.initializingView_ = true;
+      this.setInitializingWebGL(true);
 
       return this.initCesium_().then(function() {
         // initialize succeeded - call again to activate Cesium
-        this.initializingView_ = false;
+        this.setInitializingWebGL(false);
         this.setCesiumEnabled(useCesium, opt_silent);
-      }, function() {
+      }, function(reason) {
         // initialize failed - disable 3D support and call again to report the WebGL error
-        this.initializingView_ = false;
+        this.setInitializingWebGL(false);
         this.is3DSupported_ = false;
         this.setCesiumEnabled(useCesium, opt_silent);
       }, this);
@@ -1608,10 +1647,13 @@ os.MapContainer.prototype.initCesium_ = function() {
           this.olCesium_.enableAutoRenderLoop();
           resolve();
         } catch (e) {
-          goog.log.error(os.MapContainer.LOGGER_, 'Failed to create 3D view!', e);
+          goog.log.error(os.MapContainer.LOGGER_, 'Failed to initialize Cesium renderer:', e);
           reject();
         }
-      }, reject, this);
+      }, function(error) {
+        goog.log.error(os.MapContainer.LOGGER_, 'Failed to load Cesium library:', error);
+        reject();
+      }, this);
     }, this);
   }
 
