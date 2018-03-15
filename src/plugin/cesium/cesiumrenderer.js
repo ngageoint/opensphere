@@ -10,6 +10,7 @@ goog.require('plugin.cesium');
 goog.require('plugin.cesium.Camera');
 goog.require('plugin.cesium.WMSImageryProvider');
 goog.require('plugin.cesium.WMSTerrainProvider');
+goog.require('plugin.cesium.interaction');
 goog.require('plugin.cesium.mixin');
 goog.require('plugin.cesium.sync.RootSynchronizer');
 
@@ -135,11 +136,10 @@ plugin.cesium.CesiumRenderer.prototype.initialize = function() {
               plugin.cesium.DEFAULT_FOG_DENSITY));
 
           // create our camera handler
-          this.olCesium_.camera_ = new plugin.cesium.Camera(scene, this.map);
+          var camera = this.olCesium_.camera_ = new plugin.cesium.Camera(scene, this.map);
 
           // configure camera interactions. do not move this before the camera is created!
-          var sscc = scene.screenSpaceCameraController;
-          os.interaction.configureCesium(sscc);
+          plugin.cesium.interaction.configureCesium(camera, scene.screenSpaceCameraController);
 
           // only render the scene when something changes
           this.olCesium_.enableAutoRenderLoop();
