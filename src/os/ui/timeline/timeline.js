@@ -475,23 +475,18 @@ os.ui.timeline.TimelineCtrl.LOGGER_ = goog.log.getLogger('os.ui.timeline.Timelin
 
 /**
  * @type {number}
- * @const
- * @private
  */
-os.ui.timeline.TimelineCtrl.AXIS_HEIGHT_ = 30;
+os.ui.timeline.TimelineCtrl.AXIS_HEIGHT = 30;
 
 
 /**
  * @type {number}
- * @const
- * @private
  */
-os.ui.timeline.TimelineCtrl.AXIS_WIDTH_ = 30;
+os.ui.timeline.TimelineCtrl.AXIS_WIDTH = 30;
 
 
 /**
  * @type {number}
- * @const
  */
 os.ui.timeline.TimelineCtrl.HANDLE_HEIGHT = 10;
 
@@ -842,8 +837,8 @@ os.ui.timeline.TimelineCtrl.prototype.initSvg = function() {
 
   var width = this.element_.innerWidth();
   var height = this.getHeight_();
-  var axisHeight = os.ui.timeline.TimelineCtrl.AXIS_HEIGHT_;
-  var axisWidth = os.ui.timeline.TimelineCtrl.AXIS_WIDTH_;
+  var axisHeight = os.ui.timeline.TimelineCtrl.AXIS_HEIGHT;
+  var axisWidth = os.ui.timeline.TimelineCtrl.AXIS_WIDTH;
   var handleHeight = os.ui.timeline.TimelineCtrl.HANDLE_HEIGHT;
 
   // initialize scale and axis properties
@@ -1065,8 +1060,8 @@ os.ui.timeline.TimelineCtrl.prototype.onDragPanTick_ = function() {
  * @private
  */
 os.ui.timeline.TimelineCtrl.prototype.getAxisBgPoints_ = function(height, width) {
-  var axisHeight = height - os.ui.timeline.TimelineCtrl.AXIS_HEIGHT_;
-  var axisWidth = os.ui.timeline.TimelineCtrl.AXIS_WIDTH_;
+  var axisHeight = height - os.ui.timeline.TimelineCtrl.AXIS_HEIGHT;
+  var axisWidth = os.ui.timeline.TimelineCtrl.AXIS_WIDTH;
 
   var points = '0,1 ' + // start
       axisWidth + ',1 ' + // right to y-axis edge
@@ -1307,7 +1302,7 @@ os.ui.timeline.TimelineCtrl.prototype.calculateIntervals_ = function() {
  * @private
  */
 os.ui.timeline.TimelineCtrl.prototype.updateItems_ = function() {
-  var height = this.getHeight_() - os.ui.timeline.TimelineCtrl.AXIS_HEIGHT_ - os.ui.timeline.TimelineCtrl.HANDLE_HEIGHT;
+  var height = this.getHeight_() - os.ui.timeline.TimelineCtrl.AXIS_HEIGHT - os.ui.timeline.TimelineCtrl.HANDLE_HEIGHT;
 
   for (var i = 0, n = this.items_.length; i < n; i++) {
     this.items_[i].render(height);
@@ -1577,7 +1572,7 @@ os.ui.timeline.TimelineCtrl.prototype.holdBrushCollectionChanged_ = function() {
 os.ui.timeline.TimelineCtrl.prototype.brushCollectionChanged_ = function(brushes) {
   if (brushes) {
     var height = this.getHeight_();
-    var axisHeight = os.ui.timeline.TimelineCtrl.AXIS_HEIGHT_;
+    var axisHeight = os.ui.timeline.TimelineCtrl.AXIS_HEIGHT;
     var handleHeight = os.ui.timeline.TimelineCtrl.HANDLE_HEIGHT;
     var element = /** @type {d3.Selection} */ (this.skipHoldElement_);
     for (var i = 0; i < brushes.length; i = i + 1) {

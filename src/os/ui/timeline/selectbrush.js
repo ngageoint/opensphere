@@ -186,6 +186,9 @@ os.ui.timeline.SelectBrush.prototype.updateBrush = function(opt_silent) {
       this.inEvent_ = false;
 
       d3.select('.brush-' + this.getId()).select('.background').style('display', 'none');
+    } else {
+      // dispatch the event to keep things moving
+      this.dispatchEvent(goog.events.EventType.CHANGE);
     }
   }
 };
