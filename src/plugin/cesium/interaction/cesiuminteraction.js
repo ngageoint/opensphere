@@ -1,6 +1,10 @@
 goog.provide('plugin.cesium.interaction');
 
 goog.require('os.map');
+goog.require('plugin.cesium.interaction.dragbox');
+goog.require('plugin.cesium.interaction.dragcircle');
+goog.require('plugin.cesium.interaction.drawpolygon');
+goog.require('plugin.cesium.interaction.measure');
 
 
 /**
@@ -46,4 +50,21 @@ plugin.cesium.interaction.configureCesium = function(camera, sscc) {
   sscc.inertiaSpin = 0;
   sscc.inertiaTranslate = 0;
   sscc.inertiaZoom = 0;
+};
+
+
+/**
+ * Initialize an interaction with Cesium, if it has additional support.
+ * @param {ol.interaction.Interaction} interaction The interaction.
+ */
+plugin.cesium.interaction.initInteraction = function(interaction) {
+  if (interaction instanceof os.interaction.Measure) {
+    plugin.cesium.interaction.measure.initialize(interaction);
+  } else if (interaction instanceof os.interaction.DrawPolygon) {
+    plugin.cesium.interaction.drawpolygon.initialize(interaction);
+  } else if (interaction instanceof os.interaction.DragBox) {
+    plugin.cesium.interaction.dragbox.initialize(interaction);
+  } else if (interaction instanceof os.interaction.DragCircle) {
+    plugin.cesium.interaction.dragcircle.initialize(interaction);
+  }
 };

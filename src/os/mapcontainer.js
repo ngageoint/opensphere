@@ -1979,22 +1979,3 @@ os.MapContainer.launch2DPerformanceDialog = function() {
     os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
   });
 };
-
-// --------------------------------------------------------------------------------------------------------------------
-// TODO: Everything below this line needs to be refactored to abstract Cesium out of the WebGL renderer usage
-// --------------------------------------------------------------------------------------------------------------------
-
-/**
- * @return {olcs.OLCesium|undefined}
- */
-os.MapContainer.prototype.getOLCesium = function() {
-  return this.webGLRenderer_ ? this.webGLRenderer_.getOLCesium() : undefined;
-};
-
-/**
- * Get the Cesium scene object.
- * @return {Cesium.Scene|undefined}
- */
-os.MapContainer.prototype.getCesiumScene = function() {
-  return this.webGLRenderer_ ? this.webGLRenderer_.getCesiumScene() : undefined;
-};

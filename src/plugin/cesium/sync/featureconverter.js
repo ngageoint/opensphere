@@ -20,7 +20,6 @@ goog.require('os.geom.GeometryField');
 goog.require('os.implements');
 goog.require('os.layer.ILayer');
 goog.require('os.map');
-goog.require('os.olcs');
 goog.require('plugin.cesium');
 goog.require('plugin.cesium.VectorContext');
 
@@ -154,7 +153,8 @@ plugin.cesium.sync.FeatureConverter.prototype.createColoredPrimitive = function(
     options.renderState.lineWidth = opt_lineWidth;
   }
 
-  var id = opt_lineWidth != null ? os.olcs.GeometryInstanceId.GEOM_OUTLINE : os.olcs.GeometryInstanceId.GEOM;
+  var id = opt_lineWidth != null ? plugin.cesium.GeometryInstanceId.GEOM_OUTLINE :
+      plugin.cesium.GeometryInstanceId.GEOM;
   var instances = opt_instanceFn ? opt_instanceFn(id, geometry, color) :
       this.createGeometryInstance(id, geometry, color);
   var appearance = new Cesium.PerInstanceColorAppearance(options);
@@ -532,7 +532,7 @@ plugin.cesium.sync.FeatureConverter.prototype.createLinePrimitive = function(pos
     width: width
   });
 
-  var instance = this.createGeometryInstance(os.olcs.GeometryInstanceId.GEOM_OUTLINE, outlineGeometry, color);
+  var instance = this.createGeometryInstance(plugin.cesium.GeometryInstanceId.GEOM_OUTLINE, outlineGeometry, color);
   var primitive = new Cesium.Primitive({
     geometryInstances: instance,
     appearance: appearance
@@ -789,10 +789,10 @@ plugin.cesium.sync.FeatureConverter.prototype.olEllipseGeometryToEllipsoid = fun
   });
 
   var createEllipsoidInstance = function(id, geometry, color) {
-    if (id === os.olcs.GeometryInstanceId.GEOM) {
-      id = os.olcs.GeometryInstanceId.ELLIPSOID;
+    if (id === plugin.cesium.GeometryInstanceId.GEOM) {
+      id = plugin.cesium.GeometryInstanceId.ELLIPSOID;
     } else {
-      id = os.olcs.GeometryInstanceId.ELLIPSOID_OUTLINE;
+      id = plugin.cesium.GeometryInstanceId.ELLIPSOID_OUTLINE;
     }
 
     return new Cesium.GeometryInstance({
@@ -851,7 +851,7 @@ plugin.cesium.sync.FeatureConverter.prototype.createPolygonHierarchy = function(
     }
 
     if (rings.length === 1 && os.geo.isRectangular(olPos, extent)) {
-      csPos = os.olcs.generateRectanglePositions(extent, 0, extrude);
+      csPos = plugin.cesium.generateRectanglePositions(extent, 0, extrude);
     } else {
       csPos = olcs.core.ol4326CoordinateArrayToCsCartesians(olPos);
     }
@@ -997,7 +997,7 @@ plugin.cesium.sync.FeatureConverter.prototype.olPolygonGeometryToCesiumPolyline 
         width: width
       });
 
-      var instance = this.createGeometryInstance(os.olcs.GeometryInstanceId.GEOM_OUTLINE, polylineGeometry,
+      var instance = this.createGeometryInstance(plugin.cesium.GeometryInstanceId.GEOM_OUTLINE, polylineGeometry,
           outlineColor);
       var outlinePrimitive = new Cesium.Primitive({
         geometryInstances: instance,
@@ -1311,10 +1311,10 @@ plugin.cesium.sync.FeatureConverter.prototype.updatePrimitive = function(feature
     // ready for update
     primitive.updateRetries = 0;
 
-    for (var key in os.olcs.GeometryInstanceId) {
+    for (var key in plugin.cesium.GeometryInstanceId) {
       // the try-catch is for the lovely DevErrors in Unminified Cesium
       try {
-        var field = os.olcs.GeometryInstanceId[key];
+        var field = plugin.cesium.GeometryInstanceId[key];
         var attributes = primitive.getGeometryInstanceAttributes(field);
         if (attributes) {
           var color;
