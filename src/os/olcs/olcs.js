@@ -81,6 +81,14 @@ os.olcs.DEFAULT_FOG_DENSITY = os.olcs.MAX_FOG_DENSITY / 2;
 
 
 /**
+ * Default timeout for loading Cesium. Override by setting `cesium.loadTimeout` in the app configuration.
+ * @type {number}
+ * @const
+ */
+os.olcs.DEFAULT_LOAD_TIMEOUT = 30000;
+
+
+/**
  * @define {string} Base path to the Cesium library, from the OpenSphere root.
  */
 goog.define('os.olcs.CESIUM_BASE_PATH', 'vendor/cesium');
@@ -99,7 +107,12 @@ os.olcs.loadCesium = function() {
     // load Cesium
     var cesiumUrl = cesiumPath + '/Cesium.js';
     var trustedUrl = goog.html.TrustedResourceUrl.fromConstant(os.string.createConstant(cesiumUrl));
-    return goog.net.jsloader.safeLoad(trustedUrl);
+
+    // extend default timeout (5 seconds) for slow connections and debugging with unminified version
+    var timeout = /** @type {number} */ (os.settings.get('cesium.loadTimeout', os.olcs.DEFAULT_LOAD_TIMEOUT));
+    return goog.net.jsloader.safeLoad(trustedUrl, {
+      timeout: timeout
+    });
   }
 
   return goog.Promise.resolve();
