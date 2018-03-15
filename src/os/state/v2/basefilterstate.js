@@ -29,11 +29,6 @@ os.state.v2.BaseFilter = function() {
   this.priority = 90;
   this.rootName = os.state.v2.FilterTag.FILTERS;
   this.title = 'Filters';
-
-  /**
-   * @type {!Array.<!Element>}
-   */
-  this.filters = [];
 };
 goog.inherits(os.state.v2.BaseFilter, os.state.XMLState);
 
@@ -47,7 +42,7 @@ os.state.v2.BaseFilter.OGC_NS = 'http://www.opengis.net/ogc';
 
 
 /**
- * If a layer it tied to a filter, but the filter isnt tied to the layer, duplicate the filter for that layer
+ * If a layer is tied to a filter, but the filter isnt tied to the layer, duplicate the filter for that layer
  * This was to support state files when filters applied to any layer it could (THIN-7215)
  * @param {!Element} el
  */
