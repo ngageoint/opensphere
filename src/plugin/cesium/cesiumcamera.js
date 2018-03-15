@@ -92,6 +92,61 @@ plugin.cesium.Camera.prototype.setEnabled = function(value) {
 
 
 /**
+ * @inheritDoc
+ */
+plugin.cesium.Camera.prototype.getAltitude = function() {
+  return this.cam_.positionCartographic.height;
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.cesium.Camera.prototype.setAltitude = function(altitude) {
+  this.flyTo(/** @type {!osx.map.FlyToOptions} */ ({
+    altitude: altitude,
+    positionCamera: true
+  }));
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.cesium.Camera.prototype.getCenter = function() {
+  var view = this.map_.getView();
+
+  if (!view) {
+    return undefined;
+  }
+
+  return view.getCenter();
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.cesium.Camera.prototype.setCenter = function(center) {
+  this.flyTo(/** @type {!osx.map.FlyToOptions} */ ({
+    center: center,
+    positionCamera: true
+  }));
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.cesium.Camera.prototype.getExtent = function() {
+  var rect = this.cam_.computeViewRectangle();
+
+  // the values are returned in radians, so map them to degrees
+  return rect ? [rect.west, rect.south, rect.east, rect.north].map(Cesium.Math.toDegrees) : undefined;
+};
+
+
+/**
  * @return {number}
  * @override
  */
@@ -136,31 +191,6 @@ plugin.cesium.Camera.prototype.setTilt = function(tilt) {
 /**
  * @inheritDoc
  */
-plugin.cesium.Camera.prototype.getCenter = function() {
-  var view = this.map_.getView();
-
-  if (!view) {
-    return undefined;
-  }
-
-  return view.getCenter();
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.Camera.prototype.setCenter = function(center) {
-  this.flyTo(/** @type {!osx.map.FlyToOptions} */ ({
-    center: center,
-    positionCamera: true
-  }));
-};
-
-
-/**
- * @inheritDoc
- */
 plugin.cesium.Camera.prototype.setPosition = function(position) {
   this.flyTo(/** @type {!osx.map.FlyToOptions} */ ({
     center: position,
@@ -172,30 +202,60 @@ plugin.cesium.Camera.prototype.setPosition = function(position) {
 /**
  * @inheritDoc
  */
-plugin.cesium.Camera.prototype.getAltitude = function() {
-  return this.cam_.positionCartographic.height;
+plugin.cesium.Camera.prototype.rotateLeft = function(opt_value) {
+  if (this.cam_) {
+    this.cam_.rotateLeft(opt_value);
+  }
 };
 
 
 /**
  * @inheritDoc
  */
-plugin.cesium.Camera.prototype.setAltitude = function(altitude) {
-  this.flyTo(/** @type {!osx.map.FlyToOptions} */ ({
-    altitude: altitude,
-    positionCamera: true
-  }));
+plugin.cesium.Camera.prototype.rotateRight = function(opt_value) {
+  if (this.cam_) {
+    this.cam_.rotateRight(opt_value);
+  }
 };
 
 
 /**
  * @inheritDoc
  */
-plugin.cesium.Camera.prototype.getExtent = function() {
-  var rect = this.cam_.computeViewRectangle();
+plugin.cesium.Camera.prototype.rotateUp = function(opt_value) {
+  if (this.cam_) {
+    this.cam_.rotateUp(opt_value);
+  }
+};
 
-  // the values are returned in radians, so map them to degrees
-  return rect ? [rect.west, rect.south, rect.east, rect.north].map(Cesium.Math.toDegrees) : undefined;
+
+/**
+ * @inheritDoc
+ */
+plugin.cesium.Camera.prototype.rotateDown = function(opt_value) {
+  if (this.cam_) {
+    this.cam_.rotateDown(opt_value);
+  }
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.cesium.Camera.prototype.twistLeft = function(opt_value) {
+  if (this.cam_) {
+    this.cam_.twistLeft(opt_value);
+  }
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.cesium.Camera.prototype.twistRight = function(opt_value) {
+  if (this.cam_) {
+    this.cam_.twistRight(opt_value);
+  }
 };
 
 
