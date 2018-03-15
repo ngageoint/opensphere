@@ -8,7 +8,6 @@ goog.require('goog.log');
 goog.require('goog.log.Logger');
 goog.require('goog.math.Range');
 goog.require('goog.math.RangeSet');
-goog.require('os.layer.AnimatedTile');
 goog.require('os.map');
 goog.require('os.state.XMLState');
 goog.require('os.time');
