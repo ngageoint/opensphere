@@ -79,6 +79,15 @@ plugin.cesium.CesiumRenderer.LOGGER_ = goog.log.getLogger('plugin.cesium.CesiumR
 
 
 /**
+ * Get the Cesium scene object.
+ * @return {Cesium.Scene|undefined}
+ */
+plugin.cesium.CesiumRenderer.prototype.getCesiumScene = function() {
+  return this.olCesium_ ? this.olCesium_.getCesiumScene() : undefined;
+};
+
+
+/**
  * @inheritDoc
  */
 plugin.cesium.CesiumRenderer.prototype.isInitialized = function() {
@@ -97,6 +106,12 @@ plugin.cesium.CesiumRenderer.prototype.initialize = function() {
         try {
           plugin.cesium.mixin.loadCesiumMixins();
           plugin.cesium.WMSImageryProvider.init();
+
+          // initialize interactions that have additional support for Cesium
+          var interactions = this.map.getInteractions();
+          if (interactions) {
+            interactions.forEach(plugin.cesium.interaction.initInteraction);
+          }
 
           this.registerTerrainProviderType('cesium', Cesium.CesiumTerrainProvider);
           this.registerTerrainProviderType('wms', plugin.cesium.WMSTerrainProvider);
@@ -518,27 +533,4 @@ plugin.cesium.CesiumRenderer.prototype.onCesiumCameraMoveChange_ = function(isMo
       }
     }
   }
-};
-
-
-// --------------------------------------------------------------------------------------------------------------------
-// TODO: Everything below this line needs to be refactored to abstract Cesium out of the WebGL renderer usage
-// --------------------------------------------------------------------------------------------------------------------
-
-
-/**
- * Get the OLCS instance.
- * @return {olcs.OLCesium|undefined}
- */
-plugin.cesium.CesiumRenderer.prototype.getOLCesium = function() {
-  return this.olCesium_;
-};
-
-
-/**
- * Get the Cesium scene object.
- * @return {Cesium.Scene|undefined}
- */
-plugin.cesium.CesiumRenderer.prototype.getCesiumScene = function() {
-  return this.olCesium_ ? this.olCesium_.getCesiumScene() : undefined;
 };
