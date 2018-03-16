@@ -226,7 +226,7 @@ os.ogc.wfs.FeatureType.prototype.init = function(typeName, columns, isDynamic) {
   this.isDynamic_ = isDynamic;
   var startDateColumn = null;
   var endDateColumn = null;
-  var singleDate = '_';
+  var singleDate = null;
 
   var i = columns.length;
   while (i--) {
@@ -246,17 +246,17 @@ os.ogc.wfs.FeatureType.prototype.init = function(typeName, columns, isDynamic) {
       this.columns_.splice(i, 1);
     }
 
-    if (startDateColumn && endDateColumn) {
-      this.startDateColumnName_ = startDateColumn;
-      this.endDateColumnName_ = endDateColumn;
-    }
-
-    if (os.ogc.wfs.FeatureType.isDateTime(lcType)) {
-      singleDate = singleDate == '_' ? name : null;
+    if (os.ogc.wfs.FeatureType.isDateTime(lcType) && !singleDate) {
+      singleDate = name;
     }
   }
 
-  if (!this.startDateColumnName_ && singleDate && singleDate != '_') {
+  if (startDateColumn && endDateColumn) {
+    this.startDateColumnName_ = startDateColumn;
+    this.endDateColumnName_ = endDateColumn;
+  }
+
+  if (!this.startDateColumnName_ && singleDate) {
     this.startDateColumnName_ = singleDate;
   }
 };
