@@ -227,6 +227,7 @@ os.interaction.Measure.getTextStyle_ = function(opt_text) {
 os.interaction.Measure.prototype.update2D = function() {
   this.createOverlay();
 
+  // add/update waypoints while drawing the line
   var waypoint = null;
   if (this.waypoints_.length === this.distances_.length) {
     // modify the last one
@@ -316,24 +317,23 @@ os.interaction.Measure.prototype.cleanup = function() {
 
 
 /**
- * @override
+ * @inheritDoc
  */
 os.interaction.Measure.prototype.end = function(mapBrowserEvent) {
   if (this.drawing) {
-    var um = os.unit.UnitManager.getInstance();
-    var text = um.formatToBestFit('distance', this.getTotalDistance_(), 'm', um.getBaseSystem(),
-        os.feature.measure.numDecimalPlaces);
+    // add a total distance waypoint if there are multiple points
+    if (this.waypoints_.length > 1) {
+      var um = os.unit.UnitManager.getInstance();
+      var text = um.formatToBestFit('distance', this.getTotalDistance_(), 'm', um.getBaseSystem(),
+          os.feature.measure.numDecimalPlaces);
 
-    if (this.waypoints_) {
-      var waypoint = new ol.style.Style({
+      this.waypoints_.push(new ol.style.Style({
         geometry: new ol.geom.Point(this.coords[this.coords.length - 1]),
         text: os.interaction.Measure.getTextStyle_(text)
-      });
+      }));
 
-      this.waypoints_.push(waypoint);
+      this.line2D.setStyle(this.getStyle());
     }
-
-    this.line2D.setStyle(this.getStyle());
 
     var type = os.interaction.Measure.method;
     type = type.substring(0, 1).toUpperCase() + type.substring(1);
@@ -346,6 +346,12 @@ os.interaction.Measure.prototype.end = function(mapBrowserEvent) {
     os.interaction.Measure.base(this, 'end', mapBrowserEvent);
   }
 };
+
+
+/**
+ * @inheritDoc
+ */
+os.interaction.Measure.prototype.saveLast = goog.nullFunction;
 
 
 /**
