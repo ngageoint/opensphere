@@ -24,6 +24,13 @@ os.webgl.AbstractWebGLRenderer = function() {
   this.initialized = false;
 
   /**
+   * If the renderer is enabled.
+   * @type {boolean}
+   * @protected
+   */
+  this.enabled = false;
+
+  /**
    * The Openlayers map.
    * @type {ol.PluggableMap|undefined}
    * @protected
@@ -36,6 +43,13 @@ os.webgl.AbstractWebGLRenderer = function() {
    * @protected
    */
   this.log = os.webgl.AbstractWebGLRenderer.LOGGER_;
+
+  /**
+   * The root WebGL Synchronizer.
+   * @type {os.webgl.AbstractRootSynchronizer|undefined}
+   * @protected
+   */
+  this.rootSynchronizer = undefined;
 
   /**
    * Target rendering frame rate.
@@ -141,7 +155,13 @@ os.webgl.AbstractWebGLRenderer.prototype.renderSync = goog.nullFunction;
 /**
  * @inheritDoc
  */
-os.webgl.AbstractWebGLRenderer.prototype.resetSync = goog.nullFunction;
+os.webgl.AbstractWebGLRenderer.prototype.resetSync = function() {
+  if (this.rootSynchronizer) {
+    // reset all synchronizers to a clean state. this needs to be called after WebGL is enabled/rendering to ensure
+    // synchronized objects are reset in the correct state.
+    this.rootSynchronizer.reset();
+  }
+};
 
 
 /**
@@ -171,13 +191,21 @@ os.webgl.AbstractWebGLRenderer.prototype.toggleMovement = goog.abstractMethod;
 /**
  * @inheritDoc
  */
-os.webgl.AbstractWebGLRenderer.prototype.getEnabled = goog.abstractMethod;
+os.webgl.AbstractWebGLRenderer.prototype.getEnabled = function() {
+  return this.enabled;
+};
 
 
 /**
  * @inheritDoc
  */
-os.webgl.AbstractWebGLRenderer.prototype.setEnabled = goog.abstractMethod;
+os.webgl.AbstractWebGLRenderer.prototype.setEnabled = function(value) {
+  if (this.rootSynchronizer) {
+    this.rootSynchronizer.setActive(value);
+  }
+
+  this.enabled = value;
+};
 
 
 /**

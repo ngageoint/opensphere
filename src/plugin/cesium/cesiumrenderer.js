@@ -32,13 +32,6 @@ plugin.cesium.CesiumRenderer = function() {
   this.olCesium_ = undefined;
 
   /**
-   * The root Cesium synchronizer.
-   * @type {plugin.cesium.sync.RootSynchronizer|undefined}
-   * @private
-   */
-  this.rootSynchronizer_ = undefined;
-
-  /**
    * Flag to double check Cesium Camera movement events
    * @type {boolean}
    * @private
@@ -177,17 +170,12 @@ plugin.cesium.CesiumRenderer.prototype.initialize = function() {
 /**
  * @inheritDoc
  */
-plugin.cesium.CesiumRenderer.prototype.getEnabled = function() {
-  return !!this.olCesium_ && this.olCesium_.getEnabled();
-};
-
-
-/**
- * @inheritDoc
- */
 plugin.cesium.CesiumRenderer.prototype.setEnabled = function(value) {
-  if (this.rootSynchronizer_) {
-    this.rootSynchronizer_.setActive(value);
+  plugin.cesium.CesiumRenderer.base(this, 'setEnabled', value);
+
+  if (!this.olCesium_) {
+    // OLCS was not set up correctly or has been disposed, don't do anything
+    return;
   }
 
   this.olCesium_.setEnabled(value);
@@ -313,18 +301,6 @@ plugin.cesium.CesiumRenderer.prototype.toggleMovement = function(value) {
     if (scene && scene.screenSpaceCameraController) {
       scene.screenSpaceCameraController.enableInputs = value;
     }
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.CesiumRenderer.prototype.resetSync = function() {
-  if (this.rootSynchronizer_) {
-    // reset all synchronizers to a clean state. this needs to be called after WebGL is enabled/rendering to ensure
-    // synchronized objects are reset in the correct state.
-    this.rootSynchronizer_.reset();
   }
 };
 
@@ -504,11 +480,11 @@ plugin.cesium.CesiumRenderer.prototype.onTerrainError_ = function(error) {
  * @private
  */
 plugin.cesium.CesiumRenderer.prototype.createCesiumSynchronizers_ = function(map, scene) {
-  if (!this.rootSynchronizer_) {
-    this.rootSynchronizer_ = new plugin.cesium.sync.RootSynchronizer(map, scene);
+  if (!this.rootSynchronizer) {
+    this.rootSynchronizer = new plugin.cesium.sync.RootSynchronizer(map, scene);
   }
 
-  return [this.rootSynchronizer_];
+  return [this.rootSynchronizer];
 };
 
 
@@ -528,8 +504,8 @@ plugin.cesium.CesiumRenderer.prototype.onCesiumCameraMoveChange_ = function(isMo
       this.cesiumMoving_ = false;
       view.setHint(ol.ViewHint.INTERACTING, -1);
 
-      if (this.rootSynchronizer_) {
-        this.rootSynchronizer_.updateFromCamera();
+      if (this.rootSynchronizer) {
+        this.rootSynchronizer.updateFromCamera();
       }
     }
   }
