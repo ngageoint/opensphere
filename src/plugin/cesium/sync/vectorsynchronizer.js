@@ -596,17 +596,20 @@ plugin.cesium.sync.VectorSynchronizer.prototype.updateHighlightedItems_ = functi
  * Update the eye offsets of all labels in the collection.
  */
 plugin.cesium.sync.VectorSynchronizer.prototype.updateLabelOffsets = function() {
-  // Find the z-index step from the camera altitude
-  var cameraDistance = os.MapContainer.getInstance().getWebGLCamera().getDistanceToCenter();
-  var zIndexStep = Math.round(cameraDistance / (this.zIndexMax_ * 10));
-  var newOffset = -(this.zIndex_ * zIndexStep);
-  this.converter.setLabelEyeOffsetDefault(new Cesium.Cartesian3(0.0, 0.0, newOffset));
+  var camera = os.MapContainer.getInstance().getWebGLCamera();
+  if (camera) {
+    // Find the z-index step from the camera altitude
+    var cameraDistance = camera.getDistanceToCenter();
+    var zIndexStep = Math.round(cameraDistance / (this.zIndexMax_ * 10));
+    var newOffset = -(this.zIndex_ * zIndexStep);
+    this.converter.setLabelEyeOffsetDefault(new Cesium.Cartesian3(0.0, 0.0, newOffset));
 
-  if (this.csContext && this.csContext.labels) {
-    for (var i = 0, ii = this.csContext.labels.length; i < ii; i++) {
-      var label = this.csContext.labels.get(i);
-      if (label) {
-        this.converter.setLabelEyeOffset(label, this.scene);
+    if (this.csContext && this.csContext.labels) {
+      for (var i = 0, ii = this.csContext.labels.length; i < ii; i++) {
+        var label = this.csContext.labels.get(i);
+        if (label) {
+          this.converter.setLabelEyeOffset(label, this.scene);
+        }
       }
     }
   }
@@ -652,7 +655,7 @@ plugin.cesium.sync.VectorSynchronizer.prototype.setFeatureHighlight_ = function(
   var camera = /** @type {plugin.cesium.Camera} */ (os.MapContainer.getInstance().getWebGLCamera());
 
   if (prim instanceof Cesium.Billboard) {
-    if (value) {
+    if (value && camera) {
       // boost the feature so it's rendered on top of others nearby. don't allow the offset to exceed the camera
       // distance or the feature will not appear on the screen.
       var cameraDistance = camera.getDistanceToPosition(prim.position);
@@ -697,17 +700,20 @@ plugin.cesium.sync.VectorSynchronizer.prototype.reposition = function(start, end
  * Update the billboard offsets
  */
 plugin.cesium.sync.VectorSynchronizer.prototype.updateBillboardOffsets = function() {
-  // Find the z-index step from the camera altitude
-  var cameraDistance = os.MapContainer.getInstance().getWebGLCamera().getDistanceToCenter();
-  var zIndexStep = Math.round(cameraDistance / (this.zIndexMax_ * 100));
-  var newOffset = -(this.zIndex_ * zIndexStep);
+  var camera = os.MapContainer.getInstance().getWebGLCamera();
+  if (camera) {
+    // Find the z-index step from the camera altitude
+    var cameraDistance = camera.getDistanceToCenter();
+    var zIndexStep = Math.round(cameraDistance / (this.zIndexMax_ * 100));
+    var newOffset = -(this.zIndex_ * zIndexStep);
 
-  if (newOffset != this.converter.getEyeOffset()['z']) {
-    this.converter.setEyeOffset(new Cesium.Cartesian3(0.0, 0.0, newOffset));
+    if (newOffset != this.converter.getEyeOffset()['z']) {
+      this.converter.setEyeOffset(new Cesium.Cartesian3(0.0, 0.0, newOffset));
 
-    var features = this.source.getFeatures();
-    for (var i = 0, n = features.length; i < n; i++) {
-      this.setEyeOffset_(features[i]);
+      var features = this.source.getFeatures();
+      for (var i = 0, n = features.length; i < n; i++) {
+        this.setEyeOffset_(features[i]);
+      }
     }
   }
 };
