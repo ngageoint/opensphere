@@ -37,19 +37,19 @@ plugin.heatmap.menu.setup = function() {
     // TODO: Enable heatmap export after switching to an image layer.
     //
 
-    // menuRoot.addChild({
-    //   label: plugin.heatmap.menu.GROUP_LABEL,
-    //   type: os.ui.menu.MenuItemType.GROUP,
-    //   children: [{
-    //     label: 'Export Heatmap...',
-    //     eventType: plugin.heatmap.menu.EventType.EXPORT,
-    //     tooltip: 'Exports the heatmap as a KML Ground Overlay',
-    //     icons: ['<i class="fa fa-fw fa-download"></i>'],
-    //     beforeRender: plugin.heatmap.menu.visibleIfSupported_,
-    //     handler: plugin.heatmap.menu.exportLayer_,
-    //     metricKey: os.metrics.Layer.HEATMAP
-    //   }]
-    // });
+    menuRoot.addChild({
+      label: plugin.heatmap.menu.GROUP_LABEL,
+      type: os.ui.menu.MenuItemType.GROUP,
+      children: [{
+        label: 'Export Heatmap...',
+        eventType: plugin.heatmap.menu.EventType.EXPORT,
+        tooltip: 'Exports the heatmap as a KML Ground Overlay',
+        icons: ['<i class="fa fa-fw fa-download"></i>'],
+        beforeRender: plugin.heatmap.menu.visibleIfSupported_,
+        handler: plugin.heatmap.menu.exportLayer_,
+        metricKey: os.metrics.Layer.HEATMAP
+      }]
+    });
 
     // this item is added for vector layers to be able to generate heatmaps
     toolsGroup.addChild({
