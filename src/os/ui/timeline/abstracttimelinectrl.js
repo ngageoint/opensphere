@@ -175,6 +175,7 @@ os.ui.timeline.AbstractTimelineCtrl = function($scope, $element, $timeout) {
   this.selectBrush = new os.ui.timeline.SelectBrush();
   this.selectBrush.setId('select');
   this.selectBrush.setMenuContainer('#map-container');
+  this.selectBrush.listen(goog.events.EventType.CHANGE, this.onSelectChange, false, this);
   this.selectBrush.listen(goog.events.EventType.EXIT, this.onSelectChange, false, this);
   this.selectBrush.listen(goog.events.EventType.DRAGSTART, this.onSelectChange, false, this);
 
@@ -301,6 +302,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.destroy = function() {
   }
 
   var selectBrush = /** @type {os.ui.timeline.SelectBrush} */ (this.getItem('select'));
+  selectBrush.unlisten(goog.events.EventType.CHANGE, this.onSelectChange, false, this);
   selectBrush.unlisten(goog.events.EventType.EXIT, this.onSelectChange, false, this);
   selectBrush.unlisten(goog.events.EventType.DRAGSTART, this.onSelectChange, false, this);
 

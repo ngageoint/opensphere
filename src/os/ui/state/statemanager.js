@@ -110,7 +110,6 @@ os.ui.state.StateManager.EventType = {
 /**
  * Sets the state export version used by the application.
  * @param {string} version The state version string
- * @protected
  */
 os.ui.state.StateManager.prototype.setVersion = function(version) {
   this.version_ = version;
