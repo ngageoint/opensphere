@@ -10,6 +10,7 @@ goog.require('os.ui.filter.ui.filterExportDirective');
 goog.require('os.ui.menu.Menu');
 goog.require('os.ui.menu.MenuItem');
 goog.require('os.ui.menu.MenuItemType');
+goog.require('os.ui.query');
 goog.require('os.ui.query.cmd.FilterRemove');
 goog.require('os.ui.query.cmd.QueryEntries');
 
@@ -331,7 +332,7 @@ os.ui.menu.filter.onFilter_ = function(event) {
         goog.array.removeDuplicates(entries, undefined, function(filter) {
           return JSON.stringify(filter);
         });
-        cmds.push(new os.ui.query.cmd.QueryEntries(entries, true, undefined, true));
+        cmds.push(new os.ui.query.cmd.QueryEntries(entries, true, os.ui.query.ALL_ID, true));
         break;
       case os.action.EventType.UNAPPLY:
         title = 'Turn off filter';
@@ -348,7 +349,7 @@ os.ui.menu.filter.onFilter_ = function(event) {
           goog.array.remove(allEntries, entry);
         });
 
-        cmds.push(new os.ui.query.cmd.QueryEntries(allEntries, false, undefined, true));
+        cmds.push(new os.ui.query.cmd.QueryEntries(allEntries, false, os.ui.query.ALL_ID, true));
         break;
       default:
         break;
