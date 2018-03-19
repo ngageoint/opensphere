@@ -24,7 +24,7 @@ Let's have a look at the JSON response from Tileserver.
   }]
 
 The first two layers are XYZ (see ``tiles`` template) PNG (``format = 'png'``) layers that are intended as base map imagery (``type = 'baselayer'``). OpenSphere already supports `XYZ layers`_ and `base map layers`_, so we can take advantage of a lot of code that already exists.
-    
+
 .. _XYZ layers: https://github.com/ngageoint/opensphere/tree/master/src/plugin/xyz
 .. _base map layers: https://github.com/ngageoint/opensphere/tree/master/src/plugin/basemap
 
@@ -34,7 +34,7 @@ The last layer is a vector format, which we will ignore in this guide. The first
   :caption: ``src/plugin/tileserver/tileserver.js``
   :linenos:
   :language: javascript
-  :emphasize-lines: 3, 5, 7, 10-13, 36-37, 58-67, 71-128
+  :emphasize-lines: 3, 5, 7-8, 11-14, 37-38, 59-68, 72-130
 
 Let's test it.
 

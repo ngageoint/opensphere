@@ -96,6 +96,14 @@ os.data.ConfigDescriptor.prototype.getDescriptorType = function() {
 /**
  * @inheritDoc
  */
+os.data.ConfigDescriptor.prototype.getIcons = function() {
+  return /** @type {string} */ (this.get('icons')) || os.data.ConfigDescriptor.base(this, 'getIcons');
+};
+
+
+/**
+ * @inheritDoc
+ */
 os.data.ConfigDescriptor.prototype.getSearchType = function() {
   var type = this.getType();
 
