@@ -1,6 +1,8 @@
+
 goog.provide('os.data.BaseDescriptor');
 
 goog.require('goog.async.nextTick');
+goog.require('goog.date.UtcDateTime');
 goog.require('goog.events.Event');
 goog.require('goog.events.EventTarget');
 goog.require('os.data.ColumnDefinition');
@@ -695,6 +697,44 @@ os.data.BaseDescriptor.prototype.restore = function(from) {
       // don't restore columns if there is an error. they'll be reloaded instead.
     }
   }
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.data.BaseDescriptor.prototype.getHtmlDescription = function() {
+  var text = 'Layer Name: ' + this.getTitle() + '<br>';
+  var provider = this.getProvider();
+  if (provider) {
+    text += 'Provider: ' + provider + '<br>';
+  }
+  var type = this.getType() || '';
+  if (goog.string.endsWith(type, 's')) {
+    type = type.substring(0, type.length - 1);
+  }
+
+  if (type) {
+    text += 'Type: ' + type + '<br>';
+  }
+
+  if (!isNaN(this.getMinDate()) && !isNaN(this.getMaxDate())) {
+    var s = new goog.date.UtcDateTime();
+    s.setTime(this.getMinDate());
+
+    var e = new goog.date.UtcDateTime();
+    e.setTime(this.getMaxDate());
+
+    text += 'Time: ' + s.toUTCIsoString(true, true) + ' to ' + e.toUTCIsoString(true, true) + '<br>';
+  }
+
+  text += '<br>';
+
+  var desc = this.getDescription();
+  text += (desc ? desc : 'No description provided') + '<br><br>';
+  text += 'Tags: ' + (this.getTags() ? this.getTags().join(', ') : '(none)');
+  text += '<br><br>';
+  return text;
 };
 
 
