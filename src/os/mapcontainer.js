@@ -387,7 +387,7 @@ os.MapContainer.prototype.handleViewChange_ = function() {
   var cameraMode = /** @type {string|undefined} */ (os.settings.get(os.config.DisplaySetting.CAMERA_MODE));
   if (cameraMode == os.CameraMode.LAST) {
     try {
-      var cameraState = os.MapContainer.getInstance().persistCameraState();
+      var cameraState = this.persistCameraState();
       os.settings.set(os.config.DisplaySetting.CAMERA_STATE, JSON.stringify(cameraState));
     } catch (e) {
       goog.log.error(os.MapContainer.LOGGER_, 'Error persisting camera state:', e);
@@ -1108,34 +1108,38 @@ os.MapContainer.prototype.saveMapMode_ = function() {
  */
 os.MapContainer.prototype.persistCameraState = function() {
   if (this.is3DEnabled()) {
-    return this.getWebGLCamera().persist();
-  } else {
-    var view = this.getMap().getView();
-    goog.asserts.assert(!!view, 'view not defined');
-
-    // always translate the center point to EPSG:4326
-    var center = view.getCenter() || os.map.DEFAULT_CENTER;
-    if (os.map.PROJECTION != os.proj.EPSG4326) {
-      center = ol.proj.toLonLat(center, os.map.PROJECTION);
-      center[0] = os.geo.normalizeLongitude(center[0]);
+    var camera = this.getWebGLCamera();
+    if (camera) {
+      return camera.persist();
     }
-
-    var resolution = view.getResolution();
-    goog.asserts.assert(resolution != null, 'resolution not defined');
-    var sizeObj = this.getMap().getSize();
-    var altitude = os.map.distanceForResolution([sizeObj[0], sizeObj[1]], resolution);
-    var zoom = this.resolutionToZoom(resolution, 1);
-    var rotation = goog.math.toDegrees(view.getRotation() || 0);
-
-    return /** @type {!osx.map.CameraState} */ ({
-      center: center,
-      altitude: altitude,
-      heading: rotation,
-      roll: 0,
-      tilt: 0,
-      zoom: zoom
-    });
   }
+
+  // persist from the 2D view if 3D isn't enabled, or camera isn't defined
+  var view = this.getMap().getView();
+  goog.asserts.assert(!!view, 'view not defined');
+
+  // always translate the center point to EPSG:4326
+  var center = view.getCenter() || os.map.DEFAULT_CENTER;
+  if (os.map.PROJECTION != os.proj.EPSG4326) {
+    center = ol.proj.toLonLat(center, os.map.PROJECTION);
+    center[0] = os.geo.normalizeLongitude(center[0]);
+  }
+
+  var resolution = view.getResolution();
+  goog.asserts.assert(resolution != null, 'resolution not defined');
+  var sizeObj = this.getMap().getSize();
+  var altitude = os.map.distanceForResolution([sizeObj[0], sizeObj[1]], resolution);
+  var zoom = this.resolutionToZoom(resolution, 1);
+  var rotation = goog.math.toDegrees(view.getRotation() || 0);
+
+  return /** @type {!osx.map.CameraState} */ ({
+    center: center,
+    altitude: altitude,
+    heading: rotation,
+    roll: 0,
+    tilt: 0,
+    zoom: zoom
+  });
 };
 
 
@@ -1162,35 +1166,40 @@ os.MapContainer.prototype.restoreCameraState = function(cameraState) {
 os.MapContainer.prototype.restoreCameraStateInternal_ = function(cameraState) {
   try {
     if (this.is3DEnabled()) {
-      this.getWebGLCamera().restore(cameraState);
-    } else {
-      var view = this.getMap().getView();
-      goog.asserts.assert(goog.isDef(view));
+      var camera = this.getWebGLCamera();
+      if (camera) {
+        camera.restore(cameraState);
+        return true;
+      }
+    }
 
-      var zoom = cameraState.zoom;
-      if (zoom == null) {
-        // check if the view extent is available, or {@link os.map.resolutionForDistance} will fail
-        var viewExtent = this.getViewExtent();
-        if (ol.extent.equals(viewExtent, os.map.ZERO_EXTENT)) {
-          return false;
-        }
+    // restore the 2D view if in 2D mode or the 3D camera is not defined
+    var view = this.getMap().getView();
+    goog.asserts.assert(goog.isDef(view));
 
-        var resolution = os.map.resolutionForDistance(this.getMap(), cameraState.altitude);
-
-        // if the calculated resolution is NaN, the map isn't ready (size is probably updating)
-        if (isNaN(resolution)) {
-          return false;
-        }
-
-        zoom = this.resolutionToZoom(resolution);
+    var zoom = cameraState.zoom;
+    if (zoom == null) {
+      // check if the view extent is available, or {@link os.map.resolutionForDistance} will fail
+      var viewExtent = this.getViewExtent();
+      if (ol.extent.equals(viewExtent, os.map.ZERO_EXTENT)) {
+        return false;
       }
 
-      // camera state is saved in EPSG:4326
-      var center = ol.proj.fromLonLat(cameraState.center, os.map.PROJECTION);
-      view.setCenter(center);
-      view.setRotation(goog.math.toRadians(cameraState.heading));
-      view.setZoom(zoom);
+      var resolution = os.map.resolutionForDistance(this.getMap(), cameraState.altitude);
+
+      // if the calculated resolution is NaN, the map isn't ready (size is probably updating)
+      if (isNaN(resolution)) {
+        return false;
+      }
+
+      zoom = this.resolutionToZoom(resolution);
     }
+
+    // camera state is saved in EPSG:4326
+    var center = ol.proj.fromLonLat(cameraState.center, os.map.PROJECTION);
+    view.setCenter(center);
+    view.setRotation(goog.math.toRadians(cameraState.heading));
+    view.setZoom(zoom);
   } catch (e) {
     goog.log.error(os.MapContainer.LOGGER_, 'Error restoring camera state:', e);
   }
