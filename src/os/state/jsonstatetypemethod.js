@@ -47,7 +47,7 @@ os.state.JSONStateTypeMethod.prototype.isType = function(file, opt_zipEntries) {
       if (goog.isObject(content)) {
         object = /** @type {Object} */ (content);
       } else if (goog.isString(content)) {
-        object = goog.json.parse(content);
+        object = JSON.parse(content);
       }
     } catch (e) {
       // parsing failed, invalid JSON
