@@ -109,6 +109,7 @@ os.ui.ol.control.LayerSwitcher.prototype.renderPanel = function() {
 /**
  * Set the map instance the control is associated with.
  * @param {ol.PluggableMap} map The map instance.
+ * @override
  */
 os.ui.ol.control.LayerSwitcher.prototype.setMap = function(map) {
   // Clean up listeners associated with the previous map
