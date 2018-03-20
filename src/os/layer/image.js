@@ -133,7 +133,6 @@ os.implements(os.layer.Image, os.layer.ILayer.ID);
 os.layer.Image.prototype.disposeInternal = function() {
   // call the parent chain first to remove listeners
   os.layer.Image.base(this, 'disposeInternal');
-  os.MapContainer.getInstance().unlisten(goog.events.EventType.PROPERTYCHANGE, this.onMapChange_, false, this);
 
   // make sure the map loading counters are updated since the layer is being removed
   this.setLoading(false);
@@ -319,11 +318,6 @@ os.layer.Image.prototype.setLayerVisible = function(value) {
   }
 
   this.dispatchEvent(new os.events.PropertyChangeEvent('visible', value, !value));
-
-  var source = this.getSource();
-  if (source instanceof os.source.Vector) {
-    /** @type {os.source.Vector} */ (source).setVisible(value);
-  }
 };
 
 
@@ -374,34 +368,11 @@ os.layer.Image.prototype.setLayerUI = function(value) {
 
 
 /**
- * @param {os.events.PropertyChangeEvent} event
- * @private
- */
-os.layer.Image.prototype.onMapChange_ = function(event) {
-  var p = event.getProperty();
-  if (p == os.MapChange.VIEW3D) {
-    var enabled = /** @type {boolean} */ (event.getNewValue());
-
-    var source = this.getSource();
-    if (source instanceof os.source.Vector) {
-      /** @type {os.source.Vector} */ (source).setWebGLEnabled(enabled);
-    }
-  }
-};
-
-
-/**
  * @return {Array<string>}
  * @protected
  */
 os.layer.Image.prototype.getSVGSet = function() {
-  var icons = [os.ui.IconsSVG.FEATURES];
-  var source = this.getSource();
-  if (source instanceof os.source.Vector && source.getTimeEnabled()) {
-    icons.push(os.ui.IconsSVG.TIME);
-  }
-
-  return icons;
+  return [os.ui.IconsSVG.FEATURES];
 };
 
 
@@ -410,13 +381,7 @@ os.layer.Image.prototype.getSVGSet = function() {
  * @protected
  */
 os.layer.Image.prototype.getIconSet = function() {
-  var icons = [os.ui.Icons.FEATURES];
-  var source = this.getSource();
-  if (source instanceof os.source.Vector && source.getTimeEnabled()) {
-    icons.push(os.ui.Icons.TIME);
-  }
-
-  return icons;
+  return [os.ui.Icons.FEATURES];
 };
 
 
