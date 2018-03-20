@@ -1,6 +1,5 @@
 goog.provide('os.ui.help.supportMsg');
 goog.require('goog.format.JsonPrettyPrinter');
-goog.require('goog.json.Serializer');
 goog.require('goog.userAgent');
 goog.require('os.config.Settings');
 
