@@ -119,7 +119,7 @@ os.geo.MGRSRegExp = /^mgrs\s*(d(e(r(i(v(e(d?)?)?)?)?)?)?)?$/i;
  * @type {!RegExp}
  * @const
  */
-os.geo.COORD_CLEANER = /[^NEWSnews\d\s.-]/g;
+os.geo.COORD_CLEANER = /[^NEWSnews\d\s.\-,]/g;
 
 
 
