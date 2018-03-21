@@ -32,13 +32,9 @@
 }
 
 .onboarding-popover.onboarding-centered {
-  // sass-lint:disable no-vendor-prefixes
-  -moz-transform: translate(-50%, -50%);
-  -ms-transform: translate(-50%, -50%);
-  -webkit-transform: translate(-50%, -50%);
+  @include translate(-50%, -50%);
   left: 50%;
   top: 50%;
-  transform: translate(-50%, -50%);
 }
 
 .onboarding-arrow,
@@ -185,11 +181,8 @@
 }
 
 .onboarding-focus {
-  // sass-lint:disable no-vendor-prefixes
-  -moz-transition: none !important;
-  -webkit-transition: none !important;
+  @include transition(none !important);
   pointer-events: none;
-  transition: none !important;
   z-index: $overrides-modal-zindex - 1 !important;
 }
 
