@@ -99,10 +99,6 @@
 }
 
 // select2 multi select css
-.ng-invalid.ng-dirty .select2-container.select2-container-multi .select2-choices {
-  background-color: $overrides-box-bg-color;
-}
-
 .select2-container.select2-container-multi {
   .select2-choices {
     background-color: $overrides-box-bg-color;

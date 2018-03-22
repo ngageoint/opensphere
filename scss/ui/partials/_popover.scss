@@ -177,6 +177,7 @@
 .popover-content {
   overflow: hidden;
   text-overflow: ellipsis;
+  word-wrap: break-word;
 
   a {
     color: #08c;
