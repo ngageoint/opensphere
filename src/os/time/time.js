@@ -13,6 +13,7 @@ goog.require('goog.events.EventType');
 goog.require('goog.i18n.DateTimeFormat');
 goog.require('os.config.Settings');
 goog.require('os.time.TimeRange');
+goog.require('os.time.TimeRangePresets');
 
 
 /**
