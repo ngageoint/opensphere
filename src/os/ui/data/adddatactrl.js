@@ -282,41 +282,18 @@ os.ui.data.AddDataCtrl.prototype.getInfo = function() {
   }
 
   if (node instanceof os.ui.slick.SlickTreeNode) {
-    var text = node.getToolTip();
-
+    var text = '';
     if (node instanceof os.ui.data.DescriptorNode) {
       var d = /** @type {os.ui.data.DescriptorNode} */ (node).getDescriptor();
-
       if (d) {
-        text = 'Provider: ' + d.getProvider() + '\n';
-        var type = d.getType() || '';
-
-        if (goog.string.endsWith(type, 's')) {
-          type = type.substring(0, type.length - 1);
-        }
-
-        text += 'Type: ' + type + '\n';
-
-        if (!isNaN(d.getMinDate()) && !isNaN(d.getMaxDate())) {
-          var s = new goog.date.UtcDateTime();
-          s.setTime(d.getMinDate());
-
-          var e = new goog.date.UtcDateTime();
-          e.setTime(d.getMaxDate());
-
-          text += 'Time: ' + s.toUTCIsoString(true, true) + ' to ' + e.toUTCIsoString(true, true) + '\n';
-        }
-
-        text += '\n';
-
-        var desc = d.getDescription();
-        text += (desc ? desc : 'No description provided') + '\n\n';
-        text += 'Tags: ' + (d.getTags() ? d.getTags().join(', ') : '(none)');
+        text += d.getHtmlDescription();
       }
+    } else {
+      text = node.getToolTip();
     }
 
     if (!text) {
-      text = 'No description provided';
+      text = 'No description provided.';
     }
 
     if (text) {

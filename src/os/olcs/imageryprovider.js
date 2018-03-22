@@ -68,7 +68,6 @@ os.olcs.ImageryProvider = function(source, opt_fallbackProj) {
   ol.events.listen(this.source, goog.events.EventType.CHANGE, this.onSourceChange_, this);
   this.onSourceChange_();
 };
-goog.inherits(os.olcs.ImageryProvider, Cesium.ImageryProvider);
 
 
 /**

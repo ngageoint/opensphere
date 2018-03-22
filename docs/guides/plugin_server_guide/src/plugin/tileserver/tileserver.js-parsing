@@ -4,6 +4,7 @@ goog.require('os.data.ConfigDescriptor');
 goog.require('os.data.IDataProvider');
 goog.require('os.fn');
 goog.require('os.net.Request');
+goog.require('os.ui.Icons');
 goog.require('os.ui.data.DescriptorNode');
 goog.require('os.ui.server.AbstractLoadingServer');
 
@@ -92,6 +93,7 @@ plugin.tileserver.Tileserver.prototype.toChildNode = function(layer) {
     'urls': layer['tiles'],
     'extent': layer['bounds'],
     'extentProjection': os.proj.EPSG4326,
+    'icons': os.ui.createIconSet(fullId, [os.ui.IconsSVG.TILES], [], [255, 255, 255, 1]),
     'projection': os.proj.EPSG3857,
     'minZoom': Math.max(os.map.MIN_ZOOM, layer['minzoom']),
     'maxZoom': Math.min(os.map.MAX_ZOOM, layer['maxzoom']),

@@ -1,5 +1,6 @@
 goog.provide('os.feature');
 
+goog.require('goog.reflect');
 goog.require('goog.string');
 goog.require('ol.Feature');
 goog.require('ol.geom.Geometry');
@@ -568,31 +569,13 @@ os.feature.getTitle = function(feature) {
 
 
 /**
- * Get the field for the {@link ol.Feature#values_} property. This is necessary for compiled code because the `values_`
- * property will be renamed by the Closure compiler.
+ * Get the property name for the {@link ol.Feature#values_} property. This is necessary for compiled code because
+ * `values_` will be renamed by the Closure compiler.
  * @type {string}
  * @private
  * @const
  */
-os.feature.VALUES_FIELD_ = (
-    /**
-     * @return {string} The field name.
-     * @suppress {checkTypes}
-     */
-    function() {
-      var testField = '__valuestest__';
-      var feature = new ol.Feature();
-      feature.set(testField, true, true);
-
-      for (var key in feature) {
-        if (feature.hasOwnProperty(key) && typeof feature[key] == 'object' && feature[key][testField] == true) {
-          return key;
-        }
-      }
-
-      return 'values_';
-    }
-    )();
+os.feature.VALUES_FIELD_ = goog.reflect.objectProperty('values_', new ol.Feature());
 
 
 /**

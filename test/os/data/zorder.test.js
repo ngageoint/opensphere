@@ -24,7 +24,7 @@ describe('os.data.ZOrder', function() {
       groups[i].getLayers().clear();
     }
 
-    expect(groups.length).toBe(5);
+    expect(groups.length).toBe(4);
   });
 
   it('should init to an empty object', function() {
@@ -83,7 +83,7 @@ describe('os.data.ZOrder', function() {
 
   it('should update the map from the z-order data', function() {
     z.update();
-    var tileLayers = map.getMap().getLayers().getArray()[1].getLayers().getArray();
+    var tileLayers = map.getMap().getLayers().getArray()[0].getLayers().getArray();
     expect(tileLayers[0].getId()).toBe('layer3');
     expect(tileLayers[1].getId()).toBe('layer1');
     expect(tileLayers[2].getId()).toBe('layer2');
@@ -101,7 +101,7 @@ describe('os.data.ZOrder', function() {
 
   it('should expire old data', function() {
     z.groups_['Tile Layers'][1].time = goog.now() - 31 * 24 * 60 * 60 * 1000;
-    map.getMap().getLayers().getArray()[1].getLayers().getArray().splice(1, 1);
+    map.getMap().getLayers().getArray()[0].getLayers().getArray().splice(1, 1);
 
     z.save();
     z.groups_ = null;
@@ -113,6 +113,6 @@ describe('os.data.ZOrder', function() {
 
   it('should clean up', function() {
     var groups = z.getMap().getLayers().getArray();
-    groups[2].get('layers').push(map.drawingLayer_);
+    groups[1].get('layers').push(map.drawingLayer_);
   });
 });

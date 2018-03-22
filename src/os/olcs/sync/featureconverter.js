@@ -60,14 +60,14 @@ os.olcs.sync.FeatureConverter = function(scene) {
    * @type {!Cesium.Cartesian3}
    * @private
    */
-  this.eyeOffset_ = os.olcs.sync.FeatureConverter.ZERO_OFFSET;
+  this.eyeOffset_ = new Cesium.Cartesian3(0.0, 0.0, 0.0);
 
   /**
    * The default eye offset for labels
    * @type {!Cesium.Cartesian3}
    * @private
    */
-  this.labelEyeOffset_ = os.olcs.sync.FeatureConverter.DEFAULT_LABEL_OFFSET;
+  this.labelEyeOffset_ = new Cesium.Cartesian3(0.0, 0.0, 10000);
 
   /**
    * Map of images being listened to
@@ -76,20 +76,6 @@ os.olcs.sync.FeatureConverter = function(scene) {
    */
   this.listenerMap_ = {};
 };
-
-
-/**
- * @type {!Cesium.Cartesian3}
- * @const
- */
-os.olcs.sync.FeatureConverter.ZERO_OFFSET = new Cesium.Cartesian3(0.0, 0.0, 0.0);
-
-
-/**
- * @type {!Cesium.Cartesian3}
- * @const
- */
-os.olcs.sync.FeatureConverter.DEFAULT_LABEL_OFFSET = new Cesium.Cartesian3(0.0, 0.0, 10000);
 
 
 /**

@@ -40,22 +40,15 @@ os.ui.Module.directive('duration', [os.ui.datetime.durationDirective]);
 /**
  * Controller function for the duration directive
  * @param {!angular.Scope} $scope
- * @param {!angular.$timeout} $timeout
  * @constructor
  * @ngInject
  */
-os.ui.datetime.DurationCtrl = function($scope, $timeout) {
+os.ui.datetime.DurationCtrl = function($scope) {
   /**
    * @type {?angular.Scope}
    * @private
    */
   this.scope_ = $scope;
-
-  /**
-   * @type {?angular.$timeout}
-   * @private
-   */
-  this.timeout_ = $timeout;
 
   /**
    * @type {number}

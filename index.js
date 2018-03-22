@@ -209,16 +209,6 @@ const sharedResources = [
     files: ['WMM.COF']
   },
   {
-    source: resolver.resolveModulePath('cesium/Build/Cesium', __dirname),
-    target: 'vendor/cesium',
-    scripts: ['Cesium.js'],
-    files: [
-      'Assets',
-      'ThirdParty',
-      'Workers'
-    ]
-  },
-  {
     source: resolver.resolveModulePath('jsts/dist', __dirname),
     target: 'vendor/jsts',
     scripts: ['jsts.min.js']
@@ -258,6 +248,16 @@ const indexResources = sharedResources.concat([
     ]
   },
   {
+    source: resolver.resolveModulePath('cesium/Build/Cesium', __dirname),
+    target: 'vendor/cesium',
+    files: [
+      'Cesium.js',
+      'Assets',
+      'ThirdParty',
+      'Workers'
+    ]
+  },
+  {
     source: resolver.resolveModulePath('d3', __dirname),
     target: 'vendor/d3',
     scripts: ['d3.min.js']
@@ -291,11 +291,6 @@ const indexResources = sharedResources.concat([
     source: 'vendor/gif',
     target: 'vendor/gif',
     files: ['gif.js', 'gif.worker.js']
-  },
-  {
-    source: 'vendor/whammy',
-    target: 'vendor/whammy',
-    files: ['whammy.min.js']
   }
 ]);
 
