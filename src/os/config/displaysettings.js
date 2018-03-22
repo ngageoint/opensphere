@@ -49,7 +49,8 @@ os.config.DisplaySetting = {
   MAP_MODE: os.config.DisplaySettings.BASE_KEY + 'mapMode',
   FOG_ENABLED: os.config.DisplaySettings.BASE_KEY + 'fogEnabled',
   FOG_DENSITY: os.config.DisplaySettings.BASE_KEY + 'fogDensity',
-  ENABLE_LIGHTING: os.config.DisplaySettings.BASE_KEY + 'enableLighting'
+  ENABLE_LIGHTING: os.config.DisplaySettings.BASE_KEY + 'enableLighting',
+  ENABLE_TERRAIN: os.config.DisplaySettings.BASE_KEY + 'enableTerrain'
 };
 
 
@@ -95,12 +96,14 @@ os.config.DisplaySettingsCtrl = function($scope) {
   this['help'] = {
     'fog': 'Fog is displayed when tilting the globe to reduce rendered tiles and terrain near the horizon. Disabling ' +
         'fog or reducing density may degrade application performance.',
-    'sunlight': 'Light the 3D scene with the Sun.'
+    'sunlight': 'Light the 3D scene with the Sun.',
+    'terrain': 'Show terrain on the 3D globe.'
   };
 
   os.settings.listen(os.config.DisplaySetting.CAMERA_STATE, this.onCameraStateChange_, false, this);
   os.settings.listen(os.config.DisplaySetting.MAP_MODE, this.onMapModeChange_, false, this);
   os.settings.listen(os.config.DisplaySetting.ENABLE_LIGHTING, this.onSunlightChange_, false, this);
+  os.settings.listen(os.config.DisplaySetting.ENABLE_TERRAIN, this.onTerrainChange_, false, this);
 
   /**
    * Flag to prevent handling settings events triggered by this controller.
@@ -153,16 +156,22 @@ os.config.DisplaySettingsCtrl = function($scope) {
       os.olcs.DEFAULT_FOG_DENSITY));
 
   /**
-   * Cesium fog density as a percent of the supported density range.
+   * Globe fog density as a percent of the supported density range.
    * @type {number}
    */
   this['fogDensity'] = density / os.olcs.MAX_FOG_DENSITY;
 
   /**
-   * If Cesium sunlight is enabled.
+   * If sunlight is enabled on the 3D globe.
    * @type {boolean}
    */
   this['sunlightEnabled'] = /** @type {boolean} */ (os.settings.get(os.config.DisplaySetting.ENABLE_LIGHTING, false));
+
+  /**
+   * If terrain is enabled on the 3D globe.
+   * @type {boolean}
+   */
+  this['terrainEnabled'] = /** @type {boolean} */ (os.settings.get(os.config.DisplaySetting.ENABLE_TERRAIN, false));
 
   $scope.$watch('display.fogEnabled', this.updateFog.bind(this));
   $scope.$watch('display.fogDensity', this.updateFog.bind(this));
@@ -180,6 +189,8 @@ os.config.DisplaySettingsCtrl = function($scope) {
 os.config.DisplaySettingsCtrl.prototype.destroy_ = function() {
   os.settings.unlisten(os.config.DisplaySetting.CAMERA_STATE, this.onCameraStateChange_, false, this);
   os.settings.unlisten(os.config.DisplaySetting.MAP_MODE, this.onMapModeChange_, false, this);
+  os.settings.unlisten(os.config.DisplaySetting.ENABLE_LIGHTING, this.onSunlightChange_, false, this);
+  os.settings.unlisten(os.config.DisplaySetting.ENABLE_TERRAIN, this.onTerrainChange_, false, this);
 
   this.scope_ = null;
 };
@@ -389,6 +400,7 @@ goog.exportProperty(
 
 
 /**
+ * Handle changes to the sunlight enabled setting.
  * @param {os.events.SettingChangeEvent} event
  * @private
  */
@@ -401,19 +413,50 @@ os.config.DisplaySettingsCtrl.prototype.onSunlightChange_ = function(event) {
 
 
 /**
- * Update the Cesium sunlight display
+ * Handle changes to the terrain enabled setting.
+ * @param {os.events.SettingChangeEvent} event
+ * @private
+ */
+os.config.DisplaySettingsCtrl.prototype.onTerrainChange_ = function(event) {
+  if (!this.ignoreSettingsEvents_ && event.newVal !== this['terrainEnabled']) {
+    this['terrainEnabled'] = event.newVal;
+    os.ui.apply(this.scope_);
+  }
+};
+
+
+/**
+ * If terrain is available in the application.
+ * @return {boolean}
+ */
+os.config.DisplaySettingsCtrl.prototype.supportsTerrain = function() {
+  return os.MapContainer.getInstance().hasTerrain();
+};
+goog.exportProperty(
+    os.config.DisplaySettingsCtrl.prototype,
+    'supportsTerrain',
+    os.config.DisplaySettingsCtrl.prototype.supportsTerrain);
+
+
+/**
+ * Update the globe sunlight display.
  */
 os.config.DisplaySettingsCtrl.prototype.updateSunlight = function() {
-  var map = os.MapContainer.getInstance();
-  var scene = map.getCesiumScene();
-
-  if (scene) {
-    this.updateSetting_(os.config.DisplaySetting.ENABLE_LIGHTING, this['sunlightEnabled']);
-    scene.globe.enableLighting = this['sunlightEnabled'];
-    os.dispatcher.dispatchEvent(os.olcs.RenderLoop.REPAINT);
-  }
+  this.updateSetting_(os.config.DisplaySetting.ENABLE_LIGHTING, this['sunlightEnabled']);
 };
 goog.exportProperty(
     os.config.DisplaySettingsCtrl.prototype,
     'updateSunlight',
     os.config.DisplaySettingsCtrl.prototype.updateSunlight);
+
+
+/**
+ * Update the globe terrain display.
+ */
+os.config.DisplaySettingsCtrl.prototype.updateTerrain = function() {
+  this.updateSetting_(os.config.DisplaySetting.ENABLE_TERRAIN, this['terrainEnabled']);
+};
+goog.exportProperty(
+    os.config.DisplaySettingsCtrl.prototype,
+    'updateTerrain',
+    os.config.DisplaySettingsCtrl.prototype.updateTerrain);

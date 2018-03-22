@@ -274,3 +274,10 @@ os.data.IDataDescriptor.prototype.getNodeUI;
  * @return {boolean} If the descriptor is using the URL, false otherwise
  */
 os.data.IDataDescriptor.prototype.matchesURL;
+
+/**
+ * Build a HTML representation of the descriptor.
+ *
+ * @return {string} the HTML formatted message
+ */
+os.data.IDataDescriptor.prototype.getHtmlDescription;

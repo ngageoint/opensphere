@@ -1,7 +1,6 @@
 goog.provide('os.ui.menu.layer');
 
 goog.require('goog.Timer');
-goog.require('goog.date.UtcDateTime');
 goog.require('ol.extent');
 goog.require('os.action.EventType');
 goog.require('os.command.FlyToExtent');
@@ -274,32 +273,7 @@ os.ui.menu.layer.onDescription_ = function(event) {
   for (var i = 0; i < layers.length; i++) {
     var descrip = os.dataManager.getDescriptor(layers[i].getId());
     if (descrip) {
-      msg += 'Layer Name: ' + descrip.getTitle() + '<br>';
-      msg += 'Provider: ' + descrip.getProvider() + '<br>';
-      var type = descrip.getType() || '';
-
-      if (goog.string.endsWith(type, 's')) {
-        type = type.substring(0, type.length - 1);
-      }
-
-      msg += 'Type: ' + type + '<br>';
-
-      if (!isNaN(descrip.getMinDate()) && !isNaN(descrip.getMaxDate())) {
-        var s = new goog.date.UtcDateTime();
-        s.setTime(descrip.getMinDate());
-
-        var e = new goog.date.UtcDateTime();
-        e.setTime(descrip.getMaxDate());
-
-        msg += 'Time: ' + s.toUTCIsoString(true, true) + ' to ' + e.toUTCIsoString(true, true) + '<br>';
-      }
-
-      msg += '<br>';
-
-      var desc = descrip.getDescription();
-      msg += (desc ? desc : 'No description provided') + '<br><br>';
-      msg += 'Tags: ' + (descrip.getTags() ? descrip.getTags().join(', ') : '(none)');
-      msg += '<br><br>';
+      msg += descrip.getHtmlDescription();
       if (i < layers.length - 1) {
         msg += '<hr><br>';
       }

@@ -3776,7 +3776,7 @@ Cesium.Scene.prototype.screenSpaceCameraController;
 
 
 /**
- * @type {Cesium.TerrainProvider}
+ * @type {Cesium.TerrainProvider|undefined}
  */
 Cesium.Scene.prototype.terrainProvider;
 
@@ -4539,6 +4539,60 @@ Cesium.HeightReference.NONE;
  */
 Cesium.HeightReference.RELATIVE_TO_GROUND;
 
+
+/**
+ * @param {Cesium.ImageryProvider|Cesium.TerrainProvider} provider
+ * @param {string} message
+ * @param {number|undefined} x
+ * @param {number|undefined} y
+ * @param {number|undefined} level
+ * @param {number} timesRetried
+ * @param {Error|undefined} error
+ * @constructor
+ */
+Cesium.TileProviderError = function(provider, message, x, y, level, timesRetried, error) {};
+
+
+/**
+ * @type {Cesium.TerrainProvider}
+ */
+Cesium.TileProviderError.prototype.provider;
+
+
+/**
+ * @type {string}
+ */
+Cesium.TileProviderError.prototype.message;
+
+
+/**
+ * @type {number|undefined}
+ */
+Cesium.TileProviderError.prototype.x;
+
+
+/**
+ * @type {number|undefined}
+ */
+Cesium.TileProviderError.prototype.y;
+
+
+/**
+ * @type {number|undefined}
+ */
+Cesium.TileProviderError.prototype.level;
+
+
+/**
+ * @type {number}
+ */
+Cesium.TileProviderError.prototype.timesRetried;
+
+
+/**
+ * @type {Error|undefined}
+ */
+Cesium.TileProviderError.prototype.error;
 
 
 /**

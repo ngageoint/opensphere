@@ -25,21 +25,34 @@ os.control.MapMode = function(opt_options) {
   var textClass = options.textClass != null ? options.textClass : 'ol-mapmode-text';
 
   /**
-   * @type {Element}
+   * Default tooltip to display on the button.
+   * @type {string}
+   * @protected
+   */
+  this.defaultTooltip = options.tipLabel ? options.tipLabel : 'Toggle 2D/3D view';
+
+  /**
+   * The control content element.
+   * @type {Element|undefined}
    * @protected
    */
   this.content = goog.dom.createDom('SPAN', textClass);
 
-  var tipLabel = options.tipLabel ? options.tipLabel : 'Toggle 2D/3D view';
+  /**
+   * Element to display when the map view is loading.
+   * @type {Element|undefined}
+   * @protected
+   */
+  this.loadingEl = goog.dom.createDom('I', 'fa fa-spin fa-spinner');
 
   /**
-   * @type {Element}
+   * @type {Element|undefined}
    * @protected
    */
   this.button = goog.dom.createDom('BUTTON', {
     'class': className + '-toggle',
     'type': 'button',
-    'title': tipLabel
+    'title': this.defaultTooltip
   }, this.content);
 
   ol.events.listen(this.button, ol.events.EventType.CLICK, os.control.MapMode.prototype.handleClick_, this);
@@ -66,13 +79,17 @@ os.control.MapMode.prototype.disposeInternal = function() {
 
   if (this.button) {
     ol.events.unlisten(this.button, ol.events.EventType.CLICK, os.control.MapMode.prototype.handleClick_, this);
-    this.button = null;
+    this.button = undefined;
   }
+
+  this.content = undefined;
+  this.loadingEl = undefined;
 };
 
 
 /**
- * @param {Event} event The event to handle
+ * Handle click events on the control.
+ * @param {Event} event The event.
  * @private
  */
 os.control.MapMode.prototype.handleClick_ = function(event) {
@@ -82,12 +99,13 @@ os.control.MapMode.prototype.handleClick_ = function(event) {
 
 
 /**
- * @param {os.events.PropertyChangeEvent} event
+ * Handle property change events from the map container.
+ * @param {os.events.PropertyChangeEvent} event The event.
  * @private
  */
 os.control.MapMode.prototype.onMapChange_ = function(event) {
   var p = event.getProperty();
-  if (p == os.MapChange.VIEW3D) {
+  if (p === os.MapChange.INIT3D || p === os.MapChange.VIEW3D) {
     this.updateContent_();
   }
 };
@@ -98,7 +116,16 @@ os.control.MapMode.prototype.onMapChange_ = function(event) {
  * @private
  */
 os.control.MapMode.prototype.updateContent_ = function() {
-  if (this.content) {
-    goog.dom.setTextContent(this.content, os.MapContainer.getInstance().is3DEnabled() ? '3D' : '2D');
+  if (this.button && this.content && this.loadingEl) {
+    var map = os.MapContainer.getInstance();
+    if (map.isInitializingWebGL()) {
+      goog.dom.setTextContent(this.content, '');
+      this.content.appendChild(this.loadingEl);
+      this.button.title = 'Initializing 3D view';
+    } else {
+      goog.dom.removeNode(this.loadingEl);
+      goog.dom.setTextContent(this.content, map.is3DEnabled() ? '3D' : '2D');
+      this.button.title = this.defaultTooltip;
+    }
   }
 };

@@ -11,12 +11,9 @@ goog.require('goog.log');
  * @param {!ol.layer.Vector} layer The OL3 layer
  * @param {!(ol.proj.Projection|string)} projection The map projection
  * @implements {goog.disposable.IDisposable}
- * @extends {Cesium.PrimitiveCollection}
  * @constructor
  */
 os.olcs.VectorContext = function(scene, layer, projection) {
-  os.olcs.VectorContext.base(this, 'constructor');
-
   /**
    * The logger to use for the source.
    * @type {goog.log.Logger}
@@ -97,11 +94,15 @@ os.olcs.VectorContext = function(scene, layer, projection) {
    */
   this.scene = scene;
 
-  this.add(this.billboards);
-  this.add(this.labels);
-  this.add(this.polylines);
+  /**
+   * The Cesium primitive collection.
+   * @type {!Cesium.PrimitiveCollection}
+   */
+  this.collection = new Cesium.PrimitiveCollection();
+  this.collection.add(this.billboards);
+  this.collection.add(this.labels);
+  this.collection.add(this.polylines);
 };
-goog.inherits(os.olcs.VectorContext, Cesium.PrimitiveCollection);
 
 
 /**
@@ -118,28 +119,28 @@ os.olcs.VectorContext.LOGGER_ = goog.log.getLogger('os.olcs.VectorContext');
  */
 os.olcs.VectorContext.prototype.dispose = function() {
   if (!this.isDisposed()) {
-    this.destroyPrimitives = true;
+    this.collection.destroyPrimitives = true;
 
     try {
       if (this.billboards) {
         this.removeOLReferences(this.billboards);
-        this.remove(this.billboards);
+        this.collection.remove(this.billboards);
         this.billboards = null;
       }
 
       if (this.labels) {
         this.removeOLReferences(this.labels);
-        this.remove(this.labels);
+        this.collection.remove(this.labels);
         this.labels = null;
       }
 
       if (this.polylines) {
         this.removeOLReferences(this.polylines);
-        this.remove(this.polylines);
+        this.collection.remove(this.polylines);
         this.polylines = null;
       }
 
-      this.removeOLReferences(this);
+      this.removeOLReferences(this.collection);
     } catch (e) {
       goog.log.error(this.log, 'Failed disposing vector context', e);
     } finally {
@@ -334,7 +335,7 @@ os.olcs.VectorContext.prototype.addPrimitive = function(primitive, feature, geom
   }
 
   if (!feature.isDisposed()) {
-    this.add(primitive);
+    this.collection.add(primitive);
     this.geometryToCesiumMap[geometryId] = primitive;
     this.addFeaturePrimitive(feature, primitive);
     this.addOLReferences(primitive, feature, geometry);
@@ -400,7 +401,7 @@ os.olcs.VectorContext.prototype.removePrimitive = function(primitive) {
     this.polylines.remove(primitive);
     this.geometryToCesiumMap[geomId] = undefined;
   } else {
-    this.remove(primitive);
+    this.collection.remove(primitive);
     this.geometryToCesiumMap[geomId] = undefined;
   }
 

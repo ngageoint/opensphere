@@ -1,5 +1,6 @@
 goog.provide('os.ui.state.AbstractStateDescriptor');
 
+goog.require('goog.json');
 goog.require('os.data.BaseDescriptor');
 goog.require('os.data.DescriptorEvent');
 goog.require('os.data.DescriptorEventType');

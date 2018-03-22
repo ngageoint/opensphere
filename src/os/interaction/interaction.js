@@ -91,7 +91,10 @@ os.interaction.configureCesium = function(sscc) {
   sscc.rotateEventTypes = [Cesium.CameraEventType.LEFT_DRAG];
 
   // mouse wheel without modifiers to zoom
-  sscc.zoomEventTypes = [Cesium.CameraEventType.WHEEL];
+  sscc.zoomEventTypes = [Cesium.CameraEventType.WHEEL, Cesium.CameraEventType.PINCH, {
+    eventType: Cesium.CameraEventType.WHEEL,
+    modifier: Cesium.KeyboardEventModifier.CTRL
+  }];
 
   // this limits camera movement per animation frame to reduce the jumpy camera behavior in low-framerate situations.
   // Cesium's user interactions (especially mouse zoom) freak out when the frame rate drops, causing the map to jump
