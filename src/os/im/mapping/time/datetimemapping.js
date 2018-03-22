@@ -127,7 +127,7 @@ os.im.mapping.time.DateTimeMapping.prototype.getLabel = function() {
  */
 os.im.mapping.time.DateTimeMapping.prototype.getFieldsChanged = function() {
   if (this.getApplyTime()) {
-    return ['recordTime'];
+    return [os.data.RecordField.TIME];
   } else {
     return os.im.mapping.time.DateTimeMapping.base(this, 'getFieldsChanged');
   }
@@ -150,8 +150,8 @@ os.im.mapping.time.DateTimeMapping.prototype.execute = function(item) {
     var t = this.getTimestamp(current);
 
     if (this.applyTime_) {
-      var old = os.im.mapping.getItemField(item, 'recordTime') || null; // not an ITime! See THIN-8508
-      os.im.mapping.setItemField(item, 'recordTime', this.getTime(t, old));
+      var old = os.im.mapping.getItemField(item, os.data.RecordField.TIME) || null; // not an ITime! See THIN-8508
+      os.im.mapping.setItemField(item, os.data.RecordField.TIME, this.getTime(t, old));
     } else if (t) {
       // only modify the original field if the time wasn't mapped to recordTime. note that this will prevent the
       // field from being used by other date mappings because the format will no longer apply.
@@ -208,7 +208,7 @@ os.im.mapping.time.DateTimeMapping.prototype.autoDetect = function(items) {
     var f = undefined;
     while (i--) {
       // only auto detect if a time has not yet been parsed
-      var time = os.im.mapping.getItemField(items[i], 'recordTime');
+      var time = os.im.mapping.getItemField(items[i], os.data.RecordField.TIME);
       if (os.implements(time, os.time.ITime.ID)) {
         break;
       }
