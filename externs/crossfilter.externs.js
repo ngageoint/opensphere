@@ -40,7 +40,7 @@ crossfilter.TimeRecord;
 /**
  * @typedef {{
  *   add: function(Array.<Object>):crossfilter.XF,
- *   dimension: function(function(Object):*):crossfilter.Dimension,
+ *   dimension: function(function(Object):*,boolean=):crossfilter.Dimension,
  *   groupAll: function():crossfilter.XF,
  *   remove: function(),
  *   size: function():number
@@ -58,9 +58,10 @@ crossfilter.XF.add = function(data) {};
 
 /**
  * @param {function(Object):*} fn
+ * @param {boolean=} opt_isArray
  * @return {crossfilter.Dimension}
  */
-crossfilter.XF.dimension = function(fn) {};
+crossfilter.XF.dimension = function(fn, opt_isArray) {};
 
 
 /**
