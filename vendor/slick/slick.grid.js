@@ -1447,7 +1447,7 @@ if (typeof Slick === "undefined") {
 
         // Do not render cells outside of the viewport.
         if (columnPosRight[Math.min(ii - 1, i + colspan - 1)] > range.leftPx) {
-          if (columnPosLeft[i] > range.rightPx) {
+          if (!options.forceFitColumns && columnPosLeft[i] > range.rightPx) {
             // All columns to the right are outside the range.
             break;
           }
@@ -1813,7 +1813,9 @@ if (typeof Slick === "undefined") {
         // cellRenderQueue populated in renderRows() needs to be cleared first
         ensureCellNodesInRowsCache(row);
 
-        cleanUpCells(range, row);
+        if (!options.forceFitColumns) {
+          cleanUpCells(range, row);
+        }
 
         // Render missing cells.
         cellsAdded = 0;
@@ -1826,7 +1828,7 @@ if (typeof Slick === "undefined") {
         // TODO:  shorten this loop (index? heuristics? binary search?)
         for (var i = 0, ii = columns.length; i < ii; i++) {
           // Cells to the right are outside the range.
-          if (columnPosLeft[i] > range.rightPx) {
+          if (!options.forceFitColumns && columnPosLeft[i] > range.rightPx) {
             break;
           }
 
