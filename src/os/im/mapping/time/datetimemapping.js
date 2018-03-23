@@ -1,5 +1,6 @@
 goog.provide('os.im.mapping.time.DateTimeMapping');
 
+goog.require('os.data.RecordField');
 goog.require('os.im.mapping');
 goog.require('os.im.mapping.AbstractMapping');
 goog.require('os.im.mapping.MappingRegistry');
