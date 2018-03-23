@@ -26,7 +26,7 @@ describe('os.filter.impl.ecql.ExclusionFormatter', function() {
     expect(formatter.wrapMultiple(result)).toBe(
       '(' +
       '(DISJOINT(geometry,POLYGON((0 1,0 3,2 3,2 1,0 1))))' +
-      ' OR ' +
+      ' AND ' +
       '(DISJOINT(geometry,POLYGON((4 5,4 7,6 7,6 5,4 5))))' +
       ')');
   });

@@ -30,6 +30,12 @@ os.filter.impl.ecql.AreaFormatter = function(opt_column) {
    * @protected
    */
   this.spatialPredicate = 'INTERSECTS';
+
+  /**
+   * @type {string}
+   * @protected
+   */
+  this.group = 'OR';
 };
 
 
@@ -62,5 +68,5 @@ os.filter.impl.ecql.AreaFormatter.prototype.supportsMultiple = function() {
  * @inheritDoc
  */
 os.filter.impl.ecql.AreaFormatter.prototype.wrapMultiple = function(value) {
-  return value ? os.filter.impl.ecql.FilterFormatter.wrapGeneric(value, 'OR') : '';
+  return value ? os.filter.impl.ecql.FilterFormatter.wrapGeneric(value, this.group) : '';
 };
