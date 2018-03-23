@@ -1,5 +1,6 @@
 goog.provide('os.histo.DateBinMethod');
 goog.provide('os.histo.DateBinType');
+goog.provide('os.histo.DateRangeBinType');
 
 goog.require('goog.object');
 goog.require('os.histo.UniqueBinMethod');
@@ -22,6 +23,25 @@ os.histo.DateBinType = {
   WEEK: 'Week',
   MONTH: 'Month',
   YEAR: 'Year'
+};
+
+
+/**
+ * Provide the bin types that are capable of binning overlapping time ranges
+ * @enum {boolean}
+ */
+os.histo.DateRangeBinType = {
+  'Hour of Day': true,
+  'Hour of Week': true,
+  'Hour of Month': true,
+  'Hour of Year': true,
+  'Day of Week': true,
+  'Unique': false,
+  'Hour': false,
+  'Day': false,
+  'Week': false,
+  'Month': false,
+  'Year': false
 };
 
 
@@ -125,6 +145,9 @@ os.histo.DateBinMethod.prototype.getValue = function(item) {
       // try os.time.ITime
       try {
         timestamp = /** @type {os.time.TimeInstant} */ (value).getStart();
+        var timedown = /** @type {os.time.TimeInstant} */ (value).getEnd();
+        // keep only if timedown is defined and different from timestamp
+        timedown = timedown && timedown !== timestamp ? timedown : undefined;
       } catch (e) {
         // didn't work - try Date
         try {
@@ -144,24 +167,59 @@ os.histo.DateBinMethod.prototype.getValue = function(item) {
     // avoid moment here if at all possible because moment.utc() is much slower than using native Date functions. it's
     // less impactful in getBinLabel because that is only called once per bin
     var d = new Date(/** @type {Object|number|string|null|undefined} */ (timestamp + os.time.timeOffset));
+    var d2 = null;
+    if (timedown && this.arrayKeys) {
+      d2 = new Date(/** @type {Object|number|string|null|undefined} */ (timedown + os.time.timeOffset));
+    }
 
     switch (this.binType_) {
       case os.histo.DateBinType.HOUR_OF_DAY:
         // 0-23
-        return d.getUTCHours();
+        var t1 = d.getUTCHours();
+        if (!d2) {
+          return this.arrayKeys ? [t1] : t1;
+        }
+        var t2 = d2.getUTCHours();
+        var max = 23;
+        return this.generateValues(t1, t2, max);
       case os.histo.DateBinType.HOUR_OF_WEEK:
         // 0 (Sunday) - 6 (Saturday) * 24 plus 0-23
-        return d.getUTCDay() * 24 + d.getUTCHours();
+        var t1 = d.getUTCDay() * 24 + d.getUTCHours();
+        if (!d2) {
+          return this.arrayKeys ? [t1] : t1;
+        }
+        var t2 = d2.getUTCDay() * 24 + d2.getUTCHours();
+        var max = 167;
+        return this.generateValues(t1, t2, max);
       case os.histo.DateBinType.HOUR_OF_MONTH:
         // 1 - [28-31] (end of month) * 24 plus 0-23
-        return d.getUTCDate() * 24 + d.getUTCHours();
+        var t1 = d.getUTCDate() * 24 + d.getUTCHours();
+        if (!d2) {
+          return this.arrayKeys ? [t1] : t1;
+        }
+        var t2 = d2.getUTCDate() * 24 + d2.getUTCHours();
+        var max = 23 + 24 * (new Date(d.getUTCFullYear(), d.getMonth() + 1, 0).getDate());
+        return this.generateValues(t1, t2, max);
       case os.histo.DateBinType.HOUR_OF_YEAR:
         // 1 - [365,366] (end of year) * 24 plus 0-23
-        var onejan = os.time.floor(d, 'year');
-        return Math.floor((d - onejan) / 86400000) * 24 + d.getUTCHours();
+        var min = new Date(d.getUTCFullYear(), 0);
+        var t1 = Math.floor((d - min) / 86400000) * 24 + d.getUTCHours();
+        if (!d2) {
+          return this.arrayKeys ? [t1] : t1;
+        }
+        var t2 = Math.floor((d - min) / 86400000) * 24 + d2.getUTCHours();
+        // get the last hour of the year by getting the next new year and subtracting the previous new year
+        var max = ((new Date(d.getUTCFullYear() + 1, 0) - min) / 86400000) * 24;
+        return this.generateValues(t1, t2, max);
       case os.histo.DateBinType.DAY_OF_WEEK:
         // 0 (Sunday) - 6 (Saturday)
-        return d.getUTCDay();
+        var t1 = d.getUTCDay();
+        if (!d2) {
+          return this.arrayKeys ? [t1] : t1;
+        }
+        var t2 = d2.getUTCDay();
+        var max = 6;
+        return this.generateValues(t1, t2, max);
       case os.histo.DateBinType.MINUTE:
         return os.time.floor(d, 'min').getTime();
       case os.histo.DateBinType.HOUR:
@@ -185,9 +243,44 @@ os.histo.DateBinMethod.prototype.getValue = function(item) {
 
 
 /**
+ * Get values for overlapping time bins, only gets called if start and end would be in different bins
+ * @param {number} start
+ * @param {number} end
+ * @param {number} max
+ * @return {Array<number>|number}
+ */
+os.histo.DateBinMethod.prototype.generateValues = function(start, end, max) {
+  if (start == end) {
+    return this.arrayKeys ? [start] : start;
+  }
+  if (start < end) {
+    // output = [start..end]
+    var output = new Array(end - start);
+    for (var i = 0, ii = end - start; i <= ii; i++) {
+      output[i] = start + i;
+    }
+  } else {
+    // end is after start but in lower bin
+    // output = [0..end,start..max]
+    var output = new Array((max - start) + (end + 1));
+    for (var i = end, ii = max - start + end; i <= ii; i++) {
+      output[i + 1] = start + i - end;
+    }
+    for (var j = 0, jj = end; j <= jj; j++) {
+      output[j] = j;
+    }
+  }
+  return output;
+};
+
+
+/**
  * @inheritDoc
  */
 os.histo.DateBinMethod.prototype.getBinKey = function(value) {
+  if (Array.isArray(value)) {
+    return value;
+  }
   return Number(value);
 };
 
@@ -197,6 +290,8 @@ os.histo.DateBinMethod.prototype.getBinKey = function(value) {
  */
 os.histo.DateBinMethod.prototype.getBinLabel = function(item) {
   var value = this.getValue(item);
+  // if value is a crossfilter key array, just get the last key
+  value = Array.isArray(value) ? value[value.length - 1] : value;
   return this.getLabelForKey(/** @type {number|string} */ (value));
 };
 

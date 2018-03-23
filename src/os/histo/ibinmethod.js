@@ -118,3 +118,9 @@ os.histo.IBinMethod.prototype.exportAsFilter;
  * @return {function(S):boolean}
  */
 os.histo.IBinMethod.prototype.createFilter;
+
+
+/**
+ * @param {boolean} value
+ */
+os.histo.IBinMethod.prototype.setArrayKeys;
