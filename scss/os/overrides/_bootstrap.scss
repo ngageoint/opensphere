@@ -349,8 +349,8 @@ td > input {
 }
 
 .modal-borderless {
+  @include box-shadow(rgba(0, 0, 0, 0) 0 3px 7px 0);
   border: 1px solid rgba(0, 0, 0, 0);
-  box-shadow: rgba(0, 0, 0, 0) 0 3px 7px 0;
 }
 
 .modal-body {
@@ -758,8 +758,8 @@ h6 {
 }
 
 .btn-group.open .btn.dropdown-toggle {
+  @include box-shadow(inset 0 2px 4px rgba(0, 0, 0, .15), 0 1px 2px rgba(0, 0, 0, .05));
   background-color: #3a3e41;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, .15), 0 1px 2px rgba(0, 0, 0, .05);
 }
 
 .dropdown-menu {

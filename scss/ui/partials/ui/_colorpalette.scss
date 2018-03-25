@@ -99,9 +99,9 @@
 
 button.btn-invisible,
 button.btn-invisible[disabled] {
+  @include box-shadow(none);
   background: transparent;
   border: 1px solid transparent;
-  box-shadow: none;
   padding: 0;
 
   &:hover {

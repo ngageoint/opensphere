@@ -126,10 +126,10 @@
 
       // override bootstrap styles on the input so it fits in the cell
       input.editor-text {
+        @include box-shadow(none);
         @include box-sizing(border-box);
         background: transparent;
         border: 0;
-        box-shadow: none;
         height: 100%;
         width: 100%;
       }
