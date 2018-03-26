@@ -184,7 +184,8 @@ plugin.heatmap.onImageComplete = function(layer, event) {
     imageFile.setContentType('image/png');
 
     var layerTitle = layer.getTitle();
-    var extent = layer.getExtent();
+    var extent = layer.getExtent().slice();
+    ol.extent.scaleFromCenter(extent, 1 / plugin.heatmap.EXTENT_SCALE_FACTOR);
     var mm = os.MapContainer.getInstance();
     var view = mm.getMap().getView();
     var centerLat = view.getCenter()[1];

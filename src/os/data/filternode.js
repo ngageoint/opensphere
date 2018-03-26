@@ -110,7 +110,7 @@ os.data.FilterNode.prototype.setState = function(value) {
             'filterGroup': true
           };
           entries.push(entry);
-          cmds.push(new os.ui.query.cmd.QueryEntries(entries, true, undefined, true));
+          cmds.push(new os.ui.query.cmd.QueryEntries(entries, true, this.entry.getType(), true));
         }
 
         if (cmds.length > 0) {
