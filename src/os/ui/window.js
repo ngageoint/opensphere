@@ -475,7 +475,7 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
   $element.css('overflow-y', 'unset');
 
   $element.css('left', $scope['x'] + 'px');
-  if ($scope['y'] != 'center' && $scope['height'] != 'auto') {
+  if (!($scope['y'] == 'center' && $scope['height'] == 'auto')) {
     $element.css('top', $scope['y'] + 'px');
   }
   $element.css('width', $scope['width'] + 'px');
@@ -532,7 +532,7 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
 
   this.scope['active'] = true;
 
-  if ($scope['y'] != 'center' && $scope['height'] != 'auto') {
+  if (!($scope['y'] == 'center' && $scope['height'] == 'auto')) {
     this.constrainWindow_();
   }
   this.element.focus();
