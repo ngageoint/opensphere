@@ -46,6 +46,8 @@ plugin.ogc.ui.OgcServerImportCtrl = function($scope, $element) {
 
   if (file) {
     var content = file.getContent();
+    var url = file.getUrl();
+
     if (content) {
       var titles = content.match(/title>([^<]*)<\//i);
 
@@ -53,9 +55,9 @@ plugin.ogc.ui.OgcServerImportCtrl = function($scope, $element) {
         $scope['config']['label'] = titles[1];
       }
 
-      if (content.search(/wms/gi) != -1) {
+      if (content.search(/wms/gi) != -1 || url.search(/wms/gi) != -1) {
         $scope['config']['wms'] = file.getUrl();
-      } else if (content.search(/wfs/gi) != -1) {
+      } else if (content.search(/wfs/gi) != -1 || url.search(/wfs/gi) != -1) {
         $scope['config']['wfs'] = file.getUrl();
       }
     }
