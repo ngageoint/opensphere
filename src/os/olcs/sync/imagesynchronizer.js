@@ -108,10 +108,17 @@ os.olcs.sync.ImageSynchronizer.prototype.syncInternal = function(opt_force) {
 
     var map = os.MapContainer.getInstance().getMap();
     var viewExtent = map.getExtent();
-    var resolution = map.getView().getResolution();
 
-    if (!viewExtent || resolution === undefined) {
+    if (!viewExtent) {
       this.removeImmediate_();
+      return;
+    }
+
+    var pixelExtent = map.getPixelFromCoordinate(ol.extent.getBottomLeft(viewExtent)).concat(
+        map.getPixelFromCoordinate(ol.extent.getTopRight(viewExtent)));
+
+    var resolution = ol.extent.getWidth(viewExtent) / Math.abs(ol.extent.getWidth(pixelExtent));
+    if (isNaN(resolution)) {
       return;
     }
 
