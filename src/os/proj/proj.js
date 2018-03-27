@@ -1,6 +1,8 @@
 goog.provide('os.proj');
 
 goog.require('goog.asserts');
+goog.require('goog.log');
+goog.require('goog.log.Logger');
 goog.require('ol.proj');
 goog.require('os.config.Settings');
 
@@ -44,6 +46,15 @@ os.proj.CRS84 = 'CRS:84';
  * @type {string}
  */
 os.proj.GOOGLE = 'EPSG:900913';
+
+
+/**
+ * The logger.
+ * @const
+ * @type {goog.debug.Logger}
+ * @private
+ */
+os.proj.LOGGER_ = goog.log.getLogger('os.proj');
 
 
 /**
@@ -121,4 +132,54 @@ os.proj.loadProjections = function() {
       }
     }
   }
+};
+
+
+/**
+ * @param {Object<string, *>} options The layer options
+ * @return {?ol.proj.Projection} The best supported projection by both the layer and the application or
+ *    null if none could be found. If projection(s) are not explicitly provided in the layer options, the
+ *    current application projection will be returned.
+ */
+os.proj.getBestSupportedProjection = function(options) {
+  var appProj = os.map.PROJECTION;
+  var desiredProjection = /** @type {string|undefined} */ (options['projection']);
+  var supportedProjections = /** @type {Array<!string>} */ (options['projections'] || []);
+  var preferredProjections = [os.proj.EPSG4326, os.proj.CRS84, os.proj.EPSG3857, os.proj.GOOGLE];
+
+  if (desiredProjection) {
+    preferredProjections.unshift(desiredProjection);
+    supportedProjections.unshift(desiredProjection);
+  }
+
+  if (!supportedProjections.length) {
+    // in the case that supported projections are not explicitly provided, we assume that the layer
+    // supports the application projection
+    return appProj;
+  }
+
+  preferredProjections.unshift(appProj.getCode());
+
+  // sort supported layer projections by preferred projection order
+  supportedProjections.sort(function(projCodeA, projCodeB) {
+    var indexA = preferredProjections.indexOf(projCodeA);
+    var indexB = preferredProjections.indexOf(projCodeB);
+
+    indexA = indexA === -1 ? preferredProjections.length : indexA;
+    indexB = indexB === -1 ? preferredProjections.length : indexB;
+
+    return indexA - indexB;
+  });
+
+  for (var i = 0, n = supportedProjections.length; i < n; i++) {
+    var p = ol.proj.get(supportedProjections[i]);
+
+    if (p) {
+      return ol.proj.equivalent(p, appProj) ? appProj : p;
+    }
+  }
+
+  goog.log.warning(os.proj.LOGGER_, 'A supported projection could not be found for layer ' + options['id'] +
+      '. projections=' + supportedProjections.toString());
+  return null;
 };
