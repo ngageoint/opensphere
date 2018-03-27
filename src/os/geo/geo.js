@@ -1738,6 +1738,24 @@ os.geo.toSexagesimal = function(coordinate, opt_isLon, opt_symbols) {
       (symbols ? ' ' : ''), (isLon ? (isNegative ? 'W' : 'E') : (isNegative ? 'S' : 'N')));
 };
 
+/**
+ * Parses a coordinate value into Degrees Decimal Minutes (DDM) format.
+ * @param {number} coordinate The coordinate
+ * @param {boolean=} opt_isLon If the coordinate is a longitudinal value
+ * @param {boolean=} opt_symbols If symbols should be displayed
+ * @return {string} The formatted coordinate
+ */
+os.geo.toDegreesDecimalMinutes = function(coordinate, opt_isLon, opt_symbols) {
+  var isLon = goog.isDef(opt_isLon) ? opt_isLon : true;
+  var symbols = goog.isDef(opt_symbols) ? opt_symbols : true;
+  var isNegative = coordinate < 0;
+  var degrees = coordinate > 0 ? Math.floor(coordinate) : Math.ceil(coordinate);
+  var minutes = Math.abs((degrees - coordinate) * 60);
+
+  return goog.string.buildString(os.geo.padCoordinate(Math.abs(degrees), isLon), (symbols ? '° ' : ''),
+      os.geo.padCoordinate(minutes, false, 2), (symbols ? '\'' : ''),
+      (symbols ? ' ' : ''), (isLon ? (isNegative ? 'W' : 'E') : (isNegative ? 'S' : 'N')));
+};
 
 /**
  * Normalizes a latitude value to the given range
