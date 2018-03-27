@@ -36,6 +36,13 @@ os.ui.menu.Menu = function(root) {
   this.context_ = undefined;
 
   /**
+   * The position options.
+   * @type {jQuery.PositionOptions}
+   * @private
+   */
+  this.position_ = {};
+
+  /**
    * The menu event target.
    * @type {Object|undefined}
    * @private
@@ -102,6 +109,7 @@ os.ui.menu.Menu.prototype.onClick_ = function(e) {
 os.ui.menu.Menu.prototype.open = function(context, position, opt_target) {
   this.close();
   this.context_ = context || undefined;
+  this.position_ = position || {};
   this.target_ = opt_target || this;
 
   var html = this.getRoot().render(this.context_, this.target_);
@@ -118,9 +126,8 @@ os.ui.menu.Menu.prototype.open = function(context, position, opt_target) {
 
   this.menu_ = $(html);
 
-  position = position || {};
-  position.within = position.within || '#win-container';
-  position.collision = position.collision || 'fit';
+  this.position_.within = this.position_.within || '#win-container';
+  this.position_.collision = this.position_.collision || 'fit';
 
   $(document.body).append(
       // You might be tempted to use the 'position' field in this options object.
@@ -130,13 +137,23 @@ os.ui.menu.Menu.prototype.open = function(context, position, opt_target) {
         'select': this.onSelect.bind(this)
       }));
 
-  this.menu_['position'](position);
+  this.menu_['position'](this.position_);
   this.listenerDelay_.start();
 
   this.dispatchEvent(os.ui.menu.MenuEventType.OPEN);
 
   // jQuery menu is outside of the Angular lifecycle, so the menu needs to trigger a digest on its own
   os.ui.apply(os.ui.injector.get('$rootScope'));
+};
+
+
+/**
+ * Reopen the menu to update it. If the menu isn't already open, nothing will happen.
+ */
+os.ui.menu.Menu.prototype.reopen = function() {
+  if (this.target_) {
+    this.open(this.context_, this.position_, this.target_);
+  }
 };
 
 
@@ -212,6 +229,7 @@ os.ui.menu.Menu.prototype.close = function(opt_dispatch) {
   }
 
   this.context_ = undefined;
+  this.position_ = {};
   this.target_ = undefined;
 
   this.onRemoveOutsideListener_();
