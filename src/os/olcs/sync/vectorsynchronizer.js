@@ -181,7 +181,8 @@ os.olcs.sync.VectorSynchronizer.prototype.disposeLayerPrimitives_ = function() {
  */
 os.olcs.sync.VectorSynchronizer.prototype.onLayerVisibility_ = function(opt_event) {
   if (this.csContext && this.layer) {
-    this.csContext.show = this.layer.getVisible();
+    // hide the collection on the context
+    this.csContext.collection.show = this.layer.getVisible();
     os.dispatcher.dispatchEvent(os.olcs.RenderLoop.REPAINT);
   }
 };
