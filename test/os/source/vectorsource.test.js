@@ -16,6 +16,7 @@ goog.require('os.layer.MockLayer');
 goog.require('os.mock');
 goog.require('os.source.Vector');
 goog.require('os.style');
+goog.require('os.style.StyleManager');
 goog.require('os.time.TimeRange');
 goog.require('os.ui.formatter.PropertiesFormatter');
 goog.require('plugin.file.geojson.GeoJSONParser');
@@ -128,175 +129,6 @@ describe('os.source.Vector', function() {
       // ID, LAT, LON, LAT_DMS, LON_DMS, MGRS, UP_DATE_TIME, DOWN_DATE_TIME
       expect(source.columns.length).toBe(8);
     });
-  });
-
-  it('should always add an ID column to the source', function() {
-    source.setColumns([]);
-    expect(source.columns.length).toBe(1);
-    expect(source.hasColumn(os.Fields.ID)).toBe(true);
-  });
-
-  it('should set columns on the source from an array of strings', function() {
-    // adds supplemental spatial columns based on existing columns
-    var columns = ['ID', 'LAT', 'LON', 'TIME', 'TEST1', 'TEST2', 'TEST3'];
-    source.setColumns(columns);
-    expect(source.columns.length).toBe(columns.length + 3); // +3 for mgrs, latdms, londms
-
-    for (var i = 0, n = columns.length; i < n; i++) {
-      expect(source.hasColumn(columns[i])).toBe(true);
-    }
-
-    expect(source.hasColumn(os.Fields.MGRS)).toBe(true);
-    expect(source.hasColumn(os.Fields.LAT_DMS)).toBe(true);
-    expect(source.hasColumn(os.Fields.LAT_DMS)).toBe(true);
-  });
-
-  it('should set columns on the source from an array of columns', function() {
-    var createColumn = function(name, field) {
-      var columnDefinition = new os.data.ColumnDefinition();
-      columnDefinition['id'] = name;
-      columnDefinition['name'] = name;
-      columnDefinition['field'] = field || name;
-      columnDefinition['sortable'] = true;
-
-      return columnDefinition;
-    };
-
-    var columns = [];
-    columns.push(createColumn('ID'));
-    columns.push(createColumn('LAT'));
-    columns.push(createColumn('LON'));
-    columns.push(createColumn('TEST1'));
-    columns.push(createColumn('TEST2'));
-    columns.push(createColumn('TEST3'));
-
-    source.setColumns(columns);
-    expect(source.columns.length).toBe(columns.length + 3); // +3 for mgrs, latdms, londms
-
-    for (var i = 0, n = columns.length; i < n; i++) {
-      expect(source.hasColumn(columns[i]['field'])).toBe(true);
-    }
-
-    expect(source.hasColumn(os.Fields.MGRS)).toBe(true);
-    expect(source.hasColumn(os.Fields.LAT_DMS)).toBe(true);
-    expect(source.hasColumn(os.Fields.LAT_DMS)).toBe(true);
-  });
-
-  it('should add a TIME column if time enabled', function() {
-    var columns = ['ID', 'LAT', 'LON', 'TEST1', 'TEST2', 'TEST3'];
-    source.setTimeEnabled(true);
-    source.setColumns(columns);
-    expect(source.columns.length).toBe(columns.length + 4); // +4 for mgrs, latdms, londms, time
-    expect(source.hasColumn(os.data.RecordField.TIME)).toBe(true);
-
-    // disable it for subsequent tests
-    source.setTimeEnabled(false);
-  });
-
-  it('should remove duplicate columns', function() {
-    var columns = [
-      new os.data.ColumnDefinition('ID'),
-      new os.data.ColumnDefinition('ID')
-    ];
-
-    var source = new os.source.Vector(undefined);
-    source.setColumns(columns);
-    expect(source.columns.length).toBe(1);
-    expect(source.columns[0]['id']).toBe('ID');
-  });
-
-  it('should restore columns from a descriptor', function() {
-    // create a fake descriptor that returns columns:
-    //  - out of the normal auto sort order
-    //  - non-default width and userModified values
-    var dColumn1 = new os.data.ColumnDefinition('TIME');
-    dColumn1['width'] = 123;
-    dColumn1['userModified'] = true;
-
-    var dColumn2 = new os.data.ColumnDefinition('ID');
-    dColumn2['width'] = 456;
-    dColumn2['userModified'] = true;
-
-    var descriptor = {
-      getColumns: function() {
-        return [dColumn1, dColumn2];
-      },
-      setColumns: function() {}
-    };
-
-    // return the descriptor when setColumns looks for one
-    spyOn(os.dataManager, 'getDescriptor').andReturn(descriptor);
-
-    // columns on the descriptor start in opposite order, with new columns mixed in
-    var columns = [
-      new os.data.ColumnDefinition('ID'),
-      new os.data.ColumnDefinition('NEW_COLUMN_1'),
-      new os.data.ColumnDefinition('TIME'),
-      new os.data.ColumnDefinition('NEW_COLUMN_2')
-    ];
-
-    columns[0]['width'] = 100;
-    columns[1]['width'] = 200;
-    columns[2]['width'] = 300;
-    columns[3]['width'] = 400;
-
-    var source = new os.source.Vector(undefined);
-    source.setColumns(columns);
-
-    // still have 4 columns
-    expect(source.columns.length).toBe(4);
-
-    // columns in the descriptor are sorted first in descriptor order
-    expect(source.columns[0]['id']).toBe('TIME');
-    expect(source.columns[1]['id']).toBe('ID');
-
-    // columns not in the descriptor are sorted last in the current order
-    expect(source.columns[2]['id']).toBe('NEW_COLUMN_1');
-    expect(source.columns[3]['id']).toBe('NEW_COLUMN_2');
-
-    // width restored from descriptor column
-    expect(source.columns[0]['width']).toBe(123);
-    expect(source.columns[1]['width']).toBe(456);
-
-    // width maintained if not on the descriptor
-    expect(source.columns[2]['width']).toBe(200);
-    expect(source.columns[3]['width']).toBe(400);
-
-    // userModified restored from descriptor column
-    expect(source.columns[0]['userModified']).toBe(true);
-    expect(source.columns[1]['userModified']).toBe(true);
-
-    // userModified maintained if not on the descriptor
-    expect(source.columns[2]['userModified']).toBe(false);
-    expect(source.columns[3]['userModified']).toBe(false);
-  });
-
-  it('should sort columns if they are not marked as user-modified', function() {
-    var columns = [
-      new os.data.ColumnDefinition('TIME'),
-      new os.data.ColumnDefinition('ID')
-    ];
-
-    var source = new os.source.Vector(undefined);
-    source.setColumns(columns);
-    expect(source.columns.length).toBe(2);
-    expect(source.columns[0]['id']).toBe('TIME');
-    expect(source.columns[1]['id']).toBe('ID');
-  });
-
-  it('should not sort columns if they are marked as user-modified', function() {
-    var columns = [
-      new os.data.ColumnDefinition('TIME'),
-      new os.data.ColumnDefinition('ID')
-    ];
-
-    columns[0]['userModified'] = true;
-
-    var source = new os.source.Vector(undefined);
-    source.setColumns(columns);
-    expect(source.columns.length).toBe(2);
-    expect(source.columns[0]['id']).toBe('TIME');
-    expect(source.columns[1]['id']).toBe('ID');
   });
 
   it('should select a single feature in the source', function() {
@@ -577,26 +409,6 @@ describe('os.source.Vector', function() {
     expect(goog.object.getKeys(source.selectedById_).length).toBe(10);
   });
 
-  it('should add a formatter to a "DESCRIPTION" column', function() {
-    var columns = ['ID', 'DESCRIPTION'];
-    source.setColumns(columns);
-    expect(source.columns.length).toBe(2);
-    expect(source.hasColumn('DESCRIPTION')).toBe(true);
-
-    // expect the formatter on that column to be the DescriptionFormatter
-    expect(source.getColumns()[1]['formatter']).toBe(os.ui.formatter.DescriptionFormatter);
-  });
-
-  it('should add a formatter to a "PROPERTIES" column', function() {
-    var columns = ['ID', 'PROPERTIES'];
-    source.setColumns(columns);
-    expect(source.columns.length).toBe(2);
-    expect(source.hasColumn('PROPERTIES')).toBe(true);
-
-    // expect the formatter on that column to be the PropertiesFormatter
-    expect(source.getColumns()[1]['formatter']).toBe(os.ui.formatter.PropertiesFormatter);
-  });
-
   it('create its refresh delay', function() {
     source.setRefreshInterval(15);
 
@@ -628,6 +440,216 @@ describe('os.source.Vector', function() {
     var newSource = new os.source.Vector(undefined);
     newSource.addFeature(f);
     expect(f.getGeometry()).toBe(null);
+  });
+
+  describe('columns', function() {
+    var columns;
+
+    it('should always add an ID column to the source', function() {
+      source.setColumns([]);
+      expect(source.columns.length).toBe(1);
+      expect(source.hasColumn(os.Fields.ID)).toBe(true);
+    });
+
+    it('should set columns on the source from an array of strings', function() {
+      // adds supplemental spatial columns based on existing columns
+      columns = ['ID', 'LAT', 'LON', 'TIME', 'TEST1', 'TEST2', 'TEST3'];
+      source.setColumns(columns);
+      expect(source.columns.length).toBe(columns.length + 3); // +3 for mgrs, latdms, londms
+
+      for (var i = 0, n = columns.length; i < n; i++) {
+        expect(source.hasColumn(columns[i])).toBe(true);
+      }
+
+      expect(source.hasColumn(os.Fields.MGRS)).toBe(true);
+      expect(source.hasColumn(os.Fields.LAT_DMS)).toBe(true);
+      expect(source.hasColumn(os.Fields.LAT_DMS)).toBe(true);
+    });
+
+    it('should set columns on the source from an array of columns', function() {
+      var createColumn = function(name, field) {
+        var columnDefinition = new os.data.ColumnDefinition();
+        columnDefinition['id'] = name;
+        columnDefinition['name'] = name;
+        columnDefinition['field'] = field || name;
+        columnDefinition['sortable'] = true;
+
+        return columnDefinition;
+      };
+
+      columns = [];
+      columns.push(createColumn('ID'));
+      columns.push(createColumn('LAT'));
+      columns.push(createColumn('LON'));
+      columns.push(createColumn('TEST1'));
+      columns.push(createColumn('TEST2'));
+      columns.push(createColumn('TEST3'));
+
+      source.setColumns(columns);
+      expect(source.columns.length).toBe(columns.length + 3); // +3 for mgrs, latdms, londms
+
+      for (var i = 0, n = columns.length; i < n; i++) {
+        expect(source.hasColumn(columns[i]['field'])).toBe(true);
+      }
+
+      expect(source.hasColumn(os.Fields.MGRS)).toBe(true);
+      expect(source.hasColumn(os.Fields.LAT_DMS)).toBe(true);
+      expect(source.hasColumn(os.Fields.LAT_DMS)).toBe(true);
+    });
+
+    it('should add a TIME column if time enabled', function() {
+      columns = ['ID', 'LAT', 'LON', 'TEST1', 'TEST2', 'TEST3'];
+      source.setTimeEnabled(true);
+      source.setColumns(columns);
+      expect(source.columns.length).toBe(columns.length + 4); // +4 for mgrs, latdms, londms, time
+      expect(source.hasColumn(os.data.RecordField.TIME)).toBe(true);
+
+      // disable it for subsequent tests
+      source.setTimeEnabled(false);
+    });
+
+    it('should remove duplicate columns', function() {
+      columns = [
+        new os.data.ColumnDefinition('ID'),
+        new os.data.ColumnDefinition('ID')
+      ];
+
+      var source = new os.source.Vector(undefined);
+      source.setColumns(columns);
+      expect(source.columns.length).toBe(1);
+      expect(source.columns[0]['id']).toBe('ID');
+    });
+
+    it('should restore columns from a descriptor', function() {
+      // create a fake descriptor that returns columns:
+      //  - out of the normal auto sort order
+      //  - non-default width and userModified values
+      var dColumn1 = new os.data.ColumnDefinition('TIME');
+      dColumn1['width'] = 123;
+      dColumn1['userModified'] = true;
+
+      var dColumn2 = new os.data.ColumnDefinition('ID');
+      dColumn2['width'] = 456;
+      dColumn2['userModified'] = true;
+
+      var descriptor = {
+        getColumns: function() {
+          return [dColumn1, dColumn2];
+        },
+        setColumns: function() {}
+      };
+
+      // return the descriptor when setColumns looks for one
+      spyOn(os.dataManager, 'getDescriptor').andReturn(descriptor);
+
+      // columns on the descriptor start in opposite order, with new columns mixed in
+      columns = [
+        new os.data.ColumnDefinition('ID'),
+        new os.data.ColumnDefinition('NEW_COLUMN_1'),
+        new os.data.ColumnDefinition('TIME'),
+        new os.data.ColumnDefinition('NEW_COLUMN_2')
+      ];
+
+      columns[0]['width'] = 100;
+      columns[1]['width'] = 200;
+      columns[2]['width'] = 300;
+      columns[3]['width'] = 400;
+
+      var source = new os.source.Vector(undefined);
+      source.setColumns(columns);
+
+      // still have 4 columns
+      expect(source.columns.length).toBe(4);
+
+      // columns in the descriptor are sorted first in descriptor order
+      expect(source.columns[0]['id']).toBe('TIME');
+      expect(source.columns[1]['id']).toBe('ID');
+
+      // columns not in the descriptor are sorted last in the current order
+      expect(source.columns[2]['id']).toBe('NEW_COLUMN_1');
+      expect(source.columns[3]['id']).toBe('NEW_COLUMN_2');
+
+      // width restored from descriptor column
+      expect(source.columns[0]['width']).toBe(123);
+      expect(source.columns[1]['width']).toBe(456);
+
+      // width maintained if not on the descriptor
+      expect(source.columns[2]['width']).toBe(200);
+      expect(source.columns[3]['width']).toBe(400);
+
+      // userModified restored from descriptor column
+      expect(source.columns[0]['userModified']).toBe(true);
+      expect(source.columns[1]['userModified']).toBe(true);
+
+      // userModified maintained if not on the descriptor
+      expect(source.columns[2]['userModified']).toBe(false);
+      expect(source.columns[3]['userModified']).toBe(false);
+    });
+
+    it('should sort columns if they are not marked as user-modified', function() {
+      columns = [
+        new os.data.ColumnDefinition('TIME'),
+        new os.data.ColumnDefinition('ID')
+      ];
+
+      var source = new os.source.Vector(undefined);
+      source.setColumns(columns);
+      expect(source.columns.length).toBe(2);
+      expect(source.columns[0]['id']).toBe('TIME');
+      expect(source.columns[1]['id']).toBe('ID');
+    });
+
+    it('should not sort columns if they are marked as user-modified', function() {
+      columns = [
+        new os.data.ColumnDefinition('TIME'),
+        new os.data.ColumnDefinition('ID')
+      ];
+
+      columns[0]['userModified'] = true;
+
+      var source = new os.source.Vector(undefined);
+      source.setColumns(columns);
+      expect(source.columns.length).toBe(2);
+      expect(source.columns[0]['id']).toBe('TIME');
+      expect(source.columns[1]['id']).toBe('ID');
+    });
+
+    it('should add a formatter to a "DESCRIPTION" column', function() {
+      columns = ['ID', 'DESCRIPTION'];
+      source = new os.source.Vector();
+      source.setColumns(columns);
+      expect(source.columns.length).toBe(2);
+      expect(source.hasColumn('DESCRIPTION')).toBe(true);
+
+      // expect the formatter on that column to be the DescriptionFormatter
+      expect(source.getColumns()[1]['formatter']).toBe(os.ui.formatter.DescriptionFormatter);
+    });
+
+    it('should add a formatter to a "PROPERTIES" column', function() {
+      columns = ['ID', 'PROPERTIES'];
+      source = new os.source.Vector();
+      source.setColumns(columns);
+      expect(source.columns.length).toBe(2);
+      expect(source.hasColumn('PROPERTIES')).toBe(true);
+
+      // expect the formatter on that column to be the PropertiesFormatter
+      expect(source.getColumns()[1]['formatter']).toBe(os.ui.formatter.PropertiesFormatter);
+    });
+
+    it('should detect an icon rotation column', function() {
+      var styleConfig = {};
+      columns = ['ID', 'TYPE', 'BEARING'];
+      source = new os.source.Vector();
+
+      var sm = os.style.StyleManager.getInstance();
+      spyOn(sm, 'getLayerConfig').andCallFake(function() {
+        return styleConfig;
+      });
+
+      source.setColumns(columns);
+
+      expect(styleConfig[os.style.StyleField.ROTATION_COLUMN]).toBe(os.Fields.BEARING);
+    });
   });
 
   describe('dynamic features', function() {
