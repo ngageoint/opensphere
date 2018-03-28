@@ -472,8 +472,6 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
     $element.resizable(resizeConfig);
   }
 
-  $element.css('overflow-y', 'unset');
-
   $element.css('left', $scope['x'] + 'px');
   if (!($scope['y'] == 'center' && $scope['height'] == 'auto')) {
     $element.css('top', $scope['y'] + 'px');
@@ -584,7 +582,6 @@ os.ui.WindowCtrl.prototype.addModalBg = function() {
   if (!this.modalElement) {
     var container = angular.element(this.scope['windowContainer']);
     this.modalElement = container.append('<div class="window-modal-bg"></div>');
-    container.css('overflow', 'hidden');
     this.element.css('z-index', this.scope['zIndex'] || '10001');
   }
 };
@@ -596,7 +593,6 @@ os.ui.WindowCtrl.prototype.addModalBg = function() {
 os.ui.WindowCtrl.prototype.removeModalBg = function() {
   if (this.modalElement) {
     $('.window-modal-bg').first().remove();
-    $(this.scope['windowContainer']).css('overflow', 'auto');
     this.modalElement = null;
   }
 };
