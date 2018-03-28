@@ -8,7 +8,6 @@ goog.require('ol');
 goog.require('ol.Feature');
 goog.require('ol.Map');
 goog.require('ol.View');
-goog.require('ol.control.ScaleLine');
 goog.require('ol.control.ZoomSlider');
 goog.require('ol.extent');
 goog.require('ol.geom.LineString');
@@ -28,6 +27,7 @@ goog.require('ol.style.Fill');
 goog.require('ol.style.Stroke');
 goog.require('ol.style.Style');
 goog.require('ol.tilegrid.TileGrid');
+goog.require('os.control.ScaleLine');
 goog.require('os.fn');
 goog.require('os.map.IMapContainer');
 goog.require('os.ol.source.XYZ');
@@ -324,7 +324,7 @@ os.ui.ol.OLMap.prototype.getControls_ = function() {
     rotate: false
   });
   var mapControls = [];
-  var scaleLine = new ol.control.ScaleLine({
+  var scaleLine = new os.control.ScaleLine({
     target: document.getElementById('scale-line')
   });
   var zoomSlider = new ol.control.ZoomSlider();
