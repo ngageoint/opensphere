@@ -9,6 +9,7 @@ form {
   textarea.ng-invalid.ng-dirty {
     background-color: #ffe8e8;
     background-image: none;
+    margin: 0;
   }
 
   .ng-invalid.ng-dirty {
@@ -35,6 +36,7 @@ form {
   textarea.ng-pristine.ng-invalid {
     background-color: #fffff5;
     background-image: none;
+    margin: 0;
   }
 
   .ng-pristine.ng-invalid .select2-container {
