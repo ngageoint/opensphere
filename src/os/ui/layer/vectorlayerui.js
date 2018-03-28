@@ -132,7 +132,7 @@ os.ui.layer.VectorLayerUICtrl = function($scope, $element, $timeout) {
   $scope.$on(os.ui.layer.LabelControlsEventType.COLUMN_CHANGE, this.onLabelColumnChange.bind(this));
   $scope.$on(os.ui.layer.LabelControlsEventType.SHOW_LABELS_CHANGE, this.onShowLabelsChange.bind(this));
   $scope.$on(os.ui.layer.VectorStyleControlsEventType.SHOW_ROTATION_CHANGE, this.onShowRotationChange_.bind(this));
-  $scope.$on(os.ui.layer.VectorStyleControlsEventType.ROTATION_COLUMN_CHANGE, this.onRotationColumnChange_.bind(this));
+  $scope.$on(os.ui.layer.VectorStyleControlsEventType.ROTATION_COLUMN_CHANGE, this.onRotationColumnChange.bind(this));
 };
 goog.inherits(os.ui.layer.VectorLayerUICtrl, os.ui.layer.DefaultLayerUICtrl);
 
@@ -157,11 +157,6 @@ os.ui.layer.VectorLayerUICtrl.prototype.initUI = function() {
     this['columns'] = this.getValue(os.ui.layer.getColumns);
     this['showRotation'] = this.getShowRotation_();
     this['rotationColumn'] = this.getRotationColumn_();
-    if (goog.string.isEmptyOrWhitespace(this['rotationColumn']) && this.canUseBearing()) { // autodetect bearing
-      this['rotationColumn'] = os.Fields.BEARING;
-      this.onRotationColumnChange(this['rotationColumn']);
-    }
-
 
     this.updateReplaceStyle_();
 
@@ -903,29 +898,6 @@ goog.exportProperty(
 
 
 /**
- * Fall back to auto-detected bearing
- * @return {boolean}
- * @protected
- */
-os.ui.layer.VectorLayerUICtrl.prototype.canUseBearing = function() {
-  var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
-  var layer = items[0].getLayer();
-  if (layer) {
-    var source = /** @type {os.layer.Vector} */ (layer).getSource();
-    if (source && os.instanceOf(source, os.source.Vector.NAME)) {
-      source = /** @type {!os.source.Vector} */ (source);
-      if (!source.hasColumn(os.Fields.BEARING)) {
-        return false;
-      }
-      return true;
-    }
-  }
-  return false;
-};
-
-
-
-/**
  * The column for the icon rotation
  * @return {string}
  * @private
@@ -990,17 +962,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.onShowRotationChange_ = function(event, 
  * @param {string} value
  * @private
  */
-os.ui.layer.VectorLayerUICtrl.prototype.onRotationColumnChange_ = function(event, value) {
-  this.onRotationColumnChange(value);
-};
-
-
-/**
- * Notify column changes to the rotation
- * @param {string} value
- * @protected
- */
-os.ui.layer.VectorLayerUICtrl.prototype.onRotationColumnChange = function(value) {
+os.ui.layer.VectorLayerUICtrl.prototype.onRotationColumnChange = function(event, value) {
   var items = /** @type {Array} */ (this.scope['items']);
   if (items && items.length > 0) {
     var fn = goog.bind(
