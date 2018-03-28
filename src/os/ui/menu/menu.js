@@ -105,9 +105,10 @@ os.ui.menu.Menu.prototype.onClick_ = function(e) {
  * @param {T} context The menu context.
  * @param {jQuery.PositionOptions} position The position options.
  * @param {Object=} opt_target The menu event target.
+ * @param {boolean=} opt_dispatch Whether or not to dispatch an event. Defaults to true.
  */
-os.ui.menu.Menu.prototype.open = function(context, position, opt_target) {
-  this.close();
+os.ui.menu.Menu.prototype.open = function(context, position, opt_target, opt_dispatch) {
+  this.close(opt_dispatch);
   this.context_ = context || undefined;
   this.position_ = position || {};
   this.target_ = opt_target || this;
@@ -140,7 +141,10 @@ os.ui.menu.Menu.prototype.open = function(context, position, opt_target) {
   this.menu_['position'](this.position_);
   this.listenerDelay_.start();
 
-  this.dispatchEvent(os.ui.menu.MenuEventType.OPEN);
+  var dispatch = opt_dispatch != null ? opt_dispatch : true;
+  if (dispatch) {
+    this.dispatchEvent(os.ui.menu.MenuEventType.OPEN);
+  }
 
   // jQuery menu is outside of the Angular lifecycle, so the menu needs to trigger a digest on its own
   os.ui.apply(os.ui.injector.get('$rootScope'));
@@ -152,7 +156,7 @@ os.ui.menu.Menu.prototype.open = function(context, position, opt_target) {
  */
 os.ui.menu.Menu.prototype.reopen = function() {
   if (this.target_) {
-    this.open(this.context_, this.position_, this.target_);
+    this.open(this.context_, this.position_, this.target_, false);
   }
 };
 
@@ -207,7 +211,9 @@ os.ui.menu.Menu.prototype.onSelect = function(evt, ui) {
         os.metrics.Metrics.getInstance().updateMetric(item.metricKey, 1);
       }
 
-      this.close();
+      if (item.closeOnSelect) {
+        this.close();
+      }
     }
   }
 };
