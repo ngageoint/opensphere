@@ -4,13 +4,15 @@ goog.require('ol.geom.Polygon');
 goog.require('os.geo');
 
 
-
 /**
  * Ellipse geometry.
- * @param {!ol.Coordinate} center The ellipse center point.
+ *
+ * The Ellipse coordinates are generated in the map projection.
+ *
+ * @param {!ol.Coordinate} center The ellipse center point, in longitude / latitude.
  * @param {number} semiMajor The semi-major radius, in meters.
  * @param {number=} opt_semiMinor The semi-minor radius, in meters. If not provided, semi-major will be used.
- * @param {number=} opt_orientation The ellipse orientation, in degrees.
+ * @param {number=} opt_orientation The ellipse orientation, in degrees from true north. 0 if not provided.
  * @extends {ol.geom.Polygon}
  * @constructor
  */
@@ -39,7 +41,7 @@ os.geom.Ellipse = function(center, semiMajor, opt_semiMinor, opt_orientation) {
   this.semiMinor = opt_semiMinor != null ? opt_semiMinor : semiMajor;
 
   /**
-   * The orientation of the ellipse.
+   * The orientation of the ellipse, major axis from true north, in degrees.
    * @type {number}
    * @protected
    */
@@ -134,7 +136,7 @@ os.geom.Ellipse.prototype.setSemiMinor = function(value) {
 
 /**
  * Get the orientation.
- * @return {number}
+ * @return {number} orientation in degrees from true north.
  */
 os.geom.Ellipse.prototype.getOrientation = function() {
   return this.orientation;
@@ -143,7 +145,7 @@ os.geom.Ellipse.prototype.getOrientation = function() {
 
 /**
  * Set the orientation.
- * @param {number} value The new value.
+ * @param {number} value The new value in degrees from true north.
  */
 os.geom.Ellipse.prototype.setOrientation = function(value) {
   this.orientation = value;
