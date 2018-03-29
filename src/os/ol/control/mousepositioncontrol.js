@@ -87,7 +87,7 @@ os.ol.control.MousePosition.LON_LAT_FORMAT = function(coordinate) {
     lat = '+' + lat;
   }
 
-  return lat + ', ' + lon;
+  return lat + ', ' + lon + ' (DD)';
 };
 
 
@@ -97,7 +97,7 @@ os.ol.control.MousePosition.LON_LAT_FORMAT = function(coordinate) {
  * @const
  */
 os.ol.control.MousePosition.MGRS_FORMAT = function(coordinate) {
-  return osasm.toMGRS(coordinate);
+  return osasm.toMGRS(coordinate) + ' (MGRS)';
 };
 
 
@@ -108,9 +108,18 @@ os.ol.control.MousePosition.MGRS_FORMAT = function(coordinate) {
  */
 os.ol.control.MousePosition.SEXAGESIMAL_FORMAT = function(coordinate) {
   return (os.geo.toSexagesimal(coordinate[1], false, false) + ' ' +
-      os.geo.toSexagesimal(os.geo.normalizeLongitude(coordinate[0]), true, false)).replace(/°/g, '&deg;');
+      os.geo.toSexagesimal(os.geo.normalizeLongitude(coordinate[0]), true, false) + ' (DMS)').replace(/°/g, '&deg;');
 };
 
+/**
+ * @param {ol.Coordinate} coordinate
+ * @return {string}
+ * @const
+ */
+os.ol.control.MousePosition.DDM = function(coordinate) {
+  return (os.geo.toDegreesDecimalMinutes(coordinate[1], false, false) + ' ' +
+      os.geo.toDegreesDecimalMinutes(os.geo.normalizeLongitude(coordinate[0]), true, false) + ' (DDM)').replace(/°/g, '&deg;');
+};
 
 /**
  * @type {!Object<string, ol.CoordinateFormatType>}
@@ -118,6 +127,7 @@ os.ol.control.MousePosition.SEXAGESIMAL_FORMAT = function(coordinate) {
 os.ol.control.MousePosition.FormatMap = {
   'deg': os.ol.control.MousePosition.LON_LAT_FORMAT,
   'dms': os.ol.control.MousePosition.SEXAGESIMAL_FORMAT,
+  'ddm': os.ol.control.MousePosition.DDM,
   'mgrs': os.ol.control.MousePosition.MGRS_FORMAT
 };
 
