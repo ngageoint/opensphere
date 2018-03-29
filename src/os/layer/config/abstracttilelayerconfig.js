@@ -8,6 +8,7 @@ goog.require('os.mixin.TileImage');
 goog.require('os.mixin.UrlTileSource');
 goog.require('os.net');
 goog.require('os.ol.source.tileimage');
+goog.require('os.proj');
 goog.require('os.tile.ColorableTile');
 
 
@@ -20,7 +21,7 @@ os.layer.config.AbstractTileLayerConfig = function() {
   os.layer.config.AbstractTileLayerConfig.base(this, 'constructor');
 
   /**
-   * @type {?ol.proj.Projection}
+   * @type {ol.proj.Projection}
    * @protected
    */
   this.projection = null;
@@ -102,32 +103,12 @@ os.layer.config.AbstractTileLayerConfig.prototype.initializeConfig = function(op
   var width = this.getTileWidth(options);
   var height = this.getTileHeight(options);
 
-  // detect best projection
-  var appProj = os.map.PROJECTION;
-  var desiredProjection = ol.proj.get(/** @type {ol.ProjectionLike} */ (options['projection']));
-  var supportedProjections = /** @type {Array<!string>} */ (options['projections'] || []);
-  var preferredProjections = [os.proj.EPSG4326, os.proj.CRS84, os.proj.EPSG3857, os.proj.GOOGLE];
-
-  if (desiredProjection) {
-    var code = desiredProjection.getCode();
-    preferredProjections.unshift(code);
-    supportedProjections.unshift(code);
+  var projection = os.proj.getBestSupportedProjection(options);
+  if (!projection) {
+    throw new Error('No projections supported by the layer are defined!');
   }
 
-  preferredProjections.unshift(appProj.getCode());
-
-  // defaults
-  this.projection = appProj;
-
-  for (var i = 0, n = preferredProjections.length; i < n; i++) {
-    var p = ol.proj.get(preferredProjections[i]);
-
-    if (p && supportedProjections.indexOf(p.getCode()) > -1) {
-      this.projection = !ol.proj.equivalent(p, appProj) ? p : this.projection;
-      break;
-    }
-  }
-
+  this.projection = projection;
   this.tileGrid = ol.tilegrid.createForProjection(this.projection, ol.DEFAULT_MAX_ZOOM, [width, height]);
 
   // cross origin
