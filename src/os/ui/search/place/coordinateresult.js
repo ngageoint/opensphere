@@ -135,6 +135,7 @@ os.ui.search.place.createFeature = function(opt_options) {
   }
 
   var feature = new ol.Feature(opt_options);
+  feature.setId(ol.getUid(feature));
 
   var featureConfig = os.object.unsafeClone(os.ui.search.place.FEATURE_CONFIG);
   feature.set(os.style.StyleType.FEATURE, featureConfig);
