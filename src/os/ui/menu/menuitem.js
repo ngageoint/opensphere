@@ -37,6 +37,7 @@ os.ui.menu.UnclickableTypes = [
  *  visible: (boolean|undefined),
  *  enabled: (boolean|undefined),
  *  selected: (boolean|undefined),
+ *  closeOnSelect: (boolean|undefined),
  *  icons: (!Array<!string>|undefined),
  *  tooltip: (string|undefined),
  *  shortcut: (string|undefined),
@@ -59,18 +60,19 @@ os.ui.menu.MenuItem = function(options) {
   this.eventType = options.eventType;
   this.metricKey = options.metricKey;
   this.label = options.label;
-  this.visible = goog.isDef(options.visible) ? options.visible : true;
-  this.enabled = goog.isDef(options.enabled) ? options.enabled : true;
+  this.visible = options.visible != null ? options.visible : true;
+  this.enabled = options.enabled != null ? options.enabled : true;
   this.selected = options.selected;
   this.icons = options.icons;
   this.tooltip = options.tooltip;
   this.shortcut = options.shortcut;
   this.sort = options.sort || 0;
+  this.closeOnSelect = options.closeOnSelect != null ? options.closeOnSelect : true;
 
   /**
    * @type {Array<!os.ui.menu.MenuItem<T>>|undefined}
    */
-  this.children = goog.isDef(options.children) ? options.children.map(function(c) {
+  this.children = options.children != null ? options.children.map(function(c) {
     return new os.ui.menu.MenuItem(c);
   }) : undefined;
 
@@ -164,8 +166,8 @@ os.ui.menu.MenuItem.prototype.render = function(context, opt_target) {
   var types = os.ui.menu.MenuItemType;
   var visible = this.visible;
   var enabled = this.enabled;
-  var type = goog.isDef(this.type) ? this.type : types.ITEM;
-  var tooltip = goog.isDef(this.tooltip) ? this.tooltip : '';
+  var type = this.type != null ? this.type : types.ITEM;
+  var tooltip = this.tooltip != null ? this.tooltip : '';
   var html = '';
   var childHtml = '';
 

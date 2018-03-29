@@ -110,7 +110,7 @@ plugin.ogc.wms.WMSLayerConfig.prototype.getSource = function(options) {
     var keys = this.params.getKeys();
     for (var i = 0, n = keys.length; i < n; i++) {
       var key = keys[i];
-      params[key.toUpperCase()] = this.params.get(key);
+      params[options['caseSensitive'] ? key : key.toUpperCase()] = this.params.get(key);
     }
   }
 
