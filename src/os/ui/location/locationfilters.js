@@ -29,7 +29,10 @@ os.ui.location.degFilter = function() {
  * @return {string}
  */
 os.ui.location.degFilter.Filter = function(latdeg, londeg) {
-  return latdeg.toFixed(5) + '°  ' + londeg.toFixed(5) + '°';
+  if (latdeg && londeg) {
+    return latdeg.toFixed(5) + '°  ' + londeg.toFixed(5) + '°';
+  }
+  return '';
 };
 
 
@@ -205,7 +208,10 @@ os.ui.location.mgrsFilter = function() {
  * @return {string}
  */
 os.ui.location.mgrsFilter.Filter = function(latdeg, londeg) {
-  return osasm.toMGRS([londeg, latdeg]);
+  if (londeg && latdeg) {
+    return osasm.toMGRS([londeg, latdeg]);
+  }
+  return '';
 };
 
 
