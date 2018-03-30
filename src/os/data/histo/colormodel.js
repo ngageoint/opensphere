@@ -387,6 +387,16 @@ os.data.histo.ColorModel.prototype.resetColor_ = function() {
       // all features should be given the default color
       this.colorFeatures_(source.getFeatures(), undefined);
     }
+    // if the histrogram is binning time ranges then force it to refresh on reset color
+    var isRanges;
+    try {
+      isRanges = this.histogram_.getBinRanges();
+    } catch (error) {
+      isRanges = false;
+    }
+    if (isRanges) {
+      this.histogram_.setBinRanges(true);
+    }
   }
 };
 
