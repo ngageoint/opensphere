@@ -1,5 +1,7 @@
 goog.provide('os.ui.modal');
 
+goog.require('ol.obj');
+
 
 /**
  * @param {string} target A selector used to identify the parent for the modal
@@ -10,7 +12,7 @@ os.ui.modal.create = function(target, markup, opt_scopeOptions) {
   var compile = /** @type {!angular.$compile} */ (os.ui.injector.get('$compile'));
   var scope = /** @type {!angular.Scope} */ (os.ui.injector.get('$rootScope').$new());
 
-  Object.assign(scope, opt_scopeOptions);
+  ol.obj.assign(scope, opt_scopeOptions);
 
   $(target).append(/** @type {Element} */ (compile(markup)(scope)[0]));
 };
