@@ -256,7 +256,7 @@ os.time.xf.TimeModel.prototype.disposeInternal = function() {
 /**
  * @inheritDoc
  */
-os.time.xf.TimeModel.prototype.addDimension = function(id, accessorFn) {
+os.time.xf.TimeModel.prototype.addDimension = function(id, accessorFn, opt_isArray) {
   if (!this.isDisposed()) {
     this.removeDimension(id, true);
 
@@ -267,9 +267,9 @@ os.time.xf.TimeModel.prototype.addDimension = function(id, accessorFn) {
     }
 
     // add the dimension to the timed data crossfilter
-    this.dimensions[id] = this.xf.dimension(accessorFn);
+    this.dimensions[id] = this.xf.dimension(accessorFn, opt_isArray);
     // add the dimension to the timeless data crossfilter
-    this.timelessDimensions[id] = this.timelessXf.dimension(accessorFn);
+    this.timelessDimensions[id] = this.timelessXf.dimension(accessorFn, opt_isArray);
 
     this.dispatchEvent(new os.events.PropertyChangeEvent(os.data.xf.PropertyChange.DIMENSION, id));
   }

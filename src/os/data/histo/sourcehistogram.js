@@ -94,6 +94,13 @@ os.data.histo.SourceHistogram = function(source, opt_parent) {
   this.timeModel_ = source.getTimeModel();
 
   /**
+   * Whether applicable time values should be binned as ranges
+   * @type {boolean}
+   * @private
+   */
+  this.binRanges_ = false;
+
+  /**
    * The sorting function
    * @type {?os.histo.bin.SortFn}
    * @protected
@@ -316,6 +323,7 @@ os.data.histo.SourceHistogram.prototype.setBinMethod = function(method) {
 
   if (this.binMethod) {
     this.binMethod.setValueFunction(os.feature.getField);
+    this.binRanges_ = this.binMethod.arrayKeys || false;
   }
 
   this.reindex();
@@ -334,7 +342,11 @@ os.data.histo.SourceHistogram.prototype.reindex = function() {
 
     if (this.binMethod) {
       var valueFn = this.binMethod.getValue.bind(this.binMethod);
-      this.timeModel_.addDimension(this.id_, valueFn);
+      // add dimension that will handle an array of keys
+      var isArray = this.binMethod.getBinType() == 'Date' ?
+          os.histo.DateRangeBinType[this.binMethod.getDateBinType()] : false;
+      isArray = this.binRanges_ ? isArray : false;
+      this.timeModel_.addDimension(this.id_, valueFn, isArray);
     }
   }
 };
@@ -459,14 +471,12 @@ os.data.histo.SourceHistogram.prototype.map = function(item, i, arr) {
   var bin = /** @type {!os.data.histo.ColorBin} */ (item.value);
   var items = bin.getItems();
 
-  if (items && items.length > 0) {
-    var thing = items[0];
-    bin.setKey(this.binMethod.getBinKey(this.binMethod.getValue(thing)));
-    bin.setLabel(this.binMethod.getBinLabel(thing));
-  } else {
-    // exclude empty bins
-    bin = null;
+  if (!items || !items.length) {
+    return null;
   }
+
+  bin.setKey(item.key);
+  bin.setLabel(this.binMethod.getLabelForKey(item.key));
 
   return bin;
 };
@@ -614,4 +624,28 @@ os.data.histo.SourceHistogram.prototype.onFeatureColor_ = function(event) {
     this.featureBins_[event.id].decrementColor(/** @type {string|undefined} */ (event.oldVal));
     this.featureBins_[event.id].incrementColor(/** @type {string|undefined} */ (event.newVal));
   }
+};
+
+
+/**
+ * @param {boolean} value The value
+ */
+os.data.histo.SourceHistogram.prototype.setBinRanges = function(value) {
+  this.binRanges_ = value;
+  if (this.binMethod && this.binMethod.getBinType() == 'Date' &&
+      os.histo.DateRangeBinType[this.binMethod.getDateBinType()]) {
+    this.binMethod.setArrayKeys(value);
+  }
+
+  this.reindex();
+  this.update();
+  this.dispatchEvent(goog.events.EventType.CHANGE);
+};
+
+
+/**
+ * @return {boolean} the value
+ */
+os.data.histo.SourceHistogram.prototype.getBinRanges = function() {
+  return this.binRanges_;
 };

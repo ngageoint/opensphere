@@ -158,14 +158,15 @@ os.data.xf.DataModel.prototype.setFilterFunction = function(fn) {
  *
  * @param {string} id Unique id of the dimension
  * @param {function(this: S, T):*} accessorFn Accessor function for the value to be filtered
+ * @param {boolean=} opt_isArray if the dimension key is an array (for scenarios where a row has multi key)
  * @template T,S
  */
-os.data.xf.DataModel.prototype.addDimension = function(id, accessorFn) {
+os.data.xf.DataModel.prototype.addDimension = function(id, accessorFn, opt_isArray) {
   if (!this.isDisposed()) {
     this.removeDimension(id);
 
     // add the dimension to the crossfilter
-    this.dimensions[id] = this.xf.dimension(accessorFn);
+    this.dimensions[id] = this.xf.dimension(accessorFn, opt_isArray);
 
     this.dispatchEvent(new os.events.PropertyChangeEvent(os.data.xf.PropertyChange.DIMENSION, id));
   }
