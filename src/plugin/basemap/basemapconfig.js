@@ -47,7 +47,7 @@ goog.inherits(plugin.basemap.BaseMapConfig, os.layer.config.AbstractLayerConfig)
  */
 plugin.basemap.BaseMapConfig.prototype.createLayer = function(options) {
   var clonedOptions = goog.object.clone(options);
-  clonedOptions['tileClass'] = plugin.basemap.layer.BaseMap;
+  clonedOptions['layerClass'] = plugin.basemap.layer.BaseMap;
 
   var layerType = /** @type {string} */ (clonedOptions['baseType']);
   var layerConfig = os.layer.config.LayerConfigManager.getInstance().getLayerConfig(layerType);
