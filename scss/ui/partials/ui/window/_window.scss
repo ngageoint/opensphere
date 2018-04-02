@@ -17,6 +17,10 @@
   }
 }
 
+.window.modal.ui-draggable-dragging {
+  overflow: unset;
+}
+
 .window.autosize .window-footer {
   position: relative;
 }
@@ -53,6 +57,7 @@
   @include box-sizing(border-box);
   @include calc(height, '100% - 35px');
   left: 0;
+  max-height: 90vh;
   overflow: auto;
   padding: 5px;
   position: relative;
@@ -61,6 +66,10 @@
   &.scroll {
     padding-right: 16px;
   }
+}
+
+.window.modal.ui-draggable-dragging .window-content {
+  overflow: unset;
 }
 
 .window-content-overlay {
@@ -115,7 +124,7 @@
 
 .window-modal-bg {
   @include opacity(.5);
-  background: #fff;
+  background: $color-backdrop-bg;
   height: 100%;
   left: 0;
   position: fixed;
