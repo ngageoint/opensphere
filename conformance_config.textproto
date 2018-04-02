@@ -135,6 +135,13 @@ requirement: {
                  'ol.xml.getAllTextContent(node, false) instead.'
 }
 
+requirement: {
+  type: BANNED_NAME
+  value: 'Object.assign'
+  error_message: 'Object.assign is not permitted. Use '
+                 'ol.obj.assign instead.'
+}
+
 #requirement: {
 #  type: BANNED_NAME
 #  value: 'goog.bind'

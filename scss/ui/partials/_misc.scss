@@ -51,6 +51,7 @@ $color-layer: #f92;
 .do-wrap {
   white-space: normal;
   word-break: break-word;
+  word-wrap: break-word;
 }
 
 .no-margin {
@@ -182,6 +183,12 @@ form.form-popover-help {
 input.spinner[disabled] {
   background: none;
   cursor: default;
+}
+
+// badge styles
+.badge-rectangle {
+  border-radius: 4px;
+  padding: 0 4px;
 }
 
 // * Inline (Glyph) button styles

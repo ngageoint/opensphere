@@ -32,6 +32,12 @@ os.histo.UniqueBinMethod = function() {
    * @protected
    */
   this.valueFunction = null;
+
+  /**
+   * @type {boolean}
+   * @protected
+   */
+  this.arrayKeys = false;
 };
 
 
@@ -247,6 +253,14 @@ os.histo.UniqueBinMethod.prototype.exportAsFilter = function(bins) {
   }
 
   return filter.join('');
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.histo.UniqueBinMethod.prototype.setArrayKeys = function(value) {
+  this.arrayKeys = value;
 };
 
 

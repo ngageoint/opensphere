@@ -80,7 +80,7 @@ os.control.ScaleLine.prototype.updateElement_ = function() {
 
   // The goal of the original Openlayers logic here is to get meters/pixel.
   // However, it is wrong (see issue #7086 for Openlayers) for some projections.
-  var map = os.MapContainer.getInstance().getMap();
+  var map = this.getMap();
 
   var p2 = map.getPixelFromCoordinate(viewState.center);
   if (!p2) {
