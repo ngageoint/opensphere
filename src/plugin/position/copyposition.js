@@ -109,7 +109,7 @@ plugin.position.CopyPositionCtrl.launch = function(value) {
       'x': 'center',
       'y': 'center',
       'width': '650',
-      'height': '190',
+      'height': '240',
       'modal': 'true'
     };
     var scopeOptions = {

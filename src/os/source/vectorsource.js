@@ -801,6 +801,14 @@ os.source.Vector.prototype.processColumns = function(opt_silent) {
       });
     }
 
+    // detect and apply an icon rotation column
+    if (this.hasColumn(os.Fields.BEARING)) {
+      var styleConfig = os.style.StyleManager.getInstance().getLayerConfig(this.getId());
+      if (styleConfig && !styleConfig[os.style.StyleField.ROTATION_COLUMN]) {
+        styleConfig[os.style.StyleField.ROTATION_COLUMN] = os.Fields.BEARING;
+      }
+    }
+
     // notify that columns have changed
     if (!opt_silent) {
       this.dispatchEvent(new os.events.PropertyChangeEvent(os.source.PropertyChange.COLUMNS, this.columns));

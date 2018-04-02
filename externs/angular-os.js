@@ -36,3 +36,15 @@ angular.Filter;
  * @type {function()}
  */
 angular.NgModelController.prototype.$$parseAndValidate = function() {};
+
+
+/**
+ * @type {function(!angular.JQLite)}
+ */
+angular.$compile.prototype.$$addBindingClass;
+
+
+/**
+ * @type {function(!angular.JQLite, (Array<string>|string))}
+ */
+angular.$compile.prototype.$$addBindingInfo;
