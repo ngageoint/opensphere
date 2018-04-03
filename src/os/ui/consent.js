@@ -40,8 +40,6 @@ os.ui.Consent = function($scope, $element) {
 
   this['server'] = location.host;
 
-  this.scope_['show'] = false;
-
   var cookie = new goog.net.Cookies(window.document);
   var consent = os.settings.get(['consent']);
 
@@ -52,12 +50,7 @@ os.ui.Consent = function($scope, $element) {
     this.timer_.listen(goog.Timer.TICK, this.update_, false, this);
 
     if (cookie && !cookie.get('consent')) {
-      this.scope_['show'] = true;
-      this.element_.modal({
-        'show': true,
-        'backdrop': 'static',
-        'keyboard': false
-      });
+      os.ui.modal.open($element);
     } else {
       this.timer_.start();
       this.update_();
@@ -138,6 +131,7 @@ os.ui.Consent.prototype.saveCookie = function() {
  */
 os.ui.consentDirective = function() {
   return {
+    replace: true,
     restrict: 'E',
     templateUrl: os.ROOT + 'views/consent.html',
     controller: os.ui.Consent,
