@@ -81,7 +81,7 @@ os.ui.AbstractMainCtrl = function($scope, $injector, rootPath, defaultAppName) {
    * Are the plugins ready?
    * @type {boolean}
    */
-  $scope['pluginsReady'] = true;
+  $scope['pluginsReady'] = false;
 
   // add window close handler
   window.addEventListener(goog.events.EventType.BEFOREUNLOAD, this.onClose.bind(this));
