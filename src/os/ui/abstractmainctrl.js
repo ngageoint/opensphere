@@ -1,3 +1,4 @@
+goog.provide('os.ui.AbstractMainContent');
 goog.provide('os.ui.AbstractMainCtrl');
 
 goog.require('goog.events.Event');
@@ -27,6 +28,14 @@ goog.require('os.ui.notification.NotificationManager');
 goog.require('os.ui.onboarding.OnboardingManager');
 goog.require('os.ui.onboarding.contextOnboardingDirective');
 goog.require('os.ui.onboarding.onboardingDirective');
+
+
+
+/**
+ * Key for injecting into the main-content list
+ * @type {string}
+ */
+os.ui.AbstractMainContent = 'main-content';
 
 
 
@@ -67,6 +76,12 @@ os.ui.AbstractMainCtrl = function($scope, $injector, rootPath, defaultAppName) {
    * @type {string}
    */
   $scope['appName'] = /** @type {string} */ (os.config.getAppName(defaultAppName));
+
+  /**
+   * Are the plugins ready?
+   * @type {boolean}
+   */
+  $scope['pluginsReady'] = true;
 
   // add window close handler
   window.addEventListener(goog.events.EventType.BEFOREUNLOAD, this.onClose.bind(this));
@@ -252,6 +267,7 @@ os.ui.AbstractMainCtrl.prototype.initPlugins = function() {
 os.ui.AbstractMainCtrl.prototype.onPluginsLoaded = function(opt_e) {
   // send browser info metric
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.BROWSER + '.' + os.browserVersion(), 1);
+  this.scope['pluginsReady'] = true;
 };
 
 
