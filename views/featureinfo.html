@@ -25,7 +25,7 @@
             </th>
           </tr>
           <tr ng-repeat="property in properties | orderBy:columnToOrder:reverse" ng-click="info.select($event, property)" ng-class="{'selected': selected==property}">
-            <td style="width:30%" class="ellipsis-text">{{property.field}}</td>
+            <td style="width:30%" class="text-truncate">{{property.field}}</td>
             <td><featureinfocell property="property"></featureinfocell></td>
           </tr>
         </table>
