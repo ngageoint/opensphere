@@ -2,7 +2,7 @@
   <div class="window-content">
     <div ng-show="recordui.recording">
       <div ng-show="recordui.recordingCritical">Please wait while the recording is created.</div>
-      <loading-bar class="wide" complete="recordui.progress" message="recordui.status"></loading-bar>
+      <loading-bar class="w-100" complete="recordui.progress" message="recordui.status"></loading-bar>
       <div ng-show="recordui.recordingCritical">
         <i class="fa fa-warning orange-icon"></i>
         Do not resize your browser during this time, or the recording will be cancelled.
@@ -14,23 +14,23 @@
         <table style="width:100%">
           <tr>
             <td class="control-label">Title:</td>
-            <td class="wide">
-              <input class="wide" type="text" name="title" ng-model="recordui.title" ng-maxlength="200" required/>
+            <td class="w-100">
+              <input class="w-100" type="text" name="title" ng-model="recordui.title" ng-maxlength="200" required/>
               <span class="help-inline" ng-show="recordForm.title.$error.required">Required!</span>
               <span class="help-inline" ng-show="recordForm.title.$error.maxlength">Title is too long!</span>
             </td>
           </tr>
           <tr>
             <td class="control-label">Save to:</td>
-            <td class="wide">
-              <select class="wide" ng-model="recordui.persister"
+            <td class="w-100">
+              <select class="w-100" ng-model="recordui.persister"
                   ng-options="value as key for (key, value) in recordui.persisters"/>
             </td>
           </tr>
           <tr ng-if="recordui.encoders.length > 1">
             <td class="control-label">Type:</td>
-            <td class="wide">
-              <select class="wide" ng-model="recordui.encoder"
+            <td class="w-100">
+              <select class="w-100" ng-model="recordui.encoder"
                   ng-options="e as recordui.getEncoderTitle(e) for e in recordui.encoders"/>
               <span ng-bind-html="recordui.getEncoderDescription(recordui.encoder)"></span>
             </td>

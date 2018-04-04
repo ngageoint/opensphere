@@ -5,8 +5,8 @@
       <table style="width:100%">
         <tr>
           <td class="control-label">Title:</td>
-          <td class="wide">
-            <input unique-provider-title type="text" class="wide" name="title" ng-disabled="!edit" ng-model="config.label" ng-required="true" ng-maxlength="1000"/>
+          <td class="w-100">
+            <input unique-provider-title type="text" class="w-100" name="title" ng-disabled="!edit" ng-model="config.label" ng-required="true" ng-maxlength="1000"/>
           </td>
         </tr>
         <tr>
@@ -22,8 +22,8 @@
         <!-- primary server url -->
         <tr title="The primary URL for the server">
           <td class="control-label">URL:</td>
-          <td class="wide">
-            <input type="text" name="url" class="wide" ng-disabled="!edit" ng-model="config.url" ng-required="true"
+          <td class="w-100">
+            <input type="text" name="url" class="w-100" ng-disabled="!edit" ng-model="config.url" ng-required="true"
                 ng-maxlength="1000"/>
           </td>
           <td></td>
@@ -41,8 +41,8 @@
         <!-- alternate server urls -->
         <tr ng-repeat-start="altUrl in config.alternateUrls track by $index" title="Alternate URL for the server">
           <td class="control-label">URL {{$index + 2}}:</td>
-          <td class="wide">
-            <input unique-server-url type="text" name="altUrl{{$index}}" class="wide" ng-disabled="!edit"
+          <td class="w-100">
+            <input unique-server-url type="text" name="altUrl{{$index}}" class="w-100" ng-disabled="!edit"
                 ng-model="config.alternateUrls[$index]" ng-maxlength="1000"
                 placeholder="Alternate URL to server" />
           </td>
