@@ -6,7 +6,7 @@ var fs = require('fs');
 var file = fs.readFileSync('./.build/gcc-java-args', 'utf8');
 
 file = file.replace(/--entry_point\s[^\s]+\s/g, '') // ditch all entry points
-  .replace(/--externs(\s[^\s]+jquery[^\s]+\s)/, '--externs-save$1') // save jquery externs
+  .replace(/--externs(\s[^\s]+jquery-\d.\d\.js+\s)/, '--externs-save$1') // save jquery externs
   .replace(/--externs\s[^\s]+\s/g, '') // ditch all externs
   .replace(/--externs-save/g, '--externs') // restore saved externs
   .replace(/--jscomp_error='unknownDefines' /g, "--jscomp_off='unknownDefines' ") // turn off unknownDefines check
