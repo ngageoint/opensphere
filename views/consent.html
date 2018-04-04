@@ -1,11 +1,15 @@
-<div ng-show="show" class="modal modal-dialog ui-consent modal-auto-size" id="consent">
-  <div class="modal-header">
-    <h3>{{consentCtrl.server}}</h3>
-  </div>
-  <div class="modal-body" ng-bind-html="consentCtrl.text"></div>
-  <div class="modal-footer">
-    <button class="pull-right btn btn-default" ng-click="consentCtrl.saveCookie()">
-      <span><i class="fa fa-check lt-blue-icon"></i> OK</span>
-    </button>
+<div id="consent" class="modal" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{consentCtrl.server}}</h5>
+      </div>
+      <div class="modal-body" ng-bind-html="consentCtrl.text"></div>
+      <div class="modal-footer">
+        <button class="pull-right btn btn-default" ng-click="consentCtrl.saveCookie()">
+          <span><i class="fa fa-check lt-blue-icon"></i> OK</span>
+        </button>
+      </div>
+    </div>
   </div>
 </div>
