@@ -17,7 +17,7 @@
       <div class="filter-import__not-found-items">
         <div class="filter-import__not-found-item" title="{{filter.tooltip}}" ng-repeat="filter in ctrl.notFound">
           <div>
-            <span class="filter-import__left-text ellipsis-text">
+            <span class="filter-import__left-text text-truncate">
               <i class="fa color-close" ng-class="{'fa-times red-icon': !filter.matches, 'fa-check green-icon': filter.matches}"
                   title="{{{false: 'This filter does not match the selected layer', true: 'This filter matches the columns for the selected layer'}[filter.matches]}}"></i>
               {{filter.title}}
@@ -36,7 +36,7 @@
       <div class="filter-import__found-items">
         <div class="filter-import__found-item" ng-repeat="(layerId, layer) in ctrl.found">
           <div>
-            <span class="ellipsis-text filter-import__left-text ellipsis-text" title="{{layer.layerTitle}}">
+            <span class="text-truncate filter-import__left-text text-truncate" title="{{layer.layerTitle}}">
               <span ng-bind-html="layer.layerIcon"></span>
               {{layer.layerTitle}}
             </span>
@@ -50,7 +50,7 @@
             </span>
           </div>
 
-          <div ng-repeat="filter in layer.filterModels" title="{{filter.tooltip}}" class="ellipsis-text filter-import__filter-text">
+          <div ng-repeat="filter in layer.filterModels" title="{{filter.tooltip}}" class="text-truncate filter-import__filter-text">
             <i class="fa" ng-class="ctrl.getFilterIcon()"></i> {{filter.title}}
           </div>
         </div>
