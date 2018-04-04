@@ -481,6 +481,35 @@ os.xt.Peer.prototype.init = function() {
   this.pingTimer_.start();
 
   goog.log.fine(os.xt.Peer.LOGGER_, 'Initialized peer ' + this.group_ + '.' + this.id_ + ' "' + this.title_ + '"');
+  this.processInitialMessages();
+};
+
+
+/**
+ * Processes messages already available on startup
+ * @protected
+ */
+os.xt.Peer.prototype.processInitialMessages = function() {
+  var storage = this.storage_;
+  var keys = [];
+
+  for (var key in storage) {
+    if (storage.hasOwnProperty(key)) {
+      keys.push(key);
+    }
+  }
+
+  var priv = ['xt', this.group_, this.id_, ''].join('.');
+  var pub = ['xt', this.group_, 'public', ''].join('.');
+
+  keys.filter(function(key) {
+    return key.startsWith(pub) || key.startsWith(priv);
+  }).map(function(key) {
+    return /** @type {Event} */ ({
+      'key': key,
+      'newValue': storage.getItem(key)
+    });
+  }).forEach(this.onStorage_.bind(this));
 };
 
 
