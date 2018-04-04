@@ -9,7 +9,7 @@
   </tr>
   <tr title="Sets the color/shape used to render features">
     <td class="control-label">Style:</td>
-    <td class="style-controls wide">
+    <td class="style-controls w-100">
       <colorpicker name="color" class="no-text" color="color" show-reset="{{showColorReset}}">
       </colorpicker>
       <select ng-if="shapes && shapes.length > 0" ng-model="$parent.shape"
@@ -22,7 +22,7 @@
   </tr>
   <tr title="Sets the style of the ellipse center" ng-if="centerShapes && centerShapes.length > 0 && ctrl.hasCenter()">
     <td class="control-label">Center:</td>
-    <td class="style-controls wide">
+    <td class="style-controls w-100">
       <select ng-model="$parent.centerShape"
           ng-change="ctrl.onCenterShapeChange($parent.centerShape)"
           ng-options="val for val in centerShapes">

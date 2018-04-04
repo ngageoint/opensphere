@@ -1,10 +1,10 @@
 <div class="ellipse-options">
   <div class="c-labelcontainer">
-    <table class="wide">
+    <table class="w-100">
       <tr>
         <td class="c-labelcontainer__fixedcell">Bearing:</td>
         <td>
-          <select class="no-margin wide" ng-model="ctrl.bearingColumn" ng-change="ctrl.onBearingColumnChange()"
+          <select class="no-margin w-100" ng-model="ctrl.bearingColumn" ng-change="ctrl.onBearingColumnChange()"
               title="Sets the data field used for bearing" ng-options="col.field as col.name for col in ctrl.columns">
               <option value="">-- None --</option>
           </select>
@@ -31,16 +31,16 @@
     </table>
   </div>
   <div ng-show="ctrl.lengthType == 'manual'">
-    <table class="wide">
+    <table class="w-100">
       <tr>
         <td>
           <input class="c-labelcontainer__wide" type="number" step="any" min="1" max="maxSize[ctrl.lengthUnits]" ng-change="ctrl.onLengthChange()" ng-model="length" ng-required="true" />
         </td>
-        <td class="wide">
+        <td class="w-100">
           <slider class="right-gapxxs" min="0" max="1000" step="100" value="length" live="false" name="length"></slider>
         </td>
         <td>
-          <select class="label-units no-margin wide" ng-model="ctrl.lengthUnits" ng-change="ctrl.onLengthUnitChange()"
+          <select class="label-units no-margin w-100" ng-model="ctrl.lengthUnits" ng-change="ctrl.onLengthUnitChange()"
               title="Sets the units field used for length" ng-options="item for item in ctrl.units">
           </select>
         </td>
@@ -48,16 +48,16 @@
     </table>
   </div>
   <div class="c-labelcontainer" ng-show="ctrl.lengthType == 'column'">
-    <table class="wide">
+    <table class="w-100">
       <tr>
         <td>
-          <select class="no-margin wide" ng-model="ctrl.lengthColumn" ng-change="ctrl.onLengthColumnChange()"
+          <select class="no-margin w-100" ng-model="ctrl.lengthColumn" ng-change="ctrl.onLengthColumnChange()"
               title="Sets the data field used for length" ng-options="col.field as col.name for col in ctrl.columns">
               <option value="">-- None --</option>
           </select>
         </td>
         <td>
-          <select class="label-units no-margin wide" ng-model="ctrl.lengthUnits" ng-change="ctrl.onLengthUnitChange()"
+          <select class="label-units no-margin w-100" ng-model="ctrl.lengthUnits" ng-change="ctrl.onLengthUnitChange()"
               title="Sets the units field used for length" ng-options="item for item in ctrl.units">
           </select>
         </td>
@@ -69,7 +69,7 @@
     </table>
   </div>
   <div class="c-labelcontainer">
-    <table class="wide">
+    <table class="w-100">
       <tr>
         <td class="no-padding">
           <label class="no-margin">
@@ -84,7 +84,7 @@
           </label>
         </td>
         <td>
-          <select ng-show="ctrl.showArrow" class="label-units no-margin wide" ng-model="ctrl.arrowUnits" ng-change="ctrl.onArrowUnitChange()"
+          <select ng-show="ctrl.showArrow" class="label-units no-margin w-100" ng-model="ctrl.arrowUnits" ng-change="ctrl.onArrowUnitChange()"
               title="Sets the units field used for arrow size" ng-options="item for item in ctrl.units">
           </select>
         </td>
@@ -92,7 +92,7 @@
     </table>
   </div>
   <div class="c-labelcontainer">
-    <table class="wide">
+    <table class="w-100">
       <tr>
         <td ng-if="ellipseSupport">
           <label class="no-margin">
@@ -106,7 +106,7 @@
   </div>
   <uiswitch ng-if="ctrl.showEllipse" items="items" directive-function="ctrl.getEllipseUI"></uiswitch>
   <div class="c-labelcontainer">
-    <table class="wide">
+    <table class="w-100">
       <tr>
         <td>
           <label class="no-margin">
@@ -121,11 +121,11 @@
   </div>
   <div ng-show="ctrl.showError">
     <div class="c-labelcontainer">
-      <table class="wide">
+      <table class="w-100">
         <tr>
           <td class="c-labelcontainer__fixedcell">Bearing&nbsp;Err:</td>
           <td>
-            <select class="no-margin wide" ng-model="ctrl.bearingErrorColumn" ng-change="ctrl.onBearingErrorColumnChange()"
+            <select class="no-margin w-100" ng-model="ctrl.bearingErrorColumn" ng-change="ctrl.onBearingErrorColumnChange()"
                 title="Sets the data field used for bearing error" ng-options="col.field as col.name for col in ctrl.columns">
                 <option value="">1</option>
             </select>
@@ -139,18 +139,18 @@
       </table>
     </div>
     <div class="c-labelcontainer">
-      <table class="wide">
+      <table class="w-100">
         <tr>
           <td class="c-labelcontainer__fixedcell">Length&nbsp;Err:</td>
           <td>
-            <select class="no-margin wide" ng-model="ctrl.lengthErrorColumn" ng-change="ctrl.onLengthErrorColumnChange()"
+            <select class="no-margin w-100" ng-model="ctrl.lengthErrorColumn" ng-change="ctrl.onLengthErrorColumnChange()"
                 title="Sets the data field used for length error" ng-options="col.field as col.name for col in ctrl.columns">
                 <option value="">1</option>
             </select>
           </td>
           <td class="c-labelcontainer__fixedcell">+/-</td>
           <td class="label-units">
-            <select class="no-margin wide" ng-model="ctrl.lengthErrorUnits" ng-change="ctrl.onLengthErrorUnitChange()"
+            <select class="no-margin w-100" ng-model="ctrl.lengthErrorUnits" ng-change="ctrl.onLengthErrorUnitChange()"
                 title="Sets the units field used for length" ng-options="item for item in ctrl.units">
             </select>
           </td>

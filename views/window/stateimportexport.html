@@ -4,7 +4,7 @@
       <div class="control-group" ng-if="stateForm.isSaving">
         <label class="control-label" for="persister">Save to:</label>
         <div class="controls">
-          <select class="wide" name="persister" ng-model="stateForm.persister"
+          <select class="w-100" name="persister" ng-model="stateForm.persister"
               ng-options="value as key for (key, value) in stateForm.persisters">
             <option ng-if="stateForm.appName" value="">{{stateForm.appName}}</option>
           </select>
@@ -13,7 +13,7 @@
       <div class="control-group">
         <label class="control-label" for="title">Name:</label>
         <div class="controls">
-          <input type="text" class="wide" name="title" statetitle ng-model="title"
+          <input type="text" class="w-100" name="title" statetitle ng-model="title"
               ng-required="true" ng-maxlength="500"/>
           <span class="help-inline" data-ng-show="form.title.$invalid && !form.title.$error.required && !form.title.$error.maxlength">
             This name has already been used. Please try another.
@@ -25,7 +25,7 @@
       <div class="control-group">
         <label class="control-label" for="desc">Description:</label>
         <div class="controls">
-          <input type="text" name="desc" class="wide" ng-model="description" ng-maxlength="4000"
+          <input type="text" name="desc" class="w-100" ng-model="description" ng-maxlength="4000"
               placeholder="Add a custom description"/>
           <span class="help-inline" data-ng-show="form.desc.$error.maxlength">Description is too long!</span>
         </div>
@@ -33,7 +33,7 @@
       <div class="control-group">
         <label class="control-label" for="tags">Tags:</label>
         <div class="controls">
-          <input type="text" name="tags" class="wide" ng-model="tags" ng-maxlength="1000"
+          <input type="text" name="tags" class="w-100" ng-model="tags" ng-maxlength="1000"
               placeholder="Tags organize states: e.g. states, population"/>
           <span class="help-inline" data-ng-show="form.tags.$error.maxlength">Tags field is too long!</span>
         </div>

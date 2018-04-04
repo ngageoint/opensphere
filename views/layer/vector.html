@@ -57,8 +57,8 @@
         <table>
           <tr ng-if="vector.showRefresh" title="Sets how often the layer will automatically refresh its data.">
             <td class="control-label">Auto Refresh:</td>
-            <td class="style-controls wide">
-              <select class="wide" ng-model="vector.refresh" ng-change="vector.onRefreshChange()"
+            <td class="style-controls w-100">
+              <select class="w-100" ng-model="vector.refresh" ng-change="vector.onRefreshChange()"
                   ng-disabled="vector.lock"
                   ng-options="val.label for val in vector.refreshOptions">
               </select>
@@ -66,8 +66,8 @@
           </tr>
           <tr title="Choose a unique identifier column for the layer." ng-show="columns && items.length == 1">
             <td class="control-label">Unique Identifier:</td>
-            <td class="style-controls wide">
-              <select class="wide" ng-model="vector.uniqueId" ng-change="vector.onUniqueIdChange()"
+            <td class="style-controls w-100">
+              <select class="w-100" ng-model="vector.uniqueId" ng-change="vector.onUniqueIdChange()"
                   ng-options="col as col.name for col in columns track by col.field">
                   <option value="">-- None --</option>
               </select>

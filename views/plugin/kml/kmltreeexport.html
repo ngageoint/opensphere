@@ -5,16 +5,16 @@
         <table style="width:100%">
           <tr>
             <td class="control-label">Name:</td>
-            <td class="wide">
-              <input class="wide" type="text" name="title" ng-model="treeExport.title" ng-maxlength="200" required/>
+            <td class="w-100">
+              <input class="w-100" type="text" name="title" ng-model="treeExport.title" ng-maxlength="200" required/>
               <span class="help-inline" ng-show="exportForm.title.$error.required">Required!</span>
               <span class="help-inline" ng-show="exportForm.title.$error.maxlength">Title is too long!</span>
             </td>
           </tr>
           <tr>
             <td class="control-label">Save to:</td>
-            <td class="wide">
-              <select class="wide" ng-model="treeExport.persister"
+            <td class="w-100">
+              <select class="w-100" ng-model="treeExport.persister"
                   ng-options="value as key for (key, value) in treeExport.persisters"/>
             </td>
           </tr>
