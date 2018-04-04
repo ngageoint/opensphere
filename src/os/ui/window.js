@@ -346,6 +346,7 @@ os.ui.WindowEventType = {
   DRAGSTART: 'windowDragStart',
   DRAGSTOP: 'windowDragStop',
   HEADERBTN: 'windowHeaderBtn',
+  RECONSTRAIN: 'windowReConstrain',
   READY: 'window.ready'
 };
 
@@ -526,6 +527,7 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
 
   this.scope.$watch('modal', this.onToggleModal_.bind(this));
   this.scope.$watch('closeFlag', this.onCloseFlag_.bind(this));
+  this.scope.$on(os.ui.WindowEventType.RECONSTRAIN, this.constrainWindow_.bind(this));
   this.scope.$on('$destroy', this.dispose.bind(this));
 
   this.scope['active'] = true;
