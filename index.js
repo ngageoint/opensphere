@@ -106,11 +106,10 @@ const sharedResources = [
     files: ['darkness/images']
   },
   {
-    source: 'vendor/bootstrap',
+    source: resolver.resolveModulePath('bootstrap/dist', __dirname),
     target: 'vendor/bootstrap',
-    css: ['slate/bootstrap.min.css'],
-    scripts: ['bootstrap.min.js'],
-    files: ['img']
+    css: ['css/bootstrap.min.css'],
+    scripts: ['js/bootstrap.min.js']
   },
   {
     source: 'vendor/select2',
@@ -316,9 +315,10 @@ const oldResources = [
     scripts: ['modernizr.js']
   },
   {
-    source: 'vendor/bootstrap',
+    source: resolver.resolveModulePath('bootstrap/dist', __dirname),
     target: 'vendor/bootstrap',
-    css: ['slate/bootstrap.min.css']
+    css: ['css/bootstrap.min.css'],
+    scripts: ['js/bootstrap.min.js']
   },
   {
     source: resolver.resolveModulePath('font-awesome', __dirname),

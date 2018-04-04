@@ -1,8 +1,7 @@
-<div id="win-container" class="win-container">
-  <!-- If you add something to this file, you're (probably) doing it wrong! -->
-  <div class="flex-container drag-container dd-target" url-drag-drop>
+<div id="win-container" class="c-main d-flex flex-column h-100 position-absolute w-100">
+  <div class="drag-container dd-target h-100" url-drag-drop>
     <nav-top></nav-top>
-    <div class="d-flex flex-row flex-grow mh-0">
+    <div id="main" class="h-100">
       <date-panel ng-show="!mainCtrl.timeline"></date-panel>
       <div list list-id="main-content" list-prefix="<div>" list-suffix="</div>"></div>
       <map class="mw-0"></map>

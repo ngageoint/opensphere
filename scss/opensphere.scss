@@ -1,62 +1,62 @@
-// The main os scss
+// // The main os scss
 
-@import 'compass';
-@import 'compass/css3';
-@import 'compass/utilities';
-@import 'animation/core';
-@import 'animation/animate';
+// @import 'compass';
+// @import 'compass/css3';
+// @import 'compass/utilities';
+// @import 'animation/core';
+// @import 'animation/animate';
 
-// load base colors, then os overrides
-@import 'ui/modules/colors';
-@import 'os/modules/color';
+// // load base colors, then os overrides
+// @import 'ui/modules/colors';
+// @import 'os/modules/color';
 
-@import 'ui/modules/browsersupport';
-@import 'os/overrides/overrides-vars';
+// @import 'ui/modules/browsersupport';
+// @import 'os/overrides/overrides-vars';
 
-// ui SUPPORT
-@import 'ui/modules/mixins'; //need mixins for overrides and partials
-@import 'ui/overrides';
-@import 'ui/overrides/simplemdedark';
-@import 'ui/partials';
+// // ui SUPPORT
+// @import 'ui/modules/mixins'; //need mixins for overrides and partials
+// @import 'ui/overrides';
+// @import 'ui/overrides/simplemdedark';
+// @import 'ui/partials';
 
-@import 'os/partials/colors';
-@import 'os/overrides/jqueryui';
-@import 'os/overrides/bootstrap';
-@import 'os/overrides/combocontainer';
-@import 'os/overrides/select2';
-@import 'os/overrides/angular-gridster';
-@import 'os/overrides/perfect-scrollbar';
-@import 'os/overrides/slickgrid';
-@import 'os/overrides/slicktree';
-@import 'os/overrides/onboarding';
-@import 'os/overrides/openlayers';
-@import 'os/partials/alertviewer';
-@import 'os/partials/areaimport';
-@import 'os/partials/buffer';
-@import 'os/partials/columnacts';
-@import 'os/partials/datecontrol';
-@import 'os/partials/datetime';
-@import 'os/partials/drawcontrols';
-@import 'os/partials/exportoptions';
-@import 'os/partials/featureedit';
-@import 'os/partials/featureinfo';
-@import 'os/partials/filter';
-@import 'os/partials/glyph';
-@import 'os/partials/labels';
-@import 'os/partials/layer';
-@import 'os/partials/legend';
-@import 'os/partials/menu';
-@import 'os/partials/navbar';
-@import 'os/partials/pagecontainer';
-@import 'os/partials/places';
-@import 'os/partials/scrollpane';
-@import 'os/partials/searchbox';
-@import 'os/partials/tabs';
-@import 'os/partials/timeline';
-@import 'os/partials/servers';
-@import 'os/partials/tree';
-@import 'os/partials/window';
-@import 'os/partials/wizard';
-@import 'os/partials/result';
-@import 'os/partials/browsedata';
-@import 'os/partials/main';
+// @import 'os/partials/colors';
+// @import 'os/overrides/jqueryui';
+// @import 'os/overrides/bootstrap';
+// @import 'os/overrides/combocontainer';
+// @import 'os/overrides/select2';
+// @import 'os/overrides/angular-gridster';
+// @import 'os/overrides/perfect-scrollbar';
+// @import 'os/overrides/slickgrid';
+// @import 'os/overrides/slicktree';
+// @import 'os/overrides/onboarding';
+// @import 'os/overrides/openlayers';
+// @import 'os/partials/alertviewer';
+// @import 'os/partials/areaimport';
+// @import 'os/partials/buffer';
+// @import 'os/partials/columnacts';
+// @import 'os/partials/datecontrol';
+// @import 'os/partials/datetime';
+// @import 'os/partials/drawcontrols';
+// @import 'os/partials/exportoptions';
+// @import 'os/partials/featureedit';
+// @import 'os/partials/featureinfo';
+// @import 'os/partials/filter';
+// @import 'os/partials/glyph';
+// @import 'os/partials/labels';
+// @import 'os/partials/layer';
+// @import 'os/partials/legend';
+// @import 'os/partials/menu';
+// @import 'os/partials/navbar';
+// @import 'os/partials/pagecontainer';
+// @import 'os/partials/places';
+// @import 'os/partials/scrollpane';
+// @import 'os/partials/searchbox';
+// @import 'os/partials/tabs';
+// @import 'os/partials/timeline';
+// @import 'os/partials/servers';
+// @import 'os/partials/tree';
+// @import 'os/partials/window';
+// @import 'os/partials/wizard';
+// @import 'os/partials/result';
+// @import 'os/partials/browsedata';
+// @import 'os/partials/main';
