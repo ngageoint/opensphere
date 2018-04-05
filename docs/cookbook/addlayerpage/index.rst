@@ -4,7 +4,7 @@ Add Layer Page
 Problem
 -------
 
-We want to support links that add layers to OpenSphere.
+We want to support links that add layers or files to OpenSphere.
 
 Solution
 --------
@@ -16,6 +16,25 @@ URI-encoded JSON string in the fragment, decodes it and passes it over to OpenSp
 Discussion
 ----------
 
+File URL
+........
+
+Use a path of:
+
+.. code-block:: javascript
+
+  'example.com/path/to/opensphere/addlayer.html#' +
+      encodeURIComponent(fileUrl);
+
+This prompts the user to import the file in the application. However, for many files, you
+may want to set all of your options up ahead of time so that the user does not have to
+figure them out in the Import Wizard.
+
+Therefore, you may want to use Layer Configs instead.
+
+Layer Config
+............
+
 Use a path of:
 
 .. code-block:: javascript
@@ -25,6 +44,7 @@ Use a path of:
 
 where ``conf`` is a JSON layer config. This is not the proper place to go into all the
 available layer configs, but one of the simplest possible configs is:
+
 
 .. code-block:: javascript
 
