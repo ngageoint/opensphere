@@ -5,6 +5,7 @@ goog.require('goog.Timer');
 goog.require('goog.array');
 goog.require('goog.async.Deferred');
 goog.require('goog.async.Delay');
+goog.require('goog.events');
 goog.require('goog.events.Event');
 goog.require('goog.events.EventType');
 goog.require('goog.log');
@@ -134,7 +135,6 @@ os.xt.Peer = function(opt_storage) {
    */
   this.establishMasterDelay_ = null;
 
-
   /**
    * An array of records that track clients waiting for peers to become available in this peer's group
    * @type {Array<os.xt.Peer.WaitRecord_>}
@@ -167,6 +167,11 @@ os.xt.Peer = function(opt_storage) {
    * @private
    */
   this.errorShown_ = false;
+
+  /**
+   * @type {Array<number|goog.events.ListenableKey|null>}
+   */
+  this.listenerKeys_ = [];
 
   // set up cross-origin messaging
   // the security checks are in the handler
@@ -469,10 +474,10 @@ os.xt.Peer.prototype.init = function() {
   this.persist();
 
   // set up the listener for the storage event
-  window.addEventListener('storage', this.onStorage_.bind(this));
+  this.listenerKeys_.push(goog.events.listen(window, 'storage', this.onStorage_, false, this));
 
   // set up the listener for application close
-  window.addEventListener('unload', this.cleanup_.bind(this));
+  this.listenerKeys_.push(goog.events.listen(window, 'unload', this.cleanup_, false, this));
 
   // set up the ping
   this.pingTimer_ = new goog.Timer(os.xt.Peer.PING_INTERVAL);
@@ -490,26 +495,16 @@ os.xt.Peer.prototype.init = function() {
  * @protected
  */
 os.xt.Peer.prototype.processInitialMessages = function() {
-  var storage = this.storage_;
-  var keys = [];
-
-  for (var key in storage) {
-    if (storage.hasOwnProperty(key)) {
-      keys.push(key);
-    }
-  }
-
   var priv = ['xt', this.group_, this.id_, ''].join('.');
   var pub = ['xt', this.group_, 'public', ''].join('.');
 
-  keys.filter(function(key) {
-    return key.startsWith(pub) || key.startsWith(priv);
-  }).map(function(key) {
-    return /** @type {Event} */ ({
-      'key': key,
-      'newValue': storage.getItem(key)
-    });
-  }).forEach(this.onStorage_.bind(this));
+  var storage = this.storage_;
+  for (var i = 0, n = storage.length; i < n; i++) {
+    var key = storage.key(i);
+    if (key.startsWith(pub) || (key.startsWith(priv) && os.xt.Peer.notThese_.indexOf(key) === -1)) {
+      this.onStorage_(/** @type {Event} */ ({'key': key, 'newValue': storage.getItem(key)}));
+    }
+  }
 };
 
 
@@ -893,6 +888,8 @@ os.xt.Peer.prototype.cleanup_ = function(opt_e) {
     this.waitListDelay_.dispose();
     this.waitListDelay_ = null;
   }
+
+  this.listenerKeys_.forEach(goog.events.unlistenByKey);
 };
 
 
