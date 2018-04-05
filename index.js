@@ -113,10 +113,10 @@ const sharedResources = [
     files: ['img']
   },
   {
-    source: 'vendor/select2',
+    source: resolver.resolveModulePath('select2', __dirname),
     target: 'vendor/select2',
     css: ['select2.css'],
-    scripts: ['select2-3.2-min.js'],
+    scripts: ['select2.js'],
     files: ['*.+(gif|png)']
   },
   {

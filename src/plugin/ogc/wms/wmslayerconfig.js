@@ -79,7 +79,7 @@ goog.inherits(plugin.ogc.wms.WMSLayerConfig, os.layer.config.AbstractTileLayerCo
  */
 plugin.ogc.wms.WMSLayerConfig.prototype.initializeConfig = function(options) {
   plugin.ogc.wms.WMSLayerConfig.base(this, 'initializeConfig', options);
-  this.tileClass = options['animate'] ? os.layer.AnimatedTile : this.tileClass;
+  this.layerClass = options['animate'] ? os.layer.AnimatedTile : this.layerClass;
 };
 
 
