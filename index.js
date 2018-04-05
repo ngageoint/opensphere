@@ -342,7 +342,7 @@ const addLayerResources = [
   {
     source: buildPath,
     target: '',
-    scripts: ['addlayer.min.js']
+    scripts: ['addlayer.js']
   }
 ];
 
