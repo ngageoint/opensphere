@@ -10,6 +10,7 @@ goog.provide('os.mixin.TileImage');
 goog.require('ol.TileState');
 goog.require('ol.source.TileImage');
 goog.require('os');
+goog.require('os.TileClass');
 goog.require('os.source.IFilterableTileSource');
 goog.require('os.tile');
 goog.require('os.tile.ColorableTile');
@@ -90,7 +91,7 @@ ol.source.TileImage.prototype.applyTileFilters = function() {
 
 /**
  * Sets the tileClass.
- * @param {function(new: ol.ImageTile, ol.TileCoord, ol.TileState, string, ?string, ol.TileLoadFunctionType)} clazz
+ * @param {!os.TileClass} clazz The tile class
  */
 ol.source.TileImage.prototype.setTileClass = function(clazz) {
   this.tileClass = clazz;
