@@ -91,7 +91,7 @@ os.ui.NavBarCtrl.prototype.onResize = function() {
  */
 os.ui.NavBarCtrl.prototype.getNavContentSize = function() {
   var size = 0;
-  this.element.find('.nav').each(function(el) {
+  this.element.find('.nav-item').each(function(el) {
     size += $(this).outerWidth(true);
   });
 
