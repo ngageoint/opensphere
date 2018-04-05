@@ -180,6 +180,7 @@ describe('os.xt.Peer', function() {
     enforceStrictStorageAPIForIE9Compatibility(window.localStorage);
     storage.clear();
     os.xt.Peer.PING_INTERVAL = 500;
+    os.xt.MockHandler.value = 0;
   });
 
   // for the purposes of this test, let's ping faster
@@ -522,6 +523,7 @@ describe('os.xt.Peer', function() {
 
     a.cleanup_();
     b.cleanup_();
+    window.localStorage.clear();
   });
 
   it('should handle messages sent to a specific peer if a handler for the message type exists', function() {
@@ -596,6 +598,7 @@ describe('os.xt.Peer', function() {
 
   it('should handle messages sent to the public channel if a handler for the message type exists', function() {
     var storage = window.localStorage;
+    storage.clear();
 
     var a = new os.xt.Peer(storage);
     a.setId('a');
@@ -623,6 +626,26 @@ describe('os.xt.Peer', function() {
 
     e.newValue = storage.getItem(e.key);
     a.onStorage_(e);
+
+    // verify that the message was handled
+    expect(os.xt.MockHandler.value).toBe(2);
+
+    a.cleanup_();
+    b.cleanup_();
+  });
+
+  it('should handle messages on init', function() {
+    var b = new os.xt.Peer(storage);
+    b.setId('b');
+    b.setTitle('bob');
+    b.init();
+    b.send('test', 2);
+
+    var a = new os.xt.Peer(storage);
+    a.setId('a');
+    a.setTitle('alice');
+    a.addHandler(new os.xt.MockHandler());
+    a.init();
 
     // verify that the message was handled
     expect(os.xt.MockHandler.value).toBe(2);
