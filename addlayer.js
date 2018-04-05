@@ -28,7 +28,7 @@
 
   if (str.startsWith('file=')) {
     data = {'url': str.substring(5)};
-    type = 'fileOpen';
+    type = 'file.load';
   } else {
     try {
       data = JSON.parse(str);
