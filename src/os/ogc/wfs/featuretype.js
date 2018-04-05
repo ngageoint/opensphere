@@ -246,7 +246,7 @@ os.ogc.wfs.FeatureType.prototype.init = function(typeName, columns, isDynamic) {
       this.columns_.splice(i, 1);
     }
 
-    if (os.ogc.wfs.FeatureType.isDateTime(lcType) && !singleDate) {
+    if (!isDynamic && os.ogc.wfs.FeatureType.isDateTime(lcType) && !singleDate) {
       singleDate = name;
     }
   }
