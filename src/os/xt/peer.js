@@ -168,10 +168,8 @@ os.xt.Peer = function(opt_storage) {
    */
   this.errorShown_ = false;
 
-  /**
-   * @type {Array<number|goog.events.ListenableKey|null>}
-   */
-  this.listenerKeys_ = [];
+  this.boundStorage_ = this.onStorage_.bind(this);
+  this.boundCleanup_ = this.cleanup_.bind(this);
 
   // set up cross-origin messaging
   // the security checks are in the handler
@@ -474,10 +472,10 @@ os.xt.Peer.prototype.init = function() {
   this.persist();
 
   // set up the listener for the storage event
-  this.listenerKeys_.push(goog.events.listen(window, 'storage', this.onStorage_, false, this));
+  window.addEventListener('storage', this.boundStorage_);
 
   // set up the listener for application close
-  this.listenerKeys_.push(goog.events.listen(window, 'unload', this.cleanup_, false, this));
+  window.addEventListener('unload', this.boundCleanup_);
 
   // set up the ping
   this.pingTimer_ = new goog.Timer(os.xt.Peer.PING_INTERVAL);
@@ -890,7 +888,8 @@ os.xt.Peer.prototype.cleanup_ = function(opt_e) {
     this.waitListDelay_ = null;
   }
 
-  this.listenerKeys_.forEach(goog.events.unlistenByKey);
+  window.removeEventListener('storage', this.boundStorage_);
+  window.removeEventListener('unload', this.boundCleanup_);
 };
 
 

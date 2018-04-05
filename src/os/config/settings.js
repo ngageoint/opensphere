@@ -223,7 +223,6 @@ os.config.Settings.prototype.init = function() {
     this.peer_.setTitle(os.config.appNs + 'Settings');
     this.peer_.setGroup(os.config.Settings.KEY_);
     this.peer_.addHandler(this);
-    this.peer_.init();
 
     this.storageLoader_.init().addBoth(this.onInit_, this);
   } else {
@@ -379,6 +378,7 @@ os.config.Settings.prototype.finalizeLoadSettings_ = function() {
   // This must be called after setting this.loaded_ to true
   this.setWriteStorageType(/** @type {os.config.storage.SettingsWritableStorageType} */ (type));
 
+  this.peer_.init();
   goog.log.info(os.config.Settings.LOGGER_, 'Settings finished loading');
   this.dispatchEvent(new goog.events.Event(os.config.EventType.LOADED));
 };
