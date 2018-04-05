@@ -6,7 +6,7 @@
   var str = window.location.hash;
 
   var isAlive = function() {
-    var ping = window.localStorage.getItem(['xt', 'default', to, 'ping']);
+    var ping = window.localStorage.getItem(['xt', 'default', to, 'ping'].join('.'));
     return ping && ping - Date.now() < 10000;
   };
 
