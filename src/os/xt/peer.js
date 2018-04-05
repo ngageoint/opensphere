@@ -499,9 +499,10 @@ os.xt.Peer.prototype.processInitialMessages = function() {
   var pub = ['xt', this.group_, 'public', ''].join('.');
 
   var storage = this.storage_;
-  for (var i = 0, n = storage.length; i < n; i++) {
+  var i = storage.length;
+  while (i--) {
     var key = storage.key(i);
-    if (key.startsWith(pub) || (key.startsWith(priv) && os.xt.Peer.notThese_.indexOf(key) === -1)) {
+    if (key && (key.startsWith(pub) || (key.startsWith(priv) && os.xt.Peer.notThese_.indexOf(key) === -1))) {
       this.onStorage_(/** @type {Event} */ ({'key': key, 'newValue': storage.getItem(key)}));
     }
   }
