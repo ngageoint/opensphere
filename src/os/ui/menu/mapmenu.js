@@ -62,7 +62,7 @@ os.ui.menu.map.setup = function() {
       }, {
         label: 'Toggle 2D/3D View',
         eventType: os.action.EventType.TOGGLE_VIEW,
-        tooltip: 'Resets to the default rotation',
+        tooltip: 'Toggle the map view between 2D and 3D views',
         icons: ['<i class="fa fa-fw fa-globe"></i>'],
         sort: 30,
         metricKey: os.metrics.keys.Map.TOGGLE_MODE

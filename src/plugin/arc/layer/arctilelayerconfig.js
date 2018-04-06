@@ -29,7 +29,7 @@ plugin.arc.layer.ArcTileLayerConfig.ID = 'arctile';
  */
 plugin.arc.layer.ArcTileLayerConfig.prototype.initializeConfig = function(options) {
   plugin.arc.layer.ArcTileLayerConfig.base(this, 'initializeConfig', options);
-  this.tileClass = options['animate'] ? plugin.arc.layer.AnimatedArcTile : this.tileClass;
+  this.layerClass = options['animate'] ? plugin.arc.layer.AnimatedArcTile : this.layerClass;
 };
 
 
