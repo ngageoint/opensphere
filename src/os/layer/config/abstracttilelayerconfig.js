@@ -1,6 +1,7 @@
 goog.provide('os.layer.config.AbstractTileLayerConfig');
 
 goog.require('goog.log');
+goog.require('os.TileClass');
 goog.require('os.layer.Tile');
 goog.require('os.layer.config.AbstractLayerConfig');
 goog.require('os.map');
@@ -39,10 +40,16 @@ os.layer.config.AbstractTileLayerConfig = function() {
   this.crossOrigin = null;
 
   /**
-   * @type {?Function}
+   * @type {!Function}
    * @protected
    */
-  this.tileClass = null;
+  this.layerClass = os.layer.Tile;
+
+  /**
+   * @type {!os.TileClass}
+   * @protected
+   */
+  this.tileClass = os.tile.ColorableTile;
 
   /**
    * List of URLs for load balancing.
@@ -131,7 +138,8 @@ os.layer.config.AbstractTileLayerConfig.prototype.initializeConfig = function(op
     options['crossOrigin'] = null;
   }
   // tile class
-  this.tileClass = /** @type {Function} */ (options['tileClass']) || os.layer.Tile;
+  this.layerClass = /** @type {Function} */ (options['layerClass']) || this.layerClass;
+  this.tileClass = /** @type {os.TileClass} */ (options['tileClass']) || this.tileClass;
 };
 
 
@@ -143,9 +151,8 @@ os.layer.config.AbstractTileLayerConfig.prototype.createLayer = function(options
 
   var source = this.getSource(options);
 
-  if (os.implements(source, os.source.IFilterableTileSource.ID)) {
-    // make it use the colorable
-    source.setTileClass(os.tile.ColorableTile);
+  if (this.tileClass && os.implements(source, os.source.IFilterableTileSource.ID)) {
+    source.setTileClass(this.tileClass);
   }
 
   // The extent is set on the source and not the layer in order to properly support wrap-x.
@@ -183,7 +190,7 @@ os.layer.config.AbstractTileLayerConfig.prototype.createLayer = function(options
     source: source
   });
 
-  var tileLayer = new this.tileClass(tileImageOptions);
+  var tileLayer = new this.layerClass(tileImageOptions);
   this.configureLayer(tileLayer, options);
   tileLayer.restore(options);
   return tileLayer;
