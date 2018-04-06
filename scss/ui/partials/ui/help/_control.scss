@@ -21,10 +21,10 @@
         }
 
         .control-key {
+          @include box-shadow(0 1px 0 rgba(0, 0, 0, .2), 0 0 0 2px #fff inset);
           background-color: #f7f7f7;
           border: 1px solid #ccc;
           border-radius: 3px;
-          box-shadow: 0 1px 0 rgba(0, 0, 0, .2), 0 0 0 2px #fff inset;
           color: #333;
           display: inline-block;
           font-family: inherit;

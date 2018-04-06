@@ -5,6 +5,8 @@ goog.require('goog.Uri');
 goog.require('goog.async.Delay');
 goog.require('goog.events');
 goog.require('goog.events.EventType');
+goog.require('ol.events');
+goog.require('ol.source.TileEventType');
 goog.require('ol.source.UrlTile');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.implements');
@@ -260,7 +262,7 @@ ol.source.UrlTile.prototype.error_ = false;
 
 
 /**
- * @type {?Array.<goog.events.Key>}
+ * @type {?Array<ol.EventsKey>}
  * @private
  */
 ol.source.UrlTile.prototype.listenerKeys_ = null;
@@ -282,7 +284,7 @@ ol.source.UrlTile.prototype.disposeInternal = function() {
 
   // remove any pending listeners
   if (this.listenerKeys_) {
-    goog.array.forEach(this.listenerKeys_, goog.events.unlistenByKey);
+    goog.array.forEach(this.listenerKeys_, ol.events.unlistenByKey);
     this.listenerKeys_.length = 0;
   }
 
@@ -394,23 +396,11 @@ ol.source.UrlTile.prototype.incrementLoading = function() {
 
 
 /**
- * @param {Event} event
+ * @param {ol.source.Tile.Event} evt
  * @private
  */
-ol.source.UrlTile.prototype.onImageLoadOrError_ = function(event) {
-  var key = goog.events.getListener(event.target, goog.events.EventType.LOAD, this.onImageLoadOrError_, false, this);
-  if (key) {
-    goog.array.remove(this.listenerKeys_, key);
-    goog.events.unlistenByKey(key);
-  }
-
-  key = goog.events.getListener(event.target, goog.events.EventType.ERROR, this.onImageLoadOrError_, false, this);
-  if (key) {
-    goog.array.remove(this.listenerKeys_, key);
-    goog.events.unlistenByKey(key);
-  }
-
-  if (event.type === goog.events.EventType.LOAD) {
+ol.source.UrlTile.prototype.onImageLoadOrError_ = function(evt) {
+  if (evt.type === ol.source.TileEventType.TILELOADEND) {
     this.loadCount_++;
   } else {
     this.errorCount_++;
@@ -433,14 +423,18 @@ ol.source.UrlTile.prototype.setTileLoadFunctionInternal_ = ol.source.UrlTile.pro
  */
 ol.source.UrlTile.prototype.setTileLoadFunction = function(tileLoadFunction) {
   this.tileLoadSet = true;
+
+  if (!this.listenerKeys_) {
+    this.listenerKeys_ = [
+      ol.events.listen(this, ol.source.TileEventType.TILELOADSTART, this.incrementLoading, this),
+      ol.events.listen(this, ol.source.TileEventType.TILELOADEND, this.onImageLoadOrError_, this),
+      ol.events.listen(this, ol.source.TileEventType.TILELOADERROR, this.onImageLoadOrError_, this)];
+  }
+
   var scope = this;
 
   if (!this.loadingDelay_) {
     this.loadingDelay_ = new goog.async.Delay(this.fireLoadingEvent_, 500, this);
-  }
-
-  if (!this.listenerKeys_) {
-    this.listenerKeys_ = [];
   }
 
   this.setTileLoadFunctionInternal_(
@@ -449,16 +443,6 @@ ol.source.UrlTile.prototype.setTileLoadFunction = function(tileLoadFunction) {
        * @param {string} source
        */
       function(tile, source) {
-        scope.incrementLoading();
-
-        if (tile instanceof ol.ImageTile) {
-          var img = tile.getImage();
-          scope.listenerKeys_.push(goog.events.listen(img, goog.events.EventType.LOAD,
-              scope.onImageLoadOrError_, false, scope));
-          scope.listenerKeys_.push(goog.events.listen(img, goog.events.EventType.ERROR,
-              scope.onImageLoadOrError_, false, scope));
-        }
-
         if (scope.isRefreshEnabled() && scope.refreshInterval) {
           var uri = new goog.Uri(source);
           var qd = uri.getQueryData();
