@@ -2,7 +2,7 @@
   var type;
   var status = $('#status');
   var to = 'opensphere';
-  var from = to + '-addLayer';
+  var from = to + '-addLayer.' + Date.now();
   var str = window.location.hash;
 
   var isAlive = function() {
