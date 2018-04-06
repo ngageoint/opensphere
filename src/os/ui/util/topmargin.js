@@ -86,6 +86,9 @@ os.ui.util.TopMarginCtrl.prototype.onDestroy_ = function() {
 };
 
 
+/**
+ * @private
+ */
 os.ui.util.TopMarginCtrl.prototype.setWatchEl_ = function() {
   this.bufferElement_ = $(this.scope_['offsetEl']);
   if (this.bufferElement_[0]) {
