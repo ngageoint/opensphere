@@ -1,5 +1,5 @@
 goog.provide('os.ui.util.TopMarginCtrl');
-goog.provide('os.ui.util.TopMarginDirective');
+goog.provide('os.ui.util.topMarginDirective');
 goog.require('os.ui');
 goog.require('os.ui.Module');
 
@@ -8,7 +8,7 @@ goog.require('os.ui.Module');
  * Offset this element the height of the offsetEl
  * @return {angular.Directive}
  */
-os.ui.util.TopMarginDirective = function() {
+os.ui.util.topMarginDirective = function() {
   return {
     restrict: 'A',
     scope: {
@@ -22,7 +22,7 @@ os.ui.util.TopMarginDirective = function() {
 /**
  * Add the directive to the os.ui module
  */
-os.ui.Module.directive('topmargin', [os.ui.util.TopMarginDirective]);
+os.ui.Module.directive('topmargin', [os.ui.util.topMarginDirective]);
 
 
 
