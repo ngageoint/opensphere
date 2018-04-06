@@ -496,11 +496,15 @@ os.xt.Peer.prototype.processInitialMessages = function() {
   var priv = ['xt', this.group_, this.id_, ''].join('.');
   var pub = ['xt', this.group_, 'public', ''].join('.');
 
+  var notThese = os.xt.Peer.notThese_.map(function(end) {
+    return priv + end;
+  });
+
   var storage = this.storage_;
   var i = storage.length;
   while (i--) {
     var key = storage.key(i);
-    if (key && (key.startsWith(pub) || (key.startsWith(priv) && os.xt.Peer.notThese_.indexOf(key) === -1))) {
+    if (key && (key.startsWith(pub) || (key.startsWith(priv) && notThese.indexOf(key) === -1))) {
       this.onStorage_(/** @type {Event} */ ({'key': key, 'newValue': storage.getItem(key)}));
     }
   }
@@ -536,7 +540,9 @@ os.xt.Peer.prototype.send = function(type, data, opt_to) {
 
   try {
     // do this in a try/catch in case localStorage is full so that we can let the user know
-    this.storage_.setItem(['xt', this.group_, opt_to, this.id_].join('.'), os.xt.Peer.prepareSendData(type, data));
+    this.storage_.setItem(
+        ['xt', this.group_, opt_to, this.id_, Date.now()].join('.'),
+        os.xt.Peer.prepareSendData(type, data));
   } catch (e) {
     var logMsg = 'A cross-app communication event was unable to be sent. This usually happens because the data was ' +
         'too large or because the storage is corrupted.';
@@ -847,7 +853,7 @@ os.xt.Peer.prototype.onStorage_ = function(event) {
   }
 
   // ensure that the key starts with xt<group><id> or xt<group>.public
-  if (parts.length === 4 && parts[0] === 'xt' && parts[1] === this.group_ &&
+  if (parts.length >= 4 && parts[0] === 'xt' && parts[1] === this.group_ &&
       (parts[2] === this.id_ || parts[2] == 'public') && event.newValue) {
     // ignore info changes and messages from ourselves
     if (os.xt.Peer.notThese_.indexOf(parts[3]) === -1 && parts[3] !== this.id_) {
@@ -856,7 +862,7 @@ os.xt.Peer.prototype.onStorage_ = function(event) {
         this.storage_.removeItem(event.key);
       }
     }
-  } else if (parts.length === 4 && parts[0] === 'xt' && parts[1] === this.group_ &&
+  } else if (parts.length >= 4 && parts[0] === 'xt' && parts[1] === this.group_ &&
       os.xt.Peer.notThese_.indexOf(parts[3]) > 0) {
     // could be a new peer, or a dead one
     this.processWaitList_();
