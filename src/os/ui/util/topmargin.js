@@ -1,5 +1,5 @@
 goog.provide('os.ui.util.TopMarginCtrl');
-goog.provide('os.ui.util.TopMarginDirective');
+goog.provide('os.ui.util.topMarginDirective');
 goog.require('os.ui');
 goog.require('os.ui.Module');
 
@@ -8,7 +8,7 @@ goog.require('os.ui.Module');
  * Offset this element the height of the offsetEl
  * @return {angular.Directive}
  */
-os.ui.util.TopMarginDirective = function() {
+os.ui.util.topMarginDirective = function() {
   return {
     restrict: 'A',
     scope: {
@@ -22,7 +22,7 @@ os.ui.util.TopMarginDirective = function() {
 /**
  * Add the directive to the os.ui module
  */
-os.ui.Module.directive('topmargin', [os.ui.util.TopMarginDirective]);
+os.ui.Module.directive('topmargin', [os.ui.util.topMarginDirective]);
 
 
 
@@ -47,10 +47,15 @@ os.ui.util.TopMarginCtrl = function($scope, $element, $timeout) {
   this.element_ = $element;
 
   /**
-   * @type {number}
+   * @type {?angular.$timeout}
    * @private
    */
-  this.marginTop_ = 1;
+  this.timeout_ = $timeout;
+
+  /**
+   * @type {?angular.JQLite}
+   */
+  this.bufferElement_ = null;
 
   /**
    * Debounce resize events over a brief period.
@@ -59,11 +64,7 @@ os.ui.util.TopMarginCtrl = function($scope, $element, $timeout) {
    */
   this.resizeFn_ = this.onResize_.bind(this);
 
-  $timeout(function() {
-    this.bufferElement_ = $(this.scope_['offsetEl']);
-    this.bufferElement_.resize(this.resizeFn_);
-    this.resizeFn_();
-  }.bind(this));
+  $timeout(this.setWatchEl_.bind(this));
   $scope.$on('$destroy', this.onDestroy_.bind(this));
 };
 
@@ -73,11 +74,31 @@ os.ui.util.TopMarginCtrl = function($scope, $element, $timeout) {
  * @private
  */
 os.ui.util.TopMarginCtrl.prototype.onDestroy_ = function() {
-  this.bufferElement_.removeResize(this.resizeFn_);
+  if (this.bufferElement_) {
+    this.bufferElement_.removeResize(this.resizeFn_);
+    this.bufferElement_ = null;
+  }
 
   this.resizeFn_ = null;
+  this.timeout_ = null;
   this.element_ = null;
   this.scope_ = null;
+};
+
+
+/**
+ * @private
+ */
+os.ui.util.TopMarginCtrl.prototype.setWatchEl_ = function() {
+  this.bufferElement_ = $(this.scope_['offsetEl']);
+  if (this.bufferElement_[0]) {
+    this.bufferElement_.resize(this.resizeFn_);
+    this.resizeFn_();
+  } else {
+    this.bufferElement_ = null;
+    // Attempt to get the element again (rare)
+    this.timeout_(this.setWatchEl_.bind(this));
+  }
 };
 
 
