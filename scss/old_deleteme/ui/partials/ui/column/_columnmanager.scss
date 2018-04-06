@@ -16,8 +16,8 @@
 
   input:focus,
   input[type='text']:focus {
+    @include box-shadow(none);
     border-color: #272b30;
-    box-shadow: none;
     outline: none;
   }
 

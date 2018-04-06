@@ -97,3 +97,7 @@ os.ui.NavBarCtrl.prototype.getNavContentSize = function() {
 
   return size;
 };
+goog.exportProperty(
+    os.ui.NavBarCtrl.prototype,
+    'getNavContentSize',
+    os.ui.NavBarCtrl.prototype.getNavContentSize);
