@@ -2,11 +2,11 @@
   <div class="window-content">
     <div class="c-paramsform">
       <form class="form-horizontal form-compact" name="form">
-        <table class="wide">
+        <table class="w-100">
           <tr ng-repeat-start="url in ctrl.urls track by $index" title="URL used for server requests">
             <td style="float:left;width:50px;">{{ctrl.getUrlLabel($index)}}:</td>
-            <td class="wide">
-              <input type="text" name="url{{$index}}" class="wide"
+            <td class="w-100">
+              <input type="text" name="url{{$index}}" class="w-100"
                   ng-model="ctrl.urls[$index]" ng-maxlength="1000" ng-change="ctrl.testValid()"
                   placeholder="Server URL" />
             </td>

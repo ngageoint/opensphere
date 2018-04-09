@@ -134,7 +134,7 @@ os.ui.menu.Menu.prototype.open = function(context, position, opt_target, opt_dis
       // You might be tempted to use the 'position' field in this options object.
       // You'd be wrong. That only relates to sub-menu positioning.
       this.menu_.menu({
-        'items': '> :not(.nav-header)',
+        'items': '> :not(.dropdown-header)',
         'select': this.onSelect.bind(this)
       }));
 

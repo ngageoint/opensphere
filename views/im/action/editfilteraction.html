@@ -23,7 +23,7 @@
 
       <div class="filter-container"
           autoheight="50%" siblings=".control-group,.nav-tabs,.filter-action-header">
-        <div class="tab-content tall">
+        <div class="tab-content h-100">
           <div ng-if="tab == 'basic'" style="height:100%">
             <basicfilterbuilder root="ctrl.root" columns="columns" is-complex="ctrl.isComplex">
             </basicfilterbuilder>
@@ -38,7 +38,7 @@
 
       <div class="filter-action-section"
           autoheight="50%" siblings=".control-group,.nav-tabs,.filter-action-header">
-        <div class="tab-content tall">
+        <div class="tab-content h-100">
           <div class="filter-action-controls advanced-filter-buttons">
             <button class="btn btn-default" ng-click="ctrl.addAction()" ng-disabled="ctrl.availableActions.length == 0"
                 title="{{ctrl.getAddActionTooltip()}}">

@@ -4,7 +4,7 @@
       <div class="control-group" ng-class="{'error':mergeForm.name.$invalid && mergeForm.name.$dirty}">
         <label class="control-label">Layer Name:</label>
         <div class="controls">
-          <input class="wide" type="text" name="name" ng-model="ctrl.name" ng-required="true" ng-maxlength="100"/>
+          <input class="w-100" type="text" name="name" ng-model="ctrl.name" ng-required="true" ng-maxlength="100"/>
           <span class="help-inline" ng-if="mergeForm.name.$error.required">Required</span>
           <span class="help-inline" ng-if="mergeForm.name.$error.maxlength">Name is too long!</span>
         </div>

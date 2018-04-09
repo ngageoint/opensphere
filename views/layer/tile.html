@@ -53,8 +53,8 @@
           </tr>
           <tr title="Sets the style of the layer(s)" ng-show="styles && items.length == 1">
             <td class="control-label">Style:</td>
-            <td class="wide">
-              <select class="wide" ng-model="style" ng-change="tile.onStyleChange()"
+            <td class="w-100">
+              <select class="w-100" ng-model="style" ng-change="tile.onStyleChange()"
                   ng-options="value.label for value in styles">
               </select>
             </td>
@@ -72,8 +72,8 @@
         <table>
           <tr ng-if="tile.showRefresh" title="Sets how often the layer will automatically refresh its tiles.">
             <td class="control-label">Auto Refresh:</td>
-            <td class="style-controls wide">
-              <select class="wide" ng-model="tile.refresh" ng-change="tile.onRefreshChange()"
+            <td class="style-controls w-100">
+              <select class="w-100" ng-model="tile.refresh" ng-change="tile.onRefreshChange()"
                   ng-options="val.label for val in tile.refreshOptions">
               </select>
             </td>

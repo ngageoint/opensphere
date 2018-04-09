@@ -4,7 +4,7 @@
       <div class="control-group c-feature-edit__name">
         <label class="control-label">Name:</label>
         <div class="controls">
-          <input class="wide" type="text" name="name" ng-model="ctrl.name" ng-change="ctrl.updatePreview()" required="true" ng-maxlength="100"/>
+          <input class="w-100" type="text" name="name" ng-model="ctrl.name" ng-change="ctrl.updatePreview()" required="true" ng-maxlength="100"/>
           <span class="help-inline" ng-if="featureEditForm.name.$error.required">Required</span>
           <span class="help-inline" ng-if="featureEditForm.name.$error.maxlength">Name is too long!</span>
         </div>

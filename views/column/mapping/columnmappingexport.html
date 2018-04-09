@@ -4,7 +4,7 @@
       <div class="control-group">
         <label class="control-label" for="title">Name:</label>
         <div class="controls">
-          <input type="text" class="wide" name="title" ng-model="title" ng-required="true" ng-maxlength="128"/>
+          <input type="text" class="w-100" name="title" ng-model="title" ng-required="true" ng-maxlength="128"/>
           <span class="help-inline" ng-show="cmExportForm.title.$error.maxlength">Title is too long!</span>
           <span class="help-inline" ng-show="cmExportForm.title.$error.required">Required!</span>
         </div>
@@ -13,7 +13,7 @@
       <div class="control-group">
         <label class="control-label" for="persister">Save to:</label>
         <div class="controls">
-          <select class="wide" name="persister" ng-model="cmExportCtrl.persister" ng-options="value as key for (key, value) in cmExportCtrl.persisters"/>
+          <select class="w-100" name="persister" ng-model="cmExportCtrl.persister" ng-options="value as key for (key, value) in cmExportCtrl.persisters"/>
         </div>
       </div>
 
