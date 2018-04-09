@@ -5,8 +5,8 @@
       <table style="width:100%">
         <tr>
           <td class="control-label">Title:</td>
-          <td class="wide">
-            <input unique-provider-title type="text" class="wide" name="title" ng-disabled="!edit" ng-model="config.label" ng-required="true" ng-maxlength="1000"/>
+          <td class="w-100">
+            <input unique-provider-title type="text" class="w-100" name="title" ng-disabled="!edit" ng-model="config.label" ng-required="true" ng-maxlength="1000"/>
           </td>
         </tr>
         <tr>
@@ -19,8 +19,8 @@
         </tr>
         <tr>
           <td class="control-label">WMS (Tile) Server:</td>
-          <td class="wide">
-            <input type="text" name="wms" class="wide" ng-disabled="!edit" ng-model="config.wms"
+          <td class="w-100">
+            <input type="text" name="wms" class="w-100" ng-disabled="!edit" ng-model="config.wms"
                 ng-required="!config.wms && !config.wfs" ng-maxlength="1000" placeholder="e.g. http://www.example.com/ogcserver/wms"/>
           </td>
         </tr>
@@ -33,8 +33,8 @@
         </tr>
         <tr>
           <td class="control-label">WFS (Features) Server:</td>
-          <td class="wide">
-            <input type="text" name="wfs" class="wide" ng-disabled="!edit" ng-model="config.wfs"
+          <td class="w-100">
+            <input type="text" name="wfs" class="w-100" ng-disabled="!edit" ng-model="config.wfs"
                 ng-required="!config.wms && !config.wfs" ng-maxlength="1000" placeholder="e.g. http://www.example.com/ogcserver/wfs"/>
           </td>
         </tr>

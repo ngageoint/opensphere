@@ -24,7 +24,7 @@
   </div>
 
   <div class="c-labelcontainer" ng-class="labels.length > 1 && 'well'">
-    <table class="wide">
+    <table class="w-100">
       <tr ng-repeat="label in labels">
         <td class="c-labelcontainer__fixedcell" ng-if="labels.length > 1">
           <span class="handle" ng-if="label.column != null" title="Click and Drag to move this label">
@@ -40,7 +40,7 @@
         </td>
         <td class="c-labelcontainer__fixedcell">Column</td>
         <td>
-          <select class="no-margin wide" ng-model="label.column" ng-change="labelCtrl.onColumnChange()"
+          <select class="no-margin w-100" ng-model="label.column" ng-change="labelCtrl.onColumnChange()"
               title="Sets the data field used for labels"
               ng-options="col.field as col.name for col in columns">
             <option value="">-- None --</option>

@@ -16,7 +16,7 @@ os.ui.mapDirective = function() {
     restrict: 'E',
     scope: true,
     replace: true,
-    template: '<div id="map-container" class="map h-100"></div>',
+    template: '<div id="map-container" class="h-100"></div>',
     controller: os.ui.MapCtrl,
     controllerAs: 'mapCtrl'
   };

@@ -1,16 +1,16 @@
 <div class="copy-filter__picker" ng-form="copyFilterPickerForm">
   <table class="copy-filter__table">
     <tr>
-      <td class="ellipsis-text copy-filter__column-name" title="{{sourceLayerName}} Column">
+      <td class="text-truncate copy-filter__column-name" title="{{sourceLayerName}} Column">
         {{sourceLayerName}} Column
       </td>
       <td></td>
-      <td class="ellipsis-text copy-filter__column-name" title="{{models[0].name}} Column">
+      <td class="text-truncate copy-filter__column-name" title="{{models[0].name}} Column">
         {{models[0].name}} Column
       </td>
     </tr>
     <tr ng-repeat="model in models">
-      <td class="ellipsis-text copy-filter__column" title="{{model.sourceColumnName}}">
+      <td class="text-truncate copy-filter__column" title="{{model.sourceColumnName}}">
         {{model.sourceColumnName}}
       </td>
       <td>

@@ -8,21 +8,21 @@
         <table>
           <tr title="Sets the color algorithm for the layer(s)">
             <td class="control-label">Colors:</td>
-            <td class="wide">
+            <td class="w-100">
               <select ng-model="gradient" ng-change="heatmap.onGradientChange()" ng-options="grad.title for grad in gradients"></select>
             </td>
           </tr>
           <tr title="Sets the opacity of the heatmap">
             <td class="control-label">Opacity:</td>
-            <td class="wide"><slider min="0" max="1" step="0.02" value="opacity" name="opacity"></slider></td>
+            <td class="w-100"><slider min="0" max="1" step="0.02" value="opacity" name="opacity"></slider></td>
           </tr>
           <tr title="Sets the size of each shape (not applied to ellipses)">
             <td class="control-label">Size:</td>
-            <td class="wide"><slider min="3" max="10" step="1" value="size" live="false" name="size"></slider></td>
+            <td class="w-100"><slider min="3" max="10" step="1" value="size" live="false" name="size"></slider></td>
           </tr>
           <tr title="Sets the number of colocated features for maximum intensity">
             <td class="control-label">Intensity:</td>
-            <td class="wide">
+            <td class="w-100">
               <spinner min="1" max="heatmap.maxIntensity" step="1" value="intensity" live="false" name="intensity" style="float:left"></spinner>
               <slider min="1" max="heatmap.maxIntensity" step="1" value="intensity" live="false" name="intensity" style="margin-left:50px; margin-top:8px"></slider>
             </td>

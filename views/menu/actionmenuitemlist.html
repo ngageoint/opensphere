@@ -2,7 +2,7 @@
   <li ng-repeat="menuItem in actions"
     ng-init="hasSubActions=menuItem.getItems;showSubMenu=isFlat;isSeparator=menuItem.isSeparator;isSeparatorHeader=menuItem.isSeparatorHeader;isAction=menuItem.getAction"
     class="menu-item"
-    ng-class="{'menu-item-action':isAction,'dropdown-submenu':hasSubActions,'submenu':hasSubActions,'divider':isSeparator,'nav-header':isSeparatorHeader}"
+    ng-class="{'menu-item-action':isAction,'dropdown-submenu':hasSubActions,'submenu':hasSubActions,'dropdown-divider':isSeparator,'dropdown-header':isSeparatorHeader}"
     title="{{menuItem.getAction().getDescription()}}"
     ng-mouseenter="showSubMenu=hasSubActions"
     ng-mouseleave="showSubMenu=isFlat"
@@ -10,10 +10,10 @@
 
     <!-- action item -->
     <span class="menu-item-hotkey" ng-if="menuItem.getAction().getHotkey()">({{menuItem.getAction().getHotkey()}})</span>
-    <div class="ellipsis-text" style="display:inline;">
+    <div class="text-truncate" style="display:inline;">
       <a class="unselectable" ng-if="!(isSeparator || isSeparatorHeader)">
         <span><i class="fa fa-fw" ng-class="menuItem.getAction().getIcon() || 'fa-indent color-light-gray'"></i></span>
-        <span class="ellipsis-text" style="padding-right:5px;">{{menuItem.getName()}}</span>
+        <span class="text-truncate" style="padding-right:5px;">{{menuItem.getName()}}</span>
       </a>
     </div>
 

@@ -1,15 +1,15 @@
 <div class="window-content-wrapper">
   <div class="window-content combinator">
     <div class="layers-header">
-      <table class="wide" ng-class="{'bot-gapxs': advanced}">
+      <table class="w-100" ng-class="{'bot-gapxs': advanced}">
         <tr ng-show="advanced">
           <td class="control-label">Group By:</td>
-          <td class="wide">
-            <select class="wide no-margin" ng-model="order" ng-change="comboCtrl.selectGroupBy(true)" ng-options="value for value in orders" />
+          <td class="w-100">
+            <select class="w-100 no-margin" ng-model="order" ng-change="comboCtrl.selectGroupBy(true)" ng-options="value for value in orders" />
           </td>
         </tr>
       </table>
-      <div class="wide inline-block">
+      <div class="w-100 inline-block">
         <div class="pull-left">
           <addfilter layer="layer" btn-text="Add Filter"></addfilter>
           <span list list-id="combinator"></span>

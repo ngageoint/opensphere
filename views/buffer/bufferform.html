@@ -5,7 +5,7 @@
     <div class="control-group" title="{{buffer.help.distance}}">
       <label class="control-label">Buffer Distance:</label>
       <div class="controls">
-        <input class="wide" type="number" name="distance" min="0" step="any"
+        <input class="w-100" type="number" name="distance" min="0" step="any"
             ng-min="1e-16"
             ng-change="buffer.updatePreview()"
             ng-model="config.distance"
@@ -16,7 +16,7 @@
     <div class="control-group" title="{{buffer.help.units}}">
       <label class="control-label">Distance Units:</label>
       <div class="controls">
-        <select class="wide" name="units" ng-model="config.units" ng-required="true" ng-change="buffer.updatePreview()"
+        <select class="w-100" name="units" ng-model="config.units" ng-required="true" ng-change="buffer.updatePreview()"
             ng-options="unit as label for (label, unit) in buffer.units"/>
         <popover class="pull-right" x-title="'Distance Units'" x-content="buffer.help.units" x-pos="'right'"></popover>
       </div>

@@ -199,7 +199,7 @@ os.ui.menu.MenuItem.prototype.render = function(context, opt_target) {
 
   // group/category
   if (type === types.GROUP) {
-    html += 'menu-item nav-header ';
+    html += 'menu-item dropdown-header ';
   }
 
   // enabled disabled
