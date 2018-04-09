@@ -10,7 +10,7 @@ goog.require('plugin.basemap.layer.BaseMap');
 /**
  * Creates a tiled map layer. Map layers are typically opaque and belong under all data overlays.
  *
- * Note that this configuration forces the <code>tileClass</code> option to be {@link plugin.basemap.layer.BaseMap}.
+ * Note that this configuration forces the <code>layerClass</code> option to be {@link plugin.basemap.layer.BaseMap}.
  *
  * @example <caption>Example map layer config</caption>
  * "example": {
