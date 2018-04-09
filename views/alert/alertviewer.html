@@ -7,7 +7,7 @@
           <tr ng-repeat="alert in alertViewerCtrl.alertArray">
             <td>
               <span>[{{alert.time}}]</span>
-              <span ng-class="{'Error':'font-error','Warning':'font-warning','Success':'font-success','Info':'font-info'}[alert.severity]">[{{alert.severity}}]</span>
+              <span ng-class="{'Error':'font-danger','Warning':'font-warning','Success':'font-success','Info':'font-info'}[alert.severity]">[{{alert.severity}}]</span>
             </td>
             <td ng-bind-html="alert.msg | alertlink"></td>
           </tr>

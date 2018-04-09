@@ -73,7 +73,7 @@ plugin.area.SHPAreaImportUI.prototype.launchUI = function(file, opt_config) {
     'modal': 'true',
     'show-close': 'true'
   };
-  var template = '<shparea resize-with=".window"></shparea>';
+  var template = '<shparea resize-with=".js-window"></shparea>';
   os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
 };
 

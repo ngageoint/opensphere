@@ -62,7 +62,7 @@ plugin.places.ui.togglePlacesWindow = function() {
       'max-height': '2000',
       'show-close': 'true'
     };
-    var template = '<places resize-with=".window"></places>';
+    var template = '<places resize-with=".js-window"></places>';
     os.ui.window.create(windowOptions, template);
   }
 };

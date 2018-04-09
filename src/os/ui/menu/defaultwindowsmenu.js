@@ -99,7 +99,7 @@ os.ui.menu.windows.default.setup = function() {
     'max-height': '1000',
     'show-close': 'true',
     'no-scroll': 'false',
-    'html': '<alerts resize-with=".window"></alerts>'
+    'html': '<alerts resize-with=".js-window"></alerts>'
   });
 
   os.ui.menu.windows.addWindow('clear', {
@@ -132,7 +132,7 @@ os.ui.menu.windows.default.setup = function() {
     'max-height': '1000',
     'show-close': 'true',
     'no-scroll': 'true',
-    'html': '<history resize-with=".window"></history>'
+    'html': '<history resize-with=".js-window"></history>'
   });
 
   if (os.settings.get('metrics.enabled', false)) {

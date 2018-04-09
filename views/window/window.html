@@ -1,34 +1,36 @@
-<div class="stack modal window unselectable" ng-class="{'active': active}">
-  <div class="window-header modal-header" ng-dblclick="windowCtrl.toggle()">
-    <div class="pull-right">
-      <div ng-if="helpContext" style="display: inline-block;">
-        <context-onboarding context="{{helpContext}}"></context-onboarding>
-      </div>
+<div class="js-window modal d-block c-window" ng-class="{'active': active}">
+  <div class="modal-content h-100">
+    <div class="js-window__header modal-header d-block" ng-dblclick="windowCtrl.toggle()">
+      <div class="float-right">
+        <div ng-if="helpContext" class="d-inline-block">
+          <context-onboarding context="{{helpContext}}"></context-onboarding>
+        </div>
 
-      <div ng-show="headerBtns.length" style="display:inline-block;">
-        <i ng-repeat="headerBtnCfg in headerBtns"
-          class="window-close {{headerBtnCfg.iconClass}}"
-          ng-click="windowCtrl.onHeaderBtnClick($event, headerBtnCfg);"
-          title="{{headerBtnCfg.tooltip}}"></i>
-      </div>
+        <div ng-show="headerBtns.length" class="d-inline-block">
+          <i ng-repeat="headerBtnCfg in headerBtns"
+            class="window-close {{headerBtnCfg.iconClass}}"
+            ng-click="windowCtrl.onHeaderBtnClick($event, headerBtnCfg);"
+            title="{{headerBtnCfg.tooltip}}"></i>
+        </div>
 
-      <div ng-if="showCollapse && !modal && !overlay" ng-click="windowCtrl.toggle()" title="{{collapsed ? 'Expand' : 'Collapse'}}" style="display:inline-block">
-        <i class="fa window-close" ng-class="{'fa-compress': !collapsed, 'fa-expand': collapsed}"></i>
-      </div>
+        <div ng-if="showCollapse && !modal && !overlay" ng-click="windowCtrl.toggle()" title="{{collapsed ? 'Expand' : 'Collapse'}}" class="d-inline-block">
+          <i class="fa window-close" ng-class="{'fa-compress': !collapsed, 'fa-expand': collapsed}"></i>
+        </div>
 
-      <div ng-if="showClose" ng-click="windowCtrl.close(true)" title="Close" style="display: inline-block;">
-        <i class="fa fa-times window-close"></i>
-      </div>
+        <div ng-if="showClose" ng-click="windowCtrl.close(true)" title="Close" class="d-inline-block">
+          <i class="fa fa-times window-close"></i>
+        </div>
 
-      <div ng-if="showHide" ng-click="windowCtrl.hide()" title="Hide" style="display: inline-block;">
-        <i class="fa fa-times window-close"></i>
+        <div ng-if="showHide" ng-click="windowCtrl.hide()" title="Hide" class="d-inline-block">
+          <i class="fa fa-times window-close"></i>
+        </div>
+      </div>
+      <div class="js_window__header-text text-nowrap" title="{{label}}">
+        <i ng-if="icon" ng-class="icon"></i>
+        <span ng-if="iconHtml" ng-bind-html="iconHtml"></span>
+        {{label}}
       </div>
     </div>
-    <div class="header-text nowrap" title="{{label}}">
-      <i ng-if="icon" ng-class="icon"></i>
-      <span ng-if="iconHtml" ng-bind-html="iconHtml"></span>
-      {{label}}
-    </div>
+    <div class="js-window__wrapper w-100 h-100 d-flex flex-column" ng-transclude></div>
   </div>
-  <div class="window-wrapper" ng-transclude></div>
 </div>

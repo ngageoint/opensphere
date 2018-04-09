@@ -1,5 +1,5 @@
-<div class="window-content-wrapper">
-  <div class="window-content">
+<div class="c-window__content">
+  <div class="modal-body">
     <div class="scroll-pane-wrapper panel" style="padding:0px;">
       <div id="historyScroll" class="scroll-pane">
         <span ng-hide="historyView.commandHistory.length">There is no history to view.</span>
@@ -20,8 +20,8 @@
       </div>
     </div>
   </div>
-  <div class="window-footer">
-    <div class="pull-right">
+  <div class="modal-footer">
+    <div class="float-right">
       <button title="Clear all history" type="button" class="btn btn-default" ng-click="historyView.clearHistory()" ng-disabled="historyView.commandHistory.length <= 0">
         <i class="fa fa-times"></i>
         Clear History
