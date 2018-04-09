@@ -1,0 +1,9 @@
+@include keyframes(pulsate) {
+  0% { opacity: .3; }
+  75% { opacity: 1; }
+  100% { opacity: .3; }
+}
+
+.pulsate {
+  @include animation(pulsate 1s infinite steps(15));
+}

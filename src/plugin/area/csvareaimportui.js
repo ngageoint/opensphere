@@ -65,6 +65,6 @@ plugin.area.CSVAreaImportUI.prototype.launchUI = function(file, opt_config) {
     'show-close': 'true',
     'no-scroll': 'true'
   };
-  var template = '<csvareaimport resize-with=".window"></csvareaimport>';
+  var template = '<csvareaimport resize-with=".js-window"></csvareaimport>';
   os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
 };

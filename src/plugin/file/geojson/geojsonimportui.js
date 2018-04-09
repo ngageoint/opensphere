@@ -79,6 +79,6 @@ plugin.file.geojson.GeoJSONImportUI.prototype.launchUI = function(file, opt_conf
     'show-close': 'true',
     'no-scroll': 'true'
   };
-  var template = '<geojsonimport resize-with=".window"></geojsonimport>';
+  var template = '<geojsonimport resize-with=".js-window"></geojsonimport>';
   os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
 };
