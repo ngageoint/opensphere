@@ -1746,28 +1746,10 @@ os.geo.toSexagesimal = function(coordinate, opt_isLon, opt_symbols) {
 /**
  * Normalizes a latitude value to the given range
  * @param {number} lat
- * @param {number=} opt_min
- * @param {number=} opt_max
  * @return {number}
  */
-os.geo.normalizeLatitude = function(lat, opt_min, opt_max) {
-  if (goog.isDef(opt_min) && goog.isDef(opt_max)) {
-    // todo: the modulo version below is a bit faster, so
-    // verify if that also works with an arbitrary range.
-    while (lat < opt_min) {
-      lat += 180;
-    }
-
-    while (lat > opt_max) {
-      lat -= 180;
-    }
-
-    return lat;
-  } else {
-    return lat > 90 ? ((lat + 90) % 180) - 90 :
-        lat < -90 ? ((lat - 90) % 180) + 90 :
-        lat;
-  }
+os.geo.normalizeLatitude = function(lat) {
+  return lat > 90 ? 90 : lat < -90 ? -90 : lat;
 };
 
 
@@ -1889,6 +1871,7 @@ os.geo.normalizeCoordinates = function(coordinates, opt_to) {
     // normalize coords against the target
     for (var i = 0; i < coordinates.length; i++) {
       coordinates[i][0] = os.geo.normalizeLongitude(coordinates[i][0], to - 180, to + 180);
+      coordinates[i][1] = os.geo.normalizeLatitude(coordinates[i][1]);
     }
   }
 };
@@ -1941,6 +1924,7 @@ os.geo.normalizeGeometryCoordinates = function(geometry, opt_to) {
         var /** @type {Array<number>} */ coord = point.getCoordinates();
         var to = opt_to != null ? opt_to : 0;
         coord[0] = os.geo.normalizeLongitude(coord[0], to - 180, to + 180);
+        coord[1] = os.geo.normalizeLatitude(coord[1]);
         point.setCoordinates(coord);
         return true;
       case ol.geom.GeometryType.LINE_STRING:
