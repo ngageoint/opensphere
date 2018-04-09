@@ -1789,7 +1789,6 @@ os.source.Vector.prototype.processImmediate = function(feature) {
 
   // save the source id on the feature
   feature.values_[os.data.RecordField.SOURCE_ID] = this.getId();
-  os.interpolate.interpolateFeature(feature);
 
   var geom = feature.getGeometry();
 
@@ -1825,6 +1824,8 @@ os.source.Vector.prototype.processImmediate = function(feature) {
       geom.osTransform();
     }
   }
+
+  os.interpolate.interpolateFeature(feature);
 
   // make sure the internal feature ID field is set
   if (feature.values_[os.Fields.ID] == null) {
