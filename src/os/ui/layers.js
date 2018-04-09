@@ -116,10 +116,20 @@ os.ui.LayersCtrl = function($scope, $element) {
   // refresh on changed favorites
   os.settings.listen(os.user.settings.FavoriteManager.KEY, this.search, false, this);
 
+  this.scope['showTiles'] = true;
+  this.scope['showFeatures'] = true;
+  this.scope['tilesBtnIcon'] = os.ROOT + 'images/tiles-base.png';
+  this.scope['featuresBtnIcon'] = os.ROOT + 'images/features-base.png';
+
   this.init();
 };
 goog.inherits(os.ui.LayersCtrl, os.ui.slick.AbstractGroupByTreeSearchCtrl);
 
+/**
+ * The functions to be called to determine if the layer should not be toggled
+* @type {Array<function(!ol.layer.Layer):boolean>}
+*/
+os.ui.LayersCtrl.SKIP_TOGGLE_FUNCS = [];
 
 /**
  * The view options for grouping layers
@@ -248,3 +258,66 @@ os.ui.LayersCtrl.prototype.toggle = function(flagName) {
   }
 };
 goog.exportProperty(os.ui.LayersCtrl.prototype, 'toggle', os.ui.LayersCtrl.prototype.toggle);
+
+/**
+ * Toggles the Tile layers on/off
+ */
+os.ui.LayersCtrl.prototype.toggleTileLayers = function() {
+  this.scope['showTiles'] = !this.scope['showTiles'];
+
+  var layers = os.map.mapContainer.getLayers();
+  for (var i = 0; i < layers.length; i++) {
+    // call the functions in SKIP_TOGGLE_FUNCS on each layer
+    // to determine if it should not be toggled
+    if (!os.ui.LayersCtrl.SKIP_TOGGLE_FUNCS.some(function(func) {
+      return func(layers[i]);
+    })) {
+      var type = layers[i].getType();
+
+      if (type && type != ol.LayerType.VECTOR) {
+        // toggle tiles
+        layers[i].setLayerVisible(this.showTiles());
+      }
+    }
+  }
+};
+goog.exportProperty(os.ui.LayersCtrl.prototype, 'toggleTileLayers', os.ui.LayersCtrl.prototype.toggleTileLayers);
+
+/**
+ * Checks if the Tiles should be displayed
+ * @return {boolean}
+ */
+os.ui.LayersCtrl.prototype.showTiles = function() {
+  return this.scope['showTiles'];
+};
+goog.exportProperty(os.ui.LayersCtrl.prototype, 'showTiles', os.ui.LayersCtrl.prototype.showTiles);
+
+/**
+ * Toggles the Feature layers on/off
+ */
+os.ui.LayersCtrl.prototype.toggleFeatureLayers = function() {
+  this.scope['showFeatures'] = !this.scope['showFeatures'];
+
+  var layers = os.map.mapContainer.getLayers();
+  for (var i = 0; i < layers.length; i++) {
+    var type = layers[i].getType();
+
+    if (type && type == ol.LayerType.VECTOR) {
+      // do not toggle the Drawing Layer
+      if (!(layers[i] instanceof os.layer.Drawing)) {
+        // toggle other features
+        layers[i].setLayerVisible(this.showFeatures());
+      }
+    }
+  }
+};
+goog.exportProperty(os.ui.LayersCtrl.prototype, 'toggleFeatureLayers', os.ui.LayersCtrl.prototype.toggleFeatureLayers);
+
+/**
+ * Checks if the Features should be displayed
+ * @return {boolean}
+ */
+os.ui.LayersCtrl.prototype.showFeatures = function() {
+  return this.scope['showFeatures'];
+};
+goog.exportProperty(os.ui.LayersCtrl.prototype, 'showFeatures', os.ui.LayersCtrl.prototype.showFeatures);
