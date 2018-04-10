@@ -146,6 +146,7 @@ goog.require('plugin.google.places.Plugin');
 goog.require('plugin.heatmap.HeatmapPlugin');
 goog.require('plugin.im.action.feature.Plugin');
 goog.require('plugin.ogc.OGCPlugin');
+goog.require('plugin.openpage.Plugin');
 goog.require('plugin.osm.nom.NominatimPlugin');
 goog.require('plugin.overview.OverviewPlugin');
 goog.require('plugin.params.ParamsPlugin');
@@ -516,6 +517,7 @@ os.MainCtrl.prototype.addPlugins = function() {
   os.ui.pluginManager.addPlugin(plugin.params.ParamsPlugin.getInstance());
   os.ui.pluginManager.addPlugin(plugin.suncalc.Plugin.getInstance());
   os.ui.pluginManager.addPlugin(plugin.track.TrackPlugin.getInstance());
+  os.ui.pluginManager.addPlugin(plugin.openpage.Plugin.getInstance());
 };
 
 
