@@ -71,7 +71,6 @@ os.ui.windowDirective = function() {
       'noScroll': '@',
       'overlay': '@',
       'modal': '=',
-      'toBack': '@',
       'disableDrag': '@',
       'windowContainer': '@',
       /* Array.<os.ui.window.HeaderBtnConfig> */
@@ -458,39 +457,32 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
 
   if ($scope['y'] == 'center') {
     var maxHeight = Math.min($(window).height(), container.height());
-    // if ($scope['height'] == 'auto') {
-    //   // Put the element off the screen
-    //   $element.css('top', '20000px');
+    if ($scope['height'] == 'auto') {
+      // Put the element off the screen
+      $element.css('top', '20000px');
 
-    //   var that = this;
-    //   var readyPromise;
-    //   var readyOff;
-    //   var onWindowReady = function() {
-    //     var height = 0;
-    //     // Only works if window html structure is followed
-    //     var content =
-    //         $element.find(os.ui.windowSelector.CONTENT_WRAPPER);
-    //     if (content) {
-    //       height = content.height();
-    //     }
-    //     $scope['y'] = (maxHeight - height) / 2;
-    //     $element.css('top', $scope['y'] + 'px');
-    //     that.constrainWindow_();
-    //   };
+      var that = this;
+      var readyPromise;
+      var readyOff;
+      var onWindowReady = function() {
+        var height = $element.height();
+        $scope['y'] = (maxHeight - height) / 2;
+        $element.css('top', $scope['y'] + 'px');
+        that.constrainWindow_();
+      };
 
-    //   // make sure the window gets positioned eventually. windows should fire a os.ui.WindowEventType.READY event to
-    //   // indicate they are initialized and ready to be positioned.
-    //   readyPromise = $timeout(function() {
-    //     readyOff();
-    //     onWindowReady();
-    //   }, 1000);
+      // make sure the window gets positioned eventually. windows should fire a os.ui.WindowEventType.READY event to
+      // indicate they are initialized and ready to be positioned.
+      readyPromise = $timeout(function() {
+        readyOff();
+        onWindowReady();
+      }, 1000);
 
-    //   readyOff = $scope.$on(os.ui.WindowEventType.READY, function() {
-    //     $timeout.cancel(readyPromise);
-    //     onWindowReady();
-    //   });
-    // } else {
-    if ($scope['height'] != 'auto') {
+      readyOff = $scope.$on(os.ui.WindowEventType.READY, function() {
+        $timeout.cancel(readyPromise);
+        onWindowReady();
+      });
+    } else {
       $scope['y'] = (maxHeight - $scope['height']) / 2;
     }
   }
@@ -507,11 +499,10 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
     this.addModalBg();
   }
 
-  if (!$scope['toBack']) {
-    $timeout(function() {
-      os.ui.window.stack(this.scope['id']);
-    }.bind(this));
-  }
+  // Stack this new window on top of others
+  $timeout(function() {
+    os.ui.window.stack(this.scope['id']);
+  }.bind(this));
 
   // make the element draggable
   if (!$scope['disableDrag']) {

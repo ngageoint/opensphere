@@ -42,7 +42,8 @@ os.ui.window.launchTimeHelp = function() {
       'height': '445',
       'min-height': '250',
       'max-height': '600',
-      'show-close': 'true'
+      'show-close': 'true',
+      'modal': 'true'
     }, '<timehelp></timehelp>');
   }
 };
