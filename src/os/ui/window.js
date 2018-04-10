@@ -3,6 +3,7 @@ goog.provide('os.ui.WindowEventType');
 goog.provide('os.ui.window');
 goog.provide('os.ui.window.HeaderBtnConfig');
 goog.provide('os.ui.windowDirective');
+goog.provide('os.ui.windowSelector');
 
 goog.require('goog.Disposable');
 goog.require('goog.async.Delay');
@@ -18,10 +19,8 @@ goog.require('os.ui.onboarding.contextOnboardingDirective');
  * @enum {string}
  */
 os.ui.windowSelector = {
-  CONTAINER: '#win-container',
-  // CONTENT: '.js-window__content',
-  // CONTENT_WRAPPER: '.js-window__content-wrapper',
-  // FOOTER: '.js-window__footer',
+  CONTAINER: '#js-window__container',
+  CONTENT: '.js-window__content',
   HEADER: '.js-window__header',
   HEADER_TEXT: '.js_window__header-text',
   MODAL_BG: '.modal-backdrop',
@@ -85,7 +84,7 @@ os.ui.Module.directive('window', [os.ui.windowDirective]);
  * Creates a window by wrapping a window around the given html
  * @param {Object.<string, *>} options The attibute/value pairs for the window
  * @param {!string} html The HTML or directive name
- * @param {string=} opt_parent The selector for the parent defaults to <code>#win-container</code>
+ * @param {string=} opt_parent The selector for the parent defaults to <code>#js-window__container</code>
  * @param {angular.Scope=} opt_scope The scope that will become the parent scope of the window
  * @param {angular.$compile=} opt_compile The compile function
  * @param {Object.<string, *>=} opt_scopeOptions Key/value pairs to add to the scope
@@ -118,7 +117,7 @@ os.ui.window.create = function(options, html, opt_parent, opt_scope, opt_compile
 /**
  * Convenience function for adding a new window to the application
  * @param {!string} html The HTML to launch
- * @param {string=} opt_parent The selector for the parent. Defaults to <code>#win-container</code>.
+ * @param {string=} opt_parent The selector for the parent. Defaults to <code>#js-window__container</code>.
  * @param {angular.Scope=} opt_scope The scope that will become the parent scope of the window
  * @param {angular.$compile=} opt_compile The compile function
  * @param {Object.<string, *>=} opt_scopeOptions Key/value pairs to add to the scope
@@ -193,7 +192,7 @@ os.ui.window.toggleVisibility = function(opt_id) {
     wins.addClass('d-none');
     var modalbg = angular.element(os.ui.windowSelector.MODAL_BG);
     if (modalbg) {
-      this.removeModalBg();
+      modalbg.addClass('d-none');
     }
 
     /**
@@ -202,7 +201,7 @@ os.ui.window.toggleVisibility = function(opt_id) {
     callback = function() {
       wins.removeClass('d-none');
       if (modalbg) {
-        this.addModalBg();
+        modalbg.removeClass('d-none');
       }
     };
   }
@@ -354,8 +353,8 @@ os.ui.window.blink = function(id, opt_start) {
 //   });
 
 //   goog.array.findIndex(windows, function(win) {
-//     return win
-//   })
+//     return win;
+//   });
 // };
 
 
@@ -388,7 +387,7 @@ os.ui.WindowEventType = {
 
 /**
  * Controller for the draggable window directive. You must have mark the window container
- * with <code>id="win-container"</code>.
+ * with <code>id="js-window__container"</code>.
  * @param {!angular.Scope} $scope The Angular scope.
  * @param {!angular.JQLite} $element The root DOM element.
  * @param {!angular.$timeout} $timeout The Angular $timeout service.

@@ -192,7 +192,7 @@ goog.exportProperty(os.ui.LayersCtrl.prototype, 'getUi', os.ui.LayersCtrl.protot
  * @return {boolean}
  */
 os.ui.LayersCtrl.prototype.isWindowActive = function(flag) {
-  var s = angular.element('#win-container').scope();
+  var s = angular.element(os.ui.windowSelector.CONTAINER).scope();
   var result = s['mainCtrl'][flag];
 
   if (result) {
