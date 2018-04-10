@@ -1002,8 +1002,7 @@ os.MainCtrl.prototype.suggestOtherBrowser = function() {
     'width': '400',
     'height': '210',
     'modal': 'true',
-    'no-scroll': 'true',
-    'z-index': '100050'
+    'no-scroll': 'true'
   };
 
   // version string removed from url

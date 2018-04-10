@@ -42,8 +42,7 @@ os.ui.window.launchGeoHelp = function() {
       'height': '500',
       'min-height': '250',
       'max-height': '600',
-      'show-close': 'true',
-      'z-index': '10002'
+      'show-close': 'true'
     }, '<geohelp></geohelp>');
   }
 };

@@ -4,6 +4,7 @@ goog.provide('os.ui.window');
 goog.provide('os.ui.window.HeaderBtnConfig');
 goog.provide('os.ui.windowDirective');
 goog.provide('os.ui.windowSelector');
+goog.provide('os.ui.windowZIndexMax');
 
 goog.require('goog.Disposable');
 goog.require('goog.async.Delay');
@@ -26,6 +27,16 @@ os.ui.windowSelector = {
   MODAL_BG: '.modal-backdrop',
   WINDOW: '.js-window',
   WRAPPER: '.js-window__wrapper'
+};
+
+
+/**
+ * The max z-index for windows
+ * @enum {number}
+ */
+os.ui.windowZIndexMax = {
+  MODAL: 1049,
+  STANDARD: 999
 };
 
 
@@ -63,7 +74,6 @@ os.ui.windowDirective = function() {
       'toBack': '@',
       'disableDrag': '@',
       'windowContainer': '@',
-      'closeFlag': '=',
       /* Array.<os.ui.window.HeaderBtnConfig> */
       'headerBtns': '=?'
     },
@@ -342,20 +352,43 @@ os.ui.window.blink = function(id, opt_start) {
 };
 
 
-// /**
-//  * Stack all the windows under this window
-//  * @param {string} topWinId
-//  */
-// os.ui.window.stack = function(topWinId) {
-//   var windows = $(os.ui.windowSelector.WINDOW);
-//   goog.array.sort(windows, function(a, b) {
-//     return goog.array.defaultCompaire($(b).zIndex(), $(a).zIndex());
-//   });
+/**
+ * Stack all the windows under this window
+ * @param {string} topWinId
+ */
+os.ui.window.stack = function(topWinId) {
+  var windows = /** @type {Array} */ ($.makeArray($(os.ui.windowSelector.WINDOW)));
+  goog.array.sort(windows, function(a, b) {
+    return goog.array.defaultCompare($(b).zIndex(), $(a).zIndex());
+  });
 
-//   goog.array.findIndex(windows, function(win) {
-//     return win;
-//   });
-// };
+  var topWindowIndex = goog.array.findIndex(windows, function(win) {
+    return win.id == topWinId;
+  });
+
+  if (topWindowIndex) {
+    var topWin = windows.splice(topWindowIndex);
+    windows.unshift(topWin);
+  }
+
+  var windowCategories = goog.array.bucket(windows, function(win) {
+    return $($(win).children()[0]).scope()['modal'] ? 'modal' : 'standard';
+  });
+
+  if (windowCategories['modal']) {
+    // Go through and set the zIndex for all the windows
+    windowCategories['modal'].forEach(function(win, index) {
+      $(win).zIndex(os.ui.windowZIndexMax.MODAL - index);
+    });
+  }
+
+  if (windowCategories['standard']) {
+    // Go through and set the zIndex for all the windows
+    windowCategories['standard'].forEach(function(win, index) {
+      $(win).zIndex(os.ui.windowZIndexMax.STANDARD - index);
+    });
+  }
+};
 
 
 /**
@@ -472,9 +505,12 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
 
   if (this.scope['modal']) {
     this.addModalBg();
-  } else {
-    // use z-index override, otherwise place the window on top of all others
-    $element.css('z-index', $scope['zIndex'] || (++os.ui.WindowCtrl.Z + ''));
+  }
+
+  if (!$scope['toBack']) {
+    $timeout(function() {
+      os.ui.window.stack(this.scope['id']);
+    }.bind(this));
   }
 
   // make the element draggable
@@ -562,7 +598,6 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
   }
 
   this.scope.$watch('modal', this.onToggleModal_.bind(this));
-  this.scope.$watch('closeFlag', this.onCloseFlag_.bind(this));
   this.scope.$on(os.ui.WindowEventType.RECONSTRAIN, this.constrainWindow_.bind(this));
   this.scope.$on('$destroy', this.dispose.bind(this));
 
@@ -621,7 +656,6 @@ os.ui.WindowCtrl.prototype.addModalBg = function() {
     var body = $('body');
     this.modalElement = body.append('<div class="' + os.ui.windowSelector.MODAL_BG.substring(1) + ' show"></div>');
     body.addClass('modal-open');
-    this.element.css('z-index', this.scope['zIndex'] || '1050');
   }
 };
 
@@ -642,7 +676,7 @@ os.ui.WindowCtrl.prototype.removeModalBg = function() {
  * Moves the window on top of other windows in the application.
  */
 os.ui.WindowCtrl.prototype.bringToFront = function() {
-  this.updateZIndex_();
+  os.ui.window.stack(this.scope['id']);
 };
 goog.exportProperty(os.ui.WindowCtrl.prototype, 'bringToFront', os.ui.WindowCtrl.prototype.bringToFront);
 
@@ -709,24 +743,19 @@ os.ui.WindowCtrl.prototype.close = function(opt_cancel) {
   eventScope.$broadcast(os.ui.WindowEventType.CLOSING, this.element);
   eventScope.$emit(os.ui.WindowEventType.CLOSE, this.element);
 
-  // for use with ng-if
-  if (goog.isDefAndNotNull(this.scope['closeFlag'])) {
-    this.scope['closeFlag'] = !this.scope['closeFlag'];
-  } else {
-    // destroying the scope will clear the element reference, but elements should always be removed from the DOM after
-    // the scope is destroyed to ensure listeners are cleared correctly.
-    var el = this.element;
+  // destroying the scope will clear the element reference, but elements should always be removed from the DOM after
+  // the scope is destroyed to ensure listeners are cleared correctly.
+  var el = this.element;
 
-    // parent scope is the one created in os.ui.window.launchInternal, so destroy that to prevent leaks. do not destroy
-    // the parent scope if this scope has already been destroyed. that will happen when Angular is in the process of
-    // destroying the root scope (on application close).
-    if (!this.isDisposed()) {
-      this.scope.$parent.$destroy();
-    }
-
-    // remove the element from the DOM
-    el.remove();
+  // parent scope is the one created in os.ui.window.launchInternal, so destroy that to prevent leaks. do not destroy
+  // the parent scope if this scope has already been destroyed. that will happen when Angular is in the process of
+  // destroying the root scope (on application close).
+  if (!this.isDisposed()) {
+    this.scope.$parent.$destroy();
   }
+
+  // remove the element from the DOM
+  el.remove();
 };
 goog.exportProperty(os.ui.WindowCtrl.prototype, 'close', os.ui.WindowCtrl.prototype.close);
 
@@ -848,27 +877,13 @@ os.ui.WindowCtrl.prototype.onToggleModal_ = function(opt_new, opt_old) {
 
 
 /**
- * Handle close flag change. This updates the window z-index when it's opened.
- * @param {boolean=} opt_new
- * @param {boolean=} opt_old
- * @private
- */
-os.ui.WindowCtrl.prototype.onCloseFlag_ = function(opt_new, opt_old) {
-  if (opt_new && opt_new != opt_old) {
-    this.updateZIndex_();
-  }
-};
-
-
-/**
  * If the window isn't a modal and didn't override its z-index, put it on top of other windows by incrementing the
  * global z-index and applying it to the window.
  * @private
  */
 os.ui.WindowCtrl.prototype.updateZIndex_ = function() {
-  if (!this.scope['modal'] && !this.scope['zIndex'] && this.element &&
-      this.element.css('z-index') != os.ui.WindowCtrl.Z) {
-    this.element.css('z-index', ++os.ui.WindowCtrl.Z + '');
+  if (!this.scope['modal'] && this.element && this.element.css('z-index') != os.ui.windowZIndexMax.STANDARD) {
+    os.ui.window.stack(this.scope['id']);
   }
 
   if (!this.scope['active']) {
