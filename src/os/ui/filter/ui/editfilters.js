@@ -227,7 +227,8 @@ os.ui.filter.ui.EditFiltersCtrl.prototype.onRemove_ = function(event, node) {
       'no-scroll': true,
       'width': 300,
       'height': 125,
-      'icon': 'fa fa-warning'
+      'icon': 'fa fa-warning',
+      'modal': 'true'
     };
 
     var scopeOptions = {
