@@ -1,3 +1,5 @@
+@import 'vendor/nganimate';
+
 @include keyframes(pulsate) {
   0% { opacity: .3; }
   75% { opacity: 1; }

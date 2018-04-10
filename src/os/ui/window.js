@@ -341,7 +341,7 @@ os.ui.window.blink = function(id, opt_start) {
   var win = os.ui.window.getById(id);
   if (win) {
     var start = goog.isDef(opt_start) ? opt_start : true;
-    var blinkEl = win.find(os.ui.windowSelector.HEADER + ' .js_window__header-text i.fa');
+    var blinkEl = win.find(os.ui.windowSelector.HEADER + ' ' + os.ui.windowSelector.HEADER_TEXT + ' i.fa');
     if (start) {
       blinkEl.addClass('pulsate');
     } else {
