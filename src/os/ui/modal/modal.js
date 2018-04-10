@@ -24,7 +24,7 @@ os.ui.modal.create = function(target, markup, opt_scopeOptions) {
  * @param {Object<string, *>=} opt_options
  */
 os.ui.modal.open = function(el, opt_options) {
-  el.modal(opt_options).on('hide', function() {
+  el.modal(opt_options).on('hidden.bs.modal', function() {
     // let the animation complete
     setTimeout(function() {
       // and then remove it
