@@ -359,13 +359,19 @@ os.ui.ol.OLMap.prototype.getInteractions_ = function() {
     kinetic: undefined
   });
   var areaHover = new os.ui.ol.interaction.AreaHover();
-  var mwZoom = new os.ui.ol.interaction.MouseWheelZoom();
+
+  // interaction to disable alt+shift+drag to rotate the map and shift+drag to zoom from the defaults
+  var options = {
+    delta: 0.2
+  };
+  var mwZoom = new os.ui.ol.interaction.MouseWheelZoom(options);
   var focus = new os.ui.ol.interaction.FocusInteraction();
 
   // interaction to disable alt+shift+drag to rotate the map and shift+drag to zoom from the defaults
   var interactions = ol.interaction.defaults({
     dragPan: false,
     shiftDragZoom: false,
+    mouseWheelZoom: false,
     zoomDelta: 0.2
   });
   interactions.extend([ctrlZoom, dragPan, mwZoom, areaHover, focus]);

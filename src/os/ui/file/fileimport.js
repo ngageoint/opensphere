@@ -94,7 +94,7 @@ os.ui.file.FileImportCtrl = function($scope, $element, $timeout) {
     'name': 'file',
     'class': 'input-hidden'
   });
-  goog.dom.appendChild(goog.dom.getElement('win-container'), this.fileInputEl_);
+  goog.dom.appendChild(goog.dom.getElement(os.ui.windowSelector.CONTAINER.substring(1)), this.fileInputEl_);
   goog.events.listen(this.fileInputEl_, goog.events.EventType.CHANGE, this.onFileChange_, false, this);
 
   $scope.$on('$destroy', this.onDestroy_.bind(this));

@@ -3,6 +3,7 @@ goog.provide('os.ui.menu.windows.GroupType');
 
 goog.require('goog.Timer');
 goog.require('os.metrics.keys');
+goog.require('os.ui.config.SettingsManager');
 goog.require('os.ui.events.UIEvent');
 goog.require('os.ui.events.UIEventType');
 goog.require('os.ui.menu.Menu');

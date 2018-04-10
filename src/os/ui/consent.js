@@ -106,7 +106,7 @@ os.ui.Consent.launch = function() {
   var cookie = new goog.net.Cookies(window.document);
 
   if (consent && consent['text'] && !cookie.get('consent')) {
-    os.ui.modal.create('.win-container', '<consent></consent>');
+    os.ui.modal.create(os.ui.windowSelector.CONTAINER, '<consent></consent>');
   }
 };
 

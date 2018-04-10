@@ -127,7 +127,7 @@ os.ui.menu.Menu.prototype.open = function(context, position, opt_target, opt_dis
 
   this.menu_ = $(html);
 
-  this.position_.within = this.position_.within || '#win-container';
+  this.position_.within = this.position_.within || os.ui.windowSelector.CONTAINER;
   this.position_.collision = this.position_.collision || 'fit';
 
   $(document.body).append(
