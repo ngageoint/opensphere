@@ -112,7 +112,7 @@ os.ui.MenuButtonCtrl.prototype.isWindowActive = function(opt_flag) {
   var flag = opt_flag || this.flag;
 
   if (flag) {
-    var s = angular.element('#win-container').scope();
+    var s = angular.element(os.ui.windowSelector.CONTAINER).scope();
     return os.ui.window.exists(flag) || (s['mainCtrl'] && s['mainCtrl'][flag]);
   }
 

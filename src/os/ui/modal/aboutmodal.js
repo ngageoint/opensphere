@@ -77,5 +77,5 @@ os.ui.modal.AboutModalCtrl = function($scope, $element) {
  * Create the modal
  */
 os.ui.modal.AboutModalCtrl.launch = function() {
-  os.ui.modal.create('.win-container', '<about-modal></about-modal>');
+  os.ui.modal.create(os.ui.windowSelector.CONTAINER, '<about-modal></about-modal>');
 };
