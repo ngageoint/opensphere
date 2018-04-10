@@ -292,7 +292,8 @@ os.ui.filter.AdvancedFilterBuilderCtrl.prototype.edit = function(opt_expr, opt_n
     'height': 150,
     'min-height': 100,
     'max-height': 200,
-    'icon': 'fa fa-file'
+    'icon': 'fa fa-file',
+    'modal': 'true'
   };
 
   opt_expr = opt_expr ? opt_expr.clone() : new os.ui.filter.Expression();
