@@ -121,6 +121,12 @@ os.histo.IBinMethod.prototype.createFilter;
 
 
 /**
- * @param {boolean} value
+ * @return {boolean}
+ */
+os.histo.IBinMethod.prototype.getArrayKeys;
+
+
+/**
+ * @param {boolean|string} value
  */
 os.histo.IBinMethod.prototype.setArrayKeys;
