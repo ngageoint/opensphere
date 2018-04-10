@@ -219,16 +219,15 @@ os.ui.filter.ui.EditFiltersCtrl.prototype.onRemove_ = function(event, node) {
     }
 
     var options = {
-      id: 'removeMultiple',
-      x: 'center',
-      y: 'center',
-      label: 'Remove Items',
+      'id': 'removeMultiple',
+      'x': 'center',
+      'y': 'center',
+      'label': 'Remove Items',
       'show-close': false,
       'no-scroll': true,
-      'z-index': '10003',
-      width: 300,
-      height: 125,
-      icon: 'fa fa-warning'
+      'width': 300,
+      'height': 125,
+      'icon': 'fa fa-warning'
     };
 
     var scopeOptions = {
