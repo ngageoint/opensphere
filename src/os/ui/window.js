@@ -3,6 +3,7 @@ goog.provide('os.ui.WindowEventType');
 goog.provide('os.ui.window');
 goog.provide('os.ui.window.HeaderBtnConfig');
 goog.provide('os.ui.windowDirective');
+goog.provide('os.ui.windowSelector');
 
 goog.require('goog.Disposable');
 goog.require('goog.async.Delay');

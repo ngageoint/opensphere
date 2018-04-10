@@ -162,7 +162,7 @@ plugin.file.shp.ui.ZipSHPImportUI.prototype.launchUIInternal_ = function() {
       'show-close': 'true',
       'no-scroll': 'true'
     };
-    var template = '<shpimport resize-with=".js-window"></shpimport>';
+    var template = '<shpimport resize-with="' + os.ui.windowSelector.WINDOW + '"></shpimport>';
     os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
   } else {
     var msg = 'Zip file does not contain both SHP and DBF files!';
