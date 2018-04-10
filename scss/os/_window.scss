@@ -3,19 +3,11 @@
 }
 
 .c-window {
-  .c-window__content {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    width: 100%;
+  .modal-body {
+    overflow-y: auto;
+  }
 
-    .modal-body {
-      height: 100%;
-      overflow-y: auto;
-    }
-
-    .modal-footer {
-      flex-shrink: 0;
-    }
+  .modal-footer {
+    flex-shrink: 0;
   }
 }
