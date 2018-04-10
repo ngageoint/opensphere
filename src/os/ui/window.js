@@ -190,19 +190,19 @@ os.ui.window.toggleVisibility = function(opt_id) {
   var wins = opt_id ? os.ui.window.getById(opt_id) : angular.element(os.ui.windowSelector.WINDOW + ':not(.ng-hide)');
   if (wins) {
     wins.addClass('d-none');
-    // var modalbg = angular.element(os.ui.windowSelector.MODAL_BG);
-    // if (modalbg) {
-    //   * @type {os.ui.WindowCtrl}  (wins.scope()['windowCtrl']).removeModalBg();
-    // }
+    var modalbg = angular.element(os.ui.windowSelector.MODAL_BG);
+    if (modalbg) {
+      modalbg.addClass('d-none');
+    }
 
     /**
      * callback removes the hidden class and adds modal background if necessary
      */
     callback = function() {
       wins.removeClass('d-none');
-      // if (modalbg) {
-      //   * @type {os.ui.WindowCtrl}  (scope['windowCtrl']).addModalBg();
-      // }
+      if (modalbg) {
+        modalbg.removeClass('d-none');
+      }
     };
   }
 
