@@ -9,6 +9,7 @@ For extended examples, see the Guides.
   :maxdepth: 1
   :caption: Cookbook
 
+  addlayerpage/index
   submenu/index
   logging/index
   osm/index

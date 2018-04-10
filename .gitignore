@@ -5,6 +5,7 @@ dist/
 docs/_build/
 index.html
 old.html
+addlayer.html
 
 # old build
 .sass-cache/
