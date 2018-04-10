@@ -499,11 +499,6 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
     this.addModalBg();
   }
 
-  // Stack this new window on top of others
-  $timeout(function() {
-    os.ui.window.stack(this.scope['id']);
-  }.bind(this));
-
   // make the element draggable
   if (!$scope['disableDrag']) {
     var handler = $scope['overlay'] ?
@@ -512,7 +507,8 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
       'containment': $scope['windowContainer'],
       'handle': handler,
       'start': this.onDragStart_.bind(this),
-      'stop': this.onDragStop_.bind(this)
+      'stop': this.onDragStop_.bind(this),
+      'scroll': false
     };
     $element.draggable(dragConfig);
   }
@@ -598,6 +594,11 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
     this.constrainWindow_();
   }
   this.element.focus();
+
+  // Stack this new window on top of others
+  $timeout(function() {
+    os.ui.window.stack(this.scope['id']);
+  }.bind(this));
 };
 goog.inherits(os.ui.WindowCtrl, goog.Disposable);
 
@@ -904,6 +905,7 @@ os.ui.WindowCtrl.prototype.constrainWindow_ = function() {
   var y = parseFloat(this.element.css('top').replace('px', ''));
   var w = parseFloat(this.element.css('width').replace('px', ''));
   var h = parseFloat(this.element.css('height').replace('px', ''));
+  var winContainerTop = $(this.scope['windowContainer']).offset()['top'];
 
   var size = this.vsm_.getSize();
 
@@ -930,10 +932,10 @@ os.ui.WindowCtrl.prototype.constrainWindow_ = function() {
     this.element.css('left', x + 'px');
   }
 
-  if (y < 0) {
-    this.element.css('top', '0px');
+  if (y < winContainerTop) {
+    this.element.css('top', winContainerTop + 'px');
   } else if ((y + h) > size.height) {
-    y = Math.max(size.height - h, 0);
+    y = Math.max(size.height - h, winContainerTop);
     this.element.css('top', y + 'px');
   }
 };

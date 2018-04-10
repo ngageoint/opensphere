@@ -1,10 +1,10 @@
 <div class="h-100 w-100 d-flex flex-column">
   <div class="modal-body">
     <span ng-hide="alertViewer.alertArray.length">There are no alerts to view.</span>
-    <div ng-show="alertViewer.alertArray.length" class="selectable alert-list">
-      <div class="alert" ng-repeat="alert in alertViewer.alertArray" 
+    <div ng-show="alertViewer.alertArray.length"">
+      <div class="alert mb-1" ng-repeat="alert in alertViewer.alertArray"
           ng-class="{'Error':'alert-danger','Warning':'alert-warning','Success':'alert-success','Info':'alert-info'}[alert.severity]">
-        <span class="pull-right">{{alert.time}}</span>
+        <span class="float-right">{{alert.time}}</span>
         <span><i class="fa" ng-class="{'Error':'fa-ban','Warning':'fa-warning','Success':'fa-check','Info':'fa-info-circle'}[alert.severity]"></i>
           <strong>{{alert.severity}}</strong></span>
         <div ng-bind-html="alert.msg | alertlink"></div>
@@ -12,8 +12,8 @@
     </div>
   </div>
   <div class="modal-footer">
-    <div class="pull-right">
-      <button title="Clear all alerts" type="button" class="btn btn-default" ng-click="alertViewer.clearAlerts()" ng-disabled="alertViewer.alertArray.length <= 0">
+    <div class="float-right">
+      <button title="Clear all alerts" type="button" class="btn" ng-click="alertViewer.clearAlerts()" ng-disabled="alertViewer.alertArray.length <= 0">
         <i class="fa fa-times"></i>
         Clear Alerts
       </button>
