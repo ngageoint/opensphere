@@ -4,6 +4,7 @@ goog.provide('os.ui.search.searchBoxDirective');
 goog.require('goog.events.Event');
 goog.require('os.alert.AlertManager');
 goog.require('os.config.Settings');
+goog.require('os.plugin.PluginManager');
 goog.require('os.search');
 goog.require('os.search.SearchEvent');
 goog.require('os.search.SearchEventType');
