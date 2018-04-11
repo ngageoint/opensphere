@@ -1,10 +1,29 @@
-// TEMPORARY UNTIL WE GET BOOTSTRAP 4 VARIABLES
+// Overrides to Bootstrap default variables
+
+// Buttons
+$input-btn-padding-y: .1rem;
+$input-btn-padding-x: .5rem;
+
+$input-btn-padding-y-sm: .05rem;
+$input-btn-padding-x-sm: .3rem;
+
+// Navlink
+$nav-link-padding-y: .2rem;
+
+// Modals
+$modal-header-padding: .5rem;
+$modal-inner-padding: .5rem;
+
+// Dropdowns
 $dropdown-item-padding-y: .25rem;
 $dropdown-item-padding-x: 1.5rem;
 $dropdown-link-hover-bg: #f8f9fa;
 $dropdown-link-hover-color: #16181b;
+
+// Body
 $body-bg: #fff;
 
+// Gradient
 @mixin gradient-bg($color) {
   background: $color linear-gradient(180deg, mix($body-bg, $color, 15%), $color) repeat-x;
 }

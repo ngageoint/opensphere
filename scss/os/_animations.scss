@@ -1,4 +1,4 @@
-@import 'os/vendor/nganimate';
+@import 'os/nganimate';
 
 @include keyframes(pulsate) {
   0% { opacity: .3; }

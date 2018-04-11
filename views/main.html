@@ -1,10 +1,10 @@
-<div id="js-window__container" class="c-main d-flex flex-column h-100 position-absolute w-100">
-  <div class="dd-target h-100" url-drag-drop>
+<div id="js-window__container" class="h-100 w-100 position-absolute">
+  <div class="dd-target c-main d-flex flex-column h-100 w-100" url-drag-drop>
     <nav-top></nav-top>
-    <div id="main" class="h-100">
-      <date-panel ng-show="!mainCtrl.timeline" class="position-absolute"></date-panel>
+    <div id="main" class="d-flex flex-row mh-0" style="flex: 1; position: relative;">
+      <date-panel ng-show="!mainCtrl.timeline"></date-panel>
       <div list list-id="main-content" list-prefix="<div>" list-suffix="</div>"></div>
-      <map class="mw-0"></map>
+      <map></map>
     </div>
     <timeline-panel ng-if="mainCtrl.timeline"></timeline-panel>
     <nav-bottom></nav-bottom>
