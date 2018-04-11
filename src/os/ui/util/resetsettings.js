@@ -25,11 +25,11 @@ os.ui.util.resetSettings = function(opt_parent) {
 
   var windowOptions = {
     'label': 'Reset Settings',
-    'icon': 'fa fa-refresh red-icon',
+    'icon': 'text-danger fa fa-refresh',
     'x': 'center',
     'y': 300,
-    'width': 350,
-    'height': 260,
+    'width': 400,
+    'height': 375,
     'modal': true,
     'no-scroll': true,
     'disable-drag': true
