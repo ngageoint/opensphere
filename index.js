@@ -108,7 +108,6 @@ const sharedResources = [
   {
     source: resolver.resolveModulePath('bootstrap/dist', __dirname),
     target: 'vendor/bootstrap',
-    css: ['css/bootstrap.min.css'],
     scripts: ['js/bootstrap.bundle.min.js']
   },
   {

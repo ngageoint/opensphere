@@ -33,7 +33,6 @@ os.ui.list.add(os.ui.nav.Location.TOP_LEFT, 'clear-button', 700);
 
 os.ui.list.add(os.ui.nav.Location.TOP_RIGHT, '<search-box></search-box><searchresults></searchresults>', 100);
 os.ui.list.add(os.ui.nav.Location.TOP_RIGHT, '<help show-label="!punyWindow"></help>', 200);
-os.ui.list.add(os.ui.nav.Location.TOP_RIGHT, '<context-onboarding context="navTop"></context-onboarding>', 10000);
 
 
 // Bottom navbar options

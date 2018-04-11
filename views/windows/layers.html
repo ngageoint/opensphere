@@ -1,23 +1,23 @@
-<div class="window-content-wrapper">
-  <div class="window-content no-pad no-footer">
+<div class="h-100 w-100 d-flex flex-column">
+  <div class="modal-body">
     <ul class="nav nav-tabs">
-      <li class="first" ng-class="{active: tab == 'layers'}"><a ng-click="tab = 'layers'">Layers</a></li>
-      <li ng-class="{active: tab == 'areas'}"><a ng-click="tab = 'areas'">Areas</a></li>
-      <li ng-class="{active: tab == 'filters'}"><a ng-click="tab = 'filters'">Filters</a></li>
-      <li ng-class="{active: tab == 'places'}"><a ng-click="tab = 'places'">Places</a></li>
+      <li class="nav-item"><a href class="nav-link" ng-click="tab = 'layers'" ng-class="{active: tab == 'layers'}">Layers</a></li>
+      <li class="nav-item"><a href class="nav-link" ng-click="tab = 'areas'" ng-class="{active: tab == 'areas'}">Areas</a></li>
+      <li class="nav-item"><a href class="nav-link" ng-click="tab = 'filters'" ng-class="{active: tab == 'filters'}">Filters</a></li>
+      <li class="nav-item"><a href class="nav-link" ng-click="tab = 'places'" ng-class="{active: tab == 'places'}">Places</a></li>
     </ul>
 
-    <div class="tab-content" autoheight siblings=".nav-tabs">
-      <div class="layers-tab" ng-if="tab == 'layers'" style="height:100%">
+    <div class="h-100">
+      <div class="h-100" ng-if="tab == 'layers'">
         <layers></layers>
       </div>
-      <div class="areas-tab" ng-if="tab == 'areas'" style="height:100%">
+      <div class="h-100" ng-if="tab == 'areas'">
         <areas></areas>
       </div>
-      <div class="filters-tab" ng-if="tab == 'filters'" style="height:100%">
+      <div class="h-100" ng-if="tab == 'filters'">
         <filters></filters>
       </div>
-      <div class="places-tab" ng-if="tab == 'places'" style="height:100%">
+      <div class="h-100" ng-if="tab == 'places'">
         <places></places>
       </div>
     </div>

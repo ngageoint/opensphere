@@ -15,6 +15,7 @@ goog.require('os.ui.popover.popoverDirective');
 os.ui.datePanelDirective = function() {
   return {
     restrict: 'AE',
+    replace: true,
     scope: true,
     templateUrl: os.ROOT + 'views/datepanel.html',
     controller: os.ui.DatePanelCtrl,

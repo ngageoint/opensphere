@@ -18,7 +18,7 @@ os.ui.alert.alertButtonDirective = function() {
     controller: os.ui.alert.AlertButtonCtrl,
     controllerAs: 'ctrl',
     template: '<span class="badge-button">' +
-      '<button class="btn btn-default no-text" ng-click="ctrl.toggle()" title="Alerts"' +
+      '<button class="btn btn-secondary" ng-click="ctrl.toggle()" title="Alerts"' +
       ' ng-class="{\'active\': ctrl.isWindowActive()}">' +
       '<i class="fa fa-bell"></i>' +
       '</button>' +
