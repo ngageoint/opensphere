@@ -49,8 +49,8 @@ plugin.storage.PersistPlugin.prototype.init = function() {
           if (!userDecision) {
             var extra = '';
             if (window.isSecureContext === false) {
-              extra += '<p>The application is not being served in a secure context, and thus persistent storage may be ' +
-                'automatically declined.</p>';
+              extra += '<p>The application is not being served in a secure context, and thus persistent storage ' +
+                  'may be automatically declined.</p>';
             }
 
             if (goog.labs.userAgent.browser.isChrome()) {
