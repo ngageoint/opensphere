@@ -23,7 +23,7 @@ Use a path of:
 
 .. code-block:: javascript
 
-  'example.com/path/to/opensphere/addlayer.html#' +
+  'example.com/path/to/opensphere/addlayer.html#file=' +
       encodeURIComponent(fileUrl);
 
 This prompts the user to import the file in the application. However, for many files, you
