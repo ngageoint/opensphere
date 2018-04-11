@@ -31,6 +31,7 @@ goog.require('os.ui.menu.windows');
 goog.require('os.ui.slick.AbstractGroupByTreeSearchCtrl');
 goog.require('os.ui.uiSwitchDirective');
 goog.require('os.ui.util.autoHeightDirective');
+goog.require('os.ui.windowSelector');
 goog.require('plugin.places.ui.placesDirective');
 
 

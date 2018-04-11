@@ -7,6 +7,7 @@ goog.require('os.defines');
 goog.require('os.ui.Module');
 goog.require('os.ui.modal');
 goog.require('os.ui.modal.modalAutoSizeDirective');
+goog.require('os.ui.windowSelector');
 
 
 /**

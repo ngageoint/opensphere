@@ -3,6 +3,9 @@ goog.provide('os.ui.MenuButtonCtrl');
 goog.require('os.ui.events.UIEvent');
 goog.require('os.ui.events.UIEventType');
 goog.require('os.ui.menu.windows');
+goog.require('os.ui.windowSelector');
+
+
 
 /**
  * Controller function for the menu button directive. Any button wishing
