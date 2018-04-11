@@ -3,6 +3,8 @@ goog.provide('os.ui.WindowEventType');
 goog.provide('os.ui.window');
 goog.provide('os.ui.window.HeaderBtnConfig');
 goog.provide('os.ui.windowDirective');
+goog.provide('os.ui.windowSelector');
+goog.provide('os.ui.windowZIndexMax');
 
 goog.require('goog.Disposable');
 goog.require('goog.async.Delay');
@@ -11,6 +13,31 @@ goog.require('goog.events.EventType');
 goog.require('os.ui.Module');
 goog.require('os.ui.events.UIEvent');
 goog.require('os.ui.onboarding.contextOnboardingDirective');
+
+
+/**
+ * Selectors for window compontents
+ * @enum {string}
+ */
+os.ui.windowSelector = {
+  CONTAINER: '#js-window__container',
+  CONTENT: '.js-window__content',
+  HEADER: '.js-window__header',
+  HEADER_TEXT: '.js_window__header-text',
+  MODAL_BG: '.modal-backdrop',
+  WINDOW: '.js-window',
+  WRAPPER: '.js-window__wrapper'
+};
+
+
+/**
+ * The max z-index for windows
+ * @enum {number}
+ */
+os.ui.windowZIndexMax = {
+  MODAL: 1049,
+  STANDARD: 999
+};
 
 
 /**
@@ -44,10 +71,8 @@ os.ui.windowDirective = function() {
       'noScroll': '@',
       'overlay': '@',
       'modal': '=',
-      'zIndex': '@',
       'disableDrag': '@',
       'windowContainer': '@',
-      'closeFlag': '=',
       /* Array.<os.ui.window.HeaderBtnConfig> */
       'headerBtns': '=?'
     },
@@ -68,14 +93,14 @@ os.ui.Module.directive('window', [os.ui.windowDirective]);
  * Creates a window by wrapping a window around the given html
  * @param {Object.<string, *>} options The attibute/value pairs for the window
  * @param {!string} html The HTML or directive name
- * @param {string=} opt_parent The selector for the parent defaults to <code>#win-container</code>
+ * @param {string=} opt_parent The selector for the parent defaults to <code>#js-window__container</code>
  * @param {angular.Scope=} opt_scope The scope that will become the parent scope of the window
  * @param {angular.$compile=} opt_compile The compile function
  * @param {Object.<string, *>=} opt_scopeOptions Key/value pairs to add to the scope
  */
 os.ui.window.create = function(options, html, opt_parent, opt_scope, opt_compile, opt_scopeOptions) {
   if (!opt_parent) {
-    opt_parent = '#win-container';
+    opt_parent = os.ui.windowSelector.CONTAINER;
   }
 
   if (html.indexOf('<') == -1) {
@@ -101,14 +126,14 @@ os.ui.window.create = function(options, html, opt_parent, opt_scope, opt_compile
 /**
  * Convenience function for adding a new window to the application
  * @param {!string} html The HTML to launch
- * @param {string=} opt_parent The selector for the parent. Defaults to <code>#win-container</code>.
+ * @param {string=} opt_parent The selector for the parent. Defaults to <code>#js-window__container</code>.
  * @param {angular.Scope=} opt_scope The scope that will become the parent scope of the window
  * @param {angular.$compile=} opt_compile The compile function
  * @param {Object.<string, *>=} opt_scopeOptions Key/value pairs to add to the scope
  */
 os.ui.window.launch = function(html, opt_parent, opt_scope, opt_compile, opt_scopeOptions) {
   if (!opt_parent) {
-    opt_parent = '#win-container';
+    opt_parent = os.ui.windowSelector.CONTAINER;
   }
 
   if (html.indexOf('<') == -1) {
@@ -171,21 +196,21 @@ os.ui.window.bringToFront = function(id) {
  */
 os.ui.window.toggleVisibility = function(opt_id) {
   var callback = null;
-  var wins = opt_id ? os.ui.window.getById(opt_id) : angular.element('.window:not(.ng-hide)');
+  var wins = opt_id ? os.ui.window.getById(opt_id) : angular.element(os.ui.windowSelector.WINDOW + ':not(.ng-hide)');
   if (wins) {
-    wins.addClass('hidden');
-    var modalbg = angular.element('.window-modal-bg');
+    wins.addClass('d-none');
+    var modalbg = angular.element(os.ui.windowSelector.MODAL_BG);
     if (modalbg) {
-      modalbg.removeClass('window-modal-bg');
+      modalbg.addClass('d-none');
     }
 
     /**
      * callback removes the hidden class and adds modal background if necessary
      */
     callback = function() {
-      wins.removeClass('hidden');
+      wins.removeClass('d-none');
       if (modalbg) {
-        modalbg.addClass('window-modal-bg');
+        modalbg.removeClass('d-none');
       }
     };
   }
@@ -232,7 +257,8 @@ os.ui.window.disableModality = function(id) {
  */
 os.ui.window.close = function(el) {
   if (el) {
-    var scope = el.hasClass('window') ? el.children().scope() : el.parents('.window').children().scope();
+    var scope = el.hasClass(os.ui.windowSelector.WINDOW) ?
+        el.children().scope() : el.parents(os.ui.windowSelector.WINDOW).children().scope();
     if (scope) {
       /** @type {os.ui.WindowCtrl} */ (scope['windowCtrl']).close();
     }
@@ -245,13 +271,13 @@ os.ui.window.close = function(el) {
  * @param {string=} opt_parent
  */
 os.ui.window.closeAll = function(opt_parent) {
-  var container = '#win-container';
+  var container = os.ui.windowSelector.CONTAINER;
   if (opt_parent) {
     container = opt_parent;
   }
   var winContainer = angular.element(container);
   if (winContainer.length) {
-    var wins = winContainer.find('.window');
+    var wins = winContainer.find(os.ui.windowSelector.WINDOW);
     if (wins instanceof Array) {
       goog.array.forEach(wins, function(win) {
         os.ui.window.close(win);
@@ -269,7 +295,7 @@ os.ui.window.closeAll = function(opt_parent) {
  * @return {?angular.JQLite} The window, if it exists.
  */
 os.ui.window.getById = function(id) {
-  var win = angular.element('.window#' + id);
+  var win = angular.element(os.ui.windowSelector.WINDOW + '#' + id);
   if (win.length == 0) {
     win = angular.element('[key="' + id + '"]');
   }
@@ -315,12 +341,51 @@ os.ui.window.blink = function(id, opt_start) {
   var win = os.ui.window.getById(id);
   if (win) {
     var start = goog.isDef(opt_start) ? opt_start : true;
-    var blinkEl = win.find('.window-header .header-text i.fa');
+    var blinkEl = win.find(os.ui.windowSelector.HEADER + ' ' + os.ui.windowSelector.HEADER_TEXT + ' i.fa');
     if (start) {
-      blinkEl.addClass('pulsate');
+      blinkEl.addClass('a-pulsate');
     } else {
-      blinkEl.removeClass('pulsate');
+      blinkEl.removeClass('a-pulsate');
     }
+  }
+};
+
+
+/**
+ * Stack all the windows under this window
+ * @param {string} topWinId
+ */
+os.ui.window.stack = function(topWinId) {
+  var windows = /** @type {Array} */ ($.makeArray($(os.ui.windowSelector.WINDOW)));
+  goog.array.sort(windows, function(a, b) {
+    return goog.array.defaultCompare($(b).zIndex(), $(a).zIndex());
+  });
+
+  var topWindowIndex = goog.array.findIndex(windows, function(win) {
+    return win.id == topWinId;
+  });
+
+  if (topWindowIndex) {
+    var topWin = windows.splice(topWindowIndex);
+    windows.unshift(topWin);
+  }
+
+  var windowCategories = goog.array.bucket(windows, function(win) {
+    return $($(win).children()[0]).scope()['modal'] ? 'modal' : 'standard';
+  });
+
+  if (windowCategories['modal']) {
+    // Go through and set the zIndex for all the windows
+    windowCategories['modal'].forEach(function(win, index) {
+      $(win).zIndex(os.ui.windowZIndexMax.MODAL - index);
+    });
+  }
+
+  if (windowCategories['standard']) {
+    // Go through and set the zIndex for all the windows
+    windowCategories['standard'].forEach(function(win, index) {
+      $(win).zIndex(os.ui.windowZIndexMax.STANDARD - index);
+    });
   }
 };
 
@@ -354,7 +419,7 @@ os.ui.WindowEventType = {
 
 /**
  * Controller for the draggable window directive. You must have mark the window container
- * with <code>id="win-container"</code>.
+ * with <code>id="js-window__container"</code>.
  * @param {!angular.Scope} $scope The Angular scope.
  * @param {!angular.JQLite} $element The root DOM element.
  * @param {!angular.$timeout} $timeout The Angular $timeout service.
@@ -379,7 +444,7 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
    */
   this.element = $element;
 
-  $scope['windowContainer'] = $scope['windowContainer'] || '#win-container';
+  $scope['windowContainer'] = $scope['windowContainer'] || os.ui.windowSelector.CONTAINER;
   var container = angular.element($scope['windowContainer']);
 
   if ($scope['id']) {
@@ -400,12 +465,7 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
       var readyPromise;
       var readyOff;
       var onWindowReady = function() {
-        var height = 0;
-        // Only works if window html structure is followed
-        var content = $element.find('.window-content-wrapper');
-        if (content) {
-          height = content.height();
-        }
+        var height = $element.height();
         $scope['y'] = (maxHeight - height) / 2;
         $element.css('top', $scope['y'] + 'px');
         that.constrainWindow_();
@@ -437,19 +497,18 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
 
   if (this.scope['modal']) {
     this.addModalBg();
-  } else {
-    // use z-index override, otherwise place the window on top of all others
-    $element.css('z-index', $scope['zIndex'] || (++os.ui.WindowCtrl.Z + ''));
   }
 
   // make the element draggable
   if (!$scope['disableDrag']) {
-    var handler = $scope['overlay'] ? '.window-header, .window-overlay-content' : '.window-header';
+    var handler = $scope['overlay'] ?
+        (os.ui.windowSelector.HEADER + ', .window-overlay-content') : os.ui.windowSelector.HEADER;
     var dragConfig = {
       'containment': $scope['windowContainer'],
       'handle': handler,
       'start': this.onDragStart_.bind(this),
-      'stop': this.onDragStop_.bind(this)
+      'stop': this.onDragStop_.bind(this),
+      'scroll': false
     };
     $element.draggable(dragConfig);
   }
@@ -465,7 +524,7 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
       'minHeight': Number($scope['minHeight']) || 100,
       'maxHeight': Number($scope['maxHeight']) || window.screen.availHeight,
       'handles': 'nw, ne, sw, se',
-      'resize': this.updateContent_.bind(this),
+      // 'resize': this.updateContent_.bind(this),
       'start': this.onDragStart_.bind(this),
       'stop': this.onDragStop_.bind(this)
     };
@@ -481,14 +540,14 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
 
   var height = $scope['height'];
   if ($scope['height'] == 'auto') {
-    $element.addClass('autosize');
+    $element.css('bottom', 'auto');
   } else {
     height += 'px';
   }
   $element.css('height', height);
 
   // update the window content element after it has been initialized
-  setTimeout(this.updateContent_.bind(this), 10);
+  // setTimeout(this.updateContent_.bind(this), 10);
 
   /**
    * Monitor changes to the browser viewport size.
@@ -526,7 +585,6 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
   }
 
   this.scope.$watch('modal', this.onToggleModal_.bind(this));
-  this.scope.$watch('closeFlag', this.onCloseFlag_.bind(this));
   this.scope.$on(os.ui.WindowEventType.RECONSTRAIN, this.constrainWindow_.bind(this));
   this.scope.$on('$destroy', this.dispose.bind(this));
 
@@ -536,15 +594,20 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
     this.constrainWindow_();
   }
   this.element.focus();
+
+  // Stack this new window on top of others
+  $timeout(function() {
+    os.ui.window.stack(this.scope['id']);
+  }.bind(this));
 };
 goog.inherits(os.ui.WindowCtrl, goog.Disposable);
 
 
 /**
- * Z-index of the top window.
+ * Z-index of the top window. This is the maximum z-index for windows all other are decremented
  * @type {number}
  */
-os.ui.WindowCtrl.Z = 2000;
+os.ui.WindowCtrl.Z = 999;
 
 
 /**
@@ -582,9 +645,9 @@ os.ui.WindowCtrl.prototype.disposeInternal = function() {
  */
 os.ui.WindowCtrl.prototype.addModalBg = function() {
   if (!this.modalElement) {
-    var container = angular.element(this.scope['windowContainer']);
-    this.modalElement = container.append('<div class="window-modal-bg"></div>');
-    this.element.css('z-index', this.scope['zIndex'] || '10001');
+    var body = $('body');
+    this.modalElement = body.append('<div class="' + os.ui.windowSelector.MODAL_BG.substring(1) + ' show"></div>');
+    body.addClass('modal-open');
   }
 };
 
@@ -594,7 +657,8 @@ os.ui.WindowCtrl.prototype.addModalBg = function() {
  */
 os.ui.WindowCtrl.prototype.removeModalBg = function() {
   if (this.modalElement) {
-    $('.window-modal-bg').first().remove();
+    $('body').removeClass('modal-open');
+    $(os.ui.windowSelector.MODAL_BG).first().remove();
     this.modalElement = null;
   }
 };
@@ -604,7 +668,7 @@ os.ui.WindowCtrl.prototype.removeModalBg = function() {
  * Moves the window on top of other windows in the application.
  */
 os.ui.WindowCtrl.prototype.bringToFront = function() {
-  this.updateZIndex_();
+  os.ui.window.stack(this.scope['id']);
 };
 goog.exportProperty(os.ui.WindowCtrl.prototype, 'bringToFront', os.ui.WindowCtrl.prototype.bringToFront);
 
@@ -631,7 +695,7 @@ os.ui.WindowCtrl.prototype.onBlurOrFocus_ = function() {
  * @private
  */
 os.ui.WindowCtrl.prototype.showOverlayWindow_ = function() {
-  var header = this.element.find('.window-header');
+  var header = this.element.find(os.ui.windowSelector.HEADER);
   var resizable = this.element.find('.ui-resizable-se');
   if (header) {
     resizable.css('visibility', 'visible');
@@ -645,7 +709,7 @@ os.ui.WindowCtrl.prototype.showOverlayWindow_ = function() {
  * @private
  */
 os.ui.WindowCtrl.prototype.hideOverlayWindow_ = function() {
-  var header = this.element.find('.window-header');
+  var header = this.element.find(os.ui.windowSelector.HEADER);
   this.element.toggleClass('.ui-resizable-se');
   var resizable = this.element.find('.ui-resizable-se');
   if (header) {
@@ -671,24 +735,19 @@ os.ui.WindowCtrl.prototype.close = function(opt_cancel) {
   eventScope.$broadcast(os.ui.WindowEventType.CLOSING, this.element);
   eventScope.$emit(os.ui.WindowEventType.CLOSE, this.element);
 
-  // for use with ng-if
-  if (goog.isDefAndNotNull(this.scope['closeFlag'])) {
-    this.scope['closeFlag'] = !this.scope['closeFlag'];
-  } else {
-    // destroying the scope will clear the element reference, but elements should always be removed from the DOM after
-    // the scope is destroyed to ensure listeners are cleared correctly.
-    var el = this.element;
+  // destroying the scope will clear the element reference, but elements should always be removed from the DOM after
+  // the scope is destroyed to ensure listeners are cleared correctly.
+  var el = this.element;
 
-    // parent scope is the one created in os.ui.window.launchInternal, so destroy that to prevent leaks. do not destroy
-    // the parent scope if this scope has already been destroyed. that will happen when Angular is in the process of
-    // destroying the root scope (on application close).
-    if (!this.isDisposed()) {
-      this.scope.$parent.$destroy();
-    }
-
-    // remove the element from the DOM
-    el.remove();
+  // parent scope is the one created in os.ui.window.launchInternal, so destroy that to prevent leaks. do not destroy
+  // the parent scope if this scope has already been destroyed. that will happen when Angular is in the process of
+  // destroying the root scope (on application close).
+  if (!this.isDisposed()) {
+    this.scope.$parent.$destroy();
   }
+
+  // remove the element from the DOM
+  el.remove();
 };
 goog.exportProperty(os.ui.WindowCtrl.prototype, 'close', os.ui.WindowCtrl.prototype.close);
 
@@ -698,7 +757,7 @@ goog.exportProperty(os.ui.WindowCtrl.prototype, 'close', os.ui.WindowCtrl.protot
  */
 os.ui.WindowCtrl.prototype.toggle = function() {
   if (!this.scope['modal']) {
-    var content = this.element.find('.window-wrapper');
+    var content = this.element.find(os.ui.windowSelector.WRAPPER);
 
     if (!isNaN(this.lastHeight_)) {
       this.element.height(this.lastHeight_);
@@ -709,10 +768,10 @@ os.ui.WindowCtrl.prototype.toggle = function() {
       this.scope['collapsed'] = false;
     } else {
       this.element.resizable('option', 'disabled', true);
-      this.lastHeight_ = this.element.height();
+      this.lastHeight_ = this.element.outerHeight();
       content.toggle();
-      var header = this.element.find('.window-header');
-      this.element.height(header.height());
+      var header = this.element.find(os.ui.windowSelector.HEADER);
+      this.element.height(header.outerHeight());
       this.scope['collapsed'] = true;
     }
   }
@@ -720,15 +779,15 @@ os.ui.WindowCtrl.prototype.toggle = function() {
 goog.exportProperty(os.ui.WindowCtrl.prototype, 'toggle', os.ui.WindowCtrl.prototype.toggle);
 
 
-/**
- * Update the window content element.
- * @private
- */
-os.ui.WindowCtrl.prototype.updateContent_ = function() {
-  if (this.scope && this.scope['noScroll'] === 'true') {
-    this.element.find('.window-content').css('overflow', 'hidden');
-  }
-};
+// /**
+//  * Update the window content element.
+//  * @private
+//  */
+// os.ui.WindowCtrl.prototype.updateContent_ = function() {
+//   if (this.scope && this.scope['noScroll'] === 'true') {
+//     this.element.find(os.ui.windowSelector.CONTENT).css('overflow', 'hidden');
+//   }
+// };
 
 
 /**
@@ -810,27 +869,13 @@ os.ui.WindowCtrl.prototype.onToggleModal_ = function(opt_new, opt_old) {
 
 
 /**
- * Handle close flag change. This updates the window z-index when it's opened.
- * @param {boolean=} opt_new
- * @param {boolean=} opt_old
- * @private
- */
-os.ui.WindowCtrl.prototype.onCloseFlag_ = function(opt_new, opt_old) {
-  if (opt_new && opt_new != opt_old) {
-    this.updateZIndex_();
-  }
-};
-
-
-/**
  * If the window isn't a modal and didn't override its z-index, put it on top of other windows by incrementing the
  * global z-index and applying it to the window.
  * @private
  */
 os.ui.WindowCtrl.prototype.updateZIndex_ = function() {
-  if (!this.scope['modal'] && !this.scope['zIndex'] && this.element &&
-      this.element.css('z-index') != os.ui.WindowCtrl.Z) {
-    this.element.css('z-index', ++os.ui.WindowCtrl.Z + '');
+  if (!this.scope['modal'] && this.element && this.element.css('z-index') != os.ui.windowZIndexMax.STANDARD) {
+    os.ui.window.stack(this.scope['id']);
   }
 
   if (!this.scope['active']) {
@@ -860,6 +905,7 @@ os.ui.WindowCtrl.prototype.constrainWindow_ = function() {
   var y = parseFloat(this.element.css('top').replace('px', ''));
   var w = parseFloat(this.element.css('width').replace('px', ''));
   var h = parseFloat(this.element.css('height').replace('px', ''));
+  var winContainerTop = $(this.scope['windowContainer']).offset()['top'];
 
   var size = this.vsm_.getSize();
 
@@ -886,10 +932,10 @@ os.ui.WindowCtrl.prototype.constrainWindow_ = function() {
     this.element.css('left', x + 'px');
   }
 
-  if (y < 0) {
-    this.element.css('top', '0px');
+  if (y < winContainerTop) {
+    this.element.css('top', winContainerTop + 'px');
   } else if ((y + h) > size.height) {
-    y = Math.max(size.height - h, 0);
+    y = Math.max(size.height - h, winContainerTop);
     this.element.css('top', y + 'px');
   }
 };
@@ -901,7 +947,7 @@ os.ui.WindowCtrl.prototype.constrainWindow_ = function() {
  * @param {!os.ui.window.HeaderBtnConfig} headerBtnCfg
  */
 os.ui.WindowCtrl.prototype.onHeaderBtnClick = function(event, headerBtnCfg) {
-  var winEl = $(event.target).parents('.window');
+  var winEl = $(event.target).parents(os.ui.windowSelector.WINDOW);
   headerBtnCfg.onClick(winEl);
 };
 goog.exportProperty(

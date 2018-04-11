@@ -1,19 +1,25 @@
-<div class="window-content-wrapper">
-  <div class="window-content">
-    <span ng-hide="alertViewer.alertArray.length">There are no alerts to view.</span>
-    <div ng-show="alertViewer.alertArray.length" class="selectable alert-list">
-      <div class="alert" ng-repeat="alert in alertViewer.alertArray" 
-          ng-class="{'Error':'alert-error','Warning':'alert-warning','Success':'alert-success','Info':'alert-info'}[alert.severity]">
-        <span class="pull-right">{{alert.time}}</span>
+<div class="h-100 w-100 d-flex flex-column">
+  <div class="modal-body">
+    <span ng-hide="ctrl.alertArray.length">There are no alerts to view.</span>
+    <div ng-show="ctrl.alertArray.length"">
+      <div class="alert" ng-repeat="alert in ctrl.alertArray"
+          ng-class="{'Error':'alert-danger','Warning':'alert-warning','Success':'alert-success','Info':'alert-info'}[alert.severity]">
+        <span class="float-right">{{alert.time}}</span>
         <span><i class="fa" ng-class="{'Error':'fa-ban','Warning':'fa-warning','Success':'fa-check','Info':'fa-info-circle'}[alert.severity]"></i>
           <strong>{{alert.severity}}</strong></span>
         <div ng-bind-html="alert.msg | alertlink"></div>
       </div>
     </div>
   </div>
-  <div class="window-footer">
-    <div class="pull-right">
-      <button title="Clear all alerts" type="button" class="btn btn-default" ng-click="alertViewer.clearAlerts()" ng-disabled="alertViewer.alertArray.length <= 0">
+  <div class="modal-footer">
+    <div class="w-100 ml-4">
+      <label class="form-check-label">
+        <input class="form-check-input" type="checkbox" ng-checked="ctrl.showAlertPopups" ng-click="ctrl.toggleAlertPopups()">
+        <span title="Enable/disable popup alert messages"> Show Popups</span>
+      </label>
+    </div>
+    <div class="float-right">
+      <button title="Clear all alerts" type="button" class="btn" ng-click="ctrl.clearAlerts()" ng-disabled="ctrl.alertArray.length <= 0">
         <i class="fa fa-times"></i>
         Clear Alerts
       </button>

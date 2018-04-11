@@ -8,6 +8,7 @@ goog.require('os.ui');
 goog.require('os.ui.menu.MenuEvent');
 goog.require('os.ui.menu.MenuEventType');
 goog.require('os.ui.menu.MenuItem');
+goog.require('os.ui.windowSelector');
 
 
 
@@ -114,7 +115,7 @@ os.ui.menu.Menu.prototype.open = function(context, position, opt_target, opt_dis
   this.target_ = opt_target || this;
 
   var html = this.getRoot().render(this.context_, this.target_);
-  html = '<ul id="menu">' + html + '</ul>';
+  html = '<ul id="menu" class="c-menu dropdown-menu show">' + html + '</ul>';
 
   // prune leading and trailing separators
   html = html.replace(/<ul><li>-<\/li>/g, '<ul>');
@@ -127,7 +128,7 @@ os.ui.menu.Menu.prototype.open = function(context, position, opt_target, opt_dis
 
   this.menu_ = $(html);
 
-  this.position_.within = this.position_.within || '#win-container';
+  this.position_.within = this.position_.within || os.ui.windowSelector.CONTAINER;
   this.position_.collision = this.position_.collision || 'fit';
 
   $(document.body).append(

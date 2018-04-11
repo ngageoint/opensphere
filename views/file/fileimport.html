@@ -1,21 +1,19 @@
-<div class="file-import window-content-wrapper">
-  <div class="window-content">
-    <form name="fileForm" class="form-compact">
-      <div class="control-group" data-ng-class="{'error': fileForm.file.$invalid && fileForm.file.$dirty}">
-        <label class="control-label">Choose a file:</label>
-        <div class="controls">
-          <input class="file-input" type="text" name="text" ng-click="fileImport.openFileBrowser()" ng-model="fileImport.fileName" ng-required="true" placeholder="Click to choose file..." readOnly />
-        </div>
+<div class="h-100 w-100 d-flex flex-column">
+  <div class="modal-body">
+    <form name="fileForm">
+      <div data-ng-class="{'error': fileForm.file.$invalid && fileForm.file.$dirty}">
+        <label >Choose a file:</label>
+        <input class="w-100" type="text" name="text" ng-click="fileImport.openFileBrowser()" ng-model="fileImport.fileName" ng-required="true" placeholder="Click to choose file..." readOnly />
       </div>
     </form>
   </div>
-  <div class="window-footer">
-    <div class="pull-right">
-      <button class="btn btn-default" ng-click="fileImport.accept()" ng-disabled="fileForm.$invalid || fileImport.loading" title="Import the file">
-        <i class="fa" ng-class="fileImport.loading && 'fa-spin fa-spinner' || 'fa-chevron-circle-right lt-blue-icon'"></i>
+  <div class="modal-footer">
+    <div class="float-right">
+      <button class="btn" ng-click="fileImport.accept()" ng-disabled="fileForm.$invalid || fileImport.loading" title="Import the file">
+        <i class="text-success fa" ng-class="fileImport.loading && 'fa-spin fa-spinner' || 'fa-chevron-circle-right'"></i>
         <span ng-if="fileImport.loading">Loading</span><span ng-if="!fileImport.loading"> Next</span>
       </button>
-      <button class="btn btn-default" ng-click="fileImport.close()" title="Cancel file import"><i class="fa fa-ban red-icon"></i> Cancel</button>
+      <button class="btn" ng-click="fileImport.close()" title="Cancel file import"><i class="text-danger fa fa-ban"></i> Cancel</button>
     </div>
   </div>
 </div>

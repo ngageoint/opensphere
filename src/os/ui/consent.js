@@ -4,6 +4,7 @@ goog.require('goog.Timer');
 goog.require('goog.events.EventTarget');
 goog.require('goog.net.Cookies');
 goog.require('os.ui.Module');
+goog.require('os.ui.windowSelector');
 goog.require('os.xt.IMessageHandler');
 goog.require('os.xt.Peer');
 
@@ -106,7 +107,7 @@ os.ui.Consent.launch = function() {
   var cookie = new goog.net.Cookies(window.document);
 
   if (consent && consent['text'] && !cookie.get('consent')) {
-    os.ui.modal.create('.win-container', '<consent></consent>');
+    os.ui.modal.create(os.ui.windowSelector.CONTAINER, '<consent></consent>');
   }
 };
 

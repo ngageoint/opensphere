@@ -4,6 +4,7 @@ goog.require('goog.Disposable');
 goog.require('os.ui.events.UIEvent');
 goog.require('os.ui.events.UIEventType');
 goog.require('os.ui.menu.windows');
+goog.require('os.ui.windowSelector');
 
 
 /**
@@ -93,7 +94,7 @@ os.ui.menu.MenuButtonCtrl.prototype.openMenu = function() {
     this.menu.open(undefined, {
       my: this.menuPosition,
       at: this.btnPosition,
-      of: this.element || '#win-container'
+      of: this.element || os.ui.windowSelector.CONTAINER
     });
   }
 };
@@ -136,7 +137,7 @@ os.ui.menu.MenuButtonCtrl.prototype.isWindowActive = function(opt_flag) {
   var flag = opt_flag || this.flag;
 
   if (flag) {
-    var s = angular.element('#win-container').scope();
+    var s = angular.element(os.ui.windowSelector.CONTAINER).scope();
     return os.ui.window.exists(flag) || (s['mainCtrl'] && s['mainCtrl'][flag]);
   }
 

@@ -1,0 +1,13 @@
+.modal-open .c-window.modal {
+  overflow-y: hidden;
+}
+
+.c-window {
+  .modal-body {
+    overflow-y: auto;
+  }
+
+  .modal-footer {
+    flex-shrink: 0;
+  }
+}

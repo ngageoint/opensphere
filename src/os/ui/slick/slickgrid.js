@@ -23,6 +23,7 @@ goog.require('os.ui.menu.IMenuSupplier');
 goog.require('os.ui.slick.ColumnEventType');
 goog.require('os.ui.slick.column');
 goog.require('os.ui.text');
+goog.require('os.ui.windowSelector');
 
 
 /**
@@ -1047,7 +1048,7 @@ os.ui.slick.SlickGridCtrl.prototype.onContextMenu_ = function(event, opt_positio
       menu.open(contextArgs, {
         my: 'left top',
         at: 'left+' + menuX + ' top+' + menuY,
-        of: '#win-container'
+        of: os.ui.windowSelector.CONTAINER
       }, this);
     }
   }
@@ -1077,7 +1078,7 @@ os.ui.slick.SlickGridCtrl.prototype.onHeaderContextMenu_ = function(event, opt_p
     position = {
       my: 'left top',
       at: 'left+' + event.clientX + ' top+' + event.clientY,
-      of: '#win-container'
+      of: os.ui.windowSelector.CONTAINER
     };
   } else if (goog.isObject(opt_position)) {
     // event was fired on the scope

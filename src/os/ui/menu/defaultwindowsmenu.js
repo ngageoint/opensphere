@@ -6,6 +6,7 @@ goog.require('os.ui.events.UIEvent');
 goog.require('os.ui.events.UIEventType');
 goog.require('os.ui.ex.ExportDirective');
 goog.require('os.ui.menu.windows');
+goog.require('os.ui.windowSelector');
 
 
 /**
@@ -99,7 +100,7 @@ os.ui.menu.windows.default.setup = function() {
     'max-height': '1000',
     'show-close': 'true',
     'no-scroll': 'false',
-    'html': '<alerts resize-with=".window"></alerts>'
+    'html': '<alerts resize-with="' + os.ui.windowSelector.WINDOW + '"></alerts>'
   });
 
   os.ui.menu.windows.addWindow('clear', {
@@ -132,7 +133,7 @@ os.ui.menu.windows.default.setup = function() {
     'max-height': '1000',
     'show-close': 'true',
     'no-scroll': 'true',
-    'html': '<history resize-with=".window"></history>'
+    'html': '<history resize-with="' + os.ui.windowSelector.WINDOW + '"></history>'
   });
 
   if (os.settings.get('metrics.enabled', false)) {

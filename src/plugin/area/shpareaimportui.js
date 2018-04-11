@@ -6,6 +6,7 @@ goog.require('os.defines');
 goog.require('os.im.Importer');
 goog.require('os.ui.im.FileImportUI');
 goog.require('os.ui.query');
+goog.require('os.ui.windowSelector');
 goog.require('os.ui.wiz.step.WizardStepEvent');
 goog.require('plugin.area.AreaImportCtrl');
 goog.require('plugin.file.shp.SHPParser');
@@ -73,7 +74,7 @@ plugin.area.SHPAreaImportUI.prototype.launchUI = function(file, opt_config) {
     'modal': 'true',
     'show-close': 'true'
   };
-  var template = '<shparea resize-with=".window"></shparea>';
+  var template = '<shparea resize-with="' + os.ui.windowSelector.WINDOW + '"></shparea>';
   os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
 };
 

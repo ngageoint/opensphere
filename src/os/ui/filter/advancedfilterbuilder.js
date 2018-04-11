@@ -280,20 +280,20 @@ os.ui.filter.AdvancedFilterBuilderCtrl.prototype.edit = function(opt_expr, opt_n
   this['editing'] = true;
 
   var options = {
-    id: os.ui.filter.AdvancedFilterBuilderCtrl.EXPR_WINDOW_ID,
-    x: 'center',
-    y: 'center',
-    label: (edit ? 'Edit' : 'Add') + ' Expression',
+    'id': os.ui.filter.AdvancedFilterBuilderCtrl.EXPR_WINDOW_ID,
+    'x': 'center',
+    'y': 'center',
+    'label': (edit ? 'Edit' : 'Add') + ' Expression',
     'show-close': false,
     'no-scroll': true,
-    'z-index': '10002',
-    width: 750,
+    'width': 750,
     'min-width': 500,
     'max-widith': 1000,
-    height: 150,
+    'height': 150,
     'min-height': 100,
     'max-height': 200,
-    icon: 'fa fa-file'
+    'icon': 'fa fa-file',
+    'modal': 'true'
   };
 
   opt_expr = opt_expr ? opt_expr.clone() : new os.ui.filter.Expression();

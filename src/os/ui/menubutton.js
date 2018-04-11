@@ -3,6 +3,9 @@ goog.provide('os.ui.MenuButtonCtrl');
 goog.require('os.ui.events.UIEvent');
 goog.require('os.ui.events.UIEventType');
 goog.require('os.ui.menu.windows');
+goog.require('os.ui.windowSelector');
+
+
 
 /**
  * Controller function for the menu button directive. Any button wishing
@@ -112,7 +115,7 @@ os.ui.MenuButtonCtrl.prototype.isWindowActive = function(opt_flag) {
   var flag = opt_flag || this.flag;
 
   if (flag) {
-    var s = angular.element('#win-container').scope();
+    var s = angular.element(os.ui.windowSelector.CONTAINER).scope();
     return os.ui.window.exists(flag) || (s['mainCtrl'] && s['mainCtrl'][flag]);
   }
 
