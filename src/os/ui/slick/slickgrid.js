@@ -23,6 +23,7 @@ goog.require('os.ui.menu.IMenuSupplier');
 goog.require('os.ui.slick.ColumnEventType');
 goog.require('os.ui.slick.column');
 goog.require('os.ui.text');
+goog.require('os.ui.windowSelector');
 
 
 /**

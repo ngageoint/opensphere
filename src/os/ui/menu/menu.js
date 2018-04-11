@@ -8,6 +8,7 @@ goog.require('os.ui');
 goog.require('os.ui.menu.MenuEvent');
 goog.require('os.ui.menu.MenuEventType');
 goog.require('os.ui.menu.MenuItem');
+goog.require('os.ui.windowSelector');
 
 
 

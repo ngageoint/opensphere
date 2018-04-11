@@ -4,6 +4,7 @@ goog.require('goog.Timer');
 goog.require('goog.events.EventTarget');
 goog.require('goog.net.Cookies');
 goog.require('os.ui.Module');
+goog.require('os.ui.windowSelector');
 goog.require('os.xt.IMessageHandler');
 goog.require('os.xt.Peer');
 

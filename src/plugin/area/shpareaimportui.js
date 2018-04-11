@@ -6,6 +6,7 @@ goog.require('os.defines');
 goog.require('os.im.Importer');
 goog.require('os.ui.im.FileImportUI');
 goog.require('os.ui.query');
+goog.require('os.ui.windowSelector');
 goog.require('os.ui.wiz.step.WizardStepEvent');
 goog.require('plugin.area.AreaImportCtrl');
 goog.require('plugin.file.shp.SHPParser');
