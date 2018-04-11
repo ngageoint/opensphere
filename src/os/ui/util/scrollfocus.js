@@ -72,7 +72,7 @@ os.ui.util.ScrollFocusCtrl = function($element) {
   /**
    * @type {!angular.JQLite}
    */
-  this.container = angular.element(window);
+  this.container = angular.element('body');
 
   // tabindex allows divs to have focus; the 0 allows the focus without mucking up the tab order
   this.element_[0].setAttribute('tabindex', 0);
