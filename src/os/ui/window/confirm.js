@@ -39,10 +39,10 @@ os.ui.window.launchConfirm = function(opt_options) {
     'confirmCallback': options.confirm || goog.nullFunction,
     'cancelCallback': options.cancel || goog.nullFunction,
     'yesText': options.yesText || 'OK',
-    'yesIcon': options.yesIcon || 'fa fa-check lt-blue-icon',
+    'yesIcon': options.yesIcon || 'text-primary fa fa-check',
     'yesButtonTitle': options.yesButtonTitle || '',
     'noText': options.noText || 'Cancel',
-    'noIcon': options.noIcon || 'fa fa-ban red-icon',
+    'noIcon': options.noIcon || 'text-danger fa fa-ban',
     'noButtonTitle': options.noButtonTitle || '',
     'formClass': options.formClass || 'form-horizontal'
   };
