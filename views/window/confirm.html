@@ -1,17 +1,17 @@
-<div class="confirm-window window-content-wrapper">
-  <div class="window-content">
-    <form class="confirm-form form-compact no-margin" ng-class="formClass" name="confirmForm"
+<div class="confirm-window h-100 w-100 d-flex flex-column">
+  <div class="modal-body">
+    <form class="h-100 form-compact no-margin" ng-class="formClass" name="confirmForm"
         ng-submit="confirm.confirm()" novalidate>
       <span class="confirm-text" ng-transclude></span>
     </form>
   </div>
-  <div class="window-footer">
-    <div class="pull-right">
-      <button type="submit" ng-class="yesButtonClass" class="btn btn-default" ng-click="confirm.confirm()" ng-disabled="confirmForm.$invalid || !valid" title="{{yesButtonTitle}}">
+  <div class="modal-footer">
+    <div class="float-right">
+      <button type="submit" ng-class="yesButtonClass" class="btn" ng-click="confirm.confirm()" ng-disabled="confirmForm.$invalid || !valid" title="{{yesButtonTitle}}">
         <i ng-class="yesIcon" ng-if="yesIcon"></i>
         {{yesText}}
       </button>
-      <button type="button" ng-class="noButtonClass" class="btn btn-default" ng-if="!hideCancel" ng-click="confirm.cancel()" title="{{noButtonTitle}}">
+      <button type="button" ng-class="noButtonClass" class="btn" ng-if="!hideCancel" ng-click="confirm.cancel()" title="{{noButtonTitle}}">
         <i ng-class="noIcon" ng-if="noIcon"></i>
         {{noText}}
       </button>
