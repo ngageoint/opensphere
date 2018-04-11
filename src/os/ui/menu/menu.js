@@ -114,7 +114,7 @@ os.ui.menu.Menu.prototype.open = function(context, position, opt_target, opt_dis
   this.target_ = opt_target || this;
 
   var html = this.getRoot().render(this.context_, this.target_);
-  html = '<ul id="menu">' + html + '</ul>';
+  html = '<ul id="menu" class="c-menu dropdown-menu show">' + html + '</ul>';
 
   // prune leading and trailing separators
   html = html.replace(/<ul><li>-<\/li>/g, '<ul>');

@@ -1,4 +1,4 @@
-@import 'vendor/nganimate';
+@import 'os/vendor/nganimate';
 
 @include keyframes(pulsate) {
   0% { opacity: .3; }
@@ -6,6 +6,6 @@
   100% { opacity: .3; }
 }
 
-.pulsate {
+.a-pulsate {
   @include animation(pulsate 1s infinite steps(15));
 }

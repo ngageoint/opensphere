@@ -5,6 +5,10 @@
 @import 'animation/core';
 @import 'animation/animate';
 
+// Variables
+@import 'os/variables';
+
 // Opensphere Imports
-@import 'os/animations';
-@import 'os/window';
+@import 'os/partials/animations';
+@import 'os/partials/menu';
+@import 'os/partials/window';
