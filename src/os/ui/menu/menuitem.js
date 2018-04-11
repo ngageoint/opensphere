@@ -199,28 +199,28 @@ os.ui.menu.MenuItem.prototype.render = function(context, opt_target) {
 
   // group/category
   if (type === types.GROUP) {
-    html += 'menu-item dropdown-header ';
+    html += 'dropdown-header ';
   }
 
   // enabled disabled
   if (!enabled) {
-    html += 'ui-state-disabled';
+    html += 'disabled ';
   }
 
   if (type === types.SEPARATOR) {
-    html += '">-</li>';
+    html += 'dropdown-divider"></li>';
     return html;
   }
 
   if (type !== types.SUBMENU && type !== types.GROUP) {
-    html += '" evt-type="' + (this.eventType || this.label) + '"';
+    html += 'dropdown-item" evt-type="' + (this.eventType || this.label) + '"';
   }
 
   html += '" title="' + tooltip + '">';
 
   // hotkey/shortcut
   if (this.shortcut) {
-    html += '<span class="menu-item-hotkey">' + this.shortcut + '</span>';
+    html += '<span class="text-muted d-inline-block float-right">' + this.shortcut + '</span>';
   }
 
   // checkbox type
@@ -241,7 +241,7 @@ os.ui.menu.MenuItem.prototype.render = function(context, opt_target) {
   }
 
   // label
-  html += '<span class="ellipsis-text">' + this.label + '</span>';
+  html += '<span class="text-truncate">' + this.label + '</span>';
 
   // sub menus
   html += type === types.SUBMENU ? '<ul>' : '</div></li>';
@@ -255,7 +255,7 @@ os.ui.menu.MenuItem.prototype.render = function(context, opt_target) {
 
   // automatically insert separators after groups
   if (type === types.GROUP) {
-    html += '<li>-</li>';
+    html += '<li class="dropdown-divider"></li>';
   }
 
   return html;

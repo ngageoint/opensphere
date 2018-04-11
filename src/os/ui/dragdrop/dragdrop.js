@@ -65,6 +65,15 @@ os.ui.Module.directive('dragDrop', [os.ui.dragDropDirective]);
 
 
 /**
+ * @enum {string}
+ */
+os.ui.DragDropStyle = {
+  BORDER: 'border-warning',
+  BACKGROUND: 'bg-secondary'
+};
+
+
+/**
  * Link function for draggable directive
  * @param {!angular.Scope} $scope angular scope
  * @param {!angular.JQLite} $element to which this directive is applied
@@ -237,7 +246,7 @@ os.ui.DragDrop.prototype.onDrop = function(event) {
  * @param {goog.fx.DragDropEvent} event
  */
 os.ui.DragDrop.prototype.addOverClass = function(event) {
-  goog.dom.classlist.add(event.dropTargetItem.element, 'dd-target-dragover');
+  goog.dom.classlist.add(event.dropTargetItem.element, os.ui.DragDropStyle.BORDER);
 };
 
 
@@ -246,7 +255,7 @@ os.ui.DragDrop.prototype.addOverClass = function(event) {
  * @param {goog.fx.DragDropEvent} event
  */
 os.ui.DragDrop.prototype.removeOverClass = function(event) {
-  goog.dom.classlist.remove(event.dropTargetItem.element, 'dd-target-dragover');
+  goog.dom.classlist.remove(event.dropTargetItem.element, os.ui.DragDropStyle.BORDER);
 };
 
 
@@ -324,9 +333,9 @@ os.ui.UrlDragDrop.prototype.handleDrag_ = function(event) {
   event.stopPropagation();
   if (!document.querySelector('.window-modal-bg')) {
     if (event.type == 'dragover') {
-      goog.dom.classlist.add(/** @type {Element} */ (event.currentTarget), 'dd-target-dragover');
+      goog.dom.classlist.add(/** @type {Element} */ (event.currentTarget), os.ui.DragDropStyle.BORDER);
     } else {
-      goog.dom.classlist.remove(/** @type {Element} */ (event.currentTarget), 'dd-target-dragover');
+      goog.dom.classlist.remove(/** @type {Element} */ (event.currentTarget), os.ui.DragDropStyle.BORDER);
     }
   }
 };
@@ -340,7 +349,7 @@ os.ui.UrlDragDrop.prototype.handleDrag_ = function(event) {
 os.ui.UrlDragDrop.prototype.handleDrop_ = function(event) {
   event.preventDefault();
   event.stopPropagation();
-  goog.dom.classlist.remove(/** @type {Element} */ (event.currentTarget), 'dd-target-dragover');
+  goog.dom.classlist.remove(/** @type {Element} */ (event.currentTarget), os.ui.DragDropStyle.BORDER);
   if (!document.querySelector('.window-modal-bg')) {
     if (goog.isDefAndNotNull(this.scope_['ddDrop'])) {
       this.scope_['ddDrop'](event);

@@ -1,8 +1,8 @@
-<div class="alert-viewer-popup selectable animate-flip-parent" ng-mouseenter="hovered = true" ng-mouseleave="hovered = false">
+<div class="fixed-bottom w-25 mb-2 ml-auto mr-1 animate-flip-parent" ng-mouseenter="hovered = true" ng-mouseleave="hovered = false">
   <div class="alert animate-flip-v"
-       ng-class="{'Error':'alert-error','Warning':'alert-warning','Success':'alert-success','Info':'alert-info'}[alert.severity]"
+       ng-class="{'Error':'alert-danger','Warning':'alert-warning','Success':'alert-success','Info':'alert-info'}[alert.severity]"
        ng-repeat="alert in alertPopupCtrl.alertPopups|limitTo:-5 track by alert.id">
-    <button ng-click="alertPopupCtrl.dismissAlert($index, alert)" class="close btn-large pull-right" type="button">
+    <button ng-click="alertPopupCtrl.dismissAlert($index, alert)" class="close float-right" type="button">
       <i class="fa fa-times"></i>
     </button>
     <h4><i class="fa" ng-class="{'Error':'fa-ban','Warning':'fa-warning','Success':'fa-check','Info':'fa-info-circle'}[alert.severity]"></i>
