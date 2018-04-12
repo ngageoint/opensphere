@@ -9,6 +9,7 @@
   }
 
   .ui-state-focus {
+    background: transparent;
     @include gradient-bg($dropdown-link-hover-bg);
     border: 0;
     color: $dropdown-link-hover-color;
