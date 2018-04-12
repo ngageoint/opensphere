@@ -1,7 +1,7 @@
 <div id="js-window__container" class="h-100 w-100 position-absolute">
   <div class="dd-target c-main d-flex flex-column h-100 w-100" url-drag-drop>
     <nav-top></nav-top>
-    <div id="main" class="d-flex flex-row mh-0" style="flex: 1; position: relative;">
+    <div id="main" class="d-flex flex-row flex-grow mh-0">
       <date-panel ng-show="!mainCtrl.timeline"></date-panel>
       <div list list-id="main-content" list-prefix="<div>" list-suffix="</div>"></div>
       <map></map>
