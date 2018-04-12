@@ -316,7 +316,6 @@ const oldResources = [
   {
     source: resolver.resolveModulePath('bootstrap/dist', __dirname),
     target: 'vendor/bootstrap',
-    css: ['css/bootstrap.min.css'],
     scripts: ['js/bootstrap.min.js']
   },
   {
