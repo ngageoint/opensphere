@@ -1,15 +1,15 @@
-<div class="ui-settings-container">
-  <div class="settings-content">
-    <nav class="settings-nav">
+<div class="container">
+  <div class="row pt-2">
+    <div class="col-4 px-0">
       <slicktree x-data="settingsNodes" selected="selected" show-root="false"></slicktree>
-    </nav>
-    <section class="settings-container">
+    </div>
+    <div class="col-8 pr-0">
       <uiswitch class="h-100" items="selected" directive-function="setCon.getUi" generic="defaultsettingui"></uiswitch>
-    </section>
+    </div>
   </div>
-  <div class="top-gaps">
-    <button type="button" class="btn btn-default" ng-click="setCon.reset();">
-      <i class="color-red fa fa-fw fa-refresh"></i>
+  <div class="mt-1 row">
+    <button type="button" class="btn" ng-click="setCon.reset();">
+      <i class="text-danger fa fa-fw fa-refresh"></i>
       Reset
     </button>
   </div>

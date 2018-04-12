@@ -1,22 +1,20 @@
-<div class="user-setting">
+<div>
+  <div>Select the format for the location: </div>
   <div>
-    <div class="user-setting-title">Select the format for the location: </div>
-    <div class="user-setting-input radio-setting">
-      <div title="Use DEG">
-        <span>
-          <input type="radio" id="location.deg" value='deg' ng-model='locSet.format'><label for="location.deg">Decimal Degrees (DEG)</label>
-        </span>
-      </div>
-      <div title="Use DMS">
-        <span>
-          <input type="radio" id="location.dms" value='dms' ng-model='locSet.format'><label for="location.dms">Degrees Minutes Seconds (DMS)</label>
-        </span>
-      </div>
-      <div title="Use MGRS">
-        <span>
-          <input type="radio" id="location.mgrs" value='mgrs' ng-model='locSet.format'><label for="location.mgrs">Military Grid Reference System (MGRS)</label>
-        </span>
-      </div>
+    <div title="Use DEG">
+      <span>
+        <input class="mr-1" type="radio" id="location.deg" value='deg' ng-model='locSet.format'><label for="location.deg">Decimal Degrees (DEG)</label>
+      </span>
+    </div>
+    <div title="Use DMS">
+      <span>
+        <input class="mr-1" type="radio" id="location.dms" value='dms' ng-model='locSet.format'><label for="location.dms">Degrees Minutes Seconds (DMS)</label>
+      </span>
+    </div>
+    <div title="Use MGRS">
+      <span>
+        <input class="mr-1" type="radio" id="location.mgrs" value='mgrs' ng-model='locSet.format'><label for="location.mgrs">Military Grid Reference System (MGRS)</label>
+      </span>
     </div>
   </div>
 </div>
