@@ -4,18 +4,15 @@
 .slick-grid {
   @include box-sizing(border-box);
   border: 1px solid #000;
+  height: 100%;
   width: 100%;
 
-  .slick-viewport.ps-container {
-    overflow: hidden !important;
-  }
-
   .even {
-    background: $overrides-grid-even-color;
+    background: #333;
   }
 
   .odd {
-    background: $overrides-grid-odd-color;
+    background: #666;
   }
 
   .slick-cell {
@@ -29,25 +26,42 @@
     border-right: 1px solid #444;
   }
 
-  .slick-row {
-    &:hover,
-    &.hovered {
-      background: #98ff98;
+  &.no-header {
+    border-top: 0;
+    width: 100%;
+
+    .slick-header {
+      display: none;
+      height: 0;
     }
 
-    &:hover .slick-cell,
-    &.hovered .slick-cell {
-      background: inherit;
-      color: #000;
+    .slick-cell {
+      border: 0;
+      margin: 0;
+      padding: 0;
     }
+  }
+}
 
-    &.selected {
-      color: #000;
+.slick-viewport {
+  overflow-x: hidden !important;
 
-      &:not(:hover) {
-        background: #0cc;
-      }
-    }
+  &.ps-container {
+    overflow: hidden !important;
+  }
+}
+
+.slick-row {
+  @include hover {
+    background-color: $table-hover-bg;
+  }
+
+  background: $body-bg;
+  color: $body-color;
+
+  &.selected:not(:hover) {
+    background: $component-active-bg;
+    color: $component-active-color;
   }
 }
 
@@ -91,6 +105,92 @@
   text-decoration: underline;
 }
 
-.ui-widget-content a.slick-cell-link {
-  color: inherit;
+.slick-dragging {
+  background: #98ff98;
+}
+
+// * Editable grid styles
+// ************************************************************/
+
+.slick-grid.editable {
+  // add a bottom border so it's easier to tell when there is an empty (new) row at the bottom.
+  .slick-row.ui-widget-content {
+    border-bottom: 1px solid #333;
+  }
+
+  .slick-cell {
+    // active cell has a full border, so when not active shift text slightly so it doesn't visibly move
+    &:not(.active) {
+      padding-left: 2px;
+    }
+
+    &.editable {
+      // when editing a cell, make it look inset
+      @include box-shadow(inset 0 0 3px #111);
+      background: #333;
+
+      // override bootstrap styles on the input so it fits in the cell
+      input.editor-text {
+        @include box-shadow(none);
+        @include box-sizing(border-box);
+        background: transparent;
+        border: 0;
+        height: 100%;
+        width: 100%;
+      }
+    }
+  }
+
+  // override the highlight background while editing
+  .slick-row:hover .slick-cell.editable {
+    background: #333;
+  }
+}
+
+// * Tree styles
+// ************************************************************/
+
+.slick-tree {
+  @include box-sizing(border-box);
+  background: $body-bg;
+  height: 100%;
+  width: 100%;
+
+  .slick-cell .slick-node-ui i:first-child {
+    padding-left: 2px;
+  }
+
+  .slick-header-columns {
+    height: 0;
+  }
+
+  .slick-header.ui-state-default {
+    border: 0;
+  }
+
+  .slick-cell {
+    border: 0;
+    padding: 0 2px 5px;
+  }
+}
+
+.tree-spacer {
+  display: inline-block;
+  height: 1px;
+}
+
+.tree-expand-collapse {
+  font-size: .8em;
+  width: 1.4em;
+}
+
+.tree-icons {
+  padding-right: 2px;
+
+  i.fa {
+    line-height: 16px;
+    text-align: center;
+    vertical-align: middle;
+    width: 14px;
+  }
 }

@@ -1,25 +1,15 @@
-<div class="h-100 w-100 d-flex flex-column">
-  <div class="modal-body">
-    <ul class="nav nav-tabs">
+<div class="h-100 w-100">
+  <div class="modal-body d-flex flex-column h-100">
+    <ul class="nav nav-tabs" style="flex-shrink: 0;">
       <li class="nav-item"><a href class="nav-link" ng-click="tab = 'layers'" ng-class="{active: tab == 'layers'}">Layers</a></li>
       <li class="nav-item"><a href class="nav-link" ng-click="tab = 'areas'" ng-class="{active: tab == 'areas'}">Areas</a></li>
       <li class="nav-item"><a href class="nav-link" ng-click="tab = 'filters'" ng-class="{active: tab == 'filters'}">Filters</a></li>
       <li class="nav-item"><a href class="nav-link" ng-click="tab = 'places'" ng-class="{active: tab == 'places'}">Places</a></li>
     </ul>
 
-    <div class="h-100">
-      <div class="h-100" ng-if="tab == 'layers'">
-        <layers></layers>
-      </div>
-      <div class="h-100" ng-if="tab == 'areas'">
-        <areas></areas>
-      </div>
-      <div class="h-100" ng-if="tab == 'filters'">
-        <filters></filters>
-      </div>
-      <div class="h-100" ng-if="tab == 'places'">
-        <places></places>
-      </div>
-    </div>
+    <layers ng-if="tab == 'layers'"></layers>
+    <areas ng-if="tab == 'areas'"></areas>
+    <filters ng-if="tab == 'filters'"></filters>
+    <places ng-if="tab == 'places'"></places>
   </div>
 </div>
