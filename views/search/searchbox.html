@@ -1,5 +1,5 @@
 <div class="search-bar">
-  <form class="form-inline" ng-submit="searchBox.search()">
+  <form class="m-auto" ng-submit="searchBox.search()">
     <div class="input-group">
       <div class="input-group-prepend">
         <button class="btn btn-secondary dropdown-toggle"
@@ -8,7 +8,7 @@
             ng-show="searchBox.searchOptions.length > 0"
             title="Show/hide search options"></button>
       </div>
-      <input class="form-control border-0"
+      <input class="form-control border"
           type="text"
           ng-model="searchBox.searchTerm"
           ng-change="searchBox.refreshAutocomplete()"

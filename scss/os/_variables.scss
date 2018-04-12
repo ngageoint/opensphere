@@ -13,17 +13,3 @@ $nav-link-padding-y: .2rem;
 // Modals
 $modal-header-padding: .5rem;
 $modal-inner-padding: .5rem;
-
-// Dropdowns
-$dropdown-item-padding-y: .25rem;
-$dropdown-item-padding-x: 1.5rem;
-$dropdown-link-hover-bg: #f8f9fa;
-$dropdown-link-hover-color: #16181b;
-
-// Body
-$body-bg: #fff;
-
-// Gradient
-@mixin gradient-bg($color) {
-  background: $color linear-gradient(180deg, mix($body-bg, $color, 15%), $color) repeat-x;
-}
