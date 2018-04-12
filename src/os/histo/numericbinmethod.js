@@ -211,14 +211,6 @@ os.histo.NumericBinMethod.prototype.filterDimension = function(dimension, item) 
 
 
 /**
- * @inheritDoc
- */
-os.histo.NumericBinMethod.prototype.setArrayKeys = function(value) {
-  this.arrayKeys = value;
-};
-
-
-/**
  * Gets the floored value of a number
  * @param {number} value
  * @return {number}
