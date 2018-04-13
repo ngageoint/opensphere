@@ -111,6 +111,11 @@ const sharedResources = [
     scripts: ['js/bootstrap.bundle.min.js']
   },
   {
+    source: resolver.resolveModulePath('opensphere/vendor/bootstrap2', __dirname),
+    target: 'vendor/bootstrap2',
+    scripts: ['typeahead.js'],
+  },
+  {
     source: resolver.resolveModulePath('select2', __dirname),
     target: 'vendor/select2',
     css: ['select2.css'],

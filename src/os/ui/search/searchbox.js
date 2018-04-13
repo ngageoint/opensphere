@@ -117,7 +117,7 @@ os.ui.search.SearchBoxCtrl = function($scope, $element) {
    * @type {!jQuery}
    * @private
    */
-  this.autocompleteSrc_ = /** @type {!jQuery} */ ($element.find('.search-query')).typeahead();
+  this.autocompleteSrc_ = /** @type {!jQuery} */ ($element.find('.js-searchbox__typeahead')).typeahead();
   goog.events.listen($element[0], 'click', this.onClick_, false, this);
   this.searchManager.listen(goog.events.EventType.CHANGE, this.onSearchManagerChange_, false, this);
   this.searchManager.listen(os.search.SearchEventType.START, this.onSearchStart_, false, this);
