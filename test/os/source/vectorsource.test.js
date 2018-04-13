@@ -131,6 +131,17 @@ describe('os.source.Vector', function() {
     });
   });
 
+  it('should ensure added features have a feature id', function() {
+    var feature = new ol.Feature(new ol.geom.Point([0, 0]));
+    expect(feature.getId()).toBeUndefined();
+
+    source.addFeature(feature);
+    expect(feature.getId()).toBeDefined();
+
+    source.removeFeature(feature);
+    source.unprocessNow();
+  });
+
   it('should select a single feature in the source', function() {
     var feature = features[0];
     expect(source.select(feature)).toBe(true);
