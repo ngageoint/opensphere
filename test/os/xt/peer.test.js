@@ -148,6 +148,16 @@ describe('os.xt.Peer', function() {
     return 'storage: {' + str + (str.length ? '\n' : '') + '}';
   };
 
+  var getFirstKey = function(storage, match) {
+    for (var i = 0, n = storage.length; i < n; i++) {
+      var key = storage.key(i);
+      if (key.startsWith(match)) {
+        return key;
+      }
+    }
+  };
+
+
   describe('mock storage', function() {
     it('adds a key and sets the value', function() {
       storage.setItem('test_key', 'test_value');
@@ -180,6 +190,7 @@ describe('os.xt.Peer', function() {
     enforceStrictStorageAPIForIE9Compatibility(window.localStorage);
     storage.clear();
     os.xt.Peer.PING_INTERVAL = 500;
+    os.xt.MockHandler.value = 0;
   });
 
   // for the purposes of this test, let's ping faster
@@ -522,6 +533,7 @@ describe('os.xt.Peer', function() {
 
     a.cleanup_();
     b.cleanup_();
+    window.localStorage.clear();
   });
 
   it('should handle messages sent to a specific peer if a handler for the message type exists', function() {
@@ -540,14 +552,16 @@ describe('os.xt.Peer', function() {
 
     b.send('test', 2, 'a');
 
-    // verify that the send worked
-    var msg = JSON.parse(storage.getItem('xt.default.a.b'));
+    var key = getFirstKey(storage, 'xt.default.a.b.');
+    expect(key).not.toBe(undefined);
+
+    var msg = JSON.parse(storage.getItem(key));
     expect(msg.type).toBe('test');
     expect(msg.data).toBe(2);
 
     // fake a storage event
     var e = {
-      key: 'xt.default.a.b',
+      key: key,
       oldValue: ''
     };
 
@@ -579,7 +593,7 @@ describe('os.xt.Peer', function() {
 
     // fake a storage event
     var e = {
-      key: 'xt.default.public.b',
+      key: 'xt.default.public.b.' + Date.now(),
       oldValue: '',
       newValue: '{"type":"test","data":1234}'
     };
@@ -596,6 +610,7 @@ describe('os.xt.Peer', function() {
 
   it('should handle messages sent to the public channel if a handler for the message type exists', function() {
     var storage = window.localStorage;
+    storage.clear();
 
     var a = new os.xt.Peer(storage);
     a.setId('a');
@@ -610,19 +625,42 @@ describe('os.xt.Peer', function() {
 
     b.send('test', 2);
 
+    var key = getFirstKey(storage, 'xt.default.public.b.');
+    expect(key).not.toBe(undefined);
+
     // verify that the send worked
-    var msg = JSON.parse(storage.getItem('xt.default.public.b'));
+    var msg = JSON.parse(storage.getItem(key));
     expect(msg.type).toBe('test');
     expect(msg.data).toBe(2);
 
     // fake a storage event
     var e = {
-      key: 'xt.default.public.b',
+      key: key,
       oldValue: ''
     };
 
     e.newValue = storage.getItem(e.key);
     a.onStorage_(e);
+
+    // verify that the message was handled
+    expect(os.xt.MockHandler.value).toBe(2);
+
+    a.cleanup_();
+    b.cleanup_();
+  });
+
+  it('should handle messages on init', function() {
+    var b = new os.xt.Peer(storage);
+    b.setId('b');
+    b.setTitle('bob');
+    b.init();
+    b.send('test', 2);
+
+    var a = new os.xt.Peer(storage);
+    a.setId('a');
+    a.setTitle('alice');
+    a.addHandler(new os.xt.MockHandler());
+    a.init();
 
     // verify that the message was handled
     expect(os.xt.MockHandler.value).toBe(2);
