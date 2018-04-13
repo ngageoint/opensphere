@@ -1,22 +1,22 @@
-<div class="ui-settings-container window-content-wrapper">
-  <div class="window-content">
-    <nav class="settings-nav">
-      <slicktree x-data="settingsNodes" selected="selected" show-root="false"></slicktree>
-    </nav>
-    <section class="settings-container">
-      <uiswitch class="h-100" items="selected" directive-function="setCon.getUi" generic="defaultsettingui"></uiswitch>
-    </section>
-  </div>
-  <div class="window-footer">
-    <div class="pull-right" >
-      <button type="button" class="btn btn-default" ng-click="setCon.close()">
-        <i class="fa fa-fw fa-check"></i>
-        Close
-      </button>
+<div class="h-100 w-100 d-flex flex-column">
+  <div class="modal-body container">
+    <div class="row mx-0">
+      <div class="col-4 px-0">
+        <slicktree x-data="settingsNodes" selected="selected" show-root="false"></slicktree>
+      </div>
+      <div class="col-8 pr-0">
+        <uiswitch class="h-100" items="selected" directive-function="setCon.getUi" generic="defaultsettingui"></uiswitch>
+      </div>
     </div>
-    <button type="button" class="btn btn-default pull-left" ng-click="setCon.reset();">
-      <i class="color-red fa fa-fw fa-refresh"></i>
+  </div>
+  <div class="modal-footer d-flex justify-content-between">
+    <button type="button" class="btn" ng-click="setCon.reset();">
+      <i class="text-danger fa fa-fw fa-refresh"></i>
       Reset
+    </button>
+    <button type="button" class="btn" ng-click="setCon.close()">
+      <i class="fa fa-fw fa-check"></i>
+      Close
     </button>
   </div>
 </div>

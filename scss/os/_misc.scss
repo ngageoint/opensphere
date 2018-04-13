@@ -1,0 +1,14 @@
+// Miscellaneous utility CSS classes not provided by Bootstrap
+
+.pointer-events-none {
+  pointer-events: none;
+}
+
+.flex-grow {
+  flex: 1;
+  position: relative;
+}
+
+.u-flex-shrink {
+  flex-shrink: 0;
+}

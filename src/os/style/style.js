@@ -1210,7 +1210,7 @@ os.style.createFeatureStyle = function(feature, baseConfig, opt_layerConfig) {
 os.style.mergeConfig = function(from, to) {
   for (var key in from) {
     var fval = from[key];
-    if (typeof fval == 'object' && !(typeof fval.length == 'number')) {
+    if (fval && typeof fval == 'object' && !(typeof fval.length == 'number')) {
       // clone objects into the target
       if (!(key in to)) {
         to[key] = {};

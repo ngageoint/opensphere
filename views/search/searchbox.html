@@ -1,28 +1,33 @@
-<div class="search-bar" style="position:relative;">
-  <form class="search-box" ng-submit="searchBox.search()" style="margin-bottom:0px;">
-    <div class="input-prepend input-append" ng-class="{'highlightSearchBox' : searchBox.highlight}">
-      <span class="options-toggle add-on input-clear action"
-          ng-click="searchBox.toggleSearchOptions($event)"
-          ng-show="searchBox.searchOptions.length > 0"
-          title="Show/hide search options">
-        <span ng-if="searchBox.showDropdownText && searchBox.searchOptions.length > 1" class="search-category">{{searchBox.getDropdownText()}}</span>
-        <i class="search-dropdown fa" ng-class="(searchBox.showDropdownText && searchBox.searchOptions.length > 1) && 'fa-caret-down' || 'fa-chevron-down'"></i>
-      </span>
-      <input type="text"
+<div class="search-bar">
+  <form class="m-auto" ng-submit="searchBox.search()">
+    <div class="input-group">
+      <div class="input-group-prepend">
+        <button class="btn btn-secondary dropdown-toggle"
+            type="button"
+            ng-click="searchBox.toggleSearchOptions($event)"
+            ng-show="searchBox.searchOptions.length > 0"
+            title="Show/hide search options"></button>
+      </div>
+      <input class="form-control border"
+          type="text"
           ng-model="searchBox.searchTerm"
           ng-change="searchBox.refreshAutocomplete()"
-          ng-focus="searchBox.highlight=true"
-          ng-blur="searchBox.highlight=false"
-          class="search-query casual-font"
           placeholder="{{searchBox.getPlaceholderText()}}"
           data-provide="typeahead" />
-      <span class="add-on input-clear action" ng-click="searchBox.clear()">
-        <i class="fa fa-times"></i>
-      </span>
-      <button type="submit"
-          class="btn btn-primary search-button button-border">
-        <i class='fa fa-search color-white'></i>
-      </button>
+      <div class="input-group-append">
+        <button class="btn btn-secondary"
+            type="button"
+            ng-click="searchBox.clear()"
+            title="Clear search">
+          <i class="fa fa-times color-white"></i>
+        </button>
+        <button class="btn btn-primary"
+            type="submit"
+            ng-click="searchBox.clear()"
+            title="Clear search">
+          <i class="fa fa-search color-white"></i>
+        </button>
+      </div>
     </div>
   </form>
 
@@ -51,7 +56,7 @@
         <span class="options-toggle add-on input-clear action"
             ng-click="show = !show"
             title="Show/hide group searches">
-          <i class="search-dropdown fa" style="width: 200px;" ng-class="searchBox.showDropdownText && 'fa-caret-down' || 'fa-chevron-down'"></i>
+          <i class="search-dropdown fa" ng-class="searchBox.showDropdownText && 'fa-caret-down' || 'fa-chevron-down'"></i>
         </span>
         <div class="row-fluid search-option left-gap" ng-show="show" ng-repeat="search in searchBox.getSearchOptionsGroup(groupName)"
             ng-click="searchBox.toggleSearch(search)">

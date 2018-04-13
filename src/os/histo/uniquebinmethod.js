@@ -161,6 +161,7 @@ os.histo.UniqueBinMethod.prototype.persist = function(opt_to) {
 
   opt_to['type'] = this.getBinType();
   opt_to['field'] = this.getField();
+  opt_to['arrayKeys'] = this.getArrayKeys();
   return opt_to;
 };
 
@@ -172,6 +173,10 @@ os.histo.UniqueBinMethod.prototype.restore = function(config) {
   var field = /** @type {string|undefined} */ (config['field']);
   if (typeof field === 'string') {
     this.setField(field);
+  }
+  var arrayKeys = /** @type {boolean|string|undefined} */ (config['arrayKeys']);
+  if (typeof arrayKeys === 'boolean' || typeof arrayKeys === 'string') {
+    this.setArrayKeys(arrayKeys);
   }
 };
 
@@ -259,7 +264,18 @@ os.histo.UniqueBinMethod.prototype.exportAsFilter = function(bins) {
 /**
  * @inheritDoc
  */
+os.histo.UniqueBinMethod.prototype.getArrayKeys = function() {
+  return this.arrayKeys;
+};
+
+
+/**
+ * @inheritDoc
+ */
 os.histo.UniqueBinMethod.prototype.setArrayKeys = function(value) {
+  if (typeof value === 'string') {
+    value = Boolean(value);
+  }
   this.arrayKeys = value;
 };
 
