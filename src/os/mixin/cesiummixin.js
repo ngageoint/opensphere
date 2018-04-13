@@ -172,11 +172,10 @@ os.mixin.cesium.loadCesiumMixins = function() {
     image.src = url;
   };
 
-
   /**
    * @suppress {accessControls|duplicate}
    */
-  Cesium.loadImage.defaultCreateImage = Cesium.loadImage.createImage;
+  Cesium.Resource._Implementations.createImage = Cesium.loadImage.createImage;
 
 
   /**
