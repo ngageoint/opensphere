@@ -5,6 +5,7 @@ goog.require('goog.Timer');
 goog.require('goog.array');
 goog.require('goog.async.Deferred');
 goog.require('goog.async.Delay');
+goog.require('goog.events');
 goog.require('goog.events.Event');
 goog.require('goog.events.EventType');
 goog.require('goog.log');
@@ -134,7 +135,6 @@ os.xt.Peer = function(opt_storage) {
    */
   this.establishMasterDelay_ = null;
 
-
   /**
    * An array of records that track clients waiting for peers to become available in this peer's group
    * @type {Array<os.xt.Peer.WaitRecord_>}
@@ -167,6 +167,9 @@ os.xt.Peer = function(opt_storage) {
    * @private
    */
   this.errorShown_ = false;
+
+  this.boundStorage_ = this.onStorage_.bind(this);
+  this.boundCleanup_ = this.cleanup_.bind(this);
 
   // set up cross-origin messaging
   // the security checks are in the handler
@@ -469,10 +472,10 @@ os.xt.Peer.prototype.init = function() {
   this.persist();
 
   // set up the listener for the storage event
-  window.addEventListener('storage', this.onStorage_.bind(this));
+  window.addEventListener('storage', this.boundStorage_);
 
   // set up the listener for application close
-  window.addEventListener('unload', this.cleanup_.bind(this));
+  window.addEventListener('unload', this.boundCleanup_);
 
   // set up the ping
   this.pingTimer_ = new goog.Timer(os.xt.Peer.PING_INTERVAL);
@@ -481,6 +484,30 @@ os.xt.Peer.prototype.init = function() {
   this.pingTimer_.start();
 
   goog.log.fine(os.xt.Peer.LOGGER_, 'Initialized peer ' + this.group_ + '.' + this.id_ + ' "' + this.title_ + '"');
+  this.processInitialMessages();
+};
+
+
+/**
+ * Processes messages already available on startup
+ * @protected
+ */
+os.xt.Peer.prototype.processInitialMessages = function() {
+  var priv = ['xt', this.group_, this.id_, ''].join('.');
+  var pub = ['xt', this.group_, 'public', ''].join('.');
+
+  var notThese = os.xt.Peer.notThese_.map(function(end) {
+    return priv + end;
+  });
+
+  var storage = this.storage_;
+  var i = storage.length;
+  while (i--) {
+    var key = storage.key(i);
+    if (key && (key.startsWith(pub) || (key.startsWith(priv) && notThese.indexOf(key) === -1))) {
+      this.onStorage_(/** @type {Event} */ ({'key': key, 'newValue': storage.getItem(key)}));
+    }
+  }
 };
 
 
@@ -513,7 +540,9 @@ os.xt.Peer.prototype.send = function(type, data, opt_to) {
 
   try {
     // do this in a try/catch in case localStorage is full so that we can let the user know
-    this.storage_.setItem(['xt', this.group_, opt_to, this.id_].join('.'), os.xt.Peer.prepareSendData(type, data));
+    this.storage_.setItem(
+        ['xt', this.group_, opt_to, this.id_, Date.now()].join('.'),
+        os.xt.Peer.prepareSendData(type, data));
   } catch (e) {
     var logMsg = 'A cross-app communication event was unable to be sent. This usually happens because the data was ' +
         'too large or because the storage is corrupted.';
@@ -824,7 +853,7 @@ os.xt.Peer.prototype.onStorage_ = function(event) {
   }
 
   // ensure that the key starts with xt<group><id> or xt<group>.public
-  if (parts.length === 4 && parts[0] === 'xt' && parts[1] === this.group_ &&
+  if (parts.length >= 4 && parts[0] === 'xt' && parts[1] === this.group_ &&
       (parts[2] === this.id_ || parts[2] == 'public') && event.newValue) {
     // ignore info changes and messages from ourselves
     if (os.xt.Peer.notThese_.indexOf(parts[3]) === -1 && parts[3] !== this.id_) {
@@ -833,7 +862,7 @@ os.xt.Peer.prototype.onStorage_ = function(event) {
         this.storage_.removeItem(event.key);
       }
     }
-  } else if (parts.length === 4 && parts[0] === 'xt' && parts[1] === this.group_ &&
+  } else if (parts.length >= 4 && parts[0] === 'xt' && parts[1] === this.group_ &&
       os.xt.Peer.notThese_.indexOf(parts[3]) > 0) {
     // could be a new peer, or a dead one
     this.processWaitList_();
@@ -864,6 +893,9 @@ os.xt.Peer.prototype.cleanup_ = function(opt_e) {
     this.waitListDelay_.dispose();
     this.waitListDelay_ = null;
   }
+
+  window.removeEventListener('storage', this.boundStorage_);
+  window.removeEventListener('unload', this.boundCleanup_);
 };
 
 

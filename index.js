@@ -111,6 +111,11 @@ const sharedResources = [
     scripts: ['js/bootstrap.bundle.min.js']
   },
   {
+    source: resolver.resolveModulePath('opensphere/vendor/bootstrap2', __dirname),
+    target: 'vendor/bootstrap2',
+    scripts: ['typeahead.js'],
+  },
+  {
     source: resolver.resolveModulePath('select2', __dirname),
     target: 'vendor/select2',
     css: ['select2.css'],
@@ -326,6 +331,24 @@ const oldResources = [
   }
 ];
 
+const addLayerResources = [
+  {
+    source: 'vendor/bootstrap',
+    target: 'vendor/bootstrap',
+    css: ['slate/bootstrap.min.css']
+  },
+  {
+    source: resolver.resolveModulePath('jquery/dist', __dirname),
+    target: 'vendor/jquery',
+    scripts: ['jquery.min.js']
+  },
+  {
+    source: buildPath,
+    target: '',
+    scripts: ['addlayer.js']
+  }
+];
+
 
 /**
  *
@@ -345,6 +368,10 @@ module.exports = {
       id: 'old',
       file: 'old-template.html',
       resources: oldResources
+    }, {
+      id: 'addlayer',
+      file: 'addlayer-template.html',
+      resources: addLayerResources
     }
   ],
   debugCss: path.join(buildDir, 'combined.css'),
