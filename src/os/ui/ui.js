@@ -315,6 +315,7 @@ os.ui.replaceDirective = function(name, module, directiveFn, opt_priority) {
         },
         'next': function(event) {
           var active = this['$menu']['find']('.active').removeClass('active');
+          active.find('a').removeClass('active');
           var next = active.next();
 
           if (!next.length) {
@@ -322,9 +323,11 @@ os.ui.replaceDirective = function(name, module, directiveFn, opt_priority) {
           }
 
           next.addClass('active');
+          next.find('a').addClass('active');
         },
         'prev': function(event) {
           var active = this['$menu']['find']('.active').removeClass('active');
+          active.find('a').removeClass('active');
           var prev = active.prev();
 
           if (!prev.length) {
@@ -332,6 +335,7 @@ os.ui.replaceDirective = function(name, module, directiveFn, opt_priority) {
           }
 
           prev.addClass('active');
+          prev.find('a').addClass('active');
         },
         'move': function(e) {
           if (!this['shown']) {
@@ -407,7 +411,7 @@ os.ui.replaceDirective = function(name, module, directiveFn, opt_priority) {
       });
 
       // make sure the user can't tab to the drop-down anchor tags
-      $.fn.typeahead.defaults.item = '<li><a tabindex="-1" href=""></a></li>';
+      $.fn.typeahead.defaults.item = '<li><a tabindex="-1" class="dropdown-item" href=""></a></li>';
 
       // Select2 has trouble with Bootstrap modals in IE only
       if (goog.userAgent.IE) {
