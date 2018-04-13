@@ -14,7 +14,7 @@ describe('os.config.Settings', function() {
   os.net.RequestHandlerFactory.addHandler(os.net.SameDomainHandler);
 
   beforeEach(function() {
-    window.localStorage.removeItem('com.bitsys.os.config.storage.writeType');
+    window.localStorage.clear();
   });
 
   it('should not return a config until initialized', function() {
