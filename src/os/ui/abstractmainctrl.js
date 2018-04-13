@@ -227,7 +227,6 @@ os.ui.AbstractMainCtrl.prototype.initialize = function() {
 
   os.ui.Consent.launch();
 
-  this.initXt();
   this.doCertNazi();
   this.registerListeners();
 };
@@ -252,6 +251,7 @@ os.ui.AbstractMainCtrl.prototype.initPlugins = function() {
 os.ui.AbstractMainCtrl.prototype.onPluginsLoaded = function(opt_e) {
   // send browser info metric
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.BROWSER + '.' + os.browserVersion(), 1);
+  this.initXt();
 };
 
 
