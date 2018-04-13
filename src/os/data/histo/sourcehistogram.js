@@ -323,7 +323,7 @@ os.data.histo.SourceHistogram.prototype.setBinMethod = function(method) {
 
   if (this.binMethod) {
     this.binMethod.setValueFunction(os.feature.getField);
-    this.binRanges_ = this.binMethod.arrayKeys || false;
+    this.binRanges_ = this.binMethod.getArrayKeys() || false;
   }
 
   this.reindex();
@@ -508,7 +508,9 @@ os.data.histo.SourceHistogram.prototype.setColorMethod = function(value, opt_bin
 
       colorModel.setColorMethod(value, opt_bins, opt_color);
     } else {
-      colorModel.setColorMethod(value, opt_bins, opt_color);
+      if (colorModel != null) {
+        colorModel.setColorMethod(value, opt_bins, opt_color);
+      }
       this.source.setColorModel(null);
     }
   }
