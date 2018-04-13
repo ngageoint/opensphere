@@ -1783,6 +1783,12 @@ os.source.Vector.prototype.processFeatures = function(features) {
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
 os.source.Vector.prototype.processImmediate = function(feature) {
+  // slickgrid, 3D renderers, and other things depend on features having a unique id. ensure they have one if not
+  // already set.
+  if (feature.id_ === undefined) {
+    feature.setId(ol.getUid(feature));
+  }
+
   // all features are initially visible
   var featureId = /** @type {string} */ (feature.id_);
   this.shownRecordMap[featureId] = true;
