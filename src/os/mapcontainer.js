@@ -69,7 +69,6 @@ goog.require('os.ogc');
 goog.require('os.ol.control.MousePosition');
 goog.require('os.ol.feature');
 goog.require('os.olcs.Camera');
-goog.require('os.olcs.WMSImageryProvider');
 goog.require('os.olcs.sync.RootSynchronizer');
 goog.require('os.proj');
 goog.require('os.proj.switch');
@@ -1601,7 +1600,6 @@ os.MapContainer.prototype.initCesium_ = function() {
       os.olcs.loadCesium().then(function() {
         try {
           os.mixin.cesium.loadCesiumMixins();
-          os.olcs.WMSImageryProvider.init();
           this.registerTerrainProviderType('cesium', Cesium.CesiumTerrainProvider);
 
           this.olCesium_ = new olcs.OLCesium({

@@ -13,7 +13,6 @@ goog.require('os.map');
 goog.require('os.ol.events');
 goog.require('os.olcs');
 goog.require('os.olcs.ImageryProvider');
-goog.require('os.olcs.WMSImageryProvider');
 goog.require('os.olcs.sync.AbstractSynchronizer');
 goog.require('os.source.Vector');
 
@@ -321,7 +320,7 @@ os.olcs.sync.TileSynchronizer.prototype.disposeCache_ = function() {
     for (var key in this.animationCache_) {
       this.cesiumLayers_.remove(this.animationCache_[key], true);
 
-      if (this.animationCache_[key].imageryProvider instanceof os.olcs.WMSImageryProvider) {
+      if (this.animationCache_[key].imageryProvider instanceof os.olcs.ImageryProvider) {
         this.animationCache_[key].imageryProvider.dispose();
       }
 
@@ -423,60 +422,45 @@ os.olcs.sync.TileSynchronizer.prototype.getCacheLayer_ = function(timeParam, sho
  * @param {string} timeParam Time to use for the WMS TIME parameter
  * @return {!Cesium.ImageryLayer} The Cesium imagery layer
  * @private
+ * @suppress {accessControls}
  */
 os.olcs.sync.TileSynchronizer.prototype.getLayerByTime_ = function(timeParam) {
   goog.asserts.assertInstanceof(this.layer, os.layer.AnimatedTile);
   goog.asserts.assert(!goog.isNull(this.view));
 
-  var source = this.layer.getSource();
-  goog.asserts.assertInstanceof(source, ol.source.TileWMS);
+  var originalSource = /** @type {ol.source.TileWMS} */ (this.layer.getSource());
+  goog.asserts.assertInstanceof(originalSource, ol.source.TileWMS);
 
-  // base WMS options
-  var baseParams = {
-    'SERVICE': 'WMS',
-    'VERSION': '1.3.0',
-    'FORMAT': 'image/png',
-    'TRANSPARENT': true
-  };
+  // shallow clone the source
+  var source = new originalSource.constructor;
+  source.setUrls(originalSource.getUrls());
+  source.setExtent(originalSource.getExtent());
+  source.setProperties(originalSource.getProperties(), true);
 
-  // add the source's WMS options
-  goog.object.extend(baseParams, source.getParams());
+  source.crossOrigin = originalSource.crossOrigin;
+  source.refreshEnabled = originalSource.refreshEnabled;
+  source.tileGrid = originalSource.getTileGrid();
+  source.tileLoadFunction = originalSource.getTileLoadFunction();
+  source.tileLoadSet = originalSource.tileLoadSet;
+  source.tileUrlFunction = originalSource.getTileUrlFunction();
+  source.tileUrlSet = originalSource.tileUrlSet;
+  source.tileFilters = originalSource.tileFilters;
+  source.tileClass = originalSource.tileClass;
 
-  // now set the custom time
-  baseParams['TIME'] = timeParam;
+  source.gutter_ = originalSource.gutter_;
+  source.hidpi_ = originalSource.hidpi_;
+  source.projection_ = originalSource.getProjection();
+  source.reprojectionErrorThreshold_ = originalSource.reprojectionErrorThreshold_;
+  source.serverType_ = originalSource.serverType_;
+  source.wrapX_ = originalSource.wrapX_;
 
-  // The Cesium WebMapServiceImageryProvider always uses SRS because they're following the 1.1.1 spec. We're using
-  // WMS 1.3.0 and the server requires us to set CRS. Further, Cesium will send BBOX coords as WSEN but our server
-  // expects them to be SWNE when using EPSG:4326. Requesting CRS:84 will make the server and Cesium play well
-  // together. wtf, Cesium?
-  baseParams['CRS'] = os.proj.CRS84;
-
-  // Cesium WMS provider options setup
-  var projection = this.view.getProjection();
-  var tg = source.getTileGrid();
-  var tileSize = !goog.isNull(tg) ? tg.getTileSize(0) : 512;
-  tileSize = goog.isNumber(tileSize) ? tileSize : tileSize[0];
-
-  var urls = source.getUrls();
-  var providerOptions = /** @type {Cesium.WebMapServiceImageryProviderOptions} */ ({
-    enablePickFeatures: false,
-    layers: baseParams['LAYERS'],
-    parameters: baseParams,
-    tileHeight: tileSize,
-    tileWidth: tileSize,
-    url: urls[0]
-  });
-
-  // Cesium imagery layer options setup
-  var layerOptions = /** @type {Cesium.ImageryLayerOptions} */ ({});
-  var extent = this.layer.getExtent();
-  if (goog.isDefAndNotNull(extent) && !goog.isNull(projection)) {
-    layerOptions.rectangle = olcs.core.extentToRectangle(extent, projection);
-  }
+  var params = originalSource.getParams();
+  params['TIME'] = timeParam;
+  source.updateParams(params);
 
   // create the layer
-  var provider = new os.olcs.WMSImageryProvider(providerOptions, source);
-  var cesiumLayer = new Cesium.ImageryLayer(provider, layerOptions);
+  var provider = new os.olcs.ImageryProvider(source);
+  var cesiumLayer = new Cesium.ImageryLayer(provider);
   return cesiumLayer;
 };
 

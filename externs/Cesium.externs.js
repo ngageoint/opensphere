@@ -75,6 +75,13 @@ Cesium.Deferred = function() {};
  */
 Cesium.Deferred.prototype.resolve = function(value) {};
 
+/**
+ * Rejector for a deferred.
+ * @param {*=} opt_value
+ * @template T
+ */
+Cesium.Deferred.prototype.reject = function(opt_value) {};
+
 
 /**
  * @type {Cesium.Promise}
