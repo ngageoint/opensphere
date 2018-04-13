@@ -65,9 +65,9 @@ plugin.google.places.Search.prototype.onSearchSuccess = function(evt) {
     var msg = null;
     if (stat === 'OVER_QUERY_LIMIT') {
       msg = 'The ' + this.getName() + ' search has reached the daily request quota. Please wait until after' +
-          ' midnight PST or contact the administractor.';
+          ' midnight PST or contact the administrator.';
     } else if (stat === 'REQUEST_DENIED' || stat === 'INVALID_REQUEST') {
-      msg = 'The ' + this.getName() + ' search is misconfigured. Please contact the administractor.';
+      msg = 'The ' + this.getName() + ' search is misconfigured. Please contact the administrator.';
     }
 
     if (msg) {
