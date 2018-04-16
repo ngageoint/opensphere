@@ -1,6 +1,7 @@
 // The purpose of this file is to remove jquery ui menu items and let bootstrap do its thing
 .c-menu.ui-menu {
   background: inherit;
+  position: fixed;
 
   .ui-menu-item {
     list-style-image: none;
