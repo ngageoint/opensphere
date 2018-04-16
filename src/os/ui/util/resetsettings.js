@@ -29,7 +29,7 @@ os.ui.util.resetSettings = function(opt_parent) {
     'x': 'center',
     'y': 300,
     'width': 400,
-    'height': 375,
+    'height': 'auto',
     'modal': true,
     'no-scroll': true,
     'disable-drag': true
