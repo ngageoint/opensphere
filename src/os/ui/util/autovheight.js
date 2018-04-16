@@ -69,13 +69,6 @@ os.ui.util.AutoVHeightCtrl = function($scope, $element, $injector) {
   this['padding'] = goog.isDefAndNotNull(this.scope_['padding']) ? this.scope_['padding'] : 0;
 
   /**
-   * @type {number}
-   * @private
-   */
-  // this.height_ = 1;
-  // this.initHeight_();
-
-  /**
    * Debounce resize events over a brief period.
    * @type {Function}
    * @private
@@ -110,12 +103,10 @@ os.ui.util.AutoVHeightCtrl.prototype.onDestroy_ = function() {
 
   var siblings = /** @type {Array.<string>} */ (this.scope_['siblings']);
   if (siblings) {
-    // try {
-    //   parent.find(siblings).removeResize(this.resizeFn_);
-    // } catch (e) {}
     try {
       for (var i = 0; i < siblings.length; i++) {
-        $(siblings[i]).resize(undefined);
+        var sib = /** @type {angular.JQLite} */ ($(siblings[i]));
+        sib.removeResize(this.resizeFn_);
       }
     } catch (e) {}
   }
