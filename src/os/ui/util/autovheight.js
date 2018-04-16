@@ -29,7 +29,7 @@ os.ui.util.autoVHeightDirective = function() {
   return {
     restrict: 'A',
     scope: {
-      'siblings': '=',
+      'siblings': '@',
       'padding': '@?',
       'minHeight': '@?'
     },
@@ -78,10 +78,10 @@ os.ui.util.AutoVHeightCtrl = function($scope, $element, $injector) {
   var parent = $element.parent();
   parent.resize(this.resizeFn_);
 
-  var siblings = /** @type {string} */ ($scope['siblings']);
-  if (siblings) {
-    for (var i = 0; i < siblings.length; i++) {
-      $(siblings[i]).resize(this.resizeFn_);
+  this['siblings'] = /** @type {string} */ ($scope['siblings']).split(' ');
+  if (this['siblings']) {
+    for (var i = 0; i < this['siblings'].length; i++) {
+      $(this['siblings'][i]).resize(this.resizeFn_);
     }
   }
 
@@ -101,11 +101,10 @@ os.ui.util.AutoVHeightCtrl.prototype.onDestroy_ = function() {
   var parent = this.element_.parent();
   parent.removeResize(this.resizeFn_);
 
-  var siblings = /** @type {Array.<string>} */ (this.scope_['siblings']);
-  if (siblings) {
+  if (this['siblings']) {
     try {
-      for (var i = 0; i < siblings.length; i++) {
-        var sib = /** @type {angular.JQLite} */ ($(siblings[i]));
+      for (var i = 0; i < this['siblings'].length; i++) {
+        var sib = /** @type {angular.JQLite} */ ($(this['siblings'][i]));
         sib.removeResize(this.resizeFn_);
       }
     } catch (e) {}
@@ -126,10 +125,9 @@ os.ui.util.AutoVHeightCtrl.prototype.onResize_ = function() {
     var winHeight = window.innerHeight;
 
     var siblingHeight = 0;
-    var siblings = /** @type {Array<string>} */ (this.scope_['siblings']);
-    if (siblings) {
-      for (var i = 0; i < siblings.length; i++) {
-        siblingHeight += $(siblings[i]).outerHeight();
+    if (this['siblings']) {
+      for (var i = 0; i < this['siblings'].length; i++) {
+        siblingHeight += $(this['siblings'][i]).outerHeight();
       }
     }
 
