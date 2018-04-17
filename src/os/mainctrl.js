@@ -472,7 +472,6 @@ os.MainCtrl.peerPrefix = os.NAMESPACE;
  */
 os.MainCtrl.prototype.initXt = function() {
   // configure and initialize the peer
-  os.peer = os.xt.Peer.getInstance();
   os.peer.setId(os.MainCtrl.peerId);
   os.peer.setTitle(os.MainCtrl.peerTitle);
   os.peer.addHandler(new os.ui.file.FileXTHandler());
