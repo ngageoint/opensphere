@@ -1,8 +1,8 @@
 goog.provide('os.im.AsyncImporter');
-goog.require('os.events.EventType');
 goog.require('goog.async.nextTick');
 goog.require('goog.events.EventTarget');
 goog.require('goog.events.EventType');
+goog.require('os.events.EventType');
 
 
 

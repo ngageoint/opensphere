@@ -160,5 +160,39 @@
     <Folder>
       <name>Basic Folder 2</name>
     </Folder>
+    <Placemark>
+      <Style>
+        <PolyStyle>
+          <color>00008000</color>
+        </PolyStyle>
+      </Style>
+      <Polygon>
+        <outerBoundaryIs>
+          <LinearRing>
+            <coordinates>
+              -1,3,0 -1,3,0 -1,3,0
+            </coordinates>
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+    <Placemark>
+      <MultiGeometry>
+          <Point>
+            <coordinates>
+              -1,3,0
+            </coordinates>
+          </Point>
+          <Polygon>
+            <outerBoundaryIs>
+              <LinearRing>
+                <coordinates>
+                  -1,3,0 -1,3,0 -1,3,0
+                </coordinates>
+              </LinearRing>
+            </outerBoundaryIs>
+          </Polygon>
+      </MultiGeometry>
+    </Placemark>
   </Document>
 </kml>
