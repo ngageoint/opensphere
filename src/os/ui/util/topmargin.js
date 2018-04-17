@@ -108,6 +108,6 @@ os.ui.util.TopMarginCtrl.prototype.setWatchEl_ = function() {
  */
 os.ui.util.TopMarginCtrl.prototype.onResize_ = function() {
   if (this.element_ && this.bufferElement_) {
-    this.element_.css('margin-top', this.bufferElement_.height() + 'px');
+    this.element_.css('margin-top', this.bufferElement_.outerHeight() + 'px');
   }
 };
