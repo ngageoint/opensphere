@@ -123,6 +123,6 @@ os.ui.popover.PopoverCtrl.prototype.showPopover_ = function(event) {
 os.ui.popover.PopoverCtrl.prototype.hidePopover_ = function(event) {
   event.stopPropagation();
   this.element_.find('popover').children().off('mouseleave');
-  this.element_.empty();
+  this.scope_['popoverElement'].popover('hide');
   this.createPopoverElement();
 };
