@@ -32,6 +32,7 @@ module.exports = function(config) {
       {pattern: resolver.resolveModulePath('d3/d3.min.js', __dirname), watched: false, included: true, served: true},
       {pattern: resolver.resolveModulePath('jsts/dist/jsts.min.js', __dirname), watched: false, included: true, served: true},
       {pattern: resolver.resolveModulePath('proj4/dist/proj4.js', __dirname), watched: false, included: true, served: true},
+      {pattern: resolver.resolveModulePath('bootstrap/dist/js/bootstrap.bundle.min.js', __dirname), watched: false, included: true, served: true},
       {pattern: resolver.resolveModulePath('moment/min/moment.min.js', __dirname), watched: false, included: true, served: true},
       {pattern: resolver.resolveModulePath('crossfilter2/crossfilter.min.js', __dirname), watched: false, included: true, served: true},
       {pattern: resolver.resolveModulePath('papaparse/papaparse.min.js', __dirname), watched: false, included: true, served: true},
