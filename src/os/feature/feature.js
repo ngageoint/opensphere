@@ -988,3 +988,36 @@ os.feature.sortByTime = function(a, b) {
 os.feature.idCompare = function(a, b) {
   return a.id_ > b.id_ ? 1 : a.id_ < b.id_ ? -1 : 0;
 };
+
+
+/**
+ * Validates a features geometries, attempting to repair invalid polygons and removing them if they are beyond fixing
+ * @param {!ol.Feature} feature thing to validate geometries on
+ * @param {boolean=} opt_quiet If alerts should be suppressed
+ * @return {number} number of invalid polygons removed
+ */
+os.feature.validateGeometries = function(feature, opt_quiet) {
+  var geometry = feature.getGeometry();
+  var count = 0;
+  if (geometry instanceof ol.geom.GeometryCollection) {
+    var geometries = geometry.getGeometriesArray();
+    for (var i = geometries.length; i > 0; i--) {
+      if (geometries[i] instanceof ol.geom.Polygon || geometries[i] instanceof ol.geom.MultiPolygon) {
+        var geom = os.geo.jsts.validate(geometries[i], opt_quiet, true); // repair or remove invalid geometries
+        if (geom !== undefined) {
+          geometries[i] = geom;
+        } else {
+          geometries.splice(i, 1);
+          count++;
+        }
+      }
+    }
+  } else if (geometry instanceof ol.geom.Polygon || geometry instanceof ol.geom.MultiPolygon) {
+    var geom = os.geo.jsts.validate(geometry, opt_quiet, true);
+    if (geom === undefined) {
+      count++;
+    }
+    feature.setGeometry(geom);
+  }
+  return count;
+};
