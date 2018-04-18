@@ -16,12 +16,12 @@ goog.require('os.ui.Module');
  * ```
  *     <div class="sibling-el1"></div>
  *     <div class="sibling-el2"></div>
- *     <div class="this-el" autoheight siblings=".sibling-el1, .sibling-el2, .sibling-el2"></div>
+ *     <div class="this-el" autovheight siblings=".sibling-el1, .sibling-el2, .sibling-el2"></div>
  *     <div class="sibling-el3"></div>
  *
  * ```
  * minHeight: The smallest vh that the element will take. Defaults to 20.
- * padding: An optional amount of the vh to add to claculation to give some space around the element.
+ * padding: An optional amount of the vh to add to caculation to give some space around the element.
  *
  * @return {angular.Directive}
  */

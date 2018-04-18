@@ -10,6 +10,7 @@ goog.require('os.ui.config.AbstractSettingsCtrl');
 os.ui.config.settingsWindowDirective = function() {
   return {
     restrict: 'E',
+    replace: true,
     templateUrl: os.ROOT + 'views/config/settingswindow.html',
     controller: os.ui.config.SettingsWindowCtrl,
     controllerAs: 'setCon'
