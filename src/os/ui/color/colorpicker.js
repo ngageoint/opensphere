@@ -11,7 +11,7 @@ goog.require('os.ui.color.colorPaletteDirective');
 /**
  * @type {string}
  */
-os.ui.color.COLOR_PICKER_TEMPLATE = '<button type="button" class="btn btn-default btn-color-picker" ' +
+os.ui.color.COLOR_PICKER_TEMPLATE = '<button class="btn btn-secondary" ' +
     'ng-click="colorPicker.togglePopup()" ng-disabled=disabled>' +
     '<i class="fa fa-square stroke" ng-style="{\'color\': color}"></i></button>';
 
@@ -23,6 +23,7 @@ os.ui.color.COLOR_PICKER_TEMPLATE = '<button type="button" class="btn btn-defaul
 os.ui.color.colorPickerDirective = function() {
   return {
     restrict: 'AE',
+    replace: true,
     scope: {
       'color': '=',
       'data': '=',

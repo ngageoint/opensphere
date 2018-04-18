@@ -47,7 +47,7 @@ os.ui.window.ConfirmTextCtrl = function($scope, $element) {
     }
   });
 
-  $scope.$emit('window.ready');
+  $scope.$emit(os.ui.WindowEventType.READY);
 };
 
 

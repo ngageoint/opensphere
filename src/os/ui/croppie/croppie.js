@@ -69,7 +69,7 @@ os.ui.croppie.CroppieCtrl = function($scope, $element) {
     'boundary': {'width': 256, 'height': 256}
   });
 
-  this.scope_.$emit('window.ready');
+  this.scope_.$emit(os.ui.WindowEventType.READY);
   $scope.$on('$destroy', this.destroy_.bind(this));
 };
 
