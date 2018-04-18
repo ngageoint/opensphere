@@ -1,11 +1,11 @@
 <div class="h-100 w-100 d-flex flex-column">
-  <div class="modal-body container">
-    <div class="row mx-0">
-      <div class="col-4 px-0">
+  <div class="modal-body container h-100">
+    <div class="row mx-0 h-100">
+      <div class="col-5">
         <slicktree x-data="settingsNodes" selected="selected" show-root="false"></slicktree>
       </div>
-      <div class="col-8 pr-0">
-        <uiswitch class="h-100" items="selected" directive-function="setCon.getUi" generic="defaultsettingui"></uiswitch>
+      <div class="col position-relative">
+        <uiswitch class="h-100 position-absolute c-settings-window__overflow" items="selected" directive-function="setCon.getUi" generic="defaultsettingui"></uiswitch>
       </div>
     </div>
   </div>
