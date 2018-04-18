@@ -2,6 +2,7 @@ goog.provide('os.ui.NavBarCtrl');
 
 goog.require('goog.dom.ViewportSizeMonitor');
 goog.require('os.ui.list.ListEventType');
+goog.require('os.ui.nav.EventType');
 
 
 
@@ -42,6 +43,8 @@ os.ui.NavBarCtrl = function($scope, $element) {
    */
   this.scope['punyWindow'] = window.innerWidth < (this.maxSize || os.ui.NavBarCtrl.DEFAULT_RESIZE_PX);
 
+  os.dispatcher.listen(os.ui.nav.EventType.TOGGLE, this.onNavbarToggle_, false, this);
+
   os.ui.waitForAngular(this.onResize.bind(this));
   this.vsm.listen(goog.events.EventType.RESIZE, this.onResize, false, this);
   $scope.$on(os.ui.list.ListEventType.CHANGE, this.onResize.bind(this));
@@ -62,6 +65,8 @@ os.ui.NavBarCtrl.DEFAULT_RESIZE_PX = 1350;
  * @protected
  */
 os.ui.NavBarCtrl.prototype.destroy = function() {
+  os.dispatcher.unlisten(os.ui.nav.EventType.TOGGLE, this.onNavbarToggle_, false, this);
+
   this.scope = null;
   this.element = null;
   this.settings = null;
@@ -101,3 +106,13 @@ goog.exportProperty(
     os.ui.NavBarCtrl.prototype,
     'getNavContentSize',
     os.ui.NavBarCtrl.prototype.getNavContentSize);
+
+/**
+ * Show or hide the nav bar
+ * @param {os.ui.nav.NavBarEvent} event
+ * @private
+ */
+os.ui.NavBarCtrl.prototype.onNavbarToggle_ = function(event) {
+  this.scope['hideNav'] = event['state'];
+  os.ui.apply(this.scope);
+};
