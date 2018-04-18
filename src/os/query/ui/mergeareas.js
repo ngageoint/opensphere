@@ -82,7 +82,7 @@ os.query.ui.MergeAreasCtrl = function($scope, $element) {
     }
   }
 
-  $scope.$emit('window.ready');
+  $scope.$emit(os.ui.WindowEventType.READY);
 };
 goog.inherits(os.query.ui.MergeAreasCtrl, os.ui.query.ui.EditAreaCtrl);
 

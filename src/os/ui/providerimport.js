@@ -37,7 +37,7 @@ os.ui.ProviderImportCtrl = function($scope, $element) {
 
   this.initialize();
 
-  $scope.$emit('window.ready');
+  $scope.$emit(os.ui.WindowEventType.READY);
 };
 
 
