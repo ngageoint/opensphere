@@ -1,6 +1,7 @@
 // The purpose of this file is to remove jquery ui menu items and let bootstrap do its thing
 .c-menu.ui-menu {
   background: inherit;
+  position: fixed;
 
   .ui-menu-item {
     list-style-image: none;
@@ -10,6 +11,7 @@
 
   .ui-state-focus {
     @include gradient-bg($dropdown-link-hover-bg);
+    background: $dropdown-link-hover-bg;
     border: 0;
     color: $dropdown-link-hover-color;
     font-weight: inherit;

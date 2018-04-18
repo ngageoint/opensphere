@@ -18,10 +18,9 @@ os.ui.stateButtonDirective = function() {
     },
     controller: os.ui.StateButtonCtrl,
     controllerAs: 'ctrl',
-    template: '<button class="btn btn-default btn-menu no-text" ng-click="ctrl.openMenu()"' +
+    template: '<button class="btn btn-secondary dropdown-toggle" ng-click="ctrl.openMenu()"' +
       ' title="State options" ng-right-click="ctrl.openMenu()">' +
-      ' <i class="fa fa-bookmark yellow-icon"></i> {{showLabel ? \'States\' : \'\'}}' +
-      ' <i class="fa fa-chevron-down menu-arrow"></i>' +
+      ' <i class="fa fa-bookmark"></i> {{showLabel ? \'States\' : \'\'}}' +
       '</button>'
   };
 };

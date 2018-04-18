@@ -1,14 +1,19 @@
-// Library Imports
+// Variables
+@import 'os/variables';
+
+// Libraries
 @import 'compass';
 @import 'compass/css3';
 @import 'compass/utilities';
 @import 'animation/core';
 @import 'animation/animate';
+@import 'bootstrap';
 
-// Variables
-@import 'os/variables';
-
-// Opensphere Imports
-@import 'os/partials/animations';
-@import 'os/partials/menu';
-@import 'os/partials/window';
+// Opensphere
+@import 'os/animations';
+@import 'os/menu';
+@import 'os/misc';
+@import 'os/nganimate';
+@import 'os/settingswindow';
+@import 'os/slickgrid';
+@import 'os/window';

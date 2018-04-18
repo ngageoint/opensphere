@@ -1,94 +1,89 @@
-<div class="search-bar" style="position:relative;">
-  <form class="search-box" ng-submit="searchBox.search()" style="margin-bottom:0px;">
-    <div class="input-prepend input-append" ng-class="{'highlightSearchBox' : searchBox.highlight}">
-      <span class="options-toggle add-on input-clear action"
-          ng-click="searchBox.toggleSearchOptions($event)"
-          ng-show="searchBox.searchOptions.length > 0"
-          title="Show/hide search options">
-        <span ng-if="searchBox.showDropdownText && searchBox.searchOptions.length > 1" class="search-category">{{searchBox.getDropdownText()}}</span>
-        <i class="search-dropdown fa" ng-class="(searchBox.showDropdownText && searchBox.searchOptions.length > 1) && 'fa-caret-down' || 'fa-chevron-down'"></i>
-      </span>
-      <input type="text"
+<div>
+  <form class="m-auto" ng-submit="searchBox.search()">
+    <div class="input-group">
+      <div class="dropdown input-group-prepend">
+        <button class="btn btn-secondary dropdown-toggle"
+            type="button"
+            ng-click="searchBox.toggleSearchOptions($event)"
+            ng-show="searchBox.searchOptions.length > 0"
+            title="Show/hide search options"></button>
+      </div>
+      <div class="dropdown-menu" ng-class="{'show': searchBox.showSearchOptions}">
+        <div class="dropdown-header" ng-if="searchBox.searchOptions.length > 1">
+          Search Types
+          <div class="float-right" ng-if="searchBox.allowMultiple">
+            <button class="btn btn-sm" type="button" ng-click="searchBox.toggleAll(true)"
+                title="Enable all search types">
+              <i class="fa fa-check-square-o"></i>
+              All
+            </button>
+            <button class="btn btn-sm" type="button" ng-click="searchBox.toggleAll(false)"
+                title="Disable all search types">
+              <i class="fa fa-square-o"></i>
+              None
+            </button>
+          </div>
+        </div>
+        <div ng-if="searchBox.searchOptions.length > 1">
+          <div ng-if="searchBox.allowMultiple" ng-repeat="groupName in searchBox.providerGroups">
+            <span class="dropdown-item" ng-click="searchBox.toggleGroup(groupName)">
+              <i class="fa" ng-class="searchBox.getGroupIcon(groupName)"></i>
+              {{groupName}}
+            </span>
+            <a class="dropdown-item" href="" ng-repeat="search in searchBox.getSearchOptionsGroup(groupName)"
+                ng-click="searchBox.toggleSearch(search)">
+                <i class="ml-3 fa" ng-class="searchBox.getSearchIcon(search)"></i>
+              {{searchBox.getSearchName(search)}}
+            </a>
+          </div>
+          <a class="dropdown-item" href="" ng-repeat="search in searchBox.searchOptionsNoGroup"
+              ng-click="searchBox.toggleSearch(search)"
+              ng-class="{'font-weight-bold': !searchBox.allowMultiple && searchBox.isSearchEnabled(search)}">
+            <i class="fa" ng-if="searchBox.allowMultiple || searchBox.isSearchEnabled(search)"
+                ng-class="searchBox.getSearchIcon(search)"></i>
+            {{searchBox.getSearchName(search)}}
+          </a>
+          <div class="dropdown-divider m-0"></div>
+        </div>
+        <div ng-if="searchBox.favorites.length > 0">
+          <div class="dropdown-header">Favorite Searches</div>
+          <div ng-if="searchBox.favorites && searchBox.favorites.length > 0">
+            <a class="dropdown-item" href="" ng-repeat="fav in searchBox.favorites"
+                ng-click="searchBox.favoriteSearch(fav)" title="{{fav.title}}">
+              <i ng-if="searchBox.isFavoriteActive(fav)" class="fa fa-angle-double-right"></i> {{fav.name}} <span class="font-italic">({{fav.type}})</span>
+            </a>
+          </div>
+          <div class="dropdown-divider m-0"></div>
+        </div>
+        <div ng-if="searchBox.recentSearches && searchBox.recentSearches.length > 0">
+          <div class="dropdown-header">Recent Searches</div>
+          <a class="dropdown-item" href="" ng-repeat="recent in searchBox.recentSearches"
+              ng-click="searchBox.setFromRecent(recent)" title="{{searchBox.getRecentTitle(recent)}}">
+            {{recent.term}} <span class="font-italic">{{searchBox.getRecentDetails(recent)}}</span>
+          </a>
+        </div>
+        <div ng-if="!searchBox.recentSearches.length && !searchBox.favorites.length && searchBox.searchOptions.length <= 1" class="text-center">
+          <small>Favorite searches and Recent searches will be added here. Search Away!</small>
+        </div>
+      </div>
+
+      <input class="form-control border js-searchbox__typeahead"
+          type="text"
           ng-model="searchBox.searchTerm"
           ng-change="searchBox.refreshAutocomplete()"
-          ng-focus="searchBox.highlight=true"
-          ng-blur="searchBox.highlight=false"
-          class="search-query casual-font"
           placeholder="{{searchBox.getPlaceholderText()}}"
           data-provide="typeahead" />
-      <span class="add-on input-clear action" ng-click="searchBox.clear()">
-        <i class="fa fa-times"></i>
-      </span>
-      <button type="submit"
-          class="btn btn-primary search-button button-border">
-        <i class='fa fa-search color-white'></i>
-      </button>
+      <div class="input-group-append">
+        <button class="btn btn-secondary"
+            type="button"
+            ng-click="searchBox.clear()"
+            title="Clear search">
+          <i class="fa fa-times color-white"></i>
+        </button>
+        <button class="btn btn-primary" type="submit">
+          <i class="fa fa-search color-white"></i>
+        </button>
+      </div>
     </div>
   </form>
-
-  <div class="search-options shadowbox" ng-if="searchBox.showSearchOptions">
-    <div class="search-header" ng-if="searchBox.searchOptions.length > 1">
-      Search Types
-      <div class="pull-right" ng-if="searchBox.allowMultiple">
-        <button class="btn btn-default btn-mini" type="button" ng-click="searchBox.toggleAll(true)"
-            title="Enable all search types">
-          <i class="fa fa-check-square-o"></i>
-          All
-        </button>
-        <button class="btn btn-default btn-mini" type="button" ng-click="searchBox.toggleAll(false)"
-            title="Disable all search types">
-          <i class="fa fa-square-o"></i>
-          None
-        </button>
-      </div>
-    </div>
-    <div class="search-types" ng-if="searchBox.searchOptions.length > 1">
-      <div ng-if="searchBox.allowMultiple" ng-repeat="groupName in searchBox.providerGroups">
-        <span class="search-option" ng-click="searchBox.toggleGroup(groupName)">
-          <i class="fa" ng-class="searchBox.getGroupIcon(groupName)"></i>
-          {{groupName}}
-        </span>
-        <span class="options-toggle add-on input-clear action"
-            ng-click="show = !show"
-            title="Show/hide group searches">
-          <i class="search-dropdown fa" style="width: 200px;" ng-class="searchBox.showDropdownText && 'fa-caret-down' || 'fa-chevron-down'"></i>
-        </span>
-        <div class="row-fluid search-option left-gap" ng-show="show" ng-repeat="search in searchBox.getSearchOptionsGroup(groupName)"
-            ng-click="searchBox.toggleSearch(search)">
-            <i class="fa" ng-class="searchBox.getSearchIcon(search)"></i>
-          {{searchBox.getSearchName(search)}}
-        </div>
-      </div>
-      <div class="row-fluid search-option" ng-repeat="search in searchBox.searchOptionsNoGroup"
-          ng-click="searchBox.toggleSearch(search)"
-          ng-class="{'selected-search': !searchBox.allowMultiple && searchBox.isSearchEnabled(search)}">
-        <i class="fa" ng-if="searchBox.allowMultiple || searchBox.isSearchEnabled(search)"
-            ng-class="searchBox.getSearchIcon(search)"></i>
-        {{searchBox.getSearchName(search)}}
-      </div>
-      <hr>
-    </div>
-    <div ng-if="searchBox.favorites.length > 0">
-      <div class="search-header">Favorite Searches</div>
-      <div class="favorite-searches" ng-if="searchBox.favorites && searchBox.favorites.length > 0">
-        <div class="row-fluid search-option" ng-repeat="fav in searchBox.favorites"
-            ng-click="searchBox.favoriteSearch(fav)" title="{{fav.title}}">
-          <i ng-if="searchBox.isFavoriteActive(fav)" class="fa fa-angle-double-right"></i> {{fav.name}} <span class="search-recent-type">({{fav.type}})</span>
-        </div>
-      </div>
-      <hr>
-    </div>
-    <div ng-if="searchBox.recentSearches && searchBox.recentSearches.length > 0">
-      <div class="search-header">Recent Searches</div>
-      <div class="recent-searches">
-        <div class="row-fluid search-option" ng-repeat="recent in searchBox.recentSearches"
-            ng-click="searchBox.setFromRecent(recent)" title="{{searchBox.getRecentTitle(recent)}}">
-          {{recent.term}} <span class="search-recent-type">{{searchBox.getRecentDetails(recent)}}</span>
-        </div>
-      </div>
-    </div>
-    <div ng-if="!searchBox.recentSearches.length && !searchBox.favorites.length && searchBox.searchOptions.length <= 1" class="centered">
-      <small>Favorite searches and Recent searches will be added here. Search Away!</small>
-    </div>
-  </div>
 </div>

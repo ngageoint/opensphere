@@ -532,8 +532,6 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
     $element.resizable(resizeConfig);
   }
 
-  $element.css('overflow-y', 'unset');
-
   $element.css('left', $scope['x'] + 'px');
   if (!($scope['y'] == 'center' && $scope['height'] == 'auto')) {
     $element.css('top', $scope['y'] + 'px');

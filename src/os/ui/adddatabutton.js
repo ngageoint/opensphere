@@ -20,18 +20,17 @@ os.ui.addDataButtonDirective = function() {
     },
     controller: os.ui.AddDataButtonCtrl,
     controllerAs: 'ctrl',
-    template: '<div class="add-data-group btn-group" ng-right-click="ctrl.openMenu()">' +
-      '<button class="btn btn-default" id="addDataButton" title="Add data to the map"' +
+    template: '<div class="btn-group" ng-right-click="ctrl.openMenu()">' +
+      '<button class="btn btn-primary" id="addDataButton" title="Add data to the map"' +
       ' ng-click="ctrl.toggle()"' +
       ' ng-class="{active: ctrl.isWindowActive()}" metric="{{metrics.addDataOpen}}">' +
-      '<i class="fa fa-plus green-icon"></i> {{showLabel ? \'Add Data\' : \'\'}}' +
+      '<i class="fa fa-plus"></i> {{showLabel ? \'Add Data\' : \'\'}}' +
       '</button>' +
-      '<button class="btn btn-default" title="Open a file or URL" ng-click="ctrl.open()">' +
+      '<button class="btn btn-secondary" title="Open a file or URL" ng-click="ctrl.open()">' +
       '<i class="fa fa-folder-open"></i>' +
       '</button>' +
-      '<button class="btn addon" ng-click="ctrl.openMenu()"' +
+      '<button class="btn btn-secondary dropdown-toggle" ng-click="ctrl.openMenu()"' +
       ' ng-class="{active: menu}">' +
-      '<i class="fa fa-chevron-down"></i>' +
       '</button></div>'
   };
 };
