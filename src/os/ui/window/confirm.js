@@ -115,7 +115,7 @@ os.ui.window.ConfirmCtrl = function($scope, $element) {
   this.keyHandler_ = new goog.events.KeyHandler(goog.dom.getDocument());
   this.keyHandler_.listen(goog.events.KeyHandler.EventType.KEY, this.handleKeyEvent_, false, this);
 
-  $scope.$emit('window.ready');
+  $scope.$emit(os.ui.WindowEventType.READY);
   $scope.$on('$destroy', this.onDestroy_.bind(this));
 };
 
