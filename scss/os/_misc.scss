@@ -1,5 +1,25 @@
 // Miscellaneous utility CSS classes not provided by Bootstrap
 
+// Mixins
+
+@mixin grab-cursor {
+  // sass-lint:disable no-duplicate-properties, no-vendor-prefixes
+  cursor: pointer;
+  cursor: -moz-grab;
+  cursor: -webkit-grab;
+  cursor: -ms-grab;
+}
+
+@mixin grabbing-cursor {
+  // sass-lint:disable no-duplicate-properties, no-vendor-prefixes
+  cursor: grabbing;
+  cursor: -moz-grabbing;
+  cursor: -webkit-grabbing;
+  cursor: -ms-grabbing;
+}
+
+// Classes
+
 .pointer-events-none {
   pointer-events: none;
 }
@@ -11,4 +31,16 @@
 
 .u-flex-shrink {
   flex-shrink: 0;
+}
+
+.u-overflow-y-auto {
+  overflow-y: auto;
+}
+
+.u-cursor-grab {
+  @include grab-cursor();
+}
+
+.u-cursor-grab.moving {
+  @include grabbing-cursor();
 }

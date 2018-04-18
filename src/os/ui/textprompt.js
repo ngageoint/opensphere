@@ -53,7 +53,7 @@ os.ui.TextPromptCtrl = function($scope, $element) {
   this.keyHandler_ = new goog.events.KeyHandler(goog.dom.getDocument());
   this.keyHandler_.listen(goog.events.KeyHandler.EventType.KEY, this.handlKeyEvent_, false, this);
   this.delay_ = new goog.async.Delay(this.select_, 50, this);
-  $scope.$emit('window.ready');
+  $scope.$emit(os.ui.WindowEventType.READY);
   $scope.$watch('value', this.onValueChange_.bind(this));
 };
 

@@ -1,15 +1,15 @@
-<div class="window-content-wrapper">
-  <div class="window-content">
+<div class="h-100 w-100 d-flex flex-column">
+  <div class="modal-body">
     <div id="croppie" class="top-gap"></div>
   </div>
-  <div class="window-footer">
-    <div class="pull-right">
-      <button title="OK" class="btn" type="button" ng-click="croppieCtrl.save()">
-        <i class="color-add fa fa-check"></i>
+  <div class="modal-footer">
+    <div class="float-right">
+      <button title="OK" class="btn btn-primary" type="button" ng-click="croppieCtrl.save()">
+        <i class="fa fa-check"></i>
         OK
       </button>
-      <button title="Cancel" class="btn btn-default" ng-click="croppieCtrl.cancel()">
-        <i class="color-cancel fa fa-ban"></i>
+      <button title="Cancel" class="btn btn-secondary" ng-click="croppieCtrl.cancel()">
+        <i class="fa fa-ban"></i>
         Cancel
       </button>
     </div>

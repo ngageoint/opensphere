@@ -245,7 +245,7 @@ os.ui.ChecklistCtrl.launchChecklistMenu = function(target, items, opt_allowMulti
     os.ui.ChecklistCtrl.checklist_.remove();
   }
 
-  var checklistHtml = '<div id="checklistContainer" class="position-absolute col-2 px-0 popover">' +
+  var checklistHtml = '<div id="checklistContainer" class="position-absolute col px-0 popover">' +
       '<checklist allow-multiple="allow" items="checklistItems" name="' + name + '"></checklist></div>';
   scope = scope.$new();
   scope['allow'] = allowMultiple;

@@ -21,7 +21,7 @@ os.ui.spinnerDirective = function() {
       'step': '=?',
       'css': '@'
     },
-    template: '<span ng-form class="spinner-container"><input class="spinner" name="spinner"/></span>',
+    template: '<div ng-form><input class="spinner" name="spinner"/></div>',
     controller: os.ui.SpinnerCtrl
   };
 };

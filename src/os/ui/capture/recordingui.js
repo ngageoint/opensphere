@@ -124,7 +124,7 @@ os.ui.capture.RecordingUI = function($scope, $element) {
   // bring focus to the title input
   this.element_.find('input[name="title"]').focus();
 
-  $scope.$emit('window.ready');
+  $scope.$emit(os.ui.WindowEventType.READY);
   $scope.$on('$destroy', this.destroy_.bind(this));
 };
 
