@@ -111,7 +111,7 @@ os.ui.file.ExportDialogCtrl = function($scope, $element, $compile) {
     customContainer.remove();
   }
 
-  $scope.$emit('window.ready');
+  $scope.$emit(os.ui.WindowEventType.READY);
   $scope.$watch('exporter', this.onExporterChange.bind(this));
   $scope.$watch('persister', this.onPersisterChange.bind(this));
   $scope.$on('$destroy', this.destroy.bind(this));

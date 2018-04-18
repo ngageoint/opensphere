@@ -46,7 +46,7 @@ os.ui.text.SimpleMDEViewerCtrl = function($scope, $timeout) {
   $scope['text'] = $scope['text'] || '';
   $scope.$on('$destroy', this.onDestroy_.bind(this));
   $timeout(goog.bind(function() {
-    this.scope_.$emit('window.ready');
+    this.scope_.$emit(os.ui.WindowEventType.READY);
   }, this), 250);
 };
 

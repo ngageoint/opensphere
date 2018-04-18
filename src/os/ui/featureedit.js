@@ -527,7 +527,7 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
     }
 
     // notify the window that it can update the size
-    $scope.$emit('window.ready');
+    $scope.$emit(os.ui.WindowEventType.READY);
   }).bind(this), 150);
 };
 goog.inherits(os.ui.FeatureEditCtrl, goog.Disposable);

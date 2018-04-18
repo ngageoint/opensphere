@@ -46,5 +46,5 @@ os.ui.Module.directive('misconfiguredUi', [os.ui.help.misconfiguredUiDirective])
  * @ngInject
  */
 os.ui.help.MisconfiguredUiCtrl = function($scope, $element) {
-  $scope.$emit('window.ready');
+  $scope.$emit(os.ui.WindowEventType.READY);
 };

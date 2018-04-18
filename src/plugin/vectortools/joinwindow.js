@@ -96,7 +96,7 @@ plugin.vectortools.JoinCtrl = function($scope, $element) {
 
   this.init();
   $scope.$on('$destroy', this.disposeInternal.bind(this));
-  $scope.$emit('window.ready');
+  $scope.$emit(os.ui.WindowEventType.READY);
 };
 goog.inherits(plugin.vectortools.JoinCtrl, os.data.SourceManager);
 
