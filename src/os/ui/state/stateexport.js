@@ -81,7 +81,7 @@ os.ui.state.StateExportCtrl = function($scope, $element, $timeout) {
    */
   this['isSaving'] = true;
   $timeout(function() {
-    $scope.$emit('window.ready');
+    $scope.$emit(os.ui.WindowEventType.READY);
   });
 };
 goog.inherits(os.ui.state.StateExportCtrl, os.ui.state.AbstractStateFormCtrl);

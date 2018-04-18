@@ -9,11 +9,11 @@
   </div>
   <div class="modal-footer">
     <div class="float-right">
-      <button class="btn" ng-click="fileImport.accept()" ng-disabled="fileForm.$invalid || fileImport.loading" title="Import the file">
-        <i class="text-success fa" ng-class="fileImport.loading && 'fa-spin fa-spinner' || 'fa-chevron-circle-right'"></i>
+      <button class="btn btn-primary" ng-click="fileImport.accept()" ng-disabled="fileForm.$invalid || fileImport.loading" title="Import the file">
+        <i class="fa" ng-class="fileImport.loading && 'fa-spin fa-spinner' || 'fa-chevron-circle-right'"></i>
         <span ng-if="fileImport.loading">Loading</span><span ng-if="!fileImport.loading"> Next</span>
       </button>
-      <button class="btn" ng-click="fileImport.close()" title="Cancel file import"><i class="text-danger fa fa-ban"></i> Cancel</button>
+      <button class="btn btn-secondary" ng-click="fileImport.close()" title="Cancel file import"><i class="fa fa-ban"></i> Cancel</button>
     </div>
   </div>
 </div>

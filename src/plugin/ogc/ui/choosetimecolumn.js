@@ -82,7 +82,7 @@ plugin.ogc.ui.ChooseTimeColumnCtrl = function($scope, $element) {
     this['end'] = this.featureType_.getEndDateColumnName();
     this['timeColumns'] = this.descriptor_.getFeatureType().getTimeColumns();
 
-    $scope.$emit('window.ready');
+    $scope.$emit(os.ui.WindowEventType.READY);
   } else {
     os.ui.window.close(this.element_);
   }

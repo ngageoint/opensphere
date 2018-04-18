@@ -108,8 +108,12 @@ const sharedResources = [
   {
     source: resolver.resolveModulePath('bootstrap/dist', __dirname),
     target: 'vendor/bootstrap',
-    css: ['css/bootstrap.min.css'],
     scripts: ['js/bootstrap.bundle.min.js']
+  },
+  {
+    source: resolver.resolveModulePath('opensphere/vendor/bootstrap2', __dirname),
+    target: 'vendor/bootstrap2',
+    scripts: ['typeahead.js'],
   },
   {
     source: resolver.resolveModulePath('select2', __dirname),
@@ -317,8 +321,8 @@ const oldResources = [
   {
     source: resolver.resolveModulePath('bootstrap/dist', __dirname),
     target: 'vendor/bootstrap',
-    css: ['css/bootstrap.min.css'],
-    scripts: ['js/bootstrap.min.js']
+    scripts: ['js/bootstrap.min.js'],
+    css: ['css/bootstrap.min.css']
   },
   {
     source: resolver.resolveModulePath('font-awesome', __dirname),
@@ -330,9 +334,10 @@ const oldResources = [
 
 const addLayerResources = [
   {
-    source: 'vendor/bootstrap',
+    source: resolver.resolveModulePath('bootstrap/dist', __dirname),
     target: 'vendor/bootstrap',
-    css: ['slate/bootstrap.min.css']
+    scripts: ['js/bootstrap.min.js'],
+    css: ['css/bootstrap.min.css']
   },
   {
     source: resolver.resolveModulePath('jquery/dist', __dirname),

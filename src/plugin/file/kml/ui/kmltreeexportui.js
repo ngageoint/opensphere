@@ -116,7 +116,7 @@ plugin.file.kml.ui.KMLTreeExportCtrl = function($scope, $element) {
 
   // fire auto height event
   setTimeout(function() {
-    $scope.$emit('window.ready');
+    $scope.$emit(os.ui.WindowEventType.READY);
   }, 0);
 };
 

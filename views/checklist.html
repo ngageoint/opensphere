@@ -1,14 +1,21 @@
-<div class="checklist" ng-form="checklistForm">
-  <label class="checkbox toggle-all" title="Enable/Disable All" ng-show="allowMultiple">
-    <input type="checkbox" name="all" ng-model="checklist.allCheckbox" ng-change="checklist.toggleAll()">
-    All
-  </label>
-  <div class="checklist-items" ng-class="{'with-toggle': allowMultiple}">
-    <label class="checkbox" ng-repeat="item in items" title="{{item.tooltip || ('Enable/disable ' + item.label)}}">
-      <input type="checkbox" name="items" ng-model="item.enabled" ng-change="checklist.onItemChange(item)"/>
-      <span ng-bind-html="item.customFormat"/>
-      {{item.label}}
-      <span ng-bind-html="item.detailText"/>
-    </label>
-  </div>
+<div class="h-100" ng-form="checklistForm">
+  <table class="table table-sm table-striped border">
+    <thead>
+      <tr class="thead-dark">
+        <th class="col d-flex align-items-center">
+          <input type="checkbox" name="all" ng-model="checklist.allCheckbox" ng-change="checklist.toggleAll()"> All
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="item in items" title="{{item.tooltip || ('Enable/disable ' + item.label)}}">
+        <th class="col d-flex align-items-center">
+          <input type="checkbox" name="items" ng-model="item.enabled" ng-change="checklist.onItemChange(item)"/>
+          <span ng-bind-html="item.customFormat"/>
+            {{item.label}}
+          <span ng-bind-html="item.detailText"/>
+        </th>
+      </tr>
+    </tbody>
+  </table>
 </div>
