@@ -95,4 +95,7 @@ plugin.basemap.BaseMapPlugin.prototype.init = function() {
   var sm = os.state.StateManager.getInstance();
   sm.addStateImplementation(os.state.Versions.V3, plugin.basemap.v3.BaseMapState);
   sm.addStateImplementation(os.state.Versions.V4, plugin.basemap.v4.BaseMapState);
+
+  // do not toggle the base maps on and off
+  os.ui.LayersCtrl.SKIP_TOGGLE_FUNCS.push(plugin.basemap.isBaseMap);
 };

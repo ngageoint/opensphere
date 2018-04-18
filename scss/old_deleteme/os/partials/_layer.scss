@@ -105,3 +105,12 @@ input.label-checkbox.checkbox.inline {
 .label-units {
   width: 57px;
 }
+
+.c-layers__button:focus {
+  background-position: inherit;
+}
+
+.c-layers__button:hover {
+  background-position: 0 -15px;
+  text-shadow: inherit;
+}
