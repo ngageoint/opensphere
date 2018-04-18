@@ -52,7 +52,7 @@ os.ui.file.AnyTypeImportCtrl = function($scope, $element) {
    * The import function to use
    */
   this.scope_['import'] = null;
-  this.scope_.$emit('window.ready');
+  this.scope_.$emit(os.ui.WindowEventType.READY);
   this.scope_.$on('destroy', goog.bind(function() {
     this.scope_ = null;
     this.element_ = null;

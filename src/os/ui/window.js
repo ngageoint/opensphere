@@ -412,7 +412,7 @@ os.ui.WindowEventType = {
   DRAGSTOP: 'windowDragStop',
   HEADERBTN: 'windowHeaderBtn',
   RECONSTRAIN: 'windowReConstrain',
-  READY: 'window.ready'
+  READY: os.ui.WindowEventType.READY
 };
 
 

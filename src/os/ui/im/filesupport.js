@@ -130,7 +130,7 @@ os.ui.im.FileSupportCtrl = function($scope, $element) {
 
     this.close_();
   } else {
-    $scope.$emit('window.ready');
+    $scope.$emit(os.ui.WindowEventType.READY);
   }
 };
 goog.inherits(os.ui.im.FileSupportCtrl, goog.Disposable);

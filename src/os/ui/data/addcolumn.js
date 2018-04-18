@@ -93,7 +93,7 @@ os.ui.data.AddColumnCtrl = function($scope, $element, $timeout) {
     $element.find('input[name="name"]').focus();
   });
 
-  $scope.$emit('window.ready');
+  $scope.$emit(os.ui.WindowEventType.READY);
   $scope.$on('$destroy', goog.bind(this.destroy_, this));
 };
 
