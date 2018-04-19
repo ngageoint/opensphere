@@ -175,7 +175,7 @@ os.ui.AbstractMainCtrl.prototype.onCertNaziFailure = function(event) {
     'x': 'center',
     'y': 'center',
     'width': '350',
-    'height': '165',
+    'height': 'auto',
     'modal': 'true',
     'no-scroll': 'true'
   };
