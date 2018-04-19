@@ -1,29 +1,36 @@
-<table class="vector-style-controls">
+<table>
   <tr title="Sets the opacity (inverse transparency) of the layer(s)">
-    <td class="control-label">Opacity:</td>
+    <td>Opacity:</td>
     <td><slider min="0" max="1" step="0.02" value="opacity" name="opacity"></slider></td>
   </tr>
   <tr title="Sets the size of each item in the layer(s)">
-    <td class="control-label">Size:</td>
+    <td>Size:</td>
     <td><slider min="1" max="10" step="1" value="size" live="false" name="size"></slider></td>
   </tr>
   <tr title="Sets the color/shape used to render features">
-    <td class="control-label">Style:</td>
-    <td class="style-controls w-100">
-      <colorpicker name="color" class="no-text" color="color" show-reset="{{showColorReset}}">
-      </colorpicker>
-      <select ng-if="shapes && shapes.length > 0" ng-model="$parent.shape"
-          ng-change="ctrl.onShapeChange()"
-          ng-options="val for val in shapes">
-      </select>
-      <iconpicker ng-show="showIcon && icon && iconSet" ng-model="icon" icon-set="iconSet" icon-src="iconSrc"></iconpicker>
-      <iconpicker ng-show="ctrl.hasCenter() && showCenterIcon && centerIcon && iconSet" ng-model="centerIcon" icon-set="iconSet" icon-src="iconSrc"></iconpicker>
+    <td>Style:</td>
+    <td class="w-100">
+      <div class="form-row align-items-center u-flex-shrink pt-1">
+        <div class="col-auto">
+          <colorpicker name="color" class="no-text" color="color" show-reset="{{showColorReset}}"></colorpicker>
+        </div>
+        <div class="col">
+          <select class="custom-select" ng-if="shapes && shapes.length > 0" ng-model="$parent.shape"
+              ng-change="ctrl.onShapeChange()"
+              ng-options="val for val in shapes">
+          </select>
+        </div>
+        <div class="col-auto" ng-show="(showIcon && icon && iconSet) || (ctrl.hasCenter() && showCenterIcon && centerIcon)">
+          <iconpicker ng-show="showIcon && icon && iconSet" ng-model="icon" icon-set="iconSet" icon-src="iconSrc"></iconpicker>
+          <iconpicker ng-show="ctrl.hasCenter() && showCenterIcon && centerIcon && iconSet" ng-model="centerIcon" icon-set="iconSet" icon-src="iconSrc"></iconpicker>
+        </div>
+      </div>
     </td>
   </tr>
   <tr title="Sets the style of the ellipse center" ng-if="centerShapes && centerShapes.length > 0 && ctrl.hasCenter()">
-    <td class="control-label">Center:</td>
-    <td class="style-controls w-100">
-      <select ng-model="$parent.centerShape"
+    <td>Center:</td>
+    <td class="w-100">
+      <select class="custom-select" ng-model="$parent.centerShape"
           ng-change="ctrl.onCenterShapeChange($parent.centerShape)"
           ng-options="val for val in centerShapes">
       </select>

@@ -1,0 +1,49 @@
+// jQuery UI overrides
+
+// UI Widgets
+.ui-widget {
+  font-size: $font-size-base;
+
+  input {
+    font-size: $font-size-base;
+  }
+}
+
+.ui-widget-content {
+  background: $body-bg;
+  border: $border-width solid $border-color;
+  color: $body-color;
+
+  a {
+    color: $body-color;
+  }
+}
+
+// Sliders
+.ui-slider {
+  @include border-radius(0);
+  height: .4em;
+}
+
+.ui-slider-handle {
+  @include border-radius(0);
+  border: 1px solid #444 !important;
+  height: .8em !important;
+  margin-left: -.2em !important;
+  width: .4em !important;
+}
+
+// Spinners
+.ui-spinner {
+  width: 100%;
+}
+
+.ui-spinner-input {
+  background: none;
+  border: 0;
+  color: inherit;
+  margin: 0;
+  padding: $input-padding-y $input-padding-x;
+  vertical-align: middle;
+  width: 100%;
+}

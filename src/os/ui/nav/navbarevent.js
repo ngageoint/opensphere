@@ -9,7 +9,7 @@ goog.require('goog.events.Event');
  * @enum {string}
  */
 os.ui.nav.EventType = {
-  TOGGLE: 'os.ui.nav.toggle'
+  HIDE_NAV: 'os.ui.nav.hide_nav'
 };
 
 
