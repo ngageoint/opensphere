@@ -1,14 +1,14 @@
 <div>
-  <form class="m-auto" ng-submit="searchBox.search()">
+  <form ng-submit="searchBox.search()">
     <div class="input-group">
       <div class="dropdown input-group-prepend">
-        <button class="btn btn-secondary dropdown-toggle"
+        <button class="c-search-box__search-options-button btn dropdown-toggle form-control border border-right-0"
             type="button"
             ng-click="searchBox.toggleSearchOptions($event)"
             ng-show="searchBox.searchOptions.length > 0"
             title="Show/hide search options"></button>
       </div>
-      <div class="dropdown-menu" ng-class="{'show': searchBox.showSearchOptions}">
+      <div class="dropdown-menu w-100" ng-class="{'show': searchBox.showSearchOptions}">
         <div class="dropdown-header" ng-if="searchBox.searchOptions.length > 1">
           Search Types
           <div class="float-right" ng-if="searchBox.allowMultiple">
@@ -67,14 +67,14 @@
         </div>
       </div>
 
-      <input class="form-control border js-searchbox__typeahead"
+      <input class="form-control border border-left-0 js-searchbox__typeahead" ng-class="{'border-right-0': showClear}"
           type="text"
           ng-model="searchBox.searchTerm"
           ng-change="searchBox.refreshAutocomplete()"
           placeholder="{{searchBox.getPlaceholderText()}}"
           data-provide="typeahead" />
       <div class="input-group-append">
-        <button class="btn btn-secondary"
+        <button ng-if="showClear" class="btn border border-left-0 form-control"
             type="button"
             ng-click="searchBox.clear()"
             title="Clear search">

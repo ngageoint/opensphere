@@ -27,7 +27,8 @@ os.ui.search.searchBoxDirective = function() {
       'eventPrefix': '@',
       'searchOnClear': '@',
       'showDropdownText': '@',
-      'searchManager': '=?'
+      'searchManager': '=?',
+      'showClear': '@?'
     },
     templateUrl: os.ROOT + 'views/search/searchbox.html',
     controller: os.ui.search.SearchBoxCtrl,
