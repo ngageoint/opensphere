@@ -129,14 +129,11 @@ os.ui.layer.DefaultLayerUICtrl = function($scope, $element, $timeout) {
 
   $timeout(goog.bind(function() {
     if (this.element) {
-      var selector = /** @type {string} */ (os.settings.get(['layercontrols'], ''));
+      var selector = /** @type {string} */ (os.settings.get('layercontrols', ''));
       if (selector) {
         var section = this.element.find(selector);
         if (section) {
-          if (!section.hasClass('in')) {
-            section.addClass('in');
-            section.siblings('.accordion-heading').addClass('open');
-          }
+          $(section).collapse('show');
         }
       }
     }
@@ -448,23 +445,13 @@ goog.exportProperty(
  * @param {string} selector
  */
 os.ui.layer.DefaultLayerUICtrl.prototype.setOpenSection = function(selector) {
-  var currentSelector = /** @type {string} */ (os.settings.get(['layercontrols'], ''));
-  if (currentSelector) {
-    this.element.find(currentSelector).siblings('.accordion-heading').removeClass('open');
-  }
+  os.settings.set('layercontrols', selector);
 
-  var section = this.element.find(selector);
-  if (section) {
-    if (currentSelector == selector) {
-      // Runs before it opens and closes so just look at the inverse instead of using timeout
-      if (section.hasClass('in')) {
-        os.settings.set(['layercontrols'], '');
-      }
-    } else {
-      os.settings.set(['layercontrols'], selector);
-      section.siblings('.accordion-heading').addClass('open');
+  this.element.find('.js-style-content').each(function(i, ele) {
+    if ('#' + ele.getAttribute('id') != selector) {
+      $(ele).collapse('hide');
     }
-  }
+  });
 };
 goog.exportProperty(
     os.ui.layer.DefaultLayerUICtrl.prototype,

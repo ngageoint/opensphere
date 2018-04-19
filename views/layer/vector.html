@@ -1,84 +1,80 @@
-<div class="accordion" id="layerControls">
-  <div class="accordion-group layer-controls-group">
-    <div class="accordion-heading" title="Style controls for the layer(s)">
-      <a class="accordion-toggle layer-controls-heading" data-toggle="collapse" data-parent="#layerControls" data-target="#layer-style" ng-click="vector.setOpenSection('#layer-style')">Style</a>
+<div id="layerControls">
+  <div class="card">
+    <div class="btn btn-secondary btn-block btn-sm" title="Style controls for the layer(s)" data-toggle="collapse" data-parent="#layerControls" data-target="#layer-style" ng-click="vector.setOpenSection('#layer-style')">
+      Style
     </div>
-    <div id="layer-style" class="accordion-body collapse">
-      <div class="accordion-inner layer-controls">
-        <vectorstylecontrols
-            color="color"
-            opacity="opacity"
-            icon="icon"
-            center-icon="centerIcon"
-            icon-set="vector.iconSet"
-            icon-src="vector.iconSrc"
-            size="size"
-            shape="shape"
-            shapes="shapes"
-            center-shape="centerShape"
-            center-shapes="centerShapes"
-            show-color-reset="vector.showColorReset">
-        </vectorstylecontrols>
-        <iconstylecontrols ng-if="vector.showRotationOption()" columns="columns" show-rotation="vector.showRotation" rotation-column="vector.rotationColumn"></iconstylecontrols>
-        <uiswitch items="items" directive-function="vector.getShapeUI"></uiswitch>
-        <div ng-if="vector.showReplaceStyle">
-          <label class="checkbox inline"
-              title="If a feature has its own style defined, override it with the layer style. If unchecked, layer style choices will act as default values.">
-            <input class="label-checkbox checkbox inline" type="checkbox" name="replaceStyle"
-                ng-model="vector.replaceStyle" ng-change="vector.onReplaceStyleChange()"/>
-            Replace Feature Style
-          </label>
+    <div id="layer-style" class="js-style-content card-body collapse">
+      <vectorstylecontrols
+          color="color"
+          opacity="opacity"
+          icon="icon"
+          center-icon="centerIcon"
+          icon-set="vector.iconSet"
+          icon-src="vector.iconSrc"
+          size="size"
+          shape="shape"
+          shapes="shapes"
+          center-shape="centerShape"
+          center-shapes="centerShapes"
+          show-color-reset="vector.showColorReset">
+      </vectorstylecontrols>
+
+      <iconstylecontrols ng-if="vector.showRotationOption()" columns="columns" show-rotation="vector.showRotation" rotation-column="vector.rotationColumn"></iconstylecontrols>
+      <uiswitch items="items" directive-function="vector.getShapeUI"></uiswitch>
+
+      <div ng-if="vector.showReplaceStyle">
+        <div class="custom-control custom-checkbox d-inline-block">
+          <input type="checkbox" class="custom-control-input" id="replaceStyle" name="replaceStyle" ng-model="vector.replaceStyle" ng-change="vector.onReplaceStyleChange()"/>
+          <label class="custom-control-label" for="replaceStyle"> Replace Feature Style</label>
         </div>
       </div>
     </div>
   </div>
-  <div class="accordion-group layer-controls-group" ng-show="columns && items.length == 1">
-    <div class="accordion-heading" title="Configure how labels are displayed for the layer">
-      <a class="accordion-toggle layer-controls-heading" data-toggle="collapse" data-parent="#layerControls" data-target="#layer-label" ng-click="vector.setOpenSection('#layer-label')">Label</a>
+  <div class="card" ng-show="columns && items.length == 1">
+    <div class="btn btn-secondary btn-block btn-sm" title="Configure how labels are displayed for the layer" data-toggle="collapse" data-parent="#layerControls" data-target="#layer-label" ng-click="vector.setOpenSection('#layer-label')">
+      Label
     </div>
-    <div id="layer-label" class="accordion-body collapse">
-      <div class="accordion-inner layer-controls">
-        <labelcontrols
-            labels="labels"
-            columns="columns"
-            show-labels="showLabels"
-            label-color="labelColor"
-            label-size="labelSize">
-        </labelcontrols>
-      </div>
+    <div id="layer-label" class="js-style-content card-body collapse">
+      <labelcontrols
+          labels="labels"
+          columns="columns"
+          show-labels="showLabels"
+          label-color="labelColor"
+          label-size="labelSize">
+      </labelcontrols>
     </div>
   </div>
-  <div ng-if="lockable || vector.showRefresh" class="accordion-group layer-controls-group">
-    <div class="accordion-heading" title="Configure how alerts are displayed for the layer">
-      <a class="accordion-toggle layer-controls-heading" data-toggle="collapse" data-parent="#layerControls" data-target="#layer-options" ng-click="vector.setOpenSection('#layer-options')">Options</a>
+  <div ng-if="lockable || vector.showRefresh" class="card">
+    <div class="btn btn-secondary btn-block btn-sm" title="Configure the layer options" data-toggle="collapse" data-parent="#layerControls" data-target="#layer-options" ng-click="vector.setOpenSection('#layer-options')">
+      Options
     </div>
-    <div id="layer-options" class="accordion-body collapse">
-      <div class="accordion-inner layer-controls">
-        <table>
-          <tr ng-if="vector.showRefresh" title="Sets how often the layer will automatically refresh its data.">
-            <td class="control-label">Auto Refresh:</td>
-            <td class="style-controls w-100">
-              <select class="w-100" ng-model="vector.refresh" ng-change="vector.onRefreshChange()"
-                  ng-disabled="vector.lock"
-                  ng-options="val.label for val in vector.refreshOptions">
-              </select>
-            </td>
-          </tr>
-          <tr title="Choose a unique identifier column for the layer." ng-show="columns && items.length == 1">
-            <td class="control-label">Unique Identifier:</td>
-            <td class="style-controls w-100">
-              <select class="w-100" ng-model="vector.uniqueId" ng-change="vector.onUniqueIdChange()"
-                  ng-options="col as col.name for col in columns track by col.field">
-                  <option value="">-- None --</option>
-              </select>
-            </td>
-          </tr>
-        </table>
-        <div ng-if="lockable">
-          <label class="checkbox inline" title="Lock this layer to prevent data from changing">
-            <input class="label-checkbox checkbox inline" type="checkbox" name="altitude"
-                ng-model="vector.lock" ng-change="vector.onLockChange()"/> Lock Layer
-          </label>
+    <div id="layer-options" class="js-style-content card-body collapse">
+      <div class="form-row align-items-center pb-1" ng-if="vector.showRefresh">
+        <div class="col-auto" title="Sets how often the layer will automatically refresh its data.">
+          Auto Refresh:
+        </div>
+        <div class="col">
+          <select class="custom-select" ng-model="vector.refresh" ng-change="vector.onRefreshChange()"
+              ng-disabled="vector.lock"
+              ng-options="val.label for val in vector.refreshOptions">
+          </select>
+        </div>
+      </div>
+      <div class="form-row align-items-center pb-1" ng-show="columns && items.length == 1" title="Choose a unique identifier column for the layer.">
+        <div class="col-auto" ng-if="vector.showRefresh" title="Sets how often the layer will automatically refresh its data.">
+          Unique Identifier:
+        </div>
+        <div class="col">
+          <select class="custom-select" ng-model="vector.uniqueId" ng-change="vector.onUniqueIdChange()"
+              ng-options="col as col.name for col in columns track by col.field">
+              <option value="">-- None --</option>
+          </select>
+        </div>
+      </div>
+      <div ng-if="lockable">
+        <div class="custom-control custom-checkbox d-inline-block" title="Lock this layer to prevent data from changing">
+          <input type="checkbox" class="custom-control-input" id="lockLayer" name="lockLayer" ng-model="vector.lock" ng-change="vector.onLockChange()"/>
+          <label class="custom-control-label" for="lockLayer"> Lock Layer</label>
         </div>
       </div>
     </div>
