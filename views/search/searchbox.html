@@ -1,11 +1,10 @@
 <div>
   <form ng-submit="searchBox.search()">
-    <div class="input-group">
+    <div ng-show="searchBox.searchOptions.length > 0" class="input-group">
       <div class="dropdown input-group-prepend">
         <button class="c-search-box__search-options-button btn dropdown-toggle form-control border border-right-0"
             type="button"
             ng-click="searchBox.toggleSearchOptions($event)"
-            ng-show="searchBox.searchOptions.length > 0"
             title="Show/hide search options"></button>
       </div>
       <div class="dropdown-menu w-100" ng-class="{'show': searchBox.showSearchOptions}">
@@ -78,10 +77,10 @@
             type="button"
             ng-click="searchBox.clear()"
             title="Clear search">
-          <i class="fa fa-times color-white"></i>
+          <i class="fa fa-times"></i>
         </button>
         <button class="btn btn-primary" type="submit">
-          <i class="fa fa-search color-white"></i>
+          <i class="fa fa-search"></i>
         </button>
       </div>
     </div>
