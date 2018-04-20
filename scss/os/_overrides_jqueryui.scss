@@ -47,3 +47,23 @@
   vertical-align: middle;
   width: 100%;
 }
+
+.ui-menu {
+  background: inherit;
+  position: fixed;
+
+  .ui-menu-item {
+    list-style-image: none;
+    margin: inherit;
+    padding: $dropdown-item-padding-y $dropdown-item-padding-x;
+  }
+
+  .ui-state-focus {
+    @include gradient-bg($dropdown-link-hover-bg);
+    background: $dropdown-link-hover-bg;
+    border: 0;
+    color: $dropdown-link-hover-color;
+    font-weight: inherit;
+    text-decoration: none;
+  }
+}
