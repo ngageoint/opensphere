@@ -89,7 +89,7 @@ os.ui.layer.LabelControlsCtrl = function($scope, $element, $timeout) {
   this['labelLimit'] = os.settings.get(['maxLabels'], 5);
 
   // make the labels sortable via drag handle
-  this.element.find('.c-labelcontainer').sortable(this.getSortOptions());
+  this.element.find('.js-label-container').sortable(this.getSortOptions());
 
   $timeout(this.validate_.bind(this));
 
@@ -117,7 +117,7 @@ os.ui.layer.LabelControlsCtrl.prototype.disposeInternal = function() {
 os.ui.layer.LabelControlsCtrl.prototype.getSortOptions = function() {
   return {
     'items': 'tr',
-    'handle': '.handle',
+    'handle': '.js-handle',
     'axis': 'y',
     'containment': 'parent',
     'snap': true,

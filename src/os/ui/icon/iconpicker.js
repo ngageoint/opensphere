@@ -9,9 +9,9 @@ goog.require('os.ui.icon.iconSelectorDirective');
 /**
  * @type {string}
  */
-os.ui.icon.ICON_PICKER_TEMPLATE = '<button type="button" class="btn btn-default btn-icon-picker btn-invisible" ' +
+os.ui.icon.ICON_PICKER_TEMPLATE = '<button type="button" class="btn btn-secondary" ' +
     'ng-click="iconPicker.show()" ng-disabled=iconPicker.disabled>' +
-    '<img ng-src="{{iconPicker.getPath(ngModel.path)}}" style="height:100%;width:100%;"/></button>';
+    '<img class="c-icon-picker__icon" ng-src="{{iconPicker.getPath(ngModel.path)}}"/></button>';
 
 
 /**
@@ -30,6 +30,7 @@ os.ui.icon.IconPickerEventType = {
 os.ui.icon.iconPickerDirective = function() {
   return {
     restrict: 'AE',
+    replace: true,
     scope: {
       'disabled': '=',
       'ngModel': '=',
