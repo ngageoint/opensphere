@@ -1,4 +1,5 @@
 goog.provide('os.ui.navbaroptions');
+goog.provide('os.ui.navbaroptions.searchbox');
 
 goog.require('os.ui.addDataButtonDirective');
 goog.require('os.ui.alert.alertButtonDirective');
@@ -20,6 +21,13 @@ goog.require('os.ui.stateButtonDirective');
 goog.require('os.ui.windowsButtonDirective');
 
 
+/**
+ * Searchbox Template
+ * @type {string}
+ */
+os.ui.navbaroptions.searchbox = '<search-box show-clear="true"></search-box><searchresults></searchresults>';
+
+
 // Top navbar items
 os.ui.list.add(os.ui.nav.Location.TOP_LEFT, '<add-data-button show-label="!punyWindow"></add-data-button>', 100);
 os.ui.list.add(os.ui.nav.Location.TOP_LEFT, '<save-button show-label="!punyWindow"></save-button>', 200);
@@ -31,7 +39,7 @@ os.ui.list.add(os.ui.nav.Location.TOP_LEFT, 'os-draw-controls', 600);
 os.ui.list.add(os.ui.nav.Location.TOP_LEFT, 'measure-button', 650);
 os.ui.list.add(os.ui.nav.Location.TOP_LEFT, 'clear-button', 700);
 
-os.ui.list.add(os.ui.nav.Location.TOP_RIGHT, '<search-box></search-box><searchresults></searchresults>', 100);
+os.ui.list.add(os.ui.nav.Location.TOP_RIGHT, os.ui.navbaroptions.searchbox, 100);
 os.ui.list.add(os.ui.nav.Location.TOP_RIGHT, '<help show-label="!punyWindow"></help>', 200);
 
 

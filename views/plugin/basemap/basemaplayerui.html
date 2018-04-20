@@ -1,74 +1,74 @@
-<div class="accordion" id="layerControls">
-  <div class="accordion-group layer-controls-group">
-    <div class="accordion-heading" title="Style controls for the layer(s)">
-      <a class="accordion-toggle layer-controls-heading" data-toggle="collapse" data-parent="#layerControls" data-target="#layer-style" ng-click="basemap.setOpenSection('#layer-style')">Style</a>
+<div id="layerControls">
+  <div class="card">
+    <div class="btn btn-secondary btn-block btn-sm" title="Style controls for the layer(s)" data-toggle="collapse" data-parent="#layerControls" data-target="#layer-style" ng-click="basemap.setOpenSection('#layer-style')">
+      Style
     </div>
-    <div id="layer-style" class="accordion-body collapse">
-      <div class="accordion-inner layer-controls">
-        <table>
-          <tr title="Sets the opacity (inverse transparency) of the layer(s)">
-            <td class="control-label">Opacity:</td>
-            <td style="width:100%"><slider min="0" max="1" step="0.05" value="opacity" name="opacity"></slider></td>
-            <td style="padding-left:10px;">
-              <button class="btn btn-default" ng-click="basemap.reset('opacity')" title="Restore default opacity">
-                <i class="fa fa-undo lt-blue-icon"></i>
-              </button>
-            </td>
-          </tr>
-          </tr>
-          <tr title="Sets the contrast of the layer(s) [3D only]" ng-show="basemap.is3DEnabled">
-            <td class="control-label">Contrast:</td>
-            <td style="width:100%"><slider min="0" max="2" step="0.05" value="contrast" name="contrast"></slider></td>
-            <td style="padding-left:10px;">
-              <button class="btn btn-default" ng-click="basemap.reset('contrast')" title="Restore default contrast">
-                <i class="fa fa-undo lt-blue-icon"></i>
-              </button>
-            </td>
-          </tr>
-          <tr title="Sets the brightness of the layer(s) [3D only]" ng-show="basemap.is3DEnabled">
-            <td class="control-label">Brightness:</td>
-            <td style="width:100%"><slider min="-1" max="1" step="0.05" value="brightness" name="brightness"></slider></td>
-            <td style="padding-left:10px;">
-              <button class="btn btn-default" ng-click="basemap.reset('brightness')" title="Restore default brightness">
-                <i class="fa fa-undo lt-blue-icon"></i>
-              </button>
-            </td>
-          <tr title="Sets the saturation of the layer(s) [3D only]" ng-show="basemap.is3DEnabled">
-            <td class="control-label">Saturation:</td>
-            <td style="width:100%"><slider min="0" max="1" step="0.05" value="saturation" name="saturation"></slider></td>
-            <td style="padding-left:10px;">
-              <button class="btn btn-default" ng-click="basemap.reset('saturation')" title="Restore default saturation">
-                <i class="fa fa-undo lt-blue-icon"></i>
-              </button>
-            </td>
-          </tr>
-        </table>
-      </div>
+    <div id="layer-style" class="js-style-content card-body collapse">
+      <table>
+        <tr title="Sets the opacity (inverse transparency) of the layer(s)">
+          <td>Opacity:</td>
+          <td class="w-100"><slider min="0" max="1" step="0.05" value="opacity" name="opacity"></slider></td>
+          <td class="text-right pl-2">
+            <button class="btn btn-secondary" ng-click="basemap.reset('opacity')" title="Restore default opacity">
+              <i class="fa fa-undo"></i>
+            </button>
+          </td>
+        </tr>
+        </tr>
+        <tr title="Sets the contrast of the layer(s) [3D only]" ng-show="basemap.is3DEnabled">
+          <td>Contrast:</td>
+          <td class="w-100"><slider min="0" max="2" step="0.05" value="contrast" name="contrast"></slider></td>
+          <td class="text-right pl-2">
+            <button class="btn btn-secondary" ng-click="basemap.reset('contrast')" title="Restore default contrast">
+              <i class="fa fa-undo"></i>
+            </button>
+          </td>
+        </tr>
+        <tr title="Sets the brightness of the layer(s) [3D only]" ng-show="basemap.is3DEnabled">
+          <td>Brightness:</td>
+          <td class="w-100"><slider min="-1" max="1" step="0.05" value="brightness" name="brightness"></slider></td>
+          <td class="text-right pl-2">
+            <button class="btn btn-secondary" ng-click="basemap.reset('brightness')" title="Restore default brightness">
+              <i class="fa fa-undo"></i>
+            </button>
+          </td>
+        <tr title="Sets the saturation of the layer(s) [3D only]" ng-show="basemap.is3DEnabled">
+          <td>Saturation:</td>
+          <td class="w-100"><slider min="0" max="1" step="0.05" value="saturation" name="saturation"></slider></td>
+          <td class="text-right pl-2">
+            <button class="btn btn-secondary" ng-click="basemap.reset('saturation')" title="Restore default saturation">
+              <i class="fa fa-undo"></i>
+            </button>
+          </td>
+        </tr>
+      </table>
     </div>
   </div>
-  <div class="accordion-group layer-controls-group">
-    <div class="accordion-heading" title="Style controls for the layer(s)">
-      <a class="accordion-toggle layer-controls-heading" data-toggle="collapse" data-parent="#layerControls" data-target="#layer-zoom" ng-click="basemap.setOpenSection('#layer-zoom')">Zoom</a>
+  <div class="card">
+    <div class="btn btn-secondary btn-block btn-sm" title="Zoom controls for the layer(s)" data-toggle="collapse" data-parent="#layerControls" data-target="#layer-zoom" ng-click="basemap.setOpenSection('#layer-zoom')">
+      Zoom
     </div>
-    <div id="layer-zoom" class="accordion-body collapse">
-      <div class="accordion-inner layer-controls">
-        <table>
-          <tr title="Sets the minimum zoom level at which the layer will display">
-            <td class="control-label">Min Zoom:</td>
-            <td style="width:100%">
-              <spinner min="2" max="maxZoom" step="1" value="minZoom" name="minZoom"></spinner>
-              <button class="btn btn-default" ng-click="basemap.setCurrent('minZoom')" title="Sets the min zoom to the current zoom level">Current</button>
-            </td>
-          </tr>
-          <tr title="Sets the maximum zoom level at which the layer will display">
-            <td class="control-label">Max Zoom:</td>
-            <td style="width:100%">
-              <spinner min="minZoom" max="28" step="1" value="maxZoom" name="maxZoom"></spinner>
-              <button class="btn btn-default" ng-click="basemap.setCurrent('maxZoom')" title="Sets the max zoom to the current zoom level">Current</button>
-            </td>
-          </tr>
-        </table>
-      </div>
+    <div id="layer-zoom" class="js-style-content card-body collapse">
+      <table>
+        <tr title="Sets the minimum zoom level at which the layer will display">
+          <td class="text-nowrap">Min Zoom:</td>
+          <td class="w-100">
+            <spinner min="2" max="maxZoom" step="1" value="minZoom" name="minZoom"></spinner>
+          </td>
+          <td>
+            <button class="btn btn-secondary" ng-click="basemap.setCurrent('minZoom')" title="Sets the min zoom to the current zoom level">Current</button>
+          </td>
+        </tr>
+        <tr title="Sets the maximum zoom level at which the layer will display">
+          <td class="text-nowrap">Max Zoom:</td>
+          <td class="w-100">
+            <spinner min="minZoom" max="28" step="1" value="maxZoom" name="maxZoom"></spinner>
+          </td>
+          <td>
+            <button class="btn btn-secondary" ng-click="basemap.setCurrent('maxZoom')" title="Sets the max zoom to the current zoom level">Current</button>
+          </td>
+        </tr>
+      </table>
     </div>
   </div>
 </div>

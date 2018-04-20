@@ -1,0 +1,69 @@
+// jQuery UI overrides
+
+// UI Widgets
+.ui-widget {
+  font-size: $font-size-base;
+
+  input {
+    font-size: $font-size-base;
+  }
+}
+
+.ui-widget-content {
+  background: $body-bg;
+  border: $border-width solid $border-color;
+  color: $body-color;
+
+  a {
+    color: $body-color;
+  }
+}
+
+// Sliders
+.ui-slider {
+  @include border-radius(0);
+  height: .4em;
+}
+
+.ui-slider-handle {
+  @include border-radius(0);
+  border: 1px solid #444 !important;
+  height: .8em !important;
+  margin-left: -.2em !important;
+  width: .4em !important;
+}
+
+// Spinners
+.ui-spinner {
+  width: 100%;
+}
+
+.ui-spinner-input {
+  background: none;
+  border: 0;
+  color: inherit;
+  margin: 0;
+  padding: $input-padding-y $input-padding-x;
+  vertical-align: middle;
+  width: 100%;
+}
+
+.ui-menu {
+  background: inherit;
+  position: fixed;
+
+  .ui-menu-item {
+    list-style-image: none;
+    margin: inherit;
+    padding: $dropdown-item-padding-y $dropdown-item-padding-x;
+  }
+
+  .ui-state-focus {
+    @include gradient-bg($dropdown-link-hover-bg);
+    background: $dropdown-link-hover-bg;
+    border: 0;
+    color: $dropdown-link-hover-color;
+    font-weight: inherit;
+    text-decoration: none;
+  }
+}
