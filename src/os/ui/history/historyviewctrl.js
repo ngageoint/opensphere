@@ -180,7 +180,7 @@ os.ui.history.HistoryViewCtrl.prototype.commandAdded_ = function(e) {
   this.timeout_(goog.bind(function() {
     this['current'] = this.cp_.getCurrent();
 
-    var objDiv = document.getElementById('historyScroll');
+    var objDiv = document.getElementById('js-history__scroll');
     objDiv.scrollTop = objDiv.scrollHeight;
   }, this));
 };
