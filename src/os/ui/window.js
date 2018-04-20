@@ -257,7 +257,7 @@ os.ui.window.disableModality = function(id) {
  */
 os.ui.window.close = function(el) {
   if (el) {
-    var scope = el.hasClass(os.ui.windowSelector.WINDOW) ?
+    var scope = el.is(os.ui.windowSelector.WINDOW) ?
         el.children().scope() : el.parents(os.ui.windowSelector.WINDOW).children().scope();
     if (scope) {
       /** @type {os.ui.WindowCtrl} */ (scope['windowCtrl']).close();
