@@ -90,8 +90,7 @@ os.ui.DatePanelCtrl = function($scope) {
  */
 os.ui.DatePanelCtrl.prototype.toggleExtend = function() {
   this['extended'] = !this['extended'];
-  var menuEl = angular.element('#slice-panel');
-  menuEl.toggle();
+
   if (!this['extended']) {
     this.applySlice();
   }

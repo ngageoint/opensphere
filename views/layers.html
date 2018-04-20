@@ -1,5 +1,5 @@
 <div class="d-flex flex-column flex-grow">
-  <div class="form-row align-items-center u-flex-shrink pt-1">
+  <div class="form-row align-items-center u-flex-shrink mt-1">
     <div class="col-auto">
       Group By:
     </div>
@@ -18,7 +18,7 @@
       </div>
     </div>
 
-    <div class="input-group pt-1 mx-1">
+    <div class="input-group mt-1 mx-1">
       <input class="form-control" type="text" ng-model="term" ng-change="layers.search()" placeholder="Search active layers"></input>
       <div class="input-group-append">
         <button class="btn btn-outline-secondary" ng-click="layers.clearSearch()" title="Clear the search term">
@@ -28,11 +28,9 @@
     </div>
   </div>
 
-  <div class="d-flex flex-row flex-grow mh-0 pt-1">
+  <div class="d-flex flex-row flex-grow mt-1">
     <layertree class="border" x-data="layerTree" drag-enabled="true" selected="selected" context-menu="contextMenu" checkbox-tooltip="Show or hide the layer" multi-select="true" disposable="true"></layertree>
   </div>
 
-  <div class="layers-footer">
-    <uiswitch items="selected" directive-function="layers.getUi" generic="defaultlayerui"></uiswitch>
-  </div>
+  <uiswitch items="selected" directive-function="layers.getUi" generic="defaultlayerui"></uiswitch>
 </div>

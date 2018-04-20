@@ -1,37 +1,40 @@
-<div class="filters" style="height:100%">
-  <div class="layers-header">
-    <table style="width:100%;margin-bottom:5px;">
-      <tr>
-        <td class="control-label">Group By:</td>
-        <td style="width:100%;padding-left:0px;">
-          <select style="width: 100%" class="no-margin" ng-model="view" ng-change="filtersCtrl.onGroupChange()" ng-options="key for (key, value) in views"/>
-        </td>
-        <td><addfilter></addfilter></td>
-      </tr>
-    </table>
-    <div class="search-box">
-      <input class="search top-gapxs" type="text" ng-model="term" ng-change="filtersCtrl.onSearchTermChange()"
-          placeholder="Search filters"></input>
-      <span class="input-clear" ng-click="filtersCtrl.clearSearch()" ng-show="term" title="Clear the search term">
-        <i class="fa fa-times"></i>
-      </span>
+<div class="d-flex flex-column flex-grow">
+  <div class="form-row align-items-center u-flex-shrink mt-1">
+    <div class="col-auto">
+      Group By:
+    </div>
+    <div class="col">
+      <select class="custom-select" ng-model="view" ng-change="filtersCtrl.onGroupChange()" ng-options="key for (key, value) in views"/>
+    </div>
+    <div class="col-auto">
+      <addfilter></addfilter>
+    </div>
+
+    <div class="input-group mt-1 mx-1">
+      <input class="form-control" ng-model="term" ng-change="filtersCtrl.onSearchTermChange()" placeholder="Search filters"></input>
+      <div class="input-group-append">
+        <button class="btn btn-outline-secondary" ng-click="filtersCtrl.clearSearch()" title="Clear the search term">
+          <i class="fa fa-times"></i>
+        </button>
+      </div>
     </div>
   </div>
-  <div class="layers-main" autoheight siblings=".layers-header, .filters-footer">
-    <slicktree x-data="filters" selected="selected" show-root="true" context-menu="contextMenu" checkbox-tooltip="Show or hide the filter" multi-select="true" disposable="true"></slicktree>
+
+  <div class="d-flex flex-row flex-grow mh-0 mt-1">
+    <slicktree class="border" x-data="filters" selected="selected" show-root="true" context-menu="contextMenu" checkbox-tooltip="Show or hide the filter" multi-select="true" disposable="true"></slicktree>
   </div>
-  <div class="filters-footer">
+
+  <div class="mt-1">
     <div class="pull-right">
-      <button class="btn btn-default" ng-click="filtersCtrl.launch()" title="Sets the areas and filters for each layer">
-        <i class="fa fa-filter green-icon"></i> Advanced
+      <button class="btn btn-primary" ng-click="filtersCtrl.launch()" title="Configure the areas and filters applying to each layer.">
+        <i class="fa fa-filter"></i> Advanced
       </button>
     </div>
-    <button class="btn btn-default" ng-click="filtersCtrl.export()" ng-disabled="filtersCtrl.exportDisabled()"><i class="fa fa-download yellow-icon"></i> Export</button>
-    <div class="import-group" ng-class="filtersCtrl.showImportMenu && 'btn-group' || 'inline-block'">
-      <button class="btn btn-default" ng-click="filtersCtrl.import()" title="Import">
-        <i class="fa fa-sign-in color-import"></i>
-        Import
-      </button>
-    </div>
+    <button class="btn btn-secondary" ng-click="filtersCtrl.export()" ng-disabled="filtersCtrl.exportDisabled()">
+      <i class="fa fa-download"></i> Export
+    </button>
+    <button class="btn btn-secondary" ng-click="filtersCtrl.import()">
+      <i class="fa fa-sign-in"></i> Import
+    </button>
   </div>
 </div>
