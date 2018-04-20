@@ -51,31 +51,30 @@ os.ui.column.mapping.ColumnMappingNodeUICtrl = function($scope, $element) {
  */
 os.ui.column.mapping.ColumnMappingNodeUICtrl.prototype.tryRemove = function() {
   var cm = /** @type {os.ui.column.mapping.ColumnMappingNode} */ (this.scope_['item']).getColumnMapping();
-
-  var scopeOptions = {
-    'confirmCallback': this.remove_.bind(this),
-    'cancelCallback': goog.nullFunction,
-    'yesText': 'Remove',
-    'yesIcon': 'fa fa-check lt-blue-icon',
-    'noText': 'Cancel',
-    'noIcon': 'fa fa-ban red-icon'
-  };
-
-  var windowOptions = {
-    'label': 'Remove Column Association',
-    'icon': 'fa fa-trash-o red-icon',
-    'x': 'center',
-    'y': 400,
-    'width': 325,
-    'height': 'auto',
-    'modal': 'true',
-    'no-scroll': 'true'
-  };
-
   var text = 'Are you sure you want to remove the <b>' + cm.getName() + '</b> column association from the ' +
       'application? <b>This action cannot be undone.</b>';
-  var template = '<confirm>' + text + '</confirm>';
-  os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+
+  os.ui.window.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
+    confirm: this.remove_.bind(this),
+    cancel: goog.nullFunction,
+    prompt: text,
+    yesText: 'Remove',
+    yesIcon: 'fa fa-trash-o',
+    yesButtonClass: 'btn-danger',
+    noText: 'Cancel',
+    noIcon: 'fa fa-ban',
+    windowOptions: {
+      'label': 'Remove Column Association',
+      'icon': 'fa fa-trash-o',
+      'headerClass': 'bg-danger u-bg-danger-text',
+      'x': 'center',
+      'y': 400,
+      'width': 325,
+      'height': 'auto',
+      'modal': 'true',
+      'no-scroll': 'true'
+    }
+  }));
 };
 goog.exportProperty(os.ui.column.mapping.ColumnMappingNodeUICtrl.prototype, 'tryRemove',
     os.ui.column.mapping.ColumnMappingNodeUICtrl.prototype.tryRemove);

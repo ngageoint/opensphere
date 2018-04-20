@@ -44,3 +44,16 @@
 .u-cursor-grab.moving {
   @include grabbing-cursor();
 }
+
+
+// This extends bootstraps bg-<varents> to also have background colors
+@mixin bg-text-variant($background) {
+  color: color-yiq($background);
+}
+
+// For all the bootstrap themes, create our utility color
+@each $color, $value in $theme-colors {
+  .u-bg-#{$color}-text {
+    @include bg-text-variant($value);
+  }
+}

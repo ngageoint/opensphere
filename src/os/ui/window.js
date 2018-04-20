@@ -61,6 +61,7 @@ os.ui.windowDirective = function() {
       'x': '@',
       'y': '@',
       'width': '@',
+      'headerClass': '@',
       'height': '@',
       'label': '@',
       'icon': '@',
