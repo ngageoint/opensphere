@@ -1,0 +1,143 @@
+// Styles for our two different types of tristate checkboxes
+
+// Tristate toggle switch
+
+.toggle-switch {
+  background: $dark;
+  border-radius: 5px;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, .5), 0 1px 0 rgba(255, 255, 255, .2);
+  cursor: pointer;
+  display: inline-block;
+  height: 15px;
+  vertical-align: middle;
+  width: 30px;
+}
+
+.toggle-switch.disabled {
+  cursor: default;
+  opacity: .5;
+}
+
+.toggle-switch-off label::after {
+  color: $dark;
+  content: 'Off';
+}
+
+.toggle-switch-on label::after {
+  color: $light;
+  content: 'On';
+}
+
+.toggle-switch-both label::after {
+  content: '';
+}
+
+.toggle-switch label {
+  background: $light;
+  border-radius: 3px;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .3);
+  display: inline-block;
+  font-size: 10px;
+  height: 11px;
+  left: 2px;
+  line-height: 12px;
+  position: relative;
+  text-align: center;
+  top: 2px;
+  transition: left .4s ease;
+  vertical-align: top;
+  width: 20px;
+}
+
+.toggle-switch-on label {
+  background: $success;
+  left: 8px;
+}
+
+.toggle-switch-both label {
+  left: 5px;
+}
+
+.toggle-switch.disabled label {
+  cursor: default;
+}
+
+// Tristate checkbox
+
+.tristate {
+  // this is a tricky set of rules to style the tri-state checkbox
+  // if the @include are moved to the top, we lose the gradient, so the lint check is turned off
+  // see THIN-6979
+  // sass-lint:disable mixins-before-declarations
+
+  background: #fcfff4;
+  cursor: pointer;
+  display: inline-block;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fcfff4', endColorstr='#b3bead', GradientType=0);
+  height: 13px;
+  margin-left: 15px auto;
+  position: relative;
+  top: 0;
+  vertical-align: middle;
+  width: 13px;
+  @include border-radius(3px);
+  @include background(linear-gradient(#fcfff4 0%, #dfe5d7 40%, #b3bead 100%));
+
+  label {
+    background: transparent;
+    color: #fff;
+    content: '';
+    display: none;
+    font-size: 13px;
+    height: 13px;
+    left: 2px;
+    pointer-events: none;
+    position: absolute;
+    text-shadow: none;
+    top: 2px;
+    width: 13px;
+  }
+}
+
+.tristate.disabled {
+  opacity: .4;
+}
+
+.tristate-off label {
+  &::after {
+    @include filter(alpha(opacity = 0));
+    @include opacity(0);
+    @include rotate(-45deg);
+    border: 3px solid #555;
+    border-right: 0;
+    border-top: 0;
+    content: '';
+    height: 2.5px;
+    position: absolute;
+    width: 6px;
+  }
+
+  &:hover::after {
+    @include filter(alpha(opacity = 30));
+    @include opacity(.3);
+  }
+}
+
+.tristate-on label {
+  @include rotate(-45deg);
+  border: 3px solid #555;
+  border-right: 0;
+  border-top: 0;
+  display: unset;
+  height: 5.5px;
+  width: 9px;
+}
+
+.tristate-both label {
+  @include border-radius(2px);
+  background: #555;
+  height: 9px;
+  left: 2px;
+  top: 2px;
+  width: 9px;
+}

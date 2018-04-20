@@ -9,13 +9,13 @@ goog.require('os.ui.node.DefaultLayerNodeUICtrl');
 /**
  * @type {string}
  */
-plugin.places.ui.PlacesNodeUITemplate = '<span class="glyphs pull-right slick-node-ui" ng-if="nodeUi.show()">' +
-        '<span ng-if="nodeUi.canEdit()" ng-click="nodeUi.addFolder()">' +
-            '<i class="fa fa-folder fa-fw glyph" title="Create a new folder"></i></span>' +
-        '<span ng-if="nodeUi.canEdit()" ng-click="nodeUi.addPlace()">' +
-            '<i class="fa fa-map-marker fa-fw glyph" title="Create a new place"></i></span>' +
-        '<span ng-if="nodeUi.isRemovable()" ng-click="nodeUi.remove()">' +
-            '<i class="fa fa-times fa-fw glyph glyph-remove" title="Remove the layer"></i></span>' +
+plugin.places.ui.PlacesNodeUITemplate = '<span class="pull-right" ng-if="nodeUi.show()">' +
+      '<span ng-if="nodeUi.canEdit()" ng-click="nodeUi.addFolder()">' +
+        '<i class="fa fa-folder fa-fw u-cursor-pointer" title="Create a new folder"></i></span>' +
+      '<span ng-if="nodeUi.canEdit()" ng-click="nodeUi.addPlace()">' +
+        '<i class="fa fa-map-marker fa-fw u-cursor-pointer" title="Create a new place"></i></span>' +
+      '<span ng-if="nodeUi.isRemovable()" ng-click="nodeUi.remove()">' +
+        '<i class="fa fa-times fa-fw text-danger u-cursor-pointer" title="Remove the layer"></i></span>' +
     '</span>';
 
 
