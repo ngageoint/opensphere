@@ -11,8 +11,8 @@ goog.require('os.ui.help.misconfiguredDirective');
  */
 os.ui.help.misconfiguredUiDirective = function() {
   var template = [
-    '<div class="window-content-wrapper">',
-    '<div class="window-content">',
+    '<div class="js-window__wrapper">',
+    '<div class="js-window__content">',
     '<misconfigured reason="{{reason}}" name="{{name}}"></misconfigured>',
     '</div>',
     '</div>'].join('');
