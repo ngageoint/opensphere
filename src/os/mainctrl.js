@@ -987,38 +987,31 @@ goog.exportProperty(os.MainCtrl.prototype, 'redoCommand', os.MainCtrl.prototype.
  * @protected
  */
 os.MainCtrl.prototype.suggestOtherBrowser = function() {
-  var scopeOptions = {
-    'cancelCallback': os.MainCtrl.unsupportedBrowserCancelCallback,
-    'confirmCallback': this.confirm_.bind(this),
-    'hideCancel': true,
-    'noText': 'Redirect',
-    'yesText': 'Continue'
-  };
-
-  var windowOptions = {
-    'label': 'Browser Not Supported',
-    'icon': 'fa fa-frown-o yellow-icon',
-    'x': 'center',
-    'y': 'center',
-    'width': '400',
-    'height': '210',
-    'modal': 'true',
-    'no-scroll': 'true'
-  };
-
-  // version string removed from url
-  var url = 'old.html';
-
-  var text = os.MainCtrl.UNSUPPORTED_BROWSER_TEXT;
-  var ignore = '<div><label class="checkbox"><input type="checkbox" ng-model="mainCtrl.showRedirectChecked"> ' +
-      'Stop showing this message</label></div>';
-
-  var template = '<confirm>' + text + '<div style="margin-top:10px;">' +
-      'Detailed browser support can be found <a style="color:yellow;" href=' +
-      url + '>here</a>. ' + '</div>' + ignore + '</confirm>';
-
   if (/** @type {boolean} */(os.settings.get(['showRedirect'], true))) {
-    os.ui.window.create(windowOptions, template, undefined, this.scope, undefined, scopeOptions);
+    var link = '<div class="mt-2">Detailed browser support can be found <a href="old.html">here</a>.</div>';
+    var ignore = '<div><label class="checkbox"><input type="checkbox" ng-model="mainCtrl.showRedirectChecked"> ' +
+        'Stop showing this message</label></div>';
+    var text = os.MainCtrl.UNSUPPORTED_BROWSER_TEXT + link + ignore;
+
+    os.ui.window.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
+      confirm: this.confirm_.bind(this),
+      cancel: os.MainCtrl.unsupportedBrowserCancelCallback,
+      prompt: text,
+      yesText: 'Continue',
+      noText: '',
+      noIcon: '',
+      windowOptions: {
+        'label': 'Browser Not Supported',
+        'icon': 'fa fa-frown-o',
+        'x': 'center',
+        'y': 'center',
+        'width': '400',
+        'height': 'auto',
+        'modal': 'true',
+        'no-scroll': 'true',
+        'headerClass': 'bg-warning u-bg-warning-text'
+      }
+    }));
   }
 };
 

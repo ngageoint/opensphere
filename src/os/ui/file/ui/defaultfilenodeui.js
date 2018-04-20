@@ -54,19 +54,17 @@ goog.inherits(os.ui.file.ui.DefaultFileNodeUICtrl, os.ui.slick.AbstractNodeUICtr
  * Prompt the user to remove the file from the application
  */
 os.ui.file.ui.DefaultFileNodeUICtrl.prototype.tryRemove = function() {
-  var scopeOptions = {
-    'confirmCallback': this.remove.bind(this),
-    'cancelCallback': goog.nullFunction,
-    'yesText': 'Remove',
-    'yesIcon': 'fa fa-check lt-blue-icon',
-    'noText': 'Cancel',
-    'noIcon': 'fa fa-ban red-icon'
-  };
-
-  var windowOptions = this.getRemoveWindowOptions();
-  var text = this.getRemoveWindowText();
-  var template = '<confirm>' + text + '</confirm>';
-  os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+  os.ui.window.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
+    confirm: this.remove.bind(this),
+    cancel: goog.nullFunction,
+    prompt: this.getRemoveWindowText(),
+    yesText: 'Remove',
+    yesIcon: 'fa fa-trash-o',
+    yesButtonClass: 'btn-danger',
+    noText: 'Cancel',
+    noIcon: 'fa fa-ban',
+    windowOptions: this.getRemoveWindowOptions()
+  }));
 };
 goog.exportProperty(os.ui.file.ui.DefaultFileNodeUICtrl.prototype, 'tryRemove',
     os.ui.file.ui.DefaultFileNodeUICtrl.prototype.tryRemove);
@@ -79,11 +77,12 @@ goog.exportProperty(os.ui.file.ui.DefaultFileNodeUICtrl.prototype, 'tryRemove',
 os.ui.file.ui.DefaultFileNodeUICtrl.prototype.getRemoveWindowOptions = function() {
   return {
     'label': 'Remove File',
-    'icon': 'fa fa-trash-o red-icon',
+    'icon': 'fa fa-trash-o',
+    'headerClass': 'bg-danger u-bg-danger-text',
     'x': 'center',
     'y': 'center',
     'width': '325',
-    'height': '140',
+    'height': 'auto',
     'modal': 'true',
     'no-scroll': 'true'
   };
