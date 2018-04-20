@@ -20,6 +20,11 @@
 
 // Classes
 
+.d-flex {
+  // this piggybacks off of the BS4 .d-flex selector in order to fix Firefox's bad handling of column flex layouts
+  min-height: 0;
+}
+
 .pointer-events-none {
   pointer-events: none;
 }
@@ -43,4 +48,8 @@
 
 .u-cursor-grab.moving {
   @include grabbing-cursor();
+}
+
+.u-cursor-pointer {
+  cursor: pointer;
 }

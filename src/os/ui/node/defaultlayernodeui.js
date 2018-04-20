@@ -15,18 +15,18 @@ goog.require('os.ui.slick.AbstractNodeUICtrl');
 /**
  * @type {string}
  */
-os.ui.node.DefaultLayerNodeUITemplate = '<span class="glyphs pull-right slick-node-ui" ng-if="nodeUi.show()">' +
+os.ui.node.DefaultLayerNodeUITemplate = '<span class="pull-right" ng-if="nodeUi.show()">' +
 
     '<span ng-if="nodeUi.canFavorite()">' +
     '<favorite ng-show="nodeUi.show()" type="descriptor" key="{{nodeUi.descId}}" ' +
-      'value="{{nodeUi.layerLabel}}" icon-color="color-yellow"></favorite></span>' +
+      'value="{{nodeUi.layerLabel}}"></favorite></span>' +
 
     '<span ng-if="nodeUi.filtersEnabled" ng-click="nodeUi.filter()">' +
-    '<i class="fa fa-filter fa-fw glyph" title="Manage filters"' +
-    'ng-class="{\'green-icon\': nodeUi.filtered}"></i></span>' +
+    '<i class="fa fa-filter fa-fw u-cursor-pointer" title="Manage filters"' +
+    'ng-class="{\'text-success\': nodeUi.filtered}"></i></span>' +
 
-    '<span ng-if="nodeUi.isRemovable()" ng-click="nodeUi.remove()"><i class="fa fa-times fa-fw glyph glyph-remove"' +
-    'title="Remove the layer"></i></span></span>';
+    '<span ng-if="nodeUi.isRemovable()" ng-click="nodeUi.remove()">' +
+    '<i class="fa fa-times fa-fw text-danger u-cursor-pointer" title="Remove the layer"></i></span></span>';
 
 
 /**

@@ -1,37 +1,35 @@
-<div class="c-places">
-  <div class="c-places__header">
-    <div class="c-places__buttons">
-      <button class="btn btn-default c-countbycontainer__buttons--addfolder"
-          ng-click="places.addFolder()" ng-disabled="!places.hasRoot()"
-          title="Add a new folder under the current selection, or at the top level of the tree">
-        <i class="fa fa-folder lt-blue-icon" />
-        Add Folder
-      </button>
-      <button class="btn btn-default c-countbycontainer__buttons--addplace"
-          ng-click="places.addPlace()" ng-disabled="!places.hasRoot()"
-          title="Add a new place under the current selection, or at the top level of the tree">
-        <i class="fa fa-map-marker lt-blue-icon" />
-        Add Place
-      </button>
-      <button class="btn btn-default c-countbycontainer__buttons--export" ng-click="places.export()"
-          ng-disabled="!places.hasRoot()" title="Export places to KML">
-        <i class="fa fa-download yellow-icon" />
-        Export
-      </button>
-      <button class="btn btn-default c-countbycontainer__buttons--expandall" ng-click="places.expandAll()"
-          ng-disabled="!places.hasRoot()"
-          title="Fully expand the tree from the selected item, or the root if nothing is selected">
-        <i class="fa fa-plus-square-o" />
-      </button>
-      <button class="btn btn-default c-countbycontainer__buttons--collapseall" ng-click="places.collapseAll()"
-          ng-disabled="!places.hasRoot()"
-          title="Fully collapse the tree from the selected item, or the root if nothing is selected">
-        <i class="fa fa-minus-square-o" />
-      </button>
-    </div>
+<div class="d-flex flex-column flex-grow">
+  <div class="u-flex-shrink mt-1">
+    <button class="btn btn-secondary"
+        ng-click="places.addFolder()" ng-disabled="!places.hasRoot()"
+        title="Add a new folder under the current selection, or at the top level of the tree">
+      <i class="fa fa-folder" /> Add Folder
+    </button>
+    <button class="btn btn-secondary"
+        ng-click="places.addPlace()" ng-disabled="!places.hasRoot()"
+        title="Add a new place under the current selection, or at the top level of the tree">
+      <i class="fa fa-map-marker" /> Add Place
+    </button>
+
+    <button class="btn btn-secondary btn-sm" ng-click="places.expandAll()"
+        ng-disabled="!places.hasRoot()"
+        title="Fully expand the tree from the selected item, or the root if nothing is selected">
+      <i class="fa fa-plus-square-o" />
+    </button>
+    <button class="btn btn-secondary btn-sm" ng-click="places.collapseAll()"
+        ng-disabled="!places.hasRoot()"
+        title="Fully collapse the tree from the selected item, or the root if nothing is selected">
+      <i class="fa fa-minus-square-o" />
+    </button>
   </div>
-  <div class="c-places__tree" autoheight siblings=".c-places__header">
-    <layertree x-data="places.treeData" selected="places.selected" multi-select="true" show-root="true"
-        context-menu="places.contextMenu"></layertree>
+
+  <div class="d-flex flex-row flex-grow mh-0 mt-1">
+    <layertree class="border" x-data="places.treeData" selected="places.selected" multi-select="true" show-root="true" context-menu="places.contextMenu"></layertree>
+  </div>
+
+  <div class="mt-1">
+    <button class="btn btn-secondary" ng-click="places.export()" ng-disabled="!places.hasRoot()" title="Export places to KML">
+      <i class="fa fa-download"/> Export
+    </button>
   </div>
 </div>
