@@ -25,7 +25,7 @@ Modernizr.canvas;
 /**
  * @type {boolean}
  */
-Modernizr.csspositionsticky
+Modernizr.csspositionsticky;
 
 
 /**
