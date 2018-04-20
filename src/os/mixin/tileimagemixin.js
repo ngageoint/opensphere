@@ -117,7 +117,7 @@ ol.source.TileImage.prototype.setTileClass = function(clazz) {
    * @suppress {duplicate}
    */
   ol.source.TileImage.prototype.createTile_ = function(z, x, y, pixelRatio, projection, key) {
-    var tile = origCreateTile.bind(this)(z, x, y, pixelRatio, projection, key);
+    var tile = origCreateTile.call(this, z, x, y, pixelRatio, projection, key);
 
     if (tile instanceof os.tile.ColorableTile) {
       tile.setOLSource(this);
