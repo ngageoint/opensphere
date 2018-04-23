@@ -2987,22 +2987,13 @@ Cesium.ImageryProvider.prototype.requestImage = function(x, y, level) {};
  */
 Cesium.ImageryProvider.loadImage = function(imageryProvider, url) {};
 
-
-Cesium.loadImage = {};
-
-
-/**
- * @param {string} url
- * @param {boolean} crossOrigin
- * @param {Cesium.Promise} deferred
- */
-Cesium.loadImage.createImage = function(url, crossOrigin, deferred) {};
-
+Cesium.Resource = {};
+Cesium.Resource._Implementations = {};
 
 /**
  * @type {function(string, boolean, Cesium.Promise)}
  */
-Cesium.loadImage.defaultCreateImage;
+Cesium.Resource._Implementations.createImage;
 
 
 
