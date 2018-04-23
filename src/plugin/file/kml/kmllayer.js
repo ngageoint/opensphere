@@ -71,10 +71,14 @@ plugin.file.kml.KMLLayer.prototype.getTreeNode = function() {
  * @inheritDoc
  */
 plugin.file.kml.KMLLayer.prototype.setLayerVisible = function(value) {
-  // You don't want to do this. For seriously. Horrible, obscenity-inducing race conditions will ensue.
-  //
-  // What this means in practice is that KML layers are always visible. This is fine since the tree can
-  // control the visibility of all the features from the layer node.
+  // control the visibility of the KML layers via the node
+  // because setting it at the layer level causes race conditions
+  var source = /** @type {plugin.file.kml.KMLSource} */ (this.getSource());
+  var root = source.getRootNode();
+
+  if (root) {
+    root.setState(value ? os.structs.TriState.ON : os.structs.TriState.OFF);
+  }
 };
 
 
