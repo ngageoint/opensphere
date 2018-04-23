@@ -3,27 +3,23 @@
 
 .slick-grid {
   @include box-sizing(border-box);
-  border: 1px solid #000;
+  border: 1px solid $body-color;
   height: 100%;
   width: 100%;
 
   .even {
-    background: #333;
+    background: $table-accent-bg;
   }
 
   .odd {
-    background: #666;
-  }
-
-  .slick-cell {
-    border-bottom: 0;
-    border-left: 0;
-    border-right: 0;
+    background: $body-bg;
   }
 
   .slick-header-column {
-    border-bottom: 1px solid #444;
-    border-right: 1px solid #444;
+    background-color: $table-dark-bg;
+    border-color: $table-dark-border-color;
+    color: $table-dark-color;
+    height: auto;
   }
 
   &.no-header {
@@ -52,12 +48,12 @@
 }
 
 .slick-row {
+  background: $body-bg;
+  color: $body-color;
+
   @include hover {
     background-color: $table-hover-bg;
   }
-
-  background: $body-bg;
-  color: $body-color;
 
   &.selected:not(:hover) {
     background: $component-active-bg;
@@ -106,7 +102,7 @@
 }
 
 .slick-dragging {
-  background: #98ff98;
+  background: $table-accent-bg;
 }
 
 // * Editable grid styles
