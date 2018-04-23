@@ -178,7 +178,8 @@ os.ui.AbstractMainCtrl.prototype.initInstances = function() {
   // Instantiate Singletons
   os.metrics.Metrics.getInstance();
 
-  // set up managers
+  os.peer = os.xt.Peer.getInstance();
+
   os.ui.metricsManager = os.ui.metrics.MetricsManager.getInstance();
 
   os.ui.notificationManager = os.ui.notification.NotificationManager.getInstance();
