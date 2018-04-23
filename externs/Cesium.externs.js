@@ -75,6 +75,12 @@ Cesium.Deferred = function() {};
  */
 Cesium.Deferred.prototype.resolve = function(value) {};
 
+/**
+ * Resolver for a deferred.
+ * @param {*=} opt_reason
+ */
+Cesium.Deferred.prototype.reject = function(opt_reason) {};
+
 
 /**
  * @type {Cesium.Promise}
@@ -92,6 +98,15 @@ Cesium.Deferred.prototype.promise;
  */
 Cesium.RequestOptions;
 
+/**
+ * @typedef {{
+ *  url: (string|undefined),
+ *  queryParameters: (Object<string, string>|undefined),
+ *  templateValues: (Object<string, *>|undefined),
+ *  headers: (Object<string, string>|undefined),
+ * }}
+ */
+Cesium.ResourceFetchOptions;
 
 /**
  * @param {Cesium.RequestOptions=} opt_options
