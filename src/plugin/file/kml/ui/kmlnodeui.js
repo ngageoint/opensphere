@@ -23,7 +23,7 @@ plugin.file.kml.ui.kmlNodeUIDirective = function() {
           '<i class="fa fa-pencil fa-fw" ' +
           'title="Edit the {{nodeUi.isFolder() ? \'folder\' : \'place\'}}"></i></span>' +
         '<span ng-if="nodeUi.canRemove()" ng-click="nodeUi.tryRemove()">' +
-          '<i class="fa fa-times fa-fw text-danger u-cursor-pointer" ' +
+          '<i class="fa fa-times fa-fw text-danger c-glyph" ' +
           'title="Remove the {{nodeUi.isFolder() ? \'folder\' : \'place\'}}"></i></span>' +
         '</span>',
     controller: plugin.file.kml.ui.KMLNodeUICtrl,

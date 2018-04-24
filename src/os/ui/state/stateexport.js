@@ -15,6 +15,7 @@ goog.require('os.ui.state.AbstractStateFormCtrl');
 os.ui.state.stateExportDirective = function() {
   return {
     restrict: 'E',
+    replace: true,
     scope: true,
     templateUrl: os.ROOT + 'views/window/stateimportexport.html',
     controller: os.ui.state.StateExportCtrl,

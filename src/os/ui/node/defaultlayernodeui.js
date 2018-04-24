@@ -22,11 +22,11 @@ os.ui.node.DefaultLayerNodeUITemplate = '<span class="pull-right" ng-if="nodeUi.
       'value="{{nodeUi.layerLabel}}"></favorite></span>' +
 
     '<span ng-if="nodeUi.filtersEnabled" ng-click="nodeUi.filter()">' +
-    '<i class="fa fa-filter fa-fw u-cursor-pointer" title="Manage filters"' +
+    '<i class="fa fa-filter fa-fw c-glyph" title="Manage filters"' +
     'ng-class="{\'text-success\': nodeUi.filtered}"></i></span>' +
 
     '<span ng-if="nodeUi.isRemovable()" ng-click="nodeUi.remove()">' +
-    '<i class="fa fa-times fa-fw text-danger u-cursor-pointer" title="Remove the layer"></i></span></span>';
+    '<i class="fa fa-times fa-fw text-danger c-glyph" title="Remove the layer"></i></span></span>';
 
 
 /**
