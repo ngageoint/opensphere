@@ -48,12 +48,12 @@
 }
 
 .slick-row {
-  background: $body-bg;
-  color: $body-color;
-
   @include hover {
     background-color: $table-hover-bg;
   }
+
+  background: $body-bg;
+  color: $body-color;
 
   &.selected:not(:hover) {
     background: $component-active-bg;
