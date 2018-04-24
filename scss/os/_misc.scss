@@ -29,8 +29,12 @@
   min-height: 0;
 }
 
-.pointer-events-none {
+.u-pointer-events-none {
   pointer-events: none;
+}
+
+.u-pointer-events-all {
+  pointer-events: all;
 }
 
 .flex-grow {

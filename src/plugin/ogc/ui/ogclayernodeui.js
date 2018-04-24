@@ -12,7 +12,7 @@ goog.require('plugin.ogc.ui.chooseTimeColumnDirective');
  * @type {string}
  */
 plugin.ogc.ui.OGCLayerNodeUITemplate = '<span ng-if="chooseTime" ng-click="nodeUi.chooseTime()">' +
-    '<i class="fa fa-clock-o fa-fw u-cursor-pointer" title="Choose Time Columns"></i></span>';
+    '<i class="fa fa-clock-o fa-fw c-glyph" title="Choose Time Columns"></i></span>';
 
 
 /**

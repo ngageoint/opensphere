@@ -11,11 +11,11 @@ goog.require('os.ui.node.DefaultLayerNodeUICtrl');
  */
 plugin.places.ui.PlacesNodeUITemplate = '<span class="pull-right" ng-if="nodeUi.show()">' +
       '<span ng-if="nodeUi.canEdit()" ng-click="nodeUi.addFolder()">' +
-        '<i class="fa fa-folder fa-fw u-cursor-pointer" title="Create a new folder"></i></span>' +
+        '<i class="fa fa-folder fa-fw c-glyph" title="Create a new folder"></i></span>' +
       '<span ng-if="nodeUi.canEdit()" ng-click="nodeUi.addPlace()">' +
-        '<i class="fa fa-map-marker fa-fw u-cursor-pointer" title="Create a new place"></i></span>' +
+        '<i class="fa fa-map-marker fa-fw c-glyph" title="Create a new place"></i></span>' +
       '<span ng-if="nodeUi.isRemovable()" ng-click="nodeUi.remove()">' +
-        '<i class="fa fa-times fa-fw text-danger u-cursor-pointer" title="Remove the layer"></i></span>' +
+        '<i class="fa fa-times fa-fw text-danger c-glyph" title="Remove the layer"></i></span>' +
     '</span>';
 
 
