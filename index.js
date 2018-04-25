@@ -113,7 +113,7 @@ const sharedResources = [
   {
     source: resolver.resolveModulePath('opensphere/vendor/bootstrap2', __dirname),
     target: 'vendor/bootstrap2',
-    scripts: ['typeahead.js'],
+    scripts: ['typeahead.js']
   },
   {
     source: resolver.resolveModulePath('select2', __dirname),
@@ -376,8 +376,8 @@ module.exports = {
       resources: addLayerResources
     }
   ],
-  debugCss: path.join(buildDir, 'combined.css'),
-  compiledCss: path.join(version, 'styles', 'opensphere.min.css'),
+  debugCss: path.join(buildDir, 'themes/default.combined.css'),
+  compiledCss: path.join(version, 'styles', 'themes/default.min.css'),
   compiledJs: path.join(version, 'opensphere.min.js'),
   sharedResources: sharedResources
 };
