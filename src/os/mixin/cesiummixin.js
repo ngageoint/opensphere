@@ -4,8 +4,10 @@
  */
 goog.provide('os.mixin.cesium');
 
+goog.require('goog.Uri');
 goog.require('olcs.OLCesium');
 goog.require('os.I3DSupport');
+goog.require('os.net.Request');
 
 
 /**
@@ -176,6 +178,36 @@ os.mixin.cesium.loadCesiumMixins = function() {
    * @suppress {accessControls|duplicate}
    */
   Cesium.Resource._Implementations.createImage = os.mixin.cesium.createImage;
+
+
+  /**
+   * Hook Cesium into our request stack
+   * @param {Cesium.ResourceFetchOptions} options
+   * @return {Cesium.Promise<*>}
+   */
+  Cesium.Resource.prototype.fetch = function(options) {
+    var req = new os.net.Request(options.url || this.url);
+    var headers = options.headers || this.headers;
+
+    if (headers) {
+      req.setHeaders(headers);
+    }
+
+    if (options.responseType) {
+      req.setResponseType(options.responseType);
+    }
+
+    var deferred = Cesium.when.defer();
+
+    req.getPromise().then(function(response) {
+      deferred.resolve(response);
+    }).thenCatch(function(reason) {
+      deferred.reject(reason);
+    });
+
+    return deferred.promise;
+  };
+
 
   /**
    * @param {Cesium.Context} context
