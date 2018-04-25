@@ -26,6 +26,7 @@ goog.require('os.config.InterpolationSettings');
 goog.require('os.config.LegendSettings');
 goog.require('os.config.ProjectionSettings');
 goog.require('os.config.ServerSettings');
+goog.require('os.config.ThemeSettings');
 goog.require('os.config.UnitSettings');
 goog.require('os.control');
 goog.require('os.data.OSDataManager');
@@ -636,6 +637,7 @@ os.MainCtrl.prototype.initializeSettings_ = function() {
   sm.addSettingPlugin(new os.config.UnitSettings());
   sm.addSettingPlugin(new os.ui.user.settings.LocationSettings());
   sm.addSettingPlugin(new os.ui.column.mapping.ColumnMappingSettings());
+  sm.addSettingPlugin(new os.config.ThemeSettings());
 };
 
 

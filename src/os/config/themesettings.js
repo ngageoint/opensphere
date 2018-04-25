@@ -146,19 +146,21 @@ os.config.ThemeSettings.setTheme = function() {
     // loading a non-default stylesheet
     if (themeStylesheet.href != newStylesheet) {
       // Awesome! lets load it!
-      goog.dom.safe.setAnchorHref(themeStylesheet, newStylesheet);
+      goog.dom.safe.setLinkHrefAndRel(themeStylesheet,
+          goog.html.TrustedResourceUrl.fromConstant(os.string.createConstant(newStylesheet)), themeStylesheet.rel);
     }
 
     // Verify that it was good...
     var request = new os.net.Request();
     request.setUri(newStylesheet);
-    request.listenOnce(goog.net.EventType.SUCCESS, os.config.ThemeSettings.cleanupRequest, false, this);
+    request.listenOnce(goog.net.EventType.SUCCESS, os.config.ThemeSettings.cleanupRequest, false);
     request.listenOnce(goog.net.EventType.ERROR, function(event) {
       os.config.ThemeSettings.cleanupRequest(event);
 
       // Revert!
-      goog.dom.safe.setAnchorHref(themeStylesheet, lastStylesheet);
-    }, false, this);
+      goog.dom.safe.setLinkHrefAndRel(themeStylesheet,
+          goog.html.TrustedResourceUrl.fromConstant(os.string.createConstant(lastStylesheet)), themeStylesheet.rel);
+    }, false);
     request.load();
   }
 };
