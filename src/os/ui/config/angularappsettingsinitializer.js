@@ -1,5 +1,6 @@
 goog.provide('os.ui.config.AngularAppSettingsInitializer');
 goog.require('os.config.AbstractSettingsInitializer');
+goog.require('os.config.ThemeSettings');
 
 
 
@@ -46,6 +47,12 @@ os.ui.config.AngularAppSettingsInitializer.prototype.onSettingsLoaded = function
     var bootstrapEl = document.querySelector(this.ngAppSelector);
     angular.element(bootstrapEl).ready(goog.bind(function() {
       angular.bootstrap(bootstrapEl, [this.ngAppModule]);
+
+      // Set the theme based on settings
+      os.config.ThemeSettings.setTheme();
+
+      // On settings change, update the theme
+      os.settings.listen(os.config.ThemeSettings.keys.THEME, os.config.ThemeSettings.setTheme, false, this);
     }, this));
   }
 };
