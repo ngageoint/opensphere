@@ -1,5 +1,6 @@
 goog.provide('plugin.file.kml.KMLLayer');
 goog.require('os.events.PropertyChangeEvent');
+goog.require('os.layer.ICustomLayerVisible');
 goog.require('os.layer.Vector');
 goog.require('os.structs.ITreeNodeSupplier');
 goog.require('plugin.file.kml.ui.KMLLayerNode');
@@ -10,6 +11,7 @@ goog.require('plugin.file.kml.ui.KMLLayerNode');
  * @param {olx.layer.VectorOptions} options Vector layer options
  * @extends {os.layer.Vector}
  * @implements {os.structs.ITreeNodeSupplier}
+ * @implements {os.layer.ICustomLayerVisible}
  * @constructor
  */
 plugin.file.kml.KMLLayer = function(options) {
@@ -34,6 +36,7 @@ plugin.file.kml.KMLLayer = function(options) {
   this.showRoot = true;
 };
 goog.inherits(plugin.file.kml.KMLLayer, os.layer.Vector);
+os.implements(plugin.file.kml.KMLLayer, os.layer.ICustomLayerVisible.ID);
 
 
 /**
@@ -71,14 +74,12 @@ plugin.file.kml.KMLLayer.prototype.getTreeNode = function() {
  * @inheritDoc
  */
 plugin.file.kml.KMLLayer.prototype.setLayerVisible = function(value) {
-  // control the visibility of the KML layers via the node
-  // because setting it at the layer level causes race conditions
-  var source = /** @type {plugin.file.kml.KMLSource} */ (this.getSource());
-  var root = source.getRootNode();
-
-  if (root) {
-    root.setState(value ? os.structs.TriState.ON : os.structs.TriState.OFF);
-  }
+  // You don't want to do this. For seriously. Horrible, obscenity-inducing race conditions will ensue.
+  //
+  // What this means in practice is that KML layers are always visible. This is fine since the tree can
+  // control the visibility of all the features from the layer node.
+  //
+  // Use plugin.file.kml.KMLLayer.prototype.setCustomLayerVisible instead.
 };
 
 
@@ -94,6 +95,30 @@ plugin.file.kml.KMLLayer.prototype.getLayerVisible = function() {
   }
 
   return plugin.file.kml.KMLLayer.base(this, 'getLayerVisible');
+};
+
+
+/**
+ * A custom method to control the visibility of the KML layers via
+ * the node because using plugin.file.kml.KMLLayer.prototype.setLayerVisible
+ * causes race conditions
+ * @inheritDoc
+ */
+plugin.file.kml.KMLLayer.prototype.setCustomLayerVisible = function(value) {
+  var source = /** @type {plugin.file.kml.KMLSource} */ (this.getSource());
+  var root = source.getRootNode();
+
+  if (root) {
+    root.setState(value ? os.structs.TriState.ON : os.structs.TriState.OFF);
+  }
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.file.kml.KMLLayer.prototype.getCustomLayerVisible = function() {
+  return plugin.file.kml.KMLLayer.prototype.getLayerVisible();
 };
 
 
