@@ -75,6 +75,12 @@ Cesium.Deferred = function() {};
  */
 Cesium.Deferred.prototype.resolve = function(value) {};
 
+/**
+ * Resolver for a deferred.
+ * @param {*=} opt_reason
+ */
+Cesium.Deferred.prototype.reject = function(opt_reason) {};
+
 
 /**
  * @type {Cesium.Promise}
@@ -92,6 +98,15 @@ Cesium.Deferred.prototype.promise;
  */
 Cesium.RequestOptions;
 
+/**
+ * @typedef {{
+ *  url: (string|undefined),
+ *  queryParameters: (Object<string, string>|undefined),
+ *  templateValues: (Object<string, *>|undefined),
+ *  headers: (Object<string, string>|undefined),
+ * }}
+ */
+Cesium.ResourceFetchOptions;
 
 /**
  * @param {Cesium.RequestOptions=} opt_options
@@ -2987,22 +3002,13 @@ Cesium.ImageryProvider.prototype.requestImage = function(x, y, level) {};
  */
 Cesium.ImageryProvider.loadImage = function(imageryProvider, url) {};
 
-
-Cesium.loadImage = {};
-
-
-/**
- * @param {string} url
- * @param {boolean} crossOrigin
- * @param {Cesium.Promise} deferred
- */
-Cesium.loadImage.createImage = function(url, crossOrigin, deferred) {};
-
+Cesium.Resource = {};
+Cesium.Resource._Implementations = {};
 
 /**
  * @type {function(string, boolean, Cesium.Promise)}
  */
-Cesium.loadImage.defaultCreateImage;
+Cesium.Resource._Implementations.createImage;
 
 
 
