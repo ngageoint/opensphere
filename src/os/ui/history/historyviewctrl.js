@@ -103,18 +103,16 @@ os.ui.history.HistoryViewCtrl.prototype.clearHistory = function() {
     yesText: 'Clear',
     yesIcon: 'fa fa-trash-o',
     yesButtonClass: 'btn-danger',
-    noText: 'Cancel',
-    noIcon: 'fa fa-ban',
     windowOptions: {
       'label': 'Clear History',
       'icon': 'fa fa-trash-o',
-      'headerClass': 'bg-danger u-bg-danger-text',
       'x': 'center',
       'y': 'center',
       'width': '325',
       'height': 'auto',
       'modal': 'true',
-      'noScroll': 'true'
+      'noScroll': 'true',
+      'headerClass': 'bg-danger u-bg-danger-text'
     }
   }));
 };

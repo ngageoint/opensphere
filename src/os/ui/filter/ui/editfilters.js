@@ -220,24 +220,24 @@ os.ui.filter.ui.EditFiltersCtrl.prototype.onRemove_ = function(event, node) {
 
     os.ui.window.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
       confirm: this.doRemove_.bind(this, node),
-      cancel: goog.nullFunction,
       prompt: 'Are you sure you want to remove multiple items from the filter?',
       yesText: 'Yes',
       yesButtonIcon: 'fa-trash',
       yesButtonClass: 'btn-danger',
       noText: 'No',
+      noIcon: 'fa fa-remove',
       windowOptions: {
         'id': 'removeMultiple',
         'x': 'center',
         'y': 'center',
         'label': 'Remove Items',
-        'headerClass': 'bg-danger u-bg-danger-text',
         'show-close': false,
         'no-scroll': true,
         'width': 300,
         'height': 'auto',
         'icon': 'fa fa-warning',
-        'modal': 'true'
+        'modal': 'true',
+        'headerClass': 'bg-danger u-bg-danger-text'
       }
     }));
   }

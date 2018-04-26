@@ -61,8 +61,6 @@ os.ui.file.ui.DefaultFileNodeUICtrl.prototype.tryRemove = function() {
     yesText: 'Remove',
     yesIcon: 'fa fa-trash-o',
     yesButtonClass: 'btn-danger',
-    noText: 'Cancel',
-    noIcon: 'fa fa-ban',
     windowOptions: this.getRemoveWindowOptions()
   }));
 };

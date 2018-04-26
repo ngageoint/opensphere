@@ -17,13 +17,13 @@
           <i class="fa window-close" ng-class="{'fa-compress': !collapsed, 'fa-expand': collapsed}"></i>
         </div>
 
-        <div ng-if="showClose" ng-click="windowCtrl.close(true)" title="Close" class="d-inline-block">
-          <i class="fa fa-times window-close"></i>
-        </div>
+        <button ng-if="showClose" type="button" class="close" ng-click="windowCtrl.close(true)" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
 
-        <div ng-if="showHide" ng-click="windowCtrl.hide()" title="Hide" class="d-inline-block">
-          <i class="fa fa-times window-close"></i>
-        </div>
+        <button ng-if="showHide" type="button" class="close" ng-click="windowCtrl.hide()"  aria-label="Hide">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
       <div class="js-window__header-text text-nowrap" title="{{label}}">
         <i ng-if="icon" ng-class="icon"></i>
