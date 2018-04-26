@@ -61,18 +61,16 @@ os.ui.column.mapping.ColumnMappingNodeUICtrl.prototype.tryRemove = function() {
     yesText: 'Remove',
     yesIcon: 'fa fa-trash-o',
     yesButtonClass: 'btn-danger',
-    noText: 'Cancel',
-    noIcon: 'fa fa-ban',
     windowOptions: {
       'label': 'Remove Column Association',
       'icon': 'fa fa-trash-o',
-      'headerClass': 'bg-danger u-bg-danger-text',
       'x': 'center',
       'y': 400,
       'width': 325,
       'height': 'auto',
       'modal': 'true',
-      'no-scroll': 'true'
+      'no-scroll': 'true',
+      'headerClass': 'bg-danger u-bg-danger-text'
     }
   }));
 };

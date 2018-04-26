@@ -49,8 +49,6 @@ os.ui.column.mapping.ColumnMappingImportUI.prototype.launchUI = function(file, o
       confirm: this.confirm_.bind(this, file),
       prompt: text,
       yesText: 'Clear and Import',
-      noText: 'Cancel',
-      noIcon: 'fa fa-ban',
       windowOptions: {
         'x': 'center',
         'y': 'center',
