@@ -56,7 +56,6 @@ os.ui.column.mapping.ColumnMappingNodeUICtrl.prototype.tryRemove = function() {
 
   os.ui.window.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
     confirm: this.remove_.bind(this),
-    cancel: goog.nullFunction,
     prompt: text,
     yesText: 'Remove',
     yesIcon: 'fa fa-trash-o',
