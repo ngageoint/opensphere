@@ -1,0 +1,11 @@
+// Inline (Glyph) button styles
+
+.c-glyph {
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+
+  &:hover {
+    text-shadow: 0 0 .8rem;
+  }
+}

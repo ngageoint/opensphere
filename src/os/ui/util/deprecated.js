@@ -43,24 +43,6 @@ os.ui.util.deprecated.showDeprecatedWarning = function(name) {
 os.ui.util.deprecated.launchDeprecatedLayersWindow_ = function() {
   var layers = os.ui.util.deprecated.deprecatedLayers_;
   if (layers && layers.length > 0) {
-    var scopeOptions = {
-      'yesText': 'Got It',
-      'yesIcon': 'fa fa-check lt-blue-icon',
-      'hideCancel': true
-    };
-
-    var height = 250 + 21 * layers.length;
-    var windowOptions = {
-      'label': 'Legacy Layers',
-      'icon': 'fa fa-exclamation-circle red-icon',
-      'x': 'center',
-      'y': 'center',
-      'width': 500,
-      'height': height,
-      'modal': 'true',
-      'no-scroll': 'true'
-    };
-
     var layersMarkup = '<ul>';
     for (var i = 0, n = layers.length; i < n; i++) {
       layersMarkup += '<li>' + layers[i] + '</li>';
@@ -70,8 +52,24 @@ os.ui.util.deprecated.launchDeprecatedLayersWindow_ = function() {
     var configMsg = os.settings.get(['deprecatedLayerMessage']);
     var text = '<b>Heads up!</b><p>The following legacy layers were just loaded into the application: </p>' +
         layersMarkup + '<p>' + configMsg + '</p>';
-    var template = '<confirm>' + text + '</confirm>';
-    os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+
+    os.ui.window.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
+      prompt: text,
+      yesText: 'Got It',
+      noIcon: '',
+      noText: '',
+      windowOptions: {
+        'label': 'Legacy Layers',
+        'headerClass': 'bg-warning u-bg-warning-text',
+        'icon': 'fa fa-exclamation-circle',
+        'x': 'center',
+        'y': 'center',
+        'width': '500',
+        'height': 'auto',
+        'modal': 'true',
+        'no-scroll': 'true'
+      }
+    }));
 
     os.ui.util.deprecated.deprecatedLayers_ = null;
   }

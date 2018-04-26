@@ -23,7 +23,7 @@ os.ui.windowSelector = {
   CONTAINER: '#js-window__container',
   CONTENT: '.js-window__content',
   HEADER: '.js-window__header',
-  HEADER_TEXT: '.js_window__header-text',
+  HEADER_TEXT: '.js-window__header-text',
   MODAL_BG: '.modal-backdrop',
   WINDOW: '.js-window',
   WRAPPER: '.js-window__wrapper'
@@ -61,6 +61,7 @@ os.ui.windowDirective = function() {
       'x': '@',
       'y': '@',
       'width': '@',
+      'headerClass': '@',
       'height': '@',
       'label': '@',
       'icon': '@',

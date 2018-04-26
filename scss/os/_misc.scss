@@ -18,10 +18,23 @@
   cursor: -ms-grabbing;
 }
 
-// Classes
+// This extends bootstraps bg-<varents> to also have background colors
+@mixin bg-text-variant($background) {
+  color: color-yiq($background);
+}
 
-.pointer-events-none {
+// Classes
+.d-flex {
+  // this piggybacks off of the BS4 .d-flex selector in order to fix Firefox's bad handling of column flex layouts
+  min-height: 0;
+}
+
+.u-pointer-events-none {
   pointer-events: none;
+}
+
+.u-pointer-events-all {
+  pointer-events: all;
 }
 
 .flex-grow {
@@ -43,4 +56,11 @@
 
 .u-cursor-grab.moving {
   @include grabbing-cursor();
+}
+
+// For all the bootstrap themes, create our utility color
+@each $color, $value in $theme-colors {
+  .u-bg-#{$color}-text {
+    @include bg-text-variant($value);
+  }
 }
