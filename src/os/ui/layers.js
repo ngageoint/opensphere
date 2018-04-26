@@ -15,6 +15,7 @@ goog.require('os.data.groupby.LayerZOrderGroupBy');
 goog.require('os.data.groupby.TagListGroupBy');
 goog.require('os.defines');
 goog.require('os.events.LayerEventType');
+goog.require('os.layer.ICustomLayerVisible');
 goog.require('os.metrics.Metrics');
 goog.require('os.metrics.keys');
 goog.require('os.object');
@@ -305,8 +306,13 @@ os.ui.LayersCtrl.prototype.toggleFeatureLayers = function() {
     if (type && type == ol.LayerType.VECTOR) {
       // do not toggle the Drawing Layer
       if (!(layers[i] instanceof os.layer.Drawing)) {
-        // toggle other features
-        layers[i].setLayerVisible(this.showFeatures());
+        // check if the layer has a special implementation for setting visibility
+        if (os.implements(layers[i], os.layer.ICustomLayerVisible.ID)) {
+          layers[i].setCustomLayerVisible(this.showFeatures());
+        } else {
+          // toggle other features the default way
+          layers[i].setLayerVisible(this.showFeatures());
+        }
       }
     }
   }
