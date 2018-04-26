@@ -32,20 +32,24 @@ os.ui.Module.directive('confirm', [os.ui.window.confirmDirective]);
 /**
  * Launch a dialog prompting the user to enter some text.
  * @param {osx.window.ConfirmOptions=} opt_options The window options
+ * @param {Object=} opt_scopeOptions
  */
-os.ui.window.launchConfirm = function(opt_options) {
+os.ui.window.launchConfirm = function(opt_options, opt_scopeOptions) {
   var options = /** @type {!osx.window.ConfirmOptions} */ (opt_options || {});
-  var scopeOptions = {
-    'confirmCallback': options.confirm || goog.nullFunction,
-    'cancelCallback': options.cancel || goog.nullFunction,
-    'yesText': options.yesText || 'OK',
-    'yesIcon': options.yesIcon || 'text-primary fa fa-check',
-    'yesButtonTitle': options.yesButtonTitle || '',
-    'noText': options.noText || 'Cancel',
-    'noIcon': options.noIcon || 'text-danger fa fa-ban',
-    'noButtonTitle': options.noButtonTitle || '',
-    'formClass': options.formClass || 'form-horizontal'
-  };
+  var scopeOptions = (opt_scopeOptions || {});
+
+  scopeOptions['confirmCallback'] = options.confirm || goog.nullFunction;
+  scopeOptions['confirmValue'] = options.confirmValue || undefined;
+  scopeOptions['cancelCallback'] = options.cancel || goog.nullFunction;
+  scopeOptions['yesText'] = options.yesText || 'OK';
+  scopeOptions['yesIcon'] = options.yesIcon || 'fa fa-check';
+  scopeOptions['yesButtonClass'] = options.yesButtonClass || 'btn-primary';
+  scopeOptions['yesButtonTitle'] = options.yesButtonTitle || '';
+  scopeOptions['noText'] = goog.isDef(options.noText) ? options.noText : 'Cancel';
+  scopeOptions['noIcon'] = goog.isDef(options.noIcon) ? options.noIcon : 'fa fa-ban';
+  scopeOptions['noButtonTitle'] = options.noButtonTitle || '';
+  scopeOptions['noButtonClass'] = options.noButtonClass || 'btn-secondary';
+  scopeOptions['formClass'] = options.formClass || 'form-horizontal';
 
   var windowOverrides = /** @type {!osx.window.WindowOptions} */ (options.windowOptions || {});
 
@@ -58,6 +62,7 @@ os.ui.window.launchConfirm = function(opt_options) {
   var maxWidth = windowOverrides.maxWidth || width;
 
   var windowOptions = {
+    'header-class': windowOverrides.headerClass || '',
     'label': windowOverrides.label || 'Confirm',
     'icon': windowOverrides.icon || '',
     'x': windowOverrides.x || 'center',
@@ -88,10 +93,11 @@ os.ui.window.launchConfirm = function(opt_options) {
  *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
+ * @param {!angular.$timeout} $timeout
  * @constructor
  * @ngInject
  */
-os.ui.window.ConfirmCtrl = function($scope, $element) {
+os.ui.window.ConfirmCtrl = function($scope, $element, $timeout) {
   /**
    * @type {?angular.Scope}
    * @private
@@ -115,7 +121,10 @@ os.ui.window.ConfirmCtrl = function($scope, $element) {
   this.keyHandler_ = new goog.events.KeyHandler(goog.dom.getDocument());
   this.keyHandler_.listen(goog.events.KeyHandler.EventType.KEY, this.handleKeyEvent_, false, this);
 
-  $scope.$emit(os.ui.WindowEventType.READY);
+  $timeout(function() {
+    $scope.$emit(os.ui.WindowEventType.READY);
+  });
+
   $scope.$on('$destroy', this.onDestroy_.bind(this));
 };
 

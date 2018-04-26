@@ -11,7 +11,7 @@
         <i ng-class="yesIcon" ng-if="yesIcon"></i>
         {{yesText}}
       </button>
-      <button type="button" ng-class="noButtonClass" class="btn" ng-if="!hideCancel" ng-click="confirm.cancel()" title="{{noButtonTitle}}">
+      <button ng-hide="!noIcon && !noText" type="button" ng-class="noButtonClass" class="btn" ng-if="!hideCancel" ng-click="confirm.cancel()" title="{{noButtonTitle}}">
         <i ng-class="noIcon" ng-if="noIcon"></i>
         {{noText}}
       </button>

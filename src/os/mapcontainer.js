@@ -2400,35 +2400,25 @@ os.MapContainer.getDefaultTerrainProvider_ = function() {
  */
 os.MapContainer.launch2DPerformanceDialog = function() {
   return new goog.Promise(function(resolve, reject) {
-    var scopeOptions = {
-      'confirmCallback': resolve,
-      'cancelCallback': reject,
-      'yesText': 'OK',
-      'yesIcon': 'fa fa-check lt-blue-icon',
-      'noText': 'Cancel',
-      'noIcon': 'fa fa-ban red-icon'
-    };
-
-    var windowOptions = {
-      'label': 'Feature Limit Exceeded',
-      'icon': 'fa fa-warning orange-icon',
-      'x': 'center',
-      'y': 'center',
-      'width': '425',
-      'min-width': '300',
-      'max-width': '600',
-      'height': '215',
-      'min-height': '215',
-      'max-height': '500',
-      'modal': 'true'
-    };
-
     var text = '<p>Switching to 2D mode with the current data volume may degrade performance considerably or crash ' +
         'the browser. Click OK to switch to 2D, or Cancel to stay in 3D.</p>' +
         '<p>If you would like to switch to 2D mode safely, please consider narrowing your time range, applying ' +
         'filters, shrinking your query areas, or removing some feature layers.</p>';
 
-    var template = '<confirm>' + text + '</confirm>';
-    os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+    os.ui.window.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
+      confirm: resolve,
+      cancel: reject,
+      prompt: text,
+      windowOptions: {
+        'label': 'Feature Limit Exceeded',
+        'icon': 'fa fa-warning',
+        'x': 'center',
+        'y': 'center',
+        'width': '425',
+        'height': 'auto',
+        'modal': 'true',
+        'headerClass': 'bg-warning u-bg-warning-text'
+      }
+    }));
   });
 };

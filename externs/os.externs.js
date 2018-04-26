@@ -345,12 +345,15 @@ osx.window.WindowOptions;
 /**
  * @typedef {{
  *   confirm: (Function|undefined),
+ *   confirmValue: (*|undefined),
  *   cancel: (Function|undefined),
  *   yesText: (string|undefined),
  *   yesIcon: (string|undefined),
+ *   yesButtonClass: (string|undefined),
  *   yesButtonTitle: (string|undefined),
  *   noText: (string|undefined),
  *   noIcon: (string|undefined),
+ *   noButtonClass: (string|undefined),
  *   noButtonTitle: (string|undefined),
  *   formClass: (string|undefined),
  *

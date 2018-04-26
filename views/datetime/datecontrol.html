@@ -1,4 +1,4 @@
-<div id="date-control" class="input-group">
+<div id="date-control" class="d-flex">
   <div class="input-group mr-1">
     <div class="input-group-prepend">
       <button class="btn btn-secondary" title="Previous {{dateControl.duration}}"
@@ -28,7 +28,7 @@
       </button>
     </div>
   </div>
-  <select title="Duration" class="custom-select"
+  <select title="Duration" class="form-control"
       ng-model="dateControl.duration"
       ng-change="dateControl.onDurationChanged()"
       ng-disabled="dateControl.disabled">

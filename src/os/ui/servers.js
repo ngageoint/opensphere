@@ -240,25 +240,25 @@ os.ui.ServersCtrl.prototype.getPrompt_ = function(provider, callback, remove) {
       msg = msg.replace('disable', 'remove');
     }
 
-    var scopeOptions = {
-      'confirmCallback': callback,
-      'cancelCallback': this.updateData_.bind(this),
-      'yesText': 'Yes',
-      'noText': 'No'
-    };
+    os.ui.window.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
+      confirm: callback,
+      cancel: this.updateData_.bind(this),
+      prompt: msg,
+      yesText: 'Yes',
+      noText: 'No',
+      noIcon: 'fa fa-remove',
+      windowOptions: {
+        'label': 'Active Layers Exist',
+        'icon': 'fa fa-warning',
+        'x': 'center',
+        'y': 'center',
+        'width': '400',
+        'height': 'auto',
+        'modal': 'true',
+        'headerClass': 'bg-warning u-bg-warning-text'
+      }
+    }));
 
-    var windowOptions = {
-      'label': 'Active Layers Exist',
-      'icon': 'fa fa-warning yellow-icon',
-      'x': 'center',
-      'y': 'center',
-      'width': '400',
-      'height': (180 + Math.min(200, titles.length * 20)).toString(),
-      'modal': 'true'
-    };
-
-    var template = '<confirm>' + msg + '</confirm>';
-    os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
     return true;
   }
 

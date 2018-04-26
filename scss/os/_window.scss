@@ -4,10 +4,15 @@
 
 .c-window {
   .modal-body {
+    // Settings the background and color allows us to color
+    background: $modal-content-bg;
+    color: $body-color;
     overflow-y: auto;
   }
 
   .modal-footer {
+    background: $modal-content-bg;
+    color: $body-color;
     flex-shrink: 0;
   }
 }

@@ -163,25 +163,23 @@ os.ui.AbstractMainCtrl.prototype.onCertNaziFailure = function(event) {
         'for instructions on how to fix this.';
   }
 
-  var scopeOptions = {
-    'confirmCallback': goog.nullFunction,
-    'hideCancel': true,
-    'yesText': 'OK'
-  };
-
-  var windowOptions = {
-    'label': label,
-    'icon': 'fa fa-frown-o yellow-icon',
-    'x': 'center',
-    'y': 'center',
-    'width': '350',
-    'height': 'auto',
-    'modal': 'true',
-    'no-scroll': 'true'
-  };
-
-  var template = '<confirm>' + text + '</confirm>';
-  os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+  os.ui.window.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
+    confirm: goog.nullFunction,
+    prompt: text,
+    noText: '',
+    noIcon: '',
+    windowOptions: {
+      'label': label,
+      'icon': 'fa fa-frown-o',
+      'x': 'center',
+      'y': 'center',
+      'width': '350',
+      'height': 'auto',
+      'modal': 'true',
+      'no-scroll': 'true',
+      'headerClass': 'bg-warning u-bg-warning-text'
+    }
+  }));
 };
 
 

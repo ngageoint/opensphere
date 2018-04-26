@@ -14,17 +14,17 @@ plugin.file.kml.ui.kmlNodeUIDirective = function() {
   return {
     restrict: 'E',
     replace: true,
-    template: '<span class="glyphs pull-right slick-node-ui" ng-if="nodeUi.show()">' +
+    template: '<span class="pull-right" ng-if="nodeUi.show()">' +
         '<span ng-if="nodeUi.canAddChildren()" ng-click="nodeUi.addFolder()">' +
-            '<i class="fa fa-folder fa-fw glyph" title="Create a new folder"></i></span>' +
+          '<i class="fa fa-folder fa-fw" title="Create a new folder"></i></span>' +
         '<span ng-if="nodeUi.canAddChildren()" ng-click="nodeUi.addPlace()">' +
-            '<i class="fa fa-map-marker fa-fw glyph" title="Create a new place"></i></span>' +
+          '<i class="fa fa-map-marker fa-fw" title="Create a new place"></i></span>' +
         '<span ng-if="nodeUi.canEdit()" ng-click="nodeUi.edit()">' +
-            '<i class="fa fa-pencil fa-fw glyph" ' +
-            'title="Edit the {{nodeUi.isFolder() ? \'folder\' : \'place\'}}"></i></span>' +
+          '<i class="fa fa-pencil fa-fw" ' +
+          'title="Edit the {{nodeUi.isFolder() ? \'folder\' : \'place\'}}"></i></span>' +
         '<span ng-if="nodeUi.canRemove()" ng-click="nodeUi.tryRemove()">' +
-            '<i class="fa fa-times fa-fw glyph glyph-remove" ' +
-            'title="Remove the {{nodeUi.isFolder() ? \'folder\' : \'place\'}}"></i></span>' +
+          '<i class="fa fa-times fa-fw text-danger c-glyph" ' +
+          'title="Remove the {{nodeUi.isFolder() ? \'folder\' : \'place\'}}"></i></span>' +
         '</span>',
     controller: plugin.file.kml.ui.KMLNodeUICtrl,
     controllerAs: 'nodeUi'

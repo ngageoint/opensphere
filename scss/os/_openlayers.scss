@@ -1,0 +1,131 @@
+// Openlayers Modifications
+
+.ol-overlaycontainer-stopevent {
+  height: 0;
+  // Prevent IE from thinking this container should have a height, since it doesn't.
+}
+
+.ol-viewport > canvas {
+  display: inherit;
+}
+
+.ol-control button,
+.ol-control button:focus {
+  background: rgba(0, 0, 0, .5);
+}
+
+.ol-control button:hover,
+.ol-control button.active {
+  background-color: rgba(0, 60, 136, .7);
+}
+
+.ol-mapmode-text {
+  font-size: .9em;
+  vertical-align: top;
+}
+
+.ol-zoom {
+  left: auto;
+  right: 15px;
+  top: 15px;
+
+  .ol-zoom-in {
+    background: rgba(0, 0, 0, .5);
+  }
+
+  .ol-zoom-out {
+    background: rgba(0, 0, 0, .5);
+  }
+}
+
+.ol-rotate {
+  left: auto;
+  right: 15px;
+  top: 70px;
+}
+
+.ol-rotate .ol-has-tooltip {
+  &:hover [role=tooltip],
+  &:focus [role=tooltip] {
+    border-radius: 0 4px 4px 0;
+    left: 2.2em;
+    right: auto;
+  }
+}
+
+.ol-mapmode {
+  left: auto;
+  right: 15px;
+  top: 102px;
+}
+
+.ol-zoom-level,
+.mouse-position {
+  font-family: monospace;
+  line-height: 26px;
+}
+
+.ol-scale-line {
+  background: none;
+  padding: 0;
+  position: inherit;
+}
+
+
+.ol-scale-line-inner {
+  display: inline-block;
+  font-family: monospace;
+  font-size: 13px;
+  height: 7px;
+  line-height: 0;
+  margin-right: 3px;
+}
+
+.ol-overviewmap {
+  bottom: auto;
+  left: auto;
+  right: 50px;
+  top: 15px;
+
+  &.ol-collapsed button {
+    position: static;
+  }
+
+  button {
+    background: rgba(0, 0, 0, .5);
+    position: absolute;
+    right: 1px;
+    top: 1px;
+  }
+
+  .ol-overviewmap-map {
+    border: 0;
+    display: block;
+    height: 120px;
+    margin: 0;
+    width: 240px;
+  }
+}
+
+.ol-collapsed .ol-overviewmap-map {
+  display: none;
+}
+
+.ol-overviewmap-box {
+  border: 2px dotted #f00;
+}
+
+.ol-attribution,
+.ol-attribution.ol-uncollapsible {
+  border-radius: 0 4px 0 0;
+  left: 0;
+  right: auto;
+
+  a {
+    color: #000;
+  }
+}
+
+.ol-attribution li:nth-child(n+2):not(:last-child):after {
+  content: ', ';
+}
