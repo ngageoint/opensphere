@@ -65,7 +65,7 @@ plugin.file.geojson.GeoJSONParser.prototype.setSource = function(source) {
     src = source[0];
   } else if (goog.isObject(source)) {
     src = source;
-  } else if (goog.isString(source)) {
+  } else if (source && goog.isString(source)) {
     // THIN-6240: if the server returns invalid JSON with literal whitespace characters inside tokens, the parser will
     // fail. as a workaround, replace tabs with spaces and strip carriage returns and new lines.
     src = /** @type {Object} */ (JSON.parse(source.replace(/\t/g, ' ').replace(/\r\n/g, '')));
