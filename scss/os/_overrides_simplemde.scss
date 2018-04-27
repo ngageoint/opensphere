@@ -1,0 +1,6 @@
+// Overrides for simpleMDE
+
+.simplemdeform .editor-toolbar.fullscreen {
+  height: 3.5rem;
+  z-index: $zindex-modal;
+}

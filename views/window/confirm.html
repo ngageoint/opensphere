@@ -2,19 +2,17 @@
   <div class="modal-body">
     <form class="h-100" ng-class="formClass" name="confirmForm"
         ng-submit="confirm.confirm()" novalidate>
-      <span class="confirm-text" ng-transclude></span>
+      <span class="js-confirm-text" ng-transclude></span>
     </form>
   </div>
   <div class="modal-footer">
-    <div class="float-right">
-      <button type="submit" ng-class="yesButtonClass" class="btn" ng-click="confirm.confirm()" ng-disabled="confirmForm.$invalid || !valid" title="{{yesButtonTitle}}">
-        <i ng-class="yesIcon" ng-if="yesIcon"></i>
-        {{yesText}}
-      </button>
-      <button ng-hide="!noIcon && !noText" type="button" ng-class="noButtonClass" class="btn" ng-if="!hideCancel" ng-click="confirm.cancel()" title="{{noButtonTitle}}">
-        <i ng-class="noIcon" ng-if="noIcon"></i>
-        {{noText}}
-      </button>
-    </div>
+    <button type="submit" ng-class="yesButtonClass" class="btn" ng-click="confirm.confirm()" ng-disabled="confirmForm.$invalid || !valid" title="{{yesButtonTitle}}">
+      <i ng-class="yesIcon" ng-if="yesIcon"></i>
+      {{yesText}}
+    </button>
+    <button ng-hide="!noIcon && !noText" type="button" ng-class="noButtonClass" class="btn" ng-if="!hideCancel" ng-click="confirm.cancel()" title="{{noButtonTitle}}">
+      <i ng-class="noIcon" ng-if="noIcon"></i>
+      {{noText}}
+    </button>
   </div>
 </div>
