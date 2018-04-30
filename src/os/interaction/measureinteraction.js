@@ -22,9 +22,10 @@ goog.require('os.math');
 
 
 /**
- * @constructor
- * @extends {os.interaction.DrawPolygon}
+ * Interaction to measure the distance between drawn points on the map.
  * @param {olx.interaction.PointerOptions=} opt_options
+ * @extends {os.interaction.DrawPolygon}
+ * @constructor
  */
 os.interaction.Measure = function(opt_options) {
   os.interaction.Measure.base(this, 'constructor');
@@ -56,12 +57,6 @@ os.interaction.Measure = function(opt_options) {
       width: 2
     })
   }));
-
-  /**
-   * @type {Cesium.LabelCollection}
-   * @private
-   */
-  this.labels3D_ = null;
 
   /**
    * @type {!Array<!ol.style.Style>}
@@ -255,68 +250,6 @@ os.interaction.Measure.prototype.update2D = function() {
 
 
 /**
- * Creates labels for Cesium.
- * @inheritDoc
- */
-os.interaction.Measure.prototype.update3D = function() {
-  os.interaction.Measure.base(this, 'update3D');
-
-  var olCesium = os.MapContainer.getInstance().getOLCesium();
-  var lonlats = this.coords.map(os.interaction.DrawPolygon.coordToLonLat);
-
-  if (lonlats.length > 1 && olCesium) {
-    var scene = olCesium.getCesiumScene();
-    var camera = os.MapContainer.getInstance().getCesiumCamera();
-
-    if (!this.labels3D_) {
-      this.labels3D_ = new Cesium.LabelCollection();
-      scene.primitives.add(this.labels3D_);
-    }
-
-    var label = null;
-
-    if (this.labels3D_.length === this.distances_.length) {
-      // modify the last one
-      label = this.labels3D_.get(this.labels3D_.length - 1);
-    } else {
-      // add a new one
-      label = this.labels3D_.add();
-    }
-
-    var i = this.distances_.length - 1;
-    label.show = false;
-    label.eyeOffset = new Cesium.Cartesian3(0.0, 0.0, -(camera.getDistanceToCenter() / 5));
-    label.font = os.style.label.getFont(os.interaction.Measure.LABEL_FONT_SIZE_);
-    label.style = Cesium.LabelStyle.FILL_AND_OUTLINE;
-    label.outlineWidth = 2;
-    label.outlineColor = new Cesium.Color(0, 0, 0);
-    label.pixelOffset = new Cesium.Cartesian2(4, 0);
-    label.position = Cesium.Cartesian3.fromDegrees(lonlats[i][0], lonlats[i][1]);
-    label.text = this.getDistanceText_(i);
-    label.show = true;
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-os.interaction.Measure.prototype.cleanup = function() {
-  os.interaction.Measure.base(this, 'cleanup');
-
-  var olCesium = os.MapContainer.getInstance().getOLCesium();
-  if (olCesium) {
-    var scene = olCesium.getCesiumScene();
-
-    if (this.labels3D_) {
-      scene.primitives.remove(this.labels3D_);
-      this.labels3D_ = null;
-    }
-  }
-};
-
-
-/**
  * @inheritDoc
  */
 os.interaction.Measure.prototype.end = function(mapBrowserEvent) {
@@ -352,14 +285,6 @@ os.interaction.Measure.prototype.end = function(mapBrowserEvent) {
  * @inheritDoc
  */
 os.interaction.Measure.prototype.saveLast = goog.nullFunction;
-
-
-/**
- * @inheritDoc
- */
-os.interaction.Measure.prototype.get3DColor = function() {
-  return Cesium.Color.RED;
-};
 
 
 /**

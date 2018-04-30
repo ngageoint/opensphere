@@ -219,7 +219,7 @@ os.layer.Vector.prototype.setSource = function(source) {
   var old = this.getSource();
   if (old && old instanceof os.source.Vector) {
     ol.events.unlisten(old, goog.events.EventType.PROPERTYCHANGE, this.onSourceChange, this);
-    old.setCesiumEnabled(false);
+    old.setWebGLEnabled(false);
   }
 
   os.layer.Vector.base(this, 'setSource', source);
@@ -227,7 +227,7 @@ os.layer.Vector.prototype.setSource = function(source) {
   if (source && source instanceof os.source.Vector) {
     source = /** @type {os.source.Vector} */ (source);
     ol.events.listen(source, goog.events.EventType.PROPERTYCHANGE, this.onSourceChange, this);
-    source.setCesiumEnabled(os.MapContainer.getInstance().is3DEnabled());
+    source.setWebGLEnabled(os.MapContainer.getInstance().is3DEnabled());
   }
 };
 
@@ -244,7 +244,7 @@ os.layer.Vector.prototype.onMapChange_ = function(event) {
 
     var source = this.getSource();
     if (source instanceof os.source.Vector) {
-      /** @type {os.source.Vector} */ (source).setCesiumEnabled(enabled);
+      /** @type {os.source.Vector} */ (source).setWebGLEnabled(enabled);
     }
   }
 };

@@ -1,4 +1,4 @@
-goog.provide('os.olcs.ImageryProvider');
+goog.provide('plugin.cesium.ImageryProvider');
 
 goog.require('goog.disposable.IDisposable');
 goog.require('ol.events');
@@ -10,7 +10,6 @@ goog.require('os.source.IFilterableTileSource');
 goog.require('os.tile');
 
 
-
 /**
  * Extension to the Cesium WMS tile provider. Adds the ability to track tile loading/unloading and apply image
  * processing filters to loaded tiles. Also slightly alters the way tile URLs are generated and tiles are loaded.
@@ -20,7 +19,7 @@ goog.require('os.tile');
  * @implements {goog.disposable.IDisposable}
  * @constructor
  */
-os.olcs.ImageryProvider = function(source, opt_fallbackProj) {
+plugin.cesium.ImageryProvider = function(source, opt_fallbackProj) {
   /**
    * @type {boolean}
    * @private
@@ -73,7 +72,7 @@ os.olcs.ImageryProvider = function(source, opt_fallbackProj) {
 /**
  * @inheritDoc
  */
-os.olcs.ImageryProvider.prototype.dispose = function() {
+plugin.cesium.ImageryProvider.prototype.dispose = function() {
   this.disposed_ = true;
 
   if (this.source) {
@@ -91,7 +90,7 @@ os.olcs.ImageryProvider.prototype.dispose = function() {
 /**
  * @inheritDoc
  */
-os.olcs.ImageryProvider.prototype.isDisposed = function() {
+plugin.cesium.ImageryProvider.prototype.isDisposed = function() {
   return this.disposed_;
 };
 
@@ -100,7 +99,7 @@ os.olcs.ImageryProvider.prototype.isDisposed = function() {
  * @param {goog.events.Event=} opt_event
  * @private
  */
-os.olcs.ImageryProvider.prototype.onSourceChange_ = function(opt_event) {
+plugin.cesium.ImageryProvider.prototype.onSourceChange_ = function(opt_event) {
   if (!this.ready_ && this.source.getState() == 'ready') {
     var proj = this.source.getProjection();
     this.projection = goog.isDefAndNotNull(proj) ? proj : this.fallbackProj;
@@ -113,7 +112,7 @@ os.olcs.ImageryProvider.prototype.onSourceChange_ = function(opt_event) {
     }
     this.rectangle_ = this.tilingScheme_.rectangle;
 
-    var credit = os.olcs.ImageryProvider.createCreditForSource(this.source);
+    var credit = plugin.cesium.ImageryProvider.createCreditForSource(this.source);
     this.credit_ = !goog.isNull(credit) ? credit : undefined;
 
     this.ready_ = true;
@@ -125,20 +124,20 @@ os.olcs.ImageryProvider.prototype.onSourceChange_ = function(opt_event) {
  * TODO: attributions for individual tile ranges
  * @override
  */
-os.olcs.ImageryProvider.prototype.getTileCredits = function(x, y, level) {
+plugin.cesium.ImageryProvider.prototype.getTileCredits = function(x, y, level) {
   return undefined;
 };
 goog.exportProperty(
-    os.olcs.ImageryProvider.prototype,
+    plugin.cesium.ImageryProvider.prototype,
     'getTileCredits',
-    os.olcs.ImageryProvider.prototype.getTileCredits);
+    plugin.cesium.ImageryProvider.prototype.getTileCredits);
 
 
 /**
  * Attempt incrementing the tile load count on the source.
  * @protected
  */
-os.olcs.ImageryProvider.prototype.incrementLoading = function() {
+plugin.cesium.ImageryProvider.prototype.incrementLoading = function() {
   try {
     /** @type {os.ol.source.ILoadingSource} */ (this.source).incrementLoading();
   } catch (e) {}
@@ -151,7 +150,7 @@ os.olcs.ImageryProvider.prototype.incrementLoading = function() {
  * @protected
  * @suppress {accessControls}
  */
-os.olcs.ImageryProvider.prototype.decrementLoading = function(image) {
+plugin.cesium.ImageryProvider.prototype.decrementLoading = function(image) {
   try {
     if (this.source instanceof ol.source.UrlTile) {
       this.source.loadCount_++;
@@ -168,7 +167,7 @@ os.olcs.ImageryProvider.prototype.decrementLoading = function(image) {
  * @protected
  * @suppress {accessControls}
  */
-os.olcs.ImageryProvider.prototype.decrementLoadingError = function(image) {
+plugin.cesium.ImageryProvider.prototype.decrementLoadingError = function(image) {
   try {
     if (this.source instanceof ol.source.UrlTile) {
       this.source.errorCount_++;
@@ -182,7 +181,7 @@ os.olcs.ImageryProvider.prototype.decrementLoadingError = function(image) {
 /**
  * @override
  */
-os.olcs.ImageryProvider.prototype.requestImage = function(x, y, level) {
+plugin.cesium.ImageryProvider.prototype.requestImage = function(x, y, level) {
   var tileUrlFunction = this.source.getTileUrlFunction();
   if (!goog.isNull(tileUrlFunction) && !goog.isNull(this.projection)) {
     var z_ = (this.tilingScheme_ instanceof Cesium.GeographicTilingScheme) ? (level + 1) : level;
@@ -213,7 +212,7 @@ os.olcs.ImageryProvider.prototype.requestImage = function(x, y, level) {
             if (filterFns.length > 0) {
               var deferred = Cesium.when.defer();
               var newPromise = deferred.promise;
-              var resolveBinding = os.olcs.ImageryProvider.resolver.bind(this, filterFns, deferred);
+              var resolveBinding = plugin.cesium.ImageryProvider.resolver.bind(this, filterFns, deferred);
               Cesium.when(promise, resolveBinding, resolveBinding);
               return newPromise;
             }
@@ -229,9 +228,9 @@ os.olcs.ImageryProvider.prototype.requestImage = function(x, y, level) {
   return this.emptyCanvas;
 };
 goog.exportProperty(
-    os.olcs.ImageryProvider.prototype,
+    plugin.cesium.ImageryProvider.prototype,
     'requestImage',
-    os.olcs.ImageryProvider.prototype.requestImage);
+    plugin.cesium.ImageryProvider.prototype.requestImage);
 
 
 /**
@@ -245,7 +244,7 @@ goog.exportProperty(
  * @param {*} deferred The deferred to resolve
  * @param {Image} image The image to filter
  */
-os.olcs.ImageryProvider.resolver = function(filterFns, deferred, image) {
+plugin.cesium.ImageryProvider.resolver = function(filterFns, deferred, image) {
   if (image) {
     var canvas = os.tile.filterImage(image, filterFns);
     deferred.resolve(canvas);
@@ -262,7 +261,7 @@ os.olcs.ImageryProvider.resolver = function(filterFns, deferred, image) {
  * @param {!ol.source.Source} source
  * @return {?Cesium.Credit}
  */
-os.olcs.ImageryProvider.createCreditForSource = function(source) {
+plugin.cesium.ImageryProvider.createCreditForSource = function(source) {
   var creditOptions = /** @type {Cesium.CreditOptions} */ ({});
   creditOptions.text = '';
   var attributions = source.getAttributions();
@@ -295,11 +294,11 @@ os.olcs.ImageryProvider.createCreditForSource = function(source) {
 
 // definitions of getters that are required to be present
 // in the Cesium.ImageryProvider instance:
-Object.defineProperties(os.olcs.ImageryProvider.prototype, {
+Object.defineProperties(plugin.cesium.ImageryProvider.prototype, {
   ready: {
     get:
         /**
-         * @this os.olcs.ImageryProvider
+         * @this plugin.cesium.ImageryProvider
          * @return {boolean}
          */
         function() {
@@ -310,7 +309,7 @@ Object.defineProperties(os.olcs.ImageryProvider.prototype, {
   rectangle: {
     get:
         /**
-         * @this os.olcs.ImageryProvider
+         * @this plugin.cesium.ImageryProvider
          * @return {Cesium.Rectangle}
          */
         function() {
@@ -321,7 +320,7 @@ Object.defineProperties(os.olcs.ImageryProvider.prototype, {
   tileWidth: {
     get:
         /**
-         * @this os.olcs.ImageryProvider
+         * @this plugin.cesium.ImageryProvider
          * @return {number}
          */
         function() {
@@ -337,7 +336,7 @@ Object.defineProperties(os.olcs.ImageryProvider.prototype, {
   tileHeight: {
     get:
         /**
-         * @this os.olcs.ImageryProvider
+         * @this plugin.cesium.ImageryProvider
          * @return {number}
          */
         function() {
@@ -348,7 +347,7 @@ Object.defineProperties(os.olcs.ImageryProvider.prototype, {
   maximumLevel: {
     get:
         /**
-         * @this os.olcs.ImageryProvider
+         * @this plugin.cesium.ImageryProvider
          * @return {number}
          */
         function() {
@@ -371,7 +370,7 @@ Object.defineProperties(os.olcs.ImageryProvider.prototype, {
   minimumLevel: {
     get:
         /**
-         * @this os.olcs.ImageryProvider
+         * @this plugin.cesium.ImageryProvider
          * @return {number}
          */
         function() {
@@ -387,7 +386,7 @@ Object.defineProperties(os.olcs.ImageryProvider.prototype, {
 
   tilingScheme: {
     get: /**
-          * @this os.olcs.ImageryProvider
+          * @this plugin.cesium.ImageryProvider
           */
         function() {
           return this.tilingScheme_;
@@ -404,7 +403,7 @@ Object.defineProperties(os.olcs.ImageryProvider.prototype, {
   errorEvent: {
     get:
         /**
-         * @this os.olcs.ImageryProvider
+         * @this plugin.cesium.ImageryProvider
          * @return {Cesium.Event}
          */
         function() {
@@ -415,7 +414,7 @@ Object.defineProperties(os.olcs.ImageryProvider.prototype, {
   credit: {
     get:
         /**
-         * @this os.olcs.ImageryProvider
+         * @this plugin.cesium.ImageryProvider
          * @return {Cesium.Credit}
          */
         function() {

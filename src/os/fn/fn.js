@@ -38,8 +38,7 @@ os.fn.reduceExtentFromLayers = function(extent, layer) {
       var source = olayer.getSource();
 
       if (source instanceof ol.source.Vector ||
-          source instanceof ol.source.Image ||
-          source instanceof ol.source.Tile) {
+          source instanceof ol.source.UrlTile) {
         ex = source.getExtent();
       }
     }

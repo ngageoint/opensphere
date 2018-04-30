@@ -44,13 +44,28 @@ os.config.DisplaySettings.BASE_KEY = 'os.map.';
  * @enum {string}
  */
 os.config.DisplaySetting = {
+  // intetionally not prefixed (old setting)
+  BG_COLOR: 'bgColor',
+
   CAMERA_STATE: os.config.DisplaySettings.BASE_KEY + 'cameraState',
   CAMERA_MODE: os.config.DisplaySettings.BASE_KEY + 'cameraMode',
   MAP_MODE: os.config.DisplaySettings.BASE_KEY + 'mapMode',
   FOG_ENABLED: os.config.DisplaySettings.BASE_KEY + 'fogEnabled',
   FOG_DENSITY: os.config.DisplaySettings.BASE_KEY + 'fogDensity',
   ENABLE_LIGHTING: os.config.DisplaySettings.BASE_KEY + 'enableLighting',
-  ENABLE_TERRAIN: os.config.DisplaySettings.BASE_KEY + 'enableTerrain'
+  ENABLE_TERRAIN: os.config.DisplaySettings.BASE_KEY + 'enableTerrain',
+  TERRAIN_OPTIONS: os.config.DisplaySettings.BASE_KEY + 'terrainOptions'
+};
+
+
+/**
+ * If terrain has been configured in the application.
+ * @return {boolean}
+ */
+os.config.isTerrainConfigured = function() {
+  var options = /** @type {osx.map.TerrainProviderOptions|undefined} */ (os.settings.get(
+      os.config.DisplaySetting.TERRAIN_OPTIONS));
+  return !!(options && options.type && options.url);
 };
 
 
@@ -100,11 +115,6 @@ os.config.DisplaySettingsCtrl = function($scope) {
     'terrain': 'Show terrain on the 3D globe.'
   };
 
-  os.settings.listen(os.config.DisplaySetting.CAMERA_STATE, this.onCameraStateChange_, false, this);
-  os.settings.listen(os.config.DisplaySetting.MAP_MODE, this.onMapModeChange_, false, this);
-  os.settings.listen(os.config.DisplaySetting.ENABLE_LIGHTING, this.onSunlightChange_, false, this);
-  os.settings.listen(os.config.DisplaySetting.ENABLE_TERRAIN, this.onTerrainChange_, false, this);
-
   /**
    * Flag to prevent handling settings events triggered by this controller.
    * @type {boolean}
@@ -119,8 +129,7 @@ os.config.DisplaySettingsCtrl = function($scope) {
   this['mapMode'] = os.settings.get(os.config.DisplaySetting.MAP_MODE, os.MapMode.VIEW_3D);
   this.scope_.$watch('display.mapMode', this.updateMapMode_.bind(this));
 
-  var settingsState = /** @type {string|undefined} */ (os.settings.get(
-      os.config.DisplaySetting.CAMERA_STATE));
+  var settingsState = /** @type {string|undefined} */ (os.settings.get(os.config.DisplaySetting.CAMERA_STATE));
   var cameraState;
   if (settingsState) {
     try {
@@ -145,21 +154,25 @@ os.config.DisplaySettingsCtrl = function($scope) {
   this['cameraState'] = cameraState || this.getDefaultCameraState_();
 
   /**
-   * If Cesium fog is enabled.
+   * If fog is enabled for WebGL rendering.
    * @type {boolean}
    */
-  this['fogEnabled'] = /** @type {boolean} */ (os.settings.get(os.config.DisplaySetting.FOG_ENABLED,
-      true));
+  this['fogEnabled'] = /** @type {boolean} */ (os.settings.get(os.config.DisplaySetting.FOG_ENABLED, true));
 
+  var density = /** @type {number} */ (os.settings.get(os.config.DisplaySetting.FOG_DENSITY, 0.5));
+  goog.math.clamp(density, 0, 1);
 
-  var density = /** @type {number} */ (os.settings.get(os.config.DisplaySetting.FOG_DENSITY,
-      os.olcs.DEFAULT_FOG_DENSITY));
+  if (density < 0.001) {
+    // density was previously stored as a Cesium value, but is now stored in the range [0..1] to indicate percent
+    // on the slider
+    density = 0.5;
+  }
 
   /**
    * Globe fog density as a percent of the supported density range.
    * @type {number}
    */
-  this['fogDensity'] = density / os.olcs.MAX_FOG_DENSITY;
+  this['fogDensity'] = density;
 
   /**
    * If sunlight is enabled on the 3D globe.
@@ -175,6 +188,11 @@ os.config.DisplaySettingsCtrl = function($scope) {
 
   $scope.$watch('display.fogEnabled', this.updateFog.bind(this));
   $scope.$watch('display.fogDensity', this.updateFog.bind(this));
+
+  os.settings.listen(os.config.DisplaySetting.CAMERA_STATE, this.onCameraStateChange_, false, this);
+  os.settings.listen(os.config.DisplaySetting.MAP_MODE, this.onMapModeChange_, false, this);
+  os.settings.listen(os.config.DisplaySetting.ENABLE_LIGHTING, this.onSunlightChange_, false, this);
+  os.settings.listen(os.config.DisplaySetting.ENABLE_TERRAIN, this.onTerrainChange_, false, this);
 
   // initialize 3d support
   this.update3DSupport_();
@@ -377,21 +395,11 @@ goog.exportProperty(
 
 
 /**
- * Update the Cesium fog display.
+ * Update the fog display.
  */
 os.config.DisplaySettingsCtrl.prototype.updateFog = function() {
-  var map = os.MapContainer.getInstance();
-  var scene = map.getCesiumScene();
-  if (scene) {
-    var newDensity = this['fogDensity'] * os.olcs.MAX_FOG_DENSITY;
-    os.settings.set(os.config.DisplaySetting.FOG_ENABLED, this['fogEnabled']);
-    os.settings.set(os.config.DisplaySetting.FOG_DENSITY, newDensity);
-
-    scene.fog.enabled = this['fogEnabled'];
-    scene.fog.density = newDensity;
-
-    os.dispatcher.dispatchEvent(os.olcs.RenderLoop.REPAINT);
-  }
+  os.settings.set(os.config.DisplaySetting.FOG_ENABLED, this['fogEnabled']);
+  os.settings.set(os.config.DisplaySetting.FOG_DENSITY, this['fogDensity']);
 };
 goog.exportProperty(
     os.config.DisplaySettingsCtrl.prototype,
@@ -430,7 +438,7 @@ os.config.DisplaySettingsCtrl.prototype.onTerrainChange_ = function(event) {
  * @return {boolean}
  */
 os.config.DisplaySettingsCtrl.prototype.supportsTerrain = function() {
-  return os.MapContainer.getInstance().hasTerrain();
+  return os.config.isTerrainConfigured();
 };
 goog.exportProperty(
     os.config.DisplaySettingsCtrl.prototype,
