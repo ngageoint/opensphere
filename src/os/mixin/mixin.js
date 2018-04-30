@@ -1,5 +1,5 @@
 /**
- * @fileoverview Mixins to OL3 and Cesium to replace private/protected vendor code that doesn't meet our requirements.
+ * @fileoverview Mixins to Openlayers to replace private/protected vendor code that doesn't meet our requirements.
  * @suppress {missingProvide}
  */
 goog.provide('os.mixin');
@@ -49,7 +49,7 @@ ol.color.normalize = function(color, opt_color) {
 
 
 /**
- * Mixin to override the non-use of the frameState.skippedFeatureUids property. OL3's renderer does not skip
+ * Mixin to override the non-use of the frameState.skippedFeatureUids property. Openlayers' renderer does not skip
  * hidden features for the sake of hit detection, which is not only slower, but also causes them to be highlighted
  * on hover even if they are hidden. Fixes THIN-7359.
  * @inheritDoc

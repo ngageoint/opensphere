@@ -14,7 +14,7 @@ goog.require('os.command.LayerAdd');
 goog.require('os.command.LayerRemove');
 goog.require('os.command.SequenceCommand');
 goog.require('os.command.SwitchView');
-goog.require('os.command.ToggleCesium');
+goog.require('os.command.ToggleWebGL');
 goog.require('os.command.TransformVectors');
 goog.require('os.data.LayerSyncDescriptor');
 goog.require('os.map');
@@ -389,11 +389,11 @@ os.proj.switch.SwitchProjection.prototype.performSwitch = function(layers) {
   var cmds = [];
 
   if (this.oldProjection_ && this.newProjection_) {
-    var useCesium = os.MapContainer.getInstance().is3DEnabled();
+    var useWebGL = os.MapContainer.getInstance().is3DEnabled();
 
-    // Step 1: stop updates to OL3 and Cesium
-    if (useCesium) {
-      cmds.push(new os.command.ToggleCesium(false, true));
+    // Step 1: stop updates to Openlayers and the WebGL renderer
+    if (useWebGL) {
+      cmds.push(new os.command.ToggleWebGL(false, true));
     }
 
     // Step 2: remove layers to be removed in the proper order
@@ -402,7 +402,7 @@ os.proj.switch.SwitchProjection.prototype.performSwitch = function(layers) {
     // Step 3: remove layers to be configured in the proper order
     this.addLayerSequence(layers.reconfig, true, cmds);
 
-    // Step 4: switch main OL3 view (update os.map.PROJECTION)
+    // Step 4: switch main Openlayers view (update os.map.PROJECTION)
     cmds.push(new os.command.SwitchView(this.newProjection_));
 
     // Step 5: Transform all vectors
@@ -414,9 +414,9 @@ os.proj.switch.SwitchProjection.prototype.performSwitch = function(layers) {
     // Step 7: Add new layers
     this.addLayerSequence(layers.add, false, cmds);
 
-    // Step 8: enable updates to OL3 and Cesium
-    if (useCesium) {
-      cmds.push(new os.command.ToggleCesium(useCesium, true));
+    // Step 8: enable updates to Openlayers and the WebGL renderer
+    if (useWebGL) {
+      cmds.push(new os.command.ToggleWebGL(useWebGL, true));
     }
 
     // Step 9: Let plugins do stuff

@@ -3,7 +3,6 @@ goog.require('os.data.DataManager');
 goog.require('os.data.LayerNode');
 goog.require('os.data.groupby.LayerZOrderGroupBy');
 goog.require('os.layer.ILayer');
-goog.require('os.layer.Image');
 goog.require('os.layer.LayerGroup');
 goog.require('os.structs.ITreeNodeSupplier');
 goog.require('os.ui.data.BaseProvider');

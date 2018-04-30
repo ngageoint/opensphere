@@ -243,8 +243,7 @@ os.style.label.updateShown_ = function() {
         continue;
       }
 
-      // compute the size of the label on screen. this is accurate for 2D, but Cesium's method of creating labels will
-      // result in them being slightly larger.
+      // compute the size of the label on screen. this is accurate for Openlayers, not necessarily other renderers
       var config = os.style.StyleManager.getInstance().getLayerConfig(featureSourceId);
       var labelFont = os.style.label.getFont(config[os.style.StyleField.LABEL_SIZE]);
       var labelSize = os.ui.measureText(labelText, 'feature-label', labelFont);

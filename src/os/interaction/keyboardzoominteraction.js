@@ -10,6 +10,7 @@ goog.require('os.ui.ol.interaction');
 
 
 /**
+ * Extends the OpenLayers keyboard zoom interaction to support WebGL.
  * @param {olx.interaction.KeyboardZoomOptions=} opt_options Options.
  * @extends {ol.interaction.KeyboardZoom}
  * @implements {os.I3DSupport}
@@ -103,7 +104,7 @@ ol.interaction.KeyboardZoom.handleEvent = function(mapBrowserEvent) {
 
         var mapContainer = os.MapContainer.getInstance();
         if (mapContainer.is3DEnabled()) {
-          var camera = mapContainer.getCesiumCamera();
+          var camera = mapContainer.getWebGLCamera();
           if (camera) {
             camera.zoomByDelta(delta);
           }

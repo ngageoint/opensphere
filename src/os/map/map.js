@@ -1,5 +1,4 @@
 goog.provide('os.MapChange');
-goog.provide('os.MapEvent');
 goog.provide('os.MapMode');
 goog.provide('os.map');
 
@@ -25,18 +24,6 @@ os.MapChange = {
   VIEW3D: 'map:change:view3d',
   INIT3D: 'map:change:init3d',
   THROTTLE: 'map:change:throttle'
-};
-
-
-/**
- * @enum {string}
- */
-os.MapEvent = {
-  MAP_READY: 'map:ready',
-  RENDER: 'map:render',
-  RENDER_SYNC: 'map:renderSync',
-  VIEW_CHANGE: 'map:viewChange',
-  TERRAIN_DISABLED: 'map:terrainDisabled'
 };
 
 
@@ -70,6 +57,30 @@ os.FlightMode = {
   BOUNCE: 'bounce',
   SMOOTH: 'smooth'
 };
+
+
+/**
+ * Selector for the OpenLayers map canvas.
+ * @type {string}
+ * @const
+ */
+os.map.OPENLAYERS_CANVAS = '.ol-viewport > canvas';
+
+
+/**
+ * Class name for the WebGL canvas.
+ * @type {string}
+ * @const
+ */
+os.map.WEBGL_CANVAS_CLASS = 'webgl-canvas';
+
+
+/**
+ * Selector for the WebGL canvas.
+ * @type {string}
+ * @const
+ */
+os.map.WEBGL_CANVAS = 'canvas.' + os.map.WEBGL_CANVAS_CLASS;
 
 
 /**
@@ -163,18 +174,25 @@ os.map.ZERO_EXTENT = [0, 0, 0, 0];
 
 
 /**
- * Gets the zoom level from the given resolution
- * @param {number} resolution
- * @param {ol.proj.Projection} projection
+ * Gets the zoom level from the given resolution.
+ * @param {number} resolution The view resolution.
+ * @param {ol.proj.Projection} projection The map projection.
+ * @param {number=} opt_precision The decimal precision
  * @return {number} zoom
  */
-os.map.resolutionToZoom = function(resolution, projection) {
+os.map.resolutionToZoom = function(resolution, projection, opt_precision) {
   var extent = projection.getExtent();
   var size = extent[2] - extent[0];
 
   // todo: replace "Math.LN2" with the log of the view's zoom factor, which does not
   // appear to be accessible through the api at the moment.
-  return Math.log(size / (256 * resolution)) / Math.LN2;
+  var zoom = Math.log(size / (256 * resolution)) / Math.LN2;
+
+  if (opt_precision != null) {
+    zoom = Number(zoom.toFixed(opt_precision));
+  }
+
+  return zoom;
 };
 
 
@@ -280,7 +298,7 @@ os.map.distanceForResolution = function(size, resolution, opt_latitude) {
 /**
  * Calculate the view resolution for a camera distance.
  *
- * @param {os.Map} map The map.
+ * @param {ol.PluggableMap} map The map.
  * @param {number} distance The camera distance.
  * @param {number=} opt_latitude The latitude to use in the calculation, defaults to 0.
  *

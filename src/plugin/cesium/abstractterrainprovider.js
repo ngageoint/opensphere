@@ -1,15 +1,16 @@
-goog.provide('os.olcs.AbstractTerrainProvider');
+goog.provide('plugin.cesium.AbstractTerrainProvider');
+
 goog.require('goog.asserts');
 
 
 
 /**
  * Base Cesium terrain provider.
- * @param {!osx.olcs.TerrainProviderOptions} options
+ * @param {!osx.map.TerrainProviderOptions} options
  * @extends {Cesium.TerrainProvider}
  * @constructor
  */
-os.olcs.AbstractTerrainProvider = function(options) {
+plugin.cesium.AbstractTerrainProvider = function(options) {
   goog.asserts.assert(goog.isDefAndNotNull(options), 'options not defined');
   goog.asserts.assert(goog.isDefAndNotNull(options.url), 'url not defined');
 
@@ -80,19 +81,19 @@ os.olcs.AbstractTerrainProvider = function(options) {
    * @type {number}
    * @protected
    */
-  this.maxLevel = options.maxLevel || os.olcs.AbstractTerrainProvider.DEFAULT_MAX_LEVEL_;
+  this.maxLevel = options.maxLevel || plugin.cesium.AbstractTerrainProvider.DEFAULT_MAX_LEVEL_;
 
   /**
    * @type {number}
    * @protected
    */
-  this.minLevel = options.minLevel || os.olcs.AbstractTerrainProvider.DEFAULT_MIN_LEVEL_;
+  this.minLevel = options.minLevel || plugin.cesium.AbstractTerrainProvider.DEFAULT_MIN_LEVEL_;
 
   /**
    * @type {number}
    * @protected
    */
-  this.tileSize = options.tileSize || os.olcs.AbstractTerrainProvider.DEFAULT_TILE_SIZE_;
+  this.tileSize = options.tileSize || plugin.cesium.AbstractTerrainProvider.DEFAULT_TILE_SIZE_;
 
   /**
    * @type {number}
@@ -136,7 +137,7 @@ os.olcs.AbstractTerrainProvider = function(options) {
  * @private
  * @const
  */
-os.olcs.AbstractTerrainProvider.DEFAULT_MAX_LEVEL_ = 11;
+plugin.cesium.AbstractTerrainProvider.DEFAULT_MAX_LEVEL_ = 11;
 
 
 /**
@@ -145,7 +146,7 @@ os.olcs.AbstractTerrainProvider.DEFAULT_MAX_LEVEL_ = 11;
  * @private
  * @const
  */
-os.olcs.AbstractTerrainProvider.DEFAULT_MIN_LEVEL_ = 8;
+plugin.cesium.AbstractTerrainProvider.DEFAULT_MIN_LEVEL_ = 8;
 
 
 /**
@@ -154,16 +155,16 @@ os.olcs.AbstractTerrainProvider.DEFAULT_MIN_LEVEL_ = 8;
  * @private
  * @const
  */
-os.olcs.AbstractTerrainProvider.DEFAULT_TILE_SIZE_ = 128;
+plugin.cesium.AbstractTerrainProvider.DEFAULT_TILE_SIZE_ = 128;
 
 
 // define the properties required by the Cesium.TerrainProvider interface
-Object.defineProperties(os.olcs.AbstractTerrainProvider.prototype, {
+Object.defineProperties(plugin.cesium.AbstractTerrainProvider.prototype, {
   credit: {
     get:
         /**
          * @return {Cesium.Credit|undefined}
-         * @this os.olcs.AbstractTerrainProvider
+         * @this plugin.cesium.AbstractTerrainProvider
          */
         function() {
           return this.credit_;
@@ -174,7 +175,7 @@ Object.defineProperties(os.olcs.AbstractTerrainProvider.prototype, {
     get:
         /**
          * @return {Cesium.Event}
-         * @this os.olcs.AbstractTerrainProvider
+         * @this plugin.cesium.AbstractTerrainProvider
          */
         function() {
           return this.errorEvent_;
@@ -185,7 +186,7 @@ Object.defineProperties(os.olcs.AbstractTerrainProvider.prototype, {
     get:
         /**
          * @return {boolean}
-         * @this os.olcs.AbstractTerrainProvider
+         * @this plugin.cesium.AbstractTerrainProvider
          */
         function() {
           return this.ready_;
@@ -193,7 +194,7 @@ Object.defineProperties(os.olcs.AbstractTerrainProvider.prototype, {
     set:
         /**
          * @param {boolean} value
-         * @this os.olcs.AbstractTerrainProvider
+         * @this plugin.cesium.AbstractTerrainProvider
          */
         function(value) {
           this.ready_ = value;
@@ -204,7 +205,7 @@ Object.defineProperties(os.olcs.AbstractTerrainProvider.prototype, {
     get:
         /**
          * @return {Cesium.GeographicTilingScheme}
-         * @this os.olcs.AbstractTerrainProvider
+         * @this plugin.cesium.AbstractTerrainProvider
          */
         function() {
           return this.tilingScheme_;
@@ -215,7 +216,7 @@ Object.defineProperties(os.olcs.AbstractTerrainProvider.prototype, {
     get:
         /**
          * @return {boolean}
-         * @this os.olcs.AbstractTerrainProvider
+         * @this plugin.cesium.AbstractTerrainProvider
          */
         function() {
           return this.hasVertexNormals_;
@@ -226,7 +227,7 @@ Object.defineProperties(os.olcs.AbstractTerrainProvider.prototype, {
     get:
         /**
          * @return {boolean}
-         * @this os.olcs.AbstractTerrainProvider
+         * @this plugin.cesium.AbstractTerrainProvider
          */
         function() {
           return this.hasWaterMask_;
@@ -240,7 +241,7 @@ Object.defineProperties(os.olcs.AbstractTerrainProvider.prototype, {
  * @return {string}
  * @protected
  */
-os.olcs.AbstractTerrainProvider.prototype.getName = function() {
+plugin.cesium.AbstractTerrainProvider.prototype.getName = function() {
   return this.name_;
 };
 
@@ -250,7 +251,7 @@ os.olcs.AbstractTerrainProvider.prototype.getName = function() {
  * @param {string} value
  * @protected
  */
-os.olcs.AbstractTerrainProvider.prototype.setName = function(value) {
+plugin.cesium.AbstractTerrainProvider.prototype.setName = function(value) {
   this.name_ = value;
 };
 
@@ -263,7 +264,7 @@ os.olcs.AbstractTerrainProvider.prototype.setName = function(value) {
  * @return {number}
  * @protected
  */
-os.olcs.AbstractTerrainProvider.prototype.getTerrainChildMask = function(x, y, level) {
+plugin.cesium.AbstractTerrainProvider.prototype.getTerrainChildMask = function(x, y, level) {
   var mask = 0;
   var childLevel = level + 1;
   mask |= this.getTileDataAvailable(2 * x, 2 * y, childLevel) ? 1 : 0;
@@ -277,7 +278,7 @@ os.olcs.AbstractTerrainProvider.prototype.getTerrainChildMask = function(x, y, l
 /**
  * @inheritDoc
  */
-os.olcs.AbstractTerrainProvider.prototype.getLevelMaximumGeometricError = function(level) {
+plugin.cesium.AbstractTerrainProvider.prototype.getLevelMaximumGeometricError = function(level) {
   return this.levelZeroMaximumGeometricError / (1 << level);
 };
 
@@ -285,6 +286,6 @@ os.olcs.AbstractTerrainProvider.prototype.getLevelMaximumGeometricError = functi
 /**
  * @inheritDoc
  */
-os.olcs.AbstractTerrainProvider.prototype.getTileDataAvailable = function(x, y, level) {
+plugin.cesium.AbstractTerrainProvider.prototype.getTileDataAvailable = function(x, y, level) {
   return true;
 };

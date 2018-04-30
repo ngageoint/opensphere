@@ -4,7 +4,9 @@ goog.require('plugin.basemap.BaseMapProvider');
 
 describe('plugin.basemap.BaseMapProvider', function() {
   var expectedTerrainType = 'testTerrain';
-  var expectedTerrainOptions = {};
+  var expectedTerrainOptions = {
+    url: 'http://terrain.com/'
+  };
 
   var config = {
     defaults: {
@@ -40,15 +42,6 @@ describe('plugin.basemap.BaseMapProvider', function() {
   var p = new plugin.basemap.BaseMapProvider();
 
   it('should configure from both maps and userMaps', function() {
-    var terrainType;
-    var terrainOptions;
-    spyOn(os.MapContainer, 'getInstance').andReturn({
-      setTerrainProvider: function(type, options) {
-        terrainType = type;
-        terrainOptions = options;
-      }
-    });
-
     p.configure(config);
 
     // it should've added four descriptors to the data manager, since unrecognized types should be ignored
@@ -70,8 +63,10 @@ describe('plugin.basemap.BaseMapProvider', function() {
     expect(p.defaults_).toContain('two');
 
     // terrain is configured on the map
-    expect(terrainType).toBe(expectedTerrainType);
-    expect(terrainOptions).toBe(expectedTerrainOptions);
+    var terrainOptions = os.settings.get(os.config.DisplaySetting.TERRAIN_OPTIONS);
+    expect(terrainOptions).toBeDefined();
+    expect(terrainOptions.url).toBe(expectedTerrainOptions.url);
+    expect(terrainOptions.type).toBe(expectedTerrainType);
   });
 
   it('should load descriptors', function() {
