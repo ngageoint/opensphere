@@ -375,6 +375,7 @@ os.im.Importer.prototype.addItem = function(item) {
 /**
  * @param {T} item
  * @protected
+ * @suppress {accessControls}
  */
 os.im.Importer.prototype.addItemInternal = function(item) {
   this.performMappings(item);
