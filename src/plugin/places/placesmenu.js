@@ -480,6 +480,7 @@ plugin.places.menu.saveSpatialToPlaces = function(event) {
     var rootNode = plugin.places.PlacesManager.getInstance().getPlacesRoot();
     var geometry;
     var name;
+    var time;
 
     context = /** @type {Object} */ (context);
 
@@ -492,6 +493,8 @@ plugin.places.menu.saveSpatialToPlaces = function(event) {
       if (featureGeom) {
         geometry = featureGeom.clone();
       }
+
+      time = features[0].get(os.data.RecordField.TIME);
     } else {
       // next look for geometries
       var geometries = os.ui.menu.spatial.getGeometriesFromContext(context);
@@ -505,7 +508,8 @@ plugin.places.menu.saveSpatialToPlaces = function(event) {
       plugin.file.kml.ui.createOrEditPlace(/** @type {!plugin.file.kml.ui.PlacemarkOptions} */ ({
         'geometry': geometry,
         'parent': rootNode,
-        'name': name
+        'name': name,
+        'time': time
       }));
     }
   }
