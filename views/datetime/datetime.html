@@ -1,11 +1,11 @@
-<div class="date-time" ng-form="dateTimeForm">
-  <wheel-date date="dateTimeCtrl.date" disable="disabled" is-required="required || invalid"></wheel-date>
-  <input data-ng-disabled="disabled" type="number" data-ng-model="dateTimeCtrl.hour" data-ng-change="dateTimeCtrl.updateValue('hour')" min="0" max="23" placeholder="h" ng-required="required || invalid"> :
-  <input data-ng-disabled="disabled" type="number" data-ng-model="dateTimeCtrl.minute" data-ng-change="dateTimeCtrl.updateValue('minute')" min="0" max="59" placeholder="m" ng-required="required || invalid"> :
-  <input data-ng-disabled="disabled" type="number" data-ng-model="dateTimeCtrl.second" data-ng-change="dateTimeCtrl.updateValue('second')" min="0" max="59" placeholder="s" ng-required="required || invalid">
+<div class="form-inline" ng-form="dateTimeForm">
+  <wheel-date class="c-date-time__wheel-date" date="dateTimeCtrl.date" disable="disabled" is-required="required || invalid"></wheel-date>&nbsp;
+  <input class="form-control c-date-time__time-input" ng-disabled="disabled" type="number" ng-model="dateTimeCtrl.hour" ng-change="dateTimeCtrl.updateValue('hour')" min="0" max="23" placeholder="h" ng-required="required || invalid"> :
+  <input class="form-control c-date-time__time-input" ng-disabled="disabled" type="number" ng-model="dateTimeCtrl.minute" ng-change="dateTimeCtrl.updateValue('minute')" min="0" max="59" placeholder="m" ng-required="required || invalid"> :
+  <input class="form-control c-date-time__time-input" ng-disabled="disabled" type="number" ng-model="dateTimeCtrl.second" ng-change="dateTimeCtrl.updateValue('second')" min="0" max="59" placeholder="s" ng-required="required || invalid">
   &nbsp;
-  <button ng-if="!hidecontrols" class="btn btn-mini btn-default" data-ng-disabled="disabled" data-ng-click="dateTimeCtrl.setNow()">Now</button>
-  <button ng-if="!hidecontrols" class="btn btn-mini btn-default" data-ng-disabled="disabled" data-ng-click="dateTimeCtrl.reset()" title="Clear Date/Time"><i class="fa fa-close"></i></button>
-  <span class="help-inline" data-ng-if="!dateTimeCtrl.errorString && dateTimeForm.$error.required">Required!</span>
-  <span class="error help-inline" data-ng-if="dateTimeCtrl.errorString">{{dateTimeCtrl.errorString}}</span>
+  <button ng-if="!hidecontrols" class="btn btn-sm btn-secondary" ng-disabled="disabled" ng-click="dateTimeCtrl.setNow()">Now</button>
+  <button ng-if="!hidecontrols" class="btn btn-sm btn-secondary" ng-disabled="disabled" ng-click="dateTimeCtrl.reset()" title="Clear Date/Time"><i class="fa fa-close"></i></button>
+  <div class="invalid-feedback" ng-if="!dateTimeCtrl.errorString && dateTimeForm.$error.required">Required!</div>
+  <div class="invalid-feedback" ng-if="dateTimeCtrl.errorString">{{dateTimeCtrl.errorString}}</div>
 </div>

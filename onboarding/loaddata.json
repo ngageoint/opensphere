@@ -18,7 +18,7 @@
         "load tiles (and eventually features) for a different time span. If you don't see any tiles on the map, ",
         "check the layer's details in the Add Data window and make sure it has data within the chosen range."
       ],
-      "attachTo": "#date-control",
+      "attachTo": ".js-date-control",
       "position": "bottom",
       "horizontalAlign": "center",
       "context": "navTop"
