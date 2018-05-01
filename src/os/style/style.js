@@ -1225,7 +1225,7 @@ os.style.mergeConfig = function(from, to) {
 
 
 /**
- * Notify OL3/Cesium that the layer style changed and things should be updated.
+ * Notify that the layer style changed and should be updated.
  * @param {ol.layer.Layer} layer The layer
  * @param {Array<ol.Feature>=} opt_features The features that changed
  * @param {string=} opt_type The style event type
@@ -1235,6 +1235,6 @@ os.style.notifyStyleChange = function(layer, opt_features, opt_type) {
   var eventType = opt_type || os.layer.PropertyChange.STYLE;
   layer.dispatchEvent(new os.events.PropertyChangeEvent(eventType, opt_features));
 
-  // ol3 map will refresh off this one. firing the event off the source causes the animation overlay to update as well.
+  // ol map will refresh off this one. firing the event off the source causes the animation overlay to update as well.
   layer.getSource().changed();
 };

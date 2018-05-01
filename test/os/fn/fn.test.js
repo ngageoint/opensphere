@@ -1,6 +1,7 @@
 goog.require('ol.Feature');
 goog.require('ol.extent');
 goog.require('ol.geom.Point');
+goog.require('ol.source.Image');
 goog.require('os.fn');
 goog.require('os.layer.Vector');
 goog.require('os.source.Vector');
@@ -61,13 +62,15 @@ describe('os.fn', function() {
   });
 
   it('should map layers to sources', function() {
-    var source1 = new os.source.Vector();
-    var layer1 = new os.layer.Vector();
-    layer1.setSource(source1);
+    var source1 = new os.source.Vector({});
+    var layer1 = new os.layer.Vector({
+      source: source1
+    });
 
-    var source2 = new ol.layer.Image();
-    var layer2 = new os.layer.Image({});
-    layer2.setSource(source2);
+    var source2 = new ol.source.Image({});
+    var layer2 = new os.layer.Image({
+      source: source2
+    });
 
     var sources = [layer1, null, layer2, undefined].map(os.fn.mapLayerToSource);
 

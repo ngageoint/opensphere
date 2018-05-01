@@ -1,34 +1,33 @@
-goog.provide('os.olcs.sync.TileSynchronizer');
+goog.provide('plugin.cesium.sync.TileSynchronizer');
 
 goog.require('goog.asserts');
 goog.require('goog.async.Delay');
 goog.require('goog.events.EventType');
 goog.require('ol.layer.Tile');
 goog.require('ol.source.TileWMS');
+goog.require('os.MapEvent');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.events.SelectionType');
 goog.require('os.layer.AnimatedTile');
 goog.require('os.layer.PropertyChange');
 goog.require('os.map');
 goog.require('os.ol.events');
-goog.require('os.olcs');
-goog.require('os.olcs.ImageryProvider');
-goog.require('os.olcs.WMSImageryProvider');
-goog.require('os.olcs.sync.AbstractSynchronizer');
 goog.require('os.source.Vector');
-
+goog.require('plugin.cesium.ImageryProvider');
+goog.require('plugin.cesium.WMSImageryProvider');
+goog.require('plugin.cesium.sync.CesiumSynchronizer');
 
 
 /**
- * Synchronizes a single OL3 tile layer to Cesium.
- * @param {!os.layer.Tile} layer
- * @param {!ol.Map} map
- * @param {!Cesium.Scene} scene
- * @extends {os.olcs.sync.AbstractSynchronizer.<os.layer.Tile>}
+ * Synchronizes a single OpenLayers tile layer to Cesium.
+ * @param {!os.layer.Tile} layer The OpenLayers tile layer.
+ * @param {!ol.PluggableMap} map The OpenLayers map.
+ * @param {!Cesium.Scene} scene The Cesium scene.
+ * @extends {plugin.cesium.sync.CesiumSynchronizer.<os.layer.Tile>}
  * @constructor
  */
-os.olcs.sync.TileSynchronizer = function(layer, map, scene) {
-  os.olcs.sync.TileSynchronizer.base(this, 'constructor', layer, map, scene);
+plugin.cesium.sync.TileSynchronizer = function(layer, map, scene) {
+  plugin.cesium.sync.TileSynchronizer.base(this, 'constructor', layer, map, scene);
 
   /**
    * @type {Cesium.ImageryLayerCollection}
@@ -67,7 +66,7 @@ os.olcs.sync.TileSynchronizer = function(layer, map, scene) {
     ol.events.listen(view, 'change:resolution', this.onZoomChange_, this);
   }
 };
-goog.inherits(os.olcs.sync.TileSynchronizer, os.olcs.sync.AbstractSynchronizer);
+goog.inherits(plugin.cesium.sync.TileSynchronizer, plugin.cesium.sync.CesiumSynchronizer);
 
 
 /**
@@ -75,7 +74,7 @@ goog.inherits(os.olcs.sync.TileSynchronizer, os.olcs.sync.AbstractSynchronizer);
  * @const
  * @private
  */
-os.olcs.sync.TileSynchronizer.STYLE_KEYS_ = [
+plugin.cesium.sync.TileSynchronizer.STYLE_KEYS_ = [
   'change:brightness',
   'change:contrast',
   'change:hue',
@@ -90,7 +89,7 @@ os.olcs.sync.TileSynchronizer.STYLE_KEYS_ = [
  * @const
  * @private
  */
-os.olcs.sync.TileSynchronizer.RESOLUTION_KEYS_ = [
+plugin.cesium.sync.TileSynchronizer.RESOLUTION_KEYS_ = [
   'change:minResolution',
   'change:maxResolution'
 ];
@@ -99,7 +98,7 @@ os.olcs.sync.TileSynchronizer.RESOLUTION_KEYS_ = [
 /**
  * @inheritDoc
  */
-os.olcs.sync.TileSynchronizer.prototype.disposeInternal = function() {
+plugin.cesium.sync.TileSynchronizer.prototype.disposeInternal = function() {
   goog.dispose(this.syncDelay_);
   this.syncDelay_ = null;
 
@@ -115,14 +114,14 @@ os.olcs.sync.TileSynchronizer.prototype.disposeInternal = function() {
 
   this.cesiumLayers_ = null;
 
-  os.olcs.sync.TileSynchronizer.base(this, 'disposeInternal');
+  plugin.cesium.sync.TileSynchronizer.base(this, 'disposeInternal');
 };
 
 
 /**
  * @inheritDoc
  */
-os.olcs.sync.TileSynchronizer.prototype.synchronize = function() {
+plugin.cesium.sync.TileSynchronizer.prototype.synchronize = function() {
   if (this.syncDelay_) {
     this.syncDelay_.start();
   }
@@ -133,7 +132,7 @@ os.olcs.sync.TileSynchronizer.prototype.synchronize = function() {
  * Synchronize the tile layer.
  * @protected
  */
-os.olcs.sync.TileSynchronizer.prototype.synchronizeInternal = function() {
+plugin.cesium.sync.TileSynchronizer.prototype.synchronizeInternal = function() {
   // clean up existing layers
   this.disposeSingle_();
   this.disposeCache_();
@@ -151,7 +150,7 @@ os.olcs.sync.TileSynchronizer.prototype.synchronizeInternal = function() {
 /**
  * @inheritDoc
  */
-os.olcs.sync.TileSynchronizer.prototype.reset = function() {
+plugin.cesium.sync.TileSynchronizer.prototype.reset = function() {
   // nothing to do yet
 };
 
@@ -161,7 +160,7 @@ os.olcs.sync.TileSynchronizer.prototype.reset = function() {
  * @param {goog.events.Event=} opt_evt
  * @private
  */
-os.olcs.sync.TileSynchronizer.prototype.onZoomChange_ = function(opt_evt) {
+plugin.cesium.sync.TileSynchronizer.prototype.onZoomChange_ = function(opt_evt) {
   if (this.layer && this.activeLayer_ && !this.animationCache_) {
     var proj = this.view.getProjection();
     var current = this.view.getResolution();
@@ -182,7 +181,7 @@ os.olcs.sync.TileSynchronizer.prototype.onZoomChange_ = function(opt_evt) {
 /**
  * @inheritDoc
  */
-os.olcs.sync.TileSynchronizer.prototype.reposition = function(start, end) {
+plugin.cesium.sync.TileSynchronizer.prototype.reposition = function(start, end) {
   if (this.lastStart_ !== start) {
     this.lastStart_ = start;
 
@@ -210,7 +209,7 @@ os.olcs.sync.TileSynchronizer.prototype.reposition = function(start, end) {
  * Get the first index of this synchronizer's layers in the Cesium imagery layer array.
  * @return {number}
  */
-os.olcs.sync.TileSynchronizer.prototype.getFirstIndex = function() {
+plugin.cesium.sync.TileSynchronizer.prototype.getFirstIndex = function() {
   return this.activeLayer_ ? this.cesiumLayers_.indexOf(this.activeLayer_) : -1;
 };
 
@@ -219,7 +218,7 @@ os.olcs.sync.TileSynchronizer.prototype.getFirstIndex = function() {
  * Get the last index of this synchronizer's layers in the Cesium imagery layer array.
  * @return {number}
  */
-os.olcs.sync.TileSynchronizer.prototype.getLastIndex = function() {
+plugin.cesium.sync.TileSynchronizer.prototype.getLastIndex = function() {
   var lastIndex = this.getFirstIndex();
   if (lastIndex > -1 && this.animationCache_) {
     lastIndex += goog.object.getCount(this.animationCache_);
@@ -230,25 +229,25 @@ os.olcs.sync.TileSynchronizer.prototype.getLastIndex = function() {
 
 
 /**
- * Creates a single Cesium layer to represent the OL3 tile layer.
+ * Creates a single Cesium layer to represent the OpenLayers tile layer.
  * @private
  */
-os.olcs.sync.TileSynchronizer.prototype.createSingle_ = function() {
+plugin.cesium.sync.TileSynchronizer.prototype.createSingle_ = function() {
   goog.asserts.assertInstanceof(this.layer, ol.layer.Tile);
   goog.asserts.assert(!goog.isNull(this.view));
 
   ol.events.listen(this.layer, goog.events.EventType.PROPERTYCHANGE, this.onLayerPropertyChange_, this);
-  this.activeLayer_ = os.olcs.tileLayerToImageryLayer(this.layer, this.view.getProjection());
+  this.activeLayer_ = plugin.cesium.tileLayerToImageryLayer(this.layer, this.view.getProjection());
 
   if (this.activeLayer_) {
     // update the layer style and add it to the scene
-    os.olcs.updateCesiumLayerProperties(this.layer, this.activeLayer_);
+    plugin.cesium.updateCesiumLayerProperties(this.layer, this.activeLayer_);
     this.onZoomChange_();
     this.cesiumLayers_.add(this.activeLayer_, this.lastStart_ > -1 ? this.lastStart_ : undefined);
 
     // register listeners to update the layer
-    os.ol.events.listenEach(this.layer, os.olcs.sync.TileSynchronizer.STYLE_KEYS_, this.onStyleChange_, this);
-    os.ol.events.listenEach(this.layer, os.olcs.sync.TileSynchronizer.RESOLUTION_KEYS_, this.onZoomChange_, this);
+    os.ol.events.listenEach(this.layer, plugin.cesium.sync.TileSynchronizer.STYLE_KEYS_, this.onStyleChange_, this);
+    os.ol.events.listenEach(this.layer, plugin.cesium.sync.TileSynchronizer.RESOLUTION_KEYS_, this.onZoomChange_, this);
     ol.events.listen(this.layer, 'change:extent', this.synchronize, this);
     ol.events.listen(this.layer, 'change', this.onChange_, this);
   }
@@ -259,17 +258,18 @@ os.olcs.sync.TileSynchronizer.prototype.createSingle_ = function() {
  * Disposes of the single Cesium layer if it exists.
  * @private
  */
-os.olcs.sync.TileSynchronizer.prototype.disposeSingle_ = function() {
+plugin.cesium.sync.TileSynchronizer.prototype.disposeSingle_ = function() {
   ol.events.unlisten(this.layer, goog.events.EventType.PROPERTYCHANGE, this.onLayerPropertyChange_, this);
 
   if (this.activeLayer_) {
     // clean up listeners
-    os.ol.events.unlistenEach(this.layer, os.olcs.sync.TileSynchronizer.STYLE_KEYS_, this.onStyleChange_, this);
-    os.ol.events.unlistenEach(this.layer, os.olcs.sync.TileSynchronizer.RESOLUTION_KEYS_, this.onZoomChange_, this);
+    os.ol.events.unlistenEach(this.layer, plugin.cesium.sync.TileSynchronizer.STYLE_KEYS_, this.onStyleChange_, this);
+    os.ol.events.unlistenEach(this.layer, plugin.cesium.sync.TileSynchronizer.RESOLUTION_KEYS_, this.onZoomChange_,
+        this);
     ol.events.unlisten(this.layer, 'change:extent', this.synchronize, this);
     ol.events.unlisten(this.layer, 'change', this.onChange_, this);
 
-    if (this.activeLayer_.imageryProvider instanceof os.olcs.ImageryProvider) {
+    if (this.activeLayer_.imageryProvider instanceof plugin.cesium.ImageryProvider) {
       this.activeLayer_.imageryProvider.dispose();
     }
 
@@ -277,20 +277,20 @@ os.olcs.sync.TileSynchronizer.prototype.disposeSingle_ = function() {
     this.cesiumLayers_.remove(this.activeLayer_, true);
     this.activeLayer_ = null;
 
-    os.dispatcher.dispatchEvent(os.olcs.RenderLoop.REPAINT);
+    os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
   }
 };
 
 
 /**
- * Creates Cesium layer cache based on a single OL3 tile layer to facilitate tile animation.
+ * Creates Cesium layer cache based on a single OpenLayers tile layer to facilitate tile animation.
  * @private
  */
-os.olcs.sync.TileSynchronizer.prototype.createCache_ = function() {
+plugin.cesium.sync.TileSynchronizer.prototype.createCache_ = function() {
   if (this.activeLayer_ && this.layer.getSource() instanceof ol.source.TileWMS) {
     // hide the active layer and disable any events that would update it
     this.activeLayer_.show = false;
-    os.ol.events.unlistenEach(this.layer, os.olcs.sync.TileSynchronizer.STYLE_KEYS_, this.onStyleChange_, this);
+    os.ol.events.unlistenEach(this.layer, plugin.cesium.sync.TileSynchronizer.STYLE_KEYS_, this.onStyleChange_, this);
     ol.events.unlisten(this.layer, 'change', this.onChange_, this);
 
     // create the cache
@@ -299,7 +299,7 @@ os.olcs.sync.TileSynchronizer.prototype.createCache_ = function() {
     // update the layer cache when the style changes, or a change event is fired (ie, params/url changed). in the
     // future we may have to clear the cache if something other than the TIME param changes (like user changes to
     // the url) but currently there isn't a way to do that.
-    os.ol.events.listenEach(this.layer, os.olcs.sync.TileSynchronizer.STYLE_KEYS_, this.updateAnimationCache_,
+    os.ol.events.listenEach(this.layer, plugin.cesium.sync.TileSynchronizer.STYLE_KEYS_, this.updateAnimationCache_,
         this);
     ol.events.listen(this.layer, 'change', this.updateAnimationCache_, this);
   }
@@ -310,9 +310,9 @@ os.olcs.sync.TileSynchronizer.prototype.createCache_ = function() {
  * Disposes of the Cesium tile layer cache.
  * @private
  */
-os.olcs.sync.TileSynchronizer.prototype.disposeCache_ = function() {
+plugin.cesium.sync.TileSynchronizer.prototype.disposeCache_ = function() {
   // remove cache listeners
-  os.ol.events.unlistenEach(this.layer, os.olcs.sync.TileSynchronizer.STYLE_KEYS_, this.updateAnimationCache_,
+  os.ol.events.unlistenEach(this.layer, plugin.cesium.sync.TileSynchronizer.STYLE_KEYS_, this.updateAnimationCache_,
       this);
   ol.events.unlisten(this.layer, 'change', this.updateAnimationCache_, this);
 
@@ -321,7 +321,7 @@ os.olcs.sync.TileSynchronizer.prototype.disposeCache_ = function() {
     for (var key in this.animationCache_) {
       this.cesiumLayers_.remove(this.animationCache_[key], true);
 
-      if (this.animationCache_[key].imageryProvider instanceof os.olcs.WMSImageryProvider) {
+      if (this.animationCache_[key].imageryProvider instanceof plugin.cesium.WMSImageryProvider) {
         this.animationCache_[key].imageryProvider.dispose();
       }
 
@@ -333,8 +333,8 @@ os.olcs.sync.TileSynchronizer.prototype.disposeCache_ = function() {
 
   // reactivate the active layer and its listeners. the show flag will be determined by layer visibility.
   if (this.layer && this.activeLayer_) {
-    os.olcs.updateCesiumLayerProperties(this.layer, this.activeLayer_);
-    os.ol.events.listenEach(this.layer, os.olcs.sync.TileSynchronizer.STYLE_KEYS_, this.onStyleChange_, this);
+    plugin.cesium.updateCesiumLayerProperties(this.layer, this.activeLayer_);
+    os.ol.events.listenEach(this.layer, plugin.cesium.sync.TileSynchronizer.STYLE_KEYS_, this.onStyleChange_, this);
     ol.events.listen(this.layer, 'change', this.onChange_, this);
   }
 };
@@ -346,7 +346,7 @@ os.olcs.sync.TileSynchronizer.prototype.disposeCache_ = function() {
  * tile layers are cached for each tile boundary within the animation loop.
  * @private
  */
-os.olcs.sync.TileSynchronizer.prototype.updateAnimationCache_ = function() {
+plugin.cesium.sync.TileSynchronizer.prototype.updateAnimationCache_ = function() {
   var newCache = {};
 
   // get the current layer from the cache and put it in the new cache
@@ -363,7 +363,7 @@ os.olcs.sync.TileSynchronizer.prototype.updateAnimationCache_ = function() {
   }
 
   this.animationCache_ = newCache;
-  os.dispatcher.dispatchEvent(os.olcs.RenderLoop.REPAINT);
+  os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
 };
 
 
@@ -375,7 +375,7 @@ os.olcs.sync.TileSynchronizer.prototype.updateAnimationCache_ = function() {
  * @return {string} WMS TIME parameter for the requested offset.
  * @private
  */
-os.olcs.sync.TileSynchronizer.prototype.getTimeParameter_ = function(offset) {
+plugin.cesium.sync.TileSynchronizer.prototype.getTimeParameter_ = function(offset) {
   goog.asserts.assertInstanceof(this.layer, os.layer.AnimatedTile);
 
   var dateFormat = this.layer.getDateFormat();
@@ -397,7 +397,7 @@ os.olcs.sync.TileSynchronizer.prototype.getTimeParameter_ = function(offset) {
  * @return {Cesium.ImageryLayer}
  * @private
  */
-os.olcs.sync.TileSynchronizer.prototype.getCacheLayer_ = function(timeParam, show) {
+plugin.cesium.sync.TileSynchronizer.prototype.getCacheLayer_ = function(timeParam, show) {
   goog.asserts.assert(!goog.isNull(this.layer));
 
   var cesiumLayer = this.animationCache_ ? this.animationCache_[timeParam] : undefined;
@@ -411,7 +411,7 @@ os.olcs.sync.TileSynchronizer.prototype.getCacheLayer_ = function(timeParam, sho
     delete this.animationCache_[timeParam];
   }
 
-  os.olcs.updateCesiumLayerProperties(this.layer, cesiumLayer);
+  plugin.cesium.updateCesiumLayerProperties(this.layer, cesiumLayer);
   cesiumLayer.alpha = show ? (this.layer.getOpacity() || 0) : 0;
   return cesiumLayer;
 };
@@ -424,7 +424,7 @@ os.olcs.sync.TileSynchronizer.prototype.getCacheLayer_ = function(timeParam, sho
  * @return {!Cesium.ImageryLayer} The Cesium imagery layer
  * @private
  */
-os.olcs.sync.TileSynchronizer.prototype.getLayerByTime_ = function(timeParam) {
+plugin.cesium.sync.TileSynchronizer.prototype.getLayerByTime_ = function(timeParam) {
   goog.asserts.assertInstanceof(this.layer, os.layer.AnimatedTile);
   goog.asserts.assert(!goog.isNull(this.view));
 
@@ -475,7 +475,7 @@ os.olcs.sync.TileSynchronizer.prototype.getLayerByTime_ = function(timeParam) {
   }
 
   // create the layer
-  var provider = new os.olcs.WMSImageryProvider(providerOptions, source);
+  var provider = new plugin.cesium.WMSImageryProvider(providerOptions, source);
   var cesiumLayer = new Cesium.ImageryLayer(provider, layerOptions);
   return cesiumLayer;
 };
@@ -486,10 +486,10 @@ os.olcs.sync.TileSynchronizer.prototype.getLayerByTime_ = function(timeParam) {
  * @param {ol.Object.Event} event
  * @private
  */
-os.olcs.sync.TileSynchronizer.prototype.onStyleChange_ = function(event) {
+plugin.cesium.sync.TileSynchronizer.prototype.onStyleChange_ = function(event) {
   goog.asserts.assert(!goog.isNull(this.layer));
   goog.asserts.assert(!goog.isNull(this.activeLayer_));
-  os.olcs.updateCesiumLayerProperties(this.layer, this.activeLayer_);
+  plugin.cesium.updateCesiumLayerProperties(this.layer, this.activeLayer_);
   this.onZoomChange_();
 };
 
@@ -499,7 +499,7 @@ os.olcs.sync.TileSynchronizer.prototype.onStyleChange_ = function(event) {
  * @param {ol.Object.Event} event
  * @private
  */
-os.olcs.sync.TileSynchronizer.prototype.onChange_ = function(event) {
+plugin.cesium.sync.TileSynchronizer.prototype.onChange_ = function(event) {
   // don't bother re-adding if the layer isn't shown. the change will take effect when the layer is shown again.
   if (this.activeLayer_ && this.activeLayer_.show) {
     // when the source changes, re-add the layer to force update
@@ -510,7 +510,7 @@ os.olcs.sync.TileSynchronizer.prototype.onChange_ = function(event) {
     }
   }
 
-  os.dispatcher.dispatchEvent(os.olcs.RenderLoop.REPAINT);
+  os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
 };
 
 
@@ -519,7 +519,7 @@ os.olcs.sync.TileSynchronizer.prototype.onChange_ = function(event) {
  * @param {os.events.PropertyChangeEvent} event
  * @private
  */
-os.olcs.sync.TileSynchronizer.prototype.onLayerPropertyChange_ = function(event) {
+plugin.cesium.sync.TileSynchronizer.prototype.onLayerPropertyChange_ = function(event) {
   // ol3 also fires 'propertychange' events, so ignore those
   if (event instanceof os.events.PropertyChangeEvent) {
     var p = event.getProperty();
@@ -536,5 +536,5 @@ os.olcs.sync.TileSynchronizer.prototype.onLayerPropertyChange_ = function(event)
     }
   }
 
-  os.dispatcher.dispatchEvent(os.olcs.RenderLoop.REPAINT);
+  os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
 };
