@@ -1,7 +1,7 @@
 // * Timeline styles
 // *******************************************
 
-.os-timeline {
+.c-timeline {
   @include box-shadow(inset 0 0 8px #222);
   background-color: #888;
   border-bottom: 1px solid $color-medium-gray;
@@ -11,15 +11,15 @@
   z-index: 200;
 }
 
-.os-timeline-expanded {
+.c-timeline-expanded {
   height: 150px;
 }
 
-.os-timeline-collapsed {
+.c-timeline-collapsed {
   height: 55px;
 }
 
-.timeline-buttons {
+.c-timeline__buttons {
   background-color: #666;
   border-radius: 4px 0 0;
   margin-top: -22px;

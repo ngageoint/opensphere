@@ -22,6 +22,7 @@ goog.require('os.ui.datetime.wheelDateDirective');
 os.ui.datetime.dateTimeDirective = function() {
   return {
     restrict: 'AE',
+    replace: true,
     scope: {
       'value': '=',
       'disabled': '=?',

@@ -84,7 +84,7 @@ os.ui.timeline.SelectBrush.prototype.setMenuContainer = function(container) {
  * @inheritDoc
  */
 os.ui.timeline.SelectBrush.prototype.initSVG = function(container, height) {
-  d3.select('.svg-timeline').
+  d3.select('.c-svg-timeline').
       on(goog.events.EventType.MOUSEDOWN + '.' + this.getId(), this.onDraw_.bind(this), true);
   os.ui.timeline.SelectBrush.superClass_.initSVG.call(this, container, height);
 };
@@ -167,7 +167,7 @@ os.ui.timeline.SelectBrush.prototype.updateBrush = function(opt_silent) {
         y: this.position_ ? this.position_[1] : 75
       };
 
-      var target = '.svg-timeline';
+      var target = '.c-svg-timeline';
 
       if (this.menu_) {
         this.menu_.open(ex, {

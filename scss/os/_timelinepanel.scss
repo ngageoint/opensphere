@@ -1,0 +1,39 @@
+// * Timeline Panel Styles
+// *******************************************
+
+.c-timeline-panel__expanded {
+  height: 190px;
+}
+
+.c-timeline-panel__collapsed {
+  height: 95px;
+}
+
+.c-timeline-panel__buttons {
+  background: $body-bg;
+  border-left: 1px solid $border-color;
+  border-radius: 4px 0 0;
+  border-top: 1px solid $border-color;
+  margin-top: -22px;
+  padding: 0 4px;
+  position: absolute;
+  right: 0;
+}
+
+.c-timeline-panel__time-start {
+  left: 5px;
+  position: absolute;
+}
+
+.c-timeline-panel__time-end {
+  position: absolute;
+  right: 5px;
+}
+
+.c-timeline-panel__fps-slider {
+  .slider-container {
+    display: inline-block;
+    margin-bottom: 1px;
+    width: 100px;
+  }
+}
