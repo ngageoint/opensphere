@@ -13,7 +13,6 @@ goog.require('plugin.ogc.OGCLayerDescriptor');
 goog.require('plugin.ogc.ui.geoserverDirective');
 goog.require('plugin.ogc.ui.ogcserverDirective');
 goog.require('plugin.ogc.wfs.QueryWFSLayerConfig');
-goog.require('plugin.ogc.wms.TerrainProvider');
 goog.require('plugin.ogc.wms.WMSLayerConfig');
 
 
@@ -58,9 +57,6 @@ plugin.ogc.OGCPlugin.prototype.init = function() {
   var im = os.ui.im.ImportManager.getInstance();
   im.registerImportUI(ogc.type, new os.ui.ProviderImportUI());
   im.registerImportUI(geo.type, new os.ui.ProviderImportUI());
-
-  // register the WMS terrain provider
-  os.MapContainer.getInstance().registerTerrainProviderType('WMS', plugin.ogc.wms.TerrainProvider);
 };
 
 

@@ -29,6 +29,7 @@ goog.require('ol.style.Style');
 goog.require('ol.tilegrid.TileGrid');
 goog.require('os.control.ScaleLine');
 goog.require('os.fn');
+goog.require('os.map');
 goog.require('os.map.IMapContainer');
 goog.require('os.ol.source.XYZ');
 goog.require('os.ui.ol.control.LayerSwitcher');
@@ -170,7 +171,7 @@ os.ui.ol.OLMap.prototype.init = function(opt_container) {
 
   if (goog.userAgent.IE) {
     try {
-      var olCanvas = /** @type {HTMLElement} */ ($('.ol-viewport > canvas')[0]);
+      var olCanvas = /** @type {HTMLElement} */ ($(os.map.OPENLAYERS_CANVAS)[0]);
       olCanvas.style.height = '';
       olCanvas.style.width = '';
     } catch (e) {

@@ -24,6 +24,7 @@ os.control.ZoomLevelOptions;
 
 
 /**
+ * Displays the current zoom level and altitude.
  * @param {os.control.ZoomLevelOptions=} opt_options Scale line options.
  * @extends {ol.control.Control}
  * @constructor
@@ -204,7 +205,7 @@ os.control.ZoomLevel.prototype.updateAltitudeText = function() {
 
   var map = os.MapContainer.getInstance();
   if (map.is3DEnabled()) {
-    var camera = map.getCesiumCamera();
+    var camera = map.getWebGLCamera();
     if (!camera) {
       this.hideAltitude();
       return;
@@ -263,7 +264,7 @@ os.control.ZoomLevel.prototype.updateZoomText = function() {
 
   var map = os.MapContainer.getInstance();
   if (map.is3DEnabled()) {
-    var camera = map.getCesiumCamera();
+    var camera = map.getWebGLCamera();
     if (!camera) {
       this.hideZoom();
       return;

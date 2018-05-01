@@ -1,19 +1,22 @@
 goog.provide('plugin.heatmap.HeatmapSynchronizer');
+
 goog.require('goog.asserts');
 goog.require('goog.async.Delay');
 goog.require('goog.events.EventType');
+goog.require('os.MapEvent');
 goog.require('os.layer.PropertyChange');
-goog.require('os.olcs');
-goog.require('os.olcs.sync.AbstractSynchronizer');
+goog.require('os.ol.events');
+goog.require('plugin.cesium');
+goog.require('plugin.cesium.sync.CesiumSynchronizer');
 
 
 
 /**
- * Synchronizes a single OL3 image layer to Cesium.
- * @param {!plugin.heatmap.Heatmap} layer
- * @param {!ol.Map} map
- * @param {!Cesium.Scene} scene
- * @extends {os.olcs.sync.AbstractSynchronizer<plugin.heatmap.Heatmap>}
+ * Synchronizes a single OpenLayers image layer to Cesium.
+ * @param {!plugin.heatmap.Heatmap} layer The OpenLayers heatmap layer.
+ * @param {!ol.PluggableMap} map The OpenLayers map.
+ * @param {!Cesium.Scene} scene The Cesium scene.
+ * @extends {plugin.cesium.sync.CesiumSynchronizer<plugin.heatmap.Heatmap>}
  * @constructor
  */
 plugin.heatmap.HeatmapSynchronizer = function(layer, map, scene) {
@@ -54,7 +57,7 @@ plugin.heatmap.HeatmapSynchronizer = function(layer, map, scene) {
   ol.events.listen(this.layer, goog.events.EventType.PROPERTYCHANGE, this.onLayerPropertyChange_, this);
   os.ol.events.listenEach(this.layer, plugin.heatmap.HeatmapSynchronizer.STYLE_KEYS_, this.onStyleChange_, this);
 };
-goog.inherits(plugin.heatmap.HeatmapSynchronizer, os.olcs.sync.AbstractSynchronizer);
+goog.inherits(plugin.heatmap.HeatmapSynchronizer, plugin.cesium.sync.CesiumSynchronizer);
 
 
 /**
@@ -131,8 +134,8 @@ plugin.heatmap.HeatmapSynchronizer.prototype.synchronizeInternal = function() {
 
     goog.asserts.assert(this.activeLayer_);
     goog.asserts.assert(this.layer);
-    os.olcs.updateCesiumLayerProperties(this.layer, this.activeLayer_);
-    os.dispatcher.dispatchEvent(os.olcs.RenderLoop.REPAINT);
+    plugin.cesium.updateCesiumLayerProperties(this.layer, this.activeLayer_);
+    os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
   }
 };
 
@@ -150,8 +153,8 @@ plugin.heatmap.HeatmapSynchronizer.prototype.onLayerPropertyChange_ = function(e
       this.visible_ = /** @type {boolean} */ (event.getNewValue());
 
       if (this.layer && this.activeLayer_) {
-        os.olcs.updateCesiumLayerProperties(this.layer, this.activeLayer_);
-        os.dispatcher.dispatchEvent(os.olcs.RenderLoop.REPAINT);
+        plugin.cesium.updateCesiumLayerProperties(this.layer, this.activeLayer_);
+        os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
       }
     } else if (p == 'intensity' || p == 'size' || p == 'gradient') {
       this.createHeatmap();
@@ -168,13 +171,13 @@ plugin.heatmap.HeatmapSynchronizer.prototype.onLayerPropertyChange_ = function(e
 plugin.heatmap.HeatmapSynchronizer.prototype.onStyleChange_ = function(event) {
   goog.asserts.assert(!goog.isNull(this.layer));
   goog.asserts.assert(!goog.isNull(this.activeLayer_));
-  os.olcs.updateCesiumLayerProperties(this.layer, this.activeLayer_);
-  os.dispatcher.dispatchEvent(os.olcs.RenderLoop.REPAINT);
+  plugin.cesium.updateCesiumLayerProperties(this.layer, this.activeLayer_);
+  os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
 };
 
 
 /**
- * Re-create the heatmap by forcing a call to OL3.
+ * Re-create the heatmap by forcing a call to OpenLayers.
  * @param {goog.events.Event=} opt_event
  * @suppress {accessControls}
  */

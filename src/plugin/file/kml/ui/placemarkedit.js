@@ -62,6 +62,20 @@ plugin.file.kml.ui.PlacemarkEditCtrl = function($scope, $element, $timeout) {
    * @protected
    */
   this.options = /** @type {!plugin.file.kml.ui.PlacemarkOptions} */ ($scope['options'] || {});
+
+  var time = this.options['time'];
+
+  if (time) {
+    this['startTime'] = time.getStart();
+    this['startTimeISO'] = this['startTime'] ? new Date(this['startTime']).toISOString() : undefined;
+    this['endTime'] = time.getEnd() === this['startTime'] ? undefined : time.getEnd();
+    this['endTimeISO'] = this['endTime'] ? new Date(this['endTime']).toISOString() : undefined;
+    if (this['endTime'] > this['startTime']) {
+      this['dateType'] = os.ui.datetime.AnyDateType.RANGE;
+    } else {
+      this['dateType'] = os.ui.datetime.AnyDateType.INSTANT;
+    }
+  }
 };
 goog.inherits(plugin.file.kml.ui.PlacemarkEditCtrl, os.ui.FeatureEditCtrl);
 

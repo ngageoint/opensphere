@@ -33,9 +33,11 @@ goog.inherits(os.command.LayerStyle, os.command.AbstractStyle);
  */
 os.command.LayerStyle.prototype.getOldValue = function() {
   var layer = os.MapContainer.getInstance().getLayer(this.layerId);
-  return (layer instanceof os.layer.Tile ||
-          layer instanceof os.layer.Vector ||
-          layer instanceof os.layer.Image) ? layer.getOpacity() : null;
+  if (os.implements(layer, os.layer.ILayer.ID)) {
+    return /** @type {os.layer.ILayer} */ (layer).getOpacity();
+  }
+
+  return null;
 };
 
 
@@ -44,8 +46,8 @@ os.command.LayerStyle.prototype.getOldValue = function() {
  */
 os.command.LayerStyle.prototype.applyValue = function(config, value) {
   var layer = os.MapContainer.getInstance().getLayer(this.layerId);
-  if (layer instanceof os.layer.Tile || layer instanceof os.layer.Vector || layer instanceof os.layer.Image) {
-    this.callback(layer, value);
+  if (os.implements(layer, os.layer.ILayer.ID)) {
+    this.callback(/** @type {os.layer.ILayer} */ (layer), value);
   }
 };
 
