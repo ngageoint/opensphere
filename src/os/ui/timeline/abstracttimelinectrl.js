@@ -1748,7 +1748,9 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.adjust = function() {
     timelineEl.addClass('c-timeline__expanded');
   }
 
-  ctrl.initSvg();
-  this.refreshAllBrushes();
-  os.ui.apply(this.scope);
+  os.ui.injector.get('$timeout')(function() {
+    // the inner timeline SVG doesn't resize correctly without this slight delay for some reason
+    ctrl.initSvg();
+    this.refreshAllBrushes();
+  }.bind(this), 100);
 };

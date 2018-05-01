@@ -1,6 +1,7 @@
 goog.provide('os.config.ThemeSettings');
 goog.provide('os.config.ThemeSettingsCtrl');
 
+goog.require('goog.Promise');
 goog.require('os.config.Settings');
 goog.require('os.net.Request');
 goog.require('os.ui.config.SettingPlugin');
@@ -112,7 +113,9 @@ os.config.ThemeSettingsCtrl.prototype.onSettingsChange_ = function(event) {
  * @param {string} oldVal
  */
 os.config.ThemeSettingsCtrl.prototype.onThemeChange = function(newVal, oldVal) {
-  os.settings.set(os.config.ThemeSettings.keys.THEME, this['theme']);
+  if (newVal != this['theme']) {
+    os.settings.set(os.config.ThemeSettings.keys.THEME, this['theme']);
+  }
 };
 goog.exportProperty(
     os.config.ThemeSettingsCtrl.prototype,
@@ -121,48 +124,63 @@ goog.exportProperty(
 
 
 /**
+ * The original stylesheet deployed with the application. Used as extreme backup if theres bad network connection
+ * @type {string}
+ */
+os.config.ThemeSettings.originalStylesheet = '';
+
+
+/**
  * Set Theme
+ * @return {goog.Promise}
  */
 os.config.ThemeSettings.setTheme = function() {
   var themeRegEx = /(themes\/).*?(\..*\.css)/;
   var stylesheets = $('[rel=stylesheet]');
-  var themeStylesheet = goog.array.find(stylesheets, function(el) {
+  var ssEl = goog.array.find(stylesheets, function(el) {
     return themeRegEx.test(el.href);
   });
 
-  // The theme that is displayed to the user
-  var displayTheme = os.settings.get(os.config.ThemeSettings.keys.THEME, 'none');
+  if (ssEl) {
+    return new goog.Promise(function(resolve, reject) {
+      // Save off the original stylesheet incase the network is having trouble getting others
+      if (!os.config.ThemeSettings.originalStylesheet) {
+        os.config.ThemeSettings.originalStylesheet = ssEl.href;
+      }
 
-  // The actual theme filename
-  var theme = os.settings.get(os.config.ThemeSettings.keys.THEMES, {})[displayTheme];
+      // The theme that is displayed to the user
+      var displayTheme = os.settings.get(os.config.ThemeSettings.keys.THEME, 'none');
 
-  // If there is a theme specified, use it! otherwise just use what comes with the application
-  if (theme) {
-    // The url to the new theme
-    var newStylesheet = themeStylesheet.href.replace(themeRegEx, '$1' + theme + '$2');
-    var lastStylesheet = themeStylesheet.href;
+      // The actual theme filename
+      var theme = os.settings.get(os.config.ThemeSettings.keys.THEMES, {})[displayTheme];
 
-    // Ok lets trust but verify that the stylesheet is good. Otherwise you see a flicker when loading the app
-    // loading a non-default stylesheet
-    if (themeStylesheet.href != newStylesheet) {
-      // Awesome! lets load it!
-      goog.dom.safe.setLinkHrefAndRel(themeStylesheet,
-          goog.html.TrustedResourceUrl.fromConstant(os.string.createConstant(newStylesheet)), themeStylesheet.rel);
-    }
+      // If there is a theme specified, use it! otherwise just use what comes with the application
+      if (goog.isDef(theme)) {
+        // The url to the new theme
+        var cssFile = ssEl.href.replace(themeRegEx, '$1' + theme + '$2');
+        var backupCssFile = ssEl.href;
 
-    // Verify that it was good...
-    var request = new os.net.Request();
-    request.setUri(newStylesheet);
-    request.listenOnce(goog.net.EventType.SUCCESS, os.config.ThemeSettings.cleanupRequest, false);
-    request.listenOnce(goog.net.EventType.ERROR, function(event) {
-      os.config.ThemeSettings.cleanupRequest(event);
-
-      // Revert!
-      goog.dom.safe.setLinkHrefAndRel(themeStylesheet,
-          goog.html.TrustedResourceUrl.fromConstant(os.string.createConstant(lastStylesheet)), themeStylesheet.rel);
-    }, false);
-    request.load();
+        // Ok lets trust but verify that the stylesheet is good. Otherwise you see a flicker when loading the app
+        // loading a non-default stylesheet
+        if (ssEl.href != cssFile) {
+          // Awesome! lets load it!
+          os.config.ThemeSettings.changeTheme(ssEl, cssFile, backupCssFile, resolve);
+        }
+      } else {
+        resolve();
+      }
+    });
+  } else {
+    return goog.Promise.resolve();
   }
+};
+
+
+/**
+ * On settings update, set the theme.
+ */
+os.config.ThemeSettings.updateTheme = function() {
+  os.config.ThemeSettings.setTheme();
 };
 
 
@@ -172,4 +190,50 @@ os.config.ThemeSettings.setTheme = function() {
  */
 os.config.ThemeSettings.cleanupRequest = function(event) {
   /** @type {os.net.Request} */ (event.target).dispose();
+};
+
+
+/**
+ * Change the stylesheet
+ * @param {!HTMLLinkElement} ssEl
+ * @param {string} cssFile
+ * @param {string} backupCssFile
+ * @param {function()} resolve - resolve the promise after the css is loaded
+ */
+os.config.ThemeSettings.changeTheme = function(ssEl, cssFile, backupCssFile, resolve) {
+  var request = new os.net.Request();
+  request.setUri(cssFile);
+  request.listenOnce(goog.net.EventType.SUCCESS, function(event) {
+    os.config.ThemeSettings.cleanupRequest(event);
+    $('body').css('opacity', 0);
+    $('body').css('background-color', '#000');
+    goog.dom.safe.setLinkHrefAndRel(ssEl,
+        goog.html.TrustedResourceUrl.fromConstant(os.string.createConstant(cssFile)), ssEl.rel);
+    resolve();
+
+    // If angular is already bootstraped. We want to wait for the new css file to load.
+    // Otherwise its loaded so we are good
+    if (os.ui.injector) {
+      os.ui.injector.get('$timeout')(function() {
+        $('body').css('background-color', '');
+        $('body').css('opacity', '');
+      }, 200);
+    } else {
+      $('body').css('background-color', '');
+      $('body').css('opacity', '');
+    }
+  }, false);
+  request.listenOnce(goog.net.EventType.ERROR, function(event) {
+    os.config.ThemeSettings.cleanupRequest(event);
+
+    // If we've already tried to load the backup and THAT failed. Then just bootstrap and hope for the best.
+    // Should never happen (??)
+    if (backupCssFile == os.config.ThemeSettings.originalStylesheet) {
+      resolve();
+    } else {
+      // Revert!
+      os.config.ThemeSettings.changeTheme(ssEl, backupCssFile, os.config.ThemeSettings.originalStylesheet, resolve);
+    }
+  }, false);
+  request.load();
 };
