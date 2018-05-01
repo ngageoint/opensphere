@@ -138,7 +138,7 @@ os.ui.slick.SlickTreeCtrl = function($scope, $element, $compile) {
    * @type {string}
    * @private
    */
-  this.checkboxClass_ = $scope['checkboxClass'] || 'tristate';
+  this.checkboxClass_ = $scope['checkboxClass'] || 'c-tristate';
 
   /**
    * The tree's spinner class
