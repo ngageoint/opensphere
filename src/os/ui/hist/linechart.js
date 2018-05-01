@@ -75,7 +75,7 @@ os.ui.hist.LineChart.prototype.draw = function(data, x, y) {
     var lineFn = /** @type {d3.LineFn} */ (line);
 
     var lines = parentSelection.selectAll('g').data(data)
-        .enter().append('g').attr('class', 'hist-line');
+        .enter().append('g').attr('class', 'c-histogram-line');
     lines.append('path')
         .attr('stroke', function(d) {
           var hist = /** @type {os.hist.HistogramData} */ (d);
@@ -103,7 +103,7 @@ os.ui.hist.LineChart.prototype.draw = function(data, x, y) {
       }
 
       d3.select(/** @type {Element} */ (this)).selectAll('circle').data(counts).enter().append('circle')
-          .attr('class', 'line-point')
+          .attr('class', 'c-histogram-group__line-point')
           .attr('cx', function(d) {
             return xFn(d['key']) + xOffset;
           })
