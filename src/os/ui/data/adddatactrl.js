@@ -78,7 +78,7 @@ os.ui.data.AddDataCtrl = function($scope, $element) {
 
   var timeout = /** @type {angular.$timeout} */ (os.ui.injector.get('$timeout'));
   timeout(function() {
-    $element.find('input.search').focus();
+    $element.find('.js-input-search').focus();
   });
 
   this.search();

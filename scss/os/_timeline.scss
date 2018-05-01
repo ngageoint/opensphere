@@ -1,0 +1,296 @@
+// * Timeline Styles. This file contains all SVG-related styling for the timeline and its histograms.
+// *******************************************
+
+.c-timeline {
+  box-shadow: inset 0 0 1rem $gray-500;
+  margin-top: 5px;
+  z-index: 200;
+}
+
+.c-timeline__expanded {
+  height: 150px;
+}
+
+.c-timeline__collapsed {
+  height: 55px;
+}
+
+// * Timeline SVG Styles
+// *******************************************
+
+.c-svg-timeline {
+  fill: $body-bg;
+  height: 100%;
+  overflow-x: hidden;
+  width: 100%;
+
+  // d3 classname, we can't change it
+  .tick {
+    pointer-events: none;
+  }
+
+  text {
+    fill: $body-color;
+  }
+}
+
+.c-svg-timeline__main {
+  height: calc(100% - 11px);
+  width: 100%;
+}
+
+.c-svg-timeline__line {
+  fill: none;
+  shape-rendering: crispEdges;
+  stroke: $black;
+}
+
+.c-svg-timeline__background {
+  @include grab-cursor();
+  fill-opacity: 0;
+}
+
+.c-svg-timeline__background.dragging {
+  @include grabbing-cursor();
+}
+
+.c-svg-timeline__axis-background {
+  fill-opacity: 0;
+  pointer-events: none;
+}
+
+.c-svg-timeline__tile-axis {
+  text {
+    display: none;
+  }
+}
+
+// TODO: rename all of these highly, highly generic classnames
+.brush,
+.hold,
+.load,
+.slice,
+.considered {
+  .left {
+    text-anchor: end;
+  }
+
+  .background {
+    display: none;
+  }
+
+  .extent {
+    shape-rendering: crispEdges;
+  }
+}
+
+.brush-window .extent {
+  fill: $blue;
+  fill-opacity: .2;
+  stroke: darken($blue, 10%);
+}
+
+.brush-window .fade-right {
+  fill-opacity: .2;
+}
+
+.brush-window .fade-left {
+  fill-opacity: .2;
+}
+
+.arrow-window,
+.brush-window .resize polygon {
+  fill: darken($blue, 10%);
+}
+
+.skip-hold-brushes {
+  .button {
+    cursor: pointer;
+    fill: $danger;
+    font-size: 8pt;
+    font-weight: bold;
+  }
+}
+
+.skip-hold-brushes .brush .extent {
+  fill: none;
+  pointer-events: stroke;
+  stroke: $success;
+}
+
+.skip-hold-brushes .hold .extent {
+  fill: none;
+  pointer-events: stroke;
+  stroke: $black;
+}
+
+.skip-hold-brushes .load .extent {
+  fill: none;
+  pointer-events: stroke;
+  stroke: $yellow;
+}
+
+.skip-hold-brushes .slice .extent {
+  fill: none;
+  pointer-events: stroke;
+  stroke: $orange;
+}
+
+.skip-hold-brushes .considered .extent {
+  fill: none;
+  pointer-events: stroke;
+  stroke: $yellow;
+  stroke-dasharray: 5, 5;
+}
+
+.arrow-loop,
+.skip-hold-brushes .brush .resize polygon {
+  fill: $success;
+}
+
+.arrow-loop,
+.skip-hold-brushes .hold .resize polygon {
+  fill: $black;
+}
+
+.arrow-loop,
+.skip-hold-brushes .load .resize polygon {
+  fill: $yellow;
+}
+
+.arrow-loop,
+.skip-hold-brushes .slice .resize polygon {
+  fill: $orange;
+}
+
+.arrow-loop,
+.skip-hold-brushes .considered .resize polygon {
+  fill: $yellow;
+}
+
+.load {
+  color: $yellow;
+}
+
+.slice {
+  color: $orange;
+}
+
+.considered {
+  color: $yellow;
+}
+
+.brush-select .extent {
+  fill: $teal;
+  fill-opacity: .2;
+  pointer-events: none;
+  stroke: $teal;
+}
+
+.brush-select .resize {
+  pointer-events: none;
+
+  polygon {
+    display: none;
+  }
+}
+
+.brush-load .extent {
+  fill: none;
+  pointer-events: stroke;
+  stroke: $yellow;
+}
+
+.arrow-load,
+.brush-load .resize polygon {
+  fill: $yellow;
+}
+
+.brush-slice .extent {
+  fill: none;
+  pointer-events: stroke;
+  stroke: $orange;
+}
+
+.arrow-slice,
+.brush-slice .resize polygon {
+  fill: $orange;
+}
+
+.brush-considered .extent {
+  fill: none;
+  pointer-events: stroke;
+  stroke: $yellow;
+}
+
+.arrow-considered,
+.brush-considered .resize polygon {
+  fill: $yellow;
+}
+
+.axis {
+  text {
+    font: 10px sans-serif;
+  }
+
+  path,
+  line {
+    fill: none;
+    shape-rendering: crispEdges;
+    stroke: $secondary;
+  }
+
+  &.c-svg-timeline__tile-axis {
+    path,
+    line {
+      stroke: $body-color;
+    }
+  }
+}
+
+// * Timeline Histogram Styles
+// *******************************************
+
+.c-histogram-group {
+  .bar {
+    shape-rendering: crispEdges;
+
+    &:hover {
+      @include opacity(.4);
+    }
+  }
+
+  path {
+    fill: none;
+    stroke-width: 2;
+  }
+}
+
+.c-histogram-group__line-point {
+  fill: $body-bg;
+  stroke-width: 2;
+}
+
+.c-histogram-tooltip {
+  @include border-radius(3);
+  background: rgba(0, 0, 0, .8);
+  color: $body-bg;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 1;
+  padding: 5px;
+  z-index: 2000;
+}
+
+.c-histogram-tooltip::after {
+  color: rgba(0, 0, 0, .8);
+  content: '\25bc';
+  display: block;
+  font-size: 10px;
+  line-height: 1;
+  margin-left: -5px;
+  margin-top: 2px;
+  position: absolute;
+  text-align: center;
+  width: 100%;
+}

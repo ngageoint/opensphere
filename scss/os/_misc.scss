@@ -58,6 +58,15 @@
   @include grabbing-cursor();
 }
 
+.u-btn-separator {
+  border-left: 1px solid $body-color;
+  border-right: 1px solid $body-bg;
+  display: inline-block;
+  height: 19px;
+  position: relative;
+  top: 6px;
+}
+
 // For all the bootstrap themes, create our utility color
 @each $color, $value in $theme-colors {
   .u-bg-#{$color}-text {
