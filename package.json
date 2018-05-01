@@ -219,7 +219,7 @@
     "opensphere-build-closure-helper": "^1.0.0",
     "opensphere-build-docs": "^1.0.0",
     "opensphere-build-index": "^1.0.0",
-    "opensphere-build-resolver": "^2.4.1",
+    "opensphere-build-resolver": "^2.6.0",
     "opensphere-state-schema": "^2.0.8",
     "replace": "^0.3.0",
     "rimraf": "^2.5.4",
