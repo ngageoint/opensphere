@@ -47,7 +47,7 @@ os.command.FlyTo.prototype.execute = function() {
   });
 
   if (mapContainer.is3DEnabled()) {
-    var camera = mapContainer.getCesiumCamera();
+    var camera = mapContainer.getWebGLCamera();
     if (camera) {
       prevOptions.altitude = camera.getAltitude();
     }

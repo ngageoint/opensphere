@@ -1,23 +1,26 @@
 /**
- * @fileoverview ol3-cesium camera replacement.
- *
+ * @fileoverview ol-cesium camera replacement.
  * @suppress {accessControls}
  */
-goog.provide('os.olcs.Camera');
+goog.provide('plugin.cesium.Camera');
 
 goog.require('goog.async.Throttle');
+goog.require('goog.math');
 goog.require('ol.Observable');
 goog.require('ol.events');
 goog.require('ol.proj');
 goog.require('olcs.Camera');
 goog.require('olcs.core');
 goog.require('os.map');
-goog.require('os.olcs');
+goog.require('os.math');
+goog.require('os.webgl.IWebGLCamera');
 
 
 
 /**
- * This object takes care of additional 3d-specific properties of the view and ensures proper synchronization with the
+ * A WebGL camera implementation for Cesium.
+ *
+ * This object takes care of additional 3D-specific properties of the view and ensures proper synchronization with the
  * underlying raw Cesium.Camera object.
  *
  * This replaces {@link olcs.Camera}, which syncs the 2D view to the 3D camera instead of using native Cesium camera
@@ -27,9 +30,10 @@ goog.require('os.olcs');
  * @param {!ol.Map} map
  *
  * @extends {olcs.Camera}
+ * @implements {os.webgl.IWebGLCamera}
  * @constructor
  */
-os.olcs.Camera = function(scene, map) {
+plugin.cesium.Camera = function(scene, map) {
   this.scene_ = scene;
   this.cam_ = scene.camera;
   this.map_ = map;
@@ -52,31 +56,33 @@ os.olcs.Camera = function(scene, map) {
    */
   this.updateThrottle_ = new goog.async.Throttle(this.updateView, 100, this);
 };
-goog.inherits(os.olcs.Camera, olcs.Camera);
+goog.inherits(plugin.cesium.Camera, olcs.Camera);
 
 
 /**
  * Replace the olcs camera with ours.
  * @suppress {checkTypes} Because hacks.
  */
-os.olcs.replaceCamera = function() {
-  olcs.Camera = os.olcs.Camera;
+plugin.cesium.replaceCamera = function() {
+  olcs.Camera = plugin.cesium.Camera;
 };
-os.olcs.replaceCamera();
+plugin.cesium.replaceCamera();
 
 
 /**
+ * If the camera is enabled.
  * @return {boolean}
  */
-os.olcs.Camera.prototype.getEnabled = function() {
+plugin.cesium.Camera.prototype.getEnabled = function() {
   return this.enabled_;
 };
 
 
 /**
- * @param {boolean} value
+ * Set if the camera is enabled.
+ * @param {boolean} value If the camera should be enabled.
  */
-os.olcs.Camera.prototype.setEnabled = function(value) {
+plugin.cesium.Camera.prototype.setEnabled = function(value) {
   this.enabled_ = value;
 
   if (this.enabled_) {
@@ -88,7 +94,63 @@ os.olcs.Camera.prototype.setEnabled = function(value) {
 /**
  * @inheritDoc
  */
-os.olcs.Camera.prototype.getHeading = function() {
+plugin.cesium.Camera.prototype.getAltitude = function() {
+  return this.cam_.positionCartographic.height;
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.cesium.Camera.prototype.setAltitude = function(altitude) {
+  this.flyTo(/** @type {!osx.map.FlyToOptions} */ ({
+    altitude: altitude,
+    positionCamera: true
+  }));
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.cesium.Camera.prototype.getCenter = function() {
+  var view = this.map_.getView();
+
+  if (!view) {
+    return undefined;
+  }
+
+  return view.getCenter();
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.cesium.Camera.prototype.setCenter = function(center) {
+  this.flyTo(/** @type {!osx.map.FlyToOptions} */ ({
+    center: center,
+    positionCamera: true
+  }));
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.cesium.Camera.prototype.getExtent = function() {
+  var rect = this.cam_.computeViewRectangle();
+
+  // the values are returned in radians, so map them to degrees
+  return rect ? [rect.west, rect.south, rect.east, rect.north].map(Cesium.Math.toDegrees) : undefined;
+};
+
+
+/**
+ * @return {number}
+ * @override
+ */
+plugin.cesium.Camera.prototype.getHeading = function() {
   return this.cam_.heading;
 };
 
@@ -96,7 +158,7 @@ os.olcs.Camera.prototype.getHeading = function() {
 /**
  * @inheritDoc
  */
-os.olcs.Camera.prototype.setHeading = function(heading) {
+plugin.cesium.Camera.prototype.setHeading = function(heading) {
   var carto = this.cam_.positionCartographic;
   this.cam_.setView({
     destionation: carto,
@@ -112,7 +174,7 @@ os.olcs.Camera.prototype.setHeading = function(heading) {
 /**
  * @inheritDoc
  */
-os.olcs.Camera.prototype.getTilt = function() {
+plugin.cesium.Camera.prototype.getTilt = function() {
   return this.tilt_;
 };
 
@@ -120,7 +182,7 @@ os.olcs.Camera.prototype.getTilt = function() {
 /**
  * @inheritDoc
  */
-os.olcs.Camera.prototype.setTilt = function(tilt) {
+plugin.cesium.Camera.prototype.setTilt = function(tilt) {
   this.tilt_ = tilt;
   this.updateCamera_();
 };
@@ -129,32 +191,7 @@ os.olcs.Camera.prototype.setTilt = function(tilt) {
 /**
  * @inheritDoc
  */
-os.olcs.Camera.prototype.getCenter = function() {
-  var view = this.map_.getView();
-
-  if (!view) {
-    return undefined;
-  }
-
-  return view.getCenter();
-};
-
-
-/**
- * @inheritDoc
- */
-os.olcs.Camera.prototype.setCenter = function(center) {
-  this.flyTo(/** @type {!osx.map.FlyToOptions} */ ({
-    center: center,
-    positionCamera: true
-  }));
-};
-
-
-/**
- * @inheritDoc
- */
-os.olcs.Camera.prototype.setPosition = function(position) {
+plugin.cesium.Camera.prototype.setPosition = function(position) {
   this.flyTo(/** @type {!osx.map.FlyToOptions} */ ({
     center: position,
     positionCamera: true
@@ -165,37 +202,67 @@ os.olcs.Camera.prototype.setPosition = function(position) {
 /**
  * @inheritDoc
  */
-os.olcs.Camera.prototype.getAltitude = function() {
-  return this.cam_.positionCartographic.height;
+plugin.cesium.Camera.prototype.rotateLeft = function(opt_value) {
+  if (this.cam_) {
+    this.cam_.rotateLeft(opt_value);
+  }
 };
 
 
 /**
  * @inheritDoc
  */
-os.olcs.Camera.prototype.setAltitude = function(altitude) {
-  this.flyTo(/** @type {!osx.map.FlyToOptions} */ ({
-    altitude: altitude,
-    positionCamera: true
-  }));
-};
-
-
-/**
- * @return {ol.Extent|undefined} The extent in degrees or undefined if the ellipsoid is not visible
- */
-os.olcs.Camera.prototype.getExtent = function() {
-  var rect = this.cam_.computeViewRectangle();
-  if (rect) {
-    return [rect.west, rect.south, rect.east, rect.north];
+plugin.cesium.Camera.prototype.rotateRight = function(opt_value) {
+  if (this.cam_) {
+    this.cam_.rotateRight(opt_value);
   }
 };
 
 
 /**
- * Cancels the current camera flight if one is in progress. The camera is left at it's current location.
+ * @inheritDoc
  */
-os.olcs.Camera.prototype.cancelFlight = function() {
+plugin.cesium.Camera.prototype.rotateUp = function(opt_value) {
+  if (this.cam_) {
+    this.cam_.rotateUp(opt_value);
+  }
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.cesium.Camera.prototype.rotateDown = function(opt_value) {
+  if (this.cam_) {
+    this.cam_.rotateDown(opt_value);
+  }
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.cesium.Camera.prototype.twistLeft = function(opt_value) {
+  if (this.cam_) {
+    this.cam_.twistLeft(opt_value);
+  }
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.cesium.Camera.prototype.twistRight = function(opt_value) {
+  if (this.cam_) {
+    this.cam_.twistRight(opt_value);
+  }
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.cesium.Camera.prototype.cancelFlight = function() {
   if (this.enabled_ && this.cam_) {
     this.cam_.cancelFlight();
   }
@@ -203,10 +270,9 @@ os.olcs.Camera.prototype.cancelFlight = function() {
 
 
 /**
- * Flies the camera to point at the specified target.
- * @param {!osx.map.FlyToOptions} options The fly to options.
+ * @inheritDoc
  */
-os.olcs.Camera.prototype.flyTo = function(options) {
+plugin.cesium.Camera.prototype.flyTo = function(options) {
   if (this.enabled_) {
     var duration = options.duration != null ? options.duration : os.MapContainer.FLY_ZOOM_DURATION;
     var easingFunction = options.flightMode === os.FlightMode.SMOOTH ? Cesium.EasingFunction.LINEAR_NONE : undefined;
@@ -262,12 +328,11 @@ os.olcs.Camera.prototype.flyTo = function(options) {
 
 
 /**
- * Gets the distance to the center of the screen
- * @return {number}
+ * @inheritDoc
  */
-os.olcs.Camera.prototype.getDistanceToCenter = function() {
+plugin.cesium.Camera.prototype.getDistanceToCenter = function() {
   var center;
-  var canvas = /** @type {HTMLCanvasElement} */ (document.querySelector(os.olcs.CESIUM_CANVAS_SELECTOR));
+  var canvas = /** @type {HTMLCanvasElement} */ (document.querySelector(os.map.WEBGL_CANVAS));
   if (canvas) {
     center = this.cam_.pickEllipsoid(new Cesium.Cartesian2(canvas.width / 2, canvas.height / 2));
   }
@@ -279,19 +344,19 @@ os.olcs.Camera.prototype.getDistanceToCenter = function() {
 
 
 /**
- * Gets the distance from the camera to a world coordinate. Returns undefined if the coordinate is obscured by the
+ * Get the distance from the camera to a world coordinate. Returns undefined if the coordinate is obscured by the
  * ellipsoid.
  * @param {!Cesium.Cartesian3} position The position
  * @return {number|undefined}
  */
-os.olcs.Camera.prototype.getDistanceToPosition = function(position) {
+plugin.cesium.Camera.prototype.getDistanceToPosition = function(position) {
   var distance;
 
   // get the window pixel of the position within the scene. make sure a pixel is returned and is not negative.
   var pixel = Cesium.SceneTransforms.wgs84ToWindowCoordinates(this.scene_, position);
   if (pixel && pixel.x > 0 && pixel.y > 0) {
     // make sure the pixel is within the bounds of the canvas
-    var canvas = /** @type {HTMLCanvasElement} */ (document.querySelector(os.olcs.CESIUM_CANVAS_SELECTOR));
+    var canvas = /** @type {HTMLCanvasElement} */ (document.querySelector(os.map.WEBGL_CANVAS));
     if (pixel.x <= canvas.width && pixel.y <= canvas.height) {
       // get the distance to the position
       distance = Cesium.Cartesian3.distance(position, this.cam_.positionWC);
@@ -314,10 +379,9 @@ os.olcs.Camera.prototype.getDistanceToPosition = function(position) {
 
 
 /**
- * Zooms the camera by the provided delta value.
- * @param {number} delta The zoom delta.
+ * @inheritDoc
  */
-os.olcs.Camera.prototype.zoomByDelta = function(delta) {
+plugin.cesium.Camera.prototype.zoomByDelta = function(delta) {
   var camDistance = this.getDistanceToCenter();
   var distance = camDistance - camDistance * delta;
 
@@ -341,7 +405,7 @@ os.olcs.Camera.prototype.zoomByDelta = function(delta) {
  * @private
  * @override
  */
-os.olcs.Camera.prototype.updateCamera_ = function() {
+plugin.cesium.Camera.prototype.updateCamera_ = function() {
   var view = this.map_.getView();
   if (!view) {
     return;
@@ -382,7 +446,7 @@ os.olcs.Camera.prototype.updateCamera_ = function() {
 /**
  * @inheritDoc
  */
-os.olcs.Camera.prototype.readFromView = function() {
+plugin.cesium.Camera.prototype.readFromView = function() {
   var view = this.map_.getView();
   if (!this.enabled_ || !view) {
     return;
@@ -407,7 +471,7 @@ os.olcs.Camera.prototype.readFromView = function() {
 /**
  * @inheritDoc
  */
-os.olcs.Camera.prototype.updateView = function() {
+plugin.cesium.Camera.prototype.updateView = function() {
   var view = this.map_.getView();
   if (!this.enabled_ || !view) {
     return;
@@ -486,7 +550,7 @@ os.olcs.Camera.prototype.updateView = function() {
 /**
  * @inheritDoc
  */
-os.olcs.Camera.prototype.checkCameraChange = function(opt_dontSync) {
+plugin.cesium.Camera.prototype.checkCameraChange = function(opt_dontSync) {
   var old = this.lastCameraViewMatrix_;
   var current = this.cam_.viewMatrix;
 
@@ -502,7 +566,7 @@ os.olcs.Camera.prototype.checkCameraChange = function(opt_dontSync) {
 /**
  * @inheritDoc
  */
-os.olcs.Camera.prototype.calcDistanceForResolution = function(resolution, latitude) {
+plugin.cesium.Camera.prototype.calcDistanceForResolution = function(resolution, latitude) {
   var canvas = this.scene_.canvas;
   var fovy = this.cam_.frustum.fovy; // vertical field of view
   var view = this.map_.getView();
@@ -543,7 +607,7 @@ os.olcs.Camera.prototype.calcDistanceForResolution = function(resolution, latitu
 /**
  * @inheritDoc
  */
-os.olcs.Camera.prototype.calcResolutionForDistance = function(distance, latitude) {
+plugin.cesium.Camera.prototype.calcResolutionForDistance = function(distance, latitude) {
   // See the reverse calculation (calcDistanceForResolution) for details
   var canvas = this.scene_.canvas;
   var fovy = this.cam_.frustum.fovy;
@@ -556,4 +620,62 @@ os.olcs.Camera.prototype.calcResolutionForDistance = function(distance, latitude
   var resolution = visibleMapUnits / canvas.clientHeight;
 
   return resolution;
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.cesium.Camera.prototype.persist = function() {
+  goog.asserts.assert(!!this.cam_, 'camera not defined');
+
+  var carto = this.cam_.positionCartographic;
+  var latitude = os.math.roundWithPrecision(goog.math.toDegrees(carto.latitude), 12) || 0;
+  var longitude = os.math.roundWithPrecision(goog.math.toDegrees(carto.longitude), 12) || 0;
+
+  var altitude = carto.height;
+  var projection = this.map_.getView().getProjection();
+  var resolution = os.map.resolutionForDistance(this.map_, altitude);
+  var zoom = os.map.resolutionToZoom(resolution, projection, 1);
+
+  // Cesium heading and roll follow the KML spec
+  var heading = goog.math.toDegrees(this.cam_.heading);
+  var roll = goog.math.toDegrees(this.cam_.roll);
+
+  // translate Cesium pitch to the KML tilt spec:
+  //   Cesium pitch: -90 is perpendicular to the globe, 0 is parallel.
+  //   KML pitch: 0 is perpendicular to the globe, 90 is parallel.
+  var tilt = goog.math.clamp(goog.math.toDegrees(this.cam_.pitch), -90, 0) + 90;
+
+  return /** @type {!osx.map.CameraState} */ ({
+    center: [longitude, latitude],
+    altitude: altitude,
+    heading: heading,
+    roll: roll,
+    tilt: tilt,
+    zoom: zoom
+  });
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.cesium.Camera.prototype.restore = function(cameraState) {
+  goog.asserts.assert(!!this.cam_, 'camera not defined');
+
+  var carto = new Cesium.Cartographic(goog.math.toRadians(cameraState.center[0]),
+      goog.math.toRadians(cameraState.center[1]), cameraState.altitude);
+
+  // translate from KML spec for tilt back to Cesium pitch:
+  //   Cesium pitch: -90 is perpendicular to the globe, 0 is parallel
+  //   KML pitch: 0 is perpendicular to the globe, 90 is parallel
+  this.cam_.setView({
+    destination: Cesium.Ellipsoid.WGS84.cartographicToCartesian(carto),
+    orientation: /** @type {Cesium.optionsOrientation} */ ({
+      heading: goog.math.toRadians(cameraState.heading),
+      pitch: goog.math.toRadians(cameraState.tilt - 90),
+      roll: goog.math.toRadians(cameraState.roll)
+    })
+  });
 };

@@ -1,16 +1,20 @@
+goog.require('ol.geom.Point');
 goog.require('os.events.EventType');
-goog.require('os.structs.TriState');
-goog.require('os.ui.file.method.UrlMethod');
+goog.require('os.im.Importer');
 goog.require('os.mixin');
 goog.require('os.mock');
-goog.require('ol.geom.Point');
+goog.require('os.net.Request');
+goog.require('os.structs.TriState');
+goog.require('os.ui.file.method.UrlMethod');
 goog.require('plugin.file.kml.KMLParser');
 goog.require('plugin.file.kml.ui.KMLNode');
 
 describe('plugin.file.kml.KMLParser', function() {
   var testUrl = '/base/test/plugin/file/kml/kml_test.xml';
   var parser = new plugin.file.kml.KMLParser();
-  var kmlSource, rootNode, testFolder;
+  var kmlSource;
+  var rootNode;
+  var testFolder;
 
   var finishParsing = function() {
     while (parser && parser.hasNext()) {
@@ -68,7 +72,7 @@ describe('plugin.file.kml.KMLParser', function() {
     expect(docRoot.getLabel()).toBe('KML Test');
     expect(docRoot.getState()).toBe(os.structs.TriState.BOTH);
 
-    //check that we read in the second doc node correctly
+    // check that we read in the second doc node correctly
     expect(docRoot2 instanceof plugin.file.kml.ui.KMLNode).toBe(true);
     expect(docRoot2.collapsed).toBe(false);
     expect(docRoot2.getLabel()).toBe('KML Test 2');
@@ -303,4 +307,48 @@ describe('plugin.file.kml.KMLParser', function() {
     expect(regexp.test('GroundOverlay3')).toBe(false);
   });
 
+  it('should work with an importer and handle invalid polygons', function() {
+    var r = new os.net.Request(testUrl);
+    var i = new os.im.Importer(new plugin.file.kml.KMLParser());
+    var count = 0;
+    var listener = function(e) {
+      count++;
+    };
+
+    r.listen(goog.net.EventType.SUCCESS, listener);
+    i.listen(os.events.EventType.COMPLETE, listener);
+
+    runs(function() {
+      r.load();
+    });
+
+    waitsFor(function() {
+      return count == 1;
+    }, 'request to finish loading');
+
+    runs(function() {
+      i.startImport(r.getResponse());
+      r.clearResponse();
+    });
+
+    waitsFor(function() {
+      return count == 2;
+    }, 'importer to finish');
+
+    runs(function() {
+      var data = i.getData();
+      expect(data.length).toBe(26);
+
+      // invalid polygon should be set to undefined for a single polygon
+      var feature = data[24].getFeature();
+      os.feature.validateGeometries(feature);
+      expect(feature.getGeometry()).toBeUndefined();
+
+      // invalid polygon in a geometry collection should be removed
+      var feature2 = data[25].getFeature();
+      os.feature.validateGeometries(feature2);
+      var geom = feature2.getGeometry();
+      expect(geom.getGeometries().length).toBe(1);
+    });
+  });
 });

@@ -5,7 +5,7 @@ goog.require('ol.control.Rotate');
 
 
 /**
- * Overrides the OL3 rotate control to allow resetting rotation in Cesium.
+ * Overrides the OpenLayers rotate control to allow resetting rotation in WebGL.
  *
  * @param {olx.control.RotateOptions=} opt_options Rotate options.
  * @extends {ol.control.Rotate}
@@ -47,7 +47,7 @@ os.control.Rotate.render = function(mapEvent) {
 
   var mapContainer = os.MapContainer.getInstance();
   if (mapContainer.is3DEnabled()) {
-    var camera = mapContainer.getCesiumCamera();
+    var camera = mapContainer.getWebGLCamera();
     if (!camera) {
       return;
     }

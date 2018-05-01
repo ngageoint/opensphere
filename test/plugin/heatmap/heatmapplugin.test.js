@@ -1,6 +1,7 @@
 goog.require('os.data.event.DataEvent');
 goog.require('os.source.Vector');
 goog.require('os.ui.menu.layer');
+goog.require('os.webgl.SynchronizerManager');
 goog.require('plugin.heatmap.HeatmapLayerConfig');
 goog.require('plugin.heatmap.HeatmapPlugin');
 goog.require('plugin.heatmap.menu');
@@ -35,7 +36,7 @@ describe('plugin.heatmap.HeatmapPlugin', function() {
     lcm.layerConfigs_ = {};
 
     var layer = createLayer();
-    var sm = os.olcs.sync.SynchronizerManager.getInstance();
+    var sm = os.webgl.SynchronizerManager.getInstance();
     var synchronizer = sm.getSynchronizer(layer);
     expect(synchronizer).toBe(plugin.heatmap.HeatmapSynchronizer);
     sm.synchronizers_ = {};

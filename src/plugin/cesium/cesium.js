@@ -1,4 +1,4 @@
-goog.provide('os.olcs');
+goog.provide('plugin.cesium');
 
 goog.require('goog.Promise');
 goog.require('goog.Uri');
@@ -10,21 +10,22 @@ goog.require('ol.source.TileImage');
 goog.require('ol.source.WMTS');
 goog.require('olcs.core');
 goog.require('os.net');
-goog.require('os.olcs.ImageryProvider');
 goog.require('os.proj');
 goog.require('os.string');
+goog.require('plugin.cesium.ImageryProvider');
 
 
 /**
+ * Constructor for a Cesium terrain provider.
  * @typedef {function(new: Cesium.TerrainProvider, ...)}
  */
-os.olcs.TerrainProviderFn;
+plugin.cesium.TerrainProviderFn;
 
 
 /**
  * @enum {string}
  */
-os.olcs.GeometryInstanceId = {
+plugin.cesium.GeometryInstanceId = {
   ELLIPSOID: 'ellipsoid',
   ELLIPSOID_OUTLINE: 'ellipsoidOutline',
   GEOM: 'geometry',
@@ -37,7 +38,7 @@ os.olcs.GeometryInstanceId = {
  * @type {RegExp}
  * @const
  */
-os.olcs.ELLIPSOID_REGEXP = /ellipsoid/i;
+plugin.cesium.ELLIPSOID_REGEXP = /ellipsoid/i;
 
 
 /**
@@ -45,23 +46,7 @@ os.olcs.ELLIPSOID_REGEXP = /ellipsoid/i;
  * @type {RegExp}
  * @const
  */
-os.olcs.OUTLINE_REGEXP = /outline/i;
-
-
-/**
- * Field used to mark geometries as dirty.
- * @type {string}
- * @const
- */
-os.olcs.DIRTY_BIT = 'dirty';
-
-
-/**
- * Selector to retrieve the Cesium canvas element.
- * @type {string}
- * @const
- */
-os.olcs.CESIUM_CANVAS_SELECTOR = '#map-container .ol-viewport > div > canvas';
+plugin.cesium.OUTLINE_REGEXP = /outline/i;
 
 
 /**
@@ -69,7 +54,7 @@ os.olcs.CESIUM_CANVAS_SELECTOR = '#map-container .ol-viewport > div > canvas';
  * @type {number}
  * @const
  */
-os.olcs.MAX_FOG_DENSITY = 3e-4;
+plugin.cesium.MAX_FOG_DENSITY = 3e-4;
 
 
 /**
@@ -77,7 +62,7 @@ os.olcs.MAX_FOG_DENSITY = 3e-4;
  * @type {number}
  * @const
  */
-os.olcs.DEFAULT_FOG_DENSITY = os.olcs.MAX_FOG_DENSITY / 2;
+plugin.cesium.DEFAULT_FOG_DENSITY = plugin.cesium.MAX_FOG_DENSITY / 2;
 
 
 /**
@@ -85,23 +70,49 @@ os.olcs.DEFAULT_FOG_DENSITY = os.olcs.MAX_FOG_DENSITY / 2;
  * @type {number}
  * @const
  */
-os.olcs.DEFAULT_LOAD_TIMEOUT = 30000;
+plugin.cesium.DEFAULT_LOAD_TIMEOUT = 30000;
 
 
 /**
  * @define {string} Base path to the Cesium library, from the OpenSphere root.
  */
-goog.define('os.olcs.CESIUM_BASE_PATH', 'vendor/cesium');
+goog.define('plugin.cesium.LIBRARY_BASE_PATH', 'vendor/cesium');
+
+
+/**
+ * Add a trusted server to Cesium.
+ * @param {string|undefined} url The server URL.
+ */
+plugin.cesium.addTrustedServer = function(url) {
+  if (url && os.net.getCrossOrigin(url) === os.net.CrossOrigin.USE_CREDENTIALS) {
+    // add URL to Cesium.TrustedServers
+    var uri = new goog.Uri(url);
+    var port = uri.getPort();
+    if (!port) {
+      var scheme = uri.getScheme();
+      if (!scheme) {
+        var local = new goog.Uri(window.location);
+        scheme = local.getScheme();
+      }
+
+      port = scheme === 'https' ? 443 : scheme === 'http' ? 80 : port;
+    }
+
+    if (port) {
+      Cesium.TrustedServers.add(uri.getDomain(), port);
+    }
+  }
+};
 
 
 /**
  * Load the Cesium library.
  * @return {!(goog.Promise|goog.async.Deferred)} A promise that resolves when Cesium has been loaded.
  */
-os.olcs.loadCesium = function() {
+plugin.cesium.loadCesium = function() {
   if (window.Cesium === undefined) {
     // tell Cesium where to find its resources
-    var cesiumPath = os.ROOT + os.olcs.CESIUM_BASE_PATH;
+    var cesiumPath = os.ROOT + plugin.cesium.LIBRARY_BASE_PATH;
     window['CESIUM_BASE_URL'] = cesiumPath;
 
     // load Cesium
@@ -109,7 +120,7 @@ os.olcs.loadCesium = function() {
     var trustedUrl = goog.html.TrustedResourceUrl.fromConstant(os.string.createConstant(cesiumUrl));
 
     // extend default timeout (5 seconds) for slow connections and debugging with unminified version
-    var timeout = /** @type {number} */ (os.settings.get('cesium.loadTimeout', os.olcs.DEFAULT_LOAD_TIMEOUT));
+    var timeout = /** @type {number} */ (os.settings.get('cesium.loadTimeout', plugin.cesium.DEFAULT_LOAD_TIMEOUT));
     return goog.net.jsloader.safeLoad(trustedUrl, {
       timeout: timeout
     });
@@ -120,57 +131,44 @@ os.olcs.loadCesium = function() {
 
 
 /**
- * Creates Cesium.ImageryLayer best corresponding to the given ol.layer.Layer. Only supports raster layers.
- * This replaces {@link olcs.core.tileLayerToImageryLayer} to use our custom provider supporting tile load counts.
- * @param {!ol.layer.Layer} olLayer
- * @param {?ol.proj.Projection} viewProj Projection of the view.
- * @return {?Cesium.ImageryLayer} null if not possible (or supported)
+ * The default Cesium terrain provider.
+ * @type {Cesium.EllipsoidTerrainProvider|undefined}
+ * @private
  */
-os.olcs.tileLayerToImageryLayer = function(olLayer, viewProj) {
-  if (!(olLayer instanceof ol.layer.Tile)) {
-    return null;
+plugin.cesium.defaultTerrainProvider_ = undefined;
+
+
+/**
+ * Get the default Cesium terrain provider.
+ * @return {Cesium.EllipsoidTerrainProvider|undefined}
+ */
+plugin.cesium.getDefaultTerrainProvider = function() {
+  // lazy init so Cesium isn't invoked by requiring this file
+  if (!plugin.cesium.defaultTerrainProvider_ && window.Cesium !== undefined) {
+    plugin.cesium.defaultTerrainProvider_ = new Cesium.EllipsoidTerrainProvider();
   }
 
-  var source = olLayer.getSource();
-  var provider = null;
+  return plugin.cesium.defaultTerrainProvider_;
+};
 
-  // handle special cases before the general synchronization
-  if (source instanceof ol.source.WMTS) {
-    // WMTS uses different TileGrid which is not currently supported
-    return null;
-  }
 
-  if (source instanceof ol.source.TileImage) {
-    var projection = source.getProjection();
+/**
+ * The Cesium Julian date object.
+ * @type {Cesium.JulianDate|undefined}
+ * @private
+ */
+plugin.cesium.julianDate_ = undefined;
 
-    if (!projection) {
-      // if not explicit, assume the same projection as view
-      projection = viewProj;
-    }
 
-    var is3857 = projection === ol.proj.get(os.proj.EPSG3857);
-    var is4326 = projection === ol.proj.get(os.proj.EPSG4326);
-    if (is3857 || is4326) {
-      provider = new os.olcs.ImageryProvider(source, viewProj);
-    } else {
-      return null;
-    }
-  } else {
-    // sources other than TileImage are currently not supported
-    return null;
-  }
-
-  // the provider is always non-null if we got this far
-
-  var layerOptions = {};
-
-  var ext = olLayer.getExtent();
-  if (goog.isDefAndNotNull(ext) && !goog.isNull(viewProj)) {
-    layerOptions.rectangle = olcs.core.extentToRectangle(ext, viewProj);
-  }
-
-  var cesiumLayer = new Cesium.ImageryLayer(provider, layerOptions);
-  return cesiumLayer;
+/**
+ * Gets the Julian date from the timeline current date.
+ * @return {Cesium.JulianDate} The Julian date of the application.
+ */
+plugin.cesium.getJulianDate = function() {
+  plugin.cesium.julianDate_ = Cesium.JulianDate.fromDate(new Date(
+    os.time.TimelineController.getInstance().getCurrent()
+  ), plugin.cesium.julianDate_);
+  return plugin.cesium.julianDate_;
 };
 
 
@@ -182,7 +180,7 @@ os.olcs.tileLayerToImageryLayer = function(olLayer, viewProj) {
  * @param {boolean=} opt_extrude
  * @return {Array<Cesium.Cartesian3>}
  */
-os.olcs.generateRectanglePositions = function(extent, opt_altitude, opt_extrude) {
+plugin.cesium.generateRectanglePositions = function(extent, opt_altitude, opt_extrude) {
   var rect = Cesium.Rectangle.fromDegrees(extent[0], extent[1], extent[2], extent[3]);
   var rected = new Cesium.RectangleGeometry({
     ellipsoid: Cesium.Ellipsoid.WGS84,
@@ -246,7 +244,7 @@ os.olcs.generateRectanglePositions = function(extent, opt_altitude, opt_extrude)
  * @param {number} radius
  * @return {Array<Cesium.Cartesian3>}
  */
-os.olcs.generateCirclePositions = function(center, radius) {
+plugin.cesium.generateCirclePositions = function(center, radius) {
   var options = {
     'center': center,
     'semiMajorAxis': radius,
@@ -281,11 +279,66 @@ os.olcs.generateCirclePositions = function(center, radius) {
 
 
 /**
+ * Creates Cesium.ImageryLayer best corresponding to the given ol.layer.Layer. Only supports raster layers.
+ * This replaces {@link olcs.core.tileLayerToImageryLayer} to use our custom provider supporting tile load counts.
+ * @param {!ol.layer.Layer} olLayer
+ * @param {?ol.proj.Projection} viewProj Projection of the view.
+ * @return {?Cesium.ImageryLayer} null if not possible (or supported)
+ */
+plugin.cesium.tileLayerToImageryLayer = function(olLayer, viewProj) {
+  if (!(olLayer instanceof ol.layer.Tile)) {
+    return null;
+  }
+
+  var source = olLayer.getSource();
+  var provider = null;
+
+  // handle special cases before the general synchronization
+  if (source instanceof ol.source.WMTS) {
+    // WMTS uses different TileGrid which is not currently supported
+    return null;
+  }
+
+  if (source instanceof ol.source.TileImage) {
+    var projection = source.getProjection();
+
+    if (!projection) {
+      // if not explicit, assume the same projection as view
+      projection = viewProj;
+    }
+
+    var is3857 = projection === ol.proj.get(os.proj.EPSG3857);
+    var is4326 = projection === ol.proj.get(os.proj.EPSG4326);
+    if (is3857 || is4326) {
+      provider = new plugin.cesium.ImageryProvider(source, viewProj);
+    } else {
+      return null;
+    }
+  } else {
+    // sources other than TileImage are currently not supported
+    return null;
+  }
+
+  // the provider is always non-null if we got this far
+
+  var layerOptions = {};
+
+  var ext = olLayer.getExtent();
+  if (goog.isDefAndNotNull(ext) && !goog.isNull(viewProj)) {
+    layerOptions.rectangle = olcs.core.extentToRectangle(ext, viewProj);
+  }
+
+  var cesiumLayer = new Cesium.ImageryLayer(provider, layerOptions);
+  return cesiumLayer;
+};
+
+
+/**
  * Synchronizes the layer rendering properties (opacity, visible) to the given Cesium ImageryLayer.
  * @param {!ol.layer.Base} olLayer
  * @param {!Cesium.ImageryLayer} csLayer
  */
-os.olcs.updateCesiumLayerProperties = function(olLayer, csLayer) {
+plugin.cesium.updateCesiumLayerProperties = function(olLayer, csLayer) {
   // call the ol3-cesium function first
   olcs.core.updateCesiumLayerProperties(/** @type {olcsx.LayerWithParents} */ ({
     layer: olLayer,
@@ -318,31 +371,5 @@ os.olcs.updateCesiumLayerProperties = function(olLayer, csLayer) {
   if (brightness != null) {
     // rough estimation
     csLayer.brightness = Math.pow(1 + parseFloat(brightness), 2);
-  }
-};
-
-
-/**
- * Add a trusted server to Cesium.
- * @param {string|undefined} url The server URL.
- */
-os.olcs.addTrustedServer = function(url) {
-  if (url && os.net.getCrossOrigin(url) === os.net.CrossOrigin.USE_CREDENTIALS) {
-    // add URL to Cesium.TrustedServers
-    var uri = new goog.Uri(url);
-    var port = uri.getPort();
-    if (!port) {
-      var scheme = uri.getScheme();
-      if (!scheme) {
-        var local = new goog.Uri(window.location);
-        scheme = local.getScheme();
-      }
-
-      port = scheme === 'https' ? 443 : scheme === 'http' ? 80 : port;
-    }
-
-    if (port) {
-      Cesium.TrustedServers.add(uri.getDomain(), port);
-    }
   }
 };

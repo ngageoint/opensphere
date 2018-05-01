@@ -198,7 +198,7 @@ os.layer.AnimatedTile.prototype.setDateFormat = function(format) {
 
 
 /**
- * If the layer has been enabled for animation. When animation/time enabled, Cesium will start caching tiles.
+ * If the layer has been enabled for animation.
  * @return {boolean}
  */
 os.layer.AnimatedTile.prototype.getAnimationEnabled = function() {

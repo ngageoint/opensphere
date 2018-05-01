@@ -1,8 +1,8 @@
-goog.require('os.im.Importer');
-goog.require('os.net.Request');
 goog.require('goog.net.EventType');
-goog.require('os.mock');
 goog.require('ol.format.GeoJSON');
+goog.require('os.im.Importer');
+goog.require('os.mock');
+goog.require('os.net.Request');
 goog.require('plugin.file.geojson.GeoJSONParser');
 
 describe('plugin.file.geojson.GeoJSONParser', function() {
@@ -13,29 +13,29 @@ describe('plugin.file.geojson.GeoJSONParser', function() {
       'geometry': {'type': 'Point', 'coordinates': [102.0, 0.5]},
       'properties': {'prop0': 'value0'}
     },
-    42, {
-      'type': 'Feature',
-      'geometry': {
-        'type': 'LineString',
-        'coordinates': [
-          [102.0, 0.0], [103.0, 1.0], [104.0, 0.0], [105.0, 1.0]
-        ]
-      },
-      'properties': {
-        'prop0': 'value0',
-        'prop1': 0.0
-      }
-    },{
-      'type': 'Feature',
-      'geometry': {
-        'type': 'Polygon',
-        'coordinates': [[[100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0]]]
-      },
-      'properties': {
-        'prop0': 'value0',
-        'prop1': {'this': 'that'}
-      }
-    }]
+      42, {
+        'type': 'Feature',
+        'geometry': {
+          'type': 'LineString',
+          'coordinates': [
+            [102.0, 0.0], [103.0, 1.0], [104.0, 0.0], [105.0, 1.0]
+          ]
+        },
+        'properties': {
+          'prop0': 'value0',
+          'prop1': 0.0
+        }
+      }, {
+        'type': 'Feature',
+        'geometry': {
+          'type': 'Polygon',
+          'coordinates': [[[100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0]]]
+        },
+        'properties': {
+          'prop0': 'value0',
+          'prop1': {'this': 'that'}
+        }
+      }]
   };
 
   it('should handle object sources', function() {

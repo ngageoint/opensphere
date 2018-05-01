@@ -1,4 +1,4 @@
-goog.provide('os.olcs.VectorContext');
+goog.provide('plugin.cesium.VectorContext');
 
 goog.require('goog.disposable.IDisposable');
 goog.require('goog.log');
@@ -13,13 +13,13 @@ goog.require('goog.log');
  * @implements {goog.disposable.IDisposable}
  * @constructor
  */
-os.olcs.VectorContext = function(scene, layer, projection) {
+plugin.cesium.VectorContext = function(scene, layer, projection) {
   /**
    * The logger to use for the source.
    * @type {goog.log.Logger}
    * @protected
    */
-  this.log = os.olcs.VectorContext.LOGGER_;
+  this.log = plugin.cesium.VectorContext.LOGGER_;
 
   /**
    * @type {boolean}
@@ -106,18 +106,18 @@ os.olcs.VectorContext = function(scene, layer, projection) {
 
 
 /**
- * Logger for os.olcs.VectorContext
+ * Logger for plugin.cesium.VectorContext
  * @type {goog.log.Logger}
  * @private
  * @const
  */
-os.olcs.VectorContext.LOGGER_ = goog.log.getLogger('os.olcs.VectorContext');
+plugin.cesium.VectorContext.LOGGER_ = goog.log.getLogger('plugin.cesium.VectorContext');
 
 
 /**
  * @inheritDoc
  */
-os.olcs.VectorContext.prototype.dispose = function() {
+plugin.cesium.VectorContext.prototype.dispose = function() {
   if (!this.isDisposed()) {
     this.collection.destroyPrimitives = true;
 
@@ -153,7 +153,7 @@ os.olcs.VectorContext.prototype.dispose = function() {
 /**
  * @inheritDoc
  */
-os.olcs.VectorContext.prototype.isDisposed = function() {
+plugin.cesium.VectorContext.prototype.isDisposed = function() {
   return this.disposed_;
 };
 
@@ -162,7 +162,7 @@ os.olcs.VectorContext.prototype.isDisposed = function() {
  * Clean unused keys from maps.
  * @suppress {checkTypes}
  */
-os.olcs.VectorContext.prototype.pruneMaps = function() {
+plugin.cesium.VectorContext.prototype.pruneMaps = function() {
   this.featureToCesiumMap = os.object.prune(this.featureToCesiumMap);
   this.geometryToCesiumMap = os.object.prune(this.geometryToCesiumMap);
   this.geometryToLabelsMap = os.object.prune(this.geometryToLabelsMap);
@@ -179,7 +179,7 @@ os.olcs.VectorContext.prototype.pruneMaps = function() {
  * @param {!ol.geom.Geometry} geometry The OL3 geometry
  * @protected
  */
-os.olcs.VectorContext.prototype.addOLReferences = function(primitive, feature, geometry) {
+plugin.cesium.VectorContext.prototype.addOLReferences = function(primitive, feature, geometry) {
   if (primitive) {
     primitive.olLayer = this.layer;
     primitive.olFeature = feature;
@@ -203,7 +203,7 @@ os.olcs.VectorContext.prototype.addOLReferences = function(primitive, feature, g
  * @param {Cesium.PrimitiveLike} primitive
  * @protected
  */
-os.olcs.VectorContext.prototype.removeOLReferences = function(primitive) {
+plugin.cesium.VectorContext.prototype.removeOLReferences = function(primitive) {
   if (primitive) {
     primitive.olLayer = undefined;
     primitive.olFeature = undefined;
@@ -228,7 +228,7 @@ os.olcs.VectorContext.prototype.removeOLReferences = function(primitive) {
  * @param {!ol.Feature} feature The OL3 feature
  * @suppress {checkTypes}
  */
-os.olcs.VectorContext.prototype.markDirty = function(feature) {
+plugin.cesium.VectorContext.prototype.markDirty = function(feature) {
   var featureId = feature['id'];
   var primitives = this.featureToCesiumMap[featureId];
   if (primitives) {
@@ -244,7 +244,7 @@ os.olcs.VectorContext.prototype.markDirty = function(feature) {
  * @param {!ol.Feature} feature The OL3 feature
  * @suppress {checkTypes}
  */
-os.olcs.VectorContext.prototype.removeDirty = function(feature) {
+plugin.cesium.VectorContext.prototype.removeDirty = function(feature) {
   var featureId = feature['id'];
   var primitives = this.featureToCesiumMap[featureId];
   if (primitives) {
@@ -263,7 +263,7 @@ os.olcs.VectorContext.prototype.removeDirty = function(feature) {
  * @param {!ol.Feature} feature the OL3 feature
  * @suppress {checkTypes}
  */
-os.olcs.VectorContext.prototype.cleanup = function(feature) {
+plugin.cesium.VectorContext.prototype.cleanup = function(feature) {
   var featureId = feature['id'];
   var primitives = this.featureToCesiumMap[featureId];
   if (primitives) {
@@ -283,7 +283,7 @@ os.olcs.VectorContext.prototype.cleanup = function(feature) {
  * @param {!ol.Feature} feature The OL3 feature tied to the billboard
  * @param {!ol.geom.Geometry} geometry The billboard's geometry
  */
-os.olcs.VectorContext.prototype.addBillboard = function(options, feature, geometry) {
+plugin.cesium.VectorContext.prototype.addBillboard = function(options, feature, geometry) {
   var geometryId = ol.getUid(geometry);
   var existing = this.geometryToCesiumMap[geometryId];
   if (existing) {
@@ -305,7 +305,7 @@ os.olcs.VectorContext.prototype.addBillboard = function(options, feature, geomet
  * @param {!ol.Feature} feature The OL3 feature tied to the primitive
  * @param {!ol.geom.Geometry} geometry The primitive's geometry
  */
-os.olcs.VectorContext.prototype.addPolyline = function(options, feature, geometry) {
+plugin.cesium.VectorContext.prototype.addPolyline = function(options, feature, geometry) {
   var geometryId = ol.getUid(geometry);
   var existing = this.geometryToCesiumMap[geometryId];
   if (existing) {
@@ -327,7 +327,7 @@ os.olcs.VectorContext.prototype.addPolyline = function(options, feature, geometr
  * @param {!ol.Feature} feature The OL3 feature tied to the primitive
  * @param {!ol.geom.Geometry} geometry The primitive's geometry
  */
-os.olcs.VectorContext.prototype.addPrimitive = function(primitive, feature, geometry) {
+plugin.cesium.VectorContext.prototype.addPrimitive = function(primitive, feature, geometry) {
   var geometryId = ol.getUid(geometry);
   var existing = this.geometryToCesiumMap[geometryId];
   if (existing) {
@@ -349,7 +349,7 @@ os.olcs.VectorContext.prototype.addPrimitive = function(primitive, feature, geom
  * @param {!ol.Feature} feature The OL3 feature tied to the label
  * @param {!ol.geom.Geometry} geometry The billboard's geometry
  */
-os.olcs.VectorContext.prototype.addLabels = function(allOptions, feature, geometry) {
+plugin.cesium.VectorContext.prototype.addLabels = function(allOptions, feature, geometry) {
   var geometryId = ol.getUid(geometry);
 
   // remove the existing labels because they will be recreated
@@ -381,7 +381,7 @@ os.olcs.VectorContext.prototype.addLabels = function(allOptions, feature, geomet
  * Remove a primitive from the collection.
  * @param {!Cesium.PrimitiveLike} primitive The primitive
  */
-os.olcs.VectorContext.prototype.removePrimitive = function(primitive) {
+plugin.cesium.VectorContext.prototype.removePrimitive = function(primitive) {
   var geomId = ol.getUid(primitive.olGeometry);
   if (primitive instanceof Cesium.Billboard) {
     this.billboards.remove(primitive);
@@ -420,7 +420,7 @@ os.olcs.VectorContext.prototype.removePrimitive = function(primitive) {
  * @protected
  * @suppress {checkTypes}
  */
-os.olcs.VectorContext.prototype.addFeaturePrimitive = function(feature, primitive) {
+plugin.cesium.VectorContext.prototype.addFeaturePrimitive = function(feature, primitive) {
   var featureId = feature['id'];
   var shown = this.featureToShownMap[featureId];
   shown = goog.isDef(shown) ? shown : primitive.show;
@@ -440,7 +440,7 @@ os.olcs.VectorContext.prototype.addFeaturePrimitive = function(feature, primitiv
  * @protected
  * @suppress {checkTypes}
  */
-os.olcs.VectorContext.prototype.removeFeaturePrimitive = function(feature, primitive) {
+plugin.cesium.VectorContext.prototype.removeFeaturePrimitive = function(feature, primitive) {
   var featureId = feature['id'];
   var primitives = this.featureToCesiumMap[featureId];
   if (primitives) {
@@ -454,7 +454,7 @@ os.olcs.VectorContext.prototype.removeFeaturePrimitive = function(feature, primi
  * @param {!ol.geom.Geometry} geometry The OL3 geometry
  * @return {Array<!Cesium.Label>}
  */
-os.olcs.VectorContext.prototype.getLabelsForGeometry = function(geometry) {
+plugin.cesium.VectorContext.prototype.getLabelsForGeometry = function(geometry) {
   return this.geometryToLabelsMap[ol.getUid(geometry)] || null;
 };
 
@@ -464,6 +464,6 @@ os.olcs.VectorContext.prototype.getLabelsForGeometry = function(geometry) {
  * @param {!ol.geom.Geometry} geometry The OL3 geometry
  * @return {?Cesium.PrimitiveLike}
  */
-os.olcs.VectorContext.prototype.getPrimitiveForGeometry = function(geometry) {
+plugin.cesium.VectorContext.prototype.getPrimitiveForGeometry = function(geometry) {
   return this.geometryToCesiumMap[ol.getUid(geometry)] || null;
 };
