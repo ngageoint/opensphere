@@ -49,13 +49,18 @@
 }
 
 .ui-menu {
-  background: inherit;
+  background: $dropdown-bg;
+  border: $dropdown-border-width solid $dropdown-border-color;
   position: fixed;
 
   .ui-menu-item {
     list-style-image: none;
     margin: inherit;
     padding: $dropdown-item-padding-y $dropdown-item-padding-x;
+  }
+
+  .ui-menu-divider {
+    @include nav-divider($dropdown-divider-bg);
   }
 
   .ui-state-focus {
