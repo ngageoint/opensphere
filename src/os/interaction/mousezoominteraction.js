@@ -12,10 +12,10 @@ goog.require('os.I3DSupport');
 /**
  * Allows the user to pan the map by dragging the map.
  *
- * @constructor
- * @implements {os.I3DSupport}
- * @extends {ol.interaction.Interaction}
  * @param {olx.interaction.DragPanOptions=} opt_options Options.
+ * @extends {ol.interaction.Interaction}
+ * @implements {os.I3DSupport}
+ * @constructor
  */
 os.interaction.MouseZoom = function(opt_options) {
   os.interaction.MouseZoom.base(this, 'constructor', {
@@ -78,7 +78,7 @@ os.interaction.MouseZoom.prototype.zoom = function(mapBrowserEvent) {
 
     var mapContainer = os.MapContainer.getInstance();
     if (mapContainer.is3DEnabled()) {
-      var camera = mapContainer.getCesiumCamera();
+      var camera = mapContainer.getWebGLCamera();
       if (camera) {
         // this will change the zoom level by ~0.1 per call
         camera.zoomByDelta(delta > 0 ? (1 / 0.95) : 0.95);

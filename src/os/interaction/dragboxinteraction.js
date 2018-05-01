@@ -5,8 +5,8 @@ goog.require('ol.color');
 goog.require('ol.style.Stroke');
 goog.require('ol.style.Style');
 goog.require('os.I3DSupport');
+goog.require('os.MapEvent');
 goog.require('os.geo');
-goog.require('os.olcs');
 goog.require('os.ui.ol.interaction.DragBox');
 
 
@@ -36,20 +36,6 @@ os.interaction.DragBox = function(opt_options) {
    * @protected
    */
   this.color = ol.color.asArray(color) || [0, 255, 255, 1];
-
-  /**
-   * The Cesium primitive.
-   * @type {Cesium.Primitive|undefined}
-   * @private
-   */
-  this.box3D_ = undefined;
-
-  /**
-   * The Cesium style.
-   * @type {Cesium.ColorGeometryInstanceAttribute|undefined}
-   * @private
-   */
-  this.style3D_ = undefined;
 };
 goog.inherits(os.interaction.DragBox, os.ui.ol.interaction.DragBox);
 
@@ -59,52 +45,7 @@ goog.inherits(os.interaction.DragBox, os.ui.ol.interaction.DragBox);
  */
 os.interaction.DragBox.prototype.update2D = function(start, end) {
   os.interaction.DragBox.base(this, 'update2D', start, end);
-  this.update3D(start, end);
-};
-
-
-/**
- * Updates the 3D version
- * @param {ol.Coordinate} start
- * @param {ol.Coordinate} end
- * @protected
- */
-os.interaction.DragBox.prototype.update3D = function(start, end) {
-  if (os.MapContainer.getInstance().is3DEnabled()) {
-    var olCesium = os.MapContainer.getInstance().getOLCesium();
-
-    start = ol.proj.toLonLat(start, this.getMap().getView().getProjection());
-    end = ol.proj.toLonLat(end, this.getMap().getView().getProjection());
-
-    if (start && end) {
-      var scene = olCesium.getCesiumScene();
-
-      if (this.box3D_) {
-        scene.primitives.remove(this.box3D_);
-      }
-      var flip = Math.abs(os.geo.normalizeLongitude(this.extent[0]) - os.geo.normalizeLongitude(this.extent[2])) > 180;
-      var appearance = new Cesium.PolylineColorAppearance();
-      this.box3D_ = new Cesium.Primitive({
-        asynchronous: false,
-        geometryInstances: new Cesium.GeometryInstance({
-          id: os.olcs.GeometryInstanceId.GEOM_OUTLINE,
-          geometry: new Cesium.PolylineGeometry({
-            positions: os.olcs.generateRectanglePositions(
-                [this.extent[flip ? 2 : 0], this.extent[1], this.extent[flip ? 0 : 2], this.extent[3]]),
-            vertexFormat: appearance.vertexFormat,
-            width: 2
-          }),
-          attributes: {
-            color: this.get3DStyle()
-          }
-        }),
-        appearance: appearance
-      });
-
-      scene.primitives.add(this.box3D_);
-      os.dispatcher.dispatchEvent(os.olcs.RenderLoop.REPAINT);
-    }
-  }
+  this.updateWebGL(start, end);
 };
 
 
@@ -118,13 +59,22 @@ os.interaction.DragBox.prototype.cleanup = function() {
   var map = /** @type {os.Map} */ (this.getMap());
   map.toggleMovement(true);
 
-  if (this.box3D_) {
-    var olCesium = os.MapContainer.getInstance().getOLCesium();
-    if (olCesium) {
-      olCesium.getCesiumScene().primitives.remove(this.box3D_);
-    }
-  }
+  this.cleanupWebGL();
 };
+
+
+/**
+ * Clean up the WebGL renderer.
+ */
+os.interaction.DragBox.prototype.cleanupWebGL = goog.nullFunction;
+
+
+/**
+ * Update the box in the WebGL renderer.
+ * @param {ol.Coordinate} start The start coordinate.
+ * @param {ol.Coordinate} end The end coordinate.
+ */
+os.interaction.DragBox.prototype.updateWebGL = goog.nullFunction;
 
 
 /**
@@ -132,31 +82,6 @@ os.interaction.DragBox.prototype.cleanup = function() {
  */
 os.interaction.DragBox.prototype.is3DSupported = function() {
   return true;
-};
-
-
-/**
- * @return {!Cesium.ColorGeometryInstanceAttribute}
- */
-os.interaction.DragBox.prototype.get3DStyle = function() {
-  if (!this.style3D_) {
-    // Openlayers color values are from 0-255, Cesium range is 0-1
-    this.style3D_ = new Cesium.ColorGeometryInstanceAttribute(
-        this.color[0] / 255,
-        this.color[1] / 255,
-        this.color[2] / 255,
-        this.color[3]);
-  }
-
-  return this.style3D_;
-};
-
-
-/**
- * @param {Cesium.ColorGeometryInstanceAttribute|undefined} style
- */
-os.interaction.DragBox.prototype.set3DStyle = function(style) {
-  this.style3D_ = style;
 };
 
 

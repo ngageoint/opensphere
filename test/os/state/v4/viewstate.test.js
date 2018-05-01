@@ -39,7 +39,7 @@ describe('os.state.v4.ViewState', function() {
 
     });
 
-    spyOn(map, 'setCesiumEnabled').andCallFake(function() {
+    spyOn(map, 'setWebGLEnabled').andCallFake(function() {
 
     });
 
@@ -78,7 +78,7 @@ describe('os.state.v4.ViewState', function() {
 
       expect(map.restoreCameraState).toHaveBeenCalled();
       // The map mode should not have changed.
-      expect(map.setCesiumEnabled).not.toHaveBeenCalled();
+      expect(map.setWebGLEnabled).not.toHaveBeenCalled();
     });
   });
 });

@@ -189,7 +189,7 @@ plugin.basemap.ui.BaseMapLayerUICtrl.prototype.setCurrent = function(key) {
   if (map.is3DEnabled()) {
     // in 3D mode, the resolution should be determined based on the camera height adjusted to the equator. this will
     // prevent the 2D projection from interfering with the relative zoom
-    var camera = map.getCesiumCamera();
+    var camera = map.getWebGLCamera();
     if (camera) {
       resolution = camera.calcResolutionForDistance(camera.getAltitude(), 0);
     }

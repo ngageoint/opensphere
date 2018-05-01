@@ -876,27 +876,27 @@ Cesium.Camera.prototype.rotate = function(axis, angle) {};
 
 
 /**
- * @param {number} angle
+ * @param {number=} opt_angle
  */
-Cesium.Camera.prototype.rotateUp = function(angle) {};
+Cesium.Camera.prototype.rotateUp = function(opt_angle) {};
 
 
 /**
- * @param {number} angle
+ * @param {number=} opt_angle
  */
-Cesium.Camera.prototype.rotateDown = function(angle) {};
+Cesium.Camera.prototype.rotateDown = function(opt_angle) {};
 
 
 /**
- * @param {number} angle
+ * @param {number=} opt_angle
  */
-Cesium.Camera.prototype.rotateLeft = function(angle) {};
+Cesium.Camera.prototype.rotateLeft = function(opt_angle) {};
 
 
 /**
- * @param {number} angle
+ * @param {number=} opt_angle
  */
-Cesium.Camera.prototype.rotateRight = function(angle) {};
+Cesium.Camera.prototype.rotateRight = function(opt_angle) {};
 
 
 /**

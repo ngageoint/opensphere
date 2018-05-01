@@ -6,7 +6,7 @@ goog.require('os.interaction');
 
 
 /**
- * Overrides the OL3 zoom control to allow zooming in/out in Cesium.
+ * Overrides the OpenLayers zoom control to allow zooming in/out in WebGL.
  *
  * @param {olx.control.ZoomOptions=} opt_options Zoom options.
  * @extends {ol.control.Zoom}
@@ -25,7 +25,7 @@ goog.inherits(os.control.Zoom, ol.control.Zoom);
 os.control.Zoom.prototype.zoomByDelta_ = function(delta) {
   var mapContainer = os.MapContainer.getInstance();
   if (mapContainer.is3DEnabled()) {
-    var camera = mapContainer.getCesiumCamera();
+    var camera = mapContainer.getWebGLCamera();
     if (camera) {
       delta = os.interaction.getZoomDelta(true, delta < 0);
       camera.zoomByDelta(delta);

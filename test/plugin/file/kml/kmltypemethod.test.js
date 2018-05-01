@@ -1,8 +1,8 @@
+goog.require('ol.xml');
 goog.require('os.events.EventType');
 goog.require('os.file.File');
-goog.require('os.ui.file.method.UrlMethod');
 goog.require('os.mock');
-goog.require('ol.xml');
+goog.require('os.ui.file.method.UrlMethod');
 goog.require('plugin.file.kml.type.KMLTypeMethod');
 
 describe('plugin.file.kml.type.KMLTypeMethod', function() {

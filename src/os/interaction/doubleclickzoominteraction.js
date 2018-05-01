@@ -7,10 +7,11 @@ goog.require('os.I3DSupport');
 
 
 /**
- * @constructor
- * @implements {os.I3DSupport}
- * @extends {ol.interaction.DoubleClickZoom}
+ * Extends the OpenLayers double click zoom interaction to support WebGL.
  * @param {olx.interaction.DoubleClickZoomOptions=} opt_options Options.
+ * @extends {ol.interaction.DoubleClickZoom}
+ * @implements {os.I3DSupport}
+ * @constructor
  */
 os.interaction.DoubleClickZoom = function(opt_options) {
   os.interaction.DoubleClickZoom.base(this, 'constructor', opt_options);
@@ -34,7 +35,7 @@ ol.interaction.DoubleClickZoom.handleEvent = function(mapBrowserEvent) {
 
     var mapContainer = os.MapContainer.getInstance();
     if (mapContainer.is3DEnabled()) {
-      var camera = mapContainer.getCesiumCamera();
+      var camera = mapContainer.getWebGLCamera();
       if (camera) {
         var currentAltitude = camera.getAltitude();
         var altitude = mapBrowserEvent.originalEvent.ctrlKey ? (currentAltitude * 2) : (currentAltitude / 2);

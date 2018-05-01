@@ -56,8 +56,8 @@
       ]
     },
     "moduleDefines": {
-      "os.olcs.CESIUM_BASE_PATH": "cesium/Build/CesiumUnminified",
-      "os.file.ZIP_PATH": "zip-js/WebContent"
+      "os.file.ZIP_PATH": "zip-js/WebContent",
+      "plugin.cesium.LIBRARY_BASE_PATH": "cesium/Build/CesiumUnminified"
     }
   },
   "scripts": {

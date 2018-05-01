@@ -21,6 +21,6 @@ goog.inherits(os.interaction.PinchZoom, ol.interaction.PinchZoom);
  * @inheritDoc
  */
 os.interaction.PinchZoom.prototype.is3DSupported = function() {
-  // Disabled in 3D mode, because Cesium already handles this
+  // handled directly by WebGL renderers
   return false;
 };

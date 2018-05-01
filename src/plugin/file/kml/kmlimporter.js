@@ -33,6 +33,13 @@ plugin.file.kml.KMLImporter = function(parser) {
    * @private
    */
   this.minRefreshPeriod_ = 0;
+
+  /**
+   * Number of invalid polygons detected on import
+   * @type {number}
+   * @private
+   */
+  this.invalidCount_ = 0;
 };
 goog.inherits(plugin.file.kml.KMLImporter, os.im.FeatureImporter);
 
@@ -93,6 +100,13 @@ plugin.file.kml.KMLImporter.prototype.onParsingComplete = function(opt_event) {
   this.columns_ = this.parser.getColumns();
   this.minRefreshPeriod_ = this.parser.getMinRefreshPeriod();
 
+  if (this.invalidCount_ > 0) {
+    var msg = this.invalidCount_ === 1 ? 'An area was' : (this.invalidCount_ + ' areas were');
+    os.alertManager.sendAlert(msg + ' removed from the original due to invalid topology. One possible ' +
+        ' reason is a repeating or invalid coordinate.',
+        os.alert.AlertEventSeverity.WARNING);
+  }
+
   plugin.file.kml.KMLImporter.base(this, 'onParsingComplete', opt_event);
 };
 
@@ -107,6 +121,7 @@ plugin.file.kml.KMLImporter.prototype.sanitize = function(item) {
   }
 
   if (feature) {
+    this.invalidCount_ += os.feature.validateGeometries(feature, false);
     plugin.file.kml.KMLImporter.base(this, 'sanitize', feature);
   }
 };
