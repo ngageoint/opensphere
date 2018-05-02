@@ -205,22 +205,23 @@ os.config.ThemeSettings.changeTheme = function(ssEl, cssFile, backupCssFile, res
   request.setUri(cssFile);
   request.listenOnce(goog.net.EventType.SUCCESS, function(event) {
     os.config.ThemeSettings.cleanupRequest(event);
-    $('body').css('opacity', 0);
-    $('body').css('background-color', '#000');
-    goog.dom.safe.setLinkHrefAndRel(ssEl,
-        goog.html.TrustedResourceUrl.fromConstant(os.string.createConstant(cssFile)), ssEl.rel);
+
+    var link = $('<link />', {
+      rel: 'stylesheet',
+      type: 'text/css',
+      href: cssFile
+    });
+    $('head').append(link);
     resolve();
 
     // If angular is already bootstraped. We want to wait for the new css file to load.
     // Otherwise its loaded so we are good
     if (os.ui.injector) {
       os.ui.injector.get('$timeout')(function() {
-        $('body').css('background-color', '');
-        $('body').css('opacity', '');
+        ssEl.remove();
       }, 200);
     } else {
-      $('body').css('background-color', '');
-      $('body').css('opacity', '');
+      ssEl.remove();
     }
   }, false);
   request.listenOnce(goog.net.EventType.ERROR, function(event) {
