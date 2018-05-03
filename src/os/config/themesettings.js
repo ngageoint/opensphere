@@ -1,7 +1,8 @@
 goog.provide('os.config.ThemeSettings');
+goog.provide('os.config.ThemeSettingsChangeEvent');
 goog.provide('os.config.ThemeSettingsCtrl');
-
 goog.require('goog.Promise');
+goog.require('goog.events.Event');
 goog.require('os.config.Settings');
 goog.require('os.ui.config.SettingPlugin');
 
@@ -151,7 +152,7 @@ os.config.ThemeSettings.setTheme = function() {
       var cssFile = ssEl.href.replace(themeRegEx, '$1' + theme + '$2');
       if (ssEl.href != cssFile) {
         // Awesome! lets load it!
-        os.config.ThemeSettings.changeTheme(cssFile);
+        os.config.ThemeSettingsChangeEventTheme(cssFile);
       }
     }
 
@@ -172,7 +173,7 @@ os.config.ThemeSettings.updateTheme = function() {
  * Change the stylesheet
  * @param {string} cssFile
  */
-os.config.ThemeSettings.changeTheme = function(cssFile) {
+os.config.ThemeSettingsChangeEventTheme = function(cssFile) {
   // onload doesnt work correctly for link for all browsers. Theres a hacky workaround to use img to to know when
   // the css is loaded
   var link = $('<link rel="stylesheet" type="text/css" href="' + cssFile + '"></link>');
@@ -187,18 +188,44 @@ os.config.ThemeSettings.changeTheme = function(cssFile) {
   img.onerror = function() {
     document.body.removeChild(img);
 
-    // Get the current theme(s)
-    var themeRegEx = /(themes\/).*?(\..*\.css)/;
-    var stylesheets = $('[rel=stylesheet]');
-    var ourThemes = goog.array.filter(stylesheets, function(el) {
-      return themeRegEx.test(el.href);
-    });
-
-    for (var i = 0; i < ourThemes.length - 1; i++) {
-      ourThemes[i].remove();
+    if (os.ui.injector) {
+      os.ui.injector.get('$timeout')(function() {
+        os.config.ThemeSettings.themeUpdated();
+      }, 200);
+    } else {
+      os.config.ThemeSettings.themeUpdated();
     }
   };
 
   document.body.appendChild(img);
   img.src = cssFile;
 };
+
+
+/**
+ * Fired after the theme is done loading
+ */
+os.config.ThemeSettings.themeUpdated = function() {
+  // Get the current theme(s)
+  var themeRegEx = /(themes\/).*?(\..*\.css)/;
+  var stylesheets = $('[rel=stylesheet]');
+  var ourThemes = goog.array.filter(stylesheets, function(el) {
+    return themeRegEx.test(el.href);
+  });
+
+
+  for (var i = 0; i < ourThemes.length - 1; i++) {
+    ourThemes[i].remove();
+  }
+
+  if (os.dispatcher) {
+    os.dispatcher.dispatchEvent(new goog.events.Event(os.config.ThemeSettingsChangeEvent));
+  }
+};
+
+
+/**
+ * If anything reacts to a theme change, update
+ * @type {string}
+ */
+os.config.ThemeSettingsChangeEvent = 'theme.changed';
