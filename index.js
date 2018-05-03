@@ -319,12 +319,6 @@ const oldResources = [
     scripts: ['modernizr.js']
   },
   {
-    source: resolver.resolveModulePath('bootstrap/dist', __dirname),
-    target: 'vendor/bootstrap',
-    scripts: ['js/bootstrap.min.js'],
-    css: ['css/bootstrap.min.css']
-  },
-  {
     source: resolver.resolveModulePath('font-awesome', __dirname),
     target: 'vendor/font-awesome',
     css: ['css/font-awesome.min.css'],

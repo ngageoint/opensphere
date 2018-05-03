@@ -159,17 +159,20 @@ function setContactInfo() {
   var browserPage = '';
   if (parsed) {
     var contactEl = document.getElementById('contactInfo');
-    if (parsed && parsed['admin']) {
-      browserPage = parsed['admin']['browserPage'];
-
-      if (contactEl) {
-        var link = parsed['admin']['supportWebsite'];
-        var text = parsed['admin']['supportWebsiteText'];
-        if (link && text) {
-          contactEl.setAttribute('href', link);
-          contactEl.className = 'btn btn btn-default';
-          contactEl.innerHTML = text;
-        }
+    if (parsed && parsed['admin'] && contactEl) {
+      var a = document.createElement('a');
+      var strong = document.createElement('strong');
+      strong.innerText = 'Help: ';
+      var link = parsed['admin']['supportWebsite'];
+      var text = parsed['admin']['supportWebsiteText'];
+      if (link && text) {
+        contactEl.appendChild(strong);
+        contactEl.appendChild(document.createElement('br'));
+        a.setAttribute('href', link);
+        a.className = 'btn btn-info';
+        a.innerHTML = text;
+        contactEl.appendChild(a);
+        contactEl.appendChild(document.createElement('p'));
       }
     }
   }
@@ -241,7 +244,7 @@ function setWarn(msg1, opt_msg2) {
  * @param {boolean} doSpin
  */
 function showBrowserWaitSpin(doSpin) {
-  var spin = document.getElementById('browerCheckWait');
+  var spin = document.getElementById('browserCheckWait');
   if (spin) {
     spin.style.display = doSpin ? '' : 'none';
   }
