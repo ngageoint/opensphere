@@ -48,31 +48,33 @@
 
 <body>
   <noscript>Javascript is disabled in your browser. Turn it on and refresh the page.</noscript>
-  <article class="container-fluid d-flex flex-wrap mt-5 justify-content-center">
-    <section class="flex-col flex-shrink-0">
-      <h3 id="report"></h3>
-      <div>
-        <i id="browerCheckWait" class="fa fa-circle-o-notch fa-spin" style="font-size: 48px;"></i>
-      </div>
-      <ul id="checks"></ul>
-      <strong>Recommended browsers for the best experience:</strong>
-      <ul>
-        <li>Google Chrome version 35 or higher</li>
-        <li>Mozilla Firefox version 31 or higher</li>
-      </ul>
-      <p id="browserInfo"></p>
-      <div id="minBrowserMsg"></div>
-      <p>
-        <a id="contactInfo"></a>
-      </p>
-      <div>
-        <button class="btn btn-secondary" style="margin-right: 10px;" onClick="toggleFullList()">Show/Hide All Detected Capabilities</button>
-        <a class="btn btn-primary" href="/">Go Home</a>
-      </div>
-    </section>
-    <section class="flex-col">
-      <p id="fullList"></p>
-    </section>
+  <article class="container-fluid d-flex flex-column flex-wrap mt-5 justify-content-center">
+    <div class="col-12 col-lg-4 offset-lg-4">
+      <section class="flex-shrink-0">
+        <h3 id="report"></h3>
+        <div>
+          <i id="browserCheckWait" class="fa fa-circle-o-notch fa-spin" style="font-size: 48px;"></i>
+        </div>
+        <ul id="checks"></ul>
+        <strong>Recommended browsers for the best experience:</strong>
+        <ul>
+          <li>Google Chrome version 35 or higher</li>
+          <li>Mozilla Firefox version 31 or higher</li>
+        </ul>
+        <p id="browserInfo"></p>
+        <div id="minBrowserMsg"></div>
+        <p>
+          <div id="contactInfo"></div>
+        </p>
+        <div>
+          <button class="btn btn-secondary" style="margin-right: 10px;" onClick="toggleFullList()">Show/Hide All Detected Capabilities</button>
+          <a class="btn btn-primary" href="/">Go Home</a>
+        </div>
+      </section>
+      <section class="flex-col">
+        <p id="fullList"></p>
+      </section>
+    </div>
   </article>
   <!--VENDOR_JS-->
 </body>
