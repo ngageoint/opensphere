@@ -225,7 +225,7 @@ os.ui.text.SimpleMDECtrl.prototype.getOptions = function() {
     'autosave': {
       'enabled': false
     },
-    'element': this.element_.find('.simplemdetextarea')[0],
+    'element': this.element_.find('.js-simplemde__textarea')[0],
     'initialValue': this.scope_['text'],
     'spellChecker': false,
     'toolbar': toolbar,
