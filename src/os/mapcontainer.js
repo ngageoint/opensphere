@@ -1271,7 +1271,7 @@ os.MapContainer.prototype.setWebGLEnabled = function(enabled, opt_silent) {
   enabled = enabled && (code === os.proj.EPSG4326 || code === os.proj.EPSG3857);
 
   // change the view if different than current
-  if (enabled != this.is3DEnabled() && this.webGLRenderer_) {
+  if (enabled != this.is3DEnabled() && this.webGLRenderer_ && !this.isInitializingWebGL()) {
     if (enabled && this.is3DSupported() && !this.failPerformanceCaveat() && !this.webGLRenderer_.isInitialized()) {
       // initialize the WebGL renderer
       this.setInitializingWebGL(true);
