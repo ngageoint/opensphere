@@ -1,0 +1,16 @@
+{
+  "name": "typeface-roboto",
+  "version": "0.0.54",
+  "description": "Roboto typeface",
+  "main": "index.css",
+  "keywords": [
+    "typeface",
+    "font",
+    "font family",
+    "google fonts",
+    "roboto"
+  ],
+  "author": "Kyle Mathews <mathews.kyle@gmail.com>",
+  "license": "MIT",
+  "repository": "https://github.com/KyleAMathews/typefaces/tree/master/packages/roboto"
+}
