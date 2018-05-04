@@ -410,13 +410,14 @@ os.object.merge(plugin.file.kml.PLACEMARK_TRACK_PARSERS, plugin.file.kml.OL_PLAC
  * @suppress {duplicate}
  */
 ol.format.KML.GEOMETRY_NODE_FACTORY_ = function(value, objectStack, opt_nodeName) {
-  if (value instanceof ol.geom.SimpleGeometry) {
-    var parentNode = objectStack[objectStack.length - 1].node;
-    var namespaceURI = parentNode.namespaceURI;
+  var parentNode = objectStack[objectStack.length - 1].node;
+  var namespaceURI = parentNode.namespaceURI;
+  var geometryType = value.getType();
+  var nodeType = ol.format.KML.GEOMETRY_TYPE_TO_NODENAME_[geometryType];
 
-    var geometryType = value.getType();
+  if (value instanceof ol.geom.SimpleGeometry) {
+    // check if we can transform it into a track
     var layout = value.getLayout();
-    var nodeType = ol.format.KML.GEOMETRY_TYPE_TO_NODENAME_[geometryType];
 
     if (layout === ol.geom.GeometryLayout.XYM || layout === ol.geom.GeometryLayout.XYZM) {
       if (geometryType === ol.geom.GeometryType.LINE_STRING) {
@@ -427,9 +428,9 @@ ol.format.KML.GEOMETRY_NODE_FACTORY_ = function(value, objectStack, opt_nodeName
         namespaceURI = plugin.file.kml.GX_NS;
       }
     }
-
-    return ol.xml.createElementNS(namespaceURI, nodeType);
   }
+
+  return ol.xml.createElementNS(namespaceURI, nodeType);
 };
 
 
