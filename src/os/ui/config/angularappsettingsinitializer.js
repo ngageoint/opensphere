@@ -1,5 +1,6 @@
 goog.provide('os.ui.config.AngularAppSettingsInitializer');
 goog.require('os.config.AbstractSettingsInitializer');
+goog.require('os.config.ThemeSettings');
 
 
 
@@ -42,10 +43,16 @@ os.ui.config.AngularAppSettingsInitializer.prototype.isBrowserSupported = functi
  * @inheritDoc
  */
 os.ui.config.AngularAppSettingsInitializer.prototype.onSettingsLoaded = function() {
-  if (this.ngAppSelector && this.ngAppModule) {
-    var bootstrapEl = document.querySelector(this.ngAppSelector);
-    angular.element(bootstrapEl).ready(goog.bind(function() {
-      angular.bootstrap(bootstrapEl, [this.ngAppModule]);
-    }, this));
-  }
+  // Wait for the theme to be set before boostrapting angular
+  os.config.ThemeSettings.setTheme().then(function() {
+    if (this.ngAppSelector && this.ngAppModule) {
+      var bootstrapEl = document.querySelector(this.ngAppSelector);
+      angular.element(bootstrapEl).ready(goog.bind(function() {
+        angular.bootstrap(bootstrapEl, [this.ngAppModule]);
+
+        // On settings change, update the theme
+        os.settings.listen(os.config.ThemeSettings.keys.THEME, os.config.ThemeSettings.updateTheme, false, this);
+      }, this));
+    }
+  }.bind(this));
 };

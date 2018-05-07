@@ -162,7 +162,7 @@ os.ui.window.ConfirmCtrl.prototype.confirm = function() {
     var value = this.scope_['confirmValue'];
     if (value == null) {
       // try looking for it on the transcluded content's scope
-      var transScope = this.element_.find('.confirm-text').children().first().scope();
+      var transScope = this.element_.find('.js-confirm-text').children().first().scope();
       value = transScope['confirmValue'];
     }
 

@@ -34,7 +34,7 @@ os.ui.list.add(os.ui.nav.Location.TOP_LEFT, '<save-button show-label="!punyWindo
 os.ui.list.add(os.ui.nav.Location.TOP_LEFT, '<state-button show-label="!punyWindow"></state-button>', 300);
 os.ui.list.add(os.ui.nav.Location.TOP_LEFT, '<windows-button show-label="!punyWindow"></windows-button>', 400);
 
-os.ui.list.add(os.ui.nav.Location.TOP_LEFT, '<div class="btn-separator"></div>', 500);
+os.ui.list.add(os.ui.nav.Location.TOP_LEFT, '<div class="u-btn-separator"></div>', 500);
 os.ui.list.add(os.ui.nav.Location.TOP_LEFT, 'os-draw-controls', 600);
 os.ui.list.add(os.ui.nav.Location.TOP_LEFT, 'measure-button', 650);
 os.ui.list.add(os.ui.nav.Location.TOP_LEFT, 'clear-button', 700);

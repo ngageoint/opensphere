@@ -1,19 +1,19 @@
 <div class="h-100 w-100 d-flex flex-column">
   <div class="modal-body">
-    <form name="fileForm">
-      <div data-ng-class="{'error': fileForm.file.$invalid && fileForm.file.$dirty}">
-        <label >Choose a file:</label>
-        <input class="w-100" type="text" name="text" ng-click="fileImport.openFileBrowser()" ng-model="fileImport.fileName" ng-required="true" placeholder="Click to choose file..." readOnly />
+    <div class="container-fluid was-validated" ng-form="fileForm">
+      <div class="form-group row">
+        <label for="fileName" class="col-4 col-form-label">Choose a file:</label>
+        <div class="col">
+          <input class="form-control" type="text" name="text" ng-click="fileImport.openFileBrowser()" ng-model="fileImport.fileName" ng-required="true" placeholder="Click to choose file..." readOnly />
+        </div>
       </div>
-    </form>
+    </div>
   </div>
   <div class="modal-footer">
-    <div class="float-right">
-      <button class="btn btn-primary" ng-click="fileImport.accept()" ng-disabled="fileForm.$invalid || fileImport.loading" title="Import the file">
-        <i class="fa" ng-class="fileImport.loading && 'fa-spin fa-spinner' || 'fa-chevron-circle-right'"></i>
-        <span ng-if="fileImport.loading">Loading</span><span ng-if="!fileImport.loading"> Next</span>
-      </button>
-      <button class="btn btn-secondary" ng-click="fileImport.close()" title="Cancel file import"><i class="fa fa-ban"></i> Cancel</button>
-    </div>
+    <button class="btn btn-primary" ng-click="fileImport.accept()" ng-disabled="fileForm.$invalid || fileImport.loading" title="Import the file">
+      <i class="fa" ng-class="fileImport.loading && 'fa-spin fa-spinner' || 'fa-chevron-circle-right'"></i>
+      <span ng-if="fileImport.loading">Loading</span><span ng-if="!fileImport.loading"> Next</span>
+    </button>
+    <button class="btn btn-secondary" ng-click="fileImport.close()" title="Cancel file import"><i class="fa fa-ban"></i> Cancel</button>
   </div>
 </div>

@@ -1,0 +1,25 @@
+// Overrides for simpleMDE
+
+.c-simplemde__form .editor-toolbar.fullscreen {
+  background-color: $body-bg;
+  height: 3.5rem;
+  z-index: $zindex-modal;
+}
+
+.c-simplemde__form .CodeMirror {
+  background-color: $body-bg;
+  color: $body-color;
+}
+
+.c-simplemde__form .editor-toolbar a {
+  color: $body-color !important;
+}
+
+.c-simplemde__form.ng-dirty.ng-invalid .editor-toolbar {
+  border-color: $danger;
+}
+
+.c-simplemde__form.ng-dirty.ng-invalid .CodeMirror {
+  border-color: $danger;
+}
+

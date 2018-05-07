@@ -21,7 +21,7 @@ os.ui.animationSettingsDirective = function() {
     restrict: 'AE',
     replace: true,
     scope: true,
-    templateUrl: os.ROOT + 'views/windows/animation.html',
+    templateUrl: os.ROOT + 'views/windows/animationsettings.html',
     controller: os.ui.AnimationSettingsCtrl,
     controllerAs: 'animationCtrl'
   };
@@ -85,8 +85,7 @@ os.ui.AnimationSettingsCtrl = function($scope, $element) {
   $scope.$watch('loopEnd', this.onLoopDatesChange.bind(this));
   $scope.$on('$destroy', this.onDestroy.bind(this));
 
-  $scope['loopStartTip'] = 'The start of the time range used to animate data.';
-  $scope['loopEndTip'] = 'The end of the time range used to animate data.';
+  $scope['loopRangeTip'] = 'The time range used to animate data.';
   $scope['tilesTip'] = 'The size of each tile frame.';
   $scope['windowTip'] = 'The size of the blue active window.';
   $scope['skipTip'] = 'The amount of time that the active window skips forward or back with each frame.';
