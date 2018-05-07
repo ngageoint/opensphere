@@ -111,10 +111,7 @@ plugin.cesium.ImageryProvider.prototype.onSourceChange_ = function(opt_event) {
       return;
     }
     this.rectangle_ = this.tilingScheme_.rectangle;
-
-    var credit = plugin.cesium.ImageryProvider.createCreditForSource(this.source);
-    this.credit_ = !goog.isNull(credit) ? credit : undefined;
-
+    this.credit_ = plugin.cesium.ImageryProvider.createCreditForSource(this.source) || undefined;
     this.ready_ = true;
   }
 };
@@ -256,39 +253,35 @@ plugin.cesium.ImageryProvider.resolver = function(filterFns, deferred, image) {
 
 
 /**
- * Tries to create proper Cesium.Credit for
- * the given ol.source.Source as closely as possible.
+ * Tries to create proper Cesium.Credit for the given ol.source.Source as closely as possible.
  * @param {!ol.source.Source} source
- * @return {?Cesium.Credit}
+ * @return {Cesium.Credit|undefined}
  */
 plugin.cesium.ImageryProvider.createCreditForSource = function(source) {
-  var creditOptions = /** @type {Cesium.CreditOptions} */ ({});
-  creditOptions.text = '';
+  var html;
   var attributions = source.getAttributions();
-  if (!goog.isNull(attributions)) {
-    goog.array.forEach(attributions, function(el, i, arr) {
+  if (attributions) {
+    html = attributions.map(function(el, i, arr) {
       // strip html tags (not supported in Cesium)
-      creditOptions.text += el.getHTML().replace(/<\/?[^>]+(>|$)/g, '') + ' ';
-    });
+      return el.getHTML();
+    }).join(' ');
   }
 
-  if (creditOptions.text.length == 0) {
+  if (!html) {
     // only use logo if no text is specified
     // otherwise the Cesium will automatically skip the text:
     // "The text to be displayed on the screen if no imageUrl is specified."
     var logo = source.getLogo();
-    if (goog.isDef(logo)) {
+    if (logo) {
       if (goog.isString(logo)) {
-        creditOptions.imageUrl = logo;
+        html = '<img src="' + logo + '"/>';
       } else {
-        creditOptions.imageUrl = logo.src;
-        creditOptions.link = logo.href;
+        html = '<a href="' + logo.href + '" target="_blank"><img src="' + logo.src + '" title="Cesium"/></a>';
       }
     }
   }
 
-  return (goog.isDef(creditOptions.imageUrl) || creditOptions.text.length > 0) ?
-         new Cesium.Credit(creditOptions) : null;
+  return html ? new Cesium.Credit(html) : undefined;
 };
 
 
