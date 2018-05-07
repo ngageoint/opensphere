@@ -2,6 +2,7 @@ goog.provide('plugin.places.menu');
 
 goog.require('ol.geom.Point');
 goog.require('os');
+goog.require('os.command.ParallelCommand');
 goog.require('os.command.SequenceCommand');
 goog.require('os.feature');
 goog.require('os.interaction');
@@ -10,6 +11,7 @@ goog.require('os.ui.menu.layer');
 goog.require('os.ui.menu.map');
 goog.require('os.ui.menu.spatial');
 goog.require('plugin.file.kml.cmd.KMLNodeAdd');
+goog.require('plugin.file.kml.cmd.KMLNodeRemove');
 goog.require('plugin.places');
 goog.require('plugin.places.ui.savePlacesDirective');
 
@@ -34,7 +36,9 @@ plugin.places.menu.EventType = {
   ADD_FOLDER: 'places:addFolder',
   ADD_PLACEMARK: 'places:addPlacemark',
   EDIT_FOLDER: 'places:editFolder',
-  EDIT_PLACEMARK: 'places:editPlacemark'
+  EDIT_PLACEMARK: 'places:editPlacemark',
+  REMOVE_PLACE: 'places:removePlace',
+  REMOVE_ALL: 'places:removeAll'
 };
 
 
@@ -104,6 +108,24 @@ plugin.places.menu.layerSetup = function() {
           beforeRender: plugin.places.menu.visibleIfCanSaveLayer,
           handler: plugin.places.menu.saveLayerToPlaces,
           metricKey: os.metrics.Places.SAVE_TO
+        },
+        {
+          label: 'Remove',
+          eventType: plugin.places.menu.EventType.REMOVE_PLACE,
+          tooltip: 'Removes the place',
+          icons: ['<i class="fa fa-fw fa-times"></i>'],
+          beforeRender: plugin.places.menu.visibleIfLayerNodeSupported_,
+          handler: plugin.places.menu.onLayerEvent_,
+          metricKey: os.metrics.Places.REMOVE_PLACE
+        },
+        {
+          label: 'Remove All',
+          eventType: plugin.places.menu.EventType.REMOVE_ALL,
+          tooltip: 'Removes all of the places',
+          icons: ['<i class="fa fa-fw fa-times"></i>'],
+          beforeRender: plugin.places.menu.visibleIfLayerNodeSupported_,
+          handler: plugin.places.menu.onLayerEvent_,
+          metricKey: os.metrics.Places.REMOVE_ALL
         }
       ]
     });
@@ -157,6 +179,16 @@ plugin.places.menu.visibleIfLayerNodeSupported_ = function(context) {
         case plugin.places.menu.EventType.EXPORT:
           this.visible = placesRoot != null && node.getRoot() == placesRoot;
           break;
+        case plugin.places.menu.EventType.REMOVE_PLACE:
+          if (node.isFolder() || node.hasChildren()) {
+            this.visible = false;
+          } else {
+            this.visible = node.removable;
+          }
+          break;
+        case plugin.places.menu.EventType.REMOVE_ALL:
+          this.visible = false;
+          break;
         default:
           this.visible = node.isFolder();
           break;
@@ -173,8 +205,39 @@ plugin.places.menu.visibleIfLayerNodeSupported_ = function(context) {
         case plugin.places.menu.EventType.ADD_PLACEMARK:
           this.visible = isPlacesLayer && node.isEditable();
           break;
+        case plugin.places.menu.EventType.REMOVE_ALL:
+          this.visible = isPlacesLayer && node.hasChildren();
+          break;
         default:
           break;
+      }
+    }
+  } else if (context && context.length > 1) {
+    for (var i = 0; i < context.length; i++) {
+      var node = context[i];
+      if (node instanceof plugin.file.kml.ui.KMLNode) {
+        var pm = plugin.places.PlacesManager.getInstance();
+        var placesRoot = pm.getPlacesRoot().getRoot();
+        var isPlacesNode = placesRoot === node.getRoot();
+        if (!isPlacesNode) {
+          this.visible = false;
+          return;
+        }
+
+        switch (this.eventType) {
+          case plugin.places.menu.EventType.REMOVE_PLACE:
+            this.visible = node.removable;
+            break;
+          default:
+            this.visible = false;
+            break;
+        }
+      } else {
+        this.visible = false;
+      }
+      // If the event is not visible for one node, then quit checking
+      if (!this.visible) {
+        break;
       }
     }
   }
@@ -372,6 +435,10 @@ plugin.places.menu.onLayerEvent_ = function(event) {
           case plugin.places.menu.EventType.EXPORT:
             plugin.file.kml.ui.launchTreeExport(node, 'Export Places');
             break;
+          case plugin.places.menu.EventType.REMOVE_PLACE:
+            var cmd = new plugin.file.kml.cmd.KMLNodeRemove(node);
+            os.commandStack.addCommand(cmd);
+            break;
           default:
             break;
         }
@@ -391,12 +458,52 @@ plugin.places.menu.onLayerEvent_ = function(event) {
             }));
             break;
           case plugin.places.menu.EventType.EXPORT:
-            plugin.file.kml.ui.launchTreeExport(/** @type {!plugin.file.kml.ui.KMLNode} */ (rootNode), 'Export Places');
+            plugin.file.kml.ui.launchTreeExport(/** @type {!plugin.file.kml.ui.KMLNode} */
+              (rootNode), 'Export Places');
+            break;
+          case plugin.places.menu.EventType.REMOVE_ALL:
+            var children = /** @type {Array<!plugin.file.kml.ui.KMLNode>} */ (node.getChildren());
+            var cmds = [];
+
+            for (var i = 0; i < children.length; i++) {
+              var rmCmd = new plugin.file.kml.cmd.KMLNodeRemove(children[i]);
+              cmds.push(rmCmd);
+            }
+            if (cmds.length) {
+              var cmd = new os.command.ParallelCommand();
+              cmd.setCommands(cmds);
+              cmd.title = 'Remove Place' + (cmds.length > 1 ? 's' : '');
+              os.command.CommandProcessor.getInstance().addCommand(cmd);
+            }
             break;
           default:
             break;
         }
       }
+    }
+  } else if (context && context.length > 1) {
+    var cmds = [];
+    for (var i = 0; i < context.length; i++) {
+      var node = context[i];
+      if (node instanceof plugin.file.kml.ui.KMLNode) {
+        var source = node.getSource();
+        if (source) {
+          switch (event.type) {
+            case plugin.places.menu.EventType.REMOVE_PLACE:
+              var rmCmd = new plugin.file.kml.cmd.KMLNodeRemove(node);
+              cmds.push(rmCmd);
+              break;
+            default:
+              break;
+          }
+        }
+      }
+    }
+    if (cmds.length) {
+      var cmd = new os.command.ParallelCommand();
+      cmd.setCommands(cmds);
+      cmd.title = 'Remove Place' + (cmds.length > 1 ? 's' : '');
+      os.command.CommandProcessor.getInstance().addCommand(cmd);
     }
   }
 };
