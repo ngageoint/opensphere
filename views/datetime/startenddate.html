@@ -1,18 +1,18 @@
 <div ng-form="dateForm">
-  <div class="form-row">
-    <div class="form-group">
-      <label for="startControls">{{startEndCtrl.startLabel}}:</label>
-      <div id="startControls">
+  <div class="container mb-1">
+    <div class="row">
+      <label class="col-3" for="startControls">{{startEndCtrl.startLabel}}:</label>
+      <div id="startControls" class="col">
         <input type="hidden" name="startDate" data-ng-required="startEndCtrl.startRequired" data-ng-model="startEndCtrl.start" />
         <div data-date-time class="d-inline-block" data-value="startEndCtrl.start" data-disabled="disabled" is-required="startEndCtrl.startRequired" data-invalid="startEndCtrl.startInvalid"></div>
       </div>
     </div>
   </div>
 
-  <div class="form-row">
-    <div class="form-group">
-      <label for="endControls">{{startEndCtrl.endLabel}}:</label>
-      <div id="endControls">
+  <div class="container">
+    <div class="row">
+      <label class="col-3" for="endControls">{{startEndCtrl.endLabel}}:</label>
+      <div id="endControls" class="col">
         <input type="hidden" name="endDate" data-ng-required="startEndCtrl.endRequired || startEndCtrl.endInvalid" data-ng-model="startEndCtrl.end" />
         <div data-date-time class="d-inline-block" data-value="startEndCtrl.end" data-disabled="disabled" is-required="startEndCtrl.endRequired" data-invalid="startEndCtrl.endInvalid"></div>
       </div>
