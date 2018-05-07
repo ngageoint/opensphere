@@ -3,14 +3,14 @@
     <thead>
       <tr class="thead-dark">
         <th class="col d-flex align-items-center">
-          <input type="checkbox" name="all" ng-model="checklist.allCheckbox" ng-change="checklist.toggleAll()"> All
+          <input class="mr-1" type="checkbox" name="all" ng-model="checklist.allCheckbox" ng-change="checklist.toggleAll()"> All
         </th>
       </tr>
     </thead>
     <tbody>
       <tr ng-repeat="item in items" title="{{item.tooltip || ('Enable/disable ' + item.label)}}">
         <th class="col d-flex align-items-center">
-          <input type="checkbox" name="items" ng-model="item.enabled" ng-change="checklist.onItemChange(item)"/>
+          <input class="mr-1" type="checkbox" name="items" ng-model="item.enabled" ng-change="checklist.onItemChange(item)"/>
           <span ng-bind-html="item.customFormat"/>
             {{item.label}}
           <span ng-bind-html="item.detailText"/>

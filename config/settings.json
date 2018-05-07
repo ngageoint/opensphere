@@ -134,6 +134,31 @@
       "cofUrl": "vendor/geomag/WMM.COF",
       "cofVersion": "2015-2020",
       "magneticNorthHelpUrl": "https://www.ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml"
+    },
+    "themes": {
+      "none": "",
+      "Default": "",
+      "Cerulean": "cerulean",
+      "Cosmo": "cosmo",
+      "Cyborg": "cyborg",
+      "Darkly": "darkly",
+      "Flatly": "flatly",
+      "Journal": "journal",
+      "Litera": "litera",
+      "Lumen": "lumen",
+      "Lux": "lux",
+      "Materia": "materia",
+      "Minty": "minty",
+      "Pulse": "pulse",
+      "Sandstone": "sandstone",
+      "Simplex": "simplex",
+      "Sketchy": "sketchy",
+      "Slate": "slate",
+      "Solar": "solar",
+      "Spacelab": "spacelab",
+      "Superhero": "superhero",
+      "United": "united",
+      "Yeti": "yeti"
     }
   },
   "user": {

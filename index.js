@@ -113,7 +113,7 @@ const sharedResources = [
   {
     source: resolver.resolveModulePath('opensphere/vendor/bootstrap2', __dirname),
     target: 'vendor/bootstrap2',
-    scripts: ['typeahead.js'],
+    scripts: ['typeahead.js']
   },
   {
     source: resolver.resolveModulePath('select2', __dirname),
@@ -225,6 +225,46 @@ const sharedResources = [
     source: 'src/electron',
     target: 'electron',
     scripts: ['electronvendorpost.js']
+  },
+  {
+    source: resolver.resolveModulePath('opensphere/vendor/fonts/typeface-lato', __dirname),
+    target: 'vendor/fonts/typeface-lato',
+    files: ['files', 'index.css']
+  },
+  {
+    source: resolver.resolveModulePath('opensphere/vendor/fonts/typeface-montserrat', __dirname),
+    target: 'vendor/fonts/typeface-montserrat',
+    files: ['files', 'index.css']
+  },
+  {
+    source: resolver.resolveModulePath('opensphere/vendor/fonts/typeface-news-cycle', __dirname),
+    target: 'vendor/fonts/typeface-news-cycle',
+    files: ['files', 'index.css']
+  },
+  {
+    source: resolver.resolveModulePath('opensphere/vendor/fonts/typeface-nunito', __dirname),
+    target: 'vendor/fonts/typeface-nunito',
+    files: ['files', 'index.css']
+  },
+  {
+    source: resolver.resolveModulePath('opensphere/vendor/fonts/typeface-open-sans', __dirname),
+    target: 'vendor/fonts/typeface-open-sans',
+    files: ['files', 'index.css']
+  },
+  {
+    source: resolver.resolveModulePath('opensphere/vendor/fonts/typeface-raleway', __dirname),
+    target: 'vendor/fonts/typeface-raleway',
+    files: ['files', 'index.css']
+  },
+  {
+    source: resolver.resolveModulePath('opensphere/vendor/fonts/typeface-roboto', __dirname),
+    target: 'vendor/fonts/typeface-roboto',
+    files: ['files', 'index.css']
+  },
+  {
+    source: resolver.resolveModulePath('opensphere/vendor/fonts/typeface-source-sans-pro', __dirname),
+    target: 'vendor/fonts/typeface-source-sans-pro',
+    files: ['files', 'index.css']
   }
 ];
 
@@ -319,12 +359,6 @@ const oldResources = [
     scripts: ['modernizr.js']
   },
   {
-    source: resolver.resolveModulePath('bootstrap/dist', __dirname),
-    target: 'vendor/bootstrap',
-    scripts: ['js/bootstrap.min.js'],
-    css: ['css/bootstrap.min.css']
-  },
-  {
     source: resolver.resolveModulePath('font-awesome', __dirname),
     target: 'vendor/font-awesome',
     css: ['css/font-awesome.min.css'],
@@ -376,8 +410,8 @@ module.exports = {
       resources: addLayerResources
     }
   ],
-  debugCss: path.join(buildDir, 'combined.css'),
-  compiledCss: path.join(version, 'styles', 'opensphere.min.css'),
+  debugCss: path.join(buildDir, 'themes/default.combined.css'),
+  compiledCss: path.join(version, 'styles', 'themes/default.min.css'),
   compiledJs: path.join(version, 'opensphere.min.js'),
   sharedResources: sharedResources
 };

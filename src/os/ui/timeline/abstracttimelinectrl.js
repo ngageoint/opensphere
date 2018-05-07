@@ -13,6 +13,7 @@ goog.require('os.time.TimeRange');
 goog.require('os.time.TimelineController');
 goog.require('os.time.TimelineEventType');
 goog.require('os.time.timeline');
+goog.require('os.ui.events.UIEvent');
 goog.require('os.ui.hist');
 goog.require('os.ui.hist.IHistogramManager');
 goog.require('os.ui.menu.Menu');
@@ -854,9 +855,13 @@ goog.exportProperty(
 
 
 /**
+ * Gets a reference to the timeline controller.
  * @return {os.ui.timeline.TimelineCtrl} The timeline controller
  */
-os.ui.timeline.AbstractTimelineCtrl.prototype.getTimelineCtrl = goog.abstractMethod;
+os.ui.timeline.AbstractTimelineCtrl.prototype.getTimelineCtrl = function() {
+  return /** @type {os.ui.timeline.TimelineCtrl} */ (this.element.find('.js-timeline').
+      children().scope()['timeline']);
+};
 
 
 /**
@@ -1481,7 +1486,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.onMenuEvent = function(event) {
   var doOffset = true;
 
   // get a reference to the timeline
-  var timeline = angular.element('.svg-timeline').scope()['timeline'];
+  var timeline = angular.element('.c-svg-timeline').scope()['timeline'];
   var histData = /** @type {?Array<!os.hist.HistogramData>} */ (this['histData']);
 
   switch (rangeText) {
@@ -1690,4 +1695,62 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.moveWindowToData = function() {
   if (mostRecent > Number.NEGATIVE_INFINITY) {
     this.tlc.setCurrent(mostRecent + this.lastScaleOptions.interval);
   }
+};
+
+
+/**
+ * Closes the timeline by sending a UI toggle event. This event must be listened for by the timeline's container
+ * which should hide/destroy the timeline.
+ */
+os.ui.timeline.AbstractTimelineCtrl.prototype.close = function() {
+  this.tlc.clearAnimateRanges();
+  this.tlc.clearHoldRanges();
+  var event = new os.ui.events.UIEvent(os.ui.events.UIEventType.TOGGLE_UI, 'timeline');
+  os.dispatcher.dispatchEvent(event);
+};
+goog.exportProperty(
+    os.ui.timeline.AbstractTimelineCtrl.prototype,
+    'close',
+    os.ui.timeline.AbstractTimelineCtrl.prototype.close);
+
+
+/**
+ * Toggles the expanded/collapsed (normal vs. ribbon) view of the timeline
+ */
+os.ui.timeline.AbstractTimelineCtrl.prototype.toggleCollapse = function() {
+  os.ui.timeline.AbstractTimelineCtrl.collapsed = !os.ui.timeline.AbstractTimelineCtrl.collapsed;
+  this.scope['collapsed'] = os.ui.timeline.AbstractTimelineCtrl.collapsed;
+  this.adjust();
+};
+goog.exportProperty(
+    os.ui.timeline.AbstractTimelineCtrl.prototype,
+    'toggleCollapse',
+    os.ui.timeline.AbstractTimelineCtrl.prototype.toggleCollapse);
+
+
+/**
+ * Modifies the timeline DOM and resets the SVG state.
+ */
+os.ui.timeline.AbstractTimelineCtrl.prototype.adjust = function() {
+  var ctrl = this.getTimelineCtrl();
+  var timelineContainerEl = this.element.find('.js-timeline-panel');
+  var timelineEl = timelineContainerEl.find('.js-timeline');
+
+  if (os.ui.timeline.AbstractTimelineCtrl.collapsed) {
+    timelineContainerEl.removeClass('c-timeline-panel__expanded');
+    timelineContainerEl.addClass('c-timeline-panel__collapsed');
+    timelineEl.removeClass('c-timeline__expanded');
+    timelineEl.addClass('c-timeline__collapsed');
+  } else {
+    timelineContainerEl.removeClass('c-timeline-panel__collapsed');
+    timelineContainerEl.addClass('c-timeline-panel__expanded');
+    timelineEl.removeClass('c-timeline__collapsed');
+    timelineEl.addClass('c-timeline__expanded');
+  }
+
+  os.ui.injector.get('$timeout')(function() {
+    // the inner timeline SVG doesn't resize correctly without this slight delay for some reason
+    ctrl.initSvg();
+    this.refreshAllBrushes();
+  }.bind(this), 100);
 };

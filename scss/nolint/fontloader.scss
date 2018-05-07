@@ -1,0 +1,42 @@
+// The purpose of this file is to convert any google fonts into local fonts if it exists in this theme
+@function str-replace($string, $search, $replace: '') {
+  $index: str-index($string, $search);
+
+  @if $index {
+    @return str-slice($string, 1, $index - 1) + $replace +
+        str-replace(str-slice($string, $index + str-length($search)), $search, $replace);
+  }
+
+  @return $string;
+}
+
+// Convert any google.api.fonts to local fonts that might have come from themes
+@if variable-exists(web-font-path) {
+  // Example Start
+  // $web-font-path: "https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700" !default;
+
+  // Replace the url to be local
+  $web-font-path: str-replace($web-font-path,
+      "https://fonts.googleapis.com/css?family=", "../../vendor/fonts/typeface-");
+
+  // Replace + with -
+  $web-font-path: str-replace($web-font-path, "+", "-");
+
+  // Strip off the end and add .css
+  $web-font-path__colon-index: str-index($web-font-path, ":");
+
+  @if $web-font-path__colon-index {
+    $web-font-path: str-slice($web-font-path, 0, ($web-font-path__colon-index - 1));
+  }
+
+  $web-font-path: $web-font-path + "/index.css";
+
+  // Lowercase everything
+  $web-font-path: to-lower-case($web-font-path);
+
+  // Example End
+  // $web-font-path: "../../vendor/fonts/typeface-source-sans-pro/index.css"
+
+  // Final import paths
+  @import url($web-font-path);
+}

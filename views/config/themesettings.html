@@ -1,0 +1,4 @@
+<div class="form-group">
+  <label for="themeInput">Theme</label>
+  <select id="themeInput" class="form-control" ng-options="key as key for (key, value) in ctrl.themes" ng-change="ctrl.onThemeChange()" ng-model="ctrl.theme"></select>
+</div>

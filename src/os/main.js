@@ -100,6 +100,7 @@ os.Module.config(os.Module.configureModule);
 os.uiMainDirective = function() {
   return {
     restrict: 'E',
+    replace: true,
     scope: true,
     templateUrl: os.ROOT + 'views/main.html',
     controller: os.MainCtrl,
