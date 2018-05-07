@@ -139,6 +139,7 @@ goog.require('plugin.capture.CapturePlugin');
 goog.require('plugin.descriptor.SearchPlugin');
 goog.require('plugin.file.csv.CSVPlugin');
 goog.require('plugin.file.geojson.GeoJSONPlugin');
+goog.require('plugin.file.gml.GMLPlugin');
 goog.require('plugin.file.gpx.GPXPlugin');
 goog.require('plugin.file.kml.KMLPlugin');
 goog.require('plugin.file.shp.SHPPlugin');
@@ -225,9 +226,6 @@ os.MainCtrl = function($scope, $element, $compile, $timeout, $injector) {
 
   // secure importer against injection attacks
   os.im.FeatureImporter.sanitize = /** @type {angular.$sanitize} */ (os.ui.injector.get('$sanitize'));
-
-  // register parsers
-  im.registerParser('gml', os.ui.file.gml.GMLParser);
 
   // set up file storage
   os.file.FileStorage.getInstance();
@@ -502,9 +500,10 @@ os.MainCtrl.prototype.addPlugins = function() {
   os.ui.pluginManager.addPlugin(new plugin.pelias.geocoder.Plugin());
   os.ui.pluginManager.addPlugin(new plugin.osm.nom.NominatimPlugin());
   os.ui.pluginManager.addPlugin(new plugin.file.csv.CSVPlugin());
-  os.ui.pluginManager.addPlugin(new plugin.file.kml.KMLPlugin());
+  os.ui.pluginManager.addPlugin(new plugin.file.gml.GMLPlugin());
   os.ui.pluginManager.addPlugin(new plugin.file.geojson.GeoJSONPlugin());
   os.ui.pluginManager.addPlugin(new plugin.file.gpx.GPXPlugin());
+  os.ui.pluginManager.addPlugin(new plugin.file.kml.KMLPlugin());
   os.ui.pluginManager.addPlugin(new plugin.file.shp.SHPPlugin());
   os.ui.pluginManager.addPlugin(new plugin.weather.WeatherPlugin());
   os.ui.pluginManager.addPlugin(new plugin.overview.OverviewPlugin());
