@@ -51,20 +51,20 @@
   <article class="container-fluid d-flex flex-column flex-wrap mt-5 justify-content-center">
     <div class="col-12 col-lg-4 offset-lg-4">
       <section class="flex-shrink-0">
-        <h3 id="report"></h3>
+        <h3 class="js-report"></h3>
         <div>
-          <i id="browserCheckWait" class="fa fa-circle-o-notch fa-spin" style="font-size: 48px;"></i>
+          <i class="js-browser-check-wait fa fa-circle-o-notch fa-spin" style="font-size: 48px;"></i>
         </div>
-        <ul id="checks"></ul>
+        <ul class="js-checks"></ul>
         <strong>Recommended browsers for the best experience:</strong>
         <ul>
           <li>Google Chrome version 35 or higher</li>
           <li>Mozilla Firefox version 31 or higher</li>
         </ul>
-        <p id="browserInfo"></p>
-        <div id="minBrowserMsg"></div>
+        <p class="js-browser-info"></p>
+        <div class="js-min-browser-msg"></div>
         <p>
-          <div id="contactInfo"></div>
+          <div class="js-contact-info"></div>
         </p>
         <div>
           <button class="btn btn-secondary" style="margin-right: 10px;" onClick="toggleFullList()">Show/Hide All Detected Capabilities</button>
@@ -72,7 +72,7 @@
         </div>
       </section>
       <section class="flex-col">
-        <p id="fullList"></p>
+        <p class="js-full-list"></p>
       </section>
     </div>
   </article>
