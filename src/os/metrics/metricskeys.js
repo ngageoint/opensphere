@@ -282,7 +282,9 @@ os.metrics.Places = {
   EDIT_FOLDER: 'places.contextMenu.editFolder',
   EDIT_PLACEMARK: 'places.contextMenu.editPlacemark',
   SAVE_TO: 'places.contextMenu.saveTo',
-  EXPORT_CONTEXT: 'places.contextMenu.export'
+  EXPORT_CONTEXT: 'places.contextMenu.export',
+  REMOVE_PLACE: 'places.removePlace',
+  REMOVE_ALL: 'places.removeAll'
 };
 
 
