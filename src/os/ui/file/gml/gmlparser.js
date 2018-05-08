@@ -6,6 +6,25 @@ goog.require('ol.format.GML3');
 goog.require('os.parse.IParser');
 
 
+/**
+ * The default GML style
+ * @type {Object<string, *>}
+ */
+os.ui.file.gml.DEFAULT_STYLE = {
+  'image': {
+    'type': 'circle',
+    'color': os.style.DEFAULT_LAYER_COLOR,
+    'fill': {
+      'color': os.style.DEFAULT_LAYER_COLOR
+    }
+  },
+  'stroke': {
+    'color': os.style.DEFAULT_LAYER_COLOR,
+    'width': os.style.DEFAULT_STROKE_WIDTH
+  }
+};
+
+
 
 /**
  * Parses a GML source
@@ -185,19 +204,27 @@ os.ui.file.gml.GMLParser.prototype.parseNext = function() {
         result.forEach(function(feature) {
           // force the default OL3 geometry field
           var geomName = feature.getGeometryName();
-          if (geomName && geomName != 'geometry') {
-            var geometry = feature.getGeometry();
-            if (geometry) {
-              feature.setGeometryName('geometry');
-              feature.setGeometry(geometry);
-            }
+          var geometry = feature.getGeometry();
+          if (geomName && geomName != 'geometry' && geometry) {
+            feature.setGeometryName('geometry');
+            feature.setGeometry(geometry);
           }
 
           // test for feature color in the styleVariation field
           var styleVariation = feature.get('styleVariation');
           if (os.color.isColorString(styleVariation)) {
+            var config = {};
+            os.style.mergeConfig(os.ui.file.gml.DEFAULT_STYLE, config);
+
+            var imageConfig = config[os.style.StyleField.IMAGE];
             var color = os.style.toRgbaString(/** @type {string} */ (styleVariation));
-            feature.set(os.style.StyleField.COLOR, color);
+            imageConfig[os.style.StyleField.COLOR] = color; // icon color
+            imageConfig[os.style.StyleField.FILL][os.style.StyleField.COLOR] = color; // center color
+
+            var strokeConfig = config[os.style.StyleField.STROKE];
+            strokeConfig[os.style.StyleField.COLOR] = color; // line color
+            feature.set(os.style.StyleType.FEATURE, config, true);
+            feature.set(os.style.StyleField.SHAPE, 'circle');
           }
         });
       }
