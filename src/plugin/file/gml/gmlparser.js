@@ -8,15 +8,6 @@ goog.require('os.parse.IParser');
 goog.require('os.ui.file.gml.GMLParser');
 
 
-/**
- * Fields to ignore when creating the column list.
- * @type {RegExp}
- * @private
- * @const
- */
-plugin.file.gml.GMLParser.SKIPPED_COLUMNS_ = /^(geometry|recordtime|time|styleurl)$/i;
-
-
 
 /**
  * @extends {os.ui.file.gml.GMLParser}
@@ -29,17 +20,16 @@ goog.inherits(plugin.file.gml.GMLParser, os.ui.file.gml.GMLParser);
 
 
 /**
- * Logger for plugin.file.gml.GMLParser
- * @type {goog.log.Logger}
+ * Fields to ignore when creating the column list.
+ * @type {RegExp}
  * @private
  * @const
  */
-plugin.file.gml.GMLParser.LOGGER_ = goog.log.getLogger('plugin.file.gml.GMLParser');
+plugin.file.gml.GMLParser.SKIPPED_COLUMNS_ = /^(geometry|recordtime|time|styleurl)$/i;
 
 
 /**
- * @return {!ol.ProjectionLike}
- * @protected
+ * @inheritDoc
  */
 plugin.file.gml.GMLParser.prototype.getProjection = function() {
   return /** @type {!ol.proj.Projection} */ (os.map.PROJECTION);
