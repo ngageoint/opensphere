@@ -1,5 +1,5 @@
 <div ng-form="dateForm">
-  <div class="container mb-1">
+  <div class="container mb-1" ng-show="startEndCtrl.showLabels">
     <div class="row">
       <label class="col-3" for="startControls">{{startEndCtrl.startLabel}}:</label>
       <div id="startControls" class="col">
@@ -9,7 +9,7 @@
     </div>
   </div>
 
-  <div class="container">
+  <div class="container" ng-show="startEndCtrl.showLabels">
     <div class="row">
       <label class="col-3" for="endControls">{{startEndCtrl.endLabel}}:</label>
       <div id="endControls" class="col">
@@ -17,6 +17,13 @@
         <div data-date-time class="d-inline-block" data-value="startEndCtrl.end" data-disabled="disabled" is-required="startEndCtrl.endRequired" data-invalid="startEndCtrl.endInvalid"></div>
       </div>
     </div>
+  </div>
+
+  <div class="d-flex flex-column" ng-show="!startEndCtrl.showLabels">
+    <input type="hidden" name="startDate" data-ng-required="startEndCtrl.startRequired" data-ng-model="startEndCtrl.start" />
+    <div data-date-time class="d-inline-block mb-1" data-value="startEndCtrl.start" data-disabled="disabled" is-required="startEndCtrl.startRequired" data-invalid="startEndCtrl.startInvalid"></div>
+    <input type="hidden" name="endDate" data-ng-required="startEndCtrl.endRequired || startEndCtrl.endInvalid" data-ng-model="startEndCtrl.end" />
+    <div data-date-time class="d-inline-block" data-value="startEndCtrl.end" data-disabled="disabled" is-required="startEndCtrl.endRequired" data-invalid="startEndCtrl.endInvalid"></div>
   </div>
 
   <div class="form-group" data-ng-show="!startEndCtrl.orderValid">
