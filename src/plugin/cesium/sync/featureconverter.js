@@ -1,4 +1,4 @@
-goog.provide('os.olcs.sync.FeatureConverter');
+goog.provide('plugin.cesium.sync.FeatureConverter');
 
 goog.require('goog.array');
 goog.require('goog.asserts');
@@ -20,9 +20,8 @@ goog.require('os.geom.GeometryField');
 goog.require('os.implements');
 goog.require('os.layer.ILayer');
 goog.require('os.map');
-goog.require('os.olcs');
-goog.require('os.olcs.VectorContext');
-
+goog.require('plugin.cesium');
+goog.require('plugin.cesium.VectorContext');
 
 
 /**
@@ -30,7 +29,7 @@ goog.require('os.olcs.VectorContext');
  * @param {!Cesium.Scene} scene Cesium scene.
  * @constructor
  */
-os.olcs.sync.FeatureConverter = function(scene) {
+plugin.cesium.sync.FeatureConverter = function(scene) {
   /**
    * @type {!Cesium.Scene}
    * @protected
@@ -83,7 +82,7 @@ os.olcs.sync.FeatureConverter = function(scene) {
  * @type {number}
  * @const
  */
-os.olcs.sync.FeatureConverter.ELLIPSE_GRANULARITY = 0.002;
+plugin.cesium.sync.FeatureConverter.ELLIPSE_GRANULARITY = 0.002;
 
 
 /**
@@ -91,7 +90,7 @@ os.olcs.sync.FeatureConverter.ELLIPSE_GRANULARITY = 0.002;
  * @type {!Object}
  * @const
  */
-os.olcs.sync.FeatureConverter.BASE_PRIMITIVE_OPTIONS = {
+plugin.cesium.sync.FeatureConverter.BASE_PRIMITIVE_OPTIONS = {
   flat: true,
   renderState: {
     depthTest: {
@@ -105,7 +104,7 @@ os.olcs.sync.FeatureConverter.BASE_PRIMITIVE_OPTIONS = {
  * Gets the transform function
  * @return {?ol.TransformFunction}
  */
-os.olcs.sync.FeatureConverter.prototype.getTransformFunction = function() {
+plugin.cesium.sync.FeatureConverter.prototype.getTransformFunction = function() {
   var pFrom = os.map.PROJECTION;
 
   if (this.lastProjection !== pFrom) {
@@ -126,7 +125,7 @@ os.olcs.sync.FeatureConverter.prototype.getTransformFunction = function() {
  * @return {!Cesium.GeometryInstance}
  * @protected
  */
-os.olcs.sync.FeatureConverter.prototype.createGeometryInstance = function(id, geometry, color) {
+plugin.cesium.sync.FeatureConverter.prototype.createGeometryInstance = function(id, geometry, color) {
   return new Cesium.GeometryInstance({
     id: id,
     geometry: geometry,
@@ -147,14 +146,15 @@ os.olcs.sync.FeatureConverter.prototype.createGeometryInstance = function(id, ge
  * @return {!Cesium.Primitive}
  * @protected
  */
-os.olcs.sync.FeatureConverter.prototype.createColoredPrimitive = function(geometry, color, opt_lineWidth,
+plugin.cesium.sync.FeatureConverter.prototype.createColoredPrimitive = function(geometry, color, opt_lineWidth,
     opt_instanceFn) {
-  var options = os.object.unsafeClone(os.olcs.sync.FeatureConverter.BASE_PRIMITIVE_OPTIONS);
+  var options = os.object.unsafeClone(plugin.cesium.sync.FeatureConverter.BASE_PRIMITIVE_OPTIONS);
   if (opt_lineWidth != null) {
     options.renderState.lineWidth = opt_lineWidth;
   }
 
-  var id = opt_lineWidth != null ? os.olcs.GeometryInstanceId.GEOM_OUTLINE : os.olcs.GeometryInstanceId.GEOM;
+  var id = opt_lineWidth != null ? plugin.cesium.GeometryInstanceId.GEOM_OUTLINE :
+      plugin.cesium.GeometryInstanceId.GEOM;
   var instances = opt_instanceFn ? opt_instanceFn(id, geometry, color) :
       this.createGeometryInstance(id, geometry, color);
   var appearance = new Cesium.PerInstanceColorAppearance(options);
@@ -173,7 +173,7 @@ os.olcs.sync.FeatureConverter.prototype.createColoredPrimitive = function(geomet
  * @param {boolean} outline
  * @return {!Cesium.Color}
  */
-os.olcs.sync.FeatureConverter.prototype.extractColorFromOlStyle = function(style, outline) {
+plugin.cesium.sync.FeatureConverter.prototype.extractColorFromOlStyle = function(style, outline) {
   var fillColor = style.getFill() ? style.getFill().getColor() : null;
   var strokeColor = style.getStroke() ? style.getStroke().getColor() : null;
 
@@ -193,7 +193,7 @@ os.olcs.sync.FeatureConverter.prototype.extractColorFromOlStyle = function(style
  * @param {!ol.style.Style|ol.style.Text} style
  * @return {number}
  */
-os.olcs.sync.FeatureConverter.prototype.extractLineWidthFromOlStyle = function(style) {
+plugin.cesium.sync.FeatureConverter.prototype.extractLineWidthFromOlStyle = function(style) {
   // make sure the width is at least 1px
   return Math.max(1, /** @type {number} */ (style.getStroke() && style.getStroke().getWidth() ||
       os.style.DEFAULT_FEATURE_SIZE));
@@ -206,11 +206,11 @@ os.olcs.sync.FeatureConverter.prototype.extractLineWidthFromOlStyle = function(s
  * @param {Cesium.Geometry} fill The fill geometry
  * @param {Cesium.Geometry} outline The outline geometry
  * @param {!ol.style.Style} style The style
- * @param {!os.olcs.VectorContext} context The vector context
+ * @param {!plugin.cesium.VectorContext} context The vector context
  * @return {!Cesium.PrimitiveCollection}
  * @protected
  */
-os.olcs.sync.FeatureConverter.prototype.wrapFillAndOutlineGeometries = function(fill, outline, style, context) {
+plugin.cesium.sync.FeatureConverter.prototype.wrapFillAndOutlineGeometries = function(fill, outline, style, context) {
   var width = this.extractLineWidthFromOlStyle(style);
   var layerOpacity = context.layer.getOpacity();
 
@@ -243,10 +243,10 @@ os.olcs.sync.FeatureConverter.prototype.wrapFillAndOutlineGeometries = function(
  * @param {!ol.Feature} feature The OL3 feature
  * @param {!ol.geom.Geometry} geometry
  * @param {Array<!ol.style.Style>} labels
- * @param {!os.olcs.VectorContext} context
+ * @param {!plugin.cesium.VectorContext} context
  * @protected
  */
-os.olcs.sync.FeatureConverter.prototype.createLabels = function(feature, geometry, labels, context) {
+plugin.cesium.sync.FeatureConverter.prototype.createLabels = function(feature, geometry, labels, context) {
   var allOptions = [];
   goog.array.forEach(labels, function(label) {
     if (!goog.string.isEmptyOrWhitespace(goog.string.makeSafe(label.getText()))) {
@@ -267,7 +267,7 @@ os.olcs.sync.FeatureConverter.prototype.createLabels = function(feature, geometr
  * @param {!ol.geom.Geometry} geometry The geometry.
  * @return {Array<number>} The position to use for the label.
  */
-os.olcs.sync.getLabelPosition = function(geometry) {
+plugin.cesium.sync.getLabelPosition = function(geometry) {
   var geometryType = geometry.getType();
   switch (geometryType) {
     case ol.geom.GeometryType.POINT:
@@ -284,10 +284,10 @@ os.olcs.sync.getLabelPosition = function(geometry) {
  * @param {!(Cesium.Label|Cesium.optionsLabelCollection)} label The label or label options
  * @param {!ol.geom.Geometry} geometry
  * @param {!ol.style.Style} style
- * @param {!os.olcs.VectorContext} context
+ * @param {!plugin.cesium.VectorContext} context
  * @protected
  */
-os.olcs.sync.FeatureConverter.prototype.updateLabel = function(label, geometry, style, context) {
+plugin.cesium.sync.FeatureConverter.prototype.updateLabel = function(label, geometry, style, context) {
   var geom = style.getGeometry();
   if (geom instanceof ol.geom.Geometry) {
     geometry = /** @type {!ol.geom.Geometry} */ (geom);
@@ -301,7 +301,7 @@ os.olcs.sync.FeatureConverter.prototype.updateLabel = function(label, geometry, 
     // TODO: export and use the text draw position from OL3. see src/ol/render/vector.js
     var transform = this.getTransformFunction();
 
-    var labelPosition = os.olcs.sync.getLabelPosition(geometry);
+    var labelPosition = plugin.cesium.sync.getLabelPosition(geometry);
     if (labelPosition) {
       if (transform) {
         labelPosition = transform(labelPosition);
@@ -422,7 +422,7 @@ os.olcs.sync.FeatureConverter.prototype.updateLabel = function(label, geometry, 
  * @param {!Cesium.Scene} scene
  * @param {Cesium.Cartesian3=} opt_offset
  */
-os.olcs.sync.FeatureConverter.prototype.setLabelEyeOffset = function(label, scene, opt_offset) {
+plugin.cesium.sync.FeatureConverter.prototype.setLabelEyeOffset = function(label, scene, opt_offset) {
   if (opt_offset) {
     label.eyeOffset = opt_offset;
   } else {
@@ -435,11 +435,11 @@ os.olcs.sync.FeatureConverter.prototype.setLabelEyeOffset = function(label, scen
  * Convert an OpenLayers circle geometry to Cesium.
  * @param {!ol.Feature} feature OL3 feature
  * @param {!ol.geom.Circle} geometry OL3 circle geometry.
- * @param {!os.olcs.VectorContext} context
+ * @param {!plugin.cesium.VectorContext} context
  * @param {!ol.style.Style} style
  * @return {Cesium.PrimitiveCollection} primitives
  */
-os.olcs.sync.FeatureConverter.prototype.olCircleGeometryToCesium = function(feature, geometry, context, style) {
+plugin.cesium.sync.FeatureConverter.prototype.olCircleGeometryToCesium = function(feature, geometry, context, style) {
   goog.asserts.assert(geometry.getType() == 'Circle');
   var transform = this.getTransformFunction();
 
@@ -482,11 +482,12 @@ os.olcs.sync.FeatureConverter.prototype.olCircleGeometryToCesium = function(feat
  * Convert an OpenLayers line string geometry to Cesium.
  * @param {!ol.Feature} feature Ol3 feature..
  * @param {!ol.geom.LineString} geometry Ol3 line string geometry.
- * @param {!os.olcs.VectorContext} context
+ * @param {!plugin.cesium.VectorContext} context
  * @param {!ol.style.Style} style
  * @return {Cesium.Primitive}
  */
-os.olcs.sync.FeatureConverter.prototype.olLineStringGeometryToCesium = function(feature, geometry, context, style) {
+plugin.cesium.sync.FeatureConverter.prototype.olLineStringGeometryToCesium = function(feature, geometry, context,
+    style) {
   goog.asserts.assert(geometry.getType() == 'LineString');
   var transform = this.getTransformFunction();
 
@@ -511,12 +512,12 @@ os.olcs.sync.FeatureConverter.prototype.olLineStringGeometryToCesium = function(
 /**
  * Create a Cesium line primitive.
  * @param {!Array<!Cesium.Cartesian3>} positions The geometry positions.
- * @param {!os.olcs.VectorContext} context The vector context.
+ * @param {!plugin.cesium.VectorContext} context The vector context.
  * @param {!ol.style.Style} style The feature style.
  * @param {string=} opt_type The line geometry type.
  * @return {Cesium.Primitive}
  */
-os.olcs.sync.FeatureConverter.prototype.createLinePrimitive = function(positions, context, style, opt_type) {
+plugin.cesium.sync.FeatureConverter.prototype.createLinePrimitive = function(positions, context, style, opt_type) {
   var type = opt_type || 'PolylineGeometry';
   var appearance = new Cesium.PolylineColorAppearance();
 
@@ -531,7 +532,7 @@ os.olcs.sync.FeatureConverter.prototype.createLinePrimitive = function(positions
     width: width
   });
 
-  var instance = this.createGeometryInstance(os.olcs.GeometryInstanceId.GEOM_OUTLINE, outlineGeometry, color);
+  var instance = this.createGeometryInstance(plugin.cesium.GeometryInstanceId.GEOM_OUTLINE, outlineGeometry, color);
   var primitive = new Cesium.Primitive({
     geometryInstances: instance,
     appearance: appearance
@@ -548,11 +549,11 @@ os.olcs.sync.FeatureConverter.prototype.createLinePrimitive = function(positions
  * Creates or updates a Cesium Billboard.
  * @param {!ol.Feature} feature The OL3 feature
  * @param {!(ol.geom.LineString|os.geom.Ellipse)} geometry The OL3 geometry
- * @param {!os.olcs.VectorContext} context
+ * @param {!plugin.cesium.VectorContext} context
  * @param {!ol.style.Style} style The OL3 style
  * @param {(Cesium.Polyline|Cesium.PolylineOptions)=} opt_polyline The polyline, for updates.
  */
-os.olcs.sync.FeatureConverter.prototype.createOrUpdatePolyline = function(feature, geometry, context, style,
+plugin.cesium.sync.FeatureConverter.prototype.createOrUpdatePolyline = function(feature, geometry, context, style,
     opt_polyline) {
   if (opt_polyline) {
     this.updatePolyline(feature, geometry, context, style, opt_polyline);
@@ -566,10 +567,10 @@ os.olcs.sync.FeatureConverter.prototype.createOrUpdatePolyline = function(featur
  * Create a Cesium line primitive.
  * @param {!ol.Feature} feature Ol3 feature..
  * @param {!(ol.geom.LineString|os.geom.Ellipse)} geometry Ol3 line string geometry.
- * @param {!os.olcs.VectorContext} context
+ * @param {!plugin.cesium.VectorContext} context
  * @param {!ol.style.Style} style
  */
-os.olcs.sync.FeatureConverter.prototype.createPolyline = function(feature, geometry, context, style) {
+plugin.cesium.sync.FeatureConverter.prototype.createPolyline = function(feature, geometry, context, style) {
   var polylineOptions = /** @type {Cesium.PolylineOptions} */ ({});
   this.updatePolyline(feature, geometry, context, style, polylineOptions);
 
@@ -581,11 +582,11 @@ os.olcs.sync.FeatureConverter.prototype.createPolyline = function(feature, geome
  * Create a Cesium line primitive.
  * @param {!ol.Feature} feature Ol3 feature..
  * @param {!(ol.geom.LineString|os.geom.Ellipse)} geometry Ol3 line string geometry.
- * @param {!os.olcs.VectorContext} context
+ * @param {!plugin.cesium.VectorContext} context
  * @param {!ol.style.Style} style
  * @param {!(Cesium.Polyline|Cesium.PolylineOptions)} polyline The polyline, for updates.
  */
-os.olcs.sync.FeatureConverter.prototype.updatePolyline = function(feature, geometry, context, style, polyline) {
+plugin.cesium.sync.FeatureConverter.prototype.updatePolyline = function(feature, geometry, context, style, polyline) {
   var geomRevision = geometry.getRevision();
   if (polyline.geomRevision != geomRevision) {
     var coordinates = geometry.getCoordinates();
@@ -625,11 +626,11 @@ os.olcs.sync.FeatureConverter.prototype.updatePolyline = function(feature, geome
  * Get a ground reference line from a coordinate to the surface of the globe.
  * @param {!ol.Coordinate} coordinate The reference coordinate.
  * @param {!ol.style.Style} style The style
- * @param {!os.olcs.VectorContext} context The vector context
+ * @param {!plugin.cesium.VectorContext} context The vector context
  * @return {Cesium.Primitive}
  * @protected
  */
-os.olcs.sync.FeatureConverter.prototype.getGroundReference = function(coordinate, style, context) {
+plugin.cesium.sync.FeatureConverter.prototype.getGroundReference = function(coordinate, style, context) {
   var surface = coordinate.slice();
   surface[2] = 0;
 
@@ -644,11 +645,12 @@ os.olcs.sync.FeatureConverter.prototype.getGroundReference = function(coordinate
  * Get a ground reference line from a coordinate to the surface of the globe.
  * @param {!ol.Feature} feature Ol3 feature
  * @param {!os.geom.Ellipse} geometry Ellipse geometry.
- * @param {!os.olcs.VectorContext} context The vector context
+ * @param {!plugin.cesium.VectorContext} context The vector context
  * @param {!ol.style.Style} style The style
  * @protected
  */
-os.olcs.sync.FeatureConverter.prototype.createOrUpdateGroundReference = function(feature, geometry, context, style) {
+plugin.cesium.sync.FeatureConverter.prototype.createOrUpdateGroundReference = function(feature, geometry, context,
+    style) {
   var groundRef = null;
 
   if (os.implements(context.layer, os.layer.ILayer.ID)) {
@@ -693,11 +695,11 @@ os.olcs.sync.FeatureConverter.prototype.createOrUpdateGroundReference = function
 /**
  * Get the fill color for an ellipsoid.
  * @param {!ol.style.Style} style The style
- * @param {!os.olcs.VectorContext} context The vector context
+ * @param {!plugin.cesium.VectorContext} context The vector context
  * @return {!Cesium.Color}
  * @protected
  */
-os.olcs.sync.FeatureConverter.prototype.getEllipsoidFill = function(style, context) {
+plugin.cesium.sync.FeatureConverter.prototype.getEllipsoidFill = function(style, context) {
   // fill ellipsoid using stroke color at a base opacity of 50%
   var color = this.extractColorFromOlStyle(style, true);
   color.alpha = 0.3 * context.layer.getOpacity();
@@ -709,11 +711,11 @@ os.olcs.sync.FeatureConverter.prototype.getEllipsoidFill = function(style, conte
 /**
  * Get the stroke color for an ellipsoid.
  * @param {!ol.style.Style} style The style
- * @param {!os.olcs.VectorContext} context The vector context
+ * @param {!plugin.cesium.VectorContext} context The vector context
  * @return {!Cesium.Color}
  * @protected
  */
-os.olcs.sync.FeatureConverter.prototype.getEllipsoidStroke = function(style, context) {
+plugin.cesium.sync.FeatureConverter.prototype.getEllipsoidStroke = function(style, context) {
   // create a white wireframe with reduced base alpha to make it less invasive
   var color = new Cesium.Color(1, 1, 1, 1);
   color.alpha = context.layer.getOpacity() * 0.75;
@@ -728,12 +730,12 @@ os.olcs.sync.FeatureConverter.prototype.getEllipsoidStroke = function(style, con
  * @param {!Cesium.Geometry} fill The fill geometry
  * @param {!Cesium.Geometry} outline The outline geometry
  * @param {!ol.style.Style} style The style
- * @param {!os.olcs.VectorContext} context The vector context
+ * @param {!plugin.cesium.VectorContext} context The vector context
  * @param {Function=} opt_instanceFn The geometry instance function.
  * @return {!Cesium.PrimitiveCollection}
  * @protected
  */
-os.olcs.sync.FeatureConverter.prototype.wrapEllipsoidFillAndOutline = function(fill, outline, style, context,
+plugin.cesium.sync.FeatureConverter.prototype.wrapEllipsoidFillAndOutline = function(fill, outline, style, context,
     opt_instanceFn) {
   var width = this.extractLineWidthFromOlStyle(style);
 
@@ -758,11 +760,12 @@ os.olcs.sync.FeatureConverter.prototype.wrapEllipsoidFillAndOutline = function(f
  * Convert an OpenLayers polygon geometry to Cesium.
  * @param {!ol.Feature} feature Ol3 feature..
  * @param {!os.geom.Ellipse} geometry Ellipse geometry.
- * @param {!os.olcs.VectorContext} context
+ * @param {!plugin.cesium.VectorContext} context
  * @param {!ol.style.Style} style
  * @return {Cesium.PrimitiveCollection|Cesium.Primitive}
  */
-os.olcs.sync.FeatureConverter.prototype.olEllipseGeometryToEllipsoid = function(feature, geometry, context, style) {
+plugin.cesium.sync.FeatureConverter.prototype.olEllipseGeometryToEllipsoid = function(feature, geometry, context,
+    style) {
   var olCenter = geometry.getCenter();
   var center = olcs.core.ol4326CoordinateToCesiumCartesian(olCenter);
   var height = olCenter[2] || undefined;
@@ -786,10 +789,10 @@ os.olcs.sync.FeatureConverter.prototype.olEllipseGeometryToEllipsoid = function(
   });
 
   var createEllipsoidInstance = function(id, geometry, color) {
-    if (id === os.olcs.GeometryInstanceId.GEOM) {
-      id = os.olcs.GeometryInstanceId.ELLIPSOID;
+    if (id === plugin.cesium.GeometryInstanceId.GEOM) {
+      id = plugin.cesium.GeometryInstanceId.ELLIPSOID;
     } else {
-      id = os.olcs.GeometryInstanceId.ELLIPSOID_OUTLINE;
+      id = plugin.cesium.GeometryInstanceId.ELLIPSOID_OUTLINE;
     }
 
     return new Cesium.GeometryInstance({
@@ -826,7 +829,7 @@ os.olcs.sync.FeatureConverter.prototype.olEllipseGeometryToEllipsoid = function(
  * @param {!ol.geom.Polygon} geometry The OL polygon
  * @return {Cesium.PolygonHierarchy}
  */
-os.olcs.sync.FeatureConverter.prototype.createPolygonHierarchy = function(geometry) {
+plugin.cesium.sync.FeatureConverter.prototype.createPolygonHierarchy = function(geometry) {
   var transform = this.getTransformFunction();
 
   var rings = geometry.getLinearRings();
@@ -848,7 +851,7 @@ os.olcs.sync.FeatureConverter.prototype.createPolygonHierarchy = function(geomet
     }
 
     if (rings.length === 1 && os.geo.isRectangular(olPos, extent)) {
-      csPos = os.olcs.generateRectanglePositions(extent, 0, extrude);
+      csPos = plugin.cesium.generateRectanglePositions(extent, 0, extrude);
     } else {
       csPos = olcs.core.ol4326CoordinateArrayToCsCartesians(olPos);
     }
@@ -874,11 +877,11 @@ os.olcs.sync.FeatureConverter.prototype.createPolygonHierarchy = function(geomet
  * in windows.
  * @param {!ol.Feature} feature Ol3 feature..
  * @param {!ol.geom.Polygon} geometry Ol3 polygon geometry.
- * @param {!os.olcs.VectorContext} context
+ * @param {!plugin.cesium.VectorContext} context
  * @param {!ol.style.Style} style
  * @return {Cesium.PrimitiveCollection}
  */
-os.olcs.sync.FeatureConverter.prototype.olPolygonGeometryToCesium = function(feature, geometry, context, style) {
+plugin.cesium.sync.FeatureConverter.prototype.olPolygonGeometryToCesium = function(feature, geometry, context, style) {
   var fillGeometry = null;
   var outlineGeometry = null;
   var transform = this.getTransformFunction();
@@ -943,11 +946,11 @@ os.olcs.sync.FeatureConverter.prototype.olPolygonGeometryToCesium = function(fea
  * Convert an OpenLayers polygon geometry to Cesium.
  * @param {!ol.Feature} feature Ol3 feature..
  * @param {!ol.geom.Polygon} geometry Ol3 polygon geometry.
- * @param {!os.olcs.VectorContext} context
+ * @param {!plugin.cesium.VectorContext} context
  * @param {!ol.style.Style} style
  * @return {Cesium.PrimitiveCollection|Cesium.Primitive}
  */
-os.olcs.sync.FeatureConverter.prototype.olPolygonGeometryToCesiumPolyline = function(feature, geometry,
+plugin.cesium.sync.FeatureConverter.prototype.olPolygonGeometryToCesiumPolyline = function(feature, geometry,
     context, style) {
   // extruded polygons cannot be rendered as a polyline. since polygons will not respect line width on Windows, make
   // sure the geometry is both extruded and has an altitude before using the polygon primitive.
@@ -994,7 +997,7 @@ os.olcs.sync.FeatureConverter.prototype.olPolygonGeometryToCesiumPolyline = func
         width: width
       });
 
-      var instance = this.createGeometryInstance(os.olcs.GeometryInstanceId.GEOM_OUTLINE, polylineGeometry,
+      var instance = this.createGeometryInstance(plugin.cesium.GeometryInstanceId.GEOM_OUTLINE, polylineGeometry,
           outlineColor);
       var outlinePrimitive = new Cesium.Primitive({
         geometryInstances: instance,
@@ -1034,7 +1037,7 @@ os.olcs.sync.FeatureConverter.prototype.olPolygonGeometryToCesiumPolyline = func
 /**
  * @param {boolean} enabled
  */
-os.olcs.sync.FeatureConverter.prototype.setAltitudeEnabled = function(enabled) {
+plugin.cesium.sync.FeatureConverter.prototype.setAltitudeEnabled = function(enabled) {
   if (enabled) {
     this.heightReference_ = Cesium.HeightReference.NONE;
   } else {
@@ -1049,7 +1052,7 @@ os.olcs.sync.FeatureConverter.prototype.setAltitudeEnabled = function(enabled) {
  * @param {!ol.geom.Geometry} geometry
  * @return {!Cesium.HeightReference}
  */
-os.olcs.sync.FeatureConverter.prototype.getHeightReference = function(layer, feature, geometry) {
+plugin.cesium.sync.FeatureConverter.prototype.getHeightReference = function(layer, feature, geometry) {
   // disable height reference because the implementation is fairly slow right now
   return this.heightReference_;
 
@@ -1081,12 +1084,12 @@ os.olcs.sync.FeatureConverter.prototype.getHeightReference = function(layer, fea
  * Creates or updates a Cesium Billboard.
  * @param {!ol.Feature} feature The OL3 feature
  * @param {!ol.geom.Point} geometry The OL3 geometry
- * @param {!os.olcs.VectorContext} context
+ * @param {!plugin.cesium.VectorContext} context
  * @param {!ol.style.Style} style The OL3 style
  * @param {(Cesium.Billboard|Cesium.optionsBillboardCollectionAdd)=} opt_billboard The billboard, for updates
  * @suppress {checkTypes}
  */
-os.olcs.sync.FeatureConverter.prototype.createOrUpdateBillboard = function(feature, geometry, context, style,
+plugin.cesium.sync.FeatureConverter.prototype.createOrUpdateBillboard = function(feature, geometry, context, style,
     opt_billboard) {
   var imageStyle = style.getImage();
   if (imageStyle) {
@@ -1142,11 +1145,11 @@ os.olcs.sync.FeatureConverter.prototype.createOrUpdateBillboard = function(featu
  * Create a Cesium Billboard from an OpenLayers image style.
  * @param {!ol.Feature} feature The OL3 feature
  * @param {!ol.geom.Point} geometry The OL3 geometry
- * @param {!os.olcs.VectorContext} context
+ * @param {!plugin.cesium.VectorContext} context
  * @param {!ol.style.Image} style The image style
  * @protected
  */
-os.olcs.sync.FeatureConverter.prototype.createBillboard = function(feature, geometry, context, style) {
+plugin.cesium.sync.FeatureConverter.prototype.createBillboard = function(feature, geometry, context, style) {
   var image = style.getImage(1); // get normal density
   if (image instanceof HTMLCanvasElement || image instanceof Image || image instanceof HTMLImageElement) {
     var heightReference = this.getHeightReference(context.layer, feature, geometry);
@@ -1170,7 +1173,7 @@ os.olcs.sync.FeatureConverter.prototype.createBillboard = function(feature, geom
  * @param {!ol.layer.Vector} layer The OL3 layer
  * @protected
  */
-os.olcs.sync.FeatureConverter.prototype.updateBillboard = function(feature, geometry, bb, style, layer) {
+plugin.cesium.sync.FeatureConverter.prototype.updateBillboard = function(feature, geometry, bb, style, layer) {
   // update the position if the geometry changed
   var geomRevision = geometry.getRevision();
   if (bb.geomRevision == null || bb.geomRevision != geomRevision) {
@@ -1275,7 +1278,7 @@ os.olcs.sync.FeatureConverter.prototype.updateBillboard = function(feature, geom
  * @param {!ol.style.Style} style [description]
  * @return {boolean} [description]
  */
-os.olcs.sync.FeatureConverter.prototype.isHighlightStyle = function(style) {
+plugin.cesium.sync.FeatureConverter.prototype.isHighlightStyle = function(style) {
   if (style && style.getStroke()) {
     return (os.style.DEFAULT_HIGHLIGHT_CONFIG.stroke.color === style.getStroke().getColor());
   }
@@ -1287,10 +1290,10 @@ os.olcs.sync.FeatureConverter.prototype.isHighlightStyle = function(style) {
  * @param {!ol.Feature} feature The OL3 feature
  * @param {!ol.geom.Geometry} geometry The geometry to be converted
  * @param {!ol.style.Style} style The geometry style
- * @param {!os.olcs.VectorContext} context Cesium synchronization context
+ * @param {!plugin.cesium.VectorContext} context Cesium synchronization context
  * @param {!Cesium.PrimitiveLike} primitive The Cesium primitive
  */
-os.olcs.sync.FeatureConverter.prototype.updatePrimitive = function(feature, geometry, style, context, primitive) {
+plugin.cesium.sync.FeatureConverter.prototype.updatePrimitive = function(feature, geometry, style, context, primitive) {
   if (!primitive.ready) {
     // primitives won't be marked as ready until they've been loaded to the GPU. we can't update them until they're
     // ready, so call this again on a delay. limit to 20 tries in case a primitive is never ready for whatever
@@ -1308,16 +1311,16 @@ os.olcs.sync.FeatureConverter.prototype.updatePrimitive = function(feature, geom
     // ready for update
     primitive.updateRetries = 0;
 
-    for (var key in os.olcs.GeometryInstanceId) {
+    for (var key in plugin.cesium.GeometryInstanceId) {
       // the try-catch is for the lovely DevErrors in Unminified Cesium
       try {
-        var field = os.olcs.GeometryInstanceId[key];
+        var field = plugin.cesium.GeometryInstanceId[key];
         var attributes = primitive.getGeometryInstanceAttributes(field);
         if (attributes) {
           var color;
 
-          var isEllipsoid = os.olcs.ELLIPSOID_REGEXP.test(field);
-          var isOutline = os.olcs.OUTLINE_REGEXP.test(field);
+          var isEllipsoid = plugin.cesium.ELLIPSOID_REGEXP.test(field);
+          var isOutline = plugin.cesium.OUTLINE_REGEXP.test(field);
 
           if (isEllipsoid) {
             if (isOutline) {
@@ -1356,11 +1359,11 @@ os.olcs.sync.FeatureConverter.prototype.updatePrimitive = function(feature, geom
  * Convert an OpenLayers multi-something geometry to Cesium.
  * @param {!ol.Feature} feature Ol3 feature..
  * @param {!ol.geom.Geometry} geometry Ol3 geometry.
- * @param {!os.olcs.VectorContext} context
+ * @param {!plugin.cesium.VectorContext} context
  * @param {!ol.style.Style} style
  * @return {?Cesium.PrimitiveLike}
  */
-os.olcs.sync.FeatureConverter.prototype.olMultiGeometryToCesium = function(feature, geometry, context, style) {
+plugin.cesium.sync.FeatureConverter.prototype.olMultiGeometryToCesium = function(feature, geometry, context, style) {
   // FIXME: would be better to combine all child geometries in one primitive. instead we create n primitives for
   // simplicity (eg, laziness).
 
@@ -1447,7 +1450,7 @@ os.olcs.sync.FeatureConverter.prototype.olMultiGeometryToCesium = function(featu
  * @param {!ol.layer.Vector} layer
  * @return {Array<ol.style.Style>} null if no style is available
  */
-os.olcs.sync.FeatureConverter.prototype.getFeatureStyles = function(feature, resolution, layer) {
+plugin.cesium.sync.FeatureConverter.prototype.getFeatureStyles = function(feature, resolution, layer) {
   var style;
 
   // feature style takes precedence
@@ -1482,10 +1485,11 @@ os.olcs.sync.FeatureConverter.prototype.getFeatureStyles = function(feature, res
  * @param {!ol.Feature} feature The OL3 feature
  * @param {!ol.geom.Geometry} geometry The geometry to be converted
  * @param {!ol.style.Style} style The geometry style
- * @param {!os.olcs.VectorContext} context Cesium synchronization context
+ * @param {!plugin.cesium.VectorContext} context Cesium synchronization context
  * @param {Array<!ol.style.Style>=} opt_labels - the group of labels to apply to the geometries
  */
-os.olcs.sync.FeatureConverter.prototype.olGeometryToCesium = function(feature, geometry, style, context, opt_labels) {
+plugin.cesium.sync.FeatureConverter.prototype.olGeometryToCesium = function(feature, geometry, style, context,
+    opt_labels) {
   if (opt_labels) {
     var currentLabels = context.getLabelsForGeometry(geometry);
     if (currentLabels == null || opt_labels.length != currentLabels.length) {
@@ -1506,12 +1510,12 @@ os.olcs.sync.FeatureConverter.prototype.olGeometryToCesium = function(feature, g
   // if the outline width changed, we need to recreate the primitive since Cesium can't change the width on a geometry
   // instance
   if (primitive && primitive['olLineWidth'] != null) {
-    var dirty = geometry.get(os.olcs.DIRTY_BIT);
+    var dirty = geometry.get(os.geom.GeometryField.DIRTY);
     var width = this.extractLineWidthFromOlStyle(style);
     if (dirty || primitive['olLineWidth'] != width) {
       wasPrimitiveShown = primitive.show;
       context.removePrimitive(primitive);
-      geometry.set(os.olcs.DIRTY_BIT, false);
+      geometry.set(os.geom.GeometryField.DIRTY, false);
       primitive = null;
     }
   }
@@ -1603,10 +1607,11 @@ os.olcs.sync.FeatureConverter.prototype.olGeometryToCesium = function(feature, g
  * @param {!ol.Feature} feature The OL3 feature
  * @param {!ol.geom.Geometry} geometry The geometry to be converted
  * @param {!ol.style.Style} style The geometry style
- * @param {!os.olcs.VectorContext} context Cesium synchronization context
+ * @param {!plugin.cesium.VectorContext} context Cesium synchronization context
  * @param {!Cesium.PrimitiveLike} primitive The Cesium primitive
  */
-os.olcs.sync.FeatureConverter.prototype.updatePrimitiveLike = function(feature, geometry, style, context, primitive) {
+plugin.cesium.sync.FeatureConverter.prototype.updatePrimitiveLike = function(feature, geometry, style, context,
+    primitive) {
   if (primitive instanceof Cesium.PrimitiveCollection) {
     for (var i = 0, n = primitive.length; i < n; i++) {
       this.updatePrimitiveLike(feature, geometry, style, context, primitive.get(i));
@@ -1632,9 +1637,9 @@ os.olcs.sync.FeatureConverter.prototype.updatePrimitiveLike = function(feature, 
  * Convert an OpenLayers vector layer to Cesium primitive collection.
  * @param {!ol.layer.Vector} layer The map layer
  * @param {!ol.View} view The OL3 view
- * @return {!os.olcs.VectorContext}
+ * @return {!plugin.cesium.VectorContext}
  */
-os.olcs.sync.FeatureConverter.prototype.olVectorLayerToCesium = function(layer, view) {
+plugin.cesium.sync.FeatureConverter.prototype.olVectorLayerToCesium = function(layer, view) {
   var projection = view.getProjection();
   var resolution = view.getResolution();
   if (!goog.isDefAndNotNull(projection) || !goog.isDef(resolution)) {
@@ -1642,7 +1647,7 @@ os.olcs.sync.FeatureConverter.prototype.olVectorLayerToCesium = function(layer, 
     throw new Error('view not ready');
   }
 
-  var context = new os.olcs.VectorContext(this.scene, layer, projection);
+  var context = new plugin.cesium.VectorContext(this.scene, layer, projection);
   var features = layer.getSource().getFeatures();
   for (var i = 0, n = features.length; i < n; i++) {
     var feature = features[i];
@@ -1659,9 +1664,9 @@ os.olcs.sync.FeatureConverter.prototype.olVectorLayerToCesium = function(layer, 
  * Convert an OpenLayers feature to Cesium primitive collection.
  * @param {!ol.Feature} feature The OL3 feature
  * @param {number} resolution The OL3 view resolution
- * @param {!os.olcs.VectorContext} context
+ * @param {!plugin.cesium.VectorContext} context
  */
-os.olcs.sync.FeatureConverter.prototype.convert = function(feature, resolution, context) {
+plugin.cesium.sync.FeatureConverter.prototype.convert = function(feature, resolution, context) {
   context.markDirty(feature);
 
   var styles = this.getFeatureStyles(feature, resolution, context.layer);
@@ -1714,7 +1719,7 @@ os.olcs.sync.FeatureConverter.prototype.convert = function(feature, resolution, 
 /**
  * @param {!Cesium.Cartesian3} labelOffset
  */
-os.olcs.sync.FeatureConverter.prototype.setLabelEyeOffsetDefault = function(labelOffset) {
+plugin.cesium.sync.FeatureConverter.prototype.setLabelEyeOffsetDefault = function(labelOffset) {
   this.labelEyeOffset_ = labelOffset;
 };
 
@@ -1722,7 +1727,7 @@ os.olcs.sync.FeatureConverter.prototype.setLabelEyeOffsetDefault = function(labe
 /**
  * @param {!Cesium.Cartesian3} primOffset
  */
-os.olcs.sync.FeatureConverter.prototype.setEyeOffset = function(primOffset) {
+plugin.cesium.sync.FeatureConverter.prototype.setEyeOffset = function(primOffset) {
   this.eyeOffset_ = primOffset;
 };
 
@@ -1730,6 +1735,6 @@ os.olcs.sync.FeatureConverter.prototype.setEyeOffset = function(primOffset) {
 /**
  * @return {!Cesium.Cartesian3}
  */
-os.olcs.sync.FeatureConverter.prototype.getEyeOffset = function() {
+plugin.cesium.sync.FeatureConverter.prototype.getEyeOffset = function() {
   return this.eyeOffset_;
 };

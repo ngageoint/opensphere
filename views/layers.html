@@ -7,10 +7,10 @@
           <select style="width: calc(100% - 60px);" class="no-margin" ng-model="view" ng-change="layers.onGroupByChanged()" ng-options="key for (key, value) in views"/>
           <div style="float:right;">
             <button class="btn btn-default c-layers__button" title="Toggle Tile Layers" ng-click="layers.toggleTileLayers()">
-              <img src="{{tilesBtnIcon}}"/>
+              <img ng-src="{{tilesBtnIcon}}"/>
             </button>
             <button class="btn btn-default c-layers__button" title="Toggle Feature Layers" ng-click="layers.toggleFeatureLayers()">
-              <img src="{{featuresBtnIcon}}"/>
+              <img ng-src="{{featuresBtnIcon}}"/>
             </button> 
           </div>
         </td>

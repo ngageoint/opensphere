@@ -1125,11 +1125,12 @@ os.geo.jsts.fromBufferProjection_ = function(geometry, projection, opt_normalize
  *
  * @param {ol.geom.Geometry|undefined} geometry The geometry to validate.
  * @param {boolean=} opt_quiet If alerts should be suppressed.
+ * @param {boolean=} opt_undefinedIfInvalid returns undefined if the geometry is invalid
  * @return {ol.geom.Geometry|undefined} The validated geometry, or the input geometry if it could not be validated.
  *
  * @see https://stackoverflow.com/questions/31473553
  */
-os.geo.jsts.validate = function(geometry, opt_quiet) {
+os.geo.jsts.validate = function(geometry, opt_quiet, opt_undefinedIfInvalid) {
   if (!geometry) {
     return undefined;
   }
@@ -1142,7 +1143,7 @@ os.geo.jsts.validate = function(geometry, opt_quiet) {
 
       // check for empty first because JSTS will throw an error when calling isValid on an empty polygon
       if (jstsPoly.isEmpty()) {
-        return geometry;
+        return opt_undefinedIfInvalid ? undefined : geometry;
       }
 
       var jstsValidPoly;
@@ -1186,8 +1187,8 @@ os.geo.jsts.validate = function(geometry, opt_quiet) {
     }
   }
 
-  // default to returning the original geometry
-  return geometry;
+  // default to returning undefined
+  return opt_undefinedIfInvalid ? undefined : geometry;
 };
 
 

@@ -6,5 +6,6 @@ goog.provide('os.geom.GeometryField');
  * @enum {string}
  */
 os.geom.GeometryField = {
+  DIRTY: '_dirty',
   NORMALIZED: '_normalized'
 };

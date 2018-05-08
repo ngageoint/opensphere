@@ -60,11 +60,11 @@ os.ui.filter.ColTypeListCtrl = function($scope, $element) {
   this.element_ = $element;
 
   /**
-   * Match newline, linefeed or tab, but only if followed by more words
+   * Match newline, linefeed or tab, but only if followed by more non-whitespace characters
    * @type {RegExp}
    * @private
    */
-  this.regex_ = /[\n\r\t](?=[\w+-.,!@#$%^&*();\\\/|<>"'])/g;
+  this.regex_ = /[\n\r\t](?=[\S])/g;
 
   this.element_.on(goog.events.EventType.PASTE, this.onPaste_.bind(this));
 
@@ -79,11 +79,14 @@ os.ui.filter.ColTypeListCtrl = function($scope, $element) {
  */
 os.ui.filter.ColTypeListCtrl.prototype.onPaste_ = function(e) {
   var text = os.ui.clipboard.getData(e.originalEvent);
-  if (goog.isDefAndNotNull(text)) {
-    setTimeout(goog.bind(function() {
-      this.scope_['expr']['literal'] = text.replace(this.regex_, ', ').replace(/[\n\r\t]/g, '').trim();
-      os.ui.apply(this.scope_);
-    }, this), 10);
+  if (text != null) {
+    var that = this;
+    setTimeout(function() {
+      that.scope_['expr']['literal'] = that.scope_['expr']['literal'].
+          replace(that.regex_, ', ').
+          replace(/[\n\r\t]\s*/g, '').trim();
+      os.ui.apply(that.scope_);
+    }, 10);
   }
 };
 

@@ -136,6 +136,7 @@ goog.require('plugin.area.AreaPlugin');
 goog.require('plugin.audio.AudioPlugin');
 goog.require('plugin.basemap.BaseMapPlugin');
 goog.require('plugin.capture.CapturePlugin');
+goog.require('plugin.cesium.Plugin');
 goog.require('plugin.descriptor.SearchPlugin');
 goog.require('plugin.file.csv.CSVPlugin');
 goog.require('plugin.file.geojson.GeoJSONPlugin');
@@ -490,6 +491,7 @@ os.MainCtrl.prototype.initXt = function() {
  */
 os.MainCtrl.prototype.addPlugins = function() {
   // Only "os" application plugins are added here
+  os.ui.pluginManager.addPlugin(new plugin.cesium.Plugin());
   os.ui.pluginManager.addPlugin(plugin.im.action.feature.Plugin.getInstance());
   os.ui.pluginManager.addPlugin(new plugin.descriptor.SearchPlugin());
   os.ui.pluginManager.addPlugin(new plugin.area.AreaPlugin());
