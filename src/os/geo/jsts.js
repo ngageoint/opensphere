@@ -111,15 +111,7 @@ os.geo.jsts.TMERC_BUFFER_LIMIT = 663469.9375;
  * @return {ol.Coordinate} An OL3 coordinate
  */
 os.geo.jsts.convertToCoordinate = function(coord) {
-  var olCoord = null;
-  if (coord) {
-    olCoord = [coord.x, coord.y];
-    if (coord.z != null) {
-      olCoord.push(coord.z);
-    }
-  }
-
-  return olCoord;
+  return coord ? [coord.x, coord.y, coord.z || 0] : null;
 };
 
 
