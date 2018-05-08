@@ -78,10 +78,11 @@ os.source.Vector = function(opt_options) {
   this.animationEnabled_ = false;
 
   /**
+   * If WebGL is enabled (not rendering directly to Openlayers).
    * @type {boolean}
    * @protected
    */
-  this.cesiumEnabled = false;
+  this.webGLEnabled = false;
 
   /**
    * @type {!Array<!os.data.ColumnDefinition>}
@@ -471,7 +472,7 @@ os.source.Vector.prototype.disposeInternal = function() {
  * @inheritDoc
  */
 os.source.Vector.prototype.changed = function() {
-  if (!this.cesiumEnabled) {
+  if (!this.webGLEnabled) {
     // skip this in 3D mode to prevent Openlayers from drawing anything that isn't being displayed
     os.source.Vector.base(this, 'changed');
 
@@ -1231,8 +1232,8 @@ os.source.Vector.prototype.setAnimationEnabled = function(value) {
  * feature visibility changes on each animation frame.
  * @param {boolean} value
  */
-os.source.Vector.prototype.setCesiumEnabled = function(value) {
-  this.cesiumEnabled = value;
+os.source.Vector.prototype.setWebGLEnabled = function(value) {
+  this.webGLEnabled = value;
 
   if (!value) {
     // re-render the layer when switching back to 2D mode
@@ -1244,7 +1245,7 @@ os.source.Vector.prototype.setCesiumEnabled = function(value) {
       // prevent the animation overlay from being rendered on the 2D map
       this.animationOverlay.setMap(null);
 
-      // once the stack clears (and Cesium has been enabled/initialized), fire an animation event to update feature
+      // once the stack clears (and WebGL has been enabled/initialized), fire an animation event to update feature
       // visibility
       goog.async.nextTick(function() {
         this.dispatchAnimationFrame(undefined, this.animationOverlay.getFeatures());
@@ -1767,8 +1768,8 @@ os.source.Vector.prototype.processFeatures = function(features) {
   if (this.processTimer) {
     this.processQueue_ = this.processQueue_.concat(features);
 
-    if (!this.cesiumEnabled || !this.isLoading()) {
-      // when cesium is enabled, defer the process timer until loading completes to optimize loading performance
+    if (!this.webGLEnabled || !this.isLoading()) {
+      // when WebGL is enabled, defer the process timer until loading completes to optimize loading performance
       this.processTimer.start();
     }
   }
@@ -1895,7 +1896,7 @@ os.source.Vector.prototype.processDeferred = function(features) {
 
   this.updateLabels();
 
-  // fire the feature event to update views and Cesium sync
+  // fire the feature event to update views and WebGL sync
   this.dispatchEvent(new os.events.PropertyChangeEvent(os.source.PropertyChange.FEATURES, features));
 
   // repeat the last show event to update the animation overlay, if active
@@ -2089,7 +2090,7 @@ os.source.Vector.prototype.createAnimationOverlay = function() {
 
     // only set the map in 2D mode. we don't want the overlay to render while in 3D.
     this.animationOverlay = new os.layer.AnimationOverlay({
-      map: this.cesiumEnabled ? null : os.MapContainer.getInstance().getMap(),
+      map: this.webGLEnabled ? null : os.MapContainer.getInstance().getMap(),
       opacity: opacity,
       zIndex: zIndex
     });
@@ -2120,8 +2121,8 @@ os.source.Vector.prototype.fadeToggle_ = function() {
   if (!this.tlc.getFade() && this.previousFade_ && this.animationOverlay) {
     // went from on to off similar to when we close the timeline
     this.updateFadeStyle_(this.animationOverlay.getFeatures(), 1);
-    if (this.cesiumEnabled) {
-      // tell the cesium synchronizer which features changed visibility
+    if (this.webGLEnabled) {
+      // tell the WebGL synchronizer which features changed visibility
       this.dispatchAnimationFrame(undefined, this.animationOverlay.getFeatures());
     }
   }
@@ -2222,8 +2223,8 @@ os.source.Vector.prototype.updateAnimationOverlay = function() {
         }
       }
 
-      // tell the cesium synchronizer which features changed visibility
-      if (this.cesiumEnabled) {
+      // tell the WebGL synchronizer which features changed visibility
+      if (this.webGLEnabled) {
         this.dispatchAnimationFrame(undefined, this.animationOverlay.getFeatures());
         this.dispatchAnimationFrame(this.animationOverlay.getFeatures(), displayedFeatures);
       }
@@ -2231,8 +2232,8 @@ os.source.Vector.prototype.updateAnimationOverlay = function() {
       // update the 2D animation overlay features
       this.animationOverlay.setFeatures(displayedFeatures);
 
-      // update dynamic features. this must happen after cesium animation frames are dispatched to avoid initial
-      // visibility state issues with cesium.
+      // update dynamic features. this must happen after WebGL animation frames are dispatched to avoid initial
+      // visibility state issues with WebGL.
       for (var dynamicId in this.dynamicFeatures_) {
         var dynamicFeature = this.dynamicFeatures_[dynamicId];
         if (dynamicFeature) {
@@ -2247,8 +2248,8 @@ os.source.Vector.prototype.updateAnimationOverlay = function() {
     } else {
       this.animationOverlay.setFeatures(undefined);
 
-      if (this.cesiumEnabled) {
-        // we need to let cesium know that the layer is now invisible, so hide every feature
+      if (this.webGLEnabled) {
+        // we need to let WebGL know that the layer is now invisible, so hide every feature
         this.dispatchAnimationFrame(this.getFeatures(), []);
       }
     }
@@ -2336,8 +2337,8 @@ os.source.Vector.prototype.disposeAnimationOverlay = function() {
     // remove fade if necessary from the last shown features
     if (this.tlc && this.tlc.getFade()) {
       this.updateFadeStyle_(this.getFeatures(), 1);
-      if (this.cesiumEnabled) {
-        // tell the cesium synchronizer which features changed visibility
+      if (this.webGLEnabled) {
+        // tell the WebGL synchronizer which features changed visibility
         this.dispatchAnimationFrame(undefined, this.animationOverlay.getFeatures());
       }
     }

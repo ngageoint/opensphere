@@ -1,6 +1,7 @@
 goog.provide('os.ui.TimelinePanelCtrl');
 goog.provide('os.ui.timelinePanelDirective');
 
+goog.require('os.MapEvent');
 goog.require('os.data.histo.TimelineHistManager');
 goog.require('os.defines');
 goog.require('os.time.TimelineEventType');
@@ -109,7 +110,7 @@ os.ui.TimelinePanelCtrl.prototype.assumeControl = function() {
 
   os.ui.TimelinePanelCtrl.base(this, 'assumeControl');
 
-  os.dispatcher.dispatchEvent(os.olcs.RenderLoop.REPAINT);
+  os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
 };
 
 
@@ -127,7 +128,7 @@ os.ui.TimelinePanelCtrl.prototype.releaseControl = function() {
   angular.element('#date-control').scope()['dateControl'].assumeControl();
   angular.element('#date-panel').scope()['ctrl'].applySliceIfActive();
 
-  os.dispatcher.dispatchEvent(os.olcs.RenderLoop.REPAINT);
+  os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
 };
 
 
@@ -304,6 +305,6 @@ os.ui.TimelinePanelCtrl.prototype.adjust = function() {
   ctrl.initSvg();
   this.refreshAllBrushes();
   os.MapContainer.getInstance().updateSize();
-  os.dispatcher.dispatchEvent(os.olcs.RenderLoop.REPAINT);
+  os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
   os.ui.apply(this.scope);
 };

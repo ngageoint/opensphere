@@ -16,20 +16,6 @@ os.ui.menu.MAP = undefined;
 
 
 /**
- * @type {string}
- * @const
- */
-os.ui.menu.map.MAP_BG_COLOR_ = 'mapBGColor';
-
-
-/**
- * @type {string}
- * @const
- */
-os.ui.menu.map.BG_COLOR_ = 'bgColor';
-
-
-/**
  * Set up the menu
  */
 os.ui.menu.map.setup = function() {
@@ -89,7 +75,7 @@ os.ui.menu.map.setup = function() {
       sort: 5,
       children: [{
         label: 'Background Color',
-        eventType: os.ui.menu.map.MAP_BG_COLOR_,
+        eventType: os.config.DisplaySetting.BG_COLOR,
         tooltip: 'Change the map background color',
         icons: [],
         beforeRender: os.ui.menu.map.updateBGIcon,
@@ -112,8 +98,6 @@ os.ui.menu.map.setup = function() {
       beforeRender: os.ui.menu.map.showIfHasCoordinate
     }]
   }));
-
-  os.settings.listen(os.ui.menu.map.BG_COLOR_, os.ui.menu.map.onColorSettingChange_);
 };
 
 
@@ -123,8 +107,6 @@ os.ui.menu.map.setup = function() {
 os.ui.menu.map.dispose = function() {
   goog.dispose(os.ui.menu.MAP);
   os.ui.menu.MAP = undefined;
-
-  os.settings.unlisten(os.ui.menu.map.BG_COLOR_, os.ui.menu.map.onColorSettingChange_);
 };
 
 
@@ -143,7 +125,7 @@ os.ui.menu.map.showIfHasCoordinate = function(coord) {
  * @this {os.ui.menu.MenuItem}
  */
 os.ui.menu.map.updateBGIcon = function() {
-  var color = os.settings.get(os.ui.menu.map.BG_COLOR_, '#000000');
+  var color = os.settings.get(os.config.DisplaySetting.BG_COLOR, '#000000');
   this.icons[0] = '<i class="fa fa-fw fa-tint" style="color:' + color + '"></i>';
 };
 
@@ -177,29 +159,18 @@ os.ui.menu.map.clearSelection_ = function() {
  * @private
  */
 os.ui.menu.map.changeColor_ = function() {
-  var map = os.MapContainer.getInstance();
-  os.ui.window.launchConfirmColor(os.ui.menu.map.onColorChosen_, map.getBGColor());
+  var color = /** @type {string} */ (os.settings.get(os.config.DisplaySetting.BG_COLOR, '#000000'));
+  os.ui.window.launchConfirmColor(os.ui.menu.map.onColorChosen_, color);
 };
 
 
 /**
- * Callback for user selecting a new color.  Simply save the value to settings and let the settings change event
- * do the work.
+ * Handle user selection of the map background color.
  * @param {string} color
  * @private
  */
 os.ui.menu.map.onColorChosen_ = function(color) {
-  os.settings.set(os.ui.menu.map.BG_COLOR_, color);
-};
-
-
-/**
- * Handle change to color in settings
- * @param {!os.events.SettingChangeEvent} event
- * @private
- */
-os.ui.menu.map.onColorSettingChange_ = function(event) {
-  os.MapContainer.getInstance().setBGColor(/** @type {string} */ (event.newVal));
+  os.settings.set(os.config.DisplaySetting.BG_COLOR, color);
 };
 
 
@@ -208,8 +179,7 @@ os.ui.menu.map.onColorSettingChange_ = function(event) {
  * @this {os.ui.menu.MenuItem}
  */
 os.ui.menu.map.updateTerrainItem = function() {
-  var mc = os.MapContainer.getInstance();
-  this.visible = mc.is3DEnabled() && mc.hasTerrain();
+  this.visible = os.MapContainer.getInstance().is3DEnabled() && os.config.isTerrainConfigured();
   this.selected = !!os.settings.get(os.config.DisplaySetting.ENABLE_TERRAIN, false);
 };
 

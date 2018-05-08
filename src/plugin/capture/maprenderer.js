@@ -1,8 +1,9 @@
 goog.provide('plugin.capture.MapRenderer');
 
 goog.require('goog.Promise');
-goog.require('os.olcs');
+goog.require('os.map');
 goog.require('os.ui.capture.CanvasRenderer');
+goog.require('plugin.cesium');
 
 
 
@@ -25,11 +26,9 @@ goog.inherits(plugin.capture.MapRenderer, os.ui.capture.CanvasRenderer);
 plugin.capture.MapRenderer.prototype.beforeOverlay = function() {
   var mapContainer = os.MapContainer.getInstance();
   if (mapContainer.is3DEnabled()) {
-    var olcs = mapContainer.getOLCesium();
-    if (olcs) {
-      var scene = olcs.getCesiumScene();
-      scene.initializeFrame();
-      scene.render(os.MapContainer.getJulianDate());
+    var webGL = mapContainer.getWebGLRenderer();
+    if (webGL) {
+      webGL.renderSync();
     }
   } else {
     var olMap = mapContainer.getMap();
@@ -73,9 +72,9 @@ plugin.capture.MapRenderer.prototype.getFill = function() {
 plugin.capture.getMapCanvas = function() {
   var mapCanvas;
   if (os.MapContainer.getInstance().is3DEnabled()) {
-    mapCanvas = /** @type {HTMLCanvasElement} */ (document.querySelector(os.olcs.CESIUM_CANVAS_SELECTOR));
+    mapCanvas = /** @type {HTMLCanvasElement} */ (document.querySelector(os.map.WEBGL_CANVAS));
   } else {
-    mapCanvas = /** @type {HTMLCanvasElement} */ (document.querySelector('.ol-viewport > canvas'));
+    mapCanvas = /** @type {HTMLCanvasElement} */ (document.querySelector(os.map.OPENLAYERS_CANVAS));
   }
 
   return mapCanvas || null;

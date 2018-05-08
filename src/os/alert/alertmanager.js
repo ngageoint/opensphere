@@ -37,6 +37,13 @@ os.alert.AlertManager = function() {
    * @private
    */
   this.missedAlertsProcessed_ = false;
+
+  /**
+   * Ensures that an alert is only sent once
+   * @type {Object<string, boolean>}
+   * @private
+   */
+  this.onceMap_ = {};
 };
 goog.inherits(os.alert.AlertManager, goog.events.EventTarget);
 goog.addSingletonGetter(os.alert.AlertManager);
@@ -83,6 +90,27 @@ os.alert.AlertManager.prototype.sendAlert = function(alert, opt_severity, opt_lo
         goog.log.info(opt_logger, alert);
         break;
     }
+  }
+};
+
+
+/**
+ * Check an alert string against onceMap_ before sending an alert
+ * @param {string} alert The alert to send and add to the window
+ * @param {os.alert.AlertEventSeverity=} opt_severity Severity of the event, defaults to error
+ * @param {goog.log.Logger=} opt_logger If provided, writes the message to this logger
+ * @param {number=} opt_limit Maximum number of duplicate alerts to display, defaults to 5
+ * @param {goog.events.EventTarget=} opt_dismissDispatcher Event target which will indicate when to dismiss the alert
+ *   by dispatching a {@code os.alert.AlertEventTypes.DISMISS_ALERT} event
+ */
+os.alert.AlertManager.prototype.sendAlertOnce = function(alert, opt_severity, opt_logger, opt_limit,
+  opt_dismissDispatcher) {
+  if (this.onceMap_[alert]) {
+    return;
+  } else {
+    this.onceMap_[alert] = true;
+    opt_limit = 1;
+    this.sendAlert(alert, opt_severity, opt_logger, opt_limit, opt_dismissDispatcher);
   }
 };
 

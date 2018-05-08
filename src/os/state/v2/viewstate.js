@@ -71,7 +71,7 @@ os.state.v2.ViewState.prototype.load = function(obj, id) {
     var is3DEnabled = mapContainer.is3DEnabled();
     if ((mapMode == os.MapMode.VIEW_2D && is3DEnabled) ||
         (mapMode == os.MapMode.VIEW_3D && !is3DEnabled)) {
-      mapContainer.setCesiumEnabled(!is3DEnabled);
+      mapContainer.setWebGLEnabled(!is3DEnabled);
     }
 
     // update the camera
