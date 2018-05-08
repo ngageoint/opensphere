@@ -48,6 +48,8 @@ os.ui.file.AnyTypeImportCtrl = function($scope, $element) {
    */
   this.element_ = $element;
 
+  this.scope_['isZip'] = this.scope_['file'] ? os.file.isZipFile(this.scope_['file'].getContent()) : false;
+
   /**
    * The import function to use
    */

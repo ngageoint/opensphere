@@ -59,12 +59,12 @@ os.file.type.AbstractXMLTypeMethod.prototype.isType = function(file, opt_zipEntr
     if (this.isValidDocument_(doc)) {
       var firstChild = goog.dom.getFirstElementChild(doc);
       var uri = firstChild.namespaceURI;
-      if (uri && uri.match(this.getNSRegExp())) {
+      if (this.testURI(uri)) {
         return true;
       }
 
       var localName = firstChild.localName || firstChild.nodeName;
-      if (localName && localName.match(this.getRootRegExp())) {
+      if (localName && this.getRootRegExp().test(localName)) {
         return true;
       }
 
@@ -73,6 +73,16 @@ os.file.type.AbstractXMLTypeMethod.prototype.isType = function(file, opt_zipEntr
   }
 
   return false;
+};
+
+
+/**
+ * Checks the uri for a matching type
+ * @param {string} uri element type
+ * @return {boolean}
+ */
+os.file.type.AbstractXMLTypeMethod.prototype.testURI = function(uri) {
+  return uri != null && this.getNSRegExp().test(uri);
 };
 
 
