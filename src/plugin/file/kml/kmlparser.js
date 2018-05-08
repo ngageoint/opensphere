@@ -673,8 +673,7 @@ plugin.file.kml.KMLParser.prototype.parseNext = function() {
   var currentEl = children[top.index];
 
   if (!currentEl) {
-    var msg = 'Encountered null child under node ' + (parentNode ? parentNode.getLabel() : 'Unknown') +
-        ' - skipping.';
+    var msg = 'Encountered null child under node ' + (parentNode ? parentNode.getLabel() : 'Unknown') + ' - skipping.';
     goog.log.warning(this.log_, msg);
     return null;
   }

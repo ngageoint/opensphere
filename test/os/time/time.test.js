@@ -224,4 +224,17 @@ describe('os.time', function() {
     expect(os.time.detectFormat('2017:09:12::13:55:17.123456789', os.time.DATETIME_FORMATS, true))
         .toBe('YYYY:MM:DD::HH:mm:ss.SSSS');
   });
+
+  it('should humanize durations without rounding', function() {
+    expect(os.time.humanize(moment.duration(25, 'hours'))).toBe('1 day, 1 hour');
+    expect(os.time.humanize(moment.duration(36, 'hours'))).toBe('1 day, 12 hours');
+    expect(os.time.humanize(moment.duration(0))).toBe('0');
+    // provide 0 duration output value
+    expect(os.time.humanize(moment.duration(0), 'Real Time')).toBe('Real Time');
+    // truncate millis
+    expect(os.time.humanize(moment.duration(86401001))).toBe('1 day');
+    expect(os.time.humanize(moment.duration(2, 'days'))).toBe('2 days');
+    expect(os.time.humanize(moment.duration(50, 'hours'))).toBe('2 days, 2 hours');
+    expect(os.time.humanize(moment.duration(2883, 'minutes'))).toBe('2 days, 3 minutes');
+  });
 });
