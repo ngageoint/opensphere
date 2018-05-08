@@ -54,17 +54,18 @@ plugin.cesium.interaction.configureCesium = function(camera, sscc) {
 
 
 /**
- * Initialize an interaction with Cesium, if it has additional support.
- * @param {ol.interaction.Interaction} interaction The interaction.
+ * Load Cesium mixins for OpenSphere interactions.
  */
-plugin.cesium.interaction.initInteraction = function(interaction) {
-  if (interaction instanceof os.interaction.Measure) {
-    plugin.cesium.interaction.measure.initialize(interaction);
-  } else if (interaction instanceof os.interaction.DrawPolygon) {
-    plugin.cesium.interaction.drawpolygon.initialize(interaction);
-  } else if (interaction instanceof os.interaction.DragBox) {
-    plugin.cesium.interaction.dragbox.initialize(interaction);
-  } else if (interaction instanceof os.interaction.DragCircle) {
-    plugin.cesium.interaction.dragcircle.initialize(interaction);
-  }
+plugin.cesium.interaction.loadInteractionMixins = function() {
+  os.interaction.DragBox.prototype.cleanupWebGL = plugin.cesium.interaction.dragbox.cleanupWebGL;
+  os.interaction.DragBox.prototype.updateWebGL = plugin.cesium.interaction.dragbox.updateWebGL;
+
+  os.interaction.DragCircle.prototype.cleanupWebGL = plugin.cesium.interaction.dragcircle.cleanupWebGL;
+  os.interaction.DragCircle.prototype.updateWebGL = plugin.cesium.interaction.dragcircle.updateWebGL;
+
+  os.interaction.DrawPolygon.prototype.cleanupWebGL = plugin.cesium.interaction.drawpolygon.cleanupWebGL;
+  os.interaction.DrawPolygon.prototype.updateWebGL = plugin.cesium.interaction.drawpolygon.updateWebGL;
+
+  os.interaction.Measure.prototype.cleanupWebGL = plugin.cesium.interaction.measure.cleanupWebGL;
+  os.interaction.Measure.prototype.updateWebGL = plugin.cesium.interaction.measure.updateWebGL;
 };
