@@ -39,10 +39,12 @@ os.ui.util.ButtonHeightCtrl = function($scope, $element, $timeout) {
    */
   this.element_ = $element;
 
-
-  $timeout(function() {
-    this.onChange_();
-  }.bind(this));
+  /**
+   * @type {?angular.$timeout}
+   * @private
+   */
+  this.timeout_ = $timeout;
+  this.onChange_();
 
   os.dispatcher.listen(os.config.ThemeSettingsChangeEvent, this.onChange_, false, this);
   $scope.$on('$destroy', this.destroy_.bind(this));
@@ -55,6 +57,7 @@ os.ui.util.ButtonHeightCtrl = function($scope, $element, $timeout) {
 os.ui.util.ButtonHeightCtrl.prototype.destroy_ = function() {
   os.dispatcher.unlisten(os.config.ThemeSettingsChangeEvent, this.onChange_, false, this);
   this.element_ = null;
+  this.timeout_ = null;
 };
 
 
@@ -63,8 +66,10 @@ os.ui.util.ButtonHeightCtrl.prototype.destroy_ = function() {
  * @private
  */
 os.ui.util.ButtonHeightCtrl.prototype.onChange_ = function() {
-  var button = $('<button class="btn js-button-height position-absolute invisible">heighcheck</button>');
-  this.element_.after(button);
-  this.element_.height(button.outerHeight());
-  button.remove();
+  this.timeout_(function() {
+    var button = $('<button class="btn js-button-height position-absolute invisible">heighcheck</button>');
+    this.element_.after(button);
+    this.element_.height(button.outerHeight());
+    button.remove();
+  }.bind(this));
 };
