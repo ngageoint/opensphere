@@ -5,6 +5,6 @@
     <span class="text-danger" ng-show="text.length > maxlength">Content is too long!</span>
     <span class="text-danger" ng-show="isRequired && text.length == 0">Required!</span>
   </ng-form>
-  <div ng-bind-html="previewText" ng-if="!edit">
+  <div class="c-simplemde__preview" ng-bind-html="previewText" ng-if="!edit">
   </div>
 </div>
