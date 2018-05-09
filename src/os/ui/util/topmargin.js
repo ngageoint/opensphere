@@ -1,5 +1,6 @@
 goog.provide('os.ui.util.TopMarginCtrl');
 goog.provide('os.ui.util.topMarginDirective');
+goog.require('os.config.ThemeSettingsChangeEvent');
 goog.require('os.ui');
 goog.require('os.ui.Module');
 
@@ -64,6 +65,7 @@ os.ui.util.TopMarginCtrl = function($scope, $element, $timeout) {
    */
   this.resizeFn_ = this.onResize_.bind(this);
 
+  os.dispatcher.listen(os.config.ThemeSettingsChangeEvent, this.onResize_, false, this);
   $timeout(this.setWatchEl_.bind(this));
   $scope.$on('$destroy', this.onDestroy_.bind(this));
 };
@@ -74,6 +76,7 @@ os.ui.util.TopMarginCtrl = function($scope, $element, $timeout) {
  * @private
  */
 os.ui.util.TopMarginCtrl.prototype.onDestroy_ = function() {
+  os.dispatcher.unlisten(os.config.ThemeSettingsChangeEvent, this.onResize_, false, this);
   if (this.bufferElement_) {
     this.bufferElement_.removeResize(this.resizeFn_);
     this.bufferElement_ = null;

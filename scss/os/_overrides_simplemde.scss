@@ -23,3 +23,8 @@
   border-color: $danger;
 }
 
+.c-simplemde__preview {
+  img {
+    @include img-fluid;
+  }
+}
