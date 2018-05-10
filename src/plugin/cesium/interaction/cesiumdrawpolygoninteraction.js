@@ -21,16 +21,6 @@ os.interaction.DrawPolygon.prototype.cesiumLines = undefined;
 
 
 /**
- * Add Cesium support to a draw polygon interaction.
- * @param {!os.interaction.DrawPolygon} interaction The draw polygon interaction.
- */
-plugin.cesium.interaction.drawpolygon.initialize = function(interaction) {
-  interaction.cleanupWebGL = plugin.cesium.interaction.drawpolygon.cleanupWebGL;
-  interaction.updateWebGL = plugin.cesium.interaction.drawpolygon.updateWebGL;
-};
-
-
-/**
  * Clean up the draw polygon interaction in Cesium.
  * @this {os.interaction.DrawPolygon}
  */
