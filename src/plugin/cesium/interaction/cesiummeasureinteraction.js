@@ -14,16 +14,6 @@ os.interaction.Measure.prototype.cesiumLabels = undefined;
 
 
 /**
- * Add Cesium support to a measure interaction.
- * @param {!os.interaction.Measure} interaction The measure interaction.
- */
-plugin.cesium.interaction.measure.initialize = function(interaction) {
-  interaction.cleanupWebGL = plugin.cesium.interaction.measure.cleanupWebGL;
-  interaction.updateWebGL = plugin.cesium.interaction.measure.updateWebGL;
-};
-
-
-/**
  * Clean up the draw polygon interaction in Cesium.
  * @this {os.interaction.Measure}
  */
