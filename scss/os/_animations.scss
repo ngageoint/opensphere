@@ -52,3 +52,13 @@
 .a-faa-wiggle-short {
   animation: wiggle 2s linear 2;
 }
+
+.a-all {
+  @include transition(all .2s);
+
+  // NOTE: this is what makes it so the elements dont flicker on model updates
+  &.ng-enter,
+  &.ng-leave {
+    @include transition(none);
+  }
+}
