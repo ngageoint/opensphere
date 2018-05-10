@@ -70,7 +70,7 @@ os.ui.util.AutoVHeightCtrl = function($scope, $element, $injector) {
 
   /**
    * Debounce resize events over a brief period.
-   * @type {Function}
+   * @type {?function()}
    * @private
    */
   this.resizeFn_ = this.onResize_.bind(this);
@@ -78,11 +78,9 @@ os.ui.util.AutoVHeightCtrl = function($scope, $element, $injector) {
   var parent = $element.parent();
   parent.resize(this.resizeFn_);
 
-  this['siblings'] = /** @type {string} */ ($scope['siblings']).split(' ');
-  if (this['siblings']) {
-    for (var i = 0; i < this['siblings'].length; i++) {
-      $(this['siblings'][i]).resize(this.resizeFn_);
-    }
+  var siblings = /** @type {string} */ ($scope['siblings']);
+  if (siblings) {
+    $(siblings).resize(this.resizeFn_);
   }
 
   // there are some situations where resize won't fire on creation, particularly when using IE or when swapping DOM
@@ -101,12 +99,10 @@ os.ui.util.AutoVHeightCtrl.prototype.onDestroy_ = function() {
   var parent = this.element_.parent();
   parent.removeResize(this.resizeFn_);
 
-  if (this['siblings']) {
+  var siblings = /** @type {Array.<string>} */ (this.scope_['siblings']);
+  if (siblings && this.resizeFn_) {
     try {
-      for (var i = 0; i < this['siblings'].length; i++) {
-        var sib = /** @type {angular.JQLite} */ ($(this['siblings'][i]));
-        sib.removeResize(this.resizeFn_);
-      }
+      $(siblings).removeResize(this.resizeFn_);
     } catch (e) {}
   }
 
@@ -125,10 +121,10 @@ os.ui.util.AutoVHeightCtrl.prototype.onResize_ = function() {
     var winHeight = window.innerHeight;
 
     var siblingHeight = 0;
-    if (this['siblings']) {
-      for (var i = 0; i < this['siblings'].length; i++) {
-        siblingHeight += $(this['siblings'][i]).outerHeight();
-      }
+    if (this.scope_['siblings']) {
+      $.makeArray($(this.scope_['siblings'])).forEach(function(sibling) {
+        siblingHeight += ($(/** @type {string} */ (sibling)).outerHeight());
+      });
     }
 
     var useableHeight = winHeight - siblingHeight;
