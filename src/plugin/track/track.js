@@ -340,27 +340,66 @@ plugin.track.removeTrackById = function(id) {
 
 
 /**
- * Create a track geometry (`ol.geom.LineString` with an XYZM coordinate layout) from a set of features. The features
- * must have a common field with values that can be naturally sorted. Any features lacking a point geometry or a value
- * in the sort field will be ignored. If sorted by `os.data.RecordField.TIME`, the track may be animated over time.
+ * Sort track coordinates by their sort field.
+ * @param {!ol.Coordinate} a The first coordinate to be compared.
+ * @param {!ol.Coordinate} b The second coordinate to be compared.
+ * @return {number} The sort value.
+ */
+plugin.track.sortCoordinatesByValue = function(a, b) {
+  var aValue = a[a.length - 1];
+  var bValue = b[b.length - 1];
+  return aValue > bValue ? 1 : aValue < bValue ? -1 : 0;
+};
+
+
+/**
+ * Get a list of coordinates to include in a track from a set of features. The features must have a common field with
+ * values that can be naturally sorted. Any features lacking a point geometry or a value in the sort field will be
+ * ignored. If sorted by `os.data.RecordField.TIME`, the track may be animated over time.
  * @param {!Array<!ol.Feature>} features The features.
  * @param {string} sortField The track sort field.
- * @return {ol.geom.LineString|undefined} The track, or undefined if no coordinates were found.
+ * @return {!Array<!ol.Coordinate>|undefined} The coordinates, or undefined if no coordinates were found.
  */
-plugin.track.createTrackGeometry = function(features, sortField) {
-  var sortFn = sortField == os.data.RecordField.TIME ? os.feature.sortByTime :
-      os.feature.sortByField.bind(null, sortField);
+plugin.track.getTrackCoordinates = function(features, sortField) {
   var getValueFn = sortField == os.data.RecordField.TIME ? plugin.track.getStartTime :
       plugin.track.getFeatureValue.bind(null, sortField);
 
-  // sort the features before assembling the track
-  features.sort(sortFn);
-
-  var coords = features.map(function(feature) {
-    var geom = feature.getGeometry();
+  var coordinates = features.map(function(feature) {
+    var pointCoord;
     var value = /** @type {number|undefined} */ (getValueFn(feature));
-    if (geom instanceof ol.geom.Point && value != null) {
-      var pointCoord = geom.getFirstCoordinate();
+    if (value == null) {
+      // ignore the feature if it doesn't have a sort value
+      return undefined;
+    }
+
+    var geometry = feature.getGeometry();
+    if (geometry instanceof ol.geom.Point) {
+      pointCoord = geometry.getFirstCoordinate();
+    } else if (geometry instanceof ol.geom.GeometryCollection) {
+      var geometries = geometry.getGeometriesArray();
+      for (var i = 0; i < geometries.length; i++) {
+        var next = geometries[i];
+        if (next instanceof ol.geom.Point) {
+          if (pointCoord) {
+            // if multiple points are found, discard the point. we can't be certain which to include in the track and
+            // cannot use multiple points at a single sort value.
+            pointCoord = undefined;
+            break;
+          } else {
+            pointCoord = next.getFirstCoordinate();
+          }
+        }
+      }
+    } else if (geometry instanceof ol.geom.MultiPoint) {
+      var stride = geometry.getStride();
+      var flatCoordinates = geometry.getFlatCoordinates();
+      if (flatCoordinates.length === stride) {
+        // single point in the geometry - use it!
+        pointCoord = flatCoordinates.slice();
+      }
+    }
+
+    if (pointCoord) {
       if (pointCoord.length < 3) {
         // add altitude for consistency across all track geometries
         pointCoord.push(0);
@@ -368,14 +407,15 @@ plugin.track.createTrackGeometry = function(features, sortField) {
 
       // add the sort value
       pointCoord.push(value);
-      return pointCoord;
     }
 
-    return undefined;
+    return pointCoord;
   }).filter(os.fn.filterFalsey);
 
-  // create the line geometry
-  return coords.length ? new ol.geom.LineString(coords, ol.geom.GeometryLayout.XYZM) : undefined;
+  // sort the resulting coordinates by the sort value
+  coordinates.sort(plugin.track.sortCoordinatesByValue);
+
+  return coordinates;
 };
 
 
@@ -391,12 +431,15 @@ plugin.track.createTrack = function(options) {
 
   var geometry = options.geometry;
   if (!geometry && options.features && options.features.length) {
-    geometry = plugin.track.createTrackGeometry(options.features, sortField);
-    featureColor = /** @type {string|undefined} */ (options.features[0].get(os.data.RecordField.COLOR));
+    var coordinates = plugin.track.getTrackCoordinates(options.features, sortField);
+    if (coordinates.length) {
+      geometry = new ol.geom.LineString(coordinates, ol.geom.GeometryLayout.XYZM);
+      featureColor = /** @type {string|undefined} */ (options.features[0].get(os.data.RecordField.COLOR));
 
-    var source = os.feature.getSource(options.features[0]);
-    if (source) {
-      sourceColor = source ? source.getColor() : undefined;
+      var source = os.feature.getSource(options.features[0]);
+      if (source) {
+        sourceColor = source ? source.getColor() : undefined;
+      }
     }
   }
 
@@ -408,11 +451,6 @@ plugin.track.createTrack = function(options) {
     geometry.toLonLat();
     geometry = os.geo.splitOnDateLine(geometry);
     geometry.osTransform();
-
-    // tracks must be a ol.geom.MultiLineString. if it isn't one now, it doesn't cross the date line and was not split.
-    // if (geometry instanceof ol.geom.LineString) {
-    //   geometry = new ol.geom.MultiLineString([geometry.getCoordinates()], ol.geom.GeometryLayout.XYZM);
-    // }
   }
 
   // prevent any further normalization of the geometry
@@ -495,65 +533,41 @@ plugin.track.addFeaturesToTrack = function(track, features) {
     return;
   }
 
-  // sort the features before assembling the track
-  var sortFn = sortField == os.data.RecordField.TIME ? os.feature.sortByTime :
-      os.feature.sortByField.bind(null, sortField);
-  features.sort(sortFn);
+  var coordinates = plugin.track.getTrackCoordinates(features, sortField);
+  var skipped = features.length - coordinates.length;
 
-  var getValueFn = sortField == os.data.RecordField.TIME ? plugin.track.getStartTime :
-      plugin.track.getFeatureValue.bind(null, sortField);
+  if (coordinates.length) {
+    // add point(s) to the original geometry, in case the track was interpolated
+    var geometry = /** @type {!plugin.track.TrackLike} */ (track.get(os.interpolate.ORIGINAL_GEOM_FIELD) ||
+        track.getGeometry());
 
-  // add point(s) to the original geometry, in case the track was interpolated
-  var geometry = /** @type {!plugin.track.TrackLike} */ (track.get(os.interpolate.ORIGINAL_GEOM_FIELD) ||
-      track.getGeometry());
+    // merge the split line so features can be added in the correct location
+    geometry.toLonLat();
+    geometry = os.geo.mergeLineGeometry(geometry);
+    geometry.osTransform();
 
-  // merge the split line so features can be added in the correct location
-  geometry.toLonLat();
-  geometry = os.geo.mergeLineGeometry(geometry);
-  geometry.osTransform();
+    var flatCoordinates = geometry.flatCoordinates;
+    var stride = geometry.stride;
 
-  var flatCoordinates = geometry.flatCoordinates;
-  var stride = geometry.stride;
-  var layout = geometry.layout;
-  var skipped = 0;
+    for (var i = 0; i < coordinates.length; i++) {
+      var coordinate = coordinates[i];
 
-  for (var i = 0; i < features.length; i++) {
-    var feature = features[i];
-    var geom = feature.getGeometry();
-    if (geom instanceof ol.geom.Point) {
-      var pointCoordinates = geom.getCoordinates();
-      if (!pointCoordinates || pointCoordinates.length < 2) {
-        // missing coordinates, so skip this one
+      // figure out where the value fits in the array. if the value value already exists, just skip the feature to
+      // avoid duplicate values.
+      var value = /** @type {number|undefined} */ (coordinate[coordinate.length - 1]);
+      var insertIndex = os.array.binaryStrideSearch(flatCoordinates, value, stride, stride - 1);
+      if (insertIndex < 0) {
+        // insert coordinates in the corresponding location
+        goog.array.insertArrayAt(flatCoordinates, coordinate, ~insertIndex);
+      } else {
         skipped++;
-        continue;
-      }
-
-      // if the point doesn't have altitude and the line does, add 0 altitude
-      if (layout === ol.geom.GeometryLayout.XYZM && pointCoordinates.length === 2) {
-        pointCoordinates.push(0);
-      }
-
-      // only add the feature if it has a value for the sort field
-      var value = /** @type {number|undefined} */ (getValueFn(feature));
-      if (value) {
-        pointCoordinates.push(value);
-
-        // figure out where the value fits in the array. if the value value already exists, just skip the feature to
-        // avoid duplicate values.
-        var insertIndex = os.array.binaryStrideSearch(flatCoordinates, value, stride, stride - 1);
-        if (insertIndex < 0) {
-          // insert coordinates in the corresponding location
-          goog.array.insertArrayAt(flatCoordinates, pointCoordinates, ~insertIndex);
-        } else {
-          skipped++;
-        }
       }
     }
   }
 
   // update the geometry on the track if features were added
   if (skipped < features.length) {
-    plugin.track.setGeometry(track, geometry);
+    plugin.track.setGeometry(track, /** @type {!plugin.track.TrackLike} */ (geometry));
   }
 
   if (skipped) {
