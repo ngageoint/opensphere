@@ -256,13 +256,14 @@ os.ui.text.SimpleMDECtrl.prototype.init = function() {
 
     this.simplemde.codemirror.on('change', this.onChange_.bind(this));
 
-    this.timeout_(this.resize_.bind(this), 2000);
+    this.timeout_(this.resize_.bind(this), 5000);
   }
 };
 
 
 /**
  * This is a little hacky. Stolen from the codemirror on window resize logic
+ * SimpleMDE has an open ticket to fix text/content not displaying, forcing the refresh is the workaround
  * @private
  */
 os.ui.text.SimpleMDECtrl.prototype.resize_ = function() {
