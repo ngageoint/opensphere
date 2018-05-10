@@ -101,10 +101,7 @@ plugin.cesium.CesiumRenderer.prototype.initialize = function() {
           plugin.cesium.WMSImageryProvider.init();
 
           // initialize interactions that have additional support for Cesium
-          var interactions = this.map.getInteractions();
-          if (interactions) {
-            interactions.forEach(plugin.cesium.interaction.initInteraction);
-          }
+          plugin.cesium.interaction.loadInteractionMixins();
 
           this.registerTerrainProviderType('cesium', Cesium.CesiumTerrainProvider);
           this.registerTerrainProviderType('wms', plugin.cesium.WMSTerrainProvider);

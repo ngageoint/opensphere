@@ -508,7 +508,7 @@ os.ui.query.ui.area.UserAreaCtrl.prototype.onUpdateDelay = function() {
       switch (this['areaType']) {
         case os.ui.query.ui.area.AreaType.BBOX:
           geometry = this.getBbox();
-          interpolationMethod = os.interpolate.Method.NONE;
+          interpolationMethod = os.interpolate.Method.RHUMB;
           break;
         case os.ui.query.ui.area.AreaType.CIRCLE:
           geometry = this.getCircle();

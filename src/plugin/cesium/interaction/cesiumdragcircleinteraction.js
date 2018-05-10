@@ -30,16 +30,6 @@ os.interaction.DragCircle.prototype.cesiumColor = undefined;
 
 
 /**
- * Add Cesium support to a drag circle interaction.
- * @param {!os.interaction.DragCircle} interaction The drag circle interaction.
- */
-plugin.cesium.interaction.dragcircle.initialize = function(interaction) {
-  interaction.cleanupWebGL = plugin.cesium.interaction.dragcircle.cleanupWebGL;
-  interaction.updateWebGL = plugin.cesium.interaction.dragcircle.updateWebGL;
-};
-
-
-/**
  * Clean up the drag circle interaction in Cesium.
  * @this {os.interaction.DragCircle}
  */
