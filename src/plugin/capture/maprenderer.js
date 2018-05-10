@@ -79,3 +79,18 @@ plugin.capture.getMapCanvas = function() {
 
   return mapCanvas || null;
 };
+
+
+/**
+ * Get the map canvas pixel ratio.
+ * @return {number} The map canvas pixel ratio.
+ */
+plugin.capture.getMapPixelRatio = function() {
+  var mapCanvas = plugin.capture.getMapCanvas();
+  if (mapCanvas) {
+    var mapRect = mapCanvas.getBoundingClientRect();
+    return mapCanvas.width / mapRect.width;
+  }
+
+  return 1;
+};

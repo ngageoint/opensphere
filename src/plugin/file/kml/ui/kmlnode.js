@@ -1,8 +1,10 @@
 goog.provide('plugin.file.kml.ui.KMLNode');
 goog.provide('plugin.file.kml.ui.KMLNodeAction');
 
+goog.require('goog.events.EventType');
 goog.require('goog.log');
 goog.require('goog.log.Logger');
+goog.require('ol.events');
 goog.require('ol.extent');
 goog.require('ol.geom.GeometryType');
 goog.require('os.data.IExtent');
@@ -274,7 +276,30 @@ plugin.file.kml.ui.KMLNode.prototype.getImage = function() {
  * @param {os.layer.Image} image The feature
  */
 plugin.file.kml.ui.KMLNode.prototype.setImage = function(image) {
+  if (this.image_) {
+    ol.events.unlisten(this.image_, goog.events.EventType.PROPERTYCHANGE, this.onImagePropertyChange, this);
+  }
+
   this.image_ = image;
+
+  if (this.image_) {
+    ol.events.listen(this.image_, goog.events.EventType.PROPERTYCHANGE, this.onImagePropertyChange, this);
+    this.setState(this.image_.getLayerVisible() ? os.structs.TriState.ON : os.structs.TriState.OFF);
+  }
+};
+
+
+/**
+ * @param {os.events.PropertyChangeEvent} e The event
+ * @protected
+ */
+plugin.file.kml.ui.KMLNode.prototype.onImagePropertyChange = function(e) {
+  if (e instanceof os.events.PropertyChangeEvent) {
+    var p = e.getProperty();
+    if (p === os.layer.PropertyChange.VISIBLE) {
+      this.setState(e.getNewValue() ? os.structs.TriState.ON : os.structs.TriState.OFF);
+    }
+  }
 };
 
 
