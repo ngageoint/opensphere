@@ -299,6 +299,7 @@ os.ui.query.QueryManager.prototype.removeEntries = function(opt_layerId, opt_are
   if (!opt_layerId && !opt_areaId && !opt_filterId) {
     goog.log.fine(os.ui.query.QueryManager.LOGGER_, 'Clearing all query entries');
     this.entries.length = 0;
+    this.expandedEntries.length = 0;
 
     if (!opt_skipUpdate) {
       this.idsToUpdate['*'] = true;
