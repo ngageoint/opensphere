@@ -28,24 +28,24 @@ os.ui.capture.CanvasRenderer.prototype.getCanvas = function() {
     return goog.Promise.reject('The HTML 2D canvas has been tainted');
   }
 
-  var targetPixelRatio = os.capture.getPixelRatio();
-  var canvasRect = canvas.getBoundingClientRect();
-  var canvasPixelRatio = canvas.width / canvasRect.width;
-  if (canvasPixelRatio !== targetPixelRatio) {
-    // create a new canvas and write the overlay to it
-    var pixelScale = targetPixelRatio / canvasPixelRatio;
-    var scaled = /** @type {HTMLCanvasElement} */ (document.createElement('canvas'));
-    scaled.width = canvas.width * pixelScale;
-    scaled.height = canvas.height * pixelScale;
+  if (canvas) {
+    var targetPixelRatio = os.capture.getPixelRatio();
+    var canvasRect = canvas.getBoundingClientRect();
+    var canvasPixelRatio = canvas.width / canvasRect.width;
+    if (canvasPixelRatio !== targetPixelRatio) {
+      // create a new canvas and write the overlay to it
+      var pixelScale = targetPixelRatio / canvasPixelRatio;
+      var scaled = /** @type {HTMLCanvasElement} */ (document.createElement('canvas'));
+      scaled.width = canvas.width * pixelScale;
+      scaled.height = canvas.height * pixelScale;
 
-    // draw the original to the scaled canvas
-    var ctx = scaled.getContext('2d');
-    ctx.drawImage(canvas,
-        0, 0, canvas.width, canvas.height,
-        0, 0, scaled.width, scaled.height);
-
-    // GCC will complain without this extra cast. unclear why.
-    canvas = /** @type {HTMLCanvasElement} */ (scaled);
+      // draw the original to the scaled canvas
+      var ctx = scaled.getContext('2d');
+      ctx.drawImage(canvas,
+          0, 0, canvas.width, canvas.height,
+          0, 0, scaled.width, scaled.height);
+      canvas = scaled;
+    }
   }
 
   return goog.Promise.resolve(canvas);
