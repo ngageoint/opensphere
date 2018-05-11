@@ -1238,3 +1238,13 @@ os.style.notifyStyleChange = function(layer, opt_features, opt_type) {
   // ol map will refresh off this one. firing the event off the source causes the animation overlay to update as well.
   layer.getSource().changed();
 };
+
+
+/**
+ * Check whether this style config object has the labels config in it.
+ * @param {Object} configEntry Style config object to query
+ * @return {boolean} True if the config object contains the labels
+ */
+os.style.isLabelConfig = function(configEntry) {
+  return !!configEntry[os.style.StyleField.LABELS];
+};
