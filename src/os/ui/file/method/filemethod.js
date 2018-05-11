@@ -127,9 +127,8 @@ os.ui.file.method.FileMethod.prototype.loadFile = function(opt_options) {
       'width': '400',
       'min-width': '400',
       'max-width': '400',
-      'height': '225',
+      'height': 'auto',
       'min-height': '225',
-      'max-height': '225',
       'modal': 'true',
       'show-close': 'true',
       'no-scroll': 'true'
