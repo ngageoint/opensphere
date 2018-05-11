@@ -288,10 +288,18 @@ plugin.file.kml.KMLExporter.prototype.getGroupLabels = function(item) {
 
     // don't count the drawing layer as a style source
     if (sourceId && sourceId != os.MapContainer.DRAW_ID) {
-      if (!(sourceId in this.labelMap)) {
+      if (item instanceof os.feature.DynamicFeature || !(sourceId in this.labelMap)) {
         var cfg = os.style.StyleManager.getInstance().getLayerConfig(sourceId);
-        if (cfg && cfg['labels']) {
+        var itemStyle = item.get(os.style.StyleType.FEATURE);
+        // Check the layer level
+        if (cfg && cfg['labels'] && this.checkLabelsNotNull_(cfg['labels'])) {
           this.labelMap[sourceId] = cfg['labels'];
+        } else if (itemStyle && goog.isArray(itemStyle)) {
+          // Check the feature level
+          var labels = goog.array.find(itemStyle, os.style.isLabelConfig);
+          if (labels) {
+            this.labelMap[sourceId] = labels['labels'];
+          }
         } else {
           this.labelMap[sourceId] = null;
         }
@@ -302,6 +310,21 @@ plugin.file.kml.KMLExporter.prototype.getGroupLabels = function(item) {
   }
 
   return null;
+};
+
+/**
+ * Check the label field array for any non-null fields.
+ * @param {Array<*>} labelFields Array of label fields
+ * @return {boolean} True if there are any non-null label fields
+ * @private
+ */
+plugin.file.kml.KMLExporter.prototype.checkLabelsNotNull_ = function(labelFields) {
+  if (labelFields) {
+    return labelFields.some(function(labelField) {
+      return (typeof labelField == 'object' && labelField['column']);
+    });
+  }
+  return false;
 };
 
 
