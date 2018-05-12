@@ -909,8 +909,14 @@ os.ui.FeatureEditCtrl.prototype.loadFromFeature_ = function(feature) {
   var config = /** @type {Object|undefined} */ (feature.get(os.style.StyleType.FEATURE));
   var featureColor;
   if (config) {
-    // if the feature config is an array, assume the first config is the one we want
     if (goog.isArray(config)) {
+      var labelsConfig = goog.array.find(config, os.style.isLabelConfig);
+
+      if (labelsConfig) {
+        this['labels'] = labelsConfig[os.style.StyleField.LABELS];
+      }
+
+      // if the feature config is an array, assume the first config is the one we want
       config = config[0];
     }
 
@@ -929,10 +935,6 @@ os.ui.FeatureEditCtrl.prototype.loadFromFeature_ = function(feature) {
     if (icon) {
       this['icon'] = icon;
       this['centerIcon'] = icon;
-    }
-
-    if (config[os.style.StyleField.LABELS]) {
-      this['labels'] = config[os.style.StyleField.LABELS];
     }
   }
 
