@@ -70,8 +70,7 @@ describe('plugin.file.kml.KMLExporter', function() {
     cfg['labels'] = [];
     exporter.reset();
     groupLabels = exporter.getGroupLabels(f);
-    expect(groupLabels).not.toBeNull();
-    expect(groupLabels.length).toBe(0);
+    expect(groupLabels).toBeNull();
 
     // a label array is defined with a label config
     cfg['labels'].push(label1);
