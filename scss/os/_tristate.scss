@@ -65,12 +65,10 @@
 // Tristate checkbox
 
 .c-tristate {
-  // this is a tricky set of rules to style the tri-state checkbox
-  // if the @include are moved to the top, we lose the gradient, so the lint check is turned off
-  // see THIN-6979
-  // sass-lint:disable mixins-before-declarations
-
+  // sass-lint:disable no-duplicate-properties
   background: #fcfff4;
+  background: linear-gradient(#fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+  border-radius: 3px;
   cursor: pointer;
   display: inline-block;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fcfff4', endColorstr='#b3bead', GradientType=0);
@@ -80,8 +78,6 @@
   top: 0;
   vertical-align: middle;
   width: 13px;
-  @include border-radius(3px);
-  @include background(linear-gradient(#fcfff4 0%, #dfe5d7 40%, #b3bead 100%));
 
   label {
     background: transparent;
@@ -105,37 +101,37 @@
 
 .c-tristate-off label {
   &::after {
-    @include filter(alpha(opacity = 0));
-    @include opacity(0);
-    @include rotate(-45deg);
     border: 3px solid #555;
     border-right: 0;
     border-top: 0;
     content: '';
+    filter: alpha(opacity = 0);
     height: 2.5px;
+    opacity: 0;
     position: absolute;
+    transform: rotate(-45deg);
     width: 6px;
   }
 
   &:hover::after {
-    @include filter(alpha(opacity = 30));
-    @include opacity(.3);
+    filter: alpha(opacity = 30);
+    opacity: .3;
   }
 }
 
 .c-tristate-on label {
-  @include rotate(-45deg);
   border: 3px solid #555;
   border-right: 0;
   border-top: 0;
   display: unset;
   height: 5.5px;
+  transform: rotate(-45deg);
   width: 9px;
 }
 
 .c-tristate-both label {
-  @include border-radius(2px);
   background: #555;
+  border-radius: 2px;
   height: 9px;
   left: 2px;
   top: 2px;
