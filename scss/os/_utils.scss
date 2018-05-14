@@ -1,10 +1,21 @@
 // Miscellaneous utility CSS classes not provided by Bootstrap
 
+// ---------- Begin Bootstrap Overrides ---------- //
 .d-flex {
-  // this piggybacks off of the BS4 .d-flex selector in order to fix Firefox's bad handling of column flex layouts
+  // This piggybacks off of the BS4 .d-flex selector in order to fix Firefox's bad handling of column flex layouts
   min-height: 0;
 }
 
+.d-flex > * {
+  // This piggybacks off of the BS4 .d-flex selector in order to fix text truncation for words that dont break
+  // All children of a d-flex should have min-width: 0 so it doesnt cause the parent to stretch to fit it inside
+  // but instead to wrap the child content
+  min-width: 0;
+}
+// ---------- End Bootstrap Overrides ---------- //
+
+
+// Our Utility Classes
 .u-pointer-events-none {
   pointer-events: none;
 }
@@ -13,7 +24,7 @@
   pointer-events: all;
 }
 
-.flex-grow {
+.u-flex-grow {
   flex: 1;
   position: relative;
 }

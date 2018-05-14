@@ -3,7 +3,7 @@
     <simple-location latdeg="coord[1]" londeg="coord[0]" ng-if="coord"></simple-location>
     <span>{{ctrl.formatDate(time)}}</span>
     <div class="d-flex">
-      <div class="flex-grow pad">
+      <div class="u-flex-grow pad">
         <h4><i class="fa fa-fw fa-clock-o"></i> Schedule</i></h4>
         <div ng-repeat="item in times">
           <span class="suncalc-time" ng-style="{color:item.textColor,background:item.color}">{{ctrl.formatTime(item.time)}}</span>
@@ -11,7 +11,7 @@
           {{item.label}}
         </div>
       </div>
-      <div class="flex-column flex-grow">
+      <div class="flex-column u-flex-grow">
         <div class="pad">
           <h4 style="color:gold"><i class="fa fa-fw fa-sun-o"></i> Sun</h4>
           <table>
