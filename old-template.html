@@ -17,17 +17,22 @@
       list-style: none
     }
 
+    ul.u-bulleted {
+      padding-left: 20px;
+      list-style: none
+    }
+
     li:before {
       font-family: 'FontAwesome';
       margin: 0 5px 0 -15px;
     }
 
-    li.found:before {
+    li.js-found:before {
       content: '\f00c';
       color: #0d0;
     }
 
-    li.missing:before {
+    li.js-missing:before {
       content: '\f00d';
       color: #d00;
     }
@@ -45,7 +50,7 @@
         </div>
         <ul class="js-checks"></ul>
         <strong>Recommended browsers for the best experience:</strong>
-        <ul>
+        <ul class="u-bullet">
           <li>Google Chrome version 35 or higher</li>
           <li>Mozilla Firefox version 31 or higher</li>
         </ul>
