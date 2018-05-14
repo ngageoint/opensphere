@@ -127,10 +127,9 @@ os.ui.header.ScrollHeaderCtrl = function($scope, $element, $timeout, $attrs) {
  * @private
  */
 os.ui.header.ScrollHeaderCtrl.prototype.updatePositions_ = function() {
-  var bannerHeight = $('.c-classification-banner__text').outerHeight();
-  var headerHeight = $('header').outerHeight();
+  var headerHeight = $('.js-navtop').outerHeight();
 
-  var navTop = this.element_.offset().top - $(window).scrollTop() - bannerHeight - headerHeight;
+  var navTop = this.element_.offset().top - $(window).scrollTop() - headerHeight;
 
   if (navTop < 0) {
     navTop = 0;
@@ -141,7 +140,7 @@ os.ui.header.ScrollHeaderCtrl.prototype.updatePositions_ = function() {
     this.resetHeight_ = /** @type {number} */ (this.scrollEl_.scrollTop());
     if (!this.supportsSticky_) {
       this.element_.addClass('subnav-fixed');
-      this.element_.css('top', bannerHeight + headerHeight + 'px');
+      this.element_.css('top', headerHeight + 'px');
     }
 
     this.scope_.$emit(os.ui.header.ScrollHeaderEvents.STICK);
