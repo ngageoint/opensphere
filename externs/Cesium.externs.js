@@ -3778,6 +3778,17 @@ Cesium.Scene.prototype.terrainProvider;
 
 
 /**
+ * @type {boolean}
+ */
+Cesium.Scene.prototype.requestRenderMode;
+
+
+/**
+ */
+Cesium.Scene.prototype.requestRender = function() {};
+
+
+/**
  *
  */
 Cesium.Scene.prototype.destroy = function() {};
