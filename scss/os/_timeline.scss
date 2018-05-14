@@ -256,7 +256,7 @@
     shape-rendering: crispEdges;
 
     &:hover {
-      @include opacity(.4);
+      opacity: .4;
     }
   }
 
@@ -272,8 +272,8 @@
 }
 
 .c-histogram-tooltip {
-  @include border-radius(3);
   background: rgba(0, 0, 0, .8);
+  border-radius: 3;
   color: $body-bg;
   font-size: 12px;
   font-weight: bold;

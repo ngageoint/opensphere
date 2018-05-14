@@ -2,10 +2,12 @@
   <form ng-submit="searchBox.search()">
     <div ng-show="searchBox.searchOptions.length > 0" class="input-group">
       <div class="dropdown input-group-prepend">
-        <button class="c-search-box__search-options-button btn dropdown-toggle form-control border border-right-0"
+        <button class="btn form-control border border-right-0"
             type="button"
             ng-click="searchBox.toggleSearchOptions($event)"
-            title="Show/hide search options"></button>
+            title="Show/hide search options">
+          <i class="fa fa-caret-down"></i>
+        </button>
       </div>
       <div class="dropdown-menu w-100" ng-class="{'show': searchBox.showSearchOptions}">
         <div class="dropdown-header" ng-if="searchBox.searchOptions.length > 1">
