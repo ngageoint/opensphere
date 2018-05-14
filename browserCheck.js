@@ -24,7 +24,7 @@ function append(el, msg, test) {
     li.innerHTML = (test ? '/' : 'X') + ' ' + msg;
   } else {
     li.innerHTML = msg;
-    li.className = test ? 'found' : 'missing';
+    li.className = test ? 'js-found' : 'js-missing';
   }
   el.appendChild(li);
   return test;

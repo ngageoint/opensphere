@@ -152,11 +152,13 @@ os.config.ThemeSettings.setTheme = function() {
       var cssFile = ssEl.href.replace(themeRegEx, '$1' + theme + '$2');
       if (ssEl.href != cssFile) {
         // Awesome! lets load it!
-        os.config.ThemeSettingsChangeEventTheme(cssFile);
+        os.config.ThemeSettingsChangeEventTheme(cssFile).then(function() {
+          resolve();
+        });
+      } else {
+        resolve();
       }
     }
-
-    resolve();
   });
 };
 
@@ -172,33 +174,36 @@ os.config.ThemeSettings.updateTheme = function() {
 /**
  * Change the stylesheet
  * @param {string} cssFile
+ * @return {goog.Promise}
  */
 os.config.ThemeSettingsChangeEventTheme = function(cssFile) {
-  // onload doesnt work correctly for link for all browsers. Theres a hacky workaround to use img to to know when
-  // the css is loaded
-  var link = $('<link rel="stylesheet" type="text/css" href="' + cssFile + '"></link>');
-  $('head').append(link);
+  return new goog.Promise(function(resolve, reject) {
+    // onload doesnt work correctly for link for all browsers. Theres a hacky workaround to use img to to know when
+    // the css is loaded
+    var link = $('<link rel="stylesheet" type="text/css" href="' + cssFile + '"></link>');
+    $('head').append(link);
+    var img = document.createElement('img');
 
+    /**
+     * Failproof way to check if the css is loaded
+     */
+    img.onerror = function() {
+      document.body.removeChild(img);
 
-  var img = document.createElement('img');
-
-  /**
-   * Failproof way to check if the css is loaded
-   */
-  img.onerror = function() {
-    document.body.removeChild(img);
-
-    if (os.ui.injector) {
-      os.ui.injector.get('$timeout')(function() {
+      if (os.ui.injector) {
+        os.ui.injector.get('$timeout')(function() {
+          os.config.ThemeSettings.themeUpdated();
+          resolve();
+        }, 200);
+      } else {
         os.config.ThemeSettings.themeUpdated();
-      }, 200);
-    } else {
-      os.config.ThemeSettings.themeUpdated();
-    }
-  };
+        resolve();
+      }
+    };
 
-  document.body.appendChild(img);
-  img.src = cssFile;
+    document.body.appendChild(img);
+    img.src = cssFile;
+  });
 };
 
 

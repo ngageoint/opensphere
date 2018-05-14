@@ -12,17 +12,14 @@
       margin-bottom: 10px;
     }
 
-    p a {
-      text-decoration: underline;
-    }
-
-    .btn {
-      text-decoration: none;
-    }
-
     ul {
+      list-style: none;
       padding-left: 20px;
-      list-style: none
+    }
+
+    ul.u-bullet {
+      list-style: unset;
+      padding-left: 20px;
     }
 
     li:before {
@@ -30,18 +27,14 @@
       margin: 0 5px 0 -15px;
     }
 
-    li.found:before {
-      content: '\f00c';
+    li.js-found:before {
       color: #0d0;
+      content: '\f00c';
     }
 
-    li.missing:before {
-      content: '\f00d';
+    li.js-missing:before {
       color: #d00;
-    }
-
-    .container {
-      margin-bottom: 16px;
+      content: '\f00d';
     }
   </style>
 </head>
@@ -57,7 +50,7 @@
         </div>
         <ul class="js-checks"></ul>
         <strong>Recommended browsers for the best experience:</strong>
-        <ul>
+        <ul class="u-bullet">
           <li>Google Chrome version 35 or higher</li>
           <li>Mozilla Firefox version 31 or higher</li>
         </ul>
