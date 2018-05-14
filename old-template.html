@@ -13,13 +13,13 @@
     }
 
     ul {
+      list-style: none;
       padding-left: 20px;
-      list-style: none
     }
 
-    ul.u-bulleted {
+    ul.u-bullet {
+      list-style: unset;
       padding-left: 20px;
-      list-style: none
     }
 
     li:before {
@@ -28,13 +28,13 @@
     }
 
     li.js-found:before {
-      content: '\f00c';
       color: #0d0;
+      content: '\f00c';
     }
 
     li.js-missing:before {
-      content: '\f00d';
       color: #d00;
+      content: '\f00d';
     }
   </style>
 </head>
