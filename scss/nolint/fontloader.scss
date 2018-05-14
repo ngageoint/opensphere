@@ -22,7 +22,7 @@
   // Replace + with -
   $web-font-path: str-replace($web-font-path, "+", "-");
 
-  // Strip off specifices (Open+Sans:400italic,700italic,400,700)
+  // Strip off specifics (Open+Sans:400italic,700italic,400,700)
   $web-font-path__colon-index: str-index($web-font-path, ":");
 
   @if $web-font-path__colon-index {
@@ -42,7 +42,7 @@
   $web-font-path: to-lower-case($web-font-path);
 
   // Example End
-  // $web-font-path: "https://../../vendor/fonts/typeface-source-sans-pro/index.css"
+  // $web-font-path: "../../vendor/fonts/typeface-source-sans-pro/index.css"
 
   // Final import paths
   @import url($web-font-path);
