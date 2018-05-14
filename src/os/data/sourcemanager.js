@@ -3,6 +3,7 @@ goog.provide('os.data.SourceManager');
 goog.require('goog.Disposable');
 goog.require('goog.async.Delay');
 goog.require('ol.events');
+goog.require('os.source.PropertyChange');
 goog.require('os.data.DataManager');
 goog.require('os.data.event.DataEventType');
 
