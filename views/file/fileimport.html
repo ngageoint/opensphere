@@ -1,11 +1,9 @@
 <div class="h-100 w-100 d-flex flex-column">
   <div class="modal-body">
     <div class="container-fluid was-validated" ng-form="fileForm">
-      <div class="form-group row">
-        <label for="fileName" class="col-4 col-form-label">Choose a file:</label>
-        <div class="col">
-          <input class="form-control" type="text" name="text" ng-click="fileImport.openFileBrowser()" ng-model="fileImport.fileName" ng-required="true" placeholder="Click to choose file..." readOnly />
-        </div>
+      <div class="form-group form-row">
+        <label for="fileName">Choose a file:</label>
+        <input class="form-control" type="text" name="text" ng-click="fileImport.openFileBrowser()" ng-model="fileImport.fileName" ng-required="true" placeholder="Click to choose file..." readOnly />
       </div>
     </div>
   </div>
