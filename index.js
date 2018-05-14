@@ -242,8 +242,18 @@ const sharedResources = [
     files: ['files', 'index.css']
   },
   {
+    source: resolver.resolveModulePath('opensphere/vendor/fonts/typeface-neucha', __dirname),
+    target: 'vendor/fonts/typeface-neucha',
+    files: ['files', 'index.css']
+  },
+  {
     source: resolver.resolveModulePath('opensphere/vendor/fonts/typeface-nunito', __dirname),
     target: 'vendor/fonts/typeface-nunito',
+    files: ['files', 'index.css']
+  },
+  {
+    source: resolver.resolveModulePath('opensphere/vendor/fonts/typeface-nunito-sans', __dirname),
+    target: 'vendor/fonts/typeface-nunito-sans',
     files: ['files', 'index.css']
   },
   {
@@ -264,6 +274,11 @@ const sharedResources = [
   {
     source: resolver.resolveModulePath('opensphere/vendor/fonts/typeface-source-sans-pro', __dirname),
     target: 'vendor/fonts/typeface-source-sans-pro',
+    files: ['files', 'index.css']
+  },
+  {
+    source: resolver.resolveModulePath('opensphere/vendor/fonts/typeface-ubuntu', __dirname),
+    target: 'vendor/fonts/typeface-ubuntu',
     files: ['files', 'index.css']
   }
 ];

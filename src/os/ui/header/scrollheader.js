@@ -33,6 +33,7 @@ os.ui.header.ScrollHeaderEvents = {
 };
 
 
+
 /**
  * Controller function for the scrollHeader directive
  * @param {!angular.Scope} $scope
@@ -116,7 +117,7 @@ os.ui.header.ScrollHeaderCtrl = function($scope, $element, $timeout, $attrs) {
   this.updatePositions_();
   $scope.$on(os.ui.header.ScrollHeaderEvents.RESET, this.processScrollHandler_.bind(this));
   $element.bind('DOMNodeInserted', this.updateHeight_.bind(this));
-  this.scrollEl_.on('scroll', this.processScrollHandler_);
+  $(window).scroll(this.processScrollHandler_.bind(this));
   this.element_.on('$destroy', this.destroyElement_.bind(this));
 };
 
@@ -126,8 +127,9 @@ os.ui.header.ScrollHeaderCtrl = function($scope, $element, $timeout, $attrs) {
  * @private
  */
 os.ui.header.ScrollHeaderCtrl.prototype.updatePositions_ = function() {
-  this.offsetHeight_ = this.element_.outerHeight() + this.heightOffset_;
-  var navTop = this.element_.offset().top - this.offsetHeight_;
+  var headerHeight = $('.js-navtop').outerHeight();
+
+  var navTop = this.element_.offset().top - $(window).scrollTop() - headerHeight;
 
   if (navTop < 0) {
     navTop = 0;
@@ -137,9 +139,8 @@ os.ui.header.ScrollHeaderCtrl.prototype.updatePositions_ = function() {
     this.isFixed_ = true;
     this.resetHeight_ = /** @type {number} */ (this.scrollEl_.scrollTop());
     if (!this.supportsSticky_) {
-      this.filler_ = $('<div>').css('height', this.offsetHeight_)
-          .addClass('scroll-header-filler').insertAfter(this.element_);
       this.element_.addClass('subnav-fixed');
+      this.element_.css('top', headerHeight + 'px');
     }
 
     this.scope_.$emit(os.ui.header.ScrollHeaderEvents.STICK);
@@ -151,6 +152,7 @@ os.ui.header.ScrollHeaderCtrl.prototype.updatePositions_ = function() {
         this.filler_ = null;
       }
       this.element_.removeClass('subnav-fixed');
+      this.element_.css('top', '');
     }
     this.scope_.$emit(os.ui.header.ScrollHeaderEvents.UNSTICK);
   }

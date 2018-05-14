@@ -22,8 +22,15 @@
   // Replace + with -
   $web-font-path: str-replace($web-font-path, "+", "-");
 
-  // Strip off the end and add .css
+  // Strip off specifics (Open+Sans:400italic,700italic,400,700)
   $web-font-path__colon-index: str-index($web-font-path, ":");
+
+  @if $web-font-path__colon-index {
+    $web-font-path: str-slice($web-font-path, 0, ($web-font-path__colon-index - 1));
+  }
+
+  // Strip off multiple fonts (Neucha|Cabin+Sketch)
+  $web-font-path__colon-index: str-index($web-font-path, "|");
 
   @if $web-font-path__colon-index {
     $web-font-path: str-slice($web-font-path, 0, ($web-font-path__colon-index - 1));

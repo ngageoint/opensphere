@@ -7,10 +7,12 @@
         </div>
 
         <div ng-show="headerBtns.length" class="d-inline-block">
-          <i ng-repeat="headerBtnCfg in headerBtns"
-            class="window-close {{headerBtnCfg.iconClass}}"
+          <button type="button" ng-repeat="headerBtnCfg in headerBtns"
+            class="close"
             ng-click="windowCtrl.onHeaderBtnClick($event, headerBtnCfg);"
-            title="{{headerBtnCfg.tooltip}}"></i>
+            title="{{headerBtnCfg.tooltip}}">
+              <i class="{{headerBtnCfg.iconClass}}"></i>
+            </button>
         </div>
 
         <div ng-if="showCollapse && !modal && !overlay" ng-click="windowCtrl.toggle()" title="{{collapsed ? 'Expand' : 'Collapse'}}" class="d-inline-block">
