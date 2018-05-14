@@ -2,8 +2,8 @@
 // These selectors will not conform to all of our standards as they alter the styling of elements internal to slickgrid
 
 .slick-grid {
-  @include box-sizing(border-box);
   border: 1px solid $border-color;
+  box-sizing: border-box;
   height: 100%;
   width: 100%;
 
@@ -122,15 +122,15 @@
 
     &.editable {
       // when editing a cell, make it look inset
-      @include box-shadow(inset 0 0 3px #111);
       background: #333;
+      box-shadow: inset 0 0 3px #111;
 
       // override bootstrap styles on the input so it fits in the cell
       input.editor-text {
-        @include box-shadow(none);
-        @include box-sizing(border-box);
         background: transparent;
         border: 0;
+        box-shadow: none;
+        box-sizing: border-box;
         height: 100%;
         width: 100%;
       }
@@ -147,8 +147,8 @@
 // ************************************************************/
 
 .slick-tree {
-  @include box-sizing(border-box);
   background: $body-bg;
+  box-sizing: border-box;
   height: 100%;
   width: 100%;
 

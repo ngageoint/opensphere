@@ -1,11 +1,11 @@
-@include keyframes(pulsate) {
+@keyframes pulsate {
   0% { opacity: .3; }
   75% { opacity: 1; }
   100% { opacity: .3; }
 }
 
 .a-pulsate {
-  @include animation(pulsate 1s infinite steps(15));
+  animation: pulsate 1s infinite steps(15);
 }
 
 
@@ -54,11 +54,11 @@
 }
 
 .a-all {
-  @include transition(all .2s);
+  transition: all .2s;
 
   // NOTE: this is what makes it so the elements dont flicker on model updates
   &.ng-enter,
   &.ng-leave {
-    @include transition(none);
+    transition: none;
   }
 }
