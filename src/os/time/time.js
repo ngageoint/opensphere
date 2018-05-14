@@ -777,6 +777,50 @@ os.time.dateCompare = function(a, b) {
 
 
 /**
+ * Moment.js duration humanize() rounds.  1 day, 3 hours becomes "1 day" and
+ * 1 day, 12 hours becomes "2 days".  This returns duration in days, hours, minutes
+ * without rounding and returns "0" or an optional zero duration value when the
+ * duration is zero.
+ * @param {moment.duration} duration
+ * @param {string=} opt_zeroDurationValue String to output when duration is 0
+ * @return {string}
+ */
+os.time.humanize = function(duration, opt_zeroDurationValue) {
+  var invalidMsg = 'Invalid duration';
+  try {
+    var result = '';
+    var days = Math.floor(duration.asDays());
+    var hours = duration.hours();
+    var minutes = duration.minutes();
+
+    if (days > 0) {
+      result += days + ' day' + (days > 1 ? 's' : '');
+    }
+    if (hours > 0) {
+      if (result.length > 0) {
+        result += ', ';
+      }
+      result += hours + ' hour' + (hours > 1 ? 's' : '');
+    }
+    if (minutes > 0) {
+      if (result.length > 0) {
+        result += ', ';
+      }
+      result += minutes + ' minute' + (minutes > 1 ? 's' : '');
+    }
+
+    if (result.length == 0) {
+      return opt_zeroDurationValue || '0';
+    } else {
+      return result;
+    }
+  } catch (e) {
+    return invalidMsg;
+  }
+};
+
+
+/**
  * @type {string}
  * @const
  */

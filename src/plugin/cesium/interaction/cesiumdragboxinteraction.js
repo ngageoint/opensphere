@@ -18,16 +18,6 @@ os.interaction.DragBox.prototype.cesiumColor = undefined;
 
 
 /**
- * Add Cesium support to a drag box interaction.
- * @param {!os.interaction.DragBox} interaction The drag box interaction.
- */
-plugin.cesium.interaction.dragbox.initialize = function(interaction) {
-  interaction.cleanupWebGL = plugin.cesium.interaction.dragbox.cleanupWebGL;
-  interaction.updateWebGL = plugin.cesium.interaction.dragbox.updateWebGL;
-};
-
-
-/**
  * Clean up the drag box interaction in Cesium.
  * @this {os.interaction.DragBox}
  */
