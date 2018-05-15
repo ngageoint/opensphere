@@ -1,7 +1,7 @@
 <ul class="menu">
   <li ng-repeat="menuItem in actions"
     ng-init="hasSubActions=menuItem.getItems;showSubMenu=isFlat;isSeparator=menuItem.isSeparator;isSeparatorHeader=menuItem.isSeparatorHeader;isAction=menuItem.getAction"
-    class="menu-item"
+    class="ui-menu-item"
     ng-class="{'menu-item-action':isAction,'dropdown-submenu':hasSubActions,'submenu':hasSubActions,'dropdown-divider':isSeparator,'dropdown-header':isSeparatorHeader}"
     title="{{menuItem.getAction().getDescription()}}"
     ng-mouseenter="showSubMenu=hasSubActions"
