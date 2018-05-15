@@ -59,6 +59,8 @@
   // This part ignores the default jquery styles
   background: $dropdown-bg;
   border: $dropdown-border-width solid $dropdown-border-color;
+  position: fixed !important;
+  z-index: $zindex-fixed + 1;
 
   // This gets the same styles defined for dropdown-menu. Used for when themes specify after the fact
   @extend .dropdown-menu;

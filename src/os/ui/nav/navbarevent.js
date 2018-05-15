@@ -3,14 +3,16 @@ goog.provide('os.ui.nav.NavBarEvent');
 goog.require('goog.events.Event');
 
 
-
 /**
  * Events for the nav bar
  * @enum {string}
  */
 os.ui.nav.EventType = {
-  HIDE_NAV: 'os.ui.nav.hide_nav'
+  HIDE_NAV: 'os.ui.nav.hide_nav',
+  EXPAND_NAV: 'os.ui.nav.expand_nav',
+  COLLAPSE_NAV: 'os.ui.nav.collapse_nav'
 };
+
 
 
 /**
