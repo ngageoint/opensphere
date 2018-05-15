@@ -11,7 +11,7 @@ goog.require('os.ui.Module');
 os.ui.nodeIconsDirective = function() {
   return {
     restrict: 'E',
-    template: '<span class="d-inline-flex pr-2"></span>',
+    template: '<span class="tree-icons d-inline-flex pr-2"></span>',
     controller: os.ui.NodeIconsCtrl,
     controllerAs: 'nodeicons'
   };
