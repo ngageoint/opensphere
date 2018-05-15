@@ -6,6 +6,10 @@
   z-index: $zindex-modal;
 }
 
+.c-simplemde__form .CodeMirror-fullscreen {
+  z-index: $zindex-modal;
+}
+
 .c-simplemde__form .CodeMirror {
   background-color: $body-bg;
   color: $body-color;
@@ -27,4 +31,13 @@
   img {
     @include img-fluid;
   }
+}
+
+.c-simplemde__form .editor-preview {
+  background-color: $body-bg;
+}
+
+.c-simplemde__form .editor-preview-side {
+  background-color: $body-bg;
+  z-index: $zindex-modal;
 }
