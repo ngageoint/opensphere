@@ -1,0 +1,64 @@
+.c-navtop__navbar-brand img,
+.c-navtop__navbar-brand svg {
+  max-height: 1.75em;
+  max-width: 5em;
+}
+
+.c-navtop__navbar-brand img,
+.c-navtop__navbar-brand g {
+  fill: $navbar-dark-color;
+}
+
+a.c-navtop__navbar-brand {
+  line-height: 1em;
+}
+
+.c-navtop__navbar-brand:hover g {
+  fill: $navbar-dark-hover-color;
+}
+
+.c-navtop__filled {
+  background-color: $navbar-light-color;
+}
+
+.c-navtop__transparent.c-navtop__header::before {
+  border-bottom: 1px solid;
+  bottom: -1px;
+  content: '';
+  left: 45%;
+  position: absolute;
+  transform: translateX(-45%);
+  width: calc(100% - 3em);
+}
+
+.border-light.c-navtop__header::before {
+  border-color: $navbar-dark-color;
+}
+
+.border-dark.c-navtop__header::before {
+  border-color: $navbar-light-color;
+}
+
+.c-navtop__header::after {
+  background-size: cover;
+  bottom: 0;
+  content: '';
+  left: (-$spacer);
+  position: absolute;
+  right: (-$spacer);
+  top: (-$spacer);
+  z-index: -1;
+}
+
+.c-navtop__header.c-navtop__header-light::after {
+  background-color: theme-color('light');
+  color: color-yiq(theme-color('light'));
+}
+
+.c-navtop__header-light .c-navtop__navbar-brand g {
+  fill: $navbar-light-color;
+}
+
+.c-navtop__header-light .c-navtop__navbar-brand:hover g {
+  fill: $navbar-light-hover-color;
+}
