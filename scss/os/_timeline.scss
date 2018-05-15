@@ -31,6 +31,12 @@
 
   text {
     fill: $body-color;
+    font-weight: 800;
+    paint-order: stroke;
+    stroke: $body-bg;
+    stroke-linecap: butt;
+    stroke-linejoin: miter;
+    stroke-width: 3px;
   }
 }
 
@@ -267,8 +273,8 @@
 }
 
 .c-histogram-group__line-point {
-  fill: $body-bg;
-  stroke-width: 2;
+  stroke: $body-color;
+  stroke-width: 1;
 }
 
 .c-histogram-tooltip {
