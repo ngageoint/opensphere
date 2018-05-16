@@ -324,6 +324,9 @@ os.ui.search.SearchBoxCtrl.prototype.onSearchManagerChange_ = function(opt_event
   this['searchOptions'] = this.searchManager.getRegisteredSearches();
   this.setUpGroups();
 
+  // update the favorites
+  this.onFavoritesUpdate_();
+
   if (!this['allowMultiple']) {
     // if multiple providers aren't allowed, make sure only one is enabled
     var foundEnabled = false;
