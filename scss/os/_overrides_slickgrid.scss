@@ -50,9 +50,9 @@
     background-color: $table-hover-bg;
   }
 
-  line-height: 0.8 * $line-height-base;
   background: $body-bg;
   color: $body-color;
+  line-height: .8 * $line-height-base;
 
   &.selected:not(:hover) {
     background: $component-active-bg;
