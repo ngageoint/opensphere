@@ -651,18 +651,16 @@ os.ui.file.kml.AbstractKMLExporter.prototype.createStyle = function(item, styleI
   } else {
     // default style - apply the item's color to everything
     os.xml.appendElementNS('color', this.kmlNS, iconStyleEl, color);
-
-    var colorStyleEl = os.xml.appendElementNS('ColorStyle', this.kmlNS, styleEl);
-    os.xml.appendElementNS('color', this.kmlNS, colorStyleEl, color);
-
-    var lineStyleEl = os.xml.appendElementNS('LineStyle', this.kmlNS, styleEl);
-    os.xml.appendElementNS('color', this.kmlNS, lineStyleEl, color);
-    os.xml.appendElementNS('width', this.kmlNS, lineStyleEl, 2);
-
-    var polyStyleEl = os.xml.appendElementNS('PolyStyle', this.kmlNS, styleEl);
-    os.xml.appendElementNS('color', this.kmlNS, polyStyleEl, color);
-    os.xml.appendElementNS('fill', this.kmlNS, polyStyleEl, 0);
   }
+
+  // all styles should define a line/poly style
+  var lineStyleEl = os.xml.appendElementNS('LineStyle', this.kmlNS, styleEl);
+  os.xml.appendElementNS('color', this.kmlNS, lineStyleEl, color);
+  os.xml.appendElementNS('width', this.kmlNS, lineStyleEl, 2);
+
+  var polyStyleEl = os.xml.appendElementNS('PolyStyle', this.kmlNS, styleEl);
+  os.xml.appendElementNS('color', this.kmlNS, polyStyleEl, color);
+  os.xml.appendElementNS('fill', this.kmlNS, polyStyleEl, 0);
 
   var firstFolder = this.kmlDoc.querySelector('Folder');
   if (firstFolder) {
