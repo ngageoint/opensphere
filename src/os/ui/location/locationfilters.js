@@ -1,3 +1,6 @@
+goog.provide('os.ui.location.ddmFilter');
+goog.provide('os.ui.location.ddmLatFilter');
+goog.provide('os.ui.location.ddmLonFilter');
 goog.provide('os.ui.location.degFilter');
 goog.provide('os.ui.location.degLatFilter');
 goog.provide('os.ui.location.degLonFilter');
@@ -98,6 +101,95 @@ os.ui.location.degLonFilter.Filter = function(londeg) {
  * Add the directive to the os.ui module
  */
 os.ui.Module.filter('deglon', [os.ui.location.degLonFilter]);
+
+
+
+/**
+ * Take decimal degress format and return ddm Degrees Decimal Minutes
+ * @constructor
+ * @return {angular.Filter}
+ * @ngInject
+ */
+os.ui.location.ddmFilter = function() {
+  return /** @type {angular.Filter} */ (os.ui.location.ddmFilter.Filter);
+};
+
+
+
+/**
+ * @constructor
+ * @param {!number} latdeg
+ * @param {!number} londeg
+ * @return {string}
+ */
+os.ui.location.ddmFilter.Filter = function(latdeg, londeg) {
+  return os.geo.toDegreesDecimalMinutes(latdeg, false, false) + ' ' +
+   os.geo.toDegreesDecimalMinutes(londeg, true, false);
+};
+
+
+/**
+ * Add the directive to the os.ui module
+ */
+os.ui.Module.filter('ddm', [os.ui.location.ddmFilter]);
+
+
+
+/**
+ * Take decimal degress format and return ddm Degrees Decimal Minutes
+ * @constructor
+ * @return {angular.Filter}
+ * @ngInject
+ */
+os.ui.location.ddmLatFilter = function() {
+  return /** @type {angular.Filter} */ (os.ui.location.ddmLatFilter.Filter);
+};
+
+
+
+/**
+ * @constructor
+ * @param {!number} latdeg
+ * @return {string}
+ */
+os.ui.location.ddmLatFilter.Filter = function(latdeg) {
+  return os.geo.toDegreesDecimalMinutes(latdeg, false, false);
+};
+
+
+/**
+ * Add the directive to the os.ui module
+ */
+os.ui.Module.filter('ddmlat', [os.ui.location.ddmLatFilter]);
+
+
+
+/**
+ * Take decimal degress format return ddm Degrees Decimal Minutes
+ * @constructor
+ * @return {angular.Filter}
+ * @ngInject
+ */
+os.ui.location.ddmLonFilter = function() {
+  return /** @type {angular.Filter} */ (os.ui.location.ddmLonFilter.Filter);
+};
+
+
+
+/**
+ * @constructor
+ * @param {!number} londeg
+ * @return {string}
+ */
+os.ui.location.ddmLonFilter.Filter = function(londeg) {
+  return os.geo.toDegreesDecimalMinutes(londeg, true, false);
+};
+
+
+/**
+ * Add the directive to the os.ui module
+ */
+os.ui.Module.filter('ddmlon', [os.ui.location.ddmLonFilter]);
 
 
 

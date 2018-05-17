@@ -39,6 +39,8 @@ plugin.file.kml.SOURCE_FIELDS = [
   os.Fields.BEARING,
   os.Fields.LAT,
   os.Fields.LON,
+  os.Fields.LAT_DDM,
+  os.Fields.LON_DDM,
   os.Fields.LAT_DMS,
   os.Fields.LON_DMS,
   os.Fields.MGRS,
