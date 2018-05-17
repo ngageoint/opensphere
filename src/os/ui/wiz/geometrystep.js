@@ -108,7 +108,7 @@ os.ui.wiz.GeometryStep = function() {
    */
   this['geoFormats'] = [
     {'format': 'DMS', 'description': 'DMS - Degrees, minutes, seconds'},
-    {'format': 'DMM', 'description': 'DMM - Degrees and decimal minutes'},
+    {'format': 'DDM', 'description': 'DDM - Degrees and decimal minutes'},
     {'format': 'DD', 'description': 'DD - Decimal degrees'}
   ];
 

@@ -572,6 +572,8 @@ os.ui.FeatureEditCtrl.FIELDS = [
   os.Fields.BEARING, // for icon
   os.Fields.LAT,
   os.Fields.LON,
+  os.Fields.LAT_DDM,
+  os.Fields.LON_DDM,
   os.Fields.LAT_DMS,
   os.Fields.LON_DMS,
   os.Fields.MGRS,
