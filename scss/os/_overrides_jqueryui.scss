@@ -48,27 +48,50 @@
   width: 100%;
 }
 
+// NOTE: we want the ui-menu to be exactly like the dropdown menu. To do this override the jquery defaults, then
+// extend the bootstrap 4 equivalent classes. Ignore all the sass-lint rules because we want it to be exactly this way.
+// sass-lint:disable extends-before-declarations
+// sass-lint:disable extends-before-mixins
+// sass-lint:disable no-extends
+// sass-lint:disable placeholder-in-extend
 .ui-menu {
+  // This part ignores the default jquery styles
   background: $dropdown-bg;
   border: $dropdown-border-width solid $dropdown-border-color;
-  position: fixed;
+  display: block !important;
+  position: fixed !important;
+
+  // This gets the same styles defined for dropdown-menu. Used for when themes specify after the fact
+  @extend .dropdown-menu;
 
   .ui-menu-item {
+    // This part ignores the default jquery styles
     list-style-image: none;
     margin: inherit;
     padding: $dropdown-item-padding-y $dropdown-item-padding-x;
+
+    // This gets the same styles defined for dropdown-item. Used for when themes specify after the fact
+    @extend .dropdown-item
   }
 
   .ui-menu-divider {
+    // This part ignores the default jquery styles
     @include nav-divider($dropdown-divider-bg);
+
+    // This gets the same styles defined for dropdown-divider. Used for when themes specify after the fact
+    @extend .dropdown-divider;
   }
 
-  .ui-state-focus {
+  .dropdown-item.ui-state-focus {
+    // This part ignores the default jquery styles
     @include gradient-bg($dropdown-link-hover-bg);
     background: $dropdown-link-hover-bg;
     border: 0;
     color: $dropdown-link-hover-color;
     font-weight: inherit;
     text-decoration: none;
+
+    // This gets the same styles defined for dropdown-item:focus. Used for when themes specify after the fact
+    @extend .dropdown-item:focus;
   }
 }
