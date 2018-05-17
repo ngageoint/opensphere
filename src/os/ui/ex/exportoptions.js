@@ -344,27 +344,25 @@ os.ui.ex.ExportOptionsCtrl.prototype.updateItems = function() {
 
           var id = exportSource.item.getId();
           var cfg = os.style.StyleManager.getInstance().getLayerConfig(id);
-          if (cfg.labels) {
+          if (cfg.labels && sourceItems.length > 0 && !this.isFeatureLevelConfig_(sourceItems)) {
             for (var n = 0; n < cfg.labels.length; n++) {
               if (cfg.labels[n]['column']) {
                 labelFields.push(cfg.labels[n]['column']);
               }
             }
-          }
 
-          if (labelFields.length == 0) {
-            labelFields.push('None');
+            if (labelFields.length == 0) {
+              labelFields.push('None');
+            }
+            // escape HTML chars to make sure they don't break the DOM
+            var labelText = goog.string.htmlEscape(labelFields.join('/'));
+            var labelTip = goog.string.htmlEscape('Columns that will be used for labels in the exported file: ' +
+                 labelFields.join(', '));
+            exportSource.detailText += '<div class="nowrap" title="' + labelTip + '">' +
+                  'Label' + (labelFields.length > 1 ? 's' : '') + ': ' + labelText +
+                  '</div>';
           }
-
-          // escape HTML chars to make sure they don't break the DOM
-          var labelText = goog.string.htmlEscape(labelFields.join('/'));
-          var labelTip = goog.string.htmlEscape('Columns that will be used for labels in the exported file: ' +
-              labelFields.join(', '));
-          exportSource.detailText += '<div class="nowrap" title="' + labelTip + '">' +
-              'Label' + (labelFields.length > 1 ? 's' : '') + ': ' + labelText +
-              '</div>';
         }
-
         if (sourceItems && sourceItems.length > 0) {
           items = items.concat(sourceItems);
         }
@@ -381,6 +379,21 @@ goog.exportProperty(
     os.ui.ex.ExportOptionsCtrl.prototype,
     'updateItems',
     os.ui.ex.ExportOptionsCtrl.prototype.updateItems);
+
+/**
+ * Check the array to see if any items have a feature level style.
+ * @param {Array<*>} items Array of items to check
+ * @return {boolean} True if any of the items in the array have a feature level style
+ * @private
+ */
+os.ui.ex.ExportOptionsCtrl.prototype.isFeatureLevelConfig_ = function(items) {
+  if (items) {
+    return items.some(function(item) {
+      return !!item.get(os.style.StyleType.FEATURE);
+    });
+  }
+  return false;
+};
 
 
 /**
