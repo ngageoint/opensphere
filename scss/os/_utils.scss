@@ -71,3 +71,9 @@
     @include bg-text-variant($value);
   }
 }
+
+@each $color, $value in $colors {
+  .u-text-#{$color} {
+    color: $value;
+  }
+}
