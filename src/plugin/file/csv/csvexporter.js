@@ -33,6 +33,16 @@ plugin.file.csv.CSVExporter.LOGGER_ = goog.log.getLogger('plugin.file.csv.CSVExp
 
 
 /**
+ * Fields for CSV export.
+ * @enum {string}
+ */
+plugin.file.csv.CSVExporter.FIELDS = {
+  START_TIME: 'START_TIME',
+  END_TIME: 'END_TIME'
+};
+
+
+/**
  * @inheritDoc
  */
 plugin.file.csv.CSVExporter.prototype.processItem = function(item) {
@@ -72,7 +82,13 @@ plugin.file.csv.CSVExporter.prototype.processItem = function(item) {
 
     var time = /** @type {os.time.ITime|undefined} */ (item.get(os.data.RecordField.TIME));
     if (time) {
-      result[os.Fields.TIME] = time.toISOString('/');
+      if (os.instanceOf(time, os.time.TimeRange.NAME)) {
+        // time ranges need to be put into two separate fields so that we can reimport our own exports
+        result[plugin.file.csv.CSVExporter.FIELDS.START_TIME] = time.getStartISOString();
+        result[plugin.file.csv.CSVExporter.FIELDS.END_TIME] = time.getEndISOString();
+      } else {
+        result[os.Fields.TIME] = time.toISOString();
+      }
     }
 
     if (this.fields) {
