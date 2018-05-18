@@ -1,7 +1,10 @@
 goog.provide('os.im.action.filter');
 goog.provide('os.im.action.filter.ExportTypeHint');
 
+goog.require('os.command.SequenceCommand');
 goog.require('os.im.action');
+goog.require('os.im.action.cmd.FilterActionAdd');
+goog.require('os.im.action.cmd.FilterActionRemove');
 goog.require('os.ui.filter');
 goog.require('os.xml');
 
@@ -68,4 +71,112 @@ os.im.action.filter.exportEntries = function(entries, opt_exactType) {
   });
 
   return result;
+};
+
+
+/**
+ * Create command to copy an entry.
+ * @param {!os.im.action.FilterActionEntry} entry The import action entry.
+ * @return {os.command.ICommand} The copy entry command.
+ */
+os.im.action.filter.copyEntryCmd = function(entry) {
+  var oldTitle = entry.getTitle();
+  var copy = /** @type {!os.im.action.FilterActionEntry} */ (entry.clone());
+  copy.setId(goog.string.getRandomString());
+  copy.setTitle(oldTitle + ' Copy');
+
+  var iam = os.im.action.ImportActionManager.getInstance();
+  var cmd = new os.im.action.cmd.FilterActionAdd(copy);
+  cmd.title = 'Copy ' + iam.entryTitle + ' "' + oldTitle + '"';
+
+  return cmd;
+};
+
+
+/**
+ * Get the initial file name to use for export.
+ * @return {string} The file name.
+ */
+os.im.action.filter.getExportName = function() {
+  return os.im.action.ImportActionManager.getInstance().entryTitle + 's';
+};
+
+
+/**
+ * Get the list of filter columns.
+ * @param {string=} opt_entryType The filter action entry type.
+ * @return {!Array} The columns.
+ */
+os.im.action.filter.getColumns = function(opt_entryType) {
+  var columns;
+
+  if (opt_entryType) {
+    var filterable = os.ui.filterManager.getFilterable(opt_entryType);
+    if (filterable) {
+      columns = filterable.getFilterColumns();
+    }
+  }
+
+  return columns || [];
+};
+
+
+/**
+ * Callback for filter action entry create/edit.
+ * @param {os.im.action.FilterActionEntry|undefined} original The orignial filter entry, for edits.
+ * @param {os.im.action.FilterActionEntry} entry The edited filter entry.
+ */
+os.im.action.filter.onEditComplete = function(original, entry) {
+  if (entry) {
+    var cmds = [];
+
+    var iam = os.im.action.ImportActionManager.getInstance();
+    var entries = iam.getActionEntries(entry.getType());
+
+    var entryTitle = entry.getTitle();
+    var insertIndex;
+    if (original) {
+      insertIndex = goog.array.findIndex(entries, function(entry) {
+        return entry == original;
+      });
+
+      entryTitle = original.getTitle();
+      cmds.push(new os.im.action.cmd.FilterActionRemove(original, insertIndex));
+    }
+
+    cmds.push(new os.im.action.cmd.FilterActionAdd(entry, insertIndex));
+
+    if (cmds.length > 1) {
+      var cmd = new os.command.SequenceCommand();
+      cmd.setCommands(cmds);
+
+      var appEntryTitle = iam.entryTitle;
+      cmd.title = 'Update ' + appEntryTitle + ' "' + entryTitle + '"';
+
+      os.commandStack.addCommand(cmd);
+    } else {
+      os.commandStack.addCommand(cmds[0]);
+    }
+  }
+};
+
+
+/**
+ * Create command to remove an entry.
+ * @param {!os.im.action.FilterActionEntry} entry The import action entry to remove.
+ * @return {os.command.ICommand} The remove entry command.
+ */
+os.im.action.filter.removeEntryCmd = function(entry) {
+  var iam = os.im.action.ImportActionManager.getInstance();
+  var entries = iam.getActionEntries(entry.getType());
+
+  var index = goog.array.findIndex(entries, function(arrEntry) {
+    return arrEntry == entry;
+  });
+
+  if (index < 0) {
+    index = undefined;
+  }
+
+  return new os.im.action.cmd.FilterActionRemove(entry, index);
 };
