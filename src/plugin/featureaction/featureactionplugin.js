@@ -13,6 +13,7 @@ goog.require('plugin.im.action.feature.Manager');
 goog.require('plugin.im.action.feature.StyleAction');
 goog.require('plugin.im.action.feature.legend');
 goog.require('plugin.im.action.feature.menu');
+goog.require('plugin.im.action.feature.node.menu');
 goog.require('plugin.im.action.feature.ui.featureActionsDirective');
 goog.require('plugin.im.action.feature.ui.labelConfigDirective');
 goog.require('plugin.im.action.feature.ui.legendSettingsDirective');
@@ -42,6 +43,8 @@ plugin.im.action.feature.Plugin.prototype.disposeInternal = function() {
   plugin.im.action.feature.Plugin.base(this, 'disposeInternal');
 
   plugin.im.action.feature.layerDispose();
+
+  plugin.im.action.feature.node.menu.dispose();
 };
 
 
@@ -71,6 +74,8 @@ plugin.im.action.feature.Plugin.prototype.init = function() {
   // TODO: shouldn't need to dual-register after THIN-8551
   sm.addStateImplementation(os.state.Versions.V3, os.state.v4.FilterAction);
   sm.addStateImplementation(os.state.Versions.V4, os.state.v4.FilterAction);
+
+  plugin.im.action.feature.node.menu.setup();
 
   // add legend renderer
   os.legend.registerLayerPlugin(/** @type {!osx.legend.PluginOptions} */ ({

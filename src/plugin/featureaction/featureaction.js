@@ -5,6 +5,8 @@ goog.require('os.im.action');
 goog.require('os.layer');
 goog.require('os.ui');
 goog.require('os.ui.window');
+goog.require('plugin.im.action.feature.node.menu');
+goog.require('plugin.im.action.feature.ui.editFeatureActionDirective');
 
 
 /**
@@ -56,7 +58,10 @@ plugin.im.action.feature.EventType = {
  * @enum {string}
  */
 plugin.im.action.feature.Metrics = {
-  LAYER_LAUNCH: 'layers.contextMenu.featureActions'
+  LAYER_LAUNCH: 'layers.contextMenu.featureActions',
+  REMOVE_SELECTED: 'action.feature.node.removeSelected',
+  TOGGLE_ON: 'action.feature.node.toggleOn',
+  TOGGLE_OFF: 'action.feature.node.toggleOff'
 };
 
 
@@ -123,4 +128,57 @@ plugin.im.action.feature.launchForLayer = function(layerId) {
   } else {
     os.ui.window.bringToFront(windowId);
   }
+};
+
+
+/**
+ * @param {string=} opt_entryType The filter action entry type.
+ * @return {string} The file name.
+ */
+plugin.im.action.feature.getExportName = function(opt_entryType) {
+  var name = os.im.action.filter.getExportName();
+
+  if (opt_entryType) {
+    var layer = os.MapContainer.getInstance().getLayer(opt_entryType);
+    if (os.implements(layer, os.layer.ILayer.ID)) {
+      var layerTitle = /** @type {os.layer.ILayer} */ (layer).getTitle();
+      if (layerTitle) {
+        name = layerTitle + ' ' + name;
+      }
+    }
+  }
+
+  return name;
+};
+
+
+/**
+ * Get the list of filter columns.
+ * @param {string=} opt_entryType The filter action entry type.
+ * @return {!Array} The columns.
+ */
+plugin.im.action.feature.getColumns = function(opt_entryType) {
+  var columns;
+
+  if (opt_entryType) {
+    var dm = os.data.DataManager.getInstance();
+    var source = dm.getSource(opt_entryType);
+    if (source) {
+      columns = os.source.getFilterColumns(source, true);
+    }
+  }
+
+  return columns || os.im.action.filter.getColumns(opt_entryType);
+};
+
+
+/**
+ * Edit an action entry. If no entry is provided, a new one will be created.
+ * @param {string} entryType The filter action entry type.
+ * @param {os.im.action.FilterActionEntry=} opt_entry The import action entry.
+ */
+plugin.im.action.feature.editEntry = function(entryType, opt_entry) {
+  var entry = opt_entry ? /** @type {!os.im.action.FilterActionEntry} */ (opt_entry.clone()) : undefined;
+  plugin.im.action.feature.ui.launchEditFeatureAction(entryType, plugin.im.action.feature.getColumns(entryType),
+      os.im.action.filter.onEditComplete.bind(this, opt_entry), entry);
 };
