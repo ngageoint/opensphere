@@ -5,8 +5,9 @@ goog.require('os.source');
 goog.require('os.ui.Module');
 goog.require('os.ui.im.action.FilterActionsCtrl');
 goog.require('os.ui.util.autoHeightDirective');
-goog.require('plugin.im.action.feature.ui.EditFeatureActionCtrl');
-goog.require('plugin.im.action.feature.ui.editFeatureActionDirective');
+goog.require('plugin.im.action.feature');
+goog.require('plugin.im.action.feature.node.menu');
+
 
 
 /**
@@ -40,6 +41,12 @@ os.ui.Module.directive('featureactions', [plugin.im.action.feature.ui.featureAct
  * @ngInject
  */
 plugin.im.action.feature.ui.FeatureActionsCtrl = function($scope, $element) {
+  /**
+   * The context menu for feature action nodes.
+   * @type {os.ui.menu.Menu<os.ui.menu.layer.Context>|undefined}
+   */
+  this['contextMenu'] = plugin.im.action.feature.node.menu.MENU;
+
   plugin.im.action.feature.ui.FeatureActionsCtrl.base(this, 'constructor', $scope, $element);
   os.dataManager.listen(os.data.event.DataEventType.SOURCE_REMOVED, this.onSourceRemoved_, false, this);
 };
@@ -102,17 +109,7 @@ goog.exportProperty(
  * @inheritDoc
  */
 plugin.im.action.feature.ui.FeatureActionsCtrl.prototype.getColumns = function() {
-  var columns;
-
-  if (this.entryType) {
-    var dm = os.data.DataManager.getInstance();
-    var source = dm.getSource(this.entryType);
-    if (source) {
-      columns = os.source.getFilterColumns(source, true);
-    }
-  }
-
-  return columns || plugin.im.action.feature.ui.FeatureActionsCtrl.base(this, 'getColumns');
+  return plugin.im.action.feature.getColumns(this.entryType);
 };
 
 
@@ -120,19 +117,7 @@ plugin.im.action.feature.ui.FeatureActionsCtrl.prototype.getColumns = function()
  * @inheritDoc
  */
 plugin.im.action.feature.ui.FeatureActionsCtrl.prototype.getExportName = function() {
-  var name = plugin.im.action.feature.ui.FeatureActionsCtrl.base(this, 'getExportName');
-
-  if (this.entryType) {
-    var layer = os.MapContainer.getInstance().getLayer(this.entryType);
-    if (os.implements(layer, os.layer.ILayer.ID)) {
-      var layerTitle = /** @type {os.layer.ILayer} */ (layer).getTitle();
-      if (layerTitle) {
-        name = layerTitle + ' ' + name;
-      }
-    }
-  }
-
-  return name;
+  return plugin.im.action.feature.getExportName(this.entryType);
 };
 
 
@@ -141,9 +126,7 @@ plugin.im.action.feature.ui.FeatureActionsCtrl.prototype.getExportName = functio
  */
 plugin.im.action.feature.ui.FeatureActionsCtrl.prototype.editEntry = function(opt_entry) {
   if (this.entryType) {
-    var entry = opt_entry ? /** @type {!os.im.action.FilterActionEntry<T>} */ (opt_entry.clone()) : undefined;
-    plugin.im.action.feature.ui.launchEditFeatureAction(this.entryType, this.getColumns(),
-        this.onEditComplete.bind(this, opt_entry), entry);
+    plugin.im.action.feature.editEntry(this.entryType, opt_entry);
   }
 };
 goog.exportProperty(
