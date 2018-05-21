@@ -3,7 +3,7 @@
 
 .slick-grid {
   border: 1px solid $border-color;
-  box-sizing: border-box;
+  box-sizing: content-box;
   height: 100%;
   width: 100%;
 
@@ -17,6 +17,7 @@
 
   .slick-header-column {
     border-color: $table-dark-border-color;
+    box-sizing: content-box;
     height: auto;
   }
 
