@@ -191,12 +191,14 @@ os.ui.im.action.FilterActionExportCtrl.prototype.close_ = function() {
  * @param {!Array<!os.im.action.FilterActionEntry>} entries The filter action entries.
  * @param {Array<!os.im.action.FilterActionEntry>=} opt_selected The selected filter action entries.
  * @param {string=} opt_fileName The export file name.
+ * @param {string=} opt_exportType The os.ui.im.action.FilterActionExportType.
  */
-os.ui.im.action.launchFilterActionExport = function(entries, opt_selected, opt_fileName) {
+os.ui.im.action.launchFilterActionExport = function(entries, opt_selected, opt_fileName, opt_exportType) {
   var scopeOptions = {
     'entries': entries,
     'selected': opt_selected,
-    'fileName': opt_fileName
+    'fileName': opt_fileName,
+    'exportType': opt_exportType
   };
 
   var iam = os.im.action.ImportActionManager.getInstance();
