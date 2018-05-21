@@ -102,6 +102,7 @@
     "copy": "npm run copy:files && npm run copy:images && npm run copy:onboarding && npm run copy:views && npm run copy:config && npm run copy:resources",
     "rename": "find dist -type f | xargs perl -pi -e \"s#{APP}#$(json admin.about.application < .build/settings.json)#g\"",
     "build": "npm run init && npm run lint && npm run modernizr && npm run compile && npm run copy && npm run build:index && npm run rename",
+    "build:nolint": "npm run init && npm run modernizr && npm run compile && npm run copy && npm run build:index && npm run rename",
     "build:debug": "npm run init && npm run modernizr && npm run compile:resolve && npm run compile:debugcss && npm run build:debugindex",
     "build:index": "xargs -n 1 os-index < .build/resources-pages",
     "build:debugindex": "xargs -n 1 os-index --debug < .build/resources-pages",

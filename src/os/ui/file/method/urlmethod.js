@@ -224,12 +224,14 @@ os.ui.file.method.UrlMethod.prototype.onLoad = function(event) {
   var q = url.indexOf('?');
   var i = url.lastIndexOf('/') + 1;
   var fileName = decodeURI(url.substring(i == -1 ? 0 : i, q == -1 ? url.length : q));
+  var headers = this.request_.getResponseHeaders();
 
   // There is a header that can be used if it exists instead of the filename
-  if (this.request_.getResponseHeaders()) {
-    var contentDisposition = this.request_.getResponseHeaders()['Content-Disposition'];
+  if (headers) {
+    // starting with Chrome 60, all HTTP headers are lowercase, so check both to support all versions
+    var contentDisposition = headers['Content-Disposition'] || headers['content-disposition'];
     if (contentDisposition) {
-      // Use the value in the Content-Disposition ex: attachment; filename="Super Awesome Dataz.kmz"
+      // Use the value in the content-disposition ex: attachment; filename="Super Awesome Dataz.kmz"
       var re = /filename="(.*?)"/;
       var match = re.exec(contentDisposition);
       if (match && match[1]) {
