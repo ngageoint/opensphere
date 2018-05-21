@@ -9,6 +9,7 @@ goog.require('goog.events.FileDropHandler');
 goog.require('goog.fx.DragDrop');
 goog.require('goog.math.Coordinate');
 goog.require('os.ui.Module');
+goog.require('os.ui.windowSelector');
 goog.require('os.url');
 goog.require('os.url.UrlManager');
 
@@ -331,7 +332,7 @@ os.ui.UrlDragDrop = function($scope, $element) {
 os.ui.UrlDragDrop.prototype.handleDrag_ = function(event) {
   event.preventDefault();
   event.stopPropagation();
-  if (!document.querySelector('.window-modal-bg')) {
+  if (!document.querySelector(os.ui.windowSelector.MODAL_BG)) {
     if (event.type == 'dragover') {
       goog.dom.classlist.add(/** @type {Element} */ (event.currentTarget), os.ui.DragDropStyle.BORDER);
     } else {
@@ -350,7 +351,7 @@ os.ui.UrlDragDrop.prototype.handleDrop_ = function(event) {
   event.preventDefault();
   event.stopPropagation();
   goog.dom.classlist.remove(/** @type {Element} */ (event.currentTarget), os.ui.DragDropStyle.BORDER);
-  if (!document.querySelector('.window-modal-bg')) {
+  if (!document.querySelector(os.ui.windowSelector.MODAL_BG)) {
     if (goog.isDefAndNotNull(this.scope_['ddDrop'])) {
       this.scope_['ddDrop'](event);
     } else if (event.dataTransfer.files && event.dataTransfer.files.length > 0) {
