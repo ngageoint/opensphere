@@ -59,7 +59,6 @@
   background: $dropdown-bg;
   border: $dropdown-border-width solid $dropdown-border-color;
   display: block !important;
-  position: fixed !important;
 
   // This gets the same styles defined for dropdown-menu. Used for when themes specify after the fact
   @extend .dropdown-menu;
