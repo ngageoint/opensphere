@@ -61,6 +61,8 @@ plugin.file.csv.CSVExporter.prototype.processItem = function(item) {
       if (coords && goog.isNumber(coords[0])) {
         result[os.Fields.LAT] = String(coords[1]);
         result[os.Fields.LON] = String(coords[0]);
+        result[os.Fields.LAT_DDM] = os.geo.toDegreesDecimalMinutes(coords[1], false, false);
+        result[os.Fields.LON_DDM] = os.geo.toDegreesDecimalMinutes(coords[0], true, false);
         result[os.Fields.LAT_DMS] = os.geo.toSexagesimal(coords[1], false, false);
         result[os.Fields.LON_DMS] = os.geo.toSexagesimal(coords[0], true, false);
         result[os.Fields.MGRS] = osasm.toMGRS(coords);
@@ -73,6 +75,8 @@ plugin.file.csv.CSVExporter.prototype.processItem = function(item) {
     if (!(os.Fields.LAT in result)) {
       result[os.Fields.LAT] = '';
       result[os.Fields.LON] = '';
+      result[os.Fields.LAT_DDM] = '';
+      result[os.Fields.LON_DDM] = '';
       result[os.Fields.LAT_DMS] = '';
       result[os.Fields.LON_DMS] = '';
       result[os.Fields.MGRS] = '';
