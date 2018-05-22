@@ -264,9 +264,11 @@ os.ui.layer.LayerPickerCtrl.prototype.select2Formatter_ = function(item, ele) {
  */
 os.ui.layer.LayerPickerCtrl.prototype.matcher_ = function(term, text, option) {
   var des = os.dataManager.getDescriptor(text);
-  var layerTitle = des.getTitle() + ' ' + (des.getExplicitTitle() || '');
-  if (layerTitle) {
-    return goog.string.caseInsensitiveContains(layerTitle, term);
+  if (des) {
+    var layerTitle = des.getTitle() + ' ' + (des.getExplicitTitle() || '');
+    if (layerTitle) {
+      return goog.string.caseInsensitiveContains(layerTitle, term);
+    }
   }
   return false;
 };
