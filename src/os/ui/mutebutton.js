@@ -18,7 +18,7 @@ os.ui.muteButtonDirective = function() {
     controllerAs: 'ctrl',
     template: '<button class="btn btn-secondary" ng-click="ctrl.toggle()"' +
       ' title="{{mute ? \'Unmute\': \'Mute\'}}">' +
-      '<i class="fa {{mute ? \'fa-volume-off\' : \'fa-volume-up\'}}"></i>' +
+      '<i class="fa fa-fw {{mute ? \'fa-volume-off\' : \'fa-volume-up\'}}"></i>' +
       '</button>'
   };
 };

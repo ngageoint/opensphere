@@ -1,4 +1,4 @@
-<div class="menu">
+<div class="c-action-menu-item-list">
   <div ng-repeat="menuItem in actions"
     ng-init="hasSubActions=menuItem.getItems;showSubMenu=isFlat;isSeparator=menuItem.isSeparator;isSeparatorHeader=menuItem.isSeparatorHeader;isAction=menuItem.getAction"
     ng-class="{'dropdown-item':isAction,'dropdown-submenu':hasSubActions,'submenu':hasSubActions,'dropdown-divider':isSeparator,'dropdown-header':isSeparatorHeader}"
