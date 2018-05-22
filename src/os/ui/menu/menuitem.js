@@ -255,7 +255,7 @@ os.ui.menu.MenuItem.prototype.render = function(context, opt_target) {
 
   // automatically insert separators after groups
   if (type === types.GROUP) {
-    html += '<li class="dropdown-divider"></li>';
+    html += '<li>-</li>';
   }
 
   return html;
