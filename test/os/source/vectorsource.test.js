@@ -126,8 +126,8 @@ describe('os.source.Vector', function() {
       expect(source.getFeatures().length).toBe(10000);
       expect(source.getFeatureCount()).toBe(10000);
 
-      // ID, LAT, LON, LAT_DMS, LON_DMS, MGRS, UP_DATE_TIME, DOWN_DATE_TIME
-      expect(source.columns.length).toBe(8);
+      // ID, LAT, LON, LAT_DMS, LON_DMS, LAT_DDM, LON_DDM, MGRS, UP_DATE_TIME, DOWN_DATE_TIME
+      expect(source.columns.length).toBe(10);
     });
   });
 
@@ -466,7 +466,7 @@ describe('os.source.Vector', function() {
       // adds supplemental spatial columns based on existing columns
       columns = ['ID', 'LAT', 'LON', 'TIME', 'TEST1', 'TEST2', 'TEST3'];
       source.setColumns(columns);
-      expect(source.columns.length).toBe(columns.length + 3); // +3 for mgrs, latdms, londms
+      expect(source.columns.length).toBe(columns.length + 5); // +5 for mgrs, latdms, londms, latddm, londdm
 
       for (var i = 0, n = columns.length; i < n; i++) {
         expect(source.hasColumn(columns[i])).toBe(true);
@@ -474,7 +474,9 @@ describe('os.source.Vector', function() {
 
       expect(source.hasColumn(os.Fields.MGRS)).toBe(true);
       expect(source.hasColumn(os.Fields.LAT_DMS)).toBe(true);
-      expect(source.hasColumn(os.Fields.LAT_DMS)).toBe(true);
+      expect(source.hasColumn(os.Fields.LON_DMS)).toBe(true);
+      expect(source.hasColumn(os.Fields.LAT_DDM)).toBe(true);
+      expect(source.hasColumn(os.Fields.LON_DDM)).toBe(true);
     });
 
     it('should set columns on the source from an array of columns', function() {
@@ -497,7 +499,7 @@ describe('os.source.Vector', function() {
       columns.push(createColumn('TEST3'));
 
       source.setColumns(columns);
-      expect(source.columns.length).toBe(columns.length + 3); // +3 for mgrs, latdms, londms
+      expect(source.columns.length).toBe(columns.length + 5); // +5 for mgrs, latdms, londms, latddm, londdm
 
       for (var i = 0, n = columns.length; i < n; i++) {
         expect(source.hasColumn(columns[i]['field'])).toBe(true);
@@ -505,14 +507,16 @@ describe('os.source.Vector', function() {
 
       expect(source.hasColumn(os.Fields.MGRS)).toBe(true);
       expect(source.hasColumn(os.Fields.LAT_DMS)).toBe(true);
-      expect(source.hasColumn(os.Fields.LAT_DMS)).toBe(true);
+      expect(source.hasColumn(os.Fields.LON_DMS)).toBe(true);
+      expect(source.hasColumn(os.Fields.LAT_DDM)).toBe(true);
+      expect(source.hasColumn(os.Fields.LON_DDM)).toBe(true);
     });
 
     it('should add a TIME column if time enabled', function() {
       columns = ['ID', 'LAT', 'LON', 'TEST1', 'TEST2', 'TEST3'];
       source.setTimeEnabled(true);
       source.setColumns(columns);
-      expect(source.columns.length).toBe(columns.length + 4); // +4 for mgrs, latdms, londms, time
+      expect(source.columns.length).toBe(columns.length + 6); // +6 for mgrs, latdms, londms, latddm, londdm, time
       expect(source.hasColumn(os.data.RecordField.TIME)).toBe(true);
 
       // disable it for subsequent tests

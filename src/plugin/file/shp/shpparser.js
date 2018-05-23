@@ -165,8 +165,10 @@ plugin.file.shp.SHPParser.prototype.parseNext = function() {
       }
 
       feature.set(os.Fields.LAT, lat);
+      feature.set(os.Fields.LAT_DDM, os.geo.toDegreesDecimalMinutes(lat, false));
       feature.set(os.Fields.LAT_DMS, os.geo.toSexagesimal(lat, false));
       feature.set(os.Fields.LON, lon);
+      feature.set(os.Fields.LON_DDM, os.geo.toDegreesDecimalMinutes(lon, true));
       feature.set(os.Fields.LON_DMS, os.geo.toSexagesimal(lon, true));
 
       // TODO: there should be a way to determine the projection from the SHP file rather than assuming EPSG:4326

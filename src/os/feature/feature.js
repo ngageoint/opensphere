@@ -522,6 +522,16 @@ os.feature.populateCoordFields = function(feature, opt_replace, opt_geometry) {
         feature.values_[os.Fields.LON_DMS] = os.geo.toSexagesimal(coords[0], true);
         changed = true;
       }
+
+      if (opt_replace || feature.values_[os.Fields.LAT_DDM] == undefined) {
+        feature.values_[os.Fields.LAT_DDM] = os.geo.toDegreesDecimalMinutes(coords[1], false);
+        changed = true;
+      }
+
+      if (opt_replace || feature.values_[os.Fields.LON_DDM] == undefined) {
+        feature.values_[os.Fields.LON_DDM] = os.geo.toDegreesDecimalMinutes(coords[0], true);
+        changed = true;
+      }
     }
   }
 
