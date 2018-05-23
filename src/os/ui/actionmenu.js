@@ -324,7 +324,7 @@ os.ui.ActionMenuCtrl.prototype.position = function() {
       element.addClass('right-menu');
     }
 
-    element.css('visibility', 'visible');
+    element.addClass('show');
   }, 25);
 };
 
