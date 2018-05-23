@@ -255,8 +255,7 @@ os.ui.slick.SlickTreeCtrl.prototype.getOptions = function() {
     'forceFitColumns': true,
     'multiSelect': this.multiSelect,
     'useRowRenderEvents': true,
-    'headerRowHeight': 0,
-    'rowHeight': 21
+    'headerRowHeight': 0
   };
 };
 
