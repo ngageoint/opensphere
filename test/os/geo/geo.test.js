@@ -135,127 +135,127 @@ describe('os.geo', function() {
   });
 
   it('should parse coordinates from D.MM separated by space without delimiters or direction', function() {
-    var result = os.geo.parseLatLon('10.30 50.15', undefined, 'DMM');
+    var result = os.geo.parseLatLon('10.30 50.15', undefined, 'DDM');
     expect(result.lon).toBeCloseTo(50.25);
     expect(result.lat).toBeCloseTo(10.5);
   });
 
   it('should parse coordinates from padded D.MM separated by space without delimiters or direction', function() {
-    var result = os.geo.parseLatLon('03.30 050.15', undefined, 'DMM');
+    var result = os.geo.parseLatLon('03.30 050.15', undefined, 'DDM');
     expect(result.lon).toBeCloseTo(50.25);
     expect(result.lat).toBeCloseTo(3.5);
   });
 
   it('should handle partial D.MM separated by space without delimiters', function() {
-    var result = os.geo.parseLatLon('10.30 50.15', undefined, 'DMM');
+    var result = os.geo.parseLatLon('10.30 50.15', undefined, 'DDM');
     expect(result.lon).toBeCloseTo(50.25);
     expect(result.lat).toBeCloseTo(10.5);
   });
 
-  it('should parse coordinates from DMM separated by space without delimiters or direction', function() {
-    var result = os.geo.parseLatLon('1030 5015', undefined, 'DMM');
+  it('should parse coordinates from DDM separated by space without delimiters or direction', function() {
+    var result = os.geo.parseLatLon('1030 5015', undefined, 'DDM');
     expect(result.lon).toBeCloseTo(50.25);
     expect(result.lat).toBeCloseTo(10.5);
   });
 
-  it('should parse coordinates from padded DMM separated by space without delimiters or direction', function() {
-    var result = os.geo.parseLatLon('0330 05015', undefined, 'DMM');
+  it('should parse coordinates from padded DDM separated by space without delimiters or direction', function() {
+    var result = os.geo.parseLatLon('0330 05015', undefined, 'DDM');
     expect(result.lon).toBeCloseTo(50.25);
     expect(result.lat).toBeCloseTo(3.5);
   });
 
-  it('should parse coordinates from DMM with space delimiters without direction', function() {
-    var result = os.geo.parseLatLon('10 30 50 15', undefined, 'DMM');
+  it('should parse coordinates from DDM with space delimiters without direction', function() {
+    var result = os.geo.parseLatLon('10 30 50 15', undefined, 'DDM');
     expect(result.lon).toBeCloseTo(50.25);
     expect(result.lat).toBeCloseTo(10.5);
   });
 
-  it('should handle partial DMM separated by space without delimiters', function() {
-    var result = os.geo.parseLatLon('1030 5015', undefined, 'DMM');
+  it('should handle partial DDM separated by space without delimiters', function() {
+    var result = os.geo.parseLatLon('1030 5015', undefined, 'DDM');
     expect(result.lon).toBeCloseTo(50.25);
     expect(result.lat).toBeCloseTo(10.5);
   });
 
-  it('should handle partial DMM separated by space with delimiters', function() {
-    var result = os.geo.parseLatLon('10°30\'50° 15\'', undefined, 'DMM');
+  it('should handle partial DDM separated by space with delimiters', function() {
+    var result = os.geo.parseLatLon('10°30\'50° 15\'', undefined, 'DDM');
     expect(result.lon).toBeCloseTo(50.25);
     expect(result.lat).toBeCloseTo(10.5);
   });
 
-  it('should handle partial DMM separated by space with space delimiters', function() {
-    var result = os.geo.parseLatLon('10 30 50 15', undefined, 'DMM');
+  it('should handle partial DDM separated by space with space delimiters', function() {
+    var result = os.geo.parseLatLon('10 30 50 15', undefined, 'DDM');
     expect(result.lon).toBeCloseTo(50.25);
     expect(result.lat).toBeCloseTo(10.5);
   });
 
-  it('should parse coordinates from padded DMM with space delimiters without direction', function() {
-    var result = os.geo.parseLatLon('05 06.15 050 03.15', undefined, 'DMM');
+  it('should parse coordinates from padded DDM with space delimiters without direction', function() {
+    var result = os.geo.parseLatLon('05 06.15 050 03.15', undefined, 'DDM');
     expect(result.lon).toBeCloseTo(50.0525);
     expect(result.lat).toBeCloseTo(5.1025);
   });
 
-  it('should parse coordinates from unpadded DMM with space delimiters without direction', function() {
-    var result = os.geo.parseLatLon('5 6.15 50 3.15', undefined, 'DMM');
+  it('should parse coordinates from unpadded DDM with space delimiters without direction', function() {
+    var result = os.geo.parseLatLon('5 6.15 50 3.15', undefined, 'DDM');
     expect(result.lon).toBeCloseTo(50.0525);
     expect(result.lat).toBeCloseTo(5.1025);
   });
 
-  it('should parse coordinates from DMM with unit delimiters without direction', function() {
-    var result = os.geo.parseLatLon('10° 30\' 50° 15\'', undefined, 'DMM');
+  it('should parse coordinates from DDM with unit delimiters without direction', function() {
+    var result = os.geo.parseLatLon('10° 30\' 50° 15\'', undefined, 'DDM');
     expect(result.lon).toBeCloseTo(50.25);
     expect(result.lat).toBeCloseTo(10.5);
   });
 
-  it('should parse coordinates from DMM with unit delimiters without spaces or direction', function() {
-    var result = os.geo.parseLatLon('10°30\'50°15\'', undefined, 'DMM');
+  it('should parse coordinates from DDM with unit delimiters without spaces or direction', function() {
+    var result = os.geo.parseLatLon('10°30\'50°15\'', undefined, 'DDM');
     expect(result.lon).toBeCloseTo(50.25);
     expect(result.lat).toBeCloseTo(10.5);
   });
 
-  it('should parse coordinates from DMM with unit delimiters delimited by space without direction', function() {
-    var result = os.geo.parseLatLon('10°30\' 50°15\'', undefined, 'DMM');
+  it('should parse coordinates from DDM with unit delimiters delimited by space without direction', function() {
+    var result = os.geo.parseLatLon('10°30\' 50°15\'', undefined, 'DDM');
     expect(result.lon).toBeCloseTo(50.25);
     expect(result.lat).toBeCloseTo(10.5);
   });
 
-  it('should parse coordinates from DMM with unit delimiters delimited by comma without direction', function() {
-    var result = os.geo.parseLatLon('10°30\',50°15\'', undefined, 'DMM');
+  it('should parse coordinates from DDM with unit delimiters delimited by comma without direction', function() {
+    var result = os.geo.parseLatLon('10°30\',50°15\'', undefined, 'DDM');
     expect(result.lon).toBeCloseTo(50.25);
     expect(result.lat).toBeCloseTo(10.5);
   });
 
-  it('should parse coordinates from DMM with unit delimiters delimited by space with direction NE', function() {
-    var result = os.geo.parseLatLon('10°30\'N 50°15\'E', undefined, 'DMM');
+  it('should parse coordinates from DDM with unit delimiters delimited by space with direction NE', function() {
+    var result = os.geo.parseLatLon('10°30\'N 50°15\'E', undefined, 'DDM');
     expect(result.lon).toBeCloseTo(50.25);
     expect(result.lat).toBeCloseTo(10.5);
-    var result = os.geo.parseLatLon('N10°30\' E50°15\'', undefined, 'DMM');
+    var result = os.geo.parseLatLon('N10°30\' E50°15\'', undefined, 'DDM');
     expect(result.lon).toBeCloseTo(50.25);
     expect(result.lat).toBeCloseTo(10.5);
   });
 
-  it('should parse coordinates from DMM with unit delimiters delimited by space with direction SE', function() {
-    var result = os.geo.parseLatLon('10°30\'S 50°15\'E', undefined, 'DMM');
+  it('should parse coordinates from DDM with unit delimiters delimited by space with direction SE', function() {
+    var result = os.geo.parseLatLon('10°30\'S 50°15\'E', undefined, 'DDM');
     expect(result.lon).toBeCloseTo(50.25);
     expect(result.lat).toBeCloseTo(-10.5);
-    var result = os.geo.parseLatLon('S10°30\' E50°15\'', undefined, 'DMM');
+    var result = os.geo.parseLatLon('S10°30\' E50°15\'', undefined, 'DDM');
     expect(result.lon).toBeCloseTo(50.25);
     expect(result.lat).toBeCloseTo(-10.5);
   });
 
-  it('should parse coordinates from DMM with unit delimiters delimited by space with direction NW', function() {
-    var result = os.geo.parseLatLon('10°30\'N 50°15\'W', undefined, 'DMM');
+  it('should parse coordinates from DDM with unit delimiters delimited by space with direction NW', function() {
+    var result = os.geo.parseLatLon('10°30\'N 50°15\'W', undefined, 'DDM');
     expect(result.lon).toBeCloseTo(-50.25);
     expect(result.lat).toBeCloseTo(10.5);
-    var result = os.geo.parseLatLon('N10°30\' W50°15\'', undefined, 'DMM');
+    var result = os.geo.parseLatLon('N10°30\' W50°15\'', undefined, 'DDM');
     expect(result.lon).toBeCloseTo(-50.25);
     expect(result.lat).toBeCloseTo(10.5);
   });
 
-  it('should parse coordinates from DMM with unit delimiters delimited by space with direction SW', function() {
-    var result = os.geo.parseLatLon('10°30\'S 50°15\'W', undefined, 'DMM');
+  it('should parse coordinates from DDM with unit delimiters delimited by space with direction SW', function() {
+    var result = os.geo.parseLatLon('10°30\'S 50°15\'W', undefined, 'DDM');
     expect(result.lon).toBeCloseTo(-50.25);
     expect(result.lat).toBeCloseTo(-10.5);
-    var result = os.geo.parseLatLon('S10°30\' W50°15\'', undefined, 'DMM');
+    var result = os.geo.parseLatLon('S10°30\' W50°15\'', undefined, 'DDM');
     expect(result.lon).toBeCloseTo(-50.25);
     expect(result.lat).toBeCloseTo(-10.5);
   });
