@@ -199,7 +199,11 @@ os.ui.menu.MenuItem.prototype.render = function(context, opt_target) {
 
   // group/category
   if (type === types.GROUP) {
-    html += 'dropdown-header ';
+    if (this.label) {
+      html += 'dropdown-header ';
+    } else {
+      html += 'u-dropdown-header__empty ';
+    }
   }
 
   // enabled disabled
@@ -208,7 +212,7 @@ os.ui.menu.MenuItem.prototype.render = function(context, opt_target) {
   }
 
   if (type === types.SEPARATOR) {
-    html += 'dropdown-divider"></li>';
+    html += '">-</li>';
     return html;
   }
 
