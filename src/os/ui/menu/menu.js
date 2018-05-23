@@ -139,6 +139,17 @@ os.ui.menu.Menu.prototype.open = function(context, position, opt_target, opt_dis
         'select': this.onSelect.bind(this)
       }));
 
+  // Some themes change the dropdown color based on if they are in the navbar. Lets do the same!
+  var navbarParent = goog.dom.getAncestorByClass(this.position_.of[0], 'navbar');
+  if (navbarParent) {
+    var classes = goog.array.filter(navbarParent.className.split(' '), function(classname) {
+      return classname.indexOf('bg-') != -1;
+    });
+    if (classes.length) {
+      this.menu_.wrap('<div id="js-menu__wrapper" class="' + classes.join(' ') + '"></div>');
+    }
+  }
+
   this.menu_['position'](this.position_);
   this.listenerDelay_.start();
 
@@ -231,6 +242,7 @@ os.ui.menu.Menu.prototype.close = function(opt_dispatch) {
       os.dispatcher.dispatchEvent(os.ui.GlobalMenuEventType.MENU_CLOSE);
     }
 
+    this.menu_.unwrap('#js-menu__wrapper');
     this.menu_.remove();
     this.menu_ = null;
   }

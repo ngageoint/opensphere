@@ -3,7 +3,7 @@
 
 .slick-grid {
   border: 1px solid $border-color;
-  box-sizing: border-box;
+  box-sizing: content-box;
   height: 100%;
   width: 100%;
 
@@ -16,9 +16,8 @@
   }
 
   .slick-header-column {
-    background-color: $table-dark-bg;
     border-color: $table-dark-border-color;
-    color: $table-dark-color;
+    box-sizing: content-box;
     height: auto;
   }
 
@@ -54,6 +53,7 @@
 
   background: $body-bg;
   color: $body-color;
+  line-height: .8 * $line-height-base;
 
   &.selected:not(:hover) {
     background: $component-active-bg;

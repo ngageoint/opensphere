@@ -166,7 +166,7 @@ os.ui.datetime.DateTimeCtrl.prototype.watchDate_ = function() {
  * @private
  */
 os.ui.datetime.DateTimeCtrl.prototype.onDateChanged_ = function(newVal, oldVal) {
-  if (newVal != oldVal) {
+  if (newVal && newVal != oldVal) {
     this.updateValue('date');
   }
 };

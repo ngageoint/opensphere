@@ -101,9 +101,9 @@ const sharedResources = [
   {
     source: 'vendor/jquery-ui',
     target: 'vendor/jquery-ui',
-    css: ['darkness/jquery-ui-1.11.0.min.css'],
+    css: ['lightness/jquery-ui-1.11.0.min.css'],
     scripts: ['jquery-ui-1.11.4.min.js'],
-    files: ['darkness/images']
+    files: ['lightness/images']
   },
   {
     source: resolver.resolveModulePath('bootstrap/dist', __dirname),

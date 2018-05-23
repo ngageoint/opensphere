@@ -29,7 +29,7 @@ os.ui.GlobalMenuEventType = {
 os.ui.GlobalMenuCtrl = function($scope, $element, $timeout) {
   os.ui.GlobalMenuCtrl.base(this, 'constructor', $scope, $element, $timeout);
 
-  this.element.css('visibility', 'hidden');
+  this.element.removeClass('show');
   this.onDownBind_ = this.onClick_.bind(this);
 
   /**
@@ -61,12 +61,12 @@ os.ui.GlobalMenuCtrl.prototype.close = function(opt_dispatch) {
     opt_dispatch = true;
   }
 
-  if (this.element.css('visibility') != 'hidden') {
+  if (this.element.hasClass('show')) {
     if (opt_dispatch && os.dispatcher) {
       os.dispatcher.dispatchEvent(os.ui.GlobalMenuEventType.MENU_CLOSE);
     }
 
-    this.element.css('visibility', 'hidden');
+    this.element.removeClass('show');
     this.element.removeClass('right-menu');
     this.element.blur();
   }
@@ -171,7 +171,7 @@ os.ui.GlobalMenuCtrl.prototype.position = function() {
       element.addClass('right-menu');
     }
 
-    element.css('visibility', 'visible');
+    element.addClass('show');
   }, 5);
 };
 
