@@ -3,6 +3,8 @@ goog.require('ol.geom.LineString');
 goog.require('ol.geom.Point');
 goog.require('os.Fields');
 goog.require('os.osasm.wait');
+goog.require('os.time.TimeInstant');
+goog.require('os.time.TimeRange');
 goog.require('plugin.file.csv.CSVExporter');
 
 
@@ -93,5 +95,32 @@ describe('plugin.file.csv.CSVExporter', function() {
     ex.process();
     expect(ex.getOutput().startsWith('\ufeff')).toBe(true);
     ex.setItems(null);
+  });
+
+  it('exports time instants correctly', function() {
+    var props = {
+      recordTime: new os.time.TimeInstant(999999)
+    };
+
+    pointFeature.setProperties(props);
+    ex.setFields(goog.object.getKeys(props));
+
+    var result = ex.processItem(pointFeature);
+
+    expect(result[os.Fields.TIME]).toBe('1970-01-01 00:16:39Z');
+  });
+
+  it('exports time ranges correctly', function() {
+    var props = {
+      recordTime: new os.time.TimeRange(999999, 9999999)
+    };
+
+    pointFeature.setProperties(props);
+    ex.setFields(goog.object.getKeys(props));
+
+    var result = ex.processItem(pointFeature);
+
+    expect(result[plugin.file.csv.CSVExporter.FIELDS.START_TIME]).toBe('1970-01-01 00:16:39Z');
+    expect(result[plugin.file.csv.CSVExporter.FIELDS.END_TIME]).toBe('1970-01-01 02:46:39Z');
   });
 });
