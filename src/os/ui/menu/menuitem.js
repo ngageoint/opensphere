@@ -225,12 +225,12 @@ os.ui.menu.MenuItem.prototype.render = function(context, opt_target) {
 
   // checkbox type
   if (type === types.CHECK) {
-    html += '<i class="fa fw fa-' + (this.selected ? 'check-' : '') + 'square-o"></i>';
+    html += '<i class="fa fa-fw fa-' + (this.selected ? 'check-' : '') + 'square-o"></i>';
   }
 
   // radio type
   if (type === types.RADIO) {
-    html += '<i class="fa fw fa-' + (this.selected ? 'dot-' : '') + 'circle-o"></i>';
+    html += '<i class="fa fa-fw fa-' + (this.selected ? 'dot-' : '') + 'circle-o"></i>';
   }
 
   // icons
