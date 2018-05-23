@@ -268,7 +268,7 @@
     "angular-animate": "~1.5.x",
     "angular-route": "~1.5.x",
     "angular-sanitize": "~1.5.x",
-    "bootstrap": "=4.1.0",
+    "bootstrap": "4.1.1",
     "bootswatch": "=4.1.0",
     "cesium": "=1.43.0",
     "compass-mixins": "^0.12.10",
