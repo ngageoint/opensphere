@@ -113,8 +113,7 @@ os.ui.hist.LineChart.prototype.draw = function(data, x, y) {
           .attr('r', 3)
           .attr('style', function(d) {
             var color = histogram.getColor();
-            var lightColor = os.color.lighten(color, 0.8);
-            var style = 'stroke:' + color + ';fill:' + lightColor + ';';
+            var style = 'fill:' + color + ';';
             if (d['value'] == 0) {
               style += 'display:none;';
             }

@@ -19,7 +19,7 @@ os.ui.windowsButtonDirective = function() {
     controller: os.ui.WindowsButtonCtrl,
     controllerAs: 'ctrl',
     template: '<button class="btn btn-secondary dropdown-toggle" ng-click="ctrl.openMenu()"' +
-      ' title="Windows and other views" ng-right-click="ctrl.openMenu()">' +
+      ' title="Windows and other views" ng-right-click="ctrl.openMenu()" ng-class="{active: menu}">' +
       '<i class="fa fa-clone"></i> {{showLabel ? \'Windows\' : \'\'}}' +
       '</button>'
   };

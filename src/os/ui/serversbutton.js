@@ -19,9 +19,9 @@ os.ui.serversButtonDirective = function() {
     template: '<span class="badge-button">' +
       '<button class="btn btn-secondary" ng-click="ctrl.toggle()" title="Servers"' +
       ' ng-class="{\'active\': ctrl.isWindowActive(\'settings\')}">' +
-      '<i class="fa fa-database"></i>' +
+      '<i class="fa fa-fw fa-database"></i>' +
       '</button>' +
-      '<i class="fa fa-warning fa-badge animate-fade orange-icon" ng-if="serverError"></i>' +
+      '<i class="fa fa-fw fa-warning fa-badge animate-fade orange-icon" ng-if="serverError"></i>' +
       '</span>'
   };
 };

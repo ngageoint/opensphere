@@ -81,7 +81,7 @@ os.ui.MenuButtonCtrl.prototype.openMenu = function() {
     this.menu.refreshEnabledActions();
     this.scope['menu'] = true;
     os.dispatcher.listenOnce(os.ui.GlobalMenuEventType.MENU_CLOSE, this.onMenuClose, false, this);
-    os.ui.openMenu(this.menu, this.position + ' 4', this.element || undefined);
+    os.ui.openMenu(this.menu, this.position, this.element || undefined);
   }
 };
 goog.exportProperty(os.ui.MenuButtonCtrl.prototype, 'openMenu', os.ui.MenuButtonCtrl.prototype.openMenu);

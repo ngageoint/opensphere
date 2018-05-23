@@ -37,6 +37,10 @@
   word-break: break-all;
 }
 
+.u-word-wrap-break-word {
+  word-wrap: break-word;
+}
+
 .u-overflow-y-auto {
   overflow-y: auto;
 }
@@ -47,6 +51,11 @@
 
 .u-cursor-grab.moving {
   @include grabbing-cursor();
+}
+
+// Used for windows and flyouts where we want to see what pops in behind them
+.u-opacity__95 {
+  opacity: .95;
 }
 
 .u-btn-separator {
@@ -69,5 +78,13 @@
 @each $color, $value in $theme-colors {
   .u-bg-#{$color}-text-a a {
     @include bg-text-variant($value);
+  }
+}
+
+// For all bootstrap colors, allow us to access theme
+// NOTE: Only useable for special items that require lots of colors. Use text-primary, etc for normal stuff
+@each $color, $value in $colors {
+  .u-text-#{$color} {
+    color: $value;
   }
 }

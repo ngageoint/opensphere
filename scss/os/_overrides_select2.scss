@@ -5,3 +5,7 @@
   line-height: $line-height-base;
   min-width: 10rem;
 }
+
+.select2-drop {
+  pointer-events: all;
+}

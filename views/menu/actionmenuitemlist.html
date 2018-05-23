@@ -1,8 +1,7 @@
-<ul class="menu">
-  <li ng-repeat="menuItem in actions"
+<div class="c-action-menu-item-list">
+  <div ng-repeat="menuItem in actions"
     ng-init="hasSubActions=menuItem.getItems;showSubMenu=isFlat;isSeparator=menuItem.isSeparator;isSeparatorHeader=menuItem.isSeparatorHeader;isAction=menuItem.getAction"
-    class="menu-item"
-    ng-class="{'menu-item-action':isAction,'dropdown-submenu':hasSubActions,'submenu':hasSubActions,'dropdown-divider':isSeparator,'dropdown-header':isSeparatorHeader}"
+    ng-class="{'dropdown-item':isAction,'dropdown-submenu':hasSubActions,'submenu':hasSubActions,'dropdown-divider':isSeparator,'dropdown-header':isSeparatorHeader}"
     title="{{menuItem.getAction().getDescription()}}"
     ng-mouseenter="showSubMenu=hasSubActions"
     ng-mouseleave="showSubMenu=isFlat"
@@ -22,5 +21,5 @@
       class="menu-container shadowbox"
       ng-if="showSubMenu && hasSubActions"
       ng-init="actions = menuItem.getItems(); actionMenu.positionSubmenu()"></ng-include>
-  </li>
-</ul>
+  </div>
+</div>
