@@ -2,10 +2,8 @@ goog.provide('os.ui.im.action.FilterActionsCtrl');
 
 goog.require('goog.Disposable');
 goog.require('goog.array');
-goog.require('os.command.SequenceCommand');
 goog.require('os.im.action.ImportActionEventType');
-goog.require('os.im.action.cmd.FilterActionAdd');
-goog.require('os.im.action.cmd.FilterActionRemove');
+goog.require('os.im.action.filter');
 goog.require('os.ui.im.ImportEvent');
 goog.require('os.ui.im.ImportEventType');
 goog.require('os.ui.im.action.FilterActionNode');
@@ -146,16 +144,7 @@ os.ui.im.action.FilterActionsCtrl.prototype.saveEntries = function() {
  * @protected
  */
 os.ui.im.action.FilterActionsCtrl.prototype.getColumns = function() {
-  var columns;
-
-  if (this.entryType) {
-    var filterable = os.ui.filterManager.getFilterable(this.entryType);
-    if (filterable) {
-      columns = filterable.getFilterColumns();
-    }
-  }
-
-  return columns || [];
+  return os.im.action.filter.getColumns(this.entryType);
 };
 
 
@@ -165,7 +154,7 @@ os.ui.im.action.FilterActionsCtrl.prototype.getColumns = function() {
  * @protected
  */
 os.ui.im.action.FilterActionsCtrl.prototype.getExportName = function() {
-  return os.im.action.ImportActionManager.getInstance().entryTitle + 's';
+  return os.im.action.filter.getExportName();
 };
 
 
@@ -177,7 +166,7 @@ os.ui.im.action.FilterActionsCtrl.prototype.editEntry = function(opt_entry) {
   if (this.entryType) {
     var entry = opt_entry ? /** @type {!os.im.action.FilterActionEntry<T>} */ (opt_entry.clone()) : undefined;
     os.ui.im.action.launchEditFilterAction(this.entryType, this.getColumns(),
-        this.onEditComplete.bind(this, opt_entry), entry);
+        os.im.action.filter.onEditComplete.bind(this, opt_entry), entry);
   }
 };
 goog.exportProperty(
@@ -195,14 +184,7 @@ os.ui.im.action.FilterActionsCtrl.prototype.onCopyEvent = function(event, entry)
   event.stopPropagation();
 
   if (entry) {
-    var oldTitle = entry.getTitle();
-    var copy = /** @type {!os.im.action.FilterActionEntry<T>} */ (entry.clone());
-    copy.setId(goog.string.getRandomString());
-    copy.setTitle(oldTitle + ' Copy');
-
-    var iam = os.im.action.ImportActionManager.getInstance();
-    var cmd = new os.im.action.cmd.FilterActionAdd(copy);
-    cmd.title = 'Copy ' + iam.entryTitle + ' "' + oldTitle + '"';
+    var cmd = os.im.action.filter.copyEntryCmd(entry);
     os.command.CommandProcessor.getInstance().addCommand(cmd);
   }
 };
@@ -218,43 +200,6 @@ os.ui.im.action.FilterActionsCtrl.prototype.onEditEvent = function(event, entry)
 
   if (entry) {
     this.editEntry(entry);
-  }
-};
-
-
-/**
- * Callback for filter action entry create/edit.
- * @param {os.im.action.FilterActionEntry<T>|undefined} original The orignial filter entry, for edits.
- * @param {os.im.action.FilterActionEntry<T>} entry The edited filter entry.
- */
-os.ui.im.action.FilterActionsCtrl.prototype.onEditComplete = function(original, entry) {
-  if (entry) {
-    var cmds = [];
-
-    var entryTitle = entry.getTitle();
-    var insertIndex;
-    if (original) {
-      insertIndex = goog.array.findIndex(this['entries'], function(node) {
-        return !!node && node.getEntry() == original;
-      });
-
-      entryTitle = original.getTitle();
-      cmds.push(new os.im.action.cmd.FilterActionRemove(original, insertIndex));
-    }
-
-    cmds.push(new os.im.action.cmd.FilterActionAdd(entry, insertIndex));
-
-    if (cmds.length > 1) {
-      var cmd = new os.command.SequenceCommand();
-      cmd.setCommands(cmds);
-
-      var appEntryTitle = os.im.action.ImportActionManager.getInstance().entryTitle;
-      cmd.title = 'Update ' + appEntryTitle + ' "' + entryTitle + '"';
-
-      os.commandStack.addCommand(cmd);
-    } else {
-      os.commandStack.addCommand(cmds[0]);
-    }
   }
 };
 
@@ -279,15 +224,7 @@ os.ui.im.action.FilterActionsCtrl.prototype.onRemoveEvent = function(event, entr
   event.stopPropagation();
 
   if (entry) {
-    var index = goog.array.findIndex(this['entries'], function(node) {
-      return !!node && node.getEntry() == entry;
-    });
-
-    if (index < 0) {
-      index = undefined;
-    }
-
-    var cmd = new os.im.action.cmd.FilterActionRemove(entry, index);
+    var cmd = os.im.action.filter.removeEntryCmd(entry);
     os.command.CommandProcessor.getInstance().addCommand(cmd);
   }
 };
