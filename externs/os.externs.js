@@ -205,9 +205,9 @@ osx.legend.PluginOptions;
  * @typedef {{
  *   enabled: boolean,
  *   item: *,
- *   label: string,
- *   detailText: (string|undefined),
- *   tooltip: (string|undefined)
+ *   label: (string|null|undefined),
+ *   detailText: (string|null|undefined),
+ *   tooltip: (string|null|undefined)
  * }}
  */
 osx.ChecklistItem;
