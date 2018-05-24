@@ -5,7 +5,4 @@ if (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1) {
     window.module = module;
     module = undefined;
   }
-
-  // allow the file:// protocol to be used by the fetch API
-  require('electron').webFrame.registerURLSchemeAsPrivileged('file');
 }
