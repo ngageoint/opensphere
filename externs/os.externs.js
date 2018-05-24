@@ -201,47 +201,16 @@ osx.legend.LegendOptions;
 osx.legend.PluginOptions;
 
 
-
 /**
- * Item to display in the checklist directive.
- * @constructor
+ * @typedef {{
+ *   enabled: boolean,
+ *   item: *,
+ *   label: string,
+ *   detailText: (string|undefined),
+ *   tooltip: (string|undefined)
+ * }}
  */
-osx.ChecklistItem = function() {};
-
-
-/**
- * If the item is enabled.
- * @type {boolean}
- */
-osx.ChecklistItem.prototype.enabled;
-
-
-/**
- * Data the item maps back to.
- * @type {*}
- */
-osx.ChecklistItem.prototype.item;
-
-
-/**
- * The primary label used for sorting the checklist.
- * @type {string}
- */
-osx.ChecklistItem.prototype.label;
-
-
-/**
- * Displayed next to the label.
- * @type {string}
- */
-osx.ChecklistItem.prototype.detailText;
-
-
-/**
- * Tooltip to display on hover.
- * @type {string}
- */
-osx.ChecklistItem.prototype.tooltip;
+osx.ChecklistItem;
 
 
 /**
