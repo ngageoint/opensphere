@@ -86,7 +86,7 @@ os.ui.util.AutoVHeightCtrl = function($scope, $element, $injector) {
   // there are some situations where resize won't fire on creation, particularly when using IE or when swapping DOM
   // elements with ng-if. this will make sure it fires as soon as Angular is done manipulating the DOM.
   os.ui.waitForAngular(this.onResize_.bind(this));
-  $scope.$on('autovheight.resize', this.onResize_.bind(this));
+  $scope.$on('resize', this.onResize_.bind(this));
   $scope.$on('$destroy', this.onDestroy_.bind(this));
 };
 
