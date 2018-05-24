@@ -16,9 +16,10 @@ os.ui.onboarding.contextOnboardingDirective = function() {
     scope: {
       'context': '@'
     },
-    templateUrl: os.ROOT + 'views/onboarding/contextonboarding.html',
+    template: '<button title="Show help" class="btn btn-sm btn-outline-secondary border-0" ng-click="ctrl.show()">' +
+        '<i class="fa fa-fw fa-question"></i></button>',
     controller: os.ui.onboarding.ContextOnboardingCtrl,
-    controllerAs: 'contextOnboardingCtrl'
+    controllerAs: 'ctrl'
   };
 };
 
@@ -58,10 +59,10 @@ os.ui.onboarding.ContextOnboardingCtrl.prototype.destroy_ = function() {
 /**
  * Called on clicking the button to display the onboarding for the element this directive is attached to.
  */
-os.ui.onboarding.ContextOnboardingCtrl.prototype.showContextOnboarding = function() {
+os.ui.onboarding.ContextOnboardingCtrl.prototype.show = function() {
   os.ui.onboarding.OnboardingManager.getInstance().showContextOnboarding(this.scope_['context']);
 };
 goog.exportProperty(
     os.ui.onboarding.ContextOnboardingCtrl.prototype,
-    'showContextOnboarding',
-    os.ui.onboarding.ContextOnboardingCtrl.prototype.showContextOnboarding);
+    'show',
+    os.ui.onboarding.ContextOnboardingCtrl.prototype.show);
