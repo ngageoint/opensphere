@@ -41,3 +41,7 @@
   background-color: $body-bg;
   z-index: $zindex-modal;
 }
+
+.modal-content .CodeMirror:not(.fullscreen) {
+  height: 10rem;
+}
