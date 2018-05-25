@@ -13,27 +13,8 @@
 
 // * Timeline SVG Styles
 // *******************************************
-
 .c-svg-timeline {
-  fill: $body-bg;
-  height: 100%;
-  overflow-x: hidden;
-  width: 100%;
-
-  // d3 classname, we can't change it
-  .tick {
-    pointer-events: none;
-  }
-
-  text {
-    fill: $body-color;
-    font-weight: 800;
-    paint-order: stroke;
-    stroke: $body-bg;
-    stroke-linecap: butt;
-    stroke-linejoin: miter;
-    stroke-width: 3px;
-  }
+  @include svg-body-styles();
 }
 
 .c-svg-timeline__main {
@@ -274,25 +255,25 @@
 }
 
 .c-histogram-tooltip {
-  background: rgba(0, 0, 0, .8);
+  background: $body-bg;
   border-radius: 3;
-  color: $body-bg;
+  color: $body-color;
   font-size: 12px;
   font-weight: bold;
   line-height: 1;
   padding: 5px;
   z-index: 2000;
-}
 
-.c-histogram-tooltip::after {
-  color: rgba(0, 0, 0, .8);
-  content: '\25bc';
-  display: block;
-  font-size: 10px;
-  line-height: 1;
-  margin-left: -5px;
-  margin-top: 2px;
-  position: absolute;
-  text-align: center;
-  width: 100%;
+  &:after {
+    color: $body-color;
+    content: '\25bc';
+    display: block;
+    font-size: 10px;
+    line-height: 1;
+    margin-left: -5px;
+    margin-top: 2px;
+    position: absolute;
+    text-align: center;
+    width: 100%;
+  }
 }
