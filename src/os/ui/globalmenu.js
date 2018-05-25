@@ -200,7 +200,7 @@ os.ui.openMenu = function(provider, position, opt_target, opt_root, opt_title) {
 
   // update the menu title if provided
   if (opt_title) {
-    ctrl.addTitle('#globalMenu', '<div id="globalMenuTitle">' + opt_title + '</div>');
+    ctrl.addTitle('#globalMenu', '<div id="globalMenuTitle" class="text-truncate">' + opt_title + '</div>');
   }
 
   var timeout = /** @type {angular.$timeout} */ (os.ui.injector.get('$timeout'));
