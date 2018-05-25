@@ -1,5 +1,10 @@
 // * Timeline Panel Styles
 // *******************************************
+.c-timeline-panel {
+  background: $body-bg;
+  z-index: 1;
+}
+
 .c-timeline-panel__buttons {
   background: $body-bg;
   border-left: 1px solid $border-color;
