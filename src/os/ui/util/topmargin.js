@@ -55,6 +55,7 @@ os.ui.util.TopMarginCtrl = function($scope, $element, $timeout) {
 
   /**
    * @type {?angular.JQLite}
+   * @private
    */
   this.bufferElement_ = null;
 
