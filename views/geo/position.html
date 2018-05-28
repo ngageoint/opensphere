@@ -1,29 +1,31 @@
-<div class="position-control control-group" ng-class="{'error': form.pos.$invalid && form.pos.$dirty}">
-  <label class="control-label" for="pos" ng-if="posCtrl.label">{{posCtrl.label}}</label>
-  <div class="controls">
-    <input type="text"
-        class="input input-xlarge"
-        style="margin-bottom:0px"
-        name="pos"
-        ng-class="{'focus': posCtrl.mapEnabled}"
-        ng-model="posText"
-        ng-disabled="disabled || posCtrl.mapEnabled"
-        geo />
-    <button type="button" class="btn btn-default" title="Set the position by clicking on the map"
-          ng-if="mapSupport === 'true'" ng-click="posCtrl.toggleMapEnabled()"
-          ng-disabled="disabled" ng-class="{'active': posCtrl.mapEnabled}">
-      <i class="fa fa-globe" ng-class="{'lt-blue-icon': posCtrl.mapEnabled}"></i>
-    </button>
-    <popover title="'Entering Position'" content="popoverContent" pos="'right'"></popover>
-    <span class="help-inline" style="margin-left: 0px" ng-show="form.pos.$error.required">Required!</span>
-    <span class="help-inline" style="margin-left: 0px" ng-show="form.pos.$invalid && !form.pos.$error.required">
-      Invalid position!
-    </span>
-    <span class="help-block" ng-if="!posCtrl.mapEnabled && !hideHint">
-      Enter a location as Decimal Degrees, DDM, DMS, or MGRS.
-    </span>
-    <span class="help-block" ng-if="posCtrl.mapEnabled && !hideHint">
-      Choose a location by clicking on the map.
-    </span>
+<div class="mb-2 d-flex flex-row">
+  <div class="w-100">
+    <label class="js-position__name" for="pos" ng-if="posCtrl.label">{{posCtrl.label}}</label>
+    <div class="d-flex flex-row align-items-center">
+      <input type="text"
+          class="form-control w-50"
+          name="pos"
+          ng-model="posText"
+          ng-disabled="disabled || posCtrl.mapEnabled"
+          geo />
+      <button type="button" class="btn btn-primary" title="Set the position by clicking on the map"
+            ng-if="mapSupport === 'true'" ng-click="posCtrl.toggleMapEnabled()"
+            ng-disabled="disabled" ng-class="{'active': posCtrl.mapEnabled}">
+        <i class="fa fa-globe" ng-class="{'text-primary': posCtrl.mapEnabled}"></i>
+      </button>
+      <popover class="mx-2" title="'Entering Position'" content="popoverContent" pos="'right'"></popover>
+      <span class="text-danger" style="margin-left: 0px" ng-show="form.pos.$error.required">Required!</span>
+      <span class="text-danger" style="margin-left: 0px" ng-show="form.pos.$invalid && !form.pos.$error.required">
+        Invalid position!
+      </span>
+    </div>
+    <div>
+      <span ng-if="!posCtrl.mapEnabled && !hideHint">
+        Enter a location as Decimal Degrees, DDM, DMS, or MGRS.
+      </span>
+      <span ng-if="posCtrl.mapEnabled && !hideHint">
+        Choose a location by clicking on the map.
+      </span>
+    </div>
   </div>
 </div>
