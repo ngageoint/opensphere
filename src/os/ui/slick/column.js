@@ -52,24 +52,32 @@ os.ui.slick.column.fix = {
     order: -82,
     width: os.ui.measureText('-000.000000', os.ui.slick.column.FIX_CELL).width + 10
   },
-  'ALTITUDE': {
+  'LAT_DDM': {
     order: -81,
+    width: os.ui.measureText('00° 00.00\' N', os.ui.slick.column.FIX_CELL).width + 10
+  },
+  'LON_DDM': {
+    order: -80,
+    width: os.ui.measureText('000° 00.00\' W', os.ui.slick.column.FIX_CELL).width + 10
+  },
+  'ALTITUDE': {
+    order: -79,
     width: os.ui.measureText('-000000.000', os.ui.slick.column.FIX_CELL).width + 10
   },
   'SEMI_MAJOR': {
-    order: -80,
+    order: -78,
     width: Math.max(
         os.ui.measureText('-000.000000', os.ui.slick.column.FIX_CELL).width,
         os.ui.measureText('SEMI_MAJOR', os.ui.slick.column.FIX_HEADER).width + 20)
   },
   'SEMI_MINOR': {
-    order: -79,
+    order: -77,
     width: Math.max(
         os.ui.measureText('-000.000000', os.ui.slick.column.FIX_CELL).width,
         os.ui.measureText('SEMI_MINOR', os.ui.slick.column.FIX_HEADER).width + 20)
   },
   'ORIENTATION': {
-    order: -78,
+    order: -76,
     width: Math.max(
         os.ui.measureText('-000.000000', os.ui.slick.column.FIX_CELL).width,
         os.ui.measureText('ORIENTATION', os.ui.slick.column.FIX_HEADER).width + 20)
