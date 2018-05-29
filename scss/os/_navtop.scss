@@ -1,4 +1,3 @@
-.c-navtop__navbar-brand img,
 .c-navtop__navbar-brand svg {
   max-height: 1.75em;
   max-width: 5em;
@@ -7,10 +6,6 @@
 .c-navtop__navbar-brand img,
 .c-navtop__navbar-brand g {
   fill: $navbar-dark-color;
-}
-
-a.c-navtop__navbar-brand {
-  line-height: 1em;
 }
 
 .c-navtop__navbar-brand:hover g {
