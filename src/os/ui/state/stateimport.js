@@ -121,7 +121,7 @@ os.ui.state.StateImportCtrl.prototype.accept = function() {
   if (this['showClear']) {
     os.settings.set('state.clear', this['clear']);
     if (this['clear']) {
-      os.ui.clearManager.clear(true);
+      os.ui.clearManager.clear(true, ['mapPosition']);
     }
   }
 
