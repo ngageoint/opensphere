@@ -217,7 +217,7 @@ os.geo.DMS_RELAXED_ = '([NSEW]?)[\\s]*([-+]?\\d{1,3}[\\.]?)(\\d{2}[\\.]?)(\\d{2}
  * @const
  * @private
  */
-os.geo.DMM_LON_ = '([NSEW]?)[\\s]*([-+]?\\d{1,3})(\\d{2}\\.\\d*)?[\\s]*([NSEW]?)';
+os.geo.DDM_LON_ = '([NSEW]?)[\\s]*([-+]?\\d{1,3})(\\d{2}\\.\\d*)?[\\s]*([NSEW]?)';
 
 
 /**
@@ -225,7 +225,7 @@ os.geo.DMM_LON_ = '([NSEW]?)[\\s]*([-+]?\\d{1,3})(\\d{2}\\.\\d*)?[\\s]*([NSEW]?)
  * @const
  * @private
  */
-os.geo.DMM_LAT_ = '([NSEW]?)[\\s]*([-+]?\\d{1,2})(\\d{2}\\.\\d*)?[\\s]*([NSEW]?)';
+os.geo.DDM_LAT_ = '([NSEW]?)[\\s]*([-+]?\\d{1,2})(\\d{2}\\.\\d*)?[\\s]*([NSEW]?)';
 
 
 /**
@@ -233,7 +233,7 @@ os.geo.DMM_LAT_ = '([NSEW]?)[\\s]*([-+]?\\d{1,2})(\\d{2}\\.\\d*)?[\\s]*([NSEW]?)
  * @const
  * @private
  */
-os.geo.DMM_RELAXED_ = '([NSEW]?)[\\s]*([-+]?\\d{1,3}[\\.]?)(\\d{2}\\.\\d*)?[\\s]*([NSEW]?)';
+os.geo.DDM_RELAXED_ = '([NSEW]?)[\\s]*([-+]?\\d{1,3}[\\.]?)(\\d{2}\\.\\d*)?[\\s]*([NSEW]?)';
 
 
 /**
@@ -241,7 +241,7 @@ os.geo.DMM_RELAXED_ = '([NSEW]?)[\\s]*([-+]?\\d{1,3}[\\.]?)(\\d{2}\\.\\d*)?[\\s]
  * @const
  * @private
  */
-os.geo.DMM_RELAXED_NO_DECIMAL_ = '([NSEW]?)[\\s]*([-+]?\\d{1,3}[\\.]?)(\\d{2})?[\\s]*([NSEW]?)';
+os.geo.DDM_RELAXED_NO_DECIMAL_ = '([NSEW]?)[\\s]*([-+]?\\d{1,3}[\\.]?)(\\d{2})?[\\s]*([NSEW]?)';
 
 
 /**
@@ -277,7 +277,7 @@ os.geo.DMS_DELIMITED_RELAXED_ = os.geo.DMS_DELIMITED_LON_;
  * @const
  * @private
  */
-os.geo.DMM_DELIMITED_LON_ = '([NSEW]?)[\\s]*([-+]?\\d{1,3})[\\s,:°]+' +
+os.geo.DDM_DELIMITED_LON_ = '([NSEW]?)[\\s]*([-+]?\\d{1,3})[\\s,:°]+' +
     '(\\d{1,2}(\\.\\d*|\\d{3})?)?[\\s\\\']*([NSEW]?)';
 
 
@@ -286,7 +286,7 @@ os.geo.DMM_DELIMITED_LON_ = '([NSEW]?)[\\s]*([-+]?\\d{1,3})[\\s,:°]+' +
  * @const
  * @private
  */
-os.geo.DMM_DELIMITED_LAT_ = '([NSEW]?)[\\s]*([-+]?\\d{1,2})[\\s,:°]+' +
+os.geo.DDM_DELIMITED_LAT_ = '([NSEW]?)[\\s]*([-+]?\\d{1,2})[\\s,:°]+' +
     '(\\d{1,2}(\\.\\d*|\\d{3})?)?[\\s\\\']*([NSEW]?)';
 
 
@@ -295,7 +295,7 @@ os.geo.DMM_DELIMITED_LAT_ = '([NSEW]?)[\\s]*([-+]?\\d{1,2})[\\s,:°]+' +
  * @const
  * @private
  */
-os.geo.DMM_DELIMITED_RELAXED_ = os.geo.DMM_DELIMITED_LON_;
+os.geo.DDM_DELIMITED_RELAXED_ = os.geo.DDM_DELIMITED_LON_;
 
 
 /**
@@ -363,32 +363,32 @@ os.geo.parseConfigsMixedDDdMS_ = [
  * @const
  * @private
  */
-os.geo.parseConfigsMixeDMM_ = [
+os.geo.parseConfigsMixeDDM_ = [
   [
-    new os.geo.ParseConf( // mixed DMM without and Decimal
-        new RegExp(os.geo.START_ + os.geo.DMM_LAT_ + os.geo.MIDDLE_ + os.geo.DECIMAL_LON_ + os.geo.END_, 'i'),
+    new os.geo.ParseConf( // mixed DDM without and Decimal
+        new RegExp(os.geo.START_ + os.geo.DDM_LAT_ + os.geo.MIDDLE_ + os.geo.DECIMAL_LON_ + os.geo.END_, 'i'),
         [{deg: 2, min: 3, sec: null, dir: [1, 4]}, {deg: 6, min: null, sec: null, dir: [5, 8]}]),
-    new os.geo.ParseConf( // mixed DMM with and Decimal
-        new RegExp(os.geo.START_ + os.geo.DMM_DELIMITED_LAT_ + os.geo.MIDDLE_ + os.geo.DECIMAL_LON_ +
+    new os.geo.ParseConf( // mixed DDM with and Decimal
+        new RegExp(os.geo.START_ + os.geo.DDM_DELIMITED_LAT_ + os.geo.MIDDLE_ + os.geo.DECIMAL_LON_ +
         os.geo.END_, 'i'), [{deg: 2, min: 3, sec: null, dir: [1, 5]}, {deg: 7, min: null, sec: null, dir: [6, 9]}]),
-    new os.geo.ParseConf( // mixed Decimal and DMM without
-        new RegExp(os.geo.START_ + os.geo.DECIMAL_LAT_ + os.geo.MIDDLE_ + os.geo.DMM_LON_ + os.geo.END_, 'i'),
+    new os.geo.ParseConf( // mixed Decimal and DDM without
+        new RegExp(os.geo.START_ + os.geo.DECIMAL_LAT_ + os.geo.MIDDLE_ + os.geo.DDM_LON_ + os.geo.END_, 'i'),
         [{deg: 2, min: null, sec: null, dir: [1, 4]}, {deg: 6, min: 7, sec: null, dir: [5, 8]}]),
-    new os.geo.ParseConf( // mixed decimal and DMM with
+    new os.geo.ParseConf( // mixed decimal and DDM with
         new RegExp(os.geo.START_ + os.geo.DECIMAL_LAT_ + os.geo.MIDDLE_ + os.geo.DMS_DELIMITED_LON_ +
         os.geo.END_, 'i'), [{deg: 2, min: null, sec: null, dir: [1, 4]}, {deg: 6, min: 7, sec: null, dir: [5, 9]}])
   ],
   [
-    new os.geo.ParseConf( // mixed DMM without and Decimal
-        new RegExp(os.geo.START_ + os.geo.DMM_LON_ + os.geo.MIDDLE_ + os.geo.DECIMAL_LAT_ + os.geo.END_, 'i'),
+    new os.geo.ParseConf( // mixed DDM without and Decimal
+        new RegExp(os.geo.START_ + os.geo.DDM_LON_ + os.geo.MIDDLE_ + os.geo.DECIMAL_LAT_ + os.geo.END_, 'i'),
         [{deg: 2, min: 3, sec: null, dir: [1, 4]}, {deg: 6, min: null, sec: null, dir: [5, 8]}]),
-    new os.geo.ParseConf( // mixed DMM with and Decimal
-        new RegExp(os.geo.START_ + os.geo.DMM_DELIMITED_LON_ + os.geo.MIDDLE_ + os.geo.DECIMAL_LAT_ +
+    new os.geo.ParseConf( // mixed DDM with and Decimal
+        new RegExp(os.geo.START_ + os.geo.DDM_DELIMITED_LON_ + os.geo.MIDDLE_ + os.geo.DECIMAL_LAT_ +
         os.geo.END_, 'i'), [{deg: 2, min: 3, sec: null, dir: [1, 5]}, {deg: 7, min: null, sec: null, dir: [6, 9]}]),
-    new os.geo.ParseConf( // mixed Decimal and DMM without
-        new RegExp(os.geo.START_ + os.geo.DECIMAL_LON_ + os.geo.MIDDLE_ + os.geo.DMM_LAT_ + os.geo.END_, 'i'),
+    new os.geo.ParseConf( // mixed Decimal and DDM without
+        new RegExp(os.geo.START_ + os.geo.DECIMAL_LON_ + os.geo.MIDDLE_ + os.geo.DDM_LAT_ + os.geo.END_, 'i'),
         [{deg: 2, min: null, sec: null, dir: [1, 4]}, {deg: 6, min: 7, sec: null, dir: [5, 8]}]),
-    new os.geo.ParseConf( // mixed decimal and DMM with
+    new os.geo.ParseConf( // mixed decimal and DDM with
         new RegExp(os.geo.START_ + os.geo.DECIMAL_LON_ + os.geo.MIDDLE_ + os.geo.DMS_DELIMITED_LAT_ +
         os.geo.END_, 'i'), [{deg: 2, min: null, sec: null, dir: [1, 4]}, {deg: 6, min: 7, sec: null, dir: [5, 9]}])
   ]
@@ -400,57 +400,57 @@ os.geo.parseConfigsMixeDMM_ = [
  * @const
  * @private
  */
-os.geo.parseConfigsMixedDMSdMM_ = [
+os.geo.parseConfigsMixedDMSdDM_ = [
   [
-    new os.geo.ParseConf( // mixed DMS without and DMM without
-        new RegExp(os.geo.START_ + os.geo.DMS_LAT_ + os.geo.MIDDLE_ + os.geo.DMM_LON_ + os.geo.END_, 'i'),
+    new os.geo.ParseConf( // mixed DMS without and DDM without
+        new RegExp(os.geo.START_ + os.geo.DMS_LAT_ + os.geo.MIDDLE_ + os.geo.DDM_LON_ + os.geo.END_, 'i'),
         [{deg: 2, min: 3, sec: 4, dir: [1, 6]}, {deg: 8, min: 9, sec: null, dir: [7, 10]}]),
-    new os.geo.ParseConf( // mixed DMS with and DMM without
-        new RegExp(os.geo.START_ + os.geo.DMS_DELIMITED_LAT_ + os.geo.MIDDLE_ + os.geo.DMM_LON_ +
+    new os.geo.ParseConf( // mixed DMS with and DDM without
+        new RegExp(os.geo.START_ + os.geo.DMS_DELIMITED_LAT_ + os.geo.MIDDLE_ + os.geo.DDM_LON_ +
         os.geo.END_, 'i'), [{deg: 2, min: 3, sec: 5, dir: [1, 7]}, {deg: 9, min: 10, sec: null, dir: [8, 11]}]),
-    new os.geo.ParseConf( // mixed DMM without and DMS without
-        new RegExp(os.geo.START_ + os.geo.DMM_LAT_ + os.geo.MIDDLE_ + os.geo.DMS_LON_ + os.geo.END_, 'i'),
+    new os.geo.ParseConf( // mixed DDM without and DMS without
+        new RegExp(os.geo.START_ + os.geo.DDM_LAT_ + os.geo.MIDDLE_ + os.geo.DMS_LON_ + os.geo.END_, 'i'),
         [{deg: 2, min: 3, sec: null, dir: [1, 4]}, {deg: 6, min: 5, sec: 8, dir: [5, 10]}]),
-    new os.geo.ParseConf( // mixed DMM without and DMS with
-        new RegExp(os.geo.START_ + os.geo.DMM_LAT_ + os.geo.MIDDLE_ + os.geo.DMS_DELIMITED_LON_ +
+    new os.geo.ParseConf( // mixed DDM without and DMS with
+        new RegExp(os.geo.START_ + os.geo.DDM_LAT_ + os.geo.MIDDLE_ + os.geo.DMS_DELIMITED_LON_ +
         os.geo.END_, 'i'), [{deg: 2, min: 3, sec: null, dir: [1, 4]}, {deg: 6, min: 7, sec: 9, dir: [6, 11]}]),
-    new os.geo.ParseConf( // mixed DMS without and DMM with
-        new RegExp(os.geo.START_ + os.geo.DMS_LAT_ + os.geo.MIDDLE_ + os.geo.DMM_DELIMITED_LON_ +
+    new os.geo.ParseConf( // mixed DMS without and DDM with
+        new RegExp(os.geo.START_ + os.geo.DMS_LAT_ + os.geo.MIDDLE_ + os.geo.DDM_DELIMITED_LON_ +
         os.geo.END_, 'i'), [{deg: 2, min: 3, sec: 4, dir: [1, 6]}, {deg: 8, min: 9, sec: null, dir: [7, 11]}]),
-    new os.geo.ParseConf( // mixed DMS with and DMM with
-        new RegExp(os.geo.START_ + os.geo.DMS_DELIMITED_LAT_ + os.geo.MIDDLE_ + os.geo.DMM_DELIMITED_LON_ +
+    new os.geo.ParseConf( // mixed DMS with and DDM with
+        new RegExp(os.geo.START_ + os.geo.DMS_DELIMITED_LAT_ + os.geo.MIDDLE_ + os.geo.DDM_DELIMITED_LON_ +
         os.geo.END_, 'i'), [{deg: 2, min: 3, sec: 5, dir: [1, 7]}, {deg: 9, min: 10, sec: null, dir: [8, 12]}]),
-    new os.geo.ParseConf( // mixed DMM with and DMS without
-        new RegExp(os.geo.START_ + os.geo.DMM_DELIMITED_LAT_ + os.geo.MIDDLE_ + os.geo.DMS_LON_ +
+    new os.geo.ParseConf( // mixed DDM with and DMS without
+        new RegExp(os.geo.START_ + os.geo.DDM_DELIMITED_LAT_ + os.geo.MIDDLE_ + os.geo.DMS_LON_ +
         os.geo.END_, 'i'), [{deg: 2, min: 3, sec: null, dir: [1, 5]}, {deg: 7, min: 8, sec: 9, dir: [6, 11]}]),
-    new os.geo.ParseConf( // mixed DMM with and DMS with
-        new RegExp(os.geo.START_ + os.geo.DMM_DELIMITED_LAT_ + os.geo.MIDDLE_ + os.geo.DMS_DELIMITED_LON_ +
+    new os.geo.ParseConf( // mixed DDM with and DMS with
+        new RegExp(os.geo.START_ + os.geo.DDM_DELIMITED_LAT_ + os.geo.MIDDLE_ + os.geo.DMS_DELIMITED_LON_ +
         os.geo.END_, 'i'), [{deg: 2, min: 3, sec: null, dir: [1, 5]}, {deg: 7, min: 8, sec: 10, dir: [6, 12]}])
   ],
   [
-    new os.geo.ParseConf( // mixed DMS without and DMM without
-        new RegExp(os.geo.START_ + os.geo.DMS_LON_ + os.geo.MIDDLE_ + os.geo.DMM_LAT_ + os.geo.END_, 'i'),
+    new os.geo.ParseConf( // mixed DMS without and DDM without
+        new RegExp(os.geo.START_ + os.geo.DMS_LON_ + os.geo.MIDDLE_ + os.geo.DDM_LAT_ + os.geo.END_, 'i'),
         [{deg: 2, min: 3, sec: 4, dir: [1, 6]}, {deg: 8, min: 9, sec: null, dir: [7, 10]}]),
-    new os.geo.ParseConf( // mixed DMS with and DMM without
-        new RegExp(os.geo.START_ + os.geo.DMS_DELIMITED_LON_ + os.geo.MIDDLE_ + os.geo.DMM_LAT_ +
+    new os.geo.ParseConf( // mixed DMS with and DDM without
+        new RegExp(os.geo.START_ + os.geo.DMS_DELIMITED_LON_ + os.geo.MIDDLE_ + os.geo.DDM_LAT_ +
         os.geo.END_, 'i'), [{deg: 2, min: 3, sec: 5, dir: [1, 7]}, {deg: 9, min: 10, sec: null, dir: [8, 11]}]),
-    new os.geo.ParseConf( // mixed DMM without and DMS without
-        new RegExp(os.geo.START_ + os.geo.DMM_LON_ + os.geo.MIDDLE_ + os.geo.DMS_LAT_ + os.geo.END_, 'i'),
+    new os.geo.ParseConf( // mixed DDM without and DMS without
+        new RegExp(os.geo.START_ + os.geo.DDM_LON_ + os.geo.MIDDLE_ + os.geo.DMS_LAT_ + os.geo.END_, 'i'),
         [{deg: 2, min: 3, sec: null, dir: [1, 4]}, {deg: 6, min: 7, sec: 8, dir: [5, 10]}]),
-    new os.geo.ParseConf( // mixed DMM without and DMS with
-        new RegExp(os.geo.START_ + os.geo.DMM_LON_ + os.geo.MIDDLE_ + os.geo.DMS_DELIMITED_LAT_ +
+    new os.geo.ParseConf( // mixed DDM without and DMS with
+        new RegExp(os.geo.START_ + os.geo.DDM_LON_ + os.geo.MIDDLE_ + os.geo.DMS_DELIMITED_LAT_ +
         os.geo.END_, 'i'), [{deg: 2, min: 3, sec: null, dir: [1, 4]}, {deg: 6, min: 7, sec: 9, dir: [5, 11]}]),
-    new os.geo.ParseConf( // mixed DMS without and DMM with
-        new RegExp(os.geo.START_ + os.geo.DMS_LON_ + os.geo.MIDDLE_ + os.geo.DMM_DELIMITED_LAT_ +
+    new os.geo.ParseConf( // mixed DMS without and DDM with
+        new RegExp(os.geo.START_ + os.geo.DMS_LON_ + os.geo.MIDDLE_ + os.geo.DDM_DELIMITED_LAT_ +
         os.geo.END_, 'i'), [{deg: 2, min: 3, sec: 4, dir: [1, 6]}, {deg: 8, min: 9, sec: null, dir: [7, 11]}]),
-    new os.geo.ParseConf( // mixed DMS with and DMM with
-        new RegExp(os.geo.START_ + os.geo.DMS_DELIMITED_LON_ + os.geo.MIDDLE_ + os.geo.DMM_DELIMITED_LAT_ +
+    new os.geo.ParseConf( // mixed DMS with and DDM with
+        new RegExp(os.geo.START_ + os.geo.DMS_DELIMITED_LON_ + os.geo.MIDDLE_ + os.geo.DDM_DELIMITED_LAT_ +
         os.geo.END_, 'i'), [{deg: 2, min: 3, sec: 5, dir: [1, 7]}, {deg: 9, min: 10, sec: null, dir: [8, 12]}]),
-    new os.geo.ParseConf( // mixed DMM with and DMS without
-        new RegExp(os.geo.START_ + os.geo.DMM_DELIMITED_LON_ + os.geo.MIDDLE_ + os.geo.DMS_LAT_ +
+    new os.geo.ParseConf( // mixed DDM with and DMS without
+        new RegExp(os.geo.START_ + os.geo.DDM_DELIMITED_LON_ + os.geo.MIDDLE_ + os.geo.DMS_LAT_ +
         os.geo.END_, 'i'), [{deg: 2, min: 3, sec: null, dir: [1, 5]}, {deg: 7, min: 8, sec: 9, dir: [6, 11]}]),
-    new os.geo.ParseConf( // mixed DMM with and DMS with
-        new RegExp(os.geo.START_ + os.geo.DMM_DELIMITED_LON_ + os.geo.MIDDLE_ + os.geo.DMS_DELIMITED_LAT_ +
+    new os.geo.ParseConf( // mixed DDM with and DMS with
+        new RegExp(os.geo.START_ + os.geo.DDM_DELIMITED_LON_ + os.geo.MIDDLE_ + os.geo.DMS_DELIMITED_LAT_ +
         os.geo.END_, 'i'), [{deg: 2, min: 3, sec: null, dir: [1, 5]}, {deg: 7, min: 8, sec: 10, dir: [6, 12]}])
   ]
 ];
@@ -550,33 +550,33 @@ os.geo.parseConfigsDMSRELAXED_ = [
  * @const
  * @private
  */
-os.geo.parseConfigsDMM_ = [
+os.geo.parseConfigsDDM_ = [
   [
-    new os.geo.ParseConf( // DMM with delimiters
-        new RegExp(os.geo.START_ + os.geo.DMM_DELIMITED_LAT_ + os.geo.MIDDLE_ + os.geo.DMM_DELIMITED_LON_ +
+    new os.geo.ParseConf( // DDM with delimiters
+        new RegExp(os.geo.START_ + os.geo.DDM_DELIMITED_LAT_ + os.geo.MIDDLE_ + os.geo.DDM_DELIMITED_LON_ +
         os.geo.END_, 'i'), [{deg: 2, min: 3, sec: null, dir: [1, 5]}, {deg: 7, min: 8, sec: null, dir: [6, 10]}]),
-    new os.geo.ParseConf( // DMM without delimiters
-        new RegExp(os.geo.START_ + os.geo.DMM_LAT_ + os.geo.MIDDLE_ + os.geo.DMM_LON_ + os.geo.END_, 'i'),
+    new os.geo.ParseConf( // DDM without delimiters
+        new RegExp(os.geo.START_ + os.geo.DDM_LAT_ + os.geo.MIDDLE_ + os.geo.DDM_LON_ + os.geo.END_, 'i'),
         [{deg: 2, min: 3, sec: null, dir: [1, 4]}, {deg: 6, min: 7, sec: null, dir: [5, 8]}]),
-    new os.geo.ParseConf( // DMM with / DMM without
-        new RegExp(os.geo.START_ + os.geo.DMM_DELIMITED_LAT_ + os.geo.MIDDLE_ + os.geo.DMS_LON_ +
+    new os.geo.ParseConf( // DDM with / DDM without
+        new RegExp(os.geo.START_ + os.geo.DDM_DELIMITED_LAT_ + os.geo.MIDDLE_ + os.geo.DMS_LON_ +
         os.geo.END_, 'i'), [{deg: 2, min: 3, sec: null, dir: [1, 5]}, {deg: 7, min: 8, sec: null, dir: [6, 10]}]),
-    new os.geo.ParseConf( // DMM without / DMM with
-        new RegExp(os.geo.START_ + os.geo.DMM_LAT_ + os.geo.MIDDLE_ + os.geo.DMM_DELIMITED_LON_ + os.geo.END_, 'i'),
+    new os.geo.ParseConf( // DDM without / DDM with
+        new RegExp(os.geo.START_ + os.geo.DDM_LAT_ + os.geo.MIDDLE_ + os.geo.DDM_DELIMITED_LON_ + os.geo.END_, 'i'),
         [{deg: 2, min: 3, sec: null, dir: [1, 4]}, {deg: 6, min: 7, sec: null, dir: [5, 9]}])
   ],
   [
-    new os.geo.ParseConf( // DMM with delimiters
-        new RegExp(os.geo.START_ + os.geo.DMM_DELIMITED_LON_ + os.geo.MIDDLE_ + os.geo.DMM_DELIMITED_LAT_ +
+    new os.geo.ParseConf( // DDM with delimiters
+        new RegExp(os.geo.START_ + os.geo.DDM_DELIMITED_LON_ + os.geo.MIDDLE_ + os.geo.DDM_DELIMITED_LAT_ +
         os.geo.END_, 'i'), [{deg: 2, min: 3, sec: null, dir: [1, 5]}, {deg: 7, min: 8, sec: null, dir: [6, 10]}]),
-    new os.geo.ParseConf( // DMM without delimiters
-        new RegExp(os.geo.START_ + os.geo.DMM_LON_ + os.geo.MIDDLE_ + os.geo.DMM_LAT_ + os.geo.END_, 'i'),
+    new os.geo.ParseConf( // DDM without delimiters
+        new RegExp(os.geo.START_ + os.geo.DDM_LON_ + os.geo.MIDDLE_ + os.geo.DDM_LAT_ + os.geo.END_, 'i'),
         [{deg: 2, min: 3, sec: null, dir: [1, 4]}, {deg: 6, min: 7, sec: null, dir: [5, 8]}]),
-    new os.geo.ParseConf( // DMM with / DMM without
-        new RegExp(os.geo.START_ + os.geo.DMM_DELIMITED_LON_ + os.geo.MIDDLE_ + os.geo.DMS_LAT_ +
+    new os.geo.ParseConf( // DDM with / DDM without
+        new RegExp(os.geo.START_ + os.geo.DDM_DELIMITED_LON_ + os.geo.MIDDLE_ + os.geo.DMS_LAT_ +
         os.geo.END_, 'i'), [{deg: 2, min: 3, sec: null, dir: [1, 5]}, {deg: 7, min: 8, sec: null, dir: [6, 10]}]),
-    new os.geo.ParseConf( // DMM without / DMM with
-        new RegExp(os.geo.START_ + os.geo.DMM_LON_ + os.geo.MIDDLE_ + os.geo.DMM_DELIMITED_LAT_ + os.geo.END_, 'i'),
+    new os.geo.ParseConf( // DDM without / DDM with
+        new RegExp(os.geo.START_ + os.geo.DDM_LON_ + os.geo.MIDDLE_ + os.geo.DDM_DELIMITED_LAT_ + os.geo.END_, 'i'),
         [{deg: 2, min: 3, sec: null, dir: [1, 4]}, {deg: 6, min: 7, sec: null, dir: [5, 9]}])
   ]
 ];
@@ -587,27 +587,27 @@ os.geo.parseConfigsDMM_ = [
  * @const
  * @private
  */
-os.geo.parseConfigsDMMRELAXED_ = [
-  new os.geo.ParseConf( // DMM with / DMM with
-      new RegExp(os.geo.START_ + os.geo.DMM_DELIMITED_RELAXED_ + os.geo.MIDDLE_ + os.geo.DMM_DELIMITED_RELAXED_ +
+os.geo.parseConfigsDDMRELAXED_ = [
+  new os.geo.ParseConf( // DDM with / DDM with
+      new RegExp(os.geo.START_ + os.geo.DDM_DELIMITED_RELAXED_ + os.geo.MIDDLE_ + os.geo.DDM_DELIMITED_RELAXED_ +
       os.geo.END_, 'i'), [{deg: 2, min: 3, sec: null, dir: [1, 5]}, {deg: 7, min: 8, sec: null, dir: [6, 10]}]),
-  new os.geo.ParseConf( // DMM without delimiters
-      new RegExp(os.geo.START_ + os.geo.DMM_RELAXED_ + os.geo.MIDDLE_ + os.geo.DMM_RELAXED_ +
+  new os.geo.ParseConf( // DDM without delimiters
+      new RegExp(os.geo.START_ + os.geo.DDM_RELAXED_ + os.geo.MIDDLE_ + os.geo.DDM_RELAXED_ +
       os.geo.END_, 'i'), [{deg: 2, min: 3, sec: null, dir: [1, 4]}, {deg: 6, min: 7, sec: null, dir: [5, 8]}]),
-  new os.geo.ParseConf( // DMM with / DMM without
-      new RegExp(os.geo.START_ + os.geo.DMM_DELIMITED_RELAXED_ + os.geo.MIDDLE_ + os.geo.DMM_RELAXED_ +
+  new os.geo.ParseConf( // DDM with / DDM without
+      new RegExp(os.geo.START_ + os.geo.DDM_DELIMITED_RELAXED_ + os.geo.MIDDLE_ + os.geo.DDM_RELAXED_ +
       os.geo.END_, 'i'), [{deg: 2, min: 3, sec: null, dir: [1, 5]}, {deg: 7, min: 8, sec: null, dir: [6, 9]}]),
-  new os.geo.ParseConf( // DMM without / DMM with
-      new RegExp(os.geo.START_ + os.geo.DMM_RELAXED_ + os.geo.MIDDLE_ + os.geo.DMM_DELIMITED_RELAXED_ +
+  new os.geo.ParseConf( // DDM without / DDM with
+      new RegExp(os.geo.START_ + os.geo.DDM_RELAXED_ + os.geo.MIDDLE_ + os.geo.DDM_DELIMITED_RELAXED_ +
       os.geo.END_, 'i'), [{deg: 2, min: 3, sec: null, dir: [1, 4]}, {deg: 6, min: 7, sec: null, dir: [5, 9]}]),
-  new os.geo.ParseConf( // DMM without delimiters
-      new RegExp(os.geo.START_ + os.geo.DMM_RELAXED_NO_DECIMAL_ + os.geo.MIDDLE_ + os.geo.DMM_RELAXED_NO_DECIMAL_ +
+  new os.geo.ParseConf( // DDM without delimiters
+      new RegExp(os.geo.START_ + os.geo.DDM_RELAXED_NO_DECIMAL_ + os.geo.MIDDLE_ + os.geo.DDM_RELAXED_NO_DECIMAL_ +
       os.geo.END_, 'i'), [{deg: 2, min: 3, sec: null, dir: [1, 4]}, {deg: 6, min: 7, sec: null, dir: [5, 8]}]),
-  new os.geo.ParseConf( // DMM with / DMM without
-      new RegExp(os.geo.START_ + os.geo.DMM_DELIMITED_RELAXED_ + os.geo.MIDDLE_ + os.geo.DMM_RELAXED_NO_DECIMAL_ +
+  new os.geo.ParseConf( // DDM with / DDM without
+      new RegExp(os.geo.START_ + os.geo.DDM_DELIMITED_RELAXED_ + os.geo.MIDDLE_ + os.geo.DDM_RELAXED_NO_DECIMAL_ +
       os.geo.END_, 'i'), [{deg: 2, min: 3, sec: null, dir: [1, 5]}, {deg: 7, min: 8, sec: null, dir: [6, 9]}]),
-  new os.geo.ParseConf( // DMM without / DMM with
-      new RegExp(os.geo.START_ + os.geo.DMM_RELAXED_NO_DECIMAL_ + os.geo.MIDDLE_ + os.geo.DMM_DELIMITED_RELAXED_ +
+  new os.geo.ParseConf( // DDM without / DDM with
+      new RegExp(os.geo.START_ + os.geo.DDM_RELAXED_NO_DECIMAL_ + os.geo.MIDDLE_ + os.geo.DDM_DELIMITED_RELAXED_ +
       os.geo.END_, 'i'), [{deg: 2, min: 3, sec: null, dir: [1, 4]}, {deg: 6, min: 7, sec: null, dir: [5, 9]}])
 ];
 
@@ -619,9 +619,9 @@ os.geo.parseConfigsDMMRELAXED_ = [
  * @private
  */
 os.geo.parseConfigs_ = [
-  os.geo.parseConfigsDD_[os.geo.PREFER_LAT_FIRST].concat(os.geo.parseConfigsDMM_[os.geo.PREFER_LAT_FIRST],
+  os.geo.parseConfigsDD_[os.geo.PREFER_LAT_FIRST].concat(os.geo.parseConfigsDDM_[os.geo.PREFER_LAT_FIRST],
       os.geo.parseConfigsDMS_[os.geo.PREFER_LAT_FIRST]),
-  os.geo.parseConfigsDD_[os.geo.PREFER_LON_FIRST].concat(os.geo.parseConfigsDMM_[os.geo.PREFER_LON_FIRST],
+  os.geo.parseConfigsDD_[os.geo.PREFER_LON_FIRST].concat(os.geo.parseConfigsDDM_[os.geo.PREFER_LON_FIRST],
       os.geo.parseConfigsDMS_[os.geo.PREFER_LON_FIRST])
 ];
 
@@ -744,8 +744,8 @@ os.geo.getLatLonFormatConfiguration = function(order, opt_format) {
     switch (opt_format) {
       case 'DD':
         return os.geo.parseConfigsDDRELAXED_;
-      case 'DMM':
-        return os.geo.parseConfigsDMMRELAXED_;
+      case 'DDM':
+        return os.geo.parseConfigsDDMRELAXED_;
       case 'DMS':
         return os.geo.parseConfigsDMSRELAXED_;
       default:
@@ -785,17 +785,17 @@ os.geo.parseLon = function(str, opt_format) {
           coords: {deg: 2, min: null, sec: null, dir: [1, 4]}
         });
         break;
-      case 'DMM':
+      case 'DDM':
         confs.push({
-          regex: new RegExp(os.geo.START_ + os.geo.DMM_DELIMITED_RELAXED_ + os.geo.END_, 'i'),
+          regex: new RegExp(os.geo.START_ + os.geo.DDM_DELIMITED_RELAXED_ + os.geo.END_, 'i'),
           coords: {deg: 2, min: 3, sec: null, dir: [1, 5]}
         });
         confs.push({
-          regex: new RegExp(os.geo.START_ + os.geo.DMM_RELAXED_ + os.geo.END_, 'i'),
+          regex: new RegExp(os.geo.START_ + os.geo.DDM_RELAXED_ + os.geo.END_, 'i'),
           coords: {deg: 2, min: 3, sec: null, dir: [1, 4]}
         });
         confs.push({
-          regex: new RegExp(os.geo.START_ + os.geo.DMM_RELAXED_NO_DECIMAL_ + os.geo.END_, 'i'),
+          regex: new RegExp(os.geo.START_ + os.geo.DDM_RELAXED_NO_DECIMAL_ + os.geo.END_, 'i'),
           coords: {deg: 2, min: 3, sec: null, dir: [1, 4]}
         });
         break;
@@ -819,11 +819,11 @@ os.geo.parseLon = function(str, opt_format) {
         coords: {deg: 2, min: null, sec: null, dir: [1, 4]}
       },
       {
-        regex: new RegExp(os.geo.START_ + os.geo.DMM_DELIMITED_LON_ + os.geo.END_, 'i'),
+        regex: new RegExp(os.geo.START_ + os.geo.DDM_DELIMITED_LON_ + os.geo.END_, 'i'),
         coords: {deg: 2, min: 3, sec: null, dir: [1, 5]}
       },
       {
-        regex: new RegExp(os.geo.START_ + os.geo.DMM_LON_ + os.geo.END_, 'i'),
+        regex: new RegExp(os.geo.START_ + os.geo.DDM_LON_ + os.geo.END_, 'i'),
         coords: {deg: 2, min: 3, sec: null, dir: [1, 4]}
       },
       {
@@ -884,17 +884,17 @@ os.geo.parseLat = function(str, opt_format) {
           coords: {deg: 2, min: null, sec: null, dir: [1, 4]}
         });
         break;
-      case 'DMM':
+      case 'DDM':
         confs.push({
-          regex: new RegExp(os.geo.START_ + os.geo.DMM_DELIMITED_RELAXED_ + os.geo.END_, 'i'),
+          regex: new RegExp(os.geo.START_ + os.geo.DDM_DELIMITED_RELAXED_ + os.geo.END_, 'i'),
           coords: {deg: 2, min: 3, sec: null, dir: [1, 5]}
         });
         confs.push({
-          regex: new RegExp(os.geo.START_ + os.geo.DMM_RELAXED_ + os.geo.END_, 'i'),
+          regex: new RegExp(os.geo.START_ + os.geo.DDM_RELAXED_ + os.geo.END_, 'i'),
           coords: {deg: 2, min: 3, sec: null, dir: [1, 4]}
         });
         confs.push({
-          regex: new RegExp(os.geo.START_ + os.geo.DMM_RELAXED_NO_DECIMAL_ + os.geo.END_, 'i'),
+          regex: new RegExp(os.geo.START_ + os.geo.DDM_RELAXED_NO_DECIMAL_ + os.geo.END_, 'i'),
           coords: {deg: 2, min: 3, sec: null, dir: [1, 4]}
         });
         break;
@@ -918,11 +918,11 @@ os.geo.parseLat = function(str, opt_format) {
         coords: {deg: 2, min: null, sec: null, dir: [1, 4]}
       },
       {
-        regex: new RegExp(os.geo.START_ + os.geo.DMM_DELIMITED_LAT_ + os.geo.END_, 'i'),
+        regex: new RegExp(os.geo.START_ + os.geo.DDM_DELIMITED_LAT_ + os.geo.END_, 'i'),
         coords: {deg: 2, min: 3, sec: null, dir: [1, 5]}
       },
       {
-        regex: new RegExp(os.geo.START_ + os.geo.DMM_LAT_ + os.geo.END_, 'i'),
+        regex: new RegExp(os.geo.START_ + os.geo.DDM_LAT_ + os.geo.END_, 'i'),
         coords: {deg: 2, min: 3, sec: null, dir: [1, 4]}
       },
       {

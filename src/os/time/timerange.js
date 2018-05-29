@@ -109,24 +109,46 @@ os.time.TimeRange.prototype.compare = function(other) {
  * @inheritDoc
  */
 os.time.TimeRange.prototype.toISOString = function(opt_separator) {
-  var parts = [];
   var d = new goog.date.UtcDateTime();
-  var s = this.getStart();
-  var e = this.getEnd();
+  var parts = [];
 
-  if (isNaN(s) || s === os.time.TimeInstant.MIN_TIME) {
-    parts.push('Unbounded');
-  } else {
-    parts.push(os.time.toOffsetString(s, d));
-  }
-
+  parts.push(this.getStartISOString(d));
   parts.push(opt_separator || ' to ');
-
-  if (isNaN(e) || e === os.time.TimeInstant.MAX_TIME) {
-    parts.push('Unbounded');
-  } else {
-    parts.push(os.time.toOffsetString(e, d));
-  }
+  parts.push(this.getEndISOString(d));
 
   return parts.join('');
+};
+
+
+/**
+ * Gets an ISO-8601 representation of the start time.
+ * @param {goog.date.UtcDateTime=} opt_dateTime Optional datetime parameter for obtaining the time offset.
+ * @return {string} The ISO-8601 string representation
+ */
+os.time.TimeRange.prototype.getStartISOString = function(opt_dateTime) {
+  var d = opt_dateTime || new goog.date.UtcDateTime();
+  var s = this.getStart();
+
+  if (isNaN(s) || s === os.time.TimeInstant.MIN_TIME) {
+    return 'Unbounded';
+  } else {
+    return os.time.toOffsetString(s, d);
+  }
+};
+
+
+/**
+ * Gets an ISO-8601 representation of the end time.
+ * @param {goog.date.UtcDateTime=} opt_dateTime Optional datetime parameter for obtaining the time offset.
+ * @return {string} The ISO-8601 string representation
+ */
+os.time.TimeRange.prototype.getEndISOString = function(opt_dateTime) {
+  var d = opt_dateTime || new goog.date.UtcDateTime();
+  var e = this.getEnd();
+
+  if (isNaN(e) || e === os.time.TimeInstant.MAX_TIME) {
+    return 'Unbounded';
+  } else {
+    return os.time.toOffsetString(e, d);
+  }
 };
