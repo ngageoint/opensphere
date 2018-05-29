@@ -39,7 +39,7 @@ a.c-navtop__navbar-brand {
   border-color: $navbar-light-color;
 }
 
-.c-navtop__header::after {
+.fixed-top .c-navtop__header::after {
   background-size: cover;
   bottom: 0;
   content: '';
