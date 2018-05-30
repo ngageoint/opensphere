@@ -1,6 +1,7 @@
 <div class="c-action-menu-item-list">
   <div ng-repeat="menuItem in actions"
     ng-init="hasSubActions=menuItem.getItems;showSubMenu=isFlat;isSeparator=menuItem.isSeparator;isSeparatorHeader=menuItem.isSeparatorHeader;isAction=menuItem.getAction"
+    class="text-truncate"
     ng-class="{'dropdown-item':isAction,'dropdown-submenu':hasSubActions,'submenu':hasSubActions,'dropdown-divider':isSeparator,'dropdown-header':isSeparatorHeader}"
     title="{{menuItem.getAction().getDescription()}}"
     ng-mouseenter="showSubMenu=hasSubActions"
@@ -18,7 +19,6 @@
 
     <span ng-if="isSeparatorHeader">{{menuItem.getName()}}</span>
     <ng-include src="path + '/views/menu/actionmenuitemlist.html'"
-      class="menu-container shadowbox"
       ng-if="showSubMenu && hasSubActions"
       ng-init="actions = menuItem.getItems(); actionMenu.positionSubmenu()"></ng-include>
   </div>

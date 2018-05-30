@@ -54,10 +54,13 @@
 // sass-lint:disable extends-before-mixins
 // sass-lint:disable no-extends
 // sass-lint:disable placeholder-in-extend
+.ui-menu.ui-widget,
 .ui-menu {
   // This part ignores the default jquery styles
   background: $dropdown-bg;
   border: $dropdown-border-width solid $dropdown-border-color;
+  position: fixed !important;
+  z-index: $zindex-fixed + 1;
 
   // This gets the same styles defined for dropdown-menu. Used for when themes specify after the fact
   @extend .dropdown-menu;
@@ -91,5 +94,12 @@
 
     // This gets the same styles defined for dropdown-item:focus. Used for when themes specify after the fact
     @extend .dropdown-item:focus;
+  }
+
+  // This is a helper to disallow jquery menu make a group header thats empty a divider
+  .u-dropdown-header__empty {
+    border: 0;
+    margin: 0;
+    padding: 0;
   }
 }

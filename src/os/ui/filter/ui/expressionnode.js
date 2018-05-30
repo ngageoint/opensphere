@@ -109,11 +109,11 @@ os.ui.filter.ui.ExpressionNode.prototype.updateFrom = function(other) {
  * @inheritDoc
  */
 os.ui.filter.ui.ExpressionNode.prototype.format = function(row, cell, value) {
-  var html = this.formatNodeUI();
-  html += this.getSpacer(20 * this.depth);
+  var html = this.getSpacer(20 * this.depth);
   html += '<nodetoggle></nodetoggle>';
   html += '<nodeicons></nodeicons>';
-  html += this.getLabel();
+  html += '<span class="text-truncate u-flex-grow">' + this.getLabel() + '</span>';
+  html += this.formatNodeUI();
   return html;
 };
 

@@ -11,9 +11,9 @@ goog.require('os.ui.color.colorPaletteDirective');
 /**
  * @type {string}
  */
-os.ui.color.COLOR_PICKER_TEMPLATE = '<button class="btn btn-secondary" ' +
+os.ui.color.COLOR_PICKER_TEMPLATE = '<button class="btn btn-sm bg-transparent border" ' +
     'ng-click="colorPicker.togglePopup()" ng-disabled=disabled>' +
-    '<i class="fa fa-square stroke" ng-style="{\'color\': color}"></i></button>';
+    '<i class="fa fa-square" ng-style="{\'color\': color}"></i></button>';
 
 
 /**
@@ -250,7 +250,7 @@ os.ui.color.ColorPickerCtrl.prototype.getTemplate = function() {
   menuOffset['top'] += this.element.outerHeight();
   var showReset = goog.isDef(this.scope['showReset']) ? this.scope['showReset'] : 'false';
 
-  return '<colorpalette class="fixed" value="value" ' + (this.name_ ? 'name="' + this.name_ + '" ' : '') +
+  return '<colorpalette class="position-fixed" value="value" ' + (this.name_ ? 'name="' + this.name_ + '" ' : '') +
       'show-reset="' + showReset + '" ' +
       'style="top:' + menuOffset['top'] + 'px;left:' + menuOffset['left'] + 'px;"></colorpalette>';
 };

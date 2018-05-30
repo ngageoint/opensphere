@@ -253,8 +253,7 @@ os.ui.slick.SlickTreeNode.prototype.format = function(row, cell, value) {
   }
 
   // this should be floated right so it should come first
-  var html = this.formatNodeUI();
-  html += this.getSpacer(15 * this.depth);
+  var html = this.getSpacer(15 * this.depth);
 
   if (this.nodetoggleVisible_) {
     html += '<nodetoggle></nodetoggle>';
@@ -274,7 +273,8 @@ os.ui.slick.SlickTreeNode.prototype.format = function(row, cell, value) {
   html += '<nodespinner></nodespinner>';
   html += '<nodeicons></nodeicons>';
 
-  html += this.formatValue(value);
+  html += '<span class="text-truncate u-flex-grow">' + this.formatValue(value) + '</span>';
+  html += this.formatNodeUI();
   return html;
 };
 

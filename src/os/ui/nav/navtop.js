@@ -2,7 +2,7 @@ goog.provide('os.ui.navTopDirective');
 
 goog.require('os.defines');
 goog.require('os.ui.NavBarCtrl');
-
+goog.require('os.ui.util.buttonHeightDirective');
 
 
 /**
@@ -13,7 +13,10 @@ os.ui.navTopDirective = function() {
   return {
     restrict: 'E',
     replace: true,
-    scope: true,
+    scope: {
+      'bgTransparent': '@?',
+      'brand': '=?'
+    },
     templateUrl: os.ROOT + 'views/navtop.html',
     controller: os.ui.NavBarCtrl,
     controllerAs: 'navTop'
