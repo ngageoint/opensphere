@@ -123,19 +123,6 @@ os.ui.help.HelpCtrl.prototype.initialize = function() {
   var appName = os.config.getAppName('the application');
   var root = this.menu.getRoot();
 
-  var helpUrl = /** @type {string} */ (os.settings.get('helpPagesUrl'));
-  if (helpUrl) {
-    root.addChild({
-      label: 'Help Pages',
-      eventType: os.ui.help.EventType.HELP,
-      tooltip: 'View help pages for ' + appName,
-      icons: ['<i class="fa fa-fw fa-question-circle"></i>'],
-      sort: 10
-    });
-
-    this.menu.listen(os.ui.help.EventType.HELP, this.onHelpAction_, false, this);
-  }
-
   var videoUrl = /** @type {string} */ (os.settings.get('helpVideoUrl'));
   if (videoUrl) {
     root.addChild({
@@ -245,10 +232,6 @@ os.ui.help.HelpCtrl.prototype.onHelpAction_ = function(event) {
         var initialPath = os.ui.onboarding.OnboardingManager.PATH + initialOnboarding;
         os.ui.onboarding.OnboardingManager.getInstance().displayOnboarding(initialPath);
       }
-      break;
-    case os.ui.help.EventType.HELP:
-      var helpUrl = /** @type {string} */ (os.settings.get('helpPagesUrl'));
-      window.open(helpUrl);
       break;
     case os.ui.help.EventType.VIEW_LOG:
       this.scope.$emit(os.ui.help.EventType.VIEW_LOG);
