@@ -18,3 +18,26 @@
 @mixin bg-text-variant($background) {
   color: color-yiq($background);
 }
+
+// Set svg to use the body background and body font color
+@mixin svg-body-styles {
+  fill: $body-bg;
+  height: 100%;
+  overflow-x: hidden;
+  width: 100%;
+
+  // d3 classname, we can't change it
+  .tick {
+    pointer-events: none;
+  }
+
+  text {
+    fill: $body-color;
+    font-weight: 800;
+    paint-order: stroke;
+    stroke: $body-bg;
+    stroke-linecap: butt;
+    stroke-linejoin: miter;
+    stroke-width: 3px;
+  }
+}

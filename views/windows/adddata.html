@@ -33,11 +33,11 @@
         </div>
 
         <div class="adw-filter" ng-show="filterName">
-          <span ng-click="addData.clearFilter()" class="c--action"><i class="fa fa-times color-red"></i> Clear Filter: <em>{{filterName}}</em></span>
+          <span ng-click="addData.clearFilter()" class="c--action"><i class="fa fa-times text-danger"></i> Clear Filter: <em>{{filterName}}</em></span>
         </div>
       </div>
 
-      <div class="pull-right">
+      <div class="float-right">
         <button class="btn btn-primary" ng-click="addData.launchFileImport()" title="Open a local file or URL" ng-class="{'focus': addData.isTreeEmpty()}">
           <i class="fa fa-folder-open"></i> Open File/URL
         </button>
@@ -46,7 +46,7 @@
 
     <div class="d-flex u-flex-grow mt-1">
       <slicktree class="border u-flex-grow" x-data="providers" checkbox-class="c-toggle-switch" checkbox-tooltip="Activates or deactivates the layer"
-          win-launcher-class="fa fa-plus color-green" selected="selected" disable-folders="true"></slicktree>
+          win-launcher-class="fa fa-plus text-primary" selected="selected" disable-folders="true"></slicktree>
       <div class="border u-flex-grow ml-1 p-2" ng-bind-html="addData.getInfo()"></div>
     </div>
   </div>
@@ -55,7 +55,7 @@
     <button class="btn btn-info" ng-click="openServers()" title="Add, edit, and remove servers providing data to the application">
       <i class="fa fa-database"></i> Manage Servers
     </button>
-    <div class="pull-right">
+    <div class="float-right">
       <button class="btn btn-secondary" ng-click="addData.close()"><i class="fa fa-times"></i> Close</button>
     </div>
   </div>

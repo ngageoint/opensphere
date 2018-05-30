@@ -53,7 +53,6 @@
 
   background: $body-bg;
   color: $body-color;
-  line-height: .8 * $line-height-base;
 
   &.selected:not(:hover) {
     background: $component-active-bg;
@@ -68,7 +67,6 @@
   font-style: normal;
   font-weight: normal;
   height: inherit;
-  line-height: 1;
   margin: 0 2px 0 0;
 
   &:not([class*='slick-sort-indicator-']) {
@@ -89,11 +87,16 @@
   content: '\f0dd';
 }
 
+.slick-cell {
+  align-items: center;
+  display: flex;
+}
+
 .slick-cell.color {
   text-align: center;
 
   > i {
-    font-size: 14px;
+    font-size: $font-size-base;
   }
 }
 
@@ -117,7 +120,7 @@
   .slick-cell {
     // active cell has a full border, so when not active shift text slightly so it doesn't visibly move
     &:not(.active) {
-      padding-left: 2px;
+      padding-left: .5rem;
     }
 
     &.editable {
@@ -148,12 +151,12 @@
 
 .slick-tree {
   background: $body-bg;
-  box-sizing: border-box;
+  box-sizing: content-box;
   height: 100%;
   width: 100%;
 
   .slick-cell .slick-node-ui i:first-child {
-    padding-left: 2px;
+    padding-left: .5rem;
   }
 
   .slick-header-columns {
@@ -166,7 +169,7 @@
 
   .slick-cell {
     border: 0;
-    padding: 0 2px 5px;
+    padding: 0 .5rem;
   }
 }
 
@@ -176,17 +179,16 @@
 }
 
 .tree-expand-collapse {
-  font-size: .8em;
-  width: 1.4em;
+  font-size: $font-size-base;
 }
 
 .tree-icons {
-  padding-right: 2px;
+  padding-right: .5rem;
+  vertical-align: text-bottom;
 
   i.fa {
-    line-height: 16px;
     text-align: center;
     vertical-align: middle;
-    width: 14px;
+    width: $font-size-base;
   }
 }
