@@ -33,6 +33,16 @@ plugin.file.csv.CSVExporter.LOGGER_ = goog.log.getLogger('plugin.file.csv.CSVExp
 
 
 /**
+ * Fields for CSV export.
+ * @enum {string}
+ */
+plugin.file.csv.CSVExporter.FIELDS = {
+  START_TIME: 'START_TIME',
+  END_TIME: 'END_TIME'
+};
+
+
+/**
  * @inheritDoc
  */
 plugin.file.csv.CSVExporter.prototype.processItem = function(item) {
@@ -51,6 +61,8 @@ plugin.file.csv.CSVExporter.prototype.processItem = function(item) {
       if (coords && goog.isNumber(coords[0])) {
         result[os.Fields.LAT] = String(coords[1]);
         result[os.Fields.LON] = String(coords[0]);
+        result[os.Fields.LAT_DDM] = os.geo.toDegreesDecimalMinutes(coords[1], false, false);
+        result[os.Fields.LON_DDM] = os.geo.toDegreesDecimalMinutes(coords[0], true, false);
         result[os.Fields.LAT_DMS] = os.geo.toSexagesimal(coords[1], false, false);
         result[os.Fields.LON_DMS] = os.geo.toSexagesimal(coords[0], true, false);
         result[os.Fields.MGRS] = osasm.toMGRS(coords);
@@ -63,6 +75,8 @@ plugin.file.csv.CSVExporter.prototype.processItem = function(item) {
     if (!(os.Fields.LAT in result)) {
       result[os.Fields.LAT] = '';
       result[os.Fields.LON] = '';
+      result[os.Fields.LAT_DDM] = '';
+      result[os.Fields.LON_DDM] = '';
       result[os.Fields.LAT_DMS] = '';
       result[os.Fields.LON_DMS] = '';
       result[os.Fields.MGRS] = '';
@@ -72,7 +86,13 @@ plugin.file.csv.CSVExporter.prototype.processItem = function(item) {
 
     var time = /** @type {os.time.ITime|undefined} */ (item.get(os.data.RecordField.TIME));
     if (time) {
-      result[os.Fields.TIME] = time.toISOString('/');
+      if (os.instanceOf(time, os.time.TimeRange.NAME)) {
+        // time ranges need to be put into two separate fields so that we can reimport our own exports
+        result[plugin.file.csv.CSVExporter.FIELDS.START_TIME] = time.getStartISOString();
+        result[plugin.file.csv.CSVExporter.FIELDS.END_TIME] = time.getEndISOString();
+      } else {
+        result[os.Fields.TIME] = time.toISOString();
+      }
     }
 
     if (this.fields) {

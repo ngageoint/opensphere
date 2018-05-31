@@ -71,6 +71,8 @@ os.source.column.addDefaults = function(source) {
   var hasMGRS = false;
   var hasLAT = false;
   var hasLON = false;
+  var hasLATDDM = false;
+  var hasLONDDM = false;
   var hasLATDMS = false;
   var hasLONDMS = false;
   var hasTIME = false;
@@ -84,6 +86,8 @@ os.source.column.addDefaults = function(source) {
     var name = column['name'];
     if (name) {
       hasID |= goog.string.caseInsensitiveEquals(name, os.Fields.ID);
+      hasLATDDM |= goog.string.caseInsensitiveEquals(name, os.Fields.LAT_DDM);
+      hasLONDDM |= goog.string.caseInsensitiveEquals(name, os.Fields.LON_DDM);
       hasLATDMS |= goog.string.caseInsensitiveEquals(name, os.Fields.LAT_DMS);
       hasLONDMS |= goog.string.caseInsensitiveEquals(name, os.Fields.LON_DMS);
       hasLAT |= goog.string.caseInsensitiveEquals(name, os.Fields.LAT);
@@ -112,6 +116,14 @@ os.source.column.addDefaults = function(source) {
 
   if (!hasLONDMS && hasLON) {
     source.addColumn(os.Fields.LON_DMS);
+  }
+
+  if (!hasLATDDM && hasLAT) {
+    source.addColumn(os.Fields.LAT_DDM);
+  }
+
+  if (!hasLONDDM && hasLON) {
+    source.addColumn(os.Fields.LON_DDM);
   }
 
   if (!hasTIME && source.getTimeEnabled()) {

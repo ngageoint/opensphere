@@ -5,7 +5,7 @@ describe('os.im.mapping.AbstractPositionMapping', function() {
 
   apm.field = 'TestField';
   apm.label = 'Abstract Mapping';
-  apm.customFormat = 'DMM';
+  apm.customFormat = 'DDM';
 
   it('should clone properly', function() {
     var clone = apm.clone();
