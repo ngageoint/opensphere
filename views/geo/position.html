@@ -14,8 +14,8 @@
         <i class="fa fa-globe" ng-class="{'text-primary': posCtrl.mapEnabled}"></i>
       </button>
       <popover class="mx-2" title="'Entering Position'" content="popoverContent" pos="'right'"></popover>
-      <span class="text-danger" style="margin-left: 0px" ng-show="form.pos.$error.required">Required!</span>
-      <span class="text-danger" style="margin-left: 0px" ng-show="form.pos.$invalid && !form.pos.$error.required">
+      <span class="invalid-feedback" style="margin-left: 0px" ng-show="form.pos.$error.required">Required!</span>
+      <span class="invalid-feedback" style="margin-left: 0px" ng-show="form.pos.$invalid && !form.pos.$error.required">
         Invalid position!
       </span>
     </div>
