@@ -1,4 +1,5 @@
 goog.provide('os.ui.NavBarCtrl');
+goog.provide('os.ui.NavBarEvents');
 
 goog.require('goog.dom.ViewportSizeMonitor');
 goog.require('os.ui.list.ListEventType');
@@ -65,7 +66,7 @@ os.ui.NavBarCtrl = function($scope, $element) {
    * @type {string}
    * @private
    */
-  this['breakpointSize'] = 'lg';
+  this['breakpointSize'] = this.scope['breakpointSize'] || 'lg';
 
   /**
    * Bootstrap navbar toggler breakpoint value (computed from size setting)
@@ -77,6 +78,10 @@ os.ui.NavBarCtrl = function($scope, $element) {
   os.dispatcher.listen(os.ui.nav.EventType.HIDE_NAV, this.onHideNavbar_, false, this);
 
   goog.events.listen(window, goog.events.EventType.SCROLL, this.formatNav_, false, this);
+
+  os.dispatcher.listen(os.ui.nav.EventType.BG_TRANSPARENT, this.setTransparent_.bind(this));
+
+  os.dispatcher.listen(os.ui.nav.EventType.BG_OPAQUE, this.setOpaque_.bind(this));
 
   os.ui.waitForAngular(this.onResize.bind(this));
   this.vsm.listen(goog.events.EventType.RESIZE, this.onResize, false, this);
@@ -100,6 +105,8 @@ os.ui.NavBarCtrl.DEFAULT_RESIZE_PX = 1350;
 os.ui.NavBarCtrl.prototype.destroy = function() {
   goog.events.unlisten(window, goog.events.EventType.SCROLL, this.formatNav_, false, this);
   os.dispatcher.unlisten(os.ui.nav.EventType.HIDE_NAV, this.onHideNavbar_, false, this);
+  os.dispatcher.unlisten(os.ui.nav.EventType.BG_TRANSPARENT, this.setTransparent_, false, this);
+  os.dispatcher.unlisten(os.ui.nav.EventType.BG_OPAQUE, this.setOpaque_, false, this);
 
   this.scope = null;
   this.element = null;
@@ -199,4 +206,20 @@ os.ui.NavBarCtrl.prototype.formatNav_ = function() {
     this.scope['filled'] = false;
   }
   os.ui.apply(this.scope);
+};
+
+
+/**
+ * @private
+ */
+os.ui.NavBarCtrl.prototype.setTransparent_ = function() {
+  this.scope['bgTransparent'] = 'true';
+};
+
+
+/**
+ * @private
+ */
+os.ui.NavBarCtrl.prototype.setOpaque_ = function() {
+  this.scope['bgTransparent'] = 'false';
 };
