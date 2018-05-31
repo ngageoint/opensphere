@@ -1,47 +1,65 @@
 // Overrides for simpleMDE
-
-.c-simplemde__form .editor-toolbar.fullscreen {
-  background-color: $body-bg;
-  height: 3.5rem;
-  z-index: $zindex-modal;
-}
-
-.c-simplemde__form .CodeMirror-fullscreen {
-  z-index: $zindex-modal;
-}
-
-.c-simplemde__form .CodeMirror {
-  background-color: $body-bg;
-  color: $body-color;
-}
-
-.c-simplemde__form .editor-toolbar a {
-  color: $body-color !important;
-}
-
-.c-simplemde__form.ng-dirty.ng-invalid .editor-toolbar {
-  border-color: $danger;
-}
-
-.c-simplemde__form.ng-dirty.ng-invalid .CodeMirror {
-  border-color: $danger;
-}
-
-.c-simplemde__preview {
-  img {
-    @include img-fluid;
+.c-simplemde {
+  .c-simplemde__form .editor-toolbar.fullscreen {
+    background-color: $body-bg;
+    height: 3.5rem;
+    z-index: $zindex-modal;
   }
-}
 
-.c-simplemde__form .editor-preview {
-  background-color: $body-bg;
-}
+  .c-simplemde__form .CodeMirror-fullscreen {
+    z-index: $zindex-modal;
+  }
 
-.c-simplemde__form .editor-preview-side {
-  background-color: $body-bg;
-  z-index: $zindex-modal;
-}
+  .c-simplemde__form .CodeMirror-fullscreen,
+  .c-simplemde__form .CodeMirror {
+    background-color: $body-bg;
+    color: $body-color;
+  }
 
-.modal-content .CodeMirror:not(.fullscreen) {
-  height: 10rem;
+  .c-simplemde__form .editor-toolbar a {
+    color: $body-color !important;
+  }
+
+  .c-simplemde__form.ng-dirty.ng-invalid .editor-toolbar {
+    border-color: $danger;
+  }
+
+  .c-simplemde__form.ng-dirty.ng-invalid .CodeMirror {
+    border-color: $danger;
+  }
+
+  .c-simplemde__preview {
+    img {
+      @include img-fluid;
+    }
+  }
+
+  .c-simplemde__form .editor-preview {
+    background-color: $body-bg;
+  }
+
+  .c-simplemde__form .editor-preview-side {
+    background-color: $body-bg;
+    z-index: $zindex-modal;
+  }
+
+  .modal-content .CodeMirror:not(.fullscreen) {
+    height: 10rem;
+  }
+
+  .editor-toolbar.fullscreen,
+  .editor-toolbar {
+    background-color: $table-head-bg;
+    color: $table-head-color;
+
+    i.separator {
+      border-left-color: $body-color;
+      border-right-color: $body-bg;
+    }
+  }
+
+  .editor-toolbar.fullscreen:after,
+  .editor-toolbar.fullscreen:before {
+    background: transparent;
+  }
 }
