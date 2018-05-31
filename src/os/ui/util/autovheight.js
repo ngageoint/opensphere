@@ -4,6 +4,7 @@ goog.provide('os.ui.util.autoVHeightDirective');
 goog.require('goog.userAgent');
 goog.require('os.ui');
 goog.require('os.ui.Module');
+goog.require('os.ui.windowCommonElements');
 
 
 /**
@@ -121,6 +122,10 @@ os.ui.util.AutoVHeightCtrl.prototype.onResize_ = function() {
     var winHeight = window.innerHeight;
 
     var siblingHeight = 0;
+    goog.object.getValues(os.ui.windowCommonElements).forEach(function(sibling) {
+      siblingHeight += ($(/** @type {string} */ (sibling)).outerHeight());
+    });
+
     if (this.scope_['siblings']) {
       $.makeArray($(this.scope_['siblings'])).forEach(function(sibling) {
         siblingHeight += ($(/** @type {string} */ (sibling)).outerHeight());
