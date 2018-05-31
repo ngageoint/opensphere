@@ -66,7 +66,7 @@ os.ui.menu.MenuButtonCtrl = function($scope, $element) {
    * @type {string}
    * @protected
    */
-  this.menuPosition = 'left top';
+  this.menuPosition = 'left top+3';
 
   $scope.$on('$destroy', this.dispose.bind(this));
 };
@@ -102,7 +102,8 @@ os.ui.menu.MenuButtonCtrl.prototype.openMenu = function() {
       this.menu.open(undefined, {
         my: this.menuPosition,
         at: this.btnPosition,
-        of: this.element || os.ui.windowSelector.CONTAINER
+        of: this.element || os.ui.windowSelector.CONTAINER,
+        within: $(window)
       });
     }
   }
