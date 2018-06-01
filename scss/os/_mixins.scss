@@ -41,3 +41,11 @@
     stroke-width: 3px;
   }
 }
+
+@mixin hoverable-link {
+  color: $body-color;
+
+  &:hover {
+    text-decoration: none;
+  }
+}
