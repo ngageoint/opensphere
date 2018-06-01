@@ -29,7 +29,7 @@ os.ui.measureButtonDirective = function() {
       ' ng-class="{active: measuring}">' +
       '<i class="fa fa-arrows-h"></i> {{showLabel ? \'Measure\' : \'\'}}' +
       '</button>' +
-      '<button class="btn btn-secondary dropdown-toggle" ng-click="ctrl.openMenu()"' +
+      '<button class="btn btn-secondary dropdown-toggle dropdown-toggle-split" ng-click="ctrl.openMenu()"' +
       ' ng-class="{active: menu}">' +
       '</button></div>'
   };
