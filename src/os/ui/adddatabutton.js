@@ -29,7 +29,7 @@ os.ui.addDataButtonDirective = function() {
       '<button class="btn btn-secondary" title="Open a file or URL" ng-click="ctrl.open()">' +
       '<i class="fa fa-folder-open"></i>' +
       '</button>' +
-      '<button class="btn btn-secondary dropdown-toggle" ng-click="ctrl.openMenu()"' +
+      '<button class="btn btn-secondary dropdown-toggle dropdown-toggle-split" ng-click="ctrl.openMenu()"' +
       ' ng-class="{active: menu}">' +
       '</button></div>'
   };
