@@ -187,9 +187,10 @@ os.state.v4.BaseLayerState.prototype.hasFileSystemData = function(layerOptions) 
  */
 os.state.v4.BaseLayerState.prototype.isValid = function(layer) {
   try {
-    // skip the layer if it doesn't have options to persist, doesn't have a type, or is a one-off (loadOnce) layer
+    // skip the layer if it doesn't have options to persist, doesn't have a type, is a one-off (loadOnce) layer,
+    // or it shouldn't be saved (skipState)
     var layerOptions = layer.getLayerOptions();
-    if (!layerOptions || !layerOptions['type'] || layerOptions['loadOnce']) {
+    if (!layerOptions || !layerOptions['type'] || layerOptions['loadOnce'] || layerOptions['skipState']) {
       return false;
     }
 
@@ -300,6 +301,13 @@ os.state.v4.BaseLayerState.prototype.saveInternal = function(options, rootObj) {
         if (!hasLocked && source instanceof os.source.Vector) {
           hasLocked = source.isLocked();
         }
+      }
+
+      var layerOptions = layer.getLayerOptions();
+      if (layerOptions && layerOptions['skipState']) {
+        var msg = 'The \'' + layer.getTitle() + '\' layer is of a type which can not be saved in state files. ' +
+            'That layer will not be included. The state file may look different from what you currently see!';
+        os.alert.AlertManager.getInstance().sendAlert(msg, os.alert.AlertEventSeverity.WARNING);
       }
     }
 
