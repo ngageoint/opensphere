@@ -125,6 +125,11 @@
   display: flex;
   padding: 2px;
 
+  a {
+    color: $link-color;
+    padding: 0 5px;
+  }
+
   &:first-child {
     border-left: 1px solid $table-border-color;
     padding-right: 1px;
