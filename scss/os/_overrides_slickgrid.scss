@@ -2,7 +2,7 @@
 // These selectors will not conform to all of our standards as they alter the styling of elements internal to slickgrid
 
 .slick-grid {
-  border: 1px solid $border-color;
+  // border: 1px solid $border-color;
   box-sizing: content-box;
   height: 100%;
   width: 100%;
@@ -13,12 +13,6 @@
 
   .odd {
     background: $body-bg;
-  }
-
-  .slick-header-column {
-    border-color: $table-dark-border-color;
-    box-sizing: content-box;
-    height: auto;
   }
 
   &.no-header {
@@ -35,6 +29,43 @@
       margin: 0;
       padding: 0;
     }
+  }
+
+  .slick-header,
+  .slick-header-column {
+    background: $body-bg;
+    color: $body-color;
+  }
+
+  .slick-header {
+    border: $table-border-color;
+  }
+
+  .slick-header-column {
+    border-bottom: 1px solid $table-dark-border-color;
+    border-right-color: $table-dark-border-color;
+    border-top: 1px solid $table-dark-border-color;
+    box-sizing: content-box;
+    height: auto;
+
+    .ui-state-hover {
+      background: $table-hover-bg;
+      border-color: $table-border-color;
+      color: $body-color;
+    }
+
+    &:first-child {
+      border-left: 1px solid $table-dark-border-color;
+      padding-left: 3px;
+    }
+
+    &:last-child {
+      border-right-color: $table-dark-border-color;
+    }
+  }
+
+  .slick-resizable-handle {
+    color: $table-border-color;
   }
 }
 
@@ -89,7 +120,19 @@
 
 .slick-cell {
   align-items: center;
+  border-bottom-color: $table-border-color;
+  border-right-color: $table-border-color;
   display: flex;
+  padding: 2px;
+
+  &:first-child {
+    border-left: 1px solid $table-border-color;
+    padding-right: 1px;
+  }
+
+  &:last-child {
+    border-right-style: solid;
+  }
 }
 
 .slick-cell.color {
