@@ -69,7 +69,7 @@ os.ui.capture.TimelineRenderer.prototype.getTimelineHeight = function() {
   if (timelineEl) {
     var rect = timelineEl.getBoundingClientRect();
     if (rect) {
-      return rect.height;
+      return rect.height * os.capture.getPixelRatio();
     }
   }
 
