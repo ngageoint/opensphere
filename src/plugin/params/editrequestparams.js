@@ -366,9 +366,7 @@ plugin.params.launchParamsEdit = function(layer, params) {
     'width': 400,
     'min-width': 400,
     'max-width': 0,
-    'height': 300,
-    'min-height': 200,
-    'max-height': 0,
+    'height': 'auto',
     'show-close': true,
     'modal': true
   };
