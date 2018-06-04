@@ -326,11 +326,14 @@ osx.window.ConfirmOptions;
 /**
  * @typedef {{
  *   confirm: (Function|undefined),
+ *   confirmValue: (*|undefined),
  *   cancel: (Function|undefined),
  *   yesText: (string|undefined),
+ *   yesButtonClass: (string|undefined),
  *   yesIcon: (string|undefined),
  *   noText: (string|undefined),
  *   noIcon: (string|undefined),
+ *   noButtonClass: (string|undefined),
  *
  *   windowOptions: (osx.window.WindowOptions|undefined),
  *

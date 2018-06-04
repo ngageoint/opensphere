@@ -1,50 +1,46 @@
-<div class="edit-request-params window-content-wrapper">
-  <div class="window-content">
+<div class="d-flex flex-column u-flex-grow">
+  <div class="modal-body">
     <div class="c-paramsform">
-      <form class="form-horizontal form-compact" name="form">
-        <table class="w-100">
-          <tr ng-repeat-start="url in ctrl.urls track by $index" title="URL used for server requests">
-            <td style="float:left;width:50px;">{{ctrl.getUrlLabel($index)}}:</td>
-            <td class="w-100">
+      <form class="form-horizontal was-validated" name="form">
+        <div ng-repeat="url in ctrl.urls track by $index" title="URL used for server requests">
+          <div class="row no-gutters mt-1">
+            <div class="col-auto">{{ctrl.getUrlLabel($index)}}:</div>
+            <div class="col-10 ml-3 mr-3">
               <input type="text" name="url{{$index}}" class="w-100"
                   ng-model="ctrl.urls[$index]" ng-maxlength="1000" ng-change="ctrl.testValid()"
                   placeholder="Server URL" />
-            </td>
-            <td>
-              <button class="btn btn-default" type="button" ng-click="ctrl.removeUrl($index)"
+            </div>
+            <div class="col-auto">
+              <button class="btn btn-outline-danger btn-sm" type="button" ng-click="ctrl.removeUrl($index)"
                   ng-if="ctrl.urls.length > 1" title="Remove this URL">
-                <i class="fa fa-times red-icon"></i>
+                <i class="fa fa-times"></i>
               </button>
-            </td>
-          </tr>
-          <tr ng-repeat-end>
-            <td></td>
-            <td>
-              <span class="help-inline" data-ng-show="form.url{{$index}}.$error.maxlength">
+            </div>
+          </div>
+          <div class="row justify-content-center mt-1">
+            <div class="col-auto">
+              <span class="invalid-feedback d-block" data-ng-show="form.url{{$index}}.$error.maxlength">
                 URL is too long!
               </span>
-            </td>
-            <td></td>
-          </tr>
-        </table>
+            </div>
+          </div>
+        </div>
       </form>
     </div>
-    <div class="c-gridcontrols bot-gapxs" ng-if="ctrl.multiUrl || ctrl.params">
-      <button class="btn btn-default" type="button" ng-if="ctrl.multiUrl"
-          ng-click="ctrl.addUrl()"
+    <div class="c-gridcontrols mb-1" ng-if="ctrl.multiUrl || ctrl.params">
+      <button class="btn btn-outline-success btn-secondary" type="button" ng-if="ctrl.multiUrl" ng-click="ctrl.addUrl()"
           title="Add an alternate server URL">
-        <i class="fa fa-plus green-icon"></i>
+        <i class="fa fa-plus"></i>
         Add URL
       </button>
-      <button class="btn btn-default" type="button" ng-if="ctrl.params" ng-click="ctrl.addRow()"
+      <button class="btn btn-outline-success btn-secondary" type="button" ng-if="ctrl.params" ng-click="ctrl.addRow()"
           title="Add a new parameter row">
-        <i class="fa fa-plus green-icon"></i>
+        <i class="fa fa-plus"></i>
         Add Parameter
       </button>
-      <button class="btn btn-default" type="button" ng-if="ctrl.params" ng-disabled="!ctrl.selected"
-          ng-click="ctrl.removeRow()"
+      <button class="btn btn-outline-danger btn-secondary" type="button" ng-if="ctrl.params" ng-disabled="!ctrl.selected" ng-click="ctrl.removeRow()"
           title="Remove the selected parameter row">
-        <i class="fa fa-minus red-icon"></i>
+        <i class="fa fa-minus"></i>
         Remove Parameter
       </button>
     </div>
@@ -58,21 +54,21 @@
       </slickgrid>
     </div>
   </div>
-  <div class="window-footer">
+  <div class="modal-footer">
     <div class="pull-left" ng-if="ctrl.errorMsg">
       <i class="fa fa-warning orange-icon"></i>
       {{ctrl.errorMsg}}
     </div>
     <div class="pull-right">
-      <button type="submit" class="btn btn-default" ng-click="ctrl.confirm()"
+      <button type="submit" class="btn btn-primary" ng-click="ctrl.confirm()"
           ng-disabled="!ctrl.testValid()"
           title="Apply parameter changes and refresh the layer.">
-        <i class="fa fa-check lt-blue-icon"></i>
+        <i class="fa fa-check"></i>
         Apply
       </button>
-      <button type="button" class="btn btn-default" ng-click="ctrl.cancel()"
+      <button type="button" class="btn btn-secondary" ng-click="ctrl.cancel()"
           title="Cancel the parameter edit, discarding all changes.">
-        <i class="fa fa-ban red-icon"></i>
+        <i class="fa fa-ban"></i>
         Cancel
       </button>
     </div>
