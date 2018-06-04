@@ -139,9 +139,9 @@ os.ui.header.ScrollHeaderCtrl.prototype.updatePositions_ = function() {
     this.isFixed_ = true;
     this.resetHeight_ = /** @type {number} */ (this.scrollEl_.scrollTop());
     if (!this.supportsSticky_) {
-      this.element_.addClass('subnav-fixed');
-      this.element_.css('top', headerHeight + 'px');
+      this.element_.addClass('position-fixed');
     }
+    this.element_.css('top', headerHeight + 'px');
 
     this.scope_.$emit(os.ui.header.ScrollHeaderEvents.STICK);
   } else if (this.isFixed_ && this.scrollEl_.scrollTop() <= this.resetHeight_) {
@@ -151,9 +151,9 @@ os.ui.header.ScrollHeaderCtrl.prototype.updatePositions_ = function() {
         this.filler_.remove();
         this.filler_ = null;
       }
-      this.element_.removeClass('subnav-fixed');
-      this.element_.css('top', '');
+      this.element_.removeClass('position-fixed');
     }
+    this.element_.css('top', '');
     this.scope_.$emit(os.ui.header.ScrollHeaderEvents.UNSTICK);
   }
 };
