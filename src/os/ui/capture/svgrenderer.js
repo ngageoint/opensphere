@@ -24,7 +24,9 @@ os.ui.capture.SvgRenderer.prototype.getCanvas = function() {
   return new goog.Promise(function(resolve, reject) {
     var svgElement = this.getRenderElement();
     if (svgElement) {
-      svgAsDataUri(svgElement, null, this.onSvgUriReady_.bind(this, resolve, reject));
+      svgAsDataUri(svgElement, {
+        'scale': os.capture.getPixelRatio()
+      }, this.onSvgUriReady_.bind(this, resolve, reject));
     } else {
       resolve(null);
     }

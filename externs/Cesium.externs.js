@@ -2623,22 +2623,12 @@ Cesium.DeveloperError = function(opt_msg) {};
 Cesium.RuntimeError = function(opt_msg) {};
 
 
-
-/**
- * @typedef {{
- *   text: (string|undefined),
- *   imageUrl: (string|undefined),
- *   link: (string|undefined),
- * }}
- */
-Cesium.CreditOptions;
-
-
 /**
  * @constructor
- * @param {Cesium.CreditOptions} options
+ * @param {string} html
+ * @param {boolean=} opt_showOnScreen
  */
-Cesium.Credit = function(options) {};
+Cesium.Credit = function(html, opt_showOnScreen) {};
 
 
 
@@ -3785,6 +3775,17 @@ Cesium.Scene.prototype.screenSpaceCameraController;
  * @type {Cesium.TerrainProvider|undefined}
  */
 Cesium.Scene.prototype.terrainProvider;
+
+
+/**
+ * @type {boolean}
+ */
+Cesium.Scene.prototype.requestRenderMode;
+
+
+/**
+ */
+Cesium.Scene.prototype.requestRender = function() {};
 
 
 /**
