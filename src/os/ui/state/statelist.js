@@ -97,11 +97,11 @@ os.ui.state.StateListCtrl.prototype.destroy_ = function() {
  * @private
  */
 os.ui.state.StateListCtrl.prototype.createChecklistItem_ = function(descriptor, opt_enabled) {
-  return /** @type {!osx.ChecklistItem} */ ({
+  return {
     enabled: goog.isDef(opt_enabled) ? opt_enabled : false,
     label: descriptor.getTitle(),
     item: descriptor
-  });
+  };
 };
 
 
