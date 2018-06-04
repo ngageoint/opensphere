@@ -370,3 +370,13 @@ os.capture.isTainted = function(canvas) {
   }
   return false;
 };
+
+
+/**
+ * Get the pixel ratio for the canvas created by capture. Override this function in capture plugins to replace the
+ * default behavior.
+ * @return {number} The pixel ratio for the output canvas.
+ */
+os.capture.getPixelRatio = function() {
+  return 1;
+};

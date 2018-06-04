@@ -4,8 +4,10 @@
       <div class="col-5">
         <slicktree x-data="settingsNodes" selected="selected" show-root="false"></slicktree>
       </div>
-      <div class="col position-relative">
-        <uiswitch class="h-100 position-absolute u-overflow-y-auto" items="selected" directive-function="setCon.getUi" generic="defaultsettingui"></uiswitch>
+      <div class="col pl-0">
+        <div class="h-100 col position-absolute u-overflow-y-auto">
+          <uiswitch class="h-100" items="selected" directive-function="setCon.getUi" generic="defaultsettingui"></uiswitch>
+        </div>
       </div>
     </div>
   </div>

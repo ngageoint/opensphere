@@ -1,5 +1,5 @@
 <div class="js-navtop w-100">
-  <header class="c-navtop__header navbar navbar-expand-{{navTop.breakpointSize}} navbar-dark o-navtop" ng-class="{ 'p-3 c-navtop__transparent': bgTransparent === 'true', 'bg-dark': bgTransparent !== 'true', 'c-navtop__header-light navbar-light border-dark' : bgTransparent === 'true' && filled, 'navbar-dark border-light' : bgTransparent === 'true' && !filled }" ng-hide="hideNav">
+  <header class="c-navtop__header navbar navbar-expand-{{navTop.breakpointSize}} o-navtop" ng-class="{ 'p-3 c-navtop__transparent': bgTransparent === 'true', 'bg-dark': bgTransparent !== 'true', 'c-navtop__header-light navbar-light border-dark' : bgTransparent === 'true' && filled, 'navbar-dark border-light' : bgTransparent === 'true' && !filled, 'navbar-dark' : bgTransparent !== 'true' }" ng-hide="hideNav">
     <a ng-if="brand" class="navbar-brand c-navtop__navbar-brand" href="{{brand.target}}">
       <img ng-if="!svg" class="img-fluid" buttonheight ng-src="{{brand.src}}"/>
       <span ng-if="svg" ng-include buttonheight src="brand.src"></span>

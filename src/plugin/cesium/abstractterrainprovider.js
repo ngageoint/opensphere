@@ -21,18 +21,11 @@ plugin.cesium.AbstractTerrainProvider = function(options) {
   // you change the property name!
   //
 
-  var credit = options.credit;
-  if (goog.isString(credit)) {
-    var creditOptions = /** @type {Cesium.CreditOptions} */ ({});
-    creditOptions.text = credit;
-    credit = new Cesium.Credit(creditOptions);
-  }
-
   /**
    * @type {Cesium.Credit|undefined}
    * @private
    */
-  this.credit_ = credit;
+  this.credit_ = goog.isString(options.credit) ? new Cesium.Credit(options.credit) : undefined;
 
   /**
    * @type {Cesium.Event}
