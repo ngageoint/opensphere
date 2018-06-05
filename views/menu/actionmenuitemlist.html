@@ -1,4 +1,4 @@
-<div class="c-action-menu-item-list" ng-init="menuLimit=100">
+<div class="c-action-menu-item-list js-action-menu-item-list" ng-init="menuLimit=100">
 
   <div ng-repeat="menuItem in actions | limitTo : menuLimit"
     ng-init="hasSubActions=menuItem.getItems;showSubMenu=isFlat;isSeparator=menuItem.isSeparator;isSeparatorHeader=menuItem.isSeparatorHeader;isAction=menuItem.getAction"
