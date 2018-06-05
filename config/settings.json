@@ -138,7 +138,7 @@
     "themes": {
       "none": "",
       "Default": "overrides_darkly_compact",
-      "Light": "overrides_flatly_",
+      "Light": "overrides_flatly",
       "Light Compact": "overrides_flatly_compact",
       "Dark": "overrides_darkly",
       "Dark Compact": "overrides_darkly_compact",
