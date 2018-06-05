@@ -33,15 +33,17 @@ plugin.capture.MapOverlayRenderer.prototype.getCanvas = function() {
   // pixels do not directly correspond to CSS pixels.
 
   if (original) {
-    // create a new canvas and write the overlay to it
-    canvas = /** @type {HTMLCanvasElement} */ (document.createElement('canvas'));
-    canvas.width = original.width;
-    canvas.height = original.height;
-
     // since OpenLayers allows for specifying the pixel ratio on a map (rather than always
     // using window.devicePixelRatio directly), we will calculate it
+    var pixelRatio = os.capture.getPixelRatio();
     var originalRect = original.getBoundingClientRect();
-    var pixelRatio = canvas.width / originalRect.width;
+    var origPixelRatio = original.width / originalRect.width;
+    var pixelScale = pixelRatio / origPixelRatio;
+
+    // create a new canvas and write the overlay to it
+    canvas = /** @type {HTMLCanvasElement} */ (document.createElement('canvas'));
+    canvas.width = original.width * pixelScale;
+    canvas.height = original.height * pixelScale;
 
     var ctx = canvas.getContext('2d');
     var bgColor = os.settings.get(['bgColor'], '#000');
@@ -50,8 +52,10 @@ plugin.capture.MapOverlayRenderer.prototype.getCanvas = function() {
     ctx.fillStyle = bgColor;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // copy the overview map canvas to our separate canvas
-    os.capture.overlayCanvas(original, canvas, 0, 0);
+    // copy the overview map canvas to our separate canvas, scaling the image if necessary.
+    ctx.drawImage(original,
+        0, 0, original.width, original.height,
+        0, 0, canvas.width, canvas.height);
 
     // draw an opaque border to mimic the CSS border
     ctx.strokeStyle = bgColor;

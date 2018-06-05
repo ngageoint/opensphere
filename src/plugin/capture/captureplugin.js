@@ -73,6 +73,9 @@ plugin.capture.CapturePlugin.prototype.init = function() {
     });
     child.beforeRender = plugin.capture.recordingBeforeRender_;
   }
+
+  // replace the capture pixel ratio function to use the map pixel ratio
+  os.capture.getPixelRatio = plugin.capture.getMapPixelRatio;
 };
 
 
