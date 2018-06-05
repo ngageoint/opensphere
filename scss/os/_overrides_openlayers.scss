@@ -59,6 +59,10 @@
   top: 102px;
 }
 
+.ol-zoom-level {
+  min-width: 15rem;
+}
+
 .ol-zoom-level,
 .mouse-position {
   font-family: monospace;
@@ -67,8 +71,10 @@
 
 .ol-scale-line {
   background: none;
+  min-width: 11rem;
   padding: 0;
   position: inherit;
+  text-align: right;
 }
 
 
