@@ -4,6 +4,40 @@
  */
 goog.provide('plugin.cesium.mixin');
 
+goog.require('os.net.Request');
+
+
+/**
+ * This "fixes" Cesium's lackluster crossOrigin support by setting crossOrigin on the image to an actual value.
+ * Firefox will not be able to load tiles without this change.
+ * @param {string} url
+ * @param {boolean} crossOrigin
+ * @param {*} deferred
+ */
+plugin.cesium.mixin.createImage = function(url, crossOrigin, deferred) {
+  var image = new Image();
+
+  /**
+   * @param {Event} e
+   */
+  image.onload = function(e) {
+    deferred.resolve(image);
+  };
+
+  /**
+   * @param {Event} e
+   */
+  image.onerror = function(e) {
+    deferred.reject(e);
+  };
+
+  if (crossOrigin) {
+    image.crossOrigin = os.net.getCrossOrigin(url);
+  }
+
+  image.src = url;
+};
+
 
 /**
  * Load Cesium mixins.
@@ -15,43 +49,37 @@ plugin.cesium.mixin.loadCesiumMixins = function() {
   }
 
   /**
-   * This "fixes" Cesium's lackluster crossOrigin support by setting crossOrigin on the image to an actual value.
-   * Firefox will not be able to load tiles without this change.
-   * @param {string} url
-   * @param {boolean} crossOrigin
-   * @param {*} deferred
    * @suppress {accessControls|duplicate}
    */
-  Cesium.loadImage.createImage = function(url, crossOrigin, deferred) {
-    var image = new Image();
-
-    /**
-     * @param {Event} e
-     */
-    image.onload = function(e) {
-      deferred.resolve(image);
-    };
-
-    /**
-     * @param {Event} e
-     */
-    image.onerror = function(e) {
-      deferred.reject(e);
-    };
-
-    if (crossOrigin) {
-      image.crossOrigin = os.net.getCrossOrigin(url);
-    }
-
-    image.src = url;
-  };
-
+  Cesium.Resource._Implementations.createImage = plugin.cesium.mixin.createImage;
 
   /**
-   * @suppress {accessControls|duplicate}
+   * Hook Cesium into our request stack
+   * @param {Cesium.ResourceFetchOptions} options
+   * @return {Cesium.Promise<*>}
    */
-  Cesium.loadImage.defaultCreateImage = Cesium.loadImage.createImage;
+  Cesium.Resource.prototype.fetch = function(options) {
+    var req = new os.net.Request(options.url || this.url);
+    var headers = options.headers || this.headers;
 
+    if (headers) {
+      req.setHeaders(headers);
+    }
+
+    if (options.responseType) {
+      req.setResponseType(options.responseType);
+    }
+
+    var deferred = Cesium.when.defer();
+
+    req.getPromise().then(function(response) {
+      deferred.resolve(response);
+    }).thenCatch(function(reason) {
+      deferred.reject(reason);
+    });
+
+    return deferred.promise;
+  };
 
   /**
    * @param {Cesium.Context} context

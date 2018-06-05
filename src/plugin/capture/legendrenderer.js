@@ -31,9 +31,11 @@ plugin.capture.LegendRenderer.prototype.getPosition = function(canvas) {
   if (mapCanvas && legendCanvas) {
     // determine the legend's position over the map
     var mapRect = mapCanvas.getBoundingClientRect();
+    var pixelRatio = mapCanvas.width / mapRect.width;
+
     var legendRect = legendCanvas.getBoundingClientRect();
-    x = legendRect.left;
-    y = legendRect.top - mapRect.top;
+    x = legendRect.left * pixelRatio;
+    y = (legendRect.top - mapRect.top) * pixelRatio;
   } else {
     // default to the settings values, or 0,0 if not present
     x = /** @type {number} */ (os.settings.get(os.config.LegendSetting.LEFT, 0));

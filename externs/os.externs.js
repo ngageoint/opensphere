@@ -201,47 +201,16 @@ osx.legend.LegendOptions;
 osx.legend.PluginOptions;
 
 
-
 /**
- * Item to display in the checklist directive.
- * @constructor
+ * @typedef {{
+ *   enabled: boolean,
+ *   item: *,
+ *   label: (string|null|undefined),
+ *   detailText: (string|null|undefined),
+ *   tooltip: (string|null|undefined)
+ * }}
  */
-osx.ChecklistItem = function() {};
-
-
-/**
- * If the item is enabled.
- * @type {boolean}
- */
-osx.ChecklistItem.prototype.enabled;
-
-
-/**
- * Data the item maps back to.
- * @type {*}
- */
-osx.ChecklistItem.prototype.item;
-
-
-/**
- * The primary label used for sorting the checklist.
- * @type {string}
- */
-osx.ChecklistItem.prototype.label;
-
-
-/**
- * Displayed next to the label.
- * @type {string}
- */
-osx.ChecklistItem.prototype.detailText;
-
-
-/**
- * Tooltip to display on hover.
- * @type {string}
- */
-osx.ChecklistItem.prototype.tooltip;
+osx.ChecklistItem;
 
 
 /**
@@ -326,11 +295,14 @@ osx.window.ConfirmOptions;
 /**
  * @typedef {{
  *   confirm: (Function|undefined),
+ *   confirmValue: (*|undefined),
  *   cancel: (Function|undefined),
  *   yesText: (string|undefined),
+ *   yesButtonClass: (string|undefined),
  *   yesIcon: (string|undefined),
  *   noText: (string|undefined),
  *   noIcon: (string|undefined),
+ *   noButtonClass: (string|undefined),
  *
  *   windowOptions: (osx.window.WindowOptions|undefined),
  *

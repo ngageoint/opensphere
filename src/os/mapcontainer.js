@@ -1327,7 +1327,7 @@ os.MapContainer.prototype.setWebGLEnabled = function(enabled, opt_silent) {
  * @private
  */
 os.MapContainer.prototype.setWebGLEnabled_ = function(value) {
-  if (this.webGLRenderer_ && this.is3DSupported_) {
+  if (this.webGLRenderer_ && this.webGLRenderer_.isInitialized() && this.is3DSupported_) {
     this.webGLRenderer_.setEnabled(value);
 
     var metricKey = value ? os.metrics.keys.Map.MODE_3D : os.metrics.keys.Map.MODE_2D;
