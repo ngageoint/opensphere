@@ -104,6 +104,12 @@ goog.define('os.AREA_STORAGE_KEY', 'areas');
 
 
 /**
+ * @define {string} Area manager's storage save key for all current areas, including temps
+ */
+goog.define('os.ALL_AREA_STORAGE_KEY', 'areasAll');
+
+
+/**
  * @type {number}
  * @private
  */
