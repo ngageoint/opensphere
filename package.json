@@ -21,6 +21,9 @@
     "index": "index.js",
     "scss": "scss/opensphere.scss",
     "themes": [
+      "overrides_slate",
+      "overrides_slate_cozy",
+      "cozy",
       "cerulean",
       "cosmo",
       "cyborg",
