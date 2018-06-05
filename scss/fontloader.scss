@@ -1,4 +1,5 @@
 // The purpose of this file is to convert any google fonts into local fonts if it exists in this theme
+// sass-lint:disable-all
 @function str-replace($string, $search, $replace: '') {
   $index: str-index($string, $search);
 
