@@ -201,7 +201,7 @@ os.ui.file.ExportManager.prototype.onExportComplete_ = function(exporter, persis
 
   if (result && name) {
     // append the extension if it hasn't been already
-    if (!goog.string.endsWith(name, extension)) {
+    if (!goog.string.endsWith(name, extension) && extension.length > 1) {
       name += extension;
     }
 

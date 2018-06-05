@@ -16,12 +16,16 @@
 
 
 // Our Utility Classes
-.u-pointer-events-none {
-  pointer-events: none;
-}
-
 .u-pointer-events-all {
   pointer-events: all;
+}
+
+.u-pointer-events-auto {
+  pointer-events: auto;
+}
+
+.u-pointer-events-none {
+  pointer-events: none;
 }
 
 .u-flex-grow {
