@@ -1,0 +1,19 @@
+@import 'slate/variables';
+
+$border-color: $gray-900;
+$input-bg: #555;
+$input-color: $white;
+$input-border-color: $gray-900;
+$input-group-addon-border-color: $gray-900;
+$input-group-addon-bg: $gray-600;
+$input-placeholder-color: $gray-500;
+$close-color: $white;
+$close-text-shadow: $black;
+
+// Original button padding (slate overrides this)
+$input-btn-padding-y: .375rem;
+$input-btn-padding-x: .75rem;
+// Original Nav Link (slate overrides this)
+$nav-link-padding-y: .5rem;
+$navbar-padding-y: .5rem;
+$navbar-padding-x: 1rem;
