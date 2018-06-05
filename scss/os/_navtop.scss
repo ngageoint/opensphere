@@ -5,14 +5,17 @@
 .c-navtop__navbar-brand svg {
   max-height: 1.75em;
   max-width: 5em;
+  vertical-align: middle;
 }
 
 .c-navtop__navbar-brand img,
-.c-navtop__navbar-brand g {
+.c-navtop__navbar-brand g,
+.c-navtop__navbar-brand g path {
   fill: $navbar-dark-color;
 }
 
-.c-navtop__navbar-brand:hover g {
+.c-navtop__navbar-brand:hover g,
+.c-navtop__navbar-brand:hover g path {
   fill: $navbar-dark-hover-color;
 }
 
@@ -54,10 +57,12 @@
   color: color-yiq(theme-color('light'));
 }
 
-.c-navtop__header-light .c-navtop__navbar-brand g {
+.c-navtop__header-light .c-navtop__navbar-brand g,
+.c-navtop__header-light .c-navtop__navbar-brand g path {
   fill: $navbar-light-color;
 }
 
-.c-navtop__header-light .c-navtop__navbar-brand:hover g {
+.c-navtop__header-light .c-navtop__navbar-brand:hover g,
+.c-navtop__header-light .c-navtop__navbar-brand:hover g path {
   fill: $navbar-light-hover-color;
 }
