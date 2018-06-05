@@ -1,0 +1,24 @@
+@import 'darkly/bootswatch';
+
+.bg-dark {
+  background-color: $dark !important;
+
+  &.navbar-dark .navbar-nav {
+    .nav-link:focus,
+    .nav-link:hover,
+    .active > .nav-link {
+      color: $white !important;
+    }
+  }
+
+  &.navbar {
+    input,
+    .btn {
+      border-color: #222;
+    }
+
+    .btn.active {
+      border-color: $black !important;
+    }
+  }
+}
