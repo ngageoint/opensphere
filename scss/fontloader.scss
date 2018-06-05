@@ -1,11 +1,11 @@
 // The purpose of this file is to convert any google fonts into local fonts if it exists in this theme
-// sass-lint:disable-all
+// sass-lint:disable quotes
 @function str-replace($string, $search, $replace: '') {
   $index: str-index($string, $search);
 
   @if $index {
     @return str-slice($string, 1, $index - 1) + $replace +
-        str-replace(str-slice($string, $index + str-length($search)), $search, $replace);
+    str-replace(str-slice($string, $index + str-length($search)), $search, $replace);
   }
 
   @return $string;
@@ -18,23 +18,23 @@
 
   // Replace the url to be local
   $web-font-path: str-replace($web-font-path,
-      "https://fonts.googleapis.com/css?family=", "../../vendor/fonts/typeface-");
+    "https://fonts.googleapis.com/css?family=", "../../vendor/fonts/typeface-");
 
   // Replace + with -
   $web-font-path: str-replace($web-font-path, "+", "-");
 
   // Strip off specifics (Open+Sans:400italic,700italic,400,700)
-  $web-font-path__colon-index: str-index($web-font-path, ":");
+  $web-font-path--colon-index: str-index($web-font-path, ":");
 
-  @if $web-font-path__colon-index {
-    $web-font-path: str-slice($web-font-path, 0, ($web-font-path__colon-index - 1));
+  @if $web-font-path--colon-index {
+    $web-font-path: str-slice($web-font-path, 0, ($web-font-path--colon-index - 1));
   }
 
   // Strip off multiple fonts (Neucha|Cabin+Sketch)
-  $web-font-path__colon-index: str-index($web-font-path, "|");
+  $web-font-path--colon-index: str-index($web-font-path, "|");
 
-  @if $web-font-path__colon-index {
-    $web-font-path: str-slice($web-font-path, 0, ($web-font-path__colon-index - 1));
+  @if $web-font-path--colon-index {
+    $web-font-path: str-slice($web-font-path, 0, ($web-font-path--colon-index - 1));
   }
 
   $web-font-path: $web-font-path + "/index.css";

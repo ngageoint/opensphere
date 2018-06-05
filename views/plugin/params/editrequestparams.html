@@ -1,7 +1,7 @@
 <div class="d-flex flex-column u-flex-grow">
   <div class="modal-body">
     <div class="c-paramsform">
-      <form class="form-horizontal was-validated" name="form">
+      <form class="form-horizontal" name="form" novalidate>
         <div ng-repeat="url in ctrl.urls track by $index" title="URL used for server requests">
           <div class="row no-gutters mt-1">
             <div class="col-auto">{{ctrl.getUrlLabel($index)}}:</div>

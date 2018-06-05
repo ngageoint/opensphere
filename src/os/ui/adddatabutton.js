@@ -26,10 +26,10 @@ os.ui.addDataButtonDirective = function() {
       ' ng-class="{active: ctrl.isWindowActive()}" metric="{{metrics.addDataOpen}}">' +
       '<i class="fa fa-plus"></i> {{showLabel ? \'Add Data\' : \'\'}}' +
       '</button>' +
-      '<button class="btn btn-secondary" title="Open a file or URL" ng-click="ctrl.open()">' +
+      '<button class="btn btn-primary" title="Open a file or URL" ng-click="ctrl.open()">' +
       '<i class="fa fa-folder-open"></i>' +
       '</button>' +
-      '<button class="btn btn-secondary dropdown-toggle dropdown-toggle-split" ng-click="ctrl.openMenu()"' +
+      '<button class="btn btn-primary dropdown-toggle dropdown-toggle-split" ng-click="ctrl.openMenu()"' +
       ' ng-class="{active: menu}">' +
       '</button></div>'
   };
