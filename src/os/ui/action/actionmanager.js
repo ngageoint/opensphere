@@ -57,6 +57,12 @@ os.ui.action.ActionManager = function() {
    * @private
    */
   this.tempActions_ = [];
+
+  /**
+   * @type {function(angular.JQLite)}
+   * @private
+   */
+  this.moreResultsAction_;
 };
 goog.inherits(os.ui.action.ActionManager, goog.events.EventTarget);
 
@@ -368,4 +374,22 @@ os.ui.action.ActionManager.prototype.fireEnabledActionsChanged_ = function() {
  */
 os.ui.action.ActionManager.prototype.registerTempActionFunc = function(func) {
   this.tempActions_.push(func);
+};
+
+/**
+ * Register the action to take if there are more actions than what will fit on
+ * the screen.
+ * @param {function(angular.JQLite)} func Function to call when the user clicks for more menu items
+ */
+os.ui.action.ActionManager.prototype.registerMoreResultsAction = function(func) {
+  this.moreResultsAction_ = func;
+};
+
+/**
+ * Invoke the action to take if there are more actions than what will fit on
+ * the screen.
+ * @param {angular.JQLite} menu Action menu that requires the more results action
+ */
+os.ui.action.ActionManager.prototype.invokeMoreResultsAction = function(menu) {
+  this.moreResultsAction_(menu);
 };
