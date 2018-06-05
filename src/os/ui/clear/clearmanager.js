@@ -63,12 +63,16 @@ os.ui.clear.ClearManager.prototype.addEntry = function(entry) {
 /**
  * Execute the enabled clear entries.
  * @param {boolean=} opt_all Optionally clear all regardless of their enabled state.
+ * @param {Array<string>=} opt_skip clear entry ids to skip
  */
-os.ui.clear.ClearManager.prototype.clear = function(opt_all) {
+os.ui.clear.ClearManager.prototype.clear = function(opt_all, opt_skip) {
   var commands = [];
   var types = [];
   for (var key in this.entries_) {
     var entry = this.entries_[key];
+    if (opt_skip && opt_skip.length && goog.array.contains(opt_skip, key)) {
+      continue;
+    }
     if (entry.enabled || opt_all) {
       commands.push(entry.createCommand());
       types.push(entry.label);

@@ -385,6 +385,16 @@ os.config.Settings.prototype.finalizeLoadSettings_ = function() {
 
 
 /**
+* Get the settings
+* @param {boolean=} opt_onlyPrefs get only user prefs
+* @return {Object}
+*/
+os.config.Settings.prototype.getSettingsConfig = function(opt_onlyPrefs) {
+  return opt_onlyPrefs ? this.actualConfig_[os.config.ConfigType.PREFERENCE] : this.mergedConfig_;
+};
+
+
+/**
  * Change the type of storage to use to save settings.
  * @param {os.config.storage.SettingsWritableStorageType} type
  * @param {boolean=} opt_alert Send a notification on the UI to confirm the update successfully occurred.
@@ -417,9 +427,10 @@ os.config.Settings.prototype.setWriteStorageType = function(type, opt_alert) {
 
 /**
  * Saves the settings if saving is enabled.
+ * @param {Object=} opt_settingsToOverwrite
  * @return {!goog.Promise}
  */
-os.config.Settings.prototype.save = function() {
+os.config.Settings.prototype.save = function(opt_settingsToOverwrite) {
   // stop the delay in case this was called manually
   if (this.saveDelay_) {
     this.saveDelay_.stop();
@@ -445,6 +456,10 @@ os.config.Settings.prototype.save = function() {
 
       var keysToDelete = goog.array.clone(os.config.namespace.getObsoleteKeys());
       goog.array.insertArrayAt(keysToDelete, os.config.namespace.keysToDelete.slice());
+
+      if (opt_settingsToOverwrite != null) {
+        userPrefsToPersist = opt_settingsToOverwrite;
+      }
 
       // return a promise that is resolved when settings have been saved, or rejected on error.
       return new goog.Promise(function(resolve, reject) {
@@ -587,11 +602,12 @@ os.config.Settings.prototype.update = function() {
 /**
  * Remove all keys and values from the storage.  Calling this function will wipe out settings for this application in
  * the settings service as well.  Use wisely.
- *
+ * @param {string=} opt_namespace
  * @return {!goog.Promise}
  */
-os.config.Settings.prototype.reset = function() {
-  goog.log.info(os.config.Settings.LOGGER_, 'Resetting settings for the application namespace: ' + os.config.appNs);
+os.config.Settings.prototype.reset = function(opt_namespace) {
+  var namespace = opt_namespace || os.config.appNs;
+  goog.log.info(os.config.Settings.LOGGER_, 'Resetting settings for the application namespace: ' + namespace);
 
   return new goog.Promise(function(resolve, reject) {
     // get the current storage type. this shouldn't be changed by the reset, so we'll restore it later.
@@ -602,7 +618,7 @@ os.config.Settings.prototype.reset = function() {
     var storage = this.storageRegistry_.getWriteStorage();
     if (storage) {
       goog.Promise.all([storage.deleteSettings(os.config.coreNs),
-        storage.deleteSettings(os.config.appNs)]).then(function() {
+        storage.deleteSettings(namespace)]).then(function() {
           goog.log.fine(os.config.Settings.LOGGER_, 'Reset settings success');
 
           // clear the user config section then save the storage type back to it
@@ -620,7 +636,7 @@ os.config.Settings.prototype.reset = function() {
           os.metrics.Metrics.getInstance().publish();
 
           // save the most recent reset date and time in local storage
-          var currentApp = os.config.appNs;
+          var currentApp = namespace;
           localStorage.setItem('resetDate', currentApp + ' ' + new Date().toISOString());
           // save current date time in settings
           this.set('reset.last', Date());
@@ -641,12 +657,11 @@ os.config.Settings.prototype.reset = function() {
 
 /**
  * Retrieve the last reset date for the current application if defined
- *
  * @return {string}
  */
 os.config.Settings.prototype.getLastReset = function() {
   try {
-    var resetDate = new Date(this.actualConfig_['user'][os.config.appNs]['reset']['last'])
+    var resetDate = new Date(this.actualConfig_[os.config.ConfigType.PREFERENCE][os.config.appNs]['reset']['last'])
         .toISOString().replace(/T/, ' ').replace(/(.000)/, ' ');
   } catch (TypeError) {
     var resetDate = 'Never!';
