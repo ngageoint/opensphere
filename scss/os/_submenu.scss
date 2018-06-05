@@ -1,0 +1,7 @@
+.c-dropdown-submenu {
+  background: $dropdown-bg;
+  border: $dropdown-border-width solid $dropdown-border-color;
+  left: 100%;
+  right: auto;
+  z-index: $zindex-fixed + 1;
+}

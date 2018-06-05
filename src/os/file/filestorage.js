@@ -64,7 +64,7 @@ goog.define('os.FILE_DB_NAME', os.NAMESPACE + '.files');
 /**
  * @define {number} The database version.
  */
-goog.define('os.FILE_DB_VERSION', 1);
+goog.define('os.FILE_DB_VERSION', 2);
 
 
 /**
