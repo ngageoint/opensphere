@@ -18,7 +18,7 @@ os.ui.saveButtonDirective = function() {
     },
     controller: os.ui.SaveButtonCtrl,
     controllerAs: 'ctrl',
-    template: '<button class="btn btn-success dropdown-toggle" ng-click="ctrl.openMenu()"' +
+    template: '<button class="btn btn-secondary dropdown-toggle" ng-click="ctrl.openMenu()"' +
       ' title="Save options" ng-right-click="ctrl.openMenu()" ng-class="{active: menu}">' +
       '<i class="fa fa-floppy-o"></i> {{showLabel ? \'Save\' : \'\'}}' +
       '</button>'
