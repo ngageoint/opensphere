@@ -47,7 +47,7 @@ os.control.ZoomLevel = function(opt_options) {
    * @private
    */
   this.altElement_ = goog.dom.createDom(goog.dom.TagName.SPAN, {
-    'class': 'altitude-text'
+    'class': 'altitude-text mr-3'
   });
   this.element_.appendChild(this.altElement_);
 

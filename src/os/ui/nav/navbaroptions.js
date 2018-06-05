@@ -44,9 +44,9 @@ os.ui.list.add(os.ui.nav.Location.TOP_RIGHT, '<help show-label="!punyWindow"></h
 
 
 // Bottom navbar options
-os.ui.list.add(os.ui.nav.Location.BOTTOM_LEFT, '<li id="zoom-level"></li>', 100);
+os.ui.list.add(os.ui.nav.Location.BOTTOM_LEFT, '<li id="zoom-level" class="nav-item mr-3 my-auto"></li>', 100);
 os.ui.list.add(os.ui.nav.Location.BOTTOM_LEFT, 'scale-line', 200);
-os.ui.list.add(os.ui.nav.Location.BOTTOM_LEFT, '<li id="mouse-position"></li>', 300);
+os.ui.list.add(os.ui.nav.Location.BOTTOM_LEFT, '<li id="mouse-position" class="nav-item mr-3 my-auto"></li>', 300);
 
 os.ui.list.add(os.ui.nav.Location.BOTTOM_RIGHT, 'servers-button', 100);
 os.ui.list.add(os.ui.nav.Location.BOTTOM_RIGHT, 'alert-button', 200);
