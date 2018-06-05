@@ -461,6 +461,8 @@ plugin.file.kml.readURI = function(node) {
 
   return s;
 };
+plugin.file.kml.replaceParsers_(ol.format.KML.PLACEMARK_PARSERS_, 'styleUrl',
+    ol.xml.makeObjectPropertySetter(plugin.file.kml.readURI));
 
 
 /**
