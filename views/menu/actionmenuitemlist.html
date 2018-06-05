@@ -3,18 +3,18 @@
   <div ng-repeat="menuItem in actions | limitTo : menuLimit"
     ng-init="hasSubActions=menuItem.getItems;showSubMenu=isFlat;isSeparator=menuItem.isSeparator;isSeparatorHeader=menuItem.isSeparatorHeader;isAction=menuItem.getAction"
     class="text-truncate"
-    ng-class="{'dropdown-item':isAction,'dropdown-submenu':hasSubActions,'submenu':hasSubActions,'dropdown-divider':isSeparator,'dropdown-header':isSeparatorHeader}"
+    ng-class="{'dropdown-item':isAction || hasSubActions,'js-dropdown-submenu':hasSubActions,'submenu':hasSubActions,'dropdown-divider':isSeparator,'dropdown-header':isSeparatorHeader, 'dropdown-submenu':hasSubActions}"
     title="{{menuItem.getAction().getDescription()}}"
     ng-mouseenter="showSubMenu=hasSubActions; menuLimit=100"
     ng-mouseleave="showSubMenu=isFlat"
     ng-click="actionMenu.invoke(menuItem.getAction())">
 
     <!-- action item -->
-    <span class="menu-item-hotkey" ng-if="menuItem.getAction().getHotkey()">({{menuItem.getAction().getHotkey()}})</span>
+    <span class="float-right" ng-if="menuItem.getAction().getHotkey()">({{menuItem.getAction().getHotkey()}})</span>
     <div class="text-truncate" style="display:inline;">
       <a class="unselectable" ng-if="!(isSeparator || isSeparatorHeader)">
-        <span><i class="fa fa-fw" ng-class="menuItem.getAction().getIcon() || 'fa-indent color-light-gray'"></i></span>
-        <span class="text-truncate" style="padding-right:5px;">{{menuItem.getName()}}</span>
+        <span><i class="fa fa-fw" ng-class="menuItem.getAction().getIcon() || 'fa-indent'"></i></span>
+        <span class="text-truncate">{{menuItem.getName()}}</span>
       </a>
     </div>
 
@@ -28,8 +28,8 @@
   <div class="dropdown-item" ng-if="isSubmenu && isMoreButton" title="See more results..." ng-click="actionMenu.handleMoreResults()">
     <div class="text-truncate" style="display:inline;">
       <a class="unselectable">
-        <span><i class="fa fa-fw" ng-class="'fa-indent color-light-gray'"></i></span>
-        <span class="text-truncate" style="padding-right:5px;">MORE...</span>
+        <span><i class="fa fa-fw" ng-class="fa-indent"></i></span>
+        <span class="text-truncate">MORE...</span>
       </a>
     </div>
   </div>
