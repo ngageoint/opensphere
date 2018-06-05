@@ -11,6 +11,7 @@ goog.require('os.ui.action.MenuItemList');
 goog.require('os.ui.action.MenuItemSeparator');
 goog.require('os.ui.action.MenuItemSeparatorHeader');
 goog.require('os.ui.action.MenuOptions');
+goog.require('os.ui.events.UIEvent');
 
 
 
@@ -29,6 +30,16 @@ os.ui.ActionMenuCtrl = function($scope, $element, $timeout) {
    * @type {boolean}
    */
   $scope['isFlat'] = $scope['flatten'] == 'true';
+
+  /**
+   * @type {number}
+   */
+  $scope['menuLimit'] = 25;
+
+  /**
+   * @type {boolean}
+   */
+  $scope['isSubmenu'] = false;
 
   /**
    * @type {?angular.Scope}
@@ -336,28 +347,70 @@ os.ui.ActionMenuCtrl.prototype.position = function() {
  */
 os.ui.ActionMenuCtrl.prototype.positionSubmenu = function() {
   this.timeout(goog.bind(function() {
-    if (this.element) {
-      var submenu = this.element.find('.menu-item > .menu-container');
-      if (submenu) {
+    if (this.element && !this.scope['isFlat']) {
+      var submenus = this.element.find('.c-action-menu-item-list > .dropdown-submenu');
+      var submenu = submenus.find('.c-action-menu-item-list');
+      if (submenu && submenu.length > 0) {
+        submenu.scope()['menuLimit'] = this.calcNumItemsToDisplay_(submenu);
+        os.ui.apply(submenu.scope());
+
         var pos = submenu.offset();
 
         if (goog.isObject(pos)) {
           var y = pos.top || pos.y;
           var h = submenu.outerHeight();
           var viewportSize = goog.dom.getViewportSize();
+          var outerMenuWidth = this.element.outerWidth();
+          var outerMenuPos = this.element.offset();
           y = y < 0 ? 5 : y;
 
-          if (y + h > viewportSize.height - 30) {
-            y = (viewportSize.height - y - h - 30);
-            submenu.css('top', y + 'px');
+          var parentEl = submenu[0].parentElement;
+
+
+          if (h > viewportSize.height - 30) {
+            y = outerMenuPos.top * -1;
+            parentEl.style.top = y + 'px';
+          } else if (y + h > viewportSize.height - 30) {
+            y = (viewportSize.height - h - 30 - this.element.offset().top);
+            parentEl.style.top = y + 'px';
+          }
+
+          var x = outerMenuPos.left || outerMenuPos.x;
+          if (x + outerMenuWidth + parentEl.offsetWidth > viewportSize.width &&
+              parentEl.offsetWidth <= x) {
+            parentEl.style.left = 'auto';
+            parentEl.style.right = '100%';
           }
         }
       }
     }
-  }, this), 50);
+  }, this), 50, true);
 };
 goog.exportProperty(os.ui.ActionMenuCtrl.prototype, 'positionSubmenu',
     os.ui.ActionMenuCtrl.prototype.positionSubmenu);
+
+/**
+ * Calculate the number of items to show on the screen.
+ * @param {Object} submenu Submenu element
+ * @return {number} Number of menu/submenu items to display
+ * @private
+ */
+os.ui.ActionMenuCtrl.prototype.calcNumItemsToDisplay_ = function(submenu) {
+  var viewportSize = goog.dom.getViewportSize();
+  var items = submenu.find('.dropdown-item');
+  var numItemsToDisplay = 0;
+  if (items && items.length > 0) {
+    var itemHeight = items[0].offsetHeight;
+    var numTotalItems = items.length;
+    var usedHeight = submenu.outerHeight() - (numTotalItems * itemHeight);
+    numItemsToDisplay = parseInt(((viewportSize.height - usedHeight) / itemHeight) - 1, 10);
+  }
+
+  if (numItemsToDisplay < numTotalItems) {
+    submenu.scope()['isMoreButton'] = true;
+  }
+  return numItemsToDisplay;
+};
 
 
 /**
@@ -367,6 +420,8 @@ goog.exportProperty(os.ui.ActionMenuCtrl.prototype, 'positionSubmenu',
 os.ui.ActionMenuCtrl.prototype.onActionsChanged_ = function() {
   var provider = /** @type {os.ui.action.ActionManager} */ (this.scope['provider']);
   this.scope['actions'] = this.constructMenu_(provider.getEnabledActions());
+  this.scope['menuLimit'] = 100;
+  this.scope['isMoreButton'] = false;
   os.ui.apply(this.scope);
 };
 
@@ -380,6 +435,33 @@ os.ui.ActionMenuCtrl.prototype.addTitle = function(selector, title) {
   $(selector).children().prepend(title);
 };
 
+/**
+ * Get the limit of actions to show in the menu.
+ * @return {number} Action item menu limit
+ */
+os.ui.ActionMenuCtrl.prototype.getLimit = function() {
+  if (this.scope['isFlat']) {
+    return 100;
+  }
+
+  return this.scope['menuLimit'];
+};
+
+/**
+ * Reset the flag to show the more button.
+ */
+os.ui.ActionMenuCtrl.prototype.clearMoreButton = function() {
+  this.scope['isMoreButton'] = false;
+};
+
+/**
+ * Take action since there are more reults in the submenu than what will fit on the screen.
+ */
+os.ui.ActionMenuCtrl.prototype.handleMoreResults = function() {
+  this.scope['provider'].invokeMoreResultsAction(this.element);
+
+  this.close();
+};
 
 /**
  * Define the directive.
@@ -401,7 +483,9 @@ os.ui.actionMenuDirective = function() {
       'visible': '@',
       'flatten': '@',
       'titletext': '@',
-      'titleselector': '@'
+      'titleselector': '@',
+      'isSubmenu': '=?',
+      'isMoreButton': '=?'
     }
   };
 };
