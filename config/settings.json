@@ -137,7 +137,11 @@
     },
     "themes": {
       "none": "",
-      "Default": "",
+      "Default": "overrides_slate_cozy",
+      "Light": "",
+      "Light Cozy": "cozy",
+      "Dark Cozy": "overrides_slate_cozy",
+      "Dark": "overrides_slate",
       "Cerulean": "cerulean",
       "Cosmo": "cosmo",
       "Cyborg": "cyborg",
