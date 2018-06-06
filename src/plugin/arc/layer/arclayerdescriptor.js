@@ -20,7 +20,7 @@ goog.require('os.layer.LayerType');
 goog.require('os.ui.CombinatorCtrl');
 goog.require('os.ui.ControlType');
 goog.require('os.ui.Icons');
-goog.require('os.ui.ogc.IFeatureType');
+goog.require('os.ui.ogc.IFeatureTypeDescriptor');
 goog.require('plugin.arc.ArcFeatureType');
 
 
@@ -29,7 +29,7 @@ goog.require('plugin.arc.ArcFeatureType');
  * Descriptor representing an Arc layer.
  * @extends {os.data.LayerSyncDescriptor}
  * @implements {os.filter.IFilterable}
- * @implements {os.ui.ogc.IFeatureType}
+ * @implements {os.ui.ogc.IFeatureTypeDescriptor}
  * @constructor
  */
 plugin.arc.layer.ArcLayerDescriptor = function() {
@@ -83,6 +83,7 @@ goog.inherits(plugin.arc.layer.ArcLayerDescriptor, os.data.LayerSyncDescriptor);
  */
 plugin.arc.layer.ArcLayerDescriptor.NAME = 'plugin.arc.layer.ArcLayerDescriptor';
 os.registerClass(plugin.arc.layer.ArcLayerDescriptor.NAME, plugin.arc.layer.ArcLayerDescriptor);
+os.implements(plugin.arc.layer.ArcLayerDescriptor, os.ui.ogc.IFeatureTypeDescriptor.ID);
 os.implements(plugin.arc.layer.ArcLayerDescriptor, os.filter.IFilterable.ID);
 
 

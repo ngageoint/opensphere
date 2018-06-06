@@ -187,9 +187,6 @@ plugin.ogc.OGCLayerDescriptor = function() {
   this.descriptorType = os.ogc.ID;
 };
 goog.inherits(plugin.ogc.OGCLayerDescriptor, os.data.LayerSyncDescriptor);
-os.implements(plugin.ogc.OGCLayerDescriptor, os.data.IAreaTest.ID);
-os.implements(plugin.ogc.OGCLayerDescriptor, os.ui.ogc.IOGCDescriptor.ID);
-os.implements(plugin.ogc.OGCLayerDescriptor, os.filter.IFilterable.ID);
 
 
 /**
@@ -199,7 +196,11 @@ os.implements(plugin.ogc.OGCLayerDescriptor, os.filter.IFilterable.ID);
  */
 plugin.ogc.OGCLayerDescriptor.NAME = 'plugin.ogc.OGCLayerDescriptor';
 os.registerClass(plugin.ogc.OGCLayerDescriptor.NAME, plugin.ogc.OGCLayerDescriptor);
+os.implements(plugin.ogc.OGCLayerDescriptor, os.data.IAreaTest.ID);
 os.implements(plugin.ogc.OGCLayerDescriptor, os.filter.IFilterable.ID);
+os.implements(plugin.ogc.OGCLayerDescriptor, os.ui.ogc.IFeatureTypeDescriptor.ID);
+os.implements(plugin.ogc.OGCLayerDescriptor, os.ui.ogc.IOGCDescriptor.ID);
+os.implements(plugin.ogc.OGCLayerDescriptor, os.ui.ogc.wms.IWMSLayer.ID);
 
 
 /**

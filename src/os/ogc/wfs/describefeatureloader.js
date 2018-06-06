@@ -9,13 +9,11 @@ goog.require('goog.net.EventType');
 goog.require('os.net.Request');
 goog.require('os.ogc');
 goog.require('os.ogc.wfs.DescribeFeatureTypeParser');
-goog.require('os.ui.ogc.IFeatureType');
 
 
 
 /**
  * @extends {goog.events.EventTarget}
- * @implements {os.ui.ogc.IFeatureType}
  * @constructor
  */
 os.ogc.wfs.DescribeFeatureLoader = function() {
@@ -121,18 +119,10 @@ os.ogc.wfs.DescribeFeatureLoader.prototype.setParams = function(value) {
 
 
 /**
- * @inheritDoc
+ * @return {os.ogc.wfs.FeatureType}
  */
 os.ogc.wfs.DescribeFeatureLoader.prototype.getFeatureType = function() {
   return this.featureType_;
-};
-
-
-/**
- * @inheritDoc
- */
-os.ogc.wfs.DescribeFeatureLoader.prototype.isFeatureTypeReady = function() {
-  return !!this.featureType_;
 };
 
 

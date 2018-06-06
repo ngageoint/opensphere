@@ -52,7 +52,8 @@ plugin.ogc.ui.OGCLayerNodeUICtrl = function($scope, $element) {
 
   var chooseTime = false;
 
-  if (this.descriptor_ instanceof os.ui.ogc.IFeatureType && this.descriptor_ instanceof os.ui.ogc.wms.IWMSLayer) {
+  if (os.implements(this.descriptor_, os.ui.ogc.IFeatureTypeDescriptor.ID)
+      && os.implements(this.descriptor_, os.ui.ogc.wms.IWMSLayer.ID)) {
     var featureType = this.descriptor_.getFeatureType();
     if (featureType) {
       chooseTime = this.descriptor_.hasTimeExtent() && featureType.getTimeColumns().length >= 2 &&
