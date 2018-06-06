@@ -1,9 +1,14 @@
 $cyan: #3498db;
 $blue: #17a2b8;
+$dark: #303030;
 
 $primary: $cyan;
 $info: $blue;
+$link-color: $primary;
 
 @import 'flatly/variables';
 
-$link-color: $primary;
+$navbar-light-color: $gray-700;
+$navbar-light-hover-color: $primary;
+$navbar-light-active-color: $primary;
+$navbar-dark-hover-color: $primary;
