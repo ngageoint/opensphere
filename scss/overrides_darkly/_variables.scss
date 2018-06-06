@@ -1,16 +1,21 @@
-$cyan: #6c94bc;
+$indigo: #6c94bc;
 $blue: #3498db;
 $light: #ecf0f1;
 
+// Changed secondary
+$gray-500: #adb5bd !default;
+
 $primary: $blue;
+$info: $indigo;
+$secondary: $gray-500;
 $link-color: $primary;
 
 @import 'darkly/variables';
 
-$border-color: $gray-900;
+$border-color: $table-border-color;
 $input-bg: #555;
 $input-color: $white;
-$input-border-color: $gray-900;
+$input-border-color: $table-border-color;
 $input-placeholder-color: $gray-500;
 
 $navbar-light-color: $gray-700;
