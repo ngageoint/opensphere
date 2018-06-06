@@ -2,6 +2,7 @@ goog.provide('os.ui.WindowCtrl');
 goog.provide('os.ui.WindowEventType');
 goog.provide('os.ui.window');
 goog.provide('os.ui.window.HeaderBtnConfig');
+goog.provide('os.ui.windowCommonElements');
 goog.provide('os.ui.windowDirective');
 goog.provide('os.ui.windowSelector');
 goog.provide('os.ui.windowZIndexMax');
@@ -27,6 +28,16 @@ os.ui.windowSelector = {
   MODAL_BG: '.modal-backdrop',
   WINDOW: '.js-window',
   WRAPPER: '.js-window__wrapper'
+};
+
+
+/**
+ * Common selectors for window compontents
+ * @enum {string}
+ */
+os.ui.windowCommonElements = {
+  NAVTOP: '.js-navtop',
+  NAVBOTTOM: '.js-navbottom'
 };
 
 
@@ -938,6 +949,17 @@ os.ui.WindowCtrl.prototype.constrainWindow_ = function() {
   } else if ((y + h) > size.height) {
     y = Math.max(size.height - h, winContainerTop);
     this.element.css('top', y + 'px');
+  }
+
+  // If window is height auto, force max-height on the modal-content
+  if (this.scope['height'] == 'auto') {
+    var otherHeight = 0;
+    goog.object.getValues(os.ui.windowCommonElements).forEach(function(otherEl) {
+      otherHeight += ($(/** @type {string} */ (otherEl)).outerHeight());
+    });
+
+    var useableHeight = size.height - otherHeight;
+    this.element.find('.modal-content').css('max-height', useableHeight);
   }
 };
 
