@@ -20,6 +20,7 @@ goog.require('os.layer.LayerType');
 goog.require('os.ui.CombinatorCtrl');
 goog.require('os.ui.ControlType');
 goog.require('os.ui.Icons');
+goog.require('os.ui.ogc.IFeatureType');
 goog.require('plugin.arc.ArcFeatureType');
 
 
@@ -28,6 +29,7 @@ goog.require('plugin.arc.ArcFeatureType');
  * Descriptor representing an Arc layer.
  * @extends {os.data.LayerSyncDescriptor}
  * @implements {os.filter.IFilterable}
+ * @implements {os.ui.ogc.IFeatureType}
  * @constructor
  */
 plugin.arc.layer.ArcLayerDescriptor = function() {
@@ -346,11 +348,18 @@ plugin.arc.layer.ArcLayerDescriptor.prototype.configureDescriptor = function(con
 
 
 /**
- * Gets the feature type.
- * @return {?plugin.arc.ArcFeatureType}
+ * @inheritDoc
  */
 plugin.arc.layer.ArcLayerDescriptor.prototype.getFeatureType = function() {
   return this.featureType_;
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.arc.layer.ArcLayerDescriptor.prototype.isFeatureTypeReady = function() {
+  return !!this.featureType_;
 };
 
 

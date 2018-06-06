@@ -3,6 +3,7 @@ goog.provide('os.ui.ogc.IOGCDescriptor');
 goog.require('os.data.IDataDescriptor');
 goog.require('os.data.IServerDescriptor');
 goog.require('os.filter.IFilterable');
+goog.require('os.ui.ogc.IFeatureType');
 goog.require('os.ui.ogc.wms.IWMSLayer');
 
 
@@ -12,8 +13,9 @@ goog.require('os.ui.ogc.wms.IWMSLayer');
  * @interface
  * @extends {os.data.IDataDescriptor}
  * @extends {os.data.IServerDescriptor}
- * @extends {os.ui.ogc.wms.IWMSLayer}
  * @extends {os.filter.IFilterable}
+ * @extends {os.ui.ogc.IFeatureType}
+ * @extends {os.ui.ogc.wms.IWMSLayer}
  */
 os.ui.ogc.IOGCDescriptor = function() {};
 
@@ -23,20 +25,6 @@ os.ui.ogc.IOGCDescriptor = function() {};
  * @const
  */
 os.ui.ogc.IOGCDescriptor.ID = 'os.ui.ogc.IOGCDescriptor';
-
-
-/**
- * Get the WFS FeatureType.
- * @return {os.ogc.wfs.FeatureType}
- */
-os.ui.ogc.IOGCDescriptor.prototype.getFeatureType;
-
-
-/**
- * Check if the WFS FeatureType is ready and load it if not.
- * @return {boolean}
- */
-os.ui.ogc.IOGCDescriptor.prototype.isFeatureTypeReady;
 
 
 /**
