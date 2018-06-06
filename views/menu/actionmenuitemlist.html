@@ -1,30 +1,36 @@
 <div class="c-action-menu-item-list js-action-menu-item-list" ng-init="menuLimit=100">
-
   <div ng-repeat="menuItem in actions | limitTo : menuLimit"
-    ng-init="hasSubActions=menuItem.getItems;showSubMenu=isFlat;isSeparator=menuItem.isSeparator;isSeparatorHeader=menuItem.isSeparatorHeader;isAction=menuItem.getAction"
-    class="text-truncate"
-    ng-class="{'dropdown-item':isAction || hasSubActions,'js-dropdown-submenu':hasSubActions,'submenu':hasSubActions,'dropdown-divider':isSeparator,'dropdown-header':isSeparatorHeader, 'dropdown-submenu':hasSubActions}"
-    title="{{menuItem.getAction().getDescription()}}"
-    ng-mouseenter="showSubMenu=hasSubActions; menuLimit=100"
-    ng-mouseleave="showSubMenu=isFlat"
-    ng-click="actionMenu.invoke(menuItem.getAction())">
+      ng-init="hasSubActions = menuItem.getItems; showSubMenu = isFlat; isSeparator = menuItem.isSeparator; isSeparatorHeader = menuItem.isSeparatorHeader; isAction = menuItem.getAction">
+    <div class="text-truncate"
+      ng-class="{'dropdown-item': isAction || (hasSubActions && !isFlat), 'js-dropdown-submenu': hasSubActions, 'dropdown-divider': isSeparator, 'dropdown-header': isSeparatorHeader, 'dropdown-header pb-0': hasSubActions && isFlat}"
+      title="{{menuItem.getAction().getDescription()}}"
+      ng-mouseenter="showSubMenu = hasSubActions; menuLimit = 100"
+      ng-mouseleave="showSubMenu = isFlat"
+      ng-click="actionMenu.invoke(menuItem.getAction())">
 
-    <!-- action item -->
-    <span class="float-right" ng-if="menuItem.getAction().getHotkey()">({{menuItem.getAction().getHotkey()}})</span>
-    <div class="text-truncate" style="display:inline;">
-      <a class="unselectable" ng-if="!(isSeparator || isSeparatorHeader)">
-        <span><i class="fa fa-fw" ng-class="menuItem.getAction().getIcon() || 'fa-indent'"></i></span>
-        <span class="text-truncate">{{menuItem.getName()}}</span>
-      </a>
+      <!-- action item -->
+      <span class="float-right" ng-if="menuItem.getAction().getHotkey()">({{menuItem.getAction().getHotkey()}})</span>
+      <div class="text-truncate" style="display:inline;">
+        <a class="unselectable" ng-if="!(isSeparator || isSeparatorHeader)">
+          <span><i class="fa fa-fw" ng-class="menuItem.getAction().getIcon() || 'fa-indent'"></i></span>
+          <span class="text-truncate">{{menuItem.getName()}}</span>
+        </a>
+      </div>
+
+      <span ng-if="isSeparatorHeader">{{menuItem.getName()}}</span>
+      <ng-include src="path + '/views/menu/actionmenuitemlist.html'"
+        ng-if="showSubMenu && hasSubActions && !isFlat"
+        ng-class="{'position-absolute': hasSubActions && !isFlat, 'c-dropdown-submenu': !isFlat}"
+        ng-init="menuLimit=100; isSubmenu = true; actions = menuItem.getItems();  actionMenu.positionSubmenu(menuItem)">
+      </ng-include>
     </div>
-
-    <span ng-if="isSeparatorHeader">{{menuItem.getName()}}</span>
     <ng-include src="path + '/views/menu/actionmenuitemlist.html'"
-      ng-if="showSubMenu && hasSubActions"
-      ng-class="{'position-absolute': hasSubActions && !isFlat, 'c-dropdown-submenu': !isFlat}"
-      ng-init="menuLimit=100; isSubmenu = true; actions = menuItem.getItems();  actionMenu.positionSubmenu(menuItem)"></ng-include>
-  </div>  
-  
+      ng-if="showSubMenu && hasSubActions && isFlat"
+      class="dropdown-header py-0"
+      ng-init="menuLimit=100; isSubmenu = true; actions = menuItem.getItems();  actionMenu.positionSubmenu(menuItem)">
+    </ng-include>
+  </div>
+
   <div class="dropdown-item" ng-if="isSubmenu && isMoreButton" title="See more results..." ng-click="actionMenu.handleMoreResults()">
     <div class="text-truncate" style="display:inline;">
       <a class="unselectable">
@@ -33,5 +39,4 @@
       </a>
     </div>
   </div>
-  
 </div>
