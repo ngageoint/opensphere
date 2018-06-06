@@ -62,7 +62,7 @@ plugin.ogc.OGCLayerDescriptor = function() {
   this.dimensions_ = null;
 
   /**
-   * @type {os.ogc.wfs.FeatureType}
+   * @type {os.ogc.IFeatureType}
    * @private
    */
   this.featureType_ = null;

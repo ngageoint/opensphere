@@ -45,15 +45,14 @@ plugin.ogc.ui.OGCLayerNodeUICtrl = function($scope, $element) {
 
   /**
    * The descriptor for this layer
-   * @type {plugin.ogc.OGCLayerDescriptor}
+   * @type {os.data.IDataDescriptor}
    * @private
    */
-  this.descriptor_ = /** @type {plugin.ogc.OGCLayerDescriptor} */ (
-      os.dataManager.getDescriptor(this.getLayerId()));
+  this.descriptor_ = os.dataManager.getDescriptor(this.getLayerId());
 
   var chooseTime = false;
 
-  if (this.descriptor_) {
+  if (this.descriptor_ instanceof os.ui.ogc.IFeatureType && this.descriptor_ instanceof os.ui.ogc.wms.IWMSLayer) {
     var featureType = this.descriptor_.getFeatureType();
     if (featureType) {
       chooseTime = this.descriptor_.hasTimeExtent() && featureType.getTimeColumns().length >= 2 &&
