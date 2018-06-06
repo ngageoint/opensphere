@@ -1,3 +1,15 @@
 // Overrides to Bootstrap defaults
+.d-flex {
+  // This piggybacks off of the BS4 .d-flex selector in order to fix Firefox's bad handling of column flex layouts
+  min-height: 0;
+}
+
+.d-flex > * {
+  // This piggybacks off of the BS4 .d-flex selector in order to fix text truncation for words that dont break
+  // All children of a d-flex should have min-width: 0 so it doesnt cause the parent to stretch to fit it inside
+  // but instead to wrap the child content
+  min-width: 0;
+}
+
 $breadcrumb-bg: transparent;
 $breadcrumb-padding-y: .25rem;
