@@ -1,8 +1,10 @@
 $cyan: #3498db;
 $blue: #17a2b8;
+$light: #ecf0f1;
 
 $primary: $cyan;
 $info: $blue;
+$link-color: $primary;
 
 @import 'darkly/variables';
 
@@ -12,4 +14,7 @@ $input-color: $white;
 $input-border-color: $gray-900;
 $input-placeholder-color: $gray-500;
 
-$link-color: $primary;
+$navbar-light-color: $gray-700;
+$navbar-light-hover-color: $primary;
+$navbar-light-active-color: $primary;
+$navbar-dark-hover-color: $primary;

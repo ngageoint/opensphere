@@ -1,19 +1,20 @@
 @import 'flatly/bootswatch';
 
+.navbar-dark .navbar-nav {
+  .nav-link:focus,
+  .nav-link:hover,
+  .active > .nav-link {
+    color: $primary !important;
+  }
+}
+
 .bg-dark {
   // This is the darkly navbar color we want
-  background-color: #303030 !important;
-
-  &.navbar-dark .navbar-nav {
-    .nav-link:focus,
-    .nav-link:hover,
-    .active > .nav-link {
-      color: $white !important;
-    }
-  }
+  background-color: $dark !important;
 
   &.navbar {
-    input,
+    .form-control,
+    .border,
     .btn {
       border-color: #222 !important;
     }
