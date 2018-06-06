@@ -15,7 +15,8 @@ os.ui.navTopDirective = function() {
     replace: true,
     scope: {
       'bgTransparent': '@?',
-      'brand': '=?'
+      'brand': '=?',
+      'breakpointSize': '@?'
     },
     templateUrl: os.ROOT + 'views/navtop.html',
     controller: os.ui.NavBarCtrl,

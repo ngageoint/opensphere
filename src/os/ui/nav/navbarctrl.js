@@ -1,4 +1,5 @@
 goog.provide('os.ui.NavBarCtrl');
+goog.provide('os.ui.NavBarEvents');
 
 goog.require('goog.dom.ViewportSizeMonitor');
 goog.require('os.ui.list.ListEventType');
@@ -58,14 +59,14 @@ os.ui.NavBarCtrl = function($scope, $element) {
    * If the brand is an svg file we want to embed the source
    * @type {boolean}
    */
-  this.scope['svg'] = this.scope['brand'] && this.scope['brand']['src'].match(/\.svg$/);
+  this.scope['svg'] = false;
 
   /**
    * Bootstrap navbar toggler breakpoint (xs, sm, md, lg, xl)
    * @type {string}
    * @private
    */
-  this['breakpointSize'] = 'lg';
+  this['breakpointSize'] = this.scope['breakpointSize'] || 'lg';
 
   /**
    * Bootstrap navbar toggler breakpoint value (computed from size setting)
@@ -78,8 +79,14 @@ os.ui.NavBarCtrl = function($scope, $element) {
 
   goog.events.listen(window, goog.events.EventType.SCROLL, this.formatNav_, false, this);
 
+  os.dispatcher.listen(os.ui.nav.EventType.BG_TRANSPARENT, this.setTransparent_.bind(this));
+
+  os.dispatcher.listen(os.ui.nav.EventType.BG_OPAQUE, this.setOpaque_.bind(this));
+
   os.ui.waitForAngular(this.onResize.bind(this));
   this.vsm.listen(goog.events.EventType.RESIZE, this.onResize, false, this);
+
+  $scope.$watch('brand', this.processBrand_.bind(this));
   $scope.$on(os.ui.list.ListEventType.CHANGE, this.onResize.bind(this));
   $scope.$on('$destroy', this.destroy.bind(this));
 };
@@ -100,6 +107,8 @@ os.ui.NavBarCtrl.DEFAULT_RESIZE_PX = 1350;
 os.ui.NavBarCtrl.prototype.destroy = function() {
   goog.events.unlisten(window, goog.events.EventType.SCROLL, this.formatNav_, false, this);
   os.dispatcher.unlisten(os.ui.nav.EventType.HIDE_NAV, this.onHideNavbar_, false, this);
+  os.dispatcher.unlisten(os.ui.nav.EventType.BG_TRANSPARENT, this.setTransparent_, false, this);
+  os.dispatcher.unlisten(os.ui.nav.EventType.BG_OPAQUE, this.setOpaque_, false, this);
 
   this.scope = null;
   this.element = null;
@@ -199,4 +208,28 @@ os.ui.NavBarCtrl.prototype.formatNav_ = function() {
     this.scope['filled'] = false;
   }
   os.ui.apply(this.scope);
+};
+
+
+/**
+ * @private
+ */
+os.ui.NavBarCtrl.prototype.setTransparent_ = function() {
+  this.scope['bgTransparent'] = 'true';
+};
+
+
+/**
+ * @private
+ */
+os.ui.NavBarCtrl.prototype.setOpaque_ = function() {
+  this.scope['bgTransparent'] = 'false';
+};
+
+
+/**
+ * @private
+ */
+os.ui.NavBarCtrl.prototype.processBrand_ = function() {
+  this.scope['svg'] = this.scope['brand'] && this.scope['brand']['src'].match(/\.svg$/);
 };

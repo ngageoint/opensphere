@@ -1,0 +1,15 @@
+.custom-control-label::before,
+.custom-control-label::after {
+  height: $font-size-base;
+  left: -1.25rem;
+  top: .2rem;
+  width: $font-size-base;
+}
+
+// Helps center text correctly
+.navbar {
+  input,
+  .btn {
+    font-family: sans-serif;
+  }
+}

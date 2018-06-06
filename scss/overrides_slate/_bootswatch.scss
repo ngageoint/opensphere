@@ -1,0 +1,20 @@
+@import 'slate/bootswatch';
+
+.navbar {
+  .navbar-brand,
+  .nav-link {
+    border: 0 !important;
+    padding-bottom: $nav-link-padding-y;
+    padding-top: $nav-link-padding-y;
+  }
+}
+
+.btn-outline-primary {
+  color: $white;
+}
+
+.form-control:disabled,
+.form-control:disabled::placeholder,
+.form-control[readonly]::placeholder {
+  background-color: $gray-600;
+}
