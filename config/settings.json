@@ -136,7 +136,6 @@
       "magneticNorthHelpUrl": "https://www.ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml"
     },
     "themes": {
-      "none": "",
       "Default": "overrides_darkly_compact",
       "Light": "overrides_flatly",
       "Light Compact": "overrides_flatly_compact",
