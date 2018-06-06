@@ -3,11 +3,11 @@ $blue: #3498db;
 $light: #ecf0f1;
 
 // Changed secondary
-$gray-500: #adb5bd !default;
+$gray-600: #999 !default;
 
 $primary: $blue;
 $info: $indigo;
-$secondary: $gray-500;
+$secondary: $gray-600;
 $link-color: $primary;
 
 @import 'darkly/variables';
