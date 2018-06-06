@@ -3,7 +3,7 @@ goog.provide('os.ui.ogc.IOGCDescriptor');
 goog.require('os.data.IDataDescriptor');
 goog.require('os.data.IServerDescriptor');
 goog.require('os.filter.IFilterable');
-goog.require('os.ui.ogc.IFeatureType');
+goog.require('os.ui.ogc.IFeatureTypeDescriptor');
 goog.require('os.ui.ogc.wms.IWMSLayer');
 
 
@@ -14,7 +14,7 @@ goog.require('os.ui.ogc.wms.IWMSLayer');
  * @extends {os.data.IDataDescriptor}
  * @extends {os.data.IServerDescriptor}
  * @extends {os.filter.IFilterable}
- * @extends {os.ui.ogc.IFeatureType}
+ * @extends {os.ui.ogc.IFeatureTypeDescriptor}
  * @extends {os.ui.ogc.wms.IWMSLayer}
  */
 os.ui.ogc.IOGCDescriptor = function() {};
