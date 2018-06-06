@@ -192,9 +192,24 @@ const sharedResources = [
       'encoding.js']
   },
   {
-    source: 'vendor/polyfill',
+    source: resolver.resolveModulePath('blob-polyfill', __dirname),
     target: 'vendor/polyfill',
-    scripts: ['blob.js', 'filesaver.js', 'string.js', 'typedarray.js']
+    scripts: ['Blob.js']
+  },
+  {
+    source: resolver.resolveModulePath('file-saver', __dirname),
+    target: 'vendor/polyfill',
+    scripts: ['FileSaver.js']
+  },
+  {
+    source: resolver.resolveModulePath('js-polyfills', __dirname),
+    target: 'vendor/polyfill',
+    scripts: ['typedarray.js']
+  },
+  {
+    source: resolver.resolveModulePath('string.prototype.startswith', __dirname),
+    target: 'vendor/polyfill',
+    scripts: ['startswith.js']
   },
   {
     source: resolver.resolveModulePath('zip-js/WebContent', __dirname),
