@@ -26,7 +26,8 @@ os.ui.datetime.startEndDateDirective = function() {
       'startRequired': '=',
       'endRequired': '=',
       'disabled': '=?',
-      'showLabels': '=?'
+      'showLabels': '=?',
+      'vertical': '=?'
     },
     templateUrl: os.ROOT + 'views/datetime/startenddate.html',
     controller: os.ui.datetime.StartEndDateCtrl,
@@ -89,6 +90,11 @@ os.ui.datetime.StartEndDateCtrl = function($scope) {
    * @type {?boolean}
    */
   this['showLabels'] = goog.isDefAndNotNull(this.scope['showLabels']) ? this.scope['showLabels'] : true;
+
+  /**
+   * @type {?boolean}
+   */
+  this['vertical'] = goog.isDefAndNotNull(this.scope['vertical']) ? this.scope['vertical'] : false;
 
   /**
    * If start date is prior to end date.
