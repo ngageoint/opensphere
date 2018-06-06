@@ -28,6 +28,10 @@
   overflow-y: auto;
 }
 
+.u-mw-50 {
+  max-width: 50%;
+}
+
 .u-cursor-grab {
   @include grab-cursor();
 }
