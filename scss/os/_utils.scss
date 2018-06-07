@@ -12,6 +12,16 @@
   min-width: 0;
 }
 
+// Bootstrap fixes form-control:disabled opacity to 1 instead of providing a variable to override. We want inputs to
+// appear muted when disabled, so we'll override the class instead.
+$form-control-disabled-opacity: .6 !default;
+
+.form-control {
+  &:disabled {
+    opacity: $form-control-disabled-opacity;
+  }
+}
+
 
 // --------------------------------- Misc Utilities --------------------------------- //
 .u-pointer-events-all {

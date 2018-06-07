@@ -1,11 +1,11 @@
 <div class="h-100 w-100 d-flex flex-column">
   <div class="modal-body container h-100">
     <div class="row mx-0 h-100">
-      <div class="col-5">
+      <div class="col-4 pl-0 pr-2">
         <slicktree x-data="settingsNodes" selected="selected" show-root="false"></slicktree>
       </div>
-      <div class="col pl-0">
-        <div class="h-100 col position-absolute u-overflow-y-auto">
+      <div class="col pl-0 pr-0">
+        <div class="h-100 w-100 position-absolute u-overflow-y-auto">
           <uiswitch class="h-100" items="selected" directive-function="setCon.getUi" generic="defaultsettingui"></uiswitch>
         </div>
       </div>
@@ -13,11 +13,11 @@
   </div>
   <div class="modal-footer d-flex justify-content-between">
     <button type="button" class="btn" ng-click="setCon.reset();">
-      <i class="fa fa-fw fa-refresh"></i>
+      <i class="fa fa-fw fa-refresh text-danger"></i>
       Reset
     </button>
-    <button type="button" class="btn btn-secondary" ng-click="setCon.close()">
-      <i class="fa fa-fw fa-check"></i>
+    <button type="button" class="btn" ng-click="setCon.close()">
+      <i class="fa fa-fw fa-check text-primary"></i>
       Close
     </button>
   </div>

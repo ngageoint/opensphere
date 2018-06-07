@@ -2,18 +2,16 @@ $indigo: #6c94bc;
 $blue: #3498db;
 $light: #ecf0f1;
 
-// Changed secondary
-$gray-600: #999 !default;
-
 $primary: $blue;
 $info: $indigo;
-$secondary: $gray-600;
 $link-color: $primary;
 
 @import 'darkly/variables';
 
 $border-color: $table-border-color;
+
 $input-bg: #555;
+$input-disabled-bg: #555;
 $input-color: $white;
 $input-border-color: $table-border-color;
 $input-placeholder-color: $gray-500;
@@ -22,3 +20,5 @@ $navbar-light-color: $gray-700;
 $navbar-light-hover-color: $primary;
 $navbar-light-active-color: $primary;
 $navbar-dark-hover-color: $primary;
+
+$text-muted: $gray-500;
