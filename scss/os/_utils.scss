@@ -1,3 +1,18 @@
+// --------------------------------- Bootstrap Overrides --------------------------------- //
+// ---------- Special block to override bootstrap defaults we want in all cases ---------- //
+.d-flex {
+  // This piggybacks off of the BS4 .d-flex selector in order to fix Firefox's bad handling of column flex layouts
+  min-height: 0;
+}
+
+.d-flex > * {
+  // This piggybacks off of the BS4 .d-flex selector in order to fix text truncation for words that dont break
+  // All children of a d-flex should have min-width: 0 so it doesnt cause the parent to stretch to fit it inside
+  // but instead to wrap the child content
+  min-width: 0;
+}
+
+
 // --------------------------------- Misc Utilities --------------------------------- //
 .u-pointer-events-all {
   pointer-events: all;
@@ -62,7 +77,7 @@
   content: '*';
   font-size: $font-size-lg;
   position: absolute;
-  top: .25 * $font-size-base;
+  top: .1 * $font-size-base;
 }
 
 
