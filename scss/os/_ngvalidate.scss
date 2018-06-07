@@ -10,27 +10,9 @@ form {
   }
 
   .select2-container.ng-invalid.ng-dirty {
-    @extend .form-control.is-invalid;
-
-    .select2-choice {
-      @extend .form-control.is-invalid;
-    }
-  }
-
-  input.ng-pristine.ng-invalid,
-  span.ng-pristine.ng-invalid,
-  div:not([ng-form]).ng-pristine.ng-invalid,
-  select.ng-pristine.ng-invalid,
-  textarea.ng-pristine.ng-invalid {
-    @extend .form-control;
-  }
-
-  .ng-pristine.ng-invalid .select2-container {
-    @extend .form-control;
-
     .select2-choice,
     .select2-choices {
-      @extend .form-control;
+      @extend .form-control.is-invalid;
     }
   }
 }
