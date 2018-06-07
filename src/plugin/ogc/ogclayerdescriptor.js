@@ -200,7 +200,6 @@ os.implements(plugin.ogc.OGCLayerDescriptor, os.data.IAreaTest.ID);
 os.implements(plugin.ogc.OGCLayerDescriptor, os.filter.IFilterable.ID);
 os.implements(plugin.ogc.OGCLayerDescriptor, os.ui.ogc.IFeatureTypeDescriptor.ID);
 os.implements(plugin.ogc.OGCLayerDescriptor, os.ui.ogc.IOGCDescriptor.ID);
-os.implements(plugin.ogc.OGCLayerDescriptor, os.ui.ogc.wms.IWMSLayer.ID);
 
 
 /**
