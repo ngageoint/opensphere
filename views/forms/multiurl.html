@@ -64,12 +64,12 @@
     </div>
   </div>
   <div class="modal-footer d-flex">
-    <button class="btn" ng-click="ctrl.accept()" ng-disabled="form.$invalid || testing">
-      <i class="fa fa-check text-primary"></i>
+    <button class="btn btn-primary" ng-click="ctrl.accept()" ng-disabled="form.$invalid || testing">
+      <i class="fa fa-check"></i>
       {{edit ? 'Save' : 'OK'}}
     </button>
-    <button class="btn" ng-click="ctrl.close()">
-      <i class="fa fa-ban text-danger"></i>
+    <button class="btn btn-secondary" ng-click="ctrl.close()">
+      <i class="fa fa-ban"></i>
       Cancel
     </button>
   </div>
