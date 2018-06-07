@@ -52,12 +52,11 @@ plugin.ogc.ui.OGCLayerNodeUICtrl = function($scope, $element) {
 
   var chooseTime = false;
 
-  if (os.implements(this.descriptor_, os.ui.ogc.IFeatureTypeDescriptor.ID)
-      && os.implements(this.descriptor_, os.ui.ogc.wms.IWMSLayer.ID)) {
+  if (os.implements(this.descriptor_, os.ui.ogc.IFeatureTypeDescriptor.ID)) {
     var featureType = this.descriptor_.getFeatureType();
     if (featureType) {
-      chooseTime = this.descriptor_.hasTimeExtent() && featureType.getTimeColumns().length >= 2 &&
-          featureType.getStartDateColumnName() != 'validTime';
+      chooseTime = (featureType.getStartDateColumnName() !== null || featureType.getEndDateColumnName() !== null)
+        && featureType.getTimeColumns().length >= 2 && featureType.getStartDateColumnName() != 'validTime';
     }
   }
   $scope['chooseTime'] = chooseTime;

@@ -9,13 +9,6 @@ os.ui.ogc.wms.IWMSLayer = function() {};
 
 
 /**
- * @type {string}
- * @const
- */
-os.ui.ogc.wms.IWMSLayer.ID = 'os.ui.ogc.wms.IWMSLayer';
-
-
-/**
  * Gets the layer title.
  * @return {?string}
  */
