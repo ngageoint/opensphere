@@ -1,7 +1,9 @@
 goog.provide('os.config.ThemeSettings');
 goog.provide('os.config.ThemeSettingsChangeEvent');
 goog.provide('os.config.ThemeSettingsCtrl');
+
 goog.require('goog.Promise');
+goog.require('goog.dom.safe');
 goog.require('goog.events.Event');
 goog.require('os.config.Settings');
 goog.require('os.ui.config.SettingPlugin');
@@ -27,10 +29,28 @@ goog.inherits(os.config.ThemeSettings, os.ui.config.SettingPlugin);
 /**
  * @enum {string}
  */
-os.config.ThemeSettings.keys = {
-  NONE: 'none',
+os.config.ThemeSettings.Keys = {
   THEME: 'theme', // NOTE: this is in namespace.js as a cross application core setting. If you change it update there.
   THEMES: 'themes'
+};
+
+
+/**
+ * The default theme name.
+ * @type {string}
+ * @const
+ */
+os.config.ThemeSettings.DEFAULT_THEME = 'Default';
+
+
+/**
+ * Default `themes` setting object. This should always be in config, so this is intended to be a fail-safe. If the
+ * default theme changes in config, please update this.
+ * @type {!Object<string, string>}
+ * @const
+ */
+os.config.ThemeSettings.DEFAULT_THEMES = {
+  'Default': 'overrides_darkly_compact'
 };
 
 
@@ -71,16 +91,14 @@ os.config.ThemeSettingsCtrl = function($scope) {
   /**
    * @type {Object<string>}
    */
-  this['themes'] = os.settings.get(os.config.ThemeSettings.keys.THEMES, {});
-  // Remove the no theme option from the list to pick from
-  goog.object.remove(this['themes'], os.config.ThemeSettings.keys.NONE);
+  this['themes'] = os.settings.get(os.config.ThemeSettings.Keys.THEMES, os.config.ThemeSettings.DEFAULT_THEMES);
 
   /**
    * @type {string}
    */
-  this['theme'] = os.settings.get(os.config.ThemeSettings.keys.THEME, '');
+  this['theme'] = os.settings.get(os.config.ThemeSettings.Keys.THEME, os.config.ThemeSettings.DEFAULT_THEME);
 
-  os.settings.listen(os.config.ThemeSettings.keys.THEME, this.onSettingsChange_, false, this);
+  os.settings.listen(os.config.ThemeSettings.Keys.THEME, this.onSettingsChange_, false, this);
   $scope.$on('$destroy', this.destroy_.bind(this));
 };
 
@@ -89,7 +107,7 @@ os.config.ThemeSettingsCtrl = function($scope) {
  * @private
  */
 os.config.ThemeSettingsCtrl.prototype.destroy_ = function() {
-  os.settings.unlisten(os.config.ThemeSettings.keys.THEME, this.onSettingsChange_, false, this);
+  os.settings.unlisten(os.config.ThemeSettings.Keys.THEME, this.onSettingsChange_, false, this);
   this.scope_ = null;
 };
 
@@ -114,7 +132,7 @@ os.config.ThemeSettingsCtrl.prototype.onSettingsChange_ = function(event) {
  */
 os.config.ThemeSettingsCtrl.prototype.onThemeChange = function(newVal, oldVal) {
   if (newVal != this['theme']) {
-    os.settings.set(os.config.ThemeSettings.keys.THEME, this['theme']);
+    os.settings.set(os.config.ThemeSettings.Keys.THEME, this['theme']);
   }
 };
 goog.exportProperty(
@@ -135,29 +153,37 @@ os.config.ThemeSettings.setTheme = function() {
       return themeRegEx.test(el.href);
     });
 
-    // The theme that is displayed to the user
-    var displayTheme = os.settings.get(os.config.ThemeSettings.keys.THEME, 'none');
+    // The currently selected theme.
+    var displayTheme = os.settings.get(os.config.ThemeSettings.Keys.THEME, os.config.ThemeSettings.DEFAULT_THEME);
 
-    // The actual theme filename
-    var theme = os.settings.get(os.config.ThemeSettings.keys.THEMES, {})[displayTheme];
+    // The application's configured themes.
+    var themes = os.settings.get(os.config.ThemeSettings.Keys.THEMES, os.config.ThemeSettings.DEFAULT_THEMES);
 
-    // If there is a theme specified, use it! otherwise just use what comes with the application
-    if (goog.isDef(theme)) {
-      // No theme is the default theme
-      if (!theme) {
-        theme = 'default';
-      }
+    // If the theme is not defined in settings, use the default. This is most likely to happen when configured themes
+    // are changed.
+    if (!themes[displayTheme]) {
+      displayTheme = os.config.ThemeSettings.DEFAULT_THEME;
+      os.settings.set(os.config.ThemeSettings.Keys.THEME, displayTheme);
+    }
 
-      // The url to the new theme
-      var cssFile = ssEl.href.replace(themeRegEx, '$1' + theme + '$2');
-      if (ssEl.href != cssFile) {
-        // Awesome! lets load it!
-        os.config.ThemeSettingsChangeEventTheme(cssFile).then(function() {
-          resolve();
-        });
-      } else {
+    // The theme's stylesheet name.
+    var theme = themes[displayTheme];
+    if (!theme) {
+      reject('Failed loading the application theme: default theme is missing.');
+      return;
+    }
+
+    // The URL to the theme's stylesheet.
+    var cssFile = ssEl.href.replace(themeRegEx, '$1' + theme + '$2');
+    if (ssEl.href != cssFile) {
+      // Awesome! lets load it!
+      os.config.ThemeSettingsChangeEventTheme(cssFile).then(function() {
         resolve();
-      }
+      }, function() {
+        reject('Failed loading the application theme: could not load CSS for "' + cssFile + '".');
+      });
+    } else {
+      resolve();
     }
   });
 };
@@ -178,26 +204,33 @@ os.config.ThemeSettings.updateTheme = function() {
  */
 os.config.ThemeSettingsChangeEventTheme = function(cssFile) {
   return new goog.Promise(function(resolve, reject) {
-    // onload doesnt work correctly for link for all browsers. Theres a hacky workaround to use img to to know when
-    // the css is loaded
+    // Create an add the stylesheet to the DOM.
     var link = $('<link rel="stylesheet" type="text/css" href="' + cssFile + '"></link>');
     $('head').append(link);
+
+    // link.onload doesnt work correctly in browsers. As a hacky workaround, load the stylesheet as an image an use the
+    // onerror handler to detect that the load completed.
     var img = document.createElement('img');
 
     /**
-     * Failproof way to check if the css is loaded
+     * Workaround for link.onload not working correctly in various browsers.
      */
     img.onerror = function() {
       document.body.removeChild(img);
 
+      // Detecting stylesheet loading still isn't an exact science, and sometimes the file will be available but not
+      // fully loaded. This causes some styles to be absent when the DOM is rendered, and is most comment when using a
+      // debug build.
       if (os.ui.injector) {
         os.ui.injector.get('$timeout')(function() {
           os.config.ThemeSettings.themeUpdated();
           resolve();
         }, 200);
       } else {
-        os.config.ThemeSettings.themeUpdated();
-        resolve();
+        setTimeout(function() {
+          os.config.ThemeSettings.themeUpdated();
+          resolve();
+        }, 200);
       }
     };
 
@@ -217,7 +250,6 @@ os.config.ThemeSettings.themeUpdated = function() {
   var ourThemes = goog.array.filter(stylesheets, function(el) {
     return themeRegEx.test(el.href);
   });
-
 
   for (var i = 0; i < ourThemes.length - 1; i++) {
     ourThemes[i].remove();

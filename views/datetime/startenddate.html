@@ -1,18 +1,18 @@
 <div ng-form="dateForm">
-  <div class="container mb-1" ng-show="startEndCtrl.showLabels">
-    <div class="row">
-      <label class="col-3" for="startControls">{{startEndCtrl.startLabel}}:</label>
-      <div id="startControls" class="col">
+  <div ng-class="{'container mb-1':!startEndCtrl.vertical}" ng-show="startEndCtrl.showLabels">
+    <div ng-class="{'row':!startEndCtrl.vertical,'form-group':startEndCtrl.vertical}">
+      <label ng-class="{'col-3':!startEndCtrl.vertical}" for="startControls">{{startEndCtrl.startLabel}}:</label>
+      <div id="startControls" ng-class="{'col':!startEndCtrl.vertical}">
         <input type="hidden" name="startDate" data-ng-required="startEndCtrl.startRequired" data-ng-model="startEndCtrl.start" />
         <div data-date-time class="d-inline-block" data-value="startEndCtrl.start" data-disabled="disabled" is-required="startEndCtrl.startRequired" data-invalid="startEndCtrl.startInvalid"></div>
       </div>
     </div>
   </div>
 
-  <div class="container" ng-show="startEndCtrl.showLabels">
-    <div class="row">
-      <label class="col-3" for="endControls">{{startEndCtrl.endLabel}}:</label>
-      <div id="endControls" class="col">
+  <div ng-class="{'container':!startEndCtrl.vertical}" ng-show="startEndCtrl.showLabels">
+    <div ng-class="{'row':!startEndCtrl.vertical,'form-group':startEndCtrl.vertical}">
+      <label ng-class="{'col-3':!startEndCtrl.vertical}" for="endControls">{{startEndCtrl.endLabel}}:</label>
+      <div id="endControls" ng-class="{'col':!startEndCtrl.vertical}">
         <input type="hidden" name="endDate" data-ng-required="startEndCtrl.endRequired || startEndCtrl.endInvalid" data-ng-model="startEndCtrl.end" />
         <div data-date-time class="d-inline-block" data-value="startEndCtrl.end" data-disabled="disabled" is-required="startEndCtrl.endRequired" data-invalid="startEndCtrl.endInvalid"></div>
       </div>
@@ -29,6 +29,6 @@
   <div class="form-group" data-ng-show="!startEndCtrl.orderValid">
     <!-- Just require that its valid -->
     <input type="hidden" data-ng-required="!startEndCtrl.orderValid" data-ng-model="startEndCtrl.orderValid"/>
-    <span class="text-danger">{{startEndCtrl.startLabel}} is after {{startEndCtrl.endLabel}}!</span>
+    <span class="invalid-feedback d-block">{{startEndCtrl.startLabel}} is after {{startEndCtrl.endLabel}}!</span>
   </div>
 </div>
