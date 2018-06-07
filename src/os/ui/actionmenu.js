@@ -397,7 +397,7 @@ goog.exportProperty(os.ui.ActionMenuCtrl.prototype, 'positionSubmenu',
  */
 os.ui.ActionMenuCtrl.prototype.calcNumItemsToDisplay_ = function(submenu) {
   var viewportSize = goog.dom.getViewportSize();
-  var items = submenu.find('.dropdown-item');
+  var items = submenu.find('.js-dropdown-item');
   var numItemsToDisplay = 0;
   if (items && items.length > 0) {
     var itemHeight = items[0].offsetHeight;
