@@ -2,7 +2,7 @@
   <div ng-repeat="menuItem in actions | limitTo : menuLimit"
       ng-init="hasSubActions = menuItem.getItems; showSubMenu = isFlat; isSeparator = menuItem.isSeparator; isSeparatorHeader = menuItem.isSeparatorHeader; isAction = menuItem.getAction">
     <div class="text-truncate"
-      ng-class="{'dropdown-item': isAction || (hasSubActions && !isFlat), 'js-dropdown-submenu': hasSubActions, 'dropdown-divider': isSeparator, 'dropdown-header': isSeparatorHeader, 'dropdown-header pb-0': hasSubActions && isFlat}"
+      ng-class="{'dropdown-item u-mw-50': isAction || (hasSubActions && !isFlat), 'js-dropdown-submenu': hasSubActions, 'dropdown-divider': isSeparator, 'dropdown-header': isSeparatorHeader, 'dropdown-header pb-0': hasSubActions && isFlat}"
       title="{{menuItem.getAction().getDescription()}}"
       ng-mouseenter="showSubMenu = hasSubActions; menuLimit = 100"
       ng-mouseleave="showSubMenu = isFlat"

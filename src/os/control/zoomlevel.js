@@ -47,16 +47,22 @@ os.control.ZoomLevel = function(opt_options) {
    * @private
    */
   this.altElement_ = goog.dom.createDom(goog.dom.TagName.SPAN, {
-    'class': 'altitude-text mr-3'
+    'class': 'altitude-text mr-1'
   });
   this.element_.appendChild(this.altElement_);
+
+  var separator = goog.dom.createDom(goog.dom.TagName.SPAN, {
+    'class': 'separator mr-1'
+  });
+  goog.dom.safe.setInnerHtml(separator, goog.html.SafeHtml.htmlEscape('|'));
+  this.element_.appendChild(separator);
 
   /**
    * @type {Element}
    * @private
    */
   this.zoomElement_ = goog.dom.createDom(goog.dom.TagName.SPAN, {
-    'class': 'zoom-text'
+    'class': 'zoom-text mr-1'
   });
   this.element_.appendChild(this.zoomElement_);
 
