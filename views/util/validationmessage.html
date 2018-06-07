@@ -1,4 +1,4 @@
-<span class="invalid-feedback" ng-class="{'d-block': ctrl.isEmpty()}">
+<span class="invalid-feedback" ng-class="{'d-block': ctrl.hasError()}">
   <span ng-if="target.$error.required">Required!</span>
   <span ng-if="target.$error.maxlength">Too long!</span>
 </span>
