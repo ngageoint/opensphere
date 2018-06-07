@@ -1,22 +1,23 @@
 // Overrides for simpleMDE
 .c-simplemde {
-  .c-simplemde__form .editor-toolbar.fullscreen {
+  .editor-toolbar.fullscreen {
     background-color: $body-bg;
     height: 3.5rem;
     z-index: $zindex-modal;
   }
 
-  .c-simplemde__form .CodeMirror-fullscreen {
+  .CodeMirror-fullscreen {
     z-index: $zindex-modal;
   }
 
-  .c-simplemde__form .CodeMirror-fullscreen,
-  .c-simplemde__form .CodeMirror {
-    background-color: $body-bg;
-    color: $body-color;
+  .CodeMirror-fullscreen,
+  .CodeMirror {
+    background-color: $input-bg;
+    border-color: $input-border-color;
+    color: $input-color;
   }
 
-  .c-simplemde__form .editor-toolbar a {
+  .editor-toolbar a {
     color: $body-color !important;
   }
 
@@ -34,11 +35,11 @@
     }
   }
 
-  .c-simplemde__form .editor-preview {
+  .editor-preview {
     background-color: $body-bg;
   }
 
-  .c-simplemde__form .editor-preview-side {
+  .editor-preview-side {
     background-color: $body-bg;
     z-index: $zindex-modal;
   }
@@ -49,12 +50,22 @@
 
   .editor-toolbar.fullscreen,
   .editor-toolbar {
-    background-color: $table-head-bg;
-    color: $table-head-color;
+    background-color: $secondary;
+    border: 0;
+
+    a {
+      color: color-yiq($secondary) !important;
+
+      &.active,
+      &:hover {
+        @include gradient-bg(darken($secondary, 7.5%));
+        border-color: $input-border-color;
+      }
+    }
 
     i.separator {
-      border-left-color: $body-color;
-      border-right-color: $body-bg;
+      border-left-color: $input-border-color;
+      border-right-color: darken($input-border-color, 7.5%);
     }
   }
 

@@ -1,8 +1,8 @@
 <div ng-form="dateForm">
   <div ng-class="{'container mb-1':!startEndCtrl.vertical}" ng-show="startEndCtrl.showLabels">
     <div ng-class="{'row':!startEndCtrl.vertical,'form-group':startEndCtrl.vertical}">
-      <label ng-class="{'col-3':!startEndCtrl.vertical}" for="startControls">{{startEndCtrl.startLabel}}:</label>
-      <div id="startControls" ng-class="{'col':!startEndCtrl.vertical}">
+      <label ng-class="{'col-3 text-right':!startEndCtrl.vertical}" for="startControls">{{startEndCtrl.startLabel}}</label>
+      <div id="startControls" ng-class="{'col':!startEndCtrl.vertical, 'u-required': startEndCtrl.startRequired}">
         <input type="hidden" name="startDate" data-ng-required="startEndCtrl.startRequired" data-ng-model="startEndCtrl.start" />
         <div data-date-time class="d-inline-block" data-value="startEndCtrl.start" data-disabled="disabled" is-required="startEndCtrl.startRequired" data-invalid="startEndCtrl.startInvalid"></div>
       </div>
@@ -11,8 +11,8 @@
 
   <div ng-class="{'container':!startEndCtrl.vertical}" ng-show="startEndCtrl.showLabels">
     <div ng-class="{'row':!startEndCtrl.vertical,'form-group':startEndCtrl.vertical}">
-      <label ng-class="{'col-3':!startEndCtrl.vertical}" for="endControls">{{startEndCtrl.endLabel}}:</label>
-      <div id="endControls" ng-class="{'col':!startEndCtrl.vertical}">
+      <label ng-class="{'col-3 text-right':!startEndCtrl.vertical}" for="endControls">{{startEndCtrl.endLabel}}</label>
+      <div id="endControls" ng-class="{'col':!startEndCtrl.vertical, 'u-required': startEndCtrl.endRequired}">
         <input type="hidden" name="endDate" data-ng-required="startEndCtrl.endRequired || startEndCtrl.endInvalid" data-ng-model="startEndCtrl.end" />
         <div data-date-time class="d-inline-block" data-value="startEndCtrl.end" data-disabled="disabled" is-required="startEndCtrl.endRequired" data-invalid="startEndCtrl.endInvalid"></div>
       </div>
@@ -21,7 +21,7 @@
 
   <div class="d-flex flex-column" ng-show="!startEndCtrl.showLabels">
     <input type="hidden" name="startDate" data-ng-required="startEndCtrl.startRequired" data-ng-model="startEndCtrl.start" />
-    <div data-date-time class="d-inline-block mb-3" data-value="startEndCtrl.start" data-disabled="disabled" is-required="startEndCtrl.startRequired" data-invalid="startEndCtrl.startInvalid"></div>
+    <div data-date-time class="d-inline-block form-group" data-value="startEndCtrl.start" data-disabled="disabled" is-required="startEndCtrl.startRequired" data-invalid="startEndCtrl.startInvalid"></div>
     <input type="hidden" name="endDate" data-ng-required="startEndCtrl.endRequired || startEndCtrl.endInvalid" data-ng-model="startEndCtrl.end" />
     <div data-date-time class="d-inline-block" data-value="startEndCtrl.end" data-disabled="disabled" is-required="startEndCtrl.endRequired" data-invalid="startEndCtrl.endInvalid"></div>
   </div>
