@@ -1,4 +1,4 @@
-// Miscellaneous utility CSS classes not provided by Bootstrap
+// --------------------------------- Misc Utilities --------------------------------- //
 .u-pointer-events-all {
   pointer-events: all;
 }
@@ -36,11 +36,6 @@
   @include grabbing-cursor();
 }
 
-// Used for windows and flyouts where we want to see what pops in behind them
-.u-opacity__95 {
-  opacity: .95;
-}
-
 .u-btn-separator {
   border-left: 1px solid $body-color;
   border-right: 1px solid $body-bg;
@@ -50,6 +45,24 @@
   top: 6px;
 }
 
+
+// --------------------------------- Visibility Utilities --------------------------------- //
+.u-opacity__95 {
+  opacity: .95;
+}
+
+
+// --------------------------------- Form Utilities --------------------------------- //
+.u-required:after {
+  color: $danger;
+  content: '*';
+  font-size: $font-size-lg;
+  position: absolute;
+  top: .25 * $font-size-base;
+}
+
+
+// --------------------------------- Color Utilities --------------------------------- //
 // For all the bootstrap themes, create our utility color
 @each $color, $value in $theme-colors {
   .u-bg-#{$color}-text {
@@ -69,5 +82,28 @@
 @each $color, $value in $colors {
   .u-text-#{$color} {
     color: $value;
+  }
+}
+
+
+// ----------- Generic max sizes. Use with caution only when absoluted needed ----------- //
+$somesizes: () !default;
+$somesizes: map-merge((
+    25: 25%,
+    50: 50%,
+    75: 75%
+), $somesizes);
+
+// (u-mh-25: max-height: 25%)
+@each $prop, $abbrev in (width: w, height: h) {
+  @each $size, $length in $somesizes {
+    .u-m#{$abbrev}-#{$size} { max-#{$prop}: $length !important; }
+  }
+}
+
+// (u-mvh-25: max-height: 25vh)
+@each $prop, $abbrev in (width: w, height: h) {
+  @each $size, $length in $somesizes {
+    .u-mv#{$abbrev}-#{$size} { max-#{$prop}: #{$size}v#{$abbrev} !important; }
   }
 }
