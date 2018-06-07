@@ -348,8 +348,8 @@ os.ui.ActionMenuCtrl.prototype.position = function() {
 os.ui.ActionMenuCtrl.prototype.positionSubmenu = function() {
   this.timeout(goog.bind(function() {
     if (this.element && !this.scope['isFlat']) {
-      var submenus = this.element.find('.c-action-menu-item-list > .dropdown-submenu');
-      var submenu = submenus.find('.c-action-menu-item-list');
+      var submenus = this.element.find('.js-action-menu-item-list .js-dropdown-submenu');
+      var submenu = submenus.find('.js-action-menu-item-list');
       if (submenu && submenu.length > 0) {
         submenu.scope()['menuLimit'] = this.calcNumItemsToDisplay_(submenu);
         os.ui.apply(submenu.scope());

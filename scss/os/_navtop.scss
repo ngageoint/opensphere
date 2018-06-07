@@ -4,19 +4,26 @@
 
 .c-navtop__navbar-brand svg {
   max-height: 1.75em;
-  max-width: 5em;
+  max-width: 7em;
   vertical-align: middle;
 }
 
-.c-navtop__navbar-brand img,
-.c-navtop__navbar-brand g,
-.c-navtop__navbar-brand g path {
+.c-navtop__navbar-brand svg g,
+.c-navtop__navbar-brand svg *[fill] {
   fill: $navbar-dark-color;
 }
 
-.c-navtop__navbar-brand:hover g,
-.c-navtop__navbar-brand:hover g path {
+.c-navtop__navbar-brand svg *[stroke] {
+  stroke: $navbar-dark-color;
+}
+
+.c-navtop__navbar-brand:hover svg g,
+.c-navtop__navbar-brand:hover svg *[fill] {
   fill: $navbar-dark-hover-color;
+}
+
+.c-navtop__navbar-brand:hover svg *[stroke] {
+  stroke: $navbar-dark-hover-color;
 }
 
 .c-navtop__filled {
@@ -57,12 +64,20 @@
   color: color-yiq(theme-color('light'));
 }
 
-.c-navtop__header-light .c-navtop__navbar-brand g,
-.c-navtop__header-light .c-navtop__navbar-brand g path {
+.c-navtop__header-light .c-navtop__navbar-brand svg g,
+.c-navtop__header-light .c-navtop__navbar-brand svg *[fill] {
   fill: $navbar-light-color;
 }
 
-.c-navtop__header-light .c-navtop__navbar-brand:hover g,
-.c-navtop__header-light .c-navtop__navbar-brand:hover g path {
+.c-navtop__header-light .c-navtop__navbar-brand svg *[stroke] {
+  stroke: $navbar-light-color;
+}
+
+.c-navtop__header-light .c-navtop__navbar-brand:hover svg g,
+.c-navtop__header-light .c-navtop__navbar-brand:hover svg *[fill] {
   fill: $navbar-light-hover-color;
+}
+
+.c-navtop__header-light .c-navtop__navbar-brand:hover svg *[stroke] {
+  stroke: $navbar-light-hover-color;
 }
