@@ -13,8 +13,9 @@
       <tbody>
         <tr ng-repeat="item in data" class="c-server-row">
           <td class="d-flex p-1">
-            <span class="c-servers-info flex-fill" title="{{item.item.url}}">
-              <input type="checkbox" ng-model="item.enabled" ng-change="servers.update()" title="Enable/Disable this server">
+            <span class="c-servers-info form-check flex-fill" title="{{item.item.url}}">
+              <input class="form-check-input" type="checkbox" ng-model="item.enabled" ng-change="servers.update()"
+                  title="Enable/Disable this server">
               {{item.label}}
               <i ng-if="!item.loading" class="fa fa-circle"
                   ng-class="item.enabled ? item.error ? 'text-danger' : 'text-success' : ''"
