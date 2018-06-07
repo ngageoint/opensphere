@@ -456,6 +456,7 @@ os.ui.ActionMenuCtrl.prototype.clearMoreButton = function() {
 
 /**
  * Take action since there are more reults in the submenu than what will fit on the screen.
+ * @export
  */
 os.ui.ActionMenuCtrl.prototype.handleMoreResults = function() {
   this.scope['provider'].invokeMoreResultsAction(this.element);
