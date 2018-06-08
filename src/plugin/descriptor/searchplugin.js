@@ -21,7 +21,7 @@ goog.inherits(plugin.descriptor.SearchPlugin, os.plugin.AbstractPlugin);
  * @type {string}
  * @const
  */
-plugin.descriptor.SearchPlugin.ID = 'descriptor';
+plugin.descriptor.SearchPlugin.ID = 'descriptorsearch';
 
 
 /**
