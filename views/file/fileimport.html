@@ -3,15 +3,20 @@
     <div class="container-fluid" ng-form="fileForm">
       <div class="form-group form-row">
         <label for="fileName">Choose a file:</label>
-        <input class="form-control" type="text" name="text" ng-click="fileImport.openFileBrowser()" ng-model="fileImport.fileName" ng-required="true" placeholder="Click to choose file..." readOnly />
+        <input class="form-control" type="text" name="text" ng-click="fileImport.openFileBrowser()"
+            ng-model="fileImport.fileName" ng-required="true" placeholder="Click to choose file..." readOnly />
       </div>
     </div>
   </div>
   <div class="modal-footer">
-    <button class="btn btn-primary" ng-click="fileImport.accept()" ng-disabled="fileForm.$invalid || fileImport.loading" title="Import the file">
+    <button class="btn btn-primary" ng-click="fileImport.accept()" ng-disabled="fileForm.$invalid || fileImport.loading"
+        title="Import the file">
       <i class="fa" ng-class="fileImport.loading && 'fa-spin fa-spinner' || 'fa-chevron-circle-right'"></i>
-      <span ng-if="fileImport.loading">Loading</span><span ng-if="!fileImport.loading"> Next</span>
+      {{fileImport.loading ? 'Loading' : 'Next'}}
     </button>
-    <button class="btn btn-secondary" ng-click="fileImport.close()" title="Cancel file import"><i class="fa fa-ban"></i> Cancel</button>
+    <button class="btn btn-secondary" ng-click="fileImport.close()" title="Cancel file import">
+      <i class="fa fa-ban"></i>
+      Cancel
+    </button>
   </div>
 </div>

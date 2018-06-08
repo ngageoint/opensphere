@@ -23,3 +23,9 @@
     }
   }
 }
+
+// The colors in this style are much too dark, and difficult to see. Brighten them up!
+.btn-outline-secondary {
+  border-color: #999;
+  color: #999;
+}
