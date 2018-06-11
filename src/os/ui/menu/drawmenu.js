@@ -123,7 +123,7 @@ os.ui.menu.draw.handleDrawEvent = function(event) {
       os.query.launchCoordinates();
       break;
     case os.ui.menu.draw.EventType.COUNTRY_BORDER:
-      os.dispatcher.dispatchEvent(new goog.events.Event(os.ui.ol.draw.DrawEventType.DRAWLINE));
+      os.dispatcher.dispatchEvent(new goog.events.Event(os.ui.ol.draw.DrawEventType.DRAWCOUNTRY));
       break;
     case os.ui.menu.draw.EventType.WHOLE_WORLD:
       os.query.queryWorld();
