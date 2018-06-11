@@ -37,7 +37,7 @@
 
 .ol-control button:hover,
 .ol-control button.active {
-  background-color: rgba($primary, .2);
+  background-color: rgba($primary, .8);
 }
 
 // top left
@@ -51,6 +51,7 @@
 // top right
 .ol-zoom {
   bottom: auto;
+  cursor: pointer;
   left: auto;
   right: .75rem;
   top: .75rem;
