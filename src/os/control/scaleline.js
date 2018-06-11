@@ -185,11 +185,6 @@ os.control.ScaleLine.prototype.updateElement_ = function() {
   }
   var html = displayNum + ' ' + suffix;
 
-  /**
-   * This is a copy of the original OpenLayers code, with additional bits for showing a single unit
-   * @inheritDoc
-   * @suppress {accessControls}
-   */
   if (this.renderedHTML_ != html && this.innerElement_) {
     goog.dom.safe.setInnerHtml(this.innerElement_, goog.html.SafeHtml.htmlEscape(html));
     this.renderedHTML_ = html;
