@@ -147,7 +147,6 @@ os.ui.ol.draw.DrawControlsCtrl = function($scope, $element, $compile) {
   $scope.$on('$destroy', this.dispose.bind(this));
 };
 goog.inherits(os.ui.ol.draw.DrawControlsCtrl, goog.Disposable);
-goog.addSingletonGetter(os.ui.ol.draw.DrawControlsCtrl);
 
 
 /**
@@ -175,25 +174,9 @@ os.ui.ol.draw.DrawControlsCtrl.prototype.disposeInternal = function() {
   os.dispatcher.unlisten(os.ui.ol.draw.DrawEventType.DRAWLINE, this.onDrawType, false, this);
   os.dispatcher.unlisten(os.ui.ol.draw.DrawEventType.DRAWCOUNTRY, this.onDrawType, false, this);
 
-  this.destroyControlMenu_();
-
   this.scope_ = null;
   this.element_ = null;
   this.compile_ = null;
-};
-
-
-/**
- * Clean up the draw control menu.
- * @private
- */
-os.ui.ol.draw.DrawControlsCtrl.prototype.destroyControlMenu_ = function() {
-  // if (this.menuScope_) {
-  //   goog.events.unlisten(document, 'mousedown', this.onMouseDown_, false, this);
-  //   goog.events.unlisten(document, 'mousewheel', this.onMouseDown_, false, this);
-  //   this.menuScope_.$destroy();
-  //   this.menuScope_ = null;
-  // }
 };
 
 
