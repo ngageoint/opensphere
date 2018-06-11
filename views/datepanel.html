@@ -1,6 +1,6 @@
 <div class="position-absolute w-100 d-flex flex-column text-light u-pointer-events-none js-date-panel" style="z-index:1;">
   <div class="ml-auto mr-auto u-pointer-events-all">
-    <div class="d-inline-block bg-dark px-2 pb-2 rounded-bottom">
+    <div class="d-inline-block bg-dark p-2" ng-class="ctrl.extended ? '' : 'rounded-bottom'">
       <div class="form-inline">
         <date-control></date-control>
         <button class="btn btn-secondary ml-1" ng-click="ctrl.toggleExtend()" title="{{ctrl.sliceTip}}">
@@ -14,7 +14,7 @@
   </div>
 
   <div id="js-slice-panel" class="ml-auto mr-auto u-pointer-events-all" ng-show="ctrl.extended">
-    <div class="d-inline-block bg-dark px-2 pb-2 rounded-bottom">
+    <div class="d-inline-block bg-dark p-2 rounded">
       <div class="form-row align-items-center">
         <div class="col-auto">
           <input class="form-control" type="number" min="0" max="23" step="1" ng-model="ctrl.startHour"
