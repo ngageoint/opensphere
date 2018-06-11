@@ -184,6 +184,12 @@ os.control.ScaleLine.prototype.updateElement_ = function() {
     displayNum = count.toExponential();
   }
   var html = displayNum + ' ' + suffix;
+
+  /**
+   * This is a copy of the original OpenLayers code, with additional bits for showing a single unit
+   * @inheritDoc
+   * @suppress {accessControls}
+   */
   if (this.renderedHTML_ != html && this.innerElement_) {
     goog.dom.safe.setInnerHtml(this.innerElement_, goog.html.SafeHtml.htmlEscape(html));
     this.renderedHTML_ = html;
@@ -198,4 +204,14 @@ os.control.ScaleLine.prototype.updateElement_ = function() {
     this.element_.style.display = '';
     this.renderedVisible_ = true;
   }
+};
+
+
+/**
+ * Get the element
+ * @suppress {accessControls}
+ * @return {Element}
+ */
+os.control.ScaleLine.prototype.getElement = function() {
+  return this.element_;
 };

@@ -9,107 +9,130 @@
   display: inherit;
 }
 
-.ol-control button,
-.ol-control button:focus {
-  background: rgba(0, 0, 0, .5);
-}
-
-.ol-control button:hover,
-.ol-control button.active {
-  background-color: rgba(0, 60, 136, .7);
-}
 
 .ol-mapmode-text {
   font-size: .9em;
   vertical-align: top;
 }
 
+// Controls
+.ol-control {
+  background-color: rgba($body-bg, .8);
+  border: .1rem solid rgba($body-color, .8);
+  color: rgba($body-color, .8);
+  position: absolute;
+}
+
+.ol-control:focus,
+.ol-control:hover {
+  background-color: rgba($body-bg, .8);
+  border: .1rem solid rgba($body-color, .8);
+  color: rgba($body-color, .8);
+}
+
+.ol-control button {
+  background-color: rgba($body-bg, .1);
+  color: rgba($body-color, .8);
+}
+
+.ol-control button:hover,
+.ol-control button.active {
+  background-color: rgba($primary, .2);
+}
+
+// top left
+.draw-controls {
+  bottom: auto;
+  left: .75rem;
+  right: auto;
+  top: .75rem;
+}
+
+// top right
 .ol-zoom {
+  bottom: auto;
   left: auto;
-  right: 15px;
-  top: 15px;
-
-  .ol-zoom-in {
-    background: rgba(0, 0, 0, .5);
-  }
-
-  .ol-zoom-out {
-    background: rgba(0, 0, 0, .5);
-  }
+  right: .75rem;
+  top: .75rem;
 }
 
 .ol-rotate {
+  bottom: auto;
   left: auto;
-  right: 15px;
-  top: 70px;
-}
-
-.ol-rotate .ol-has-tooltip {
-  &:hover [role=tooltip],
-  &:focus [role=tooltip] {
-    border-radius: 0 4px 4px 0;
-    left: 2.2em;
-    right: auto;
-  }
+  right: .75rem;
+  top: 4.5rem;
 }
 
 .ol-mapmode {
+  bottom: auto;
   left: auto;
-  right: 15px;
-  top: 102px;
+  right: .75rem;
+  top: 6.75rem;
 }
 
-.ol-zoom-level {
-  min-width: 15rem;
-}
+.ol-layer-switcher {
+  bottom: auto;
+  left: auto;
+  right: 3rem;
+  text-align: left;
+  top: .75rem;
 
-.ol-zoom-level,
-.mouse-position {
-  font-family: monospace;
-  line-height: 26px;
-}
+  button {
+    background-color: rgba($body-bg, .8);
+    background-image: url('../images/layers.png');
+  }
 
-.ol-scale-line {
-  background: none;
-  min-width: 11rem;
-  padding: 0;
-  position: inherit;
-  text-align: right;
-}
+  .panel {
+    background-color: rgba($body-bg, .8);
+    border: 1px solid rgba($body-color, .8);
+    display: none;
+    margin: 0;
+    margin-top: 1px;
+    padding: 0 5px;
+  }
 
+  &.shown .panel {
+    display: block;
+  }
 
-.ol-scale-line-inner {
-  display: inline-block;
-  font-family: monospace;
-  font-size: 13px;
-  height: 7px;
-  line-height: 0;
-  margin-right: 3px;
+  .layers-inner {
+    background-color: rgba($body-bg, .8);
+    background-image: url('../images/layers.png');
+    background-position: 2px;
+    background-repeat: no-repeat;
+    border: 1px solid rgba($body-color, .8) !important;
+    border-radius: 2px;
+    float: right;
+    height: 2.5rem;
+    margin: 1px;
+    width: 2.5rem;
+  }
 }
 
 .ol-overviewmap {
   bottom: auto;
   left: auto;
-  right: 50px;
-  top: 15px;
+  right: 3rem;
+  top: .75rem;
 
   &.ol-collapsed button {
     position: static;
   }
 
   button {
-    background: rgba(0, 0, 0, .5);
+    background: rgba($body-bg, .5);
+    color: rgba($body-color, .8);
     position: absolute;
-    right: 1px;
-    top: 1px;
+    right: .1rem;
+    top: .1rem;
   }
 
   .ol-overviewmap-map {
     border: 0;
     display: block;
-    height: 120px;
+    height: 7.625rem;
     margin: 0;
-    width: 240px;
+    width: 15rem;
   }
 }
 
@@ -118,20 +141,74 @@
 }
 
 .ol-overviewmap-box {
-  border: 2px dotted #f00;
+  border: .125rem dotted $danger;
+}
+
+// bottom
+footer .ol-zoom-level {
+  color: $white;
+  min-width: 15rem;
+}
+
+.ol-scale-line {
+  bottom: .75rem;
+  cursor: pointer;
+  left: .75rem;
+  padding: .5rem;
+  right: auto;
+  top: auto;
+}
+
+.ol-scale-line-inner {
+  border-color: rgba($body-color, .8);
+  color: rgba($body-color, .8);
+  display: inline-block;
+  font-size: .75rem;
+  height: .5rem;
+  line-height: 0;
+}
+
+footer .ol-scale-line {
+  background: transparent;
+  bottom: auto;
+  color: $white;
+  left: auto;
+  min-width: 10rem;
+  padding: unset;
+}
+
+footer .ol-scale-line-inner {
+  border-color: $white;
+  color: $white;
 }
 
 .ol-attribution,
 .ol-attribution.ol-uncollapsible {
-  border-radius: 0 4px 0 0;
-  left: 0;
+  bottom: .25rem;
+  height: unset;
+  left: .25rem;
   right: auto;
+  top: auto;
 
   a {
-    color: #000;
+    color: rgba($link-color, .8);
   }
 }
 
 .ol-attribution li:nth-child(n+2):not(:last-child):after {
   content: ', ';
+}
+
+.ol-mouse-position {
+  bottom: .75em;
+  cursor: pointer;
+  left: auto;
+  right: .75rem;
+  top: auto;
+}
+
+footer .ol-mouse-position {
+  bottom: auto;
+  color: $white;
+  right: auto;
 }

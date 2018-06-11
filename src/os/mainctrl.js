@@ -110,6 +110,7 @@ goog.require('os.ui.im.ImportManager');
 goog.require('os.ui.menu');
 goog.require('os.ui.menu.areaImport');
 goog.require('os.ui.menu.buffer');
+goog.require('os.ui.menu.draw');
 goog.require('os.ui.menu.filter');
 goog.require('os.ui.menu.import');
 goog.require('os.ui.menu.layer');
@@ -283,6 +284,7 @@ os.MainCtrl = function($scope, $element, $compile, $timeout, $injector) {
   this.registerDragDrop_();
 
   // set up menus
+  os.ui.menu.draw.setup();
   os.ui.menu.filter.setup();
   os.ui.menu.import.setup();
   os.ui.menu.map.setup();
@@ -362,6 +364,7 @@ os.MainCtrl.prototype.destroy = function() {
   os.ui.menu.buffer.dispose();
   os.ui.menu.areaImport.dispose();
 
+  os.ui.menu.draw.dispose();
   os.ui.menu.filter.dispose();
   os.ui.menu.map.dispose();
   os.ui.menu.layer.dispose();

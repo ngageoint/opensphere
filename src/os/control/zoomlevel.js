@@ -310,3 +310,12 @@ os.control.ZoomLevel.prototype.updateZoomText = function() {
 os.control.ZoomLevel.Property_ = {
   UNITS: 'units'
 };
+
+
+/**
+ * Get the element
+ * @return {Element}
+ */
+os.control.ZoomLevel.prototype.getElement = function() {
+  return this.element_;
+};
