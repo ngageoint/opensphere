@@ -8,6 +8,7 @@ goog.require('ol.Feature');
 goog.require('ol.format.GeoJSON');
 goog.require('ol.source.Vector');
 goog.require('ol.source.VectorEventType');
+goog.require('os.MapContainer');
 goog.require('os.command.TransformAreas');
 goog.require('os.config.Settings');
 goog.require('os.data.CollectionManager');
@@ -178,12 +179,18 @@ os.query.AreaManager.prototype.load = function() {
  */
 os.query.AreaManager.prototype.save = function() {
   var format = new ol.format.GeoJSON();
-  var areas = this.getAll().filter(os.ui.query.AreaManager.filterTemp).map(os.query.AreaManager.mapOriginalGeoms);
+  var areasAll = this.getAll();
+  var areas = areasAll.filter(os.ui.query.AreaManager.filterTemp).map(os.query.AreaManager.mapOriginalGeoms);
   var obj = format.writeFeaturesObject(areas, {
     featureProjection: os.map.PROJECTION
   });
 
+  var objAll = format.writeFeaturesObject(areasAll, {
+    featureProjection: os.map.PROJECTION
+  });
+
   os.settings.set(os.AREA_STORAGE_KEY, obj);
+  os.settings.set(os.ALL_AREA_STORAGE_KEY, objAll);
   return goog.async.Deferred.succeed();
 };
 
