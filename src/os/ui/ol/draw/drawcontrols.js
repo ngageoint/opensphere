@@ -10,6 +10,7 @@ goog.require('os.data.RecordField');
 goog.require('os.metrics.Metrics');
 goog.require('os.ui.GlobalMenuEventType');
 goog.require('os.ui.Module');
+goog.require('os.ui.menu.draw');
 goog.require('os.ui.ol.draw.DrawEventType');
 goog.require('os.ui.ol.draw.drawMenuDirective');
 goog.require('os.ui.ol.interaction.AbstractDraw');
@@ -119,9 +120,10 @@ os.ui.ol.draw.DrawControlsCtrl = function($scope, $element, $compile) {
   this['selectedType'] = '';
 
   /**
-   * @type {boolean}
+   * @type {os.ui.menu.Menu|undefined}
    */
-  this['showMenu'] = false;
+  this['controlMenu'] = os.ui.menu.draw.MENU;
+  this.initControlMenu();
 
   /**
    * If the line control is supported.
@@ -133,12 +135,19 @@ os.ui.ol.draw.DrawControlsCtrl = function($scope, $element, $compile) {
   os.dispatcher.listen(os.ui.ol.draw.DrawEventType.DRAWEND, this.onDrawEnd, false, this);
   os.dispatcher.listen(os.ui.ol.draw.DrawEventType.DRAWCANCEL, this.apply, false, this);
 
+  os.dispatcher.listen(os.ui.ol.draw.DrawEventType.DRAWBOX, this.onDrawType, false, this);
+  os.dispatcher.listen(os.ui.ol.draw.DrawEventType.DRAWCIRCLE, this.onDrawType, false, this);
+  os.dispatcher.listen(os.ui.ol.draw.DrawEventType.DRAWPOLYGON, this.onDrawType, false, this);
+  os.dispatcher.listen(os.ui.ol.draw.DrawEventType.DRAWLINE, this.onDrawType, false, this);
+  os.dispatcher.listen(os.ui.ol.draw.DrawEventType.DRAWCOUNTRY, this.onDrawType, false, this);
+
   var selected = /** @type {string} */ (os.settings.get('drawType', os.ui.ol.interaction.DragBox.TYPE));
   this.setSelectedControl(selected);
 
   $scope.$on('$destroy', this.dispose.bind(this));
 };
 goog.inherits(os.ui.ol.draw.DrawControlsCtrl, goog.Disposable);
+goog.addSingletonGetter(os.ui.ol.draw.DrawControlsCtrl);
 
 
 /**
@@ -160,6 +169,12 @@ os.ui.ol.draw.DrawControlsCtrl.prototype.disposeInternal = function() {
   os.dispatcher.unlisten(os.ui.ol.draw.DrawEventType.DRAWEND, this.onDrawEnd, false, this);
   os.dispatcher.unlisten(os.ui.ol.draw.DrawEventType.DRAWCANCEL, this.apply, false, this);
 
+  os.dispatcher.unlisten(os.ui.ol.draw.DrawEventType.DRAWBOX, this.onDrawType, false, this);
+  os.dispatcher.unlisten(os.ui.ol.draw.DrawEventType.DRAWCIRCLE, this.onDrawType, false, this);
+  os.dispatcher.unlisten(os.ui.ol.draw.DrawEventType.DRAWPOLYGON, this.onDrawType, false, this);
+  os.dispatcher.unlisten(os.ui.ol.draw.DrawEventType.DRAWLINE, this.onDrawType, false, this);
+  os.dispatcher.unlisten(os.ui.ol.draw.DrawEventType.DRAWCOUNTRY, this.onDrawType, false, this);
+
   this.destroyControlMenu_();
 
   this.scope_ = null;
@@ -173,12 +188,12 @@ os.ui.ol.draw.DrawControlsCtrl.prototype.disposeInternal = function() {
  * @private
  */
 os.ui.ol.draw.DrawControlsCtrl.prototype.destroyControlMenu_ = function() {
-  if (this.menuScope_) {
-    goog.events.unlisten(document, 'mousedown', this.onMouseDown_, false, this);
-    goog.events.unlisten(document, 'mousewheel', this.onMouseDown_, false, this);
-    this.menuScope_.$destroy();
-    this.menuScope_ = null;
-  }
+  // if (this.menuScope_) {
+  //   goog.events.unlisten(document, 'mousedown', this.onMouseDown_, false, this);
+  //   goog.events.unlisten(document, 'mousewheel', this.onMouseDown_, false, this);
+  //   this.menuScope_.$destroy();
+  //   this.menuScope_ = null;
+  // }
 };
 
 
@@ -276,6 +291,40 @@ os.ui.ol.draw.DrawControlsCtrl.prototype.apply = function(opt_event) {
 
 
 /**
+ * @protected
+ */
+os.ui.ol.draw.DrawControlsCtrl.prototype.initControlMenu = function() {
+  var mi = this['controlMenu'].getRoot();
+  if (this['supportsLines']) {
+    mi.addChild({
+      label: 'Line',
+      eventType: os.ui.menu.draw.EventType.LINE,
+      tooltip: 'Draw a line on the map',
+      icons: ['<i class="fa fa-fw fa-long-arrow-right"></i> '],
+      handler: os.ui.menu.draw.handleDrawEvent,
+      sort: 40
+    });
+  }
+  if (this['hideExtraControls']) {
+    mi.removeChild('Choose Area');
+    mi.removeChild('Enter Coordinates');
+    mi.removeChild('Whole World');
+    mi.removeChild('drawMenuSeparator');
+  }
+  if (this.isCountryEnabled() && !this['hideExtraControls']) {
+    mi.addChild({
+      label: 'Country Border',
+      eventType: os.ui.menu.draw.EventType.COUNTRY_BORDER,
+      tooltip: 'Draw a box for query, selection, and zoom',
+      icons: ['<i class="fa fa-fw fa-globe"></i> '],
+      handler: os.ui.menu.draw.handleDrawEvent,
+      sort: 130
+    });
+  }
+};
+
+
+/**
  * @param {os.ui.ol.draw.DrawEvent} event
  * @protected
  */
@@ -331,16 +380,14 @@ os.ui.ol.draw.DrawControlsCtrl.prototype.onMenuEnd = function(opt_e) {
 
 
 /**
- * @param {goog.events.BrowserEvent} e
- * @private
+ * @param {goog.events.Event} e
  */
-os.ui.ol.draw.DrawControlsCtrl.prototype.onMouseDown_ = function(e) {
-  var thisElement = /** @type {Element} */ (this.element_[0]);
-  if (e.target != thisElement && !goog.dom.contains(thisElement, e.target)) {
-    var menuElement = angular.element('.draw-menu');
-    if (menuElement.length > 0 && e.target != menuElement[0] && !goog.dom.contains(menuElement[0], e.target)) {
-      this.toggleMenu(false);
-      this.apply();
+os.ui.ol.draw.DrawControlsCtrl.prototype.onDrawType = function(e) {
+  if (e && e.type) {
+    if (e.type == 'country' && this.isCountryEnabled()) {
+      this.launchCountryPicker();
+    } else {
+      this.activateControl(e.type);
     }
   }
 };
@@ -363,8 +410,6 @@ os.ui.ol.draw.DrawControlsCtrl.prototype.activateControl = function(type) {
   if (this.interaction) {
     this.interaction.setEnabled(!this.interaction.getEnabled());
   }
-
-  this.toggleMenu(false);
 };
 goog.exportProperty(
     os.ui.ol.draw.DrawControlsCtrl.prototype,
@@ -376,35 +421,14 @@ goog.exportProperty(
  * @param {boolean=} opt_value
  */
 os.ui.ol.draw.DrawControlsCtrl.prototype.toggleMenu = function(opt_value) {
-  this['showMenu'] = goog.isDef(opt_value) ? opt_value : !this['showMenu'];
+  var menu = this['controlMenu'];
 
-  if (this['showMenu']) {
-    // calculate the position based on the draw control element
-    var menuOffset = this.element_.offset();
-    menuOffset['top'] += (this.element_.find('.draw-controls-group').outerHeight());
-    menuOffset['left']--;
-
-    var classes = '';
-    if (this.scope_['embeddedControls']) {
-      classes = 'class="ol-control" ';
-    }
-
-    // create the template
-    var template = '<draw-menu ' + classes +
-        'style="top:' + menuOffset['top'] + 'px;left:' + menuOffset['left'] + 'px"></draw-menu>';
-
-    // create a new scope, compile the template, and add the menu to the page body
-    this.menuScope_ = this.scope_.$new();
-    if (this.menuScope_) {
-      var menu = this.compile_(template)(this.menuScope_)[0];
-      goog.dom.append(/** @type {!HTMLElement} */ (document.body), menu);
-
-      goog.events.listen(document, 'mousedown', this.onMouseDown_, false, this);
-      goog.events.listen(document, 'mousewheel', this.onMouseDown_, false, this);
-    }
-  } else {
-    this.destroyControlMenu_();
-  }
+  var target = this.element_.find('.draw-controls-group');
+  menu.open(undefined, {
+    my: 'left top+4',
+    at: 'left bottom',
+    of: target
+  });
 };
 goog.exportProperty(
     os.ui.ol.draw.DrawControlsCtrl.prototype,
@@ -422,3 +446,22 @@ goog.exportProperty(
     os.ui.ol.draw.DrawControlsCtrl.prototype,
     'isActive',
     os.ui.ol.draw.DrawControlsCtrl.prototype.isActive);
+
+
+/**
+ * override via mixin if opensphere has access to country borders
+ * @return {boolean}
+ */
+os.ui.ol.draw.DrawControlsCtrl.prototype.isCountryEnabled = function() {
+  return false;
+};
+goog.exportProperty(
+    os.ui.ol.draw.DrawControlsCtrl.prototype,
+    'isCountryEnabled',
+    os.ui.ol.draw.DrawControlsCtrl.prototype.isCountryEnabled);
+
+
+/**
+ * override via mixin if opensphere has access to country borders
+ */
+os.ui.ol.draw.DrawControlsCtrl.prototype.launchCountryPicker = function() {};
