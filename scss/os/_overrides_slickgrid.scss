@@ -15,6 +15,14 @@
     background: $body-bg;
   }
 
+  &.no-borders {
+    .slick-cell {
+      border: 0;
+      margin: 0;
+      padding: 0;
+    }
+  }
+
   &.no-header {
     border-top: 0;
     width: 100%;
@@ -22,12 +30,6 @@
     .slick-header {
       display: none;
       height: 0;
-    }
-
-    .slick-cell {
-      border: 0;
-      margin: 0;
-      padding: 0;
     }
   }
 
@@ -39,6 +41,11 @@
 
   .slick-header {
     border: $table-border-color;
+
+    .slick-header-buttons {
+      cursor: pointer;
+      float: right;
+    }
   }
 
   .slick-header-column {
@@ -46,7 +53,6 @@
     border-right-color: $table-dark-border-color;
     border-top: 1px solid $table-dark-border-color;
     box-sizing: content-box;
-    height: auto;
 
     .ui-state-hover {
       background: $table-hover-bg;
@@ -69,13 +75,6 @@
   }
 }
 
-.slick-viewport {
-  overflow-x: hidden !important;
-
-  &.ps-container {
-    overflow: hidden !important;
-  }
-}
 
 .slick-row {
   @include hover {
@@ -218,6 +217,10 @@
   .slick-cell {
     border: 0;
     padding: 0 .5rem;
+  }
+
+  .slick-viewport {
+    overflow-x: hidden !important;
   }
 }
 

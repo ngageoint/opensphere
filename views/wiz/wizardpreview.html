@@ -1,9 +1,9 @@
-<div class="wizard-preview">
-  <div ng-if="config.columns[0].header" class="color-gray" style="padding-left:5px;">
+<div class="d-flex flex-column u-flex-grow" ng-show="config.preview.length && config.columns.length">
+  <div class="ml-2 mb-1" ng-if="config.columns[0].header">
     <i class="fa fa-info-circle"></i>
-    The checkboxes indicate whether the column will be included upon import.  You must have at least two columns.
+    Toggle checkboxes to control which columns are imported. You must choose at least two columns.
   </div>
-  <div style="height:calc(100% - 20px);" ng-if="config.columns[0].header && config.preview.length > 0 && config.columns.length > 0">
+  <div class="d-flex flex-column u-flex-grow" ng-if="config.columns[0].header">
     <slickheaderbutton
         x-data="config.preview"
         columns="config.columns"
@@ -14,7 +14,7 @@
     </slickheaderbutton>
   </div>
 
-  <div style="height:100%"  ng-if="!config.columns[0].header && config.preview.length > 0 && config.columns.length > 0">
+  <div class="d-flex u-flex-grow" ng-if="!config.columns[0].header">
     <slickgrid
         x-data="config.preview"
         columns="config.columns"
