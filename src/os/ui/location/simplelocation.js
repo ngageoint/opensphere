@@ -11,7 +11,10 @@ goog.require('os.config.Settings');
 goog.require('os.ui');
 goog.require('os.ui.Module');
 goog.require('os.ui.location');
+goog.require('os.ui.location.ddmFilter');
 goog.require('os.ui.location.degFilter');
+goog.require('os.ui.location.dmsFilter');
+goog.require('os.ui.location.mgrsFilter');
 
 
 
@@ -133,9 +136,10 @@ goog.exportProperty(os.ui.location.SimpleLocationCtrl.prototype, 'locationChange
  * Provide a read-only view of a location that can configurably display
  * location in three base forms and should be extendable to any number
  *
- * 1. Decimal Degrees (DEC)
+ * 1. Decimal Degrees (DD)
  * 2. Degrees Minutes Seconds (DMS)
- * 3. MGRS
+ * 3. Degrees Decimal Minutes (DDM)
+ * 4. MGRS
  *
  * It should provide an output view and a button group to switch between the
  * types.
@@ -209,12 +213,11 @@ os.ui.location.SimpleLocationControlsCtrl = function($scope) {
    */
   this['format'] = os.ui.location.getCurrentFormat();
 
+  this.change_({'opt_format': this['format']});
+
   this.scope_.$on('$destroy', this.destroy_.bind(this));
   this.scope_.$watch('formatDefault', goog.bind(function(format) {
     this['format'] = format;
-  }, this));
-  this.scope_.$watch('simpleLocationControlsCtrl.format', goog.bind(function(format) {
-    this.formatChanged(format);
   }, this));
 
   os.settings.listen(os.ui.location.LocationSetting.POSITION, this.locationControlChanged, false, this);
@@ -224,9 +227,15 @@ os.ui.location.SimpleLocationControlsCtrl = function($scope) {
 /**
  * Change the display model
  * @param {os.ui.location.Format} formatType
+ * @param {angular.Scope.Event=} opt_event
+ * @export
  */
-os.ui.location.SimpleLocationControlsCtrl.prototype.formatChanged = function(formatType) {
+os.ui.location.SimpleLocationControlsCtrl.prototype.formatChanged = function(formatType, opt_event) {
   this.change_({'opt_format': formatType});
+  if (opt_event && opt_event.target) {
+    opt_event.target.blur();
+  }
+  os.settings.set(os.ui.location.LocationSetting.POSITION, formatType);
   os.ui.apply(this.scope_);
 };
 
