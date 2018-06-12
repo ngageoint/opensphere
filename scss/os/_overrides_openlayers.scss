@@ -51,10 +51,13 @@
 // top right
 .ol-zoom {
   bottom: auto;
-  cursor: pointer;
   left: auto;
   right: .75rem;
   top: .75rem;
+}
+
+.ol-zoom button {
+  cursor: pointer;
 }
 
 .ol-rotate {
