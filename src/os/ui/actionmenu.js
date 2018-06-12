@@ -365,13 +365,16 @@ os.ui.ActionMenuCtrl.prototype.positionSubmenu = function() {
           y = y < 0 ? 5 : y;
 
           var parentEl = submenu[0].parentElement;
-
+          var hoveredElPos = submenu.closest('.js-dropdown-submenu, .dropdown-item').offset();
 
           if (h > viewportSize.height - 30) {
             y = outerMenuPos.top * -1;
             parentEl.style.top = y + 'px';
           } else if (y + h > viewportSize.height - 30) {
             y = (viewportSize.height - h - 30 - this.element.offset().top);
+            parentEl.style.top = y + 'px';
+          } else {
+            y = hoveredElPos.top - outerMenuPos.top;
             parentEl.style.top = y + 'px';
           }
 
