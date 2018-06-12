@@ -3,6 +3,7 @@ goog.provide('os.olcs.ImageryProvider');
 goog.require('goog.disposable.IDisposable');
 goog.require('ol.events');
 goog.require('olcs.core.OLImageryProvider');
+goog.require('os.olcs.TileGridTilingScheme');
 goog.require('os.proj');
 
 
@@ -41,6 +42,20 @@ os.olcs.ImageryProvider.prototype.isDisposed = function() {
 };
 
 
+/**
+ * @inheritDoc
+ * @suppress {accessControls}
+ */
+os.olcs.ImageryProvider.prototype.handleSourceChanged_ = function() {
+  if (!this.ready_ && this.source_.getState() === ol.source.State.READY) {
+    this.projection_ = olcs.util.getSourceProjection(this.source_) || this.fallbackProj_;
+    this.tilingScheme_ = new os.olcs.TileGridTilingScheme(this.source_);
+    this.rectangle_ = this.tilingScheme_.rectangle;
+    this.credit_ = olcs.core.OLImageryProvider.createCreditForSource(this.source_) || null;
+    this.ready_ = true;
+  }
+};
+
 
 /**
  * @override
@@ -50,13 +65,13 @@ os.olcs.ImageryProvider.prototype.isDisposed = function() {
 os.olcs.ImageryProvider.prototype.requestImage = function(x, y, level) {
   // Perform mapping of Cesium tile coordinates to ol3 tile coordinates:
   // 1) Cesium zoom level 0 is OpenLayers zoom level 1 for EPSG:4326
-  var z_ = this.tilingScheme_ instanceof Cesium.GeographicTilingScheme ? level + 1 : level;
+  var z_ = level; // this.tilingScheme_ instanceof Cesium.GeographicTilingScheme ? level + 1 : level;
   // 2) OpenLayers tile coordinates increase from bottom to top
   var y_ = -y - 1;
 
   var deferred = Cesium.when.defer();
   var tilegrid = this.source_.getTileGridForProjection(this.projection_);
-  if (z_ < tilegrid.getMinZoom() || z_ > tilegrid.getMaxZoom()) {
+  if (z_ < tilegrid.getMinZoom() - 1 || z_ > tilegrid.getMaxZoom()) {
     deferred.resolve(this.emptyCanvas_); // no data
     return deferred.promise;
   }
@@ -104,7 +119,8 @@ Object.defineProperties(os.olcs.ImageryProvider.prototype, {
          */
         function() {
           var tg = this.source_.getTileGrid();
-          return tg ? (Array.isArray(tg.getTileSize(0)) ? tg.getTileSize(0)[0] : tg.getTileSize(0)) : 256;
+          var size = tg.getTileSize(tg.getMinZoom());
+          return tg ? (Array.isArray(size) ? size[0] : size) : 256;
         }
   },
   'tileHeight': {
@@ -115,7 +131,8 @@ Object.defineProperties(os.olcs.ImageryProvider.prototype, {
          */
         function() {
           var tg = this.source_.getTileGrid();
-          return tg ? (Array.isArray(tg.getTileSize(0)) ? tg.getTileSize(0)[1] : tg.getTileSize(0)) : 256;
+          var size = tg.getTileSize(tg.getMinZoom());
+          return tg ? (Array.isArray(size) ? size[1] : size) : 256;
         }
   }
 });

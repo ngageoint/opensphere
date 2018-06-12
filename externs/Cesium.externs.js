@@ -77,10 +77,10 @@ Cesium.Deferred.prototype.resolve = function(value) {};
 
 /**
  * Rejector for a deferred.
- * @param {*=} opt_value
+ * @param {*=} opt_reason
  * @template T
  */
-Cesium.Deferred.prototype.reject = function(opt_value) {};
+Cesium.Deferred.prototype.reject = function(opt_reason) {};
 
 
 /**
@@ -2670,7 +2670,7 @@ Cesium.TilingScheme.prototype.getNumberOfYTilesAtLevel = function(level) {};
  * @param {number} x
  * @param {number} y
  * @param {number} level
- * @param {Object=} opt_result
+ * @param {Cesium.Rectangle=} opt_result
  * @return {Cesium.Rectangle}
  */
 Cesium.TilingScheme.prototype.tileXYToRectangle = function(x, y, level, opt_result) {};
@@ -2680,10 +2680,25 @@ Cesium.TilingScheme.prototype.tileXYToRectangle = function(x, y, level, opt_resu
  * @param {number} x
  * @param {number} y
  * @param {number} level
- * @param {Object=} opt_result
+ * @param {Cesium.Rectangle=} opt_result
  * @return {Cesium.Rectangle}
  */
 Cesium.TilingScheme.prototype.tileXYToNativeRectangle = function(x, y, level, opt_result) {};
+
+/**
+ * @param {Cesium.Rectangle} rectangle
+ * @param {Cesium.Rectangle=} opt_result
+ * @return {Cesium.Rectangle}
+ */
+Cesium.TilingScheme.prototype.rectangleToNativeRectangle = function(rectangle, opt_result) {};
+
+/**
+ * @param {Cesium.Cartographic} position
+ * @param {number} level
+ * @param {Cesium.Cartesian2=} opt_result
+ * @return {Cesium.Cartesian2|undefined}
+ */
+Cesium.TilingScheme.prototype.positionToTileXY = function(position, level, opt_result) {};
 
 
 /**
@@ -4424,6 +4439,24 @@ Cesium.SkyBoxSources;
  */
 Cesium.SkyBoxOptions;
 
+
+/**
+ * @constructor
+ * @param {Cesium.Ellipsoid} ellipsoid
+ */
+Cesium.GeographicProjection = function(ellipsoid) {};
+
+/**
+ * @param {Cesium.Cartographic} cartographic
+ * @return {Cesium.Cartesian3}
+ */
+Cesium.GeographicProjection.prototype.project = function(cartographic) {};
+
+/**
+ * @param {Cesium.Cartesian3} cartesian
+ * @return {Cesium.Cartographic}
+ */
+Cesium.GeographicProjection.prototype.unproject = function(cartesian) {};
 
 
 /**
