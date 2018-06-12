@@ -28,6 +28,8 @@ plugin.descriptor.SearchPlugin.ID = 'descriptorsearch';
  * @inheritDoc
  */
 plugin.descriptor.SearchPlugin.prototype.init = function() {
-  os.search.SearchManager.getInstance().registerSearch(new plugin.descriptor.DescriptorSearch('Layers'));
-  os.ui.search.FacetedSearchCtrl.provider = new plugin.descriptor.DescriptorSearch('Layers');
+  if (!os.ui.search.FacetedSearchCtrl.provider) {
+    os.search.SearchManager.getInstance().registerSearch(new plugin.descriptor.DescriptorSearch('Layers'));
+    os.ui.search.FacetedSearchCtrl.provider = new plugin.descriptor.DescriptorSearch('Layers');
+  }
 };
