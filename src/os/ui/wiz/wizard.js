@@ -370,13 +370,13 @@ os.ui.wiz.WizardCtrl.prototype.getStepIcon = function(step) {
     var state = this.getStepState(step);
     if (state == os.ui.wiz.StepState.ERROR) {
       // always show the error icon if the step is invalid, regardless of position
-      return 'fa-exclamation-triangle orange-icon';
+      return 'fa-exclamation-triangle text-warning';
     } else if (this.isActive(step)) {
       // show the caret for the active step
       return 'fa-caret-right';
     } else if (state == os.ui.wiz.StepState.COMPLETE) {
       // show checkmark for completed steps
-      return 'fa-check green-icon';
+      return 'fa-check text-success';
     }
   }
 

@@ -95,6 +95,17 @@ $form-control-disabled-opacity: .6 !default;
 }
 
 
+// --------------------------------- Table Utilities --------------------------------- //
+
+.u-table-interactive {
+  tbody {
+    tr:hover {
+      cursor: pointer;
+    }
+  }
+}
+
+
 // --------------------------------- Color Utilities --------------------------------- //
 // For all the bootstrap themes, create our utility color
 @each $color, $value in $theme-colors {
