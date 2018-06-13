@@ -207,7 +207,12 @@ os.storage.IDBStorage.prototype.onBlocked_ = function(event) {
  */
 os.storage.IDBStorage.prototype.onUpgradeNeeded_ = function(event, db, tx) {
   goog.log.fine(this.log, 'Upgrading database from ' + event.oldVersion + ' to ' + event.newVersion);
-  db.createObjectStore(this.storeName_);
+
+  // create the object store if it doesn't exist in the DB
+  var storeNames = db.getObjectStoreNames();
+  if (!storeNames || !storeNames.contains(this.storeName_)) {
+    db.createObjectStore(this.storeName_);
+  }
 };
 
 
