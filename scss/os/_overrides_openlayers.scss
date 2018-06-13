@@ -111,6 +111,11 @@
     margin: 1px;
     width: 2.5rem;
   }
+
+  .form-check-input,
+  .form-check-label {
+    cursor: pointer;
+  }
 }
 
 .ol-overviewmap {
