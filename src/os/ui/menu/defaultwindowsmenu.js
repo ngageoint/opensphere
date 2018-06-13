@@ -134,7 +134,7 @@ os.ui.menu.windows.default.setup = function() {
     'show-close': 'true',
     'no-scroll': 'true',
     'html': '<history resize-with="' + os.ui.windowSelector.WINDOW + '"></history>'
-  });
+  }, false, undefined, true);
 
   if (os.settings.get('metrics.enabled', false)) {
     os.ui.menu.windows.addWindow('metrics', {
@@ -152,7 +152,7 @@ os.ui.menu.windows.default.setup = function() {
       'show-close': 'true',
       'no-scroll': 'true',
       'html': 'metrics'
-    });
+    }, false, undefined, true);
   }
 
   os.ui.menu.windows.addWindow('legend', {
@@ -168,7 +168,7 @@ os.ui.menu.windows.default.setup = function() {
     if (!os.logWindow.isEnabled()) {
       os.logWindow.setEnabled(true);
     }
-  });
+  }, true);
 
   os.ui.menu.windows.addWindow('servers', {
     'icon': 'fa fa-database',

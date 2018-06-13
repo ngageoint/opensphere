@@ -40,9 +40,10 @@ os.ui.menu.windows.configs_ = {};
  * @param {Object<string, string>} config The window config to pass to os.ui.window.create
  * @param {boolean=} opt_isMajor
  * @param {Function=} opt_func
+ * @param {boolean=} opt_toMenu - display in the windows menu
  * @return {os.ui.menu.MenuItem|undefined}
  */
-os.ui.menu.windows.addWindow = function(id, config, opt_isMajor, opt_func) {
+os.ui.menu.windows.addWindow = function(id, config, opt_isMajor, opt_func, opt_toMenu) {
   if (!os.ui.menu.windows.MENU) {
     return;
   }
@@ -50,20 +51,22 @@ os.ui.menu.windows.addWindow = function(id, config, opt_isMajor, opt_func) {
   config['id'] = id;
   os.ui.menu.windows.configs_[id] = opt_func || config;
 
-  var menuItem;
-  var eventType = 'openWindow.' + id;
-  var groupType = opt_isMajor ? os.ui.menu.windows.GroupType.MAJOR : os.ui.menu.windows.GroupType.MINOR;
-  var group = os.ui.menu.windows.MENU.getRoot().find(groupType);
-  if (group) {
-    menuItem = group.addChild({
-      label: config['label'],
-      eventType: eventType,
-      tooltip: config['description'] || '',
-      icons: ['<i class="fa fa-fw ' + config['icon'] + '"></i>'],
-      shortcut: config['shortcut'],
-      metricKey: config['metricKey'],
-      handler: os.ui.menu.windows.openWindow
-    });
+  if (opt_toMenu) {
+    var menuItem;
+    var eventType = 'openWindow.' + id;
+    var groupType = opt_isMajor ? os.ui.menu.windows.GroupType.MAJOR : os.ui.menu.windows.GroupType.MINOR;
+    var group = os.ui.menu.windows.MENU.getRoot().find(groupType);
+    if (group) {
+      menuItem = group.addChild({
+        label: config['label'],
+        eventType: eventType,
+        tooltip: config['description'] || '',
+        icons: ['<i class="fa fa-fw ' + config['icon'] + '"></i>'],
+        shortcut: config['shortcut'],
+        metricKey: config['metricKey'],
+        handler: os.ui.menu.windows.openWindow
+      });
+    }
   }
 
   // don't need this any more

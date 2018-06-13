@@ -31,10 +31,11 @@ os.ui.Module.directive('datePanel', [os.ui.datePanelDirective]);
 /**
  * Controller for the date panel
  * @param {!angular.Scope} $scope
+ * @param {!angular.JQLite} $element
  * @constructor
  * @ngInject
  */
-os.ui.DatePanelCtrl = function($scope) {
+os.ui.DatePanelCtrl = function($scope, $element) {
   /**
    *@type {boolean}
    */
@@ -82,6 +83,12 @@ os.ui.DatePanelCtrl = function($scope) {
   '\nChoose 14:00 to 16:00 to query that time slice every day within the given range. (UTC 0000 = Zulu)';
 
   this.tlc_ = os.time.TimelineController.getInstance();
+
+  $scope.$watch('puny', function() {
+    if ($scope['puny']) {
+      $element.css('top', $element.parent().height());
+    }
+  });
 };
 
 

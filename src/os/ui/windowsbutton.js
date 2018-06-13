@@ -13,14 +13,12 @@ os.ui.windowsButtonDirective = function() {
   return {
     restrict: 'E',
     replace: true,
-    scope: {
-      'showLabel': '='
-    },
+    scope: true,
     controller: os.ui.WindowsButtonCtrl,
     controllerAs: 'ctrl',
     template: '<button class="btn btn-secondary dropdown-toggle" ng-click="ctrl.openMenu()"' +
       ' title="Windows and other views" ng-right-click="ctrl.openMenu()" ng-class="{active: menu}">' +
-      '<i class="fa fa-clone"></i> {{showLabel ? \'Windows\' : \'\'}}' +
+      'More' +
       '</button>'
   };
 };
