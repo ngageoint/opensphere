@@ -13,6 +13,7 @@ goog.require('os.net');
 goog.require('os.proj');
 goog.require('os.string');
 goog.require('plugin.cesium.ImageryProvider');
+goog.require('plugin.cesium.OldImageryProvider');
 
 
 /**
@@ -310,7 +311,16 @@ plugin.cesium.tileLayerToImageryLayer = function(olLayer, viewProj) {
     var is3857 = projection === ol.proj.get(os.proj.EPSG3857);
     var is4326 = projection === ol.proj.get(os.proj.EPSG4326);
     if (is3857 || is4326) {
-      provider = new plugin.cesium.ImageryProvider(source, viewProj);
+      if (os.implements(olLayer, os.layer.ILayer.ID)) {
+        var ilayer = /** @type {os.layer.ILayer} */ (olLayer);
+        if (ilayer.getLayerOptions()['oldImageryProvider']) {
+          provider = new plugin.cesium.OldImageryProvider(source, viewProj);
+        }
+      }
+
+      if (!provider) {
+        provider = new plugin.cesium.ImageryProvider(source, viewProj);
+      }
     } else {
       return null;
     }
@@ -330,6 +340,30 @@ plugin.cesium.tileLayerToImageryLayer = function(olLayer, viewProj) {
 
   var cesiumLayer = new Cesium.ImageryLayer(provider, layerOptions);
   return cesiumLayer;
+};
+
+/**
+ * Test new ImageryProvider and TilingScheme by copying all basemaps
+ * out to the old provider with an opacity for visual inspection
+ */
+window['cesiumImageryTest'] = function() {
+  os.map.mapContainer.getLayers().
+      map(function(layer) {
+        return layer.getLayerOptions();
+      }).
+      filter(function(options) {
+        return options && !options['oldImageryProvider'] && options['type'] &&
+            options['type'].toLowerCase() === 'basemap';
+      }).
+      forEach(function(options) {
+        options['id'] += '-' + goog.string.getRandomString();
+        options['title'] = 'Old ' + options['title'];
+        options['opacity'] = 0.5;
+        options['oldImageryProvider'] = true;
+
+        var layer = os.layer.createFromOptions(options);
+        os.map.mapContainer.addLayer(layer);
+      });
 };
 
 
