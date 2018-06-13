@@ -30,10 +30,12 @@
       </button>
     </div>
   </div>
-  <select title="Duration" class="form-control"
-      ng-model="dateControl.duration"
-      ng-change="dateControl.onDurationChanged()"
-      ng-disabled="dateControl.disabled">
-    <option ng-repeat="duration in dateControl.durations">{{duration}}</option>
-  </select>
+  <div class="flex-shrink-0">
+    <select title="Duration" class="form-control"
+        ng-model="dateControl.duration"
+        ng-change="dateControl.onDurationChanged()"
+        ng-disabled="dateControl.disabled">
+      <option ng-repeat="duration in dateControl.durations">{{duration}}</option>
+    </select>
+  </div>
 </div>
