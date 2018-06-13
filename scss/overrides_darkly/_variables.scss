@@ -21,6 +21,7 @@ $navbar-light-hover-color: $primary;
 $navbar-light-active-color: $primary;
 $navbar-dark-hover-color: $primary;
 
-$text-muted: $gray-500;
+// Darkly makes the table accent the same as the modal BG, so striped tables don't show up in modals/windows.
+$table-accent-bg: $gray-900;
 
-$jq-ui-icon-bg: url('images/ui-icons_cccccc_256x240.png');
+$text-muted: $gray-500;
