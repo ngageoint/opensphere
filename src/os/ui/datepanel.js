@@ -86,7 +86,7 @@ os.ui.DatePanelCtrl = function($scope, $element) {
 
   $scope.$watch('puny', function() {
     if ($scope['puny']) {
-      $element.css('top', $element.parent().height());
+      $element.css('top', $element.height());
     }
   });
 };

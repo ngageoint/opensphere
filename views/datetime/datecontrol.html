@@ -1,7 +1,7 @@
 <div class="d-flex js-date-control">
   <div class="input-group mr-1">
     <div class="input-group-prepend">
-      <button class="btn btn-secondary" title="Previous {{dateControl.duration}}"
+      <button class="btn btn-secondary flex-shrink-0" title="Previous {{dateControl.duration}}"
           ng-click="dateControl.shiftDate(-1)"
           ng-disabled="dateControl.disabled"
           ng-if="dateControl.duration !== 'custom'">
@@ -9,18 +9,20 @@
       </button>
     </div>
     <wheel-date class="start-date" title="Start date"
+        class="c-date-control__wheel-date"
         blur-on-select="true"
         date="dateControl.startDate"
         disable="dateControl.disabled">
     </wheel-date>
     <wheel-date class="end-date" title="End date (inclusive)"
+        class="c-date-control__wheel-date"
         blur-on-select="true"
         date="dateControl.endDate"
         disable="dateControl.disabled"
         ng-if="dateControl.duration == 'custom'">
     </wheel-date>
     <div class="input-group-append">
-      <button class="btn btn-secondary" title="Next {{dateControl.duration}}"
+      <button class="btn btn-secondary flex-shrink-0" title="Next {{dateControl.duration}}"
           ng-click="dateControl.shiftDate(1)"
           ng-disabled="dateControl.disabled"
           ng-if="dateControl.duration !== 'custom'">

@@ -19,7 +19,7 @@ os.ui.settingsButtonDirective = function() {
     template: '<button class="btn btn-secondary" title="View Settings"' +
       ' ng-click="ctrl.toggle()"' +
       ' ng-class="{active: ctrl.isWindowActive()}">' +
-      '<i class="fa fa-gears"></i> <span ng-class="{\'d-none\': puny}">Settings</span>' +
+      '<i class="fa fa-gears"></i>' +
       '</button>'
   };
 };
