@@ -8,7 +8,7 @@
               <tr ng-repeat="step in wiz.steps" ng-class="{'table-active': wiz.isActive(step)}"
                   ng-click="wiz.setStepIndex($index)">
                 <td class="border-bottom">
-                  <span class="step-status"><i class="fa" ng-class="wiz.getStepIcon(step)"></i></span>
+                  <i class="fa fa-fw" ng-class="wiz.getStepIcon(step)"></i>
                   <span ng-class="{'font-warning': wiz.getStepState(step) == 'error'}">
                     {{$index + 1}}. {{step.getTitle()}}
                   </span>
@@ -23,13 +23,11 @@
   </div>
 
   <div class="modal-footer">
-    <button class="btn btn-secondary" ng-click="wiz.prev()" title="Previous step"
-        ng-disabled="wiz.activeIndex <= 0 || wiz.loading">
+    <button class="btn btn-secondary" ng-click="wiz.prev()" title="Previous step" ng-disabled="wiz.activeIndex <= 0 || wiz.loading">
       <i class="fa fa-chevron-circle-left"></i>
       Prev
     </button>
-    <button class="btn btn-secondary" ng-click="wiz.next()" title="Next step"
-        ng-disabled="!wiz.canContinue() || wiz.loading">
+    <button class="btn btn-secondary" ng-click="wiz.next()" title="Next step" ng-disabled="!wiz.canContinue() || wiz.loading">
       <i class="fa fa-chevron-circle-right"></i>
       Next
     </button>
