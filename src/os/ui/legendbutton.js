@@ -19,7 +19,7 @@ os.ui.legendButtonDirective = function() {
     template: '<button class="btn btn-secondary" title="View Legend"' +
       ' ng-click="ctrl.toggle()"' +
       ' ng-class="{active: ctrl.isWindowActive()}">' +
-      '<i class="fa fa-map-signs"></i> <span ng-class="{\'d-none\': puny}">Legend</span>' +
+      '<i class="fa fa-map-signs"></i>' +
       '</button>'
   };
 };
