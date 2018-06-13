@@ -57,10 +57,6 @@ $form-control-disabled-opacity: .6 !default;
   overflow-y: auto;
 }
 
-.u-mw-50 {
-  max-width: 50vw;
-}
-
 .u-cursor-grab {
   @include grab-cursor();
 }
@@ -107,11 +103,19 @@ $form-control-disabled-opacity: .6 !default;
 
 
 // --------------------------------- Color Utilities --------------------------------- //
+.u-bg-body {
+  background-color: $body-bg;
+}
+
 // For all the bootstrap themes, create our utility color
 @each $color, $value in $theme-colors {
   .u-bg-#{$color}-text {
     @include bg-text-variant($value);
   }
+}
+
+.u-bg-body-text {
+  color: $body-color;
 }
 
 // For all the bootstrap themes, create our utility color for a elements

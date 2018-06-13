@@ -28,12 +28,6 @@ os.ui.NavBarCtrl = function($scope, $element) {
   this.element = $element;
 
   /**
-   * @type {number}
-   * @protected
-   */
-  this.maxSize = 0;
-
-  /**
    * @type {boolean}
    */
   this.collapsed = true;
@@ -43,11 +37,6 @@ os.ui.NavBarCtrl = function($scope, $element) {
    * @protected
    */
   this.vsm = new goog.dom.ViewportSizeMonitor();
-
-  /**
-   * @type {boolean}
-   */
-  this.scope['punyWindow'] = window.innerWidth < (this.maxSize || os.ui.NavBarCtrl.DEFAULT_RESIZE_PX);
 
   /**
    * Backfill for scrolled transparent navbar
@@ -60,13 +49,6 @@ os.ui.NavBarCtrl = function($scope, $element) {
    * @type {boolean}
    */
   this.scope['svg'] = false;
-
-  /**
-   * Bootstrap navbar toggler breakpoint (xs, sm, md, lg, xl)
-   * @type {string}
-   * @private
-   */
-  this['breakpointSize'] = this.scope['breakpointSize'] || 'lg';
 
   /**
    * Bootstrap navbar toggler breakpoint value (computed from size setting)
@@ -86,7 +68,6 @@ os.ui.NavBarCtrl = function($scope, $element) {
   os.ui.waitForAngular(this.onResize.bind(this));
   this.vsm.listen(goog.events.EventType.RESIZE, this.onResize, false, this);
 
-  $scope.$watch('brand', this.processBrand_.bind(this));
   $scope.$on(os.ui.list.ListEventType.CHANGE, this.onResize.bind(this));
   $scope.$on('$destroy', this.destroy.bind(this));
 };
@@ -122,12 +103,6 @@ os.ui.NavBarCtrl.prototype.destroy = function() {
  * @protected
  */
 os.ui.NavBarCtrl.prototype.onResize = function() {
-  if (!this.scope['punyWindow']) {
-    // recompute the size whenever items are expanded, in case things are added to/removed from the nav
-    this.maxSize = this.getNavContentSize() + 20;
-  }
-
-  this.scope['punyWindow'] = window.innerWidth < (this.maxSize || os.ui.NavBarCtrl.DEFAULT_RESIZE_PX);
   this.formatNav_();
   os.ui.apply(this.scope);
 };
@@ -224,12 +199,4 @@ os.ui.NavBarCtrl.prototype.setTransparent_ = function() {
  */
 os.ui.NavBarCtrl.prototype.setOpaque_ = function() {
   this.scope['bgTransparent'] = 'false';
-};
-
-
-/**
- * @private
- */
-os.ui.NavBarCtrl.prototype.processBrand_ = function() {
-  this.scope['svg'] = this.scope['brand'] && this.scope['brand']['src'].match(/\.svg$/);
 };

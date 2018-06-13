@@ -1,0 +1,23 @@
+.c-date-panel {
+  background-color: $body-bg;
+  color: $body-color;
+  left: 0;
+  min-width: 22rem;
+  right: 0;
+  top: 0;
+  z-index: 1;
+
+  .c-date-panel__expanded {
+    background-color: $body-bg;
+    color: $body-color;
+    left: 0;
+    z-index: 1;
+  }
+}
+
+// Fixes top being offset at small resolutions
+@include media-breakpoint-down(sm) {
+  .c-date-panel {
+    top: 0 !important;
+  }
+}
