@@ -43,7 +43,7 @@ plugin.file.kml.ui.KMLImportUI.prototype.launchUI = function(file, opt_config) {
   };
   var windowOptions = {
     'label': 'Import KML',
-    'icon': 'fa fa-file-text lt-blue-icon',
+    'icon': 'fa fa-file-text',
     'x': 'center',
     'y': 'center',
     'width': 400,
