@@ -5,7 +5,7 @@
       Format Help
     </button>
 
-    <div class="col-8 mb-1">
+    <div class="form-group col-8 pl-0">
       <div class="form-check">
         <label class="form-check-label">
           <input class="form-check-input" type="radio" name="geomTypeRadios" ng-model="step.geomType" value="none">
@@ -27,10 +27,10 @@
     </div>
 
     <div ng-if="step.geomType == 'separate' || step.geomType == 'single'">
-      <div class="card bg-secondary mb-1">
+      <div class="card form-group bg-secondary">
         <div class="card-body">
           <div ng-if="step.geomType == 'separate'">
-            <div class="form-row" title="Column to use for latitude">
+            <div class="form-row form-group" title="Column to use for latitude">
               <div class="row col-6">
                 <label class="col-form-label col-4">Latitude:</label>
                 <select class="form-control col-7" ng-model="step.latColumn" ng-change="geomStep.validate()"
@@ -50,7 +50,7 @@
                 </select>
               </div>
             </div>
-            <div class="form-row" title="Column to use for longitude">
+            <div class="form-row form-group" title="Column to use for longitude">
               <div class="row col-6">
                 <label class="col-form-label col-4">Longitude:</label>
                 <select class="form-control col-7" ng-model="step.lonColumn" ng-change="geomStep.validate()"
@@ -60,7 +60,7 @@
             </div>
           </div>
           <div ng-if="step.geomType == 'single'">
-            <div class="form-row" title="Column to use for position">
+            <div class="form-row form-group" title="Column to use for position">
               <div class="row col-6">
                 <label class="col-form-label col-4">Column:</label>
                 <select class="form-control col-7" ng-model="step.posColumn" ng-change="geomStep.validate()">
@@ -79,7 +79,7 @@
                 </select>
               </div>
             </div>
-            <div class="form-row" title="Position format of the data">
+            <div class="form-row form-group" title="Position format of the data">
               <div class="row col-6">
                 <label class="col-form-label col-4">Type:</label>
                 <select class="form-control col-7" ng-model="step.posType" ng-change="geomStep.validate()">
@@ -88,14 +88,14 @@
               </div>
             </div>
           </div>
-          <small class="form-text" ng-if="geomStep.sample">Sample: {{geomStep.sample}}</small>
-          <small class="form-text text-success" ng-if="geomStep.result != null">{{geomStep.result}}</small>
-          <small class="form-text text-warning" ng-repeat="error in geomStep.errors">{{error}}</small>
-          <small class="form-text text-warning" ng-repeat="warning in geomStep.warnings">{{warning}}</small>
+          <small class="d-block" ng-if="geomStep.sample">Sample: {{geomStep.sample}}</small>
+          <small class="d-block text-success" ng-if="geomStep.result != null">{{geomStep.result}}</small>
+          <small class="d-block text-warning" ng-repeat="error in geomStep.errors">{{error}}</small>
+          <small class="d-block text-warning" ng-repeat="warning in geomStep.warnings">{{warning}}</small>
         </div>
       </div>
 
-      <div class="form-row mb-1">
+      <div class="form-row form-group">
         <label class="col-form-label col-2">Altitude:</label>
         <select class="form-control col-5 mr-2" name="altitude" ng-model="step.altitude.column" ng-change="geomStep.validate()"
             ng-options="column.name as column.name for column in geomStep.columns">
@@ -116,24 +116,26 @@
     </div>
   </form>
 
-  <form name="ellipseForm" ng-if="step.geomType != 'none'" novalidate>
-    <div class="form-check">
-      <label class="form-check-label col-form-label" title="Throw out empty rows">
-        <input class="form-check-input" type="checkbox" ng-model="step.ignoreMissingGeomRows" ng-change="geomStep.validate()">
-        Ignore rows missing geometry data
+  <form name="ellipseForm" ng-show="step.geomType != 'none'" novalidate>
+    <div class="form-group">
+      <div class="form-check">
+        <label class="form-check-label col-form-label" title="Throw out empty rows">
+          <input class="form-check-input" type="checkbox" ng-model="step.ignoreMissingGeomRows" ng-change="geomStep.validate()">
+          Ignore rows missing geometry data
+          </label>
         </label>
-      </label>
-    </div>
-    <div class="form-check">
-      <label class="form-check-label col-form-label" title="Enable if the CSV has ellipse fields to configure">
-        <input class="form-check-input" type="checkbox" ng-model="step.showEllipse" ng-change="geomStep.validate()">
-        Ellipse Fields
-      </label>
+      </div>
+      <div class="form-check">
+        <label class="form-check-label col-form-label" title="Enable if the CSV has ellipse fields to configure">
+          <input class="form-check-input" type="checkbox" ng-model="step.showEllipse" ng-change="geomStep.validate()">
+          Ellipse Fields
+        </label>
+      </div>
     </div>
 
-    <div class="card bg-secondary mb-1"ng-if="step.showEllipse">
+    <div class="card form-group bg-secondary" ng-show="step.showEllipse">
       <div class="card-body">
-        <div class="form-row mb-1">
+        <div class="form-row form-group">
           <label class="col-form-label col-2">Radius/CEP:</label>
           <select class="form-control col-4 mr-1" name="radius" ng-model="step.ellipse.radius.column" ng-change="geomStep.validate()"
               ng-options="column.name as column.name for column in geomStep.columns">
@@ -143,7 +145,7 @@
           <select class="form-control col-2" ng-model="step.ellipse.radius.units" ng-change="geomStep.validate()"
               ng-disabled="!step.ellipse.radius.column" ng-options="unit for unit in geomStep.units"></select>
         </div>
-        <div class="form-row mb-1">
+        <div class="form-row form-group">
           <label class="col-form-label col-2">Semi Major:</label>
           <select class="form-control col-4 mr-1" name="semiMajor" ng-model="step.ellipse.semiMajor.column" ng-change="geomStep.validate()"
               ng-required="step.showEllipse && (step.ellipse.semiMinor.column || step.ellipse.orientation.column)"
@@ -156,7 +158,7 @@
               ng-options="unit for unit in geomStep.units"></select>
           <small class="form-text invalid-feedback d-inline-block col-2" ng-if="ellipseForm.semiMajor.$error.required">Required!</small>
         </div>
-        <div class="form-row mb-1">
+        <div class="form-row form-group">
           <label class="col-form-label col-2">Semi Minor:</label>
           <select class="form-control col-4 mr-1" name="semiMinor" ng-model="step.ellipse.semiMinor.column" ng-change="geomStep.validate()"
               ng-required="step.showEllipse && (step.ellipse.semiMajor.column || step.ellipse.orientation.column)"
@@ -169,7 +171,7 @@
               ng-options="unit for unit in geomStep.units"></select>
           <small class="form-text invalid-feedback d-inline-block col-2" ng-if="ellipseForm.semiMinor.$error.required">Required!</small>
         </div>
-        <div class="form-row mb-1">
+        <div class="form-row">
           <label class="col-form-label col-2">Orientation:</label>
           <select class="form-control col-4 mr-1" name="orientation" ng-model="step.ellipse.orientation.column" ng-change="geomStep.validate()"
               ng-required="step.showEllipse && (step.ellipse.semiMajor.column || step.ellipse.semiMinor.column)"
