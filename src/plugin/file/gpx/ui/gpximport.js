@@ -17,9 +17,9 @@ plugin.file.gpx.ui.gpxImportDirective = function() {
     restrict: 'E',
     replace: true,
     scope: true,
-    templateUrl: os.ROOT + 'views/plugin/gpx/gpximport.html',
+    templateUrl: os.ROOT + 'views/file/genericfileimport.html',
     controller: plugin.file.gpx.ui.GPXImportCtrl,
-    controllerAs: 'gpxImport'
+    controllerAs: 'ctrl'
   };
 };
 
@@ -41,7 +41,6 @@ os.ui.Module.directive('gpximport', [plugin.file.gpx.ui.gpxImportDirective]);
  */
 plugin.file.gpx.ui.GPXImportCtrl = function($scope, $element) {
   plugin.file.gpx.ui.GPXImportCtrl.base(this, 'constructor', $scope, $element);
-  this.formName = 'gpxForm';
 };
 goog.inherits(plugin.file.gpx.ui.GPXImportCtrl, os.ui.file.ui.AbstractFileImportCtrl);
 
