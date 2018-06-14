@@ -1,4 +1,5 @@
 goog.provide('plugin.file.csv.ui.CSVImportUI');
+
 goog.require('os.ui.file.ui.csv.ConfigStep');
 goog.require('os.ui.im.FileImportUI');
 goog.require('os.ui.window');
@@ -55,18 +56,18 @@ plugin.file.csv.ui.CSVImportUI.prototype.launchUI = function(file, opt_config) {
   };
   var windowOptions = {
     'label': 'CSV Import',
-    'icon': 'fa fa-sign-in lt-blue-icon',
+    'icon': 'fa fa-sign-in',
     'x': 'center',
     'y': 'center',
-    'width': '850',
+    'width': '900',
     'min-width': '500',
-    'max-width': '1200',
-    'height': '650',
-    'min-height': '300',
-    'max-height': '1000',
-    'modal': 'true',
-    'show-close': 'true',
-    'no-scroll': 'true'
+    'max-width': '2000',
+    'height': '700',
+    'min-height': '500',
+    'max-height': '2000',
+    'modal': true,
+    'show-close': true,
+    'no-scroll': true
   };
   var template = '<csvimport resize-with="' + os.ui.windowSelector.WINDOW + '"></csvimport>';
   os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);

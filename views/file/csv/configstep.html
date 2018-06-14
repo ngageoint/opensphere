@@ -1,7 +1,7 @@
 <div class="d-flex flex-column u-flex-grow">
   <form class="container-fluid" name="csvForm" novalidate>
-    <div class="form-row">
-      <div class="form-group row col-6">
+    <div class="form-row form-group">
+      <div class="row col-6">
         <label class="col-form-label col-4">Header Row:</label>
         <spinner class="col-3"
             min="1"
@@ -15,7 +15,7 @@
         <input class="form-check-input position-relative ml-0" type="checkbox" ng-model="config.useHeader"
             ng-change="configStep.updatePreview()">
       </div>
-      <div class="form-group row col-6" title="Specify the character used to separate data fields in the file.">
+      <div class="row col-6" title="Specify the character used to separate data fields in the file.">
         <label class="col-form-label col-4">Delimiter:</label>
         <div class="col-8">
           <select class="form-control" ng-model="config.delimiter" ng-change="configStep.updatePreview()"
@@ -23,8 +23,8 @@
         </div>
       </div>
     </div>
-    <div class="form-row">
-      <div class="form-group row col-6">
+    <div class="form-row form-group">
+      <div class="row col-6">
         <label class="col-form-label col-4">Data Row:</label>
         <spinner class="col-3"
             min="config.useHeader ? (config.headerRow + 1) : 1"
@@ -35,7 +35,7 @@
             live="false">
         </spinner>
       </div>
-      <div class="form-group row col-6" title="Specify the comment character for the file. Lines beginning with this character will be ignored.">
+      <div class="row col-6" title="Specify the comment character for the file. Lines beginning with this character will be ignored.">
         <label class="col-form-label col-4">Comment:</label>
         <div class="col-8">
           <select class="form-control" ng-model="config.commentChar" ng-change="configStep.updatePreview()"
