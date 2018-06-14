@@ -1,35 +1,35 @@
-<div class="wizard-step options">
-  <div class="step-content">
-    <form name="optionsForm" class="form-horizontal form-compact">
-      <div class="control-group span12" data-ng-class="{'error':optionsForm.title.$invalid && optionsForm.title.$dirty}">
-        <label class="control-label">Layer Title:</label>
-        <div class="controls">
-          <input type="text" name="title" ng-model="config.title" ng-required="true" ng-maxlength="500"/> 
-          <span class="help-inline" data-ng-show="optionsForm.title.$error.required">Required!</span>
-          <span class="help-inline" data-ng-show="optionsForm.title.$error.maxlength">Title is too long!</span>
-          <span class="help-inline" data-ng-show="optionsForm.title.$error.exists">Title is already in use by another layer!</span>
-        </div>
+<div class="d-flex flex-column u-flex-grow">
+  <form name="optionsForm" novalidate>
+    <div class="form-row form-group col">
+      <label class="col-form-label col-2">Layer Title:</label>
+      <div class="col p-0">
+        <input class="form-control col" type="text" name="title" ng-model="config.title" ng-required="true" ng-maxlength="500"/>
+        <small class="form-text invalid-feedback" ng-if="optionsForm.title.$error.required">Required!</small>
+        <small class="form-text invalid-feedback" ng-if="optionsForm.title.$error.maxlength">Title is too long!</small>
+        <small class="form-text invalid-feedback" ng-if="optionsForm.title.$error.exists">Title is already in use by another layer!</small>
       </div>
-      <div class="control-group span12" data-ng-class="{'error': optionsForm.desc.$invalid && optionsForm.desc.$dirty}">
-        <label class="control-label">Description:</label>
-        <div class="controls">
-          <input type="text" name="desc" ng-model="config.description" ng-maxlength="2000" placeholder="Add a custom description"/> 
-          <span class="help-inline" data-ng-show="optionsForm.desc.$error.maxlength">Description is too long!</span>
-        </div>
+    </div>
+    <div class="form-row form-group col">
+      <label class="col-form-label col-2">Description:</label>
+      <div class="col p-0">
+        <input class="form-control col" type="text" name="desc" ng-model="config.description" ng-maxlength="2000"
+            placeholder="Add a custom description"/>
+        <small class="form-text invalid-feedback" ng-if="optionsForm.desc.$error.maxlength">Description is too long!</small>
       </div>
-      <div class="control-group span12" data-ng-class="{'error':optionsForm.tags.$invalid && optionsForm.tags.$dirty}">
-        <label class="control-label">Tags:</label>
-        <div class="controls">
-          <input type="text" name="tags" ng-model="config.tags" ng-maxlength="2000" placeholder="Tags organize layers: e.g. states, population"/> 
-          <span class="help-inline" data-ng-show="optionsForm.tags.$error.maxlength">Tags are too long!</span>
-        </div>
+    </div>
+    <div class="form-row form-group col">
+      <label class="col-form-label col-2">Tags:</label>
+      <div class="col p-0">
+        <input class="form-control col" type="text" name="tags" ng-model="config.tags" ng-maxlength="2000"
+            placeholder="Tags organize layers: e.g. states, population"/>
+        <small class="form-text invalid-feedback" ng-if="optionsForm.tags.$error.maxlength">Tags are too long!</small>
       </div>
-      <div class="control-group">
-        <label class="control-label">Color:</label>
-        <div class="controls">
-          <colorpicker name="color" class="no-text" color="config.color">
-        </div>
+    </div>
+    <div class="form-row form-group col">
+      <label class="col-form-label col-2">Color:</label>
+      <div class="col p-0">
+        <colorpicker name="color" color="config.color"></colorpicker>
       </div>
-    </form>
-  </div>
+    </div>
+  </form>
 </div>
