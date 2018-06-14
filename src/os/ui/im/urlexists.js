@@ -64,23 +64,23 @@ os.ui.im.launchURLExists = function(url, current, confirm) {
     'confirmCallback': confirm,
     'confirmValue': os.ui.im.URLExistsChoice.ACTIVATE,
     'yesText': 'OK',
-    'yesIcon': 'fa fa-check lt-blue-icon',
+    'yesIcon': 'fa fa-check',
     'noText': 'Cancel',
-    'noIcon': 'fa fa-ban red-icon',
+    'noIcon': 'fa fa-ban',
     'current': current,
     'url': url
   };
 
   var windowOptions = {
     'label': 'URL Exists!',
-    'icon': 'fa fa-exclamation-triangle orange-icon',
+    'icon': 'fa fa-exclamation-triangle',
     'x': 'center',
     'y': 'center',
     'width': 450,
     'height': 'auto',
-    'modal': 'true',
-    'show-close': 'true',
-    'no-scroll': 'true'
+    'modal': true,
+    'show-close': true,
+    'no-scroll': true
   };
 
   var template = '<confirm><urlexists></urlexists></confirm>';
