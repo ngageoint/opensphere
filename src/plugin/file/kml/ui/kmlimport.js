@@ -1,12 +1,9 @@
 goog.provide('plugin.file.kml.ui.KMLImportCtrl');
 goog.provide('plugin.file.kml.ui.kmlImportDirective');
 
-goog.require('os.data.DataManager');
 goog.require('os.defines');
-goog.require('os.file.FileStorage');
 goog.require('os.ui.Module');
 goog.require('os.ui.file.ui.AbstractFileImportCtrl');
-goog.require('os.ui.window');
 goog.require('plugin.file.kml.KMLDescriptor');
 goog.require('plugin.file.kml.KMLProvider');
 
@@ -20,9 +17,9 @@ plugin.file.kml.ui.kmlImportDirective = function() {
     restrict: 'E',
     replace: true,
     scope: true,
-    templateUrl: os.ROOT + 'views/plugin/kml/kmlimport.html',
+    templateUrl: os.ROOT + 'views/file/genericfileimport.html',
     controller: plugin.file.kml.ui.KMLImportCtrl,
-    controllerAs: 'kmlImport'
+    controllerAs: 'ctrl'
   };
 };
 
@@ -44,7 +41,6 @@ os.ui.Module.directive('kmlimport', [plugin.file.kml.ui.kmlImportDirective]);
  */
 plugin.file.kml.ui.KMLImportCtrl = function($scope, $element) {
   plugin.file.kml.ui.KMLImportCtrl.base(this, 'constructor', $scope, $element);
-  this.formName = 'kmlForm';
 };
 goog.inherits(plugin.file.kml.ui.KMLImportCtrl, os.ui.file.ui.AbstractFileImportCtrl);
 
