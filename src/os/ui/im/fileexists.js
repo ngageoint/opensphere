@@ -64,22 +64,22 @@ os.ui.im.launchFileExists = function(file, confirm) {
     'confirmCallback': confirm,
     'confirmValue': os.ui.im.FileExistsChoice.SAVE_NEW,
     'yesText': 'OK',
-    'yesIcon': 'fa fa-check lt-blue-icon',
+    'yesIcon': 'fa fa-check',
     'noText': 'Cancel',
-    'noIcon': 'fa fa-ban red-icon',
+    'noIcon': 'fa fa-ban',
     'fileName': file.getFileName()
   };
 
   var windowOptions = {
     'label': 'File Exists!',
-    'icon': 'fa fa-exclamation-triangle orange-icon',
+    'icon': 'fa fa-exclamation-triangle',
     'x': 'center',
     'y': 'center',
     'width': 400,
     'height': 'auto',
-    'modal': 'true',
-    'show-close': 'true',
-    'no-scroll': 'true'
+    'modal': true,
+    'show-close': true,
+    'no-scroll': true
   };
 
   var template = '<confirm><fileexists></fileexists></confirm>';
