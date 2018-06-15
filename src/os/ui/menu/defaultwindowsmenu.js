@@ -168,7 +168,7 @@ os.ui.menu.windows.default.setup = function() {
     if (!os.logWindow.isEnabled()) {
       os.logWindow.setEnabled(true);
     }
-  }, true);
+  });
 
   os.ui.menu.windows.addWindow('servers', {
     'icon': 'fa fa-database',

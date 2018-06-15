@@ -8,19 +8,19 @@
     <div class="form-group col-8 pl-0">
       <div class="form-check">
         <label class="form-check-label">
-          <input class="form-check-input" type="radio" name="geomTypeRadios" ng-model="step.geomType" value="none">
+          <input class="form-check-input" type="radio" name="geomTypeRadios" ng-model="step.geomType" value="none" />
           No Geometry (will not be displayed on the map)
         </label>
       </div>
       <div class="form-check">
         <label class="form-check-label">
-          <input class="form-check-input" type="radio" name="geomTypeRadios" ng-model="step.geomType" value="separate">
+          <input class="form-check-input" type="radio" name="geomTypeRadios" ng-model="step.geomType" value="separate" />
           Separate Latitude and Longitude Fields
         </label>
       </div>
       <div class="form-check">
         <label class="form-check-label">
-          <input class="form-check-input" type="radio" name="geomTypeRadios" ng-model="step.geomType" value="single">
+          <input class="form-check-input" type="radio" name="geomTypeRadios" ng-model="step.geomType" value="single" />
           Single Geometry Field
         </label>
       </div>
@@ -40,7 +40,7 @@
               <div class="row col-6">
                 <div class="form-check mr-2">
                   <label class="form-check-label col-form-label" title="Enable to autodetect latitude column">
-                    <input class="form-check-input" type="checkbox" ng-model="step.useGeoSeparateAutoFormat" ng-change="geomStep.validate()">
+                    <input class="form-check-input" type="checkbox" ng-model="step.useGeoSeparateAutoFormat" ng-change="geomStep.validate()" />
                     Auto Format
                   </label>
                 </div>
@@ -70,7 +70,7 @@
               <div class="row col-6" ng-if="step.posType == 'Lat/Lon' || step.posType == 'Lon/Lat'">
                 <div class="form-check mr-2">
                   <label class="form-check-label col-form-label" title="Enable to autodetect lat/lon column">
-                    <input class="form-check-input" type="checkbox" ng-model="step.useGeoSingleAutoFormat" ng-change="geomStep.validate()">
+                    <input class="form-check-input" type="checkbox" ng-model="step.useGeoSingleAutoFormat" ng-change="geomStep.validate()" />
                     Auto Format
                   </label>
                 </div>
@@ -120,14 +120,14 @@
     <div class="form-group">
       <div class="form-check">
         <label class="form-check-label col-form-label" title="Throw out empty rows">
-          <input class="form-check-input" type="checkbox" ng-model="step.ignoreMissingGeomRows" ng-change="geomStep.validate()">
+          <input class="form-check-input" type="checkbox" ng-model="step.ignoreMissingGeomRows" ng-change="geomStep.validate()" />
           Ignore rows missing geometry data
           </label>
         </label>
       </div>
       <div class="form-check">
         <label class="form-check-label col-form-label" title="Enable if the CSV has ellipse fields to configure">
-          <input class="form-check-input" type="checkbox" ng-model="step.showEllipse" ng-change="geomStep.validate()">
+          <input class="form-check-input" type="checkbox" ng-model="step.showEllipse" ng-change="geomStep.validate()" />
           Ellipse Fields
         </label>
       </div>
