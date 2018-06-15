@@ -77,14 +77,16 @@
 
 
 .slick-row {
+  @include gradient-bg($dropdown-link-hover-bg);
   @include hover {
-    background-color: $table-hover-bg;
+    background: $dropdown-link-hover-bg;
+    color: $dropdown-link-hover-color;
   }
 
   background: $body-bg;
   color: $body-color;
 
-  &.selected:not(:hover) {
+  &.selected {
     background: $component-active-bg;
     color: $component-active-color;
   }
