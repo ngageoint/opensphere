@@ -43,7 +43,7 @@ os.ui.config.AngularAppSettingsInitializer.prototype.isBrowserSupported = functi
  * @inheritDoc
  */
 os.ui.config.AngularAppSettingsInitializer.prototype.onSettingsLoaded = function() {
-  // Wait for the theme to be set before boostrapting angular
+  // Wait for the theme to be set before bootstrapping angular
   os.config.ThemeSettings.setTheme().then(function() {
     // Theme loaded - bootstrap Angular.
     if (this.ngAppSelector && this.ngAppModule) {
