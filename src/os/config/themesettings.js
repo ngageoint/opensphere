@@ -159,6 +159,13 @@ goog.exportProperty(
 
 
 /**
+ * Keep track of the theme loading promise so we arent loading multiple themes at one time
+ * @type {?goog.Promise}
+ */
+os.config.ThemeSettings.loadingPromise = null;
+
+
+/**
  * Set Theme
  * @return {goog.Promise}
  */
@@ -193,11 +200,26 @@ os.config.ThemeSettings.setTheme = function() {
     // The URL to the theme's stylesheet.
     var cssFile = ssEl.href.replace(themeRegEx, '$1' + theme + '$2');
     if (ssEl.href != cssFile) {
+      if (os.config.ThemeSettings.loadingPromise) {
+        os.config.ThemeSettings.loadingPromise.cancel();
+        os.config.ThemeSettings.loadingPromise = null;
+      }
+
       // Awesome! lets load it!
-      os.config.ThemeSettingsChangeEventTheme(cssFile, theme).then(function() {
+      os.config.ThemeSettings.loadingPromise = os.config.ThemeSettingsChangeEventTheme(cssFile, theme).then(function() {
+        os.config.ThemeSettings.loadingPromise = null;
+
+        // Dont remove old themes until we have a good theme.
+        // This prevents not having a theme if the promise is canceled
+        os.config.ThemeSettings.themeUpdated();
         resolve();
-      }, function() {
-        reject('Failed loading the application theme: could not load CSS for "' + cssFile + '".');
+      }, function(e) {
+        if (e instanceof goog.Promise.CancellationError) {
+          resolve();
+        } else {
+          os.config.ThemeSettings.loadingPromise = null;
+          reject('Failed loading the application theme: could not load CSS for "' + cssFile + '".');
+        }
       });
     } else {
       resolve();
@@ -236,12 +258,10 @@ os.config.ThemeSettingsChangeEventTheme = function(cssFile, theme) {
         // If Angular is loaded, use the $timeout service to update the theme outside the Angular lifecycle then apply
         // the scope.
         os.ui.injector.get('$timeout')(function() {
-          os.config.ThemeSettings.themeUpdated();
           resolve();
         }, 200);
       } else {
         // Angular isn't bootstrapped, so update the theme and resolve.
-        os.config.ThemeSettings.themeUpdated();
         resolve();
       }
     };
