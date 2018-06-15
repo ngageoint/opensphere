@@ -310,16 +310,7 @@ plugin.cesium.tileLayerToImageryLayer = function(olLayer, viewProj) {
     var is3857 = projection === ol.proj.get(os.proj.EPSG3857);
     var is4326 = projection === ol.proj.get(os.proj.EPSG4326);
     if (is3857 || is4326) {
-      if (os.implements(olLayer, os.layer.ILayer.ID)) {
-        var ilayer = /** @type {os.layer.ILayer} */ (olLayer);
-        if (ilayer.getLayerOptions()['oldImageryProvider']) {
-          provider = new plugin.cesium.OldImageryProvider(source, viewProj);
-        }
-      }
-
-      if (!provider) {
-        provider = new plugin.cesium.ImageryProvider(source, viewProj);
-      }
+      provider = new plugin.cesium.ImageryProvider(source, viewProj);
     } else {
       return null;
     }
