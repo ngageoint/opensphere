@@ -134,7 +134,7 @@ os.ui.menu.windows.default.setup = function() {
     'show-close': 'true',
     'no-scroll': 'true',
     'html': '<history resize-with="' + os.ui.windowSelector.WINDOW + '"></history>'
-  }, false, undefined, true);
+  }, false, undefined);
 
   if (os.settings.get('metrics.enabled', false)) {
     os.ui.menu.windows.addWindow('metrics', {
@@ -152,7 +152,7 @@ os.ui.menu.windows.default.setup = function() {
       'show-close': 'true',
       'no-scroll': 'true',
       'html': 'metrics'
-    }, false, undefined, true);
+    }, false, undefined);
   }
 
   os.ui.menu.windows.addWindow('legend', {
