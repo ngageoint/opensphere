@@ -4,7 +4,12 @@
   }
 
   .c-date-panel__expanded {
+    background: $body-bg;
+    border: 1px solid $border-color;
+    border-top: 0;
+    color: $body-color;
     min-width: 24rem;
+    position: absolute;
     right: 0;
     z-index: 1;
   }
