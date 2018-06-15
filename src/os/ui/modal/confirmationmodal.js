@@ -23,13 +23,13 @@ os.ui.modal.ConfirmationModalOptions;
 
 /**
  * The confirmation-modal directive is a catch-all modal display for the main page.  This modal dialog is controlled via
- * broadcasting messages from an ancestor to this directive.  The 'bits.modal.displayConfirmation' message
+ * broadcasting messages from an ancestor to this directive.  The 'confirmModal.displayConfirmation' message
  * will toggle the modal on.  The title, message, and submessage can all be set within the parameters that are sent via
  * the emit. Cancel and Success callbacks are also available via the emit parameters. The yesClass param will set the
  * button class (btn-primary, btn-danger, etc) and the yesIcon param will set the icon class (fa-trash-o, etc) to use
  * for the Yes button.
  *
- * To close the modal, a second message needs to be broadcast from the parent: 'bits.modal.success'.
+ * To close the modal, a second message needs to be broadcast from the parent: 'confirmModal.success'.
  *
  * @return {angular.Directive}
  */
@@ -91,7 +91,7 @@ os.ui.modal.ConfirmationModalCtrl = function($scope, $element, $timeout) {
   /** @type {boolean} */
   this['saving'] = false;
 
-  $scope.$on('bits.modal.displayConfirmation', function(event, params) {
+  $scope.$on(os.ui.modal.ConfirmationModalCtrl.confirm, function(event, params) {
     // set parameters from event
     this.setMessage(params);
 
@@ -102,7 +102,7 @@ os.ui.modal.ConfirmationModalCtrl = function($scope, $element, $timeout) {
     });
   }.bind(this));
 
-  $scope.$on('bits.modal.success', function(event, params) {
+  $scope.$on(os.ui.modal.ConfirmationModalCtrl.success, function(event, params) {
     this.cleanup();
     if (params && params['message']) {
       os.alert.AlertManager.getInstance().sendAlert(params['message'], os.alert.AlertEventSeverity.SUCCESS);
@@ -111,6 +111,18 @@ os.ui.modal.ConfirmationModalCtrl = function($scope, $element, $timeout) {
 
   $scope.$on('$destroy', this.destroy_.bind(this));
 };
+
+
+/**
+ * @const {string}
+ */
+os.ui.modal.ConfirmationModalCtrl.confirm = 'confirmModal.displayConfirmation';
+
+
+/**
+ * @const {string}
+ */
+os.ui.modal.ConfirmationModalCtrl.success = 'confirmModal.success';
 
 
 /**

@@ -1,6 +1,5 @@
-// Miscellaneous utility CSS classes not provided by Bootstrap
-
-// ---------- Begin Bootstrap Overrides ---------- //
+// --------------------------------- Bootstrap Overrides --------------------------------- //
+// ---------- Special block to override bootstrap defaults we want in all cases ---------- //
 .d-flex {
   // This piggybacks off of the BS4 .d-flex selector in order to fix Firefox's bad handling of column flex layouts
   min-height: 0;
@@ -12,10 +11,19 @@
   // but instead to wrap the child content
   min-width: 0;
 }
-// ---------- End Bootstrap Overrides ---------- //
+
+// Bootstrap fixes form-control:disabled opacity to 1 instead of providing a variable to override. We want inputs to
+// appear muted when disabled, so we'll override the class instead.
+$form-control-disabled-opacity: .6 !default;
+
+.form-control {
+  &:disabled {
+    opacity: $form-control-disabled-opacity;
+  }
+}
 
 
-// Our Utility Classes
+// --------------------------------- Misc Utilities --------------------------------- //
 .u-pointer-events-all {
   pointer-events: all;
 }
@@ -33,10 +41,6 @@
   position: relative;
 }
 
-.u-flex-shrink {
-  flex-shrink: 0;
-}
-
 .u-word-break {
   word-break: break-all;
 }
@@ -45,8 +49,16 @@
   word-wrap: break-word;
 }
 
+.u-pre {
+  white-space: pre-wrap;
+}
+
 .u-overflow-y-auto {
-  overflow-y: auto;
+  overflow-y: auto !important;
+}
+
+.u-overflow-y-hidden {
+  overflow-y: hidden !important;
 }
 
 .u-cursor-grab {
@@ -55,11 +67,6 @@
 
 .u-cursor-grab.moving {
   @include grabbing-cursor();
-}
-
-// Used for windows and flyouts where we want to see what pops in behind them
-.u-opacity__95 {
-  opacity: .95;
 }
 
 .u-btn-separator {
@@ -71,11 +78,48 @@
   top: 6px;
 }
 
+
+// --------------------------------- Visibility Utilities --------------------------------- //
+.u-opacity__95 {
+  opacity: .95;
+}
+
+
+// --------------------------------- Form Utilities --------------------------------- //
+.u-required:after {
+  color: $danger;
+  content: '*';
+  font-size: $font-size-lg;
+  position: absolute;
+  top: .1 * $font-size-base;
+}
+
+
+// --------------------------------- Table Utilities --------------------------------- //
+
+.u-table-interactive {
+  tbody {
+    tr:hover {
+      cursor: pointer;
+    }
+  }
+}
+
+
+// --------------------------------- Color Utilities --------------------------------- //
+.u-bg-body {
+  background-color: $body-bg;
+}
+
 // For all the bootstrap themes, create our utility color
 @each $color, $value in $theme-colors {
   .u-bg-#{$color}-text {
     @include bg-text-variant($value);
   }
+}
+
+.u-bg-body-text {
+  color: $body-color;
 }
 
 // For all the bootstrap themes, create our utility color for a elements
@@ -90,5 +134,28 @@
 @each $color, $value in $colors {
   .u-text-#{$color} {
     color: $value;
+  }
+}
+
+
+// ----------- Generic max sizes. Use with caution only when absoluted needed ----------- //
+$somesizes: () !default;
+$somesizes: map-merge((
+    25: 25%,
+    50: 50%,
+    75: 75%
+), $somesizes);
+
+// (u-mh-25: max-height: 25%)
+@each $prop, $abbrev in (width: w, height: h) {
+  @each $size, $length in $somesizes {
+    .u-m#{$abbrev}-#{$size} { max-#{$prop}: $length !important; }
+  }
+}
+
+// (u-mvh-25: max-height: 25vh)
+@each $prop, $abbrev in (width: w, height: h) {
+  @each $size, $length in $somesizes {
+    .u-mv#{$abbrev}-#{$size} { max-#{$prop}: #{$size}v#{$abbrev} !important; }
   }
 }

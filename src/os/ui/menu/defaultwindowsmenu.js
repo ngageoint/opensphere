@@ -104,18 +104,18 @@ os.ui.menu.windows.default.setup = function() {
   });
 
   os.ui.menu.windows.addWindow('clear', {
-    'icon': 'fa fa-times red-icon',
+    'icon': 'fa fa-times',
     'label': 'Clear',
     'description': 'Clear data from the map',
     'x': 'center',
     'y': 'center',
-    'width': '300',
-    'height': '262',
-    'min-width': '300',
-    'max-width': '400',
-    'min-height': '250',
-    'max-height': '500',
-    'show-close': 'true',
+    'width': 300,
+    'height': 262,
+    'min-width': 300,
+    'max-width': 400,
+    'min-height': 250,
+    'max-height': 500,
+    'show-close': true,
     'html': 'clear'
   });
 
@@ -134,7 +134,7 @@ os.ui.menu.windows.default.setup = function() {
     'show-close': 'true',
     'no-scroll': 'true',
     'html': '<history resize-with="' + os.ui.windowSelector.WINDOW + '"></history>'
-  });
+  }, false, undefined, true);
 
   if (os.settings.get('metrics.enabled', false)) {
     os.ui.menu.windows.addWindow('metrics', {
@@ -152,7 +152,7 @@ os.ui.menu.windows.default.setup = function() {
       'show-close': 'true',
       'no-scroll': 'true',
       'html': 'metrics'
-    });
+    }, false, undefined, true);
   }
 
   os.ui.menu.windows.addWindow('legend', {
@@ -168,7 +168,7 @@ os.ui.menu.windows.default.setup = function() {
     if (!os.logWindow.isEnabled()) {
       os.logWindow.setEnabled(true);
     }
-  });
+  }, true);
 
   os.ui.menu.windows.addWindow('servers', {
     'icon': 'fa fa-database',

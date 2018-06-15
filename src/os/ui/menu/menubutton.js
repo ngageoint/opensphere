@@ -95,6 +95,7 @@ os.ui.menu.MenuButtonCtrl.prototype.openMenu = function() {
         this.element.hasClass('active-remove') ||
         this.element.hasClass('active-remove-active')) {
       this.scope['menu'] = false;
+      this.element.blur();
       this.menu.close();
     } else {
       this.scope['menu'] = true;
@@ -107,6 +108,8 @@ os.ui.menu.MenuButtonCtrl.prototype.openMenu = function() {
       });
     }
   }
+
+  os.ui.apply(this.scope);
 };
 goog.exportProperty(
     os.ui.menu.MenuButtonCtrl.prototype,
@@ -120,6 +123,7 @@ goog.exportProperty(
  */
 os.ui.menu.MenuButtonCtrl.prototype.onMenuClose = function() {
   this.scope['menu'] = false;
+  this.element.blur();
 };
 
 

@@ -1,12 +1,12 @@
 <div class="d-flex o-search-box">
-  <form ng-submit="searchBox.search()" class="u-flex-shrink w-100">
+  <form ng-submit="searchBox.search()" class="flex-shrink-0 w-100">
     <div ng-show="searchBox.searchOptions.length > 0" class="input-group">
       <div class="dropdown input-group-prepend">
         <button class="btn form-control border border-right-0"
             type="button"
             ng-click="searchBox.toggleSearchOptions($event)"
             title="Show/hide search options">
-          <i class="fa fa-caret-down"></i>
+          <i class="fa fa-fw fa-caret-down"></i>
         </button>
       </div>
       <div class="dropdown-menu w-100" ng-class="{'show': searchBox.showSearchOptions}">
@@ -82,7 +82,7 @@
           <i class="fa fa-times"></i>
         </button>
         <button class="btn btn-primary" type="submit">
-          <i class="fa fa-search"></i>
+          <i class="fa fa-fw fa-search"></i>
         </button>
       </div>
     </div>

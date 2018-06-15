@@ -27,12 +27,13 @@ goog.require('os.ui.windowsButtonDirective');
  */
 os.ui.navbaroptions.searchbox = '<search-box show-clear="true"></search-box><searchresults></searchresults>';
 
+// os.ui.list.add(os.ui.AbstractMainContent, '<date-panel></date-panel', 1);
 
 // Top navbar items
-os.ui.list.add(os.ui.nav.Location.TOP_LEFT, '<add-data-button show-label="!punyWindow"></add-data-button>', 100);
-os.ui.list.add(os.ui.nav.Location.TOP_LEFT, '<save-button show-label="!punyWindow"></save-button>', 200);
-os.ui.list.add(os.ui.nav.Location.TOP_LEFT, '<state-button show-label="!punyWindow"></state-button>', 300);
-os.ui.list.add(os.ui.nav.Location.TOP_LEFT, '<windows-button show-label="!punyWindow"></windows-button>', 400);
+os.ui.list.add(os.ui.nav.Location.TOP_LEFT, 'add-data-button', 100);
+os.ui.list.add(os.ui.nav.Location.TOP_LEFT, 'save-button', 200);
+os.ui.list.add(os.ui.nav.Location.TOP_LEFT, 'state-button', 300);
+os.ui.list.add(os.ui.nav.Location.TOP_LEFT, 'windows-button', 400);
 
 os.ui.list.add(os.ui.nav.Location.TOP_LEFT, '<div class="u-btn-separator"></div>', 500);
 os.ui.list.add(os.ui.nav.Location.TOP_LEFT, 'os-draw-controls', 600);
@@ -40,13 +41,15 @@ os.ui.list.add(os.ui.nav.Location.TOP_LEFT, 'measure-button', 650);
 os.ui.list.add(os.ui.nav.Location.TOP_LEFT, 'clear-button', 700);
 
 os.ui.list.add(os.ui.nav.Location.TOP_RIGHT, os.ui.navbaroptions.searchbox, 100);
-os.ui.list.add(os.ui.nav.Location.TOP_RIGHT, '<help show-label="!punyWindow"></help>', 200);
+os.ui.list.add(os.ui.nav.Location.TOP_RIGHT, 'help', 200);
 
 
 // Bottom navbar options
-os.ui.list.add(os.ui.nav.Location.BOTTOM_LEFT, '<li id="zoom-level" class="nav-item mr-3 my-auto"></li>', 100);
-os.ui.list.add(os.ui.nav.Location.BOTTOM_LEFT, 'scale-line', 200);
-os.ui.list.add(os.ui.nav.Location.BOTTOM_LEFT, '<li id="mouse-position" class="nav-item mr-3 my-auto"></li>', 300);
+os.ui.list.add(os.ui.nav.Location.BOTTOM_LEFT,
+    '<li id="zoom-level" class="nav-item mr-1 my-auto flex-shrink-0" ng-class="{\'small\': puny}"></li>', 100);
+os.ui.list.add(os.ui.nav.Location.BOTTOM_LEFT, '<scale-line ng-class="{\'d-none\': puny}"></scale-line>', 200);
+os.ui.list.add(os.ui.nav.Location.BOTTOM_LEFT,
+    '<li id="mouse-position" class="nav-item mr-1 my-auto flex-shrink-0" ng-class="{\'small\': puny}"></li>', 300);
 
 os.ui.list.add(os.ui.nav.Location.BOTTOM_RIGHT, 'servers-button', 100);
 os.ui.list.add(os.ui.nav.Location.BOTTOM_RIGHT, 'alert-button', 200);

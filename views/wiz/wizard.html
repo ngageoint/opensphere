@@ -1,17 +1,16 @@
-<div id="wizard" class="window-content-wrapper" ng-class="wiz.wizardClass">
-  <div class="window-content">
-    <div id="wizard-step-content" class="pull-right"></div>
-    <div id="wizard-steps-pane" class="scroll-pane-wrapper panel">
-      <div id="wizard-scroll-pane" class="scroll-pane ps-container">
-        <div class="wizard-scroll-pane-inner">
-          <table class="wizard-steps table table-hover table-condensed">
+<div id="wizard" class="h-100 w-100 d-flex flex-column" ng-class="wiz.wizardClass">
+  <div class="modal-body container-fluid h-100">
+    <div class="row h-100">
+      <div class="col-3">
+        <div class="border h-100">
+          <table class="table table-borderless table-hover table-sm u-table-interactive">
             <tbody>
-              <tr ng-repeat="step in wiz.steps" ng-class="{'active': wiz.isActive(step)}"
+              <tr ng-repeat="step in wiz.steps" ng-class="{'table-active': wiz.isActive(step)}"
                   ng-click="wiz.setStepIndex($index)">
-                <td>
-                  <span class="step-status"><i class="fa" ng-class="wiz.getStepIcon(step)"></i></span>
+                <td class="border-bottom">
+                  <i class="fa fa-fw" ng-class="wiz.getStepIcon(step)"></i>
                   <span ng-class="{'font-warning': wiz.getStepState(step) == 'error'}">
-                    <span>{{$index + 1}}.</span> {{step.getTitle()}}
+                    {{$index + 1}}. {{step.getTitle()}}
                   </span>
                 </td>
               </tr>
@@ -19,23 +18,26 @@
           </table>
         </div>
       </div>
+      <div id="wizard-step-content" class="d-flex col-9"></div>
     </div>
   </div>
-  <div class="window-footer">
-    <div class="pull-right">
-      <button class="btn btn-default" ng-click="wiz.prev()" title="Previous step"
-          ng-disabled="wiz.activeIndex <= 0 || wiz.loading">
-        <i class="fa fa-chevron-circle-left"></i> Prev
-      </button>
-      <button class="btn btn-default" ng-click="wiz.next()" title="Next step"
-          ng-disabled="!wiz.canContinue() || wiz.loading">
-        <i class="fa fa-chevron-circle-right"></i> Next
-      </button>
-      <button class="btn btn-default" ng-click="wiz.accept()" ng-disabled="!wiz.canAccept() || wiz.loading">
-        <i class="fa" ng-class="wiz.loading && 'fa-spin fa-spinner' || 'fa-check lt-blue-icon'"></i>
-        {{wiz.loading ? 'Loading' : 'Done'}}
-      </button>
-      <button class="btn btn-default" ng-click="wiz.cancel()"><i class="fa fa-ban red-icon"></i> Cancel</button>
-    </div>
+
+  <div class="modal-footer">
+    <button class="btn btn-secondary" ng-click="wiz.prev()" title="Previous step" ng-disabled="wiz.activeIndex <= 0 || wiz.loading">
+      <i class="fa fa-chevron-circle-left"></i>
+      Prev
+    </button>
+    <button class="btn btn-secondary" ng-click="wiz.next()" title="Next step" ng-disabled="!wiz.canContinue() || wiz.loading">
+      <i class="fa fa-chevron-circle-right"></i>
+      Next
+    </button>
+    <button class="btn btn-primary" ng-click="wiz.accept()" ng-disabled="!wiz.canAccept() || wiz.loading">
+      <i class="fa" ng-class="wiz.loading && 'fa-spin fa-spinner' || 'fa-check'"></i>
+      {{wiz.loading ? 'Loading' : 'Done'}}
+    </button>
+    <button class="btn btn-secondary" ng-click="wiz.cancel()">
+      <i class="fa fa-ban"></i>
+      Cancel
+    </button>
   </div>
 </div>

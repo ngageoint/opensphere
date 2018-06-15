@@ -1,6 +1,6 @@
 <div class="h-100 w-100 d-flex flex-column">
   <div class="modal-body d-flex flex-column u-flex-grow">
-    <div class="alert alert-danger animate-fade u-flex-shrink" ng-if="addData.showServerAlert">
+    <div class="alert alert-danger animate-fade flex-shrink-0" ng-if="addData.showServerAlert">
       <button class="close" type="button" ng-click="addData.dismissServerAlert()">
         <i class="fa fa-times"></i>
       </button>
@@ -12,7 +12,7 @@
       </span>
     </div>
 
-    <div class="u-flex-shrink">
+    <div class="flex-shrink-0">
       <div class="pull-left">
         <div class="input-group mb-1">
           <input class="form-control js-input-search" ng-model="addData.term" ng-change="addData.search()" placeholder="Search available layers"></input>

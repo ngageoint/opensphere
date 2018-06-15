@@ -1,34 +1,48 @@
-<div class="wizard-step time">
-  <div class="step-content">
-    <div class="preview-sibling">
-      <button class="btn btn-default pull-right" ng-click="timeStep.launchHelp()" title="Help for custom date and time formats">
-        <i class="fa fa-question-circle lt-blue-icon"></i>
-        Format Help
-      </button>
-      <form name="timeForm" class="form-horizontal form-compact">
-        <label class="radio">
-          <input type="radio" name="timeTypeRadios" data-ng-model="step.timeType" value="none">
+<div class="d-flex flex-column u-flex-grow">
+  <form name="timeForm" novalidate>
+    <button class="btn btn-info float-right" ng-click="timeStep.launchHelp()" title="Help for custom date and time formats">
+      <i class="fa fa-question-circle"></i>
+      Format Help
+    </button>
+
+    <div class="form-group col-8 pl-0">
+      <div class="form-check">
+        <label class="form-check-label">
+          <input class="form-check-input" type="radio" name="timeTypeRadios" data-ng-model="step.timeType" value="none">
           No Time
         </label>
-        <label class="radio">
-          <input type="radio" name="timeTypeRadios" data-ng-model="step.timeType" value="instant">
+      </div>
+      <div class="form-check">
+        <label class="form-check-label">
+          <input class="form-check-input" type="radio" name="timeTypeRadios" data-ng-model="step.timeType" value="instant">
           Time Instant
         </label>
-        <label class="radio">
-          <input type="radio" name="timeTypeRadios" data-ng-model="step.timeType" value="range">
+      </div>
+      <div class="form-check">
+        <label class="form-check-label">
+          <input class="form-check-input" type="radio" name="timeTypeRadios" data-ng-model="step.timeType" value="range">
           Time Range
         </label>
-
-        <div class="panel" ng-if="step.timeType != 'none'">
-          <timeinstantui config="config" model="step.startModel" valid="timeStep.startValid"
-              label="{{step.timeType == 'range' ? 'Start' : ''}}" style="display: inline-block"></timeinstantui>
-
-          <hr style="margin: 2px 0px;" ng-if="step.timeType == 'range'">
-          <timeinstantui ng-if="step.timeType == 'range'" config="config" model="step.endModel"
-              valid="timeStep.endValid" label="End" style="display: inline-block"></timeinstantui>
-        </div>
-      </form>
+      </div>
     </div>
-    <wizardpreview config="config" resize-with=".js-window"></wizardpreview>
-  </div>
+
+    <div class="card form-group bg-secondary" ng-if="step.timeType != 'none'">
+      <div class="card-body">
+        <timeinstantui
+            config="config"
+            model="step.startModel"
+            valid="timeStep.startValid"
+            label="{{step.timeType == 'range' ? 'Start' : ''}}">
+        </timeinstantui>
+        <hr ng-if="step.timeType == 'range'">
+        <timeinstantui ng-if="step.timeType == 'range'"
+            config="config"
+            model="step.endModel"
+            valid="timeStep.endValid"
+            label="End">
+        </timeinstantui>
+      </div>
+    </div>
+  </form>
+  <wizardpreview config="config" resize-with=".js-window"></wizardpreview>
 </div>

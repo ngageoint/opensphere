@@ -15,19 +15,17 @@ os.ui.addDataButtonDirective = function() {
   return {
     restrict: 'E',
     replace: true,
-    scope: {
-      'showLabel': '='
-    },
+    scope: true,
     controller: os.ui.AddDataButtonCtrl,
     controllerAs: 'ctrl',
     template: '<div class="btn-group o-add-data-button" ng-right-click="ctrl.openMenu()">' +
       '<button class="btn btn-primary" id="addDataButton" title="Add data to the map"' +
       ' ng-click="ctrl.toggle()"' +
       ' ng-class="{active: ctrl.isWindowActive()}" metric="{{metrics.addDataOpen}}">' +
-      '<i class="fa fa-plus"></i> {{showLabel ? \'Add Data\' : \'\'}}' +
+      '<i class="fa fa-plus" ng-class="{\'fa-fw\': puny}"></i> <span ng-class="{\'d-none\': puny}">Add Data</span>' +
       '</button>' +
       '<button class="btn btn-primary" title="Open a file or URL" ng-click="ctrl.open()">' +
-      '<i class="fa fa-folder-open"></i>' +
+      '<i class="fa fa-fw fa-folder-open"></i>' +
       '</button>' +
       '<button class="btn btn-primary dropdown-toggle dropdown-toggle-split" ng-click="ctrl.openMenu()"' +
       ' ng-class="{active: menu}">' +
@@ -43,7 +41,6 @@ os.ui.Module.directive('addDataButton', [os.ui.addDataButtonDirective]);
 
 
 /**
- * Controller function for the nav-top directive
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element The element
  * @extends {os.ui.menu.MenuButtonCtrl}

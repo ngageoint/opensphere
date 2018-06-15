@@ -248,7 +248,7 @@ os.ui.timeline.AbstractTimelineCtrl = function($scope, $element, $timeout) {
    */
   this.menus_ = {
     '.load-presets': this.loadMenu,
-    '.zoom-group': this.zoomMenu
+    '.js-zoom-group': this.zoomMenu
   };
 
   /**

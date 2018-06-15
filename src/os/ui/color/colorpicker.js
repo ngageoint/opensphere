@@ -11,7 +11,7 @@ goog.require('os.ui.color.colorPaletteDirective');
 /**
  * @type {string}
  */
-os.ui.color.COLOR_PICKER_TEMPLATE = '<button class="btn btn-sm bg-transparent border" ' +
+os.ui.color.COLOR_PICKER_TEMPLATE = '<button class="btn bg-transparent border" ' +
     'ng-click="colorPicker.togglePopup()" ng-disabled=disabled>' +
     '<i class="fa fa-square" ng-style="{\'color\': color}"></i></button>';
 

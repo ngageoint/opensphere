@@ -1,5 +1,5 @@
 <div class="d-flex flex-column u-flex-grow">
-  <div class="form-row align-items-center u-flex-shrink mt-1">
+  <div class="form-row align-items-center flex-shrink-0 mt-1">
     <div class="col-auto">
       Group By:
     </div>
@@ -19,12 +19,12 @@
     </div>
   </div>
 
-  <div class="form-row align-items-center u-flex-shrink mt-1">
+  <div class="form-row align-items-center flex-shrink-0 mt-1">
     <div class="col">
       <div class="input-group">
         <input class="form-control" type="text" ng-model="term" ng-change="layers.search()" placeholder="Search active layers"></input>
         <div class="input-group-append">
-          <button class="btn btn-outline-secondary" ng-click="layers.clearSearch()" title="Clear the search term">
+          <button class="btn btn-secondary" ng-click="layers.clearSearch()" title="Clear the search term">
             <i class="fa fa-times"></i>
           </button>
         </div>
