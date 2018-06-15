@@ -666,6 +666,11 @@ os.state.v4.BaseLayerState.prototype.defaultConfigToXML = function(key, value, l
       value = os.uri.addBase(value);
     }
 
+    // don't include the hash key since it will cause a crash
+    if (goog.isString(value) && key == '$$hashKey') {
+      return;
+    }
+
     os.xml.appendElement(key, layerEl, value);
   } else if (goog.isArray(value)) {
     var arr = /** @type {Array} */ (value);
