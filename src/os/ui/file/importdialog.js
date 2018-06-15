@@ -106,6 +106,7 @@ os.ui.file.ImportDialogCtrl = function($scope, $element) {
   // bring focus to the url input
   this.element_.find('input[name="url"]').focus();
 
+  $scope.$emit(os.ui.WindowEventType.READY);
   $scope.$on('$destroy', this.onDestroy_.bind(this));
 };
 

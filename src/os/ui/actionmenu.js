@@ -365,13 +365,16 @@ os.ui.ActionMenuCtrl.prototype.positionSubmenu = function() {
           y = y < 0 ? 5 : y;
 
           var parentEl = submenu[0].parentElement;
-
+          var hoveredElPos = submenu.closest('.js-dropdown-submenu, .dropdown-item').offset();
 
           if (h > viewportSize.height - 30) {
             y = outerMenuPos.top * -1;
             parentEl.style.top = y + 'px';
           } else if (y + h > viewportSize.height - 30) {
             y = (viewportSize.height - h - 30 - this.element.offset().top);
+            parentEl.style.top = y + 'px';
+          } else {
+            y = hoveredElPos.top - outerMenuPos.top;
             parentEl.style.top = y + 'px';
           }
 
@@ -397,7 +400,7 @@ goog.exportProperty(os.ui.ActionMenuCtrl.prototype, 'positionSubmenu',
  */
 os.ui.ActionMenuCtrl.prototype.calcNumItemsToDisplay_ = function(submenu) {
   var viewportSize = goog.dom.getViewportSize();
-  var items = submenu.find('.dropdown-item');
+  var items = submenu.find('.js-dropdown-item');
   var numItemsToDisplay = 0;
   if (items && items.length > 0) {
     var itemHeight = items[0].offsetHeight;
@@ -456,6 +459,7 @@ os.ui.ActionMenuCtrl.prototype.clearMoreButton = function() {
 
 /**
  * Take action since there are more reults in the submenu than what will fit on the screen.
+ * @export
  */
 os.ui.ActionMenuCtrl.prototype.handleMoreResults = function() {
   this.scope['provider'].invokeMoreResultsAction(this.element);

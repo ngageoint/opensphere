@@ -1,7 +1,12 @@
 <div class="js-window modal d-block c-window" ng-class="{'active': active}">
   <div class="modal-content h-100" ng-class="headerClass">
-    <div class="js-window__header modal-header d-block" ng-dblclick="windowCtrl.toggle()">
-      <div class="float-right">
+    <div class="js-window__header modal-header d-flex justify-content-between" ng-dblclick="windowCtrl.toggle()">
+      <div class="js-window__header-text text-truncate" title="{{label}}">
+        <i ng-if="icon" ng-class="icon"></i>
+        <span ng-if="iconHtml" ng-bind-html="iconHtml"></span>
+        {{label}}
+      </div>
+      <div>
         <div ng-if="helpContext" class="d-inline-block">
           <context-onboarding context="{{helpContext}}"></context-onboarding>
         </div>
@@ -26,11 +31,6 @@
         <button ng-if="showHide" type="button" class="close" ng-click="windowCtrl.hide()"  aria-label="Hide">
           <span aria-hidden="true">&times;</span>
         </button>
-      </div>
-      <div class="js-window__header-text text-nowrap" title="{{label}}">
-        <i ng-if="icon" ng-class="icon"></i>
-        <span ng-if="iconHtml" ng-bind-html="iconHtml"></span>
-        {{label}}
       </div>
     </div>
     <div class="js-window__wrapper w-100 h-100 d-flex flex-column" ng-transclude></div>

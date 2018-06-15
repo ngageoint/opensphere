@@ -1,0 +1,11 @@
+.c-date-panel {
+  .form-control {
+    max-width: 6rem;
+  }
+
+  .c-date-panel__expanded {
+    min-width: 24rem;
+    right: 0;
+    z-index: 1;
+  }
+}

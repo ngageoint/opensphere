@@ -16,13 +16,11 @@ os.ui.serversButtonDirective = function() {
     scope: true,
     controller: os.ui.ServersButtonCtrl,
     controllerAs: 'ctrl',
-    template: '<span class="badge-button">' +
-      '<button class="btn btn-secondary" ng-click="ctrl.toggle()" title="Servers"' +
+    template: '<button class="btn btn-secondary" ng-click="ctrl.toggle()" title="Servers"' +
       ' ng-class="{\'active\': ctrl.isWindowActive(\'settings\')}">' +
       '<i class="fa fa-fw fa-database"></i>' +
-      '</button>' +
-      '<i class="fa fa-fw fa-warning fa-badge animate-fade orange-icon" ng-if="serverError"></i>' +
-      '</span>'
+      '<span ng-if="serverError" class="ml-1 badge badge-warning"><i class="fa fa-fw fa-warning"></i></span>' +
+      '</button>'
   };
 };
 

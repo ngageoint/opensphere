@@ -16,7 +16,7 @@ os.ui.clear.clearButtonDirective = function() {
     controller: os.ui.clear.ClearButtonCtrl,
     controllerAs: 'ctrl',
     template: '<button class="btn btn-danger" ng-click="ctrl.toggle()" ' +
-        'title="Select items to clear/reset"><i class="fa fa-times"></i></button>'
+        'title="Select items to clear/reset"><i class="fa fa-fw fa-times"></i></button>'
   };
 };
 

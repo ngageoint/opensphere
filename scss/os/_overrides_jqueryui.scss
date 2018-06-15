@@ -103,3 +103,10 @@
     padding: 0;
   }
 }
+
+// This avoids these items appearing to be disabled
+.ui-widget-content .ui-priority-secondary,
+.ui-widget-content .ui-priority-primary {
+  font-weight: normal;
+  opacity: 1;
+}

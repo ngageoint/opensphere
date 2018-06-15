@@ -55,9 +55,7 @@ os.ui.help.helpDirective = function() {
   return {
     restrict: 'E',
     replace: true,
-    scope: {
-      'showLabel': '='
-    },
+    scope: true,
     templateUrl: os.ROOT + 'views/help/help.html',
     controller: os.ui.help.HelpCtrl,
     controllerAs: 'help'

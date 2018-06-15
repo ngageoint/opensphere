@@ -27,7 +27,7 @@ os.ui.ol.control.LayerSwitcher = function(opt_options) {
    */
   this.mapListeners = [];
 
-  this.hiddenClassName = 'ol-unselectable ol-control layer-switcher';
+  this.hiddenClassName = 'ol-unselectable ol-control ol-layer-switcher';
   this.shownClassName = this.hiddenClassName + ' shown';
 
   var element = document.createElement('div');
@@ -242,4 +242,13 @@ os.ui.ol.control.LayerSwitcher.forEachRecursive = function(lyr, fn) {
       os.ui.ol.control.LayerSwitcher.forEachRecursive(lyr, fn);
     }
   });
+};
+
+
+/**
+ * Get the element
+ * @return {Element}
+ */
+os.ui.ol.control.LayerSwitcher.prototype.getElement = function() {
+  return this.element;
 };

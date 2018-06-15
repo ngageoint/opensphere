@@ -13,14 +13,12 @@ os.ui.stateButtonDirective = function() {
   return {
     restrict: 'E',
     replace: true,
-    scope: {
-      'showLabel': '='
-    },
+    scope: true,
     controller: os.ui.StateButtonCtrl,
     controllerAs: 'ctrl',
     template: '<button class="btn btn-secondary dropdown-toggle o-state-button" ng-click="ctrl.openMenu()"' +
       ' title="State options" ng-right-click="ctrl.openMenu()" ng-class="{active: menu}">' +
-      ' <i class="fa fa-bookmark"></i> {{showLabel ? \'States\' : \'\'}}' +
+      ' <i class="fa fa-bookmark" ng-class="{\'fa-fw\': puny}"></i> <span ng-class="{\'d-none\': puny}">States</span>' +
       '</button>'
   };
 };

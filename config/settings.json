@@ -110,6 +110,9 @@
       "kml": {
         "type": "kml"
       },
+      "gml": {
+        "type": "gml"
+      },
       "gpx": {
         "type": "gpx"
       },

@@ -1,50 +1,45 @@
-<div class="position-absolute w-100 d-flex flex-column text-light u-pointer-events-none js-date-panel" style="z-index:1;">
-  <div class="ml-auto mr-auto u-pointer-events-all">
-    <div class="d-inline-block bg-dark px-2 pb-2 rounded-bottom">
-      <div class="form-inline">
-        <date-control></date-control>
-        <button class="btn btn-secondary ml-1" ng-click="ctrl.toggleExtend()" title="{{ctrl.sliceTip}}">
-          hh/mm <i class="fa" ng-class="ctrl.extended ? 'fa-caret-up' : 'fa-caret-down'"></i>
-        </button>
-        <button id="timelineButton" class="btn btn-secondary ml-1" ng-click="ctrl.expand()" title="Expand to full timeline">
-          <i class="fa fa-fw fa-clock-o"></i>
-        </button>
-      </div>
+<div class="d-flex flex-column u-pointer-events-none js-date-panel c-date-panel">
+  <div class="u-pointer-events-all">
+    <div class="w-100 d-flex justify-content-center">
+        <!-- ng-class="{'border-left border-right u-bg-body': puny, 'p-1 border-bottom rounded-bottom': !ctrl.extended && puny}"> -->
+      <date-control></date-control>
+      <button class="btn btn-secondary dropdown-toggle ml-1 flex-shrink-0" ng-click="ctrl.toggleExtend()" title="{{ctrl.sliceTip}}">hh/mm</button>
+      <button id="timelineButton" class="btn btn-secondary ml-1 flex-shrink-0" ng-click="ctrl.expand()" title="Expand to full timeline">
+        <i class="fa fa-fw fa-clock-o"></i>
+      </button>
     </div>
   </div>
 
-  <div id="js-slice-panel" class="ml-auto mr-auto u-pointer-events-all" ng-show="ctrl.extended">
-    <div class="d-inline-block bg-dark px-2 pb-2 rounded-bottom">
-      <div class="form-row align-items-center">
-        <div class="col-auto">
+  <div id="js-slice-panel" class="u-pointer-events-all " ng-show="ctrl.extended">
+    <div class="position-absolute d-flex w-100 p-1 mt-1 u-bg-body flex-shrink-0 border border-top-0 justify-content-center rounded-bottom c-date-panel__expanded">
+      <div class="d-flex align-items-center">
+        <div class="mx-1 d-flex align-items-center">
           <input class="form-control" type="number" min="0" max="23" step="1" ng-model="ctrl.startHour"
               ng-change="ctrl.onChange('startHour', 0, 23, '{{ctrl.startHour}}')"></input>
+          <span class="flex-shrink-0 ml-1">h</span>
         </div>
-        h
-        <div class="col-auto">
+        <div class="mx-1 d-flex align-items-center">
           <input class="form-control" type="number" min="0" max="59" step="1" ng-model="ctrl.startMinute"
               ng-change="ctrl.onChange('startMinute', 0, 59, '{{ctrl.startMinute}}')"></input>
+          <span class="flex-shrink-0 ml-1">m to</span>
         </div>
-        m to
-        <div class="col-auto">
+        <div class="mx-1 d-flex align-items-center">
           <input class="form-control" type="number" min="0" max="23" step="1" ng-model="ctrl.endHour"
               ng-change="ctrl.onChange('endHour', 0, 23, '{{ctrl.endHour}}')"></input>
+          <span class="flex-shrink-0 ml-1">h</span>
         </div>
-        h
-        <div class="col-auto">
+        <div class="mx-1 d-flex align-items-center">
           <input class="form-control" type="number" min="0" max="59" step="1" ng-model="ctrl.endMinute"
               ng-change="ctrl.onChange('endMinute', 0, 59, '{{ctrl.endMinute}}')"></input>
+          <span class="flex-shrink-0 ml-1">m {{ctrl.getOffset()}}</span>
         </div>
-        m {{ctrl.getOffset()}}
-
-        <div class="col-auto">
+        <div class="mx-1 d-flex align-items-center">
           <button class="btn btn-secondary" ng-click="ctrl.applySlice()" title="Apply time slice" ng-disabled="!ctrl.sliceValid() || ctrl.active">
             <div ng-if="!ctrl.active"><i class="fa fa-fw fa-check green-icon"></i></div>
             <div ng-if="ctrl.active"><i class="fa fa-fw fa-check"></i></div>
           </button>
         </div>
-
-        <div class="col-auto">
+        <div>
           <popover data-title="ctrl.sliceTitle" data-content="ctrl.sliceDescription" data-pos="'bottom'"></popover>
         </div>
       </span>
