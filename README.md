@@ -15,7 +15,7 @@ Things to try:
 
 In addition, OpenSphere (and its build system) can serve as a base library for GIS applications. Love what we've done with Openlayers and Cesium but want your own UI? You can do that!
 
-Questions? Ask them in the [forum](https://groups.google.com/forum/#!forum/opensphere).
+Questions? Ask them in the [forum](https://groups.google.com/forum/#!forum/opensphere) or [join our Slack!](https://join.slack.com/t/opensphere/shared_invite/enQtMzgyMjk2MjYyOTY0LTUyZmVkZTg4OGI1ZmQ4YzlmNWExMDgzNzc3YjQwZWZiMzA5NTAzNWZlY2Q1YjU2MmY0MDk4YTdkNWQ5ZGY3ZGY)
 
 ## Prerequisites
 
