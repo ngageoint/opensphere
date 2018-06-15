@@ -77,7 +77,9 @@ plugin.cesium.ImageryProvider.prototype.requestImage = function(x, y, level) {
   var tile = this.source_.getTile(z_, x, y_, 1, this.projection_);
   var state = tile.getState();
 
-  if (state === ol.TileState.LOADED || state === ol.TileState.EMPTY) {
+  if (state === ol.TileState.EMPTY) {
+    deferred.resolve(this.emptyCanvas_);
+  } else if (state === ol.TileState.LOADED) {
     deferred.resolve(tile.getImage());
   } else if (state === ol.TileState.ERROR) {
     deferred.resolve(this.emptyCanvas_);
@@ -86,7 +88,10 @@ plugin.cesium.ImageryProvider.prototype.requestImage = function(x, y, level) {
 
     var unlisten = ol.events.listen(tile, ol.events.EventType.CHANGE, function() {
       var state = tile.getState();
-      if (state === ol.TileState.LOADED || state === ol.TileState.EMPTY) {
+      if (state === ol.TileState.EMPTY) {
+        deferred.resolve(this.emptyCanvas_);
+        ol.events.unlistenByKey(unlisten);
+      } else if (state === ol.TileState.LOADED) {
         deferred.resolve(tile.getImage());
         ol.events.unlistenByKey(unlisten);
       } else if (state === ol.TileState.ERROR) {
