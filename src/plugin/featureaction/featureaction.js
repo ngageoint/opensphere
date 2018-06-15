@@ -180,5 +180,5 @@ plugin.im.action.feature.getColumns = function(opt_entryType) {
 plugin.im.action.feature.editEntry = function(entryType, opt_entry) {
   var entry = opt_entry ? /** @type {!os.im.action.FilterActionEntry} */ (opt_entry.clone()) : undefined;
   plugin.im.action.feature.ui.launchEditFeatureAction(entryType, plugin.im.action.feature.getColumns(entryType),
-      os.im.action.filter.onEditComplete.bind(this, opt_entry), entry);
+      os.im.action.filter.onEditComplete.bind(null, opt_entry), entry);
 };
