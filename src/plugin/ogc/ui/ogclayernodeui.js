@@ -45,19 +45,18 @@ plugin.ogc.ui.OGCLayerNodeUICtrl = function($scope, $element) {
 
   /**
    * The descriptor for this layer
-   * @type {plugin.ogc.OGCLayerDescriptor}
+   * @type {os.data.IDataDescriptor}
    * @private
    */
-  this.descriptor_ = /** @type {plugin.ogc.OGCLayerDescriptor} */ (
-      os.dataManager.getDescriptor(this.getLayerId()));
+  this.descriptor_ = os.dataManager.getDescriptor(this.getLayerId());
 
   var chooseTime = false;
 
-  if (this.descriptor_) {
+  if (os.implements(this.descriptor_, os.ui.ogc.IFeatureTypeDescriptor.ID)) {
     var featureType = this.descriptor_.getFeatureType();
     if (featureType) {
-      chooseTime = this.descriptor_.hasTimeExtent() && featureType.getTimeColumns().length >= 2 &&
-          featureType.getStartDateColumnName() != 'validTime';
+      chooseTime = (featureType.getStartDateColumnName() !== null || featureType.getEndDateColumnName() !== null)
+        && featureType.getTimeColumns().length >= 2 && featureType.getStartDateColumnName() != 'validTime';
     }
   }
   $scope['chooseTime'] = chooseTime;
