@@ -1,6 +1,6 @@
 .c-date-panel {
   .form-control {
-    max-width: 6rem;
+    max-width: 7rem;
   }
 
   .c-date-panel__expanded {
@@ -8,7 +8,8 @@
     border: 1px solid $border-color;
     border-top: 0;
     color: $body-color;
-    min-width: 24rem;
+    left: 0;
+    min-width: 35rem;
     position: absolute;
     right: 0;
     z-index: 1;
