@@ -3,11 +3,13 @@ goog.provide('plugin.cesium.sync.TileSynchronizer');
 goog.require('goog.asserts');
 goog.require('goog.async.Delay');
 goog.require('goog.events.EventType');
+goog.require('goog.string');
 goog.require('ol.layer.Tile');
 goog.require('ol.source.TileWMS');
 goog.require('os.MapEvent');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.events.SelectionType');
+goog.require('os.layer');
 goog.require('os.layer.AnimatedTile');
 goog.require('os.layer.PropertyChange');
 goog.require('os.map');
@@ -431,28 +433,12 @@ plugin.cesium.sync.TileSynchronizer.prototype.getLayerByTime_ = function(timePar
   var originalSource = /** @type {ol.source.TileWMS} */ (this.layer.getSource());
   goog.asserts.assertInstanceof(originalSource, ol.source.TileWMS);
 
-  // shallow clone the source
-  var source = new originalSource.constructor;
-  source.setUrls(originalSource.getUrls());
-  source.setExtent(originalSource.getExtent());
-  source.setProperties(originalSource.getProperties(), true);
+  var options = this.layer.getLayerOptions();
+  // just to be sure, make the ID different
+  options['id'] = goog.string.getRandomString();
 
-  source.crossOrigin = originalSource.crossOrigin;
-  source.refreshEnabled = originalSource.refreshEnabled;
-  source.tileGrid = originalSource.getTileGrid();
-  source.tileLoadFunction = originalSource.getTileLoadFunction();
-  source.tileLoadSet = originalSource.tileLoadSet;
-  source.tileUrlFunction = originalSource.getTileUrlFunction();
-  source.tileUrlSet = originalSource.tileUrlSet;
-  source.tileFilters = originalSource.tileFilters;
-  source.tileClass = originalSource.tileClass;
-
-  source.gutter_ = originalSource.gutter_;
-  source.hidpi_ = originalSource.hidpi_;
-  source.projection_ = originalSource.getProjection();
-  source.reprojectionErrorThreshold_ = originalSource.reprojectionErrorThreshold_;
-  source.serverType_ = originalSource.serverType_;
-  source.wrapX_ = originalSource.wrapX_;
+  var clone = os.layer.createFromOptions(options);
+  var source = /** @type {ol.source.TileWMS} */ (clone.getSource());
 
   var params = originalSource.getParams();
   params['TIME'] = timeParam;
