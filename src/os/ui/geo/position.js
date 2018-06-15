@@ -53,7 +53,9 @@ os.ui.geo.positionDirective = function() {
       'label': '@',
       'mapSupport': '@',
       'name': '@',
-      'hideHint': '='
+      'hideHint': '=',
+      'bulk': '=?',
+      'col': '=?'
     },
     controller: os.ui.geo.PositionCtrl,
     controllerAs: 'posCtrl'
@@ -110,6 +112,11 @@ os.ui.geo.PositionCtrl = function($scope, $element) {
    * @type {number}
    */
   this.precision = Math.pow(10, os.ui.geo.PositionCtrl.DEFAULT_COORD_PRECISION);
+
+  /**
+   * @type {string}
+   */
+  this['col'] = goog.isDefAndNotNull($scope['col']) ? $scope['col'] : '2';
 
   /**
    * @type {string}

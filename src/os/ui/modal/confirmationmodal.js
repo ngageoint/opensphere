@@ -91,7 +91,7 @@ os.ui.modal.ConfirmationModalCtrl = function($scope, $element, $timeout) {
   /** @type {boolean} */
   this['saving'] = false;
 
-  $scope.$on('confirmModal.displayConfirmation', function(event, params) {
+  $scope.$on(os.ui.modal.ConfirmationModalCtrl.confirm, function(event, params) {
     // set parameters from event
     this.setMessage(params);
 
@@ -102,7 +102,7 @@ os.ui.modal.ConfirmationModalCtrl = function($scope, $element, $timeout) {
     });
   }.bind(this));
 
-  $scope.$on('confirmModal.success', function(event, params) {
+  $scope.$on(os.ui.modal.ConfirmationModalCtrl.success, function(event, params) {
     this.cleanup();
     if (params && params['message']) {
       os.alert.AlertManager.getInstance().sendAlert(params['message'], os.alert.AlertEventSeverity.SUCCESS);
@@ -111,6 +111,18 @@ os.ui.modal.ConfirmationModalCtrl = function($scope, $element, $timeout) {
 
   $scope.$on('$destroy', this.destroy_.bind(this));
 };
+
+
+/**
+ * @const {string}
+ */
+os.ui.modal.ConfirmationModalCtrl.confirm = 'confirmModal.displayConfirmation';
+
+
+/**
+ * @const {string}
+ */
+os.ui.modal.ConfirmationModalCtrl.success = 'confirmModal.success';
 
 
 /**
