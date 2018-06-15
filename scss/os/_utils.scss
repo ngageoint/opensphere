@@ -54,7 +54,11 @@ $form-control-disabled-opacity: .6 !default;
 }
 
 .u-overflow-y-auto {
-  overflow-y: auto;
+  overflow-y: auto !important;
+}
+
+.u-overflow-y-hidden {
+  overflow-y: hidden !important;
 }
 
 .u-cursor-grab {

@@ -1,14 +1,16 @@
-<div class="clear-window window-content-wrapper">
-  <div class="window-content">
-    <div class="clear-header" style="font-size:13px;">Choose items to clear:</div>
-    <div class="clear-list" autoheight siblings=".clear-header">
-      <checklist class="h-100" allow-multiple="true" items="clear.entries"></checklist>
-    </div>
+<div class="h-100 w-100 d-flex flex-column">
+  <div class="modal-body d-flex flex-column u-flex-grow u-overflow-y-hidden">
+    <div class="mb-1">Choose items to clear:</div>
+    <checklist allow-multiple="true" items="clear.entries"></checklist>
   </div>
-  <div class="window-footer">
-    <div class="pull-right">
-      <button class="btn btn-default" ng-click="clear.accept()"><i class="fa fa-check lt-blue-icon"></i> OK</button>
-      <button class="btn btn-default" ng-click="clear.cancel()"><i class="fa fa-ban red-icon"></i> Cancel</button>
-    </div>
+  <div class="modal-footer d-flex">
+    <button class="btn btn-primary" ng-click="clear.accept()">
+      <i class="fa fa-check"></i>
+      OK
+    </button>
+    <button class="btn btn-secondary" ng-click="clear.cancel()">
+      <i class="fa fa-ban"></i>
+      Cancel
+    </button>
   </div>
 </div>
