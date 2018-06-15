@@ -437,8 +437,12 @@ plugin.cesium.sync.TileSynchronizer.prototype.getLayerByTime_ = function(timePar
   // just to be sure, make the ID different
   options['id'] = goog.string.getRandomString();
 
-  var clone = os.layer.createFromOptions(options);
+  var clone = /** @type {os.layer.Tile} */ (os.layer.createFromOptions(options));
   var source = /** @type {ol.source.TileWMS} */ (clone.getSource());
+
+  // don't leak the layer and its ties to the source
+  clone.setSource(null);
+  clone.dispose();
 
   var params = originalSource.getParams();
   params['TIME'] = timeParam;
