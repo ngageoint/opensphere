@@ -1,3 +1,5 @@
+.. _settings-guide:
+
 Settings Guide
 ##############
 
