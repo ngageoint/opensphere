@@ -69,7 +69,7 @@ plugin.ogc.ui.ChooseTimeColumnCtrl = function($scope, $element) {
       os.dataManager.getDescriptor(this.scope_['id']));
 
   /**
-   * @type {os.ogc.wfs.FeatureType}
+   * @type {os.ogc.IFeatureType}
    * @private
    */
   this.featureType_ = null;

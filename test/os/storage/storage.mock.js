@@ -83,8 +83,10 @@ beforeEach(function() {
 os.storage.runAsyncSetTests = function(storage) {
   describe('set', function() {
     it('should set values in storage', function() {
-      storage.set('stringKey', os.storage.asyncValueMap['stringKey'])
-          .addCallbacks(os.storage.mock.incrementCb, os.storage.mock.incrementEb);
+      runs(function() {
+        storage.set('stringKey', os.storage.asyncValueMap['stringKey'])
+            .addCallbacks(os.storage.mock.incrementCb, os.storage.mock.incrementEb);
+      });
 
       waitsFor(function() {
         return os.storage.mock.cbCount > 0 || os.storage.mock.ebCount > 0;
@@ -151,8 +153,9 @@ os.storage.runAsyncSetTests = function(storage) {
 os.storage.runAsyncGetTests = function(storage) {
   describe('get', function() {
     it('should get values from storage', function() {
-      storage.get('stringKey')
-          .addCallbacks(os.storage.mock.incrementCb, os.storage.mock.incrementEb);
+      runs(function() {
+        storage.get('stringKey').addCallbacks(os.storage.mock.incrementCb, os.storage.mock.incrementEb);
+      });
 
       waitsFor(function() {
         return os.storage.mock.lastValue != null;
@@ -242,8 +245,9 @@ os.storage.runAsyncGetAllTests = function(storage, opt_supportsInterface) {
   if (supportsInterface) {
     describe('get all', function() {
       it('should get all values from the storage', function() {
-        storage.getAll()
-            .addCallbacks(os.storage.mock.incrementCb, os.storage.mock.incrementEb);
+        runs(function() {
+          storage.getAll().addCallbacks(os.storage.mock.incrementCb, os.storage.mock.incrementEb);
+        });
 
         waitsFor(function() {
           return os.storage.mock.cbCount > 0 || os.storage.mock.ebCount > 0;
@@ -267,8 +271,9 @@ os.storage.runAsyncGetAllTests = function(storage, opt_supportsInterface) {
 os.storage.runAsyncReplaceTests = function(storage) {
   describe('replace', function() {
     it('should only replace values when specified', function() {
-      storage.set('numKey', 9000)
-          .addCallbacks(os.storage.mock.incrementCb, os.storage.mock.incrementEb);
+      runs(function() {
+        storage.set('numKey', 9000).addCallbacks(os.storage.mock.incrementCb, os.storage.mock.incrementEb);
+      });
 
       waitsFor(function() {
         return os.storage.mock.cbCount > 0 || os.storage.mock.ebCount > 0;
@@ -363,10 +368,10 @@ os.storage.runAsyncReplaceTests = function(storage) {
 os.storage.runAsyncRemoveTests = function(storage) {
   describe('remove', function() {
     it('should remove keys from the database', function() {
-      storage.remove('stringKey')
-          .addCallbacks(os.storage.mock.incrementCb, os.storage.mock.incrementEb);
-      storage.remove('numKey')
-          .addCallbacks(os.storage.mock.incrementCb, os.storage.mock.incrementEb);
+      runs(function() {
+        storage.remove('stringKey').addCallbacks(os.storage.mock.incrementCb, os.storage.mock.incrementEb);
+        storage.remove('numKey').addCallbacks(os.storage.mock.incrementCb, os.storage.mock.incrementEb);
+      });
 
       waitsFor(function() {
         return os.storage.mock.cbCount > 1 || os.storage.mock.ebCount > 0;
@@ -421,8 +426,9 @@ os.storage.runAsyncRemoveTests = function(storage) {
 os.storage.runAsyncClearTests = function(storage) {
   describe('clear', function() {
     it('should clear storage', function() {
-      storage.clear()
-          .addCallbacks(os.storage.mock.incrementCb, os.storage.mock.incrementEb);
+      runs(function() {
+        storage.clear().addCallbacks(os.storage.mock.incrementCb, os.storage.mock.incrementEb);
+      });
 
       waitsFor(function() {
         return os.storage.mock.cbCount > 0 || os.storage.mock.ebCount > 0;
@@ -446,6 +452,25 @@ os.storage.runAsyncClearTests = function(storage) {
         expect(os.storage.mock.ebCount).toBe(0);
         expect(os.storage.mock.lastValue).not.toBeNull();
         expect(os.storage.mock.lastValue.length).toBe(0);
+      });
+    });
+  });
+};
+
+
+/**
+ * Base dispose tests for all asynchronous storage classes.
+ * @param {os.storage.AsyncStorage} storage The asynchronous storage object
+ */
+os.storage.runAsyncDisposeTests = function(storage) {
+  describe('dispose', function() {
+    it('should dispose the database', function() {
+      runs(function() {
+        storage.dispose();
+      });
+
+      waitsFor(function() {
+        return storage.isDisposed();
       });
     });
   });
