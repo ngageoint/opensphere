@@ -104,30 +104,6 @@ os.data.DataManager.prototype.getProviderEntry = function(type) {
 /**
  * @inheritDoc
  */
-os.data.DataManager.prototype.getProviderTypeByFile = function(file) {
-  var best = null;
-  var bestScore = 0;
-
-  for (var type in this.providerTypes_) {
-    var entry = this.providerTypes_[type];
-
-    if (entry.fileDetection) {
-      var score = entry.fileDetection(file);
-
-      if (score > bestScore) {
-        best = entry.type;
-        bestScore = score;
-      }
-    }
-  }
-
-  return best;
-};
-
-
-/**
- * @inheritDoc
- */
 os.data.DataManager.prototype.getProviderTypeByClass = function(clazz) {
   for (var type in this.providerTypes_) {
     var entry = this.providerTypes_[type];

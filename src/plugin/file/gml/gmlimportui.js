@@ -30,6 +30,8 @@ plugin.file.gml.GMLImportUI.prototype.getTitle = function() {
  * @inheritDoc
  */
 plugin.file.gml.GMLImportUI.prototype.launchUI = function(file, opt_config) {
+  plugin.file.gml.GMLImportUI.base(this, 'launchUI', file, opt_config);
+
   var config = new plugin.file.gml.GMLParserConfig();
 
   // if an existing config was provided, merge it in

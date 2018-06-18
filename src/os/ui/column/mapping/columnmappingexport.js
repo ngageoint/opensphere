@@ -1,6 +1,6 @@
 goog.provide('os.ui.column.mapping.ColumnMappingExportCtrl');
 goog.provide('os.ui.column.mapping.columnMappingExportDirective');
-goog.require('os.column.ColumnMappingTypeMethod');
+goog.require('os.file.mime.columnmapping');
 goog.require('os.file.persist.FilePersistence');
 goog.require('os.ui.Module');
 
@@ -122,7 +122,7 @@ os.ui.column.mapping.ColumnMappingExportCtrl.prototype.accept = function() {
   }
   content += '</' + os.column.ColumnMappingTag.COLUMN_MAPPINGS + '>';
 
-  method.save(title, content, os.column.ColumnMappingTypeMethod.CONTENT_TYPE);
+  method.save(title, content, os.file.mime.columnmapping.TYPE);
   this.close();
 };
 goog.exportProperty(

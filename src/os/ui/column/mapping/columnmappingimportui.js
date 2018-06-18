@@ -39,6 +39,8 @@ os.ui.column.mapping.ColumnMappingImportUI.LOGGER_ = goog.log.getLogger('os.ui.c
  * @inheritDoc
  */
 os.ui.column.mapping.ColumnMappingImportUI.prototype.launchUI = function(file, opt_config) {
+  os.ui.column.mapping.ColumnMappingImportUI.base(this, 'launchUI', file, opt_config);
+
   var options = {
     'x': 'center',
     'y': 'center',

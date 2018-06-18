@@ -5,8 +5,8 @@ goog.require('goog.async.Deferred');
 goog.require('goog.fs.FileReader');
 goog.require('goog.net.jsloader');
 goog.require('os.IPersistable');
-goog.require('os.arraybuf');
 goog.require('os.defines');
+goog.require('os.file.mime.zip');
 
 
 
@@ -53,6 +53,12 @@ os.file.File = function() {
    * @private
    */
   this.url_ = null;
+
+  /**
+   * @type {?string}
+   * @private
+   */
+  this.encoding_ = null;
 };
 
 
@@ -82,6 +88,22 @@ os.file.FILE_URL_ENABLED = false;
 
 
 /**
+ * @return {?string} The encoding used
+ */
+os.file.File.prototype.getEncoding = function() {
+  return this.encoding_;
+};
+
+
+/**
+ * @param {?string} value The encoding
+ */
+os.file.File.prototype.setEncoding = function(value) {
+  this.encoding_ = value;
+};
+
+
+/**
  * @return {?(Object|string)}
  */
 os.file.File.prototype.getContent = function() {
@@ -93,18 +115,21 @@ os.file.File.prototype.getContent = function() {
  * @param {?(ArrayBuffer|Object|string)} value
  */
 os.file.File.prototype.setContent = function(value) {
+  this.content_ = value;
+};
+
+
+/**
+ * Converts ArrayBuffer content to a string
+ */
+os.file.File.prototype.convertContentToString = function() {
+  var value = this.getContent();
   if (value instanceof ArrayBuffer) {
     var ab = /** @type {ArrayBuffer} */ (value);
-    if (os.arraybuf.isText(ab)) {
-      var s = os.arraybuf.toString(ab);
-      if (s) {
-        this.content_ = s;
-      }
-    } else {
-      this.content_ = ab;
+    var s = os.file.mime.text.getText(ab);
+    if (s) {
+      this.setContent(s);
     }
-  } else {
-    this.content_ = value;
   }
 };
 
@@ -190,6 +215,24 @@ os.file.File.prototype.setUrl = function(value) {
 
 
 /**
+ * @return {goog.async.Deferred|undefined}
+ */
+os.file.File.prototype.loadContent = function() {
+  var origFile = this.getFile();
+  if (origFile) {
+    var deferred = new goog.async.Deferred();
+    var scope = this;
+    goog.fs.FileReader.readAsArrayBuffer(origFile).addCallback(
+        function(resp) {
+          scope.setContent(resp);
+          return null;
+        }).chainDeferred(deferred);
+    return deferred;
+  }
+};
+
+
+/**
  * @inheritDoc
  */
 os.file.File.prototype.persist = function(opt_to) {
@@ -199,6 +242,7 @@ os.file.File.prototype.persist = function(opt_to) {
   to['fileName'] = this.fileName_;
   to['type'] = this.type_;
   to['url'] = this.url_;
+  to['encoding'] = this.encoding_;
 
   return to;
 };
@@ -213,6 +257,7 @@ os.file.File.prototype.restore = function(config) {
   this.fileName_ = config['fileName'] || null;
   this.type_ = config['type'] || null;
   this.url_ = config['url'] || null;
+  this.encoding_ = config['encoding'] || null;
 };
 
 
@@ -245,26 +290,14 @@ goog.define('os.file.ZIP_PATH', 'vendor/zip-js');
 })();
 
 
-/**
- * @type {number}
- * @const
- */
-os.file.ZIP_MAGIC_BYTES_BIG_ENDIAN = 0x504B0304;
-
 
 /**
  * Tests if an ArrayBuffer holds ZIP content by looking for the magic number.
  * @param {ArrayBuffer} content
  * @return {boolean}
+ * @deprecated Please use os.file.mime.zip.isZip() instead.
  */
-os.file.isZipFile = function(content) {
-  if (!content) {
-    return false;
-  }
-
-  var dv = new DataView(content.slice(0, 4));
-  return os.file.ZIP_MAGIC_BYTES_BIG_ENDIAN == dv.getUint32(0);
-};
+os.file.isZipFile = os.file.mime.zip.isZip;
 
 
 /**
@@ -281,18 +314,18 @@ os.file.canImport = function() {
  * Creates a new os.file.File instance from a system file. The content will be read as a string if it's determined
  * to be text, or an ArrayBuffer if not.
  * @param {!File} file The system file
- * @param {boolean=} opt_keepFile Whether to keep reference to the original File on the returned data.
  * @return {!goog.async.Deferred} A promise passing the new file instance to the success callback, or the error message
  *   on failure.
  */
-os.file.createFromFile = function(file, opt_keepFile) {
+os.file.createFromFile = function(file) {
   var deferred = new goog.async.Deferred();
 
-  if (file.size < os.file.File.MAX_CONTENT_LEN) {
+  if (file.path && os.file.FILE_URL_ENABLED) {
+    deferred.callback(os.file.createFromContent(file.name, os.file.getFileUrl(file.path), file, null));
+  } else if (file.size < os.file.File.MAX_CONTENT_LEN) {
     var url = os.file.getLocalUrl(file.name);
     goog.fs.FileReader.readAsArrayBuffer(file).addCallback(
-        os.file.createFromContent.bind(undefined, file.name, url, opt_keepFile ? file : undefined))
-        .chainDeferred(deferred);
+        os.file.createFromContent.bind(undefined, file.name, url, file)).chainDeferred(deferred);
   } else {
     var limit = Math.floor(os.file.File.MAX_CONTENT_LEN / 1000000) + 'MB';
     var msg = 'File "' + file.name + '" exceeds the size limit (' + limit + ') and cannot be imported.';
@@ -309,7 +342,7 @@ os.file.createFromFile = function(file, opt_keepFile) {
  * @param {string} fileName The name of the file
  * @param {string} url The URL to the file content
  * @param {File|undefined} originalFile Original file. If included, will be set on the os.file.File
- * @param {!(ArrayBuffer|string)} content The file content
+ * @param {?(ArrayBuffer|string)} content The file content
  * @return {!os.file.File}
  */
 os.file.createFromContent = function(fileName, url, originalFile, content) {
