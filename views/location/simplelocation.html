@@ -1,11 +1,12 @@
 <div>
   <div class="btn-group btn-group-sm" ng-if="!radio">
-    <button title="Display in DEG" class="btn btn-outline-secondary" ng-class="{active:simpleLocationControlsCtrl.format=='deg'}" ng-click="simpleLocationControlsCtrl.format = 'deg'">
-      <i class="fa fa-fw fa-circle-o"></i></button>
-    <button title="Display in DMS" class="btn btn-outline-secondary" ng-class="{active:simpleLocationControlsCtrl.format=='dms'}" ng-click="simpleLocationControlsCtrl.format = 'dms'">
-      <i class="fa fa-fw fa-dot-circle-o"></i></button>
-    <button title="Display in MGRS" class="btn btn-outline-secondary" ng-class="{active:simpleLocationControlsCtrl.format=='mgrs'}" ng-click="simpleLocationControlsCtrl.format = 'mgrs'">
-      <i class="fa fa-fw fa-th"></i>
-  	</button>
+    <button title="Display in Decimal Degrees" class="btn btn-outline-secondary" ng-class="{active:simpleLocationControlsCtrl.format=='deg'}" ng-click="simpleLocationControlsCtrl.formatChanged('deg', $event)">
+      DD</button>
+    <button title="Display in Degrees Minutes Seconds" class="btn btn-outline-secondary" ng-class="{active:simpleLocationControlsCtrl.format=='dms'}" ng-click="simpleLocationControlsCtrl.formatChanged('dms', $event)">
+      DMS</button>
+    <button title="Display in Degrees Decimal Minutes" class="btn btn-outline-secondary" ng-class="{active:simpleLocationControlsCtrl.format=='ddm'}" ng-click="simpleLocationControlsCtrl.formatChanged('ddm', $event)">
+      DDM</button>
+    <button title="Display in Military Grid Reference System" class="btn btn-outline-secondary" ng-class="{active:simpleLocationControlsCtrl.format=='mgrs'}" ng-click="simpleLocationControlsCtrl.formatChanged('mgrs', $event)">
+      MGRS</button>
   </div>
 </div> 

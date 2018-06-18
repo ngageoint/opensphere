@@ -218,7 +218,7 @@ os.ui.query.ui.area.UserAreaCtrl = function($scope, $element, $timeout) {
    */
   this['customPopoverContent'] = 'Enter coordinates with spaces between latitude/longitude and commas separating ' +
       'coordinate pairs or MGRS values. The polygon will be validated/closed if necessary.<br><br>' +
-      'Takes DMS, Decimal Degrees, or MGRS. If Lat/Lon, the first coordinate is assumed to ' +
+      'Takes DD, DMS, DDM or MGRS. If Lat/Lon, the first coordinate is assumed to ' +
       'be latitude unless it is zero-padded (0683000.55 or 058.135), three-digits (105&deg;30\'10.1&quot; or ' +
       '105.3), or contains the direction (68 30 12 W or 105 E).';
 
