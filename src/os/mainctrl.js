@@ -92,7 +92,6 @@ goog.require('os.ui.columnactions.ColumnActionEvent');
 goog.require('os.ui.columnactions.ColumnActionManager');
 goog.require('os.ui.config.SettingPlugin');
 goog.require('os.ui.config.SettingsManager');
-goog.require('os.ui.datePanelDirective');
 goog.require('os.ui.draw');
 goog.require('os.ui.events.UIEventType');
 goog.require('os.ui.exportManager');
