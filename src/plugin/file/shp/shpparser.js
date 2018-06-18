@@ -12,6 +12,8 @@ goog.require('ol.geom.Point');
 goog.require('ol.geom.Polygon');
 goog.require('os.data.ColumnDefinition');
 goog.require('os.file');
+goog.require('os.file.mime.text');
+goog.require('os.file.mime.zip');
 goog.require('os.geo');
 goog.require('os.parse.AsyncParser');
 goog.require('plugin.file.shp');
@@ -328,21 +330,25 @@ plugin.file.shp.SHPParser.prototype.addFields_ = function(feature) {
     for (var i = 0, n = dbf.fields.length; i < n; i++) {
       var field = dbf.fields[i];
       var fieldBuf = dbf.data.slice(position, position + field.length);
-      var value = goog.string.trim(os.arraybuf.toString(fieldBuf));
+      var s = os.file.mime.text.getText(fieldBuf);
 
-      if (field.type == 'N') {
-        value = Number(value);
-        if (isNaN(value)) {
-          value = null;
+      if (s) {
+        var value = goog.string.trim(s);
+
+        if (field.type == 'N') {
+          value = Number(value);
+          if (isNaN(value)) {
+            value = null;
+          }
+        } else if (field.type == 'L') {
+          value = Boolean(value);
         }
-      } else if (field.type == 'L') {
-        value = Boolean(value);
+
+        // TODO: Figure out what else needs to be ported here
+
+        position += field.length;
+        feature.set(field.name, value);
       }
-
-      // TODO: Figure out what else needs to be ported here
-
-      position += field.length;
-      feature.set(field.name, value);
     }
   }
 };
@@ -413,7 +419,7 @@ plugin.file.shp.SHPParser.prototype.initialize_ = function() {
   var i = this.source_.length;
   while (i--) {
     var source = this.source_[i];
-    if (os.file.isZipFile(source)) {
+    if (os.file.mime.zip.isZip(source)) {
       this.setupZIPFile_(source);
     } else if (plugin.file.shp.isSHPFileType(source)) {
       if (!this.header_.data) {
@@ -528,10 +534,10 @@ plugin.file.shp.SHPParser.prototype.processZIPEntries_ = function(entries) {
     // if the entry is a shp or dbf, load the content and process it. only use the first file encountered, which means
     // archives with multiple shapefiles will only load the first
     var entry = entries[i];
-    if (!foundSHP && entry.filename.match(plugin.file.shp.type.SHPTypeMethod.EXT_REGEXP)) {
+    if (!foundSHP && plugin.file.shp.mime.SHP_EXT_REGEXP.test(entry.filename)) {
       foundSHP = true;
       entry.getData(new zip.ArrayBufferWriter(), this.processZIPEntry_.bind(this, entry));
-    } else if (!foundDBF && entry.filename.match(plugin.file.shp.type.DBFTypeMethod.EXT_REGEXP)) {
+    } else if (!foundDBF && plugin.file.shp.mime.DBF_EXT_REGEXP.test(entry.filename)) {
       foundDBF = true;
       entry.getData(new zip.ArrayBufferWriter(), this.processZIPEntry_.bind(this, entry));
     }
@@ -555,9 +561,9 @@ plugin.file.shp.SHPParser.prototype.processZIPEntries_ = function(entries) {
 plugin.file.shp.SHPParser.prototype.processZIPEntry_ = function(entry, content) {
   if (content instanceof ArrayBuffer) {
     content = /** @type {!ArrayBuffer} */ (content);
-    if (entry.filename.match(plugin.file.shp.type.SHPTypeMethod.EXT_REGEXP)) {
+    if (plugin.file.shp.mime.SHP_EXT_REGEXP.test(entry.filename)) {
       this.setupSHPFile_(content);
-    } else if (entry.filename.match(plugin.file.shp.type.DBFTypeMethod.EXT_REGEXP)) {
+    } else if (plugin.file.shp.mime.DBF_EXT_REGEXP.test(entry.filename)) {
       this.setupDBFFile_(content);
       this.updateColumns_();
     }
@@ -645,7 +651,7 @@ plugin.file.shp.SHPParser.prototype.setupDBFFile_ = function(source) {
 
   var position = 32;
   while (position < dbf.recordStart) {
-    var name = os.arraybuf.toString(source.slice(position, position + 10));
+    var name = os.file.mime.text.getText(source.slice(position, position + 10));
     if (name.charCodeAt(0) == 0x0D) {
       break;
     }

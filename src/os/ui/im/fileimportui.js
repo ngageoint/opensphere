@@ -1,4 +1,6 @@
 goog.provide('os.ui.im.FileImportUI');
+
+goog.require('os.file.mime.text');
 goog.require('os.ui.im.AbstractImportUI');
 
 
@@ -27,3 +29,19 @@ os.ui.im.FileImportUI.prototype.mergeConfig = function(from, to) {
   to['oldFile'] = from['oldFile'];
   to['replace'] = from['replace'];
 };
+
+
+/**
+ * @inheritDoc
+ */
+os.ui.im.FileImportUI.prototype.launchUI = function(file, opt_config) {
+  var type = file.getType();
+
+  if (type) {
+    var chain = os.file.mime.getTypeChain(type);
+    if (chain && chain.indexOf(os.file.mime.text.TYPE) > -1) {
+      file.convertContentToString();
+    }
+  }
+};
+

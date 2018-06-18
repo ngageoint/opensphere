@@ -10,9 +10,6 @@ goog.require('os.ui.wiz.step.WizardStepEvent');
 goog.require('os.ui.wiz.wizardPreviewDirective');
 goog.require('plugin.file.shp');
 goog.require('plugin.file.shp.SHPParserConfig');
-goog.require('plugin.file.shp.type.DBFTypeMethod');
-goog.require('plugin.file.shp.type.SHPTypeMethod');
-
 
 
 /**
@@ -223,8 +220,10 @@ plugin.file.shp.ui.SHPFilesStepCtrl.prototype.handleResult_ = function(type, fil
       os.file.FileStorage.getInstance().setUniqueFileName(file);
     }
 
-    var method = type == 'dbf' ? new plugin.file.shp.type.DBFTypeMethod() : new plugin.file.shp.type.SHPTypeMethod();
-    if (method.isType(file)) {
+    var method = type == 'dbf' ? plugin.file.shp.isDBFFileType : plugin.file.shp.isSHPFileType;
+    var content = file.getContent();
+
+    if (content && content instanceof ArrayBuffer && method(content)) {
       if (type == 'dbf') {
         this.config_['file2'] = file;
       } else {

@@ -2,6 +2,8 @@ goog.provide('plugin.area.KMLAreaParser');
 goog.require('ol.format.KML');
 goog.require('ol.xml');
 goog.require('os.data.ColumnDefinition');
+goog.require('os.file.mime.text');
+goog.require('os.file.mime.zip');
 goog.require('os.parse.AsyncParser');
 goog.require('os.parse.IParser');
 
@@ -71,11 +73,17 @@ plugin.area.KMLAreaParser.prototype.setSource = function(source) {
   } else if (goog.isString(source)) {
     this.document_ = goog.dom.xml.loadXml(source);
   } else if (source instanceof ArrayBuffer) {
-    if (os.file.isZipFile(source)) {
+    if (os.file.mime.zip.isZip(source)) {
       this.handleZIP_(source);
       return;
     } else {
-      this.document_ = goog.dom.xml.loadXml(os.arraybuf.toString(source));
+      var s = os.file.mime.text.getText(source);
+      if (s) {
+        this.document_ = goog.dom.xml.loadXml(s);
+      } else {
+        goog.log.error(this.log_, 'The buffer source does not appear to be text');
+        this.onError();
+      }
     }
   } else if (source instanceof Blob) {
     goog.fs.FileReader.readAsArrayBuffer(source).addCallback(this.setSource, this);
