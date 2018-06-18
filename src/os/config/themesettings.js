@@ -3,11 +3,11 @@ goog.provide('os.config.ThemeSettingsChangeEvent');
 goog.provide('os.config.ThemeSettingsCtrl');
 
 goog.require('goog.Promise');
+goog.require('goog.async.ConditionalDelay');
 goog.require('goog.dom.safe');
 goog.require('goog.events.Event');
 goog.require('os.config.Settings');
 goog.require('os.ui.config.SettingPlugin');
-
 
 
 /**
@@ -52,6 +52,23 @@ os.config.ThemeSettings.DEFAULT_THEME = 'Default';
 os.config.ThemeSettings.DEFAULT_THEMES = {
   'Default': 'overrides_darkly_compact'
 };
+
+
+/**
+ * Class used to indicate which theme is loaded and applied to the DOM.
+ * @type {string}
+ * @const
+ */
+os.config.ThemeSettings.LOADED_THEME_CLASS = 'u-loaded-theme';
+
+
+/**
+ * HTML for an element to detect which theme is currently loaded.
+ * @type {string}
+ * @const
+ */
+os.config.ThemeSettings.LOADED_THEME_HTML = '<div class="' + os.config.ThemeSettings.LOADED_THEME_CLASS +
+    '" style="display: none;"></div>';
 
 
 /**
@@ -142,6 +159,13 @@ goog.exportProperty(
 
 
 /**
+ * Keep track of the theme loading promise so we arent loading multiple themes at one time
+ * @type {?goog.Promise}
+ */
+os.config.ThemeSettings.loadingPromise = null;
+
+
+/**
  * Set Theme
  * @return {goog.Promise}
  */
@@ -176,11 +200,26 @@ os.config.ThemeSettings.setTheme = function() {
     // The URL to the theme's stylesheet.
     var cssFile = ssEl.href.replace(themeRegEx, '$1' + theme + '$2');
     if (ssEl.href != cssFile) {
+      if (os.config.ThemeSettings.loadingPromise) {
+        os.config.ThemeSettings.loadingPromise.cancel();
+        os.config.ThemeSettings.loadingPromise = null;
+      }
+
       // Awesome! lets load it!
-      os.config.ThemeSettingsChangeEventTheme(cssFile).then(function() {
+      os.config.ThemeSettings.loadingPromise = os.config.ThemeSettingsChangeEventTheme(cssFile, theme).then(function() {
+        os.config.ThemeSettings.loadingPromise = null;
+
+        // Dont remove old themes until we have a good theme.
+        // This prevents not having a theme if the promise is canceled
+        os.config.ThemeSettings.themeUpdated();
         resolve();
-      }, function() {
-        reject('Failed loading the application theme: could not load CSS for "' + cssFile + '".');
+      }, function(e) {
+        if (e instanceof goog.Promise.CancellationError) {
+          resolve();
+        } else {
+          os.config.ThemeSettings.loadingPromise = null;
+          reject('Failed loading the application theme: could not load CSS for "' + cssFile + '".');
+        }
       });
     } else {
       resolve();
@@ -199,44 +238,76 @@ os.config.ThemeSettings.updateTheme = function() {
 
 /**
  * Change the stylesheet
- * @param {string} cssFile
+ * @param {string} cssFile The stylesheet URL.
+ * @param {string} theme The stylesheet theme name.
  * @return {goog.Promise}
  */
-os.config.ThemeSettingsChangeEventTheme = function(cssFile) {
+os.config.ThemeSettingsChangeEventTheme = function(cssFile, theme) {
   return new goog.Promise(function(resolve, reject) {
-    // Create an add the stylesheet to the DOM.
+    // Create and add the stylesheet to the DOM.
     var link = $('<link rel="stylesheet" type="text/css" href="' + cssFile + '"></link>');
     $('head').append(link);
 
-    // link.onload doesnt work correctly in browsers. As a hacky workaround, load the stylesheet as an image an use the
-    // onerror handler to detect that the load completed.
-    var img = document.createElement('img');
+    var delay = new goog.async.ConditionalDelay(os.config.ThemeSettings.isThemeLoaded.bind(undefined, theme));
 
     /**
-     * Workaround for link.onload not working correctly in various browsers.
+     * Theme load success handler.
      */
-    img.onerror = function() {
-      document.body.removeChild(img);
-
-      // Detecting stylesheet loading still isn't an exact science, and sometimes the file will be available but not
-      // fully loaded. This causes some styles to be absent when the DOM is rendered, and is most comment when using a
-      // debug build.
+    delay.onSuccess = function() {
       if (os.ui.injector) {
+        // If Angular is loaded, use the $timeout service to update the theme outside the Angular lifecycle then apply
+        // the scope.
         os.ui.injector.get('$timeout')(function() {
-          os.config.ThemeSettings.themeUpdated();
           resolve();
         }, 200);
       } else {
-        setTimeout(function() {
-          os.config.ThemeSettings.themeUpdated();
-          resolve();
-        }, 200);
+        // Angular isn't bootstrapped, so update the theme and resolve.
+        resolve();
       }
     };
 
-    document.body.appendChild(img);
-    img.src = cssFile;
+    /**
+     * Theme load failure handler.
+     */
+    delay.onFailure = function() {
+      reject();
+    };
+
+    delay.start(10, 5000);
   });
+};
+
+
+/**
+ * Check if a theme has been loaded.
+ * @param {string} theme The theme name.
+ * @return {boolean} If the theme is currently loaded.
+ */
+os.config.ThemeSettings.isThemeLoaded = function(theme) {
+  // The theme has been loaded when the test element's content is set to the theme name.
+  var el = os.config.ThemeSettings.getDetectionElement();
+  if (el && el.length) {
+    var content = el.css('content') || '';
+    return content.replace(/^"(.*)"$/, '$1') === theme;
+  }
+
+  return false;
+};
+
+
+/**
+ * Adds an element to the DOM that can be used to detect which theme is currently loaded.
+ * @return {jQuery} The detection element.
+ */
+os.config.ThemeSettings.getDetectionElement = function() {
+  // Add an element to detect when the theme has been loaded.
+  var el = $('.' + os.config.ThemeSettings.LOADED_THEME_CLASS);
+  if (!el || !el.length) {
+    el = $(os.config.ThemeSettings.LOADED_THEME_HTML);
+    $('body').append(el);
+  }
+
+  return el;
 };
 
 

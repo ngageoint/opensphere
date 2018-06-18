@@ -94,6 +94,10 @@ $form-control-disabled-opacity: .6 !default;
   top: .1 * $font-size-base;
 }
 
+.u-required.btn-group::after {
+  right: .5rem;
+}
+
 
 // --------------------------------- Table Utilities --------------------------------- //
 

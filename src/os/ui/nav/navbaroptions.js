@@ -4,8 +4,11 @@ goog.provide('os.ui.navbaroptions.searchbox');
 goog.require('os.ui.addDataButtonDirective');
 goog.require('os.ui.alert.alertButtonDirective');
 goog.require('os.ui.clear.clearButtonDirective');
+goog.require('os.ui.datePanelDirective');
 goog.require('os.ui.draw.drawControlsDirective');
 goog.require('os.ui.help');
+goog.require('os.ui.history.historyButtonDirective');
+goog.require('os.ui.legendButtonDirective');
 goog.require('os.ui.list');
 goog.require('os.ui.measureButtonDirective');
 goog.require('os.ui.muteButtonDirective');
@@ -17,6 +20,7 @@ goog.require('os.ui.scaleLineDirective');
 goog.require('os.ui.search.searchBoxDirective');
 goog.require('os.ui.search.searchResultsDirective');
 goog.require('os.ui.serversButtonDirective');
+goog.require('os.ui.settingsButtonDirective');
 goog.require('os.ui.stateButtonDirective');
 goog.require('os.ui.windowsButtonDirective');
 
@@ -40,6 +44,8 @@ os.ui.list.add(os.ui.nav.Location.TOP_LEFT, 'os-draw-controls', 600);
 os.ui.list.add(os.ui.nav.Location.TOP_LEFT, 'measure-button', 650);
 os.ui.list.add(os.ui.nav.Location.TOP_LEFT, 'clear-button', 700);
 
+os.ui.list.add(os.ui.nav.Location.TOP_CENTER, '<date-panel ng-show="!mainCtrl.timeline"></date-panel>', 1);
+
 os.ui.list.add(os.ui.nav.Location.TOP_RIGHT, os.ui.navbaroptions.searchbox, 100);
 os.ui.list.add(os.ui.nav.Location.TOP_RIGHT, 'help', 200);
 
@@ -51,6 +57,9 @@ os.ui.list.add(os.ui.nav.Location.BOTTOM_LEFT, '<scale-line ng-class="{\'d-none\
 os.ui.list.add(os.ui.nav.Location.BOTTOM_LEFT,
     '<li id="mouse-position" class="nav-item mr-1 my-auto flex-shrink-0" ng-class="{\'small\': puny}"></li>', 300);
 
+os.ui.list.add(os.ui.nav.Location.BOTTOM_RIGHT, 'settings-button', 10);
+os.ui.list.add(os.ui.nav.Location.BOTTOM_RIGHT, 'legend-button', 50);
 os.ui.list.add(os.ui.nav.Location.BOTTOM_RIGHT, 'servers-button', 100);
 os.ui.list.add(os.ui.nav.Location.BOTTOM_RIGHT, 'alert-button', 200);
+os.ui.list.add(os.ui.nav.Location.BOTTOM_RIGHT, 'history-button', 200);
 os.ui.list.add(os.ui.nav.Location.BOTTOM_RIGHT, 'mute-button', 300);

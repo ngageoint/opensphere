@@ -72,7 +72,11 @@
     padding: $dropdown-item-padding-y $dropdown-item-padding-x;
 
     // This gets the same styles defined for dropdown-item. Used for when themes specify after the fact
-    @extend .dropdown-item
+    @extend .dropdown-item;
+
+    i {
+      margin-right: ($spacer * .25);
+    }
   }
 
   .ui-menu-divider {
