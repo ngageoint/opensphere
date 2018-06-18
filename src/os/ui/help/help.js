@@ -186,16 +186,6 @@ os.ui.help.HelpCtrl.prototype.initialize = function() {
   }
 
   root.addChild({
-    eventType: os.ui.help.EventType.CAPABILITIES,
-    label: '{APP} Capabilities',
-    tooltip: 'Display the {APP} Capabilities',
-    icons: ['<i class="fa fa-fw fa-cubes"></i>'],
-    sort: 135
-  });
-  os.dispatcher.listen(os.ui.help.EventType.CAPABILITIES, os.ui.help.showMetricsWindow_);
-  this.menu.listen(os.ui.help.EventType.CAPABILITIES, this.onHelpAction_, false, this);
-
-  root.addChild({
     eventType: os.ui.help.EventType.VIEW_ALERTS,
     label: 'View Alerts',
     tooltip: 'Display the alert log',
@@ -256,9 +246,6 @@ os.ui.help.HelpCtrl.prototype.onHelpAction_ = function(event) {
     case os.ui.help.EventType.CONTROLS:
       os.ui.help.ControlsCtrl.launch();
       break;
-    case os.ui.help.EventType.CAPABILITIES:
-      this.scope.$emit(os.ui.help.EventType.CAPABILITIES);
-      break;
     default:
       break;
   }
@@ -266,9 +253,8 @@ os.ui.help.HelpCtrl.prototype.onHelpAction_ = function(event) {
 
 /**
  * @param {string} flag
- * @private
  */
-os.ui.help.showWindow_ = function(flag) {
+os.ui.help.showWindow = function(flag) {
   if (flag && !os.ui.menu.windows.openWindow(flag)) {
     var evt = new os.ui.events.UIEvent(os.ui.events.UIEventType.TOGGLE_UI, flag);
     os.dispatcher.dispatchEvent(evt);
@@ -281,16 +267,7 @@ os.ui.help.showWindow_ = function(flag) {
  * @private
  */
 os.ui.help.showAlertsWindow_ = function() {
-  os.ui.help.showWindow_('alerts');
-};
-
-
-/**
- * Show the metrics window.
- * @private
- */
-os.ui.help.showMetricsWindow_ = function() {
-  os.ui.help.showWindow_('metrics');
+  os.ui.help.showWindow('alerts');
 };
 
 

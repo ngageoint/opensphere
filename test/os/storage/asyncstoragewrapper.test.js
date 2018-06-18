@@ -1,10 +1,10 @@
+goog.require('goog.storage.mechanism.HTML5LocalStorage');
 goog.require('os.storage.AsyncStorageWrapper');
 goog.require('os.storage.HTML5LocalStorage');
 goog.require('os.storage.ObjectMechanism');
 goog.require('os.storage.PrefixedMechanism');
 goog.require('os.storage.mock');
 goog.require('os.storage.mock.AsyncStorage');
-goog.require('goog.storage.mechanism.HTML5LocalStorage');
 
 
 /**
@@ -37,6 +37,7 @@ os.storage.runAsyncWrapperTests = function(mechanism, type) {
     os.storage.runAsyncReplaceTests(storage);
     os.storage.runAsyncRemoveTests(storage);
     os.storage.runAsyncClearTests(storage);
+    os.storage.runAsyncDisposeTests(storage);
   });
 };
 
