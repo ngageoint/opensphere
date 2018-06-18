@@ -19,7 +19,7 @@ os.ui.geo.PositionEventType = {
 
 
 /**
- * The position input directive. This directive provides an input that accepts Lat/Lon, DMS, and MGRS locations. It
+ * The position input directive. This directive provides an input that accepts Lat/Lon, DMS, DDM and MGRS locations. It
  * also supports receiving map click events from an ancestor.
  *
  * Scope vars:
@@ -121,8 +121,8 @@ os.ui.geo.PositionCtrl = function($scope, $element) {
   /**
    * @type {string}
    */
-  $scope['popoverContent'] = 'Takes DMS, Decimal Degrees, or MGRS. If Lat/Lon, the first coordinate is assumed to ' +
-      'be latitude unless it is zero-padded (0683000.55 or 058.135), three-digits (105&deg;30\'10.1&quot; or ' +
+  $scope['popoverContent'] = 'Takes DD, DMS, DDM or MGRS. If Lat/Lon, the first coordinate is assumed ' +
+      'to be latitude unless it is zero-padded (0683000.55 or 058.135), three-digits (105&deg;30\'10.1&quot; or ' +
       '105.3), or contains the direction (68 30 12 W or 105 E).';
 
   $scope.$watch('posText', function(event, val) {
