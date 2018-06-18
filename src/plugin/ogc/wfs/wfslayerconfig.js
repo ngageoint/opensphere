@@ -36,7 +36,7 @@ plugin.ogc.wfs.WFSLayerConfig = function() {
   this.describeType = true;
 
   /**
-   * @type {os.ogc.wfs.FeatureType}
+   * @type {os.ogc.IFeatureType}
    */
   this.featureType = null;
 
