@@ -92,7 +92,6 @@ goog.require('os.ui.columnactions.ColumnActionEvent');
 goog.require('os.ui.columnactions.ColumnActionManager');
 goog.require('os.ui.config.SettingPlugin');
 goog.require('os.ui.config.SettingsManager');
-goog.require('os.ui.datePanelDirective');
 goog.require('os.ui.draw');
 goog.require('os.ui.events.UIEventType');
 goog.require('os.ui.exportManager');
@@ -101,6 +100,7 @@ goog.require('os.ui.file.FileXTHandler');
 goog.require('os.ui.file.method.ImportMethod');
 goog.require('os.ui.filtersDirective');
 goog.require('os.ui.help.Controls');
+goog.require('os.ui.help.metricsOption');
 goog.require('os.ui.historyDirective');
 goog.require('os.ui.icon.IconSelectorManager');
 goog.require('os.ui.im.FilterTypeMethod');
@@ -408,6 +408,7 @@ os.MainCtrl.prototype.initialize = function() {
   os.time.initOffset();
 
   this.addControlsToHelp_();
+  os.ui.help.metricsOption.addToNav();
 };
 
 
