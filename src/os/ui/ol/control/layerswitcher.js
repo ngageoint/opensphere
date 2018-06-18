@@ -27,7 +27,7 @@ os.ui.ol.control.LayerSwitcher = function(opt_options) {
    */
   this.mapListeners = [];
 
-  this.hiddenClassName = 'ol-unselectable ol-control ol-layer-switcher';
+  this.hiddenClassName = 'u-mw-75 ol-unselectable ol-control ol-layer-switcher';
   this.shownClassName = this.hiddenClassName + ' shown';
 
   var element = document.createElement('div');
@@ -101,6 +101,7 @@ os.ui.ol.control.LayerSwitcher.prototype.renderPanel = function() {
   }
 
   var ul = document.createElement('ul');
+  ul.className = 'list-unstyled';
   this.panel.appendChild(ul);
   this.renderLayers_(this.getMap(), ul);
 };
@@ -186,6 +187,7 @@ os.ui.ol.control.LayerSwitcher.prototype.renderLayer_ = function(lyr, idx) {
     goog.dom.safe.setInnerHtml(label, lyrTitle);
     li.appendChild(label);
     var ul = document.createElement('ul');
+    ul.className = 'form-check list-unstyled text-truncate';
     li.appendChild(ul);
     this.renderLayers_(lyr, ul);
   } else {
@@ -197,6 +199,7 @@ os.ui.ol.control.LayerSwitcher.prototype.renderLayer_ = function(lyr, idx) {
       input.type = 'checkbox';
     }
     input.id = lyrId;
+    input.className = 'form-check-input';
     input.checked = lyr.get('visible');
     input.onchange = goog.bind(function(e) {
       this_.setVisible_(lyr, e.target.checked);
@@ -204,6 +207,7 @@ os.ui.ol.control.LayerSwitcher.prototype.renderLayer_ = function(lyr, idx) {
     li.appendChild(input);
     label.htmlFor = lyrId;
     goog.dom.safe.setInnerHtml(label, lyrTitle);
+    label.className = 'form-check-label';
     li.appendChild(label);
   }
 
