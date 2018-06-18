@@ -4,6 +4,7 @@ goog.provide('os.ui.navbaroptions.searchbox');
 goog.require('os.ui.addDataButtonDirective');
 goog.require('os.ui.alert.alertButtonDirective');
 goog.require('os.ui.clear.clearButtonDirective');
+goog.require('os.ui.datePanelDirective');
 goog.require('os.ui.draw.drawControlsDirective');
 goog.require('os.ui.help');
 goog.require('os.ui.history.historyButtonDirective');
@@ -42,6 +43,8 @@ os.ui.list.add(os.ui.nav.Location.TOP_LEFT, '<div class="u-btn-separator"></div>
 os.ui.list.add(os.ui.nav.Location.TOP_LEFT, 'os-draw-controls', 600);
 os.ui.list.add(os.ui.nav.Location.TOP_LEFT, 'measure-button', 650);
 os.ui.list.add(os.ui.nav.Location.TOP_LEFT, 'clear-button', 700);
+
+os.ui.list.add(os.ui.nav.Location.TOP_CENTER, '<date-panel ng-show="!mainCtrl.timeline"></date-panel>', 1);
 
 os.ui.list.add(os.ui.nav.Location.TOP_RIGHT, os.ui.navbaroptions.searchbox, 100);
 os.ui.list.add(os.ui.nav.Location.TOP_RIGHT, 'help', 200);
