@@ -1,6 +1,11 @@
 goog.provide('os.ui.location');
+
 goog.require('os.config.Settings');
 goog.require('os.ui');
+goog.require('os.ui.location.ddmFilter');
+goog.require('os.ui.location.degFilter');
+goog.require('os.ui.location.dmsFilter');
+goog.require('os.ui.location.mgrsFilter');
 
 
 /**
@@ -18,6 +23,7 @@ os.ui.location.LOGGER_ = goog.log.getLogger('os.ui.location');
 os.ui.location.Format = {
   DEG: 'deg',
   DMS: 'dms',
+  DDM: 'ddm',
   MGRS: 'mgrs'
 };
 
