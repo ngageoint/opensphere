@@ -32,7 +32,6 @@ os.events.PropertyChangeEvent = function(opt_property, opt_newVal, opt_oldVal, o
    */
   this.newVal_ = goog.isDef(opt_newVal) ? opt_newVal : null;
 
-
   /**
    * The old value
    * @type {?*}
