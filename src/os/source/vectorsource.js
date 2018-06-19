@@ -1739,11 +1739,10 @@ os.source.Vector.prototype.getFeatureCount = function() {
 
 
 /**
- * Process a set of features before they're added to the source.
- * @param {!Array<!ol.Feature>} features The features.
- * @protected
+ * Checks the new features array to see if it will push us past the feature limit.
+ * @param {!Array<!ol.Feature>} features The new features.
  */
-os.source.Vector.prototype.processFeatures = function(features) {
+os.source.Vector.prototype.checkFeatureLimit = function(features) {
   var totalCount = os.data.DataManager.getInstance().getTotalFeatureCount();
   var maxFeatures = os.ogc.getMaxFeatures();
 
@@ -1752,6 +1751,17 @@ os.source.Vector.prototype.processFeatures = function(features) {
     features.length = Math.max(maxFeatures - totalCount, 0);
     os.source.handleMaxFeatureCount(maxFeatures);
   }
+};
+
+
+/**
+ * Process a set of features before they're added to the source.
+ * @param {!Array<!ol.Feature>} features The features.
+ * @protected
+ */
+os.source.Vector.prototype.processFeatures = function(features) {
+  this.checkFeatureLimit(features);
+
   this.featureCount_ += features.length;
 
   // handle immediate processing on all features
