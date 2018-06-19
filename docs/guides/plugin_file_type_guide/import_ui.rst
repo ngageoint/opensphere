@@ -30,7 +30,7 @@ Cool. Now let's undo our launcher changes from the last step and make it look li
   :caption: ``src/plugin/georss/georssimportui.js``
   :linenos:
   :language: javascript
-  :emphasize-lines: 5-6, 47-64
+  :emphasize-lines: 5-6, 48-65
 
 To test that Import UI, we need a few tests:
 
