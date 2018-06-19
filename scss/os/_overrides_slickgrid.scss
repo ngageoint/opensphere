@@ -81,6 +81,10 @@
   @include hover {
     background: $dropdown-link-hover-bg;
     color: $dropdown-link-hover-color;
+
+    a {
+      color: $dropdown-link-hover-color;
+    }
   }
 
   background: $body-bg;
