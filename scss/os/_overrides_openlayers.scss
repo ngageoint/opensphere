@@ -21,7 +21,7 @@
 // Controls
 .ol-control {
   background-color: rgba($body-bg, .8);
-  border: .1rem solid rgba($body-color, .8);
+  border: .1rem solid $border-color;
   color: rgba($body-color, .8);
   position: absolute;
 }
@@ -29,7 +29,7 @@
 .ol-control:focus,
 .ol-control:hover {
   background-color: rgba($body-bg, .8);
-  border: .1rem solid rgba($body-color, .8);
+  border: .1rem solid $border-color;
   color: rgba($body-color, .8);
 }
 
@@ -94,15 +94,10 @@
 
   button {
     background-color: rgba($body-bg, .8);
-    background-image: url('../images/layers.png');
+    background-image: url('../../images/layers.png');
   }
 
   .panel {
-    background-color: rgba($body-bg, .8);
-    border: 1px solid rgba($body-color, .8);
-    display: none;
-    margin: 0;
-    margin-top: 1px;
     padding: 0 5px;
   }
 
@@ -112,13 +107,10 @@
 
   .layers-inner {
     background-color: rgba($body-bg, .8);
-    background-image: url('../images/layers.png');
-    background-position: 2px;
+    background-image: url('../../images/layers.png');
+    background-position: center;
     background-repeat: no-repeat;
-    border: 1px solid rgba($body-color, .8) !important;
-    border-radius: 2px;
     height: 2.5rem;
-    margin: 1px;
     margin-left: auto;
     width: 2.5rem;
   }
@@ -180,7 +172,7 @@ footer .ol-zoom-level {
 }
 
 .ol-scale-line-inner {
-  border-color: rgba($body-color, .8);
+  border-color: $border-color;
   color: rgba($body-color, .8);
   display: inline-block;
   font-size: .75rem;
@@ -198,7 +190,7 @@ footer .ol-scale-line {
 }
 
 footer .ol-scale-line-inner {
-  border-color: $white;
+  border-color: $border-color;
   color: $white;
 }
 
