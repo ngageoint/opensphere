@@ -139,13 +139,6 @@ os.MapContainer = function() {
   this.restoreCameraDelay_ = null;
 
   /**
-   * Reusable view extent.
-   * @type {ol.Extent}
-   * @private
-   */
-  this.viewExtent_ = ol.extent.createEmpty();
-
-  /**
    * Drawing layer for query regions.
    * @type {os.layer.Vector}
    * @private
@@ -343,26 +336,7 @@ os.MapContainer.prototype.onSettingChange_ = function(event) {
  * @return {ol.Extent}
  */
 os.MapContainer.prototype.getViewExtent = function() {
-  var view = this.map_.getView();
-  var size = this.map_.getSize();
-  var center = view.getCenter();
-  var resolution = view.getResolution();
-  if (goog.isDef(center) && goog.isDef(resolution) && goog.isDef(size)) {
-    ol.extent.getForViewAndSize(center, resolution, view.getRotation(), size, this.viewExtent_);
-    var projExtent = os.map.PROJECTION.getExtent();
-
-    if (projExtent) {
-      this.viewExtent_[1] = Math.max(this.viewExtent_[1], projExtent[1]);
-      this.viewExtent_[3] = Math.min(this.viewExtent_[3], projExtent[3]);
-
-      if (!os.map.PROJECTION.canWrapX()) {
-        this.viewExtent_[0] = Math.max(this.viewExtent_[0], projExtent[0]);
-        this.viewExtent_[2] = Math.min(this.viewExtent_[2], projExtent[2]);
-      }
-    }
-  }
-
-  return this.viewExtent_;
+  return this.map_ ? this.map_.getExtent() : ol.extent.createEmpty();
 };
 
 
