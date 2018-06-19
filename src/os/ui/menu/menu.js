@@ -111,7 +111,8 @@ os.ui.menu.Menu.prototype.onClick_ = function(e) {
     } catch (error) {
       var test = $(e.target).closest(str).length ? true : false;
     }
-    if (opener != '#map-container' && test) {
+    // test to see if the map or timeline was clicked, those should always close a menu
+    if (test && opener != '#map-container' && opener != '.c-svg-timeline') {
       // leave the open flag so the next call to open wont open anything
       this.close(false, true);
     } else {
