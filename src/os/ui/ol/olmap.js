@@ -326,13 +326,12 @@ os.ui.ol.OLMap.prototype.getControls_ = function() {
   });
   var mapControls = [];
   var scaleLine = new os.control.ScaleLine({
-    target: document.getElementById('scale-line')
+    target: document.getElementById('scale-line'),
+    className: 'ol-scale-line ol-control',
   });
-  var zoomSlider = new ol.control.ZoomSlider();
   var layerSwitcher = new os.ui.ol.control.LayerSwitcher();
 
   mapControls.push(scaleLine);
-  mapControls.push(zoomSlider);
   mapControls.push(layerSwitcher);
   controls.extend(mapControls);
   return controls;
