@@ -90,6 +90,10 @@
   &.selected {
     background: $component-active-bg;
     color: $component-active-color;
+
+    a {
+      color: $component-active-color;
+    }
   }
 }
 
