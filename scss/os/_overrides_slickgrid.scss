@@ -53,6 +53,7 @@
     border-right-color: $table-dark-border-color;
     border-top: 1px solid $table-dark-border-color;
     box-sizing: content-box;
+    cursor: pointer;
 
     .ui-state-hover {
       background: $table-hover-bg;
@@ -93,6 +94,10 @@
   &.selected {
     background: $component-active-bg;
     color: $component-active-color;
+
+    a {
+      color: $component-active-color;
+    }
   }
 }
 
