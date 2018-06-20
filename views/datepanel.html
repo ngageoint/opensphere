@@ -1,4 +1,4 @@
-<div class="d-flex flex-column u-pointer-events-none js-date-panel c-date-panel">
+<div class="d-flex flex-column u-pointer-events-none js-date-panel c-date-panel" ng-class="{'c-date-panel__extended-open': ctrl.extended}">
   <div class="u-pointer-events-all">
     <div class="w-100 d-flex justify-content-center">
       <date-control></date-control>
@@ -9,8 +9,8 @@
     </div>
   </div>
 
-  <div id="js-slice-panel" class="u-pointer-events-all " ng-show="ctrl.extended">
-    <div class="c-date-panel__expanded d-flex w-100 p-1 mt-1 flex-shrink-0 justify-content-center rounded-bottom">
+  <div id="js-slice-panel" class="u-pointer-events-all" ng-show="ctrl.extended">
+    <div class="c-date-panel__extended d-flex w-100 px-1 pb-1 mt-1 flex-shrink-0 justify-content-center rounded-bottom">
       <div class="d-flex align-items-center">
         <div class="mx-1 d-flex align-items-center">
           <input class="form-control" type="number" min="0" max="23" step="1" ng-model="ctrl.startHour"
@@ -32,16 +32,15 @@
               ng-change="ctrl.onChange('endMinute', 0, 59, '{{ctrl.endMinute}}')"></input>
           <span class="flex-shrink-0 ml-1">m {{ctrl.getOffset()}}</span>
         </div>
-        <div class="mx-1 d-flex align-items-center">
-          <button class="btn btn-secondary" ng-click="ctrl.applySlice()" title="Apply time slice" ng-disabled="!ctrl.sliceValid() || ctrl.active">
-            <div ng-if="!ctrl.active"><i class="fa fa-fw fa-check green-icon"></i></div>
-            <div ng-if="ctrl.active"><i class="fa fa-fw fa-check"></i></div>
+        <div class="mx-1 d-flex align-items-center flex-shrink-0">
+          <button class="btn" ng-class="{'btn-success': !ctrl.active, 'btn-secondary': ctrl.active}" ng-click="ctrl.applySlice()" title="Apply time slice" ng-disabled="!ctrl.sliceValid() || ctrl.active">
+            <i class="fa fa-fw fa-check"></i>
           </button>
         </div>
         <div>
           <popover data-title="ctrl.sliceTitle" data-content="ctrl.sliceDescription" data-pos="'bottom'"></popover>
         </div>
-      </span>
+      </div>
     </div>
   </div>
 </div>

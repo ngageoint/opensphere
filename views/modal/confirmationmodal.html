@@ -1,25 +1,18 @@
-<div class="modal hide">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title"><span ng-bind-html="confctrl.title"></span></h5>
-      </div>
-      <div class="modal-body">
-        <div>
-          <h4>{{confctrl.message}}</h4>
-          <h5>{{confctrl.submessage}}</h5>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" ng-class="confctrl.yesClass" ng-disabled="confctrl.saving" ng-click="confctrl.confirmClick()" >
-          <i class="fa" ng-class="confctrl.saving && 'fa-spin fa-spinner' || confctrl.yesIcon"></i>
-          Delete
-        </button>
-        <button type="button" class="btn btn-secondary" ng-disabled="confctrl.saving" ng-click="confctrl.cancelClick()">
-          <i class="fa fa-times"></i>
-          Cancel
-        </button>
-      </div>
+<div>
+  <div>
+    <div>
+      <h4>{{confctrl.message}}</h4>
+      <h5>{{confctrl.submessage}}</h5>
     </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" ng-class="confctrl.yesClass" ng-disabled="confctrl.saving" ng-click="confctrl.confirmClick()" >
+      <i class="fa" ng-class="confctrl.saving && 'fa-spin fa-spinner' || confctrl.yesIcon"></i>
+      Delete
+    </button>
+    <button type="button" class="btn btn-secondary" ng-disabled="confctrl.saving" ng-click="confctrl.cancelClick()">
+      <i class="fa fa-times"></i>
+      Cancel
+    </button>
   </div>
 </div>
