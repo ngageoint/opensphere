@@ -2,7 +2,7 @@
   <div class="modal-content h-100" ng-class="headerClass">
     <div class="js-window__header modal-header d-flex justify-content-between" ng-dblclick="windowCtrl.toggle()">
       <div class="js-window__header-text text-truncate" title="{{label}}">
-        <i ng-if="icon" ng-class="icon"></i>
+        <i ng-if="icon" ng-class="icon" class="mr-1"></i>
         <span ng-if="iconHtml" ng-bind-html="iconHtml"></span>
         {{label}}
       </div>
