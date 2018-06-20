@@ -25,7 +25,7 @@ os.file.mime.jsonstate.detect = function(buffer, file, opt_context) {
     retVal = opt_context;
   }
 
-  return goog.Promise.resolve(opt_context);
+  return goog.Promise.resolve(retVal);
 };
 
 
