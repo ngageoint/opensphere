@@ -29,3 +29,11 @@
   border-color: #999;
   color: #999;
 }
+
+.carousel-control-prev,
+.carousel-control-next {
+  &:hover {
+    background-color: $dark !important;
+    opacity: .5;
+  }
+}

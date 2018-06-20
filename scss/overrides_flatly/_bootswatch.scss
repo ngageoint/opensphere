@@ -24,3 +24,11 @@
     }
   }
 }
+
+.carousel-control-prev,
+.carousel-control-next {
+  &:hover {
+    background-color: $dark !important;
+    opacity: .5;
+  }
+}

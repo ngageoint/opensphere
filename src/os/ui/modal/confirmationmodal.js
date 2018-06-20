@@ -10,6 +10,7 @@ goog.require('os.ui.modal.modalAutoSizeDirective');
 /**
  * @typedef {{
  *   title: string,
+ *   icon: string,
  *   message: string,
  *   submessage: string,
  *   yesClass: string,
@@ -22,22 +23,21 @@ os.ui.modal.ConfirmationModalOptions;
 
 
 /**
- * The confirmation-modal directive is a catch-all modal display for the main page.  This modal dialog is controlled via
- * broadcasting messages from an ancestor to this directive.  The 'confirmModal.displayConfirmation' message
- * will toggle the modal on.  The title, message, and submessage can all be set within the parameters that are sent via
- * the emit. Cancel and Success callbacks are also available via the emit parameters. The yesClass param will set the
+ * The confirmation-modal directive is a catch-all modal display for the main page. This modal dialog is controlled via
+ * a launch call. The title, message, and submessage can all be set within the parameters that are sent via parameters.
+ * Cancel and Success callbacks are also available via the parameters. The yesClass param will set the
  * button class (btn-primary, btn-danger, etc) and the yesIcon param will set the icon class (fa-trash-o, etc) to use
  * for the Yes button.
- *
- * To close the modal, a second message needs to be broadcast from the parent: 'confirmModal.success'.
  *
  * @return {angular.Directive}
  */
 os.ui.modal.confirmationModalDirective = function() {
   return {
-    scope: true,
-    replace: true,
     restrict: 'E',
+    replace: true,
+    scope: {
+      'params': '='
+    },
     templateUrl: os.ROOT + 'views/modal/confirmationmodal.html',
     controller: os.ui.modal.ConfirmationModalCtrl,
     controllerAs: 'confctrl'
@@ -91,23 +91,7 @@ os.ui.modal.ConfirmationModalCtrl = function($scope, $element, $timeout) {
   /** @type {boolean} */
   this['saving'] = false;
 
-  $scope.$on(os.ui.modal.ConfirmationModalCtrl.confirm, function(event, params) {
-    // set parameters from event
-    this.setMessage(params);
-
-    // show modal
-    $element.modal({
-      'show': true,
-      'backdrop': 'static'
-    });
-  }.bind(this));
-
-  $scope.$on(os.ui.modal.ConfirmationModalCtrl.success, function(event, params) {
-    this.cleanup();
-    if (params && params['message']) {
-      os.alert.AlertManager.getInstance().sendAlert(params['message'], os.alert.AlertEventSeverity.SUCCESS);
-    }
-  }.bind(this));
+  this.setMessage($scope['params']);
 
   $scope.$on('$destroy', this.destroy_.bind(this));
 };
@@ -116,13 +100,7 @@ os.ui.modal.ConfirmationModalCtrl = function($scope, $element, $timeout) {
 /**
  * @const {string}
  */
-os.ui.modal.ConfirmationModalCtrl.confirm = 'confirmModal.displayConfirmation';
-
-
-/**
- * @const {string}
- */
-os.ui.modal.ConfirmationModalCtrl.success = 'confirmModal.success';
+os.ui.modal.ConfirmationModalCtrl.ID = 'confirmModal';
 
 
 /**
@@ -155,9 +133,6 @@ os.ui.modal.ConfirmationModalCtrl.prototype.setMessage = function(options) {
  * Hides the modal after a button click
  */
 os.ui.modal.ConfirmationModalCtrl.prototype.cancelClick = function() {
-  // hide modal
-  this.element_.modal('hide');
-
   // call cancel callback
   if (goog.isDefAndNotNull(this.onCancel)) {
     /** @type {!Function} */
@@ -165,7 +140,7 @@ os.ui.modal.ConfirmationModalCtrl.prototype.cancelClick = function() {
     this.timeout_(callback);
   }
 
-  this.cleanup();
+  os.ui.window.close(os.ui.window.getById(os.ui.modal.ConfirmationModalCtrl.ID));
 };
 goog.exportProperty(
     os.ui.modal.ConfirmationModalCtrl.prototype,
@@ -194,14 +169,31 @@ goog.exportProperty(
 
 
 /**
- * Get rid of references to everything
+ * launches confirmation modal
+ * @param {os.ui.modal.ConfirmationModalOptions} params
  */
-os.ui.modal.ConfirmationModalCtrl.prototype.cleanup = function() {
-  this.element_.modal('hide');
-  this['title'] = '';
-  this['message'] = '';
-  this['submessage'] = '';
-  this.onYes = null;
-  this.onCancel = null;
-  this['saving'] = false;
+os.ui.modal.ConfirmationModalCtrl.launch = function(params) {
+  var html = '<confirmation-modal params="params"></confirmation-modal>';
+  var options = {
+    'id': os.ui.modal.ConfirmationModalCtrl.ID,
+    'icon': params['icon'] || '',
+    'width': 550,
+    'height': 'auto',
+    'label': params['title'] || '',
+    'show-close': true,
+    'modal': true,
+    'x': 'center',
+    'y': 'center'
+  };
+
+  var scopeOptions = {
+    'params': params
+  };
+
+  if (os.ui.window.exists(os.ui.modal.ConfirmationModalCtrl.ID)) {
+    os.ui.window.close(os.ui.window.getById(os.ui.modal.ConfirmationModalCtrl.ID));
+  }
+
+  // Create the modal window
+  os.ui.window.create(options, html, undefined, undefined, undefined, scopeOptions);
 };
