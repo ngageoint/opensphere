@@ -1,10 +1,10 @@
 // Openlayers Modifications
-
 .ol-overlaycontainer-stopevent {
   height: 0;
   // Prevent IE from thinking this container should have a height, since it doesn't.
 }
 
+// Viewport
 .ol-viewport {
   height: 100% !important;
 
@@ -13,37 +13,34 @@
   }
 }
 
-.ol-mapmode-text {
-  font-size: .9em;
-  vertical-align: top;
-}
-
-// Controls
+// Generic Controls
 .ol-control {
   background-color: rgba($body-bg, .8);
   border: .1rem solid $border-color;
   color: rgba($body-color, .8);
   position: absolute;
+
+  &:focus,
+  &:hover {
+    background-color: rgba($body-bg, .8);
+    border: .1rem solid $border-color;
+    color: rgba($body-color, .8);
+  }
+
+  button {
+    background-color: rgba($body-bg, .1);
+    color: rgba($body-color, .8);
+    cursor: pointer;
+
+    &:hover,
+    &.active {
+      background-color: rgba($primary, .8);
+    }
+  }
 }
 
-.ol-control:focus,
-.ol-control:hover {
-  background-color: rgba($body-bg, .8);
-  border: .1rem solid $border-color;
-  color: rgba($body-color, .8);
-}
 
-.ol-control button {
-  background-color: rgba($body-bg, .1);
-  color: rgba($body-color, .8);
-}
-
-.ol-control button:hover,
-.ol-control button.active {
-  background-color: rgba($primary, .8);
-}
-
-// top left
+// If the draw controls are absolutely positioned, position to top left
 .draw-controls {
   bottom: auto;
   left: .75rem;
@@ -51,7 +48,8 @@
   top: .75rem;
 }
 
-// top right
+
+// + / - zoom control buttons
 .ol-zoom {
   bottom: auto;
   left: auto;
@@ -59,10 +57,8 @@
   top: .75rem;
 }
 
-.ol-zoom button {
-  cursor: pointer;
-}
 
+// Arrow rotation control button
 .ol-rotate {
   bottom: auto;
   left: auto;
@@ -70,21 +66,32 @@
   top: 4.5rem;
 }
 
+
+// 2D / 3D switcher button
 .ol-mapmode {
   bottom: auto;
   left: auto;
   right: .75rem;
   top: 6.75rem;
+
+  .ol-mapmode-text {
+    font-size: .9em;
+  }
 }
 
-.small .ol-zoom-level {
-  min-width: 10rem;
-}
 
+// Zoombar needs a min width
 .ol-zoom-level {
   min-width: 15rem;
 }
 
+// If the zoom level is small, dont take as much space
+.small .ol-zoom-level {
+  min-width: 10rem;
+}
+
+
+// Layer switcher
 .ol-layer-switcher {
   bottom: auto;
   left: auto;
@@ -92,17 +99,8 @@
   text-align: left;
   top: .75rem;
 
-  button {
-    background-color: rgba($body-bg, .8);
-    background-image: url('../../images/layers.png');
-  }
-
   .panel {
     padding: 0 5px;
-  }
-
-  &.shown .panel {
-    display: block;
   }
 
   .layers-inner {
@@ -120,6 +118,8 @@
   }
 }
 
+
+// Overview map
 .ol-overviewmap {
   bottom: auto;
   left: auto;
@@ -145,22 +145,19 @@
     margin: 0;
     width: 15rem;
   }
+
+  .ol-overviewmap-box {
+    border: .125rem dotted $danger;
+  }
 }
 
+// Collapsed overview map
 .ol-collapsed .ol-overviewmap-map {
   display: none;
 }
 
-.ol-overviewmap-box {
-  border: .125rem dotted $danger;
-}
 
-// bottom
-footer .ol-zoom-level {
-  color: $white;
-  min-width: 15rem;
-}
-
+// Scale Line
 .ol-scale-line {
   bottom: .75rem;
   cursor: pointer;
@@ -168,31 +165,19 @@ footer .ol-zoom-level {
   padding: .5rem;
   right: auto;
   top: auto;
+
+  .ol-scale-line-inner {
+    border-color: rgba($body-color, .8);
+    color: rgba($body-color, .8);
+    display: inline-block;
+    font-size: .75rem;
+    height: .5rem;
+    line-height: 0;
+  }
 }
 
-.ol-scale-line-inner {
-  border-color: $border-color;
-  color: rgba($body-color, .8);
-  display: inline-block;
-  font-size: .75rem;
-  height: .5rem;
-  line-height: 0;
-}
 
-footer .ol-scale-line {
-  background: transparent;
-  bottom: auto;
-  color: $white;
-  left: auto;
-  min-width: 10rem;
-  padding: unset;
-}
-
-footer .ol-scale-line-inner {
-  border-color: $border-color;
-  color: $white;
-}
-
+// Attribution
 .ol-attribution,
 .ol-attribution.ol-uncollapsible {
   bottom: .25rem;
@@ -201,15 +186,22 @@ footer .ol-scale-line-inner {
   right: auto;
   top: auto;
 
+  li:nth-child(n+2):not(:last-child):after {
+    content: ', ';
+  }
+
+  &:hover {
+    background-color: rgba($body-bg, .9);
+    color: rgba($body-color, .9);
+  }
+
   a {
     color: rgba($link-color, .8);
   }
 }
 
-.ol-attribution li:nth-child(n+2):not(:last-child):after {
-  content: ', ';
-}
 
+// Mouse Position
 .ol-mouse-position {
   bottom: .75em;
   cursor: pointer;
@@ -218,8 +210,31 @@ footer .ol-scale-line-inner {
   top: auto;
 }
 
-footer .ol-mouse-position {
-  bottom: auto;
-  color: $white;
-  right: auto;
+
+// Things in the dark navbar. Light navbars should just get the defaults
+.navbar-dark {
+  .ol-mouse-position {
+    bottom: auto;
+    color: $navbar-dark-color;
+    right: auto;
+  }
+
+  .ol-zoom-level {
+    color: $navbar-dark-color;
+    min-width: 15rem;
+  }
+
+  .ol-scale-line {
+    background: transparent;
+    bottom: auto;
+    color: $navbar-dark-color;
+    left: auto;
+    min-width: 10rem;
+    padding: unset;
+
+    .ol-scale-line-inner {
+      border-color: $navbar-dark-color;
+      color: $navbar-dark-color;
+    }
+  }
 }
