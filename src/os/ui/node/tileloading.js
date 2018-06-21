@@ -99,13 +99,7 @@ os.ui.node.TileLoadingCtrl.prototype.getText = function() {
     if (this.source_) {
       var count = /** @type {?number} */ (this.source_.get(os.layer.PropertyChange.TILE_COUNT));
 
-      if (/** @type {os.ol.source.ILoadingSource} */ (this.source_).isLoading()) {
-        if (count != null) {
-          return '(' + count + ' In View) Loading...';
-        }
-
-        return '(Loading...)';
-      } else if (count != null) {
+      if (count != null) {
         return '(' + count + ' In View)';
       }
     }
