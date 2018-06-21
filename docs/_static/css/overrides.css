@@ -1,0 +1,4 @@
+/* make line highlight visible against new highlight div background */
+.highlight .hll {
+  background-color: #ddeebb;
+}

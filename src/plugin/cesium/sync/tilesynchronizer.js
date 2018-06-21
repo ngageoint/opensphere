@@ -3,18 +3,19 @@ goog.provide('plugin.cesium.sync.TileSynchronizer');
 goog.require('goog.asserts');
 goog.require('goog.async.Delay');
 goog.require('goog.events.EventType');
+goog.require('goog.string');
 goog.require('ol.layer.Tile');
 goog.require('ol.source.TileWMS');
 goog.require('os.MapEvent');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.events.SelectionType');
+goog.require('os.layer');
 goog.require('os.layer.AnimatedTile');
 goog.require('os.layer.PropertyChange');
 goog.require('os.map');
 goog.require('os.ol.events');
 goog.require('os.source.Vector');
 goog.require('plugin.cesium.ImageryProvider');
-goog.require('plugin.cesium.WMSImageryProvider');
 goog.require('plugin.cesium.sync.CesiumSynchronizer');
 
 
@@ -321,7 +322,7 @@ plugin.cesium.sync.TileSynchronizer.prototype.disposeCache_ = function() {
     for (var key in this.animationCache_) {
       this.cesiumLayers_.remove(this.animationCache_[key], true);
 
-      if (this.animationCache_[key].imageryProvider instanceof plugin.cesium.WMSImageryProvider) {
+      if (this.animationCache_[key].imageryProvider instanceof plugin.cesium.ImageryProvider) {
         this.animationCache_[key].imageryProvider.dispose();
       }
 
@@ -423,60 +424,32 @@ plugin.cesium.sync.TileSynchronizer.prototype.getCacheLayer_ = function(timePara
  * @param {string} timeParam Time to use for the WMS TIME parameter
  * @return {!Cesium.ImageryLayer} The Cesium imagery layer
  * @private
+ * @suppress {accessControls}
  */
 plugin.cesium.sync.TileSynchronizer.prototype.getLayerByTime_ = function(timeParam) {
   goog.asserts.assertInstanceof(this.layer, os.layer.AnimatedTile);
   goog.asserts.assert(!goog.isNull(this.view));
 
-  var source = this.layer.getSource();
-  goog.asserts.assertInstanceof(source, ol.source.TileWMS);
+  var originalSource = /** @type {ol.source.TileWMS} */ (this.layer.getSource());
+  goog.asserts.assertInstanceof(originalSource, ol.source.TileWMS);
 
-  // base WMS options
-  var baseParams = {
-    'SERVICE': 'WMS',
-    'VERSION': '1.3.0',
-    'FORMAT': 'image/png',
-    'TRANSPARENT': true
-  };
+  var options = this.layer.getLayerOptions();
+  // just to be sure, make the ID different
+  options['id'] = goog.string.getRandomString();
 
-  // add the source's WMS options
-  goog.object.extend(baseParams, source.getParams());
+  var clone = /** @type {os.layer.Tile} */ (os.layer.createFromOptions(options));
+  var source = /** @type {ol.source.TileWMS} */ (clone.getSource());
 
-  // now set the custom time
-  baseParams['TIME'] = timeParam;
+  // don't leak the layer and its ties to the source
+  clone.setSource(null);
+  clone.dispose();
 
-  // The Cesium WebMapServiceImageryProvider always uses SRS because they're following the 1.1.1 spec. We're using
-  // WMS 1.3.0 and the server requires us to set CRS. Further, Cesium will send BBOX coords as WSEN but our server
-  // expects them to be SWNE when using EPSG:4326. Requesting CRS:84 will make the server and Cesium play well
-  // together. wtf, Cesium?
-  baseParams['CRS'] = os.proj.CRS84;
+  var params = originalSource.getParams();
+  params['TIME'] = timeParam;
+  source.updateParams(params);
 
-  // Cesium WMS provider options setup
-  var projection = this.view.getProjection();
-  var tg = source.getTileGrid();
-  var tileSize = !goog.isNull(tg) ? tg.getTileSize(0) : 512;
-  tileSize = goog.isNumber(tileSize) ? tileSize : tileSize[0];
-
-  var urls = source.getUrls();
-  var providerOptions = /** @type {Cesium.WebMapServiceImageryProviderOptions} */ ({
-    enablePickFeatures: false,
-    layers: baseParams['LAYERS'],
-    parameters: baseParams,
-    tileHeight: tileSize,
-    tileWidth: tileSize,
-    url: urls[0]
-  });
-
-  // Cesium imagery layer options setup
-  var layerOptions = /** @type {Cesium.ImageryLayerOptions} */ ({});
-  var extent = this.layer.getExtent();
-  if (goog.isDefAndNotNull(extent) && !goog.isNull(projection)) {
-    layerOptions.rectangle = olcs.core.extentToRectangle(extent, projection);
-  }
-
-  // create the layer
-  var provider = new plugin.cesium.WMSImageryProvider(providerOptions, source);
-  var cesiumLayer = new Cesium.ImageryLayer(provider, layerOptions);
+  var provider = new plugin.cesium.ImageryProvider(source);
+  var cesiumLayer = new Cesium.ImageryLayer(provider);
   return cesiumLayer;
 };
 
