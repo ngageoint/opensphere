@@ -22,6 +22,35 @@ $form-control-disabled-opacity: .6 !default;
   }
 }
 
+// At certain breakpoints, forms look really bad (especially in modals. Lets adjust forms to takeup more of the screen)
+@include media-breakpoint-down(md) {
+  // Only form elements in a form group
+  .form-group {
+    @each $breakpoint in map-keys($grid-breakpoints) {
+      $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+      @for $i from 1 through $grid-columns {
+        .col#{$infix}-#{$i} {
+          flex-basis: 100%;
+          max-width: 100%;
+        }
+      }
+
+      @for $i from 0 through ($grid-columns - 1) {
+        @if not ($infix == '' and $i == 0) { // Avoid emitting useless .offset-0
+          .offset#{$infix}-#{$i} {
+            margin-left: 0;
+          }
+        }
+      }
+    }
+
+    .text-right .col-form-label,
+    .col-form-label.text-right {
+      text-align: left !important;
+    }
+  }
+}
+
 
 // --------------------------------- Misc Utilities --------------------------------- //
 .u-pointer-events-all {
