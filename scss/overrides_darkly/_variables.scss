@@ -25,3 +25,6 @@ $navbar-dark-hover-color: $primary;
 $table-accent-bg: $gray-900;
 
 $text-muted: $gray-500;
+
+// The card's header / footer conflict with btn-secondary
+$card-cap-bg: lighten($gray-700, 6%);
