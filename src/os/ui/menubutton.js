@@ -78,12 +78,22 @@ os.ui.MenuButtonCtrl.prototype.onDestroy = function() {
  * Open the menu
  */
 os.ui.MenuButtonCtrl.prototype.openMenu = function() {
-  if (this.menu && !this.scope['menu']) {
-    this.menu.refreshEnabledActions();
-    this.scope['menu'] = true;
-    os.dispatcher.listenOnce(os.ui.GlobalMenuEventType.MENU_CLOSE, this.onMenuClose, false, this);
-    os.ui.openMenu(this.menu, this.position, this.element || undefined);
+  if (this.menu) {
+    // To be consistent with bs4, if the menu is open and you click it again, close the menu
+    if (this.scope['menu'] ||
+        this.element.hasClass('active') ||
+        this.element.hasClass('active-remove') ||
+        this.element.hasClass('active-remove-active')) {
+      this.scope['menu'] = false;
+      this.element.blur();
+    } else {
+      this.scope['menu'] = true;
+      os.dispatcher.listenOnce(os.ui.GlobalMenuEventType.MENU_CLOSE, this.onMenuClose, false, this);
+      os.ui.openMenu(this.menu, this.position, this.element || undefined);
+    }
   }
+
+  os.ui.apply(this.scope);
 };
 goog.exportProperty(os.ui.MenuButtonCtrl.prototype, 'openMenu', os.ui.MenuButtonCtrl.prototype.openMenu);
 
@@ -94,6 +104,7 @@ goog.exportProperty(os.ui.MenuButtonCtrl.prototype, 'openMenu', os.ui.MenuButton
  */
 os.ui.MenuButtonCtrl.prototype.onMenuClose = function() {
   this.scope['menu'] = false;
+  this.element.blur();
 };
 
 
