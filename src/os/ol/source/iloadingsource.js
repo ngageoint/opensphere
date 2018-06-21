@@ -7,6 +7,11 @@ goog.provide('os.ol.source.ILoadingSource');
  */
 os.ol.source.ILoadingSource = function() {};
 
+/**
+ * @type {string}
+ * @const
+ */
+os.ol.source.ILoadingSource.ID = 'os.ol.source.ILoadingSource';
 
 /**
  * If the source is currently in a loading state.

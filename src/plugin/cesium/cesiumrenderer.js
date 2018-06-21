@@ -8,7 +8,7 @@ goog.require('os.MapEvent');
 goog.require('os.webgl.AbstractWebGLRenderer');
 goog.require('plugin.cesium');
 goog.require('plugin.cesium.Camera');
-goog.require('plugin.cesium.WMSImageryProvider');
+goog.require('plugin.cesium.TileGridTilingScheme');
 goog.require('plugin.cesium.WMSTerrainProvider');
 goog.require('plugin.cesium.interaction');
 goog.require('plugin.cesium.mixin');
@@ -98,7 +98,7 @@ plugin.cesium.CesiumRenderer.prototype.initialize = function() {
       plugin.cesium.loadCesium().then(function() {
         try {
           plugin.cesium.mixin.loadCesiumMixins();
-          plugin.cesium.WMSImageryProvider.init();
+          plugin.cesium.TileGridTilingScheme.init();
 
           // initialize interactions that have additional support for Cesium
           plugin.cesium.interaction.loadInteractionMixins();

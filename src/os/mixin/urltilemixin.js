@@ -10,11 +10,13 @@ goog.require('ol.source.TileEventType');
 goog.require('ol.source.UrlTile');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.implements');
+goog.require('os.ol.source.ILoadingSource');
 goog.require('os.ol.source.IUrlSource');
 
 
 // add support for providing custom URL parameters
 os.implements(ol.source.UrlTile, os.ol.source.IUrlSource.ID);
+os.implements(ol.source.UrlTile, os.ol.source.ILoadingSource.ID);
 
 
 /*
