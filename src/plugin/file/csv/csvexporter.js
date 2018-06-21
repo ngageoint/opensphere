@@ -82,7 +82,9 @@ plugin.file.csv.CSVExporter.prototype.processItem = function(item) {
       result[os.Fields.MGRS] = '';
     }
 
-    result[os.Fields.GEOMETRY] = os.ol.wkt.FORMAT.writeFeature(item);
+    result[os.Fields.GEOMETRY] = os.ol.wkt.FORMAT.writeFeature(item, {
+      dataProjection: os.proj.EPSG4326,
+      featureProjection: os.map.PROJECTION});
 
     var time = /** @type {os.time.ITime|undefined} */ (item.get(os.data.RecordField.TIME));
     if (time) {

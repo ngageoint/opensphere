@@ -26,4 +26,5 @@ The code is open source, and `available on GitHub`_.
    guides/app_guide
    guides/plugin_guide
    guides/settings_guide
+   guides/deployment_guide
    cookbook/overview

@@ -60,12 +60,6 @@ os.ui.MenuButtonCtrl = function($scope, $element) {
    */
   this.position = 'top';
 
-  /**
-   * @type {boolean}
-   * @protected
-   */
-  this.isOpen = false;
-
   $scope.$on('$destroy', this.onDestroy.bind(this));
 };
 
@@ -84,13 +78,8 @@ os.ui.MenuButtonCtrl.prototype.onDestroy = function() {
  * Open the menu
  */
 os.ui.MenuButtonCtrl.prototype.openMenu = function() {
-  if (this.isOpen) {
-    this.isOpen = false;
-    return;
-  }
-  if (this.menu) {
+  if (this.menu && !this.scope['menu']) {
     this.menu.refreshEnabledActions();
-    this.isOpen = true;
     this.scope['menu'] = true;
     os.dispatcher.listenOnce(os.ui.GlobalMenuEventType.MENU_CLOSE, this.onMenuClose, false, this);
     os.ui.openMenu(this.menu, this.position, this.element || undefined);

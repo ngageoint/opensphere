@@ -44,7 +44,7 @@ os.im.mapping.WKTMapping.LOGGER_ = goog.log.getLogger('os.im.mapping.WKTMapping'
  * @const
  */
 os.im.mapping.WKTMapping.WKT_REGEX =
-    /^\s*(POINT|LINESTRING|LINEARRING|POLYGON|MULTIPOINT|MULTILINESTRING|MULTIPOLYGON|GEOMETRYCOLLECTION)\s*[(]/i;
+    /^\s*(POINT|LINESTRING|LINEARRING|POLYGON|MULTIPOINT|MULTILINESTRING|MULTIPOLYGON|GEOMETRYCOLLECTION)\s*Z?[(]/i;
 
 /**
  * @type {RegExp}
@@ -100,11 +100,15 @@ os.im.mapping.WKTMapping.prototype.execute = function(item) {
   if (this.field) {
     var fieldValue = os.im.mapping.getItemField(item, this.field);
     if (fieldValue) {
-      var geom = os.ol.wkt.FORMAT.readGeometry(String(fieldValue));
+      var geom = os.ol.wkt.FORMAT.readGeometry(String(fieldValue), {
+        dataProjection: os.proj.EPSG4326,
+        featureProjection: os.map.PROJECTION
+      });
+
       if (geom) {
         item.suppressEvents();
         item.set(this.field, undefined);
-        item.setGeometry(geom.osTransform());
+        item.setGeometry(geom);
         item.enableEvents();
       }
     }
