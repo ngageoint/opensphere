@@ -98,9 +98,68 @@ $form-control-disabled-opacity: .6 !default;
   right: .5rem;
 }
 
+// At certain breakpoints, forms look really bad (especially in modals. Lets adjust forms to takeup more of the screen)
+// To use, just add u-form-vertical-at-<breakpoint>. (u-form-veritical-at-md).
+// This will apply to all form-groups under this selector
+@each $breakpoint in map-keys($grid-breakpoints) {
+  // Add a media query at this breakpoint
+  @include media-breakpoint-down($breakpoint) {
+    $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+
+    .u-form-vertical-at-#{$breakpoint} {
+
+      // Wrap all form groups to new lines
+      // sass-lint:disable no-extends
+      .form-group {
+        flex-wrap: wrap;
+
+        // Make all columns 100% and no padding
+        %full-columns {
+          flex-basis: 100%;
+          max-width: 100%;
+          padding-left: 0;
+          padding-right: 0;
+        }
+
+        %no-margin-left {
+          margin-left: 0;
+        }
+
+        // Remove padding for columns
+        .col {
+          @extend %full-columns;
+        }
+
+        @each $breakpoint in map-keys($grid-breakpoints) {
+          $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+          @for $i from 1 through $grid-columns {
+            .col#{$infix}-#{$i} {
+              @extend %full-columns;
+            }
+          }
+
+          // Make all offets ignored
+          @for $i from 0 through ($grid-columns - 1) {
+            @if not ($infix == '' and $i == 0) { // Avoid emitting useless .offset-0
+              .offset#{$infix}-#{$i} {
+                @extend %no-margin-left;
+              }
+            }
+          }
+        }
+
+        // Convert right aligned labels to be left aligned
+        .text-right .col-form-label,
+        .col-form-label.text-right {
+          text-align: left !important;
+        }
+      }
+    }
+  }
+}
+
 
 // --------------------------------- Table Utilities --------------------------------- //
-
 .u-table-interactive {
   tbody {
     tr:hover {
@@ -127,16 +186,17 @@ $form-control-disabled-opacity: .6 !default;
   }
 }
 
+
+@each $color, $value in $colors {
+  .u-bg-#{$color} {
+    color: $value;
+  }
+}
+
 // This extends bootstraps bg-<varents> to also have background colors
 @mixin color-generator($color-map) {
   @each $color, $value in $color-map {
     .u-border-#{$color} {
-      color: $value;
-    }
-  }
-
-  @each $color, $value in $color-map {
-    .u-bg-#{$color} {
       color: $value;
     }
   }

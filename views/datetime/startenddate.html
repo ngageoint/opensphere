@@ -1,5 +1,5 @@
 <div ng-form="dateForm">
-  <div ng-class="{'container mb-1':!startEndCtrl.vertical}" ng-show="startEndCtrl.showLabels">
+  <div ng-class="{'container-fluid mb-1':!startEndCtrl.vertical}" ng-show="startEndCtrl.showLabels">
     <div ng-class="{'row':!startEndCtrl.vertical,'form-group':startEndCtrl.vertical}">
       <label ng-class="{'col-3 text-right':!startEndCtrl.vertical}" for="startControls">{{startEndCtrl.startLabel}}</label>
       <div id="startControls" ng-class="{'col':!startEndCtrl.vertical, 'u-required': startEndCtrl.startRequired}">
@@ -9,7 +9,7 @@
     </div>
   </div>
 
-  <div ng-class="{'container':!startEndCtrl.vertical}" ng-show="startEndCtrl.showLabels">
+  <div ng-class="{'container-fluid':!startEndCtrl.vertical}" ng-show="startEndCtrl.showLabels">
     <div ng-class="{'row':!startEndCtrl.vertical,'form-group':startEndCtrl.vertical}">
       <label ng-class="{'col-3 text-right':!startEndCtrl.vertical}" for="endControls">{{startEndCtrl.endLabel}}</label>
       <div id="endControls" ng-class="{'col':!startEndCtrl.vertical, 'u-required': startEndCtrl.endRequired}">
