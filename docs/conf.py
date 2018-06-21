@@ -57,6 +57,9 @@ pygments_style = 'sphinx'
 html_theme = 'sphinx_rtd_theme'
 html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 
+# Copy our static files
+html_static_path = ['_static']
+
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
@@ -82,3 +85,6 @@ man_pages = [
     (master_doc, 'opensphere', u'OpenSphere Documentation',
      [author], 1)
 ]
+
+def setup(app):
+    app.add_stylesheet('css/overrides.css')
