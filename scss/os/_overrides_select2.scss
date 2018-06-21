@@ -2,8 +2,7 @@
 .select2-container.select2-container-multi {
   width: 100%;
 
-  // sass-lint:disable no-extends
-  // sass-lint:disable placeholder-in-extend
+  // sass-lint:disable no-extends, placeholder-in-extend
   .select2-choices {
     @extend .form-control;
     background-image: none;
@@ -13,8 +12,7 @@
       margin: 1px 0 1px 5px;
     }
 
-    // sass-lint:disable no-extends
-    // sass-lint:disable placeholder-in-extend
+    // sass-lint:disable no-extends, placeholder-in-extend
     .select2-search-field input.select2-input {
       @extend .form-control;
       background: transparent;
