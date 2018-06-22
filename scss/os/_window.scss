@@ -12,6 +12,7 @@
 
   .modal-footer {
     background: $modal-content-bg;
+    border-radius: $border-radius;
     color: $body-color;
     flex-shrink: 0;
   }
