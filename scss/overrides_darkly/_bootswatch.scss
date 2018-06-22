@@ -37,3 +37,15 @@
     opacity: .5;
   }
 }
+
+.list-group-item-action {
+  @include hover-focus {
+    background-color: $primary;
+  }
+}
+
+.list-group-item-action:not(.active) {
+  @include hover-focus {
+    background-color: $gray-700;
+  }
+}

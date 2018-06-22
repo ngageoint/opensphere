@@ -164,16 +164,6 @@ $form-control-disabled-opacity: .6 !default;
 }
 
 
-// --------------------------------- Table Utilities --------------------------------- //
-.u-table-interactive {
-  tbody {
-    tr:hover {
-      cursor: pointer;
-    }
-  }
-}
-
-
 // --------------------------------- Color Utilities --------------------------------- //
 .u-bg-body {
   background-color: $body-bg;
