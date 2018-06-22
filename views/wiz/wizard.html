@@ -3,19 +3,15 @@
     <div class="row h-100">
       <div class="col-3">
         <div class="border h-100">
-          <table class="table table-borderless table-hover table-sm u-table-interactive">
-            <tbody>
-              <tr ng-repeat="step in wiz.steps" ng-class="{'table-active': wiz.isActive(step)}"
-                  ng-click="wiz.setStepIndex($index)">
-                <td class="border-bottom">
-                  <i class="fa fa-fw" ng-class="wiz.getStepIcon(step)"></i>
-                  <span ng-class="{'font-warning': wiz.getStepState(step) == 'error'}">
-                    {{$index + 1}}. {{step.getTitle()}}
-                  </span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <div class="list-group list-group-flush">
+            <a href="" class="list-group-item list-group-item-action border-bottom" ng-repeat="step in wiz.steps"
+                ng-class="{'active': wiz.isActive(step)}" ng-click="wiz.setStepIndex($index)">
+              <i class="fa fa-fw" ng-class="wiz.getStepIcon(step)"></i>
+              <span ng-class="{'font-warning': wiz.getStepState(step) == 'error'}">
+                {{$index + 1}}. {{step.getTitle()}}
+              </span>
+            </a>
+          </div>
         </div>
       </div>
       <div id="wizard-step-content" class="d-flex col-9"></div>

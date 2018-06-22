@@ -1,16 +1,22 @@
+$compact-y: .1rem;
+$compact-x: .25rem;
+
 $font-size-base: .875rem;
 
-$input-btn-padding-y-sm: .1rem;
-$input-btn-padding-x-sm: .25rem;
+$input-btn-padding-y-sm: $compact-y;
+$input-btn-padding-x-sm: $compact-x;
 
-$input-btn-padding-y: .1rem;
-$input-btn-padding-x: .25rem;
+$input-btn-padding-y: $compact-y;
+$input-btn-padding-x: $compact-x;
 
 $input-btn-padding-y-lg: .375rem;
 $input-btn-padding-x-lg: .75rem;
 
-$custom-select-padding-y: .1rem;
-$custom-select-padding-x: .25rem;
+$custom-select-padding-y: $compact-y;
+$custom-select-padding-x: $compact-x;
+
+$list-group-item-padding-y: $compact-y * 2;
+$list-group-item-padding-x: $compact-x * 2;
 
 $grid-gutter-width: 1rem;
 
@@ -23,8 +29,6 @@ $modal-header-padding: .5rem;
 $modal-inner-padding: .5rem;
 $card-spacer-y: .5rem;
 $card-spacer-x: .5rem;
-$list-group-item-padding-y: .5rem;
-$list-group-item-padding-x: .5rem;
 $alert-padding-y: .5rem;
 $alert-padding-x: .5rem;
 
