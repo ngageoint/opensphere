@@ -55,7 +55,8 @@ os.search.SearchEventType = {
   FACET_OPTIONS_LOAD: 'facet.options.load',
   FACET_DETAILS_LOAD: 'facet.details.load',
   FAVORITE: 'favorite',
-  SEARCH_TERM: 'change:searchTerm'
+  SEARCH_TERM: 'change:searchTerm',
+  GEO_SEARCH_CHANGE: 'change:geoSearch'
 };
 
 
