@@ -16,7 +16,7 @@ goog.require('os.file.persist.FilePersistence');
  */
 os.file.persist.LocalFilePersistence = function(opt_dbStore) {
   /**
-   * @type {!string}
+   * @type {string|undefined}
    */
   this.dbstore = opt_dbStore;
 };
@@ -61,7 +61,8 @@ os.file.persist.LocalFilePersistence.prototype.save = function(name, content, op
  * @private
  */
 os.file.persist.LocalFilePersistence.finishImport_ = function(file) {
-  os.dispatcher.dispatchEvent(new goog.events.Event(os.file.persist.LocalFilePersistence.SAVE_COMPLETE, file.getUrl()));
+  os.dispatcher.dispatchEvent(new goog.events.Event(os.file.persist.LocalFilePersistence.SAVE_COMPLETE,
+      {'url': file.getUrl()}));
 };
 
 
@@ -75,14 +76,14 @@ os.file.persist.LocalFilePersistence.onFileError_ = function(error) {
   if (goog.isString(error)) {
     msg += ' ' + error;
   }
-  os.dispatcher.dispatchEvent(new goog.events.Event(os.file.persist.LocalFilePersistence.SAVE_FAILED, msg));
+  os.dispatcher.dispatchEvent(new goog.events.Event(os.file.persist.LocalFilePersistence.SAVE_FAILED, {'error': msg}));
 };
 
 
 /**
  * Static function to save a file, so it can be used without the persistence
  * @param {string} fileName The file name
- * @param {*} content The content to save
+ * @param {Object|null|string} content The content to save
  * @param {string=} opt_mimeType The mime type of the content
  * @param {string=} opt_dbStore The local db name to store in
  * @return {boolean} Whether or not the save action was successfull
