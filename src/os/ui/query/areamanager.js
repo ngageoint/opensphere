@@ -325,6 +325,7 @@ os.ui.query.AreaManager.prototype.add = function(feature) {
  */
 os.ui.query.AreaManager.prototype.isValidFeature = function(feature) {
   var geometry = feature.getGeometry();
+  var originalGeometry = /** @type {ol.geom.Geometry} */ (feature.get(os.interpolate.ORIGINAL_GEOM_FIELD));
   if (!geometry) {
     return false;
   }
@@ -333,10 +334,16 @@ os.ui.query.AreaManager.prototype.isValidFeature = function(feature) {
   var geomType = geometry.getType();
   if (geomType == ol.geom.GeometryType.POLYGON || geomType == ol.geom.GeometryType.MULTI_POLYGON) {
     var validated = os.geo.jsts.validate(geometry);
+    var validatedOriginal = null;
+
+    if (originalGeometry) {
+      validatedOriginal = os.geo.jsts.validate(originalGeometry);
+    }
+
     isValid = true;
 
     feature.setGeometry(validated);
-    feature.set(os.interpolate.ORIGINAL_GEOM_FIELD, validated);
+    feature.set(os.interpolate.ORIGINAL_GEOM_FIELD, validatedOriginal || validated);
   } else {
     try {
       var polygon = os.geo.jsts.toPolygon(geometry);
