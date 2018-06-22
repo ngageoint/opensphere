@@ -153,6 +153,11 @@ $form-control-disabled-opacity: .6 !default;
         .col-form-label.text-right {
           text-align: left !important;
         }
+
+        .col-form-label.border-right {
+          border-bottom: 1px solid $border-color;
+          border-right: 0 !important;
+        }
       }
     }
   }
