@@ -17,7 +17,7 @@
             ng-click="windowCtrl.onHeaderBtnClick($event, headerBtnCfg);"
             title="{{headerBtnCfg.tooltip}}">
               <i class="{{headerBtnCfg.iconClass}}"></i>
-            </button>
+          </button>
         </div>
 
         <div ng-if="showCollapse && !modal && !overlay" ng-click="windowCtrl.toggle()" title="{{collapsed ? 'Expand' : 'Collapse'}}" class="d-inline-block">

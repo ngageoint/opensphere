@@ -468,23 +468,25 @@ os.xt.Peer.prototype.persist = function() {
  * Starts the peer
  */
 os.xt.Peer.prototype.init = function() {
-  this.isInit_ = true;
-  this.persist();
+  if (!this.isInit_) {
+    this.isInit_ = true;
+    this.persist();
 
-  // set up the listener for the storage event
-  window.addEventListener('storage', this.boundStorage_);
+    // set up the listener for the storage event
+    window.addEventListener('storage', this.boundStorage_);
 
-  // set up the listener for application close
-  window.addEventListener('unload', this.boundCleanup_);
+    // set up the listener for application close
+    window.addEventListener('unload', this.boundCleanup_);
 
-  // set up the ping
-  this.pingTimer_ = new goog.Timer(os.xt.Peer.PING_INTERVAL);
-  this.pingTimer_.listen(goog.Timer.TICK, this.onPing_, false, this);
-  this.onPing_();
-  this.pingTimer_.start();
+    // set up the ping
+    this.pingTimer_ = new goog.Timer(os.xt.Peer.PING_INTERVAL);
+    this.pingTimer_.listen(goog.Timer.TICK, this.onPing_, false, this);
+    this.onPing_();
+    this.pingTimer_.start();
 
-  goog.log.fine(os.xt.Peer.LOGGER_, 'Initialized peer ' + this.group_ + '.' + this.id_ + ' "' + this.title_ + '"');
-  this.processInitialMessages();
+    goog.log.fine(os.xt.Peer.LOGGER_, 'Initialized peer ' + this.group_ + '.' + this.id_ + ' "' + this.title_ + '"');
+    this.processInitialMessages();
+  }
 };
 
 
