@@ -189,7 +189,7 @@ $form-control-disabled-opacity: .6 !default;
 
 @each $color, $value in $colors {
   .u-bg-#{$color} {
-    color: $value;
+    background-color: $value;
   }
 }
 
@@ -197,7 +197,7 @@ $form-control-disabled-opacity: .6 !default;
 @mixin color-generator($color-map) {
   @each $color, $value in $color-map {
     .u-border-#{$color} {
-      color: $value;
+      border-color: $value;
     }
   }
 
