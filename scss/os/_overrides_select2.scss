@@ -1,33 +1,59 @@
 // Overrides for select2
-.select2-container.select2-container-multi {
-  width: 100%;
+.select2-container {
+  // Single select2
+  &.select2-dropdown-open .select2-choice {
+    box-shadow: none;
+  }
 
-  // sass-lint:disable no-extends
-  // sass-lint:disable placeholder-in-extend
-  .select2-choices {
+  // sass-lint:disable no-extends, placeholder-in-extend
+  .select2-choice {
     @extend .form-control;
     background-image: none;
-    min-width: 10rem;
+    height: $input-height;
 
-    .select2-search-choice {
-      margin: 1px 0 1px 5px;
+    .select2-arrow {
+      background-color: $input-bg;
+      background-image: none;
+      border-color: $input-bg;
     }
+  }
 
-    // sass-lint:disable no-extends
-    // sass-lint:disable placeholder-in-extend
-    .select2-search-field input.select2-input {
+  // Multiple select2
+  &.select2-container-multi {
+    width: 100%;
+
+    // sass-lint:disable no-extends, placeholder-in-extend
+    .select2-choices {
       @extend .form-control;
-      background: transparent;
-      border: 0;
-      line-height: $line-height-base;
-      margin: 0;
-      padding: 0;
-      width: 100% !important;
+      background-image: none;
+      min-width: 10rem;
 
-      &::placeholder {
-        color: $input-placeholder-color;
-        // Override Firefox's unusual default opacity; see https://github.com/twbs/bootstrap/pull/11526.
-        opacity: 1;
+      .select2-search-choice {
+        background-color: $input-group-addon-bg;
+        background-image: none;
+        color: $input-group-addon-color;
+        margin: 1px 0 1px 5px;
+      }
+
+      // sass-lint:disable no-extends, placeholder-in-extend
+      .select2-search-field {
+        margin-top: .25rem;
+
+        input.select2-input {
+          @extend .form-control;
+          background: transparent;
+          border: 0;
+          line-height: $line-height-base;
+          margin: 0;
+          padding: 0;
+          width: 100% !important;
+
+          &::placeholder {
+            color: $input-placeholder-color;
+            // Override Firefox's unusual default opacity; see https://github.com/twbs/bootstrap/pull/11526.
+            opacity: 1;
+          }
+        }
       }
     }
   }
@@ -39,6 +65,13 @@
   color: $input-color;
   pointer-events: all;
 
+  // Single select2
+  .select2-search input {
+    @extend .form-control;
+    background-image: none;
+  }
+
+  // Multiple select2
   .select2-results .select2-no-results,
   .select2-results .select2-searching,
   .select2-results .select2-ajax-error,

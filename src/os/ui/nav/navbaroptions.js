@@ -57,9 +57,9 @@ os.ui.list.add(os.ui.nav.Location.BOTTOM_LEFT, '<scale-line ng-class="{\'d-none\
 os.ui.list.add(os.ui.nav.Location.BOTTOM_LEFT,
     '<li id="mouse-position" class="nav-item mr-1 my-auto flex-shrink-0" ng-class="{\'small\': puny}"></li>', 300);
 
-os.ui.list.add(os.ui.nav.Location.BOTTOM_RIGHT, 'settings-button', 10);
-os.ui.list.add(os.ui.nav.Location.BOTTOM_RIGHT, 'legend-button', 50);
-os.ui.list.add(os.ui.nav.Location.BOTTOM_RIGHT, 'servers-button', 100);
-os.ui.list.add(os.ui.nav.Location.BOTTOM_RIGHT, 'alert-button', 200);
-os.ui.list.add(os.ui.nav.Location.BOTTOM_RIGHT, 'history-button', 200);
-os.ui.list.add(os.ui.nav.Location.BOTTOM_RIGHT, 'mute-button', 300);
+os.ui.list.add(os.ui.nav.Location.BOTTOM_RIGHT, 'settings-button', 100);
+os.ui.list.add(os.ui.nav.Location.BOTTOM_RIGHT, 'legend-button', 200);
+os.ui.list.add(os.ui.nav.Location.BOTTOM_RIGHT, 'servers-button', 300);
+os.ui.list.add(os.ui.nav.Location.BOTTOM_RIGHT, 'alert-button', 400);
+os.ui.list.add(os.ui.nav.Location.BOTTOM_RIGHT, 'history-button', 500);
+os.ui.list.add(os.ui.nav.Location.BOTTOM_RIGHT, 'mute-button', 600);
