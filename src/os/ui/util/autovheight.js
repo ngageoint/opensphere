@@ -2,6 +2,7 @@ goog.provide('os.ui.util.AutoVHeightCtrl');
 goog.provide('os.ui.util.autoVHeightDirective');
 
 goog.require('goog.userAgent');
+goog.require('os.config.ThemeSettingsChangeEvent');
 goog.require('os.ui');
 goog.require('os.ui.Module');
 goog.require('os.ui.windowCommonElements');
@@ -87,6 +88,8 @@ os.ui.util.AutoVHeightCtrl = function($scope, $element, $injector) {
   // there are some situations where resize won't fire on creation, particularly when using IE or when swapping DOM
   // elements with ng-if. this will make sure it fires as soon as Angular is done manipulating the DOM.
   os.ui.waitForAngular(this.onResize_.bind(this));
+
+  os.dispatcher.listen(os.config.ThemeSettingsChangeEvent, this.onResize_, false, this);
   $scope.$on('resize', this.onResize_.bind(this));
   $scope.$on('$destroy', this.onDestroy_.bind(this));
 };
@@ -97,6 +100,8 @@ os.ui.util.AutoVHeightCtrl = function($scope, $element, $injector) {
  * @private
  */
 os.ui.util.AutoVHeightCtrl.prototype.onDestroy_ = function() {
+  os.dispatcher.unlisten(os.config.ThemeSettingsChangeEvent, this.onResize_, false, this);
+
   var parent = this.element_.parent();
   parent.removeResize(this.resizeFn_);
 
