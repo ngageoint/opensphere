@@ -11,9 +11,7 @@
         <div class="col">
           <input unique-provider-title type="text" class="form-control" name="title" ng-disabled="!edit"
               ng-model="config.label" ng-required="true" ng-maxlength="1000"/>
-          <small class="form-text invalid-feedback" ng-if="form.title.$error.maxlength">Title is too long!</small>
-          <small class="form-text invalid-feedback" ng-if="form.title.$error.unique">Title is not unique!</small>
-          <small class="form-text invalid-feedback" ng-if="form.title.$error.required">Please enter a title.</small>
+          <validation-message target="form.title"></validation-message>
         </div>
       </div>
 
@@ -24,8 +22,7 @@
           <input type="text" name="url" class="form-control" ng-disabled="!edit" ng-model="config.url" ng-required="true"
               ng-maxlength="1000"/>
           <small class="form-text invalid-feedback" ng-if="urlExample && form.url.$valid">e.g. {{urlExample}}</small>
-          <small class="form-text invalid-feedback" ng-if="form.url.$error.maxlength">URL is too long!</small>
-          <small class="form-text invalid-feedback" ng-if="form.url.$error.required">Please enter a URL.</small>
+          <validation-message target="form.url"></validation-message>
         </div>
       </div>
 
@@ -33,28 +30,12 @@
       <div class="form-group row" ng-repeat="altUrl in config.alternateUrls track by $index"
           title="Alternate URL for the server">
         <label class="col-2 col-form-label" for="altUrl{{$index}}">URL {{$index + 2}}:</label>
-        <div class="input-group col">
+        <div class="col">
           <input unique-server-url type="text" name="altUrl{{$index}}" class="form-control" ng-disabled="!edit"
               ng-model="config.alternateUrls[$index]" ng-maxlength="1000"
               placeholder="Alternate URL to server" />
-          <div class="input-group-append">
-            <button class="btn" type="button" ng-click="ctrl.removeAlternateUrl($index)" ng-if="edit"
-                title="Remove this alternate URL">
-              <i class="fa fa-times text-danger"></i>
-            </button>
-          </div>
-          <small class="form-text invalid-feedback" ng-if="form.altUrl{{$index}}.$error.maxlength">URL is too long!</small>
-          <small class="form-text invalid-feedback" ng-if="form.altUrl{{$index}}.$error.unique">URL is not unique!</small>
         </div>
       </div>
-
-      <!-- Removed button to allow the user to add an alternate URL to avoid confusion about this feature -->
-      <!-- <div class="form-group row">
-        <button class="btn btn-default" type="button" ng-click="ctrl.addAlternateUrl()" ng-if="edit"
-            title="Add an alternate URL that can be used to reach the server. This will be used to distribute server requests.">
-          <i class="fa fa-plus text-success"></i> Add Alternate URL
-        </button>
-      </div> -->
 
       <input type="submit" hidden>
     </form>

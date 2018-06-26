@@ -6,11 +6,13 @@
     </form>
   </div>
   <div class="modal-footer">
-    <button class="btn btn-primary" type="submit" ng-class="yesButtonClass" ng-click="confirm.confirm()" ng-disabled="confirmForm.$invalid || !valid" title="{{yesButtonTitle}}">
+    <button class="btn" type="submit" ng-class="yesButtonClass" ng-click="confirm.confirm()"
+        ng-disabled="confirmForm.$invalid || !valid" title="{{yesButtonTitle}}">
       <i ng-class="yesIcon" ng-if="yesIcon"></i>
       {{yesText}}
     </button>
-    <button class="btn btn-secondary" ng-hide="!noIcon && !noText" type="button" ng-class="noButtonClass" ng-if="!hideCancel" ng-click="confirm.cancel()" title="{{noButtonTitle}}">
+    <button class="btn" type="button" ng-class="noButtonClass" ng-if="noIcon && noText && !hideCancel"
+        ng-click="confirm.cancel()" title="{{noButtonTitle}}">
       <i ng-class="noIcon" ng-if="noIcon"></i>
       {{noText}}
     </button>
