@@ -11,9 +11,7 @@
         <div class="col">
           <input unique-provider-title type="text" class="form-control" name="title" ng-disabled="!edit"
               ng-model="config.label" ng-required="true" ng-maxlength="1000"/>
-          <small class="form-text invalid-feedback" ng-if="form.title.$error.maxlength">Title is too long!</small>
-          <small class="form-text invalid-feedback" ng-if="form.title.$error.unique">Title is not unique!</small>
-          <small class="form-text invalid-feedback" ng-if="form.title.$error.required">Please enter a title</small>
+          <validation-message target="form.title"></validation-message>
         </div>
       </div>
 
@@ -23,9 +21,7 @@
           <input type="text" name="url" class="form-control" ng-disabled="!edit" ng-model="config.url" ng-required="true"
               ng-maxlength="1000"/>
           <small class="form-text invalid-feedback" ng-if="urlExample && form.url.$valid">e.g. {{urlExample}}</small>
-          <small class="form-text invalid-feedback" ng-if="form.url.$error.unique">URL is not unique!</small>
-          <small class="form-text invalid-feedback" ng-if="form.url.$error.maxlength">URL is too long!</small>
-          <small class="form-text invalid-feedback" ng-if="form.url.$error.required">Please enter a URL</small>
+          <validation-message target="form.url"></validation-message>
         </div>
       </div>
 
