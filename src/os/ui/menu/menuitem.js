@@ -224,7 +224,7 @@ os.ui.menu.MenuItem.prototype.render = function(context, opt_target) {
 
   // hotkey/shortcut
   if (this.shortcut) {
-    html += '<span class="text-muted d-inline-block float-right">' + this.shortcut + '</span>';
+    html += '<span class="text-muted d-inline-block float-right pl-2">' + this.shortcut + '</span>';
   }
 
   // checkbox type
