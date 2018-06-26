@@ -1,5 +1,6 @@
 goog.provide('os.ui.file.ImportDialogCtrl');
 goog.provide('os.ui.file.importDialogDirective');
+
 goog.require('goog.events.EventType');
 goog.require('goog.fs.FileReader');
 goog.require('goog.log');
@@ -13,6 +14,7 @@ goog.require('os.net.LocalFileHandler');
 goog.require('os.ui');
 goog.require('os.ui.Module');
 goog.require('os.ui.popover.popoverDirective');
+goog.require('os.ui.util.validationMessageDirective');
 goog.require('os.ui.window');
 
 
