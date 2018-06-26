@@ -1,24 +1,28 @@
-<div class="file-import window-content-wrapper">
-  <div class="window-content">
+<div>
+  <div class="modal-content">
     <div>
-      <div><b>{{file.getFileName()}}</b></div>
+      <div class="row justify-content-center"><b>{{file.getFileName()}}</b></div>
       <div ng-if="!isZip">
-        <div><i class="fa fa-warning orange-icon"></i> The file type could not be detected</div>
-        <div>Please choose from the list of supported types:</div>
+        <div class="row justify-content-center">
+          <div><i class="fa fa-warning"></i> The file type could not be detected</div>
+          <div>Please choose from the list of supported types:</div>
+        </div>
+        <div class="row justify-content-center">
+          <select class="w-25" ng-model="anytype.import" ng-options="importer.title for importer in importers"></select>
+        </div>
       </div>
-      <div ng-if="isZip"><i class="fa fa-warning orange-icon"></i> Zip file detected - please unzip this file before importing</div>
+      <div ng-if="isZip" class="row justify-content-center"><i class="fa fa-warning"></i> Zip file detected - please unzip this file before importing</div>
     </div>
-    <select ng-if="!isZip" ng-model="import" ng-options="importer.title for importer in importers"></select>
   </div>
-  <div class="window-footer">
-    <div class="pull-right">
-      <button ng-if="isZip" class="btn btn-default" ng-click="anytype.close()" title="Close">
-        <i class="fa fa-times red-icon"></i> Close
+  <div class="modal-footer">
+    <div>
+      <button ng-if="isZip" class="btn btn-secondary" ng-click="anytype.close()" title="Close">
+        <i class="fa fa-times"></i> Close
       </button>
-      <button ng-if="!isZip" class="btn btn-default" ng-click="anytype.accept()" ng-disabled="!import" title="Import the file">
-        <i class="fa fa-check blue-icon"></i> OK
+      <button ng-if="!isZip" class="btn btn-primary" ng-click="anytype.accept()" ng-disabled="!anytype.import" title="Import the file">
+        <i class="fa fa-check"></i> OK
       </button>
-      <button ng-if="!isZip" class="btn btn-default" ng-click="anytype.close()" title="Cancel import"><i class="fa fa-ban red-icon"></i> Cancel</button>
+      <button ng-if="!isZip" class="btn btn-secondary" ng-click="anytype.close()" title="Cancel import"><i class="fa fa-ban red-icon"></i> Cancel</button>
     </div>
   </div>
 </div>
