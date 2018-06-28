@@ -59,7 +59,7 @@ os.ui.menu.import.setup = function() {
           label: 'Add Data',
           eventType: 'openwindow.addData',
           tooltip: 'Browse the data catalog',
-          icons: ['<i class="fa fa-fw fa-plus green-icon"></i>'],
+          icons: ['<i class="fa fa-fw fa-plus"></i>'],
           handler: os.ui.menu.windows.openWindow,
           metricKey: os.metrics.keys.AddData.OPEN,
           sort: 0
