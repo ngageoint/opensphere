@@ -85,9 +85,6 @@ os.ui.wiz.step.TimeStep.prototype.initialize = function(config) {
  * @inheritDoc
  */
 os.ui.wiz.step.TimeStep.prototype.finalize = function(config) {
-  if (!config) {
-    return;
-  }
   // remove previous time mappings
   if (config['mappings']) {
     var i = config['mappings'].length;
