@@ -287,7 +287,7 @@ os.config.ThemeSettings.isThemeLoaded = function(theme) {
   // The theme has been loaded when the test element's content is set to the theme name.
   var el = os.config.ThemeSettings.getDetectionElement();
   if (el && el.length) {
-    var content = el.css('content') || '';
+    var content = window.getComputedStyle(el[0], ':before').content;
     return content.replace(/^"(.*)"$/, '$1') === theme;
   }
 
