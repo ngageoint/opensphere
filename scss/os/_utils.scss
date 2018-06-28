@@ -53,6 +53,14 @@ $form-control-disabled-opacity: .6 !default;
   white-space: pre-wrap;
 }
 
+.u-overflow-x-auto {
+  overflow-x: auto !important;
+}
+
+.u-overflow-x-hidden {
+  overflow-x: hidden !important;
+}
+
 .u-overflow-y-auto {
   overflow-y: auto !important;
 }
