@@ -323,7 +323,7 @@ os.config.ThemeSettings.themeUpdated = function() {
   });
 
   for (var i = 0; i < ourThemes.length - 1; i++) {
-    ourThemes[i].remove();
+    $(ourThemes[i]).remove();
   }
 
   if (os.dispatcher) {
