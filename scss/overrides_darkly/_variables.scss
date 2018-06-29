@@ -28,3 +28,9 @@ $text-muted: $gray-500;
 
 // The card's header / footer conflict with btn-secondary
 $card-cap-bg: lighten($gray-700, 6%);
+
+// Override from themevariables
+$sticky-nav-background-color: $gray-700;
+
+// Override from themevariables
+$hover-edit-background-color: $gray-700;

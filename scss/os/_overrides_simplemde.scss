@@ -21,11 +21,11 @@
     color: $body-color !important;
   }
 
-  .c-simplemde__form.ng-dirty.ng-invalid .editor-toolbar {
+  .ng-dirty.ng-invalid .editor-toolbar {
     border-color: $danger;
   }
 
-  .c-simplemde__form.ng-dirty.ng-invalid .CodeMirror {
+  .ng-dirty.ng-invalid .CodeMirror {
     border-color: $danger;
   }
 
