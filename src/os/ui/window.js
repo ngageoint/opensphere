@@ -121,7 +121,7 @@ os.ui.window.launch = function(html, opt_parent, opt_scope, opt_compile, opt_sco
   if (i) {
     os.ui.window.launchInternal(html,
         opt_parent,
-        opt_scope || $('[ng-view]').scope(),
+        opt_scope || $('[ng-view]').scope() || i.get('$rootScope'),
         opt_compile || i.get('$compile'),
         opt_scopeOptions);
   }
