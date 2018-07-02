@@ -70,7 +70,7 @@ os.ui.GlobalMenuCtrl.prototype.close = function(opt_dispatch) {
     this.element.removeClass('right-menu');
     this.element.blur();
   }
-  this.element.find('#globalMenuTitle').remove();
+  this.element.find('#js-global-menu__title').remove();
 
   var doc = goog.dom.getDocument();
   doc.removeEventListener(goog.events.EventType.MOUSEDOWN, this.onDownBind_, true);
@@ -106,7 +106,7 @@ os.ui.GlobalMenuCtrl.prototype.onAddOutsideListener_ = function() {
  */
 os.ui.GlobalMenuCtrl.prototype.onClick_ = function(e) {
   // if we didn't click on something in the menu
-  if (!$(e.target).closest('#globalMenu').length) {
+  if (!$(e.target).closest('#js-global-menu').length) {
     // close the menu
     this.close();
   }
@@ -192,7 +192,7 @@ os.ui.GlobalMenuCtrl.prototype.position = function() {
  * @param {?string=} opt_title Optional title html for the menu
  */
 os.ui.openMenu = function(provider, position, opt_target, opt_root, opt_title) {
-  var menuEl = angular.element('#globalMenu');
+  var menuEl = angular.element('#js-global-menu');
   var s = menuEl.scope();
   s['provider'] = provider;
   var ctrl = /** @type {os.ui.GlobalMenuCtrl} */ (s['actionMenu']);
@@ -200,7 +200,7 @@ os.ui.openMenu = function(provider, position, opt_target, opt_root, opt_title) {
 
   // update the menu title if provided
   if (opt_title) {
-    ctrl.addTitle('#globalMenu', '<div id="globalMenuTitle" class="text-truncate">' + opt_title + '</div>');
+    ctrl.addTitle('#js-global-menu', '<div id="js-global-menu__title" class="text-truncate">' + opt_title + '</div>');
   }
 
   var timeout = /** @type {angular.$timeout} */ (os.ui.injector.get('$timeout'));
@@ -219,7 +219,7 @@ os.ui.openMenu = function(provider, position, opt_target, opt_root, opt_title) {
  * Allow closing the current global menu if its up
  */
 os.ui.GlobalMenuCtrl.closeMenu = function() {
-  var menuEl = angular.element('#globalMenu');
+  var menuEl = angular.element('#js-global-menu');
   var s = menuEl.scope();
   var ctrl = /** @type {os.ui.GlobalMenuCtrl} */ (s['actionMenu']);
 
@@ -243,7 +243,7 @@ os.ui.GlobalMenuCtrl.closeMenu = function() {
  * @private
  */
 os.ui.positionMenu_ = function(position, opt_target, opt_root) {
-  var menuEl = angular.element('#globalMenu');
+  var menuEl = angular.element('#js-global-menu');
   var s = menuEl.scope();
   var ctrl = /** @type {os.ui.GlobalMenuCtrl} */ (s['actionMenu']);
 
