@@ -274,6 +274,8 @@ plugin.cesium.VectorContext.prototype.cleanup = function(feature) {
       this.removePrimitive(primitives[i]);
     }
   }
+
+  this.billboards._billboardsToUpdate.length = this.billboards.length;
 };
 
 

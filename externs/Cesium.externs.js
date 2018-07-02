@@ -447,6 +447,12 @@ Cesium.BillboardCollection.prototype.sizeReal;
 Cesium.BillboardCollection.prototype.textureAtlas;
 
 
+/**
+ * @type {Array<Cesium.Billboard>}
+ */
+Cesium.BillboardCollection.prototype._billboardsToUpdate;
+
+
 
 /**
  * @param {Object.<string, *>} opts
