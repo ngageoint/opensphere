@@ -273,7 +273,7 @@ os.config.ThemeSettingsChangeEventTheme = function(cssFile, theme) {
       reject();
     };
 
-    delay.start(10, 5000);
+    delay.start(50, 15000);
   });
 };
 
