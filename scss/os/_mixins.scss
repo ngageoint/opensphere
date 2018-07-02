@@ -49,3 +49,12 @@
     text-decoration: none;
   }
 }
+
+@mixin font-awesome {
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  display: inline-block;
+  font: normal normal normal 14px/1 FontAwesome;
+  font-size: inherit;
+  text-rendering: auto;
+}
