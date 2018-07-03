@@ -22,6 +22,31 @@ Cesium.defaultValue = function(value, defaultValue) {};
 Cesium.defined = function(value) {};
 
 
+/**
+ * @typedef {{
+ *  highhpFloatSupported: boolean,
+ *  highhpIntSupported: boolean,
+ *  maximumAliasedLineWidth: number,
+ *  maximumAliasedPointSize: number,
+ *  maximumColorAttachments: number,
+ *  maximumCombinedTextureImageUnits: number,
+ *  maximumCubeMapSize: number,
+ *  maximumDrawBuffers: number,
+ *  maximumFragmentUniformVectors: number,
+ *  maximumRenderbufferSize: number,
+ *  maximumTextureFilterAnisotropy: number,
+ *  maximumTextureImageUnits: number,
+ *  maximumTextureSize: number,
+ *  maximumVaryingVectors: number,
+ *  maximumVertexAttributes: number,
+ *  maximumViewportHeight: number,
+ *  maximumViewportWidth: number,
+ *  minimumAliasedLineWidth: number,
+ *  minimumAliasedPointSize: number
+ * }}
+ */
+Cesium.ContextLimits;
+
 
 /**
  * @constructor
