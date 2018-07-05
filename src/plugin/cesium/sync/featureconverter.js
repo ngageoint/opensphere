@@ -3,6 +3,7 @@ goog.provide('plugin.cesium.sync.FeatureConverter');
 goog.require('goog.array');
 goog.require('goog.asserts');
 goog.require('goog.async.Delay');
+goog.require('goog.math');
 goog.require('goog.string');
 goog.require('ol.ImageState');
 goog.require('ol.events');
@@ -150,7 +151,8 @@ plugin.cesium.sync.FeatureConverter.prototype.createColoredPrimitive = function(
     opt_instanceFn) {
   var options = os.object.unsafeClone(plugin.cesium.sync.FeatureConverter.BASE_PRIMITIVE_OPTIONS);
   if (opt_lineWidth != null) {
-    options.renderState.lineWidth = opt_lineWidth;
+    options.renderState.lineWidth = goog.math.clamp(opt_lineWidth, Cesium.ContextLimits.minimumAliasedLineWidth,
+        Cesium.ContextLimits.maximumAliasedLineWidth);
   }
 
   var id = opt_lineWidth != null ? plugin.cesium.GeometryInstanceId.GEOM_OUTLINE :
