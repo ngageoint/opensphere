@@ -22,7 +22,6 @@ goog.require('os.ui.layersDirective');
 goog.require('os.ui.mapDirective');
 goog.require('os.ui.metrics.MetricsContainerDirective');
 goog.require('os.ui.modal.aboutModalDirective');
-goog.require('os.ui.navbaroptions');
 goog.require('os.ui.savedWindowDirective');
 goog.require('os.ui.serversDirective');
 goog.require('os.ui.slick.slickTreeDirective');
