@@ -18,6 +18,7 @@ os.ui.search.searchResultsDirective = function() {
   return {
     restrict: 'E',
     scope: true,
+    replace: true,
     transclude: true,
     templateUrl: os.ROOT + 'views/search/searchresults.html',
     controller: os.ui.search.SearchResultsCtrl,

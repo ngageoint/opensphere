@@ -1,0 +1,12 @@
+.c-navtop {
+  .c-navtop__header {
+    &.navbar-dark.bg-dark {
+      background: $body-bg !important;
+      color: $body-color;
+
+      .nav-link {
+        color: $body-color !important;
+      }
+    }
+  }
+}
