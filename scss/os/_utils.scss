@@ -205,17 +205,10 @@ $form-control-disabled-opacity: .6 !default;
   }
 
   @each $color, $value in $color-map {
-    .u-bg-#{$color}-text {
+    @include u-bg-color-content($color) {
       @include bg-text-variant($value);
     }
   }
-
-  @each $color, $value in $color-map {
-    .u-bg-#{$color}-text-a a {
-      @include bg-text-variant($value);
-    }
-  }
-
 }
 
 @include color-generator($colors);
