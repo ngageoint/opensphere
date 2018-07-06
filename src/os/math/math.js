@@ -127,3 +127,13 @@ os.math.parseNumber = function(value) {
   // couldn't parse a number, so return NaN
   return NaN;
 };
+
+
+/**
+ * Returns the integer part of a number by removing any fractional digits.
+ * @param {(string|number)} val The number to truncate
+ * @return {number}
+ */
+os.math.trunc = function(val) {
+  return val < 0 ? Math.ceil(val) : Math.floor(val);
+};
