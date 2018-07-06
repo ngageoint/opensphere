@@ -99,6 +99,25 @@
       color: $component-active-color;
     }
   }
+
+  &:hover {
+    background: $success;
+  }
+
+  &.selected,
+  &:hover {
+    @each $color, $value in $theme-colors {
+      .text-#{$color} {
+        color: $component-active-color !important;
+      }
+    }
+
+    @each $color, $value in $colors {
+      @include u-bg-color-content($color) {
+        color: $component-active-color !important;
+      }
+    }
+  }
 }
 
 .slick-sort-indicator {
