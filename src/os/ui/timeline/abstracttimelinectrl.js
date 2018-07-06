@@ -1754,3 +1754,17 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.adjust = function() {
     this.refreshAllBrushes();
   }.bind(this), 100);
 };
+
+
+/**
+ * Record animation
+ * @export
+ */
+os.ui.timeline.AbstractTimelineCtrl.prototype.record = function() {
+  // stop animating prior to trying to record for sanity's sake
+  if (this.tlc.isPlaying()) {
+    this.tlc.stop();
+  }
+  os.dispatcher.dispatchEvent(os.time.TimelineEventType.RECORD);
+  os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Timeline.RECORD, 1);
+};
