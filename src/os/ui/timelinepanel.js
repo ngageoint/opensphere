@@ -230,23 +230,6 @@ goog.exportProperty(
 
 
 /**
- * Record animation
- */
-os.ui.TimelinePanelCtrl.prototype.record = function() {
-  // stop animating prior to trying to record for sanity's sake
-  if (this.tlc.isPlaying()) {
-    this.tlc.stop();
-  }
-  os.dispatcher.dispatchEvent(os.time.TimelineEventType.RECORD);
-  os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Timeline.RECORD, 1);
-};
-goog.exportProperty(
-    os.ui.TimelinePanelCtrl.prototype,
-    'record',
-    os.ui.TimelinePanelCtrl.prototype.record);
-
-
-/**
  * @inheritDoc
  */
 os.ui.TimelinePanelCtrl.prototype.adjust = function() {
