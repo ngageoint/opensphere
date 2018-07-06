@@ -69,6 +69,11 @@ $form-control-disabled-opacity: .6 !default;
   overflow-y: hidden !important;
 }
 
+// Bootstrap by default puts a focus style around items. This turns that off
+.u-focus-outline-none:focus {
+  outline: none;
+}
+
 .u-cursor-grab {
   @include grab-cursor();
 }

@@ -360,7 +360,7 @@ os.ui.launchFeatureInfo = function(feature, opt_titleDetail, opt_altDirective) {
       var winScope = angular.element(goog.dom.getFirstElementChild(win)).scope();
       winScope['label'] = winLabel;
 
-      var scope = angular.element(win).find('.feature-info-window').scope();
+      var scope = angular.element(win).find('.js-feature-info').scope();
       if (scope) {
         scope['feature'] = feature;
         os.ui.apply(scope);
