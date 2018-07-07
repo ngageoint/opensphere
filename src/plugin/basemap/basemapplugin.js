@@ -6,6 +6,7 @@ goog.require('os.data.ProviderEntry');
 goog.require('os.layer.Group');
 goog.require('os.plugin.AbstractPlugin');
 goog.require('os.state.StateManager');
+goog.require('os.ui.LayersCtrl');
 goog.require('plugin.basemap');
 goog.require('plugin.basemap.BaseMapConfig');
 goog.require('plugin.basemap.BaseMapDescriptor');
