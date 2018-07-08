@@ -184,9 +184,11 @@ plugin.cesium.VectorContext.prototype.addOLReferences = function(primitive, feat
     primitive.olLayer = this.layer;
     primitive.olFeature = feature;
     primitive.olGeometry = geometry;
+    primitive.geomRevision = geometry.getRevision();
 
     // primitives in a collection need a feature reference or hover will not work
-    if (primitive instanceof Cesium.PrimitiveCollection) {
+    if (primitive instanceof Cesium.PrimitiveCollection || primitive instanceof Cesium.BillboardCollection ||
+        primitive instanceof Cesium.PolylineCollection) {
       for (var i = 0, n = primitive.length; i < n; i++) {
         var p = primitive.get(i);
         if (p) {
@@ -211,7 +213,7 @@ plugin.cesium.VectorContext.prototype.removeOLReferences = function(primitive) {
 
     // clean up feature references on collections
     if (primitive instanceof Cesium.PrimitiveCollection || primitive instanceof Cesium.BillboardCollection ||
-        primitive instanceof Cesium.LabelCollection) {
+        primitive instanceof Cesium.PolylineCollection || primitive instanceof Cesium.LabelCollection) {
       for (var i = 0, n = primitive.length; i < n; i++) {
         var p = primitive.get(i);
         if (p) {
@@ -385,6 +387,13 @@ plugin.cesium.VectorContext.prototype.addLabels = function(allOptions, feature, 
  */
 plugin.cesium.VectorContext.prototype.removePrimitive = function(primitive) {
   var geomId = ol.getUid(primitive.olGeometry);
+
+  if (primitive.olFeature) {
+    this.removeFeaturePrimitive(primitive.olFeature, primitive);
+  }
+
+  this.removeOLReferences(primitive);
+
   if (primitive instanceof Cesium.Billboard) {
     this.billboards.remove(primitive);
     this.geometryToCesiumMap[geomId] = undefined;
@@ -406,12 +415,6 @@ plugin.cesium.VectorContext.prototype.removePrimitive = function(primitive) {
     this.collection.remove(primitive);
     this.geometryToCesiumMap[geomId] = undefined;
   }
-
-  if (primitive.olFeature) {
-    this.removeFeaturePrimitive(primitive.olFeature, primitive);
-  }
-
-  this.removeOLReferences(primitive);
 };
 
 
