@@ -554,8 +554,7 @@ plugin.cesium.sync.FeatureConverter.prototype.createLinePrimitive = function(pos
 plugin.cesium.sync.FeatureConverter.prototype.createOrUpdatePolyline = function(feature, geometry, context, style,
     opt_polyline, opt_flatCoords, opt_offset, opt_end, opt_collection) {
   if (opt_polyline) {
-    this.updatePolyline(feature, geometry, context, style, opt_polyline, opt_flatCoords, opt_offset, opt_end,
-        opt_collection);
+    this.updatePolyline(feature, geometry, context, style, opt_polyline, opt_flatCoords, opt_offset, opt_end);
   } else {
     this.createPolyline(feature, geometry, context, style, opt_flatCoords, opt_offset, opt_end, opt_collection);
   }
