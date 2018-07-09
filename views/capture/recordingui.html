@@ -1,54 +1,46 @@
-<div class="recording-window window-content-wrapper">
-  <div class="window-content">
+<div class="d-flex flex-column u-flex-grow">
+  <div class="modal-body">
     <div ng-show="recordui.recording">
       <div ng-show="recordui.recordingCritical">Please wait while the recording is created.</div>
       <loading-bar class="w-100" complete="recordui.progress" message="recordui.status"></loading-bar>
       <div ng-show="recordui.recordingCritical">
-        <i class="fa fa-warning orange-icon"></i>
+        <i class="fa fa-warning text-warning"></i>
         Do not resize your browser during this time, or the recording will be cancelled.
       </div>
     </div>
     <div ng-show="!recordui.recording">
-      Choose how you would like to save the recording, then click Record to begin.
-      <form name="recordForm" class="form-horizontal form-compact">
-        <table style="width:100%">
-          <tr>
-            <td class="control-label">Title:</td>
-            <td class="w-100">
-              <input class="w-100" type="text" name="title" ng-model="recordui.title" ng-maxlength="200" required/>
-              <span class="help-inline" ng-show="recordForm.title.$error.required">Required!</span>
-              <span class="help-inline" ng-show="recordForm.title.$error.maxlength">Title is too long!</span>
-            </td>
-          </tr>
-          <tr>
-            <td class="control-label">Save to:</td>
-            <td class="w-100">
-              <select class="w-100" ng-model="recordui.persister"
-                  ng-options="value as key for (key, value) in recordui.persisters"/>
-            </td>
-          </tr>
-          <tr ng-if="recordui.encoders.length > 1">
-            <td class="control-label">Type:</td>
-            <td class="w-100">
-              <select class="w-100" ng-model="recordui.encoder"
-                  ng-options="e as recordui.getEncoderTitle(e) for e in recordui.encoders"/>
-              <span ng-bind-html="recordui.getEncoderDescription(recordui.encoder)"></span>
-            </td>
-          </tr>
-        </table>
-      </form>
+      <div class="mb-2">Choose how you would like to save the recording, then click Record to begin.</div>
+      <div ng-form="recordForm" class="container-fluid">
+        <div class="row form-group">
+          <label class="col-form-label col-2 text-right u-required">Title</label>
+          <div class="col">
+            <input class="form-control" type="text" name="title" ng-model="recordui.title" ng-maxlength="200" required/>
+          </div>
+        </div>
+        <div class="row form-group">
+          <label class="col-form-label col-2 text-right u-required">Save to</label>
+          <div class="col form-inline">
+            <select class="form-control" ng-model="recordui.persister" ng-options="value as key for (key, value) in recordui.persisters"/>
+          </div>
+        </div>
+        <div class="row form-group"  ng-if="recordui.encoders.length > 1">
+          <label class="col-form-label col-2 text-right u-required">Type</label>
+          <div class="col form-inline">
+            <select class="form-control" ng-model="recordui.encoder"ng-options="e as recordui.getEncoderTitle(e) for e in recordui.encoders"/>
+          </div>
+          <span ng-bind-html="recordui.getEncoderDescription(recordui.encoder)"></span>
+        </div>
+      </div>
     </div>
   </div>
-  <div class="window-footer">
-    <div class="pull-right">
-      <button class="btn btn-default" ng-click="recordui.record()" ng-disabled="recordForm.$invalid || recordui.recording">
-        <i class="fa" ng-class="recordui.recording && 'fa-spin fa-spinner' || 'fa-check lt-blue-icon'"></i>
-        Record{{recordui.recording ? 'ing' : ''}}
-      </button>
-      <button class="btn btn-default" ng-click="recordui.cancel()">
-        <i class="fa fa-ban red-icon"></i>
-        Cancel
-      </button>
-    </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" ng-click="recordui.record()" ng-disabled="recordForm.$invalid || recordui.recording">
+      <i class="fa" ng-class="recordui.recording ? 'fa-spin fa-spinner' : 'fa-check'"></i>
+      Record{{recordui.recording ? 'ing' : ''}}
+    </button>
+    <button class="btn btn-secondary" ng-click="recordui.cancel()">
+      <i class="fa fa-ban red-icon"></i>
+      Cancel
+    </button>
   </div>
 </div>

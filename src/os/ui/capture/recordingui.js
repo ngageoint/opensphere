@@ -220,7 +220,7 @@ goog.exportProperty(
 os.ui.capture.RecordingUI.prototype.getEncoderDescription = function(encoder) {
   var description = encoder && encoder.description || '';
   if (description) {
-    description = '<i class="fa fa-info-circle"></i>&nbsp;' + description;
+    description = '<i class="fa fa-info-circle text-danger"></i>&nbsp;' + description;
   }
 
   return description;
@@ -332,11 +332,11 @@ os.ui.capture.launchRecordingUI = function(recorder) {
     var windowOptions = {
       'id': os.ui.capture.RECORDING_ID,
       'label': recorder.title || 'Give me a title please',
-      'icon': 'fa fa-circle red-icon',
+      'icon': 'fa fa-circle text-danger',
       'x': 'center',
       'y': 'center',
-      'width': '325',
-      'min-width': '250',
+      'width': '350',
+      'min-width': '275',
       'max-width': '500',
       'height': 'auto',
       'modal': 'false',
