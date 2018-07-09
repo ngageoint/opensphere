@@ -177,7 +177,6 @@ plugin.cesium.VectorContext.prototype.pruneMaps = function() {
  * @param {Cesium.PrimitiveLike} primitive
  * @param {!ol.Feature} feature The OL3 feature
  * @param {!ol.geom.Geometry} geometry The OL3 geometry
- * @protected
  */
 plugin.cesium.VectorContext.prototype.addOLReferences = function(primitive, feature, geometry) {
   if (primitive) {
