@@ -235,3 +235,12 @@ $somesizes: map-merge((
     .u-mv#{$abbrev}-#{$size} { max-#{$prop}: #{$size}v#{$abbrev} !important; }
   }
 }
+
+// ----------- Hover edit utilities ----------- //
+.u-hover-show-edit {
+  opacity: 0;
+}
+
+.u-hover-container:hover .u-hover-show-edit {
+  opacity: 1;
+}
