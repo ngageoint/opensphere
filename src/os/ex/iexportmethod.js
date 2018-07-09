@@ -90,7 +90,7 @@ os.ex.IExportMethod.prototype.cancel;
 
 /**
  * The resulting exported output.
- * @return {*}
+ * @return {Object|null|string}
  */
 os.ex.IExportMethod.prototype.getOutput;
 
