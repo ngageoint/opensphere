@@ -648,7 +648,10 @@ plugin.cesium.sync.FeatureConverter.prototype.getLineStringPositions = function(
       transformedCoord[j] = coord[j];
     }
 
-    transform(coord, transformedCoord, stride);
+    if (transform) {
+      transform(coord, transformedCoord, stride);
+    }
+
     positions[count] = olcs.core.ol4326CoordinateToCesiumCartesian(transformedCoord);
     count++;
   }
@@ -932,7 +935,9 @@ plugin.cesium.sync.FeatureConverter.prototype.createPolygonHierarchy = function(
         transformedCoord[j] = coord[j];
       }
 
-      transform(coord, transformedCoord, coord.length);
+      if (transform) {
+        transform(coord, transformedCoord, coord.length);
+      }
 
       if (isNaN(firstLon)) {
         firstLon = transformedCoord[0];
@@ -1768,19 +1773,19 @@ plugin.cesium.sync.FeatureConverter.prototype.updatePrimitiveLike = function(fea
     primitive) {
   var type = geometry.getType();
 
-  if (primitive instanceof Cesium.PrimitiveCollection) {
-    for (var i = 0, n = primitive.length; i < n; i++) {
-      this.updatePrimitiveLike(feature, geometry, style, context, primitive.get(i));
-    }
-
-    // mark as updated so it isn't removed
-    primitive.dirty = false;
-  } else if (type === ol.geom.GeometryType.MULTI_POINT || type === ol.geom.GeometryType.MULTI_LINE_STRING ||
+  if (type === ol.geom.GeometryType.MULTI_POINT || type === ol.geom.GeometryType.MULTI_LINE_STRING ||
       type === ol.geom.GeometryType.MULTI_POLYGON) {
     this.olMultiGeometryToCesium(feature, geometry, context, style, primitive);
     // multi-geom cases can often add new primitives to the collection as a result of a geometry update,
     // so ensure they can be picked
     context.addOLReferences(primitive, feature, geometry);
+    // mark as updated so it isn't removed
+    primitive.dirty = false;
+  } else if (primitive instanceof Cesium.PrimitiveCollection) {
+    for (var i = 0, n = primitive.length; i < n; i++) {
+      this.updatePrimitiveLike(feature, geometry, style, context, primitive.get(i));
+    }
+
     // mark as updated so it isn't removed
     primitive.dirty = false;
   } else if (primitive instanceof Cesium.Billboard) {
