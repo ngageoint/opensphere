@@ -136,9 +136,17 @@ plugin.cesium.CesiumRenderer.prototype.initialize = function() {
           this.updateTerrainProvider();
 
           // configure Cesium fog
-          scene.fog.enabled = /** @type {boolean} */ (os.settings.get(os.config.DisplaySetting.FOG_ENABLED, true));
-          scene.fog.density = /** @type {boolean} */ (os.settings.get(os.config.DisplaySetting.FOG_DENSITY,
+          this.showFog(/** @type {boolean} */ (os.settings.get(os.config.DisplaySetting.FOG_ENABLED, true)));
+
+          // legacy code saved density as the Cesium fog density value. now it is saved as a percentage from 0-1. if
+          // the settings value is non-zero (no fog) and less than 5% (not allowed by our UI), reset it to the default.
+          var density = /** @type {number} */ (os.settings.get(os.config.DisplaySetting.FOG_DENSITY,
               plugin.cesium.DEFAULT_FOG_DENSITY));
+          if (density != 0 && density < 0.05) {
+            density = plugin.cesium.DEFAULT_FOG_DENSITY;
+          }
+
+          this.setFogDensity(density);
 
           // create our camera handler
           var camera = this.olCesium_.camera_ = new plugin.cesium.Camera(scene, this.map);
@@ -331,7 +339,8 @@ plugin.cesium.CesiumRenderer.prototype.showFog = function(value) {
 plugin.cesium.CesiumRenderer.prototype.setFogDensity = function(value) {
   var scene = this.olCesium_ ? this.olCesium_.getCesiumScene() : undefined;
   if (scene) {
-    var newDensity = value * plugin.cesium.MAX_FOG_DENSITY;
+    // density value should be between 0 (no fog) and the maximum density allowed by the application
+    var newDensity = goog.math.clamp(value * plugin.cesium.MAX_FOG_DENSITY, 0, plugin.cesium.MAX_FOG_DENSITY);
     if (scene.fog.density != newDensity) {
       scene.fog.density = newDensity;
     }
