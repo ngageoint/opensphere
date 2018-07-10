@@ -22,6 +22,12 @@ $form-control-disabled-opacity: .6 !default;
   }
 }
 
+// ui-menu-item has some spacer between font awesome icons and dropdown text. Has better readability
+.dropdown-item {
+  i.fa {
+    margin-right: ($spacer * .25);
+  }
+}
 
 // --------------------------------- Misc Utilities --------------------------------- //
 .u-pointer-events-all {
