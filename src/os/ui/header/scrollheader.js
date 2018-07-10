@@ -183,4 +183,5 @@ os.ui.header.ScrollHeaderCtrl.prototype.destroyElement_ = function() {
   this.scope_ = null;
   this.element_ = null;
   this.timeout_ = null;
+  $(window).off('scroll');
 };
