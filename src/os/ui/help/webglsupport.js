@@ -1,4 +1,5 @@
 goog.provide('os.ui.help.webGLSupportDirective');
+
 goog.require('goog.userAgent');
 goog.require('os.config');
 goog.require('os.ui.Module');
@@ -13,6 +14,7 @@ goog.require('os.ui.window');
 os.ui.help.webGLSupportDirective = function() {
   return {
     restrict: 'E',
+    replace: true,
     templateUrl: os.ROOT + 'views/help/webglsupport.html'
   };
 };
@@ -30,24 +32,21 @@ os.ui.Module.directive('webglsupport', [os.ui.help.webGLSupportDirective]);
  */
 os.ui.help.launchWebGLSupportDialog = function(opt_title) {
   var scopeOptions = {
-    'confirmCallback': goog.nullFunction,
-    'hideCancel': true,
-    'yesText': 'OK',
-    'yesIcon': 'fa fa-check lt-blue-icon'
+    'hideCancel': true
   };
 
   var windowOptions = {
     'label': opt_title || 'WebGL Not Supported',
-    'icon': 'fa fa-frown-o yellow-icon',
+    'icon': 'fa fa-frown-o',
     'x': 'center',
     'y': 'center',
-    'width': '425',
-    'min-width': '300',
-    'max-width': '600',
-    'height': '200',
-    'min-height': '200',
-    'max-height': '500',
-    'modal': 'true'
+    'width': 425,
+    'min-width': 300,
+    'max-width': 600,
+    'height': 200,
+    'min-height': 200,
+    'max-height': 500,
+    'modal': true
   };
 
   scopeOptions['appName'] = os.config.getAppName('the application');
@@ -64,6 +63,8 @@ os.ui.help.launchWebGLSupportDialog = function(opt_title) {
     windowOptions['height'] = 300;
   }
 
-  var template = '<confirm><webglsupport></webglsupport></confirm>';
-  os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+  os.ui.window.launchConfirm(/** @type {!osx.window.ConfirmOptions} */ ({
+    prompt: '<webglsupport></webglsupport>',
+    windowOptions: windowOptions
+  }), scopeOptions);
 };
