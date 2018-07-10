@@ -49,7 +49,7 @@ os.file.persist.FilePersistence.prototype.save = function(fileName, content, opt
 /**
  * Static function to save a file, so it can be used without the persistence
  * @param {string} fileName The file name
- * @param {*} content The content to save
+ * @param {Object|null|string} content The content to save
  * @param {string=} opt_mimeType The mime type of the content
  * @return {boolean} Whether or not the save action was successfull
  */

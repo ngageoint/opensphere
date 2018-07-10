@@ -20,7 +20,7 @@
           </button>
         </div>
         <div class="pull-right">
-          <label class="checkbox inline" title="Advanced mode allows more specific combinations of layers, filters, and areas">
+          <label ng-show="hideAdvanced !== 'true'" class="checkbox inline" title="Advanced mode allows more specific combinations of layers, filters, and areas">
             <input type="checkbox" ng-model="advanced" ng-change="comboCtrl.advancedToggle(true)">
             Advanced
           </label>
