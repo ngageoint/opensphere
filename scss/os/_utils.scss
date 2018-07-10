@@ -243,10 +243,10 @@ $somesizes: map-merge((
 }
 
 // ----------- Hover edit utilities ----------- //
-.u-hover-show-edit {
+.u-hover-show {
   opacity: 0;
 }
 
-.u-hover-container:hover .u-hover-show-edit {
+.u-hover-container:hover .u-hover-show {
   opacity: 1;
 }
