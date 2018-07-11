@@ -16,7 +16,7 @@ plugin.ogc.mime.capTest_ = os.file.mime.xml.createDetect(/^W((MT_)?M|F)S_Capabil
 /**
  * @private
  */
-plugin.ogc.mime.exTest_ = os.file.mime.xml.createDetect(/^ExceptionReport$/, /\/ows$/);
+plugin.ogc.mime.exTest_ = os.file.mime.xml.createDetect(/ExceptionReport$/, /\/(ows|ogc)(\/|$)/);
 
 /**
  * @param {Array<*|undefined>} arr
