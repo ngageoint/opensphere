@@ -14,6 +14,7 @@ goog.require('os.ui.window');
 os.ui.window.confirmDirective = function() {
   return {
     restrict: 'E',
+    replace: true,
     transclude: true,
     scope: true,
     templateUrl: os.ROOT + 'views/window/confirm.html',

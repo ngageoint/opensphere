@@ -1,0 +1,19 @@
+.c-searchresults {
+  background-color: rgba($body-bg, .5);
+  max-width: 35rem;
+  overflow: auto;
+  right: 0;
+  z-index: $zindex-dropdown - 1;
+}
+
+@media (max-width: map-get($grid-breakpoints, lg)) {
+  .c-searchresults  {
+    max-width: 75% !important;
+  }
+}
+
+@media (max-width: map-get($grid-breakpoints, md)) {
+  .c-searchresults  {
+    max-width: 95% !important;
+  }
+}

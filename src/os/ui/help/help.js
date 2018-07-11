@@ -57,9 +57,13 @@ os.ui.help.helpDirective = function() {
     restrict: 'E',
     replace: true,
     scope: true,
-    templateUrl: os.ROOT + 'views/help/help.html',
     controller: os.ui.help.HelpCtrl,
-    controllerAs: 'help'
+    controllerAs: 'ctrl',
+    template: '<button class="btn btn-info dropdown-toggle" title="Support"' +
+        ' ng-click="ctrl.openMenu()" ng-right-click="ctrl.openMenu()" ng-class="{active: menu}">' +
+        '<i class="fa fa-question-circle" ng-class="{\'fa-fw\': puny}"></i> ' +
+        '<span ng-class="{\'d-none\': puny}">Support</span>' +
+        '</button>'
   };
 };
 
