@@ -84,6 +84,12 @@ os.ui.file.ImportDialogCtrl = function($scope, $element) {
   this['fileSupported'] = /** @type {boolean} */ ($scope['fileSupported']) || false;
 
   /**
+   * If local files are supported
+   * @type {boolean}
+   */
+  this['hideCancel'] = /** @type {boolean} */ ($scope['hideCancel']) || false;
+
+  /**
    * @type {boolean}
    */
   this['fileChosen'] = false;
@@ -100,7 +106,7 @@ os.ui.file.ImportDialogCtrl = function($scope, $element) {
   this.fileInputEl_ = goog.dom.createDom(goog.dom.TagName.INPUT, {
     'type': 'file',
     'name': 'file',
-    'class': 'input-hidden'
+    'class': 'd-none'
   });
   goog.dom.appendChild(goog.dom.getElement(os.ui.windowSelector.CONTAINER.substring(1)), this.fileInputEl_);
   goog.events.listen(this.fileInputEl_, goog.events.EventType.CHANGE, this.onFileChange_, false, this);
