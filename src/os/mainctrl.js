@@ -121,11 +121,13 @@ goog.require('os.ui.menu.timeline');
 goog.require('os.ui.menu.unit');
 goog.require('os.ui.menu.windows');
 goog.require('os.ui.menu.windows.default');
+goog.require('os.ui.navbaroptions');
 goog.require('os.ui.ngRightClickDirective');
 goog.require('os.ui.query.cmd.QueryEntriesClear');
 goog.require('os.ui.route.RouteManager');
 goog.require('os.ui.search.NoResult');
 goog.require('os.ui.search.place.CoordinateSearch');
+goog.require('os.ui.search.searchResultsDirective');
 goog.require('os.ui.slick.column');
 goog.require('os.ui.state.cmd.StateClear');
 goog.require('os.ui.state.menu');
@@ -407,6 +409,9 @@ os.MainCtrl.prototype.initialize = function() {
   // set up time offset
   os.time.initOffset();
 
+  // initialize the nav bars
+  os.ui.navbaroptions.init();
+
   this.addControlsToHelp_();
   os.ui.help.metricsOption.addToNav();
 };
@@ -559,6 +564,11 @@ os.MainCtrl.prototype.onPluginsLoaded = function(opt_e) {
   var rm = os.ui.route.RouteManager.getInstance();
   rm.registerUrlHandler(new os.file.FileUrlHandler());
   rm.initialize();
+
+  // add the search results panel
+  if (os.ui.navbaroptions.searchresults) {
+    os.ui.list.add(os.ui.AbstractMainContent, os.ui.navbaroptions.searchresults, 100);
+  }
 
   // display initial onboarding
   os.ui.onboarding.OnboardingManager.getInstance().displayOnboarding(os.ROOT + 'onboarding/intro.json');

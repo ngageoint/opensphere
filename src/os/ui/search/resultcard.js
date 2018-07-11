@@ -11,8 +11,9 @@ goog.require('os.ui.Module');
 os.ui.search.resultCardDirective = function() {
   return {
     restrict: 'E',
+    replace: true,
     scope: true,
-    templateUrl: os.ROOT + 'views/search/resultcard.html',
+    template: '<div class="card-body"></div>',
     controller: os.ui.search.ResultCardCtrl,
     controllerAs: 'resultCard'
   };
@@ -37,13 +38,12 @@ os.ui.Module.directive('resultcard', [os.ui.search.resultCardDirective]);
 os.ui.search.ResultCardCtrl = function($scope, $element, $compile) {
   if ('result' in $scope) {
     // grab the card UI off the result, compile it, and add it to the DOM
-    var container = $element.find('.card-wrapper');
     var result = /** @type {os.search.ISearchResult} */ ($scope['result']);
     var ui = result.getSearchUI();
     if (goog.string.startsWith(ui, '<')) {
-      container.append($compile(ui)($scope));
+      $element.append($compile(ui)($scope));
     } else {
-      container.append(ui);
+      $element.append(ui);
     }
   }
 
