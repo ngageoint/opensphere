@@ -6,7 +6,7 @@ describe('os.file.mime.html', function() {
   it('should not detect files that are not HTML files', function() {
     os.file.mime.mock.testFiles([
       '/base/test/os/ui/filter/parse/state.xml',
-      '/base/test/resources/text/utf8.bin'],
+      '/base/test/resources/json/partial_array.json'],
         os.file.mime.mock.testNo(os.file.mime.html.TYPE));
   });
 
