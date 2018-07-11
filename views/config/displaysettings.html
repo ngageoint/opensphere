@@ -1,85 +1,111 @@
-<div class="user-setting compact">
-  <h5 class="no-margin">Display Options</h5>
-  <div ng-if="display.show3DSettings">
-    <p>When you open {{appName}} show:</p>
-    <label class="radio" title="Start {{appName}} in the 2D equirectangular map mode.">
-      <input type="radio" value="2d" ng-model="display.mapMode">
-      2D Flat Map
-    </label>
-    <label class="radio" title="Start {{appName}} in the 3D globe mode.">
-      <input type="radio" value="3d" ng-model="display.mapMode">
-      3D Globe
-    </label>
+<div class="d-flex flex-column h-100 u-overflow-y-auto container-fluid">
+  <h5>Display Options</h5>
+  <div class="form-group mb-2" ng-if="display.show3DSettings">
+    <div>When you open {{appName}} show:</div>
+    <div class="form-check" title="Start {{appName}} in the 2D equirectangular map mode.">
+      <label class="form-check-label">
+        <input class="form-check-input" type="radio" value="2d" ng-model="display.mapMode">
+        2D Flat Map
+      </label>
+    </div>
+    <div class="form-check" title="Start {{appName}} in the 3D globe mode.">
+      <label class="form-check-label">
+        <input class="form-check-input" type="radio" value="3d" ng-model="display.mapMode">
+        3D Globe
+      </label>
+    </div>
   </div>
-  <div ng-if="!display.show3DSettings">
-    <h3><i class="fa fa-warning color-yellow"></i> 3D Globe Not Supported.</h3>
-    <webglsupport></webglsupport>
-  </div>
-
-  <p>Specify the initial position and zoom level of the map.</p>
-  <label class="radio inline" title="Use the default map position and zoom level.">
-    <input type="radio" value="default" ng-model="display.cameraMode">
-    Default
-  </label>
-  <label class="radio inline" title="Set the map position and zoom level to a fixed value.">
-    <input type="radio" value="fixed" ng-model="display.cameraMode">
-    Fixed
-  </label>
-  <label class="radio inline" title="Remember the map position and zoom level when {{appName}} is closed.">
-    <input type="radio" value="last" ng-model="display.cameraMode">
-    Remember Last
-  </label>
-
-  <div class="well top-gapxs" style="width:265px;padding:5px 8px;">
-    <h6 class="no-margin">Initial Position/Zoom:</h6>
-    <table class="table table-borderless table-condensed no-margin" style="width:auto;" ng-if="display.cameraState">
-      <tr>
-        <td>Latitude:</td>
-        <td>{{display.cameraState.center[1].toFixed(4)}}</td>
-      </tr>
-      <tr>
-        <td>Longitude:</td>
-        <td>{{display.cameraState.center[0].toFixed(4)}}</td>
-      </tr>
-      <tr>
-        <td>Zoom:</td>
-        <td>{{display.getZoom()}}</td>
-      </tr>
-    </table>
-    <button class="btn btn-default" type="button" ng-if="display.cameraMode == 'fixed'"
-        ng-click="display.useCurrentPosition()">
-      Use Current
-    </button>
+  <div class="card form-group bg-secondary" ng-if="!display.show3DSettings">
+    <div class="card-body">
+      <h5><i class="fa fa-warning text-warning"></i> 3D Globe Not Supported.</h5>
+      <webglsupport></webglsupport>
+    </div>
   </div>
 
-  <div class="top-gaps" ng-if="display.show3DSettings">
-    <h5>3D Globe Options</h5>
-    <div class="control-group">
-      <label class="checkbox inline" title="{{display.help.sunlight}}">
-        <input type="checkbox" ng-model="display.sunlightEnabled" ng-change="display.updateSunlight()" />
-        Enable Sunlight
+  <div class="form-group mb-2">
+    <div>Specify the initial position and zoom level of the map.</div>
+    <div class="form-check form-check-inline" title="Use the default map position and zoom level.">
+      <label class="form-check-label">
+        <input class="form-check-input" type="radio" value="default" ng-model="display.cameraMode">
+        Default
       </label>
-      <popover content="display.help.sunlight" pos="'right'"></popover>
     </div>
-    <div class="control-group" ng-if="display.supportsTerrain()">
-      <label class="checkbox inline" title="{{display.help.terrain}}">
-        <input type="checkbox" ng-model="display.terrainEnabled" ng-change="display.updateTerrain()" />
-        Enable Terrain
+    <div class="form-check form-check-inline" title="Set the map position and zoom level to a fixed value.">
+      <label class="form-check-label">
+        <input class="form-check-input" type="radio" value="fixed" ng-model="display.cameraMode">
+        Fixed
       </label>
-      <popover content="display.help.terrain" pos="'right'"></popover>
     </div>
-    <div class="control-group">
-      <label class="checkbox inline" title="{{display.help.fog}}">
-        <input type="checkbox" ng-model="display.fogEnabled" ng-change="display.updateFog()" />
-        Enable Fog
+    <div class="form-check form-check-inline"
+        title="Remember the map position and zoom level when {{appName}} is closed.">
+      <label class="form-check-label">
+        <input class="form-check-input" type="radio" value="last" ng-model="display.cameraMode">
+        Remember Last
       </label>
-      <popover content="display.help.fog" pos="'right'"></popover>
     </div>
-    <div class="control-group" ng-if="display.fogEnabled" title="{{display.help.fog}}">
-      <label class="control-label" for="persister">Fog Density:</label>
-      <div class="controls top-gaps" style="width:300px;margin-left:10px;">
-        <slider min="0" max="1" step="0.1" value="display.fogDensity" live="true" name="fogDensity"></slider>
+
+    <div class="card bg-secondary col-8 mt-2 p-0">
+      <div class="card-body">
+        <h6 class="m-0">Initial Position/Zoom:</h6>
+        <table class="table table-borderless table-sm m-0" ng-if="display.cameraState">
+          <tr>
+            <td>Latitude:</td>
+            <td class="col">{{display.cameraState.center[1].toFixed(4)}}</td>
+          </tr>
+          <tr>
+            <td>Longitude:</td>
+            <td class="col">{{display.cameraState.center[0].toFixed(4)}}</td>
+          </tr>
+          <tr>
+            <td>Zoom:</td>
+            <td class="col">{{display.getZoom()}}</td>
+          </tr>
+        </table>
+        <button class="btn btn-primary" type="button" ng-if="display.cameraMode == 'fixed'"
+            ng-click="display.useCurrentPosition()">
+          Use Current
+        </button>
       </div>
+    </div>
+  </div>
+
+
+  <div ng-if="display.show3DSettings">
+    <h5>3D Globe Options</h5>
+    <div class="form-group">
+      <div class="form-check" title="{{display.help.sunlight}}">
+        <label class="form-check-label">
+          <input class="form-check-input" type="checkbox" ng-model="display.sunlightEnabled"
+              ng-change="display.updateSunlight()" />
+          Enable Sunlight
+        </label>
+        <popover x-title="'Enable Sunlight'" content="display.help.sunlight" pos="'right'"></popover>
+      </div>
+    </div>
+    <div class="form-group" ng-if="display.supportsTerrain()">
+      <div class="form-check" title="{{display.help.terrain}}">
+        <label class="form-check-label">
+          <input class="form-check-input" type="checkbox" ng-model="display.terrainEnabled"
+              ng-change="display.updateTerrain()" />
+          Enable Terrain
+        </label>
+        <popover x-title="'Enable Terrain'" content="display.help.terrain" pos="'right'"></popover>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="form-check" title="{{display.help.fog}}">
+        <label class="form-check-label">
+          <input class="form-check-input" type="checkbox" ng-model="display.fogEnabled"
+              ng-change="display.updateFog()" />
+          Enable Fog
+        </label>
+        <popover x-title="'Enable Fog'" content="display.help.fog" pos="'right'"></popover>
+      </div>
+    </div>
+    <div class="form-group" ng-if="display.fogEnabled" title="{{display.help.fog}}">
+      <label for="fogDensity">Fog Density:</label>
+      <slider class="col-6" min="0" max="1" step="0.1" value="display.fogDensity" live="true" name="fogDensity">
+      </slider>
     </div>
   </div>
 </div>
