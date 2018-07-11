@@ -243,6 +243,7 @@ os.ui.window.enableModality = function(id) {
       /** @type {os.ui.WindowCtrl} */ (scope['windowCtrl']).addModalBg();
       scope['modal'] = true;
     }
+    win.zIndex(os.ui.windowZIndexMax.MODAL);
   }
 };
 
@@ -259,6 +260,7 @@ os.ui.window.disableModality = function(id) {
       /** @type {os.ui.WindowCtrl} */ (scope['windowCtrl']).removeModalBg();
       scope['modal'] = false;
     }
+    win.zIndex(os.ui.windowZIndexMax.STANDARD);
   }
 };
 
