@@ -1,8 +1,8 @@
 <div class="d-flex flex-column u-flex-grow">
-  <form class="container-fluid" name="csvForm" novalidate>
+  <ng-form class="container-fluid" name="csvForm" novalidate>
     <div class="form-row form-group">
       <div class="row col-6">
-        <label class="col-form-label col-4">Header Row:</label>
+        <label class="col-form-label col-4">Header Row</label>
         <spinner class="col-3"
             min="1"
             max="config.linePreview.length - 1"
@@ -16,7 +16,7 @@
             ng-change="configStep.updatePreview()">
       </div>
       <div class="row col-6" title="Specify the character used to separate data fields in the file.">
-        <label class="col-form-label col-4">Delimiter:</label>
+        <label class="col-form-label col-4">Delimiter</label>
         <div class="col-8">
           <select class="form-control" ng-model="config.delimiter" ng-change="configStep.updatePreview()"
               ng-options="value as key for (key, value) in configStep.delimiters"></select>
@@ -25,7 +25,7 @@
     </div>
     <div class="form-row form-group">
       <div class="row col-6">
-        <label class="col-form-label col-4">Data Row:</label>
+        <label class="col-form-label col-4">Data Row</label>
         <spinner class="col-3"
             min="config.useHeader ? (config.headerRow + 1) : 1"
             max="config.linePreview.length"
@@ -36,14 +36,14 @@
         </spinner>
       </div>
       <div class="row col-6" title="Specify the comment character for the file. Lines beginning with this character will be ignored.">
-        <label class="col-form-label col-4">Comment:</label>
+        <label class="col-form-label col-4">Comment</label>
         <div class="col-8">
           <select class="form-control" ng-model="config.commentChar" ng-change="configStep.updatePreview()"
               ng-options="value as key for (key, value) in configStep.commentChars"></select>
         </div>
       </div>
     </div>
-  </form>
+  </ng-form>
 
   <div class="d-flex flex-column u-flex-grow">
     <div class="d-flex u-flex-grow mb-2">

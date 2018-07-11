@@ -2,7 +2,7 @@
   <div class="modal-body">
     <div class="container-fluid" ng-form="form" ng-submit="stateForm.accept()">
       <div class="form-group row" ng-if="stateForm.isSaving">
-        <label for="persister" class="col-3 col-form-label">Save to:</label>
+        <label for="persister" class="col-3 col-form-label text-right">Save to</label>
         <div class="col">
           <select class="custom-select" name="persister" ng-model="stateForm.persister" ng-options="value as key for (key, value) in stateForm.persisters">
             <option ng-if="stateForm.appName" value="">{{stateForm.appName}}</option>
@@ -11,7 +11,7 @@
       </div>
 
       <div class="form-group row">
-        <label for="persister" class="col-3 col-form-label">Name:</label>
+        <label for="persister" class="col-3 col-form-label text-right">Name</label>
         <div class="col">
           <input type="text" class="form-control" name="title" statetitle ng-model="title" ng-required="true" ng-maxlength="500"/>
           <div class="invalid-feedback" ng-show="form.title.$invalid && !form.title.$error.required && !form.title.$error.maxlength">This name has already been used. Please try another.</div>
@@ -21,7 +21,7 @@
       </div>
 
       <div class="form-group row">
-        <label for="desc" class="col-3 col-form-label">Description:</label>
+        <label for="desc" class="col-3 col-form-label text-right">Description</label>
         <div class="col">
           <input type="text" name="desc" class="form-control" ng-model="description" ng-maxlength="4000" placeholder="Add a custom description"/>
           <div class="invalid-feedback" ng-show="form.desc.$error.maxlength">Description is too long!</div>
@@ -29,7 +29,7 @@
       </div>
 
       <div class="form-group row">
-        <label for="tags" class="col-3 col-form-label">Tags:</label>
+        <label for="tags" class="col-3 col-form-label text-right">Tags</label>
         <div class="col">
           <input type="text" name="tags" class="form-control" ng-model="tags" ng-maxlength="1000" placeholder="Tags organize states: e.g. states, population"/>
           <div class="invalid-feedback" ng-show="form.tags.$error.maxlength">Tags field is too long!</div>
