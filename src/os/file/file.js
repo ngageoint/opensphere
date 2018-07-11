@@ -126,7 +126,7 @@ os.file.File.prototype.convertContentToString = function() {
   var value = this.getContent();
   if (value instanceof ArrayBuffer) {
     var ab = /** @type {ArrayBuffer} */ (value);
-    var s = os.file.mime.text.getText(ab);
+    var s = os.file.mime.text.getText(ab, this);
     if (s) {
       this.setContent(s);
     }
