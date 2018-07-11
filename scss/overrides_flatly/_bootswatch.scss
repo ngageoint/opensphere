@@ -32,3 +32,12 @@
     opacity: .5;
   }
 }
+
+.progress {
+  height: 1rem;
+
+  .progress-bar {
+    color: $black;
+    font-size: 1rem;
+  }
+}

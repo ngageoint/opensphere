@@ -49,3 +49,13 @@
     background-color: $gray-700;
   }
 }
+
+.progress {
+  height: 1rem;
+
+  .progress-bar {
+    color: $white;
+    font-size: 1rem;
+  }
+}
+
