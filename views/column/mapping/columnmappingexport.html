@@ -1,49 +1,50 @@
-<div class="window-content-wrapper export-dialog">
-  <div class="window-content">
-    <form name="cmExportForm" class="form-horizontal form-compact" ng-submit="cmExportCtrl.accept()">
-      <div class="control-group">
-        <label class="control-label" for="title">Name:</label>
-        <div class="controls">
-          <input type="text" class="w-100" name="title" ng-model="title" ng-required="true" ng-maxlength="128"/>
-          <span class="help-inline" ng-show="cmExportForm.title.$error.maxlength">Title is too long!</span>
-          <span class="help-inline" ng-show="cmExportForm.title.$error.required">Required!</span>
+<div class="d-flex flex-column u-flex-grow">
+  <div class="modal-body">
+    <form name="cmExportForm" ng-submit="cmExportCtrl.accept()">
+
+      <div class="d-flex flex-row form-group">
+        <label class="col-3 col-form-label text-right">Name</label>
+        <div class="col">
+          <input class="form-control" type="text" name="title" ng-model="title" ng-required="true" ng-maxlength="128" />
+          <validation-message target="cmExportForm.title"></validation-message>
         </div>
       </div>
 
-      <div class="control-group">
-        <label class="control-label" for="persister">Save to:</label>
-        <div class="controls">
-          <select class="w-100" name="persister" ng-model="cmExportCtrl.persister" ng-options="value as key for (key, value) in cmExportCtrl.persisters"/>
+      <div class="d-flex flex-row form-group">
+        <label class="col-3 col-form-label text-right">Save to</label>
+        <div class="col">
+          <select class="form-control" name="persister" ng-model="cmExportCtrl.persister" ng-options="value as key for (key, value) in cmExportCtrl.persisters"
+          />
         </div>
       </div>
 
-      <div class="control-group" ng-if="cmExportCtrl.showExportType">
-        <label class="control-label" for="persister">Exporting:</label>
-        <div class="controls">
-          <label class="radio inline">
-            <input type="radio" name="timeTypeRadios" ng-model="cmExportCtrl.exportType" value="all">
-            All
+      <div class="d-flex flex-row form-group" ng-if="cmExportCtrl.showExportType">
+        <label class="col-3 col-form-label text-right">Exporting</label>
+        <div class="col">
+          <input class="form-check-input" type="radio" name="timeTypeRadios" ng-model="cmExportCtrl.exportType" value="all"> All
+          <label class="form-check-label">
           </label>
-          <label class="radio inline">
-            <input type="radio" name="timeTypeRadios" ng-model="cmExportCtrl.exportType" value="selected">
-            Selected
+          <input class="form-check-input" type="radio" name="timeTypeRadios" ng-model="cmExportCtrl.exportType" value="selected"> Selected
+          <label class="form-check-label">
           </label>
         </div>
       </div>
-      <input type="submit" class="hidden">
+      <input type="submit" class="invisible">
+
     </form>
   </div>
-  <div class="window-footer">
-    Exporting {{cmExportCtrl.exportType == 'all' ? mappings.length : selectedMappings.length}} {{(cmExportCtrl.exportType == 'all' ? mappings.length : selectedMappings.length) === 1 ? 'Column Association.' : 'Column Associations.'}}
-    <div class="pull-right">
-      <button class="btn btn-default" ng-click="cmExportCtrl.accept()" ng-disabled="cmExportForm.$invalid">
-        <i class="fa fa-check lt-blue-icon"></i>
+
+  <div class="modal-footer">
+    Exporting {{cmExportCtrl.exportType == 'all' ? mappings.length : selectedMappings.length}} {{(cmExportCtrl.exportType ==
+    'all' ? mappings.length : selectedMappings.length) === 1 ? 'Column Association.' : 'Column Associations.'}}
+      <button class="btn btn-primary" ng-click="cmExportCtrl.accept()" ng-disabled="cmExportForm.$invalid">
+        <i class="fa fa-check"></i>
         OK
       </button>
-      <button class="btn btn-default" ng-click="cmExportCtrl.close()">
-        <i class="fa fa-ban red-icon"></i>
+      <button class="btn btn-secondary" ng-click="cmExportCtrl.close()">
+        <i class="fa fa-ban"></i>
         Cancel
       </button>
-    </div>
   </div>
+
 </div>

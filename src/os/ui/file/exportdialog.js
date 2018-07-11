@@ -102,7 +102,7 @@ os.ui.file.ExportDialogCtrl = function($scope, $element, $compile) {
   }
 
   // add application-specific UI
-  var customContainer = this.element.find('.custom-ui');
+  var customContainer = this.element.find('.js-custom-ui');
   var customOptions = this.getCustomOptions();
   if (customOptions) {
     customContainer.html(customOptions);
@@ -184,7 +184,7 @@ os.ui.file.ExportDialogCtrl.prototype.onExporterChange = function(opt_new, opt_o
     this.options.exporter = opt_new;
 
     // remove the old export ui
-    var uiContainer = this.element.find('.export-ui-container');
+    var uiContainer = this.element.find('.js-export-ui__container');
     uiContainer.children().remove();
 
     // and drop in the new one

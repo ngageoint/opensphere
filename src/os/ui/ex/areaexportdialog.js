@@ -83,7 +83,7 @@ os.ui.ex.AreaExportCtrl.start = function(areas) {
     'icon': 'fa fa-download',
     'x': 'center',
     'y': 'center',
-    'width': '350',
+    'width': '400',
     'height': 'auto',
     'show-close': 'true',
     'modal': 'true'

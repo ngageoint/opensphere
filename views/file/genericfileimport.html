@@ -2,26 +2,26 @@
   <div class="modal-body container h-100">
     <form class="container-fluid" name="importForm" novalidate>
       <div class="form-group row">
-        <label for="title">Layer Title:</label>
+        <label for="title">Layer Title</label>
         <input class="form-control" type="text" name="title" ng-model="config.title" ng-required="true" ng-maxlength="500"/>
         <small class="form-text invalid-feedback" ng-if="importForm.title.$error.required">Required!</small>
         <small class="form-text invalid-feedback" ng-if="importForm.title.$error.maxlength">Title is too long!</small>
         <small class="form-text invalid-feedback" ng-if="importForm.title.$error.exists">Title is already in use by another layer!</small>
       </div>
       <div class="form-group row">
-        <label for="desc">Description:</label>
+        <label for="desc">Description</label>
         <input class="form-control" type="text" name="desc" ng-model="config.description" ng-maxlength="2000"
             placeholder="Add a custom description"/>
         <small class="form-text invalid-feedback" ng-if="importForm.desc.$error.maxlength">Description is too long!</small>
       </div>
       <div class="form-group row">
-        <label for="tags">Tags:</label>
+        <label for="tags">Tags</label>
         <input class="form-control" type="text" name="tags" ng-model="config.tags" ng-maxlength="2000"
             placeholder="Tags organize layers: e.g. states, population"/>
         <small class="form-text invalid-feedback" ng-if="importForm.tags.$error.maxlength">Tags are too long!</small>
       </div>
       <div class="form-group row">
-        <label class="col-form-label pl-0 mr-2" for="color">Color:</label>
+        <label class="col-form-label pl-0 mr-2" for="color">Color</label>
         <colorpicker name="color" color="config.color"></colorpicker>
       </div>
     </form>
