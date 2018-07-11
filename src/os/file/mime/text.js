@@ -67,7 +67,9 @@ os.file.mime.text.getText = function(buffer, opt_file) {
       // to take a typed array as input.
       var binaryString = '';
       var arr = new Uint8Array(buffer);
-      for (var i = 0, n = arr.length; i < n; i++) {
+      // Don't send jschardet more than 16KB of data. It is pretty sluggish on large files
+      var max = Math.min(arr.length, 16 * 1024);
+      for (var i = 0; i < max; i++) {
         binaryString += String.fromCharCode(arr[i]);
       }
 
@@ -75,6 +77,7 @@ os.file.mime.text.getText = function(buffer, opt_file) {
       if (encoding) {
         // strip any UTF BOMs before decoding
         var boms = os.file.mime.text.BOMS_;
+        var n;
         for (i = 0, n = boms.length; i < n; i++) {
           var bom = boms[i];
           if (arr.length >= bom.length && goog.array.equals(arr.slice(0, bom.length), bom)) {
