@@ -35,12 +35,14 @@ os.ui.im.FileImportUI.prototype.mergeConfig = function(from, to) {
  * @inheritDoc
  */
 os.ui.im.FileImportUI.prototype.launchUI = function(file, opt_config) {
-  var type = file.getType();
+  if (file) {
+    var type = file.getType();
 
-  if (type) {
-    var chain = os.file.mime.getTypeChain(type);
-    if (chain && chain.indexOf(os.file.mime.text.TYPE) > -1) {
-      file.convertContentToString();
+    if (type) {
+      var chain = os.file.mime.getTypeChain(type);
+      if (chain && chain.indexOf(os.file.mime.text.TYPE) > -1) {
+        file.convertContentToString();
+      }
     }
   }
 };
