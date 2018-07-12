@@ -8,13 +8,17 @@
         color: $body-color !important;
       }
     }
-  }
 
-  // Fixes buttons and forms in the navbar
-  .form-control,
-  .btn {
-    font-family: sans-serif;
-    font-size: .875rem;
-    padding: .1rem .2rem;
+    // Fixes buttons and forms in the navbar
+    &.c-navtop__top {
+      font-size: .875rem;
+
+      .form-control,
+      .btn {
+        font-family: sans-serif;
+        font-size: .875rem;
+        padding: .1rem .2rem;
+      }
+    }
   }
 }
