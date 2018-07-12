@@ -99,7 +99,11 @@ os.ui.header.ScrollHeaderCtrl = function($scope, $element, $timeout, $attrs) {
    * @type {boolean}
    * @private
    */
-  this.supportsSticky_ = Modernizr.csspositionsticky || false;
+  // Turning off position: sticky as there are some issues with z-index
+  // and creating new stacking contexts. Return this line once those
+  // issues are addressed.
+  // this.supportsSticky_ = Modernizr.csspositionsticky || false;
+  this.supportsSticky_ = false;
   if (this.supportsSticky_) {
     this.timeout_(function() {
       this.element_.css('position', 'sticky');
