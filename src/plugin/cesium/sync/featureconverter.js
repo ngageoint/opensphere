@@ -1536,22 +1536,17 @@ plugin.cesium.sync.FeatureConverter.prototype.olMultiGeometryToCesium = function
 
       primitives = opt_primitive || (feature instanceof os.feature.DynamicFeature ? new Cesium.PolylineCollection() :
           new Cesium.PrimitiveCollection());
+      primitives.removeAll();
 
       for (i = 0, ii = lineEnds.length; i < ii; i++) {
-        var polyLine = count < primitives.length ? primitives.get(count) : undefined;
-        count++;
         var lineEnd = lineEnds[i];
 
         if (feature instanceof os.feature.DynamicFeature) {
           // dynamic lines may change frequently and should use Cesium.Polyline to avoid recreating on each change,
           // which will cause a flicker while the new Primitive is loaded to the GPU.
-          this.createOrUpdatePolyline(feature, geometry, context, style, polyLine,
+          this.createOrUpdatePolyline(feature, geometry, context, style, undefined,
               lineFlats, offset, lineEnd, /** @type {Cesium.PolylineCollection} */ (primitives));
         } else {
-          if (polyLine) {
-            primitives.remove(polyLine);
-          }
-
           // all other lines should use Cesium.Primitive/Cesium.PolylineGeometry, which is more performant for picking.
           var prim = this.olLineStringGeometryToCesium(feature, geometry, context, style, lineFlats, offset, lineEnd);
           if (prim) {
@@ -1773,8 +1768,8 @@ plugin.cesium.sync.FeatureConverter.prototype.updatePrimitiveLike = function(fea
     primitive) {
   var type = geometry.getType();
 
-  if (type === ol.geom.GeometryType.MULTI_POINT || type === ol.geom.GeometryType.MULTI_LINE_STRING ||
-      type === ol.geom.GeometryType.MULTI_POLYGON) {
+  if (type === ol.geom.GeometryType.MULTI_POINT || (primitive.geomRevision !== geometry.getRevision() &&
+      (type === ol.geom.GeometryType.MULTI_LINE_STRING || type === ol.geom.GeometryType.MULTI_POLYGON))) {
     this.olMultiGeometryToCesium(feature, geometry, context, style, primitive);
     // multi-geom cases can often add new primitives to the collection as a result of a geometry update,
     // so ensure they can be picked
