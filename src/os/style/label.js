@@ -316,7 +316,6 @@ os.style.label.updateShown_ = function() {
 
   var msg = 'Label visibility computed in ' + (goog.now() - then) + 'ms.';
   goog.log.fine(os.style.label.LOGGER_, msg);
-  // console.log(msg);
 
   // return true to stop the conditional delay
   return true;
