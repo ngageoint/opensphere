@@ -1,5 +1,5 @@
-goog.provide('os.ui.FeatureInfoCtrl');
-goog.provide('os.ui.featureInfoDirective');
+goog.provide('os.ui.feature.FeatureInfoCtrl');
+goog.provide('os.ui.feature.featureInfoDirective');
 
 goog.require('goog.Disposable');
 goog.require('goog.object');
@@ -12,7 +12,7 @@ goog.require('os.defines');
 goog.require('os.map');
 goog.require('os.style');
 goog.require('os.ui.Module');
-goog.require('os.ui.featureInfoCellDirective');
+goog.require('os.ui.feature.featureInfoCellDirective');
 goog.require('os.ui.location.SimpleLocationDirective');
 goog.require('os.ui.propertyInfoDirective');
 goog.require('os.ui.util.autoHeightDirective');
@@ -23,14 +23,12 @@ goog.require('os.ui.window');
  * The featureinfo directive
  * @return {angular.Directive}
  */
-os.ui.featureInfoDirective = function() {
+os.ui.feature.featureInfoDirective = function() {
   return {
     restrict: 'E',
-    scope: {
-      'feature': '='
-    },
-    templateUrl: os.ROOT + 'views/featureinfo.html',
-    controller: os.ui.FeatureInfoCtrl,
+    replace: true,
+    templateUrl: os.ROOT + 'views/feature/featureinfo.html',
+    controller: os.ui.feature.FeatureInfoCtrl,
     controllerAs: 'info'
   };
 };
@@ -39,7 +37,7 @@ os.ui.featureInfoDirective = function() {
 /**
  * Add the directive to the module.
  */
-os.ui.Module.directive('featureinfo', [os.ui.featureInfoDirective]);
+os.ui.Module.directive('featureinfo', [os.ui.feature.featureInfoDirective]);
 
 
 
@@ -51,8 +49,8 @@ os.ui.Module.directive('featureinfo', [os.ui.featureInfoDirective]);
  * @constructor
  * @ngInject
  */
-os.ui.FeatureInfoCtrl = function($scope, $element) {
-  os.ui.FeatureInfoCtrl.base(this, 'constructor');
+os.ui.feature.FeatureInfoCtrl = function($scope, $element) {
+  os.ui.feature.FeatureInfoCtrl.base(this, 'constructor');
 
   /**
    * @type {?angular.Scope}
@@ -77,11 +75,11 @@ os.ui.FeatureInfoCtrl = function($scope, $element) {
 
   os.unit.UnitManager.getInstance().listen(goog.events.EventType.PROPERTYCHANGE, this.updateGeometry, false, this);
   os.dispatcher.listen(os.data.FeatureEventType.VALUECHANGE, this.onValueChange, false, this);
-  $scope.$watch('feature', this.onFeatureChange.bind(this));
-  $scope.$on(os.ui.FeatureInfoCtrl.SHOW_DESCRIPTION, this.showDescription.bind(this));
+  $scope.$watch('items', this.onFeatureChange.bind(this));
+  $scope.$on(os.ui.feature.FeatureInfoCtrl.SHOW_DESCRIPTION, this.showDescription.bind(this));
   $scope.$on('$destroy', this.dispose.bind(this));
 };
-goog.inherits(os.ui.FeatureInfoCtrl, goog.Disposable);
+goog.inherits(os.ui.feature.FeatureInfoCtrl, goog.Disposable);
 
 
 /**
@@ -89,14 +87,14 @@ goog.inherits(os.ui.FeatureInfoCtrl, goog.Disposable);
  * @type {string}
  * @const
  */
-os.ui.FeatureInfoCtrl.SHOW_DESCRIPTION = 'os.ui.FeatureInfoCtrl.showDescription';
+os.ui.feature.FeatureInfoCtrl.SHOW_DESCRIPTION = 'os.ui.feature.FeatureInfoCtrl.showDescription';
 
 
 /**
  * @inheritDoc
  */
-os.ui.FeatureInfoCtrl.prototype.disposeInternal = function() {
-  os.ui.FeatureInfoCtrl.base(this, 'disposeInternal');
+os.ui.feature.FeatureInfoCtrl.prototype.disposeInternal = function() {
+  os.ui.feature.FeatureInfoCtrl.base(this, 'disposeInternal');
 
   if (this.changeKey_) {
     ol.events.unlistenByKey(this.changeKey_);
@@ -115,9 +113,9 @@ os.ui.FeatureInfoCtrl.prototype.disposeInternal = function() {
  * @param {os.data.FeatureEvent} event
  * @suppress {checkTypes} To allow access to feature['id'].
  */
-os.ui.FeatureInfoCtrl.prototype.onValueChange = function(event) {
+os.ui.feature.FeatureInfoCtrl.prototype.onValueChange = function(event) {
   if (event && this.scope) {
-    var feature = /** @type {ol.Feature|undefined} */ (this.scope['feature']);
+    var feature = /** @type {ol.Feature|undefined} */ (this.scope['items'][0]);
     if (feature && feature['id'] === event['id']) {
       this.updateGeometry();
       this.updateProperties();
@@ -132,7 +130,7 @@ os.ui.FeatureInfoCtrl.prototype.onValueChange = function(event) {
  * Handle change events fired by the feature.
  * @param {ol.events.Event} event
  */
-os.ui.FeatureInfoCtrl.prototype.onFeatureChangeEvent = function(event) {
+os.ui.feature.FeatureInfoCtrl.prototype.onFeatureChangeEvent = function(event) {
   this.updateGeometry();
   this.updateProperties();
 
@@ -142,13 +140,13 @@ os.ui.FeatureInfoCtrl.prototype.onFeatureChangeEvent = function(event) {
 
 /**
  * Handle feature changes on the scope.
- * @param {ol.Feature} newVal The new value
+ * @param {Array<ol.Feature>} newVal The new value
  *
  * @todo Should polygons display the center point? See {@link ol.geom.Polygon#getInteriorPoint}. What about line
  *       strings? We can get the center of the extent, but that's not very helpful. For now, only display the location
  *       for point geometries.
  */
-os.ui.FeatureInfoCtrl.prototype.onFeatureChange = function(newVal) {
+os.ui.feature.FeatureInfoCtrl.prototype.onFeatureChange = function(newVal) {
   if (this.isDisposed()) {
     return;
   }
@@ -162,8 +160,11 @@ os.ui.FeatureInfoCtrl.prototype.onFeatureChange = function(newVal) {
   this.updateProperties();
 
   if (newVal) {
-    // listen for change events fired by the feature so the window can be updated
-    this.changeKey_ = ol.events.listen(newVal, ol.events.EventType.CHANGE, this.onFeatureChangeEvent, this);
+    var feature = newVal[0];
+    if (feature) {
+      // listen for change events fired by the feature so the window can be updated
+      this.changeKey_ = ol.events.listen(feature, ol.events.EventType.CHANGE, this.onFeatureChangeEvent, this);
+    }
   }
 };
 
@@ -172,13 +173,13 @@ os.ui.FeatureInfoCtrl.prototype.onFeatureChange = function(newVal) {
  * Update the geometry information displayed for the feature.
  * @protected
  */
-os.ui.FeatureInfoCtrl.prototype.updateGeometry = function() {
+os.ui.feature.FeatureInfoCtrl.prototype.updateGeometry = function() {
   if (this.scope) {
     this.scope['lon'] = undefined;
     this.scope['lat'] = undefined;
     this.scope['alt'] = undefined;
 
-    var feature = /** @type {ol.Feature|undefined} */ (this.scope['feature']);
+    var feature = /** @type {ol.Feature|undefined} */ (this.scope['items'][0]);
     if (feature) {
       var geom = feature.getGeometry();
       if (geom instanceof ol.geom.Point) {
@@ -204,12 +205,12 @@ os.ui.FeatureInfoCtrl.prototype.updateGeometry = function() {
  * Update the properties/description information displayed for the feature.
  * @protected
  */
-os.ui.FeatureInfoCtrl.prototype.updateProperties = function() {
+os.ui.feature.FeatureInfoCtrl.prototype.updateProperties = function() {
   if (this.scope) {
     this.scope['description'] = false;
     this.scope['properties'] = [];
 
-    var feature = /** @type {ol.Feature|undefined} */ (this.scope['feature']);
+    var feature = /** @type {ol.Feature|undefined} */ (this.scope['items'][0]);
     if (feature) {
       var properties = feature.getProperties();
       var description = properties[os.data.RecordField.HTML_DESCRIPTION];
@@ -285,14 +286,14 @@ os.ui.FeatureInfoCtrl.prototype.updateProperties = function() {
  * Allow ordering
  * @param {string} key
  */
-os.ui.FeatureInfoCtrl.prototype.order = function(key) {
+os.ui.feature.FeatureInfoCtrl.prototype.order = function(key) {
   this.scope['columnToOrder'] = key;
   this.scope['reverse'] = !this.scope['reverse'];
 };
 goog.exportProperty(
-    os.ui.FeatureInfoCtrl.prototype,
+    os.ui.feature.FeatureInfoCtrl.prototype,
     'order',
-    os.ui.FeatureInfoCtrl.prototype.order);
+    os.ui.feature.FeatureInfoCtrl.prototype.order);
 
 
 /**
@@ -300,7 +301,7 @@ goog.exportProperty(
  * @param {Event} event
  * @param {Object} property
  */
-os.ui.FeatureInfoCtrl.prototype.select = function(event, property) {
+os.ui.feature.FeatureInfoCtrl.prototype.select = function(event, property) {
   if (this.scope['selected'] == property && event.ctrlKey) {
     this.scope['selected'] = null;
   } else {
@@ -308,96 +309,32 @@ os.ui.FeatureInfoCtrl.prototype.select = function(event, property) {
   }
 };
 goog.exportProperty(
-    os.ui.FeatureInfoCtrl.prototype,
+    os.ui.feature.FeatureInfoCtrl.prototype,
     'select',
-    os.ui.FeatureInfoCtrl.prototype.select);
+    os.ui.feature.FeatureInfoCtrl.prototype.select);
 
 
 /**
  * Switches to the properties tab.
  * @param {angular.Scope.Event} event
  */
-os.ui.FeatureInfoCtrl.prototype.showProperties = function(event) {
+os.ui.feature.FeatureInfoCtrl.prototype.showProperties = function(event) {
   this.scope['tab'] = 'properties';
 };
 goog.exportProperty(
-    os.ui.FeatureInfoCtrl.prototype,
+    os.ui.feature.FeatureInfoCtrl.prototype,
     'showProperties',
-    os.ui.FeatureInfoCtrl.prototype.showProperties);
+    os.ui.feature.FeatureInfoCtrl.prototype.showProperties);
 
 
 /**
  * Switches to the description tab.
  * @param {angular.Scope.Event} event
  */
-os.ui.FeatureInfoCtrl.prototype.showDescription = function(event) {
+os.ui.feature.FeatureInfoCtrl.prototype.showDescription = function(event) {
   this.scope['tab'] = 'description';
 };
 goog.exportProperty(
-    os.ui.FeatureInfoCtrl.prototype,
+    os.ui.feature.FeatureInfoCtrl.prototype,
     'showDescription',
-    os.ui.FeatureInfoCtrl.prototype.showDescription);
-
-
-/**
- * Launches a feature info window for the provided feature.
- * @param {!ol.Feature} feature The feature
- * @param {string=} opt_titleDetail Title of the containing layer
- * @param {string=} opt_altDirective An alternative directive name to use to display feature information.
- */
-os.ui.launchFeatureInfo = function(feature, opt_titleDetail, opt_altDirective) {
-  var winLabel = opt_titleDetail || 'Feature Info';
-  var directive = opt_altDirective || 'featureinfo';
-  var createNewWindow = false;
-
-  var windowId = 'featureInfo';
-  if (os.ui.window.exists(windowId)) {
-    var win = document.querySelector('.window#' + windowId);
-    var featureInfoType = win.querySelector('.window-wrapper');
-    var featureInfoTypeChild = goog.dom.getFirstElementChild(featureInfoType);
-    if (featureInfoTypeChild.tagName.toLowerCase().indexOf(directive.toLowerCase()) === 0) {
-      // update the existing window
-      var winScope = angular.element(goog.dom.getFirstElementChild(win)).scope();
-      winScope['label'] = winLabel;
-
-      var scope = angular.element(win).find('.js-feature-info').scope();
-      if (scope) {
-        scope['feature'] = feature;
-        os.ui.apply(scope);
-      }
-      os.ui.window.bringToFront(windowId);
-    } else {
-      os.ui.window.close(angular.element(win));
-      createNewWindow = true;
-    }
-  } else {
-    createNewWindow = true;
-  }
-
-  if (createNewWindow) {
-    // create a new window
-    var scopeOptions = {
-      'feature': feature
-    };
-
-    // don't constrain the max width/height since content varies widely per feature
-    var windowOptions = {
-      'id': windowId,
-      'label': winLabel,
-      'icon': 'fa fa-map-marker lt-blue-icon',
-      'key': 'featureinfo',
-      'x': 'center',
-      'y': 'center',
-      'width': 450,
-      'min-width': 200,
-      'max-width': 0,
-      'height': 350,
-      'min-height': 200,
-      'max-height': 0,
-      'show-close': true
-    };
-
-    var template = '<' + directive + ' feature="feature"></' + directive + '>';
-    os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
-  }
-};
+    os.ui.feature.FeatureInfoCtrl.prototype.showDescription);
