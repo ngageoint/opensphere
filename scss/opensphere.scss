@@ -7,10 +7,11 @@
 @import 'os/mixins';
 
 // Opensphere
+@import 'os/actionmenuitemlist';
 @import 'os/animations';
 @import 'os/colorpalette';
-@import 'os/datetime';
 @import 'os/datepanel';
+@import 'os/datetime';
 @import 'os/glyph';
 @import 'os/iconpicker';
 @import 'os/loading';
@@ -23,7 +24,6 @@
 @import 'os/overrides_select2';
 @import 'os/overrides_simplemde';
 @import 'os/overrides_slickgrid';
-@import 'os/actionmenuitemlist';
 @import 'os/searchresults';
 @import 'os/timeline';
 @import 'os/timelinepanel';
