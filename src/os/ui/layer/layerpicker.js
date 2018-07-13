@@ -86,8 +86,8 @@ os.ui.layer.LayerPickerCtrl = function($scope, $element, $timeout) {
     $scope['isRequired'] = true;
   }
 
-  $timeout(goog.bind(function() {
-    this.select2_ = $element.find('select.layer-typeahead');
+  $timeout(function() {
+    this.select2_ = $element.find('.js-layer-picker');
     this.select2_.select2({
       'placeholder': this.placeholderText_,
       'maximumSelectionSize': this.maxNumLayers_,
@@ -96,7 +96,7 @@ os.ui.layer.LayerPickerCtrl = function($scope, $element, $timeout) {
       'formatResult': formatter
     });
     this.layerSelected_();
-  }, this));
+  }.bind(this));
   this.scope_.$watch('layer', this.layerSelected_.bind(this));
   this.scope_.$watch('layers', this.layerSelected_.bind(this));
   this.scope_.$on('updateLayers', goog.bind(function() {
