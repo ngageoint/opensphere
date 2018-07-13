@@ -1253,7 +1253,7 @@ goog.exportProperty(
  * Opens the area import menu.
  */
 os.ui.query.ui.CombinatorCtrl.prototype.openImportMenu = function() {
-  var target = this.element_.find('.import-group');
+  var target = this.element_.find('.js-import-group');
   var menu = os.ui.menu.areaImport.MENU;
   if (menu && target && target.length) {
     menu.open(undefined, {

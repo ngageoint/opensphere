@@ -15,13 +15,13 @@ os.ui.filter.ui.filterNodeUIDirective = function() {
   return {
     restrict: 'AE',
     replace: true,
-    template: '<span class="glyphs pull-right slick-node-ui" ng-if="nodeUi.show()">' +
+    template: '<span ng-if="nodeUi.show()">' +
         '<span ng-if="nodeUi.canCopy()" ng-click="nodeUi.copy()">' +
-        '<i class="fa fa-copy fa-fw glyph" title="Copy"></i></span>' +
+        '<i class="fa fa-copy fa-fw c-glyph" title="Copy"></i></span>' +
         '<span ng-if="nodeUi.canEdit()" ng-click="nodeUi.edit()">' +
-        '<i class="fa fa-pencil fa-fw glyph" title="Edit"></i></span>' +
+        '<i class="fa fa-pencil fa-fw c-glyph" title="Edit"></i></span>' +
         '<span ng-click="nodeUi.remove()">' +
-        '<i class="fa fa-times fa-fw glyph glyph-remove" title="Remove"></i></span>' +
+        '<i class="fa fa-times fa-fw c-glyph text-danger" title="Remove"></i></span>' +
         '</span>',
     controller: os.ui.filter.ui.FilterNodeUICtrl,
     controllerAs: 'nodeUi'

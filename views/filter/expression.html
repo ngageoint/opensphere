@@ -1,5 +1,9 @@
-<span ng-form="exprForm" class="expression">
-  <select ng-model="expr.column" ng-options="value.name for value in columns" required/>
-  <select ng-model="expr.op" ng-options="value.getTitle() for value in ops" required/>
-  <opuiswitch items="expr.op" directive-function="exprCtrl.getUi" generic="text" expr="expr"></opuiswitch>
+<span ng-form="exprForm" class="mt-1 mb-1 u-flex-grow">
+	<div class="row-fluid">
+		<div class="col form-inline">
+		  <select class="col-4 mr-2  form-control" ng-model="expr.column" ng-options="value.name for value in columns" required/>
+		  <select class="col-4 mr-2 form-control" ng-model="expr.op" ng-options="value.getTitle() for value in ops" required/>
+		  <opuiswitch class="col-3" items="expr.op" directive-function="exprCtrl.getUi" generic="text" expr="expr"></opuiswitch>
+		</div>
+	 </div>
 </span>

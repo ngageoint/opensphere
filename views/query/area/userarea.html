@@ -1,11 +1,11 @@
 <div class="user-area-window window-content-wrapper">
-  <div class="window-content">
+  <div class="modal-body">
     <form class="user-area-form form-compact no-margin" ng-class="formClass" name="userAreaForm"
         ng-submit="ctrl.confirm()" novalidate>
       <div ng-form="areaTypeForm" class="form-compressed"
           ng-if="ctrl.canEditGeometry && ctrl.areaTypes.length > 1">
         <div class="btn-group">
-          <button class="btn btn-default" type="button" title="{{ctrl.getAreaTypeTooltip(type)}}"
+          <button class="btn btn-secondary" type="button" title="{{ctrl.getAreaTypeTooltip(type)}}"
               ng-class="ctrl.areaType == type && 'active'"
               ng-click="ctrl.areaType = type"
               ng-repeat="type in ctrl.areaTypes">
@@ -21,52 +21,54 @@
         Area edit is only available for box/polygon areas.
       </div>
 
-      <div ng-form="areaForm" class="form-compressed form-horizontal">
-        <div class="control-group">
-          <label class="control-label">Name:</label>
-          <div class="controls">
-            <input name="name" class="w-100" type="text" placeholder="Enter Name" required
-                ng-model="ctrl.name"
-                ng-trim="true">
-            <span class="help-inline" ng-if="areaForm.name.$error.required">Required</span>
+      <div ng-form="areaForm">
+        <div class="row mb-1">
+          <label class="col-form-label col-3 text-right u-required">Name</label>
+          <div class="col form-inline">
+            <input name="name" class="w-100 form-control" type="text" placeholder="Enter Name" required ng-model="ctrl.name" ng-trim="true">
+            <validation-message target="areaForm.name"></validation-message>
           </div>
         </div>
 
-        <div class="control-group" title="If coordinate parsing should force longitude first">
-          <label class="control-label">Longitude First:</label>
-          <div class="controls">
-            <input type="checkbox" name="lonFirst" ng-model="ctrl.lonFirst" ng-change="ctrl.onLonFirstChange()">
+        <div class="row mb-1">
+          <label class="col-form-label col-3 text-right">Longitude First</label>
+          <div class="col form-inline">
+            <input class="" type="checkbox" name="lonFirst" ng-model="ctrl.lonFirst" ng-change="ctrl.onLonFirstChange()">
           </div>
         </div>
 
-        <div class="user-area-bbox-form" ng-if="ctrl.areaType == 'bbox'">
-          <div class="control-group" ng-form="corner1Form">
-            <label class="control-label">Corner 1:</label>
-            <position name="corner1" geom="ctrl.corner1" order="ctrl.coordOrder" x-form="corner1Form" label="false" map-support="false" hide-hint="true"></position>
+        <div ng-if="ctrl.areaType == 'bbox'">
+          <div class="row mb-1">
+            <label class="col-form-label col-3 text-right u-required">Corner 1</label>
+            <div class="col form-inline">
+              <position name="corner1" geom="ctrl.corner1" order="ctrl.coordOrder" x-form="corner1Form" label="false" map-support="false" hide-hint="true"></position>
+            </div>
           </div>
-          <div class="control-group" ng-form="corner2Form">
-            <label class="control-label">Corner 2:</label>
-            <position name="corner2" geom="ctrl.corner2" order="ctrl.coordOrder" x-form="corner2Form" label="false" map-support="false" hide-hint="true"></position>
+          <div class="row mb-1">
+            <label class="col-form-label col-3 text-right u-required">Corner 2</label>
+            <div class="col form-inline">
+              <position name="corner2" geom="ctrl.corner2" order="ctrl.coordOrder" x-form="corner2Form" label="false" map-support="false" hide-hint="true"></position>
+            </div>
           </div>
         </div>
 
-        <div class="user-area-circle-form" ng-if="ctrl.areaType == 'circle'" ng-form="circleForm">
-          <div class="control-group">
-            <label class="control-label">Center:</label>
-            <position name="center" geom="ctrl.center" order="ctrl.coordOrder" x-form="circleForm" label="false" map-support="false" hide-hint="true"></position>
+        <div ng-if="ctrl.areaType == 'circle'" ng-form="circleForm">
+          <div class="row mb-1">
+            <label class="col-form-label col-3 text-right u-required">Center</label>
+            <div class="col form-inline">
+              <position name="center" geom="ctrl.center" order="ctrl.coordOrder" x-form="circleForm" label="false" map-support="false" hide-hint="true"></position>
+            </div>
           </div>
-          <div class="control-group">
-            <label class="control-label">Radius:</label>
-            <div class="controls">
-              <input name="radius" type="number" step="any" min="0" style="width:100px"
+          <div class="row mb-1">
+            <label class="col-form-label col-3 text-right u-required">Radius</label>
+            <div class="col form-inline">
+              <input class="form-control" name="radius" type="number" step="any" min="0"
                   ng-min="1e-16"
                   ng-model="ctrl.radius"
                   ng-change="ctrl.updateArea()"
                   ng-required="ctrl.areaType == 'circle'">
-              <select style="width: 65px;" ng-model="ctrl.radiusUnits" ng-change="ctrl.updateArea()"
-                  ng-options="unit for unit in ctrl.units"></select>
-              <span class="help-inline"
-                  ng-show="circleForm.radius.$error.required || circleForm.radius.$error.min">
+              <select class="form-control" ng-model="ctrl.radiusUnits" ng-change="ctrl.updateArea()" ng-options="unit for unit in ctrl.units"></select>
+              <span class="invalid-feedback d-block" ng-show="circleForm.radius.$error.required || circleForm.radius.$error.min">
                 Radius must be greater than zero.
               </span>
             </div>
@@ -74,23 +76,21 @@
         </div>
 
         <div class="user-area-polygon-form" ng-if="ctrl.areaType == 'polygon'" ng-form="polygonForm">
-          <div class="control-group">
-            <label class="control-label">
-              Coordinates:
-              <popover title="'Entering Coordinates'" content="ctrl.customPopoverContent" pos="'right'"></popover>
-            </label>
-            <div class="controls">
-              <textarea class="resize-vertical wide" name="coordinates" rows="5" required
+          <div class="row mb-1">
+            <label class="col-form-label col-3 text-right u-required">Coordinates</label>
+            <popover title="'Entering Coordinates'" content="ctrl.customPopoverContent" pos="'right'"></popover>
+            <div class="col">
+              <textarea class="form-control u-flex-grow" name="coordinates" rows="5" required
                   placeholder="Enter Coordinates"
                   ng-model="ctrl.coordinates"
                   ng-change="ctrl.updateArea()">
               </textarea>
-              <span class="help-inline" ng-if="ctrl.coordinates && !ctrl.area">
-                <i class="fa fa-warning orange-icon"></i>
+              <span class="invalid-feedback d-block" ng-if="ctrl.coordinates && !ctrl.area">
+                <i class="fa fa-warning text-warning"></i>
                 Coordinates must define a valid polygon.
               </span>
-              <span class="help-inline" ng-if="ctrl.numInvalidCoords && ctrl.area">
-                <i class="fa fa-warning orange-icon"></i>
+              <span class="invalid-feedback d-block" ng-if="ctrl.numInvalidCoords && ctrl.area">
+                <i class="fa fa-warning text-warning"></i>
                 <ng-pluralize count="ctrl.numInvalidCoords"
                     when="{'one': '{} coordinate could not be parsed.',
                            'other': '{} coordinates could not be parsed.'}">
@@ -105,17 +105,15 @@
       <input type="hidden" required ng-model="ctrl.area"/>
     </form>
   </div>
-  <div class="window-footer">
-    <div class="pull-right">
-      <button type="submit" class="btn btn-default" ng-click="ctrl.confirm()" ng-disabled="userAreaForm.$invalid">
-        <i class="fa fa-check lt-blue-icon"></i>
-        OK
-      </button>
-      <button type="button" class="btn btn-default" ng-click="ctrl.cancel()">
-        <i class="fa fa-ban red-icon"></i>
-        Cancel
-      </button>
-    </div>
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-primary" ng-click="ctrl.confirm()" ng-disabled="userAreaForm.$invalid">
+      <i class="fa fa-check"></i>
+      OK
+    </button>
+    <button type="button" class="btn btn-secondary" ng-click="ctrl.cancel()">
+      <i class="fa fa-ban"></i>
+      Cancel
+    </button>
   </div>
 </div>
 

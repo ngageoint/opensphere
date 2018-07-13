@@ -12,23 +12,23 @@ os.ui.query.ui.comboNodeUIDirective = function() {
   return {
     restrict: 'AE',
     replace: true,
-    template: '<span class="pull-right slick-node-ui"">' +
-        '<span class="group" ng-if="nodeUi.isGroup()" title="Whether to pass all filters (AND) or any filter (OR)">' +
-        '<span class="glyph" style="text-decoration:underline;" ng-click="nodeUi.toggleGroup()">' +
-        '{{nodeUi.group ? "All (AND)" : "Any (OR)"}}</span>' +
+    template: '<span class="float-right"">' +
+        '<span ng-if="nodeUi.isGroup()" title="Whether to pass all filters (AND) or any filter (OR)">' +
+        '<span><select class="form-control" ng-model="nodeUi.activeGroup" ng-change="nodeUi.toggleGroup()"' +
+        'ng-options="item as item for item in nodeUi.groups"/></span>' +
         '</span>' +
-        '<span class="glyphs">' +
+        '<span>' +
         '<span ng-if="nodeUi.isArea() && nodeUi.isEnabled()" ng-click="nodeUi.toggleQuery()" title="' +
         'Toggles between querying and excluding the area">' +
-        '<i class="fa fa-fw glyph" ng-class="{\'fa-ban red-icon\': !nodeUi.include, \'fa-circle-o yellow-icon\'' +
+        '<i class="fa fa-fw c-glyph" ng-class="{\'fa-ban text-danger\': !nodeUi.include, \'fa-circle-o text-warning\'' +
         ': nodeUi.include}"></i>' +
         '</span>' +
         '<span ng-if="nodeUi.isFilter() && nodeUi.showCopy()" ng-click="nodeUi.copy()">' +
-        '<i class="fa fa-copy fa-fw glyph" title="Copy"></i></span>' +
+        '<i class="fa fa-copy fa-fw c-glyph" title="Copy"></i></span>' +
         '<span ng-if="nodeUi.isFilter() || nodeUi.isArea()" ng-click="nodeUi.edit()">' +
-        '<i class="fa fa-pencil fa-fw glyph" title="Edit"></i></span>' +
+        '<i class="fa fa-pencil fa-fw c-glyph" title="Edit"></i></span>' +
         '<span ng-if="nodeUi.isFilter() || nodeUi.isArea()" ng-click="nodeUi.remove()">' +
-        '<i class="fa fa-times fa-fw glyph glyph-remove" title="Remove"></i></span>' +
+        '<i class="fa fa-times fa-fw text-danger c-glyph" title="Remove"></i></span>' +
         '</span></span>',
     controller: os.ui.query.ui.ComboNodeUICtrl,
     controllerAs: 'nodeUi'
@@ -64,6 +64,8 @@ os.ui.query.ui.ComboNodeUICtrl = function($scope, $element) {
   this.node_ = $scope['item'];
 
   this['group'] = this.getFilterGroup();
+  this['activeGroup'] =
+    this['group'] ? os.ui.query.ui.ComboNodeUICtrl.GROUPS[0] : os.ui.query.ui.ComboNodeUICtrl.GROUPS[1];
   this['include'] = this.getInclude();
 
   var entry = this.getEntry();
@@ -71,8 +73,22 @@ os.ui.query.ui.ComboNodeUICtrl = function($scope, $element) {
     entry['filterGroup'] = this['group'];
   }
 
+  this['groups'] = os.ui.query.ui.ComboNodeUICtrl.GROUPS;
+
   $scope.$on('$destroy', this.onDestroy_.bind(this));
 };
+
+
+/**
+ * Available groupings for filter grouping nodes.
+ * Not is not included because a node can be unchecked to achieve the same thing.
+ * @type {Array<string>}
+ * @const
+ */
+os.ui.query.ui.ComboNodeUICtrl.GROUPS = [
+  'All (AND)',
+  'Any (OR)'
+];
 
 
 /**

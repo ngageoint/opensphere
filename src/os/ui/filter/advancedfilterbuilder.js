@@ -289,9 +289,7 @@ os.ui.filter.AdvancedFilterBuilderCtrl.prototype.edit = function(opt_expr, opt_n
     'width': 750,
     'min-width': 500,
     'max-widith': 1000,
-    'height': 150,
-    'min-height': 100,
-    'max-height': 200,
+    'height': 'auto',
     'icon': 'fa fa-file',
     'modal': 'true'
   };
@@ -304,9 +302,11 @@ os.ui.filter.AdvancedFilterBuilderCtrl.prototype.edit = function(opt_expr, opt_n
     'confirmCallback': confirmCallback,
     'cancelCallback': this.onEditComplete_.bind(this),
     'yesText': 'OK',
-    'yesIcon': 'btn-icon fa fa-check color-add',
+    'yesIcon': 'fa fa-check',
+    'yesButtonClass': 'btn-primary',
     'noText': 'Cancel',
-    'noIcon': 'btn-icon fa fa-ban red-icon',
+    'noIcon': 'fa fa-ban',
+    'noButtonClass': 'btn-secondary',
     'expr': opt_expr,
     'columns': this.scope_['columns']
   };

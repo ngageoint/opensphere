@@ -795,7 +795,7 @@ os.ui.query.AreaManager.save = function(feature, opt_columns) {
     'x': 'center',
     'y': 'center',
     'width': 400,
-    'height': columns ? 245 : 225,
+    'height': 'auto',
     'show-close': true,
     'modal': true
   };
