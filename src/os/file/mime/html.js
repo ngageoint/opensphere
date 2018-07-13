@@ -23,7 +23,7 @@ os.file.mime.html.detectHtml = function(buffer, file, opt_context) {
 
   if ((file && file.getFileName() && /\.x?html?$/i.test(file.getFileName())) ||
       (file && file.getContentType() === os.file.mime.html.TYPE) ||
-      (opt_context && goog.isString(opt_context) && /^<\!doctype html/i.test(opt_context.trim()))) {
+      (opt_context && goog.isString(opt_context) && /^<(\!doctype )?html( |>)/i.test(opt_context.trim()))) {
     retVal = opt_context;
   }
 

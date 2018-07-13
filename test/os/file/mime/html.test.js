@@ -13,7 +13,9 @@ describe('os.file.mime.html', function() {
   it('should detect files that are HTML files', function() {
     os.file.mime.mock.testFiles([
       '/base/test/resources/html/sample.html',
-      '/base/test/resources/html/sample.xhtml'],
+      '/base/test/resources/html/sample.xhtml',
+      '/base/test/resources/html/no-doctype.html',
+      '/base/test/resources/html/old-doctype.html'],
         os.file.mime.mock.testYes(os.file.mime.html.TYPE));
   });
 
