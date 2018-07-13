@@ -1,6 +1,6 @@
 <div>
   <div ng-show="areas && areas.length > 0">
-    <select class="w-100 form-control" ng-model="area" ng-options="area as area.get('title') for area in areas" required="true"></select>
+    <select class="form-control" ng-model="area" ng-options="area as area.get('title') for area in areas" required="true"></select>
     <popover class="float-right" ng-if="helpTitle && helpContent" x-title="helpTitle" x-content="helpContent" x-pos="'right'"></popover>
   </div>
 
