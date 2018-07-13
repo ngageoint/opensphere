@@ -381,10 +381,8 @@ os.ui.window.stack = function(topWinId) {
     return win.id == topWinId;
   });
 
-  if (topWindowIndex > 0) {
-    var topWin = windows.splice(topWindowIndex);
-    windows.unshift(topWin);
-  }
+  var topWin = windows.splice(topWindowIndex, 1);
+  windows.unshift(topWin);
 
   var windowCategories = goog.array.bucket(windows, function(win) {
     return $($(win).children()[0]).scope()['modal'] ? 'modal' : 'standard';
