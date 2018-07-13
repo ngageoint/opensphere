@@ -14,12 +14,12 @@ os.ui.node.areaNodeUIDirective = function() {
   return {
     restrict: 'AE',
     replace: true,
-    template: '<span class="glyphs pull-right slick-node-ui" ng-if="nodeUi.show()">' +
+    template: '<span ng-if="nodeUi.show()">' +
         '<span ng-click="nodeUi.edit()">' +
-        '<i class="fa fa-fw glyph" ng-class="nodeUi.getTemp() ? \'fa-save\' : \'fa-pencil\'" ' +
+        '<i class="fa fa-fw c-glyph" ng-class="nodeUi.getTemp() ? \'fa-save\' : \'fa-pencil\'" ' +
             'title="{{nodeUi.getTemp() ? \'Save\' : \'Edit\'}}"></i></span>' +
         '<span ng-click="nodeUi.remove()">' +
-        '<i class="fa fa-times fa-fw glyph glyph-remove" title="Remove the area"></i></span>' +
+        '<i class="fa fa-times fa-fw c-glyph text-danger" title="Remove the area"></i></span>' +
         '</span>',
     controller: os.ui.node.AreaNodeUICtrl,
     controllerAs: 'nodeUi'

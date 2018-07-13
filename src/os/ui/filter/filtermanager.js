@@ -506,7 +506,7 @@ os.ui.filter.FilterManager.edit = function(layerId, layerColumns, callback, opt_
     'modal': true,
     'width': 850,
     'height': 425,
-    'icon': 'filter-icon fa fa-filter'
+    'icon': 'fa fa-filter'
   };
 
   opt_entry = opt_entry ? opt_entry.clone() : new os.filter.FilterEntry();
@@ -552,7 +552,7 @@ os.ui.filter.FilterManager.view = function(layerId, layerColumns, callback, opt_
     'modal': true,
     'width': 850,
     'height': 425,
-    'icon': 'filter-icon fa fa-filter'
+    'icon': 'fa fa-filter'
   };
 
   opt_entry = opt_entry ? opt_entry.clone() : new os.filter.FilterEntry();
@@ -586,7 +586,7 @@ os.ui.filter.FilterManager.copy = function(entry, layerId) {
     'no-scroll': false,
     'modal': true,
     'width': 500,
-    'height': 700,
+    'height': 'auto',
     'icon': 'fa fa-copy'
   };
 

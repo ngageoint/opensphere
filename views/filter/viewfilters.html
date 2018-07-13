@@ -1,23 +1,21 @@
-<div class="window-content-wrapper">
-  <div class="window-content">
-    <div ng-form name="filterForm" class="form-horizontal form-compact filterform">
-      <div class="control-group" ng-class="{'error': filterForm.title.$invalid}">
-        <label class="control-label"><b>Title:</b></label>
-        <label class="control-label" style="text-align: left">{{filters.title}}</label>
+<div class="flex-column d-flex u-flex-grow">
+  <div class="modal-body flex-column d-flex u-flex-grow">
+    <div ng-form name="filterForm" class="flex-column d-flex u-flex-grow">
+      <div class="row">
+        <label class="col-form-label col-6 text-right">Title</label>
+        <label class="col-form-label col-6 text-left">{{filters.title}}</label>
       </div>
-      <div class="control-group">
-        <label class="control-label"><b>Description:</b></label>
-        <label class="control-label" style="text-align: left">{{filters.description}}</label>
+      <div class="row">
+        <label class="col-form-label col-6 text-right">Description</label>
+        <label class="col-form-label col-6 text-left">{{filters.description}}</label>
       </div>
       <hr>
-      <div class="filter-container">
+      <div class="u-flex-grow">
         <advancedfilterbuilder root="filters.root" columns="columns" viewonly="viewonly"></advancedfilterbuilder>
       </div>
     </div>
   </div>
-  <div class="window-footer">
-    <div class="pull-right">
-      <button class="btn btn-default" ng-click="filters.cancel()"><i class="btn-icon fa fa-check green-icon"></i> OK</button>
-    </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" ng-click="filters.cancel()"><i class="fa fa-check"></i> OK</button>
   </div>
 </div>

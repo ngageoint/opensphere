@@ -279,34 +279,9 @@ os.ui.filter.AdvancedFilterBuilderCtrl.prototype.edit = function(opt_expr, opt_n
   var edit = !!opt_expr;
   this['editing'] = true;
 
-  var options = {
-    'id': os.ui.filter.AdvancedFilterBuilderCtrl.EXPR_WINDOW_ID,
-    'x': 'center',
-    'y': 'center',
-    'label': (edit ? 'Edit' : 'Add') + ' Expression',
-    'show-close': false,
-    'no-scroll': true,
-    'width': 750,
-    'min-width': 500,
-    'max-widith': 1000,
-    'height': 150,
-    'min-height': 100,
-    'max-height': 200,
-    'icon': 'fa fa-file',
-    'modal': 'true'
-  };
-
   opt_expr = opt_expr ? opt_expr.clone() : new os.ui.filter.Expression();
-  var confirmCallback = edit && opt_node ? this.doEditExpr_.bind(this, opt_expr, opt_node) :
-      this.doAddExpr_.bind(this, opt_expr);
 
   var scopeOptions = {
-    'confirmCallback': confirmCallback,
-    'cancelCallback': this.onEditComplete_.bind(this),
-    'yesText': 'OK',
-    'yesIcon': 'btn-icon fa fa-check color-add',
-    'noText': 'Cancel',
-    'noIcon': 'btn-icon fa fa-ban red-icon',
     'expr': opt_expr,
     'columns': this.scope_['columns']
   };
@@ -315,8 +290,25 @@ os.ui.filter.AdvancedFilterBuilderCtrl.prototype.edit = function(opt_expr, opt_n
     scopeOptions['columns'].sort(os.ui.filter.AdvancedFilterBuilderCtrl.sortColumns);
   }
 
-  var template = '<confirm><expression expr="expr" columns="columns"></expression></confirm>';
-  os.ui.window.create(options, template, undefined, this.scope_, undefined, scopeOptions);
+  os.ui.window.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
+    confirm: edit && opt_node ? this.doEditExpr_.bind(this, opt_expr, opt_node) : this.doAddExpr_.bind(this, opt_expr),
+    cancel: this.onEditComplete_.bind(this),
+    prompt: '<expression expr="expr" columns="columns"></expression>',
+    windowOptions: {
+      'id': os.ui.filter.AdvancedFilterBuilderCtrl.EXPR_WINDOW_ID,
+      'x': 'center',
+      'y': 'center',
+      'label': (edit ? 'Edit' : 'Add') + ' Expression',
+      'show-close': false,
+      'no-scroll': true,
+      'width': 750,
+      'min-width': 500,
+      'max-widith': 1000,
+      'height': 'auto',
+      'icon': 'fa fa-file',
+      'modal': 'true'
+    }
+  }), scopeOptions);
 };
 goog.exportProperty(
     os.ui.filter.AdvancedFilterBuilderCtrl.prototype,

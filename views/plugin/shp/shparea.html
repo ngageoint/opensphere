@@ -1,5 +1,5 @@
 <div class="window-content-wrapper">
-  <div class="window-content">
+  <div class="modal-body">
     <div ng-if="!config.zipFile" class="shpareafiles">
       <shpfilesstep></shpfilesstep>
       <hr/>
@@ -11,28 +11,26 @@
       <form name="areaForm" class="form-compact form-horizontal form-popover-help">
         <basicinfo config="config" columns="config.merge ? null : config.columns" help="areaFiles.help"></basicinfo>
 
-        <div class="control-group">
-          <label class="control-label">Merge Areas:</label>
-          <div class="controls">
+        <div class="row mt-1">
+          <label class="col-form-label col-4 text-right">Merge Areas</label>
+          <div class="col form-inline">
             <input type="checkbox" name="merge" ng-model="config.merge"/>
-            <popover class="pull-right" ng-if="areaFiles.help.merge" x-title="'Merge Areas'"
-                x-content="areaFiles.help.merge" x-pos="'right'"></popover>
+            <span class="ml-auto">
+              <popover class="float-right" ng-if="areaFiles.help.merge" x-title="'Merge Areas'" x-content="areaFiles.help.merge" x-pos="'right'"></popover>
+            </span>
           </div>
         </div>
       </form>
     </div>
   </div>
-  <div class="window-footer">
-    <div class="pull-right">
-      <button class="btn btn-default" ng-disabled="areaFiles.invalid() || areaForm.$invalid || areaFiles.loading"
-          ng-click="areaFiles.finish()">
-        <i class="fa fa-fw lt-blue-icon" ng-class="areaFiles.loading && 'fa-spin fa-spinner' || 'fa-check'"></i>
-        {{areaFiles.loading ? 'Loading' : 'OK'}}
-      </button>
-      <button class="btn btn-default" ng-click="areaFiles.close()">
-        <i class="fa fa-fw fa-ban red-icon"></i>
-        Cancel
-      </button>
-    </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" ng-disabled="areaFiles.invalid() || areaForm.$invalid || areaFiles.loading" ng-click="areaFiles.finish()">
+      <i class="fa fa-fw" ng-class="areaFiles.loading && 'fa-spin fa-spinner' || 'fa-check'"></i>
+      {{areaFiles.loading ? 'Loading' : 'OK'}}
+    </button>
+    <button class="btn btn-primary" ng-click="areaFiles.close()">
+      <i class="fa fa-fw fa-ban"></i>
+      Cancel
+    </button>
   </div>
 </div>
