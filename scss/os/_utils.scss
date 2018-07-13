@@ -103,6 +103,10 @@ $form-control-disabled-opacity: .6 !default;
   opacity: .95;
 }
 
+.u-hidden {
+  display: none;
+}
+
 
 // --------------------------------- Form Utilities --------------------------------- //
 .u-required:after {

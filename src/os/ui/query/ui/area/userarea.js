@@ -18,6 +18,7 @@ goog.require('os.ui.Module');
 goog.require('os.ui.action.ActionEvent');
 goog.require('os.ui.action.EventType');
 goog.require('os.ui.geo.positionDirective');
+goog.require('os.ui.util.validationMessageDirective');
 goog.require('os.ui.window');
 
 

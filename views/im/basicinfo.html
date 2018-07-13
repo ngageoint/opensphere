@@ -1,80 +1,97 @@
-<div class="basic-info" ng-form="basicInfoForm" style="margin-bottom:5px;">
-  <div class="control-group" ng-if="columns.length > 0">
-    <label class="control-label">Title Column:</label>
-    <div class="controls">
-      <select class="w-100" ng-model="config.titleColumn" ng-change="info.updateSampleText()"
+<div ng-form="basicInfoForm">
+  <div class="row mt-1" ng-if="columns.length > 0">
+      <label class="col-form-label col-4 text-right u-required">Title Column</label>
+    <div class="col form-inline">
+      <select class="w-100 form-control col-11" ng-model="config.titleColumn" ng-change="info.updateSampleText()"
           ng-options="col as col.name for col in columns">
         <option value="">-- Custom --</option>
       </select>
-      <popover class="pull-right" ng-if="help.titleColumn" x-title="'Title Column'" x-content="help.titleColumn" x-pos="'right'"></popover>
-
-      <div class="nowrap" ng-if="config.titleColumn" title="{{info.titleSample}}">
+      <span class="ml-auto">
+        <popover class="float-right" ng-if="help.titleColumn" x-title="'Title Column'" x-content="help.titleColumn" x-pos="'right'"></popover>
+      </span>
+    </div>
+  </div>
+  <div class="row" ng-if="columns.length > 0">
+    <label class="col-form-label col-4"></label>
+    <div class="col">
+      <div ng-if="config.titleColumn" title="{{info.titleSample}}">
         <em>Sample: {{info.titleSample}}</em>
       </div>
     </div>
   </div>
-  <div class="control-group" ng-if="!config.titleColumn"
-      ng-class="{'error':basicInfoForm.title.$invalid && basicInfoForm.title.$dirty}">
-    <label class="control-label">Title:</label>
-    <div class="controls">
-      <input class="w-100" type="text" name="title" ng-model="config.title" ng-required="true" ng-maxlength="128"/>
-      <popover class="pull-right" ng-if="help.title" x-title="'Title'" x-content="help.title" x-pos="'right'"></popover>
 
-      <span class="help-inline" ng-if="basicInfoForm.title.$error.required">Title is required!</span>
-      <span class="help-inline" ng-if="basicInfoForm.title.$error.maxlength">Title is too long!</span>
+  <div class="row mt-1" ng-if="!config.titleColumn">
+    <label class="col-form-label col-4 text-right u-required">Title</label>
+    <div class="col form-inline">
+      <input class="w-100 form-control col-11" type="text" name="title" ng-model="config.title" ng-required="true" ng-maxlength="128"/>
+      <validation-message target="basicInfoForm.title"></validation-message>
+      <span class="ml-auto">
+        <popover class="float-right" ng-if="help.title" x-title="'Title'" x-content="help.title" x-pos="'right'"></popover>
+      </span>
     </div>
   </div>
 
-  <div class="control-group" ng-if="columns.length > 0">
-    <label class="control-label">Description Column:</label>
-    <div class="controls">
-      <select class="w-100" ng-model="config.descColumn" ng-change="info.updateSampleText()"
+  <div class="row mt-1" ng-if="columns.length > 0">
+    <label class="col-form-label col-4 text-right u-required">Description Column</label>
+    <div class="col form-inline">
+      <select class="w-100 form-control col-11" ng-model="config.descColumn" ng-change="info.updateSampleText()"
           ng-options="col as col.name for col in columns">
         <option value="">-- Custom --</option>
       </select>
-      <popover class="pull-right" ng-if="help.descColumn" x-title="'Description Column'" x-content="help.descColumn" x-pos="'right'">
-      </popover>
-
-      <div class="nowrap" ng-if="config.descColumn" title="{{info.descSample}}">
+      <span class="ml-auto">
+        <popover class="float-right" ng-if="help.descColumn" x-title="'Description Column'" x-content="help.descColumn" x-pos="'right'"></popover>
+      </span>
+    </div>
+  </div>
+  <div class="row" ng-if="columns.length > 0">
+    <label class="col-form-label col-4"></label>
+    <div class="col">
+      <div ng-if="config.descColumn" title="{{info.descSample}}">
         <em>Sample: {{info.descSample}}</em>
       </div>
     </div>
   </div>
-  <div class="control-group" ng-if="!config.descColumn"
-      ng-class="{'error':basicInfoForm.description.$invalid && basicInfoForm.description.$dirty}">
-    <label class="control-label">Description:</label>
-    <div class="controls">
-      <input class="w-100" type="text" name="description" ng-model="config.description" ng-maxlength="1000"/>
-      <popover class="pull-right" ng-if="help.description" x-title="'Description'" x-content="help.description" x-pos="'right'"></popover>
 
-      <span class="help-inline" ng-if="basicInfoForm.description.$error.maxlength">Description is too long!</span>
+  <div class="row mt-1" ng-if="!config.descColumn">
+    <label class="col-form-label col-4 text-right u-required">Description</label>
+    <div class="col form-inline">
+      <input class="w-100 form-control col-11" type="text" name="description" ng-model="config.description" ng-maxlength="1000"/>
+      <validation-message target="basicInfoForm.description"></validation-message>
+      <span class="ml-auto">
+        <popover class="float-right" ng-if="help.description" x-title="'Description'" x-content="help.description" x-pos="'right'"></popover>
+      </span>
     </div>
   </div>
 
-  <div class="control-group" ng-if="columns.length > 0">
-    <label class="control-label">Tags Column:</label>
-    <div class="controls">
-      <select class="w-100" ng-model="config.tagsColumn" ng-change="info.updateSampleText()"
+  <div class="row mt-1" ng-if="columns.length > 0">
+    <label class="col-form-label col-4 text-right u-required">Tags Column</label>
+    <div class="col form-inline">
+      <select class="w-100 form-control col-11" ng-model="config.tagsColumn" ng-change="info.updateSampleText()"
           ng-options="col as col.name for col in columns">
         <option value="">-- Custom --</option>
       </select>
-      <popover class="pull-right" ng-if="help.tagsColumn" x-title="'Tags Column'" x-content="help.tagsColumn" x-pos="'right'">
-      </popover>
-
-      <div class="nowrap" ng-if="config.tagsColumn" title="{{info.tagsSample}}">
+      <span class="ml-auto">
+        <popover class="float-right" ng-if="help.tagsColumn" x-title="'Tags Column'" x-content="help.tagsColumn" x-pos="'right'"></popover>
+      </span>
+    </div>
+  </div>
+  <div class="row" ng-if="columns.length > 0">
+    <label class="col-form-label col-4"></label>
+    <div class="col">
+      <div ng-if="config.tagsColumn" title="{{info.tagsSample}}">
         <em>Sample: {{info.tagsSample}}</em>
       </div>
     </div>
   </div>
-  <div class="control-group" ng-if="!config.tagsColumn"
-      ng-class="{'error':basicInfoForm.tags.$invalid && basicInfoForm.tags.$dirty}">
-    <label class="control-label">Tags:</label>
-    <div class="controls">
-      <input class="w-100" type="text" name="tags" ng-model="config.tags" ng-maxlength="1000"
-          placeholder="e.g. UK, Airports"/>
-      <popover class="pull-right" ng-if="help.tags" x-title="'Tags'" x-content="help.tags" x-pos="'right'"></popover>
 
-      <span class="help-inline" ng-if="basicInfoForm.tags.$error.maxlength">Tags field is too long!</span>
+  <div class="row mt-1" ng-if="!config.tagsColumn">
+    <label class="col-form-label col-4 text-right u-required">Tags</label>
+    <div class="col form-inline">
+      <input class="w-100 form-control col-11" type="text" name="tags" ng-model="config.tags" ng-maxlength="1000" placeholder="e.g. UK, Airports"/>
+      <validation-message target="basicInfoForm.tags"></validation-message>
+      <span class="ml-auto">
+        <popover class="float-right" ng-if="help.tags" x-title="'Tags'" x-content="help.tags" x-pos="'right'"></popover>
+      </span>
     </div>
   </div>
 </div>
