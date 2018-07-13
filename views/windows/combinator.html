@@ -4,13 +4,13 @@
       <div class="row mb-1" ng-show="!hideLayerChooser">
         <label class="col-form-label col-3">Layer</label>
         <div class="col form-inline">
-          <select class="w-100 form-control" ng-model="layer" ng-change="comboCtrl.selectLayer(true)" ng-options="value.label for value in layers" required></select>
+          <select class="form-control" ng-model="layer" ng-change="comboCtrl.selectLayer(true)" ng-options="value.label for value in layers" required></select>
         </div>
       </div>
       <div class="row mb-1" ng-show="advanced">
         <label class="col-form-label col-3">Group By</label>
         <div class="col form-inline">
-          <select class="w-100 form-control" ng-model="order" ng-change="comboCtrl.selectGroupBy(true)" ng-options="value for value in orders"></select>
+          <select class="form-control" ng-model="order" ng-change="comboCtrl.selectGroupBy(true)" ng-options="value for value in orders"></select>
         </div>
       </div>
       <div class="w-100 d-inline-block">
@@ -30,7 +30,7 @@
       <slicktree x-data="pivots" selected="selected" multi-select="true" disposable="true"></slicktree>
     </div>
   </div>
-  <div class="modal-footer flex-shrink-0">
+  <div class="modal-footer">
     <div class="btn-group">
       <button class="btn btn-primary" ng-click="comboCtrl.apply()"><i class="fa fa-fw fa-check"></i>Apply</button>
       <button class="btn btn-secondary" ng-click="comboCtrl.close()"><i class="fa fa-fw fa-ban"></i>Close</button>
@@ -38,7 +38,7 @@
     <button class="btn btn-secondary" ng-click="comboCtrl.launchExport()" ng-disabled="comboCtrl.exportDisabled()"><i class="fa fa-download"></i> Export</button>
     <div class="js-import-group btn-group" ng-right-click="comboCtrl.openImportMenu()">
       <button class="btn btn-secondary" ng-click="comboCtrl.import()"><i class="fa fa-sign-in"></i> Import</button>
-      <button class="btn btn-secondary addon" ng-click="comboCtrl.openImportMenu()" ng-class="{active: importMenuOpen}"><i class="fa fa-chevron-down"></i></button>
+      <button class="btn btn-secondary" ng-click="comboCtrl.openImportMenu()" ng-class="{active: importMenuOpen}"><i class="fa fa-chevron-down"></i></button>
     </div>
   </div>
 </div>

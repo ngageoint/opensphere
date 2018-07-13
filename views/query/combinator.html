@@ -17,7 +17,7 @@
           </button>
         </div>
         <div>
-          <label ng-show="hideAdvanced !== 'true'" class="checkbox inline" title="Advanced mode allows more specific combinations of layers, filters, and areas">
+          <label class="checkbox inline" title="Advanced mode allows more specific combinations of layers, filters, and areas">
             <input type="checkbox" ng-model="advanced" ng-change="comboCtrl.advancedToggle(true)">
             Advanced
           </label>
@@ -31,11 +31,11 @@
       <slicktree x-data="pivots" selected="selected" multi-select="true" disposable="true"></slicktree>
     </div>
   </div>
-  <div class="modal-footer gray-footer">
+  <div class="modal-footer">
     <button class="btn btn-primary" ng-click="comboCtrl.launchExport()" ng-disabled="comboCtrl.exportDisabled()"><i class="fa fa-download"></i> Export</button>
     <div class="js-import-group btn-group" ng-right-click="comboCtrl.openImportMenu()">
       <button class="btn btn-primary" ng-click="comboCtrl.import()"><i class="fa fa-sign-in"></i> Import</button>
-      <button class="btn addon" ng-click="comboCtrl.openImportMenu()" ng-class="{active: importMenuOpen}"><i class="fa fa-chevron-down"></i></button>
+      <button class="btn" ng-click="comboCtrl.openImportMenu()" ng-class="{active: importMenuOpen}"><i class="fa fa-chevron-down"></i></button>
     </div>
   </div>
 </div>

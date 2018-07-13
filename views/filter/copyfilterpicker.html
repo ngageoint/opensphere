@@ -13,7 +13,7 @@
     </div>
   </div>
   <div>
-    <i class="fa fa-warning" ng-if="copyFilterPickerForm.$error.duplicate || copyFilterPickerForm.$error.inUse"></i>
+    <i class="fa fa-warning text-warning" ng-if="copyFilterPickerForm.$error.duplicate || copyFilterPickerForm.$error.inUse"></i>
     <span ng-if="copyFilterPickerForm.$error.duplicate" ng-bind-html="copyFilterPickerCtrl.duplicateText"></span>
     <span ng-if="!copyFilterPickerForm.$error.duplicate && copyFilterPickerForm.$error.inUse" ng-bind-html="copyFilterPickerCtrl.inUseText"></span>
   </div>
