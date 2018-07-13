@@ -100,10 +100,17 @@
     }
   }
 
+  &.hovered,
   &:hover {
     background: $success;
+    color: $component-active-color;
+
+    a {
+      color: $component-active-color;
+    }
   }
 
+  &.hovered,
   &.selected,
   &:hover {
     @each $color, $value in $theme-colors {
