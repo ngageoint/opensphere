@@ -257,23 +257,24 @@ plugin.cesium.CesiumRenderer.prototype.getPixelFromCoordinate = function(coordin
  * @inheritDoc
  */
 plugin.cesium.CesiumRenderer.prototype.forEachFeatureAtPixel = function(pixel, callback, opt_options) {
-  // NOTE: The Cesium version does not follow the full spec for forEachFeatureAtPixel. In all of our current
-  // calls, we are only concerned with the top feature. Therefore, Scene.pick() is used instead of
-  // Scene.drillPick(). If the calling method is attempting to loop over more than the top pixel, the 3D
-  // method will fail over to the OpenLayers method.
-
   if (this.olCesium_) {
     var cartesian = new Cesium.Cartesian2(pixel[0], pixel[1]);
-    var picked = /** @type {Cesium.Primitive} */ (this.olCesium_.getCesiumScene().pick(cartesian));
-    if (picked && picked.primitive) {
-      // convert primitive to feature
-      var feature = picked.primitive.olFeature;
-      var layer = picked.primitive.olLayer;
+    var primitives = /** @type {Array<Cesium.Primitive>} */ (this.olCesium_.getCesiumScene().drillPick(cartesian));
+    if (primitives && primitives.length > 0) {
+      for (var i = 0, ii = primitives.length; i < ii; i++) {
+        // convert primitive to feature
+        var primitive = primitives[i];
+        var feature = primitive.primitive.olFeature;
+        var layer = primitive.primitive.olLayer;
 
-      if (feature && layer) {
-        var layerFilter = opt_options ? opt_options.layerFilter : undefined;
-        if (!layerFilter || layerFilter(layer)) {
-          return callback(feature, layer) || null;
+        if (feature && layer) {
+          var layerFilter = opt_options ? opt_options.layerFilter : undefined;
+          if (!layerFilter || layerFilter(layer)) {
+            var value = callback(feature, layer) || null;
+            if (value) {
+              return value;
+            }
+          }
         }
       }
     }

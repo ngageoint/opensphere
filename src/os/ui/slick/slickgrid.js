@@ -163,10 +163,12 @@ os.ui.slick.SlickGridCtrl = function($scope, $element, $compile) {
    */
   this.copyLimitMsg = os.ui.slick.SlickGridCtrl.COPY_LIMIT_MSG;
 
+  // The order in which these watches are created matters. Any initial selection state on a slickgrid will be wiped
+  // out if the watch on columns is created before the watch on the selected items.
   this.destroyers.push($scope.$watch('data', this.onDataChange.bind(this)));
+  this.destroyers.push($scope.$watch('selected', this.onSelectedChange.bind(this)));
   this.destroyers.push($scope.$watch('columns', this.onColumnsChange.bind(this)));
   this.destroyers.push($scope.$watch('options', this.onOptionsChange.bind(this)));
-  this.destroyers.push($scope.$watch('selected', this.onSelectedChange.bind(this)));
   this.destroyers.push($scope.$on('$destroy', this.dispose.bind(this)));
   var unWatchSortColumn = $scope.$watch('defaultSortColumn', goog.bind(function(newVal) {
     if (newVal && goog.array.find($scope['columns'], function(col) {

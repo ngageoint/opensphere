@@ -1,5 +1,6 @@
-goog.provide('os.ui.FeatureInfoCellCtrl');
-goog.provide('os.ui.featureInfoCellDirective');
+goog.provide('os.ui.feature.FeatureInfoCellCtrl');
+goog.provide('os.ui.feature.featureInfoCellDirective');
+
 goog.require('goog.object');
 goog.require('goog.string');
 goog.require('os.defines');
@@ -17,15 +18,15 @@ goog.require('os.ui.text');
  * The featureinfo directive
  * @return {angular.Directive}
  */
-os.ui.featureInfoCellDirective = function() {
+os.ui.feature.featureInfoCellDirective = function() {
   return {
     restrict: 'E',
     scope: {
       'property': '='
     },
     replace: true,
-    templateUrl: os.ROOT + 'views/featureinfocell.html',
-    controller: os.ui.FeatureInfoCellCtrl,
+    templateUrl: os.ROOT + 'views/feature/featureinfocell.html',
+    controller: os.ui.feature.FeatureInfoCellCtrl,
     controllerAs: 'cell'
   };
 };
@@ -34,7 +35,7 @@ os.ui.featureInfoCellDirective = function() {
 /**
  * Add the directive to the module.
  */
-os.ui.Module.directive('featureinfocell', [os.ui.featureInfoCellDirective]);
+os.ui.Module.directive('featureinfocell', [os.ui.feature.featureInfoCellDirective]);
 
 
 
@@ -46,7 +47,7 @@ os.ui.Module.directive('featureinfocell', [os.ui.featureInfoCellDirective]);
  * @constructor
  * @ngInject
  */
-os.ui.FeatureInfoCellCtrl = function($scope, $element, $sce) {
+os.ui.feature.FeatureInfoCellCtrl = function($scope, $element, $sce) {
   /**
    * @type {?angular.Scope}
    * @private
@@ -80,7 +81,7 @@ os.ui.FeatureInfoCellCtrl = function($scope, $element, $sce) {
  * Clean up.
  * @private
  */
-os.ui.FeatureInfoCellCtrl.prototype.destroy_ = function() {
+os.ui.feature.FeatureInfoCellCtrl.prototype.destroy_ = function() {
   this.scope_ = null;
   this.element_ = null;
   this.sce_ = null;
@@ -91,7 +92,7 @@ os.ui.FeatureInfoCellCtrl.prototype.destroy_ = function() {
  * Setup the cell by the type
  * @private
  */
-os.ui.FeatureInfoCellCtrl.prototype.init_ = function() {
+os.ui.feature.FeatureInfoCellCtrl.prototype.init_ = function() {
   var property = this.scope_['property'];
   var value = property['value'];
   this.scope_['type'] = '';
@@ -129,19 +130,19 @@ os.ui.FeatureInfoCellCtrl.prototype.init_ = function() {
 /**
  * Show the description tab
  */
-os.ui.FeatureInfoCellCtrl.prototype.showDescription = function() {
-  this.scope_.$emit(os.ui.FeatureInfoCtrl.SHOW_DESCRIPTION);
+os.ui.feature.FeatureInfoCellCtrl.prototype.showDescription = function() {
+  this.scope_.$emit(os.ui.feature.FeatureInfoCtrl.SHOW_DESCRIPTION);
 };
 goog.exportProperty(
-    os.ui.FeatureInfoCellCtrl.prototype,
+    os.ui.feature.FeatureInfoCellCtrl.prototype,
     'showDescription',
-    os.ui.FeatureInfoCellCtrl.prototype.showDescription);
+    os.ui.feature.FeatureInfoCellCtrl.prototype.showDescription);
 
 
 /**
  * View properties
  */
-os.ui.FeatureInfoCellCtrl.prototype.viewProperties = function() {
+os.ui.feature.FeatureInfoCellCtrl.prototype.viewProperties = function() {
   var feature = /** @type {!ol.Feature} */ (this.scope_['property']['feature']);
   var properties = /** @type {!Object} */ (feature.get(os.Fields.PROPERTIES));
   var id = /** @type {!string} */ (feature.get(os.Fields.ID));
@@ -150,28 +151,28 @@ os.ui.FeatureInfoCellCtrl.prototype.viewProperties = function() {
   }
 };
 goog.exportProperty(
-    os.ui.FeatureInfoCellCtrl.prototype,
+    os.ui.feature.FeatureInfoCellCtrl.prototype,
     'viewProperties',
-    os.ui.FeatureInfoCellCtrl.prototype.viewProperties);
+    os.ui.feature.FeatureInfoCellCtrl.prototype.viewProperties);
 
 
 /**
  * Pick column action
  */
-os.ui.FeatureInfoCellCtrl.prototype.pickColumnAction = function() {
+os.ui.feature.FeatureInfoCellCtrl.prototype.pickColumnAction = function() {
   os.ui.columnactions.launchColumnActionPrompt(this.scope_['actions'],
       this.scope_['property']['value'],
       this.scope_['ca']);
 };
 goog.exportProperty(
-    os.ui.FeatureInfoCellCtrl.prototype,
+    os.ui.feature.FeatureInfoCellCtrl.prototype,
     'pickColumnAction',
-    os.ui.FeatureInfoCellCtrl.prototype.pickColumnAction);
+    os.ui.feature.FeatureInfoCellCtrl.prototype.pickColumnAction);
 
 
 /**
  * @private
  */
-os.ui.FeatureInfoCellCtrl.prototype.onDblClick_ = function() {
+os.ui.feature.FeatureInfoCellCtrl.prototype.onDblClick_ = function() {
   os.ui.text.copy(this.copyValue_);
 };

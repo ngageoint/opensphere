@@ -151,6 +151,7 @@ goog.exportProperty(os.ui.location.SimpleLocationCtrl.prototype, 'locationChange
 os.ui.location.SimpleLocationDirective = function() {
   return {
     restrict: 'EA',
+    replace: true,
     template: os.ui.location.SimpleLocationDirective.template_,
     controller: os.ui.location.SimpleLocationCtrl,
     controllerAs: 'simpleLocationCtrl',
