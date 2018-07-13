@@ -3,6 +3,7 @@ goog.provide('os.ui.filter.ui.FilterExportCtrl');
 goog.provide('os.ui.filter.ui.filterExportDirective');
 goog.require('os.ui.Module');
 goog.require('os.ui.checklistDirective');
+goog.require('os.ui.util.validationMessageDirective');
 
 
 /**
@@ -95,7 +96,7 @@ os.ui.filter.ui.launchFilterExport = function(confirm, opt_mode) {
     'x': 'center',
     'y': 'center',
     'width': '260',
-    'height': '215',
+    'height': 'auto',
     'modal': 'true',
     'show-close': 'true'
   };

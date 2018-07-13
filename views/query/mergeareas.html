@@ -1,24 +1,24 @@
-<div class="window-content-wrapper">
-  <div class="window-content area-window">
-    <form name="areaForm" class="form-horizontal form-compact form-popover-help" ng-submit="ctrl.accept()">
+<div>
+  <div class="modal-body">
+    <form name="areaForm" ng-submit="ctrl.accept()">
       <basicinfo config="config" columns="columns" help="ctrl.help"></basicinfo>
 
-      <div class="control-group" title="{{ctrl.help.replace}}">
-        <label class="control-label">Replace Areas:</label>
-        <div class="controls">
-          <input type="checkbox" class="no-margin" name="replace" ng-model="ctrl.replace"/>
-          <popover class="pull-right" ng-if="ctrl.help.replace" x-title="'Replace Areas'" x-content="ctrl.help.replace"
-              x-pos="'right'"></popover>
+      <div class="row mt-1">
+        <label class="col-form-label col-4 text-right u-required">Replace Areas</label>
+        <div class="col form-inline">
+          <input type="checkbox" class="form-control" name="replace" ng-model="ctrl.replace"/>
+          <span class="ml-auto">
+            <popover ng-if="ctrl.help.replace" x-title="'Replace Areas'" x-content="ctrl.help.replace" x-pos="'right'"></popover>
+          </span>
         </div>
       </div>
 
-      <input type="submit" style="display:none;">
+      <input type="submit" class="form-control d-none">
     </form>
   </div>
-  <div class="window-footer">
-    <div class="pull-right">
-      <button class="btn btn-default" ng-click="ctrl.accept()" ng-disabled="areaForm.$invalid"><i class="btn-icon fa fa-check color-add"></i> Save</button>
-      <button class="btn btn-default" ng-click="ctrl.close()"><i class="btn-icon fa fa-ban red-icon"></i> Cancel</button>
+  <div class="modal-footer">
+      <button class="btn btn-primary" ng-click="ctrl.accept()" ng-disabled="areaForm.$invalid"><i class="fa fa-check"></i> Save</button>
+      <button class="btn btn-secondary" ng-click="ctrl.close()"><i class="fa fa-ban"></i> Cancel</button>
     </div>
   </div>
 </div>

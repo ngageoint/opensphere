@@ -75,15 +75,13 @@ plugin.area.KMLAreaImportUI.prototype.onPreviewReady_ = function(config, event) 
   };
   var windowOptions = {
     'label': 'KML Area Import',
-    'icon': 'fa fa-sign-in lt-blue-icon',
+    'icon': 'fa fa-sign-in',
     'x': 'center',
     'y': 'center',
     'width': '450',
     'min-width': '300',
     'max-width': '800',
-    'height': '285',
-    'min-height': '285',
-    'max-height': '600',
+    'height': 'auto',
     'modal': 'true',
     'show-close': 'true'
   };

@@ -23,8 +23,8 @@ os.ui.query.ui.addFilterDirective = function() {
       'layer': '=',
       'btnText': '@'
     },
-    template: '<button class="btn btn-default" title="Add a filter" ng-disabled="!addfilterctrl.canAdd()" ' +
-        'ng-click="addfilterctrl.add()"><i class="btn-icon fa fa-plus green-icon"></i> {{btnText}}</button>',
+    template: '<button class="btn btn-primary" title="Add a filter" ng-disabled="!addfilterctrl.canAdd()" ' +
+        'ng-click="addfilterctrl.add()"><i class="fa fa-plus"></i> {{btnText}}</button>',
     controller: os.ui.query.ui.AddFilterCtrl,
     controllerAs: 'addfilterctrl'
   };

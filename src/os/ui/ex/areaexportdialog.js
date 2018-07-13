@@ -80,11 +80,11 @@ os.ui.ex.AreaExportCtrl.start = function(areas) {
   var windowOptions = {
     'id': 'areaExport',
     'label': 'Export Areas',
-    'icon': 'fa fa-download color-yellow',
+    'icon': 'fa fa-download',
     'x': 'center',
     'y': 'center',
     'width': '350',
-    'height': '250',
+    'height': 'auto',
     'show-close': 'true',
     'modal': 'true'
   };

@@ -1,19 +1,23 @@
-<div class="filterbuilder">
-  <div style="height:100%;" ng-if="!isComplex">
-    <div class="advanced-filter-buttons">
-      <button class="btn btn-default" ng-click="basicCtrl.add()" title="Adds a new expression to the filter"><i class="btn-icon fa fa-plus green-icon"></i> Add Expression</button>
-      <span style="margin-left: 30px" class="form-inline">Match:
-        <label class="radio"><input type="radio" ng-model="root.grouping" value="And">All (AND)</label>
-        <label class="radio"><input type="radio" ng-model="root.grouping" value="Or">Any (OR)</label>
-      </span>
+<div class="flex-column d-flex u-flex-grow">
+  <div class="flex-column d-flex u-flex-grow" ng-if="!isComplex">
+    <div class="row">
+      <div class="col form-inline">
+        <button class="mr-5 btn btn-primary" ng-click="basicCtrl.add()" title="Adds a new expression to the filter"><i class="fa fa-plus"></i> Add Expression</button>
+        <span class="form-inline">Match
+          <label class="ml-2"><input type="radio" ng-model="root.grouping" value="And">All (AND)</label>
+          <label class="ml-2"><input type="radio" ng-model="root.grouping" value="Or">Any (OR)</label>
+        </span>
+      </div>
     </div>
-    <div class="basic-tree" autoheight siblings=".advanced-filter-buttons">
-      <basicfiltertree x-data="root" disable-selection="true"></basicfiltertree>
+    <div class="row flex-column d-flex u-flex-grow">
+      <div class="col flex-column u-flex-grow u-overflow-y-auto">
+        <basicfiltertree x-data="root" disable-selection="true"></basicfiltertree>
+      </div>
     </div>
   </div>
-  <div ng-if="isComplex">
+  <div class="flex-column d-flex u-flex-grow" ng-if="isComplex">
     <p>
-      <i class="fa fa-exclamation-triangle font-warning"></i>
+      <i class="fa fa-exclamation-triangle text-warning"></i>
       This filter is too complex to display in basic mode. Please go to the Advanced tab.
     </p>
   </div>

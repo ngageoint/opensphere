@@ -11,14 +11,16 @@ os.ui.filter.ui.GroupNodeUIDirective = function() {
   return {
     restrict: 'AE',
     replace: true,
-    template: '<span>' +
-        '<span class="group-glyphs slick-node-ui">' +
-        '<span ng-if="!groupUi.isRoot" ng-click="groupUi.remove()">' +
-        '<i class="fa fa-times fa-fw glyph glyph-remove" title="Remove the expression"></i></span>' +
-        '</span>' +
-        '<select class="filter-select" ng-model="item.grouping"' +
-        ' ng-options="key for (key, value) in groupUi.groups" style="margin:0 0 3px 5px;"' +
+    template: '<span class="u-flex-grow form-inline">' +
+        '<span class="u-flex-grow">' +
+        '<select class="form-control" ng-model="item.grouping"' +
+        ' ng-options="key for (key, value) in groupUi.groups"' +
         ' title="Whether results can match any or all filters in the group"/>' +
+        '</span>' +
+        '<span>' +
+        '<span ng-show="!groupUi.isRoot" ng-click="groupUi.remove()">' +
+        '<i class="fa fa-times fa-fw text-danger c-glyph" title="Remove the expression"></i></span>' +
+        '</span>' +
         '</span>',
     controller: os.ui.filter.ui.GroupNodeUICtrl,
     controllerAs: 'groupUi'

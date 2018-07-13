@@ -126,6 +126,11 @@ os.ui.filter.im.FilterImportCtrl = function($scope, $element, $sce) {
    */
   this['showMatch'] = true;
 
+  /**
+   * @type {Array<string>}
+   */
+  this['groups'] = os.ui.query.ui.ComboNodeUICtrl.GROUPS;
+
   var descriptors = os.dataManager.getDescriptors();
   var filterables = [];
   for (var i = 0, ii = descriptors.length; i < ii; i++) {
