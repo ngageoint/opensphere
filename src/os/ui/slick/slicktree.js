@@ -152,7 +152,7 @@ os.ui.slick.SlickTreeCtrl = function($scope, $element, $compile) {
    * @type {string}
    * @private
    */
-  this.winLauncherClass_ = $scope['winLauncherClass'] || 'fa fa-plus';
+  this.winLauncherClass_ = $scope['winLauncherClass'] || 'fa fa-fw fa-plus';
 
   /**
    * @type {?Array}
