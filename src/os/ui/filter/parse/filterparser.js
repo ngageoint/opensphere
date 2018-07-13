@@ -32,6 +32,10 @@ os.ui.filter.parse.FilterParser = function() {
  * @inheritDoc
  */
 os.ui.filter.parse.FilterParser.prototype.setSource = function(source) {
+  if (source instanceof ArrayBuffer) {
+    source = os.file.mime.text.getText(source) || null;
+  }
+
   if (source instanceof Document) {
     this.document_ = /** @type {Document} */ (source);
   } else if (goog.isString(source)) {
