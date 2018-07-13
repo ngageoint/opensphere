@@ -210,6 +210,7 @@ os.ui.window.toggleVisibility = function(opt_id) {
   var callback = null;
   var wins = opt_id ? os.ui.window.getById(opt_id) : angular.element(os.ui.windowSelector.WINDOW + ':not(.ng-hide)');
   if (wins) {
+    wins.removeClass('d-block');
     wins.addClass('d-none');
     var modalbg = angular.element(os.ui.windowSelector.MODAL_BG);
     if (modalbg) {
@@ -221,6 +222,7 @@ os.ui.window.toggleVisibility = function(opt_id) {
      */
     callback = function() {
       wins.removeClass('d-none');
+      wins.addClass('d-block');
       if (modalbg) {
         modalbg.removeClass('d-none');
       }
@@ -379,10 +381,8 @@ os.ui.window.stack = function(topWinId) {
     return win.id == topWinId;
   });
 
-  if (topWindowIndex) {
-    var topWin = windows.splice(topWindowIndex);
-    windows.unshift(topWin);
-  }
+  var topWin = windows.splice(topWindowIndex, 1);
+  windows.unshift(topWin);
 
   var windowCategories = goog.array.bucket(windows, function(win) {
     return $($(win).children()[0]).scope()['modal'] ? 'modal' : 'standard';
@@ -461,9 +461,12 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
   $scope['windowContainer'] = $scope['windowContainer'] || os.ui.windowSelector.CONTAINER;
   var container = angular.element($scope['windowContainer']);
 
-  if ($scope['id']) {
-    $element[0].id = $scope['id'];
+  // If there is no scope id. Make one
+  if (!$scope['id']) {
+    $scope['id'] = goog.string.createUniqueString();
   }
+
+  $element[0].id = $scope['id'];
 
   if ($scope['x'] == 'center') {
     $scope['x'] = (container.width() - $scope['width']) / 2;
@@ -680,11 +683,11 @@ os.ui.WindowCtrl.prototype.removeModalBg = function() {
 
 /**
  * Moves the window on top of other windows in the application.
+ * @export
  */
 os.ui.WindowCtrl.prototype.bringToFront = function() {
   os.ui.window.stack(this.scope['id']);
 };
-goog.exportProperty(os.ui.WindowCtrl.prototype, 'bringToFront', os.ui.WindowCtrl.prototype.bringToFront);
 
 
 /**
@@ -888,7 +891,7 @@ os.ui.WindowCtrl.prototype.onToggleModal_ = function(opt_new, opt_old) {
  * @private
  */
 os.ui.WindowCtrl.prototype.updateZIndex_ = function() {
-  if (!this.scope['modal'] && this.element && this.element.css('z-index') != os.ui.windowZIndexMax.STANDARD) {
+  if (!this.scope['modal'] && this.element) {
     os.ui.window.stack(this.scope['id']);
   }
 
