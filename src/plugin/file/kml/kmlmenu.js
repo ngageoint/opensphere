@@ -2,7 +2,7 @@ goog.provide('plugin.file.kml.menu');
 
 goog.require('os.buffer');
 goog.require('os.command.FlyToExtent');
-goog.require('os.ui.featureInfoDirective');
+goog.require('os.ui.feature.featureInfoDirective');
 goog.require('os.ui.menu.layer');
 goog.require('plugin.file.kml.ui.KMLNetworkLinkNode');
 goog.require('plugin.file.kml.ui.KMLNode');
@@ -212,7 +212,7 @@ plugin.file.kml.menu.onLayerEvent_ = function(event) {
             var title = source ? source.getTitle() : undefined;
             var feature = node.getFeature();
             if (feature) {
-              os.ui.launchFeatureInfo(feature, title);
+              os.ui.feature.launchMultiFeatureInfo(feature, title);
             }
             break;
           default:
