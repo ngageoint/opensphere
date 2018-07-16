@@ -47,7 +47,7 @@ plugin.file.kml.ui.launchTreeExport = function(rootNode, opt_winLabel) {
     'icon': 'fa fa-download',
     'x': 'center',
     'y': 'center',
-    'width': 350,
+    'width': 400,
     'min-width': 300,
     'max-width': 2000,
     'height': 'auto',
