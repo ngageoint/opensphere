@@ -11,6 +11,7 @@ os.ui.nav.EventType = {
   HIDE_NAV: 'os.ui.nav.hide_nav',
   EXPAND_NAV: 'os.ui.nav.expand_nav',
   COLLAPSE_NAV: 'os.ui.nav.collapse_nav',
+  RESIZE: 'os.ui.nav.resize',
   BG_TRANSPARENT: 'os.ui.nav.bg_transparent'
 };
 
