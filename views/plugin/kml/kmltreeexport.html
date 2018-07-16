@@ -1,42 +1,37 @@
-<div class="c-kmltreeexport window-content-wrapper">
-  <div class="window-content">
-    <div class="export-dialog">
-      <form name="exportForm" class="form-horizontal form-compact">
-        <table style="width:100%">
-          <tr>
-            <td class="control-label">Name:</td>
-            <td class="w-100">
-              <input class="w-100" type="text" name="title" ng-model="treeExport.title" ng-maxlength="200" required/>
-              <span class="help-inline" ng-show="exportForm.title.$error.required">Required!</span>
-              <span class="help-inline" ng-show="exportForm.title.$error.maxlength">Title is too long!</span>
-            </td>
-          </tr>
-          <tr>
-            <td class="control-label">Save to:</td>
-            <td class="w-100">
-              <select class="w-100" ng-model="treeExport.persister"
-                  ng-options="value as key for (key, value) in treeExport.persisters"/>
-            </td>
-          </tr>
-        </table>
+<div class="d-flex flex-column u-flex-grow">
+  <div class="modal-body">
+    <form name="exportForm">
 
-        <h6>KML Options</h6>
-        <div class="well export-ui-container">
-          <kmlexport exporter="treeExport.exporter"></kmlexport>
+      <div class="d-flex flex-row form-group">
+        <label class="col-3 col-form-label text-right">Name</label>
+        <div class="col">
+          <input class="form-control" type="text" name="title" ng-model="treeExport.title" ng-maxlength="200" required/>
+          <validation-message target="exportForm.title"></validation-message>
         </div>
-      </form>
-    </div>
+      </div>
+
+      <div class="d-flex flex-row form-group">
+        <label class="col-3 col-form-label text-right">Save To</label>
+        <div class="col">
+          <select class="form-control" ng-model="treeExport.persister" ng-options="value as key for (key, value) in treeExport.persisters"/>
+        </div>
+      </div>
+
+      <h5 class="mt-3 text-center">KML Options</h5>
+      <div class=".js-export-ui__container col-10 offset-2">
+        <kmlexport exporter="treeExport.exporter"></kmlexport>
+      </div>
+    </form>
   </div>
-  <div class="window-footer">
-    <div class="pull-right">
-      <button class="btn btn-default" ng-click="treeExport.confirm()" ng-disabled="exportForm.$invalid">
-        <i class="fa fa-check lt-blue-icon"></i>
-        OK
-      </button>
-      <button class="btn btn-default" ng-click="treeExport.cancel()">
-        <i class="fa fa-ban red-icon"></i>
-        Cancel
-      </button>
-    </div>
-  </div>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-primary" ng-click="treeExport.confirm()" ng-disabled="exportForm.$invalid">
+    <i class="fa fa-check"></i>
+    OK
+  </button>
+  <button class="btn btn-secondary" ng-click="treeExport.cancel()">
+    <i class="fa fa-ban"></i>
+    Cancel
+  </button>
+</div>
 </div>

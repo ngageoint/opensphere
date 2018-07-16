@@ -2,5 +2,6 @@
   <span ng-if="target.$error.required">Required!</span>
   <span ng-if="target.$error.maxlength">Too long!</span>
   <span ng-if="target.$error.number">Input must be a number!</span>
-  <span ng-if="target.$error.unique">Already exists!</span>
+  <span ng-if="target.$error.unique || target.$error.exists">Already exists!</span>
+  <span ng-if="target.tags.$error.maxlength">Tags are too long!</span>
 </span>

@@ -84,7 +84,7 @@ goog.inherits(os.ui.ex.ExportCtrl, os.ui.file.ExportDialogCtrl);
  * @inheritDoc
  */
 os.ui.ex.ExportCtrl.prototype.getCustomOptions = function() {
-  return '<h6>Sources to Export</h6>' +
+  return '<h5 class="mt-3 text-center">Sources to Export</h5>' +
       '<exportoptions init-sources="initSources" allow-multiple="allowMultiple" show-labels="showLabels">' +
       '</exportoptions>';
 };
@@ -165,10 +165,10 @@ os.ui.ex.startExport = function(opt_sources) {
       'icon': 'fa fa-download',
       'x': 'center',
       'y': 'center',
-      'width': '350',
+      'width': '400',
       'min-width': '300',
       'max-width': '800',
-      'height': '400',
+      'height': 'auto',
       'min-height': '250',
       'max-height': '600',
       'show-close': 'true'

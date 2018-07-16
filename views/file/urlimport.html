@@ -2,7 +2,7 @@
   <div class="modal-body container h-100">
     <form name="urlForm" ng-submit="urlImport.accept()">
       <div class="form-group m-0" data-ng-class="{'error': urlForm.url.$invalid && urlForm.url.$dirty}">
-        <label for="url">Enter a URL:</label>
+        <label for="url">Enter a URL</label>
         <input class="form-control c-url-input" type="text" name="url" ng-model="urlImport.url" ng-required="true" ng-maxlength="1000"/>
         <validation-message target="urlForm.url"></validation-message>
       </div>
