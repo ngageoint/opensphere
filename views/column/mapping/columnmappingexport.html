@@ -34,9 +34,12 @@
     </form>
   </div>
 
-  <div class="modal-footer">
-    Exporting {{cmExportCtrl.exportType == 'all' ? mappings.length : selectedMappings.length}} {{(cmExportCtrl.exportType ==
-    'all' ? mappings.length : selectedMappings.length) === 1 ? 'Column Association.' : 'Column Associations.'}}
+  <div class="modal-footer flex-row justify-content-between">
+    <div>
+      Exporting {{cmExportCtrl.exportType == 'all' ? mappings.length : selectedMappings.length}} {{(cmExportCtrl.exportType ==
+      'all' ? mappings.length : selectedMappings.length) === 1 ? 'Column Association.' : 'Column Associations.'}}
+    </div>
+    <div>
       <button class="btn btn-primary" ng-click="cmExportCtrl.accept()" ng-disabled="cmExportForm.$invalid">
         <i class="fa fa-check"></i>
         OK
@@ -45,6 +48,7 @@
         <i class="fa fa-ban"></i>
         Cancel
       </button>
+    </div>
   </div>
 
 </div>
