@@ -1,5 +1,6 @@
 goog.provide('os.ui.NavBarCtrl');
 goog.provide('os.ui.NavBarEvents');
+goog.require('goog.events.Event');
 goog.require('os.ui.nav.EventType');
 
 
@@ -22,7 +23,7 @@ os.ui.NavBarCtrl = function($scope, $element) {
    * @type {?angular.JQLite}
    * @private
    */
-  this.element = $element;
+  this.element_ = $element;
 
   /**
    * Backfill for scrolled transparent navbar
@@ -44,6 +45,15 @@ os.ui.NavBarCtrl = function($scope, $element) {
   goog.events.listen(window, goog.events.EventType.SCROLL, this.formatNav_, false, this);
   os.dispatcher.listen(os.ui.nav.EventType.HIDE_NAV, this.onHideNavbar_, false, this);
   os.dispatcher.listen(os.ui.nav.EventType.BG_TRANSPARENT, this.setTransparent_.bind(this));
+
+  /**
+   * @type {Function}
+   * @private
+   */
+  this.resizeFn_ = this.onResize_.bind(this);
+
+  $element.resize(this.resizeFn_);
+
   $scope.$on('$destroy', this.destroy.bind(this));
 };
 
@@ -58,7 +68,7 @@ os.ui.NavBarCtrl.prototype.destroy = function() {
   os.dispatcher.unlisten(os.ui.nav.EventType.BG_TRANSPARENT, this.setTransparent_, false, this);
 
   this.scope = null;
-  this.element = null;
+  this.element_ = null;
 };
 
 
@@ -100,9 +110,17 @@ os.ui.NavBarCtrl.prototype.setTransparent_ = function(event) {
  */
 os.ui.NavBarCtrl.prototype.getNavContentSize = function() {
   var size = 0;
-  this.element.find('.nav-item').each(function(el) {
+  this.element_.find('.nav-item').each(function(el) {
     size += $(this).outerWidth(true);
   });
 
   return size;
+};
+
+
+/**
+ * @private
+ */
+os.ui.NavBarCtrl.prototype.onResize_ = function() {
+  os.dispatcher.dispatchEvent(new goog.events.Event(os.ui.nav.EventType.RESIZE));
 };
