@@ -25,6 +25,7 @@ goog.require('os.style');
 goog.require('os.style.label');
 goog.require('os.ui.Icons');
 goog.require('os.ui.feature.featureInfoDirective');
+goog.require('os.ui.feature.multiFeatureInfoDirective');
 goog.require('os.ui.layer.vectorLayerUIDirective');
 goog.require('os.ui.node.defaultLayerNodeUIDirective');
 goog.require('os.ui.renamelayer');
