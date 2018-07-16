@@ -1,5 +1,6 @@
 goog.provide('os.ui.NavBarCtrl');
 goog.provide('os.ui.NavBarEvents');
+goog.require('goog.events.Event');
 goog.require('os.ui.nav.EventType');
 
 
