@@ -182,11 +182,11 @@ os.ui.column.mapping.ColumnMappingSettingsCtrl.prototype.export = function() {
 
   var windowOptions = {
     'label': 'Export Column Associations',
-    'icon': 'fa fa-download color-yellow',
+    'icon': 'fa fa-download',
     'x': 'center',
     'y': 'center',
     'width': 360,
-    'height': 230,
+    'height': 'auto',
     'show-close': 'true',
     'modal': 'true'
   };
