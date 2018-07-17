@@ -85,6 +85,11 @@ os.ui.util.AutoVHeightCtrl = function($scope, $element, $injector) {
     $(siblings).resize(this.resizeFn_);
   }
 
+  // add resize to common elements
+  goog.object.getValues(os.ui.windowCommonElements).forEach(function(sibling) {
+    $(/** @type {string} */ (sibling)).resize(this.resizeFn_);
+  }.bind(this));
+
   // there are some situations where resize won't fire on creation, particularly when using IE or when swapping DOM
   // elements with ng-if. this will make sure it fires as soon as Angular is done manipulating the DOM.
   os.ui.waitForAngular(this.onResize_.bind(this));
