@@ -491,6 +491,12 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
       // make sure the window gets positioned eventually. windows should fire a os.ui.WindowEventType.READY event to
       // indicate they are initialized and ready to be positioned.
       readyPromise = $timeout(function() {
+        // TODO remove this before bs4 gets delivered
+        os.alertManager.sendAlert('WINDOW_READY_EVENT_MISSING FOR ' + $scope['label'],
+            os.alert.AlertEventSeverity.INFO);
+        os.alertManager.sendAlert('WINDOW_READY_EVENT_MISSING FOR ' + $scope['label'],
+            os.alert.AlertEventSeverity.WARNING);
+        os.alertManager.sendAlert('WINDOW_READY_EVENT_MISSING FOR ' + $scope['label']);
         readyOff();
         onWindowReady();
       }, 1000);
