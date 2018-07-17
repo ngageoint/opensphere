@@ -29,6 +29,17 @@ $form-control-disabled-opacity: .6 !default;
   }
 }
 
+// How bootstrap does box-sizing breaks 3rd party libraries box sizing. This technique allows slickgrid to work
+html {
+  box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
 // --------------------------------- Misc Utilities --------------------------------- //
 .u-pointer-events-all {
   pointer-events: all;
