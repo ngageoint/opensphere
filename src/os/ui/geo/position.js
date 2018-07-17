@@ -54,6 +54,7 @@ os.ui.geo.positionDirective = function() {
       'mapSupport': '@',
       'name': '@',
       'hideHint': '=',
+      'showLabel': '=?',
       'bulk': '=?',
       'col': '=?'
     },
@@ -93,7 +94,7 @@ os.ui.geo.PositionCtrl = function($scope, $element) {
   /**
    * @type {string}
    */
-  this['label'] = goog.isDef($scope['label']) ? $scope['label'] : 'Position:';
+  this['label'] = goog.isDef($scope['label']) ? $scope['label'] : 'Position';
   if (this['label'] == 'false') {
     this['label'] = null;
   }
@@ -112,6 +113,8 @@ os.ui.geo.PositionCtrl = function($scope, $element) {
    * @type {number}
    */
   this.precision = Math.pow(10, os.ui.geo.PositionCtrl.DEFAULT_COORD_PRECISION);
+
+  this['showLabel'] = goog.isDefAndNotNull(this.scope_['showLabel']) ? this.scope_['showLabel'] : true;
 
   /**
    * @type {string}
