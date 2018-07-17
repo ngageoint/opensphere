@@ -1721,9 +1721,10 @@ os.geo.padCoordinate = function(n, opt_isLon, opt_precision) {
  * @param {number} coordinate The coordinate
  * @param {boolean=} opt_isLon If the coordinate is a longitudinal value
  * @param {boolean=} opt_symbols If symbols should be displayed
+ * @param {number=} opt_decimalSeconds Number of decimals to display for seconds, default is 2
  * @return {string} The formatted coordinate
  */
-os.geo.toSexagesimal = function(coordinate, opt_isLon, opt_symbols) {
+os.geo.toSexagesimal = function(coordinate, opt_isLon, opt_symbols, opt_decimalSeconds) {
   var isLon = goog.isDef(opt_isLon) ? opt_isLon : true;
   var symbols = goog.isDef(opt_symbols) ? opt_symbols : true;
   var isNegative = coordinate < 0;
@@ -1734,9 +1735,10 @@ os.geo.toSexagesimal = function(coordinate, opt_isLon, opt_symbols) {
 
   return goog.string.buildString(os.geo.padCoordinate(Math.abs(degrees), isLon), (symbols ? '° ' : ''),
       os.geo.padCoordinate(minutes), (symbols ? '\' ' : ''),
-      os.geo.padCoordinate(seconds, false, 2), (symbols ? '"' : ''),
-      (symbols ? ' ' : ''), (isLon ? (isNegative ? 'W' : 'E') : (isNegative ? 'S' : 'N')));
+      os.geo.padCoordinate(seconds, false, goog.isDefAndNotNull(opt_decimalSeconds) ? opt_decimalSeconds : 2),
+      (symbols ? '"' : ''), (symbols ? ' ' : ''), (isLon ? (isNegative ? 'W' : 'E') : (isNegative ? 'S' : 'N')));
 };
+
 
 /**
  * Parses a coordinate value into Degrees Decimal Minutes (DDM) format.
