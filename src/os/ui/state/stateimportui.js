@@ -36,6 +36,7 @@ os.ui.state.StateImportUI.prototype.launchUI = function(file, opt_config) {
 
   var rawState = null;
 
+  file.convertContentToString();
   var content = file.getContent();
   var contentType = file.getContentType();
   if (content) {
