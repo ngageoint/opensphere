@@ -822,17 +822,17 @@ os.source.Vector.prototype.processColumns = function(opt_silent) {
 
       // update the column type based on the data
       if (!goog.object.isEmpty(this.stats_)) {
-        var types = this.stats_[column.name];
+        var types = this.stats_[column['name']];
 
         if (types) {
           // ignore the empty data
           goog.object.remove(types, 'empty');
 
           if (goog.object.getCount(types) == 1) {
-            column.type = goog.object.getAnyKey(types);
+            column['type'] = goog.object.getAnyKey(types);
           } else if (goog.object.getCount(types) == 2) {
             if (goog.object.containsKey(types, 'integer') && goog.object.containsKey(types, 'decimal')) {
-              column.type = 'decimal';
+              column['type'] = 'decimal';
             }
           }
         }
