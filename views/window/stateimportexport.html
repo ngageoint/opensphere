@@ -14,9 +14,7 @@
         <label for="persister" class="col-3 col-form-label text-right">Name</label>
         <div class="col">
           <input type="text" class="form-control" name="title" statetitle ng-model="title" ng-required="true" ng-maxlength="500"/>
-          <div class="invalid-feedback" ng-show="form.title.$invalid && !form.title.$error.required && !form.title.$error.maxlength">This name has already been used. Please try another.</div>
-          <div class="invalid-feedback" ng-show="form.title.$error.maxlength">Name is too long!</div>
-          <div class="invalid-feedback" ng-show="form.title.$error.required">Required</div>
+          <validationmessage target="form.title"></validationmessage>
         </div>
       </div>
 
@@ -24,7 +22,7 @@
         <label for="desc" class="col-3 col-form-label text-right">Description</label>
         <div class="col">
           <input type="text" name="desc" class="form-control" ng-model="description" ng-maxlength="4000" placeholder="Add a custom description"/>
-          <div class="invalid-feedback" ng-show="form.desc.$error.maxlength">Description is too long!</div>
+          <validationmessage target="form.desc"></validationmessage>
         </div>
       </div>
 
@@ -32,7 +30,7 @@
         <label for="tags" class="col-3 col-form-label text-right">Tags</label>
         <div class="col">
           <input type="text" name="tags" class="form-control" ng-model="tags" ng-maxlength="1000" placeholder="Tags organize states: e.g. states, population"/>
-          <div class="invalid-feedback" ng-show="form.tags.$error.maxlength">Tags field is too long!</div>
+          <validationmessage target="form.tags"></validationmessage>
         </div>
       </div>
 
