@@ -43,7 +43,8 @@ os.net.URLModifier.configure = function(options) {
  * @inheritDoc
  */
 os.net.URLModifier.prototype.modify = function(uri) {
-  var url = uri.toString();
+  // search patterns are generally given unencoded
+  var url = decodeURIComponent(uri.toString());
   var list = os.net.URLModifier.replace_;
 
   for (var i = 0, n = list.length; i < n; i++) {
