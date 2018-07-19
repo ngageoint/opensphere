@@ -3,6 +3,7 @@ goog.provide('plugin.position.PositionInteraction');
 goog.require('ol.events.condition');
 goog.require('ol.interaction.Interaction');
 goog.require('os.I3DSupport');
+goog.require('os.implements');
 goog.require('os.metrics.Metrics');
 goog.require('os.metrics.keys');
 
@@ -22,6 +23,7 @@ plugin.position.PositionInteraction = function() {
   this.condition_ = goog.functions.and(ol.events.condition.noModifierKeys, ol.events.condition.targetNotEditable);
 };
 goog.inherits(plugin.position.PositionInteraction, ol.interaction.Interaction);
+os.implements(plugin.position.PositionInteraction, os.I3DSupport.ID);
 
 
 /**
