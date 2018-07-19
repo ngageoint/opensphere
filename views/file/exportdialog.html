@@ -3,21 +3,21 @@
     <form name="exportForm">
 
       <div class="d-flex flex-row form-group">
-        <label class="col-3 col-form-label text-right">Name</label>
+        <label class="col-3 col-form-label text-right u-required">Name</label>
         <div class="col">
           <input class="form-control" type="text" name="title" ng-model="options.title" ng-maxlength="200" required/>
           <validation-message target="exportForm.title"></validation-message>
         </div>
       </div>
 
-      <div ng-show="exportdialog.exporters.persisters > 0" class="d-flex flex-row form-group">
+      <div class="d-flex flex-row form-group">
         <label class="col-3 col-form-label text-right">Save To</label>
         <div class="col">
           <select class="form-control" ng-model="persister" ng-options="value as key for (key, value) in exportdialog.persisters" />
         </div>
       </div>
 
-      <div ng-show="exportdialog.exporters.length > 0" class="d-flex flex-row form-group">
+      <div class="d-flex flex-row form-group">
         <label class="col-3 col-form-label text-right">Type</label>
         <div class="col">
           <select class="form-control" ng-model="exporter" ng-options="value as key for (key, value) in exportdialog.exporters" />

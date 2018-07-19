@@ -3,7 +3,7 @@
     <form name="exportForm">
 
       <div class="d-flex flex-row form-group">
-        <label class="col-3 col-form-label text-right">Name</label>
+        <label class="col-3 col-form-label text-right u-required">Name</label>
         <div class="col">
           <input class="form-control" type="text" name="title" required ng-model="ctrl.fileName" ng-maxlength="200" />
           <validation-message target="exportForm.title"></validation-message>
