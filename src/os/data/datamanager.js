@@ -169,14 +169,12 @@ os.data.DataManager.prototype.createProvider = function(type) {
 
     if (type in this.providerTypes_) {
       var dp = null;
-      try {
-        // check if the provider is a singleton
-        dp = this.providerTypes_[type].clazz.getInstance();
-      } catch (e) {
-      }
+      var clazz = this.providerTypes_[type].clazz;
 
-      if (!dp) {
-        dp = /** @type {os.data.IDataProvider} */ (new this.providerTypes_[type].clazz());
+      if (clazz.getInstance) {
+        dp = clazz.getInstance();
+      } else {
+        dp = /** @type {os.data.IDataProvider} */ (new clazz());
       }
 
       return dp;
