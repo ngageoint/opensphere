@@ -4,9 +4,9 @@
       <em>The current export type only supports exporting a single source.</em>
     </div>
     <div class="form-check mx-1 mb-2">
-      <input type="checkbox" name="exportoptions.useSelected" ng-model="exportoptions.useSelected" ng-change="exportoptions.updateItems()"
-        class="form-check-input">
       <label class="form-check-label" title="If checked, only selected features will be exported. If unchecked or nothing is selected, all visible features will be exported.">
+          <input type="checkbox" name="exportoptions.useSelected" ng-model="exportoptions.useSelected" ng-change="exportoptions.updateItems()"
+            class="form-check-input">
         Export Selected Features
       </label>
     </div>

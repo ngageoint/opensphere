@@ -1,7 +1,7 @@
 <div class="h-100 w-100 d-flex flex-column">
   <div class="modal-body">
     <span ng-hide="ctrl.alertArray.length">There are no alerts to view.</span>
-    <div ng-show="ctrl.alertArray.length"">
+    <div ng-show="ctrl.alertArray.length">
       <div class="alert" ng-repeat="alert in ctrl.alertArray"
           ng-class="{'Error':'alert-danger','Warning':'alert-warning','Success':'alert-success','Info':'alert-info'}[alert.severity]">
         <span class="float-right">{{alert.time}}</span>
