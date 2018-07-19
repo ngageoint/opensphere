@@ -51,7 +51,7 @@ os.ui.TextPromptCtrl = function($scope, $element) {
    * @private
    */
   this.keyHandler_ = new goog.events.KeyHandler(goog.dom.getDocument());
-  this.keyHandler_.listen(goog.events.KeyHandler.EventType.KEY, this.handlKeyEvent_, false, this);
+  this.keyHandler_.listen(goog.events.KeyHandler.EventType.KEY, this.handleKeyEvent_, false, this);
   this.delay_ = new goog.async.Delay(this.select_, 50, this);
   $scope.$emit(os.ui.WindowEventType.READY);
   $scope.$watch('value', this.onValueChange_.bind(this));
@@ -97,7 +97,7 @@ os.ui.TextPromptCtrl.prototype.select_ = function() {
  * @param {goog.events.KeyEvent} event
  * @private
  */
-os.ui.TextPromptCtrl.prototype.handlKeyEvent_ = function(event) {
+os.ui.TextPromptCtrl.prototype.handleKeyEvent_ = function(event) {
   if (event.keyCode == goog.events.KeyCodes.ESC) {
     this.close();
   }
