@@ -40,14 +40,11 @@ goog.inherits(os.ui.filter.ui.ExpressionNode, os.ui.slick.SlickTreeNode);
 
 /**
  * @return {?os.ui.filter.Expression}
+ * @export
  */
 os.ui.filter.ui.ExpressionNode.prototype.getExpression = function() {
   return this.expr_;
 };
-goog.exportProperty(
-    os.ui.filter.ui.ExpressionNode.prototype,
-    'getExpression',
-    os.ui.filter.ui.ExpressionNode.prototype.getExpression);
 
 
 /**

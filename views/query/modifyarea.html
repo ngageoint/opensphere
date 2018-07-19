@@ -1,97 +1,96 @@
-<div class="modify-area-window window-content-wrapper">
-  <div class="window-content">
-    <form class="form-compact form-horizontal form-popover-help" name="areaForm" novalidate>
-      <div class="control-group" title="{{modarea.help.area1}}">
-        <label class="control-label">Area to Modify:</label>
-        <div class="controls">
-          <div ng-show="!fixArea">
+<div>
+  <div class="modal-body">
+    <form name="areaForm" novalidate>
+      <div class="row mt-1" title="{{modarea.help.area1}}">
+        <label class="col-form-label col-4 text-right">Area to Modify</label>
+        <div class="col form-inline">
+          <div class="u-flex-grow" ng-show="!fixArea">
             <choosearea area="area" help-title="Area to Modify" help-content="{{modarea.help.area1}}"></choosearea>
           </div>
-          <span ng-show="fixArea">
+          <span class="u-flex-grow" ng-show="fixArea">
             From Map
-            <button class="btn btn-default btn-mini" ng-click="area=null" title="Clear the selected area">
-              <i class="fa fa-times red-icon"></i>
+            <button class="btn btn-sm btn-danger" ng-click="area=null" title="Clear the selected area">
+              <i class="fa fa-times"></i>
               Clear
             </button>
           </span>
         </div>
       </div>
-      <div class="control-group" title="{{modarea.help.operation}}">
-        <label class="control-label">Operation:</label>
-        <div class="controls">
-          <label class="radio inline" ng-disabled="modarea.loading" title="{{modarea.help.addOp}}">
-            <input type="radio" name="modifyOp" value="Add" ng-model="op" required="true" ng-disabled="modarea.loading">
+      <div class="row mt-1" title="{{modarea.help.operation}}">
+        <label class="col-form-label col-4 text-right">Operation</label>
+        <div class="col form-inline">
+          <label class="mr-1" ng-disabled="modarea.loading" title="{{modarea.help.addOp}}">
+            <input class="form-check-input" type="radio" name="modifyOp" value="Add" ng-model="op" required="true" ng-disabled="modarea.loading">
             Add
           </label>
-          <label class="radio inline" ng-disabled="modarea.loading" title="{{modarea.help.removeOp}}">
-            <input type="radio" name="modifyOp" value="Remove" ng-model="op" required="true" ng-disabled="modarea.loading">
+          <label class="mr-1" ng-disabled="modarea.loading" title="{{modarea.help.removeOp}}">
+            <input class="form-check-input" type="radio" name="modifyOp" value="Remove" ng-model="op" required="true" ng-disabled="modarea.loading">
             Remove
           </label>
-          <label class="radio inline" ng-disabled="modarea.loading" title="{{modarea.help.intersectOp}}">
-            <input type="radio" name="modifyOp" value="Intersect" ng-model="op" required="true" ng-disabled="modarea.loading">
+          <label class="mr-1" ng-disabled="modarea.loading" title="{{modarea.help.intersectOp}}">
+            <input class="form-check-input" type="radio" name="modifyOp" value="Intersect" ng-model="op" required="true" ng-disabled="modarea.loading">
             Intersection
           </label>
-          <popover class="pull-right" x-pos="'right'" x-title="modarea.getPopoverTitle(op)"
-              x-content="modarea.getPopoverContent(op)">
-          </popover>
-        </div>
-      </div>
-      <div class="control-group">
-        <label class="control-label">Area to {{op}}:</label>
-        <div class="controls">
-          <div ng-show="!fixTargetArea">
-            <choosearea area="targetArea" help-title="{{'Area to ' + op}}" help-content="{{modarea.help.area2}}">
-            </choosearea>
-          </div>
-          <span ng-show="fixTargetArea">
-            From Map
-            <button class="btn btn-default btn-mini" ng-click="targetArea=null" title="Clear the selected area">
-              <i class="fa fa-times red-icon"></i>
-              Clear
-            </button>
-            <popover class="pull-right" x-title="'Map Area'" x-content="modarea.help.mapArea" x-pos="'right'"></popover>
+          <span class="ml-auto">
+            <popover class="float-right" x-pos="'right'" x-title="modarea.getPopoverTitle(op)" x-content="modarea.getPopoverContent(op)"></popover>
           </span>
         </div>
       </div>
-      <div class="control-group" title="{{modarea.help.replace}}">
-        <label class="control-label">Replace Area:</label>
-        <div class="controls">
-          <input type="checkbox" class="no-margin" name="replace" ng-model="modarea.replace"/>
-          <popover class="pull-right" x-title="'Replace Area'" x-content="modarea.help.replace" x-pos="'right'"></popover>
+      <div class="row mt-1">
+        <label class="col-form-label col-4 text-right">Area to {{op}}</label>
+        <div class="col form-inline">
+          <div class="u-flex-grow" ng-show="!fixTargetArea">
+            <choosearea area="targetArea" help-title="{{'Area to ' + op}}" help-content="{{modarea.help.area2}}"></choosearea>
+          </div>
+          <span class="u-flex-grow d-flex align-items-center" ng-show="fixTargetArea">
+            From Map
+            <button class="btn btn-sm btn-danger ml-2" ng-click="targetArea=null" title="Clear the selected area">
+              <i class="fa fa-times"></i>
+              Clear
+            </button>
+            <span class="ml-auto">
+              <popover class="float-right" x-title="'Map Area'" x-content="modarea.help.mapArea" x-pos="'right'"></popover>
+            </span>
+          </span>
         </div>
       </div>
-      <div class="control-group" ng-if="!modarea.replace" title="{{modarea.help.title}}">
-        <label class="control-label">Title:</label>
-        <div class="controls">
-          <input type="text" class="w-100" name="title" ng-model="modarea.title"
-              ng-required="!modarea.replace" ng-maxlength="128" />
-          <popover class="pull-right" x-title="'Title'" x-content="modarea.help.title" x-pos="'right'"></popover>
-
-          <span class="help-inline" ng-if="areaForm.title.$error.required">Title is required!</span>
-          <span class="help-inline" ng-if="areaForm.title.$error.maxlength">Title is too long!</span>
+      <div class="row mt-1" title="{{modarea.help.replace}}">
+        <label class="col-form-label col-4 text-right">Replace Area</label>
+        <div class="col form-inline">
+          <input type="checkbox" class="form-control" name="replace" ng-model="modarea.replace"/>
+          <span class="ml-auto">
+            <popover class="float-right" x-title="'Replace Area'" x-content="modarea.help.replace" x-pos="'right'"></popover>
+          </span>
+        </div>
+      </div>
+      <div class="row mt-1" ng-if="!modarea.replace" title="{{modarea.help.title}}">
+        <label class="col-form-label col-4 text-right u-required">Title</label>
+        <div class="col form-inline">
+          <input type="text" class="form-control" name="title" ng-model="modarea.title" ng-required="!modarea.replace" ng-maxlength="128" />
+          <span class="ml-auto">
+            <popover class="float-right" x-title="'Title'" x-content="modarea.help.title" x-pos="'right'"></popover>
+          </span>
+          <validation-message target="areaForm.title"></validation-message>
         </div>
       </div>
     </form>
     <div>
-      <i class="fa fa-info-circle"></i>
+      <i class="fa fa-info-circle text-info"></i>
       <em>Selected areas are highlighted in white, and the result in blue.</em>
     </div>
+  </div>
+  <div class="modal-footer">
     <div ng-if="modarea.error">
-      <i class="fa fa-warning orange-icon"></i>
+      <i class="fa fa-warning text-warning"></i>
       <em>{{modarea.error}}</em>
     </div>
-  </div>
-  <div class="window-footer">
-    <div class="pull-right">
-      <button class="btn btn-default" ng-click="modarea.confirm()"
-          ng-disabled="modarea.error || areaForm.$invalid || modarea.loading">
-        <i class="fa fa-check blue-icon"></i>
-        OK
-      </button>
-      <button class="btn btn-default" ng-click="modarea.cancel()">
-        <i class="fa fa-ban red-icon"></i>
-        Cancel
-      </button>
-    </div>
+    <button class="btn btn-primary" ng-click="modarea.confirm()" ng-disabled="modarea.error || areaForm.$invalid || modarea.loading">
+      <i class="fa fa-check"></i>
+      OK
+    </button>
+    <button class="btn btn-secondary" ng-click="modarea.cancel()">
+      <i class="fa fa-ban"></i>
+      Cancel
+    </button>
   </div>
 </div>

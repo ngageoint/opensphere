@@ -1,25 +1,16 @@
-<div class="window-content-wrapper">
+<div>
   <div class="modal-body">
-    <div ng-if="!config.zipFile" class="shpareafiles">
+    <div ng-if="!config.zipFile">
       <shpfilesstep></shpfilesstep>
       <hr/>
     </div>
-    <div ng-show="config.zipFile && config.columns.length == 0" class='row-fluid'>
+    <div ng-show="config.zipFile && config.columns.length == 0">
       <span class="middle"><i class="fa fa-spin fa-spinner" title="Loading..."></i> Loading Zip...</span>
     </div>
     <div ng-show="config.columns" ng-class="!config.zipFile && 'shpareafilemapper'">
-      <form name="areaForm" class="form-compact form-horizontal form-popover-help">
+      <form name="areaForm">
         <basicinfo config="config" columns="config.merge ? null : config.columns" help="areaFiles.help"></basicinfo>
-
-        <div class="row mt-1">
-          <label class="col-form-label col-4 text-right">Merge Areas</label>
-          <div class="col form-inline">
-            <input type="checkbox" name="merge" ng-model="config.merge"/>
-            <span class="ml-auto">
-              <popover class="float-right" ng-if="areaFiles.help.merge" x-title="'Merge Areas'" x-content="areaFiles.help.merge" x-pos="'right'"></popover>
-            </span>
-          </div>
-        </div>
+        <mergeareaoption ng-model="config.merge" help="areaFiles.help.merge"></mergeareaoption>
       </form>
     </div>
   </div>
@@ -28,7 +19,7 @@
       <i class="fa fa-fw" ng-class="areaFiles.loading && 'fa-spin fa-spinner' || 'fa-check'"></i>
       {{areaFiles.loading ? 'Loading' : 'OK'}}
     </button>
-    <button class="btn btn-primary" ng-click="areaFiles.close()">
+    <button class="btn btn-secondary" ng-click="areaFiles.close()">
       <i class="fa fa-fw fa-ban"></i>
       Cancel
     </button>
