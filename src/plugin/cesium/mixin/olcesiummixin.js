@@ -79,12 +79,9 @@ olcs.OLCesium.prototype.setEnabled = function(enable) {
     if (this.isOverMap_) {
       var interactions = this.map_.getInteractions();
       interactions.forEach(function(el, i, arr) {
-        try {
-          var interaction = /** @type {ol.interaction.Interaction} */ (el);
-          if (!(/** @type {os.I3DSupport} */ (interaction)).is3DSupported()) {
-            interaction.setActive(false);
-          }
-        } catch (e) {
+        var interaction = /** @type {ol.interaction.Interaction} */ (el);
+        if (!os.implements(interaction, os.I3DSupport.ID) ||
+            !(/** @type {os.I3DSupport} */ (interaction)).is3DSupported()) {
           interaction.setActive(false);
         }
       });
@@ -108,12 +105,9 @@ olcs.OLCesium.prototype.setEnabled = function(enable) {
     if (this.isOverMap_) {
       interactions = this.map_.getInteractions();
       interactions.forEach(function(el, i, arr) {
-        try {
-          var interaction = /** @type {ol.interaction.Interaction} */ (el);
-          if (!(/** @type {os.I3DSupport} */ (interaction)).is3DSupported()) {
-            interaction.setActive(true);
-          }
-        } catch (e) {
+        var interaction = /** @type {ol.interaction.Interaction} */ (el);
+        if (!os.implements(interaction, os.I3DSupport.ID) ||
+              !(/** @type {os.I3DSupport} */ (interaction)).is3DSupported()) {
           interaction.setActive(true);
         }
       });
