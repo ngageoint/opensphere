@@ -13,8 +13,8 @@ addons:
   chrome: stable
   apt:
     sources:
-    - key_url: "https://dl.yarnpkg.com/debian/pubkey.gpg"
     - sourceline: "deb https://dl.yarnpkg.com/debian/ stable main"
+      key_url: "https://dl.yarnpkg.com/debian/pubkey.gpg"
     packages:
     - yarn
 install:
