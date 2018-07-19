@@ -439,12 +439,10 @@ os.layer.Tile.prototype.setStyle = function(value) {
 
   this.style_ = value;
 
-  try {
-    var source = /** @type {os.source.IStyle} */ (this.getSource());
-    source.setStyle(value);
-
+  var source = this.getSource();
+  if (os.implements(source, os.source.IStyle.ID)) {
+    /** @type {os.source.IStyle} */ (source).setStyle(value);
     os.style.notifyStyleChange(this);
-  } catch (e) {
   }
 };
 
