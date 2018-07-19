@@ -49,15 +49,15 @@
         <h6 class="m-0">Initial Position/Zoom:</h6>
         <table class="table table-borderless table-sm m-0" ng-if="display.cameraState">
           <tr>
-            <td>Latitude:</td>
+            <td>Latitude</td>
             <td class="col">{{display.cameraState.center[1].toFixed(4)}}</td>
           </tr>
           <tr>
-            <td>Longitude:</td>
+            <td>Longitude</td>
             <td class="col">{{display.cameraState.center[0].toFixed(4)}}</td>
           </tr>
           <tr>
-            <td>Zoom:</td>
+            <td>Zoom</td>
             <td class="col">{{display.getZoom()}}</td>
           </tr>
         </table>
@@ -103,7 +103,7 @@
       </div>
     </div>
     <div class="form-group" ng-if="display.fogEnabled" title="{{display.help.fog}}">
-      <label for="fogDensity">Fog Density:</label>
+      <label for="fogDensity">Fog Density</label>
       <slider class="col-6" min="0" max="1" step="0.1" value="display.fogDensity" live="true" name="fogDensity">
       </slider>
     </div>

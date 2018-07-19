@@ -3,7 +3,7 @@
     <div ng-show="testing" class="testing"><i class="fa fa-4x fa-spin fa-smooth fa-spinner"></i><p>Testing...</p></div>
     <form ng-show="!testing" name="form" ng-submit="ctrl.accept()">
       <div class="form-group">
-        <label for="title">Title:</label>
+        <label for="title">Title</label>
         <input unique-provider-title type="text" class="form-control" name="title" ng-disabled="!edit"
             ng-model="config.label" ng-required="true" ng-maxlength="1000"/>
         <small class="form-text text-muted" data-ng-show="form.title.$error.maxlength">Title is too long!</small>
@@ -11,14 +11,14 @@
         <small class="form-text text-muted" data-ng-show="form.title.$error.required">Please enter a title</small>
       </div>
       <div class="form-group">
-        <label for="wms">WMS (Tile) Server:</label>
+        <label for="wms">WMS (Tile) Server</label>
         <input type="text" name="wms" class="form-control" ng-disabled="!edit" ng-model="config.wms"
             ng-required="!config.wms && !config.wfs" ng-maxlength="1000" placeholder="e.g. http://www.example.com/ogcserver/wms"/>
         <small class="form-text text-muted" data-ng-show="form.wms.$error.maxlength">URL is too long!</small>
         <small class="form-text text-muted" data-ng-show="form.wms.$error.required">Please enter a URL</small>
       </div>
       <div class="form-group">
-        <label for="wfs">WFS (Features) Server:</label>
+        <label for="wfs">WFS (Features) Server</label>
         <input type="text" name="wfs" class="form-control" ng-disabled="!edit" ng-model="config.wfs"
             ng-required="!config.wms && !config.wfs" ng-maxlength="1000" placeholder="e.g. http://www.example.com/ogcserver/wfs"/>
         <small class="form-text text-muted" data-ng-show="form.wfs.$error.maxlength">URL is too long!</small>

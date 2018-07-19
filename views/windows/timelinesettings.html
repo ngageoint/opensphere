@@ -2,13 +2,13 @@
   <div class="modal-body">
     <div ng-form="timeForm" class="container-fluid">
       <div class="row">
-        <label class="col-form-label" title="Loaded range start">Load Range:</label>
+        <label class="col-form-label" title="Loaded range start">Load Range</label>
       </div>
 
       <div class="card row form-group" ng-repeat="range in loadRanges" ng-class="{'ng-invalid': !timeCtrl.isValid(range.start, range.end)}">
         <div class="card-body container-fluid">
           <div class="mb-1 row">
-            <label class="col-form-label col-2" title="Loaded range start">Start:</label>
+            <label class="col-form-label col-2" title="Loaded range start">Start</label>
             <div class="col">
               <span class="pull-right"><popover data-title="'Start'" data-content="loadStartTip" data-pos="'right'"></popover></span>
               <date-time value="range.start" hidecontrols="true"></date-time>
@@ -16,7 +16,7 @@
           </div>
 
           <div class="row">
-            <label class="col-form-label col-2" title="Loaded range end">End:</label>
+            <label class="col-form-label col-2" title="Loaded range end">End</label>
             <div class="col">
               <span class="pull-right">
                 <button class="btn btn-outline-danger btn-sm" title="Add range" ng-if="loadRanges.length > 1" ng-click="timeCtrl.removeRange($index)">
@@ -35,7 +35,7 @@
       </div>
 
       <div class="row mb-1">
-        <label class="col-form-label" title="Slice range start">Time Slices:</label>
+        <label class="col-form-label" title="Slice range start">Time Slices</label>
         <button class="btn btn-secondary btn-sm ml-1" title="Add slice" ng-click="timeCtrl.addSlice()" ng-if="sliceRanges.length < 1">
           <i class="fa fa-fw fa-plus"></i> Create
         </button>
@@ -47,7 +47,7 @@
       <div ng-repeat="slice in sliceRanges" class="card row form-group">
         <div class="card-body container-fluid">
           <div class="mb-1 row">
-            <label class="col-form-label col-2" title="Slice range start">Start:</label>
+            <label class="col-form-label col-2" title="Slice range start">Start</label>
             <div class="col form-inline">
               <time hours="slice.start.hours" mins="slice.start.mins" secs="slice.start.secs"></time>
               <span class="ml-auto"><popover data-title="'Start'" data-content="sliceStartTip" data-pos="'right'"></popover></span>
@@ -55,7 +55,7 @@
           </div>
 
           <div class="row">
-            <label class="col-form-label col-2" title="Slice range end">End:</label>
+            <label class="col-form-label col-2" title="Slice range end">End</label>
             <div class="col form-inline">
               <time hours="slice.end.hours" mins="slice.end.mins" secs="slice.end.secs"></time>
               <span class="ml-auto">
@@ -73,7 +73,7 @@
       </div>
 
       <div class="row">
-        <label class="col-form-label" title="Offset from UTC">Offset:</label>
+        <label class="col-form-label" title="Offset from UTC">Offset</label>
         <div class="col">
           <input name="offset" class="form-control" type="text" ng-model="offset" ng-pattern="/^(UTC)?[+-]\d{4}$/">
           <div class="invalid-feedback" ng-if="timeForm.offset.$invalid">Please enter the value as &#177HHMM</div>

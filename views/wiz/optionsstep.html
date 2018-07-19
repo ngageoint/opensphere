@@ -1,7 +1,7 @@
 <div class="d-flex flex-column u-flex-grow">
   <form name="optionsForm" novalidate>
     <div class="form-row form-group col">
-      <label class="col-form-label col-2">Layer Title:</label>
+      <label class="col-form-label col-3 text-right">Layer Title</label>
       <div class="col p-0">
         <input class="form-control col" type="text" name="title" ng-model="config.title" ng-required="true" ng-maxlength="500"/>
         <small class="form-text invalid-feedback" ng-if="optionsForm.title.$error.required">Required!</small>
@@ -10,7 +10,7 @@
       </div>
     </div>
     <div class="form-row form-group col">
-      <label class="col-form-label col-2">Description:</label>
+      <label class="col-form-label col-3 text-right">Description</label>
       <div class="col p-0">
         <input class="form-control col" type="text" name="desc" ng-model="config.description" ng-maxlength="2000"
             placeholder="Add a custom description"/>
@@ -18,7 +18,7 @@
       </div>
     </div>
     <div class="form-row form-group col">
-      <label class="col-form-label col-2">Tags:</label>
+      <label class="col-form-label col-3 text-right">Tags</label>
       <div class="col p-0">
         <input class="form-control col" type="text" name="tags" ng-model="config.tags" ng-maxlength="2000"
             placeholder="Tags organize layers: e.g. states, population"/>
@@ -26,7 +26,7 @@
       </div>
     </div>
     <div class="form-row form-group col">
-      <label class="col-form-label col-2">Color:</label>
+      <label class="col-form-label col-3 text-right">Color</label>
       <div class="col p-0">
         <colorpicker name="color" color="config.color"></colorpicker>
       </div>

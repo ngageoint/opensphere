@@ -7,7 +7,7 @@
 
     <form class="container-fluid" ng-show="!testing" name="form" ng-submit="ctrl.accept()" novalidate>
       <div class="form-group row" title="The title for the server">
-        <label class="col-2 col-form-label" for="title">Title:</label>
+        <label class="col-3 col-form-label text-right" for="title">Title</label>
         <div class="col">
           <input unique-provider-title type="text" class="form-control" name="title" ng-disabled="!edit"
               ng-model="config.label" ng-required="true" ng-maxlength="1000"/>
@@ -17,7 +17,7 @@
 
       <!-- primary server url -->
       <div class="form-group row" title="The primary URL for the server">
-        <label class="col-2 col-form-label" for="url">URL:</label>
+        <label class="col-3 col-form-label text-right" for="url">URL</label>
         <div class="col">
           <input type="text" name="url" class="form-control" ng-disabled="!edit" ng-model="config.url" ng-required="true"
               ng-maxlength="1000"/>
@@ -29,7 +29,7 @@
       <!-- alternate server urls -->
       <div class="form-group row" ng-repeat="altUrl in config.alternateUrls track by $index"
           title="Alternate URL for the server">
-        <label class="col-2 col-form-label" for="altUrl{{$index}}">URL {{$index + 2}}:</label>
+        <label class="col-3 col-form-label text-right" for="altUrl{{$index}}">URL {{$index + 2}}</label>
         <div class="col">
           <input unique-server-url type="text" name="altUrl{{$index}}" class="form-control" ng-disabled="!edit"
               ng-model="config.alternateUrls[$index]" ng-maxlength="1000"
