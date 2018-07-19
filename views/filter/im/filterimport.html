@@ -1,14 +1,17 @@
-<div>
+<div class="c-filter-import flex-column d-flex u-flex-grow">
   <div class="modal-body u-overflow-y-auto">
     <div class="border rounded bg-secondary" ng-if="ctrl.notFound.length">
       We were unable to match <b>{{ctrl.notFound.length}}</b> {{ctrl.getFilterTitle(ctrl.notFound.length)}} to a layer. Please choose layers to add them to:
-      <div class="filter-import__layer-picker">
-        <layerpicker is-required="false" layer="ctrl.layer" layers-filter="ctrl.getLayersFunction()"></layerpicker>
-        <button class="btn btn-primary" ng-class="{'border-glow': !!ctrl.layer}" ng-click="ctrl.addNotFound()"
-            ng-disabled="!ctrl.hasMatchedFilters" title="Add matching {{ctrl.getFilterTitle()}} to the list to import">
-          <i class="fa fa-plus"></i>
-          Add
-        </button>
+      <div class="form-group row">
+        <div class="col">
+          <layerpicker is-required="false" layer="ctrl.layer" layers-filter="ctrl.getLayersFunction()"></layerpicker>
+        </div>
+        <label class="col-form-label col-1 mr-3">
+          <button class="btn btn-primary" ng-click="ctrl.addNotFound()" ng-disabled="!ctrl.hasMatchedFilters" title="Add matching {{ctrl.getFilterTitle()}} to the list to import">
+            <i class="fa fa-plus"></i>
+            Add
+          </button>
+        </label>
       </div>
       <div ng-if="ctrl.hasUnmatchedFilters">
         <i class="fa fa-warning text-warning"></i> Any {{ctrl.getFilterTitle(1)}} with <i class="fa fa-times text-danger"></i> will be discarded.
@@ -49,7 +52,7 @@
             </span>
           </div>
 
-          <div ng-repeat="filter in layer.filterModels" title="{{filter.tooltip}}" class="text-truncate" style="margin-left: 1.5em">
+          <div ng-repeat="filter in layer.filterModels" title="{{filter.tooltip}}" class="c-filter-import__filter text-truncate">
             <i class="fa" ng-class="ctrl.getFilterIcon()"></i> {{filter.title}}
           </div>
         </div>

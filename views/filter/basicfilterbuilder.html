@@ -1,8 +1,8 @@
-<div class="flex-column d-flex flex-fill">
+<div class="c-basicfiltertree flex-column d-flex flex-fill">
   <div class="flex-column d-flex flex-fill" ng-if="!isComplex">
-    <div class="row">
-      <div class="col form-inline">
-        <button class="mr-5 btn btn-primary" ng-click="basicCtrl.add()" title="Adds a new expression to the filter"><i class="fa fa-plus"></i> Add Expression</button>
+    <div class="my-2">
+      <div class="form-inline">
+        <button class="mr-5 btn btn-primary btn-sm" ng-click="basicCtrl.add()" title="Adds a new expression to the filter"><i class="fa fa-plus"></i> Add Expression</button>
         <span class="form-inline">Match
           <label class="ml-2"><input type="radio" ng-model="root.grouping" value="And">All (AND)</label>
           <label class="ml-2"><input type="radio" ng-model="root.grouping" value="Or">Any (OR)</label>

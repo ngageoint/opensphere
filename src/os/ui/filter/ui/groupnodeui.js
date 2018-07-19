@@ -69,12 +69,9 @@ os.ui.filter.ui.GroupNodeUICtrl.GROUPS = {
 
 /**
  * Removes the expression
+ * @export
  */
 os.ui.filter.ui.GroupNodeUICtrl.prototype.remove = function() {
   var node = /** @type {os.ui.filter.ui.GroupNode} */ (this.scope_['item']);
   this.scope_.$emit('filterbuilder.remove', node);
 };
-goog.exportProperty(
-    os.ui.filter.ui.GroupNodeUICtrl.prototype,
-    'remove',
-    os.ui.filter.ui.GroupNodeUICtrl.prototype.remove);

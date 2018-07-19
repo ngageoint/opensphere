@@ -16,9 +16,9 @@
             Country
           </button>
         </div>
-        <div>
-          <label class="checkbox inline" title="Advanced mode allows more specific combinations of layers, filters, and areas">
-            <input type="checkbox" ng-model="advanced" ng-change="comboCtrl.advancedToggle(true)">
+        <div class="float-right">
+          <label class="form-check-label mr-2" title="Advanced mode allows more specific combinations of layers, filters, and areas">
+            <input class="form-check-input" type="checkbox" ng-model="advanced" ng-change="comboCtrl.advancedToggle(true)">
             Advanced
           </label>
           <button class="btn btn-primary" ng-click="comboCtrl.toggle(false)" title="Expand all"><i class="fa fa-plus-square-o"></i></button>

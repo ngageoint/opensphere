@@ -1,11 +1,11 @@
 <div class="d-flex flex-column">
-  <div class="modal-body d-flex flex-fill">
+  <div class="modal-body flex-column d-flex flex-fill">
     <div class="border rounded mx-2">
       <checklist name="layerlist" allow-multiple="true" items="copyFilterCtrl.layers"></checklist>
     </div>
     <div class="mt-2 mb-1 flex-column d-flex flex-fill" ng-form="copyFilterForm">
       <div ng-show="copyFilterCtrl.hasUnmappedColumns()">
-        Unassociated Columns:
+        Unassociated Columns
         <popover class="float-right" x-title="'Missing Columns'" x-content="copyFilterCtrl.helpText" x-pos="'right'"></popover>
       </div>
       <div class="flex-column d-flex flex-fill">

@@ -1,9 +1,8 @@
 <div ng-form="basicInfoForm">
   <div class="row mt-1" ng-if="columns.length > 0">
-      <label class="col-form-label col-4 text-right u-required">Title Column</label>
+      <label class="col-form-label col-4 text-right">Title Column</label>
     <div class="col form-inline">
-      <select class="form-control col-11" ng-model="config.titleColumn" ng-change="info.updateSampleText()"
-          ng-options="col as col.name for col in columns">
+      <select class="form-control col-11" ng-model="config.titleColumn" ng-change="info.updateSampleText()" ng-options="col as col.name for col in columns">
         <option value="">-- Custom --</option>
       </select>
       <span class="ml-auto">
@@ -24,18 +23,17 @@
     <label class="col-form-label col-4 text-right u-required">Title</label>
     <div class="col form-inline">
       <input class="form-control col-11" type="text" name="title" ng-model="config.title" ng-required="true" ng-maxlength="128"/>
-      <validation-message target="basicInfoForm.title"></validation-message>
       <span class="ml-auto">
         <popover class="float-right" ng-if="help.title" x-title="'Title'" x-content="help.title" x-pos="'right'"></popover>
       </span>
+      <validation-message target="basicInfoForm.title"></validation-message>
     </div>
   </div>
 
   <div class="row mt-1" ng-if="columns.length > 0">
-    <label class="col-form-label col-4 text-right u-required">Description Column</label>
+    <label class="col-form-label col-4 text-right">Description Column</label>
     <div class="col form-inline">
-      <select class="form-control col-11" ng-model="config.descColumn" ng-change="info.updateSampleText()"
-          ng-options="col as col.name for col in columns">
+      <select class="form-control col-11" ng-model="config.descColumn" ng-change="info.updateSampleText()" ng-options="col as col.name for col in columns">
         <option value="">-- Custom --</option>
       </select>
       <span class="ml-auto">
@@ -53,21 +51,20 @@
   </div>
 
   <div class="row mt-1" ng-if="!config.descColumn">
-    <label class="col-form-label col-4 text-right u-required">Description</label>
+    <label class="col-form-label col-4 text-right">Description</label>
     <div class="col form-inline">
       <input class="form-control col-11" type="text" name="description" ng-model="config.description" ng-maxlength="1000"/>
-      <validation-message target="basicInfoForm.description"></validation-message>
       <span class="ml-auto">
         <popover class="float-right" ng-if="help.description" x-title="'Description'" x-content="help.description" x-pos="'right'"></popover>
       </span>
+      <validation-message target="basicInfoForm.description"></validation-message>
     </div>
   </div>
 
   <div class="row mt-1" ng-if="columns.length > 0">
-    <label class="col-form-label col-4 text-right u-required">Tags Column</label>
+    <label class="col-form-label col-4 text-right">Tags Column</label>
     <div class="col form-inline">
-      <select class="form-control col-11" ng-model="config.tagsColumn" ng-change="info.updateSampleText()"
-          ng-options="col as col.name for col in columns">
+      <select class="form-control col-11" ng-model="config.tagsColumn" ng-change="info.updateSampleText()" ng-options="col as col.name for col in columns">
         <option value="">-- Custom --</option>
       </select>
       <span class="ml-auto">
@@ -85,13 +82,13 @@
   </div>
 
   <div class="row mt-1" ng-if="!config.tagsColumn">
-    <label class="col-form-label col-4 text-right u-required">Tags</label>
+    <label class="col-form-label col-4 text-right">Tags</label>
     <div class="col form-inline">
       <input class="form-control col-11" type="text" name="tags" ng-model="config.tags" ng-maxlength="1000" placeholder="e.g. UK, Airports"/>
-      <validation-message target="basicInfoForm.tags"></validation-message>
       <span class="ml-auto">
         <popover class="float-right" ng-if="help.tags" x-title="'Tags'" x-content="help.tags" x-pos="'right'"></popover>
       </span>
+      <validation-message target="basicInfoForm.tags"></validation-message>
     </div>
   </div>
 </div>

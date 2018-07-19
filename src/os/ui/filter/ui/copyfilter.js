@@ -188,60 +188,62 @@ os.ui.filter.ui.CopyFilterCtrl.prototype.update_ = function() {
         continue;
       }
       var targetColumns = targetFilterable.getFilterColumns();
-      targetColumns = goog.array.filter(targetColumns, os.ui.filter.filterColumns);
-      var targetLayerName = /** @type {os.data.IDataDescriptor} */ (targetFilterable).getTitle();
-      goog.asserts.assertString(targetLayerName);
+      if (targetColumns) {
+        targetColumns = goog.array.filter(targetColumns, os.ui.filter.filterColumns);
+        var targetLayerName = /** @type {os.data.IDataDescriptor} */ (targetFilterable).getTitle();
+        goog.asserts.assertString(targetLayerName);
 
-      for (var j = 0, jj = this.sourceColumnNames_.length; j < jj; j++) {
-        var sourceColumnName = this.sourceColumnNames_[j];
-        var sourceHash = this['sourceFilterKey'] + '#' + sourceColumnName;
-        var sourceMapping = cmm.getOwnerMapping(sourceHash);
+        for (var j = 0, jj = this.sourceColumnNames_.length; j < jj; j++) {
+          var sourceColumnName = this.sourceColumnNames_[j];
+          var sourceHash = this['sourceFilterKey'] + '#' + sourceColumnName;
+          var sourceMapping = cmm.getOwnerMapping(sourceHash);
 
-        if (sourceMapping && sourceMapping.getColumn(targetFilterKey)) {
-          // the mapping already exists and works between these two layers, so use it
-          var targetColumn = sourceMapping.getColumn(targetFilterKey);
-          var actualTargetColumn = goog.array.find(targetColumns, function(column) {
-            return column['name'] === targetColumn['column'];
-          });
-
-          var model = os.ui.filter.ui.CopyFilterCtrl.createPickerModel(targetLayerName, targetFilterKey,
-              sourceColumnName, targetColumns, actualTargetColumn, sourceMapping);
-
-          if (this['mappedColumns'][targetFilterKey]) {
-            this['mappedColumns'][targetFilterKey].push(model);
-          } else {
-            this['mappedColumns'][targetFilterKey] = [model];
-          }
-        } else {
-          // put a UI model in place for constructing the mapping
-          var selectedColumn = null;
-          var oldModelArray = oldUnmappedColumns[targetFilterKey];
-          if (oldModelArray) {
-            var oldModelColumn = goog.array.find(oldModelArray, function(oldModel) {
-              return oldModel['sourceColumnName'] === sourceColumnName &&
-                  oldModel['targetFilterKey'] === targetFilterKey;
+          if (sourceMapping && sourceMapping.getColumn(targetFilterKey)) {
+            // the mapping already exists and works between these two layers, so use it
+            var targetColumn = sourceMapping.getColumn(targetFilterKey);
+            var actualTargetColumn = goog.array.find(targetColumns, function(column) {
+              return column['name'] === targetColumn['column'];
             });
 
-            if (oldModelColumn) {
-              selectedColumn = oldModelColumn['selectedTargetColumn'];
-            }
-          }
+            var model = os.ui.filter.ui.CopyFilterCtrl.createPickerModel(targetLayerName, targetFilterKey,
+                sourceColumnName, targetColumns, actualTargetColumn, sourceMapping);
 
-          var model = os.ui.filter.ui.CopyFilterCtrl.createPickerModel(targetLayerName, targetFilterKey,
-              sourceColumnName, targetColumns, selectedColumn);
-
-          if (this['unmappedColumns'][targetFilterKey]) {
-            // HACK ALERT! Descriptors are capable of adding multiple layers with the SAME DATATYPE.
-            // This check prevents us from treating those layers as separate layers for the purpose of
-            // building a new mapping.
-            var duplicateModel = goog.array.find(this['unmappedColumns'][targetFilterKey], function(model) {
-              return model['sourceColumnName'] === sourceColumnName && model['targetFilterKey'] === targetFilterKey;
-            });
-            if (!duplicateModel) {
-              this['unmappedColumns'][targetFilterKey].push(model);
+            if (this['mappedColumns'][targetFilterKey]) {
+              this['mappedColumns'][targetFilterKey].push(model);
+            } else {
+              this['mappedColumns'][targetFilterKey] = [model];
             }
           } else {
-            this['unmappedColumns'][targetFilterKey] = [model];
+            // put a UI model in place for constructing the mapping
+            var selectedColumn = null;
+            var oldModelArray = oldUnmappedColumns[targetFilterKey];
+            if (oldModelArray) {
+              var oldModelColumn = goog.array.find(oldModelArray, function(oldModel) {
+                return oldModel['sourceColumnName'] === sourceColumnName &&
+                    oldModel['targetFilterKey'] === targetFilterKey;
+              });
+
+              if (oldModelColumn) {
+                selectedColumn = oldModelColumn['selectedTargetColumn'];
+              }
+            }
+
+            var model = os.ui.filter.ui.CopyFilterCtrl.createPickerModel(targetLayerName, targetFilterKey,
+                sourceColumnName, targetColumns, selectedColumn);
+
+            if (this['unmappedColumns'][targetFilterKey]) {
+              // HACK ALERT! Descriptors are capable of adding multiple layers with the SAME DATATYPE.
+              // This check prevents us from treating those layers as separate layers for the purpose of
+              // building a new mapping.
+              var duplicateModel = goog.array.find(this['unmappedColumns'][targetFilterKey], function(model) {
+                return model['sourceColumnName'] === sourceColumnName && model['targetFilterKey'] === targetFilterKey;
+              });
+              if (!duplicateModel) {
+                this['unmappedColumns'][targetFilterKey].push(model);
+              }
+            } else {
+              this['unmappedColumns'][targetFilterKey] = [model];
+            }
           }
         }
       }
@@ -325,43 +327,35 @@ os.ui.filter.ui.CopyFilterCtrl.prototype.constructNewMappings_ = function() {
 /**
  * Get whether there are unmapped columns.
  * @return {boolean}
+ * @export
  */
 os.ui.filter.ui.CopyFilterCtrl.prototype.hasUnmappedColumns = function() {
   return goog.object.getCount(this['unmappedColumns']) > 0;
 };
-goog.exportProperty(
-    os.ui.filter.ui.CopyFilterCtrl.prototype,
-    'hasUnmappedColumns',
-    os.ui.filter.ui.CopyFilterCtrl.prototype.hasUnmappedColumns);
 
 
 /**
  * Get whether there are unmapped columns.
  * @return {boolean}
+ * @export
  */
 os.ui.filter.ui.CopyFilterCtrl.prototype.hasMappedColumns = function() {
   return goog.object.getCount(this['mappedColumns']) > 0;
 };
-goog.exportProperty(
-    os.ui.filter.ui.CopyFilterCtrl.prototype,
-    'hasMappedColumns',
-    os.ui.filter.ui.CopyFilterCtrl.prototype.hasMappedColumns);
 
 
 /**
  * Cancels the filter
+ * @export
  */
 os.ui.filter.ui.CopyFilterCtrl.prototype.cancel = function() {
   os.ui.window.close(this.element_);
 };
-goog.exportProperty(
-    os.ui.filter.ui.CopyFilterCtrl.prototype,
-    'cancel',
-    os.ui.filter.ui.CopyFilterCtrl.prototype.cancel);
 
 
 /**
  * User clicked OK
+ * @export
  */
 os.ui.filter.ui.CopyFilterCtrl.prototype.finish = function() {
   var layersToMappings = this.constructNewMappings_();
@@ -409,10 +403,6 @@ os.ui.filter.ui.CopyFilterCtrl.prototype.finish = function() {
 
   os.ui.window.close(this.element_);
 };
-goog.exportProperty(
-    os.ui.filter.ui.CopyFilterCtrl.prototype,
-    'finish',
-    os.ui.filter.ui.CopyFilterCtrl.prototype.finish);
 
 
 /**
