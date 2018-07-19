@@ -1,6 +1,7 @@
 <div class="d-flex flex-column u-flex-grow">
   <div class="modal-body">
-    <div class="container-fluid" ng-form="form" ng-submit="stateForm.accept()">
+    <ng-form name="form" ng-submit="stateForm.accept()">
+
       <div class="form-group row" ng-if="stateForm.isSaving">
         <label for="persister" class="col-3 col-form-label text-right">Save to</label>
         <div class="col">
@@ -13,73 +14,76 @@
       <div class="form-group row">
         <label for="persister" class="col-3 col-form-label text-right">Name</label>
         <div class="col">
-          <input type="text" class="form-control" name="title" statetitle ng-model="title" ng-required="true" ng-maxlength="500"/>
-          <validationmessage target="form.title"></validationmessage>
+          <input statetitle type="text" class="form-control" name="title" ng-model="title" ng-required="true" ng-maxlength="500" />
+          <div class="invalid-feedback" ng-show="form.title.$invalid && !form.title.$error.required && !form.title.$error.maxlength">This name has already been used. Please try another.</div>
+          <div class="invalid-feedback" ng-show="form.title.$error.maxlength">Name is too long!</div>
+          <div class="invalid-feedback" ng-show="form.title.$error.required">Required!</div>
         </div>
       </div>
 
       <div class="form-group row">
         <label for="desc" class="col-3 col-form-label text-right">Description</label>
         <div class="col">
-          <input type="text" name="desc" class="form-control" ng-model="description" ng-maxlength="4000" placeholder="Add a custom description"/>
-          <validationmessage target="form.desc"></validationmessage>
+          <input type="text" name="desc" class="form-control" ng-model="description" ng-maxlength="4000" placeholder="Add a custom description"
+          />
+          <div class="invalid-feedback" ng-show="form.desc.$error.maxlength">Description is too long!</div>
         </div>
       </div>
 
       <div class="form-group row">
         <label for="tags" class="col-3 col-form-label text-right">Tags</label>
         <div class="col">
-          <input type="text" name="tags" class="form-control" ng-model="tags" ng-maxlength="1000" placeholder="Tags organize states: e.g. states, population"/>
-          <validationmessage target="form.tags"></validationmessage>
+          <input type="text" name="tags" class="form-control" ng-model="tags" ng-maxlength="1000" placeholder="Tags organize states: e.g. states, population"
+          />
+          <div class="invalid-feedback" ng-show="form.tags.$error.maxlength">Tags field is too long!</div>
         </div>
       </div>
 
       <input type="submit" class="d-none">
-    </div>
 
-    <div class="container-fluid">
-      <div class="row" ng-if="stateForm.showClear && !stateForm.isSaving">
-        <div class="col">
-          <label class="mb-0 form-check" title="Clear all currently loaded application data before activating the state">
-            <input class="form-check-input" type="checkbox" name="clear" ng-model="stateForm.clear">
-            Clear current application data
-          </label>
-        </div>
-      </div>
+      <div class="container-fluid">
 
-      <div class="row">
-        <div class="col">
-          <label class="mb-0 form-check">
-            <input class="form-check-input" type="checkbox" name="showOptions" ng-model="stateForm.showOptions">
-            Choose which parts of the state to {{stateForm.isSaving && 'save' || 'import'}}
-          </label>
+        <div class="row" ng-if="stateForm.showClear && !stateForm.isSaving">
+          <div class="col">
+            <label class="mb-0 form-check" title="Clear all currently loaded application data before activating the state">
+              <input class="form-check-input" type="checkbox" name="clear" ng-model="stateForm.clear"> Clear current application data
+            </label>
+          </div>
         </div>
-      </div>
 
-      <div class="row" ng-if="stateForm.showOptions">
-        <div class="col">
-          <table class="table table-sm table-striped border mb-0">
-            <thead>
-              <tr class="thead-dark">
-                <th class="align-items-center">
-                  <input type="checkbox" name="all" ng-model="stateForm.all" ng-change="stateForm.toggleAll()"> All
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr ng-repeat="s in stateForm.states" title="{{stateForm.getDescription(s)}}">
-                <td class="align-items-center">
-                  <label class="mb-0 form-check">
-                    <input class="form-check-input" type="checkbox" ng-model="s.enabled">
-                    {{stateForm.getTitle(s)}}
-                  </label>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="row">
+          <div class="col form-check">
+            <label class="mb-0 form-check-label">
+              <input class="form-check-input" type="checkbox" name="showOptions" ng-model="stateForm.showOptions"> Choose which parts of the state to {{stateForm.isSaving && 'save' || 'import'}}
+            </label>
+          </div>
         </div>
+
+        <div class="row" ng-if="stateForm.showOptions">
+          <div class="col">
+            <table class="table table-sm table-striped border mb-0">
+              <thead>
+                <tr class="thead-dark">
+                  <th class="align-items-center">
+                    <input type="checkbox" name="all" ng-model="stateForm.all" ng-change="stateForm.toggleAll()"> All
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="s in stateForm.states" title="{{stateForm.getDescription(s)}}">
+                  <td class="align-items-center">
+                    <label class="mb-0 form-check">
+                      <input class="form-check-input" type="checkbox" ng-model="s.enabled"> {{stateForm.getTitle(s)}}
+                    </label>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
       </div>
-    </div>
+    </ng-form>
   </div>
 
   <div class="modal-footer">
