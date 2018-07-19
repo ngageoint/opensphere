@@ -10,14 +10,14 @@
         </div>
       </div>
 
-      <div class="d-flex flex-row form-group">
+      <div ng-show="exportdialog.exporters.persisters > 0" class="d-flex flex-row form-group">
         <label class="col-3 col-form-label text-right">Save To</label>
         <div class="col">
           <select class="form-control" ng-model="persister" ng-options="value as key for (key, value) in exportdialog.persisters" />
         </div>
       </div>
 
-      <div class="d-flex flex-row form-group">
+      <div ng-show="exportdialog.exporters.length > 0" class="d-flex flex-row form-group">
         <label class="col-3 col-form-label text-right">Type</label>
         <div class="col">
           <select class="form-control" ng-model="exporter" ng-options="value as key for (key, value) in exportdialog.exporters" />
@@ -34,17 +34,21 @@
   </div>
 </div>
 
-<div class="modal-footer">
-  <ng-pluralize count="options.items.length" style="vertical-align:middle;" when="{'0': 'Nothing to export.',
-               'one': 'Exporting {} {{itemText}}.',
-               'other': 'Exporting {} {{itemText}}s.'}">
-  </ng-pluralize>
-  <button class="btn btn-primary" ng-click="exportdialog.confirm()" ng-disabled="exportForm.$invalid || options.items.length == 0">
-    <i class="fa fa-check"></i>
-    OK
-  </button>
-  <button class="btn btn-secondary" ng-click="exportdialog.cancel()">
-    <i class="fa fa-ban"></i>
-    Cancel
-  </button>
+<div class="modal-footer flex-row justify-content-between">
+  <div>
+    <ng-pluralize count="options.items.length" style="vertical-align:middle;" when="{'0': 'Nothing to export.',
+                 'one': 'Exporting {} {{itemText}}.',
+                 'other': 'Exporting {} {{itemText}}s.'}">
+    </ng-pluralize>
+  </div>
+  <div>
+    <button class="btn btn-primary" ng-click="exportdialog.confirm()" ng-disabled="exportForm.$invalid || options.items.length == 0">
+      <i class="fa fa-check"></i>
+      OK
+    </button>
+    <button class="btn btn-secondary" ng-click="exportdialog.cancel()">
+      <i class="fa fa-ban"></i>
+      Cancel
+    </button>
+  </div>
 </div>

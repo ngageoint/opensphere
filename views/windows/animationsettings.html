@@ -18,14 +18,14 @@
       </div>
 
       <div class="row mb-1">
-        <label class="col-form-label col-2" title="Animation range start">Start:</label>
+        <label class="col-form-label col-3 text-right" title="Animation range start">Start</label>
         <div class="col">
           <date-time value="loopStart" disabled="autoLoop" hidecontrols="true"></date-time>
         </div>
       </div>
 
       <div class="row mb-1">
-        <label class="col-form-label col-2" title="Looped range end">End:</label>
+        <label class="col-form-label col-3 text-right" title="Looped range end">End</label>
         <div class="col">
           <date-time value="loopEnd" disabled="autoLoop" hidecontrols="true"></date-time>
         </div>
@@ -44,7 +44,7 @@
       </div>
 
       <div class="row mb-1">
-        <label class="col-form-label col-2" title="The tile duration">Tiles</label>
+        <label class="col-form-label col-3 text-right" title="The tile duration">Tiles</label>
         <div class="col form-inline">
           <select name="durationbox" required ng-disabled="autoConfig" class="form-control" ng-model="duration" ng-options="value for value in durations"></select>
         </div>
@@ -52,7 +52,7 @@
       </div>
 
       <div class="row mb-1">
-        <label class="col-form-label col-2" title="The active window size">Window</label>
+        <label class="col-form-label col-3 text-right" title="The active window size">Window</label>
         <div class="col form-inline">
           <input name="windowInput" required ng-disabled="autoConfig" class="form-control mr-1" ng-model="window" type="number" min="1">
           <select name="windowUnitBox" required ng-disabled="autoConfig" class="form-control" ng-model="windowUnit" ng-options="value.label for value in units"></select>
@@ -61,7 +61,7 @@
       </div>
 
       <div class="row mb-1">
-        <label class="col-form-label col-2" title="How far the active window skips forward/back per frame">Skip</label>
+        <label class="col-form-label col-3 text-right" title="How far the active window skips forward/back per frame">Skip</label>
         <div class="col form-inline">
           <input name="skipInput" required ng-disabled="autoConfig" class="form-control mr-1" ng-model="skip" type="number" min="1">
           <select name="skipUnitBox" required ng-disabled="autoConfig" class="form-control" ng-model="skipUnit" ng-options="value.label for value in units"></select>

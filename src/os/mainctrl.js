@@ -1006,8 +1006,8 @@ goog.exportProperty(os.MainCtrl.prototype, 'redoCommand', os.MainCtrl.prototype.
 os.MainCtrl.prototype.suggestOtherBrowser = function() {
   if (/** @type {boolean} */(os.settings.get(['showRedirect'], true))) {
     var link = '<div class="mt-2">Detailed browser support can be found <a href="old.html">here</a>.</div>';
-    var ignore = '<div class="form-check"><input type="checkbox" ng-model="mainCtrl.showRedirectChecked" ' +
-    'class="form-check-input"><label class="form-check-label">Stop showing this message</label></div>';
+    var ignore = '<div class="form-check"><label class="form-check-label"><input type="checkbox" ' +
+    'ng-model="mainCtrl.showRedirectChecked" class="form-check-input">Stop showing this message</label></div>';
     var text = os.MainCtrl.UNSUPPORTED_BROWSER_TEXT + link + ignore;
 
     os.ui.window.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
