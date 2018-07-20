@@ -1,6 +1,6 @@
-<div class="flex-column d-flex u-flex-grow">
-  <div class="modal-body flex-column d-flex u-flex-grow">
-    <div ng-form name="filterForm" class="flex-column d-flex u-flex-grow">
+<div class="flex-column d-flex flex-fill">
+  <div class="modal-body flex-column d-flex flex-fill">
+    <div ng-form name="filterForm" class="flex-column d-flex flex-fill">
       <div class="row">
         <label class="col-form-label col-6 text-right">Title</label>
         <label class="col-form-label col-6 text-left">{{filters.title}}</label>
@@ -10,7 +10,7 @@
         <label class="col-form-label col-6 text-left">{{filters.description}}</label>
       </div>
       <hr>
-      <div class="u-flex-grow">
+      <div class="flex-fill">
         <advancedfilterbuilder root="filters.root" columns="columns" viewonly="viewonly"></advancedfilterbuilder>
       </div>
     </div>

@@ -16,7 +16,7 @@ os.ui.mapDirective = function() {
     restrict: 'E',
     scope: true,
     replace: true,
-    template: '<div id="map-container" class="mw-0 u-flex-grow"></div>',
+    template: '<div id="map-container" class="mw-0 flex-fill"></div>',
     controller: os.ui.MapCtrl,
     controllerAs: 'mapCtrl'
   };
