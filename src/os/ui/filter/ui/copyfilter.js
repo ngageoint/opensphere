@@ -41,10 +41,11 @@ os.ui.Module.directive('copyfilter', [os.ui.filter.ui.copyFilterDirective]);
  * Controller for the copyfilter directive
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
+ * @param {!angular.$timeout} $timeout The Angular $timeout service.
  * @constructor
  * @ngInject
  */
-os.ui.filter.ui.CopyFilterCtrl = function($scope, $element) {
+os.ui.filter.ui.CopyFilterCtrl = function($scope, $element, $timeout) {
   /**
    * @type {?angular.JQLite}
    * @private
@@ -107,6 +108,11 @@ os.ui.filter.ui.CopyFilterCtrl = function($scope, $element) {
 
   $scope.$on(os.ui.ChecklistEvent.CHANGE + ':layerlist', this.update_.bind(this));
   $scope.$on('$destroy', this.onDestroy_.bind(this));
+
+  // trigger window auto height after the DOM is rendered
+  $timeout(function() {
+    $scope.$emit(os.ui.WindowEventType.READY);
+  });
 };
 
 
