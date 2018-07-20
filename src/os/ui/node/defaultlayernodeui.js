@@ -114,6 +114,7 @@ os.ui.node.DefaultLayerNodeUICtrl.prototype.getSource = function() {
 /**
  * If the layer is removable.
  * @return {boolean}
+ * @export
  */
 os.ui.node.DefaultLayerNodeUICtrl.prototype.isRemovable = function() {
   var node = /** @type {os.data.LayerNode} */ (this.scope['item']);
@@ -126,14 +127,11 @@ os.ui.node.DefaultLayerNodeUICtrl.prototype.isRemovable = function() {
 
   return false;
 };
-goog.exportProperty(
-    os.ui.node.DefaultLayerNodeUICtrl.prototype,
-    'isRemovable',
-    os.ui.node.DefaultLayerNodeUICtrl.prototype.isRemovable);
 
 
 /**
  * Remove the layer
+ * @export
  */
 os.ui.node.DefaultLayerNodeUICtrl.prototype.remove = function() {
   // the node should be on the scope as 'item'
@@ -152,8 +150,6 @@ os.ui.node.DefaultLayerNodeUICtrl.prototype.remove = function() {
     this.removeNode_(node);
   }
 };
-goog.exportProperty(os.ui.node.DefaultLayerNodeUICtrl.prototype, 'remove',
-    os.ui.node.DefaultLayerNodeUICtrl.prototype.remove);
 
 
 /**
@@ -170,6 +166,7 @@ os.ui.node.DefaultLayerNodeUICtrl.prototype.removeNode_ = function(node) {
 /**
  * If the layer is favoritable.
  * @return {boolean}
+ * @export
  */
 os.ui.node.DefaultLayerNodeUICtrl.prototype.canFavorite = function() {
   var id = this.getLayerId();
@@ -180,14 +177,11 @@ os.ui.node.DefaultLayerNodeUICtrl.prototype.canFavorite = function() {
 
   return false;
 };
-goog.exportProperty(
-    os.ui.node.DefaultLayerNodeUICtrl.prototype,
-    'canFavorite',
-    os.ui.node.DefaultLayerNodeUICtrl.prototype.canFavorite);
 
 
 /**
  * Launch the filter manager for the layer
+ * @export
  */
 os.ui.node.DefaultLayerNodeUICtrl.prototype.filter = function() {
   var id = this.getLayerId();
@@ -205,8 +199,6 @@ os.ui.node.DefaultLayerNodeUICtrl.prototype.filter = function() {
     }
   }
 };
-goog.exportProperty(os.ui.node.DefaultLayerNodeUICtrl.prototype, 'filter',
-    os.ui.node.DefaultLayerNodeUICtrl.prototype.filter);
 
 
 /**

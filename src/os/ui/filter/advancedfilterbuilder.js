@@ -230,6 +230,7 @@ os.ui.filter.AdvancedFilterBuilderCtrl.prototype.doAddExpr_ = function(expr) {
 
 /**
  * Adds a new grouping node
+ * @export
  */
 os.ui.filter.AdvancedFilterBuilderCtrl.prototype.addGrouping = function() {
   this.onEditComplete_();
@@ -251,24 +252,22 @@ os.ui.filter.AdvancedFilterBuilderCtrl.prototype.addGrouping = function() {
     goog.log.error(os.ui.filter.AdvancedFilterBuilderCtrl.LOGGER_, msg);
   }
 };
-goog.exportProperty(os.ui.filter.AdvancedFilterBuilderCtrl.prototype, 'addGrouping',
-    os.ui.filter.AdvancedFilterBuilderCtrl.prototype.addGrouping);
 
 
 /**
  * Adds a new expression node
+ * @export
  */
 os.ui.filter.AdvancedFilterBuilderCtrl.prototype.addExpr = function() {
   this.edit();
 };
-goog.exportProperty(os.ui.filter.AdvancedFilterBuilderCtrl.prototype, 'addExpr',
-    os.ui.filter.AdvancedFilterBuilderCtrl.prototype.addExpr);
 
 
 /**
  * Adds or edits an expression
  * @param {os.ui.filter.Expression=} opt_expr
  * @param {os.ui.filter.ui.ExpressionNode=} opt_node
+ * @export
  */
 os.ui.filter.AdvancedFilterBuilderCtrl.prototype.edit = function(opt_expr, opt_node) {
   if (os.ui.window.exists(os.ui.filter.AdvancedFilterBuilderCtrl.EXPR_WINDOW_ID)) {
@@ -310,33 +309,27 @@ os.ui.filter.AdvancedFilterBuilderCtrl.prototype.edit = function(opt_expr, opt_n
     }
   }), scopeOptions);
 };
-goog.exportProperty(
-    os.ui.filter.AdvancedFilterBuilderCtrl.prototype,
-    'edit',
-    os.ui.filter.AdvancedFilterBuilderCtrl.prototype.edit);
 
 
 /**
  * Returns whether the currently selected node is removable
  * @return {boolean}
+ * @export
  */
 os.ui.filter.AdvancedFilterBuilderCtrl.prototype.canRemove = function() {
   return this['selected'] && this['selected'] !== this.scope_['root'];
 };
-goog.exportProperty(os.ui.filter.AdvancedFilterBuilderCtrl.prototype, 'canRemove',
-    os.ui.filter.AdvancedFilterBuilderCtrl.prototype.canRemove);
 
 
 /**
  * Removes the currently selected node.
+ * @export
  */
 os.ui.filter.AdvancedFilterBuilderCtrl.prototype.remove = function() {
   if (this.canRemove()) {
     this.scope_.$emit('filterbuilder.remove', this['selected']);
   }
 };
-goog.exportProperty(os.ui.filter.AdvancedFilterBuilderCtrl.prototype, 'remove',
-    os.ui.filter.AdvancedFilterBuilderCtrl.prototype.remove);
 
 
 /**

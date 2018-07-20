@@ -191,6 +191,11 @@
   background: $table-accent-bg;
 }
 
+.slick-reorder-proxy,
+.slick-reorder-guide {
+  background: $primary;
+}
+
 // * Editable grid styles
 // ************************************************************/
 

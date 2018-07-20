@@ -8,6 +8,7 @@ goog.require('os.ui.filter');
 goog.require('os.ui.filter.advancedFilterBuilderDirective');
 goog.require('os.ui.filter.basicFilterBuilderDirective');
 goog.require('os.ui.filter.ui.GroupNode');
+goog.require('os.ui.util.validationMessageDirective');
 goog.require('os.ui.window');
 
 
@@ -258,30 +259,24 @@ os.ui.filter.ui.EditFiltersCtrl.prototype.doRemove_ = function(node) {
 /**
  * Sets the tab value and broadcasts an event to the children.
  * @param {string} tab
+ * @export
  */
 os.ui.filter.ui.EditFiltersCtrl.prototype.setTab = function(tab) {
   this.checkFilter_();
   this.scope['tab'] = tab;
   this.scope.$broadcast('tabChange', tab);
 };
-goog.exportProperty(
-    os.ui.filter.ui.EditFiltersCtrl.prototype,
-    'setTab',
-    os.ui.filter.ui.EditFiltersCtrl.prototype.setTab);
 
 
 /**
  * Gets whether the form is invalid
  * @return {boolean}
+ * @export
  */
 os.ui.filter.ui.EditFiltersCtrl.prototype.isInvalid = function() {
   return this.scope['tab'] === 'basic' && this['isComplex'] ||
       this.isNodeInvalid(/** @type {!os.ui.filter.ui.GroupNode} */ (this['root']));
 };
-goog.exportProperty(
-    os.ui.filter.ui.EditFiltersCtrl.prototype,
-    'isInvalid',
-    os.ui.filter.ui.EditFiltersCtrl.prototype.isInvalid);
 
 
 /**
@@ -316,18 +311,16 @@ os.ui.filter.ui.EditFiltersCtrl.prototype.isNodeInvalid = function(node) {
 
 /**
  * Cancels the filter
+ * @export
  */
 os.ui.filter.ui.EditFiltersCtrl.prototype.cancel = function() {
   os.ui.window.close(this.element);
 };
-goog.exportProperty(
-    os.ui.filter.ui.EditFiltersCtrl.prototype,
-    'cancel',
-    os.ui.filter.ui.EditFiltersCtrl.prototype.cancel);
 
 
 /**
  * User clicked OK
+ * @export
  */
 os.ui.filter.ui.EditFiltersCtrl.prototype.finish = function() {
   this.entry.setTitle(this['title']);
@@ -343,10 +336,6 @@ os.ui.filter.ui.EditFiltersCtrl.prototype.finish = function() {
 
   os.ui.window.close(this.element);
 };
-goog.exportProperty(
-    os.ui.filter.ui.EditFiltersCtrl.prototype,
-    'finish',
-    os.ui.filter.ui.EditFiltersCtrl.prototype.finish);
 
 
 /**

@@ -1,7 +1,6 @@
-<div class="user-area-window window-content-wrapper">
+<div>
   <div class="modal-body">
-    <form class="user-area-form form-compact no-margin" ng-class="formClass" name="userAreaForm"
-        ng-submit="ctrl.confirm()" novalidate>
+    <form class="user-area-form form-compact no-margin" ng-class="formClass" name="userAreaForm" ng-submit="ctrl.confirm()" novalidate>
       <div ng-form="areaTypeForm" class="form-compressed"
           ng-if="ctrl.canEditGeometry && ctrl.areaTypes.length > 1">
         <div class="btn-group">
@@ -13,7 +12,7 @@
             {{ctrl.getAreaTypeName(type)}}
           </button>
         </div>
-        <hr>
+        <hr/>
       </div>
 
       <div ng-show="!ctrl.canEditGeometry">
@@ -40,24 +39,18 @@
         <div ng-if="ctrl.areaType == 'bbox'">
           <div class="row mb-1">
             <label class="col-form-label col-3 text-right u-required">Corner 1</label>
-            <div class="col form-inline">
-              <position name="corner1" geom="ctrl.corner1" order="ctrl.coordOrder" x-form="corner1Form" label="false" map-support="false" hide-hint="true"></position>
-            </div>
+            <position name="corner1" geom="ctrl.corner1" order="ctrl.coordOrder" x-form="corner1Form" show-label="false" map-support="false" hide-hint="true"></position>
           </div>
           <div class="row mb-1">
             <label class="col-form-label col-3 text-right u-required">Corner 2</label>
-            <div class="col form-inline">
-              <position name="corner2" geom="ctrl.corner2" order="ctrl.coordOrder" x-form="corner2Form" label="false" map-support="false" hide-hint="true"></position>
-            </div>
+            <position name="corner2" geom="ctrl.corner2" order="ctrl.coordOrder" x-form="corner2Form" show-label="false" map-support="false" hide-hint="true"></position>
           </div>
         </div>
 
         <div ng-if="ctrl.areaType == 'circle'" ng-form="circleForm">
           <div class="row mb-1">
             <label class="col-form-label col-3 text-right u-required">Center</label>
-            <div class="col form-inline">
-              <position name="center" geom="ctrl.center" order="ctrl.coordOrder" x-form="circleForm" label="false" map-support="false" hide-hint="true"></position>
-            </div>
+            <position name="center" geom="ctrl.center" order="ctrl.coordOrder" x-form="circleForm" show-label="false" map-support="false" hide-hint="true"></position>
           </div>
           <div class="row mb-1">
             <label class="col-form-label col-3 text-right u-required">Radius</label>
@@ -68,23 +61,21 @@
                   ng-change="ctrl.updateArea()"
                   ng-required="ctrl.areaType == 'circle'">
               <select class="form-control" ng-model="ctrl.radiusUnits" ng-change="ctrl.updateArea()" ng-options="unit for unit in ctrl.units"></select>
-              <span class="invalid-feedback d-block" ng-show="circleForm.radius.$error.required || circleForm.radius.$error.min">
+              <span class="invalid-feedback d-block" ng-show="(circleForm.radius.$error.required || circleForm.radius.$error.min) && circleForm.radius.$dirty">
                 Radius must be greater than zero.
               </span>
             </div>
           </div>
         </div>
 
-        <div class="user-area-polygon-form" ng-if="ctrl.areaType == 'polygon'" ng-form="polygonForm">
+        <div ng-if="ctrl.areaType == 'polygon'" ng-form="polygonForm">
           <div class="row mb-1">
             <label class="col-form-label col-3 text-right u-required">Coordinates</label>
-            <popover title="'Entering Coordinates'" content="ctrl.customPopoverContent" pos="'right'"></popover>
             <div class="col">
-              <textarea class="form-control flex-fill" name="coordinates" rows="5" required
-                  placeholder="Enter Coordinates"
-                  ng-model="ctrl.coordinates"
-                  ng-change="ctrl.updateArea()">
-              </textarea>
+              <span class="ml-auto float-right">
+                <popover title="'Entering Coordinates'" content="ctrl.customPopoverContent" pos="'right'"></popover>
+              </span>
+              <textarea class="col-11 form-control flex-fill" name="coordinates" rows="5" required placeholder="Enter Coordinates" ng-model="ctrl.coordinates" ng-change="ctrl.updateArea()"></textarea>
               <span class="invalid-feedback d-block" ng-if="ctrl.coordinates && !ctrl.area">
                 <i class="fa fa-warning text-warning"></i>
                 Coordinates must define a valid polygon.

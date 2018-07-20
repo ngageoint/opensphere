@@ -96,11 +96,10 @@ os.ui.filter.ui.FilterGroupUICtrl.prototype.onGroupChanged_ = function(event) {
 
 /**
  * Update the grouping
+ * @export
  */
 os.ui.filter.ui.FilterGroupUICtrl.prototype.onGroup = function() {
   var fqm = os.ui.filter.FilterManager.getInstance();
   var node = /** @type {os.structs.ITreeNode} */ (this.scope_['item']);
   fqm.setGrouping(node.getId(), /** @type {boolean} */ (this['group']));
 };
-goog.exportProperty(os.ui.filter.ui.FilterGroupUICtrl.prototype, 'onGroup',
-    os.ui.filter.ui.FilterGroupUICtrl.prototype.onGroup);

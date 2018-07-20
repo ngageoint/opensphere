@@ -196,11 +196,11 @@ os.ui.query.AreaNode.prototype.onMouseLeave = function() {
 /**
  * Whether or not the layer is loading
  * @return {boolean}
+ * @export
  */
 os.ui.query.AreaNode.prototype.isLoading = function() {
   return false;
 };
-goog.exportProperty(os.ui.query.AreaNode.prototype, 'isLoading', os.ui.query.AreaNode.prototype.isLoading);
 
 
 /**

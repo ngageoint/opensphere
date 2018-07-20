@@ -52,6 +52,7 @@ goog.inherits(os.ui.filter.ui.FilterNodeUICtrl, os.ui.slick.AbstractNodeUICtrl);
 
 /**
  * Removes the filter
+ * @export
  */
 os.ui.filter.ui.FilterNodeUICtrl.prototype.remove = function() {
   var filter = /** @type {os.ui.filter.ui.FilterNode} */ (this.scope['item']).getEntry();
@@ -59,43 +60,34 @@ os.ui.filter.ui.FilterNodeUICtrl.prototype.remove = function() {
   os.command.CommandProcessor.getInstance().addCommand(cmd);
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Filters.REMOVE, 1);
 };
-goog.exportProperty(
-    os.ui.filter.ui.FilterNodeUICtrl.prototype,
-    'remove',
-    os.ui.filter.ui.FilterNodeUICtrl.prototype.remove);
 
 
 /**
  * Is this filter able to be editted
  * @return {boolean}
+ * @export
  */
 os.ui.filter.ui.FilterNodeUICtrl.prototype.canEdit = function() {
   var filter = /** @type {os.ui.filter.ui.FilterNode} */ (this.scope['item']).getEntry();
   return goog.isDef(os.ui.queryManager.getLayerSet()[filter.getType()]);
 };
-goog.exportProperty(
-    os.ui.filter.ui.FilterNodeUICtrl.prototype,
-    'canEdit',
-    os.ui.filter.ui.FilterNodeUICtrl.prototype.canEdit);
 
 
 /**
  * Edits the filter
+ * @export
  */
 os.ui.filter.ui.FilterNodeUICtrl.prototype.edit = function() {
   var filter = /** @type {os.ui.filter.ui.FilterNode} */ (this.scope['item']).getEntry();
   this.scope.$emit('filterEdit', filter);
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Filters.EDIT, 1);
 };
-goog.exportProperty(
-    os.ui.filter.ui.FilterNodeUICtrl.prototype,
-    'edit',
-    os.ui.filter.ui.FilterNodeUICtrl.prototype.edit);
 
 
 /**
  * Whether to show the filter copy glyph
  * @return {boolean}
+ * @export
  */
 os.ui.filter.ui.FilterNodeUICtrl.prototype.canCopy = function() {
   // we must have both a descriptor for the layer and more than 1 layer loaded
@@ -104,17 +96,14 @@ os.ui.filter.ui.FilterNodeUICtrl.prototype.canCopy = function() {
   var layers = os.ui.queryManager.getLayerSet();
   return goog.object.getCount(layers) > 0 && !!d;
 };
-goog.exportProperty(os.ui.filter.ui.FilterNodeUICtrl.prototype, 'canCopy',
-    os.ui.filter.ui.FilterNodeUICtrl.prototype.canCopy);
 
 
 /**
  * Copy a thing
+ * @export
  */
 os.ui.filter.ui.FilterNodeUICtrl.prototype.copy = function() {
   var filter = /** @type {os.ui.filter.ui.FilterNode} */ (this.scope['item']).getEntry();
   this.scope.$emit('filterCopy', filter);
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Filters.COPY, 1);
 };
-goog.exportProperty(os.ui.filter.ui.FilterNodeUICtrl.prototype, 'copy',
-    os.ui.filter.ui.FilterNodeUICtrl.prototype.copy);

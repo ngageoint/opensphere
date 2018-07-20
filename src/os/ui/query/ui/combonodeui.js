@@ -12,16 +12,16 @@ os.ui.query.ui.comboNodeUIDirective = function() {
   return {
     restrict: 'AE',
     replace: true,
-    template: '<span class="float-right"">' +
+    template: '<span class="form-inline">' +
         '<span ng-if="nodeUi.isGroup()" title="Whether to pass all filters (AND) or any filter (OR)">' +
         '<span><select class="form-control" ng-model="nodeUi.activeGroup" ng-change="nodeUi.toggleGroup()"' +
         'ng-options="item as item for item in nodeUi.groups"/></span>' +
         '</span>' +
-        '<span>' +
+        '<span class="ml-2">' +
         '<span ng-if="nodeUi.isArea() && nodeUi.isEnabled()" ng-click="nodeUi.toggleQuery()" title="' +
         'Toggles between querying and excluding the area">' +
-        '<i class="fa fa-fw c-glyph" ng-class="{\'fa-ban text-danger\': !nodeUi.include, \'fa-circle-o text-warning\'' +
-        ': nodeUi.include}"></i>' +
+        '<i class="fa fa-fw c-glyph" ' +
+        'ng-class="{\'fa-ban text-danger\': !nodeUi.include, \'fa-circle-o u-text-yellow\': nodeUi.include}"></i>' +
         '</span>' +
         '<span ng-if="nodeUi.isFilter() && nodeUi.showCopy()" ng-click="nodeUi.copy()">' +
         '<i class="fa fa-copy fa-fw c-glyph" title="Copy"></i></span>' +
@@ -145,6 +145,7 @@ os.ui.query.ui.ComboNodeUICtrl.prototype.getInclude = function() {
 
 /**
  * Toggles the filter group value
+ * @export
  */
 os.ui.query.ui.ComboNodeUICtrl.prototype.toggleGroup = function() {
   this['group'] = !this['group'];
@@ -167,12 +168,11 @@ os.ui.query.ui.ComboNodeUICtrl.prototype.toggleGroup = function() {
 
   this.scope_.$emit('dirty');
 };
-goog.exportProperty(os.ui.query.ui.ComboNodeUICtrl.prototype, 'toggleGroup',
-    os.ui.query.ui.ComboNodeUICtrl.prototype.toggleGroup);
 
 
 /**
  * @return {boolean} Whether or not to show the filter group UI
+ * @export
  */
 os.ui.query.ui.ComboNodeUICtrl.prototype.isGroup = function() {
   var children = this.node_.getChildren();
@@ -184,8 +184,6 @@ os.ui.query.ui.ComboNodeUICtrl.prototype.isGroup = function() {
 
   return false;
 };
-goog.exportProperty(os.ui.query.ui.ComboNodeUICtrl.prototype, 'isGroup',
-    os.ui.query.ui.ComboNodeUICtrl.prototype.isGroup);
 
 
 /**
@@ -198,6 +196,7 @@ os.ui.query.ui.ComboNodeUICtrl.prototype.getEntry = function() {
 
 /**
  * Toggles area query/exclude
+ * @export
  */
 os.ui.query.ui.ComboNodeUICtrl.prototype.toggleQuery = function() {
   this['include'] = !this['include'];
@@ -209,66 +208,60 @@ os.ui.query.ui.ComboNodeUICtrl.prototype.toggleQuery = function() {
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Filters.ADVANCED_AREA_INCLUDE_TOGGLE, 1);
   this.scope_.$emit('dirty');
 };
-goog.exportProperty(os.ui.query.ui.ComboNodeUICtrl.prototype, 'toggleQuery',
-    os.ui.query.ui.ComboNodeUICtrl.prototype.toggleQuery);
 
 
 /**
  * @return {boolean} Whether or not to show the area UI
+ * @export
  */
 os.ui.query.ui.ComboNodeUICtrl.prototype.isArea = function() {
   var entry = this.getEntry();
   return !!entry && !!entry['areaId'] && entry['areaId'] !== '*';
 };
-goog.exportProperty(os.ui.query.ui.ComboNodeUICtrl.prototype, 'isArea',
-    os.ui.query.ui.ComboNodeUICtrl.prototype.isArea);
 
 
 /**
  * @return {boolean} Whether or not the node is enabled
+ * @export
  */
 os.ui.query.ui.ComboNodeUICtrl.prototype.isEnabled = function() {
   return this.node_.getState() !== os.structs.TriState.OFF;
 };
-goog.exportProperty(os.ui.query.ui.ComboNodeUICtrl.prototype, 'isEnabled',
-    os.ui.query.ui.ComboNodeUICtrl.prototype.isEnabled);
 
 
 /**
  * @return {boolean} Whether or not to show the filter entry UI
+ * @export
  */
 os.ui.query.ui.ComboNodeUICtrl.prototype.isFilter = function() {
   var entry = this.getEntry();
   return !!entry && !!entry['filterId'] && entry['filterId'] !== '*';
 };
-goog.exportProperty(os.ui.query.ui.ComboNodeUICtrl.prototype, 'isFilter',
-    os.ui.query.ui.ComboNodeUICtrl.prototype.isFilter);
 
 
 /**
  * Edit a thing
+ * @export
  */
 os.ui.query.ui.ComboNodeUICtrl.prototype.edit = function() {
   this.scope_.$emit('edit', this.isFilter(), this.getEntry());
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Filters.ADVANCED_AREA_EDIT, 1);
 };
-goog.exportProperty(os.ui.query.ui.ComboNodeUICtrl.prototype, 'edit',
-    os.ui.query.ui.ComboNodeUICtrl.prototype.edit);
 
 
 /**
  * View a thing
+ * @export
  */
 os.ui.query.ui.ComboNodeUICtrl.prototype.view = function() {
   this.scope_.$emit('view', this.isFilter(), this.getEntry());
 };
-goog.exportProperty(os.ui.query.ui.ComboNodeUICtrl.prototype, 'view',
-    os.ui.query.ui.ComboNodeUICtrl.prototype.view);
 
 
 /**
  * Whether to show the filter copy glyph.
  * @return {boolean}
+ * @export
  */
 os.ui.query.ui.ComboNodeUICtrl.prototype.showCopy = function() {
   // we must have both a descriptor for the layer and more than 1 layer loaded
@@ -277,28 +270,24 @@ os.ui.query.ui.ComboNodeUICtrl.prototype.showCopy = function() {
   var layers = os.ui.queryManager.getLayerSet();
   return goog.object.getCount(layers) > 0 && !!d;
 };
-goog.exportProperty(os.ui.query.ui.ComboNodeUICtrl.prototype, 'showCopy',
-    os.ui.query.ui.ComboNodeUICtrl.prototype.showCopy);
 
 
 /**
  * Copy a thing
+ * @export
  */
 os.ui.query.ui.ComboNodeUICtrl.prototype.copy = function() {
   this.scope_.$emit('copy', this.getEntry());
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Filters.ADVANCED_AREA_COPY, 1);
 };
-goog.exportProperty(os.ui.query.ui.ComboNodeUICtrl.prototype, 'copy',
-    os.ui.query.ui.ComboNodeUICtrl.prototype.copy);
 
 
 /**
  * Remove a thing
+ * @export
  */
 os.ui.query.ui.ComboNodeUICtrl.prototype.remove = function() {
   this.scope_.$emit('remove', this.isFilter(), this.getEntry());
   this.scope_.$emit('dirty');
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Filters.ADVANCED_AREA_REMOVE, 1);
 };
-goog.exportProperty(os.ui.query.ui.ComboNodeUICtrl.prototype, 'remove',
-    os.ui.query.ui.ComboNodeUICtrl.prototype.remove);

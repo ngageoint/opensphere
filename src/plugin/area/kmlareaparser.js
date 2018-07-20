@@ -4,6 +4,7 @@ goog.require('ol.xml');
 goog.require('os.data.ColumnDefinition');
 goog.require('os.parse.AsyncParser');
 goog.require('os.parse.IParser');
+goog.require('os.ui.im.mergeAreaOptionDirective');
 
 
 

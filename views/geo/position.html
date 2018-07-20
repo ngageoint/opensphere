@@ -18,7 +18,7 @@
       </div>
       <div>
         <validation-message target="form.pos"></validation-message>
-        <span class="invalid-feedback d-block" ng-show="form.pos.$invalid && !form.pos.$error.required">
+        <span class="invalid-feedback d-block" ng-show="form.pos.$invalid && !form.pos.$error.required && form.pos.$dirty">
           Invalid position!
         </span>
       </div>

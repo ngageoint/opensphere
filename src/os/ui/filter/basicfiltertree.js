@@ -43,7 +43,7 @@ os.ui.filter.BasicFilterTreeCtrl.prototype.treeFormatter = function(row, cell, v
   return row % 2 == 1 ? '<div ng-bind="root.grouping"></div>' :
       '<expression expr="item.getExpression()" columns="columns"></expression>' +
       ('<span ng-if="hasMultipleFilters()">' +
-          '<button class="btn btn-danger" tabindex="-1" ng-click="$emit(\'filterbuilder.remove\', item)" ' +
+          '<button class="btn btn-danger btn-sm" tabindex="-1" ng-click="$emit(\'filterbuilder.remove\', item)" ' +
           'title="Remove this expression"><i class="fa fa-times"></i></button></span>');
 };
 

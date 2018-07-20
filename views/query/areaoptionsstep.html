@@ -1,17 +1,8 @@
-<div>
+<div class="d-flex flex-column flex-fill">
   <div class="modal-body">
-    <form name="areaOptionsForm" class="form-compact form-horizontal form-popover-help">
+    <form name="areaOptionsForm">
       <basicinfo config="config" columns="config.merge ? null : config.columns" help="areaoptions.help"></basicinfo>
-
-      <div class="row mt-1">
-        <label class="col-form-label col-4 text-right">Merge Areas</label>
-        <div class="col form-inline">
-          <input type="checkbox" name="merge" ng-model="config.merge"/>
-          <span class="ml-auto">
-            <popover class="float-right" ng-if="areaoptions.help.merge" x-title="'Merge Areas'" x-content="areaoptions.help.merge" x-pos="'right'"></popover>
-          </span>
-        </div>
-      </div>
+      <mergeareaoption ng-model="config.merge" help="areaoptions.help.merge"></mergeareaoption>
     </form>
   </div>
 </div>

@@ -37,12 +37,13 @@ os.ui.Module.directive('editarea', [os.ui.query.ui.editAreaDirective]);
  * Controller for edit area window
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
+ * @param {!angular.$timeout} $timeout The Angular $timeout service.
  * @extends {os.ui.query.ui.AreaImportCtrl}
  * @constructor
  * @ngInject
  */
-os.ui.query.ui.EditAreaCtrl = function($scope, $element) {
-  os.ui.query.ui.EditAreaCtrl.base(this, 'constructor', $scope, $element);
+os.ui.query.ui.EditAreaCtrl = function($scope, $element, $timeout) {
+  os.ui.query.ui.EditAreaCtrl.base(this, 'constructor', $scope, $element, $timeout);
 
   this.config = $scope['config'] = {
     'title': null,
@@ -64,6 +65,10 @@ os.ui.query.ui.EditAreaCtrl = function($scope, $element) {
     this.config['description'] = feature.get('description');
     this.config['tags'] = feature.get('tags');
   }
+
+  $timeout(function() {
+    $scope.$emit(os.ui.WindowEventType.READY);
+  });
 };
 goog.inherits(os.ui.query.ui.EditAreaCtrl, os.ui.query.ui.AreaImportCtrl);
 
