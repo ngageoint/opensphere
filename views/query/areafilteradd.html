@@ -8,7 +8,7 @@
         <input class="search top-gapxs" type="text" ng-model="filterTerm" ng-change="afa.searchFilters()" placeholder="Search filters"></input>
       </div>
     </div>
-    <div class="filter-tree slick-tree-container" autoheight="50%" siblings=".areas-header, .filters-header, area-tree">
+    <div class="filter-tree slick-tree-container d-flex" autoheight="50%" siblings=".areas-header, .filters-header, area-tree">
       <slicktree x-data="filters" selected="selected" show-root="true" multi-select="true"></slicktree>
     </div>
 
@@ -35,7 +35,7 @@
         <input class="search top-gapxs" type="text" ng-model="areaTerm" ng-change="afa.searchAreas()" placeholder="Search areas"></input>
       </div>
     </div>
-    <div class="area-tree slick-tree-container" autoheight="50%" siblings=".areas-header, .filters-header, filter-tree">
+    <div class="area-tree slick-tree-container d-flex" autoheight="50%" siblings=".areas-header, .filters-header, filter-tree">
       <slicktree x-data="areas" selected="selected" show-root="true" multi-select="true"></slicktree>
     </div>
   </div>

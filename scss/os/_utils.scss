@@ -53,8 +53,12 @@ html {
   pointer-events: none;
 }
 
+.u-flex-basis-0 {
+  flex-basis: 0% !important;
+}
+
 .u-flex-grow {
-  flex: 1;
+  flex: 1 1 auto;
   position: relative;
 }
 
