@@ -5,6 +5,7 @@
         <label class="col-form-label col-2 text-right u-required" for="filterTitle">Title</label>
         <div class="col form-inline">
           <input class="form-control w-50" id="filterTitle" type="text" ng-model="filters.title" name="title" required/>
+          <validation-message target="filterForm.title"></validation-message>
         </div>
       </div>
       <div class="row mb-1">
@@ -14,8 +15,8 @@
         </div>
       </div>
       <ul class="nav nav-tabs flex-shrink-0">
-        <li class="nav-item"><a class="nav-link" ng-class="{active: tab == 'basic'}" ng-click="filters.setTab('basic')">Basic</a></li>
-        <li class="nav-item"><a class="nav-link" ng-class="{active: tab == 'advanced'}" ng-click="filters.setTab('advanced')">Advanced</a></li>
+        <li class="nav-item"><a href class="nav-link" ng-class="{active: tab == 'basic'}" ng-click="filters.setTab('basic')">Basic</a></li>
+        <li class="nav-item"><a href class="nav-link" ng-class="{active: tab == 'advanced'}" ng-click="filters.setTab('advanced')">Advanced</a></li>
       </ul>
       <div class="flex-column d-flex flex-fill">
         <div class="flex-column d-flex flex-fill">

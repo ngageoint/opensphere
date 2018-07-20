@@ -1,5 +1,5 @@
 <span ng-form="exprForm" class="my-1 flex-fill">
-	<div class="row-fluid">
+	<div class="row">
 		<div class="col form-inline">
 		  <select class="col-4 mr-2  form-control" ng-model="expr.column" ng-options="value.name for value in columns" required/>
 		  <select class="col-4 mr-2 form-control" ng-model="expr.op" ng-options="value.getTitle() for value in ops" required/>

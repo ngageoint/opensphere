@@ -66,7 +66,7 @@ plugin.file.geojson.GeoJSONImportUI.prototype.launchUI = function(file, opt_conf
   };
   var windowOptions = {
     'label': 'Import GeoJSON',
-    'icon': 'fa fa-sign-in lt-blue-icon',
+    'icon': 'fa fa-sign-in',
     'x': 'center',
     'y': 'center',
     'width': '850',

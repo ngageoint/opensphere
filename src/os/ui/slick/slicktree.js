@@ -861,11 +861,13 @@ os.ui.slick.SlickTreeCtrl.prototype.onDrag = function(e, dragInfo) {
       var targetNode = /** @type {os.ui.slick.SlickTreeNode} */ (this.dataView.getItem(insertOn));
       dragInfo['guide'].css('top', (insertBefore + (Math.round(loc) == 0 ? .5 : -.5)) * rowHeight);
       dragInfo['guide'].css('left', (targetNode.getDepth() + 1) * rowWidth);
-      dragInfo['rect'].css('background', 'blue');
+      dragInfo['rect'].removeClass('bg-danger');
+      dragInfo['rect'].addClass('bg-primary');
       dragInfo['canMove'] = true;
     } else {
       dragInfo['guide'].css('top', -1000);
-      dragInfo['rect'].css('background', 'red');
+      dragInfo['rect'].removeClass('bg-primary');
+      dragInfo['rect'].addClass('bg-danger');
       dragInfo['canMove'] = false;
     }
     dragInfo['insertBefore'] = insertOn;
@@ -877,7 +879,8 @@ os.ui.slick.SlickTreeCtrl.prototype.onDrag = function(e, dragInfo) {
       var depth = targetNode ? targetNode.getDepth() : 0;
       dragInfo['guide'].css('top', insertBefore * rowHeight);
       dragInfo['guide'].css('left', (depth + 1) * rowWidth);
-      dragInfo['rect'].css('background', 'blue');
+      dragInfo['rect'].removeClass('bg-danger');
+      dragInfo['rect'].addClass('bg-primary');
       dragInfo['canMove'] = true;
 
       if (targetNode && targetNode.getParentIndex() != currentNode.getParentIndex()) {
@@ -899,7 +902,8 @@ os.ui.slick.SlickTreeCtrl.prototype.onDrag = function(e, dragInfo) {
     } else {
       dragInfo['guide'].css('top', -1000);
       dragInfo['guide'].css('left', 0);
-      dragInfo['rect'].css('background', 'red');
+      dragInfo['rect'].removeClass('bg-primary');
+      dragInfo['rect'].addClass('bg-danger');
       dragInfo['canMove'] = false;
     }
     dragInfo['insertBefore'] = insertBefore;

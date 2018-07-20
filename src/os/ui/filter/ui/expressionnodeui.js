@@ -48,25 +48,19 @@ os.ui.filter.ui.ExpressionNodeUI = function($scope, $element) {
 
 /**
  * Removes the expression
+ * @export
  */
 os.ui.filter.ui.ExpressionNodeUI.prototype.remove = function() {
   var node = /** @type {os.ui.filter.ui.ExpressionNode} */ (this.scope_['item']);
   this.scope_.$emit('filterbuilder.remove', node);
 };
-goog.exportProperty(
-    os.ui.filter.ui.ExpressionNodeUI.prototype,
-    'remove',
-    os.ui.filter.ui.ExpressionNodeUI.prototype.remove);
 
 
 /**
  * Edits the expression
+ * @export
  */
 os.ui.filter.ui.ExpressionNodeUI.prototype.edit = function() {
   var node = /** @type {os.ui.filter.ui.ExpressionNode} */ (this.scope_['item']);
   this.scope_.$emit('advancedfilterbuilder.editExpr', node);
 };
-goog.exportProperty(
-    os.ui.filter.ui.ExpressionNodeUI.prototype,
-    'edit',
-    os.ui.filter.ui.ExpressionNodeUI.prototype.edit);

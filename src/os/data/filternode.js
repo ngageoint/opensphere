@@ -134,7 +134,7 @@ os.data.FilterNode.prototype.formatIcons = function() {
   var color = '';
   var status = 'inactive';
   if (found && goog.isDefAndNotNull(os.MapContainer.getInstance().getLayer(filter.getType()))) {
-    color = 'green-icon';
+    color = 'text-success';
     status = 'active';
   }
 

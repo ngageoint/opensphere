@@ -45,10 +45,11 @@ os.ui.Module.directive('filterexport', [os.ui.filter.ui.filterExportDirective]);
  * Controller function for the filterexport directive
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
+ * @param {!angular.$timeout} $timeout The Angular $timeout service.
  * @constructor
  * @ngInject
  */
-os.ui.filter.ui.FilterExportCtrl = function($scope, $element) {
+os.ui.filter.ui.FilterExportCtrl = function($scope, $element, $timeout) {
   /**
    * @type {?angular.Scope}
    * @protected
@@ -75,6 +76,11 @@ os.ui.filter.ui.FilterExportCtrl = function($scope, $element) {
    * @type {Function}
    */
   this['confirm'] = $scope['confirm'];
+
+  // trigger window auto height after the DOM is rendered
+  $timeout(function() {
+    $scope.$emit(os.ui.WindowEventType.READY);
+  });
 };
 
 
@@ -108,28 +114,22 @@ os.ui.filter.ui.launchFilterExport = function(confirm, opt_mode) {
 
 /**
  * Fire the cancel callback and close the window.
+ * @export
  */
 os.ui.filter.ui.FilterExportCtrl.prototype.cancel = function() {
   this.close_();
 };
-goog.exportProperty(
-    os.ui.filter.ui.FilterExportCtrl.prototype,
-    'cancel',
-    os.ui.filter.ui.FilterExportCtrl.prototype.cancel);
 
 
 /**
  * Fire the confirmation callback and close the window.
+ * @export
  */
 os.ui.filter.ui.FilterExportCtrl.prototype.save = function() {
   // call our confirm function with the file name and mode
   this['confirm'](this['fileName'], this['mode']);
   this.close_();
 };
-goog.exportProperty(
-    os.ui.filter.ui.FilterExportCtrl.prototype,
-    'save',
-    os.ui.filter.ui.FilterExportCtrl.prototype.save);
 
 
 /**

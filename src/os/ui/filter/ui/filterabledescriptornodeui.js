@@ -25,10 +25,10 @@ os.ui.filter.ui.filterableDescriptorNodeUIDirective = function() {
  * @private
  */
 os.ui.filter.ui.filterableDescriptorNodeUIDirective.TEMPLATE_ =
-    '<span class="glyphs pull-right slick-node-ui" ng-if="nodeUi.show()">' +
+    '<span class="float-right" ng-if="nodeUi.show()">' +
     '<span ng-if="nodeUi.filtersEnabled" ng-click="nodeUi.filter()">' +
-    '<i class="fa fa-filter fa-fw glyph" title="Manage filters"' +
-    'ng-class="{\'green-icon\': nodeUi.filtered}"></i></span></span>';
+    '<i class="fa fa-filter fa-fw c-glyph" title="Manage filters"' +
+    'ng-class="{\'text-success\': nodeUi.filtered}"></i></span></span>';
 
 
 /**
@@ -100,6 +100,7 @@ os.ui.filter.ui.FilterableDescriptorNodeUICtrl.prototype.updateFilters_ = functi
 
 /**
  * Launch the filter manager for the layer
+ * @export
  */
 os.ui.filter.ui.FilterableDescriptorNodeUICtrl.prototype.filter = function() {
   var d = this.node_.getDescriptor();
@@ -107,5 +108,3 @@ os.ui.filter.ui.FilterableDescriptorNodeUICtrl.prototype.filter = function() {
     d.launchFilterManager();
   }
 };
-goog.exportProperty(os.ui.filter.ui.FilterableDescriptorNodeUICtrl.prototype, 'filter',
-    os.ui.filter.ui.FilterableDescriptorNodeUICtrl.prototype.filter);

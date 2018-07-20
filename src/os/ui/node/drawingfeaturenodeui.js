@@ -8,8 +8,8 @@ goog.require('os.ui.slick.AbstractNodeUICtrl');
 /**
  * @type {string}
  */
-os.ui.node.DrawingFeatureNodeUITemplate = '<span class="glyphs pull-right slick-node-ui" ng-if="nodeUi.show()">' +
-    '<span ng-click="nodeUi.remove()"><i class="fa fa-times fa-fw glyph glyph-remove"' +
+os.ui.node.DrawingFeatureNodeUITemplate = '<span ng-if="nodeUi.show()">' +
+    '<span ng-click="nodeUi.remove()"><i class="fa fa-times fa-fw c-glyph text-danger"' +
     'title="Remove the feature"></i></span></span>';
 
 
@@ -51,6 +51,7 @@ goog.inherits(os.ui.node.DrawingFeatureNodeUICtrl, os.ui.slick.AbstractNodeUICtr
 
 /**
  * Remove the feature
+ * @export
  */
 os.ui.node.DrawingFeatureNodeUICtrl.prototype.remove = function() {
   // the node should be on the scope as 'item'
@@ -62,5 +63,3 @@ os.ui.node.DrawingFeatureNodeUICtrl.prototype.remove = function() {
     os.MapContainer.getInstance().removeFeature(feature);
   }
 };
-goog.exportProperty(os.ui.node.DrawingFeatureNodeUICtrl.prototype, 'remove',
-    os.ui.node.DrawingFeatureNodeUICtrl.prototype.remove);
