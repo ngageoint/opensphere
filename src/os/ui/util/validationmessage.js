@@ -46,6 +46,7 @@ os.ui.util.ValidationMessageCtrl = function($scope, $element) {
 /**
  * Waits for Angular to finish doing things then resizes the map.
  * @return {boolean}
+ * @export
  */
 os.ui.util.ValidationMessageCtrl.prototype.hasError = function() {
   return this.scope_['target'] && !goog.object.isEmpty(this.scope_['target'].$error) && this.scope_['target'].$dirty;
