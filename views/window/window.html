@@ -1,13 +1,13 @@
-<div class="js-window modal d-block c-window" ng-class="{'active': active}">
-  <div class="modal-content h-100" ng-class="headerClass">
+<div class="js-window modal d-flex c-window" ng-class="{'active': active}">
+  <div class="modal-content d-flex flex-column flex-fill" ng-class="headerClass">
     <div class="js-window__header modal-header d-flex justify-content-between flex-shrink-0" ng-dblclick="windowCtrl.toggle()">
       <div class="js-window__header-text text-truncate" title="{{label}}">
         <i ng-if="icon" ng-class="icon" class="mr-1"></i>
         <span ng-if="iconHtml" ng-bind-html="iconHtml"></span>
         {{label}}
       </div>
-      <div>
-        <div ng-if="helpContext" class="d-inline-block">
+      <div class="d-inline-flex">
+        <div ng-if="helpContext" class="d-inline-flex">
           <context-onboarding context="{{helpContext}}"></context-onboarding>
         </div>
 
@@ -20,7 +20,7 @@
           </button>
         </div>
 
-        <div ng-if="showCollapse && !modal && !overlay" ng-click="windowCtrl.toggle()" title="{{collapsed ? 'Expand' : 'Collapse'}}" class="d-inline-block">
+        <div ng-if="showCollapse && !modal && !overlay" ng-click="windowCtrl.toggle()" title="{{collapsed ? 'Expand' : 'Collapse'}}" class="d-inline-flex">
           <i class="fa window-close" ng-class="{'fa-compress': !collapsed, 'fa-expand': collapsed}"></i>
         </div>
 
@@ -33,8 +33,8 @@
         </button>
       </div>
     </div>
-    <div class="w-100 h-100 d-flex flex-column">
-      <div class="js-window__wrapper h-100 d-flex flex-column u-flex-grow" ng-transclude></div>
+    <div class="w-100 flex-fill d-flex flex-column">
+      <div class="js-window__wrapper d-flex flex-column flex-fill" ng-transclude></div>
     </div>
   </div>
 </div>

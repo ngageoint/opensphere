@@ -3,7 +3,7 @@
 
 .slick-grid {
   box-sizing: content-box;
-  height: 100%;
+  flex: 1;
   width: 100%;
 
   .even {
@@ -235,7 +235,7 @@
 .slick-tree {
   background: $body-bg;
   box-sizing: content-box;
-  height: 100%;
+  flex: 1;
   width: 100%;
 
   .slick-cell .slick-node-ui i:first-child {

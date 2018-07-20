@@ -1,4 +1,4 @@
-<div class="d-flex h-100">
+<div class="d-flex flex-fill">
   <div class="modal-body d-flex flex-row u-overflow-y-hidden">
     <div class="d-flex flex-column col-4 pl-0 pr-2" ng-show="features.length > 1">
       <div class="input-group mb-1">
@@ -15,7 +15,7 @@
       <slickgrid x-data="filteredFeatures" columns="multiCtrl.columns" selected="selected" options="multiCtrl.options"></slickgrid>
     </div>
     <div class="d-flex col pl-0 pr-0">
-      <uiswitch class="d-flex flex-column u-flex-grow" items="selected" directive-function="multiCtrl.getUi" generic="featureinfo"></uiswitch>
+      <uiswitch class="d-flex flex-column flex-fill" items="selected" directive-function="multiCtrl.getUi" generic="featureinfo"></uiswitch>
     </div>
   </div>
 </div>

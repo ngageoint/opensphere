@@ -1,8 +1,8 @@
-<div id="wizard" class="h-100 w-100 d-flex flex-column" ng-class="wiz.wizardClass">
-  <div class="modal-body container-fluid h-100">
-    <div class="row h-100">
-      <div class="col-3">
-        <div class="border h-100">
+<div id="wizard" class="flex-fill w-100 d-flex flex-column" ng-class="wiz.wizardClass">
+  <div class="modal-body container-fluid flex-fill">
+    <div class="row flex-fill">
+      <div class="col-3 d-flex">
+        <div class="border flex-fill">
           <div class="list-group list-group-flush">
             <a href="" class="list-group-item list-group-item-action border-bottom" ng-repeat="step in wiz.steps"
                 ng-class="{'active': wiz.isActive(step)}" ng-click="wiz.setStepIndex($index)">
@@ -14,7 +14,7 @@
           </div>
         </div>
       </div>
-      <div id="wizard-step-content" class="d-flex col-9 h-100"></div>
+      <div id="wizard-step-content" class="d-flex col-9 flex-fill"></div>
     </div>
   </div>
 

@@ -1,4 +1,4 @@
-<div class="d-flex flex-column h-100">
+<div class="d-flex flex-column flex-fill">
   <div>
     <div class="float-right">
       <button class="btn btn-primary" ng-click="servers.add()" title="Add a new server">
@@ -8,7 +8,7 @@
     </div>
     <p>Data servers provide layers, analytics, and other data that can be loaded on the map.</p>
   </div>
-  <div class="u-flex-grow u-overflow-y-auto">
+  <div class="flex-fill u-overflow-y-auto">
     <table class="table table-striped bg-secondary m-0">
       <tbody>
         <tr ng-repeat="item in data">

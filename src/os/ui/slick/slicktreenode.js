@@ -273,7 +273,7 @@ os.ui.slick.SlickTreeNode.prototype.format = function(row, cell, value) {
   html += '<nodespinner></nodespinner>';
   html += '<nodeicons></nodeicons>';
 
-  html += '<span class="text-truncate u-flex-grow">' + this.formatValue(value) + '</span>';
+  html += '<span class="text-truncate flex-fill">' + this.formatValue(value) + '</span>';
   html += this.formatNodeUI();
   return html;
 };
