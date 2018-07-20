@@ -11,7 +11,7 @@ os.ui.filter.ui.expressionNodeViewUIDirective = function() {
   return {
     restrict: 'AE',
     replace: true,
-    template: '<span class="c-glyph float-right"></span>',
+    template: '<span class="c-glyph"></span>',
     controller: os.ui.filter.ui.ExpressionNodeViewUI,
     controllerAs: 'nodeUi'
   };

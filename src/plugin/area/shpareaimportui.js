@@ -100,12 +100,13 @@ os.ui.Module.directive('shparea', [plugin.area.shpAreaDirective]);
  * Controller for the SHP import file selection step
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
+ * @param {!angular.$timeout} $timeout The Angular $timeout service.
  * @extends {plugin.area.AreaImportCtrl<plugin.file.shp.SHPParserConfig>}
  * @constructor
  * @ngInject
  */
-plugin.area.SHPAreaCtrl = function($scope, $element) {
-  plugin.area.SHPAreaCtrl.base(this, 'constructor', $scope, $element);
+plugin.area.SHPAreaCtrl = function($scope, $element, $timeout) {
+  plugin.area.SHPAreaCtrl.base(this, 'constructor', $scope, $element, $timeout);
 
   this.scope.$on(os.ui.wiz.step.WizardStepEvent.VALIDATE, this.onFileChange_.bind(this));
 

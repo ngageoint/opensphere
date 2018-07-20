@@ -115,12 +115,13 @@ os.ui.Module.directive('kmlarea', [plugin.area.kmlAreaDirective]);
  * Controller for the SHP import file selection step
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
+ * @param {!angular.$timeout} $timeout The Angular $timeout service.
  * @extends {plugin.area.AreaImportCtrl<os.parse.FileParserConfig>}
  * @constructor
  * @ngInject
  */
-plugin.area.KMLAreaCtrl = function($scope, $element) {
-  plugin.area.KMLAreaCtrl.base(this, 'constructor', $scope, $element);
+plugin.area.KMLAreaCtrl = function($scope, $element, $timeout) {
+  plugin.area.KMLAreaCtrl.base(this, 'constructor', $scope, $element, $timeout);
 };
 goog.inherits(plugin.area.KMLAreaCtrl, plugin.area.AreaImportCtrl);
 

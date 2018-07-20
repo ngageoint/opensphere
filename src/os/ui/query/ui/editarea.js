@@ -43,7 +43,7 @@ os.ui.Module.directive('editarea', [os.ui.query.ui.editAreaDirective]);
  * @ngInject
  */
 os.ui.query.ui.EditAreaCtrl = function($scope, $element, $timeout) {
-  os.ui.query.ui.EditAreaCtrl.base(this, 'constructor', $scope, $element);
+  os.ui.query.ui.EditAreaCtrl.base(this, 'constructor', $scope, $element, $timeout);
 
   this.config = $scope['config'] = {
     'title': null,
