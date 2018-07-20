@@ -39,18 +39,18 @@
         <div ng-if="ctrl.areaType == 'bbox'">
           <div class="row mb-1">
             <label class="col-form-label col-3 text-right u-required">Corner 1</label>
-            <position name="corner1" geom="ctrl.corner1" order="ctrl.coordOrder" x-form="corner1Form" label="false" map-support="false" hide-hint="true"></position>
+            <position name="corner1" geom="ctrl.corner1" order="ctrl.coordOrder" x-form="corner1Form" show-label="false" map-support="false" hide-hint="true"></position>
           </div>
           <div class="row mb-1">
             <label class="col-form-label col-3 text-right u-required">Corner 2</label>
-            <position name="corner2" geom="ctrl.corner2" order="ctrl.coordOrder" x-form="corner2Form" label="false" map-support="false" hide-hint="true"></position>
+            <position name="corner2" geom="ctrl.corner2" order="ctrl.coordOrder" x-form="corner2Form" show-label="false" map-support="false" hide-hint="true"></position>
           </div>
         </div>
 
         <div ng-if="ctrl.areaType == 'circle'" ng-form="circleForm">
           <div class="row mb-1">
             <label class="col-form-label col-3 text-right u-required">Center</label>
-            <position name="center" geom="ctrl.center" order="ctrl.coordOrder" x-form="circleForm" label="false" map-support="false" hide-hint="true"></position>
+            <position name="center" geom="ctrl.center" order="ctrl.coordOrder" x-form="circleForm" show-label="false" map-support="false" hide-hint="true"></position>
           </div>
           <div class="row mb-1">
             <label class="col-form-label col-3 text-right u-required">Radius</label>

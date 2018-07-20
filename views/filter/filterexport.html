@@ -20,13 +20,13 @@
             Export all filters
           </label>
         </label>
-        <label class="form-inline d-inline-flex">
-          <label class="mr-2 u-required">
-            Name
-          </label>
+      </div>
+      <div class="row">
+        <label class="col-form-label col-3 text-right u-required">Name</label>
+        <div class="col">
           <input class="form-control" type="text" name="title" ng-model="filterexport['fileName']" ng-maxlength="200" required>
           <validation-message target="exportForm.title"></validation-message>
-        </label>
+        </div>
       </div>
     </form>
   </div>

@@ -45,10 +45,11 @@ os.ui.Module.directive('filterexport', [os.ui.filter.ui.filterExportDirective]);
  * Controller function for the filterexport directive
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
+ * @param {!angular.$timeout} $timeout The Angular $timeout service.
  * @constructor
  * @ngInject
  */
-os.ui.filter.ui.FilterExportCtrl = function($scope, $element) {
+os.ui.filter.ui.FilterExportCtrl = function($scope, $element, $timeout) {
   /**
    * @type {?angular.Scope}
    * @protected
@@ -75,6 +76,11 @@ os.ui.filter.ui.FilterExportCtrl = function($scope, $element) {
    * @type {Function}
    */
   this['confirm'] = $scope['confirm'];
+
+  // trigger window auto height after the DOM is rendered
+  $timeout(function() {
+    $scope.$emit(os.ui.WindowEventType.READY);
+  });
 };
 
 
