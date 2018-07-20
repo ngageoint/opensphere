@@ -1,5 +1,5 @@
-<div class="h-100 w-100 d-flex flex-column">
-  <div class="modal-body d-flex flex-column u-flex-grow">
+<div class="flex-fill w-100 d-flex flex-column">
+  <div class="modal-body d-flex flex-column flex-fill">
     <div class="alert alert-danger animate-fade flex-shrink-0" ng-if="addData.showServerAlert">
       <button class="close" type="button" ng-click="addData.dismissServerAlert()">
         <i class="fa fa-times"></i>
@@ -48,10 +48,10 @@
       </div>
     </div>
 
-    <div class="d-flex u-flex-grow mt-1">
-      <slicktree class="border u-flex-grow" x-data="providers" checkbox-class="c-toggle-switch" checkbox-tooltip="Activates or deactivates the layer"
+    <div class="d-flex flex-fill mt-1">
+      <slicktree class="border flex-fill" x-data="providers" checkbox-class="c-toggle-switch" checkbox-tooltip="Activates or deactivates the layer"
         selected="selected" disable-folders="true"></slicktree>
-      <div class="border u-flex-grow ml-1 p-2" ng-bind-html="addData.getInfo()"></div>
+      <div class="border flex-fill ml-1 p-2" ng-bind-html="addData.getInfo()"></div>
     </div>
   </div>
 

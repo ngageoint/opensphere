@@ -1,6 +1,6 @@
-<div class="flex-column d-flex u-flex-grow">
-  <div class="modal-body flex-column d-flex u-flex-grow">
-    <div class="flex-column d-flex u-flex-grow">
+<div class="flex-column d-flex flex-fill">
+  <div class="modal-body flex-column d-flex flex-fill">
+    <div class="flex-column d-flex flex-fill">
       <div class="row mb-1" ng-show="advanced">>
         <label class="col-form-label col-2 text-right" for="filterTitle">Group By</label>
         <div class="col form-inline">
@@ -27,7 +27,7 @@
         </div>
       </div>
     </div>
-    <div class="u-flex-grow">
+    <div class="flex-fill d-flex">
       <slicktree x-data="pivots" selected="selected" multi-select="true" disposable="true"></slicktree>
     </div>
   </div>

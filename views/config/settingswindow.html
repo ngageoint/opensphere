@@ -1,10 +1,10 @@
-<div class="h-100 w-100 d-flex flex-column">
-  <div class="modal-body d-flex flex-row u-flex-grow u-overflow-y-hidden">
-    <div class="col-4 pl-0 pr-2">
+<div class="flex-fill w-100 d-flex flex-column">
+  <div class="modal-body d-flex flex-row flex-fill u-overflow-y-hidden">
+    <div class="col-4 pl-0 pr-2 d-flex flex-fill">
       <slicktree x-data="settingsNodes" selected="selected" show-root="false"></slicktree>
     </div>
-    <div class="d-flex flex-column u-flex-grow col pl-0 pr-0">
-      <uiswitch class="d-flex flex-column u-flex-grow" items="selected" directive-function="setCon.getUi" generic="defaultsettingui"></uiswitch>
+    <div class="d-flex flex-column flex-fill col pl-0 pr-0">
+      <uiswitch class="d-flex flex-column flex-fill" items="selected" directive-function="setCon.getUi" generic="defaultsettingui"></uiswitch>
     </div>
   </div>
   <div class="modal-footer d-flex justify-content-between">

@@ -53,9 +53,8 @@ html {
   pointer-events: none;
 }
 
-.u-flex-grow {
-  flex: 1;
-  position: relative;
+.u-flex-basis-0 {
+  flex-basis: 0% !important;
 }
 
 .u-word-break {

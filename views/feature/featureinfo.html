@@ -1,4 +1,4 @@
-<div class="d-flex flex-column h-100">
+<div class="d-flex flex-column flex-fill">
   <div class="flex-shrink-0">
     <simple-location latdeg="lat" londeg="lon" ng-if="lat !== undefined && lon !== undefined"></simple-location>
     <span ng-if="alt">Altitude: {{alt}}</span>
@@ -10,7 +10,7 @@
     </ul>
   </div>
 
-  <div class="u-flex-grow u-overflow-y-auto" ng-show="tab == 'properties'">
+  <div class="flex-fill u-overflow-y-auto" ng-show="tab == 'properties'">
     <table class="table table-striped table-hover">
       <thead>
         <tr class="table-bordered">
@@ -30,7 +30,7 @@
       </tbody>
     </table>
   </div>
-  <div class="u-flex-grow u-overflow-y-auto card" ng-show="tab == 'description'">
-    <iframe class="card h-100 bg-light" id="descriptionFrame"></iframe>
+  <div class="flex-fill u-overflow-y-auto card d-flex" ng-show="tab == 'description'">
+    <iframe class="card flex-fill bg-light" id="descriptionFrame"></iframe>
   </div>
 </div>

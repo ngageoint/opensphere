@@ -1,5 +1,5 @@
-<div class="flex-column d-flex u-flex-grow">
-  <div class="modal-body flex-column d-flex u-flex-grow u-overflow-y-hidden">
+<div class="flex-column d-flex flex-fill">
+  <div class="modal-body flex-column d-flex flex-fill u-overflow-y-hidden">
     <div class="w-100">
       <div class="row mb-1" ng-show="!hideLayerChooser">
         <label class="col-form-label col-3">Layer</label>
@@ -26,7 +26,7 @@
         </div>
       </div>
     </div>
-    <div class="w-100 u-flex-grow u-overflow-y-auto">
+    <div class="w-100 flex-fill u-overflow-y-auto d-flex">
       <slicktree x-data="pivots" selected="selected" multi-select="true" disposable="true"></slicktree>
     </div>
   </div>
