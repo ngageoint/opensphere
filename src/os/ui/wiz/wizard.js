@@ -160,7 +160,7 @@ os.ui.wiz.WizardCtrl.prototype.onStepValidityChange_ = function(event, opt_valid
  */
 os.ui.wiz.WizardCtrl.prototype.activateStep_ = function(step, opt_skipCompile) {
   var scope = opt_skipCompile ? undefined : this.scope.$new();
-  var parent = opt_skipCompile ? undefined : this.element.find('#wizard-step-content');
+  var parent = opt_skipCompile ? undefined : this.element.find('#js-wizard-step-content');
   step.activate(this.config, scope, parent);
 };
 
