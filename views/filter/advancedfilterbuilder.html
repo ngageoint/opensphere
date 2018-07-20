@@ -4,7 +4,7 @@
     <button class="btn btn-primary" ng-disabled="advCtrl.editing" ng-click="advCtrl.addGrouping()" title="Adds a new group to the filter"><i class="fa fa-plus"></i> Add Group</button>
     <button class="btn btn-danger" ng-disabled="!advCtrl.canRemove() || advCtrl.Editing" ng-click="advCtrl.remove()" title="Removes an element from the filter"><i class="fa fa-times"></i></button>
   </div>
-  <div class="flex-column u-flex-grow u-overflow-y-auto">
+  <div class="flex-column u-flex-grow u-overflow-y-auto d-flex">
     <slicktree x-data="advCtrl.tree" drag-enabled="true" selected="advCtrl.selected" show-root="true" multi-select="false"></slicktree>
   </div>
 </div>

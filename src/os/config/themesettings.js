@@ -67,8 +67,8 @@ os.config.ThemeSettings.LOADED_THEME_CLASS = 'u-loaded-theme';
  * @type {string}
  * @const
  */
-os.config.ThemeSettings.LOADED_THEME_HTML = '<div class="' + os.config.ThemeSettings.LOADED_THEME_CLASS +
-    '" style="display: none;"></div>';
+os.config.ThemeSettings.LOADED_THEME_HTML =
+    '<div class="' + os.config.ThemeSettings.LOADED_THEME_CLASS + '" style="position: absolute; left: -9999px"></div>';
 
 
 /**
