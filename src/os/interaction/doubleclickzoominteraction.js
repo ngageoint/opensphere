@@ -3,6 +3,7 @@ goog.provide('os.interaction.DoubleClickZoom');
 goog.require('ol.MapBrowserEventType');
 goog.require('ol.interaction.DoubleClickZoom');
 goog.require('os.I3DSupport');
+goog.require('os.implements');
 
 
 
@@ -17,6 +18,7 @@ os.interaction.DoubleClickZoom = function(opt_options) {
   os.interaction.DoubleClickZoom.base(this, 'constructor', opt_options);
 };
 goog.inherits(os.interaction.DoubleClickZoom, ol.interaction.DoubleClickZoom);
+os.implements(os.interaction.DoubleClickZoom, os.I3DSupport.ID);
 
 
 /**

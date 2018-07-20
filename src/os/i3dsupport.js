@@ -9,6 +9,13 @@ os.I3DSupport = goog.abstractMethod;
 
 
 /**
+ * @const
+ * @type {string}
+ */
+os.I3DSupport.ID = 'os.I3DSupport';
+
+
+/**
  * Whether or not 3D is supported
  * @return {boolean}
  */
