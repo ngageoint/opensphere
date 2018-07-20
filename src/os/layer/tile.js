@@ -747,6 +747,12 @@ os.layer.Tile.prototype.getGroupUI = function() {
 os.layer.Tile.prototype.supportsAction = function(type, opt_actionArgs) {
   if (os.action) {
     switch (type) {
+      case os.action.EventType.GOTO:
+        var projExtent = os.map.PROJECTION.getExtent();
+        var layerExtent = os.fn.reduceExtentFromLayers(/** @type {!ol.Extent} */ (ol.extent.createEmpty()), this);
+        var projArea = ol.extent.getArea(projExtent);
+        var layerArea = ol.extent.getArea(layerExtent);
+        return !ol.extent.isEmpty(layerExtent) && layerArea / projArea < 0.8;
       case os.action.EventType.IDENTIFY:
       case os.action.EventType.REFRESH:
       case os.action.EventType.SHOW_DESCRIPTION:
