@@ -110,7 +110,14 @@ plugin.cesium.CesiumRenderer.prototype.initialize = function() {
             cameraClass: plugin.cesium.Camera,
             createSynchronizers: this.createCesiumSynchronizers_.bind(this),
             map: this.map,
-            time: plugin.cesium.getJulianDate
+            time: plugin.cesium.getJulianDate,
+            sceneOptions: {
+              'contextOptions': {
+                'webgl': {
+                  'preserveDrawingBuffer': true
+                }
+              }
+            }
           });
 
           goog.dom.classlist.add(this.olCesium_.canvas_, os.map.WEBGL_CANVAS_CLASS);
