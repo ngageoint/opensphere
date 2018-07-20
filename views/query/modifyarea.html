@@ -4,10 +4,10 @@
       <div class="row mt-1" title="{{modarea.help.area1}}">
         <label class="col-form-label col-4 text-right">Area to Modify</label>
         <div class="col form-inline">
-          <div class="u-flex-grow" ng-show="!fixArea">
+          <div class="flex-fill" ng-show="!fixArea">
             <choosearea area="area" help-title="Area to Modify" help-content="{{modarea.help.area1}}"></choosearea>
           </div>
-          <span class="u-flex-grow" ng-show="fixArea">
+          <span class="flex-fill" ng-show="fixArea">
             From Map
             <button class="btn btn-sm btn-danger" ng-click="area=null" title="Clear the selected area">
               <i class="fa fa-times"></i>
@@ -39,10 +39,10 @@
       <div class="row mt-1">
         <label class="col-form-label col-4 text-right">Area to {{op}}</label>
         <div class="col form-inline">
-          <div class="u-flex-grow" ng-show="!fixTargetArea">
+          <div class="flex-fill" ng-show="!fixTargetArea">
             <choosearea area="targetArea" help-title="{{'Area to ' + op}}" help-content="{{modarea.help.area2}}"></choosearea>
           </div>
-          <span class="u-flex-grow d-flex align-items-center" ng-show="fixTargetArea">
+          <span class="flex-fill d-flex align-items-center" ng-show="fixTargetArea">
             From Map
             <button class="btn btn-sm btn-danger ml-2" ng-click="targetArea=null" title="Clear the selected area">
               <i class="fa fa-times"></i>

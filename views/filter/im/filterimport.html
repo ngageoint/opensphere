@@ -1,4 +1,4 @@
-<div class="c-filter-import flex-column d-flex u-flex-grow">
+<div class="c-filter-import flex-column d-flex flex-fill">
   <div class="modal-body u-overflow-y-auto">
     <div class="border rounded bg-secondary" ng-if="ctrl.notFound.length">
       We were unable to match <b>{{ctrl.notFound.length}}</b> {{ctrl.getFilterTitle(ctrl.notFound.length)}} to a layer. Please choose layers to add them to:
@@ -52,7 +52,7 @@
             </span>
           </div>
 
-          <div ng-repeat="filter in layer.filterModels" title="{{filter.tooltip}}" class="c-filter-import__filter text-truncate">
+          <div ng-repeat="filter in layer.filterModels" title="{{filter.tooltip}}" class="ml-4 text-truncate">
             <i class="fa" ng-class="ctrl.getFilterIcon()"></i> {{filter.title}}
           </div>
         </div>
