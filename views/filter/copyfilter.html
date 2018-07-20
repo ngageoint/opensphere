@@ -1,14 +1,14 @@
 <div class="d-flex flex-column">
-  <div class="modal-body d-flex u-flex-grow">
+  <div class="modal-body d-flex flex-fill">
     <div class="border rounded mx-2">
       <checklist name="layerlist" allow-multiple="true" items="copyFilterCtrl.layers"></checklist>
     </div>
-    <div class="mt-2 mb-1 flex-column d-flex u-flex-grow" ng-form="copyFilterForm">
+    <div class="mt-2 mb-1 flex-column d-flex flex-fill" ng-form="copyFilterForm">
       <div ng-show="copyFilterCtrl.hasUnmappedColumns()">
         Unassociated Columns:
         <popover class="float-right" x-title="'Missing Columns'" x-content="copyFilterCtrl.helpText" x-pos="'right'"></popover>
       </div>
-      <div class="flex-column d-flex u-flex-grow">
+      <div class="flex-column d-flex flex-fill">
         <div class="row mx-2 mb-1" ng-repeat="(layerId, models) in copyFilterCtrl.unmappedColumns">
           <div class="col border rounded">
             <copyfilterpicker models="models" source-layer-name="copyFilterCtrl.sourceLayerName" source-filter-key="copyFilterCtrl.sourceFilterKey"></copyfilterpicker>

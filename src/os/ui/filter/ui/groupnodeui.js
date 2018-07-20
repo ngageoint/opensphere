@@ -11,8 +11,8 @@ os.ui.filter.ui.GroupNodeUIDirective = function() {
   return {
     restrict: 'AE',
     replace: true,
-    template: '<span class="u-flex-grow form-inline">' +
-        '<span class="u-flex-grow">' +
+    template: '<span class="flex-fill form-inline">' +
+        '<span class="flex-fill">' +
         '<select class="form-control" ng-model="item.grouping"' +
         ' ng-options="key for (key, value) in groupUi.groups"' +
         ' title="Whether results can match any or all filters in the group"/>' +

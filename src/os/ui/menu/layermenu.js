@@ -286,7 +286,7 @@ os.ui.menu.layer.onDescription_ = function(event) {
   }
 
   var html =
-      '<div class="d-flex flex-column u-flex-grow">' +
+      '<div class="d-flex flex-column flex-fill">' +
           '<div class="modal-body">' + msg + '</div>' +
           '<div class="modal-footer">' +
               '<div class="pull-right">' +
