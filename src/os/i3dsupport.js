@@ -5,7 +5,7 @@ goog.provide('os.I3DSupport');
 /**
  * @interface
  */
-os.I3DSupport = goog.abstractMethod;
+os.I3DSupport = function() {};
 
 
 /**
