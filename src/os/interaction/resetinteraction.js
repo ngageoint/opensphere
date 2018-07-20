@@ -5,6 +5,7 @@ goog.require('ol.events.condition');
 goog.require('ol.interaction.Interaction');
 goog.require('os.I3DSupport');
 goog.require('os.MapContainer');
+goog.require('os.implements');
 goog.require('os.metrics.Metrics');
 goog.require('os.metrics.keys');
 
@@ -25,7 +26,7 @@ os.interaction.Reset = function(opt_options) {
   this.condition_ = goog.functions.and(ol.events.condition.noModifierKeys, ol.events.condition.targetNotEditable);
 };
 goog.inherits(os.interaction.Reset, ol.interaction.Interaction);
-
+os.implements(os.interaction.Reset, os.I3DSupport.ID);
 
 /**
  * @param {ol.MapBrowserEvent} mapBrowserEvent Map browser event.

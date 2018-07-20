@@ -3,6 +3,7 @@ goog.provide('os.interaction.KeyboardPan');
 goog.require('ol.events.EventType');
 goog.require('ol.interaction.KeyboardPan');
 goog.require('os.I3DSupport');
+goog.require('os.implements');
 goog.require('os.ui.ol.interaction');
 
 
@@ -24,7 +25,7 @@ os.interaction.KeyboardPan = function(opt_options) {
   this.lastKeyCode_ = 0;
 };
 goog.inherits(os.interaction.KeyboardPan, ol.interaction.KeyboardPan);
-
+os.implements(os.interaction.KeyboardPan, os.I3DSupport.ID);
 
 /**
  * @inheritDoc
