@@ -290,7 +290,7 @@ plugin.cesium.CesiumRenderer.prototype.renderSync = function() {
     var scene = this.olCesium_.getCesiumScene();
     if (scene) {
       scene.initializeFrame();
-      scene.render(plugin.cesium.getJulianDate());
+      scene.forceRender(plugin.cesium.getJulianDate());
     }
   }
 };
