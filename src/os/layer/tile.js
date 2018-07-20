@@ -752,8 +752,7 @@ os.layer.Tile.prototype.supportsAction = function(type, opt_actionArgs) {
         var layerExtent = os.fn.reduceExtentFromLayers(/** @type {!ol.Extent} */ (ol.extent.createEmpty()), this);
         var projArea = ol.extent.getArea(projExtent);
         var layerArea = ol.extent.getArea(layerExtent);
-        return !ol.extent.isEmpty(layerExtent) && ol.extent.containsExtent(projExtent, layerExtent) &&
-            layerArea / projArea < 0.8;
+        return !ol.extent.isEmpty(layerExtent) && layerArea / projArea < 0.8;
       case os.action.EventType.IDENTIFY:
       case os.action.EventType.REFRESH:
       case os.action.EventType.SHOW_DESCRIPTION:
