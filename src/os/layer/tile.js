@@ -835,9 +835,9 @@ os.layer.Tile.prototype.persist = function(opt_to) {
   // we now store min and max zoom rather than resolution because the resolutions can change
   // drastically if the user or admin switches the default projection (resulting in the layer
   // being basically invisible)
-  var mm = os.MapContainer.getInstance();
-  opt_to['maxZoom'] = mm.resolutionToZoom(this.getMinResolution());
-  opt_to['minZoom'] = mm.resolutionToZoom(this.getMaxResolution());
+  var tilegrid = this.getSource().getTileGrid();
+  opt_to['maxZoom'] = Math.min(os.map.MAX_ZOOM, tilegrid.getZForResolution(this.getMinResolution()));
+  opt_to['minZoom'] = Math.max(os.map.MIN_ZOOM, tilegrid.getZForResolution(this.getMaxResolution()));
 
   var style = this.getStyle();
   if (style) {
@@ -915,13 +915,16 @@ os.layer.Tile.prototype.restore = function(config) {
     }
   }
 
-  var mm = os.MapContainer.getInstance();
+  // A layer's min/max resolution depends directly on its own tile grid.
+  //
+  // Do not use MapContainer.zoomToResolution here. That is for overall map/view
+  // purposes and not for individual layers, which may have discrete tile matrices.
   if (config['minZoom']) {
-    this.setMaxResolution(mm.zoomToResolution(config['minZoom']));
+    this.setMaxResolution(this.getSource().getTileGrid().getResolution(config['minZoom']));
   }
 
   if (config['maxZoom']) {
-    this.setMinResolution(mm.zoomToResolution(config['maxZoom']));
+    this.setMinResolution(this.getSource().getTileGrid().getResolution(config['maxZoom']));
   }
 
   var style = config['style'] || '';
