@@ -45,16 +45,16 @@
     </div>
   </ng-form>
 
-  <div class="d-flex flex-column flex-fill">
-    <div class="d-flex flex-fill mb-2">
-      <slickgrid class="border no-header text-monospace"
-          x-data="configStep.linePreviewRows"
-          columns="configStep.linePreviewColumns"
-          options="configStep.linePreviewOptions"
-          selected="previewSelection"
-          resize-with=".js-window">
-      </slickgrid>
-    </div>
+  <div class="d-flex flex-fill mb-2 c-config-step__preview-grid">
+    <slickgrid class="border no-header text-monospace"
+        x-data="configStep.linePreviewRows"
+        columns="configStep.linePreviewColumns"
+        options="configStep.linePreviewOptions"
+        selected="previewSelection"
+        resize-with=".js-window">
+    </slickgrid>
+  </div>
+  <div class="d-flex flex-fill c-config-step__wizard-grid">
     <wizardpreview config="config"></wizardpreview>
   </div>
 </div>
