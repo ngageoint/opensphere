@@ -1,5 +1,6 @@
 goog.provide('plugin.cesium.VectorContext');
 
+goog.require('goog.async.Throttle');
 goog.require('goog.disposable.IDisposable');
 goog.require('goog.log');
 
@@ -95,6 +96,12 @@ plugin.cesium.VectorContext = function(scene, layer, projection) {
   this.scene = scene;
 
   /**
+   * Throttle for billboard cleanup.
+   * @type {goog.async.Throttle}
+   */
+  this.billboardCleanupThrottle = new goog.async.Throttle(this.onBillboardCleanup, 500, this);
+
+  /**
    * The Cesium primitive collection.
    * @type {!Cesium.PrimitiveCollection}
    */
@@ -119,6 +126,8 @@ plugin.cesium.VectorContext.LOGGER_ = goog.log.getLogger('plugin.cesium.VectorCo
  */
 plugin.cesium.VectorContext.prototype.dispose = function() {
   if (!this.isDisposed()) {
+    goog.dispose(this.billboardCleanupThrottle);
+
     this.collection.destroyPrimitives = true;
 
     try {
@@ -275,6 +284,14 @@ plugin.cesium.VectorContext.prototype.cleanup = function(feature) {
     }
   }
 
+  this.billboardCleanupThrottle.fire();
+};
+
+
+/**
+ * Throttleed call to debounce cleanup of billboards after removals occur.
+ */
+plugin.cesium.VectorContext.prototype.onBillboardCleanup = function() {
   this.billboards._billboardsToUpdate.length = this.billboards.length;
 };
 

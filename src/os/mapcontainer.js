@@ -423,6 +423,7 @@ os.MapContainer.prototype.updateSize = function() {
     }, this);
 
     this.map_.setSize([0, 0]);
+    os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
   }
 };
 
