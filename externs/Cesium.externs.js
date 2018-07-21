@@ -22,6 +22,31 @@ Cesium.defaultValue = function(value, defaultValue) {};
 Cesium.defined = function(value) {};
 
 
+/**
+ * @typedef {{
+ *  highhpFloatSupported: boolean,
+ *  highhpIntSupported: boolean,
+ *  maximumAliasedLineWidth: number,
+ *  maximumAliasedPointSize: number,
+ *  maximumColorAttachments: number,
+ *  maximumCombinedTextureImageUnits: number,
+ *  maximumCubeMapSize: number,
+ *  maximumDrawBuffers: number,
+ *  maximumFragmentUniformVectors: number,
+ *  maximumRenderbufferSize: number,
+ *  maximumTextureFilterAnisotropy: number,
+ *  maximumTextureImageUnits: number,
+ *  maximumTextureSize: number,
+ *  maximumVaryingVectors: number,
+ *  maximumVertexAttributes: number,
+ *  maximumViewportHeight: number,
+ *  maximumViewportWidth: number,
+ *  minimumAliasedLineWidth: number,
+ *  minimumAliasedPointSize: number
+ * }}
+ */
+Cesium.ContextLimits;
+
 
 /**
  * @constructor
@@ -3015,7 +3040,17 @@ Cesium.ImageryProvider.prototype.requestImage = function(x, y, level) {};
  */
 Cesium.ImageryProvider.loadImage = function(imageryProvider, url) {};
 
-Cesium.Resource = {};
+/**
+ * @constructor
+ */
+Cesium.Resource = function() {};
+
+/**
+ * @param {Cesium.ResourceFetchOptions} options
+ * @return {Cesium.Promise<*>}
+ */
+Cesium.Resource.prototype._makeRequest = function(options) {};
+
 Cesium.Resource._Implementations = {};
 
 /**
@@ -3772,6 +3807,12 @@ Cesium.Scene.prototype.initializeFrame = function() {};
  * @param {Cesium.JulianDate} julianDate
  */
 Cesium.Scene.prototype.render = function(julianDate) {};
+
+
+/**
+ * @param {Cesium.JulianDate} julianDate
+ */
+Cesium.Scene.prototype.forceRender = function(julianDate) {};
 
 
 /**
@@ -5028,3 +5069,10 @@ Cesium.EntityView.prototype.update = function(currentTime, bs) {};
  * @constructor
  */
 Cesium.CallbackProperty = function(cb, constant) {};
+
+
+/**
+ * @param {{requestVertexNormals: (boolean|undefined), requestWaterMask: (boolean|undefined)}} options
+ * @return {!Cesium.CesiumTerrainProvider}
+ */
+Cesium.createWorldTerrain = function(options) {};
