@@ -1,25 +1,36 @@
-<div class="user-setting">
-  <h5 class="no-margin">Include Options</h5>
-  <table>
-    <tr title="Sets the color of include areas">
-      <td class="control-label">Color:</td>
-      <td><colorpicker name="wpscolor" color="area.inColor"></colorpicker></td>
-    </tr>
-    <tr title="Sets the border width of include areas">
-      <td class="control-label">Width:</td>
-      <td><slider name="inwidth" min="1" max="20" step="1" value="area.inWidth" style="width:200px"></slider></td>
-    </tr>
-  </table>
-  <h5 class="no-margin">Exclude Options</h5>
-  <table>
-    <tr title="Sets the color of exclude areas">
-      <td class="control-label">Color:</td>
-      <td><colorpicker name="wpscolor" color="area.exColor"></colorpicker></td>
-    </tr>
-    <tr title="Sets the border width of exclude areas">
-      <td class="control-label">Width:</td>
-      <td><slider name="exwidth" min="1" max="20" step="1" value="area.exWidth" style="width:200px"></slider></td>
-    </tr>
-  </table>
-  <button class="btn btn-default btn-reset" style="margin-top:20px;" ng-click="area.reset()">Reset All</button>
+<div class="d-flex flex-column flex-fill u-overflow-y-auto container-fluid">
+  <h4>Areas</h4>
+  <div class="form-group">Select how you would like inclusion/exclusion areas to be displayed:</div>
+  <h5>Include Options</h5>
+  <div class="form-group row flex-shrink-0" title="Sets the color of include areas">
+    <label class="col-2 col-form-label">Color</label>
+    <div class="col">
+      <colorpicker name="wpscolor" color="area.inColor"></colorpicker>
+    </div>
+  </div>
+  <div class="form-group row flex-shrink-0" title="Sets the border width of include areas">
+    <label class="col-2 col-form-label">Width</label>
+    <div class="col-4 my-auto">
+      <slider name="inwidth" min="1" max="20" step="1" value="area.inWidth"></slider>
+    </div>
+  </div>
+  <h5>Exclude Options</h5>
+  <div class="form-group row flex-shrink-0" title="Sets the color of exclude areas">
+    <label class="col-2 col-form-label">Color</label>
+    <div class="col">
+      <colorpicker name="wpscolor" color="area.exColor"></colorpicker>
+    </div>
+  </div>
+  <div class="form-group row flex-shrink-0" title="Sets the border width of exclude areas">
+    <label class="col-2 col-form-label">Width</label>
+    <div class="col-4 my-auto">
+      <slider name="exwidth" min="1" max="20" step="1" value="area.exWidth"></slider>
+    </div>
+  </div>
+  <div class="form-group mt-2">
+    <button class="btn btn-danger" ng-click="area.reset()">
+      <i class="fa fa-refresh"></i>
+      Reset All
+    </button>
+  </div>
 </div>
