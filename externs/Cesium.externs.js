@@ -3810,6 +3810,12 @@ Cesium.Scene.prototype.render = function(julianDate) {};
 
 
 /**
+ * @param {Cesium.JulianDate} julianDate
+ */
+Cesium.Scene.prototype.forceRender = function(julianDate) {};
+
+
+/**
  * @type {Cesium.Event}
  * @const
  */
