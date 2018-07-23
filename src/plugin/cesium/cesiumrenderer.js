@@ -110,7 +110,14 @@ plugin.cesium.CesiumRenderer.prototype.initialize = function() {
             cameraClass: plugin.cesium.Camera,
             createSynchronizers: this.createCesiumSynchronizers_.bind(this),
             map: this.map,
-            time: plugin.cesium.getJulianDate
+            time: plugin.cesium.getJulianDate,
+            sceneOptions: {
+              'contextOptions': {
+                'webgl': {
+                  'preserveDrawingBuffer': true
+                }
+              }
+            }
           });
 
           goog.dom.classlist.add(this.olCesium_.canvas_, os.map.WEBGL_CANVAS_CLASS);
@@ -291,7 +298,7 @@ plugin.cesium.CesiumRenderer.prototype.renderSync = function() {
     var scene = this.olCesium_.getCesiumScene();
     if (scene) {
       scene.initializeFrame();
-      scene.render(plugin.cesium.getJulianDate());
+      scene.forceRender(plugin.cesium.getJulianDate());
     }
   }
 };
