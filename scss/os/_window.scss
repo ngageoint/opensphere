@@ -28,8 +28,8 @@
   // Dont show window content while resizing to speed up performance
   &.c-window__blank-resize.ui-resizable-resizing {
     * {
-      display: none;
       border: 0;
+      display: none;
     }
   }
 }
