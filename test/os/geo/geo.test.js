@@ -20,6 +20,28 @@ describe('os.geo', function() {
     expect(result.lat).toBeCloseTo(3.51);
   });
 
+  it('should parse coordinates from DMS with no separator and required direction', function() {
+    var result = os.geo.parseLatLon('465445000N1303901000E', undefined, 'DMS');
+    expect(result.lat).toBeCloseTo(46.9125);
+    expect(result.lon).toBeCloseTo(130.65);
+  });
+
+  it('should not parse coordinates from DMS with no separator and no direction', function() {
+    var result = os.geo.parseLatLon('4654450001303901000', undefined, 'DMS');
+    expect(result).toBeNull();
+  });
+
+  it('should parse coordinates from DDM with no separator and required direction', function() {
+    var result = os.geo.parseLatLon('1030N5015E', undefined, 'DDM');
+    expect(result.lon).toBeCloseTo(50.25);
+    expect(result.lat).toBeCloseTo(10.50);
+  });
+
+  it('should not parse coordinates from DMS with no separator and no direction', function() {
+    var result = os.geo.parseLatLon('10305015', undefined, 'DDM');
+    expect(result).toBeNull();
+  });
+
   it('should parse coordinates from DMS with space delimiters without direction', function() {
     var result = os.geo.parseLatLon('10 30 36 50 15 45');
     expect(result.lon).toBeCloseTo(50.2625);
