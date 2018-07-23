@@ -54,6 +54,10 @@ os.interaction.DoubleClick.handleEvent_ = function(mapBrowserEvent) {
   if (mapBrowserEvent.type == ol.MapBrowserEventType.DBLCLICK &&
       map.getView().getHints()[ol.ViewHint.INTERACTING] == 0) {
     try {
+      var options = {
+        'drillPick': true
+      };
+
       map.forEachFeatureAtPixel(mapBrowserEvent.pixel, function(feature, layer) {
         if (feature instanceof ol.Feature) {
           if (!layer || !(layer instanceof os.layer.Vector)) {
@@ -70,7 +74,7 @@ os.interaction.DoubleClick.handleEvent_ = function(mapBrowserEvent) {
             }
           }
         }
-      });
+      }, options);
 
       if (features.length > 0) {
         os.ui.feature.launchMultiFeatureInfo(features);

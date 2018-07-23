@@ -266,7 +266,21 @@ plugin.cesium.CesiumRenderer.prototype.getPixelFromCoordinate = function(coordin
 plugin.cesium.CesiumRenderer.prototype.forEachFeatureAtPixel = function(pixel, callback, opt_options) {
   if (this.olCesium_) {
     var cartesian = new Cesium.Cartesian2(pixel[0], pixel[1]);
-    var primitives = /** @type {Array<Cesium.Primitive>} */ (this.olCesium_.getCesiumScene().drillPick(cartesian));
+    var drillPick = opt_options ? opt_options['drillPick'] : false;
+    var scene = this.olCesium_.getCesiumScene();
+    var primitives;
+
+    if (drillPick) {
+      // drillPick is extremely slow and should only be used in cases where it's needed (such as launching feature
+      // info for stacked features)
+      primitives = /** @type {Array<Cesium.Primitive>} */ (scene.drillPick(cartesian));
+    } else {
+      var primitive = /** @type {Cesium.Primitive} */ (scene.pick(cartesian));
+      if (primitive) {
+        primitives = [primitive];
+      }
+    }
+
     if (primitives && primitives.length > 0) {
       for (var i = 0, ii = primitives.length; i < ii; i++) {
         // convert primitive to feature
