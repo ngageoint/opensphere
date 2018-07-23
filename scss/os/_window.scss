@@ -4,8 +4,8 @@
 
 .c-window {
   .modal-body {
-    // Settings the background and color allows us to color
     background: $modal-content-bg;
+    border-radius: 0 0 $border-radius $border-radius;
     color: $body-color;
     overflow-y: auto;
   }
@@ -23,5 +23,13 @@
     border-radius: 0 0 $border-radius $border-radius;
     color: $body-color;
     flex-shrink: 0;
+  }
+
+  // Dont show window content while resizing to speed up performance
+  &.c-window__blank-resize.ui-resizable-resizing {
+    * {
+      display: none;
+      border: 0;
+    }
   }
 }
