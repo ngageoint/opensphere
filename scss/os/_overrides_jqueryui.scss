@@ -39,13 +39,19 @@
 }
 
 .ui-spinner-input {
-  background: none;
   border: 0;
   color: inherit;
   margin: 0;
   padding: $input-padding-y $input-padding-x;
   vertical-align: middle;
   width: 100%;
+}
+
+.ui-spinner .ui-icon {
+  background-image: none;
+  margin-top: 0;
+  text-indent: 0;
+  top: .5em;
 }
 
 // NOTE: we want the ui-menu to be exactly like the dropdown menu. To do this override the jquery defaults, then

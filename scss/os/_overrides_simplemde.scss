@@ -21,6 +21,11 @@
     color: $body-color !important;
   }
 
+  .editor-toolbar.disabled-for-preview a:not(.no-disable) {
+    background: inherit;
+    opacity: .5;
+  }
+
   .ng-dirty.ng-invalid .editor-toolbar {
     border-color: $danger;
   }

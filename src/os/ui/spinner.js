@@ -87,6 +87,7 @@ os.ui.SpinnerCtrl = function($scope, $element) {
   if ($scope['css']) {
     $element.find('.ui-spinner').addClass($scope['css']);
   }
+  $element.find('.ui-spinner-input').addClass('form-control');
 
   var fn = this.onChange_.bind(this);
   $scope.$watch('value', fn);
