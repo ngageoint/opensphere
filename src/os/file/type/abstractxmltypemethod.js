@@ -82,7 +82,7 @@ os.file.type.AbstractXMLTypeMethod.prototype.isType = function(file, opt_zipEntr
  * @return {boolean}
  */
 os.file.type.AbstractXMLTypeMethod.prototype.testURI = function(uri) {
-  return uri != null && this.getNSRegExp().test(uri);
+  return uri != null && this.getNSRegExp() !== null && this.getNSRegExp().test(uri);
 };
 
 
