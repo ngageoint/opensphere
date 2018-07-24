@@ -1,5 +1,6 @@
 goog.provide('os.ui.column.mapping.ColumnMappingFormCtrl');
 goog.provide('os.ui.column.mapping.columnMappingFormDirective');
+
 goog.require('os.ui.Module');
 goog.require('os.ui.column.mapping.ColumnModelNode');
 goog.require('os.ui.column.mapping.columnModelTreeDirective');
@@ -12,6 +13,7 @@ goog.require('os.ui.column.mapping.columnModelTreeDirective');
 os.ui.column.mapping.columnMappingFormDirective = function() {
   return {
     restrict: 'E',
+    replace: true,
     scope: {
       'columnMapping': '='
     },
