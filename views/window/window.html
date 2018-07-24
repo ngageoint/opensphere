@@ -1,6 +1,8 @@
 <div class="js-window modal d-flex c-window" ng-class="{'active': active}">
-  <div class="modal-content d-flex flex-column flex-fill" ng-class="headerClass">
-    <div class="js-window__header modal-header d-flex justify-content-between flex-shrink-0" ng-dblclick="windowCtrl.toggle()">
+  <div class="modal-content d-flex flex-column flex-fill">
+    <div class="js-window__header modal-header d-flex justify-content-between flex-shrink-0"
+        ng-class="headerClass"
+        ng-dblclick="windowCtrl.toggle()">
       <div class="js-window__header-text text-truncate" title="{{label}}">
         <i ng-if="icon" ng-class="icon" class="mr-1"></i>
         <span ng-if="iconHtml" ng-bind-html="iconHtml"></span>
