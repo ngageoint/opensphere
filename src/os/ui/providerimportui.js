@@ -7,14 +7,20 @@ goog.require('os.ui.window');
 
 
 /**
+ * @param {string} ui The directive to launch
  * @extends {os.ui.im.FileImportUI}
  * @constructor
  */
-os.ui.ProviderImportUI = function() {
+os.ui.ProviderImportUI = function(ui) {
   os.ui.ProviderImportUI.base(this, 'constructor');
 
   // file contents are only used in memory, not loaded from storage
   this.requiresStorage = false;
+
+  /**
+   * @type {string}
+   */
+  this.ui = ui;
 };
 goog.inherits(os.ui.ProviderImportUI, os.ui.im.FileImportUI);
 
@@ -23,6 +29,8 @@ goog.inherits(os.ui.ProviderImportUI, os.ui.im.FileImportUI);
  * @inheritDoc
  */
 os.ui.ProviderImportUI.prototype.launchUI = function(file, opt_config) {
+  os.ui.ProviderImportUI.base(this, 'launchUI', file, opt_config);
+
   var config = new os.parse.FileParserConfig();
 
   // if an existing config was provided, merge it in
@@ -33,7 +41,7 @@ os.ui.ProviderImportUI.prototype.launchUI = function(file, opt_config) {
   var type = opt_config ? opt_config['type'] : file ? file.getType() : null;
   var entry = os.dataManager.getProviderEntry(type);
 
-  if (entry.ui) {
+  if (this.ui) {
     var provider = opt_config ? opt_config.provider : null;
 
     if (provider) {
@@ -63,7 +71,7 @@ os.ui.ProviderImportUI.prototype.launchUI = function(file, opt_config) {
       'show-close': 'true',
       'no-scroll': 'true'
     };
-    os.ui.window.create(windowOptions, entry.ui, undefined, undefined, undefined, scopeOptions);
+    os.ui.window.create(windowOptions, this.ui, undefined, undefined, undefined, scopeOptions);
   } else {
     // todo log some stuff, man
   }

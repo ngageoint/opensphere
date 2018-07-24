@@ -71,7 +71,7 @@ plugin.arc.layer.ArcLayerDescriptor = function() {
    */
   this.featureType_ = null;
 
-  this.descriptorType = plugin.arc.ArcPlugin.ID;
+  this.descriptorType = plugin.arc.ID;
 };
 goog.inherits(plugin.arc.layer.ArcLayerDescriptor, os.data.LayerSyncDescriptor);
 

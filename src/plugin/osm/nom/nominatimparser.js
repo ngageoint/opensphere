@@ -4,6 +4,7 @@ goog.require('goog.log');
 goog.require('ol.Feature');
 goog.require('ol.format.GeoJSON');
 goog.require('ol.geom.Point');
+goog.require('os.file.mime.text');
 goog.require('os.parse.IParser');
 
 
@@ -51,6 +52,10 @@ plugin.osm.nom.NominatimParser.LOGGER_ = goog.log.getLogger('plugin.osm.nom.Nomi
  */
 plugin.osm.nom.NominatimParser.prototype.setSource = function(source) {
   this.cleanup();
+
+  if (source instanceof ArrayBuffer) {
+    source = os.file.mime.text.getText(source) || null;
+  }
 
   var results;
   if (goog.isString(source)) {
