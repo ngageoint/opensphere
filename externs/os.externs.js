@@ -248,6 +248,7 @@ osx.window;
 
 /**
  * @typedef {{
+ *   headerClass: (string|undefined),
  *   label: (string|undefined),
  *   icon: (string|undefined),
  *   modal: (boolean|undefined),
