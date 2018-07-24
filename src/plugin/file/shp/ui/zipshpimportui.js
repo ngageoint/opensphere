@@ -6,8 +6,7 @@ goog.require('os.ui.window');
 goog.require('os.ui.wiz.OptionsStep');
 goog.require('os.ui.wiz.step.TimeStep');
 goog.require('plugin.file.shp.SHPParserConfig');
-goog.require('plugin.file.shp.type.DBFTypeMethod');
-goog.require('plugin.file.shp.type.SHPTypeMethod');
+goog.require('plugin.file.shp.mime');
 goog.require('plugin.file.shp.ui.shpImportDirective');
 
 
@@ -48,6 +47,8 @@ goog.inherits(plugin.file.shp.ui.ZipSHPImportUI, os.ui.im.FileImportUI);
  * @inheritDoc
  */
 plugin.file.shp.ui.ZipSHPImportUI.prototype.launchUI = function(file, opt_config) {
+  plugin.file.shp.ui.ZipSHPImportUI.base(this, 'launchUI', file, opt_config);
+
   this.shpFile_ = null;
   this.dbfFile_ = null;
   this.zipFile_ = file;
@@ -75,8 +76,8 @@ plugin.file.shp.ui.ZipSHPImportUI.prototype.launchUI = function(file, opt_config
 plugin.file.shp.ui.ZipSHPImportUI.prototype.processEntries_ = function(entries) {
   for (var i = 0, n = entries.length; i < n; i++) {
     var entry = entries[i];
-    if (entry.filename.match(plugin.file.shp.type.SHPTypeMethod.EXT_REGEXP) ||
-        entry.filename.match(plugin.file.shp.type.DBFTypeMethod.EXT_REGEXP)) {
+    if (plugin.file.shp.mime.SHP_EXT_REGEXP.test(entry.filename) ||
+        plugin.file.shp.mime.DBF_EXT_REGEXP.test(entry.filename)) {
       // if the entry is a shp or dbf, load the content and process it
       entry.getData(new zip.ArrayBufferWriter(), this.processEntry_.bind(this, entry));
     }
@@ -93,10 +94,10 @@ plugin.file.shp.ui.ZipSHPImportUI.prototype.processEntry_ = function(entry, cont
   if (content instanceof ArrayBuffer) {
     // only use the first file encountered, which means archives with multiple shapefiles will only load the first
     content = /** @type {!ArrayBuffer} */ (content);
-    if (!this.shpFile_ && entry.filename.match(plugin.file.shp.type.SHPTypeMethod.EXT_REGEXP)) {
+    if (!this.shpFile_ && plugin.file.shp.mime.SHP_EXT_REGEXP.test(entry.filename)) {
       this.shpFile_ =
           os.file.createFromContent(entry.filename, os.file.getLocalUrl(entry.filename), undefined, content);
-    } else if (!this.dbfFile_ && entry.filename.match(plugin.file.shp.type.DBFTypeMethod.EXT_REGEXP)) {
+    } else if (!this.dbfFile_ && plugin.file.shp.mime.DBF_EXT_REGEXP.test(entry.filename)) {
       this.dbfFile_ =
           os.file.createFromContent(entry.filename, os.file.getLocalUrl(entry.filename), undefined, content);
     }

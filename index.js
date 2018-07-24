@@ -232,6 +232,21 @@ const sharedResources = [
     scripts: ['jsts.min.js']
   },
   {
+    source: resolver.resolveModulePath('jschardet/dist', __dirname),
+    target: 'vendor/jschardet',
+    scripts: ['jschardet.min.js']
+  },
+  {
+    source: buildPath,
+    target: 'vendor/xml-lexer',
+    scripts: ['xml-lexer.min.js']
+  },
+  {
+    source: resolver.resolveModulePath('oboe/dist', __dirname),
+    target: 'vendor/oboe',
+    scripts: ['oboe-browser.min.js']
+  },
+  {
     source: resolver.resolveModulePath('navigator.sendbeacon', __dirname),
     target: 'vendor/sendbeacon',
     scripts: ['sendbeacon.js']

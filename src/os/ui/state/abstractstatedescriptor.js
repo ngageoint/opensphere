@@ -120,6 +120,7 @@ os.ui.state.AbstractStateDescriptor.prototype.activateState = function(opt_file)
     } else {
       this.setLoading(false);
 
+      opt_file.convertContentToString();
       var content = opt_file.getContent();
       goog.asserts.assertString(content, 'State file content must be a string!');
 

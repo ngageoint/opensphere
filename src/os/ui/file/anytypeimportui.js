@@ -1,5 +1,5 @@
 goog.provide('os.ui.file.AnyTypeImportUI');
-goog.require('os.file.File');
+goog.require('os.file.mime.zip');
 goog.require('os.ui.file.anyTypeImportDirective');
 goog.require('os.ui.im.AbstractImportUI');
 goog.require('os.ui.im.ImportManager');
@@ -42,7 +42,8 @@ os.ui.file.AnyTypeImportUI.prototype.launchUI = function(file, opt_config) {
     };
     var content = file.getContent();
     var windowOptions = {
-      'label': content instanceof ArrayBuffer && os.file.isZipFile(content) ? 'Import Zip' : 'Choose Import Method',
+      'label': content instanceof ArrayBuffer && os.file.mime.zip.isZip(content) ? 'Import Zip' :
+          'Choose Import Method',
       'icon': 'fa fa-cloud-download',
       'x': 'center',
       'y': 'center',

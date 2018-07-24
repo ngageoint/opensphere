@@ -42,6 +42,8 @@ describe('os.ui.file.method.UrlMethod', function() {
       expect(method.getFile()).not.toBeNull();
 
       var file = method.getFile();
+      file.convertContentToString();
+
       expect(file.getFileName()).toBe('foo');
       expect(file.getContent()).toBe('bar');
       expect(file.getUrl()).toBe(testUrl);

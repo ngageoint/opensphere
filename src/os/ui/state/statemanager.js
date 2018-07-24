@@ -11,7 +11,6 @@ goog.require('os.file.File');
 goog.require('os.file.FileStorage');
 goog.require('os.metrics.Metrics');
 goog.require('os.metrics.keys');
-goog.require('os.ui.im.ImportManager');
 goog.require('os.ui.state');
 goog.require('os.ui.state.StateImportUI');
 goog.require('os.ui.state.stateExportDirective');
@@ -66,11 +65,6 @@ os.ui.state.StateManager = function() {
    * @protected
    */
   this.log = os.ui.state.StateManager.LOGGER_;
-
-  // register the import UI
-  var im = os.ui.im.ImportManager.getInstance();
-  im.registerImportDetails(os.config.getAppName('Application') + ' state files.');
-  im.registerImportUI('state', new os.ui.state.StateImportUI());
 };
 goog.inherits(os.ui.state.StateManager, goog.events.EventTarget);
 goog.addSingletonGetter(os.ui.state.StateManager);

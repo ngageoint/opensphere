@@ -39,8 +39,9 @@ goog.require('os.events.LayerConfigEventType');
 goog.require('os.file.FileManager');
 goog.require('os.file.FileStorage');
 goog.require('os.file.FileUrlHandler');
+goog.require('os.file.mime.any');
+goog.require('os.file.mime.filter');
 goog.require('os.file.persist.FilePersistence');
-goog.require('os.file.type.AnyTypeMethod');
 goog.require('os.filter.im.OSFilterImportUI');
 goog.require('os.im.FeatureImporter');
 goog.require('os.im.ImportProcess');
@@ -103,7 +104,6 @@ goog.require('os.ui.help.Controls');
 goog.require('os.ui.help.metricsOption');
 goog.require('os.ui.historyDirective');
 goog.require('os.ui.icon.IconSelectorManager');
-goog.require('os.ui.im.FilterTypeMethod');
 goog.require('os.ui.im.ImportEvent');
 goog.require('os.ui.im.ImportEventType');
 goog.require('os.ui.im.ImportManager');
@@ -219,13 +219,11 @@ os.MainCtrl = function($scope, $element, $compile, $timeout, $injector) {
   // set up file methods
   // drop the File reference after import
   os.file.FileManager.getInstance().registerFileMethod(new os.ui.file.method.ImportMethod(false));
-  os.file.FileManager.getInstance().registerContentTypeMethod(new os.ui.im.FilterTypeMethod());
-  os.file.FileManager.getInstance().registerContentTypeMethod(new os.file.type.AnyTypeMethod());
 
   var im = os.ui.im.ImportManager.getInstance();
   im.registerImportDetails('Data filters for supported layers.');
-  im.registerImportUI('filter', new os.filter.im.OSFilterImportUI());
-  im.registerImportUI(os.file.type.AnyTypeMethod.TYPE, new os.ui.file.AnyTypeImportUI());
+  im.registerImportUI(os.file.mime.filter.TYPE, new os.filter.im.OSFilterImportUI());
+  im.registerImportUI(os.file.mime.any.TYPE, new os.ui.file.AnyTypeImportUI());
 
   // register importers
   im.registerImporter('os', os.im.FeatureImporter);
@@ -333,7 +331,6 @@ os.MainCtrl = function($scope, $element, $compile, $timeout, $injector) {
   os.areaImportManager.registerImportDetails('Data filters for supported layers.');
   os.areaImportManager.registerImportUI('filter', new os.filter.im.OSFilterImportUI());
   os.areaFileManager = new os.file.FileManager();
-  os.areaFileManager.registerContentTypeMethod(new os.ui.im.FilterTypeMethod());
 
   // initialize the CMM
   os.column.ColumnMappingManager.getInstance();

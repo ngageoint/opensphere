@@ -16,16 +16,4 @@ describe('plugin.arc', function() {
     expect(plugin.arc.getColumnType(geom)).toBe('gml');
     expect(plugin.arc.getColumnType(num)).toBe('decimal');
   });
-
-  it('should detect an Arc response and sos it', function() {
-    var file = new os.file.File();
-    var url = 'https://fake.arc.server/arcgis/rest/services';
-    var content = '<div>Some Fake Title</div><br><br>ArcGIS REST Services Directory';
-
-    file.setUrl(url);
-    expect(plugin.arc.isArcResponse(file)).toBe(3);
-
-    file.setContent(content);
-    expect(plugin.arc.isArcResponse(file)).toBe(6);
-  });
 });

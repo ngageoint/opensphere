@@ -1,6 +1,7 @@
 goog.provide('os.ui.file.AnyTypeImportCtrl');
 goog.provide('os.ui.file.anyTypeImportDirective');
 
+goog.require('os.file.mime.zip');
 goog.require('os.ui.im.ImportManager');
 goog.require('os.ui.window');
 
@@ -48,7 +49,7 @@ os.ui.file.AnyTypeImportCtrl = function($scope, $element) {
    */
   this.element_ = $element;
 
-  this.scope_['isZip'] = this.scope_['file'] ? os.file.isZipFile(this.scope_['file'].getContent()) : false;
+  this.scope_['isZip'] = this.scope_['file'] ? os.file.mime.zip.isZip(this.scope_['file'].getContent()) : false;
 
   this.scope_.$emit(os.ui.WindowEventType.READY);
   this.scope_.$on('destroy', goog.bind(function() {

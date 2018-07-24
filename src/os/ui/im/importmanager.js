@@ -179,7 +179,7 @@ os.ui.im.ImportManager.prototype.registerImportDetails = function(details, opt_i
 
 
 /**
- * Register an import UI.
+ * Register an import UI launcher.
  * @param {string} type The import type
  * @param {os.ui.im.IImportUI} ui The import UI
  */

@@ -4,8 +4,7 @@ goog.require('os.ui.window');
 goog.require('os.ui.wiz.OptionsStep');
 goog.require('os.ui.wiz.step.TimeStep');
 goog.require('plugin.file.shp.SHPParserConfig');
-goog.require('plugin.file.shp.type.DBFTypeMethod');
-goog.require('plugin.file.shp.type.SHPTypeMethod');
+goog.require('plugin.file.shp.mime');
 goog.require('plugin.file.shp.ui.SHPFilesStep');
 goog.require('plugin.file.shp.ui.shpImportDirective');
 
@@ -33,6 +32,8 @@ plugin.file.shp.ui.SHPImportUI.prototype.getTitle = function() {
  * @inheritDoc
  */
 plugin.file.shp.ui.SHPImportUI.prototype.launchUI = function(file, opt_config) {
+  plugin.file.shp.ui.SHPImportUI.base(this, 'launchUI', file, opt_config);
+
   var steps = [
     new plugin.file.shp.ui.SHPFilesStep(),
     new os.ui.wiz.step.TimeStep(),
@@ -48,12 +49,12 @@ plugin.file.shp.ui.SHPImportUI.prototype.launchUI = function(file, opt_config) {
 
   // determine if the initial file is the DBF or SHP file
   var name = file.getFileName();
-  if (name.match(plugin.file.shp.type.SHPTypeMethod.EXT_REGEXP)) {
+  if (plugin.file.shp.mime.SHP_EXT_REGEXP.test(name)) {
     config['file'] = file;
     config['title'] = name;
   } else {
     config['file2'] = file;
-    config['title'] = name.split(plugin.file.shp.type.DBFTypeMethod.EXT_REGEXP)[0] + '.shp';
+    config['title'] = name.split(plugin.file.shp.mime.DBF_EXT_REGEXP)[0] + '.shp';
   }
 
   var scopeOptions = {

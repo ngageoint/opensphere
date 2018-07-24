@@ -161,16 +161,10 @@ os.ui.file.ImportDialogCtrl.prototype.accept = function() {
     if (this['fileChosen']) {
       var file = /** @type {File|undefined} */ (this['file']);
       if (file) {
-        if (file.path && os.file.FILE_URL_ENABLED) {
-          // running in Electron, so request the file with a file:// URL
-          url = os.file.getFileUrl(file.path);
-        } else {
-          // load a local file
-          var keepFile = method.getKeepFile();
-          var reader = os.file.createFromFile(this['file'], keepFile);
-          if (reader) {
-            reader.addCallbacks(this.onFileReady_, this.onFileError_, this);
-          }
+        // load a local file
+        var reader = os.file.createFromFile(this['file']);
+        if (reader) {
+          reader.addCallbacks(this.onFileReady_, this.onFileError_, this);
         }
       }
     } else {

@@ -10,12 +10,9 @@ goog.require('os.data.IDataProvider');
  * @param {!function()} clazz The class
  * @param {!string} title The title
  * @param {?string} desc The description
- * @param {?string=} opt_ui The directive HTML for creating a new provider of this type
- * @param {function(os.file.File):number=} opt_fileDetection The function used
- *  for detecting if a file matches this provider type
  * @constructor
  */
-os.data.ProviderEntry = function(type, clazz, title, desc, opt_ui, opt_fileDetection) {
+os.data.ProviderEntry = function(type, clazz, title, desc) {
   /**
    * The provider type
    * @type {!string}
@@ -39,15 +36,4 @@ os.data.ProviderEntry = function(type, clazz, title, desc, opt_ui, opt_fileDetec
    * @type {?string}
    */
   this.desc = desc;
-
-  /**
-   * The add UI
-   * @type {?string}
-   */
-  this.ui = opt_ui || null;
-
-  /**
-   * @type {?function(os.file.File):number}
-   */
-  this.fileDetection = opt_fileDetection || null;
 };

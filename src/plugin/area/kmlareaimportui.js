@@ -44,6 +44,8 @@ plugin.area.KMLAreaImportUI.prototype.getTitle = function() {
  * @inheritDoc
  */
 plugin.area.KMLAreaImportUI.prototype.launchUI = function(file, opt_config) {
+  plugin.area.KMLAreaImportUI.base(this, 'launchUI', file, opt_config);
+
   var config = new os.parse.FileParserConfig();
   config['file'] = file;
   config['title'] = file.getFileName() || '';
