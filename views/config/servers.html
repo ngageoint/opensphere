@@ -1,12 +1,13 @@
-<div class="d-flex flex-column flex-fill">
-  <div>
-    <div class="float-right">
-      <button class="btn btn-primary" ng-click="servers.add()" title="Add a new server">
-        <i class="fa fa-plus"></i>
-        Add Server
-      </button>
-    </div>
-    <p>Data servers provide layers, analytics, and other data that can be loaded on the map.</p>
+<div class="d-flex flex-column flex-fill container-fluid">
+  <div class="mb-2">
+    <h4 class="d-inline">Data Servers</h4>
+    <button class="btn btn-primary float-right" ng-click="servers.add()" title="Add a new server">
+      <i class="fa fa-plus"></i>
+      Add Server
+    </button>
+  </div>
+  <div class="form-group">
+    Data servers provide layers, analytics, and other data that can be loaded on the map.
   </div>
   <div class="flex-fill u-overflow-y-auto">
     <table class="table table-striped bg-secondary m-0">
