@@ -1,4 +1,5 @@
 goog.provide('os.ui.config.SettingsWindowCtrl');
+goog.provide('os.ui.config.SettingsWindowList');
 goog.provide('os.ui.config.settingsWindowDirective');
 goog.require('os.ui.config.AbstractSettingsCtrl');
 
@@ -11,6 +12,9 @@ os.ui.config.settingsWindowDirective = function() {
   return {
     restrict: 'E',
     replace: true,
+    scope: {
+      'hideClose': '@?'
+    },
     templateUrl: os.ROOT + 'views/config/settingswindow.html',
     controller: os.ui.config.SettingsWindowCtrl,
     controllerAs: 'setCon'
@@ -22,6 +26,13 @@ os.ui.config.settingsWindowDirective = function() {
  * Add the directive to the os.ui module
  */
 os.ui.Module.directive('settings', [os.ui.config.settingsWindowDirective]);
+
+
+/**
+ * Settings window button list
+ * @type {string}
+ */
+os.ui.config.SettingsWindowList = 'settings-window-button';
 
 
 
