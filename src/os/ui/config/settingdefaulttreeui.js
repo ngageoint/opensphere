@@ -11,7 +11,7 @@ os.ui.config.settingDefaultTreeUIDirective = function() {
   return {
     restrict: 'AE',
     replace: true,
-    templateUrl: os.ROOT + 'views/config/defaultconfigview.html',
+    template: '<div></div>',
     controller: os.ui.config.SettingDefaultUICtrl,
     controllerAs: 'settingUi'
   };
