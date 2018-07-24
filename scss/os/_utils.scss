@@ -29,11 +29,18 @@ $form-control-disabled-opacity: .6 !default;
   }
 }
 
-// How bootstrap does box-sizing breaks 3rd party libraries box sizing. This technique allows slickgrid to work
 html {
+  // (Part 1) How bootstrap does box-sizing breaks 3rd party libraries box sizing.
+  // This technique allows slickgrid to work
   box-sizing: border-box;
+
+  // This makes the page the whole height by default. Use flex-fill to make your page take all the available space
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
+// (Part 2) Use your parents box sizing. This technique allows slickgrid to work
 *,
 *:before,
 *:after {
