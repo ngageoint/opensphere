@@ -28,6 +28,8 @@ plugin.file.kml.ui.KMLImportUI.prototype.getTitle = function() {
  * @inheritDoc
  */
 plugin.file.kml.ui.KMLImportUI.prototype.launchUI = function(file, opt_config) {
+  plugin.file.kml.ui.KMLImportUI.base(this, 'launchUI', file, opt_config);
+
   var config = new os.parse.FileParserConfig();
 
   // if an existing config was provided, merge it in

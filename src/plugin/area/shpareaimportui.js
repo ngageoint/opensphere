@@ -11,6 +11,7 @@ goog.require('os.ui.wiz.step.WizardStepEvent');
 goog.require('plugin.area.AreaImportCtrl');
 goog.require('plugin.file.shp.SHPParser');
 goog.require('plugin.file.shp.SHPParserConfig');
+goog.require('plugin.file.shp.mime');
 goog.require('plugin.file.shp.ui.SHPFilesStep');
 
 
@@ -40,16 +41,18 @@ plugin.area.SHPAreaImportUI.prototype.getTitle = function() {
  * @inheritDoc
  */
 plugin.area.SHPAreaImportUI.prototype.launchUI = function(file, opt_config) {
+  plugin.area.SHPAreaImportUI.base(this, 'launchUI', file, opt_config);
+
   var config = new plugin.file.shp.SHPParserConfig();
 
   // determine if the initial file is the DBF or SHP file
   var name = file.getFileName();
-  if (name.match(plugin.file.shp.type.SHPTypeMethod.EXT_REGEXP)) {
+  if (plugin.file.shp.mime.SHP_EXT_REGEXP.test(name)) {
     config['file'] = file;
     config['title'] = name;
-  } else if (name.match(plugin.file.shp.type.DBFTypeMethod.EXT_REGEXP)) {
+  } else if (plugin.file.shp.mime.DBF_EXT_REGEXP.test(name)) {
     config['file2'] = file;
-    config['title'] = name.split(plugin.file.shp.type.DBFTypeMethod.EXT_REGEXP)[0] + '.shp';
+    config['title'] = name.split(plugin.file.shp.mime.DBF_EXT_REGEXP)[0] + '.shp';
   } else {
     config['zipFile'] = file;
     config['title'] = name;

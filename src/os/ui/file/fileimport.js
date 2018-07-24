@@ -138,9 +138,7 @@ os.ui.file.FileImportCtrl.prototype.onDestroy_ = function() {
 os.ui.file.FileImportCtrl.prototype.accept = function() {
   if (this.scope_['method'] && this['file']) {
     this['loading'] = true;
-    var keepFile = /** @type {os.file.IFileMethod} */ (this.scope_['method']).getKeepFile();
-
-    var reader = os.file.createFromFile(this['file'], keepFile);
+    var reader = os.file.createFromFile(this['file']);
     if (reader) {
       reader.addCallbacks(this.handleResult_, this.handleError_, this);
     }

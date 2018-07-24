@@ -10,6 +10,7 @@ goog.require('os.ui.im.ImportManager');
 goog.require('os.ui.ogc.OGCServer');
 goog.require('plugin.ogc.GeoServer');
 goog.require('plugin.ogc.OGCLayerDescriptor');
+goog.require('plugin.ogc.mime');
 goog.require('plugin.ogc.ui.geoserverDirective');
 goog.require('plugin.ogc.ui.ogcserverDirective');
 goog.require('plugin.ogc.wfs.QueryWFSLayerConfig');
@@ -36,9 +37,10 @@ plugin.ogc.OGCPlugin.prototype.init = function() {
   var dm = os.dataManager;
 
   var ogc = new os.data.ProviderEntry(os.ogc.ID, os.ui.ogc.OGCServer, 'OGC Server',
-      'Generic description for generic OGC Server.', '<ogcserver></ogcserver>', os.ui.ogc.OGCServer.isOGCResponse);
-  var geo = new os.data.ProviderEntry('geoserver', plugin.ogc.GeoServer, 'GeoServer',
-      'GeoServer description blah blah blah...', '<geoserver></geoserver>', plugin.ogc.GeoServer.isGeoserverResponse);
+    'OGC Servers provide raster imagery through WMS (Web Map Service) and vector features through WFS'
+    + ' (Web Feature Service) servers');
+
+  var geo = new os.data.ProviderEntry(plugin.ogc.mime.GEOSERVER_TYPE, plugin.ogc.GeoServer, 'GeoServer', '');
 
   // register the ogc provider types
   dm.registerProviderType(ogc);
@@ -55,8 +57,9 @@ plugin.ogc.OGCPlugin.prototype.init = function() {
 
   // register the server forms for adding/editing servers
   var im = os.ui.im.ImportManager.getInstance();
-  im.registerImportUI(ogc.type, new os.ui.ProviderImportUI());
-  im.registerImportUI(geo.type, new os.ui.ProviderImportUI());
+  im.registerImportUI(os.ogc.ID, new os.ui.ProviderImportUI('<ogcserver></ogcserver>'));
+  im.registerImportUI(plugin.ogc.mime.GEOSERVER_TYPE,
+      new os.ui.ProviderImportUI('<geoserver></geoserver>'));
 };
 
 

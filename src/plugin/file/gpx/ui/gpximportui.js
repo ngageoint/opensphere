@@ -28,6 +28,8 @@ plugin.file.gpx.ui.GPXImportUI.prototype.getTitle = function() {
  * @inheritDoc
  */
 plugin.file.gpx.ui.GPXImportUI.prototype.launchUI = function(file, opt_config) {
+  plugin.file.gpx.ui.GPXImportUI.base(this, 'launchUI', file, opt_config);
+
   var config = new os.parse.FileParserConfig();
 
   // if an existing config was provided, merge it in

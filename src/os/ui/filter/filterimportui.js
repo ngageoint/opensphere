@@ -27,6 +27,8 @@ goog.inherits(os.ui.filter.FilterImportUI, os.ui.im.FileImportUI);
  * @inheritDoc
  */
 os.ui.filter.FilterImportUI.prototype.launchUI = function(file, opt_config) {
+  os.ui.filter.FilterImportUI.base(this, 'launchUI', file, opt_config);
+
   var windowOptions = {
     'label': this.label,
     'icon': 'fa fa-sign-in',

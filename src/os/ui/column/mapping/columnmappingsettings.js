@@ -5,7 +5,7 @@ goog.provide('os.ui.column.mapping.ColumnMappingSettingsCtrl');
 goog.require('os.column.ColumnMapping');
 goog.require('os.column.ColumnMappingEventType');
 goog.require('os.column.ColumnMappingManager');
-goog.require('os.column.ColumnMappingTypeMethod');
+goog.require('os.file.mime.columnmapping');
 goog.require('os.ui.Module');
 goog.require('os.ui.column.mapping.ColumnMappingImportUI');
 goog.require('os.ui.column.mapping.ColumnMappingNode');
@@ -23,13 +23,10 @@ goog.require('os.ui.im.ImportProcess');
  */
 os.ui.column.mapping.ColumnMappingSettings = function() {
   os.ui.column.mapping.ColumnMappingSettings.base(this, 'constructor');
-
-  var fm = os.file.FileManager.getInstance();
   var im = os.ui.im.ImportManager.getInstance();
 
   // csv
-  fm.registerContentTypeMethod(new os.column.ColumnMappingTypeMethod());
-  im.registerImportUI('columnmapping', new os.ui.column.mapping.ColumnMappingImportUI());
+  im.registerImportUI(os.file.mime.columnmapping.TYPE, new os.ui.column.mapping.ColumnMappingImportUI());
 
   this.setLabel('Column Associations');
   this.setDescription('Configure your column associations');

@@ -4,6 +4,7 @@ goog.require('goog.Disposable');
 goog.require('goog.disposable.IDisposable');
 goog.require('ol.format.GeoJSON');
 goog.require('os.data.ColumnDefinition');
+goog.require('os.file.mime.text');
 goog.require('os.map');
 goog.require('os.parse.IParser');
 
@@ -60,6 +61,10 @@ plugin.file.geojson.GeoJSONParser.prototype.setSource = function(source) {
   this.nextIndex = 0;
 
   var src;
+  if (source instanceof ArrayBuffer) {
+    source = os.file.mime.text.getText(source) || null;
+  }
+
   if (goog.isArray(source) && source.length == 1 && (goog.isString(source[0]) || goog.isObject(source[0]))) {
     // source likely came from a chaining importer
     src = source[0];

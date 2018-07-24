@@ -24,6 +24,8 @@ goog.inherits(os.ui.state.StateImportUI, os.ui.im.FileImportUI);
  * @inheritDoc
  */
 os.ui.state.StateImportUI.prototype.launchUI = function(file, opt_config) {
+  os.ui.state.StateImportUI.base(this, 'launchUI', file, opt_config);
+
   var config = new os.parse.StateParserConfig();
 
   // if an existing config was provided, merge it in
@@ -34,6 +36,7 @@ os.ui.state.StateImportUI.prototype.launchUI = function(file, opt_config) {
 
   var rawState = null;
 
+  file.convertContentToString();
   var content = file.getContent();
   var contentType = file.getContentType();
   if (content) {
