@@ -2,6 +2,7 @@ goog.provide('os.im.action.FilterActionParser');
 
 goog.require('goog.dom');
 goog.require('goog.dom.xml');
+goog.require('os.file.mime.text');
 goog.require('os.im.action');
 goog.require('os.im.action.TagName');
 goog.require('os.im.action.filter');
@@ -28,6 +29,10 @@ os.im.action.FilterActionParser = function() {
  * @inheritDoc
  */
 os.im.action.FilterActionParser.prototype.setSource = function(source) {
+  if (source instanceof ArrayBuffer) {
+    source = os.file.mime.text.getText(source) || null;
+  }
+
   if (source instanceof Document) {
     this.document_ = /** @type {!Document} */ (source);
   } else if (typeof source == 'string') {

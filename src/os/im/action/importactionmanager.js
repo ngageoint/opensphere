@@ -5,6 +5,7 @@ goog.require('goog.events.EventType');
 goog.require('goog.log');
 goog.require('os.im.action.FilterActionEntry');
 goog.require('os.im.action.ImportActionEventType');
+goog.require('os.im.action.TagName');
 goog.require('os.im.action.cmd.FilterActionAdd');
 goog.require('os.plugin.PluginManager');
 

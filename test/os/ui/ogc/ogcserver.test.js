@@ -27,28 +27,28 @@ describe('os.ui.ogc.OGCServer', function() {
   it('should merge CRS lists properly', function() {
     var server = new os.ui.ogc.OGCServer();
     loadAndRun(server, {
-        wms: '/base/test/os/ui/ogc/wms.xml'
-      }, function() {
-        var d = os.dataManager.getDescriptor('testogc#inherit');
-        expect(d).toBeTruthy();
+      wms: '/base/test/resources/ogc/wms-130.xml'
+    }, function() {
+      var d = os.dataManager.getDescriptor('testogc#inherit');
+      expect(d).toBeTruthy();
 
-        var list = d.getSupportedCRS();
-        expect(list).toBeTruthy();
-        expect(list.length).toBe(3);
-        expect(list).toContain('EPSG:4326');
-        expect(list).toContain('EPSG:3857');
-        expect(list).toContain('CRS:84');
+      var list = d.getSupportedCRS();
+      expect(list).toBeTruthy();
+      expect(list.length).toBe(3);
+      expect(list).toContain('EPSG:4326');
+      expect(list).toContain('EPSG:3857');
+      expect(list).toContain('CRS:84');
 
-        d = os.dataManager.getDescriptor('testogc#add_crs');
-        expect(d).toBeTruthy();
+      d = os.dataManager.getDescriptor('testogc#add_crs');
+      expect(d).toBeTruthy();
 
-        list = d.getSupportedCRS();
-        expect(list).toBeTruthy();
-        expect(list.length).toBe(4);
-        expect(list).toContain('EPSG:4326');
-        expect(list).toContain('EPSG:3857');
-        expect(list).toContain('CRS:84');
-        expect(list).toContain('EPSG:3395');
-      });
+      list = d.getSupportedCRS();
+      expect(list).toBeTruthy();
+      expect(list.length).toBe(4);
+      expect(list).toContain('EPSG:4326');
+      expect(list).toContain('EPSG:3857');
+      expect(list).toContain('CRS:84');
+      expect(list).toContain('EPSG:3395');
+    });
   });
 });

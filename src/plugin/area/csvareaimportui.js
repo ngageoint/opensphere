@@ -35,6 +35,8 @@ plugin.area.CSVAreaImportUI.prototype.getTitle = function() {
  * @inheritDoc
  */
 plugin.area.CSVAreaImportUI.prototype.launchUI = function(file, opt_config) {
+  plugin.area.CSVAreaImportUI.base(this, 'launchUI', file, opt_config);
+
   var steps = [
     new os.ui.file.ui.csv.ConfigStep(),
     new os.ui.wiz.GeometryStep(),

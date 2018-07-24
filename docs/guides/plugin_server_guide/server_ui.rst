@@ -1,21 +1,28 @@
 Server Import UI
 ================
 
-Server type detection differs slightly from file type detection in that it only works on URLs rather than both files and URLs. Let's add a function to detect a Tileserver ``/index.json`` response.
+Server type detection works exactly the same as file type detection. Let's add a detection function for a Tileserver ``/index.json`` response and register it.
+
+.. literalinclude:: src/plugin/tileserver/mime.js
+  :caption: ``src/plugin/tileserver/mime.js``
+  :linenos:
+  :language: javascript
+
+Let's test that.
+
+.. literalinclude:: test/plugin/tileserver/mime.test.js
+  :caption: ``test/plugin/tileserver/mime.test.js``
+  :linenos:
+  :language: javascript
+
+Now have the plugin require it.
 
 .. literalinclude:: src/plugin/tileserver/tileserverplugin.js-server_ui-1
   :caption: ``src/plugin/tileserver/tileserverplugin.js``
   :linenos:
   :language: javascript
-  :emphasize-lines: 46-63
+  :emphasize-lines: 8
 
-Let's test that.
-
-.. literalinclude:: test/plugin/tileserver/tileserverplugin.test.js-server_ui
-  :caption: ``test/plugin/tileserver/tileserverplugin.test.js``
-  :linenos:
-  :language: javascript
-  :emphasize-lines: 1, 21-46
 
 Now we need to make an Angular directive so the user has a form to give the server a title and potentially modify the URL.
 
@@ -32,7 +39,7 @@ Now let's hook that up in our plugin.
   :caption: ``src/plugin/tileserver/tileserverplugin.js``
   :linenos:
   :language: javascript
-  :emphasize-lines: 7, 9, 42-43, 48-49
+  :emphasize-lines: 7, 10, 47-51
 
 Save and run the build. Open the debug instance and go to Settings > Data Servers. You can now hit the little view icon on the Tileserver provider in that list. In addition, you can hit "Add Server" and add the URL to the ``index.json``. It will pop up a UI for you to edit the title and the URL, as shown below:
 
