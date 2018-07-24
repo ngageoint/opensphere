@@ -10,6 +10,7 @@ goog.require('os.ui.config.AbstractSettingsCtrl');
 os.ui.config.settingsContainerDirective = function() {
   return {
     restrict: 'E',
+    replace: true,
     templateUrl: os.ROOT + 'views/config/settingscontainer.html',
     controller: os.ui.config.SettingsContainerCtrl,
     controllerAs: 'setCon'
