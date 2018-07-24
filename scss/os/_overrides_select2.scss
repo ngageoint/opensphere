@@ -79,3 +79,12 @@
     background: transparent;
   }
 }
+
+// form-control sets 'width: auto' in a form-inline, which shrinks the select2. prevent that from happening.
+.form-inline {
+  .select2-container {
+    .select2-choice {
+      width: 100%;
+    }
+  }
+}
