@@ -24,7 +24,7 @@
               Value <i ng-show="columnToOrder == 'value'" class="slick-sort-indicator" ng-class="{'slick-sort-indicator-desc': !reverse, 'slick-sort-indicator-asc': reverse}"></i>
             </th>
           </tr>
-          <tr ng-repeat="property in properties | orderBy:columnToOrder:reverse" ng-click="info.select($event, property)" ng-class="{'selected': selected==property}">
+          <tr ng-repeat="property in properties" ng-click="info.select($event, property)" ng-class="{'selected': selected==property}">
             <td style="width:30%" class="ellipsis-text">{{property.field}}</td>
             <td><featureinfocell property="property"></featureinfocell></td>
           </tr>
