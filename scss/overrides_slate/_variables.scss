@@ -1,3 +1,9 @@
+$blue: #3498db;
+$primary: $blue;
+
+$gray-800: #3a3f44 !default;
+$dark: $gray-800;
+
 @import 'slate/variables';
 
 $border-color: $gray-900;
@@ -17,3 +23,18 @@ $input-btn-padding-x: .75rem;
 $nav-link-padding-y: .5rem;
 $navbar-padding-y: .5rem;
 $navbar-padding-x: 1rem;
+
+// Override from themevariables
+$sticky-nav-background-color: $gray-700;
+
+// Override from themevariables
+$hover-edit-background-color: $gray-700;
+
+// Override from themevariables
+$default-image-background-color: $gray-700;
+
+// Override from themevariables
+$default-timeline-background-color: $gray-800;
+
+// Override from themevariables
+$default-timeline-background-color-active: $gray-700;
