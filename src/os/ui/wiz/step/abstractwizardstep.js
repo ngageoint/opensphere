@@ -139,7 +139,9 @@ os.ui.wiz.step.AbstractWizardStep.prototype.activate = function(config, opt_scop
  * @inheritDoc
  */
 os.ui.wiz.step.AbstractWizardStep.prototype.deactivate = function(config) {
-  this.finalize(config);
+  if (config !== null) {
+    this.finalize(config);
+  }
 
   if (this.scope) {
     delete this.scope['step'];
