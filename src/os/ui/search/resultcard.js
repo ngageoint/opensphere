@@ -13,7 +13,7 @@ os.ui.search.resultCardDirective = function() {
     restrict: 'E',
     replace: true,
     scope: true,
-    template: '<div class="card-body"></div>',
+    template: '<div></div>',
     controller: os.ui.search.ResultCardCtrl,
     controllerAs: 'resultCard'
   };
