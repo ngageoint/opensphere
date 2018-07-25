@@ -1,6 +1,7 @@
 goog.provide('os.ui.config.SettingsContainerCtrl');
 goog.provide('os.ui.config.SettingsContainerDirective');
 goog.require('os.ui.config.AbstractSettingsCtrl');
+goog.require('os.ui.config.settingsWindowDirective');
 
 
 /**
