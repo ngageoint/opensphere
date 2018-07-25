@@ -243,6 +243,12 @@
   flex: 1;
   width: 100%;
 
+  &.no-hover {
+    .slick-row:hover {
+      background: inherit;
+    }
+  }
+
   .slick-cell .slick-node-ui i:first-child {
     padding-left: .5rem;
   }

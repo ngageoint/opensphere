@@ -11,12 +11,12 @@ os.ui.column.mapping.columnMappingNodeUIDirective = function() {
   return {
     restrict: 'E',
     replace: true,
-    template: '<span class="glyphs pull-right slick-node-ui">' +
+    template: '<div>' +
         '<span ng-click="nodeUi.edit()">' +
-        '<i class="fa fa-pencil fa-fw glyph" title="Edit the column mapping"></i></span>' +
+        '<i class="fa fa-pencil fa-fw c-glyph" title="Edit the column mapping"></i></span>' +
         '<span ng-click="nodeUi.tryRemove()">' +
-        '<i class="fa fa-times fa-fw glyph glyph-remove" title="Remove the column mapping"></i></span>' +
-        '</span>',
+        '<i class="fa fa-times fa-fw c-glyph text-danger" title="Remove the column mapping"></i></span>' +
+        '</div>',
     controller: os.ui.column.mapping.ColumnMappingNodeUICtrl,
     controllerAs: 'nodeUi'
   };
