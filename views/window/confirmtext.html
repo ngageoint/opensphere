@@ -1,5 +1,5 @@
 <div ng-form="textForm">
-  {{prompt}}
+  <div class="form-group" ng-if="prompt">{{prompt}}</div>
   <div>
     <label for="title" ng-if="formLabel" class="u-required">{{formLabel}}:</label>
     <div>
