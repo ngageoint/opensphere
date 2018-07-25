@@ -12,44 +12,41 @@
       </span>
     </div>
 
-    <div class="flex-shrink-0">
-      <div class="float-left">
-        <div class="input-group mb-1">
+    <div class="container flex-shrink-0 p-0">
+      <div class="form-group row">
+        <div class="input-group col-6">
           <input class="form-control js-input-search" ng-model="addData.term" ng-change="addData.search()" placeholder="Search available layers"/>
           <div class="input-group-append">
-            <button class="btn btn-outline-secondary" ng-click="addData.clearSearch()" title="Clear the search term">
+            <button class="btn btn-secondary" ng-click="addData.clearSearch()" title="Clear the search term">
               <i class="fa fa-times"></i>
             </button>
           </div>
         </div>
 
-        <div class="form-row align-items-center" ng-hide="filterName">
-          <div class="col-auto">
-            Group By:
-          </div>
-          <div class="col">
-            <select class="custom-select" ng-model="addData.view" ng-change="addData.onGroupByChanged()" ng-options="key for (key, value) in addData.views"
-            />
-          </div>
-        </div>
-
-        <div class="adw-filter" ng-show="filterName">
-          <span ng-click="addData.clearFilter()" class="c--action">
-            <i class="fa fa-times text-danger"></i> Clear Filter:
-            <em>{{filterName}}</em>
-          </span>
+        <div class="col text-right">
+          <button class="btn btn-primary" ng-click="addData.launchFileImport()" title="Open a local file or URL"
+              ng-class="{'focus': addData.isTreeEmpty()}">
+            <i class="fa fa-folder-open"></i> Open File/URL
+          </button>
         </div>
       </div>
+      <div class="row" ng-hide="filterName">
+        <label class="col-auto">Group By:</label>
+        <select class="custom-select col-3" ng-model="addData.view" ng-change="addData.onGroupByChanged()"
+            ng-options="key for (key, value) in addData.views"/>
+      </div>
 
-      <div class="float-right">
-        <button class="btn btn-primary" ng-click="addData.launchFileImport()" title="Open a local file or URL" ng-class="{'focus': addData.isTreeEmpty()}">
-          <i class="fa fa-folder-open"></i> Open File/URL
+      <div ng-show="filterName">
+        <button class="btn btn-outline-secondary" ng-click="addData.clearFilter()">
+          <i class="fa fa-times text-danger"></i>
+          Clear Filter:
+          <em>{{filterName}}</em>
         </button>
       </div>
     </div>
 
     <div class="d-flex flex-fill mt-1">
-      <slicktree class="border col" x-data="providers" checkbox-class="c-toggle-switch" checkbox-tooltip="Activates or deactivates the layer"
+      <slicktree class="border col p-0" x-data="providers" checkbox-class="c-toggle-switch" checkbox-tooltip="Activates or deactivates the layer"
         selected="selected" disable-folders="true"></slicktree>
       <div class="border col ml-1 p-2" ng-bind-html="addData.getInfo()"></div>
     </div>

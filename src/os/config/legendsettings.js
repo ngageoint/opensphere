@@ -156,7 +156,7 @@ os.config.LegendSettingsCtrl.prototype.disposeInternal = function() {
  */
 os.config.LegendSettingsCtrl.prototype.compilePlugins = function() {
   if (this.scope && this.element && this.compile) {
-    var uiContainer = this.element.find('.plugin-settings-container');
+    var uiContainer = this.element.find('.js-legend-settings__plugin-options');
     uiContainer.children().remove();
 
     var html = '';
