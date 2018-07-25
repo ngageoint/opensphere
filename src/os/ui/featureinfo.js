@@ -278,22 +278,37 @@ os.ui.FeatureInfoCtrl.prototype.updateProperties = function() {
       }
     }
   }
+
+  this.order();
 };
 
 
 /**
  * Allow ordering
- * @param {string} key
+ * @param {string=} opt_key
  */
-os.ui.FeatureInfoCtrl.prototype.order = function(key) {
-  this.scope['columnToOrder'] = key;
-  this.scope['reverse'] = !this.scope['reverse'];
+os.ui.FeatureInfoCtrl.prototype.order = function(opt_key) {
+  if (opt_key) {
+    if (opt_key === this.scope['columnToOrder']) {
+      this.scope['reverse'] = !this.scope['reverse'];
+    } else {
+      this.scope['columnToOrder'] = opt_key;
+    }
+  }
+
+  var field = this.scope['columnToOrder'];
+  var reverse = this.scope['reverse'];
+
+  this.scope['properties'].sort(function(a, b) {
+    var v1 = a[field].toString();
+    var v2 = b[field].toString();
+    return goog.string.numerateCompare(v1, v2) * (reverse ? -1 : 1);
+  });
 };
 goog.exportProperty(
     os.ui.FeatureInfoCtrl.prototype,
     'order',
     os.ui.FeatureInfoCtrl.prototype.order);
-
 
 /**
  * Select this property
