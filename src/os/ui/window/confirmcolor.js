@@ -42,34 +42,28 @@ os.ui.window.ConfirmColorCtrl = function($scope) {
   });
 };
 
-
 /**
  * Launch a dialog prompting the user to pick a color.
  * @param {Function} confirm
  * @param {string=} opt_default The default color to use
  */
 os.ui.window.launchConfirmColor = function(confirm, opt_default) {
-  var scopeOptions = {
-    'confirmCallback': confirm,
-    'confirmValue': opt_default || '#ffffff',
-    'yesText': 'OK',
-    'yesIcon': 'fa fa-check lt-blue-icon',
-    'noText': 'Cancel',
-    'noIcon': 'fa fa-ban red-icon'
-  };
-
   var windowOptions = {
     'label': 'Choose Color',
-    'icon': 'fa fa-tint lt-blue-icon',
+    'icon': 'fa fa-tint',
     'x': 'center',
     'y': 'center',
     'width': '185',
-    'height': '100',
+    'height': 'auto',
     'modal': 'true',
     'show-close': 'false',
     'no-scroll': 'true'
   };
 
-  var template = '<confirm><confirmcolor></confirmcolor></confirm>';
-  os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+  os.ui.window.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
+    confirm: confirm,
+    confirmValue: opt_default || '#ffffff',
+    prompt: '<confirmcolor></confirmcolor>',
+    windowOptions: windowOptions
+  }));
 };

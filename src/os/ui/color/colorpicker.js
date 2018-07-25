@@ -17,7 +17,8 @@ os.ui.color.COLOR_PICKER_SELECTOR = 'js-color-picker';
 /**
  * @type {string}
  */
-os.ui.color.COLOR_PICKER_TEMPLATE = '<button class="btn bg-transparent border ' + os.ui.color.COLOR_PICKER_SELECTOR +
+os.ui.color.COLOR_PICKER_TEMPLATE = '<button type="button" class="btn bg-transparent border ' +
+    os.ui.color.COLOR_PICKER_SELECTOR +
     '" ng-click="colorPicker.togglePopup()" ng-disabled=disabled>' +
     '<i class="fa fa-square" ng-style="{\'color\': color}"></i></button>';
 
