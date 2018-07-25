@@ -265,7 +265,8 @@ os.ui.urlDragDropDirective = function() {
     scope: {
       'ddTargetId': '@',
       'ddDrop': '=?',
-      'ddCapture': '@'
+      'ddCapture': '@',
+      'ddElement': '@'
     }
   };
 };
@@ -306,11 +307,13 @@ os.ui.UrlDragDrop = function($scope, $element) {
    * @type {?angular.JQLite}
    * @private
    */
-  this.element_ = $element;
+  this.element_ = $scope['ddElement'] ? $($scope['ddElement']) : $element;
 
-  $element[0].addEventListener('drop', this.handleDrop_.bind(this), $scope['ddCapture'] === 'true');
-  $element[0].addEventListener('dragover', this.handleDrag_, false);
-  $element[0].addEventListener('dragleave', this.handleDrag_, false);
+  if (this.element_[0]) {
+    this.element_[0].addEventListener('drop', this.handleDrop_.bind(this), $scope['ddCapture'] === 'true');
+    this.element_[0].addEventListener('dragover', this.handleDrag_, false);
+    this.element_[0].addEventListener('dragleave', this.handleDrag_, false);
+  }
 };
 
 
