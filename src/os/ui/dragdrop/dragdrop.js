@@ -69,8 +69,7 @@ os.ui.Module.directive('dragDrop', [os.ui.dragDropDirective]);
  * @enum {string}
  */
 os.ui.DragDropStyle = {
-  BORDER: 'border-warning',
-  BACKGROUND: 'bg-secondary'
+  DRAG_DROP_CLASS: 'c-dd-target__dragover'
 };
 
 
@@ -247,7 +246,7 @@ os.ui.DragDrop.prototype.onDrop = function(event) {
  * @param {goog.fx.DragDropEvent} event
  */
 os.ui.DragDrop.prototype.addOverClass = function(event) {
-  goog.dom.classlist.add(event.dropTargetItem.element, os.ui.DragDropStyle.BORDER);
+  goog.dom.classlist.add(event.dropTargetItem.element, os.ui.DragDropStyle.DRAG_DROP_CLASS);
 };
 
 
@@ -256,7 +255,7 @@ os.ui.DragDrop.prototype.addOverClass = function(event) {
  * @param {goog.fx.DragDropEvent} event
  */
 os.ui.DragDrop.prototype.removeOverClass = function(event) {
-  goog.dom.classlist.remove(event.dropTargetItem.element, os.ui.DragDropStyle.BORDER);
+  goog.dom.classlist.remove(event.dropTargetItem.element, os.ui.DragDropStyle.DRAG_DROP_CLASS);
 };
 
 
@@ -334,9 +333,9 @@ os.ui.UrlDragDrop.prototype.handleDrag_ = function(event) {
   event.stopPropagation();
   if (!document.querySelector(os.ui.windowSelector.MODAL_BG)) {
     if (event.type == 'dragover') {
-      goog.dom.classlist.add(/** @type {Element} */ (event.currentTarget), os.ui.DragDropStyle.BORDER);
+      goog.dom.classlist.add(/** @type {Element} */ (event.currentTarget), os.ui.DragDropStyle.DRAG_DROP_CLASS);
     } else {
-      goog.dom.classlist.remove(/** @type {Element} */ (event.currentTarget), os.ui.DragDropStyle.BORDER);
+      goog.dom.classlist.remove(/** @type {Element} */ (event.currentTarget), os.ui.DragDropStyle.DRAG_DROP_CLASS);
     }
   }
 };
@@ -350,7 +349,7 @@ os.ui.UrlDragDrop.prototype.handleDrag_ = function(event) {
 os.ui.UrlDragDrop.prototype.handleDrop_ = function(event) {
   event.preventDefault();
   event.stopPropagation();
-  goog.dom.classlist.remove(/** @type {Element} */ (event.currentTarget), os.ui.DragDropStyle.BORDER);
+  goog.dom.classlist.remove(/** @type {Element} */ (event.currentTarget), os.ui.DragDropStyle.DRAG_DROP_CLASS);
   if (!document.querySelector(os.ui.windowSelector.MODAL_BG)) {
     if (goog.isDefAndNotNull(this.scope_['ddDrop'])) {
       this.scope_['ddDrop'](event);
