@@ -288,7 +288,7 @@ os.ui.feature.FeatureInfoCtrl.prototype.updateProperties = function() {
  * Allow ordering
  * @param {string=} opt_key
  */
-os.ui.FeatureInfoCtrl.prototype.order = function(opt_key) {
+os.ui.feature.FeatureInfoCtrl.prototype.order = function(opt_key) {
   if (opt_key) {
     if (opt_key === this.scope['columnToOrder']) {
       this.scope['reverse'] = !this.scope['reverse'];
