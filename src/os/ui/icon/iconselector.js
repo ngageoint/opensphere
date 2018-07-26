@@ -11,7 +11,7 @@ goog.require('os.ui.list');
  * Nav bar locations.
  * @type {string}
  */
-os.ui.icon.ICON_SELECTORS = 'nav-icon-selectors';
+os.ui.icon.ICON_SELECTORS = 'js-nav-icon__selectors';
 
 
 /**
@@ -71,6 +71,7 @@ os.ui.icon.IconSelectorCtrl = function($scope, $element) {
         this.scope_['tabs'][i]['name'] + '\'">' + this.scope_['tabs'][i]['html'] + '</div>', 201);
   }
 
+  this.scope_.$emit(os.ui.WindowEventType.READY);
   $scope.$on('$destroy', this.destroy_.bind(this));
 };
 goog.inherits(os.ui.icon.IconSelectorCtrl, goog.events.EventTarget);
