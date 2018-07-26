@@ -12,6 +12,7 @@ goog.require('ol.source.Vector');
 goog.require('os.I3DSupport');
 goog.require('os.MapEvent');
 goog.require('os.geo');
+goog.require('os.implements');
 goog.require('os.interpolate');
 goog.require('os.map');
 goog.require('os.ui.ol.draw.DrawEvent');
@@ -36,7 +37,7 @@ os.interaction.DrawPolygon = function() {
   this.color = [51, 255, 255, 1];
 };
 goog.inherits(os.interaction.DrawPolygon, os.ui.ol.interaction.DrawPolygon);
-
+os.implements(os.interaction.DrawPolygon, os.I3DSupport.ID);
 
 /**
  * @inheritDoc
