@@ -23,7 +23,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="property in properties | orderBy:columnToOrder:reverse" ng-click="info.select($event, property)" ng-class="{'selected': selected==property}">
+        <tr ng-repeat="property in properties" ng-click="info.select($event, property)" ng-class="{'selected': selected==property}">
           <td class="text-truncate">{{property.field}}</td>
           <td><featureinfocell property="property"></featureinfocell></td>
         </tr>
