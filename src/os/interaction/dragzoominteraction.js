@@ -2,6 +2,7 @@ goog.provide('os.interaction.DragZoom');
 
 goog.require('os.I3DSupport');
 goog.require('os.command.FlyToExtent');
+goog.require('os.implements');
 goog.require('os.interaction.DragBox');
 
 
@@ -22,6 +23,7 @@ os.interaction.DragZoom = function(opt_options) {
   this.setActive(true);
 };
 goog.inherits(os.interaction.DragZoom, os.interaction.DragBox);
+os.implements(os.interaction.DragZoom, os.I3DSupport.ID);
 
 
 /**
