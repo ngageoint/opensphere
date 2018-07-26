@@ -137,7 +137,7 @@ os.ui.menu.import.refreshRecent_ = function() {
     var icon = enabled ? 'fa-check-square-o' : 'fa-square-o';
 
     if (type) {
-      if (type === os.layer.LayerType.GROUPS) {
+      if (os.layer !== undefined && type === os.layer.LayerType.GROUPS) {
         type = 'Group';
       }
 
