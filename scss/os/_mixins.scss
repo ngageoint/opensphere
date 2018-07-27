@@ -60,7 +60,11 @@
 }
 
 @mixin u-bg-color-content($color) {
-  .u-bg-#{color}-text { @content; }
+  .u-bg-#{$color}-text {
+    @content;
+  }
 
-  .u-bg-#{color}-text-a a { @content; }
+  .u-bg-#{$color}-text-a a {
+    @content;
+  }
 }

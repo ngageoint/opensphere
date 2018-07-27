@@ -139,15 +139,15 @@
       "magneticNorthHelpUrl": "https://www.ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml"
     },
     "themes": {
-      "Default": "overrides_darkly_compact",
-      "Light": "overrides_flatly",
-      "Light Compact": "overrides_flatly_compact",
-      "Dark": "overrides_darkly",
-      "Dark Compact": "overrides_darkly_compact",
-      "Light2": "default",
-      "Light2 Compact": "compact",
-      "Dark2": "overrides_slate",
-      "Dark2 Compact": "overrides_slate_compact"
+      "Default": "overrides_slate_compact",
+      "Light": "overrides_default",
+      "Light Compact": "overrides_default_compact",
+      "Dark": "overrides_slate",
+      "Dark Compact": "overrides_slate_compact",
+      "Light Flat": "overrides_flatly",
+      "Light Flat Compact": "overrides_flatly_compact",
+      "Dark Flat": "overrides_darkly",
+      "Dark Flat Compact": "overrides_darkly_compact"
     }
   },
   "user": {

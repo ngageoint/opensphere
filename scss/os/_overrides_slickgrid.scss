@@ -263,7 +263,6 @@
 
   .slick-cell {
     border: 0;
-    padding: 0 .5rem;
   }
 
   .slick-viewport {
@@ -273,6 +272,7 @@
 
 .tree-spacer {
   display: inline-block;
+  flex-shrink: 0;
   height: 1px;
 }
 
@@ -281,7 +281,8 @@
 }
 
 .tree-icons {
-  padding-right: .5rem;
+  display: flex;
+  padding-right: .25rem;
   vertical-align: text-bottom;
 
   i.fa {
