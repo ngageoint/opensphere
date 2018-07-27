@@ -307,7 +307,7 @@ os.ui.UrlDragDrop = function($scope, $element) {
    * @type {?angular.JQLite}
    * @private
    */
-  this.element_ = $scope['ddElement'] ? $($scope['ddElement']) : $element;
+  this.element_ = $scope['ddElement'] ? /** @type {angular.JQLite} */ ($($scope['ddElement'])) : $element;
 
   if (this.element_[0]) {
     this.element_[0].addEventListener('drop', this.handleDrop_.bind(this), $scope['ddCapture'] === 'true');
