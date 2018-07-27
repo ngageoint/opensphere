@@ -33,6 +33,13 @@ os.ui.file.method.UrlNoFailMethod.LOGGER_ = goog.log.getLogger('os.ui.file.metho
 
 
 /**
+ * @type {string}
+ * @const
+ */
+os.ui.file.method.UrlNoFailMethod.TYPE = 'unkown';
+
+
+/**
  * Handle the file request failure.  Create file with name and URL but no contents.
  * @override
  * @param {goog.events.Event} event
@@ -53,6 +60,7 @@ os.ui.file.method.UrlNoFailMethod.prototype.onError = function(event) {
   var file = new os.file.File();
   file.setFileName(fileName);
   file.setUrl(url);
+  file.setType(os.ui.file.method.UrlNoFailMethod.TYPE);
   this.setFile(file);
   this.dispatchEvent(os.events.EventType.COMPLETE);
 };
