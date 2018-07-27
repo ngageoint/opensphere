@@ -42,10 +42,15 @@ os.file.FileManager.prototype.getContentType = function(file, callback) {
   var fileBlob = file.getFile();
 
   if (!buffer && !fileBlob) {
-    goog.log.error(os.file.FileManager.LOGGER_,
-        'The content or original File instance must be present on the os.file.File for content type '
-        + 'detection to work');
-    callback(file.getType());
+    var type = file.getType();
+
+    if (!type) {
+      goog.log.error(os.file.FileManager.LOGGER_,
+          'The content or original File instance must be present on the os.file.File for content type '
+          + 'detection to work');
+    }
+
+    callback(type);
     return;
   }
 
