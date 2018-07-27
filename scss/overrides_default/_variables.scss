@@ -1,0 +1,23 @@
+$font-family-sans-serif: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+$font-size-base: .9375rem;
+
+// Needed for color pallet to have white text on buttons
+$yiq-contrasted-threshold: 166;
+
+$blue: #08c;
+$indigo:  #6610f2;
+$purple:  #6f42c1;
+$pink:    #e83e8c;
+$red:     #ee5f5b;
+$orange:  #fd7e14;
+$yellow:  #f89406;
+$green:   #62c462;
+$teal:    #20c997;
+$cyan:    #5bc0de;
+
+$primary: $blue;
+$dropdown-link-hover-color: #fff;
+$dropdown-link-hover-bg: $primary;
+
+$gray-900: #272B30;
+$dark: lighten($gray-900, 5%);
