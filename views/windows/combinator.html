@@ -4,13 +4,13 @@
       <div class="row mb-1" ng-show="!hideLayerChooser">
         <label class="col-form-label text-right col-2">Layer</label>
         <div class="col">
-          <select class="form-control col-14" ng-model="layer" ng-change="comboCtrl.selectLayer(true)" ng-options="value.label for value in layers" required></select>
+          <select class="form-control col-10" ng-model="layer" ng-change="comboCtrl.selectLayer(true)" ng-options="value.label for value in layers" required></select>
         </div>
       </div>
       <div class="row mb-1" ng-show="advanced">
         <label class="col-form-label text-right col-2">Group By</label>
         <div class="col">
-          <select class="form-control col-14" ng-model="order" ng-change="comboCtrl.selectGroupBy(true)" ng-options="value for value in orders"></select>
+          <select class="form-control col-10" ng-model="order" ng-change="comboCtrl.selectGroupBy(true)" ng-options="value for value in orders"></select>
         </div>
       </div>
       <div class="w-100 d-inline-block mb-2">
@@ -20,13 +20,13 @@
             <input class="form-check-input" type="checkbox" ng-model="advanced" ng-change="comboCtrl.advancedToggle(true)">
             Advanced
           </label>
-          <button class="btn btn-secondary" ng-click="comboCtrl.toggle(false)" title="Expand all"><i class="fa fa-plus-square-o"></i></button>
-          <button class="btn btn-secondary" ng-click="comboCtrl.toggle(true)" title="Collapse all"><i class="fa fa-minus-square-o"></i></button>
-          <button class="btn btn-secondary" ng-click="comboCtrl.clear()" title="Clears all the checkboxes in the form">Reset</button>
+          <button class="btn btn-secondary btn-sm" ng-click="comboCtrl.toggle(false)" title="Expand all"><i class="fa fa-plus-square-o"></i></button>
+          <button class="btn btn-secondary btn-sm" ng-click="comboCtrl.toggle(true)" title="Collapse all"><i class="fa fa-minus-square-o"></i></button>
+          <button class="btn btn-secondary btn-sm" ng-click="comboCtrl.clear()" title="Clears all the checkboxes in the form">Reset</button>
         </div>
       </div>
     </div>
-    <div class="w-100 flex-fill u-overflow-y-auto d-flex">
+    <div class="w-100 flex-fill d-flex u-overflow-y-auto">
       <slicktree x-data="pivots" selected="selected" multi-select="true" disposable="true"></slicktree>
     </div>
   </div>

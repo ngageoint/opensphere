@@ -23,6 +23,7 @@ goog.require('os.ui.slick.TreeSearch');
 os.ui.query.ui.areaFilterAddDirective = function() {
   return {
     restrict: 'E',
+    replace: true,
     scope: {},
     templateUrl: os.ROOT + 'views/query/areafilteradd.html',
     controller: os.ui.query.ui.AreaFilterAddCtrl,
@@ -42,11 +43,12 @@ os.ui.Module.directive('areafilteradd', [os.ui.query.ui.areaFilterAddDirective])
  * Controller function for the areafilteradd directive
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
+ * @param {!angular.$timeout} $timeout The Angular $timeout service.
  * @extends {goog.events.EventTarget}
  * @constructor
  * @ngInject
  */
-os.ui.query.ui.AreaFilterAddCtrl = function($scope, $element) {
+os.ui.query.ui.AreaFilterAddCtrl = function($scope, $element, $timeout) {
   os.ui.query.ui.AreaFilterAddCtrl.base(this, 'constructor');
   $scope['areaTerm'] = '';
   $scope['filterTerm'] = '';
@@ -117,6 +119,10 @@ os.ui.query.ui.AreaFilterAddCtrl = function($scope, $element) {
 
   os.ui.areaManager.getStoredAreas().addCallback(this.onAreasReady_, this);
   this.updateFilters_();
+
+  $timeout(function() {
+    $scope.$emit(os.ui.WindowEventType.READY);
+  });
 };
 goog.inherits(os.ui.query.ui.AreaFilterAddCtrl, goog.events.EventTarget);
 
@@ -286,16 +292,13 @@ os.ui.query.ui.AreaFilterAddCtrl.prototype.updateFilters_ = function() {
 
 /**
  * Starts the area search delay
+ * @export
  */
 os.ui.query.ui.AreaFilterAddCtrl.prototype.searchAreas = function() {
   if (this.areaSearchDelay_) {
     this.areaSearchDelay_.start();
   }
 };
-goog.exportProperty(
-    os.ui.query.ui.AreaFilterAddCtrl.prototype,
-    'searchAreas',
-    os.ui.query.ui.AreaFilterAddCtrl.prototype.searchAreas);
 
 
 /**
@@ -322,16 +325,13 @@ os.ui.query.ui.AreaFilterAddCtrl.prototype.onAreaSearch_ = function() {
 
 /**
  * Starts the filter search delay
+ * @export
  */
 os.ui.query.ui.AreaFilterAddCtrl.prototype.searchFilters = function() {
   if (this.filterSearchDelay_) {
     this.filterSearchDelay_.start();
   }
 };
-goog.exportProperty(
-    os.ui.query.ui.AreaFilterAddCtrl.prototype,
-    'searchFilters',
-    os.ui.query.ui.AreaFilterAddCtrl.prototype.searchFilters);
 
 
 /**
@@ -352,6 +352,7 @@ os.ui.query.ui.AreaFilterAddCtrl.prototype.onFilterSearch_ = function() {
 
 /**
  * Adds the toggled on filters and areas to their managers.
+ * @export
  */
 os.ui.query.ui.AreaFilterAddCtrl.prototype.add = function() {
   if (this.areaTreeSearch_) {
@@ -366,10 +367,6 @@ os.ui.query.ui.AreaFilterAddCtrl.prototype.add = function() {
 
   this.close();
 };
-goog.exportProperty(
-    os.ui.query.ui.AreaFilterAddCtrl.prototype,
-    'add',
-    os.ui.query.ui.AreaFilterAddCtrl.prototype.add);
 
 
 /**
@@ -442,26 +439,20 @@ os.ui.query.ui.AreaFilterAddCtrl.prototype.getDescriptors = function(layer) {
 
 /**
  * Closes the window without doing anything.
+ * @export
  */
 os.ui.query.ui.AreaFilterAddCtrl.prototype.close = function() {
   os.ui.window.close(this.element_);
 };
-goog.exportProperty(
-    os.ui.query.ui.AreaFilterAddCtrl.prototype,
-    'close',
-    os.ui.query.ui.AreaFilterAddCtrl.prototype.close);
 
 
 /**
  * Fires an event telling the form to scroll the map into the view.
+ * @export
  */
 os.ui.query.ui.AreaFilterAddCtrl.prototype.scrollToMap = function() {
   os.dispatcher.dispatchEvent(new os.ui.events.ScrollEvent('#mapSection'));
 };
-goog.exportProperty(
-    os.ui.query.ui.AreaFilterAddCtrl.prototype,
-    'scrollToMap',
-    os.ui.query.ui.AreaFilterAddCtrl.prototype.scrollToMap);
 
 
 /**
@@ -517,6 +508,7 @@ os.ui.query.ui.AreaFilterAddCtrl.prototype.count_ = function(opt_event) {
 
 /**
  * Launches a window to choose objects to add areas from.
+ * @export
  */
 os.ui.query.ui.AreaFilterAddCtrl.prototype.launchAddObjectAreas = function() {
   var id = 'areaobjectadd';
@@ -543,10 +535,6 @@ os.ui.query.ui.AreaFilterAddCtrl.prototype.launchAddObjectAreas = function() {
 
   os.ui.window.create(options, 'areaobjectadd callback="callback"', undefined, this.scope, undefined, scopeOptions);
 };
-goog.exportProperty(
-    os.ui.query.ui.AreaFilterAddCtrl.prototype,
-    'launchAddObjectAreas',
-    os.ui.query.ui.AreaFilterAddCtrl.prototype.launchAddObjectAreas);
 
 
 /**

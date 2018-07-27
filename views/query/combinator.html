@@ -1,17 +1,17 @@
 <div class="flex-column d-flex flex-fill">
   <div class="modal-body flex-column d-flex flex-fill">
-    <div class="flex-column d-flex flex-fill">
-      <div class="row mb-1" ng-show="advanced">>
-        <label class="col-form-label col-2 text-right" for="filterTitle">Group By</label>
+    <div class="w-100">
+      <div class="row mb-1" ng-show="advanced">
+        <label class="col-form-label text-right col-2" for="filterTitle">Group By</label>
         <div class="col form-inline">
-          <select class="w-100 form-control" ng-model="order" ng-change="comboCtrl.selectGroupBy(true)" ng-options="value for value in orders" />
+          <select class="form-control col-10" ng-model="order" ng-change="comboCtrl.selectGroupBy(true)" ng-options="value for value in orders" />
         </div>
       </div>
-      <div class="w-100 d-inline-block">
+      <div class="w-100 d-inline-block mb-2">
         <div class="float-left">
           <addfilter layer="layer" btn-text="Add Filter"></addfilter>
           <span list list-id="combinator"></span>
-          <button class="btn btn-primary" ng-click="comboCtrl.addCountry()" ng-if="hasCountrySupport" title="Add a country border">
+          <button class="btn btn-primary btn-sm" ng-click="comboCtrl.addCountry()" ng-if="hasCountrySupport" title="Add a country border">
             <i class="fa fa-plus"></i>
             Country
           </button>
@@ -21,21 +21,21 @@
             <input class="form-check-input" type="checkbox" ng-model="advanced" ng-change="comboCtrl.advancedToggle(true)">
             Advanced
           </label>
-          <button class="btn btn-primary" ng-click="comboCtrl.toggle(false)" title="Expand all"><i class="fa fa-plus-square-o"></i></button>
-          <button class="btn btn-primary" ng-click="comboCtrl.toggle(true)" title="Collapse all" ><i class="fa fa-minus-square-o"></i></button>
-          <button class="btn btn-primary" ng-click="comboCtrl.clear()" title="Clears all the checkboxes in the form">Reset</button>
+          <button class="btn btn-secondary btn-sm" ng-click="comboCtrl.toggle(false)" title="Expand all"><i class="fa fa-plus-square-o"></i></button>
+          <button class="btn btn-secondary btn-sm" ng-click="comboCtrl.toggle(true)" title="Collapse all" ><i class="fa fa-minus-square-o"></i></button>
+          <button class="btn btn-secondary btn-sm" ng-click="comboCtrl.clear()" title="Clears all the checkboxes in the form">Reset</button>
         </div>
       </div>
     </div>
-    <div class="flex-fill d-flex">
+    <div class="w-100 flex-fill d-flex">
       <slicktree x-data="pivots" selected="selected" multi-select="true" disposable="true"></slicktree>
     </div>
   </div>
-  <div class="modal-footer">
-    <button class="btn btn-primary" ng-click="comboCtrl.launchExport()" ng-disabled="comboCtrl.exportDisabled()"><i class="fa fa-download"></i> Export</button>
+  <div class="modal-footer d-inline">
+    <button class="btn btn-secondary" ng-click="comboCtrl.launchExport()" ng-disabled="comboCtrl.exportDisabled()"><i class="fa fa-download"></i> Export</button>
     <div class="js-import-group btn-group" ng-right-click="comboCtrl.openImportMenu()">
-      <button class="btn btn-primary" ng-click="comboCtrl.import()"><i class="fa fa-sign-in"></i> Import</button>
-      <button class="btn" ng-click="comboCtrl.openImportMenu()" ng-class="{active: importMenuOpen}"><i class="fa fa-chevron-down"></i></button>
+      <button class="btn btn-secondary" ng-click="comboCtrl.import()"><i class="fa fa-sign-in"></i> Import</button>
+      <button class="btn btn-secondary" ng-click="comboCtrl.openImportMenu()" ng-class="{active: importMenuOpen}"><i class="fa fa-chevron-down"></i></button>
     </div>
   </div>
 </div>
