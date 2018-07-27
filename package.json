@@ -88,7 +88,7 @@
     "init:version": "echo dist/opensphere/v$(date +%s) > .build/version",
     "init:vfolder": "mkdirp $(cat .build/version)",
     "init": "npm run init:base && npm run init:debug && npm run init:version && npm run init:vfolder",
-    "lint:css": "sass-lint -c ../opensphere/.sass-lint.yml -v -s scss -i 'scss/nolint/**/*.scss' 'scss/**/*.scss'",
+    "lint:css": "sass-lint -v -s scss -i 'scss/nolint/**/*.scss' 'scss/**/*.scss'",
     "lint:js": "eslint --cache 'src/**/*.js'",
     "lint": "npm run lint:js && npm run lint:css",
     "compile:dossier": "npm run init:apidoc && os-docs-gen-config dossier.conf.json .build/dossier.conf.json && os-docs -c .build/dossier.conf.json",

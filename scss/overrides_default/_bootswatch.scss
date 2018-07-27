@@ -5,9 +5,9 @@ $web-font-path: "https://fonts.googleapis.com/css?family=Open+Sans:400,700" !def
 
 .nav-tabs {
   .nav-link {
+    background: $gray-100;
     border-color: $nav-tabs-border-color;
     margin: 0 .1rem;
-    background: $gray-100;
 
     &:hover {
       background: transparent;
