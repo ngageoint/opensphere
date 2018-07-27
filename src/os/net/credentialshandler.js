@@ -38,19 +38,3 @@ os.net.CredentialsHandler.prototype.modUri = function(uri) {
 os.net.CredentialsHandler.prototype.getHandlerType = function() {
   return os.net.HandlerType.CREDENTIALS;
 };
-
-
-/**
- * @inheritDoc
- */
-os.net.CredentialsHandler.prototype.onXhrComplete = function(opt_event) {
-  var lastUri = this.req.getLastUri();
-  var uri = new goog.Uri(lastUri);
-  var pattern = '^' + uri.getScheme() + '://' + uri.getDomain();
-
-  // register the cross origin based on whether the request used credentials or not
-  var co = this.req.getWithCredentials() ? os.net.CrossOrigin.USE_CREDENTIALS : os.net.CrossOrigin.NONE;
-  os.net.saveCrossOrigin(pattern, co);
-
-  os.net.CredentialsHandler.base(this, 'onXhrComplete', opt_event);
-};
