@@ -1,24 +1,29 @@
-<div class="window-content-wrapper">
-  <div class="window-content">
-    <div class="feature-tabs">
-      <ul class="nav nav-tabs" ng-show="showtabs">
-        <li ng-repeat="tab in tabs" ng-class="{active: activeTab == tab.name, first: $first}"><a ng-click="selector.setTab(tab.name)">{{tab.name}}</a></li>
-      </ul>
+<div class="d-flex flex-column flex-fill">
+  <div class="modal-body flex-row flex-fill d-flex u-overflow-y-hidden">
+    <div class="d-flex flex-column">
+      <div class="d-flex flex-row">
+        <ul class="nav nav-tabs" ng-show="showtabs">
+          <li ng-repeat="tab in tabs" ng-class="{active: activeTab == tab.name, first: $first}">
+            <a ng-click="selector.setTab(tab.name)">{{tab.name}}</a>
+          </li>
+        </ul>
+      </div>
+      <div class="d-flex flex-row" list list-id="js-nav-icon__selectors"></div>
     </div>
-    <div class="tab-content selectable" autoheight siblings=".feature-tabs,.window-footer" list list-id="nav-icon-selectors"></div>
   </div>
-  <div class="window-footer">
-    <div class="iconchosen" ng-if="selector.isValid()">
-      <img ng-src="{{selector.getPath(selected.path)}}"/>
+  <div class="modal-footer flex-shrink-0 d-flex flex-row justify-content-between">
+    <div>
+      <div ng-if="selector.isValid()">
+        <img ng-src="{{selector.getPath(selected.path)}}" />
+      </div>
     </div>
-    <div class="pull-right">
-      <button class="btn btn-default" ng-click="selector.okay()" ng-disabled="!selector.isValid()"
-          title="Confirm the icon selection">
-        <i class="fa fa-check lt-blue-icon"></i>
+    <div>
+      <button class="btn btn-primary" ng-click="selector.okay()" ng-disabled="!selector.isValid()" title="Confirm the icon selection">
+        <i class="fa fa-check"></i>
         OK
       </button>
-      <button class="btn btn-default" ng-click="selector.cancel()" title="Cancel">
-        <i class="fa fa-ban red-icon"></i>
+      <button class="btn btn-secondary" ng-click="selector.cancel()" title="Cancel">
+        <i class="fa fa-ban"></i>
         Cancel
       </button>
     </div>
