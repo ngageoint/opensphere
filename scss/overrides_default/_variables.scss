@@ -9,12 +9,25 @@ $indigo:  #6610f2;
 $purple:  #6f42c1;
 $pink:    #e83e8c;
 $red:     #ee5f5b;
-$orange:  #fd7e14;
-$yellow:  #f89406;
+$orange:  #f89406;
+$yellow:  #ffc107;
 $green:   #62c462;
 $teal:    #20c997;
 $cyan:    #5bc0de;
 
+
+$blue:    #007bff !default;
+$indigo:  #6610f2 !default;
+$purple:  #6f42c1 !default;
+$pink:    #e83e8c !default;
+$red:     #dc3545 !default;
+$yellow:  #ffc107 !default;
+$green:   #28a745 !default;
+$teal:    #20c997 !default;
+$cyan:    #17a2b8 !default;
+
+
+$warning: $orange;
 $primary: $blue;
 $dropdown-link-hover-color: #fff;
 $dropdown-link-hover-bg: $primary;
