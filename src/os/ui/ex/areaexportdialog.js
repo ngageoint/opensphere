@@ -113,8 +113,8 @@ os.ui.ex.AreaExportCtrl.prototype.onExporterChange = function(opt_new, opt_old) 
     fields.push('mapVisualizationType');
   } else if (opt_new instanceof plugin.file.shp.SHPExporter) {
     // Dont show the ui
-    var uiContainer = this.element.find('.export-ui');
-    uiContainer.children().remove();
+    var uiWrapper = this.element.find('.js-export-ui__wrapper');
+    uiWrapper.children().remove();
   }
 
   // update the export columns
