@@ -114,6 +114,7 @@ os.config.ProjectionSettingsCtrl.prototype.updateApp = function() {
  * @private
  */
 os.config.ProjectionSettingsCtrl.prototype.onProjectionChange_ = function() {
+  os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Settings.SWITCH_PROJECTION, 1);
   this.updateApp();
   os.ui.apply(this.scope_);
 };
