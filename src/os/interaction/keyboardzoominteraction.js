@@ -4,6 +4,7 @@ goog.require('goog.events.KeyCodes');
 goog.require('ol.events.EventType');
 goog.require('ol.interaction.KeyboardZoom');
 goog.require('os.I3DSupport');
+goog.require('os.implements');
 goog.require('os.interaction');
 goog.require('os.ui.ol.interaction');
 
@@ -27,7 +28,7 @@ os.interaction.KeyboardZoom = function(opt_options) {
   this.lastKeyCode_ = 0;
 };
 goog.inherits(os.interaction.KeyboardZoom, ol.interaction.KeyboardZoom);
-
+os.implements(os.interaction.KeyboardZoom, os.I3DSupport.ID);
 
 /**
  * @inheritDoc

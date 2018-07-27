@@ -8,6 +8,7 @@ goog.require('os.I3DSupport');
 goog.require('os.data.DataManager');
 goog.require('os.data.RecordField');
 goog.require('os.feature');
+goog.require('os.implements');
 goog.require('os.source.Vector');
 goog.require('os.ui.feature.multiFeatureInfoDirective');
 
@@ -31,7 +32,7 @@ os.interaction.DoubleClick = function() {
   this.supports3D_ = true;
 };
 goog.inherits(os.interaction.DoubleClick, ol.interaction.Interaction);
-
+os.implements(os.interaction.DoubleClick, os.I3DSupport.ID);
 
 /**
  * @inheritDoc
