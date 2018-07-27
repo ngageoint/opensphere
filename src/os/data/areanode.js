@@ -140,10 +140,10 @@ os.data.AreaNode.prototype.formatIcons = function() {
     icon = 'fa-ban text-danger';
     tooltip = 'This area is an exclusion';
   } else if (result == 2) {
-    icon = 'fa-circle-o u-text-yellow';
+    icon = 'fa-circle u-text-yellow';
     tooltip = 'This area is querying features';
   } else if (result == 3) {
-    icon = 'fa-circle-o text-warning';
+    icon = 'fa-times-circle text-warning';
     tooltip = 'This area is being used for queries and exclusions';
   } else {
     icon = 'fa-circle-o';
