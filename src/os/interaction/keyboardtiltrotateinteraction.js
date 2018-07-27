@@ -8,6 +8,7 @@ goog.require('ol.events.condition');
 goog.require('ol.interaction.Interaction');
 goog.require('os.I3DSupport');
 goog.require('os.MapContainer');
+goog.require('os.implements');
 goog.require('os.ui.ol.interaction');
 
 
@@ -43,7 +44,7 @@ os.interaction.KeyboardTiltRotate = function(opt_options) {
           ol.events.condition.targetNotEditable);
 };
 goog.inherits(os.interaction.KeyboardTiltRotate, ol.interaction.Interaction);
-
+os.implements(os.interaction.KeyboardTiltRotate, os.I3DSupport.ID);
 
 /**
  * Multiplier to use when spinning the globe. This is based off of using the view resolution, which is measured in
