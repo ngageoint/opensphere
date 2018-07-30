@@ -94,6 +94,7 @@ os.ui.modal.ConfirmationModalCtrl = function($scope, $element, $timeout) {
   this.setMessage($scope['params']);
 
   $scope.$on('$destroy', this.destroy_.bind(this));
+  $scope.$emit(os.ui.WindowEventType.READY);
 };
 
 
