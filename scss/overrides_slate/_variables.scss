@@ -1,8 +1,14 @@
-$blue: #3498db;
+$blue: #08c;
 $primary: $blue;
+$yellow: #ff0;
+$orange: #f89406;
+$warning: $orange;
 
-$gray-800: #3a3f44 !default;
-$dark: $gray-800;
+$gray-900: #272b30;
+$dark: lighten($gray-900, 5%);
+
+$font-family-sans-serif: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+$font-size-base: .9375rem;
 
 @import 'slate/variables';
 
@@ -24,17 +30,18 @@ $nav-link-padding-y: .5rem;
 $navbar-padding-y: .5rem;
 $navbar-padding-x: 1rem;
 
-// Override from themevariables
-$sticky-nav-background-color: $gray-700;
 
 // Override from themevariables
-$hover-edit-background-color: $gray-700;
+$sticky-nav-background-color: $gray-800;
 
 // Override from themevariables
-$default-image-background-color: $gray-700;
+$hover-edit-background-color: $gray-800;
+
+// Override from themevariables
+$default-image-background-color: $gray-800;
 
 // Override from themevariables
 $default-timeline-background-color: $gray-800;
 
 // Override from themevariables
-$default-timeline-background-color-active: $gray-700;
+$default-timeline-background-color-active: $gray-800;

@@ -1,0 +1,16 @@
+// sass-lint:disable quotes
+$web-font-path: "https://fonts.googleapis.com/css?family=Open+Sans:400,700" !default;
+@import url($web-font-path);
+
+
+.nav-tabs {
+  .nav-link {
+    background: $gray-100;
+    border-color: $nav-tabs-border-color;
+    margin: 0 .1rem;
+
+    &:hover {
+      background: transparent;
+    }
+  }
+}
