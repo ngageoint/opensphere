@@ -81,8 +81,8 @@ os.ui.icon.IconPickerCtrl.prototype.onSelection_ = function(icon) {
  * Toggle the icon picker on/off.
  */
 os.ui.icon.IconPickerCtrl.prototype.show = function() {
-  var ui = '<iconselector accept-callback="acceptCallback" selected="icon" icon-set="iconSet" icon-src="iconSrc">' +
-      '</iconselector>';
+  var ui = '<iconselector class="d-flex flex-fill" accept-callback="acceptCallback" selected="icon"' +
+      'icon-set="iconSet" icon-src="iconSrc"> </iconselector>';
   var scopeOptions = {
     'acceptCallback': this.onSelection_.bind(this),
     'icon': os.object.unsafeClone(this.scope['ngModel']),
