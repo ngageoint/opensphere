@@ -7,7 +7,7 @@
   </div>
   <div class="u-overflow-y-auto">
     <div class="form-check pl-4" ng-repeat="item in items" title="{{item.tooltip || ('Enable/disable ' + item.label)}}"
-        ng-class-odd="'bg-secondary'">
+        ng-class-odd="'bg-secondary u-bg-secondary-text'">
       <label class="form-check-label col-form-label">
         <input class="form-check-input" type="checkbox" name="items" ng-model="item.enabled" ng-change="checklist.onItemChange(item)"/>
         <span ng-bind-html="item.customFormat"/>

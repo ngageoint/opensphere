@@ -91,35 +91,31 @@
   color: $body-color;
 
   &.selected {
-    background: $component-active-bg;
-    color: $component-active-color;
-
-    a {
-      color: $component-active-color;
-    }
+    background: darken($component-active-bg, 15%);
   }
 
   &.hovered,
   &:hover {
-    background: $success;
-    color: $component-active-color;
-
-    a {
-      color: $component-active-color;
-    }
+    background: darken($success, 15%);
   }
 
-  &.hovered,
   &.selected,
+  &.hovered,
   &:hover {
-    @each $color, $value in $theme-colors {
-      .text-#{$color} {
+    color: $component-active-color;
+
+    a {
+      color: $component-active-color;
+    }
+
+    @each $color, $value in $colors {
+      .u-text-#{$color} {
         color: $component-active-color !important;
       }
     }
 
-    @each $color, $value in $colors {
-      @include u-bg-color-content($color) {
+    @each $color, $value in $theme-colors {
+      .text-#{$color} {
         color: $component-active-color !important;
       }
     }
@@ -263,7 +259,6 @@
 
   .slick-cell {
     border: 0;
-    padding: 0 .5rem;
   }
 
   .slick-viewport {
@@ -273,15 +268,18 @@
 
 .tree-spacer {
   display: inline-block;
+  flex-shrink: 0;
   height: 1px;
 }
 
 .tree-expand-collapse {
+  flex-shrink: 0;
   font-size: $font-size-base;
 }
 
 .tree-icons {
-  padding-right: .5rem;
+  display: flex;
+  padding-right: .25rem;
   vertical-align: text-bottom;
 
   i.fa {

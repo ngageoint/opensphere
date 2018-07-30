@@ -21,7 +21,7 @@ os.ui.query.ui.comboNodeUIDirective = function() {
         '<span ng-if="nodeUi.isArea() && nodeUi.isEnabled()" ng-click="nodeUi.toggleQuery()" title="' +
         'Toggles between querying and excluding the area">' +
         '<i class="fa fa-fw c-glyph" ' +
-        'ng-class="{\'fa-ban text-danger\': !nodeUi.include, \'fa-circle-o u-text-yellow\': nodeUi.include}"></i>' +
+        'ng-class="{\'fa-ban text-danger\': !nodeUi.include, \'fa-circle u-text-yellow\': nodeUi.include}"></i>' +
         '</span>' +
         '<span ng-if="nodeUi.isFilter() && nodeUi.showCopy()" ng-click="nodeUi.copy()">' +
         '<i class="fa fa-copy fa-fw c-glyph" title="Copy"></i></span>' +
