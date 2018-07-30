@@ -1,58 +1,49 @@
-<div class="any-date">
-  <div class="control-group">
-    <div class="controls">
-      <label class="radio inline" ng-disabled="disabled">
+<div class="d-flex flex-column flex-fill">
+  <div class="d-flex flex-row form-group">
+      <label class="radio col-2 col-form-label text-right" ng-disabled="disabled">
         <input type="radio" name="dateTypeRadios" value="notime" data-ng-model="anydate.dateType"
             data-ng-disabled="disabled">
         No Time
       </label>
-      <label class="radio inline" ng-disabled="disabled">
+      <label class="radio col-2 col-form-label text-right" ng-disabled="disabled">
         <input type="radio" name="dateTypeRadios" value="instant" data-ng-model="anydate.dateType"
             data-ng-disabled="disabled">
         Instant
       </label>
-      <label class="radio inline" ng-disabled="disabled">
+      <label class="radio col-2 col-form-label text-right" ng-disabled="disabled">
         <input type="radio" name="dateTypeRadios" value="range" data-ng-model="anydate.dateType"
             data-ng-disabled="disabled">
         Range
       </label>
       <popover ng-if="help" title="help.title" content="help.content" pos="help.pos"></popover>
+  </div>
+
+<div ng-form="anyDateForm">
+  <div class="d-flex flex-row form-group">
+    <div data-ng-if="anydate.dateType != 'notime'" data-ng-class="{'error': anyDateForm.startDate.$dirty && (!anydate.timesValid || (!anydate.startDate && !anydate.startUnknown))}">
+
+      <date-time data-value="anydate.startDate" x-disabled="anydate.startUnknown || disabled"
+        is-required="anydate.dateType != 'notime' && !anydate.startUnknown">
+      </date-time>
+
+      <input type="hidden" name="startDate" data-ng-required="anydate.dateType != 'notime' && !anydate.startUnknown" data-ng-model="anydate.startDate"/>
+          </div>
     </div>
   </div>
 
-  <div ng-form="anyDateForm" style="display:inline;">
-    <div class="control-group" data-ng-if="anydate.dateType != 'notime'" data-ng-class="{'error': anyDateForm.startDate.$dirty && (!anydate.timesValid || (!anydate.startDate && !anydate.startUnknown))}">
-      <div class="controls">
-        <div>
-          <div class="inline">
-            <date-time class="date-time" data-value="anydate.startDate" x-disabled="anydate.startUnknown || disabled"
-                is-required="anydate.dateType != 'notime' && !anydate.startUnknown">
-            </date-time>
-          </div>
-        </div>
-        <span class="help-inline" data-ng-show="!anydate.startDate && !anydate.startUnknown">Required!</span>
-      </div>
-      <input type="hidden" name="startDate" data-ng-required="anydate.dateType != 'notime' && !anydate.startUnknown"
-          data-ng-model="anydate.startDate"/>
-    </div>
+  <div class="d-flex flex-row form-group">
+    <div data-ng-if="anydate.dateType == 'range'" data-ng-class="{'error': anyDateForm.endDate.$dirty && (!anydate.timesValid || (!anydate.endDate && !anydate.endUnknown))}">
 
-    <div class="control-group" data-ng-if="anydate.dateType == 'range'" data-ng-class="{'error': anyDateForm.endDate.$dirty && (!anydate.timesValid || (!anydate.endDate && !anydate.endUnknown))}">
-      <div class="controls">
-        <div>
-          <div class="inline">
-            <date-time class="date-time" data-value="anydate.endDate" x-disabled="anydate.endUnknown || disabled"
-                is-required="anydate.dateType == 'range' && !anydate.endUnknown">
-            </date-time>
-          </div>
-        </div>
-        <span class="help-inline" data-ng-show="!anydate.endDate && !anydate.endUnknown">Required!</span>
-      </div>
+      <date-time class="date-time" data-value="anydate.endDate" x-disabled="anydate.endUnknown || disabled"
+        is-required="anydate.dateType == 'range' && !anydate.endUnknown">
+      </date-time>
+
       <input type="hidden" name="endDate" data-ng-required="anydate.dateType == 'range' && !anydate.endUnknown" data-ng-model="anydate.endDate"/>
     </div>
+  </div>
 
-    <div class="control-group error" data-ng-show="anydate.dateType == 'range' && !anydate.timesValid">
-      <input type="hidden" data-ng-required="anydate.dateType == 'range'" data-ng-model="anydate.timesValid"/>
-      <span class="controls help-inline">End date must be after start date!</span>
-    </div>
+  <div data-ng-show="anydate.dateType == 'range' && !anydate.timesValid">
+    <input type="hidden" data-ng-required="anydate.dateType == 'range'" data-ng-model="anydate.timesValid"/>
+    <span class="invalid-feedback d-block">End date must be after start date!</span>
   </div>
 </div>

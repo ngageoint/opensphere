@@ -1,137 +1,147 @@
-<div class="c-feature-edit window-content-wrapper">
-  <div class="window-content">
-    <form class="form-horizontal form-compact limitsimpleMDE-300" name="featureEditForm" novalidate>
-      <div class="control-group c-feature-edit__name">
-        <label class="control-label">Name:</label>
-        <div class="controls">
-          <input class="w-100" type="text" name="name" ng-model="ctrl.name" ng-change="ctrl.updatePreview()" required="true" ng-maxlength="100"/>
-          <span class="help-inline" ng-if="featureEditForm.name.$error.required">Required</span>
-          <span class="help-inline" ng-if="featureEditForm.name.$error.maxlength">Name is too long!</span>
+<div class="d-flex flex-column flex-fill">
+  <div class="modal-body">
+    <form name="featureEditForm" novalidate>
+
+      <div class="d-flex flex-row form-group">
+        <label class="col-2 col-form-label text-right u-required">Name</label>
+        <div class="col">
+          <input class="form-control" type="text" name="name" ng-model="ctrl.name" ng-change="ctrl.updatePreview()" ng-maxlength="100" required="true"/>
+           <span class="invalid-feedback d-block" ng-if="featureEditForm.name.$error.maxlength">Name is too long!</span>
         </div>
       </div>
-      <div class="control-group c-feature-edit__description">
-        <label class="control-label">Description:</label>
-        <div class="controls">
+
+      <div class="d-flex flex-row form-group">
+        <label class="col-2 col-form-label text-right">Description</label>
+        <div class="col mt-2">
           <simplemde text="ctrl.description" edit="true" is-required="false" maxlength="4000"></simplemde>
         </div>
       </div>
-      <position ng-if="ctrl.pointGeometry" name="pointGeometry" geom="ctrl.pointGeometry" x-form="featureEditForm" map-support="true"></position>
-      <div class="control-group c-feature-edit__time" ng-if="ctrl.timeEditEnabled">
-        <label class="control-label">Time:</label>
-        <anydate initialstart="ctrl.startTimeISO" initialend="ctrl.endTimeISO" initialtype="ctrl.dateType" x-disabled="disabled" help="ctrl.timeHelp"></anydate>
+      
+      <div class="d-flex flex-row form-group">
+        <label class="col-2 col-form-label text-right">Position</label>
+        <div class="col">
+        <position ng-if="ctrl.pointGeometry" name="pointGeometry" geom="ctrl.pointGeometry" x-form="featureEditForm" show-label="false" map-support="true"></position>
+        </div>
       </div>
-      <div class="c-feature-edit__ellipse-fields" ng-if="ctrl.isEllipse()">
-        <div class="control-group" title="{{ctrl.help.semiMajor}}">
-          <label class="control-label">Semi Major:</label>
-          <div class="controls">
-            <input type="number" name="semiMajor" ng-model="ctrl.semiMajor" ng-change="ctrl.onAxisChange()"
+
+      <div class="d-flex flex-row form-group" ng-if="ctrl.timeEditEnabled">
+        <label class="col-2 col-form-label text-right">Time</label>
+        <div class="col">
+          <anydate initialstart="ctrl.startTimeISO" initialend="ctrl.endTimeISO" initialtype="ctrl.dateType" x-disabled="disabled" help="ctrl.timeHelp"></anydate>
+        </div>
+      </div>
+
+      <div ng-if="ctrl.isEllipse()">
+        <div class="d-flex flex-row form-group"  title="{{ctrl.help.semiMajor}}">
+          <label class="col-2 col-form-label text-right u-required">Semi Major</label>
+          <div class="d-inline-flex col">
+            <input class="form-control col-4" type="number" name="semiMajor" ng-model="ctrl.semiMajor" ng-change="ctrl.onAxisChange()"
                 min="{{ctrl.getSemiMajorMin()}}" step="any" required="true" />
-            <select ng-model="ctrl.semiMajorUnits" ng-change="ctrl.updatePreview()"
+            <select class="form-control ml-2 col-2" ng-model="ctrl.semiMajorUnits" ng-change="ctrl.updatePreview()"
                 ng-options="unit for unit in ctrl.units">
             </select>
-            <popover x-title="'Semi-Major Axis'" x-content="ctrl.help.semiMajor" x-pos="'right'">
+            <popover  class="mx-2" title="'Semi-Major Axis'" content="ctrl.help.semiMajor" pos="'right'">
             </popover>
-            <span class="help-inline" ng-if="featureEditForm.semiMajor.$error.required">Required!</span>
-            <span class="help-inline" ng-if="featureEditForm.semiMajor.$error.min">
-              Must be greater than {{ctrl.semiMinor ? 'or equal to Semi Minor' : 'zero'}}!
-            </span>
           </div>
         </div>
-        <div class="control-group" title="{{ctrl.help.semiMinor}}">
-          <label class="control-label">Semi Minor:</label>
-          <div class="controls">
-            <input type="number" name="semiMinor" ng-model="ctrl.semiMinor" ng-change="ctrl.onAxisChange()"
+        <div class="d-flex flex-row">
+          <div class="col-2">
+          </div>
+          <span class="invalid-feedback d-block col mb-1" ng-if="featureEditForm.semiMajor.$error.min">
+            Must be greater than {{ctrl.semiMinor ? 'or equal to Semi Minor' : 'zero'}}!
+          </span>
+        </div>
+
+        <div class="d-flex flex-row form-group" title="{{ctrl.help.semiMinor}}">
+          <label class="col-2 col-form-label text-right u-required">Semi Minor</label>
+          <div class="d-inline-flex col">
+            <input class="form-control col-4" type="number" name="semiMinor" ng-model="ctrl.semiMinor" ng-change="ctrl.onAxisChange()"
                 min="{{1e-16}}" step="any" required="true" />
-            <select ng-model="ctrl.semiMinorUnits" ng-change="ctrl.updatePreview()"
+            <select class="form-control ml-2 col-2" ng-model="ctrl.semiMinorUnits" ng-change="ctrl.updatePreview()"
                 ng-options="unit for unit in ctrl.units">
             </select>
-            <popover x-title="'Semi-Minor Axis'" x-content="ctrl.help.semiMinor" x-pos="'right'">
+            <popover class="mx-2" title="'Semi-Minor Axis'" content="ctrl.help.semiMinor" pos="'right'">
             </popover>
-            <span class="help-inline" ng-if="featureEditForm.semiMinor.$error.required">Required!</span>
-            <span class="help-inline" ng-if="featureEditForm.semiMinor.$error.min">
-              Must be greater than zero!
-            </span>
           </div>
         </div>
-        <div class="control-group" title="{{ctrl.help.orientation}}">
-          <label class="control-label">Orientation:</label>
-          <div class="controls">
-            <input type="number" name="orientation" ng-model="ctrl.orientation" ng-change="ctrl.updatePreview()"
-                step="any" required="true" />
-            <popover x-title="'Ellipse Orientation'" x-content="ctrl.help.orientation" x-pos="'right'">
-            </popover>
-            <span class="help-inline" ng-show="featureEditForm.orientation.$error.required">Required!</span>
+        <div class="d-flex flex-row">
+          <div class="col-2">
           </div>
+          <span class="invalid-feedback d-block col mb-1" ng-if="featureEditForm.semiMinor.$error.min">
+            Must be greater than zero!
+          </span>
         </div>
-      </div>
-      <div class="c-feature-edit__ellipse-fields" ng-if="!ctrl.isFeatureDynamic() && (ctrl.showIcon() || ctrl.showCenterIcon())">
-        <div class="control-group" title="{{ctrl.help.iconRotation}}">
-          <label class="control-label">Icon Rotation:</label>
-          <div class="controls">
-            <input type="number" name="iconRotation" ng-model="ctrl.iconRotation" ng-change="ctrl.updatePreview()" step="any" />
-            degrees
-            <popover x-title="'Icon Rotation'" x-content="ctrl.help.iconRotation" x-pos="'right'">
+        <div class="d-flex flex-row form-group" title="{{ctrl.help.orientation}}">
+          <label class="col-2 col-form-label text-right u-required">Orientation:</label>
+          <div class="d-inline-flex col">
+            <input class="form-control col-4" type="number" name="orientation" ng-model="ctrl.orientation" ng-change="ctrl.updatePreview()" step="any" required="true" />
+            <popover class="mx-2" title="'Ellipse Orientation'" content="ctrl.help.orientation" pos="'right'">
             </popover>
           </div>
         </div>
       </div>
+
+      <div ng-if="!ctrl.isFeatureDynamic() && (ctrl.showIcon() || ctrl.showCenterIcon())">
+        <div class="d-flex flex-row form-group" title="{{ctrl.help.iconRotation}}">
+          <label class="col-2 col-form-label text-right">Icon Rotation:</label>
+          <div class="d-inline-flex col">
+            <input class="form-control col-4" type="number" name="iconRotation" ng-model="ctrl.iconRotation" ng-change="ctrl.updatePreview()" step="any" />
+            <div class="mx-2">degrees</div>
+            <popover title="'Icon Rotation'" content="ctrl.help.iconRotation" pos="'right'">
+            </popover>
+          </div>
+        </div>
+      </div>
+
     </form>
 
-    <div class="accordion" ng-attr-id="{{featureControlsID}}">
-      <div class="c-feature-edit__styleoptions accordion-group layer-controls-group">
-        <div class="accordion-heading" title="Style controls for the feature">
-          <a class="accordion-toggle layer-controls-heading" data-toggle="collapse" data-parent="#{{featureControlsID}}"
-              data-target="#{{featureStyleID}}" ng-click="ctrl.setOpenSection(featureStyleID)">Style Options</a>
-        </div>
-        <div ng-attr-id="{{featureStyleID}}" class="accordion-body collapse">
-          <div class="accordion-inner layer-controls">
-            <vectorstylecontrols
-                color="ctrl.color"
-                opacity="ctrl.opacity"
-                icon="ctrl.icon"
-                center-icon="ctrl.centerIcon"
-                show-center-icon="ctrl.showCenterIcon()"
-                icon-set="ctrl.iconSet"
-                icon-src="ctrl.iconSrc"
-                show-icon="ctrl.showIcon()"
-                size="ctrl.size"
-                shape="ctrl.shape"
-                shapes="ctrl.pointGeometry ? ctrl.shapes : undefined"
-                center-shape="ctrl.centerShape"
-                center-shapes="ctrl.pointGeometry ? ctrl.centerShapes : undefined">
-            </vectorstylecontrols>
-          </div>
-        </div>
+    <div ng-attr-id="{{featureControlsID}}" class="card">
+      <div class="btn btn-secondary btn-block" title="Style controls for the layer(s)" data-toggle="collapse" data-parent="#{{featureControlsID}}" data-target="#{{featureStyleID}}" ng-click="ctrl.setOpenSection(featureStyleID)">
+        Style Options
       </div>
-      <div class="c-feature-edit__labeloptions accordion-group layer-controls-group" ng-show="ctrl.labelColumns">
-        <div class="accordion-heading" title="Configure how labels are displayed for the feature">
-          <a class="accordion-toggle layer-controls-heading" data-toggle="collapse" data-parent="#{{featureControlsID}}" data-target="#{{featureLabelsID}}" ng-click="ctrl.setOpenSection(featureLabelsID)">Label Options</a>
+      <div ng-attr-id="{{featureStyleID}}" class="card-body js-style-content collapse show">
+        <vectorstylecontrols
+            color="ctrl.color"
+            opacity="ctrl.opacity"
+            icon="ctrl.icon"
+            center-icon="ctrl.centerIcon"
+            show-center-icon="ctrl.showCenterIcon()"
+            icon-set="ctrl.iconSet"
+            icon-src="ctrl.iconSrc"
+            show-icon="ctrl.showIcon()"
+            size="ctrl.size"
+            shape="ctrl.shape"
+            shapes="ctrl.pointGeometry ? ctrl.shapes : undefined"
+            center-shape="ctrl.centerShape"
+            center-shapes="ctrl.pointGeometry ? ctrl.centerShapes : undefined">
+        </vectorstylecontrols>
+      </div>
+
+      <div ng-show="ctrl.labelColumns">
+        <div class="btn btn-secondary btn-block" title="Configure how labels are displayed for the feature" data-toggle="collapse" data-parent="#{{featureControlsID}}" data-target="#{{featureLabelsID}}" ng-click="ctrl.setOpenSection(featureLabelsID)">
+          Label Options
         </div>
-        <div ng-attr-id="{{featureLabelsID}}" class="accordion-body collapse">
-          <div class="accordion-inner layer-controls">
-            <labelcontrols
-                labels="ctrl.labels"
-                columns="ctrl.labelColumns"
-                show-labels="ctrl.showLabels"
-                label-color="ctrl.labelColor"
-                label-size="ctrl.labelSize">
-            </labelcontrols>
-          </div>
+        <div ng-attr-id="{{featureLabelsID}}" class="card-body js-style-content collapse">
+              <labelcontrols
+                  labels="ctrl.labels"
+                  columns="ctrl.labelColumns"
+                  show-labels="ctrl.showLabels"
+                  label-color="ctrl.labelColor"
+                  label-size="ctrl.labelSize">
+              </labelcontrols>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="window-footer">
-    <div class="pull-right">
-      <button class="btn btn-default" ng-click="ctrl.accept()" ng-disabled="featureEditForm.$invalid">
-        <i class="fa fa-check lt-blue-icon"></i>
+  <div class="modal-footer">
+      <button class="btn btn-primary" ng-click="ctrl.accept()" ng-disabled="featureEditForm.$invalid">
+        <i class="fa fa-check"></i>
         OK
       </button>
-      <button class="btn btn-default" ng-click="ctrl.cancel()">
-        <i class="fa fa-ban red-icon"></i>
+      <button class="btn btn-secondary" ng-click="ctrl.cancel()">
+        <i class="fa fa-ban"></i>
         Cancel
       </button>
-    </div>
   </div>
 </div>

@@ -129,13 +129,6 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
   this.scope['featureStyleID'] = uid + 'featureStyle';
 
   /**
-   * The open accordion section.
-   * @type {?string}
-   * @protected
-   */
-  this.openSection = '#' + this.scope['featureStyleID'];
-
-  /**
    * Keyboard event handler used while listening for map clicks.
    * @type {goog.events.KeyHandler}
    * @protected
@@ -515,20 +508,9 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
   $scope.$on('$destroy', this.dispose.bind(this));
 
   $timeout((function() {
-    if (this.openSection) {
-      // open the style config section
-      var section = this.element.find(this.openSection);
-      if (section) {
-        if (!section.hasClass('in')) {
-          section.addClass('in');
-          section.siblings('.accordion-heading').addClass('open');
-        }
-      }
-    }
-
     // notify the window that it can update the size
     $scope.$emit(os.ui.WindowEventType.READY);
-  }).bind(this), 150);
+  }), 150);
 };
 goog.inherits(os.ui.FeatureEditCtrl, goog.Disposable);
 
@@ -853,19 +835,11 @@ goog.exportProperty(
  * @param {string} selector
  */
 os.ui.FeatureEditCtrl.prototype.setOpenSection = function(selector) {
-  if (this.openSection) {
-    this.element.find(this.openSection).siblings('.accordion-heading').removeClass('open');
-  }
-
-  var section = this.element.find(selector);
-  if (section) {
-    if (this.openSection != selector) {
-      section.siblings('.accordion-heading').addClass('open');
-      this.openSection = selector;
-    } else {
-      this.openSection = null;
+  this.element.find('.js-style-content').each(function(i, ele) {
+    if ('#' + ele.getAttribute('id') != selector) {
+      $(ele).collapse('hide');
     }
-  }
+  });
 };
 goog.exportProperty(
     os.ui.FeatureEditCtrl.prototype,
