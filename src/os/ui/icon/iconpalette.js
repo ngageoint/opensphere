@@ -18,6 +18,7 @@ os.ui.icon.iconPaletteDirective = function() {
       'iconSet': '=',
       'iconSrc': '=?'
     },
+    replace: true,
     templateUrl: os.ROOT + 'views/icon/iconpalette.html',
     controller: os.ui.icon.IconPaletteCtrl,
     controllerAs: 'palette'
