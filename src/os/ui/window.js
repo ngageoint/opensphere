@@ -210,7 +210,7 @@ os.ui.window.toggleVisibility = function(opt_id) {
   var callback = null;
   var wins = opt_id ? os.ui.window.getById(opt_id) : angular.element(os.ui.windowSelector.WINDOW + ':not(.ng-hide)');
   if (wins) {
-    wins.removeClass('d-block');
+    wins.removeClass('d-flex');
     wins.addClass('d-none');
     var modalbg = angular.element(os.ui.windowSelector.MODAL_BG);
     if (modalbg) {
@@ -222,7 +222,7 @@ os.ui.window.toggleVisibility = function(opt_id) {
      */
     callback = function() {
       wins.removeClass('d-none');
-      wins.addClass('d-block');
+      wins.addClass('d-flex');
       if (modalbg) {
         modalbg.removeClass('d-none');
       }
