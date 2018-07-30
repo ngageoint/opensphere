@@ -8,21 +8,6 @@ goog.require('os.net.Request');
 goog.require('os.ui.file.method.UrlMethod');
 
 
-
-/**
- * Extension of {os.ui.file.method.UrlMethod} which still creates a file, with a name and URL, even if the request
- * for the file fails and its contents can't be read.
- * @implements {os.file.IFileMethod}
- * @extends {os.ui.file.method.UrlMethod}
- * @constructor
- */
-os.ui.file.method.UrlNoFailMethod = function() {
-  os.ui.file.method.UrlNoFailMethod.base(this, 'constructor');
-  this.log = os.ui.file.method.UrlNoFailMethod.LOGGER_;
-};
-goog.inherits(os.ui.file.method.UrlNoFailMethod, os.ui.file.method.UrlMethod);
-
-
 /**
  * Logger
  * @type {goog.log.Logger}
@@ -44,8 +29,9 @@ os.ui.file.method.UrlNoFailMethod.TYPE = 'unkown';
  * @override
  * @param {goog.events.Event} event
  * @protected
+ * @suppress {duplicate}
  */
-os.ui.file.method.UrlNoFailMethod.prototype.onError = function(event) {
+os.ui.file.method.UrlMethod.prototype.onError = function(event) {
   var request = /** @type {os.net.Request} */ (event.target);
   request.removeAllListeners();
 
@@ -55,7 +41,7 @@ os.ui.file.method.UrlNoFailMethod.prototype.onError = function(event) {
   var fileName = decodeURI(url.substring(i == -1 ? 0 : i, q == -1 ? url.length : q));
 
   var msg = 'Unable to read contents from URL "' + url + '"!  Creating file with name and URL, but no contents';
-  goog.log.info(this.log, msg);
+  goog.log.info(os.ui.file.method.UrlNoFailMethod.LOGGER_, msg);
 
   var file = new os.file.File();
   file.setFileName(fileName);
