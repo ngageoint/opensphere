@@ -33,3 +33,23 @@ $dropdown-link-hover-color: #fff;
 $dropdown-link-hover-bg: $primary;
 
 $dark: lighten(#272b30, 5%);
+
+
+
+$gray-100: #f8f9fa !default;
+$gray-200: #e9ecef !default;
+
+// Override from themevariables
+$sticky-nav-background-color: $gray-200;
+
+// Override from themevariables
+$hover-edit-background-color: $gray-200;
+
+// Override from themevariables
+$default-image-background-color: $gray-200;
+
+// Override from themevariables
+$default-timeline-background-color: $gray-100;
+
+// Override from themevariables
+$default-timeline-background-color-active: $gray-200;
