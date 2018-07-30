@@ -10,7 +10,7 @@
     Data servers provide layers, analytics, and other data that can be loaded on the map.
   </div>
   <div class="flex-fill u-overflow-y-auto">
-    <table class="table table-striped bg-secondary u-bg-secondary-text m-0">
+    <table class="table table-striped m-0 border rounded">
       <tbody>
         <tr ng-repeat="item in data">
           <td class="d-flex p-1">
@@ -24,11 +24,11 @@
               <i ng-if="item.loading" class="fa fa-fw fa-spin fa-spinner" title="Loading..."></i>
             </span>
             <span>
-              <i class="fa btn btn-sm" ng-class="item.edit ? 'fa-pencil' : 'fa-eye'" ng-click="servers.edit(item.item)"
+              <i class="fa btn btn-secondary btn-sm" ng-class="item.edit ? 'fa-pencil' : 'fa-eye'" ng-click="servers.edit(item.item)"
                   title="{{item.edit ? 'Edit' : 'View'}} server"></i>
-              <i class="fa fa-close text-danger btn btn-sm" ng-if="item.edit" ng-click="servers.remove(item.item)"
+              <i class="fa fa-close text-danger btn btn-secondary btn-sm" ng-if="item.edit" ng-click="servers.remove(item.item)"
                   title="Delete server"></i>
-              <i class="fa fa-refresh btn btn-sm" ng-click="servers.refresh(item.item)"
+              <i class="fa fa-refresh btn btn-secondary btn-sm" ng-click="servers.refresh(item.item)"
                   title="Refresh server"></i>
             </span>
           </td>
