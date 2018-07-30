@@ -9,7 +9,7 @@
             ng-model="posText"
             ng-disabled="disabled || posCtrl.mapEnabled"
             geo />
-        <button type="button" class="btn btn-primary" title="Set the position by clicking on the map"
+        <button type="button" class="btn btn-primary ml-1 col-auto" title="Set the position by clicking on the map"
               ng-if="mapSupport === 'true'" ng-click="posCtrl.toggleMapEnabled()"
               ng-disabled="disabled" ng-class="{'active': posCtrl.mapEnabled}">
           <i class="fa fa-globe" ng-class="{'text-primary': posCtrl.mapEnabled}"></i>
