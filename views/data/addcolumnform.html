@@ -1,26 +1,26 @@
-<div class="c-add-column">
+<div>
   <div ng-form="columnForm">
-    <div class="control-group" ng-class="{'error':(columnForm.name.$invalid) && columnForm.name.$dirty}"
+    <div class="form-group row" ng-class="{'error':(columnForm.name.$invalid) && columnForm.name.$dirty}"
         title="The name of the column to add to each feature">
-      <label class="control-label required">Column Name</label>
-      <div class="controls">
-        <input type="text" name="name" class="w-100" placeholder="Column name..."
+      <label class="col-3 col-form-label text-right">Column Name</label>
+      <div class="col-9">
+        <input type="text" name="name" class="form-control" placeholder="Column name..."
             ng-model="name"
             ng-required="true"
             ng-maxlength="100" />
-        <span class="help-inline error" ng-if="columnForm.name.$error.required">Required</span>
-        <span class="help-inline error" ng-if="columnForm.name.$error.maxlength">Name is too long!</span>
-        <span class="help-inline error" ng-if="columnForm.name.$error.duplicate">Duplicate default column names are not allowed!</span>
+        <span class="text-danger pl-2" ng-if="columnForm.name.$error.required">Required</span>
+        <span class="text-danger pl-2" ng-if="columnForm.name.$error.maxlength">Name is too long!</span>
+        <span class="text-danger pl-2" ng-if="columnForm.name.$error.duplicate">Duplicate default column names are not allowed!</span>
       </div>
     </div>
 
-    <div class="control-group" ng-class="{'error':columnForm.value.$invalid && columnForm.value.$dirty}"
+    <div class="form-group row" ng-class="{'error':columnForm.value.$invalid && columnForm.value.$dirty}"
         title="The value to insert into each column">
-      <label class="control-label required">Value</label>
-      <div class="controls">
-        <input type="text" name="value" class="w-100" ng-model="value" placeholder="Column value..." ng-required="true" ng-maxlength="2000" />
-        <span class="help-inline error" ng-if="columnForm.value.$error.required">Required</span>
-        <span class="help-inline error" ng-if="columnForm.value.$error.maxlength">Value is too long!</span>
+      <label class="col-3 col-form-label text-right">Value</label>
+      <div class="col-9">
+        <input type="text" name="value" class="form-control" ng-model="value" placeholder="Column value..." ng-required="true" ng-maxlength="2000" />
+        <span class="text-danger pl-2" ng-if="columnForm.value.$error.required">Required</span>
+        <span class="text-danger pl-2" ng-if="columnForm.value.$error.maxlength">Value is too long!</span>
       </div>
     </div>
   </div>
