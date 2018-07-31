@@ -9,12 +9,12 @@
         <div class="col-7">
           <span ng-repeat="keyCode in ctrl.keys track by $index">
             <span ng-if="$even" class="border border-info rounded p-1" >{{controlsHelp.getKey(keyCode)}}</span>
-            <span ng-if="$odd" class=""> {{keyCode}} </span>
+            <span ng-if="$odd"> {{keyCode}} </span>
           </span>
           <span ng-repeat="otherText in ctrl.other track by $index">
             <span ng-if="$even">
               <img ng-if="controlsHelp.getMouse(otherText)" ng-src="{{controlsHelp.getMouse(otherText)}}"></img>
-              <span ng-if="controlsHelp.getFont(otherText)" class="border border-info rounded p-1" disabled ng-class="controlsHelp.getFontClass(otherText)">
+              <span ng-if="controlsHelp.getFont(otherText)" class="border border-info rounded p-1" ng-class="controlsHelp.getFontClass(otherText)">
                 <i ng-class="controlsHelp.getFont(otherText)"></i>
               </span>
               <span ng-if="!controlsHelp.getMouse(otherText) && !controlsHelp.getFont(otherText)" class="border border-info rounded p-1">{{otherText}}</span>
