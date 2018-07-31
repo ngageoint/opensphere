@@ -1,17 +1,17 @@
 <div class="d-flex flex-column flex-fill">
-  <div class="modal-body flex-row flex-fill d-flex u-overflow-y-hidden">
-    <div class="d-flex flex-column">
-      <div class="d-flex flex-row">
+  <div class="modal-body flex-fill d-flex u-overflow-y-hidden">
+    <div class="d-flex flex-fill flex-column">
+      <div>
         <ul class="nav nav-tabs" ng-show="showtabs">
-          <li ng-repeat="tab in tabs" ng-class="{active: activeTab == tab.name, first: $first}">
+          <li class="mx-3 my-1" ng-repeat="tab in tabs" ng-class="{active: activeTab == tab.name, first: $first}">
             <a ng-click="selector.setTab(tab.name)">{{tab.name}}</a>
           </li>
         </ul>
       </div>
-      <div class="d-flex flex-row" list list-id="js-nav-icon__selectors"></div>
+      <div class="d-flex flex-fill" list list-id="js-nav-icon__selectors"></div>
     </div>
   </div>
-  <div class="modal-footer flex-shrink-0 d-flex flex-row justify-content-between">
+  <div class="modal-footer flex-shrink-0 d-flex justify-content-between">
     <div>
       <div ng-if="selector.isValid()">
         <img ng-src="{{selector.getPath(selected.path)}}" />
