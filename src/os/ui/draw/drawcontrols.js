@@ -44,9 +44,9 @@ os.ui.Module.directive('osDrawControls', [os.ui.draw.drawControlsDirective]);
  * @ngInject
  */
 os.ui.draw.DrawControlsCtrl = function($scope, $element, $compile) {
+  this['supportsLines'] = true;
   os.ui.draw.DrawControlsCtrl.base(this, 'constructor', $scope, $element, $compile);
   this.log = os.ui.draw.DrawControlsCtrl.LOGGER_;
-  this['supportsLines'] = true;
 };
 goog.inherits(os.ui.draw.DrawControlsCtrl, os.ui.ol.draw.DrawControlsCtrl);
 
