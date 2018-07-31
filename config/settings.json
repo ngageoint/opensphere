@@ -140,14 +140,8 @@
     },
     "themes": {
       "Default": "overrides_slate_compact",
-      "Light": "overrides_default",
-      "Light Compact": "overrides_default_compact",
-      "Dark": "overrides_slate",
-      "Dark Compact": "overrides_slate_compact",
-      "Light Flat": "overrides_flatly",
-      "Light Flat Compact": "overrides_flatly_compact",
-      "Dark Flat": "overrides_darkly",
-      "Dark Flat Compact": "overrides_darkly_compact"
+      "Light": "overrides_default_compact",
+      "Dark": "overrides_slate_compact"
     }
   },
   "user": {

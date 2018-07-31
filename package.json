@@ -21,13 +21,7 @@
     "index": "index.js",
     "scss": "scss/opensphere.scss",
     "themes": [
-      "overrides_default",
       "overrides_default_compact",
-      "overrides_darkly",
-      "overrides_darkly_compact",
-      "overrides_flatly",
-      "overrides_flatly_compact",
-      "overrides_slate",
       "overrides_slate_compact"
     ],
     "gcc": {
