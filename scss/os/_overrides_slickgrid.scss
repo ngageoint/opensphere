@@ -91,12 +91,12 @@
   color: $body-color;
 
   &.selected {
-    background: darken($component-active-bg, 15%);
+    background: darken($component-active-bg, 10%);
   }
 
   &.hovered,
   &:hover {
-    background: darken($success, 15%);
+    background: darken($success, 10%);
   }
 
   &.selected,

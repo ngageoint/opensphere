@@ -4,7 +4,7 @@
   }
 
   .c-date-panel__extended {
-    background: $body-bg;
+    background: lighten($body-bg, 5%) !important;
     border: 1px solid $border-color;
     border-top: 0;
     color: $body-color;
