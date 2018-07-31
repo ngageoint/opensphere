@@ -789,6 +789,7 @@ os.ui.WindowCtrl.prototype.toggle = function() {
       this.element.resizable('option', 'disabled', false);
       this.constrainWindow_();
       this.scope['collapsed'] = false;
+      this.element.find('.js-window__header').removeClass('collapsed');
     } else {
       this.element.resizable('option', 'disabled', true);
       this.lastHeight_ = this.element.outerHeight();
@@ -796,6 +797,7 @@ os.ui.WindowCtrl.prototype.toggle = function() {
       var header = this.element.find(os.ui.windowSelector.HEADER);
       this.element.height(header.outerHeight());
       this.scope['collapsed'] = true;
+      this.element.find('.js-window__header').addClass('collapsed');
     }
   }
 };
