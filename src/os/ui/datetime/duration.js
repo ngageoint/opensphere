@@ -2,6 +2,8 @@ goog.provide('os.ui.datetime.DurationCtrl');
 goog.provide('os.ui.datetime.durationDirective');
 goog.require('os.ui.Module');
 goog.require('os.ui.spinnerDirective');
+goog.require('os.ui.util.buttonHeightDirective');
+goog.require('os.ui.util.validationMessageDirective');
 
 
 /**
@@ -78,7 +80,12 @@ os.ui.datetime.DurationCtrl = function($scope) {
   /**
    * @type {Object}
    */
-  this['errors'] = {};
+  this['errors'] = {
+    'duration': {
+      '$error': {},
+      '$dirty': false
+    }
+  };
 
   /**
    * @type {number}
@@ -116,6 +123,7 @@ os.ui.datetime.DurationCtrl = function($scope) {
   $scope.$on('$destroy', this.destroy_.bind(this));
 
   this.calculateTime_();
+  this.init_();
 };
 
 
@@ -126,6 +134,15 @@ os.ui.datetime.DurationCtrl = function($scope) {
 os.ui.datetime.DurationCtrl.prototype.destroy_ = function() {
   this.scope_ = null;
   this.element_ = null;
+};
+
+
+/**
+ * Initialize
+ * @private
+ */
+os.ui.datetime.DurationCtrl.prototype.init_ = function() {
+  this['errors']['duration']['$dirty'] = false;
 };
 
 
@@ -148,9 +165,12 @@ os.ui.datetime.DurationCtrl.prototype.calculateTime_ = function() {
     }
 
     var r = goog.string.toNumber(this.scope_['dur']);
-    r < minDuration ? this['errors']['minDuration'] = true : delete this['errors']['minDuration'];
-    r > maxDuration ? this['errors']['maxDuration'] = true : delete this['errors']['maxDuration'];
-    this['valid'] = goog.object.isEmpty(this['errors']) && !this.scope_['disabled'] ? true : null;
+    r < minDuration ? this['errors']['duration']['$error']['minlength'] = true :
+        delete this['errors']['duration']['$error']['minlength'];
+    r > maxDuration ? this['errors']['duration']['$error']['maxlength'] = true :
+        delete this['errors']['duration']['$error']['maxlength'];
+    this['valid'] = goog.object.isEmpty(this['errors']['duration']['$error']) &&
+        !this.scope_['disabled'] ? true : null;
 
     if (this.scope_['useWeeks'] === 'true') {
       this['weeks'] = Math.floor(r / 604800000);
@@ -176,6 +196,8 @@ os.ui.datetime.DurationCtrl.prototype.calculateTime_ = function() {
       this['seconds'] = Math.floor(r / 1000);
     }
     os.ui.apply(this.scope_);
+
+    this['errors']['duration']['$dirty'] = true;
   }
 };
 
