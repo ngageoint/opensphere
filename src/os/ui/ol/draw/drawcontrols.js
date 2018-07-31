@@ -120,16 +120,16 @@ os.ui.ol.draw.DrawControlsCtrl = function($scope, $element, $compile) {
   this['selectedType'] = '';
 
   /**
+   * If the line control is supported.
+   * @type {boolean}
+   */
+  this['supportsLines'] = this['supportsLines'] || false;
+
+  /**
    * @type {os.ui.menu.Menu|undefined}
    */
   this['controlMenu'] = os.ui.menu.draw.MENU;
   this.initControlMenu();
-
-  /**
-   * If the line control is supported.
-   * @type {boolean}
-   */
-  this['supportsLines'] = false;
 
   os.dispatcher.listen(os.ui.ol.draw.DrawEventType.DRAWSTART, this.apply, false, this);
   os.dispatcher.listen(os.ui.ol.draw.DrawEventType.DRAWEND, this.onDrawEnd, false, this);
@@ -318,7 +318,7 @@ os.ui.ol.draw.DrawControlsCtrl.prototype.onDrawEnd = function(event) {
     var map = this.getMap();
     if (menu && map) {
       // stop doing stuff while the menu is up
-      $(map.getViewport()).addClass('no-mouse');
+      $(map.getViewport()).addClass('u-pointer-events-none');
 
       var f = new ol.Feature(event.properties);
       f.setGeometry(event.geometry.clone());
@@ -353,7 +353,7 @@ os.ui.ol.draw.DrawControlsCtrl.prototype.onDrawEnd = function(event) {
  * @protected
  */
 os.ui.ol.draw.DrawControlsCtrl.prototype.onMenuEnd = function(opt_e) {
-  $(this.getMap().getViewport()).removeClass('no-mouse');
+  $(this.getMap().getViewport()).removeClass('u-pointer-events-none');
   this.setFeature(undefined);
   if (this.interaction) {
     this.interaction.setEnabled(false);
@@ -378,6 +378,7 @@ os.ui.ol.draw.DrawControlsCtrl.prototype.onDrawType = function(e) {
 
 /**
  * @param {string} type
+ * @export
  */
 os.ui.ol.draw.DrawControlsCtrl.prototype.activateControl = function(type) {
   goog.log.fine(this.log, 'Activating ' + type + ' control.');
@@ -394,14 +395,11 @@ os.ui.ol.draw.DrawControlsCtrl.prototype.activateControl = function(type) {
     this.interaction.setEnabled(!this.interaction.getEnabled());
   }
 };
-goog.exportProperty(
-    os.ui.ol.draw.DrawControlsCtrl.prototype,
-    'activateControl',
-    os.ui.ol.draw.DrawControlsCtrl.prototype.activateControl);
 
 
 /**
  * @param {boolean=} opt_value
+ * @export
  */
 os.ui.ol.draw.DrawControlsCtrl.prototype.toggleMenu = function(opt_value) {
   var menu = this['controlMenu'];
@@ -413,35 +411,25 @@ os.ui.ol.draw.DrawControlsCtrl.prototype.toggleMenu = function(opt_value) {
     of: target
   });
 };
-goog.exportProperty(
-    os.ui.ol.draw.DrawControlsCtrl.prototype,
-    'toggleMenu',
-    os.ui.ol.draw.DrawControlsCtrl.prototype.toggleMenu);
 
 
 /**
  * @return {boolean} whether the current interaction is enabled/active
+ * @export
  */
 os.ui.ol.draw.DrawControlsCtrl.prototype.isActive = function() {
   return this.interaction ? this.interaction.getEnabled() : false;
 };
-goog.exportProperty(
-    os.ui.ol.draw.DrawControlsCtrl.prototype,
-    'isActive',
-    os.ui.ol.draw.DrawControlsCtrl.prototype.isActive);
 
 
 /**
  * override via mixin if opensphere has access to country borders
  * @return {boolean}
+ * @export
  */
 os.ui.ol.draw.DrawControlsCtrl.prototype.isCountryEnabled = function() {
   return false;
 };
-goog.exportProperty(
-    os.ui.ol.draw.DrawControlsCtrl.prototype,
-    'isCountryEnabled',
-    os.ui.ol.draw.DrawControlsCtrl.prototype.isCountryEnabled);
 
 
 /**
