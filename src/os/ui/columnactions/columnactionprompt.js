@@ -132,6 +132,6 @@ os.ui.columnactions.launchColumnActionPrompt = function(matched, value, colDef) 
     'no-scroll': 'true'
   };
 
-  var template = '<columnactions></columnactions>';
+  var template = '<columnactions class="d-flex flex-fill"></columnactions>';
   os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
 };
