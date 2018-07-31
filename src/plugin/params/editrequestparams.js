@@ -157,18 +157,16 @@ plugin.params.EditRequestParamsCtrl.prototype.disposeInternal = function() {
 
 /**
  * Discard changes and close the window.
+ * @export
  */
 plugin.params.EditRequestParamsCtrl.prototype.cancel = function() {
   this.close();
 };
-goog.exportProperty(
-    plugin.params.EditRequestParamsCtrl.prototype,
-    'cancel',
-    plugin.params.EditRequestParamsCtrl.prototype.cancel);
 
 
 /**
  * Save the parameter changes and close the window.
+ * @export
  */
 plugin.params.EditRequestParamsCtrl.prototype.confirm = function() {
   if (this.scope) {
@@ -213,10 +211,6 @@ plugin.params.EditRequestParamsCtrl.prototype.confirm = function() {
 
   this.close();
 };
-goog.exportProperty(
-    plugin.params.EditRequestParamsCtrl.prototype,
-    'confirm',
-    plugin.params.EditRequestParamsCtrl.prototype.confirm);
 
 
 /**
@@ -230,6 +224,7 @@ plugin.params.EditRequestParamsCtrl.prototype.close = function() {
 
 /**
  * Add a new parameter row.
+ * @export
  */
 plugin.params.EditRequestParamsCtrl.prototype.addRow = function() {
   if (this['params']) {
@@ -240,14 +235,11 @@ plugin.params.EditRequestParamsCtrl.prototype.addRow = function() {
     }]);
   }
 };
-goog.exportProperty(
-    plugin.params.EditRequestParamsCtrl.prototype,
-    'addRow',
-    plugin.params.EditRequestParamsCtrl.prototype.addRow);
 
 
 /**
  * Remove the selected parameter row.
+ * @export
  */
 plugin.params.EditRequestParamsCtrl.prototype.removeRow = function() {
   if (this['selected'] && this['params']) {
@@ -255,45 +247,36 @@ plugin.params.EditRequestParamsCtrl.prototype.removeRow = function() {
     this['params'] = this['params'].slice();
   }
 };
-goog.exportProperty(
-    plugin.params.EditRequestParamsCtrl.prototype,
-    'removeRow',
-    plugin.params.EditRequestParamsCtrl.prototype.removeRow);
 
 
 /**
  * Add a URL.
+ * @export
  */
 plugin.params.EditRequestParamsCtrl.prototype.addUrl = function() {
   if (this['multiUrl'] && this['urls']) {
     this['urls'].push('');
   }
 };
-goog.exportProperty(
-    plugin.params.EditRequestParamsCtrl.prototype,
-    'addUrl',
-    plugin.params.EditRequestParamsCtrl.prototype.addUrl);
 
 
 /**
  * Remove a URL.
  * @param {number} index The URL index.
+ * @export
  */
 plugin.params.EditRequestParamsCtrl.prototype.removeUrl = function(index) {
   if (index != null && this['urls'] && this['urls'].length > index) {
     this['urls'].splice(index, 1);
   }
 };
-goog.exportProperty(
-    plugin.params.EditRequestParamsCtrl.prototype,
-    'removeUrl',
-    plugin.params.EditRequestParamsCtrl.prototype.removeUrl);
 
 
 /**
  * Get the label to display for a URL control.
  * @param {number} index The URL index.
  * @return {string} The URL control label.
+ * @export
  */
 plugin.params.EditRequestParamsCtrl.prototype.getUrlLabel = function(index) {
   if (this['multiUrl']) {
@@ -302,15 +285,12 @@ plugin.params.EditRequestParamsCtrl.prototype.getUrlLabel = function(index) {
 
   return 'URL';
 };
-goog.exportProperty(
-    plugin.params.EditRequestParamsCtrl.prototype,
-    'getUrlLabel',
-    plugin.params.EditRequestParamsCtrl.prototype.getUrlLabel);
 
 
 /**
  * Test if the parameters are valid.
  * @return {boolean} If all parameters are valid.
+ * @export
  */
 plugin.params.EditRequestParamsCtrl.prototype.testValid = function() {
   if (!this['urls'] || this['urls'].length == 0 || this['urls'].every(goog.string.isEmptyOrWhitespace)) {
@@ -334,10 +314,6 @@ plugin.params.EditRequestParamsCtrl.prototype.testValid = function() {
   this['errorMsg'] = '';
   return true;
 };
-goog.exportProperty(
-    plugin.params.EditRequestParamsCtrl.prototype,
-    'testValid',
-    plugin.params.EditRequestParamsCtrl.prototype.testValid);
 
 
 /**
