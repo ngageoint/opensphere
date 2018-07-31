@@ -1,12 +1,13 @@
 goog.provide('os.data.FileProvider');
-goog.require('os.data.FileDescriptor');
+
 goog.require('os.ui.data.DescriptorProvider');
 
 
 
 /**
  * Generic file-based provider
- * @extends {os.ui.data.DescriptorProvider.<!os.data.FileDescriptor>}
+ * @extends {os.ui.data.DescriptorProvider<!T>}
+ * @template T
  * @constructor
  */
 os.data.FileProvider = function() {
