@@ -1,64 +1,58 @@
-<div class="window-content-wrapper">
-  <div class="window-content">
-    <div ng-form="joinForm" ng-submit="ctrl.accept()">
-      <div class="control-group" ng-class="{'error':joinForm.name.$invalid && joinForm.name.$dirty}">
-        <label class="control-label">Layer Name:</label>
-        <div class="controls">
-          <input class="w-100" type="text" name="name" ng-model="ctrl.name" ng-required="true" ng-maxlength="100"/>
-          <span class="help-inline" ng-if="joinForm.name.$error.required">Required</span>
-          <span class="help-inline" ng-if="joinForm.name.$error.maxlength">Name is too long!</span>
+<div class="d-flex flex-column flex-fill">
+  <div class="modal-body d-flex flex-column flex-fill">
+    <div ng-form="joinForm" ng-submit="ctrl.accept()" class="container-fluid d-flex flex-column flex-fill">
+      <div class="form-group row" ng-class="{'error':joinForm.name.$invalid && joinForm.name.$dirty}">
+        <label class="col-form-label">Layer Name</label>
+        <div class="col">
+          <input class="form-control w-100" type="text" name="name" ng-model="ctrl.name" ng-required="true" ng-maxlength="100"/>
+          <validation-message target="joinForm.name"></validation-message>
         </div>
       </div>
 
-      <div class="control-group">
-        <div class="inline-block">Choose the Primary Layer you want to join into and pick which columns to use</div>
+      <div class="form-group row mt-2">
+        <div class="col pl-0">Choose the Primary Layer you want to join into and pick which columns to use</div>
         <popover class="pull-right" x-title="'Join Columns'" x-content="ctrl.chooseLayerHelp" x-pos="'right'"></popover>
-        <div class="controls">
-          <table>
-            <tr ng-repeat="source in ctrl.joinSources">
-              <td class="control-label">
-                <label class="radio">
-                  <input type="radio" name="primarySource" ng-model="ctrl.primarySource" ng-value="source.id">
-                  {{source.title}}
-                </label>
-              </td>
-              <td class="w-100">
-                <select class="w-100 no-margin" ng-model="source.joinColumn" ng-options="col.name for col in source.cols" required></select>
-              </td>
-            </tr>
-          </table>
+      </div>
+      <div class="form-group row" ng-repeat="source in ctrl.joinSources">
+        <div class="col pl-0">
+          <div class="form-check">
+            <input id="join_source_{{$id}}_{{$index}}" type="radio" class="form-check-input" name="primarySource" ng-model="ctrl.primarySource" ng-value="source.id"></input>
+            <label for="join_source_{{$id}}_{{$index}}" class="form-check-label">{{source.title}}</label>
+          </div>
+        </div>
+        <div class="col">
+          <select class="w-100 no-margin form-control" ng-model="source.joinColumn" ng-options="col.name for col in source.cols" required></select>
         </div>
       </div>
 
       <mappingcounter source-ids="sourceIds"></mappingcounter>
 
-      <div class="control-group">
-        <label class="control-label inline-block">Join Method:</label>
-        <popover class="pull-right" x-title="'Join Method'" x-content="ctrl.joinMethodHelp" x-pos="'right'"></popover>
-        <div class="controls">
-          <label class="radio" ng-disabled="disabled">
-            <input type="radio" name="dateTypeRadios" value="unique" ng-model="ctrl.joinMethod" ng-disabled="disabled">
-            Exact Match
-          </label>
-          <label class="radio" ng-disabled="disabled">
-            <input type="radio" name="dateTypeRadios" value="contains" ng-model="ctrl.joinMethod" ng-disabled="disabled">
-            Contains
-          </label>
+      <div class="form-group d-flex flex-row row mt-2">
+        <div class="col pl-0">Join Method</div>
+        <popover x-title="'Join Method'" x-content="ctrl.joinMethodHelp" x-pos="'right'"></popover>
+      </div>
+      <div class="form-group row">
+        <div class="form-check form-check-inline">
+          <input type="radio" id="exactMatch_{{$id}}" class="form-check-input" name="dateTypeRadios" value="unique" ng-model="ctrl.joinMethod" ng-disabled="disabled">
+          <label class="form-check-label" for="exactMatch_{{$id}}" ng-disabled="disabled">Exact Match</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input type="radio" id="contains_{{$id}}" class="form-check-input" name="dateTypeRadios" value="contains" ng-model="ctrl.joinMethod" ng-disabled="disabled">
+          <label class="form-check-label" for="contains_{{$id}}" ng-disabled="disabled">Contains</label>
         </div>
       </div>
     </div>
   </div>
-
-  <div class="window-footer">
+  <div class="modal-footer">
     <span ng-if="joinForm.$error.featureCount">
-      <popover x-title="ctrl.popoverTitle" x-content="ctrl.featureCountText" x-pos="'left'" icon="'fa fa-warning orange-icon'"></popover> {{ctrl.popoverText}}
+      <popover x-title="ctrl.popoverTitle" x-content="ctrl.featureCountText" x-pos="'left'" icon="'fa fa-warning text-warning'"></popover><span class="text-warning ml-1">{{ctrl.popoverText}}</span>
     </span>
     <div class="pull-right">
-      <button class="btn" ng-disabled="joinForm.$invalid" ng-click="ctrl.accept()">
-        <i class="fa fa-check lt-blue-icon"></i> OK
+      <button class="btn btn-primary" ng-disabled="joinForm.$invalid" ng-click="ctrl.accept()">
+        <i class="fa fa-check"></i> OK
       </button>
-      <button class="btn btn-default" ng-click="ctrl.close()">
-        <i class="fa fa-ban red-icon"></i> Cancel
+      <button class="btn btn-secondary" ng-click="ctrl.close()">
+        <i class="fa fa-ban"></i> Cancel
       </button>
     </div>
   </div>

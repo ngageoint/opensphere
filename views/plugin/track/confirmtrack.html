@@ -1,7 +1,7 @@
 <div class="confirm-track">
   <div ng-if="confirm.tracks.length > 0">
     <span style="margin-right:5px;">Please choose a track:</span>
-    <select class="w-100" placeholder="Select track..." ng-model="confirm.track" required
+    <select class="w-100 form-control" placeholder="Select track..." ng-model="confirm.track" required
         ng-options="track as confirm.getTrackName(track) for track in confirm.tracks"></select>
   </div>
   <div ng-if="confirm.tracks.length == 0">
