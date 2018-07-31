@@ -16,6 +16,7 @@ goog.require('os.ui.window');
 os.ui.help.controlsDirective = function() {
   return {
     restrict: 'E',
+    replace: true,
     scope: true,
     templateUrl: os.ROOT + 'views/help/controls.html',
     controller: os.ui.help.ControlsCtrl,
@@ -71,13 +72,13 @@ os.ui.help.ControlsCtrl.launch = function() {
       'label': 'Controls',
       'show-close': true,
       'no-scroll': false,
-      'min-width': 400,
-      'min-height': 200,
-      'max-width': 1050,
-      'max-height': 1000,
+      'min-width': 850,
+      'min-height': 750,
+      'max-width': 900,
+      'max-height': 800,
       'modal': false,
-      'width': 865,
-      'height': 550,
+      'width': 850,
+      'height': 750,
       'icon': 'fa fa-keyboard-o'
     }, 'controlshelp');
   }
