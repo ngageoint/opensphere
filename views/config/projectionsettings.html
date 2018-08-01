@@ -2,7 +2,7 @@
   <h4>Projection</h4>
   <div class="form-group">Select the map projection:</div>
   <div class="form-group">
-    <select class="form-control custom-select col-9" ng-model="projCtrl.projection"
+    <select class="form-control col-9" ng-model="projCtrl.projection"
         ng-options="item.code + ' ' + item.title for item in projCtrl.projections track by item.code">
     </select>
     <button class="btn btn-primary" ng-disabled="projCtrl.projection.code == projCtrl.appProjection.code" ng-click="projCtrl.apply()">
