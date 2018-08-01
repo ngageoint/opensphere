@@ -6,6 +6,7 @@ goog.require('os.data.SourceManager');
 goog.require('os.defines');
 goog.require('os.source.PropertyChange');
 goog.require('os.ui.Module');
+goog.require('os.ui.util.validationMessageDirective');
 goog.require('os.ui.window');
 goog.require('plugin.vectortools.MergeLayer');
 goog.require('plugin.vectortools.mappingCounterDirective');
