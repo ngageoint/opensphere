@@ -1,7 +1,7 @@
 <div class="d-flex flex-column flex-fill">
   <div class="modal-body d-flex flex-column flex-fill">
     <div ng-form="joinForm" ng-submit="ctrl.accept()" class="container-fluid d-flex flex-column flex-fill">
-      <div class="form-group row" ng-class="{'error':joinForm.name.$invalid && joinForm.name.$dirty}">
+      <div class="form-group row" ng-class="{'text-danger':joinForm.name.$invalid && joinForm.name.$dirty}">
         <label class="col-form-label">Layer Name</label>
         <div class="col">
           <input class="form-control w-100" type="text" name="name" ng-model="ctrl.name" ng-required="true" ng-maxlength="100"/>
@@ -11,7 +11,7 @@
 
       <div class="form-group row mt-2">
         <div class="col pl-0">Choose the Primary Layer you want to join into and pick which columns to use</div>
-        <popover class="pull-right" x-title="'Join Columns'" x-content="ctrl.chooseLayerHelp" x-pos="'right'"></popover>
+        <popover class="float-right" x-title="'Join Columns'" x-content="ctrl.chooseLayerHelp" x-pos="'right'"></popover>
       </div>
       <div class="form-group row" ng-repeat="source in ctrl.joinSources">
         <div class="col pl-0">
@@ -33,11 +33,11 @@
       </div>
       <div class="form-group row">
         <div class="form-check form-check-inline">
-          <input type="radio" id="exactMatch_{{$id}}" class="form-check-input" name="dateTypeRadios" value="unique" ng-model="ctrl.joinMethod" ng-disabled="disabled">
+          <input type="radio" id="exactMatch_{{$id}}" class="form-check-input" name="dateTypeRadios" value="unique" ng-model="ctrl.joinMethod" ng-disabled="disabled"></input>
           <label class="form-check-label" for="exactMatch_{{$id}}" ng-disabled="disabled">Exact Match</label>
         </div>
         <div class="form-check form-check-inline">
-          <input type="radio" id="contains_{{$id}}" class="form-check-input" name="dateTypeRadios" value="contains" ng-model="ctrl.joinMethod" ng-disabled="disabled">
+          <input type="radio" id="contains_{{$id}}" class="form-check-input" name="dateTypeRadios" value="contains" ng-model="ctrl.joinMethod" ng-disabled="disabled"></input>
           <label class="form-check-label" for="contains_{{$id}}" ng-disabled="disabled">Contains</label>
         </div>
       </div>
@@ -47,13 +47,11 @@
     <span ng-if="joinForm.$error.featureCount">
       <popover x-title="ctrl.popoverTitle" x-content="ctrl.featureCountText" x-pos="'left'" icon="'fa fa-warning text-warning'"></popover><span class="text-warning ml-1">{{ctrl.popoverText}}</span>
     </span>
-    <div class="pull-right">
-      <button class="btn btn-primary" ng-disabled="joinForm.$invalid" ng-click="ctrl.accept()">
-        <i class="fa fa-check"></i> OK
-      </button>
-      <button class="btn btn-secondary" ng-click="ctrl.close()">
-        <i class="fa fa-ban"></i> Cancel
-      </button>
-    </div>
+    <button class="btn btn-primary" ng-disabled="joinForm.$invalid" ng-click="ctrl.accept()">
+      <i class="fa fa-check"></i> OK
+    </button>
+    <button class="btn btn-secondary" ng-click="ctrl.close()">
+      <i class="fa fa-ban"></i> Cancel
+    </button>
   </div>
 </div>
