@@ -2,7 +2,7 @@
   <div class="modal-body">
     <form name="cmExportForm" ng-submit="cmExportCtrl.accept()">
 
-      <div class="d-flex flex-row form-group">
+      <div class="d-flex flex-fill form-group">
         <label class="col-3 col-form-label text-right">Name</label>
         <div class="col">
           <input class="form-control" type="text" name="title" ng-model="title" ng-required="true" ng-maxlength="128" />
@@ -10,7 +10,7 @@
         </div>
       </div>
 
-      <div class="d-flex flex-row form-group">
+      <div class="d-flex flex-fill form-group">
         <label class="col-3 col-form-label text-right">Save to</label>
         <div class="col">
           <select class="form-control" name="persister" ng-model="cmExportCtrl.persister" ng-options="value as key for (key, value) in cmExportCtrl.persisters"
@@ -18,23 +18,23 @@
         </div>
       </div>
 
-      <div class="d-flex flex-row form-group" ng-if="cmExportCtrl.showExportType">
+      <div class="d-flex flex-fill form-group" ng-if="cmExportCtrl.showExportType">
         <label class="col-3 col-form-label text-right">Exporting</label>
-        <div class="col">
-          <label class="form-check-label">
-          <input class="form-check-input" type="radio" name="timeTypeRadios" ng-model="cmExportCtrl.exportType" value="all"> All
+        <div class="ml-1 col form-check form-check-inline">
+          <input class="mx-1 form-check-input" type="radio" name="timeTypeRadios" ng-model="cmExportCtrl.exportType" value="all" />
+          <label class="mr-3 form-check-label">All
           </label>
+          <input class="mx-1 form-check-input" type="radio" name="timeTypeRadios" ng-model="cmExportCtrl.exportType" value="selected" />
           <label class="form-check-label">
-          <input class="form-check-input" type="radio" name="timeTypeRadios" ng-model="cmExportCtrl.exportType" value="selected"> Selected
-          </label>
+          </label>Selected
         </div>
       </div>
-      <input type="submit" class="invisible">
+      <input type="submit" class="invisible" />
 
     </form>
   </div>
 
-  <div class="modal-footer flex-row justify-content-between">
+  <div class="modal-footer flex-fill justify-content-between">
     <div>
       Exporting {{cmExportCtrl.exportType == 'all' ? mappings.length : selectedMappings.length}} {{(cmExportCtrl.exportType ==
       'all' ? mappings.length : selectedMappings.length) === 1 ? 'Column Association.' : 'Column Associations.'}}
