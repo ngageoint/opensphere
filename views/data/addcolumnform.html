@@ -1,7 +1,7 @@
 <div>
   <div ng-form="columnForm">
     <div class="form-group row" title="The name of the column to add to each feature">
-      <label class="col-3 col-form-label text-right">Column Name</label>
+      <label class="col-3 col-form-label text-right u-required">Column Name</label>
       <div class="col-9">
         <input type="text" name="name" class="form-control" placeholder="Column name..."
             ng-model="name"
@@ -12,7 +12,7 @@
       </div>
     </div>
     <div class="form-group row" title="The value to insert into each column">
-      <label class="col-3 col-form-label text-right">Value</label>
+      <label class="col-3 col-form-label text-right u-required">Value</label>
       <div class="col-9">
         <input type="text" name="value" class="form-control" ng-model="value" placeholder="Column value..." ng-required="true" ng-maxlength="2000" />
         <validation-message target="columnForm.value"></validation-message>
