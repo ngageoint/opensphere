@@ -919,12 +919,13 @@ os.layer.Tile.prototype.restore = function(config) {
   //
   // Do not use MapContainer.zoomToResolution here. That is for overall map/view
   // purposes and not for individual layers, which may have discrete tile matrices.
+  var offset = config['zoomOffset'] || 0;
   if (config['minZoom']) {
-    this.setMaxResolution(this.getSource().getTileGrid().getResolution(config['minZoom']));
+    this.setMaxResolution(this.getSource().getTileGrid().getResolution(config['minZoom'] + offset));
   }
 
   if (config['maxZoom']) {
-    this.setMinResolution(this.getSource().getTileGrid().getResolution(config['maxZoom']));
+    this.setMinResolution(this.getSource().getTileGrid().getResolution(config['maxZoom'] + offset));
   }
 
   var style = config['style'] || '';
