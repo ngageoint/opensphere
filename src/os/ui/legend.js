@@ -193,10 +193,10 @@ os.ui.LegendCtrl.prototype.init = function() {
     }
 
     // positioning off the screen will auto correct to the bottom/right
-    var x = /** @type {number} */ (os.settings.get(os.config.LegendSetting.LEFT, 15000));
-    var y = /** @type {number} */ (os.settings.get(os.config.LegendSetting.TOP, 15000));
-    this.element.css('left', x + 'px');
-    this.element.css('top', y + 'px');
+    var x = /** @type {string} */ (os.settings.get(os.config.LegendSetting.LEFT, '15000px'));
+    var y = /** @type {string} */ (os.settings.get(os.config.LegendSetting.TOP, '15000px'));
+    this.element.css('left', x);
+    this.element.css('top', y);
 
     this.element.draggable({
       'containment': os.ui.LegendCtrl.CONTAINER_SELECTOR,
