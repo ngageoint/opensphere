@@ -7,4 +7,14 @@
   &:hover {
     text-shadow: 0 0 .8rem;
   }
+
+  &.c-glyph__off {
+    color: $black !important;
+    opacity: .33;
+
+    &:hover {
+      color: inherit !important;
+      opacity: 1;
+    }
+  }
 }

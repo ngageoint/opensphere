@@ -4,6 +4,11 @@
 .ui-widget {
   font-size: $font-size-base;
 
+  // Dont let jquery resize our bootstrap close button
+  button.close {
+    font-size: $close-font-size;
+  }
+
   input {
     font-size: $font-size-base;
   }

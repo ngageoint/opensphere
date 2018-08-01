@@ -101,7 +101,7 @@
   &.hovered,
   &:hover {
     @each $color, $value in $colors {
-      .u-text-#{$color} {
+      .u-text-#{$color}:not(.c-glyph__enabled) {
         color: inherit !important;
       }
     }
