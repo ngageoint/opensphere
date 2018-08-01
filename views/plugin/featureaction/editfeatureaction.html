@@ -1,85 +1,79 @@
-<div class="window-content-wrapper">
-  <div class="window-content">
-    <div ng-form name="actionForm" class="form-horizontal form-compact filterform">
-      <div class="control-group" ng-class="{'error': actionForm.title.$invalid}">
-        <label class="control-label">Title:</label>
-        <div class="control">
-          <input type="text" ng-model="ctrl.title" name="title" required/>
+<div class="d-flex flex-column flex-fill">
+  <div class="modal-body d-flex flex-column flex-fill">
+    <div ng-form name="actionForm" class="d-flex flex-fill flex-column">
+      <div class="row mb-1">
+        <label class="col-form-label col-2 text-right u-required" for="filterTitle">Title</label>
+        <div class="col form-inline">
+          <input class="form-control w-50" id="filterTitle" type="text" ng-model="ctrl.title" name="title" required/>
+          <validation-message target="actionForm.title"></validation-message>
         </div>
       </div>
-      <div class="control-group">
-        <label class="control-label" for="filterDesc">Description:</label>
-        <div class="control">
-          <input id="filterDesc" type="text" ng-model="ctrl.description" name="description"/>
+      <div class="row mb-1">
+        <label class="col-form-label col-2 text-right" for="filterDesc">Description</label>
+        <div class="col form-inline">
+          <input class="form-control w-50" id="filterDesc" type="text" ng-model="ctrl.description" name="description"/>
         </div>
       </div>
 
-      <h5 class="filter-action-header no-margin">For data matching the filter...</h5>
+      <h5 class="mt-1">For data matching the filter...</h5>
 
-      <ul class="nav nav-tabs">
-        <li class="first" ng-class="{active: tab == 'basic'}"><a ng-click="ctrl.setTab('basic')">Basic</a></li>
-        <li ng-class="{active: tab == 'advanced'}"><a ng-click="ctrl.setTab('advanced')">Advanced</a></li>
+      <ul class="nav nav-tabs flex-shrink-0">
+        <li class="nav-item"><a href class="nav-link" ng-click="ctrl.setTab('basic')" ng-class="{active: tab == 'basic'}">Basic</a></li>
+        <li class="nav-item"><a href class="nav-link" ng-class="{active: tab == 'advanced'}" ng-click="ctrl.setTab('advanced')">Advanced</a></li>
       </ul>
-
-      <div class="filter-container"
-          autoheight="50%" siblings=".control-group,.nav-tabs,.filter-action-header">
-        <div class="tab-content flex-fill">
-          <div ng-if="tab == 'basic'" style="height:100%">
-            <basicfilterbuilder root="ctrl.root" columns="columns" is-complex="ctrl.isComplex">
-            </basicfilterbuilder>
+      <div class="flex-column d-flex flex-fill">
+        <div class="flex-column d-flex flex-fill">
+          <div ng-if="tab == 'basic'" class="flex-column d-flex flex-fill">
+            <basicfilterbuilder root="ctrl.root" columns="columns" is-complex="ctrl.isComplex"></basicfilterbuilder>
           </div>
-          <div ng-if="tab == 'advanced'" style="height:100%">
+          <div ng-if="tab == 'advanced'" class="flex-column d-flex flex-fill">
             <advancedfilterbuilder root="ctrl.root" columns="columns"></advancedfilterbuilder>
           </div>
         </div>
       </div>
 
-      <h5 class="filter-action-header no-margin">Perform the following actions...</h5>
+      <h5 class="c-editfilteraction__header mt-2">Perform the following actions...</h5>
 
-      <div class="filter-action-section"
-          autoheight="50%" siblings=".control-group,.nav-tabs,.filter-action-header">
-        <div class="tab-content flex-fill">
-          <div class="filter-action-controls advanced-filter-buttons">
-            <button class="btn btn-default" ng-click="ctrl.addAction()" ng-disabled="ctrl.availableActions.length == 0"
-                title="{{ctrl.getAddActionTooltip()}}">
-              <i class="btn-icon fa fa-plus green-icon"></i>
-              Add Action
+      <div autoheight="25%" siblings=".control-group,.nav-tabs,.c-editfilteraction__header">
+        <div class="c-editfilteraction__controls mb-1">
+          <button class="btn btn-small btn-primary" ng-click="ctrl.addAction()" ng-disabled="ctrl.availableActions.length == 0"
+              title="{{ctrl.getAddActionTooltip()}}">
+            <i class="btn-icon fa fa-plus green-icon"></i>
+            Add Action
+          </button>
+          <span ng-if="ctrl.actions.length == 0">
+            <i class="fa fa-warning orange-icon"></i>
+            Please create at least one action.
+          </span>
+        </div>
+        <div autoheight siblings=".c-editfilteraction__controls">
+          <div class="form-inline js-filter-action__controls" ng-repeat="action in ctrl.actions">
+            <select ng-model="action.id" class="form-control col-2"
+                ng-options="val.id as val.label for val in ctrl.availableActions.concat(action.action)"
+                ng-change="ctrl.updateAction($index, val.id)">
+            </select>
+            <button class="btn btn-secondary" ng-click="ctrl.configAction(action.action)"
+                title="Configure the action">
+              <i class="fa fa-gear"></i>
             </button>
-            <span ng-if="ctrl.actions.length == 0">
-              <i class="fa fa-warning orange-icon"></i>
-              Please create at least one action.
-            </span>
-          </div>
-          <div class="slick-table-container action-container" autoheight siblings=".filter-action-controls">
-            <div class="filter-action-row" style="padding:2px 0;" ng-repeat="action in ctrl.actions">
-              <select ng-model="action.id"
-                  ng-options="val.id as val.label for val in ctrl.availableActions.concat(action.action)"
-                  ng-change="ctrl.updateAction($index, val.id)">
-              </select>
-              <button class="btn btn-default" ng-click="ctrl.configAction(action.action)"
-                  title="Configure the action">
-                <i class="fa fa-gear"></i>
-              </button>
-              <button class="btn btn-default" ng-click="ctrl.removeAction($index)" ng-if="ctrl.actions.length > 1"
-                  title="Remove the action">
-                <i class="fa fa-times red-icon"></i>
-              </button>
-              <span>{{ctrl.showActionPreview()}}</span>
-            </div>
+            <button class="btn btn-danger" ng-click="ctrl.removeAction($index)" ng-if="ctrl.actions.length > 1"
+                title="Remove the action">
+              <i class="fa fa-times"></i>
+            </button>
+            <span>{{ctrl.showActionPreview()}}</span>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div class="window-footer">
-    <div class="pull-right">
-      <button class="btn btn-default" ng-click="ctrl.finish()"
+  <div class="modal-footer">
+      <button class="btn btn-primary" ng-click="ctrl.finish()"
           ng-disabled="actionForm.$invalid || ctrl.isInvalid()">
-        <i class="btn-icon fa fa-check color-add"></i>
+        <i class="btn-icon fa fa-check"></i>
         OK
       </button>
-      <button class="btn btn-default" ng-click="ctrl.cancel()">
-        <i class="btn-icon fa fa-ban red-icon"></i>
+      <button class="btn btn-secondary" ng-click="ctrl.cancel()">
+        <i class="btn-icon fa fa-ban"></i>
         Cancel
       </button>
     </div>

@@ -16,7 +16,7 @@
       <div class="form-group row" ng-repeat="source in ctrl.joinSources">
         <div class="col pl-0">
           <div class="form-check">
-            <input id="join_source_{{$id}}_{{$index}}" type="radio" class="form-check-input" name="primarySource" ng-model="ctrl.primarySource" ng-value="source.id"></input>
+            <input id="join_source_{{$id}}_{{$index}}" type="radio" class="form-check-input" name="primarySource" ng-model="ctrl.primarySource" ng-value="source.id" />
             <label for="join_source_{{$id}}_{{$index}}" class="form-check-label">{{source.title}}</label>
           </div>
         </div>
@@ -33,11 +33,11 @@
       </div>
       <div class="form-group row">
         <div class="form-check form-check-inline">
-          <input type="radio" id="exactMatch_{{$id}}" class="form-check-input" name="dateTypeRadios" value="unique" ng-model="ctrl.joinMethod" ng-disabled="disabled"></input>
+          <input type="radio" id="exactMatch_{{$id}}" class="form-check-input" name="dateTypeRadios" value="unique" ng-model="ctrl.joinMethod" ng-disabled="disabled" />
           <label class="form-check-label" for="exactMatch_{{$id}}" ng-disabled="disabled">Exact Match</label>
         </div>
         <div class="form-check form-check-inline">
-          <input type="radio" id="contains_{{$id}}" class="form-check-input" name="dateTypeRadios" value="contains" ng-model="ctrl.joinMethod" ng-disabled="disabled"></input>
+          <input type="radio" id="contains_{{$id}}" class="form-check-input" name="dateTypeRadios" value="contains" ng-model="ctrl.joinMethod" ng-disabled="disabled" />
           <label class="form-check-label" for="contains_{{$id}}" ng-disabled="disabled">Contains</label>
         </div>
       </div>
