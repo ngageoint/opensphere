@@ -23,6 +23,8 @@ $dark: darken($gray-800, 5%);
 $font-family-sans-serif: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 $font-size-base: .9375rem;
 
+$dropdown-link-hover-bg: $primary;
+
 @import 'slate/variables';
 
 $border-color: $gray-900;
@@ -35,6 +37,7 @@ $input-group-addon-bg: $gray-600;
 $input-placeholder-color: $gray-500;
 $close-color: $white;
 $close-text-shadow: $black;
+$table-accent-bg: lighten($body-bg, 3%);
 
 // Original button padding (slate overrides this)
 $input-btn-padding-y: .375rem;
