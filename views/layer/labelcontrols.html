@@ -1,7 +1,7 @@
 <div ng-form="labelForm">
   <table>
     <tr>
-      <td>Style:</td>
+      <td>Style</td>
       <td class="w-100">
         <colorpicker name="labelColor" color="labelColor" show-reset="true" title="Sets the label color"></colorpicker>
         <spinner class="d-inline-block" min="8" max="20" live="false" step="1" value="labelSize" name="labelSize" title="Sets the label font size"></spinner>px
@@ -32,7 +32,7 @@
           </div>
         </td>
         <td>
-          <select class="custom-select" ng-model="label.column" ng-change="labelCtrl.onColumnChange()"
+          <select class="form-control" ng-model="label.column" ng-change="labelCtrl.onColumnChange()"
               title="Sets the data field used for labels"
               ng-options="col.field as col.name for col in columns">
             <option value="">-- None --</option>

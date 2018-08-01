@@ -15,7 +15,7 @@
       <div class="form-group row" ng-if="stateForm.isSaving">
         <label for="persister" class="col-3 col-form-label text-right">Save to</label>
         <div class="col">
-          <select class="custom-select" name="persister" ng-model="stateForm.persister" ng-options="value as key for (key, value) in stateForm.persisters">
+          <select class="form-control" name="persister" ng-model="stateForm.persister" ng-options="value as key for (key, value) in stateForm.persisters">
             <option ng-if="stateForm.appName" value="">{{stateForm.appName}}</option>
           </select>
         </div>
