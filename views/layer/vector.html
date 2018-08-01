@@ -54,7 +54,7 @@
           Auto Refresh:
         </div>
         <div class="col">
-          <select class="custom-select" ng-model="vector.refresh" ng-change="vector.onRefreshChange()"
+          <select class="form-control" ng-model="vector.refresh" ng-change="vector.onRefreshChange()"
               ng-disabled="vector.lock"
               ng-options="val.label for val in vector.refreshOptions">
           </select>
@@ -62,10 +62,10 @@
       </div>
       <div class="form-row align-items-center pb-1" ng-show="columns && items.length == 1" title="Choose a unique identifier column for the layer.">
         <div class="col-auto" ng-if="vector.showRefresh" title="Sets how often the layer will automatically refresh its data.">
-          Unique Identifier:
+          Unique Identifier
         </div>
         <div class="col">
-          <select class="custom-select" ng-model="vector.uniqueId" ng-change="vector.onUniqueIdChange()"
+          <select class="form-control" ng-model="vector.uniqueId" ng-change="vector.onUniqueIdChange()"
               ng-options="col as col.name for col in columns track by col.field">
               <option value="">-- None --</option>
           </select>

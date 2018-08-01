@@ -31,8 +31,8 @@
         </div>
       </div>
       <div class="row" ng-hide="filterName">
-        <label class="col-auto">Group By:</label>
-        <select class="custom-select col-3" ng-model="addData.view" ng-change="addData.onGroupByChanged()"
+        <label class="col-auto col-form-label">Group By</label>
+        <select class="form-control col-3" ng-model="addData.view" ng-change="addData.onGroupByChanged()"
             ng-options="key for (key, value) in addData.views"/>
       </div>
 

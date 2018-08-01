@@ -1,10 +1,10 @@
 <div class="d-flex flex-column flex-fill">
   <div class="form-row align-items-center flex-shrink-0 mt-1">
-    <div class="col-auto">
-      Group By:
+    <div class="col-auto col-form-label">
+      Group By
     </div>
     <div class="col">
-      <select class="custom-select" ng-model="view" ng-change="filtersCtrl.onGroupChange()" ng-options="key for (key, value) in views"/>
+      <select class="form-control" ng-model="view" ng-change="filtersCtrl.onGroupChange()" ng-options="key for (key, value) in views"/>
     </div>
     <div class="col-auto">
       <addfilter></addfilter>

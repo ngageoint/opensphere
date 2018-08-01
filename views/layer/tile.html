@@ -6,7 +6,7 @@
     <div id="layer-style" class="js-style-content card-body collapse">
       <table>
         <tr title="Sets the opacity (inverse transparency) of the layer(s)">
-          <td>Opacity:</td>
+          <td>Opacity</td>
           <td class="w-100"><slider min="0" max="1" step="0.05" value="opacity" name="opacity"></slider></td>
           <td class="text-right pl-2">
             <button class="btn btn-secondary" ng-click="tile.reset('opacity')" title="Restore default opacity">
@@ -15,7 +15,7 @@
           </td>
         </tr>
         <tr title="Sets the brightness of the layer(s) [3D only]" ng-show="tile.is3DEnabled && tile.showBasicColor">
-          <td>Brightness:</td>
+          <td>Brightness</td>
           <td class="w-100"><slider min="-1" max="1" step="0.05" value="brightness" name="brightness"></slider></td>
           <td class="text-right pl-2">
             <button class="btn btn-secondary" ng-click="tile.reset('brightness')" title="Restore default brightness">
@@ -24,7 +24,7 @@
           </td>
         </tr>
         <tr title="Sets the contrast of the layer(s) [3D only]" ng-show="tile.is3DEnabled && tile.showBasicColor">
-          <td>Contrast:</td>
+          <td>Contrast</td>
           <td class="w-100"><slider min="0" max="2" step="0.05" value="contrast" name="contrast"></slider></td>
           <td class="text-right pl-2">
             <button class="btn btn-secondary" ng-click="tile.reset('contrast')" title="Restore default contrast">
@@ -33,7 +33,7 @@
           </td>
         </tr>
         <tr title="Sets the saturation of the layer(s) [3D only]" ng-show="tile.is3DEnabled && tile.showBasicColor">
-          <td>Saturation:</td>
+          <td>Saturation</td>
           <td class="w-100"><slider min="0" max="1" step="0.05" value="saturation" name="saturation"></slider></td>
           <td class="text-right pl-2">
             <button class="btn btn-secondary" ng-click="tile.reset('saturation')" title="Restore default saturation">
@@ -42,7 +42,7 @@
           </td>
         </tr>
         <tr title="Sets the color of the layer(s)" ng-show="tile.showColorPicker">
-          <td>Color:</td>
+          <td>Color</td>
           <td>
             <colorpicker name="color" color="color" show-reset="{{tile.showColorReset}}"></colorpicker>
             <div class="custom-control custom-checkbox d-inline-block">
@@ -52,9 +52,9 @@
           </td>
         </tr>
         <tr title="Sets the style of the layer(s)" ng-show="styles && items.length == 1">
-          <td>Style:</td>
+          <td>Style</td>
           <td class="w-100">
-            <select class="custom-select" ng-model="style" ng-change="tile.onStyleChange()" ng-options="value.label for value in styles">
+            <select class="form-control" ng-model="style" ng-change="tile.onStyleChange()" ng-options="value.label for value in styles">
             </select>
           </td>
         </tr>
@@ -68,9 +68,9 @@
     <div id="layer-options" class="js-style-content card-body collapse">
       <table>
         <tr ng-if="tile.showRefresh" title="Sets how often the layer will automatically refresh its tiles.">
-          <td class="text-nowrap">Auto Refresh:</td>
+          <td class="text-nowrap">Auto Refresh</td>
           <td class="w-100">
-            <select class="custom-select" ng-model="tile.refresh" ng-change="tile.onRefreshChange()"
+            <select class="form-control" ng-model="tile.refresh" ng-change="tile.onRefreshChange()"
                 ng-options="val.label for val in tile.refreshOptions">
             </select>
           </td>
