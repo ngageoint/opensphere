@@ -101,7 +101,7 @@ os.ui.filter.ui.launchFilterExport = function(confirm, opt_mode) {
     'icon': 'fa fa-download',
     'x': 'center',
     'y': 'center',
-    'width': '260',
+    'width': '400',
     'height': 'auto',
     'modal': 'true',
     'show-close': 'true'

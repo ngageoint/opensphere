@@ -1,31 +1,28 @@
 <div>
   <div class="modal-body">
     <form name="exportForm">
-      <div class="ml-2">
-        <label class="form-check d-inline-flex">
-          <label class="form-check-label">
-            <input class="form-check-input" type="radio" name="exportmode" value="active" ng-model="filterexport['mode']" checked />
-            Export active (checked) filters
-          </label>
-        </label>
-        <label class="form-check d-inline-flex">
-          <label class="form-check-label">
-            <input class="form-check-input" type="radio" name="exportmode" value="selected" ng-model="filterexport['mode']" checked />
-            Export selected filters
-          </label>
-        </label>
-        <label class="form-check d-inline-flex">
-          <label class="form-check-label">
-            <input class="form-check-input" type="radio" name="exportmode" value="all" ng-model="filterexport['mode']" checked />
-            Export all filters
-          </label>
-        </label>
-      </div>
-      <div class="row">
+      <div class="d-flex flex-fill form-group">
         <label class="col-form-label col-3 text-right u-required">Name</label>
         <div class="col">
           <input class="form-control" type="text" name="title" ng-model="filterexport['fileName']" ng-maxlength="200" required />
           <validation-message target="exportForm.title"></validation-message>
+        </div>
+      </div>
+      <div class="form-check">
+        <div class="ml-2">
+          <label class="form-check-label">
+            <input class="form-check-input" type="radio" name="exportmode" value="active" ng-model="filterexport['mode']" checked /> Export active (checked) filters
+          </label>
+        </div>
+        <div class="ml-2">
+          <label class="form-check-label">
+            <input class="form-check-input" type="radio" name="exportmode" value="selected" ng-model="filterexport['mode']" checked /> Export selected filters
+          </label>
+        </div>
+        <div class="ml-2">
+          <label class="form-check-label">
+            <input class="form-check-input" type="radio" name="exportmode" value="all" ng-model="filterexport['mode']" checked /> Export all filters
+          </label>
         </div>
       </div>
     </form>

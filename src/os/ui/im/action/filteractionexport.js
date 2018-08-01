@@ -208,7 +208,7 @@ os.ui.im.action.launchFilterActionExport = function(entries, opt_selected, opt_f
     'icon': 'fa fa-download',
     'x': 'center',
     'y': 'center',
-    'width': '260',
+    'width': '400',
     'height': 'auto',
     'modal': 'true',
     'show-close': 'true'

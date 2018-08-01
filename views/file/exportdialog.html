@@ -2,7 +2,7 @@
   <div class="modal-body">
     <form name="exportForm">
 
-      <div class="d-flex flex-row form-group">
+      <div class="d-flex flex-fill form-group">
         <label class="col-3 col-form-label text-right u-required">Name</label>
         <div class="col">
           <input class="form-control" type="text" name="title" ng-model="options.title" ng-maxlength="200" required/>
@@ -10,14 +10,14 @@
         </div>
       </div>
 
-      <div class="d-flex flex-row form-group">
+      <div class="d-flex flex-fill form-group">
         <label class="col-3 col-form-label text-right">Save To</label>
         <div class="col">
           <select class="form-control" ng-model="persister" ng-options="value as key for (key, value) in exportdialog.persisters" />
         </div>
       </div>
 
-      <div class="d-flex flex-row form-group">
+      <div class="d-flex flex-fill form-group">
         <label class="col-3 col-form-label text-right">Type</label>
         <div class="col">
           <select class="form-control" ng-model="exporter" ng-options="value as key for (key, value) in exportdialog.exporters" />
@@ -34,7 +34,7 @@
   </div>
 
 
-  <div class="modal-footer flex-row justify-content-between">
+  <div class="modal-footer flex-fill justify-content-between">
     <div>
       <ng-pluralize class="align-middle" count="options.items.length" when="{'0': 'Nothing to export.',
                  'one': 'Exporting {} {{itemText}}.',
