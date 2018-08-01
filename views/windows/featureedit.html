@@ -20,7 +20,7 @@
       <div class="d-flex flex-row form-group">
         <label class="col-2 col-form-label text-right">Position</label>
         <div class="col">
-        <position ng-if="ctrl.pointGeometry" name="pointGeometry" geom="ctrl.pointGeometry" x-form="featureEditForm" show-label="false" map-support="true"></position>
+          <position ng-if="ctrl.pointGeometry" name="pointGeometry" geom="ctrl.pointGeometry" x-form="featureEditForm" show-label="false" map-support="true"></position>
         </div>
       </div>
 
@@ -122,13 +122,13 @@
           Label Options
         </div>
         <div ng-attr-id="{{featureLabelsID}}" class="card-body js-style-content collapse">
-              <labelcontrols
-                  labels="ctrl.labels"
-                  columns="ctrl.labelColumns"
-                  show-labels="ctrl.showLabels"
-                  label-color="ctrl.labelColor"
-                  label-size="ctrl.labelSize">
-              </labelcontrols>
+          <labelcontrols
+              labels="ctrl.labels"
+              columns="ctrl.labelColumns"
+              show-labels="ctrl.showLabels"
+              label-color="ctrl.labelColor"
+              label-size="ctrl.labelSize">
+          </labelcontrols>
         </div>
       </div>
     </div>
