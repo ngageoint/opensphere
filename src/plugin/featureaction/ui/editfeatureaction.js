@@ -30,8 +30,8 @@ goog.require('os.ui.filter.ui.editFiltersDirective');
 goog.require('os.ui.im.action.EditFilterActionCtrl');
 goog.require('os.ui.im.action.EventType');
 goog.require('os.ui.im.action.editFilterActionDirective');
+goog.require('os.ui.util.validationMessageDirective');
 goog.require('os.ui.window');
-
 
 
 /**
@@ -89,6 +89,7 @@ plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.onDestroy = function
 
 /**
  * Show a preview of the actions selected
+ * @export
  */
 plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.showActionPreview = function() {
   // get rid of the existing canvas elements to be replaced with new ones
@@ -106,10 +107,6 @@ plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.showActionPreview = 
     }
   }
 };
-goog.exportProperty(
-    plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype,
-    'showActionPreview',
-    plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.showActionPreview);
 
 
 /**
@@ -124,10 +121,9 @@ plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.buildStylePreview = 
   this.styleCanvas.setAttribute('class', 'styleCanvas');
   this.styleCanvas.height = 27;
   this.styleCanvas.width = 150;
-  this.styleCanvas.style.setProperty('vertical-align', 'middle');
 
   // only add this to the applicable action
-  var query = '.filter-action-row:has(option[selected=\'selected\'][value=\'string:featureStyleAction\'])';
+  var query = '.js-filter-action__controls:has(option[selected=\'selected\'][value=\'string:featureStyleAction\'])';
   var curContainer = this.element.find(query);
   curContainer.append(this.styleCanvas);
 
@@ -225,10 +221,9 @@ plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.buildLabelPreview = 
   this.labelCanvas.setAttribute('class', 'labelCanvas');
   this.labelCanvas.height = 24;
   this.labelCanvas.width = 150;
-  this.labelCanvas.style.setProperty('vertical-align', 'middle');
 
   // only add this to the applicable action
-  var query = '.filter-action-row:has(option[selected=\'selected\'][value=\'string:featureLabelAction\'])';
+  var query = '.js-filter-action__controls:has(option[selected=\'selected\'][value=\'string:featureLabelAction\'])';
   var curContainer = this.element.find(query);
   curContainer.append(this.labelCanvas);
 

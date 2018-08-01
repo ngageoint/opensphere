@@ -19,6 +19,7 @@ os.ui.im.action.EventType = {
   UPDATE: 'action:update'
 };
 
+
 /**
  * The edit filter action directive.
  * @return {angular.Directive}
@@ -437,9 +438,11 @@ os.ui.im.action.launchActionConfig = function(action, type) {
       'action': action,
       'type': type,
       'yesText': 'OK',
-      'yesIcon': 'fa fa-check lt-blue-icon',
+      'yesIcon': 'fa fa-check',
+      'yesButtonClass': 'btn-primary',
       'noText': 'Cancel',
-      'noIcon': 'fa fa-ban red-icon'
+      'noIcon': 'fa fa-ban',
+      'noButtonClass': 'btn-secondary'
     };
 
     var windowOptions = {
