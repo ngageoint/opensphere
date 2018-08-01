@@ -1,21 +1,17 @@
 <div class="flex-fill w-100 d-flex flex-column">
   <div class="modal-body">
-    <form name="choiceForm">
-      <table class="table table-striped table-bordered">
-        <tbody>
-          <tr ng-repeat="match in matched">
-            <td>
-              <a ng-click="columnActionPrompt.executeMatch(match, value)" href="#" 
-                 title="{{columnActionPrompt.getToolTip(match, value)}}" ng-bind-html="columnActionPrompt.getDescription(match)"></a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <form name="choiceForm" class="d-flex flex-column">
+      <div ng-repeat="match in matched" ng-class="{'u-bg-body' : $index % 2 == 0}" class="flex-row border">
+        <div class="col">
+          <a ng-click="columnActionPrompt.executeMatch(match, value)" href="#" 
+             title="{{columnActionPrompt.getToolTip(match, value)}}" ng-bind-html="columnActionPrompt.getDescription(match)"></a>
+        </div>
+      </div>
     </form>
   </div>
   <div class="modal-footer">
     <div>
-      <button ng-class="doneButtonClass" class="btn btn-primary" ng-click="columnActionPrompt.close();">
+      <button class="btn btn-primary" ng-click="columnActionPrompt.close();">
         <i class="fa fa fa-ban"></i>
         Cancel
       </button>

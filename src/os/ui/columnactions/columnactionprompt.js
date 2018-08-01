@@ -117,7 +117,7 @@ os.ui.columnactions.launchColumnActionPrompt = function(matched, value, colDef) 
     'colDef': colDef,
     'value': value,
     'doneText': 'Close',
-    'doneIcon': 'fa fa-check icon-blue'
+    'doneIcon': 'fa fa-check'
   };
 
   var windowOptions = {
