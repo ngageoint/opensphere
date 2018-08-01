@@ -34,19 +34,19 @@
 
       <h5 class="c-editfilteraction__header mt-2">Perform the following actions...</h5>
 
-      <div autoheight="25%" siblings=".control-group,.nav-tabs,.c-editfilteraction__header">
+      <div class="h-25">
         <div class="c-editfilteraction__controls mb-1">
           <button class="btn btn-small btn-primary" ng-click="ctrl.addAction()" ng-disabled="ctrl.availableActions.length == 0"
               title="{{ctrl.getAddActionTooltip()}}">
-            <i class="btn-icon fa fa-plus green-icon"></i>
+            <i class="fa fa-plus"></i>
             Add Action
           </button>
           <span ng-if="ctrl.actions.length == 0">
-            <i class="fa fa-warning orange-icon"></i>
+            <i class="fa fa-warning"></i>
             Please create at least one action.
           </span>
         </div>
-        <div autoheight siblings=".c-editfilteraction__controls">
+        <div class="h-25">
           <div class="form-inline js-filter-action__controls" ng-repeat="action in ctrl.actions">
             <select ng-model="action.id" class="form-control col-2"
                 ng-options="val.id as val.label for val in ctrl.availableActions.concat(action.action)"
@@ -67,15 +67,14 @@
     </div>
   </div>
   <div class="modal-footer">
-      <button class="btn btn-primary" ng-click="ctrl.finish()"
-          ng-disabled="actionForm.$invalid || ctrl.isInvalid()">
-        <i class="btn-icon fa fa-check"></i>
-        OK
-      </button>
-      <button class="btn btn-secondary" ng-click="ctrl.cancel()">
-        <i class="btn-icon fa fa-ban"></i>
-        Cancel
-      </button>
-    </div>
+    <button class="btn btn-primary" ng-click="ctrl.finish()"
+        ng-disabled="actionForm.$invalid || ctrl.isInvalid()">
+      <i class="fa fa-check"></i>
+      OK
+    </button>
+    <button class="btn btn-secondary" ng-click="ctrl.cancel()">
+      <i class="fa fa-ban"></i>
+      Cancel
+    </button>
   </div>
 </div>
