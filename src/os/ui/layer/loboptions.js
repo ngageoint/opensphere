@@ -527,7 +527,6 @@ os.ui.layer.LobOptionsCtrl.prototype.getShowEllipse_ = function() {
 
 /**
  * Handle changes to the Show Arrow option.
- * @protected
  * @export
  */
 os.ui.layer.LobOptionsCtrl.prototype.onShowArrowChange = function() {
@@ -550,7 +549,6 @@ os.ui.layer.LobOptionsCtrl.prototype.onShowArrowChange = function() {
 
 /**
  * Handle changes to the Show error option.
- * @protected
  * @export
  */
 os.ui.layer.LobOptionsCtrl.prototype.onShowErrorChange = function() {
@@ -573,7 +571,6 @@ os.ui.layer.LobOptionsCtrl.prototype.onShowErrorChange = function() {
 
 /**
  * Handle changes to the Show Arrow option.
- * @protected
  * @export
  */
 os.ui.layer.LobOptionsCtrl.prototype.onShowEllipseChange = function() {
@@ -598,7 +595,6 @@ os.ui.layer.LobOptionsCtrl.prototype.onShowEllipseChange = function() {
  * Handles changes to arrow size
  * @param {angular.Scope.Event} event
  * @param {number} value
- * @protected
  * @export
  */
 os.ui.layer.LobOptionsCtrl.prototype.onSizeChange = function(event, value) {
@@ -630,7 +626,6 @@ os.ui.layer.LobOptionsCtrl.prototype.onSizeDelay_ = function() {
  * Handles changes to lob length
  * @param {angular.Scope.Event} event
  * @param {number} value
- * @protected
  * @export
  */
 os.ui.layer.LobOptionsCtrl.prototype.onLengthChange = function(event, value) {
@@ -656,7 +651,6 @@ os.ui.layer.LobOptionsCtrl.prototype.onLengthChange = function(event, value) {
  * Handles changes to lob column length
  * @param {angular.Scope.Event} event
  * @param {number} value
- * @protected
  * @export
  */
 os.ui.layer.LobOptionsCtrl.prototype.onColumnLengthChange = function(event, value) {
@@ -688,7 +682,6 @@ os.ui.layer.LobOptionsCtrl.prototype.onColumnLengthDelay_ = function() {
  * Handles changes to bearing error multiplier
  * @param {angular.Scope.Event} event
  * @param {number} value
- * @protected
  * @export
  */
 os.ui.layer.LobOptionsCtrl.prototype.onBearingErrorChange = function(event, value) {
@@ -720,7 +713,6 @@ os.ui.layer.LobOptionsCtrl.prototype.onBearingErrorDelay_ = function() {
  * Handles changes to bearing error multiplier
  * @param {angular.Scope.Event} event
  * @param {number} value
- * @protected
  * @export
  */
 os.ui.layer.LobOptionsCtrl.prototype.onLengthErrorChange = function(event, value) {
@@ -750,7 +742,6 @@ os.ui.layer.LobOptionsCtrl.prototype.onLengthErrorDelay_ = function() {
 
 /**
  * Handles column changes to the lob length multiplier
- * @protected
  * @export
  */
 os.ui.layer.LobOptionsCtrl.prototype.onLengthColumnChange = function() {
@@ -769,7 +760,6 @@ os.ui.layer.LobOptionsCtrl.prototype.onLengthColumnChange = function() {
 
 /**
  * Handles column changes to the lob length error
- * @protected
  * @export
  */
 os.ui.layer.LobOptionsCtrl.prototype.onLengthErrorColumnChange = function() {
@@ -788,7 +778,6 @@ os.ui.layer.LobOptionsCtrl.prototype.onLengthErrorColumnChange = function() {
 
 /**
  * Handles changes to the length type
- * @protected
  * @export
  */
 os.ui.layer.LobOptionsCtrl.prototype.onLengthTypeChange = function() {
@@ -807,7 +796,6 @@ os.ui.layer.LobOptionsCtrl.prototype.onLengthTypeChange = function() {
 
 /**
  * Handles column changes to the bearing
- * @protected
  * @export
  */
 os.ui.layer.LobOptionsCtrl.prototype.onBearingColumnChange = function() {
@@ -826,7 +814,6 @@ os.ui.layer.LobOptionsCtrl.prototype.onBearingColumnChange = function() {
 
 /**
  * Handles column changes to the bearing error
- * @protected
  * @export
  */
 os.ui.layer.LobOptionsCtrl.prototype.onBearingErrorColumnChange = function() {
@@ -845,7 +832,6 @@ os.ui.layer.LobOptionsCtrl.prototype.onBearingErrorColumnChange = function() {
 
 /**
  * Handles length unit changes
- * @protected
  * @export
  */
 os.ui.layer.LobOptionsCtrl.prototype.onLengthUnitChange = function() {
@@ -864,7 +850,6 @@ os.ui.layer.LobOptionsCtrl.prototype.onLengthUnitChange = function() {
 
 /**
  * Handles arrow unit changes
- * @protected
  * @export
  */
 os.ui.layer.LobOptionsCtrl.prototype.onArrowUnitChange = function() {
@@ -883,7 +868,6 @@ os.ui.layer.LobOptionsCtrl.prototype.onArrowUnitChange = function() {
 
 /**
  * Handles length error unit changes
- * @protected
  * @export
  */
 os.ui.layer.LobOptionsCtrl.prototype.onLengthErrorUnitChange = function() {
