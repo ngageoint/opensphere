@@ -18,6 +18,7 @@ goog.require('os.ui.util.autoHeightDirective');
 goog.require('os.ui.window');
 
 
+
 /**
  * The descriptioninfo directive
  * @return {angular.Directive}
@@ -25,6 +26,7 @@ goog.require('os.ui.window');
 os.ui.descriptionInfoDirective = function() {
   return {
     restrict: 'E',
+    replace: true,
     scope: {
       'description': '='
     },
