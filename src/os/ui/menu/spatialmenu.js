@@ -946,7 +946,7 @@ os.ui.menu.spatial.onLayerPicker_ = function(event) {
     var windowOptions = {
       'id': 'spatiallayerchooser',
       'label': 'Choose Layers',
-      'icon': 'fa fa-align-justify orange-icon',
+      'icon': 'fa fa-align-justify',
       'x': 'center',
       'y': 'center',
       'width': '350',
@@ -959,7 +959,7 @@ os.ui.menu.spatial.onLayerPicker_ = function(event) {
       'show-close': 'true'
     };
 
-    var template = '<layerchooser></layerchooser>';
+    var template = '<layerchooser class="flex-fill d-flex"></layerchooser>';
     os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
   } else {
     var layerIds = [];

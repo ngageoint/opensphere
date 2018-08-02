@@ -172,7 +172,7 @@ os.ui.data.AddColumnCtrl.launch = function(source) {
     'modal': true,
     'width': 500,
     'height': 'auto',
-    'icon': 'color-add fa fa-plus'
+    'icon': 'fa fa-plus'
   };
 
   var scopeOptions = {
