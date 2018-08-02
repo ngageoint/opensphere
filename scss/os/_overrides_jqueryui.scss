@@ -4,6 +4,11 @@
 .ui-widget {
   font-size: $font-size-base;
 
+  // Dont let jquery resize our bootstrap close button
+  button.close {
+    font-size: $close-font-size;
+  }
+
   input {
     font-size: $font-size-base;
   }
@@ -13,6 +18,10 @@
   background: $body-bg;
   border: $border-width solid $border-color;
   color: $body-color;
+
+  .ui-spinner-input {
+    background: $input-bg;
+  }
 
   a {
     color: $body-color;
@@ -120,4 +129,11 @@
 .ui-widget-content .ui-priority-primary {
   font-weight: normal;
   opacity: 1;
+}
+
+.ui-state-active,
+.ui-widget-content .ui-state-active,
+.ui-widget-header .ui-state-active {
+  @include gradient-bg($dropdown-link-hover-bg);
+  background: none;
 }

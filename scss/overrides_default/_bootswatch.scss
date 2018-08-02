@@ -14,3 +14,38 @@ $web-font-path: "https://fonts.googleapis.com/css?family=Open+Sans:400,700" !def
     }
   }
 }
+
+.bg-dark {
+  &.navbar {
+    .form-control,
+    .border,
+    .btn {
+      border-color: $dark !important;
+    }
+
+    .btn.active {
+      border-color: $black !important;
+    }
+  }
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+  &:hover {
+    background-color: $dark !important;
+    opacity: .5;
+  }
+}
+
+.progress {
+  height: 1rem;
+
+  .progress-bar {
+    color: $black;
+    font-size: 1rem;
+  }
+}
+
+.c-navtop .c-navtop__bottom .nav-link.active {
+  color: $primary !important;
+}

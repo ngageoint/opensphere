@@ -53,3 +53,9 @@ $web-font-path: "https://fonts.googleapis.com/css?family=Open+Sans:400,700" !def
     border-bottom-color: $modal-content-bg;
   }
 }
+
+@each $color, $value in $theme-colors {
+  .btn-outline-#{$color} {
+    border-color: $value;
+  }
+}
