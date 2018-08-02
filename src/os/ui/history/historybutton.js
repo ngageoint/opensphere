@@ -3,7 +3,7 @@ goog.provide('os.ui.history.historyButtonDirective');
 
 goog.require('os.ui.MenuButtonCtrl');
 goog.require('os.ui.Module');
-goog.require('os.ui.history.historyViewDirective');
+goog.require('os.ui.historyDirective');
 
 
 /**
