@@ -173,10 +173,10 @@ os.ui.layer.LobOptionsCtrl = function($scope, $element) {
   /**
    * @type {string}
    */
-  this['helpText'] = '<p>Line of Bearing Error allows you to show a +/- error range on the line length and ' +
-    'orientation with arcs. Absence of bearing error shows lines instead of arcs. Absence of length error shows a ' +
-    'single arc. Note that the bearing error is not accurate for line lengths greater than 10,000km!' +
-    '</p><img src="' + os.ROOT + '/images/loberror.png"></img>';
+  this['helpText'] = '<div><p>Line of Bearing Error allows you to show a +/- error range on the line length and ' +
+      'orientation with arcs. Absence of bearing error shows lines instead of arcs. Absence of length error shows a ' +
+      'single arc. Note that the bearing error is not accurate for line lengths greater than 10,000km!' +
+      '</p><img class="c-loboptions-popover__image" src="' + os.ROOT + '/images/loberror.png"></img></div>';
 
   $scope.$on('length.slidestop', this.onLengthChange.bind(this));
 };
@@ -528,6 +528,7 @@ os.ui.layer.LobOptionsCtrl.prototype.getShowEllipse_ = function() {
 /**
  * Handle changes to the Show Arrow option.
  * @protected
+ * @export
  */
 os.ui.layer.LobOptionsCtrl.prototype.onShowArrowChange = function() {
   var items = /** @type {Array} */ (this.scope['items']);
@@ -545,15 +546,12 @@ os.ui.layer.LobOptionsCtrl.prototype.onShowArrowChange = function() {
     this.createCommand(fn);
   }
 };
-goog.exportProperty(
-    os.ui.layer.LobOptionsCtrl.prototype,
-    'onShowArrowChange',
-    os.ui.layer.LobOptionsCtrl.prototype.onShowArrowChange);
 
 
 /**
  * Handle changes to the Show error option.
  * @protected
+ * @export
  */
 os.ui.layer.LobOptionsCtrl.prototype.onShowErrorChange = function() {
   var items = /** @type {Array} */ (this.scope['items']);
@@ -571,15 +569,12 @@ os.ui.layer.LobOptionsCtrl.prototype.onShowErrorChange = function() {
     this.createCommand(fn);
   }
 };
-goog.exportProperty(
-    os.ui.layer.LobOptionsCtrl.prototype,
-    'onShowErrorChange',
-    os.ui.layer.LobOptionsCtrl.prototype.onShowErrorChange);
 
 
 /**
  * Handle changes to the Show Arrow option.
  * @protected
+ * @export
  */
 os.ui.layer.LobOptionsCtrl.prototype.onShowEllipseChange = function() {
   var items = /** @type {Array} */ (this.scope['items']);
@@ -597,10 +592,6 @@ os.ui.layer.LobOptionsCtrl.prototype.onShowEllipseChange = function() {
     this.createCommand(fn);
   }
 };
-goog.exportProperty(
-    os.ui.layer.LobOptionsCtrl.prototype,
-    'onShowEllipseChange',
-    os.ui.layer.LobOptionsCtrl.prototype.onShowEllipseChange);
 
 
 /**
@@ -608,16 +599,13 @@ goog.exportProperty(
  * @param {angular.Scope.Event} event
  * @param {number} value
  * @protected
+ * @export
  */
 os.ui.layer.LobOptionsCtrl.prototype.onSizeChange = function(event, value) {
   if (!this.isDisposed()) {
     this.sizeDelay_.start();
   }
 };
-goog.exportProperty(
-    os.ui.layer.LobOptionsCtrl.prototype,
-    'onSizeChange',
-    os.ui.layer.LobOptionsCtrl.prototype.onSizeChange);
 
 
 /**
@@ -643,6 +631,7 @@ os.ui.layer.LobOptionsCtrl.prototype.onSizeDelay_ = function() {
  * @param {angular.Scope.Event} event
  * @param {number} value
  * @protected
+ * @export
  */
 os.ui.layer.LobOptionsCtrl.prototype.onLengthChange = function(event, value) {
   if (event) {
@@ -661,10 +650,6 @@ os.ui.layer.LobOptionsCtrl.prototype.onLengthChange = function(event, value) {
 
   this.createCommand(fn);
 };
-goog.exportProperty(
-    os.ui.layer.LobOptionsCtrl.prototype,
-    'onLengthChange',
-    os.ui.layer.LobOptionsCtrl.prototype.onLengthChange);
 
 
 /**
@@ -672,16 +657,13 @@ goog.exportProperty(
  * @param {angular.Scope.Event} event
  * @param {number} value
  * @protected
+ * @export
  */
 os.ui.layer.LobOptionsCtrl.prototype.onColumnLengthChange = function(event, value) {
   if (!this.isDisposed()) {
     this.columnLengthDelay_.start();
   }
 };
-goog.exportProperty(
-    os.ui.layer.LobOptionsCtrl.prototype,
-    'onColumnLengthChange',
-    os.ui.layer.LobOptionsCtrl.prototype.onColumnLengthChange);
 
 
 /**
@@ -707,16 +689,13 @@ os.ui.layer.LobOptionsCtrl.prototype.onColumnLengthDelay_ = function() {
  * @param {angular.Scope.Event} event
  * @param {number} value
  * @protected
+ * @export
  */
 os.ui.layer.LobOptionsCtrl.prototype.onBearingErrorChange = function(event, value) {
   if (!this.isDisposed()) {
     this.bearingErrorDelay_.start();
   }
 };
-goog.exportProperty(
-    os.ui.layer.LobOptionsCtrl.prototype,
-    'onBearingErrorChange',
-    os.ui.layer.LobOptionsCtrl.prototype.onBearingErrorChange);
 
 
 /**
@@ -742,16 +721,13 @@ os.ui.layer.LobOptionsCtrl.prototype.onBearingErrorDelay_ = function() {
  * @param {angular.Scope.Event} event
  * @param {number} value
  * @protected
+ * @export
  */
 os.ui.layer.LobOptionsCtrl.prototype.onLengthErrorChange = function(event, value) {
   if (!this.isDisposed()) {
     this.lengthErrorDelay_.start();
   }
 };
-goog.exportProperty(
-    os.ui.layer.LobOptionsCtrl.prototype,
-    'onLengthErrorChange',
-    os.ui.layer.LobOptionsCtrl.prototype.onLengthErrorChange);
 
 
 /**
@@ -775,6 +751,7 @@ os.ui.layer.LobOptionsCtrl.prototype.onLengthErrorDelay_ = function() {
 /**
  * Handles column changes to the lob length multiplier
  * @protected
+ * @export
  */
 os.ui.layer.LobOptionsCtrl.prototype.onLengthColumnChange = function() {
   var fn = goog.bind(
@@ -788,15 +765,12 @@ os.ui.layer.LobOptionsCtrl.prototype.onLengthColumnChange = function() {
 
   this.createCommand(fn);
 };
-goog.exportProperty(
-    os.ui.layer.LobOptionsCtrl.prototype,
-    'onLengthColumnChange',
-    os.ui.layer.LobOptionsCtrl.prototype.onLengthColumnChange);
 
 
 /**
  * Handles column changes to the lob length error
  * @protected
+ * @export
  */
 os.ui.layer.LobOptionsCtrl.prototype.onLengthErrorColumnChange = function() {
   var fn = goog.bind(
@@ -810,15 +784,12 @@ os.ui.layer.LobOptionsCtrl.prototype.onLengthErrorColumnChange = function() {
 
   this.createCommand(fn);
 };
-goog.exportProperty(
-    os.ui.layer.LobOptionsCtrl.prototype,
-    'onLengthErrorColumnChange',
-    os.ui.layer.LobOptionsCtrl.prototype.onLengthErrorColumnChange);
 
 
 /**
  * Handles changes to the length type
  * @protected
+ * @export
  */
 os.ui.layer.LobOptionsCtrl.prototype.onLengthTypeChange = function() {
   var fn = goog.bind(
@@ -832,14 +803,12 @@ os.ui.layer.LobOptionsCtrl.prototype.onLengthTypeChange = function() {
 
   this.createCommand(fn);
 };
-goog.exportProperty(
-    os.ui.layer.LobOptionsCtrl.prototype,
-    'onLengthTypeChange',
-    os.ui.layer.LobOptionsCtrl.prototype.onLengthTypeChange);
+
 
 /**
  * Handles column changes to the bearing
  * @protected
+ * @export
  */
 os.ui.layer.LobOptionsCtrl.prototype.onBearingColumnChange = function() {
   var fn = goog.bind(
@@ -853,15 +822,12 @@ os.ui.layer.LobOptionsCtrl.prototype.onBearingColumnChange = function() {
 
   this.createCommand(fn);
 };
-goog.exportProperty(
-    os.ui.layer.LobOptionsCtrl.prototype,
-    'onBearingColumnChange',
-    os.ui.layer.LobOptionsCtrl.prototype.onBearingColumnChange);
 
 
 /**
  * Handles column changes to the bearing error
  * @protected
+ * @export
  */
 os.ui.layer.LobOptionsCtrl.prototype.onBearingErrorColumnChange = function() {
   var fn = goog.bind(
@@ -875,15 +841,12 @@ os.ui.layer.LobOptionsCtrl.prototype.onBearingErrorColumnChange = function() {
 
   this.createCommand(fn);
 };
-goog.exportProperty(
-    os.ui.layer.LobOptionsCtrl.prototype,
-    'onBearingErrorColumnChange',
-    os.ui.layer.LobOptionsCtrl.prototype.onBearingErrorColumnChange);
 
 
 /**
  * Handles length unit changes
  * @protected
+ * @export
  */
 os.ui.layer.LobOptionsCtrl.prototype.onLengthUnitChange = function() {
   var fn = goog.bind(
@@ -897,15 +860,12 @@ os.ui.layer.LobOptionsCtrl.prototype.onLengthUnitChange = function() {
 
   this.createCommand(fn);
 };
-goog.exportProperty(
-    os.ui.layer.LobOptionsCtrl.prototype,
-    'onLengthUnitChange',
-    os.ui.layer.LobOptionsCtrl.prototype.onLengthUnitChange);
 
 
 /**
  * Handles arrow unit changes
  * @protected
+ * @export
  */
 os.ui.layer.LobOptionsCtrl.prototype.onArrowUnitChange = function() {
   var fn = goog.bind(
@@ -919,15 +879,12 @@ os.ui.layer.LobOptionsCtrl.prototype.onArrowUnitChange = function() {
 
   this.createCommand(fn);
 };
-goog.exportProperty(
-    os.ui.layer.LobOptionsCtrl.prototype,
-    'onArrowUnitChange',
-    os.ui.layer.LobOptionsCtrl.prototype.onArrowUnitChange);
 
 
 /**
  * Handles length error unit changes
  * @protected
+ * @export
  */
 os.ui.layer.LobOptionsCtrl.prototype.onLengthErrorUnitChange = function() {
   var fn = goog.bind(
@@ -941,20 +898,13 @@ os.ui.layer.LobOptionsCtrl.prototype.onLengthErrorUnitChange = function() {
 
   this.createCommand(fn);
 };
-goog.exportProperty(
-    os.ui.layer.LobOptionsCtrl.prototype,
-    'onLengthErrorUnitChange',
-    os.ui.layer.LobOptionsCtrl.prototype.onLengthErrorUnitChange);
 
 
 /**
  * Adds ellipse options when rendering ellispe
  * @return {string}
+ * @export
  */
 os.ui.layer.LobOptionsCtrl.prototype.getEllipseUI = function() {
   return 'ellipseoptions';
 };
-goog.exportProperty(
-    os.ui.layer.LobOptionsCtrl.prototype,
-    'getEllipseUI',
-    os.ui.layer.LobOptionsCtrl.prototype.getEllipseUI);
