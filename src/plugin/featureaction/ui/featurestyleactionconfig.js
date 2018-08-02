@@ -15,7 +15,6 @@ goog.require('os.ui.uiSwitchDirective');
 goog.require('plugin.im.action.feature.StyleAction');
 goog.require('plugin.im.action.feature.ui.ActionConfigCtrl');
 
-
 /**
  * Directive to configure a feature style action.
  * @return {angular.Directive}
@@ -25,24 +24,21 @@ plugin.im.action.feature.ui.styleConfigDirective = function() {
     restrict: 'E',
     replace: true,
     template: '<div><vectorstylecontrols color="color" opacity="opacity" size="size" ' +
-        'icon="icon" center-icon="centerIcon" icon-set="ctrl.iconSet" icon-src="ctrl.iconSrc" ' +
-        'shape="shape" shapes="shapes" center-shape="centerShape" center-shapes="centerShapes" ' +
-        'show-color-reset="true"></vectorstylecontrols>' +
-        '<iconstylecontrols ng-show="ctrl.showRotationOption()" columns="columns" show-rotation="showRotation" ' +
-        'rotation-column="rotationColumn"></iconstylecontrols></div>',
+    'icon="icon" center-icon="centerIcon" icon-set="ctrl.iconSet" icon-src="ctrl.iconSrc" ' +
+    'shape="shape" shapes="shapes" center-shape="centerShape" center-shapes="centerShapes" ' +
+    'show-color-reset="true"></vectorstylecontrols>' +
+    '<iconstylecontrols ng-show="ctrl.showRotationOption()" columns="columns" show-rotation="showRotation" ' +
+    'rotation-column="rotationColumn"></iconstylecontrols></div>',
     controller: plugin.im.action.feature.ui.StyleConfigCtrl,
     controllerAs: 'ctrl'
   };
 };
-
 
 /**
  * Add the directive to the module.
  */
 os.ui.Module.directive(plugin.im.action.feature.StyleAction.CONFIG_UI,
     [plugin.im.action.feature.ui.styleConfigDirective]);
-
-
 
 /**
  * Controller for setting a feature style.
@@ -53,7 +49,8 @@ os.ui.Module.directive(plugin.im.action.feature.StyleAction.CONFIG_UI,
  * @ngInject
  */
 plugin.im.action.feature.ui.StyleConfigCtrl = function($scope, $element) {
-  plugin.im.action.feature.ui.StyleConfigCtrl.base(this, 'constructor', $scope, $element);
+  plugin.im.action.feature.ui.StyleConfigCtrl.base(this, 'constructor', $scope,
+      $element);
 
   /**
    * Icons available to the icon picker.
@@ -72,7 +69,8 @@ plugin.im.action.feature.ui.StyleConfigCtrl = function($scope, $element) {
    * @type {Object}
    * @protected
    */
-  this.styleConfig = /** @type {!Object} */ (os.object.unsafeClone(os.style.DEFAULT_VECTOR_CONFIG));
+  this.styleConfig = /** @type {!Object} */ (os.object.unsafeClone(
+      os.style.DEFAULT_VECTOR_CONFIG));
 
   /**
    * The original style color, for the Reset button.
@@ -89,22 +87,28 @@ plugin.im.action.feature.ui.StyleConfigCtrl = function($scope, $element) {
   $scope.$on('color.reset', this.onColorReset.bind(this));
   $scope.$on('opacity.slidestop', this.onOpacityChange.bind(this));
   $scope.$on('size.slidestop', this.onSizeChange.bind(this));
-  $scope.$on(os.ui.icon.IconPickerEventType.CHANGE, this.onIconChange.bind(this));
-  $scope.$on(os.ui.layer.VectorStyleControlsEventType.SHAPE_CHANGE, this.onShapeChange.bind(this));
-  $scope.$on(os.ui.layer.VectorStyleControlsEventType.CENTER_SHAPE_CHANGE, this.onCenterShapeChange.bind(this));
-  $scope.$on(os.ui.layer.VectorStyleControlsEventType.SHOW_ROTATION_CHANGE, this.onShowRotationChange_.bind(this));
-  $scope.$on(os.ui.layer.VectorStyleControlsEventType.ROTATION_COLUMN_CHANGE, this.onRotationColumnChange_.bind(this));
+  $scope.$on(os.ui.icon.IconPickerEventType.CHANGE,
+      this.onIconChange.bind(this));
+  $scope.$on(os.ui.layer.VectorStyleControlsEventType.SHAPE_CHANGE,
+      this.onShapeChange.bind(this));
+  $scope.$on(os.ui.layer.VectorStyleControlsEventType.CENTER_SHAPE_CHANGE,
+      this.onCenterShapeChange.bind(this));
+  $scope.$on(os.ui.layer.VectorStyleControlsEventType.SHOW_ROTATION_CHANGE,
+      this.onShowRotationChange_.bind(this));
+  $scope.$on(os.ui.layer.VectorStyleControlsEventType.ROTATION_COLUMN_CHANGE,
+      this.onRotationColumnChange_.bind(this));
   this.initialize();
 };
-goog.inherits(plugin.im.action.feature.ui.StyleConfigCtrl, plugin.im.action.feature.ui.ActionConfigCtrl);
-
+goog.inherits(plugin.im.action.feature.ui.StyleConfigCtrl,
+    plugin.im.action.feature.ui.ActionConfigCtrl);
 
 /**
  * @inheritDoc
  */
 plugin.im.action.feature.ui.StyleConfigCtrl.prototype.initialize = function() {
   if (this.styleConfig) {
-    var color = /** @type {Array<number>} */ (os.style.getConfigColor(this.styleConfig, true));
+    var color = /** @type {Array<number>} */ (os.style.getConfigColor(
+        this.styleConfig, true));
     if (color) {
       this.scope['color'] = this.initialColor = goog.color.rgbArrayToHex(color);
       this.scope['opacity'] = color.length > 3 ? color[3] : 1.0;
@@ -113,16 +117,21 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.initialize = function() {
       this.scope['opacity'] = 1.0;
     }
 
-    os.style.setConfigColor(this.styleConfig, os.style.getConfigColor(this.styleConfig));
+    os.style.setConfigColor(this.styleConfig,
+        os.style.getConfigColor(this.styleConfig));
 
     this.scope['size'] = os.style.getConfigSize(this.styleConfig);
 
-    this.scope['shape'] = this.styleConfig[os.style.StyleField.SHAPE] || os.style.DEFAULT_SHAPE;
+    this.scope['shape'] = this.styleConfig[os.style.StyleField.SHAPE] ||
+        os.style.DEFAULT_SHAPE;
     this.updateIcon_();
-    this.scope['centerShape'] = this.styleConfig[os.style.StyleField.CENTER_SHAPE] || os.style.DEFAULT_CENTER_SHAPE;
+    this.scope['centerShape'] = this.styleConfig[os.style.StyleField.CENTER_SHAPE] ||
+        os.style.DEFAULT_CENTER_SHAPE;
     this.updateCenterIcon_();
-    this.scope['showRotation'] = this.styleConfig[os.style.StyleField.SHOW_ROTATION] || false;
-    this.scope['rotationColumn'] = this.styleConfig[os.style.StyleField.ROTATION_COLUMN] || '';
+    this.scope['showRotation'] = this.styleConfig[os.style.StyleField.SHOW_ROTATION] ||
+        false;
+    this.scope['rotationColumn'] = this.styleConfig[os.style.StyleField.ROTATION_COLUMN] ||
+        '';
 
     if (this.type) {
       var dm = os.data.DataManager.getInstance();
@@ -131,12 +140,15 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.initialize = function() {
         source = /** @type {!os.source.Vector} */ (source);
 
         var shapes = goog.object.getKeys(os.style.SHAPES);
-        this.scope['shapes'] = goog.array.filter(shapes, source.supportsShape, source);
-        this.scope['centerShapes'] = goog.array.filter(shapes, source.isNotEllipseOrLOBOrDefault, source);
+        this.scope['shapes'] = goog.array.filter(shapes, source.supportsShape,
+            source);
+        this.scope['centerShapes'] = goog.array.filter(shapes,
+            source.isNotEllipseOrLOBOrDefault, source);
         this.scope['columns'] = os.ui.layer.getColumnsFromSource(source);
 
         // autodetect
-        if (goog.string.isEmptyOrWhitespace(this.scope['rotationColumn']) && source.hasColumn(os.Fields.BEARING)) {
+        if (goog.string.isEmptyOrWhitespace(this.scope['rotationColumn']) &&
+            source.hasColumn(os.Fields.BEARING)) {
           this.scope['rotationColumn'] = os.Fields.BEARING;
           this.onRotationColumnChange_(undefined, this.scope['rotationColumn']);
         }
@@ -146,7 +158,6 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.initialize = function() {
 
   plugin.im.action.feature.ui.StyleConfigCtrl.base(this, 'initialize');
 };
-
 
 /**
  * @inheritDoc
@@ -159,20 +170,22 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.saveAction = function() {
   }
 };
 
-
 /**
  * Handle color change.
  * @param {?angular.Scope.Event} event The Angular event.
  * @param {string|undefined} value The new color value.
  * @protected
  */
-plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onColorChange = function(event, value) {
+plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onColorChange = function(
+    event, value) {
   if (event) {
     event.stopPropagation();
   }
 
   if (this.styleConfig) {
-    var color = value ? os.style.toRgbaString(value) : os.style.DEFAULT_LAYER_COLOR;
+    var color = value ?
+        os.style.toRgbaString(value) :
+        os.style.DEFAULT_LAYER_COLOR;
 
     // update the color with the correct opacity
     var colorArr = os.color.toRgbArray(color);
@@ -188,7 +201,6 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onColorChange = function(e
   }
 };
 
-
 /**
  * Handle color reset.
  * @param {?angular.Scope.Event} event The Angular event.
@@ -203,14 +215,14 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onColorReset = function(ev
   this.onColorChange(event, this.initialColor);
 };
 
-
 /**
  * Handle icon change.
  * @param {?angular.Scope.Event} event The Angular event.
  * @param {osx.icon.Icon} value The new value.
  * @protected
  */
-plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onIconChange = function(event, value) {
+plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onIconChange = function(
+    event, value) {
   if (event) {
     event.stopPropagation();
   }
@@ -220,14 +232,14 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onIconChange = function(ev
   }
 };
 
-
 /**
  * Handle changes to opacity.
  * @param {?angular.Scope.Event} event The Angular event.
  * @param {number} value
  * @protected
  */
-plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onOpacityChange = function(event, value) {
+plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onOpacityChange = function(
+    event, value) {
   if (event) {
     event.stopPropagation();
   }
@@ -237,14 +249,14 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onOpacityChange = function
   }
 };
 
-
 /**
  * Handle changes to size.
  * @param {?angular.Scope.Event} event The Angular event.
  * @param {number} value
  * @protected
  */
-plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onSizeChange = function(event, value) {
+plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onSizeChange = function(
+    event, value) {
   if (event) {
     event.stopPropagation();
   }
@@ -254,14 +266,14 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onSizeChange = function(ev
   }
 };
 
-
 /**
  * Handle changes to the shape.
  * @param {?angular.Scope.Event} event The Angular event.
  * @param {string} value The new value.
  * @protected
  */
-plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onShapeChange = function(event, value) {
+plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onShapeChange = function(
+    event, value) {
   if (event) {
     event.stopPropagation();
   }
@@ -273,14 +285,14 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onShapeChange = function(e
   this.updateIcon_();
 };
 
-
 /**
  * Handle changes to the shape.
  * @param {?angular.Scope.Event} event The Angular event.
  * @param {string} value The new value.
  * @protected
  */
-plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onCenterShapeChange = function(event, value) {
+plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onCenterShapeChange = function(
+    event, value) {
   if (event) {
     event.stopPropagation();
   }
@@ -292,14 +304,15 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onCenterShapeChange = func
   this.updateCenterIcon_();
 };
 
-
 /**
  * Update the displayed icon.
  * @private
  */
 plugin.im.action.feature.ui.StyleConfigCtrl.prototype.updateIcon_ = function() {
-  if (this.styleConfig && this.styleConfig[os.style.StyleField.SHAPE] == os.style.ShapeType.ICON) {
-    this.scope['icon'] = os.style.getConfigIcon(this.styleConfig) || os.ui.file.kml.getDefaultIcon();
+  if (this.styleConfig && this.styleConfig[os.style.StyleField.SHAPE] ==
+      os.style.ShapeType.ICON) {
+    this.scope['icon'] = os.style.getConfigIcon(this.styleConfig) ||
+        os.ui.file.kml.getDefaultIcon();
   } else {
     this.scope['icon'] = null;
   }
@@ -307,21 +320,21 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.updateIcon_ = function() {
   this.onIconChange(null, this.scope['icon']);
 };
 
-
 /**
  * Update the displayed icon.
  * @private
  */
 plugin.im.action.feature.ui.StyleConfigCtrl.prototype.updateCenterIcon_ = function() {
-  if (this.styleConfig && this.styleConfig[os.style.StyleField.CENTER_SHAPE] == os.style.ShapeType.ICON) {
-    this.scope['centerIcon'] = os.style.getConfigIcon(this.styleConfig) || os.ui.file.kml.getDefaultIcon();
+  if (this.styleConfig && this.styleConfig[os.style.StyleField.CENTER_SHAPE] ==
+      os.style.ShapeType.ICON) {
+    this.scope['centerIcon'] = os.style.getConfigIcon(this.styleConfig) ||
+        os.ui.file.kml.getDefaultIcon();
   } else {
     this.scope['centerIcon'] = null;
   }
 
   this.onIconChange(null, this.scope['centerIcon']);
 };
-
 
 /**
  * When to show the icon rotation option
@@ -332,7 +345,9 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.showRotationOption = funct
     var shape = this.scope['shape'] || '';
     var center = this.scope['centerShape'] || '';
     return shape == os.style.ShapeType.ICON ||
-      ((os.style.ELLIPSE_REGEXP.test(shape) || os.style.LOB_REGEXP.test(shape)) && center == os.style.ShapeType.ICON);
+        ((os.style.ELLIPSE_REGEXP.test(shape) ||
+            os.style.LOB_REGEXP.test(shape)) && center ==
+            os.style.ShapeType.ICON);
   }
 
   return false;
@@ -342,14 +357,14 @@ goog.exportProperty(
     'showRotationOption',
     plugin.im.action.feature.ui.StyleConfigCtrl.prototype.showRotationOption);
 
-
 /**
  * Handle changes to the Show Rotation option.
  * @param {angular.Scope.Event} event
  * @param {boolean} value
  * @private
  */
-plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onShowRotationChange_ = function(event, value) {
+plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onShowRotationChange_ = function(
+    event, value) {
   if (event) {
     event.stopPropagation();
   }
@@ -359,14 +374,14 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onShowRotationChange_ = fu
   }
 };
 
-
 /**
  * Handles column changes to the rotation
  * @param {angular.Scope.Event=} opt_event
  * @param {string=} opt_value
  * @private
  */
-plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onRotationColumnChange_ = function(opt_event, opt_value) {
+plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onRotationColumnChange_ = function(
+    opt_event, opt_value) {
   if (opt_event) {
     opt_event.stopPropagation();
   }

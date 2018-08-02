@@ -3,8 +3,6 @@ goog.provide('plugin.im.action.feature.Entry');
 goog.require('os.feature');
 goog.require('os.im.action.FilterActionEntry');
 
-
-
 /**
  * Filter entry that performs actions on matched features.
  * @extends {os.im.action.FilterActionEntry<ol.Feature>}

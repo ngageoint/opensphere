@@ -10,6 +10,7 @@ goog.require('os.ui.im.action.FilterActionImportUI');
 goog.require('plugin.im.action.feature');
 goog.require('plugin.im.action.feature.LabelAction');
 goog.require('plugin.im.action.feature.Manager');
+goog.require('plugin.im.action.feature.SoundAction');
 goog.require('plugin.im.action.feature.StyleAction');
 goog.require('plugin.im.action.feature.legend');
 goog.require('plugin.im.action.feature.menu');
@@ -17,6 +18,7 @@ goog.require('plugin.im.action.feature.node.menu');
 goog.require('plugin.im.action.feature.ui.featureActionsDirective');
 goog.require('plugin.im.action.feature.ui.labelConfigDirective');
 goog.require('plugin.im.action.feature.ui.legendSettingsDirective');
+goog.require('plugin.im.action.feature.ui.soundConfigDirective');
 goog.require('plugin.im.action.feature.ui.styleConfigDirective');
 
 
@@ -56,6 +58,7 @@ plugin.im.action.feature.Plugin.prototype.init = function() {
   var manager = plugin.im.action.feature.Manager.getInstance();
   manager.registerAction(new plugin.im.action.feature.LabelAction());
   manager.registerAction(new plugin.im.action.feature.StyleAction());
+  manager.registerAction(new plugin.im.action.feature.SoundAction());
 
   // register import UI
   os.ui.im.ImportManager.getInstance().registerImportUI(
