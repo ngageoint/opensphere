@@ -179,7 +179,7 @@ os.ui.datetime.DateTimeCtrl.prototype.updateValue = function(opt_type) {
   goog.log.fine(os.ui.datetime.DateTimeCtrl.LOGGER_, 'dateTime.updateValue');
 
   // if the date was set, zero out any hour/min/sec fields that aren't set yet
-  if (opt_type && opt_type === 'date' && goog.isDateLike(this['date'])) {
+  if (opt_type && opt_type === 'date' && goog.isDateLike(this['date']) && !isNaN(this['date'].getTime())) {
     if (!goog.isDefAndNotNull(this['hour'])) {
       this['hour'] = 0;
     }
@@ -191,8 +191,8 @@ os.ui.datetime.DateTimeCtrl.prototype.updateValue = function(opt_type) {
     }
   }
 
-  if (goog.isDateLike(this['date']) && goog.isDefAndNotNull(this['hour']) && goog.isDefAndNotNull(this['minute']) &&
-      goog.isDefAndNotNull(this['second'])) {
+  if (goog.isDateLike(this['date']) && !isNaN(this['date'].getTime()) && goog.isDefAndNotNull(this['hour']) &&
+     goog.isDefAndNotNull(this['minute']) && goog.isDefAndNotNull(this['second'])) {
     // update date field with hour/min/sec control values
     var utcDate = new Date(this['date'].getTime() - this['date'].getTimezoneOffset() * 60000);
     utcDate.setUTCHours(this['hour']);
