@@ -15,19 +15,19 @@ goog.require('os.ui.slick.AbstractNodeUICtrl');
 /**
  * @type {string}
  */
-os.ui.node.DefaultLayerNodeUITemplate = '<span class="pull-right" ng-if="nodeUi.show()">' +
-
+os.ui.node.DefaultLayerNodeUITemplate = '<span ng-if="nodeUi.show()" class="d-flex">' +
     '<span ng-if="nodeUi.canFavorite()">' +
     '<favorite ng-show="nodeUi.show()" type="descriptor" key="{{nodeUi.descId}}" ' +
       'value="{{nodeUi.layerLabel}}"></favorite></span>' +
 
     '<span ng-if="nodeUi.filtersEnabled" ng-click="nodeUi.filter()">' +
-    '<i class="fa fa-filter fa-fw c-glyph" title="Manage filters"' +
-    'ng-class="{\'text-success\': nodeUi.filtered}"></i></span>' +
+      '<i class="fa fa-filter fa-fw c-glyph" title="Manage filters"' +
+      'ng-class="{\'text-success\': nodeUi.filtered, \'c-glyph__off\': !nodeUi.filtered}"></i></span>' +
 
-    '<span ng-if="nodeUi.isRemovable()" ng-click="nodeUi.remove()">' +
-    '<i class="fa fa-times fa-fw text-danger c-glyph" title="Remove the layer"></i></span></span>';
+    '<button ng-if="nodeUi.isRemovable()" type="button" class="close mx-1" ng-click="nodeUi.remove()" ' +
+      'aria-label="Close"><span aria-hidden="true" title="Remove the layer">&times;</span></button>' +
 
+    '</span>';
 
 /**
  * The selected/highlighted node UI directive

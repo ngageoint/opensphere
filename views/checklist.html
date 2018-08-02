@@ -1,14 +1,13 @@
-<div class="d-flex flex-column flex-fill" ng-form="checklistForm">
-  <div class="form-check list-group-item-secondary pl-4">
-    <label class="form-check-label col-form-label">
+<div class="d-flex flex-column flex-fill u-table u-table-striped" ng-form="checklistForm">
+  <div class="form-check pl-4 u-table__head">
+    <label class="form-check-label col-form-label w-100">
       <input class="form-check-input" type="checkbox" name="all" ng-model="checklist.allCheckbox" ng-change="checklist.toggleAll()">
       All
     </label>
   </div>
   <div class="u-overflow-y-auto">
-    <div class="form-check pl-4" ng-repeat="item in items" title="{{item.tooltip || ('Enable/disable ' + item.label)}}"
-        ng-class-odd="'bg-secondary u-bg-secondary-text'">
-      <label class="form-check-label col-form-label">
+    <div class="form-check pl-4 u-table__row" ng-repeat="item in items" title="{{item.tooltip || ('Enable/disable ' + item.label)}}">
+      <label class="form-check-label col-form-label w-100">
         <input class="form-check-input" type="checkbox" name="items" ng-model="item.enabled" ng-change="checklist.onItemChange(item)"/>
         <span ng-bind-html="item.customFormat"/>
         {{item.label}}

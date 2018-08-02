@@ -11,7 +11,7 @@
   }
 
   .odd {
-    background: $body-bg;
+    background: $table-bg;
   }
 
   &.no-borders {
@@ -48,10 +48,12 @@
   }
 
   .slick-header-column {
-    border-bottom: 1px solid $table-dark-border-color;
-    border-right-color: $table-dark-border-color;
-    border-top: 1px solid $table-dark-border-color;
+    background: $body-bg;
+    border-bottom: 1px solid $table-border-color;
+    border-right-color: $table-border-color;
+    border-top: 1px solid $table-border-color;
     box-sizing: content-box;
+    color: color-yiq($body-bg);
     cursor: pointer;
 
     .ui-state-hover {
@@ -61,12 +63,12 @@
     }
 
     &:first-child {
-      border-left: 1px solid $table-dark-border-color;
+      border-left: 1px solid $table-border-color;
       padding-left: 3px;
     }
 
     &:last-child {
-      border-right-color: $table-dark-border-color;
+      border-right-color: $table-border-color;
     }
   }
 
@@ -75,48 +77,38 @@
   }
 }
 
-
 .slick-row {
   @include gradient-bg($dropdown-link-hover-bg);
-  @include hover {
-    background: $dropdown-link-hover-bg;
-    color: $dropdown-link-hover-color;
-
-    a {
-      color: $dropdown-link-hover-color;
-    }
-  }
-
   background: $body-bg;
-  color: $body-color;
+  color: color-yiq($body-bg);
 
   &.selected {
-    background: darken($component-active-bg, 15%);
+    background: darken($success, 10%);
+    color: color-yiq(darken($success, 10%));
   }
 
   &.hovered,
   &:hover {
-    background: darken($success, 15%);
+    background: darken($component-active-bg, 10%);
+    color: color-yiq(darken($component-active-bg, 10%));
+
+    a {
+      color: color-yiq(darken($success, 10%));
+    }
   }
 
   &.selected,
   &.hovered,
   &:hover {
-    color: $component-active-color;
-
-    a {
-      color: $component-active-color;
-    }
-
     @each $color, $value in $colors {
-      .u-text-#{$color} {
-        color: $component-active-color !important;
+      .u-text-#{$color}:not(.c-glyph__enabled) {
+        color: inherit !important;
       }
     }
 
     @each $color, $value in $theme-colors {
       .text-#{$color} {
-        color: $component-active-color !important;
+        color: inherit !important;
       }
     }
   }

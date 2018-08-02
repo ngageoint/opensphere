@@ -29,6 +29,13 @@ $form-control-disabled-opacity: .6 !default;
   }
 }
 
+.modal-dialog {
+  .modal-header,
+  .modal-footer {
+    background: darken($modal-content-bg, 5%);
+  }
+}
+
 html {
   // (Part 1) How bootstrap does box-sizing breaks 3rd party libraries box sizing.
   // This technique allows slickgrid to work
@@ -119,6 +126,38 @@ html {
 .u-opacity__95 {
   opacity: .95;
 }
+
+// --------------------------------- Table Utilities --------------------------------- //
+// Tables in bootstrap are styled by elements.... not classes. Allow class styling
+.u-table {
+  .u-table__head,
+  .u-table__row {
+    @include hover {
+      background-color: darken($success, 10%) !important;
+      color: $dropdown-link-hover-color;
+
+      a {
+        color: $dropdown-link-hover-color;
+      }
+    }
+  }
+
+  .u-table__head {
+    background: $body-bg;
+    color: color-yiq($body-bg);
+  }
+
+  .u-table__row {
+    background-color: $table-bg;
+  }
+
+  &.u-table-striped {
+    .u-table__row:nth-child(odd) {
+      background-color: $table-accent-bg;
+    }
+  }
+}
+
 
 // --------------------------------- Form Utilities --------------------------------- //
 .u-required:after {
