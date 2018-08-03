@@ -1,21 +1,21 @@
 <div class="d-flex flex-column flex-fill">
   <div class="d-flex flex-row form-group">
-    <label class="radio col-2 col-form-label text-right" ng-disabled="disabled">
+    <label class="custom-radio col-form-label" ng-disabled="disabled">
       <input type="radio" name="dateTypeRadios" value="notime" data-ng-model="anydate.dateType"
           data-ng-disabled="disabled">
       No Time
     </label>
-    <label class="radio col-2 col-form-label text-right" ng-disabled="disabled">
+    <label class="custom-control custom-radio col-form-label" ng-disabled="disabled">
       <input type="radio" name="dateTypeRadios" value="instant" data-ng-model="anydate.dateType"
           data-ng-disabled="disabled">
       Instant
     </label>
-    <label class="radio col-2 col-form-label text-right" ng-disabled="disabled">
+    <label class="custom-control custom-radio col-form-label" ng-disabled="disabled">
       <input type="radio" name="dateTypeRadios" value="range" data-ng-model="anydate.dateType"
           data-ng-disabled="disabled">
       Range
     </label>
-    <popover ng-if="help" title="help.title" content="help.content" pos="help.pos"></popover>
+    <popover class="ml-3" ng-if="help" title="help.title" content="help.content" pos="help.pos"></popover>
   </div>
 
   <div ng-form="anyDateForm">
