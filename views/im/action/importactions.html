@@ -3,7 +3,7 @@
 
     <div class="js-import-action__header mb-2 d-flex flex-row justify-content-between w-100">
       <div class="text-left">
-        <button type="button" class="btn btn-primary" ng-click="ctrl.editEntry()" title="Create a new action">
+        <button type="button" class="btn btn-primary btn-sm" ng-click="ctrl.editEntry()" title="Create a new action">
           <i class="fa fa-plus"></i>
           Create
         </button>
@@ -24,11 +24,11 @@
   <div class="modal-footer">
     <div class="d-flex flex-row justify-content-between w-100">
       <div class="text-left">
-        <button type="button" class="btn btn-primary" ng-click="ctrl.launchExport()" ng-disabled="!ctrl.entries.length">
+        <button type="button" class="btn btn-secondary" ng-click="ctrl.launchExport()" ng-disabled="!ctrl.entries.length">
           <i class="fa fa-download"></i>
           Export
         </button>
-        <button type="button" class="btn btn-primary" ng-click="ctrl.launchImport()">
+        <button type="button" class="btn btn-secondary" ng-click="ctrl.launchImport()">
           <i class="fa fa-sign-in"></i>
           Import
         </button>

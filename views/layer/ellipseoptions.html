@@ -1,22 +1,14 @@
-<div class="ellipse-options">
-  <div class="c-labelcontainer" ng-if="ctrl.is3DEnabled">
-    <table class="w-100">
-      <tr>
-        <td>
-          <label class="no-margin" title="Show ellipses as a 3D ellipsoid. Uses the ellipse semi-minor axis as the z-axis.">
-            <input class="label-checkbox checkbox inline" type="checkbox" name="showEllipsoids"
-                ng-model="ctrl.showEllipsoids" ng-change="ctrl.onShowEllipsoidsChange()"/>
-            Show Ellipsoids
-          </label>
-        </td>
-        <td>
-          <label class="no-margin" title="Show a line from the center of the ellipse/ellipsoid to the ground.">
-            <input class="label-checkbox checkbox inline" type="checkbox" name="showGroundReference"
-                ng-model="ctrl.showGroundReference" ng-change="ctrl.onShowGroundReferenceChange()"/>
-            Show Ground Ref
-          </label>
-        </td>
-      </tr>
-    </table>
+<div class="mt-1">
+  <div class="form-inline justify-content-between" ng-if="ctrl.is3DEnabled">
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="checkbox" name="showEllipsoids" id="showEllipsoids_{{$id}}"
+        ng-model="ctrl.showEllipsoids" ng-change="ctrl.onShowEllipsoidsChange()"/>
+      <label class="form-check-label" for="showEllipsoids_{{$id}}" title="Show ellipses as a 3D ellipsoid. Uses the ellipse semi-minor axis as the z-axis.">Show Ellipsoids</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="checkbox" name="showGroundReference" id="showGroundReference_{{$id}}"
+        ng-model="ctrl.showGroundReference" ng-change="ctrl.onShowGroundReferenceChange()"/>
+      <label class="form-check-label" for="showGroundReference_{{$id}}" title="Show a line from the center of the ellipse/ellipsoid to the ground.">Show Ground Ref</label>
+    </div>
   </div>
 </div>
