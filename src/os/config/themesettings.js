@@ -50,7 +50,7 @@ os.config.ThemeSettings.DEFAULT_THEME = 'Default';
  * @const
  */
 os.config.ThemeSettings.DEFAULT_THEMES = {
-  'Default': 'overrides_darkly_compact'
+  'Default': 'overrides_slate_compact'
 };
 
 
