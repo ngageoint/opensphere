@@ -1,3 +1,4 @@
+/*Needed because the popover won't place correctly since the image isn't loaded when it is figuring out placement.*/
 .c-loboptions-popover__image {
   min-height: 300px !important;
 }
