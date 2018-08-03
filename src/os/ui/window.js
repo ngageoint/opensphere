@@ -849,7 +849,7 @@ os.ui.WindowCtrl.prototype.onDragStart_ = function(event, ui) {
   this.scope.$emit(os.ui.WindowEventType.DRAGSTART);
 
   // iframes kill mouse events if you roll over them while dragging, so we'll nip that in the bud
-  angular.element('iframe').addClass('no-mouse');
+  angular.element('iframe').addClass('u-pointer-events-none');
 };
 
 
@@ -869,7 +869,7 @@ os.ui.WindowCtrl.prototype.onDragStop_ = function(event, ui) {
   }
 
   // iframes can have mouse events again
-  angular.element('iframe').removeClass('no-mouse');
+  angular.element('iframe').removeClass('u-pointer-events-none');
 
   // ensure the window is still constrained within the browser window
   this.constrainWindow_();
