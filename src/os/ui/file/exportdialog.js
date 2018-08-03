@@ -12,6 +12,7 @@ goog.require('os.ui.window');
  */
 os.ui.file.exportDialogDirective = function() {
   return {
+    replace: true,
     restrict: 'E',
     templateUrl: os.ROOT + 'views/file/exportdialog.html',
     controller: os.ui.file.ExportDialogCtrl,
@@ -172,6 +173,16 @@ os.ui.file.ExportDialogCtrl.prototype.getCustomOptions = function() {
   return null;
 };
 
+
+/**
+ * Get the keys
+ * @param {Object} obj
+ * @return {Array} The custom options UI as HTML
+ * @export
+ */
+os.ui.file.ExportDialogCtrl.prototype.getKeys = function(obj) {
+  return obj != null ? Object.keys(obj) : [];
+};
 
 /**
  * Handle exporter change.

@@ -1,6 +1,6 @@
 <div class="d-flex flex-column flex-fill">
-  <div class="modal-body">
-    <form name="exportForm">
+  <div class="modal-body d-flex flex-fill">
+    <form name="exportForm" class="d-flex flex-fill flex-column">
 
       <div class="d-flex flex-row form-group">
         <label class="col-3 col-form-label text-right u-required">Name</label>
@@ -18,20 +18,19 @@
       </div>
 
       <h5 class="mt-3 text-center">KML Options</h5>
-      <div class=".js-export-ui__container col-10 offset-2">
+      <div class="js-export-ui__container col-10 offset-2">
         <kmlexport exporter="treeExport.exporter"></kmlexport>
       </div>
     </form>
   </div>
-</div>
-<div class="modal-footer">
-  <button class="btn btn-primary" ng-click="treeExport.confirm()" ng-disabled="exportForm.$invalid">
-    <i class="fa fa-check"></i>
-    OK
-  </button>
-  <button class="btn btn-secondary" ng-click="treeExport.cancel()">
-    <i class="fa fa-ban"></i>
-    Cancel
-  </button>
-</div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" ng-click="treeExport.confirm()" ng-disabled="exportForm.$invalid">
+      <i class="fa fa-check"></i>
+      OK
+    </button>
+    <button class="btn btn-secondary" ng-click="treeExport.cancel()">
+      <i class="fa fa-ban"></i>
+      Cancel
+    </button>
+  </div>
 </div>
