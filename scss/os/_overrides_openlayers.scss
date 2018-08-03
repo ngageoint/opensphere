@@ -46,6 +46,7 @@
   left: .75rem;
   right: auto;
   top: .75rem;
+  z-index: 1;
 }
 
 
@@ -165,6 +166,7 @@
   padding: .5rem;
   right: auto;
   top: auto;
+  z-index: $zindex-dropdown;
 
   .ol-scale-line-inner {
     border-color: rgba($body-color, .8);
@@ -211,6 +213,17 @@
   top: auto;
 }
 
+// Zoom Slider
+.ol-zoomslider {
+  left: auto;
+  margin: 1px;
+  right: .75em;
+  top: 4.75em;
+
+  .ol-zoomslider-thumb {
+    background-color: rgba($body-bg, .8);
+  }
+}
 
 // Things in the dark navbar. Light navbars should just get the defaults
 .navbar-dark {
