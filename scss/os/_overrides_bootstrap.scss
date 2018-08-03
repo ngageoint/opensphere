@@ -2,3 +2,5 @@
 $breadcrumb-bg: transparent;
 $breadcrumb-padding-y: .25rem;
 $enable-shadows: true;
+$popover-header-padding-x: .75rem !default;
+$popover-max-width: (($popover-header-padding-x * 2) + 20);
