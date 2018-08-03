@@ -2,9 +2,9 @@
   <div class="modal-body flex-fill d-flex u-overflow-y-hidden">
     <div class="d-flex flex-fill flex-column">
       <div>
-        <ul class="nav nav-tabs" ng-show="showtabs">
-          <li class="mx-3 my-1" ng-repeat="tab in tabs" ng-class="{active: activeTab == tab.name, first: $first}">
-            <a ng-click="selector.setTab(tab.name)">{{tab.name}}</a>
+        <ul class="nav nav-tabs flex-shrink-0" ng-show="showtabs">
+          <li class="mx-3 my-1 nav-item" ng-repeat="tab in tabs" ng-class="{active: activeTab == tab.name, first: $first}">
+            <a class="nav-link" ng-click="selector.setTab(tab.name)">{{tab.name}}</a>
           </li>
         </ul>
       </div>

@@ -135,10 +135,10 @@ os.ui.state.StateImportUI.prototype.showUI = function(file, config) {
   };
   var windowOptions = {
     'label': 'Import State',
-    'icon': 'fa fa-file-text lt-blue-icon',
+    'icon': 'fa fa-file-text',
     'x': 'center',
     'y': 'center',
-    'width': '385',
+    'width': '400',
     'height': 'auto',
     'modal': 'true',
     'show-close': 'true'

@@ -174,7 +174,8 @@ os.ui.column.mapping.ColumnMappingSettingsCtrl.prototype.export = function() {
 
   var scopeOptions = {
     'mappings': items,
-    'selectedMappings': selectedItems
+    'selectedMappings': selectedItems,
+    'yesButtonClass': 'btn-danger'
   };
 
   var windowOptions = {
@@ -182,7 +183,7 @@ os.ui.column.mapping.ColumnMappingSettingsCtrl.prototype.export = function() {
     'icon': 'fa fa-download',
     'x': 'center',
     'y': 'center',
-    'width': 360,
+    'width': 400,
     'height': 'auto',
     'show-close': 'true',
     'modal': 'true'
