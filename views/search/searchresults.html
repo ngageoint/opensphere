@@ -1,11 +1,14 @@
-<div class="c-searchresults position-absolute h-100 w-100 px-1 pb-1 ng-hide"
+<div class="c-searchresults position-absolute u-bg-flyout u-overflow-y-auto w-100 animate-slide-w ng-hide a-transition-duration__200ms"
     ng-show="searchResults.loading || searchResults.results.length">
-  <div class="card bg-secondary mt-1" ng-if="searchResults.loading">
-    <div class="card-body">
-      <span><i class="fa fa-fw fa-spin fa-spinner"></i> Loading results ...</span>
+  <div class="d-flex flex-column flex-fill p-1" autovheight>
+    <div class="card u-bg-body border mb-1 flex-shrink-0" ng-if="searchResults.loading">
+      <div class="card-body">
+        <span><i class="fa fa-fw fa-spin fa-spinner"></i> Loading results ...</span>
+      </div>
     </div>
-  </div>
-  <div class="card bg-secondary mt-1" ng-repeat="result in searchResults.results track by searchResults.track(result)">
-    <resultcard result="result"></resultcard>
+    <div class="card u-bg-body border mb-1 flex-shrink-0"
+        ng-repeat="result in searchResults.results track by searchResults.track(result)">
+      <resultcard result="result"></resultcard>
+    </div>
   </div>
 </div>

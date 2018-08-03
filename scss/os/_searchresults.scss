@@ -1,9 +1,7 @@
 .c-searchresults {
-  background-color: rgba($body-bg, .5);
   max-width: 35rem;
-  overflow: auto;
   right: 0;
-  z-index: $zindex-dropdown - 1;
+  z-index: 1;
 }
 
 @media (max-width: map-get($grid-breakpoints, lg)) {

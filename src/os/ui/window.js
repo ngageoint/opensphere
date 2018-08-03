@@ -47,7 +47,7 @@ os.ui.windowCommonElements = {
  */
 os.ui.windowZIndexMax = {
   MODAL: 1049,
-  STANDARD: 999
+  STANDARD: 990
 };
 
 

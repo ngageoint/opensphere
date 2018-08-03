@@ -3,6 +3,8 @@ $compact-x: .25rem;
 
 $font-size-base: .875rem;
 
+$btn-padding-y-sm: 0;
+
 $input-btn-padding-y-sm: $compact-y;
 $input-btn-padding-x-sm: $compact-x;
 
@@ -28,6 +30,7 @@ $navbar-padding-y: .2rem;
 $navbar-padding-x: .4rem;
 $nav-link-padding-y: 0;
 $nav-link-padding-x: .5rem;
+$nav-divider-margin-y: .25rem;
 
 $modal-header-padding: .5rem;
 $modal-inner-padding: .5rem;

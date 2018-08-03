@@ -12,6 +12,7 @@ goog.require('os.ui.Module');
 plugin.descriptor.descriptorResultCardDirective = function() {
   return {
     restrict: 'E',
+    replace: true,
     templateUrl: os.ROOT + 'views/plugin/descriptor/resultcard.html',
     controller: plugin.descriptor.ResultCardCtrl,
     controllerAs: 'ctrl'
@@ -78,7 +79,7 @@ plugin.descriptor.ResultCardCtrl.prototype.destroy_ = function() {
  * Updates icons
  */
 plugin.descriptor.ResultCardCtrl.prototype.updateIcons = function() {
-  var icons = this.element_.find('.icons');
+  var icons = this.element_.find('.js-card-title-icons');
   // clear
   icons.children().remove();
   // add

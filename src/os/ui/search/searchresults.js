@@ -8,6 +8,7 @@ goog.require('os.ui');
 goog.require('os.ui.Module');
 goog.require('os.ui.dragDropDirective');
 goog.require('os.ui.search.resultCardDirective');
+goog.require('os.ui.util.autoVHeightDirective');
 
 
 /**

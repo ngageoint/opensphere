@@ -1,8 +1,18 @@
-<div class="coord-result-card pointer" ng-mouseover="coordResult.over()" ng-mouseout="coordResult.out()" ng-click="coordResult.goTo()">
-  <div class="result-card-header">
-    <i class="fa fa-map-marker"></i>
-    {{coordResult.lat}}, {{coordResult.lon}}
-    <span ng-if="coordResult.mgrs">({{coordResult.mgrs}})</span>
+<div ng-mouseover="ctrl.over()" ng-mouseout="ctrl.out()">
+  <div class="card-header d-flex flex-row">
+    <div class="flex-fill">
+      <i class="fa fa-fw fa-map-marker"></i>
+      {{ctrl.lat}}, {{ctrl.lon}}
+      <span ng-if="ctrl.mgrs">({{ctrl.mgrs}})</span>
+    </div>
   </div>
-  <div class="result-type">Coordinate</div>
+  <div class="card-body">
+    <div class="d-flex flex-row">
+      <div class="card-subtitle text-muted flex-fill my-auto">Coordinate</div>
+      <button type="button" class="btn btn-primary" ng-click="ctrl.goTo()" title="View the result on the map">
+        <i class="fa fa-fighter-jet"></i>
+        Go To
+      </button>
+    </div>
+  </div>
 </div>

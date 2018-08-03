@@ -21,6 +21,7 @@ goog.require('os.ui.dragDropDirective');
 os.ui.search.searchBoxDirective = function() {
   return {
     restrict: 'AE',
+    replace: true,
     scope: {
       'dataSource': '=datasource',
       'allowMultiple': '@',
