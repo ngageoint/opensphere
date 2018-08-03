@@ -257,6 +257,10 @@ html {
   color: $body-color;
 }
 
+.u-bg-flyout {
+  background-color: rgba($modal-content-bg, .95);
+}
+
 // For when you want a border for spacing but transparent
 .u-border-color-transparent {
   border-color: transparent;
