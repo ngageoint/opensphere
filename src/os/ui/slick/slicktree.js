@@ -481,7 +481,7 @@ os.ui.slick.SlickTreeCtrl.getVisibleData_ = function(arr, result) {
  */
 os.ui.slick.SlickTreeCtrl.prototype.onItemClick = function(e, args) {
   var item = /** @type {os.ui.slick.SlickTreeNode} */ (this.dataView.getItem(args['row']));
-  if (item && goog.dom.classlist.contains(/** @type {!Element} */ (e.target), 'tree-expand-collapse')) {
+  if (item && goog.dom.classlist.contains(/** @type {!Element} */ (e.target), 'js-node-toggle')) {
     item.setCollapsed(!item.collapsed);
     this.dataView.updateItem(item['id'], item);
     this.scope.$emit('collapseChange');
