@@ -28,6 +28,7 @@ goog.require('os.ui.geo.positionDirective');
 goog.require('os.ui.layer.labelControlsDirective');
 goog.require('os.ui.layer.vectorStyleControlsDirective');
 goog.require('os.ui.text.simpleMDEDirective');
+goog.require('os.ui.util.validationMessageDirective');
 goog.require('os.ui.window');
 
 
