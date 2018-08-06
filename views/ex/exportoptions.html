@@ -4,19 +4,20 @@
       <em>The current export type only supports exporting a single source.</em>
     </div>
     <div class="form-check mx-1 mb-2">
-      <label class="form-check-label" title="If checked, only selected features will be exported. If unchecked or nothing is selected, all visible features will be exported.">
-          <input type="checkbox" name="exportoptions.useSelected" ng-model="exportoptions.useSelected" ng-change="exportoptions.updateItems()"
-            class="form-check-input">
+      <input id="js-export-options__useselected" type="checkbox" name="exportoptions.useSelected"
+          ng-model="exportoptions.useSelected" ng-change="exportoptions.updateItems()" class="custom-control-input"/>
+      <label for="js-export-options__useselected" class="custom-control-label"
+        title="If checked, only selected features will be exported. If unchecked or nothing is selected, all visible features will be exported.">
         Export Selected Features
       </label>
     </div>
-    <checklist name="sourcelist" allow-multiple="allowMultiple" items="exportoptions.sourceItems"></checklist>
+    <checklist name="sourcelist" allow-multiple="allowMultiple" items="exportoptions.sourceItems" class="border"></checklist>
   </div>
   <div ng-if="exportoptions.sourceItems.length <= 0">
     <i class="fa fa-warning"></i>
     <em>There are no visible sources to export. Please add at least one source and make sure it is visible.</em>
   </div>
-  <div ng-if="exportoptions.sourceItems.length > 0 && showCount">
+  <div ng-if="exportoptions.sourceItems.length > 0 && showCount" ng-class="{'text-warning': exportoptions.count <= 0, 'text-success': exportoptions.count > 0}">
     <i class="fa fa-warning" ng-if="exportoptions.count <= 0"></i>
     <ng-pluralize count="exportoptions.count" ng-class="{'italic': exportoptions.count <= 0}" when="{'0': 'Nothing to export. Please choose one or more sources with loaded data.',
                'one': 'Exporting {} feature.',
