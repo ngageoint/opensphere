@@ -15,6 +15,7 @@
           <simplemde text="ctrl.description" edit="true" is-required="false" maxlength="4000"></simplemde>
         </div>
       </div>
+      <altitude></altitude>
       <position ng-if="ctrl.pointGeometry" name="pointGeometry" geom="ctrl.pointGeometry" x-form="featureEditForm" map-support="true"></position>
       <div class="control-group c-feature-edit__time" ng-if="ctrl.timeEditEnabled">
         <label class="control-label">Time:</label>

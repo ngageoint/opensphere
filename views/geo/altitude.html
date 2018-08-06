@@ -1,0 +1,19 @@
+<div class="altitude-control control-group" ng-class="{'error': form.alt.$invalid && form.alt.$dirty}">
+    <label class="control-label" for="alt" ng-if="altCtrl.label">{{altCtrl.label}}</label>
+    <div class="controls">
+      <input type="text"
+          class="input input-xlarge"
+          style="margin-bottom:0px"
+          name="alt"
+          ng-class="{'focus': altCtrl.mapEnabled}"
+          ng-model="altText"
+          ng-disabled="disabled || altCtrl.mapEnabled"
+          geo />
+      <button type="button" class="btn btn-default" title="Set the altitude by clicking on the map"
+            ng-if="mapSupport === 'true'" ng-click="altCtrl.toggleMapEnabled()"
+            ng-disabled="disabled" ng-class="{'active': altCtrl.mapEnabled}">
+        <i class="fa fa-globe" ng-class="{'lt-blue-icon': altCtrl.mapEnabled}"></i>
+      </button>
+      <popover title="'Entering Altitude'" content="popoverContent" alt="'right'"></popover>
+    </div>
+</div>
