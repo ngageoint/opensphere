@@ -108,7 +108,7 @@ os.data.LayerSyncDescriptor.prototype.getLayers = function() {
 
 
 /**
- * @param {Array<Object<string, *>>} opt_options
+ * @param {Array<Object<string, *>>=} opt_options
  */
 os.data.LayerSyncDescriptor.prototype.populateLayerIds = function(opt_options) {
   this.layerIds = (opt_options || this.getOptions()).map(os.data.LayerSyncDescriptor.mapLayerIds_);
