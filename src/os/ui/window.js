@@ -525,7 +525,7 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
   // make the element draggable
   if (!$scope['disableDrag']) {
     var handler = $scope['overlay'] ?
-        (os.ui.windowSelector.HEADER + ', .window-overlay-content') : os.ui.windowSelector.HEADER;
+        (os.ui.windowSelector.HEADER + ', .js-window-overlay-content') : os.ui.windowSelector.HEADER;
     var dragConfig = {
       'containment': $scope['windowContainer'],
       'handle': handler,
