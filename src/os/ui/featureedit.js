@@ -13,6 +13,7 @@ goog.require('ol.geom.Point');
 goog.require('os.action.EventType');
 goog.require('os.data.ColumnDefinition');
 goog.require('os.map');
+goog.require('os.math.Units');
 goog.require('os.ol.feature');
 goog.require('os.style');
 goog.require('os.style.label');
@@ -246,7 +247,6 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
    */
   this['shape'] = os.style.ShapeType.POINT;
 
-
   /**
    * Supported shapes.
    * @type {string}
@@ -310,6 +310,24 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
     os.math.Units.KILOMETERS,
     os.math.Units.METERS
   ];
+
+  /**
+   * Feature altitude.
+   * @type {number}
+   */
+  this['altitude'] = 0;
+
+  /**
+   * Feature altitude units.
+   * @type {number}
+   */
+  this['altUnits'] = os.math.Units.METERS;
+
+  /**
+   * Altitude unit options.
+   * @type {string}
+   */
+  this['altUnitOptions'] = goog.object.getValues(os.math.Units);
 
   /**
    * @type {string}
@@ -445,7 +463,8 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
       // new place without a geometry, initialize as a point
       this['pointGeometry'] = {
         'lat': NaN,
-        'lon': NaN
+        'lon': NaN,
+        'alt': NaN
       };
     } else if (geometry instanceof ol.geom.Point) {
       // geometry is a point, so allow editing it
@@ -555,6 +574,8 @@ os.ui.FeatureEditCtrl.FIELDS = [
   os.Fields.BEARING, // for icon
   os.Fields.LAT,
   os.Fields.LON,
+  os.Fields.ALT,
+  os.Fields.ALT_UNITS,
   os.Fields.LAT_DDM,
   os.Fields.LON_DDM,
   os.Fields.LAT_DMS,
@@ -952,11 +973,18 @@ os.ui.FeatureEditCtrl.prototype.loadFromFeature_ = function(feature) {
       clone.toLonLat();
 
       var coordinate = clone.getFirstCoordinate();
-      if (coordinate) {
+      if (coordinate && coordinate.length >= 2) {
+        var altitude = coordinate[2] || 0;
+        var altUnit = /** @type {string|undefined} */ (feature.get(os.Fields.ALT_UNITS)) || os.math.Units.METERS;
+
         this['pointGeometry'] = {
           'lon': coordinate[0],
-          'lat': coordinate[1]
+          'lat': coordinate[1],
+          'alt': altitude
         };
+
+        this['altitude'] = os.math.convertUnits(altitude, altUnit, os.math.Units.METERS);
+        this['altUnits'] = altUnit;
       }
 
       this['semiMajor'] = this.getNumericField_(feature, os.Fields.SEMI_MAJOR);
@@ -1130,8 +1158,14 @@ os.ui.FeatureEditCtrl.prototype.saveGeometry_ = function(feature) {
     var lon = Number(this['pointGeometry']['lon']);
     var lat = Number(this['pointGeometry']['lat']);
 
+    var altUnit = this['altUnits'] || os.math.Units.METERS;
+    var alt = os.math.convertUnits(Number(this['altitude']) || 0, os.math.Units.METERS, altUnit);
+
+    feature.set(os.Fields.ALT, alt);
+    feature.set(os.Fields.ALT_UNITS, altUnit);
+
     if (!isNaN(lon) && !isNaN(lat)) {
-      var point = new ol.geom.Point([lon, lat]);
+      var point = new ol.geom.Point([lon, lat, alt]);
       point.osTransform();
       feature.setGeometry(point);
 
