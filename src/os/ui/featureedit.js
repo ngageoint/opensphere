@@ -1021,6 +1021,7 @@ os.ui.FeatureEditCtrl.prototype.loadFromFeature_ = function(feature) {
 
         var altU = this['options']['feature']['values_']['ALTITUDE_UNITS'];
 
+        // else if runs when the page is refreshed
         if (coordinate[2] !== null && coordinate[2] !== undefined && altU !== null && altU !== undefined) {
           var newUnits = os.math.UnitLabels[goog.string.toTitleCase(altU.toLowerCase())];
           this['altitude'] = os.math.convertUnits(coordinate[2], newUnits, os.math.Units.METERS);
