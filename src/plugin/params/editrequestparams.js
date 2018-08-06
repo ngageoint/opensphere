@@ -140,6 +140,7 @@ plugin.params.EditRequestParamsCtrl = function($scope, $element) {
   this['gridColumns'] = [fieldCol, valueCol];
 
   $scope.$on('$destroy', this.dispose.bind(this));
+  $scope.$emit(os.ui.WindowEventType.READY);
 };
 goog.inherits(plugin.params.EditRequestParamsCtrl, goog.Disposable);
 
