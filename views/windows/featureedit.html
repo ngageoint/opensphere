@@ -1,12 +1,12 @@
 <div class="d-flex flex-column flex-fill">
   <div class="modal-body">
-    <form name="featureEditForm" novalidate>
+    <div ng-form="featureEditForm" novalidate>
 
       <div class="d-flex flex-row form-group">
         <label class="col-2 col-form-label text-right u-required">Name</label>
         <div class="col">
           <input class="form-control" type="text" name="name" ng-model="ctrl.name" ng-change="ctrl.updatePreview()" ng-maxlength="100" required="true"/>
-           <span class="invalid-feedback d-block" ng-if="featureEditForm.name.$error.maxlength">Name is too long!</span>
+          <validation-message target="featureEditForm.name"></validation-message>
         </div>
       </div>
 
@@ -93,7 +93,7 @@
         </div>
       </div>
 
-    </form>
+    </div>
 
     <div ng-attr-id="{{featureControlsID}}" class="card">
       <div class="btn btn-secondary btn-block" title="Style controls for the layer(s)" data-toggle="collapse" data-parent="#{{featureControlsID}}" data-target="#{{featureStyleID}}" ng-click="ctrl.setOpenSection(featureStyleID)">

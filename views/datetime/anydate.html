@@ -20,7 +20,7 @@
 
   <div ng-form="anyDateForm">
     <div class="d-flex flex-row form-group">
-      <div data-ng-if="anydate.dateType != 'notime'" data-ng-class="{'error': anyDateForm.startDate.$dirty && (!anydate.timesValid || (!anydate.startDate && !anydate.startUnknown))}">
+      <div data-ng-if="anydate.dateType != 'notime'" data-ng-class="{'text-danger': anyDateForm.startDate.$dirty && (!anydate.timesValid || (!anydate.startDate && !anydate.startUnknown))}">
         <date-time data-value="anydate.startDate" x-disabled="anydate.startUnknown || disabled"
           is-required="anydate.dateType != 'notime' && !anydate.startUnknown">
         </date-time>
@@ -30,7 +30,7 @@
   </div>
 
   <div class="d-flex flex-row form-group">
-    <div data-ng-if="anydate.dateType == 'range'" data-ng-class="{'error': anyDateForm.endDate.$dirty && (!anydate.timesValid || (!anydate.endDate && !anydate.endUnknown))}">
+    <div data-ng-if="anydate.dateType == 'range'" data-ng-class="{'text-danger': anyDateForm.endDate.$dirty && (!anydate.timesValid || (!anydate.endDate && !anydate.endUnknown))}">
       <date-time class="date-time" data-value="anydate.endDate" x-disabled="anydate.endUnknown || disabled"
         is-required="anydate.dateType == 'range' && !anydate.endUnknown">
       </date-time>
