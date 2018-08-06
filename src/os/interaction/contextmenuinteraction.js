@@ -1,6 +1,7 @@
 goog.provide('os.interaction.ContextMenu');
 
 goog.require('os.I3DSupport');
+goog.require('os.implements');
 goog.require('os.ui.ol.interaction.ContextMenu');
 
 
@@ -20,7 +21,7 @@ os.interaction.ContextMenu = function(opt_options) {
   goog.exportProperty(window, 'omcm', this.openMapContextMenu.bind(this));
 };
 goog.inherits(os.interaction.ContextMenu, os.ui.ol.interaction.ContextMenu);
-
+os.implements(os.interaction.ContextMenu, os.I3DSupport.ID);
 
 /**
  * @inheritDoc

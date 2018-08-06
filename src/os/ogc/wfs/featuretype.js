@@ -104,6 +104,27 @@ os.ogc.wfs.FeatureType.TIME_COLUMNS_ = {};
 
 
 /**
+ * @type {!Array<!string>}
+ * @const
+ */
+os.ogc.wfs.FeatureType.SUPPORTED_GEOMETRY_TYPES = [
+  'gml:Point',
+  'gml:LineString',
+  'gml:Polygon',
+  'gml:MultiPoint',
+  'gml:MultiLineString',
+  'gml:MultiPolygon',
+  'gml:GeometryCollection',
+  'gml:PointPropertyType',
+  'gml:LineStringPropertyType',
+  'gml:PolygonPropertyType',
+  'gml:MultiPointPropertyType',
+  'gml:MultiLineStringPropertyType',
+  'gml:MultiPolygonPropertyType',
+  'gml:GeometryCollectionPropertyType'];
+
+
+/**
  * @inheritDoc
  */
 os.ogc.wfs.FeatureType.prototype.getTypeName = function() {
@@ -236,7 +257,7 @@ os.ogc.wfs.FeatureType.prototype.init = function(typeName, columns, isDynamic) {
     var lcName = name.toLowerCase();
     var lcType = type.toLowerCase();
 
-    if (goog.string.contains(type, 'gml')) {
+    if (!this.geometryColumnName_ && os.ogc.wfs.FeatureType.SUPPORTED_GEOMETRY_TYPES.indexOf(type) > -1) {
       this.geometryColumnName_ = name;
     } else if (!startDateColumn && os.ogc.wfs.FeatureType.isDateTime(lcType) && this.isStartDate(lcName)) {
       startDateColumn = name;
