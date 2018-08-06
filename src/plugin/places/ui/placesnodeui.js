@@ -9,7 +9,7 @@ goog.require('os.ui.node.DefaultLayerNodeUICtrl');
 /**
  * @type {string}
  */
-plugin.places.ui.PlacesNodeUITemplate = '<span class="pull-right" ng-if="nodeUi.show()">' +
+plugin.places.ui.PlacesNodeUITemplate = '<span ng-if="nodeUi.show()">' +
       '<span ng-if="nodeUi.canEdit()" ng-click="nodeUi.addFolder()">' +
         '<i class="fa fa-folder fa-fw c-glyph" title="Create a new folder"></i></span>' +
       '<span ng-if="nodeUi.canEdit()" ng-click="nodeUi.addPlace()">' +
@@ -98,22 +98,18 @@ goog.exportProperty(
 /**
  * If the node can be edited.
  * @return {boolean}
+ * @export
  */
 plugin.places.ui.PlacesNodeUICtrl.prototype.canEdit = function() {
   var node = /** @type {plugin.file.kml.ui.KMLLayerNode} */ (this.scope['item']);
-  return node != null && node.isEditable();
+  return node ? node.isEditable() : false;
 };
-goog.exportProperty(
-    plugin.places.ui.PlacesNodeUICtrl.prototype,
-    'canEdit',
-    plugin.places.ui.PlacesNodeUICtrl.prototype.canEdit);
 
 
 /**
  * @inheritDoc
+ * @export
  */
 plugin.places.ui.PlacesNodeUICtrl.prototype.remove = function() {
   plugin.places.PlacesManager.getInstance().removeLayer();
 };
-goog.exportProperty(plugin.places.ui.PlacesNodeUICtrl.prototype, 'remove',
-    plugin.places.ui.PlacesNodeUICtrl.prototype.remove);
