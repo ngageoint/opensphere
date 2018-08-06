@@ -1,12 +1,12 @@
 <div class="d-flex flex-column flex-fill">
   <div class="modal-body">
-    <form name="featureEditForm" novalidate>
+    <div ng-form="featureEditForm" novalidate>
 
       <div class="d-flex flex-row form-group">
         <label class="col-2 col-form-label text-right u-required">Name</label>
         <div class="col">
           <input class="form-control" type="text" name="name" ng-model="ctrl.name" ng-change="ctrl.updatePreview()" ng-maxlength="100" required="true"/>
-           <span class="invalid-feedback d-block" ng-if="featureEditForm.name.$error.maxlength">Name is too long!</span>
+          <validation-message target="featureEditForm.name"></validation-message>
         </div>
       </div>
 
@@ -18,7 +18,7 @@
       </div>
       
       <div class="d-flex flex-row form-group">
-        <label class="col-2 col-form-label text-right">Position</label>
+        <label class="col-2 col-form-label text-right u-required">Position</label>
         <div class="col">
           <position ng-if="ctrl.pointGeometry" name="pointGeometry" geom="ctrl.pointGeometry" x-form="featureEditForm" show-label="false" map-support="true"></position>
         </div>
@@ -48,7 +48,7 @@
           <div class="col-2">
           </div>
           <span class="invalid-feedback d-block col mb-1" ng-if="featureEditForm.semiMajor.$error.min">
-            Must be greater than {{ctrl.semiMinor ? 'or equal to Semi Minor' : 'zero'}}!
+             {{ctrl.semiMinor ? 'Must be greater than or equal to Semi Minor' : 'Too low'}}!
           </span>
         </div>
 
@@ -67,9 +67,7 @@
         <div class="d-flex flex-row">
           <div class="col-2">
           </div>
-          <span class="invalid-feedback d-block col mb-1" ng-if="featureEditForm.semiMinor.$error.min">
-            Must be greater than zero!
-          </span>
+          <validation-message target="featureEditForm.semiMinor"></validation-message>
         </div>
         <div class="d-flex flex-row form-group" title="{{ctrl.help.orientation}}">
           <label class="col-2 col-form-label text-right u-required">Orientation:</label>
@@ -93,7 +91,7 @@
         </div>
       </div>
 
-    </form>
+    </div>
 
     <div ng-attr-id="{{featureControlsID}}" class="card">
       <div class="btn btn-secondary btn-block" title="Style controls for the layer(s)" data-toggle="collapse" data-parent="#{{featureControlsID}}" data-target="#{{featureStyleID}}" ng-click="ctrl.setOpenSection(featureStyleID)">
