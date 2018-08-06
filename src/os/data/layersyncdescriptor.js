@@ -13,6 +13,7 @@ goog.require('os.events.LayerEventType');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.layer.ILayer');
 goog.require('os.layer.PropertyChange');
+goog.require('os.net.Online');
 goog.require('os.ui.node.defaultLayerNodeUIDirective');
 
 
@@ -46,6 +47,12 @@ os.data.LayerSyncDescriptor = function() {
    * @protected
    */
   this.layerConfig = {};
+
+  /**
+   * @type {os.net.Online}
+   * @protected
+   */
+  this.online = os.net.Online.getInstance();
 
   os.dispatcher.listen(os.events.LayerEventType.ADD, this.onLayerAdded, false, this);
   os.dispatcher.listen(os.events.LayerEventType.REMOVE, this.onLayerRemoved, false, this);
