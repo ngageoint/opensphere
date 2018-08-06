@@ -223,9 +223,6 @@ os.ui.ChecklistCtrl.prototype.updateAllCheckbox_ = function() {
         }
       }
 
-      // Update the model
-      this['allCheckbox'] = !hasUnchecked;
-
       var allCheckbox = this.element_.find('.js-checklist__all');
       // If at least 1 is checked but not all, make indeterminate
       if (hasChecked && hasUnchecked) {
