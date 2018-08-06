@@ -7,7 +7,6 @@
       <i class="fa fa-fw c-glyph fa-times"></i>
     </span>
   </div>
-
   <timeline
       ng-class="{'c-timeline__collapsed': collapsed}"
       hist-class="timelineCtrl.histClass"
@@ -19,7 +18,7 @@
       load-brushes="timelineCtrl.loadBrushes"
       hist-tip="timelineCtrl.getHistogramTooltip" snap="true">
   </timeline>
-
+  <lightstrip></lightstrip>
   <div class="text-center d-flex align-items-center w-100 my-1 justify-content-between flex-md-nowrap flex-wrap">
     <small class="order-0 ml-2 flex-shrink-0">{{start}}</small>
     <div class="order-md-1 order-2">
