@@ -25,6 +25,8 @@ goog.require('os.ui.datetime.AnyDateCtrl');
 goog.require('os.ui.datetime.AnyDateHelp');
 goog.require('os.ui.datetime.AnyDateType');
 goog.require('os.ui.file.kml');
+goog.require('os.ui.geo.AltitudeDirective');
+goog.require('os.ui.geo.AltitudeEventType');
 goog.require('os.ui.geo.PositionEventType');
 goog.require('os.ui.geo.positionDirective');
 goog.require('os.ui.layer.labelControlsDirective');
