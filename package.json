@@ -115,7 +115,7 @@
     "postmerge": "npm run package:update",
     "postrewrite": "npm run package:update",
     "semantic-release": "semantic-release",
-    "start-server": "http-server ../ -p 8282 -c-1 -o -U"
+    "start-server": "http-server ../../ -p 8282 -c-1 -o -U"
   },
   "keywords": [
     "geospatial",
