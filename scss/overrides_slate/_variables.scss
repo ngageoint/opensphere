@@ -32,8 +32,8 @@ $custom-control-indicator-checked-disabled-bg: rgba($gray-200, .5);
 $custom-control-indicator-active-color: $black;
 $custom-control-indicator-active-bg: $gray-200;
 $custom-checkbox-indicator-indeterminate-bg: $gray-200;
-// $custom-control-indicator-disabled-bg: $gray-500;
-// $custom-control-label-disabled-color: $black;
+$custom-control-indicator-disabled-bg: $gray-500;
+$custom-control-label-disabled-color: $black;
 
 @import 'slate/variables';
 
