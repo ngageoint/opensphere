@@ -48,7 +48,7 @@
           <div class="col-2">
           </div>
           <span class="invalid-feedback d-block col mb-1" ng-if="featureEditForm.semiMajor.$error.min">
-            Must be greater than {{ctrl.semiMinor ? 'or equal to Semi Minor' : 'zero'}}!
+             {{ctrl.semiMinor ? 'Must be greater than or equal to Semi Minor' : 'Too low'}}!
           </span>
         </div>
 
@@ -67,9 +67,7 @@
         <div class="d-flex flex-row">
           <div class="col-2">
           </div>
-          <span class="invalid-feedback d-block col mb-1" ng-if="featureEditForm.semiMinor.$error.min">
-            Must be greater than zero!
-          </span>
+          <validation-message target="featureEditForm.semiMinor"></validation-message>
         </div>
         <div class="d-flex flex-row form-group" title="{{ctrl.help.orientation}}">
           <label class="col-2 col-form-label text-right u-required">Orientation:</label>
