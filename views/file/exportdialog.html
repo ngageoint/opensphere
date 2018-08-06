@@ -1,6 +1,6 @@
 <div class="d-flex flex-column flex-fill">
-  <div class="modal-body">
-    <form name="exportForm">
+  <div class="modal-body d-flex flex-fill">
+    <form name="exportForm" class="d-flex flex-fill flex-column">
 
       <div class="d-flex flex-fill form-group">
         <label class="col-3 col-form-label text-right u-required">Name</label>
@@ -10,14 +10,14 @@
         </div>
       </div>
 
-      <div class="d-flex flex-fill form-group">
+      <div class="d-flex flex-fill form-group" ng-show="exportdialog.getKeys(exportdialog.persisters).length">
         <label class="col-3 col-form-label text-right">Save To</label>
         <div class="col">
           <select class="form-control" ng-model="persister" ng-options="value as key for (key, value) in exportdialog.persisters" />
         </div>
       </div>
 
-      <div class="d-flex flex-fill form-group">
+      <div class="d-flex flex-fill form-group" ng-show="exportdialog.getKeys(exportdialog.exporters).length">
         <label class="col-3 col-form-label text-right">Type</label>
         <div class="col">
           <select class="form-control" ng-model="exporter" ng-options="value as key for (key, value) in exportdialog.exporters" />
@@ -40,6 +40,7 @@
                  'one': 'Exporting {} {{itemText}}.',
                  'other': 'Exporting {} {{itemText}}s.'}">
       </ng-pluralize>
+    </div>
     <div>
       <button class="btn btn-primary" ng-click="exportdialog.confirm()" ng-disabled="exportForm.$invalid || options.items.length == 0">
         <i class="fa fa-check"></i>
