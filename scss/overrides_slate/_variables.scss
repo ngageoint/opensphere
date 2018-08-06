@@ -12,6 +12,7 @@ $gray-600: #7a8288 !default;
 $gray-700: #52575c !default;
 $gray-800: #3a3f44 !default;
 $gray-900: #272b30 !default;
+$black: #000 !default;
 
 $primary: $blue;
 $warning: $orange;
@@ -24,6 +25,15 @@ $font-family-sans-serif: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe 
 $font-size-base: .9375rem;
 
 $dropdown-link-hover-bg: $primary;
+
+$custom-control-indicator-checked-color: $black;
+$custom-control-indicator-checked-bg: $gray-200;
+$custom-control-indicator-checked-disabled-bg: rgba($gray-200, .5);
+$custom-control-indicator-active-color: $black;
+$custom-control-indicator-active-bg: $gray-200;
+$custom-checkbox-indicator-indeterminate-bg: $gray-200;
+// $custom-control-indicator-disabled-bg: $gray-500;
+// $custom-control-label-disabled-color: $black;
 
 @import 'slate/variables';
 

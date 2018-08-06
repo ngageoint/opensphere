@@ -36,6 +36,16 @@ $form-control-disabled-opacity: .6 !default;
   }
 }
 
+// Add a pointer to the custom checkbox
+.custom-control.custom-checkbox .custom-control-label {
+  cursor: pointer;
+}
+
+.custom-checkbox .custom-control-label::after {
+  border: 1px solid $input-border-color;
+  border-radius: .125rem;
+}
+
 html {
   // (Part 1) How bootstrap does box-sizing breaks 3rd party libraries box sizing.
   // This technique allows slickgrid to work
@@ -245,6 +255,11 @@ html {
 
 .u-bg-body-text {
   color: $body-color;
+}
+
+// For when you want a border for spacing but transparent
+.u-border-color-transparent {
+  border-color: transparent;
 }
 
 // For all bootstrap colors, allow us to access them
