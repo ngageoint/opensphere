@@ -17,6 +17,10 @@
     color: $input-color;
   }
 
+  .CodeMirror:not(.CodeMirror-fullscreen) .CodeMirror-scroll {
+    max-height: 400px;
+  }
+
   .editor-toolbar a {
     color: $body-color !important;
   }
