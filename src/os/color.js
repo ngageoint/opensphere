@@ -740,6 +740,41 @@ os.color.colorize = function(data, tgtColor) {
   }
 };
 
+/**
+ * Applies a color transform to an array of image data. This transform takes a target color and adjusts the color
+ * for saturation color and brightness.
+ * @param {Array<number>} data The image data to colorize
+ * @param {number} brightness The target brightness. The range is -1 to 1.
+ * @param {number} contrast The target contrast. The range is 0 to 2.
+ * @param {number} saturation The target saturation. The range is 0 to 1.
+ */
+os.color.adjustColor = function(data, brightness, contrast, saturation) {
+  var intercept = (1 - contrast) / 2;
+  var sr = (1 - saturation) * 0.3086;
+  var sg = (1 - saturation) * 0.6094;
+  var sb = (1 - saturation) * 0.0820;
+  brightness = brightness * 225;
+
+  // color transform matrix for contrast and saturation, taken from online research https://docs.rainmeter.net/tips/colormatrix-guide/
+  var m = [
+    contrast * (sr + saturation), contrast * sr, contrast * sr, 0, 0,
+    contrast * sg, contrast * (sg + saturation), sg * contrast, 0, 0,
+    contrast * sb, contrast * sb, contrast * (sb + saturation), 0, 0,
+    0, 0, 0, 1, 0,
+    intercept + brightness, intercept + brightness, intercept + brightness, 1, 0
+  ];
+
+
+  for (var i = 0, n = data.length; i < n; i += 4) {
+    var r = data[i];
+    var g = data[i + 1];
+    var b = data[i + 2];
+    var a = data[i + 3];
+    data[i] = (r * m[0] + g * m[5] + b * m[10] + a * m[15] + m[20]);
+    data[i + 1] = (r * m[1] + g * m[6] + b * m[11] + a * m[16] + m[21]);
+    data[i + 2] = (r * m[2] + g * m[7] + b * m[12] + a * m[17] + m[22]);
+  }
+};
 
 /**
  * Applies a color transform to an array of image data. This transform takes a source and target color and blends

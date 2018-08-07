@@ -161,4 +161,26 @@ describe('os.color', function() {
     expect(os.color.normalizeOpacity(-1)).toBe(0);
     expect(os.color.normalizeOpacity(2)).toBe(1);
   });
+
+  it('should adjust values for brightness, contrast, and saturation', function() {
+    // Tests brightness and clamps
+    var data = [225, 0, 0, 0];
+    os.color.adjustColor(data, -1, 1, 1);
+    expect(data).toBe([0, 0, 0, 0]);
+
+    // Tests contrast
+    data = [100, 50, 50, 0];
+    os.color.adjustColor(data, 0, 2, 1);
+    expect(data).toBe([200, 100, 100, 0]);
+
+    // Tests saturation
+    data = [20, 20, 200, 0];
+    os.color.adjustColor(data, 0, 1, 0);
+    expect(data).toBe([35, 35, 35, 0]);
+
+    // Tests all 3
+    data = [0, 225, 225, 0];
+    os.color.adjustColor(data, 0.5, 0.5, 0.5);
+    expect(data).toBe([152, 208, 208, 0]);
+  });
 });
