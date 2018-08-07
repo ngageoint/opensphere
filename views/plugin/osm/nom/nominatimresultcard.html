@@ -1,8 +1,15 @@
-<div class="coord-result-card pointer" ng-mouseover="ctrl.over()" ng-mouseout="ctrl.out()" ng-click="ctrl.goTo()">
-  <div class="geonames result-card-header">
-    <span><i class="fa fa-map-marker"></i> {{ctrl.getTitle()}}</span>
+<div ng-mouseover="ctrl.over()" ng-mouseout="ctrl.out()">
+  <div class="card-header">
+    <i class="fa fa-fw fa-map-marker"></i>
+    {{ctrl.getTitle()}}
   </div>
-  <div>
-    <span class="result-type">{{ctrl.details}}</span>
+  <div class="card-body">
+    <div class="card-subtitle text-muted">{{ctrl.details}}</div>
+    <div class="text-right">
+      <button type="button" class="btn btn-primary" ng-click="ctrl.goTo()" title="View the result on the map">
+        <i class="fa fa-fighter-jet"></i>
+        Go To
+      </button>
+    </div>
   </div>
 </div>
