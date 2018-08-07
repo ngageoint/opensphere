@@ -29,6 +29,7 @@ plugin.im.action.feature.SoundAction = function() {
   plugin.im.action.feature.SoundAction.base(this, 'constructor');
 
   this.id = plugin.im.action.feature.SoundAction.ID;
+  this.label = plugin.im.action.feature.SoundAction.LABEL;
   this.configUI = plugin.im.action.feature.SoundAction.CONFIG_UI;
   this.xmlType = plugin.im.action.feature.SoundAction.ID;
 
