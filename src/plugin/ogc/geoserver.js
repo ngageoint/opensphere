@@ -63,25 +63,5 @@ plugin.ogc.GeoServer.prototype.configure = function(config) {
 /**
  * @type {RegExp}
  * @const
- * @private
  */
-plugin.ogc.GeoServer.URI_REGEXP_ = /\/(geoserver|.*?gs)(\/|(\/.*)?\/(ows|web)\/?)?([?#]|$)/i;
-
-
-/**
- * @param {os.file.File} file
- * @return {number}
- */
-plugin.ogc.GeoServer.isGeoserverResponse = function(file) {
-  var score = 0;
-
-  if (file) {
-    var uri = file.getUrl();
-
-    if (uri) {
-      score += plugin.ogc.GeoServer.URI_REGEXP_.test(uri) ? 5 : 0;
-    }
-  }
-
-  return score;
-};
+plugin.ogc.GeoServer.URI_REGEXP = /\/(geoserver|.*?gs)(\/|(\/.*)?\/(ows|web)\/?)?([?#]|$)/i;

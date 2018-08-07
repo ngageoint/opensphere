@@ -32,6 +32,8 @@ plugin.file.csv.ui.CSVImportUI.prototype.getTitle = function() {
  * @inheritDoc
  */
 plugin.file.csv.ui.CSVImportUI.prototype.launchUI = function(file, opt_config) {
+  plugin.file.csv.ui.CSVImportUI.base(this, 'launchUI', file, opt_config);
+
   var steps = [
     new os.ui.file.ui.csv.ConfigStep(),
     new os.ui.wiz.GeometryStep(),

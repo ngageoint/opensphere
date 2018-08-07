@@ -167,7 +167,7 @@ os.ui.search.SearchScrollDataSource.prototype.handleSearchStart = function(event
 os.ui.search.SearchScrollDataSource.prototype.handleSearchSuccess = function(event) {
   this.loading_ = false;
   // ensure the term is set
-  if (this.term_ !== event.getSearchTerm() && !goog.string.isEmptySafe(event.getTerm())) {
+  if (this.term_ !== event.getSearchTerm() && !goog.string.isEmptyOrWhitespace(event.getTerm())) {
     this.setTerm(event.getSearchTerm() || '');
   }
 

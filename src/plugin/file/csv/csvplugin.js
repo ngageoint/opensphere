@@ -2,7 +2,7 @@ goog.provide('plugin.file.csv.CSVPlugin');
 
 goog.require('os.data.DataManager');
 goog.require('os.data.ProviderEntry');
-goog.require('os.file.FileManager');
+goog.require('os.file.mime.csv');
 goog.require('os.layer.config.LayerConfigManager');
 goog.require('os.plugin.AbstractPlugin');
 goog.require('os.ui.im.ImportManager');
@@ -11,7 +11,6 @@ goog.require('plugin.file.csv.CSVExporter');
 goog.require('plugin.file.csv.CSVLayerConfig');
 goog.require('plugin.file.csv.CSVParser');
 goog.require('plugin.file.csv.CSVProvider');
-goog.require('plugin.file.csv.CSVTypeMethod');
 goog.require('plugin.file.csv.ui.CSVImportUI');
 
 
@@ -53,8 +52,7 @@ plugin.file.csv.CSVPlugin.prototype.init = function() {
       plugin.file.csv.CSVPlugin.ID,
       plugin.file.csv.CSVProvider,
       plugin.file.csv.CSVPlugin.TYPE,
-      plugin.file.csv.CSVPlugin.TYPE,
-      ''));
+      plugin.file.csv.CSVPlugin.TYPE));
 
   // register the csv descriptor type
   dm.registerDescriptorType(this.id, plugin.file.csv.CSVDescriptor);
@@ -63,15 +61,11 @@ plugin.file.csv.CSVPlugin.prototype.init = function() {
   var lcm = os.layer.config.LayerConfigManager.getInstance();
   lcm.registerLayerConfig('CSV', plugin.file.csv.CSVLayerConfig);
 
-  // register the csv file type method
-  var fm = os.file.FileManager.getInstance();
-  fm.registerContentTypeMethod(new plugin.file.csv.CSVTypeMethod());
-
   // register the csv import ui
   var im = os.ui.im.ImportManager.getInstance();
   im.registerImportDetails('CSV', true);
-  im.registerImportUI('csv', new plugin.file.csv.ui.CSVImportUI());
-  im.registerParser('csv', plugin.file.csv.CSVParser);
+  im.registerImportUI(os.file.mime.csv.TYPE, new plugin.file.csv.ui.CSVImportUI());
+  im.registerParser(this.id, plugin.file.csv.CSVParser);
 
   // register the csv exporter
   os.ui.exportManager.registerExportMethod(new plugin.file.csv.CSVExporter());

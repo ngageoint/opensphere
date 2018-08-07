@@ -104,30 +104,6 @@ os.data.DataManager.prototype.getProviderEntry = function(type) {
 /**
  * @inheritDoc
  */
-os.data.DataManager.prototype.getProviderTypeByFile = function(file) {
-  var best = null;
-  var bestScore = 0;
-
-  for (var type in this.providerTypes_) {
-    var entry = this.providerTypes_[type];
-
-    if (entry.fileDetection) {
-      var score = entry.fileDetection(file);
-
-      if (score > bestScore) {
-        best = entry.type;
-        bestScore = score;
-      }
-    }
-  }
-
-  return best;
-};
-
-
-/**
- * @inheritDoc
- */
 os.data.DataManager.prototype.getProviderTypeByClass = function(clazz) {
   for (var type in this.providerTypes_) {
     var entry = this.providerTypes_[type];
@@ -169,14 +145,12 @@ os.data.DataManager.prototype.createProvider = function(type) {
 
     if (type in this.providerTypes_) {
       var dp = null;
-      try {
-        // check if the provider is a singleton
-        dp = this.providerTypes_[type].clazz.getInstance();
-      } catch (e) {
-      }
+      var clazz = this.providerTypes_[type].clazz;
 
-      if (!dp) {
-        dp = /** @type {os.data.IDataProvider} */ (new this.providerTypes_[type].clazz());
+      if (clazz.getInstance) {
+        dp = clazz.getInstance();
+      } else {
+        dp = /** @type {os.data.IDataProvider} */ (new clazz());
       }
 
       return dp;

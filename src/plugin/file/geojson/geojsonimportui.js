@@ -30,6 +30,7 @@ plugin.file.geojson.GeoJSONImportUI.prototype.getTitle = function() {
  * @inheritDoc
  */
 plugin.file.geojson.GeoJSONImportUI.prototype.launchUI = function(file, opt_config) {
+  plugin.file.geojson.GeoJSONImportUI.base(this, 'launchUI', file, opt_config);
   var steps = [
     new os.ui.wiz.step.TimeStep(),
     new os.ui.wiz.OptionsStep()

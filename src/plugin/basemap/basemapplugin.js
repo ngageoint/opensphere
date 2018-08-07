@@ -78,8 +78,7 @@ plugin.basemap.BaseMapPlugin.prototype.init = function() {
       this.id,
       plugin.basemap.BaseMapProvider,
       plugin.basemap.LAYER_TYPE,
-      'Map layers provide background imagery. They often include streets, borders, or other reference information.',
-      ''));
+      'Map layers provide background imagery. They often include streets, borders, or other reference information.'));
 
   // register the base map descriptor types
   dm.registerDescriptorType(this.id, plugin.basemap.BaseMapDescriptor);
