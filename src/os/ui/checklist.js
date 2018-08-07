@@ -226,9 +226,9 @@ os.ui.ChecklistCtrl.prototype.updateAllCheckbox_ = function() {
       var allCheckbox = this.element_.find('.js-checklist__all');
       // If at least 1 is checked but not all, make indeterminate
       if (hasChecked && hasUnchecked) {
-        allCheckbox.prop('checked', false);
+        allCheckbox.prop('checked', true);
         allCheckbox.prop('indeterminate', true);
-        this['allCheckbox'] = false;
+        this['allCheckbox'] = true;
       } else {
         allCheckbox.prop('checked', hasChecked);
         allCheckbox.prop('indeterminate', false);
