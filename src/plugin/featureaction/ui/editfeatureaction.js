@@ -153,8 +153,6 @@ plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.buildSoundPreview = 
           2, this.soundCanvas.clientHeight / 2);
     }
   }
-
-  console.log(soundAction);
 };
 
 /**
