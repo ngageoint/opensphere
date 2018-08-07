@@ -6,15 +6,21 @@ goog.require('os.events.EventType');
 
 
 /**
- * @define {string} Shared IndexedDB object store.
+ * @define {string} Shared IDB store name.
  */
 goog.define('os.SHARED_STORE_NAME', 'shared');
 
 
 /**
- * @define {string} Shared IndexedDB object store.
+ * @define {string} Shared IDB name.
  */
 goog.define('os.SHARED_DB_NAME', os.NAMESPACE + '.shared');
+
+
+/**
+ * @define {number} Shared IDB version.
+ */
+goog.define('os.SHARED_DB_VERSION', 2);
 
 
 /**
