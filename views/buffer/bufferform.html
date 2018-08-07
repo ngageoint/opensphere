@@ -22,7 +22,7 @@
       </div>
     </div>
 
-    <div class="row mt-1" title="{{buffer.help.outside}}">
+    <div class="row mt-1" title="{{buffer.help.outside}}" ng-if="buffer.supportsBidirectional()">
       <label class="col-form-label col-4 text-right">Buffer Outside</label>
       <div class="col form-inline">
         <input class="form-control col-auto" type="checkbox" name="outside" ng-model="config.outside" ng-change="buffer.updatePreview()" ng-required="!config.inside">
@@ -32,7 +32,7 @@
       </div>
     </div>
 
-    <div class="row mt-1" title="{{buffer.help.inside}}">
+    <div class="row mt-1" title="{{buffer.help.inside}}" ng-if="buffer.supportsBidirectional()">
       <label class="col-form-label col-4 text-right">Buffer Inside</label>
       <div class="col form-inline">
         <input class="form-control col-auto" type="checkbox" name="inside" ng-model="config.inside" ng-change="buffer.updatePreview()" ng-required="!config.outside">

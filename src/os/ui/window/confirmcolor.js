@@ -53,7 +53,7 @@ os.ui.window.launchConfirmColor = function(confirm, opt_default) {
     'icon': 'fa fa-tint',
     'x': 'center',
     'y': 'center',
-    'width': '185',
+    'width': 195,
     'height': 'auto',
     'modal': 'true',
     'show-close': 'false',
