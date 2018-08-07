@@ -12,19 +12,19 @@
       <div class="mb-2">Choose how you would like to save the recording, then click Record to begin.</div>
       <div ng-form="recordForm" class="container-fluid">
         <div class="row form-group">
-          <label class="col-form-label col-2 text-right u-required">Title</label>
+          <label class="col-form-label col-3 text-right u-required">Title</label>
           <div class="col">
             <input class="form-control" type="text" name="title" ng-model="recordui.title" ng-maxlength="200" required/>
           </div>
         </div>
         <div class="row form-group">
-          <label class="col-form-label col-2 text-right u-required">Save to</label>
+          <label class="col-form-label col-3 text-right u-required">Save to</label>
           <div class="col form-inline">
             <select class="form-control" ng-model="recordui.persister" ng-options="value as key for (key, value) in recordui.persisters"/>
           </div>
         </div>
         <div class="row form-group"  ng-if="recordui.encoders.length > 1">
-          <label class="col-form-label col-2 text-right u-required">Type</label>
+          <label class="col-form-label col-3 text-right u-required">Type</label>
           <div class="col form-inline">
             <select class="form-control" ng-model="recordui.encoder"ng-options="e as recordui.getEncoderTitle(e) for e in recordui.encoders"/>
           </div>
