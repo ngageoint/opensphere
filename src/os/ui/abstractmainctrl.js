@@ -248,8 +248,8 @@ os.ui.AbstractMainCtrl.prototype.initialize = function() {
   // support flexbox but just not well until 38
   var versionArray = goog.labs.userAgent.browser.getVersion().split('.');
   var version = (versionArray && versionArray.length > 1) ? Number(versionArray[0]) : 0;
-  var minVersion = /** @type {Number} */(os.settings.get('slowFFversion', 31));
-  if (goog.labs.userAgent.browser.isFirefox() && version <= minVersion) {
+  var minVersion = /** @type {Number} */(os.settings.get('slowFFversion', 38));
+  if (goog.labs.userAgent.browser.isFirefox() && version < minVersion) {
     $('body').addClass('c-main__slowBrowser');
   }
 };
