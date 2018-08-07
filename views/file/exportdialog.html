@@ -36,7 +36,7 @@
 
   <div class="modal-footer flex-fill justify-content-between">
     <div>
-      <ng-pluralize class="align-middle" count="options.items.length" when="{'0': 'Nothing to export.',
+      <ng-pluralize class="align-middle" ng-class="{'text-warning': options.items.length == 0}" count="options.items.length" when="{'0': 'Nothing to export.',
                  'one': 'Exporting {} {{itemText}}.',
                  'other': 'Exporting {} {{itemText}}s.'}">
       </ng-pluralize>

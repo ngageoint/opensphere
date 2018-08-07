@@ -29,9 +29,9 @@
       min-width: 10rem;
 
       .select2-search-choice {
-        background-color: $input-group-addon-bg;
+        background-color: lighten($body-bg, 5%);
         background-image: none;
-        color: $input-group-addon-color;
+        color: color-yiq(lighten($body-bg, 5%));
         margin: 1px 0 1px 5px;
       }
 
