@@ -323,12 +323,7 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
    * Units for altitude
    * @type {string}
    */
-  this['altOptions'] = [
-    'kilometers',
-    'meters',
-    'miles',
-    'nautical miles'
-  ];
+  this['altOptions'] = goog.object.getKeys(os.math.Units);
 
   /**
    * @type {string}
@@ -1023,12 +1018,11 @@ os.ui.FeatureEditCtrl.prototype.loadFromFeature_ = function(feature) {
 
         // else if runs when the page is refreshed
         if (coordinate[2] !== null && coordinate[2] !== undefined && altU !== null && altU !== undefined) {
-          var newUnits = os.math.UnitLabels[goog.string.toTitleCase(altU.toLowerCase())];
-          this['altitude'] = os.math.convertUnits(coordinate[2], newUnits, os.math.Units.METERS);
+          this['altitude'] = os.math.convertUnits(coordinate[2], os.math.Units[altU], os.math.Units.METERS);
           this['altUnits'] = altU;
         } else if (coordinate[2] !== null && coordinate[2] !== undefined && altU == undefined) {
           this['altitude'] = coordinate[2];
-          this['altUnits'] = 'meters';
+          this['altUnits'] = goog.object.getKeys(os.math.Units)[1];
         }
       }
 
@@ -1191,24 +1185,6 @@ os.ui.FeatureEditCtrl.prototype.setFeatureConfig_ = function(config) {
   config[os.style.StyleField.LABEL_SIZE] = parseInt(this['labelSize'], 10) || os.style.label.DEFAULT_SIZE;
 };
 
-/**
- * Coverts alt to meters
- * @param {number} alt
- * @param {string} altU
- * @return {number}
- */
-os.ui.FeatureEditCtrl.convertUnits = function(alt, altU) {
-  if (altU == 'meters') {
-    return alt;
-  } else if (altU == 'kilometers') {
-    return os.math.convertUnits(alt, os.math.Units.METERS, os.math.Units.KILOMETERS);
-  } else if (altU == 'miles') {
-    return os.math.convertUnits(alt, os.math.Units.METERS, os.math.Units.MILES);
-  } else if (altU == 'nautical miles') {
-    return os.math.convertUnits(alt, os.math.Units.METERS, os.math.Units.NAUTICAL_MILES);
-  }
-  return alt;
-};
 
 /**
  * Save the geometry to a feature.
@@ -1221,20 +1197,20 @@ os.ui.FeatureEditCtrl.prototype.saveGeometry_ = function(feature) {
     var lon = Number(this['pointGeometry']['lon']);
     var lat = Number(this['pointGeometry']['lat']);
     var alt = Number(this['altitude']) ? this['altitude'] : null;
-    var altU = this['altUnits'] ? this['altUnits'] : 'meters';
-    var coords = [lon, lat];
+    var altU = this['altUnits'] ? this['altUnits'] : goog.object.getKeys(os.math.Units)[1];
+    var coord = [lon, lat];
 
     if (alt !== null && alt !== undefined && altU !== null && altU !== undefined) {
       feature.set(os.Fields.ALTITUDE_INPUT, alt);
       feature.set(os.Fields.ALT_UNITS, altU);
-      alt = os.ui.FeatureEditCtrl.convertUnits(alt, altU);
+      alt = os.math.convertUnits(alt, os.math.Units.METERS, os.math.Units[altU]);
       feature.set(os.Fields.ALT, alt);
       os.feature.setAltitude(feature);
-      coords.push(alt);
+      coord.push(alt);
     }
 
     if (!isNaN(lon) && !isNaN(lat)) {
-      var point = new ol.geom.Point(coords);
+      var point = new ol.geom.Point(coord);
       point.osTransform();
       feature.setGeometry(point);
 
