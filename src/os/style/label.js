@@ -346,7 +346,6 @@ os.style.label.updateShown = function() {
   }
 };
 
-
 /**
  * Creates or updates a label style for the provided feature. Label styles are saved to each feature instead of being
  * cached on the reader like other styles. This prevents saving a style for each text/font/color combo which would get

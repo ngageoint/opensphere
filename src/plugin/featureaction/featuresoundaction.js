@@ -16,13 +16,7 @@ goog.require('os.xml');
  * @enum {string}
  */
 plugin.im.action.feature.SoundActionTagName = {
-  CENTER_SHAPE: 'centerShape',
-  COLOR: 'color',
-  ICON_SRC: 'iconSrc',
-  ROTATION_COLUMN: 'rotationColumn',
-  SHOW_ROTATION: 'showRotation',
-  SHAPE: 'shape',
-  SIZE: 'size'
+  SOUND: 'sound'
 };
 
 /**
@@ -101,34 +95,95 @@ plugin.im.action.feature.SoundAction.DEFAULT_CONFIG = {
  * @inheritDoc
  */
 plugin.im.action.feature.SoundAction.prototype.execute = function(items) {
-  console.log('execute me');
+  var y = os.audio.AudioManager.getInstance();
+
+  for (var i = 0; i < items.length; i++) {
+    var item = items[i];
+    if (item) {
+      var featureConfig = /** @type {Array|Object|undefined} */ (item.get(
+          os.style.StyleType.FEATURE)) || {};
+      if (goog.isArray(featureConfig)) {
+        for (var j = 0; j < featureConfig.length; j++) {
+          os.style.mergeConfig(this.soundConfig, featureConfig[j]);
+        }
+      } else {
+        os.style.mergeConfig(this.soundConfig, featureConfig);
+      }
+
+      console.log('Play the sound', this.soundConfig['sound']);
+      y.play(this.soundConfig['sound']);
+
+      item.set(os.style.StyleType.FEATURE, featureConfig, true);
+      item.set(plugin.im.action.feature.SoundAction.FEATURE_ID, this.uid, true);
+
+      var configSound = this.soundConfig['sound'];
+      if (configSound) {
+        item.set('sound', configSound, true);
+      }
+    }
+  }
+
+  os.style.setFeaturesStyle(items);
+
+  var layer = os.feature.getLayer(items[0]);
+
+  if (layer) {
+    os.style.notifyStyleChange(layer, items);
+  }
 };
 
 /**
  * @inheritDoc
  */
 plugin.im.action.feature.SoundAction.prototype.persist = function(opt_to) {
+  opt_to = plugin.im.action.feature.SoundAction.base(this, 'persist', opt_to);
+  opt_to['soundConfig'] = this.soundConfig;
 
+  return opt_to;
 };
 
 /**
  * @inheritDoc
  */
 plugin.im.action.feature.SoundAction.prototype.restore = function(config) {
-
+  var soundConfig = /** @type {Object|undefined} */ (config['soundConfig']);
+  if (soundConfig) {
+    // create a new object in the same window context as this object
+    this.soundConfig = {};
+    os.object.merge(soundConfig, this.soundConfig);
+  }
 };
 
 /**
  * @inheritDoc
  */
 plugin.im.action.feature.SoundAction.prototype.toXml = function() {
+  var element = plugin.im.action.feature.SoundAction.base(this, 'toXml');
 
+  var sound = (this.soundConfig['sound']);
+  if (sound != null) {
+    os.xml.appendElement(plugin.im.action.feature.SoundActionTagName.SOUND,
+        element, String(sound));
+  }
+
+  return element;
 };
 
 /**
  * @inheritDoc
  */
 plugin.im.action.feature.SoundAction.prototype.fromXml = function(xml) {
+  var soundConfig = /** @type {!Object} */ (os.object.unsafeClone(
+      plugin.im.action.feature.SoundAction.DEFAULT_CONFIG));
+
+  if (xml) {
+    var sound = os.xml.getChildValue(xml,
+        plugin.im.action.feature.SoundActionTagName.SOUND);
+
+    soundConfig['sound'] = String(sound);
+
+    this.soundConfig = soundConfig;
+  }
 };
 
 /**

@@ -91,8 +91,6 @@ plugin.im.action.feature.ui.SoundConfigCtrl.prototype.initialize = function() {
 plugin.im.action.feature.ui.SoundConfigCtrl.prototype.saveAction = function() {
   if (this.action && this.soundConfig) {
     this.action.soundConfig = this.soundConfig;
-    // send a message indicating an update occurred
-    os.dispatcher.dispatchEvent(os.ui.im.action.EventType.UPDATE);
   }
 };
 

@@ -110,6 +110,7 @@ plugin.im.action.feature.LabelAction.prototype.execute = function(items) {
         // get the existing feature config or create a new one
         var featureConfig = /** @type {Array|Object|undefined} */ (item.get(os.style.StyleType.FEATURE)) || {};
 
+
         // apply label config
         if (goog.isArray(featureConfig)) {
           for (var j = 0; j < featureConfig.length; j++) {
