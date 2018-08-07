@@ -37,7 +37,7 @@
           <div class="d-inline-flex col">
             <input class="form-control col-4" type="number" name="semiMajor" ng-model="ctrl.semiMajor" ng-change="ctrl.onAxisChange()"
                 min="{{ctrl.getSemiMajorMin()}}" step="any" required="true" />
-            <select class="form-control ml-2 col-2" ng-model="ctrl.semiMajorUnits" ng-change="ctrl.updatePreview()"
+            <select class="form-control custom-select ml-2 col-2" ng-model="ctrl.semiMajorUnits" ng-change="ctrl.updatePreview()"
                 ng-options="unit for unit in ctrl.units">
             </select>
             <popover  class="mx-2" title="'Semi-Major Axis'" content="ctrl.help.semiMajor" pos="'right'">
@@ -57,7 +57,7 @@
           <div class="d-inline-flex col">
             <input class="form-control col-4" type="number" name="semiMinor" ng-model="ctrl.semiMinor" ng-change="ctrl.onAxisChange()"
                 min="{{1e-16}}" step="any" required="true" />
-            <select class="form-control ml-2 col-2" ng-model="ctrl.semiMinorUnits" ng-change="ctrl.updatePreview()"
+            <select class="form-control custom-select ml-2 col-2" ng-model="ctrl.semiMinorUnits" ng-change="ctrl.updatePreview()"
                 ng-options="unit for unit in ctrl.units">
             </select>
             <popover class="mx-2" title="'Semi-Minor Axis'" content="ctrl.help.semiMinor" pos="'right'">
