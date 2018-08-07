@@ -6,6 +6,7 @@ goog.require('ol.coordinate');
 goog.require('ol.events.condition');
 goog.require('ol.interaction.Interaction');
 goog.require('os.I3DSupport');
+goog.require('os.implements');
 
 
 
@@ -29,7 +30,7 @@ os.interaction.MouseZoom = function(opt_options) {
   this.lastY_ = {};
 };
 goog.inherits(os.interaction.MouseZoom, ol.interaction.Interaction);
-
+os.implements(os.interaction.MouseZoom, os.I3DSupport.ID);
 
 /**
  * @inheritDoc

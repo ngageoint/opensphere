@@ -1,13 +1,14 @@
 goog.provide('os.file.FileManager');
-goog.require('os.file');
-goog.require('os.file.IContentTypeMethod');
-goog.require('os.file.IFileMethod');
 
+goog.require('goog.log');
+goog.require('goog.log.Logger');
+goog.require('os.file');
+goog.require('os.file.mime');
+goog.require('os.file.mime.text');
 
 
 /**
- * Keeps a registry of methods for reading a file ({@link os.file.IFileMethod}) and a registry of content type
- * methods ({@link os.file.IContentTypeMethod}) for determining the file and layer type of a given file.
+ * Keeps a registry of methods for reading a file ({@link os.file.IFileMethod})
  * @constructor
  */
 os.file.FileManager = function() {
@@ -17,13 +18,6 @@ os.file.FileManager = function() {
    * @private
    */
   this.fileMethods_ = [];
-
-  /**
-   * Registered content type methods.
-   * @type {!Array<!os.file.IContentTypeMethod>}
-   * @private
-   */
-  this.ctMethods_ = [];
 };
 goog.addSingletonGetter(os.file.FileManager);
 
@@ -40,73 +34,68 @@ os.file.FileManager.prototype.getFileMethod = function() {
 
 /**
  * Given a content type or layer type hint, return the corresponding layer type.
- * @param {os.file.File} file The file reference.
+ * @param {!os.file.File} file The file reference.
  * @param {function(?string)} callback Callback when the type is available.
  */
-os.file.FileManager.prototype.getLayerType = function(file, callback) {
-  if (file.getContent() instanceof ArrayBuffer) {
-    var content = /** @type {ArrayBuffer} */ (file.getContent());
-    if (goog.isDef(window.zip) && os.file.isZipFile(content)) {
-      // read the zip file
-      zip.createReader(new zip.ArrayBufferReader(content), goog.bind(function(reader) {
-        // get the entries in the zip file, then test for layer type using the entries
-        reader.getEntries(this.getLayerTypeInternal_.bind(this, file, callback));
-      }, this), function() {
-        // failed reading the zip file
-        var msg = 'Error reading zip file "' + file.getFileName() + '"!';
-        os.alert.AlertManager.getInstance().sendAlert(msg, os.alert.AlertEventSeverity.ERROR);
-      });
-      return;
+os.file.FileManager.prototype.getContentType = function(file, callback) {
+  var buffer = file.getContent();
+  var fileBlob = file.getFile();
+
+  if (!buffer && !fileBlob) {
+    goog.log.error(os.file.FileManager.LOGGER_,
+        'The content or original File instance must be present on the os.file.File for content type '
+        + 'detection to work');
+    callback(file.getType());
+    return;
+  }
+
+  if (buffer && !(buffer instanceof ArrayBuffer)) {
+    goog.log.error(os.file.FileManager.LOGGER_,
+        'The content has been changed from the original array buffer (most likely to a string).');
+    callback(file.getType());
+    return;
+  }
+
+  var onComplete = function(type) {
+    if (type) {
+      var chain = os.file.mime.getTypeChain(type);
+      if (chain && chain.indexOf(os.file.mime.text.TYPE) > -1) {
+        file.convertContentToString();
+      }
+
+      file.setType(type);
     }
-  }
 
-  this.getLayerTypeInternal_(file, callback);
+    return type;
+  };
+
+  // we are going to read the first 16KB and send that to the mime/content type detection
+  if (buffer && buffer instanceof ArrayBuffer) {
+    os.file.mime.detect(buffer, file).then(onComplete).then(callback);
+  } else {
+    goog.fs.FileReader.readAsArrayBuffer(fileBlob.slice(0, 16 * 1024)).addCallback(function(buffer) {
+      os.file.mime.detect(buffer, file).then(onComplete).then(callback);
+    });
+  }
 };
 
 
 /**
- * Given a content type or layer type hint, return the corresponding layer type.
- * @param {os.file.File} file The file reference.
- * @param {function(?string)} callback Callback when the type is available.
- * @param {Array<zip.Entry>=} opt_zipEntries
+ * Logger
+ * @type {goog.log.Logger}
  * @private
+ * @const
  */
-os.file.FileManager.prototype.getLayerTypeInternal_ = function(file, callback, opt_zipEntries) {
-  var type = null;
-  var ctMethod = goog.array.find(this.ctMethods_, function(method) {
-    return method.isType(file, opt_zipEntries);
-  });
-
-  if (ctMethod) {
-    type = ctMethod.getLayerType().toLowerCase();
-    file.setContentType(ctMethod.getContentType());
-    file.setType(type);
-  }
-
-  callback(type);
-};
+os.file.FileManager.LOGGER_ = goog.log.getLogger('os.file.FileManager');
 
 
 /**
  * Given a content type or layer type hint, return the corresponding layer type.
- * @param {os.file.File} file The file reference.
- * @param {string} hint Content type hint.
- * @return {?string} The corresponding layer type, or null if no registered content type methods were matched.
+ * @param {!os.file.File} file The file reference.
+ * @param {function(?string)} callback Callback when the type is available.
+ * @deprecated use os.file.FileManager.prototype.getContentType() instead
  */
-os.file.FileManager.prototype.getLayerTypeByContentHint = function(file, hint) {
-  var type = null;
-  var ctMethod = goog.array.find(this.ctMethods_, function(method) {
-    return (method.getContentType() == hint || method.getLayerType() == hint) && method.isType(file);
-  });
-
-  if (ctMethod) {
-    type = ctMethod.getLayerType().toLowerCase();
-    file.setContentType(ctMethod.getContentType());
-    file.setType(type);
-  }
-
-  return type;
-};
+os.file.FileManager.prototype.getLayerType = os.file.FileManager.prototype.getContentType;
 
 
 /**
@@ -120,24 +109,12 @@ os.file.FileManager.prototype.hasSupportedMethod = function() {
 
 /**
  * Convenience function for array searching/filtering.
- * @param {!(os.file.IFileMethod|os.file.IContentTypeMethod)} method The method.
+ * @param {!(os.file.IFileMethod)} method The method.
  * @return {boolean}
  * @private
  */
 os.file.FileManager.prototype.isMethodSupported_ = function(method) {
   return method.isSupported();
-};
-
-
-/**
- * Register a method for determining content type.
- * @param {!os.file.IContentTypeMethod} ctMethod The content type method.
- */
-os.file.FileManager.prototype.registerContentTypeMethod = function(ctMethod) {
-  if (!goog.array.contains(this.ctMethods_, ctMethod)) {
-    this.ctMethods_.push(ctMethod);
-    this.ctMethods_.sort(this.sortDescPriority_);
-  }
 };
 
 
@@ -155,8 +132,8 @@ os.file.FileManager.prototype.registerFileMethod = function(fileMethod) {
 
 /**
  * Sort file/content type method by descending priority.
- * @param {!(os.file.IFileMethod|os.file.IContentTypeMethod)} a First method.
- * @param {!(os.file.IFileMethod|os.file.IContentTypeMethod)} b Second method.
+ * @param {!os.file.IFileMethod} a First method.
+ * @param {!os.file.IFileMethod} b Second method.
  * @return {number}
  * @private
  */

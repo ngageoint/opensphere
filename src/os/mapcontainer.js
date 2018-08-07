@@ -419,10 +419,15 @@ os.MapContainer.prototype.updateSize = function() {
   if (this.map_) {
     // wait for the map to finish rendering with 0 size, then update the size to the correct value
     ol.events.listenOnce(this.map_, ol.MapEventType.POSTRENDER, function() {
-      os.ui.waitForAngular(this.map_.updateSize.bind(this.map_));
+      var map = this.map_;
+      os.ui.waitForAngular(function() {
+        map.updateSize();
+        os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
+      });
     }, this);
 
     this.map_.setSize([0, 0]);
+    os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
   }
 };
 

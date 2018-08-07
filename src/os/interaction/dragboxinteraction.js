@@ -7,6 +7,7 @@ goog.require('ol.style.Style');
 goog.require('os.I3DSupport');
 goog.require('os.MapEvent');
 goog.require('os.geo');
+goog.require('os.implements');
 goog.require('os.ui.ol.interaction.DragBox');
 
 
@@ -38,7 +39,7 @@ os.interaction.DragBox = function(opt_options) {
   this.color = ol.color.asArray(color) || [0, 255, 255, 1];
 };
 goog.inherits(os.interaction.DragBox, os.ui.ol.interaction.DragBox);
-
+os.implements(os.interaction.DragBox, os.I3DSupport.ID);
 
 /**
  * @inheritDoc

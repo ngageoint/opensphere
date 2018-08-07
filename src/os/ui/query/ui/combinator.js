@@ -43,6 +43,7 @@ os.ui.query.ui.combinatorDirective = function() {
     scope: {
       'layerId': '=',
       'updateImmediate': '=?',
+      'hideAdvanced': '@?',
       'hideLayerChooser': '=?'
     },
     templateUrl: os.ROOT + 'views/query/combinator.html',
@@ -115,7 +116,7 @@ os.ui.query.ui.CombinatorCtrl = function($scope, $element) {
    */
   this.applyImmediate = $scope['updateImmediate'] === true;
 
-  $scope['advanced'] = os.ui.queryManager.hasActiveExplicitEntries();
+  $scope['advanced'] = !$scope['hideAdvanced'] && os.ui.queryManager.hasActiveExplicitEntries();
   var orders = os.ui.query.ui.CombinatorCtrl.ORDERS_;
   $scope['orders'] = orders;
 

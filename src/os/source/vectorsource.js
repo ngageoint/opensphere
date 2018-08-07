@@ -43,6 +43,7 @@ goog.require('os.source');
 goog.require('os.source.ISource');
 goog.require('os.source.PropertyChange');
 goog.require('os.source.column');
+goog.require('os.string');
 goog.require('os.style.StyleManager');
 goog.require('os.style.label');
 goog.require('os.time.TimeRange');
@@ -369,6 +370,20 @@ os.source.Vector = function(opt_options) {
    * @private
    */
   this.uniqueId_ = null;
+
+  /**
+   * Stats of column data types.
+   * @type {?Object}
+   * @private
+   */
+  this.stats_ = {};
+
+  /**
+   * If the feature data column type should try to be determined.
+   * @type {boolean}
+   * @protected
+   */
+  this.detectColumnTypes_ = false;
 
   if (!options['disableAreaSelection']) {
     os.dispatcher.listen(os.action.EventType.SELECT, this.onFeatureAction_, false, this);
@@ -760,6 +775,24 @@ os.source.Vector.prototype.addColumn = function(field, opt_header, opt_temp, opt
 
 
 /**
+ * Gets a flag to determine whether to attempt to convert feature data to a type.
+ * @return {boolean}
+ */
+os.source.Vector.prototype.getDetectColumnTypes = function() {
+  return this.detectColumnTypes_;
+};
+
+
+/**
+ * Sets a flag to determine whether to attempt to convert feature data to a type.
+ * @param {boolean} value
+ */
+os.source.Vector.prototype.setDetectColumnTypes = function(value) {
+  this.detectColumnTypes_ = value;
+};
+
+
+/**
  * Perform cleanup actions on columns.
  * @param {boolean=} opt_silent If events should not be dispatched.
  * @protected
@@ -771,14 +804,6 @@ os.source.Vector.prototype.processColumns = function(opt_silent) {
         os.object.getValueExtractor('name'));
     goog.array.removeDuplicates(this.columns, this.columns, colByName);
 
-    this.columns.forEach(function(column) {
-      // mark internal columns that were derived from another
-      os.fields.markDerived(column);
-
-      // add custom formatters
-      os.source.column.addFormatter(column);
-    }, this);
-
     var descriptor = os.dataManager.getDescriptor(this.getId());
     if (descriptor) {
       // restore descriptor column information to the source columns
@@ -786,7 +811,35 @@ os.source.Vector.prototype.processColumns = function(opt_silent) {
       if (descriptorColumns) {
         os.ui.slick.column.restore(descriptorColumns, this.columns);
       }
+    }
 
+    this.columns.forEach(function(column) {
+      // mark internal columns that were derived from another
+      os.fields.markDerived(column);
+
+      // add custom formatters
+      os.source.column.addFormatter(column);
+
+      // update the column type based on the data
+      if (!goog.object.isEmpty(this.stats_)) {
+        var types = this.stats_[column['name']];
+
+        if (types) {
+          // ignore the empty data
+          goog.object.remove(types, 'empty');
+
+          if (goog.object.getCount(types) == 1) {
+            column['type'] = goog.object.getAnyKey(types);
+          } else if (goog.object.getCount(types) == 2) {
+            if (goog.object.containsKey(types, 'integer') && goog.object.containsKey(types, 'decimal')) {
+              column['type'] = 'decimal';
+            }
+          }
+        }
+      }
+    }, this);
+
+    if (descriptor) {
       // save columns to the descriptor
       descriptor.setColumns(this.columns);
     }
@@ -1764,6 +1817,8 @@ os.source.Vector.prototype.processFeatures = function(features) {
 
   this.featureCount_ += features.length;
 
+  this.stats_ = {};
+
   // handle immediate processing on all features
   for (var i = 0, n = features.length; i < n; i++) {
     features[i].suppressEvents();
@@ -1866,6 +1921,55 @@ os.source.Vector.prototype.processImmediate = function(feature) {
   }
 
   os.style.setFeatureStyle(feature, this);
+
+  if (this.getDetectColumnTypes()) {
+    this.columnTypeDetection_(feature);
+  }
+};
+
+
+/**
+ * Detects the column types.
+ * @param {!ol.Feature} feature
+ * @private
+ *
+ * @suppress {accessControls} To allow direct access to feature metadata.
+ */
+os.source.Vector.prototype.columnTypeDetection_ = function(feature) {
+  var keys = feature.getKeys();
+  keys.forEach(function(col) {
+    var value = feature.values_[col];
+    var type = typeof (value);
+
+    if (value === '') {
+      type = 'empty';
+    } else if (type === 'number') {
+      type = Math.floor(value) === value ? 'integer' : 'decimal';
+    } else if (type === 'string') {
+      if (os.string.isFloat(String(value))) {
+        value = parseFloat(value);
+
+        if (Math.floor(value) === value) {
+          type = 'integer';
+        } else {
+          type = 'decimal';
+        }
+
+        feature.values_[col] = value;
+      }
+    }
+
+    // keep stats of the different types for each column
+    if (!(col in this.stats_)) {
+      this.stats_[col] = {};
+    }
+
+    if (!(type in this.stats_[col])) {
+      this.stats_[col][type] = 0;
+    }
+
+    this.stats_[col][type]++;
+  }, this);
 };
 
 
@@ -3274,5 +3378,9 @@ os.source.Vector.prototype.restore = function(config) {
     var columnDef = new os.data.ColumnDefinition();
     columnDef.restore(config['uniqueId']);
     this.setUniqueId(columnDef);
+  }
+
+  if (config['detectColumnTypes']) {
+    this.setDetectColumnTypes(config['detectColumnTypes']);
   }
 };
