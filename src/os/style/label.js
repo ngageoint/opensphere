@@ -456,7 +456,9 @@ os.style.label.prepareText = function(text, opt_truncate) {
   result = result.trim();
 
   if (truncate) {
-    result = goog.string.truncate(result, os.style.label.TRUNCATE_LENGTH);
+    result = result.split('\n').map(function(l) {
+      return goog.string.truncate(l.trim(), os.style.label.TRUNCATE_LENGTH);
+    }).join('\n');
   }
 
   return result;

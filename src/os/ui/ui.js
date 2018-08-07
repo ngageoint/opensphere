@@ -144,7 +144,8 @@ os.ui.measureText = function(text, opt_classes, opt_font) {
     el[0].setAttribute('class', opt_classes ? opt_classes : '');
     el.css('font', opt_font || '');
 
-    el.html(text.replace('\n', '<br>'));
+    // replace newline characters with HTML breaks
+    el.html(text.replace(/\n/g, '<br>'));
     return new goog.math.Size(/** @type {number} */ (el.width()), /** @type {number} */ (el.height()));
   }
 
