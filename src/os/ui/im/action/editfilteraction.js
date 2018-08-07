@@ -87,7 +87,6 @@ os.ui.im.action.EditFilterActionCtrl = function($scope, $element) {
         'id': actions[i].getId(),
         'action': actions[i]
       });
-      console.log(actions[i].getId());
     }
   }
 

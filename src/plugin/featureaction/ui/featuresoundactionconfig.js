@@ -18,9 +18,6 @@ goog.require('plugin.im.action.feature.ui.ActionConfigCtrl');
 /**
  * Directive to configure a feature style action.
  * @return {angular.Directive}
- * ><select><option data-ng-repeat=" sound in sounds" ' +
- *'">{{sound}}</option>' +
- *'</select>
  *
  */
 plugin.im.action.feature.ui.soundConfigDirective = function() {
@@ -31,8 +28,8 @@ plugin.im.action.feature.ui.soundConfigDirective = function() {
     'ng-model="sound" ' +
     'ng-change="ctrl.onSoundChange()"' +
     'style="width:100%" ' +
-    'ng-options="val for val in sounds"></select>' +
-    '</div>',
+    'ng-options="val for val in sounds">' +
+    '</select></div>',
     controller: plugin.im.action.feature.ui.SoundConfigCtrl,
     controllerAs: 'ctrl'
   };
@@ -45,7 +42,7 @@ os.ui.Module.directive(plugin.im.action.feature.SoundAction.CONFIG_UI,
     [plugin.im.action.feature.ui.soundConfigDirective]);
 
 /**
- * Controller for setting a feature style.
+ * Controller for setting a feature sound.
  * @param {!angular.Scope} $scope The Angular scope.
  * @param {!angular.JQLite} $element The root DOM element.
  * @extends {plugin.im.action.feature.ui.ActionConfigCtrl<plugin.im.action.feature.SoundAction>}
@@ -59,7 +56,7 @@ plugin.im.action.feature.ui.SoundConfigCtrl = function($scope, $element) {
   $scope['sounds'] = os.audio.AudioManager.getInstance().getSounds();
 
   /**
-   * The action style config.
+   * The action sound config.
    * @type {Object}
    * @protected
    */
@@ -95,7 +92,7 @@ plugin.im.action.feature.ui.SoundConfigCtrl.prototype.saveAction = function() {
 };
 
 /**
- * Description
+ * Play selected sound on change
  */
 plugin.im.action.feature.ui.SoundConfigCtrl.prototype.onSoundChange = function() {
   var snd = this.scope['sound'];

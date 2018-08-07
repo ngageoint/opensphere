@@ -29,7 +29,6 @@ plugin.im.action.feature.SoundAction = function() {
   plugin.im.action.feature.SoundAction.base(this, 'constructor');
 
   this.id = plugin.im.action.feature.SoundAction.ID;
-  this.label = plugin.im.action.feature.SoundAction.LABEL;
   this.configUI = plugin.im.action.feature.SoundAction.CONFIG_UI;
   this.xmlType = plugin.im.action.feature.SoundAction.ID;
 
@@ -41,7 +40,7 @@ plugin.im.action.feature.SoundAction = function() {
   this.uid = goog.getUid(this);
 
   /**
-   * The feature style config.
+   * The feature sound config.
    * @type {!Object}
    */
   this.soundConfig = /** @type {!Object} */ (os.object.unsafeClone(
@@ -68,7 +67,7 @@ plugin.im.action.feature.SoundAction.ID = 'featureSoundAction';
 plugin.im.action.feature.SoundAction.FEATURE_ID = '_featureSoundAction';
 
 /**
- * Action label.
+ * Action Label.
  * @type {string}
  * @const
  */
@@ -82,7 +81,7 @@ plugin.im.action.feature.SoundAction.LABEL = 'Set Sound';
 plugin.im.action.feature.SoundAction.CONFIG_UI = 'featureactionsoundconfig';
 
 /**
- * The default label configuration.
+ * The default sound configuration.
  * @type {!Object}
  * @const
  */

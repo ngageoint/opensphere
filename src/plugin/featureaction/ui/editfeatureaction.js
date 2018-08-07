@@ -116,7 +116,7 @@ goog.exportProperty(
     plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.showActionPreview);
 
 /**
- * Ype
+ * Create the canvas preview for a selected sound
  * @param {plugin.im.action.feature.SoundAction} soundAction
  */
 plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.buildSoundPreview = function(soundAction) {
