@@ -13,7 +13,7 @@ os.ui.load.loadingDirective = function() {
   return {
     restrict: 'E',
     replace: true,
-    template: '<i title="Loading..." class="fa fa-spinner fa-smooth fa-spin c-loading-spinner" ' +
+    template: '<i title="Loading..." class="fa fa-spinner fa-smooth fa-spin" ' +
         'ng-if="loadingCtrl.loading"></i>',
     controller: os.ui.load.LoadingCtrl,
     controllerAs: 'loadingCtrl'
