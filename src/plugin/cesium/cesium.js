@@ -58,11 +58,11 @@ plugin.cesium.MAX_FOG_DENSITY = 3e-4;
 
 
 /**
- * The default Cesium fog density.
+ * The default Cesium fog density, as a percentage of max density.
  * @type {number}
  * @const
  */
-plugin.cesium.DEFAULT_FOG_DENSITY = plugin.cesium.MAX_FOG_DENSITY / 2;
+plugin.cesium.DEFAULT_FOG_DENSITY = 0.5;
 
 
 /**

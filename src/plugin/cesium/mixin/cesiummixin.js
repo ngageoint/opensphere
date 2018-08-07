@@ -58,7 +58,7 @@ plugin.cesium.mixin.loadCesiumMixins = function() {
    * @param {Cesium.ResourceFetchOptions} options
    * @return {Cesium.Promise<*>}
    */
-  Cesium.Resource.prototype.fetch = function(options) {
+  Cesium.Resource.prototype._makeRequest = function(options) {
     var req = new os.net.Request(options.url || this.url);
     var headers = options.headers || this.headers;
 

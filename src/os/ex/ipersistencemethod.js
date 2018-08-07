@@ -33,7 +33,7 @@ os.ex.IPersistenceMethod.prototype.requiresUserAction;
 /**
  * Saves the given content
  * @param {string} fileName The file name (may not be applicable to all persistence methods)
- * @param {*} content The content to save
+ * @param {Object|null|string} content The content to save
  * @param {string=} opt_mimeType The mime type of the content
  * @param {string=} opt_title The title of the state (may not be applicable to all persistence methods)
  * @param {string=} opt_description The description of the state (may not be applicable to all persistence methods)
