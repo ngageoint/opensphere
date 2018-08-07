@@ -24,7 +24,6 @@ os.ui.help.webGLPerfCaveatDirective = function() {
 os.ui.Module.directive('webglperfcaveat', [os.ui.help.webGLPerfCaveatDirective]);
 
 
-
 /**
  * Launches a dialog telling the user their browser is terrible.
  * @param {string=} opt_title The window title
@@ -39,14 +38,16 @@ os.ui.help.launchWebGLPerfCaveatDialog = function(opt_title, opt_overrideCallbac
     'yesText': 'Got it!',
     'yesIcon': 'fa fa-thumbs-up',
     'yesButtonTitle': 'Cancel and continue using 2D.',
+    'yesButtonClass': 'btn-primary',
     'noText': 'Use 3D',
-    'noIcon': 'fa fa-warning orange-icon',
-    'noButtonTitle': 'Switch to 3D, but you may experience poor performance on this browser.'
+    'noIcon': 'fa fa-warning',
+    'noButtonTitle': 'Switch to 3D, but you may experience poor performance on this browser.',
+    'noButtonClass': 'btn-danger'
   };
 
   var windowOptions = {
     'label': opt_title || 'WebGL Performance Issue',
-    'icon': 'fa fa-frown-o yellow-icon',
+    'icon': 'fa fa-frown-o',
     'x': 'center',
     'y': 'center',
     'width': '425',
