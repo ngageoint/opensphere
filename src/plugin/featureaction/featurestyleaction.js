@@ -97,6 +97,8 @@ plugin.im.action.feature.StyleAction.prototype.execute = function(items) {
       var featureConfig = /** @type {Array|Object|undefined} */ (os.object.unsafeClone(
           item.get(os.style.StyleType.FEATURE))) || {};
 
+
+
       // merge style changes into the feature config and set it on the feature
       if (goog.isArray(featureConfig)) {
         for (var j = 0; j < featureConfig.length; j++) {
