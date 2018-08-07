@@ -44,15 +44,22 @@ os.ui.Module.directive('checklist', [os.ui.checklistDirective]);
 /**
  * Controller function for the checklist directive
  * @param {!angular.Scope} $scope
+ * @param {!angular.JQLite} $element
  * @constructor
  * @ngInject
  */
-os.ui.ChecklistCtrl = function($scope) {
+os.ui.ChecklistCtrl = function($scope, $element) {
   /**
    * @type {?angular.Scope}
    * @private
    */
   this.scope_ = $scope;
+
+  /**
+   * @type {?angular.JQLite}
+   * @private
+   */
+  this.element_ = $element;
 
   /**
    * @type {boolean}
@@ -73,6 +80,7 @@ os.ui.ChecklistCtrl = function($scope) {
  */
 os.ui.ChecklistCtrl.prototype.destroy_ = function() {
   this.scope_ = null;
+  this.element_ = null;
 };
 
 
@@ -202,18 +210,30 @@ goog.exportProperty(
  */
 os.ui.ChecklistCtrl.prototype.updateAllCheckbox_ = function() {
   if (this.scope_) {
+    var hasChecked = false;
+    var hasUnchecked = false;
     var items = /** @type {Array<!osx.ChecklistItem>} */ (this.scope_['items']);
     if (items && items.length > 0) {
       for (var i = 0, n = items.length; i < n; i++) {
         if (!items[i].enabled) {
           // if at least one isn't checked, uncheck the box
-          this['allCheckbox'] = false;
-          return;
+          hasUnchecked = true;
+        } else {
+          hasChecked = true;
         }
       }
 
-      // they were all checked
-      this['allCheckbox'] = true;
+      var allCheckbox = this.element_.find('.js-checklist__all');
+      // If at least 1 is checked but not all, make indeterminate
+      if (hasChecked && hasUnchecked) {
+        allCheckbox.prop('checked', false);
+        allCheckbox.prop('indeterminate', true);
+        this['allCheckbox'] = false;
+      } else {
+        allCheckbox.prop('checked', hasChecked);
+        allCheckbox.prop('indeterminate', false);
+        this['allCheckbox'] = hasChecked;
+      }
     }
   }
 };

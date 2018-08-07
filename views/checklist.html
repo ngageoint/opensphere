@@ -1,14 +1,12 @@
 <div class="d-flex flex-column flex-fill u-table u-table-striped" ng-form="checklistForm">
-  <div class="form-check pl-4 u-table__head">
-    <label class="form-check-label col-form-label w-100">
-      <input class="form-check-input" type="checkbox" name="all" ng-model="checklist.allCheckbox" ng-change="checklist.toggleAll()">
-      All
-    </label>
+  <div class="custom-control custom-checkbox pl-4 u-table__head">
+    <input id="js-checklist__all" class="js-checklist__all custom-control-input" type="checkbox" name="all" ng-model="checklist.allCheckbox" ng-change="checklist.toggleAll()">
+    <label for="js-checklist__all" class="custom-control-label w-100">All</label>
   </div>
   <div class="u-overflow-y-auto">
-    <div class="form-check pl-4 u-table__row" ng-repeat="item in items" title="{{item.tooltip || ('Enable/disable ' + item.label)}}">
-      <label class="form-check-label col-form-label w-100">
-        <input class="form-check-input" type="checkbox" name="items" ng-model="item.enabled" ng-change="checklist.onItemChange(item)"/>
+    <div class="custom-control custom-checkbox pl-4 u-table__row" ng-repeat="item in items" title="{{item.tooltip || ('Enable/disable ' + item.label)}}">
+      <input id="{{$index + item.label}}" class="custom-control-input" type="checkbox" name="items" ng-model="item.enabled" ng-change="checklist.onItemChange(item)"/>
+      <label for="{{$index + item.label}}" class="custom-control-label w-100">
         <span ng-bind-html="item.customFormat"/>
         {{item.label}}
         <span ng-bind-html="item.detailText"/>

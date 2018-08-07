@@ -264,16 +264,13 @@
   height: 1px;
 }
 
-.tree-expand-collapse {
+.c-node-toggle {
+  cursor: pointer;
   flex-shrink: 0;
   font-size: $font-size-base;
 }
 
-.tree-icons {
-  display: flex;
-  padding-right: .25rem;
-  vertical-align: text-bottom;
-
+.c-node-icons {
   i.fa {
     text-align: center;
     vertical-align: middle;

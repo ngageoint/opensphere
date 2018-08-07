@@ -411,7 +411,8 @@ os.ui.replaceDirective = function(name, module, directiveFn, opt_priority) {
       });
 
       // make sure the user can't tab to the drop-down anchor tags
-      $.fn.typeahead.defaults.item = '<li><a tabindex="-1" class="dropdown-item" href=""></a></li>';
+      $.fn.typeahead.defaults.item = '<li><a tabindex="-1" class="dropdown-item text-truncate" href=""></a></li>';
+      $.fn.typeahead.defaults.menu = '<ul class="typeahead dropdown-menu mw-100"></ul>';
 
       // Select2 has trouble with Bootstrap modals in IE only
       if (goog.userAgent.IE) {
