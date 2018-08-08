@@ -1,5 +1,6 @@
 goog.provide('plugin.ogc.ui.ChooseTimeColumnCtrl');
 goog.provide('plugin.ogc.ui.chooseTimeColumnDirective');
+
 goog.require('goog.Disposable');
 goog.require('goog.array');
 goog.require('goog.async.Delay');
@@ -9,6 +10,7 @@ goog.require('os.data.DataManager');
 goog.require('os.defines');
 goog.require('os.layer');
 goog.require('os.ui.Module');
+goog.require('os.ui.util.validationMessageDirective');
 goog.require('plugin.ogc.OGCLayerDescriptor');
 
 

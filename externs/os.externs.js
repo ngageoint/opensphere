@@ -255,7 +255,7 @@ osx.window;
  *   showClose: (boolean|undefined),
  *   noScroll: (boolean|undefined),
  *
- *   height: (number|undefined),
+ *   height: (string|number|undefined),
  *   minHeight: (number|undefined),
  *   maxHeight: (number|undefined),
  *
