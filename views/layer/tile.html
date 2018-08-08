@@ -15,7 +15,7 @@
               </button>
             </td>
           </tr>
-          <tr title="Sets the brightness of the layer(s) [3D only]" ng-show="tile.is3DEnabled && tile.showBasicColor">
+          <tr title="Sets the brightness of the layer(s)" ng-show="tile.showBasicColor">
             <td class="control-label">Brightness:</td>
             <td style="width:100%"><slider min="-1" max="1" step="0.05" value="brightness" name="brightness"></slider></td>
             <td style="padding-left:10px;">
@@ -24,7 +24,7 @@
               </button>
             </td>
           </tr>
-          <tr title="Sets the contrast of the layer(s) [3D only]" ng-show="tile.is3DEnabled && tile.showBasicColor">
+          <tr title="Sets the contrast of the layer(s)" ng-show="tile.showBasicColor">
             <td class="control-label">Contrast:</td>
             <td style="width:100%"><slider min="0" max="2" step="0.05" value="contrast" name="contrast"></slider></td>
             <td style="padding-left:10px;">
@@ -33,7 +33,7 @@
               </button>
             </td>
           </tr>
-          <tr title="Sets the saturation of the layer(s) [3D only]" ng-show="tile.is3DEnabled && tile.showBasicColor">
+          <tr title="Sets the saturation of the layer(s)" ng-show="tile.showBasicColor">
             <td class="control-label">Saturation:</td>
             <td style="width:100%"><slider min="0" max="1" step="0.05" value="saturation" name="saturation"></slider></td>
             <td style="padding-left:10px;">
