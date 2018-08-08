@@ -547,7 +547,6 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
       'minHeight': Number($scope['minHeight']) || 100,
       'maxHeight': Number($scope['maxHeight']) || window.screen.availHeight,
       'handles': 'nw, ne, sw, se',
-      // 'resize': this.updateContent_.bind(this),
       'start': this.onDragStart_.bind(this),
       'stop': this.onDragStop_.bind(this)
     };
