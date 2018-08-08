@@ -226,26 +226,38 @@
   }
 }
 
-// Things in the dark navbar. Light navbars should just get the defaults
-.navbar-dark {
+// Positioning/sizing for controls in a nav bar.
+.navbar {
   .ol-mouse-position {
     bottom: auto;
-    color: $navbar-dark-color;
     right: auto;
   }
 
   .ol-zoom-level {
-    color: $navbar-dark-color;
     min-width: 15rem;
   }
 
   .ol-scale-line {
     background: transparent;
     bottom: auto;
-    color: $navbar-dark-color;
     left: auto;
     min-width: 10rem;
     padding: unset;
+  }
+}
+
+// Color adjustments for dark navbars. Light navbars should use the defaults.
+.navbar-dark {
+  .ol-mouse-position {
+    color: $navbar-dark-color;
+  }
+
+  .ol-zoom-level {
+    color: $navbar-dark-color;
+  }
+
+  .ol-scale-line {
+    color: $navbar-dark-color;
 
     .ol-scale-line-inner {
       border-color: $navbar-dark-color;
