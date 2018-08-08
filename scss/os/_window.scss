@@ -4,7 +4,6 @@
 
 .c-window {
   .modal-body {
-    // Settings the background and color allows us to color
     background: $modal-content-bg;
     color: $body-color;
     overflow-y: auto;
@@ -23,5 +22,17 @@
     border-radius: 0 0 $border-radius $border-radius;
     color: $body-color;
     flex-shrink: 0;
+  }
+}
+
+// Dont show window content while resizing to speed up performance for slow browsers
+.c-main__slowBrowser .c-window.ui-resizable-resizing {
+  .modal-header {
+    background: $modal-content-bg;
+    border: 0;
+  }
+
+  * {
+    display: none;
   }
 }
