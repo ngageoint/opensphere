@@ -20,7 +20,7 @@ plugin.im.action.feature.SoundActionTagName = {
 };
 
 /**
- * Import action that sets the style for a {@link ol.Feature}.
+ * Import action that sets the sound for a {@link ol.Feature}.
  * @extends {os.im.action.AbstractImportAction<ol.Feature>}
  * @implements {os.legend.ILegendRenderer}
  * @constructor
@@ -30,7 +30,6 @@ plugin.im.action.feature.SoundAction = function() {
 
   this.id = plugin.im.action.feature.SoundAction.ID;
   this.label = plugin.im.action.feature.SoundAction.LABEL;
-  this.configUI = plugin.im.action.feature.SoundAction.CONFIG_UI;
   this.xmlType = plugin.im.action.feature.SoundAction.ID;
 
   /**
@@ -61,7 +60,7 @@ os.implements(plugin.im.action.feature.SoundAction,
 plugin.im.action.feature.SoundAction.ID = 'featureSoundAction';
 
 /**
- * Property set on features to indicate they're using a feature style action.
+ * Property set on features to indicate they're using a feature sound action.
  * @type {string}
  * @const
  */
@@ -95,8 +94,6 @@ plugin.im.action.feature.SoundAction.DEFAULT_CONFIG = {
  * @inheritDoc
  */
 plugin.im.action.feature.SoundAction.prototype.execute = function(items) {
-  var y = os.audio.AudioManager.getInstance();
-
   for (var i = 0; i < items.length; i++) {
     var item = items[i];
     if (item) {
@@ -110,9 +107,6 @@ plugin.im.action.feature.SoundAction.prototype.execute = function(items) {
         os.style.mergeConfig(this.soundConfig, featureConfig);
       }
 
-      console.log('Play the sound', this.soundConfig['sound']);
-      y.play(this.soundConfig['sound']);
-
       item.set(os.style.StyleType.FEATURE, featureConfig, true);
       item.set(plugin.im.action.feature.SoundAction.FEATURE_ID, this.uid, true);
 
@@ -122,6 +116,8 @@ plugin.im.action.feature.SoundAction.prototype.execute = function(items) {
       }
     }
   }
+
+  os.audio.AudioManager.getInstance().play(this.soundConfig['sound']);
 
   os.style.setFeaturesStyle(items);
 
@@ -186,23 +182,10 @@ plugin.im.action.feature.SoundAction.prototype.fromXml = function(xml) {
   }
 };
 
+
 /**
  * @inheritDoc
  */
 plugin.im.action.feature.SoundAction.prototype.renderLegend = function(
     options, var_args) {
-
-};
-
-/**
- * If a feature is styled by the action.
- * @param {!ol.Feature} feature The feature.
- * @return {boolean} If the feature is using this style action.
- * @this plugin.im.action.feature.SoundAction
- *
- * @suppress {accessControls} To allow direct access to feature metadata.
- */
-plugin.im.action.feature.SoundAction.isFeatureStyled = function(feature) {
-  return feature.values_[plugin.im.action.feature.SoundAction.FEATURE_ID] ===
-      this.uid;
 };
