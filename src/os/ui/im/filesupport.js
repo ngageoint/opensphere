@@ -214,16 +214,17 @@ os.ui.im.launchFileSupport = function(file) {
 
     var windowOptions = {
       'label': 'Unable to Store File',
-      'icon': 'fa fa-exclamation-triangle orange-icon',
+      'headerClass': 'bg-warning u-bg-warning-text',
+      'icon': 'fa fa-warning',
       'x': 'center',
       'y': 'center',
       'width': 550,
       'min-width': 400,
       'max-width': 800,
       'height': 'auto',
-      'modal': 'true',
-      'show-close': 'true',
-      'no-scroll': 'true'
+      'modal': true,
+      'show-close': true,
+      'no-scroll': true
     };
 
     var template = '<filesupport></filesupport>';

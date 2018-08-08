@@ -12,6 +12,7 @@ goog.require('os.ui.window.confirmDirective');
  */
 os.ui.window.confirmColumnDirective = function() {
   return {
+    replace: true,
     restrict: 'E',
     templateUrl: os.ROOT + 'views/window/confirmcolumn.html',
     controller: os.ui.window.ConfirmColumnCtrl,
@@ -55,30 +56,19 @@ os.ui.window.ConfirmColumnCtrl = function($scope) {
  */
 os.ui.window.launchConfirmColumn = function(options) {
   var scopeOptions = {
-    'confirmCallback': options.confirm,
-    'cancelCallback': options.cancel,
-    'confirmValue': options.defaultValue,
-    'yesText': 'OK',
-    'yesIcon': 'fa fa-check lt-blue-icon',
-    'noText': 'Cancel',
-    'noIcon': 'fa fa-ban red-icon',
     'columns': options.columns,
     'prompt': options.prompt
   };
 
-  var windowOverrides = /** @type {!osx.window.WindowOptions} */ (options.windowOptions || {});
-  var windowOptions = {
-    'label': windowOverrides.label || 'Choose Column',
-    'icon': windowOverrides.icon || '',
-    'x': windowOverrides.x || 'center',
-    'y': windowOverrides.y || 'center',
-    'width': windowOverrides.width || 325,
-    'height': windowOverrides.height || 'auto',
-    'modal': windowOverrides.modal != null ? windowOverrides.modal : 'true',
-    'show-close': windowOverrides.showClose != null ? windowOverrides.showClose : 'false',
-    'no-scroll': windowOverrides.noScroll != null ? windowOverrides.noScroll : 'true'
-  };
+  var windowOptions = /** @type {!osx.window.WindowOptions} */ (options.windowOptions || {});
+  windowOptions.label = windowOptions.label || 'Choose Column';
+  windowOptions.height = 'auto';
 
-  var template = '<confirm><confirmcolumn></confirmcolumn></confirm>';
-  os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+  os.ui.window.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
+    confirm: options.confirm,
+    confirmValue: options.defaultValue,
+    cancel: options.cancel,
+    prompt: '<confirmcolumn></confirmcolumn>',
+    windowOptions: windowOptions
+  }), scopeOptions);
 };

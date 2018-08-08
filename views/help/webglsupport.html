@@ -1,49 +1,56 @@
 <div>
-  <div>
+  <p>
     Uh oh! Your browser does not support WebGL. To use this feature, please upgrade to a modern browser (we recommend
     Chrome 35+ or Firefox 31+) and make sure your graphics drivers are up to date. If you need assistance, please
     contact <span ng-bind-html="supportText | osLinky"></span> for support.
-  </div>
-  <div class="mt-2" ng-if="showIEHelp">
-    <h5>Internet Explorer 11 Note:</h5>
-    <div>
+  </p>
+  <div class="card bg-secondary u-bg-secondary-text" ng-if="showIEHelp">
+    <div class="card-header">Internet Explorer 11 Note</div>
+    <div class="card-body">
       This version of IE11 is missing required WebGL features. Please contact your system administrator to install the
       latest patches, or use Chrome/Firefox if available.
     </div>
   </div>
-  <div class="mt-2" ng-if="showFFHelp">
-    <h5>Firefox Note:</h5>
-    <div>
-      WebGL may be supported but disabled in your browser. <em>Follow these instructions at your own risk!</em>
+  <div class="card bg-secondary u-bg-secondary-text" ng-if="showFFHelp">
+    <div class="card-header">Firefox Note</div>
+    <div class="card-body">
+      <div class="form-group">
+        WebGL may be supported but disabled in your browser.
+        <br>
+        <em>Follow these instructions at your own risk!</em>
+      </div>
+      <ol>
+        <li>In a new tab, navigate to '<span class="font-weight-bold">about:config</span>'.</li>
+        <li>Type '<span class="font-weight-bold">webgl</span>' in the search box.</li>
+        <li>Set '<span class="font-weight-bold">webgl.disabled</span>' to <span class="font-weight-bold">false</span>.</li>
+        <li>Set '<span class="font-weight-bold">webgl.force-enabled</span>' to <span class="font-weight-bold">true</span>.</li>
+        <li>Refresh {{appName}} and try again.</li>
+        <li>
+          If you encounter further issues, reset the above to their original values and contact
+          <span ng-bind-html="supportText | osLinky"></span> for support.
+        </li>
+      </ol>
     </div>
-    <ol>
-      <li>In a new tab, navigate to '<strong>about:config</strong>'.</li>
-      <li>Type '<strong>webgl</strong>' in the search box.</li>
-      <li>Set '<strong>webgl.disabled</strong>' to <strong>false</strong>.</li>
-      <li>Set '<strong>webgl.force-enabled</strong>' to <strong>true</strong>.</li>
-      <li>Refresh {{appName}} and try again.</li>
-      <li>
-        If you encounter further issues, reset the above to their original values and contact
-        <span ng-bind-html="supportText | osLinky"></span> for support.
-      </li>
-    </ol>
   </div>
-  <div class="mt-2" ng-if="showGCHelp">
-    <h5>Google Chrome Note:</h5>
-    <div>
-      WebGL may be supported but disabled in your browser.
-      <br><em>Follow these instructions at your own risk!</em>
+  <div class="card bg-secondary u-bg-secondary-text" ng-if="showGCHelp">
+    <div class="card-header">Google Chrome Note</div>
+    <div class="card-body">
+      <div class="form-group">
+        WebGL may be supported but disabled in your browser.
+        <br>
+        <em>Follow these instructions at your own risk!</em>
+      </div>
+      <ol>
+        <li>In a new tab, navigate to '<span class="font-weight-bold">chrome://flags</span>'.</li>
+        <li>On the right side of the '<span class="font-weight-bold">Experiments</span>' bar click '<span class="font-weight-bold">Reset all to default</span>'</li>
+        <li>On the bottom of the page click the '<span class="font-weight-bold">Relauch Now</span>' button</li>
+        <li>If the browser does not re-open on its own, open it manually</li>
+        <li>When the browser opens, reload {{appName}} and try again.</li>
+        <li>
+          If you encounter further issues, contact
+          <span ng-bind-html="supportText | osLinky"></span> for support.
+        </li>
+      </ol>
     </div>
-    <ol>
-      <li>In a new tab, navigate to '<strong>chrome://flags</strong>'.</li>
-      <li>On the right side of the '<strong>Experiments</strong>' bar click '<strong>Reset all to default</strong>'</li>
-      <li>On the bottom of the page click the '<strong>Relauch Now</strong>' button</li>
-      <li>If the browser does not re-open on its own, open it manually</li>
-      <li>When the browser opens, reload {{appName}} and try again.</li>
-      <li>
-        If you encounter further issues, contact
-        <span ng-bind-html="supportText | osLinky"></span> for support.
-      </li>
-    </ol>
   </div>
 </div>

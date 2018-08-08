@@ -15,6 +15,7 @@ os.ui.help.webGLSupportDirective = function() {
   return {
     restrict: 'E',
     replace: true,
+    link: os.ui.help.webGLSupportLink_,
     templateUrl: os.ROOT + 'views/help/webglsupport.html'
   };
 };
@@ -24,6 +25,16 @@ os.ui.help.webGLSupportDirective = function() {
  * Add the directive to the module.
  */
 os.ui.Module.directive('webglsupport', [os.ui.help.webGLSupportDirective]);
+
+
+/**
+ * Fire the window ready event for auto height.
+ * @param {!angular.Scope} $scope The Angular scope.
+ * @private
+ */
+os.ui.help.webGLSupportLink_ = function($scope) {
+  $scope.$emit(os.ui.WindowEventType.READY);
+};
 
 
 /**
@@ -37,15 +48,16 @@ os.ui.help.launchWebGLSupportDialog = function(opt_title) {
 
   var windowOptions = {
     'label': opt_title || 'WebGL Not Supported',
+    'headerClass': 'bg-warning u-bg-warning-text',
     'icon': 'fa fa-frown-o',
     'x': 'center',
     'y': 'center',
-    'width': 425,
+    'width': 525,
     'min-width': 300,
-    'max-width': 600,
-    'height': 200,
+    'max-width': 1000,
+    'height': 'auto',
     'min-height': 200,
-    'max-height': 500,
+    'max-height': 1000,
     'modal': true
   };
 
@@ -54,13 +66,10 @@ os.ui.help.launchWebGLSupportDialog = function(opt_title) {
 
   if (goog.userAgent.IE && goog.userAgent.VERSION == 11) {
     scopeOptions['showIEHelp'] = true;
-    windowOptions['height'] = 300;
   } else if (goog.userAgent.GECKO && goog.userAgent.isVersionOrHigher(10)) {
     scopeOptions['showFFHelp'] = true;
-    windowOptions['height'] = 300;
   } else if (goog.userAgent.WEBKIT && goog.userAgent.isVersionOrHigher(28)) {
     scopeOptions['showGCHelp'] = true;
-    windowOptions['height'] = 300;
   }
 
   os.ui.window.launchConfirm(/** @type {!osx.window.ConfirmOptions} */ ({
