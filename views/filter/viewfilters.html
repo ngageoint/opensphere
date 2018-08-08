@@ -2,15 +2,14 @@
   <div class="modal-body flex-column d-flex flex-fill">
     <div ng-form name="filterForm" class="flex-column d-flex flex-fill">
       <div class="row">
-        <label class="col-form-label col-6 text-right">Title</label>
-        <label class="col-form-label col-6 text-left">{{filters.title}}</label>
+        <label class="col-form-label col-2 text-right">Title</label>
+        <label class="col-form-label col">{{filters.title}}</label>
       </div>
       <div class="row">
-        <label class="col-form-label col-6 text-right">Description</label>
-        <label class="col-form-label col-6 text-left">{{filters.description}}</label>
+        <label class="col-form-label col-2 text-right">Description</label>
+        <label class="col-form-label col">{{filters.description}}</label>
       </div>
-      <hr>
-      <div class="flex-fill">
+      <div class="d-flex flex-column flex-fill">
         <advancedfilterbuilder root="filters.root" columns="columns" viewonly="viewonly"></advancedfilterbuilder>
       </div>
     </div>

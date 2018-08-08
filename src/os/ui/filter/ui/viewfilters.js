@@ -163,14 +163,11 @@ os.ui.filter.ui.ViewFiltersCtrl.prototype.addTreeNode_ = function(child, treeNod
 
 /**
  * Cancels the filter
+ * @export
  */
 os.ui.filter.ui.ViewFiltersCtrl.prototype.cancel = function() {
   os.ui.window.close(this.element);
 };
-goog.exportProperty(
-    os.ui.filter.ui.ViewFiltersCtrl.prototype,
-    'cancel',
-    os.ui.filter.ui.ViewFiltersCtrl.prototype.cancel);
 
 
 /**
