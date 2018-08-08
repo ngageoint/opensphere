@@ -1,24 +1,19 @@
 .c-navtop {
-  .c-navtop__wrapper {
-    &.navbar-dark.bg-dark {
-      background: $body-bg !important;
-      color: $body-color;
+  font-family: sans-serif;
 
-      .nav-link {
-        color: $body-color !important;
-      }
-    }
+  .c-search-box {
+    width: 20rem;
+  }
+}
 
-    // Fixes buttons and forms in the navbar
-    &.c-navtop__top {
-      font-size: .875rem;
+@media (max-width: map-get($grid-breakpoints, xl)) {
+  .c-navtop .c-search-box {
+    width: 17rem;
+  }
+}
 
-      .form-control,
-      .btn {
-        font-family: sans-serif;
-        font-size: .875rem;
-        padding: .1rem .2rem;
-      }
-    }
+@media (max-width: map-get($grid-breakpoints, lg)) {
+  .c-navtop .c-search-box {
+    width: inherit;
   }
 }
