@@ -276,6 +276,42 @@ os.layer.Tile.prototype.getColor = function() {
   return null;
 };
 
+/**
+ * Get the brightness for the tile layer.
+ * @return {number}
+ * @override
+ */
+os.layer.Tile.prototype.getBrightness = function() {
+  if (this.layerOptions_) {
+    return /** @type {number} */ (this.layerOptions_['brightness'] || 0);
+  }
+  return 0;
+};
+
+/**
+ * Get the brightness for the tile layer.
+ * @override
+ * @return {number}
+ */
+os.layer.Tile.prototype.getContrast = function() {
+  if (this.layerOptions_) {
+    return /** @type {number} */ (this.layerOptions_['contrast'] || 1);
+  }
+  return 1;
+};
+
+/**
+ * Get the saturation for the tile layer.
+ * @override
+ * @return {number}
+ */
+os.layer.Tile.prototype.getSaturation = function() {
+  if (this.layerOptions_) {
+    return /** @type {number} */ (this.layerOptions_['saturation'] || 1);
+  }
+  return 1;
+};
+
 
 /**
  * Get the whether the tile layer is being colorized.
@@ -326,6 +362,72 @@ os.layer.Tile.prototype.setColor = function(value, opt_options) {
   }
 };
 
+/**
+ * Adjust the layer brightness.  A value of -1 will render the layer completely
+ * black.  A value of 0 will leave the brightness unchanged.  A value of 1 will
+ * render the layer completely white.  Other values are linear multipliers on
+ * the effect (values are clamped between -1 and 1).
+ *
+ * @override
+ * @param {number} value The brightness of the layer (values clamped between -1 and 1)
+ * @param {Object=} opt_options The layer options to use
+ */
+os.layer.Tile.prototype.setBrightness = function(value, opt_options) {
+  goog.asserts.assert(value >= -1 && value <= 1, 'brightness is not between -1 and 1');
+  os.layer.Tile.base(this, 'setBrightness', value);
+  var options = opt_options || this.layerOptions_;
+  if (options) {
+    options['brightness'] = value;
+    this.updateColorFilter();
+    this.updateIcons_();
+    os.style.notifyStyleChange(this);
+  }
+};
+
+/**
+ * Adjust the layer contrast.  A value of 0 will render the layer completely
+ * grey.  A value of 1 will leave the contrast unchanged.  Other values are
+ * linear multipliers on the effect (and values over 1 are permitted).
+ *
+ * @override
+ * @param {number} value The contrast of the layer (values clamped between 0 and 2)
+ * @param {Object=} opt_options The layer options to use
+ */
+os.layer.Tile.prototype.setContrast = function(value, opt_options) {
+  goog.asserts.assert(value >= 0 && value <= 2, 'contrast is not between 0 and 2');
+  os.layer.Tile.base(this, 'setContrast', value);
+  var options = opt_options || this.layerOptions_;
+  if (options) {
+    options['contrast'] = value;
+    this.updateColorFilter();
+    this.updateIcons_();
+    os.style.notifyStyleChange(this);
+  }
+};
+
+/**
+ * Adjust layer saturation.  A value of 0 will render the layer completely
+ * unsaturated.  A value of 1 will leave the saturation unchanged.  Other
+ * values are linear multipliers of the effect (and values over 1 are
+ * permitted).
+ *
+ * @override
+ * @param {number} value The saturation of the layer (values clamped between 0 and 1)
+ * @param {Object=} opt_options The layer options to use
+ */
+os.layer.Tile.prototype.setSaturation = function(value, opt_options) {
+  goog.asserts.assert(value >= 0 && value <= 1, 'saturation is not between 0 and 1');
+  os.layer.Tile.base(this, 'setSaturation', value);
+  var options = opt_options || this.layerOptions_;
+  if (options) {
+    options['saturation'] = value;
+    this.updateColorFilter();
+    this.updateIcons_();
+    os.style.notifyStyleChange(this);
+  }
+};
+
+
 
 /**
  * Updates the color filter, either adding or removing depending on whether the layer is colored to a non-default
@@ -335,7 +437,8 @@ os.layer.Tile.prototype.setColor = function(value, opt_options) {
 os.layer.Tile.prototype.updateColorFilter = function() {
   var source = this.getSource();
   if (source instanceof ol.source.TileImage) {
-    if (this.getColorize() || !os.color.equals(this.getColor(), this.getDefaultColor())) {
+    if (this.getColorize() || !os.color.equals(this.getColor(), this.getDefaultColor()) ||
+        this.getBrightness() != 0 || this.getContrast() != 1 || this.getSaturation() != 1) {
       // put the colorFilter in place if we are colorized or the current color is different from the default
       source.addTileFilter(this.colorFilter_);
     } else {
@@ -354,8 +457,12 @@ os.layer.Tile.prototype.updateColorFilter = function() {
 os.layer.Tile.prototype.applyColors = function(data) {
   var srcColor = this.getDefaultColor() || '#fffffe';
   var tgtColor = this.getColor() || '#fffffe';
+  var brightness = this.getBrightness();
+  var contrast = this.getContrast();
+  var saturation = this.getSaturation();
   var colorize = this.getColorize();
-  if (colorize || !os.color.equals(srcColor, tgtColor)) {
+  if (colorize || !os.color.equals(srcColor, tgtColor) ||
+    this.getBrightness() != 0 || this.getContrast() != 1 || this.getSaturation() != 1) {
     if (tgtColor) {
       if (colorize) {
         // colorize will set all of the colors to the target
@@ -364,6 +471,7 @@ os.layer.Tile.prototype.applyColors = function(data) {
         // transformColor blends between the src and target color, leaving densitization intact
         os.color.transformColor(data, srcColor, tgtColor);
       }
+      os.color.adjustColor(data, brightness, contrast, saturation);
     }
   }
 };
