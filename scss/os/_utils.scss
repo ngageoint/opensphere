@@ -16,8 +16,13 @@
 // appear muted when disabled, so we'll override the class instead.
 $form-control-disabled-opacity: .6 !default;
 
+// Button borders are changed when disabled, but form controls are not. This looks bad when they're together,
+// particularly in input groups. Change disabled form control borders to match buttons.
+$form-control-disabled-border: $gray-600 !default;
+
 .form-control {
   &:disabled {
+    border-color: $form-control-disabled-border;
     opacity: $form-control-disabled-opacity;
   }
 }
