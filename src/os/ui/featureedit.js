@@ -406,7 +406,7 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
       // we don't care about or want these sticking around, so remove them
       delete this.originalProperties_[os.style.StyleType.SELECT];
       delete this.originalProperties_[os.style.StyleType.HIGHLIGHT];
-      delete this.originalProperties_[os.style.StyleType.LABELS];
+      delete this.originalProperties_[os.style.StyleType.LABEL];
 
       // if a feature config exists, create a deep clone of it so the correct config is restored on cancel
       var oldConfig = this.originalProperties_[os.style.StyleType.FEATURE];
