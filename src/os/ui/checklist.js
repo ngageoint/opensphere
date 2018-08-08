@@ -156,6 +156,7 @@ os.ui.ChecklistCtrl.prototype.labelCompare_ = function(a, b) {
 
 /**
  * Toggles all items on or off.
+ * @export
  */
 os.ui.ChecklistCtrl.prototype.toggleAll = function() {
   if (this.scope_ && this.scope_['allowMultiple']) {
@@ -170,15 +171,12 @@ os.ui.ChecklistCtrl.prototype.toggleAll = function() {
     }
   }
 };
-goog.exportProperty(
-    os.ui.ChecklistCtrl.prototype,
-    'toggleAll',
-    os.ui.ChecklistCtrl.prototype.toggleAll);
 
 
 /**
  * Handle an item being checked on/off.
  * @param {!osx.ChecklistItem} item The changed item
+ * @export
  */
 os.ui.ChecklistCtrl.prototype.onItemChange = function(item) {
   if (this.scope_) {
@@ -198,10 +196,6 @@ os.ui.ChecklistCtrl.prototype.onItemChange = function(item) {
     this.emitChangeEvent_();
   }
 };
-goog.exportProperty(
-    os.ui.ChecklistCtrl.prototype,
-    'onItemChange',
-    os.ui.ChecklistCtrl.prototype.onItemChange);
 
 
 /**
