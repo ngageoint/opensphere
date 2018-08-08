@@ -1,6 +1,9 @@
 <div class="c-ogcserver-form flex-fill w-100 d-flex flex-column">
   <div class="modal-body container flex-fill">
-    <div ng-show="testing" class="testing"><i class="fa fa-4x fa-spin fa-smooth fa-spinner"></i><p>Testing...</p></div>
+    <div class="text-center" ng-show="testing">
+      <div><i class="fa fa-4x fa-spin fa-smooth fa-spinner"></i></div>
+      <div>Testing...</div>
+    </div>
     <form ng-show="!testing" name="form" ng-submit="ctrl.accept()">
       <div class="form-group">
         <label for="title">Title</label>

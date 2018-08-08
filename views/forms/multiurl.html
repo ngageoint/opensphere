@@ -1,10 +1,9 @@
 <div class="flex-fill w-100 d-flex flex-column">
   <div class="modal-body container flex-fill">
-    <div class="d-flex p-2 align-items-center justify-content-center" ng-show="testing">
-      <i class="fa fa-4x fa-spin fa-smooth fa-spinner mr-2"></i>
-      <span>Testing...</span>
+    <div class="text-center" ng-show="testing">
+      <div><i class="fa fa-4x fa-spin fa-smooth fa-spinner"></i></div>
+      <div>Testing...</div>
     </div>
-
     <form class="container-fluid" ng-show="!testing" name="form" ng-submit="ctrl.accept()" novalidate>
       <div class="form-group row" title="The title for the server">
         <label class="col-3 col-form-label text-right" for="title">Title</label>
