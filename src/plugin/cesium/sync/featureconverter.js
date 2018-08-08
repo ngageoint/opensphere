@@ -17,6 +17,7 @@ goog.require('ol.source.TileImage');
 goog.require('ol.source.WMTS');
 goog.require('ol.style.Icon');
 goog.require('ol.style.Style');
+goog.require('os.fn');
 goog.require('os.geom.GeometryField');
 goog.require('os.implements');
 goog.require('os.layer.ILayer');
@@ -242,25 +243,21 @@ plugin.cesium.sync.FeatureConverter.prototype.wrapFillAndOutlineGeometries = fun
 // Geometry converters
 /**
  * Create a Cesium label if style has a text component.
- * @param {!ol.Feature} feature The OL3 feature
- * @param {!ol.geom.Geometry} geometry
- * @param {Array<!ol.style.Style>} labels
- * @param {!plugin.cesium.VectorContext} context
+ * @param {!ol.Feature} feature The feature.
+ * @param {!ol.geom.Geometry} geometry The geometry.
+ * @param {!ol.style.Style} label The label style.
+ * @param {!plugin.cesium.VectorContext} context The Cesium vector context.
  * @protected
  */
-plugin.cesium.sync.FeatureConverter.prototype.createLabels = function(feature, geometry, labels, context) {
-  var allOptions = [];
-  goog.array.forEach(labels, function(label) {
-    if (!goog.string.isEmptyOrWhitespace(goog.string.makeSafe(label.getText()))) {
-      var options = /** @type {!Cesium.optionsLabelCollection} */ ({
-        heightReference: this.getHeightReference(context.layer, feature, geometry)
-      });
+plugin.cesium.sync.FeatureConverter.prototype.createLabel = function(feature, geometry, label, context) {
+  if (!goog.string.isEmptyOrWhitespace(goog.string.makeSafe(label.getText()))) {
+    var options = /** @type {!Cesium.optionsLabelCollection} */ ({
+      heightReference: this.getHeightReference(context.layer, feature, geometry)
+    });
 
-      this.updateLabel(options, geometry, label, context);
-      allOptions.push(options);
-    }
-  }, this);
-  context.addLabels(allOptions, feature, geometry);
+    this.updateLabel(options, geometry, label, context);
+    context.addLabel(options, feature, geometry);
+  }
 };
 
 
@@ -397,7 +394,7 @@ plugin.cesium.sync.FeatureConverter.prototype.updateLabel = function(label, geom
   // This removes characters outside the ASCII printable range to prevent that behavior.
   //
   var labelText = textStyle.getText() || '';
-  label.text = labelText.replace(/[^\x20-\x7e\xa0-\xff]/g, '');
+  label.text = labelText.replace(/[^\x0a\x0d\x20-\x7e\xa0-\xff]/g, '');
 
   label.font = textStyle.getFont() || 'normal 12px Arial';
   label.pixelOffset = new Cesium.Cartesian2(textStyle.getOffsetX(), textStyle.getOffsetY());
@@ -1488,18 +1485,16 @@ plugin.cesium.sync.FeatureConverter.prototype.getFeatureStyles = function(featur
  * @param {!ol.geom.Geometry} geometry The geometry to be converted
  * @param {!ol.style.Style} style The geometry style
  * @param {!plugin.cesium.VectorContext} context Cesium synchronization context
- * @param {Array<!ol.style.Style>=} opt_labels - the group of labels to apply to the geometries
+ * @param {ol.style.Style=} opt_label The label to render with the geometry
  */
 plugin.cesium.sync.FeatureConverter.prototype.olGeometryToCesium = function(feature, geometry, style, context,
-    opt_labels) {
-  if (opt_labels) {
-    var currentLabels = context.getLabelsForGeometry(geometry);
-    if (currentLabels == null || opt_labels.length != currentLabels.length) {
-      this.createLabels(feature, geometry, opt_labels, context);
+    opt_label) {
+  if (opt_label) {
+    var currentLabel = context.getLabelForGeometry(geometry);
+    if (currentLabel == null) {
+      this.createLabel(feature, geometry, opt_label, context);
     } else {
-      goog.array.forEach(opt_labels, function(label, index) {
-        this.updateLabel(currentLabels[index], geometry, label, context);
-      }, this);
+      this.updateLabel(currentLabel, geometry, opt_label, context);
     }
   }
 
@@ -1671,43 +1666,48 @@ plugin.cesium.sync.FeatureConverter.prototype.olVectorLayerToCesium = function(l
 plugin.cesium.sync.FeatureConverter.prototype.convert = function(feature, resolution, context) {
   context.markDirty(feature);
 
-  var styles = this.getFeatureStyles(feature, resolution, context.layer);
-
-  // Split the styles into normal styles and labels
-  var split = goog.array.bucket(styles, function(style) {
-    // MASSIVE ASSUMPTION ALERT!
-    // I decided to separate label styles from geometry styles for caching purposes, but it also allows making the below
-    // assumption that anything with a text style is for a label, and anything else is for a primitive/billboard. sorry
-    // if this wrecks your party.
-    return style.getText() ? 'labels' : 'other';
-  });
-
-  styles = split['other'];
-
-  var textStyles = split['labels'];
+  var styles = [];
+  var labelStyle;
   var labelGeometry;
 
-  if (textStyles && textStyles.length > 0) {
-    // check if the feature defines which geometry should be used to position the label
-    var labelGeometryName = /** @type {string|undefined} */ (feature.get(os.style.StyleField.LABEL_GEOMETRY));
-    if (labelGeometryName) {
-      labelGeometry = /** @type {ol.geom.Geometry|undefined} */ (feature.get(labelGeometryName));
+  //
+  // The following code makes these assumptions, based on how OpenSphere creates label styles:
+  //  - Each feature has a single label style.
+  //  - The label style is independent of styles that should be applied to geometries.
+  //
+  // Given those assumptions, treat the first style with a text component as the label and keep non-text styles for
+  // styling geometries.
+  //
+  var featureStyles = this.getFeatureStyles(feature, resolution, context.layer);
+  for (var i = 0; i < featureStyles.length; i++) {
+    if (!featureStyles[i].getText()) {
+      styles.push(featureStyles[i]);
+    } else if (!labelStyle) {
+      labelStyle = featureStyles[i];
     }
   }
 
   if (styles) {
+    if (labelStyle) {
+      // check if the feature defines which geometry should be used to position the label
+      var labelGeometryName = /** @type {string|undefined} */ (feature.get(os.style.StyleField.LABEL_GEOMETRY));
+      if (labelGeometryName) {
+        labelGeometry = /** @type {ol.geom.Geometry|undefined} */ (feature.get(labelGeometryName));
+      }
+    }
+
     for (var i = 0, n = styles.length; i < n; i++) {
       var style = styles[i];
       if (style) {
         var geometry = style.getGeometryFunction()(feature);
         if (geometry) {
           // render labels if there isn't a label geometry or the current geometry is the label geometry
-          var renderedLabels = (!labelGeometry || labelGeometry == geometry) ? textStyles : undefined;
-          this.olGeometryToCesium(feature, geometry, style, context, renderedLabels);
+          var renderedLabel = (!labelGeometry || labelGeometry == geometry) ? labelStyle : undefined;
+          this.olGeometryToCesium(feature, geometry, style, context, renderedLabel);
 
           // never render labels more than once
-          if (renderedLabels) {
-            textStyles = undefined;
+          if (renderedLabel) {
+            labelStyle = undefined;
           }
         }
       }

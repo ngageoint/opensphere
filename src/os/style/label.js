@@ -4,6 +4,7 @@ goog.require('goog.async.ConditionalDelay');
 goog.require('goog.log');
 goog.require('goog.log.Logger');
 goog.require('ol.style.Style');
+goog.require('os.fn');
 goog.require('os.map');
 
 
@@ -100,16 +101,6 @@ os.style.label.filterValid = function(configs) {
   }
 
   return [];
-};
-
-
-/**
- * Default label config.
- * @type {Object}
- * @const
- */
-os.style.label.DEFAULT_CONFIG = {
-  'offsetY': -5
 };
 
 
@@ -354,12 +345,12 @@ os.style.label.updateShown = function() {
  * @param {ol.Feature} feature The feature
  * @param {Object} config Base configuration for the feature
  * @param {Object=} opt_layerConfig Layer configuration for the feature
- * @return {Array<!ol.style.Style>}
+ * @return {ol.style.Style|undefined} The label style, or undefined if the feature isn't labelled
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
 os.style.label.createOrUpdate = function(feature, config, opt_layerConfig) {
-  var labelStyles = [];
+  var labelStyle;
 
   // always show labels for highlighted features, otherwise show if the flag isn't explicity set to false. this is
   // managed by the hit detection function, and if that isn't run on the feature we should show the label.
@@ -372,94 +363,75 @@ os.style.label.createOrUpdate = function(feature, config, opt_layerConfig) {
     if (labelConfigs) {
       var labelText = os.style.label.getLabelsText(feature, labelConfigs);
       if (!goog.string.isEmptyOrWhitespace(goog.string.makeSafe(labelText))) {
-        var labels = labelText.split('\n');
+        labelStyle = /** @type {ol.style.Style|undefined} */ (feature.get(os.style.StyleType.LABEL));
 
-        labelStyles =
-            /** @type {Array<!ol.style.Style>|undefined} */ (feature.get(os.style.StyleType.LABELS)) || [];
+        if (!labelStyle) {
+          // label style hasn't been created for the layer yet - do it now!
+          var reader = os.style.StyleManager.getInstance().getReader('text');
+          goog.asserts.assert(reader);
 
-        // reuse label styles when possible, but truncate the array if we have more styles than labels to display
-        if (labelStyles.length > labels.length) {
-          labelStyles.length = labels.length;
+          // look for the text style configuration on the feature config, then the layer config.
+          // if these change in the future we'll have to rework this a bit.
+          var labelConfig = {};
+          var baseLabelConfig = /** @type {Object|undefined} */ (os.object.getFirstValue('text', config,
+              opt_layerConfig)) || {};
+          os.style.mergeConfig(baseLabelConfig, labelConfig);
+
+          // create the style using the text reader
+          var textStyle = reader.getOrCreateStyle(labelConfig);
+          labelStyle = new ol.style.Style({
+            geometry: os.style.label.defaultGeometryFunction,
+            text: textStyle
+          });
         }
 
-        goog.array.forEach(labels, function(labelText, index) {
-          var labelStyle = labelStyles[index];
-          if (!labelStyle) {
-            // label style hasn't been created for the layer yet - do it now!
-            var reader = os.style.StyleManager.getInstance().getReader('text');
-            goog.asserts.assert(reader);
+        // update the z-index of the label
+        var baseZIndex = config['zIndex'] || 0;
+        labelStyle.setZIndex(baseZIndex + os.style.label.Z_INDEX);
 
-            // look for the text style configuration on the feature config, then the layer config.
-            // if these change in the future we'll have to rework this a bit.
-            var labelConfig = {};
-            var baseLabelConfig = /** @type {Object|undefined} */ (os.object.getFirstValue('text', config,
-                opt_layerConfig)) || os.style.label.DEFAULT_CONFIG;
-            os.style.mergeConfig(baseLabelConfig, labelConfig);
+        // update the style with dynamic values
+        var labelColor = os.style.label.getColor(feature, config, opt_layerConfig);
 
-            // create the style using the text reader
-            var textStyle = reader.getOrCreateStyle(labelConfig);
-            labelStyle = new ol.style.Style({
-              geometry: os.style.label.defaultGeometryFunction,
-              text: textStyle
-            });
+        // force font size to an integer, and drop NaN values
+        var fontSize = /** @type {string|number|undefined} */ (os.object.getFirstValue(
+            os.style.StyleField.LABEL_SIZE, config, opt_layerConfig));
+        if (typeof fontSize == 'string') {
+          fontSize = parseInt(fontSize, 10) || undefined;
+        }
 
-            labelStyles.push(labelStyle);
-          }
+        // if there isn't a font size (or it's zero), use the default size to ensure labels are drawn
+        if (!fontSize) {
+          fontSize = os.style.label.DEFAULT_SIZE;
+        }
 
-          // update the z-index of the label
-          var baseZIndex = config['zIndex'] || 0;
-          labelStyle.setZIndex(baseZIndex + os.style.label.Z_INDEX);
+        var labelFont = os.style.label.getFont(fontSize);
+        var text = labelStyle.getText();
+        text.setFont(labelFont);
+        text.setText(os.style.label.prepareText(labelText, true));
+        text.getFill().setColor(labelColor);
 
-          // update the style with dynamic values
-          var labelColor = os.style.label.getColor(feature, config, opt_layerConfig);
+        // match the fill/stroke opacity
+        var fillColor = ol.color.asArray(labelColor);
+        var strokeColor = ol.color.asArray(/** @type {Array<number>|string} */ (text.getStroke().getColor()));
+        strokeColor[3] = fillColor[3];
+        text.getStroke().setColor(os.style.toRgbaString(strokeColor));
 
-          // force font size to an integer, and drop NaN values
-          var fontSize = /** @type {string|number|undefined} */ (os.object.getFirstValue(
-              os.style.StyleField.LABEL_SIZE, config, opt_layerConfig));
-          if (typeof fontSize == 'string') {
-            fontSize = parseInt(fontSize, 10) || undefined;
-          }
+        // labels need to be offset a little more when next to an icon. this helps, but isn't nearly complete.
+        // TODO: determine the size of the rendered feature and use that for the x offset
+        var offsetx = os.style.isIconConfig(config) ? fontSize : (fontSize / 2);
+        text.setOffsetX(offsetx);
 
-          // if there isn't a font size (or it's zero), use the default size to ensure labels are drawn
-          if (!fontSize) {
-            fontSize = os.style.label.DEFAULT_SIZE;
-          }
-
-          var labelFont = os.style.label.getFont(fontSize);
-          var text = labelStyle.getText();
-          text.setFont(labelFont);
-          text.setText(os.style.label.prepareText(labelText, true));
-          text.getFill().setColor(labelColor);
-
-          // match the fill/stroke opacity
-          var fillColor = ol.color.asArray(labelColor);
-          var strokeColor = ol.color.asArray(text.getStroke().getColor());
-          strokeColor[3] = fillColor[3];
-          text.getStroke().setColor(os.style.toRgbaString(strokeColor));
-
-          // compute the y offset using the font size, number of labels, and current label index so they are rendered
-          // in top-down order.
-          var center = -(fontSize + 2) * ((labels.length / 2) - 1);
-          var offsety = index * (fontSize + 2);
-          text.setOffsetY(center + offsety);
-
-          // labels need to be offset a little more when next to an icon. this helps, but isn't nearly complete.
-          // TODO: determine the size of the rendered feature and use that for the x offset
-          var offsetx = os.style.isIconConfig(config) ? fontSize : (fontSize / 2);
-          text.setOffsetX(offsetx);
-
-          // draw labels to the right of the feature
-          // TODO: make this configurable. this will require more advanced x/y offset computations.
-          text.setTextAlign('left');
-        });
+        // draw labels to the right of the feature
+        // TODO: make this configurable. this will require more advanced x/y offset computations.
+        text.setTextAlign('left');
 
         // update the cache on the feature
-        feature.set(os.style.StyleType.LABELS, labelStyles, true);
+        feature.set(os.style.StyleType.LABEL, labelStyle, true);
       }
     }
   }
 
-  return labelStyles;
+  return labelStyle;
 };
 
 
@@ -477,15 +449,16 @@ os.style.label.prepareText = function(text, opt_truncate) {
   try {
     // parse HTML and grab only the remaining text content
     result = new DOMParser().parseFromString(text, 'text/html').body.textContent;
-
-    // strip any line breaks
-    result = result.replace(/[\n\r]+/g, ' ');
   } catch (e) {
     result = text;
   }
 
+  result = result.trim();
+
   if (truncate) {
-    result = goog.string.truncate(result, os.style.label.TRUNCATE_LENGTH);
+    result = result.split('\n').map(function(l) {
+      return goog.string.truncate(l.trim(), os.style.label.TRUNCATE_LENGTH);
+    }).join('\n');
   }
 
   return result;
@@ -543,17 +516,9 @@ os.style.label.getLabelText = function(feature, label) {
  * @return {string} the label text
  */
 os.style.label.getLabelsText = function(feature, labels) {
-  var value = '';
-  goog.array.forEach(labels, function(label, index) {
-    var labelText = os.style.label.getLabelText(feature, label);
-    if (labelText) {
-      if (index > 0 && value != '') {
-        value += '\n';
-      }
-      value += labelText;
-    }
-  });
-  return value;
+  return labels.map(function(label) {
+    return os.style.label.getLabelText(feature, label);
+  }).filter(os.fn.filterFalsey).join('\n');
 };
 
 
