@@ -1,5 +1,5 @@
 <div class="d-flex flex-column flex-fill u-table u-table-striped" ng-form="checklistForm">
-  <div class="custom-control custom-checkbox pl-4 u-table__head">
+  <div ng-if="allowMultiple" class="custom-control custom-checkbox pl-4 u-table__head">
     <input id="js-checklist__all" class="js-checklist__all custom-control-input" type="checkbox" name="all" ng-model="checklist.allCheckbox" ng-change="checklist.toggleAll()">
     <label for="js-checklist__all" class="custom-control-label w-100">All</label>
   </div>
