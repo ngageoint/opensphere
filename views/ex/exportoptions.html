@@ -3,7 +3,7 @@
     <div ng-if="!allowMultiple">
       <em>The current export type only supports exporting a single source.</em>
     </div>
-    <div class="form-check mx-1 mb-2">
+    <div class="custom-control custom-checkbox">
       <input id="js-export-options__useselected" type="checkbox" name="exportoptions.useSelected"
           ng-model="exportoptions.useSelected" ng-change="exportoptions.updateItems()" class="custom-control-input"/>
       <label for="js-export-options__useselected" class="custom-control-label"
