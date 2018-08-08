@@ -83,6 +83,7 @@
 
 // Zoombar needs a min width
 .ol-zoom-level {
+  font-family: monospace;
   min-width: 15rem;
 }
 
@@ -162,6 +163,7 @@
 .ol-scale-line {
   bottom: .75rem;
   cursor: pointer;
+  font-family: monospace;
   left: .75rem;
   padding: .5rem;
   right: auto;
