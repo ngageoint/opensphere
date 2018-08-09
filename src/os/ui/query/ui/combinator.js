@@ -776,10 +776,8 @@ os.ui.query.ui.CombinatorCtrl.prototype.onView_ = function(evt, isFilter, entry)
                 os.alert.AlertEventSeverity.WARNING);
           }
         }
-      } else {
-        // Only filters are available for view, so don't allow it
-        os.alertManager.sendAlert('Viewing areas is not allowed at this time.',
-            os.alert.AlertEventSeverity.WARNING);
+      } else { // Only filters are available for view, so don't allow it
+        os.alertManager.sendAlert('Viewing areas is not allowed at this time.', os.alert.AlertEventSeverity.WARNING);
       }
     }
   }

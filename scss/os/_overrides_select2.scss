@@ -38,6 +38,7 @@
       // sass-lint:disable no-extends, placeholder-in-extend
       .select2-search-field {
         margin-top: .25rem;
+        width: 100% !important;
 
         input.select2-input {
           @extend .form-control;
