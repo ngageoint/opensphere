@@ -1,30 +1,40 @@
 <div class="d-flex flex-column flex-fill u-overflow-y-auto container-fluid">
   <h4>Areas</h4>
   <div class="form-group">Select how you would like inclusion/exclusion areas to be displayed:</div>
-  <h5>Include Options</h5>
-  <div class="form-group row flex-shrink-0" title="Sets the color of include areas">
-    <label class="col-2 col-form-label">Color</label>
-    <div class="col">
-      <colorpicker name="wpscolor" color="area.inColor"></colorpicker>
+
+  <div class="card form-group">
+    <div class="card-header">Include Options</div>
+    <div class="card-body">
+      <div class="form-group row flex-shrink-0" title="Sets the color of include areas">
+        <label class="col-2 col-form-label text-right">Color</label>
+        <div class="col">
+          <colorpicker name="wpscolor" color="area.inColor"></colorpicker>
+        </div>
+      </div>
+      <div class="form-group row flex-shrink-0" title="Sets the border width of include areas">
+        <label class="col-2 col-form-label text-right">Width</label>
+        <div class="col-4 my-auto">
+          <slider name="inwidth" min="1" max="20" step="1" value="area.inWidth"></slider>
+        </div>
+      </div>
     </div>
   </div>
-  <div class="form-group row flex-shrink-0" title="Sets the border width of include areas">
-    <label class="col-2 col-form-label">Width</label>
-    <div class="col-4 my-auto">
-      <slider name="inwidth" min="1" max="20" step="1" value="area.inWidth"></slider>
-    </div>
-  </div>
-  <h5>Exclude Options</h5>
-  <div class="form-group row flex-shrink-0" title="Sets the color of exclude areas">
-    <label class="col-2 col-form-label">Color</label>
-    <div class="col">
-      <colorpicker name="wpscolor" color="area.exColor"></colorpicker>
-    </div>
-  </div>
-  <div class="form-group row flex-shrink-0" title="Sets the border width of exclude areas">
-    <label class="col-2 col-form-label">Width</label>
-    <div class="col-4 my-auto">
-      <slider name="exwidth" min="1" max="20" step="1" value="area.exWidth"></slider>
+
+  <div class="card form-group">
+    <div class="card-header">Exclude Options</div>
+    <div class="card-body">
+      <div class="form-group row flex-shrink-0" title="Sets the color of exclude areas">
+        <label class="col-2 col-form-label text-right">Color</label>
+        <div class="col">
+          <colorpicker name="wpscolor" color="area.exColor"></colorpicker>
+        </div>
+      </div>
+      <div class="form-group row flex-shrink-0" title="Sets the border width of exclude areas">
+        <label class="col-2 col-form-label text-right">Width</label>
+        <div class="col-4 my-auto">
+          <slider name="exwidth" min="1" max="20" step="1" value="area.exWidth"></slider>
+        </div>
+      </div>
     </div>
   </div>
   <div class="form-group mt-2">
