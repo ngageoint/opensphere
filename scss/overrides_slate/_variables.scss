@@ -56,6 +56,11 @@ $nav-link-padding-y: .5rem;
 $navbar-padding-y: .5rem;
 $navbar-padding-x: 1rem;
 
+// Make active/hovered items more prominent.
+// Slate overrides this, and we don't want to.
+$list-group-active-bg: $primary;
+// Same color used by slate's '.list-group-item:hover' override.
+$list-group-hover-bg: darken($gray-900, 5%);
 
 // Start Theme Variable Overides
 $sticky-nav-background-color: $gray-800;
