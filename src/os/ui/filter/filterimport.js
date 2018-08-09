@@ -30,6 +30,7 @@ os.ui.filter.im.filterImportDirective = function() {
        */
       'layerId': '=?'
     },
+    replace: true,
     templateUrl: os.ROOT + 'views/filter/im/filterimport.html',
     controller: os.ui.filter.im.FilterImportCtrl,
     controllerAs: 'ctrl'
