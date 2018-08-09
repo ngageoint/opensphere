@@ -1,0 +1,43 @@
+// This file is to set the padding preferences for themes. Dont add colors to this file
+// Try to not add page padding changes, but things more like buttons, inputs, etc.
+// Should still feel less compact than the compact theme
+
+$compact-y: .1rem;
+$compact-x: .25rem;
+
+$golden-ratio: 1.618;
+$font-size-base: .875rem;
+$line-height-base: $golden-ratio;
+$line-height-lg: $golden-ratio;
+$line-height-sm: $golden-ratio;
+
+$btn-padding-y-sm: 0;
+
+$input-btn-padding-y-sm: $compact-y;
+$input-btn-padding-x-sm: $compact-x;
+
+$input-btn-padding-y: $compact-y;
+$input-btn-padding-x: $compact-x;
+
+$input-btn-padding-y-lg: .375rem;
+$input-btn-padding-x-lg: .75rem;
+
+$custom-select-padding-y: $compact-y;
+$custom-select-padding-x: $compact-x;
+
+$hr-margin-y: .2rem;
+
+$form-group-margin-bottom: .5rem;
+$breadcrumb-padding-y: .25rem;
+$popover-header-padding-x: .75rem !default;
+$popover-max-width: (($popover-header-padding-x * 2) + 20);
+
+$nav-link-padding-y: .25rem;
+$nav-link-padding-x: .5rem;
+
+$modal-header-padding: .5rem;
+$modal-inner-padding: .5rem;
+
+$dropdown-padding-y: .15rem;
+$dropdown-item-padding-y: $compact-y;
+$dropdown-item-padding-x: 1rem;
