@@ -120,7 +120,7 @@ os.ui.wiz.WizardCtrl = function($scope, $element, $timeout, $attrs) {
  */
 os.ui.wiz.WizardCtrl.prototype.destroy_ = function() {
   var step = this['steps'][this['activeIndex']];
-  if (!step.isDeactivated() && this.config) {
+  if (!step.isDeactivated()) {
     step.deactivate(this.config);
   }
 
