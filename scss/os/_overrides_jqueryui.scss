@@ -34,6 +34,11 @@
   height: .4em;
 }
 
+.slider-container {
+  background: $input-bg;
+  border-color: $input-border-color;
+}
+
 .ui-slider-handle {
   @include border-radius(0);
   border: 1px solid #444 !important;
