@@ -13,6 +13,7 @@ goog.require('os.file.mime');
  */
 os.file.mime.text.TYPE = 'text/plain';
 
+
 /**
  * The Byte Order Marker (BOM) sequence.
  * @type {!Array<number>}
@@ -20,11 +21,13 @@ os.file.mime.text.TYPE = 'text/plain';
  */
 os.file.mime.text.UTF8_BYTE_ORDER_MARKER = [0xef, 0xbb, 0xbf];
 
+
 /**
  * @type {!Array<number>}
  * @const
  */
 os.file.mime.text.UTF16_BYTE_ORDER_MARKER_BE = [0xfe, 0xff];
+
 
 /**
  * @type {!Array<number>}
@@ -50,7 +53,6 @@ os.file.mime.text.BOMS_ = [
  * @private
  */
 os.file.mime.text.LOGGER_ = goog.log.getLogger('os.file.mime.text');
-
 
 
 /**
@@ -99,6 +101,22 @@ os.file.mime.text.getText = function(buffer, opt_file) {
     }
 
     return s;
+  }
+};
+
+
+/**
+ * Gets an ArrayBuffer from a string of text.
+ * @param {string} text
+ * @return {ArrayBuffer|undefined}
+ */
+os.file.mime.text.getArrayBuffer = function(text) {
+  try {
+    var encoder = new TextEncoder();
+    var arr = encoder.encode(text);
+    return arr.buffer;
+  } catch (e) {
+    goog.log.error(os.file.mime.text.LOGGER_, 'Failed to create ArrayBuffer from string.', e);
   }
 };
 
