@@ -25,8 +25,8 @@
   }
 
   .modal-footer {
+    @include border-bottom-radius($border-radius);
     background: darken($modal-content-bg, 5%);
-    border-radius: 0 0 $border-radius $border-radius;
     color: $body-color;
     flex-shrink: 0;
   }
