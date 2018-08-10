@@ -2,7 +2,6 @@ goog.provide('os.ui.datetime.DurationCtrl');
 goog.provide('os.ui.datetime.durationDirective');
 goog.require('os.ui.Module');
 goog.require('os.ui.spinnerDirective');
-goog.require('os.ui.util.buttonHeightDirective');
 goog.require('os.ui.util.validationMessageDirective');
 
 
