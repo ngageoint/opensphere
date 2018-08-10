@@ -6,6 +6,10 @@
   width: $font-size-base;
 }
 
+.custom-control {
+  min-height: ($font-size-base * $line-height-base);
+}
+
 .pagination {
   margin: .5rem;
 }
