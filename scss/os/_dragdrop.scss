@@ -1,5 +1,24 @@
 .c-dd-target__dragover {
   background: $list-group-hover-bg;
-  outline: dashed 3px $success !important;
-  outline-offset: -3px;
+  outline: dashed .2rem $success;
+  outline-offset: -.2rem;
+}
+
+.c-dd-source {
+  @include grab-cursor();
+}
+
+.c-dd-source__dragging {
+  @include grabbing-cursor();
+  background: $blue;
+  border: dashed .2rem $cyan;
+  border-radius: .5rem;
+  color: $gray-800;
+  font-size: 1rem;
+  font-style: italic;
+  height: auto;
+  opacity: .5;
+  padding: 1rem;
+  width: 15rem;
+  z-index: 30;
 }

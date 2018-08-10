@@ -126,9 +126,9 @@ os.ui.DragDrop = function($scope, $element) {
   this.target_ = new goog.fx.DragDrop($scope['ddTargetId']);
   this.source_.addTarget(this.target_);
 
-  this.source_.setDragClass('dd-source-dragging');
-  this.source_.setSourceClass('dd-source');
-  this.target_.setTargetClass('dd-target');
+  this.source_.setDragClass('c-dd-source__dragging');
+  this.source_.setSourceClass('c-dd-source');
+  this.target_.setTargetClass('c-dd-target');
 
   this.source_.init();
   this.target_.init();
