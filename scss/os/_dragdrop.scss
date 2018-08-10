@@ -1,7 +1,7 @@
 .c-dd-target__dragover {
   background: $list-group-hover-bg;
-  outline: dashed 3px $success !important;
-  outline-offset: -3px;
+  outline: dashed .2rem $success;
+  outline-offset: -.2rem;
 }
 
 .c-dd-source {
