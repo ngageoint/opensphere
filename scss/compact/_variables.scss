@@ -1,26 +1,7 @@
-$compact-y: .1rem;
-$compact-x: .25rem;
+// Import standard items like buttons, forms, etc that are consistent in all padding themes
+@import 'standard/variables';
 
-$font-size-base: .875rem;
-
-$btn-padding-y-sm: 0;
-
-$input-btn-padding-y-sm: $compact-y;
-$input-btn-padding-x-sm: $compact-x;
-
-$input-btn-padding-y: $compact-y;
-$input-btn-padding-x: $compact-x;
-
-$input-btn-padding-y-lg: .375rem;
-$input-btn-padding-x-lg: .75rem;
-
-$custom-select-padding-y: $compact-y;
-$custom-select-padding-x: $compact-x;
-
-$dropdown-padding-y: .15rem;
-$dropdown-item-padding-y: $compact-y;
-$dropdown-item-padding-x: 1rem;
-
+// Add additional super compact options we only want in tighter themes
 $list-group-item-padding-y: $compact-y * 2;
 $list-group-item-padding-x: $compact-x * 2;
 
@@ -32,14 +13,11 @@ $nav-link-padding-y: 0;
 $nav-link-padding-x: .5rem;
 $nav-divider-margin-y: .25rem;
 
-$modal-header-padding: .5rem;
-$modal-inner-padding: .5rem;
 $card-spacer-y: .5rem;
 $card-spacer-x: .5rem;
 $alert-padding-y: .5rem;
 $alert-padding-x: .5rem;
 
-$hr-margin-y: .2rem;
 $jumbotron-padding: 1.5rem;
 
 $form-group-margin-bottom: .25rem;
