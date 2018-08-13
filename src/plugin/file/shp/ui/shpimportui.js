@@ -63,7 +63,7 @@ plugin.file.shp.ui.SHPImportUI.prototype.launchUI = function(file, opt_config) {
   };
   var windowOptions = {
     'label': 'SHP Import',
-    'icon': 'fa fa-sign-in lt-blue-icon',
+    'icon': 'fa fa-sign-in',
     'x': 'center',
     'y': 'center',
     'width': '850',

@@ -121,7 +121,7 @@ os.ui.file.method.FileMethod.prototype.loadFile = function(opt_options) {
     };
     var windowOptions = {
       'label': 'Import File',
-      'icon': 'fa fa-floppy-o lt-blue-icon',
+      'icon': 'fa fa-floppy-o',
       'x': 'center',
       'y': 'center',
       'width': '400',

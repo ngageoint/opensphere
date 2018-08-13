@@ -17,19 +17,19 @@ os.ui.menu.TIMELINE = new os.ui.menu.Menu(new os.ui.menu.MenuItem({
     label: 'Load',
     eventType: os.time.TimelineActionEventType.LOAD,
     tooltip: 'Queries this time range, replaces other load ranges',
-    icons: ['<i class="fa fa-fw fa-cloud-download yellow-icon"></i>'],
+    icons: ['<i class="fa fa-fw fa-cloud-download"></i>'],
     sort: 10
   }, {
     label: 'Add',
     eventType: os.time.TimelineActionEventType.ADD,
     tooltip: 'Adds this time range to the loaded ranges',
-    icons: ['<i class="fa fa-fw fa-plus yellow-icon"></i>'],
+    icons: ['<i class="fa fa-fw fa-plus"></i>'],
     sort: 20
   }, {
     label: 'Create Slice',
     eventType: os.time.TimelineActionEventType.SLICE,
     tooltip: 'Adds time slice which creates a time range less than 24 hours to show data from each loaded day',
-    icons: ['<i class="fa fa-fw fa-hand-scissors-o orange-icon"></i>'],
+    icons: ['<i class="fa fa-fw fa-hand-scissors-o"></i>'],
     sort: 30
   }, {
     label: 'View',
@@ -47,7 +47,7 @@ os.ui.menu.TIMELINE = new os.ui.menu.Menu(new os.ui.menu.MenuItem({
     label: 'Skip Animate',
     eventType: os.time.TimelineActionEventType.ANIMATE_SKIP,
     tooltip: 'Skip animating this time range',
-    icons: ['<i class="fa fa-fw fa-ban red-icon"></i>'],
+    icons: ['<i class="fa fa-fw fa-ban"></i>'],
     sort: 60
   }, {
     label: 'Hold Range',

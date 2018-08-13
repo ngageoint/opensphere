@@ -9,7 +9,7 @@ goog.require('plugin.file.kml.ui');
 /**
  * @type {string}
  */
-plugin.track.ui.TrackNodeUITemplate = '<span class="pull-right" ng-if="nodeUi.show()">' +
+plugin.track.ui.TrackNodeUITemplate = '<span class="float-right" ng-if="nodeUi.show()">' +
       '<span ng-if="nodeUi.canEdit()" ng-click="nodeUi.addFolder()">' +
           '<i class="fa fa-folder fa-fw c-glyph" title="Create a new folder"></i></span>' +
       '<span ng-if="nodeUi.isRemovable()" ng-click="nodeUi.remove()">' +
