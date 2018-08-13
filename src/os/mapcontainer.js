@@ -1284,7 +1284,7 @@ os.MapContainer.prototype.setWebGLEnabled = function(enabled, opt_silent) {
     this.dispatchEvent(os.events.EventType.MAP_MODE);
   }
 
-  if (this.is3DEnabled() != enabled && !this.failPerformanceCaveat() && !opt_silent) {
+  if (this.is3DEnabled() != enabled && !this.failPerformanceCaveat() && !this.isInitializingWebGL() && !opt_silent) {
     // if we tried enabling WebGL and it isn't supported or enabling failed, disable support and display an error
     this.is3DSupported_ = false;
     os.ui.help.launchWebGLSupportDialog('3D Globe Not Supported');
