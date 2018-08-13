@@ -289,10 +289,8 @@ os.ui.menu.layer.onDescription_ = function(event) {
       '<div class="d-flex flex-column flex-fill">' +
           '<div class="modal-body">' + msg + '</div>' +
           '<div class="modal-footer">' +
-              '<div class="pull-right">' +
-                  '<button class="btn btn-secondary" ng-click="close()">' +
-                  '<i class="fa fa-ban"></i> Close</button>' +
-              '</div>' +
+            '<button class="btn btn-secondary" ng-click="close()">' +
+            '<i class="fa fa-ban"></i> Close</button>' +
           '</div>' +
       '</div>';
 

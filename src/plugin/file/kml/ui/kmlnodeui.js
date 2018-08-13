@@ -14,7 +14,7 @@ plugin.file.kml.ui.kmlNodeUIDirective = function() {
   return {
     restrict: 'E',
     replace: true,
-    template: '<span class="pull-right" ng-if="nodeUi.show()">' +
+    template: '<span class="float-right" ng-if="nodeUi.show()">' +
         '<span ng-if="nodeUi.canAddChildren()" ng-click="nodeUi.addFolder()">' +
           '<i class="fa fa-folder fa-fw" title="Create a new folder"></i></span>' +
         '<span ng-if="nodeUi.canAddChildren()" ng-click="nodeUi.addPlace()">' +
@@ -56,19 +56,17 @@ goog.inherits(plugin.file.kml.ui.KMLNodeUICtrl, os.ui.slick.AbstractNodeUICtrl);
 /**
  * If the node is a folder.
  * @return {boolean}
+ * @export
  */
 plugin.file.kml.ui.KMLNodeUICtrl.prototype.isFolder = function() {
   var node = /** @type {plugin.file.kml.ui.KMLNode} */ (this.scope['item']);
   return node != null && node.isFolder();
 };
-goog.exportProperty(
-    plugin.file.kml.ui.KMLNodeUICtrl.prototype,
-    'isFolder',
-    plugin.file.kml.ui.KMLNodeUICtrl.prototype.isFolder);
 
 
 /**
  * Add a new folder.
+ * @export
  */
 plugin.file.kml.ui.KMLNodeUICtrl.prototype.addFolder = function() {
   var node = /** @type {plugin.file.kml.ui.KMLNode} */ (this.scope['item']);
@@ -78,14 +76,11 @@ plugin.file.kml.ui.KMLNodeUICtrl.prototype.addFolder = function() {
     }));
   }
 };
-goog.exportProperty(
-    plugin.file.kml.ui.KMLNodeUICtrl.prototype,
-    'addFolder',
-    plugin.file.kml.ui.KMLNodeUICtrl.prototype.addFolder);
 
 
 /**
  * Add a new place.
+ * @export
  */
 plugin.file.kml.ui.KMLNodeUICtrl.prototype.addPlace = function() {
   var node = /** @type {plugin.file.kml.ui.KMLNode} */ (this.scope['item']);
@@ -95,56 +90,44 @@ plugin.file.kml.ui.KMLNodeUICtrl.prototype.addPlace = function() {
     }));
   }
 };
-goog.exportProperty(
-    plugin.file.kml.ui.KMLNodeUICtrl.prototype,
-    'addPlace',
-    plugin.file.kml.ui.KMLNodeUICtrl.prototype.addPlace);
 
 
 /**
  * If the node can be edited.
  * @return {boolean}
+ * @export
  */
 plugin.file.kml.ui.KMLNodeUICtrl.prototype.canAddChildren = function() {
   var node = /** @type {plugin.file.kml.ui.KMLNode} */ (this.scope['item']);
   return node != null && node.canAddChildren;
 };
-goog.exportProperty(
-    plugin.file.kml.ui.KMLNodeUICtrl.prototype,
-    'canAddChildren',
-    plugin.file.kml.ui.KMLNodeUICtrl.prototype.canAddChildren);
 
 
 /**
  * If the node can be edited.
  * @return {boolean}
+ * @export
  */
 plugin.file.kml.ui.KMLNodeUICtrl.prototype.canEdit = function() {
   var node = /** @type {plugin.file.kml.ui.KMLNode} */ (this.scope['item']);
   return node != null && node.editable;
 };
-goog.exportProperty(
-    plugin.file.kml.ui.KMLNodeUICtrl.prototype,
-    'canEdit',
-    plugin.file.kml.ui.KMLNodeUICtrl.prototype.canEdit);
 
 
 /**
  * If the node can be removed from the tree.
  * @return {boolean}
+ * @export
  */
 plugin.file.kml.ui.KMLNodeUICtrl.prototype.canRemove = function() {
   var node = /** @type {plugin.file.kml.ui.KMLNode} */ (this.scope['item']);
   return node != null && node.removable;
 };
-goog.exportProperty(
-    plugin.file.kml.ui.KMLNodeUICtrl.prototype,
-    'canRemove',
-    plugin.file.kml.ui.KMLNodeUICtrl.prototype.canRemove);
 
 
 /**
  * Prompt the user to remove the node from the tree.
+ * @export
  */
 plugin.file.kml.ui.KMLNodeUICtrl.prototype.tryRemove = function() {
   var node = /** @type {plugin.file.kml.ui.KMLNode} */ (this.scope['item']);
@@ -159,7 +142,7 @@ plugin.file.kml.ui.KMLNodeUICtrl.prototype.tryRemove = function() {
         prompt: prompt,
 
         windowOptions: /** @type {!osx.window.WindowOptions} */ ({
-          icon: 'fa fa-trash-o red-icon',
+          icon: 'fa fa-trash-o',
           label: 'Remove ' + label
         })
       }));
@@ -168,10 +151,6 @@ plugin.file.kml.ui.KMLNodeUICtrl.prototype.tryRemove = function() {
     }
   }
 };
-goog.exportProperty(
-    plugin.file.kml.ui.KMLNodeUICtrl.prototype,
-    'tryRemove',
-    plugin.file.kml.ui.KMLNodeUICtrl.prototype.tryRemove);
 
 
 /**
@@ -187,6 +166,7 @@ plugin.file.kml.ui.KMLNodeUICtrl.prototype.removeNodeInternal = function(node) {
 
 /**
  * Edits the node title.
+ * @export
  */
 plugin.file.kml.ui.KMLNodeUICtrl.prototype.edit = function() {
   var node = /** @type {plugin.file.kml.ui.KMLNode} */ (this.scope['item']);
@@ -204,7 +184,3 @@ plugin.file.kml.ui.KMLNodeUICtrl.prototype.edit = function() {
     }
   }
 };
-goog.exportProperty(
-    plugin.file.kml.ui.KMLNodeUICtrl.prototype,
-    'edit',
-    plugin.file.kml.ui.KMLNodeUICtrl.prototype.edit);

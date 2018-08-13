@@ -276,7 +276,7 @@ os.ui.state.menu.getViewMoreOptions_ = function(descriptor) {
       label: 'More ' + typeName,
       eventType: 'VIEW_MORE_' + descriptorType,
       tooltip: 'Launch the Add Data window to add more',
-      icons: ['<i class="fa fa-fw fa-plus green-icon"></i>'],
+      icons: ['<i class="fa fa-fw fa-plus"></i>'],
       handler: os.ui.state.menu.viewMoreEventEmitter.bind(undefined, typeName, descriptorType),
       sort: Infinity
     };

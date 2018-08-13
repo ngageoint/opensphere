@@ -10,7 +10,7 @@
           <div class="mb-1 row">
             <label class="col-form-label col-2" title="Loaded range start">Start</label>
             <div class="col">
-              <span class="pull-right"><popover data-title="'Start'" data-content="loadStartTip" data-pos="'right'"></popover></span>
+              <span class="float-right"><popover data-title="'Start'" data-content="loadStartTip" data-pos="'right'"></popover></span>
               <date-time value="range.start" hidecontrols="true"></date-time>
             </div>
           </div>
@@ -18,7 +18,7 @@
           <div class="row">
             <label class="col-form-label col-2" title="Loaded range end">End</label>
             <div class="col">
-              <span class="pull-right">
+              <span class="float-right">
                 <button class="btn btn-outline-danger btn-sm" title="Add range" ng-if="loadRanges.length > 1" ng-click="timeCtrl.removeRange($index)">
                   <i class="fa fa-fw fa-times"></i>
                 </button>
@@ -84,11 +84,9 @@
   </div>
 
   <div class="modal-footer">
-    <div class="pull-right">
-      <button class="btn btn-primary" ng-disabled="!timeCtrl.valid() || timeForm.$invalid" ng-click="timeCtrl.accept()">
-        <i class="fa fa-check"></i> OK
-      </button>
-      <button class="btn btn-secondary" ng-click="timeCtrl.cancel()"><i class="fa fa-ban"></i> Cancel</button>
-    </div>
+    <button class="btn btn-primary" ng-disabled="!timeCtrl.valid() || timeForm.$invalid" ng-click="timeCtrl.accept()">
+      <i class="fa fa-check"></i> OK
+    </button>
+    <button class="btn btn-secondary" ng-click="timeCtrl.cancel()"><i class="fa fa-ban"></i> Cancel</button>
   </div>
 </div>
