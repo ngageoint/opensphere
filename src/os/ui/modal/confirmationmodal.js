@@ -132,6 +132,7 @@ os.ui.modal.ConfirmationModalCtrl.prototype.setMessage = function(options) {
 
 /**
  * Hides the modal after a button click
+ * @export
  */
 os.ui.modal.ConfirmationModalCtrl.prototype.cancelClick = function() {
   // call cancel callback
@@ -143,15 +144,12 @@ os.ui.modal.ConfirmationModalCtrl.prototype.cancelClick = function() {
 
   os.ui.window.close(os.ui.window.getById(os.ui.modal.ConfirmationModalCtrl.ID));
 };
-goog.exportProperty(
-    os.ui.modal.ConfirmationModalCtrl.prototype,
-    'cancelClick',
-    os.ui.modal.ConfirmationModalCtrl.prototype.cancelClick);
 
 
 /**
  * Confirm/Yes was clicked.  Set the display to lock while we call the success callback and wait for a new event to come
  * in before closing the dialog.
+ * @export
  */
 os.ui.modal.ConfirmationModalCtrl.prototype.confirmClick = function() {
   this['saving'] = true;
@@ -163,10 +161,6 @@ os.ui.modal.ConfirmationModalCtrl.prototype.confirmClick = function() {
     this.timeout_(callback);
   }
 };
-goog.exportProperty(
-    os.ui.modal.ConfirmationModalCtrl.prototype,
-    'confirmClick',
-    os.ui.modal.ConfirmationModalCtrl.prototype.confirmClick);
 
 
 /**
