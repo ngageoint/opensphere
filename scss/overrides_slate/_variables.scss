@@ -1,4 +1,5 @@
 $blue: #08c;
+$green: #62c462;
 $yellow: #ff0;
 $orange: #f89406;
 $indigo: #6c94bc;
@@ -13,8 +14,10 @@ $gray-700: #52575c !default;
 $gray-800: #3a3f44 !default;
 $gray-900: #272b30 !default;
 $black: #000 !default;
+$white: #fff !default;
 
 $primary: $blue;
+$success: $green;
 $warning: $orange;
 $info: $indigo;
 
@@ -56,11 +59,13 @@ $nav-link-padding-y: .5rem;
 $navbar-padding-y: .5rem;
 $navbar-padding-x: 1rem;
 
-// Make active/hovered items more prominent.
-// Slate overrides this, and we don't want to.
-$list-group-active-bg: $primary;
-// Same color used by slate's '.list-group-item:hover' override.
-$list-group-hover-bg: darken($gray-900, 5%);
+// Active/selected color.
+$list-group-active-bg: darken($success, 25%);
+$list-group-active-color: $white;
+
+// Highlight/hover color.
+$list-group-hover-bg: darken($primary, 10%);
+$list-group-action-hover-color: $white;
 
 // Start Theme Variable Overides
 $sticky-nav-background-color: $gray-800;
