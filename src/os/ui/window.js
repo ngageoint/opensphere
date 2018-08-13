@@ -8,9 +8,11 @@ goog.provide('os.ui.windowSelector');
 goog.provide('os.ui.windowZIndexMax');
 
 goog.require('goog.Disposable');
+goog.require('goog.asserts');
 goog.require('goog.async.Delay');
 goog.require('goog.dom.ViewportSizeMonitor');
 goog.require('goog.events.EventType');
+goog.require('goog.log');
 goog.require('os.ui.Module');
 goog.require('os.ui.events.UIEvent');
 goog.require('os.ui.onboarding.contextOnboardingDirective');
@@ -49,6 +51,15 @@ os.ui.windowZIndexMax = {
   MODAL: 1049,
   STANDARD: 990
 };
+
+
+/**
+ * Logger for os.ui.window.
+ * @type {goog.log.Logger}
+ * @private
+ * @const
+ */
+os.ui.window.LOGGER_ = goog.log.getLogger('os.ui.window');
 
 
 /**
@@ -491,12 +502,11 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
       // make sure the window gets positioned eventually. windows should fire a os.ui.WindowEventType.READY event to
       // indicate they are initialized and ready to be positioned.
       readyPromise = $timeout(function() {
-        // TODO remove this before bs4 gets delivered
-        os.alertManager.sendAlert('WINDOW_READY_EVENT_MISSING FOR ' + $scope['label'],
-            os.alert.AlertEventSeverity.INFO);
-        os.alertManager.sendAlert('WINDOW_READY_EVENT_MISSING FOR ' + $scope['label'],
-            os.alert.AlertEventSeverity.WARNING);
-        os.alertManager.sendAlert('WINDOW_READY_EVENT_MISSING FOR ' + $scope['label']);
+        // fail an assertion to make this more obvious in debug mode, and log a warning otherwise.
+        var errorMessage = 'Window READY event was not fired for "' + $scope['label'] + '"!';
+        goog.asserts.fail(errorMessage);
+        goog.log.warning(os.ui.window.LOGGER_, errorMessage);
+
         readyOff();
         onWindowReady();
       }, 1000);

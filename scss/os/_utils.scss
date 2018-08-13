@@ -157,7 +157,7 @@ html {
   .u-table__head,
   .u-table__row {
     @include hover {
-      background-color: darken($success, 10%) !important;
+      background-color: $list-group-active-bg !important;
       color: $dropdown-link-hover-color;
 
       a {
@@ -342,4 +342,31 @@ $somesizes: map-merge((
 
 .u-hover-container:hover .u-hover-show {
   opacity: 1;
+}
+
+// ----------- Card utilities ------- //
+
+.card {
+  &.u-card-selected {
+    .card-header {
+      background-color: $list-group-active-bg;
+      color: $list-group-active-color;
+    }
+  }
+
+  // allow applying hover style programmatically
+  &.u-card-highlight {
+    .card-header {
+      background-color: $list-group-hover-bg;
+      color: $list-group-action-hover-color;
+    }
+  }
+
+  // allow applying hover style on hover
+  &.u-card-hover:hover {
+    .card-header {
+      background-color: $list-group-hover-bg;
+      color: $list-group-action-hover-color;
+    }
+  }
 }

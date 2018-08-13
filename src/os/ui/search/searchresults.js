@@ -18,7 +18,9 @@ goog.require('os.ui.util.autoVHeightDirective');
 os.ui.search.searchResultsDirective = function() {
   return {
     restrict: 'E',
-    scope: true,
+    scope: {
+      'parent': '@'
+    },
     replace: true,
     transclude: true,
     templateUrl: os.ROOT + 'views/search/searchresults.html',
