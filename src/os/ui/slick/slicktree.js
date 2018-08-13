@@ -18,7 +18,7 @@ os.ui.slick.slickTreeDirective = function() {
   return {
     restrict: 'AE',
     replace: true,
-    template: '<div class="slick-tree"></div>',
+    template: '<div class="c-slick-tree"></div>',
     scope: {
       /**
        * The data for the tree
@@ -256,7 +256,7 @@ os.ui.slick.SlickTreeCtrl.prototype.getOptions = function() {
     'multiSelect': this.multiSelect,
     'useRowRenderEvents': true,
     'headerRowHeight': 0,
-    'rowHeight': 22
+    'rowHeight': 21
   };
 };
 
