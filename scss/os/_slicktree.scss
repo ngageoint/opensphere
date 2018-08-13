@@ -1,0 +1,63 @@
+// Parent Slicktree, depends on slickgrid
+.c-slick-tree {
+  background: $body-bg;
+  box-sizing: content-box;
+  flex: 1;
+  width: 100%;
+
+  &.ui-widget {
+    font-size: $font-size-sm;
+  }
+
+  &.no-hover {
+    .slick-row:hover {
+      background: inherit;
+    }
+  }
+
+  .slick-cell .slick-node-ui i:first-child {
+    padding-left: .5rem;
+  }
+
+  .slick-header-columns {
+    height: 0;
+  }
+
+  .slick-header.ui-state-default {
+    border: 0;
+  }
+
+  .slick-cell {
+    border: 0;
+  }
+
+  .slick-viewport {
+    overflow-x: hidden !important;
+  }
+}
+
+
+// Slick Tree Node
+.c-slick-tree-node__spacer {
+  display: inline-block;
+  flex-shrink: 0;
+  height: 1px;
+}
+
+
+// Node Toggle
+.c-node-toggle {
+  cursor: pointer;
+  flex-shrink: 0;
+  font-size: $font-size-base;
+}
+
+
+// Node Icons
+.c-node-icons {
+  i.fa {
+    text-align: center;
+    vertical-align: middle;
+    width: $font-size-base;
+  }
+}
