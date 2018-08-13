@@ -24,9 +24,11 @@ $gray-700: #495057 !default;
 $gray-800: #343a40 !default;
 $gray-900: #212529 !default;
 $black: #000 !default;
+$white: #fff !default;
 
 $warning: $orange;
 $primary: $blue;
+$success: $green;
 $info: $indigo;
 $dropdown-link-hover-color: #fff;
 $dropdown-link-hover-bg: $primary;
@@ -42,6 +44,13 @@ $custom-checkbox-indicator-indeterminate-bg: $gray-300;
 $custom-control-indicator-disabled-bg: $gray-500;
 $custom-control-label-disabled-color: $black;
 
+// Active/selected color.
+$list-group-active-bg: darken($success, 10%);
+$list-group-active-color: $white;
+
+// Highlight/hover color.
+$list-group-hover-bg: darken($primary, 10%);
+$list-group-action-hover-color: $white;
 
 // Start Theme Variable Overides
 $sticky-nav-background-color: $gray-200;

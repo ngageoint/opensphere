@@ -75,17 +75,17 @@
   color: color-yiq($body-bg);
 
   &.selected {
-    background: darken($success, 10%);
-    color: color-yiq(darken($success, 10%));
+    background: $list-group-active-bg;
+    color: $list-group-active-color;
   }
 
   &.hovered,
   &:hover {
-    background: darken($component-active-bg, 10%);
-    color: color-yiq(darken($component-active-bg, 10%));
+    background: $list-group-hover-bg;
+    color: $list-group-action-hover-color;
 
     a {
-      color: color-yiq(darken($success, 10%));
+      color: $list-group-active-color;
     }
   }
 

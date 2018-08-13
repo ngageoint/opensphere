@@ -1,0 +1,50 @@
+$close-tab-padding-x: .25rem !default;
+$close-tab-font-size: .5rem !default;
+
+//
+// A tab for closing flyout panels.
+//
+// To use, add an element inside an absolutely positioned panel:
+//   <div class="c-close-tab-left"></div>
+//
+// To make it functional, add an ng-click handler that closes the panel.
+//
+@mixin close-tab {
+  background: $modal-content-bg;
+  border: $border-width solid $border-color;
+  cursor: pointer;
+  font-size: $close-tab-font-size;
+  padding: ($close-tab-padding-x * 3) $close-tab-padding-x;
+  position: absolute;
+
+  &:hover {
+    background-color: $list-group-hover-bg;
+    color: $list-group-action-hover-color;
+  }
+}
+
+// position on the left side of an element
+.c-close-tab-left {
+  @include close-tab();
+  border-radius: $border-radius-sm 0 0 $border-radius-sm;
+  left: -($close-tab-padding-x * 2 + $close-tab-font-size);
+
+  // Equivalent to "fa fa-chevron-right"
+  &::before {
+    @include font-awesome();
+    content: '\f054';
+  }
+}
+
+// position on the right side of an element
+.c-close-tab-right {
+  @include close-tab();
+  border-radius: 0 $border-radius-sm $border-radius-sm 0;
+  left: 100%;
+
+  // Equivalent to "fa fa-chevron-left"
+  &::before {
+    @include font-awesome();
+    content: '\f053';
+  }
+}
