@@ -315,7 +315,7 @@ os.ui.slick.SlickTreeNode.prototype.getSpacer = function(opt_width, opt_unit) {
     opt_unit = 'px';
   }
 
-  return '<span class="tree-spacer" style="width:' + opt_width + opt_unit + '"></span>';
+  return '<span class="c-slick-tree-node__spacer" style="width:' + opt_width + opt_unit + '"></span>';
 };
 
 

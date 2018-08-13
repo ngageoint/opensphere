@@ -14,14 +14,6 @@
     background: $table-bg;
   }
 
-  &.no-borders {
-    .slick-cell {
-      border: 0;
-      margin: 0;
-      padding: 0;
-    }
-  }
-
   &.no-header {
     border-top: 0;
     width: 100%;
@@ -145,8 +137,14 @@
   align-items: center;
   border-bottom-color: $table-border-color;
   border-right-color: $table-border-color;
+  box-sizing: border-box;
   display: flex;
   padding: 2px;
+
+  // Standardy bold is too bold!
+  b {
+    font-weight: 600;
+  }
 
   a {
     color: $link-color;
@@ -219,65 +217,5 @@
   // override the highlight background while editing
   .slick-row:hover .slick-cell.editable {
     background: #333;
-  }
-}
-
-// * Tree styles
-// ************************************************************/
-
-.slick-tree {
-  background: $body-bg;
-  box-sizing: content-box;
-  flex: 1;
-  width: 100%;
-
-  &.ui-widget {
-    font-size: $font-size-sm;
-  }
-
-  &.no-hover {
-    .slick-row:hover {
-      background: inherit;
-    }
-  }
-
-  .slick-cell .slick-node-ui i:first-child {
-    padding-left: .5rem;
-  }
-
-  .slick-header-columns {
-    height: 0;
-  }
-
-  .slick-header.ui-state-default {
-    border: 0;
-  }
-
-  .slick-cell {
-    border: 0;
-  }
-
-  .slick-viewport {
-    overflow-x: hidden !important;
-  }
-}
-
-.tree-spacer {
-  display: inline-block;
-  flex-shrink: 0;
-  height: 1px;
-}
-
-.c-node-toggle {
-  cursor: pointer;
-  flex-shrink: 0;
-  font-size: $font-size-base;
-}
-
-.c-node-icons {
-  i.fa {
-    text-align: center;
-    vertical-align: middle;
-    width: $font-size-base;
   }
 }
