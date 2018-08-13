@@ -1,5 +1,6 @@
 goog.provide('os.ui.NavBarCtrl');
-goog.provide('os.ui.NavBarEvents');
+
+goog.require('goog.Disposable');
 goog.require('goog.events.Event');
 goog.require('os.ui.nav.EventType');
 
@@ -7,99 +8,50 @@ goog.require('os.ui.nav.EventType');
 
 /**
  * Controller for NavBars
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
+ * @param {!angular.Scope} $scope The Angular scope.
+ * @param {!angular.JQLite} $element The root DOM element.
+ * @extends {goog.Disposable}
  * @constructor
  * @ngInject
  */
 os.ui.NavBarCtrl = function($scope, $element) {
+  os.ui.NavBarCtrl.base(this, 'constructor');
+
   /**
+   * The Angular scope.
    * @type {?angular.Scope}
    * @protected
    */
   this.scope = $scope;
 
   /**
+   * The root DOM element.
    * @type {?angular.JQLite}
-   * @private
+   * @protected
    */
-  this.element_ = $element;
+  this.element = $element;
 
   /**
-   * Backfill for scrolled transparent navbar
-   * @type {boolean}
-   */
-  this.scope['filled'] = false;
-
-  /**
-   * Should we hide the navbar?
-   * @type {boolean}
-   */
-  this.scope['hideNav'] = false;
-
-  /**
-   * @type {boolean}
-   */
-  this.scope['bgTransparent'] = false;
-
-  goog.events.listen(window, goog.events.EventType.SCROLL, this.formatNav_, false, this);
-  os.dispatcher.listen(os.ui.nav.EventType.HIDE_NAV, this.onHideNavbar_, false, this);
-  os.dispatcher.listen(os.ui.nav.EventType.BG_TRANSPARENT, this.setTransparent_.bind(this));
-
-  /**
+   * Bound resize handler.
    * @type {Function}
    * @private
    */
   this.resizeFn_ = this.onResize_.bind(this);
-
   $element.resize(this.resizeFn_);
 
-  $scope.$on('$destroy', this.destroy.bind(this));
+  $scope.$on('$destroy', this.dispose.bind(this));
 };
+goog.inherits(os.ui.NavBarCtrl, goog.Disposable);
 
 
 /**
- * Clean up.
- * @protected
+ * @inheritDoc
  */
-os.ui.NavBarCtrl.prototype.destroy = function() {
-  goog.events.unlisten(window, goog.events.EventType.SCROLL, this.formatNav_, false, this);
-  os.dispatcher.unlisten(os.ui.nav.EventType.HIDE_NAV, this.onHideNavbar_, false, this);
-  os.dispatcher.unlisten(os.ui.nav.EventType.BG_TRANSPARENT, this.setTransparent_, false, this);
+os.ui.NavBarCtrl.prototype.disposeInternal = function() {
+  os.ui.NavBarCtrl.base(this, 'disposeInternal');
 
   this.scope = null;
-  this.element_ = null;
-};
-
-
-/**
- * Show or hide the nav bar
- * @param {os.ui.nav.NavBarEvent} event
- * @private
- */
-os.ui.NavBarCtrl.prototype.onHideNavbar_ = function(event) {
-  this.scope['hideNav'] = event['state'];
-  os.ui.apply(this.scope);
-};
-
-
-/**
- * Format the navbar based on nav collapse and window scroll
- * @private
- */
-os.ui.NavBarCtrl.prototype.formatNav_ = function() {
-  this.scope['filled'] = window.scrollY > 0;
-  os.ui.apply(this.scope);
-};
-
-
-/**
- * @param {os.ui.nav.NavBarEvent} event
- * @private
- */
-os.ui.NavBarCtrl.prototype.setTransparent_ = function(event) {
-  this.scope['bgTransparent'] = event['state'];
-  os.ui.apply(this.scope);
+  this.element = null;
 };
 
 
@@ -110,7 +62,7 @@ os.ui.NavBarCtrl.prototype.setTransparent_ = function(event) {
  */
 os.ui.NavBarCtrl.prototype.getNavContentSize = function() {
   var size = 0;
-  this.element_.find('.nav-item').each(function(el) {
+  this.element.find('.nav-item').each(function(el) {
     size += $(this).outerWidth(true);
   });
 
@@ -119,6 +71,7 @@ os.ui.NavBarCtrl.prototype.getNavContentSize = function() {
 
 
 /**
+ * Handle nav resize events.
  * @private
  */
 os.ui.NavBarCtrl.prototype.onResize_ = function() {
