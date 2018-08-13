@@ -4,32 +4,28 @@
 
 .c-toggle-switch {
   background: $dark;
-  border-radius: 5px;
+  border-radius: .25rem;
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, .5), 0 1px 0 rgba(255, 255, 255, .2);
   cursor: pointer;
-  display: inline-block;
   flex-shrink: 0;
-  font-family: monospace;
-  height: 15px;
-  vertical-align: middle;
-  width: 30px;
+  height: 1rem;
+  width: 2rem;
 
   label {
     background: $light;
-    border-radius: 3px;
+    border-radius: .25rem;
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .3);
     cursor: pointer;
-    display: inline-block;
-    font-size: 10px;
-    height: 11px;
-    left: 2px;
-    line-height: 12px;
+    font-size: .6rem;
+    height: .75rem;
+    left: .1rem;
+    line-height: .75rem;
     position: relative;
     text-align: center;
-    top: 2px;
+    top: .1rem;
     transition: left .4s ease;
     vertical-align: top;
-    width: 20px;
+    width: 1.25rem;
   }
 }
 
@@ -49,7 +45,7 @@
 
 .c-toggle-switch-on label {
   background: $success;
-  left: 8px;
+  left: .6rem;
 
   &::after {
     color: $light;
@@ -58,7 +54,7 @@
 }
 
 .c-toggle-switch-both label {
-  left: 5px;
+  left: .4rem;
 
   &::after {
     content: '';
