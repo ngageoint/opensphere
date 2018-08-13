@@ -32,7 +32,7 @@ os.ui.Module.directive('comboContainer', os.ui.util.comboContainerDirective);
  * @param {Object} $attrs
  */
 os.ui.util.comboContainerLink = function($scope, $element, $attrs) {
-  var comboEl = $element.find('.combo-drop');
+  var comboEl = $element.find('.js-combo-drop');
   var updateComboPosition;
   var uniqueId = 'combo-container-' + Date.now();
   $element.attr('data-combo-id', uniqueId);
@@ -42,7 +42,7 @@ os.ui.util.comboContainerLink = function($scope, $element, $attrs) {
    */
   var hideDropdown = function(opt_event) {
     var comboContainerParent = $(opt_event.target).parents('.combo-container');
-    var comboDropParent = $(opt_event.target).parents('.combo-drop');
+    var comboDropParent = $(opt_event.target).parents('.js-combo-drop');
 
     // this class can be attached to other UIs to indicate that clicking them doesn't close the combo
     // better solution in the long run: get rid of this directive entirely because it's old and bad.
