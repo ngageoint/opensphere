@@ -671,7 +671,8 @@ os.color.yiqToRgb = function(yiq, opt_result) {
  * @return {string} The hex representation.
  */
 os.color.intToHex = function(num) {
-  return '#' + ('0000' + (num | 0).toString(16)).substr(-6);
+  num = goog.math.clamp(num | 0, 0, 0xffffff);
+  return '#' + ('00000' + (num | 0).toString(16)).substr(-6);
 };
 
 
