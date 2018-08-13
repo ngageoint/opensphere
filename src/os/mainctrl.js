@@ -329,7 +329,7 @@ os.MainCtrl = function($scope, $element, $compile, $timeout, $injector) {
   // initialize the area/filter import/file managers
   os.areaImportManager = new os.ui.im.ImportManager();
   os.areaImportManager.registerImportDetails('Data filters for supported layers.');
-  os.areaImportManager.registerImportUI('filter', new os.filter.im.OSFilterImportUI());
+  os.areaImportManager.registerImportUI(os.file.mime.filter.TYPE, new os.filter.im.OSFilterImportUI());
   os.areaFileManager = new os.file.FileManager();
 
   // initialize the CMM
