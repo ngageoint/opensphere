@@ -17,7 +17,7 @@ os.ui.menu.windows.default.setup = function() {
 
   // add windows
   os.ui.menu.windows.addWindow('addData', {
-    'icon': 'fa fa-plus green-icon',
+    'icon': 'fa fa-plus',
     'label': 'Add Data',
     'description': 'Add data to the map',
     'x': 'center',
@@ -36,7 +36,7 @@ os.ui.menu.windows.default.setup = function() {
 
   var layers = os.ui.menu.windows.addWindow('layers', {
     'key': 'layers',
-    'icon': 'orange-icon fa fa-align-justify',
+    'icon': 'fa fa-align-justify',
     'label': 'Layers',
     'description': 'View and manipulate layers on the map',
     'x': '0',
@@ -61,7 +61,7 @@ os.ui.menu.windows.default.setup = function() {
   }
 
   os.ui.menu.windows.addWindow('timeline', {
-    'icon': 'fa fa-clock-o yellow-icon',
+    'icon': 'fa fa-clock-o',
     'label': 'Timeline',
     'metricKey': os.metrics.keys.Timeline.OPEN
   }, true, function() {
@@ -138,7 +138,7 @@ os.ui.menu.windows.default.setup = function() {
 
   if (os.settings.get('metrics.enabled', false)) {
     os.ui.menu.windows.addWindow('metrics', {
-      'icon': 'orange-icon fa fa-cubes',
+      'icon': 'fa fa-cubes',
       'label': '{APP} Capabilities',
       'description': 'Explore {APP} Capabilities',
       'x': 'center',

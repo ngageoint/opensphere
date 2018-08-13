@@ -58,7 +58,7 @@ os.ui.ProviderImportUI.prototype.launchUI = function(file, opt_config) {
     };
     var windowOptions = {
       'label': (provider ? provider.getEditable() ? 'Edit ' : 'View ' : 'Add ') + entry.title,
-      'icon': 'fa fa-database lt-blue-icon',
+      'icon': 'fa fa-database',
       'x': 'center',
       'y': 'center',
       'width': '500',

@@ -150,7 +150,7 @@ plugin.file.shp.ui.ZipSHPImportUI.prototype.launchUIInternal_ = function() {
     };
     var windowOptions = {
       'label': 'SHP Import',
-      'icon': 'fa fa-sign-in lt-blue-icon',
+      'icon': 'fa fa-sign-in',
       'x': 'center',
       'y': 'center',
       'width': '850',

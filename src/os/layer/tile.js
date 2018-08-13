@@ -455,7 +455,7 @@ os.layer.Tile.prototype.getIcons = function() {
 
   var html = '';
   if (this.error_) {
-    html += '<i class="fa fa-warning orange-icon" title="There were errors accessing the tiles for this layer"></i>';
+    html += '<i class="fa fa-warning text-warning" title="There were errors accessing the tiles for this layer"></i>';
   }
 
   var layerColor = this.getColor();

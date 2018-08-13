@@ -17,22 +17,20 @@ goog.inherits(plugin.georss.GeoRSSImportUI, os.ui.im.FileImportUI);
 
 
 /**
+ * Let's be honest, testing getters like this is pedantic. Let's ignore it this time.
  * @inheritDoc
+ * istanbul ignore next
  */
-// Let's be honest, testing getters like this is pedantic. Let's ignore it
-// this time.
-/* istanbul ignore next */
 plugin.georss.GeoRSSImportUI.prototype.getTitle = function() {
   return 'GeoRSS';
 };
 
 
 /**
+ * TODO: This function doesn't do much yet, after it does, let's test the finished product.
  * @inheritDoc
+ * istanbul ignore next
  */
-// TODO: This function doesn't do much yet, after it does, let's test the
-// finished product.
-/* istanbul ignore next */
 plugin.georss.GeoRSSImportUI.prototype.launchUI = function(file, opt_config) {
   plugin.georss.GeoRSSImportUI.base(this, 'launchUI', file, opt_config);
   var config = new os.parse.FileParserConfig();
@@ -50,7 +48,7 @@ plugin.georss.GeoRSSImportUI.prototype.launchUI = function(file, opt_config) {
   };
   var windowOptions = {
     'label': 'Import GeoRSS',
-    'icon': 'fa fa-file-text lt-blue-icon',
+    'icon': 'fa fa-file-text',
     'x': 'center',
     'y': 'center',
     'width': 350,
