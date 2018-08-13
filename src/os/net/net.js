@@ -3,7 +3,6 @@ goog.provide('os.net.CrossOrigin');
 
 goog.require('goog.Uri');
 goog.require('goog.array');
-goog.require('os.net.CredentialsHandler');
 goog.require('os.net.ExtDomainHandler');
 goog.require('os.net.LocalFileHandler');
 goog.require('os.net.ProxyHandler');
@@ -59,7 +58,6 @@ os.net.addDefaultHandlers = function() {
   os.net.RequestHandlerFactory.addHandler(os.net.SameDomainHandler);
   os.net.RequestHandlerFactory.addHandler(os.net.ExtDomainHandler);
   os.net.RequestHandlerFactory.addHandler(os.net.ProxyHandler);
-  os.net.RequestHandlerFactory.addHandler(os.net.CredentialsHandler);
 };
 
 
@@ -86,8 +84,6 @@ os.net.loadCrossOriginCache = function() {
   os.net.crossOriginCache_.length = 0;
 
   var crossOrigin = /** @type {!Object} */ (os.settings.get('crossOrigin', {}));
-  var userCrossOrigin = /** @type {!Object} */ (os.settings.get('userCrossOrigin', {}));
-  os.object.merge(userCrossOrigin, crossOrigin, true);
 
   for (var id in crossOrigin) {
     var item = crossOrigin[id];
