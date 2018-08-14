@@ -18,8 +18,8 @@ $close-tab-font-size: .5rem !default;
   position: absolute;
 
   &:hover {
-    background-color: $list-group-hover-bg;
-    color: $list-group-action-hover-color;
+    background-color: $list-group-hover-bg !important;
+    color: $list-group-action-hover-color !important;
   }
 }
 
