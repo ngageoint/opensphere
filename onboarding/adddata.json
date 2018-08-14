@@ -19,11 +19,12 @@
         "To quickly find layers by name, tag, or description, type what you're looking for in the search box. The ",
         "tree will be automatically updated to show matching layers."
       ],
-      "attachTo": ".adw-header .search",
-      "focusOn": ".window[label='Add Data']",
+      "attachTo": ".o-add-data__search",
+      "highlight": ".o-add-data__search",
+      "focusOn": ".o-window[label='Add Data']",
       "position": "bottom",
-      "horizontalAlign": "center",
-      "context": "addData"
+      "context": "addData",
+      "yOffset": -10
     },
     {
       "title": "Available Layers",
@@ -33,8 +34,9 @@
         "displayed on the map. Icons next to the layer titles indicate what type of data is represented by each ",
         "layer. Select a layer and details about it will be displayed to the right."
       ],
-      "attachTo": ".adw-main .slick-viewport",
-      "focusOn": ".window[label='Add Data']",
+      "attachTo": ".o-add-data__slicktree",
+      "highlight": ".o-add-data__slicktree",
+      "focusOn": ".o-window[label='Add Data']",
       "position": "right",
       "verticalAlign": "center",
       "context": "addData"
@@ -62,10 +64,10 @@
         "or use the dropdown to import a remote file. We currently support KML, CSV, and SHP, but support for ",
         "additional types will be added in the future!"
       ],
-      "attachTo": ".adw-header .add-data-group",
-      "focusOn": ".window[label='Add Data']",
+      "attachTo": ".o-add-data__open-button",
+      "highlight": ".o-add-data__open-button",
+      "focusOn": ".o-window[label='Add Data']",
       "position": "bottom",
-      "horizontalAlign": "center",
       "context": "addData"
     },
     {

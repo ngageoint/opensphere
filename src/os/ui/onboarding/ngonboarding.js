@@ -161,6 +161,7 @@ goog.exportProperty(
  */
 os.ui.onboarding.NgOnboardingCtrl.prototype.setupOverlay_ = function(showOverlay) {
   $('.c-ng-onboarding__focus').removeClass('c-ng-onboarding__focus');
+  $('.c-ng-onboarding__highlight').removeClass('c-ng-onboarding__highlight');
   if (showOverlay) {
     if (this.scope_['overlay']) {
       if (this.curStep_['attachTo']) {
@@ -169,6 +170,10 @@ os.ui.onboarding.NgOnboardingCtrl.prototype.setupOverlay_ = function(showOverlay
 
       if (this.curStep_['focusOn']) {
         $(this.curStep_['focusOn']).addClass('c-ng-onboarding__focus');
+      }
+
+      if (this.curStep_['highlight']) {
+        $(this.curStep_['highlight']).addClass('c-ng-onboarding__highlight');
       }
     }
   }
@@ -274,25 +279,10 @@ os.ui.onboarding.NgOnboardingCtrl.prototype.setupPositioning_ = function() {
 
         if (this.scope_['position'] === 'right') {
           left = attachTo.offset().left + attachTo.outerWidth() + xMargin;
-
-          // if (this.curStep_['horizontalAlign'] == 'center') {
-          //   // offset by half the target element width, remove the margin, account for popover arrow width
-          //   left = left - this.getElementWidth_(attachTo) / 2 - xMargin + 11;
-          // }
         } else if (this.scope_['position'] === 'left') {
           right = $(window).width() - attachTo.offset().left + xMargin;
-
-          // if (this.curStep_['horizontalAlign'] == 'center') {
-          //   // offset by half the target element width, remove the margin, account for popover arrow width
-          //   right = right - this.getElementWidth_(attachTo) / 2 - xMargin + 11;
-          // }
         } else if (this.scope_['position'] === 'top' || this.scope_['position'] === 'bottom') {
           left = attachTo.offset().left;
-
-          // if (this.curStep_['horizontalAlign'] == 'center') {
-          //   left = left - $('.js-onboarding__popover').outerWidth() / 2 + this.getElementWidth_(attachTo) / 2;
-          //   left = left < 0 ? 0 : left;
-          // }
         }
 
         if (this.curStep_['xOffset']) {

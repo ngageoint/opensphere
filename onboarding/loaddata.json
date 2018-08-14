@@ -18,9 +18,8 @@
         "load tiles (and eventually features) for a different time span. If you don't see any tiles on the map, ",
         "check the layer's details in the Add Data window and make sure it has data within the chosen range."
       ],
-      "attachTo": ".js-date-control",
+      "attachTo": ".o-date-control",
       "position": "bottom",
-      "horizontalAlign": "center",
       "context": "navTop"
     },
     {
@@ -30,7 +29,7 @@
         "the map. Use the draw controls here to draw a query region, or use Shift+Click and drag to draw using the ",
         "most recently selected control. Draw the query area on the map, then choose Load from the menu."
       ],
-      "attachTo": ".draw-controls",
+      "attachTo": ".o-draw-controls",
       "position": "bottom",
       "horizontalAlign": "center",
       "context": "navTop"
@@ -39,7 +38,7 @@
       "title": "Undo/Redo (Ctrl+Z/Ctrl+Y)",
       "description": [
         "Most actions in the application can be undone. Use the Undo/Redo actions to move back and forth through the ",
-        "state of the application. To view your command history, choose Windows > History."
+        "state of the application."
       ],
       "position": "centered",
       "focusOn": "button[title=History]"
