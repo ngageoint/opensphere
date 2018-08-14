@@ -9,6 +9,7 @@ goog.require('goog.events.FileDropHandler');
 goog.require('goog.fx.DragDrop');
 goog.require('goog.math.Coordinate');
 goog.require('os.ui.Module');
+goog.require('os.ui.windowSelector');
 goog.require('os.url');
 goog.require('os.url.UrlManager');
 
@@ -65,6 +66,14 @@ os.ui.Module.directive('dragDrop', [os.ui.dragDropDirective]);
 
 
 /**
+ * @enum {string}
+ */
+os.ui.DragDropStyle = {
+  DRAG_DROP_CLASS: 'c-dd-target__dragover'
+};
+
+
+/**
  * Link function for draggable directive
  * @param {!angular.Scope} $scope angular scope
  * @param {!angular.JQLite} $element to which this directive is applied
@@ -117,9 +126,9 @@ os.ui.DragDrop = function($scope, $element) {
   this.target_ = new goog.fx.DragDrop($scope['ddTargetId']);
   this.source_.addTarget(this.target_);
 
-  this.source_.setDragClass('dd-source-dragging');
-  this.source_.setSourceClass('dd-source');
-  this.target_.setTargetClass('dd-target');
+  this.source_.setDragClass('c-dd-source__dragging');
+  this.source_.setSourceClass('c-dd-source');
+  this.target_.setTargetClass('c-dd-target');
 
   this.source_.init();
   this.target_.init();
@@ -237,7 +246,7 @@ os.ui.DragDrop.prototype.onDrop = function(event) {
  * @param {goog.fx.DragDropEvent} event
  */
 os.ui.DragDrop.prototype.addOverClass = function(event) {
-  goog.dom.classlist.add(event.dropTargetItem.element, 'dd-target-dragover');
+  goog.dom.classlist.add(event.dropTargetItem.element, os.ui.DragDropStyle.DRAG_DROP_CLASS);
 };
 
 
@@ -246,7 +255,7 @@ os.ui.DragDrop.prototype.addOverClass = function(event) {
  * @param {goog.fx.DragDropEvent} event
  */
 os.ui.DragDrop.prototype.removeOverClass = function(event) {
-  goog.dom.classlist.remove(event.dropTargetItem.element, 'dd-target-dragover');
+  goog.dom.classlist.remove(event.dropTargetItem.element, os.ui.DragDropStyle.DRAG_DROP_CLASS);
 };
 
 
@@ -325,11 +334,11 @@ os.ui.UrlDragDrop = function($scope, $element) {
 os.ui.UrlDragDrop.prototype.handleDrag_ = function(event) {
   event.preventDefault();
   event.stopPropagation();
-  if (!document.querySelector('.window-modal-bg')) {
+  if (!document.querySelector(os.ui.windowSelector.MODAL_BG)) {
     if (event.type == 'dragover') {
-      goog.dom.classlist.add(/** @type {Element} */ (event.currentTarget), 'dd-target-dragover');
+      goog.dom.classlist.add(/** @type {Element} */ (event.currentTarget), os.ui.DragDropStyle.DRAG_DROP_CLASS);
     } else {
-      goog.dom.classlist.remove(/** @type {Element} */ (event.currentTarget), 'dd-target-dragover');
+      goog.dom.classlist.remove(/** @type {Element} */ (event.currentTarget), os.ui.DragDropStyle.DRAG_DROP_CLASS);
     }
   }
 };
@@ -343,8 +352,8 @@ os.ui.UrlDragDrop.prototype.handleDrag_ = function(event) {
 os.ui.UrlDragDrop.prototype.handleDrop_ = function(event) {
   event.preventDefault();
   event.stopPropagation();
-  goog.dom.classlist.remove(/** @type {Element} */ (event.currentTarget), 'dd-target-dragover');
-  if (!document.querySelector('.window-modal-bg')) {
+  goog.dom.classlist.remove(/** @type {Element} */ (event.currentTarget), os.ui.DragDropStyle.DRAG_DROP_CLASS);
+  if (!document.querySelector(os.ui.windowSelector.MODAL_BG)) {
     if (goog.isDefAndNotNull(this.scope_['ddDrop'])) {
       this.scope_['ddDrop'](event);
     } else if (event.dataTransfer.files && event.dataTransfer.files.length > 0) {

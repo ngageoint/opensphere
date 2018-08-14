@@ -1,0 +1,14 @@
+.c-basicfiltertree {
+
+  .slick-row {
+    &.hovered,
+    &:hover {
+      background: none;
+      color: none;
+
+      a {
+        color: none;
+      }
+    }
+  }
+}

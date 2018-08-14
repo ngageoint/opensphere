@@ -28,6 +28,7 @@ goog.require('os.ui.geo.positionDirective');
 goog.require('os.ui.layer.labelControlsDirective');
 goog.require('os.ui.layer.vectorStyleControlsDirective');
 goog.require('os.ui.text.simpleMDEDirective');
+goog.require('os.ui.util.validationMessageDirective');
 goog.require('os.ui.window');
 
 
@@ -127,13 +128,6 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
    * @type {string}
    */
   this.scope['featureStyleID'] = uid + 'featureStyle';
-
-  /**
-   * The open accordion section.
-   * @type {?string}
-   * @protected
-   */
-  this.openSection = '#' + this.scope['featureStyleID'];
 
   /**
    * Keyboard event handler used while listening for map clicks.
@@ -412,7 +406,7 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
       // we don't care about or want these sticking around, so remove them
       delete this.originalProperties_[os.style.StyleType.SELECT];
       delete this.originalProperties_[os.style.StyleType.HIGHLIGHT];
-      delete this.originalProperties_[os.style.StyleType.LABELS];
+      delete this.originalProperties_[os.style.StyleType.LABEL];
 
       // if a feature config exists, create a deep clone of it so the correct config is restored on cancel
       var oldConfig = this.originalProperties_[os.style.StyleType.FEATURE];
@@ -515,20 +509,9 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
   $scope.$on('$destroy', this.dispose.bind(this));
 
   $timeout((function() {
-    if (this.openSection) {
-      // open the style config section
-      var section = this.element.find(this.openSection);
-      if (section) {
-        if (!section.hasClass('in')) {
-          section.addClass('in');
-          section.siblings('.accordion-heading').addClass('open');
-        }
-      }
-    }
-
     // notify the window that it can update the size
-    $scope.$emit('window.ready');
-  }).bind(this), 150);
+    $scope.$emit(os.ui.WindowEventType.READY);
+  }), 150);
 };
 goog.inherits(os.ui.FeatureEditCtrl, goog.Disposable);
 
@@ -853,19 +836,11 @@ goog.exportProperty(
  * @param {string} selector
  */
 os.ui.FeatureEditCtrl.prototype.setOpenSection = function(selector) {
-  if (this.openSection) {
-    this.element.find(this.openSection).siblings('.accordion-heading').removeClass('open');
-  }
-
-  var section = this.element.find(selector);
-  if (section) {
-    if (this.openSection != selector) {
-      section.siblings('.accordion-heading').addClass('open');
-      this.openSection = selector;
-    } else {
-      this.openSection = null;
+  this.element.find('.js-style-content').each(function(i, ele) {
+    if ('#' + ele.getAttribute('id') != selector) {
+      $(ele).collapse('hide');
     }
-  }
+  });
 };
 goog.exportProperty(
     os.ui.FeatureEditCtrl.prototype,

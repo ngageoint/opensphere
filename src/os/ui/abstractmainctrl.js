@@ -1,3 +1,4 @@
+goog.provide('os.ui.AbstractMainContent');
 goog.provide('os.ui.AbstractMainCtrl');
 
 goog.require('goog.events.Event');
@@ -27,6 +28,14 @@ goog.require('os.ui.notification.NotificationManager');
 goog.require('os.ui.onboarding.OnboardingManager');
 goog.require('os.ui.onboarding.contextOnboardingDirective');
 goog.require('os.ui.onboarding.onboardingDirective');
+
+
+
+/**
+ * Key for injecting into the main-content list
+ * @type {string}
+ */
+os.ui.AbstractMainContent = 'main-content';
 
 
 
@@ -67,6 +76,12 @@ os.ui.AbstractMainCtrl = function($scope, $injector, rootPath, defaultAppName) {
    * @type {string}
    */
   $scope['appName'] = /** @type {string} */ (os.config.getAppName(defaultAppName));
+
+  /**
+   * Are the plugins ready?
+   * @type {boolean}
+   */
+  $scope['pluginsReady'] = false;
 
   // add window close handler
   window.addEventListener(goog.events.EventType.BEFOREUNLOAD, this.onClose.bind(this));
@@ -148,25 +163,23 @@ os.ui.AbstractMainCtrl.prototype.onCertNaziFailure = function(event) {
         'for instructions on how to fix this.';
   }
 
-  var scopeOptions = {
-    'confirmCallback': goog.nullFunction,
-    'hideCancel': true,
-    'yesText': 'OK'
-  };
-
-  var windowOptions = {
-    'label': label,
-    'icon': 'fa fa-frown-o yellow-icon',
-    'x': 'center',
-    'y': 'center',
-    'width': '350',
-    'height': '165',
-    'modal': 'true',
-    'no-scroll': 'true'
-  };
-
-  var template = '<confirm>' + text + '</confirm>';
-  os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+  os.ui.window.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
+    confirm: goog.nullFunction,
+    prompt: text,
+    noText: '',
+    noIcon: '',
+    windowOptions: {
+      'label': label,
+      'icon': 'fa fa-frown-o',
+      'x': 'center',
+      'y': 'center',
+      'width': '350',
+      'height': 'auto',
+      'modal': 'true',
+      'no-scroll': 'true',
+      'headerClass': 'bg-warning u-bg-warning-text'
+    }
+  }));
 };
 
 
@@ -230,6 +243,15 @@ os.ui.AbstractMainCtrl.prototype.initialize = function() {
 
   this.doCertNazi();
   this.registerListeners();
+
+  // Firefox < 38 doesnt support nested flexboxes very well. Moderizer checks dont help because it technically does
+  // support flexbox but just not well until 38
+  var versionArray = goog.labs.userAgent.browser.getVersion().split('.');
+  var version = (versionArray && versionArray.length > 1) ? Number(versionArray[0]) : 0;
+  var minVersion = /** @type {number} */(os.settings.get('minPerformatFFVersion', 38));
+  if (goog.labs.userAgent.browser.isFirefox() && version < minVersion) {
+    $('body').addClass('c-main__slowBrowser');
+  }
 };
 
 
@@ -252,6 +274,7 @@ os.ui.AbstractMainCtrl.prototype.initPlugins = function() {
 os.ui.AbstractMainCtrl.prototype.onPluginsLoaded = function(opt_e) {
   // send browser info metric
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.BROWSER + '.' + os.browserVersion(), 1);
+  this.scope['pluginsReady'] = true;
   this.initXt();
 };
 

@@ -22,6 +22,7 @@ goog.require('os.ui.datetime.wheelDateDirective');
 os.ui.datetime.dateTimeDirective = function() {
   return {
     restrict: 'AE',
+    replace: true,
     scope: {
       'value': '=',
       'disabled': '=?',
@@ -165,7 +166,7 @@ os.ui.datetime.DateTimeCtrl.prototype.watchDate_ = function() {
  * @private
  */
 os.ui.datetime.DateTimeCtrl.prototype.onDateChanged_ = function(newVal, oldVal) {
-  if (newVal != oldVal) {
+  if (newVal && newVal != oldVal) {
     this.updateValue('date');
   }
 };
@@ -230,6 +231,10 @@ goog.exportProperty(os.ui.datetime.DateTimeCtrl.prototype, 'updateValue',
  * Sets this field to the current time.
  */
 os.ui.datetime.DateTimeCtrl.prototype.setNow = function() {
+  // set the inputs as dirty for validation
+  $('.js-date-time__time-input').addClass('ng-dirty');
+  $('.js-wheel-date__date-input').addClass('ng-dirty');
+
   // offset local time so the ui-date control displays in UTC
   var now = new Date();
   this['date'] = new Date(now.getTime() + now.getTimezoneOffset() * 60000);

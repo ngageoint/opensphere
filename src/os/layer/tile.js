@@ -455,7 +455,7 @@ os.layer.Tile.prototype.getIcons = function() {
 
   var html = '';
   if (this.error_) {
-    html += '<i class="fa fa-warning orange-icon" title="There were errors accessing the tiles for this layer"></i>';
+    html += '<i class="fa fa-warning text-warning" title="There were errors accessing the tiles for this layer"></i>';
   }
 
   var layerColor = this.getColor();
@@ -919,12 +919,13 @@ os.layer.Tile.prototype.restore = function(config) {
   //
   // Do not use MapContainer.zoomToResolution here. That is for overall map/view
   // purposes and not for individual layers, which may have discrete tile matrices.
+  var offset = config['zoomOffset'] || 0;
   if (config['minZoom']) {
-    this.setMaxResolution(this.getSource().getTileGrid().getResolution(config['minZoom']));
+    this.setMaxResolution(this.getSource().getTileGrid().getResolution(config['minZoom'] + offset));
   }
 
   if (config['maxZoom']) {
-    this.setMinResolution(this.getSource().getTileGrid().getResolution(config['maxZoom']));
+    this.setMinResolution(this.getSource().getTileGrid().getResolution(config['maxZoom'] + offset));
   }
 
   var style = config['style'] || '';

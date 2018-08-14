@@ -1,0 +1,30 @@
+$indigo: #6c94bc;
+$blue: #3498db;
+$dark: #303030;
+
+$primary: $blue;
+$info: $indigo;
+$link-color: $primary;
+
+@import 'flatly/variables';
+
+$navbar-light-color: $gray-700;
+$navbar-light-hover-color: $primary;
+$navbar-light-active-color: $primary;
+$navbar-dark-hover-color: $primary;
+$close-color: $black;
+
+// Override from themevariables
+$sticky-nav-background-color: $gray-200;
+
+// Override from themevariables
+$hover-edit-background-color: $gray-200;
+
+// Override from themevariables
+$default-image-background-color: $gray-200;
+
+// Override from themevariables
+$default-timeline-background-color: $gray-100;
+
+// Override from themevariables
+$default-timeline-background-color-active: $gray-200;

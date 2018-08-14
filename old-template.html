@@ -1,57 +1,75 @@
 <!DOCTYPE html>
 <html class="no-js">
+
 <head>
   <title>Browser Check</title>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta charset="UTF-8">
   <!--VENDOR_CSS-->
-  <!--VENDOR_JS-->
+  <!--APP_CSS-->
   <style>
-    li { margin-bottom: 10px; }
-    p a { text-decoration: underline; }
-    .btn { text-decoration: none; }
-    ul { padding-left: 20px; list-style: none }
+    li {
+      margin-bottom: 10px;
+    }
+
+    ul {
+      list-style: none;
+      padding-left: 20px;
+    }
+
+    ul.u-bullet {
+      list-style: unset;
+      padding-left: 20px;
+    }
+
     li:before {
       font-family: 'FontAwesome';
       margin: 0 5px 0 -15px;
     }
-    li.found:before {
-      content: '\f00c';
+
+    li.js-found:before {
       color: #0d0;
+      content: '\f00c';
     }
-    li.missing:before {
-      content: '\f00d';
+
+    li.js-missing:before {
       color: #d00;
-    }
-    .container {
-      margin-bottom: 16px;
+      content: '\f00d';
     }
   </style>
 </head>
+
 <body>
   <noscript>Javascript is disabled in your browser. Turn it on and refresh the page.</noscript>
-  <div class="container">
-    <div class="span8 offset2">
-      <h3 id="report"></h3>
-      <div>
-        <i id="browerCheckWait" class="fa fa-circle-o-notch fa-spin" style="font-size: 48px;"></i>
-      </div>
-      <ul id="checks"></ul>
-      <div id="minBrowserMsg">
-      </div>
-      <strong>Recommended browsers for the best experience:</strong>
-      <ul>
-        <li>Google Chrome version 35 or higher</li>
-        <li>Mozilla Firefox version 31 or higher</li>
-      </ul>
-      <p id="browserInfo"></p>
-      <p><a id="contactInfo"></a></p>
-      <div id="fullList"></div>
-      <div>
-        <button class="btn btn-info" style="margin-right: 10px;" onClick="toggleFullList()">Show/Hide All Detected Capabilities</button>
-        <a class="btn btn-success" href="/">Go Home</a>
-      </div>
+  <article class="container-fluid d-flex flex-column flex-wrap mt-5 justify-content-center">
+    <div class="col-12 col-lg-4 offset-lg-4">
+      <section class="flex-shrink-0">
+        <h3 class="js-report"></h3>
+        <div>
+          <i class="js-browser-check-wait fa fa-circle-o-notch fa-spin" style="font-size: 48px;"></i>
+        </div>
+        <ul class="js-checks"></ul>
+        <strong>Recommended browsers for the best experience:</strong>
+        <ul class="u-bullet">
+          <li>Google Chrome version 35 or higher</li>
+          <li>Mozilla Firefox version 31 or higher</li>
+        </ul>
+        <p class="js-browser-info"></p>
+        <div class="js-min-browser-msg"></div>
+        <p>
+          <div class="js-contact-info"></div>
+        </p>
+        <div>
+          <button class="btn btn-secondary" style="margin-right: 10px;" onClick="toggleFullList()">Show/Hide All Detected Capabilities</button>
+          <a class="btn btn-primary" href="/">Go Home</a>
+        </div>
+      </section>
+      <section class="flex-col">
+        <p class="js-full-list"></p>
+      </section>
     </div>
-  </div>
+  </article>
+  <!--VENDOR_JS-->
 </body>
+
 </html>

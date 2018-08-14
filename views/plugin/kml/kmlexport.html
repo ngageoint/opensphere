@@ -1,53 +1,38 @@
-<div class="kml-export" ng-form="kmlExportForm">
-  <table style="width:100%">
-    <tr ng-if="!simple">
-      <td class="control-group inline">
-        <label class="checkbox" title="If selected, icons will be colored with the current feature color. If unselected, icons will be unchanged.">
-          <input type="checkbox" name="useItemColor" ng-model="kmlexport.useItemColor">
-          Use Feature Colors
-        </label>
-      </td>
-    </tr>
-    <!-- <tr ng-if="!simple">
-      <td class="control-group inline">
-        <label class="checkbox" title="If selected, icons that are currently displayed will be used in the KML. If unselected, the default icon will be used.">
-          <input type="checkbox" name="useItemIcon" ng-model="kmlexport.useItemIcon">
-          Use Feature Icons
-        </label>
-      </td>
-    </tr> -->
-    <tr>
-      <td class="control-group inline">
-        <label class="checkbox" title="Selecting this will compress the KML into a KMZ, resulting in a smaller output file.">
-          <input type="checkbox" name="compress" ng-model="kmlexport.compress">
-          Compress as KMZ
-        </label>
-      </td>
-    </tr>
-    <tr ng-if="!simple">
-      <td class="control-group inline">
-        <label class="checkbox" title="Selecting this will export features as ellipses, when possible.">
-          <input type="checkbox" name="exportEllipses" ng-model="kmlexport.exportEllipses">
-          Export Ellipses
-        </label>
-      </td>
-    </tr>
-    <tr ng-if="!simple">
-      <td class="control-group inline">
-        <label class="checkbox" title="Selecting this will include the center point in the exported ellipse."
-            ng-show="kmlexport.exportEllipses">
-          <input type="checkbox" name="useCenterPoint" ng-model="kmlexport.useCenterPoint">
-          Include Center Point
-        </label>
-      </td>
-    </tr>
-  </table>
-  <table style="width:100%" ng-if="kmlexport.icon && !simple">
-    <tr title="The icon to use for each point">
-      <td class="wide">
-        Default Icon:
-        <iconpicker ng-model="kmlexport.icon" icon-set="kmlexport.iconSet" icon-src="kmlexport.iconSrc"></iconpicker>
-      </td>
-    </tr>
-  </table>
-</div>
+<ng-form name="kmlExportForm">
+  <div class="form-group">
+
+    <div class="custom-control custom-checkbox mx-1" title="Selecting this will compress the KML into a KMZ, resulting in a smaller output file.">
+      <input id="js-kmlexport__compress" class="custom-control-input" type="checkbox" name="compress" ng-model="kmlexport.compress">
+      <label for="js-kmlexport__compress" class="custom-control-label">Compress as KMZ</label>
+    </div>
+
+    <div class="custom-control custom-checkbox mx-1" title="If selected, icons will be colored with the current feature color. If unselected, icons will be unchanged.">
+      <input id="js-kmlexport__useItemColor" class="custom-control-input" type="checkbox" name="useItemColor" ng-model="kmlexport.useItemColor">
+      <label for="js-kmlexport__useItemColor" class="custom-control-label">Use Feature Colors</label>
+    </div>
+
+    <!-- <div ng-if="!simple" class="custom-control custom-checkbox mx-1" title="If selected, icons that are currently displayed will be used in the KML. If unselected, the default icon will be used.">
+      <label class="custom-control-label">
+      <input class="custom-control-input" type="checkbox" name="useItemIcon" ng-model="kmlexport.useItemIcon">
+        Use Feature Icons
+      </label>
+      </div> -->
+
+    <div ng-if="!simple" class="custom-control custom-checkbox mx-1" title="Selecting this will export features as ellipses, when possible.">
+      <input id="js-kmlexport__exportEllipses" class="custom-control-input" type="checkbox" name="exportEllipses" ng-model="kmlexport.exportEllipses">
+      <label for="js-kmlexport__exportEllipses" class="custom-control-label">Export Ellipses</label>
+    </div>
+
+    <div ng-if="!simple" class="custom-control custom-checkbox mx-1" title="Selecting this will include the center point in the exported ellipse." ng-show="kmlexport.exportEllipses">
+      <input id="js-kmlexport__useCenterPoint" class="custom-control-input" type="checkbox" name="useCenterPoint" ng-model="kmlexport.useCenterPoint">
+      <label for="js-kmlexport__useCenterPoint" class="custom-control-label">Include Center Point</label>
+    </div>
+  </div>
+
+  <div class="form-group mt-2">
+    <div ng-if="kmlexport.icon && !simple" class="form-check mx-1" title="Select the icon to use for each point.">
+      <label class="form-check-label mr-1">Default Icon</label>
+      <iconpicker ng-model="kmlexport.icon" icon-set="kmlexport.iconSet" icon-src="kmlexport.iconSrc"></iconpicker>
+    </div>
+  </div>
+</ng-form>

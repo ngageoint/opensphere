@@ -14,6 +14,7 @@ goog.require('os.ui.window');
 os.ui.window.confirmDirective = function() {
   return {
     restrict: 'E',
+    replace: true,
     transclude: true,
     scope: true,
     templateUrl: os.ROOT + 'views/window/confirm.html',
@@ -42,11 +43,11 @@ os.ui.window.launchConfirm = function(opt_options, opt_scopeOptions) {
   scopeOptions['confirmValue'] = options.confirmValue || undefined;
   scopeOptions['cancelCallback'] = options.cancel || goog.nullFunction;
   scopeOptions['yesText'] = options.yesText || 'OK';
-  scopeOptions['yesIcon'] = options.yesIcon || 'fa fa-check lt-blue-icon';
+  scopeOptions['yesIcon'] = options.yesIcon || 'fa fa-check';
   scopeOptions['yesButtonClass'] = options.yesButtonClass || 'btn-primary';
   scopeOptions['yesButtonTitle'] = options.yesButtonTitle || '';
   scopeOptions['noText'] = goog.isDef(options.noText) ? options.noText : 'Cancel';
-  scopeOptions['noIcon'] = goog.isDef(options.noIcon) ? options.noIcon : 'fa fa-ban red-icon';
+  scopeOptions['noIcon'] = goog.isDef(options.noIcon) ? options.noIcon : 'fa fa-ban';
   scopeOptions['noButtonTitle'] = options.noButtonTitle || '';
   scopeOptions['noButtonClass'] = options.noButtonClass || 'btn-secondary';
   scopeOptions['formClass'] = options.formClass || 'form-horizontal';
@@ -62,6 +63,7 @@ os.ui.window.launchConfirm = function(opt_options, opt_scopeOptions) {
   var maxWidth = windowOverrides.maxWidth || width;
 
   var windowOptions = {
+    'header-class': windowOverrides.headerClass || '',
     'label': windowOverrides.label || 'Confirm',
     'icon': windowOverrides.icon || '',
     'x': windowOverrides.x || 'center',
@@ -92,10 +94,11 @@ os.ui.window.launchConfirm = function(opt_options, opt_scopeOptions) {
  *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
+ * @param {!angular.$timeout} $timeout
  * @constructor
  * @ngInject
  */
-os.ui.window.ConfirmCtrl = function($scope, $element) {
+os.ui.window.ConfirmCtrl = function($scope, $element, $timeout) {
   /**
    * @type {?angular.Scope}
    * @private
@@ -118,6 +121,10 @@ os.ui.window.ConfirmCtrl = function($scope, $element) {
    */
   this.keyHandler_ = new goog.events.KeyHandler(goog.dom.getDocument());
   this.keyHandler_.listen(goog.events.KeyHandler.EventType.KEY, this.handleKeyEvent_, false, this);
+
+  $timeout(function() {
+    $scope.$emit(os.ui.WindowEventType.READY);
+  });
 
   $scope.$on('$destroy', this.onDestroy_.bind(this));
 };
@@ -156,7 +163,7 @@ os.ui.window.ConfirmCtrl.prototype.confirm = function() {
     var value = this.scope_['confirmValue'];
     if (value == null) {
       // try looking for it on the transcluded content's scope
-      var transScope = this.element_.find('.confirm-text').children().first().scope();
+      var transScope = this.element_.find('.js-confirm-text').children().first().scope();
       value = transScope['confirmValue'];
     }
 

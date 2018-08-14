@@ -15,19 +15,19 @@ goog.require('os.ui.slick.AbstractNodeUICtrl');
 /**
  * @type {string}
  */
-os.ui.node.DefaultLayerNodeUITemplate = '<span class="glyphs pull-right slick-node-ui" ng-if="nodeUi.show()">' +
-
+os.ui.node.DefaultLayerNodeUITemplate = '<span ng-if="nodeUi.show()" class="d-flex">' +
     '<span ng-if="nodeUi.canFavorite()">' +
     '<favorite ng-show="nodeUi.show()" type="descriptor" key="{{nodeUi.descId}}" ' +
-      'value="{{nodeUi.layerLabel}}" icon-color="color-yellow"></favorite></span>' +
+      'value="{{nodeUi.layerLabel}}"></favorite></span>' +
 
     '<span ng-if="nodeUi.filtersEnabled" ng-click="nodeUi.filter()">' +
-    '<i class="fa fa-filter fa-fw glyph" title="Manage filters"' +
-    'ng-class="{\'green-icon\': nodeUi.filtered}"></i></span>' +
+      '<i class="fa fa-filter fa-fw c-glyph" title="Manage filters"' +
+      'ng-class="{\'text-success\': nodeUi.filtered, \'c-glyph__off\': !nodeUi.filtered}"></i></span>' +
 
-    '<span ng-if="nodeUi.isRemovable()" ng-click="nodeUi.remove()"><i class="fa fa-times fa-fw glyph glyph-remove"' +
-    'title="Remove the layer"></i></span></span>';
+    '<button ng-if="nodeUi.isRemovable()" type="button" class="close mx-1" ng-click="nodeUi.remove()" ' +
+      'aria-label="Close"><span aria-hidden="true" title="Remove the layer">&times;</span></button>' +
 
+    '</span>';
 
 /**
  * The selected/highlighted node UI directive
@@ -114,6 +114,7 @@ os.ui.node.DefaultLayerNodeUICtrl.prototype.getSource = function() {
 /**
  * If the layer is removable.
  * @return {boolean}
+ * @export
  */
 os.ui.node.DefaultLayerNodeUICtrl.prototype.isRemovable = function() {
   var node = /** @type {os.data.LayerNode} */ (this.scope['item']);
@@ -126,14 +127,11 @@ os.ui.node.DefaultLayerNodeUICtrl.prototype.isRemovable = function() {
 
   return false;
 };
-goog.exportProperty(
-    os.ui.node.DefaultLayerNodeUICtrl.prototype,
-    'isRemovable',
-    os.ui.node.DefaultLayerNodeUICtrl.prototype.isRemovable);
 
 
 /**
  * Remove the layer
+ * @export
  */
 os.ui.node.DefaultLayerNodeUICtrl.prototype.remove = function() {
   // the node should be on the scope as 'item'
@@ -152,8 +150,6 @@ os.ui.node.DefaultLayerNodeUICtrl.prototype.remove = function() {
     this.removeNode_(node);
   }
 };
-goog.exportProperty(os.ui.node.DefaultLayerNodeUICtrl.prototype, 'remove',
-    os.ui.node.DefaultLayerNodeUICtrl.prototype.remove);
 
 
 /**
@@ -170,6 +166,7 @@ os.ui.node.DefaultLayerNodeUICtrl.prototype.removeNode_ = function(node) {
 /**
  * If the layer is favoritable.
  * @return {boolean}
+ * @export
  */
 os.ui.node.DefaultLayerNodeUICtrl.prototype.canFavorite = function() {
   var id = this.getLayerId();
@@ -180,14 +177,11 @@ os.ui.node.DefaultLayerNodeUICtrl.prototype.canFavorite = function() {
 
   return false;
 };
-goog.exportProperty(
-    os.ui.node.DefaultLayerNodeUICtrl.prototype,
-    'canFavorite',
-    os.ui.node.DefaultLayerNodeUICtrl.prototype.canFavorite);
 
 
 /**
  * Launch the filter manager for the layer
+ * @export
  */
 os.ui.node.DefaultLayerNodeUICtrl.prototype.filter = function() {
   var id = this.getLayerId();
@@ -205,8 +199,6 @@ os.ui.node.DefaultLayerNodeUICtrl.prototype.filter = function() {
     }
   }
 };
-goog.exportProperty(os.ui.node.DefaultLayerNodeUICtrl.prototype, 'filter',
-    os.ui.node.DefaultLayerNodeUICtrl.prototype.filter);
 
 
 /**

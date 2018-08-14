@@ -8,6 +8,7 @@ goog.require('os.ui');
 goog.require('os.ui.menu.MenuEvent');
 goog.require('os.ui.menu.MenuEventType');
 goog.require('os.ui.menu.MenuItem');
+goog.require('os.ui.windowSelector');
 
 
 
@@ -54,6 +55,12 @@ os.ui.menu.Menu = function(root) {
    * @private
    */
   this.listenerDelay_ = new goog.async.Delay(this.onAddOutsideListener_, 25, this);
+
+  /**
+   * @type {boolean}
+   * @private
+   */
+  this.isOpen_ = false;
 };
 goog.inherits(os.ui.menu.Menu, goog.events.EventTarget);
 
@@ -94,8 +101,24 @@ os.ui.menu.Menu.prototype.setRoot = function(root) {
 os.ui.menu.Menu.prototype.onClick_ = function(e) {
   // if we didn't click on something in the menu
   if (!$(e.target).closest('#menu').length) {
-    // close the menu
-    this.close();
+    // check to see if what was clicked was what originally opened the menu, if so, close it
+    var opener = this.position_.of;
+    var openerEl = /** @type {Element} */ (this.position_.of);
+    var str = typeof opener === 'string' ? /** @type {string} */ (opener) : '';
+    try {
+      // check target against menu position element
+      var test = $(e.target).closest(opener[0]).length || $(e.target).closest(openerEl).length;
+    } catch (error) {
+      var test = $(e.target).closest(str).length ? true : false;
+    }
+    // test to see if the map or timeline was clicked, those should always close a menu
+    if (test && opener != '#map-container' && opener != '.c-svg-timeline') {
+      // leave the open flag so the next call to open wont open anything
+      this.close(false, true);
+    } else {
+      // close the menu
+      this.close();
+    }
   }
 };
 
@@ -108,13 +131,18 @@ os.ui.menu.Menu.prototype.onClick_ = function(e) {
  * @param {boolean=} opt_dispatch Whether or not to dispatch an event. Defaults to true.
  */
 os.ui.menu.Menu.prototype.open = function(context, position, opt_target, opt_dispatch) {
+  if (this.isOpen_) {
+    // we clicked on whatever opened the menu, so close it and leave it closed
+    this.close(opt_dispatch);
+    return;
+  }
   this.close(opt_dispatch);
   this.context_ = context || undefined;
   this.position_ = position || {};
   this.target_ = opt_target || this;
 
   var html = this.getRoot().render(this.context_, this.target_);
-  html = '<ul id="menu">' + html + '</ul>';
+  html = '<ul id="menu" class="c-menu dropdown-menu show">' + html + '</ul>';
 
   // prune leading and trailing separators
   html = html.replace(/<ul><li>-<\/li>/g, '<ul>');
@@ -127,16 +155,27 @@ os.ui.menu.Menu.prototype.open = function(context, position, opt_target, opt_dis
 
   this.menu_ = $(html);
 
-  this.position_.within = this.position_.within || '#win-container';
+  this.position_.within = this.position_.within || os.ui.windowSelector.CONTAINER;
   this.position_.collision = this.position_.collision || 'fit';
 
   $(document.body).append(
       // You might be tempted to use the 'position' field in this options object.
       // You'd be wrong. That only relates to sub-menu positioning.
       this.menu_.menu({
-        'items': '> :not(.nav-header)',
+        'items': '> :not(.dropdown-header)',
         'select': this.onSelect.bind(this)
       }));
+
+  // Some themes change the dropdown color based on if they are in the navbar. Lets do the same!
+  var navbarParent = goog.dom.getAncestorByClass(this.position_.of[0], 'navbar');
+  if (navbarParent) {
+    var classes = goog.array.filter(navbarParent.className.split(' '), function(classname) {
+      return classname.indexOf('bg-') != -1;
+    });
+    if (classes.length) {
+      this.menu_.wrap('<div id="js-menu__wrapper" class="' + classes.join(' ') + '"></div>');
+    }
+  }
 
   this.menu_['position'](this.position_);
   this.listenerDelay_.start();
@@ -146,6 +185,7 @@ os.ui.menu.Menu.prototype.open = function(context, position, opt_target, opt_dis
     this.dispatchEvent(os.ui.menu.MenuEventType.OPEN);
   }
 
+  this.isOpen_ = true;
   // jQuery menu is outside of the Angular lifecycle, so the menu needs to trigger a digest on its own
   os.ui.apply(os.ui.injector.get('$rootScope'));
 };
@@ -222,14 +262,16 @@ os.ui.menu.Menu.prototype.onSelect = function(evt, ui) {
 /**
  * Close the menu.
  * @param {boolean=} opt_dispatch Whether or not to dispatch an event. Defaults to true.
+ * @param {boolean=} opt_leaveOpen Whether or not to leave isOpen_ alone (i.e. not set to false)
  */
-os.ui.menu.Menu.prototype.close = function(opt_dispatch) {
+os.ui.menu.Menu.prototype.close = function(opt_dispatch, opt_leaveOpen) {
   if (this.menu_) {
     var dispatch = opt_dispatch != null ? opt_dispatch : true;
     if (dispatch && os.dispatcher) {
       os.dispatcher.dispatchEvent(os.ui.GlobalMenuEventType.MENU_CLOSE);
     }
 
+    this.menu_.unwrap('#js-menu__wrapper');
     this.menu_.remove();
     this.menu_ = null;
   }
@@ -240,6 +282,7 @@ os.ui.menu.Menu.prototype.close = function(opt_dispatch) {
 
   this.onRemoveOutsideListener_();
 
+  this.isOpen_ = opt_leaveOpen ? this.isOpen_ : false;
   // jQuery menu is outside of the Angular lifecycle, so the menu needs to trigger a digest on its own
   os.ui.apply(os.ui.injector.get('$rootScope'));
 };

@@ -1,78 +1,52 @@
-<div class="edit-request-params window-content-wrapper">
-  <div class="window-content">
-    <div class="c-paramsform">
-      <form class="form-horizontal form-compact" name="form">
-        <table class="wide">
-          <tr ng-repeat-start="url in ctrl.urls track by $index" title="URL used for server requests">
-            <td style="float:left;width:50px;">{{ctrl.getUrlLabel($index)}}:</td>
-            <td class="wide">
-              <input type="text" name="url{{$index}}" class="wide"
-                  ng-model="ctrl.urls[$index]" ng-maxlength="1000" ng-change="ctrl.testValid()"
-                  placeholder="Server URL" />
-            </td>
-            <td>
-              <button class="btn btn-default" type="button" ng-click="ctrl.removeUrl($index)"
-                  ng-if="ctrl.urls.length > 1" title="Remove this URL">
-                <i class="fa fa-times red-icon"></i>
-              </button>
-            </td>
-          </tr>
-          <tr ng-repeat-end>
-            <td></td>
-            <td>
-              <span class="help-inline" data-ng-show="form.url{{$index}}.$error.maxlength">
-                URL is too long!
-              </span>
-            </td>
-            <td></td>
-          </tr>
-        </table>
-      </form>
-    </div>
-    <div class="c-gridcontrols bot-gapxs" ng-if="ctrl.multiUrl || ctrl.params">
-      <button class="btn btn-default" type="button" ng-if="ctrl.multiUrl"
-          ng-click="ctrl.addUrl()"
-          title="Add an alternate server URL">
-        <i class="fa fa-plus green-icon"></i>
+<div class="d-flex flex-column flex-fill">
+  <div class="modal-body d-flex flex-column flex-fill">
+    <form name="form" novalidate>
+      <div ng-repeat="url in ctrl.urls track by $index" title="URL used for server requests">
+        <div class="row no-gutters mb-1">
+          <label class="col-form-label col-2 text-right">{{ctrl.getUrlLabel($index)}}</label>
+          <div class="col form-inline">
+            <input class="ml-2 col-11 form-control" type="text" name="url{{$index}}" ng-model="ctrl.urls[$index]" ng-maxlength="1000" ng-change="ctrl.testValid()" placeholder="Server URL" />
+            <button class="btn btn-outline-danger btn-sm" type="button" ng-click="ctrl.removeUrl($index)" ng-if="ctrl.urls.length > 1" title="Remove this URL">
+              <i class="fa fa-times"></i>
+            </button>
+            <span class="invalid-feedback d-block" ng-show="form.url{{$index}}.$error.maxlength">
+              Too long!
+            </span>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div class="mb-1" ng-if="ctrl.multiUrl || ctrl.params">
+      <button class="btn btn-outline-success btn-secondary" type="button" ng-if="ctrl.multiUrl" ng-click="ctrl.addUrl()" title="Add an alternate server URL">
+        <i class="fa fa-plus"></i>
         Add URL
       </button>
-      <button class="btn btn-default" type="button" ng-if="ctrl.params" ng-click="ctrl.addRow()"
-          title="Add a new parameter row">
-        <i class="fa fa-plus green-icon"></i>
+      <button class="btn btn-outline-success" type="button" ng-if="ctrl.params" ng-click="ctrl.addRow()" title="Add a new parameter row">
+        <i class="fa fa-plus"></i>
         Add Parameter
       </button>
-      <button class="btn btn-default" type="button" ng-if="ctrl.params" ng-disabled="!ctrl.selected"
-          ng-click="ctrl.removeRow()"
-          title="Remove the selected parameter row">
-        <i class="fa fa-minus red-icon"></i>
+      <button class="btn btn-outline-danger" type="button" ng-if="ctrl.params" ng-disabled="!ctrl.selected" ng-click="ctrl.removeRow()" title="Remove the selected parameter row">
+        <i class="fa fa-minus"></i>
         Remove Parameter
       </button>
     </div>
-    <div autoheight minheight="150" siblings=".c-paramsform,.c-gridcontrols" ng-if="ctrl.params">
-      <slickgrid
-          x-data="ctrl.params"
-          columns="ctrl.gridColumns"
-          options="ctrl.gridOptions"
-          selected="ctrl.selected"
-          use-angular="true">
-      </slickgrid>
+    <div class="d-flex flex-column flex-fill" ng-if="ctrl.params">
+      <slickgrid x-data="ctrl.params" columns="ctrl.gridColumns" options="ctrl.gridOptions" selected="ctrl.selected" use-angular="true"></slickgrid>
     </div>
   </div>
-  <div class="window-footer">
-    <div class="pull-left" ng-if="ctrl.errorMsg">
-      <i class="fa fa-warning orange-icon"></i>
+  <div class="modal-footer d-block">
+    <div class="float-left" ng-if="ctrl.errorMsg">
+      <i class="fa fa-warning text-warning"></i>
       {{ctrl.errorMsg}}
     </div>
-    <div class="pull-right">
-      <button type="submit" class="btn btn-default" ng-click="ctrl.confirm()"
-          ng-disabled="!ctrl.testValid()"
-          title="Apply parameter changes and refresh the layer.">
-        <i class="fa fa-check lt-blue-icon"></i>
+    <div class="float-right">
+      <button type="submit" class="btn btn-primary" ng-click="ctrl.confirm()" ng-disabled="!ctrl.testValid()" title="Apply parameter changes and refresh the layer.">
+        <i class="fa fa-check"></i>
         Apply
       </button>
-      <button type="button" class="btn btn-default" ng-click="ctrl.cancel()"
+      <button type="button" class="btn btn-secondary" ng-click="ctrl.cancel()"
           title="Cancel the parameter edit, discarding all changes.">
-        <i class="fa fa-ban red-icon"></i>
+        <i class="fa fa-ban"></i>
         Cancel
       </button>
     </div>

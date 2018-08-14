@@ -1,34 +1,26 @@
-<div class="window-content-wrapper">
-  <div class="window-content no-footer controls-help container-fluid">
-    <div class="row-fluid">
-      <div ng-repeat="(key, controlcolumn) in controlsHelp.controls" class="control-column">
-        <div ng-repeat="control in controlcolumn" class="row-fluid">
-          <div class="container-fluid control-section">
-            <div class="row-fluid">
-              <h4 class="control-header span12">{{control.section}}</h4>
-            </div>
-            <div ng-repeat="ctrl in control.controls">
-              <div class="row-fluid control-line">
-                <span class="span5 control-text">{{ctrl.text}}: </span>
-                <span class="span7">
-                  <span ng-repeat="keyCode in ctrl.keys track by $index">
-                    <span class="control-key" ng-if="$even">{{controlsHelp.getKey(keyCode)}}</span>
-                    <span ng-if="$odd"> {{keyCode}} </span>
-                  </span>
-                  <span ng-repeat="otherText in ctrl.other track by $index">
-                    <span ng-if="$even">
-                      <img ng-if="controlsHelp.getMouse(otherText)" class="control-mouse" ng-src="{{controlsHelp.getMouse(otherText)}}"></img>
-                      <span ng-if="controlsHelp.getFont(otherText)" ng-class="controlsHelp.getFontClass(otherText)">
-                        <i ng-class="controlsHelp.getFont(otherText)"></i>
-                      </span>
-                      <span ng-if="!controlsHelp.getMouse(otherText) && !controlsHelp.getFont(otherText)" class="control-key">{{otherText}}</span>
-                    </span>
-                    <span ng-if="$odd"> {{otherText}} </span>
-                  </span>             
-                </span>
-              </div>
-            </div>
-          </div>
+<div class="d-flex">
+  <div ng-repeat="(key, controlcolumn) in controlsHelp.controls" class="col-6">
+    <div ng-repeat="control in controlcolumn" class="m-2">
+      <div>
+        <h4>{{control.section}}</h4>
+      </div>
+      <div ng-repeat="ctrl in control.controls" class="row pb-3">
+        <div class="col-5">{{ctrl.text}}: </div>
+        <div class="col-7">
+          <span ng-repeat="keyCode in ctrl.keys track by $index">
+            <span ng-if="$even" class="border border-info rounded p-1" >{{controlsHelp.getKey(keyCode)}}</span>
+            <span ng-if="$odd"> {{keyCode}} </span>
+          </span>
+          <span ng-repeat="otherText in ctrl.other track by $index">
+            <span ng-if="$even">
+              <img ng-if="controlsHelp.getMouse(otherText)" ng-src="{{controlsHelp.getMouse(otherText)}}">
+              <span ng-if="controlsHelp.getFont(otherText)" class="border border-info rounded p-1" ng-class="controlsHelp.getFontClass(otherText)">
+                <i ng-class="controlsHelp.getFont(otherText)"></i>
+              </span>
+              <span ng-if="!controlsHelp.getMouse(otherText) && !controlsHelp.getFont(otherText)" class="border border-info rounded p-1">{{otherText}}</span>
+            </span>
+            <span ng-if="$odd"> {{otherText}} </span>
+          </span>
         </div>
       </div>
     </div>

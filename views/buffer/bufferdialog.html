@@ -1,26 +1,21 @@
-<div class="buffer-window window-content-wrapper">
-  <div class="window-content">
-    <div class="buffer-dialog" ng-form="bufferDialogForm">
-      <bufferform config="config" init-sources="sources" show-source-picker="buffer.showSourcePicker"
-          warning-message="buffer.warningMessage"></bufferform>
+<div>
+  <div class="modal-body">
+    <div ng-form="bufferDialogForm">
+      <bufferform config="config" init-sources="sources" show-source-picker="buffer.showSourcePicker" warning-message="buffer.warningMessage"></bufferform>
     </div>
-    <div class="buffer-status">
-      <i class="fa fa-warning orange-icon" ng-if="buffer.warningMessage || !buffer.isDataReady()"></i>
-      <span ng-class="{'italic': buffer.warningMessage || !buffer.isDataReady()}"
-          ng-bind-html="buffer.warningMessage || buffer.getStatus()"></span>
+    <div>
+      <i class="fa fa-warning text-warning" ng-if="buffer.warningMessage || !buffer.isDataReady()"></i>
+      <span ng-class="{'font-italic': buffer.warningMessage || !buffer.isDataReady()}" ng-bind-html="buffer.warningMessage || buffer.getStatus()"></span>
     </div>
   </div>
-  <div class="window-footer">
-    <div class="pull-right">
-      <button class="btn btn-default" ng-click="buffer.confirm()"
-          ng-disabled="buffer.loading || bufferDialogForm.$invalid || buffer.warningMessage || !buffer.isDataReady()">
-        <i class="fa" ng-class="buffer.loading && 'fa-spin fa-spinner' || 'fa-check lt-blue-icon'"></i>
-        {{buffer.loading ? 'Loading' : 'OK'}}
-      </button>
-      <button class="btn btn-default" ng-click="buffer.cancel()">
-        <i class="fa fa-ban red-icon"></i>
-        Cancel
-      </button>
-    </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" ng-click="buffer.confirm()" ng-disabled="buffer.loading || bufferDialogForm.$invalid || buffer.warningMessage || !buffer.isDataReady()">
+      <i class="fa" ng-class="buffer.loading && 'fa-spin fa-spinner' || 'fa-check'"></i>
+      {{buffer.loading ? 'Loading' : 'OK'}}
+    </button>
+    <button class="btn btn-secondary" ng-click="buffer.cancel()">
+      <i class="fa fa-ban"></i>
+      Cancel
+    </button>
   </div>
 </div>

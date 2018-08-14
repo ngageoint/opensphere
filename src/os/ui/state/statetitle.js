@@ -34,6 +34,7 @@ os.ui.state.stateTitleLinkFn = function(scope, element, attrs, ctrl) {
 
       ctrl.$setValidity('title', valid);
     }
+    ctrl.$setDirty();
     return val;
   };
 

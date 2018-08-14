@@ -1,67 +1,56 @@
-<div class="c-labelcontrols" ng-form="labelForm">
+<div ng-form="labelForm">
   <table>
     <tr>
-      <td class="control-label">Style:</td>
-      <td>
-        <colorpicker name="labelColor" class="no-text" color="labelColor" show-reset="true"
-            title="Sets the label color">
-        </colorpicker>
-        <spinner min="8" max="20" live="false" step="1" value="labelSize" name="labelSize"
-            title="Sets the label font size">
-        </spinner>
-        px
+      <td>Style</td>
+      <td class="w-100">
+        <colorpicker name="labelColor" color="labelColor" show-reset="true" title="Sets the label color"></colorpicker>
+        <spinner class="d-inline-block" min="8" max="20" live="false" step="1" value="labelSize" name="labelSize" title="Sets the label font size"></spinner>px
       </td>
     </tr>
   </table>
 
-  <div class="c-labelcontrols__showlabels" ng-show="alwaysShowLabels != 'false'">
-    <label>
-      <input class="label-checkbox checkbox inline" type="checkbox" name="showLabels"
-          title="Always show labels for this layer. If unchecked, labels will only be shown on hover."
-          ng-model="showLabels" ng-change="labelCtrl.onShowLabelsChange()"/>
-      Always Show Labels
-    </label>
+  <div ng-show="alwaysShowLabels != 'false'">
+    <div class="custom-control custom-checkbox d-inline-block" title="Always show labels for this layer. If unchecked, labels will only be shown on hover.">
+      <input type="checkbox" class="custom-control-input" id="showLabels" name="showLabels" ng-model="showLabels" ng-change="labelCtrl.onShowLabelsChange()"/>
+      <label class="custom-control-label" for="showLabels"> Always Show Labels</label>
+    </div>
   </div>
 
-  <div class="c-labelcontainer" ng-class="labels.length > 1 && 'well'">
-    <table class="wide">
+  <div class="js-label-container card-body border">
+    <table>
       <tr ng-repeat="label in labels">
-        <td class="c-labelcontainer__fixedcell" ng-if="labels.length > 1">
-          <span class="handle" ng-if="label.column != null" title="Click and Drag to move this label">
-            <i class="fa fa-bars"></i>
-          </span>
+        <td class="js-handle u-cursor-grab" ng-if="labels.length > 1">
+          <i class="fa fa-bars pr-1" ng-if="label.column != null" title="Click and Drag to move this label"></i>
         </td>
-        <td class="c-labelcontainer__fixedcell">
-          <input ng-disabled="label.column == null" class="checkbox inline" type="checkbox"
-              name="showColumn"
-              title="Display the column with the value"
-              ng-model="label.showColumn"
-              ng-change="labelCtrl.onColumnChange()" />
-        </td>
-        <td class="c-labelcontainer__fixedcell">Column</td>
         <td>
-          <select class="no-margin wide" ng-model="label.column" ng-change="labelCtrl.onColumnChange()"
+          <div class="custom-control custom-checkbox d-inline-block" title="Display the column name with the label.">
+            <input type="checkbox" class="custom-control-input" id="{{'showColumn' + $index}}" name="{{'showColumn' + $index}}"
+                ng-disabled="label.column == null"
+                ng-model="label.showColumn"
+                ng-change="labelCtrl.onColumnChange()"/>
+            <label class="custom-control-label" for="{{'showColumn' + $index}}"> Column</label>
+          </div>
+        </td>
+        <td>
+          <select class="form-control" ng-model="label.column" ng-change="labelCtrl.onColumnChange()"
               title="Sets the data field used for labels"
               ng-options="col.field as col.name for col in columns">
             <option value="">-- None --</option>
           </select>
         </td>
-        <td class="c-labelcontainer__fixedcell" ng-if="labels.length > 1">
-          <button type="button" class="btn btn-default" ng-click="labelCtrl.removeLabel(label)"
-              title="Remove this label">
-            <i class="fa fa-times red-icon"></i>
+        <td ng-if="labels.length > 1">
+          <button type="button" class="btn btn-danger" ng-click="labelCtrl.removeLabel(label)" title="Remove this label">
+            <i class="fa fa-times"></i>
           </button>
         </td>
-        <td class="c-labelcontainer__fixedcell">
-          <button type="button" class="btn btn-default" ng-click="labelCtrl.addLabel()"
-              ng-class="{'invisible': !$last || labels.length == labelCtrl.labelLimit}"
-              title="Add a label">
-            <i class="fa fa-plus green-icon"></i>
+        <td>
+          <button type="button" class="btn btn-secondary" ng-if="$last" ng-click="labelCtrl.addLabel()" title="Add a label">
+            <i class="fa fa-plus"></i>
           </button>
         </td>
       </tr>
     </table>
-    <span class="help-inline error" ng-if="labelForm.$error.columnRequired">
+    <span class="invalid-feedback d-block" ng-if="labelForm.$error.columnRequired">
       Please choose at least one column.
     </span>
   </div>

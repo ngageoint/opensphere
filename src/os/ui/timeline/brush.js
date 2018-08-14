@@ -634,7 +634,7 @@ os.ui.timeline.Brush.prototype.checkDragPan_ = function(event) {
 
   // get the mouse x position relative to the timeline, regardless of the event target
   // restrict it to be greater than 0, certain browsers provide bogus left offset values
-  var x = event.clientX - Math.max(angular.element('.svg-timeline').offset().left, 0);
+  var x = event.clientX - Math.max(angular.element('.c-svg-timeline').offset().left, 0);
   var left = x < limit[0] + 20;
   var right = x > limit[1] - 20;
 

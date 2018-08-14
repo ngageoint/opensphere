@@ -121,7 +121,7 @@ os.ui.server.AbstractLoadingServer.prototype.formatIcons = function() {
   var icons = os.ui.server.AbstractLoadingServer.base(this, 'formatIcons');
   if (this.getError()) {
     var message = 'Server failed to load. See the log/alerts window for details.';
-    icons += '<i class="fa fa-warning orange-icon" title="' + message + '"></i>';
+    icons += '<i class="fa fa-warning text-warning" title="' + message + '"></i>';
   }
 
   return icons;

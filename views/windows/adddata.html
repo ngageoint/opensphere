@@ -1,56 +1,68 @@
-<div class="window-content-wrapper">
-  <div class="window-content">
-    <div class="adw-banner">
-      <div class="alert alert-error animate-fade" ng-if="addData.showServerAlert">
-        <button class="close inline" type="button" ng-click="addData.dismissServerAlert()">
-          <i class="fa fa-times"></i>
+<div class="flex-fill w-100 d-flex flex-column">
+  <div class="modal-body d-flex flex-column flex-fill">
+    <div class="alert alert-danger animate-fade flex-shrink-0" ng-if="addData.showServerAlert">
+      <button class="close" type="button" ng-click="addData.dismissServerAlert()">
+        <i class="fa fa-times"></i>
+      </button>
+      <span>
+        Some servers failed to load and their layers will not be available. See the
+        <span class="important-link" ng-click="openAlerts()">alerts</span> or
+        <span class="important-link" ng-click="openServers()">servers</span>
+        windows for details.
+      </span>
+    </div>
+
+    <div class="container flex-shrink-0 p-0">
+      <div class="form-group row">
+        <div class="input-group col-6">
+          <input class="form-control js-input-search" ng-model="addData.term" ng-change="addData.search()" placeholder="Search available layers"/>
+          <div class="input-group-append">
+            <button class="btn btn-secondary" ng-click="addData.clearSearch()" title="Clear the search term">
+              <i class="fa fa-times"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="col text-right">
+          <button class="btn btn-primary" ng-click="addData.launchFileImport()" title="Open a local file or URL"
+              ng-class="{'focus': addData.isTreeEmpty()}">
+            <i class="fa fa-folder-open"></i> Open File/URL
+          </button>
+        </div>
+      </div>
+      <div class="row" ng-hide="filterName">
+        <label class="col-auto col-form-label">Group By</label>
+        <select class="form-control col-3" ng-model="addData.view" ng-change="addData.onGroupByChanged()"
+            ng-options="key for (key, value) in addData.views"/>
+      </div>
+
+      <div ng-show="filterName">
+        <button class="btn btn-outline-secondary" ng-click="addData.clearFilter()">
+          <i class="fa fa-times text-danger"></i>
+          Clear Filter:
+          <em>{{filterName}}</em>
         </button>
-        <span>
-          Some servers failed to load and their layers will not be available. See the
-          <span class="important-link" ng-click="openAlerts()">alerts</span> or
-          <span class="important-link" ng-click="openServers()">servers</span>
-          windows for details.
-        </span>
       </div>
     </div>
-    <div class="adw-header">
-      <div class="pull-left">
-        <div class="search-box">
-          <input class="search" type="text" ng-model="addData.term" ng-change="addData.search()"
-              placeholder="Search available layers"></input>
-          <span class="input-clear" ng-click="addData.clearSearch()" ng-show="addData.term" title="Clear the search term">
-            <i class="fa fa-times"></i>
-          </span>
-        </div>
-        <div class="groupby" ng-hide="filterName">
-          <span>Group By:</span>
-          <select class="no-margin" ng-model="addData.view" ng-change="addData.onGroupByChanged()"
-              ng-options="key for (key, value) in addData.views"/>
-        </div>
-        <div class="adw-filter" ng-show="filterName">
-          <span ng-click="addData.clearFilter()" class="c--action"><i class="fa fa-times color-red"></i> Clear Filter: <em>{{filterName}}</em></span>
-        </div>
-      </div>
-      <div class="add-data-group pull-right">
-        <button class="btn btn-default" ng-click="addData.launchFileImport()" title="Open a local file or URL"
-            ng-class="{'border-glow': addData.isTreeEmpty()}">
-          <i class="fa fa-folder-open"></i>
-          <span>Open File/URL</span>
-        </button>
-      </div>
-    </div>
-    <div class="adw-main" autoheight siblings=".adw-header,.adw-banner">
-      <div class="adw-info panel pull-right selectable" ng-bind-html="addData.getInfo()"></div>
-      <slicktree x-data="providers" checkbox-class="toggle-switch" checkbox-tooltip="Activates or deactivates the layer"
-          win-launcher-class="fa fa-plus color-green" selected="selected" disable-folders="true"></slicktree>
+
+    <div class="d-flex flex-fill mt-1">
+      <slicktree class="border col p-0" x-data="providers" checkbox-class="c-toggle-switch" checkbox-tooltip="Activates or deactivates the layer"
+        selected="selected" disable-folders="true"></slicktree>
+      <div class="border col ml-1 p-2" ng-bind-html="addData.getInfo()"></div>
     </div>
   </div>
-  <div class="window-footer">
-    <div class="pull-right">
-      <button class="btn btn-default" ng-click="addData.close()"><i class="btn-icon fa fa-check"></i> Close</button>
+
+  <div class="modal-footer">
+    <div class="d-flex flex-row justify-content-between w-100">
+      <div class="text-left">
+        <button class="btn btn-info" ng-click="openServers()" title="Add, edit, and remove servers providing data to the application">
+          <i class="fa fa-database"></i> Manage Servers
+        </button>
+      </div>
+      <div class="text-right">
+        <button class="btn btn-secondary" ng-click="addData.close()">
+          <i class="fa fa-times"></i> Close</button>
+      </div>
     </div>
-    <button class="btn btn-default" ng-click="openServers()" title="Add, edit, and remove servers providing data to the application">
-      <i class="btn-icon fa fa-database"></i> Manage Servers
-    </button>
   </div>
 </div>

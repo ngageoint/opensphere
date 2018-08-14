@@ -1,0 +1,221 @@
+// Styles for slickgrids and slicktrees
+// These selectors will not conform to all of our standards as they alter the styling of elements internal to slickgrid
+
+.slick-grid {
+  box-sizing: content-box;
+  flex: 1;
+  width: 100%;
+
+  .even {
+    background: $table-accent-bg;
+  }
+
+  .odd {
+    background: $table-bg;
+  }
+
+  &.no-header {
+    border-top: 0;
+    width: 100%;
+
+    .slick-header {
+      display: none;
+      height: 0;
+    }
+  }
+
+  .slick-header,
+  .slick-header-column {
+    background: $body-bg;
+    color: $body-color;
+  }
+
+  .slick-header {
+    border: $table-border-color;
+
+    .slick-header-buttons {
+      cursor: pointer;
+      float: right;
+    }
+  }
+
+  .slick-header-column {
+    background: $body-bg;
+    border-bottom: 1px solid $table-border-color;
+    border-right-color: $table-border-color;
+    border-top: 1px solid $table-border-color;
+    box-sizing: content-box;
+    color: color-yiq($body-bg);
+    cursor: pointer;
+
+    .ui-state-hover {
+      background: $table-hover-bg;
+      border-color: $table-border-color;
+      color: $body-color;
+    }
+
+    &:first-child {
+      border-left: 1px solid $table-border-color;
+      padding-left: 3px;
+    }
+
+    &:last-child {
+      border-right-color: $table-border-color;
+    }
+  }
+
+  .slick-resizable-handle {
+    color: $table-border-color;
+  }
+}
+
+.slick-row {
+  @include gradient-bg($dropdown-link-hover-bg);
+  background: $body-bg;
+  color: color-yiq($body-bg);
+
+  &.selected {
+    background: $list-group-active-bg;
+    color: $list-group-active-color;
+  }
+
+  &.hovered,
+  &:hover {
+    background: $list-group-hover-bg;
+    color: $list-group-action-hover-color;
+
+    a {
+      color: $list-group-active-color;
+    }
+  }
+
+  &.selected,
+  &.hovered,
+  &:hover {
+    @each $color, $value in $colors {
+      .u-text-#{$color}:not(.c-glyph__enabled) {
+        color: inherit !important;
+      }
+    }
+
+    @each $color, $value in $theme-colors {
+      .text-#{$color} {
+        color: inherit !important;
+      }
+    }
+  }
+}
+
+.slick-sort-indicator {
+  background: none;
+  float: left;
+  font-family: FontAwesome;
+  font-style: normal;
+  font-weight: normal;
+  height: inherit;
+  margin: 0 2px 0 0;
+
+  &:not([class*='slick-sort-indicator-']) {
+    display: none;
+  }
+}
+
+.slick-column-name {
+  display: inline-block;
+  float: left;
+}
+
+.slick-sort-indicator-asc::after {
+  content: '\f0d8';
+}
+
+.slick-sort-indicator-desc::after {
+  content: '\f0dd';
+}
+
+.slick-cell {
+  align-items: center;
+  border-bottom-color: $table-border-color;
+  border-right-color: $table-border-color;
+  box-sizing: border-box;
+  display: flex;
+  padding: 2px;
+
+  // Standard bold is too bold!
+  b {
+    font-weight: 600;
+  }
+
+  a {
+    color: $link-color;
+    padding: 0 5px;
+  }
+
+  &:first-child {
+    border-left: 1px solid $table-border-color;
+    padding-right: 1px;
+  }
+
+  &:last-child {
+    border-right-style: solid;
+  }
+}
+
+.slick-cell.color {
+  text-align: center;
+
+  > i {
+    font-size: $font-size-base;
+  }
+}
+
+.slick-cell-link {
+  text-decoration: underline;
+}
+
+.slick-dragging {
+  background: $table-accent-bg;
+}
+
+.slick-reorder-proxy,
+.slick-reorder-guide {
+  background: $primary;
+}
+
+// * Editable grid styles
+// ************************************************************/
+
+.slick-grid.editable {
+  // add a bottom border so it's easier to tell when there is an empty (new) row at the bottom.
+  .slick-row.ui-widget-content {
+    border-bottom: 1px solid #333;
+  }
+
+  .slick-cell {
+    // active cell has a full border, so when not active shift text slightly so it doesn't visibly move
+    &:not(.active) {
+      padding-left: .5rem;
+    }
+
+    &.editable {
+      // when editing a cell, make it look inset
+      background: #333;
+      box-shadow: inset 0 0 3px #111;
+
+      // override bootstrap styles on the input so it fits in the cell
+      input.editor-text {
+        background: transparent;
+        border: 0;
+        box-shadow: none;
+        box-sizing: border-box;
+        height: 100%;
+        width: 100%;
+      }
+    }
+  }
+
+  // override the highlight background while editing
+  .slick-row:hover .slick-cell.editable {
+    background: #333;
+  }
+}

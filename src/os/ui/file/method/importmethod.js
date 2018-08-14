@@ -101,13 +101,13 @@ os.ui.file.method.ImportMethod.prototype.loadFile = function(opt_options) {
     var windowOptions = {
       'id': os.ui.file.method.UrlMethod.ID,
       'label': 'Import Data',
-      'icon': 'fa fa-cloud-download lt-blue-icon',
+      'icon': 'fa fa-cloud-download',
       'x': 'center',
       'y': 'center',
       'width': '400',
       'min-width': '400',
       'max-width': '400',
-      'height': '150',
+      'height': 'auto',
       'modal': 'true',
       'show-close': 'true',
       'no-scroll': 'true'

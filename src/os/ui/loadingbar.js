@@ -103,7 +103,7 @@ os.ui.LoadingBarCtrl = function($scope, $element, $timeout) {
         this['indeterminate'] = false;
       }
 
-      var element = goog.dom.getElementByClass('bar', this.element_[0]);
+      var element = goog.dom.getElementByClass('progress-bar', this.element_[0]);
       if (element) {
         goog.style.setWidth(element, this['complete'] + '%');
       }

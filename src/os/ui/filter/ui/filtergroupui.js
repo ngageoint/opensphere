@@ -15,7 +15,7 @@ os.ui.filter.ui.filterGroupUIDirective = function() {
   return {
     restrict: 'AE',
     replace: true,
-    template: '<span class="pull-right">' +
+    template: '<span class="float-right">' +
         '<select class="filter-select" ng-model="groupUi.group" ng-change="groupUi.onGroup()"' +
         ' ng-options="key for (key, value) in groupUi.groups"' +
         ' title="Whether results can match any filter or must match all filters."/>' +
@@ -96,11 +96,10 @@ os.ui.filter.ui.FilterGroupUICtrl.prototype.onGroupChanged_ = function(event) {
 
 /**
  * Update the grouping
+ * @export
  */
 os.ui.filter.ui.FilterGroupUICtrl.prototype.onGroup = function() {
   var fqm = os.ui.filter.FilterManager.getInstance();
   var node = /** @type {os.structs.ITreeNode} */ (this.scope_['item']);
   fqm.setGrouping(node.getId(), /** @type {boolean} */ (this['group']));
 };
-goog.exportProperty(os.ui.filter.ui.FilterGroupUICtrl.prototype, 'onGroup',
-    os.ui.filter.ui.FilterGroupUICtrl.prototype.onGroup);

@@ -15,13 +15,13 @@ goog.require('os.ui.filter.ui.filterNodeUIDirective');
 os.ui.im.action.filterActionNodeUIDirective = function() {
   var directive = os.ui.filter.ui.filterNodeUIDirective();
   directive.controller = os.ui.im.action.FilterActionNodeUICtrl;
-  directive.template = '<span class="glyphs pull-right slick-node-ui" ng-if="nodeUi.show()">' +
+  directive.template = '<span class="float-right slick-node-ui" ng-if="nodeUi.show()">' +
       '<span ng-click="nodeUi.copy()">' +
-      '<i class="fa fa-copy fa-fw glyph" title="Copy the action"></i></span>' +
+      '<i class="fa fa-copy fa-fw c-glyph" title="Copy the action"></i></span>' +
       '<span ng-click="nodeUi.edit()">' +
-      '<i class="fa fa-pencil fa-fw glyph" title="Edit the action"></i></span>' +
+      '<i class="fa fa-pencil fa-fw c-glyph" title="Edit the action"></i></span>' +
       '<span ng-click="nodeUi.remove()">' +
-      '<i class="fa fa-times fa-fw glyph glyph-remove" title="Remove the action"></i></span>' +
+      '<i class="fa fa-times fa-fw c-glyph" title="Remove the action"></i></span>' +
       '</span>';
   return directive;
 };
@@ -51,6 +51,7 @@ goog.inherits(os.ui.im.action.FilterActionNodeUICtrl, os.ui.filter.ui.FilterNode
 /**
  * Copy the filter action.
  * @override
+ * @export
  */
 os.ui.im.action.FilterActionNodeUICtrl.prototype.copy = function() {
   var entry = /** @type {os.ui.im.action.FilterActionNode} */ (this.scope['item']).getEntry();
@@ -59,15 +60,12 @@ os.ui.im.action.FilterActionNodeUICtrl.prototype.copy = function() {
     os.metrics.Metrics.getInstance().updateMetric(os.im.action.Metrics.COPY, 1);
   }
 };
-goog.exportProperty(
-    os.ui.im.action.FilterActionNodeUICtrl.prototype,
-    'copy',
-    os.ui.im.action.FilterActionNodeUICtrl.prototype.copy);
 
 
 /**
  * Edit the filter action.
  * @override
+ * @export
  */
 os.ui.im.action.FilterActionNodeUICtrl.prototype.edit = function() {
   var entry = /** @type {os.ui.im.action.FilterActionNode} */ (this.scope['item']).getEntry();
@@ -76,15 +74,12 @@ os.ui.im.action.FilterActionNodeUICtrl.prototype.edit = function() {
     os.metrics.Metrics.getInstance().updateMetric(os.im.action.Metrics.EDIT, 1);
   }
 };
-goog.exportProperty(
-    os.ui.im.action.FilterActionNodeUICtrl.prototype,
-    'edit',
-    os.ui.im.action.FilterActionNodeUICtrl.prototype.edit);
 
 
 /**
  * Remove the filter action.
  * @override
+ * @export
  */
 os.ui.im.action.FilterActionNodeUICtrl.prototype.remove = function() {
   var entry = /** @type {os.ui.im.action.FilterActionNode} */ (this.scope['item']).getEntry();
@@ -93,7 +88,3 @@ os.ui.im.action.FilterActionNodeUICtrl.prototype.remove = function() {
     os.metrics.Metrics.getInstance().updateMetric(os.im.action.Metrics.REMOVE, 1);
   }
 };
-goog.exportProperty(
-    os.ui.im.action.FilterActionNodeUICtrl.prototype,
-    'remove',
-    os.ui.im.action.FilterActionNodeUICtrl.prototype.remove);

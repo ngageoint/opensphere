@@ -11,7 +11,7 @@ goog.require('os.data.IExtent');
 goog.require('os.data.ISearchable');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.structs.TriState');
-goog.require('os.ui.featureInfoDirective');
+goog.require('os.ui.feature.featureInfoDirective');
 goog.require('os.ui.slick.SlickTreeNode');
 goog.require('plugin.file.kml.ui.GeometryIcons');
 goog.require('plugin.file.kml.ui.kmlNodeUIDirective');
@@ -640,7 +640,7 @@ plugin.file.kml.ui.KMLNode.prototype.performAction = function(type) {
   if (type == plugin.file.kml.ui.KMLNodeAction.FEATURE_INFO) {
     if (this.feature_) {
       var title = this.source ? this.source.getTitle() : undefined;
-      os.ui.launchFeatureInfo(this.feature_, title);
+      os.ui.feature.launchMultiFeatureInfo(this.feature_, title);
     }
   }
 };

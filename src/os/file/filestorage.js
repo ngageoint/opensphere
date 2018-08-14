@@ -18,10 +18,11 @@ goog.require('os.storage.ObjectMechanism');
 /**
  * Stores local files using IndexedDB when available, or a local cache if IDB is not supported.
  * @extends {goog.Disposable}
- * @param {string=} opt_dbname
+ * @param {string=} opt_dbName
+ * @param {number=} opt_dbVersion
  * @constructor
  */
-os.file.FileStorage = function(opt_dbname) {
+os.file.FileStorage = function(opt_dbName, opt_dbVersion) {
   os.file.FileStorage.base(this, 'constructor');
   this.log = os.file.FileStorage.LOGGER_;
 
@@ -36,7 +37,8 @@ os.file.FileStorage = function(opt_dbname) {
    * @type {os.storage.AsyncStorage<!os.file.File>}
    * @protected
    */
-  this.storage = new os.storage.IDBStorage(os.FILE_STORE_NAME, opt_dbname || os.FILE_DB_NAME, os.FILE_DB_VERSION);
+  this.storage = new os.storage.IDBStorage(os.FILE_STORE_NAME, opt_dbName || os.FILE_DB_NAME,
+      opt_dbVersion || os.FILE_DB_VERSION);
   this.storage.deserializeItem = os.file.deserializeFile;
   this.storage.serializeItem = os.file.serializeFile;
 

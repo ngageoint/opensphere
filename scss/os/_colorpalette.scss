@@ -1,0 +1,28 @@
+.c-colorpalette {
+  z-index: $zindex-popover;
+
+  .c-colorpalette__table {
+    border: 1px solid $dark;
+    box-shadow: 0 2px 2px $dark;
+
+    .c-colorpalette__cell {
+      cursor: pointer;
+      height: 18px;
+      width: 18px;
+
+      .c-colorpalette__colorswatch {
+        border: 2px solid transparent;
+        height: 18px;
+        width: 18px;
+
+        &.c-colorpalette__selected {
+          border-color: $gray-800;
+        }
+
+        &:hover {
+          border-color: $white;
+        }
+      }
+    }
+  }
+}

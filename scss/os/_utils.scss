@@ -1,0 +1,372 @@
+// --------------------------------- Bootstrap Overrides --------------------------------- //
+// ---------- Special block to override bootstrap defaults we want in all cases ---------- //
+.d-flex {
+  // This piggybacks off of the BS4 .d-flex selector in order to fix Firefox's bad handling of column flex layouts
+  min-height: 0;
+}
+
+.d-flex > * {
+  // This piggybacks off of the BS4 .d-flex selector in order to fix text truncation for words that dont break
+  // All children of a d-flex should have min-width: 0 so it doesnt cause the parent to stretch to fit it inside
+  // but instead to wrap the child content
+  min-width: 0;
+}
+
+// Bootstrap fixes form-control:disabled opacity to 1 instead of providing a variable to override. We want inputs to
+// appear muted when disabled, so we'll override the class instead.
+$form-control-disabled-opacity: .6 !default;
+
+// Button borders are changed when disabled, but form controls are not. This looks bad when they're together,
+// particularly in input groups. Change disabled form control borders to match buttons.
+$form-control-disabled-border: $gray-600 !default;
+
+.form-control {
+  &:disabled {
+    border-color: $form-control-disabled-border;
+    opacity: $form-control-disabled-opacity;
+  }
+}
+
+// ui-menu-item has some spacer between font awesome icons and dropdown text. Has better readability
+.dropdown-item {
+  i.fa {
+    margin-right: ($spacer * .25);
+  }
+}
+
+// The default
+.modal:not(.c-window) {
+  background: rgba($modal-backdrop-bg, .33);
+}
+
+.modal-dialog {
+  .modal-header,
+  .modal-footer {
+    background: darken($modal-content-bg, 5%);
+  }
+
+  .modal-footer {
+    @include border-bottom-radius($modal-content-border-radius);
+  }
+}
+
+// Add a pointer to the custom checkbox
+.custom-control.custom-checkbox .custom-control-label {
+  cursor: pointer;
+}
+
+.custom-checkbox .custom-control-label::after {
+  border: 1px solid $input-border-color;
+  border-radius: .125rem;
+}
+
+html {
+  // (Part 1) How bootstrap does box-sizing breaks 3rd party libraries box sizing.
+  // This technique allows slickgrid to work
+  box-sizing: border-box;
+
+  // This makes the page the whole height by default. Use flex-fill to make your page take all the available space
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+// (Part 2) Use your parents box sizing. This technique allows slickgrid to work
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+// --------------------------------- Misc Utilities --------------------------------- //
+.u-pointer-events-all {
+  pointer-events: all;
+}
+
+.u-pointer-events-auto {
+  pointer-events: auto;
+}
+
+.u-pointer-events-none {
+  pointer-events: none;
+}
+
+.u-flex-basis-0 {
+  flex-basis: 0% !important;
+}
+
+.u-word-break {
+  word-break: break-all;
+}
+
+.u-word-wrap-break-word {
+  word-wrap: break-word;
+}
+
+.u-pre {
+  white-space: pre-wrap;
+}
+
+.u-overflow-x-auto {
+  overflow-x: auto !important;
+}
+
+.u-overflow-x-hidden {
+  overflow-x: hidden !important;
+}
+
+.u-overflow-y-auto {
+  overflow-y: auto !important;
+}
+
+.u-overflow-y-hidden {
+  overflow-y: hidden !important;
+}
+
+// Bootstrap by default puts a focus style around items. This turns that off
+.u-focus-outline-none:focus {
+  outline: none;
+}
+
+.u-cursor-grab {
+  @include grab-cursor();
+}
+
+.u-cursor-grab.moving {
+  @include grabbing-cursor();
+}
+
+.u-btn-separator {
+  border-left: 1px solid $body-color;
+  border-right: 1px solid $body-bg;
+  display: inline-block;
+  height: 19px;
+  position: relative;
+  top: 6px;
+}
+
+
+// --------------------------------- Visibility Utilities --------------------------------- //
+.u-opacity__95 {
+  opacity: .95;
+}
+
+// --------------------------------- Table Utilities --------------------------------- //
+// Tables in bootstrap are styled by elements.... not classes. Allow class styling
+.u-table {
+  .u-table__head,
+  .u-table__row {
+    @include hover {
+      background-color: $list-group-active-bg !important;
+      color: $dropdown-link-hover-color;
+
+      a {
+        color: $dropdown-link-hover-color;
+      }
+    }
+  }
+
+  .u-table__head {
+    background: $body-bg;
+    color: color-yiq($body-bg);
+  }
+
+  .u-table__row {
+    background-color: $table-bg;
+  }
+
+  &.u-table-striped {
+    .u-table__row:nth-child(odd) {
+      background-color: $table-accent-bg;
+    }
+  }
+}
+
+
+// --------------------------------- Form Utilities --------------------------------- //
+.u-required:after {
+  color: $danger;
+  content: '*';
+  font-size: $font-size-lg;
+  position: absolute;
+  top: .1 * $font-size-base;
+}
+
+.u-required.btn-group::after {
+  right: .5rem;
+}
+
+// At certain breakpoints, forms look really bad (especially in modals. Lets adjust forms to takeup more of the screen)
+// To use, just add u-form-vertical-at-<breakpoint>. (u-form-veritical-at-md).
+// This will apply to all form-groups under this selector
+@each $breakpoint in map-keys($grid-breakpoints) {
+  // Add a media query at this breakpoint
+  @include media-breakpoint-down($breakpoint) {
+    $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+
+    .u-form-vertical-at-#{$breakpoint} {
+
+      // Wrap all form groups to new lines
+      // sass-lint:disable no-extends
+      .form-group {
+        flex-wrap: wrap;
+
+        // Make all columns 100% and no padding
+        %full-columns {
+          flex-basis: 100%;
+          max-width: 100%;
+          padding-left: 0;
+          padding-right: 0;
+        }
+
+        %no-margin-left {
+          margin-left: 0;
+        }
+
+        // Remove padding for columns
+        .col {
+          @extend %full-columns;
+        }
+
+        @each $breakpoint in map-keys($grid-breakpoints) {
+          $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+          @for $i from 1 through $grid-columns {
+            .col#{$infix}-#{$i} {
+              @extend %full-columns;
+            }
+          }
+
+          // Make all offets ignored
+          @for $i from 0 through ($grid-columns - 1) {
+            @if not ($infix == '' and $i == 0) { // Avoid emitting useless .offset-0
+              .offset#{$infix}-#{$i} {
+                @extend %no-margin-left;
+              }
+            }
+          }
+        }
+
+        // Convert right aligned labels to be left aligned
+        .text-right .col-form-label,
+        .col-form-label.text-right {
+          text-align: left !important;
+        }
+
+        .col-form-label.border-right {
+          border-bottom: 1px solid $border-color;
+          border-right: 0 !important;
+        }
+      }
+    }
+  }
+}
+
+
+// --------------------------------- Color Utilities --------------------------------- //
+.u-bg-body {
+  background-color: $body-bg;
+}
+
+.u-bg-body-text {
+  color: $body-color;
+}
+
+.u-bg-flyout {
+  background-color: rgba($modal-content-bg, .95);
+}
+
+// For when you want a border for spacing but transparent
+.u-border-color-transparent {
+  border-color: transparent;
+}
+
+// For all bootstrap colors, allow us to access them
+// NOTE: Only useable for special items that require lots of colors. Use text-primary, etc for normal stuff
+@each $color, $value in $colors {
+  .u-text-#{$color} {
+    color: $value;
+  }
+}
+
+
+@each $color, $value in $colors {
+  .u-bg-#{$color} {
+    background-color: $value;
+  }
+}
+
+// This extends bootstraps bg-<varents> to also have background colors
+@mixin color-generator($color-map) {
+  @each $color, $value in $color-map {
+    .u-border-#{$color} {
+      border-color: $value;
+    }
+  }
+
+  @each $color, $value in $color-map {
+    @include u-bg-color-content($color) {
+      @include bg-text-variant($value);
+    }
+  }
+}
+
+@include color-generator($colors);
+@include color-generator($theme-colors);
+
+// ----------- Generic max sizes. Use with caution only when absoluted needed ----------- //
+$somesizes: () !default;
+$somesizes: map-merge((
+    25: 25%,
+    50: 50%,
+    75: 75%
+), $somesizes);
+
+// (u-mh-25: max-height: 25%)
+@each $prop, $abbrev in (width: w, height: h) {
+  @each $size, $length in $somesizes {
+    .u-m#{$abbrev}-#{$size} { max-#{$prop}: $length !important; }
+  }
+}
+
+// (u-mvh-25: max-height: 25vh)
+@each $prop, $abbrev in (width: w, height: h) {
+  @each $size, $length in $somesizes {
+    .u-mv#{$abbrev}-#{$size} { max-#{$prop}: #{$size}v#{$abbrev} !important; }
+  }
+}
+
+// ----------- Hover edit utilities ----------- //
+.u-hover-show {
+  opacity: 0;
+}
+
+.u-hover-container:hover .u-hover-show {
+  opacity: 1;
+}
+
+// ----------- Card utilities ------- //
+
+.card {
+  &.u-card-selected {
+    .card-header {
+      background-color: $list-group-active-bg;
+      color: $list-group-active-color;
+    }
+  }
+
+  // allow applying hover style programmatically
+  &.u-card-highlight {
+    .card-header {
+      background-color: $list-group-hover-bg;
+      color: $list-group-action-hover-color;
+    }
+  }
+
+  // allow applying hover style on hover
+  &.u-card-hover:hover {
+    .card-header {
+      background-color: $list-group-hover-bg;
+      color: $list-group-action-hover-color;
+    }
+  }
+}
