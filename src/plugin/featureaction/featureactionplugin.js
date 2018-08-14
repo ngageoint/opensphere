@@ -10,6 +10,7 @@ goog.require('plugin.featureaction.mime');
 goog.require('plugin.im.action.feature');
 goog.require('plugin.im.action.feature.LabelAction');
 goog.require('plugin.im.action.feature.Manager');
+goog.require('plugin.im.action.feature.SoundAction');
 goog.require('plugin.im.action.feature.StyleAction');
 goog.require('plugin.im.action.feature.legend');
 goog.require('plugin.im.action.feature.menu');
