@@ -63,7 +63,7 @@ plugin.file.shp.ui.SHPImportUI.prototype.launchUI = function(file, opt_config) {
   };
   var windowOptions = {
     'label': 'SHP Import',
-    'icon': 'fa fa-sign-in lt-blue-icon',
+    'icon': 'fa fa-sign-in',
     'x': 'center',
     'y': 'center',
     'width': '850',
@@ -76,6 +76,6 @@ plugin.file.shp.ui.SHPImportUI.prototype.launchUI = function(file, opt_config) {
     'show-close': 'true',
     'no-scroll': 'true'
   };
-  var template = '<shpimport resize-with=".window"></shpimport>';
+  var template = '<shpimport resize-with="' + os.ui.windowSelector.WINDOW + '"></shpimport>';
   os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
 };

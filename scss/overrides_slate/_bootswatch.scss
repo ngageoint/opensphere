@@ -1,0 +1,67 @@
+@import 'slate/bootswatch';
+
+// sass-lint:disable quotes
+$web-font-path: "https://fonts.googleapis.com/css?family=Open+Sans:400,700" !default;
+
+.navbar {
+  .navbar-brand,
+  .nav-link {
+    @include hover-focus {
+      background-image: none;
+    }
+
+    border: 0 !important;
+    padding-bottom: $nav-link-padding-y;
+    padding-top: $nav-link-padding-y;
+  }
+
+  .nav-item.active .nav-link {
+    background-color: transparent;
+  }
+}
+
+.btn-outline-primary {
+  color: $white;
+}
+
+.form-control:disabled,
+.form-control:disabled::placeholder,
+.form-control[readonly]::placeholder {
+  background-color: $gray-600;
+}
+
+.breadcrumb {
+  background-image: none;
+  border: 0;
+}
+
+.nav-tabs {
+  .nav-link {
+    background: $nav-tabs-link-active-bg;
+    border-color: $nav-tabs-border-color;
+    margin: 0 .1rem;
+
+    &:hover {
+      background: transparent;
+    }
+  }
+
+  .nav-link.active,
+  .nav-item.show .nav-link {
+    background: transparent;
+    border-bottom-color: $modal-content-bg;
+  }
+}
+
+@each $color, $value in $theme-colors {
+  .btn-outline-#{$color} {
+    border-color: $value;
+  }
+}
+
+// Replace the Slate override so the app is consistent with hover color.
+.list-group {
+  &-item:hover {
+    background-color: $list-group-hover-bg;
+  }
+}

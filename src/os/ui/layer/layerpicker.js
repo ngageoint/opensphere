@@ -86,8 +86,8 @@ os.ui.layer.LayerPickerCtrl = function($scope, $element, $timeout) {
     $scope['isRequired'] = true;
   }
 
-  $timeout(goog.bind(function() {
-    this.select2_ = $element.find('select.layer-typeahead');
+  $timeout(function() {
+    this.select2_ = $element.find('.js-layer-picker');
     this.select2_.select2({
       'placeholder': this.placeholderText_,
       'maximumSelectionSize': this.maxNumLayers_,
@@ -96,7 +96,7 @@ os.ui.layer.LayerPickerCtrl = function($scope, $element, $timeout) {
       'formatResult': formatter
     });
     this.layerSelected_();
-  }, this));
+  }.bind(this));
   this.scope_.$watch('layer', this.layerSelected_.bind(this));
   this.scope_.$watch('layers', this.layerSelected_.bind(this));
   this.scope_.$on('updateLayers', goog.bind(function() {
@@ -183,40 +183,31 @@ os.ui.layer.LayerPickerCtrl.prototype.getLayersList = function() {
 
 /**
  * @param {os.data.IDataDescriptor} layer
+ * @export
  */
 os.ui.layer.LayerPickerCtrl.prototype.layerPicked = function(layer) {
   this.scope_['layer'] = layer;
   this.scope_.$emit('layerpicker.layerselected', layer);
 };
-goog.exportProperty(
-    os.ui.layer.LayerPickerCtrl.prototype,
-    'layerPicked',
-    os.ui.layer.LayerPickerCtrl.prototype.layerPicked);
 
 
 /**
  * @param {!Array.<!os.data.IDataDescriptor>} layers
+ * @export
  */
 os.ui.layer.LayerPickerCtrl.prototype.layersChanged = function(layers) {
   this.scope_['layers'] = layers;
 };
-goog.exportProperty(
-    os.ui.layer.LayerPickerCtrl.prototype,
-    'layersChanged',
-    os.ui.layer.LayerPickerCtrl.prototype.layersChanged);
 
 
 /**
  * Returns if this allows multiple selection.
  * @return {boolean}
+ * @export
  */
 os.ui.layer.LayerPickerCtrl.prototype.multiple = function() {
   return this.maxNumLayers_ != 1;
 };
-goog.exportProperty(
-    os.ui.layer.LayerPickerCtrl.prototype,
-    'multiple',
-    os.ui.layer.LayerPickerCtrl.prototype.multiple);
 
 
 /**

@@ -6,6 +6,7 @@ goog.require('os.file.mime.text');
 goog.require('os.file.mime.zip');
 goog.require('os.parse.AsyncParser');
 goog.require('os.parse.IParser');
+goog.require('os.ui.im.mergeAreaOptionDirective');
 
 
 

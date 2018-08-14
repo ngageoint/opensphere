@@ -26,8 +26,7 @@ os.ui.ol.control.LayerSwitcher = function(opt_options) {
    * @protected
    */
   this.mapListeners = [];
-
-  this.hiddenClassName = 'ol-unselectable ol-control layer-switcher';
+  this.hiddenClassName = 'u-mw-75 ol-unselectable ol-control ol-layer-switcher';
   this.shownClassName = this.hiddenClassName + ' shown';
 
   var element = document.createElement('div');
@@ -39,25 +38,31 @@ os.ui.ol.control.LayerSwitcher = function(opt_options) {
   element.appendChild(innerEle);
 
   this.panel = document.createElement('div');
-  this.panel.className = 'panel';
+  this.panel.className = 'panel d-none';
   element.appendChild(this.panel);
 
   var this_ = this;
 
   /**
+   * Show the layer panel.
    * @param {Event} e
    */
   element.onmouseover = function(e) {
-    this_.showPanel();
+    if (this_.panel.className == 'panel d-none') {
+      this_.showPanel();
+    }
   };
 
   /**
+   * Hide the layer panel.
    * @param {Event} e
    */
   element.onmouseout = function(e) {
     e = e || window.event;
     if (!element.contains(e.toElement)) {
-      this_.hidePanel();
+      if (this_.panel.className == 'panel d-block') {
+        this_.hidePanel();
+      }
     }
   };
 
@@ -73,10 +78,8 @@ ol.inherits(os.ui.ol.control.LayerSwitcher, ol.control.Control);
  * Show the layer panel.
  */
 os.ui.ol.control.LayerSwitcher.prototype.showPanel = function() {
-  if (this.element.className != this.shownClassName) {
-    this.element.className = this.shownClassName;
-    this.renderPanel();
-  }
+  this.panel.className = 'panel d-block';
+  this.renderPanel();
 };
 
 
@@ -84,9 +87,7 @@ os.ui.ol.control.LayerSwitcher.prototype.showPanel = function() {
  * Hide the layer panel.
  */
 os.ui.ol.control.LayerSwitcher.prototype.hidePanel = function() {
-  if (this.element.className != this.hiddenClassName) {
-    this.element.className = this.hiddenClassName;
-  }
+  this.panel.className = 'panel d-none';
 };
 
 
@@ -100,9 +101,9 @@ os.ui.ol.control.LayerSwitcher.prototype.renderPanel = function() {
     this.panel.removeChild(goog.dom.getFirstElementChild(this.panel));
   }
 
-  var ul = document.createElement('ul');
-  this.panel.appendChild(ul);
-  this.renderLayers_(this.getMap(), ul);
+  var div = document.createElement('div');
+  this.panel.appendChild(div);
+  this.renderLayers_(this.getMap(), div);
 };
 
 
@@ -176,18 +177,20 @@ os.ui.ol.control.LayerSwitcher.prototype.setVisible_ = function(lyr, visible) {
  */
 os.ui.ol.control.LayerSwitcher.prototype.renderLayer_ = function(lyr, idx) {
   var this_ = this;
-  var li = document.createElement('li');
+  var layerDiv = document.createElement('div');
+  layerDiv.className = 'form-check';
   var lyrTitle = goog.html.SafeHtml.htmlEscape(/** @type {string|undefined} */ (lyr.get('title')) || '');
   var lyrId = lyr.get('title').replace(' ', '-') + '_' + idx;
   var label = document.createElement('label');
 
   if (lyr instanceof ol.layer.Group) {
-    li.className = 'group';
+    layerDiv.className = 'group';
     goog.dom.safe.setInnerHtml(label, lyrTitle);
-    li.appendChild(label);
-    var ul = document.createElement('ul');
-    li.appendChild(ul);
-    this.renderLayers_(lyr, ul);
+    layerDiv.appendChild(label);
+    var div = document.createElement('div');
+    div.className = 'form-check text-truncate';
+    layerDiv.appendChild(div);
+    this.renderLayers_(lyr, div);
   } else {
     var input = document.createElement('input');
     if (lyr.get('type') === 'base') {
@@ -197,17 +200,19 @@ os.ui.ol.control.LayerSwitcher.prototype.renderLayer_ = function(lyr, idx) {
       input.type = 'checkbox';
     }
     input.id = lyrId;
+    input.className = 'form-check-input';
     input.checked = lyr.get('visible');
     input.onchange = goog.bind(function(e) {
       this_.setVisible_(lyr, e.target.checked);
     }, this);
-    li.appendChild(input);
+    layerDiv.appendChild(input);
     label.htmlFor = lyrId;
     goog.dom.safe.setInnerHtml(label, lyrTitle);
-    li.appendChild(label);
+    label.className = 'form-check-label';
+    layerDiv.appendChild(label);
   }
 
-  return li;
+  return layerDiv;
 };
 
 
@@ -242,4 +247,13 @@ os.ui.ol.control.LayerSwitcher.forEachRecursive = function(lyr, fn) {
       os.ui.ol.control.LayerSwitcher.forEachRecursive(lyr, fn);
     }
   });
+};
+
+
+/**
+ * Get the element
+ * @return {Element}
+ */
+os.ui.ol.control.LayerSwitcher.prototype.getElement = function() {
+  return this.element;
 };

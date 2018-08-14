@@ -27,6 +27,7 @@ goog.require('os.ui.util.ResetSettings');
  */
 os.ui.help.EventType = {
   ABOUT: 'about',
+  CAPABILITIES: 'metrics',
   CONTROLS: 'controlsHelp',
   HELP: 'help',
   HELP_VIDEO: 'help_video',
@@ -55,12 +56,14 @@ os.ui.help.helpDirective = function() {
   return {
     restrict: 'E',
     replace: true,
-    scope: {
-      'showLabel': '='
-    },
-    templateUrl: os.ROOT + 'views/help/help.html',
+    scope: true,
     controller: os.ui.help.HelpCtrl,
-    controllerAs: 'help'
+    controllerAs: 'ctrl',
+    template: '<button class="btn btn-info dropdown-toggle" title="Support"' +
+        ' ng-click="ctrl.openMenu()" ng-right-click="ctrl.openMenu()" ng-class="{active: menu}">' +
+        '<i class="fa fa-question-circle" ng-class="{\'fa-fw\': puny}"></i> ' +
+        '<span ng-class="{\'d-none\': puny}">Support</span>' +
+        '</button>'
   };
 };
 
@@ -205,6 +208,7 @@ os.ui.help.HelpCtrl.prototype.initialize = function() {
   });
   this.menu.listen(os.ui.help.EventType.VIEW_LOG, this.onHelpAction_, false, this);
 
+
   root.addChild(os.ui.util.resetSettingsOptions);
   this.menu.listen(os.ui.EventType.DISPLAY_CLEAR_LOCALSTORAGE, function() {
     os.ui.util.resetSettings();
@@ -251,17 +255,23 @@ os.ui.help.HelpCtrl.prototype.onHelpAction_ = function(event) {
   }
 };
 
+/**
+ * @param {string} flag
+ */
+os.ui.help.showWindow = function(flag) {
+  if (flag && !os.ui.menu.windows.openWindow(flag)) {
+    var evt = new os.ui.events.UIEvent(os.ui.events.UIEventType.TOGGLE_UI, flag);
+    os.dispatcher.dispatchEvent(evt);
+  }
+};
+
 
 /**
  * Show the Alerts window.
  * @private
  */
 os.ui.help.showAlertsWindow_ = function() {
-  var flag = 'alerts';
-  if (flag && !os.ui.menu.windows.openWindow(flag)) {
-    var evt = new os.ui.events.UIEvent(os.ui.events.UIEventType.TOGGLE_UI, flag);
-    os.dispatcher.dispatchEvent(evt);
-  }
+  os.ui.help.showWindow('alerts');
 };
 
 

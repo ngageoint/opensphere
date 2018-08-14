@@ -48,8 +48,6 @@ os.ui.file.AnyTypeImportUI.prototype.launchUI = function(file, opt_config) {
       'x': 'center',
       'y': 'center',
       'width': '450',
-      'min-width': '350',
-      'max-width': '600',
       'height': 'auto',
       'show-close': 'true',
       'no-scroll': 'true'

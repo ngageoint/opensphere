@@ -325,14 +325,7 @@ os.ui.ol.OLMap.prototype.getControls_ = function() {
     rotate: false
   });
   var mapControls = [];
-  var scaleLine = new os.control.ScaleLine({
-    target: document.getElementById('scale-line')
-  });
-  var zoomSlider = new ol.control.ZoomSlider();
   var layerSwitcher = new os.ui.ol.control.LayerSwitcher();
-
-  mapControls.push(scaleLine);
-  mapControls.push(zoomSlider);
   mapControls.push(layerSwitcher);
   controls.extend(mapControls);
   return controls;

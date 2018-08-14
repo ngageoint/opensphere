@@ -284,3 +284,12 @@ os.ol.control.MousePosition.prototype.onBearingChange_ = function() {
     this.handleMouseMove(this.lastBrowserEvent_);
   }
 };
+
+
+/**
+ * Get the element
+ * @return {Element}
+ */
+os.ol.control.MousePosition.prototype.getElement = function() {
+  return this.element;
+};

@@ -80,11 +80,11 @@ os.ui.ex.AreaExportCtrl.start = function(areas) {
   var windowOptions = {
     'id': 'areaExport',
     'label': 'Export Areas',
-    'icon': 'fa fa-download color-yellow',
+    'icon': 'fa fa-download',
     'x': 'center',
     'y': 'center',
-    'width': '350',
-    'height': '250',
+    'width': '400',
+    'height': 'auto',
     'show-close': 'true',
     'modal': 'true'
   };
@@ -113,8 +113,8 @@ os.ui.ex.AreaExportCtrl.prototype.onExporterChange = function(opt_new, opt_old) 
     fields.push('mapVisualizationType');
   } else if (opt_new instanceof plugin.file.shp.SHPExporter) {
     // Dont show the ui
-    var uiContainer = this.element.find('.export-ui');
-    uiContainer.children().remove();
+    var uiWrapper = this.element.find('.js-export-ui__wrapper');
+    uiWrapper.children().remove();
   }
 
   // update the export columns

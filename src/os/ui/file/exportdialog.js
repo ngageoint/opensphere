@@ -12,6 +12,7 @@ goog.require('os.ui.window');
  */
 os.ui.file.exportDialogDirective = function() {
   return {
+    replace: true,
     restrict: 'E',
     templateUrl: os.ROOT + 'views/file/exportdialog.html',
     controller: os.ui.file.ExportDialogCtrl,
@@ -102,7 +103,7 @@ os.ui.file.ExportDialogCtrl = function($scope, $element, $compile) {
   }
 
   // add application-specific UI
-  var customContainer = this.element.find('.custom-ui');
+  var customContainer = this.element.find('.js-custom-ui');
   var customOptions = this.getCustomOptions();
   if (customOptions) {
     customContainer.html(customOptions);
@@ -111,7 +112,7 @@ os.ui.file.ExportDialogCtrl = function($scope, $element, $compile) {
     customContainer.remove();
   }
 
-  $scope.$emit('window.ready');
+  $scope.$emit(os.ui.WindowEventType.READY);
   $scope.$watch('exporter', this.onExporterChange.bind(this));
   $scope.$watch('persister', this.onPersisterChange.bind(this));
   $scope.$on('$destroy', this.destroy.bind(this));
@@ -174,6 +175,16 @@ os.ui.file.ExportDialogCtrl.prototype.getCustomOptions = function() {
 
 
 /**
+ * Get the keys
+ * @param {Object} obj
+ * @return {Array} The custom options UI as HTML
+ * @export
+ */
+os.ui.file.ExportDialogCtrl.prototype.getKeys = function(obj) {
+  return obj != null ? Object.keys(obj) : [];
+};
+
+/**
  * Handle exporter change.
  * @param {os.ex.IExportMethod=} opt_new The new value
  * @param {os.ex.IExportMethod=} opt_old The old value
@@ -184,7 +195,7 @@ os.ui.file.ExportDialogCtrl.prototype.onExporterChange = function(opt_new, opt_o
     this.options.exporter = opt_new;
 
     // remove the old export ui
-    var uiContainer = this.element.find('.export-ui-container');
+    var uiContainer = this.element.find('.js-export-ui__container');
     uiContainer.children().remove();
 
     // and drop in the new one

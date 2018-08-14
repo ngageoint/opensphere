@@ -116,7 +116,7 @@ os.state.v2.TimeState.prototype.load = function(obj, id) {
 os.state.v2.TimeState.testUIState = function(obj) {
   var animationEl = obj.querySelector(os.state.v2.TimeTag.ANIMATION);
   var tActive = animationEl != null && animationEl.childElementCount > 0;
-  var curActive = document.getElementById('timeline-container') != null;
+  var curActive = goog.dom.getElementByClass('js-timeline') != null;
   return tActive === curActive;
 };
 
@@ -190,14 +190,14 @@ os.state.v2.TimeState.prototype.loadInternal = function(obj, id) {
     }
 
     // force the date control to update from the timeline controller
-    var dcScope = angular.element('#date-control').scope();
+    var dcScope = angular.element('.js-date-control').scope();
     if (dcScope) {
       dcScope['dateControl'].update();
     }
 
     if (tActive) {
       // force the timeline panel to update from the timeline controller
-      var tlContainer = document.getElementById('timeline-container');
+      var tlContainer = goog.dom.getElementByClass('js-timeline');
       if (tlContainer) {
         // otherwise force it to update the viewable range if it was already open
         angular.element(tlContainer).scope()['timelineCtrl'].updateTimeline(true);
@@ -255,7 +255,7 @@ os.state.v2.TimeState.prototype.saveInternal = function(options, rootObj) {
       this.addRanges_(tlc.getHoldRanges(), holds);
     }
 
-    var timeline = document.getElementById('timeline-container');
+    var timeline = goog.dom.getElementByClass('js-timeline');
     if (goog.isDefAndNotNull(timeline)) {
       // TODO: I think loop is OBE, as the hold/animate loops really handle this.
       // Using the full animation range for now.

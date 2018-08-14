@@ -87,6 +87,7 @@ os.ui.column.mapping.ColumnMappingExportCtrl = function($scope, $element) {
   // this['persisters'][urlPersister.getLabel()] = urlPersister;
   this['persister'] = filePersister;
 
+  this.scope_.$emit(os.ui.WindowEventType.READY);
   $scope.$on('$destroy', this.onDestroy_.bind(this));
 };
 

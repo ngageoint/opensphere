@@ -1,98 +1,94 @@
-<div class="timeline-container" tabindex="1"
-    ng-class="{'timeline-container-expanded': !collapsed, 'timeline-container-collapsed': collapsed}">
-  <div class="timeline-buttons">
-    <span ng-click="timelineCtrl.toggle()" title="Expand/Collapse the timeline">
-      <i class="fa fa-fw glyph" ng-class="{'fa-compress': !collapsed, 'fa-expand': collapsed}"></i>
+<div class="js-timeline-panel border-top c-timeline-panel" tabindex="-1">
+  <div class="c-timeline-panel__buttons">
+    <span ng-click="timelineCtrl.toggleCollapse()" title="Expand/Collapse the timeline">
+      <i class="fa fa-fw c-glyph" ng-class="{'fa-compress': !collapsed, 'fa-expand': collapsed}"></i>
     </span>
     <span ng-click="timelineCtrl.close()" title="Close the timeline">
-      <i class="fa fa-fw glyph fa-times"></i>
+      <i class="fa fa-fw c-glyph fa-times"></i>
     </span>
   </div>
-  <timeline class="os-timeline"
-      ng-class="{'os-timeline-expanded': !collapsed, 'os-timeline-collapsed': collapsed}"
-      hist-class="timelineCtrl.histClass" hist-data="timelineCtrl.histData" hist-tip="timelineCtrl.getHistogramTooltip"
-      start-end="timelineCtrl.timeRange" items="timelineCtrl.items"
-      slice-brushes="timelineCtrl.sliceBrushes"
-      load-brushes="timelineCtrl.loadBrushes"
+  <timeline
+      ng-class="{'c-timeline__collapsed': collapsed}"
+      hist-class="timelineCtrl.histClass"
+      items="timelineCtrl.items"
+      start-end="timelineCtrl.timeRange"
+      hist-data="timelineCtrl.histData"
       animation-brushes="timelineCtrl.animationBrushes"
       hold-brushes="timelineCtrl.holdBrushes"
-      snap="true"></timeline>
+      load-brushes="timelineCtrl.loadBrushes"
+      hist-tip="timelineCtrl.getHistogramTooltip" snap="true">
+  </timeline>
   <lightstrip></lightstrip>
-  <table class="layer-controls unselectable" style="width: 100%">
-    <tr>
-      <td class="timeline-controls">
-        <span class="time-display time-start">{{start}}</span>
-        <span class="time-display time-end">{{end}}</span>
-        <span>
-          <button class="btn btn-default" ng-click="timelineCtrl.settings()" title="Change timeline settings ...">
-            <i class="fa fa-fw fa-clock-o"></i>
-          </button>
-          <button class="btn btn-default" ng-click="timelineCtrl.animationSettings()" title="Change animation settings ...">
-            <i class="fa fa-fw fa-sliders"></i>
-          </button>
-          <div class="btn-separator"></div>
-        </span>
-        <span>
-          <button class="btn btn-default load-presets" ng-click="timelineCtrl.openMenu('.load-presets')" title="Load ...">
-            <i class="fa fa-fw fa-cloud-download yellow-icon"></i>
-            <i class="fa fa-chevron-down" style="font-size:7px"></i>
-          </button>
-          <button class="btn btn-default cyan-icon" ng-class="{'active': selecting}" ng-click="timelineCtrl.select()" title="Select a range on the timeline">
-            <i class="fa fa-fw fa-arrows-h" ng-class="{'cyan-icon': selecting}"></i>
-          </button>
-          <div class="btn-separator"></div>
-        </span>
-        <span>
-          <div class="zoom-group btn-group" ng-right-click="timelineCtrl.openMenu('.zoom-group')">
-            <button class="btn btn-default" ng-click="timelineCtrl.zoomIn()" title="Zoom in">
-              <i class="fa fa-fw fa-search-plus"></i>
-            </button>
-            <button class="btn btn-default" ng-click="timelineCtrl.zoomOut()" title="Zoom out">
-              <i class="fa fa-fw fa-search-minus"></i>
-            </button>
-            <button class="btn addon" ng-click="timelineCtrl.openMenu('.zoom-group')" title="Zoom to ..." ng-class="{active: menu == '.zoom-group'}">
-              <i class="fa fa-chevron-down"></i>
-            </button>
-          </div>
-          <span class="btn-separator"></span>
-        </span>
-        <span>
-          <button class="btn btn-default" ng-click="timelineCtrl.firstFrame()" title="First frame">
-            <i class="fa fa-fw fa-fast-backward"></i>
-          </button>
-          <button class="btn btn-default" ng-click="timelineCtrl.previousFrame()" ng-disabled="timelineCtrl.playing" title="Previous frame">
-            <i class="fa fa-fw fa-step-backward"></i>
-          </button>
-          <button class="btn btn-default" ng-click="timelineCtrl.togglePlay()" ng-class="{active: timelineCtrl.playing}"
-              title="Toggle animation of tiles/features on the map">
-            <i class="fa fa-fw fa-fw compact" ng-class="{'play-icon': !timelineCtrl.playing, 'pause-icon': timelineCtrl.playing}"></i>
-          </button>
-          <button class="btn btn-default" ng-click="timelineCtrl.nextFrame()" ng-disabled="timelineCtrl.playing" title="Next frame" >
-            <i class="fa fa-fw fa-step-forward"></i>
-          </button>
-          <button class="btn btn-default" ng-click="timelineCtrl.lastFrame()" title="Last frame">
-            <i class="fa fa-fw fa-fast-forward"></i>
-          </button>
-          <span class="btn-separator"></span>
-        </span>
-        <span>
-          <button id="timeline-record-button" class="btn btn-default" ng-click="timelineCtrl.record()" title="Start/stop a recording">
-            <i class="fa fa-fw fa-circle red-icon"></i>
-          </button>
-          <span class="fps-slider">
-            Speed:
-            <slider min="0" max="8" step="1" value="timelineCtrl.fpsx"></slider>
-            <span class="fps-text">{{timelineCtrl.fps}} fps</span>
-          </span>
-          <div class="btn-separator"></div>
-          <button class="btn btn-default" ng-click="timelineCtrl.toggleChartType()" title="Toggle between chart types" ng-if="!collapsed">
-            <i class="fa fa-fw fa-bar-chart-o yellow-icon"></i>
-          </button>
-          <button class="btn btn-default" ng-click="timelineCtrl.reset()" title="Reset timeline to the state when it was opened">
-            <i class="fa fa-fw fa-undo lt-blue-icon"></i>
-          </button>
-        </div>
-      </td>
-    </tr>
-  </table>
+  <div class="text-center d-flex align-items-center w-100 my-1 justify-content-between flex-md-nowrap flex-wrap">
+    <small class="order-0 ml-2 flex-shrink-0">{{start}}</small>
+    <div class="order-md-1 order-2">
+      <button class="btn btn-secondary btn-sm" ng-click="timelineCtrl.settings()" title="Change timeline settings...">
+        <i class="fa fa-fw fa-clock-o"></i>
+      </button>
+      <button class="btn btn-secondary btn-sm" ng-click="timelineCtrl.animationSettings()" title="Change animation settings...">
+        <i class="fa fa-fw fa-sliders"></i>
+      </button>
+
+      <div class="u-btn-separator"></div>
+
+      <button class="btn btn-secondary btn-sm js-load-presets" ng-click="timelineCtrl.openMenu('.js-load-presets')" title="Load...">
+        <i class="fa fa-fw fa-cloud-download"></i>
+        <i class="fa fa-chevron-down"></i>
+      </button>
+      <button class="btn btn-secondary btn-sm" ng-class="{'active': selecting}" ng-click="timelineCtrl.select()" title="Select a range on the timeline">
+        <i class="fa fa-fw fa-arrows-h"></i>
+      </button>
+
+      <div class="u-btn-separator"></div>
+
+      <div class="js-zoom-group btn-group" ng-right-click="timelineCtrl.openMenu('.js-zoom-group')">
+        <button class="btn btn-secondary btn-sm" ng-click="timelineCtrl.zoomIn()" title="Zoom in">
+          <i class="fa fa-fw fa-search-plus"></i>
+        </button>
+        <button class="btn btn-secondary btn-sm" ng-click="timelineCtrl.zoomOut()" title="Zoom out">
+          <i class="fa fa-fw fa-search-minus"></i>
+        </button>
+        <button class="btn btn-secondary btn-sm" ng-click="timelineCtrl.openMenu('.js-zoom-group')" title="Zoom to..." ng-class="{active: menu == '.js-zoom-group'}">
+          <i class="fa fa-chevron-down"></i>
+        </button>
+      </div>
+
+      <span class="u-btn-separator"></span>
+
+      <button class="btn btn-secondary btn-sm" ng-click="timelineCtrl.firstFrame()" title="First frame">
+        <i class="fa fa-fw fa-fast-backward"></i>
+      </button>
+      <button class="btn btn-secondary btn-sm" ng-click="timelineCtrl.previousFrame()" ng-disabled="timelineCtrl.playing" title="Previous frame">
+        <i class="fa fa-fw fa-step-backward"></i>
+      </button>
+      <button class="btn btn-primary btn-sm" ng-click="timelineCtrl.togglePlay()" ng-class="{active: timelineCtrl.playing}" title="Toggle animation of tiles/features on the map">
+        <i class="fa fa-fw fa-fw compact" ng-class="{'fa-play': !timelineCtrl.playing, 'fa-pause': timelineCtrl.playing}"></i>
+      </button>
+      <button class="btn btn-secondary btn-sm" ng-click="timelineCtrl.nextFrame()" ng-disabled="timelineCtrl.playing" title="Next frame" >
+        <i class="fa fa-fw fa-step-forward"></i>
+      </button>
+      <button class="btn btn-secondary btn-sm" ng-click="timelineCtrl.lastFrame()" title="Last frame">
+        <i class="fa fa-fw fa-fast-forward"></i>
+      </button>
+
+      <span class="u-btn-separator"></span>
+
+      <button id="timeline-record-button" class="btn btn-secondary btn-sm" ng-click="timelineCtrl.record()" title="Start/stop a recording">
+        <i class="fa fa-fw fa-circle text-danger"></i>
+      </button>
+      <span class="c-timeline-panel__fps-slider">
+        Speed:
+        <slider min="0" max="8" step="1" value="timelineCtrl.fpsx"></slider>
+        <span class="fps-text">{{timelineCtrl.fps}} fps</span>
+      </span>
+      <div class="u-btn-separator"></div>
+      <button class="btn btn-secondary btn-sm" ng-click="timelineCtrl.toggleChartType()" title="Toggle between chart types" ng-if="!collapsed">
+        <i class="fa fa-fw fa-bar-chart-o"></i>
+      </button>
+      <button class="btn btn-secondary btn-sm" ng-click="timelineCtrl.reset()" title="Reset timeline to the state when it was opened">
+        <i class="fa fa-fw fa-undo"></i>
+      </button>
+    </div>
+    <small class="order-md-2 order-1 mr-2 flex-shrink-0">{{end}}</small>
+  </div>
 </div>

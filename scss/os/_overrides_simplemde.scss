@@ -1,0 +1,85 @@
+// Overrides for simpleMDE
+.c-simplemde {
+  .editor-toolbar.fullscreen {
+    background-color: $body-bg;
+    height: 3.5rem;
+    z-index: $zindex-modal;
+  }
+
+  .CodeMirror-fullscreen {
+    z-index: $zindex-modal;
+  }
+
+  .CodeMirror-fullscreen,
+  .CodeMirror {
+    background-color: $input-bg;
+    border-color: $input-border-color;
+    color: $input-color;
+  }
+
+  .CodeMirror:not(.CodeMirror-fullscreen) .CodeMirror-scroll {
+    max-height: 400px;
+  }
+
+  .editor-toolbar a {
+    color: $body-color !important;
+  }
+
+  .editor-toolbar.disabled-for-preview a:not(.no-disable) {
+    background: inherit;
+    opacity: .5;
+  }
+
+  .ng-dirty.ng-invalid .editor-toolbar {
+    border-color: $danger;
+  }
+
+  .ng-dirty.ng-invalid .CodeMirror {
+    border-color: $danger;
+  }
+
+  .c-simplemde__preview {
+    img {
+      @include img-fluid;
+    }
+  }
+
+  .editor-preview {
+    background-color: $body-bg;
+  }
+
+  .editor-preview-side {
+    background-color: $body-bg;
+    z-index: $zindex-modal;
+  }
+
+  .modal-content .CodeMirror:not(.fullscreen) {
+    height: 10rem;
+  }
+
+  .editor-toolbar.fullscreen,
+  .editor-toolbar {
+    background-color: $secondary;
+    border: 0;
+
+    a {
+      color: color-yiq($secondary) !important;
+
+      &.active,
+      &:hover {
+        @include gradient-bg(darken($secondary, 7.5%));
+        border-color: $input-border-color;
+      }
+    }
+
+    i.separator {
+      border-left-color: $input-border-color;
+      border-right-color: darken($input-border-color, 7.5%);
+    }
+  }
+
+  .editor-toolbar.fullscreen:after,
+  .editor-toolbar.fullscreen:before {
+    background: transparent;
+  }
+}

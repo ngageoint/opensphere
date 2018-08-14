@@ -1,29 +1,27 @@
-<div class="window-content-wrapper">
-  <div class="window-content">
-    <div ng-form="mergeForm" ng-submit="ctrl.accept()">
-      <div class="control-group" ng-class="{'error':mergeForm.name.$invalid && mergeForm.name.$dirty}">
-        <label class="control-label">Layer Name:</label>
-        <div class="controls">
-          <input class="wide" type="text" name="name" ng-model="ctrl.name" ng-required="true" ng-maxlength="100"/>
-          <span class="help-inline" ng-if="mergeForm.name.$error.required">Required</span>
-          <span class="help-inline" ng-if="mergeForm.name.$error.maxlength">Name is too long!</span>
+<div class="d-flex flex-column flex-fill">
+  <div class="modal-body d-flex flex-column flex-fill">
+    <div ng-form="mergeForm" ng-submit="ctrl.accept()" class="container-fluid d-flex flex-column flex-fill">
+      <div class="form-group row" ng-class="{'text-danger':mergeForm.name.$invalid && mergeForm.name.$dirty}">
+        <label class="col-form-label">Layer Name</label>
+        <div class="col">
+          <input class="form-control w-100" type="text" name="name" ng-model="ctrl.name" ng-required="true" ng-maxlength="100"/>
+          <validation-message target="mergeForm.name"></validation-message>
         </div>
       </div>
       <mappingcounter source-ids="sourceIds"></mappingcounter>
     </div>
   </div>
 
-  <div class="window-footer">
+  <div class="modal-footer">
     <span ng-if="mergeForm.$error.featureCount">
-      <popover x-title="ctrl.popoverTitle" x-content="ctrl.featureCountText" x-pos="'left'" icon="'fa fa-warning orange-icon'"></popover> {{ctrl.popoverText}}
+      <popover x-title="ctrl.popoverTitle" x-content="ctrl.featureCountText" x-pos="'left'" icon="'fa fa-warning text-warning'"></popover>
+      <span class="text-warning">{{ctrl.popoverText}}</span>
     </span>
-    <div class="pull-right">
-      <button class="btn" ng-disabled="mergeForm.$invalid" ng-click="ctrl.accept()">
-        <i class="fa fa-check lt-blue-icon"></i> OK
-      </button>
-      <button class="btn btn-default" ng-click="ctrl.close()">
-        <i class="fa fa-ban red-icon"></i> Cancel
-      </button>
-    </div>
+    <button class="btn btn-primary" ng-disabled="mergeForm.$invalid" ng-click="ctrl.accept()">
+      <i class="fa fa-check"></i> OK
+    </button>
+    <button class="btn btn-secondary" ng-click="ctrl.close()">
+      <i class="fa fa-ban"></i> Cancel
+    </button>
   </div>
 </div>

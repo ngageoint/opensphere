@@ -1,0 +1,61 @@
+$font-family-sans-serif: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+
+// Needed for color pallet to have white text on buttons
+$yiq-contrasted-threshold: 166;
+
+$blue: #08c;
+$indigo:  #6c94bc;
+$purple:  #6f42c1;
+$pink:    #e83e8c;
+$red:     #ee5f5b;
+$orange:  #f89406;
+$yellow:  #ffc107;
+$green:   #62c462;
+$teal:    #20c997;
+$cyan:    #5bc0de;
+
+$gray-100: #f8f9fa !default;
+$gray-200: #e9ecef !default;
+$gray-300: #dee2e6 !default;
+$gray-400: #ced4da !default;
+$gray-500: #adb5bd !default;
+$gray-600: #6c757d !default;
+$gray-700: #495057 !default;
+$gray-800: #343a40 !default;
+$gray-900: #212529 !default;
+$black: #000 !default;
+$white: #fff !default;
+
+$warning: $orange;
+$primary: $blue;
+$success: $green;
+$info: $indigo;
+$dropdown-link-hover-color: #fff;
+$dropdown-link-hover-bg: $primary;
+
+$dark: lighten(#272b30, 5%);
+
+$custom-control-indicator-checked-color: $black;
+$custom-control-indicator-checked-bg: $gray-300;
+$custom-control-indicator-checked-disabled-bg: $gray-500;
+$custom-control-indicator-active-color: $black;
+$custom-control-indicator-active-bg: $gray-300;
+$custom-checkbox-indicator-indeterminate-bg: $gray-300;
+$custom-control-indicator-disabled-bg: $gray-500;
+$custom-control-label-disabled-color: $black;
+
+// Active/selected color.
+$list-group-active-bg: darken($success, 10%);
+$list-group-active-color: $white;
+
+// Highlight/hover color.
+$list-group-hover-bg: darken($primary, 10%);
+$list-group-action-hover-color: $white;
+
+// Start Theme Variable Overides
+$sticky-nav-background-color: $gray-200;
+$hover-edit-background-color: $gray-200;
+$default-image-background-color: $gray-200;
+$default-timeline-background-color: $gray-100;
+$default-timeline-background-color-active: $gray-200;
+// End Theme Variable Overides

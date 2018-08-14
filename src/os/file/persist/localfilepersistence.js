@@ -95,7 +95,7 @@ os.file.persist.saveLocal = function(fileName, content, opt_mimeType, opt_dbStor
   file.setUrl(os.file.getLocalUrl(fileName));
   file.setContent(content);
   file.setContentType(type);
-  var fs = new os.file.FileStorage(opt_dbStore);
+  var fs = new os.file.FileStorage(opt_dbStore, os.SHARED_DB_VERSION);
   fs.setUniqueFileName(file);
   fs.storeFile(file, true).addCallbacks(goog.partial(os.file.persist.LocalFilePersistence.finishImport_, file),
       os.file.persist.LocalFilePersistence.onFileError_);

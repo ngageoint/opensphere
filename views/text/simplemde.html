@@ -1,10 +1,10 @@
-<div class="control-group simplemde" ng-class="{'error':simplemdeform.$dirty && simplemdeform.$invalid, 'edit-form':edit}">
-  <ng-form name="simplemdeform" class="simplemdeform" ng-show="edit">
-    <textarea class="simplemdetextarea"></textarea>
+<div class="c-simplemde form-group mb-0">
+  <ng-form name="simplemdeform" ng-show="edit">
+    <textarea class="js-simplemde__textarea"></textarea>
     <input class="ng-hide" type="text" name="empty" ng-model="text" ng-maxlength="{{maxlength}}" ng-required="isRequired"/>
-    <span class="help-block" ng-show="text.length > maxlength">Content is too long!</span>
-    <span class="help-block" ng-show="isRequired && text.length == 0">Required!</span>
+    <span class="text-danger" ng-show="text.length > maxlength">Content is too long!</span>
+    <span class="text-danger" ng-show="isRequired && text.length == 0">Required!</span>
   </ng-form>
-  <div class="preview" ng-bind-html="previewText" ng-if="!edit">
+  <div class="c-simplemde__preview u-word-wrap-break-word" ng-bind-html="previewText" ng-if="!edit">
   </div>
 </div>

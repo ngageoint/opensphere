@@ -3,6 +3,7 @@ goog.provide('os.ui.im.basicInfoDirective');
 
 goog.require('os.ui.Module');
 goog.require('os.ui.slick.column');
+goog.require('os.ui.util.validationMessageDirective');
 
 
 /**
@@ -159,6 +160,7 @@ os.ui.im.BasicInfoCtrl.prototype.updateColumn = function(columnField, columns, o
 
 /**
  * Updates sample text used to display column values.
+ * @export
  */
 os.ui.im.BasicInfoCtrl.prototype.updateSampleText = function() {
   if (this.scope && this.scope['config']) {
@@ -167,10 +169,6 @@ os.ui.im.BasicInfoCtrl.prototype.updateSampleText = function() {
     this['tagsSample'] = this.getSample(this.scope['config']['tagsColumn']);
   }
 };
-goog.exportProperty(
-    os.ui.im.BasicInfoCtrl.prototype,
-    'updateSampleText',
-    os.ui.im.BasicInfoCtrl.prototype.updateSampleText);
 
 
 /**

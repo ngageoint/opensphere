@@ -1,10 +1,10 @@
-<div class="filterbuilder">
-  <div class="advanced-filter-buttons" ng-if="!viewonly">
-    <button class="btn btn-default" ng-disabled="advCtrl.editing" ng-click="advCtrl.addExpr()" title="Adds a new expression to the filter"><i class="btn-icon fa fa-plus green-icon"></i> Add Expression</button>
-    <button class="btn btn-default" ng-disabled="advCtrl.editing" ng-click="advCtrl.addGrouping()" title="Adds a new group to the filter"><i class="btn-icon fa fa-plus green-icon"></i> Add Group</button>
-    <button class="btn btn-default" ng-disabled="!advCtrl.canRemove() || advCtrl.Editing" ng-click="advCtrl.remove()" title="Removes an element from the filter"><i class="btn-icon fa fa-times red-icon"></i></button>
+<div class="flex-column d-flex flex-fill">
+  <div class="flex-column my-2" ng-if="!viewonly">
+    <button class="btn btn-primary btn-sm" ng-disabled="advCtrl.editing" ng-click="advCtrl.addExpr()" title="Adds a new expression to the filter"><i class="fa fa-plus"></i> Add Expression</button>
+    <button class="btn btn-primary btn-sm" ng-disabled="advCtrl.editing" ng-click="advCtrl.addGrouping()" title="Adds a new group to the filter"><i class="fa fa-plus"></i> Add Group</button>
+    <button class="btn btn-danger btn-sm" ng-disabled="!advCtrl.canRemove() || advCtrl.Editing" ng-click="advCtrl.remove()" title="Removes an element from the filter"><i class="fa fa-times"></i></button>
   </div>
-  <div class="advanced-filter-tree" autoheight siblings=".advanced-filter-buttons">
+  <div class="flex-column flex-fill u-overflow-y-auto d-flex">
     <slicktree x-data="advCtrl.tree" drag-enabled="true" selected="advCtrl.selected" show-root="true" multi-select="false"></slicktree>
   </div>
 </div>

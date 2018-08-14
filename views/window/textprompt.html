@@ -1,15 +1,31 @@
-<div class="text-prompt window-content-wrapper">
-  <div class="window-content no-footer">
-    <div ng-if="title">
-      {{title}}
+<div class="d-flex flex-column flex-fill">
+  <div class="modal-body mb-2">
+
+    <div ng-show="title" class="form-group">
+      <p>
+        {{title}}
+      </p>
     </div>
-    <div ng-class="!text2 && 'bot-gap'">
-      {{text}}
-      <input id="main" type="text" class="wide" ng-model="value" readonly="readonly"/>
+
+    <div class="form-group">
+      <label class="col-form-label text-right">{{text}}</label>
+      <div class="col">
+        <input id="main" type="text" class="form-control" ng-model="value" readonly="readonly" />
+      </div>
     </div>
-    <div ng-if="text2 && value2" class="bot-gap">
-      {{text2}}
-      <input type="text" class="wide" ng-model="value2" readonly="readonly"/>
+
+    <div ng-show="text2 && value2" class="form-group">
+      <label class="col-form-label text-right">{{text2}}</label>
+      <div class="col">
+        <input type="text" class="form-control" ng-model="value2" readonly="readonly" />
+      </div>
     </div>
+
   </div>
+
+  <div class="modal-footer flex-row">
+    <button class="btn btn-secondary" ng-click="textPrompt.close()">
+      <i class="fa fa-times"></i> Close</button>
+  </div>
+
 </div>

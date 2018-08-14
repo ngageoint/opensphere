@@ -987,6 +987,17 @@ os.feature.sortByTime = function(a, b) {
 
 
 /**
+ * Sorts two features by their start time, in descending order.
+ * @param {!ol.Feature} a The first feature.
+ * @param {!ol.Feature} b The second feature.
+ * @return {number}
+ */
+os.feature.sortByTimeDesc = function(a, b) {
+  return os.feature.sortByTime(b, a);
+};
+
+
+/**
  * Compares two features by their id.
  * @param {!ol.Feature} a First feature
  * @param {!ol.Feature} b Second feature

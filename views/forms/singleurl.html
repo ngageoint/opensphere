@@ -1,49 +1,44 @@
-<div class="server-form window-content-wrapper">
-  <div class="window-content">
-    <div ng-show="testing" class="testing"><i class="fa fa-4x fa-spin fa-smooth fa-spinner"></i><p>Testing...</p></div>
-    <form ng-show="!testing" name="form" class="form-horizontal form-compressed" ng-submit="ctrl.accept()">
-      <table style="width:100%">
-        <tr>
-          <td class="control-label">Title:</td>
-          <td class="wide">
-            <input unique-provider-title type="text" class="wide" name="title" ng-disabled="!edit" ng-model="config.label" ng-required="true" ng-maxlength="1000"/>
-          </td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>
-            <span class="help-inline" data-ng-show="form.title.$error.maxlength">Title is too long!</span>
-            <span class="help-inline" data-ng-show="form.title.$error.unique">Title is not unique!</span>
-            <span class="help-inline" data-ng-show="form.title.$error.required">Please enter a title</span>
-          </td>
-        </tr>
-        <tr>
-          <td class="control-label">URL:</td>
-          <td class="wide">
-            <input unique-server-url type="text" name="url" class="wide" ng-disabled="!edit" ng-model="config.url" ng-required="true" ng-maxlength="1000"/>
-          </td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>
-            <span ng-if="urlExample" class="help-inline" data-ng-show="form.url.$valid">e.g. {{urlExample}}</span>
-            <span class="help-inline" data-ng-show="form.url.$error.unique">URL is not unique!</span>
-            <span class="help-inline" data-ng-show="form.url.$error.maxlength">URL is too long!</span>
-            <span class="help-inline" data-ng-show="form.url.$error.required">Please enter a URL</span>
-          </td>
-        </tr>
-      </table>
-      <input type="submit" class="hidden">
+<div class="flex-fill w-100 d-flex flex-column">
+  <div class="modal-body container flex-fill">
+    <div class="text-center" ng-show="testing">
+      <div><i class="fa fa-4x fa-spin fa-smooth fa-spinner"></i></div>
+      <div>Testing...</div>
+    </div>
+    <form class="container-fluid" ng-show="!testing" name="form" ng-submit="ctrl.accept()" novalidate>
+      <div class="form-group row" title="The title for the server">
+        <label class="col-3 col-form-label text-right" for="title">Title</label>
+        <div class="col">
+          <input unique-provider-title type="text" class="form-control" name="title" ng-disabled="!edit"
+              ng-model="config.label" ng-required="true" ng-maxlength="1000"/>
+          <validation-message target="form.title"></validation-message>
+        </div>
+      </div>
+
+      <div class="form-group row" title="The URL for the server">
+        <label class="col-3 col-form-label text-right" for="url">URL</label>
+        <div class="col">
+          <input type="text" name="url" class="form-control" ng-disabled="!edit" ng-model="config.url" ng-required="true"
+              ng-maxlength="1000"/>
+          <small class="form-text invalid-feedback" ng-if="urlExample && form.url.$valid">e.g. {{urlExample}}</small>
+          <validation-message target="form.url"></validation-message>
+        </div>
+      </div>
+
+      <input type="submit" hidden>
     </form>
     <div class="error" ng-if="error">
       <h5>Error!</h5>
       <p ng-bind-html="error"></p>
     </div>
   </div>
-  <div class="window-footer">
-    <div class="pull-right">
-      <button class="btn btn-default" ng-click="ctrl.accept()" ng-disabled="form.$invalid || testing"><i class="fa fa-check lt-blue-icon"></i> {{edit ? 'Save' : 'OK'}}</button>
-      <button class="btn btn-default" ng-click="ctrl.close()"><i class="fa fa-ban red-icon"></i> Cancel</button>
-    </div>
+  <div class="modal-footer d-flex">
+    <button class="btn btn-primary" ng-click="ctrl.accept()" ng-disabled="form.$invalid || testing">
+      <i class="fa fa-check"></i>
+      {{edit ? 'Save' : 'OK'}}
+    </button>
+    <button class="btn btn-secondary" ng-click="ctrl.close()">
+      <i class="fa fa-ban"></i>
+      Cancel
+    </button>
   </div>
 </div>

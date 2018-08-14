@@ -14,12 +14,12 @@ os.ui.node.areaNodeUIDirective = function() {
   return {
     restrict: 'AE',
     replace: true,
-    template: '<span class="glyphs pull-right slick-node-ui" ng-if="nodeUi.show()">' +
+    template: '<span ng-if="nodeUi.show()">' +
         '<span ng-click="nodeUi.edit()">' +
-        '<i class="fa fa-fw glyph" ng-class="nodeUi.getTemp() ? \'fa-save\' : \'fa-pencil\'" ' +
+        '<i class="fa fa-fw c-glyph" ng-class="nodeUi.getTemp() ? \'fa-save\' : \'fa-pencil\'" ' +
             'title="{{nodeUi.getTemp() ? \'Save\' : \'Edit\'}}"></i></span>' +
         '<span ng-click="nodeUi.remove()">' +
-        '<i class="fa fa-times fa-fw glyph glyph-remove" title="Remove the area"></i></span>' +
+        '<i class="fa fa-times fa-fw c-glyph text-danger" title="Remove the area"></i></span>' +
         '</span>',
     controller: os.ui.node.AreaNodeUICtrl,
     controllerAs: 'nodeUi'
@@ -49,18 +49,18 @@ goog.inherits(os.ui.node.AreaNodeUICtrl, os.ui.slick.AbstractNodeUICtrl);
 
 
 /**
- * @protected
  * @return {boolean} Whether or not the item is temporary
+ * @export
  */
 os.ui.node.AreaNodeUICtrl.prototype.getTemp = function() {
   var area = /** @type {os.data.AreaNode} */ (this.scope['item']).getArea();
   return /** @type {boolean} */ (area.get('temp'));
 };
-goog.exportProperty(os.ui.node.AreaNodeUICtrl.prototype, 'getTemp', os.ui.node.AreaNodeUICtrl.prototype.getTemp);
 
 
 /**
  * Removes the area
+ * @export
  */
 os.ui.node.AreaNodeUICtrl.prototype.remove = function() {
   var area = /** @type {os.data.AreaNode} */ (this.scope['item']).getArea();
@@ -70,11 +70,11 @@ os.ui.node.AreaNodeUICtrl.prototype.remove = function() {
     os.command.CommandProcessor.getInstance().addCommand(cmd);
   }
 };
-goog.exportProperty(os.ui.node.AreaNodeUICtrl.prototype, 'remove', os.ui.node.AreaNodeUICtrl.prototype.remove);
 
 
 /**
  * Edits the filter
+ * @export
  */
 os.ui.node.AreaNodeUICtrl.prototype.edit = function() {
   var area = /** @type {os.data.AreaNode} */ (this.scope['item']).getArea();
@@ -83,4 +83,3 @@ os.ui.node.AreaNodeUICtrl.prototype.edit = function() {
     os.ui.query.AreaManager.save(area);
   }
 };
-goog.exportProperty(os.ui.node.AreaNodeUICtrl.prototype, 'edit', os.ui.node.AreaNodeUICtrl.prototype.edit);

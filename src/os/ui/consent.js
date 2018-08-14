@@ -4,6 +4,7 @@ goog.require('goog.Timer');
 goog.require('goog.events.EventTarget');
 goog.require('goog.net.Cookies');
 goog.require('os.ui.Module');
+goog.require('os.ui.windowSelector');
 goog.require('os.xt.IMessageHandler');
 goog.require('os.xt.Peer');
 
@@ -40,8 +41,6 @@ os.ui.Consent = function($scope, $element) {
 
   this['server'] = location.host;
 
-  this.scope_['show'] = false;
-
   var cookie = new goog.net.Cookies(window.document);
   var consent = os.settings.get(['consent']);
 
@@ -52,12 +51,7 @@ os.ui.Consent = function($scope, $element) {
     this.timer_.listen(goog.Timer.TICK, this.update_, false, this);
 
     if (cookie && !cookie.get('consent')) {
-      this.scope_['show'] = true;
-      this.element_.modal({
-        'show': true,
-        'backdrop': 'static',
-        'keyboard': false
-      });
+      os.ui.modal.open($element);
     } else {
       this.timer_.start();
       this.update_();
@@ -113,7 +107,7 @@ os.ui.Consent.launch = function() {
   var cookie = new goog.net.Cookies(window.document);
 
   if (consent && consent['text'] && !cookie.get('consent')) {
-    os.ui.modal.create('.win-container', '<consent></consent>');
+    os.ui.modal.create(os.ui.windowSelector.CONTAINER, '<consent></consent>');
   }
 };
 
@@ -138,6 +132,7 @@ os.ui.Consent.prototype.saveCookie = function() {
  */
 os.ui.consentDirective = function() {
   return {
+    replace: true,
     restrict: 'E',
     templateUrl: os.ROOT + 'views/consent.html',
     controller: os.ui.Consent,

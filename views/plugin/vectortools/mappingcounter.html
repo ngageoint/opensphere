@@ -1,10 +1,16 @@
-<div class="control-group">
-  <ng-pluralize count="ctrl.mappingCount"
-      when="{'0': 'These layers have no associated columns.',
-             'one': 'These layers have {} associated column.',
-             'other': 'These layers have {} associated columns.'}"></ng-pluralize>
-  <popover class="pull-right" x-title="'Column Associations'" x-content="ctrl.columnMappingHelp" x-pos="'right'"></popover>
-  <button class="btn block" type="button" ng-click="ctrl.launchColumnMappings()">
-    <i class="fa fa-columns lt-blue-icon"></i> Column Associations
-  </button>
+<div class="mt-2">
+  <div class="form-group row">
+    <div class="col pl-0">
+      <ng-pluralize count="ctrl.mappingCount"
+          when="{'0': 'These layers have no associated columns.',
+                 'one': 'These layers have {} associated column.',
+                 'other': 'These layers have {} associated columns.'}"></ng-pluralize>
+    </div>
+    <popover x-title="'Column Associations'" x-content="ctrl.columnMappingHelp" x-pos="'right'"></popover>
+  </div>
+  <div class="form-group row">
+    <button class="btn btn-secondary" type="button" ng-click="ctrl.launchColumnMappings()">
+      <i class="fa fa-columns"></i> Column Associations
+    </button>
+  </div>
 </div>
