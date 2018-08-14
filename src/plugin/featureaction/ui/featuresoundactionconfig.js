@@ -1,16 +1,10 @@
 goog.provide('plugin.im.action.feature.ui.SoundConfigCtrl');
 goog.provide('plugin.im.action.feature.ui.soundConfigDirective');
-goog.require('goog.color');
 goog.require('os.audio.AudioManager');
-goog.require('os.color');
 goog.require('os.object');
-goog.require('os.style');
 goog.require('os.ui.Module');
-goog.require('os.ui.file.kml');
 goog.require('os.ui.icon.IconPickerEventType');
 goog.require('os.ui.im.action.EventType');
-goog.require('os.ui.layer.iconStyleControlsDirective');
-goog.require('os.ui.layer.vectorStyleControlsDirective');
 goog.require('os.ui.uiSwitchDirective');
 goog.require('plugin.im.action.feature.SoundAction');
 goog.require('plugin.im.action.feature.ui.ActionConfigCtrl');

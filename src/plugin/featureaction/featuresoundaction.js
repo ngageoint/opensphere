@@ -1,14 +1,11 @@
 goog.provide('plugin.im.action.feature.SoundAction');
 
-goog.require('goog.math');
-goog.require('os.color');
 goog.require('os.feature');
 goog.require('os.im.action.AbstractImportAction');
 goog.require('os.implements');
 goog.require('os.legend');
 goog.require('os.legend.ILegendRenderer');
 goog.require('os.object');
-goog.require('os.style');
 goog.require('os.xml');
 
 /**
@@ -99,34 +96,8 @@ plugin.im.action.feature.SoundAction.prototype.execute = function(items) {
   for (var i = 0; i < items.length; i++) {
     var item = items[i];
     if (item) {
-      var featureConfig = /** @type {Array|Object|undefined} */ (item.get(
-          os.style.StyleType.FEATURE)) || {};
-      if (goog.isArray(featureConfig)) {
-        for (var j = 0; j < featureConfig.length; j++) {
-          os.style.mergeConfig(this.soundConfig, featureConfig[j]);
-        }
-      } else {
-        os.style.mergeConfig(this.soundConfig, featureConfig);
-      }
-
-      item.set(os.style.StyleType.FEATURE, featureConfig, true);
-      item.set(plugin.im.action.feature.SoundAction.FEATURE_ID, this.uid, true);
-
-      var configSound = this.soundConfig['sound'];
-      if (configSound) {
-        item.set('sound', configSound, true);
-      }
+      os.audio.AudioManager.getInstance().play(this.soundConfig['sound']);
     }
-  }
-
-  os.audio.AudioManager.getInstance().play(this.soundConfig['sound']);
-
-  os.style.setFeaturesStyle(items);
-
-  var layer = os.feature.getLayer(items[0]);
-
-  if (layer) {
-    os.style.notifyStyleChange(layer, items);
   }
 };
 
