@@ -56,6 +56,7 @@ plugin.im.action.feature.Plugin.prototype.init = function() {
   var manager = plugin.im.action.feature.Manager.getInstance();
   manager.registerAction(new plugin.im.action.feature.LabelAction());
   manager.registerAction(new plugin.im.action.feature.StyleAction());
+  manager.registerAction(new plugin.im.action.feature.SoundAction());
 
   // register import UI
   os.ui.im.ImportManager.getInstance().registerImportUI(plugin.featureaction.mime.TYPE,
