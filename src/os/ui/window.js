@@ -578,9 +578,6 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
   }
   $element.css('height', height);
 
-  // update the window content element after it has been initialized
-  // setTimeout(this.updateContent_.bind(this), 10);
-
   /**
    * Monitor changes to the browser viewport size.
    * @type {?goog.dom.ViewportSizeMonitor}
@@ -811,17 +808,6 @@ os.ui.WindowCtrl.prototype.toggle = function() {
   }
 };
 goog.exportProperty(os.ui.WindowCtrl.prototype, 'toggle', os.ui.WindowCtrl.prototype.toggle);
-
-
-// /**
-//  * Update the window content element.
-//  * @private
-//  */
-// os.ui.WindowCtrl.prototype.updateContent_ = function() {
-//   if (this.scope && this.scope['noScroll'] === 'true') {
-//     this.element.find(os.ui.windowSelector.CONTENT).css('overflow', 'hidden');
-//   }
-// };
 
 
 /**

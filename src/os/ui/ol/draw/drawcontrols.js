@@ -50,12 +50,11 @@ os.ui.Module.directive('drawControls', [os.ui.ol.draw.drawControlsDirective]);
  * the os.ui version of the OL map.
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
- * @param {!angular.$compile} $compile
  * @extends {goog.Disposable}
  * @constructor
  * @ngInject
  */
-os.ui.ol.draw.DrawControlsCtrl = function($scope, $element, $compile) {
+os.ui.ol.draw.DrawControlsCtrl = function($scope, $element) {
   os.ui.ol.draw.DrawControlsCtrl.base(this, 'constructor');
 
   /**
@@ -69,18 +68,6 @@ os.ui.ol.draw.DrawControlsCtrl = function($scope, $element, $compile) {
    * @private
    */
   this.element_ = $element;
-
-  /**
-   * @type {?angular.$compile}
-   * @private
-   */
-  this.compile_ = $compile;
-
-  /**
-   * @type {?angular.Scope}
-   * @private
-   */
-  this.menuScope_ = null;
 
   /**
    * @type {os.ui.ol.interaction.AbstractDraw}
@@ -176,7 +163,6 @@ os.ui.ol.draw.DrawControlsCtrl.prototype.disposeInternal = function() {
 
   this.scope_ = null;
   this.element_ = null;
-  this.compile_ = null;
 };
 
 

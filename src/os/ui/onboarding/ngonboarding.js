@@ -192,9 +192,9 @@ os.ui.onboarding.NgOnboardingCtrl.prototype.getElementHeight_ = function(element
  * @return {number}
  * @private
  */
-os.ui.onboarding.NgOnboardingCtrl.prototype.getElementWidth_ = function(element) {
-  return SVGElement && element[0] instanceof SVGElement ? element[0].getBBox().width : element.outerWidth();
-};
+// os.ui.onboarding.NgOnboardingCtrl.prototype.getElementWidth_ = function(element) {
+//   return SVGElement && element[0] instanceof SVGElement ? element[0].getBBox().width : element.outerWidth();
+// };
 
 
 /**
