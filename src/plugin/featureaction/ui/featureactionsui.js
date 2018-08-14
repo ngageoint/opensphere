@@ -8,8 +8,6 @@ goog.require('os.ui.util.autoHeightDirective');
 goog.require('plugin.im.action.feature');
 goog.require('plugin.im.action.feature.node.menu');
 
-
-
 /**
  * The featureactions directive
  * @return {angular.Directive}
@@ -24,13 +22,11 @@ plugin.im.action.feature.ui.featureActionsDirective = function() {
   };
 };
 
-
 /**
  * Add the directive to the module.
  */
-os.ui.Module.directive('featureactions', [plugin.im.action.feature.ui.featureActionsDirective]);
-
-
+os.ui.Module.directive('featureactions',
+    [plugin.im.action.feature.ui.featureActionsDirective]);
 
 /**
  * Controller function for the featureactions directive.
@@ -47,11 +43,13 @@ plugin.im.action.feature.ui.FeatureActionsCtrl = function($scope, $element) {
    */
   this['contextMenu'] = plugin.im.action.feature.node.menu.MENU;
 
-  plugin.im.action.feature.ui.FeatureActionsCtrl.base(this, 'constructor', $scope, $element);
-  os.dataManager.listen(os.data.event.DataEventType.SOURCE_REMOVED, this.onSourceRemoved_, false, this);
+  plugin.im.action.feature.ui.FeatureActionsCtrl.base(this, 'constructor',
+      $scope, $element);
+  os.dataManager.listen(os.data.event.DataEventType.SOURCE_REMOVED,
+      this.onSourceRemoved_, false, this);
 };
-goog.inherits(plugin.im.action.feature.ui.FeatureActionsCtrl, os.ui.im.action.FilterActionsCtrl);
-
+goog.inherits(plugin.im.action.feature.ui.FeatureActionsCtrl,
+    os.ui.im.action.FilterActionsCtrl);
 
 /**
  * Close the feature action window if the source was removed
@@ -66,19 +64,18 @@ plugin.im.action.feature.ui.FeatureActionsCtrl.prototype.onSourceRemoved_ = func
   }
 };
 
-
 /**
  * @inheritDoc
  */
 plugin.im.action.feature.ui.FeatureActionsCtrl.prototype.close = function() {
   plugin.im.action.feature.ui.FeatureActionsCtrl.base(this, 'close');
-  os.dataManager.unlisten(os.data.event.DataEventType.SOURCE_REMOVED, this.onSourceRemoved_, false, this);
+  os.dataManager.unlisten(os.data.event.DataEventType.SOURCE_REMOVED,
+      this.onSourceRemoved_, false, this);
 };
 goog.exportProperty(
     plugin.im.action.feature.ui.FeatureActionsCtrl.prototype,
     'close',
     plugin.im.action.feature.ui.FeatureActionsCtrl.prototype.close);
-
 
 /**
  * @inheritDoc
@@ -104,7 +101,6 @@ goog.exportProperty(
     'apply',
     plugin.im.action.feature.ui.FeatureActionsCtrl.prototype.apply);
 
-
 /**
  * @inheritDoc
  */
@@ -112,14 +108,12 @@ plugin.im.action.feature.ui.FeatureActionsCtrl.prototype.getColumns = function()
   return plugin.im.action.feature.getColumns(this.entryType);
 };
 
-
 /**
  * @inheritDoc
  */
 plugin.im.action.feature.ui.FeatureActionsCtrl.prototype.getExportName = function() {
   return plugin.im.action.feature.getExportName(this.entryType);
 };
-
 
 /**
  * @inheritDoc

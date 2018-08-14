@@ -110,3 +110,4 @@ os.im.action.FilterActionEntry.prototype.restore = function(config) {
 os.im.action.testFilterActionEnabled = function(entry) {
   return entry.isEnabled();
 };
+
