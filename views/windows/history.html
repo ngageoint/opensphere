@@ -3,9 +3,9 @@
     <div ng-if="!historyView.commandHistory.length" class="text-muted text-center" >There is no history to view.</div>
     <div ng-show="historyView.commandHistory.length" class="list-group">
       <div ng-repeat="command in historyView.commandHistory" ng-class="{active:$index == historyView.current}" class="list-group-item list-group-item-action" ng-click="historyView.setIndex($index)" >
-        <i class="fa" ng-class="{'fa-spin fa-cog': historyView.processingIndex == $index}"></i> 
+        <i class="fa" ng-class="{'fa-spin fa-cog': historyView.processingIndex == $index}"></i>
         <span ng-class="($index > historyView.current) && 'text-muted font-italic'"><span>{{$index + 1}}.</span> {{command.title}}
-          <i ng-if="command.state == 'error'" class="fa fa-lg text-danger fa-exclamation-circle" title="{{command.details}}"></i> 
+          <i ng-if="command.state == 'error'" class="fa fa-lg text-danger fa-exclamation-circle" title="{{command.details}}"></i>
         </span>
       </div>
       <div ng-if="historyView.newCommand">
@@ -15,12 +15,10 @@
     </div>
   </div>
   <div class="modal-footer">
-    <div class="float-right">
-      <button title="Clear all history" type="button" class="btn btn-secondary" ng-click="historyView.clearHistory()"
-          ng-disabled="historyView.commandHistory.length <= 0">
-        <i class="fa fa-times"></i>
-        Clear History
-      </button>
-    </div>
+    <button title="Clear all history" type="button" class="btn btn-secondary" ng-click="historyView.clearHistory()"
+        ng-disabled="historyView.commandHistory.length <= 0">
+      <i class="fa fa-times"></i>
+      Clear History
+    </button>
   </div>
 </div>

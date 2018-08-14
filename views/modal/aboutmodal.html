@@ -8,7 +8,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <img class="mw-100" ng-src="{{path + aboutModalCtrl.logoPath}}"></img>
+        <img class="mw-100" ng-src="{{path + aboutModalCtrl.logoPath}}">
         <p>{{aboutModalCtrl.application}} version: {{version}} {{aboutModalCtrl.userAgent}}</p>
         <div ng-if="aboutModalCtrl.vendors.length || aboutModalCtrl.appVendors.length">
           <h3>Powered By:</h3>
@@ -16,7 +16,7 @@
             <div class="row">
               <div class="col-2 d-flex align-items-end" ng-repeat="vendor in aboutModalCtrl.appVendors">
                 <div class="text-center">
-                  <img class="img-fluid text-center" ng-src="{{path + vendor.logoPath}}"></img>
+                  <img class="img-fluid text-center" ng-src="{{path + vendor.logoPath}}">
                   <div class="text-center">
                     {{vendor.name}}
                   </div>
@@ -24,7 +24,7 @@
               </div>
               <div class="col-2 d-flex align-items-end" ng-repeat="vendor in aboutModalCtrl.vendors">
                 <div class="text-center">
-                  <img class="img-fluid text-center" ng-src="{{uiPath + vendor.logoPath}}"></img>
+                  <img class="img-fluid text-center" ng-src="{{uiPath + vendor.logoPath}}">
                   <div class="text-center">
                     {{vendor.name}}
                   </div>

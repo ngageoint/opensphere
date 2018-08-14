@@ -13,7 +13,7 @@
           </span>
           <span ng-repeat="otherText in ctrl.other track by $index">
             <span ng-if="$even">
-              <img ng-if="controlsHelp.getMouse(otherText)" ng-src="{{controlsHelp.getMouse(otherText)}}"></img>
+              <img ng-if="controlsHelp.getMouse(otherText)" ng-src="{{controlsHelp.getMouse(otherText)}}">
               <span ng-if="controlsHelp.getFont(otherText)" class="border border-info rounded p-1" ng-class="controlsHelp.getFontClass(otherText)">
                 <i ng-class="controlsHelp.getFont(otherText)"></i>
               </span>
@@ -26,4 +26,3 @@
     </div>
   </div>
 </div>
-
