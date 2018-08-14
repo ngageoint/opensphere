@@ -24,8 +24,8 @@ plugin.file.kml.ui.GeometryIcons = {
  * @enum {string}
  */
 plugin.file.kml.ui.NetworkLinkIcons = {
-  ACTIVE: '<i class="fa fa-link fa-fw compact" title="KML network link"></i>',
-  ERROR: '<i class="fa fa-unlink fa-fw compact" title="Unable to load network link"></i>',
+  ACTIVE: '<i class="fa fa-link fa-fw compact text-green" title="KML network link"></i>',
+  ERROR: '<i class="fa fa-unlink fa-fw compact text-danger" title="Unable to load network link"></i>',
   INACTIVE: '<i class="fa fa-link fa-fw compact" title="KML network link - enable to load"></i>',
-  LOADING: '<i class="fa fa-link fa-fw compact" title="Loading network link..."></i>'
+  LOADING: '<i class="fa fa-link fa-fw compact text-warning" title="Loading network link..."></i>'
 };
