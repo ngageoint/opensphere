@@ -16,7 +16,7 @@ os.ui.help.metricsOption.addToNav = function() {
       icons: ['<i class="fa fa-fw fa-cubes"></i>'],
       sort: 135
     });
-    menu.listen(os.ui.help.EventType.CAPABILITIES, os.ui.help.showMetricsWindow_, false, this);
+    menu.listen(os.ui.help.EventType.CAPABILITIES, os.ui.help.showMetricsWindow_);
   }
 };
 

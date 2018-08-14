@@ -1,5 +1,6 @@
 goog.provide('os.ui.menu.import');
 
+goog.require('os.layer.LayerType');
 goog.require('os.metrics.keys');
 goog.require('os.ui.im.ImportEventType');
 goog.require('os.ui.menu.Menu');
@@ -137,7 +138,7 @@ os.ui.menu.import.refreshRecent_ = function() {
     var icon = enabled ? 'fa-check-square-o' : 'fa-square-o';
 
     if (type) {
-      if (os.layer !== undefined && type === os.layer.LayerType.GROUPS) {
+      if (type === os.layer.LayerType.GROUPS) {
         type = 'Group';
       }
 
