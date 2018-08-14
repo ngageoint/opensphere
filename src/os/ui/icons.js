@@ -32,7 +32,7 @@ os.ui.Icons = {
   TILES: '<img src="' + os.ROOT + 'images/tiles-base.png" title="Tile layer"/>',
   TIME: '<img class="time-icon" src="' + os.ROOT + 'images/time-base.png" ' +
       'title="This layer supports animation over time"/>',
-  DEPRECATED: '<i class="fa fa-exclamation-circle" title="This layer is soon to be deleted"></i>',
+  DEPRECATED: '<i class="fa fa-exclamation-circle text-danger" title="This layer is soon to be deleted"></i>',
   LOCK: '<i class="fa fa-lock" title="This layer is locked."></i>',
   COLOR_MODEL: '<i class="fa fa-tint" title="This layer has auto/manual coloring rules applied"></i>'
 };
