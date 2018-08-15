@@ -14,8 +14,9 @@ plugin.places.ui.PlacesNodeUITemplate = '<span ng-if="nodeUi.show()">' +
         '<i class="fa fa-folder fa-fw c-glyph" title="Create a new folder"></i></span>' +
       '<span ng-if="nodeUi.canEdit()" ng-click="nodeUi.addPlace()">' +
         '<i class="fa fa-map-marker fa-fw c-glyph" title="Create a new place"></i></span>' +
-      '<span ng-if="nodeUi.isRemovable()" ng-click="nodeUi.remove()">' +
-        '<i class="fa fa-times fa-fw text-danger c-glyph" title="Remove the layer"></i></span>' +
+
+      '<button ng-if="nodeUi.isRemovable()" type="button" class="close mx-1" ng-click="nodeUi.remove()" ' +
+      'aria-label="Close"><span aria-hidden="true" title="Remove the layer">&times;</span></button>' +
     '</span>';
 
 

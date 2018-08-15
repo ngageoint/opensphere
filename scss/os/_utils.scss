@@ -78,6 +78,7 @@ html {
   box-sizing: inherit;
 }
 
+
 // --------------------------------- Misc Utilities --------------------------------- //
 .u-pointer-events-all {
   pointer-events: all;
@@ -146,10 +147,17 @@ html {
 }
 
 
+// --------------------------------- Font Utilities --------------------------------- //
+.u-font-family-sans-serif {
+  font-family: sans-serif;
+}
+
+
 // --------------------------------- Visibility Utilities --------------------------------- //
 .u-opacity__95 {
   opacity: .95;
 }
+
 
 // --------------------------------- Table Utilities --------------------------------- //
 // Tables in bootstrap are styled by elements.... not classes. Allow class styling
@@ -313,6 +321,7 @@ html {
 @include color-generator($colors);
 @include color-generator($theme-colors);
 
+
 // ----------- Generic max sizes. Use with caution only when absoluted needed ----------- //
 $somesizes: () !default;
 $somesizes: map-merge((
@@ -335,6 +344,7 @@ $somesizes: map-merge((
   }
 }
 
+
 // ----------- Hover edit utilities ----------- //
 .u-hover-show {
   opacity: 0;
@@ -345,7 +355,6 @@ $somesizes: map-merge((
 }
 
 // ----------- Card utilities ------- //
-
 .card {
   &.u-card-selected {
     .card-header {
