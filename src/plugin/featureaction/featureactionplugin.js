@@ -18,6 +18,7 @@ goog.require('plugin.im.action.feature.node.menu');
 goog.require('plugin.im.action.feature.ui.featureActionsDirective');
 goog.require('plugin.im.action.feature.ui.labelConfigDirective');
 goog.require('plugin.im.action.feature.ui.legendSettingsDirective');
+goog.require('plugin.im.action.feature.ui.soundConfigDirective');
 goog.require('plugin.im.action.feature.ui.styleConfigDirective');
 
 

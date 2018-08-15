@@ -46,14 +46,8 @@ os.ui.Module.directive(plugin.im.action.feature.SoundAction.CONFIG_UI,
 plugin.im.action.feature.ui.SoundConfigCtrl = function($scope, $element) {
   plugin.im.action.feature.ui.SoundConfigCtrl.base(this, 'constructor', $scope,
       $element);
-
   $scope['sounds'] = os.audio.AudioManager.getInstance().getSounds();
 
-  /**
-   * The action sound config.
-   * @type {Object}
-   * @protected
-   */
   if (this.action && this.action.soundConfig) {
     this.soundConfig = /** @type {!Object} */ (os.object.unsafeClone(
         this.action.soundConfig));
