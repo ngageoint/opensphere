@@ -8,7 +8,7 @@
   &.bs-popover-centered {
     left: 50%;
     top: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -51%);
   }
 }
 
@@ -16,4 +16,8 @@
   @include transition(none !important);
   pointer-events: none;
   z-index: $zindex-popover !important;
+}
+
+.c-ng-onboarding__highlight {
+  box-shadow: 0 0 10px 2px $body-color;
 }
