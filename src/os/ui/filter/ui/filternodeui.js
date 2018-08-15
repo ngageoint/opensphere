@@ -20,8 +20,9 @@ os.ui.filter.ui.filterNodeUIDirective = function() {
         '<i class="fa fa-copy fa-fw c-glyph" title="Copy"></i></span>' +
         '<span ng-if="nodeUi.canEdit()" ng-click="nodeUi.edit()">' +
         '<i class="fa fa-pencil fa-fw c-glyph" title="Edit"></i></span>' +
-        '<span ng-click="nodeUi.remove()">' +
-        '<i class="fa fa-times fa-fw c-glyph text-danger" title="Remove"></i></span>' +
+
+        '<button type="button" class="close mx-1" ng-click="nodeUi.remove()" ' +
+        'aria-label="Close"><span aria-hidden="true" title="Remove">&times;</span></button>' +
         '</span>',
     controller: os.ui.filter.ui.FilterNodeUICtrl,
     controllerAs: 'nodeUi'
