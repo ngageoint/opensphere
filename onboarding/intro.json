@@ -21,7 +21,7 @@
         "<li>Change how layers appear</li><li>Remove layers from the map</li><li>Manage your areas and filters</li></ul>",
         "We've added some map layers to get you started, so continue on and we'll explain how to add more."
       ],
-      "attachTo": ".window[label=Layers]",
+      "attachTo": ".o-window[label=Layers]",
       "position": "right",
       "verticalAlign": "center",
       "context": "layers"
@@ -32,9 +32,8 @@
         "To find new layers to add to the map, click the Add Data button. You can also import files using the ",
         "drop-down menu, or by dragging files on your computer and dropping them on the map."
       ],
-      "attachTo": ".add-data-group",
+      "attachTo": ".o-add-data-button",
       "position": "bottom",
-      "horizontalAlign": "center",
       "width": 350,
       "context": "navTop"
     },
