@@ -836,8 +836,12 @@ os.layer.Tile.prototype.persist = function(opt_to) {
   // drastically if the user or admin switches the default projection (resulting in the layer
   // being basically invisible)
   var tilegrid = this.getSource().getTileGrid();
-  opt_to['maxZoom'] = Math.min(os.map.MAX_ZOOM, tilegrid.getZForResolution(this.getMinResolution()));
-  opt_to['minZoom'] = Math.max(os.map.MIN_ZOOM, tilegrid.getZForResolution(this.getMaxResolution()));
+
+  var config = this.getLayerOptions();
+  var offset = /** @type {number} */ (config ? config['zoomOffset'] || 0 : 0);
+
+  opt_to['maxZoom'] = Math.min(os.map.MAX_ZOOM, tilegrid.getZForResolution(this.getMinResolution()) - offset);
+  opt_to['minZoom'] = Math.max(os.map.MIN_ZOOM, tilegrid.getZForResolution(this.getMaxResolution()) - offset);
 
   var style = this.getStyle();
   if (style) {
