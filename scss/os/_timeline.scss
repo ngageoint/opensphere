@@ -40,7 +40,8 @@
 }
 
 .c-svg-timeline__axis-background {
-  fill-opacity: 0;
+  fill: darken($default-timeline-background-color, 5);
+  fill-opacity: .8;
   pointer-events: none;
 }
 
@@ -216,6 +217,7 @@
 .axis {
   text {
     font: 10px sans-serif;
+    stroke: unset;
   }
 
   path,
