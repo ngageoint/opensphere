@@ -3,37 +3,37 @@
     <div class="js-window__header modal-header d-flex justify-content-between flex-shrink-0"
         ng-class="headerClass"
         ng-dblclick="windowCtrl.toggle()">
-      <div class="js-window__header-text text-truncate" title="{{label}}">
+      <div class="js-window__header-text text-truncate flex-fill" title="{{label}}">
         <i ng-if="icon" ng-class="icon" class="mr-1"></i>
         <span ng-if="iconHtml" ng-bind-html="iconHtml"></span>
         {{label}}
       </div>
-      <div class="d-inline-flex">
-        <div ng-if="helpContext" class="d-inline-flex">
-          <context-onboarding context="{{helpContext}}"></context-onboarding>
-        </div>
 
-        <div ng-show="headerBtns.length" class="d-inline-block">
-          <button type="button" ng-repeat="headerBtnCfg in headerBtns"
-            class="close"
-            ng-click="windowCtrl.onHeaderBtnClick($event, headerBtnCfg);"
-            title="{{headerBtnCfg.tooltip}}">
-              <i class="{{headerBtnCfg.iconClass}}"></i>
-          </button>
-        </div>
+      <div ng-if="helpContext" class="d-inline-flex">
+        <context-onboarding context="{{helpContext}}"></context-onboarding>
+      </div>
 
-        <div ng-if="showCollapse && !modal && !overlay" ng-click="windowCtrl.toggle()" title="{{collapsed ? 'Expand' : 'Collapse'}}" class="d-inline-flex">
-          <i class="fa window-close" ng-class="{'fa-compress': !collapsed, 'fa-expand': collapsed}"></i>
-        </div>
-
-        <button ng-if="showClose" type="button" class="close" ng-click="windowCtrl.close(true)" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-
-        <button ng-if="showHide" type="button" class="close" ng-click="windowCtrl.hide()"  aria-label="Hide">
-          <span aria-hidden="true">&times;</span>
+      <div ng-show="headerBtns.length" class="d-inline-block flex-shrink-0">
+        <button type="button" ng-repeat="headerBtnCfg in headerBtns"
+          class="close"
+          ng-click="windowCtrl.onHeaderBtnClick($event, headerBtnCfg);"
+          title="{{headerBtnCfg.tooltip}}">
+            <i class="{{headerBtnCfg.iconClass}}"></i>
         </button>
       </div>
+
+      <div ng-if="showCollapse && !modal && !overlay" ng-click="windowCtrl.toggle()" title="{{collapsed ? 'Expand' : 'Collapse'}}" class="d-inline-flex">
+        <i class="fa window-close" ng-class="{'fa-compress': !collapsed, 'fa-expand': collapsed}"></i>
+      </div>
+
+      <button ng-if="showClose" type="button" class="close flex-shrink-0" ng-click="windowCtrl.close(true)" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+
+      <button ng-if="showHide" type="button" class="close flex-shrink-0" ng-click="windowCtrl.hide()"  aria-label="Hide">
+        <span aria-hidden="true">&times;</span>
+      </button>
+
     </div>
     <div class="w-100 flex-fill d-flex flex-column">
       <div class="js-window__wrapper d-flex flex-column flex-fill" ng-transclude></div>

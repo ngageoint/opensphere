@@ -16,21 +16,21 @@
         </div>
       </div>
     </form>
-    <div class="mb-1" ng-if="ctrl.multiUrl || ctrl.params">
-      <button class="btn btn-outline-success btn-secondary" type="button" ng-if="ctrl.multiUrl" ng-click="ctrl.addUrl()" title="Add an alternate server URL">
+    <div ng-if="ctrl.multiUrl || ctrl.params" class="mb-1 text-right">
+      <button ng-if="ctrl.multiUrl" class="btn btn-secondary" type="button" ng-click="ctrl.addUrl()" title="Add an alternate server URL">
         <i class="fa fa-plus"></i>
         Add URL
       </button>
-      <button class="btn btn-outline-success" type="button" ng-if="ctrl.params" ng-click="ctrl.addRow()" title="Add a new parameter row">
+      <button class="btn btn-secondary" type="button" ng-if="ctrl.params" ng-click="ctrl.addRow()" title="Add a new parameter row">
         <i class="fa fa-plus"></i>
         Add Parameter
       </button>
-      <button class="btn btn-outline-danger" type="button" ng-if="ctrl.params" ng-disabled="!ctrl.selected" ng-click="ctrl.removeRow()" title="Remove the selected parameter row">
+      <button class="btn btn-danger" type="button" ng-if="ctrl.params" ng-disabled="!ctrl.selected" ng-click="ctrl.removeRow()" title="Remove the selected parameter row">
         <i class="fa fa-minus"></i>
         Remove Parameter
       </button>
     </div>
-    <div class="d-flex flex-column flex-fill" ng-if="ctrl.params">
+    <div ng-if="ctrl.params" class="d-flex flex-fill">
       <slickgrid x-data="ctrl.params" columns="ctrl.gridColumns" options="ctrl.gridOptions" selected="ctrl.selected" use-angular="true"></slickgrid>
     </div>
   </div>
