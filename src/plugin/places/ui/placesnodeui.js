@@ -9,7 +9,7 @@ goog.require('os.ui.node.DefaultLayerNodeUICtrl');
 /**
  * @type {string}
  */
-plugin.places.ui.PlacesNodeUITemplate = '<span ng-if="nodeUi.show()">' +
+plugin.places.ui.PlacesNodeUITemplate = '<span ng-if="nodeUi.show()" class="d-flex flex-shrink-0">' +
       '<span ng-if="nodeUi.canEdit()" ng-click="nodeUi.addFolder()">' +
         '<i class="fa fa-folder fa-fw c-glyph" title="Create a new folder"></i></span>' +
       '<span ng-if="nodeUi.canEdit()" ng-click="nodeUi.addPlace()">' +

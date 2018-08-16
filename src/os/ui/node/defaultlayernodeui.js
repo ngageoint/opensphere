@@ -15,7 +15,7 @@ goog.require('os.ui.slick.AbstractNodeUICtrl');
 /**
  * @type {string}
  */
-os.ui.node.DefaultLayerNodeUITemplate = '<span ng-if="nodeUi.show()" class="d-flex">' +
+os.ui.node.DefaultLayerNodeUITemplate = '<span ng-if="nodeUi.show()" class="d-flex flex-shrink-0">' +
     '<span ng-if="nodeUi.canFavorite()">' +
     '<favorite ng-show="nodeUi.show()" type="descriptor" key="{{nodeUi.descId}}" ' +
       'value="{{nodeUi.layerLabel}}"></favorite></span>' +
