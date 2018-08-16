@@ -18,17 +18,17 @@
 
   <div class="js-label-container card-body border">
     <table>
-      <tr ng-repeat="label in labels">
+      <tr ng-repeat="label in labels" ng-init="checkId = $root.getUniqueString()">
         <td class="js-handle u-cursor-grab" ng-if="labels.length > 1">
           <i class="fa fa-bars pr-1" ng-if="label.column != null" title="Click and Drag to move this label"></i>
         </td>
         <td>
           <div class="custom-control custom-checkbox d-inline-block" title="Display the column name with the label.">
-            <input type="checkbox" class="custom-control-input" id="{{'showColumn' + $index}}" name="{{'showColumn' + $index}}"
+            <input type="checkbox" class="custom-control-input" id="{{'showColumn' + checkId}}" name="{{'showColumn' + $index}}"
                 ng-disabled="label.column == null"
                 ng-model="label.showColumn"
                 ng-change="labelCtrl.onColumnChange()"/>
-            <label class="custom-control-label" for="{{'showColumn' + $index}}"> Column</label>
+            <label class="custom-control-label" for="{{'showColumn' + checkId}}"> Column</label>
           </div>
         </td>
         <td>

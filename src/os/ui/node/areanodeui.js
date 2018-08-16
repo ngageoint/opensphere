@@ -18,8 +18,9 @@ os.ui.node.areaNodeUIDirective = function() {
         '<span ng-click="nodeUi.edit()">' +
         '<i class="fa fa-fw c-glyph" ng-class="nodeUi.getTemp() ? \'fa-save\' : \'fa-pencil\'" ' +
             'title="{{nodeUi.getTemp() ? \'Save\' : \'Edit\'}}"></i></span>' +
-        '<span ng-click="nodeUi.remove()">' +
-        '<i class="fa fa-times fa-fw c-glyph text-danger" title="Remove the area"></i></span>' +
+
+        '<button type="button" class="close mx-1" ng-click="nodeUi.remove()" ' +
+          'aria-label="Close"><span aria-hidden="true" title="Remove the area">&times;</span></button>' +
         '</span>',
     controller: os.ui.node.AreaNodeUICtrl,
     controllerAs: 'nodeUi'

@@ -252,6 +252,15 @@ os.ui.AbstractMainCtrl.prototype.initialize = function() {
   if (goog.labs.userAgent.browser.isFirefox() && version < minVersion) {
     $('body').addClass('c-main__slowBrowser');
   }
+
+  /**
+   * Expose the ability to get a unique string.
+   * This is useful for custom-check where you need a unqiueID to the whole DOM
+   * @return {string}
+   */
+  os.ui.injector.get('$rootScope')['getUniqueString'] = function() {
+    return goog.string.getRandomString();
+  };
 };
 
 
