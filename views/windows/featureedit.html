@@ -17,10 +17,10 @@
         </div>
       </div>
       
-      <div class="d-flex flex-row form-group">
+      <div ng-if="ctrl.pointGeometry" class="d-flex flex-row form-group">
         <label class="col-2 col-form-label text-right u-required">Position</label>
         <div class="col">
-          <position ng-if="ctrl.pointGeometry" name="pointGeometry" geom="ctrl.pointGeometry" x-form="featureEditForm" show-label="false" map-support="true"></position>
+          <position name="pointGeometry" geom="ctrl.pointGeometry" x-form="featureEditForm" show-label="false" map-support="true"></position>
         </div>
       </div>
 
