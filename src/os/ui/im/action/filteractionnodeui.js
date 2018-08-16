@@ -15,13 +15,13 @@ goog.require('os.ui.filter.ui.filterNodeUIDirective');
 os.ui.im.action.filterActionNodeUIDirective = function() {
   var directive = os.ui.filter.ui.filterNodeUIDirective();
   directive.controller = os.ui.im.action.FilterActionNodeUICtrl;
-  directive.template = '<span class="float-right slick-node-ui" ng-if="nodeUi.show()">' +
+  directive.template = '<span ng-if="nodeUi.show()" class="d-flex flex-shrink-0">' +
       '<span ng-click="nodeUi.copy()">' +
       '<i class="fa fa-copy fa-fw c-glyph" title="Copy the action"></i></span>' +
       '<span ng-click="nodeUi.edit()">' +
       '<i class="fa fa-pencil fa-fw c-glyph" title="Edit the action"></i></span>' +
-      '<span ng-click="nodeUi.remove()">' +
-      '<i class="fa fa-times fa-fw c-glyph" title="Remove the action"></i></span>' +
+      '<button type="button" class="close mx-1" ng-click="nodeUi.remove()" ' +
+      'aria-label="Close"><span aria-hidden="true" title="Remove the action">&times;</span></button>' +
       '</span>';
   return directive;
 };

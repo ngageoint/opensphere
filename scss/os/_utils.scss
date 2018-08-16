@@ -163,7 +163,7 @@ html {
 // Tables in bootstrap are styled by elements.... not classes. Allow class styling
 .u-table {
   .u-table__head,
-  .u-table__row {
+  &:not(.u-table__no-hover) .u-table__row {
     @include hover {
       background-color: $list-group-active-bg !important;
       color: $dropdown-link-hover-color;
