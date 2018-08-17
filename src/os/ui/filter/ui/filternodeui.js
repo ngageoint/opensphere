@@ -15,7 +15,7 @@ os.ui.filter.ui.filterNodeUIDirective = function() {
   return {
     restrict: 'AE',
     replace: true,
-    template: '<span ng-if="nodeUi.show()">' +
+    template: '<span ng-if="nodeUi.show()" class="d-flex flex-shrink-0">' +
         '<span ng-if="nodeUi.canCopy()" ng-click="nodeUi.copy()">' +
         '<i class="fa fa-copy fa-fw c-glyph" title="Copy"></i></span>' +
         '<span ng-if="nodeUi.canEdit()" ng-click="nodeUi.edit()">' +

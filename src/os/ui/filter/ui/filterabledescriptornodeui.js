@@ -25,7 +25,7 @@ os.ui.filter.ui.filterableDescriptorNodeUIDirective = function() {
  * @private
  */
 os.ui.filter.ui.filterableDescriptorNodeUIDirective.TEMPLATE_ =
-    '<span class="float-right" ng-if="nodeUi.show()">' +
+    '<span ng-if="nodeUi.show()" class="d-flex flex-shrink-0">' +
     '<span ng-if="nodeUi.filtersEnabled" ng-click="nodeUi.filter()">' +
     '<i class="fa fa-filter fa-fw c-glyph" title="Manage filters"' +
     'ng-class="{\'text-success\': nodeUi.filtered, \'c-glyph__off\': !nodeUi.filtered}"></i></span></span>';

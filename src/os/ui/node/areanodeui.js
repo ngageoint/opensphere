@@ -14,7 +14,7 @@ os.ui.node.areaNodeUIDirective = function() {
   return {
     restrict: 'AE',
     replace: true,
-    template: '<span ng-if="nodeUi.show()">' +
+    template: '<span ng-if="nodeUi.show()" class="d-flex flex-shrink-0">' +
         '<span ng-click="nodeUi.edit()">' +
         '<i class="fa fa-fw c-glyph" ng-class="nodeUi.getTemp() ? \'fa-save\' : \'fa-pencil\'" ' +
             'title="{{nodeUi.getTemp() ? \'Save\' : \'Edit\'}}"></i></span>' +

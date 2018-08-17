@@ -14,7 +14,7 @@ plugin.file.kml.ui.kmlNodeUIDirective = function() {
   return {
     restrict: 'E',
     replace: true,
-    template: '<span class="float-right" ng-if="nodeUi.show()">' +
+    template: '<span ng-if="nodeUi.show()" class="d-flex flex-shrink-0">' +
         '<span ng-if="nodeUi.canAddChildren()" ng-click="nodeUi.addFolder()">' +
           '<i class="fa fa-folder fa-fw c-glyph" title="Create a new folder"></i></span>' +
         '<span ng-if="nodeUi.canAddChildren()" ng-click="nodeUi.addPlace()">' +
