@@ -376,7 +376,7 @@ os.file.getFileUrl = function(path) {
  * @return {string}
  */
 os.file.getLocalUrl = function(fileName) {
-  return os.file.FileScheme.LOCAL + '://' + btoa(unescape(encodeURIComponent(fileName)));
+  return os.file.FileScheme.LOCAL + '://' + fileName;
 };
 
 
