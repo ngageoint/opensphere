@@ -37,17 +37,18 @@
 
       // sass-lint:disable no-extends, placeholder-in-extend
       .select2-search-field {
-        margin-top: .25rem;
-        width: 100% !important;
+        width: auto !important;
 
         input.select2-input {
           @extend .form-control;
           background: transparent;
           border: 0;
+          box-shadow: none;
           line-height: $line-height-base;
           margin: 0;
+          margin-top: .25rem;
           padding: 0;
-          width: 100% !important;
+          width: auto !important;
 
           &::placeholder {
             color: $input-placeholder-color;
@@ -88,4 +89,8 @@
       width: 100%;
     }
   }
+}
+
+.select2-drop-mask {
+  width: 100%;
 }
