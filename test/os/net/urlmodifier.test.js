@@ -8,7 +8,7 @@ describe('os.net.URLModifier', function() {
     // set no replacements
     os.net.URLModifier.configure();
 
-    var expectedString = 'http://example.com/path/to/thing?someQuery=text%20with%20spaces#someFragment';
+    var expectedString = 'http://example.com/path/to/thing?someQuery=text%20with%20%25%20spaces#someFragment';
     var uri = new goog.Uri(expectedString);
 
     mod.modify(uri);
@@ -23,7 +23,7 @@ describe('os.net.URLModifier', function() {
       '{needle}': 'tada!'
     });
 
-    var expectedString = 'http://example.com/path/to/thing?someQuery=text%20with%20spaces#someFragment';
+    var expectedString = 'http://example.com/path/to/thing?someQuery=text%20with%20%25%20spaces#someFragment';
     var uri = new goog.Uri(expectedString);
 
     mod.modify(uri);
@@ -38,7 +38,7 @@ describe('os.net.URLModifier', function() {
       '{needle}': 'tada'
     });
 
-    var expectedString = 'http://example.com/path/to/thing?someQuery=text%20with%20spaces&special=%7Bneedle%7D#someFragment';
+    var expectedString = 'http://example.com/path/to/thing?someQuery=text%20with%20%25%20spaces&special=%7Bneedle%7D#someFragment';
     var uri = new goog.Uri(expectedString);
 
     mod.modify(uri);
@@ -53,7 +53,7 @@ describe('os.net.URLModifier', function() {
       '{needle}': 'tada'
     });
 
-    var expectedString = 'http://example.com/path/to/thing?someQuery=text%20with%20spaces&special={needle}#someFragment';
+    var expectedString = 'http://example.com/path/to/thing?someQuery=text%20with%20%25%20spaces&special={needle}#someFragment';
     var uri = new goog.Uri(expectedString);
 
     mod.modify(uri);

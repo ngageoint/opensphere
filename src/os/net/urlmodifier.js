@@ -43,16 +43,38 @@ os.net.URLModifier.configure = function(options) {
  * @inheritDoc
  */
 os.net.URLModifier.prototype.modify = function(uri) {
-  // search patterns are generally given unencoded
-  var url = decodeURIComponent(uri.toString());
   var list = os.net.URLModifier.replace_;
-
-  for (var i = 0, n = list.length; i < n; i++) {
-    url = url.replace(list[i].search, list[i].replace);
+  if (!list.length) {
+    return;
   }
 
-  var u = new goog.Uri(url);
-  if (url !== uri.toString()) {
+  var url = uri.toString().replace(/[?#].*$/, '');
+  var qd = uri.getQueryData();
+  var keys = qd.getKeys();
+  var fragment = uri.getFragment();
+
+  for (var i = 0, ii = list.length; i < ii; i++) {
+    url = url.replace(list[i].search, list[i].replace);
+    fragment = fragment.replace(list[i].search, list[i].replace);
+
+    if (keys) {
+      for (var j = 0, jj = keys.length; j < jj; j++) {
+        var key = keys[j];
+        var value = qd.get(key);
+
+        if (value) {
+          var newValue = value.toString().replace(list[i].search, list[i].replace);
+
+          if (newValue != value) {
+            qd.set(key, newValue);
+          }
+        }
+      }
+    }
+  }
+
+  var u = new goog.Uri(url + (keys.length ? '?' + qd.toString() : '') + (fragment ? '#' + fragment : ''));
+  if (u.toString() !== uri.toString()) {
     uri.setScheme(u.getScheme());
     uri.setDomain(u.getDomain());
     uri.setPort(u.getPort());
