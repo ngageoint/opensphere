@@ -1,5 +1,6 @@
 goog.provide('os.ui.file.kml.AbstractKMLExporter');
 
+goog.require('goog.array');
 goog.require('goog.dom');
 goog.require('goog.dom.xml');
 goog.require('goog.object');
@@ -127,6 +128,14 @@ os.ui.file.kml.AbstractKMLExporter = function() {
    */
   this.styles_ = {};
 
+
+  /**
+   * The column used for feature icon rotation
+   * @type {string|null|undefined}
+   * @private
+   */
+  this.rotationColumn_ = null;
+
   /**
    * If the item color should be used for icons.
    * @type {boolean}
@@ -190,6 +199,7 @@ os.ui.file.kml.AbstractKMLExporter.prototype.reset = function() {
   this.icon_ = null;
   this.styles_ = {};
   this.labelMap = {};
+  this.rotationColumn_ = null;
 };
 
 
@@ -529,6 +539,8 @@ os.ui.file.kml.AbstractKMLExporter.prototype.processPlacemark = function(element
   var visibility = this.isItemVisible(item) ? 1 : 0;
   os.xml.appendElementNS('visibility', this.kmlNS, element, visibility);
 
+  this.createRotColElement(element, item);
+
   var ed = os.xml.createElementNS('ExtendedData', this.kmlNS, this.doc);
 
   var time = this.getTime(item);
@@ -590,6 +602,16 @@ os.ui.file.kml.AbstractKMLExporter.prototype.processPlacemark = function(element
           os.xml.appendElementNS('value', this.kmlNS, dataEl, String(val));
         }
       }
+    }
+
+
+    // Some fields do not get automatically exported (e.g., fields that are not visible)
+    // if the rotation column is one of those fields create its data element here
+    if (goog.isDefAndNotNull(this.rotationColumn_) && !goog.array.contains(fields, this.rotationColumn_)) {
+      var rotDataEl = os.xml.appendElementNS('Data', this.kmlNS, ed, undefined, {
+        'name': this.rotationColumn_
+      });
+      os.xml.appendElementNS('value', this.kmlNS, rotDataEl, String(this.getField(item, this.rotationColumn_)));
     }
   }
 
@@ -675,6 +697,25 @@ os.ui.file.kml.AbstractKMLExporter.prototype.createStyle = function(item, styleI
 
 
 /**
+ * Create a rotationColumn element and append to element
+ * @param {!Element} element The Placemark element
+ * @param {T} item The item
+ * @protected
+ * @template T
+ */
+os.ui.file.kml.AbstractKMLExporter.prototype.createRotColElement = function(element, item) {
+  if (this.rotationColumn_ === null) {
+    // rotation column had not yet been retrieved
+    this.rotationColumn_ = this.getRotationColumn(item);
+  }
+
+  if (goog.isDefAndNotNull(this.rotationColumn_)) {
+    os.xml.appendElementNS('rotationColumn', this.kmlNS, element, this.rotationColumn_);
+  }
+};
+
+
+/**
  * Get the children of an item.
  * @param {T} item The item
  * @return {Array<T>} The item's children
@@ -730,6 +771,15 @@ os.ui.file.kml.AbstractKMLExporter.prototype.setFields = function(value) {
  * @protected
  */
 os.ui.file.kml.AbstractKMLExporter.prototype.getGeometry = goog.abstractMethod;
+
+
+/**
+ * Get the icon rotation column.
+ * @param {T} item The item
+ * @return {string|null|undefined}
+ * @protected
+ */
+os.ui.file.kml.AbstractKMLExporter.prototype.getRotationColumn = goog.abstractMethod;
 
 
 /**
