@@ -961,7 +961,6 @@ os.source.Vector.prototype.getGeometryShape = function() {
 /**
  * Sets the geometry shape used by features in the source.
  * @param {string} value
- * @suppress {accessControls}
  */
 os.source.Vector.prototype.setGeometryShape = function(value) {
   var oldGeomShape = this.geometryShape_;
@@ -1007,17 +1006,42 @@ os.source.Vector.prototype.setGeometryShape = function(value) {
 
       if (lobTest) {
         os.feature.createLineOfBearing(features[i], true, lobOptions);
-
-        // This picks up cached ellipses even if the user has them off. While that's not ideal, we
-        // don't have a choice until we can refactor both ellipse and LOB into "derived geometries"
-        // and give them a better setup form in the app
-        geoms.push(/** @type {ol.geom.Geometry} */ (features[i].get(os.data.RecordField.ELLIPSE)));
-        geoms.push(/** @type {ol.geom.Geometry} */ (features[i].get(os.data.RecordField.LINE_OF_BEARING)));
       }
 
-      var extent = geoms.reduce(os.fn.reduceExtentFromGeometries, ol.extent.createEmpty());
-      if (!ol.extent.isEmpty(extent)) {
-        this.featuresRtree_.update(extent, features[i]);
+      this.updateIndex(features[i]);
+    }
+  }
+};
+
+
+/**
+ * @param {ol.Feature} feature
+ * @suppress {accessControls}
+ */
+os.source.Vector.prototype.updateIndex = function(feature) {
+  if (feature) {
+    var style = feature.getStyle();
+    var styles = Array.isArray(style) ? style : [style];
+
+    var extent = ol.extent.createEmpty();
+
+    for (var s = 0, ss = styles.length; s < ss; s++) {
+      var geomFunc = styles[s].getGeometryFunction();
+      var g = geomFunc(feature);
+      if (g) {
+        var e = os.extent.getFunctionalExtent(g);
+        if (e) {
+          ol.extent.extend(extent, e);
+        }
+      }
+    }
+
+    if (!ol.extent.isEmpty(extent)) {
+      var id = ol.getUid(feature);
+      if (id in this.featuresRtree_.items_) {
+        this.featuresRtree_.update(extent, feature);
+      } else {
+        this.featuresRtree_.insert(extent, feature);
       }
     }
   }

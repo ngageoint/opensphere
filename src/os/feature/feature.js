@@ -281,7 +281,7 @@ os.feature.createEllipse = function(feature, opt_replace) {
  */
 os.feature.getColumnValue = function(feature, opt_column, opt_default) {
   if (opt_column) {
-    if (feature.values_[opt_column]) {
+    if (feature.values_[opt_column] !== undefined) {
       var val = parseFloat(feature.values_[opt_column]);
       if (val == feature.values_[opt_column]) { // this prevents against a partial conversion ie 7 != '7ate9'
         return val;
