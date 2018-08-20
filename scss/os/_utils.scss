@@ -50,7 +50,16 @@ $form-control-disabled-border: $gray-600 !default;
   }
 }
 
+// We prefer to have tighter vertical padding on headers and footers
+.modal-header,
+.modal-footer {
+  padding: $modal-header-padding $modal-inner-padding;
+}
+
 // Add a pointer to the custom checkbox
+.list-group-item,
+.custome-select,
+.custom-control.custom-radio .custom-control-label,
 .custom-control.custom-checkbox .custom-control-label {
   cursor: pointer;
 }
@@ -144,6 +153,26 @@ html {
   height: 19px;
   position: relative;
   top: 6px;
+}
+
+// Allows adding a count to a font-awesome icon
+.u-fa-badge {
+  position: relative;
+}
+
+.u-fa-badge[data-count]:after {
+  background: darken($input-bg, 5%);
+  border: 1px solid $border-color;
+  border-radius: $border-radius;
+  bottom: -55%;
+  color: color-yiq(darken($input-bg, 5%));
+  content: attr(data-count);
+  font-size: 50%;
+  opacity: .8;
+  padding: .15rem .25rem;
+  position: absolute;
+  right: -55%;
+  text-align: center;
 }
 
 
