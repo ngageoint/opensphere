@@ -30,7 +30,6 @@ goog.require('os.ui.onboarding.contextOnboardingDirective');
 goog.require('os.ui.onboarding.onboardingDirective');
 
 
-
 /**
  * Key for injecting into the main-content list
  * @type {string}
@@ -249,8 +248,14 @@ os.ui.AbstractMainCtrl.prototype.initialize = function() {
   var versionArray = goog.labs.userAgent.browser.getVersion().split('.');
   var version = (versionArray && versionArray.length > 1) ? Number(versionArray[0]) : 0;
   var minVersion = /** @type {number} */(os.settings.get('minPerformatFFVersion', 38));
+  var deprecatedFirefoxMessage = /** @type {string} */ (os.settings.get('deprecatedFirefoxMessage',
+      '<h3>You are using an unsupported version of the Firefox browser!</h3>' +
+      'For the best experience, please consider updating your browser.'));
+
   if (goog.labs.userAgent.browser.isFirefox() && version < minVersion) {
     $('body').addClass('c-main__slowBrowser');
+    os.alert.AlertManager.getInstance().sendAlert(deprecatedFirefoxMessage,
+        os.alert.AlertEventSeverity.WARNING, undefined, 1, new goog.events.EventTarget());
   }
 
   /**
