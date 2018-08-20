@@ -798,6 +798,12 @@ os.style.setFeatureStyle = function(feature, opt_source, opt_style) {
   }
 
   feature.setStyle(style);
+
+  opt_source = /** @type {os.source.Vector} */ (opt_source || os.feature.getSource(feature));
+
+  if (opt_source) {
+    opt_source.updateIndex(feature);
+  }
 };
 
 
