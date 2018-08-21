@@ -15,6 +15,17 @@
           <simplemde text="ctrl.description" edit="true" is-required="false" maxlength="4000"></simplemde>
         </div>
       </div>
+      <div class="control-group c-feature-edit__altitude">
+        <label class="control-label">Altitude:</label>
+        <div class="controls">
+          <input type="number" name="altitude" 
+            ng-model="ctrl.altitude" 
+            ng-maxlength="100" 
+            placeholder="Insert Altitude"/>
+          <select id="units menu" ng-model="ctrl.altUnits" ng-options="column for column in ctrl.altOptions track by column"></select>
+          <span class="help-inline" ng-if="featureEditForm.altitude.$error.maxlength">Altitude is too long!</span>
+        </div>
+      </div>
       <position ng-if="ctrl.pointGeometry" name="pointGeometry" geom="ctrl.pointGeometry" x-form="featureEditForm" map-support="true"></position>
       <div class="control-group c-feature-edit__time" ng-if="ctrl.timeEditEnabled">
         <label class="control-label">Time:</label>

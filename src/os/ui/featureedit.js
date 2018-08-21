@@ -12,7 +12,9 @@ goog.require('ol.events');
 goog.require('ol.geom.Point');
 goog.require('os.action.EventType');
 goog.require('os.data.ColumnDefinition');
+goog.require('os.feature');
 goog.require('os.map');
+goog.require('os.math.Units');
 goog.require('os.ol.feature');
 goog.require('os.style');
 goog.require('os.style.label');
@@ -318,6 +320,12 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
   ];
 
   /**
+   * Units for altitude
+   * @type {string}
+   */
+  this['altOptions'] = goog.object.getKeys(os.math.Units);
+
+  /**
    * @type {string}
    */
   this['labelColor'] = os.style.DEFAULT_LAYER_COLOR;
@@ -451,7 +459,8 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
       // new place without a geometry, initialize as a point
       this['pointGeometry'] = {
         'lat': NaN,
-        'lon': NaN
+        'lon': NaN,
+        'alt': NaN
       };
     } else if (geometry instanceof ol.geom.Point) {
       // geometry is a point, so allow editing it
@@ -476,6 +485,8 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
   if (this['pointGeometry']) {
     $scope.$watch('ctrl.pointGeometry.lat', this.updatePreview.bind(this));
     $scope.$watch('ctrl.pointGeometry.lon', this.updatePreview.bind(this));
+    $scope.$watch('ctrl.altitude', this.updatePreview.bind(this));
+    $scope.$watch('ctrl.altUnits', this.updatePreview.bind(this));
   }
 
   $scope.$watch('ctrl.description', this.updatePreview.bind(this));
@@ -572,6 +583,9 @@ os.ui.FeatureEditCtrl.FIELDS = [
   os.Fields.BEARING, // for icon
   os.Fields.LAT,
   os.Fields.LON,
+  os.Fields.ALT,
+  os.Fields.ALT_UNITS,
+  os.Fields.ALTITUDE_INPUT,
   os.Fields.LAT_DDM,
   os.Fields.LON_DDM,
   os.Fields.LAT_DMS,
@@ -636,6 +650,7 @@ os.ui.FeatureEditCtrl.prototype.accept = function() {
       return label['column'] != null;
     });
   }
+
 
   this.saveToFeature(feature);
 
@@ -847,6 +862,21 @@ goog.exportProperty(
     'updatePreview',
     os.ui.FeatureEditCtrl.prototype.updatePreview);
 
+/**
+ * Updates the altitude units.
+ * @param {*} value
+ */
+os.ui.FeatureEditCtrl.prototype.updateAltUnits = function(value) {
+  if (value != null) {
+    this['altUnits'] = value;
+    this.updatePreview();
+  }
+};
+goog.exportProperty(
+    os.ui.FeatureEditCtrl.prototype,
+    'updateAltUnits',
+    os.ui.FeatureEditCtrl.prototype.updateAltUnits);
+
 
 /**
  * Save which section is open to local storage
@@ -980,8 +1010,20 @@ os.ui.FeatureEditCtrl.prototype.loadFromFeature_ = function(feature) {
       if (coordinate) {
         this['pointGeometry'] = {
           'lon': coordinate[0],
-          'lat': coordinate[1]
+          'lat': coordinate[1],
+          'alt': coordinate[2]
         };
+
+        var altU = this['options']['feature']['values_']['ALTITUDE_UNITS'];
+
+        // else if runs when the page is refreshed
+        if (coordinate[2] !== null && coordinate[2] !== undefined && altU !== null && altU !== undefined) {
+          this['altitude'] = os.math.convertUnits(coordinate[2], os.math.Units[altU], os.math.Units.METERS);
+          this['altUnits'] = altU;
+        } else if (coordinate[2] !== null && coordinate[2] !== undefined && altU == undefined) {
+          this['altitude'] = coordinate[2];
+          this['altUnits'] = goog.object.getKeys(os.math.Units)[1];
+        }
       }
 
       this['semiMajor'] = this.getNumericField_(feature, os.Fields.SEMI_MAJOR);
@@ -1154,9 +1196,21 @@ os.ui.FeatureEditCtrl.prototype.saveGeometry_ = function(feature) {
     // make sure the coordinate values are numeric
     var lon = Number(this['pointGeometry']['lon']);
     var lat = Number(this['pointGeometry']['lat']);
+    var alt = Number(this['altitude']) ? this['altitude'] : null;
+    var altU = this['altUnits'] ? this['altUnits'] : goog.object.getKeys(os.math.Units)[1];
+    var coord = [lon, lat];
+
+    if (alt !== null && alt !== undefined && altU !== null && altU !== undefined) {
+      feature.set(os.Fields.ALTITUDE_INPUT, alt);
+      feature.set(os.Fields.ALT_UNITS, altU);
+      alt = os.math.convertUnits(alt, os.math.Units.METERS, os.math.Units[altU]);
+      feature.set(os.Fields.ALT, alt);
+      os.feature.setAltitude(feature);
+      coord.push(alt);
+    }
 
     if (!isNaN(lon) && !isNaN(lat)) {
-      var point = new ol.geom.Point([lon, lat]);
+      var point = new ol.geom.Point(coord);
       point.osTransform();
       feature.setGeometry(point);
 
