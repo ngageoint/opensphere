@@ -136,7 +136,7 @@ os.ui.window.create = function(options, html, opt_parent, opt_scope, opt_compile
   for (var key in options) {
     var val = options[key];
     if (key === 'label' && goog.isString(val)) {
-      val = val.replace('"', '&quot;');
+      val = val.replace(/"/g, '&quot;');
     }
     win += ' ' + key + '="' + val + '"';
   }
