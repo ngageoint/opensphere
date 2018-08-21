@@ -1,13 +1,26 @@
-.custom-control-label::before,
-.custom-control-label::after {
-  height: $font-size-base;
-  left: -1.25rem;
-  top: .2rem;
-  width: $font-size-base;
+.custom-checkbox {
+  .custom-control-label::before,
+  .custom-control-label::after {
+    height: $font-size-base;
+    left: -1.25rem;
+    top: .2rem;
+    width: $font-size-base;
+  }
+
+  .custom-control-label::after {
+    border: 1px solid $input-border-color;
+    border-radius: .125rem;
+  }
+
+  .custom-control {
+    min-height: ($font-size-base * $line-height-base);
+  }
 }
 
-.custom-control {
-  min-height: ($font-size-base * $line-height-base);
+.custom-radio {
+  .custom-control-label {
+    padding-top: $input-padding-y;
+  }
 }
 
 .pagination {

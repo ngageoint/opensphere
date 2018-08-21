@@ -58,15 +58,10 @@ $form-control-disabled-border: $gray-600 !default;
 
 // Add a pointer to the custom checkbox
 .list-group-item,
-.custome-select,
+.custom-select,
 .custom-control.custom-radio .custom-control-label,
 .custom-control.custom-checkbox .custom-control-label {
   cursor: pointer;
-}
-
-.custom-checkbox .custom-control-label::after {
-  border: 1px solid $input-border-color;
-  border-radius: .125rem;
 }
 
 html {
