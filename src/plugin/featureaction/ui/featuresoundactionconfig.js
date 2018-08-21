@@ -3,8 +3,8 @@ goog.provide('plugin.im.action.feature.ui.soundConfigDirective');
 goog.require('os.audio.AudioManager');
 goog.require('os.object');
 goog.require('os.ui.Module');
-goog.require('os.ui.icon.IconPickerEventType');
 goog.require('os.ui.im.action.EventType');
+goog.require('os.ui.spinnerDirective');
 goog.require('os.ui.uiSwitchDirective');
 goog.require('plugin.im.action.feature.SoundAction');
 goog.require('plugin.im.action.feature.ui.ActionConfigCtrl');
@@ -23,7 +23,17 @@ plugin.im.action.feature.ui.soundConfigDirective = function() {
     'ng-change="ctrl.onSoundChange()"' +
     'style="width:100%" ' +
     'ng-options="val for val in sounds">' +
-    '</select></div>',
+    '</select>  <table>' +
+    '    <tr>' +
+    '      <td class="control-sound-play">Time Delay: </td>' +
+    '      <td>' +
+    '        <spinner min="1" max="60" live="false" step="1" value="playDelay" name="playDelay"' +
+    '            title="Sets the label font size">' +
+    '        </spinner>' +
+    '        seconds' +
+    '      </td>' +
+    '    </tr>' +
+    '  </table></div>',
     controller: plugin.im.action.feature.ui.SoundConfigCtrl,
     controllerAs: 'ctrl'
   };
@@ -47,6 +57,7 @@ plugin.im.action.feature.ui.SoundConfigCtrl = function($scope, $element) {
   plugin.im.action.feature.ui.SoundConfigCtrl.base(this, 'constructor', $scope,
       $element);
   $scope['sounds'] = os.audio.AudioManager.getInstance().getSounds();
+  $scope.$on('playDelay.spinstop', this.onDelayChange.bind(this));
 
   if (this.action && this.action.soundConfig) {
     this.soundConfig = /** @type {!Object} */ (os.object.unsafeClone(
@@ -66,6 +77,7 @@ goog.inherits(plugin.im.action.feature.ui.SoundConfigCtrl,
  */
 plugin.im.action.feature.ui.SoundConfigCtrl.prototype.initialize = function() {
   plugin.im.action.feature.ui.SoundConfigCtrl.base(this, 'initialize');
+  this.scope['playDelay'] = this.soundConfig['playDelay'];
 };
 
 /**
@@ -78,7 +90,7 @@ plugin.im.action.feature.ui.SoundConfigCtrl.prototype.saveAction = function() {
 };
 
 /**
- * Play selected sound on change
+ * Play selected sound on change and save.
  */
 plugin.im.action.feature.ui.SoundConfigCtrl.prototype.onSoundChange = function() {
   var snd = this.scope['sound'];
@@ -86,9 +98,13 @@ plugin.im.action.feature.ui.SoundConfigCtrl.prototype.onSoundChange = function()
   this.soundConfig['sound'] = this.scope['sound'];
 };
 
+/**
+ * Set the time between sound notifications.
+ */
+plugin.im.action.feature.ui.SoundConfigCtrl.prototype.onDelayChange = function() {
+  this.soundConfig['playDelay'] = this.scope['playDelay'];
+};
+
 goog.exportProperty(plugin.im.action.feature.ui.SoundConfigCtrl.prototype,
     'onSoundChange',
     plugin.im.action.feature.ui.SoundConfigCtrl.prototype.onSoundChange);
-
-
-

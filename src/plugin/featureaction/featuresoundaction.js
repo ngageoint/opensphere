@@ -1,4 +1,5 @@
 goog.provide('plugin.im.action.feature.SoundAction');
+goog.require('goog.async.Delay');
 goog.require('os.feature');
 goog.require('os.im.action.AbstractImportAction');
 goog.require('os.implements');
@@ -12,7 +13,8 @@ goog.require('os.xml');
  * @enum {string}
  */
 plugin.im.action.feature.SoundActionTagName = {
-  SOUND: 'sound'
+  SOUND: 'sound',
+  DELAY: 'playDelay'
 };
 
 /**
@@ -29,13 +31,20 @@ plugin.im.action.feature.SoundAction = function() {
   this.xmlType = plugin.im.action.feature.SoundAction.ID;
   this.configUI = plugin.im.action.feature.SoundAction.CONFIG_UI;
 
-
   /**
    * Unique identifier for this action.
    * @type {number}
    * @protected
    */
   this.uid = goog.getUid(this);
+
+  /**
+   * User defined time between sound notifications in seconds.
+   * @type {number}
+   */
+  this.delay = this.soundConfig['playDelay'] * 1000;
+
+  this.refreshTimer_ = os.debounce(this.onRefreshTimer_, this.delay, true);
 
   /**
    * The feature sound config.
@@ -84,20 +93,16 @@ plugin.im.action.feature.SoundAction.CONFIG_UI = 'featureactionsoundconfig';
  * @const
  */
 plugin.im.action.feature.SoundAction.DEFAULT_CONFIG = {
-  'sound': 'Default'
+  'sound': 'Default',
+  'playDelay': 30
 
 };
 
 /**
  * @inheritDoc
  */
-plugin.im.action.feature.SoundAction.prototype.execute = function(items) {
-  for (var i = 0; i < items.length; i++) {
-    var item = items[i];
-    if (item) {
-      os.audio.AudioManager.getInstance().play(this.soundConfig['sound']);
-    }
-  }
+plugin.im.action.feature.SoundAction.prototype.execute = function() {
+  this.refreshTimer_();
 };
 
 /**
@@ -129,9 +134,15 @@ plugin.im.action.feature.SoundAction.prototype.toXml = function() {
   var element = plugin.im.action.feature.SoundAction.base(this, 'toXml');
 
   var sound = (this.soundConfig['sound']);
+  var delay = (this.soundConfig['playDelay']);
   if (sound != null) {
     os.xml.appendElement(plugin.im.action.feature.SoundActionTagName.SOUND,
         element, String(sound));
+  }
+
+  if (delay != null) {
+    os.xml.appendElement(plugin.im.action.feature.SoundActionTagName.DELAY,
+        element, String(delay));
   }
 
   return element;
@@ -147,13 +158,23 @@ plugin.im.action.feature.SoundAction.prototype.fromXml = function(xml) {
   if (xml) {
     var sound = os.xml.getChildValue(xml,
         plugin.im.action.feature.SoundActionTagName.SOUND);
+    var delay = os.xml.getChildValue(xml,
+        plugin.im.action.feature.SoundActionTagName.DELAY);
 
     soundConfig['sound'] = String(sound);
+    soundConfig['playDelay'] = Number(delay);
 
     this.soundConfig = soundConfig;
   }
 };
 
+/**
+ * Handle the playing of sound notifications between delays.
+ * @private
+ */
+plugin.im.action.feature.SoundAction.prototype.onRefreshTimer_ = function() {
+  os.audio.AudioManager.getInstance().play(this.soundConfig['sound']);
+};
 
 /**
  * @inheritDoc
