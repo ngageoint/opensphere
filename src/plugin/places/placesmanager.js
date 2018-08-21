@@ -121,17 +121,6 @@ plugin.places.PlacesManager.EMPTY_CONTENT = '<kml xmlns="http://www.opengis.net/
 
 
 /**
- * Source events that should trigger saving places.
- * @type {!Array<string>}
- * @const
- */
-plugin.places.PlacesManager.SOURCE_SAVE_EVENTS = [
-  os.source.PropertyChange.FEATURES,
-  os.source.PropertyChange.FEATURE_VISIBILITY
-];
-
-
-/**
  * @inheritDoc
  */
 plugin.places.PlacesManager.prototype.disposeInternal = function() {
@@ -433,8 +422,14 @@ plugin.places.PlacesManager.prototype.onSourcePropertyChange_ = function(event) 
     if (!this.placesSource_.isLoading()) {
       this.onSourceLoaded_();
     }
-  } else if (this.saveDelay_ && p && plugin.places.PlacesManager.SOURCE_SAVE_EVENTS.indexOf(p) !== -1) {
-    this.saveDelay_.start();
+  } else if (this.saveDelay_ && (p === os.source.PropertyChange.FEATURE_VISIBILITY ||
+      p === os.source.PropertyChange.FEATURES)) {
+    // only save if a list of changed features was provided. if not, it's a general refresh event and can be ignored.
+    var newVal = event.getNewValue();
+    var oldVal = event.getOldValue();
+    if (newVal || oldVal) {
+      this.saveDelay_.start();
+    }
   }
 };
 
