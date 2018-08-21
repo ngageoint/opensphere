@@ -1200,7 +1200,8 @@ plugin.file.kml.KMLParser.prototype.readScreenOverlay_ = function(el) {
 /**
  * Parse XY attributes from a screenXY element and return an object with more useful location coordinates
  * @param {Element} el The XML element
- * @return {?{x: (string|number), y: (string|number)}} an object with an x and y attribute representing location in pixels
+ * @return {?{x: (string|number), y: (string|number)}} an object with an x and y
+ *                                attribute representing location in pixels
  * @private
  */
 plugin.file.kml.KMLParser.prototype.parseScreenXY_ = function(el) {
@@ -1378,6 +1379,13 @@ plugin.file.kml.KMLParser.prototype.applyStyles_ = function(el, feature) {
     // set the feature shape if it wasn't defined in the file and an icon style is present
     if (!feature.get(os.style.StyleField.CENTER_SHAPE) && os.style.isIconConfig(mergedStyle)) {
       feature.set(os.style.StyleField.CENTER_SHAPE, os.style.ShapeType.ICON);
+    }
+
+    // if a <rotationColumn> is present set the rotation column for the feature layer
+    var iconRotationColumn = os.xml.getChildValue(el, 'rotationColumn');
+    if (goog.isDefAndNotNull(iconRotationColumn)) {
+      feature.set(os.style.StyleField.ROTATION_COLUMN, iconRotationColumn);
+      feature.set(os.style.StyleField.SHOW_ROTATION, true);
     }
 
     // apply the feature style
