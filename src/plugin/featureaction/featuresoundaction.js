@@ -1,5 +1,4 @@
 goog.provide('plugin.im.action.feature.SoundAction');
-goog.require('goog.async.Delay');
 goog.require('os.feature');
 goog.require('os.im.action.AbstractImportAction');
 goog.require('os.implements');
