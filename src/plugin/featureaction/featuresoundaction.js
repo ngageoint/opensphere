@@ -38,19 +38,19 @@ plugin.im.action.feature.SoundAction = function() {
   this.uid = goog.getUid(this);
 
   /**
+   * The feature sound config.
+   * @type {!Object}
+   */
+  this.soundConfig = /** @type {!Object} */ (os.object.unsafeClone(
+      plugin.im.action.feature.SoundAction.DEFAULT_CONFIG));
+
+  /**
    * User defined time between sound notifications in seconds.
    * @type {number}
    */
   this.delay = this.soundConfig['playDelay'] * 1000;
 
   this.refreshTimer_ = os.debounce(this.onRefreshTimer_, this.delay, true);
-
-  /**
-   * The feature sound config.
-   * @type {!Object}
-   */
-  this.soundConfig = /** @type {!Object} */ (os.object.unsafeClone(
-      plugin.im.action.feature.SoundAction.DEFAULT_CONFIG));
 };
 goog.inherits(plugin.im.action.feature.SoundAction,
     os.im.action.AbstractImportAction);

@@ -1,5 +1,6 @@
 goog.provide('plugin.im.action.feature.ui.SoundConfigCtrl');
 goog.provide('plugin.im.action.feature.ui.soundConfigDirective');
+
 goog.require('os.audio.AudioManager');
 goog.require('os.object');
 goog.require('os.ui.Module');
@@ -18,22 +19,7 @@ plugin.im.action.feature.ui.soundConfigDirective = function() {
   return {
     restrict: 'E',
     replace: true,
-    template: '<div><select ' +
-    'ng-model="sound" ' +
-    'ng-change="ctrl.onSoundChange()"' +
-    'style="width:100%" ' +
-    'ng-options="val for val in sounds">' +
-    '</select>  <table>' +
-    '    <tr>' +
-    '      <td class="control-sound-play">Time Delay: </td>' +
-    '      <td>' +
-    '        <spinner min="1" max="60" live="false" step="1" value="playDelay" name="playDelay"' +
-    '            title="Sets the label font size">' +
-    '        </spinner>' +
-    '        seconds' +
-    '      </td>' +
-    '    </tr>' +
-    '  </table></div>',
+    templateUrl: os.ROOT + 'views/plugin/featureaction/featuresoundactionconfig.html',
     controller: plugin.im.action.feature.ui.SoundConfigCtrl,
     controllerAs: 'ctrl'
   };
