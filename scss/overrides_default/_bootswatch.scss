@@ -1,0 +1,56 @@
+// sass-lint:disable quotes
+$web-font-path: "https://fonts.googleapis.com/css?family=Open+Sans:400,700" !default;
+
+.nav-tabs {
+  .nav-link {
+    background: $gray-100;
+    border-color: $nav-tabs-border-color;
+    margin: 0 .1rem;
+
+    &:hover {
+      background: transparent;
+    }
+  }
+}
+
+.bg-dark {
+  &.navbar {
+    .form-control,
+    .border,
+    .btn {
+      border-color: $dark !important;
+    }
+
+    .btn.active {
+      border-color: $black !important;
+    }
+  }
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+  &:hover {
+    background-color: $dark !important;
+    opacity: .5;
+  }
+}
+
+.progress {
+  height: 1rem;
+
+  .progress-bar {
+    color: $black;
+    font-size: 1rem;
+  }
+}
+
+.c-navtop .c-navtop__bottom .nav-link.active {
+  color: $primary !important;
+}
+
+// Defined so the hover style will override the active style.
+.list-group {
+  &-item:hover {
+    background-color: $list-group-hover-bg;
+  }
+}

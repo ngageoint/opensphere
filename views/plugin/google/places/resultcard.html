@@ -1,9 +1,16 @@
-<div class="coord-result-card pointer" ng-mouseover="resultCtrl.over()" ng-mouseout="resultCtrl.out()" ng-click="resultCtrl.goTo()">
-  <div class="google-places result-card-header" 
-    <span><i class="fa fa-map-marker"></i> {{resultCtrl.getField('name')}}</span>
+<div class="card" ng-mouseover="resultCtrl.over()" ng-mouseout="resultCtrl.out()">
+  <div class="card-header">
+    <i class="fa fa-fw fa-map-marker"></i>
+    {{resultCtrl.getField('name')}}
   </div>
-  <div>
-    <span class="result-type">{{resultCtrl.getField('types').slice(0, 3).join(', ')}}</span>
+  <div class="card-body">
+    <div class="card-subtitle text-muted">{{resultCtrl.getField('types').slice(0, 3).join(', ')}}</div>
+    <div class="card-text">{{resultCtrl.getField('vicinity')}}</div>
+    <div class="text-right">
+      <button type="button" class="btn btn-primary" ng-click="resultCtrl.goTo()" title="View the result on the map">
+        <i class="fa fa-fighter-jet"></i>
+        Go To
+      </button>
+    </div>
   </div>
-  <p>{{resultCtrl.getField('vicinity')}}</p>
 </div>

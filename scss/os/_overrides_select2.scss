@@ -1,0 +1,91 @@
+// Overrides for select2
+.select2-container {
+  // Single select2
+  &.select2-dropdown-open .select2-choice {
+    box-shadow: none;
+  }
+
+  // sass-lint:disable no-extends, placeholder-in-extend
+  .select2-choice {
+    @extend .form-control;
+    background-image: none;
+    height: $input-height;
+
+    .select2-arrow {
+      background-color: $input-bg;
+      background-image: none;
+      border-color: $input-bg;
+    }
+  }
+
+  // Multiple select2
+  &.select2-container-multi {
+    width: 100%;
+
+    // sass-lint:disable no-extends, placeholder-in-extend
+    .select2-choices {
+      @extend .form-control;
+      background-image: none;
+      min-width: 10rem;
+
+      .select2-search-choice {
+        background-color: lighten($body-bg, 5%);
+        background-image: none;
+        color: color-yiq(lighten($body-bg, 5%));
+        margin: 1px 0 1px 5px;
+      }
+
+      // sass-lint:disable no-extends, placeholder-in-extend
+      .select2-search-field {
+        margin-top: .25rem;
+        width: 100% !important;
+
+        input.select2-input {
+          @extend .form-control;
+          background: transparent;
+          border: 0;
+          line-height: $line-height-base;
+          margin: 0;
+          padding: 0;
+          width: 100% !important;
+
+          &::placeholder {
+            color: $input-placeholder-color;
+            // Override Firefox's unusual default opacity; see https://github.com/twbs/bootstrap/pull/11526.
+            opacity: 1;
+          }
+        }
+      }
+    }
+  }
+}
+
+.select2-drop {
+  background: $input-bg;
+  border: $input-border-width solid $input-border-color;
+  color: $input-color;
+  pointer-events: all;
+
+  // Single select2
+  .select2-search input {
+    @extend .form-control;
+    background-image: none;
+  }
+
+  // Multiple select2
+  .select2-results .select2-no-results,
+  .select2-results .select2-searching,
+  .select2-results .select2-ajax-error,
+  .select2-results .select2-selection-limit {
+    background: transparent;
+  }
+}
+
+// form-control sets 'width: auto' in a form-inline, which shrinks the select2. prevent that from happening.
+.form-inline {
+  .select2-container {
+    .select2-choice {
+      width: 100%;
+    }
+  }
+}

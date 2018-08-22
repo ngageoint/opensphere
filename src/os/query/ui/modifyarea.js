@@ -4,6 +4,7 @@ goog.provide('os.query.ui.modifyAreaDirective');
 goog.require('goog.log');
 goog.require('os.ui.query.ui.ModifyAreaCtrl');
 goog.require('os.ui.query.ui.modifyAreaDirective');
+goog.require('os.ui.util.validationMessageDirective');
 
 
 /**

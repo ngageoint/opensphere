@@ -1,0 +1,25 @@
+// Import standard items like buttons, forms, etc that are consistent in all padding themes
+@import 'standard/variables';
+
+// Add additional super compact options we only want in tighter themes
+$list-group-item-padding-y: $compact-y * 2;
+$list-group-item-padding-x: $compact-x * 2;
+
+$grid-gutter-width: 1rem;
+
+$navbar-padding-y: .2rem;
+$navbar-padding-x: .4rem;
+$nav-link-padding-y: 0;
+$nav-link-padding-x: .5rem;
+$nav-divider-margin-y: .25rem;
+
+$card-spacer-y: .5rem;
+$card-spacer-x: .5rem;
+$alert-padding-y: .5rem;
+$alert-padding-x: .5rem;
+
+$jumbotron-padding: 1.5rem;
+
+$form-group-margin-bottom: .25rem;
+
+$table-cell-padding: .25rem;

@@ -1,0 +1,23 @@
+.c-ng-onboarding__popover {
+  max-width: initial;
+  top: inherit;
+  // The highest zindex possible
+  z-index: $zindex-tooltip + 1 !important;
+
+  // Not a real bs class, but it uses bs-popover directiion for everything else. Just doesnt have centered
+  &.bs-popover-centered {
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -51%);
+  }
+}
+
+.c-ng-onboarding__focus {
+  @include transition(none !important);
+  pointer-events: none;
+  z-index: $zindex-popover !important;
+}
+
+.c-ng-onboarding__highlight {
+  box-shadow: 0 0 10px 2px $body-color;
+}

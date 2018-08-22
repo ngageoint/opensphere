@@ -23,7 +23,7 @@ goog.inherits(os.style.TextReader, os.style.AbstractReader);
 os.style.TextReader.prototype.getOrCreateStyle = function(config) {
   var text = /** @type {string|undefined} */ (config['text']);
   var textAlign = /** @type {string|undefined} */ (config['textAlign']) || 'center';
-  var textBaseline = /** @type {string|undefined} */ (config['textBaseline']) || 'bottom';
+  var textBaseline = /** @type {string|undefined} */ (config['textBaseline']) || 'middle';
   var font = /** @type {string|undefined} */ (config['font']) || 'bold 12px Arial';
   var fillColor = /** @type {string|undefined} */ (config['fillColor']) || 'rgba(255,255,255,1)';
   var strokeColor = /** @type {string|undefined} */ (config['strokeColor']) || 'rgba(0,0,0,1)';

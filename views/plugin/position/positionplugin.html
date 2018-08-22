@@ -1,13 +1,12 @@
-<div class="position-window window-content-wrapper">
-  <div class="window-content">
-  <pre class="selectable" style="background-color:#555;color:white;"
-    ng-bind="value"></pre>
-  <label>Select Text, Ctrl+C, Enter</label>
+<div>
+  <div class="bg-secondary u-bg-secondary-text container-fluid d-flex">
+    <pre class="ml-2 mt-3" ng-bind="value"></pre>
   </div>
-  <div class="window-footer">
-    <div class="pull-right">
-      <button class="btn btn-default" ng-click="copyPosition.close()">
-        <i class="fa fa-check blue-icon"></i>
+  <div class="modal-footer flex-row justify-content-between">
+    <label class="my-auto">Select Text, Ctrl+C, Enter</label>
+    <div>
+      <button class="btn btn-primary" ng-click="copyPosition.close()">
+        <i class="fa fa-check"></i>
         OK
       </button>
     </div>

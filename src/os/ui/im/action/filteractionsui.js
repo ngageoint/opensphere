@@ -19,6 +19,7 @@ goog.require('os.ui.window');
  * @param {!angular.JQLite} $element
  * @extends {goog.Disposable}
  * @constructor
+ * @abstract
  * @template T
  * @ngInject
  */
@@ -161,18 +162,11 @@ os.ui.im.action.FilterActionsCtrl.prototype.getExportName = function() {
 /**
  * Edit an action entry. If no entry is provided, a new one will be created.
  * @param {os.im.action.FilterActionEntry<T>=} opt_entry The import action entry.
+ * @abstract
+ * @export
  */
 os.ui.im.action.FilterActionsCtrl.prototype.editEntry = function(opt_entry) {
-  if (this.entryType) {
-    var entry = opt_entry ? /** @type {!os.im.action.FilterActionEntry<T>} */ (opt_entry.clone()) : undefined;
-    os.ui.im.action.launchEditFilterAction(this.entryType, this.getColumns(),
-        os.im.action.filter.onEditComplete.bind(this, opt_entry), entry);
-  }
 };
-goog.exportProperty(
-    os.ui.im.action.FilterActionsCtrl.prototype,
-    'editEntry',
-    os.ui.im.action.FilterActionsCtrl.prototype.editEntry);
 
 
 /**

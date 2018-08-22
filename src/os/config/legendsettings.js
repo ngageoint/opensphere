@@ -6,6 +6,7 @@ goog.require('os.defines');
 goog.require('os.legend');
 goog.require('os.ui.Module');
 goog.require('os.ui.config.SettingPlugin');
+goog.require('os.ui.events.UIEvent');
 goog.require('os.ui.legendDirective');
 
 
@@ -156,7 +157,7 @@ os.config.LegendSettingsCtrl.prototype.disposeInternal = function() {
  */
 os.config.LegendSettingsCtrl.prototype.compilePlugins = function() {
   if (this.scope && this.element && this.compile) {
-    var uiContainer = this.element.find('.plugin-settings-container');
+    var uiContainer = this.element.find('.js-legend-settings__plugin-options');
     uiContainer.children().remove();
 
     var html = '';
@@ -175,6 +176,16 @@ os.config.LegendSettingsCtrl.prototype.compilePlugins = function() {
     uiContainer.html(html);
     this.compile(uiContainer.contents())(this.scope);
   }
+};
+
+
+/**
+ * Open the legend.
+ * @export
+ */
+os.config.LegendSettingsCtrl.prototype.openLegend = function() {
+  var event = new os.ui.events.UIEvent(os.ui.events.UIEventType.TOGGLE_UI, os.legend.ID, true);
+  os.dispatcher.dispatchEvent(event);
 };
 
 

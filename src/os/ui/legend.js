@@ -2,6 +2,7 @@ goog.provide('os.ui.LegendCtrl');
 goog.provide('os.ui.legendDirective');
 
 goog.require('goog.async.Throttle');
+goog.require('goog.async.nextTick');
 goog.require('os.data.SourceManager');
 goog.require('os.defines');
 goog.require('os.legend');
@@ -21,7 +22,7 @@ os.ui.legendDirective = function() {
       'closeFlag': '=',
       'widget': '@'
     },
-    templateUrl: os.ROOT + 'views/legendguide.html',
+    templateUrl: os.ROOT + 'views/legend.html',
     controller: os.ui.LegendCtrl,
     controllerAs: 'legend'
   };
@@ -192,24 +193,19 @@ os.ui.LegendCtrl.prototype.init = function() {
     }
 
     // positioning off the screen will auto correct to the bottom/right
-    var x = /** @type {number} */ (os.settings.get(os.config.LegendSetting.LEFT, 15000));
-    var y = /** @type {number} */ (os.settings.get(os.config.LegendSetting.TOP, 15000));
-
-    this.scope['legendStyle'] = {
-      'position': 'fixed',
-      'left': x,
-      'top': y
-    };
+    var x = /** @type {string} */ (os.settings.get(os.config.LegendSetting.LEFT, '15000px'));
+    var y = /** @type {string} */ (os.settings.get(os.config.LegendSetting.TOP, '15000px'));
+    this.element.css('left', x);
+    this.element.css('top', y);
 
     this.element.draggable({
       'containment': os.ui.LegendCtrl.CONTAINER_SELECTOR,
-      'handle': '.c-legend__dragtarget',
       'start': this.onDragStart_.bind(this),
       'stop': this.onDragStop_.bind(this)
     });
 
     // defer the initial update so the CSS left/top attributes are updated
-    setTimeout(this.onUpdateDelay.bind(this), 0);
+    goog.async.nextTick(this.onUpdateDelay, this);
   }
 };
 
@@ -343,7 +339,7 @@ os.ui.LegendCtrl.prototype.onTilePropertyChange = function(event) {
  */
 os.ui.LegendCtrl.prototype.onDragStart_ = function(event, ui) {
   // iframes kill mouse events if you roll over them while dragging, so we'll nip that in the bud
-  angular.element('iframe').addClass('no-mouse');
+  angular.element('iframe').addClass('u-pointer-events-none');
   this.dragging_ = true;
 };
 
@@ -356,7 +352,7 @@ os.ui.LegendCtrl.prototype.onDragStart_ = function(event, ui) {
  */
 os.ui.LegendCtrl.prototype.onDragStop_ = function(event, ui) {
   // iframes can have mouse events again
-  angular.element('iframe').removeClass('no-mouse');
+  angular.element('iframe').removeClass('u-pointer-events-none');
   this.dragging_ = false;
 
   if (this.element) {

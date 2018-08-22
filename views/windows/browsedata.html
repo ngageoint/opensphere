@@ -1,24 +1,24 @@
-<div class="window-content-wrapper">
-  <div class="window-content">
+<div>
+  <div class="modal-body">
     <div class="bd-header">
-      <div class="pull-left">
-        <div style="display:inline-block" class="search-box">
-          <input class="search" type="text" ng-model="term" ng-change="ctrl.delaySearch()" placeholder="Search"></input>
+      <div class="float-left">
+        <div class="search-box d-inline-block">
+          <input class="search" type="text" ng-model="term" ng-change="ctrl.delaySearch()" placeholder="Search" />
           <span class="input-clear" ng-click="ctrl.clearTerm()" ng-show="term" title="Clear the search term">
             <i class="fa fa-times"></i>
           </span>
         </div>
         <span class="link" ng-if="ctrl.results && ctrl.results.length" ng-click="ctrl.clearAll()">Clear Filters</span>
       </div>
-      <div class="add-data-group pull-right">
-        <button class="btn btn-default" ng-click="ctrl.launchFileImport()" title="Import a local file">
-          <i class="fa fa-plus green-icon"></i>
+      <div class="add-data-group float-right">
+        <button class="btn btn-secondary" ng-click="ctrl.launchFileImport()" title="Import a local file">
+          <i class="fa fa-plus"></i>
           <span>Import File/URL</span>
         </button>
       </div>
     </div>
-    <div class="bd-main" autoheight siblings=".bd-header">
-      <div class="bd-results search-results panel pull-right">
+    <div class="bd-main d-flex" autoheight siblings=".bd-header">
+      <div class="bd-results search-results panel float-right">
         <div class="box box-hover" ng-if="!ctrl.results || !ctrl.results.length">
           <span class="middle">No results. Try adjusting the filters on the left.</span>
         </div>
@@ -29,13 +29,10 @@
           <resultcard result="result"></resultcard>
         </div>
       </div>
-      <slicktree x-data="facetTree" dbl-click-enabled="false" selected="selected" disable-folders="true"
-        disable-selection="true"></slicktree>
+      <slicktree x-data="facetTree" dbl-click-enabled="false" selected="selected" disable-folders="true" disable-selection="true"></slicktree>
     </div>
   </div>
-  <div class="window-footer">
-    <div class="pull-right">
-      <button class="btn btn-default" ng-click="ctrl.close()"><i class="btn-icon fa fa-check"></i> Close</button>
-    </div>
+  <div class="modal-footer">
+    <button class="btn btn-secondary" ng-click="ctrl.close()"><i class="fa fa-check"></i> Close</button>
   </div>
 </div>

@@ -11,7 +11,7 @@ goog.require('os.ui.Module');
 os.ui.nodeIconsDirective = function() {
   return {
     restrict: 'E',
-    template: '<span class="tree-icons"></span>',
+    template: '<span class="js-node-icons d-flex align-text-bottom pr-1 c-node-icons"></span>',
     controller: os.ui.NodeIconsCtrl,
     controllerAs: 'nodeicons'
   };
@@ -106,7 +106,7 @@ os.ui.NodeIconsCtrl.prototype.onPropertyChange_ = function(e) {
  */
 os.ui.NodeIconsCtrl.prototype.updateIcons_ = function() {
   if (this.scope_ && this.element_) {
-    var spanEl = this.element_.find('.tree-icons');
+    var spanEl = this.element_.find('.js-node-icons');
     var iconHtml = /** @type {string} */ (this.scope_['item']['getIcons']()) || os.ui.NodeIconsCtrl.DEFAULT_CONTENT_;
     spanEl.html(iconHtml);
     this.compile_(spanEl.contents())(this.scope_);

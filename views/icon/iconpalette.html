@@ -1,0 +1,5 @@
+<div class="d-flex flex-wrap u-overflow-y-auto">
+  <div ng-repeat="icon in iconSet" title="{{icon.title}}" class="c-icon-picker__large-icon p-1">
+    <button class="btn btn-secondary h-100 w-100" ng-click="palette.pick(icon.path)"><img class="h-100 w-100" ng-src="{{palette.getIconSrc(icon.path)}}" /></button>
+  </div>
+</div>

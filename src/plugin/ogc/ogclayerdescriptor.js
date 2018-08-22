@@ -1021,8 +1021,13 @@ plugin.ogc.OGCLayerDescriptor.prototype.onDescribeComplete_ = function(event) {
  * @protected
  */
 plugin.ogc.OGCLayerDescriptor.prototype.onDescribeError = function() {
-  // feature type could not be loaded, so disable WFS for the layer
-  this.setWfsEnabled(false);
+  if (!this.online.refreshStatus()) {
+    // disable due to offline status
+    this.setActive(false);
+  } else {
+    // feature type could not be loaded, so disable WFS for the layer
+    this.setWfsEnabled(false);
+  }
 
   var msg = this.getFeatureTypeErrorMsg();
   os.alert.AlertManager.getInstance().sendAlert(msg, os.alert.AlertEventSeverity.ERROR);
@@ -1042,6 +1047,10 @@ plugin.ogc.OGCLayerDescriptor.prototype.setDescribeCallback = function(fn) {
  * @return {string}
  */
 plugin.ogc.OGCLayerDescriptor.prototype.getFeatureTypeErrorMsg = function() {
+  if (!this.online.refreshStatus()) {
+    return 'Network is disconnected. ' + this.getWfsName() + ' is unavailable.';
+  }
+
   return 'Failed loading DescribeFeatureType for ' + this.getWfsName() +
       '. Feature requests have been disabled for this layer.';
 };

@@ -106,7 +106,7 @@ goog.exportProperty(os.ui.AreasCtrl.prototype, 'launch', os.ui.AreasCtrl.prototy
  * Opens the area import menu.
  */
 os.ui.AreasCtrl.prototype.openImportMenu = function() {
-  var target = this.element.find('.import-group');
+  var target = this.element.find('.js-import-group');
   var menu = os.ui.menu.areaImport.MENU;
   if (menu && target && target.length) {
     menu.open(undefined, {

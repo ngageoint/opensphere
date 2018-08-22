@@ -9,7 +9,7 @@ goog.require('os.ui.grid.DataGridCtrl');
  */
 os.ui.grid.dataGridDirective = function() {
   return {
-    template: '<div class="data-grid"></div>',
+    template: '<div></div>',
     restrict: 'AE',
     replace: true,
     scope: {

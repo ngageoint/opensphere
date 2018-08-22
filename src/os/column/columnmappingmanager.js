@@ -42,7 +42,7 @@ os.column.ColumnMappingManager = function() {
    * @type {os.storage.AsyncStorage<Object>}
    * @protected
    */
-  this.storage = new os.storage.IDBStorage(os.SHARED_STORE_NAME, os.SHARED_DB_NAME);
+  this.storage = new os.storage.IDBStorage(os.SHARED_STORE_NAME, os.SHARED_DB_NAME, os.SHARED_DB_VERSION);
   this.storage.init().addCallbacks(this.onStorageReady, this.onStorageError, this);
 };
 goog.inherits(os.column.ColumnMappingManager, os.data.CollectionManager);

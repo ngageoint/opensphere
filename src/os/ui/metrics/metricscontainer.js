@@ -24,6 +24,7 @@ goog.require('os.ui.uiSwitchDirective');
 os.ui.metrics.metricsContainerDirective = function() {
   return {
     restrict: 'E',
+    replace: true,
     templateUrl: os.ROOT + 'views/config/metricscontainer.html',
     controller: os.ui.metrics.MetricsContainerCtrl,
     controllerAs: 'setCon'
