@@ -908,14 +908,16 @@ os.ui.FeatureEditCtrl.prototype.loadFromFeature_ = function(feature) {
   var featureColor;
   if (config) {
     if (goog.isArray(config)) {
+      // locate the label config in the array
       var labelsConfig = goog.array.find(config, os.style.isLabelConfig);
-
       if (labelsConfig) {
         this['labels'] = labelsConfig[os.style.StyleField.LABELS];
       }
 
-      // if the feature config is an array, assume the first config is the one we want
+      // if the feature config is an array, assume the first config has the style info we want
       config = config[0];
+    } else if (config[os.style.StyleField.LABELS]) {
+      this['labels'] = config[os.style.StyleField.LABELS];
     }
 
     var size = os.style.getConfigSize(config);
