@@ -1720,6 +1720,7 @@ os.source.Vector.prototype.addFeature = function(feature) {
 
 /**
  * @inheritDoc
+ * @suppress {accessControls}
  */
 os.source.Vector.prototype.addFeatures = function(features) {
   this.clearQueue();
@@ -1732,8 +1733,15 @@ os.source.Vector.prototype.addFeatures = function(features) {
     // remove duplicates and process features before adding them to the source
     this.processFeatures(features);
 
+    // we want OpenLayers to skip its default r-tree load since we are doing a better version
+    var tree = this.featuresRtree_;
+    this.featuresRtree_ = null;
+
     // add to the source
     os.source.Vector.base(this, 'addFeatures', features);
+
+    // restore r-tree
+    this.featuresRtree_ = tree;
   }
 };
 
