@@ -224,6 +224,7 @@ os.im.mapping.RuleMapping.prototype.getStaticValue = function() {
 /**
  * Return the display
  * @return {string}
+ * @export
  */
 os.im.mapping.RuleMapping.prototype.getDisplay = function() {
   return this.staticValue ? this.staticValue : this.field;
