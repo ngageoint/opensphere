@@ -9,7 +9,6 @@ goog.require('os.webgl.AbstractWebGLRenderer');
 goog.require('plugin.cesium');
 goog.require('plugin.cesium.Camera');
 goog.require('plugin.cesium.TileGridTilingScheme');
-goog.require('plugin.cesium.WMSTerrainProvider');
 goog.require('plugin.cesium.interaction');
 goog.require('plugin.cesium.mixin');
 goog.require('plugin.cesium.sync.RootSynchronizer');
@@ -103,8 +102,9 @@ plugin.cesium.CesiumRenderer.prototype.initialize = function() {
           // initialize interactions that have additional support for Cesium
           plugin.cesium.interaction.loadInteractionMixins();
 
-          this.registerTerrainProviderType('cesium', Cesium.CesiumTerrainProvider);
-          this.registerTerrainProviderType('wms', plugin.cesium.WMSTerrainProvider);
+          this.registerTerrainProviderType('cesium', plugin.cesium.createCesiumTerrain);
+          this.registerTerrainProviderType('cesium-ion', plugin.cesium.createWorldTerrain);
+          this.registerTerrainProviderType('wms', plugin.cesium.createWMSTerrain);
 
           this.olCesium_ = new olcs.OLCesium({
             cameraClass: plugin.cesium.Camera,
@@ -402,10 +402,10 @@ plugin.cesium.CesiumRenderer.prototype.showTerrain = function(value) {
 /**
  * Register a new Cesium terrain provider type.
  * @param {string} type The type id.
- * @param {!plugin.cesium.TerrainProviderFn} clazz The terrain provider class.
+ * @param {!plugin.cesium.TerrainProviderFn} factory Factory function to create a terrain provider instance.
  * @protected
  */
-plugin.cesium.CesiumRenderer.prototype.registerTerrainProviderType = function(type, clazz) {
+plugin.cesium.CesiumRenderer.prototype.registerTerrainProviderType = function(type, factory) {
   type = type.toLowerCase();
 
   if (type in this.terrainProviderTypes_) {
@@ -413,7 +413,7 @@ plugin.cesium.CesiumRenderer.prototype.registerTerrainProviderType = function(ty
     return;
   }
 
-  this.terrainProviderTypes_[type] = clazz;
+  this.terrainProviderTypes_[type] = factory;
 };
 
 
@@ -443,8 +443,7 @@ plugin.cesium.CesiumRenderer.prototype.updateTerrainProvider = function() {
       // instruct Cesium to trust terrain servers (controlled by app configuration)
       plugin.cesium.addTrustedServer(terrainUrl);
 
-      // create the terrain provider
-      this.terrainProvider_ = new this.terrainProviderTypes_[terrainType](this.terrainOptions);
+      this.terrainProvider_ = this.terrainProviderTypes_[terrainType](this.terrainOptions);
       this.terrainProvider_.errorEvent.addEventListener(this.onTerrainError_, this);
     } else {
       // report any errors in the configuration
