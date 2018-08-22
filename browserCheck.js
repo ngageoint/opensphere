@@ -111,8 +111,8 @@ function checkCompat() {
  * @return {boolean}
  */
 function checkVersion() {
-  return typeof (platform) != 'undefined' && ((platform.name == 'Chrome' && parseFloat(platform.version) >= 29) ||
-      (platform.name == 'Firefox' && parseFloat(platform.version) >= 28));
+  return typeof (platform) != 'undefined' && ((platform.name == 'Chrome' && parseFloat(platform.version) >= 35) ||
+      (platform.name == 'Firefox' && parseFloat(platform.version) >= 38));
 }
 
 
@@ -133,6 +133,7 @@ function getModernizrValues() {
   return result;
 }
 
+
 /**
  * extracts all info from config
  * @return {string}
@@ -150,6 +151,7 @@ function getConfig() {
   request.send(null);
   return parsed;
 }
+
 
 /**
  * extracts contact info from config and put it in the DOM
@@ -196,9 +198,9 @@ function setContactInfo() {
     setWarn('');
   } else {
     var minSupportInfo = '<strong>Recommended Browsers:</strong>' +
-      '<ul>' +
-      '<li>Google Chrome version 35+</li>' +
-      '<li>Mozilla Firefox version 31+</li>' +
+      '<ul class="u-bullet">' +
+      '<li>Google Chrome version 60+</li>' +
+      '<li>Mozilla Firefox version 57+</li>' +
       '</ul>' +
       '<p>If you do not have one of these browsers installed, contact your local IT department for help.</p>';
 
@@ -209,7 +211,8 @@ function setContactInfo() {
   }
   var browserInfo = document.getElementsByClassName('js-browser-info')[0];
   if (browserInfo && typeof (platform) != 'undefined') {
-    browserInfo.innerHTML = platform.name + ' Version ' + platform.version + ' detected';
+    browserInfo.innerHTML = '<ul><li class="' + (checkVersion() ? 'js-found' : 'js-missing' ) + '">' +
+        platform.name + ' Version ' + platform.version + ' detected</li></ul>';
   }
 }
 
