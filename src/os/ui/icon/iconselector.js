@@ -68,8 +68,11 @@ os.ui.icon.IconSelectorCtrl = function($scope, $element) {
   this.scope_['activeTab'] = this.scope_['tabs'].length > 0 ? this.scope_['tabs'][0]['name'] : '';
 
   for (var i = 0; i < this.scope_['tabs'].length; i++) { // wrap each icon selector in tab structure
-    os.ui.list.add(os.ui.icon.ICON_SELECTORS, '<div class="d-flex flex-fill" ng-if="activeTab == \'' +
-        this.scope_['tabs'][i]['name'] + '\'">' + this.scope_['tabs'][i]['html'] + '</div>', 201);
+    var markup = '<div class="d-flex flex-fill" ng-if="activeTab == \'' +
+        this.scope_['tabs'][i]['name'] + '\'">' + this.scope_['tabs'][i]['html'] + '</div>';
+    if (!os.ui.list.exists(os.ui.icon.ICON_SELECTORS, markup)) {
+      os.ui.list.add(os.ui.icon.ICON_SELECTORS, markup, 201);
+    }
   }
 
   this.scope_.$emit(os.ui.WindowEventType.READY);
