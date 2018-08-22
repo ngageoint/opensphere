@@ -15,6 +15,7 @@ goog.require('os.ui.slick.column');
 os.ui.column.columnManagerDirective = function() {
   return {
     restrict: 'E',
+    replace: true,
     scope: {
       'columns': '=',
       'acceptCallback': '='
@@ -180,7 +181,6 @@ os.ui.column.ColumnManagerCtrl.prototype.destroy_ = function() {
  * @param {boolean} enableListen
  */
 os.ui.column.ColumnManagerCtrl.prototype.listenForKeys = function(enableListen) {
-  this['highlight'] = enableListen;
   if (enableListen) {
     this.keyHandler_.listen(goog.events.KeyHandler.EventType.KEY, this.handleKeyEvent_, false, this);
   } else {

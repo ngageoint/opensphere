@@ -101,16 +101,19 @@ const sharedResources = [
   {
     source: 'vendor/jquery-ui',
     target: 'vendor/jquery-ui',
-    css: ['darkness/jquery-ui-1.11.0.min.css'],
+    css: ['lightness/jquery-ui-1.11.0.min.css'],
     scripts: ['jquery-ui-1.11.4.min.js'],
-    files: ['darkness/images']
+    files: ['lightness/images']
   },
   {
-    source: 'vendor/bootstrap',
+    source: resolver.resolveModulePath('bootstrap/dist', __dirname),
     target: 'vendor/bootstrap',
-    css: ['slate/bootstrap.min.css'],
-    scripts: ['bootstrap.min.js'],
-    files: ['img']
+    scripts: ['js/bootstrap.bundle.min.js']
+  },
+  {
+    source: resolver.resolveModulePath('opensphere/vendor/bootstrap2', __dirname),
+    target: 'vendor/bootstrap2',
+    scripts: ['typeahead.js']
   },
   {
     source: resolver.resolveModulePath('select2', __dirname),
@@ -252,6 +255,11 @@ const sharedResources = [
     source: 'src/electron',
     target: 'electron',
     scripts: ['electronvendorpost.js']
+  },
+  {
+    source: resolver.resolveModulePath('opensphere/vendor/fonts/typeface-open-sans', __dirname),
+    target: 'vendor/fonts/typeface-open-sans',
+    files: ['files', 'index.css']
   }
 ];
 
@@ -346,11 +354,6 @@ const oldResources = [
     scripts: ['modernizr.js']
   },
   {
-    source: 'vendor/bootstrap',
-    target: 'vendor/bootstrap',
-    css: ['slate/bootstrap.min.css']
-  },
-  {
     source: resolver.resolveModulePath('font-awesome', __dirname),
     target: 'vendor/font-awesome',
     css: ['css/font-awesome.min.css'],
@@ -360,9 +363,10 @@ const oldResources = [
 
 const addLayerResources = [
   {
-    source: 'vendor/bootstrap',
+    source: resolver.resolveModulePath('bootstrap/dist', __dirname),
     target: 'vendor/bootstrap',
-    css: ['slate/bootstrap.min.css']
+    scripts: ['js/bootstrap.min.js'],
+    css: ['css/bootstrap.min.css']
   },
   {
     source: resolver.resolveModulePath('jquery/dist', __dirname),
@@ -401,8 +405,8 @@ module.exports = {
       resources: addLayerResources
     }
   ],
-  debugCss: path.join(buildDir, 'combined.css'),
-  compiledCss: path.join(version, 'styles', 'opensphere.min.css'),
+  debugCss: path.join(buildDir, 'themes/default.combined.css'),
+  compiledCss: path.join(version, 'styles', 'themes/default.min.css'),
   compiledJs: path.join(version, 'opensphere.min.js'),
   sharedResources: sharedResources
 };

@@ -1,0 +1,19 @@
+.c-navtop {
+  font-family: sans-serif;
+
+  .c-search-box {
+    width: 20rem;
+  }
+}
+
+@media (max-width: map-get($grid-breakpoints, xl)) {
+  .c-navtop .c-search-box {
+    width: 17rem;
+  }
+}
+
+@media (max-width: map-get($grid-breakpoints, lg)) {
+  .c-navtop .c-search-box {
+    width: inherit;
+  }
+}

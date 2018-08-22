@@ -16,6 +16,7 @@ os.ui.popover.popoverDirective = function() {
     replace: true,
     scope: {
       'title': '=',
+      'popoverclass': '=',
       'content': '=',
       'pos': '=',
       'icon': '='
@@ -55,8 +56,7 @@ os.ui.popover.PopoverCtrl = function($scope, $element) {
 
   this.scope_['popoverElement'] = null;
 
-  this.element_.on('mouseenter', this.showPopover_.bind(this)).on('mouseleave',
-      this.hidePopover_.bind(this));
+  this.element_.on('mouseenter', this.showPopover_.bind(this)).on('mouseleave', this.hidePopover_.bind(this));
 
   this.createPopoverElement();
 
@@ -98,6 +98,7 @@ os.ui.popover.PopoverCtrl.prototype.showPopover_ = function(event) {
     this.scope_['title'] = goog.string.truncate(this.scope_['title'], 25);
   }
 
+  var popclass = this.scope_['popoverclass'] ? this.scope_['popoverclass'] : '';
   if (goog.dom.contains(/** @type {Node} */ (event.target), this.scope_['popoverElement'][0])) {
     /** @type {!jQuery} */ (this.scope_['popoverElement']).popover({
       'html': true,
@@ -105,7 +106,12 @@ os.ui.popover.PopoverCtrl.prototype.showPopover_ = function(event) {
       'trigger': 'manual',
       'title': this.scope_['title'],
       'content': this.scope_['content'],
-      'container': false
+      'template': '<div class="popover ' + popclass + '" role="tooltip">' +
+          '<div class="arrow"></div>' +
+          '<h3 class="popover-header"></h3>' +
+          '<div class="popover-body"></div></div>',
+      'boundary': 'window',
+      'container': 'body'
     }).popover('show').on('hidden', function(e) {
       e.stopPropagation();
     });
@@ -123,6 +129,6 @@ os.ui.popover.PopoverCtrl.prototype.showPopover_ = function(event) {
 os.ui.popover.PopoverCtrl.prototype.hidePopover_ = function(event) {
   event.stopPropagation();
   this.element_.find('popover').children().off('mouseleave');
-  this.element_.empty();
+  this.scope_['popoverElement'].popover('hide');
   this.createPopoverElement();
 };

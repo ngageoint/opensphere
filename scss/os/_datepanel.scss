@@ -1,0 +1,17 @@
+.c-date-panel {
+  .form-control {
+    max-width: 7rem;
+  }
+
+  .c-date-panel__extended {
+    background: lighten($body-bg, 5%) !important;
+    border: 1px solid $border-color;
+    border-top: 0;
+    color: $body-color;
+    left: 0;
+    min-width: 35rem;
+    position: absolute;
+    right: 0;
+    z-index: 1;
+  }
+}

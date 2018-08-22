@@ -4,6 +4,7 @@ goog.require('goog.Disposable');
 goog.require('os.ui.events.UIEvent');
 goog.require('os.ui.events.UIEventType');
 goog.require('os.ui.menu.windows');
+goog.require('os.ui.windowSelector');
 
 
 /**
@@ -65,7 +66,7 @@ os.ui.menu.MenuButtonCtrl = function($scope, $element) {
    * @type {string}
    * @protected
    */
-  this.menuPosition = 'left top+4';
+  this.menuPosition = 'left top+3';
 
   $scope.$on('$destroy', this.dispose.bind(this));
 };
@@ -88,14 +89,27 @@ os.ui.menu.MenuButtonCtrl.prototype.disposeInternal = function() {
  */
 os.ui.menu.MenuButtonCtrl.prototype.openMenu = function() {
   if (this.menu) {
-    this.scope['menu'] = true;
-    os.dispatcher.listenOnce(os.ui.GlobalMenuEventType.MENU_CLOSE, this.onMenuClose, false, this);
-    this.menu.open(undefined, {
-      my: this.menuPosition,
-      at: this.btnPosition,
-      of: this.element || '#win-container'
-    });
+    // To be consistent with bs4, if the menu is open and you click it again, close the menu
+    if (this.scope['menu'] ||
+        this.element.hasClass('active') ||
+        this.element.hasClass('active-remove') ||
+        this.element.hasClass('active-remove-active')) {
+      this.scope['menu'] = false;
+      this.element.blur();
+      this.menu.close();
+    } else {
+      this.scope['menu'] = true;
+      os.dispatcher.listenOnce(os.ui.GlobalMenuEventType.MENU_CLOSE, this.onMenuClose, false, this);
+      this.menu.open(undefined, {
+        my: this.menuPosition,
+        at: this.btnPosition,
+        of: this.element || os.ui.windowSelector.CONTAINER,
+        within: $(window)
+      });
+    }
   }
+
+  os.ui.apply(this.scope);
 };
 goog.exportProperty(
     os.ui.menu.MenuButtonCtrl.prototype,
@@ -109,6 +123,7 @@ goog.exportProperty(
  */
 os.ui.menu.MenuButtonCtrl.prototype.onMenuClose = function() {
   this.scope['menu'] = false;
+  this.element.blur();
 };
 
 
@@ -136,7 +151,7 @@ os.ui.menu.MenuButtonCtrl.prototype.isWindowActive = function(opt_flag) {
   var flag = opt_flag || this.flag;
 
   if (flag) {
-    var s = angular.element('#win-container').scope();
+    var s = angular.element(os.ui.windowSelector.CONTAINER).scope();
     return os.ui.window.exists(flag) || (s['mainCtrl'] && s['mainCtrl'][flag]);
   }
 

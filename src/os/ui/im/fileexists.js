@@ -3,6 +3,7 @@ goog.provide('os.ui.im.FileExistsCtrl');
 goog.provide('os.ui.im.fileExistsDirective');
 
 goog.require('os.ui.Module');
+goog.require('os.ui.window.confirmDirective');
 
 
 /**
@@ -60,28 +61,26 @@ os.ui.im.FileExistsCtrl = function($scope) {
  * @param {function(os.ui.im.FileExistsChoice)} confirm
  */
 os.ui.im.launchFileExists = function(file, confirm) {
+  var confirmOptions = /** @type {osx.window.ConfirmOptions} */ ({
+    confirm: confirm,
+    confirmValue: os.ui.im.FileExistsChoice.SAVE_NEW,
+    prompt: '<fileexists></fileexists>',
+    windowOptions: {
+      'label': 'File Exists!',
+      'icon': 'fa fa-exclamation-triangle',
+      'x': 'center',
+      'y': 'center',
+      'width': 400,
+      'height': 'auto',
+      'modal': true,
+      'show-close': true,
+      'no-scroll': true
+    }
+  });
+
   var scopeOptions = {
-    'confirmCallback': confirm,
-    'confirmValue': os.ui.im.FileExistsChoice.SAVE_NEW,
-    'yesText': 'OK',
-    'yesIcon': 'fa fa-check lt-blue-icon',
-    'noText': 'Cancel',
-    'noIcon': 'fa fa-ban red-icon',
     'fileName': file.getFileName()
   };
 
-  var windowOptions = {
-    'label': 'File Exists!',
-    'icon': 'fa fa-exclamation-triangle orange-icon',
-    'x': 'center',
-    'y': 'center',
-    'width': 400,
-    'height': 'auto',
-    'modal': 'true',
-    'show-close': 'true',
-    'no-scroll': 'true'
-  };
-
-  var template = '<confirm><fileexists></fileexists></confirm>';
-  os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+  os.ui.window.launchConfirm(confirmOptions, scopeOptions);
 };

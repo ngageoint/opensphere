@@ -1,0 +1,145 @@
+// jQuery UI overrides
+
+// UI Widgets
+.ui-widget {
+  font-family: $font-family-sans-serif;
+  font-size: $font-size-base;
+
+  // Dont let jquery resize our bootstrap close button
+  button.close {
+    font-size: $close-font-size;
+  }
+
+  input {
+    font-size: $font-size-base;
+  }
+}
+
+.ui-widget-content {
+  background: $body-bg;
+  border: $border-width solid $border-color;
+  color: $body-color;
+
+  .ui-spinner-input {
+    background: $input-bg;
+  }
+
+  a {
+    color: $body-color;
+  }
+}
+
+// Sliders
+.ui-slider {
+  @include border-radius(0);
+  height: .4em;
+}
+
+.slider-container {
+  background: $input-bg;
+  border-color: $input-border-color;
+}
+
+.ui-slider-handle {
+  @include border-radius(0);
+  border: 1px solid #444 !important;
+  height: .8em !important;
+  margin-left: -.2em !important;
+  width: .4em !important;
+}
+
+// Spinners
+.ui-spinner {
+  width: 100%;
+}
+
+.ui-spinner-input {
+  border: 0;
+  color: inherit;
+  margin: 0;
+  padding: $input-padding-y $input-padding-x;
+  vertical-align: middle;
+  width: 100%;
+}
+
+.ui-spinner .ui-icon {
+  background-image: none;
+  margin-top: 0;
+  text-indent: 0;
+  top: .5em;
+}
+
+// NOTE: we want the ui-menu to be exactly like the dropdown menu. To do this override the jquery defaults, then
+// extend the bootstrap 4 equivalent classes. Ignore all the sass-lint rules because we want it to be exactly this way.
+// sass-lint:disable extends-before-declarations, extends-before-mixins, no-extends, placeholder-in-extend
+.ui-menu.ui-widget,
+.ui-menu {
+  // This part ignores the default jquery styles
+  background: $dropdown-bg;
+  border: $dropdown-border-width solid $dropdown-border-color;
+  position: fixed !important;
+  z-index: $zindex-fixed + 1;
+
+  // This gets the same styles defined for dropdown-menu. Used for when themes specify after the fact
+  @extend .dropdown-menu;
+
+  .ui-menu-item {
+    // This part ignores the default jquery styles
+    list-style-image: none;
+    margin: inherit;
+    padding: $dropdown-item-padding-y $dropdown-item-padding-x;
+
+    // This gets the same styles defined for dropdown-item. Used for when themes specify after the fact
+    @extend .dropdown-item;
+
+    i.fa {
+      margin-right: ($spacer * .25);
+    }
+  }
+
+  .ui-menu-divider {
+    // This part ignores the default jquery styles
+    @include nav-divider($dropdown-divider-bg);
+
+    // This gets the same styles defined for dropdown-divider. Used for when themes specify after the fact
+    @extend .dropdown-divider;
+  }
+
+  .dropdown-item {
+    cursor: pointer;
+  }
+
+  .dropdown-item.ui-state-focus {
+    // This part ignores the default jquery styles
+    @include gradient-bg($dropdown-link-hover-bg);
+    background: $dropdown-link-hover-bg;
+    border: 0;
+    color: $dropdown-link-hover-color;
+    font-weight: inherit;
+    text-decoration: none;
+
+    // This gets the same styles defined for dropdown-item:focus. Used for when themes specify after the fact
+    @extend .dropdown-item:focus;
+  }
+
+  // This is a helper to disallow jquery menu make a group header thats empty a divider
+  .u-dropdown-header__empty {
+    border: 0;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+// This avoids these items appearing to be disabled
+.ui-widget-content .ui-priority-secondary,
+.ui-widget-content .ui-priority-primary {
+  font-weight: normal;
+  opacity: 1;
+}
+
+.ui-state-active,
+.ui-widget-content .ui-state-active,
+.ui-widget-header .ui-state-active {
+  @include gradient-bg($dropdown-link-hover-bg);
+  background: none;
+}

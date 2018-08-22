@@ -51,7 +51,7 @@ os.ui.file.FileXTHandler.prototype.process = function(data, type, sender, time) 
 
   if (type === os.ui.file.FileXTHandler.TYPE) {
     if (goog.string.startsWith(url, os.file.FileScheme.LOCAL + '://')) { // local file
-      var fs = new os.file.FileStorage(os.SHARED_FILE_DB_NAME); // read into memory
+      var fs = new os.file.FileStorage(os.SHARED_FILE_DB_NAME, os.SHARED_DB_VERSION); // read into memory
       fs.getFile(url).addCallbacks(this.onFileReady_, this.onFileError_, this); // local file handler??
     } else {
       var importEvent = new os.ui.im.ImportEvent(os.ui.im.ImportEventType.URL, url);
@@ -67,7 +67,7 @@ os.ui.file.FileXTHandler.prototype.process = function(data, type, sender, time) 
  * @private
  */
 os.ui.file.FileXTHandler.prototype.onFileReady_ = function(file) {
-  var fs = new os.file.FileStorage(os.SHARED_FILE_DB_NAME);
+  var fs = new os.file.FileStorage(os.SHARED_FILE_DB_NAME, os.SHARED_DB_VERSION);
   fs.deleteFile(file); // delete indexdb version
   var importEvent = new os.ui.im.ImportEvent(os.ui.im.ImportEventType.FILE, file);
   os.dispatcher.dispatchEvent(importEvent);

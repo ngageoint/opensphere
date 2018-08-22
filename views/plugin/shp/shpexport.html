@@ -1,12 +1,10 @@
-<div class="shp-export" ng-form="shpExportForm">
-  <table style="width:100%">
-    <tr>
-      <td class="control-group inline">
-        <label class="checkbox" title="Selecting this will export features as ellipses, when possible.">
-          <input type="checkbox" name="exportEllipses" ng-model="exportEllipses">
-          Export Ellipses
-        </label>
-      </td>
-    </tr>
-  </table>
-</div>
+<ng-form name="shpExportForm">
+  <div class="form-group">
+    <div class="form-check mx-1" title="Select to export features as ellipses, when possible.">
+      <label class="form-check-label">
+      <input class="form-check-input" type="checkbox" name="exportEllipses" ng-model="exportEllipses">
+        Export Ellipses
+      </label>
+    </div>
+  </div>
+</ng-form>

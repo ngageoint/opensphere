@@ -70,8 +70,8 @@ os.ui.alert.AlertBadgeCtrl = function($scope) {
  * @enum {string}
  */
 os.ui.alert.AlertBadgeCtrl.CLASSES = {
-  'Error': 'alert-badge-error',
-  'Warning': 'alert-badge-warning'
+  'Error': 'badge-danger',
+  'Warning': 'badge-warning'
 };
 
 
@@ -102,7 +102,7 @@ os.ui.alert.AlertBadgeCtrl.prototype.reset = function() {
  * @return {string}
  */
 os.ui.alert.AlertBadgeCtrl.prototype.getClass = function() {
-  return 'alert-badge ' + (os.ui.alert.AlertBadgeCtrl.CLASSES[this['highestAlert']] || '');
+  return os.ui.alert.AlertBadgeCtrl.CLASSES[this['highestAlert']] || 'badge-light';
 };
 goog.exportProperty(
     os.ui.alert.AlertBadgeCtrl.prototype,

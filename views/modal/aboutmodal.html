@@ -1,32 +1,42 @@
-<div class="modal modal-half hide fade" id="aboutModal">
-  <div class="modal-header">
-    <button type="button" class="close btn" data-dismiss="modal"><i class="fa fa-times"></i></button>
-    <h2>About</h2>
-  </div>
-  <div class="modal-body selectable" style="max-height:560px;">
-    <img style="max-width:80%;max-height:280px;margin-left:50px;" ng-src="{{path + aboutModalCtrl.logoPath}}"></img>
-    <p>{{aboutModalCtrl.application}} version: {{version}} {{aboutModalCtrl.userAgent}}</p>
-    <div ng-if="aboutModalCtrl.vendors.length || aboutModalCtrl.appVendors.length">
-      <h3>Powered By:</h3>
-      <div class="vendor-attributions">
-        <ul class="unstyled">
-          <li class="vendor-attribution" ng-repeat="vendor in aboutModalCtrl.appVendors">
-            <img class="vendor-logo" ng-src="{{path + vendor.logoPath}}"></img>
-            <div class="centered">
-              {{vendor.name}}
+<div id="aboutModal" class="modal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">About</h2>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <img class="mw-100" ng-src="{{path + aboutModalCtrl.logoPath}}">
+        <p>{{aboutModalCtrl.application}} version: {{version}} {{aboutModalCtrl.userAgent}}</p>
+        <div ng-if="aboutModalCtrl.vendors.length || aboutModalCtrl.appVendors.length">
+          <h3>Powered By:</h3>
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-2 d-flex align-items-end" ng-repeat="vendor in aboutModalCtrl.appVendors">
+                <div class="text-center">
+                  <img class="img-fluid text-center" ng-src="{{path + vendor.logoPath}}">
+                  <div class="text-center">
+                    {{vendor.name}}
+                  </div>
+                </div>
+              </div>
+              <div class="col-2 d-flex align-items-end" ng-repeat="vendor in aboutModalCtrl.vendors">
+                <div class="text-center">
+                  <img class="img-fluid text-center" ng-src="{{uiPath + vendor.logoPath}}">
+                  <div class="text-center">
+                    {{vendor.name}}
+                  </div>
+                </div>
+              </div>
             </div>
-          </li>
-          <li class="vendor-attribution" ng-repeat="vendor in aboutModalCtrl.vendors">
-            <img class="vendor-logo" ng-src="{{uiPath + vendor.logoPath}}"></img>
-            <div class="centered">
-              {{vendor.name}}
-            </div>
-          </li>
-        </ul>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
     </div>
-  </div>
-  <div class="modal-footer">
-    <button class="btn btn-default" data-dismiss="modal">Close</button>
   </div>
 </div>

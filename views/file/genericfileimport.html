@@ -1,0 +1,43 @@
+<div class="flex-fill w-100 d-flex flex-column">
+  <div class="modal-body container flex-fill">
+    <form class="container-fluid" name="importForm" novalidate>
+      <div class="form-group row">
+        <label class="col-3 col-form-label text-right">Layer Title</label>
+        <div class="col">
+          <input class="form-control" type="text" name="title" ng-model="config.title" ng-required="true" ng-maxlength="500" />
+          <validationmessage target="importForm.title"></validationmessage>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-3 col-form-label text-right">Description</label>
+        <div class="col">
+          <input class="form-control" type="text" name="desc" ng-model="config.description" ng-maxlength="2000" placeholder="Add a custom description"/>
+          <validationmessage target="importForm.desc"></validationmessage>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-3 col-form-label text-right">Tags</label>
+        <div class="col">
+          <input class="form-control" type="text" name="tags" ng-model="config.tags" ng-maxlength="2000" placeholder="Tags organize layers: e.g. states, population"/>
+          <validationmessage target="importForm.tags"></validationmessage>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-3 col-form-label text-right">Color</label>
+        <div class="col">
+          <colorpicker name="color" color="config.color"></colorpicker>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer d-flex">
+    <button class="btn btn-primary" ng-click="ctrl.accept()" ng-disabled="importForm.$invalid" title="Import the file">
+      <i class="fa fa-check"></i>
+      OK
+    </button>
+    <button class="btn btn-secondary" ng-click="ctrl.cancel()" title="Cancel file import">
+      <i class="fa fa-ban"></i>
+      Cancel
+    </button>
+  </div>
+</div>

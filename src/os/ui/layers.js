@@ -32,6 +32,7 @@ goog.require('os.ui.menu.windows');
 goog.require('os.ui.slick.AbstractGroupByTreeSearchCtrl');
 goog.require('os.ui.uiSwitchDirective');
 goog.require('os.ui.util.autoHeightDirective');
+goog.require('os.ui.windowSelector');
 goog.require('plugin.places.ui.placesDirective');
 
 
@@ -203,7 +204,7 @@ goog.exportProperty(os.ui.LayersCtrl.prototype, 'getUi', os.ui.LayersCtrl.protot
  * @return {boolean}
  */
 os.ui.LayersCtrl.prototype.isWindowActive = function(flag) {
-  var s = angular.element('#win-container').scope();
+  var s = angular.element(os.ui.windowSelector.CONTAINER).scope();
   var result = s['mainCtrl'][flag];
 
   if (result) {

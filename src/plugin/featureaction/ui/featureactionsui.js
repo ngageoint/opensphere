@@ -9,7 +9,6 @@ goog.require('plugin.im.action.feature');
 goog.require('plugin.im.action.feature.node.menu');
 
 
-
 /**
  * The featureactions directive
  * @return {angular.Directive}
@@ -123,13 +122,10 @@ plugin.im.action.feature.ui.FeatureActionsCtrl.prototype.getExportName = functio
 
 /**
  * @inheritDoc
+ * @export
  */
 plugin.im.action.feature.ui.FeatureActionsCtrl.prototype.editEntry = function(opt_entry) {
   if (this.entryType) {
     plugin.im.action.feature.editEntry(this.entryType, opt_entry);
   }
 };
-goog.exportProperty(
-    plugin.im.action.feature.ui.FeatureActionsCtrl.prototype,
-    'editEntry',
-    plugin.im.action.feature.ui.FeatureActionsCtrl.prototype.editEntry);

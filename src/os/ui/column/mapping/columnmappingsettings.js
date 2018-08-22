@@ -174,16 +174,17 @@ os.ui.column.mapping.ColumnMappingSettingsCtrl.prototype.export = function() {
 
   var scopeOptions = {
     'mappings': items,
-    'selectedMappings': selectedItems
+    'selectedMappings': selectedItems,
+    'yesButtonClass': 'btn-danger'
   };
 
   var windowOptions = {
     'label': 'Export Column Associations',
-    'icon': 'fa fa-download color-yellow',
+    'icon': 'fa fa-download',
     'x': 'center',
     'y': 'center',
-    'width': 360,
-    'height': 230,
+    'width': 400,
+    'height': 'auto',
     'show-close': 'true',
     'modal': 'true'
   };

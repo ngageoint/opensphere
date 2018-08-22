@@ -66,7 +66,7 @@ os.ui.query.AreaManager = function() {
    * @type {os.storage.AsyncStorage<Object>}
    * @protected
    */
-  this.storage = new os.storage.IDBStorage(os.SHARED_STORE_NAME, os.SHARED_DB_NAME);
+  this.storage = new os.storage.IDBStorage(os.SHARED_STORE_NAME, os.SHARED_DB_NAME, os.SHARED_DB_VERSION);
   this.storage.init().addCallbacks(this.onStorageReady, this.onStorageError, this);
 };
 goog.inherits(os.ui.query.AreaManager, os.data.CollectionManager);
@@ -795,7 +795,7 @@ os.ui.query.AreaManager.save = function(feature, opt_columns) {
     'x': 'center',
     'y': 'center',
     'width': 400,
-    'height': columns ? 245 : 225,
+    'height': 'auto',
     'show-close': true,
     'modal': true
   };

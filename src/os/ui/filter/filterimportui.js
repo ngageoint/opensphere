@@ -31,7 +31,7 @@ os.ui.filter.FilterImportUI.prototype.launchUI = function(file, opt_config) {
 
   var windowOptions = {
     'label': this.label,
-    'icon': 'fa fa-sign-in color-import',
+    'icon': 'fa fa-sign-in',
     'x': 'center',
     'y': 'center',
     'width': '700',

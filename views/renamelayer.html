@@ -1,20 +1,17 @@
-<div class="window-content-wrapper">
-  <div class="window-content">
+<div class="d-flex flex-column flex-grow">
+  <div class="modal-body">
     <div class="c-rename">
       <form name="renameForm" class="form-compact" ng-submit="rename.save()">
         <input type="text" name="renameInput" ng-model="rename.layerTitle" class="input-xlarge" autocomplete="off" required novalidate autofocus />
       </form>
     </div>
   </div>
-  <div class="window-footer">
-    <div class="pull-right">
-      <button class="btn btn-default" ng-click="rename.save()" ng-disabled="renameForm.$invalid">
-        <i class="fa fa-check lt-blue-icon"></i> OK
-      </button>
-      <button class="btn btn-default" ng-click="rename.close()">
-        <i class="fa fa-ban red-icon"></i>
-        Cancel
-      </button>
-    </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" ng-click="rename.save()" ng-disabled="renameForm.$invalid">
+      <i class="fa fa-check"></i> OK
+    </button>
+    <button class="btn btn-secondary" ng-click="rename.close()">
+      <i class="fa fa-ban"></i> Cancel
+    </button>
   </div>
 </div>

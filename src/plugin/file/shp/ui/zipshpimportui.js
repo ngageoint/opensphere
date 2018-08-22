@@ -150,7 +150,7 @@ plugin.file.shp.ui.ZipSHPImportUI.prototype.launchUIInternal_ = function() {
     };
     var windowOptions = {
       'label': 'SHP Import',
-      'icon': 'fa fa-sign-in lt-blue-icon',
+      'icon': 'fa fa-sign-in',
       'x': 'center',
       'y': 'center',
       'width': '850',
@@ -163,7 +163,7 @@ plugin.file.shp.ui.ZipSHPImportUI.prototype.launchUIInternal_ = function() {
       'show-close': 'true',
       'no-scroll': 'true'
     };
-    var template = '<shpimport resize-with=".window"></shpimport>';
+    var template = '<shpimport resize-with="' + os.ui.windowSelector.WINDOW + '"></shpimport>';
     os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
   } else {
     var msg = 'Zip file does not contain both SHP and DBF files!';

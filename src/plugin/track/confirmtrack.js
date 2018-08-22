@@ -96,9 +96,11 @@ plugin.track.launchConfirmTrack = function(confirm, cancel) {
     'confirmCallback': confirm,
     'cancelCallback': cancel,
     'yesText': 'OK',
-    'yesIcon': 'fa fa-check lt-blue-icon',
+    'yesIcon': 'fa fa-check',
+    'yesButtonClass': 'btn-primary',
     'noText': 'Cancel',
-    'noIcon': 'fa fa-ban red-icon'
+    'noIcon': 'fa fa-ban',
+    'noButtonClass': 'btn-secondary'
   };
 
   var windowOptions = {

@@ -11,11 +11,11 @@ os.ui.filter.ui.expressionNodeUIDirective = function() {
   return {
     restrict: 'AE',
     replace: true,
-    template: '<span class="glyphs pull-right slick-node-ui">' +
+    template: '<span>' +
         '<span ng-click="nodeUi.edit()">' +
-        '<i class="fa fa-pencil fa-fw glyph" title="Edit the expression"></i></span>' +
+        '<i class="fa fa-pencil fa-fw c-glyph" title="Edit the expression"></i></span>' +
         '<span ng-click="nodeUi.remove()">' +
-        '<i class="fa fa-times fa-fw glyph glyph-remove" title="Remove the expression"></i></span>' +
+        '<i class="fa fa-times fa-fw text-danger c-glyph" title="Remove the expression"></i></span>' +
         '</span>',
     controller: os.ui.filter.ui.ExpressionNodeUI,
     controllerAs: 'nodeUi'
@@ -48,25 +48,19 @@ os.ui.filter.ui.ExpressionNodeUI = function($scope, $element) {
 
 /**
  * Removes the expression
+ * @export
  */
 os.ui.filter.ui.ExpressionNodeUI.prototype.remove = function() {
   var node = /** @type {os.ui.filter.ui.ExpressionNode} */ (this.scope_['item']);
   this.scope_.$emit('filterbuilder.remove', node);
 };
-goog.exportProperty(
-    os.ui.filter.ui.ExpressionNodeUI.prototype,
-    'remove',
-    os.ui.filter.ui.ExpressionNodeUI.prototype.remove);
 
 
 /**
  * Edits the expression
+ * @export
  */
 os.ui.filter.ui.ExpressionNodeUI.prototype.edit = function() {
   var node = /** @type {os.ui.filter.ui.ExpressionNode} */ (this.scope_['item']);
   this.scope_.$emit('advancedfilterbuilder.editExpr', node);
 };
-goog.exportProperty(
-    os.ui.filter.ui.ExpressionNodeUI.prototype,
-    'edit',
-    os.ui.filter.ui.ExpressionNodeUI.prototype.edit);

@@ -1,5 +1,6 @@
 goog.provide('os.ui.file.ImportDialogCtrl');
 goog.provide('os.ui.file.importDialogDirective');
+
 goog.require('goog.events.EventType');
 goog.require('goog.fs.FileReader');
 goog.require('goog.log');
@@ -13,6 +14,7 @@ goog.require('os.net.LocalFileHandler');
 goog.require('os.ui');
 goog.require('os.ui.Module');
 goog.require('os.ui.popover.popoverDirective');
+goog.require('os.ui.util.validationMessageDirective');
 goog.require('os.ui.window');
 
 
@@ -82,6 +84,12 @@ os.ui.file.ImportDialogCtrl = function($scope, $element) {
   this['fileSupported'] = /** @type {boolean} */ ($scope['fileSupported']) || false;
 
   /**
+   * If local files are supported
+   * @type {boolean}
+   */
+  this['hideCancel'] = /** @type {boolean} */ ($scope['hideCancel']) || false;
+
+  /**
    * @type {boolean}
    */
   this['fileChosen'] = false;
@@ -98,14 +106,15 @@ os.ui.file.ImportDialogCtrl = function($scope, $element) {
   this.fileInputEl_ = goog.dom.createDom(goog.dom.TagName.INPUT, {
     'type': 'file',
     'name': 'file',
-    'class': 'input-hidden'
+    'class': 'd-none'
   });
-  goog.dom.appendChild(goog.dom.getElement('win-container'), this.fileInputEl_);
+  goog.dom.appendChild(goog.dom.getElement(os.ui.windowSelector.CONTAINER.substring(1)), this.fileInputEl_);
   goog.events.listen(this.fileInputEl_, goog.events.EventType.CHANGE, this.onFileChange_, false, this);
 
   // bring focus to the url input
   this.element_.find('input[name="url"]').focus();
 
+  $scope.$emit(os.ui.WindowEventType.READY);
   $scope.$on('$destroy', this.onDestroy_.bind(this));
 };
 
