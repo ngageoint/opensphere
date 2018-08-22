@@ -77,15 +77,13 @@ plugin.area.KMLAreaImportUI.prototype.onPreviewReady_ = function(config, event) 
   };
   var windowOptions = {
     'label': 'KML Area Import',
-    'icon': 'fa fa-sign-in lt-blue-icon',
+    'icon': 'fa fa-sign-in',
     'x': 'center',
     'y': 'center',
     'width': '450',
     'min-width': '300',
     'max-width': '800',
-    'height': '285',
-    'min-height': '285',
-    'max-height': '600',
+    'height': 'auto',
     'modal': 'true',
     'show-close': 'true'
   };
@@ -119,18 +117,20 @@ os.ui.Module.directive('kmlarea', [plugin.area.kmlAreaDirective]);
  * Controller for the SHP import file selection step
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
+ * @param {!angular.$timeout} $timeout The Angular $timeout service.
  * @extends {plugin.area.AreaImportCtrl<os.parse.FileParserConfig>}
  * @constructor
  * @ngInject
  */
-plugin.area.KMLAreaCtrl = function($scope, $element) {
-  plugin.area.KMLAreaCtrl.base(this, 'constructor', $scope, $element);
+plugin.area.KMLAreaCtrl = function($scope, $element, $timeout) {
+  plugin.area.KMLAreaCtrl.base(this, 'constructor', $scope, $element, $timeout);
 };
 goog.inherits(plugin.area.KMLAreaCtrl, plugin.area.AreaImportCtrl);
 
 
 /**
  * @inheritDoc
+ * @export
  */
 plugin.area.KMLAreaCtrl.prototype.finish = function() {
   plugin.area.KMLAreaCtrl.base(this, 'finish');
@@ -140,10 +140,6 @@ plugin.area.KMLAreaCtrl.prototype.finish = function() {
   importer.listenOnce(os.events.EventType.COMPLETE, this.onImportComplete_, false, this);
   importer.startImport(this.config['file'].getContent());
 };
-goog.exportProperty(
-    plugin.area.KMLAreaCtrl.prototype,
-    'finish',
-    plugin.area.KMLAreaCtrl.prototype.finish);
 
 
 /**

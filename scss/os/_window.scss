@@ -1,0 +1,45 @@
+.modal-open .c-window.modal {
+  overflow-y: hidden;
+}
+
+.c-window {
+  border-radius: $border-radius;
+
+  .modal-content {
+    // Handled by the modal-body bg
+    background: transparent;
+  }
+
+  .modal-body {
+    background: $modal-content-bg;
+    color: $body-color;
+    overflow-y: auto;
+  }
+
+  .modal-header {
+    background: darken($modal-content-bg, 5%);
+
+    &.collapsed {
+      border-radius: $border-radius;
+    }
+  }
+
+  .modal-footer {
+    @include border-bottom-radius($border-radius);
+    background: darken($modal-content-bg, 5%);
+    color: $body-color;
+    flex-shrink: 0;
+  }
+}
+
+// Dont show window content while resizing to speed up performance for slow browsers
+.c-main__slowBrowser .c-window.ui-resizable-resizing {
+  .modal-header {
+    background: $modal-content-bg;
+    border: 0;
+  }
+
+  * {
+    display: none;
+  }
+}

@@ -151,7 +151,7 @@ os.metrics.TimelineMetrics = function() {
 
   this.addChild(leaf, {
     label: 'Open Timeline',
-    description: 'The <i class="fa fa-clock-o yellow-icon"></i> icon located at the top' +
+    description: 'The <i class="fa fa-clock-o"></i> icon located at the top' +
         ' center of the screen opens the time-line control.',
     key: os.metrics.keys.Timeline.OPEN
   });

@@ -1,39 +1,37 @@
-<div class="window-content-wrapper">
-  <div class="window-content">
-    <div ng-form name="filterForm" class="form-horizontal form-compact filterform">
-      <div class="control-group" ng-class="{'error': filterForm.title.$invalid}">
-        <label class="control-label" for="filterTitle">Title:</label>
-        <div class="control">
-          <input id="filterTitle" type="text" ng-model="filters.title" name="title" required/>
+<div class="flex-column d-flex flex-fill">
+  <div class="modal-body flex-column d-flex flex-fill u-overflow-y-hidden">
+    <div ng-form name="filterForm" class="flex-column d-flex flex-fill">
+      <div class="row mb-1">
+        <label class="col-form-label col-2 text-right u-required" for="filterTitle">Title</label>
+        <div class="col form-inline">
+          <input class="form-control w-50" id="filterTitle" type="text" ng-model="filters.title" name="title" required/>
+          <validation-message target="filterForm.title"></validation-message>
         </div>
       </div>
-      <div class="control-group">
-        <label class="control-label" for="filterDesc">Description:</label>
-        <div class="control">
-          <input id="filterDesc" type="text" ng-model="filters.description" name="description"/>
+      <div class="row mb-1">
+        <label class="col-form-label col-2 text-right" for="filterDesc">Description</label>
+        <div class="col form-inline">
+          <input class="form-control w-50" id="filterDesc" type="text" ng-model="filters.description" name="description"/>
         </div>
       </div>
-      <ul class="nav nav-tabs">
-        <li class="first" ng-class="{active: tab == 'basic'}"><a ng-click="filters.setTab('basic')">Basic</a></li>
-        <li ng-class="{active: tab == 'advanced'}"><a ng-click="filters.setTab('advanced')">Advanced</a></li>
+      <ul class="nav nav-tabs flex-shrink-0">
+        <li class="nav-item"><a href class="nav-link" ng-class="{active: tab == 'basic'}" ng-click="filters.setTab('basic')">Basic</a></li>
+        <li class="nav-item"><a href class="nav-link" ng-class="{active: tab == 'advanced'}" ng-click="filters.setTab('advanced')">Advanced</a></li>
       </ul>
-
-      <div class="filter-container">
-        <div class="tab-content" autoheight siblings=".nav-tabs">
-          <div ng-if="tab == 'basic'" style="height:100%">
+      <div class="flex-column d-flex flex-fill">
+        <div class="flex-column d-flex flex-fill">
+          <div ng-if="tab == 'basic'" class="flex-column d-flex flex-fill">
             <basicfilterbuilder root="filters.root" columns="columns" is-complex="filters.isComplex"></basicfilterbuilder>
           </div>
-          <div ng-if="tab == 'advanced'" style="height:100%">
+          <div ng-if="tab == 'advanced'" class="flex-column d-flex flex-fill">
             <advancedfilterbuilder root="filters.root" columns="columns"></advancedfilterbuilder>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div class="window-footer">
-    <div class="pull-right">
-      <button class="btn btn-default" ng-click="filters.finish()" ng-disabled="filters.isInvalid()"><i class="btn-icon fa fa-check color-add"></i> OK</button>
-      <button class="btn btn-default" ng-click="filters.cancel()"><i class="btn-icon fa fa-ban red-icon"></i> Cancel</button>
-    </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" ng-click="filters.finish()" ng-disabled="filters.isInvalid()"><i class="fa fa-check"></i> OK</button>
+    <button class="btn btn-secondary" ng-click="filters.cancel()"><i class="fa fa-ban"></i> Cancel</button>
   </div>
 </div>

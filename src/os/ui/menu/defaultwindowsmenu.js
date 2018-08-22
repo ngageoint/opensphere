@@ -6,6 +6,7 @@ goog.require('os.ui.events.UIEvent');
 goog.require('os.ui.events.UIEventType');
 goog.require('os.ui.ex.ExportDirective');
 goog.require('os.ui.menu.windows');
+goog.require('os.ui.windowSelector');
 
 
 /**
@@ -16,7 +17,7 @@ os.ui.menu.windows.default.setup = function() {
 
   // add windows
   os.ui.menu.windows.addWindow('addData', {
-    'icon': 'fa fa-plus green-icon',
+    'icon': 'fa fa-plus',
     'label': 'Add Data',
     'description': 'Add data to the map',
     'x': 'center',
@@ -35,11 +36,11 @@ os.ui.menu.windows.default.setup = function() {
 
   var layers = os.ui.menu.windows.addWindow('layers', {
     'key': 'layers',
-    'icon': 'orange-icon fa fa-align-justify',
+    'icon': 'fa fa-align-justify',
     'label': 'Layers',
     'description': 'View and manipulate layers on the map',
-    'x': '20',
-    'y': '75',
+    'x': '0',
+    'y': '96',
     'width': '325',
     'height': '550',
     'min-width': '300',
@@ -60,7 +61,7 @@ os.ui.menu.windows.default.setup = function() {
   }
 
   os.ui.menu.windows.addWindow('timeline', {
-    'icon': 'fa fa-clock-o yellow-icon',
+    'icon': 'fa fa-clock-o',
     'label': 'Timeline',
     'metricKey': os.metrics.keys.Timeline.OPEN
   }, true, function() {
@@ -99,22 +100,22 @@ os.ui.menu.windows.default.setup = function() {
     'max-height': '1000',
     'show-close': 'true',
     'no-scroll': 'false',
-    'html': '<alerts resize-with=".window"></alerts>'
+    'html': '<alerts resize-with="' + os.ui.windowSelector.WINDOW + '"></alerts>'
   });
 
   os.ui.menu.windows.addWindow('clear', {
-    'icon': 'fa fa-times red-icon',
+    'icon': 'fa fa-times',
     'label': 'Clear',
     'description': 'Clear data from the map',
     'x': 'center',
     'y': 'center',
-    'width': '300',
-    'height': '262',
-    'min-width': '300',
-    'max-width': '400',
-    'min-height': '250',
-    'max-height': '500',
-    'show-close': 'true',
+    'width': 300,
+    'height': 262,
+    'min-width': 300,
+    'max-width': 400,
+    'min-height': 250,
+    'max-height': 500,
+    'show-close': true,
     'html': 'clear'
   });
 
@@ -132,12 +133,12 @@ os.ui.menu.windows.default.setup = function() {
     'max-height': '1000',
     'show-close': 'true',
     'no-scroll': 'true',
-    'html': '<history resize-with=".window"></history>'
-  });
+    'html': '<history resize-with="' + os.ui.windowSelector.WINDOW + '"></history>'
+  }, false, undefined);
 
   if (os.settings.get('metrics.enabled', false)) {
     os.ui.menu.windows.addWindow('metrics', {
-      'icon': 'orange-icon fa fa-cubes',
+      'icon': 'fa fa-cubes',
       'label': '{APP} Capabilities',
       'description': 'Explore {APP} Capabilities',
       'x': 'center',
@@ -151,7 +152,7 @@ os.ui.menu.windows.default.setup = function() {
       'show-close': 'true',
       'no-scroll': 'true',
       'html': 'metrics'
-    });
+    }, false, undefined);
   }
 
   os.ui.menu.windows.addWindow('legend', {

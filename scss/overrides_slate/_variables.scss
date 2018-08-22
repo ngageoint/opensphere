@@ -1,0 +1,77 @@
+$blue: #08c;
+$green: #62c462;
+$yellow: #ff0;
+$orange: #f89406;
+$indigo: #6c94bc;
+
+$gray-100: #f8f9fa !default;
+$gray-200: #e9ecef !default;
+$gray-300: #dee2e6 !default;
+$gray-400: #ced4da !default;
+$gray-500: #999 !default;
+$gray-600: #7a8288 !default;
+$gray-700: #52575c !default;
+$gray-800: #3a3f44 !default;
+$gray-900: #272b30 !default;
+$black: #000 !default;
+$white: #fff !default;
+
+$primary: $blue;
+$success: $green;
+$warning: $orange;
+$info: $indigo;
+
+$body-color: $gray-300;
+$dark: darken($gray-800, 5%);
+
+$font-family-sans-serif: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+
+$dropdown-link-hover-bg: $primary;
+
+$custom-control-indicator-checked-color: $black;
+$custom-control-indicator-checked-bg: $gray-200;
+$custom-control-indicator-checked-disabled-bg: rgba($gray-200, .5);
+$custom-control-indicator-active-color: $black;
+$custom-control-indicator-active-bg: $gray-200;
+$custom-checkbox-indicator-indeterminate-bg: $gray-200;
+$custom-control-indicator-disabled-bg: $gray-500;
+$custom-control-label-disabled-color: $black;
+
+@import 'slate/variables';
+
+$link-color: #8be;
+$border-color: $gray-900;
+$input-bg: #555;
+$input-disabled-bg: $gray-600;
+$input-color: $white;
+$input-border-color: $gray-900;
+$input-group-addon-border-color: $gray-900;
+$input-group-addon-bg: $gray-600;
+$input-placeholder-color: $gray-500;
+$close-color: $white;
+$close-text-shadow: $black;
+$table-accent-bg: lighten($body-bg, 3%);
+
+// Original button padding (slate overrides this)
+$input-btn-padding-y: .375rem;
+$input-btn-padding-x: .75rem;
+// Original Nav Link (slate overrides this)
+$nav-link-padding-y: .5rem;
+$navbar-padding-y: .5rem;
+$navbar-padding-x: 1rem;
+
+// Active/selected color.
+$list-group-active-bg: darken($success, 25%);
+$list-group-active-color: $white;
+
+// Highlight/hover color.
+$list-group-hover-bg: darken($primary, 10%);
+$list-group-action-hover-color: $white;
+
+// Start Theme Variable Overides
+$sticky-nav-background-color: $gray-800;
+$hover-edit-background-color: $gray-800;
+$default-image-background-color: $gray-800;
+$default-timeline-background-color: $gray-800;
+$default-timeline-background-color-active: $gray-800;
+// End Theme Variable Overides

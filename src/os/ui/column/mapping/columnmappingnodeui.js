@@ -11,12 +11,12 @@ os.ui.column.mapping.columnMappingNodeUIDirective = function() {
   return {
     restrict: 'E',
     replace: true,
-    template: '<span class="glyphs pull-right slick-node-ui">' +
+    template: '<div>' +
         '<span ng-click="nodeUi.edit()">' +
-        '<i class="fa fa-pencil fa-fw glyph" title="Edit the column mapping"></i></span>' +
+        '<i class="fa fa-pencil fa-fw c-glyph" title="Edit the column mapping"></i></span>' +
         '<span ng-click="nodeUi.tryRemove()">' +
-        '<i class="fa fa-times fa-fw glyph glyph-remove" title="Remove the column mapping"></i></span>' +
-        '</span>',
+        '<i class="fa fa-times fa-fw c-glyph text-danger" title="Remove the column mapping"></i></span>' +
+        '</div>',
     controller: os.ui.column.mapping.ColumnMappingNodeUICtrl,
     controllerAs: 'nodeUi'
   };
@@ -51,31 +51,27 @@ os.ui.column.mapping.ColumnMappingNodeUICtrl = function($scope, $element) {
  */
 os.ui.column.mapping.ColumnMappingNodeUICtrl.prototype.tryRemove = function() {
   var cm = /** @type {os.ui.column.mapping.ColumnMappingNode} */ (this.scope_['item']).getColumnMapping();
-
-  var scopeOptions = {
-    'confirmCallback': this.remove_.bind(this),
-    'cancelCallback': goog.nullFunction,
-    'yesText': 'Remove',
-    'yesIcon': 'fa fa-check lt-blue-icon',
-    'noText': 'Cancel',
-    'noIcon': 'fa fa-ban red-icon'
-  };
-
-  var windowOptions = {
-    'label': 'Remove Column Association',
-    'icon': 'fa fa-trash-o red-icon',
-    'x': 'center',
-    'y': 400,
-    'width': 325,
-    'height': 'auto',
-    'modal': 'true',
-    'no-scroll': 'true'
-  };
-
   var text = 'Are you sure you want to remove the <b>' + cm.getName() + '</b> column association from the ' +
       'application? <b>This action cannot be undone.</b>';
-  var template = '<confirm>' + text + '</confirm>';
-  os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+
+  os.ui.window.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
+    confirm: this.remove_.bind(this),
+    prompt: text,
+    yesText: 'Remove',
+    yesIcon: 'fa fa-trash-o',
+    yesButtonClass: 'btn-danger',
+    windowOptions: {
+      'label': 'Remove Column Association',
+      'icon': 'fa fa-trash-o',
+      'x': 'center',
+      'y': 400,
+      'width': 325,
+      'height': 'auto',
+      'modal': 'true',
+      'no-scroll': 'true',
+      'headerClass': 'bg-danger u-bg-danger-text'
+    }
+  }));
 };
 goog.exportProperty(os.ui.column.mapping.ColumnMappingNodeUICtrl.prototype, 'tryRemove',
     os.ui.column.mapping.ColumnMappingNodeUICtrl.prototype.tryRemove);

@@ -54,7 +54,7 @@ os.ui.clear.ClearCtrl = function($scope, $element, $timeout) {
 
   $scope.$on('$destroy', this.onDestroy_.bind(this));
   $timeout(function() {
-    $scope.$emit('window.ready');
+    $scope.$emit(os.ui.WindowEventType.READY);
   });
 };
 

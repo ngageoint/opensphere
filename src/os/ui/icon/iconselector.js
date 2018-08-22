@@ -11,7 +11,7 @@ goog.require('os.ui.list');
  * Nav bar locations.
  * @type {string}
  */
-os.ui.icon.ICON_SELECTORS = 'nav-icon-selectors';
+os.ui.icon.ICON_SELECTORS = 'js-nav-icon__selectors';
 
 
 /**
@@ -27,6 +27,7 @@ os.ui.icon.iconSelectorDirective = function() {
       'iconSet': '=',
       'iconSrc': '=?'
     },
+    replace: true,
     templateUrl: os.ROOT + 'views/icon/iconselector.html',
     controller: os.ui.icon.IconSelectorCtrl,
     controllerAs: 'selector'
@@ -67,10 +68,11 @@ os.ui.icon.IconSelectorCtrl = function($scope, $element) {
   this.scope_['activeTab'] = this.scope_['tabs'].length > 0 ? this.scope_['tabs'][0]['name'] : '';
 
   for (var i = 0; i < this.scope_['tabs'].length; i++) { // wrap each icon selector in tab structure
-    os.ui.list.add(os.ui.icon.ICON_SELECTORS, '<div class="properties-tab tab" ng-show="activeTab == \'' +
+    os.ui.list.add(os.ui.icon.ICON_SELECTORS, '<div class="d-flex flex-fill" ng-if="activeTab == \'' +
         this.scope_['tabs'][i]['name'] + '\'">' + this.scope_['tabs'][i]['html'] + '</div>', 201);
   }
 
+  this.scope_.$emit(os.ui.WindowEventType.READY);
   $scope.$on('$destroy', this.destroy_.bind(this));
 };
 goog.inherits(os.ui.icon.IconSelectorCtrl, goog.events.EventTarget);

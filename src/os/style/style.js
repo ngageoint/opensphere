@@ -1162,33 +1162,31 @@ os.style.createFeatureStyle = function(feature, baseConfig, opt_layerConfig) {
     // merge or create label style if no label geometry is defined, or the current config matches the geometry name
     var labelGeometry = feature.values_[os.style.StyleField.LABEL_GEOMETRY];
     if (!labelGeometry || labelGeometry == featureConfig['geometry']) {
-      var labelStyles = os.style.label.createOrUpdate(feature, featureConfig, opt_layerConfig);
-      if (labelStyles) {
-        // fix all of the styles since we can have multiple labels...
-        for (var i = 0; i < labelStyles.length; i++) {
-          if (opacity != null) {
-            // make sure the stroke opacity changes in addition to the fill
-            var textStrokeColor = /** @type {Array<number>|string} */ (labelStyles[i].text_.stroke_.color_);
-            var strokeColor = ol.color.asArray(textStrokeColor);
-            strokeColor[3] *= opacity;
-            labelStyles[i].text_.stroke_.color_ = ol.color.toString(strokeColor);
+      var labelStyle = os.style.label.createOrUpdate(feature, featureConfig, opt_layerConfig);
+      if (labelStyle) {
+        // update label opacity if set on the feature
+        if (opacity != null) {
+          // make sure the stroke opacity changes in addition to the fill
+          var textStrokeColor = /** @type {Array<number>|string} */ (labelStyle.text_.stroke_.color_);
+          var strokeColor = ol.color.asArray(textStrokeColor);
+          strokeColor[3] *= opacity;
+          labelStyle.text_.stroke_.color_ = ol.color.toString(strokeColor);
 
-            // use the highlight/select config color if present, otherwise update the opacity
-            if (!highlightConfig && !selectConfig) {
-              var color = [];
-              if (opt_layerConfig && opt_layerConfig[os.style.StyleField.LABEL_COLOR]) {
-                // use label override color
-                color = ol.color.asArray(opt_layerConfig[os.style.StyleField.LABEL_COLOR]);
-              } else {
-                color = ol.color.asArray(os.style.getConfigColor(featureConfig));
-              }
-              color[3] *= opacity;
-              labelStyles[i].text_.fill_.color_ = ol.color.toString(color);
+          // use the highlight/select config color if present, otherwise update the opacity
+          if (!highlightConfig && !selectConfig) {
+            var color = [];
+            if (opt_layerConfig && opt_layerConfig[os.style.StyleField.LABEL_COLOR]) {
+              // use label override color
+              color = ol.color.asArray(opt_layerConfig[os.style.StyleField.LABEL_COLOR]);
+            } else {
+              color = ol.color.asArray(os.style.getConfigColor(featureConfig));
             }
+            color[3] *= opacity;
+            labelStyle.text_.fill_.color_ = ol.color.toString(color);
           }
-
-          styles.push(labelStyles[i]);
         }
+
+        styles.push(labelStyle);
       }
     }
 

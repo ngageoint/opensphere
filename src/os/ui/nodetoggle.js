@@ -12,7 +12,7 @@ os.ui.nodeToggleDirective = function() {
   return {
     restrict: 'AE',
     replace: true,
-    template: '<i class="tree-expand-collapse fa fa-fw action" ' +
+    template: '<i class="js-node-toggle c-node-toggle fa fa-fw" ' +
         'ng-class="{\'fa-caret-right\': item.collapsed, \'fa-caret-down\': !item.collapsed}"></i>',
     controller: os.ui.NodeToggleCtrl,
     controllerAs: 'toggle'

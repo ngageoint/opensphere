@@ -167,6 +167,7 @@ os.ui.query.ui.CombinatorCtrl.ORDERS_ = [
 
 /**
  * Applies the entries to the query manager
+ * @export
  */
 os.ui.query.ui.CombinatorCtrl.prototype.apply = function() {
   this.createEntriesFromTree();
@@ -190,21 +191,21 @@ os.ui.query.ui.CombinatorCtrl.prototype.apply = function() {
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Filters.ADVANCED_APPLY, 1);
   this.scope.$emit('combinator.applycomplete');
 };
-goog.exportProperty(os.ui.query.ui.CombinatorCtrl.prototype, 'apply', os.ui.query.ui.CombinatorCtrl.prototype.apply);
 
 
 /**
  * Closes the window
+ * @export
  */
 os.ui.query.ui.CombinatorCtrl.prototype.close = function() {
   os.ui.window.close(this.element_);
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Filters.ADVANCED_CLOSE, 1);
 };
-goog.exportProperty(os.ui.query.ui.CombinatorCtrl.prototype, 'close', os.ui.query.ui.CombinatorCtrl.prototype.close);
 
 
 /**
  * Clear
+ * @export
  */
 os.ui.query.ui.CombinatorCtrl.prototype.clear = function() {
   var root = /** @type {os.ui.query.ComboNode} */ (this.scope['pivots']);
@@ -216,7 +217,6 @@ os.ui.query.ui.CombinatorCtrl.prototype.clear = function() {
   this.onDirty_();
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Filters.ADVANCED_RESET, 1);
 };
-goog.exportProperty(os.ui.query.ui.CombinatorCtrl.prototype, 'clear', os.ui.query.ui.CombinatorCtrl.prototype.clear);
 
 
 /**
@@ -336,6 +336,7 @@ os.ui.query.ui.CombinatorCtrl.prototype.getPivotData = function(opt_order, opt_a
 /**
  * Updates the tree data.
  * @param {boolean=} opt_restoreState If state should be restored for tree nodes
+ * @export
  */
 os.ui.query.ui.CombinatorCtrl.prototype.update = function(opt_restoreState) {
   var advanced = /** @type {boolean} */ (this.scope['advanced']);
@@ -385,38 +386,28 @@ os.ui.query.ui.CombinatorCtrl.prototype.update = function(opt_restoreState) {
   os.settings.set(['filter', 'groupBy'], orderStr);
   this.lastOrder_ = orderStr;
 };
-goog.exportProperty(
-    os.ui.query.ui.CombinatorCtrl.prototype,
-    'update',
-    os.ui.query.ui.CombinatorCtrl.prototype.update);
 
 
 /**
  * Handles user layer selection
  * @param {boolean=} opt_restoreState If state should be restored for tree nodes
+ * @export
  */
 os.ui.query.ui.CombinatorCtrl.prototype.selectLayer = function(opt_restoreState) {
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Filters.ADVANCED_SELECT_LAYER, 1);
   this.update(opt_restoreState);
 };
-goog.exportProperty(
-    os.ui.query.ui.CombinatorCtrl.prototype,
-    'selectLayer',
-    os.ui.query.ui.CombinatorCtrl.prototype.selectLayer);
 
 
 /**
  * Handles user groupBy selection
  * @param {boolean=} opt_restoreState If state should be restored for tree nodes
+ * @export
  */
 os.ui.query.ui.CombinatorCtrl.prototype.selectGroupBy = function(opt_restoreState) {
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Filters.GROUP_BY, 1);
   this.update(opt_restoreState);
 };
-goog.exportProperty(
-    os.ui.query.ui.CombinatorCtrl.prototype,
-    'selectGroupBy',
-    os.ui.query.ui.CombinatorCtrl.prototype.selectGroupBy);
 
 
 /**
@@ -449,15 +440,12 @@ os.ui.query.ui.CombinatorCtrl.prototype.selectById = function(id, opt_node) {
 /**
  * Handles toggle of advancde check box
  * @param {boolean=} opt_restoreState If state should be restored for tree nodes
+ * @export
  */
 os.ui.query.ui.CombinatorCtrl.prototype.advancedToggle = function(opt_restoreState) {
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Filters.ADVANCED_TOGGLE, 1);
   this.update(opt_restoreState);
 };
-goog.exportProperty(
-    os.ui.query.ui.CombinatorCtrl.prototype,
-    'advancedToggle',
-    os.ui.query.ui.CombinatorCtrl.prototype.advancedToggle);
 
 
 /**
@@ -788,10 +776,8 @@ os.ui.query.ui.CombinatorCtrl.prototype.onView_ = function(evt, isFilter, entry)
                 os.alert.AlertEventSeverity.WARNING);
           }
         }
-      } else {
-        // Only filters are available for view, so don't allow it
-        os.alertManager.sendAlert('Viewing areas is not allowed at this time.',
-            os.alert.AlertEventSeverity.WARNING);
+      } else { // Only filters are available for view, so don't allow it
+        os.alertManager.sendAlert('Viewing areas is not allowed at this time.', os.alert.AlertEventSeverity.WARNING);
       }
     }
   }
@@ -1207,6 +1193,7 @@ os.ui.query.ui.CombinatorCtrl.prototype.save_ = function(name, mode) {
 /**
  * Disables export button
  * @return {boolean}
+ * @export
  */
 os.ui.query.ui.CombinatorCtrl.prototype.exportDisabled = function() {
   // off when no filters present for this layer
@@ -1218,42 +1205,35 @@ os.ui.query.ui.CombinatorCtrl.prototype.exportDisabled = function() {
 
   return true;
 };
-goog.exportProperty(os.ui.query.ui.CombinatorCtrl.prototype, 'exportDisabled',
-    os.ui.query.ui.CombinatorCtrl.prototype.exportDisabled);
 
 
 /**
  * Launches the filter export process.
+ * @export
  */
 os.ui.query.ui.CombinatorCtrl.prototype.launchExport = function() {
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Filters.EXPORT, 1);
   os.ui.filter.ui.launchFilterExport(this.save_.bind(this));
 };
-goog.exportProperty(
-    os.ui.query.ui.CombinatorCtrl.prototype,
-    'launchExport',
-    os.ui.query.ui.CombinatorCtrl.prototype.launchExport);
 
 
 /**
  * Launches the filter import process.
+ * @export
  */
 os.ui.query.ui.CombinatorCtrl.prototype.import = function() {
   os.query.launchQueryImport({
     'layerId': this.getLayerId_()
   });
 };
-goog.exportProperty(
-    os.ui.query.ui.CombinatorCtrl.prototype,
-    'import',
-    os.ui.query.ui.CombinatorCtrl.prototype.import);
 
 
 /**
  * Opens the area import menu.
+ * @export
  */
 os.ui.query.ui.CombinatorCtrl.prototype.openImportMenu = function() {
-  var target = this.element_.find('.import-group');
+  var target = this.element_.find('.js-import-group');
   var menu = os.ui.menu.areaImport.MENU;
   if (menu && target && target.length) {
     menu.open(undefined, {
@@ -1263,7 +1243,3 @@ os.ui.query.ui.CombinatorCtrl.prototype.openImportMenu = function() {
     });
   }
 };
-goog.exportProperty(
-    os.ui.query.ui.CombinatorCtrl.prototype,
-    'openImportMenu',
-    os.ui.query.ui.CombinatorCtrl.prototype.openImportMenu);

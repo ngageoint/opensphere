@@ -9,8 +9,8 @@ goog.require('os.ui.Module');
  * @type {string}
  * @const
  */
-os.ui.WINDOW_LAUNCHER_TEMPLATE = '<button ng-click="launchCtrl.click($event)" title="{{chkTooltip}}" ' +
-    'class="btn btn-mini window-launch"><i ng-class="winLauncherClass"></i></button>';
+os.ui.WINDOW_LAUNCHER_TEMPLATE = '<small><button ng-click="launchCtrl.click($event)" title="{{chkTooltip}}" ' +
+    'class="btn btn-sm btn-info border"><i ng-class="winLauncherClass"></i></button></small>';
 
 
 /**

@@ -160,7 +160,7 @@ os.ui.wiz.WizardCtrl.prototype.onStepValidityChange_ = function(event, opt_valid
  */
 os.ui.wiz.WizardCtrl.prototype.activateStep_ = function(step, opt_skipCompile) {
   var scope = opt_skipCompile ? undefined : this.scope.$new();
-  var parent = opt_skipCompile ? undefined : this.element.find('#wizard-step-content');
+  var parent = opt_skipCompile ? undefined : this.element.find('#js-wizard-step-content');
   step.activate(this.config, scope, parent);
 };
 
@@ -370,13 +370,13 @@ os.ui.wiz.WizardCtrl.prototype.getStepIcon = function(step) {
     var state = this.getStepState(step);
     if (state == os.ui.wiz.StepState.ERROR) {
       // always show the error icon if the step is invalid, regardless of position
-      return 'fa-exclamation-triangle orange-icon';
+      return 'fa-exclamation-triangle text-warning';
     } else if (this.isActive(step)) {
       // show the caret for the active step
       return 'fa-caret-right';
     } else if (state == os.ui.wiz.StepState.COMPLETE) {
       // show checkmark for completed steps
-      return 'fa-check green-icon';
+      return 'fa-check text-success';
     }
   }
 

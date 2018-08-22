@@ -159,18 +159,16 @@ os.ui.file.method.UrlMethod.prototype.loadFile = function(opt_options) {
     var windowOptions = {
       'id': os.ui.file.method.UrlMethod.ID,
       'label': 'Import URL',
-      'icon': 'fa fa-cloud-download lt-blue-icon',
+      'icon': 'fa fa-cloud-download',
       'x': 'center',
       'y': 'center',
       'width': '400',
       'min-width': '400',
       'max-width': '400',
-      'height': '135',
-      'min-height': '135',
-      'max-height': '135',
-      'modal': 'true',
-      'show-close': 'true',
-      'no-scroll': 'true'
+      'height': 'auto',
+      'modal': true,
+      'show-close': true,
+      'no-scroll': true
     };
     var template = '<urlimport></urlimport>';
     os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);

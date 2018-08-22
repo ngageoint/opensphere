@@ -6,6 +6,7 @@ goog.require('os.defines');
 goog.require('os.im.Importer');
 goog.require('os.ui.im.FileImportUI');
 goog.require('os.ui.query');
+goog.require('os.ui.windowSelector');
 goog.require('os.ui.wiz.step.WizardStepEvent');
 goog.require('plugin.area.AreaImportCtrl');
 goog.require('plugin.file.shp.SHPParser');
@@ -44,7 +45,6 @@ plugin.area.SHPAreaImportUI.prototype.launchUI = function(file, opt_config) {
 
   var config = new plugin.file.shp.SHPParserConfig();
 
-  var height = '410';
   // determine if the initial file is the DBF or SHP file
   var name = file.getFileName();
   if (plugin.file.shp.mime.SHP_EXT_REGEXP.test(name)) {
@@ -56,7 +56,6 @@ plugin.area.SHPAreaImportUI.prototype.launchUI = function(file, opt_config) {
   } else {
     config['zipFile'] = file;
     config['title'] = name;
-    height = '290';
   }
 
   var scopeOptions = {
@@ -64,19 +63,17 @@ plugin.area.SHPAreaImportUI.prototype.launchUI = function(file, opt_config) {
   };
   var windowOptions = {
     'label': 'SHP Area Import',
-    'icon': 'fa fa-sign-in lt-blue-icon',
+    'icon': 'fa fa-sign-in',
     'x': 'center',
     'y': 'center',
     'width': '450',
     'min-width': '300',
     'max-width': '800',
-    'height': height,
-    'min-height': '285',
-    'max-height': '600',
+    'height': 'auto',
     'modal': 'true',
     'show-close': 'true'
   };
-  var template = '<shparea resize-with=".window"></shparea>';
+  var template = '<shparea resize-with="' + os.ui.windowSelector.WINDOW + '"></shparea>';
   os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
 };
 
@@ -106,12 +103,13 @@ os.ui.Module.directive('shparea', [plugin.area.shpAreaDirective]);
  * Controller for the SHP import file selection step
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
+ * @param {!angular.$timeout} $timeout The Angular $timeout service.
  * @extends {plugin.area.AreaImportCtrl<plugin.file.shp.SHPParserConfig>}
  * @constructor
  * @ngInject
  */
-plugin.area.SHPAreaCtrl = function($scope, $element) {
-  plugin.area.SHPAreaCtrl.base(this, 'constructor', $scope, $element);
+plugin.area.SHPAreaCtrl = function($scope, $element, $timeout) {
+  plugin.area.SHPAreaCtrl.base(this, 'constructor', $scope, $element, $timeout);
 
   this.scope.$on(os.ui.wiz.step.WizardStepEvent.VALIDATE, this.onFileChange_.bind(this));
 
@@ -138,6 +136,7 @@ plugin.area.SHPAreaCtrl.prototype.onFileChange_ = function(event, valid) {
 /**
  * Validate the done button
  * @return {boolean} if the form is valid
+ * @export
  */
 plugin.area.SHPAreaCtrl.prototype.invalid = function() {
   var config = this.config;
@@ -147,14 +146,11 @@ plugin.area.SHPAreaCtrl.prototype.invalid = function() {
     return !config['file'] || !config['file2'] || (!config['title'] && !config['titleColumn']);
   }
 };
-goog.exportProperty(
-    plugin.area.SHPAreaCtrl.prototype,
-    'invalid',
-    plugin.area.SHPAreaCtrl.prototype.invalid);
 
 
 /**
  * @inheritDoc
+ * @export
  */
 plugin.area.SHPAreaCtrl.prototype.finish = function() {
   plugin.area.SHPAreaCtrl.base(this, 'finish');
@@ -169,10 +165,6 @@ plugin.area.SHPAreaCtrl.prototype.finish = function() {
     importer.startImport([this.config['file'].getContent(), this.config['file2'].getContent()]);
   }
 };
-goog.exportProperty(
-    plugin.area.SHPAreaCtrl.prototype,
-    'finish',
-    plugin.area.SHPAreaCtrl.prototype.finish);
 
 
 /**

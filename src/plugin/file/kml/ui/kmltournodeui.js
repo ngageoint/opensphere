@@ -14,13 +14,13 @@ plugin.file.kml.ui.kmlTourNodeUIDirective = function() {
   return {
     restrict: 'E',
     replace: true,
-    template: '<span class="glyphs pull-right slick-node-ui" ng-if="ctrl.show()">' +
+    template: '<span class="slick-node-ui" ng-if="ctrl.show()">' +
         '<span ng-if="!ctrl.isPlaying()" ng-click="ctrl.play()" title="Play the tour">' +
-            '<i class="fa fa-fw fa-play glyph"></i></span>' +
+            '<i class="fa fa-fw fa-play c-glyph"></i></span>' +
         '<span ng-if="ctrl.isPlaying()" ng-click="ctrl.pause()" title="Pause the tour">' +
-            '<i class="fa fa-fw fa-pause yellow-icon glyph"></i></span>' +
+            '<i class="fa fa-fw fa-pause c-glyph"></i></span>' +
         '<span ng-click="ctrl.reset()" title="Reset the tour">' +
-            '<i class="fa fa-fw fa-undo glyph"></i></span>' +
+            '<i class="fa fa-fw fa-undo c-glyph"></i></span>' +
         '</span>',
     controller: plugin.file.kml.ui.KMLTourNodeUICtrl,
     controllerAs: 'ctrl'

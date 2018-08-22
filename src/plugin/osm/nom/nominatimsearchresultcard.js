@@ -12,6 +12,7 @@ goog.require('os.ui.search.FeatureResultCardCtrl');
 plugin.osm.nom.resultCardDirective = function() {
   return {
     restrict: 'E',
+    replace: true,
     templateUrl: os.ROOT + 'views/plugin/osm/nom/nominatimresultcard.html',
     controller: plugin.osm.nom.ResultCardCtrl,
     controllerAs: 'ctrl'

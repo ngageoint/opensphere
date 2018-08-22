@@ -144,7 +144,8 @@ os.ui.measureText = function(text, opt_classes, opt_font) {
     el[0].setAttribute('class', opt_classes ? opt_classes : '');
     el.css('font', opt_font || '');
 
-    el.html(text);
+    // replace newline characters with HTML breaks
+    el.html(text.replace(/\n/g, '<br>'));
     return new goog.math.Size(/** @type {number} */ (el.width()), /** @type {number} */ (el.height()));
   }
 
@@ -315,6 +316,7 @@ os.ui.replaceDirective = function(name, module, directiveFn, opt_priority) {
         },
         'next': function(event) {
           var active = this['$menu']['find']('.active').removeClass('active');
+          active.find('a').removeClass('active');
           var next = active.next();
 
           if (!next.length) {
@@ -322,9 +324,11 @@ os.ui.replaceDirective = function(name, module, directiveFn, opt_priority) {
           }
 
           next.addClass('active');
+          next.find('a').addClass('active');
         },
         'prev': function(event) {
           var active = this['$menu']['find']('.active').removeClass('active');
+          active.find('a').removeClass('active');
           var prev = active.prev();
 
           if (!prev.length) {
@@ -332,6 +336,7 @@ os.ui.replaceDirective = function(name, module, directiveFn, opt_priority) {
           }
 
           prev.addClass('active');
+          prev.find('a').addClass('active');
         },
         'move': function(e) {
           if (!this['shown']) {
@@ -407,7 +412,8 @@ os.ui.replaceDirective = function(name, module, directiveFn, opt_priority) {
       });
 
       // make sure the user can't tab to the drop-down anchor tags
-      $.fn.typeahead.defaults.item = '<li><a tabindex="-1" href=""></a></li>';
+      $.fn.typeahead.defaults.item = '<li><a tabindex="-1" class="dropdown-item text-truncate" href=""></a></li>';
+      $.fn.typeahead.defaults.menu = '<ul class="typeahead dropdown-menu mw-100"></ul>';
 
       // Select2 has trouble with Bootstrap modals in IE only
       if (goog.userAgent.IE) {

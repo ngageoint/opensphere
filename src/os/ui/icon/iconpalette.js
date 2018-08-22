@@ -4,13 +4,6 @@ goog.provide('os.ui.icon.iconPaletteDirective');
 goog.require('os.ui.Module');
 
 
-/**
- * @type {string}
- */
-os.ui.icon.ICON_PALETTE_TEMPLATE = '<div ng-repeat="icon in iconSet" ng-click="palette.pick(icon.path)" ' +
-    'title="{{icon.title}}" class="iconchooser" ng-class="{\'selected\' : icon.path === selected.path}">' +
-    '<img ng-src="{{palette.getIconSrc(icon.path)}}"/></div>';
-
 
 /**
  * The iconpalette directive
@@ -25,7 +18,8 @@ os.ui.icon.iconPaletteDirective = function() {
       'iconSet': '=',
       'iconSrc': '=?'
     },
-    template: os.ui.icon.ICON_PALETTE_TEMPLATE,
+    replace: true,
+    templateUrl: os.ROOT + 'views/icon/iconpalette.html',
     controller: os.ui.icon.IconPaletteCtrl,
     controllerAs: 'palette'
   };

@@ -12,7 +12,7 @@ goog.require('os.geo');
 goog.require('os.query.ui.mergeAreasDirective');
 goog.require('os.query.ui.modifyAreaDirective');
 goog.require('os.ui.ex.AreaExportCtrl');
-goog.require('os.ui.featureInfoDirective');
+goog.require('os.ui.feature.featureInfoDirective');
 goog.require('os.ui.menu.Menu');
 goog.require('os.ui.menu.MenuItem');
 goog.require('os.ui.menu.MenuItemType');
@@ -619,7 +619,7 @@ os.ui.menu.spatial.onMenuEvent = function(event, opt_layerIds) {
           case os.action.EventType.FEATURE_INFO:
             var layer = /** @type {os.layer.ILayer|undefined} */ (context[i].layer);
             var title = layer ? layer.getTitle() : undefined;
-            os.ui.launchFeatureInfo(feature, title);
+            os.ui.feature.launchMultiFeatureInfo(feature, title);
             break;
           default:
             break;
@@ -946,7 +946,7 @@ os.ui.menu.spatial.onLayerPicker_ = function(event) {
     var windowOptions = {
       'id': 'spatiallayerchooser',
       'label': 'Choose Layers',
-      'icon': 'fa fa-align-justify orange-icon',
+      'icon': 'fa fa-align-justify',
       'x': 'center',
       'y': 'center',
       'width': '350',
@@ -959,7 +959,7 @@ os.ui.menu.spatial.onLayerPicker_ = function(event) {
       'show-close': 'true'
     };
 
-    var template = '<layerchooser></layerchooser>';
+    var template = '<layerchooser class="flex-fill d-flex"></layerchooser>';
     os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
   } else {
     var layerIds = [];

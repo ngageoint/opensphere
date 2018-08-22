@@ -1,99 +1,79 @@
 goog.provide('os.ui.NavBarCtrl');
 
-goog.require('goog.dom.ViewportSizeMonitor');
-goog.require('os.ui.list.ListEventType');
+goog.require('goog.Disposable');
+goog.require('goog.events.Event');
+goog.require('os.ui.nav.EventType');
 
 
 
 /**
  * Controller for NavBars
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
+ * @param {!angular.Scope} $scope The Angular scope.
+ * @param {!angular.JQLite} $element The root DOM element.
+ * @extends {goog.Disposable}
  * @constructor
  * @ngInject
  */
 os.ui.NavBarCtrl = function($scope, $element) {
+  os.ui.NavBarCtrl.base(this, 'constructor');
+
   /**
+   * The Angular scope.
    * @type {?angular.Scope}
    * @protected
    */
   this.scope = $scope;
 
   /**
+   * The root DOM element.
    * @type {?angular.JQLite}
    * @protected
    */
   this.element = $element;
 
   /**
-   * @type {number}
-   * @protected
+   * Bound resize handler.
+   * @type {Function}
+   * @private
    */
-  this.maxSize = 0;
+  this.resizeFn_ = this.onResize_.bind(this);
+  $element.resize(this.resizeFn_);
 
-  /**
-   * @type {goog.dom.ViewportSizeMonitor}
-   * @protected
-   */
-  this.vsm = new goog.dom.ViewportSizeMonitor();
-
-  /**
-   * @type {boolean}
-   */
-  this.scope['punyWindow'] = window.innerWidth < (this.maxSize || os.ui.NavBarCtrl.DEFAULT_RESIZE_PX);
-
-  os.ui.waitForAngular(this.onResize.bind(this));
-  this.vsm.listen(goog.events.EventType.RESIZE, this.onResize, false, this);
-  $scope.$on(os.ui.list.ListEventType.CHANGE, this.onResize.bind(this));
-  $scope.$on('$destroy', this.destroy.bind(this));
+  $scope.$on('$destroy', this.dispose.bind(this));
 };
+goog.inherits(os.ui.NavBarCtrl, goog.Disposable);
 
 
 /**
- * The default window width at which to update the nav contents.
- * @type {number}
- * @const
+ * @inheritDoc
  */
-os.ui.NavBarCtrl.DEFAULT_RESIZE_PX = 1350;
+os.ui.NavBarCtrl.prototype.disposeInternal = function() {
+  os.ui.NavBarCtrl.base(this, 'disposeInternal');
 
-
-/**
- * Clean up.
- * @protected
- */
-os.ui.NavBarCtrl.prototype.destroy = function() {
   this.scope = null;
   this.element = null;
-  this.settings = null;
-  this.vsm = null;
-};
-
-
-/**
- * Handles the browser resizing. Removes text from buttons for smaller windows.
- * @protected
- */
-os.ui.NavBarCtrl.prototype.onResize = function() {
-  if (!this.scope['punyWindow']) {
-    // recompute the size whenever items are expanded, in case things are added to/removed from the nav
-    this.maxSize = this.getNavContentSize() + 20;
-  }
-
-  this.scope['punyWindow'] = window.innerWidth < (this.maxSize || os.ui.NavBarCtrl.DEFAULT_RESIZE_PX);
-  os.ui.apply(this.scope);
 };
 
 
 /**
  * Get the width of the items in the navbar
  * @return {number}
- * @protected
+ * @export
  */
 os.ui.NavBarCtrl.prototype.getNavContentSize = function() {
   var size = 0;
-  this.element.find('.nav').each(function(el) {
+  this.element.find('.nav-item').each(function(el) {
     size += $(this).outerWidth(true);
   });
 
   return size;
+};
+
+
+/**
+ * Handle nav resize events.
+ * @private
+ */
+os.ui.NavBarCtrl.prototype.onResize_ = function() {
+  os.dispatcher.dispatchEvent(new goog.events.Event(os.ui.nav.EventType.RESIZE));
 };

@@ -97,32 +97,27 @@ os.ui.buffer.BufferDialogCtrl.prototype.destroy_ = function() {
 
 /**
  * Close the window.
+ * @export
  */
 os.ui.buffer.BufferDialogCtrl.prototype.cancel = function() {
   os.ui.window.close(this.element_);
 };
-goog.exportProperty(
-    os.ui.buffer.BufferDialogCtrl.prototype,
-    'cancel',
-    os.ui.buffer.BufferDialogCtrl.prototype.cancel);
 
 
 /**
  * Create buffer regions and close the window.
+ * @export
  */
 os.ui.buffer.BufferDialogCtrl.prototype.confirm = function() {
   os.buffer.createFromConfig(this.config);
   this.cancel();
 };
-goog.exportProperty(
-    os.ui.buffer.BufferDialogCtrl.prototype,
-    'confirm',
-    os.ui.buffer.BufferDialogCtrl.prototype.confirm);
 
 
 /**
  * Get the status text to display at the bottom of the dialog.
  * @return {string}
+ * @export
  */
 os.ui.buffer.BufferDialogCtrl.prototype.getStatus = function() {
   if (!this['showSourcePicker']) {
@@ -136,20 +131,13 @@ os.ui.buffer.BufferDialogCtrl.prototype.getStatus = function() {
   var count = this.config['features'].length;
   return count + ' feature' + (count > 1 ? 's' : '') + ' chosen.';
 };
-goog.exportProperty(
-    os.ui.buffer.BufferDialogCtrl.prototype,
-    'getStatus',
-    os.ui.buffer.BufferDialogCtrl.prototype.getStatus);
 
 
 /**
  * If the status display is valid.
  * @return {string}
+ * @export
  */
 os.ui.buffer.BufferDialogCtrl.prototype.isDataReady = function() {
   return !this['showSourcePicker'] || (this.config && this.config['features'] && this.config['features'].length > 0);
 };
-goog.exportProperty(
-    os.ui.buffer.BufferDialogCtrl.prototype,
-    'isDataReady',
-    os.ui.buffer.BufferDialogCtrl.prototype.isDataReady);

@@ -71,12 +71,10 @@ os.ui.Module.directive('shpfilesstep', [plugin.file.shp.ui.configStepDirective])
 /**
  * Controller for the SHP import file selection step
  * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @param {!angular.$timeout} $timeout
  * @constructor
  * @ngInject
  */
-plugin.file.shp.ui.SHPFilesStepCtrl = function($scope, $element, $timeout) {
+plugin.file.shp.ui.SHPFilesStepCtrl = function($scope) {
   /**
    * @type {?angular.Scope}
    * @private
