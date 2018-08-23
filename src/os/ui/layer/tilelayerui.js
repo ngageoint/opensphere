@@ -151,6 +151,7 @@ goog.exportProperty(os.ui.layer.TileLayerUICtrl.prototype, 'onStyleChange',
 
 /**
  * Handles colorize changes.
+ * @export
  */
 os.ui.layer.TileLayerUICtrl.prototype.onColorizeChange = function() {
   var value = /** @type {boolean} */ (this.scope['colorize']);
@@ -165,5 +166,3 @@ os.ui.layer.TileLayerUICtrl.prototype.onColorizeChange = function() {
 
   this.createCommand(fn);
 };
-goog.exportProperty(os.ui.layer.TileLayerUICtrl.prototype, 'onColorizeChange',
-    os.ui.layer.TileLayerUICtrl.prototype.onColorizeChange);

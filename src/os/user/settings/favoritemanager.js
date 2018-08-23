@@ -66,7 +66,7 @@ os.user.settings.FavoriteManager = function() {
    */
   this.icons_ = {};
 
-  this.registerIcon(os.user.settings.FavoriteType.DESCRIPTOR, 'toggle-switch');
+  this.registerIcon(os.user.settings.FavoriteType.DESCRIPTOR, 'c-toggle-switch');
   this.registerIcon(os.user.settings.FavoriteType.FOLDER, 'fa fa-fw fa-folder');
   this.registerIcon(os.user.settings.FavoriteType.MISSING, 'fa fa-fw fa-chain-broken');
   this.registerIcon(os.user.settings.FavoriteType.SEARCH, 'fa fa-fw fa-search');

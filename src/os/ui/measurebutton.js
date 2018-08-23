@@ -23,15 +23,14 @@ os.ui.measureButtonDirective = function() {
     },
     controller: os.ui.MeasureButtonCtrl,
     controllerAs: 'ctrl',
-    template: '<div class="measure-group btn-group" ng-right-click="ctrl.openMenu()">' +
-      '<button class="btn btn-default" id="measureButton" title="Measure between points"' +
+    template: '<div class="btn-group" ng-right-click="ctrl.openMenu()">' +
+      '<button class="btn btn-secondary" id="measureButton" title="Measure between points"' +
       ' ng-click="ctrl.toggle()"' +
       ' ng-class="{active: measuring}">' +
-      '<i class="fa fa-arrows-h"></i> {{showLabel ? \'Measure\' : \'\'}}' +
+      '<i class="fa fa-fw fa-arrows-h"></i> {{showLabel ? \'Measure\' : \'\'}}' +
       '</button>' +
-      '<button class="btn addon" ng-click="ctrl.openMenu()"' +
+      '<button class="btn btn-secondary dropdown-toggle dropdown-toggle-split" ng-click="ctrl.openMenu()"' +
       ' ng-class="{active: menu}">' +
-      '<i class="fa fa-chevron-down"></i>' +
       '</button></div>'
   };
 };

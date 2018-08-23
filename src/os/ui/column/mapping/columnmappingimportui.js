@@ -39,34 +39,27 @@ os.ui.column.mapping.ColumnMappingImportUI.LOGGER_ = goog.log.getLogger('os.ui.c
  * @inheritDoc
  */
 os.ui.column.mapping.ColumnMappingImportUI.prototype.launchUI = function(file, opt_config) {
-  os.ui.column.mapping.ColumnMappingImportUI.base(this, 'launchUI', file, opt_config);
-
-  var options = {
-    'x': 'center',
-    'y': 'center',
-    'label': 'Import Column Associations',
-    'show-close': false,
-    'no-scroll': true,
-    'width': 400,
-    'height': 200,
-    'icon': 'fa fa-sign-in color-import'
-  };
-
-  var scopeOptions = {
-    'confirmCallback': this.confirm_.bind(this, file),
-    'yesText': 'Clear and Import',
-    'yesIcon': 'btn-icon fa fa-check color-add',
-    'noText': 'Cancel',
-    'noIcon': 'btn-icon fa fa-ban red-icon'
-  };
-
   var cmm = os.column.ColumnMappingManager.getInstance();
   var all = cmm.getAll();
   if (all && all.length > 0) {
     var text = 'You are importing a new set of Column Associations. This action will <b>wipe out all existing ' +
         'Column Associations and replace them with the imported set</b><br><br>Are you sure you want to proceed?';
-    var template = '<confirm>' + text + '</confirm>';
-    os.ui.window.create(options, template, undefined, undefined, undefined, scopeOptions);
+
+    os.ui.window.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
+      confirm: this.confirm_.bind(this, file),
+      prompt: text,
+      yesText: 'Clear and Import',
+      windowOptions: {
+        'x': 'center',
+        'y': 'center',
+        'label': 'Import Column Associations',
+        'show-close': false,
+        'no-scroll': true,
+        'width': 400,
+        'height': 'auto',
+        'icon': 'fa fa-sign-in'
+      }
+    }));
   } else {
     this.confirm_(file);
   }

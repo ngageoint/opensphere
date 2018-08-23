@@ -1,0 +1,16 @@
+{
+  "name": "typeface-open-sans",
+  "version": "0.0.54",
+  "description": "Open Sans typeface",
+  "main": "index.css",
+  "keywords": [
+    "typeface",
+    "font",
+    "font family",
+    "google fonts",
+    "open-sans"
+  ],
+  "author": "Kyle Mathews <mathews.kyle@gmail.com>",
+  "license": "MIT",
+  "repository": "https://github.com/KyleAMathews/typefaces/tree/master/packages/open-sans"
+}

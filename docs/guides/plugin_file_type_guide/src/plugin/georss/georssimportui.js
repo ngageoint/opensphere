@@ -50,7 +50,7 @@ plugin.georss.GeoRSSImportUI.prototype.launchUI = function(file, opt_config) {
   };
   var windowOptions = {
     'label': 'Import GeoRSS',
-    'icon': 'fa fa-file-text lt-blue-icon',
+    'icon': 'fa fa-file-text',
     'x': 'center',
     'y': 'center',
     'width': 350,

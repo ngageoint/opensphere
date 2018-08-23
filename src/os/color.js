@@ -666,6 +666,17 @@ os.color.yiqToRgb = function(yiq, opt_result) {
 
 
 /**
+ * Converts an integer color representation to a hex string
+ * @param {number} num The integer color.
+ * @return {string} The hex representation.
+ */
+os.color.intToHex = function(num) {
+  num = goog.math.clamp(num | 0, 0, 0xffffff);
+  return '#' + ('00000' + (num | 0).toString(16)).substr(-6);
+};
+
+
+/**
  * Transforms the hue of a color in the YIQ color space.
  *
  * @param {!Array<number>} rgb The original color in RGB

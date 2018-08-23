@@ -16,7 +16,6 @@ goog.require('os.registerClass');
 goog.require('os.source');
 goog.require('os.style');
 goog.require('os.ui.Icons');
-goog.require('os.ui.featureInfoDirective');
 goog.require('os.ui.layer.defaultLayerUIDirective');
 goog.require('os.ui.renamelayer');
 goog.require('os.ui.window');

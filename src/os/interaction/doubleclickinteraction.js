@@ -10,6 +10,7 @@ goog.require('os.data.RecordField');
 goog.require('os.feature');
 goog.require('os.implements');
 goog.require('os.source.Vector');
+goog.require('os.ui.feature.multiFeatureInfoDirective');
 
 
 
@@ -49,41 +50,39 @@ os.interaction.DoubleClick.prototype.is3DSupported = function() {
  */
 os.interaction.DoubleClick.handleEvent_ = function(mapBrowserEvent) {
   var map = mapBrowserEvent.map;
+  var features = [];
 
   if (mapBrowserEvent.type == ol.MapBrowserEventType.DBLCLICK &&
       map.getView().getHints()[ol.ViewHint.INTERACTING] == 0) {
     try {
-      var feature = map.forEachFeatureAtPixel(mapBrowserEvent.pixel, this.checkLayers_.bind(this));
+      var options = {
+        'drillPick': true
+      };
+
+      map.forEachFeatureAtPixel(mapBrowserEvent.pixel, function(feature, layer) {
+        if (feature instanceof ol.Feature) {
+          if (!layer || !(layer instanceof os.layer.Vector)) {
+            // might be an animation overlay - try to find the original layer
+            layer = os.feature.getLayer(feature);
+          }
+
+          if (layer instanceof os.layer.Vector) {
+            var vector = /** @type {os.layer.Vector} */ (layer);
+            var id = vector.getId();
+
+            if (vector && id) {
+              goog.array.insert(features, feature);
+            }
+          }
+        }
+      }, options);
+
+      if (features.length > 0) {
+        os.ui.feature.launchMultiFeatureInfo(features);
+      }
     } catch (e) {
     }
   }
 
-  return !feature;
-};
-
-
-/**
- * @param {ol.Feature|ol.render.Feature} feature Feature.
- * @param {ol.layer.Layer} layer Layer.
- * @return {?ol.Feature}
- * @private
- */
-os.interaction.DoubleClick.prototype.checkLayers_ = function(feature, layer) {
-  if (feature instanceof ol.Feature) {
-    if (!layer || !(layer instanceof os.layer.Vector)) {
-      // might be an animation overlay - try to find the original layer
-      layer = os.feature.getLayer(feature);
-    }
-
-    if (layer instanceof os.layer.Vector) {
-      var vector = /** @type {os.layer.Vector} */ (layer);
-      var handler = vector.getDoubleClickHandler();
-      if (handler) {
-        handler(feature);
-        return feature;
-      }
-    }
-  }
-
-  return null;
+  return !features.length;
 };

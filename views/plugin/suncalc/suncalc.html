@@ -1,59 +1,54 @@
-<div class="suncalc-window window-content-wrapper">
-  <div class="window-content">
-    <simple-location latdeg="coord[1]" londeg="coord[0]" ng-if="coord"></simple-location>
-    <span>{{ctrl.formatDate(time)}}</span>
+<div class="d-flex flex-column flex-fill">
+  <div class="modal-body">
+    <div>
+      <simple-location latdeg="coord[1]" londeg="coord[0]" ng-if="coord"></simple-location>
+      <div class="mb-2">{{ctrl.formatDate(time)}}</div>
+    </div>
     <div class="d-flex">
-      <div class="flex-grow pad">
-        <h4><i class="fa fa-fw fa-clock-o"></i> Schedule</i></h4>
+      <div class="flex-fill col">
+        <h4><i class="fa fa-fw fa-clock-o"></i> Schedule</h4>
         <div ng-repeat="item in times">
-          <span class="suncalc-time" ng-style="{color:item.textColor,background:item.color}">{{ctrl.formatTime(item.time)}}</span>
+          <span class="rounded px-1" ng-style="{color:item.textColor,background:item.color}">{{ctrl.formatTime(item.time)}}</span>
           &mdash;
           {{item.label}}
         </div>
       </div>
-      <div class="flex-column flex-grow">
-        <div class="pad">
-          <h4 style="color:gold"><i class="fa fa-fw fa-sun-o"></i> Sun</h4>
-          <table>
-            <tr title="Altitude above horizon">
-              <td>Altitude</td>
-              <td class="align-right">{{sun.altitude.toFixed(2)}}&deg;</td>
-            </tr>
-            <tr title="Azimuth meastured from North to East">
-              <td>Azimuth</td>
-              <td class="align-right">{{sun.azimuth.toFixed(2)}}&deg;</td>
-            </tr>
-          </table>
+      <div class="col flex-fill">
+        <div class="mb-2">
+          <h4><i class="fa fa-fw fa-sun-o u-text-yellow"></i> Sun</h4>
+          <div class="d-flex" title="Altitude above horizon">
+            <div class="flex-fill">Altitude</div>
+            <div class="text-right mr-5">{{sun.altitude.toFixed(2)}}&deg;</div>
+          </div>
+          <div class="d-flex" title="Azimuth meastured from North to East">
+            <div class="flex-fill">Azimuth</div>
+            <div class="text-right mr-5">{{sun.azimuth.toFixed(2)}}&deg;</div>
+          </div>
         </div>
-        <div class="pad">
-          <h4><i class="fa fa-fw fa-moon-o"></i> Moon</h4>
-          <div ng-if="moon.alwaysUp">Up all day</div>
-          <div ng-if="moon.alwaysDown">Down all day</div>
-          <div>{{moon.phase}}</div>
-          <table>
-            <tr title="Altitude above horizon">
-              <td>Altitude</td>
-              <td class="align-right">{{moon.altitude.toFixed(2)}}&deg;</td>
-            </tr>
-            <tr title="Azimuth meastured from North to East">
-              <td>Azimuth</td>
-              <td class="align-right">{{moon.azimuth.toFixed(2)}}&deg;</td>
-            </tr>
-            <tr>
-              <td>Brightness</td>
-              <td class="align-right">{{moon.brightness}}</td>
-            </tr>
-          </table>
+        <h4><i class="fa fa-fw fa-moon-o u-text-blue"></i> Moon</h4>
+        <div ng-if="moon.alwaysUp">Up all day</div>
+        <div ng-if="moon.alwaysDown">Down all day</div>
+        <div>{{moon.phase}}</div>
+        <div class="d-flex" title="Altitude above horizon">
+          <div class="flex-fill">Altitude</div>
+          <div class="text-right mr-5">{{moon.altitude.toFixed(2)}}&deg;</div>
+        </div>
+        <div class="d-flex" title="Azimuth meastured from North to East">
+          <div class="flex-fill">Azimuth</div>
+          <div class="text-right mr-5">{{moon.azimuth.toFixed(2)}}&deg;</div>
+        </div>
+        <div class="d-flex">
+          <div class="flex-fill">Brightness</div>
+          <div class="text-right mr-5">{{moon.brightness}}</div>
         </div>
       </div>
     </div>
   </div>
-  <div class="window-footer">
-    <div class="pull-right">
-      <button type="button" class="btn btn-default" ng-click="ctrl.close()">
-        <i class="fa fa-fw fa-check"></i>
-        Close
-      </button>
-    </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" ng-click="ctrl.close()">
+      <i class="fa fa-fw fa-check"></i>
+      Close
+    </button>
   </div>
 </div>

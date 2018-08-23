@@ -110,6 +110,9 @@
       "kml": {
         "type": "kml"
       },
+      "gml": {
+        "type": "gml"
+      },
       "gpx": {
         "type": "gpx"
       },
@@ -134,6 +137,11 @@
       "cofUrl": "vendor/geomag/WMM.COF",
       "cofVersion": "2015-2020",
       "magneticNorthHelpUrl": "https://www.ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml"
+    },
+    "themes": {
+      "Default": "overrides_slate_compact",
+      "Light": "overrides_default_compact",
+      "Dark": "overrides_slate_compact"
     }
   },
   "user": {

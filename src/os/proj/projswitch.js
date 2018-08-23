@@ -330,31 +330,25 @@ os.proj.switch.SwitchProjection.prototype.prompt_ = function() {
     text += '<p>The 3D view does not support the new projection. The view will be switched to 2D.</p>';
   }
 
-  var scopeOptions = {
-    'confirmCallback': this.performSwitch.bind(this, layers),
-    'cancelCallback': this.cancelSwitch.bind(this),
-    'yesText': 'Switch',
-    'yesIcon': 'fa fa-exchange green-icon',
-    'noText': 'Cancel',
-    'noIcon': 'fa fa-ban red-icon'
-  };
-
-  var windowOptions = {
-    'label': this.layers_.length ? 'Differing Projections' : 'Projection Change',
-    'icon': 'fa fa-warning orange-icon',
-    'x': 'center',
-    'y': 'center',
-    'width': '500',
-    'min-width': '300',
-    'max-width': '600',
-    'height': '400',
-    'min-height': '215',
-    'max-height': '500',
-    'modal': 'true'
-  };
-
-  var template = '<confirm>' + text + '</confirm>';
-  os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+  os.ui.window.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
+    confirm: this.performSwitch.bind(this, layers),
+    cancel: this.cancelSwitch.bind(this),
+    prompt: text,
+    yesText: 'Switch',
+    yesIcon: 'fa fa-exchange',
+    windowOptions: {
+      'label': this.layers_.length ? 'Differing Projections' : 'Projection Change',
+      'icon': 'fa fa-warning',
+      'x': 'center',
+      'y': 'center',
+      'width': '500',
+      'min-width': '300',
+      'max-width': '600',
+      'height': 'auto',
+      'modal': 'true',
+      'headerClass': 'bg-warning u-bg-warning-text'
+    }
+  }));
 };
 
 

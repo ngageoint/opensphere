@@ -1,11 +1,9 @@
-<div id="win-container" class="win-container">
-  <!-- If you add something to this file, you're (probably) doing it wrong! -->
-  <div class="flex-container drag-container dd-target" url-drag-drop dd-element=".os-app">
-    <nav-top></nav-top>
-    <div class="d-flex flex-row flex-grow mh-0">
-      <date-panel ng-show="!mainCtrl.timeline"></date-panel>
+<div id="js-window__container" class="h-100 w-100 position-absolute js-main d-flex">
+  <div class="dd-target c-main d-flex flex-column flex-fill w-100" url-drag-drop>
+    <nav-top options="navOptions"></nav-top>
+    <div id="main" class="d-flex flex-row flex-fill">
       <div list list-id="main-content" list-prefix="<div>" list-suffix="</div>"></div>
-      <map class="mw-0"></map>
+      <map></map>
     </div>
     <timeline-panel ng-if="mainCtrl.timeline"></timeline-panel>
     <nav-bottom></nav-bottom>
@@ -15,6 +13,6 @@
   <legendguide ng-if="mainCtrl.legend" widget="true" close-flag="mainCtrl.legend"></legendguide>
 
   <!-- these are OK since they are legitimately always in the DOM -->
-  <global-menu id="globalMenu"></global-menu>
+  <global-menu id="js-global-menu"></global-menu>
   <onboarding></onboarding>
 </div>

@@ -3,6 +3,7 @@ goog.provide('os.ui.im.URLExistsCtrl');
 goog.provide('os.ui.im.urlExistsDirective');
 
 goog.require('os.ui.Module');
+goog.require('os.ui.window.confirmDirective');
 
 
 /**
@@ -60,29 +61,27 @@ os.ui.im.URLExistsCtrl = function($scope) {
  * @param {function(os.ui.im.URLExistsChoice)} confirm
  */
 os.ui.im.launchURLExists = function(url, current, confirm) {
+  var confirmOptions = /** @type {osx.window.ConfirmOptions} */ ({
+    confirm: confirm,
+    confirmValue: os.ui.im.URLExistsChoice.ACTIVATE,
+    prompt: '<urlexists></urlexists>',
+    windowOptions: {
+      'label': 'URL Exists!',
+      'icon': 'fa fa-exclamation-triangle',
+      'x': 'center',
+      'y': 'center',
+      'width': 450,
+      'height': 'auto',
+      'modal': true,
+      'show-close': true,
+      'no-scroll': true
+    }
+  });
+
   var scopeOptions = {
-    'confirmCallback': confirm,
-    'confirmValue': os.ui.im.URLExistsChoice.ACTIVATE,
-    'yesText': 'OK',
-    'yesIcon': 'fa fa-check lt-blue-icon',
-    'noText': 'Cancel',
-    'noIcon': 'fa fa-ban red-icon',
     'current': current,
     'url': url
   };
 
-  var windowOptions = {
-    'label': 'URL Exists!',
-    'icon': 'fa fa-exclamation-triangle orange-icon',
-    'x': 'center',
-    'y': 'center',
-    'width': 450,
-    'height': 'auto',
-    'modal': 'true',
-    'show-close': 'true',
-    'no-scroll': 'true'
-  };
-
-  var template = '<confirm><urlexists></urlexists></confirm>';
-  os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+  os.ui.window.launchConfirm(confirmOptions, scopeOptions);
 };

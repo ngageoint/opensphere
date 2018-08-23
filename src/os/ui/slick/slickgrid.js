@@ -23,6 +23,7 @@ goog.require('os.ui.menu.IMenuSupplier');
 goog.require('os.ui.slick.ColumnEventType');
 goog.require('os.ui.slick.column');
 goog.require('os.ui.text');
+goog.require('os.ui.windowSelector');
 
 
 /**
@@ -162,10 +163,12 @@ os.ui.slick.SlickGridCtrl = function($scope, $element, $compile) {
    */
   this.copyLimitMsg = os.ui.slick.SlickGridCtrl.COPY_LIMIT_MSG;
 
+  // The order in which these watches are created matters. Any initial selection state on a slickgrid will be wiped
+  // out if the watch on columns is created before the watch on the selected items.
   this.destroyers.push($scope.$watch('data', this.onDataChange.bind(this)));
+  this.destroyers.push($scope.$watch('selected', this.onSelectedChange.bind(this)));
   this.destroyers.push($scope.$watch('columns', this.onColumnsChange.bind(this)));
   this.destroyers.push($scope.$watch('options', this.onOptionsChange.bind(this)));
-  this.destroyers.push($scope.$watch('selected', this.onSelectedChange.bind(this)));
   this.destroyers.push($scope.$on('$destroy', this.dispose.bind(this)));
   var unWatchSortColumn = $scope.$watch('defaultSortColumn', goog.bind(function(newVal) {
     if (newVal && goog.array.find($scope['columns'], function(col) {
@@ -1047,7 +1050,7 @@ os.ui.slick.SlickGridCtrl.prototype.onContextMenu_ = function(event, opt_positio
       menu.open(contextArgs, {
         my: 'left top',
         at: 'left+' + menuX + ' top+' + menuY,
-        of: '#win-container'
+        of: os.ui.windowSelector.CONTAINER
       }, this);
     }
   }
@@ -1077,7 +1080,7 @@ os.ui.slick.SlickGridCtrl.prototype.onHeaderContextMenu_ = function(event, opt_p
     position = {
       my: 'left top',
       at: 'left+' + event.clientX + ' top+' + event.clientY,
-      of: '#win-container'
+      of: os.ui.windowSelector.CONTAINER
     };
   } else if (goog.isObject(opt_position)) {
     // event was fired on the scope

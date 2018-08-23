@@ -121,15 +121,14 @@ os.ui.file.method.FileMethod.prototype.loadFile = function(opt_options) {
     };
     var windowOptions = {
       'label': 'Import File',
-      'icon': 'fa fa-floppy-o lt-blue-icon',
+      'icon': 'fa fa-floppy-o',
       'x': 'center',
       'y': 'center',
       'width': '400',
       'min-width': '400',
       'max-width': '400',
-      'height': '150',
-      'min-height': '150',
-      'max-height': '150',
+      'height': 'auto',
+      'min-height': '225',
       'modal': 'true',
       'show-close': 'true',
       'no-scroll': 'true'
@@ -146,7 +145,8 @@ os.ui.file.method.FileMethod.prototype.loadFile = function(opt_options) {
       tries++;
 
       if (tries < 10) {
-        var fileEl = goog.dom.getElement('win-container').querySelector('input[type="file"]');
+        var fileEl =
+            goog.dom.getElement(os.ui.windowSelector.CONTAINER.substring(1)).querySelector('input[type="file"]');
         if (fileEl) {
           fileEl.click();
         } else {

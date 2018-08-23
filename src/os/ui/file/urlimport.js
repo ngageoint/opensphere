@@ -1,6 +1,8 @@
 goog.provide('os.ui.file.UrlImportCtrl');
 goog.provide('os.ui.file.urlImportDirective');
+
 goog.require('os.ui.Module');
+goog.require('os.ui.util.validationMessageDirective');
 
 
 /**
@@ -65,6 +67,7 @@ os.ui.file.UrlImportCtrl = function($scope, $element) {
   // bring focus to the url input
   this.element_.find('input[name="url"]').focus();
 
+  $scope.$emit(os.ui.WindowEventType.READY);
   $scope.$on('$destroy', this.onDestroy_.bind(this));
 };
 

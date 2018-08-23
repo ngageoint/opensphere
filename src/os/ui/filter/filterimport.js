@@ -30,6 +30,7 @@ os.ui.filter.im.filterImportDirective = function() {
        */
       'layerId': '=?'
     },
+    replace: true,
     templateUrl: os.ROOT + 'views/filter/im/filterimport.html',
     controller: os.ui.filter.im.FilterImportCtrl,
     controllerAs: 'ctrl'
@@ -125,6 +126,11 @@ os.ui.filter.im.FilterImportCtrl = function($scope, $element, $sce) {
    * @type {boolean}
    */
   this['showMatch'] = true;
+
+  /**
+   * @type {Array<string>}
+   */
+  this['groups'] = os.ui.query.ui.ComboNodeUICtrl.GROUPS;
 
   var descriptors = os.dataManager.getDescriptors();
   var filterables = [];
@@ -406,19 +412,17 @@ os.ui.filter.im.FilterImportCtrl.prototype.testColumns_ = function() {
 /**
  * Gets the list of filterable layer descriptors.
  * @return {!Array<!os.data.IDataDescriptor>}
+ * @export
  */
 os.ui.filter.im.FilterImportCtrl.prototype.getLayersFunction = function() {
   return this.filterableDescriptors_;
 };
-goog.exportProperty(
-    os.ui.filter.im.FilterImportCtrl.prototype,
-    'getLayersFunction',
-    os.ui.filter.im.FilterImportCtrl.prototype.getLayersFunction);
 
 
 /**
  * Remove a layer from the import list.
  * @param {string} layerId The layer id.
+ * @export
  */
 os.ui.filter.im.FilterImportCtrl.prototype.removeLayer = function(layerId) {
   if (layerId && this['found'][layerId]) {
@@ -430,14 +434,11 @@ os.ui.filter.im.FilterImportCtrl.prototype.removeLayer = function(layerId) {
     delete this['found'][layerId];
   }
 };
-goog.exportProperty(
-    os.ui.filter.im.FilterImportCtrl.prototype,
-    'removeLayer',
-    os.ui.filter.im.FilterImportCtrl.prototype.removeLayer);
 
 
 /**
  * Adds the set of not-matched filters that match the presently selected layer to the list of matched filters.
+ * @export
  */
 os.ui.filter.im.FilterImportCtrl.prototype.addNotFound = function() {
   var layer = /** @type {os.data.IDataDescriptor} */ (this['layer']);
@@ -482,14 +483,11 @@ os.ui.filter.im.FilterImportCtrl.prototype.addNotFound = function() {
     return !!obj['matches'];
   });
 };
-goog.exportProperty(
-    os.ui.filter.im.FilterImportCtrl.prototype,
-    'addNotFound',
-    os.ui.filter.im.FilterImportCtrl.prototype.addNotFound);
 
 
 /**
  * Add the filters to the detected/chosen layers and close the window.
+ * @export
  */
 os.ui.filter.im.FilterImportCtrl.prototype.finish = function() {
   var count = 0;
@@ -544,50 +542,37 @@ os.ui.filter.im.FilterImportCtrl.prototype.finish = function() {
 
   os.ui.window.close(this.element);
 };
-goog.exportProperty(
-    os.ui.filter.im.FilterImportCtrl.prototype,
-    'finish',
-    os.ui.filter.im.FilterImportCtrl.prototype.finish);
 
 
 /**
  * Close the window and cancel the import.
+ * @export
  */
 os.ui.filter.im.FilterImportCtrl.prototype.cancel = function() {
   os.ui.window.close(this.element);
 };
-goog.exportProperty(
-    os.ui.filter.im.FilterImportCtrl.prototype,
-    'cancel',
-    os.ui.filter.im.FilterImportCtrl.prototype.cancel);
 
 
 /**
  * Get the filter icon class.
  * @return {string}
+ * @export
  */
 os.ui.filter.im.FilterImportCtrl.prototype.getFilterIcon = function() {
   return 'fa-filter';
 };
-goog.exportProperty(
-    os.ui.filter.im.FilterImportCtrl.prototype,
-    'getFilterIcon',
-    os.ui.filter.im.FilterImportCtrl.prototype.getFilterIcon);
 
 
 /**
  * Get the text to display for the imported filter count.
  * @param {number=} opt_count The count, for determining the plurality.
  * @return {string}
+ * @export
  */
 os.ui.filter.im.FilterImportCtrl.prototype.getFilterTitle = function(opt_count) {
   var plural = opt_count == 1 ? '' : 's';
   return this.filterTitle + plural;
 };
-goog.exportProperty(
-    os.ui.filter.im.FilterImportCtrl.prototype,
-    'getFilterTitle',
-    os.ui.filter.im.FilterImportCtrl.prototype.getFilterTitle);
 
 
 /**

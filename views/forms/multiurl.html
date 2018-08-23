@@ -1,90 +1,56 @@
-<div class="server-form window-content-wrapper">
-  <div class="window-content">
-    <div ng-show="testing" class="testing"><i class="fa fa-4x fa-spin fa-smooth fa-spinner"></i><p>Testing...</p></div>
-    <form ng-show="!testing" name="form" class="form-horizontal form-compressed" ng-submit="ctrl.accept()">
-      <table style="width:100%">
-        <tr>
-          <td class="control-label">Title:</td>
-          <td class="wide">
-            <input unique-provider-title type="text" class="wide" name="title" ng-disabled="!edit" ng-model="config.label" ng-required="true" ng-maxlength="1000"/>
-          </td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>
-            <span class="help-inline" data-ng-show="form.title.$error.maxlength">Title is too long!</span>
-            <span class="help-inline" data-ng-show="form.title.$error.unique">Title is not unique!</span>
-            <span class="help-inline" data-ng-show="form.title.$error.required">Please enter a title</span>
-          </td>
-          <td></td>
-        </tr>
+<div class="flex-fill w-100 d-flex flex-column">
+  <div class="modal-body container flex-fill">
+    <div class="text-center" ng-show="testing">
+      <div><i class="fa fa-4x fa-spin fa-smooth fa-spinner"></i></div>
+      <div>Testing...</div>
+    </div>
+    <form class="container-fluid" ng-show="!testing" name="form" ng-submit="ctrl.accept()" novalidate>
+      <div class="form-group row" title="The title for the server">
+        <label class="col-3 col-form-label text-right" for="title">Title</label>
+        <div class="col">
+          <input unique-provider-title type="text" class="form-control" name="title" ng-disabled="!edit"
+              ng-model="config.label" ng-required="true" ng-maxlength="1000"/>
+          <validation-message target="form.title"></validation-message>
+        </div>
+      </div>
 
-        <!-- primary server url -->
-        <tr title="The primary URL for the server">
-          <td class="control-label">URL:</td>
-          <td class="wide">
-            <input type="text" name="url" class="wide" ng-disabled="!edit" ng-model="config.url" ng-required="true"
-                ng-maxlength="1000"/>
-          </td>
-          <td></td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>
-            <span ng-if="urlExample" class="help-inline" data-ng-show="form.url.$valid">e.g. {{urlExample}}</span>
-            <span class="help-inline" data-ng-show="form.url.$error.maxlength">URL is too long!</span>
-            <span class="help-inline" data-ng-show="form.url.$error.required">Please enter a URL</span>
-          </td>
-          <td></td>
-        </tr>
+      <!-- primary server url -->
+      <div class="form-group row" title="The primary URL for the server">
+        <label class="col-3 col-form-label text-right" for="url">URL</label>
+        <div class="col">
+          <input type="text" name="url" class="form-control" ng-disabled="!edit" ng-model="config.url" ng-required="true"
+              ng-maxlength="1000"/>
+          <small class="form-text invalid-feedback" ng-if="urlExample && form.url.$valid">e.g. {{urlExample}}</small>
+          <validation-message target="form.url"></validation-message>
+        </div>
+      </div>
 
-        <!-- alternate server urls -->
-        <tr ng-repeat-start="altUrl in config.alternateUrls track by $index" title="Alternate URL for the server">
-          <td class="control-label">URL {{$index + 2}}:</td>
-          <td class="wide">
-            <input unique-server-url type="text" name="altUrl{{$index}}" class="wide" ng-disabled="!edit"
-                ng-model="config.alternateUrls[$index]" ng-maxlength="1000"
-                placeholder="Alternate URL to server" />
-          </td>
-          <td>
-            <button class="btn btn-default" type="button" ng-click="ctrl.removeAlternateUrl($index)" ng-if="edit"
-                title="Remove this alternate URL">
-              <i class="fa fa-times red-icon"></i>
-            </button>
-          </td>
-        </tr>
-        <tr ng-repeat-end>
-          <td></td>
-          <td>
-            <span class="help-inline" data-ng-show="form.altUrl{{$index}}.$error.maxlength">URL is too long!</span>
-            <span class="help-inline" data-ng-show="form.altUrl{{$index}}.$error.unique">URL is not unique!</span>
-          </td>
-          <td></td>
-        </tr>
+      <!-- alternate server urls -->
+      <div class="form-group row" ng-repeat="altUrl in config.alternateUrls track by $index"
+          title="Alternate URL for the server">
+        <label class="col-3 col-form-label text-right" for="altUrl{{$index}}">URL {{$index + 2}}</label>
+        <div class="col">
+          <input unique-server-url type="text" name="altUrl{{$index}}" class="form-control" ng-disabled="!edit"
+              ng-model="config.alternateUrls[$index]" ng-maxlength="1000"
+              placeholder="Alternate URL to server" />
+        </div>
+      </div>
 
-        <!-- Removed button to allow the user to add an alternate URL to avoid confusion about this feature -->
-        <!-- <tr>
-          <td></td>
-          <td>
-            <button class="btn btn-default" type="button" ng-click="ctrl.addAlternateUrl()" ng-if="edit"
-                title="Add an alternate URL that can be used to reach the server. This will be used to distribute server requests.">
-              <i class="fa fa-plus green-icon"></i> Add Alternate URL
-            </button>
-          </td>
-          <td></td>
-        </tr> -->
-      </table>
-      <input type="submit" class="hidden">
+      <input type="submit" hidden />
     </form>
     <div class="error" ng-if="error">
       <h5>Error!</h5>
       <p ng-bind-html="error"></p>
     </div>
   </div>
-  <div class="window-footer">
-    <div class="pull-right">
-      <button class="btn btn-default" ng-click="ctrl.accept()" ng-disabled="form.$invalid || testing"><i class="fa fa-check lt-blue-icon"></i> {{edit ? 'Save' : 'OK'}}</button>
-      <button class="btn btn-default" ng-click="ctrl.close()"><i class="fa fa-ban red-icon"></i> Cancel</button>
-    </div>
+  <div class="modal-footer d-flex">
+    <button class="btn btn-primary" ng-click="ctrl.accept()" ng-disabled="form.$invalid || testing">
+      <i class="fa fa-check"></i>
+      {{edit ? 'Save' : 'OK'}}
+    </button>
+    <button class="btn btn-secondary" ng-click="ctrl.close()">
+      <i class="fa fa-ban"></i>
+      Cancel
+    </button>
   </div>
 </div>

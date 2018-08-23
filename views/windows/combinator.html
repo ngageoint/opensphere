@@ -1,47 +1,44 @@
-<div class="window-content-wrapper">
-  <div class="window-content combinator">
-    <div class="layers-header">
-      <table class="wide bot-gapxs">
-        <tr ng-show="!hideLayerChooser">
-          <td class="control-label">Layer:</td>
-          <td class="wide">
-            <select class="wide no-margin" ng-model="layer" ng-change="comboCtrl.selectLayer(true)"
-              ng-options="value.label for value in layers" required></select>
-          </td>
-        </tr>
-        <tr ng-show="advanced">
-          <td class="control-label">Group By:</td>
-          <td class="wide">
-            <select class="wide no-margin" ng-model="order" ng-change="comboCtrl.selectGroupBy(true)" ng-options="value for value in orders" />
-          </td>
-        </tr>
-      </table>
-      <div class="wide inline-block">
+<div class="flex-column d-flex flex-fill p-0">
+  <div class="modal-body flex-column d-flex flex-fill u-overflow-y-hidden">
+    <div class="w-100">
+      <div class="row mb-1" ng-show="!hideLayerChooser">
+        <label class="col-form-label text-right col-2">Layer</label>
+        <div class="col">
+          <select class="form-control col-10" ng-model="layer" ng-change="comboCtrl.selectLayer(true)" ng-options="value.label for value in layers" required></select>
+        </div>
+      </div>
+      <div class="row mb-1" ng-show="advanced">
+        <label class="col-form-label text-right col-2">Group By</label>
+        <div class="col">
+          <select class="form-control col-10" ng-model="order" ng-change="comboCtrl.selectGroupBy(true)" ng-options="value for value in orders"></select>
+        </div>
+      </div>
+      <div class="w-100 d-inline-block mb-2">
         <addfilter layer="layer" btn-text="Add Filter"></addfilter>
-        <div class="pull-right">
-          <label class="checkbox inline" title="Advanced mode allows more specific combinations of layers, filters, and areas">
-            <input type="checkbox" style="height: inherit;" ng-model="advanced" ng-change="comboCtrl.advancedToggle(true)" style="height: inherit;">
+        <div class="float-right">
+          <label class="form-check-label mr-2" title="Advanced mode allows more specific combinations of layers, filters, and areas">
+            <input class="form-check-input" type="checkbox" ng-model="advanced" ng-change="comboCtrl.advancedToggle(true)">
             Advanced
           </label>
-          <button class="btn btn-default" ng-click="comboCtrl.toggle(false)" title="Expand all"><i class="fa fa-plus-square-o"></i></button>
-          <button class="btn btn-default" ng-click="comboCtrl.toggle(true)" title="Collapse all"><i class="fa fa-minus-square-o"></i></button>
-          <button class="btn btn-default" ng-click="comboCtrl.clear()" title="Clears all the checkboxes in the form">Reset</button>
+          <button class="btn btn-secondary btn-sm" ng-click="comboCtrl.toggle(false)" title="Expand all"><i class="fa fa-plus-square-o"></i></button>
+          <button class="btn btn-secondary btn-sm" ng-click="comboCtrl.toggle(true)" title="Collapse all"><i class="fa fa-minus-square-o"></i></button>
+          <button class="btn btn-secondary btn-sm" ng-click="comboCtrl.clear()" title="Clears all the checkboxes in the form">Reset</button>
         </div>
       </div>
     </div>
-    <div class="combinator-main" autoheight siblings=".layers-header">
+    <div class="w-100 flex-fill d-flex u-overflow-y-auto">
       <slicktree x-data="pivots" selected="selected" multi-select="true" disposable="true"></slicktree>
     </div>
   </div>
-  <div class="window-footer">
-    <div class="pull-right">
-      <button class="btn btn-default" ng-click="comboCtrl.apply()"><i class="fa fa-fw fa-check"></i>Apply</button>
-      <button class="btn btn-default" ng-click="comboCtrl.close()"><i class="fa fa-fw fa-ban red-icon"></i>Close</button>
+  <div class="modal-footer d-inline">
+    <div class="float-right">
+      <button class="btn btn-primary" ng-click="comboCtrl.apply()"><i class="fa fa-fw fa-check"></i>Apply</button>
+      <button class="btn btn-secondary" ng-click="comboCtrl.close()"><i class="fa fa-fw fa-ban"></i>Close</button>
     </div>
-    <button class="btn btn-default" ng-click="comboCtrl.launchExport()" ng-disabled="comboCtrl.exportDisabled()"><i class="fa fa-download yellow-icon"></i> Export</button>
-    <div class="import-group btn-group" ng-right-click="comboCtrl.openImportMenu()">
-      <button class="btn btn-default" ng-click="comboCtrl.import()"><i class="fa fa-sign-in color-import"></i> Import</button>
-      <button class="btn addon" ng-click="comboCtrl.openImportMenu()" ng-class="{active: importMenuOpen}"><i class="fa fa-chevron-down"></i></button>
+    <button class="btn btn-secondary" ng-click="comboCtrl.launchExport()" ng-disabled="comboCtrl.exportDisabled()"><i class="fa fa-download"></i> Export</button>
+    <div class="js-import-group btn-group" ng-right-click="comboCtrl.openImportMenu()">
+      <button class="btn btn-secondary" ng-click="comboCtrl.import()"><i class="fa fa-sign-in"></i> Import</button>
+      <button class="btn btn-secondary" ng-click="comboCtrl.openImportMenu()" ng-class="{active: importMenuOpen}"><i class="fa fa-chevron-down"></i></button>
     </div>
   </div>
 </div>

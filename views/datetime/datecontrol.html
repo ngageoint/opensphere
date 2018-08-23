@@ -1,31 +1,41 @@
-<div id="date-control">
-  <button class="btn btn-mini" title="Previous {{dateControl.duration}}"
-      ng-click="dateControl.shiftDate(-1)"
-      ng-disabled="dateControl.disabled"
-      ng-if="dateControl.duration !== 'custom'">
-    <i class="btn-icon fa fa-chevron-left"></i>
-  </button>
-  <wheel-date class="start-date" title="Start date"
-      blur-on-select="true"
-      date="dateControl.startDate"
-      disable="dateControl.disabled">
-  </wheel-date>
-  <wheel-date class="end-date" title="End date (inclusive)"
-      blur-on-select="true"
-      date="dateControl.endDate"
-      disable="dateControl.disabled"
-      ng-show="dateControl.duration == 'custom'">
-  </wheel-date>
-  <button class="btn btn-mini" title="Next {{dateControl.duration}}"
-      ng-click="dateControl.shiftDate(1)"
-      ng-disabled="dateControl.disabled"
-      ng-if="dateControl.duration !== 'custom'">
-    <i class="btn-icon fa fa-chevron-right"></i>
-  </button>
-  <select title="Duration"
-      ng-model="dateControl.duration"
-      ng-change="dateControl.onDurationChanged()"
-      ng-disabled="dateControl.disabled">
-    <option ng-repeat="duration in dateControl.durations">{{duration}}</option>
-  </select>
+<div class="d-flex js-date-control o-date-control">
+  <div class="input-group mr-1">
+    <div class="input-group-prepend">
+      <button class="btn btn-secondary flex-shrink-0" title="Previous {{dateControl.duration}}"
+          ng-click="dateControl.shiftDate(-1)"
+          ng-disabled="dateControl.disabled"
+          ng-if="dateControl.duration !== 'custom'">
+        <i class="fa fa-chevron-left"></i>
+      </button>
+    </div>
+    <wheel-date class="start-date" title="Start date"
+        class="c-date-control__wheel-date"
+        blur-on-select="true"
+        date="dateControl.startDate"
+        disable="dateControl.disabled">
+    </wheel-date>
+    <wheel-date class="end-date" title="End date (inclusive)"
+        class="c-date-control__wheel-date"
+        blur-on-select="true"
+        date="dateControl.endDate"
+        disable="dateControl.disabled"
+        ng-if="dateControl.duration == 'custom'">
+    </wheel-date>
+    <div class="input-group-append">
+      <button class="btn btn-secondary flex-shrink-0" title="Next {{dateControl.duration}}"
+          ng-click="dateControl.shiftDate(1)"
+          ng-disabled="dateControl.disabled"
+          ng-if="dateControl.duration !== 'custom'">
+        <i class="fa fa-chevron-right"></i>
+      </button>
+    </div>
+  </div>
+  <div class="flex-shrink-0">
+    <select title="Duration" class="form-control"
+        ng-model="dateControl.duration"
+        ng-change="dateControl.onDurationChanged()"
+        ng-disabled="dateControl.disabled">
+      <option ng-repeat="duration in dateControl.durations">{{duration}}</option>
+    </select>
+  </div>
 </div>

@@ -168,7 +168,8 @@ os.ui.hist.HorizontalBarChart.prototype.tooltip = function(tooltip) {
           tooltip.show(parentData[0], data);
         }
       })
-      .on('mouseout', tooltip.hide);
+      .on('mouseout', tooltip.hide)
+      .on('click', tooltip.hide);
 };
 
 

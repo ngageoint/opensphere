@@ -15,6 +15,7 @@ goog.require('os.ui.state.AbstractStateFormCtrl');
 os.ui.state.stateExportDirective = function() {
   return {
     restrict: 'E',
+    replace: true,
     scope: true,
     templateUrl: os.ROOT + 'views/window/stateimportexport.html',
     controller: os.ui.state.StateExportCtrl,
@@ -81,7 +82,7 @@ os.ui.state.StateExportCtrl = function($scope, $element, $timeout) {
    */
   this['isSaving'] = true;
   $timeout(function() {
-    $scope.$emit('window.ready');
+    $scope.$emit(os.ui.WindowEventType.READY);
   });
 };
 goog.inherits(os.ui.state.StateExportCtrl, os.ui.state.AbstractStateFormCtrl);

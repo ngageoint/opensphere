@@ -5,6 +5,7 @@ goog.require('os.data.OSDataManager');
 goog.require('os.data.SourceManager');
 goog.require('os.defines');
 goog.require('os.ui.Module');
+goog.require('os.ui.util.validationMessageDirective');
 goog.require('os.ui.window');
 goog.require('plugin.vectortools.JoinLayer');
 goog.require('plugin.vectortools.mappingCounterDirective');
@@ -96,7 +97,7 @@ plugin.vectortools.JoinCtrl = function($scope, $element) {
 
   this.init();
   $scope.$on('$destroy', this.disposeInternal.bind(this));
-  $scope.$emit('window.ready');
+  $scope.$emit(os.ui.WindowEventType.READY);
 };
 goog.inherits(plugin.vectortools.JoinCtrl, os.data.SourceManager);
 

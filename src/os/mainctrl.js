@@ -26,6 +26,7 @@ goog.require('os.config.InterpolationSettings');
 goog.require('os.config.LegendSettings');
 goog.require('os.config.ProjectionSettings');
 goog.require('os.config.ServerSettings');
+goog.require('os.config.ThemeSettings');
 goog.require('os.config.UnitSettings');
 goog.require('os.control');
 goog.require('os.data.OSDataManager');
@@ -92,7 +93,6 @@ goog.require('os.ui.columnactions.ColumnActionEvent');
 goog.require('os.ui.columnactions.ColumnActionManager');
 goog.require('os.ui.config.SettingPlugin');
 goog.require('os.ui.config.SettingsManager');
-goog.require('os.ui.datePanelDirective');
 goog.require('os.ui.draw');
 goog.require('os.ui.events.UIEventType');
 goog.require('os.ui.exportManager');
@@ -101,6 +101,7 @@ goog.require('os.ui.file.FileXTHandler');
 goog.require('os.ui.file.method.ImportMethod');
 goog.require('os.ui.filtersDirective');
 goog.require('os.ui.help.Controls');
+goog.require('os.ui.help.metricsOption');
 goog.require('os.ui.historyDirective');
 goog.require('os.ui.icon.IconSelectorManager');
 goog.require('os.ui.im.ImportEvent');
@@ -109,6 +110,7 @@ goog.require('os.ui.im.ImportManager');
 goog.require('os.ui.menu');
 goog.require('os.ui.menu.areaImport');
 goog.require('os.ui.menu.buffer');
+goog.require('os.ui.menu.draw');
 goog.require('os.ui.menu.filter');
 goog.require('os.ui.menu.import');
 goog.require('os.ui.menu.layer');
@@ -119,11 +121,13 @@ goog.require('os.ui.menu.timeline');
 goog.require('os.ui.menu.unit');
 goog.require('os.ui.menu.windows');
 goog.require('os.ui.menu.windows.default');
+goog.require('os.ui.navbaroptions');
 goog.require('os.ui.ngRightClickDirective');
 goog.require('os.ui.query.cmd.QueryEntriesClear');
 goog.require('os.ui.route.RouteManager');
 goog.require('os.ui.search.NoResult');
 goog.require('os.ui.search.place.CoordinateSearch');
+goog.require('os.ui.search.searchResultsDirective');
 goog.require('os.ui.slick.column');
 goog.require('os.ui.state.cmd.StateClear');
 goog.require('os.ui.state.menu');
@@ -280,6 +284,7 @@ os.MainCtrl = function($scope, $element, $compile, $timeout, $injector) {
   this.registerDragDrop_();
 
   // set up menus
+  os.ui.menu.draw.setup();
   os.ui.menu.filter.setup();
   os.ui.menu.import.setup();
   os.ui.menu.map.setup();
@@ -358,6 +363,7 @@ os.MainCtrl.prototype.destroy = function() {
   os.ui.menu.buffer.dispose();
   os.ui.menu.areaImport.dispose();
 
+  os.ui.menu.draw.dispose();
   os.ui.menu.filter.dispose();
   os.ui.menu.map.dispose();
   os.ui.menu.layer.dispose();
@@ -400,7 +406,11 @@ os.MainCtrl.prototype.initialize = function() {
   // set up time offset
   os.time.initOffset();
 
+  // initialize the nav bars
+  os.ui.navbaroptions.init();
+
   this.addControlsToHelp_();
+  os.ui.help.metricsOption.addToNav();
 };
 
 
@@ -552,6 +562,11 @@ os.MainCtrl.prototype.onPluginsLoaded = function(opt_e) {
   rm.registerUrlHandler(new os.file.FileUrlHandler());
   rm.initialize();
 
+  // add the search results panel
+  if (os.ui.navbaroptions.searchresults) {
+    os.ui.list.add(os.ui.AbstractMainContent, os.ui.navbaroptions.searchresults, 100);
+  }
+
   // display initial onboarding
   os.ui.onboarding.OnboardingManager.getInstance().displayOnboarding(os.ROOT + 'onboarding/intro.json');
 
@@ -632,6 +647,7 @@ os.MainCtrl.prototype.initializeSettings_ = function() {
   sm.addSettingPlugin(new os.config.UnitSettings());
   sm.addSettingPlugin(new os.ui.user.settings.LocationSettings());
   sm.addSettingPlugin(new os.ui.column.mapping.ColumnMappingSettings());
+  sm.addSettingPlugin(new os.config.ThemeSettings());
 };
 
 
@@ -985,39 +1001,31 @@ goog.exportProperty(os.MainCtrl.prototype, 'redoCommand', os.MainCtrl.prototype.
  * @protected
  */
 os.MainCtrl.prototype.suggestOtherBrowser = function() {
-  var scopeOptions = {
-    'cancelCallback': os.MainCtrl.unsupportedBrowserCancelCallback,
-    'confirmCallback': this.confirm_.bind(this),
-    'hideCancel': true,
-    'noText': 'Redirect',
-    'yesText': 'Continue'
-  };
-
-  var windowOptions = {
-    'label': 'Browser Not Supported',
-    'icon': 'fa fa-frown-o yellow-icon',
-    'x': 'center',
-    'y': 'center',
-    'width': '400',
-    'height': '210',
-    'modal': 'true',
-    'no-scroll': 'true',
-    'z-index': '100050'
-  };
-
-  // version string removed from url
-  var url = 'old.html';
-
-  var text = os.MainCtrl.UNSUPPORTED_BROWSER_TEXT;
-  var ignore = '<div><label class="checkbox"><input type="checkbox" ng-model="mainCtrl.showRedirectChecked"> ' +
-      'Stop showing this message</label></div>';
-
-  var template = '<confirm>' + text + '<div style="margin-top:10px;">' +
-      'Detailed browser support can be found <a style="color:yellow;" href=' +
-      url + '>here</a>. ' + '</div>' + ignore + '</confirm>';
-
   if (/** @type {boolean} */(os.settings.get(['showRedirect'], true))) {
-    os.ui.window.create(windowOptions, template, undefined, this.scope, undefined, scopeOptions);
+    var link = '<div class="mt-2">Detailed browser support can be found <a href="old.html">here</a>.</div>';
+    var ignore = '<div class="form-check"><label class="form-check-label"><input type="checkbox" ' +
+    'ng-model="mainCtrl.showRedirectChecked" class="form-check-input">Stop showing this message</label></div>';
+    var text = os.MainCtrl.UNSUPPORTED_BROWSER_TEXT + link + ignore;
+
+    os.ui.window.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
+      confirm: this.confirm_.bind(this),
+      cancel: os.MainCtrl.unsupportedBrowserCancelCallback,
+      prompt: text,
+      yesText: 'Continue',
+      noText: '',
+      noIcon: '',
+      windowOptions: {
+        'label': 'Browser Not Supported',
+        'icon': 'fa fa-frown-o',
+        'x': 'center',
+        'y': 'center',
+        'width': '400',
+        'height': 'auto',
+        'modal': 'true',
+        'no-scroll': 'true',
+        'headerClass': 'bg-warning u-bg-warning-text'
+      }
+    }));
   }
 };
 

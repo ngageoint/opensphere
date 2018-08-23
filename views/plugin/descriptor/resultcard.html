@@ -1,22 +1,26 @@
-<div class="descriptor-result-card c-result-card">
-    <div class="c-result-card-header__title">
-      <span class="icons"></span>
-      {{ctrl.getField('title')}}
+<div class="card">
+  <div class="card-header">
+    <span class="js-card-title-icons"></span>
+    {{ctrl.getField('title')}}
+  </div>
+  <div class="card-body">
+    <div class="card-subtitle text-muted">{{ctrl.getField('type')}} | {{ctrl.getField('provider')}}</div>
+    <div ng-if="ctrl.featureCount != null" title="Number of features available within the current map view">
+      Current View: {{ctrl.featureCount}} features
     </div>
-  </div>
-  <div>{{ctrl.getField('type')}} | {{ctrl.getField('provider')}}</div>
-  <div ng-if="ctrl.featureCount != null" title="Number of features available within the current map view">
-    Current View: {{ctrl.featureCount}} features
-  </div>
-  <div class="result-snippet" ng-if="!showFullDescription">
-    {{ctrl.getField('snippet')}} <a ng-if="short" class="pointer" ng-click="ctrl.showFullDescription(true)"> More</a>
-  </div>
-  <div class="result-snippet" ng-if="showFullDescription">
-    {{ctrl.getField('description')}} <a  class="pointer"ng-click="ctrl.showFullDescription(false)"> Less</a>
-  </div>
-  <div class="result-actions">
-    <button class="btn btn-default" ng-click="ctrl.toggle()">
-      <i class="fa fa-{{ctrl.getField('active') ? 'times red' : 'plus green'}}-icon"></i> {{ctrl.getField('active') ? 'Remove' : 'Add'}}
-    </button>
+    <div ng-if="!showFullDescription">
+      {{ctrl.getField('snippet')}}
+      <a class="text-muted" href="" ng-if="short" ng-click="ctrl.showFullDescription(true)">More</a>
+    </div>
+    <div ng-if="showFullDescription">
+      {{ctrl.getField('description')}}
+      <a class="text-muted" href="" ng-click="ctrl.showFullDescription(false)">Less</a>
+    </div>
+    <div class="text-right">
+      <button class="btn" ng-class="ctrl.getField('active') ? 'btn-danger' : 'btn-primary'" ng-click="ctrl.toggle()">
+        <i class="fa" ng-class="ctrl.getField('active') ? 'fa-times' : 'fa-plus'"></i>
+        {{ctrl.getField('active') ? 'Remove' : 'Add'}}
+      </button>
+    </div>
   </div>
 </div>

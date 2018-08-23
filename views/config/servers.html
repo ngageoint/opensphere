@@ -1,23 +1,39 @@
-<div class="server-settings user-setting">
-  <div class="servers-header">
-    <div class="pull-right">
-      <button class="btn btn-default" ng-click="servers.add()" title="Add a new server"><i class="fa fa-plus green-icon"></i> Add Server</button>
-    </div>
-    <p>Data servers provide layers, analytics, and other data that can be loaded on the map.</p>
+<div class="d-flex flex-column flex-fill container-fluid">
+  <div class="mb-2">
+    <h4 class="d-inline">Data Servers</h4>
+    <button class="btn btn-primary float-right" ng-click="servers.add()" title="Add a new server">
+      <i class="fa fa-plus"></i>
+      Add Server
+    </button>
   </div>
-  <div class="servers-container" autoheight siblings=".servers-header">
-    <div ng-repeat="item in data" class="server-row">
-      <span class="servers-actions">
-        <i class="fa" ng-class="item.edit ? 'fa-pencil' : 'fa-eye'" ng-click="servers.edit(item.item)" title="{{item.edit ? 'Edit' : 'View'}} server"></i>
-        <i class="fa fa-close red-icon" ng-if="item.edit" ng-click="servers.remove(item.item)" title="Delete server"></i>
-        <i class="fa fa-refresh" title="Refresh server" ng-click="servers.refresh(item.item)"></i>
-      </span>
-      <span class="servers-info" title="{{item.item.url}}">
-        <input type="checkbox" ng-model="item.enabled" ng-change="servers.update()" title="Enable/Disable this server">
-        {{item.label}}
-        <i ng-if="!item.loading" class="fa fa-circle" ng-class="item.enabled ? item.error ? 'red-icon' : 'green-icon' : ''" title="{{item.error ? 'Offline' : item.enabled ? 'Online' : 'Disabled'}}"></i>
-        <i ng-if="item.loading" class="fa fa-fw fa-spin fa-spinner" title="Loading..."></i>
-      </span>
-    </div>
+  <div class="form-group">
+    Data servers provide layers, analytics, and other data that can be loaded on the map.
+  </div>
+  <div class="flex-fill u-overflow-y-auto">
+    <table class="table table-striped m-0 border rounded">
+      <tbody>
+        <tr ng-repeat="item in data">
+          <td class="d-flex p-1">
+            <span class="form-check flex-fill" title="{{item.item.url}}">
+              <input class="form-check-input" type="checkbox" ng-model="item.enabled" ng-change="servers.update()"
+                  title="Enable/Disable this server">
+              {{item.label}}
+              <i ng-if="!item.loading" class="fa fa-circle"
+                  ng-class="item.enabled ? item.error ? 'text-danger' : 'text-success' : ''"
+                  title="{{item.error ? 'Offline' : item.enabled ? 'Online' : 'Disabled'}}"></i>
+              <i ng-if="item.loading" class="fa fa-fw fa-spin fa-spinner" title="Loading..."></i>
+            </span>
+            <span>
+              <i class="fa btn btn-secondary btn-sm" ng-class="item.edit ? 'fa-pencil' : 'fa-eye'" ng-click="servers.edit(item.item)"
+                  title="{{item.edit ? 'Edit' : 'View'}} server"></i>
+              <i class="fa fa-close text-danger btn btn-secondary btn-sm" ng-if="item.edit" ng-click="servers.remove(item.item)"
+                  title="Delete server"></i>
+              <i class="fa fa-refresh btn btn-secondary btn-sm" ng-click="servers.refresh(item.item)"
+                  title="Refresh server"></i>
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>
