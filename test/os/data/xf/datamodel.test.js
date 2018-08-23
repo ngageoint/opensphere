@@ -1,8 +1,22 @@
+goog.require('goog.object');
 goog.require('os.data.xf.DataModel');
 goog.require('os.time.TimeInstant');
 goog.require('os.time.TimeRange');
-goog.require('goog.object');
 
+
+/**
+ * @type {Array.<Object>}
+ * @const
+ */
+var MOVIE_DATA = [
+  {title: 'Casablanca',        year: 1941, rating: 8.5, lead: 'Bogart', gross: 1024560},
+  {title: 'Braveheart',        year: 1995, rating: 8.4, lead: 'Gibson'},
+  {title: 'Godfather',         year: 1972, rating: 9.2, lead: 'Pacino'},
+  {title: 'Shaun of the Dead', year: 2004, rating: 7.9},
+  {title: 'Pulp Fiction',      year: 1994, rating: 8.9},
+  {title: 'Tombstone',         year: 1993, rating: 7.8, lead: 'Russell'},
+  {title: 'Jaws',              year: 1975, rating: 8.0},
+];
 
 describe('os.data.xf.DataModel', function() {
   var data = [];
@@ -114,5 +128,69 @@ describe('os.data.xf.DataModel', function() {
     filter.dispose();
     expect(filter.isEmpty()).toBe(true);
     expect(filter.xf).toBeNull();
+  });
+
+  //Max
+  it('should get the dimension top record attribute value properly' , function() {
+    filter.add(MOVIE_DATA);
+
+    //Example: Max Value of string
+    filter.addDimension('string_title', function(m) {return m.title});
+    expect(filter.getTopAttributeValue('string_title', 'title')).toBe('Tombstone');
+    expect(filter.getTopAttributeValue('string_title', 'rating')).toBe(7.8);
+
+    //Example: Max value of number
+    filter.addDimension('number_year', function(m) {return m.year});
+    expect(filter.getTopAttributeValue('number_year', 'year')).toBe(2004);
+
+    //Example: Max value with filtering
+    //NOTE: crossfilter does not handle NaN, null, undefined well so an attribute cannot be missing
+    //      for a record.  This can be handled when the dimension is added.
+    filter.addDimension('string_lead', function(m) {return m.lead || ""});
+    expect(filter.getTopAttributeValue('string_lead', 'lead')).toBe('Russell');
+    filter.filterDimension('string_lead', 'Pacino');
+    //The value returned respects the dimensions's filter
+    expect(filter.getTopAttributeValue('string_lead', 'lead')).toBe('Pacino');
+    filter.filterDimension('string_lead');
+    //The value returned also respects the filters in other dimensions
+    filter.filterDimension('number_year', 2004);
+    expect(filter.getTopAttributeValue('string_lead', 'lead')).toBe(undefined);
+    filter.filterDimension('number_year');
+
+    //Example: Max value with numeric data not fully populated
+    //NOTE: crossfilter does not handle NaN, null, undefined well so an attribute cannot be missing
+    //      for a record.  This can be handled when the dimension is added.
+    filter.addDimension('number_gross', function(m) {return m.gross || -Number.MAX_VALUE});
+    expect(filter.getTopAttributeValue('number_gross', 'gross')).toBe(1024560);
+  });
+
+  //Min
+  it('should get the dimension bottom record attribute value properly' , function() {
+    filter.add(MOVIE_DATA);
+
+    //Example: Min Value of string
+    filter.addDimension('string_title', function(m) {return m.title});
+    expect(filter.getBottomAttributeValue('string_title', 'title')).toBe('Braveheart');
+    expect(filter.getBottomAttributeValue('string_title', 'rating')).toBe(8.4);
+
+    //Example: Min value of number
+    filter.addDimension('number_year', function(m) {return m.year});
+    expect(filter.getBottomAttributeValue('number_year', 'year')).toBe(1941);
+
+    //Example: Min value with filtering
+    //NOTE: crossfilter does not handle NaN, null, undefined well so an attribute cannot be missing
+    //      for a record.  This can be handled when the dimension is added.
+    filter.addDimension('string_lead', function(m) {return m.lead || ""});
+    expect(filter.getBottomAttributeValue('string_lead', 'lead')).toBe(undefined);
+    //If we want to get the min of the leads that are defined, we need to filter out the empties
+    filter.filterDimension('string_lead', function(l) {return l != ""});
+    expect(filter.getBottomAttributeValue('string_lead', 'lead')).toBe('Bogart');
+    filter.filterDimension('string_lead');
+
+    //Example: Min value with numeric data not fully populated
+    //NOTE: crossfilter does not handle NaN, null, undefined well so an attribute cannot be missing
+    //      for a record.  This can be handled when the dimension is added.
+    filter.addDimension('number_gross', function(m) {return m.gross || Number.MAX_VALUE});
+    expect(filter.getBottomAttributeValue('number_gross', 'gross')).toBe(1024560);
   });
 });

@@ -220,6 +220,51 @@ os.data.xf.DataModel.prototype.filterDimension = function(id, opt_value) {
 
 
 /**
+ * Gets the <i>attr<i>'s value from the top record in dimension <i>id</i>
+ * @param {string} id Unique id of the dimension
+ * @param {string} attr The attribute key
+ * @return {*} the value | null if dimension does not exist | undefined attr not found or dimension is empty
+ */
+os.data.xf.DataModel.prototype.getTopAttributeValue = function(id, attr) {
+  if (!this.isDisposed() && this.hasDimension(id)) {
+    var topRecord = this.dimensions[id].top(1);
+    return topRecord.length == 1 ? topRecord[0][attr] : undefined;
+  }
+  return null;
+};
+
+
+/**
+ * Gets the <i>attr<i>'s value from the bottom record in dimension <i>id</i>
+ * @param {string} id Unique id of the dimension
+ * @param {string} attr The attribute key
+ * @return {*} the value | null if dimension does not exist | undefined attr not found or dimension is empty
+ */
+os.data.xf.DataModel.prototype.getBottomAttributeValue = function(id, attr) {
+  if (!this.isDisposed() && this.hasDimension(id)) {
+    var bottomRecord = this.dimensions[id].bottom(1);
+    return bottomRecord.length == 1 ? bottomRecord[0][attr] : undefined;
+  }
+  return null;
+};
+
+
+//  TOOD: Remove
+/**
+ * getDimensionResults
+ * @param {string} id Unique id of the dimension
+ * @return {?Array<S>}
+ */
+os.data.xf.DataModel.prototype.getDimensionResults = function(id) {
+  if (!this.isDisposed()) {
+    if (this.hasDimension(id)) {
+      return this.dimensions[id].top(Infinity);
+    }
+  }
+  return null;
+};
+
+/**
  * Groups data by a dimension in the crossfilter instance.
  * @param {string} id The dimension id
  * @param {function(S):T} accessorFn The group key accessor function
