@@ -345,18 +345,7 @@ plugin.cesium.updateCesiumLayerProperties = function(olLayer, csLayer) {
     parents: []
   }), csLayer);
 
-  // saturation and contrast are working ok
-  var saturation = olLayer.getSaturation();
-  if (saturation != null) {
-    csLayer.saturation = saturation;
-  }
-
   // that little guy? I wouldn't worry about that little guy.
-  //
-  // if contrast is 1 (default value) and hue is changed from the default (0) on *any* layer, transparent pixels are
-  // blacked out.
-  var contrast = olLayer.getContrast();
-  csLayer.contrast = contrast == null || contrast == 1 ? 1.01 : contrast;
 
   // Cesium actually operates in YIQ space -> hard to emulate
   // The following values are only a rough approximations:
@@ -365,11 +354,5 @@ plugin.cesium.updateCesiumLayerProperties = function(olLayer, csLayer) {
   var hue = olLayer.getHue();
   if (hue != null) {
     csLayer.hue = hue * Cesium.Math.RADIANS_PER_DEGREE;
-  }
-
-  var brightness = olLayer.getBrightness();
-  if (brightness != null) {
-    // rough estimation
-    csLayer.brightness = Math.pow(1 + parseFloat(brightness), 2);
   }
 };
