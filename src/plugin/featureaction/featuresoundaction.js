@@ -85,11 +85,7 @@ plugin.im.action.feature.SoundAction.DEFAULT_CONFIG = {
  * @inheritDoc
  */
 plugin.im.action.feature.SoundAction.prototype.execute = function() {
-  // this.refreshTimer_();
-  console.log('here');
-  os.audio.AudioManager.getInstance().
-      play(this.soundConfig['sound'], this.delay);
-  // this.soundConfig['playDelay'] * 1000
+  os.audio.AudioManager.getInstance().play(this.soundConfig['sound'], this.delay);
 };
 
 /**
