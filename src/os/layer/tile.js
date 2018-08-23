@@ -294,10 +294,8 @@ os.layer.Tile.prototype.getBrightness = function() {
  * @return {number}
  */
 os.layer.Tile.prototype.getContrast = function() {
-  if (this.layerOptions_) {
-    if (this.layerOptions_['contrast'] != null) {
-      return /** @type {number} */ (this.layerOptions_['contrast']);
-    }
+  if (this.layerOptions_ && this.layerOptions_['contrast'] != null) {
+    return /** @type {number} */ (this.layerOptions_['contrast']);
   }
   return 1;
 };
@@ -308,10 +306,8 @@ os.layer.Tile.prototype.getContrast = function() {
  * @return {number}
  */
 os.layer.Tile.prototype.getSaturation = function() {
-  if (this.layerOptions_) {
-    if (this.layerOptions_['saturation'] != null) {
-      return /** @type {number} */ (this.layerOptions_['saturation']);
-    }
+  if (this.layerOptions_ && this.layerOptions_['saturation'] != null) {
+    return /** @type {number} */ (this.layerOptions_['saturation']);
   }
   return 1;
 };
