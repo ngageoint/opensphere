@@ -26,7 +26,11 @@ os.ui.file.importDialogDirective = function() {
   return {
     restrict: 'E',
     replace: true,
-    scope: true,
+    scope: {
+      'method': '=',
+      'manager': '=?',
+      'hideCancel': '=?'
+    },
     templateUrl: os.ROOT + 'views/file/importdialog.html',
     controller: os.ui.file.ImportDialogCtrl,
     controllerAs: 'importdialog'
@@ -76,12 +80,6 @@ os.ui.file.ImportDialogCtrl = function($scope, $element) {
    * @type {?string}
    */
   this['url'] = null;
-
-  /**
-   * If local files are supported
-   * @type {boolean}
-   */
-  this['fileSupported'] = /** @type {boolean} */ ($scope['fileSupported']) || false;
 
   /**
    * If local files are supported
