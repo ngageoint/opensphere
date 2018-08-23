@@ -302,16 +302,6 @@ os.file.isZipFile = os.file.mime.zip.isZip;
 
 
 /**
- * Check for the presence of the FileReader and ArrayBuffer APIs. We depend on these two HTML5 APIs to read and parse
- * files. FF 4+, Chrome 7+, and IE10+ support these, and we have a polyfill for ArrayBuffer supporting earlier browsers.
- * @return {boolean}
- */
-os.file.canImport = function() {
-  return !(typeof FileReader === 'undefined' || typeof ArrayBuffer === 'undefined');
-};
-
-
-/**
  * Creates a new os.file.File instance from a system file. The content will be read as a string if it's determined
  * to be text, or an ArrayBuffer if not.
  * @param {!File} file The system file

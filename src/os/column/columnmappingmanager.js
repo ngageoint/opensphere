@@ -5,10 +5,6 @@ goog.require('os.column.ColumnMapping');
 goog.require('os.column.ColumnMappingEventType');
 goog.require('os.column.IColumnMapping');
 goog.require('os.data.CollectionManager');
-goog.require('os.storage');
-goog.require('os.storage.AsyncStorageWrapper');
-goog.require('os.storage.HTML5LocalStorage');
-goog.require('os.storage.IDBStorage');
 
 
 
@@ -37,13 +33,6 @@ os.column.ColumnMappingManager = function() {
    * @private
    */
   this.changeDelay_ = new goog.async.Delay(this.onChangeDelay_, 100, this);
-
-  /**
-   * @type {os.storage.AsyncStorage<Object>}
-   * @protected
-   */
-  this.storage = new os.storage.IDBStorage(os.SHARED_STORE_NAME, os.SHARED_DB_NAME, os.SHARED_DB_VERSION);
-  this.storage.init().addCallbacks(this.onStorageReady, this.onStorageError, this);
 };
 goog.inherits(os.column.ColumnMappingManager, os.data.CollectionManager);
 goog.addSingletonGetter(os.column.ColumnMappingManager);
@@ -69,82 +58,6 @@ goog.define('os.COLUMN_MAPPINGS_STORAGE_KEY', 'columnMappings');
  */
 os.column.ColumnMappingManager.prototype.getId = function(item) {
   return item.getId() || '';
-};
-
-
-/**
- * Handle successful IndexedDB storage initialization.
- * @protected
- */
-os.column.ColumnMappingManager.prototype.onStorageReady = function() {
-  this.migrateMappingsFromLsToIdb_();
-  this.migrateMappingsFromIdbToSettings_().addCallbacks(this.load, this.onStorageError, this);
-};
-
-
-/**
- * Migrate mappings from localStorage to IndexedDb
- * @private
- */
-os.column.ColumnMappingManager.prototype.migrateMappingsFromLsToIdb_ = function() {
-  var oldStorage = new os.storage.HTML5LocalStorage();
-  var localStorageMappings = oldStorage.get(os.COLUMN_MAPPINGS_STORAGE_KEY);
-  if (localStorageMappings) {
-    try {
-      var mappings = this.parseMappings_(localStorageMappings);
-      if (mappings) {
-        goog.log.info(this.log, 'Migrating ' + mappings.length + ' associations from local storage to IndexedDB.');
-        this.bulkAdd(mappings);
-      }
-    } catch (e) {
-      goog.log.error(this.log, 'Failed migrating old column associations from local storage!', e);
-    }
-
-    // remove the old value so it won't be handled again and we can free up some space
-    oldStorage.remove(os.COLUMN_MAPPINGS_STORAGE_KEY);
-  }
-};
-
-
-/**
- * Migrate mappings from IDB to somewhere else in IDB.
- * @return {goog.async.Deferred}
- * @private
- */
-os.column.ColumnMappingManager.prototype.migrateMappingsFromIdbToSettings_ = function() {
-  return this.storage.get(os.COLUMN_MAPPINGS_STORAGE_KEY)
-      .addCallbacks(this.onMigrateMappingsLoaded_, this.onStorageError, this);
-};
-
-
-/**
- * Handle deferred callback of mappings loaded from async storage device. Persist them to settings.
- * @param {Object} obj
- * @private
- */
-os.column.ColumnMappingManager.prototype.onMigrateMappingsLoaded_ = function(obj) {
-  if (obj) {
-    os.settings.set(os.COLUMN_MAPPINGS_STORAGE_KEY, obj);
-  }
-
-  if (this.storage) {
-    // remove this storage key out of the old storage, DO NOT CLEAR IT!!!!!!
-    this.storage.remove(os.COLUMN_MAPPINGS_STORAGE_KEY).addCallback(this.storage.dispose, this.storage);
-  }
-};
-
-
-/**
- * Handle IndexedDB storage error, degrading to using local storage.
- * @param {goog.db.Error} error The error.
- * @protected
- */
-os.column.ColumnMappingManager.prototype.onStorageError = function(error) {
-  if (this.storage) {
-    this.storage.dispose();
-    this.storage = new os.storage.AsyncStorageWrapper(new os.storage.HTML5LocalStorage());
-    this.load();
-  }
 };
 
 
