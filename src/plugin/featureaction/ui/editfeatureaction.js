@@ -72,7 +72,6 @@ plugin.im.action.feature.ui.EditFeatureActionCtrl = function($scope, $element) {
    */
   this.styleCanvas = null;
   this.labelCanvas = null;
-  this.soundCanvas = null;
 
   os.dispatcher.listen(os.ui.im.action.EventType.UPDATE, this.showActionPreview,
       false, this);
@@ -97,10 +96,9 @@ plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.showActionPreview = 
   // get rid of the existing canvas elements to be replaced with new ones
   this.element.find('.labelCanvas').remove();
   this.element.find('.styleCanvas').remove();
-  this.element.find('.soundCanvas').remove();
+  this.element.find('.soundPreview').remove();
   this.labelCanvas = null;
   this.styleCanvas = null;
-  this.soundCanvas = null;
 
   for (var i = 0; i < this['actions'].length; i++) {
     var curAction = this['actions'][i]['action'];
@@ -115,43 +113,23 @@ plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.showActionPreview = 
 };
 
 /**
- * Create the canvas preview for a selected sound
+ * Create the preview for a selected sound
  * @param {plugin.im.action.feature.SoundAction} soundAction
  */
 plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.buildSoundPreview = function(soundAction) {
-  this.soundCanvas = /** @type {HTMLCanvasElement} */ (document.createElement(
-      'canvas'));
-  this.soundCanvas.setAttribute('class', 'styleCanvas');
-  this.soundCanvas.height = 27;
-  this.soundCanvas.width = 150;
-  this.soundCanvas.style.setProperty('vertical-align', 'middle');
+  var config = /** @type {!Object} */ (os.object.unsafeClone(
+      soundAction.soundConfig));
+
+  var soundPreview = document.createElement('SPAN');
+  soundPreview.setAttribute('class', 'soundPreview');
+
+  var soundPreviewText = document.createTextNode(config['sound']);
+  soundPreview.appendChild(soundPreviewText);
 
   // only add this to the applicable action
   var query = '.filter-action-row:has(option[selected=\'selected\'][value=\'string:featureSoundAction\'])';
   var curContainer = this.element.find(query);
-  curContainer.append(this.soundCanvas);
-
-  if (this.soundCanvas) {
-    var soundContext = /** @type {CanvasRenderingContext2D} */ (this.soundCanvas.getContext(
-        '2d'));
-
-    // clear any previous contents
-    soundContext.clearRect(0, 0, this.soundCanvas.clientWidth,
-        this.soundCanvas.clientHeight);
-
-    var config = /** @type {!Object} */ (os.object.unsafeClone(
-        soundAction.soundConfig));
-
-    if (goog.isDefAndNotNull(config)) {
-      var sound = /** @type {string|undefined} */ (config['sound']);
-
-      soundContext.fillStyle = 'white';
-      soundContext.textAlign = 'center';
-      soundContext.font = '14pt sans-serif';
-      soundContext.fillText(String(sound), this.soundCanvas.clientWidth /
-          2, this.soundCanvas.clientHeight / 2);
-    }
-  }
+  curContainer.append(soundPreview);
 };
 
 /**
@@ -388,7 +366,7 @@ plugin.im.action.feature.ui.launchEditFeatureAction = function(
     'max-height': 1000,
     'modal': true,
     'width': 850,
-    'height': 600
+    'height': 600,
   };
 
   var scopeOptions = {

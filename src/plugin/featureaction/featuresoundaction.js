@@ -2,8 +2,6 @@ goog.provide('plugin.im.action.feature.SoundAction');
 goog.require('os.feature');
 goog.require('os.im.action.AbstractImportAction');
 goog.require('os.implements');
-goog.require('os.legend');
-goog.require('os.legend.ILegendRenderer');
 goog.require('os.object');
 goog.require('os.xml');
 
@@ -19,7 +17,6 @@ plugin.im.action.feature.SoundActionTagName = {
 /**
  * Import action that sets the sound for a {@link ol.Feature}.
  * @extends {os.im.action.AbstractImportAction<ol.Feature>}
- * @implements {os.legend.ILegendRenderer}
  * @constructor
  */
 plugin.im.action.feature.SoundAction = function() {
@@ -29,13 +26,6 @@ plugin.im.action.feature.SoundAction = function() {
   this.label = plugin.im.action.feature.SoundAction.LABEL;
   this.xmlType = plugin.im.action.feature.SoundAction.ID;
   this.configUI = plugin.im.action.feature.SoundAction.CONFIG_UI;
-
-  /**
-   * Unique identifier for this action.
-   * @type {number}
-   * @protected
-   */
-  this.uid = goog.getUid(this);
 
   /**
    * The feature sound config.
@@ -49,14 +39,9 @@ plugin.im.action.feature.SoundAction = function() {
    * @type {number}
    */
   this.delay = this.soundConfig['playDelay'] * 1000;
-
-  this.refreshTimer_ = os.debounce(this.onRefreshTimer_, this.delay, true);
 };
 goog.inherits(plugin.im.action.feature.SoundAction,
     os.im.action.AbstractImportAction);
-
-os.implements(plugin.im.action.feature.SoundAction,
-    os.legend.ILegendRenderer.ID);
 
 /**
  * Action identifier.
@@ -101,7 +86,11 @@ plugin.im.action.feature.SoundAction.DEFAULT_CONFIG = {
  * @inheritDoc
  */
 plugin.im.action.feature.SoundAction.prototype.execute = function() {
-  this.refreshTimer_();
+  // this.refreshTimer_();
+  console.log('here');
+  os.audio.AudioManager.getInstance().
+      play(this.soundConfig['sound'], this.delay);
+  // this.soundConfig['playDelay'] * 1000
 };
 
 /**
@@ -165,19 +154,4 @@ plugin.im.action.feature.SoundAction.prototype.fromXml = function(xml) {
 
     this.soundConfig = soundConfig;
   }
-};
-
-/**
- * Handle the playing of sound notifications between delays.
- * @private
- */
-plugin.im.action.feature.SoundAction.prototype.onRefreshTimer_ = function() {
-  os.audio.AudioManager.getInstance().play(this.soundConfig['sound']);
-};
-
-/**
- * @inheritDoc
- */
-plugin.im.action.feature.SoundAction.prototype.renderLegend = function(
-    options, var_args) {
 };
