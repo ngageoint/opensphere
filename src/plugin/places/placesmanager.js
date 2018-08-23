@@ -98,10 +98,13 @@ plugin.places.PlacesManager.STORAGE_NAME = '//plugin.places';
 
 /**
  * The storage key used for places.
+ *
+ * Note that this is base64-encoded for compatibility reasons. os.file.getLocalUrl() no longer
+ * does that for us since btoa does not support character sets outside of latin1.
  * @type {string}
  * @const
  */
-plugin.places.PlacesManager.STORAGE_URL = os.file.getLocalUrl('//plugin.places');
+plugin.places.PlacesManager.STORAGE_URL = os.file.getLocalUrl(btoa(plugin.places.PlacesManager.STORAGE_NAME));
 
 
 /**
