@@ -114,16 +114,10 @@ plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.buildSoundPreview = 
   var config = /** @type {!Object} */ (os.object.unsafeClone(
       soundAction.soundConfig));
 
-  var soundPreview = document.createElement('SPAN');
-  soundPreview.setAttribute('class', 'soundPreview');
-
-  var soundPreviewText = document.createTextNode(config['sound']);
-  soundPreview.appendChild(soundPreviewText);
-
   // only add this to the applicable action
-  var query = '.filter-action-row:has(option[selected=\'selected\'][value=\'string:featureSoundAction\'])';
+  var query = '.js-filter-action__controls:has(option[selected=\'selected\'][value=\'string:featureSoundAction\'])';
   var curContainer = this.element.find(query);
-  curContainer.append(soundPreview);
+  curContainer.append('<span class="soundPreview"><i class="fa fa-fw fa-music"></i> ' + config['sound'] + '</span>');
 };
 
 /**
