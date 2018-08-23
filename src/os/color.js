@@ -784,9 +784,9 @@ os.color.adjustColor = function(data, brightness, contrast, saturation) {
     data[i] = Math.round((r * m[0] + g * m[5] + b * m[10] + a * m[15] + m[20]));
     data[i + 1] = Math.round((r * m[1] + g * m[6] + b * m[11] + a * m[16] + m[21]));
     data[i + 2] = Math.round((r * m[2] + g * m[7] + b * m[12] + a * m[17] + m[22]));
-    goog.math.clamp(data[i], 0, 255);
-    goog.math.clamp(data[i + 1], 0, 255);
-    goog.math.clamp(data[i + 2], 0, 255);
+    data[i] = goog.math.clamp(data[i], 0, 255);
+    data[i + 1] = goog.math.clamp(data[i + 1], 0, 255);
+    data[i + 2] = goog.math.clamp(data[i + 2], 0, 255);
   }
 };
 
