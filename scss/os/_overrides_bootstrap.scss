@@ -1,3 +1,13 @@
 // Variables we always want set no matter the theme
 $breadcrumb-bg: transparent;
 $enable-shadows: true;
+
+// Standard + xxl breakpoint
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1500px
+);
