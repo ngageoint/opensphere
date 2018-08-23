@@ -140,7 +140,7 @@ plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.buildStylePreview = 
   this.styleCanvas.width = 150;
 
   // only add this to the applicable action
-  var query = '.js-filter-action__controls:has(option[selected=\'selected\'][value=\'string:featureStyleAction\'])';
+  var query = '.filter-action-row:has(option[selected=\'selected\'][value=\'string:featureStyleAction\'])';
   var curContainer = this.element.find(query);
   curContainer.append(this.styleCanvas);
 
@@ -238,7 +238,7 @@ plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.buildLabelPreview = 
   this.labelCanvas.width = 150;
 
   // only add this to the applicable action
-  var query = '.js-filter-action__controls:has(option[selected=\'selected\'][value=\'string:featureLabelAction\'])';
+  var query = '.filter-action-row:has(option[selected=\'selected\'][value=\'string:featureLabelAction\'])';
   var curContainer = this.element.find(query);
   curContainer.append(this.labelCanvas);
 
