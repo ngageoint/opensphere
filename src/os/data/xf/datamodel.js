@@ -249,21 +249,6 @@ os.data.xf.DataModel.prototype.getBottomAttributeValue = function(id, attr) {
 };
 
 
-//  TOOD: Remove
-/**
- * getDimensionResults
- * @param {string} id Unique id of the dimension
- * @return {?Array<S>}
- */
-os.data.xf.DataModel.prototype.getDimensionResults = function(id) {
-  if (!this.isDisposed()) {
-    if (this.hasDimension(id)) {
-      return this.dimensions[id].top(Infinity);
-    }
-  }
-  return null;
-};
-
 /**
  * Groups data by a dimension in the crossfilter instance.
  * @param {string} id The dimension id

@@ -131,7 +131,7 @@ describe('os.data.xf.DataModel', function() {
   });
 
   //Max
-  it('should get the dimension top record attribute value properly' , function() {
+  it('should get the dimension top record attribute value properly', function() {
     filter.add(MOVIE_DATA);
 
     //Example: Max Value of string
@@ -165,7 +165,7 @@ describe('os.data.xf.DataModel', function() {
   });
 
   //Min
-  it('should get the dimension bottom record attribute value properly' , function() {
+  it('should get the dimension bottom record attribute value properly', function() {
     filter.add(MOVIE_DATA);
 
     //Example: Min Value of string
@@ -192,5 +192,29 @@ describe('os.data.xf.DataModel', function() {
     //      for a record.  This can be handled when the dimension is added.
     filter.addDimension('number_gross', function(m) {return m.gross || Number.MAX_VALUE});
     expect(filter.getBottomAttributeValue('number_gross', 'gross')).toBe(1024560);
+  });
+
+  //Range
+  it('should return results given a dimension range properly', function() {
+    filter.add(MOVIE_DATA);
+
+    //Example: Numeric Range
+    filter.addDimension('number_year', function(m) {return m.year});
+    filter.filterDimension('number_year', [1990, 2010]);
+    expect(filter.getResults().length).toBe(4);
+    //Example: Number Range showing inclusion
+    //NOTE: Crossfilter ranges are inclusive on the lower limit, and exclusive on the upper limit
+    filter.filterDimension('number_year', [1972, 1975]);
+    expect(filter.getResults().length).toBe(1);
+    filter.filterDimension('number_year');
+
+    //Example: String Range
+    filter.addDimension('string_title', function(m) {return m.title});
+    filter.filterDimension('string_title', ['A','Q']);
+    expect(filter.getResults().length).toBe(5);
+    //strings ranges are case-sensitive
+    filter.filterDimension('string_title', ['a','q']);
+    expect(filter.getResults().length).toBe(0);
+    filter.filterDimension('string_title');
   });
 });
