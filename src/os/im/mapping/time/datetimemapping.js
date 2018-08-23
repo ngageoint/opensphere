@@ -25,6 +25,7 @@ goog.require('os.time.TimeRange');
 os.im.mapping.time.DateTimeMapping = function(type, opt_id) {
   os.im.mapping.time.DateTimeMapping.base(this, 'constructor');
   this.xmlType = os.im.mapping.time.DateTimeMapping.ID;
+  this.id = opt_id || os.im.mapping.time.DateTimeMapping.ID;
 
   /**
    * Whether or not to set the record time
@@ -32,12 +33,6 @@ os.im.mapping.time.DateTimeMapping = function(type, opt_id) {
    * @private
    */
   this.applyTime_ = true;
-
-  /**
-   * @type {string}
-   * @private
-   */
-  this.id_ = opt_id || os.im.mapping.time.DateTimeMapping.ID;
 
   /**
    * The format for parsing the date/time from the field
@@ -90,12 +85,12 @@ os.im.mapping.MappingRegistry.getInstance().registerMapping(
  */
 os.im.mapping.time.DateTimeMapping.prototype.getId = function() {
   if (this.type == os.im.mapping.TimeType.START) {
-    return 'Start ' + this.id_;
+    return 'Start ' + this.id;
   } else if (this.type == os.im.mapping.TimeType.END) {
-    return 'End ' + this.id_;
+    return 'End ' + this.id;
   }
 
-  return this.id_;
+  return this.id;
 };
 
 
