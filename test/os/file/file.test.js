@@ -19,6 +19,14 @@ describe('os.file.File', function() {
   it('gets file:// URLs from a path', function() {
     var path = '/path/to/some/file.xml';
     expect(os.file.getFileUrl(path)).toBe('file://' + path);
+
+    var isWin = goog.userAgent.WINDOWS;
+    goog.userAgent.WINDOWS = true;
+
+    var winPath = 'C:\\Program Files\\My File.xml';
+    expect(os.file.getFileUrl(winPath)).toBe('file:///C:/Program Files/My File.xml');
+
+    goog.userAgent.WINDOWS = isWin;
   });
 
   it('tests for file:// URLs', function() {
