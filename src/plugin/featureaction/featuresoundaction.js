@@ -79,7 +79,6 @@ plugin.im.action.feature.SoundAction.CONFIG_UI = 'featureactionsoundconfig';
 plugin.im.action.feature.SoundAction.DEFAULT_CONFIG = {
   'sound': 'Default',
   'playDelay': 30
-
 };
 
 /**
