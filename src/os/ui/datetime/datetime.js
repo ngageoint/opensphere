@@ -22,6 +22,7 @@ goog.require('os.ui.datetime.wheelDateDirective');
 os.ui.datetime.dateTimeDirective = function() {
   return {
     restrict: 'AE',
+    replace: true,
     scope: {
       'value': '=',
       'disabled': '=?',
@@ -165,7 +166,7 @@ os.ui.datetime.DateTimeCtrl.prototype.watchDate_ = function() {
  * @private
  */
 os.ui.datetime.DateTimeCtrl.prototype.onDateChanged_ = function(newVal, oldVal) {
-  if (newVal != oldVal) {
+  if (newVal && newVal != oldVal) {
     this.updateValue('date');
   }
 };
@@ -179,7 +180,7 @@ os.ui.datetime.DateTimeCtrl.prototype.updateValue = function(opt_type) {
   goog.log.fine(os.ui.datetime.DateTimeCtrl.LOGGER_, 'dateTime.updateValue');
 
   // if the date was set, zero out any hour/min/sec fields that aren't set yet
-  if (opt_type && opt_type === 'date' && goog.isDateLike(this['date'])) {
+  if (opt_type && opt_type === 'date' && goog.isDateLike(this['date']) && !isNaN(this['date'].getTime())) {
     if (!goog.isDefAndNotNull(this['hour'])) {
       this['hour'] = 0;
     }
@@ -191,8 +192,8 @@ os.ui.datetime.DateTimeCtrl.prototype.updateValue = function(opt_type) {
     }
   }
 
-  if (goog.isDateLike(this['date']) && goog.isDefAndNotNull(this['hour']) && goog.isDefAndNotNull(this['minute']) &&
-      goog.isDefAndNotNull(this['second'])) {
+  if (goog.isDateLike(this['date']) && !isNaN(this['date'].getTime()) && goog.isDefAndNotNull(this['hour']) &&
+     goog.isDefAndNotNull(this['minute']) && goog.isDefAndNotNull(this['second'])) {
     // update date field with hour/min/sec control values
     var utcDate = new Date(this['date'].getTime() - this['date'].getTimezoneOffset() * 60000);
     utcDate.setUTCHours(this['hour']);
@@ -230,6 +231,10 @@ goog.exportProperty(os.ui.datetime.DateTimeCtrl.prototype, 'updateValue',
  * Sets this field to the current time.
  */
 os.ui.datetime.DateTimeCtrl.prototype.setNow = function() {
+  // set the inputs as dirty for validation
+  $('.js-date-time__time-input').addClass('ng-dirty');
+  $('.js-wheel-date__date-input').addClass('ng-dirty');
+
   // offset local time so the ui-date control displays in UTC
   var now = new Date();
   this['date'] = new Date(now.getTime() + now.getTimezoneOffset() * 60000);

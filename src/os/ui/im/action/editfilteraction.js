@@ -19,25 +19,6 @@ os.ui.im.action.EventType = {
   UPDATE: 'action:update'
 };
 
-/**
- * The edit filter action directive.
- * @return {angular.Directive}
- */
-os.ui.im.action.editFilterActionDirective = function() {
-  var dir = os.ui.filter.ui.editFiltersDirective();
-  dir.templateUrl = os.ROOT + 'views/im/action/editfilteraction.html';
-  dir.controller = os.ui.im.action.EditFilterActionCtrl;
-  dir.controllerAs = 'ctrl';
-  return dir;
-};
-
-
-/**
- * Add the directive to the module.
- */
-os.ui.Module.directive('editfilteraction', [os.ui.im.action.editFilterActionDirective]);
-
-
 
 /**
  * Controller for the edit filter action window.
@@ -368,59 +349,6 @@ os.ui.im.action.closeActionConfigWindow = function() {
 
 
 /**
- * Create/edit a filter action entry. If no entry is provided, a new one will be created.
- * @param {string} type The entry type.
- * @param {Array} columns The filter columns.
- * @param {function(os.im.action.FilterActionEntry<T>)} callback The callback to fire when the entry is ready.
- * @param {os.im.action.FilterActionEntry<T>=} opt_entry The entry to edit.
- * @param {string=} opt_label Base window label.
- * @template T
- */
-os.ui.im.action.launchEditFilterAction = function(type, columns, callback, opt_entry, opt_label) {
-  var iam = os.im.action.ImportActionManager.getInstance();
-  var label = opt_label || iam.entryTitle;
-  var entry = opt_entry;
-  if (!entry) {
-    // create a new entry and default it to enabled
-    entry = iam.createActionEntry();
-    entry.setEnabled(true);
-    entry.setType(type);
-
-    label = 'Create ' + label;
-  } else {
-    // editing an existing entry
-    label = 'Edit ' + label;
-  }
-
-  var options = {
-    'id': 'editfilteraction',
-    'icon': 'fa ' + os.im.action.ICON,
-    'label': label,
-    'x': 'center',
-    'y': 'center',
-    'show-close': true,
-    'no-scroll': false,
-    'min-width': 400,
-    'min-height': 500,
-    'max-width': 1000,
-    'max-height': 1000,
-    'modal': true,
-    'width': 850,
-    'height': 600
-  };
-
-  var scopeOptions = {
-    'entry': entry,
-    'type': type,
-    'columns': columns,
-    'callback': callback
-  };
-
-  os.ui.window.create(options, 'editfilteraction', undefined, undefined, undefined, scopeOptions);
-};
-
-
-/**
  * Launch a dialog to configure an import action.
  * @param {!os.im.action.IImportAction} action The action.
  * @param {string} type The action entry type.
@@ -437,9 +365,11 @@ os.ui.im.action.launchActionConfig = function(action, type) {
       'action': action,
       'type': type,
       'yesText': 'OK',
-      'yesIcon': 'fa fa-check lt-blue-icon',
+      'yesIcon': 'fa fa-check',
+      'yesButtonClass': 'btn-primary',
       'noText': 'Cancel',
-      'noIcon': 'fa fa-ban red-icon'
+      'noIcon': 'fa fa-ban',
+      'noButtonClass': 'btn-secondary'
     };
 
     var windowOptions = {

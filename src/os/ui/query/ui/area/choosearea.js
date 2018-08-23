@@ -115,30 +115,20 @@ os.ui.query.ui.area.ChooseAreaCtrl.prototype.updateAreas_ = function() {
  * @param {ol.Feature=} opt_default The default area to select
  */
 os.ui.query.ui.area.launchChooseArea = function(confirm, opt_default) {
-  var windowOptions = {
-    'label': 'Choose Area',
-    'icon': 'fa fa-list-ul',
-    'x': 'center',
-    'y': 'center',
-    'width': 400,
-    'height': 150,
-    'show-close': true,
-    'no-scroll': true,
-    'modal': true
-  };
-
-  var scopeOptions = {
-    'confirmCallback': confirm,
-    'confirmValue': opt_default,
-    'yesText': 'OK',
-    'yesIcon': 'fa fa-check blue-icon',
-    'noText': 'Cancel',
-    'noIcon': 'fa fa-ban red-icon'
-  };
-
-  var template = '<confirm>' +
-      '<span>Please choose an area from the list:</span>' +
-      '<choosearea></choosearea>' +
-      '</confirm>';
-  os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+  os.ui.window.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
+    confirm: confirm,
+    confirmValue: opt_default,
+    prompt: '<span>Please choose an area from the list:</span><choosearea></choosearea>',
+    windowOptions: {
+      'label': 'Choose Area',
+      'icon': 'fa fa-list-ul',
+      'x': 'center',
+      'y': 'center',
+      'width': '400',
+      'height': 'auto',
+      'show-close': 'true',
+      'no-scroll': 'true',
+      'modal': 'true'
+    }
+  }));
 };

@@ -1,6 +1,6 @@
-goog.require('os.color');
 goog.require('goog.array');
 goog.require('goog.object');
+goog.require('os.color');
 
 
 describe('os.color', function() {
@@ -182,5 +182,16 @@ describe('os.color', function() {
     data = [0, 225, 225, 0];
     os.color.adjustColor(data, 0.5, 0.5, 0.5);
     expect(data).toEqual([152, 208, 208, 0]);
+  });
+
+  it('should convert integer color representations to hex color strings', function() {
+    expect(os.color.intToHex(0)).toBe('#000000');
+    expect(os.color.intToHex(16777215)).toBe('#ffffff');
+    expect(os.color.intToHex(65535)).toBe('#00ffff');
+    expect(os.color.intToHex(123456)).toBe('#01e240');
+
+    // negative numbers and numbers larger than 0xffffff should be clamped
+    expect(os.color.intToHex(-5000)).toBe('#000000');
+    expect(os.color.intToHex(99999999999)).toBe('#ffffff');
   });
 });

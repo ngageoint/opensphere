@@ -14,9 +14,10 @@ goog.require('os.ui.search.FeatureResultCardCtrl');
 os.ui.search.place.coordResultCardDirective = function() {
   return {
     restrict: 'E',
+    replace: true,
     templateUrl: os.ROOT + 'views/search/place/coordinateresultcard.html',
     controller: os.ui.search.place.CoordinateResultCardCtrl,
-    controllerAs: 'coordResult'
+    controllerAs: 'ctrl'
   };
 };
 

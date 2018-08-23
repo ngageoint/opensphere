@@ -40,11 +40,11 @@ goog.inherits(os.ui.filter.BasicFilterTreeCtrl, os.ui.slick.SlickTreeCtrl);
  * @inheritDoc
  */
 os.ui.filter.BasicFilterTreeCtrl.prototype.treeFormatter = function(row, cell, value, columnDef, node) {
-  return row % 2 == 1 ? '<div style="text-align:center" ng-bind="root.grouping"></div>' :
-      ('<span class="pull-right" ng-if="hasMultipleFilters()">' +
-          '<button class="btn btn-default" tabindex="-1" ng-click="$emit(\'filterbuilder.remove\', item)" ' +
-          'title="Remove this expression"><i class="fa fa-times red-icon"></i></button></span>') +
-      '<expression expr="item.getExpression()" columns="columns"></expression>';
+  return row % 2 == 1 ? '<div ng-bind="root.grouping"></div>' :
+      '<expression expr="item.getExpression()" columns="columns"></expression>' +
+      ('<span ng-if="hasMultipleFilters()">' +
+          '<button class="btn btn-danger btn-sm" tabindex="-1" ng-click="$emit(\'filterbuilder.remove\', item)" ' +
+          'title="Remove this expression"><i class="fa fa-times"></i></button></span>');
 };
 
 

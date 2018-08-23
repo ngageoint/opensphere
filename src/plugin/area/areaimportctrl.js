@@ -9,13 +9,14 @@ goog.require('plugin.area');
  * Abstract controller for importing areas from a file.
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
+ * @param {!angular.$timeout} $timeout The Angular $timeout service.
  * @extends {os.ui.query.ui.AreaImportCtrl}
  * @constructor
  * @ngInject
  * @template T
  */
-plugin.area.AreaImportCtrl = function($scope, $element) {
-  plugin.area.AreaImportCtrl.base(this, 'constructor', $scope, $element);
+plugin.area.AreaImportCtrl = function($scope, $element, $timeout) {
+  plugin.area.AreaImportCtrl.base(this, 'constructor', $scope, $element, $timeout);
 };
 goog.inherits(plugin.area.AreaImportCtrl, os.ui.query.ui.AreaImportCtrl);
 

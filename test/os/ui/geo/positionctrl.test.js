@@ -6,7 +6,7 @@ describe('os.ui.geo.PositionCtrl', function() {
     var ctrl = new os.ui.geo.PositionCtrl($rootScope.$new());
     expect(ctrl.precision).toBe(100000000);
   }))
-  
+
   it('should format position correctly - NE', inject(function($rootScope) {
     var ctrl = new os.ui.geo.PositionCtrl($rootScope.$new());
     ctrl.scope_['geom'] = [];
@@ -15,7 +15,7 @@ describe('os.ui.geo.PositionCtrl', function() {
     ctrl.formatLatLon_();
     expect(ctrl.scope_['posText']).toBe('45.1N 100.223E');
   }))
-  
+
   it('should format position correctly - NW', inject(function($rootScope) {
     var ctrl = new os.ui.geo.PositionCtrl($rootScope.$new());
     ctrl.scope_['geom'] = [];
@@ -24,7 +24,7 @@ describe('os.ui.geo.PositionCtrl', function() {
     ctrl.formatLatLon_();
     expect(ctrl.scope_['posText']).toBe('45.1N 100.223W');
   }))
-  
+
   it('should format position correctly - SE', inject(function($rootScope) {
     var ctrl = new os.ui.geo.PositionCtrl($rootScope.$new());
     ctrl.scope_['geom'] = [];
@@ -33,7 +33,7 @@ describe('os.ui.geo.PositionCtrl', function() {
     ctrl.formatLatLon_();
     expect(ctrl.scope_['posText']).toBe('45.1S 100.223E');
   }))
-  
+
   it('should format position correctly - SW', inject(function($rootScope) {
     var ctrl = new os.ui.geo.PositionCtrl($rootScope.$new());
     ctrl.scope_['geom'] = [];
@@ -42,7 +42,7 @@ describe('os.ui.geo.PositionCtrl', function() {
     ctrl.formatLatLon_();
     expect(ctrl.scope_['posText']).toBe('45.1S 100.223W');
   }))
-  
+
   it('should format position correctly - Equator', inject(function($rootScope) {
     var ctrl = new os.ui.geo.PositionCtrl($rootScope.$new());
     ctrl.scope_['geom'] = [];
@@ -87,7 +87,7 @@ describe('os.ui.geo.PositionCtrl', function() {
     expect(ctrl.formatLatLon_).toHaveBeenCalled();
     expect(ctrl['mapEnabled']).toBe(true);
   }))
-  
+
   it('should should disable map clicks if so specified', inject(function($rootScope) {
     var ctrl = new os.ui.geo.PositionCtrl($rootScope.$new());
     ctrl.scope_['geom'] = [];
@@ -98,7 +98,7 @@ describe('os.ui.geo.PositionCtrl', function() {
     expect(ctrl.formatLatLon_).toHaveBeenCalled();
     expect(ctrl['mapEnabled']).toBe(false);
   }))
-  
+
   it('should should toggle map clicks from enabled to disabled', inject(function($rootScope) {
     var ctrl = new os.ui.geo.PositionCtrl($rootScope.$new());
     ctrl['mapEnabled'] = false;
@@ -112,14 +112,14 @@ describe('os.ui.geo.PositionCtrl', function() {
     ctrl.toggleMapEnabled();
     expect(ctrl['mapEnabled']).toBe(false);
   }))
-  
+
   it('should should leave map clicks enabled', inject(function($rootScope) {
     var ctrl = new os.ui.geo.PositionCtrl($rootScope.$new());
     ctrl['mapEnabled'] = true;
     ctrl.setMapEnabled_(true);
     expect(ctrl['mapEnabled']).toBe(true);
   }))
-  
+
   it('should should leave map clicks disabled', inject(function($rootScope) {
     var ctrl = new os.ui.geo.PositionCtrl($rootScope.$new());
     ctrl['mapEnabled'] = false;
@@ -135,11 +135,11 @@ describe('os.ui.geo.PositionCtrl', function() {
     ctrl.onMapClick_(null, [100.012345670123, 45.123456781234], false);
     expect(ctrl.formatLatLon_).not.toHaveBeenCalled();
   }))
-  
+
   it('should have a sensible default label', inject(function($rootScope) {
     var scope  = $rootScope.$new()
     var ctrl = new os.ui.geo.PositionCtrl(scope);
-    expect(ctrl['label']).toBe('Position:');
+    expect(ctrl['label']).toBe('Position');
   }))
 
   it('should have take a label', inject(function($rootScope) {
@@ -155,5 +155,5 @@ describe('os.ui.geo.PositionCtrl', function() {
     var ctrl = new os.ui.geo.PositionCtrl(scope);
     expect(ctrl['label']).toBe(null);
   }))
-  
+
 });

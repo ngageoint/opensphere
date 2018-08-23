@@ -18,6 +18,7 @@ goog.require('os.ui.util.autoHeightDirective');
 goog.require('os.ui.window');
 
 
+
 /**
  * The descriptioninfo directive
  * @return {angular.Directive}
@@ -25,6 +26,7 @@ goog.require('os.ui.window');
 os.ui.descriptionInfoDirective = function() {
   return {
     restrict: 'E',
+    replace: true,
     scope: {
       'description': '='
     },
@@ -117,7 +119,7 @@ os.ui.launchDescriptionInfo = function(id, description, opt_titleDetail) {
     var windowOptions = {
       'id': windowId,
       'label': winLabel,
-      'icon': 'fa fa-newspaper-o lt-blue-icon',
+      'icon': 'fa fa-newspaper-o',
       'x': 'center',
       'y': 'center',
       'width': '800',

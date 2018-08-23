@@ -10,7 +10,7 @@ os.style.StyleType = {
   SELECT: '_selectStyle',
   HIGHLIGHT: '_highlightStyle',
   CUSTOM_HIGHLIGHT: '_customHighlightStyle',
-  LABELS: '_labelsStyle'
+  LABEL: '_labelStyle'
 };
 
 

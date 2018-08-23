@@ -1,81 +1,80 @@
-<div class="column-manager-window window-content-wrapper">
-  <div class="window-content">
-    <div class="column-manager-container">
-      <div>
-        <form class="search-box-container" ng-submit="columnManager.find()">
-          <div class="search-box-cols input-append" ng-class="{'highlightSearchBox' : columnManager.highlight}">
-            <input type="text"
-                   class="search-query-cols casual-font"
-                   ng-focus="columnManager.listenForKeys(true)"
-                   ng-blur="columnManager.listenForKeys(false)"
-                   ng-model="columnManager.term"
-                   ng-change="columnManager.find()"/>
-            <span class="add-on-cols action" ng-click="columnManager.clear()">
-              <i class="glyph fa fa-fw fa-times"></i>
-            </span>
-          </div>
-        </form>
-        <div class="search-results" ng-if="columnManager.searchResults.length > 0">
-          {{columnManager.searchIndex + 1}} of {{columnManager.searchResults.length}} matches
-          <button id="nextRes" class="btn btn-default" title="Previous result" ng-click="columnManager.previous()">
-            <i class="fa fw fa-chevron-up"></i> Previous
-          </button>
-          <button id="prevRes" class="btn btn-default" title="Next result" ng-click="columnManager.next()">
-            <i class="fa fw fa-chevron-down"></i> Next
+<div class="d-flex flex-column flex-fill w-100">
+  <div class="d-flex flex-column flex-fill modal-body">
+    <form class="form-group" ng-submit="columnManager.find()" novalidate>
+      <div class="input-group mb-1">
+        <input type="text" class="form-control col-6"
+               ng-focus="columnManager.listenForKeys(true)"
+               ng-blur="columnManager.listenForKeys(false)"
+               ng-model="columnManager.term"
+               ng-change="columnManager.find()"/>
+        <div class="input-group-append">
+          <button class="btn btn-secondary" ng-click="columnManager.clear()" title="Clear the search term">
+            <i class="fa fa-times"></i>
           </button>
         </div>
-        <div class="search-results" ng-if="columnManager.searchResults.length < 1">No matches</div>
       </div>
-      <div class="sg-container">
-        <slickgrid
-            x-data="columnManager.hiddenColumns"
-            selected="columnManager.hiddenSelected"
-            columns="columnManager.hiddenConfig"
-            options="columnManager.tableOptions"
-            dbl-click-handler="columnManager.showDblClick"
-            dbl-click-enabled="true"
-            use-angular="true">
-        </slickgrid>
-
-        <div class="scootch-btn-group inline-block">
-          <button class="btn btn-default"  ng-click="columnManager.show(true)">
-            <i class="fa fa-fw fa-angle-double-right"></i>
-          </button>
-          <button class="btn btn-default" ng-click="columnManager.show()">
-            <i class="fa fa-fw fa-angle-right"></i>
-          </button>
-          <button class="btn btn-default" ng-click="columnManager.hide()">
-            <i class="fa fa-fw  fa-angle-left"></i>
-          </button>
-          <button class="btn btn-default" ng-click="columnManager.hide(true)">
-            <i class="fa fa-fw  fa-angle-double-left"></i>
-          </button>
-        </div>
-
-        <slickgrid
-          x-data="columnManager.shownColumns"
-          selected="columnManager.shownSelected"
-          columns="columnManager.shownConfig"
+    </form>
+    <div class="d-flex form-group" ng-if="columnManager.searchResults.length > 0">
+      <span class="my-auto mr-1">{{columnManager.searchIndex + 1}} of {{columnManager.searchResults.length}} matches</span>
+      <button class="btn btn-secondary mr-1" type="button" title="Previous result" ng-click="columnManager.previous()">
+        <i class="fa fw fa-chevron-up"></i>
+        Previous
+      </button>
+      <button class="btn btn-secondary" type="button" title="Next result" ng-click="columnManager.next()">
+        <i class="fa fw fa-chevron-down"></i>
+        Next
+      </button>
+    </div>
+    <div class="form-group" ng-if="columnManager.searchResults.length < 1">No matches</div>
+    <div class="d-flex flex-row flex-fill">
+      <slickgrid class="border"
+          x-data="columnManager.hiddenColumns"
+          selected="columnManager.hiddenSelected"
+          columns="columnManager.hiddenConfig"
           options="columnManager.tableOptions"
-          dbl-click-handler="columnManager.hideDblClick"
+          dbl-click-handler="columnManager.showDblClick"
           dbl-click-enabled="true"
-          drag-enabled="true"
           use-angular="true">
-        </slickgrid>
+      </slickgrid>
+
+      <div class="d-flex flex-column col-auto my-auto">
+        <button class="btn btn-secondary mb-1"  ng-click="columnManager.show(true)">
+          <i class="fa fa-fw fa-angle-double-right"></i>
+        </button>
+        <button class="btn btn-secondary mb-1" ng-click="columnManager.show()">
+          <i class="fa fa-fw fa-angle-right"></i>
+        </button>
+        <button class="btn btn-secondary mb-1" ng-click="columnManager.hide()">
+          <i class="fa fa-fw  fa-angle-left"></i>
+        </button>
+        <button class="btn btn-secondary" ng-click="columnManager.hide(true)">
+          <i class="fa fa-fw  fa-angle-double-left"></i>
+        </button>
       </div>
+
+      <slickgrid class="border"
+        x-data="columnManager.shownColumns"
+        selected="columnManager.shownSelected"
+        columns="columnManager.shownConfig"
+        options="columnManager.tableOptions"
+        dbl-click-handler="columnManager.hideDblClick"
+        dbl-click-enabled="true"
+        drag-enabled="true"
+        use-angular="true">
+      </slickgrid>
     </div>
   </div>
-  <div class="window-footer">
-    <span style="vertical-align:middle;" ng-if="!columnManager.valid">
+  <div class="d-flex modal-footer">
+    <div ng-if="!columnManager.valid">
       At least 1 column must be visible.
-    </span>
-    <div class="pull-right">
-      <button class="btn btn-default" ng-click="columnManager.accept()" ng-disabled="!columnManager.valid">
-        <i class="fa fa-check lt-blue-icon"></i>
+    </div>
+    <div class="col text-right">
+      <button class="btn btn-primary" ng-click="columnManager.accept()" ng-disabled="!columnManager.valid">
+        <i class="fa fa-check"></i>
         OK
       </button>
-      <button class="btn btn-default" ng-click="columnManager.close()">
-        <i class="fa fa-ban red-icon"></i>
+      <button class="btn btn-secondary" ng-click="columnManager.close()">
+        <i class="fa fa-ban"></i>
         Cancel
       </button>
     </div>

@@ -60,7 +60,7 @@ os.ui.search.place.FEATURE_CONFIG = {
     'src': os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.WHT_BLANK,
     'color': 'rgba(0,255,255,1)'
   },
-  'text': os.style.label.DEFAULT_CONFIG
+  'text': {}
 };
 
 

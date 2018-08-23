@@ -98,7 +98,7 @@ os.ui.state.StateImportCtrl = function($scope, $element) {
       state.setEnabled(goog.array.contains(this.config_['loadItems'], state.toString()));
     }
   }
-  $scope.$emit('window.ready');
+  $scope.$emit(os.ui.WindowEventType.READY);
 };
 goog.inherits(os.ui.state.StateImportCtrl, os.ui.state.AbstractStateFormCtrl);
 

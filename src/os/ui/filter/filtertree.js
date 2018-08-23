@@ -22,7 +22,7 @@ os.ui.filter.ui.filterTreeDirective = function() {
     scope: {
       'type': '='
     },
-    template: '<div class="filters-main">' +
+    template: '<div>' +
         '<slicktree x-data="filters" selected="selectedFilter"' +
         ' checkbox-tooltip="Enable or disable the filter" show-root="true"></slicktree>' +
         '</div>',

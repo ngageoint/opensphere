@@ -1,0 +1,141 @@
+// Styles for our two different types of tristate checkboxes
+
+// Tristate toggle switch
+
+.c-toggle-switch {
+  background: $dark;
+  border-radius: .25rem;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, .5), 0 1px 0 rgba(255, 255, 255, .2);
+  cursor: pointer;
+  flex-shrink: 0;
+  height: 1rem;
+  width: 2rem;
+
+  label {
+    background: $light;
+    border-radius: .25rem;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .3);
+    cursor: pointer;
+    font-size: .6rem;
+    height: .75rem;
+    left: .1rem;
+    line-height: .75rem;
+    position: relative;
+    text-align: center;
+    top: .1rem;
+    transition: left .4s ease;
+    vertical-align: top;
+    width: 1.25rem;
+  }
+}
+
+.c-toggle-switch.disabled {
+  cursor: default;
+  opacity: .5;
+
+  label {
+    cursor: default;
+  }
+}
+
+.c-toggle-switch-off label::after {
+  color: $dark;
+  content: 'Off';
+}
+
+.c-toggle-switch-on label {
+  background: $success;
+  left: .6rem;
+
+  &::after {
+    color: $light;
+    content: 'On';
+  }
+}
+
+.c-toggle-switch-both label {
+  left: .4rem;
+
+  &::after {
+    content: '';
+  }
+}
+
+// Tristate checkbox
+
+.c-tristate {
+  // sass-lint:disable no-duplicate-properties
+  background: #fcfff4;
+  background: linear-gradient(#fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+  border-radius: 3px;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: inline-block;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fcfff4', endColorstr='#b3bead', GradientType=0);
+  flex-shrink: 0;
+  height: 13px;
+  margin-left: 15px auto;
+  position: relative;
+  top: 0;
+  vertical-align: middle;
+  width: 13px;
+
+  label {
+    background: transparent;
+    color: #fff;
+    content: '';
+    display: none;
+    font-size: 13px;
+    height: 13px;
+    left: 2px;
+    pointer-events: none;
+    position: absolute;
+    text-shadow: none;
+    top: 2px;
+    width: 13px;
+  }
+}
+
+.c-tristate.disabled {
+  opacity: .4;
+}
+
+.c-tristate-off label {
+  &::after {
+    border: 3px solid #555;
+    border-right: 0;
+    border-top: 0;
+    content: '';
+    filter: alpha(opacity = 0);
+    height: 2.5px;
+    opacity: 0;
+    position: absolute;
+    transform: rotate(-45deg);
+    width: 6px;
+  }
+
+  &:hover::after {
+    filter: alpha(opacity = 30);
+    opacity: .3;
+  }
+}
+
+.c-tristate-on label {
+  border: 3px solid #555;
+  border-right: 0;
+  border-top: 0;
+  display: unset;
+  height: 5.5px;
+  transform: rotate(-45deg);
+  width: 9px;
+}
+
+.c-tristate-both label {
+  background: #555;
+  border-radius: 2px;
+  display: unset;
+  height: 9px;
+  left: 2px;
+  top: 2px;
+  width: 9px;
+}

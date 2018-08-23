@@ -1,0 +1,92 @@
+<div class="d-flex flex-column flex-fill">
+  <div class="modal-body">
+    <div ng-form="timeForm" class="container-fluid">
+      <div class="row">
+        <label class="col-form-label" title="Loaded range start">Load Range</label>
+      </div>
+
+      <div class="card row form-group" ng-repeat="range in loadRanges" ng-class="{'ng-invalid': !timeCtrl.isValid(range.start, range.end)}">
+        <div class="card-body container-fluid">
+          <div class="mb-1 row">
+            <label class="col-form-label col-2" title="Loaded range start">Start</label>
+            <div class="col">
+              <span class="float-right"><popover data-title="'Start'" data-content="loadStartTip" data-pos="'right'"></popover></span>
+              <date-time value="range.start" hidecontrols="true"></date-time>
+            </div>
+          </div>
+
+          <div class="row">
+            <label class="col-form-label col-2" title="Loaded range end">End</label>
+            <div class="col">
+              <span class="float-right">
+                <button class="btn btn-outline-danger btn-sm" title="Add range" ng-if="loadRanges.length > 1" ng-click="timeCtrl.removeRange($index)">
+                  <i class="fa fa-fw fa-times"></i>
+                </button>
+                <button class="btn btn-outline-success btn-sm" title="Add range" ng-if="$last" ng-click="timeCtrl.addRange(range)">
+                  <i class="fa fa-fw fa-plus"></i>
+                </button>
+                <popover data-title="'End'" data-content="loadEndTip" data-pos="'right'"></popover>
+              </span>
+              <date-time value="range.end" hidecontrols="true"></date-time>
+              <div class="invalid-feedback d-block" ng-if="!timeCtrl.isValid(range.start, range.end)">Start must be before End!</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mb-1">
+        <label class="col-form-label" title="Slice range start">Time Slices</label>
+        <button class="btn btn-secondary btn-sm ml-1" title="Add slice" ng-click="timeCtrl.addSlice()" ng-if="sliceRanges.length < 1">
+          <i class="fa fa-fw fa-plus"></i> Create
+        </button>
+        <span class="ml-auto">
+          <popover data-title="'Slice'" data-content="sliceTip" data-pos="'right'"></popover>
+        </span>
+      </div>
+
+      <div ng-repeat="slice in sliceRanges" class="card row form-group">
+        <div class="card-body container-fluid">
+          <div class="mb-1 row">
+            <label class="col-form-label col-2" title="Slice range start">Start</label>
+            <div class="col form-inline">
+              <time hours="slice.start.hours" mins="slice.start.mins" secs="slice.start.secs"></time>
+              <span class="ml-auto"><popover data-title="'Start'" data-content="sliceStartTip" data-pos="'right'"></popover></span>
+            </div>
+          </div>
+
+          <div class="row">
+            <label class="col-form-label col-2" title="Slice range end">End</label>
+            <div class="col form-inline">
+              <time hours="slice.end.hours" mins="slice.end.mins" secs="slice.end.secs"></time>
+              <span class="ml-auto">
+                <button class="btn btn-outline-danger btn-sm" title="Remove slice" ng-click="timeCtrl.removeSlice($index)">
+                  <i class="fa fa-fw fa-times"></i>
+                </button>
+                <button class="btn btn-outline-success btn-sm" title="Add Slice" ng-if="$last" ng-click="timeCtrl.addSlice(slice)">
+                  <i class="fa fa-fw fa-plus"></i>
+                </button>
+                <popover data-title="'End'" data-content="sliceEndTip" data-pos="'right'"></popover>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <label class="col-form-label" title="Offset from UTC">Offset</label>
+        <div class="col">
+          <input name="offset" class="form-control" type="text" ng-model="offset" ng-pattern="/^(UTC)?[+-]\d{4}$/">
+          <div class="invalid-feedback" ng-if="timeForm.offset.$invalid">Please enter the value as &#177HHMM</div>
+        </div>
+        <span class="ml-auto"><popover data-title="'Offset'" data-content="offsetTip" data-pos="'right'"></popover></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button class="btn btn-primary" ng-disabled="!timeCtrl.valid() || timeForm.$invalid" ng-click="timeCtrl.accept()">
+      <i class="fa fa-check"></i> OK
+    </button>
+    <button class="btn btn-secondary" ng-click="timeCtrl.cancel()"><i class="fa fa-ban"></i> Cancel</button>
+  </div>
+</div>

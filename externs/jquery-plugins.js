@@ -93,6 +93,12 @@ jQuery.prototype.typeahead = function(opt_arg1) {};
 jQuery.prototype.sortable = function(opt_arg1) {};
 
 /**
+ * @param {(string|Object)=} opt_arg1
+ * @return {!jQuery}
+ */
+jQuery.prototype.collapse = function(opt_arg1) {};
+
+/**
  * @param {Object} options
  * @return {!jQuery}
  */

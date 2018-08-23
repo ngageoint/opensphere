@@ -3,6 +3,7 @@ goog.provide('os.query.ui.AreaOptionsStepCtrl');
 
 goog.require('os.defines');
 goog.require('os.ui.Module');
+goog.require('os.ui.im.mergeAreaOptionDirective');
 goog.require('os.ui.query');
 goog.require('os.ui.wiz.step.AbstractWizardStep');
 goog.require('os.ui.wiz.step.WizardStepEvent');

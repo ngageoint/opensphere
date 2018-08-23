@@ -1,46 +1,48 @@
-<div style="height:100%">
-  <div class="layers-header">
-    <table style="width:100%;margin-bottom:5px;">
-      <tr>
-        <td class="control-label">Group By:</td>
-        <td style="width:100%;">
-          <select style="width: calc(100% - 60px);" class="no-margin" ng-model="view" ng-change="layers.onGroupByChanged()" ng-options="key for (key, value) in views"/>
-          <div style="float:right;">
-            <button class="btn btn-default c-layers__button" title="Toggle Tile Layers" ng-click="layers.toggleTileLayers()">
-              <img ng-src="{{tilesBtnIcon}}"/>
-            </button>
-            <button class="btn btn-default c-layers__button" title="Toggle Feature Layers" ng-click="layers.toggleFeatureLayers()">
-              <img ng-src="{{featuresBtnIcon}}"/>
-            </button> 
-          </div>
-        </td>
-      </tr>
-    </table>
-    <table>
-      <tr>
-        <td class="search-box" style="width: 100%;">
-          <input class="search top-gapxs" type="text" ng-model="term" ng-change="layers.search()"
-          placeholder="Search active layers"></input>
-          <span class="input-clear" ng-click="layers.clearSearch()" ng-show="layers.term" title="Clear the search term">
+<div class="d-flex flex-column flex-fill">
+  <div class="form-row align-items-center flex-shrink-0 mt-1">
+    <div class="col-auto col-form-label">
+      Group By
+    </div>
+    <div class="col">
+      <select class="form-control" ng-model="view" ng-change="layers.onGroupByChanged()" ng-options="key for (key, value) in views"/>
+    </div>
+    <div class="col-auto">
+      <div class="btn-group add-data-group" ng-right-click="layers.openMenu('.add-data-group')">
+        <button class="btn btn-primary" title="Add data to the map" ng-click="layers.toggle('addData')"
+          ng-class="{active: layers.isWindowActive('addData')}">
+          <i class="fa fa-plus color-secondary"></i>
+        </button>
+        <button class="btn btn-primary dropdown-toggle" ng-click="layers.openMenu('.add-data-group')"></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-row align-items-center flex-shrink-0 mt-1">
+    <div class="col">
+      <div class="input-group">
+        <input class="form-control" type="text" ng-model="term" ng-change="layers.search()" placeholder="Search active layers" />
+        <div class="input-group-append">
+          <button class="btn btn-secondary" ng-click="layers.clearSearch()" title="Clear the search term">
             <i class="fa fa-times"></i>
-          </span>
-        </td>
-        <td class="btn-group add-data-group" ng-right-click="layers.openMenu('.add-data-group')" style="float:right;">
-          <button class="btn btn-default " title="Add data to the map" ng-click="layers.toggle('addData')"
-            ng-class="{active: layers.isWindowActive('addData')}">
-            <i class="fa fa-plus green-icon"></i>
           </button>
-          <button class="btn addon"  ng-click="layers.openMenu('.add-data-group')" ng-class="{active: menu == '.add-data-group'}">
-            <i class="fa fa-chevron-down"></i>
-          </button>
-        </td> 
-      </tr>
-    </table>   
+        </div>
+      </div>
+    </div>
+    <div class="col-auto">
+      <div class="btn-group">
+        <button class="btn btn-secondary" title="Toggle Tile Layers" ng-click="layers.toggleTileLayers()">
+          <img ng-src="{{tilesBtnIcon}}"/>
+        </button>
+        <button class="btn btn-secondary" title="Toggle Feature Layers" ng-click="layers.toggleFeatureLayers()">
+          <img ng-src="{{featuresBtnIcon}}"/>
+        </button>
+      </div>
+    </div>
   </div>
-  <div class="layers-main" autoheight siblings=".layers-header, .layers-footer">
-    <layertree x-data="layerTree" drag-enabled="true" selected="selected" context-menu="contextMenu" checkbox-tooltip="Show or hide the layer" multi-select="true" disposable="true"></layertree>
+
+  <div class="d-flex flex-row flex-fill mt-1">
+    <layertree class="border" x-data="layerTree" drag-enabled="true" selected="selected" context-menu="contextMenu" checkbox-tooltip="Show or hide the layer" multi-select="true" disposable="true"></layertree>
   </div>
-  <div class="layers-footer">
-    <uiswitch items="selected" directive-function="layers.getUi" generic="defaultlayerui"></uiswitch>
-  </div>
+
+  <uiswitch items="selected" directive-function="layers.getUi" generic="defaultlayerui"></uiswitch>
 </div>

@@ -13,15 +13,12 @@ os.ui.saveButtonDirective = function() {
   return {
     restrict: 'E',
     replace: true,
-    scope: {
-      'showLabel': '='
-    },
+    scope: true,
     controller: os.ui.SaveButtonCtrl,
     controllerAs: 'ctrl',
-    template: '<button class="btn btn-default btn-menu no-text" ng-click="ctrl.openMenu()"' +
+    template: '<button class="btn btn-secondary dropdown-toggle" ng-click="ctrl.openMenu()"' +
       ' title="Save options" ng-right-click="ctrl.openMenu()" ng-class="{active: menu}">' +
-      '<i class="fa fa-floppy-o green-icon"></i> {{showLabel ? \'Save\' : \'\'}}' +
-      '&nbsp;<i class="fa fa-chevron-down menu-arrow"></i>' +
+      '<i class="fa fa-floppy-o" ng-class="{\'fa-fw\': puny}"></i> <span ng-class="{\'d-none\': puny}">Save</span>' +
       '</button>'
   };
 };

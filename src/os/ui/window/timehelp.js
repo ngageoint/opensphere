@@ -33,7 +33,7 @@ os.ui.window.launchTimeHelp = function() {
   if (!document.getElementById('time-help')) {
     os.ui.window.create({
       'label': 'Custom Date/Time Formats',
-      'icon': 'fa fa-clock-o lt-blue-icon',
+      'icon': 'fa fa-clock-o',
       'x': '-10',
       'y': 'center',
       'width': '445',
@@ -42,8 +42,8 @@ os.ui.window.launchTimeHelp = function() {
       'height': '445',
       'min-height': '250',
       'max-height': '600',
-      'show-close': 'true',
-      'z-index': '10002'
+      'show-close': true,
+      'modal': true
     }, '<timehelp></timehelp>');
   }
 };

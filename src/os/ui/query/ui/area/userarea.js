@@ -18,6 +18,7 @@ goog.require('os.ui.Module');
 goog.require('os.ui.action.ActionEvent');
 goog.require('os.ui.action.EventType');
 goog.require('os.ui.geo.positionDirective');
+goog.require('os.ui.util.validationMessageDirective');
 goog.require('os.ui.window');
 
 
@@ -315,6 +316,7 @@ os.ui.query.ui.area.UserAreaCtrl.prototype.disposeInternal = function() {
 
 /**
  * Fire the cancel callback and close the window.
+ * @export
  */
 os.ui.query.ui.area.UserAreaCtrl.prototype.cancel = function() {
   if (this.scope && this.scope['cancel']) {
@@ -323,14 +325,11 @@ os.ui.query.ui.area.UserAreaCtrl.prototype.cancel = function() {
 
   this.close();
 };
-goog.exportProperty(
-    os.ui.query.ui.area.UserAreaCtrl.prototype,
-    'cancel',
-    os.ui.query.ui.area.UserAreaCtrl.prototype.cancel);
 
 
 /**
  * Fire the confirmation callback and close the window.
+ * @export
  */
 os.ui.query.ui.area.UserAreaCtrl.prototype.confirm = function() {
   if (this.scope && this.scope['confirm'] && this['area']) {
@@ -356,10 +355,6 @@ os.ui.query.ui.area.UserAreaCtrl.prototype.confirm = function() {
 
   this.close();
 };
-goog.exportProperty(
-    os.ui.query.ui.area.UserAreaCtrl.prototype,
-    'confirm',
-    os.ui.query.ui.area.UserAreaCtrl.prototype.confirm);
 
 
 /**
@@ -389,6 +384,7 @@ os.ui.query.ui.area.UserAreaCtrl.prototype.handleKeyEvent = function(event) {
  * Get the user-facing name for an area type.
  * @param {string} type The area type.
  * @return {string} The user-facing name for the area type.
+ * @export
  */
 os.ui.query.ui.area.UserAreaCtrl.prototype.getAreaTypeName = function(type) {
   var typeDetails = os.ui.query.ui.area.AreaTypeDetails[type];
@@ -398,16 +394,13 @@ os.ui.query.ui.area.UserAreaCtrl.prototype.getAreaTypeName = function(type) {
 
   return 'Unspecified Type';
 };
-goog.exportProperty(
-    os.ui.query.ui.area.UserAreaCtrl.prototype,
-    'getAreaTypeName',
-    os.ui.query.ui.area.UserAreaCtrl.prototype.getAreaTypeName);
 
 
 /**
  * Get the user-facing name for an area type.
  * @param {string} type The area type.
  * @return {string} The user-facing name for the area type.
+ * @export
  */
 os.ui.query.ui.area.UserAreaCtrl.prototype.getAreaTypeIcon = function(type) {
   var typeDetails = os.ui.query.ui.area.AreaTypeDetails[type];
@@ -417,16 +410,13 @@ os.ui.query.ui.area.UserAreaCtrl.prototype.getAreaTypeIcon = function(type) {
 
   return 'fa-calculator';
 };
-goog.exportProperty(
-    os.ui.query.ui.area.UserAreaCtrl.prototype,
-    'getAreaTypeIcon',
-    os.ui.query.ui.area.UserAreaCtrl.prototype.getAreaTypeIcon);
 
 
 /**
  * Get the user-facing tooltip for an area type.
  * @param {string} type The area type.
  * @return {string} The user-facing tooltip for the area type.
+ * @export
  */
 os.ui.query.ui.area.UserAreaCtrl.prototype.getAreaTypeTooltip = function(type) {
   var typeDetails = os.ui.query.ui.area.AreaTypeDetails[type];
@@ -436,10 +426,6 @@ os.ui.query.ui.area.UserAreaCtrl.prototype.getAreaTypeTooltip = function(type) {
 
   return 'Enter coordinates to define an area.';
 };
-goog.exportProperty(
-    os.ui.query.ui.area.UserAreaCtrl.prototype,
-    'getAreaTypeTooltip',
-    os.ui.query.ui.area.UserAreaCtrl.prototype.getAreaTypeTooltip);
 
 
 /**
@@ -466,29 +452,23 @@ os.ui.query.ui.area.UserAreaCtrl.prototype.setArea = function(area) {
 
 /**
  * Update the name on the area.
+ * @export
  */
 os.ui.query.ui.area.UserAreaCtrl.prototype.onLonFirstChange = function() {
   this['coordOrder'] = this['lonFirst'] ? os.geo.PREFER_LON_FIRST : undefined;
   this.updateArea();
 };
-goog.exportProperty(
-    os.ui.query.ui.area.UserAreaCtrl.prototype,
-    'onLonFirstChange',
-    os.ui.query.ui.area.UserAreaCtrl.prototype.onLonFirstChange);
 
 
 /**
  * Update the area from the form.
+ * @export
  */
 os.ui.query.ui.area.UserAreaCtrl.prototype.updateArea = function() {
   if (this.updateDelay) {
     this.updateDelay.start();
   }
 };
-goog.exportProperty(
-    os.ui.query.ui.area.UserAreaCtrl.prototype,
-    'updateArea',
-    os.ui.query.ui.area.UserAreaCtrl.prototype.updateArea);
 
 
 /**

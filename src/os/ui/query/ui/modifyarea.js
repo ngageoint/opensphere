@@ -116,7 +116,7 @@ os.ui.query.ui.ModifyAreaCtrl = function($scope, $element) {
   $scope.$watch('op', this.updatePreview.bind(this));
   $scope.$watch('targetArea', this.onTargetAreaChange.bind(this));
   $scope.$on('$destroy', this.dispose.bind(this));
-  $scope.$emit('window.ready');
+  $scope.$emit(os.ui.WindowEventType.READY);
 };
 goog.inherits(os.ui.query.ui.ModifyAreaCtrl, goog.Disposable);
 
