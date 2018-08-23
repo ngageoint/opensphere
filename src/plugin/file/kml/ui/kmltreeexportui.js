@@ -47,7 +47,7 @@ plugin.file.kml.ui.launchTreeExport = function(rootNode, opt_winLabel) {
     'icon': 'fa fa-download',
     'x': 'center',
     'y': 'center',
-    'width': 350,
+    'width': 400,
     'min-width': 300,
     'max-width': 2000,
     'height': 'auto',
@@ -116,7 +116,7 @@ plugin.file.kml.ui.KMLTreeExportCtrl = function($scope, $element) {
 
   // fire auto height event
   setTimeout(function() {
-    $scope.$emit('window.ready');
+    $scope.$emit(os.ui.WindowEventType.READY);
   }, 0);
 };
 

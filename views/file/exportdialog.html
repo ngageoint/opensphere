@@ -1,53 +1,53 @@
-<div class="export-window window-content-wrapper">
-  <div class="window-content">
-    <div class="export-dialog">
-      <form name="exportForm" class="form-horizontal form-compact">
-        <table style="width:100%">
-          <tr>
-            <td class="control-label">Name:</td>
-            <td class="wide">
-              <input class="wide" type="text" name="title" ng-model="options.title" ng-maxlength="200" required/>
-              <span class="help-inline" ng-show="exportForm.title.$error.required">Required!</span>
-              <span class="help-inline" ng-show="exportForm.title.$error.maxlength">Title is too long!</span>
-            </td>
-          </tr>
-          <tr ng-show="!initialPersister">
-            <td class="control-label">Save to:</td>
-            <td class="wide">
-              <select class="wide" ng-model="persister"
-                  ng-options="value as key for (key, value) in exportdialog.persisters"/>
-            </td>
-          </tr>
-          <tr ng-show="!initialExporter">
-            <td class="control-label">Type:</td>
-            <td class="wide">
-              <select class="wide" ng-model="exporter"
-                  ng-options="value as key for (key, value) in exportdialog.exporters"/>
-            </td>
-          </tr>
-        </table>
-        <div class="export-ui" ng-show="exporter && exportdialog.getExporterUI()">
-          <h6>{{exportdialog.getExporterLabel()}} Options</h6>
-          <div class="well export-ui-container"></div>
+<div class="d-flex flex-column flex-fill">
+  <div class="modal-body d-flex flex-fill flex-column">
+    <form name="exportForm" class="d-flex flex-fill flex-column">
+
+      <div class="d-flex flex-fill form-group">
+        <label class="col-3 col-form-label text-right u-required">Name</label>
+        <div class="col">
+          <input class="form-control" type="text" name="title" ng-model="options.title" ng-maxlength="200" required/>
+          <validation-message target="exportForm.title"></validation-message>
         </div>
-        <div class="custom-ui"></div>
-      </form>
-    </div>
+      </div>
+
+      <div class="d-flex flex-fill form-group" ng-show="exportdialog.getKeys(exportdialog.persisters).length">
+        <label class="col-3 col-form-label text-right">Save To</label>
+        <div class="col">
+          <select class="form-control" ng-model="persister" ng-options="value as key for (key, value) in exportdialog.persisters" />
+        </div>
+      </div>
+
+      <div class="d-flex flex-fill form-group" ng-show="exportdialog.getKeys(exportdialog.exporters).length">
+        <label class="col-3 col-form-label text-right">Type</label>
+        <div class="col">
+          <select class="form-control" ng-model="exporter" ng-options="value as key for (key, value) in exportdialog.exporters" />
+        </div>
+      </div>
+
+      <div class="js-export-ui__wrapper" ng-show="exporter && exportdialog.getExporterUI()">
+        <h5 class="mt-3 text-center">{{exportdialog.getExporterLabel()}} Options</h5>
+        <div class="js-export-ui__container"></div>
+      </div>
+      <div class="js-custom-ui"></div>
+
+    </form>
   </div>
-  <div class="window-footer">
-    <ng-pluralize count="options.items.length" style="vertical-align:middle;"
-        when="{'0': 'Nothing to export.',
-               'one': 'Exporting {} {{itemText}}.',
-               'other': 'Exporting {} {{itemText}}s.'}">
-    </ng-pluralize>
-    <div class="pull-right">
-      <button class="btn btn-default" ng-click="exportdialog.confirm()"
-          ng-disabled="exportForm.$invalid || options.items.length == 0">
-        <i class="fa fa-check lt-blue-icon"></i>
+
+
+  <div class="modal-footer flex-fill justify-content-between">
+    <div>
+      <ng-pluralize class="align-middle" ng-class="{'text-warning': options.items.length == 0}" count="options.items.length" when="{'0': 'Nothing to export.',
+                 'one': 'Exporting {} {{itemText}}.',
+                 'other': 'Exporting {} {{itemText}}s.'}">
+      </ng-pluralize>
+    </div>
+    <div>
+      <button class="btn btn-primary" ng-click="exportdialog.confirm()" ng-disabled="exportForm.$invalid || options.items.length == 0">
+        <i class="fa fa-check"></i>
         OK
       </button>
-      <button class="btn btn-default" ng-click="exportdialog.cancel()">
-        <i class="fa fa-ban red-icon"></i>
+      <button class="btn btn-secondary" ng-click="exportdialog.cancel()">
+        <i class="fa fa-ban"></i>
         Cancel
       </button>
     </div>

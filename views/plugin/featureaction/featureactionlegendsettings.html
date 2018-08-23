@@ -1,7 +1,8 @@
-<div class="feature-action-legend-settings control-group">
-  <label class="checkbox inline" title="Show feature actions in the legend">
-    <input type="checkbox" name="showFeatureActions" ng-model="legend.options.showFeatureActions"
+<div class="form-group">
+  <div class="form-check" title="Show feature actions in the legend">
+    <input class="form-check-input" id="legendShowFeatureActions" type="checkbox" name="showFeatureActions"
+        ng-model="legend.options.showFeatureActions"
         ng-change="legend.toggle('showFeatureActions')"/>
-    Show feature actions
-  </label>
+    <label class="form-check-label" for="legendShowFeatureActions">Show feature actions</label>
+  </div>
 </div>

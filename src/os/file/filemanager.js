@@ -42,18 +42,21 @@ os.file.FileManager.prototype.getContentType = function(file, callback) {
   var fileBlob = file.getFile();
 
   if (!buffer && !fileBlob) {
-    goog.log.error(os.file.FileManager.LOGGER_,
-        'The content or original File instance must be present on the os.file.File for content type '
-        + 'detection to work');
-    callback(file.getType());
+    var type = file.getType();
+
+    if (!type) {
+      goog.log.error(os.file.FileManager.LOGGER_,
+          'The content or original File instance must be present on the os.file.File for content type '
+          + 'detection to work');
+    }
+
+    callback(type);
     return;
   }
 
-  if (buffer && !(buffer instanceof ArrayBuffer)) {
-    goog.log.error(os.file.FileManager.LOGGER_,
-        'The content has been changed from the original array buffer (most likely to a string).');
-    callback(file.getType());
-    return;
+  if (buffer && goog.isString(buffer)) {
+    // convert the string to an ArrayBuffer and continue with the check
+    buffer = os.file.mime.text.getArrayBuffer(buffer);
   }
 
   var onComplete = function(type) {
@@ -72,10 +75,13 @@ os.file.FileManager.prototype.getContentType = function(file, callback) {
   // we are going to read the first 16KB and send that to the mime/content type detection
   if (buffer && buffer instanceof ArrayBuffer) {
     os.file.mime.detect(buffer, file).then(onComplete).then(callback);
-  } else {
+  } else if (fileBlob instanceof Blob) {
     goog.fs.FileReader.readAsArrayBuffer(fileBlob.slice(0, 16 * 1024)).addCallback(function(buffer) {
       os.file.mime.detect(buffer, file).then(onComplete).then(callback);
     });
+  } else {
+    goog.log.error(os.file.FileManager.LOGGER_,
+        'Failed to detect content type. The content was not a string or ArrayBuffer.');
   }
 };
 

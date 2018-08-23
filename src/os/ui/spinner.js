@@ -21,7 +21,7 @@ os.ui.spinnerDirective = function() {
       'step': '=?',
       'css': '@'
     },
-    template: '<span ng-form class="spinner-container"><input class="spinner" name="spinner"/></span>',
+    template: '<div ng-form><input class="spinner" name="spinner"/></div>',
     controller: os.ui.SpinnerCtrl
   };
 };
@@ -87,6 +87,7 @@ os.ui.SpinnerCtrl = function($scope, $element) {
   if ($scope['css']) {
     $element.find('.ui-spinner').addClass($scope['css']);
   }
+  $element.find('.ui-spinner-input').addClass('form-control');
 
   var fn = this.onChange_.bind(this);
   $scope.$watch('value', fn);

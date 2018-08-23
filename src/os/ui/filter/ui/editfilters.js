@@ -8,6 +8,7 @@ goog.require('os.ui.filter');
 goog.require('os.ui.filter.advancedFilterBuilderDirective');
 goog.require('os.ui.filter.basicFilterBuilderDirective');
 goog.require('os.ui.filter.ui.GroupNode');
+goog.require('os.ui.util.validationMessageDirective');
 goog.require('os.ui.window');
 
 
@@ -218,29 +219,28 @@ os.ui.filter.ui.EditFiltersCtrl.prototype.onRemove_ = function(event, node) {
       return;
     }
 
-    var options = {
-      id: 'removeMultiple',
-      x: 'center',
-      y: 'center',
-      label: 'Remove Items',
-      'show-close': false,
-      'no-scroll': true,
-      'z-index': '10003',
-      width: 300,
-      height: 125,
-      icon: 'fa fa-warning'
-    };
-
-    var scopeOptions = {
-      'confirmCallback': this.doRemove_.bind(this, node),
-      'cancelCallback': goog.nullFunction,
-      'yesText': 'Yes',
-      'noText': 'No'
-    };
-
-    var text = 'Are you sure you want to remove multiple items from the filter?';
-    var template = '<confirm>' + text + '</confirm>';
-    os.ui.window.create(options, template, undefined, undefined, undefined, scopeOptions);
+    os.ui.window.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
+      confirm: this.doRemove_.bind(this, node),
+      prompt: 'Are you sure you want to remove multiple items from the filter?',
+      yesText: 'Yes',
+      yesButtonIcon: 'fa-trash',
+      yesButtonClass: 'btn-danger',
+      noText: 'No',
+      noIcon: 'fa fa-remove',
+      windowOptions: {
+        'id': 'removeMultiple',
+        'x': 'center',
+        'y': 'center',
+        'label': 'Remove Items',
+        'show-close': false,
+        'no-scroll': true,
+        'width': 300,
+        'height': 'auto',
+        'icon': 'fa fa-warning',
+        'modal': 'true',
+        'headerClass': 'bg-danger u-bg-danger-text'
+      }
+    }));
   }
 };
 
@@ -259,30 +259,24 @@ os.ui.filter.ui.EditFiltersCtrl.prototype.doRemove_ = function(node) {
 /**
  * Sets the tab value and broadcasts an event to the children.
  * @param {string} tab
+ * @export
  */
 os.ui.filter.ui.EditFiltersCtrl.prototype.setTab = function(tab) {
   this.checkFilter_();
   this.scope['tab'] = tab;
   this.scope.$broadcast('tabChange', tab);
 };
-goog.exportProperty(
-    os.ui.filter.ui.EditFiltersCtrl.prototype,
-    'setTab',
-    os.ui.filter.ui.EditFiltersCtrl.prototype.setTab);
 
 
 /**
  * Gets whether the form is invalid
  * @return {boolean}
+ * @export
  */
 os.ui.filter.ui.EditFiltersCtrl.prototype.isInvalid = function() {
   return this.scope['tab'] === 'basic' && this['isComplex'] ||
       this.isNodeInvalid(/** @type {!os.ui.filter.ui.GroupNode} */ (this['root']));
 };
-goog.exportProperty(
-    os.ui.filter.ui.EditFiltersCtrl.prototype,
-    'isInvalid',
-    os.ui.filter.ui.EditFiltersCtrl.prototype.isInvalid);
 
 
 /**
@@ -317,18 +311,16 @@ os.ui.filter.ui.EditFiltersCtrl.prototype.isNodeInvalid = function(node) {
 
 /**
  * Cancels the filter
+ * @export
  */
 os.ui.filter.ui.EditFiltersCtrl.prototype.cancel = function() {
   os.ui.window.close(this.element);
 };
-goog.exportProperty(
-    os.ui.filter.ui.EditFiltersCtrl.prototype,
-    'cancel',
-    os.ui.filter.ui.EditFiltersCtrl.prototype.cancel);
 
 
 /**
  * User clicked OK
+ * @export
  */
 os.ui.filter.ui.EditFiltersCtrl.prototype.finish = function() {
   this.entry.setTitle(this['title']);
@@ -344,10 +336,6 @@ os.ui.filter.ui.EditFiltersCtrl.prototype.finish = function() {
 
   os.ui.window.close(this.element);
 };
-goog.exportProperty(
-    os.ui.filter.ui.EditFiltersCtrl.prototype,
-    'finish',
-    os.ui.filter.ui.EditFiltersCtrl.prototype.finish);
 
 
 /**

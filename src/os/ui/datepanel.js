@@ -15,6 +15,7 @@ goog.require('os.ui.popover.popoverDirective');
 os.ui.datePanelDirective = function() {
   return {
     restrict: 'AE',
+    replace: true,
     scope: true,
     templateUrl: os.ROOT + 'views/datepanel.html',
     controller: os.ui.DatePanelCtrl,
@@ -89,8 +90,7 @@ os.ui.DatePanelCtrl = function($scope) {
  */
 os.ui.DatePanelCtrl.prototype.toggleExtend = function() {
   this['extended'] = !this['extended'];
-  var menuEl = angular.element('#slice-panel');
-  menuEl.toggle();
+
   if (!this['extended']) {
     this.applySlice();
   }

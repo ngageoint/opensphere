@@ -11,7 +11,7 @@ goog.require('os.time.TimelineController');
 goog.require('os.ui.Module');
 goog.require('os.ui.datetime.dateTimeDirective');
 goog.require('os.ui.popover.popoverDirective');
-goog.require('os.ui.spinnerDirective');
+goog.require('os.ui.time.timeDirective');
 
 
 /**
@@ -23,7 +23,7 @@ os.ui.timeSettingsDirective = function() {
     restrict: 'AE',
     replace: true,
     scope: true,
-    templateUrl: os.ROOT + 'views/windows/time.html',
+    templateUrl: os.ROOT + 'views/windows/timelinesettings.html',
     controller: os.ui.TimeSettingsCtrl,
     controllerAs: 'timeCtrl'
   };
@@ -179,9 +179,8 @@ os.ui.TimeSettingsCtrl.prototype.handleKeyEvent_ = function(event) {
 /**
  * Add a slice
  * @param {Object=} opt_slice
- * @param {boolean=} opt_crossesMidnight
  */
-os.ui.TimeSettingsCtrl.prototype.addSlice = function(opt_slice, opt_crossesMidnight) {
+os.ui.TimeSettingsCtrl.prototype.addSlice = function(opt_slice) {
   var slice = {'start': {'hours': 0, 'mins': 0, 'secs': 0}, 'end': {'hours': 1, 'mins': 0, 'secs': 0}};
   if (opt_slice) {
     slice = {
@@ -198,7 +197,6 @@ os.ui.TimeSettingsCtrl.prototype.addSlice = function(opt_slice, opt_crossesMidni
     };
   }
   this.scope['sliceRanges'].push(slice);
-  this.scope['sliceModels'][this.scope['sliceRanges'].length - 1] = (opt_crossesMidnight ? opt_crossesMidnight : false);
 };
 goog.exportProperty(os.ui.TimeSettingsCtrl.prototype, 'addSlice', os.ui.TimeSettingsCtrl.prototype.addSlice);
 
@@ -294,15 +292,6 @@ os.ui.TimeSettingsCtrl.prototype.timeFromField = function(field) {
  * @return {boolean}
  */
 os.ui.TimeSettingsCtrl.prototype.valid = function() {
-  var sr = this.scope['sliceRanges'];
-  for (var i = 0; i < sr.length; i++) {
-    var start = sr[i]['start']['hours'] * 3600000 + sr[i]['start']['mins'] * 60000 + sr[i]['start']['secs'] * 1000;
-    var end = sr[i]['end']['hours'] * 3600000 + sr[i]['end']['mins'] * 60000 + sr[i]['end']['secs'] * 1000;
-    if (start > end && !this.scope['sliceModels'][i]) {
-      return false;
-    }
-  }
-
   var loadRanges = this.scope['loadRanges'];
   for (var i = 0; i < loadRanges.length; i++) {
     var start = this.timeFromField(loadRanges[i].start);

@@ -67,7 +67,7 @@ plugin.file.geojson.GeoJSONImportUI.prototype.launchUI = function(file, opt_conf
   };
   var windowOptions = {
     'label': 'Import GeoJSON',
-    'icon': 'fa fa-sign-in lt-blue-icon',
+    'icon': 'fa fa-sign-in',
     'x': 'center',
     'y': 'center',
     'width': '850',
@@ -80,6 +80,6 @@ plugin.file.geojson.GeoJSONImportUI.prototype.launchUI = function(file, opt_conf
     'show-close': 'true',
     'no-scroll': 'true'
   };
-  var template = '<geojsonimport resize-with=".window"></geojsonimport>';
+  var template = '<geojsonimport resize-with="' + os.ui.windowSelector.WINDOW + '"></geojsonimport>';
   os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
 };

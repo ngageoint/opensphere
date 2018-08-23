@@ -9,13 +9,14 @@ goog.require('plugin.file.kml.ui');
 /**
  * @type {string}
  */
-plugin.track.ui.TrackNodeUITemplate = '<span class="glyphs pull-right slick-node-ui" ng-if="nodeUi.show()">' +
-        '<span ng-if="nodeUi.canEdit()" ng-click="nodeUi.addFolder()">' +
-            '<i class="fa fa-folder fa-fw glyph" title="Create a new folder"></i></span>' +
-        '<span ng-if="nodeUi.isRemovable()" ng-click="nodeUi.remove()">' +
-            '<i class="fa fa-times fa-fw glyph glyph-remove" title="Remove the layer and all saved tracks"></i>' +
-        '</span>' +
-    '</span>';
+plugin.track.ui.TrackNodeUITemplate = '<span ng-if="nodeUi.show()" class="d-flex flex-shrink-0">' +
+  '<span ng-if="nodeUi.canEdit()" ng-click="nodeUi.addFolder()">' +
+      '<i class="fa fa-folder fa-fw c-glyph" title="Create a new folder"></i></span>' +
+
+  '<button ng-if="nodeUi.isRemovable()" type="button" class="close mx-1" ng-click="nodeUi.remove()" ' +
+  'aria-label="Close"><span aria-hidden="true" title="Remove the layer and all saved tracks">&times;</span></button>' +
+  '</span>' +
+  '</span>';
 
 
 /**

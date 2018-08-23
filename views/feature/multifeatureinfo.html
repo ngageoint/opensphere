@@ -1,0 +1,21 @@
+<div class="d-flex flex-fill">
+  <div class="modal-body d-flex flex-row u-overflow-y-hidden">
+    <div class="d-flex flex-column col-4 pl-0 pr-2" ng-show="features.length > 1">
+      <div class="input-group mb-1">
+        <input class="form-control" type="text" ng-model="multiCtrl.term" ng-change="multiCtrl.search()" placeholder="Search features" />
+        <div class="input-group-append">
+          <button class="btn btn-secondary" ng-click="multiCtrl.term = null; multiCtrl.search()" title="Clear the search term">
+            <i class="fa fa-times"></i>
+          </button>
+        </div>
+      </div>
+      <div>
+        {{features.length == filteredFeatures.length ? features.length + ' features' : ' (' + filteredFeatures.length + '/' + features.length + ') features'}}
+      </div>
+      <slickgrid x-data="filteredFeatures" columns="multiCtrl.columns" selected="selected" options="multiCtrl.options"></slickgrid>
+    </div>
+    <div class="d-flex col pl-0 pr-0">
+      <uiswitch class="d-flex flex-column flex-fill" items="selected" directive-function="multiCtrl.getUi" generic="featureinfo"></uiswitch>
+    </div>
+  </div>
+</div>

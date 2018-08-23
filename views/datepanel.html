@@ -1,37 +1,45 @@
-<div id="date-panel">
-  <div class="date-control-wrapper">
-    <div class="date-control-container">
-      <div>
-        <date-control></date-control>
-        <button class="btn btn-default" ng-click="ctrl.toggleExtend()" title="{{ctrl.sliceTip}}" style="font-size:13px">
-          <i class="fa fa-fw" ng-class="{'fa-caret-up': ctrl.extended, 'fa-caret-down': !ctrl.extended}"></i>
-          hh/mm
-        </button>
-        <div class="btn-separator"></div>
-        <button id="timelineButton" class="btn btn-default" ng-click="ctrl.expand()" title="Expand to full timeline">
-          <i class="fa fa-fw fa-clock-o yellow-icon"></i>
-        </button>
-      </div>
-      <div id="slice-panel" style="display:none;font-size:13px;margin-top:3px;">
-        <span style="display: inline-block;">
-          <input class="time-spin" type="number" min="0" max="23" step="1" ng-model="ctrl.startHour"
+<div class="d-flex flex-column u-pointer-events-none js-date-panel c-date-panel" ng-class="{'c-date-panel__extended-open': ctrl.extended}">
+  <div class="u-pointer-events-all">
+    <div class="w-100 d-flex justify-content-center">
+      <date-control></date-control>
+      <button class="btn btn-secondary dropdown-toggle ml-1 flex-shrink-0" ng-click="ctrl.toggleExtend()" title="{{ctrl.sliceTip}}">hh/mm</button>
+      <button id="timelineButton" class="btn btn-secondary ml-1 flex-shrink-0 o-timeline-button" ng-click="ctrl.expand()" title="Expand to full timeline">
+        <i class="fa fa-fw fa-clock-o"></i>
+      </button>
+    </div>
+  </div>
+
+  <div id="js-slice-panel" class="u-pointer-events-all" ng-show="ctrl.extended">
+    <div class="c-date-panel__extended d-flex w-100 px-1 pb-1 mt-1 flex-shrink-0 justify-content-center rounded-bottom">
+      <div class="d-flex align-items-center">
+        <div class="mx-1 d-flex align-items-center">
+          <input class="form-control" type="number" min="0" max="23" step="1" ng-model="ctrl.startHour"
               ng-change="ctrl.onChange('startHour', 0, 23, '{{ctrl.startHour}}')"></input>
-          h :
-          <input class="time-spin" type="number" min="0" max="59" step="1" ng-model="ctrl.startMinute"
+          <span class="flex-shrink-0 ml-1">h</span>
+        </div>
+        <div class="mx-1 d-flex align-items-center">
+          <input class="form-control" type="number" min="0" max="59" step="1" ng-model="ctrl.startMinute"
               ng-change="ctrl.onChange('startMinute', 0, 59, '{{ctrl.startMinute}}')"></input>
-          m&nbsp; to &nbsp;
-          <input class="time-spin" type="number" min="0" max="23" step="1" ng-model="ctrl.endHour"
+          <span class="flex-shrink-0 ml-1">m to</span>
+        </div>
+        <div class="mx-1 d-flex align-items-center">
+          <input class="form-control" type="number" min="0" max="23" step="1" ng-model="ctrl.endHour"
               ng-change="ctrl.onChange('endHour', 0, 23, '{{ctrl.endHour}}')"></input>
-          h :
-          <input class="time-spin" type="number" min="0" max="59" step="1" ng-model="ctrl.endMinute"
+          <span class="flex-shrink-0 ml-1">h</span>
+        </div>
+        <div class="mx-1 d-flex align-items-center">
+          <input class="form-control" type="number" min="0" max="59" step="1" ng-model="ctrl.endMinute"
               ng-change="ctrl.onChange('endMinute', 0, 59, '{{ctrl.endMinute}}')"></input>
-          m &nbsp;{{ctrl.getOffset()}}
-          <button class="btn btn-default" ng-click="ctrl.applySlice()" title="Apply time slice" ng-disabled="!ctrl.sliceValid() || ctrl.active">
-            <div ng-if="!ctrl.active" style="font-size:13px"><i class="fa fa-fw fa-check green-icon"></i></div>
-            <div ng-if="ctrl.active" style="font-size:13px"><i class="fa fa-fw fa-check" style="color:#0d0"></i></div>
+          <span class="flex-shrink-0 ml-1">m {{ctrl.getOffset()}}</span>
+        </div>
+        <div class="mx-1 d-flex align-items-center flex-shrink-0">
+          <button class="btn" ng-class="{'btn-success': !ctrl.active, 'btn-secondary': ctrl.active}" ng-click="ctrl.applySlice()" title="Apply time slice" ng-disabled="!ctrl.sliceValid() || ctrl.active">
+            <i class="fa fa-fw fa-check"></i>
           </button>
+        </div>
+        <div>
           <popover data-title="ctrl.sliceTitle" data-content="ctrl.sliceDescription" data-pos="'bottom'"></popover>
-        </span>
+        </div>
       </div>
     </div>
   </div>

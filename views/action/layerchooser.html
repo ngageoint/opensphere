@@ -1,11 +1,9 @@
-<div class="confirm-window window-content-wrapper">
-  <div class="window-content">
+<div class="flex-fill w-100 d-flex flex-column">
+  <div class="modal-body">
     <checklist name="layerlist" allow-multiple="true" items="layers"></checklist>
   </div>
-  <div class="window-footer">
-    <div class="pull-right">
-      <button class="btn btn-default" ng-click="layerchooser.accept()" ng-disabled="layerchooser.valid()"><i class="fa fa-check lt-blue-icon"></i> OK</button>
-      <button class="btn btn-default" ng-click="layerchooser.close()"><i class="fa fa-ban red-icon"></i> Cancel</button>
-    </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" ng-click="layerchooser.accept()" ng-disabled="layerchooser.valid()"><i class="fa fa-check"></i> OK</button>
+    <button class="btn btn-secondary" ng-click="layerchooser.close()"><i class="fa fa-ban"></i> Cancel</button>
   </div>
 </div>

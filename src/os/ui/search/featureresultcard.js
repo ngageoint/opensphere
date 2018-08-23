@@ -167,22 +167,22 @@ os.ui.search.FeatureResultCardCtrl.prototype.onSourceChange_ = function(event, i
     }
 
     if (feature && feature.length) {
-      var hoverWrapper = this.element.parentsUntil('box-hover');
+      var hoverWrapper = this.element;
       for (var y = 0; y < feature.length; y++) {
         if (feature[y] === this.feature) {
           if (p === os.events.SelectionType.ADDED) {
-            hoverWrapper.addClass('box-selected');
+            hoverWrapper.addClass('u-card-selected');
           } else if (p === os.events.SelectionType.REMOVED) {
-            hoverWrapper.removeClass('box-selected');
+            hoverWrapper.removeClass('u-card-selected');
           } else if (p === os.source.PropertyChange.HIGHLIGHTED_ITEMS) {
             if (!event.getNewValue()) { // unhighlight event
-              hoverWrapper.removeClass('box-highlight'); // use two classes to enforce proper selection color
+              hoverWrapper.removeClass('u-card-highlight'); // use two classes to enforce proper selection color
             } else {
-              hoverWrapper.addClass('box-highlight');
+              hoverWrapper.addClass('u-card-highlight');
             }
           }
-        } else if (hoverWrapper.hasClass('box-highlight')) { // address case where overlapping features stay highlighted
-          hoverWrapper.removeClass('box-highlight');
+        } else if (hoverWrapper.hasClass('u-card-highlight')) { // address case where overlapping features stay highlighted
+          hoverWrapper.removeClass('u-card-highlight');
         }
       }
     }

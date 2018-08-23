@@ -11,12 +11,13 @@ goog.require('os.ui.window');
  * Abstract controller for importing areas from a file.
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
+ * @param {!angular.$timeout} $timeout The Angular $timeout service.
  * @extends {goog.Disposable}
  * @constructor
  * @ngInject
  * @template T
  */
-os.ui.query.ui.AreaImportCtrl = function($scope, $element) {
+os.ui.query.ui.AreaImportCtrl = function($scope, $element, $timeout) {
   /**
    * @type {?angular.Scope}
    * @protected
@@ -46,6 +47,11 @@ os.ui.query.ui.AreaImportCtrl = function($scope, $element) {
   this['help'] = os.ui.query.AREA_IMPORT_HELP;
 
   $scope.$on('$destroy', this.dispose.bind(this));
+
+  // trigger window auto height after the DOM is rendered
+  $timeout(function() {
+    $scope.$emit(os.ui.WindowEventType.READY);
+  });
 };
 goog.inherits(os.ui.query.ui.AreaImportCtrl, goog.Disposable);
 

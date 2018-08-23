@@ -1,5 +1,3 @@
-<div class="menu-container shadowbox">
-  <div id="action-menu-handle">
-    <ng-include src="path + 'views/menu/actionmenuitemlist.html'"></ng-include>
-  </div>
+<div class="ui-menu" ng-class="{'u-mw-25':!isFlat}">
+  <ng-include src="path + 'views/menu/actionmenuitemlist.html'"></ng-include>
 </div>

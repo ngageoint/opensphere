@@ -1,27 +1,22 @@
-<div class="user-setting">
+<div class="d-flex flex-column flex-fill u-overflow-y-auto container-fluid">
+  <h4>Location Format</h4>
+  <div class="form-group">Select the format for the location:</div>
   <div>
-    <div class="user-setting-title">Select the format for the location: </div>
-    <div class="user-setting-input radio-setting">
-      <div title="Use DD">
-        <span>
-          <input type="radio" id="location.deg" value='deg' ng-model='locSet.format'><label for="location.deg">Decimal Degrees (DD)</label>
-        </span>
-      </div>
-      <div title="Use DMS">
-        <span>
-          <input type="radio" id="location.dms" value='dms' ng-model='locSet.format'><label for="location.dms">Degrees Minutes Seconds (DMS)</label>
-        </span>
-      </div>
-      <div title="Use DDM">
-        <span>
-          <input type="radio" id="location.ddm" value='ddm' ng-model='locSet.format'><label for="location.ddm">Degrees Decimal Minutes (DDM)</label>
-        </span>
-      </div>
-      <div title="Use MGRS">
-        <span>
-          <input type="radio" id="location.mgrs" value='mgrs' ng-model='locSet.format'><label for="location.mgrs">Military Grid Reference System (MGRS)</label>
-        </span>
-      </div>
+    <div class="form-check" title="Use DEG">
+      <input class="form-check-input" type="radio" id="location.deg" value='deg' ng-model='locSet.format'>
+      <label class="form-check-label" for="location.deg">Decimal Degrees (DEG)</label>
+    </div>
+    <div class="form-check" title="Use DMS">
+      <input class="form-check-input" type="radio" id="location.dms" value='dms' ng-model='locSet.format'>
+      <label class="form-check-label" for="location.dms">Degrees Minutes Seconds (DMS)</label>
+    </div>
+    <div class="form-check" title="Use DDM">
+      <input class="form-check-input" type="radio" id="location.ddm" value='ddm' ng-model='locSet.format'>
+      <label class="form-check-label" for="location.ddm">Degrees Decimal Minutes (DDM)</label>
+    </div>
+    <div class="form-check" title="Use MGRS">
+      <input class="form-check-input" type="radio" id="location.mgrs" value='mgrs' ng-model='locSet.format'>
+      <label class="form-check-label" for="location.mgrs">Military Grid Reference System (MGRS)</label>
     </div>
   </div>
 </div>
