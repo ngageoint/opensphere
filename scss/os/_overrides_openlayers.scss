@@ -216,8 +216,10 @@
 
 // Zoom Slider
 .ol-zoomslider {
+  height: 45%;
   left: auto;
   margin: 1px;
+  max-height: 12.5rem;
   right: .75em;
   top: 4.75em;
 
