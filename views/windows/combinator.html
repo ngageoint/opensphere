@@ -13,13 +13,15 @@
           <select class="form-control col-10" ng-model="order" ng-change="comboCtrl.selectGroupBy(true)" ng-options="value for value in orders"></select>
         </div>
       </div>
-      <div class="w-100 d-inline-block mb-2">
+      <div class="w-100 d-inline-block mb-1">
         <addfilter layer="layer" btn-text="Add Filter"></addfilter>
         <div class="float-right">
-          <label class="form-check-label mr-2" title="Advanced mode allows more specific combinations of layers, filters, and areas">
-            <input class="form-check-input" type="checkbox" ng-model="advanced" ng-change="comboCtrl.advancedToggle(true)">
-            Advanced
-          </label>
+          <div class="d-inline custom-control custom-checkbox" ng-init="checkId = $root.getUniqueString()" title="Advanced mode allows more specific combinations of layers, filters, and areas">
+            <input id="{{checkId}}" class="custom-control-input" type="checkbox" ng-model="advanced" ng-change="comboCtrl.advancedToggle(true)">
+            <label for="{{checkId}}" class="custom-control-label">
+              Advanced
+            </label>
+          </div>
           <button class="btn btn-secondary btn-sm" ng-click="comboCtrl.toggle(false)" title="Expand all"><i class="fa fa-plus-square-o"></i></button>
           <button class="btn btn-secondary btn-sm" ng-click="comboCtrl.toggle(true)" title="Collapse all"><i class="fa fa-minus-square-o"></i></button>
           <button class="btn btn-secondary btn-sm" ng-click="comboCtrl.clear()" title="Clears all the checkboxes in the form">Reset</button>
