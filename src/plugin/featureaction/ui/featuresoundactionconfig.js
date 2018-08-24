@@ -42,8 +42,11 @@ os.ui.Module.directive(plugin.im.action.feature.SoundAction.CONFIG_UI,
 plugin.im.action.feature.ui.SoundConfigCtrl = function($scope, $element) {
   plugin.im.action.feature.ui.SoundConfigCtrl.base(this, 'constructor', $scope,
       $element);
-  $scope['sounds'] = os.audio.AudioManager.getInstance().getSounds();
   $scope.$on('playDelay.spinstop', this.onDelayChange.bind(this));
+
+  this['sounds'] = os.audio.AudioManager.getInstance().getSounds();
+  goog.array.remove(this['sounds'], 'None');
+
 
   if (this.action && this.action.soundConfig) {
     this.soundConfig = /** @type {!Object} */ (os.object.unsafeClone(
