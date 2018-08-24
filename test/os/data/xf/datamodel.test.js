@@ -9,13 +9,13 @@ goog.require('os.time.TimeRange');
  * @const
  */
 var MOVIE_DATA = [
-  {title: 'Casablanca',        year: 1941, rating: 8.5, lead: 'Bogart', gross: 1024560},
-  {title: 'Braveheart',        year: 1995, rating: 8.4, lead: 'Gibson'},
-  {title: 'Godfather',         year: 1972, rating: 9.2, lead: 'Pacino'},
+  {title: 'Casablanca', year: 1941, rating: 8.5, lead: 'Bogart', gross: 1024560},
+  {title: 'Braveheart', year: 1995, rating: 8.4, lead: 'Gibson'},
+  {title: 'Godfather', year: 1972, rating: 9.2, lead: 'Pacino'},
   {title: 'Shaun of the Dead', year: 2004, rating: 7.9},
-  {title: 'Pulp Fiction',      year: 1994, rating: 8.9},
-  {title: 'Tombstone',         year: 1993, rating: 7.8, lead: 'Russell'},
-  {title: 'Jaws',              year: 1975, rating: 8.0},
+  {title: 'Pulp Fiction', year: 1994, rating: 8.9},
+  {title: 'Tombstone', year: 1993, rating: 7.8, lead: 'Russell'},
+  {title: 'Jaws', year: 1975, rating: 8.0}
 ];
 
 describe('os.data.xf.DataModel', function() {
@@ -146,7 +146,7 @@ describe('os.data.xf.DataModel', function() {
     //Example: Max value with filtering
     //NOTE: crossfilter does not handle NaN, null, undefined well so an attribute cannot be missing
     //      for a record.  This can be handled when the dimension is added.
-    filter.addDimension('string_lead', function(m) {return m.lead || ""});
+    filter.addDimension('string_lead', function(m) {return m.lead || ''});
     expect(filter.getTopAttributeValue('string_lead', 'lead')).toBe('Russell');
     filter.filterDimension('string_lead', 'Pacino');
     //The value returned respects the dimensions's filter
@@ -180,10 +180,10 @@ describe('os.data.xf.DataModel', function() {
     //Example: Min value with filtering
     //NOTE: crossfilter does not handle NaN, null, undefined well so an attribute cannot be missing
     //      for a record.  This can be handled when the dimension is added.
-    filter.addDimension('string_lead', function(m) {return m.lead || ""});
+    filter.addDimension('string_lead', function(m) {return m.lead || ''});
     expect(filter.getBottomAttributeValue('string_lead', 'lead')).toBe(undefined);
     //If we want to get the min of the leads that are defined, we need to filter out the empties
-    filter.filterDimension('string_lead', function(l) {return l != ""});
+    filter.filterDimension('string_lead', function(l) {return l != ''});
     expect(filter.getBottomAttributeValue('string_lead', 'lead')).toBe('Bogart');
     filter.filterDimension('string_lead');
 
@@ -200,21 +200,44 @@ describe('os.data.xf.DataModel', function() {
 
     //Example: Numeric Range
     filter.addDimension('number_year', function(m) {return m.year});
-    filter.filterDimension('number_year', [1990, 2010]);
+    filter.filterDimension('number_year' , [1990, 2010]);
     expect(filter.getResults().length).toBe(4);
     //Example: Number Range showing inclusion
     //NOTE: Crossfilter ranges are inclusive on the lower limit, and exclusive on the upper limit
-    filter.filterDimension('number_year', [1972, 1975]);
+    filter.filterDimension('number_year' , [1972, 1975]);
     expect(filter.getResults().length).toBe(1);
     filter.filterDimension('number_year');
 
     //Example: String Range
     filter.addDimension('string_title', function(m) {return m.title});
-    filter.filterDimension('string_title', ['A','Q']);
+    filter.filterDimension('string_title', ['A', 'Q']);
     expect(filter.getResults().length).toBe(5);
     //strings ranges are case-sensitive
-    filter.filterDimension('string_title', ['a','q']);
+    filter.filterDimension('string_title' , ['a', 'q']);
     expect(filter.getResults().length).toBe(0);
     filter.filterDimension('string_title');
+  });
+
+  //Multidimensional Filtering
+  it('should filter on multiple dimensions properly', function() {
+    filter.add(MOVIE_DATA);
+
+    //2 dimensions
+    filter.addDimension('number_year', function(m) {return m.year});
+    filter.addDimension('number_rating', function(m) {return m.rating});
+    filter.filterDimension('number_year', [1990, 2000]);
+    filter.filterDimension('number_rating', function(r) {return r >= 8});
+    expect(filter.getResults().length).toBe(2);
+    filter.clearAllFilters();
+
+    //3 dimensions
+    filter.addDimension('string_lead', function(m) {return m.lead || ''});
+    filter.addDimension('number_year', function(m) {return m.year});
+    filter.addDimension('number_rating', function(m) {return m.rating});
+    filter.filterDimension('string_lead', function(l) {return l != ''});
+    filter.filterDimension('number_year', function(y) {return y >= 1975});
+    filter.filterDimension('number_rating', function(r) {return r >= 8});
+    expect(filter.getResults().length).toBe(1);
+    expect(filter.getTopAttributeValue('string_lead', 'title')).toBe('Braveheart');
   });
 });
