@@ -34,6 +34,17 @@
   .slick-viewport {
     overflow-x: hidden !important;
   }
+
+  // Forms in slick trees are too tall by default
+  .slick-row .form-control,
+  .slick-row .custom-select {
+    height: 1.3125rem !important;
+    line-height: 1rem !important;
+  }
+
+  .slick-row .form-control {
+    margin-bottom: .1rem;
+  }
 }
 
 
