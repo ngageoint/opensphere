@@ -40,7 +40,7 @@ $custom-control-label-disabled-color: $black;
 @import 'slate/variables';
 
 $link-color: #8be;
-$border-color: $gray-900;
+$border-color: rgba($black, .6);
 $input-bg: #555;
 $input-disabled-bg: $gray-600;
 $input-color: $white;
