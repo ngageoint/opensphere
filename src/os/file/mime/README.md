@@ -22,7 +22,7 @@ MIME types are really trees of types. If we store them this way, we can reuse th
 
 The tree:
 
-- `application/octect-stream` (a.k.a. generic binary)
+- `application/octet-stream` (a.k.a. generic binary)
 -- `application/zip`
 --- `application/vnd.google-earth.kmz`
 --- (zipped shapefile)
