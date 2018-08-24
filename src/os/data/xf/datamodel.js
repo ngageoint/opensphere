@@ -220,6 +220,20 @@ os.data.xf.DataModel.prototype.filterDimension = function(id, opt_value) {
 
 
 /**
+ * Clears all dimension filters and the filterFunction
+ */
+os.data.xf.DataModel.prototype.clearAllFilters = function() {
+  if (!this.isDisposed()) {
+    for (var key in this.filterValues) {
+      console.log('Clear filter id: ' + key);
+      this.filterDimension(key);
+    }
+    this.setFilterFunction(null);
+  }
+};
+
+
+/**
  * Gets the <i>attr<i>'s value from the top record in dimension <i>id</i>
  * @param {string} id Unique id of the dimension
  * @param {string} attr The attribute key
