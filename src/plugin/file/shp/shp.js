@@ -42,7 +42,12 @@ plugin.file.shp.isDBFFileType = function(content) {
   }
 
   var dv = new DataView(content.slice(0, 4));
-  var type = dv.getUint32(0);
+  var type = null;
+  try {
+    type = dv.getUint32(0);
+  } catch (e) {
+    return false;
+  }
 
   // dBASE Header bytes:
   // 0: 3 indicates dBASE version 5, 4 indicates dBASE version 7
@@ -61,5 +66,9 @@ plugin.file.shp.isDBFFileType = function(content) {
  */
 plugin.file.shp.isSHPFileType = function(content) {
   var dv = new DataView(content.slice(0, 4));
-  return dv.getUint32(0) == 9994;
+  try {
+    return dv.getUint32(0) == 9994;
+  } catch (e) {
+    return false;
+  }
 };
