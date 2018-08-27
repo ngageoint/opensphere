@@ -47,7 +47,6 @@ plugin.im.action.feature.ui.SoundConfigCtrl = function($scope, $element) {
   this['sounds'] = os.audio.AudioManager.getInstance().getSounds();
   goog.array.remove(this['sounds'], 'None');
 
-
   if (this.action && this.action.soundConfig) {
     this.soundConfig = /** @type {!Object} */ (os.object.unsafeClone(
         this.action.soundConfig));
@@ -67,6 +66,7 @@ goog.inherits(plugin.im.action.feature.ui.SoundConfigCtrl,
 plugin.im.action.feature.ui.SoundConfigCtrl.prototype.initialize = function() {
   plugin.im.action.feature.ui.SoundConfigCtrl.base(this, 'initialize');
   this.scope['playDelay'] = this.soundConfig['playDelay'];
+  this['sound'] = this.soundConfig['sound'];
 };
 
 /**
@@ -82,9 +82,9 @@ plugin.im.action.feature.ui.SoundConfigCtrl.prototype.saveAction = function() {
  * Play selected sound on change and save.
  */
 plugin.im.action.feature.ui.SoundConfigCtrl.prototype.onSoundChange = function() {
-  var snd = this.scope['sound'];
+  var snd = this['sound'];
   os.audio.AudioManager.getInstance().play(snd);
-  this.soundConfig['sound'] = this.scope['sound'];
+  this.soundConfig['sound'] = this['sound'];
 };
 
 /**

@@ -34,6 +34,14 @@ plugin.im.action.feature.SoundAction = function() {
   this.soundConfig = /** @type {!Object} */ (os.object.unsafeClone(
       plugin.im.action.feature.SoundAction.DEFAULT_CONFIG));
 
+  this['sounds'] = os.audio.AudioManager.getInstance().getSounds();
+  goog.array.remove(this['sounds'], 'None');
+
+  /**
+   * Set the default sound for the sound action.
+   */
+  this.soundConfig['sound'] = this['sounds'][0] || '';
+
   /**
    * User defined time between sound notifications in seconds.
    * @type {number}
@@ -77,7 +85,7 @@ plugin.im.action.feature.SoundAction.CONFIG_UI = 'featureactionsoundconfig';
  * @const
  */
 plugin.im.action.feature.SoundAction.DEFAULT_CONFIG = {
-  'sound': 'Default',
+  'sound': '',
   'playDelay': 30
 };
 

@@ -1,13 +1,13 @@
 <div class="feature-action-sound-config">
   <select
-      ng-model="sound"
+      ng-model="ctrl.sound"
       ng-change=" ctrl.onSoundChange()"
       style="width:100%"
-      ng-options="val for val in sounds">
+      ng-options="sound for sound in ctrl.sounds">
   </select>
   <table>
     <tr>
-      <td class="control-sound-play">Time Between Plays:</td>
+      <td class="control-sound-play">Delay:</td>
       <td>
         <spinner min="1" max="60" live="false" step="1" value="playDelay" name="playDelay"
                  title="Sets time between notification sounds">
