@@ -222,6 +222,9 @@ os.ui.menu.MenuItem.prototype.render = function(context, opt_target) {
 
   html += '" title="' + tooltip + '">';
 
+  // start wrapper div (required by jquery-ui 1.12+)
+  html += '<div>';
+
   // hotkey/shortcut
   if (this.shortcut) {
     html += '<span class="text-muted d-inline-block float-right pl-2">' + this.shortcut + '</span>';
@@ -247,8 +250,11 @@ os.ui.menu.MenuItem.prototype.render = function(context, opt_target) {
   // label
   html += '<span class="text-truncate">' + this.label + '</span>';
 
+  // end wrapper div (required by jquery-ui 1.12+)
+  html += '</div>';
+
   // sub menus
-  html += type === types.SUBMENU ? '<ul>' : '</div></li>';
+  html += type === types.SUBMENU ? '<ul>' : '</li>';
 
   html += childHtml;
 
