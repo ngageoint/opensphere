@@ -6,8 +6,8 @@
       ng-change=" ctrl.onSoundChange()"
       ng-options="sound for sound in ctrl.sounds">
   </select>
-  <div class="form-inline">
-    <label class="col-2 text-right" for="spinner">Delay </label>
+  <div class="d-flex flex-row form-group">
+    <label class="form-control-label text-right">Delay</label>
     <div class="form-group col-4">
       <spinner min="1" max="60" live="false" id="spinner" step="1" value="playDelay" name="playDelay"
                title="Sets time between notification sounds">
