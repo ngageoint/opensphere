@@ -67,7 +67,7 @@ plugin.im.action.feature.ui.SoundConfigCtrl.prototype.initialize = function() {
   plugin.im.action.feature.ui.SoundConfigCtrl.base(this, 'initialize');
   this.scope['playDelay'] = this.soundConfig['playDelay'];
   this['sound'] = this.soundConfig['sound'];
-  this['help'] = "Set the time between sound notifications in seconds"
+  this['help'] = 'Set the time between sound notifications in seconds';
 };
 
 /**
