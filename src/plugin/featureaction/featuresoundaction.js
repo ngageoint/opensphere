@@ -35,7 +35,6 @@ plugin.im.action.feature.SoundAction = function() {
       plugin.im.action.feature.SoundAction.DEFAULT_CONFIG));
 
   this['sounds'] = os.audio.AudioManager.getInstance().getSounds();
-  goog.array.remove(this['sounds'], 'None');
 
   /**
    * Set the default sound for the sound action.
