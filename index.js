@@ -96,7 +96,7 @@ const sharedResources = [
   {
     source: 'vendor/jquery',
     target: 'vendor/jquery',
-    scripts: ['jquery.event.drag-2.2.js', 'jquery.resize.js']
+    scripts: ['jquery.event.drag-2.3.0.js', 'jquery.resize.js']
   },
   {
     source: 'vendor/jquery-ui',
