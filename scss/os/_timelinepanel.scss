@@ -17,6 +17,8 @@
 }
 
 .c-timeline-panel__fps-slider {
+  white-space: nowrap;
+
   .slider-container {
     display: inline-block;
     margin-bottom: 1px;
