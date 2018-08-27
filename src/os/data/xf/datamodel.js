@@ -235,13 +235,17 @@ os.data.xf.DataModel.prototype.clearAllFilters = function() {
 /**
  * Gets the <i>attr<i>'s value from the top record in dimension <i>id</i>
  * @param {string} id Unique id of the dimension
- * @param {string} attr The attribute key
+ * @param {string=} opt_attr The attribute key to pull from the record
  * @return {*} the value | null if dimension does not exist | undefined if attr not found or dimension is empty
  */
-os.data.xf.DataModel.prototype.getTopAttributeValue = function(id, attr) {
+os.data.xf.DataModel.prototype.getTopAttributeValue = function(id, opt_attr) {
   if (!this.isDisposed() && this.hasDimension(id)) {
     var topRecord = this.dimensions[id].top(1);
-    return topRecord.length == 1 ? topRecord[0][attr] : undefined;
+    if (opt_attr) {
+      return topRecord.length == 1 ? topRecord[0][opt_attr] : undefined;
+    } else {
+      return topRecord.length == 1 ? topRecord[0] : undefined;
+    }
   }
   return null;
 };
@@ -250,13 +254,17 @@ os.data.xf.DataModel.prototype.getTopAttributeValue = function(id, attr) {
 /**
  * Gets the <i>attr<i>'s value from the bottom record in dimension <i>id</i>
  * @param {string} id Unique id of the dimension
- * @param {string} attr The attribute key
+ * @param {string=} opt_attr The attribute key to pull from the record
  * @return {*} the value | null if dimension does not exist | undefined attr not found or dimension is empty
  */
-os.data.xf.DataModel.prototype.getBottomAttributeValue = function(id, attr) {
+os.data.xf.DataModel.prototype.getBottomAttributeValue = function(id, opt_attr) {
   if (!this.isDisposed() && this.hasDimension(id)) {
     var bottomRecord = this.dimensions[id].bottom(1);
-    return bottomRecord.length == 1 ? bottomRecord[0][attr] : undefined;
+    if (opt_attr) {
+      return bottomRecord.length == 1 ? bottomRecord[0][opt_attr] : undefined;
+    } else {
+      return bottomRecord.length == 1 ? bottomRecord[0] : undefined;
+    }
   }
   return null;
 };
