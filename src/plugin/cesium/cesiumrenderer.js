@@ -435,27 +435,22 @@ plugin.cesium.CesiumRenderer.prototype.updateTerrainProvider = function() {
   // clean up existing provider
   this.removeTerrainProvider_();
 
-  if (this.terrainOptions) {
-    var terrainType = this.terrainOptions.type;
-    var terrainUrl = this.terrainOptions.url;
+  var terrainOptions = /** @type {osx.map.TerrainProviderOptions|undefined} */ (os.settings.get(
+      os.config.DisplaySetting.TERRAIN_OPTIONS));
+  if (terrainOptions) {
+    var terrainType = terrainOptions.type;
+    if (terrainType && terrainType in this.terrainProviderTypes_) {
+      if (terrainOptions.url) {
+        // instruct Cesium to trust terrain servers (controlled by app configuration)
+        plugin.cesium.addTrustedServer(terrainOptions.url);
+      }
 
-    if (terrainType && terrainType in this.terrainProviderTypes_ && terrainUrl) {
-      // instruct Cesium to trust terrain servers (controlled by app configuration)
-      plugin.cesium.addTrustedServer(terrainUrl);
-
-      this.terrainProvider_ = this.terrainProviderTypes_[terrainType](this.terrainOptions);
+      this.terrainProvider_ = this.terrainProviderTypes_[terrainType](terrainOptions);
       this.terrainProvider_.errorEvent.addEventListener(this.onTerrainError_, this);
-    } else {
-      // report any errors in the configuration
-      if (!terrainType) {
-        goog.log.error(this.log, 'Terrain provider type not configured.');
-      } else if (!(terrainType in this.terrainProviderTypes_)) {
-        goog.log.error(this.log, 'Unknown terrain provider type: ' + terrainType);
-      }
-
-      if (!terrainUrl) {
-        goog.log.error(this.log, 'Terrain provider URL not configured.');
-      }
+    } else if (!terrainType) {
+      goog.log.error(this.log, 'Terrain provider type not configured.');
+    } else if (!(terrainType in this.terrainProviderTypes_)) {
+      goog.log.error(this.log, 'Unknown terrain provider type: ' + terrainType);
     }
   }
 
