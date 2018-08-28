@@ -29,7 +29,8 @@ os.ui.file.importDialogDirective = function() {
     scope: {
       'method': '=',
       'manager': '=?',
-      'hideCancel': '=?'
+      'hideCancel': '=?',
+      'confirmText': '=?'
     },
     templateUrl: os.ROOT + 'views/file/importdialog.html',
     controller: os.ui.file.ImportDialogCtrl,
@@ -82,7 +83,6 @@ os.ui.file.ImportDialogCtrl = function($scope, $element) {
   this['url'] = null;
 
   /**
-   * If local files are supported
    * @type {boolean}
    */
   this['hideCancel'] = /** @type {boolean} */ ($scope['hideCancel']) || false;
@@ -96,6 +96,8 @@ os.ui.file.ImportDialogCtrl = function($scope, $element) {
    * @type {boolean}
    */
   this['loading'] = false;
+
+  $scope['confirmText'] = $scope['confirmText'] || 'Next';
 
   /**
    * @type {?Element}
@@ -284,6 +286,8 @@ os.ui.file.ImportDialogCtrl.prototype.onFileChange_ = function(event) {
  * @private
  */
 os.ui.file.ImportDialogCtrl.prototype.onFileReady_ = function(file) {
+  this['loading'] = false;
+
   if (file) {
     var method = /** @type {os.file.IFileMethod} */ (this.scope_['method']);
     method.setFile(file);

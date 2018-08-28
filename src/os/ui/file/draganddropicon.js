@@ -9,6 +9,7 @@ os.ui.file.dragAndDropIconDirective = function() {
   return {
     restrict: 'E',
     scope: false,
+    replace: true,
     template: ['<span>',
       '<i class="fa fa-desktop fa-2x"></i>',
       '<i class="fa fa-share text-muted"',
