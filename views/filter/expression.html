@@ -1,4 +1,4 @@
-<span ng-form="exprForm" class="my-1 flex-fill">
+<div ng-form="exprForm" class="container-fluid">
 	<div class="row">
 		<div class="col form-inline">
 		  <select class="col-4 mr-2 p-1 form-control" ng-model="expr.column" ng-options="value.name for value in columns" required/>
@@ -6,4 +6,4 @@
 		  <opuiswitch class="col-3 p-1" items="expr.op" directive-function="exprCtrl.getUi" generic="text" expr="expr"></opuiswitch>
 		</div>
 	 </div>
-</span>
+</div>

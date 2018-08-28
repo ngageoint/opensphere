@@ -2,6 +2,7 @@ goog.provide('os.ui');
 goog.provide('os.ui.Module');
 
 goog.require('goog.events.EventTarget');
+goog.require('goog.html.SafeHtml');
 goog.require('goog.labs.userAgent.util');
 goog.require('goog.math.Size');
 goog.require('goog.string');
@@ -115,6 +116,27 @@ os.ui.unescapeHtmlOpenCloseTags = function(value) {
 os.ui.sanitizeId = function(value) {
   // collapse all whitespace and replace all non-alphanumeric characters with hyphens
   return value.replace(/\s/g, '').replace(/[^\w]/g, '-');
+};
+
+
+/**
+ * Strip HTML from text
+ * @param {string} html string to sanitize
+ * @return {string}
+ */
+os.ui.getUnformattedText = function(html) {
+  var doc = new DOMParser().parseFromString(html, 'text/html');
+  return os.ui.escapeHtml(doc.body.textContent || '');
+};
+
+
+/**
+ * Escape HTML in text
+ * @param {string} html
+ * @return {string}
+ */
+os.ui.escapeHtml = function(html) {
+  return goog.html.SafeHtml.unwrap(goog.html.SafeHtml.htmlEscape(html));
 };
 
 

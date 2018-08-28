@@ -115,13 +115,18 @@ os.ogc.wfs.FeatureType.SUPPORTED_GEOMETRY_TYPES = [
   'gml:MultiLineString',
   'gml:MultiPolygon',
   'gml:GeometryCollection',
+  'gml:Geometry',
+  'gml:Surface',
   'gml:PointPropertyType',
   'gml:LineStringPropertyType',
   'gml:PolygonPropertyType',
   'gml:MultiPointPropertyType',
   'gml:MultiLineStringPropertyType',
   'gml:MultiPolygonPropertyType',
-  'gml:GeometryCollectionPropertyType'];
+  'gml:GeometryCollectionPropertyType',
+  'gml:GeometryPropertyType',
+  'gml:SurfacePropertyType'
+];
 
 
 /**
