@@ -101,8 +101,8 @@ const sharedResources = [
   {
     source: 'vendor/jquery-ui',
     target: 'vendor/jquery-ui',
-    css: ['lightness/jquery-ui-1.11.0.min.css'],
-    scripts: ['jquery-ui-1.11.4.min.js'],
+    css: ['lightness/jquery-ui-1.12.1.min.css'],
+    scripts: ['jquery-ui-1.12.1.min.js'],
     files: ['lightness/images']
   },
   {
@@ -111,7 +111,7 @@ const sharedResources = [
     scripts: ['js/bootstrap.bundle.min.js']
   },
   {
-    source: resolver.resolveModulePath('opensphere/vendor/bootstrap2', __dirname),
+    source: 'vendor/bootstrap2',
     target: 'vendor/bootstrap2',
     scripts: ['typeahead.js']
   },
