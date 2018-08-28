@@ -137,32 +137,32 @@ describe('os.data.xf.DataModel', function() {
 
     // Example: Max Value of string
     filter.addDimension('string_title', function(m) {return m.title});
-    expect(filter.getTopAttributeValue('string_title', 'title')).toBe('Tombstone');
-    expect(filter.getTopAttributeValue('string_title', 'rating')).toBe(7.8);
+    expect(filter.getTopRecord('string_title')['title']).toBe('Tombstone');
+    expect(filter.getTopRecord('string_title')['rating']).toBe(7.8);
 
     // Example: Max value of number
     filter.addDimension('number_year', function(m) {return m.year});
-    expect(filter.getTopAttributeValue('number_year', 'year')).toBe(2004);
+    expect(filter.getTopRecord('number_year')['year']).toBe(2004);
 
     // Example: Max value with filtering
     // NOTE: crossfilter does not handle NaN, null, undefined well so an attribute cannot be missing
     //      for a record.  This can be handled when the dimension is added.
     filter.addDimension('string_lead', function(m) {return m.lead || ''});
-    expect(filter.getTopAttributeValue('string_lead', 'lead')).toBe('Russell');
+    expect(filter.getTopRecord('string_lead')['lead']).toBe('Russell');
     filter.filterDimension('string_lead', 'Pacino');
     // The value returned respects the dimensions's filter
-    expect(filter.getTopAttributeValue('string_lead', 'lead')).toBe('Pacino');
+    expect(filter.getTopRecord('string_lead')['lead']).toBe('Pacino');
     filter.filterDimension('string_lead');
     // The value returned also respects the filters in other dimensions
     filter.filterDimension('number_year', 2004);
-    expect(filter.getTopAttributeValue('string_lead', 'lead')).toBe(undefined);
+    expect(filter.getTopRecord('string_lead')['lead']).toBe(undefined);
     filter.filterDimension('number_year');
 
     // Example: Max value with numeric data not fully populated
     // NOTE: crossfilter does not handle NaN, null, undefined well so an attribute cannot be missing
     //      for a record.  This can be handled when the dimension is added.
     filter.addDimension('number_gross', function(m) {return m.gross || -Number.MAX_VALUE});
-    expect(filter.getTopAttributeValue('number_gross', 'gross')).toBe(1024560);
+    expect(filter.getTopRecord('number_gross')['gross']).toBe(1024560);
   });
 
   // Min
@@ -171,28 +171,28 @@ describe('os.data.xf.DataModel', function() {
 
     // Example: Min Value of string
     filter.addDimension('string_title', function(m) {return m.title});
-    expect(filter.getBottomAttributeValue('string_title', 'title')).toBe('Braveheart');
-    expect(filter.getBottomAttributeValue('string_title', 'rating')).toBe(8.4);
+    expect(filter.getBottomRecord('string_title')['title']).toBe('Braveheart');
+    expect(filter.getBottomRecord('string_title')['rating']).toBe(8.4);
 
     // Example: Min value of number
     filter.addDimension('number_year', function(m) {return m.year});
-    expect(filter.getBottomAttributeValue('number_year', 'year')).toBe(1941);
+    expect(filter.getBottomRecord('number_year')['year']).toBe(1941);
 
     // Example: Min value with filtering
     // NOTE: crossfilter does not handle NaN, null, undefined well so an attribute cannot be missing
     //      for a record.  This can be handled when the dimension is added.
     filter.addDimension('string_lead', function(m) {return m.lead || ''});
-    expect(filter.getBottomAttributeValue('string_lead', 'lead')).toBe(undefined);
+    expect(filter.getBottomRecord('string_lead')['lead']).toBe(undefined);
     // If we want to get the min of the leads that are defined, we need to filter out the empties
     filter.filterDimension('string_lead', function(l) {return l != ''});
-    expect(filter.getBottomAttributeValue('string_lead', 'lead')).toBe('Bogart');
+    expect(filter.getBottomRecord('string_lead')['lead']).toBe('Bogart');
     filter.filterDimension('string_lead');
 
     // Example: Min value with numeric data not fully populated
     // NOTE: crossfilter does not handle NaN, null, undefined well so an attribute cannot be missing
     //      for a record.  This can be handled when the dimension is added.
     filter.addDimension('number_gross', function(m) {return m.gross || Number.MAX_VALUE});
-    expect(filter.getBottomAttributeValue('number_gross', 'gross')).toBe(1024560);
+    expect(filter.getBottomRecord('number_gross')['gross']).toBe(1024560);
   });
 
   // Range
@@ -266,6 +266,6 @@ describe('os.data.xf.DataModel', function() {
     filter.filterDimension('number_year', function(y) {return y >= 1975});
     filter.filterDimension('number_rating', function(r) {return r >= 8});
     expect(filter.getResults().length).toBe(1);
-    expect(filter.getTopAttributeValue('string_lead', 'title')).toBe('Braveheart');
+    expect(filter.getTopRecord('string_lead')['title']).toBe('Braveheart');
   });
 });
