@@ -46,13 +46,10 @@ plugin.im.action.feature.ui.editFeatureActionDirective = function() {
   return dir;
 };
 
-
 /**
  * Add the directive to the module.
  */
 os.ui.Module.directive('editfeatureaction', [plugin.im.action.feature.ui.editFeatureActionDirective]);
-
-
 
 /**
  * Controller for the edit feature action window.
@@ -69,14 +66,13 @@ plugin.im.action.feature.ui.EditFeatureActionCtrl = function($scope, $element) {
   /**
    * @type {?HTMLCanvasElement}
    * @protected
-  */
+   */
   this.styleCanvas = null;
   this.labelCanvas = null;
 
   os.dispatcher.listen(os.ui.im.action.EventType.UPDATE, this.showActionPreview, false, this);
 };
 goog.inherits(plugin.im.action.feature.ui.EditFeatureActionCtrl, os.ui.im.action.EditFilterActionCtrl);
-
 
 /**
  * @inheritDoc
@@ -86,7 +82,6 @@ plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.onDestroy = function
   os.dispatcher.unlisten(os.ui.im.action.EventType.UPDATE, this.showActionPreview, false, this);
 };
 
-
 /**
  * Show a preview of the actions selected
  * @export
@@ -95,6 +90,7 @@ plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.showActionPreview = 
   // get rid of the existing canvas elements to be replaced with new ones
   this.element.find('.labelCanvas').remove();
   this.element.find('.styleCanvas').remove();
+  this.element.find('.soundPreview').remove();
   this.labelCanvas = null;
   this.styleCanvas = null;
 
@@ -104,10 +100,25 @@ plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.showActionPreview = 
       this.buildStylePreview(curAction);
     } else if (curAction['id'] == 'featureLabelAction') {
       this.buildLabelPreview(curAction);
+    } else if (curAction['id'] == 'featureSoundAction') {
+      this.buildSoundPreview(curAction);
     }
   }
 };
 
+/**
+ * Create the preview for a selected sound
+ * @param {plugin.im.action.feature.SoundAction} soundAction
+ */
+plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.buildSoundPreview = function(soundAction) {
+  var config = /** @type {!Object} */ (os.object.unsafeClone(
+      soundAction.soundConfig));
+
+  // only add this to the applicable action
+  var query = '.js-filter-action__controls:has(option[selected=\'selected\'][value=\'string:featureSoundAction\'])';
+  var curContainer = this.element.find(query);
+  curContainer.append('<span class="soundPreview"><i class="fa fa-fw fa-music"></i> ' + config['sound'] + '</span>');
+};
 
 /**
  * Create the preview for a style action
@@ -192,7 +203,6 @@ plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.buildStylePreview = 
         if (imageState < ol.ImageState.LOADED) {
           // icon isn't loaded yet, so load it now
 
-
           if (imageState == ol.ImageState.IDLE) {
             imageStyle.load();
           }
@@ -208,7 +218,6 @@ plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.buildStylePreview = 
     }
   }
 };
-
 
 /**
  * Create the preview for a label action
@@ -276,7 +285,6 @@ plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.buildLabelPreview = 
   }
 };
 
-
 /**
  * Handler for when we receive notice that an image loaded
  * @this ol.style.Image
@@ -290,7 +298,6 @@ plugin.im.action.feature.ui.onImageChange_ = function() {
     os.dispatcher.dispatchEvent(os.ui.im.action.EventType.UPDATE);
   }
 };
-
 
 /**
  * Create/edit a feature action entry. If no entry is provided, a new one will be created.
