@@ -52,13 +52,30 @@ os.im.action.FilterActionEntry.prototype.setFilter = function(filter) {
 
 
 /**
- * Execute actions on items that match the filter.
+ * Reset the features passed in
+ * @param {string} entryType The entry type.
  * @param {Array<T>} items The items.
  */
-os.im.action.FilterActionEntry.prototype.processItems = function(items) {
+os.im.action.FilterActionEntry.prototype.unprocessItems = function(entryType, items) {
+  if (items) {
+    items = items.filter(this.filterFn);
+    for (var i = 0; i < this.actions.length; i++) {
+      this.actions[i].reset(entryType, items);
+    }
+  }
+};
+
+
+/**
+ * Execute actions on items that match the filter.
+ * @param {string} entryType The entry type.
+ * @param {Array<T>} items The items.
+ */
+os.im.action.FilterActionEntry.prototype.processItems = function(entryType, items) {
   if (items) {
     items = items.filter(this.filterFn);
 
+    // apply to applicable items
     if (items.length > 0) {
       for (var i = 0; i < this.actions.length; i++) {
         this.actions[i].execute(items);
