@@ -70,10 +70,10 @@ os.ui.navbaroptions.init = function() {
 
   // Bottom navbar options
   os.ui.list.add(os.ui.nav.Location.BOTTOM_LEFT,
-      '<li id="zoom-level" class="nav-item mr-1 my-auto flex-shrink-0" ng-class="{\'small\': puny}"></li>', 100);
-  os.ui.list.add(os.ui.nav.Location.BOTTOM_LEFT, '<scale-line ng-class="{\'d-none\': puny}"></scale-line>', 200);
+      '<li id="zoom-level" class="nav-item mr-1 my-auto flex-shrink-0"></li>', 100);
+  os.ui.list.add(os.ui.nav.Location.BOTTOM_LEFT, '<scale-line></scale-line>', 200);
   os.ui.list.add(os.ui.nav.Location.BOTTOM_LEFT,
-      '<li id="mouse-position" class="nav-item mr-1 my-auto flex-shrink-0" ng-class="{\'small\': puny}"></li>', 300);
+      '<li id="mouse-position" class="nav-item mr-1 my-auto flex-shrink-0"></li>', 300);
 
   os.ui.list.add(os.ui.nav.Location.BOTTOM_RIGHT, 'settings-button', 100);
   os.ui.list.add(os.ui.nav.Location.BOTTOM_RIGHT, 'legend-button', 200);
