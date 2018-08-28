@@ -9,7 +9,7 @@
           <i class="fa fa-fw fa-caret-down"></i>
         </button>
       </div>
-      <div class="dropdown-menu w-100" ng-class="{'show': searchBox.showSearchOptions}">
+      <div class="dropdown-menu w-100 js-searchbox__search-options" ng-class="{'show': searchBox.showSearchOptions}">
         <div class="d-flex flex-row dropdown-header" ng-if="searchBox.searchOptions.length > 1">
           <div class="flex-fill my-auto">Search Types</div>
           <div ng-if="searchBox.allowMultiple">
@@ -55,7 +55,7 @@
             </a>
           </div>
         </div>
-        <div ng-if="searchBox.recentSearches && searchBox.recentSearches.length > 0">
+        <div ng-if="searchBox.recentSearches && searchBox.recentSearches.length > 0" class="js-searchbox__recent-searches">
           <div class="dropdown-divider"></div>
           <div class="dropdown-header">Recent Searches</div>
           <a class="dropdown-item text-truncate" href="" ng-repeat="recent in searchBox.recentSearches"
