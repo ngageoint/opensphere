@@ -40,12 +40,6 @@ plugin.im.action.feature.SoundAction = function() {
    * Set the default sound for the sound action.
    */
   this.soundConfig['sound'] = this['sounds'][0] || '';
-
-  /**
-   * User defined time between sound notifications in seconds.
-   * @type {number}
-   */
-  this.delay = this.soundConfig['playDelay'] * 1000;
 };
 goog.inherits(plugin.im.action.feature.SoundAction,
     os.im.action.AbstractImportAction);
@@ -92,7 +86,7 @@ plugin.im.action.feature.SoundAction.DEFAULT_CONFIG = {
  * @inheritDoc
  */
 plugin.im.action.feature.SoundAction.prototype.execute = function() {
-  os.audio.AudioManager.getInstance().play(this.soundConfig['sound'], this.delay);
+  os.audio.AudioManager.getInstance().play(this.soundConfig['sound'], this.soundConfig['playDelay'] * 1000);
 };
 
 /**
