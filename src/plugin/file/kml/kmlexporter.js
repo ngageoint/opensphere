@@ -2,6 +2,7 @@ goog.provide('plugin.file.kml.KMLExporter');
 
 goog.require('goog.object');
 goog.require('goog.string');
+goog.require('ol.Feature');
 goog.require('ol.geom.GeometryCollection');
 goog.require('ol.geom.GeometryType');
 goog.require('ol.geom.Point');
@@ -12,6 +13,7 @@ goog.require('os.feature');
 goog.require('os.implements');
 goog.require('os.source');
 goog.require('os.style');
+goog.require('os.style.StyleField');
 goog.require('os.time.ITime');
 goog.require('os.ui.file.kml');
 goog.require('os.ui.file.kml.AbstractKMLExporter');
@@ -253,6 +255,21 @@ plugin.file.kml.KMLExporter.prototype.getGeometry = function(item) {
 
 
 /**
+ * @inheritDoc
+ */
+plugin.file.kml.KMLExporter.prototype.getRotationColumn = function(item) {
+  var feature = /** @type {ol.Feature} */ (item);
+  if (feature) {
+    var layerConfig = os.style.getLayerConfig(feature);
+    if (layerConfig && layerConfig[os.style.StyleField.SHOW_ROTATION]) {
+      return layerConfig[os.style.StyleField.ROTATION_COLUMN];
+    }
+  }
+  return undefined;
+};
+
+
+/**
  * Get the feature's source.
  * @param {ol.Feature} feature The feature
  * @return {os.source.Vector} The source
@@ -311,6 +328,7 @@ plugin.file.kml.KMLExporter.prototype.getGroupLabels = function(item) {
 
   return null;
 };
+
 
 /**
  * Check the label field array for any non-null fields.

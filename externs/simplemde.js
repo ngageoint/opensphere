@@ -76,6 +76,12 @@ SimpleMDE.prototype.markdown = function(text) {};
 
 
 /**
+ * @return {boolean}
+ */
+SimpleMDE.prototype.isFullscreenActive = function() {};
+
+
+/**
  * @type {CodeMirror}
  */
 SimpleMDE.prototype.codemirror;
