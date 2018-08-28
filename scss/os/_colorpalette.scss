@@ -7,13 +7,13 @@
 
     .c-colorpalette__cell {
       cursor: pointer;
-      height: 18px;
-      width: 18px;
+      height: 1rem;
+      width: 1rem;
 
       .c-colorpalette__colorswatch {
         border: 2px solid transparent;
-        height: 18px;
-        width: 18px;
+        height: 1rem;
+        width: 1rem;
 
         &.c-colorpalette__selected {
           border-color: $gray-800;
