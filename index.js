@@ -257,7 +257,7 @@ const sharedResources = [
     scripts: ['electronvendorpost.js']
   },
   {
-    source: resolver.resolveModulePath('opensphere/vendor/fonts/typeface-open-sans', __dirname),
+    source: 'vendor/fonts/typeface-open-sans',
     target: 'vendor/fonts/typeface-open-sans',
     files: ['files', 'index.css']
   }
