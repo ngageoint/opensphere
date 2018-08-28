@@ -80,6 +80,7 @@ plugin.im.action.feature.ui.SoundConfigCtrl.prototype.saveAction = function() {
 
 /**
  * Play selected sound on change and save.
+ * @export
  */
 plugin.im.action.feature.ui.SoundConfigCtrl.prototype.onSoundChange = function() {
   var snd = this['sound'];
@@ -100,7 +101,3 @@ plugin.im.action.feature.ui.SoundConfigCtrl.prototype.onDelayChange = function(e
     this.soundConfig['playDelay'] = value;
   }
 };
-
-goog.exportProperty(plugin.im.action.feature.ui.SoundConfigCtrl.prototype,
-    'onSoundChange',
-    plugin.im.action.feature.ui.SoundConfigCtrl.prototype.onSoundChange);
