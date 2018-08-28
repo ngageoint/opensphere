@@ -90,6 +90,33 @@ plugin.im.action.feature.LabelAction.DEFAULT_CONFIG = {
 
 
 /**
+ * Undo all feature action label changes, reset to the user/default layer settings
+ * @param {string} entryType feature action entry type
+ * @param {!Array<ol.Feature>} items The items.
+ */
+plugin.im.action.feature.LabelAction.prototype.reset = function(entryType, items) {
+  var dm = os.data.DataManager.getInstance();
+  var source = dm.getSource(entryType);
+  var layerConfig = os.style.StyleManager.getInstance().getLayerConfig(source.getId());
+
+  for (var i = 0; i < items.length; i++) {
+    var item = items[i];
+    if (item) {
+      item.set(os.style.StyleType.FEATURE, layerConfig, true);
+    }
+  }
+
+  os.style.setFeaturesStyle(items);
+
+  // notify that the layer needs to be updated
+  var layer = os.feature.getLayer(items[0]);
+  if (layer) {
+    os.style.notifyStyleChange(layer, items);
+  }
+};
+
+
+/**
  * @inheritDoc
  */
 plugin.im.action.feature.LabelAction.prototype.execute = function(items) {
