@@ -83,3 +83,22 @@
     background: transparent;
   }
 }
+
+.c-simplemde__fullscreen {
+  &.modal {
+    left: 0 !important;
+    top: 0 !important;
+    width: auto !important;
+  }
+
+  .modal-dialog {
+    transform: none !important;
+  }
+}
+
+.c-window .CodeMirror,
+.c-window .CodeMirror-scroll,
+.modal .CodeMirror,
+.modal .CodeMirror-scroll {
+  min-height: 6rem;
+}

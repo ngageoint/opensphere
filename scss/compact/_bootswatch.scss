@@ -1,1 +1,14 @@
 @import 'standard/bootswatch';
+
+// Form row's default is -5px...... why?!?!?!
+// Account for a smaller modal-inner-padding
+.form-row {
+  margin-left: -.15rem;
+  margin-right: -.15rem;
+}
+
+// Account for a smaller modal-inner-padding
+.row {
+  margin-left: -.35rem;
+  margin-right: -.35rem;
+}
