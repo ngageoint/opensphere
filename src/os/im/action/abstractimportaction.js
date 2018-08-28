@@ -153,3 +153,9 @@ os.im.action.AbstractImportAction.prototype.toXml = function() {
  * @inheritDoc
  */
 os.im.action.AbstractImportAction.prototype.fromXml = goog.abstractMethod;
+
+
+/**
+ * @inheritDoc
+ */
+os.im.action.AbstractImportAction.prototype.reset = goog.abstractMethod;

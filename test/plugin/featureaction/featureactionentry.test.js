@@ -31,7 +31,7 @@ describe('plugin.im.action.feature.Entry', function() {
       PROPERTY: 'bbbAAA'
     });
 
-    entry.processItems([feature1, feature2]);
+    entry.processItems('entryType', [feature1, feature2]);
     expect(feature1.get('MATCH')).toBe(true);
     expect(feature2.get('MATCH')).toBeUndefined();
   };
