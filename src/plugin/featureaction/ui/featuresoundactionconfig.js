@@ -89,9 +89,16 @@ plugin.im.action.feature.ui.SoundConfigCtrl.prototype.onSoundChange = function()
 
 /**
  * Set the time between sound notifications.
+ * @param {angular.Scope.Event} event
+ * @param {number} value
+ * @protected
  */
-plugin.im.action.feature.ui.SoundConfigCtrl.prototype.onDelayChange = function() {
-  this.soundConfig['playDelay'] = this.scope['playDelay'];
+plugin.im.action.feature.ui.SoundConfigCtrl.prototype.onDelayChange = function(event, value) {
+  event.stopPropagation();
+
+  if (this.soundConfig && value != null) {
+    this.soundConfig['playDelay'] = value;
+  }
 };
 
 goog.exportProperty(plugin.im.action.feature.ui.SoundConfigCtrl.prototype,
