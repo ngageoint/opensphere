@@ -842,8 +842,8 @@ os.ui.search.SearchBoxCtrl.prototype.toggleSearchOptions = function(event) {
     var listenKey = goog.events.listen(document, 'click', function(e) {
       if (this.element) {
         var event = /** @type {goog.events.BrowserEvent} */ (e);
-        var optionsEl = this.element.find('.search-options')[0] || null;
-        var recentsEl = this.element.find('.recent-searches')[0] || null;
+        var optionsEl = this.element.find('.js-searchbox__search-options')[0] || null;
+        var recentsEl = this.element.find('.js-searchbox__recent-searches')[0] || null;
 
         //
         // Handle the event if this isn't the click event that opened the options and it meets one of these criteria:

@@ -1,6 +1,7 @@
 goog.provide('os.string');
 goog.require('goog.array');
 goog.require('goog.string');
+goog.require('os.ui');
 goog.require('os.url');
 
 
@@ -89,7 +90,7 @@ os.string.linkify = function(text, opt_target, opt_class, opt_title, opt_htmlTex
     if (!text) {
       return;
     }
-    html.push(text);
+    html.push(os.ui.escapeHtml(text));
   };
 
   var addLink = function(url, text) {
