@@ -10,7 +10,7 @@
 
 .c-dd-source__dragging {
   @include grabbing-cursor();
-  background: $blue;
+  background: $gray-100;
   border: dashed .2rem $cyan;
   border-radius: .5rem;
   color: $gray-800;
@@ -20,5 +20,5 @@
   opacity: .5;
   padding: 1rem;
   width: 15rem;
-  z-index: 30;
+  z-index: $zindex-dropdown - 1;
 }
