@@ -19,9 +19,7 @@
       <div ng-if="ctrl.pointGeometry">
         <div class="d-flex flex-row form-group">
           <label class="col-2 col-form-label text-right u-required">Position</label>
-          <position class="w-100" name="pointGeometry" geom="ctrl.pointGeometry" x-form="featureEditForm"
-              show-label="false" map-support="true">
-          </position>
+          <position class="w-100" name="pointGeometry" geom="ctrl.pointGeometry" x-form="featureEditForm" show-label="false" map-support="true"></position>
         </div>
         <div class="d-flex flex-row form-group">
           <label class="col-2 col-form-label text-right">Altitude</label>
@@ -81,7 +79,7 @@
           <validation-message target="featureEditForm.semiMinor"></validation-message>
         </div>
         <div class="d-flex flex-row form-group" title="{{ctrl.help.orientation}}">
-          <label class="col-2 col-form-label text-right u-required">Orientation:</label>
+          <label class="col-2 col-form-label text-right u-required">Orientation</label>
           <div class="d-inline-flex col">
             <input class="form-control col-4" type="number" name="orientation" ng-model="ctrl.orientation" ng-change="ctrl.updatePreview()" step="any" required="true" />
             <popover class="mx-2" title="'Ellipse Orientation'" content="ctrl.help.orientation" pos="'right'">
@@ -92,7 +90,7 @@
 
       <div ng-if="!ctrl.isFeatureDynamic() && (ctrl.showIcon() || ctrl.showCenterIcon())">
         <div class="d-flex flex-row form-group" title="{{ctrl.help.iconRotation}}">
-          <label class="col-2 col-form-label text-right">Icon Rotation:</label>
+          <label class="col-2 col-form-label text-right">Icon Rotation</label>
           <div class="d-inline-flex col">
             <input class="form-control col-4" type="number" name="iconRotation" ng-model="ctrl.iconRotation" ng-change="ctrl.updatePreview()" step="any" />
             <div class="mx-2">degrees</div>

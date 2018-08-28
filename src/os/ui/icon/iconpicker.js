@@ -6,7 +6,6 @@ goog.require('os.ui.Module');
 goog.require('os.ui.icon.iconSelectorDirective');
 
 
-
 /**
  * Icon picker event types.
  * @enum {string}
@@ -82,7 +81,7 @@ os.ui.icon.IconPickerCtrl.prototype.onSelection_ = function(icon) {
  */
 os.ui.icon.IconPickerCtrl.prototype.show = function() {
   var ui = '<iconselector class="d-flex flex-fill" accept-callback="acceptCallback" selected="icon"' +
-      'icon-set="iconSet" icon-src="iconSrc"> </iconselector>';
+      ' icon-set="iconSet" icon-src="iconSrc"> </iconselector>';
   var scopeOptions = {
     'acceptCallback': this.onSelection_.bind(this),
     'icon': os.object.unsafeClone(this.scope['ngModel']),
