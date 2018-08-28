@@ -311,14 +311,36 @@ os.im.action.ImportActionManager.prototype.getEntryItems = function(type) {
  * Executes enabled import action entries of a type against a set of items.
  * @param {string} entryType The entry type.
  * @param {Array<T>=} opt_items The items to process.
+ * @param {boolean=} opt_unprocess Reset existing items
  */
-os.im.action.ImportActionManager.prototype.processItems = function(entryType, opt_items) {
+os.im.action.ImportActionManager.prototype.processItems = function(entryType, opt_items, opt_unprocess) {
   var items = opt_items || this.getEntryItems(entryType);
   if (items && items.length > 0) {
-    var entries = (this.actionEntries[entryType] || []).filter(os.im.action.testFilterActionEnabled);
+    var entries = this.actionEntries[entryType];
     if (entries && entries.length > 0) {
       for (var i = 0; i < entries.length; i++) {
-        entries[i].processItems(items);
+        if (entries[i].isEnabled()) {
+          entries[i].processItems(entryType, items);
+        } else if (opt_unprocess) {
+          entries[i].unprocessItems(entryType, items);
+        }
+      }
+    }
+  }
+};
+
+
+/**
+ * Explicit call to unprocess items - used when an action is removed
+ * @param {string} entryType The entry type.
+ * @param {Array<T>} items The items to process.
+ */
+os.im.action.ImportActionManager.prototype.unprocessItems = function(entryType, items) {
+  if (items && items.length > 0) {
+    var entries = this.actionEntries[entryType];
+    if (entries && entries.length > 0) {
+      for (var i = 0; i < entries.length; i++) {
+        entries[i].unprocessItems(entryType, items);
       }
     }
   }
@@ -331,12 +353,17 @@ os.im.action.ImportActionManager.prototype.processItems = function(entryType, op
  */
 os.im.action.ImportActionManager.prototype.removeActionEntry = function(entry) {
   if (entry && entry.type in this.actionEntries) {
+    // unprocess any items tagged with featureActionRefresh
+    this.unprocessItems(entry.type, this.getEntryItems(entry.type));
+
     var entries = this.actionEntries[entry.type];
     goog.array.remove(entries, entry);
 
     if (entries.length == 0) {
       delete this.actionEntries[entry.type];
     }
+
+    this.processItems(entry.type);
 
     this.dispatchEvent(os.im.action.ImportActionEventType.REFRESH);
     this.save();
