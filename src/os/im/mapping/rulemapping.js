@@ -91,6 +91,12 @@ os.im.mapping.RuleMapping = function() {
    * @type {RegExp}
    */
   this.regex = /\*/i;
+
+  /**
+   * Whether this mapping is valid.
+   * @type {boolean}
+   */
+  this['valid'] = true;
 };
 goog.inherits(os.im.mapping.RuleMapping, os.im.mapping.AbstractMapping);
 
