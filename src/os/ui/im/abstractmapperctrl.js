@@ -105,6 +105,8 @@ os.ui.im.AbstractMapperCtrl = function($scope, $element, $timeout) {
    */
   this['mappingRuleset'] = $scope['mapping'].getRules();
 
+  this.update();
+
   $scope.$on('$destroy', this.destroy.bind(this));
 };
 
@@ -130,6 +132,8 @@ os.ui.im.AbstractMapperCtrl.prototype.accept = function() {
       this.scope['mapping'].setRules(this['mappingRuleset']);
       this.scope['mapping'].field = this.getColumn();
     }
+
+    this.scope['mapping']['valid'] = true;
   }
 
   if (this.scope['validate']) {
@@ -228,14 +232,27 @@ os.ui.im.AbstractMapperCtrl.prototype.update = function() {
 
     var uniqueKeys = goog.object.getKeys(bucket);
     goog.array.sort(uniqueKeys);
+    var newRules = this.createRules(uniqueKeys);
 
     if (this['mappingRulesets'][column]) {
-      this['mappingRuleset'] = this['mappingRulesets'][column];
-    } else {
-      var data = this.createRules(uniqueKeys);
+      var ruleset = this['mappingRulesets'][column];
 
-      this['mappingRuleset'] = data;
-      this['mappingRulesets'][column] = data;
+      // check if there are any rules in the new ruleset that aren't in the existing one
+      for (var i = 0, ii = newRules.length; i < ii; i++) {
+        var newRule = newRules[i];
+        var found = goog.array.find(ruleset, function(rule) {
+          return rule['initialValue'] == newRule['initialValue'];
+        });
+
+        if (!found) {
+          ruleset.push(newRule);
+        }
+      }
+
+      this['mappingRuleset'] = ruleset.slice();
+    } else {
+      this['mappingRuleset'] = newRules;
+      this['mappingRulesets'][column] = newRules;
     }
 
     this.validateRules();

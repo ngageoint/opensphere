@@ -11,7 +11,8 @@ goog.require('os.ui.wiz.step.IWizardStep');
  * @enum {string}
  */
 os.ui.wiz.step.WizardStepEvent = {
-  VALIDATE: 'validate'
+  VALIDATE: 'validate',
+  SAVE: 'save'
 };
 
 
@@ -126,7 +127,7 @@ os.ui.wiz.step.AbstractWizardStep.prototype.activate = function(config, opt_scop
     var compile = this.compile_ || opt_parent.injector().get('$compile');
     var template = this.getTemplate();
     if (compile && template) {
-      opt_parent.html(this.getTemplate());
+      opt_parent.html(template);
       this.element = compile(opt_parent.contents())(opt_scope);
     }
   }
