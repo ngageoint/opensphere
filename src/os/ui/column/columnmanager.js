@@ -18,7 +18,8 @@ os.ui.column.columnManagerDirective = function() {
     replace: true,
     scope: {
       'columns': '=',
-      'acceptCallback': '='
+      'acceptCallback': '=',
+      'shownCallback': '='
     },
     templateUrl: os.ROOT + 'views/column/columnmanager.html',
     controller: os.ui.column.ColumnManagerCtrl,
@@ -311,6 +312,10 @@ os.ui.column.ColumnManagerCtrl.prototype.accept = function() {
     this.scope_['acceptCallback']();
   }
 
+  if (this.scope_['shownCallback']) {
+    this.scope_['shownCallback'](this['shownColumns']);
+  }
+
   this.close();
 };
 goog.exportProperty(
@@ -498,6 +503,39 @@ os.ui.column.launchColumnManager = function(columns, callback) {
     'modal': true
   };
 
-  var template = '<column-manager columns="columns" accept-callback="acceptCallback"></column-manager>';
+  var template = '<column-manager columns="columns" accept-callback="acceptCallback" ></column-manager>';
+  os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+};
+
+
+/**
+ * Launches a column manager window with the given columns
+ * @param {Array.<os.data.ColumnDefinition>} columns
+ * @param {string} header Dialog header
+ * @param {Function} callback
+ */
+os.ui.column.launchColumnManagerWithShownCallback = function(columns, header, callback) {
+  var scopeOptions = {
+    'columns': columns,
+    'shownCallback': callback
+  };
+
+  var windowOptions = {
+    'label': header,
+    'icon': 'fa fa-columns',
+    'x': 'center',
+    'y': 'center',
+    'width': '600',
+    'min-width': '500',
+    'max-width': '700',
+    'height': '400',
+    'min-height': '350',
+    'max-height': '1000',
+    'show-close': true,
+    'no-scroll': true,
+    'modal': true
+  };
+
+  var template = '<column-manager columns="columns" shown-callback="shownCallback"></column-manager>';
   os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
 };
