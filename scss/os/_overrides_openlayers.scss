@@ -168,6 +168,7 @@
   padding: .5rem;
   right: auto;
   top: auto;
+  z-index: 1;
 
   .ol-scale-line-inner {
     border-color: rgba($body-color, .8);
@@ -216,8 +217,10 @@
 
 // Zoom Slider
 .ol-zoomslider {
+  height: 45%;
   left: auto;
   margin: 1px;
+  max-height: 12.5rem;
   right: .75em;
   top: 4.75em;
 

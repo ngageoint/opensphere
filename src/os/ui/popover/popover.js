@@ -19,8 +19,9 @@ os.ui.popover.popoverDirective = function() {
       'popoverclass': '=',
       'content': '=',
       'pos': '=',
-      'icon': '='
+      'icon': '=?'
     },
+    template: '<i ng-class="popoverctrl.icon"></i>',
     controller: os.ui.popover.PopoverCtrl,
     controllerAs: 'popoverctrl'
   };
@@ -38,10 +39,11 @@ os.ui.Module.directive('popover', [os.ui.popover.popoverDirective]);
  * Controller for the popover directive
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
+ * @param {!angular.$timeout} $timeout
  * @constructor
  * @ngInject
  */
-os.ui.popover.PopoverCtrl = function($scope, $element) {
+os.ui.popover.PopoverCtrl = function($scope, $element, $timeout) {
   /**
    * @type {?angular.Scope}
    * @private
@@ -49,18 +51,33 @@ os.ui.popover.PopoverCtrl = function($scope, $element) {
   this.scope_ = $scope;
 
   /**
-   * @private
    * @type {?angular.JQLite}
+   * @private
    */
   this.element_ = $element;
 
-  this.scope_['popoverElement'] = null;
+  /**
+   * @type {?angular.$timeout}
+   * @private
+   */
+  this.timeout_ = $timeout;
 
-  this.element_.on('mouseenter', this.showPopover_.bind(this)).on('mouseleave', this.hidePopover_.bind(this));
+  /**
+   * The icon for the popover. Can be set on the scope
+   * @type {string}
+   */
+  this['icon'] = 'fa fa-question-circle';
 
-  this.createPopoverElement();
+  /**
+   * @type {?angular.JQLite}
+   * @private
+   */
+  this.popover_ = null;
 
-  this.scope_.$watch('icon', this.createPopoverElement.bind(this));
+  this.update_();
+
+  this.scope_.$watch('icon', this.update_.bind(this));
+  this.scope_.$watch('content', this.update_.bind(this));
   this.scope_.$on('$destroy', this.onDestroy_.bind(this));
 };
 
@@ -70,65 +87,75 @@ os.ui.popover.PopoverCtrl = function($scope, $element) {
  * @private
  */
 os.ui.popover.PopoverCtrl.prototype.onDestroy_ = function() {
-  this.element_.off('mouseenter').off('mouseleave');
-  this.scope_ = null;
-  this.element_ = null;
-};
-
-
-/**
- * Creates a popover element
- */
-os.ui.popover.PopoverCtrl.prototype.createPopoverElement = function() {
-  var iconEle = this.scope_['icon'] ? this.scope_['icon'] : 'fa fa-question-circle';
-  this.scope_['popoverElement'] = $('<i class="' + iconEle + '"></i>');
-
-  this.element_.html(this.scope_['popoverElement']);
-};
-
-
-/**
- * Shows the popover element
- * @param {goog.events.Event} event
- * @private
- */
-os.ui.popover.PopoverCtrl.prototype.showPopover_ = function(event) {
-  event.stopPropagation();
-  if (goog.isDefAndNotNull(this.scope_['title']) && this.scope_['title'].length > 25) {
-    this.scope_['title'] = goog.string.truncate(this.scope_['title'], 25);
+  if (this.popover_) {
+    this.popover_.off('mouseenter').off('mouseleave');
+    this.popover_.popover('dispose');
+    this.popover_ = null;
   }
 
-  var popclass = this.scope_['popoverclass'] ? this.scope_['popoverclass'] : '';
-  if (goog.dom.contains(/** @type {Node} */ (event.target), this.scope_['popoverElement'][0])) {
-    /** @type {!jQuery} */ (this.scope_['popoverElement']).popover({
+  this.scope_ = null;
+  this.element_ = null;
+  this.timeout_ = null;
+};
+
+
+/**
+ * Update the popover
+ * @private
+ */
+os.ui.popover.PopoverCtrl.prototype.update_ = function() {
+  if (this.scope_['content']) {
+    if (this.popover_) {
+      this.popover_.popover('dispose');
+      this.popover_ = null;
+    }
+
+    // Default the icon to ? if not set
+    this['icon'] = this.scope_['icon'] ? this.scope_['icon'] : 'fa fa-question-circle';
+
+    // Truncate the title
+    if (goog.isDefAndNotNull(this.scope_['title']) && this.scope_['title'].length > 25) {
+      this.scope_['title'] = goog.string.truncate(this.scope_['title'], 25);
+    }
+
+    // Create the popover
+    this.popover_ = this.element_.popover({
       'html': true,
       'placement': this.scope_['pos'] ? this.scope_['pos'] : 'bottom',
       'trigger': 'manual',
       'title': this.scope_['title'],
       'content': this.scope_['content'],
-      'template': '<div class="popover ' + popclass + '" role="tooltip">' +
+      'template': '<div class="popover ' + (this.scope_['popoverclass'] ? this.scope_['popoverclass'] : '') +
+          '" role="tooltip">' +
           '<div class="arrow"></div>' +
           '<h3 class="popover-header"></h3>' +
           '<div class="popover-body"></div></div>',
       'boundary': 'window',
       'container': 'body'
-    }).popover('show').on('hidden', function(e) {
-      e.stopPropagation();
     });
 
-    this.element_.find('popover').children().on('mouseleave', this.hidePopover_.bind(this));
+    // When hovering on the popover
+    this.popover_.on('mouseenter', function() {
+      // Show the popover, watch for leaving
+      this.element_.popover('show');
+
+      // If we leave the popover, hide
+      $('.popover').on('mouseleave', function() {
+        this.element_.popover('hide');
+      }.bind(this));
+    }.bind(this));
+
+    // When exiting the popover trigger
+    this.popover_.on('mouseleave', function() {
+      // Check to see if we are hovering the popover contents
+      this.timeout_(function() {
+        // If we arent hovering contents, hide
+        if (!$('.popover:hover').length) {
+          this.element_.popover('hide');
+        }
+      }.bind(this));
+    }.bind(this));
   }
-};
 
-
-/**
- * Hides a popover element
- * @param {goog.events.Event} event
- * @private
- */
-os.ui.popover.PopoverCtrl.prototype.hidePopover_ = function(event) {
-  event.stopPropagation();
-  this.element_.find('popover').children().off('mouseleave');
-  this.scope_['popoverElement'].popover('hide');
-  this.createPopoverElement();
+  os.ui.apply(this.scope_);
 };
