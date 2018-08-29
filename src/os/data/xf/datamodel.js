@@ -220,6 +220,89 @@ os.data.xf.DataModel.prototype.filterDimension = function(id, opt_value) {
 
 
 /**
+ * Clears all dimension filters and the filterFunction
+ */
+os.data.xf.DataModel.prototype.clearAllFilters = function() {
+  if (!this.isDisposed()) {
+    for (var key in this.filterValues) {
+      this.filterDimension(key);
+    }
+    this.setFilterFunction(null);
+  }
+};
+
+
+/**
+ * Gets the top record of the dimension
+ * @param {string} id Unique id of the dimension
+ * @return {*} the value | null if dimension does not exist | undefined if attr not found or dimension is empty
+ */
+os.data.xf.DataModel.prototype.getTopRecord = function(id) {
+  if (!this.isDisposed() && this.hasDimension(id)) {
+    var topRecord = this.dimensions[id].top(1);
+    return topRecord.length == 1 ? topRecord[0] : undefined;
+  }
+  return null;
+};
+
+
+/**
+ * Gets the bottom record of the dimension
+ * @param {string} id Unique id of the dimension
+ * @return {*} the value | null if dimension does not exist | undefined attr not found or dimension is empty
+ */
+os.data.xf.DataModel.prototype.getBottomRecord = function(id) {
+  if (!this.isDisposed() && this.hasDimension(id)) {
+    var bottomRecord = this.dimensions[id].bottom(1);
+    return bottomRecord.length == 1 ? bottomRecord[0] : undefined;
+  }
+  return null;
+};
+
+
+/**
+ * Determines if all records in dimension <i>id</i> are empty for its value function
+ * @param {!string} id The dimension id
+ * @param {!*} emptyIdentifier The representation of what empty means for the attribute
+ * @return {?boolean} true if the dimension value is empty for all records of the dimension
+ */
+os.data.xf.DataModel.prototype.isDimensionValueEmptyAll = function(id, emptyIdentifier) {
+  if (!this.isDisposed() && this.hasDimension(id)) {
+    var groupResults = /** @type {Array.<crossfilter.GroupKV>} */ (this.dimensions[id].group().all());
+    var isEmpty = groupResults != null &&
+                  groupResults.length == 1 &&
+                  groupResults[0].key === emptyIdentifier;
+    return isEmpty;
+  }
+  return null;
+};
+
+
+/**
+ * Determines if any records in dimension <i>id</i> are empty for its value function
+ * @param {!string} id The dimension id
+ * @param {!*} emptyIdentifier The representation of what is empty for the attribute
+ * @return {?boolean} true if the dimension value is empty for any records of the dimension
+ */
+os.data.xf.DataModel.prototype.isDimensionValueEmptyAny = function(id, emptyIdentifier) {
+  if (!this.isDisposed() && this.hasDimension(id)) {
+    var groupResults = /** @type {Array.<crossfilter.GroupKV>} */ (this.dimensions[id].group().all());
+    var hasEmpty = false;
+
+    for (var i = 0; i < groupResults.length; i++) {
+      if (groupResults[i].key === emptyIdentifier) {
+        hasEmpty = true;
+        break;
+      }
+    }
+
+    return hasEmpty;
+  }
+  return null;
+};
+
+
+/**
  * Groups data by a dimension in the crossfilter instance.
  * @param {string} id The dimension id
  * @param {function(S):T} accessorFn The group key accessor function
