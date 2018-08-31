@@ -537,7 +537,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.getHistogramTooltip = function(his
   if (histogram && histogram.getTitle()) {
     tooltip += histogram.getTitle() + '<br>';
   }
-  tooltip += 'Features: <span style="color:red">' + item['value'] + '</span>';
+  tooltip += 'Features: <span class="u-text-red">' + item['value'] + '</span>';
   return tooltip;
 };
 goog.exportProperty(os.ui.timeline.AbstractTimelineCtrl.prototype, 'getHistogramTooltip',

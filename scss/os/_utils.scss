@@ -91,6 +91,12 @@
   text-align: center;
 }
 
+.u-offscreen {
+  left: -9999px;
+  position: fixed;
+  top: -9999px;
+}
+
 
 // --------------------------------- Font Utilities --------------------------------- //
 .u-font-family-sans-serif {
