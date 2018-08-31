@@ -3,7 +3,7 @@
     <div class="w-100 d-flex justify-content-center">
       <date-control></date-control>
       <button class="btn btn-secondary dropdown-toggle ml-1 flex-shrink-0" ng-click="ctrl.toggleExtend()" title="{{ctrl.sliceTip}}">hh/mm</button>
-      <button id="timelineButton" class="btn btn-secondary ml-1 flex-shrink-0 o-timeline-button" ng-click="ctrl.expand()" title="Expand to full timeline">
+      <button id="timelineButton" class="btn btn-warning ml-1 flex-shrink-0 o-timeline-button" ng-click="ctrl.expand()" title="Expand to full timeline">
         <i class="fa fa-fw fa-clock-o"></i>
       </button>
     </div>
@@ -38,7 +38,7 @@
           </button>
         </div>
         <div>
-          <popover data-title="ctrl.sliceTitle" data-content="ctrl.sliceDescription" data-pos="'bottom'"></popover>
+          <popover data-title="ctrl.sliceTitle" content="ctrl.sliceDescription" data-pos="'bottom'"></popover>
         </div>
       </div>
     </div>
