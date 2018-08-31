@@ -316,3 +316,33 @@ plugin.file.kml.KMLTreeExporter.prototype.getGeometry = function(item) {
 
   return geometry;
 };
+
+
+/**
+ * @inheritDoc
+ */
+plugin.file.kml.KMLTreeExporter.prototype.getRotationColumn = function(item) {
+  var feature = item ? item.getFeature() : null;
+  if (feature) {
+    var layerConfig = os.style.getLayerConfig(feature);
+    if (layerConfig && layerConfig[os.style.StyleField.SHOW_ROTATION]) {
+      return layerConfig[os.style.StyleField.ROTATION_COLUMN];
+    }
+  }
+  return undefined;
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.file.kml.KMLTreeExporter.prototype.getRotationValue = function(item, rotationColumn) {
+  var feature = item ? item.getFeature() : null;
+  if (feature && rotationColumn) {
+    var iconRotation = /** @type {number} */ (feature.get(rotationColumn));
+    if (!isNaN(iconRotation)) {
+      return iconRotation;
+    }
+  }
+  return null;
+};
