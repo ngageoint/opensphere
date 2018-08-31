@@ -4787,7 +4787,7 @@ Cesium.ArcGisImageServerTerrainProvider = function(options) {};
 
 /**
  * @typedef {{
- *   url: string,
+ *   url: (Cesium.Resource|string),
  *   credit: (Cesium.Credit|string|undefined),
  *   ellipsoid: (Cesium.Ellipsoid|undefined),
  *   proxy: (Object|undefined),
@@ -5072,7 +5072,43 @@ Cesium.CallbackProperty = function(cb, constant) {};
 
 
 /**
+ * @typedef {{
+ *   accessToken: (string|undefined),
+ *   assetId: (number|undefined)
+ * }}
+ */
+Cesium.WorldTerrainOptions;
+
+
+/**
  * @param {{requestVertexNormals: (boolean|undefined), requestWaterMask: (boolean|undefined)}} options
  * @return {!Cesium.CesiumTerrainProvider}
  */
 Cesium.createWorldTerrain = function(options) {};
+
+
+/**
+ * @typedef {{
+ *   accessToken: (string|undefined),
+ *   server: (Cesium.Resource|string|undefined)
+ * }}
+ */
+Cesium.AssetOptions;
+
+
+/**
+ * @param {Object} endpoint The result of the Cesium ion asset endpoint service.
+ * @param {Cesium.Resource} resource The resource used to retreive the endpoint.
+ * @extends {Cesium.Resource}
+ * @constructor
+ */
+Cesium.IonResource = function(endpoint, resource) {};
+
+
+/**
+ * Create a Cesium Ion resource from an asset id.
+ * @param {number} assetId The asset id.
+ * @param {Cesium.AssetOptions} options The asset options.
+ * @return {Cesium.IonResource}
+ */
+Cesium.IonResource.fromAssetId = function(assetId, options) {};

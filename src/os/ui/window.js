@@ -256,7 +256,8 @@ os.ui.window.enableModality = function(id) {
       /** @type {os.ui.WindowCtrl} */ (scope['windowCtrl']).addModalBg();
       scope['modal'] = true;
     }
-    win.zIndex(os.ui.windowZIndexMax.MODAL);
+    win.draggable('option', 'zIndex', os.ui.windowZIndexMax.MODAL);
+    win.css('zIndex', String(os.ui.windowZIndexMax.MODAL));
   }
 };
 
@@ -273,7 +274,8 @@ os.ui.window.disableModality = function(id) {
       /** @type {os.ui.WindowCtrl} */ (scope['windowCtrl']).removeModalBg();
       scope['modal'] = false;
     }
-    win.zIndex(os.ui.windowZIndexMax.STANDARD);
+    win.draggable('option', 'zIndex', os.ui.windowZIndexMax.STANDARD);
+    win.css('zIndex', String(os.ui.windowZIndexMax.STANDARD));
   }
 };
 
@@ -385,7 +387,7 @@ os.ui.window.blink = function(id, opt_start) {
 os.ui.window.stack = function(topWinId) {
   var windows = /** @type {Array} */ ($.makeArray($(os.ui.windowSelector.WINDOW)));
   goog.array.sort(windows, function(a, b) {
-    return goog.array.defaultCompare($(b).zIndex(), $(a).zIndex());
+    return goog.array.defaultCompare($(b).draggable('option', 'zIndex'), $(a).draggable('option', 'zIndex'));
   });
 
   var topWindowIndex = goog.array.findIndex(windows, function(win) {
@@ -402,14 +404,18 @@ os.ui.window.stack = function(topWinId) {
   if (windowCategories['modal']) {
     // Go through and set the zIndex for all the windows
     windowCategories['modal'].forEach(function(win, index) {
-      $(win).zIndex(os.ui.windowZIndexMax.MODAL - index);
+      var zIndex = String(os.ui.windowZIndexMax.MODAL - index);
+      $(win).draggable('option', 'zIndex', zIndex);
+      $(win).css('zIndex', zIndex);
     });
   }
 
   if (windowCategories['standard']) {
     // Go through and set the zIndex for all the windows
     windowCategories['standard'].forEach(function(win, index) {
-      $(win).zIndex(os.ui.windowZIndexMax.STANDARD - index);
+      var zIndex = String(os.ui.windowZIndexMax.STANDARD - index);
+      $(win).draggable('option', 'zIndex', zIndex);
+      $(win).css('zIndex', zIndex);
     });
   }
 };

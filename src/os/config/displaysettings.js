@@ -65,7 +65,7 @@ os.config.DisplaySetting = {
 os.config.isTerrainConfigured = function() {
   var options = /** @type {osx.map.TerrainProviderOptions|undefined} */ (os.settings.get(
       os.config.DisplaySetting.TERRAIN_OPTIONS));
-  return !!(options && options.type && options.url);
+  return !!(options && options.type);
 };
 
 

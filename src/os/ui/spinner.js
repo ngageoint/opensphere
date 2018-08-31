@@ -82,7 +82,7 @@ os.ui.SpinnerCtrl = function($scope, $element) {
   this.scope_ = $scope;
 
   this.spinner_ = $element.find('input');
-  this.spinner_['spinner'](options);
+  this.spinner_.spinner(options);
 
   if ($scope['css']) {
     $element.find('.ui-spinner').addClass($scope['css']);
@@ -132,7 +132,7 @@ os.ui.SpinnerCtrl.prototype.onChange_ = function(newVal, oldVal) {
     var key = list[i];
 
     if (key in this.scope_) {
-      this.spinner_['spinner']('option', key, this.scope_[key]);
+      this.spinner_.spinner('option', key, this.scope_[key]);
     }
   }
 
@@ -140,7 +140,7 @@ os.ui.SpinnerCtrl.prototype.onChange_ = function(newVal, oldVal) {
     this.scope_['value'] = this.scope_['min'] || 0;
   }
 
-  this.spinner_['spinner']('value', this.scope_['value']);
+  this.spinner_.spinner('value', this.scope_['value']);
 
   if (newVal !== oldVal && this.scope_['name'] && this.scope_[this.scope_['name']]) {
     this.scope_[this.scope_['name']].$setDirty();
@@ -156,7 +156,7 @@ os.ui.SpinnerCtrl.prototype.onChange_ = function(newVal, oldVal) {
  */
 os.ui.SpinnerCtrl.prototype.onDisabledChange_ = function(opt_new, opt_old) {
   if (goog.isDef(opt_new)) {
-    this.spinner_['spinner']('option', 'disabled', opt_new);
+    this.spinner_.spinner('option', 'disabled', opt_new);
   }
 };
 
@@ -170,7 +170,7 @@ os.ui.SpinnerCtrl.prototype.onDisabledChange_ = function(opt_new, opt_old) {
 os.ui.SpinnerCtrl.prototype.onSpin_ = function(e, spinner) {
   this.killEvent_(e);
 
-  var faceValue = goog.isDef(spinner['value']) ? spinner['value'] : this.spinner_['spinner']('value');
+  var faceValue = goog.isDef(spinner['value']) ? spinner['value'] : this.spinner_.spinner('value');
   var adjustedValue = goog.math.clamp(faceValue, this.scope_['min'], this.scope_['max']); // keep in valid range
   if (adjustedValue != this.scope_['value'] || faceValue != adjustedValue) {
     this.scope_['value'] = faceValue; // set to faceValue so UI can adjust
@@ -187,7 +187,7 @@ os.ui.SpinnerCtrl.prototype.onSpin_ = function(e, spinner) {
  * @private
  */
 os.ui.SpinnerCtrl.prototype.onSpinnerChange_ = function(e, spinner) {
-  var value = goog.isDef(spinner['value']) ? spinner['value'] : this.spinner_['spinner']('value');
+  var value = goog.isDef(spinner['value']) ? spinner['value'] : this.spinner_.spinner('value');
   if (value != this.scope_['value']) {
     this.scope_['value'] = value;
     os.ui.apply(this.scope_);

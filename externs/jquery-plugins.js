@@ -3,38 +3,40 @@
  * @param {*} arg1
  * @return {!jQuery}
  */
-jQuery.prototype.carousel = function(arg1) {};
+jQuery.prototype.carousel;
 
 /**
  * @param {string=} opt_arg1
  * @param {*=} opt_arg2
  * return {!jQuery}
  */
-jQuery.prototype.datepicker = function(opt_arg1, opt_arg2) {};
+jQuery.prototype.datepicker;
+
+/**
+ * @param {(string|Object)=} opt_arg1
+ * @param {*=} opt_arg2
+ * @param {*=} opt_arg3
+ * @return {!jQuery}
+ */
+jQuery.prototype.draggable;
 
 /**
  * @param {(string|Object)=} opt_arg1
  * @return {!jQuery}
  */
-jQuery.prototype.draggable = function(opt_arg1) {};
+jQuery.prototype.modal;
 
 /**
  * @param {(string|Object)=} opt_arg1
  * @return {!jQuery}
  */
-jQuery.prototype.modal = function(opt_arg1) {};
-
-/**
- * @param {(string|Object)=} opt_arg1
- * @return {!jQuery}
- */
-jQuery.prototype.popover = function(opt_arg1) {};
+jQuery.prototype.popover;
 
 /**
  * @param {function()} listener
  * @return {!jQuery}
  */
-jQuery.prototype.removeResize = function(listener) {};
+jQuery.prototype.removeResize;
 
 /**
  * @param {(string|Object)=} opt_options
@@ -42,67 +44,75 @@ jQuery.prototype.removeResize = function(listener) {};
  * @param {*=} opt_value
  * @return {!jQuery}
  */
-jQuery.prototype.resizable = function(opt_options, opt_key, opt_value) {};
+jQuery.prototype.resizable;
 
 /**
  * @param {(string|Object)=} opt_options
  * @return {!jQuery}
  */
-jQuery.prototype.scrollspy = function(opt_options) {};
+jQuery.prototype.scrollspy;
 
 /**
  * @param {number=} opt_value
  * @return {!jQuery}
  */
-jQuery.prototype.scrollParent = function(opt_value) {};
+jQuery.prototype.scrollParent;
 
 /**
  * @param {*} arg1
  * @return {!jQuery}
  */
-jQuery.prototype.select2 = function(arg1) {};
+jQuery.prototype.select2;
 
 /**
  * @param {number=} opt_options
  * @return {!jQuery}
  */
-jQuery.prototype.slider = function(opt_options) {};
+jQuery.prototype.slider;
 
 /**
  * @param {string} arg1
  * @return {!jQuery}
  */
-jQuery.prototype.tab = function(arg1) {};
+jQuery.prototype.tab;
 
 /**
  * @param {(string|Object)=} opt_options
  * @return {!jQuery}
  */
-jQuery.prototype.tooltip = function(opt_options) {};
+jQuery.prototype.tooltip;
 
 /**
  * @param {(string|Object)=} opt_arg1
  * @return {!jQuery}
  */
-jQuery.prototype.typeahead = function(opt_arg1) {};
+jQuery.prototype.typeahead;
 
 /**
  * @param {(string|Object)=} opt_arg1
  * @return {!jQuery}
  */
-jQuery.prototype.sortable = function(opt_arg1) {};
+jQuery.prototype.sortable;
+
+/**
+ * @param {(string|Object)=} opt_arg1
+ * @param {*=} opt_arg2
+ * @param {*=} opt_arg3
+ * @return {!jQuery}
+ */
+jQuery.prototype.spinner;
 
 /**
  * @param {(string|Object)=} opt_arg1
  * @return {!jQuery}
  */
-jQuery.prototype.collapse = function(opt_arg1) {};
+jQuery.prototype.collapse;
 
 /**
  * @param {Object} options
  * @return {!jQuery}
  */
-jQuery.prototype.menu = function(options) {};
+jQuery.prototype.menu;
 
 /**
  * @typedef {{

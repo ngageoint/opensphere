@@ -174,12 +174,10 @@ plugin.basemap.BaseMapProvider.prototype.addBaseMapFromConfig = function(config)
 
           // if multiple terrain descriptors are configured, the last one will win
           var terrainOptions = /** @type {osx.map.TerrainProviderOptions|undefined} */ (conf['options']);
-          if (terrainOptions && terrainOptions.url) {
-            var terrainType = /** @type {string|undefined} */ (conf['baseType']);
-            if (terrainType) {
-              terrainOptions.type = terrainType;
-              os.settings.set(os.config.DisplaySetting.TERRAIN_OPTIONS, terrainOptions);
-            }
+          var terrainType = /** @type {string|undefined} */ (conf['baseType']);
+          if (terrainOptions && terrainType) {
+            terrainOptions.type = terrainType;
+            os.settings.set(os.config.DisplaySetting.TERRAIN_OPTIONS, terrainOptions);
           }
 
           // create a descriptor that will inform the user on where terrain was moved to
