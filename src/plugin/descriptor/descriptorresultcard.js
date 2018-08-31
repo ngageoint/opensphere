@@ -66,6 +66,14 @@ plugin.descriptor.ResultCardCtrl = function($scope, $element) {
 
 
 /**
+ * Length of the snippet to show for long descriptions
+ * @type {number}
+ * @const
+ */
+plugin.descriptor.ResultCardCtrl.SNIPPET_LENGTH = 125;
+
+
+/**
  * Clean up the controller.
  * @private
  */
@@ -132,8 +140,8 @@ plugin.descriptor.ResultCardCtrl.prototype.getField = function(field) {
           }
 
           var snippet = paragraphs[sx];
-          if (snippet.length > 350) {
-            snippet = snippet.substring(0, 350) + ' ...';
+          if (snippet.length > plugin.descriptor.ResultCardCtrl.SNIPPET_LENGTH) {
+            snippet = snippet.substring(0, plugin.descriptor.ResultCardCtrl.SNIPPET_LENGTH) + ' ...';
             this.scope_['short'] = true;
           }
 
