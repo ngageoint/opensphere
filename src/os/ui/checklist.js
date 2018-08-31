@@ -150,7 +150,10 @@ os.ui.ChecklistCtrl.prototype.onItemsChange_ = function() {
  * @private
  */
 os.ui.ChecklistCtrl.prototype.labelCompare_ = function(a, b) {
-  return goog.array.defaultCompare(a.label, b.label);
+  if (!a.label || !b.label) {
+    return goog.array.defaultCompare(a.label, b.label);
+  }
+  return a.label.localeCompare(/** @type {string} */ (b.label), undefined, {sensitivity: 'base', numeric: true});
 };
 
 
