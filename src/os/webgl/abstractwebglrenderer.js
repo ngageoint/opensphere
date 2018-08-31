@@ -59,14 +59,6 @@ os.webgl.AbstractWebGLRenderer = function() {
   this.targetFrameRate = 60;
 
   /**
-   * The terrain provider options.
-   * @type {osx.map.TerrainProviderOptions|undefined}
-   * @protected
-   */
-  this.terrainOptions = /** @type {osx.map.TerrainProviderOptions|undefined} */ (os.settings.get(
-      os.config.DisplaySetting.TERRAIN_OPTIONS));
-
-  /**
    * Settings keys monitored by the map container.
    * @type {!Array<string>}
    * @protected
@@ -242,9 +234,6 @@ os.webgl.AbstractWebGLRenderer.prototype.onSettingChange = function(event) {
       }
       break;
     case os.config.DisplaySetting.TERRAIN_OPTIONS:
-      var options = /** @type {osx.map.TerrainProviderOptions|undefined} */ (event.newVal);
-      this.terrainOptions = options;
-
       if (this.getEnabled()) {
         this.updateTerrainProvider();
       }
@@ -300,7 +289,6 @@ os.webgl.AbstractWebGLRenderer.prototype.showSunlight = function(value) {
  */
 os.webgl.AbstractWebGLRenderer.prototype.disableTerrain = function() {
   // disable the terrain provider and switch to the default
-  this.terrainOptions = undefined;
   os.settings.set(os.config.DisplaySetting.ENABLE_TERRAIN, false);
 
   // notify that terrain has been disabled
