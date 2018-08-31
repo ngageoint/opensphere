@@ -15,7 +15,6 @@ goog.require('os.ui.Module');
 goog.require('os.ui.location.SimpleLocationDirective');
 goog.require('os.ui.slick.formatter');
 goog.require('os.ui.slick.slickGridDirective');
-goog.require('os.ui.util.autoHeightDirective');
 goog.require('os.ui.window');
 
 
