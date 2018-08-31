@@ -6,6 +6,10 @@
     z-index: $zindex-modal;
   }
 
+  .CodeMirror-cursor {
+    border-left-color: $body-color;
+  }
+
   .CodeMirror-fullscreen {
     z-index: $zindex-modal;
   }
