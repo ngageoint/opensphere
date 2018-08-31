@@ -63,7 +63,7 @@ os.ui.slick.formatter.depthfulFormatter = function(row, cell, value, columnDef, 
  */
 os.ui.slick.formatter.color = function(row, cell, value, columnDef, item) {
   return value ? '<i class="fa fa-circle" style="color:' + value + '"></i>' :
-    '<i class="fa fa-adjust" title="Multiple Colors Present" style="color:#DDDDDD"></i>';
+      '<i class="fa fa-adjust c-formatter__adjust" title="Multiple Colors Present"></i>';
 };
 
 
@@ -190,16 +190,16 @@ os.ui.slick.formatter.columnActionFormatter = function(row, cell, value, columnD
 
   var actions = cam.getActions(null, new os.ui.slick.SlickColumnActionModel(columnDef), value);
   if (actions.length === 1) {
-    formatted = goog.string.buildString(formatted, ' <div style="display: inline-block;" ',
-        'class="col-act col-act-single" data-colvalue="', value, '">',
+    formatted = goog.string.buildString(formatted, ' <div ',
+        'class="col-act col-act-single d-inline-block" data-colvalue="', value, '">',
         '<a class="os-colact-anchor" href="', actions[0].getAction(value), '" target="_blank">',
         '<i class="fa fa-external-link-square" title="', actions[0].getDescription(), '"></i></a></div>');
   } else if (actions.length > 1) {
-    formatted = goog.string.buildString(formatted, ' <div style="display: inline-block;" ',
-        'class="col-act col-act-mult" data-colvalue="', value, '">',
+    formatted = goog.string.buildString(formatted, ' <div ',
+        'class="col-act col-act-mult d-inline-block" data-colvalue="', value, '">',
         '<span title="Multiple Column Actions" ',
-        'style="vertical-align:baseline" class="fa-stack mult-colaction">',
-        '<i class="fa fa-square-o fa-stack-1x" style="left:-.3em;font-size:1.3em;bottom:.1em;"></i>',
+        'class="fa-stack mult-colaction align-baseline">',
+        '<i class="fa fa-square-o fa-stack-1x c-formatter__column-action-square"></i>',
         '<i class="fa fa-stack fa-external-link-square"></i></span></div>');
     columnDef['asyncPostRender'] = goog.partial(os.ui.slick.asyncrenderer.slickColActAsyncRenderer, node);
   }
@@ -222,5 +222,5 @@ os.ui.slick.formatter.imgPreviewFormatter = function(row, cell, value, columnDef
     return '';
   }
 
-  return goog.string.buildString('<img style="height:100%;" src="', value, '"/>');
+  return goog.string.buildString('<img class="h-100" src="', value, '"/>');
 };
