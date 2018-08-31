@@ -105,6 +105,7 @@ os.ui.TimeSettingsCtrl.prototype.populate = function() {
 
 /**
  * Apply the settings
+ * @export
  */
 os.ui.TimeSettingsCtrl.prototype.accept = function() {
   var tlc = os.time.TimelineController.getInstance();
@@ -150,16 +151,15 @@ os.ui.TimeSettingsCtrl.prototype.accept = function() {
   /** @type {os.ui.timeline.TimelineCtrl} */ (this.scope['timeline']).zoomToExtent([tlc.getStart(), tlc.getEnd()]);
   this.cancel();
 };
-goog.exportProperty(os.ui.TimeSettingsCtrl.prototype, 'accept', os.ui.TimeSettingsCtrl.prototype.accept);
 
 
 /**
  * Cancel/Close
+ * @export
  */
 os.ui.TimeSettingsCtrl.prototype.cancel = function() {
   os.ui.window.close(this.element);
 };
-goog.exportProperty(os.ui.TimeSettingsCtrl.prototype, 'cancel', os.ui.TimeSettingsCtrl.prototype.cancel);
 
 
 /**
@@ -178,57 +178,57 @@ os.ui.TimeSettingsCtrl.prototype.handleKeyEvent_ = function(event) {
 
 /**
  * Add a slice
- * @param {Object=} opt_slice
+ * @export
  */
-os.ui.TimeSettingsCtrl.prototype.addSlice = function(opt_slice) {
+os.ui.TimeSettingsCtrl.prototype.addSlice = function() {
   var slice = {'start': {'hours': 0, 'mins': 0, 'secs': 0}, 'end': {'hours': 1, 'mins': 0, 'secs': 0}};
-  if (opt_slice) {
+  var last = this.scope['sliceRanges'].length ? this.scope['sliceRanges'][this.scope['sliceRanges'].length - 1] : null;
+  if (last) {
     slice = {
       'start': {
-        'hours': opt_slice['start']['hours'],
-        'mins': opt_slice['start']['mins'],
-        'secs': opt_slice['start']['secs']
+        'hours': last['start']['hours'],
+        'mins': last['start']['mins'],
+        'secs': last['start']['secs']
       },
       'end': {
-        'hours': opt_slice['end']['hours'],
-        'mins': opt_slice['end']['mins'],
-        'secs': opt_slice['end']['secs']
+        'hours': last['end']['hours'],
+        'mins': last['end']['mins'],
+        'secs': last['end']['secs']
       }
     };
   }
   this.scope['sliceRanges'].push(slice);
 };
-goog.exportProperty(os.ui.TimeSettingsCtrl.prototype, 'addSlice', os.ui.TimeSettingsCtrl.prototype.addSlice);
 
 
 /**
  * Remove a slice
  * @param {number} index
+ * @export
  */
 os.ui.TimeSettingsCtrl.prototype.removeSlice = function(index) {
   this.scope['sliceRanges'].splice(index, 1);
 };
-goog.exportProperty(os.ui.TimeSettingsCtrl.prototype, 'removeSlice', os.ui.TimeSettingsCtrl.prototype.removeSlice);
 
 
 /**
  * Add a load range
- * @param {Object} range
+ * @export
  */
-os.ui.TimeSettingsCtrl.prototype.addRange = function(range) {
+os.ui.TimeSettingsCtrl.prototype.addRange = function() {
+  var range = this.scope['loadRanges'][this.scope['loadRanges'].length - 1];
   this.scope['loadRanges'].push({'start': range.start, 'end': range.end});
 };
-goog.exportProperty(os.ui.TimeSettingsCtrl.prototype, 'addRange', os.ui.TimeSettingsCtrl.prototype.addRange);
 
 
 /**
  * Remove a load range
  * @param {number} index
+ * @export
  */
 os.ui.TimeSettingsCtrl.prototype.removeRange = function(index) {
   this.scope['loadRanges'].splice(index, 1);
 };
-goog.exportProperty(os.ui.TimeSettingsCtrl.prototype, 'removeRange', os.ui.TimeSettingsCtrl.prototype.removeRange);
 
 
 /**
