@@ -13,11 +13,12 @@ goog.require('os.net');
 goog.require('os.proj');
 goog.require('os.string');
 goog.require('plugin.cesium.ImageryProvider');
+goog.require('plugin.cesium.WMSTerrainProvider');
 
 
 /**
  * Constructor for a Cesium terrain provider.
- * @typedef {function(new: Cesium.TerrainProvider, ...)}
+ * @typedef {function(...):Cesium.TerrainProvider}
  */
 plugin.cesium.TerrainProviderFn;
 
@@ -345,18 +346,7 @@ plugin.cesium.updateCesiumLayerProperties = function(olLayer, csLayer) {
     parents: []
   }), csLayer);
 
-  // saturation and contrast are working ok
-  var saturation = olLayer.getSaturation();
-  if (saturation != null) {
-    csLayer.saturation = saturation;
-  }
-
   // that little guy? I wouldn't worry about that little guy.
-  //
-  // if contrast is 1 (default value) and hue is changed from the default (0) on *any* layer, transparent pixels are
-  // blacked out.
-  var contrast = olLayer.getContrast();
-  csLayer.contrast = contrast == null || contrast == 1 ? 1.01 : contrast;
 
   // Cesium actually operates in YIQ space -> hard to emulate
   // The following values are only a rough approximations:
@@ -366,10 +356,39 @@ plugin.cesium.updateCesiumLayerProperties = function(olLayer, csLayer) {
   if (hue != null) {
     csLayer.hue = hue * Cesium.Math.RADIANS_PER_DEGREE;
   }
+};
 
-  var brightness = olLayer.getBrightness();
-  if (brightness != null) {
-    // rough estimation
-    csLayer.brightness = Math.pow(1 + parseFloat(brightness), 2);
-  }
+
+/**
+ * Create a Cesium terrain provider instance.
+ * @param {Cesium.CesiumTerrainProviderOptions} options The Cesium terrain options.
+ * @return {!Cesium.CesiumTerrainProvider}
+ */
+plugin.cesium.createCesiumTerrain = function(options) {
+  return new Cesium.CesiumTerrainProvider(options);
+};
+
+
+/**
+ * Create a Cesium World Terrain instance.
+ * @param {Cesium.WorldTerrainOptions} options The Cesium World Terrain options.
+ * @return {!Cesium.CesiumTerrainProvider}
+ */
+plugin.cesium.createWorldTerrain = function(options) {
+  var assetId = options.assetId != null ? options.assetId : 1;
+  return plugin.cesium.createCesiumTerrain({
+    url: Cesium.IonResource.fromAssetId(assetId, {
+      accessToken: options.accessToken
+    })
+  });
+};
+
+
+/**
+ * Create a Cesium WMS terrain provider instance.
+ * @param {!osx.cesium.WMSTerrainProviderOptions} options The WMS terrain options.
+ * @return {!plugin.cesium.WMSTerrainProvider}
+ */
+plugin.cesium.createWMSTerrain = function(options) {
+  return new plugin.cesium.WMSTerrainProvider(options);
 };

@@ -16,12 +16,23 @@
           <simplemde text="ctrl.description" edit="true" is-required="false" maxlength="4000"></simplemde>
         </div>
       </div>
-      
-      <div ng-if="ctrl.pointGeometry" class="d-flex flex-row form-group">
-        <label class="col-2 col-form-label text-right u-required">Position</label>
-        <position class="w-100" name="pointGeometry" geom="ctrl.pointGeometry" x-form="featureEditForm" show-label="false" map-support="true"></position>
+      <div ng-if="ctrl.pointGeometry">
+        <div class="d-flex flex-row form-group">
+          <label class="col-2 col-form-label text-right u-required">Position</label>
+          <position class="w-100" name="pointGeometry" geom="ctrl.pointGeometry" x-form="featureEditForm" show-label="false" map-support="true"></position>
+        </div>
+        <div class="d-flex flex-row form-group">
+          <label class="col-2 col-form-label text-right">Altitude</label>
+          <div class="col-3">
+            <input class="form-control" type="number" name="altitude" step="any"
+                ng-change="ctrl.updatePreview()" ng-model="ctrl.altitude" />
+          </div>
+          <select class="form-control custom-select col-2" ng-model="ctrl.altUnits"
+              ng-options="unit for unit in ctrl.altUnitOptions"
+              ng-change="ctrl.updatePreview()">
+          </select>
+        </div>
       </div>
-
       <div class="d-flex flex-row form-group" ng-if="ctrl.timeEditEnabled">
         <label class="col-2 col-form-label text-right">Time</label>
         <div class="col">
