@@ -127,8 +127,10 @@ os.ui.menu.MenuItem.prototype.addChild = function(options) {
 
   // Does this already exist as a child?
   var existingItem = goog.array.find(this.children, function(child) {
-    return child.label == item.label &&
+    return child.type == item.type &&
       child.eventType == item.eventType &&
+      child.label == item.label &&
+      child.metricKey == item.metricKey &&
       child.tooltip == item.tooltip &&
       child.sort == item.sort;
   });
