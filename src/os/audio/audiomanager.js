@@ -32,10 +32,10 @@ os.audio.AudioManager = function() {
 
   /**
    * Set of sounds
-   * @type {Object<string, string>}
+   * @type {!Object<string, string>}
    * @private
    */
-  this.sounds_ = {'None': null};
+  this.sounds_ = {};
 
   /**
    * Cache of audio objects

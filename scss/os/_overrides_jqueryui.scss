@@ -13,6 +13,10 @@
   input {
     font-size: $font-size-base;
   }
+
+  &.ui-widget-content {
+    border: $border-width solid $border-color;
+  }
 }
 
 .ui-widget-content {
@@ -49,24 +53,41 @@
 }
 
 // Spinners
+
 .ui-spinner {
   width: 100%;
-}
 
-.ui-spinner-input {
-  border: 0;
-  color: inherit;
-  margin: 0;
-  padding: $input-padding-y $input-padding-x;
-  vertical-align: middle;
-  width: 100%;
-}
+  .ui-spinner-input {
+    border: 0;
+    color: inherit;
+    margin: 0;
+    padding: $input-padding-y $input-padding-x;
+    vertical-align: middle;
+    width: 100%;
+  }
 
-.ui-spinner .ui-icon {
-  background-image: none;
-  margin-top: 0;
-  text-indent: 0;
-  top: .1em;
+  .ui-spinner-down {
+    &::before {
+      @include font-awesome();
+      content: '\f0d7';
+      font-size: .625rem;
+    }
+  }
+
+  .ui-spinner-up {
+    &::before {
+      @include font-awesome();
+      content: '\f0d8';
+      font-size: .625rem;
+    }
+  }
+
+  .ui-icon {
+    background-image: none;
+    margin-top: 0;
+    text-indent: 0;
+    top: .5em;
+  }
 }
 
 // NOTE: we want the ui-menu to be exactly like the dropdown menu. To do this override the jquery defaults, then
@@ -83,17 +104,39 @@
   // This gets the same styles defined for dropdown-menu. Used for when themes specify after the fact
   @extend .dropdown-menu;
 
+  // jQueryUI offsets active menu items. Disable that.
+  .ui-state-active {
+    margin: 0;
+  }
+
   .ui-menu-item {
     // This part ignores the default jquery styles
     list-style-image: none;
     margin: inherit;
-    padding: $dropdown-item-padding-y $dropdown-item-padding-x;
+    padding: 0;
 
     // This gets the same styles defined for dropdown-item. Used for when themes specify after the fact
     @extend .dropdown-item;
 
     i.fa {
       margin-right: ($spacer * .25);
+    }
+
+    .ui-menu-item-wrapper {
+      padding: $dropdown-item-padding-y $dropdown-item-padding-x;
+
+      &.ui-state-active {
+        // This part ignores the default jquery styles
+        @include gradient-bg($dropdown-link-hover-bg);
+        background: $dropdown-link-hover-bg;
+        border: 0;
+        color: $dropdown-link-hover-color;
+        font-weight: inherit;
+        text-decoration: none;
+
+        // This gets the same styles defined for dropdown-item:focus. Used for when themes specify after the fact
+        @extend .dropdown-item:focus;
+      }
     }
   }
 
@@ -107,19 +150,6 @@
 
   .dropdown-item {
     cursor: pointer;
-  }
-
-  .dropdown-item.ui-state-focus {
-    // This part ignores the default jquery styles
-    @include gradient-bg($dropdown-link-hover-bg);
-    background: $dropdown-link-hover-bg;
-    border: 0;
-    color: $dropdown-link-hover-color;
-    font-weight: inherit;
-    text-decoration: none;
-
-    // This gets the same styles defined for dropdown-item:focus. Used for when themes specify after the fact
-    @extend .dropdown-item:focus;
   }
 
   // This is a helper to disallow jquery menu make a group header thats empty a divider
@@ -142,4 +172,5 @@
 .ui-widget-header .ui-state-active {
   @include gradient-bg($dropdown-link-hover-bg);
   background: none;
+  color: $body-color;
 }
