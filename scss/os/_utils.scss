@@ -107,7 +107,7 @@
 // --------------------------------- Table Utilities --------------------------------- //
 // Tables in bootstrap are styled by elements.... not classes. Allow class styling
 .u-table {
-  .u-table__head,
+  &:not(.u-table__no-hover) .u-table__head,
   &:not(.u-table__no-hover) .u-table__row {
     @include hover {
       background-color: $list-group-active-bg !important;
