@@ -105,6 +105,14 @@ os.style.label.filterValid = function(configs) {
 
 
 /**
+ * Default font.
+ * @type {string}
+ * @const
+ */
+os.style.label.DEFAULT_FONT = 'Arial';
+
+
+/**
  * Default font size.
  * @type {number}
  * @const
@@ -544,14 +552,15 @@ os.style.label.getColor = function(feature, config, opt_layerConfig) {
 
 
 /**
- * For now we'll just support font size. Non-bold fonts can be hard to read, and we'll assume Arial.
- * @param {number=} opt_size The font size to use.
- * @return {string} The font string
+ * Generate a CSS font style for labels. Assume bold because non-bold fonts are generally hard to read.
+ * @param {number=} opt_size The font size.
+ * @return {string} The CSS font style.
  */
 os.style.label.getFont = function(opt_size) {
   // using size/size sets the line height to the font size, creating compact labels
-  var size = (opt_size || os.style.label.DEFAULT_SIZE) + 'px';
-  return 'bold ' + size + '/' + size + ' Arial';
+  var size = goog.math.clamp(opt_size || os.style.label.DEFAULT_SIZE, os.style.label.MIN_SIZE, os.style.label.MAX_SIZE);
+  var pxSize = size + 'px';
+  return 'bold ' + pxSize + '/' + pxSize + ' ' + os.style.label.DEFAULT_FONT;
 };
 
 
