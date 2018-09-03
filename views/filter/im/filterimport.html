@@ -32,29 +32,29 @@
       </div>
     </div>
 
-    <div class="border rounded bg-secondary" ng-if="ctrl.foundCount > 0">
-      <i class="fa fa-check text-success"></i>
-      <span>Importing <b>{{ctrl.foundCount}}</b> {{ctrl.getFilterTitle(ctrl.foundCount)}} to these layers:</span>
-      <div class="border rounded">
-        <div ng-repeat="(layerId, layer) in ctrl.found" ng-class="{'u-bg-body' : $index % 2 == 0}">
-          <div>
-            <span class="text-truncate" title="{{layer.layerTitle}}">
-              <span ng-bind-html="layer.layerIcon"></span>
-              {{layer.layerTitle}}
-            </span>
-            <span class="float-right d-flex">
-              <span ng-show="ctrl.showMatch" class="mr-1" title="Whether to pass all filters (AND) or any filter (OR)">
-                <select class="form-control" ng-model="layer.filterGroup" ng-init="layer.filterGroup = ctrl.groups[layer.match ? 0 : 1]" ng-options="item as item for item in ctrl.groups" ng-change="layer.match = !layer.match"/>
-              </span>
-              <span ng-click="ctrl.removeLayer(layerId)" class="float-right" title="Don't import {{ctrl.getFilterTitle()}} for this layer">
-                <i class="fa fa-times text-danger c-glyph"></i>
-              </span>
-            </span>
-          </div>
+    <div ng-if="ctrl.foundCount > 0" class="u-table u-table-striped u-table__no-hover border">
+      <div class="u-table__head px-1">
+        <i class="fa fa-check text-success"></i>
+        Importing <b>{{ctrl.foundCount}}</b> {{ctrl.getFilterTitle(ctrl.foundCount)}} to these layers
+      </div>
+      <div ng-repeat="(layerId, layer) in ctrl.found" class="u-table__row p-1 border-top">
+        <div class="d-flex px-1">
+          <span class="text-truncate mr-auto" title="{{layer.layerTitle}}">
+            <span ng-bind-html="layer.layerIcon"></span>
+            {{layer.layerTitle}}
+          </span>
 
-          <div ng-repeat="filter in layer.filterModels" title="{{filter.tooltip}}" class="ml-4 text-truncate">
-            <i class="fa" ng-class="ctrl.getFilterIcon()"></i> {{filter.title}}
-          </div>
+          <span ng-show="ctrl.showMatch" class="mr-1" title="Whether to pass all filters (AND) or any filter (OR)">
+            <select class="form-control" ng-model="layer.filterGroup" ng-init="layer.filterGroup = ctrl.groups[layer.match ? 0 : 1]" ng-options="item as item for item in ctrl.groups" ng-change="layer.match = !layer.match"/>
+          </span>
+
+          <button type="button" class="close flex-shrink-0" ng-click="ctrl.removeLayer(layerId)" aria-label="close" title="Don't import {{ctrl.getFilterTitle()}} for this layer">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div ng-repeat="filter in layer.filterModels" title="{{filter.tooltip}}" class="ml-4 text-truncate">
+          <i class="fa" ng-class="ctrl.getFilterIcon()"></i> {{filter.title}}
         </div>
       </div>
     </div>
