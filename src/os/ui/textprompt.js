@@ -87,7 +87,7 @@ os.ui.TextPromptCtrl.prototype.onValueChange_ = function(newValue) {
  * @private
  */
 os.ui.TextPromptCtrl.prototype.select_ = function() {
-  var input = this.element_.find('#main');
+  var input = this.element_.find('.js-text-prompt__main');
   input.select();
 };
 
