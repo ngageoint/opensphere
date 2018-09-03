@@ -253,3 +253,97 @@ However, for the overly paranoid:
       }
     }
   }
+
+terrain
+-------
+``admin.providers.basemap.maps.terrain``
+
+OpenSphere supports a number of terrain formats out of the box, and more can be added via plugins. By default, the following are supported:
+
+* STK Terrain Server
+* WMS Tiles (``image/bil`` only)
+* `Cesium World Terrain`_ (requires a `Cesium Ion`_ access token)
+
+Enabling terrain in OpenSphere requires adding a basemap provider to settings with the requisite configuration for the terrain provider type. All providers should set ``"type": "Terrain"`` to identify it as a terrain server, and set ``baseType`` to one of ``cesium``, ``wms``, or ``cesium-ion``. Examples of configuring each are as follows.
+
+STK Terrain Server
+******************
+
+.. code-block:: json
+
+  {
+    "admin": {
+      "providers": {
+        "basemap": {
+          "maps": {
+            "terrain": {
+              "type": "Terrain",
+              "baseType": "cesium",
+              "options": {
+                "url": "<server url>"
+              },
+            }
+          }
+        }
+      }
+    }
+  }
+
+WMS Tiles
+******************
+
+.. code-block:: json
+
+  {
+    "admin": {
+      "providers": {
+        "basemap": {
+          "maps": {
+            "terrain": {
+              "type": "Terrain",
+              "baseType": "wms",
+              "options": {
+                "url": "<server url>"
+              },
+            }
+          }
+        }
+      }
+    }
+  }
+
+Cesium World Terrain
+********************
+
+A `Cesium Ion`_ account is required to use Cesium World Terrain. After signing in to an Ion account:
+
+1. Select a Cesium World Terrain asset from My Assets.
+2. Set the ``options.assetId`` value to the asset ID (displayed in the code example).
+3. Navigate to Access Tokens.
+4. Set the ``options.accessToken`` value to a token with read access for the terrain asset.
+
+Example:
+
+.. code-block:: javascript
+
+  {
+    "admin": {
+      "providers": {
+        "basemap": {
+          "maps": {
+            "terrain": {
+              "type": "Terrain",
+              "baseType": "cesium-ion",
+              "options": {
+                "accessToken": "<ion access token>",
+                "assetId": 1
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+.. _Cesium World Terrain: https://cesium.com/content/cesium-world-terrain/
+.. _Cesium Ion: https://cesium.com/ion/
