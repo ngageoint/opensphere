@@ -4,6 +4,7 @@ goog.provide('os.file.File');
 goog.require('goog.async.Deferred');
 goog.require('goog.fs.FileReader');
 goog.require('goog.net.jsloader');
+goog.require('goog.userAgent');
 goog.require('os.IPersistable');
 goog.require('os.defines');
 goog.require('os.file.mime.zip');
@@ -366,7 +367,11 @@ os.file.createFromContent = function(fileName, url, originalFile, content) {
  * @return {string}
  */
 os.file.getFileUrl = function(path) {
-  return os.file.FileScheme.FILE + '://' + path;
+  if (goog.userAgent.WINDOWS) {
+    return os.file.FileScheme.FILE + ':///' + path.replace(/\\/g, '/');
+  } else {
+    return os.file.FileScheme.FILE + '://' + path;
+  }
 };
 
 

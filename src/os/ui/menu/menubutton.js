@@ -104,7 +104,7 @@ os.ui.menu.MenuButtonCtrl.prototype.openMenu = function() {
         my: this.menuPosition,
         at: this.btnPosition,
         of: this.element || os.ui.windowSelector.CONTAINER,
-        within: $(window)
+        within: $(document.firstElementChild)
       });
     }
   }
