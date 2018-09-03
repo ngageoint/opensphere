@@ -1,7 +1,25 @@
 .c-dd-target__dragover {
-  background: $list-group-hover-bg;
-  outline: dashed .2rem $success;
-  outline-offset: -.2rem;
+  opacity: .75;
+}
+
+// sass-lint:disable no-extends, placeholder-in-extend
+.c-dd-target__dragover::after {
+  bottom: 50%;
+  color: $success;
+  content: 'Drag & Drop';
+  font-size: 4.5rem;
+  font-weight: bold;
+  height: 4.5rem;
+  left: 50%;
+  margin-left: -14rem;
+  margin-top: -4.5rem;
+  position: absolute;
+  right: 50%;
+  text-align: center;
+  text-shadow: 1px 1px color-yiq($success);
+  top: 50%;
+  width: 28rem;
+  z-index: $zindex-tooltip;
 }
 
 .c-dd-source {
