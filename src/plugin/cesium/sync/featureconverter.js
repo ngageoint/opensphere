@@ -22,6 +22,7 @@ goog.require('os.geom.GeometryField');
 goog.require('os.implements');
 goog.require('os.layer.ILayer');
 goog.require('os.map');
+goog.require('os.style.label');
 goog.require('plugin.cesium');
 goog.require('plugin.cesium.VectorContext');
 
@@ -396,7 +397,7 @@ plugin.cesium.sync.FeatureConverter.prototype.updateLabel = function(label, geom
   var labelText = textStyle.getText() || '';
   label.text = labelText.replace(/[^\x0a\x0d\x20-\x7e\xa0-\xff]/g, '');
 
-  label.font = textStyle.getFont() || 'normal 12px Arial';
+  label.font = textStyle.getFont() || os.style.label.getFont();
   label.pixelOffset = new Cesium.Cartesian2(textStyle.getOffsetX(), textStyle.getOffsetY());
 
   // check if there is an associated primitive, and if it is shown
