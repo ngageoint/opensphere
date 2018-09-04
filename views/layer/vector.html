@@ -54,7 +54,7 @@
           Auto Refresh:
         </div>
         <div class="col">
-          <select class="form-control" ng-model="vector.refresh" ng-change="vector.onRefreshChange()"
+          <select class="custom-select" ng-model="vector.refresh" ng-change="vector.onRefreshChange()"
               ng-disabled="vector.lock"
               ng-options="val.label for val in vector.refreshOptions">
           </select>
@@ -65,7 +65,7 @@
           Unique Identifier
         </div>
         <div class="col">
-          <select class="form-control" ng-model="vector.uniqueId" ng-change="vector.onUniqueIdChange()"
+          <select class="custom-select" ng-model="vector.uniqueId" ng-change="vector.onUniqueIdChange()"
               ng-options="col as col.name for col in columns track by col.field">
               <option value="">-- None --</option>
           </select>
