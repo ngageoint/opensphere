@@ -84,14 +84,16 @@ os.ui.im.mapping.time.TimeMappingModel.prototype.updateFromMappings = function(m
 
   for (var i = 0, n = mappings.length; i < n; i++) {
     var m = mappings[i];
-    if (m instanceof os.im.mapping.time.TimeMapping) {
-      this.timeMapping_ = m.clone();
-      this['timeColumn'] = this.timeMapping_.field;
-      this['timeFormat'] = this.timeMapping_.getFormat();
-    } else {
-      this.dateMapping_ = m.clone();
-      this['dateColumn'] = this.dateMapping_.field;
-      this['dateFormat'] = this.dateMapping_.getFormat();
+    if (m.getType() == this.getType()) {
+      if (m instanceof os.im.mapping.time.TimeMapping) {
+        this.timeMapping_ = m.clone();
+        this['timeColumn'] = this.timeMapping_.field;
+        this['timeFormat'] = this.timeMapping_.getFormat();
+      } else {
+        this.dateMapping_ = m.clone();
+        this['dateColumn'] = this.dateMapping_.field;
+        this['dateFormat'] = this.dateMapping_.getFormat();
+      }
     }
   }
 

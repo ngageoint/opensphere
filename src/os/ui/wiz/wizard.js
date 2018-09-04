@@ -109,6 +109,7 @@ os.ui.wiz.WizardCtrl = function($scope, $element, $timeout, $attrs) {
   }
 
   $scope.$on(os.ui.wiz.step.WizardStepEvent.VALIDATE, this.onStepValidityChange_.bind(this));
+  $scope.$on(os.ui.wiz.step.WizardStepEvent.SAVE, this.onSave_.bind(this));
   $scope.$on(os.ui.WindowEventType.CANCEL, this.cancelInternal.bind(this));
   $scope.$on('$destroy', this.destroy_.bind(this));
 };
@@ -148,6 +149,20 @@ os.ui.wiz.WizardCtrl.prototype.onStepValidityChange_ = function(event, opt_valid
     this.setStepState(step, os.ui.wiz.StepState.NONE);
   } else {
     this.setStepState(step, os.ui.wiz.StepState.ERROR);
+  }
+};
+
+
+/**
+ * Handles save events.
+ * @param {angular.Scope.Event} event
+ * @param {os.parse.FileParserConfig=} opt_config Optional parser config.
+ * @private
+ */
+os.ui.wiz.WizardCtrl.prototype.onSave_ = function(event, opt_config) {
+  var step = this['steps'][this['activeIndex']];
+  if (step) {
+    step.finalize(opt_config);
   }
 };
 
