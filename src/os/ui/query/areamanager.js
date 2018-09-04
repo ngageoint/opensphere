@@ -16,10 +16,6 @@ goog.require('os.geo.jsts');
 goog.require('os.map');
 goog.require('os.map.IMapContainer');
 goog.require('os.mixin.geometry');
-goog.require('os.storage');
-goog.require('os.storage.AsyncStorageWrapper');
-goog.require('os.storage.HTML5LocalStorage');
-goog.require('os.storage.IDBStorage');
 goog.require('os.style.area');
 goog.require('os.ui.window');
 
@@ -61,13 +57,6 @@ os.ui.query.AreaManager = function() {
    * @private
    */
   this.saveDelay_ = new goog.async.Delay(this.save, 100, this);
-
-  /**
-   * @type {os.storage.AsyncStorage<Object>}
-   * @protected
-   */
-  this.storage = new os.storage.IDBStorage(os.SHARED_STORE_NAME, os.SHARED_DB_NAME, os.SHARED_DB_VERSION);
-  this.storage.init().addCallbacks(this.onStorageReady, this.onStorageError, this);
 };
 goog.inherits(os.ui.query.AreaManager, os.data.CollectionManager);
 goog.addSingletonGetter(os.ui.query.AreaManager);
@@ -114,83 +103,6 @@ goog.define('os.ALL_AREA_STORAGE_KEY', 'areasAll');
  * @private
  */
 os.ui.query.AreaManager.tempId_ = 1;
-
-
-/**
- * Handle successful IndexedDB storage initialization.
- * @protected
- */
-os.ui.query.AreaManager.prototype.onStorageReady = function() {
-  this.migrateAreasFromLsToIdb_();
-  this.migrateAreasFromIdbToSettings_().addCallbacks(this.load, this.onStorageError, this);
-};
-
-
-/**
- * Migrate areas from localStorage to IndexedDb
- * @private
- */
-os.ui.query.AreaManager.prototype.migrateAreasFromLsToIdb_ = function() {
-  // look for areas in local storage first and add them to the manager
-  var oldStorage = new os.storage.HTML5LocalStorage();
-  var oldAreas = oldStorage.get(os.AREA_STORAGE_KEY);
-  if (oldAreas) {
-    try {
-      var format = new ol.format.GeoJSON();
-      var areas = /** @type {Array<!ol.Feature>} */ (format.readFeatures(oldAreas));
-      if (areas) {
-        goog.log.info(this.log, 'Migrating ' + areas.length + ' areas from local storage to IndexedDB.');
-        this.bulkAdd(areas);
-      }
-    } catch (e) {
-      goog.log.error(this.log, 'Failed migrating old areas from local storage!', e);
-    }
-
-    // remove the old value so it won't be handled again and we can free up some space
-    oldStorage.remove(os.AREA_STORAGE_KEY);
-  }
-};
-
-
-/**
- * Migrate areas from localStorage to IndexedDb
- * @return {goog.async.Deferred}
- * @private
- */
-os.ui.query.AreaManager.prototype.migrateAreasFromIdbToSettings_ = function() {
-  return this.storage.get(os.AREA_STORAGE_KEY)
-      .addCallbacks(this.onMigrateAreasLoaded_, this.onStorageError, this);
-};
-
-
-/**
- * Handle deferred callback of areas loaded from async storage device.  Persist them to settings service
- * @param {Object} obj
- * @private
- */
-os.ui.query.AreaManager.prototype.onMigrateAreasLoaded_ = function(obj) {
-  if (obj) {
-    os.settings.set(os.AREA_STORAGE_KEY, obj);
-  }
-  if (this.storage) {
-    // clear this storage key out of the old storage, DO NOT CLEAR IT!!!!!!
-    this.storage.remove(os.AREA_STORAGE_KEY).addCallback(this.storage.dispose, this.storage);
-  }
-};
-
-
-/**
- * Handle IndexedDB storage error, degrading to using local storage.
- * @param {goog.db.Error} error The error.
- * @protected
- */
-os.ui.query.AreaManager.prototype.onStorageError = function(error) {
-  if (this.storage) {
-    this.storage.dispose();
-    this.storage = new os.storage.AsyncStorageWrapper(new os.storage.HTML5LocalStorage());
-    this.load();
-  }
-};
 
 
 /**
