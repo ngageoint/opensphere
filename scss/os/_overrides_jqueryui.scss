@@ -174,3 +174,13 @@
   background: none;
   color: $body-color;
 }
+
+// Draggable hands
+.ui-draggable-handle {
+  @include grab-cursor();
+}
+
+.ui-draggable-dragging.ui-draggable-handle,
+.ui-draggable-dragging .ui-draggable-handle {
+  @include grabbing-cursor();
+}
