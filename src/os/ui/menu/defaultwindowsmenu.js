@@ -110,7 +110,7 @@ os.ui.menu.windows.default.setup = function() {
     'x': 'center',
     'y': 'center',
     'width': 300,
-    'height': 262,
+    'height': 350,
     'min-width': 300,
     'max-width': 400,
     'min-height': 250,
