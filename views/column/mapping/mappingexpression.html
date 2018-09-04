@@ -3,7 +3,7 @@
     <label class="col-auto">Layer</label>
     <layerpicker class="col-5" layer="exprCtrl.layer" layers-filter="node.getFn()" formatter="exprCtrl.formatter"></layerpicker>
     <label class="col-auto">Column</label>
-    <select class="form-control col-4" placeholder="Select column..." ng-model="exprCtrl.column"
+    <select class="custom-select col-4" placeholder="Select column..." ng-model="exprCtrl.column"
         ng-options="value.name for value in exprCtrl.columns" required/>
     <div class="col-auto">
       <button class="btn btn-danger" ng-click="$emit('columnmapping.remove', node)" title="Remove this expression">

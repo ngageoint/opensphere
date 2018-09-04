@@ -14,7 +14,7 @@ os.ui.metrics.metricCompletionDirective = function() {
   return {
     restrict: 'AE',
     replace: true,
-    template: '<span class="pl-1" ng-style="mc.style" ' +
+    template: '<span class="pl-1 c-slick-grid__hover-color" ng-style="mc.style" ' +
         'ng-bind-html="mc.getCompleted()" />',
     controller: os.ui.metrics.MetricCompletionCtrl,
     controllerAs: 'mc'

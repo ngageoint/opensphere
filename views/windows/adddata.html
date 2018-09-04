@@ -32,7 +32,7 @@
       </div>
       <div class="row" ng-hide="filterName">
         <label class="col-auto col-form-label">Group By</label>
-        <select class="form-control col-3" ng-model="addData.view" ng-change="addData.onGroupByChanged()"
+        <select class="custom-select col-3" ng-model="addData.view" ng-change="addData.onGroupByChanged()"
             ng-options="key for (key, value) in addData.views"/>
       </div>
 
@@ -46,7 +46,7 @@
     </div>
 
     <div class="d-flex flex-fill mt-1">
-      <slicktree class="border col p-0 o-add-data__slicktree"" x-data="providers" checkbox-class="c-toggle-switch" checkbox-tooltip="Activates or deactivates the layer"
+      <slicktree class="border col p-0 o-add-data__slicktree" x-data="providers" checkbox-class="c-toggle-switch" checkbox-tooltip="Activates or deactivates the layer"
         selected="selected" disable-folders="true"></slicktree>
       <div class="border col ml-1 p-2" ng-bind-html="addData.getInfo()"></div>
     </div>

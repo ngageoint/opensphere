@@ -1,88 +1,3 @@
-// --------------------------------- Bootstrap Overrides --------------------------------- //
-// ---------- Special block to override bootstrap defaults we want in all cases ---------- //
-.d-flex {
-  // This piggybacks off of the BS4 .d-flex selector in order to fix Firefox's bad handling of column flex layouts
-  min-height: 0;
-}
-
-.d-flex > * {
-  // This piggybacks off of the BS4 .d-flex selector in order to fix text truncation for words that dont break
-  // All children of a d-flex should have min-width: 0 so it doesnt cause the parent to stretch to fit it inside
-  // but instead to wrap the child content
-  min-width: 0;
-}
-
-// Bootstrap fixes form-control:disabled opacity to 1 instead of providing a variable to override. We want inputs to
-// appear muted when disabled, so we'll override the class instead.
-$form-control-disabled-opacity: .6 !default;
-
-// Button borders are changed when disabled, but form controls are not. This looks bad when they're together,
-// particularly in input groups. Change disabled form control borders to match buttons.
-$form-control-disabled-border: $gray-600 !default;
-
-.form-control {
-  &:disabled {
-    border-color: $form-control-disabled-border;
-    opacity: $form-control-disabled-opacity;
-  }
-}
-
-// ui-menu-item has some spacer between font awesome icons and dropdown text. Has better readability
-.dropdown-item {
-  i.fa {
-    margin-right: ($spacer * .25);
-  }
-}
-
-// The default
-.modal:not(.c-window) {
-  background: rgba($modal-backdrop-bg, .33);
-}
-
-.modal-dialog {
-  .modal-header,
-  .modal-footer {
-    background: darken($modal-content-bg, 5%);
-  }
-
-  .modal-footer {
-    @include border-bottom-radius($modal-content-border-radius);
-  }
-}
-
-// We prefer to have tighter vertical padding on headers and footers
-.modal-header,
-.modal-footer {
-  padding: $modal-header-padding $modal-inner-padding;
-}
-
-// Add a pointer to the custom checkbox
-.list-group-item,
-.custom-select,
-.custom-control.custom-radio .custom-control-label,
-.custom-control.custom-checkbox .custom-control-label {
-  cursor: pointer;
-}
-
-html {
-  // (Part 1) How bootstrap does box-sizing breaks 3rd party libraries box sizing.
-  // This technique allows slickgrid to work
-  box-sizing: border-box;
-
-  // This makes the page the whole height by default. Use flex-fill to make your page take all the available space
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-// (Part 2) Use your parents box sizing. This technique allows slickgrid to work
-*,
-*:before,
-*:after {
-  box-sizing: inherit;
-}
-
-
 // --------------------------------- Misc Utilities --------------------------------- //
 .u-pointer-events-all {
   pointer-events: all;
@@ -109,6 +24,12 @@ html {
 }
 
 .u-pre {
+  // Use default font family (bootstrap override)
+  font-family: $font-family-sans-serif;
+
+  // Dont shrink the font (bootstrap override)
+  font-size: 100%;
+
   white-space: pre-wrap;
 }
 
@@ -186,7 +107,7 @@ html {
 // --------------------------------- Table Utilities --------------------------------- //
 // Tables in bootstrap are styled by elements.... not classes. Allow class styling
 .u-table {
-  .u-table__head,
+  &:not(.u-table__no-hover) .u-table__head,
   &:not(.u-table__no-hover) .u-table__row {
     @include hover {
       background-color: $list-group-active-bg !important;
@@ -310,6 +231,11 @@ html {
 // For when you want a border for spacing but transparent
 .u-border-color-transparent {
   border-color: transparent;
+}
+
+// Used for buttons that are styled as form-controls borders
+.u-border-color-input {
+  border-color: $input-border-color !important;
 }
 
 // For all bootstrap colors, allow us to access them

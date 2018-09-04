@@ -54,7 +54,7 @@
         <tr title="Sets the style of the layer(s)" ng-show="styles && items.length == 1">
           <td>Style</td>
           <td class="w-100">
-            <select class="form-control" ng-model="style" ng-change="tile.onStyleChange()" ng-options="value.label for value in styles">
+            <select class="custom-select" ng-model="style" ng-change="tile.onStyleChange()" ng-options="value.label for value in styles">
             </select>
           </td>
         </tr>
@@ -70,7 +70,7 @@
         <tr ng-if="tile.showRefresh" title="Sets how often the layer will automatically refresh its tiles.">
           <td class="text-nowrap">Auto Refresh</td>
           <td class="w-100">
-            <select class="form-control" ng-model="tile.refresh" ng-change="tile.onRefreshChange()"
+            <select class="custom-select" ng-model="tile.refresh" ng-change="tile.onRefreshChange()"
                 ng-options="val.label for val in tile.refreshOptions">
             </select>
           </td>

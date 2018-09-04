@@ -1,7 +1,19 @@
 .c-dd-target__dragover {
-  background: $list-group-hover-bg;
-  outline: dashed .2rem $success;
-  outline-offset: -.2rem;
+  &::after {
+    align-items: center;
+    background: rgba($white, .5);
+    border: .5rem dashed $gray-900;
+    color: $gray-900;
+    content: 'Drag & Drop';
+    display: flex;
+    font-size: 5rem;
+    height: 100%;
+    justify-content: center;
+    pointer-events: none;
+    position: absolute;
+    width: 100%;
+    z-index: 1070;
+  }
 }
 
 .c-dd-source {
