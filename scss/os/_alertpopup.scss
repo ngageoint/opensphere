@@ -1,0 +1,4 @@
+// We want alerts to popup above windows and modals
+.c-alert-popup {
+  z-index: $zindex-modal + 1;
+}

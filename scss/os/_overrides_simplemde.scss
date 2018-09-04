@@ -6,6 +6,10 @@
     z-index: $zindex-modal;
   }
 
+  .CodeMirror-cursor {
+    border-left-color: $body-color;
+  }
+
   .CodeMirror-fullscreen {
     z-index: $zindex-modal;
   }
@@ -18,7 +22,7 @@
   }
 
   .CodeMirror:not(.CodeMirror-fullscreen) .CodeMirror-scroll {
-    max-height: 400px;
+    max-height: 25rem;
   }
 
   .editor-toolbar a {
