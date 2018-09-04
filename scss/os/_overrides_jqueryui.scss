@@ -70,6 +70,7 @@
     &::before {
       @include font-awesome();
       content: '\f0d7';
+      font-size: .625rem;
     }
   }
 
@@ -77,6 +78,7 @@
     &::before {
       @include font-awesome();
       content: '\f0d8';
+      font-size: .625rem;
     }
   }
 

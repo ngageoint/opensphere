@@ -51,7 +51,11 @@ os.ui.Consent = function($scope, $element) {
     this.timer_.listen(goog.Timer.TICK, this.update_, false, this);
 
     if (cookie && !cookie.get('consent')) {
-      os.ui.modal.open($element);
+      os.ui.modal.open($element, {
+        'backdrop': 'static',
+        'focus': true
+      });
+      $('body').addClass('c-consent');
     } else {
       this.timer_.start();
       this.update_();
@@ -66,6 +70,7 @@ os.ui.Consent = function($scope, $element) {
  * Destroy.
  */
 os.ui.Consent.prototype.destroy = function() {
+  $('body').removeClass('c-consent');
   this.scope_ = null;
   this.element_ = null;
   this.timeout_ = null;

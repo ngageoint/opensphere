@@ -8,18 +8,19 @@
 .c-timeline-panel__buttons {
   background: $body-bg;
   border-left: 1px solid $border-color;
-  border-radius: 4px 0 0;
+  border-radius: .25rem 0 0;
   border-top: 1px solid $border-color;
-  margin-top: -22px;
-  padding: 0 4px;
+  margin-top: -1.5rem;
+  padding: 0 .25rem;
   position: absolute;
   right: 0;
 }
 
 .c-timeline-panel__fps-slider {
+  white-space: nowrap;
+
   .slider-container {
     display: inline-block;
-    margin-bottom: 1px;
-    width: 100px;
+    width: 5rem;
   }
 }

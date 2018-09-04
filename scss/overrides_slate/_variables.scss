@@ -35,12 +35,12 @@ $custom-control-indicator-active-color: $black;
 $custom-control-indicator-active-bg: $gray-200;
 $custom-checkbox-indicator-indeterminate-bg: $gray-200;
 $custom-control-indicator-disabled-bg: $gray-500;
-$custom-control-label-disabled-color: $black;
+$custom-control-label-disabled-color: $gray-600;
 
 @import 'slate/variables';
 
 $link-color: #8be;
-$border-color: $gray-900;
+$border-color: rgba($black, .6);
 $input-bg: #555;
 $input-disabled-bg: $gray-600;
 $input-color: $white;
