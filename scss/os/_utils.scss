@@ -233,6 +233,11 @@
   border-color: transparent;
 }
 
+// Used for buttons that are styled as form-controls borders
+.u-border-color-input {
+  border-color: $input-border-color !important;
+}
+
 // For all bootstrap colors, allow us to access them
 // NOTE: Only useable for special items that require lots of colors. Use text-primary, etc for normal stuff
 @each $color, $value in $colors {

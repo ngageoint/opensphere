@@ -19,7 +19,7 @@
   </div>
   <div ng-if="exportoptions.sourceItems.length > 0 && showCount" ng-class="{'text-warning': exportoptions.count <= 0, 'text-success': exportoptions.count > 0}">
     <i class="fa fa-warning" ng-if="exportoptions.count <= 0"></i>
-    <ng-pluralize count="exportoptions.count" ng-class="{'italic': exportoptions.count <= 0}" when="{'0': 'Nothing to export. Please choose one or more sources with loaded data.',
+    <ng-pluralize count="exportoptions.count" ng-class="{'font-italic': exportoptions.count <= 0}" when="{'0': 'Nothing to export. Please choose one or more sources with loaded data.',
                'one': 'Exporting {} feature.',
                'other': 'Exporting {} features.'}">
   </div>
