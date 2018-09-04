@@ -635,14 +635,15 @@ os.ui.file.kml.AbstractKMLExporter.prototype.processPlacemark = function(element
  * @template T
  */
 os.ui.file.kml.AbstractKMLExporter.prototype.createPlacemarkMergedStyle = function(placemarkEl, item) {
-  var heading = this.getRotationValue(item, this.rotationColumn_);
-  if (heading != null) {
-    var mergeStyleEl = os.xml.createElementNS('Style', this.kmlNS, this.doc);
-    var mergeIconStyleEl = os.xml.appendElementNS('IconStyle', this.kmlNS, mergeStyleEl);
-    os.xml.appendElementNS('heading', this.kmlNS, mergeIconStyleEl, heading % 360);
-    return mergeStyleEl;
+  if (this.rotationColumn_) {
+    var heading = /** @type {number} */ (this.getField(item, this.rotationColumn_));
+    if (!isNaN(heading)) {
+      var mergeStyleEl = os.xml.createElementNS('Style', this.kmlNS, this.doc);
+      var mergeIconStyleEl = os.xml.appendElementNS('IconStyle', this.kmlNS, mergeStyleEl);
+      os.xml.appendElementNS('heading', this.kmlNS, mergeIconStyleEl, heading % 360);
+      return mergeStyleEl;
+    }
   }
-
   return null;
 };
 
@@ -787,16 +788,6 @@ os.ui.file.kml.AbstractKMLExporter.prototype.getGeometry = goog.abstractMethod;
  * @protected
  */
 os.ui.file.kml.AbstractKMLExporter.prototype.getRotationColumn = goog.abstractMethod;
-
-
-/**
- * Get the icon rotation value.
- * @param {T} item The item
- * @param {string|null|undefined} rotationColumn
- * @return {?number}
- * @protected
- */
-os.ui.file.kml.AbstractKMLExporter.prototype.getRotationValue = goog.abstractMethod;
 
 
 /**
