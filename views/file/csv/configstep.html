@@ -18,7 +18,7 @@
       <div class="row col-6" title="Specify the character used to separate data fields in the file.">
         <label class="col-form-label col-4">Delimiter</label>
         <div class="col-8">
-          <select class="form-control" ng-model="config.delimiter" ng-change="configStep.updatePreview()"
+          <select class="custom-select" ng-model="config.delimiter" ng-change="configStep.updatePreview()"
               ng-options="value as key for (key, value) in configStep.delimiters"></select>
         </div>
       </div>
@@ -38,7 +38,7 @@
       <div class="row col-6" title="Specify the comment character for the file. Lines beginning with this character will be ignored.">
         <label class="col-form-label col-4">Comment</label>
         <div class="col-8">
-          <select class="form-control" ng-model="config.commentChar" ng-change="configStep.updatePreview()"
+          <select class="custom-select" ng-model="config.commentChar" ng-change="configStep.updatePreview()"
               ng-options="value as key for (key, value) in configStep.commentChars"></select>
         </div>
       </div>

@@ -4,7 +4,7 @@
       Group By
     </div>
     <div class="col">
-      <select class="form-control" ng-model="view" ng-change="layers.onGroupByChanged()" ng-options="key for (key, value) in views"/>
+      <select class="custom-select" ng-model="view" ng-change="layers.onGroupByChanged()" ng-options="key for (key, value) in views"/>
     </div>
     <div class="col-auto">
       <div class="btn-group add-data-group" ng-right-click="layers.openMenu('.add-data-group')">

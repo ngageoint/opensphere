@@ -15,7 +15,7 @@
           <colorpicker name="color" class="no-text" color="color" show-reset="{{showColorReset}}"></colorpicker>
         </div>
         <div class="col">
-          <select class="form-control" ng-if="shapes && shapes.length > 0" ng-model="$parent.shape"
+          <select class="custom-select" ng-if="shapes && shapes.length > 0" ng-model="$parent.shape"
               ng-change="ctrl.onShapeChange()"
               ng-options="val for val in shapes">
           </select>
@@ -30,7 +30,7 @@
   <tr title="Sets the style of the ellipse center" ng-if="centerShapes && centerShapes.length > 0 && ctrl.hasCenter()">
     <td>Center</td>
     <td class="w-100">
-      <select class="form-control" ng-model="$parent.centerShape"
+      <select class="custom-select" ng-model="$parent.centerShape"
           ng-change="ctrl.onCenterShapeChange($parent.centerShape)"
           ng-options="val for val in centerShapes">
       </select>

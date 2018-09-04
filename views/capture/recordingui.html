@@ -20,13 +20,13 @@
         <div class="row form-group">
           <label class="col-form-label col-3 text-right u-required">Save to</label>
           <div class="col form-inline">
-            <select class="form-control" ng-model="recordui.persister" ng-options="value as key for (key, value) in recordui.persisters"/>
+            <select class="custom-select" ng-model="recordui.persister" ng-options="value as key for (key, value) in recordui.persisters"/>
           </div>
         </div>
         <div class="row form-group"  ng-if="recordui.encoders.length > 1">
           <label class="col-form-label col-3 text-right u-required">Type</label>
           <div class="col form-inline">
-            <select class="form-control" ng-model="recordui.encoder"ng-options="e as recordui.getEncoderTitle(e) for e in recordui.encoders"/>
+            <select class="custom-select" ng-model="recordui.encoder"ng-options="e as recordui.getEncoderTitle(e) for e in recordui.encoders"/>
           </div>
           <span ng-bind-html="recordui.getEncoderDescription(recordui.encoder)"></span>
         </div>

@@ -22,7 +22,7 @@
       <div class="row">
         <label class="col-form-label text-right col-auto">Group By</label>
         <div class="col form-inline">
-          <select class="form-control" ng-model="areaView" ng-change="afa.searchAreas()" ng-options="key for (key, value) in areaViews"/>
+          <select class="custom-select" ng-model="areaView" ng-change="afa.searchAreas()" ng-options="key for (key, value) in areaViews"/>
         </div>
       </div>
       <input class="form-control" type="text" ng-model="areaTerm" ng-change="afa.searchAreas()" placeholder="Search areas"/>

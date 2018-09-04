@@ -4,7 +4,7 @@
       Group By
     </div>
     <div class="col">
-      <select class="form-control" ng-model="view" ng-change="filtersCtrl.onGroupChange()" ng-options="key for (key, value) in views"/>
+      <select class="custom-select" ng-model="view" ng-change="filtersCtrl.onGroupChange()" ng-options="key for (key, value) in views"/>
     </div>
     <div class="col-auto">
       <addfilter></addfilter>

@@ -17,7 +17,7 @@ os.ui.popover.popoverDirective = function() {
     scope: {
       'title': '=',
       'popoverclass': '=',
-      'content': '=',
+      'content': '=?',
       'pos': '=',
       'icon': '=?'
     },
