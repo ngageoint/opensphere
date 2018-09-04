@@ -3,8 +3,8 @@
     <div class="d-flex flex-fill flex-column">
       <div>
         <ul class="nav nav-tabs flex-shrink-0" ng-show="showtabs">
-          <li class="nav-item" ng-repeat="tab in tabs" ng-class="{active: activeTab == tab.name}">
-            <a class="nav-link" ng-click="selector.setTab(tab.name)">{{tab.name}}</a>
+          <li class="nav-item" ng-repeat="tab in tabs">
+            <a class="nav-link" href ng-click="selector.setTab(tab.name)" ng-class="{active: activeTab == tab.name}">{{tab.name}}</a>
           </li>
         </ul>
       </div>
@@ -12,10 +12,8 @@
     </div>
   </div>
   <div class="modal-footer flex-shrink-0 d-flex justify-content-between">
-    <div>
-      <div ng-if="selector.isValid()" class="c-icon-picker__large-icon">
-        <img class="img-fluid" ng-src="{{selector.getPath(selected.path)}}" />
-      </div>
+    <div ng-if="selector.isValid()" class="c-icon-picker__icon d-flex align-items-center justify-content-center">
+      <img class="img-fluid" ng-src="{{selector.getPath(selected.path)}}" />
     </div>
     <div>
       <button class="btn btn-primary" ng-click="selector.okay()" ng-disabled="!selector.isValid()" title="Confirm the icon selection">

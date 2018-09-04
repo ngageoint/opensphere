@@ -13,14 +13,14 @@
       <div class="d-flex flex-fill form-group" ng-show="exportdialog.getKeys(exportdialog.persisters).length">
         <label class="col-3 col-form-label text-right">Save To</label>
         <div class="col">
-          <select class="form-control" ng-model="persister" ng-options="value as key for (key, value) in exportdialog.persisters" />
+          <select class="custom-select" ng-model="persister" ng-options="value as key for (key, value) in exportdialog.persisters" />
         </div>
       </div>
 
       <div class="d-flex flex-fill form-group" ng-show="exportdialog.getKeys(exportdialog.exporters).length">
         <label class="col-3 col-form-label text-right">Type</label>
         <div class="col">
-          <select class="form-control" ng-model="exporter" ng-options="value as key for (key, value) in exportdialog.exporters" />
+          <select class="custom-select" ng-model="exporter" ng-options="value as key for (key, value) in exportdialog.exporters" />
         </div>
       </div>
 

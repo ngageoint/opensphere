@@ -2,7 +2,7 @@
   <div class="form-row form-group">
     <div class="row col-4">
       <label class="col-form-label col-5">{{label}} Type</label>
-      <select class="form-control col" ng-model="model.dateType"
+      <select class="custom-select col" ng-model="model.dateType"
           ng-options="type.id as type.label for type in tiUI.types"
           ng-change="tiUI.onDateType()"></select>
     </div>
@@ -10,13 +10,13 @@
   <div class="form-row form-group">
     <div class="row col-4">
       <label class="col-form-label col-5">Date</label>
-      <select class="form-control col" ng-model="model.dateColumn" ng-change="tiUI.onDateColumn()"
+      <select class="custom-select col" ng-model="model.dateColumn" ng-change="tiUI.onDateColumn()"
           ng-options="column.name as column.name for column in config.columns">
       </select>
     </div>
     <div class="row col-8 ml-0">
       <label class="col-form-label col-auto">Format</label>
-      <select class="form-control" ng-class="tiUI.dateFormat == 'Custom' && 'col-4' || 'col'"
+      <select class="custom-select" ng-class="tiUI.dateFormat == 'Custom' && 'col-4' || 'col'"
           ng-model="tiUI.dateFormat" ng-change="tiUI.onDateFormat()">
         <option ng-repeat="format in (model.dateType == 'combined' ? tiUI.dtFormats : tiUI.dFormats)">{{format}}</option>
         <option value="Custom">Custom</option>
@@ -27,13 +27,13 @@
   <div class="form-row form-group" ng-if="model.dateType == 'separate'">
     <div class="row col-4">
       <label class="col-form-label col-5">Time</label>
-      <select class="form-control col" ng-model="model.timeColumn" ng-change="tiUI.onTimeColumn()"
+      <select class="custom-select col" ng-model="model.timeColumn" ng-change="tiUI.onTimeColumn()"
           ng-options="column.name as column.name for column in config.columns">
       </select>
     </div>
     <div class="row col-8 ml-0">
       <label class="col-form-label col-auto">Format</label>
-      <select class="form-control" ng-class="tiUI.timeFormat == 'Custom' && 'col-4' || 'col'"
+      <select class="custom-select" ng-class="tiUI.timeFormat == 'Custom' && 'col-4' || 'col'"
           ng-model="tiUI.timeFormat" ng-change="tiUI.onTimeFormat()">
         <option ng-repeat="format in tiUI.tFormats">{{format}}</option>
         <option value="Custom">Custom</option>

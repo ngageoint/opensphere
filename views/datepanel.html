@@ -3,7 +3,7 @@
     <div class="w-100 d-flex justify-content-center">
       <date-control></date-control>
       <button class="btn btn-secondary dropdown-toggle ml-1 flex-shrink-0" ng-click="ctrl.toggleExtend()" title="{{ctrl.sliceTip}}">hh/mm</button>
-      <button id="timelineButton" class="btn btn-secondary ml-1 flex-shrink-0 o-timeline-button" ng-click="ctrl.expand()" title="Expand to full timeline">
+      <button id="timelineButton" class="btn btn-warning ml-1 flex-shrink-0 o-timeline-button" ng-click="ctrl.expand()" title="Expand to full timeline">
         <i class="fa fa-fw fa-clock-o"></i>
       </button>
     </div>
@@ -14,22 +14,22 @@
       <div class="d-flex align-items-center">
         <div class="mx-1 d-flex align-items-center">
           <input class="form-control" type="number" min="0" max="23" step="1" ng-model="ctrl.startHour"
-              ng-change="ctrl.onChange('startHour', 0, 23, '{{ctrl.startHour}}')"></input>
+              ng-change="ctrl.onChange('startHour', 0, 23, '{{ctrl.startHour}}')"/>
           <span class="flex-shrink-0 ml-1">h</span>
         </div>
         <div class="mx-1 d-flex align-items-center">
           <input class="form-control" type="number" min="0" max="59" step="1" ng-model="ctrl.startMinute"
-              ng-change="ctrl.onChange('startMinute', 0, 59, '{{ctrl.startMinute}}')"></input>
+              ng-change="ctrl.onChange('startMinute', 0, 59, '{{ctrl.startMinute}}')"/>
           <span class="flex-shrink-0 ml-1">m to</span>
         </div>
         <div class="mx-1 d-flex align-items-center">
           <input class="form-control" type="number" min="0" max="23" step="1" ng-model="ctrl.endHour"
-              ng-change="ctrl.onChange('endHour', 0, 23, '{{ctrl.endHour}}')"></input>
+              ng-change="ctrl.onChange('endHour', 0, 23, '{{ctrl.endHour}}')"/>
           <span class="flex-shrink-0 ml-1">h</span>
         </div>
         <div class="mx-1 d-flex align-items-center">
           <input class="form-control" type="number" min="0" max="59" step="1" ng-model="ctrl.endMinute"
-              ng-change="ctrl.onChange('endMinute', 0, 59, '{{ctrl.endMinute}}')"></input>
+              ng-change="ctrl.onChange('endMinute', 0, 59, '{{ctrl.endMinute}}')"/>
           <span class="flex-shrink-0 ml-1">m {{ctrl.getOffset()}}</span>
         </div>
         <div class="mx-1 d-flex align-items-center flex-shrink-0">
@@ -38,7 +38,7 @@
           </button>
         </div>
         <div>
-          <popover data-title="ctrl.sliceTitle" data-content="ctrl.sliceDescription" data-pos="'bottom'"></popover>
+          <popover data-title="ctrl.sliceTitle" content="ctrl.sliceDescription" data-pos="'bottom'"></popover>
         </div>
       </div>
     </div>

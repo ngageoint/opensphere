@@ -44,7 +44,7 @@ os.ui.navbaroptions.searchbox = '<search-box show-clear="true"></search-box>';
  * Search results template.
  * @type {string}
  */
-os.ui.navbaroptions.searchresults = '<searchresults parent="#main"></searchresults>';
+os.ui.navbaroptions.searchresults = '<searchresults parent="#js-main"></searchresults>';
 
 
 /**

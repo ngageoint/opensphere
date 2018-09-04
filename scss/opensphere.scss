@@ -1,7 +1,7 @@
 @import 'os/themevariables';
 
 // Libraries
-@import 'os/overrides_bootstrap';
+@import 'os/overrides_bootstrap_variables';
 @import 'bootstrap';
 @import 'fontloader';
 @import 'os/mixins';
@@ -27,6 +27,7 @@
 @import 'os/nganimate';
 @import 'os/ngonboarding';
 @import 'os/ngvalidate';
+@import 'os/overrides_bootstrap';
 @import 'os/overrides_jqueryui';
 @import 'os/overrides_openlayers';
 @import 'os/overrides_select2';

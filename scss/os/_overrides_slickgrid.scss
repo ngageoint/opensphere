@@ -83,15 +83,20 @@
   &:hover {
     background: $list-group-hover-bg;
     color: $list-group-action-hover-color;
-
-    a {
-      color: $list-group-active-color;
-    }
   }
 
   &.selected,
   &.hovered,
   &:hover {
+    a {
+      color: $list-group-active-color;
+      text-decoration: underline;
+    }
+
+    .c-slick-grid__hover-color {
+      color: $list-group-active-color !important;
+    }
+
     @each $color, $value in $colors {
       .u-text-#{$color}:not(.c-glyph__enabled) {
         color: inherit !important;
@@ -134,12 +139,9 @@
 }
 
 .slick-cell {
-  align-items: center;
   border-bottom-color: $table-border-color;
   border-right-color: $table-border-color;
   box-sizing: border-box;
-  display: flex;
-  padding: 2px;
 
   // Standard bold is too bold!
   b {
@@ -218,4 +220,9 @@
   .slick-row:hover .slick-cell.editable {
     background: #333;
   }
+}
+
+// Allow cells to wrap if we tell slickgrid to wrap cells (modified row height)
+.c-slick-grid__pre-wrap .slick-cell {
+  white-space: pre-wrap;
 }

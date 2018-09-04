@@ -178,10 +178,11 @@ os.ui.TimelinePanelCtrl.prototype.settings = function() {
     'icon': 'fa fa-clock-o',
     'x': 'center',
     'y': 'center',
-    'width': '450',
+    'width': '525',
     'height': 'auto',
     'modal': 'true',
-    'no-scroll': 'true'
+    'no-scroll': 'true',
+    'show-close': 'true'
   };
 
   os.ui.window.create(windowOptions, this.getSettingsTemplate(), undefined, undefined, undefined, scopeOptions);
