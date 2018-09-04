@@ -41,13 +41,11 @@ plugin.file.shp.isDBFFileType = function(content) {
     return false;
   }
 
-  var dv = new DataView(content.slice(0, 4));
-  var type = null;
-  try {
-    type = dv.getUint32(0);
-  } catch (e) {
+  if (content.byteLength < 4) {
     return false;
   }
+  var dv = new DataView(content.slice(0, 4));
+  var type = dv.getUint32(0);
 
   // dBASE Header bytes:
   // 0: 3 indicates dBASE version 5, 4 indicates dBASE version 7
