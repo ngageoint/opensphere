@@ -1130,12 +1130,17 @@ plugin.file.kml.KMLParser.prototype.readGroundOverlay_ = function(el) {
       }
     }
 
+    var extent = [
+      Math.min(west, east),
+      Math.min(south, north),
+      Math.max(west, east),
+      Math.max(south, north)];
+
     var image = new os.layer.Image({
       source: new ol.source.ImageStatic({
         url: icon,
-        imageExtent: [west, south, east, north]
+        imageExtent: extent
       }),
-      extent: [west, south, east, north],
       url: icon
     });
 
