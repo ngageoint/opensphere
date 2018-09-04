@@ -10,6 +10,7 @@ goog.require('os.ui.uiSwitchDirective');
 goog.require('plugin.im.action.feature.SoundAction');
 goog.require('plugin.im.action.feature.ui.ActionConfigCtrl');
 
+
 /**
  * Directive to configure a feature style action.
  * @return {angular.Directive}
@@ -25,11 +26,14 @@ plugin.im.action.feature.ui.soundConfigDirective = function() {
   };
 };
 
+
 /**
  * Add the directive to the module.
  */
 os.ui.Module.directive(plugin.im.action.feature.SoundAction.CONFIG_UI,
     [plugin.im.action.feature.ui.soundConfigDirective]);
+
+
 
 /**
  * Controller for setting a feature sound.
@@ -59,6 +63,7 @@ plugin.im.action.feature.ui.SoundConfigCtrl = function($scope, $element) {
 goog.inherits(plugin.im.action.feature.ui.SoundConfigCtrl,
     plugin.im.action.feature.ui.ActionConfigCtrl);
 
+
 /**
  * @inheritDoc
  */
@@ -69,6 +74,7 @@ plugin.im.action.feature.ui.SoundConfigCtrl.prototype.initialize = function() {
   this['help'] = 'Set the time between sound notifications in seconds';
 };
 
+
 /**
  * @inheritDoc
  */
@@ -77,6 +83,7 @@ plugin.im.action.feature.ui.SoundConfigCtrl.prototype.saveAction = function() {
     this.action.soundConfig = this.soundConfig;
   }
 };
+
 
 /**
  * Play selected sound on change and save.
@@ -87,6 +94,7 @@ plugin.im.action.feature.ui.SoundConfigCtrl.prototype.onSoundChange = function()
   os.audio.AudioManager.getInstance().play(snd);
   this.soundConfig['sound'] = this['sound'];
 };
+
 
 /**
  * Set the time between sound notifications.
