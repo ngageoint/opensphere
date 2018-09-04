@@ -1,25 +1,19 @@
 // sass-lint:disable no-extends, placeholder-in-extend
 .c-dd-target__dragover {
-  opacity: .75;
-
   &::after {
-    bottom: 50%;
-    color: $success;
+    align-items: center;
+    background: rgba($white, 0.5);
+    border: .5rem dashed $gray-900;
+    color: $gray-900;
     content: 'Drag & Drop';
-    font-size: 4.5rem;
-    font-weight: bold;
-    height: 4.5rem;
-    left: 50%;
-    margin-left: -14rem;
-    margin-top: -4.5rem;
+    display: flex;
+    font-size: 5rem;
+    height: 100%;
+    justify-content: center;
     pointer-events: none;
     position: absolute;
-    right: 50%;
-    text-align: center;
-    text-shadow: 1px 1px color-yiq($success);
-    top: 50%;
-    width: 28rem;
-    z-index: $zindex-tooltip;
+    width: 100%;
+    z-index: 1070;
   }
 }
 
