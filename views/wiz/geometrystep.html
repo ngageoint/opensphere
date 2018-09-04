@@ -33,7 +33,7 @@
             <div class="form-row form-group" title="Column to use for latitude">
               <div class="row col-6">
                 <label class="col-form-label col-4">Latitude</label>
-                <select class="form-control col-7" ng-model="step.latColumn" ng-change="geomStep.validate()"
+                <select class="custom-select col-7" ng-model="step.latColumn" ng-change="geomStep.validate()"
                     ng-options="column.name as column.name for column in geomStep.columns">
                 </select>
               </div>
@@ -44,7 +44,7 @@
                     Auto Format
                   </label>
                 </div>
-                <select class="form-control col" ng-if="!step.useGeoSeparateAutoFormat" ng-model="step.geoSeparateFormat"
+                <select class="custom-select col" ng-if="!step.useGeoSeparateAutoFormat" ng-model="step.geoSeparateFormat"
                     ng-change="geomStep.validate()"
                     ng-options="format.format as format.description for format in step.geoFormats">
                 </select>
@@ -53,7 +53,7 @@
             <div class="form-row form-group" title="Column to use for longitude">
               <div class="row col-6">
                 <label class="col-form-label col-4">Longitude</label>
-                <select class="form-control col-7" ng-model="step.lonColumn" ng-change="geomStep.validate()"
+                <select class="custom-select col-7" ng-model="step.lonColumn" ng-change="geomStep.validate()"
                     ng-options="column.name as column.name for column in geomStep.columns">
                 </select>
               </div>
@@ -63,7 +63,7 @@
             <div class="form-row form-group" title="Column to use for position">
               <div class="row col-6">
                 <label class="col-form-label col-4">Column</label>
-                <select class="form-control col-7" ng-model="step.posColumn" ng-change="geomStep.validate()">
+                <select class="custom-select col-7" ng-model="step.posColumn" ng-change="geomStep.validate()">
                   <option ng-repeat="column in geomStep.columns">{{column.name}}</option>
                 </select>
               </div>
@@ -74,7 +74,7 @@
                     Auto Format
                   </label>
                 </div>
-                <select class="form-control col" ng-if="!step.useGeoSingleAutoFormat" ng-model="step.geoSingleFormat" ng-change="geomStep.validate()"
+                <select class="custom-select col" ng-if="!step.useGeoSingleAutoFormat" ng-model="step.geoSingleFormat" ng-change="geomStep.validate()"
                     ng-options="format.format as format.description for format in step.geoFormats">
                 </select>
               </div>
@@ -82,7 +82,7 @@
             <div class="form-row form-group" title="Position format of the data">
               <div class="row col-6">
                 <label class="col-form-label col-4">Type</label>
-                <select class="form-control col-7" ng-model="step.posType" ng-change="geomStep.validate()">
+                <select class="custom-select col-7" ng-model="step.posType" ng-change="geomStep.validate()">
                   <option ng-repeat="(key, val) in geomStep.posTypes">{{key}}</option>
                 </select>
               </div>
@@ -97,18 +97,18 @@
 
       <div class="form-row form-group">
         <label class="col-form-label col-2">Altitude</label>
-        <select class="form-control col-5 mr-2" name="altitude" ng-model="step.altitude.column" ng-change="geomStep.validate()"
+        <select class="custom-select col-5 mr-2" name="altitude" ng-model="step.altitude.column" ng-change="geomStep.validate()"
             ng-options="column.name as column.name for column in geomStep.columns">
           <option value="">-- None --</option>
         </select>
         <label class="col-form-label col-auto">Units</label>
-        <select class="form-control col-2" ng-model="step.altitude.units" ng-change="geomStep.validate()"
+        <select class="custom-select col-2" ng-model="step.altitude.units" ng-change="geomStep.validate()"
             ng-disabled="!step.altitude.column" ng-options="unit for unit in geomStep.altUnits"></select>
       </div>
 
       <div class="form-row">
         <label class="col-form-label col-2">Bearing</label>
-        <select class="form-control col-5" name="bearing" ng-model="step.bearing.column" ng-change="geomStep.validate()"
+        <select class="custom-select col-5" name="bearing" ng-model="step.bearing.column" ng-change="geomStep.validate()"
             ng-options="column.name as column.name for column in geomStep.columns">
           <option value="">-- None --</option>
         </select>
@@ -137,43 +137,43 @@
       <div class="card-body">
         <div class="form-row form-group">
           <label class="col-form-label col-2">Radius/CEP</label>
-          <select class="form-control col-4 mr-1" name="radius" ng-model="step.ellipse.radius.column" ng-change="geomStep.validate()"
+          <select class="custom-select col-4 mr-1" name="radius" ng-model="step.ellipse.radius.column" ng-change="geomStep.validate()"
               ng-options="column.name as column.name for column in geomStep.columns">
             <option value="">-- None --</option>
           </select>
           <label class="col-form-label col-auto">Units</label>
-          <select class="form-control col-2" ng-model="step.ellipse.radius.units" ng-change="geomStep.validate()"
+          <select class="custom-select col-2" ng-model="step.ellipse.radius.units" ng-change="geomStep.validate()"
               ng-disabled="!step.ellipse.radius.column" ng-options="unit for unit in geomStep.units"></select>
         </div>
         <div class="form-row form-group">
           <label class="col-form-label col-2">Semi Major</label>
-          <select class="form-control col-4 mr-1" name="semiMajor" ng-model="step.ellipse.semiMajor.column" ng-change="geomStep.validate()"
+          <select class="custom-select col-4 mr-1" name="semiMajor" ng-model="step.ellipse.semiMajor.column" ng-change="geomStep.validate()"
               ng-required="step.showEllipse && (step.ellipse.semiMinor.column || step.ellipse.orientation.column)"
               ng-options="column.name as column.name for column in geomStep.columns">
             <option value="">-- None --</option>
           </select>
           <label class="col-form-label col-auto">Units</label>
-          <select class="form-control col-2" ng-model="step.ellipse.semiMajor.units" ng-change="geomStep.validate()"
+          <select class="custom-select col-2" ng-model="step.ellipse.semiMajor.units" ng-change="geomStep.validate()"
               ng-disabled="!step.ellipse.semiMajor.column"
               ng-options="unit for unit in geomStep.units"></select>
           <small class="form-text invalid-feedback d-inline-block col-2" ng-if="ellipseForm.semiMajor.$error.required">Required!</small>
         </div>
         <div class="form-row form-group">
           <label class="col-form-label col-2">Semi Minor</label>
-          <select class="form-control col-4 mr-1" name="semiMinor" ng-model="step.ellipse.semiMinor.column" ng-change="geomStep.validate()"
+          <select class="custom-select col-4 mr-1" name="semiMinor" ng-model="step.ellipse.semiMinor.column" ng-change="geomStep.validate()"
               ng-required="step.showEllipse && (step.ellipse.semiMajor.column || step.ellipse.orientation.column)"
               ng-options="column.name as column.name for column in geomStep.columns">
             <option value="">-- None --</option>
           </select>
           <label class="col-form-label col-auto">Units</label>
-          <select class="form-control col-2" ng-model="step.ellipse.semiMinor.units" ng-change="geomStep.validate()"
+          <select class="custom-select col-2" ng-model="step.ellipse.semiMinor.units" ng-change="geomStep.validate()"
               ng-disabled="!step.ellipse.semiMinor.column"
               ng-options="unit for unit in geomStep.units"></select>
           <small class="form-text invalid-feedback d-inline-block col-2" ng-if="ellipseForm.semiMinor.$error.required">Required!</small>
         </div>
         <div class="form-row">
           <label class="col-form-label col-2">Orientation</label>
-          <select class="form-control col-4 mr-1" name="orientation" ng-model="step.ellipse.orientation.column" ng-change="geomStep.validate()"
+          <select class="custom-select col-4 mr-1" name="orientation" ng-model="step.ellipse.orientation.column" ng-change="geomStep.validate()"
               ng-required="step.showEllipse && (step.ellipse.semiMajor.column || step.ellipse.semiMinor.column)"
               ng-options="column.name as column.name for column in geomStep.columns">
             <option value="">-- None --</option>
