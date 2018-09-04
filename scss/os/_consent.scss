@@ -1,0 +1,13 @@
+// This is a rare exception to use +2 +3. We want the consent modal to always be above anything including alerts
+// (see alertpopup.scss)
+//
+// However we want alerts to be above normal modals and windows. Because of that change, this change was needed
+.c-consent {
+  .modal-backdrop.show {
+    z-index: $zindex-modal + 2;
+  }
+
+  .modal.c-consent__modal.show {
+    z-index: $zindex-modal + 3;
+  }
+}
