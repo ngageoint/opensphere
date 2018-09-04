@@ -12,17 +12,14 @@
     </div>
   </div>
   <div class="modal-footer">
-    <div class="w-100 ml-4">
-      <label class="form-check-label">
-        <input class="form-check-input" type="checkbox" ng-checked="ctrl.showAlertPopups" ng-click="ctrl.toggleAlertPopups()">
-        <span title="Enable/disable popup alert messages"> Show Popups</span>
-      </label>
+    <div class="custom-control custom-checkbox" title="Enable/disable popup alert messages">
+      <input id="alerts__show-popups" class="custom-control-input" type="checkbox" ng-checked="ctrl.showAlertPopups" ng-click="ctrl.toggleAlertPopups()"/>
+      <label for="alerts__show-popups" class="custom-control-label">Show Popups</label>
     </div>
-    <div class="float-right">
-      <button title="Clear all alerts" type="button" class="btn btn-secondary" ng-click="ctrl.clearAlerts()" ng-disabled="ctrl.alertArray.length <= 0">
-        <i class="fa fa-times"></i>
-        Clear Alerts
-      </button>
-    </div>
+
+    <button title="Clear all alerts" type="button" class="ml-auto btn btn-secondary" ng-click="ctrl.clearAlerts()" ng-disabled="ctrl.alertArray.length <= 0">
+      <i class="fa fa-times"></i>
+      Clear Alerts
+    </button>
   </div>
 </div>

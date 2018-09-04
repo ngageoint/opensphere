@@ -3,12 +3,12 @@
     <div class="input-group">
       <input type="text" class="form-control" placeholder="Choose a file or enter a URL" name="url" ng-model="importdialog.url" ng-required="true" ng-maxlength="1000" ng-readonly="importdialog.fileChosen || importdialog.loading">
       <div class="input-group-append">
-        <button class="btn form-control border border-left-0" ng-click="importdialog.clearFile()" ng-disabled="importdialog.loading"
+        <button class="btn form-control border border-left-0 u-border-color-input" ng-click="importdialog.clearFile()" ng-disabled="importdialog.loading"
             title="Clear the file/URL">
-          <i class="fa fa-times text-danger"></i>
+          <i class="fa fa-times"></i>
         </button>
         <button class="btn btn-secondary" ng-click="importdialog.openFileBrowser()" ng-disabled="importdialog.loading" title="Choose a local file">
-          Browse...
+          Browse
         </button>
       </div>
     </div>

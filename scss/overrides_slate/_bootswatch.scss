@@ -98,6 +98,12 @@ $web-font-path: "https://fonts.googleapis.com/css?family=Open+Sans:400,700" !def
   .btn.disabled.btn-#{$color}:focus {
     border-color: $value;
   }
+
+  // We dont want the button bg to look active while focused (user feedback)
+  // This is consistent with light theme also
+  .btn-#{$color}:not([disabled]):not(.disabled):focus {
+    background-image: inherit;
+  }
 }
 
 hr {
