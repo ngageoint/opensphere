@@ -25,7 +25,7 @@ goog.require('plugin.file.kml.ui.kmlExportDirective');
 
 /**
  * KML exporter
- * @extends {os.ui.file.kml.AbstractKMLExporter.<ol.Feature>}
+ * @extends {os.ui.file.kml.AbstractKMLExporter<ol.Feature>}
  * @constructor
  */
 plugin.file.kml.KMLExporter = function() {
@@ -34,14 +34,14 @@ plugin.file.kml.KMLExporter = function() {
 
   /**
    * Folders for sources being exported.
-   * @type {!Object.<string, !Element>}
+   * @type {!Object<string, !Element>}
    * @private
    */
   this.folders_ = {};
 
   /**
    * Source color cache.
-   * @type {!Object.<string, !Array.<string>>}
+   * @type {!Object<string, !Array<string>>}
    * @private
    */
   this.sourceFields_ = {};
@@ -258,9 +258,8 @@ plugin.file.kml.KMLExporter.prototype.getGeometry = function(item) {
  * @inheritDoc
  */
 plugin.file.kml.KMLExporter.prototype.getRotationColumn = function(item) {
-  var feature = /** @type {ol.Feature} */ (item);
-  if (feature) {
-    var layerConfig = os.style.getLayerConfig(feature);
+  if (item) {
+    var layerConfig = os.style.getLayerConfig(item);
     if (layerConfig && layerConfig[os.style.StyleField.SHOW_ROTATION]) {
       return layerConfig[os.style.StyleField.ROTATION_COLUMN];
     }
