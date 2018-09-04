@@ -32,7 +32,7 @@
           </div>
         </td>
         <td>
-          <select class="form-control" ng-model="label.column" ng-change="labelCtrl.onColumnChange()"
+          <select class="custom-select" ng-model="label.column" ng-change="labelCtrl.onColumnChange()"
               title="Sets the data field used for labels"
               ng-options="col.field as col.name for col in columns">
             <option value="">-- None --</option>

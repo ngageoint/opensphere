@@ -4,13 +4,13 @@
       <div class="form-group">Choose time columns for: {{title}}</div>
       <div class="form-group row">
         <label class="col-3 col-form-label text-right">Start Time:</label>
-        <select class="col form-control custom-select" name="start" ng-model="chooseTime.start"
+        <select class="col custom-select" name="start" ng-model="chooseTime.start"
             ng-options="col.name as col.name for col in chooseTime.timeColumns" required></select>
         <validation-message target="chooseTimeColumnForm.start"></validation-message>
       </div>
       <div class="form-group row">
         <label class="col-3 col-form-label text-right">End Time:</label>
-        <select class="col form-control custom-select" ng-model="chooseTime.end"
+        <select class="col custom-select" ng-model="chooseTime.end"
             ng-options="col.name as col.name for col in chooseTime.timeColumns" required></select>
         <validation-message target="chooseTimeColumnForm.end"></validation-message>
       </div>

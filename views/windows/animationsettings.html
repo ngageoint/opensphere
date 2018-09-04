@@ -46,7 +46,7 @@
       <div class="row mb-1">
         <label class="col-form-label col-3 text-right" title="The tile duration">Tiles</label>
         <div class="col form-inline">
-          <select name="durationbox" required ng-disabled="autoConfig" class="form-control" ng-model="duration" ng-options="value for value in durations"></select>
+          <select name="durationbox" required ng-disabled="autoConfig" class="custom-select" ng-model="duration" ng-options="value for value in durations"></select>
         </div>
         <span class="ml-auto"><popover data-title="'Tiles'" content="tilesTip" data-pos="'right'"></popover></span>
       </div>
@@ -55,7 +55,7 @@
         <label class="col-form-label col-3 text-right" title="The active window size">Window</label>
         <div class="col form-inline">
           <input name="windowInput" required ng-disabled="autoConfig" class="form-control mr-1" ng-model="window" type="number" min="1">
-          <select name="windowUnitBox" required ng-disabled="autoConfig" class="form-control" ng-model="windowUnit" ng-options="value.label for value in units"></select>
+          <select name="windowUnitBox" required ng-disabled="autoConfig" class="custom-select" ng-model="windowUnit" ng-options="value.label for value in units"></select>
         </div>
         <span class="ml-auto"><popover data-title="'Window'" content="windowTip" data-pos="'right'"></popover></span>
       </div>
@@ -64,7 +64,7 @@
         <label class="col-form-label col-3 text-right" title="How far the active window skips forward/back per frame">Skip</label>
         <div class="col form-inline">
           <input name="skipInput" required ng-disabled="autoConfig" class="form-control mr-1" ng-model="skip" type="number" min="1">
-          <select name="skipUnitBox" required ng-disabled="autoConfig" class="form-control" ng-model="skipUnit" ng-options="value.label for value in units"></select>
+          <select name="skipUnitBox" required ng-disabled="autoConfig" class="custom-select" ng-model="skipUnit" ng-options="value.label for value in units"></select>
         </div>
         <span class="ml-auto"><popover data-title="'Skip'" content="skipTip" data-pos="'right'"></popover></span>
       </div>

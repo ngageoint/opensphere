@@ -2,7 +2,7 @@
   <div class="row mt-1" ng-if="columns.length > 0">
       <label class="col-form-label col-4 text-right">Title Column</label>
     <div class="col form-inline">
-      <select class="form-control col-11" ng-model="config.titleColumn" ng-change="info.updateSampleText()" ng-options="col as col.name for col in columns">
+      <select class="custom-select col-11" ng-model="config.titleColumn" ng-change="info.updateSampleText()" ng-options="col as col.name for col in columns">
         <option value="">-- Custom --</option>
       </select>
       <span class="ml-auto">
@@ -33,7 +33,7 @@
   <div class="row mt-1" ng-if="columns.length > 0">
     <label class="col-form-label col-4 text-right">Description Column</label>
     <div class="col form-inline">
-      <select class="form-control col-11" ng-model="config.descColumn" ng-change="info.updateSampleText()" ng-options="col as col.name for col in columns">
+      <select class="custom-select col-11" ng-model="config.descColumn" ng-change="info.updateSampleText()" ng-options="col as col.name for col in columns">
         <option value="">-- Custom --</option>
       </select>
       <span class="ml-auto">
@@ -64,7 +64,7 @@
   <div class="row mt-1" ng-if="columns.length > 0">
     <label class="col-form-label col-4 text-right">Tags Column</label>
     <div class="col form-inline">
-      <select class="form-control col-11" ng-model="config.tagsColumn" ng-change="info.updateSampleText()" ng-options="col as col.name for col in columns">
+      <select class="custom-select col-11" ng-model="config.tagsColumn" ng-change="info.updateSampleText()" ng-options="col as col.name for col in columns">
         <option value="">-- Custom --</option>
       </select>
       <span class="ml-auto">

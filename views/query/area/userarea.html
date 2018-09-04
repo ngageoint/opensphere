@@ -60,7 +60,7 @@
                   ng-model="ctrl.radius"
                   ng-change="ctrl.updateArea()"
                   ng-required="ctrl.areaType == 'circle'">
-              <select class="form-control" ng-model="ctrl.radiusUnits" ng-change="ctrl.updateArea()" ng-options="unit for unit in ctrl.units"></select>
+              <select class="custom-select" ng-model="ctrl.radiusUnits" ng-change="ctrl.updateArea()" ng-options="unit for unit in ctrl.units"></select>
               <span class="invalid-feedback d-block" ng-show="(circleForm.radius.$error.required || circleForm.radius.$error.min) && circleForm.radius.$dirty">
                 Radius must be greater than zero.
               </span>
