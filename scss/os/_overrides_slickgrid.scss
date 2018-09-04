@@ -83,15 +83,20 @@
   &:hover {
     background: $list-group-hover-bg;
     color: $list-group-action-hover-color;
-
-    a {
-      color: $list-group-active-color;
-    }
   }
 
   &.selected,
   &.hovered,
   &:hover {
+    a {
+      color: $list-group-active-color;
+      text-decoration: underline;
+    }
+
+    .c-slick-grid__hover-color {
+      color: $list-group-active-color !important;
+    }
+
     @each $color, $value in $colors {
       .u-text-#{$color}:not(.c-glyph__enabled) {
         color: inherit !important;
