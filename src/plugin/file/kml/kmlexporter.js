@@ -270,20 +270,6 @@ plugin.file.kml.KMLExporter.prototype.getRotationColumn = function(item) {
 
 
 /**
- * @inheritDoc
- */
-plugin.file.kml.KMLExporter.prototype.getRotationValue = function(item, rotationColumn) {
-  if (item && rotationColumn) {
-    var iconRotation = /** @type {number} */ (item.get(rotationColumn));
-    if (!isNaN(iconRotation)) {
-      return iconRotation;
-    }
-  }
-  return null;
-};
-
-
-/**
  * Get the feature's source.
  * @param {ol.Feature} feature The feature
  * @return {os.source.Vector} The source
