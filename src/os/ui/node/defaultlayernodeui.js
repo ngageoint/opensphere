@@ -213,9 +213,9 @@ os.ui.node.DefaultLayerNodeUICtrl.prototype.updateFilters_ = function(opt_event)
   this['filtered'] = fqm.hasEnabledFilters(node.getId());
 
   if (this['filtered']) {
-    this.cellEl.addClass('italic');
+    this.cellEl.addClass('font-italic');
   } else {
-    this.cellEl.removeClass('italic');
+    this.cellEl.removeClass('font-italic');
   }
 
   var layer = this.getLayer();
