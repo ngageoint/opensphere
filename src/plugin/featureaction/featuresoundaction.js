@@ -5,6 +5,7 @@ goog.require('os.implements');
 goog.require('os.object');
 goog.require('os.xml');
 
+
 /**
  * Tag names used for XML persistence.
  * @enum {string}
@@ -13,6 +14,16 @@ plugin.im.action.feature.SoundActionTagName = {
   SOUND: 'sound',
   DELAY: 'playDelay'
 };
+
+
+/**
+ * The default sound
+ * @type {string}
+ * @const
+ */
+plugin.im.action.feature.DEFAULT_SOUND = 'Default';
+
+
 
 /**
  * Import action that sets the sound for a {@link ol.Feature}.
@@ -39,10 +50,16 @@ plugin.im.action.feature.SoundAction = function() {
   /**
    * Set the default sound for the sound action.
    */
-  this.soundConfig['sound'] = this['sounds'][0] || '';
+  var defaultSoundIndex = this['sounds'].indexOf(plugin.im.action.feature.DEFAULT_SOUND);
+  if (defaultSoundIndex > -1) {
+    this.soundConfig['sound'] = this['sounds'][defaultSoundIndex];
+  } else {
+    this.soundConfig['sound'] = this['sounds'][0] || '';
+  }
 };
 goog.inherits(plugin.im.action.feature.SoundAction,
     os.im.action.AbstractImportAction);
+
 
 /**
  * Action identifier.
@@ -51,12 +68,14 @@ goog.inherits(plugin.im.action.feature.SoundAction,
  */
 plugin.im.action.feature.SoundAction.ID = 'featureSoundAction';
 
+
 /**
  * Property set on features to indicate they're using a feature sound action.
  * @type {string}
  * @const
  */
 plugin.im.action.feature.SoundAction.FEATURE_ID = '_featureSoundAction';
+
 
 /**
  * Action Label.
@@ -65,12 +84,14 @@ plugin.im.action.feature.SoundAction.FEATURE_ID = '_featureSoundAction';
  */
 plugin.im.action.feature.SoundAction.LABEL = 'Set Sound';
 
+
 /**
  * Action edit UI.
  * @type {string}
  * @const
  */
 plugin.im.action.feature.SoundAction.CONFIG_UI = 'featureactionsoundconfig';
+
 
 /**
  * The default sound configuration.
@@ -82,12 +103,14 @@ plugin.im.action.feature.SoundAction.DEFAULT_CONFIG = {
   'playDelay': 30
 };
 
+
 /**
  * @inheritDoc
  */
 plugin.im.action.feature.SoundAction.prototype.execute = function() {
   os.audio.AudioManager.getInstance().play(this.soundConfig['sound'], this.soundConfig['playDelay'] * 1000);
 };
+
 
 /**
  * @inheritDoc
@@ -98,6 +121,7 @@ plugin.im.action.feature.SoundAction.prototype.persist = function(opt_to) {
 
   return opt_to;
 };
+
 
 /**
  * @inheritDoc
@@ -110,6 +134,7 @@ plugin.im.action.feature.SoundAction.prototype.restore = function(config) {
     os.object.merge(soundConfig, this.soundConfig);
   }
 };
+
 
 /**
  * @inheritDoc
@@ -131,6 +156,7 @@ plugin.im.action.feature.SoundAction.prototype.toXml = function() {
 
   return element;
 };
+
 
 /**
  * @inheritDoc
