@@ -45,7 +45,7 @@
           </span>
 
           <span ng-show="ctrl.showMatch" class="mr-1" title="Whether to pass all filters (AND) or any filter (OR)">
-            <select class="form-control" ng-model="layer.filterGroup" ng-init="layer.filterGroup = ctrl.groups[layer.match ? 0 : 1]" ng-options="item as item for item in ctrl.groups" ng-change="layer.match = !layer.match"/>
+            <select class="custom-select" ng-model="layer.filterGroup" ng-init="layer.filterGroup = ctrl.groups[layer.match ? 0 : 1]" ng-options="item as item for item in ctrl.groups" ng-change="layer.match = !layer.match"/>
           </span>
 
           <button type="button" class="close flex-shrink-0" ng-click="ctrl.removeLayer(layerId)" aria-label="close" title="Don't import {{ctrl.getFilterTitle()}} for this layer">

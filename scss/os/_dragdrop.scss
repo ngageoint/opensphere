@@ -2,7 +2,7 @@
 .c-dd-target__dragover {
   &::after {
     align-items: center;
-    background: rgba($white, 0.5);
+    background: rgba($white, .5);
     border: .5rem dashed $gray-900;
     color: $gray-900;
     content: 'Drag & Drop';

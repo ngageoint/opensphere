@@ -13,7 +13,7 @@ os.ui.filter.ui.GroupNodeUIDirective = function() {
     replace: true,
     template: '<span class="flex-fill form-inline">' +
         '<span class="flex-fill">' +
-        '<select class="form-control" ng-model="item.grouping"' +
+        '<select class="custom-select" ng-model="item.grouping"' +
         ' ng-options="key for (key, value) in groupUi.groups"' +
         ' title="Whether results can match any or all filters in the group"/>' +
         '</span>' +
