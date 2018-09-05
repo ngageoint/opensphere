@@ -30,16 +30,4 @@ $text-muted: $gray-500;
 $card-cap-bg: lighten($gray-700, 6%);
 
 // Override from themevariables
-$sticky-nav-background-color: $gray-700;
-
-// Override from themevariables
-$hover-edit-background-color: $gray-700;
-
-// Override from themevariables
-$default-image-background-color: $gray-700;
-
-// Override from themevariables
-$default-timeline-background-color: $gray-800;
-
-// Override from themevariables
-$default-timeline-background-color-active: $gray-700;
+$u-theme-variables--bg-offset: $gray-700;
