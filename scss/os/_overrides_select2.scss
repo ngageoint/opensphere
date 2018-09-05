@@ -33,6 +33,12 @@
         background-image: none;
         color: color-yiq(lighten($body-bg, 5%));
         margin: 0 .125rem;
+
+        div {
+          max-width: 35em;
+          overflow-x: hidden;
+          text-overflow: ellipsis;
+        }
       }
 
       // sass-lint:disable no-extends, placeholder-in-extend
