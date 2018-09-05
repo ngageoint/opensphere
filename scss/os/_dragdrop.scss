@@ -1,18 +1,34 @@
 .c-dd-target__dragover {
-  &::after {
-    align-items: center;
-    background: rgba($white, .5);
-    border: .5rem dashed $gray-900;
+  &:before {
+    background: rgba($white, .25);
+    border: .2rem dashed $gray-200;
+    content: '';
+    height: 100%;
+    left: 0;
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: $zindex-tooltip;
+  }
+
+  &:after {
+    background: $white;
+    border: .2rem solid $warning;
     color: $gray-900;
     content: 'Drag & Drop';
     display: flex;
-    font-size: 5rem;
-    height: 100%;
+    font-size: $font-size-lg;
     justify-content: center;
+    left: 50%;
+    margin-left: -15%;
+    opacity: .7;
+    padding: .5rem;
     pointer-events: none;
     position: absolute;
-    width: 100%;
-    z-index: 1070;
+    top: 10%;
+    width: 30%;
+    z-index: $zindex-tooltip;
   }
 }
 
