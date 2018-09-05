@@ -41,6 +41,9 @@ plugin.file.shp.isDBFFileType = function(content) {
     return false;
   }
 
+  if (content.byteLength < 4) {
+    return false;
+  }
   var dv = new DataView(content.slice(0, 4));
   var type = dv.getUint32(0);
 
@@ -61,5 +64,9 @@ plugin.file.shp.isDBFFileType = function(content) {
  */
 plugin.file.shp.isSHPFileType = function(content) {
   var dv = new DataView(content.slice(0, 4));
-  return dv.getUint32(0) == 9994;
+  try {
+    return dv.getUint32(0) == 9994;
+  } catch (e) {
+    return false;
+  }
 };
