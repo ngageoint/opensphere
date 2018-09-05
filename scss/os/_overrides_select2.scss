@@ -45,7 +45,10 @@
           line-height: $line-height-base;
           margin: 0;
           padding: 0;
-          width: auto !important;
+
+          &.select2-active {
+            background: $input-bg no-repeat 100% !important;
+          }
 
           &::placeholder {
             color: $input-placeholder-color;
