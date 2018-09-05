@@ -16,13 +16,13 @@ os.im.mapping.location.AbstractBaseLatOrLonMapping = function() {
    * @type {string}
    * @protected
    */
-  this.coordField = null;
+  this.coordField = '';
 
   /**
    * @type {string}
    * @protected
    */
-  this.type = null;
+  this.type = '';
 
   /**
    * @type {RegExp}
