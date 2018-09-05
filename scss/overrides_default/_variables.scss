@@ -53,9 +53,5 @@ $list-group-hover-bg: darken($primary, 10%);
 $list-group-action-hover-color: $white;
 
 // Start Theme Variable Overides
-$sticky-nav-background-color: $gray-200;
-$hover-edit-background-color: $gray-200;
-$default-image-background-color: $gray-200;
-$default-timeline-background-color: $gray-100;
-$default-timeline-background-color-active: $gray-200;
+$u-theme-variables--bg-offset: $gray-200;
 // End Theme Variable Overides
