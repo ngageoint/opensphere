@@ -1,7 +1,8 @@
 .c-dd-target__dragover {
   &:before {
-    background: rgba($white, .25);
-    border: .2rem dashed $gray-200;
+    background: rgba($u-theme-variables--bg-offset, .33);
+    border: .2rem dashed color-yiq($u-theme-variables--bg-offset);
+    border-radius: $border-radius;
     content: '';
     height: 100%;
     left: 0;
@@ -15,7 +16,8 @@
   &:after {
     background: $white;
     border: .2rem solid $warning;
-    color: $gray-900;
+    border-radius: $border-radius;
+    color: $black;
     content: 'Drag & Drop';
     display: flex;
     font-size: $font-size-lg;
