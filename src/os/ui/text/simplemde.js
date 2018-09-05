@@ -297,7 +297,7 @@ os.ui.text.SimpleMDECtrl.prototype.onChange_ = function() {
  */
 os.ui.text.SimpleMDECtrl.prototype.onToggleFullscreen_ = function() {
   var element = this.element_;
-  while (element.length) {
+  while (element && element.length) {
     if (element.hasClass('modal')) {
       if (this.simplemde.isFullscreenActive()) {
         element.addClass('c-simplemde__fullscreen');
