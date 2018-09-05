@@ -1,11 +1,13 @@
 goog.provide('os.im.mapping.location.BaseLatMapping');
+
 goog.require('os.geo');
+goog.require('os.im.mapping.AbstractPositionMapping');
 goog.require('os.im.mapping.location.AbstractBaseLatOrLonMapping');
 
 
 
 /**
- * @extends {os.im.mapping.AbstractPositionMapping.<T, S>}
+ * @extends {os.im.mapping.location.AbstractBaseLatOrLonMapping.<T, S>}
  * @constructor
  * @template T, S
  */
