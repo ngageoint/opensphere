@@ -1743,6 +1743,11 @@ os.ui.slick.SlickGridCtrl.prototype.onMouseEnter = function(e, args) {
   if (!this.inEvent) {
     this.inEvent = true;
     var cell = this.grid.getCellFromEvent(e);
+
+    // Set the tooltip
+    var node = $(this.grid.getCellNode(cell['row'], cell['cell']));
+    node.attr('title', /** @type {string} */ (node.text()));
+
     var row = /** @type {?Array<number>} */ (cell['row']);
     var item = this.grid.getDataItem(row);
     this.scope.$emit(os.ui.slick.SlickGridEvent.HIGHLIGHT_CHANGE, item);
