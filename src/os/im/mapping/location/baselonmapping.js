@@ -1,19 +1,40 @@
 goog.provide('os.im.mapping.location.BaseLonMapping');
-goog.require('os.im.mapping.location.BaseLatMapping');
+
+goog.require('os.geo');
+goog.require('os.im.mapping.location.AbstractBaseLatOrLonMapping');
 
 
 
 /**
- * @extends {os.im.mapping.location.BaseLatMapping}
+ * @extends {os.im.mapping.location.BaseLonMapping}
  * @constructor
  */
 os.im.mapping.location.BaseLonMapping = function() {
-  os.im.mapping.location.BaseLonMapping.base(this, 'constructor');
+  /**
+   * @type {string}
+   * @protected
+   */
   this.coordField = 'LON';
+
+  /**
+   * @type {string}
+   * @protected
+   */
   this.type = os.im.mapping.location.BaseLonMapping.ID;
+
+  /**
+   * @type {RegExp}
+   * @protected
+   */
   this.regex = os.im.mapping.location.BaseLonMapping.LON_REGEX;
+
+  /**
+   * @type {Function}
+   * @protected
+   */
+  this.parseFn = os.geo.parseLon;
 };
-goog.inherits(os.im.mapping.location.BaseLonMapping, os.im.mapping.location.BaseLatMapping);
+goog.inherits(os.im.mapping.location.BaseLonMapping, os.im.mapping.location.AbstractBaseLatOrLonMapping);
 
 
 /**
