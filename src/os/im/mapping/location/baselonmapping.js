@@ -1,15 +1,19 @@
 goog.provide('os.im.mapping.location.BaseLonMapping');
 
 goog.require('os.geo');
+goog.require('os.im.mapping.AbstractPositionMapping');
 goog.require('os.im.mapping.location.AbstractBaseLatOrLonMapping');
 
 
 
 /**
- * @extends {os.im.mapping.location.BaseLonMapping}
+ * @extends {os.im.mapping.location.AbstractBaseLatOrLonMapping.<T, S>}
  * @constructor
+ * @template T, S
  */
 os.im.mapping.location.BaseLonMapping = function() {
+  os.im.mapping.location.BaseLonMapping.base(this, 'constructor');
+
   /**
    * @type {string}
    * @protected
