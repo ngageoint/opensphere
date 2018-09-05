@@ -536,10 +536,16 @@ os.ui.file.kml.AbstractKMLExporter.prototype.processPlacemark = function(element
     os.xml.appendElementNS('styleUrl', this.kmlNS, element, '#' + styleId);
   }
 
+  if (this.rotationColumn_ === null) {
+    this.rotationColumn_ = this.getRotationColumn(item);
+  }
+  var pStyleEl = this.createPlacemarkMergedStyle(element, item);
+  if (pStyleEl) {
+    element.appendChild(pStyleEl);
+  }
+
   var visibility = this.isItemVisible(item) ? 1 : 0;
   os.xml.appendElementNS('visibility', this.kmlNS, element, visibility);
-
-  this.createRotColElement(element, item);
 
   var ed = os.xml.createElementNS('ExtendedData', this.kmlNS, this.doc);
 
@@ -604,7 +610,6 @@ os.ui.file.kml.AbstractKMLExporter.prototype.processPlacemark = function(element
       }
     }
 
-
     // Some fields do not get automatically exported (e.g., fields that are not visible)
     // if the rotation column is one of those fields create its data element here
     if (goog.isDefAndNotNull(this.rotationColumn_) && !goog.array.contains(fields, this.rotationColumn_)) {
@@ -618,6 +623,28 @@ os.ui.file.kml.AbstractKMLExporter.prototype.processPlacemark = function(element
   if (ed.childElementCount > 0) {
     element.appendChild(ed);
   }
+};
+
+
+/**
+ * Create placemark specific merged style.
+ * @param {!Element} placemarkEl The placemark element
+ * @param {T} item The item
+ * @return {?Element} The merged style element
+ * @protected
+ * @template T
+ */
+os.ui.file.kml.AbstractKMLExporter.prototype.createPlacemarkMergedStyle = function(placemarkEl, item) {
+  if (this.rotationColumn_) {
+    var heading = /** @type {number} */ (this.getField(item, this.rotationColumn_));
+    if (!isNaN(heading)) {
+      var mergeStyleEl = os.xml.createElementNS('Style', this.kmlNS, this.doc);
+      var mergeIconStyleEl = os.xml.appendElementNS('IconStyle', this.kmlNS, mergeStyleEl);
+      os.xml.appendElementNS('heading', this.kmlNS, mergeIconStyleEl, heading % 360);
+      return mergeStyleEl;
+    }
+  }
+  return null;
 };
 
 
@@ -693,25 +720,6 @@ os.ui.file.kml.AbstractKMLExporter.prototype.createStyle = function(item, styleI
     this.kmlDoc.appendChild(styleEl);
   }
   this.styles_[styleId] = true;
-};
-
-
-/**
- * Create a rotationColumn element and append to element
- * @param {!Element} element The Placemark element
- * @param {T} item The item
- * @protected
- * @template T
- */
-os.ui.file.kml.AbstractKMLExporter.prototype.createRotColElement = function(element, item) {
-  if (this.rotationColumn_ === null) {
-    // rotation column had not yet been retrieved
-    this.rotationColumn_ = this.getRotationColumn(item);
-  }
-
-  if (goog.isDefAndNotNull(this.rotationColumn_)) {
-    os.xml.appendElementNS('rotationColumn', this.kmlNS, element, this.rotationColumn_);
-  }
 };
 
 

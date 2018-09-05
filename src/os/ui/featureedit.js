@@ -1521,7 +1521,10 @@ os.ui.FeatureEditCtrl.updateFeatureStyle = function(feature) {
             os.style.setConfigOpacityColor(config, 0);
           }
         } else {
-          config['image']['rotation'] = goog.math.toRadians(/** @type {number} */(feature.get(os.Fields.BEARING)) || 0);
+          var bearing = /** @type {number} */ (feature.get(os.Fields.BEARING));
+          if (!isNaN(bearing)) {
+            config['image']['rotation'] = goog.math.toRadians(bearing);
+          }
         }
       }
     }
