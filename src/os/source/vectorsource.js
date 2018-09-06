@@ -1015,6 +1015,12 @@ os.source.Vector.prototype.setGeometryShape = function(value) {
 
 
 /**
+ * @type {ol.Extent}
+ */
+os.source.Vector.scratchExtent_ = ol.extent.createEmpty();
+
+
+/**
  * @param {ol.Feature} feature
  * @suppress {accessControls}
  */
@@ -1023,7 +1029,11 @@ os.source.Vector.prototype.updateIndex = function(feature) {
     var style = feature.getStyle();
     var styles = Array.isArray(style) ? style : [style];
 
-    var extent = ol.extent.createEmpty();
+    var extent = os.source.Vector.scratchExtent_;
+    extent[0] = Infinity;
+    extent[1] = Infinity;
+    extent[2] = -Infinity;
+    extent[3] = -Infinity;
 
     for (var s = 0, ss = styles.length; s < ss; s++) {
       var geomFunc = styles[s].getGeometryFunction();
