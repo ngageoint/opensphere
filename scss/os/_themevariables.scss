@@ -2,15 +2,4 @@
 // themes, meaning that different themes will
 // override the defaults set here. If you add
 // a variable here, add it to all theme overrides
-$theme-variables-default: #fff;
-
-
-$sticky-nav-background-color: $theme-variables-default !default;
-
-$hover-edit-background-color: $theme-variables-default !default;
-
-$default-image-background-color: $theme-variables-default !default;
-
-$default-timeline-background-color: $theme-variables-default !default;
-
-$default-timeline-background-color-active: $theme-variables-default !default;
+$u-theme-variables--bg-offset: #fff;
