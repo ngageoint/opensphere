@@ -2,7 +2,7 @@
 // *******************************************
 
 .c-timeline {
-  background: $default-timeline-background-color;
+  background: $u-theme-variables--bg-offset;
   border-bottom: 1px solid $border-color;
   border-top: 1px solid $border-color;
   margin-top: .25rem;
@@ -40,7 +40,7 @@
 }
 
 .c-svg-timeline__axis-background {
-  fill: darken($default-timeline-background-color, 5);
+  fill: darken($u-theme-variables--bg-offset, 5);
   fill-opacity: .8;
   pointer-events: none;
 }

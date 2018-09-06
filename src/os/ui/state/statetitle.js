@@ -24,7 +24,7 @@ os.ui.state.stateTitleDirective = function() {
 os.ui.state.stateTitleLinkFn = function(scope, element, attrs, ctrl) {
   var validate = function(val) {
     // if a value is not set, the field will be marked as required
-    if (val) {
+    if (!ctrl.$pristine || val) {
       // oldTitle will be set on the scope during the reimport process. if a persister is set, the state is
       // being exported to something other than the application so we don't need to check the title.
       var valid = true;
@@ -33,8 +33,9 @@ os.ui.state.stateTitleLinkFn = function(scope, element, attrs, ctrl) {
       }
 
       ctrl.$setValidity('title', valid);
+      ctrl.$setDirty();
     }
-    ctrl.$setDirty();
+
     return val;
   };
 

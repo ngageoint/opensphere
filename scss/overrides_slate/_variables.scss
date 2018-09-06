@@ -1,3 +1,6 @@
+// Needed for color pallet to have white text on buttons
+$yiq-contrasted-threshold: 166;
+
 $blue: #08c;
 $green: #62c462;
 $yellow: #ff0;
@@ -70,9 +73,5 @@ $list-group-hover-bg: darken($primary, 10%);
 $list-group-action-hover-color: $white;
 
 // Start Theme Variable Overides
-$sticky-nav-background-color: $gray-800;
-$hover-edit-background-color: $gray-800;
-$default-image-background-color: $gray-800;
-$default-timeline-background-color: $gray-800;
-$default-timeline-background-color-active: $gray-800;
+$u-theme-variables--bg-offset: $gray-800;
 // End Theme Variable Overides
