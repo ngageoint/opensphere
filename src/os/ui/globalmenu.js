@@ -33,6 +33,16 @@ os.ui.GlobalMenuCtrl = function($scope, $element, $timeout) {
   this.onDownBind_ = this.onClick_.bind(this);
 
   /**
+   * @type {angular.JQLite|string|null}
+   */
+  this.target = null;
+
+  /**
+   * @type {Object?}
+   */
+  this.targetOffset = null;
+
+  /**
    * @type {goog.async.Delay}
    * @private
    */
@@ -61,6 +71,9 @@ os.ui.GlobalMenuCtrl.prototype.close = function(opt_dispatch) {
     opt_dispatch = true;
   }
 
+  this.target = null;
+  this.targetOffset = null;
+
   if (this.element.hasClass('show')) {
     if (opt_dispatch && os.dispatcher) {
       os.dispatcher.dispatchEvent(os.ui.GlobalMenuEventType.MENU_CLOSE);
@@ -75,6 +88,7 @@ os.ui.GlobalMenuCtrl.prototype.close = function(opt_dispatch) {
   var doc = goog.dom.getDocument();
   doc.removeEventListener(goog.events.EventType.MOUSEDOWN, this.onDownBind_, true);
   doc.removeEventListener(goog.events.EventType.POINTERDOWN, this.onDownBind_, true);
+  doc.removeEventListener(goog.events.EventType.SCROLL, this.onScroll_.bind(this), true);
 
   os.ui.apply(this.scope);
 };
@@ -96,6 +110,7 @@ os.ui.GlobalMenuCtrl.prototype.onAddOutsideListener_ = function() {
   var doc = goog.dom.getDocument();
   doc.addEventListener(goog.events.EventType.MOUSEDOWN, this.onDownBind_, true);
   doc.addEventListener(goog.events.EventType.POINTERDOWN, this.onDownBind_, true);
+  doc.addEventListener(goog.events.EventType.SCROLL, this.onScroll_.bind(this), true);
 };
 
 
@@ -177,6 +192,30 @@ os.ui.GlobalMenuCtrl.prototype.position = function() {
 
 
 /**
+ * Set target
+ * @param {angular.JQLite|string} target
+ */
+os.ui.GlobalMenuCtrl.prototype.setTarget = function(target) {
+  this.target = target;
+  this.targetOffset = $(target).offset();
+};
+
+
+/**
+ * Close window if target position changed
+ * @private
+ */
+os.ui.GlobalMenuCtrl.prototype.onScroll_ = function() {
+  if (this.targetOffset) {
+    var currPos = $(this.target).offset();
+    if (this.targetOffset['left'] != currPos['left'] || this.targetOffset['top'] != currPos['top']) {
+      os.ui.GlobalMenuCtrl.closeMenu();
+    }
+  }
+};
+
+
+/**
  * Opens a menu
  * @param {os.ui.action.ActionManager} provider The action menu manager that supplies the menu
  * @param {{
@@ -201,6 +240,10 @@ os.ui.openMenu = function(provider, position, opt_target, opt_root, opt_title) {
   // update the menu title if provided
   if (opt_title) {
     ctrl.addTitle('#js-global-menu', '<div id="js-global-menu__title" class="text-truncate">' + opt_title + '</div>');
+  }
+
+  if (opt_target) {
+    ctrl.setTarget(opt_target);
   }
 
   var timeout = /** @type {angular.$timeout} */ (os.ui.injector.get('$timeout'));
