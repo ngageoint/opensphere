@@ -63,16 +63,10 @@ os.ui.ChecklistCtrl = function($scope, $element, $timeout) {
   this.element_ = $element;
 
   /**
-   * @type {?angular.$timeout}
-   * @private
-   */
-  this.timeout_ = $timeout;
-
-  /**
    * @type {boolean}
    */
   this['allCheckbox'] = false;
-  this.timeout_(function() {
+  $timeout(function() {
     this.updateAllCheckbox_();
   }.bind(this));
 
