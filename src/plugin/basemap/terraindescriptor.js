@@ -1,4 +1,5 @@
 goog.provide('plugin.basemap.TerrainDescriptor');
+goog.require('os.config.DisplaySetting');
 goog.require('os.data.BaseDescriptor');
 goog.require('plugin.basemap');
 
@@ -19,11 +20,13 @@ plugin.basemap.TerrainDescriptor = function() {
   this.descriptorType = plugin.basemap.TERRAIN_ID;
 
   /**
-   * If the alert has been displayed.
+   * Flag to prevent handling settings events triggered by this descriptor.
    * @type {boolean}
    * @private
    */
-  this.alertDisplayed_ = false;
+  this.ignoreSettingsEvents_ = false;
+
+  os.settings.listen(os.config.DisplaySetting.ENABLE_TERRAIN, this.onTerrainChange_, false, this);
 };
 goog.inherits(plugin.basemap.TerrainDescriptor, os.data.BaseDescriptor);
 
@@ -33,8 +36,15 @@ goog.inherits(plugin.basemap.TerrainDescriptor, os.data.BaseDescriptor);
  * @type {string}
  * @const
  */
-plugin.basemap.TerrainDescriptor.DESCRIPTION = 'Terrain is no longer managed from the Add Data window. It can now ' +
-    'be toggled by right-clicking the map, or in the Map Display section of Settings.';
+plugin.basemap.TerrainDescriptor.DESCRIPTION = 'Show terrain on the 3D globe.';
+
+
+/**
+ * Clean up.
+ */
+plugin.basemap.TerrainDescriptor.prototype.disposeInternal = function() {
+  os.settings.unlisten(os.config.DisplaySetting.ENABLE_TERRAIN, this.onTerrainChange_, false, this);
+};
 
 
 /**
@@ -49,35 +59,30 @@ plugin.basemap.TerrainDescriptor.prototype.getIcons = function() {
  * @inheritDoc
  */
 plugin.basemap.TerrainDescriptor.prototype.setActiveInternal = function() {
-  if (this.isActive() && !this.alertDisplayed_) {
-    os.alertManager.sendAlert(plugin.basemap.TerrainDescriptor.DESCRIPTION, os.alert.AlertEventSeverity.INFO);
-    this.alertDisplayed_ = true;
-  }
+  this.ignoreSettingsEvents_ = true;
+  os.settings.set(os.config.DisplaySetting.ENABLE_TERRAIN, this.isActive());
+  this.ignoreSettingsEvents_ = false;
 
   return plugin.basemap.TerrainDescriptor.base(this, 'setActiveInternal');
 };
-
-
-/**
- * @inheritDoc
- */
-plugin.basemap.TerrainDescriptor.prototype.getLastActive = function() {
-  // don't remember last active
-  return NaN;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.basemap.TerrainDescriptor.prototype.touchLastActive = function() {
-  // don't remember last active
-};
-
 
 /**
  * @inheritDoc
  */
 plugin.basemap.TerrainDescriptor.prototype.restore = function(from) {
-  // don't restore this descriptor
+  plugin.basemap.TerrainDescriptor.base(this, 'restore', from);
+  this.tempActive = /** @type {boolean} */ (os.settings.get(os.config.DisplaySetting.ENABLE_TERRAIN, false));
+  this.updateActiveFromTemp();
+};
+
+
+/**
+ * Handle changes to the terrain enabled setting.
+ * @param {os.events.SettingChangeEvent} event
+ * @private
+ */
+plugin.basemap.TerrainDescriptor.prototype.onTerrainChange_ = function(event) {
+  if (!this.ignoreSettingsEvents_ && event.newVal !== this.isActive()) {
+    this.setActive(/** @type {boolean} */ (event.newVal));
+  }
 };
