@@ -2,7 +2,7 @@
   <form ng-submit="searchBox.search()" class="flex-shrink-0 w-100">
     <div ng-show="searchBox.searchOptions.length > 0" class="input-group">
       <div class="dropdown input-group-prepend">
-        <button class="c-search-box__dropdown btn form-control border border-right-0"
+        <button class="c-search-box__dropdown btn form-control w-auto border border-right-0"
             type="button"
             ng-click="searchBox.toggleSearchOptions($event)"
             title="Show/hide search options">
@@ -75,7 +75,7 @@
           placeholder="{{searchBox.getPlaceholderText()}}"
           data-provide="typeahead" />
       <div class="input-group-append">
-        <button ng-if="showClear" class="btn border border-left-0 form-control"
+        <button ng-if="showClear" class="btn border border-left-0 form-control w-auto"
             type="button"
             ng-click="searchBox.clear()"
             title="Clear search">
