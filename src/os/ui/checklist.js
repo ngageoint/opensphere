@@ -45,10 +45,11 @@ os.ui.Module.directive('checklist', [os.ui.checklistDirective]);
  * Controller function for the checklist directive
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
+ * @param {!angular.$timeout} $timeout
  * @constructor
  * @ngInject
  */
-os.ui.ChecklistCtrl = function($scope, $element) {
+os.ui.ChecklistCtrl = function($scope, $element, $timeout) {
   /**
    * @type {?angular.Scope}
    * @private
@@ -62,10 +63,18 @@ os.ui.ChecklistCtrl = function($scope, $element) {
   this.element_ = $element;
 
   /**
+   * @type {?angular.$timeout}
+   * @private
+   */
+  this.timeout_ = $timeout;
+
+  /**
    * @type {boolean}
    */
   this['allCheckbox'] = false;
-  this.updateAllCheckbox_();
+  this.timeout_(function() {
+    this.updateAllCheckbox_();
+  }.bind(this));
 
   $scope.$watch('allowMultiple', this.onAllowMultipleChange_.bind(this));
   $scope.$watch('items', this.onItemsChange_.bind(this));
