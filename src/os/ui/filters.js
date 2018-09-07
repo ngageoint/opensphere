@@ -23,7 +23,6 @@ goog.require('os.ui.query.cmd.FilterRemove');
 goog.require('os.ui.query.ui.CombinatorCtrl');
 goog.require('os.ui.slick.AbstractGroupByTreeSearchCtrl');
 goog.require('os.ui.slick.slickTreeDirective');
-goog.require('os.ui.util.autoHeightDirective');
 
 
 /**

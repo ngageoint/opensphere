@@ -31,7 +31,6 @@ goog.require('os.ui.menu.layer');
 goog.require('os.ui.menu.windows');
 goog.require('os.ui.slick.AbstractGroupByTreeSearchCtrl');
 goog.require('os.ui.uiSwitchDirective');
-goog.require('os.ui.util.autoHeightDirective');
 goog.require('os.ui.windowSelector');
 goog.require('plugin.places.ui.placesDirective');
 
@@ -127,11 +126,13 @@ os.ui.LayersCtrl = function($scope, $element) {
 };
 goog.inherits(os.ui.LayersCtrl, os.ui.slick.AbstractGroupByTreeSearchCtrl);
 
+
 /**
  * The functions to be called to determine if the layer should not be toggled
 * @type {Array<function(!ol.layer.Layer):boolean>}
 */
 os.ui.LayersCtrl.SKIP_TOGGLE_FUNCS = [];
+
 
 /**
  * The view options for grouping layers
@@ -261,6 +262,7 @@ os.ui.LayersCtrl.prototype.toggle = function(flagName) {
 };
 goog.exportProperty(os.ui.LayersCtrl.prototype, 'toggle', os.ui.LayersCtrl.prototype.toggle);
 
+
 /**
  * Toggles the Tile layers on/off
  */
@@ -285,6 +287,7 @@ os.ui.LayersCtrl.prototype.toggleTileLayers = function() {
 };
 goog.exportProperty(os.ui.LayersCtrl.prototype, 'toggleTileLayers', os.ui.LayersCtrl.prototype.toggleTileLayers);
 
+
 /**
  * Checks if the Tiles should be displayed
  * @return {boolean}
@@ -293,6 +296,7 @@ os.ui.LayersCtrl.prototype.showTiles = function() {
   return this.scope['showTiles'];
 };
 goog.exportProperty(os.ui.LayersCtrl.prototype, 'showTiles', os.ui.LayersCtrl.prototype.showTiles);
+
 
 /**
  * Toggles the Feature layers on/off
@@ -319,6 +323,7 @@ os.ui.LayersCtrl.prototype.toggleFeatureLayers = function() {
   }
 };
 goog.exportProperty(os.ui.LayersCtrl.prototype, 'toggleFeatureLayers', os.ui.LayersCtrl.prototype.toggleFeatureLayers);
+
 
 /**
  * Checks if the Features should be displayed

@@ -4,6 +4,7 @@ goog.require('goog.crypt.hash32');
 goog.require('os.color');
 goog.require('os.defines');
 
+
 /**
  * Icon svg markup
  * @enum {string}
@@ -70,7 +71,7 @@ os.ui.createIconSet = function(id, svgIcons, faIcons, color) {
     var width = os.ui.ICON_WIDTH * svgIcons.length;
     var filter = 'filter_';
     var matrix = 'matrix_';
-    html += '<svg width="' + width + 'px" height="16px" style="vertical-align:middle" ' +
+    html += '<svg width="' + width + 'px" height="16px" class="align-middle" ' +
         'xmlns="http://www.w3.org/2000/svg" filter="url(#' + filter + id + ')">';
 
     html += svgIcons.join('');

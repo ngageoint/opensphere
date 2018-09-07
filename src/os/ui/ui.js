@@ -159,11 +159,15 @@ os.ui.measureText = function(text, opt_classes, opt_font) {
   var el = angular.element('#measureText');
 
   if (!el || el.length === 0) {
-    el = $('<div id="measureText" style="position: fixed; top: -2000px; left: -2000px;"></div>').appendTo('body');
+    el = $('<div id="measureText" class="u-offscreen"></div>').appendTo('body');
   }
 
   if (el && el.length > 0) {
-    el[0].setAttribute('class', opt_classes ? opt_classes : '');
+    var classes = 'u-offscreen ';
+    if (opt_classes) {
+      classes += opt_classes;
+    }
+    el[0].setAttribute('class', classes);
     el.css('font', opt_font || '');
 
     // replace newline characters with HTML breaks
