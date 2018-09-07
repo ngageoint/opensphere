@@ -53,6 +53,8 @@ os.ui.config.SettingsWindowCtrl = function($scope, $timeout, $element) {
    * @private
    */
   this.element_ = $element;
+
+  $scope.$on('os.ui.window.params', this.onParamsChange_.bind(this));
 };
 goog.inherits(os.ui.config.SettingsWindowCtrl, os.ui.config.AbstractSettingsCtrl);
 
@@ -62,6 +64,25 @@ goog.inherits(os.ui.config.SettingsWindowCtrl, os.ui.config.AbstractSettingsCtrl
  */
 os.ui.config.SettingsWindowCtrl.prototype.destroy = function() {
   this.element_ = null;
+};
+
+
+/**
+ * Handle params change event
+ * @param {!angular.Scope.Event} event
+ * @param {Object} params
+ * @private
+ */
+os.ui.config.SettingsWindowCtrl.prototype.onParamsChange_ = function(event, params) {
+  var settingsMgr = os.ui.config.SettingsManager.getInstance();
+  var plugins = settingsMgr.getChildren();
+  for (var i = 0; i < plugins.length; i++) {
+    var plugin = plugins[i];
+    if (params && params.length > 0 && plugin.getLabel() == params[0]) {
+      settingsMgr.setSelectedPlugin(plugin.getId());
+      break;
+    }
+  }
 };
 
 
