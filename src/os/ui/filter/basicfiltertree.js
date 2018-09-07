@@ -13,6 +13,7 @@ goog.require('os.ui.slick.slickTreeDirective');
 os.ui.filter.basicFilterTreeDirective = function() {
   var conf = os.ui.slick.slickTreeDirective();
   conf.controller = os.ui.filter.BasicFilterTreeCtrl;
+  conf.template = '<div class="c-slick-tree no-hover"></div>';
   return conf;
 };
 
