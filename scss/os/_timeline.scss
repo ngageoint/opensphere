@@ -217,6 +217,9 @@
 .axis {
   text {
     font: 10px sans-serif;
+    // Chrome < 41 needs initial
+    // sass-lint:disable no-duplicate-properties
+    stroke: initial;
     stroke: unset;
   }
 
