@@ -270,8 +270,8 @@ os.im.action.ImportActionManager.prototype.addActionEntry = function(entry, opt_
       // check if the entry already exists
       var list = this.getActionEntries(entry.type);
       index = goog.array.findIndex(list, function(e) {
-        if (os.object.compareByField('filter', e, entry) == 0 &&
-            os.object.compareByField('actions', e, entry) == 0) {
+        // if entries are functionally the same mark them as duplicate
+        if (e.compare(entry) == 0) {
           duplicate = true;
         }
         return e.getId() == entry.getId();
