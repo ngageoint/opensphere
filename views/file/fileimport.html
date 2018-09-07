@@ -3,7 +3,7 @@
     <div class="container-fluid" ng-form="fileForm">
       <div class="custom-file" title="{{fileImport.fileName ? fileImport.fileName : 'Choose File...'}}">
         <input type="text" ng-model="fileImport.fileName" ng-click="fileImport.openFileBrowser()" class="custom-file-input" required />
-        <label ng-click="fileImport.openFileBrowser()" class="custom-file-label text-truncate" >
+        <label ng-click="fileImport.openFileBrowser()" class="custom-file-label text-truncate mb-0" >
           <i class="fa fa-fw fa-file"></i> {{fileImport.fileName ? fileImport.fileName : 'Choose File...'}}
         </label>
       </div>
