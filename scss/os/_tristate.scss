@@ -124,7 +124,7 @@
   border: 3px solid #555;
   border-right: 0;
   border-top: 0;
-  display: unset;
+  display: initial;
   height: 5.5px;
   transform: rotate(-45deg);
   width: 9px;
@@ -133,7 +133,7 @@
 .c-tristate-both label {
   background: #555;
   border-radius: 2px;
-  display: unset;
+  display: initial;
   height: 9px;
   left: 2px;
   top: 2px;
