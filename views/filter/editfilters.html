@@ -18,15 +18,11 @@
         <li class="nav-item"><a href class="nav-link" ng-class="{active: tab == 'basic'}" ng-click="filters.setTab('basic')">Basic</a></li>
         <li class="nav-item"><a href class="nav-link" ng-class="{active: tab == 'advanced'}" ng-click="filters.setTab('advanced')">Advanced</a></li>
       </ul>
-      <div class="flex-column d-flex flex-fill">
-        <div class="row flex-column d-flex flex-fill">
-          <div ng-if="tab == 'basic'" class="flex-column d-flex flex-fill">
-            <basicfilterbuilder root="filters.root" columns="columns" is-complex="filters.isComplex"></basicfilterbuilder>
-          </div>
-          <div ng-if="tab == 'advanced'" class="flex-column d-flex flex-fill">
-            <advancedfilterbuilder root="filters.root" columns="columns"></advancedfilterbuilder>
-          </div>
-        </div>
+      <div ng-if="tab == 'basic'" class="flex-column d-flex flex-fill">
+        <basicfilterbuilder root="filters.root" columns="columns" is-complex="filters.isComplex"></basicfilterbuilder>
+      </div>
+      <div ng-if="tab == 'advanced'" class="flex-column d-flex flex-fill">
+        <advancedfilterbuilder root="filters.root" columns="columns"></advancedfilterbuilder>
       </div>
     </div>
   </div>
