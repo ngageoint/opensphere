@@ -89,7 +89,7 @@ os.ui.filter.ui.ExpressionNode.prototype.getLabel = function() {
  * @inheritDoc
  */
 os.ui.filter.ui.ExpressionNode.prototype.formatIcons = function() {
-  return '<i class="fa fa-fw fa-file" style="margin-right:5px;"></i>';
+  return '<i class="fa fa-fw fa-file mr-1"></i>';
 };
 
 
