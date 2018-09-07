@@ -207,12 +207,7 @@ const sharedResources = [
   {
     source: resolver.resolveModulePath('js-polyfills', __dirname),
     target: 'vendor/polyfill',
-    scripts: ['typedarray.js']
-  },
-  {
-    source: resolver.resolveModulePath('string.prototype.startswith', __dirname),
-    target: 'vendor/polyfill',
-    scripts: ['startswith.js']
+    scripts: ['polyfill.min.js']
   },
   {
     source: resolver.resolveModulePath('zip-js/WebContent', __dirname),
