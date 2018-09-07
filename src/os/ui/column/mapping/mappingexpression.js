@@ -205,7 +205,7 @@ os.ui.column.mapping.MappingExpressionCtrl.prototype.formatter = function(item, 
     val = des.getTitle();
     var color = des.getColor();
     color = color ? os.color.toHexString(color) : 'white';
-    val = '<i class="fa fa-bars" style="color:' + color + ';margin-right:5px;"></i>' + val;
+    val = '<i class="fa fa-bars mr-1" style="color:' + color + '"></i>' + val;
     if (des.getProvider()) {
       // put the provider on each for clarity
       val += ' (' + des.getProvider() + ')';

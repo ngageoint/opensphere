@@ -13,7 +13,6 @@ goog.require('os.ui.data.AddDataCtrl');
 goog.require('os.ui.data.groupby.TagGroupBy');
 goog.require('os.ui.menu.windows');
 goog.require('os.ui.menu.windows.default');
-goog.require('os.ui.util.autoHeightDirective');
 
 
 /**

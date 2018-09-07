@@ -15,7 +15,6 @@ goog.require('os.ui.Module');
 goog.require('os.ui.feature.featureInfoCellDirective');
 goog.require('os.ui.location.SimpleLocationDirective');
 goog.require('os.ui.propertyInfoDirective');
-goog.require('os.ui.util.autoHeightDirective');
 goog.require('os.ui.window');
 
 

@@ -16,7 +16,6 @@ goog.require('os.ui.menu.spatial');
 goog.require('os.ui.query.ui.CombinatorCtrl');
 goog.require('os.ui.query.ui.editAreaDirective');
 goog.require('os.ui.slick.AbstractGroupByTreeSearchCtrl');
-goog.require('os.ui.util.autoHeightDirective');
 
 
 /**
