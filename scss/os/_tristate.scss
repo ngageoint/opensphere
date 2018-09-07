@@ -124,7 +124,10 @@
   border: 3px solid #555;
   border-right: 0;
   border-top: 0;
+  // Chrome < 41 needs initial
+  // sass-lint:disable no-duplicate-properties
   display: initial;
+  display: unset;
   height: 5.5px;
   transform: rotate(-45deg);
   width: 9px;
@@ -133,7 +136,10 @@
 .c-tristate-both label {
   background: #555;
   border-radius: 2px;
+  // Chrome < 41 needs initial
+  // sass-lint:disable no-duplicate-properties
   display: initial;
+  display: unset;
   height: 9px;
   left: 2px;
   top: 2px;
