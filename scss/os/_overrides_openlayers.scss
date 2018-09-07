@@ -185,6 +185,9 @@
 .ol-attribution,
 .ol-attribution.ol-uncollapsible {
   bottom: .25rem;
+  // Chrome < 41 needs initial
+  // sass-lint:disable no-duplicate-properties
+  height: initial;
   height: unset;
   left: .25rem;
   right: auto;
@@ -245,6 +248,9 @@
     bottom: auto;
     left: auto;
     min-width: 10rem;
+    // Chrome < 41 needs initial
+    // sass-lint:disable no-duplicate-properties
+    padding: initial;
     padding: unset;
   }
 }
