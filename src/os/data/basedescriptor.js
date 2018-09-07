@@ -175,14 +175,11 @@ os.data.BaseDescriptor.LOGGER_ = goog.log.getLogger('os.data.BaseDescriptor');
 
 /**
  * @inheritDoc
+ * @export
  */
 os.data.BaseDescriptor.prototype.getId = function() {
   return this.id_;
 };
-goog.exportProperty(
-    os.data.BaseDescriptor.prototype,
-    'getId',
-    os.data.BaseDescriptor.prototype.getId);
 
 
 /**
@@ -274,14 +271,11 @@ os.data.BaseDescriptor.prototype.setDataProvider = function(value) {
 
 /**
  * @inheritDoc
+ * @export
  */
 os.data.BaseDescriptor.prototype.getTitle = function() {
   return this.title_;
 };
-goog.exportProperty(
-    os.data.BaseDescriptor.prototype,
-    'getTitle',
-    os.data.BaseDescriptor.prototype.getTitle);
 
 
 /**
