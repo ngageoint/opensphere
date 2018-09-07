@@ -89,4 +89,36 @@ describe('os.im.action.FilterActionEntry', function() {
     // actions should be restored
     testMockAction(clone);
   });
+
+  it('should compare properly', function() {
+    spyOn(os.im.action.ImportActionManager, 'getInstance').andCallFake(os.im.action.getMockManager);
+    var filterXml2 = filterXml + filterXml;
+
+    var fe = new os.im.action.FilterActionEntry();
+    fe.setTitle('Compare Me');
+    fe.setFilter(filterXml);
+    fe.actions = [new os.im.action.MockAction()];
+
+    var other = new os.im.action.FilterActionEntry();
+    other.setTitle('Compare Me');
+    other.setFilter(filterXml);
+    other.actions = [new os.im.action.MockAction()];
+
+    expect(fe.compare(other)).toBe(0);
+
+    other.setFilter(filterXml2);
+    expect(fe.compare(other)).toBe(-1);
+    expect(other.compare(fe)).toBe(1);
+
+    fe.actions.push(new os.im.action.MockAction());
+    expect(fe.compare(other)).toBe(1);
+    expect(other.compare(fe)).toBe(-1);
+
+    other.setTitle('Compare Me!');
+    expect(fe.compare(other)).toBe(-1);
+    expect(other.compare(fe)).toBe(1);
+
+    var clone = fe.clone();
+    expect(fe.compare(clone)).toBe(0);
+  });
 });
