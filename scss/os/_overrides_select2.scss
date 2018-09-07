@@ -35,8 +35,9 @@
         margin: 0 .125rem;
 
         div {
-          max-width: 35em;
-          overflow-x: hidden;
+          max-width: 35rem;
+          min-height: 1.125rem;
+          overflow: hidden;
           text-overflow: ellipsis;
         }
       }
