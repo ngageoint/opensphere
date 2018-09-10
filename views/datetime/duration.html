@@ -1,8 +1,9 @@
-<div ng-form="durationForm" class="duration-picker">
+<div ng-form="durationForm" class="c-duration">
   <div class="container-fluid">
     <div class="row">
       <div class="text-center" ng-if="useWeeks">
         <spinner
+            class="u-input-number__width-4"
             min="0"
             step="1"
             value="durCtrl.weeks"
@@ -16,6 +17,7 @@
       </div>
       <div class="text-center" ng-if="useDays">
         <spinner
+            class="u-input-number__width-4"
             min="0"
             max="durCtrl.maxdays"
             step="1"
@@ -30,6 +32,7 @@
       </div>
       <div class="text-center" ng-if="useHours">
         <spinner
+            class="u-input-number__width-4"
             min="0"
             max="durCtrl.maxhours"
             step="1"
@@ -44,6 +47,7 @@
       </div>
       <div class="text-center" ng-if="useMinutes">
         <spinner
+            class="u-input-number__width-4"
             min="0"
             max="durCtrl.maxminutes"
             step="1"
@@ -53,11 +57,12 @@
             disabled="disabled">
         </spinner>
         <label ng-class="{'disabled': disabled}">
-          minutes
+          mins
         </label>
       </div>
       <div class="text-center" ng-if="useSeconds">
         <spinner
+            class="u-input-number__width-4"
             min="0"
             max="durCtrl.maxseconds"
             step="1"
@@ -67,13 +72,13 @@
             disabled="disabled">
         </spinner>
         <label ng-class="{'disabled': disabled}">
-          seconds
+          secs
         </label>
       </div>
       <div class="pl-2">
         <validation-message target="durCtrl.errors.duration"></validation-message>
       </div>
-      <input type="hidden" name="duration" ng-model="durCtrl.valid" required/>
+      <input type="hidden" name="duration" ng-model="durCtrl.valid" ng-required="durCtrl.isrequired"/>
     </div>
   </div>
 </div>
