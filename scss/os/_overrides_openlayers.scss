@@ -6,10 +6,17 @@
 
 // Viewport
 .ol-viewport {
-  height: 100% !important;
+  // Parent of viewport requires display: flex
+  flex: 1 1 auto;
 
   > canvas {
     display: inherit;
+  }
+
+  // Height: 100% not supported under a flex container
+  // The canvas adds a style tag so we have to override that
+  canvas.ol-unselectable {
+    height: auto !important;
   }
 }
 
