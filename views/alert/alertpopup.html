@@ -1,4 +1,4 @@
-<div class="fixed-bottom col-xl-4 col-lg-5 col-md-6 col-sm-8 col-xs-10 col ml-auto mr-1 animate-flip-parent" ng-class="{'mb-5': alertPopupCtrl.alertPopups.length}" ng-mouseenter="hovered = true" ng-mouseleave="hovered = false">
+<div class="c-alert-popup fixed-bottom col-xl-4 col-lg-5 col-md-6 col-sm-8 col-xs-10 col ml-auto mr-1 animate-flip-parent" ng-class="{'mb-5': alertPopupCtrl.alertPopups.length}" ng-mouseenter="hovered = true" ng-mouseleave="hovered = false">
   <div class="alert animate-flip-v"
        ng-class="{'Error':'alert-danger','Warning':'alert-warning','Success':'alert-success','Info':'alert-info'}[alert.severity]"
        ng-repeat="alert in alertPopupCtrl.alertPopups|limitTo:-5 track by alert.id">
