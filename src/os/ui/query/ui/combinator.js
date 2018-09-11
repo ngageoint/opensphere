@@ -620,10 +620,8 @@ os.ui.query.ui.CombinatorCtrl.prototype.createEntriesFromTree = function() {
   var tree = this.getRoot();
 
   if (tree) {
-    var entries = this.getEntries_();
-    var newEntries = [];
-    os.ui.query.ui.CombinatorCtrl.parseEntries(tree, newEntries);
-    this.entries_ = os.ui.query.cmd.QueryEntries.merge(newEntries, entries, this.getLayerId_(os.ui.query.ALL_ID));
+    this.entries_ = [];
+    os.ui.query.ui.CombinatorCtrl.parseEntries(tree, this.entries_);
   }
 };
 
