@@ -91,6 +91,7 @@
 // Zoombar needs a min width
 .ol-zoom-level {
   font-family: monospace;
+  font-size: $lead-font-size;
   min-width: 15rem;
 }
 
@@ -205,7 +206,7 @@
   }
 
   &:hover {
-    background-color: rgba($body-bg, .9);
+    background-color: rgba($white, .6);
     color: rgba($body-color, .9);
   }
 
@@ -220,6 +221,7 @@
   bottom: .75em;
   cursor: pointer;
   font-family: monospace;
+  font-size: $lead-font-size;
   left: auto;
   right: .75rem;
   top: auto;
