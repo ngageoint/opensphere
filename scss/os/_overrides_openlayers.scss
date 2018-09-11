@@ -235,7 +235,8 @@
   top: 4.75em;
 
   .ol-zoomslider-thumb {
-    background-color: rgba($body-bg, .8);
+    background-color: rgba($body-color, .4);
+    border: 1px solid $border-color;
   }
 }
 
