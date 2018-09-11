@@ -2,20 +2,17 @@ goog.provide('os.ui.feature.FeatureInfoCtrl');
 goog.provide('os.ui.feature.featureInfoDirective');
 
 goog.require('goog.Disposable');
-goog.require('goog.object');
-goog.require('goog.string');
 goog.require('ol.events');
 goog.require('ol.geom.Point');
-goog.require('os.Fields');
-goog.require('os.data.RecordField');
-goog.require('os.defines');
 goog.require('os.map');
-goog.require('os.style');
 goog.require('os.ui.Module');
 goog.require('os.ui.feature.featureInfoCellDirective');
+goog.require('os.ui.feature.tab.descriptionEnableFunction');
+goog.require('os.ui.feature.tab.descriptionTabDirective');
+goog.require('os.ui.feature.tab.propertiesTabDirective');
 goog.require('os.ui.location.SimpleLocationDirective');
-goog.require('os.ui.propertyInfoDirective');
-goog.require('os.ui.window');
+goog.require('os.ui.tab.Tab');
+goog.require('os.ui.uiSwitchDirective');
 
 
 /**
@@ -55,10 +52,23 @@ os.ui.feature.FeatureInfoCtrl = function($scope, $element) {
    * @type {?angular.Scope}
    */
   this.scope = $scope;
-  this.scope['tab'] = 'properties';
-  this.scope['columnToOrder'] = 'field';
-  this.scope['reverse'] = false;
-  this.scope['selected'] = null;
+
+  /**
+   * Array of tabs to show.
+   * @type {Array.<os.ui.tab.Tab>}
+   */
+  this['tabs'] = os.ui.feature.FeatureInfoCtrl.TABS;
+
+  /**
+   * Number of tabs that are currently shown
+   * @type {number}
+   */
+  this['numTabsShown'] = 1;
+
+  /**
+   * @type {function(os.ui.tab.Tab):string}
+   */
+  this['getUi'] = goog.bind(this.getUi_, this);
 
   /**
    * @type {?angular.JQLite}
@@ -72,6 +82,8 @@ os.ui.feature.FeatureInfoCtrl = function($scope, $element) {
    */
   this.changeKey_ = null;
 
+  this.setInitialActiveTab_();
+
   os.unit.UnitManager.getInstance().listen(goog.events.EventType.PROPERTYCHANGE, this.updateGeometry, false, this);
   os.dispatcher.listen(os.data.FeatureEventType.VALUECHANGE, this.onValueChange, false, this);
   $scope.$watch('items', this.onFeatureChange.bind(this));
@@ -82,11 +94,45 @@ goog.inherits(os.ui.feature.FeatureInfoCtrl, goog.Disposable);
 
 
 /**
+ * The default properties tab.
+ * @type {os.ui.tab.Tab}
+ */
+os.ui.feature.FeatureInfoCtrl.PROPERTIES_TAB = new os.ui.tab.Tab('props', 'Properties', 'fa-th', 'propertiestab');
+
+
+/**
+ * The description tab.
+ * @type {os.ui.tab.Tab}
+ */
+os.ui.feature.FeatureInfoCtrl.DESCRIPTION_TAB = new
+    os.ui.tab.Tab('desc', 'Description', 'fa-newspaper-o', 'descriptiontab',
+        null, os.ui.feature.tab.descriptionEnableFunction);
+
+
+/**
+ * Array of tabs to show on this mashup.
+ * @type {Array.<os.ui.tab.Tab>}
+ */
+os.ui.feature.FeatureInfoCtrl.TABS = [
+  os.ui.feature.FeatureInfoCtrl.PROPERTIES_TAB,
+  os.ui.feature.FeatureInfoCtrl.DESCRIPTION_TAB
+];
+
+
+/**
  * Angular event type for switching this view to the description tab.
  * @type {string}
  * @const
  */
 os.ui.feature.FeatureInfoCtrl.SHOW_DESCRIPTION = 'os.ui.feature.FeatureInfoCtrl.showDescription';
+
+
+/**
+ * Angular event type for updating all tabs.
+ * @type {string}
+ * @const
+ */
+os.ui.feature.FeatureInfoCtrl.UPDATE_TABS = 'os.ui.feature.FeatureInfoCtrl.updateTabs';
 
 
 /**
@@ -117,7 +163,7 @@ os.ui.feature.FeatureInfoCtrl.prototype.onValueChange = function(event) {
     var feature = /** @type {ol.Feature|undefined} */ (this.scope['items'][0]);
     if (feature && feature['id'] === event['id']) {
       this.updateGeometry();
-      this.updateProperties();
+      this.updateTabs_();
 
       os.ui.apply(this.scope);
     }
@@ -131,7 +177,7 @@ os.ui.feature.FeatureInfoCtrl.prototype.onValueChange = function(event) {
  */
 os.ui.feature.FeatureInfoCtrl.prototype.onFeatureChangeEvent = function(event) {
   this.updateGeometry();
-  this.updateProperties();
+  this.updateTabs_();
 
   os.ui.apply(this.scope);
 };
@@ -156,7 +202,7 @@ os.ui.feature.FeatureInfoCtrl.prototype.onFeatureChange = function(newVal) {
   }
 
   this.updateGeometry();
-  this.updateProperties();
+  this.updateTabs_();
 
   if (newVal) {
     var feature = newVal[0];
@@ -201,145 +247,66 @@ os.ui.feature.FeatureInfoCtrl.prototype.updateGeometry = function() {
 
 
 /**
- * Update the properties/description information displayed for the feature.
- * @protected
+ * Save active tab
+ * @param {os.ui.tab.Tab} tab
+ * @export
  */
-os.ui.feature.FeatureInfoCtrl.prototype.updateProperties = function() {
-  if (this.scope) {
-    this.scope['description'] = false;
-    this.scope['properties'] = [];
-
-    var feature = /** @type {ol.Feature|undefined} */ (this.scope['items'][0]);
-    if (feature) {
-      var properties = feature.getProperties();
-      var description = properties[os.data.RecordField.HTML_DESCRIPTION];
-      if (!description) {
-        description = /** @type {string|undefined} */ (goog.object.findValue(properties, function(val, key) {
-          return os.fields.DESC_REGEXP.test(key) && !goog.string.isEmptyOrWhitespace(goog.string.makeSafe(val));
-        })) || '';
-      }
-
-      if (!goog.string.isEmptyOrWhitespace(goog.string.makeSafe(description))) {
-        // force anchor tags to launch a new tab - we may want to instead just launch a new window for the entire
-        // description
-        description = description.replace(/<a /g, '<a target="_blank" ');
-
-        // write the description HTML to the IFrame
-        this.scope['description'] = true;
-
-        var iframe = this.element.find('iframe')[0];
-        if (iframe) {
-          var frameDoc = iframe.contentWindow.document;
-          frameDoc.open();
-          frameDoc.write(description);
-          frameDoc.close();
-        }
-      } else {
-        // switch back to the properties tab if we won't have a description tab
-        this.scope['tab'] = 'properties';
-      }
-
-      // create content for the property grid
-      var time = /** @type {os.time.ITime|undefined} */ (feature.get(os.data.RecordField.TIME));
-      if (time) {
-        // add the record time to the property grid and make sure it isn't duplicated
-        this.scope['properties'].push({
-          'id': 'TIME',
-          'field': 'TIME',
-          'value': time
-        });
-
-        delete properties['TIME'];
-      }
-
-      for (var key in properties) {
-        if (key === os.Fields.GEOTAG) {
-          // associate the feature with the CX report it came from
-          this.scope['properties'].push({
-            'id': os.Fields.GEOTAG,
-            'field': os.Fields.GEOTAG,
-            'value': properties[os.data.RecordField.SOURCE_ID],
-            'CX': true
-          });
-        } else if (key === os.Fields.PROPERTIES) {
-          this.scope['properties'].push({
-            'id': key,
-            'field': key,
-            'value': properties[key],
-            'feature': feature
-          });
-        } else if (!os.feature.isInternalField(key) && os.object.isPrimitive(properties[key])) {
-          this.scope['properties'].push({
-            'id': key,
-            'field': key,
-            'value': properties[key]
-          });
-        }
-      }
-    }
-  }
-
-  this.order();
+os.ui.feature.FeatureInfoCtrl.prototype.setActiveTab = function(tab) {
+  this.scope['activeTab'] = tab;
 };
 
 
 /**
- * Allow ordering
- * @param {string=} opt_key
+ * Sets the intial active tab.  Defaults to properties tab.
+ * @private
  */
-os.ui.feature.FeatureInfoCtrl.prototype.order = function(opt_key) {
-  if (opt_key) {
-    if (opt_key === this.scope['columnToOrder']) {
-      this.scope['reverse'] = !this.scope['reverse'];
-    } else {
-      this.scope['columnToOrder'] = opt_key;
-    }
-  }
-
-  var field = this.scope['columnToOrder'];
-  var reverse = this.scope['reverse'];
-
-  this.scope['properties'].sort(function(a, b) {
-    var v1 = a[field].toString();
-    var v2 = b[field].toString();
-    return goog.string.numerateCompare(v1, v2) * (reverse ? -1 : 1);
+os.ui.feature.FeatureInfoCtrl.prototype.setInitialActiveTab_ = function() {
+  var initialActiveTab = this['tabs'].find(function(tab) {
+    return tab.id == 'props';
   });
-};
-goog.exportProperty(
-    os.ui.feature.FeatureInfoCtrl.prototype,
-    'order',
-    os.ui.feature.FeatureInfoCtrl.prototype.order);
 
-
-/**
- * Select this property
- * @param {Event} event
- * @param {Object} property
- */
-os.ui.feature.FeatureInfoCtrl.prototype.select = function(event, property) {
-  if (this.scope['selected'] == property && event.ctrlKey) {
-    this.scope['selected'] = null;
-  } else {
-    this.scope['selected'] = property;
+  if (initialActiveTab) {
+    this.setActiveTab(initialActiveTab);
+  } else if (this['tabs'].length > 0) {
+    this.setActiveTab(this['tabs'][0]);
   }
 };
-goog.exportProperty(
-    os.ui.feature.FeatureInfoCtrl.prototype,
-    'select',
-    os.ui.feature.FeatureInfoCtrl.prototype.select);
 
 
 /**
- * Switches to the properties tab.
- * @param {angular.Scope.Event} event
+ * Gets the UI for the currently active tab.
+ * @param {os.ui.tab.Tab} item
+ * @return {string}
+ * @private
  */
-os.ui.feature.FeatureInfoCtrl.prototype.showProperties = function(event) {
-  this.scope['tab'] = 'properties';
+os.ui.feature.FeatureInfoCtrl.prototype.getUi_ = function(item) {
+  item['data'] = /** @type {ol.Feature|undefined} */ (this.scope['items'][0]);
+  return item['template'];
 };
-goog.exportProperty(
-    os.ui.feature.FeatureInfoCtrl.prototype,
-    'showProperties',
-    os.ui.feature.FeatureInfoCtrl.prototype.showProperties);
+
+
+/**
+ * Update the visibility of the tabs and broadcast update event
+ * @private
+ */
+os.ui.feature.FeatureInfoCtrl.prototype.updateTabs_ = function() {
+  var numShown = 0;
+  for (var i = 0; i < this['tabs'].length; i++) {
+    if (this['tabs'][i]['enableFunc']) {
+      var showTab = this['tabs'][i]['enableFunc'](this['tabs'][i]['data']);
+      this['tabs'][i]['isShown'] = showTab;
+      if (showTab) {
+        numShown++;
+      }
+    } else {
+      this['tabs'][i]['isShown'] = true;
+      numShown++;
+    }
+  }
+  this['numTabsShown'] = numShown;
+
+  this.scope.$broadcast(os.ui.feature.FeatureInfoCtrl.UPDATE_TABS, this.scope['items'][0]);
+};
 
 
 /**
@@ -347,9 +314,5 @@ goog.exportProperty(
  * @param {angular.Scope.Event} event
  */
 os.ui.feature.FeatureInfoCtrl.prototype.showDescription = function(event) {
-  this.scope['tab'] = 'description';
+  this.setActiveTab(os.ui.feature.FeatureInfoCtrl.DESCRIPTION_TAB);
 };
-goog.exportProperty(
-    os.ui.feature.FeatureInfoCtrl.prototype,
-    'showDescription',
-    os.ui.feature.FeatureInfoCtrl.prototype.showDescription);
