@@ -1,4 +1,6 @@
 .c-dd-target__dragover {
+  position: relative;
+
   &:before {
     background: rgba($u-theme-variables--bg-offset, .33);
     border: .2rem dashed color-yiq($u-theme-variables--bg-offset);
