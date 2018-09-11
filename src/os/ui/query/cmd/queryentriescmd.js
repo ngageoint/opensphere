@@ -22,12 +22,6 @@ os.ui.query.cmd.QueryEntries = function(entries, opt_merge, opt_layerHint, opt_i
   this.newEntries = entries;
 
   /**
-   * @type {!Array<!Object<string, string|boolean>>}
-   * @protected
-   */
-  this.oldEntries = os.ui.queryManager.getEntries();
-
-  /**
    * @type {boolean}
    * @protected
    */
@@ -44,6 +38,12 @@ os.ui.query.cmd.QueryEntries = function(entries, opt_merge, opt_layerHint, opt_i
    * @protected
    */
   this.immediate = goog.isDef(opt_immediate) ? opt_immediate : false;
+
+  /**
+   * @type {!Array<!Object<string, string|boolean>>}
+   * @protected
+   */
+  this.oldEntries = this.getOldEntries();
 };
 
 
@@ -106,14 +106,7 @@ os.ui.query.cmd.QueryEntries.prototype.canExecute = function() {
 os.ui.query.cmd.QueryEntries.prototype.execute = function() {
   if (this.canExecute()) {
     this.state = os.command.State.EXECUTING;
-
-    var qm = os.ui.queryManager;
-    var merged = this.merge ? os.ui.query.cmd.QueryEntries.merge(this.newEntries, this.oldEntries, this.layerHint) :
-        this.newEntries;
-
-    qm.removeEntries(undefined, undefined, undefined, true);
-    qm.addEntries(merged, this.immediate, this.layerHint);
-
+    this.swap(this.newEntries);
     this.state = os.command.State.SUCCESS;
     return true;
   }
@@ -123,52 +116,70 @@ os.ui.query.cmd.QueryEntries.prototype.execute = function() {
 
 
 /**
- * @param {!Array<!Object<string, string|boolean>>} newSet
- * @param {!Array<!Object<string, string|boolean>>} largeSet
- * @param {?string=} opt_layerHint
- * @return {!Array<!Object<string, string|boolean>>} merged set
- */
-os.ui.query.cmd.QueryEntries.merge = function(newSet, largeSet, opt_layerHint) {
-  var layerSet = {};
-
-  if (opt_layerHint) {
-    layerSet[opt_layerHint] = true;
-  }
-
-  // get all the layerIds from the new entries
-  for (var i = 0, n = newSet.length; i < n; i++) {
-    var id = /** @type {string} */ (newSet[i]['layerId']);
-    layerSet[id] = true;
-  }
-
-  var merged = largeSet.slice();
-  i = merged.length;
-  while (i--) {
-    id = /** @type {string} */ (merged[i]['layerId']);
-    if (id in layerSet) {
-      merged.splice(i, 1);
-    }
-  }
-
-  if (newSet.length) {
-    merged = merged.concat(newSet);
-  }
-
-  return merged;
-};
-
-
-/**
  * @inheritDoc
  */
 os.ui.query.cmd.QueryEntries.prototype.revert = function() {
   this.state = os.command.State.REVERTING;
-
-  var qm = os.ui.queryManager;
-  qm.removeEntries(undefined, undefined, undefined, true);
-  qm.addEntries(this.oldEntries, this.immediate, this.layerHint);
-
+  this.swap(this.oldEntries);
   this.state = os.command.State.READY;
   return true;
 };
+
+
+/**
+ * @param {!Array<!Object<string, string|boolean>>} entries
+ * @protected
+ */
+os.ui.query.cmd.QueryEntries.prototype.swap = function(entries) {
+  var qm = os.ui.queryManager;
+
+  if (this.merge) {
+    var layerSet = this.getLayerSet();
+    // remove all items related to those layers
+    for (var id in layerSet) {
+      qm.removeEntries(id, undefined, undefined, true);
+    }
+  } else {
+    qm.removeEntries(undefined, undefined, undefined, true);
+  }
+
+  qm.addEntries(entries, this.immediate, this.layerHint);
+};
+
+
+/**
+ * @return {!Array<!Object<string, string|boolean>>}
+ * @protected
+ */
+os.ui.query.cmd.QueryEntries.prototype.getOldEntries = function() {
+  var fullSet = os.ui.queryManager.getEntries();
+  var layerSet = this.getLayerSet();
+
+  return this.merge ? fullSet.filter(function(entry) {
+    var id = /** @type {string} */ (entry['layerId']);
+    return id in layerSet;
+  }) : fullSet;
+};
+
+
+/**
+ * @return {Object<string, boolean>} layer set
+ * @protected
+ */
+os.ui.query.cmd.QueryEntries.prototype.getLayerSet = function() {
+  var layerSet = {};
+
+  if (this.layerHint) {
+    layerSet[this.layerHint] = true;
+  }
+
+  layerSet = this.newEntries.reduce(function(layerSet, entry) {
+    var id = /** @type {string} */ (entry['layerId']);
+    layerSet[id] = true;
+    return layerSet;
+  }, layerSet);
+
+  return layerSet;
+};
+
 
