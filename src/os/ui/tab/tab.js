@@ -9,9 +9,10 @@ goog.provide('os.ui.tab.Tab');
  * @param {string} icon The icon to display
  * @param {string} template The template to compile
  * @param {Object=} opt_data The optional data for the tab
+ * @param {function(Object, boolean)=} opt_enableFunc The optional tab enable function
  * @constructor
  */
-os.ui.tab.Tab = function(id, label, icon, template, opt_data) {
+os.ui.tab.Tab = function(id, label, icon, template, opt_data, opt_enableFunc) {
   /**
    * @type {string}
    */
@@ -36,4 +37,15 @@ os.ui.tab.Tab = function(id, label, icon, template, opt_data) {
    * @type {*}
    */
   this['data'] = opt_data || null;
+
+  /**
+   * @type {boolean}
+   */
+  this['isShown'] = true;
+
+  /**
+   * The function that returns if tab should be shown.
+   * @type {?function(*, boolean)}
+   */
+  this['enableFunc'] = opt_enableFunc;
 };
