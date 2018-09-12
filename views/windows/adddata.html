@@ -48,14 +48,14 @@
     <div class="d-flex flex-fill mt-1">
       <slicktree class="border col p-0 o-add-data__slicktree" x-data="providers" checkbox-class="c-toggle-switch" checkbox-tooltip="Activates or deactivates the layer"
         selected="selected" disable-folders="true"></slicktree>
-      <div class="border col ml-1 p-2" ng-bind-html="addData.getInfo()"></div>
+      <div class="border col ml-1 p-2 u-overflow-y-auto" ng-bind-html="addData.getInfo()"></div>
     </div>
   </div>
 
   <div class="modal-footer">
     <div class="d-flex flex-row justify-content-between w-100">
       <div class="text-left">
-        <button class="btn btn-info" ng-click="openServers()" title="Add, edit, and remove servers providing data to the application">
+        <button class="btn btn-secondary" ng-click="openServers()" title="Add, edit, and remove servers providing data to the application">
           <i class="fa fa-database"></i> Manage Servers
         </button>
       </div>
