@@ -14,16 +14,21 @@
 
     <div class="container flex-shrink-0 p-0">
       <div class="form-group row">
-        <div class="input-group col-6">
-          <input class="form-control js-input-search o-add-data__search" ng-model="addData.term" ng-change="addData.search()" placeholder="Search available layers"/>
-          <div class="input-group-append">
-            <button class="btn btn-secondary" ng-click="addData.clearSearch()" title="Clear the search term">
-              <i class="fa fa-times"></i>
-            </button>
+        <div class="col-6">
+          <div class="input-group">
+            <input class="form-control js-input-search o-add-data__search" ng-model="addData.term" ng-change="addData.search()" placeholder="Search available layers"/>
+            <div class="input-group-append">
+              <button class="btn btn-secondary" ng-click="addData.clearSearch()" title="Clear the search term">
+                <i class="fa fa-times"></i>
+              </button>
+            </div>
           </div>
         </div>
 
         <div class="col text-right">
+          <button class="btn btn-secondary" ng-click="openServers()" title="Add, edit, and remove servers providing data to the application">
+            <i class="fa fa-database"></i> Manage Servers
+          </button>
           <button class="btn btn-primary o-add-data__open-button" ng-click="addData.launchFileImport()" title="Open a local file or URL"
               ng-class="{'focus': addData.isTreeEmpty()}">
             <i class="fa fa-folder-open"></i> Open File/URL
@@ -53,16 +58,8 @@
   </div>
 
   <div class="modal-footer">
-    <div class="d-flex flex-row justify-content-between w-100">
-      <div class="text-left">
-        <button class="btn btn-secondary" ng-click="openServers()" title="Add, edit, and remove servers providing data to the application">
-          <i class="fa fa-database"></i> Manage Servers
-        </button>
-      </div>
-      <div class="text-right">
-        <button class="btn btn-secondary" ng-click="addData.close()">
-          <i class="fa fa-times"></i> Close</button>
-      </div>
-    </div>
+    <button class="btn btn-secondary" ng-click="addData.close()">
+      <i class="fa fa-times"></i> Close
+    </button>
   </div>
 </div>
