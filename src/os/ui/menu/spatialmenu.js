@@ -673,12 +673,8 @@ os.ui.menu.spatial.onMenuEvent = function(event, opt_layerIds) {
             break;
           case os.action.EventType.MERGE_AREAS:
           case os.action.EventType.EXPORT:
-            features.push(feature);
-            break;
           case os.action.EventType.FEATURE_INFO:
-            var layer = /** @type {os.layer.ILayer|undefined} */ (context[i].layer);
-            var title = layer ? layer.getTitle() : undefined;
-            os.ui.feature.launchMultiFeatureInfo(feature, title);
+            features.push(feature);
             break;
           default:
             break;
@@ -699,6 +695,11 @@ os.ui.menu.spatial.onMenuEvent = function(event, opt_layerIds) {
             cmds.push(new os.command.AreaToggle(area, true));
           }
         }
+        break;
+      case os.action.EventType.FEATURE_INFO:
+        var layer = /** @type {os.layer.ILayer|undefined} */ (context[0].layer);
+        var title = layer ? layer.getTitle() : undefined;
+        os.ui.feature.launchMultiFeatureInfo(features, title);
         break;
       default:
         break;
