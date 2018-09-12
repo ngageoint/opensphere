@@ -32,6 +32,12 @@ os.ui.Module.directive('punyparent', [os.ui.util.punyParentDirective]);
  */
 os.ui.util.PunyParentCtrl = function($scope, $element, $timeout) {
   /**
+   * @type {?angular.Scope}
+   * @private
+   */
+  this.scope_ = $scope;
+
+  /**
    * @type {?angular.JQLite}
    * @private
    */
@@ -66,6 +72,7 @@ os.ui.util.PunyParentCtrl = function($scope, $element, $timeout) {
  */
 os.ui.util.PunyParentCtrl.prototype.destroy_ = function() {
   this.element_.removeResize(this.resizeFn_);
+  this.scope_ = null;
   this.element_ = null;
   this.timeout_ = null;
 };
@@ -75,27 +82,27 @@ os.ui.util.PunyParentCtrl.prototype.destroy_ = function() {
  * @private
  */
 os.ui.util.PunyParentCtrl.prototype.onResize_ = function() {
-  this.timeout_(function() {
-    var children = this.element_.children().toArray();
-    var childrenWidth = 0;
-    children.forEach(function(child) {
-      var c = $(child);
-      // ignore the resize trigger since thats the parent size
-      if (!c.hasClass('resize-triggers')) {
-        childrenWidth += c.outerWidth(true);
-      }
-    });
-
-    if (childrenWidth > this.fullSize) {
-      this.fullSize = childrenWidth;
+  var children = this.element_.children().toArray();
+  var childrenWidth = 0;
+  children.forEach(function(child) {
+    var c = $(child);
+    // ignore the resize trigger since thats the parent size
+    if (!c.hasClass('resize-triggers')) {
+      childrenWidth += c.outerWidth(true);
     }
+  });
 
-    // Set the puny state on the child scope
-    children.forEach(function(child) {
-      var cscope = $(child).scope();
-      if (cscope) {
-        cscope['puny'] = this.element_.outerWidth(true) < this.fullSize;
-      }
-    }.bind(this));
+  if (childrenWidth > this.fullSize) {
+    this.fullSize = childrenWidth;
+  }
+
+  // Set the puny state on the child scope
+  children.forEach(function(child) {
+    var c = $(child);
+    var cscope = c.scope();
+    if (!c.hasClass('resize-triggers') && cscope) {
+      cscope['puny'] = this.element_.outerWidth(true) < this.fullSize;
+    }
   }.bind(this));
+  os.ui.apply(this.scope_);
 };
