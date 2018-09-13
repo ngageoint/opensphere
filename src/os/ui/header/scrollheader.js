@@ -141,7 +141,8 @@ os.ui.header.ScrollHeaderCtrl.prototype.updatePositions_ = function() {
 
   if (!this.isFixed_ && navTop <= 1) {
     this.isFixed_ = true;
-    this.resetHeight_ = /** @type {number} */ (this.scrollEl_.scrollTop());
+    var eleHeight = this.element_.height();
+    this.resetHeight_ = /** @type {number} */ (this.scrollEl_.scrollTop()) - (eleHeight ? eleHeight : 0);
     if (!this.supportsSticky_) {
       this.element_.addClass('position-fixed');
     }
