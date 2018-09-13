@@ -172,6 +172,7 @@ os.ui.DragDrop.prototype.destroy = function() {
  * @param {goog.fx.DragDropEvent} event
  */
 os.ui.DragDrop.prototype.onDragStart = function(event) {
+  this.clearTextSelection_();
   // To fix firefox selection issue, remove the parent selection (if it exists)
   var dragEle = event.dragSourceItem.element;
   if (dragEle) {
@@ -194,6 +195,7 @@ os.ui.DragDrop.prototype.onDragStart = function(event) {
  * @param {goog.fx.DragDropEvent} event
  */
 os.ui.DragDrop.prototype.onDragEnd = function(event) {
+  this.clearTextSelection_();
   if (this.parent_) {
     this.parent_.removeClass('unselectable');
     this.parent_.addClass('selectable');
@@ -201,6 +203,25 @@ os.ui.DragDrop.prototype.onDragEnd = function(event) {
   }
   if (this.scope_['ddEnd']) {
     this.scope_['ddEnd'](event.dragSourceItem.data, event);
+  }
+};
+
+
+/**
+ * Remove any highlighting that happened due to dragging
+ * @private
+ */
+os.ui.DragDrop.prototype.clearTextSelection_ = function() {
+  if (document.selection && document.selection.empty) {
+    try {
+      // IE fails here if selected element is not in dom
+      document.selection.empty();
+    } catch (e) { }
+  } else if (window.getSelection) {
+    var sel = window.getSelection();
+    if (sel && sel.removeAllRanges) {
+      sel.removeAllRanges();
+    }
   }
 };
 
@@ -318,8 +339,10 @@ os.ui.UrlDragDrop = function($scope, $element) {
    */
   this.element_ = $scope['ddElement'] ? /** @type {angular.JQLite} */ ($($scope['ddElement'])) : $element;
 
+  this.handleDropFn_ = this.handleDrop_.bind(this);
+
   if (this.element_[0]) {
-    this.element_[0].addEventListener('drop', this.handleDrop_.bind(this), $scope['ddCapture'] === 'true');
+    this.element_[0].addEventListener('drop', this.handleDropFn_, $scope['ddCapture'] === 'true');
     this.element_[0].addEventListener('dragover', this.handleDrag_, false);
     this.element_[0].addEventListener('dragleave', this.handleDrag_, false);
   }
@@ -385,7 +408,9 @@ os.ui.UrlDragDrop.prototype.handleDrop_ = function(event) {
  * Clear references to Angular/DOM elements.
  */
 os.ui.UrlDragDrop.prototype.destroy = function() {
-  goog.events.removeAll(this.element_);
+  this.element_[0].removeEventListener('drop', this.handleDropFn_);
+  this.element_[0].removeEventListener('dragover', this.handleDrag_);
+  this.element_[0].removeEventListener('dragleave', this.handleDrag_);
   this.scope_ = null;
   this.element_ = null;
 };

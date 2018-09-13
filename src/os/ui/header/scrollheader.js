@@ -141,7 +141,8 @@ os.ui.header.ScrollHeaderCtrl.prototype.updatePositions_ = function() {
 
   if (!this.isFixed_ && navTop <= 1) {
     this.isFixed_ = true;
-    this.resetHeight_ = /** @type {number} */ (this.scrollEl_.scrollTop());
+    var eleHeight = this.element_.height();
+    this.resetHeight_ = /** @type {number} */ (this.scrollEl_.scrollTop()) - (eleHeight ? eleHeight : 0);
     if (!this.supportsSticky_) {
       this.element_.addClass('position-fixed');
     }
@@ -159,6 +160,9 @@ os.ui.header.ScrollHeaderCtrl.prototype.updatePositions_ = function() {
     }
     this.element_.css('top', '');
     this.scope_.$emit(os.ui.header.ScrollHeaderEvents.UNSTICK);
+  } else if (this.isFixed_ && headerHeight != this.element_.position().top) {
+    // We are in a fixed state but the header changed sizes, update our offset
+    this.element_.css('top', headerHeight + 'px');
   }
 };
 
