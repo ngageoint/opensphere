@@ -5,6 +5,7 @@ goog.require('goog.Disposable');
 goog.require('ol.events');
 goog.require('ol.geom.Point');
 goog.require('os.map');
+goog.require('os.plugin.PluginManager');
 goog.require('os.ui.Module');
 goog.require('os.ui.feature.featureInfoCellDirective');
 goog.require('os.ui.feature.tab.descriptionEnableFunction');
@@ -58,6 +59,7 @@ os.ui.feature.FeatureInfoCtrl = function($scope, $element) {
    * @type {Array.<os.ui.tab.Tab>}
    */
   this['tabs'] = os.ui.feature.FeatureInfoCtrl.TABS;
+  this.addTabPlugins_();
 
   /**
    * Number of tabs that are currently shown
@@ -247,6 +249,33 @@ os.ui.feature.FeatureInfoCtrl.prototype.updateGeometry = function() {
 
 
 /**
+ * Add external plugin tabs
+ * @private
+ */
+os.ui.feature.FeatureInfoCtrl.prototype.addTabPlugins_ = function() {
+  var tabPlugins = os.plugin.PluginManager.getInstance().getPlugins().filter(
+      function(p) {
+        return p['group'] == 'featureinfotab';
+      });
+
+  for (var i = 0; i < tabPlugins.length; i++) {
+    if (tabPlugins[i]['getTab']) {
+      var newTab = tabPlugins[i]['getTab']();
+      var foundTab = this['tabs'].find(function(t) {
+        return newTab.id == t.id;
+      });
+
+      if (!foundTab) {
+        this['tabs'].push(newTab);
+      } else {
+        newTab = null;
+      }
+    }
+  }
+};
+
+
+/**
  * Save active tab
  * @param {os.ui.tab.Tab} tab
  * @export
@@ -291,9 +320,10 @@ os.ui.feature.FeatureInfoCtrl.prototype.getUi_ = function(item) {
  */
 os.ui.feature.FeatureInfoCtrl.prototype.updateTabs_ = function() {
   var numShown = 0;
+  console.log('updatetabs');
   for (var i = 0; i < this['tabs'].length; i++) {
     if (this['tabs'][i]['enableFunc']) {
-      var showTab = this['tabs'][i]['enableFunc'](this['tabs'][i]['data']);
+      var showTab = this['tabs'][i]['enableFunc'](this.scope['items'][0]);
       this['tabs'][i]['isShown'] = showTab;
       if (showTab) {
         numShown++;
@@ -304,6 +334,11 @@ os.ui.feature.FeatureInfoCtrl.prototype.updateTabs_ = function() {
     }
   }
   this['numTabsShown'] = numShown;
+
+  // If an event happened that hides the active tag reset the active tab
+  if (this.scope['activeTab']['isShown'] === false) {
+    this.setInitialActiveTab_();
+  }
 
   this.scope.$broadcast(os.ui.feature.FeatureInfoCtrl.UPDATE_TABS, this.scope['items'][0]);
 };
