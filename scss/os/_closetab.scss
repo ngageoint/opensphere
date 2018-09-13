@@ -16,6 +16,7 @@ $close-tab-font-size: .5rem !default;
   font-size: $close-tab-font-size;
   padding: ($close-tab-padding-x * 3) $close-tab-padding-x;
   position: absolute;
+  z-index: 1;
 
   &:hover {
     background-color: $list-group-hover-bg !important;

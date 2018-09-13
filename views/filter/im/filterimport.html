@@ -1,6 +1,6 @@
 <div class="c-filter-import flex-column d-flex flex-fill">
   <div class="modal-body u-overflow-y-auto">
-    <div class="border rounded bg-secondary" ng-if="ctrl.notFound.length">
+    <div ng-if="ctrl.notFound.length">
       We were unable to match <b>{{ctrl.notFound.length}}</b> {{ctrl.getFilterTitle(ctrl.notFound.length)}} to a layer. Please choose layers to add them to:
       <div class="form-group row">
         <div class="col">
@@ -16,8 +16,8 @@
       <div ng-if="ctrl.hasUnmatchedFilters">
         <i class="fa fa-warning text-warning"></i> Any {{ctrl.getFilterTitle(1)}} with <i class="fa fa-times text-danger"></i> will be discarded.
       </div>
-      <div class="border rounded bg-secondary">
-        <div title="{{filter.tooltip}}" ng-repeat="filter in ctrl.notFound" ng-class="{'u-bg-body' : $index % 2 == 0}">
+      <div class="u-table u-table-striped mt-1 border">
+        <div title="{{filter.tooltip}}" ng-repeat="filter in ctrl.notFound" class="u-table__row">
           <div>
             <span class="text-truncate">
               <i class="fa mx-1" ng-class="{'fa-times text-danger': !filter.matches, 'fa-check text-success': filter.matches}"
@@ -58,10 +58,7 @@
         </div>
       </div>
     </div>
-
-    <div class="border rounded bg-secondary" ng-if="ctrl.foundCount == 0">
-      Nothing to import.
-    </div>
+    <div ng-if="ctrl.foundCount == 0" class="text-center p-2">Nothing to import</div>
   </div>
 
   <div class="modal-footer">
