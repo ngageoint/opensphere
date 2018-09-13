@@ -159,6 +159,9 @@ os.ui.header.ScrollHeaderCtrl.prototype.updatePositions_ = function() {
     }
     this.element_.css('top', '');
     this.scope_.$emit(os.ui.header.ScrollHeaderEvents.UNSTICK);
+  } else if (this.isFixed_ && headerHeight != this.element_.position().top) {
+    // We are in a fixed state but the header changed sizes, update our offset
+    this.element_.css('top', headerHeight + 'px');
   }
 };
 
