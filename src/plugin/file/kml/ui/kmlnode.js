@@ -381,6 +381,7 @@ plugin.file.kml.ui.KMLNode.prototype.getOverlays = function(opt_unchecked) {
 
 /**
  * @inheritDoc
+ * @suppress {accessControls}
  */
 plugin.file.kml.ui.KMLNode.prototype.getExtent = function() {
   var extent = null;
