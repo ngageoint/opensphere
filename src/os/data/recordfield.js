@@ -20,7 +20,8 @@ os.data.RecordField = {
   SOURCE_ID: 'sourceId',
   SOURCE_NAME: '_sourceName',
   TIME: 'recordTime',
-  VISIBLE: 'visibleNonTimeline'
+  VISIBLE: 'visibleNonTimeline',
+  URL: 'URL'
 };
 
 

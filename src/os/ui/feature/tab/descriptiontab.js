@@ -4,6 +4,7 @@ goog.provide('os.ui.feature.tab.descriptionTabDirective');
 
 
 goog.require('ol.Feature');
+goog.require('os.data.RecordField');
 goog.require('os.ui.Module');
 
 
