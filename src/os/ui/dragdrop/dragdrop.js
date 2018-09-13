@@ -275,7 +275,8 @@ os.ui.urlDragDropDirective = function() {
       'ddTargetId': '@',
       'ddDrop': '=?',
       'ddCapture': '@',
-      'ddElement': '@'
+      'ddElement': '@',
+      'ddText': '@?'
     }
   };
 };
@@ -318,10 +319,18 @@ os.ui.UrlDragDrop = function($scope, $element) {
    */
   this.element_ = $scope['ddElement'] ? /** @type {angular.JQLite} */ ($($scope['ddElement'])) : $element;
 
+  this.handleDropFn_ = this.handleDrop_.bind(this);
+
   if (this.element_[0]) {
-    this.element_[0].addEventListener('drop', this.handleDrop_.bind(this), $scope['ddCapture'] === 'true');
+    this.element_[0].addEventListener('drop', this.handleDropFn_, $scope['ddCapture'] === 'true');
     this.element_[0].addEventListener('dragover', this.handleDrag_, false);
     this.element_[0].addEventListener('dragleave', this.handleDrag_, false);
+
+    if (this.scope_['ddText']) {
+      this.element_.attr('data-text', this.scope_['ddText']);
+    } else {
+      this.element_.attr('data-text', 'Drag & Drop');
+    }
   }
 };
 
@@ -385,7 +394,9 @@ os.ui.UrlDragDrop.prototype.handleDrop_ = function(event) {
  * Clear references to Angular/DOM elements.
  */
 os.ui.UrlDragDrop.prototype.destroy = function() {
-  goog.events.removeAll(this.element_);
+  this.element_[0].removeEventListener('drop', this.handleDropFn_);
+  this.element_[0].removeEventListener('dragover', this.handleDrag_);
+  this.element_[0].removeEventListener('dragleave', this.handleDrag_);
   this.scope_ = null;
   this.element_ = null;
 };
