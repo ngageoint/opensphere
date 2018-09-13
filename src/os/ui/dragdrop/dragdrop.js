@@ -172,6 +172,7 @@ os.ui.DragDrop.prototype.destroy = function() {
  * @param {goog.fx.DragDropEvent} event
  */
 os.ui.DragDrop.prototype.onDragStart = function(event) {
+  this.clearTextSelection_();
   // To fix firefox selection issue, remove the parent selection (if it exists)
   var dragEle = event.dragSourceItem.element;
   if (dragEle) {
@@ -194,6 +195,7 @@ os.ui.DragDrop.prototype.onDragStart = function(event) {
  * @param {goog.fx.DragDropEvent} event
  */
 os.ui.DragDrop.prototype.onDragEnd = function(event) {
+  this.clearTextSelection_();
   if (this.parent_) {
     this.parent_.removeClass('unselectable');
     this.parent_.addClass('selectable');
@@ -201,6 +203,25 @@ os.ui.DragDrop.prototype.onDragEnd = function(event) {
   }
   if (this.scope_['ddEnd']) {
     this.scope_['ddEnd'](event.dragSourceItem.data, event);
+  }
+};
+
+
+/**
+ * Remove any highlighting that happened due to dragging
+ * @private
+ */
+os.ui.DragDrop.prototype.clearTextSelection_ = function() {
+  if (document.selection && document.selection.empty) {
+    try {
+      // IE fails here if selected element is not in dom
+      document.selection.empty();
+    } catch (e) { }
+  } else if (window.getSelection) {
+    var sel = window.getSelection();
+    if (sel && sel.removeAllRanges) {
+      sel.removeAllRanges();
+    }
   }
 };
 
