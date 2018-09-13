@@ -92,7 +92,7 @@ os.ui.help.ControlsCtrl.launch = function() {
  */
 os.ui.help.ControlsCtrl.prototype.getKey = function(key) {
   if (key === goog.events.KeyCodes.META && os.isOSX()) {
-    return '';
+    return 'Command';
   }
 
   return goog.string.toTitleCase(goog.events.KeyNames[key]);
