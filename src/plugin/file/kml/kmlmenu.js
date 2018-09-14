@@ -187,7 +187,7 @@ plugin.file.kml.menu.onLayerEvent_ = function(event) {
           case plugin.file.kml.menu.EventType.GOTO:
             var extent = node.getExtent();
 
-            if (!ol.extent.isEmpty(extent)) {
+            if (extent && !ol.extent.isEmpty(extent)) {
               os.commandStack.addCommand(new os.command.FlyToExtent(extent));
             }
             break;
