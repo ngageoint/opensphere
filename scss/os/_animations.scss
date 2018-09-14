@@ -70,3 +70,10 @@
 .a-transition-duration__100ms {
   transition-duration: 100ms !important;
 }
+
+.a-transition-leave__none {
+  // NOTE: this is what makes it so the elements dont flicker on model updates
+  &.ng-hide {
+    transition: none;
+  }
+}
