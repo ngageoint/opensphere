@@ -8,10 +8,7 @@ goog.require('os.map');
 goog.require('os.plugin.PluginManager');
 goog.require('os.ui.Module');
 goog.require('os.ui.button.Button');
-goog.require('os.ui.feature.featureInfoCellDirective');
-goog.require('os.ui.feature.tab.descriptionEnableFunction');
-goog.require('os.ui.feature.tab.descriptionTabDirective');
-goog.require('os.ui.feature.tab.propertiesTabDirective');
+goog.require('os.ui.feature.FeatureInfoTabManager');
 goog.require('os.ui.location.SimpleLocationDirective');
 goog.require('os.ui.tab.Tab');
 goog.require('os.ui.uiSwitchDirective');
@@ -59,8 +56,7 @@ os.ui.feature.FeatureInfoCtrl = function($scope, $element) {
    * Array of tabs to show.
    * @type {Array.<os.ui.tab.Tab>}
    */
-  this['tabs'] = os.ui.feature.FeatureInfoCtrl.TABS;
-  this.addTabPlugins_();
+  this['tabs'] = os.ui.feature.FeatureInfoTabManager.getInstance().getTabs();
 
   /**
    * Number of tabs that are currently shown
@@ -94,32 +90,6 @@ os.ui.feature.FeatureInfoCtrl = function($scope, $element) {
   $scope.$on('$destroy', this.dispose.bind(this));
 };
 goog.inherits(os.ui.feature.FeatureInfoCtrl, goog.Disposable);
-
-
-/**
- * The default properties tab.
- * @type {os.ui.tab.Tab}
- */
-os.ui.feature.FeatureInfoCtrl.PROPERTIES_TAB = new os.ui.tab.Tab('props', 'Properties', 'fa-th', 'propertiestab');
-
-
-/**
- * The description tab.
- * @type {os.ui.tab.Tab}
- */
-os.ui.feature.FeatureInfoCtrl.DESCRIPTION_TAB = new
-    os.ui.tab.Tab('desc', 'Description', 'fa-newspaper-o', 'descriptiontab',
-        null, os.ui.feature.tab.descriptionEnableFunction);
-
-
-/**
- * Array of tabs to show on this mashup.
- * @type {Array.<os.ui.tab.Tab>}
- */
-os.ui.feature.FeatureInfoCtrl.TABS = [
-  os.ui.feature.FeatureInfoCtrl.PROPERTIES_TAB,
-  os.ui.feature.FeatureInfoCtrl.DESCRIPTION_TAB
-];
 
 
 /**
@@ -250,33 +220,6 @@ os.ui.feature.FeatureInfoCtrl.prototype.updateGeometry = function() {
 
 
 /**
- * Add external plugin tabs
- * @private
- */
-os.ui.feature.FeatureInfoCtrl.prototype.addTabPlugins_ = function() {
-  var tabPlugins = os.plugin.PluginManager.getInstance().getPlugins().filter(
-      function(p) {
-        return p['group'] == 'featureinfotab';
-      });
-
-  for (var i = 0; i < tabPlugins.length; i++) {
-    if (tabPlugins[i]['getTab']) {
-      var newTab = tabPlugins[i]['getTab']();
-      var foundTab = this['tabs'].find(function(t) {
-        return newTab.id == t.id;
-      });
-
-      if (!foundTab) {
-        this['tabs'].push(newTab);
-      } else {
-        newTab = null;
-      }
-    }
-  }
-};
-
-
-/**
  * Save active tab
  * @param {os.ui.tab.Tab} tab
  * @export
@@ -291,13 +234,7 @@ os.ui.feature.FeatureInfoCtrl.prototype.setActiveTab = function(tab) {
  * @private
  */
 os.ui.feature.FeatureInfoCtrl.prototype.setInitialActiveTab_ = function() {
-  var initialActiveTab = this['tabs'].find(function(tab) {
-    return tab.id == 'props';
-  });
-
-  if (initialActiveTab) {
-    this.setActiveTab(initialActiveTab);
-  } else if (this['tabs'].length > 0) {
+  if (this['tabs'].length > 0) {
     this.setActiveTab(this['tabs'][0]);
   }
 };
@@ -349,5 +286,11 @@ os.ui.feature.FeatureInfoCtrl.prototype.updateTabs_ = function() {
  * @param {angular.Scope.Event} event
  */
 os.ui.feature.FeatureInfoCtrl.prototype.showDescription = function(event) {
-  this.setActiveTab(os.ui.feature.FeatureInfoCtrl.DESCRIPTION_TAB);
+  var descTabIndex = this['tabs'].findIndex(function(t) {
+    return t.id == 'desc';
+  });
+
+  if (descTabIndex > -1) {
+    this.setActiveTab(this['tabs'][descTabIndex]);
+  }
 };

@@ -6,6 +6,7 @@ goog.require('ol.Feature');
 goog.require('os.Fields');
 goog.require('os.data.RecordField');
 goog.require('os.ui.Module');
+goog.require('os.ui.feature.featureInfoCellDirective');
 goog.require('os.ui.feature.tab.AbstractFeatureTabCtrl');
 
 
@@ -111,8 +112,6 @@ os.ui.feature.tab.PropertiesTabCtrl.prototype.updateTab = function(event, data) 
   }
 
   this.order();
-
-  // os.ui.apply(this.scope);
 };
 
 
