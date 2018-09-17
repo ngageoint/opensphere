@@ -7,6 +7,7 @@ goog.require('ol.geom.Point');
 goog.require('os.map');
 goog.require('os.plugin.PluginManager');
 goog.require('os.ui.Module');
+goog.require('os.ui.button.Button');
 goog.require('os.ui.feature.featureInfoCellDirective');
 goog.require('os.ui.feature.tab.descriptionEnableFunction');
 goog.require('os.ui.feature.tab.descriptionTabDirective');
@@ -320,7 +321,6 @@ os.ui.feature.FeatureInfoCtrl.prototype.getUi_ = function(item) {
  */
 os.ui.feature.FeatureInfoCtrl.prototype.updateTabs_ = function() {
   var numShown = 0;
-  console.log('updatetabs');
   for (var i = 0; i < this['tabs'].length; i++) {
     if (this['tabs'][i]['enableFunc']) {
       var showTab = this['tabs'][i]['enableFunc'](this.scope['items'][0]);
