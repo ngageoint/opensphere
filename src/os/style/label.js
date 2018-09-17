@@ -117,7 +117,7 @@ os.style.label.DEFAULT_FONT = 'Arial';
  * @type {number}
  * @const
  */
-os.style.label.DEFAULT_SIZE = 12;
+os.style.label.DEFAULT_SIZE = 14;
 
 
 /**
@@ -133,7 +133,7 @@ os.style.label.MIN_SIZE = 8;
  * @type {number}
  * @const
  */
-os.style.label.MAX_SIZE = 20;
+os.style.label.MAX_SIZE = 24;
 
 
 /**
