@@ -1,26 +1,32 @@
-<div class="d-flex">
-  <div ng-repeat="(key, controlcolumn) in controlsHelp.controls" class="col-6">
-    <div ng-repeat="control in controlcolumn" class="m-2">
-      <div>
-        <h4>{{control.section}}</h4>
-      </div>
-      <div ng-repeat="ctrl in control.controls" class="row pb-3">
-        <div class="col-5">{{ctrl.text}}: </div>
-        <div class="col-7">
-          <span ng-repeat="keyCode in ctrl.keys track by $index">
-            <span ng-if="$even" class="border border-info rounded p-1" >{{controlsHelp.getKey(keyCode)}}</span>
-            <span ng-if="$odd"> {{keyCode}} </span>
-          </span>
-          <span ng-repeat="otherText in ctrl.other track by $index">
-            <span ng-if="$even">
-              <img ng-if="controlsHelp.getMouse(otherText)" ng-src="{{controlsHelp.getMouse(otherText)}}">
-              <span ng-if="controlsHelp.getFont(otherText)" class="border border-info rounded p-1" ng-class="controlsHelp.getFontClass(otherText)">
-                <i ng-class="controlsHelp.getFont(otherText)"></i>
+<div class="d-flex modal-body">
+  <div class="flex-fill row">
+    <div ng-repeat="(key, controlcolumn) in controlsHelp.controls" class="col-md-6 col-12">
+      <div ng-repeat="control in controlcolumn" class="card mb-3">
+        <div class="card-header">
+          <h4 class="m-0">{{control.section}}</h4>
+        </div>
+        <div class="card-body">
+          <div ng-repeat="ctrl in control.controls" class="row align-items-center mb-1">
+            <div class="text-right col-5 col-form-label">{{ctrl.text}} </div>
+            <div class="col-7">
+              <span ng-repeat="keyCode in ctrl.keys track by $index">
+                <span ng-if="$even" class="col-form-label d-inline-block px-1 bg-secondary u-bg-secondary-text rounded border">
+                  {{controlsHelp.getKey(keyCode)}}
+                </span>
+                <span ng-if="$odd"> {{keyCode}} </span>
               </span>
-              <span ng-if="!controlsHelp.getMouse(otherText) && !controlsHelp.getFont(otherText)" class="border border-info rounded p-1">{{otherText}}</span>
-            </span>
-            <span ng-if="$odd"> {{otherText}} </span>
-          </span>
+              <span ng-repeat="otherText in ctrl.other track by $index">
+                <span ng-if="$even">
+                  <img ng-if="controlsHelp.getMouse(otherText)" ng-src="{{controlsHelp.getMouse(otherText)}}">
+                  <span ng-if="controlsHelp.getFont(otherText)" class="col-form-label d-inline-block px-1 bg-secondary u-bg-secondary-text rounded border" ng-class="controlsHelp.getFontClass(otherText)">
+                    <i ng-class="controlsHelp.getFont(otherText)"></i>
+                  </span>
+                  <span ng-if="!controlsHelp.getMouse(otherText) && !controlsHelp.getFont(otherText)" class="col-form-label d-inline-block px-1 bg-secondary u-bg-secondary-text rounded border">{{otherText}}</span>
+                </span>
+                <span ng-if="$odd"> {{otherText}} </span>
+              </span>
+            </div>
+          </div>
         </div>
       </div>
     </div>

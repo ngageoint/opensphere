@@ -220,10 +220,22 @@
   }
 }
 
+.u-input-number__width-2 {
+  width: 2.5rem;
+}
+
+.u-input-number__width-4 {
+  width: 3.5rem;
+}
+
 
 // --------------------------------- Color Utilities --------------------------------- //
 .u-bg-body {
   background-color: $body-bg;
+}
+
+.u-bg-body-offset {
+  background-color: $u-theme-variables--bg-offset;
 }
 
 .u-bg-body-text {
