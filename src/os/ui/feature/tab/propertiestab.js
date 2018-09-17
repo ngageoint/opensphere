@@ -6,6 +6,7 @@ goog.require('ol.Feature');
 goog.require('os.Fields');
 goog.require('os.data.RecordField');
 goog.require('os.ui.Module');
+goog.require('os.ui.feature.tab.AbstractFeatureTabCtrl');
 
 
 /**
@@ -34,47 +35,35 @@ os.ui.Module.directive('propertiestab', [os.ui.feature.tab.propertiesTabDirectiv
 /**
  * Controller function for the propertiesTabDirective directive
  * @param {!angular.Scope} $scope
+ * @param {!angular.JQLite} $element
+ * @extends {os.ui.feature.tab.AbstractFeatureTabCtrl}
  * @constructor
- * @ngInject
  */
-os.ui.feature.tab.PropertiesTabCtrl = function($scope) {
+os.ui.feature.tab.PropertiesTabCtrl = function($scope, $element) {
   /**
    * @type {?angular.Scope}
    */
   this.scope = $scope;
 
+  /**
+   * @type {?angular.JQLite}
+   */
+  this.element = $element;
+
+
   this.scope['columnToOrder'] = 'field';
   this.scope['reverse'] = false;
   this.scope['selected'] = null;
 
-  // Control is constructed after the first broadcast
-  // so the properties need to be updated once during construction
-  if (this.scope && this.scope['items'] && this.scope['items'].length > 0) {
-    this.updateProperties(null, this.scope['items'][0]['data']);
-  }
-
-
-  $scope.$on('$destroy', goog.bind(this.destroy_, this));
-  $scope.$on(os.ui.feature.FeatureInfoCtrl.UPDATE_TABS, this.updateProperties.bind(this));
+  os.ui.feature.tab.PropertiesTabCtrl.base(this, 'constructor');
 };
+goog.inherits(os.ui.feature.tab.PropertiesTabCtrl, os.ui.feature.tab.AbstractFeatureTabCtrl);
 
 
 /**
- * Clean up.
- * @private
+ * @inheritDoc
  */
-os.ui.feature.tab.PropertiesTabCtrl.prototype.destroy_ = function() {
-  this.scope = null;
-};
-
-
-/**
- * Update the properties/description information displayed for the feature
- * @param {?angular.Scope.Event} event The broadcast event
- * @param {*} data The event data
- * @protected
- */
-os.ui.feature.tab.PropertiesTabCtrl.prototype.updateProperties = function(event, data) {
+os.ui.feature.tab.PropertiesTabCtrl.prototype.updateTab = function(event, data) {
   if (data) {
     this.scope['properties'] = [];
 

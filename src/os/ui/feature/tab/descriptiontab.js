@@ -2,10 +2,10 @@ goog.provide('os.ui.feature.tab.DescriptionTabCtrl');
 goog.provide('os.ui.feature.tab.descriptionEnableFunction');
 goog.provide('os.ui.feature.tab.descriptionTabDirective');
 
-
 goog.require('ol.Feature');
 goog.require('os.data.RecordField');
 goog.require('os.ui.Module');
+goog.require('os.ui.feature.tab.AbstractFeatureTabCtrl');
 
 
 /**
@@ -35,8 +35,8 @@ os.ui.Module.directive('descriptiontab', [os.ui.feature.tab.descriptionTabDirect
  * Controller function for the descriptionTabDirective directive
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
+ * @extends {os.ui.feature.tab.AbstractFeatureTabCtrl}
  * @constructor
- * @ngInject
  */
 os.ui.feature.tab.DescriptionTabCtrl = function($scope, $element) {
   /**
@@ -49,34 +49,15 @@ os.ui.feature.tab.DescriptionTabCtrl = function($scope, $element) {
    */
   this.element = $element;
 
-  // Control is constructed after the first broadcast
-  // so the description need to be updated once during construction
-  if (this.scope && this.scope['items'] && this.scope['items'].length > 0) {
-    this.updateDescription(null, this.scope['items'][0]['data']);
-  }
-
-  $scope.$on(os.ui.feature.FeatureInfoCtrl.UPDATE_TABS, this.updateDescription.bind(this));
-  $scope.$on('$destroy', goog.bind(this.destroy_, this));
+  os.ui.feature.tab.DescriptionTabCtrl.base(this, 'constructor');
 };
+goog.inherits(os.ui.feature.tab.DescriptionTabCtrl, os.ui.feature.tab.AbstractFeatureTabCtrl);
 
 
 /**
- * Clean up.
- * @private
+ * @inheritDoc
  */
-os.ui.feature.tab.DescriptionTabCtrl.prototype.destroy_ = function() {
-  this.scope = null;
-  this.element = null;
-};
-
-
-/**
- * Update the description information displayed for the feature.
- * @param {?angular.Scope.Event} event The broadcast event
- * @param {*} data The event data
- * @protected
- */
-os.ui.feature.tab.DescriptionTabCtrl.prototype.updateDescription = function(event, data) {
+os.ui.feature.tab.DescriptionTabCtrl.prototype.updateTab = function(event, data) {
   if (data) {
     var feature = /** @type {ol.Feature|undefined} */ (data);
     if (feature) {
