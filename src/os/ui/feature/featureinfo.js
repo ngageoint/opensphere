@@ -10,7 +10,7 @@ goog.require('os.ui.Module');
 goog.require('os.ui.button.Button');
 goog.require('os.ui.feature.FeatureInfoTabManager');
 goog.require('os.ui.location.SimpleLocationDirective');
-goog.require('os.ui.tab.Tab');
+goog.require('os.ui.tab.FeatureTab');
 goog.require('os.ui.uiSwitchDirective');
 
 
@@ -54,7 +54,7 @@ os.ui.feature.FeatureInfoCtrl = function($scope, $element) {
 
   /**
    * Array of tabs to show.
-   * @type {Array.<os.ui.tab.Tab>}
+   * @type {Array.<os.ui.tab.FeatureTab>}
    */
   this['tabs'] = os.ui.feature.FeatureInfoTabManager.getInstance().getTabs();
 
@@ -65,7 +65,7 @@ os.ui.feature.FeatureInfoCtrl = function($scope, $element) {
   this['numTabsShown'] = 1;
 
   /**
-   * @type {function(os.ui.tab.Tab):string}
+   * @type {function(os.ui.tab.FeatureTab):string}
    */
   this['getUi'] = goog.bind(this.getUi_, this);
 
@@ -221,7 +221,7 @@ os.ui.feature.FeatureInfoCtrl.prototype.updateGeometry = function() {
 
 /**
  * Save active tab
- * @param {os.ui.tab.Tab} tab
+ * @param {os.ui.tab.FeatureTab} tab
  * @export
  */
 os.ui.feature.FeatureInfoCtrl.prototype.setActiveTab = function(tab) {
@@ -242,7 +242,7 @@ os.ui.feature.FeatureInfoCtrl.prototype.setInitialActiveTab_ = function() {
 
 /**
  * Gets the UI for the currently active tab.
- * @param {os.ui.tab.Tab} item
+ * @param {os.ui.tab.FeatureTab} item
  * @return {string}
  * @private
  */
@@ -258,26 +258,28 @@ os.ui.feature.FeatureInfoCtrl.prototype.getUi_ = function(item) {
  */
 os.ui.feature.FeatureInfoCtrl.prototype.updateTabs_ = function() {
   var numShown = 0;
-  for (var i = 0; i < this['tabs'].length; i++) {
-    if (this['tabs'][i]['enableFunc']) {
-      var showTab = this['tabs'][i]['enableFunc'](this.scope['items'][0]);
-      this['tabs'][i]['isShown'] = showTab;
+  var loadedFeature = this.scope['items'][0];
+
+  this['tabs'].forEach(function(tab) {
+    if (tab.enableFunc) {
+      var showTab = tab.enableFunc(loadedFeature);
+      tab.isShown = showTab;
       if (showTab) {
         numShown++;
       }
     } else {
-      this['tabs'][i]['isShown'] = true;
+      tab.isShown = true;
       numShown++;
     }
-  }
+  });
   this['numTabsShown'] = numShown;
 
   // If an event happened that hides the active tag reset the active tab
-  if (this.scope['activeTab']['isShown'] === false) {
+  if (this.scope['activeTab'].isShown === false) {
     this.setInitialActiveTab_();
   }
 
-  this.scope.$broadcast(os.ui.feature.FeatureInfoCtrl.UPDATE_TABS, this.scope['items'][0]);
+  this.scope.$broadcast(os.ui.feature.FeatureInfoCtrl.UPDATE_TABS, loadedFeature);
 };
 
 
