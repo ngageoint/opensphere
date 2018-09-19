@@ -55,3 +55,11 @@ os.im.action.IImportAction.prototype.execute;
  * @return {!os.im.action.IImportAction<T>} The cloned action.
  */
 os.im.action.IImportAction.prototype.clone;
+
+
+/**
+ * Reset the import action.
+ * @param {string} entry type
+ * @param {!Array<T>} items The items.
+ */
+os.im.action.IImportAction.prototype.reset;

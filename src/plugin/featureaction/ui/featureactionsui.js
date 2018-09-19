@@ -89,11 +89,19 @@ plugin.im.action.feature.ui.FeatureActionsCtrl.prototype.apply = function() {
     var dm = os.data.DataManager.getInstance();
     var source = dm.getSource(this.entryType);
     if (source) {
-      if (source.isRefreshEnabled()) {
+      var layer = /** @type {os.layer.Vector} */ (os.MapContainer.getInstance().getLayer(this.entryType));
+
+      // check to see if the layer source should be refreshed
+      var featureActionRefresh = true;
+      if (layer.getLayerOptions()['featureActionRefresh'] !== undefined) {
+        featureActionRefresh = layer.getLayerOptions()['featureActionRefresh'];
+      }
+
+      if (source.isRefreshEnabled() && featureActionRefresh) {
         source.refresh();
       } else {
         var manager = plugin.im.action.feature.Manager.getInstance();
-        manager.processItems(source.getId(), source.getFeatures());
+        manager.processItems(source.getId(), source.getFeatures(), true);
       }
     }
   }
