@@ -1,6 +1,5 @@
 goog.provide('os.ui.feature.FeatureInfoTabManager');
 
-goog.require('goog.object');
 goog.require('os.ui.feature.tab.descriptionEnableFunction');
 goog.require('os.ui.feature.tab.descriptionTabDirective');
 goog.require('os.ui.feature.tab.propertiesTabDirective');
@@ -54,7 +53,7 @@ os.ui.feature.FeatureInfoTabManager.TABS = [
  * @return {Array.<os.ui.tab.FeatureTab>} clone of the registered tabs
  */
 os.ui.feature.FeatureInfoTabManager.prototype.getTabs = function() {
-  return goog.object.unsafeClone(this['registeredTabs']);
+  return this['registeredTabs'];
 };
 
 
