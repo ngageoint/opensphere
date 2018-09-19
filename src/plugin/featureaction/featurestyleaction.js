@@ -95,6 +95,34 @@ plugin.im.action.feature.StyleAction.CONFIG_UI = 'featureactionstyleconfig';
 /**
  * @inheritDoc
  */
+plugin.im.action.feature.StyleAction.prototype.reset = function(entryType, items) {
+  var dm = os.data.DataManager.getInstance();
+  var source = dm.getSource(entryType);
+  var layerConfig = os.style.StyleManager.getInstance().getLayerConfig(source.getId());
+
+  for (var i = 0; i < items.length; i++) {
+    var item = items[i];
+    if (item) {
+      item.set(plugin.im.action.feature.StyleAction.FEATURE_ID, undefined);
+      item.set(os.style.StyleField.SHAPE, undefined, true);
+      item.set(os.style.StyleField.CENTER_SHAPE, undefined, true);
+      item.set(os.style.StyleType.FEATURE, layerConfig, true);
+    }
+  }
+
+  os.style.setFeaturesStyle(items);
+
+  // notify that the layer needs to be updated
+  var layer = os.feature.getLayer(items[0]);
+  if (layer) {
+    os.style.notifyStyleChange(layer, items);
+  }
+};
+
+
+/**
+ * @inheritDoc
+ */
 plugin.im.action.feature.StyleAction.prototype.execute = function(items) {
   for (var i = 0; i < items.length; i++) {
     var item = items[i];
