@@ -932,6 +932,11 @@ plugin.ogc.OGCLayerDescriptor.prototype.getWmsOptions = function() {
 
   options['urls'] = urls;
 
+  if (options['provider']) {
+    // check to see if the visibility is configured to false, if not visibility should be true
+    options['visible'] = os.settings.get(['providers', this.getProvider().toLowerCase(), 'visible'], true);
+  }
+
   return options;
 };
 
@@ -973,6 +978,11 @@ plugin.ogc.OGCLayerDescriptor.prototype.getWfsOptions = function(opt_options) {
   options['url'] = this.replaceWithNextUrl(this.getWfsUrl());
   options['usePost'] = this.getUsePost();
   options['formats'] = this.getWfsFormats();
+
+  if (options['provider']) {
+    // check to see if the visibility is configured to false, if not visibility should be true
+    options['visible'] = os.settings.get(['providers', this.getProvider().toLowerCase(), 'visible'], true);
+  }
 
   return options;
 };
