@@ -5,7 +5,6 @@ goog.provide('os.ui.feature.tab.AbstractFeatureTabCtrl');
 /**
  * Abstract controller for feature tabs.
  * @constructor
- * @ngInject
  */
 os.ui.feature.tab.AbstractFeatureTabCtrl = function() {
   goog.asserts.assert(this.scope != null);
