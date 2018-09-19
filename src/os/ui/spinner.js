@@ -168,28 +168,37 @@ os.ui.SpinnerCtrl.prototype.onDisabledChange_ = function(opt_new, opt_old) {
  * @private
  */
 os.ui.SpinnerCtrl.prototype.onSpin_ = function(e, spinner) {
+  // jQuery UI manages the value between max and min so we don't need to
   this.killEvent_(e);
 
   var faceValue = goog.isDef(spinner['value']) ? spinner['value'] : this.spinner_.spinner('value');
-  var adjustedValue = goog.math.clamp(faceValue, this.scope_['min'], this.scope_['max']); // keep in valid range
-  if (adjustedValue != this.scope_['value'] || faceValue != adjustedValue) {
-    this.scope_['value'] = faceValue; // set to faceValue so UI can adjust
-    this.scope_.$emit(this.scope_['name'] + '.' + e.type, adjustedValue); // keep advertised value in range
-    os.ui.apply(this.scope_);
-  }
+  this.scope_['value'] = faceValue;
+  this.scope_.$emit(this.scope_['name'] + '.' + e.type, faceValue);
+  os.ui.apply(this.scope_);
 };
 
 
 /**
- * Handles the spinner change event for internal value changes (ie, min/max changed)
+ * Handles the spinner change event
  * @param {*} e The event
  * @param {*} spinner The spinner
  * @private
  */
 os.ui.SpinnerCtrl.prototype.onSpinnerChange_ = function(e, spinner) {
-  var value = goog.isDef(spinner['value']) ? spinner['value'] : this.spinner_.spinner('value');
-  if (value != this.scope_['value']) {
-    this.scope_['value'] = value;
+  var faceValue = goog.isDef(spinner['value']) ? spinner['value'] : this.spinner_.spinner('value');
+  if (!goog.isNumber(faceValue)) {
+    faceValue = this.scope_['value'];
+  }
+
+  var adjustedValue = goog.math.clamp(faceValue, this.scope_['min'], this.scope_['max']);
+  if (adjustedValue != this.scope_['value'] || faceValue != adjustedValue) {
+    this.scope_['value'] = adjustedValue;
+    this.scope_.$emit(this.scope_['name'] + '.' + e.type, adjustedValue);
     os.ui.apply(this.scope_);
+  }
+
+  // Ensure ui matches angular's scope
+  if (this.spinner_.spinner('value') != this.scope_['value']) {
+    this.spinner_.spinner('value', this.scope_['value']);
   }
 };
