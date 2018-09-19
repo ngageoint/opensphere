@@ -296,7 +296,8 @@ os.ui.urlDragDropDirective = function() {
       'ddTargetId': '@',
       'ddDrop': '=?',
       'ddCapture': '@',
-      'ddElement': '@'
+      'ddElement': '@',
+      'ddText': '@?'
     }
   };
 };
@@ -345,6 +346,12 @@ os.ui.UrlDragDrop = function($scope, $element) {
     this.element_[0].addEventListener('drop', this.handleDropFn_, $scope['ddCapture'] === 'true');
     this.element_[0].addEventListener('dragover', this.handleDrag_, false);
     this.element_[0].addEventListener('dragleave', this.handleDrag_, false);
+
+    if (this.scope_['ddText']) {
+      this.element_.attr('data-text', this.scope_['ddText']);
+    } else {
+      this.element_.attr('data-text', 'Drag & Drop');
+    }
   }
 };
 
