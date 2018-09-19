@@ -37,6 +37,7 @@ os.ui.Module.directive('descriptiontab', [os.ui.feature.tab.descriptionTabDirect
  * @param {!angular.JQLite} $element
  * @extends {os.ui.feature.tab.AbstractFeatureTabCtrl}
  * @constructor
+ * @ngInject
  */
 os.ui.feature.tab.DescriptionTabCtrl = function($scope, $element) {
   /**
@@ -69,7 +70,7 @@ os.ui.feature.tab.DescriptionTabCtrl.prototype.updateTab = function(event, data)
         })) || '';
       }
 
-      if (!goog.string.isEmptyOrWhitespace(goog.string.makeSafe(description))) {
+      if (description != null && description != '') {
         description = description.replace(/<a /g, '<a target="_blank" ');
 
         var iframe = this.element.find('iframe')[0];
@@ -101,7 +102,7 @@ os.ui.feature.tab.descriptionEnableFunction = function(tabData) {
       })) || '';
     }
 
-    if (!goog.string.isEmptyOrWhitespace(goog.string.makeSafe(description))) {
+    if (description != null && description != '') {
       return true;
     }
   }
