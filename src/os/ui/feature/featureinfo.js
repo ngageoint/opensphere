@@ -7,7 +7,6 @@ goog.require('ol.geom.Point');
 goog.require('os.map');
 goog.require('os.plugin.PluginManager');
 goog.require('os.ui.Module');
-goog.require('os.ui.button.Button');
 goog.require('os.ui.feature.FeatureInfoTabManager');
 goog.require('os.ui.location.SimpleLocationDirective');
 goog.require('os.ui.tab.FeatureTab');
@@ -184,6 +183,8 @@ os.ui.feature.FeatureInfoCtrl.prototype.onFeatureChange = function(newVal) {
       this.changeKey_ = ol.events.listen(feature, ol.events.EventType.CHANGE, this.onFeatureChangeEvent, this);
     }
   }
+
+  os.ui.apply(this.scope);
 };
 
 
@@ -260,22 +261,22 @@ os.ui.feature.FeatureInfoCtrl.prototype.updateTabs_ = function() {
   var numShown = 0;
   var loadedFeature = this.scope['items'][0];
 
-  this['tabs'].forEach(function(tab) {
-    if (tab.enableFunc) {
-      var showTab = tab.enableFunc(loadedFeature);
-      tab.isShown = showTab;
-      if (showTab) {
+  for (var i = 0; i < this['tabs'].length; i++) {
+    var tab = this['tabs'][i];
+    if (tab['enableFunc'] != null) {
+      tab['isShown'] = tab['enableFunc'].call(this, loadedFeature);
+      if (tab['isShown']) {
         numShown++;
       }
     } else {
-      tab.isShown = true;
+      tab['isShown'] = true;
       numShown++;
     }
-  });
+  }
   this['numTabsShown'] = numShown;
 
   // If an event happened that hides the active tag reset the active tab
-  if (this.scope['activeTab'].isShown === false) {
+  if (this.scope['activeTab']['isShown'] === false) {
     this.setInitialActiveTab_();
   }
 

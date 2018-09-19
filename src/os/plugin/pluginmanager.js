@@ -161,15 +161,6 @@ os.plugin.PluginManager.prototype.getPlugin = function(id) {
 
 
 /**
- * Get all plugins
- * @return {!Array<!os.plugin.IPlugin>} the plugins
- */
-os.plugin.PluginManager.prototype.getPlugins = function() {
-  return this.plugins_;
-};
-
-
-/**
  * Initialize the manager. This will kick off the initialization of all plugins
  * that are currently registered with the manager. Listen for
  * {@link goog.events.EventType.LOAD} for when all plugins are complete.

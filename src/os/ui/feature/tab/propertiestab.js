@@ -39,6 +39,7 @@ os.ui.Module.directive('propertiestab', [os.ui.feature.tab.propertiesTabDirectiv
  * @param {!angular.JQLite} $element
  * @extends {os.ui.feature.tab.AbstractFeatureTabCtrl}
  * @constructor
+ * @ngInject
  */
 os.ui.feature.tab.PropertiesTabCtrl = function($scope, $element) {
   /**
