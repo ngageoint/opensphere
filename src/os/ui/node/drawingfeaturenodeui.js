@@ -9,7 +9,7 @@ goog.require('os.ui.slick.AbstractNodeUICtrl');
  * @type {string}
  */
 os.ui.node.DrawingFeatureNodeUITemplate = '<span ng-if="nodeUi.show()">' +
-    '<span ng-click="nodeUi.remove()"><i class="fa fa-times fa-fw c-glyph text-danger"' +
+    '<span ng-click="nodeUi.remove()"><i class="fa fa-times fa-fw c-glyph"' +
     'title="Remove the feature"></i></span></span>';
 
 
