@@ -262,14 +262,7 @@ os.ui.feature.FeatureInfoCtrl.prototype.updateTabs_ = function() {
   var loadedFeature = this.scope['items'][0];
 
   for (var i = 0; i < this['tabs'].length; i++) {
-    var tab = this['tabs'][i];
-    if (tab['enableFunc'] != null) {
-      tab['isShown'] = tab['enableFunc'].call(this, loadedFeature);
-      if (tab['isShown']) {
-        numShown++;
-      }
-    } else {
-      tab['isShown'] = true;
+    if (this['tabs'][i].checkIfEnabled(loadedFeature)) {
       numShown++;
     }
   }
