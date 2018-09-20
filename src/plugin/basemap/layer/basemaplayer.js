@@ -47,11 +47,3 @@ plugin.basemap.layer.BaseMap.prototype.setLoading = function(value) {
     plugin.basemap.layer.BaseMap.warningShown_ = true;
   }
 };
-
-
-/**
- * Workaround to a couple of weird cases where colors have been somehow set on basemap layers. Those color filters
- * should currently never be applied, so this replaces the function to do nothing.
- * @inheritDoc
- */
-plugin.basemap.layer.BaseMap.prototype.applyColors = goog.nullFunction;
