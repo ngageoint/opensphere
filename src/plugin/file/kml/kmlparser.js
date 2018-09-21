@@ -126,6 +126,13 @@ plugin.file.kml.KMLParser = function(options) {
   this.styleMap_ = {};
 
   /**
+   * The KML styles not supported by OpenLayers map.
+   * @type {!Object<string, !Object>}
+   * @private
+   */
+  this.otherStyleMap = {};
+
+  /**
    * The KML style config map for highlight styles from StyleMap tags
    * @type {!Object<string, !Array<Object>>}
    * @private
@@ -246,6 +253,7 @@ plugin.file.kml.KMLParser.prototype.cleanup = function() {
   this.columnMap_ = null;
   this.stack_.length = 0;
   this.styleMap_ = {};
+  this.otherStyleMap = {};
   this.unnamedCount_ = 0;
   this.screenOverlayCount_ = 0;
   this.minRefreshPeriod_ = 0;
@@ -842,6 +850,58 @@ plugin.file.kml.KMLParser.prototype.createTreeNode_ = function(el, opt_parent) {
 
 
 /**
+ * Examine styles that are unsupported in OpenLayers KML styles.
+ * @param {Node} node Node.
+ * @private
+ */
+plugin.file.kml.KMLParser.prototype.examineStyles_ = function(node) {
+  var n;
+  for (n = node.firstElementChild; n; n = n.nextElementSibling) {
+    if (n.localName == 'BalloonStyle') {
+      var properties = ol.xml.pushParseAndPop({}, plugin.file.kml.BALLOON_PROPERTY_PARSERS, n, []);
+      if (properties) {
+        var id = node.id || node.getAttribute('id');
+        this.otherStyleMap[id] = properties;
+      }
+    }
+  }
+};
+
+
+/**
+ * Read the KML balloon style.
+ * @param {ol.Feature} feature The feature
+ * @private
+ *
+ * @suppress {accessControls} To allow direct access to feature metadata.
+ */
+plugin.file.kml.KMLParser.prototype.readBalloonStyle_ = function(feature) {
+  var styleUrl = /** @type {string} */ (feature.get('styleUrl'));
+  var styleId = this.getStyleId(decodeURIComponent(styleUrl));
+  var style = styleId in this.otherStyleMap ? this.otherStyleMap[styleId] : null;
+
+  if (style) {
+    var text = style.text;
+    var bgColor = style.bgColor || '255, 255, 255, 1';
+    var textColor = style.textColor || '0, 0, 0, 1';
+
+    var pattern = /[$]\[(.*?)\]/g;
+    var regex = new RegExp(pattern);
+
+    text = text.replace(regex, function(match, key) {
+      if (key in feature.values_) {
+        return feature.get(key);
+      } else {
+        return '';
+      }
+    });
+    var description = '<div style="background:rgba(' + bgColor + ');color:rgba(' + textColor + ')">' + text + '</div>';
+    feature.set('description', description);
+  }
+};
+
+
+/**
  * Creates a tree node from an XML element
  * @param {Element} el The XML element
  * @return {plugin.file.kml.ui.KMLNode} The tree node
@@ -1338,9 +1398,13 @@ plugin.file.kml.KMLParser.prototype.applyStyles_ = function(el, feature) {
   // style from style url
   var styleUrl = /** @type {string} */ (feature.get('styleUrl'));
   if (styleUrl) {
-    styleSets.push(this.findStyle_(decodeURIComponent(styleUrl)));
-    highlightStyle = this.findStyle_(decodeURIComponent(styleUrl), true);
+    var styleId = this.getStyleId(decodeURIComponent(styleUrl));
+    styleSets.push(styleId in this.styleMap_ ? this.styleMap_[styleId] : null);
+    highlightStyle = styleId in this.highlightStyleMap_ ? this.highlightStyleMap_[styleId] : null;
   }
+
+  this.readBalloonStyle_(feature);
+
 
   // local style
   var styles = /** @type {Array<ol.style.Style>} */ (feature.get(plugin.file.kml.STYLE_KEY));
@@ -1428,6 +1492,8 @@ plugin.file.kml.KMLParser.prototype.extractStyles_ = function(el) {
   var styleEls = os.xml.getChildrenByTagName(el, 'Style');
   for (var i = 0, n = styleEls.length; i < n; i++) {
     var style = styleEls[i];
+
+    this.examineStyles_(style);
 
     var styles = plugin.file.kml.readStyle(style, []);
     var id = style.id || style.getAttribute('id');
@@ -1592,21 +1658,17 @@ plugin.file.kml.KMLParser.prototype.mapStyleToConfig_ = function(style) {
 
 
 /**
- * Finds the first instance of a style id on the style stack
- * @param {string} id The style id
- * @param {boolean=} opt_highlight Whether to check the highlight style map
- * @return {Array<Object>} The style configs, or null if not found
- * @private
+ * Parse the StyleUrl into the correct id format.
+ * @param {string} id The StyleUrl.
+ * @return {string} The Parsed Style id.
  */
-plugin.file.kml.KMLParser.prototype.findStyle_ = function(id, opt_highlight) {
+plugin.file.kml.KMLParser.prototype.getStyleId = function(id) {
   var x = id.indexOf('#');
 
   if (x > -1) {
     id = id.substring(x + 1);
   }
-
-  var map = opt_highlight ? this.highlightStyleMap_ : this.styleMap_;
-  return id in map ? map[id] : null;
+  return id;
 };
 
 
