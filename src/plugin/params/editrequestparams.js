@@ -340,10 +340,11 @@ plugin.params.launchParamsEdit = function(layer, params) {
     'key': 'editparams',
     'x': 'center',
     'y': 'center',
-    'width': 400,
-    'min-width': 400,
+    'width': 450,
+    'min-width': 450,
     'max-width': 0,
-    'height': 200,
+    'height': 350,
+    'min-height': 250,
     'show-close': true,
     'modal': true
   };
