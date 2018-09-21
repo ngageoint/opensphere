@@ -53,7 +53,7 @@
         <tr title="Sets the minimum zoom level at which the layer will display">
           <td class="text-nowrap">Min Zoom:</td>
           <td class="w-100">
-            <spinner min="2" max="maxZoom" step="1" value="minZoom" name="minZoom"></spinner>
+            <spinner min="::basemap.mapMinZoom" max="maxZoom" step="1" value="minZoom" name="minZoom"></spinner>
           </td>
           <td>
             <button class="btn btn-secondary" ng-click="basemap.setCurrent('minZoom')" title="Sets the min zoom to the current zoom level">Current</button>
@@ -62,7 +62,7 @@
         <tr title="Sets the maximum zoom level at which the layer will display">
           <td class="text-nowrap">Max Zoom:</td>
           <td class="w-100">
-            <spinner min="minZoom" max="28" step="1" value="maxZoom" name="maxZoom"></spinner>
+            <spinner min="minZoom" max="::basemap.mapMaxZoom" step="1" value="maxZoom" name="maxZoom"></spinner>
           </td>
           <td>
             <button class="btn btn-secondary" ng-click="basemap.setCurrent('maxZoom')" title="Sets the max zoom to the current zoom level">Current</button>
