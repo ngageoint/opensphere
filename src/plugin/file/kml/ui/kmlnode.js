@@ -381,14 +381,16 @@ plugin.file.kml.ui.KMLNode.prototype.getOverlays = function(opt_unchecked) {
 
 /**
  * @inheritDoc
+ * @suppress {accessControls}
  */
 plugin.file.kml.ui.KMLNode.prototype.getExtent = function() {
   var extent = null;
 
   if (this.image_) {
-    extent = this.image_.getExtent();
-    if (!extent) {
-      extent = null;
+    var source = this.image_.getSource();
+
+    if (source instanceof ol.source.ImageStatic) {
+      extent = /** @type {ol.source.ImageStatic} */ (source).image_.getExtent();
     }
   } else {
     var features = this.getFeatures();
