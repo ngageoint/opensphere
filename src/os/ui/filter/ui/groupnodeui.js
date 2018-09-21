@@ -19,7 +19,7 @@ os.ui.filter.ui.GroupNodeUIDirective = function() {
         '</span>' +
         '<span>' +
         '<span ng-show="!groupUi.isRoot" ng-click="groupUi.remove()">' +
-        '<i class="fa fa-times fa-fw text-danger c-glyph" title="Remove the expression"></i></span>' +
+        '<i class="fa fa-times fa-fw c-glyph" title="Remove the expression"></i></span>' +
         '</span>' +
         '</span>',
     controller: os.ui.filter.ui.GroupNodeUICtrl,
