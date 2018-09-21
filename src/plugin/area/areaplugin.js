@@ -7,6 +7,7 @@ goog.require('os.plugin.AbstractPlugin');
 goog.require('os.ui.file.method.ImportMethod');
 goog.require('os.ui.im.ImportManager');
 goog.require('plugin.area.CSVAreaImportUI');
+goog.require('plugin.area.GeoJSONAreaImportUI');
 goog.require('plugin.area.KMLAreaImportUI');
 goog.require('plugin.area.SHPAreaImportUI');
 goog.require('plugin.file.kml.mime');
@@ -47,6 +48,10 @@ plugin.area.AreaPlugin.prototype.init = function() {
   // csv
   aim.registerImportUI(os.file.mime.csv.TYPE, new plugin.area.CSVAreaImportUI());
   aim.registerImportDetails('CSV', true);
+
+  // geojson
+  aim.registerImportUI(plugin.file.geojson.mime.TYPE, new plugin.area.GeoJSONAreaImportUI());
+  aim.registerImportDetails('GeoJSON', true);
 
   // kml
   aim.registerImportUI(plugin.file.kml.mime.TYPE, new plugin.area.KMLAreaImportUI());
