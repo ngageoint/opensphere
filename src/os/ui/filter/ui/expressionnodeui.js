@@ -15,7 +15,7 @@ os.ui.filter.ui.expressionNodeUIDirective = function() {
         '<span ng-click="nodeUi.edit()">' +
         '<i class="fa fa-pencil fa-fw c-glyph" title="Edit the expression"></i></span>' +
         '<span ng-click="nodeUi.remove()">' +
-        '<i class="fa fa-times fa-fw text-danger c-glyph" title="Remove the expression"></i></span>' +
+        '<i class="fa fa-times fa-fw c-glyph" title="Remove the expression"></i></span>' +
         '</span>',
     controller: os.ui.filter.ui.ExpressionNodeUI,
     controllerAs: 'nodeUi'
