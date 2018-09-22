@@ -20,8 +20,8 @@ os.ui.im.action.filterActionNodeUIDirective = function() {
       '<i class="fa fa-copy fa-fw c-glyph" title="Copy the action"></i></span>' +
       '<span ng-click="nodeUi.edit()">' +
       '<i class="fa fa-pencil fa-fw c-glyph" title="Edit the action"></i></span>' +
-      '<button type="button" class="close mx-1" ng-click="nodeUi.remove()" ' +
-      'aria-label="Close"><span aria-hidden="true" title="Remove the action">&times;</span></button>' +
+      '<span ng-click="nodeUi.remove()">' +
+      '<i class="fa fa-times fa-fw c-glyph" title="Remove the action"></i></span>' +
       '</span>';
   return directive;
 };

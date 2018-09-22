@@ -28,7 +28,7 @@ os.ui.query.ui.comboNodeUIDirective = function() {
         '<span ng-if="nodeUi.isFilter() || nodeUi.isArea()" ng-click="nodeUi.edit()">' +
         '<i class="fa fa-pencil fa-fw c-glyph" title="Edit"></i></span>' +
         '<span ng-if="nodeUi.isFilter() || nodeUi.isArea()" ng-click="nodeUi.remove()">' +
-        '<i class="fa fa-times fa-fw text-danger c-glyph" title="Remove"></i></span>' +
+        '<i class="fa fa-times fa-fw c-glyph" title="Remove"></i></span>' +
         '</span></span>',
     controller: os.ui.query.ui.ComboNodeUICtrl,
     controllerAs: 'nodeUi'
