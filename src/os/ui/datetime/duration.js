@@ -22,7 +22,8 @@ os.ui.datetime.durationDirective = function() {
       'useWeeks': '@',
       'min': '=?',
       'max': '=?',
-      'disabled': '=?'
+      'disabled': '=?',
+      'isRequired': '=?'
     },
     templateUrl: os.ROOT + 'views/datetime/duration.html',
     controller: os.ui.datetime.DurationCtrl,
@@ -111,6 +112,11 @@ os.ui.datetime.DurationCtrl = function($scope) {
    */
   this['valid'] = true;
 
+  /**
+   * @type {?boolean}
+   */
+  this['isrequired'] = this.scope_['isRequired'] != null ? this.scope_['isRequired'] : true;
+
   $scope.$watch('dur', this.onDurationUpdate_.bind(this));
   $scope.$watch('durCtrl.weeks', this.onWeeksChange_.bind(this));
   $scope.$watch('durCtrl.days', this.onDaysChange_.bind(this));
@@ -119,6 +125,7 @@ os.ui.datetime.DurationCtrl = function($scope) {
   $scope.$watch('durCtrl.seconds', this.onSecondsChange_.bind(this));
   $scope.$watch('min', this.calculateTime_.bind(this));
   $scope.$watch('max', this.calculateTime_.bind(this));
+  $scope.$watch('isRequired', this.onIsRequiredChange_.bind(this));
   $scope.$on('$destroy', this.destroy_.bind(this));
 
   this.calculateTime_();
@@ -287,4 +294,16 @@ os.ui.datetime.DurationCtrl.prototype.onMinutesChange_ = function(value) {
 os.ui.datetime.DurationCtrl.prototype.onSecondsChange_ = function(value) {
   this['seconds'] = value;
   this.updateDuration_();
+};
+
+
+/**
+ * Handler for required changes.
+ * @param {boolean} value
+ * @private
+ */
+os.ui.datetime.DurationCtrl.prototype.onIsRequiredChange_ = function(value) {
+  if (value != null) {
+    this['isrequired'] = value;
+  }
 };

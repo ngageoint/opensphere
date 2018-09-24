@@ -2,7 +2,7 @@
   <div class="u-pointer-events-all">
     <div class="w-100 d-flex justify-content-center">
       <date-control></date-control>
-      <button class="btn btn-secondary dropdown-toggle ml-1 flex-shrink-0" ng-click="ctrl.toggleExtend()" title="{{ctrl.sliceTip}}">hh/mm</button>
+      <button class="btn btn-secondary dropdown-toggle ml-1 flex-shrink-0" ng-class="{'btn-success': ctrl.extended}" ng-click="ctrl.toggleExtend()" title="{{ctrl.sliceTip}}">hh/mm</button>
       <button id="timelineButton" class="btn btn-warning ml-1 flex-shrink-0 o-timeline-button" ng-click="ctrl.expand()" title="Expand to full timeline">
         <i class="fa fa-fw fa-clock-o"></i>
       </button>
@@ -33,7 +33,7 @@
           <span class="flex-shrink-0 ml-1">m {{ctrl.getOffset()}}</span>
         </div>
         <div class="mx-1 d-flex align-items-center flex-shrink-0">
-          <button class="btn" ng-class="{'btn-success': !ctrl.active, 'btn-secondary': ctrl.active}" ng-click="ctrl.applySlice()" title="Apply time slice" ng-disabled="!ctrl.sliceValid() || ctrl.active">
+          <button class="btn" ng-class="{'btn-primary': !ctrl.active, 'btn-secondary': ctrl.active}" ng-click="ctrl.applySlice()" title="Apply time slice" ng-disabled="!ctrl.sliceValid() || ctrl.active">
             <i class="fa fa-fw fa-check"></i>
           </button>
         </div>

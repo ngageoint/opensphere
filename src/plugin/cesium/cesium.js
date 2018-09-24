@@ -182,50 +182,44 @@ plugin.cesium.getJulianDate = function() {
  * @return {Array<Cesium.Cartesian3>}
  */
 plugin.cesium.generateRectanglePositions = function(extent, opt_altitude, opt_extrude) {
-  var rect = Cesium.Rectangle.fromDegrees(extent[0], extent[1], extent[2], extent[3]);
-  var rected = new Cesium.RectangleGeometry({
-    ellipsoid: Cesium.Ellipsoid.WGS84,
-    rectangle: rect,
-    height: opt_altitude ? opt_altitude : 0,
-    extrudedHeight: opt_extrude ? 0 : undefined
-  });
-
   // NOTE: The Cesium.RectangleGeometryLibrary.computePosition does NOT use the height parameter :(
   // var geometry = Cesium.RectangleGeometry.createGeometry(rected);
 
-  var options = Cesium.RectangleGeometryLibrary.computeOptions(rected, rect, new Cesium.Cartographic());
-  // options.surfaceHeight = opt_altitude ? opt_altitude : 0;
-  // options.extrudedHeight = opt_extrude ? 0 : undefined;
-  var height = options.height;
-  var width = options.width;
+  var rect = Cesium.Rectangle.fromDegrees(extent[0], extent[1], extent[2], extent[3]);
+  var computedOptions = Cesium.RectangleGeometryLibrary.computeOptions(rect, Cesium.Math.RADIANS_PER_DEGREE, 0, 0,
+      new Cesium.Rectangle(), new Cesium.Cartographic(), new Cesium.Cartographic());
+  // computedOptions.surfaceHeight = opt_altitude ? opt_altitude : 0;
+  // computedOptions.extrudedHeight = opt_extrude ? 0 : undefined;
+  var height = computedOptions.height;
+  var width = computedOptions.width;
   var positions = [];
   var row = 0;
   var col;
 
   for (col = 0; col < width; col++) {
     var position = new Cesium.Cartesian3();
-    Cesium.RectangleGeometryLibrary.computePosition(options, row, col, position);
+    Cesium.RectangleGeometryLibrary.computePosition(computedOptions, Cesium.Ellipsoid.WGS84, false, row, col, position);
     positions.push(position);
   }
 
   col = width - 1;
   for (row = 1; row < height; row++) {
     var position = new Cesium.Cartesian3();
-    Cesium.RectangleGeometryLibrary.computePosition(options, row, col, position);
+    Cesium.RectangleGeometryLibrary.computePosition(computedOptions, Cesium.Ellipsoid.WGS84, false, row, col, position);
     positions.push(position);
   }
 
   row = height - 1;
   for (col = width - 2; col >= 0; col--) {
     var position = new Cesium.Cartesian3();
-    Cesium.RectangleGeometryLibrary.computePosition(options, row, col, position);
+    Cesium.RectangleGeometryLibrary.computePosition(computedOptions, Cesium.Ellipsoid.WGS84, false, row, col, position);
     positions.push(position);
   }
 
   col = 0;
   for (row = height - 2; row > 0; row--) {
     var position = new Cesium.Cartesian3();
-    Cesium.RectangleGeometryLibrary.computePosition(options, row, col, position);
+    Cesium.RectangleGeometryLibrary.computePosition(computedOptions, Cesium.Ellipsoid.WGS84, false, row, col, position);
     positions.push(position);
   }
 

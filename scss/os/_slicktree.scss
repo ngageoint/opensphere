@@ -9,6 +9,10 @@
     font-size: $font-size-sm;
   }
 
+  .slick-row .slick-cell .fa {
+    font-size: $font-size-base;
+  }
+
   &.no-hover {
     .slick-row:hover {
       background: inherit;

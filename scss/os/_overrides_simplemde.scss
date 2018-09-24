@@ -8,6 +8,9 @@
 
   .CodeMirror-cursor {
     border-left-color: $body-color;
+
+    // Sometimes the cursor doesnt show up (windows?) this fixes that issue
+    width: 1px !important;
   }
 
   .CodeMirror-fullscreen {

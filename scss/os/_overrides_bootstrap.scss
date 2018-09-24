@@ -75,6 +75,12 @@ html {
   min-height: 100vh;
 }
 
+body {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+}
+
 // (Part 2) Use your parents box sizing. This technique allows slickgrid to work
 *,
 *:before,
