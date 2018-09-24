@@ -3183,22 +3183,31 @@ Cesium.RectangleGeometryLibrary = {};
 
 
 /**
- * @param {Cesium.Geometry} geometry
  * @param {Cesium.Rectangle} rectangle
- * @param {!Cesium.Cartographic} nwCorner
+ * @param {number} granularity
+ * @param {number} rotation
+ * @param {number} stRotation
+ * @param {Cesium.Rectangle} boundingRectangleScratch
+ * @param {!Cesium.Cartographic} nwCornerResult
+ * @param {!Cesium.Cartographic} stNwCornerResult
  * @return {{height: number, width: number}}
  */
-Cesium.RectangleGeometryLibrary.computeOptions = function(geometry, rectangle, nwCorner) {};
+Cesium.RectangleGeometryLibrary.computeOptions = function(rectangle, granularity, rotation, stRotation,
+    boundingRectangleScratch, nwCornerResult, stNwCornerResult) {};
 
 
 /**
- * @param {{height: number, width: number}} options
+ * @param {{height: number, width: number}} computedOptions
+ * @param {Cesium.Ellipsoid} ellipsoid
+ * @param {boolean} computeST
  * @param {number} row
  * @param {number} col
  * @param {!Cesium.Cartesian3} position
+ * @param {Cesium.Cartesian2=} opt_st
  * @return {!Cesium.Cartesian3}
  */
-Cesium.RectangleGeometryLibrary.computePosition = function(options, row, col, position) {};
+Cesium.RectangleGeometryLibrary.computePosition = function(computedOptions, ellipsoid, computeST, row, col, position,
+    opt_st) {};
 
 
 /**
