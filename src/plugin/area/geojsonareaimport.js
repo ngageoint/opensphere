@@ -7,9 +7,7 @@ goog.require('os.ui.Module');
 goog.require('os.ui.wiz.WizardCtrl');
 goog.require('os.ui.wiz.wizardDirective');
 goog.require('plugin.area');
-goog.require('plugin.file.geojson.GeoJSONDescriptor');
 goog.require('plugin.file.geojson.GeoJSONParser');
-goog.require('plugin.file.geojson.GeoJSONProvider');
 
 
 
