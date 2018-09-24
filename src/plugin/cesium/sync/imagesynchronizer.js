@@ -56,6 +56,7 @@ plugin.cesium.sync.ImageSynchronizer.prototype.disposeInternal = function() {
 
 /**
  * @inheritDoc
+ * @suppress {accessControls}
  */
 plugin.cesium.sync.ImageSynchronizer.prototype.synchronize = function() {
   // remove the old KML image
@@ -72,14 +73,22 @@ plugin.cesium.sync.ImageSynchronizer.prototype.synchronize = function() {
   var img = /** @type {string} */ (this.layer.get('url'));
 
   if (img) {
-    var extent = this.layer.getExtent();
-    layers.addImageryProvider(new Cesium.SingleTileImageryProvider({
-      url: img,
-      rectangle: Cesium.Rectangle.fromDegrees(extent[0], extent[1], extent[2], extent[3])
-    }));
-    this.activeLayer_ = layers.get(layers.length - 1);
+    var source = this.layer.getSource();
+    var extent;
 
-    this.activeLayer_.imageryProvider.errorEvent.addEventListener(this.providerError.bind(this));
+    if (source instanceof ol.source.ImageStatic) {
+      extent = /** @type {ol.source.ImageStatic} */ (source).image_.getExtent();
+    }
+
+    if (extent && extent.length === 4 && !ol.extent.isEmpty(extent)) {
+      layers.addImageryProvider(new Cesium.SingleTileImageryProvider({
+        url: img,
+        rectangle: Cesium.Rectangle.fromDegrees(extent[0], extent[1], extent[2], extent[3])
+      }));
+      this.activeLayer_ = layers.get(layers.length - 1);
+
+      this.activeLayer_.imageryProvider.errorEvent.addEventListener(this.providerError.bind(this));
+    }
   }
 };
 
