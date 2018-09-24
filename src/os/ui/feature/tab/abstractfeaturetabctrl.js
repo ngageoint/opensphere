@@ -4,9 +4,22 @@ goog.provide('os.ui.feature.tab.AbstractFeatureTabCtrl');
 
 /**
  * Abstract controller for feature tabs.
+ * @param {!angular.Scope} $scope
+ * @param {!angular.JQLite} $element
  * @constructor
  */
-os.ui.feature.tab.AbstractFeatureTabCtrl = function() {
+os.ui.feature.tab.AbstractFeatureTabCtrl = function($scope, $element) {
+  /**
+   * @type {?angular.Scope}
+   */
+  this.scope = $scope;
+
+  /**
+   * @type {?angular.JQLite}
+   */
+  this.element = $element;
+
+
   goog.asserts.assert(this.scope != null);
 
   // Control is constructed after the first broadcast
