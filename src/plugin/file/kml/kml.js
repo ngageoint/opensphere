@@ -195,7 +195,6 @@ plugin.file.kml.replaceParsers_(ol.format.KML.POLY_STYLE_PARSERS_, 'color',
  */
 plugin.file.kml.readBalloonText_ = function(node) {
   var s = ol.xml.getAllTextContent(node, false).trim();
-
   return s;
 };
 
