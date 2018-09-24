@@ -492,8 +492,8 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
   if ($scope['y'] == 'center') {
     var maxHeight = Math.min($(window).height(), container.height());
     if ($scope['height'] == 'auto') {
-      // Put the element off the screen
-      $element.css('top', '20000px');
+      // Put the element off the screen at the top
+      $element.css('top', '-20000px');
 
       var that = this;
       var readyPromise;
