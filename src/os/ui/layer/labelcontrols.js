@@ -83,6 +83,18 @@ os.ui.layer.LabelControlsCtrl = function($scope, $element, $timeout) {
   this.startIndex_ = -1;
 
   /**
+   * The maximum label size.
+   * @type {number}
+   */
+  this['maxSize'] = os.style.label.MAX_SIZE;
+
+  /**
+   * The minimum label size.
+   * @type {number}
+   */
+  this['minSize'] = os.style.label.MIN_SIZE;
+
+  /**
    * The maximum number of labels to allow.
    * @type {number}
    */

@@ -1136,6 +1136,8 @@ plugin.file.kml.KMLParser.prototype.readGroundOverlay_ = function(el) {
       Math.max(west, east),
       Math.max(south, north)];
 
+    extent = ol.proj.transformExtent(extent, os.proj.EPSG4326, os.map.PROJECTION);
+
     var image = new os.layer.Image({
       source: new ol.source.ImageStatic({
         url: icon,

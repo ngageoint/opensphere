@@ -40,9 +40,10 @@ plugin.basemap.TerrainDescriptor.DESCRIPTION = 'Show terrain on the 3D globe.';
 
 
 /**
- * Clean up.
+ * @inheritDoc
  */
 plugin.basemap.TerrainDescriptor.prototype.disposeInternal = function() {
+  plugin.basemap.TerrainDescriptor.base(this, 'disposeInternal');
   os.settings.unlisten(os.config.DisplaySetting.ENABLE_TERRAIN, this.onTerrainChange_, false, this);
 };
 

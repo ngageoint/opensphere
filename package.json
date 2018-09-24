@@ -255,7 +255,7 @@
     "blob-polyfill": "^2.0.20171115",
     "bootstrap": "4.1.1",
     "bootswatch": "4.1.1",
-    "cesium": "=1.46.1",
+    "cesium": "1.49.0",
     "compass-mixins": "^0.12.10",
     "crossfilter2": "^1.4.5",
     "d3": "^3.5.17",
