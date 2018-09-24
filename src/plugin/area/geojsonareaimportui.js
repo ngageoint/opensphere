@@ -6,7 +6,6 @@ goog.require('os.ui.window');
 goog.require('os.ui.wiz.GeometryStep');
 goog.require('plugin.area.geojsonAreaImportDirective');
 goog.require('plugin.file.geojson.GeoJSONParserConfig');
-goog.require('plugin.file.geojson.geojsonImportDirective');
 
 
 
