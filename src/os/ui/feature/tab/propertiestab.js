@@ -42,22 +42,11 @@ os.ui.Module.directive('propertiestab', [os.ui.feature.tab.propertiesTabDirectiv
  * @ngInject
  */
 os.ui.feature.tab.PropertiesTabCtrl = function($scope, $element) {
-  /**
-   * @type {?angular.Scope}
-   */
-  this.scope = $scope;
+  $scope['columnToOrder'] = 'field';
+  $scope['reverse'] = false;
+  $scope['selected'] = null;
 
-  /**
-   * @type {?angular.JQLite}
-   */
-  this.element = $element;
-
-
-  this.scope['columnToOrder'] = 'field';
-  this.scope['reverse'] = false;
-  this.scope['selected'] = null;
-
-  os.ui.feature.tab.PropertiesTabCtrl.base(this, 'constructor');
+  os.ui.feature.tab.PropertiesTabCtrl.base(this, 'constructor', $scope, $element);
 };
 goog.inherits(os.ui.feature.tab.PropertiesTabCtrl, os.ui.feature.tab.AbstractFeatureTabCtrl);
 
