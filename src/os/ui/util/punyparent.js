@@ -26,11 +26,10 @@ os.ui.Module.directive('punyparent', [os.ui.util.punyParentDirective]);
 /**
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
- * @param {!angular.$timeout} $timeout
  * @constructor
  * @ngInject
  */
-os.ui.util.PunyParentCtrl = function($scope, $element, $timeout) {
+os.ui.util.PunyParentCtrl = function($scope, $element) {
   /**
    * @type {?angular.Scope}
    * @private
@@ -42,12 +41,6 @@ os.ui.util.PunyParentCtrl = function($scope, $element, $timeout) {
    * @private
    */
   this.element_ = $element;
-
-  /**
-   * @type {?angular.$timeout}
-   * @private
-   */
-  this.timeout_ = $timeout;
 
   /**
    * @type {Function}
@@ -74,7 +67,6 @@ os.ui.util.PunyParentCtrl.prototype.destroy_ = function() {
   this.element_.removeResize(this.resizeFn_);
   this.scope_ = null;
   this.element_ = null;
-  this.timeout_ = null;
 };
 
 

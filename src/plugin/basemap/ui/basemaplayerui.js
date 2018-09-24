@@ -42,7 +42,9 @@ plugin.basemap.ui.BaseMapLayerUICtrl = function($scope, $element, $timeout) {
   plugin.basemap.ui.BaseMapLayerUICtrl.base(this, 'constructor', $scope, $element, $timeout);
 
   $scope.$on('minZoom.spin', this.onMinZoomChange.bind(this));
+  $scope.$on('minZoom.spinchange', this.onMinZoomChange.bind(this));
   $scope.$on('maxZoom.spin', this.onMaxZoomChange.bind(this));
+  $scope.$on('maxZoom.spinchange', this.onMaxZoomChange.bind(this));
 
   this.refreshDelay = new goog.async.Delay(this.onRefresh, 1000, this);
 };
