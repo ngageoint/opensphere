@@ -40,17 +40,7 @@ os.ui.Module.directive('descriptiontab', [os.ui.feature.tab.descriptionTabDirect
  * @ngInject
  */
 os.ui.feature.tab.DescriptionTabCtrl = function($scope, $element) {
-  /**
-   * @type {?angular.Scope}
-   */
-  this.scope = $scope;
-
-  /**
-   * @type {?angular.JQLite}
-   */
-  this.element = $element;
-
-  os.ui.feature.tab.DescriptionTabCtrl.base(this, 'constructor');
+  os.ui.feature.tab.DescriptionTabCtrl.base(this, 'constructor', $scope, $element);
 };
 goog.inherits(os.ui.feature.tab.DescriptionTabCtrl, os.ui.feature.tab.AbstractFeatureTabCtrl);
 
