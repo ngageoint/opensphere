@@ -64,6 +64,28 @@
           }
         }
       }
+
+      &.select2-container-disabled .select2-choices {
+        background-color: $input-disabled-bg;
+        background-image: none;
+
+        .select2-search-choice {
+          border: $input-border-color;
+        }
+      }
+    }
+  }
+
+  &.select2-container-disabled {
+    .select2-choice {
+      background-color: $input-disabled-bg;
+      background-image: none;
+      border-color: $input-border-color;
+
+      .select2-arrow {
+        background-color: $input-disabled-bg;
+        background-image: none;
+      }
     }
   }
 }
