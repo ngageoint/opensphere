@@ -19,9 +19,6 @@ os.ui.feature.tab.AbstractFeatureTabCtrl = function($scope, $element) {
    */
   this.element = $element;
 
-
-  goog.asserts.assert(this.scope != null);
-
   // Control is constructed after the first broadcast
   // so the description need to be updated once during construction
   if (this.scope && this.scope['items'] && this.scope['items'].length > 0) {
