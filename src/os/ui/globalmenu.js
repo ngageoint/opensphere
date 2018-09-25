@@ -217,7 +217,7 @@ os.ui.GlobalMenuCtrl.prototype.onScroll_ = function() {
 
 /**
  * Opens a menu
- * @param {os.ui.action.ActionManager} provider The action menu manager that supplies the menu
+ * @param {os.ui.action.ActionManager|os.ui.menu.Menu} provider The action menu manager that supplies the menu
  * @param {{
  *  x: (number|undefined),
  *  y: (number|undefined),
