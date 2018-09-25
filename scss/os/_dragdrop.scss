@@ -8,6 +8,8 @@
     content: '';
     height: 100%;
     left: 0;
+    max-height: 100vh;
+    max-width: 100vw;
     pointer-events: none;
     position: absolute;
     top: 0;
@@ -20,7 +22,7 @@
     border: .2rem solid $warning;
     border-radius: $border-radius;
     color: $black;
-    content: 'Drag & Drop';
+    content: attr(data-text);
     display: flex;
     font-size: $font-size-lg;
     justify-content: center;

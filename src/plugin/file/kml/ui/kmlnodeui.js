@@ -16,16 +16,16 @@ plugin.file.kml.ui.kmlNodeUIDirective = function() {
     replace: true,
     template: '<span ng-if="nodeUi.show()" class="d-flex flex-shrink-0">' +
         '<span ng-if="nodeUi.canAddChildren()" ng-click="nodeUi.addFolder()">' +
-          '<i class="fa fa-folder fa-fw c-glyph" title="Create a new folder"></i></span>' +
+            '<i class="fa fa-folder fa-fw c-glyph" title="Create a new folder"></i></span>' +
         '<span ng-if="nodeUi.canAddChildren()" ng-click="nodeUi.addPlace()">' +
-          '<i class="fa fa-map-marker fa-fw c-glyph" title="Create a new place"></i></span>' +
+            '<i class="fa fa-map-marker fa-fw c-glyph" title="Create a new place"></i></span>' +
         '<span ng-if="nodeUi.canEdit()" ng-click="nodeUi.edit()">' +
-          '<i class="fa fa-pencil fa-fw c-glyph" ' +
-          'title="Edit the {{nodeUi.isFolder() ? \'folder\' : \'place\'}}"></i></span>' +
+            '<i class="fa fa-pencil fa-fw c-glyph" ' +
+                'title="Edit the {{nodeUi.isFolder() ? \'folder\' : \'place\'}}"></i></span>' +
 
-        '<button ng-if="nodeUi.canRemove()" type="button" class="close mx-1" ng-click="nodeUi.tryRemove()" ' +
-          'aria-label="Close"><span aria-hidden="true" ' +
-          'title="Remove the {{nodeUi.isFolder() ? \'folder\' : \'place\'}}">&times;</span></button>' +
+        '<span ng-if="nodeUi.canRemove()" ng-click="nodeUi.tryRemove()">' +
+        '<i class="fa fa-times fa-fw c-glyph" ' +
+            'title="Remove the {{nodeUi.isFolder() ? \'folder\' : \'place\'}}"></i></span>' +
 
         '</span>',
     controller: plugin.file.kml.ui.KMLNodeUICtrl,

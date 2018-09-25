@@ -30,7 +30,7 @@ describe('os.im.action.FilterActionEntry', function() {
       PROPERTY: 'bbbAAA'
     };
 
-    entry.processItems([obj1, obj2]);
+    entry.processItems('entryType', [obj1, obj2]);
     expect(obj1.MATCH).toBe(true);
     expect(obj2.MATCH).toBeUndefined();
   };

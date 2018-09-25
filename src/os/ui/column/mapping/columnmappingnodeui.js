@@ -15,7 +15,7 @@ os.ui.column.mapping.columnMappingNodeUIDirective = function() {
         '<span ng-click="nodeUi.edit()">' +
         '<i class="fa fa-pencil fa-fw c-glyph" title="Edit the column mapping"></i></span>' +
         '<span ng-click="nodeUi.tryRemove()">' +
-        '<i class="fa fa-times fa-fw c-glyph text-danger" title="Remove the column mapping"></i></span>' +
+        '<i class="fa fa-times fa-fw c-glyph" title="Remove the column mapping"></i></span>' +
         '</div>',
     controller: os.ui.column.mapping.ColumnMappingNodeUICtrl,
     controllerAs: 'nodeUi'
