@@ -381,7 +381,7 @@ os.source.Vector = function(opt_options) {
   /**
    * If the feature data column type should try to be determined.
    * @type {boolean}
-   * @protected
+   * @private
    */
   this.detectColumnTypes_ = false;
 
@@ -1016,6 +1016,7 @@ os.source.Vector.prototype.setGeometryShape = function(value) {
 
 /**
  * @type {ol.Extent}
+ * @private
  */
 os.source.Vector.scratchExtent_ = ol.extent.createEmpty();
 
@@ -2153,7 +2154,7 @@ os.source.Vector.prototype.unprocessDeferred = function(features) {
   this.dynamicListeners_ = os.object.prune(this.dynamicListeners_);
 
   // removed features should never remain in the selection
-  this.removeFromSelected(features);
+  this.removeFromSelectedAccountingForStyle_(features, true);
 
   // update the time model from remaining data
   if (this.timeModel) {
@@ -3027,6 +3028,16 @@ os.source.Vector.prototype.addToSelected = function(features) {
  * @inheritDoc
  */
 os.source.Vector.prototype.removeFromSelected = function(features) {
+  this.removeFromSelectedAccountingForStyle_(features);
+};
+
+
+/**
+ * @param {!ol.Feature|Array<!ol.Feature>} features
+ * @param {boolean=} opt_skipStyle
+ * @private
+ */
+os.source.Vector.prototype.removeFromSelectedAccountingForStyle_ = function(features, opt_skipStyle) {
   if (!goog.isArray(features)) {
     features = [features];
   }
@@ -3042,7 +3053,9 @@ os.source.Vector.prototype.removeFromSelected = function(features) {
 
     if (removed.length > 0) {
       // update styles for all features removed from the selection
-      os.style.setFeaturesStyle(removed, this);
+      if (opt_skipStyle !== true) {
+        os.style.setFeaturesStyle(removed, this);
+      }
 
       this.dispatchEvent(new os.events.PropertyChangeEvent(os.events.SelectionType.REMOVED, removed));
       this.changed();
