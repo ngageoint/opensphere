@@ -84,7 +84,7 @@ os.ui.column.mapping.MappingExpressionCtrl = function($scope, $element, $timeout
   }
 
   this.timeout_(goog.bind(function() {
-    var selElement = this.element_.find('.mapping-expression__column-select');
+    var selElement = this.element_.find('.js-mapping-expression__column-select');
     selElement.select2({
       'placeholder': 'Select column...'
     });
@@ -124,6 +124,7 @@ os.ui.column.mapping.MappingExpressionCtrl.prototype.onColumnChange_ = function(
   if (newValue) {
     this.model_['column'] = newValue['name'];
   }
+  this.scope_.$emit('columnpicker.columnselected');
 };
 
 
@@ -168,7 +169,7 @@ os.ui.column.mapping.MappingExpressionCtrl.prototype.describeCallback_ = functio
  */
 os.ui.column.mapping.MappingExpressionCtrl.prototype.setColumns_ = function(columns) {
   var columnName = this.model_['column'];
-
+  this['column'] = null;
   columns = columns.filter(function(column) {
     if (column['type'] !== 'string' && column['type'] !== 'decimal') {
       // only include string and decimal type columns
@@ -184,9 +185,11 @@ os.ui.column.mapping.MappingExpressionCtrl.prototype.setColumns_ = function(colu
 
   this['columns'] = columns;
 
+  this.model_['column'] = (this['column'] == null) ? null : this.model_['column'];
+
   this.timeout_(goog.bind(function() {
     // this tells the select2 to update to reflect the new set of columns
-    this.element_.find('.mapping-expression__column-select').change().select2('enable');
+    this.element_.find('.js-mapping-expression__column-select').change().select2('enable');
   }, this));
 };
 
