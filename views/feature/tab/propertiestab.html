@@ -1,0 +1,21 @@
+<div class="d-flex flex-fill u-overflow-y-auto">
+  <table class="table table-striped table-hover">
+    <thead>
+      <tr class="table-bordered">
+        <th ng-click="propctrl.order('field')">
+          Field <i ng-show="propctrl.columnToOrder == 'field'" class="slick-sort-indicator" ng-class="{'slick-sort-indicator-desc': !propctrl.reverse, 'slick-sort-indicator-asc': propctrl.reverse}"></i>
+        </th>
+        <th ng-click="propctrl.order('value')">
+          Value <i ng-show="propctrl.columnToOrder == 'value'" class="slick-sort-indicator" ng-class="{'slick-sort-indicator-desc': !propctrl.reverse, 'slick-sort-indicator-asc': propctrl.reverse}"></i>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="property in properties" ng-click="propctrl.select($event, property)" ng-class="{'selected': propctrl.selected==property}">
+        <td class="text-truncate">{{property.field}}</td>
+        <td><featureinfocell property="property"></featureinfocell></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
