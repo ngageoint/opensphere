@@ -19,6 +19,7 @@ The ``build`` property is used to instruct the resolver during the build. For th
 * ``config``: Where to find the application's main configuration file.
 * ``index``: The index file used by opensphere-build-index_.
 * ``scss``: The root SCSS file for the application.
+* ``themes``: SCSS themes to include in the build. Available themes can be found in ``opensphere/scss``.
 * ``gcc``: Additional instructions for the `Google Closure Compiler`_.
 * ``moduleDefines``: ``goog.define`` properties that should be resolved to a ``node_module`` path in uncompiled mode.
 
