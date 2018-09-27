@@ -107,6 +107,12 @@ plugin.im.action.feature.SoundAction.DEFAULT_CONFIG = {
 /**
  * @inheritDoc
  */
+plugin.im.action.feature.SoundAction.prototype.reset = goog.nullFunction;
+
+
+/**
+ * @inheritDoc
+ */
 plugin.im.action.feature.SoundAction.prototype.execute = function() {
   os.audio.AudioManager.getInstance().play(this.soundConfig['sound'], this.soundConfig['playDelay'] * 1000);
 };
