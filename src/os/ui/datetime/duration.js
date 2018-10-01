@@ -125,6 +125,7 @@ os.ui.datetime.DurationCtrl = function($scope) {
   $scope.$watch('durCtrl.seconds', this.onSecondsChange_.bind(this));
   $scope.$watch('min', this.calculateTime_.bind(this));
   $scope.$watch('max', this.calculateTime_.bind(this));
+  $scope.$watch('disabled', this.calculateTime_.bind(this));
   $scope.$watch('isRequired', this.onIsRequiredChange_.bind(this));
   $scope.$on('$destroy', this.destroy_.bind(this));
 
@@ -175,8 +176,8 @@ os.ui.datetime.DurationCtrl.prototype.calculateTime_ = function() {
         delete this['errors']['duration']['$error']['minlength'];
     r > maxDuration ? this['errors']['duration']['$error']['maxlength'] = true :
         delete this['errors']['duration']['$error']['maxlength'];
-    this['valid'] = goog.object.isEmpty(this['errors']['duration']['$error']) &&
-        !this.scope_['disabled'] ? true : null;
+    this['valid'] = goog.object.isEmpty(this['errors']['duration']['$error']) ||
+        this.scope_['disabled'] ? true : null;
 
     if (this.scope_['useWeeks'] === 'true') {
       this['weeks'] = Math.floor(r / 604800000);
