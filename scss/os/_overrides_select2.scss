@@ -9,7 +9,9 @@
   .select2-choice {
     @extend .form-control;
     background-image: none;
+    color: $input-color !important;
     height: $input-height;
+    text-decoration: none !important;
 
     .select2-arrow {
       background-color: $input-bg;
