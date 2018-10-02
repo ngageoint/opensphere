@@ -1,6 +1,8 @@
 goog.provide('os.ui.onboarding.NgOnboardingCtrl');
 goog.provide('os.ui.onboarding.ngOnboardingDirective');
 goog.require('goog.array');
+goog.require('goog.dom.ViewportSizeMonitor');
+goog.require('goog.events.EventType');
 goog.require('goog.object');
 goog.require('os.config.Settings');
 goog.require('os.ui.Module');
@@ -79,12 +81,18 @@ os.ui.onboarding.NgOnboardingCtrl = function($scope, $sce) {
   this['stepCount'] = $scope['steps'].length;
 
   $scope.$watch('index', this.onIndexChange_.bind(this));
+  $scope.$on('$destroy', this.destroy_.bind(this));
+
+  /**
+   * @type {?goog.dom.ViewportSizeMonitor}
+   * @private
+   */
+  this.vsm_ = new goog.dom.ViewportSizeMonitor();
+  this.vsm_.listen(goog.events.EventType.RESIZE, this.onResize_, false, this);
 
   if ($scope['steps'].length && !$scope['index']) {
     return $scope['index'] = 0;
   }
-
-  $scope.$on('$destroy', this.destroy_.bind(this));
 };
 
 
@@ -93,6 +101,10 @@ os.ui.onboarding.NgOnboardingCtrl = function($scope, $sce) {
  * @private
  */
 os.ui.onboarding.NgOnboardingCtrl.prototype.destroy_ = function() {
+  if (this.vsm_) {
+    this.vsm_.dispose();
+    this.vsm_ = null;
+  }
   this.sce_ = null;
   this.scope_ = null;
 };
@@ -100,6 +112,7 @@ os.ui.onboarding.NgOnboardingCtrl.prototype.destroy_ = function() {
 
 /**
  * Move to the next step.
+ * @export
  */
 os.ui.onboarding.NgOnboardingCtrl.prototype.next = function() {
   if (!this['lastStep']) {
@@ -108,26 +121,20 @@ os.ui.onboarding.NgOnboardingCtrl.prototype.next = function() {
     this.close();
   }
 };
-goog.exportProperty(
-    os.ui.onboarding.NgOnboardingCtrl.prototype,
-    'next',
-    os.ui.onboarding.NgOnboardingCtrl.prototype.next);
 
 
 /**
  * Move to the previous step.
+ * @export
  */
 os.ui.onboarding.NgOnboardingCtrl.prototype.previous = function() {
   this.scope_['index'] = this.scope_['index'] - 1;
 };
-goog.exportProperty(
-    os.ui.onboarding.NgOnboardingCtrl.prototype,
-    'previous',
-    os.ui.onboarding.NgOnboardingCtrl.prototype.previous);
 
 
 /**
  * Close onboarding.
+ * @export
  */
 os.ui.onboarding.NgOnboardingCtrl.prototype.close = function() {
   this.scope_['enabled'] = false;
@@ -136,23 +143,16 @@ os.ui.onboarding.NgOnboardingCtrl.prototype.close = function() {
     this.scope_['onFinishCallback']();
   }
 };
-goog.exportProperty(
-    os.ui.onboarding.NgOnboardingCtrl.prototype,
-    'close',
-    os.ui.onboarding.NgOnboardingCtrl.prototype.close);
 
 
 /**
  * Close onboarding and prevent others from being displayed.
+ * @export
  */
 os.ui.onboarding.NgOnboardingCtrl.prototype.stopShowing = function() {
   os.settings.set('onboarding.showOnboarding', false);
   this.close();
 };
-goog.exportProperty(
-    os.ui.onboarding.NgOnboardingCtrl.prototype,
-    'stopShowing',
-    os.ui.onboarding.NgOnboardingCtrl.prototype.stopShowing);
 
 
 /**
@@ -200,6 +200,21 @@ os.ui.onboarding.NgOnboardingCtrl.prototype.getElementHeight_ = function(element
 // os.ui.onboarding.NgOnboardingCtrl.prototype.getElementWidth_ = function(element) {
 //   return SVGElement && element[0] instanceof SVGElement ? element[0].getBBox().width : element.outerWidth();
 // };
+
+
+/**
+ * Handle window resize
+ * @private
+ */
+os.ui.onboarding.NgOnboardingCtrl.prototype.onResize_ = function() {
+  // reset the popover
+  var attributesToClear = ['top', 'right', 'bottom', 'left', 'position'];
+  attributesToClear.forEach(function(attr) {
+    this.scope_[attr] = null;
+  }, this);
+
+  this.setupPositioning_();
+};
 
 
 /**
@@ -277,10 +292,20 @@ os.ui.onboarding.NgOnboardingCtrl.prototype.setupPositioning_ = function() {
         left = null;
         right = null;
 
+        var windowWidth = $(window).width();
+        var popoverWidth = $('.js-onboarding__popover').outerWidth();
         if (this.scope_['position'] === 'right') {
           left = attachTo.offset().left + attachTo.outerWidth() + xMargin;
+          right = windowWidth - attachTo.offset().left + xMargin;
+          if (left + popoverWidth > windowWidth &&
+              right + popoverWidth < windowWidth) {
+            left = 'auto';
+            this.scope_['position'] = 'left';
+          } else {
+            right = null;
+          }
         } else if (this.scope_['position'] === 'left') {
-          right = $(window).width() - attachTo.offset().left + xMargin;
+          right = windowWidth - attachTo.offset().left + xMargin;
         } else if (this.scope_['position'] === 'top' || this.scope_['position'] === 'bottom') {
           left = attachTo.offset().left;
         }
@@ -301,6 +326,7 @@ os.ui.onboarding.NgOnboardingCtrl.prototype.setupPositioning_ = function() {
       if (!(this.scope_['top'] || this.scope_['bottom'])) {
         top = null;
         bottom = null;
+        var windowHeight = $(window).height();
         if (this.scope_['position'] === 'left' || this.scope_['position'] === 'right') {
           top = attachTo.offset().top;
 
@@ -309,8 +335,19 @@ os.ui.onboarding.NgOnboardingCtrl.prototype.setupPositioning_ = function() {
           }
         } else if (this.scope_['position'] === 'bottom') {
           top = attachTo.offset().top + attachTo.outerHeight() + yMargin;
+          var popoverHeight = $('.js-onboarding__popover').outerHeight();
+          if (
+              /* check if popover overflows bottom of window */
+              (top + popoverHeight > windowHeight) &&
+              /* check if popover on top would overflow top of window */
+              (popoverHeight - attachTo.offset().top + yMargin <= 0)) {
+            // switch to top
+            top = null;
+            this.scope_['position'] = 'top';
+            bottom = windowHeight - attachTo.offset().top + yMargin;
+          }
         } else if (this.scope_['position'] === 'top') {
-          bottom = $(window).height() - attachTo.offset().top + yMargin;
+          bottom = windowHeight - attachTo.offset().top + yMargin;
         }
 
         if (this.curStep_['yOffset']) {
