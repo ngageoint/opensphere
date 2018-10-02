@@ -51,10 +51,11 @@ os.ui.Module.directive('autovheight', [os.ui.util.autoVHeightDirective]);
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$injector} $injector
+ * @param {!angular.$timeout} $timeout
  * @constructor
  * @ngInject
  */
-os.ui.util.AutoVHeightCtrl = function($scope, $element, $injector) {
+os.ui.util.AutoVHeightCtrl = function($scope, $element, $injector, $timeout) {
   /**
    * @type {?angular.Scope}
    * @private
@@ -80,10 +81,7 @@ os.ui.util.AutoVHeightCtrl = function($scope, $element, $injector) {
   var parent = $element.parent();
   parent.resize(this.resizeFn_);
 
-  var siblings = /** @type {string} */ ($scope['siblings']);
-  if (siblings) {
-    $(siblings).resize(this.resizeFn_);
-  }
+  $timeout(this.resizeSiblings_.bind(this));
 
   // add resize to common elements
   goog.object.getValues(os.ui.windowCommonElements).forEach(function(sibling) {
@@ -149,5 +147,17 @@ os.ui.util.AutoVHeightCtrl.prototype.onResize_ = function() {
       vhHeight = ((useableHeight / winHeight) * 100 - this['padding']) + 'vh';
     }
     this.element_.css('height', vhHeight);
+  }
+};
+
+
+/**
+ * Add resize handlers to siblings
+ * @private
+ */
+os.ui.util.AutoVHeightCtrl.prototype.resizeSiblings_ = function() {
+  var siblings = /** @type {string} */ (this.scope_['siblings']);
+  if (siblings) {
+    $(siblings).resize(this.resizeFn_);
   }
 };

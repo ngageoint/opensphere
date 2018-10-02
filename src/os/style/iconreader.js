@@ -28,14 +28,15 @@ goog.inherits(os.style.IconReader, os.style.AbstractReader);
  */
 os.style.IconReader.prototype.getOrCreateStyle = function(config) {
   os.style.IconReader.translateIcons(config);
-
+  if (config['fill'] && config['fill']['color']) {
+    config['color'] = config['fill']['color'];
+  }
   var hash = this.baseHash;
   for (var key in config) {
     if (goog.isDef(config[key])) {
       hash += goog.string.hashCode(config[key].toString());
     }
   }
-
   if (!this.cache[hash]) {
     var options = /** @type {olx.style.IconOptions} */ ({
       anchor: config['anchor'],
