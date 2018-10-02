@@ -1,6 +1,6 @@
 <div>
   <select ng-if="!pickerCtrl.multiple()" ng-model="layer" ng-options="l.getId() for l in pickerCtrl.layersList"
     ng-change="pickerCtrl.layerPicked(layer)" class="js-layer-picker w-100" ng-required="isRequired"/>
-  <select ng-if="pickerCtrl.multiple()" ng-model="layers" ng-options="l.getId() for l in pickerCtrl.layersList"
-    ng-change="pickerCtrl.layersChanged(layers)" class="js-layer-picker w-100" multiple/>
+  <select ng-if="pickerCtrl.multiple()" ng-model="pickerCtrl.layers" ng-options="l.getId() for l in pickerCtrl.layersList"
+    ng-change="pickerCtrl.layersChanged(pickerCtrl.layers)" class="js-layer-picker w-100" multiple/>
 </div>
