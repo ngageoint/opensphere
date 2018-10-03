@@ -11,6 +11,7 @@ goog.require('os.ui.wiz.step.IWizardStep');
  * @enum {string}
  */
 os.ui.wiz.step.WizardStepEvent = {
+  FINALIZE: 'finalize',
   VALIDATE: 'validate',
   SAVE: 'save'
 };
