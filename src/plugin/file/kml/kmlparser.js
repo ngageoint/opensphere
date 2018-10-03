@@ -122,6 +122,8 @@ plugin.file.kml.KMLParser = function(options) {
    */
   this.styleMap_ = {};
 
+  this.otherStyleMap = {};
+
   /**
    * The KML style config map for highlight styles from StyleMap tags
    * @type {!Object<string, !Array<Object>>}
@@ -239,6 +241,7 @@ plugin.file.kml.KMLParser.prototype.cleanup = function() {
   this.columnMap_ = null;
   this.stack_.length = 0;
   this.styleMap_ = {};
+  this.otherStyleMap = {};
   this.unnamedCount_ = 0;
   this.screenOverlayCount_ = 0;
   this.minRefreshPeriod_ = 0;
@@ -844,9 +847,6 @@ plugin.file.kml.KMLParser.prototype.examineElement_ = function(el) {
   } else {
     node = new plugin.file.kml.ui.KMLNode();
   }
-
-  if(el.)
-
   if (node) {
     this.updateNode_(el, node, plugin.file.kml.KMLParser.BASE_ELEMENT_PARSERS_);
   }
@@ -1039,22 +1039,6 @@ plugin.file.kml.KMLParser.prototype.readPlacemark_ = function(el) {
 };
 
 /**
- * Add support for BallonStyle tag
- * @param {Node} node Node.
- * @param {Array<*>} objectStack Object stack.
- * @constructor
- */
-plugin.file.kml.KMLParser.readBalloon_ = function(el) {
-  goog.asserts.assert(el.nodeType == goog.dom.NodeType.ELEMENT, 'node.nodeType should be an ELEMENT');
-  // goog.asserts.assert(node.localName == 'BalloonStyle', 'localName should be BalloonStyle');
-  // var properties = ol.xml.pushParseAndPop({}, plugin.file.kml.BALLOON_PROPERTY_PARSERS, node, []);
-  console.log(node, el);
-  // if (!properties) {
-  //  return;
-  // }
-};
-
-/**
  * Parses a KML GroundOverlay element into a map layer
  * @param {Element} el The XML element
  * @return {os.layer.Image} The map layer
@@ -1125,7 +1109,6 @@ plugin.file.kml.KMLParser.prototype.readGroundOverlay_ = function(el) {
       }),
       url: icon
     });
-
     return image;
   } else {
     return null;
@@ -1306,13 +1289,14 @@ plugin.file.kml.KMLParser.reduceStyles_ = function(config, set) {
 plugin.file.kml.KMLParser.prototype.applyStyles_ = function(el, feature) {
   var styleSets = [];
   var highlightStyle = null;
-
   // style from style url
   var styleUrl = /** @type {string} */ (feature.get('styleUrl'));
   if (styleUrl) {
     styleSets.push(this.findStyle_(decodeURIComponent(styleUrl)));
     highlightStyle = this.findStyle_(decodeURIComponent(styleUrl), true);
   }
+
+  this.readBalloonStyle_(feature);
 
   // local style
   var styles = /** @type {Array<ol.style.Style>} */ (feature.get(plugin.file.kml.STYLE_KEY));
@@ -1390,6 +1374,50 @@ plugin.file.kml.KMLParser.prototype.applyStyles_ = function(el, feature) {
 };
 
 /**
+ *
+ * @param {Node} node Node.
+ * @private
+ */
+plugin.file.kml.KMLParser.prototype.examineStyles_ = function(node) {
+  var n;
+  for (n = node.firstElementChild; n; n = n.nextElementSibling) {
+    if (n.localName == 'BalloonStyle') {
+      var properties = ol.xml.pushParseAndPop({}, plugin.file.kml.BALLOON_PROPERTY_PARSERS, n, []);
+      if (properties) {
+        this.otherStyleMap[node.id] = properties;
+      }
+    }
+  }
+};
+
+/**
+ * read the balloon style.
+ * @param feature the feature.
+ * @private
+ */
+plugin.file.kml.KMLParser.prototype.readBalloonStyle_ = function(feature) {
+  //Do not support the geDirections yet.
+  var styleUrl = /** @type {string} */ (feature.get('styleUrl'));
+  var style = this.findStyle2_(decodeURIComponent(styleUrl));
+  var text = style.text;
+
+  if (text) {
+    var pattern = /[$]\[(.*?)\]/g;
+    var regex = new RegExp(pattern);
+
+    console.log(text.replace(regex, function(match) {
+      var key = match.slice(2, -1);
+      if (key in feature['values_']) {
+        return feature.get(key);
+      } else {
+        return '';
+      }
+    }));
+    feature.set('description', text);
+  }
+};
+
+/**
  * Extracts all immediate styles from the provided element.
  * @param {Element} el The XML element
  * @private
@@ -1400,11 +1428,8 @@ plugin.file.kml.KMLParser.prototype.extractStyles_ = function(el) {
   for (var i = 0, n = styleEls.length; i < n; i++) {
     var style = styleEls[i];
 
+    this.examineStyles_(style);
     var styles = plugin.file.kml.readStyle(style, []);
-    if (goog.object.isEmpty(styles)) {
-      console.log('Empty Object', styleEls[i]);
-    }
-
     var id = style.id || style.getAttribute('id');
     if (!id) {
       // styles without an ID are merely the base styles for the container
@@ -1569,13 +1594,29 @@ plugin.file.kml.KMLParser.prototype.mapStyleToConfig_ = function(style) {
  * @return {Array<Object>} The style configs, or null if not found
  * @private
  */
+plugin.file.kml.KMLParser.prototype.findStyle2_ = function(id) {
+  var x = id.indexOf('#');
+
+  if (x > -1) {
+    id = id.substring(x + 1);
+  }
+  var map = this.otherStyleMap;
+  return id in map ? map[id] : null;
+};
+
+/**
+ * Finds the first instance of a style id on the style stack
+ * @param {string} id The style id
+ * @param {boolean=} opt_highlight Whether to check the highlight style map
+ * @return {Array<Object>} The style configs, or null if not found
+ * @private
+ */
 plugin.file.kml.KMLParser.prototype.findStyle_ = function(id, opt_highlight) {
   var x = id.indexOf('#');
 
   if (x > -1) {
     id = id.substring(x + 1);
   }
-
   var map = opt_highlight ? this.highlightStyleMap_ : this.styleMap_;
   return id in map ? map[id] : null;
 };
@@ -1645,6 +1686,5 @@ plugin.file.kml.KMLElementParser;
 plugin.file.kml.KMLParser.BASE_ELEMENT_PARSERS_ = {
   'name': plugin.file.kml.KMLParser.setNodeLabel_,
   'open': plugin.file.kml.KMLParser.setNodeCollapsed_,
-  'visibility': plugin.file.kml.KMLParser.setNodeVisibility_,
-  'Style': plugin.file.kml.KMLParser.readBalloon_
+  'visibility': plugin.file.kml.KMLParser.setNodeVisibility_
 };

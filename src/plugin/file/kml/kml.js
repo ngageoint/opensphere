@@ -640,28 +640,6 @@ plugin.file.kml.UrlParser_ = function(node, objectStack) {
 plugin.file.kml.replaceParsers_(plugin.file.kml.OL_NETWORK_LINK_PARSERS(), 'Url', plugin.file.kml.UrlParser_);
 
 /**
- * Add support for BallonStyle tag
- * @param {Node} node Node.
- * @param {Array<*>} objectStack Object stack.
- * @constructor
- */
-plugin.file.kml.BalloonStyleParser = function(node, objectStack) {
-  goog.asserts.assert(node.nodeType == goog.dom.NodeType.ELEMENT, 'node.nodeType should be an ELEMENT');
-  goog.asserts.assert(node.localName == 'BalloonStyle', 'localName should be BalloonStyle');
-
-  var properties = ol.xml.pushParseAndPop({}, plugin.file.kml.BALLOON_PROPERTY_PARSERS, node, objectStack);
-
-  if (!properties) {
-    return;
-  }
-  var styleObject = /** @type {Object} */ (objectStack[objectStack.length - 1]);
-  goog.asserts.assert(goog.isObject(styleObject), 'styleObject should be an Object');
-
-  styleObject['balloonStyle'] = properties;
-};
-plugin.file.kml.replaceParsers_(plugin.file.kml.OL_STYLE_PARSERS(), 'BalloonStyle', plugin.file.kml.BalloonStyleParser);
-
-/**
  * Added support for icon color.
  *
  * @param {Node} node Node.
