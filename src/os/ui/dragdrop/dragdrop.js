@@ -297,7 +297,8 @@ os.ui.urlDragDropDirective = function() {
       'ddDrop': '=?',
       'ddCapture': '@',
       'ddElement': '@',
-      'ddText': '@?'
+      'ddText': '@?',
+      'enabled': '=?'
     }
   };
 };
@@ -340,12 +341,13 @@ os.ui.UrlDragDrop = function($scope, $element) {
    */
   this.element_ = $scope['ddElement'] ? /** @type {angular.JQLite} */ ($($scope['ddElement'])) : $element;
 
-  this.handleDropFn_ = this.handleDrop_.bind(this);
+  // default to enabled if it's not defined
+  $scope['enabled'] = $scope['enabled'] == undefined ? true : $scope['enabled'];
 
   if (this.element_[0]) {
-    this.element_[0].addEventListener('drop', this.handleDropFn_, $scope['ddCapture'] === 'true');
-    this.element_[0].addEventListener('dragover', this.handleDrag_, false);
-    this.element_[0].addEventListener('dragleave', this.handleDrag_, false);
+    goog.events.listen(this.element_[0], 'drop', this.handleDrop_, $scope['ddCapture'] === 'true', this);
+    goog.events.listen(this.element_[0], 'dragover', this.handleDrag_, false, this);
+    goog.events.listen(this.element_[0], 'dragleave', this.handleDrag_, false, this);
 
     if (this.scope_['ddText']) {
       this.element_.attr('data-text', this.scope_['ddText']);
@@ -358,17 +360,23 @@ os.ui.UrlDragDrop = function($scope, $element) {
 
 /**
  * Handles an item being dragged over the element
- * @param {Event} event The drop event
+ * @param {goog.events.BrowserEvent} event The drop event
  * @private
  */
 os.ui.UrlDragDrop.prototype.handleDrag_ = function(event) {
-  event.preventDefault();
-  event.stopPropagation();
-  if (!document.querySelector(os.ui.windowSelector.MODAL_BG)) {
-    if (event.type == 'dragover') {
-      goog.dom.classlist.add(/** @type {Element} */ (event.currentTarget), os.ui.DragDropStyle.DRAG_DROP_CLASS);
-    } else {
-      goog.dom.classlist.remove(/** @type {Element} */ (event.currentTarget), os.ui.DragDropStyle.DRAG_DROP_CLASS);
+  if (this.scope_['enabled']) {
+    var browserEvent = event.getBrowserEvent();
+    browserEvent.preventDefault();
+    browserEvent.stopPropagation();
+
+    if (!document.querySelector(os.ui.windowSelector.MODAL_BG)) {
+      if (browserEvent.type == 'dragover') {
+        goog.dom.classlist.add(/** @type {Element} */ (browserEvent.currentTarget),
+            os.ui.DragDropStyle.DRAG_DROP_CLASS);
+      } else {
+        goog.dom.classlist.remove(/** @type {Element} */ (browserEvent.currentTarget),
+            os.ui.DragDropStyle.DRAG_DROP_CLASS);
+      }
     }
   }
 };
@@ -376,34 +384,39 @@ os.ui.UrlDragDrop.prototype.handleDrag_ = function(event) {
 
 /**
  * Handles an item being dropped in the element.
- * @param {Event} event The drop event
+ * @param {goog.events.BrowserEvent} event The drop event
  * @private
  */
 os.ui.UrlDragDrop.prototype.handleDrop_ = function(event) {
-  event.preventDefault();
-  event.stopPropagation();
-  goog.dom.classlist.remove(/** @type {Element} */ (event.currentTarget), os.ui.DragDropStyle.DRAG_DROP_CLASS);
-  if (!document.querySelector(os.ui.windowSelector.MODAL_BG)) {
-    if (goog.isDefAndNotNull(this.scope_['ddDrop'])) {
-      this.scope_['ddDrop'](event);
-    } else if (event.dataTransfer.files && event.dataTransfer.files.length > 0) {
-      os.url.UrlManager.getInstance().handleFiles(event.dataTransfer.files);
-    } else {
-      var sourceUri = null;
+  if (this.scope_['enabled']) {
+    var browserEvent = event.getBrowserEvent();
+    browserEvent.preventDefault();
+    browserEvent.stopPropagation();
 
-      try {
-        sourceUri = event.dataTransfer.getData('text') ||
-            event.dataTransfer.getData('text/plain') ||
-            event.dataTransfer.getData('text/x-moz-text-internal');
-      } catch (e) {
-        // old browser, drag/drop API not implemented correctly
-      }
+    goog.dom.classlist.remove(/** @type {Element} */ (browserEvent.currentTarget), os.ui.DragDropStyle.DRAG_DROP_CLASS);
 
-      if (sourceUri) {
-        if (os.url.URL_REGEXP.test(sourceUri)) {
-          os.url.UrlManager.getInstance().handleUrl(sourceUri);
-        } else {
-          os.url.UrlManager.getInstance().handleText(sourceUri);
+    if (!document.querySelector(os.ui.windowSelector.MODAL_BG)) {
+      if (goog.isDefAndNotNull(this.scope_['ddDrop'])) {
+        this.scope_['ddDrop'](browserEvent);
+      } else if (browserEvent.dataTransfer.files && browserEvent.dataTransfer.files.length > 0) {
+        os.url.UrlManager.getInstance().handleFiles(browserEvent.dataTransfer.files);
+      } else {
+        var sourceUri = null;
+
+        try {
+          sourceUri = browserEvent.dataTransfer.getData('text') ||
+              browserEvent.dataTransfer.getData('text/plain') ||
+              browserEvent.dataTransfer.getData('text/x-moz-text-internal');
+        } catch (e) {
+          // old browser, drag/drop API not implemented correctly
+        }
+
+        if (sourceUri) {
+          if (os.url.URL_REGEXP.test(sourceUri)) {
+            os.url.UrlManager.getInstance().handleUrl(sourceUri);
+          } else {
+            os.url.UrlManager.getInstance().handleText(sourceUri);
+          }
         }
       }
     }
@@ -415,9 +428,9 @@ os.ui.UrlDragDrop.prototype.handleDrop_ = function(event) {
  * Clear references to Angular/DOM elements.
  */
 os.ui.UrlDragDrop.prototype.destroy = function() {
-  this.element_[0].removeEventListener('drop', this.handleDropFn_);
-  this.element_[0].removeEventListener('dragover', this.handleDrag_);
-  this.element_[0].removeEventListener('dragleave', this.handleDrag_);
+  goog.events.unlisten(this.element_[0], 'drop', this.handleDrop_, this.scope_['ddCapture'] === 'true', this);
+  goog.events.unlisten(this.element_[0], 'dragover', this.handleDrag_, false, this);
+  goog.events.unlisten(this.element_[0], 'dragleave', this.handleDrag_, false, this);
   this.scope_ = null;
   this.element_ = null;
 };
