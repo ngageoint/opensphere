@@ -20,7 +20,8 @@ os.ui.layer.layerPickerDirective = function() {
       'maxNumLayers': '@?',
       'formatter': '=?',
       'matcher': '=?',
-      'placeholderText': '@?'
+      'placeholderText': '@?',
+      'emitName': '@?'
     },
     templateUrl: os.ROOT + 'views/layer/layerpicker.html',
     controller: os.ui.layer.LayerPickerCtrl,
@@ -73,6 +74,12 @@ os.ui.layer.LayerPickerCtrl = function($scope, $element, $timeout) {
   this.placeholderText_ = this.scope_['placeholderText'] || ('Select Layer' + (this.multiple() ? 's' : '') + '...');
 
   /**
+   * @type {string}
+   * @private
+   */
+  this.emitName_ = this.scope_['emitName'] != null ? this.scope_['emitName'] : 'layerpicker';
+
+  /**
    * Array of available layers
    * @type {!Array.<!os.data.IDataDescriptor>}
    */
@@ -85,6 +92,8 @@ os.ui.layer.LayerPickerCtrl = function($scope, $element, $timeout) {
     // default the picker to required
     $scope['isRequired'] = true;
   }
+
+  this.timeout_ = $timeout;
 
   $timeout(function() {
     this.select2_ = $element.find('.js-layer-picker');
@@ -187,7 +196,7 @@ os.ui.layer.LayerPickerCtrl.prototype.getLayersList = function() {
  */
 os.ui.layer.LayerPickerCtrl.prototype.layerPicked = function(layer) {
   this.scope_['layer'] = layer;
-  this.scope_.$emit('layerpicker.layerselected', layer);
+  this.scope_.$emit(this.emitName_ + '.layerselected', layer);
 };
 
 
@@ -197,6 +206,9 @@ os.ui.layer.LayerPickerCtrl.prototype.layerPicked = function(layer) {
  */
 os.ui.layer.LayerPickerCtrl.prototype.layersChanged = function(layers) {
   this.scope_['layers'] = layers;
+  this.timeout_(function() { // give the scope a chance to update
+    this.scope_.$emit(this.emitName_ + '.layerschanged', layers);
+  }.bind(this));
 };
 
 
