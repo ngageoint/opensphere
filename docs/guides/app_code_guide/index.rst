@@ -63,6 +63,7 @@ OpenSphere is designed to be extended via plugins. In our example app, we add a 
 * Loading WMS/WFS layers from OGC servers
 * Adding XYZ map layers
 * Configuring a set of base maps
+* Enabling the Cesium 3D globe
 * Loading supported file types (CSV, KML, GeoJSON, GPX, SHP)
 
 OpenSphere has a number of other plugins available. To browse what's available, take a look at OpenSphere's `addPlugins call <https://github.com/ngageoint/opensphere/blob/master/src/os/mainctrl.js#L486>`_ or the `plugin directory <https://github.com/ngageoint/opensphere/tree/master/src/plugin>`_ in the source. For more information on creating new plugins, see the :doc:`../plugin_guide`.

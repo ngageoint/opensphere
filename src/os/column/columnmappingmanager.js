@@ -33,6 +33,8 @@ os.column.ColumnMappingManager = function() {
    * @private
    */
   this.changeDelay_ = new goog.async.Delay(this.onChangeDelay_, 100, this);
+
+  this.load();
 };
 goog.inherits(os.column.ColumnMappingManager, os.data.CollectionManager);
 goog.addSingletonGetter(os.column.ColumnMappingManager);
