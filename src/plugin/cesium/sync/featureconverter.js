@@ -23,6 +23,7 @@ goog.require('os.implements');
 goog.require('os.layer.ILayer');
 goog.require('os.map');
 goog.require('os.style.label');
+goog.require('os.webgl');
 goog.require('plugin.cesium');
 goog.require('plugin.cesium.VectorContext');
 
@@ -891,6 +892,7 @@ plugin.cesium.sync.FeatureConverter.prototype.olPolygonGeometryToCesium = functi
   clone.toLonLat();
 
   if (os.geo.isGeometryRectangular(clone)) {
+    // NOTE: This will always return 0. LinearRings.getCoordintates() returns only xy values (Array<[number, number]>)
     var altitude = os.geo.getAverageAltitude(geometry.getLinearRings()[0].getCoordinates());
     var extent = geometry.getLinearRings()[0].getExtent();
 
@@ -1035,13 +1037,20 @@ plugin.cesium.sync.FeatureConverter.prototype.olPolygonGeometryToCesiumPolyline 
 
 
 /**
- * @param {boolean} enabled
+ * @param {os.webgl.AltitudeMode} altitudeMode
  */
-plugin.cesium.sync.FeatureConverter.prototype.setAltitudeEnabled = function(enabled) {
-  if (enabled) {
-    this.heightReference_ = Cesium.HeightReference.NONE;
-  } else {
-    this.heightReference_ = Cesium.HeightReference.CLAMP_TO_GROUND;
+plugin.cesium.sync.FeatureConverter.prototype.setAltitudeMode = function(altitudeMode) {
+  switch (altitudeMode) {
+    case os.webgl.AltitudeMode.RELATIVE_TO_GROUND:
+      this.heightReference_ = Cesium.HeightReference.RELATIVE_TO_GROUND;
+      break;
+    case os.webgl.AltitudeMode.CLAMP_TO_GROUND:
+      this.heightReference_ = Cesium.HeightReference.CLAMP_TO_GROUND;
+      break;
+    case os.webgl.AltitudeMode.ABSOLUTE:
+    default:
+      this.heightReference_ = Cesium.HeightReference.NONE;
+      break;
   }
 };
 
@@ -1054,6 +1063,7 @@ plugin.cesium.sync.FeatureConverter.prototype.setAltitudeEnabled = function(enab
  */
 plugin.cesium.sync.FeatureConverter.prototype.getHeightReference = function(layer, feature, geometry) {
   // disable height reference because the implementation is fairly slow right now
+  // TODO: Should we remove this since with the function above we are seting it for the whole layer?
   return this.heightReference_;
 
   // // Read from the geometry
@@ -1069,14 +1079,17 @@ plugin.cesium.sync.FeatureConverter.prototype.getHeightReference = function(laye
   //   altitudeMode = layer.get('altitudeMode');
   // }
 
-  // var heightReference = Cesium.HeightReference.NONE;
-  // if (altitudeMode === 'clampToGround') {
-  //   heightReference = Cesium.HeightReference.CLAMP_TO_GROUND;
-  // } else if (altitudeMode === 'relativeToGround') {
-  //   heightReference = Cesium.HeightReference.RELATIVE_TO_GROUND;
+  // if (goog.isDef(altitudeMode)) {
+  //   var heightReference = Cesium.HeightReference.NONE;
+  //   if (altitudeMode === 'clampToGround') {
+  //     heightReference = Cesium.HeightReference.CLAMP_TO_GROUND;
+  //   } else if (altitudeMode === 'relativeToGround') {
+  //     heightReference = Cesium.HeightReference.RELATIVE_TO_GROUND;
+  //   }
+  //   return heightReference;
   // }
 
-  // return heightReference;
+  // return this.heightReference_;
 };
 
 

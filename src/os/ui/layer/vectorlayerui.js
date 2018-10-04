@@ -2,6 +2,7 @@ goog.provide('os.ui.layer.VectorLayerUICtrl');
 goog.provide('os.ui.layer.vectorLayerUIDirective');
 
 goog.require('goog.color');
+goog.require('os.MapChange');
 goog.require('os.command.VectorLayerAutoRefresh');
 goog.require('os.command.VectorLayerCenterShape');
 goog.require('os.command.VectorLayerColor');
@@ -31,6 +32,7 @@ goog.require('os.ui.layer.lobOptionsDirective');
 goog.require('os.ui.layer.vectorStyleControlsDirective');
 goog.require('os.ui.slick.column');
 goog.require('os.ui.uiSwitchDirective');
+goog.require('os.webgl');
 
 
 /**
@@ -107,6 +109,18 @@ os.ui.layer.VectorLayerUICtrl = function($scope, $element, $timeout) {
    */
   this['rotationColumn'] = '';
 
+  /**
+   * The altitude modes supported
+   * @type {Array<os.webgl.AltitudeMode>}
+   */
+  this['altitudeModes'] = [];
+
+  /**
+   * If the altitude modes should be shown
+   * @type {boolean}
+   */
+  this['showAltitudeModes'] = false;
+
   os.ui.layer.VectorLayerUICtrl.base(this, 'constructor', $scope, $element, $timeout);
   this.defaultColorControl = os.ui.ColorControlType.PICKER;
 
@@ -114,6 +128,7 @@ os.ui.layer.VectorLayerUICtrl = function($scope, $element, $timeout) {
   this.initEvents.push(os.layer.PropertyChange.LOCK);
 
   // register scope event listeners
+  os.map.mapContainer.listen(goog.events.EventType.PROPERTYCHANGE, this.onMapView3DChange_, false, this);
 
   // style change handlers
   $scope.$on('size.slidestop', this.onSizeChange.bind(this));
@@ -153,7 +168,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.initUI = function() {
     this.scope['centerShape'] = this.getCenterShape_();
     this.scope['centerShapes'] = this.getCenterShapes_();
     this.scope['lockable'] = this.getLockable_();
-    this.scope['altitude'] = this.getAltitudeEnabled_();
+    this['altitudeMode'] = this.getAltitudeMode_();
     this['columns'] = this.getValue(os.ui.layer.getColumns);
     this['showRotation'] = this.getShowRotation_();
     this['rotationColumn'] = this.getRotationColumn_();
@@ -185,6 +200,12 @@ os.ui.layer.VectorLayerUICtrl.prototype.initUI = function() {
       this.scope['showLabels'] = false;
       this.scope['labelColor'] = '';
       this.scope['labelSize'] = 0;
+    }
+
+    var webGLRenderer = os.map.mapContainer.getWebGLRenderer();
+    if (webGLRenderer) {
+      this['altitudeModes'] = webGLRenderer.getAltitudeModes();
+      this['showAltitudeModes'] = this['altitudeModes'].length > 0 && os.map.mapContainer.is3DEnabled();
     }
 
     // update the shape UI
@@ -827,39 +848,39 @@ goog.exportProperty(
 
 
 /**
- * @return {boolean}
+ * @return {os.webgl.AltitudeMode}
  * @private
  */
-os.ui.layer.VectorLayerUICtrl.prototype.getAltitudeEnabled_ = function() {
-  var altitudeEnabled = true;
+os.ui.layer.VectorLayerUICtrl.prototype.getAltitudeMode_ = function() {
+  var altitudeMode = os.webgl.AltitudeMode.ABSOLUTE;
   var items = /** @type {Array} */ (this.scope['items']);
   if (items && items.length > 0) {
     for (var i = 0, n = items.length; i < n; i++) {
       try {
         var source = os.osDataManager.getSource(items[i].getId());
         if (source && source instanceof os.source.Vector) {
-          altitudeEnabled = source.hasAltitudeEnabled();
+          altitudeMode = source.getAltitudeMode();
           break;
         }
       } catch (e) {
       }
     }
   }
-  return altitudeEnabled;
+  return altitudeMode;
 };
 
 
 /**
- * Set the locked state of the source
+ * Set the altitude mode of the source
  */
-os.ui.layer.VectorLayerUICtrl.prototype.onAltitudeChange = function() {
+os.ui.layer.VectorLayerUICtrl.prototype.onAltitudeModeChange = function() {
   var items = /** @type {Array} */ (this.scope['items']);
   if (items && items.length > 0) {
     for (var i = 0, n = items.length; i < n; i++) {
       try {
         var source = os.osDataManager.getSource(items[i].getId());
         if (source && source instanceof os.source.Vector) {
-          source.setAltitudeEnabled(this.scope['altitude']);
+          source.setAltitudeMode(this['altitudeMode']);
         }
       } catch (e) {
       }
@@ -868,8 +889,8 @@ os.ui.layer.VectorLayerUICtrl.prototype.onAltitudeChange = function() {
 };
 goog.exportProperty(
     os.ui.layer.VectorLayerUICtrl.prototype,
-    'onAltitudeChange',
-    os.ui.layer.VectorLayerUICtrl.prototype.onAltitudeChange);
+    'onAltitudeModeChange',
+    os.ui.layer.VectorLayerUICtrl.prototype.onAltitudeModeChange);
 
 
 /**
@@ -977,3 +998,34 @@ os.ui.layer.VectorLayerUICtrl.prototype.onRotationColumnChange = function(event,
     this.createCommand(fn);
   }
 };
+
+
+/**
+ * Handle map property changes.
+ * @param {os.events.PropertyChangeEvent} event The change event.
+ * @private
+ */
+os.ui.layer.VectorLayerUICtrl.prototype.onMapView3DChange_ = function(event) {
+  if (event.getProperty() == os.MapChange.VIEW3D) {
+    this['showAltitudeModes'] = event.getNewValue() && this['altitudeModes'].length > 0;
+    os.ui.apply(this.scope);
+  }
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.ui.layer.VectorLayerUICtrl.prototype.disposeInternal = function() {
+  os.map.mapContainer.unlisten(goog.events.EventType.PROPERTYCHANGE, this.onMapView3DChange_, false, this);
+  os.ui.layer.VectorLayerUICtrl.base(this, 'disposeInternal');
+};
+
+
+/**
+ * Gets a human readable name for altitude mode
+ * @param {os.webgl.AltitudeMode} altitudeMode - The mode to map to a name
+ * @return {string}
+ * @export
+ */
+os.ui.layer.VectorLayerUICtrl.prototype.mapAltitudeModeToName = os.webgl.mapAltitudeModeToName;

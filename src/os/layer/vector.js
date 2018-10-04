@@ -311,6 +311,12 @@ os.layer.Vector.prototype.onSourceChange = function(event) {
     case os.source.PropertyChange.COLUMN_ADDED:
       this.dispatchEvent(new os.events.PropertyChangeEvent(p));
       break;
+    case os.source.PropertyChange.ALTITUDE:
+      // forward as a layer event
+      e = new os.events.PropertyChangeEvent(os.layer.PropertyChange.ALTITUDE, event.getNewValue(),
+          event.getOldValue());
+      this.dispatchEvent(e);
+      break;
     default:
       break;
   }

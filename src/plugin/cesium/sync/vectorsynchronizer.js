@@ -47,7 +47,7 @@ plugin.cesium.sync.VectorSynchronizer = function(layer, map, scene, opt_converte
    */
   this.source = this.layer.getSource();
   if (this.source instanceof os.source.Vector) {
-    this.converter.setAltitudeEnabled(this.source.hasAltitudeEnabled());
+    this.converter.setAltitudeMode(this.source.getAltitudeMode());
   }
 
   /**
@@ -324,7 +324,7 @@ plugin.cesium.sync.VectorSynchronizer.prototype.onSourcePropertyChange_ = functi
       break;
     case os.source.PropertyChange.ALTITUDE:
       if (this.source instanceof os.source.Vector) {
-        this.converter.setAltitudeEnabled(this.source.hasAltitudeEnabled());
+        this.converter.setAltitudeMode(this.source.getAltitudeMode());
         this.refreshFeatures_(source.getFeatures());
       }
       break;
