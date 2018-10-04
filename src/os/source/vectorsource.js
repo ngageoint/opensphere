@@ -50,6 +50,7 @@ goog.require('os.time.TimeRange');
 goog.require('os.time.TimelineController');
 goog.require('os.time.xf.TimeModel');
 goog.require('os.ui.slick.column');
+goog.require('os.webgl');
 
 
 
@@ -332,10 +333,10 @@ os.source.Vector = function(opt_options) {
   this.lockable_ = false;
 
   /**
-   * @type {boolean}
+   * @type {os.webgl.AltitudeMode}
    * @private
    */
-  this.altitudeEnabled_ = true;
+  this.altitudeMode_ = os.webgl.AltitudeMode.ABSOLUTE;
 
   /**
    * How often the source will automatically refresh itself.
@@ -1196,19 +1197,19 @@ os.source.Vector.prototype.getColor = function() {
 
 
 /**
- * @return {boolean}
+ * @return {os.webgl.AltitudeMode}
  */
-os.source.Vector.prototype.hasAltitudeEnabled = function() {
-  return this.altitudeEnabled_;
+os.source.Vector.prototype.getAltitudeMode = function() {
+  return this.altitudeMode_;
 };
 
 
 /**
- * @param {boolean} value
+ * @param {os.webgl.AltitudeMode} value
  */
-os.source.Vector.prototype.setAltitudeEnabled = function(value) {
-  var old = this.altitudeEnabled_;
-  this.altitudeEnabled_ = value;
+os.source.Vector.prototype.setAltitudeMode = function(value) {
+  var old = this.altitudeMode_;
+  this.altitudeMode_ = value;
   this.dispatchEvent(new os.events.PropertyChangeEvent(os.source.PropertyChange.ALTITUDE, value, old));
 };
 
@@ -3379,7 +3380,7 @@ os.source.Vector.prototype.persist = function(opt_to) {
   options['shapeName'] = this.getGeometryShape();
   options['centerShapeName'] = this.getCenterGeometryShape();
   options['timeEnabled'] = this.getTimeEnabled();
-  options['altitudeEnabled'] = this.hasAltitudeEnabled();
+  options['altitudeMode'] = this.getAltitudeMode();
   options['refreshInterval'] = this.refreshInterval;
 
   if (this.uniqueId_) {
@@ -3414,8 +3415,8 @@ os.source.Vector.prototype.restore = function(config) {
     this.setColumnAutoDetectLimit(config['columnDetectLimit']);
   }
 
-  if (config['altitudeEnabled'] != undefined) {
-    this.setAltitudeEnabled(config['altitudeEnabled']);
+  if (config['altitudeMode'] != undefined) {
+    this.setAltitudeMode(config['altitudeMode']);
   }
 
   if (config['refreshInterval']) {
