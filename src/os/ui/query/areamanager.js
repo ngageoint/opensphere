@@ -57,6 +57,8 @@ os.ui.query.AreaManager = function() {
    * @private
    */
   this.saveDelay_ = new goog.async.Delay(this.save, 100, this);
+
+  this.load();
 };
 goog.inherits(os.ui.query.AreaManager, os.data.CollectionManager);
 goog.addSingletonGetter(os.ui.query.AreaManager);
