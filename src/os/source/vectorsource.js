@@ -1964,6 +1964,7 @@ os.source.Vector.prototype.processImmediate = function(feature) {
   }
 
   os.style.setFeatureStyle(feature, this);
+  this.updateIndex(feature);
 
   if (this.getDetectColumnTypes()) {
     this.columnTypeDetection_(feature);
@@ -2154,7 +2155,7 @@ os.source.Vector.prototype.unprocessDeferred = function(features) {
   this.dynamicListeners_ = os.object.prune(this.dynamicListeners_);
 
   // removed features should never remain in the selection
-  this.removeFromSelectedAccountingForStyle_(features, true);
+  this.removeFromSelected(features, true);
 
   // update the time model from remaining data
   if (this.timeModel) {
@@ -3025,19 +3026,11 @@ os.source.Vector.prototype.addToSelected = function(features) {
 
 
 /**
- * @inheritDoc
- */
-os.source.Vector.prototype.removeFromSelected = function(features) {
-  this.removeFromSelectedAccountingForStyle_(features);
-};
-
-
-/**
+ * @override
  * @param {!ol.Feature|Array<!ol.Feature>} features
  * @param {boolean=} opt_skipStyle
- * @private
  */
-os.source.Vector.prototype.removeFromSelectedAccountingForStyle_ = function(features, opt_skipStyle) {
+os.source.Vector.prototype.removeFromSelected = function(features, opt_skipStyle) {
   if (!goog.isArray(features)) {
     features = [features];
   }
