@@ -1374,7 +1374,7 @@ plugin.file.kml.KMLParser.prototype.applyStyles_ = function(el, feature) {
 };
 
 /**
- *
+ * Examine styles that are unsupported in OpenLayers KML styles.
  * @param {Node} node Node.
  * @private
  */
@@ -1391,29 +1391,31 @@ plugin.file.kml.KMLParser.prototype.examineStyles_ = function(node) {
 };
 
 /**
- * read the balloon style.
+ * Read the KML balloon style.
  * @param feature the feature.
  * @private
  */
 plugin.file.kml.KMLParser.prototype.readBalloonStyle_ = function(feature) {
-  //Do not support the geDirections yet.
   var styleUrl = /** @type {string} */ (feature.get('styleUrl'));
-  var style = this.findStyle2_(decodeURIComponent(styleUrl));
+  var style = this.findStyle_(decodeURIComponent(styleUrl), false, true);
   var text = style.text;
+  var bgColor = style.bgColor || '255, 255, 255, 1';
+  var textColor = style.textColor || '0, 0, 0, 1';
 
   if (text) {
     var pattern = /[$]\[(.*?)\]/g;
     var regex = new RegExp(pattern);
 
-    console.log(text.replace(regex, function(match) {
+    text = text.replace(regex, function(match) {
       var key = match.slice(2, -1);
       if (key in feature['values_']) {
         return feature.get(key);
       } else {
         return '';
       }
-    }));
-    feature.set('description', text);
+    });
+    var description = '<div style="background:rgba(' + bgColor + ');color:rgba(' + textColor + ')">' + text + '</div>';
+    feature.set('description', description);
   }
 };
 
@@ -1608,16 +1610,20 @@ plugin.file.kml.KMLParser.prototype.findStyle2_ = function(id) {
  * Finds the first instance of a style id on the style stack
  * @param {string} id The style id
  * @param {boolean=} opt_highlight Whether to check the highlight style map
+ * @param {boolean=} opt_otherStyle Whether to check externally parsed styles.
  * @return {Array<Object>} The style configs, or null if not found
  * @private
  */
-plugin.file.kml.KMLParser.prototype.findStyle_ = function(id, opt_highlight) {
+plugin.file.kml.KMLParser.prototype.findStyle_ = function(id, opt_highlight, opt_otherStyle) {
   var x = id.indexOf('#');
 
   if (x > -1) {
     id = id.substring(x + 1);
   }
   var map = opt_highlight ? this.highlightStyleMap_ : this.styleMap_;
+  if (opt_otherStyle) {
+    map = this.otherStyleMap;
+  }
   return id in map ? map[id] : null;
 };
 
