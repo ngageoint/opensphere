@@ -97,6 +97,11 @@ os.im.mapping.RuleMapping = function() {
    * @type {boolean}
    */
   this['valid'] = true;
+
+  /**
+   * @type {?string}
+   */
+  this['displayValue'] = null;
 };
 goog.inherits(os.im.mapping.RuleMapping, os.im.mapping.AbstractMapping);
 
@@ -270,6 +275,7 @@ os.im.mapping.RuleMapping.prototype.persist = function(opt_to) {
 
   opt_to['field'] = this.field;
   opt_to['targetField'] = this.targetField;
+  opt_to['displayValue'] = this['displayValue'];
 
   return opt_to;
 };
@@ -285,6 +291,7 @@ os.im.mapping.RuleMapping.prototype.restore = function(config) {
 
   this.field = config['field'];
   this.targetField = config['targetField'];
+  this['displayValue'] = config['displayValue'];
 };
 
 
@@ -325,5 +332,5 @@ os.im.mapping.RuleMapping.prototype.restoreValues = function(config) {
     this.setRules(rules);
   }
 
-  this.staticValue = config['staticValue'];
+  this.setStaticValue(config['staticValue']);
 };

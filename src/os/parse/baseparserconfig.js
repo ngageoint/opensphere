@@ -37,7 +37,7 @@ os.parse.BaseParserConfig = function() {
   /**
    * @type {Array.<os.im.mapping.IMapping>}
    */
-  this['mappings'] = null;
+  this['mappings'] = [];
 
   /**
    * @type {Array.<T>}
