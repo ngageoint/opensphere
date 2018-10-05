@@ -190,22 +190,23 @@ plugin.file.kml.replaceParsers_(ol.format.KML.POLY_STYLE_PARSERS_, 'color',
     ol.xml.makeObjectPropertySetter(plugin.file.kml.readColor_));
 
 /**
- *
- * @param {Node} node
+ * Parse text field from BalloonStyle tag.
+ * @param {Node} node Node.
+ * @return {string|*}
+ * @private
  */
 plugin.file.kml.readBalloonText_ = function(node) {
-  var s = ol.xml.getAllTextContent(node, false).trim();
-  return s;
+  return ol.xml.getAllTextContent(node, false).trim();
 };
 
 /**
- *
- * @param {Node} node
+ * Parse display mode from the BalloonStyle tag.
+ * @param {Node} node Node.
+ * @return {string|*}
  * @private
  */
 plugin.file.kml.readDisplayMode_ = function(node) {
-  var s = ol.xml.getAllTextContent(node, false).trim();
-  return s;
+  return ol.xml.getAllTextContent(node, false).trim();
 };
 
 /**
@@ -345,7 +346,7 @@ plugin.file.kml.MULTITRACK_PROPERTY_PARSERS = ol.xml.makeStructureNS(
     ));
 
 /**
- * Property parsers for MultiTrack nodes.
+ * Property parsers for BalloonStyle Style.
  * @type {Object<string, Object<string, ol.XmlParser>>}
  * @const
  */
