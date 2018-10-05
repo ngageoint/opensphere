@@ -4,6 +4,10 @@
     "type": "app",
     "index": "index.js",
     "scss": "scss/example.scss",
+    "themes": [
+      "overrides_default_compact",
+      "overrides_slate_compact"
+    ],
     "gcc": {
       "define": [
         "os.SETTINGS=config/settings.json",
