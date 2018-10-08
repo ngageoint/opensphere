@@ -1652,10 +1652,12 @@ plugin.file.kml.KMLParser.prototype.mapStyleToConfig_ = function(style) {
  * Finds the first instance of a style id on the style stack
  * @param {string} id The style id
  * @param {boolean=} opt_highlight Whether to check the highlight style map
+ * @param {boolean=} opt_otherStyle Whether to check externally parsed styles.
+
  * @return {Array<Object>} The style configs, or null if not found
  * @private
  */
-plugin.file.kml.KMLParser.prototype.findStyle_ = function(id, opt_highlight) {
+plugin.file.kml.KMLParser.prototype.findStyle_ = function(id, opt_highlight, opt_otherStyle) {
   var x = id.indexOf('#');
 
   if (x > -1) {
@@ -1663,6 +1665,9 @@ plugin.file.kml.KMLParser.prototype.findStyle_ = function(id, opt_highlight) {
   }
 
   var map = opt_highlight ? this.highlightStyleMap_ : this.styleMap_;
+  if (opt_otherStyle) {
+    map = this.otherStyleMap;
+  }
   return id in map ? map[id] : null;
 };
 
