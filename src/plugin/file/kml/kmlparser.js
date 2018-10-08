@@ -122,6 +122,11 @@ plugin.file.kml.KMLParser = function(options) {
    */
   this.styleMap_ = {};
 
+  /**
+   * The KML styles not supported by OpenLayers map.
+   * @type {!Object<string, !Array<Object>>}
+   * @private
+   */
   this.otherStyleMap = {};
 
   /**
@@ -1295,7 +1300,6 @@ plugin.file.kml.KMLParser.prototype.applyStyles_ = function(el, feature) {
     styleSets.push(this.findStyle_(decodeURIComponent(styleUrl)));
     highlightStyle = this.findStyle_(decodeURIComponent(styleUrl), true);
   }
-
   this.readBalloonStyle_(feature);
 
   // local style
@@ -1392,7 +1396,7 @@ plugin.file.kml.KMLParser.prototype.examineStyles_ = function(node) {
 
 /**
  * Read the KML balloon style.
- * @param feature the feature.
+ * @param {ol.Feature} feature The feature
  * @private
  */
 plugin.file.kml.KMLParser.prototype.readBalloonStyle_ = function(feature) {
@@ -1402,7 +1406,7 @@ plugin.file.kml.KMLParser.prototype.readBalloonStyle_ = function(feature) {
   var bgColor = style.bgColor || '255, 255, 255, 1';
   var textColor = style.textColor || '0, 0, 0, 1';
 
-  if (text) {
+  if (style && text) {
     var pattern = /[$]\[(.*?)\]/g;
     var regex = new RegExp(pattern);
 
@@ -1587,23 +1591,6 @@ plugin.file.kml.KMLParser.prototype.mapStyleToConfig_ = function(style) {
   }
 
   return config;
-};
-
-/**
- * Finds the first instance of a style id on the style stack
- * @param {string} id The style id
- * @param {boolean=} opt_highlight Whether to check the highlight style map
- * @return {Array<Object>} The style configs, or null if not found
- * @private
- */
-plugin.file.kml.KMLParser.prototype.findStyle2_ = function(id) {
-  var x = id.indexOf('#');
-
-  if (x > -1) {
-    id = id.substring(x + 1);
-  }
-  var map = this.otherStyleMap;
-  return id in map ? map[id] : null;
 };
 
 /**
