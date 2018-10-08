@@ -216,6 +216,7 @@ plugin.file.kml.readStyle = function(node, objectStack) {
   return ol.format.KML.readStyle_(node, objectStack);
 };
 
+
 /**
  * Parse text field from BalloonStyle tag.
  * @param {Node} node Node.
@@ -225,6 +226,8 @@ plugin.file.kml.readStyle = function(node, objectStack) {
 plugin.file.kml.readBalloonText_ = function(node) {
   return ol.xml.getAllTextContent(node, false).trim();
 };
+
+
 /**
  * Parse display mode from the BalloonStyle tag.
  * @param {Node} node Node.
@@ -234,6 +237,7 @@ plugin.file.kml.readBalloonText_ = function(node) {
 plugin.file.kml.readDisplayMode_ = function(node) {
   return ol.xml.getAllTextContent(node, false).trim();
 };
+
 
 /**
  * Property parsers for BalloonStyle Style.
@@ -247,7 +251,6 @@ plugin.file.kml.BALLOON_PROPERTY_PARSERS = ol.xml.makeStructureNS(
       'text': ol.xml.makeObjectPropertySetter(plugin.file.kml.readBalloonText_),
       'displayMode': ol.xml.makeObjectPropertySetter(plugin.file.kml.readDisplayMode_)
     });
-
 
 
 /**
