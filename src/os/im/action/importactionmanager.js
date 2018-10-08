@@ -262,7 +262,6 @@ os.im.action.ImportActionManager.prototype.setActionEntries = function(type, ent
 os.im.action.ImportActionManager.prototype.addActionEntry = function(entry, opt_index) {
   if (entry && entry.type && entry.getFilter()) {
     var index = -1;
-    var duplicate = false;
     if (!(entry.type in this.actionEntries)) {
       // no entries for the type - create the array
       this.actionEntries[entry.type] = [];
@@ -270,22 +269,18 @@ os.im.action.ImportActionManager.prototype.addActionEntry = function(entry, opt_
       // check if the entry already exists
       var list = this.getActionEntries(entry.type);
       index = goog.array.findIndex(list, function(e) {
-        // if entries are functionally the same mark them as duplicate
-        if (e.compare(entry) == 0) {
-          duplicate = true;
-        }
         return e.getId() == entry.getId();
       });
     }
 
     var entries = this.actionEntries[entry.type];
-    if (index > -1 && !duplicate) {
+    if (index > -1) {
       // replace the existing entry
       entries[index] = entry;
     } else if (opt_index > -1 && opt_index < entries.length) {
       // insert at the given index
       goog.array.insertAt(entries, entry, opt_index);
-    } else if (!duplicate) {
+    } else {
       // append to the end of the array
       entries.push(entry);
     }
@@ -413,7 +408,10 @@ os.im.action.ImportActionManager.prototype.save = function() {
     if (entries.length > 0) {
       var entryConfigs = [];
       for (var i = 0; i < entries.length; i++) {
-        entryConfigs.push(entries[i].persist());
+        var e = entries[i];
+        if (!e.isTemporary()) {
+          entryConfigs.push(e.persist());
+        }
       }
 
       obj[type] = entryConfigs;
