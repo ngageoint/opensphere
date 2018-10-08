@@ -1412,7 +1412,7 @@ plugin.file.kml.KMLParser.prototype.readBalloonStyle_ = function(feature) {
 
     text = text.replace(regex, function(match) {
       var key = match.slice(2, -1);
-      if (key in feature['values_']) {
+      if (key in feature.values_) {
         return feature.get(key);
       } else {
         return '';
