@@ -872,6 +872,8 @@ plugin.file.kml.KMLParser.prototype.examineStyles_ = function(node) {
  * Read the KML balloon style.
  * @param {ol.Feature} feature The feature
  * @private
+ *
+ * @suppress {accessControls} To allow direct access to feature metadata.
  */
 plugin.file.kml.KMLParser.prototype.readBalloonStyle_ = function(feature) {
   var styleUrl = /** @type {string} */ (feature.get('styleUrl'));
