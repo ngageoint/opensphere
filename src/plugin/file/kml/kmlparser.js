@@ -886,8 +886,8 @@ plugin.file.kml.KMLParser.prototype.readBalloonStyle_ = function(feature) {
     var pattern = /[$]\[(.*?)\]/g;
     var regex = new RegExp(pattern);
 
-    text = text.replace(regex, function(match, p1) {
-      if (p1 in feature.values_) {
+    text = text.replace(regex, function(match, key) {
+      if (key in feature.values_) {
         return feature.get(key);
       } else {
         return '';
