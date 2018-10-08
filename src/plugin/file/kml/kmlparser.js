@@ -127,7 +127,7 @@ plugin.file.kml.KMLParser = function(options) {
 
   /**
    * The KML styles not supported by OpenLayers map.
-   * @type {!Object<string, !Object<string>>}
+   * @type {!Object<string, !Object>}
    * @private
    */
   this.otherStyleMap = {};
@@ -888,7 +888,7 @@ plugin.file.kml.KMLParser.prototype.readBalloonStyle_ = function(feature) {
 
     text = text.replace(regex, function(match) {
       var key = match.slice(2, -1);
-      if (key in feature.values_) {
+      if (match in feature.values_) {
         return feature.get(key);
       } else {
         return '';
