@@ -21,11 +21,13 @@ goog.require('os.time.TimeRange');
 goog.require('os.ui.file.kml');
 goog.require('os.xml');
 
+
 /**
  * Key used to store the parsed KML style on features.
  * @type {string}
  */
 plugin.file.kml.STYLE_KEY = '_kmlStyle';
+
 
 /**
  * Namespace URI used for KML nodes.
@@ -34,12 +36,14 @@ plugin.file.kml.STYLE_KEY = '_kmlStyle';
  */
 plugin.file.kml.KML_NS = 'http://www.opengis.net/kml/2.2';
 
+
 /**
  * Namespace URI used for gx nodes.
  * @type {string}
  * @const
  */
 plugin.file.kml.GX_NS = 'http://www.google.com/kml/ext/2.2';
+
 
 /**
  * The default KML style
@@ -61,10 +65,12 @@ plugin.file.kml.DEFAULT_STYLE = {
   }
 };
 
+
 /**
  * @type {Array<Object<string, *>>}
  */
 plugin.file.kml.DEFAULT_STYLE_ARRAY = [plugin.file.kml.DEFAULT_STYLE];
+
 
 /**
  * Replaces parsers in an Openlayers KML parser map.
@@ -81,6 +87,7 @@ plugin.file.kml.replaceParsers_ = function(obj, field, parser) {
   }
 };
 
+
 /**
  * Accessor for private Openlayers code.
  * @return {function(this: T, *, Array<*>, (string|undefined)): (Node|undefined)}
@@ -89,6 +96,7 @@ plugin.file.kml.replaceParsers_ = function(obj, field, parser) {
 plugin.file.kml.OL_GEOMETRY_NODE_FACTORY = function() {
   return ol.format.KML.GEOMETRY_NODE_FACTORY_;
 };
+
 
 /**
  * Accessor for private Openlayers code.
@@ -99,6 +107,7 @@ plugin.file.kml.OL_ICON_STYLE_PARSERS = function() {
   return ol.format.KML.ICON_STYLE_PARSERS_;
 };
 
+
 /**
  * Accessor for private Openlayers code.
  * @return {Object<string, Object<string, ol.XmlParser>>}
@@ -106,6 +115,7 @@ plugin.file.kml.OL_ICON_STYLE_PARSERS = function() {
 plugin.file.kml.OL_LINK_PARSERS = function() {
   return ol.format.KML.LINK_PARSERS_;
 };
+
 
 /**
  * Accessor for private Openlayers code.
@@ -115,6 +125,7 @@ plugin.file.kml.OL_NAMESPACE_URIS = function() {
   return ol.format.KML.NAMESPACE_URIS_;
 };
 
+
 /**
  * Accessor for private Openlayers code.
  * @return {Array<string>}
@@ -122,6 +133,7 @@ plugin.file.kml.OL_NAMESPACE_URIS = function() {
 plugin.file.kml.OL_GX_NAMESPACE_URIS = function() {
   return ol.format.KML.GX_NAMESPACE_URIS_;
 };
+
 
 /**
  * Accessor for private Openlayers code.
@@ -131,6 +143,7 @@ plugin.file.kml.OL_NETWORK_LINK_PARSERS = function() {
   return ol.format.KML.NETWORK_LINK_PARSERS_;
 };
 
+
 /**
  * Accessor for private Openlayers code.
  * @return {Object<string, Object<string, ol.XmlParser>>}
@@ -138,6 +151,7 @@ plugin.file.kml.OL_NETWORK_LINK_PARSERS = function() {
 plugin.file.kml.OL_PLACEMARK_PARSERS = function() {
   return ol.format.KML.PLACEMARK_PARSERS_;
 };
+
 
 /**
  * Access for private Openlayers code.
@@ -147,6 +161,7 @@ plugin.file.kml.OL_PLACEMARK_SERIALIZERS = function() {
   return ol.format.KML.PLACEMARK_SERIALIZERS_;
 };
 
+
 /**
  * Access for private Openlayers code.
  * @return {Object<string, Object<string, ol.XmlParser>>}
@@ -154,6 +169,7 @@ plugin.file.kml.OL_PLACEMARK_SERIALIZERS = function() {
 plugin.file.kml.OL_STYLE_PARSERS = function() {
   return ol.format.KML.STYLE_PARSERS_;
 };
+
 
 /**
  * Openlayers' opacity parsing can result in 16 decimal precision, which breaks when converting to a string then back
@@ -189,6 +205,17 @@ plugin.file.kml.replaceParsers_(ol.format.KML.LINE_STYLE_PARSERS_, 'color',
 plugin.file.kml.replaceParsers_(ol.format.KML.POLY_STYLE_PARSERS_, 'color',
     ol.xml.makeObjectPropertySetter(plugin.file.kml.readColor_));
 
+
+/**
+ * Accessor for private Openlayers code.
+ * @param {Node} node Node.
+ * @param {Array<*>} objectStack Object stack.
+ * @return {Array<ol.style.Style>} Style.
+ */
+plugin.file.kml.readStyle = function(node, objectStack) {
+  return ol.format.KML.readStyle_(node, objectStack);
+};
+
 /**
  * Parse text field from BalloonStyle tag.
  * @param {Node} node Node.
@@ -198,7 +225,6 @@ plugin.file.kml.replaceParsers_(ol.format.KML.POLY_STYLE_PARSERS_, 'color',
 plugin.file.kml.readBalloonText_ = function(node) {
   return ol.xml.getAllTextContent(node, false).trim();
 };
-
 /**
  * Parse display mode from the BalloonStyle tag.
  * @param {Node} node Node.
@@ -210,14 +236,19 @@ plugin.file.kml.readDisplayMode_ = function(node) {
 };
 
 /**
- * Accessor for private Openlayers code.
- * @param {Node} node Node.
- * @param {Array<*>} objectStack Object stack.
- * @return {Array<ol.style.Style>} Style.
+ * Property parsers for BalloonStyle Style.
+ * @type {Object<string, Object<string, ol.XmlParser>>}
+ * @const
  */
-plugin.file.kml.readStyle = function(node, objectStack) {
-  return ol.format.KML.readStyle_(node, objectStack);
-};
+plugin.file.kml.BALLOON_PROPERTY_PARSERS = ol.xml.makeStructureNS(
+    plugin.file.kml.OL_NAMESPACE_URIS(), {
+      'bgColor': ol.xml.makeObjectPropertySetter(plugin.file.kml.readColor_),
+      'textColor': ol.xml.makeObjectPropertySetter(plugin.file.kml.readColor_),
+      'text': ol.xml.makeObjectPropertySetter(plugin.file.kml.readBalloonText_),
+      'displayMode': ol.xml.makeObjectPropertySetter(plugin.file.kml.readDisplayMode_)
+    });
+
+
 
 /**
  * Parses a time node.
@@ -240,6 +271,7 @@ plugin.file.kml.readTime = function(node, objectStack) {
   return time;
 };
 
+
 /**
  * @type {Object<string, Object<string, ol.XmlParser>>}
  * @const
@@ -252,10 +284,12 @@ plugin.file.kml.LINK_PARSERS = ol.xml.makeStructureNS(
       'viewRefreshTime': ol.xml.makeObjectPropertySetter(ol.format.XSD.readNonNegativeInteger)
     });
 
+
 /**
  * Extend link parsers to include refresh options.
  */
 os.object.merge(plugin.file.kml.LINK_PARSERS, plugin.file.kml.OL_LINK_PARSERS(), false);
+
 
 /**
  * @type {Object<string, Object<string, ol.XmlParser>>}
@@ -267,10 +301,12 @@ plugin.file.kml.ICON_STYLE_PARSERS = ol.xml.makeStructureNS(
       'color': ol.xml.makeObjectPropertySetter(plugin.file.kml.readColor_)
     });
 
+
 /**
  * Extend link parsers to include refresh options.
  */
 os.object.merge(plugin.file.kml.ICON_STYLE_PARSERS, plugin.file.kml.OL_ICON_STYLE_PARSERS(), false);
+
 
 /**
  * Parse KML time nodes to a os.time.ITime object.
@@ -282,6 +318,7 @@ plugin.file.kml.TIME_PARSERS = ol.xml.makeStructureNS(
       'TimeStamp': ol.xml.makeObjectPropertySetter(plugin.file.kml.readTime, os.data.RecordField.TIME),
       'TimeSpan': ol.xml.makeObjectPropertySetter(plugin.file.kml.readTime, os.data.RecordField.TIME)
     });
+
 
 /**
  * Parse Date objects from KML.
@@ -295,11 +332,13 @@ plugin.file.kml.TIMEFIELD_PARSERS = ol.xml.makeStructureNS(
       'end': ol.xml.makeObjectPropertySetter(os.xml.readDateTime)
     });
 
+
 /**
  * Add time parsers to the Openlayers Placemark parsers. These will parse kml:TimeStamp into a time instant and
  * kml:TimeSpan into a time range.
  */
 os.object.merge(plugin.file.kml.TIME_PARSERS, plugin.file.kml.OL_PLACEMARK_PARSERS(), false);
+
 
 /**
  * Read a MultiTrack node.
@@ -318,6 +357,7 @@ plugin.file.kml.readMultiTrack = function(node, objectStack) {
   return geometry;
 };
 
+
 /**
  * Geometry parsers for MultiTrack nodes.
  * @type {Object<string, Object<string, ol.XmlParser>>}
@@ -328,6 +368,7 @@ plugin.file.kml.MULTITRACK_GEOMETRY_PARSERS = ol.xml.makeStructureNS(
       // add kml:Track parser to support the 2.3 spec
       'Track': ol.xml.makeArrayPusher(ol.format.KML.readGxTrack_)
     });
+
 
 /**
  * Property parsers for MultiTrack nodes.
@@ -345,18 +386,6 @@ plugin.file.kml.MULTITRACK_PROPERTY_PARSERS = ol.xml.makeStructureNS(
         }
     ));
 
-/**
- * Property parsers for BalloonStyle Style.
- * @type {Object<string, Object<string, ol.XmlParser>>}
- * @const
- */
-plugin.file.kml.BALLOON_PROPERTY_PARSERS = ol.xml.makeStructureNS(
-    plugin.file.kml.OL_NAMESPACE_URIS(), {
-      'bgColor': ol.xml.makeObjectPropertySetter(plugin.file.kml.readColor_),
-      'textColor': ol.xml.makeObjectPropertySetter(plugin.file.kml.readColor_),
-      'text': ol.xml.makeObjectPropertySetter(plugin.file.kml.readBalloonText_),
-      'displayMode': ol.xml.makeObjectPropertySetter(plugin.file.kml.readDisplayMode_)
-    });
 
 /**
  * Track/MultiTrack parsers for Placemark nodes.
@@ -375,6 +404,7 @@ plugin.file.kml.PLACEMARK_TRACK_PARSERS = ol.xml.makeStructureNS(
         }
     ));
 
+
 /**
  * @type {Object<string, Object<string, ol.XmlParser>>}
  * @const
@@ -384,20 +414,24 @@ plugin.file.kml.GX_TRACK_PARSERS = ol.xml.makeStructureNS(
       'coord': ol.format.KML.gxCoordParser_
     });
 
+
 /**
  * Extend the Openlayers MultiTrack geometry parsers.
  */
 os.object.merge(plugin.file.kml.MULTITRACK_GEOMETRY_PARSERS, ol.format.KML.GX_MULTITRACK_GEOMETRY_PARSERS_, false);
+
 
 /**
  * Extend the Openlayers Track node parsers.
  */
 os.object.merge(plugin.file.kml.GX_TRACK_PARSERS, ol.format.KML.GX_TRACK_PARSERS_, false);
 
+
 /**
  * Add/replace Track/MultiTrack parsers for Placemark nodes.
  */
 os.object.merge(plugin.file.kml.PLACEMARK_TRACK_PARSERS, plugin.file.kml.OL_PLACEMARK_PARSERS(), true);
+
 
 /**
  * Override the Openlayers function to support exporting Track and MultiTrack nodes.
@@ -432,6 +466,7 @@ ol.format.KML.GEOMETRY_NODE_FACTORY_ = function(value, objectStack, opt_nodeName
   return ol.xml.createElementNS(namespaceURI, nodeType);
 };
 
+
 /**
  * Override the href parser to use the asset map.
  *
@@ -462,6 +497,7 @@ plugin.file.kml.readURI = function(node) {
 plugin.file.kml.replaceParsers_(ol.format.KML.PLACEMARK_PARSERS_, 'styleUrl',
     ol.xml.makeObjectPropertySetter(plugin.file.kml.readURI));
 
+
 /**
  * Override for HREF parsing so that it will use our own readURI function above
  */
@@ -473,6 +509,7 @@ plugin.file.kml.HREF_OVERRIDE = ol.xml.makeStructureNS(
 os.object.merge(plugin.file.kml.HREF_OVERRIDE, ol.format.KML.LINK_PARSERS_, true);
 os.object.merge(plugin.file.kml.HREF_OVERRIDE, ol.format.KML.ICON_PARSERS_, true);
 
+
 /**
  * Save a reference to the original Openlayers writeMultiGeometry_ function.
  * @param {Node} node Node.
@@ -481,6 +518,7 @@ os.object.merge(plugin.file.kml.HREF_OVERRIDE, ol.format.KML.ICON_PARSERS_, true
  * @private
  */
 plugin.file.kml.olWriteMultiGeometry_ = ol.format.KML.writeMultiGeometry_;
+
 
 /**
  * Adds support for writing geometries in a {@link ol.geom.GeometryCollection} to a kml:MultiGeometry node.
@@ -504,6 +542,7 @@ plugin.file.kml.writeMultiGeometry_ = function(node, geometry, objectStack) {
   }
 };
 
+
 /**
  * Adds support for writing Track nodes.
  * @param {Node} node Node.
@@ -521,6 +560,8 @@ plugin.file.kml.writeMultiTrack_ = function(node, geometry, objectStack) {
     }
   }
 };
+
+
 
 /**
  * Adds support for writing Track nodes.
@@ -552,6 +593,7 @@ plugin.file.kml.writeTrack_ = function(node, geometry, objectStack) {
   }
 };
 
+
 /**
  * Override the Openlayers Placemark serializers to add additional support.
  * @type {Object<string, Object<string, ol.XmlSerializer>>}
@@ -569,10 +611,12 @@ plugin.file.kml.PLACEMARK_SERIALIZERS = ol.xml.makeStructureNS(
     ));
 os.object.merge(plugin.file.kml.PLACEMARK_SERIALIZERS, plugin.file.kml.OL_PLACEMARK_SERIALIZERS(), true);
 
+
 /**
  * {@link ol.geom.GeometryCollection} should be serialized as a kml:MultiGeometry.
  */
 ol.format.KML.GEOMETRY_TYPE_TO_NODENAME_['GeometryCollection'] = 'MultiGeometry';
+
 
 /**
  * This is literally replacing \d+ with \d* in the regular expression's altitude group so coordinates like
@@ -610,6 +654,7 @@ plugin.file.kml.replaceParsers_(ol.format.KML.FLAT_LINEAR_RING_PARSERS_, 'coordi
 plugin.file.kml.replaceParsers_(ol.format.KML.GEOMETRY_FLAT_COORDINATES_PARSERS_, 'coordinates',
     ol.xml.makeReplacer(ol.format.KML.readFlatCoordinates_));
 
+
 /**
  * Let's just go with the KML scale value instead of the square root, shall we?
  *
@@ -625,6 +670,7 @@ plugin.file.kml.replaceParsers_(ol.format.KML.ICON_STYLE_PARSERS_, 'scale',
 plugin.file.kml.replaceParsers_(ol.format.KML.LABEL_STYLE_PARSERS_, 'scale',
     ol.xml.makeObjectPropertySetter(plugin.file.kml.readScale_));
 
+
 /**
  * KML 2.0 support, yay!!!
  *
@@ -639,6 +685,7 @@ plugin.file.kml.UrlParser_ = function(node, objectStack) {
   ol.xml.parseNode(plugin.file.kml.OL_LINK_PARSERS(), node, objectStack);
 };
 plugin.file.kml.replaceParsers_(plugin.file.kml.OL_NETWORK_LINK_PARSERS(), 'Url', plugin.file.kml.UrlParser_);
+
 
 /**
  * Added support for icon color.
