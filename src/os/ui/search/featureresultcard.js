@@ -194,44 +194,40 @@ os.ui.search.FeatureResultCardCtrl.prototype.onSourceChange_ = function(event, i
  * Get a field from the result.
  * @param {string} field
  * @return {string}
+ * @export
  */
 os.ui.search.FeatureResultCardCtrl.prototype.getField = function(field) {
   return /** @type {string} */ (this.feature.get(field));
 };
-goog.exportProperty(os.ui.search.FeatureResultCardCtrl.prototype, 'getField',
-    os.ui.search.FeatureResultCardCtrl.prototype.getField);
 
 
 /**
  * Fly to the location on the map.
+ * @export
  */
 os.ui.search.FeatureResultCardCtrl.prototype.goTo = function() {
   this.result.performAction();
 };
-goog.exportProperty(os.ui.search.FeatureResultCardCtrl.prototype, 'goTo',
-    os.ui.search.FeatureResultCardCtrl.prototype.goTo);
 
 
 /**
  * Highlights the feature on mouse over
+ * @export
  */
 os.ui.search.FeatureResultCardCtrl.prototype.over = function() {
   this.feature.set(os.style.StyleType.HIGHLIGHT, os.style.DEFAULT_HIGHLIGHT_CONFIG);
   os.style.setFeatureStyle(this.feature);
   os.style.notifyStyleChange(this.layer, [this.feature]);
 };
-goog.exportProperty(os.ui.search.FeatureResultCardCtrl.prototype, 'over',
-    os.ui.search.FeatureResultCardCtrl.prototype.over);
 
 
 /**
  * Removes the highlight on mouse out
+ * @export
  */
 os.ui.search.FeatureResultCardCtrl.prototype.out = function() {
   this.feature.set(os.style.StyleType.HIGHLIGHT, undefined);
   os.style.setFeatureStyle(this.feature);
   os.style.notifyStyleChange(this.layer, [this.feature]);
 };
-goog.exportProperty(os.ui.search.FeatureResultCardCtrl.prototype, 'out',
-    os.ui.search.FeatureResultCardCtrl.prototype.out);
 

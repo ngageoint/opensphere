@@ -102,18 +102,16 @@ os.ui.im.action.FilterActionExportCtrl.prototype.disposeInternal = function() {
 
 /**
  * Fire the cancel callback and close the window.
+ * @export
  */
 os.ui.im.action.FilterActionExportCtrl.prototype.cancel = function() {
   this.close_();
 };
-goog.exportProperty(
-    os.ui.im.action.FilterActionExportCtrl.prototype,
-    'cancel',
-    os.ui.im.action.FilterActionExportCtrl.prototype.cancel);
 
 
 /**
  * Validate the export selection.
+ * @export
  */
 os.ui.im.action.FilterActionExportCtrl.prototype.validate = function() {
   this['errorMsg'] = undefined;
@@ -138,14 +136,11 @@ os.ui.im.action.FilterActionExportCtrl.prototype.validate = function() {
       break;
   }
 };
-goog.exportProperty(
-    os.ui.im.action.FilterActionExportCtrl.prototype,
-    'validate',
-    os.ui.im.action.FilterActionExportCtrl.prototype.validate);
 
 
 /**
  * Fire the confirmation callback and close the window.
+ * @export
  */
 os.ui.im.action.FilterActionExportCtrl.prototype.save = function() {
   var entries;
@@ -171,10 +166,6 @@ os.ui.im.action.FilterActionExportCtrl.prototype.save = function() {
 
   this.close_();
 };
-goog.exportProperty(
-    os.ui.im.action.FilterActionExportCtrl.prototype,
-    'save',
-    os.ui.im.action.FilterActionExportCtrl.prototype.save);
 
 
 /**

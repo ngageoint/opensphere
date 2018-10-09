@@ -90,6 +90,7 @@ goog.inherits(os.ui.state.StateExportCtrl, os.ui.state.AbstractStateFormCtrl);
 
 /**
  * @inheritDoc
+ * @export
  */
 os.ui.state.StateExportCtrl.prototype.accept = function() {
   var method = this['persister'] || null;
@@ -112,7 +113,3 @@ os.ui.state.StateExportCtrl.prototype.accept = function() {
 
   os.ui.state.StateExportCtrl.base(this, 'accept');
 };
-goog.exportProperty(
-    os.ui.state.StateExportCtrl.prototype,
-    'accept',
-    os.ui.state.StateExportCtrl.prototype.accept);

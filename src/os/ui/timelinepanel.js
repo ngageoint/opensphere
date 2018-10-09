@@ -168,6 +168,7 @@ os.ui.TimelinePanelCtrl.prototype.getSettingsTemplate = function() {
 
 /**
  * Launches the timeline settings dialog
+ * @export
  */
 os.ui.TimelinePanelCtrl.prototype.settings = function() {
   var scopeOptions = {
@@ -187,10 +188,6 @@ os.ui.TimelinePanelCtrl.prototype.settings = function() {
 
   os.ui.window.create(windowOptions, this.getSettingsTemplate(), undefined, undefined, undefined, scopeOptions);
 };
-goog.exportProperty(
-    os.ui.TimelinePanelCtrl.prototype,
-    'settings',
-    os.ui.TimelinePanelCtrl.prototype.settings);
 
 
 /**
@@ -204,6 +201,7 @@ os.ui.TimelinePanelCtrl.prototype.getAnimationSettingsTemplate = function() {
 
 /**
  * Launches the animation settings dialog
+ * @export
  */
 os.ui.TimelinePanelCtrl.prototype.animationSettings = function() {
   var scopOptions = {
@@ -224,10 +222,6 @@ os.ui.TimelinePanelCtrl.prototype.animationSettings = function() {
 
   os.ui.window.create(windowOptions, this.getAnimationSettingsTemplate(), undefined, undefined, undefined, scopOptions);
 };
-goog.exportProperty(
-    os.ui.TimelinePanelCtrl.prototype,
-    'animationSettings',
-    os.ui.TimelinePanelCtrl.prototype.animationSettings);
 
 
 /**

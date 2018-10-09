@@ -64,6 +64,7 @@ os.ui.metrics.MetricDetailsCtrl.prototype.disposeInternal = function() {
 /**
  * Get the metric label.
  * @return {string}
+ * @export
  */
 os.ui.metrics.MetricDetailsCtrl.prototype.getLabel = function() {
   if (this.scope_ && this.scope_['metric'] instanceof os.ui.metrics.MetricNode) {
@@ -87,15 +88,12 @@ os.ui.metrics.MetricDetailsCtrl.prototype.getLabel = function() {
 
   return '';
 };
-goog.exportProperty(
-    os.ui.metrics.MetricDetailsCtrl.prototype,
-    'getLabel',
-    os.ui.metrics.MetricDetailsCtrl.prototype.getLabel);
 
 
 /**
  * Get the metric description.
  * @return {string}
+ * @export
  */
 os.ui.metrics.MetricDetailsCtrl.prototype.getDescription = function() {
   if (this.scope_ && this.scope_['metric'] instanceof os.ui.metrics.MetricNode) {
@@ -105,7 +103,3 @@ os.ui.metrics.MetricDetailsCtrl.prototype.getDescription = function() {
 
   return '';
 };
-goog.exportProperty(
-    os.ui.metrics.MetricDetailsCtrl.prototype,
-    'getDescription',
-    os.ui.metrics.MetricDetailsCtrl.prototype.getDescription);

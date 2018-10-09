@@ -79,11 +79,11 @@ plugin.suncalc.SunCalcCtrl.prototype.destroy_ = function() {
 
 /**
  * Close
+ * @export
  */
 plugin.suncalc.SunCalcCtrl.prototype.close = function() {
   os.ui.window.close(this.element_);
 };
-goog.exportProperty(plugin.suncalc.SunCalcCtrl.prototype, 'close', plugin.suncalc.SunCalcCtrl.prototype.close);
 
 
 /**
@@ -230,6 +230,7 @@ plugin.suncalc.SunCalcCtrl.addTextColor_ = function(item) {
 /**
  * @param {number|string} t The time
  * @return {string} The formatted time
+ * @export
  */
 plugin.suncalc.SunCalcCtrl.prototype.formatTime = function(t) {
   if (goog.isNumber(t)) {
@@ -238,13 +239,12 @@ plugin.suncalc.SunCalcCtrl.prototype.formatTime = function(t) {
 
   return t;
 };
-goog.exportProperty(plugin.suncalc.SunCalcCtrl.prototype, 'formatTime',
-    plugin.suncalc.SunCalcCtrl.prototype.formatTime);
 
 
 /**
  * @param {number} t The time
  * @return {string} The formatted date
+ * @export
  */
 plugin.suncalc.SunCalcCtrl.prototype.formatDate = function(t) {
   if (goog.isDef(t)) {
@@ -254,6 +254,4 @@ plugin.suncalc.SunCalcCtrl.prototype.formatDate = function(t) {
 
   return '';
 };
-goog.exportProperty(plugin.suncalc.SunCalcCtrl.prototype, 'formatDate',
-    plugin.suncalc.SunCalcCtrl.prototype.formatDate);
 

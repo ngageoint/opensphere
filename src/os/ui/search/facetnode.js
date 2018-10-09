@@ -131,6 +131,7 @@ os.ui.search.FacetNode.prototype.format = function(row, cell, value) {
 /**
  * Toggles the state
  * @param {MouseEvent} e the event
+ * @export
  */
 os.ui.search.FacetNode.prototype.toggle = function(e) {
   if (this.parentIndex > -1) {
@@ -142,4 +143,3 @@ os.ui.search.FacetNode.prototype.toggle = function(e) {
     e.stopPropagation();
   }
 };
-goog.exportProperty(os.ui.search.FacetNode.prototype, 'toggle', os.ui.search.FacetNode.prototype.toggle);

@@ -188,14 +188,11 @@ os.ui.wiz.step.AbstractWizardStep.prototype.getTemplate = function() {
 
 /**
  * @inheritDoc
+ * @export
  */
 os.ui.wiz.step.AbstractWizardStep.prototype.getTitle = function() {
   return this.title;
 };
-goog.exportProperty(
-    os.ui.wiz.step.AbstractWizardStep.prototype,
-    'getTitle',
-    os.ui.wiz.step.AbstractWizardStep.prototype.getTitle);
 
 
 /**

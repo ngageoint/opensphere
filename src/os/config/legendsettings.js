@@ -234,32 +234,27 @@ os.config.LegendSettingsCtrl.prototype.onOpacityChange_ = function(newVal, oldVa
 /**
  * If the font size can be increased.
  * @return {boolean}
+ * @export
  */
 os.config.LegendSettingsCtrl.prototype.canIncreaseFontSize = function() {
   var sizes = os.config.LegendSettingsCtrl.FONT_SIZES;
   return sizes.indexOf(this['options']['fontSize']) < sizes.length - 1;
 };
-goog.exportProperty(
-    os.config.LegendSettingsCtrl.prototype,
-    'canIncreaseFontSize',
-    os.config.LegendSettingsCtrl.prototype.canIncreaseFontSize);
 
 
 /**
  * If the font size can be increased.
  * @return {boolean}
+ * @export
  */
 os.config.LegendSettingsCtrl.prototype.canDecreaseFontSize = function() {
   return os.config.LegendSettingsCtrl.FONT_SIZES.indexOf(this['options']['fontSize']) > 0;
 };
-goog.exportProperty(
-    os.config.LegendSettingsCtrl.prototype,
-    'canDecreaseFontSize',
-    os.config.LegendSettingsCtrl.prototype.canDecreaseFontSize);
 
 
 /**
  * Increases the font size used in the legend.
+ * @export
  */
 os.config.LegendSettingsCtrl.prototype.increaseFontSize = function() {
   var idx = os.config.LegendSettingsCtrl.FONT_SIZES.indexOf(this['options']['fontSize']);
@@ -269,14 +264,11 @@ os.config.LegendSettingsCtrl.prototype.increaseFontSize = function() {
     os.dispatcher.dispatchEvent(os.legend.EventType.UPDATE);
   }
 };
-goog.exportProperty(
-    os.config.LegendSettingsCtrl.prototype,
-    'increaseFontSize',
-    os.config.LegendSettingsCtrl.prototype.increaseFontSize);
 
 
 /**
  * Decreases the font size used in the legend.
+ * @export
  */
 os.config.LegendSettingsCtrl.prototype.decreaseFontSize = function() {
   var idx = os.config.LegendSettingsCtrl.FONT_SIZES.indexOf(this['options']['fontSize']);
@@ -286,35 +278,25 @@ os.config.LegendSettingsCtrl.prototype.decreaseFontSize = function() {
     os.dispatcher.dispatchEvent(os.legend.EventType.UPDATE);
   }
 };
-goog.exportProperty(
-    os.config.LegendSettingsCtrl.prototype,
-    'decreaseFontSize',
-    os.config.LegendSettingsCtrl.prototype.decreaseFontSize);
 
 
 /**
  * Toggles a boolean value and updates the value in settings.
  * @param {string} type
+ * @export
  */
 os.config.LegendSettingsCtrl.prototype.toggle = function(type) {
   var settingKey = os.legend.DRAW_OPTIONS_KEY + '.' + type;
   os.settings.set(settingKey, this['options'][type]);
   os.dispatcher.dispatchEvent(os.legend.EventType.UPDATE);
 };
-goog.exportProperty(
-    os.config.LegendSettingsCtrl.prototype,
-    'toggle',
-    os.config.LegendSettingsCtrl.prototype.toggle);
 
 
 /**
  * Toggle the font bold setting.
+ * @export
  */
 os.config.LegendSettingsCtrl.prototype.toggleBold = function() {
   this['options']['bold'] = !this['options']['bold'];
   this.toggle('bold');
 };
-goog.exportProperty(
-    os.config.LegendSettingsCtrl.prototype,
-    'toggleBold',
-    os.config.LegendSettingsCtrl.prototype.toggleBold);

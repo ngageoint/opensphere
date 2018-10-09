@@ -399,6 +399,7 @@ os.ui.layer.DefaultLayerUICtrl.prototype.onSliderStop = function(callback, key, 
 
 /**
  * Set the refresh state of the source.
+ * @export
  */
 os.ui.layer.DefaultLayerUICtrl.prototype.onRefreshChange = function() {
   var nodes = this.getLayerNodes();
@@ -417,15 +418,12 @@ os.ui.layer.DefaultLayerUICtrl.prototype.onRefreshChange = function() {
     this.createCommand(fn);
   }
 };
-goog.exportProperty(
-    os.ui.layer.DefaultLayerUICtrl.prototype,
-    'onRefreshChange',
-    os.ui.layer.DefaultLayerUICtrl.prototype.onRefreshChange);
 
 
 /**
  * Resets the value of the chosen key to the default.
  * @param {string} key
+ * @export
  */
 os.ui.layer.DefaultLayerUICtrl.prototype.reset = function(key) {
   var defaultValue = this.defaults[key];
@@ -434,15 +432,12 @@ os.ui.layer.DefaultLayerUICtrl.prototype.reset = function(key) {
     this.onSliderStop(callback, key, null, defaultValue);
   }
 };
-goog.exportProperty(
-    os.ui.layer.DefaultLayerUICtrl.prototype,
-    'reset',
-    os.ui.layer.DefaultLayerUICtrl.prototype.reset);
 
 
 /**
  * Opens an accordion and saves it to local storage.
  * @param {string} selector
+ * @export
  */
 os.ui.layer.DefaultLayerUICtrl.prototype.setOpenSection = function(selector) {
   os.settings.set('layercontrols', selector);
@@ -453,7 +448,3 @@ os.ui.layer.DefaultLayerUICtrl.prototype.setOpenSection = function(selector) {
     }
   });
 };
-goog.exportProperty(
-    os.ui.layer.DefaultLayerUICtrl.prototype,
-    'setOpenSection',
-    os.ui.layer.DefaultLayerUICtrl.prototype.setOpenSection);

@@ -440,14 +440,11 @@ plugin.file.kml.ui.KMLNode.prototype.getId = function() {
 /**
  * Whether or not the KML node is loading.
  * @return {boolean}
+ * @export
  */
 plugin.file.kml.ui.KMLNode.prototype.isLoading = function() {
   return this.loading;
 };
-goog.exportProperty(
-    plugin.file.kml.ui.KMLNode.prototype,
-    'isLoading',
-    plugin.file.kml.ui.KMLNode.prototype.isLoading);
 
 
 /**

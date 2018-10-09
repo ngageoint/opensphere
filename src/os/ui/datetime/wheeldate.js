@@ -332,6 +332,7 @@ os.ui.datetime.WheelDateCtrl.prototype.handleWheelEvent_ = function(event) {
 /**
  * Updates Angular scope's date so the parent can react. This should only fire when the user chooses a date
  * from the calendar, hits enter, or the field loses focus. Mouse wheel changes should be suppressed.
+ * @export
  */
 os.ui.datetime.WheelDateCtrl.prototype.updateScopeDate = function() {
   goog.log.fine(os.ui.datetime.WheelDateCtrl.LOGGER_, 'Wheel date updating scope.');
@@ -346,7 +347,3 @@ os.ui.datetime.WheelDateCtrl.prototype.updateScopeDate = function() {
     }
   }
 };
-goog.exportProperty(
-    os.ui.datetime.WheelDateCtrl.prototype,
-    'updateScopeDate',
-    os.ui.datetime.WheelDateCtrl.prototype.updateScopeDate);

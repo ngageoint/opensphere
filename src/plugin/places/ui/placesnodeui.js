@@ -58,6 +58,7 @@ goog.inherits(plugin.places.ui.PlacesNodeUICtrl, os.ui.node.DefaultLayerNodeUICt
 
 /**
  * Add a new folder.
+ * @export
  */
 plugin.places.ui.PlacesNodeUICtrl.prototype.addFolder = function() {
   var node = /** @type {plugin.file.kml.ui.KMLLayerNode} */ (this.scope['item']);
@@ -70,14 +71,11 @@ plugin.places.ui.PlacesNodeUICtrl.prototype.addFolder = function() {
     }
   }
 };
-goog.exportProperty(
-    plugin.places.ui.PlacesNodeUICtrl.prototype,
-    'addFolder',
-    plugin.places.ui.PlacesNodeUICtrl.prototype.addFolder);
 
 
 /**
  * Add a new place.
+ * @export
  */
 plugin.places.ui.PlacesNodeUICtrl.prototype.addPlace = function() {
   var node = /** @type {plugin.file.kml.ui.KMLLayerNode} */ (this.scope['item']);
@@ -90,10 +88,6 @@ plugin.places.ui.PlacesNodeUICtrl.prototype.addPlace = function() {
     }
   }
 };
-goog.exportProperty(
-    plugin.places.ui.PlacesNodeUICtrl.prototype,
-    'addPlace',
-    plugin.places.ui.PlacesNodeUICtrl.prototype.addPlace);
 
 
 /**

@@ -122,6 +122,7 @@ os.ui.ActionMenuCtrl.prototype.killRightClick_ = function(event) {
  * Invokes a menu action on the provider
  * @param {os.ui.action.Action} action
  * @return {boolean} True if an action was invoked, false otherwise
+ * @export
  */
 os.ui.ActionMenuCtrl.prototype.invoke = function(action) {
   var provider = this.scope['provider'];
@@ -134,7 +135,6 @@ os.ui.ActionMenuCtrl.prototype.invoke = function(action) {
 
   return false;
 };
-goog.exportProperty(os.ui.ActionMenuCtrl.prototype, 'invoke', os.ui.ActionMenuCtrl.prototype.invoke);
 
 
 /**
@@ -344,6 +344,7 @@ os.ui.ActionMenuCtrl.prototype.position = function() {
  * Called when a submenu is initialized. At initialization, the submenu DOM element does not exist yet,
  * so the DOM manipulation is done inside of a timeout which gives sufficient time for the element to
  * be added and its height/position to be read and set based on the viewport boundaries.
+ * @export
  */
 os.ui.ActionMenuCtrl.prototype.positionSubmenu = function() {
   this.timeout(goog.bind(function() {
@@ -389,8 +390,6 @@ os.ui.ActionMenuCtrl.prototype.positionSubmenu = function() {
     }
   }, this), 50, true);
 };
-goog.exportProperty(os.ui.ActionMenuCtrl.prototype, 'positionSubmenu',
-    os.ui.ActionMenuCtrl.prototype.positionSubmenu);
 
 /**
  * Calculate the number of items to show on the screen.

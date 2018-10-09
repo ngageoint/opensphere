@@ -69,23 +69,17 @@ os.ui.query.ui.AreaImportCtrl.prototype.disposeInternal = function() {
 
 /**
  * Close the window
+ * @export
  */
 os.ui.query.ui.AreaImportCtrl.prototype.close = function() {
   os.ui.window.close(this.element);
 };
-goog.exportProperty(
-    os.ui.query.ui.AreaImportCtrl.prototype,
-    'close',
-    os.ui.query.ui.AreaImportCtrl.prototype.close);
 
 
 /**
  * Load areas from the selected file(s).
+ * @export
  */
 os.ui.query.ui.AreaImportCtrl.prototype.finish = function() {
   this['loading'] = true;
 };
-goog.exportProperty(
-    os.ui.query.ui.AreaImportCtrl.prototype,
-    'finish',
-    os.ui.query.ui.AreaImportCtrl.prototype.finish);

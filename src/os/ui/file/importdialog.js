@@ -151,6 +151,7 @@ os.ui.file.ImportDialogCtrl.prototype.onDestroy_ = function() {
 
 /**
  * Create import command and close the window
+ * @export
  */
 os.ui.file.ImportDialogCtrl.prototype.accept = function() {
   if (this.scope_['method']) {
@@ -184,14 +185,11 @@ os.ui.file.ImportDialogCtrl.prototype.accept = function() {
     this.close();
   }
 };
-goog.exportProperty(
-    os.ui.file.ImportDialogCtrl.prototype,
-    'accept',
-    os.ui.file.ImportDialogCtrl.prototype.accept);
 
 
 /**
  * Close the window.
+ * @export
  */
 os.ui.file.ImportDialogCtrl.prototype.close = function() {
   if (this.scope_ && this.scope_['onClose']) {
@@ -200,14 +198,11 @@ os.ui.file.ImportDialogCtrl.prototype.close = function() {
 
   os.ui.window.close(this.element_);
 };
-goog.exportProperty(
-    os.ui.file.ImportDialogCtrl.prototype,
-    'close',
-    os.ui.file.ImportDialogCtrl.prototype.close);
 
 
 /**
  * Launch the system file browser.
+ * @export
  */
 os.ui.file.ImportDialogCtrl.prototype.clearFile = function() {
   if (this.fileInputEl_) {
@@ -222,15 +217,12 @@ os.ui.file.ImportDialogCtrl.prototype.clearFile = function() {
   this['url'] = null;
   this['fileChosen'] = false;
 };
-goog.exportProperty(
-    os.ui.file.ImportDialogCtrl.prototype,
-    'clearFile',
-    os.ui.file.ImportDialogCtrl.prototype.clearFile);
 
 
 /**
  * Get the import types supported by the application.
  * @return {string}
+ * @export
  */
 os.ui.file.ImportDialogCtrl.prototype.getImportDetails = function() {
   var result;
@@ -249,22 +241,15 @@ os.ui.file.ImportDialogCtrl.prototype.getImportDetails = function() {
 
   return result;
 };
-goog.exportProperty(
-    os.ui.file.ImportDialogCtrl.prototype,
-    'getImportDetails',
-    os.ui.file.ImportDialogCtrl.prototype.getImportDetails);
 
 
 /**
  * Launch the system file browser.
+ * @export
  */
 os.ui.file.ImportDialogCtrl.prototype.openFileBrowser = function() {
   this.fileInputEl_.click();
 };
-goog.exportProperty(
-    os.ui.file.ImportDialogCtrl.prototype,
-    'openFileBrowser',
-    os.ui.file.ImportDialogCtrl.prototype.openFileBrowser);
 
 
 /**

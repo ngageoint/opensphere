@@ -144,6 +144,14 @@ requirement: {
 
 #requirement: {
 #  type: BANNED_NAME
+#  value: 'goog.exportProperty'
+#  error_message: 'goog.exportProperty is not permitted. Use @export in the JSDoc '
+#                 'to prevent function renaming, or assign the property directly '
+#                 'for aliases.'
+#}
+
+#requirement: {
+#  type: BANNED_NAME
 #  value: 'goog.bind'
 #  error_message: 'goog.bind(func, args) is not permitted. Use func.bind(args) instead.'
 #}

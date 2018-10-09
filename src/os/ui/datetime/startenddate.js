@@ -261,6 +261,7 @@ os.ui.datetime.StartEndDateCtrl.getDate = function(date) {
 /**
  * Checks if the start date is in an error state.
  * @return {boolean}
+ * @export
  */
 os.ui.datetime.StartEndDateCtrl.prototype.checkStartForError = function() {
   if (this.scope) {
@@ -282,13 +283,12 @@ os.ui.datetime.StartEndDateCtrl.prototype.checkStartForError = function() {
 
   return false;
 };
-goog.exportProperty(os.ui.datetime.StartEndDateCtrl.prototype, 'checkStartForError',
-    os.ui.datetime.StartEndDateCtrl.prototype.checkStartForError);
 
 
 /**
  * Checks if the end date is in an error state.
  * @return {boolean}
+ * @export
  */
 os.ui.datetime.StartEndDateCtrl.prototype.checkEndForError = function() {
   if (this.scope) {
@@ -314,5 +314,3 @@ os.ui.datetime.StartEndDateCtrl.prototype.checkEndForError = function() {
 
   return false;
 };
-goog.exportProperty(os.ui.datetime.StartEndDateCtrl.prototype, 'checkEndForError',
-    os.ui.datetime.StartEndDateCtrl.prototype.checkEndForError);

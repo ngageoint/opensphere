@@ -182,15 +182,16 @@ plugin.vectortools.JoinCtrl.prototype.onUpdateDelay = function() {
 
 /**
  * Close the window.
+ * @export
  */
 plugin.vectortools.JoinCtrl.prototype.close = function() {
   os.ui.window.close(this.element_);
 };
-goog.exportProperty(plugin.vectortools.JoinCtrl.prototype, 'close', plugin.vectortools.JoinCtrl.prototype.close);
 
 
 /**
  * Builds and executes the command to perform the join then closes the window.
+ * @export
  */
 plugin.vectortools.JoinCtrl.prototype.accept = function() {
   var sources = this['joinSources'].map(function(item) {
@@ -220,7 +221,6 @@ plugin.vectortools.JoinCtrl.prototype.accept = function() {
   os.command.CommandProcessor.getInstance().addCommand(cmd);
   this.close();
 };
-goog.exportProperty(plugin.vectortools.JoinCtrl.prototype, 'accept', plugin.vectortools.JoinCtrl.prototype.accept);
 
 
 /**
