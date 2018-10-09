@@ -25,19 +25,17 @@ goog.inherits(os.ui.slick.LoadingNode, os.ui.slick.SlickTreeNode);
 /**
  * Whether or not the node is loading
  * @return {boolean}
+ * @export
  */
 os.ui.slick.LoadingNode.prototype.isLoading = function() {
   return this.loading_;
 };
-goog.exportProperty(
-    os.ui.slick.LoadingNode.prototype,
-    'isLoading',
-    os.ui.slick.LoadingNode.prototype.isLoading);
 
 
 /**
  * Set whether or not the node is loading
  * @param {boolean} value
+ * @export
  */
 os.ui.slick.LoadingNode.prototype.setLoading = function(value) {
   if (value != this.loading_) {
@@ -45,10 +43,6 @@ os.ui.slick.LoadingNode.prototype.setLoading = function(value) {
     this.dispatchEvent(new os.events.PropertyChangeEvent('loading', value, !value));
   }
 };
-goog.exportProperty(
-    os.ui.slick.LoadingNode.prototype,
-    'setLoading',
-    os.ui.slick.LoadingNode.prototype.setLoading);
 
 
 /**

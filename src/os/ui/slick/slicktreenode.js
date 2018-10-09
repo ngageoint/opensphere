@@ -351,14 +351,11 @@ os.ui.slick.SlickTreeNode.prototype.formatValue = function(value) {
 /**
  * API call to get the HTML for the icons
  * @return {!string} The icon HTML
+ * @export
  */
 os.ui.slick.SlickTreeNode.prototype.getIcons = function() {
   return this.formatIcons();
 };
-goog.exportProperty(
-    os.ui.slick.SlickTreeNode.prototype,
-    'getIcons',
-    os.ui.slick.SlickTreeNode.prototype.getIcons);
 
 
 /**

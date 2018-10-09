@@ -175,6 +175,7 @@ os.ui.datetime.DateTimeCtrl.prototype.onDateChanged_ = function(newVal, oldVal) 
 /**
  * Updates the scope value or reports an error.
  * @param {string=} opt_type
+ * @export
  */
 os.ui.datetime.DateTimeCtrl.prototype.updateValue = function(opt_type) {
   goog.log.fine(os.ui.datetime.DateTimeCtrl.LOGGER_, 'dateTime.updateValue');
@@ -223,12 +224,11 @@ os.ui.datetime.DateTimeCtrl.prototype.updateValue = function(opt_type) {
     }
   }
 };
-goog.exportProperty(os.ui.datetime.DateTimeCtrl.prototype, 'updateValue',
-    os.ui.datetime.DateTimeCtrl.prototype.updateValue);
 
 
 /**
  * Sets this field to the current time.
+ * @export
  */
 os.ui.datetime.DateTimeCtrl.prototype.setNow = function() {
   // set the inputs as dirty for validation
@@ -247,12 +247,11 @@ os.ui.datetime.DateTimeCtrl.prototype.setNow = function() {
     this.scope_['dateTimeForm'].$setDirty();
   }
 };
-goog.exportProperty(os.ui.datetime.DateTimeCtrl.prototype, 'setNow',
-    os.ui.datetime.DateTimeCtrl.prototype.setNow);
 
 
 /**
  * Sets this field to the current time.
+ * @export
  */
 os.ui.datetime.DateTimeCtrl.prototype.reset = function() {
   this.unwatchDate_();
@@ -265,5 +264,3 @@ os.ui.datetime.DateTimeCtrl.prototype.reset = function() {
   this.scope_['invalid'] = false;
   this.watchDate_();
 };
-goog.exportProperty(os.ui.datetime.DateTimeCtrl.prototype, 'reset',
-    os.ui.datetime.DateTimeCtrl.prototype.reset);

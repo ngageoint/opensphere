@@ -217,6 +217,7 @@ os.ui.color.ColorPickerCtrl.prototype.onMouseDown_ = function(e) {
 /**
  * Toggle the color picker on/off.
  * @param {boolean=} opt_value
+ * @export
  */
 os.ui.color.ColorPickerCtrl.prototype.togglePopup = function(opt_value) {
   this['showPopup'] = goog.isDef(opt_value) ? opt_value : !this['showPopup'];
@@ -241,10 +242,6 @@ os.ui.color.ColorPickerCtrl.prototype.togglePopup = function(opt_value) {
     this.destroyControlMenu_();
   }
 };
-goog.exportProperty(
-    os.ui.color.ColorPickerCtrl.prototype,
-    'togglePopup',
-    os.ui.color.ColorPickerCtrl.prototype.togglePopup);
 
 
 /**

@@ -101,65 +101,50 @@ plugin.file.kml.ui.KMLTourNodeUICtrl.prototype.onTourEvent = function(event) {
 /**
  * If the tour is playing.
  * @return {boolean}
+ * @export
  */
 plugin.file.kml.ui.KMLTourNodeUICtrl.prototype.isPlaying = function() {
   return this.tour_ != null && this.tour_['playing'];
 };
-goog.exportProperty(
-    plugin.file.kml.ui.KMLTourNodeUICtrl.prototype,
-    'isPlaying',
-    plugin.file.kml.ui.KMLTourNodeUICtrl.prototype.isPlaying);
 
 
 /**
  * @inheritDoc
+ * @export
  */
 plugin.file.kml.ui.KMLTourNodeUICtrl.prototype.show = function() {
   return plugin.file.kml.ui.KMLTourNodeUICtrl.base(this, 'show') || this.isPlaying();
 };
-goog.exportProperty(
-    plugin.file.kml.ui.KMLTourNodeUICtrl.prototype,
-    'show',
-    plugin.file.kml.ui.KMLTourNodeUICtrl.prototype.show);
 
 
 /**
  * Play the tour.
+ * @export
  */
 plugin.file.kml.ui.KMLTourNodeUICtrl.prototype.play = function() {
   if (this.tour_) {
     this.tour_.play();
   }
 };
-goog.exportProperty(
-    plugin.file.kml.ui.KMLTourNodeUICtrl.prototype,
-    'play',
-    plugin.file.kml.ui.KMLTourNodeUICtrl.prototype.play);
 
 
 /**
  * Pause the tour.
+ * @export
  */
 plugin.file.kml.ui.KMLTourNodeUICtrl.prototype.pause = function() {
   if (this.tour_) {
     this.tour_.pause();
   }
 };
-goog.exportProperty(
-    plugin.file.kml.ui.KMLTourNodeUICtrl.prototype,
-    'pause',
-    plugin.file.kml.ui.KMLTourNodeUICtrl.prototype.pause);
 
 
 /**
  * Reset the tour.
+ * @export
  */
 plugin.file.kml.ui.KMLTourNodeUICtrl.prototype.reset = function() {
   if (this.tour_) {
     this.tour_.reset();
   }
 };
-goog.exportProperty(
-    plugin.file.kml.ui.KMLTourNodeUICtrl.prototype,
-    'reset',
-    plugin.file.kml.ui.KMLTourNodeUICtrl.prototype.reset);

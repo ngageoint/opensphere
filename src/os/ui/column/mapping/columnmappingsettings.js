@@ -140,18 +140,16 @@ os.ui.column.mapping.ColumnMappingSettingsCtrl.prototype.onMappingsChange_ = fun
 
 /**
  * Launches the create column mapping form.
+ * @export
  */
 os.ui.column.mapping.ColumnMappingSettingsCtrl.prototype.create = function() {
   os.ui.column.mapping.ColumnMappingSettings.launchColumnMappingWindow();
 };
-goog.exportProperty(
-    os.ui.column.mapping.ColumnMappingSettingsCtrl.prototype,
-    'create',
-    os.ui.column.mapping.ColumnMappingSettingsCtrl.prototype.create);
 
 
 /**
  * Launches the export column mappings form.
+ * @export
  */
 os.ui.column.mapping.ColumnMappingSettingsCtrl.prototype.export = function() {
   var selected = /** @type {Array<os.ui.column.mapping.ColumnMappingNode>} */ (this.scope_['selected']);
@@ -192,24 +190,17 @@ os.ui.column.mapping.ColumnMappingSettingsCtrl.prototype.export = function() {
   var template = '<columnmappingexport></columnmappingexport>';
   os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
 };
-goog.exportProperty(
-    os.ui.column.mapping.ColumnMappingSettingsCtrl.prototype,
-    'export',
-    os.ui.column.mapping.ColumnMappingSettingsCtrl.prototype.export);
 
 
 /**
  * Launches the import column mappings form.
+ * @export
  */
 os.ui.column.mapping.ColumnMappingSettingsCtrl.prototype.import = function() {
   var importProcess = new os.ui.im.ImportProcess();
   importProcess.setEvent(new os.ui.im.ImportEvent(os.ui.im.ImportEventType.FILE));
   importProcess.begin();
 };
-goog.exportProperty(
-    os.ui.column.mapping.ColumnMappingSettingsCtrl.prototype,
-    'import',
-    os.ui.column.mapping.ColumnMappingSettingsCtrl.prototype.import);
 
 
 /**

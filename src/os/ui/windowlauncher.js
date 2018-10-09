@@ -64,6 +64,7 @@ os.ui.WindowLauncherCtrl.prototype.destroy_ = function() {
 /**
  * Sets the descriptor as active.
  * @param {MouseEvent} e The event
+ * @export
  */
 os.ui.WindowLauncherCtrl.prototype.click = function(e) {
   if (this.scope_) {
@@ -71,7 +72,3 @@ os.ui.WindowLauncherCtrl.prototype.click = function(e) {
     item.getDescriptor().setActive(true);
   }
 };
-goog.exportProperty(
-    os.ui.WindowLauncherCtrl.prototype,
-    'click',
-    os.ui.WindowLauncherCtrl.prototype.click);

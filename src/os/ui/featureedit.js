@@ -628,6 +628,7 @@ os.ui.FeatureEditCtrl.prototype.disposeInternal = function() {
 
 /**
  * Accept changes, saving the feature.
+ * @export
  */
 os.ui.FeatureEditCtrl.prototype.accept = function() {
   // create a new feature if necessary
@@ -653,14 +654,11 @@ os.ui.FeatureEditCtrl.prototype.accept = function() {
 
   this.close();
 };
-goog.exportProperty(
-    os.ui.FeatureEditCtrl.prototype,
-    'accept',
-    os.ui.FeatureEditCtrl.prototype.accept);
 
 
 /**
  * Cancel edit and close the window.
+ * @export
  */
 os.ui.FeatureEditCtrl.prototype.cancel = function() {
   var feature = this.options['feature'];
@@ -677,10 +675,6 @@ os.ui.FeatureEditCtrl.prototype.cancel = function() {
 
   this.close();
 };
-goog.exportProperty(
-    os.ui.FeatureEditCtrl.prototype,
-    'cancel',
-    os.ui.FeatureEditCtrl.prototype.cancel);
 
 
 /**
@@ -714,54 +708,42 @@ os.ui.FeatureEditCtrl.prototype.handleKeyEvent = function(event) {
 /**
  * If an ellipse shape is selected.
  * @return {boolean}
+ * @export
  */
 os.ui.FeatureEditCtrl.prototype.isEllipse = function() {
   return os.style.ELLIPSE_REGEXP.test(this['shape']);
 };
-goog.exportProperty(
-    os.ui.FeatureEditCtrl.prototype,
-    'isEllipse',
-    os.ui.FeatureEditCtrl.prototype.isEllipse);
 
 
 /**
  * If the icon picker should be displayed.
  * @return {boolean}
+ * @export
  */
 os.ui.FeatureEditCtrl.prototype.showIcon = function() {
   return this['shape'] === os.style.ShapeType.ICON;
 };
-goog.exportProperty(
-    os.ui.FeatureEditCtrl.prototype,
-    'showIcon',
-    os.ui.FeatureEditCtrl.prototype.showIcon);
 
 
 /**
  * If the icon picker should be displayed.
  * @return {boolean}
+ * @export
  */
 os.ui.FeatureEditCtrl.prototype.showCenterIcon = function() {
   return os.style.CENTER_LOOKUP[this['shape']] && this['centerShape'] === os.style.ShapeType.ICON;
 };
-goog.exportProperty(
-    os.ui.FeatureEditCtrl.prototype,
-    'showCenterIcon',
-    os.ui.FeatureEditCtrl.prototype.showCenterIcon);
 
 
 /**
  * If the feature is dynamic, which means it is a time based track
  * @return {boolean}
+ * @export
  */
 os.ui.FeatureEditCtrl.prototype.isFeatureDynamic = function() {
   var feature = /** @type {ol.Feature|undefined} */ (this.options['feature']);
   return feature instanceof os.feature.DynamicFeature;
 };
-goog.exportProperty(
-    os.ui.FeatureEditCtrl.prototype,
-    'isFeatureDynamic',
-    os.ui.FeatureEditCtrl.prototype.isFeatureDynamic);
 
 
 /**
@@ -829,6 +811,7 @@ os.ui.FeatureEditCtrl.prototype.onMapClick_ = function(mapBrowserEvent) {
 
 /**
  * Updates the temporary feature style.
+ * @export
  */
 os.ui.FeatureEditCtrl.prototype.updatePreview = function() {
   if (this.previewFeature) {
@@ -846,15 +829,12 @@ os.ui.FeatureEditCtrl.prototype.updatePreview = function() {
     }
   }
 };
-goog.exportProperty(
-    os.ui.FeatureEditCtrl.prototype,
-    'updatePreview',
-    os.ui.FeatureEditCtrl.prototype.updatePreview);
 
 
 /**
  * Save which section is open to local storage
  * @param {string} selector
+ * @export
  */
 os.ui.FeatureEditCtrl.prototype.setOpenSection = function(selector) {
   this.element.find('.js-style-content').each(function(i, ele) {
@@ -863,10 +843,6 @@ os.ui.FeatureEditCtrl.prototype.setOpenSection = function(selector) {
     }
   });
 };
-goog.exportProperty(
-    os.ui.FeatureEditCtrl.prototype,
-    'setOpenSection',
-    os.ui.FeatureEditCtrl.prototype.setOpenSection);
 
 
 /**
@@ -1226,6 +1202,7 @@ os.ui.FeatureEditCtrl.prototype.onColumnChange = function(event) {
  * Handle changes to the icon color.
  * @param {string=} opt_new The new color value
  * @param {string=} opt_old The old color value
+ * @export
  */
 os.ui.FeatureEditCtrl.prototype.onIconColorChange = function(opt_new, opt_old) {
   if (opt_new != opt_old && this['labelColor'] == opt_old) {
@@ -1234,17 +1211,13 @@ os.ui.FeatureEditCtrl.prototype.onIconColorChange = function(opt_new, opt_old) {
 
   this.updatePreview();
 };
-goog.exportProperty(
-    os.ui.FeatureEditCtrl.prototype,
-    'onIconColorChange',
-    os.ui.FeatureEditCtrl.prototype.onIconColorChange);
 
 
 /**
  * Handle icon change.
  * @param {angular.Scope.Event} event The Angular event.
  * @param {osx.icon.Icon} value The new value.
- * @protected
+ * @export
  */
 os.ui.FeatureEditCtrl.prototype.onIconChange = function(event, value) {
   event.stopPropagation();
@@ -1253,10 +1226,6 @@ os.ui.FeatureEditCtrl.prototype.onIconChange = function(event, value) {
   this['centerIcon'] = value;
   this.updatePreview();
 };
-goog.exportProperty(
-    os.ui.FeatureEditCtrl.prototype,
-    'onIconChange',
-    os.ui.FeatureEditCtrl.prototype.onIconChange);
 
 
 /**
@@ -1275,6 +1244,7 @@ os.ui.FeatureEditCtrl.prototype.onLabelColorReset = function(event) {
 /**
  * Get the minimum value for the semi-major ellipse axis by converting semi-minor to the semi-major units.
  * @return {number}
+ * @export
  */
 os.ui.FeatureEditCtrl.prototype.getSemiMajorMin = function() {
   var min = 1e-16;
@@ -1285,15 +1255,12 @@ os.ui.FeatureEditCtrl.prototype.getSemiMajorMin = function() {
 
   return min;
 };
-goog.exportProperty(
-    os.ui.FeatureEditCtrl.prototype,
-    'getSemiMajorMin',
-    os.ui.FeatureEditCtrl.prototype.getSemiMajorMin);
 
 
 /**
  * Handle changes to the semi-major or semi-minor axis. This corrects the initial arrow key/scroll value caused by
  * using "1e-16" as the min value to invalidate the form when 0 is used.
+ * @export
  */
 os.ui.FeatureEditCtrl.prototype.onAxisChange = function() {
   if (this['semiMinor'] === 1e-16) {
@@ -1306,10 +1273,6 @@ os.ui.FeatureEditCtrl.prototype.onAxisChange = function() {
 
   this.updatePreview();
 };
-goog.exportProperty(
-    os.ui.FeatureEditCtrl.prototype,
-    'onAxisChange',
-    os.ui.FeatureEditCtrl.prototype.onAxisChange);
 
 
 /**

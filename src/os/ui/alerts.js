@@ -91,28 +91,22 @@ os.ui.alert.AlertsCtrl.prototype.registerAlert_ = function(event) {
 
 /**
  * Clears the alerts being displayed
+ * @export
  */
 os.ui.alert.AlertsCtrl.prototype.clearAlerts = function() {
   this['alertArray'].length = 0;
   os.alertManager.clearAlerts();
 };
-goog.exportProperty(
-    os.ui.alert.AlertsCtrl.prototype,
-    'clearAlerts',
-    os.ui.alert.AlertsCtrl.prototype.clearAlerts);
 
 
 /**
  * Toggles the alert popups
+ * @export
  */
 os.ui.alert.AlertsCtrl.prototype.toggleAlertPopups = function() {
   this['showAlertPopups'] = !this['showAlertPopups'];
   os.settings.set(['showAlertPopups'], this['showAlertPopups']);
 };
-goog.exportProperty(
-    os.ui.alert.AlertsCtrl.prototype,
-    'toggleAlertPopups',
-    os.ui.alert.AlertsCtrl.prototype.toggleAlertPopups);
 
 /**
  * @param {angular.Scope.Event} evt The angular event

@@ -290,6 +290,7 @@ os.ui.TimeSettingsCtrl.prototype.timeFromField = function(field) {
 /**
  * Checks for valid
  * @return {boolean}
+ * @export
  */
 os.ui.TimeSettingsCtrl.prototype.valid = function() {
   var loadRanges = this.scope['loadRanges'];
@@ -303,7 +304,6 @@ os.ui.TimeSettingsCtrl.prototype.valid = function() {
 
   return true;
 };
-goog.exportProperty(os.ui.TimeSettingsCtrl.prototype, 'valid', os.ui.TimeSettingsCtrl.prototype.valid);
 
 
 /**
@@ -311,11 +311,11 @@ goog.exportProperty(os.ui.TimeSettingsCtrl.prototype, 'valid', os.ui.TimeSetting
  * @param {string} start
  * @param {string} end
  * @return {boolean}
+ * @export
  */
 os.ui.TimeSettingsCtrl.prototype.isValid = function(start, end) {
   return new Date(start) < new Date(end);
 };
-goog.exportProperty(os.ui.TimeSettingsCtrl.prototype, 'isValid', os.ui.TimeSettingsCtrl.prototype.isValid);
 
 
 /**
@@ -324,6 +324,7 @@ goog.exportProperty(os.ui.TimeSettingsCtrl.prototype, 'isValid', os.ui.TimeSetti
  * @param {Object} end
  * @param {boolean=} opt_ignore
  * @return {boolean}
+ * @export
  */
 os.ui.TimeSettingsCtrl.prototype.isValidSlice = function(start, end, opt_ignore) {
   var valid = true;
@@ -334,4 +335,3 @@ os.ui.TimeSettingsCtrl.prototype.isValidSlice = function(start, end, opt_ignore)
   }
   return /** @type {boolean} */ (valid);
 };
-goog.exportProperty(os.ui.TimeSettingsCtrl.prototype, 'isValidSlice', os.ui.TimeSettingsCtrl.prototype.isValidSlice);

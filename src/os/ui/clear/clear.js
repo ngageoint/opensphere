@@ -91,27 +91,21 @@ os.ui.clear.ClearCtrl.prototype.cancelInternal_ = function() {
 
 /**
  * Handle user clicking the Cancel button
+ * @export
  */
 os.ui.clear.ClearCtrl.prototype.cancel = function() {
   // reset and close the window
   this.cancelInternal_();
   this.close_();
 };
-goog.exportProperty(
-    os.ui.clear.ClearCtrl.prototype,
-    'cancel',
-    os.ui.clear.ClearCtrl.prototype.cancel);
 
 
 /**
  * Handle user clicking the OK button
+ * @export
  */
 os.ui.clear.ClearCtrl.prototype.accept = function() {
   // clear selected entries and close the window
   os.ui.clearManager.clear();
   this.close_();
 };
-goog.exportProperty(
-    os.ui.clear.ClearCtrl.prototype,
-    'accept',
-    os.ui.clear.ClearCtrl.prototype.accept);

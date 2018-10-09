@@ -57,6 +57,7 @@ goog.inherits(plugin.track.ui.TrackNodeUICtrl, os.ui.node.DefaultLayerNodeUICtrl
 
 /**
  * Add a new folder.
+ * @export
  */
 plugin.track.ui.TrackNodeUICtrl.prototype.addFolder = function() {
   var node = /** @type {plugin.file.kml.ui.KMLLayerNode} */ (this.scope['item']);
@@ -69,21 +70,14 @@ plugin.track.ui.TrackNodeUICtrl.prototype.addFolder = function() {
     }
   }
 };
-goog.exportProperty(
-    plugin.track.ui.TrackNodeUICtrl.prototype,
-    'addFolder',
-    plugin.track.ui.TrackNodeUICtrl.prototype.addFolder);
 
 
 /**
  * If the node can be edited.
  * @return {boolean}
+ * @export
  */
 plugin.track.ui.TrackNodeUICtrl.prototype.canEdit = function() {
   var node = /** @type {plugin.file.kml.ui.KMLLayerNode} */ (this.scope['item']);
   return node != null && node.isEditable();
 };
-goog.exportProperty(
-    plugin.track.ui.TrackNodeUICtrl.prototype,
-    'canEdit',
-    plugin.track.ui.TrackNodeUICtrl.prototype.canEdit);

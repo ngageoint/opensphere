@@ -48,6 +48,7 @@ os.ui.column.mapping.ColumnMappingNodeUICtrl = function($scope, $element) {
 
 /**
  * Prompt the user to remove the analytic from the application
+ * @export
  */
 os.ui.column.mapping.ColumnMappingNodeUICtrl.prototype.tryRemove = function() {
   var cm = /** @type {os.ui.column.mapping.ColumnMappingNode} */ (this.scope_['item']).getColumnMapping();
@@ -73,8 +74,6 @@ os.ui.column.mapping.ColumnMappingNodeUICtrl.prototype.tryRemove = function() {
     }
   }));
 };
-goog.exportProperty(os.ui.column.mapping.ColumnMappingNodeUICtrl.prototype, 'tryRemove',
-    os.ui.column.mapping.ColumnMappingNodeUICtrl.prototype.tryRemove);
 
 
 /**
@@ -89,12 +88,9 @@ os.ui.column.mapping.ColumnMappingNodeUICtrl.prototype.remove_ = function() {
 
 /**
  * Edits the column mapping
+ * @export
  */
 os.ui.column.mapping.ColumnMappingNodeUICtrl.prototype.edit = function() {
   var cm = /** @type {os.ui.column.mapping.ColumnMappingNode} */ (this.scope_['item']).getColumnMapping();
   os.ui.column.mapping.ColumnMappingSettings.launchColumnMappingWindow(cm);
 };
-goog.exportProperty(
-    os.ui.column.mapping.ColumnMappingNodeUICtrl.prototype,
-    'edit',
-    os.ui.column.mapping.ColumnMappingNodeUICtrl.prototype.edit);

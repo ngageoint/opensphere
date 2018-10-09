@@ -78,21 +78,21 @@ os.ui.filter.op.Op.prototype.getLocalName = function() {
 /**
  * Gets the title
  * @return {string} The title
+ * @export
  */
 os.ui.filter.op.Op.prototype.getTitle = function() {
   return this.title_;
 };
-goog.exportProperty(os.ui.filter.op.Op.prototype, 'getTitle', os.ui.filter.op.Op.prototype.getTitle);
 
 
 /**
  * Gets the title
  * @return {string} The title
+ * @export
  */
 os.ui.filter.op.Op.prototype.getShortTitle = function() {
   return this.shortTitle_;
 };
-goog.exportProperty(os.ui.filter.op.Op.prototype, 'getShortTitle', os.ui.filter.op.Op.prototype.getShortTitle);
 
 
 /**

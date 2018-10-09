@@ -199,6 +199,7 @@ os.ui.column.mapping.MappingExpressionCtrl.prototype.setColumns_ = function(colu
  * @param {Object} item
  * @param {angular.JQLite} ele
  * @return {string|angular.JQLite}
+ * @export
  */
 os.ui.column.mapping.MappingExpressionCtrl.prototype.formatter = function(item, ele) {
   var id = item['text'];
@@ -216,7 +217,3 @@ os.ui.column.mapping.MappingExpressionCtrl.prototype.formatter = function(item, 
   }
   return val;
 };
-goog.exportProperty(
-    os.ui.column.mapping.MappingExpressionCtrl.prototype,
-    'formatter',
-    os.ui.column.mapping.MappingExpressionCtrl.prototype.formatter);
