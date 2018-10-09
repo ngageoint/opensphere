@@ -835,7 +835,6 @@ plugin.cesium.sync.FeatureConverter.prototype.createPolygonHierarchy = function(
   var rings = geometry.getLinearRings();
   var positions;
   var holes;
-  var extrude = !!geometry.get('extrude');
   goog.asserts.assert(rings.length > 0);
 
   for (var i = 0; i < rings.length; ++i) {
@@ -850,12 +849,8 @@ plugin.cesium.sync.FeatureConverter.prototype.createPolygonHierarchy = function(
       });
     }
 
-    if (rings.length === 1 && os.geo.isRectangular(olPos, extent)) {
-      csPos = plugin.cesium.generateRectanglePositions(extent, 0, extrude);
-    } else {
-      csPos = olcs.core.ol4326CoordinateArrayToCsCartesians(olPos);
-    }
-    // csPos = olcs.core.ol4326CoordinateArrayToCsCartesians(olPos);
+    csPos = olcs.core.ol4326CoordinateArrayToCsCartesians(olPos);
+
     // if a ring is empty, just ignore it
     if (csPos && csPos.length > 0) {
       if (i == 0) {
