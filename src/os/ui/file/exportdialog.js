@@ -133,6 +133,7 @@ os.ui.file.ExportDialogCtrl.prototype.destroy = function() {
 /**
  * Get the label for the exporter.
  * @return {?string}
+ * @export
  */
 os.ui.file.ExportDialogCtrl.prototype.getExporterLabel = function() {
   if (this.scope && this.scope['exporter']) {
@@ -141,15 +142,12 @@ os.ui.file.ExportDialogCtrl.prototype.getExporterLabel = function() {
 
   return null;
 };
-goog.exportProperty(
-    os.ui.file.ExportDialogCtrl.prototype,
-    'getExporterLabel',
-    os.ui.file.ExportDialogCtrl.prototype.getExporterLabel);
 
 
 /**
  * Get the options UI for the exporter.
  * @return {?string}
+ * @export
  */
 os.ui.file.ExportDialogCtrl.prototype.getExporterUI = function() {
   if (this.scope && this.scope['exporter']) {
@@ -158,10 +156,6 @@ os.ui.file.ExportDialogCtrl.prototype.getExporterUI = function() {
 
   return null;
 };
-goog.exportProperty(
-    os.ui.file.ExportDialogCtrl.prototype,
-    'getExporterUI',
-    os.ui.file.ExportDialogCtrl.prototype.getExporterUI);
 
 
 /**
@@ -223,18 +217,16 @@ os.ui.file.ExportDialogCtrl.prototype.onPersisterChange = function(opt_new, opt_
 
 /**
  * Fire the cancel callback and close the window.
+ * @export
  */
 os.ui.file.ExportDialogCtrl.prototype.cancel = function() {
   this.close_();
 };
-goog.exportProperty(
-    os.ui.file.ExportDialogCtrl.prototype,
-    'cancel',
-    os.ui.file.ExportDialogCtrl.prototype.cancel);
 
 
 /**
  * Fire the confirmation callback and close the window.
+ * @export
  */
 os.ui.file.ExportDialogCtrl.prototype.confirm = function() {
   goog.asserts.assert(goog.isDefAndNotNull(this.options.exporter), 'exporter is not defined');
@@ -247,10 +239,6 @@ os.ui.file.ExportDialogCtrl.prototype.confirm = function() {
       this.options.exporter, this.options.persister);
   this.close_();
 };
-goog.exportProperty(
-    os.ui.file.ExportDialogCtrl.prototype,
-    'confirm',
-    os.ui.file.ExportDialogCtrl.prototype.confirm);
 
 
 /**

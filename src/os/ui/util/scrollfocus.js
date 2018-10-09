@@ -175,6 +175,7 @@ os.ui.util.ScrollFocusCtrl.prototype.hasScrollBar_ = function() {
 /**
  * Listener for focus and blur events to activate and deactivate scrolling.
  * @param {goog.events.Event} e The event
+ * @export
  */
 os.ui.util.ScrollFocusCtrl.prototype.setFocus = function(e) {
   if (e.type === 'focus') {
@@ -183,5 +184,3 @@ os.ui.util.ScrollFocusCtrl.prototype.setFocus = function(e) {
     this['hasFocus'] = false;
   }
 };
-goog.exportProperty(os.ui.util.ScrollFocusCtrl.prototype, 'setFocus',
-    os.ui.util.ScrollFocusCtrl.prototype.setFocus);

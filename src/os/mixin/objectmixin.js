@@ -5,6 +5,7 @@ goog.provide('os.mixin.object');
 
 goog.require('ol.Object');
 goog.require('ol.ObjectEventType');
+goog.require('ol.obj');
 
 
 /**
@@ -15,7 +16,9 @@ goog.require('ol.ObjectEventType');
 ol.Object.prototype.getHashKey = function() {
   return ol.getUid(this);
 };
-goog.exportProperty(ol.Object.prototype, '$$hashKey', ol.Object.prototype.getHashKey);
+ol.obj.assign(ol.Object.prototype, {
+  '$$hashKey': ol.Object.prototype.getHashKey
+});
 
 
 /**

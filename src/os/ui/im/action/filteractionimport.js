@@ -74,6 +74,7 @@ os.ui.im.action.FilterActionImportCtrl.prototype.getFilterTooltip = function(ent
 
 /**
  * @inheritDoc
+ * @export
  */
 os.ui.im.action.FilterActionImportCtrl.prototype.finish = function() {
   var iam = os.im.action.ImportActionManager.getInstance();
@@ -124,19 +125,12 @@ os.ui.im.action.FilterActionImportCtrl.prototype.finish = function() {
 
   os.ui.window.close(this.element);
 };
-goog.exportProperty(
-    os.ui.im.action.FilterActionImportCtrl.prototype,
-    'finish',
-    os.ui.im.action.FilterActionImportCtrl.prototype.finish);
 
 
 /**
  * @inheritDoc
+ * @export
  */
 os.ui.im.action.FilterActionImportCtrl.prototype.getFilterIcon = function() {
   return os.im.action.ICON;
 };
-goog.exportProperty(
-    os.ui.im.action.FilterActionImportCtrl.prototype,
-    'getFilterIcon',
-    os.ui.im.action.FilterActionImportCtrl.prototype.getFilterIcon);

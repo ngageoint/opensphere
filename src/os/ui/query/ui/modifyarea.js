@@ -275,18 +275,16 @@ os.ui.query.ui.ModifyAreaCtrl.prototype.getMergedArea_ = function() {
 
 /**
  * Fire the cancel callback and close the window.
+ * @export
  */
 os.ui.query.ui.ModifyAreaCtrl.prototype.cancel = function() {
   this.close_();
 };
-goog.exportProperty(
-    os.ui.query.ui.ModifyAreaCtrl.prototype,
-    'cancel',
-    os.ui.query.ui.ModifyAreaCtrl.prototype.cancel);
 
 
 /**
  * Performs the area modification.
+ * @export
  */
 os.ui.query.ui.ModifyAreaCtrl.prototype.confirm = function() {
   var feature = this.getMergedArea_();
@@ -312,16 +310,13 @@ os.ui.query.ui.ModifyAreaCtrl.prototype.confirm = function() {
 
   this.close_();
 };
-goog.exportProperty(
-    os.ui.query.ui.ModifyAreaCtrl.prototype,
-    'confirm',
-    os.ui.query.ui.ModifyAreaCtrl.prototype.confirm);
 
 
 /**
  * Get the help popover title for an operation.
  * @param {string} op The operation
  * @return {string}
+ * @export
  */
 os.ui.query.ui.ModifyAreaCtrl.prototype.getPopoverTitle = function(op) {
   switch (op) {
@@ -337,16 +332,13 @@ os.ui.query.ui.ModifyAreaCtrl.prototype.getPopoverTitle = function(op) {
 
   return 'Area Help';
 };
-goog.exportProperty(
-    os.ui.query.ui.ModifyAreaCtrl.prototype,
-    'getPopoverTitle',
-    os.ui.query.ui.ModifyAreaCtrl.prototype.getPopoverTitle);
 
 
 /**
  * Get the help popover content for an operation.
  * @param {string} op The operation
  * @return {string}
+ * @export
  */
 os.ui.query.ui.ModifyAreaCtrl.prototype.getPopoverContent = function(op) {
   switch (op) {
@@ -362,10 +354,6 @@ os.ui.query.ui.ModifyAreaCtrl.prototype.getPopoverContent = function(op) {
 
   return 'Area Help';
 };
-goog.exportProperty(
-    os.ui.query.ui.ModifyAreaCtrl.prototype,
-    'getPopoverContent',
-    os.ui.query.ui.ModifyAreaCtrl.prototype.getPopoverContent);
 
 
 /**

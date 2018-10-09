@@ -71,50 +71,38 @@ os.ui.ol.draw.DrawMenuCtrl.prototype.destroy_ = function() {
 
 /**
  * @return {boolean} Whether or not picking by country is enabled
+ * @export
  */
 os.ui.ol.draw.DrawMenuCtrl.prototype.isCountryEnabled = function() {
   return false;
 };
-goog.exportProperty(
-    os.ui.ol.draw.DrawMenuCtrl.prototype,
-    'isCountryEnabled',
-    os.ui.ol.draw.DrawMenuCtrl.prototype.isCountryEnabled);
 
 
 /**
  * Launched adding areas by coordinates
+ * @export
  */
 os.ui.ol.draw.DrawMenuCtrl.prototype.launchAreaByCoordinates = function() {
   os.query.launchCoordinates();
   /** @type {os.ui.ol.draw.DrawControlsCtrl} */ (this['drawControls']).toggleMenu(false);
 };
-goog.exportProperty(
-    os.ui.ol.draw.DrawMenuCtrl.prototype,
-    'launchAreaByCoordinates',
-    os.ui.ol.draw.DrawMenuCtrl.prototype.launchAreaByCoordinates);
 
 
 /**
  * Launched adding areas by coordinates
+ * @export
  */
 os.ui.ol.draw.DrawMenuCtrl.prototype.launchChooseArea = function() {
   os.query.launchChooseArea();
   /** @type {os.ui.ol.draw.DrawControlsCtrl} */ (this['drawControls']).toggleMenu(false);
 };
-goog.exportProperty(
-    os.ui.ol.draw.DrawMenuCtrl.prototype,
-    'launchChooseArea',
-    os.ui.ol.draw.DrawMenuCtrl.prototype.launchChooseArea);
 
 
 /**
  * Adds an area querying the whole world.
+ * @export
  */
 os.ui.ol.draw.DrawMenuCtrl.prototype.queryWorld = function() {
   os.query.queryWorld();
   /** @type {os.ui.ol.draw.DrawControlsCtrl} */ (this['drawControls']).toggleMenu(false);
 };
-goog.exportProperty(
-    os.ui.ol.draw.DrawMenuCtrl.prototype,
-    'queryWorld',
-    os.ui.ol.draw.DrawMenuCtrl.prototype.queryWorld);

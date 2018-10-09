@@ -311,12 +311,11 @@ os.ui.action.ActionManager.prototype.getEnabledActions = function() {
 
 /**
  * @return {boolean} true if this.getEnabledActions().length > 0, false otherwise
+ * @export
  */
 os.ui.action.ActionManager.prototype.hasEnabledActions = function() {
   return this.getEnabledActions().length > 0;
 };
-goog.exportProperty(os.ui.action.ActionManager.prototype, 'hasEnabledActions',
-    os.ui.action.ActionManager.prototype.hasEnabledActions);
 
 
 /**

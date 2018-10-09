@@ -119,16 +119,14 @@ os.ui.Consent.launch = function() {
 
 /**
  * Save the cookie so it wont popup again
+ * @export
  */
 os.ui.Consent.prototype.saveCookie = function() {
   this.update_();
   this.element_.modal('hide');
   this.timer_.start();
   this.peer_.send('consent', '');
-}; goog.exportProperty(
-    os.ui.Consent.prototype,
-    'saveCookie',
-    os.ui.Consent.prototype.saveCookie);
+};
 
 
 /**

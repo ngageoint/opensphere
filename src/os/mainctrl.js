@@ -978,22 +978,22 @@ os.MainCtrl.prototype.handleURLDrop_ = function(url) {
 
 /**
  * Undo the last command.
+ * @export
  */
 os.MainCtrl.prototype.undoCommand = function() {
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.UNDO, 1);
   os.command.CommandProcessor.getInstance().undo();
 };
-goog.exportProperty(os.MainCtrl.prototype, 'undoCommand', os.MainCtrl.prototype.undoCommand);
 
 
 /**
  * Redo the last undone command.
+ * @export
  */
 os.MainCtrl.prototype.redoCommand = function() {
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.REDO, 1);
   os.command.CommandProcessor.getInstance().redo();
 };
-goog.exportProperty(os.MainCtrl.prototype, 'redoCommand', os.MainCtrl.prototype.redoCommand);
 
 
 /**

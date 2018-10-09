@@ -67,6 +67,7 @@ os.ui.metrics.MetricCompletionCtrl.prototype.onDestroy_ = function() {
 
 /**
  * @return {string}
+ * @export
  */
 os.ui.metrics.MetricCompletionCtrl.prototype.getCompleted = function() {
   try {
@@ -88,10 +89,6 @@ os.ui.metrics.MetricCompletionCtrl.prototype.getCompleted = function() {
 
   return '';
 };
-goog.exportProperty(
-    os.ui.metrics.MetricCompletionCtrl.prototype,
-    'getCompleted',
-    os.ui.metrics.MetricCompletionCtrl.prototype.getCompleted);
 
 
 /**

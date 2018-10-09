@@ -78,11 +78,8 @@ os.ui.window.TimeHelpCtrl.prototype.destroy_ = function() {
 
 /**
  * Close the window
+ * @export
  */
 os.ui.window.TimeHelpCtrl.prototype.close = function() {
   os.ui.window.close(this.element_);
 };
-goog.exportProperty(
-    os.ui.window.TimeHelpCtrl.prototype,
-    'close',
-    os.ui.window.TimeHelpCtrl.prototype.close);

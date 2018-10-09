@@ -63,9 +63,8 @@ os.ui.filter.TextNoColCheckCtrl.prototype.onDestroy_ = function() {
 
 /**
  * Run when the user changes the value
+ * @export
  */
 os.ui.filter.TextNoColCheckCtrl.prototype.onChange = function() {
   this.scope_['expr']['literal'] = this['start'];
 };
-goog.exportProperty(os.ui.filter.TextNoColCheckCtrl.prototype, 'onChange',
-    os.ui.filter.TextNoColCheckCtrl.prototype.onChange);

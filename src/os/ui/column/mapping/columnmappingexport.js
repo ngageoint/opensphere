@@ -111,6 +111,7 @@ os.ui.column.mapping.ColumnMappingExportCtrl.prototype.onDestroy_ = function() {
 
 /**
  * Exports the mappings.
+ * @export
  */
 os.ui.column.mapping.ColumnMappingExportCtrl.prototype.accept = function() {
   var method = this['persister'];
@@ -126,19 +127,12 @@ os.ui.column.mapping.ColumnMappingExportCtrl.prototype.accept = function() {
   method.save(title, content, os.file.mime.columnmapping.TYPE);
   this.close();
 };
-goog.exportProperty(
-    os.ui.column.mapping.ColumnMappingExportCtrl.prototype,
-    'accept',
-    os.ui.column.mapping.ColumnMappingExportCtrl.prototype.accept);
 
 
 /**
  * Close the window
+ * @export
  */
 os.ui.column.mapping.ColumnMappingExportCtrl.prototype.close = function() {
   os.ui.window.close(this.element_);
 };
-goog.exportProperty(
-    os.ui.column.mapping.ColumnMappingExportCtrl.prototype,
-    'close',
-    os.ui.column.mapping.ColumnMappingExportCtrl.prototype.close);

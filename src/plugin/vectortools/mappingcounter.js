@@ -97,10 +97,8 @@ plugin.vectortools.MappingCounterCtrl.prototype.onColumnMappingsChange_ = functi
 
 /**
  * Launches the settings window for managing column mappings.
+ * @export
  */
 plugin.vectortools.MappingCounterCtrl.prototype.launchColumnMappings = function() {
   os.ui.menu.windows.openSettingsTo(os.ui.column.mapping.ColumnMappingSettings.ID);
 };
-goog.exportProperty(plugin.vectortools.MappingCounterCtrl.prototype,
-    'launchColumnMappings',
-    plugin.vectortools.MappingCounterCtrl.prototype.launchColumnMappings);

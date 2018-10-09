@@ -144,6 +144,7 @@ os.ui.window.ConfirmCtrl.prototype.onDestroy_ = function() {
 
 /**
  * Fire the cancel callback and close the window.
+ * @export
  */
 os.ui.window.ConfirmCtrl.prototype.cancel = function() {
   if (this.scope_['cancelCallback']) {
@@ -152,11 +153,11 @@ os.ui.window.ConfirmCtrl.prototype.cancel = function() {
 
   this.close_();
 };
-goog.exportProperty(os.ui.window.ConfirmCtrl.prototype, 'cancel', os.ui.window.ConfirmCtrl.prototype.cancel);
 
 
 /**
  * Fire the confirmation callback and close the window.
+ * @export
  */
 os.ui.window.ConfirmCtrl.prototype.confirm = function() {
   if (this.scope_['confirmCallback']) {
@@ -172,7 +173,6 @@ os.ui.window.ConfirmCtrl.prototype.confirm = function() {
 
   this.close_();
 };
-goog.exportProperty(os.ui.window.ConfirmCtrl.prototype, 'confirm', os.ui.window.ConfirmCtrl.prototype.confirm);
 
 
 /**

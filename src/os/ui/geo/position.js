@@ -242,14 +242,11 @@ os.ui.geo.PositionCtrl.prototype.formatLatLon_ = function() {
 
 /**
  * Toggles listening for map click events via the UI, propagating an event upward.
+ * @export
  */
 os.ui.geo.PositionCtrl.prototype.toggleMapEnabled = function() {
   this.setMapEnabled_(!this['mapEnabled']);
 };
-goog.exportProperty(
-    os.ui.geo.PositionCtrl.prototype,
-    'toggleMapEnabled',
-    os.ui.geo.PositionCtrl.prototype.toggleMapEnabled);
 
 
 /**

@@ -75,6 +75,7 @@ goog.inherits(os.ui.query.ui.EditAreaCtrl, os.ui.query.ui.AreaImportCtrl);
 
 /**
  * Finish the dialog
+ * @export
  */
 os.ui.query.ui.EditAreaCtrl.prototype.accept = function() {
   var feature = /** @type {!ol.Feature} */ (this.scope['feature']);
@@ -99,5 +100,4 @@ os.ui.query.ui.EditAreaCtrl.prototype.accept = function() {
 
   this.close();
 };
-goog.exportProperty(os.ui.query.ui.EditAreaCtrl.prototype, 'accept', os.ui.query.ui.EditAreaCtrl.prototype.accept);
 
