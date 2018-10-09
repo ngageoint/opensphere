@@ -30,7 +30,8 @@ os.ui.file.importDialogDirective = function() {
       'method': '=',
       'manager': '=?',
       'hideCancel': '=?',
-      'confirmText': '=?'
+      'confirmText': '=?',
+      'onClose': '=?'
     },
     templateUrl: os.ROOT + 'views/file/importdialog.html',
     controller: os.ui.file.ImportDialogCtrl,
@@ -193,6 +194,10 @@ goog.exportProperty(
  * Close the window.
  */
 os.ui.file.ImportDialogCtrl.prototype.close = function() {
+  if (this.scope_ && this.scope_['onClose']) {
+    this.scope_['onClose']();
+  }
+
   os.ui.window.close(this.element_);
 };
 goog.exportProperty(

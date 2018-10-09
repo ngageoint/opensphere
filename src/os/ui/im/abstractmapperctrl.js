@@ -15,7 +15,7 @@ goog.require('os.ui.slick.slickGridDirective');
  * <code>
  * {
  *   config: <os.config.BaseParserConfig>,
- *   validate: <Function>,
+ *   finalize: <Function>,
  *   mapping: <os.im.mapping.IMapping>
  * }
  * </code>
@@ -128,16 +128,18 @@ os.ui.im.AbstractMapperCtrl.prototype.accept = function() {
   if (this.scope['mapping']) {
     if (this['mappingType'] == 'static') {
       this.scope['mapping'].setStaticValue(this['staticValue']);
+      this.scope['mapping']['displayValue'] = this['staticValue'];
     } else {
       this.scope['mapping'].setRules(this['mappingRuleset']);
       this.scope['mapping'].field = this.getColumn();
+      this.scope['mapping']['displayValue'] = this.getColumn();
     }
 
     this.scope['mapping']['valid'] = true;
   }
 
-  if (this.scope['validate']) {
-    this.scope['validate'](this.scope['mapping']);
+  if (this.scope['finalize']) {
+    this.scope['finalize'](this.scope['mapping']);
   }
 
   os.ui.window.close(this.element);
@@ -150,8 +152,8 @@ goog.exportProperty(os.ui.im.AbstractMapperCtrl.prototype,
  * Closes the window. Does not save changes to the mapping.
  */
 os.ui.im.AbstractMapperCtrl.prototype.close = function() {
-  if (this.scope['validate']) {
-    this.scope['validate'](false);
+  if (this.scope['finalize']) {
+    this.scope['finalize'](false);
   }
   os.ui.window.close(this.element);
 };
