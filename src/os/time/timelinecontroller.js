@@ -54,6 +54,12 @@ os.time.TimelineController = function() {
   this.fade_ = false;
 
   /**
+   * @type {boolean}
+   * @private
+   */
+  this.lock_ = false;
+
+  /**
    * @type {number}
    * @private
    */
@@ -178,6 +184,7 @@ os.time.TimelineController.prototype.initialize_ = function() {
   this.setDuration(duration);
   this.setOffset(this.getSmallestAnimateRangeLength());
   this.setFade(false);
+  this.setLock(false);
   this.setCurrent(end.getTime());
   this.setSuppressShowEvents(false);
   this.updateOffetsAndCurrent_();
@@ -276,6 +283,32 @@ os.time.TimelineController.prototype.getFade = function() {
 os.time.TimelineController.prototype.setFade = function(value) {
   this.fade_ = value;
   this.dispatchEvent(os.time.TimelineEventType.FADE_TOGGLE);
+};
+
+
+/**
+ * @return {boolean}
+ */
+os.time.TimelineController.prototype.getLock = function() {
+  return this.lock_;
+};
+
+
+/**
+ * @return {boolean}
+ */
+os.time.TimelineController.prototype.toggleLock = function() {
+  this.lock_ = !this.lock_;
+  return this.lock_;
+};
+
+
+/**
+ * @param {boolean} value
+ */
+os.time.TimelineController.prototype.setLock = function(value) {
+  this.lock_ = value;
+  this.dispatchEvent(os.time.TimelineEventType.LOCK_TOGGLE);
 };
 
 
@@ -535,7 +568,8 @@ os.time.TimelineController.prototype.setSuppressShowEvents = function(value) {
 os.time.TimelineController.prototype.clamp = function() {
   var animateRange = this.getAnimationRange();
   if ((this.current_ > animateRange.end && this.lastCurrent_ >= animateRange.end) ||
-      (this.lastCurrent_ <= animateRange.start + this.offset_ && this.current_ <= animateRange.start + this.offset_)) {
+      (this.lastCurrent_ <= animateRange.start + this.offset_ && this.current_ <= animateRange.start)
+      || (this.lock_ && this.offset_ === 0)) {
     if (this.current_ - this.lastCurrent_ > 0) {
       this.first();
     } else {
@@ -572,6 +606,9 @@ os.time.TimelineController.prototype.stop = function() {
  */
 os.time.TimelineController.prototype.first = function() {
   var animateRange = this.getAnimationRange();
+  if (this.getLock()) {
+    this.setOffset(this.skip_);
+  }
   this.setCurrent(animateRange.start + this.offset_);
 };
 
@@ -581,6 +618,9 @@ os.time.TimelineController.prototype.first = function() {
  */
 os.time.TimelineController.prototype.last = function() {
   var animateRange = this.getAnimationRange();
+  if (this.getLock()) {
+    this.setOffset(animateRange.getLength());
+  }
   this.setCurrent(animateRange.end);
 };
 
@@ -724,10 +764,9 @@ os.time.TimelineController.prototype.scheduleReset_ = function() {
  * @private
  */
 os.time.TimelineController.prototype.adjustCurrent_ = function(dir) {
-  // var offset = dir < 0 ? this.skip_ : 0;
+  var lastCurrent = this.current_;
   var nextFrame = this.getNextFrame(this.current_, dir);
-  var nextPosition = dir > 0 ? nextFrame.start : nextFrame.end;
-  // var pos = nextPosition - offset;
+  var nextPosition = dir > 0 && !this.lock_ ? nextFrame.start : nextFrame.end; // only look at end when locking
   if (!this.animateRanges_.isEmpty()) {
     if (!this.animateRanges_.containsValue(nextPosition)) {
       // find the nearest range
@@ -738,7 +777,7 @@ os.time.TimelineController.prototype.adjustCurrent_ = function(dir) {
 
       if (dir > 0) {
         // align the left edge of the window with the start of the next animation range, minus one skip interval
-        this.current_ = range.start + (this.offset_ - this.skip_);
+        this.current_ = this.lock_ ? (range.start - this.skip_) : (range.start + (this.offset_ - this.skip_));
       } else {
         // align the right edge of the window with the end of the previous animation range, plus one skip interval
         this.current_ = range.end + this.skip_;
@@ -750,6 +789,15 @@ os.time.TimelineController.prototype.adjustCurrent_ = function(dir) {
       }
 
       this.lastRange_ = range;
+
+      if (this.lock_) {
+        if (this.loadRanges_.getBounds().end === range.end && (this.skip_ + nextPosition - range.end) > 0) {
+          // for last frame only, let it go past end
+          this.current_ = lastCurrent;
+        } else {
+          this.setOffset(this.current_ - nextPosition + this.offset_ + this.skip_ * dir);
+        }
+      }
     }
   } else {
     var effLoadRangeSet = this.getEffectiveLoadRangeSet();
@@ -762,7 +810,7 @@ os.time.TimelineController.prototype.adjustCurrent_ = function(dir) {
 
       if (dir > 0) {
         // align the left edge of the window with the start of the next animation range, minus one skip interval
-        this.current_ = range.start + (this.offset_ - this.skip_);
+        this.current_ = this.lock_ ? range.start : (range.start + (this.offset_ - this.skip_));
       } else {
         // align the right edge of the window with the end of the previous animation range, plus one skip interval
         this.current_ = range.end + this.skip_;
@@ -774,6 +822,15 @@ os.time.TimelineController.prototype.adjustCurrent_ = function(dir) {
       }
 
       this.lastRange_ = range;
+
+      if (this.lock_) {
+        if (this.loadRanges_.getBounds().end === range.end && (this.skip_ + nextPosition - range.end) > 0) {
+          // for last frame only, let it go past end
+          this.current_ = lastCurrent;
+        } else {
+          this.setOffset(this.current_ - nextPosition + this.offset_ + this.skip_ * dir);
+        }
+      }
     }
   }
 };
@@ -835,7 +892,14 @@ os.time.TimelineController.prototype.findNextNearestRange_ = function(rangeSet, 
  */
 os.time.TimelineController.prototype.step_ = function(dir) {
   this.adjustCurrent_(dir);
-  this.setCurrent(this.getNextPosition_(this.current_, dir));
+  if (this.getLock()) {
+    var nextOffset = this.getNextPosition_(this.offset_, dir);
+    var nextCurrent = this.getNextPosition_(this.current_, dir);
+    this.setCurrent(nextCurrent);
+    this.setOffset(nextOffset);
+  } else {
+    this.setCurrent(this.getNextPosition_(this.current_, dir));
+  }
 };
 
 
@@ -850,6 +914,7 @@ os.time.TimelineController.prototype.persist = function(opt_to) {
   obj['current'] = this.getCurrent();
   obj['offset'] = this.getOffset();
   obj['fade'] = this.getFade();
+  obj['lock'] = this.getLock();
   obj['skip'] = this.getSkip();
   obj['playing'] = this.isPlaying();
   obj['sliceRanges'] = this.sliceRanges_.clone();
@@ -869,6 +934,7 @@ os.time.TimelineController.prototype.restore = function(config) {
   this.setDuration(config['duration']);
   this.setOffset(config['offset']);
   this.setFade(config['fade']);
+  this.setLock(config['lock']);
   this.setSkip(config['skip']);
   this.setCurrent(config['current']);
   this.setSliceRanges(config['sliceRanges']);
