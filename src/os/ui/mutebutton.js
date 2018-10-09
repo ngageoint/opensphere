@@ -47,12 +47,12 @@ os.ui.MuteButtonCtrl = function($scope) {
 
 /**
  * Toggles mute
+ * @export
  */
 os.ui.MuteButtonCtrl.prototype.toggle = function() {
   var am = os.audio.AudioManager.getInstance();
   am.setMute(!am.getMute());
   this.scope['mute'] = am.getMute();
 };
-goog.exportProperty(os.ui.MuteButtonCtrl.prototype, 'toggle', os.ui.MuteButtonCtrl.prototype.toggle);
 
 

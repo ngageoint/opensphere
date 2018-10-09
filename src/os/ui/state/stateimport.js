@@ -116,6 +116,7 @@ os.ui.state.StateImportCtrl.prototype.onDestroy = function() {
 
 /**
  * @inheritDoc
+ * @export
  */
 os.ui.state.StateImportCtrl.prototype.accept = function() {
   if (this['showClear']) {
@@ -140,7 +141,3 @@ os.ui.state.StateImportCtrl.prototype.accept = function() {
   os.ui.stateManager.addImportedState(/** @type {!os.file.File} */ (this.config_['file']), options);
   os.ui.state.StateImportCtrl.base(this, 'accept');
 };
-goog.exportProperty(
-    os.ui.state.StateImportCtrl.prototype,
-    'accept',
-    os.ui.state.StateImportCtrl.prototype.accept);

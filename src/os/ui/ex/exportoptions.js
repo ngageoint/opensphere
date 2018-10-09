@@ -304,6 +304,7 @@ os.ui.ex.ExportOptionsCtrl.prototype.getSourceItem_ = function(source, opt_remov
 
 /**
  * Update the items being exported. Applications should extend this to handle how export items are determined.
+ * @export
  */
 os.ui.ex.ExportOptionsCtrl.prototype.updateItems = function() {
   this['count'] = 0;
@@ -375,10 +376,6 @@ os.ui.ex.ExportOptionsCtrl.prototype.updateItems = function() {
     os.ui.apply(this.scope);
   }
 };
-goog.exportProperty(
-    os.ui.ex.ExportOptionsCtrl.prototype,
-    'updateItems',
-    os.ui.ex.ExportOptionsCtrl.prototype.updateItems);
 
 /**
  * Check the array to see if any items have a feature level style.

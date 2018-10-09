@@ -236,6 +236,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.getShapeUIInternal = function() {
 /**
  * Decide when to show the rotation option
  * @return {boolean}
+ * @export
  */
 os.ui.layer.VectorLayerUICtrl.prototype.showRotationOption = function() {
   if (this.scope != null) {
@@ -246,10 +247,6 @@ os.ui.layer.VectorLayerUICtrl.prototype.showRotationOption = function() {
 
   return false;
 };
-goog.exportProperty(
-    os.ui.layer.VectorLayerUICtrl.prototype,
-    'showRotationOption',
-    os.ui.layer.VectorLayerUICtrl.prototype.showRotationOption);
 
 
 /**
@@ -339,6 +336,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.onSizeChange = function(event, value) {
  * Handles changes to the icon.
  * @param {angular.Scope.Event} event The Angular event.
  * @param {osx.icon.Icon} value The new value.
+ * @export
  */
 os.ui.layer.VectorLayerUICtrl.prototype.onIconChange = function(event, value) {
   event.stopPropagation();
@@ -356,14 +354,13 @@ os.ui.layer.VectorLayerUICtrl.prototype.onIconChange = function(event, value) {
     this.createCommand(fn);
   }
 };
-goog.exportProperty(os.ui.layer.VectorLayerUICtrl.prototype, 'onIconChange',
-    os.ui.layer.VectorLayerUICtrl.prototype.onIconChange);
 
 
 /**
  * Handles changes to the shape.
  * @param {angular.Scope.Event} event The Angular event.
  * @param {string} value The new value.
+ * @export
  */
 os.ui.layer.VectorLayerUICtrl.prototype.onShapeChange = function(event, value) {
   event.stopPropagation();
@@ -380,14 +377,13 @@ os.ui.layer.VectorLayerUICtrl.prototype.onShapeChange = function(event, value) {
     this.createCommand(fn);
   }
 };
-goog.exportProperty(os.ui.layer.VectorLayerUICtrl.prototype, 'onShapeChange',
-    os.ui.layer.VectorLayerUICtrl.prototype.onShapeChange);
 
 
 /**
  * Handles changes to the center shape.
  * @param {angular.Scope.Event} event The Angular event.
  * @param {string} value The new value.
+ * @export
  */
 os.ui.layer.VectorLayerUICtrl.prototype.onCenterShapeChange = function(event, value) {
   event.stopPropagation();
@@ -404,8 +400,6 @@ os.ui.layer.VectorLayerUICtrl.prototype.onCenterShapeChange = function(event, va
     this.createCommand(fn);
   }
 };
-goog.exportProperty(os.ui.layer.VectorLayerUICtrl.prototype, 'onCenterShapeChange',
-    os.ui.layer.VectorLayerUICtrl.prototype.onCenterShapeChange);
 
 
 /**
@@ -762,6 +756,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.getLockable_ = function() {
 
 /**
  * Set the locked state of the source
+ * @export
  */
 os.ui.layer.VectorLayerUICtrl.prototype.onLockChange = function() {
   var items = /** @type {Array} */ (this.scope['items']);
@@ -777,10 +772,6 @@ os.ui.layer.VectorLayerUICtrl.prototype.onLockChange = function() {
     }
   }
 };
-goog.exportProperty(
-    os.ui.layer.VectorLayerUICtrl.prototype,
-    'onLockChange',
-    os.ui.layer.VectorLayerUICtrl.prototype.onLockChange);
 
 
 /**
@@ -824,6 +815,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.updateReplaceStyle_ = function() {
 
 /**
  * Handle changes to the Replace Feature Style option.
+ * @export
  */
 os.ui.layer.VectorLayerUICtrl.prototype.onReplaceStyleChange = function() {
   var items = /** @type {Array} */ (this.scope['items']);
@@ -841,10 +833,6 @@ os.ui.layer.VectorLayerUICtrl.prototype.onReplaceStyleChange = function() {
     this.createCommand(fn);
   }
 };
-goog.exportProperty(
-    os.ui.layer.VectorLayerUICtrl.prototype,
-    'onReplaceStyleChange',
-    os.ui.layer.VectorLayerUICtrl.prototype.onReplaceStyleChange);
 
 
 /**
@@ -872,6 +860,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.getAltitudeMode_ = function() {
 
 /**
  * Set the altitude mode of the source
+ * @export
  */
 os.ui.layer.VectorLayerUICtrl.prototype.onAltitudeModeChange = function() {
   var items = /** @type {Array} */ (this.scope['items']);
@@ -887,14 +876,11 @@ os.ui.layer.VectorLayerUICtrl.prototype.onAltitudeModeChange = function() {
     }
   }
 };
-goog.exportProperty(
-    os.ui.layer.VectorLayerUICtrl.prototype,
-    'onAltitudeModeChange',
-    os.ui.layer.VectorLayerUICtrl.prototype.onAltitudeModeChange);
 
 
 /**
  * Set the unique ID field of the source.
+ * @export
  */
 os.ui.layer.VectorLayerUICtrl.prototype.onUniqueIdChange = function() {
   var nodes = this.getLayerNodes();
@@ -912,10 +898,6 @@ os.ui.layer.VectorLayerUICtrl.prototype.onUniqueIdChange = function() {
     this.createCommand(fn);
   }
 };
-goog.exportProperty(
-    os.ui.layer.VectorLayerUICtrl.prototype,
-    'onUniqueIdChange',
-    os.ui.layer.VectorLayerUICtrl.prototype.onUniqueIdChange);
 
 
 /**

@@ -100,6 +100,7 @@ os.ui.onboarding.NgOnboardingCtrl.prototype.destroy_ = function() {
 
 /**
  * Move to the next step.
+ * @export
  */
 os.ui.onboarding.NgOnboardingCtrl.prototype.next = function() {
   if (!this['lastStep']) {
@@ -108,26 +109,20 @@ os.ui.onboarding.NgOnboardingCtrl.prototype.next = function() {
     this.close();
   }
 };
-goog.exportProperty(
-    os.ui.onboarding.NgOnboardingCtrl.prototype,
-    'next',
-    os.ui.onboarding.NgOnboardingCtrl.prototype.next);
 
 
 /**
  * Move to the previous step.
+ * @export
  */
 os.ui.onboarding.NgOnboardingCtrl.prototype.previous = function() {
   this.scope_['index'] = this.scope_['index'] - 1;
 };
-goog.exportProperty(
-    os.ui.onboarding.NgOnboardingCtrl.prototype,
-    'previous',
-    os.ui.onboarding.NgOnboardingCtrl.prototype.previous);
 
 
 /**
  * Close onboarding.
+ * @export
  */
 os.ui.onboarding.NgOnboardingCtrl.prototype.close = function() {
   this.scope_['enabled'] = false;
@@ -136,23 +131,16 @@ os.ui.onboarding.NgOnboardingCtrl.prototype.close = function() {
     this.scope_['onFinishCallback']();
   }
 };
-goog.exportProperty(
-    os.ui.onboarding.NgOnboardingCtrl.prototype,
-    'close',
-    os.ui.onboarding.NgOnboardingCtrl.prototype.close);
 
 
 /**
  * Close onboarding and prevent others from being displayed.
+ * @export
  */
 os.ui.onboarding.NgOnboardingCtrl.prototype.stopShowing = function() {
   os.settings.set('onboarding.showOnboarding', false);
   this.close();
 };
-goog.exportProperty(
-    os.ui.onboarding.NgOnboardingCtrl.prototype,
-    'stopShowing',
-    os.ui.onboarding.NgOnboardingCtrl.prototype.stopShowing);
 
 
 /**

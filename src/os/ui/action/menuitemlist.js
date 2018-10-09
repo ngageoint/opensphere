@@ -39,11 +39,8 @@ os.ui.action.MenuItemList.prototype.addItem = function(menuItem) {
 /**
  * Retrieve the list of menu items (sub-menu)
  * @return {!Array.<os.ui.action.MenuItem>}
+ * @export
  */
 os.ui.action.MenuItemList.prototype.getItems = function() {
   return this.menuItems_;
 };
-goog.exportProperty(
-    os.ui.action.MenuItemList.prototype,
-    'getItems',
-    os.ui.action.MenuItemList.prototype.getItems);

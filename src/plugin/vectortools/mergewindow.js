@@ -159,19 +159,19 @@ plugin.vectortools.MergeCtrl.prototype.onUpdateDelay = function() {
 
 /**
  * Close dialog
+ * @export
  */
 plugin.vectortools.MergeCtrl.prototype.close = function() {
   os.ui.window.close(this.element_);
 };
-goog.exportProperty(plugin.vectortools.MergeCtrl.prototype, 'close', plugin.vectortools.MergeCtrl.prototype.close);
 
 
 /**
  * Adds the command to perform the merge.
+ * @export
  */
 plugin.vectortools.MergeCtrl.prototype.accept = function() {
   var merge = new plugin.vectortools.MergeLayer(this.sourceIds_, this['name']);
   os.command.CommandProcessor.getInstance().addCommand(merge);
   this.close();
 };
-goog.exportProperty(plugin.vectortools.MergeCtrl.prototype, 'accept', plugin.vectortools.MergeCtrl.prototype.accept);

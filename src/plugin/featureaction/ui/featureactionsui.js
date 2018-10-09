@@ -68,19 +68,17 @@ plugin.im.action.feature.ui.FeatureActionsCtrl.prototype.onSourceRemoved_ = func
 
 /**
  * @inheritDoc
+ * @export
  */
 plugin.im.action.feature.ui.FeatureActionsCtrl.prototype.close = function() {
   plugin.im.action.feature.ui.FeatureActionsCtrl.base(this, 'close');
   os.dataManager.unlisten(os.data.event.DataEventType.SOURCE_REMOVED, this.onSourceRemoved_, false, this);
 };
-goog.exportProperty(
-    plugin.im.action.feature.ui.FeatureActionsCtrl.prototype,
-    'close',
-    plugin.im.action.feature.ui.FeatureActionsCtrl.prototype.close);
 
 
 /**
  * @inheritDoc
+ * @export
  */
 plugin.im.action.feature.ui.FeatureActionsCtrl.prototype.apply = function() {
   plugin.im.action.feature.ui.FeatureActionsCtrl.base(this, 'apply');
@@ -106,10 +104,6 @@ plugin.im.action.feature.ui.FeatureActionsCtrl.prototype.apply = function() {
     }
   }
 };
-goog.exportProperty(
-    plugin.im.action.feature.ui.FeatureActionsCtrl.prototype,
-    'apply',
-    plugin.im.action.feature.ui.FeatureActionsCtrl.prototype.apply);
 
 
 /**

@@ -109,11 +109,10 @@ os.bearing.BearingSettingsCtrl.prototype.onBearingChange_ = function(event) {
  * Update and store setting.
  * @param {os.ui.location.Format=} opt_new
  * @param {os.ui.location.Format=} opt_old
+ * @export
  */
 os.bearing.BearingSettingsCtrl.prototype.update = function(opt_new, opt_old) {
   if (opt_new && opt_old && opt_new !== opt_old) {
     os.settings.set(os.bearing.BearingSettingsKeys.BEARING_TYPE, opt_new);
   }
 };
-goog.exportProperty(os.bearing.BearingSettingsCtrl.prototype, 'update',
-    os.bearing.BearingSettingsCtrl.prototype.update);

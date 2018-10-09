@@ -251,8 +251,8 @@ os.ui.filter.ExpressionCtrl.prototype.filterOps_ = function(op) {
  * Gets the UI for the given item
  * @param {os.ui.filter.op.Op} op
  * @return {?string}
+ * @export
  */
 os.ui.filter.ExpressionCtrl.prototype.getUi = function(op) {
   return op ? op.getUi() : null;
 };
-goog.exportProperty(os.ui.filter.ExpressionCtrl.prototype, 'getUi', os.ui.filter.ExpressionCtrl.prototype.getUi);

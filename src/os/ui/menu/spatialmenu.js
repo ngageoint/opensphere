@@ -867,6 +867,7 @@ os.ui.menu.spatial.LayerChooserCtrl = function($scope, $element) {
 /**
  * Fire the confirmation callback and close the window.
  * @return {boolean}
+ * @export
  */
 os.ui.menu.spatial.LayerChooserCtrl.prototype.valid = function() {
   var found = goog.array.find(this.scope_['layers'], function(layer) {
@@ -876,13 +877,11 @@ os.ui.menu.spatial.LayerChooserCtrl.prototype.valid = function() {
   // Switch the type to the correct action
   return !found;
 };
-goog.exportProperty(os.ui.menu.spatial.LayerChooserCtrl.prototype,
-    'valid',
-    os.ui.menu.spatial.LayerChooserCtrl.prototype.valid);
 
 
 /**
  * Fire the confirmation callback and close the window.
+ * @export
  */
 os.ui.menu.spatial.LayerChooserCtrl.prototype.accept = function() {
   // Switch the type to the correct action
@@ -898,21 +897,15 @@ os.ui.menu.spatial.LayerChooserCtrl.prototype.accept = function() {
   os.ui.menu.spatial.onMenuEvent(this.scope_['event'], layerIds);
   this.close();
 };
-goog.exportProperty(os.ui.menu.spatial.LayerChooserCtrl.prototype,
-    'accept',
-    os.ui.menu.spatial.LayerChooserCtrl.prototype.accept);
 
 
 /**
  * Close the window.
+ * @export
  */
 os.ui.menu.spatial.LayerChooserCtrl.prototype.close = function() {
   os.ui.window.close(this.element_);
 };
-goog.exportProperty(
-    os.ui.menu.spatial.LayerChooserCtrl.prototype,
-    'close',
-    os.ui.menu.spatial.LayerChooserCtrl.prototype.close);
 
 
 /**

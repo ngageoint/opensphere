@@ -437,6 +437,7 @@ os.ui.wiz.GeometryStepCtrl.prototype.destroy_ = function() {
 
 /**
  * Verifies the provided form data is valid and complete.
+ * @export
  */
 os.ui.wiz.GeometryStepCtrl.prototype.validate = function() {
   this['sample'] = null;
@@ -538,10 +539,6 @@ os.ui.wiz.GeometryStepCtrl.prototype.validate = function() {
       (!this.scope_['step']['showEllipse'] || this.scope_['ellipseForm'].$valid));
   this.scope_.$broadcast('resizePreview');
 };
-goog.exportProperty(
-    os.ui.wiz.GeometryStepCtrl.prototype,
-    'validate',
-    os.ui.wiz.GeometryStepCtrl.prototype.validate);
 
 
 /**
@@ -572,11 +569,8 @@ os.ui.wiz.GeometryStepCtrl.prototype.testMappingAndEmpty_ = function(mapping, fi
 
 /**
  * Launches the geo formatting help dialog.
+ * @export
  */
 os.ui.wiz.GeometryStepCtrl.prototype.launchHelp = function() {
   os.ui.window.launchGeoHelp();
 };
-goog.exportProperty(
-    os.ui.wiz.GeometryStepCtrl.prototype,
-    'launchHelp',
-    os.ui.wiz.GeometryStepCtrl.prototype.launchHelp);

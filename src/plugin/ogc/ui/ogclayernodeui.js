@@ -66,6 +66,7 @@ goog.inherits(plugin.ogc.ui.OGCLayerNodeUICtrl, os.ui.node.DefaultLayerNodeUICtr
 
 /**
  * Launch the time column chooser for the layer
+ * @export
  */
 plugin.ogc.ui.OGCLayerNodeUICtrl.prototype.chooseTime = function() {
   var deferred = new goog.async.Deferred();
@@ -75,5 +76,3 @@ plugin.ogc.ui.OGCLayerNodeUICtrl.prototype.chooseTime = function() {
   }, this);
   plugin.ogc.ui.ChooseTimeColumnCtrl.launch(this.getLayerId(), deferred);
 };
-goog.exportProperty(plugin.ogc.ui.OGCLayerNodeUICtrl.prototype, 'chooseTime',
-    plugin.ogc.ui.OGCLayerNodeUICtrl.prototype.chooseTime);

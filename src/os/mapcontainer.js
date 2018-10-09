@@ -911,9 +911,9 @@ os.MapContainer.prototype.init = function() {
   ol.events.listen(view, ol.ObjectEventType.PROPERTYCHANGE, this.onViewChange_, this);
 
   // export the map's getPixelFromCoordinate/getCoordinateFromPixel methods for tests
-  goog.exportProperty(window, 'pfc', this.map_.getPixelFromCoordinate.bind(this.map_));
-  goog.exportProperty(window, 'cfp', this.map_.getCoordinateFromPixel.bind(this.map_));
-  goog.exportProperty(window, 'fte', this.flyToExtent.bind(this));
+  window['pfc'] = this.map_.getPixelFromCoordinate.bind(this.map_);
+  window['cfp'] = this.map_.getCoordinateFromPixel.bind(this.map_);
+  window['fte'] = this.flyToExtent.bind(this);
 
   // update the map canvas size on browser resize
   this.vsm_.listen(goog.events.EventType.RESIZE, this.updateSize, false, this);

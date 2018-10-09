@@ -94,26 +94,20 @@ os.ui.icon.IconSelectorCtrl.prototype.destroy_ = function() {
 /**
  * Is valid if the user has picked something
  * @return {boolean}
+ * @export
  */
 os.ui.icon.IconSelectorCtrl.prototype.isValid = function() {
   return this.scope_['selected'] && !!this.scope_['selected']['path'];
 };
-goog.exportProperty(
-    os.ui.icon.IconSelectorCtrl.prototype,
-    'isValid',
-    os.ui.icon.IconSelectorCtrl.prototype.isValid);
 
 
 /**
  * Notify parent scope that no icon was selected
+ * @export
  */
 os.ui.icon.IconSelectorCtrl.prototype.cancel = function() {
   this.close_();
 };
-goog.exportProperty(
-    os.ui.icon.IconSelectorCtrl.prototype,
-    'cancel',
-    os.ui.icon.IconSelectorCtrl.prototype.cancel);
 
 
 /**
@@ -127,6 +121,7 @@ os.ui.icon.IconSelectorCtrl.prototype.close_ = function() {
 
 /**
  * Notify parent scope which icon the user picked
+ * @export
  */
 os.ui.icon.IconSelectorCtrl.prototype.okay = function() {
   if (this.scope_['acceptCallback']) {
@@ -134,34 +129,24 @@ os.ui.icon.IconSelectorCtrl.prototype.okay = function() {
   }
   this.close_();
 };
-goog.exportProperty(
-    os.ui.icon.IconSelectorCtrl.prototype,
-    'okay',
-    os.ui.icon.IconSelectorCtrl.prototype.okay);
 
 
 /**
  * Notify parent scope which icon the user picked
  * @param {string} name
+ * @export
  */
 os.ui.icon.IconSelectorCtrl.prototype.setTab = function(name) {
   this.scope_['activeTab'] = name;
 };
-goog.exportProperty(
-    os.ui.icon.IconSelectorCtrl.prototype,
-    'setTab',
-    os.ui.icon.IconSelectorCtrl.prototype.setTab);
 
 
 /**
  * Translates from google uri if needed
  * @param {string} path
  * @return {string}
+ * @export
  */
 os.ui.icon.IconSelectorCtrl.prototype.getPath = function(path) {
   return os.ui.file.kml.GMAPS_SEARCH.test(path) ? os.ui.file.kml.replaceGoogleUri(path) : path;
 };
-goog.exportProperty(
-    os.ui.icon.IconSelectorCtrl.prototype,
-    'getPath',
-    os.ui.icon.IconSelectorCtrl.prototype.getPath);

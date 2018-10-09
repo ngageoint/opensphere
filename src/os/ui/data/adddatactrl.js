@@ -147,21 +147,21 @@ os.ui.data.AddDataCtrl.prototype.onDestroy = function() {
 
 /**
  * Close the window
+ * @export
  */
 os.ui.data.AddDataCtrl.prototype.close = function() {
   os.ui.window.close(this.element);
 };
-goog.exportProperty(os.ui.data.AddDataCtrl.prototype, 'close', os.ui.data.AddDataCtrl.prototype.close);
 
 
 /**
  * Check if the base tree is empty (no providers are present).
  * @return {boolean}
+ * @export
  */
 os.ui.data.AddDataCtrl.prototype.isTreeEmpty = function() {
   return this.treeSearch.getSearch().length == 0;
 };
-goog.exportProperty(os.ui.data.AddDataCtrl.prototype, 'isTreeEmpty', os.ui.data.AddDataCtrl.prototype.isTreeEmpty);
 
 
 /**
@@ -180,6 +180,7 @@ os.ui.data.AddDataCtrl.prototype.onChildrenChanged = function(e) {
 
 /**
  * Starts a search
+ * @export
  */
 os.ui.data.AddDataCtrl.prototype.search = function() {
   if (this.root && this.treeSearch && this.searchDelay_) {
@@ -191,7 +192,6 @@ os.ui.data.AddDataCtrl.prototype.search = function() {
     os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.AddData.SEARCH, 1);
   }
 };
-goog.exportProperty(os.ui.data.AddDataCtrl.prototype, 'search', os.ui.data.AddDataCtrl.prototype.search);
 
 
 /**
@@ -223,24 +223,23 @@ os.ui.data.AddDataCtrl.listFilter_ = function(item, i, arr) {
 
 /**
  * Handles group by selection change
-  */
+ * @export
+ */
 os.ui.data.AddDataCtrl.prototype.onGroupByChanged = function() {
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.AddData.GROUP_BY, 1);
   this.search();
 };
-goog.exportProperty(os.ui.data.AddDataCtrl.prototype, 'onGroupByChanged',
-    os.ui.data.AddDataCtrl.prototype.onGroupByChanged);
 
 
 /**
  * Clears the search
+ * @export
  */
 os.ui.data.AddDataCtrl.prototype.clearSearch = function() {
   this['term'] = '';
   this.search();
   this.element.find('.search').focus();
 };
-goog.exportProperty(os.ui.data.AddDataCtrl.prototype, 'clearSearch', os.ui.data.AddDataCtrl.prototype.clearSearch);
 
 
 /**
@@ -270,6 +269,7 @@ os.ui.data.AddDataCtrl.prototype.onSearch_ = function() {
 /**
  * Get the content for the info panel
  * @return {string}
+ * @export
  */
 os.ui.data.AddDataCtrl.prototype.getInfo = function() {
   if (this.isTreeEmpty()) {
@@ -304,4 +304,3 @@ os.ui.data.AddDataCtrl.prototype.getInfo = function() {
 
   return 'Select an item on the left to see more information.';
 };
-goog.exportProperty(os.ui.data.AddDataCtrl.prototype, 'getInfo', os.ui.data.AddDataCtrl.prototype.getInfo);

@@ -133,18 +133,16 @@ plugin.file.kml.ui.KMLTreeExportCtrl.prototype.destroy = function() {
 
 /**
  * Fire the cancel callback and close the window.
+ * @export
  */
 plugin.file.kml.ui.KMLTreeExportCtrl.prototype.cancel = function() {
   this.close_();
 };
-goog.exportProperty(
-    plugin.file.kml.ui.KMLTreeExportCtrl.prototype,
-    'cancel',
-    plugin.file.kml.ui.KMLTreeExportCtrl.prototype.cancel);
 
 
 /**
  * Fire the confirmation callback and close the window.
+ * @export
  */
 plugin.file.kml.ui.KMLTreeExportCtrl.prototype.confirm = function() {
   goog.asserts.assert(goog.isDefAndNotNull(this.scope), 'scope is not defined');
@@ -160,10 +158,6 @@ plugin.file.kml.ui.KMLTreeExportCtrl.prototype.confirm = function() {
     this.close_();
   }
 };
-goog.exportProperty(
-    plugin.file.kml.ui.KMLTreeExportCtrl.prototype,
-    'confirm',
-    plugin.file.kml.ui.KMLTreeExportCtrl.prototype.confirm);
 
 
 /**
