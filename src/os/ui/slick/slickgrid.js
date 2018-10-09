@@ -72,7 +72,8 @@ os.ui.slickGridDirective = function() {
       'defaultSortOrder': '@', /* asc|desc */
       'compare': '=?',
       'getItemMetadata': '=?',
-      'rowScope': '=?'
+      'rowScope': '=?',
+      'cellTooltips': '=?'
     },
     controller: os.ui.slick.SlickGridCtrl,
     controllerAs: 'gridCtrl'
@@ -248,6 +249,8 @@ os.ui.slick.SlickGridCtrl = function($scope, $element, $compile) {
   $scope.$on(os.ui.slick.SlickGridEvent.SCROLL_TO_CELL, this.onScrollToCell.bind(this));
   $scope.$on(os.ui.slick.SlickGridEvent.SORT_SELECTED, this.onSortBySelectionChange.bind(this));
   $scope.$on('resize', this.resizeFn);
+
+  $scope['cellTooltips'] = $scope['cellTooltips'] == undefined ? true : $scope['cellTooltips'];
 
   if ($scope['dblClickEnabled'] && $scope['dblClickEnabled'] !== 'false') {
     if (goog.isDefAndNotNull($scope['dblClickHandler'])) {
@@ -1744,9 +1747,11 @@ os.ui.slick.SlickGridCtrl.prototype.onMouseEnter = function(e, args) {
     this.inEvent = true;
     var cell = this.grid.getCellFromEvent(e);
 
-    // Set the tooltip
-    var node = $(this.grid.getCellNode(cell['row'], cell['cell']));
-    node.attr('title', /** @type {string} */ (node.text()));
+    if (this.scope['cellTooltips']) {
+      // Set the tooltip
+      var node = $(this.grid.getCellNode(cell['row'], cell['cell']));
+      node.attr('title', /** @type {string} */ (node.text()));
+    }
 
     var row = /** @type {?Array<number>} */ (cell['row']);
     var item = this.grid.getDataItem(row);

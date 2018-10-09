@@ -84,7 +84,8 @@ describe('os.layer.Tile', function() {
   it('should restore properly', function() {
     var layer = new os.layer.Tile({
       source: new plugin.ogc.wms.TileWMSSource(/** @type {olx.source.TileWMSOptions} */ ({
-        params: { 'LAYERS': 'dontcare' }
+        params: { 'LAYERS': 'dontcare' },
+        tileGrid: ol.tilegrid.createForProjection(os.map.PROJECTION, ol.DEFAULT_MAX_ZOOM, [256, 256])
       }))
     });
 

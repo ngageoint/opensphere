@@ -801,7 +801,7 @@ os.style.setFeatureStyle = function(feature, opt_source, opt_style) {
 
   opt_source = /** @type {os.source.Vector} */ (opt_source || os.feature.getSource(feature));
 
-  if (opt_source) {
+  if (opt_source && opt_source.idIndex_[feature.id_.toString()]) {
     opt_source.updateIndex(feature);
   }
 };

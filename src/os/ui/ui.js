@@ -4,6 +4,7 @@ goog.provide('os.ui.Module');
 goog.require('goog.events.EventTarget');
 goog.require('goog.html.SafeHtml');
 goog.require('goog.labs.userAgent.util');
+goog.require('goog.math');
 goog.require('goog.math.Size');
 goog.require('goog.string');
 goog.require('goog.userAgent');
@@ -459,6 +460,46 @@ os.ui.replaceDirective = function(name, module, directiveFn, opt_priority) {
               oldEnforceFocus.call(this); // eslint-disable-line no-invalid-this
             }
           }, this));
+        }
+      });
+    }
+  }
+})();
+
+
+/**
+ * Override jQuery UI Datepicker _checkOffset to prevent rounding/floating point equality from breaking
+ * offset top calculation
+ */
+(function() {
+  'use strict';
+
+  if (goog.isDef(window['jQuery'])) {
+    var $ = window['jQuery'];
+
+    if ($.datepicker) {
+      $.extend($.datepicker, {
+        '_checkOffset': function(inst, offset, isFixed) {
+          var dpWidth = inst['dpDiv']['outerWidth']();
+          var dpHeight = inst['dpDiv']['outerHeight']();
+          var inputWidth = inst['input'] ? inst['input']['outerWidth']() : 0;
+          var inputHeight = inst['input'] ? inst['input']['outerHeight']() : 0;
+          var viewWidth = document.documentElement.clientWidth + (isFixed ? 0 : $(document).scrollLeft());
+          var viewHeight = document.documentElement.clientHeight + (isFixed ? 0 : $(document).scrollTop());
+
+          offset['left'] -= (this['_get'](inst, 'isRTL') ? dpWidth - inputWidth : 0);
+          offset['left'] -= (isFixed && offset['left'] == inst['input']['offset']()['left']) ?
+              $(document).scrollLeft() : 0;
+          offset['top'] -= goog.math.nearlyEquals(isFixed && offset['top'],
+              inst['input']['offset']()['top'] + inputHeight, 1) ?
+              $(document).scrollTop() : 0;
+
+          offset['left'] -= Math.min(offset['left'], offset['left'] + dpWidth > viewWidth && viewWidth > dpWidth ?
+              Math.abs(offset['left'] + dpWidth - viewWidth) : 0);
+          offset['top'] -= Math.min(offset['top'], offset['top'] + dpHeight > viewHeight && viewHeight > dpHeight ?
+              Math.abs(dpHeight + inputHeight) : 0);
+
+          return offset;
         }
       });
     }
