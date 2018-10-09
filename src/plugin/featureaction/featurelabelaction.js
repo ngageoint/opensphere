@@ -90,9 +90,8 @@ plugin.im.action.feature.LabelAction.DEFAULT_CONFIG = {
 
 
 /**
- * Undo all feature action label changes, reset to the user/default layer settings
- * @param {string} entryType feature action entry type
- * @param {!Array<ol.Feature>} items The items.
+ * Undo all feature action label changes, resetting to the user/default layer settings.
+ * @override
  */
 plugin.im.action.feature.LabelAction.prototype.reset = function(entryType, items) {
   var dm = os.data.DataManager.getInstance();
