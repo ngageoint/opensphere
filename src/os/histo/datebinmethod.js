@@ -300,7 +300,7 @@ os.histo.DateBinMethod.prototype.getBinLabel = function(item) {
  * @inheritDoc
  */
 os.histo.DateBinMethod.prototype.getLabelForKey = function(value) {
-  if (goog.isDef(value) && value != os.histo.DateBinMethod.MAGIC) {
+  if (value !== undefined && value != os.histo.DateBinMethod.MAGIC) {
     switch (this.binType_) {
       case os.histo.DateBinType.HOUR_OF_DAY:
         // value is 0-23, so pad to 0000-2300

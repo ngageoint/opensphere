@@ -15,7 +15,7 @@ goog.require('goog.math.Coordinate');
  */
 os.math.Circle = function(opt_x, opt_y, opt_radius) {
   os.math.Circle.base(this, 'constructor', opt_x, opt_y);
-  this.radius = goog.isDef(opt_radius) ? opt_radius : 0;
+  this.radius = opt_radius !== undefined ? opt_radius : 0;
 };
 goog.inherits(os.math.Circle, goog.math.Coordinate);
 

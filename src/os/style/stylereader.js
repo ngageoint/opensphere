@@ -96,7 +96,7 @@ os.style.StyleReader.prototype.toConfig = function(style, obj) {
 
     var zIndex = s.getZIndex();
 
-    if (goog.isDef(zIndex) && zIndex !== 0) {
+    if (zIndex !== undefined && zIndex !== 0) {
       obj['zIndex'] = zIndex;
     }
 

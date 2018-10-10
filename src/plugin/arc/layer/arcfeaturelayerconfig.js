@@ -42,7 +42,7 @@ plugin.arc.layer.ArcFeatureLayerConfig.prototype.createLayer = function(options)
   source.setId(this.id);
   source.setRequest(this.getRequest(options));
   source.setImporter(this.getImporter(options));
-  source.setTimeEnabled(goog.isDef(this.animate) ? this.animate : false);
+  source.setTimeEnabled(this.animate !== undefined ? this.animate : false);
   source.setTitle(this.title);
 
   var layer = this.getLayer(source, options);

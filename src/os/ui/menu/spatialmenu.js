@@ -698,7 +698,7 @@ os.ui.menu.spatial.getLayers = function(opt_areaId) {
 
   // check to see if this area is applied to all layers first
   var enabled = true;
-  if (goog.isDef(opt_areaId)) {
+  if (opt_areaId !== undefined) {
     enabled = os.ui.queryManager.getEntries('*', opt_areaId, null).length > 0;
     if (enabled) {
       // dont lookup for individual layers if it applys to all
@@ -709,7 +709,7 @@ os.ui.menu.spatial.getLayers = function(opt_areaId) {
     var l = /** @type {os.filter.IFilterable} */ (os.MapContainer.getInstance().getLayer(key));
     try {
       if (l) {
-        if (goog.isDef(opt_areaId)) {
+        if (opt_areaId !== undefined) {
           enabled = os.ui.queryManager.getEntries(key, opt_areaId, null).length > 0;
         }
         layers.push({

@@ -198,7 +198,7 @@ os.ui.slick.SlickGridCtrl = function($scope, $element, $compile) {
    * @protected
    */
   this.dataView = new Slick.Data.DataView();
-  if (goog.isDef($scope['getItemMetadata'])) {
+  if ($scope['getItemMetadata'] !== undefined) {
     this.dataView.getItemMetadata = $scope['getItemMetadata'];
   }
 
@@ -654,7 +654,7 @@ os.ui.slick.SlickGridCtrl.prototype.onCopyRows = function(event, mapFn) {
  */
 os.ui.slick.SlickGridCtrl.prototype.onScrollToItem = function(event, item, opt_top) {
   var row = this.mapItemsToRows(item);
-  if (goog.isDef(row)) {
+  if (row !== undefined) {
     if (opt_top) {
       this.grid.scrollRowToTop(row);
     } else {

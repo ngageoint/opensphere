@@ -244,7 +244,7 @@ os.ui.timeline.Brush.prototype.getExtent = function() {
  * @param {boolean=} opt_snap Whether or not the given extent should be snapped. Defaults to false.
  */
 os.ui.timeline.Brush.prototype.setExtent = function(extent, opt_silent, opt_snap) {
-  opt_snap = goog.isDef(opt_snap) ? opt_snap : false;
+  opt_snap = opt_snap !== undefined ? opt_snap : false;
 
   var current = this.getExtent();
   if (extent && extent[0] == extent[1]) {
@@ -464,7 +464,7 @@ os.ui.timeline.Brush.prototype.render = function(opt_height) {
       var group = d3.select('.brush-' + this.getId());
       group.call(/** @type {Function} */ (this.brush_));
 
-      if (goog.isDef(opt_height)) {
+      if (opt_height !== undefined) {
         group.selectAll('rect').attr('height', opt_height + 'px');
       }
 

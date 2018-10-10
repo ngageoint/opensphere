@@ -25,7 +25,7 @@ os.ui.query.cmd.QueryEntries = function(entries, opt_merge, opt_layerHint, opt_i
    * @type {boolean}
    * @protected
    */
-  this.merge = goog.isDef(opt_merge) ? opt_merge : false;
+  this.merge = opt_merge !== undefined ? opt_merge : false;
 
   /**
    * @type {string|undefined}
@@ -37,7 +37,7 @@ os.ui.query.cmd.QueryEntries = function(entries, opt_merge, opt_layerHint, opt_i
    * @type {boolean}
    * @protected
    */
-  this.immediate = goog.isDef(opt_immediate) ? opt_immediate : false;
+  this.immediate = opt_immediate !== undefined ? opt_immediate : false;
 
   /**
    * @type {!Array<!Object<string, string|boolean>>}

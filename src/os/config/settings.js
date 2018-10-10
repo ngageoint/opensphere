@@ -691,7 +691,7 @@ os.config.Settings.prototype.get = function(keys, opt_default) {
       val = goog.object.clone(val);
     }
 
-    return goog.isDef(val) ? val : opt_default;
+    return val !== undefined ? val : opt_default;
   } else {
     throw new Error('Attempted to get a value before settings were loaded!');
   }
@@ -811,7 +811,7 @@ os.config.Settings.prototype.dispatchChange_ = function(keys, newVal, oldVal, op
  * @private
  */
 os.config.Settings.prototype.isAdmin_ = function(keys) {
-  return goog.isDef(goog.object.getValueByKeys(this.actualConfig_[os.config.ConfigType.CONFIG], keys));
+  return goog.object.getValueByKeys(this.actualConfig_[os.config.ConfigType.CONFIG], keys) !== undefined;
 };
 
 

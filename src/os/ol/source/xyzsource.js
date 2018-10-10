@@ -12,7 +12,7 @@ goog.require('ol.source.XYZ');
  * @constructor
  */
 os.ol.source.XYZ = function(options) {
-  options.projection = goog.isDef(options.projection) ? options.projection : 'EPSG:4326';
+  options.projection = options.projection !== undefined ? options.projection : 'EPSG:4326';
 
   /**
    * @type {number}

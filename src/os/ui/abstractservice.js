@@ -111,7 +111,7 @@ os.ui.AbstractService.prototype.reportError = function(message, silent, opt_reje
     os.alert.AlertManager.getInstance().sendAlert(errorMsg, os.alert.AlertEventSeverity.ERROR, this.log);
   }
 
-  if (goog.isDef(opt_reject)) {
+  if (opt_reject !== undefined) {
     opt_reject(message);
   }
 };

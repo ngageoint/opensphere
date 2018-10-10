@@ -12,7 +12,7 @@ goog.require('os.hist.HistogramData');
  * @return {number}
  */
 os.hist.maxBinCount = function(histograms, opt_combine) {
-  var combine = goog.isDef(opt_combine) ? opt_combine : false;
+  var combine = opt_combine !== undefined ? opt_combine : false;
   var max = 0;
 
   if (histograms && histograms.length > 0) {
@@ -54,7 +54,7 @@ os.hist.maxBinCount = function(histograms, opt_combine) {
  * @return {Array.<!Object>}
  */
 os.hist.getBinCounts = function(histograms, opt_combine, opt_skipCompare) {
-  var combine = goog.isDef(opt_combine) ? opt_combine : false;
+  var combine = opt_combine !== undefined ? opt_combine : false;
   var sortedCounts = [];
 
   if (histograms && histograms.length > 0) {

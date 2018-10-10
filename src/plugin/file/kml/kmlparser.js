@@ -897,7 +897,7 @@ plugin.file.kml.KMLParser.prototype.updateNode_ = function(el, node, parsers) {
   var n;
   for (n = goog.dom.getFirstElementChild(el); !goog.isNull(n); n = n.nextElementSibling) {
     var parser = parsers[n.localName];
-    if (goog.isDef(parser)) {
+    if (parser !== undefined) {
       parser.call(this, node, n);
     }
   }
@@ -1088,7 +1088,7 @@ plugin.file.kml.KMLParser.prototype.readGroundOverlay_ = function(el) {
   goog.asserts.assert(el.localName == 'GroundOverlay', 'localName should be GroundOverlay');
 
   // openlayers does not natively support GroundOverlay so we need to parse the xml and create an image
-  if (goog.isDef(el) && el.querySelector('name') && el.querySelector('Icon') &&
+  if (el !== undefined && el.querySelector('name') && el.querySelector('Icon') &&
       (el.querySelector('LatLonBox') || el.querySelector('LatLonQuad'))) {
     var icon = el.querySelector('Icon').querySelector('href').textContent;
     if (this.assetMap_[icon]) {
@@ -1166,7 +1166,7 @@ plugin.file.kml.KMLParser.prototype.readScreenOverlay_ = function(el) {
   goog.asserts.assert(el.localName == 'ScreenOverlay', 'localName should be ScreenOverlay');
 
   // openlayers does not natively support ScreenOverlay so we need to parse the xml and create an overlay window
-  if (goog.isDef(el) && el.querySelector('name') && el.querySelector('Icon')) {
+  if (el !== undefined && el.querySelector('name') && el.querySelector('Icon')) {
     // check if visibility is set to 0, if it is, do not proceed
     var vis = el.querySelector('visibility');
     if (vis) {

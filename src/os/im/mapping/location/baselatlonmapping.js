@@ -19,7 +19,7 @@ os.im.mapping.location.BaseLatLonMapping = function(opt_order) {
    * @type {number}
    * @private
    */
-  this.order_ = goog.isDef(opt_order) ? opt_order : os.geo.PREFER_LAT_FIRST;
+  this.order_ = opt_order !== undefined ? opt_order : os.geo.PREFER_LAT_FIRST;
 };
 goog.inherits(os.im.mapping.location.BaseLatLonMapping, os.im.mapping.AbstractPositionMapping);
 

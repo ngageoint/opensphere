@@ -672,7 +672,7 @@ os.style.getConfigSize = function(config) {
         if (!os.object.isPrimitive(config[key])) {
           var result = os.style.getConfigSize(config[key]);
 
-          if (goog.isDef(result)) {
+          if (result !== undefined) {
             return result;
           }
         }
@@ -951,11 +951,11 @@ os.style.createFeatureConfig = function(feature, baseConfig, opt_layerConfig) {
     }
 
     // rotate icon as specified
-    if (goog.isDef(featureConfig[os.style.StyleField.SHOW_ROTATION]) && // feature action
-        goog.isDef(featureConfig[os.style.StyleField.ROTATION_COLUMN])) {
+    if (featureConfig[os.style.StyleField.SHOW_ROTATION] !== undefined &&
+        featureConfig[os.style.StyleField.ROTATION_COLUMN] !== undefined) {
       os.style.setConfigIconRotationFromObject(featureConfig, featureConfig, feature);
-    } else if (goog.isDef(feature.values_[os.style.StyleField.SHOW_ROTATION]) && // place
-        goog.isDef(feature.values_[os.style.StyleField.ROTATION_COLUMN])) {
+    } else if (feature.values_[os.style.StyleField.SHOW_ROTATION] !== undefined &&
+        feature.values_[os.style.StyleField.ROTATION_COLUMN] !== undefined) {
       os.style.setConfigIconRotationFromObject(featureConfig, feature.values_, feature);
     }
 
@@ -971,8 +971,8 @@ os.style.createFeatureConfig = function(feature, baseConfig, opt_layerConfig) {
       os.style.mergeConfig(opt_layerConfig[os.style.StyleField.STROKE],
           featureConfig[os.style.StyleField.STROKE]);
     }
-  } else if (opt_layerConfig && goog.isDef(opt_layerConfig[os.style.StyleField.SHOW_ROTATION]) && // rotate icon
-      goog.isDef(opt_layerConfig[os.style.StyleField.ROTATION_COLUMN])) {
+  } else if (opt_layerConfig && opt_layerConfig[os.style.StyleField.SHOW_ROTATION] !== undefined && // rotate icon
+      opt_layerConfig[os.style.StyleField.ROTATION_COLUMN] !== undefined) {
     os.style.setConfigIconRotationFromObject(featureConfig, opt_layerConfig, feature);
   }
 

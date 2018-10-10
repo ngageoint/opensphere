@@ -32,7 +32,7 @@ os.control.ZoomLevelOptions;
 os.control.ZoomLevel = function(opt_options) {
   var options = opt_options || {};
 
-  var className = goog.isDef(options.className) ? options.className : 'ol-zoom-level';
+  var className = options.className !== undefined ? options.className : 'ol-zoom-level';
 
   /**
    * @type {Element}

@@ -273,7 +273,7 @@ os.layer.AnimatedTile.prototype.persist = function(opt_to) {
 os.layer.AnimatedTile.prototype.restore = function(config) {
   os.layer.AnimatedTile.base(this, 'restore', config);
 
-  if (goog.isDef(config['refreshInterval'])) {
+  if (config['refreshInterval'] !== undefined) {
     var source = this.getSource();
     if (source && source instanceof ol.source.UrlTile) {
       source.setRefreshInterval(/** @type {number} */ (config['refreshInterval']));

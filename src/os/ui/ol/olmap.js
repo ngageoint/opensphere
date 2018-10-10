@@ -296,7 +296,7 @@ os.ui.ol.OLMap.prototype.flyToExtent = function(extent, opt_buffer, opt_maxZoom)
   var map = this.getMap();
   if (map) {
     var view = map.getView();
-    goog.asserts.assert(goog.isDef(view));
+    goog.asserts.assert(view !== undefined);
 
     if (extent) {
       if (opt_buffer && opt_buffer > 0) {
@@ -421,7 +421,7 @@ os.ui.ol.OLMap.prototype.getLayers_ = function() {
       hasDefault = true;
     }
 
-    layer.setVisible(goog.isDef(layerConfig['isDefault']));
+    layer.setVisible(layerConfig['isDefault'] !== undefined);
     layer.set('title', layerConfig['display']);
     layer.set('type', 'base');
     layers.push(layer);

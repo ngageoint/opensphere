@@ -111,7 +111,7 @@ os.query.TemporalHandler.prototype.handleTimelineReset = function(controller, op
   request.removeModifier(this.modifier_.getId());
   request.addModifier(this.modifier_);
 
-  var refresh = goog.isDef(opt_refresh) ? opt_refresh : true;
+  var refresh = opt_refresh !== undefined ? opt_refresh : true;
   if (refresh) {
     this.refreshSource();
   }

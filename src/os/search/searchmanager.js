@@ -262,7 +262,7 @@ os.search.SearchManager.prototype.search = function(term, opt_start, opt_pageSiz
       if (numSearches == 0) {
         // we didn't register any searches
         var contact = os.config.getSupportContact();
-        var support = goog.isDef(contact) ? ('<b>' + contact + '</b>') : 'an administrator';
+        var support = contact !== undefined ? ('<b>' + contact + '</b>') : 'an administrator';
         var message = 'No search types are available. Please ensure you have appropriate permissions or contact ' +
             support + ' for support.';
         os.alert.AlertManager.getInstance().sendAlert(message, os.alert.AlertEventSeverity.ERROR);

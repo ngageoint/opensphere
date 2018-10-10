@@ -98,7 +98,7 @@ os.ui.state.StateListCtrl.prototype.destroy_ = function() {
  */
 os.ui.state.StateListCtrl.prototype.createChecklistItem_ = function(descriptor, opt_enabled) {
   return {
-    enabled: goog.isDef(opt_enabled) ? opt_enabled : false,
+    enabled: opt_enabled !== undefined ? opt_enabled : false,
     label: descriptor.getTitle(),
     item: descriptor
   };

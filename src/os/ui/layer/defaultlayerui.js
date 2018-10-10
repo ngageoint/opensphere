@@ -380,7 +380,7 @@ os.ui.layer.DefaultLayerUICtrl.prototype.onSliderStop = function(callback, key, 
       function(layer) {
         var initialValues = this.initialValues[layer.getId()];
         var old = 1;
-        if (initialValues && goog.isDef(initialValues[key])) {
+        if (initialValues && initialValues[key] !== undefined) {
           old = initialValues[key];
         }
 
