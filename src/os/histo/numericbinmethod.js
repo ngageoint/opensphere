@@ -160,7 +160,7 @@ os.histo.NumericBinMethod.prototype.getBinKey = function(value) {
     return os.histo.NumericBinMethod.MAGIC_EMPTY;
   } else if (value === this.getFloor(os.histo.NumericBinMethod.MAGIC_NAN)) {
     return os.histo.NumericBinMethod.MAGIC_NAN;
-  } else if (goog.isNumber(value)) {
+  } else if (typeof value === 'number') {
     // not our magic number, so go ahead and floor it based on the method settings
     return this.getFloor(value);
   }

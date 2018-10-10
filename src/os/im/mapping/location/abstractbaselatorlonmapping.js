@@ -139,7 +139,8 @@ os.im.mapping.location.AbstractBaseLatOrLonMapping.prototype.testAndGetField = f
 os.im.mapping.location.AbstractBaseLatOrLonMapping.prototype.addGeometry = function(item, targetItem) {
   var lat = item['LAT'];
   var lon = item['LON'];
-  if (goog.isDef(lat) && !isNaN(lat) && goog.isNumber(lat) && goog.isDef(lon) && !isNaN(lon) && goog.isNumber(lon)) {
+  if (goog.isDef(lat) && !isNaN(lat) && typeof lat === 'number' &&
+      goog.isDef(lon) && !isNaN(lon) && typeof lon === 'number') {
     targetItem['GEOM'] = [lon, lat];
   }
 };

@@ -122,7 +122,7 @@ plugin.file.geojson.GeoJSONSimpleStyleParser.prototype.process = function(featur
       // Marker symbols can be the integers 1 - 9
       // The character a - z
       // Or an icon id from the maki set.
-      if (goog.isNumber(markersymbol) || markersymbol.match(/^[a-z0-9]$/)) {
+      if (typeof markersymbol === 'number' || markersymbol.match(/^[a-z0-9]$/)) {
         png = 'marker-24.png';
       }
 

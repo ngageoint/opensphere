@@ -949,7 +949,7 @@ plugin.file.kml.KMLParser.prototype.readNetworkLink_ = function(el) {
           break;
         case os.ui.file.kml.RefreshMode.INTERVAL:
           var interval = /** @type {number} */ (linkObj['refreshInterval']);
-          if (goog.isNumber(interval) && !isNaN(interval)) {
+          if (typeof interval === 'number' && !isNaN(interval)) {
             node.setRefreshInterval(interval * 1000);
           }
           break;

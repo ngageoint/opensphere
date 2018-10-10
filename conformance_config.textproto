@@ -157,6 +157,12 @@ requirement: {
 
 #requirement: {
 #  type: BANNED_NAME
+#  value: 'goog.isNumber'
+#  error_message: 'goog.isNumber(value) is not permitted. Use typeof value === \'number\' instead.'
+#}
+
+#requirement: {
+#  type: BANNED_NAME
 #  value: 'goog.isString'
 #  error_message: 'goog.isString(value) is not permitted. Use typeof value === \'string\' instead.'
 #}

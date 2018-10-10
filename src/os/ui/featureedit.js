@@ -1052,7 +1052,7 @@ os.ui.FeatureEditCtrl.prototype.saveToFeature = function(feature) {
     feature.set(os.style.StyleField.CENTER_SHAPE, this['centerShape']);
 
     if (!this.isFeatureDynamic() && (this.showIcon() || this.showCenterIcon())) {
-      feature.set(os.Fields.BEARING, goog.isNumber(this['iconRotation']) ? this['iconRotation'] % 360 : undefined);
+      feature.set(os.Fields.BEARING, typeof this['iconRotation'] === 'number' ? this['iconRotation'] % 360 : undefined);
       feature.set(os.style.StyleField.SHOW_ROTATION, true);
       feature.set(os.style.StyleField.ROTATION_COLUMN, os.Fields.BEARING);
     } else {

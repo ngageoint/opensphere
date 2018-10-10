@@ -159,13 +159,13 @@ os.ui.datetime.DurationCtrl.prototype.init_ = function() {
  */
 os.ui.datetime.DurationCtrl.prototype.calculateTime_ = function() {
   if (this.scope_) {
-    var minDuration = goog.isNumber(this.scope_['min']) ? this.scope_['min'] : parseInt(this.scope_['min'], 10);
+    var minDuration = typeof this.scope_['min'] === 'number' ? this.scope_['min'] : parseInt(this.scope_['min'], 10);
 
     if (!minDuration) {
       minDuration = 0;
     }
 
-    var maxDuration = goog.isNumber(this.scope_['max']) ? this.scope_['max'] : parseInt(this.scope_['max'], 10);
+    var maxDuration = typeof this.scope_['max'] === 'number' ? this.scope_['max'] : parseInt(this.scope_['max'], 10);
 
     if (!maxDuration) {
       maxDuration = Infinity;

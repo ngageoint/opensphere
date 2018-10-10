@@ -244,7 +244,7 @@ os.ui.file.kml.AbstractKMLExporter.prototype.getDefaultIcon = function() {
 os.ui.file.kml.AbstractKMLExporter.prototype.setDefaultIcon = function(href, opt_scale) {
   this.defaultIcon_.href = href;
 
-  if (goog.isNumber(opt_scale) && !isNaN(opt_scale)) {
+  if (typeof opt_scale === 'number' && !isNaN(opt_scale)) {
     this.defaultIcon_.scale = Math.max(0, opt_scale);
   }
 };
@@ -910,7 +910,7 @@ os.ui.file.kml.AbstractKMLExporter.prototype.getStyleId = function(item) {
     // use the hashcode since a URL may contain restricted characters for an XML attribute
     styleParts.push(String(goog.string.hashCode(icon.href)));
 
-    if (goog.isNumber(icon.scale) && icon.scale != 1) {
+    if (typeof icon.scale === 'number' && icon.scale != 1) {
       styleParts.push(String(icon.scale));
     }
   }

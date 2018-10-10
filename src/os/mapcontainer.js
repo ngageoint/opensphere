@@ -1631,7 +1631,7 @@ os.MapContainer.prototype.removeFeature = function(feature, opt_dispose) {
     os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.REMOVE_FEATURE, 1);
     var layer = this.getLayer(os.MapContainer.DRAW_ID);
     var source = /** @type {ol.source.Vector} */ (layer.getSource());
-    if (typeof feature === 'string' || goog.isNumber(feature)) {
+    if (typeof feature === 'string' || typeof feature === 'number') {
       feature = source.getFeatureById(feature);
     } else {
       feature = source.getFeatureById(feature.getId() + '');
@@ -1658,7 +1658,7 @@ os.MapContainer.prototype.containsFeature = function(feature) {
     if (layer) {
       var source = /** @type {ol.source.Vector} */ (layer.getSource());
 
-      return !!(typeof feature === 'string' || goog.isNumber(feature) ? source.getFeatureById(feature) :
+      return !!(typeof feature === 'string' || typeof feature === 'number' ? source.getFeatureById(feature) :
           source.getFeatureById(feature.getId() + ''));
     }
   }

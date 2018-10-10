@@ -450,7 +450,7 @@ os.state.v4.BaseLayerState.prototype.configKeyToXML = function(layerConfig, type
       }
       break;
     case 'contrast':
-      if (goog.isNumber(value) && !isNaN(value)) {
+      if (typeof value === 'number' && !isNaN(value)) {
         // Cesium contrast: 0 is gray, 1 is normal, > 1 increases contrast. we allow from 0 to 2.
         os.xml.appendElement(os.state.v4.LayerTag.CONTRAST, layerEl, Math.round((value - 1) * 100));
       }
@@ -513,7 +513,7 @@ os.state.v4.BaseLayerState.prototype.configKeyToXML = function(layerConfig, type
       }
       break;
     case os.style.StyleField.LABEL_SIZE:
-      if (bfs && goog.isNumber(value)) {
+      if (bfs && typeof value === 'number') {
         os.xml.appendElement(os.state.v4.LayerTag.LABEL_SIZE, bfs, value);
       }
       break;
@@ -529,7 +529,7 @@ os.state.v4.BaseLayerState.prototype.configKeyToXML = function(layerConfig, type
 
       // size and the value: convert to 0-100 iconScale and add the URL
       var iconScale = os.style.DEFAULT_FEATURE_SIZE * 10;
-      if (layerConfig['size'] && goog.isNumber(layerConfig['size'])) {
+      if (layerConfig['size'] && typeof layerConfig['size'] === 'number') {
         // use the feature size to convert into a scale if it's available
         iconScale = Math.floor(/** @type {number} */ (layerConfig['size']) * 10);
       }
@@ -651,7 +651,7 @@ os.state.v4.BaseLayerState.prototype.extentsFromXML_ = function(element) {
 os.state.v4.BaseLayerState.prototype.defaultConfigToXML = function(key, value, layerEl) {
   var node = null;
 
-  if (typeof value === 'string' || goog.isNumber(value) || goog.isBoolean(value)) {
+  if (typeof value === 'string' || typeof value === 'number' || goog.isBoolean(value)) {
     if (typeof value === 'string' && key.search(/color/i) > -1 && key != 'colorize' && os.color.isColorString(value)) {
       try {
         // output hex

@@ -314,7 +314,7 @@ os.state.v2.LayerState.prototype.layerToXML = function(layer, options, opt_exclu
           }
           break;
         case 'contrast':
-          if (goog.isNumber(value) && !isNaN(value)) {
+          if (typeof value === 'number' && !isNaN(value)) {
             // Cesium contrast: 0 is gray, 1 is normal, > 1 increases contrast. we allow from 0 to 2.
             // 2D contrast: -100 is gray, 0 is normal, 100 is max.
             os.xml.appendElement(os.state.v2.LayerTag.CONTRAST, layerEl, Math.round((value - 1) * 100));
@@ -382,7 +382,7 @@ os.state.v2.LayerState.prototype.layerToXML = function(layer, options, opt_exclu
           }
           break;
         case os.style.StyleField.LABEL_SIZE:
-          if (bfs && goog.isNumber(value)) {
+          if (bfs && typeof value === 'number') {
             os.xml.appendElement(os.state.v2.LayerTag.LABEL_SIZE, bfs, value);
           }
           break;
@@ -436,7 +436,7 @@ os.state.v2.LayerState.prototype.layerToXML = function(layer, options, opt_exclu
 os.state.v2.LayerState.prototype.defaultConfigToXML = function(key, value, layerEl) {
   var node = null;
 
-  if (typeof value === 'string' || goog.isNumber(value) || goog.isBoolean(value)) {
+  if (typeof value === 'string' || typeof value === 'number' || goog.isBoolean(value)) {
     if (typeof value === 'string' && key.search(/color/i) > -1 && key != 'colorize' && os.color.isColorString(value)) {
       try {
         // output hex

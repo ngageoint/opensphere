@@ -122,7 +122,7 @@ os.ui.timeline.normalizeExtent = function(extent) {
   // setting the extent with two dates. In any case, we will normalize that here.
   if (extent) {
     for (var i = 0, n = extent.length; i < n; i++) {
-      extent[i] = goog.isNumber(extent[i]) ? extent[i] : /** @type {Date} */ (extent[i]).getTime();
+      extent[i] = typeof extent[i] === 'number' ? extent[i] : /** @type {Date} */ (extent[i]).getTime();
     }
   }
 

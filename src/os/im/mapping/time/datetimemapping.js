@@ -166,7 +166,7 @@ os.im.mapping.time.DateTimeMapping.prototype.execute = function(item) {
  */
 os.im.mapping.time.DateTimeMapping.prototype.getTimestamp = function(value) {
   var t = null;
-  if (value != null && (goog.isNumber(value) || value != '')) {
+  if (value != null && (typeof value === 'number' || value != '')) {
     if (this.format == os.im.mapping.TimeFormat.TIMESTAMP) {
       try {
         t = parseFloat(value);

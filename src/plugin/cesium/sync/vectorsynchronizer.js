@@ -502,7 +502,7 @@ plugin.cesium.sync.VectorSynchronizer.prototype.addFeature = function(feature) {
  * @protected
  */
 plugin.cesium.sync.VectorSynchronizer.prototype.removeFeature = function(feature) {
-  if (goog.isNumber(feature) || typeof feature === 'string') {
+  if (typeof feature === 'number' || typeof feature === 'string') {
     feature = this.source.getFeatureById(feature);
   }
 
