@@ -21,7 +21,7 @@ os.hist.maxBinCount = function(histograms, opt_combine) {
     for (var i = 0, n = histograms.length; i < n; i++) {
       var counts = histograms[i].getCounts();
       for (var key in counts) {
-        var count = goog.isNumber(counts[key]) ? counts[key] : counts[key].length;
+        var count = typeof counts[key] === 'number' ? counts[key] : counts[key].length;
         if (!(key in binCounts)) {
           binCounts[key] = count;
         } else if (combine) {
@@ -63,7 +63,7 @@ os.hist.getBinCounts = function(histograms, opt_combine, opt_skipCompare) {
     for (var i = 0, n = histograms.length; i < n; i++) {
       var counts = histograms[i].getCounts();
       for (var key in counts) {
-        var count = goog.isNumber(counts[key]) ? counts[key] : counts[key].length;
+        var count = typeof counts[key] === 'number' ? counts[key] : counts[key].length;
         if (!(key in binCounts)) {
           binCounts[key] = count;
         } else if (combine) {

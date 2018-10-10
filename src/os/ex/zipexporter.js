@@ -180,7 +180,7 @@ os.ex.ZipExporter.prototype.writeNextFile_ = function(writer) {
     var content = file.getContent();
 
     if (fileName) {
-      if (goog.isString(content)) {
+      if (typeof content === 'string') {
         writer.add(fileName, new zip.TextReader(content), this.writeNextFile_.bind(this, writer));
       } else if (content instanceof ArrayBuffer) {
         writer.add(fileName, new zip.ArrayBufferReader(content), this.writeNextFile_.bind(this, writer));

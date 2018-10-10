@@ -48,7 +48,7 @@ os.ui.AbstractService.prototype.onSuccess = function(event, resolve) {
   var response = /** @type {string} */ (request.getResponse());
   request.dispose();
 
-  if (response && goog.isString(response) && goog.json.isValid(response)) {
+  if (response && typeof response === 'string' && goog.json.isValid(response)) {
     var data = /** @type {Object} */ (JSON.parse(response));
     resolve(data);
   } else {

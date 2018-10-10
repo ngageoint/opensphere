@@ -225,7 +225,7 @@ os.object.delete = function(obj, keys) {
  */
 os.object.parseValues = function(obj) {
   for (var key in obj) {
-    if (goog.isDef(obj[key]) && goog.isString(obj[key])) {
+    if (goog.isDef(obj[key]) && typeof obj[key] === 'string') {
       obj[key] = JSON.parse(/** @type {string} */ (obj[key]));
     }
   }

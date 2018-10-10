@@ -25,7 +25,7 @@ describe('os.im.FeatureImporter', function() {
 
     expect(attack.get('field1')).toBe(safe.get('field1'));
     expect(attack.get('field2')).toBe(safe.get('field2'));
-    expect(goog.isNumber(attack.get('count'))).toBe(true);
+    expect(typeof attack.get('count') === 'number').toBe(true);
     expect(attack.get('count')).toBe(safe.get('count'));
   });
 });

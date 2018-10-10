@@ -155,7 +155,7 @@ os.histo.DateBinMethod.prototype.getValue = function(item) {
         } catch (e) {
         }
       }
-    } else if (goog.isString(value)) {
+    } else if (typeof value === 'string') {
       value = moment(value).valueOf();
       if (!isNaN(value)) {
         timestamp = value;

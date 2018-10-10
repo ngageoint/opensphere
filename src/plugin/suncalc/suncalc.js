@@ -213,7 +213,7 @@ plugin.suncalc.SunCalcCtrl.PHASES = [
  * @private
  */
 plugin.suncalc.SunCalcCtrl.filter_ = function(item) {
-  return goog.isString(item.time) || !isNaN(item.time);
+  return typeof item.time === 'string' || !isNaN(item.time);
 };
 
 
@@ -233,7 +233,7 @@ plugin.suncalc.SunCalcCtrl.addTextColor_ = function(item) {
  * @export
  */
 plugin.suncalc.SunCalcCtrl.prototype.formatTime = function(t) {
-  if (goog.isNumber(t)) {
+  if (typeof t === 'number') {
     return moment(t + os.time.timeOffset).utc().format(os.time.TIME_FORMATS[7]);
   }
 

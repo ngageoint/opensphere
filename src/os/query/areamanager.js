@@ -377,7 +377,7 @@ os.query.AreaManager.prototype.normalizeGeometry = function(feature) {
  * @return {string}
  */
 os.query.AreaManager.prototype.toRgbaString = function(color) {
-  return ol.color.asString(goog.isString(color) ? os.color.toRgbArray(color) : color);
+  return ol.color.asString(typeof color === 'string' ? os.color.toRgbArray(color) : color);
 };
 
 

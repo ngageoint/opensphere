@@ -224,7 +224,7 @@ os.ui.ol.OLMap.prototype.addFeatures = function(features) {
 os.ui.ol.OLMap.prototype.removeFeature = function(feature, opt_dispose) {
   if (feature) {
     var source = this.drawingLayer_.getSource();
-    if (goog.isString(feature) || goog.isNumber(feature)) {
+    if (typeof feature === 'string' || typeof feature === 'number') {
       feature = source.getFeatureById(feature);
     } else {
       feature = source.getFeatureById(feature.getId() + '');
@@ -277,7 +277,7 @@ os.ui.ol.OLMap.prototype.containsFeature = function(feature) {
     if (layer) {
       var source = /** @type {ol.source.Vector} */ (layer.getSource());
 
-      return !!(goog.isString(feature) || goog.isNumber(feature) ? source.getFeatureById(feature) :
+      return !!(typeof feature === 'string' || typeof feature === 'number' ? source.getFeatureById(feature) :
           source.getFeatureById(feature.getId() + ''));
     }
   }
@@ -462,7 +462,7 @@ os.ui.ol.OLMap.prototype.getLayer = function(layerOrFeature, opt_search, opt_rem
       var item = opt_search.item(i);
 
       try {
-        if (goog.isString(layerOrFeature)) {
+        if (typeof layerOrFeature === 'string') {
           var lid = /** @type {ol.layer.Layer} */ (item).get('id');
           if (lid == layerOrFeature) {
             l = /** @type {ol.layer.Layer} */ (item);

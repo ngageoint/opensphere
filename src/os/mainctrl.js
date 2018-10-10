@@ -899,7 +899,7 @@ os.MainCtrl.prototype.onToggleUI_ = function(event) {
       os.ui.window.bringToFront(event.id);
     } else {
       // Use event value if available.  Keep open if event contains parameters. Lastly just toggle the value.
-      var open = goog.isBoolean(event.value) ? event.value :
+      var open = typeof event.value === 'boolean' ? event.value :
           (goog.isDefAndNotNull(event.params) ? true : !this[event.id]);
       this[event.id] = open;
       os.ui.apply(this.scope);
@@ -959,7 +959,7 @@ os.MainCtrl.prototype.handleResult_ = function(file) {
  * @private
  */
 os.MainCtrl.prototype.handleError_ = function(errorMsg) {
-  if (errorMsg && goog.isString(errorMsg)) {
+  if (errorMsg && typeof errorMsg === 'string') {
     goog.log.error(os.MainCtrl.LOGGER_, errorMsg);
     os.alert.AlertManager.getInstance().sendAlert(errorMsg, os.alert.AlertEventSeverity.ERROR);
   }

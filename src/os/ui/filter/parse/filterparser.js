@@ -38,7 +38,7 @@ os.ui.filter.parse.FilterParser.prototype.setSource = function(source) {
 
   if (source instanceof Document) {
     this.document_ = /** @type {Document} */ (source);
-  } else if (goog.isString(source)) {
+  } else if (typeof source === 'string') {
     this.document_ = goog.dom.xml.loadXml(source);
   }
 };

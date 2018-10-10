@@ -357,7 +357,7 @@ os.ui.wiz.WizardCtrl.prototype.setStepIndex = function(index) {
  * @export
  */
 os.ui.wiz.WizardCtrl.prototype.isActive = function(step) {
-  if (goog.isNumber(step)) {
+  if (typeof step === 'number') {
     return this['activeIndex'] === step;
   } else {
     return this['steps'][this['activeIndex']] === step;
@@ -372,7 +372,7 @@ os.ui.wiz.WizardCtrl.prototype.isActive = function(step) {
  * @export
  */
 os.ui.wiz.WizardCtrl.prototype.getStepIcon = function(step) {
-  if (goog.isNumber(step)) {
+  if (typeof step === 'number') {
     step = this['steps'][step];
   }
 
@@ -401,7 +401,7 @@ os.ui.wiz.WizardCtrl.prototype.getStepIcon = function(step) {
  * @export
  */
 os.ui.wiz.WizardCtrl.prototype.getStepState = function(step) {
-  if (goog.isNumber(step)) {
+  if (typeof step === 'number') {
     step = this['steps'][step];
   }
 
@@ -416,7 +416,7 @@ os.ui.wiz.WizardCtrl.prototype.getStepState = function(step) {
  * @protected
  */
 os.ui.wiz.WizardCtrl.prototype.setStepState = function(step, state) {
-  if (goog.isNumber(step)) {
+  if (typeof step === 'number') {
     step = this['steps'][step];
   }
 

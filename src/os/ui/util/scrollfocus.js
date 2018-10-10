@@ -39,7 +39,7 @@ os.ui.Module.directive('scrollFocus', [os.ui.util.scrollFocusDirective]);
 os.ui.util.scrollFocusDirective.linker_ = function(scope, element, attrs, scrollFocusCtrl) {
   scope['element'] = element = element[0];
   scope.$watch('element.scrollHeight', goog.bind(function(height) {
-    if (goog.isNumber(height)) {
+    if (typeof height === 'number') {
       if (scrollFocusCtrl.hasScrollBar_()) {
         element.setAttribute('tabindex', 0);
       } else {

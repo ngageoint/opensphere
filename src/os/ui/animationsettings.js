@@ -201,11 +201,11 @@ os.ui.AnimationSettingsCtrl.prototype.hasMultipleRanges = function() {
  * @protected
  */
 os.ui.AnimationSettingsCtrl.prototype.onLoopDatesChange = function(newValue, oldValue) {
-  if (goog.isString(this.scope['loopStart'])) {
+  if (typeof this.scope['loopStart'] === 'string') {
     this.loopStart = os.time.parse(this.scope['loopStart'], null, true);
   }
 
-  if (goog.isString(this.scope['loopEnd'])) {
+  if (typeof this.scope['loopEnd'] === 'string') {
     this.loopEnd = os.time.parse(this.scope['loopEnd'], null, true);
   }
 

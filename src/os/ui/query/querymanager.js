@@ -1112,7 +1112,7 @@ os.ui.query.QueryManager.prototype.getPivotData = function(opt_pivots, opt_pivot
           var astr = a.getLabel();
           var bstr = b.getLabel();
 
-          if (goog.isString(astr) && goog.isString(bstr)) {
+          if (typeof astr === 'string' && typeof bstr === 'string') {
             return goog.string.caseInsensitiveCompare(astr, bstr);
           }
 

@@ -175,7 +175,7 @@ os.ui.file.FileImportCtrl.prototype.handleResult_ = function(file) {
 os.ui.file.FileImportCtrl.prototype.handleError_ = function(errorMsg) {
   this['loading'] = false;
 
-  if (!errorMsg || !goog.isString(errorMsg)) {
+  if (!errorMsg || typeof errorMsg !== 'string') {
     var fileName = this['file'] ? this['file'].name : 'unknown';
     errorMsg = 'Unable to load file "' + fileName + '"!';
   }
