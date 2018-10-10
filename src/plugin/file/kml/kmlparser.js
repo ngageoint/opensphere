@@ -877,7 +877,8 @@ plugin.file.kml.KMLParser.prototype.examineStyles_ = function(node) {
  */
 plugin.file.kml.KMLParser.prototype.readBalloonStyle_ = function(feature) {
   var styleUrl = /** @type {string} */ (feature.get('styleUrl'));
-  var style = this.findStyle_(decodeURIComponent(styleUrl), false, true);
+  var styleId = this.getStyleId(decodeURIComponent(styleUrl));
+  var style = styleId in this.otherStyleMap ? this.otherStyleMap[styleId] : null;
   var text = style.text;
   var bgColor = style.bgColor || '255, 255, 255, 1';
   var textColor = style.textColor || '0, 0, 0, 1';
@@ -1391,8 +1392,9 @@ plugin.file.kml.KMLParser.prototype.applyStyles_ = function(el, feature) {
   // style from style url
   var styleUrl = /** @type {string} */ (feature.get('styleUrl'));
   if (styleUrl) {
-    styleSets.push(this.findStyle_(decodeURIComponent(styleUrl)));
-    highlightStyle = this.findStyle_(decodeURIComponent(styleUrl), true);
+    var styleId = this.getStyleId(decodeURIComponent(styleUrl));
+    styleSets.push(styleId in this.styleMap_ ? this.styleMap_[styleId] : null);
+    highlightStyle = styleId in this.highlightStyleMap_ ? this.highlightStyleMap_[styleId] : null;
   }
 
   this.readBalloonStyle_(feature);
@@ -1650,26 +1652,17 @@ plugin.file.kml.KMLParser.prototype.mapStyleToConfig_ = function(style) {
 
 
 /**
- * Finds the first instance of a style id on the style stack
- * @param {string} id The style id
- * @param {boolean=} opt_highlight Whether to check the highlight style map
- * @param {boolean=} opt_otherStyle Whether to check externally parsed styles.
-
- * @return {Array<Object>} The style configs, or null if not found
- * @private
+ * Parse the StyleUrl into the correct id format.
+ * @param {string} id The StyleUrl.
+ * @return {string} The Parsed Style id.
  */
-plugin.file.kml.KMLParser.prototype.findStyle_ = function(id, opt_highlight, opt_otherStyle) {
+plugin.file.kml.KMLParser.prototype.getStyleId = function(id) {
   var x = id.indexOf('#');
 
   if (x > -1) {
     id = id.substring(x + 1);
   }
-
-  var map = opt_highlight ? this.highlightStyleMap_ : this.styleMap_;
-  if (opt_otherStyle) {
-    map = this.otherStyleMap;
-  }
-  return id in map ? map[id] : null;
+  return id;
 };
 
 
