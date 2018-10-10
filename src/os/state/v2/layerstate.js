@@ -436,7 +436,7 @@ os.state.v2.LayerState.prototype.layerToXML = function(layer, options, opt_exclu
 os.state.v2.LayerState.prototype.defaultConfigToXML = function(key, value, layerEl) {
   var node = null;
 
-  if (typeof value === 'string' || typeof value === 'number' || goog.isBoolean(value)) {
+  if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
     if (typeof value === 'string' && key.search(/color/i) > -1 && key != 'colorize' && os.color.isColorString(value)) {
       try {
         // output hex

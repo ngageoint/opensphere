@@ -157,6 +157,12 @@ requirement: {
 
 #requirement: {
 #  type: BANNED_NAME
+#  value: 'goog.isBoolean'
+#  error_message: 'goog.isBoolean(value) is not permitted. Use typeof value === \'boolean\' instead.'
+#}
+
+#requirement: {
+#  type: BANNED_NAME
 #  value: 'goog.isNumber'
 #  error_message: 'goog.isNumber(value) is not permitted. Use typeof value === \'number\' instead.'
 #}
