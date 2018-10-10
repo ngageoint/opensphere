@@ -43,7 +43,7 @@ os.ui.filter.TextNoColCheckCtrl = function($scope) {
 
   this['start'] = undefined;
 
-  if (goog.isDefAndNotNull($scope['expr']['literal'])) {
+  if ($scope['expr']['literal'] != null) {
     this['start'] = $scope['expr']['literal'];
   }
 

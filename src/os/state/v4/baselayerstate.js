@@ -348,7 +348,7 @@ os.state.v4.BaseLayerState.prototype.layerToXML = function(layer, options, opt_e
 
   // write the persisted layer on top of the cloned options so we have (most) everything in one place
   var layerConfig = goog.object.clone(layer.getLayerOptions());
-  if (goog.isDefAndNotNull(opt_layerConfig)) {
+  if (opt_layerConfig != null) {
     goog.object.extend(layerConfig, opt_layerConfig);
   }
 
@@ -368,12 +368,12 @@ os.state.v4.BaseLayerState.prototype.layerToXML = function(layer, options, opt_e
 
   var type = this.getLayerType_(layer);
 
-  if (goog.isDefAndNotNull(opt_exclusions)) {
+  if (opt_exclusions != null) {
     var exclusions = goog.isArray(opt_exclusions) ? opt_exclusions : [opt_exclusions];
     tagExclusions = goog.array.join(tagExclusions, exclusions);
   }
   for (var i = 0, n = tagExclusions.length; i < n; i++) {
-    if (goog.isDefAndNotNull(layerConfig[tagExclusions[i]])) {
+    if (layerConfig[tagExclusions[i]] != null) {
       delete layerConfig[tagExclusions[i]];
     }
   }
@@ -383,7 +383,7 @@ os.state.v4.BaseLayerState.prototype.layerToXML = function(layer, options, opt_e
 
   for (var key in layerConfig) {
     var value = layerConfig[key];
-    if (goog.isDefAndNotNull(value)) {
+    if (value != null) {
       this.configKeyToXML(layerConfig, type, key, value, bfs, layerEl);
     }
   }
@@ -458,7 +458,7 @@ os.state.v4.BaseLayerState.prototype.configKeyToXML = function(layerConfig, type
     case 'alpha':
     case 'opacity':
       if (bfs) {
-        value = goog.isDefAndNotNull(value) ? Number(value) : os.style.DEFAULT_ALPHA;
+        value = value != null ? Number(value) : os.style.DEFAULT_ALPHA;
         var opacity = Math.round(value * 255);
         var pointOpacityElement = bfs.querySelector(os.state.v4.LayerTag.PT_OPACITY);
         if (pointOpacityElement) {
@@ -468,13 +468,13 @@ os.state.v4.BaseLayerState.prototype.configKeyToXML = function(layerConfig, type
         }
       } else {
         // write tile layer opacity/alpha as alpha
-        value = goog.isDefAndNotNull(value) ? Number(value) : os.style.DEFAULT_ALPHA;
+        value = value != null ? Number(value) : os.style.DEFAULT_ALPHA;
         os.xml.appendElement(os.state.v4.LayerTag.ALPHA, layerEl, value);
       }
       break;
     case 'size':
       if (bfs) {
-        value = goog.isDefAndNotNull(value) ? Math.floor(value) : os.style.DEFAULT_FEATURE_SIZE;
+        value = value != null ? Math.floor(value) : os.style.DEFAULT_FEATURE_SIZE;
 
         var pointSize = value * 2;
         os.xml.appendElement(os.state.v4.LayerTag.PT_SIZE, bfs, pointSize);
@@ -799,7 +799,7 @@ os.state.v4.BaseLayerState.prototype.analyzeOptions = function(options, id) {
     var style = /** @type {string} */ (layerOptions['style']);
     var styles = /** @type {Array<Object>} */ (layerOptions['styles']);
     // fix any styles that don't reference the data
-    if (goog.isDefAndNotNull(style) && goog.isDefAndNotNull(styles)) {
+    if (style != null && styles != null) {
       var matchesStyle = false;
       for (var j = 0, m = styles.length; j < m; j++) {
         if (styles[j]['data'] === style) {

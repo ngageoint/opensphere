@@ -28,7 +28,7 @@ os.ui.state.stateTitleLinkFn = function(scope, element, attrs, ctrl) {
       // oldTitle will be set on the scope during the reimport process. if a persister is set, the state is
       // being exported to something other than the application so we don't need to check the title.
       var valid = true;
-      if (scope['oldTitle'] !== val && !goog.isDefAndNotNull(scope['stateForm']['persister'])) {
+      if (scope['oldTitle'] !== val && scope['stateForm']['persister'] == null) {
         valid = !os.ui.stateManager.hasState(val);
       }
 

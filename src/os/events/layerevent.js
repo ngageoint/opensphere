@@ -37,7 +37,7 @@ os.events.LayerEvent = function(type, layer, opt_index) {
   /**
    * @type {number}
    */
-  this.index = goog.isDefAndNotNull(opt_index) ? opt_index : -1;
+  this.index = opt_index != null ? opt_index : -1;
 };
 goog.inherits(os.events.LayerEvent, goog.events.Event);
 

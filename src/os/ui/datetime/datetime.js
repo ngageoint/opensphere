@@ -182,19 +182,19 @@ os.ui.datetime.DateTimeCtrl.prototype.updateValue = function(opt_type) {
 
   // if the date was set, zero out any hour/min/sec fields that aren't set yet
   if (opt_type && opt_type === 'date' && goog.isDateLike(this['date']) && !isNaN(this['date'].getTime())) {
-    if (!goog.isDefAndNotNull(this['hour'])) {
+    if (this['hour'] == null) {
       this['hour'] = 0;
     }
-    if (!goog.isDefAndNotNull(this['minute'])) {
+    if (this['minute'] == null) {
       this['minute'] = 0;
     }
-    if (!goog.isDefAndNotNull(this['second'])) {
+    if (this['second'] == null) {
       this['second'] = 0;
     }
   }
 
-  if (goog.isDateLike(this['date']) && !isNaN(this['date'].getTime()) && goog.isDefAndNotNull(this['hour']) &&
-     goog.isDefAndNotNull(this['minute']) && goog.isDefAndNotNull(this['second'])) {
+  if (goog.isDateLike(this['date']) && !isNaN(this['date'].getTime()) && this['hour'] != null &&
+     this['minute'] != null && this['second'] != null) {
     // update date field with hour/min/sec control values
     var utcDate = new Date(this['date'].getTime() - this['date'].getTimezoneOffset() * 60000);
     utcDate.setUTCHours(this['hour']);
@@ -210,16 +210,16 @@ os.ui.datetime.DateTimeCtrl.prototype.updateValue = function(opt_type) {
     this['errorString'] = null;
     this['requiredString'] = null;
     // display error string for missing/invalid value, preferring date > hour > min > sec
-    if (this.scope_['required'] && !goog.isDateLike(this['date']) && !goog.isDefAndNotNull(this['hour']) &&
-        !goog.isDefAndNotNull(this['minute']) && !goog.isDefAndNotNull(this['second'])) {
+    if (this.scope_['required'] && !goog.isDateLike(this['date']) && this['hour'] == null &&
+        this['minute'] == null && this['second'] == null) {
       this['requiredString'] = 'Required!';
     } else if (!goog.isDateLike(this['date'])) {
       this['errorString'] = 'Please provide a valid date.';
-    } else if (!goog.isDefAndNotNull(this['hour'])) {
+    } else if (this['hour'] == null) {
       this['errorString'] = 'Hour field invalid! Range: 0-23';
-    } else if (!goog.isDefAndNotNull(this['minute'])) {
+    } else if (this['minute'] == null) {
       this['errorString'] = 'Minute field invalid! Range: 0-59';
-    } else if (!goog.isDefAndNotNull(this['second'])) {
+    } else if (this['second'] == null) {
       this['errorString'] = 'Second field invalid! Range: 0-59';
     }
   }

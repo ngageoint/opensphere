@@ -35,7 +35,7 @@ os.command.SetLayerTitle.prototype.execute = function() {
   this.state = os.command.State.EXECUTING;
 
   var l = /** @type {os.layer.Vector} */ (os.MapContainer.getInstance().getLayer(this.overlayId_));
-  if (!goog.isDefAndNotNull(l)) {
+  if (l == null) {
     return this.handleError('Layer not found for passed ID.');
   }
   this.oldTitle_ = l.getTitle();
@@ -52,7 +52,7 @@ os.command.SetLayerTitle.prototype.revert = function() {
   this.state = os.command.State.REVERTING;
 
   var l = /** @type {os.layer.Vector} */ (os.MapContainer.getInstance().getLayer(this.overlayId_));
-  if (!goog.isDefAndNotNull(l)) {
+  if (l == null) {
     return this.handleError('Layer not found for passed ID.');
   }
   l.setTitle(this.oldTitle_);

@@ -547,7 +547,7 @@ os.ui.query.ui.CombinatorCtrl.prototype.updateLayers = function() {
  * @private
  */
 os.ui.query.ui.CombinatorCtrl.prototype.filterRoot_ = function(root, opt_changeRoot) {
-  opt_changeRoot = goog.isDef(opt_changeRoot) ? opt_changeRoot : true;
+  opt_changeRoot = opt_changeRoot !== undefined ? opt_changeRoot : true;
 
   var changed = false;
   var layerId = this.getLayerId_();
@@ -1147,7 +1147,7 @@ os.ui.query.ui.CombinatorCtrl.flatten_ = function(arr, result, activeOnly) {
       if ((activeOnly && item.getState() == 'on' || !activeOnly) &&
           item.getEntry()) {
         var filterId = item.getEntry()['filterId'];
-        if (goog.isDef(filterId) && filterId != '*') {
+        if (filterId !== undefined && filterId != '*') {
           result.push(item);
         }
       }
@@ -1175,7 +1175,7 @@ os.ui.query.ui.CombinatorCtrl.prototype.save_ = function(name, mode) {
     filters = goog.array.filter(this.scope['selected'], function(item) {
       if (item.getEntry()) {
         var filterId = item.getEntry()['filterId'];
-        if (goog.isDef(filterId) && filterId != '*') {
+        if (filterId !== undefined && filterId != '*') {
           return true;
         }
         return false;

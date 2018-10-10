@@ -558,7 +558,7 @@ os.ui.wiz.GeometryStepCtrl.prototype.testMappingAndEmpty_ = function(mapping, fi
     if (testValue) {
       invalidSample = testValue;
       var sample = mapping.testAndGetField(testValue, opt_format);
-      if (goog.isDefAndNotNull(sample)) {
+      if (sample != null) {
         return /** @type {os.GeoMapTestRes} */ ({'test': 1, 'result': sample, 'sample': testValue});
       }
     }

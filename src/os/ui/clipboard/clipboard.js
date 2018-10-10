@@ -12,8 +12,8 @@ os.ui.clipboard.getData = function(event, opt_type) {
   var result = null;
   if (event && event.clipboardData) {
     result = event.clipboardData.getData(type);
-  } else if (goog.isDef(window.clipboardData)) {
+  } else if (window.clipboardData !== undefined) {
     result = window.clipboardData.getData(type);
   }
-  return goog.isDef(result) ? result : null;
+  return result !== undefined ? result : null;
 };

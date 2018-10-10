@@ -69,7 +69,7 @@ os.feature.TITLE_REGEX = /^(name|title)$/i;
 os.feature.autoMap = function(features, opt_count) {
   if (features && features.length > 0) {
     var mm = os.im.mapping.MappingManager.getInstance();
-    var detectFeatures = goog.isDef(opt_count) ? features.slice(0, opt_count) : [features[0]];
+    var detectFeatures = opt_count !== undefined ? features.slice(0, opt_count) : [features[0]];
     var mappings = mm.autoDetect(detectFeatures);
     mappings.forEach(function(mapping) {
       for (var i = 0; i < features.length; i++) {
@@ -382,15 +382,15 @@ os.feature.createLineOfBearing = function(feature, opt_replace, opt_lobOpts) {
       if (opt_lobOpts.showError) { // draw error arcs
         var lengthErrorUnits = opt_lobOpts.lengthErrorUnits || os.style.DEFAULT_UNITS;
         var lengthError = Math.abs(os.feature.getColumnValue(feature, opt_lobOpts.lengthErrorColumn));
-        var lengthErrorMultiplier = goog.isDef(opt_lobOpts.lengthError) ?
+        var lengthErrorMultiplier = opt_lobOpts.lengthError !== undefined ?
             opt_lobOpts.lengthError : os.style.DEFAULT_LOB_LENGTH_ERROR;
         var bearingError = Math.abs(os.feature.getColumnValue(feature, opt_lobOpts.bearingErrorColumn));
-        var bearingErrorMultiplier = goog.isDef(opt_lobOpts.bearingError) ?
+        var bearingErrorMultiplier = opt_lobOpts.bearingError !== undefined ?
             opt_lobOpts.bearingError : os.style.DEFAULT_LOB_BEARING_ERROR;
-        if (goog.isNull(bearingError) || isNaN(bearingError)) {
+        if (bearingError === null || isNaN(bearingError)) {
           bearingError = 1;
         }
-        if (goog.isNull(lengthError) || isNaN(lengthError)) {
+        if (lengthError === null || isNaN(lengthError)) {
           lengthError = 1;
         }
         var cLengthError = os.math.convertUnits(lengthError, os.style.DEFAULT_UNITS, lengthErrorUnits) *

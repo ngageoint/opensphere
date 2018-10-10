@@ -90,7 +90,7 @@ os.state.v2.QueryEntries.prototype.load = function(obj, id) {
         var filterGroup = child.getAttribute('filterGroup');
         filterGroup = filterGroup ? filterCheck.test(filterGroup) : true;
 
-        if (layerId && areaId && filterId && goog.isDef(includeArea) && goog.isDef(filterGroup)) {
+        if (layerId && areaId && filterId && includeArea !== undefined && filterGroup !== undefined) {
           toAdd.push({
             'layerId': layerId !== '*' ? os.state.AbstractState.createId(id, layerId) : layerId,
             'areaId': areaId !== '*' ? os.state.AbstractState.createId(id, areaId) : areaId,

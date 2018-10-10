@@ -34,7 +34,7 @@ os.net.LongPoll = function(opt_autoReconnect, opt_getNextReconnect) {
    * @type {boolean}
    * @private
    */
-  this.autoReconnect_ = goog.isDef(opt_autoReconnect) ? opt_autoReconnect : true;
+  this.autoReconnect_ = opt_autoReconnect !== undefined ? opt_autoReconnect : true;
 
   /**
    * A function for obtaining the time until the next reconnect attempt.
@@ -343,7 +343,7 @@ os.net.LongPoll.prototype.getStatus = function() {
  * @private
  */
 os.net.LongPoll.prototype.clearReconnectTimer_ = function() {
-  if (goog.isDefAndNotNull(this.reconnectTimer_)) {
+  if (this.reconnectTimer_ != null) {
     goog.Timer.clear(this.reconnectTimer_);
   }
   this.reconnectTimer_ = null;

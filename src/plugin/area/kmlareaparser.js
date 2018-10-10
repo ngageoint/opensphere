@@ -228,7 +228,7 @@ plugin.area.KMLAreaParser.prototype.cleanup = function() {
  * @inheritDoc
  */
 plugin.area.KMLAreaParser.prototype.hasNext = function() {
-  return goog.isDefAndNotNull(this.document_);
+  return this.document_ != null;
 };
 
 

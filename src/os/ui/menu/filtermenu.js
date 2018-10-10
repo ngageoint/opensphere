@@ -165,7 +165,7 @@ os.ui.menu.filter.getFilters = function(nodes) {
  * @private
  */
 os.ui.menu.filter.layerOn_ = function(layerId) {
-  return goog.isDefAndNotNull(os.MapContainer.getInstance().getLayer(layerId));
+  return os.MapContainer.getInstance().getLayer(layerId) != null;
 };
 
 

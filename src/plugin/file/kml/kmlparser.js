@@ -671,7 +671,7 @@ plugin.file.kml.KMLParser.prototype.handleZIPText_ = function(filename, event) {
  */
 plugin.file.kml.KMLParser.prototype.parseNext = function() {
   goog.asserts.assert(this.stack_.length > 0, 'Stack should not be empty');
-  goog.asserts.assert(goog.isDefAndNotNull(this.stack_[this.stack_.length - 1]), 'Top of stack should be an object');
+  goog.asserts.assert(this.stack_[this.stack_.length - 1] != null, 'Top of stack should be an object');
 
   var stackObj = null;
   var node = null;
@@ -821,10 +821,10 @@ plugin.file.kml.KMLParser.prototype.createTreeNode_ = function(el, opt_parent) {
       node.setLabel(id || this.getDefaultName_(el.localName));
     }
 
-    if (goog.isDefAndNotNull(opt_parent)) {
+    if (opt_parent != null) {
       // if the child already exists, the new node will be merged and the original node returned
       node = /** @type {plugin.file.kml.ui.KMLNode} */ (opt_parent.addChild(node));
-    } else if (goog.isNull(this.rootNode_)) {
+    } else if (this.rootNode_ === null) {
       this.rootNode_ = node;
     } else if (this.rootNode_.getLabel() != node.getLabel()) {
       // the root node name changed, so start with a fresh tree. if this rains on anyone's parade we can probably
@@ -895,9 +895,9 @@ plugin.file.kml.KMLParser.prototype.examineElement_ = function(el) {
  */
 plugin.file.kml.KMLParser.prototype.updateNode_ = function(el, node, parsers) {
   var n;
-  for (n = goog.dom.getFirstElementChild(el); !goog.isNull(n); n = n.nextElementSibling) {
+  for (n = goog.dom.getFirstElementChild(el); n !== null; n = n.nextElementSibling) {
     var parser = parsers[n.localName];
-    if (goog.isDef(parser)) {
+    if (parser !== undefined) {
       parser.call(this, node, n);
     }
   }
@@ -1088,7 +1088,7 @@ plugin.file.kml.KMLParser.prototype.readGroundOverlay_ = function(el) {
   goog.asserts.assert(el.localName == 'GroundOverlay', 'localName should be GroundOverlay');
 
   // openlayers does not natively support GroundOverlay so we need to parse the xml and create an image
-  if (goog.isDef(el) && el.querySelector('name') && el.querySelector('Icon') &&
+  if (el !== undefined && el.querySelector('name') && el.querySelector('Icon') &&
       (el.querySelector('LatLonBox') || el.querySelector('LatLonQuad'))) {
     var icon = el.querySelector('Icon').querySelector('href').textContent;
     if (this.assetMap_[icon]) {
@@ -1166,7 +1166,7 @@ plugin.file.kml.KMLParser.prototype.readScreenOverlay_ = function(el) {
   goog.asserts.assert(el.localName == 'ScreenOverlay', 'localName should be ScreenOverlay');
 
   // openlayers does not natively support ScreenOverlay so we need to parse the xml and create an overlay window
-  if (goog.isDef(el) && el.querySelector('name') && el.querySelector('Icon')) {
+  if (el !== undefined && el.querySelector('name') && el.querySelector('Icon')) {
     // check if visibility is set to 0, if it is, do not proceed
     var vis = el.querySelector('visibility');
     if (vis) {

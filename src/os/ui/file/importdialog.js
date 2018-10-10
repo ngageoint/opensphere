@@ -263,7 +263,7 @@ os.ui.file.ImportDialogCtrl.prototype.onFileChange_ = function(event) {
     this.getFileExtention_(this['file']);
   }
 
-  this['url'] = goog.isDefAndNotNull(this['file']) ? /** @type {File} */ (this['file']).name : null;
+  this['url'] = this['file'] != null ? /** @type {File} */ (this['file']).name : null;
   this['fileChosen'] = true;
 
   os.ui.apply(this.scope_);

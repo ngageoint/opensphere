@@ -100,13 +100,13 @@ plugin.file.shp.SHPLayerConfig.prototype.getImporter = function(options) {
 plugin.file.shp.SHPLayerConfig.prototype.getParser = function(options) {
   var config = this.parserConfig || new plugin.file.shp.SHPParserConfig();
 
-  if (goog.isDef(options['lineAlpha'])) {
+  if (options['lineAlpha'] !== undefined) {
     config['lineAlpha'] = options['lineAlpha'];
   }
-  if (goog.isDef(options['fillAlpha'])) {
+  if (options['fillAlpha'] !== undefined) {
     config['fillAlpha'] = options['fillAlpha'];
   }
-  if (goog.isDef(options['append'])) {
+  if (options['append'] !== undefined) {
     config['append'] = options['append'];
   }
 

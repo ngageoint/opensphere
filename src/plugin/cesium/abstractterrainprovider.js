@@ -11,8 +11,8 @@ goog.require('goog.asserts');
  * @constructor
  */
 plugin.cesium.AbstractTerrainProvider = function(options) {
-  goog.asserts.assert(goog.isDefAndNotNull(options), 'options not defined');
-  goog.asserts.assert(goog.isDefAndNotNull(options.url), 'url not defined');
+  goog.asserts.assert(options != null, 'options not defined');
+  goog.asserts.assert(options.url != null, 'url not defined');
 
   //
   // The following properties are all used by Cesium using the get/set functions defined below. They are already

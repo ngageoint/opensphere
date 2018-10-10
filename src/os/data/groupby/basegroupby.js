@@ -54,7 +54,7 @@ os.data.groupby.BaseGroupBy.prototype.disposeInternal = function() {
  * @inheritDoc
  */
 os.data.groupby.BaseGroupBy.prototype.groupBy = function(node, results, opt_doCount, opt_skipClone) {
-  if (!goog.isDefAndNotNull(opt_doCount)) {
+  if (opt_doCount == null) {
     opt_doCount = true;
   }
 

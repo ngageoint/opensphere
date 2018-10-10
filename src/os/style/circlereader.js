@@ -24,7 +24,7 @@ os.style.CircleReader.prototype.getOrCreateStyle = function(config) {
   var fill;
   var stroke;
 
-  var radius = goog.isDef(config['radius']) ? /** @type {number} */ (config['radius']) :
+  var radius = config['radius'] !== undefined ? /** @type {number} */ (config['radius']) :
       os.style.DEFAULT_FEATURE_SIZE;
   var hash = this.baseHash + radius;
 

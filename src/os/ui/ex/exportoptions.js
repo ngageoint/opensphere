@@ -145,7 +145,7 @@ os.ui.ex.ExportOptionsCtrl.prototype.disposeInternal = function() {
  */
 os.ui.ex.ExportOptionsCtrl.prototype.createChecklistItem_ = function(source, opt_enabled) {
   return {
-    enabled: goog.isDef(opt_enabled) ? opt_enabled : false,
+    enabled: opt_enabled !== undefined ? opt_enabled : false,
     label: source.getTitle(),
     item: source
   };

@@ -103,7 +103,7 @@ os.ui.search.FacetNode.prototype.getCheckboxDisabled = function() {
  * @inheritDoc
  */
 os.ui.search.FacetNode.prototype.format = function(row, cell, value) {
-  if (!goog.isDefAndNotNull(value)) {
+  if (value == null) {
     return '';
   }
 

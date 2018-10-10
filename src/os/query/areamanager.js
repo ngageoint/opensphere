@@ -443,7 +443,7 @@ os.query.AreaManager.prototype.updateExWidth_ = function(event) {
 os.query.AreaManager.prototype.redrawQueryAreas_ = function() {
   var areas = this.getAll();
   goog.array.forEach(areas, function(area) {
-    if (goog.isDefAndNotNull(area.getStyle())) {
+    if (area.getStyle() != null) {
       var entries = os.ui.query.QueryManager.getInstance().getEntries(null, /** @type {string} */ (area.getId()));
       if (entries && entries.length > 0) {
         var expectedStyle = /** @type {boolean} */ (entries[0]['includeArea']) ?

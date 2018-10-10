@@ -46,8 +46,8 @@ os.ui.window.launchConfirm = function(opt_options, opt_scopeOptions) {
   scopeOptions['yesIcon'] = options.yesIcon || 'fa fa-check';
   scopeOptions['yesButtonClass'] = options.yesButtonClass || 'btn-primary';
   scopeOptions['yesButtonTitle'] = options.yesButtonTitle || '';
-  scopeOptions['noText'] = goog.isDef(options.noText) ? options.noText : 'Cancel';
-  scopeOptions['noIcon'] = goog.isDef(options.noIcon) ? options.noIcon : 'fa fa-ban';
+  scopeOptions['noText'] = options.noText !== undefined ? options.noText : 'Cancel';
+  scopeOptions['noIcon'] = options.noIcon !== undefined ? options.noIcon : 'fa fa-ban';
   scopeOptions['noButtonTitle'] = options.noButtonTitle || '';
   scopeOptions['noButtonClass'] = options.noButtonClass || 'btn-secondary';
   scopeOptions['formClass'] = options.formClass || 'form-horizontal';

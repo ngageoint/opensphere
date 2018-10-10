@@ -372,7 +372,7 @@ os.ui.column.ColumnManagerCtrl.prototype.find_ = function(term, columnName) {
 os.ui.column.ColumnManagerCtrl.prototype.find = function(opt_startIndex) {
   if (this['term'] != '') {
     this['searchResults'] = this.find_(this['term'], 'hiddenColumns').concat(this.find_(this['term'], 'shownColumns'));
-    this['searchIndex'] = goog.isDefAndNotNull(opt_startIndex) ? opt_startIndex : -1;
+    this['searchIndex'] = opt_startIndex != null ? opt_startIndex : -1;
     this.next();
   }
 };

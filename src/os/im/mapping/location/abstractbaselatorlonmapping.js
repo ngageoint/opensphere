@@ -113,7 +113,7 @@ os.im.mapping.location.AbstractBaseLatOrLonMapping.prototype.execute = function(
 os.im.mapping.location.AbstractBaseLatOrLonMapping.prototype.testField = function(value) {
   if (value) {
     var l = this.parseFn(String(value));
-    return goog.isDefAndNotNull(l) && !isNaN(l);
+    return l != null && !isNaN(l);
   }
   return false;
 };
@@ -125,7 +125,7 @@ os.im.mapping.location.AbstractBaseLatOrLonMapping.prototype.testField = functio
 os.im.mapping.location.AbstractBaseLatOrLonMapping.prototype.testAndGetField = function(value, opt_format) {
   if (value) {
     var l = this.parseFn(String(value), opt_format);
-    return goog.isDefAndNotNull(l) && !isNaN(l) ? l.toString() : null;
+    return l != null && !isNaN(l) ? l.toString() : null;
   }
   return null;
 };
@@ -139,8 +139,8 @@ os.im.mapping.location.AbstractBaseLatOrLonMapping.prototype.testAndGetField = f
 os.im.mapping.location.AbstractBaseLatOrLonMapping.prototype.addGeometry = function(item, targetItem) {
   var lat = item['LAT'];
   var lon = item['LON'];
-  if (goog.isDef(lat) && !isNaN(lat) && typeof lat === 'number' &&
-      goog.isDef(lon) && !isNaN(lon) && typeof lon === 'number') {
+  if (lat !== undefined && !isNaN(lat) && typeof lat === 'number' &&
+      lon !== undefined && !isNaN(lon) && typeof lon === 'number') {
     targetItem['GEOM'] = [lon, lat];
   }
 };

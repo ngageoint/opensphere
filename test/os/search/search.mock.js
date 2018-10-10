@@ -89,7 +89,7 @@ os.search.MockSearch.prototype.cancel = function() {
  * @inheritDoc
  */
 os.search.MockSearch.prototype.autocomplete = function(term, opt_maxResults) {
-  var pageSize = goog.isDef(opt_maxResults) ? opt_maxResults : 25;
+  var pageSize = opt_maxResults !== undefined ? opt_maxResults : 25;
   var results = [];
 
   for (var i = 0; i < pageSize; i++) {
