@@ -114,7 +114,7 @@ os.ui.popover.PopoverCtrl.prototype.update_ = function() {
     this['icon'] = this.scope_['icon'] ? this.scope_['icon'] : 'fa fa-question-circle';
 
     // Truncate the title
-    if (goog.isDefAndNotNull(this.scope_['title']) && this.scope_['title'].length > 25) {
+    if (this.scope_['title'] != null && this.scope_['title'].length > 25) {
       this.scope_['title'] = goog.string.truncate(this.scope_['title'], 25);
     }
 

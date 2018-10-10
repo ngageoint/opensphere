@@ -104,7 +104,7 @@ os.ui.geo.PositionCtrl = function($scope, $element) {
    */
   this['mapEnabled'] = false;
 
-  if (!goog.isDefAndNotNull(this.scope_['required'])) {
+  if (this.scope_['required'] == null) {
     this.scope_['required'] = true;
   }
 
@@ -114,12 +114,12 @@ os.ui.geo.PositionCtrl = function($scope, $element) {
    */
   this.precision = Math.pow(10, os.ui.geo.PositionCtrl.DEFAULT_COORD_PRECISION);
 
-  this['showLabel'] = goog.isDefAndNotNull(this.scope_['showLabel']) ? this.scope_['showLabel'] : true;
+  this['showLabel'] = this.scope_['showLabel'] != null ? this.scope_['showLabel'] : true;
 
   /**
    * @type {string}
    */
-  this['col'] = goog.isDefAndNotNull($scope['col']) ? $scope['col'] : '2';
+  this['col'] = $scope['col'] != null ? $scope['col'] : '2';
 
   /**
    * @type {string}
@@ -180,11 +180,11 @@ os.ui.geo.PositionCtrl.prototype.destroy_ = function() {
 os.ui.geo.PositionCtrl.prototype.onPosText_ = function() {
   if (this.scope_['posText']) {
     var result = os.geo.parseLatLon(this.scope_['posText'], this.scope_['order']);
-    if (goog.isDefAndNotNull(result) && Math.abs(result.lat) > 90) {
+    if (result != null && Math.abs(result.lat) > 90) {
       // If the result isnt in range, set it to null to invalidate form
       result = null;
     }
-    if (!goog.isDefAndNotNull(result)) {
+    if (result == null) {
       try {
         var coord = osasm.toLonLat(this.scope_['posText']);
         result = /** @type {!osx.geo.Location} */ ({
@@ -195,7 +195,7 @@ os.ui.geo.PositionCtrl.prototype.onPosText_ = function() {
       }
     }
 
-    if (goog.isDefAndNotNull(result)) {
+    if (result != null) {
       this.scope_['geom']['lat'] = result.lat;
       this.scope_['geom']['lon'] = result.lon;
     }
@@ -211,7 +211,7 @@ os.ui.geo.PositionCtrl.prototype.onCoord_ = function() {
   if (!isNaN(this.scope_['geom']['lat']) && !isNaN(this.scope_['geom']['lon'])) {
     if (this.scope_['posText']) {
       var result = os.geo.parseLatLon(this.scope_['posText'], this.scope_['order']);
-      if (goog.isDefAndNotNull(result)) {
+      if (result != null) {
         if (Math.abs(result.lat - this.scope_['geom']['lat']) > os.geo.EPSILON ||
             Math.abs(result.lon - this.scope_['geom']['lon']) > os.geo.EPSILON) {
           this.formatLatLon_();

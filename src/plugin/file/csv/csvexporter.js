@@ -50,7 +50,7 @@ plugin.file.csv.CSVExporter.prototype.processItem = function(item) {
 
   // this cast is incorrect, but will serve our needs wrt the compiler
   var geom = item ? /** @type {ol.geom.Point|undefined} */ (item.getGeometry()) : null;
-  if (goog.isDefAndNotNull(geom)) {
+  if (geom != null) {
     geom = /** @type {ol.geom.Point|undefined} */ (geom.clone().toLonLat());
     result = {};
 
@@ -102,7 +102,7 @@ plugin.file.csv.CSVExporter.prototype.processItem = function(item) {
         var field = this.fields[i];
         if (!(field in result)) {
           var value = item.get(this.fields[i]);
-          if (!goog.isDefAndNotNull(value)) {
+          if (value == null) {
             value = '';
           }
 

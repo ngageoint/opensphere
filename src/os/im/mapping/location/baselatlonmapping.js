@@ -72,7 +72,7 @@ os.im.mapping.location.BaseLatLonMapping.prototype.setOrder = function(order) {
 os.im.mapping.location.BaseLatLonMapping.prototype.testField = function(value) {
   if (value) {
     var l = this.parseLatLon(String(value));
-    return goog.isDefAndNotNull(l);
+    return l != null;
   }
   return false;
 };
@@ -84,7 +84,7 @@ os.im.mapping.location.BaseLatLonMapping.prototype.testField = function(value) {
 os.im.mapping.location.BaseLatLonMapping.prototype.testAndGetField = function(value, opt_format) {
   if (value) {
     var l = this.parseLatLon(String(value), opt_format);
-    if (goog.isDefAndNotNull(l)) {
+    if (l != null) {
       return l.lat.toString() + ' ' + l.lon.toString();
     }
   }

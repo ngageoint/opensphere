@@ -145,10 +145,10 @@ plugin.file.kml.ui.KMLTreeExportCtrl.prototype.cancel = function() {
  * @export
  */
 plugin.file.kml.ui.KMLTreeExportCtrl.prototype.confirm = function() {
-  goog.asserts.assert(goog.isDefAndNotNull(this.scope), 'scope is not defined');
-  goog.asserts.assert(goog.isDefAndNotNull(this.scope['rootNode']), 'KML root is not defined');
-  goog.asserts.assert(goog.isDefAndNotNull(this['exporter']), 'exporter is not defined');
-  goog.asserts.assert(goog.isDefAndNotNull(this['persister']), 'persister is not defined');
+  goog.asserts.assert(this.scope != null, 'scope is not defined');
+  goog.asserts.assert(this.scope['rootNode'] != null, 'KML root is not defined');
+  goog.asserts.assert(this['exporter'] != null, 'exporter is not defined');
+  goog.asserts.assert(this['persister'] != null, 'persister is not defined');
   goog.asserts.assert(!!this['title'], 'export title is empty/null');
 
   var root = /** @type {plugin.file.kml.ui.KMLNode} */ (this.scope['rootNode']);

@@ -343,7 +343,7 @@ os.net.LongPoll.prototype.getStatus = function() {
  * @private
  */
 os.net.LongPoll.prototype.clearReconnectTimer_ = function() {
-  if (goog.isDefAndNotNull(this.reconnectTimer_)) {
+  if (this.reconnectTimer_ != null) {
     goog.Timer.clear(this.reconnectTimer_);
   }
   this.reconnectTimer_ = null;

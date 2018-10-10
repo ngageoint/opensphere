@@ -171,7 +171,7 @@ os.ui.SlickDescriptionAsyncRenderer = function(elem, row, dataContext, colDef) {
     if (!desc) {
       desc = /** @type {!string} */ (dataContext.get(os.Fields.DESCRIPTION.toLowerCase()));
     }
-    if (goog.isDefAndNotNull(desc) && typeof id === 'string') {
+    if (desc != null && typeof id === 'string') {
       var $elem = $(elem);
       var doc = elem.ownerDocument;
       var myWin = doc.defaultView || doc.parentWindow;

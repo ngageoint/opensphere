@@ -82,7 +82,7 @@ os.layer.config.StaticLayerConfig.prototype.createLayer = function(options) {
   var layer = this.getLayer(source, options);
   this.restore(layer, options);
 
-  if (goog.isDefAndNotNull(options['explicitType'])) {
+  if (options['explicitType'] != null) {
     layer.setExplicitType(/** @type {string} */ (options['explicitType']));
   }
 

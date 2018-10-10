@@ -87,7 +87,7 @@ os.olm.render.BaseShape.prototype.setMap = function(map) {
  */
 os.olm.render.BaseShape.prototype.handleMapPostCompose_ = function(event) {
   var geometry = this.getGeometry();
-  goog.asserts.assert(goog.isDefAndNotNull(geometry));
+  goog.asserts.assert(geometry != null);
 
   var style = this.getStyle();
   goog.asserts.assert(style !== null);

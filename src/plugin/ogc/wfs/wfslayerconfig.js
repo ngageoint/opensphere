@@ -233,7 +233,7 @@ plugin.ogc.wfs.WFSLayerConfig.prototype.featureTypeAvailable = function(layer, o
  * @protected
  */
 plugin.ogc.wfs.WFSLayerConfig.prototype.addMappings = function(layer, options) {
-  var animate = goog.isDefAndNotNull(options['animate']) ? options['animate'] : false;
+  var animate = options['animate'] != null ? options['animate'] : false;
   var source = /** @type {os.source.Request} */ (layer.getSource());
   var importer = /** @type {os.im.Importer} */ (source.getImporter());
 

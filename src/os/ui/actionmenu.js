@@ -262,7 +262,7 @@ os.ui.ActionMenuCtrl.prototype.insertMenuItems_ = function(menuStructure, menuIt
         goog.array.insertAt(menuItems, new os.ui.action.MenuItemSeparator(), i);
         i++;
       }
-      if (goog.isDefAndNotNull(division)) {
+      if (division != null) {
         goog.array.insertAt(menuItems, new os.ui.action.MenuItemSeparatorHeader(division.replace(/^[0-9]*:/, '')), i);
         i++;
       }
@@ -290,9 +290,9 @@ os.ui.ActionMenuCtrl.prototype.sortByDivisionThenOrder_ = function(a, b) {
     bOrder = b.getMenuOptions().order;
     return (aOrder === bOrder) ? 1 : ((aOrder > bOrder) ? 1 : -1);
   } else {
-    return (goog.isDefAndNotNull(aDiv) ?
-        (goog.isDefAndNotNull(bDiv) ?
-            ((aDiv === bDiv) ? 1 : ((aDiv > bDiv) ? 1 : -1)) : -1) : 1);
+    return aDiv != null ?
+        (bDiv != null ?
+            ((aDiv === bDiv) ? 1 : ((aDiv > bDiv) ? 1 : -1)) : -1) : 1;
   }
 };
 

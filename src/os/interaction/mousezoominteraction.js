@@ -51,7 +51,7 @@ os.interaction.MouseZoom.prototype.zoom = function(mapBrowserEvent) {
   var browserEvent = new goog.events.BrowserEvent(mapBrowserEvent.originalEvent);
 
   // Add a little buffer so it doesnt seem like it zooms horizontally
-  if (goog.isDefAndNotNull(this.lastY_)) {
+  if (this.lastY_ != null) {
     if (browserEvent.clientY < this.lastY_.low) {
       delta = -zoomIncrements;
     } else if (browserEvent.clientY > this.lastY_.high) {

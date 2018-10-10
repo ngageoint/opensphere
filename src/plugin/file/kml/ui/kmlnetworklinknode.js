@@ -449,7 +449,7 @@ plugin.file.kml.ui.KMLNetworkLinkNode.prototype.onImportComplete_ = function(eve
   if (currentRoot !== firstRootChild || ((children) && (children.length != rootChildren.length))) {
     // the root node will only change on the first parse, or when the root name changes and we can't merge
     this.setChildren(rootChildren ? rootChildren : null);
-    this.collapsed = !goog.isDefAndNotNull(rootNode);
+    this.collapsed = rootNode == null;
   }
 
   // TODO: increase the refresh interval for lengthy imports? waiting to start the timer helps, but if the interval is

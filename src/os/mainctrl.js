@@ -843,7 +843,7 @@ os.MainCtrl.prototype.onSettingsReset_ = function(event) {
  * @private
  */
 os.MainCtrl.prototype.onImportEvent_ = function(opt_event) {
-  var event = goog.isDefAndNotNull(opt_event) ? opt_event : new os.ui.im.ImportEvent(os.ui.im.ImportEventType.FILE);
+  var event = opt_event != null ? opt_event : new os.ui.im.ImportEvent(os.ui.im.ImportEventType.FILE);
   var process = new os.im.ImportProcess();
   process.setEvent(event);
   process.begin();
@@ -900,7 +900,7 @@ os.MainCtrl.prototype.onToggleUI_ = function(event) {
     } else {
       // Use event value if available.  Keep open if event contains parameters. Lastly just toggle the value.
       var open = typeof event.value === 'boolean' ? event.value :
-          (goog.isDefAndNotNull(event.params) ? true : !this[event.id]);
+          (event.params != null ? true : !this[event.id]);
       this[event.id] = open;
       os.ui.apply(this.scope);
     }

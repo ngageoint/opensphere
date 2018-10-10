@@ -17,7 +17,7 @@ goog.require('os.im.IImporter');
  * @template T
  */
 os.im.ChainingImporter = function(chain) {
-  goog.asserts.assert(goog.isDefAndNotNull(chain), 'importer chain cannot be null');
+  goog.asserts.assert(chain != null, 'importer chain cannot be null');
   goog.asserts.assert(chain.length > 0, 'importer chain cannot be empty');
 
   os.im.ChainingImporter.base(this, 'constructor');
@@ -109,7 +109,7 @@ os.im.ChainingImporter.prototype.onImporterComplete_ = function(event) {
  * @inheritDoc
  */
 os.im.ChainingImporter.prototype.getData = function(opt_reset) {
-  var reset = goog.isDefAndNotNull(opt_reset) ? opt_reset : true;
+  var reset = opt_reset != null ? opt_reset : true;
   var ret = this.data_;
   if (reset) {
     this.data_ = [];

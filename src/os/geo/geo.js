@@ -879,7 +879,7 @@ os.geo.parseLon = function(str, opt_format) {
 
   var confs = [];
 
-  if (goog.isDefAndNotNull(opt_format)) {
+  if (opt_format != null) {
     switch (opt_format) {
       case 'DD':
         confs.push({
@@ -978,7 +978,7 @@ os.geo.parseLat = function(str, opt_format) {
 
   var confs = [];
 
-  if (goog.isDefAndNotNull(opt_format)) {
+  if (opt_format != null) {
     switch (opt_format) {
       case 'DD':
         confs.push({
@@ -1528,7 +1528,7 @@ os.geo.isClosed = function(coords) {
  */
 os.geo.isPolygon = function(coords) {
   var closed = os.geo.isClosed(coords);
-  return goog.isDefAndNotNull(coords) && ((closed && coords.length > 3) || (!closed && coords.length > 2));
+  return coords != null && ((closed && coords.length > 3) || (!closed && coords.length > 2));
 };
 
 
@@ -1837,7 +1837,7 @@ os.geo.toSexagesimal = function(coordinate, opt_isLon, opt_symbols, opt_decimalS
 
   return goog.string.buildString(os.geo.padCoordinate(Math.abs(degrees), isLon), (symbols ? '° ' : ''),
       os.geo.padCoordinate(minutes), (symbols ? '\' ' : ''),
-      os.geo.padCoordinate(seconds, false, goog.isDefAndNotNull(opt_decimalSeconds) ? opt_decimalSeconds : 2),
+      os.geo.padCoordinate(seconds, false, opt_decimalSeconds != null ? opt_decimalSeconds : 2),
       (symbols ? '"' : ''), (symbols ? ' ' : ''), (isLon ? (isNegative ? 'W' : 'E') : (isNegative ? 'S' : 'N')));
 };
 
@@ -2280,7 +2280,7 @@ os.geo.isValidExtent = function(extent) {
 os.geo.stringifyExtent = function(extent, opt_precision) {
   var s = '';
 
-  if (goog.isDefAndNotNull(opt_precision) && opt_precision > 0) {
+  if (opt_precision != null && opt_precision > 0) {
     s = extent[1].toFixed(opt_precision) + ', ' + extent[0].toFixed(opt_precision) + ', ' +
         extent[3].toFixed(opt_precision) + ', ' + extent[2].toFixed(opt_precision);
   } else {

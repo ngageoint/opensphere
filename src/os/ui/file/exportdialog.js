@@ -229,9 +229,9 @@ os.ui.file.ExportDialogCtrl.prototype.cancel = function() {
  * @export
  */
 os.ui.file.ExportDialogCtrl.prototype.confirm = function() {
-  goog.asserts.assert(goog.isDefAndNotNull(this.options.exporter), 'exporter is not defined');
-  goog.asserts.assert(goog.isDefAndNotNull(this.options.persister), 'persister is not defined');
-  goog.asserts.assert(goog.isDefAndNotNull(this.options.title), 'export title is null');
+  goog.asserts.assert(this.options.exporter != null, 'exporter is not defined');
+  goog.asserts.assert(this.options.persister != null, 'persister is not defined');
+  goog.asserts.assert(this.options.title != null, 'export title is null');
   goog.asserts.assert(this.options.items.length > 0, 'no items to export');
   goog.asserts.assert(this.options.fields.length > 0, 'no fields defined on export');
 

@@ -387,7 +387,7 @@ os.im.Importer.prototype.addItemInternal = function(item) {
  * @inheritDoc
  */
 os.im.Importer.prototype.getData = function(opt_reset) {
-  var reset = goog.isDefAndNotNull(opt_reset) ? opt_reset : true;
+  var reset = opt_reset != null ? opt_reset : true;
   var ret = this.data_;
   if (reset) {
     this.data_ = [];

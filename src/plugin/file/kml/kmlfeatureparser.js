@@ -57,7 +57,7 @@ plugin.file.kml.KMLFeatureParser.prototype.cleanup = function() {
  * @inheritDoc
  */
 plugin.file.kml.KMLFeatureParser.prototype.hasNext = function() {
-  return goog.isDefAndNotNull(this.document_);
+  return this.document_ != null;
 };
 
 

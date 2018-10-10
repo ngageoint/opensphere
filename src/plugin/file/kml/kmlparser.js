@@ -671,7 +671,7 @@ plugin.file.kml.KMLParser.prototype.handleZIPText_ = function(filename, event) {
  */
 plugin.file.kml.KMLParser.prototype.parseNext = function() {
   goog.asserts.assert(this.stack_.length > 0, 'Stack should not be empty');
-  goog.asserts.assert(goog.isDefAndNotNull(this.stack_[this.stack_.length - 1]), 'Top of stack should be an object');
+  goog.asserts.assert(this.stack_[this.stack_.length - 1] != null, 'Top of stack should be an object');
 
   var stackObj = null;
   var node = null;
@@ -821,7 +821,7 @@ plugin.file.kml.KMLParser.prototype.createTreeNode_ = function(el, opt_parent) {
       node.setLabel(id || this.getDefaultName_(el.localName));
     }
 
-    if (goog.isDefAndNotNull(opt_parent)) {
+    if (opt_parent != null) {
       // if the child already exists, the new node will be merged and the original node returned
       node = /** @type {plugin.file.kml.ui.KMLNode} */ (opt_parent.addChild(node));
     } else if (this.rootNode_ === null) {

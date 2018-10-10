@@ -215,7 +215,7 @@ os.ui.file.FileImportCtrl.prototype.onFileChange_ = function(event) {
   }
 
   this.timeout_(goog.bind(function() {
-    this['fileName'] = goog.isDefAndNotNull(this['file']) ? /** @type {File} */ (this['file']).name : null;
+    this['fileName'] = this['file'] != null ? /** @type {File} */ (this['file']).name : null;
   }, this));
 };
 

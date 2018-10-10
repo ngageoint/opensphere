@@ -66,7 +66,7 @@ os.data.FilterNode.prototype.setEntry = function(value) {
 
     this.dispatchEvent(new os.events.PropertyChangeEvent('filter', value, old));
   }
-  if (!goog.isDefAndNotNull(os.MapContainer.getInstance().getLayer(this.entry.getType()))) {
+  if (os.MapContainer.getInstance().getLayer(this.entry.getType()) == null) {
     this.setCheckboxDisabled(true);
   }
 };
@@ -133,7 +133,7 @@ os.data.FilterNode.prototype.formatIcons = function() {
   var found = os.ui.queryManager.hasFilter(/** @type {string} */ (filter.getId()));
   var color = '';
   var status = 'inactive';
-  if (found && goog.isDefAndNotNull(os.MapContainer.getInstance().getLayer(filter.getType()))) {
+  if (found && os.MapContainer.getInstance().getLayer(filter.getType()) != null) {
     color = 'text-success';
     status = 'active';
   }

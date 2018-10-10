@@ -319,7 +319,7 @@ os.layer.AnimatedTile.getTimeParameter = function(dateFormat, start, end, durati
  * @return {Array.<string>} Formatted times
  */
 os.layer.AnimatedTile.getFormattedTimes = function(tlc, dateFormat, timeFormat) {
-  if (goog.isDefAndNotNull(tlc)) {
+  if (tlc != null) {
     var date = new Date(tlc.getStart());
     var duration = tlc.getDuration();
 

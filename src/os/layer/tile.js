@@ -868,7 +868,7 @@ os.layer.Tile.prototype.supportsAction = function(type, opt_actionArgs) {
       case os.action.EventType.MOST_RECENT:
         // only enable if descriptor exists and max date is greater than 0
         var desc = os.dataManager.getDescriptor(this.getId());
-        if (goog.isDefAndNotNull(desc)) {
+        if (desc != null) {
           var maxDate = desc.getMaxDate();
           return maxDate > 0 && maxDate < os.time.TimeInstant.MAX_TIME;
         }

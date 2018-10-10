@@ -283,7 +283,7 @@ os.state.v4.TimeState.prototype.saveInternal = function(options, rootObj) {
  */
 os.state.v4.TimeState.prototype.isTimeLineVisible = function() {
   var timeline = goog.dom.getElementByClass('js-timeline');
-  return goog.isDefAndNotNull(timeline);
+  return timeline != null;
 };
 
 

@@ -167,13 +167,13 @@ os.ui.slick.SlickTreeCtrl = function($scope, $element, $compile) {
   $scope['multiSelect'] = $scope['multiSelect'] == 'true';
 
   // booleans using @ will be true if they're set to anything other than undefined/null
-  $scope['disableFolders'] = goog.isDefAndNotNull($scope['disableFolders']);
-  $scope['showRoot'] = goog.isDefAndNotNull($scope['showRoot']);
-  $scope['noRoot'] = goog.isDefAndNotNull($scope['noRoot']);
+  $scope['disableFolders'] = $scope['disableFolders'] != null;
+  $scope['showRoot'] = $scope['showRoot'] != null;
+  $scope['noRoot'] = $scope['noRoot'] != null;
   if ($scope['noRoot']) {
     $scope['showRoot'] = false;
   }
-  $scope['disposable'] = goog.isDefAndNotNull($scope['disposable']);
+  $scope['disposable'] = $scope['disposable'] != null;
 
   this.grid.onRowRender.subscribe(this.onRowRender.bind(this));
   this.grid.onRowRemove.subscribe(this.onRowRemove.bind(this));
@@ -317,7 +317,7 @@ os.ui.slick.SlickTreeCtrl.prototype.isTreeNode_ = function(node) {
   var element = /** @type {Element} */ (node);
   if (goog.dom.classlist.contains(element, 'ng-scope')) {
     var scope = angular.element(element).scope();
-    return goog.isDefAndNotNull(scope) && 'item' in scope && scope['item'] instanceof os.ui.slick.SlickTreeNode;
+    return scope != null && 'item' in scope && scope['item'] instanceof os.ui.slick.SlickTreeNode;
   }
 
   return false;
@@ -594,7 +594,7 @@ os.ui.slick.SlickTreeCtrl.prototype.treeFilter_ = function(item) {
  * @return {string} The HTML for the row
  */
 os.ui.slick.SlickTreeCtrl.prototype.treeFormatter = function(row, cell, value, columnDef, node) {
-  if (!goog.isDefAndNotNull(value)) {
+  if (value == null) {
     value = '';
   }
 

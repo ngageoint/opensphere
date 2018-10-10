@@ -1204,7 +1204,7 @@ os.MapContainer.prototype.getAltitude = function() {
   } else {
     var view = this.map_.getView();
     var resolution = view.getResolution();
-    if (!goog.isDefAndNotNull(resolution)) {
+    if (resolution == null) {
       return altitude;
     }
 
@@ -1627,7 +1627,7 @@ os.MapContainer.prototype.addFeatures = function(features, opt_style) {
  * @export Prevent the compiler from moving the function off the prototype.
  */
 os.MapContainer.prototype.removeFeature = function(feature, opt_dispose) {
-  if (goog.isDefAndNotNull(feature)) {
+  if (feature != null) {
     os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.REMOVE_FEATURE, 1);
     var layer = this.getLayer(os.MapContainer.DRAW_ID);
     var source = /** @type {ol.source.Vector} */ (layer.getSource());
@@ -1637,7 +1637,7 @@ os.MapContainer.prototype.removeFeature = function(feature, opt_dispose) {
       feature = source.getFeatureById(feature.getId() + '');
     }
 
-    if (goog.isDefAndNotNull(feature)) {
+    if (feature != null) {
       source.removeFeature(feature);
 
       if (opt_dispose) {
@@ -1652,7 +1652,7 @@ os.MapContainer.prototype.removeFeature = function(feature, opt_dispose) {
  * @inheritDoc
  */
 os.MapContainer.prototype.containsFeature = function(feature) {
-  if (goog.isDefAndNotNull(feature)) {
+  if (feature != null) {
     var layer = this.getLayer(os.MapContainer.DRAW_ID);
 
     if (layer) {
@@ -1738,7 +1738,7 @@ os.MapContainer.prototype.getLayerCount = function(clazz) {
  * @inheritDoc
  */
 os.MapContainer.prototype.getLayer = function(layerOrFeature, opt_search, opt_remove) {
-  if (!goog.isDefAndNotNull(opt_remove)) {
+  if (opt_remove == null) {
     opt_remove = false;
   }
 
