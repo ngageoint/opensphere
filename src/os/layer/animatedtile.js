@@ -273,7 +273,7 @@ os.layer.AnimatedTile.prototype.persist = function(opt_to) {
 os.layer.AnimatedTile.prototype.restore = function(config) {
   os.layer.AnimatedTile.base(this, 'restore', config);
 
-  if (goog.isDef(config['refreshInterval'])) {
+  if (config['refreshInterval'] !== undefined) {
     var source = this.getSource();
     if (source && source instanceof ol.source.UrlTile) {
       source.setRefreshInterval(/** @type {number} */ (config['refreshInterval']));
@@ -319,7 +319,7 @@ os.layer.AnimatedTile.getTimeParameter = function(dateFormat, start, end, durati
  * @return {Array.<string>} Formatted times
  */
 os.layer.AnimatedTile.getFormattedTimes = function(tlc, dateFormat, timeFormat) {
-  if (goog.isDefAndNotNull(tlc)) {
+  if (tlc != null) {
     var date = new Date(tlc.getStart());
     var duration = tlc.getDuration();
 

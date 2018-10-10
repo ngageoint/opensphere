@@ -3331,7 +3331,7 @@ os.source.Vector.prototype.handleFeatureHover = function(feature) {
 os.source.Vector.prototype.setHoverHandler = function(opt_fn, opt_context) {
   var fn = opt_fn || undefined;
   var ctx = opt_context || this;
-  this.hoverHandler_ = goog.isDef(fn) ? fn.bind(ctx) : undefined;
+  this.hoverHandler_ = fn !== undefined ? fn.bind(ctx) : undefined;
 };
 
 

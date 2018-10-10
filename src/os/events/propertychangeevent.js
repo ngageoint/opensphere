@@ -23,21 +23,21 @@ os.events.PropertyChangeEvent = function(opt_property, opt_newVal, opt_oldVal, o
    * @type {?string}
    * @private
    */
-  this.property_ = goog.isDef(opt_property) ? opt_property : null;
+  this.property_ = opt_property !== undefined ? opt_property : null;
 
   /**
    * The new value
    * @type {?*}
    * @private
    */
-  this.newVal_ = goog.isDef(opt_newVal) ? opt_newVal : null;
+  this.newVal_ = opt_newVal !== undefined ? opt_newVal : null;
 
   /**
    * The old value
    * @type {?*}
    * @private
    */
-  this.oldVal_ = goog.isDef(opt_oldVal) ? opt_oldVal : null;
+  this.oldVal_ = opt_oldVal !== undefined ? opt_oldVal : null;
 };
 goog.inherits(os.events.PropertyChangeEvent, goog.events.Event);
 

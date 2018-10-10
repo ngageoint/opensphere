@@ -379,7 +379,7 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
   /**
    * @type {boolean}
    */
-  this['timeEditEnabled'] = goog.isDef(this.options['timeEditEnabled']) ?
+  this['timeEditEnabled'] = this.options['timeEditEnabled'] !== undefined ?
       this.options['timeEditEnabled'] : true;
 
   /**

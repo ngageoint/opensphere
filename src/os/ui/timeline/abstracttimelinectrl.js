@@ -1550,7 +1550,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.onMenuEvent = function(event) {
       break;
   }
 
-  if (goog.isDef(begin) && goog.isDef(end)) {
+  if (begin !== undefined && end !== undefined) {
     if (doOffset) {
       begin.setTime(begin.getTime() - os.time.timeOffset);
       end.setTime(end.getTime() - os.time.timeOffset);

@@ -622,7 +622,7 @@ os.xt.Peer.prototype.getMasterId_ = function() {
 os.xt.Peer.prototype.isPeerAlive_ = function(peerId) {
   var theirPing = this.getLastPing_(peerId);
   var myPing = this.getLastPing_();
-  return goog.isDefAndNotNull(theirPing) && (myPing - theirPing < 1.5 * os.xt.Peer.PING_INTERVAL);
+  return theirPing != null && (myPing - theirPing < 1.5 * os.xt.Peer.PING_INTERVAL);
 };
 
 

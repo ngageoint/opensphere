@@ -48,7 +48,7 @@ os.ui.state.StateImportCtrl = function($scope, $element) {
    * @private
    */
   this.config_ = /** @type {os.parse.StateParserConfig} */ ($scope['config']);
-  goog.asserts.assert(goog.isDefAndNotNull(this.config_), 'Config not defined for state import UI!');
+  goog.asserts.assert(this.config_ != null, 'Config not defined for state import UI!');
 
   // the replace flag should be set when the user chooses to reimport a state. save the current title so the validator
   // can allow it
@@ -61,7 +61,7 @@ os.ui.state.StateImportCtrl = function($scope, $element) {
    * @private
    */
   this.rawState_ = /** @type {!(Document|Object)} */ (this.config_['state']);
-  goog.asserts.assert(goog.isDefAndNotNull(this.rawState_), 'State doc not defined for state import UI!');
+  goog.asserts.assert(this.rawState_ != null, 'State doc not defined for state import UI!');
 
   $scope['title'] = this.config_['title'];
   $scope['description'] = this.config_['description'];

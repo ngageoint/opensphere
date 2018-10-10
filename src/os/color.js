@@ -363,8 +363,8 @@ os.color.getGradientColor = function(ratio, opt_gradient) {
  */
 os.color.getHslGradient = function(size, opt_min, opt_max, opt_distinct) {
   var gradient = [];
-  var min = goog.isDef(opt_min) ? goog.math.clamp(opt_min, 0, 360) : 0;
-  var max = goog.isDef(opt_max) ? goog.math.clamp(opt_max, min, 360) : 360;
+  var min = opt_min !== undefined ? goog.math.clamp(opt_min, 0, 360) : 0;
+  var max = opt_max !== undefined ? goog.math.clamp(opt_max, min, 360) : 360;
 
   var range = max - min;
   var lastHue = 0;

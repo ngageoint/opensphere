@@ -34,7 +34,7 @@ os.search.SearchEvent = function(type, term, opt_results, opt_total, opt_target)
    * @type {number}
    * @private
    */
-  this.total_ = goog.isDef(opt_total) ? opt_total : opt_results ? opt_results.length : 0;
+  this.total_ = opt_total !== undefined ? opt_total : opt_results ? opt_results.length : 0;
 };
 goog.inherits(os.search.SearchEvent, goog.events.Event);
 

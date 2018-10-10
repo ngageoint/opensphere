@@ -71,7 +71,7 @@ plugin.file.gpx.GPXParser.prototype.cleanup = function() {
  * @inheritDoc
  */
 plugin.file.gpx.GPXParser.prototype.hasNext = function() {
-  return goog.isDefAndNotNull(this.document_);
+  return this.document_ != null;
 };
 
 

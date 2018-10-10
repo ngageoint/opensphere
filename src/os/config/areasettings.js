@@ -223,7 +223,7 @@ os.config.AreaSettingsCtrl.prototype.confirm_ = function() {
 
   var areas = am.getAll();
   goog.array.forEach(areas, function(area) {
-    if (goog.isDefAndNotNull(area.getStyle())) {
+    if (area.getStyle() != null) {
       var entries = os.ui.queryManager.getEntries(null, /** @type {string} */ (area.getId()));
       if (entries && entries.length > 0) {
         var expectedStyle = /** @type {boolean} */ (entries[0]['includeArea']) ?

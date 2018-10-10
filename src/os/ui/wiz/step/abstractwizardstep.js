@@ -108,7 +108,7 @@ os.ui.wiz.step.AbstractWizardStep.LOGGER_ = goog.log.getLogger('os.ui.wiz.step.A
  * @private
  */
 os.ui.wiz.step.AbstractWizardStep.prototype.onStepValidityChange_ = function(event, opt_valid) {
-  if (goog.isDef(opt_valid)) {
+  if (opt_valid !== undefined) {
     this.valid = opt_valid;
   }
 };

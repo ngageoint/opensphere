@@ -640,8 +640,8 @@ os.ui.ogc.OGCDescriptor.prototype.isBaseLayer = function() {
  * @inheritDoc
  */
 os.ui.ogc.OGCDescriptor.prototype.hasTimeExtent = function() {
-  return (goog.isDefAndNotNull(this.dimensions_) && 'time' in this.dimensions_) ||
-      (goog.isDefAndNotNull(this.featureType_) && (this.featureType_.getStartDateColumnName() != null ||
+  return (this.dimensions_ != null && 'time' in this.dimensions_) ||
+      (this.featureType_ != null && (this.featureType_.getStartDateColumnName() != null ||
       this.featureType_.getEndDateColumnName() != null));
 };
 

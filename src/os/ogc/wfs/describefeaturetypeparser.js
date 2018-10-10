@@ -58,7 +58,7 @@ os.ogc.wfs.DescribeFeatureTypeParser.prototype.parse = function(source) {
  * @private
  */
 os.ogc.wfs.DescribeFeatureTypeParser.prototype.getRootNode_ = function(doc) {
-  for (var n = goog.dom.getFirstElementChild(doc); !goog.isNull(n); n = n.nextSibling) {
+  for (var n = goog.dom.getFirstElementChild(doc); n !== null; n = n.nextSibling) {
     if (n.nodeType == goog.dom.NodeType.ELEMENT) {
       return /** @type {Element} */ (n);
     }
@@ -78,7 +78,7 @@ os.ogc.wfs.DescribeFeatureTypeParser.prototype.loadTypes_ = function(root) {
 
   var elements = [];
   var types = [];
-  for (var n = goog.dom.getFirstElementChild(root); !goog.isNull(n); n = n.nextSibling) {
+  for (var n = goog.dom.getFirstElementChild(root); n !== null; n = n.nextSibling) {
     if (n.nodeType == goog.dom.NodeType.ELEMENT) {
       if (n.localName == 'element') {
         elements.push(n);

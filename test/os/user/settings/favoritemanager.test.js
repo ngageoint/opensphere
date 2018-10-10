@@ -30,9 +30,9 @@ describe('os.user.settings.FavoriteManager', function() {
   });
 
   it('should retrieve favorites', function() {
-    expect(goog.isDefAndNotNull(os.favoriteManager.getFavorite('1'))).toBe(true);
-    expect(goog.isDefAndNotNull(os.favoriteManager.getFavorite('2'))).toBe(true);
-    expect(goog.isDefAndNotNull(os.favoriteManager.getFavorite('3'))).toBe(true);
+    expect(os.favoriteManager.getFavorite('1') != null).toBe(true);
+    expect(os.favoriteManager.getFavorite('2') != null).toBe(true);
+    expect(os.favoriteManager.getFavorite('3') != null).toBe(true);
   });
 
   it('should remove favorites', function() {
@@ -42,14 +42,14 @@ describe('os.user.settings.FavoriteManager', function() {
 
   // it('should add folder favorites', function() {
   //   var key = os.favoriteManager.createFolder();
-  //   expect(goog.isDefAndNotNull(os.favoriteManager.getFavorite(key))).toBe(true);
+  //   expect(os.favoriteManager.getFavorite(key) != null).toBe(true);
   //   expect(os.favoriteManager.getFavorites().length).toBe(3);
 
   //   var nestedFolder = os.favoriteManager.createFolder(key);
   //   waitsFor(function() {
-  //     return goog.isDefAndNotNull(os.favoriteManager.getFavorite(nestedFolder));
+  //     return os.favoriteManager.getFavorite(nestedFolder) != null)
   //   });
-  //   expect(goog.isDefAndNotNull(os.favoriteManager.getFavorite(nestedFolder))).toBe(true);
+  //   expect(os.favoriteManager.getFavorite(nestedFolder) != null).toBe(true);
   //   expect(os.favoriteManager.getFavorites().length).toBe(3);
   // });
 

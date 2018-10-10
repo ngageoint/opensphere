@@ -113,7 +113,7 @@ plugin.cesium.sync.VectorSynchronizer.prototype.reset = function() {
  */
 plugin.cesium.sync.VectorSynchronizer.prototype.createLayerPrimitives_ = function() {
   goog.asserts.assertInstanceof(this.layer, ol.layer.Vector);
-  goog.asserts.assert(!goog.isNull(this.view));
+  goog.asserts.assert(this.view !== null);
 
   this.csContext = this.converter.olVectorLayerToCesium(this.layer, this.view);
   this.onLayerVisibility_();
@@ -231,7 +231,7 @@ plugin.cesium.sync.VectorSynchronizer.prototype.onLayerPropertyChange_ = functio
  */
 plugin.cesium.sync.VectorSynchronizer.prototype.onAddFeature_ = function(event) {
   var feature = event.feature;
-  goog.asserts.assert(goog.isDefAndNotNull(feature));
+  goog.asserts.assert(feature != null);
   this.addFeature(feature);
 };
 
@@ -243,7 +243,7 @@ plugin.cesium.sync.VectorSynchronizer.prototype.onAddFeature_ = function(event) 
  */
 plugin.cesium.sync.VectorSynchronizer.prototype.onRemoveFeature_ = function(event) {
   var feature = event.feature;
-  goog.asserts.assert(goog.isDefAndNotNull(feature));
+  goog.asserts.assert(feature != null);
   this.removeFeature(feature);
 };
 
@@ -255,7 +255,7 @@ plugin.cesium.sync.VectorSynchronizer.prototype.onRemoveFeature_ = function(even
  */
 plugin.cesium.sync.VectorSynchronizer.prototype.onChangeFeature_ = function(event) {
   var feature = event.feature;
-  goog.asserts.assert(goog.isDefAndNotNull(feature));
+  goog.asserts.assert(feature != null);
   this.updateFeature_(feature);
 };
 
@@ -454,7 +454,7 @@ plugin.cesium.sync.VectorSynchronizer.prototype.resetFeatures_ = function(featur
   if (this.active || opt_force) {
     for (var i = 0, n = features.length; i < n; i++) {
       var feature = features[i];
-      goog.asserts.assert(!goog.isNull(feature));
+      goog.asserts.assert(feature !== null);
 
       var prims = this.csContext.featureToCesiumMap[feature['id']];
       var shown = prims && prims.length > 0 && prims[0].show;
@@ -476,8 +476,8 @@ plugin.cesium.sync.VectorSynchronizer.prototype.resetFeatures_ = function(featur
  * @suppress {checkTypes}
  */
 plugin.cesium.sync.VectorSynchronizer.prototype.addFeature = function(feature) {
-  goog.asserts.assert(!goog.isNull(this.view));
-  goog.asserts.assert(!goog.isNull(this.csContext));
+  goog.asserts.assert(this.view !== null);
+  goog.asserts.assert(this.csContext !== null);
 
   this.updateFeature_(feature);
 
@@ -506,7 +506,7 @@ plugin.cesium.sync.VectorSynchronizer.prototype.removeFeature = function(feature
     feature = this.source.getFeatureById(feature);
   }
 
-  if (!goog.isNull(feature) && this.csContext) {
+  if (feature !== null && this.csContext) {
     this.csContext.cleanup(feature);
     os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
   }

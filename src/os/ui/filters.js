@@ -192,7 +192,7 @@ os.ui.FiltersCtrl.prototype.flatten_ = function(arr, result, activeOnly) {
         this.flatten_(item.getChildren(), result, activeOnly);
       } else if ((activeOnly && item.getState() == 'on' || !activeOnly) && item.getEntry()) {
         var filterId = item.getId();
-        if (goog.isDef(filterId) && filterId != '*') {
+        if (filterId !== undefined && filterId != '*') {
           result.push(item);
         }
       }

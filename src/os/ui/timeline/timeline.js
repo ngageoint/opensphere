@@ -1121,7 +1121,7 @@ os.ui.timeline.TimelineCtrl.prototype.drawHistogram_ = function() {
  * @private
  */
 os.ui.timeline.TimelineCtrl.prototype.zoomBy_ = function(dir, opt_focus) {
-  var center = [goog.isDef(opt_focus) ? opt_focus : this.element_.innerWidth() / 2, 0];
+  var center = [opt_focus !== undefined ? opt_focus : this.element_.innerWidth() / 2, 0];
   var limit = this.zoom_.scaleExtent();
   var translate = this.zoom_.translate();
   var translate0 = [];

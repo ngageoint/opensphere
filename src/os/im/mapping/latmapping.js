@@ -126,7 +126,7 @@ os.im.mapping.LatMapping.prototype.execute = function(item) {
 os.im.mapping.LatMapping.prototype.testField = function(value) {
   if (value) {
     var l = os.geo.parseLat(String(value));
-    return goog.isDefAndNotNull(l) && !isNaN(l);
+    return l != null && !isNaN(l);
   }
   return false;
 };
@@ -138,7 +138,7 @@ os.im.mapping.LatMapping.prototype.testField = function(value) {
 os.im.mapping.LatMapping.prototype.testAndGetField = function(value, opt_format) {
   if (value) {
     var l = os.geo.parseLat(String(value), opt_format);
-    if (goog.isDefAndNotNull(l) && !isNaN(l)) {
+    if (l != null && !isNaN(l)) {
       return l.toString();
     }
   }
@@ -159,8 +159,8 @@ os.im.mapping.LatMapping.prototype.addGeometry = function(feature) {
 
   var lat = feature.get(os.Fields.LAT);
   var lon = feature.get(os.Fields.LON);
-  if (goog.isDef(lat) && !isNaN(lat) && typeof lat === 'number' &&
-      goog.isDef(lon) && !isNaN(lon) && typeof lon === 'number') {
+  if (lat !== undefined && !isNaN(lat) && typeof lat === 'number' &&
+      lon !== undefined && !isNaN(lon) && typeof lon === 'number') {
     var geom = new ol.geom.Point([lon, lat]);
     feature.suppressEvents();
     feature.setGeometry(geom.osTransform());

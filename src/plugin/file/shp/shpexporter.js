@@ -366,7 +366,7 @@ plugin.file.shp.SHPExporter.prototype.allocateArrays_ = function() {
   for (var i = 0, n = this.items.length; i < n; i++) {
     var item = this.items[i];
     var geom = this.getGeometry_(item);
-    if (goog.isDefAndNotNull(geom)) {
+    if (geom != null) {
       if (geom instanceof ol.geom.GeometryCollection) {
         goog.array.forEach(geom.getGeometries(), function(geometry) {
           this.allocateItem_(item, /** @type {ol.geom.SimpleGeometry} */ (geometry));

@@ -220,7 +220,7 @@ os.ui.color.ColorPickerCtrl.prototype.onMouseDown_ = function(e) {
  * @export
  */
 os.ui.color.ColorPickerCtrl.prototype.togglePopup = function(opt_value) {
-  this['showPopup'] = goog.isDef(opt_value) ? opt_value : !this['showPopup'];
+  this['showPopup'] = opt_value !== undefined ? opt_value : !this['showPopup'];
 
   if (this['showPopup']) {
     // create a new scope
@@ -252,7 +252,7 @@ os.ui.color.ColorPickerCtrl.prototype.togglePopup = function(opt_value) {
 os.ui.color.ColorPickerCtrl.prototype.getTemplate = function() {
   var menuOffset = this.element.offset();
   menuOffset['top'] += this.element.outerHeight();
-  var showReset = goog.isDef(this.scope['showReset']) ? this.scope['showReset'] : 'false';
+  var showReset = this.scope['showReset'] !== undefined ? this.scope['showReset'] : 'false';
 
   return '<colorpalette class="position-fixed" value="value" ' + (this.name_ ? 'name="' + this.name_ + '" ' : '') +
       'show-reset="' + showReset + '" ' +

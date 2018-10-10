@@ -19,7 +19,7 @@ os.im.mapping.location.BaseLatLonMapping = function(opt_order) {
    * @type {number}
    * @private
    */
-  this.order_ = goog.isDef(opt_order) ? opt_order : os.geo.PREFER_LAT_FIRST;
+  this.order_ = opt_order !== undefined ? opt_order : os.geo.PREFER_LAT_FIRST;
 };
 goog.inherits(os.im.mapping.location.BaseLatLonMapping, os.im.mapping.AbstractPositionMapping);
 
@@ -72,7 +72,7 @@ os.im.mapping.location.BaseLatLonMapping.prototype.setOrder = function(order) {
 os.im.mapping.location.BaseLatLonMapping.prototype.testField = function(value) {
   if (value) {
     var l = this.parseLatLon(String(value));
-    return goog.isDefAndNotNull(l);
+    return l != null;
   }
   return false;
 };
@@ -84,7 +84,7 @@ os.im.mapping.location.BaseLatLonMapping.prototype.testField = function(value) {
 os.im.mapping.location.BaseLatLonMapping.prototype.testAndGetField = function(value, opt_format) {
   if (value) {
     var l = this.parseLatLon(String(value), opt_format);
-    if (goog.isDefAndNotNull(l)) {
+    if (l != null) {
       return l.lat.toString() + ' ' + l.lon.toString();
     }
   }

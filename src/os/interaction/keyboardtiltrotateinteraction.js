@@ -166,7 +166,7 @@ os.interaction.KeyboardTiltRotate.prototype.spin = function(mapBrowserEvent) {
     var keyCode = mapBrowserEvent.originalEvent.keyCode;
 
     var view = map.getMap().getView();
-    goog.asserts.assert(!goog.isNull(view), 'view should not be null');
+    goog.asserts.assert(view !== null, 'view should not be null');
     var viewState = view.getState();
 
     // transform the resolution to degrees, then to radians for the camera

@@ -20,7 +20,7 @@ os.net.AbstractModifier = function(id, opt_priority) {
    * @type {number}
    * @private
    */
-  this.priority_ = goog.isDef(opt_priority) ? opt_priority : 0;
+  this.priority_ = opt_priority !== undefined ? opt_priority : 0;
 };
 
 
