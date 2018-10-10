@@ -289,7 +289,7 @@ plugin.file.shp.ui.SHPFilesStepCtrl.prototype.handleError_ = function(type, erro
   this['loading'] = false;
 
   var file = type + 'File';
-  if (!errorMsg || !goog.isString(errorMsg)) {
+  if (!errorMsg || typeof errorMsg !== 'string') {
     var fileName = this.scope_[file] ? this.scope_[file].name : 'unknown';
     errorMsg = 'Unable to load file "' + fileName + '".';
   }

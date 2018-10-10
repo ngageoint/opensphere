@@ -117,17 +117,13 @@ plugin.basemap.v2.BaseMapState.prototype.xmlToOptions = function(node) {
     options['crossOrigin'] = os.net.getCrossOrigin(/** @type {string} */ (options['url']));
   }
 
-  // some notes on what's going on below:
-  // - zoom is 1 higher in opensphere than in legacy apps
-  // - the closure compiler doesn't remember goog.isNumber when bracket notation is used, thus the extra var
-  var minZoom = options['minZoom'];
-  if (goog.isNumber(minZoom)) {
-    options['minZoom'] = minZoom + 1;
+  // zoom is 1 higher in opensphere than in legacy apps
+  if (typeof options['minZoom'] === 'number') {
+    options['minZoom'] = options['minZoom'] + 1;
   }
 
-  var maxZoom = options['maxZoom'];
-  if (goog.isNumber(maxZoom)) {
-    options['maxZoom'] = maxZoom + 1;
+  if (typeof options['maxZoom'] === 'number') {
+    options['maxZoom'] = options['maxZoom'] + 1;
   }
 
   return options;

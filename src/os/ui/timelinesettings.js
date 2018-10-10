@@ -283,7 +283,7 @@ os.ui.TimeSettingsCtrl.prototype.fromSlicesToHMS = function(ranges) {
  * @protected
  */
 os.ui.TimeSettingsCtrl.prototype.timeFromField = function(field) {
-  return (goog.isString(field) ? os.time.parse(field, null, true) : field).getTime() - os.time.timeOffset;
+  return (typeof field === 'string' ? os.time.parse(field, null, true) : field).getTime() - os.time.timeOffset;
 };
 
 

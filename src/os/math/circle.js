@@ -70,7 +70,7 @@ os.math.Circle.equals = function(a, b) {
  * @override
  */
 os.math.Circle.prototype.scale = function(sx, opt_sy) {
-  var sy = goog.isNumber(opt_sy) ? opt_sy : sx;
+  var sy = typeof opt_sy === 'number' ? opt_sy : sx;
   this.x *= sx;
   this.y *= sy;
   this.radius *= sx;

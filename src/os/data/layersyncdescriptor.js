@@ -226,7 +226,7 @@ os.data.LayerSyncDescriptor.prototype.removeLayer = function(layer) {
  * @protected
  */
 os.data.LayerSyncDescriptor.prototype.onLayerAdded = function(evt) {
-  if (!goog.isString(evt.layer)) {
+  if (typeof evt.layer !== 'string') {
     var layer = /** @type {os.layer.ILayer} */ (evt.layer);
 
     if (!this.layerIds.length) {
@@ -245,7 +245,7 @@ os.data.LayerSyncDescriptor.prototype.onLayerAdded = function(evt) {
  * @protected
  */
 os.data.LayerSyncDescriptor.prototype.onLayerRemoved = function(evt) {
-  if (!goog.isString(evt.layer)) {
+  if (typeof evt.layer !== 'string') {
     var layer = /** @type {os.layer.ILayer} */ (evt.layer);
 
     if (!this.layerIds.length) {

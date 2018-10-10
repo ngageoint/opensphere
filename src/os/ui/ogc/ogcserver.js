@@ -1370,7 +1370,7 @@ os.ui.ogc.OGCServer.isOGCResponse = function(file) {
     }
 
     var content = file.getContent();
-    if (goog.isString(content)) {
+    if (typeof content === 'string') {
       score += os.ui.ogc.OGCServer.CONTENT_REGEXP_.test(content) ? 3 : 0;
     }
   }

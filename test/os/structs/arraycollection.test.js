@@ -349,7 +349,7 @@ describe('os.structs.ArrayCollection', function() {
 
   it('does not require refresh when filter set after construction', function() {
     var c = new os.structs.ArrayCollection();
-    c.setFilter(function(item) { return goog.isNumber(item) && item > 10; });
+    c.setFilter(function(item) { return typeof item === 'number' && item > 10; });
     c.add(1);
     c.add(20);
     expect(c.contains(1)).toBe(false);
@@ -358,7 +358,7 @@ describe('os.structs.ArrayCollection', function() {
 
   it('retains the view after setting the filter without calling refresh', function() {
     var c = new os.structs.ArrayCollection();
-    c.setFilter(function(item) { return goog.isNumber(item) && item > 10; });
+    c.setFilter(function(item) { return typeof item === 'number' && item > 10; });
     c.add(1);
     c.add(20);
     expect(c.getValues()).toEqual([20]);

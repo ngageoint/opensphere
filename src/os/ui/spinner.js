@@ -186,7 +186,7 @@ os.ui.SpinnerCtrl.prototype.onSpin_ = function(e, spinner) {
  */
 os.ui.SpinnerCtrl.prototype.onSpinnerChange_ = function(e, spinner) {
   var faceValue = goog.isDef(spinner['value']) ? spinner['value'] : this.spinner_.spinner('value');
-  if (!goog.isNumber(faceValue)) {
+  if (typeof faceValue !== 'number') {
     faceValue = this.scope_['value'];
   }
 
