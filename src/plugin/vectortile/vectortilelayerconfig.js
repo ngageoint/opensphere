@@ -3,6 +3,7 @@ goog.provide('plugin.vectortile.VectorTileLayerConfig');
 goog.require('goog.log');
 goog.require('ol.VectorTile');
 goog.require('ol.format.MVT');
+goog.require('ol.layer.VectorTileRenderType');
 goog.require('ol.obj');
 goog.require('ol.source.VectorTile');
 goog.require('os.layer.VectorTile');
@@ -118,6 +119,7 @@ plugin.vectortile.VectorTileLayerConfig.prototype.getSource = function(options) 
  * @return {os.layer.VectorTile}
  */
 plugin.vectortile.VectorTileLayerConfig.prototype.getLayer = function(source, options) {
+  options['renderMode'] = options['renderMode'] || ol.layer.VectorTileRenderType.IMAGE;
   var vectorTileOptions = /** @type {olx.source.VectorTileOptions} */ (ol.obj.assign({}, options, {
     'source': source
   }));

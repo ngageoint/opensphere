@@ -1,8 +1,10 @@
 goog.provide('os.layer.VectorTile');
 
 goog.require('ol.layer.VectorTile');
+goog.require('ol.renderer.canvas.VectorTileLayer');
 goog.require('os.layer.ILayer');
 goog.require('os.layer.Tile');
+goog.require('os.mixin.VectorImageTile');
 
 /**
  * @fileoverview
@@ -113,9 +115,24 @@ os.layer.VectorTile = function(options) {
   if (source) {
     ol.events.listen(source, goog.events.EventType.PROPERTYCHANGE, this.onSourcePropertyChange_, this);
   }
+
+  /**
+   * @type {!ol.renderer.canvas.VectorTileLayer}
+   * @private
+   */
+  this.renderer_ = new ol.renderer.canvas.VectorTileLayer(this);
 };
 goog.inherits(os.layer.VectorTile, ol.layer.VectorTile);
 os.implements(os.layer.VectorTile, os.layer.ILayer.ID);
+
+
+/**
+ * @return {!ol.renderer.canvas.VectorTileLayer}
+ */
+os.layer.VectorTile.prototype.getRenderer = function() {
+  return this.renderer_;
+};
+
 
 /**
  * @inheritDoc

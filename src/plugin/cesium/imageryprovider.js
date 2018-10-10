@@ -1,6 +1,8 @@
 goog.provide('plugin.cesium.ImageryProvider');
 
 goog.require('goog.disposable.IDisposable');
+goog.require('ol.ImageTile');
+goog.require('ol.VectorImageTile');
 goog.require('ol.events');
 goog.require('olcs.core.OLImageryProvider');
 goog.require('os.proj');
@@ -8,20 +10,29 @@ goog.require('plugin.cesium.TileGridTilingScheme');
 
 
 /**
- * @param {!ol.source.TileImage} source
+ * @param {!ol.source.Tile} source
+ * @param {?ol.layer.Layer} layer
  * @param {ol.proj.Projection=} opt_fallbackProj Projection to assume if the projection of the source is not defined.
  * @extends {olcs.core.OLImageryProvider}
  * @implements {goog.disposable.IDisposable}
  * @constructor
  */
-plugin.cesium.ImageryProvider = function(source, opt_fallbackProj) {
-  plugin.cesium.ImageryProvider.base(this, 'constructor', source, opt_fallbackProj);
+plugin.cesium.ImageryProvider = function(source, layer, opt_fallbackProj) {
+  /** @suppress {invalidCasts} */
+  plugin.cesium.ImageryProvider.base(this, 'constructor',
+    /** @type {!ol.source.TileImage} */ (source), opt_fallbackProj);
 
   /**
    * @type {boolean}
    * @private
    */
   this.disposed_ = false;
+
+  /**
+   * @type {?ol.layer.Layer}
+   * @private
+   */
+  this.layer_ = layer;
 };
 goog.inherits(plugin.cesium.ImageryProvider, olcs.core.OLImageryProvider);
 
@@ -80,19 +91,28 @@ plugin.cesium.ImageryProvider.prototype.requestImage = function(x, y, level) {
   if (state === ol.TileState.EMPTY) {
     deferred.resolve(this.emptyCanvas_);
   } else if (state === ol.TileState.LOADED) {
-    deferred.resolve(tile.getImage());
+    if (tile instanceof ol.ImageTile) {
+      deferred.resolve(tile.getImage());
+    } else if (tile instanceof ol.VectorImageTile) {
+      deferred.resolve(tile.getDrawnImage(this.layer_));
+    }
   } else if (state === ol.TileState.ERROR) {
     deferred.resolve(this.emptyCanvas_);
   } else {
     tile.load();
 
+    var layer = this.layer_;
     var unlisten = ol.events.listen(tile, ol.events.EventType.CHANGE, function() {
       var state = tile.getState();
       if (state === ol.TileState.EMPTY) {
         deferred.resolve(this.emptyCanvas_);
         ol.events.unlistenByKey(unlisten);
       } else if (state === ol.TileState.LOADED) {
-        deferred.resolve(tile.getImage());
+        if (tile instanceof ol.ImageTile) {
+          deferred.resolve(tile.getImage());
+        } else if (tile instanceof ol.VectorImageTile) {
+          deferred.resolve(tile.getDrawnImage(layer));
+        }
         ol.events.unlistenByKey(unlisten);
       } else if (state === ol.TileState.ERROR) {
         deferred.resolve(this.emptyCanvas_);
