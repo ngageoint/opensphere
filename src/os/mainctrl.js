@@ -899,7 +899,7 @@ os.MainCtrl.prototype.onToggleUI_ = function(event) {
       os.ui.window.bringToFront(event.id);
     } else {
       // Use event value if available.  Keep open if event contains parameters. Lastly just toggle the value.
-      var open = goog.isBoolean(event.value) ? event.value :
+      var open = typeof event.value === 'boolean' ? event.value :
           (goog.isDefAndNotNull(event.params) ? true : !this[event.id]);
       this[event.id] = open;
       os.ui.apply(this.scope);
