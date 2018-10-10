@@ -953,7 +953,7 @@ os.layer.Tile.prototype.persist = function(opt_to) {
 
   var style = this.getStyle();
   if (style) {
-    opt_to['style'] = goog.isString(style) ? style : style.data;
+    opt_to['style'] = typeof style === 'string' ? style : style.data;
   }
 
   var source = this.getSource();
@@ -1049,7 +1049,7 @@ os.layer.Tile.prototype.restore = function(config) {
   var style = config['style'] || '';
   var currStyle = this.getStyle();
 
-  if (!currStyle || (goog.isString(currStyle) && style != currStyle) || style != currStyle.data) {
+  if (!currStyle || (typeof currStyle === 'string' && style != currStyle) || style != currStyle.data) {
     this.setStyle(style);
   }
 };

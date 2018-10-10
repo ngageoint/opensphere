@@ -40,7 +40,7 @@ os.ui.state.StateImportUI.prototype.launchUI = function(file, opt_config) {
   var content = file.getContent();
   var contentType = file.getContentType();
   if (content) {
-    if (goog.isString(content)) {
+    if (typeof content === 'string') {
       if (contentType == 'application/json') {
         try {
           rawState = /** @type {Object} */ (JSON.parse(content));

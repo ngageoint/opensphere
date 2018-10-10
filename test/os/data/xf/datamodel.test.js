@@ -36,7 +36,7 @@ describe('os.data.xf.DataModel', function() {
   var numObjects = data.length;
 
   var dim1 = function(item) {
-    return goog.isString(item.value);
+    return typeof item.value === 'string';
   };
 
   var dim2 = function(item) {
@@ -79,7 +79,7 @@ describe('os.data.xf.DataModel', function() {
 
     var results = filter.getResults();
     expect(results.length).toBe(50);
-    expect(goog.isString(results[0].value)).toBe(true);
+    expect(typeof results[0].value === 'string').toBe(true);
 
     filter.filterDimension('string', false);
     filter.filterDimension('number', true);

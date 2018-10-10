@@ -959,7 +959,7 @@ os.MainCtrl.prototype.handleResult_ = function(file) {
  * @private
  */
 os.MainCtrl.prototype.handleError_ = function(errorMsg) {
-  if (errorMsg && goog.isString(errorMsg)) {
+  if (errorMsg && typeof errorMsg === 'string') {
     goog.log.error(os.MainCtrl.LOGGER_, errorMsg);
     os.alert.AlertManager.getInstance().sendAlert(errorMsg, os.alert.AlertEventSeverity.ERROR);
   }

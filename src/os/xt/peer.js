@@ -253,7 +253,7 @@ os.xt.Peer.prototype.onWebMessage_ = function(evt) {
 
   var origins = this.getAllowedOrigins();
   if (!origins || origins.indexOf(evt.origin) > -1) {
-    if (goog.isString(evt.data)) {
+    if (typeof evt.data === 'string') {
       os.xt.Peer.getInstance().handleMessage(evt.data, evt.origin);
     } else {
       goog.log.error(os.xt.Peer.LOGGER_,

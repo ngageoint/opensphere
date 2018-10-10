@@ -977,7 +977,7 @@ os.ui.FeatureEditCtrl.prototype.loadFromFeature_ = function(feature) {
 
   if (!this.isFeatureDynamic()) {
     var rotation = feature.get(os.Fields.BEARING);
-    if (goog.isString(rotation) && !goog.string.isEmptyOrWhitespace(rotation)) {
+    if (typeof rotation === 'string' && !goog.string.isEmptyOrWhitespace(rotation)) {
       rotation = Number(rotation);
     }
     if (rotation == null || isNaN(rotation)) {

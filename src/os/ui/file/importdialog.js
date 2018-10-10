@@ -298,7 +298,7 @@ os.ui.file.ImportDialogCtrl.prototype.onFileReady_ = function(file) {
 os.ui.file.ImportDialogCtrl.prototype.onFileError_ = function(errorMsg) {
   this['loading'] = false;
 
-  if (!errorMsg || !goog.isString(errorMsg)) {
+  if (!errorMsg || typeof errorMsg !== 'string') {
     var fileName = this['file'] ? this['file'].name : 'unknown';
     errorMsg = 'Unable to load file "' + fileName + '"!';
   }

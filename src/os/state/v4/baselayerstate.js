@@ -355,7 +355,7 @@ os.state.v4.BaseLayerState.prototype.layerToXML = function(layer, options, opt_e
   layer.persist(layerConfig);
 
   var url = /** @type {string|undefined} */ (layerConfig['url']);
-  if (goog.isString(url) && !os.file.isLocal(url)) {
+  if (typeof url === 'string' && !os.file.isLocal(url)) {
     // writing to xml, do not encode URLs, we are looking for specific values like the {X}/{Y}/{Z} layer
     url = layerConfig['url'] = decodeURIComponent(os.uri.addBase(url));
   }
@@ -366,7 +366,6 @@ os.state.v4.BaseLayerState.prototype.layerToXML = function(layer, options, opt_e
     layerConfig['url'] = urls[0];
   }
 
-  // var type = goog.isString(layerConfig['type']) ? layerConfig['type'].toLowerCase() : '';
   var type = this.getLayerType_(layer);
 
   if (goog.isDefAndNotNull(opt_exclusions)) {
@@ -418,7 +417,7 @@ os.state.v4.BaseLayerState.prototype.configKeyToXML = function(layerConfig, type
   switch (key) {
     case 'params':
       var paramsEl = os.xml.appendElement(os.state.v4.LayerTag.PARAMS, layerEl);
-      var qd = goog.isString(value) ? new goog.Uri.QueryData(value) : /** @type {goog.Uri.QueryData} */ (value);
+      var qd = typeof value === 'string' ? new goog.Uri.QueryData(value) : /** @type {goog.Uri.QueryData} */ (value);
       var qdKeys = qd.getKeys();
       for (var i = 0, n = qdKeys.length; i < n; i++) {
         var qdKey = qdKeys[i];
@@ -508,7 +507,7 @@ os.state.v4.BaseLayerState.prototype.configKeyToXML = function(layerConfig, type
       }
       break;
     case os.style.StyleField.LABEL_COLOR:
-      if (bfs && goog.isString(value) && !goog.string.isEmptyOrWhitespace(goog.string.makeSafe(value))) {
+      if (bfs && typeof value === 'string' && !goog.string.isEmptyOrWhitespace(goog.string.makeSafe(value))) {
         var color = os.color.toServerString(value);
         os.xml.appendElement(os.state.v4.LayerTag.LABEL_COLOR, bfs, color);
       }
@@ -652,8 +651,8 @@ os.state.v4.BaseLayerState.prototype.extentsFromXML_ = function(element) {
 os.state.v4.BaseLayerState.prototype.defaultConfigToXML = function(key, value, layerEl) {
   var node = null;
 
-  if (goog.isString(value) || goog.isNumber(value) || goog.isBoolean(value)) {
-    if (goog.isString(value) && key.search(/color/i) > -1 && key != 'colorize' && os.color.isColorString(value)) {
+  if (typeof value === 'string' || goog.isNumber(value) || goog.isBoolean(value)) {
+    if (typeof value === 'string' && key.search(/color/i) > -1 && key != 'colorize' && os.color.isColorString(value)) {
       try {
         // output hex
         value = os.color.toServerString(value);
@@ -661,13 +660,13 @@ os.state.v4.BaseLayerState.prototype.defaultConfigToXML = function(key, value, l
         // default to white
         value = '0xffffff';
       }
-    } else if (goog.isString(value) && goog.string.startsWith(value, 'url')) {
+    } else if (typeof value === 'string' && goog.string.startsWith(value, 'url')) {
       // make sure url's are qualified
       value = os.uri.addBase(value);
     }
 
     // don't include the hash key since it will cause a crash
-    if (goog.isString(value) && key == '$$hashKey') {
+    if (typeof value === 'string' && key == '$$hashKey') {
       return;
     }
 
@@ -788,7 +787,7 @@ os.state.v4.BaseLayerState.prototype.analyzeOptions = function(options, id) {
           typeName = paramsTypeName;
         }
 
-        if (goog.isString(typeName)) {
+        if (typeof typeName === 'string') {
           var idx = typeName.indexOf(':');
           if (idx > -1) {
             typeName = typeName.substring(idx + 1);
@@ -904,7 +903,7 @@ os.state.v4.BaseLayerState.prototype.xmlToConfigKey = function(node, child, name
                 os.style.DEFAULT_FEATURE_SIZE;
             break;
           case os.state.v4.LayerTag.LABEL_COLUMN:
-            var column = goog.isString(styleVal) ? goog.string.trim(styleVal) : '';
+            var column = typeof styleVal === 'string' ? goog.string.trim(styleVal) : '';
             // Is this the default?
             if (options[os.style.StyleField.LABELS] == undefined) {
               options[os.style.StyleField.LABELS] = [os.style.label.cloneConfig()];

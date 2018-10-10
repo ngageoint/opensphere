@@ -455,7 +455,7 @@ os.style.toAbgrString = function(color) {
  * @return {string}
  */
 os.style.toRgbaString = function(color) {
-  return ol.color.asString(goog.isString(color) ? os.color.toRgbArray(color) : color);
+  return ol.color.asString(typeof color === 'string' ? os.color.toRgbArray(color) : color);
 };
 
 
@@ -594,7 +594,7 @@ os.style.setConfigIconRotation = function(config, showRotation, rotateAmount) {
 os.style.setConfigIconRotationFromObject = function(config, origin, feature) {
   var showRotation = origin[os.style.StyleField.SHOW_ROTATION] || false;
   var rotationColumn = origin[os.style.StyleField.ROTATION_COLUMN];
-  rotationColumn = goog.isString(rotationColumn) ? rotationColumn : '';
+  rotationColumn = typeof rotationColumn === 'string' ? rotationColumn : '';
   var rotateAmount = Number(feature.values_[rotationColumn]);
   rotateAmount = goog.isNumber(rotateAmount) && !isNaN(rotateAmount) ? rotateAmount : 0;
   os.style.setConfigIconRotation(config, showRotation, rotateAmount);

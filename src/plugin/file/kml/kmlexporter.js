@@ -278,7 +278,7 @@ plugin.file.kml.KMLExporter.prototype.getSource_ = function(feature) {
   var source = null;
   if (feature) {
     var sourceId = feature.get(os.data.RecordField.SOURCE_ID);
-    if (goog.isString(sourceId)) {
+    if (typeof sourceId === 'string') {
       source = /** @type {os.source.Vector} */ (os.osDataManager.getSource(sourceId));
     }
   }

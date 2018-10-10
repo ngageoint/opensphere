@@ -66,7 +66,7 @@ os.ui.createIconSet = function(id, svgIcons, faIcons, color) {
   id = os.ui.hashIconId(id);
 
   if (svgIcons && svgIcons.length > 0) {
-    var arrColor = goog.isString(color) ? os.color.toRgbArray(color) : color;
+    var arrColor = typeof color === 'string' ? os.color.toRgbArray(color) : color;
     var values = os.color.changeColor(os.ui.white_, arrColor || os.ui.white_);
     var width = os.ui.ICON_WIDTH * svgIcons.length;
     var filter = 'filter_';
@@ -134,7 +134,7 @@ os.ui.xReplace_ = function(match, p1, offset, whole) {
  * @param {Array<number>|string} color
  */
 os.ui.adjustIconSet = function(id, color) {
-  if (goog.isString(color)) {
+  if (typeof color === 'string') {
     color = os.color.toRgbArray(color);
   }
 

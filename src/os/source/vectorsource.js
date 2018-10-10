@@ -913,7 +913,7 @@ os.source.Vector.prototype.updateColumns = function(features) {
  */
 os.source.Vector.prototype.hasColumn = function(value) {
   var field = null;
-  if (goog.isString(value)) {
+  if (typeof value === 'string') {
     field = value;
   } else if (goog.isObject(value)) {
     field = /** @type {os.data.ColumnDefinition} */ (value)['field'];

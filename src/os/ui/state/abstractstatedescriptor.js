@@ -165,7 +165,7 @@ os.ui.state.AbstractStateDescriptor.prototype.onFileReady_ = function(file) {
  */
 os.ui.state.AbstractStateDescriptor.prototype.onFileError_ = function(error) {
   var msg;
-  if (goog.isString(error)) {
+  if (typeof error === 'string') {
     msg = 'Unable to load state file from storage: ' + error;
   } else {
     msg = 'State file not found in local storage!';

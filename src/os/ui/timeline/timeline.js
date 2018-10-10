@@ -1375,7 +1375,7 @@ os.ui.timeline.TimelineCtrl.prototype.setEnd = function(value) {
  * @param {os.ui.timeline.ITimelineItem|string} item The item or item ID to jump to
  */
 os.ui.timeline.TimelineCtrl.prototype.zoomToItem = function(item) {
-  if (goog.isString(item)) {
+  if (typeof item === 'string') {
     item = this.getItem(item);
   }
 
@@ -1410,7 +1410,7 @@ os.ui.timeline.TimelineCtrl.prototype.zoomToExtent = function(extent) {
  * @param {os.ui.timeline.ITimelineItem|string} item The item or item ID to pan to
  */
 os.ui.timeline.TimelineCtrl.prototype.panToItem = function(item) {
-  if (goog.isString(item)) {
+  if (typeof item === 'string') {
     item = this.getItem(item);
   }
 

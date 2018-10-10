@@ -39,7 +39,7 @@ os.ui.im.ImportEvent = function(type, opt_fileOrUrl, opt_contentHint, opt_config
   /**
    * @type {?string}
    */
-  this.url = opt_fileOrUrl && goog.isString(opt_fileOrUrl) ? opt_fileOrUrl : null;
+  this.url = opt_fileOrUrl && typeof opt_fileOrUrl === 'string' ? opt_fileOrUrl : null;
 
   /**
    * @type {?Object}

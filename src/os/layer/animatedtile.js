@@ -136,7 +136,7 @@ os.layer.AnimatedTile.prototype.getLegendOptions = function() {
     var imageURL = '';
     if (legend['OnlineResource']) {
       imageURL = legend['OnlineResource'];
-    } else if (goog.isString(legend)) {
+    } else if (typeof legend === 'string') {
       imageURL = legend; // not the normal format but let's handle it
     } else {
       // should not come from a state file/wms server

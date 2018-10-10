@@ -38,7 +38,7 @@ os.xml.XMLNS = 'http://www.w3.org/2000/xmlns/';
  * @return {string} The escaped string
  */
 os.xml.escape = function(text) {
-  if (goog.isString(text)) {
+  if (typeof text === 'string') {
     text = text.replace(/\&/g, '&amp;');
     text = text.replace(/</g, '&lt;');
     text = text.replace(/>/g, '&gt;');
@@ -56,7 +56,7 @@ os.xml.escape = function(text) {
  * @return {string} The escaped string
  */
 os.xml.unescape = function(text) {
-  if (goog.isString(text)) {
+  if (typeof text === 'string') {
     text = text.replace(/\&amp;/g, '&');
     text = text.replace(/&lt;/g, '<');
     text = text.replace(/&gt;/g, '>');

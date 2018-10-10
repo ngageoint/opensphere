@@ -53,7 +53,7 @@ plugin.file.gpx.GPXParser.prototype.setSource = function(source) {
 
   if (ol.xml.isDocument(source)) {
     this.document_ = /** @type {Document} */ (source);
-  } else if (goog.isString(source)) {
+  } else if (typeof source === 'string') {
     this.document_ = ol.xml.parse(source);
   }
 };
