@@ -90,19 +90,16 @@ plugin.im.action.feature.LabelAction.DEFAULT_CONFIG = {
 
 
 /**
- * Undo all feature action label changes, reset to the user/default layer settings
- * @param {string} entryType feature action entry type
- * @param {!Array<ol.Feature>} items The items.
+ * @inheritDoc
  */
 plugin.im.action.feature.LabelAction.prototype.reset = function(entryType, items) {
-  var dm = os.data.DataManager.getInstance();
-  var source = dm.getSource(entryType);
-  var layerConfig = os.style.StyleManager.getInstance().getLayerConfig(source.getId());
-
   for (var i = 0; i < items.length; i++) {
     var item = items[i];
     if (item) {
-      item.set(os.style.StyleType.FEATURE, layerConfig, true);
+      // reset the original feature config
+      var originalConfig = /** @type {Array|Object|undefined} */
+          (item.get(plugin.im.action.feature.StyleType.ORIGINAL));
+      item.set(os.style.StyleType.FEATURE, originalConfig, true);
     }
   }
 
@@ -135,7 +132,8 @@ plugin.im.action.feature.LabelAction.prototype.execute = function(items) {
       // update label fields on the feature if there is at least one valid label config defined
       if (labels.length > 0) {
         // get the existing feature config or create a new one
-        var featureConfig = /** @type {Array|Object|undefined} */ (item.get(os.style.StyleType.FEATURE)) || {};
+        var originalConfig = /** @type {Array|Object|undefined} */ (item.get(os.style.StyleType.FEATURE));
+        var featureConfig = os.object.unsafeClone(originalConfig) || {};
 
         // apply label config
         if (goog.isArray(featureConfig)) {
@@ -153,6 +151,9 @@ plugin.im.action.feature.LabelAction.prototype.execute = function(items) {
         // save the feature config(s) to the feature, and persist the label config to the feature
         item.set(os.style.StyleType.FEATURE, featureConfig, true);
         os.ui.FeatureEditCtrl.persistFeatureLabels(item);
+
+        // add a reference to the original config so we can reset back to it
+        item.set(plugin.im.action.feature.StyleType.ORIGINAL, originalConfig, true);
       }
 
       // if a custom column was configured, set the value on the feature
