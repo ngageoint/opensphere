@@ -225,7 +225,7 @@ plugin.heatmap.Heatmap.prototype.styleFunc = function(feature, resolution) {
 
   if (!style) {
     // only create the style if it wasn't in the cache
-    var img = this.createImage(feature);
+    var img = this.createImage(/** @type {ol.Feature} */ (feature));
     var icon = new ol.style.Icon({
       opacity: opacity,
       img: img,
