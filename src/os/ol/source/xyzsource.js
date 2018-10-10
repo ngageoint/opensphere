@@ -56,25 +56,26 @@ os.ol.source.XYZ.prototype.createFromTemplate = function(template) {
   var dashYRegEx = /\{-y\}/g;
   var offset = this.zoomOffset;
   return (
-      /**
-       * @param {ol.TileCoord} tileCoord Tile Coordinate.
-       * @param {number} pixelRatio Pixel ratio.
-       * @param {ol.proj.Projection} projection Projection.
-       * @return {string|undefined} Tile URL.
-       */
-      function(tileCoord, pixelRatio, projection) {
-        if (goog.isNull(tileCoord)) {
-          return undefined;
-        } else {
-          return template.replace(zRegEx, (tileCoord[0] + offset).toString())
-              .replace(xRegEx, tileCoord[1].toString())
-              .replace(yRegEx, (-tileCoord[2] - 1).toString())
-              .replace(dashYRegEx, function() {
-                var y = (1 << tileCoord[0]) - tileCoord[2] - 1;
-                return y.toString();
-              });
-        }
-      });
+    /**
+     * @param {ol.TileCoord} tileCoord Tile Coordinate.
+     * @param {number} pixelRatio Pixel ratio.
+     * @param {ol.proj.Projection} projection Projection.
+     * @return {string|undefined} Tile URL.
+     */
+    function(tileCoord, pixelRatio, projection) {
+      if (tileCoord === null) {
+        return undefined;
+      } else {
+        return template.replace(zRegEx, (tileCoord[0] + offset).toString())
+            .replace(xRegEx, tileCoord[1].toString())
+            .replace(yRegEx, (-tileCoord[2] - 1).toString())
+            .replace(dashYRegEx, function() {
+              var y = (1 << tileCoord[0]) - tileCoord[2] - 1;
+              return y.toString();
+            });
+      }
+    }
+  );
 };
 
 

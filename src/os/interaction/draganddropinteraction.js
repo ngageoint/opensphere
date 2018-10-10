@@ -113,13 +113,13 @@ os.interaction.DragAndDrop.prototype.setMap = function(map) {
     goog.events.unlistenByKey(this.dropListenKey_);
     this.dropListenKey_ = undefined;
   }
-  if (!goog.isNull(this.fileDropHandler_)) {
+  if (this.fileDropHandler_ !== null) {
     goog.dispose(this.fileDropHandler_);
     this.fileDropHandler_ = null;
   }
   goog.asserts.assert(this.dropListenKey_ === undefined);
   os.interaction.DragAndDrop.base(this, 'setMap', map);
-  if (!goog.isNull(map)) {
+  if (map !== null) {
     this.fileDropHandler_ = new goog.events.FileDropHandler(map.getViewport());
     this.dropListenKey_ = goog.events.listen(
         this.fileDropHandler_, goog.events.FileDropHandler.EventType.DROP,

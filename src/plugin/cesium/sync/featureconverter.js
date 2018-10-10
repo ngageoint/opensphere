@@ -1388,7 +1388,7 @@ plugin.cesium.sync.FeatureConverter.prototype.olMultiGeometryToCesium = function
       subGeos = geometry.getPoints();
 
       subGeos.forEach(function(subGeo) {
-        goog.asserts.assert(!goog.isNull(subGeo));
+        goog.asserts.assert(subGeo !== null);
         this.createOrUpdateBillboard(feature, subGeo, context, style);
       }, this);
       break;

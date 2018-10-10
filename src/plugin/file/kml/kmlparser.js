@@ -824,7 +824,7 @@ plugin.file.kml.KMLParser.prototype.createTreeNode_ = function(el, opt_parent) {
     if (goog.isDefAndNotNull(opt_parent)) {
       // if the child already exists, the new node will be merged and the original node returned
       node = /** @type {plugin.file.kml.ui.KMLNode} */ (opt_parent.addChild(node));
-    } else if (goog.isNull(this.rootNode_)) {
+    } else if (this.rootNode_ === null) {
       this.rootNode_ = node;
     } else if (this.rootNode_.getLabel() != node.getLabel()) {
       // the root node name changed, so start with a fresh tree. if this rains on anyone's parade we can probably
@@ -895,7 +895,7 @@ plugin.file.kml.KMLParser.prototype.examineElement_ = function(el) {
  */
 plugin.file.kml.KMLParser.prototype.updateNode_ = function(el, node, parsers) {
   var n;
-  for (n = goog.dom.getFirstElementChild(el); !goog.isNull(n); n = n.nextElementSibling) {
+  for (n = goog.dom.getFirstElementChild(el); n !== null; n = n.nextElementSibling) {
     var parser = parsers[n.localName];
     if (parser !== undefined) {
       parser.call(this, node, n);

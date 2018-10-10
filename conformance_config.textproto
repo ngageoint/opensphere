@@ -169,6 +169,12 @@ requirement: {
 
 #requirement: {
 #  type: BANNED_NAME
+#  value: 'goog.isNull'
+#  error_message: 'goog.isNull(value) is not permitted. Use value === null instead.'
+#}
+
+#requirement: {
+#  type: BANNED_NAME
 #  value: 'goog.isNumber'
 #  error_message: 'goog.isNumber(value) is not permitted. Use typeof value === \'number\' instead.'
 #}
