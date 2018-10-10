@@ -42,7 +42,7 @@ plugin.georss.GeoRSSParser = function() {
 plugin.georss.GeoRSSParser.prototype.setSource = function(source) {
   if (ol.xml.isDocument(source)) {
     this.document = /** @type {Document} */ (source);
-  } else if (goog.isString(source)) {
+  } else if (typeof source === 'string') {
     this.document = ol.xml.parse(source);
   }
 

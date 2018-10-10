@@ -103,7 +103,7 @@ os.ui.location.SimpleLocationCtrl.prototype.format = function(opt_format) {
     var lat = this.scope_['latdeg'];
     var lon = this.scope_['londeg'];
 
-    if ((goog.isNumber(lat) || goog.isString(lat)) && (goog.isNumber(lon) || goog.isString(lon))) {
+    if ((goog.isNumber(lat) || typeof lat === 'string') && (goog.isNumber(lon) || typeof lon === 'string')) {
       this['location'] = formatter(this.scope_['latdeg'], this.scope_['londeg']).replace(/°/g, '&deg;');
     } else {
       this['location'] = '';

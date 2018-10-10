@@ -330,7 +330,7 @@ plugin.file.kml.KMLParser.prototype.setSource = function(source) {
 
   if (ol.xml.isDocument(source)) {
     this.document_ = /** @type {Document} */ (source);
-  } else if (goog.isString(source)) {
+  } else if (typeof source === 'string') {
     this.document_ = os.xml.loadXml(source);
   } else if (source instanceof ArrayBuffer) {
     if (os.file.mime.zip.isZip(source)) {
@@ -617,7 +617,7 @@ plugin.file.kml.KMLParser.prototype.imagesRemaining_ = function() {
  * @private
  */
 plugin.file.kml.KMLParser.prototype.processZipImage_ = function(filename, uri) {
-  if (goog.isString(filename) && goog.isString(uri)) {
+  if (typeof filename === 'string' && typeof uri === 'string') {
     this.assetMap_[filename] = uri;
     this.kmzImagesRemaining_--;
   } else {
@@ -652,7 +652,7 @@ plugin.file.kml.KMLParser.prototype.processZIPEntry_ = function(filename, conten
 plugin.file.kml.KMLParser.prototype.handleZIPText_ = function(filename, event) {
   var content = event.target.result;
 
-  if (content && goog.isString(content)) {
+  if (content && typeof content === 'string') {
     if (!this.document_) {
       this.setSource(content);
     } else {

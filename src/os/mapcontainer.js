@@ -1477,7 +1477,7 @@ os.MapContainer.prototype.addGroup = function(group) {
  */
 os.MapContainer.prototype.removeLayer = function(layer, opt_dispose) {
   var dispose = opt_dispose != null ? opt_dispose : true;
-  var l = goog.isString(layer) ? this.getLayer(layer) : layer;
+  var l = typeof layer === 'string' ? this.getLayer(layer) : layer;
 
   if (l instanceof ol.layer.Layer) {
     var canRemove = true;
@@ -1631,7 +1631,7 @@ os.MapContainer.prototype.removeFeature = function(feature, opt_dispose) {
     os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.REMOVE_FEATURE, 1);
     var layer = this.getLayer(os.MapContainer.DRAW_ID);
     var source = /** @type {ol.source.Vector} */ (layer.getSource());
-    if (goog.isString(feature) || goog.isNumber(feature)) {
+    if (typeof feature === 'string' || goog.isNumber(feature)) {
       feature = source.getFeatureById(feature);
     } else {
       feature = source.getFeatureById(feature.getId() + '');
@@ -1658,7 +1658,7 @@ os.MapContainer.prototype.containsFeature = function(feature) {
     if (layer) {
       var source = /** @type {ol.source.Vector} */ (layer.getSource());
 
-      return !!(goog.isString(feature) || goog.isNumber(feature) ? source.getFeatureById(feature) :
+      return !!(typeof feature === 'string' || goog.isNumber(feature) ? source.getFeatureById(feature) :
           source.getFeatureById(feature.getId() + ''));
     }
   }
@@ -1756,7 +1756,7 @@ os.MapContainer.prototype.getLayer = function(layerOrFeature, opt_search, opt_re
         l = this.getLayer(layerOrFeature, /** @type {os.layer.Group} */ (item).getLayers(), opt_remove);
       } else {
         try {
-          if (goog.isString(layerOrFeature)) {
+          if (typeof layerOrFeature === 'string') {
             var lid = /** @type {os.layer.ILayer} */ (item).getId();
             if (lid == layerOrFeature) {
               l = /** @type {ol.layer.Layer} */ (item);

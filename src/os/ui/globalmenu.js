@@ -291,7 +291,7 @@ os.ui.positionMenu_ = function(position, opt_target, opt_root) {
   var ctrl = /** @type {os.ui.GlobalMenuCtrl} */ (s['actionMenu']);
 
   var targetEl;
-  if (goog.isString(opt_target)) {
+  if (typeof opt_target === 'string') {
     // target is a selector from the document or a root element
     targetEl = goog.isDefAndNotNull(opt_root) ? opt_root.find(opt_target) : angular.element(opt_target);
   } else if (goog.isDef(opt_target)) {
@@ -305,7 +305,7 @@ os.ui.positionMenu_ = function(position, opt_target, opt_root) {
     if (pos.top) {
       pos.top -= $(document).scrollTop();
     }
-    if (goog.isString(position)) {
+    if (typeof position === 'string') {
       var parts = position.split(/\s+/);
       position = parts[0];
       var offset = parts.length > 1 ? parseInt(parts[1], 10) : 2;

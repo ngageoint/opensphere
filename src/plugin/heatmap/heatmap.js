@@ -227,6 +227,6 @@ plugin.heatmap.onImageComplete = function(layer, event) {
 plugin.heatmap.onImageError = function(event) {
   goog.dispose(event.target);
 
-  var msg = goog.isString(event.data) ? event.data : 'Screen capture failed due to an unspecified error';
+  var msg = typeof event.data === 'string' ? event.data : 'Screen capture failed due to an unspecified error';
   os.alertManager.sendAlert(msg, os.alert.AlertEventSeverity.ERROR);
 };

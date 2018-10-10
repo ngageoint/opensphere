@@ -98,7 +98,7 @@ os.interaction.DragAndDrop.prototype.handleResult_ = function(file) {
  * @private
  */
 os.interaction.DragAndDrop.prototype.handleError_ = function(errorMsg) {
-  if (errorMsg && goog.isString(errorMsg)) {
+  if (errorMsg && typeof errorMsg === 'string') {
     goog.log.error(os.interaction.DragAndDrop.LOGGER_, errorMsg);
     os.alert.AlertManager.getInstance().sendAlert(errorMsg, os.alert.AlertEventSeverity.ERROR);
   }

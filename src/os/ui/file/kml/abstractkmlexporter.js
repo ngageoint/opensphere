@@ -591,7 +591,7 @@ os.ui.file.kml.AbstractKMLExporter.prototype.processPlacemark = function(element
     for (var i = 0, n = fields.length; i < n; i++) {
       var val = this.getField(item, fields[i]);
       if (goog.isDefAndNotNull(val)) {
-        if (!goog.isDef(descEl) && goog.isString(val) && os.fields.DESC_REGEXP.test(fields[i])) {
+        if (!goog.isDef(descEl) && typeof val === 'string' && os.fields.DESC_REGEXP.test(fields[i])) {
           // strip out carriage returns, because screw windows
           val.replace(/\r/g, '');
 

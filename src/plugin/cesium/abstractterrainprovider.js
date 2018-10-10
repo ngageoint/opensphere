@@ -25,7 +25,7 @@ plugin.cesium.AbstractTerrainProvider = function(options) {
    * @type {Cesium.Credit|undefined}
    * @private
    */
-  this.credit_ = goog.isString(options.credit) ? new Cesium.Credit(options.credit) : undefined;
+  this.credit_ = typeof options.credit === 'string' ? new Cesium.Credit(options.credit) : undefined;
 
   /**
    * @type {Cesium.Event}

@@ -150,7 +150,7 @@ os.net.LocalFileHandler.prototype.onFileError_ = function(error) {
   this.deferred_ = null;
   this.errors = [];
 
-  if (goog.isString(error)) {
+  if (typeof error === 'string') {
     this.statusCode = 400;
     this.errors.push(/** @type {string} */ (error));
   } else {

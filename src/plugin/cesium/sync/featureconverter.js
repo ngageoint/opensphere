@@ -1225,7 +1225,7 @@ plugin.cesium.sync.FeatureConverter.prototype.updateBillboard = function(feature
     imageId = style['id'] || ol.getUid(image);
   }
 
-  if (goog.isString(image) || image instanceof HTMLCanvasElement || image instanceof Image ||
+  if (typeof image === 'string' || image instanceof HTMLCanvasElement || image instanceof Image ||
       image instanceof HTMLImageElement) {
     if (bb instanceof Cesium.Billboard) {
       bb.setImage(imageId, image);

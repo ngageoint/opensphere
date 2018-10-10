@@ -219,7 +219,7 @@ os.ui.action.ActionManager.prototype.addActions = function(actions) {
  * @param {boolean=} opt_quiet optionally suppress firing change event upon remove
  */
 os.ui.action.ActionManager.prototype.removeAction = function(action, opt_quiet) {
-  var existing = goog.isString(action) ? this.getAction(action) : action;
+  var existing = typeof action === 'string' ? this.getAction(action) : action;
   if (existing) {
     var type = existing.getEventType();
     var existingHandler = existing.getHandler();
@@ -337,7 +337,7 @@ os.ui.action.ActionManager.prototype.getAction = function(eventType) {
  * @return {boolean} true if the action was invoked, false otherwise
  */
 os.ui.action.ActionManager.prototype.invoke = function(action) {
-  if (goog.isString(action)) {
+  if (typeof action === 'string') {
     action = this.getAction(action);
   }
   var args = this.getActionArgs();

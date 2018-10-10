@@ -81,7 +81,7 @@ os.data.CollectionManager.prototype.getIdOrItem = function(idOrItem) {
   if (!idOrItem) {
     return null;
   }
-  return goog.isString(idOrItem) ? idOrItem : this.getId(/** @type {T} */ (idOrItem));
+  return typeof idOrItem === 'string' ? idOrItem : this.getId(/** @type {T} */ (idOrItem));
 };
 
 

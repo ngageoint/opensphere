@@ -410,7 +410,7 @@ os.ui.state.StateManager.prototype.saveLocal = function(file, options) {
  * @private
  */
 os.ui.state.StateManager.prototype.onFileError_ = function(error) {
-  if (goog.isString(error)) {
+  if (typeof error === 'string') {
     goog.log.error(this.log, 'Unable to store state file locally: ' + error);
   } else {
     goog.log.error(this.log, 'Unable to store state file locally!');
