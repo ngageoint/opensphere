@@ -271,7 +271,7 @@ os.ui.ol.OLMap.prototype.getDrawingLayer = function() {
  * @inheritDoc
  */
 os.ui.ol.OLMap.prototype.containsFeature = function(feature) {
-  if (goog.isDefAndNotNull(feature)) {
+  if (feature != null) {
     var layer = this.getDrawingLayer();
 
     if (layer) {
@@ -447,7 +447,7 @@ os.ui.ol.OLMap.prototype.getLayers_ = function() {
  * @inheritDoc
  */
 os.ui.ol.OLMap.prototype.getLayer = function(layerOrFeature, opt_search, opt_remove) {
-  if (!goog.isDefAndNotNull(opt_remove)) {
+  if (opt_remove == null) {
     opt_remove = false;
   }
 

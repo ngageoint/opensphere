@@ -262,7 +262,7 @@ os.state.v3.LayerState.prototype.layerToXML = function(layer, options, opt_exclu
 
   // write the persisted layer on top of the cloned options so we have (most) everything in one place
   var layerConfig = goog.object.clone(layer.getLayerOptions());
-  if (goog.isDefAndNotNull(opt_layerConfig)) {
+  if (opt_layerConfig != null) {
     goog.object.extend(layerConfig, opt_layerConfig);
   }
 
@@ -282,12 +282,12 @@ os.state.v3.LayerState.prototype.layerToXML = function(layer, options, opt_exclu
 
   var type = typeof layerConfig['type'] === 'string' ? layerConfig['type'].toLowerCase() : '';
 
-  if (goog.isDefAndNotNull(opt_exclusions)) {
+  if (opt_exclusions != null) {
     var exclusions = goog.isArray(opt_exclusions) ? opt_exclusions : [opt_exclusions];
     tagExclusions = goog.array.join(tagExclusions, exclusions);
   }
   for (var i = 0, n = tagExclusions.length; i < n; i++) {
-    if (goog.isDefAndNotNull(layerConfig[tagExclusions[i]])) {
+    if (layerConfig[tagExclusions[i]] != null) {
       delete layerConfig[tagExclusions[i]];
     }
   }
@@ -297,7 +297,7 @@ os.state.v3.LayerState.prototype.layerToXML = function(layer, options, opt_exclu
 
   for (var key in layerConfig) {
     var value = layerConfig[key];
-    if (goog.isDefAndNotNull(value)) {
+    if (value != null) {
       switch (key) {
         case 'params':
           var paramsEl = os.xml.appendElement(os.state.v3.LayerTag.PARAMS, layerEl);
@@ -344,19 +344,19 @@ os.state.v3.LayerState.prototype.layerToXML = function(layer, options, opt_exclu
         case 'alpha':
         case 'opacity':
           if (bfs) {
-            value = goog.isDefAndNotNull(value) ? Number(value) : os.style.DEFAULT_ALPHA;
+            value = value != null ? Number(value) : os.style.DEFAULT_ALPHA;
 
             var opacity = Math.round(value * 255);
             os.xml.appendElement(os.state.v3.LayerTag.PT_OPACITY, bfs, opacity);
           } else {
             // write tile layer opacity/alpha as alpha
-            value = goog.isDefAndNotNull(value) ? Number(value) : os.style.DEFAULT_ALPHA;
+            value = value != null ? Number(value) : os.style.DEFAULT_ALPHA;
             os.xml.appendElement(os.state.v3.LayerTag.ALPHA, layerEl, value);
           }
           break;
         case 'size':
           if (bfs) {
-            value = goog.isDefAndNotNull(value) ? Math.floor(value) : os.style.DEFAULT_FEATURE_SIZE;
+            value = value != null ? Math.floor(value) : os.style.DEFAULT_FEATURE_SIZE;
 
             var pointSize = value * 2;
             os.xml.appendElement(os.state.v3.LayerTag.PT_SIZE, bfs, pointSize);
@@ -431,11 +431,13 @@ os.state.v3.LayerState.prototype.layerToXML = function(layer, options, opt_exclu
           break;
         case os.state.v3.LayerTag.CSV_DATA_ROW:
           // convert from 1 based indexing to 0 based.
-          this.defaultConfigToXML(os.state.v3.LayerTag.CSV_DATA_ROW, value - 1, layerEl);
+          if (typeof value === 'number') {
+            this.defaultConfigToXML(os.state.v3.LayerTag.CSV_DATA_ROW, value - 1, layerEl);
+          }
           break;
         case os.state.v3.LayerTag.CSV_HEADER_ROW:
           // convert from 1 based indexing to 0 based. But needs to be set to -1 when useHeader is false.
-          if (layerConfig[os.state.v3.LayerTag.CSV_USE_HEADER]) {
+          if (typeof value === 'number' && layerConfig[os.state.v3.LayerTag.CSV_USE_HEADER]) {
             this.defaultConfigToXML(os.state.v3.LayerTag.CSV_HEADER_ROW, value - 1, layerEl);
           } else {
             this.defaultConfigToXML(os.state.v3.LayerTag.CSV_HEADER_ROW, -1, layerEl);
@@ -638,7 +640,7 @@ os.state.v3.LayerState.prototype.analyzeOptions = function(options, id) {
     var style = /** @type {string} */ (layerOptions['style']);
     var styles = /** @type {Array<Object>} */ (layerOptions['styles']);
     // fix any styles that don't reference the data
-    if (goog.isDefAndNotNull(style) && goog.isDefAndNotNull(styles)) {
+    if (style != null && styles != null) {
       var matchesStyle = false;
       for (var j = 0, m = styles.length; j < m; j++) {
         if (styles[j]['data'] === style) {

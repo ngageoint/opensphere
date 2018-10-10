@@ -133,12 +133,12 @@ os.ui.file.ExportManager.prototype.getPersistenceMethods = function(opt_getAll) 
  * @param {os.ex.IPersistenceMethod=} opt_persister The persistence method to use
  */
 os.ui.file.ExportManager.prototype.exportItems = function(items, fields, title, opt_exporter, opt_persister) {
-  if (!goog.isDefAndNotNull(items) || items.length == 0) {
+  if (items == null || items.length == 0) {
     goog.log.error(os.ui.file.ExportManager.LOGGER_, 'No data was supplied for the export.');
     return;
   }
 
-  if (goog.isDefAndNotNull(opt_exporter) && goog.isDefAndNotNull(opt_persister)) {
+  if (opt_exporter != null && opt_persister != null) {
     this.doExport_(items, fields, title, opt_exporter, opt_persister);
   } else if (this.exporters_.length > 0 && this.persisters_.length > 0) {
     this.launchExportDialog_(items, fields, title, opt_exporter, opt_persister);

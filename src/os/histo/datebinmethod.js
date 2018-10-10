@@ -137,7 +137,7 @@ os.histo.DateBinMethod.prototype.getValue = function(item) {
   var timestamp = os.histo.DateBinMethod.MAGIC;
   var value = this.valueFunction ? this.valueFunction(item, this.field) : item[this.field];
 
-  if (goog.isDefAndNotNull(value)) {
+  if (value != null) {
     // we want to end up with millis since epoch
     //
     // Can't use instanceof here because of potential window context issues

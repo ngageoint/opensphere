@@ -188,7 +188,7 @@ os.time.TimelineController.prototype.initialize_ = function() {
  * @return {boolean}
  */
 os.time.TimelineController.prototype.isPlaying = function() {
-  return goog.isDefAndNotNull(this.animationTimer_) && this.animationTimer_.enabled;
+  return this.animationTimer_ != null && this.animationTimer_.enabled;
 };
 
 

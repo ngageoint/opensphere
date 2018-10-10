@@ -61,11 +61,11 @@ os.object.prune = function(obj) {
  *    as override values. Defaults to true
  */
 os.object.merge = function(from, to, opt_overwrite, opt_nullOverwrite) {
-  if (!goog.isDefAndNotNull(opt_overwrite)) {
+  if (opt_overwrite == null) {
     opt_overwrite = true;
   }
 
-  if (!goog.isDefAndNotNull(opt_nullOverwrite)) {
+  if (opt_nullOverwrite == null) {
     opt_nullOverwrite = true;
   }
 
@@ -306,7 +306,7 @@ os.object.compareByField = function(field, o1, o2, opt_comparitor) {
  * @private
  */
 os.object.getCompareFieldValue_ = function(field, o) {
-  if (goog.isDefAndNotNull(o)) {
+  if (o != null) {
     var value;
     if (o[field]) {
       if (goog.isFunction(o[field])) {

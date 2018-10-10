@@ -1473,7 +1473,7 @@ plugin.cesium.sync.FeatureConverter.prototype.getFeatureStyles = function(featur
   }
 
   // use the fallback if there isn't one
-  if (!goog.isDefAndNotNull(style)) {
+  if (style == null) {
     var layerStyle = layer.getStyleFunction();
     if (layerStyle) {
       style = layerStyle(feature, resolution);
@@ -1653,7 +1653,7 @@ plugin.cesium.sync.FeatureConverter.prototype.updatePrimitiveLike = function(fea
 plugin.cesium.sync.FeatureConverter.prototype.olVectorLayerToCesium = function(layer, view) {
   var projection = view.getProjection();
   var resolution = view.getResolution();
-  if (!goog.isDefAndNotNull(projection) || resolution === undefined) {
+  if (projection == null || resolution === undefined) {
     // an assertion is not enough for closure to assume resolution and projection are defined
     throw new Error('view not ready');
   }

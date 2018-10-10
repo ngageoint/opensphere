@@ -256,7 +256,7 @@ os.state.v2.TimeState.prototype.saveInternal = function(options, rootObj) {
     }
 
     var timeline = goog.dom.getElementByClass('js-timeline');
-    if (goog.isDefAndNotNull(timeline)) {
+    if (timeline != null) {
       // TODO: I think loop is OBE, as the hold/animate loops really handle this.
       // Using the full animation range for now.
       var loop = this.rangeToDateFormatString_(tlc.getAnimationRange());

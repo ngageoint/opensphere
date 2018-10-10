@@ -706,7 +706,7 @@ os.ui.timeline.Brush.prototype.updateLabels = function() {
       }
     }
 
-    if (!goog.isDefAndNotNull(panningRight)) {
+    if (panningRight == null) {
       fadeLeft.style('display', 'none');
       fadeRight.style('display', 'none');
     } else if (panningRight) {

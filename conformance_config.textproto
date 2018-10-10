@@ -169,6 +169,12 @@ requirement: {
 
 #requirement: {
 #  type: BANNED_NAME
+#  value: 'goog.isDefAndNotNull'
+#  error_message: 'goog.isDefAndNotNull(value) is not permitted. Use value != null instead.'
+#}
+
+#requirement: {
+#  type: BANNED_NAME
 #  value: 'goog.isNull'
 #  error_message: 'goog.isNull(value) is not permitted. Use value === null instead.'
 #}

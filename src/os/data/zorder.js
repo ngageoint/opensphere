@@ -292,12 +292,12 @@ os.data.ZOrder.prototype.moveHighestAndUpdate = function(id) {
       }
     }
 
-    if (goog.isDefAndNotNull(addedGroup)) {
+    if (addedGroup != null) {
       break;
     }
   }
 
-  if (!goog.isDefAndNotNull(addedGroup)) {
+  if (addedGroup == null) {
     return false;
   }
 

@@ -188,7 +188,7 @@ os.ui.window.launch = function(html, opt_parent, opt_scope, opt_compile, opt_sco
 os.ui.window.launchInternal = function(html, parent, $scope, $compile, opt_scopeOptions) {
   // make a new scope
   var s = $scope.$new();
-  if (goog.isDefAndNotNull(opt_scopeOptions)) {
+  if (opt_scopeOptions != null) {
     goog.object.extend(s, opt_scopeOptions);
   }
 

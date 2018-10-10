@@ -334,8 +334,8 @@ os.ui.state.StateManager.prototype.saveStates = function(method, title, opt_desc
 os.ui.state.StateManager.prototype.onSaveSuccess = function(options) {
   var content = this.serializeContent(options);
   var stateFileName = this.getStateFileName(options);
-  goog.asserts.assert(goog.isDefAndNotNull(content), 'No state content to save!');
-  goog.asserts.assert(goog.isDefAndNotNull(stateFileName), 'No state file name!');
+  goog.asserts.assert(content != null, 'No state content to save!');
+  goog.asserts.assert(stateFileName != null, 'No state file name!');
 
   var persistMethod = options.method;
   if (persistMethod) {

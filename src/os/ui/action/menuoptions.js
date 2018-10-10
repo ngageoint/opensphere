@@ -30,5 +30,5 @@ goog.provide('os.ui.action.MenuOptions');
 os.ui.action.MenuOptions = function(opt_menu, opt_division, opt_order) {
   this.menu = opt_menu;
   this.division = opt_division;
-  this.order = goog.isDefAndNotNull(opt_order) ? opt_order : Number.MAX_VALUE;
+  this.order = opt_order != null ? opt_order : Number.MAX_VALUE;
 };

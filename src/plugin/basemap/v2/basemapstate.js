@@ -55,7 +55,7 @@ plugin.basemap.v2.BaseMapState.LOGGER_ = goog.log.getLogger('plugin.basemap.v2.B
  */
 plugin.basemap.v2.BaseMapState.prototype.isValid = function(layer) {
   try {
-    return layer instanceof plugin.basemap.layer.BaseMap && goog.isDefAndNotNull(layer.getLayerOptions());
+    return layer instanceof plugin.basemap.layer.BaseMap && layer.getLayerOptions() != null;
   } catch (e) {
     // may not be a os.layer.ILayer... so don't persist it
   }

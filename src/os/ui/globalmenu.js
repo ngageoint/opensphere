@@ -293,14 +293,14 @@ os.ui.positionMenu_ = function(position, opt_target, opt_root) {
   var targetEl;
   if (typeof opt_target === 'string') {
     // target is a selector from the document or a root element
-    targetEl = goog.isDefAndNotNull(opt_root) ? opt_root.find(opt_target) : angular.element(opt_target);
+    targetEl = opt_root != null ? opt_root.find(opt_target) : angular.element(opt_target);
   } else if (opt_target !== undefined) {
     // target is an element
     targetEl = opt_target;
   }
 
   var p = position;
-  if (goog.isDefAndNotNull(targetEl)) {
+  if (targetEl != null) {
     var pos = /** @type {{left: number, top:number}} */ (targetEl.offset());
     if (pos.top) {
       pos.top -= $(document).scrollTop();

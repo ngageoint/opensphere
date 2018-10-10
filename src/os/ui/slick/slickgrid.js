@@ -253,7 +253,7 @@ os.ui.slick.SlickGridCtrl = function($scope, $element, $compile) {
   $scope['cellTooltips'] = $scope['cellTooltips'] == undefined ? true : $scope['cellTooltips'];
 
   if ($scope['dblClickEnabled'] && $scope['dblClickEnabled'] !== 'false') {
-    if (goog.isDefAndNotNull($scope['dblClickHandler'])) {
+    if ($scope['dblClickHandler'] != null) {
       this.grid.onDblClick.subscribe($scope['dblClickHandler'].bind(this));
     } else {
       this.grid.onDblClick.subscribe(this.onDblClick.bind(this));
@@ -1446,7 +1446,7 @@ os.ui.slick.SlickGridCtrl.prototype.onRowRemove = function(e, args) {
  * @param {*} rows
  */
 os.ui.slick.SlickGridCtrl.prototype.setSelectedRows = function(rows) {
-  if (goog.isDefAndNotNull(this.selectionModel_)) {
+  if (this.selectionModel_ != null) {
     this.grid.setSelectedRows(rows);
   }
 };
@@ -1458,7 +1458,7 @@ os.ui.slick.SlickGridCtrl.prototype.setSelectedRows = function(rows) {
  * @protected
  */
 os.ui.slick.SlickGridCtrl.prototype.getSelectedRows = function() {
-  return goog.isDefAndNotNull(this.selectionModel_) ? this.grid.getSelectedRows() : [];
+  return this.selectionModel_ != null ? this.grid.getSelectedRows() : [];
 };
 
 

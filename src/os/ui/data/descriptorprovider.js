@@ -28,7 +28,7 @@ goog.inherits(os.ui.data.DescriptorProvider, os.ui.data.BaseProvider);
  * @template T
  */
 os.ui.data.DescriptorProvider.prototype.addDescriptor = function(descriptor, opt_enable, opt_dedup) {
-  var dedup = goog.isDefAndNotNull(opt_dedup) ? opt_dedup : true;
+  var dedup = opt_dedup != null ? opt_dedup : true;
   var node = dedup ? this.findNode(descriptor) : null;
   if (!node) {
     node = new os.ui.data.DescriptorNode();
@@ -36,7 +36,7 @@ os.ui.data.DescriptorProvider.prototype.addDescriptor = function(descriptor, opt
     this.addChild(node);
   }
 
-  var enable = goog.isDefAndNotNull(opt_enable) ? opt_enable : true;
+  var enable = opt_enable != null ? opt_enable : true;
   if (enable) {
     // refresh the descriptor. don't create a command if the descriptor was previously active since the final state
     // isn't changing.

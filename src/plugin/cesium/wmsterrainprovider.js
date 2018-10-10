@@ -16,7 +16,7 @@ goog.require('plugin.cesium.AbstractTerrainProvider');
 plugin.cesium.WMSTerrainProvider = function(options) {
   plugin.cesium.WMSTerrainProvider.base(this, 'constructor', /** @type {!osx.map.TerrainProviderOptions} */ (options));
 
-  goog.asserts.assert(goog.isDefAndNotNull(options.layers) && options.layers.length > 0, 'layers not defined');
+  goog.asserts.assert(options.layers != null && options.layers.length > 0, 'layers not defined');
 
   /**
    * Configured WMS layers to use for terrain.

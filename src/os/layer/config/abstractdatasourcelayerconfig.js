@@ -210,7 +210,7 @@ os.layer.config.AbstractDataSourceLayerConfig.prototype.getLayer = function(sour
  * @protected
  */
 os.layer.config.AbstractDataSourceLayerConfig.prototype.getRequest = function(options) {
-  goog.asserts.assert(goog.isDefAndNotNull(this.url), 'Data source layer URL cannot be null!');
+  goog.asserts.assert(this.url != null, 'Data source layer URL cannot be null!');
 
   var uri = new goog.Uri(this.url);
   if (this.params) {

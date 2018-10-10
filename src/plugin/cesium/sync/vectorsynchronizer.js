@@ -231,7 +231,7 @@ plugin.cesium.sync.VectorSynchronizer.prototype.onLayerPropertyChange_ = functio
  */
 plugin.cesium.sync.VectorSynchronizer.prototype.onAddFeature_ = function(event) {
   var feature = event.feature;
-  goog.asserts.assert(goog.isDefAndNotNull(feature));
+  goog.asserts.assert(feature != null);
   this.addFeature(feature);
 };
 
@@ -243,7 +243,7 @@ plugin.cesium.sync.VectorSynchronizer.prototype.onAddFeature_ = function(event) 
  */
 plugin.cesium.sync.VectorSynchronizer.prototype.onRemoveFeature_ = function(event) {
   var feature = event.feature;
-  goog.asserts.assert(goog.isDefAndNotNull(feature));
+  goog.asserts.assert(feature != null);
   this.removeFeature(feature);
 };
 
@@ -255,7 +255,7 @@ plugin.cesium.sync.VectorSynchronizer.prototype.onRemoveFeature_ = function(even
  */
 plugin.cesium.sync.VectorSynchronizer.prototype.onChangeFeature_ = function(event) {
   var feature = event.feature;
-  goog.asserts.assert(goog.isDefAndNotNull(feature));
+  goog.asserts.assert(feature != null);
   this.updateFeature_(feature);
 };
 

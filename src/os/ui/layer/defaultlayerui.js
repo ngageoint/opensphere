@@ -317,16 +317,16 @@ os.ui.layer.DefaultLayerUICtrl.prototype.setInitialValues_ = function() {
         var values = {};
 
         var opacity = os.layer.getOpacity(layer);
-        values['opacity'] = goog.isDefAndNotNull(opacity) ? opacity : 0;
+        values['opacity'] = opacity != null ? opacity : 0;
 
         var brightness = os.layer.getBrightness(layer);
-        values['brightness'] = goog.isDefAndNotNull(brightness) ? brightness : 0;
+        values['brightness'] = brightness != null ? brightness : 0;
 
         var contrast = os.layer.getContrast(layer);
-        values['contrast'] = goog.isDefAndNotNull(contrast) ? contrast : 0;
+        values['contrast'] = contrast != null ? contrast : 0;
 
         var saturation = os.layer.getSaturation(layer);
-        values['saturation'] = goog.isDefAndNotNull(saturation) ? saturation : 0;
+        values['saturation'] = saturation != null ? saturation : 0;
 
         this.initialValues[layerId] = values;
       }

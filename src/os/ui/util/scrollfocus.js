@@ -117,12 +117,12 @@ os.ui.util.ScrollFocusCtrl.prototype.scrollHandler_ = function(e) {
   var x;
   var y;
   var wheelY;
-  if (goog.isDefAndNotNull(e.wheelDeltaX) &&
-      goog.isDefAndNotNull(e.wheelDeltaY)) { // chrome
+  if (e.wheelDeltaX != null &&
+      e.wheelDeltaY != null) { // chrome
     x = 0.4 * e.wheelDeltaX;
     y = -0.45 * e.wheelDeltaY;
     wheelY = e.wheelDeltaY;
-  } else if (goog.isDefAndNotNull(e.wheelDelta)) { // i freaking e.
+  } else if (e.wheelDelta != null) { // i freaking e.
     x = 0;
     y = -2.1 * e.wheelDelta; // +120 away -120 toward the user
     wheelY = e.wheelDelta;

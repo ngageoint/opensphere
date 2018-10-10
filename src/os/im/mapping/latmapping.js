@@ -126,7 +126,7 @@ os.im.mapping.LatMapping.prototype.execute = function(item) {
 os.im.mapping.LatMapping.prototype.testField = function(value) {
   if (value) {
     var l = os.geo.parseLat(String(value));
-    return goog.isDefAndNotNull(l) && !isNaN(l);
+    return l != null && !isNaN(l);
   }
   return false;
 };
@@ -138,7 +138,7 @@ os.im.mapping.LatMapping.prototype.testField = function(value) {
 os.im.mapping.LatMapping.prototype.testAndGetField = function(value, opt_format) {
   if (value) {
     var l = os.geo.parseLat(String(value), opt_format);
-    if (goog.isDefAndNotNull(l) && !isNaN(l)) {
+    if (l != null && !isNaN(l)) {
       return l.toString();
     }
   }

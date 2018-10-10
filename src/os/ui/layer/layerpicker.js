@@ -88,7 +88,7 @@ os.ui.layer.LayerPickerCtrl = function($scope, $element, $timeout) {
   var formatter = /** @type {Function} */ ($scope['formatter']) || this.select2Formatter_;
   var matcher = /** @type {Function} */ ($scope['matcher']) || this.matcher_;
 
-  if (!goog.isDefAndNotNull($scope['isRequired'])) {
+  if ($scope['isRequired'] == null) {
     // default the picker to required
     $scope['isRequired'] = true;
   }

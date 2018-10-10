@@ -337,7 +337,7 @@ os.ui.query.QueryManager.prototype.removeEntries = function(opt_layerId, opt_are
  * @param {!Array<Object<string, string|boolean>>} entries
  */
 os.ui.query.QueryManager.prototype.removeEntriesArr = function(entries) {
-  goog.asserts.assert(goog.isDefAndNotNull(entries));
+  goog.asserts.assert(entries != null);
 
   var i = this.entries.length;
   var count = 0;

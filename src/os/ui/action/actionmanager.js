@@ -231,7 +231,7 @@ os.ui.action.ActionManager.prototype.removeAction = function(action, opt_quiet) 
 
     if (existing.isEnabled(this.getActionArgs())) {
       this.enabledActions_.remove(type);
-      if (goog.isDefAndNotNull(opt_quiet) && !opt_quiet) {
+      if (opt_quiet != null && !opt_quiet) {
         this.fireEnabledActionsChanged_();
       }
     }

@@ -827,7 +827,7 @@ os.config.Settings.prototype.isAdmin_ = function(keys) {
 os.config.Settings.prototype.markKeysForDelete_ = function(keys, newVal, oldVal) {
   if (goog.typeOf(oldVal) === 'object') {
     var oldObjKeys = goog.object.getKeys(os.object.reduce(oldVal));
-    var newObjKeys = goog.isDefAndNotNull(newVal) ? goog.object.getKeys(os.object.reduce(newVal)) : [];
+    var newObjKeys = newVal != null ? goog.object.getKeys(os.object.reduce(newVal)) : [];
     var keysAsStr = keys.join('.');
     goog.array.forEach(oldObjKeys, function(oldObjKey) {
       if (!goog.array.contains(newObjKeys, oldObjKey)) {

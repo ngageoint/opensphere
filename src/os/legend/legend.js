@@ -268,11 +268,11 @@ os.legend.drawToCanvas = function(canvas, opt_maxHeight, opt_maxWidth) {
   var options = os.legend.getOptionsFromSettings();
   options.maxHeight = opt_maxHeight || Infinity;
   options.maxWidth = opt_maxWidth || Infinity;
-  var showCountDefined = goog.isDefAndNotNull(options.showCount);
+  var showCountDefined = options.showCount != null;
   options.showCount = !showCountDefined ? os.legend.DEFAULT_OPTIONS.showCount : options.showCount;
-  var showColumnDefined = goog.isDefAndNotNull(options.showColumn);
+  var showColumnDefined = options.showColumn != null;
   options.showColumn = !showColumnDefined ? os.legend.DEFAULT_OPTIONS.showColumn : options.showColumn;
-  var showVectorTypeDefined = goog.isDefAndNotNull(options.showVectorType);
+  var showVectorTypeDefined = options.showVectorType != null;
   options.showVectorType = !showVectorTypeDefined ? os.legend.DEFAULT_OPTIONS.showVectorType : options.showVectorType;
 
   if (canvas) {
