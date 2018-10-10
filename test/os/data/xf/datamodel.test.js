@@ -40,7 +40,7 @@ describe('os.data.xf.DataModel', function() {
   };
 
   var dim2 = function(item) {
-    return goog.isNumber(item.value);
+    return typeof item.value === 'number';
   };
 
   var filter = null;
@@ -86,7 +86,7 @@ describe('os.data.xf.DataModel', function() {
 
     var results = filter.getResults(25);
     expect(results.length).toBe(25);
-    expect(goog.isNumber(results[0].value)).toBe(true);
+    expect(typeof results[0].value === 'number').toBe(true);
   });
 
   it('should filter objects after finding the intersection', function() {

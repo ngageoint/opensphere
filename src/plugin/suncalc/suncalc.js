@@ -233,7 +233,7 @@ plugin.suncalc.SunCalcCtrl.addTextColor_ = function(item) {
  * @export
  */
 plugin.suncalc.SunCalcCtrl.prototype.formatTime = function(t) {
-  if (goog.isNumber(t)) {
+  if (typeof t === 'number') {
     return moment(t + os.time.timeOffset).utc().format(os.time.TIME_FORMATS[7]);
   }
 

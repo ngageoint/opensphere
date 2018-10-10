@@ -159,7 +159,8 @@ os.im.mapping.LatMapping.prototype.addGeometry = function(feature) {
 
   var lat = feature.get(os.Fields.LAT);
   var lon = feature.get(os.Fields.LON);
-  if (goog.isDef(lat) && !isNaN(lat) && goog.isNumber(lat) && goog.isDef(lon) && !isNaN(lon) && goog.isNumber(lon)) {
+  if (goog.isDef(lat) && !isNaN(lat) && typeof lat === 'number' &&
+      goog.isDef(lon) && !isNaN(lon) && typeof lon === 'number') {
     var geom = new ol.geom.Point([lon, lat]);
     feature.suppressEvents();
     feature.setGeometry(geom.osTransform());

@@ -91,7 +91,7 @@ os.ui.LoadingBarCtrl = function($scope, $element, $timeout) {
   }, this));
 
   this.unwatchComplete = $scope.$watch('complete', goog.bind(function(val) {
-    if (goog.isNumber(val)) {
+    if (typeof val === 'number') {
       if (val < 0) {
         // for negative values, show an indeterminate progress bar (full bar, no percent complete)
         this['complete'] = 100;
