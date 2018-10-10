@@ -130,7 +130,7 @@ os.ui.layer.LayerPickerCtrl.prototype.destroy_ = function() {
  * @private
  */
 os.ui.layer.LayerPickerCtrl.prototype.layerSelected_ = function() {
-  if (goog.isDef(this.scope_['layer'])) {
+  if (this.scope_['layer'] !== undefined) {
     this.selectLayer_();
   } else {
     this.selectLayers_();

@@ -400,7 +400,7 @@ os.state.v2.TimeState.prototype.readIntervalsAsRangeSet_ = function(element, tag
  * @protected
  */
 os.state.v2.TimeState.prototype.getDurationFromDiff = function(diff, opt_numIntervals) {
-  var numIntervals = goog.isDef(opt_numIntervals) ? opt_numIntervals : 1;
+  var numIntervals = opt_numIntervals !== undefined ? opt_numIntervals : 1;
   var val = null;
 
   if (diff >= 28 * 24 * 60 * 60 * 1000) {

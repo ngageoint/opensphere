@@ -178,7 +178,7 @@ os.ui.ServersCtrl.prototype.update = function(opt_prompt) {
     return;
   }
 
-  if (!goog.isDef(opt_prompt)) {
+  if (opt_prompt === undefined) {
     opt_prompt = true;
   }
 
@@ -356,7 +356,7 @@ os.ui.ServersCtrl.prototype.edit = function(provider) {
  * @export
  */
 os.ui.ServersCtrl.prototype.remove = function(provider, opt_prompt) {
-  if (!goog.isDef(opt_prompt)) {
+  if (opt_prompt === undefined) {
     opt_prompt = true;
   }
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.Servers.REMOVE, 1);

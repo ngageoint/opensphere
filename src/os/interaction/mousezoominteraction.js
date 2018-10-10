@@ -75,7 +75,7 @@ os.interaction.MouseZoom.prototype.zoom = function(mapBrowserEvent) {
     var map = mapBrowserEvent.map;
 
     var view = map.getView();
-    goog.asserts.assert(goog.isDef(view));
+    goog.asserts.assert(view !== undefined);
 
     var mapContainer = os.MapContainer.getInstance();
     if (mapContainer.is3DEnabled()) {

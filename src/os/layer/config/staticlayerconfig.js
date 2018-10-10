@@ -56,7 +56,7 @@ os.layer.config.StaticLayerConfig.LOGGER_ = goog.log.getLogger('os.layer.config.
 os.layer.config.StaticLayerConfig.prototype.initializeConfig = function(options) {
   os.layer.config.StaticLayerConfig.base(this, 'initializeConfig', options);
 
-  this.animate = goog.isDef(options['animate']) ? options['animate'] : false;
+  this.animate = options['animate'] !== undefined ? options['animate'] : false;
 
   if (goog.isArray(options['data'])) {
     // make sure the array was created in this context

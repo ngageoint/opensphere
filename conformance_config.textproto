@@ -163,6 +163,12 @@ requirement: {
 
 #requirement: {
 #  type: BANNED_NAME
+#  value: 'goog.isDef'
+#  error_message: 'goog.isDef(value) is not permitted. Use value !== undefined instead.'
+#}
+
+#requirement: {
+#  type: BANNED_NAME
 #  value: 'goog.isNumber'
 #  error_message: 'goog.isNumber(value) is not permitted. Use typeof value === \'number\' instead.'
 #}

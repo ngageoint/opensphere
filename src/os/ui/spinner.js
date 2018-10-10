@@ -44,7 +44,7 @@ os.ui.Module.directive('spinner', [os.ui.spinnerDirective]);
 os.ui.SpinnerCtrl = function($scope, $element) {
   var liveUpdate = true;
 
-  if (goog.isDef($scope['live']) && goog.isDef($scope['live']())) {
+  if ($scope['live'] !== undefined && $scope['live']() !== undefined) {
     liveUpdate = $scope['live']();
   }
 
@@ -64,7 +64,7 @@ os.ui.SpinnerCtrl = function($scope, $element) {
     'start': this.killEvent_
   };
 
-  if (goog.isDef($scope['step'])) {
+  if ($scope['step'] !== undefined) {
     options['step'] = $scope['step'];
   }
 
@@ -155,7 +155,7 @@ os.ui.SpinnerCtrl.prototype.onChange_ = function(newVal, oldVal) {
  * @private
  */
 os.ui.SpinnerCtrl.prototype.onDisabledChange_ = function(opt_new, opt_old) {
-  if (goog.isDef(opt_new)) {
+  if (opt_new !== undefined) {
     this.spinner_.spinner('option', 'disabled', opt_new);
   }
 };
@@ -171,7 +171,7 @@ os.ui.SpinnerCtrl.prototype.onSpin_ = function(e, spinner) {
   // jQuery UI manages the value between max and min so we don't need to
   this.killEvent_(e);
 
-  var faceValue = goog.isDef(spinner['value']) ? spinner['value'] : this.spinner_.spinner('value');
+  var faceValue = spinner['value'] !== undefined ? spinner['value'] : this.spinner_.spinner('value');
   this.scope_['value'] = faceValue;
   this.scope_.$emit(this.scope_['name'] + '.' + e.type, faceValue);
   os.ui.apply(this.scope_);
@@ -185,7 +185,7 @@ os.ui.SpinnerCtrl.prototype.onSpin_ = function(e, spinner) {
  * @private
  */
 os.ui.SpinnerCtrl.prototype.onSpinnerChange_ = function(e, spinner) {
-  var faceValue = goog.isDef(spinner['value']) ? spinner['value'] : this.spinner_.spinner('value');
+  var faceValue = spinner['value'] !== undefined ? spinner['value'] : this.spinner_.spinner('value');
   if (typeof faceValue !== 'number') {
     faceValue = this.scope_['value'];
   }

@@ -247,7 +247,7 @@ plugin.suncalc.SunCalcCtrl.prototype.formatTime = function(t) {
  * @export
  */
 plugin.suncalc.SunCalcCtrl.prototype.formatDate = function(t) {
-  if (goog.isDef(t)) {
+  if (t !== undefined) {
     return moment(t + os.time.timeOffset).utc().format(os.time.DATETIME_FORMATS[20]) +
         (os.time.timeOffset !== 0 ? ' UTC' : '') + os.time.timeOffsetLabel;
   }

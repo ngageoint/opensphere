@@ -94,7 +94,7 @@ os.ui.geo.PositionCtrl = function($scope, $element) {
   /**
    * @type {string}
    */
-  this['label'] = goog.isDef($scope['label']) ? $scope['label'] : 'Position';
+  this['label'] = $scope['label'] !== undefined ? $scope['label'] : 'Position';
   if (this['label'] == 'false') {
     this['label'] = null;
   }
@@ -142,7 +142,7 @@ os.ui.geo.PositionCtrl = function($scope, $element) {
   $scope.$on(os.ui.geo.PositionEventType.MAP_ENABLED, this.onMapEnabled_.bind(this));
 
   $scope.$on('resetForm', function(opt_name) {
-    if (!goog.isDef(opt_name) || opt_name == this.scope_['name']) {
+    if (opt_name === undefined || opt_name == this.scope_['name']) {
       this.setMapEnabled_(false);
     }
   }.bind(this));

@@ -678,7 +678,7 @@ os.MapContainer.prototype.onZoom_ = function(event) {
 os.MapContainer.prototype.resetView = function() {
   var map = this.getMap();
   var view = map.getView();
-  goog.asserts.assert(goog.isDef(view));
+  goog.asserts.assert(view !== undefined);
   view.setRotation(0);
   view.setCenter(os.map.DEFAULT_CENTER);
   view.setZoom(3);
@@ -721,7 +721,7 @@ os.MapContainer.prototype.resetRoll = function() {
   } else {
     var map = this.getMap();
     var view = map.getView();
-    goog.asserts.assert(goog.isDef(view));
+    goog.asserts.assert(view !== undefined);
     view.setRotation(0);
   }
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.RESET_ROLL, 1);
@@ -1154,7 +1154,7 @@ os.MapContainer.prototype.restoreCameraStateInternal_ = function(cameraState) {
 
     // restore the 2D view if in 2D mode or the 3D camera is not defined
     var view = this.getMap().getView();
-    goog.asserts.assert(goog.isDef(view));
+    goog.asserts.assert(view !== undefined);
 
     var zoom = cameraState.zoom;
     if (zoom == null) {

@@ -432,7 +432,7 @@ os.ui.filter.FilterManager.prototype.toggle = function(filterOrId, opt_toggle) {
   var id = filterOrId instanceof os.filter.FilterEntry ? filterOrId.getId() : filterOrId;
   if (id) {
     var filter = this.getFilter(id);
-    var enable = goog.isDef(opt_toggle) ? opt_toggle : !filter.isEnabled();
+    var enable = opt_toggle !== undefined ? opt_toggle : !filter.isEnabled();
     filter.setEnabled(enable);
     this.save();
 

@@ -152,7 +152,7 @@ plugin.cesium.WMSTerrainProvider.prototype.getRequestUrl_ = function(x, y, level
  */
 plugin.cesium.WMSTerrainProvider.prototype.arrayToHeightmap_ = function(childTileMask, buffer) {
   var heightBuffer = this.postProcessArray_(buffer);
-  if (!goog.isDef(heightBuffer)) {
+  if (heightBuffer === undefined) {
     throw new Cesium.DeveloperError('unexpected height buffer size');
   }
 

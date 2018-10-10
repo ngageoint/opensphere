@@ -54,7 +54,7 @@ os.layer.config.AbstractDataSourceLayerConfig.LOGGER_ =
 os.layer.config.AbstractDataSourceLayerConfig.prototype.initializeConfig = function(options) {
   os.layer.config.AbstractDataSourceLayerConfig.superClass_.initializeConfig.call(this, options);
 
-  if (goog.isDef(options['animate'])) {
+  if (options['animate'] !== undefined) {
     this.animate = options['animate'];
   } else {
     this.animate = false;

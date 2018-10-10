@@ -1070,16 +1070,16 @@ plugin.cesium.sync.FeatureConverter.prototype.getHeightReference = function(laye
   // var altitudeMode = geometry.get('altitudeMode');
 
   // // Or from the feature
-  // if (!goog.isDef(altitudeMode)) {
+  // if (altitudeMode === undefined) {
   //   altitudeMode = feature.get('altitudeMode');
   // }
 
   // // Or from the layer
-  // if (!goog.isDef(altitudeMode)) {
+  // if (altitudeMode === undefined) {
   //   altitudeMode = layer.get('altitudeMode');
   // }
 
-  // if (goog.isDef(altitudeMode)) {
+  // if (altitudeMode !== undefined) {
   //   var heightReference = Cesium.HeightReference.NONE;
   //   if (altitudeMode === 'clampToGround') {
   //     heightReference = Cesium.HeightReference.CLAMP_TO_GROUND;
@@ -1311,7 +1311,7 @@ plugin.cesium.sync.FeatureConverter.prototype.updatePrimitive = function(feature
     // primitives won't be marked as ready until they've been loaded to the GPU. we can't update them until they're
     // ready, so call this again on a delay. limit to 20 tries in case a primitive is never ready for whatever
     // reason.
-    primitive.updateRetries = goog.isDef(primitive.updateRetries) ? primitive.updateRetries + 1 : 1;
+    primitive.updateRetries = primitive.updateRetries !== undefined ? primitive.updateRetries + 1 : 1;
 
     if (primitive.updateRetries < 20) {
       var callback = goog.partial(this.updatePrimitive, feature, geometry, style, context, primitive);
@@ -1468,7 +1468,7 @@ plugin.cesium.sync.FeatureConverter.prototype.getFeatureStyles = function(featur
 
   // feature style takes precedence
   var featureStyle = feature.getStyleFunction();
-  if (goog.isDef(featureStyle)) {
+  if (featureStyle !== undefined) {
     style = featureStyle.call(feature, resolution);
   }
 
@@ -1480,7 +1480,7 @@ plugin.cesium.sync.FeatureConverter.prototype.getFeatureStyles = function(featur
     }
   }
 
-  if (!goog.isDef(style)) {
+  if (style === undefined) {
     return null;
   }
 
@@ -1653,7 +1653,7 @@ plugin.cesium.sync.FeatureConverter.prototype.updatePrimitiveLike = function(fea
 plugin.cesium.sync.FeatureConverter.prototype.olVectorLayerToCesium = function(layer, view) {
   var projection = view.getProjection();
   var resolution = view.getResolution();
-  if (!goog.isDefAndNotNull(projection) || !goog.isDef(resolution)) {
+  if (!goog.isDefAndNotNull(projection) || resolution === undefined) {
     // an assertion is not enough for closure to assume resolution and projection are defined
     throw new Error('view not ready');
   }

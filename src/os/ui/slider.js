@@ -45,15 +45,15 @@ os.ui.SliderCtrl = function($scope, $element) {
     'min': $scope['min'],
     'max': $scope['max'],
     'value': $scope['value'],
-    'disabled': goog.isDef($scope['disabled']) ? $scope['disabled'] : false
+    'disabled': $scope['disabled'] !== undefined ? $scope['disabled'] : false
   };
 
-  if (goog.isDef($scope['step'])) {
+  if ($scope['step'] !== undefined) {
     options['step'] = $scope['step'];
   }
 
   var liveUpdate = true;
-  if (goog.isDef($scope['live']) && goog.isDef($scope['live']())) {
+  if ($scope['live'] !== undefined && $scope['live']() !== undefined) {
     liveUpdate = $scope['live']();
   }
 

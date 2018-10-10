@@ -369,7 +369,7 @@ os.ui.window.exists = function(id) {
 os.ui.window.blink = function(id, opt_start) {
   var win = os.ui.window.getById(id);
   if (win) {
-    var start = goog.isDef(opt_start) ? opt_start : true;
+    var start = opt_start !== undefined ? opt_start : true;
     var blinkEl = win.find(os.ui.windowSelector.HEADER + ' ' + os.ui.windowSelector.HEADER_TEXT + ' i.fa');
     if (start) {
       blinkEl.addClass('a-pulsate');
@@ -884,7 +884,7 @@ os.ui.WindowCtrl.prototype.onDragStop_ = function(event, ui) {
  * @private
  */
 os.ui.WindowCtrl.prototype.onToggleModal_ = function(opt_new, opt_old) {
-  if (goog.isDef(opt_new) && opt_new != opt_old) {
+  if (opt_new !== undefined && opt_new != opt_old) {
     if (opt_new) {
       this.addModalBg();
     } else {

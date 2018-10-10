@@ -168,8 +168,8 @@ plugin.cesium.sync.TileSynchronizer.prototype.onZoomChange_ = function(opt_evt) 
     var min = this.layer.getMinResolution();
     var max = this.layer.getMaxResolution();
 
-    min = goog.isDef(min) ? min : os.map.zoomToResolution(42, proj);
-    max = goog.isDef(max) ? max : os.map.zoomToResolution(1, proj);
+    min = min !== undefined ? min : os.map.zoomToResolution(42, proj);
+    max = max !== undefined ? max : os.map.zoomToResolution(1, proj);
 
     var maxZoom = os.map.resolutionToZoom(min, proj);
     // for layers with a max zoom of 20 or greater, we will assume that they should just stay on indefinitely as

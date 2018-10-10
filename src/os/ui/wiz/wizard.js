@@ -143,7 +143,7 @@ os.ui.wiz.WizardCtrl.prototype.onStepValidityChange_ = function(event, opt_valid
   event.stopPropagation();
 
   // default to true, relying on the step validity result
-  var valid = goog.isDef(opt_valid) ? opt_valid : true;
+  var valid = opt_valid !== undefined ? opt_valid : true;
   var step = this['steps'][this['activeIndex']];
   if (valid && step.isValid(this.config)) {
     this.setStepState(step, os.ui.wiz.StepState.NONE);
