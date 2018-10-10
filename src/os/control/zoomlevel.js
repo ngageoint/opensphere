@@ -162,7 +162,7 @@ os.control.ZoomLevel.prototype.onUnitsChange = function(event) {
  */
 os.control.ZoomLevel.render_ = function(mapEvent) {
   var frameState = mapEvent.frameState;
-  if (goog.isNull(frameState)) {
+  if (frameState === null) {
     this.viewState_ = null;
   } else {
     this.viewState_ = frameState.viewState;

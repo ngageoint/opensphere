@@ -136,7 +136,7 @@ os.ui.SpinnerCtrl.prototype.onChange_ = function(newVal, oldVal) {
     }
   }
 
-  if (goog.isNull(this.scope_['value'])) {
+  if (this.scope_['value'] === null) {
     this.scope_['value'] = this.scope_['min'] || 0;
   }
 

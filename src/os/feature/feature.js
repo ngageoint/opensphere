@@ -387,10 +387,10 @@ os.feature.createLineOfBearing = function(feature, opt_replace, opt_lobOpts) {
         var bearingError = Math.abs(os.feature.getColumnValue(feature, opt_lobOpts.bearingErrorColumn));
         var bearingErrorMultiplier = opt_lobOpts.bearingError !== undefined ?
             opt_lobOpts.bearingError : os.style.DEFAULT_LOB_BEARING_ERROR;
-        if (goog.isNull(bearingError) || isNaN(bearingError)) {
+        if (bearingError === null || isNaN(bearingError)) {
           bearingError = 1;
         }
-        if (goog.isNull(lengthError) || isNaN(lengthError)) {
+        if (lengthError === null || isNaN(lengthError)) {
           lengthError = 1;
         }
         var cLengthError = os.math.convertUnits(lengthError, os.style.DEFAULT_UNITS, lengthErrorUnits) *
