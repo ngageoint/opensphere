@@ -879,11 +879,12 @@ plugin.file.kml.KMLParser.prototype.readBalloonStyle_ = function(feature) {
   var styleUrl = /** @type {string} */ (feature.get('styleUrl'));
   var styleId = this.getStyleId(decodeURIComponent(styleUrl));
   var style = styleId in this.otherStyleMap ? this.otherStyleMap[styleId] : null;
-  var text = style.text;
-  var bgColor = style.bgColor || '255, 255, 255, 1';
-  var textColor = style.textColor || '0, 0, 0, 1';
 
-  if (style && text) {
+  if (style) {
+    var text = style.text;
+    var bgColor = style.bgColor || '255, 255, 255, 1';
+    var textColor = style.textColor || '0, 0, 0, 1';
+
     var pattern = /[$]\[(.*?)\]/g;
     var regex = new RegExp(pattern);
 
