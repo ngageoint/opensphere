@@ -26,9 +26,9 @@ os.ui.ol.interaction.DragBox = function(opt_options) {
 
   /**
    * @type {!os.olm.render.Box}
-   * @private
+   * @protected
    */
-  this.box2D_ = new os.olm.render.Box(/** @type {ol.style.Style} */ (this.getStyle()));
+  this.box2D = new os.olm.render.Box(/** @type {ol.style.Style} */ (this.getStyle()));
 
   /**
    * This is the box extent in lon/lat
@@ -51,7 +51,7 @@ os.ui.ol.interaction.DragBox.TYPE = 'box';
  * @inheritDoc
  */
 os.ui.ol.interaction.DragBox.prototype.getGeometry = function() {
-  var geom = this.box2D_.getOriginalGeometry();
+  var geom = this.box2D.getOriginalGeometry();
 
   if (geom) {
     geom.toLonLat();
@@ -78,7 +78,7 @@ os.ui.ol.interaction.DragBox.prototype.getProperties = function() {
  */
 os.ui.ol.interaction.DragBox.prototype.begin = function(mapBrowserEvent) {
   os.ui.ol.interaction.DragBox.base(this, 'begin', mapBrowserEvent);
-  this.box2D_.setMap(mapBrowserEvent.map);
+  this.box2D.setMap(mapBrowserEvent.map);
 };
 
 
@@ -116,7 +116,7 @@ os.ui.ol.interaction.DragBox.prototype.update = function(mapBrowserEvent) {
  */
 os.ui.ol.interaction.DragBox.prototype.update2D = function(start, end) {
   if (start && end && this.extent) {
-    this.box2D_.setLonLatExtent(this.extent);
+    this.box2D.setLonLatExtent(this.extent);
   }
 };
 
@@ -128,8 +128,8 @@ os.ui.ol.interaction.DragBox.prototype.cleanup = function() {
   os.ui.ol.interaction.DragBox.base(this, 'cleanup');
   this.endCoord = null;
 
-  if (this.box2D_) {
-    this.box2D_.setMap(null);
+  if (this.box2D) {
+    this.box2D.setMap(null);
   }
 };
 
