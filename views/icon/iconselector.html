@@ -12,8 +12,8 @@
     </div>
   </div>
   <div class="modal-footer flex-shrink-0 d-flex justify-content-between">
-    <div ng-if="selector.isValid()" class="c-icon-picker__icon d-flex align-items-center justify-content-center">
-      <img class="img-fluid" ng-src="{{selector.getPath(selected.path)}}" />
+      <div ng-if="selector.isValid()" class="d-flex align-items-center justify-content-center">
+          <img class="img-fluid c-icon-picker__large-icon c-icon-picker__background rounded" ng-src="{{selector.getPath(selected.path)}}" />
     </div>
     <div>
       <button class="btn btn-primary" ng-click="selector.okay()" ng-disabled="!selector.isValid()" title="Confirm the icon selection">
