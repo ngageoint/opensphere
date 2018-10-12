@@ -39,7 +39,7 @@ plugin.file.kml.KMLFeatureParser.prototype.setSource = function(source) {
 
   if (ol.xml.isDocument(source)) {
     this.document_ = /** @type {Document} */ (source);
-  } else if (goog.isString(source)) {
+  } else if (typeof source === 'string') {
     this.document_ = ol.xml.parse(source);
   }
 };
@@ -57,7 +57,7 @@ plugin.file.kml.KMLFeatureParser.prototype.cleanup = function() {
  * @inheritDoc
  */
 plugin.file.kml.KMLFeatureParser.prototype.hasNext = function() {
-  return goog.isDefAndNotNull(this.document_);
+  return this.document_ != null;
 };
 
 

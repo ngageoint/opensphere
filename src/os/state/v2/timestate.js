@@ -256,7 +256,7 @@ os.state.v2.TimeState.prototype.saveInternal = function(options, rootObj) {
     }
 
     var timeline = goog.dom.getElementByClass('js-timeline');
-    if (goog.isDefAndNotNull(timeline)) {
+    if (timeline != null) {
       // TODO: I think loop is OBE, as the hold/animate loops really handle this.
       // Using the full animation range for now.
       var loop = this.rangeToDateFormatString_(tlc.getAnimationRange());
@@ -400,7 +400,7 @@ os.state.v2.TimeState.prototype.readIntervalsAsRangeSet_ = function(element, tag
  * @protected
  */
 os.state.v2.TimeState.prototype.getDurationFromDiff = function(diff, opt_numIntervals) {
-  var numIntervals = goog.isDef(opt_numIntervals) ? opt_numIntervals : 1;
+  var numIntervals = opt_numIntervals !== undefined ? opt_numIntervals : 1;
   var val = null;
 
   if (diff >= 28 * 24 * 60 * 60 * 1000) {

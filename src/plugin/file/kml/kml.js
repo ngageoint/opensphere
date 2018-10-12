@@ -229,9 +229,9 @@ plugin.file.kml.readTime = function(node, objectStack) {
 
   var timeObj = ol.xml.pushParseAndPop({}, plugin.file.kml.TIMEFIELD_PARSERS, node, []);
   var time = null;
-  if (goog.isDefAndNotNull(timeObj['when'])) {
+  if (timeObj['when'] != null) {
     time = new os.time.TimeInstant(timeObj['when']);
-  } else if (goog.isDefAndNotNull(timeObj['begin']) || goog.isDefAndNotNull(timeObj['end'])) {
+  } else if (timeObj['begin'] != null || timeObj['end'] != null) {
     time = new os.time.TimeRange(timeObj['begin'], timeObj['end']);
   }
 

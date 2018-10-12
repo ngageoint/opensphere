@@ -54,7 +54,7 @@ os.file.FileManager.prototype.getContentType = function(file, callback) {
     return;
   }
 
-  if (buffer && goog.isString(buffer)) {
+  if (buffer && typeof buffer === 'string') {
     // convert the string to an ArrayBuffer and continue with the check
     buffer = os.file.mime.text.getArrayBuffer(buffer);
   }

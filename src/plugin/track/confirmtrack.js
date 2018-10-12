@@ -60,6 +60,7 @@ plugin.track.ConfirmTrackCtrl = function($scope) {
  * Get the name of a track.
  * @param {!ol.Feature} track The track
  * @return {string} The name
+ * @export
  */
 plugin.track.ConfirmTrackCtrl.prototype.getTrackName = function(track) {
   var trackName = /** @type {string|undefined} */ (track.get(plugin.file.kml.KMLField.NAME));
@@ -69,10 +70,6 @@ plugin.track.ConfirmTrackCtrl.prototype.getTrackName = function(track) {
 
   return trackName;
 };
-goog.exportProperty(
-    plugin.track.ConfirmTrackCtrl.prototype,
-    'getTrackName',
-    plugin.track.ConfirmTrackCtrl.prototype.getTrackName);
 
 
 /**

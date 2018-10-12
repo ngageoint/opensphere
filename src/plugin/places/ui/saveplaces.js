@@ -145,18 +145,16 @@ plugin.places.ui.SavePlacesCtrl.prototype.disposeInternal = function() {
 
 /**
  * Close the window.
+ * @export
  */
 plugin.places.ui.SavePlacesCtrl.prototype.cancel = function() {
   os.ui.window.close(this.element);
 };
-goog.exportProperty(
-    plugin.places.ui.SavePlacesCtrl.prototype,
-    'cancel',
-    plugin.places.ui.SavePlacesCtrl.prototype.cancel);
 
 
 /**
  * Save selection to places and close the window.
+ * @export
  */
 plugin.places.ui.SavePlacesCtrl.prototype.confirm = function() {
   plugin.places.saveFromSource(this['config']);
@@ -168,10 +166,6 @@ plugin.places.ui.SavePlacesCtrl.prototype.confirm = function() {
 
   this.cancel();
 };
-goog.exportProperty(
-    plugin.places.ui.SavePlacesCtrl.prototype,
-    'confirm',
-    plugin.places.ui.SavePlacesCtrl.prototype.confirm);
 
 
 /**

@@ -23,6 +23,7 @@ goog.require('os.implements');
 goog.require('os.layer.ILayer');
 goog.require('os.map');
 goog.require('os.style.label');
+goog.require('os.webgl');
 goog.require('plugin.cesium');
 goog.require('plugin.cesium.VectorContext');
 
@@ -886,6 +887,7 @@ plugin.cesium.sync.FeatureConverter.prototype.olPolygonGeometryToCesium = functi
   clone.toLonLat();
 
   if (os.geo.isGeometryRectangular(clone)) {
+    // NOTE: This will always return 0. LinearRings.getCoordintates() returns only xy values (Array<[number, number]>)
     var altitude = os.geo.getAverageAltitude(geometry.getLinearRings()[0].getCoordinates());
     var extent = geometry.getLinearRings()[0].getExtent();
 
@@ -1030,13 +1032,20 @@ plugin.cesium.sync.FeatureConverter.prototype.olPolygonGeometryToCesiumPolyline 
 
 
 /**
- * @param {boolean} enabled
+ * @param {os.webgl.AltitudeMode} altitudeMode
  */
-plugin.cesium.sync.FeatureConverter.prototype.setAltitudeEnabled = function(enabled) {
-  if (enabled) {
-    this.heightReference_ = Cesium.HeightReference.NONE;
-  } else {
-    this.heightReference_ = Cesium.HeightReference.CLAMP_TO_GROUND;
+plugin.cesium.sync.FeatureConverter.prototype.setAltitudeMode = function(altitudeMode) {
+  switch (altitudeMode) {
+    case os.webgl.AltitudeMode.RELATIVE_TO_GROUND:
+      this.heightReference_ = Cesium.HeightReference.RELATIVE_TO_GROUND;
+      break;
+    case os.webgl.AltitudeMode.CLAMP_TO_GROUND:
+      this.heightReference_ = Cesium.HeightReference.CLAMP_TO_GROUND;
+      break;
+    case os.webgl.AltitudeMode.ABSOLUTE:
+    default:
+      this.heightReference_ = Cesium.HeightReference.NONE;
+      break;
   }
 };
 
@@ -1049,29 +1058,33 @@ plugin.cesium.sync.FeatureConverter.prototype.setAltitudeEnabled = function(enab
  */
 plugin.cesium.sync.FeatureConverter.prototype.getHeightReference = function(layer, feature, geometry) {
   // disable height reference because the implementation is fairly slow right now
+  // TODO: Should we remove this since with the function above we are seting it for the whole layer?
   return this.heightReference_;
 
   // // Read from the geometry
   // var altitudeMode = geometry.get('altitudeMode');
 
   // // Or from the feature
-  // if (!goog.isDef(altitudeMode)) {
+  // if (altitudeMode === undefined) {
   //   altitudeMode = feature.get('altitudeMode');
   // }
 
   // // Or from the layer
-  // if (!goog.isDef(altitudeMode)) {
+  // if (altitudeMode === undefined) {
   //   altitudeMode = layer.get('altitudeMode');
   // }
 
-  // var heightReference = Cesium.HeightReference.NONE;
-  // if (altitudeMode === 'clampToGround') {
-  //   heightReference = Cesium.HeightReference.CLAMP_TO_GROUND;
-  // } else if (altitudeMode === 'relativeToGround') {
-  //   heightReference = Cesium.HeightReference.RELATIVE_TO_GROUND;
+  // if (altitudeMode !== undefined) {
+  //   var heightReference = Cesium.HeightReference.NONE;
+  //   if (altitudeMode === 'clampToGround') {
+  //     heightReference = Cesium.HeightReference.CLAMP_TO_GROUND;
+  //   } else if (altitudeMode === 'relativeToGround') {
+  //     heightReference = Cesium.HeightReference.RELATIVE_TO_GROUND;
+  //   }
+  //   return heightReference;
   // }
 
-  // return heightReference;
+  // return this.heightReference_;
 };
 
 
@@ -1207,7 +1220,7 @@ plugin.cesium.sync.FeatureConverter.prototype.updateBillboard = function(feature
     imageId = style['id'] || ol.getUid(image);
   }
 
-  if (goog.isString(image) || image instanceof HTMLCanvasElement || image instanceof Image ||
+  if (typeof image === 'string' || image instanceof HTMLCanvasElement || image instanceof Image ||
       image instanceof HTMLImageElement) {
     if (bb instanceof Cesium.Billboard) {
       bb.setImage(imageId, image);
@@ -1293,7 +1306,7 @@ plugin.cesium.sync.FeatureConverter.prototype.updatePrimitive = function(feature
     // primitives won't be marked as ready until they've been loaded to the GPU. we can't update them until they're
     // ready, so call this again on a delay. limit to 20 tries in case a primitive is never ready for whatever
     // reason.
-    primitive.updateRetries = goog.isDef(primitive.updateRetries) ? primitive.updateRetries + 1 : 1;
+    primitive.updateRetries = primitive.updateRetries !== undefined ? primitive.updateRetries + 1 : 1;
 
     if (primitive.updateRetries < 20) {
       var callback = goog.partial(this.updatePrimitive, feature, geometry, style, context, primitive);
@@ -1370,7 +1383,7 @@ plugin.cesium.sync.FeatureConverter.prototype.olMultiGeometryToCesium = function
       subGeos = geometry.getPoints();
 
       subGeos.forEach(function(subGeo) {
-        goog.asserts.assert(!goog.isNull(subGeo));
+        goog.asserts.assert(subGeo !== null);
         this.createOrUpdateBillboard(feature, subGeo, context, style);
       }, this);
       break;
@@ -1450,19 +1463,19 @@ plugin.cesium.sync.FeatureConverter.prototype.getFeatureStyles = function(featur
 
   // feature style takes precedence
   var featureStyle = feature.getStyleFunction();
-  if (goog.isDef(featureStyle)) {
+  if (featureStyle !== undefined) {
     style = featureStyle.call(feature, resolution);
   }
 
   // use the fallback if there isn't one
-  if (!goog.isDefAndNotNull(style)) {
+  if (style == null) {
     var layerStyle = layer.getStyleFunction();
     if (layerStyle) {
       style = layerStyle(feature, resolution);
     }
   }
 
-  if (!goog.isDef(style)) {
+  if (style === undefined) {
     return null;
   }
 
@@ -1635,7 +1648,7 @@ plugin.cesium.sync.FeatureConverter.prototype.updatePrimitiveLike = function(fea
 plugin.cesium.sync.FeatureConverter.prototype.olVectorLayerToCesium = function(layer, view) {
   var projection = view.getProjection();
   var resolution = view.getResolution();
-  if (!goog.isDefAndNotNull(projection) || !goog.isDef(resolution)) {
+  if (projection == null || resolution === undefined) {
     // an assertion is not enough for closure to assume resolution and projection are defined
     throw new Error('view not ready');
   }

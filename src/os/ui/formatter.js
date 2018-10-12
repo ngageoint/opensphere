@@ -9,7 +9,7 @@ goog.require('os.time.TimeInstant');
  */
 os.ui.formatter.urlNewTabFormatter = function(value) {
   if (typeof value !== 'object') {
-    if (goog.isDefAndNotNull(value)) {
+    if (value != null) {
       // does this even have a URL?
       if (os.url.URL_REGEXP_LINKY.test(value) && !os.ui.slick.formatter.ANCHOR.test(value)) {
         var newValue = '';

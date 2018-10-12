@@ -116,20 +116,19 @@ os.ui.BrowseDataCtrl.launch = function(facets) {
 
 /**
  * Closes the window
+ * @export
  */
 os.ui.BrowseDataCtrl.prototype.close = function() {
   os.ui.window.close(this.element);
 };
-goog.exportProperty(os.ui.BrowseDataCtrl.prototype, 'close', os.ui.BrowseDataCtrl.prototype.close);
 
 
 /**
  * Loads a file/URL
+ * @export
  */
 os.ui.BrowseDataCtrl.prototype.launchFileImport = function() {
   os.dispatcher.dispatchEvent(os.ui.im.ImportEventType.FILE);
 };
-goog.exportProperty(os.ui.BrowseDataCtrl.prototype, 'launchFileImport',
-    os.ui.BrowseDataCtrl.prototype.launchFileImport);
 
 

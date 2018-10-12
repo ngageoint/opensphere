@@ -51,7 +51,7 @@ goog.addSingletonGetter(os.config.storage.SettingsStorageRegistry);
  */
 os.config.storage.SettingsStorageRegistry.prototype.addStorage = function(storage, opt_index) {
   goog.array.insertAt(this.availableReadStorages_, storage,
-      goog.isDef(opt_index) ? opt_index : this.availableReadStorages_.length);
+      opt_index !== undefined ? opt_index : this.availableReadStorages_.length);
   if (storage.writeType === os.config.storage.SettingsWritableStorageType.REMOTE) {
     this.hasRemoteStorage = true;
   }

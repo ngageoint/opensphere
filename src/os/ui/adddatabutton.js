@@ -57,10 +57,10 @@ goog.inherits(os.ui.AddDataButtonCtrl, os.ui.menu.MenuButtonCtrl);
 
 /**
  * Opens a file or URL
+ * @export
  */
 os.ui.AddDataButtonCtrl.prototype.open = function() {
   os.dispatcher.dispatchEvent(os.ui.im.ImportEventType.FILE);
 };
-goog.exportProperty(os.ui.AddDataButtonCtrl.prototype, 'open', os.ui.AddDataButtonCtrl.prototype.open);
 
 

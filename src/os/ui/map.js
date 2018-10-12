@@ -76,7 +76,7 @@ os.ui.MapCtrl.prototype.destroy_ = function() {
  * @private
  */
 os.ui.MapCtrl.prototype.onAngularReady_ = function(opt_err) {
-  if (goog.isString(opt_err)) {
+  if (typeof opt_err === 'string') {
     goog.log.error(os.ui.MapCtrl.LOGGER_, 'Error waiting for Angular to render the page: ' +
         JSON.stringify(opt_err));
   } else if (this.map_) {

@@ -26,8 +26,8 @@ os.interaction.Hover = function(opt_options) {
   os.interaction.Hover.base(this, 'constructor', opt_options);
   this.handleEvent = this.onMouseMove_;
 
-  var options = goog.isDef(opt_options) ? opt_options : {};
-  this.condition = goog.isDef(options.condition) ? options.condition : ol.events.condition.pointerMove;
+  var options = opt_options !== undefined ? opt_options : {};
+  this.condition = options.condition !== undefined ? options.condition : ol.events.condition.pointerMove;
 
   /**
    * Overlay for rendering hovered features.

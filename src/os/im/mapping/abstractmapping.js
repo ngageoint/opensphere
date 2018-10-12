@@ -105,7 +105,7 @@ os.im.mapping.AbstractMapping.prototype.execute = goog.abstractMethod;
  * @inheritDoc
  */
 os.im.mapping.AbstractMapping.prototype.testField = function(value) {
-  return goog.isDefAndNotNull(value);
+  return value != null;
 };
 
 

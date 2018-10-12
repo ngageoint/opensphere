@@ -100,11 +100,10 @@ os.ui.user.settings.LocationSettingsCtrl.prototype.onFormatChange_ = function(ev
  * Update and store setting.
  * @param {os.ui.location.Format=} opt_new
  * @param {os.ui.location.Format=} opt_old
+ * @export
  */
 os.ui.user.settings.LocationSettingsCtrl.prototype.update = function(opt_new, opt_old) {
   if (os.settings && opt_new && opt_old && opt_new !== opt_old) {
     os.settings.set(os.ui.location.LocationSetting.POSITION, opt_new);
   }
 };
-goog.exportProperty(os.ui.user.settings.LocationSettingsCtrl.prototype, 'update',
-    os.ui.user.settings.LocationSettingsCtrl.prototype.update);

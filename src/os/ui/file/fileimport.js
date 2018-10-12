@@ -134,6 +134,7 @@ os.ui.file.FileImportCtrl.prototype.onDestroy_ = function() {
 
 /**
  * Create import command and close the window
+ * @export
  */
 os.ui.file.FileImportCtrl.prototype.accept = function() {
   if (this.scope_['method'] && this['file']) {
@@ -146,10 +147,6 @@ os.ui.file.FileImportCtrl.prototype.accept = function() {
     this.close();
   }
 };
-goog.exportProperty(
-    os.ui.file.FileImportCtrl.prototype,
-    'accept',
-    os.ui.file.FileImportCtrl.prototype.accept);
 
 
 /**
@@ -178,7 +175,7 @@ os.ui.file.FileImportCtrl.prototype.handleResult_ = function(file) {
 os.ui.file.FileImportCtrl.prototype.handleError_ = function(errorMsg) {
   this['loading'] = false;
 
-  if (!errorMsg || !goog.isString(errorMsg)) {
+  if (!errorMsg || typeof errorMsg !== 'string') {
     var fileName = this['file'] ? this['file'].name : 'unknown';
     errorMsg = 'Unable to load file "' + fileName + '"!';
   }
@@ -191,26 +188,20 @@ os.ui.file.FileImportCtrl.prototype.handleError_ = function(errorMsg) {
 
 /**
  * Close the window.
+ * @export
  */
 os.ui.file.FileImportCtrl.prototype.close = function() {
   os.ui.window.close(this.element_);
 };
-goog.exportProperty(
-    os.ui.file.FileImportCtrl.prototype,
-    'close',
-    os.ui.file.FileImportCtrl.prototype.close);
 
 
 /**
  * Launch the system file browser.
+ * @export
  */
 os.ui.file.FileImportCtrl.prototype.openFileBrowser = function() {
   this.fileInputEl_.click();
 };
-goog.exportProperty(
-    os.ui.file.FileImportCtrl.prototype,
-    'openFileBrowser',
-    os.ui.file.FileImportCtrl.prototype.openFileBrowser);
 
 
 /**
@@ -224,7 +215,7 @@ os.ui.file.FileImportCtrl.prototype.onFileChange_ = function(event) {
   }
 
   this.timeout_(goog.bind(function() {
-    this['fileName'] = goog.isDefAndNotNull(this['file']) ? /** @type {File} */ (this['file']).name : null;
+    this['fileName'] = this['file'] != null ? /** @type {File} */ (this['file']).name : null;
   }, this));
 };
 

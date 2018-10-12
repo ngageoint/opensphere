@@ -31,7 +31,7 @@ os.net.CertNazi = function(opt_urls) {
    */
   this.urls_ = [];
 
-  if (goog.isDef(opt_urls)) {
+  if (opt_urls !== undefined) {
     this.setUrls(opt_urls);
   }
 

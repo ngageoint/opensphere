@@ -51,7 +51,7 @@ os.interaction.MouseZoom.prototype.zoom = function(mapBrowserEvent) {
   var browserEvent = new goog.events.BrowserEvent(mapBrowserEvent.originalEvent);
 
   // Add a little buffer so it doesnt seem like it zooms horizontally
-  if (goog.isDefAndNotNull(this.lastY_)) {
+  if (this.lastY_ != null) {
     if (browserEvent.clientY < this.lastY_.low) {
       delta = -zoomIncrements;
     } else if (browserEvent.clientY > this.lastY_.high) {
@@ -75,7 +75,7 @@ os.interaction.MouseZoom.prototype.zoom = function(mapBrowserEvent) {
     var map = mapBrowserEvent.map;
 
     var view = map.getView();
-    goog.asserts.assert(goog.isDef(view));
+    goog.asserts.assert(view !== undefined);
 
     var mapContainer = os.MapContainer.getInstance();
     if (mapContainer.is3DEnabled()) {

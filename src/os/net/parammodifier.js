@@ -95,7 +95,7 @@ os.net.ParamModifier.prototype.modify = function(uri) {
       'The parameter for modifier ' + this.getId() + ' was not set. Request will not load.');
   goog.asserts.assert(!goog.string.isEmptyOrWhitespace(goog.string.makeSafe(this.replaceTerm_)),
       'The replacement term for modifier ' + this.getId() + ' was not set. Request will not load.');
-  goog.asserts.assert(goog.isDefAndNotNull(this.replacement_),
+  goog.asserts.assert(this.replacement_ != null,
       'The replacement for modifier ' + this.getId() + ' was not set. Request will not load.');
 
   var qd = uri.getQueryData();

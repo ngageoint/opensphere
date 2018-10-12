@@ -27,39 +27,39 @@ goog.inherits(plugin.file.csv.CSVLayerConfig, os.layer.config.AbstractDataSource
 plugin.file.csv.CSVLayerConfig.prototype.initializeConfig = function(options) {
   plugin.file.csv.CSVLayerConfig.superClass_.initializeConfig.call(this, options);
 
-  if (goog.isDefAndNotNull(options['parserConfig'])) {
+  if (options['parserConfig'] != null) {
     this.parserConfig = /** @type {plugin.file.csv.CSVParserConfig} */ (options['parserConfig']);
   } else {
     // when loading from a state file, these will be inline in the base options instead of in a parser config object
-    if (goog.isDefAndNotNull(options['commentChar'])) {
+    if (options['commentChar'] != null) {
       this.parserConfig['commentChar'] = options['commentChar'];
     }
 
-    if (goog.isDefAndNotNull(options['dataRow'])) {
+    if (options['dataRow'] != null) {
       this.parserConfig['dataRow'] = options['dataRow'];
     }
 
-    if (goog.isDefAndNotNull(options['delimiter'])) {
+    if (options['delimiter'] != null) {
       this.parserConfig['delimiter'] = options['delimiter'];
     }
 
-    if (goog.isDefAndNotNull(options['headerRow'])) {
+    if (options['headerRow'] != null) {
       this.parserConfig['headerRow'] = options['headerRow'];
     }
 
-    if (goog.isDefAndNotNull(options['useHeader'])) {
+    if (options['useHeader'] != null) {
       this.parserConfig['useHeader'] = options['useHeader'];
     }
 
-    if (goog.isDefAndNotNull(options['mappings'])) {
+    if (options['mappings'] != null) {
       this.parserConfig['mappings'] = options['mappings'];
     }
 
-    if (goog.isDefAndNotNull(options['skipTimeMappings'])) {
+    if (options['skipTimeMappings'] != null) {
       this.parserConfig['skipTimeMappings'] = options['skipTimeMappings'];
     }
 
-    if (goog.isDefAndNotNull(options['skipGeoMappings'])) {
+    if (options['skipGeoMappings'] != null) {
       this.parserConfig['skipGeoMappings'] = options['skipGeoMappings'];
     }
   }

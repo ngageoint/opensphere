@@ -83,7 +83,7 @@ os.ui.file.FileXTHandler.prototype.onFileError_ = function(error) {
   var errors = [];
   var statusCode;
 
-  if (goog.isString(error)) {
+  if (typeof error === 'string') {
     statusCode = 400;
     errors.push(/** @type {string} */ (error));
   } else {

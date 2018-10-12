@@ -55,9 +55,9 @@ os.ui.sanitize = function(value) {
     } catch (e) {
       // make this super obvious so we catch it in dev
       // some errors come as a result of poorly formatted text, ignore those
-      if (!goog.isDef(os.ui.sanitize_)) {
+      if (os.ui.sanitize_ === undefined) {
         console.error('$santize service unavailable!');
-      } else if (!goog.isDef(os.ui.injector)) {
+      } else if (os.ui.injector === undefined) {
         console.error('os.ui.injector service never defined!');
       }
     }
@@ -292,7 +292,7 @@ os.ui.replaceDirective = function(name, module, directiveFn, opt_priority) {
 (function() {
   'use strict'; // jshint ;_;
 
-  if (goog.isDef(window['jQuery'])) {
+  if (window['jQuery'] !== undefined) {
     var $ = window['jQuery'];
     if ($.fn && $.fn.typeahead) {
       $.extend($.fn.typeahead['Constructor'].prototype, {
@@ -474,7 +474,7 @@ os.ui.replaceDirective = function(name, module, directiveFn, opt_priority) {
 (function() {
   'use strict';
 
-  if (goog.isDef(window['jQuery'])) {
+  if (window['jQuery'] !== undefined) {
     var $ = window['jQuery'];
 
     if ($.datepicker) {

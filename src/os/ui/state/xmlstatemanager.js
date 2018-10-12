@@ -73,7 +73,7 @@ os.ui.state.XMLStateManager.prototype.setVersion = function(version) {
  * @inheritDoc
  */
 os.ui.state.XMLStateManager.prototype.analyze = function(obj) {
-  if (goog.isString(obj)) {
+  if (typeof obj === 'string') {
     var doc = goog.dom.xml.loadXml(obj);
     if (doc) {
       obj = doc;
@@ -113,7 +113,7 @@ os.ui.state.XMLStateManager.prototype.analyze = function(obj) {
  */
 os.ui.state.XMLStateManager.prototype.loadState = function(obj, states, stateId, opt_title) {
   if (obj && states) {
-    if (goog.isString(obj)) {
+    if (typeof obj === 'string') {
       var doc = goog.dom.xml.loadXml(obj);
       if (doc) {
         obj = doc;

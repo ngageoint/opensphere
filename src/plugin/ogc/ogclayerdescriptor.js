@@ -810,10 +810,10 @@ plugin.ogc.OGCLayerDescriptor.prototype.isBaseLayer = function() {
  */
 plugin.ogc.OGCLayerDescriptor.prototype.hasTimeExtent = function() {
   if (this.isWmsEnabled()) {
-    return goog.isDefAndNotNull(this.dimensions_) && 'time' in this.dimensions_;
+    return this.dimensions_ != null && 'time' in this.dimensions_;
   }
 
-  if (goog.isDefAndNotNull(this.featureType_)) {
+  if (this.featureType_ != null) {
     return this.featureType_.getStartDateColumnName() !== null || this.featureType_.getEndDateColumnName() !== null;
   }
 

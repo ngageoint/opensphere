@@ -71,7 +71,7 @@ plugin.area.KMLAreaParser.prototype.setSource = function(source) {
 
   if (ol.xml.isDocument(source)) {
     this.document_ = /** @type {Document} */ (source);
-  } else if (goog.isString(source)) {
+  } else if (typeof source === 'string') {
     this.document_ = goog.dom.xml.loadXml(source);
   } else if (source instanceof ArrayBuffer) {
     if (os.file.mime.zip.isZip(source)) {
@@ -205,7 +205,7 @@ plugin.area.KMLAreaParser.prototype.processZIPEntry_ = function(filename, conten
 plugin.area.KMLAreaParser.prototype.handleZIPText_ = function(filename, event) {
   var content = event.target.result;
 
-  if (content && goog.isString(content)) {
+  if (content && typeof content === 'string') {
     if (!this.document_) {
       this.setSource(content);
     }
@@ -228,7 +228,7 @@ plugin.area.KMLAreaParser.prototype.cleanup = function() {
  * @inheritDoc
  */
 plugin.area.KMLAreaParser.prototype.hasNext = function() {
-  return goog.isDefAndNotNull(this.document_);
+  return this.document_ != null;
 };
 
 

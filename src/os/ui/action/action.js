@@ -116,77 +116,77 @@ os.ui.action.Action.prototype.disposeInternal = function() {
  * Return the event type that invokes this action.
  *
  * @return {!string}
+ * @export
  */
 os.ui.action.Action.prototype.getEventType = function() {
   return this.eventType_;
 };
-goog.exportProperty(os.ui.action.Action.prototype, 'getEventType', os.ui.action.Action.prototype.getEventType);
 
 
 /**
  * Return the metricKey associated with this acation.
  *
  * @return {?string}
+ * @export
  */
 os.ui.action.Action.prototype.getMetricKey = function() {
   return this.metricKey_;
 };
-goog.exportProperty(os.ui.action.Action.prototype, 'getMetricKey', os.ui.action.Action.prototype.getMetricKey);
 
 
 /**
  * Return a short length of text that represents the action to the user.
  *
  * @return {!string}
+ * @export
  */
 os.ui.action.Action.prototype.getTitle = function() {
   return this.title_;
 };
-goog.exportProperty(os.ui.action.Action.prototype, 'getTitle', os.ui.action.Action.prototype.getTitle);
 
 
 /**
  * Return a style name that displays an icon for this action.
  *
  * @return {?string}
+ * @export
  */
 os.ui.action.Action.prototype.getIcon = function() {
   return this.icon_;
 };
-goog.exportProperty(os.ui.action.Action.prototype, 'getIcon', os.ui.action.Action.prototype.getIcon);
 
 
 /**
  * Return a style name that displays an icon for this action.
  *
  * @param {string} icon
+ * @export
  */
 os.ui.action.Action.prototype.setIcon = function(icon) {
   this.icon_ = icon;
 };
-goog.exportProperty(os.ui.action.Action.prototype, 'setIcon', os.ui.action.Action.prototype.setIcon);
 
 
 /**
  * Return a keyboard shortcut to invoke this action.
  *
  * @return {?string}
+ * @export
  */
 os.ui.action.Action.prototype.getHotkey = function() {
   return this.hotkey_;
 };
-goog.exportProperty(os.ui.action.Action.prototype, 'getHotkey', os.ui.action.Action.prototype.getHotkey);
 
 
 /**
  * Return a more detailed description of the action intended for a tooltip, help pop-up, etc.
  *
  * @return {?string}
+ * @export
  */
 os.ui.action.Action.prototype.getDescription = function() {
   return this.description_;
 };
-goog.exportProperty(os.ui.action.Action.prototype, 'getDescription', os.ui.action.Action.prototype.getDescription);
 
 
 /**

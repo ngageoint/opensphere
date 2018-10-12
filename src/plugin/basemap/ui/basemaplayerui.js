@@ -188,6 +188,7 @@ plugin.basemap.ui.BaseMapLayerUICtrl.prototype.getMaxZoom_ = function() {
 
 /**
  * @param {string} key The scope value to set
+ * @export
  */
 plugin.basemap.ui.BaseMapLayerUICtrl.prototype.setCurrent = function(key) {
   var map = os.MapContainer.getInstance();
@@ -215,6 +216,4 @@ plugin.basemap.ui.BaseMapLayerUICtrl.prototype.setCurrent = function(key) {
     }
   }
 };
-goog.exportProperty(plugin.basemap.ui.BaseMapLayerUICtrl.prototype, 'setCurrent',
-    plugin.basemap.ui.BaseMapLayerUICtrl.prototype.setCurrent);
 

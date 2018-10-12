@@ -23,7 +23,7 @@ os.file.mime.json.TYPE = 'application/json';
 os.file.mime.json.isJSON = function(buffer, opt_file, opt_context) {
   var retVal;
 
-  if (opt_context && goog.isString(opt_context)) {
+  if (opt_context && typeof opt_context === 'string') {
     var parser = oboe();
 
     var error = false;

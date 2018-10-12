@@ -81,7 +81,7 @@ os.ui.timeline.TileAxis.prototype.initSVG = function(container, height) {
  * @inheritDoc
  */
 os.ui.timeline.TileAxis.prototype.render = function(opt_height) {
-  if (goog.isDef(opt_height)) {
+  if (opt_height !== undefined) {
     this.axis_.tickSize(-opt_height, -opt_height);
   }
 

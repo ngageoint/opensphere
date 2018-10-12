@@ -121,13 +121,11 @@ os.ui.metrics.MetricsContainerCtrl.prototype.initRoot = function() {
 
 /**
  * Save the metrics
- * @private
+ * @export
  */
-os.ui.metrics.MetricsContainerCtrl.prototype.save_ = function() {
+os.ui.metrics.MetricsContainerCtrl.prototype.save = function() {
   os.metrics.Metrics.getInstance().save();
 };
-goog.exportProperty(os.ui.metrics.MetricsContainerCtrl.prototype, 'save',
-    os.ui.metrics.MetricsContainerCtrl.prototype.save_);
 
 
 /**

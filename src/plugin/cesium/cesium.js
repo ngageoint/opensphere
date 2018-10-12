@@ -260,7 +260,7 @@ plugin.cesium.tileLayerToImageryLayer = function(olLayer, viewProj) {
   var layerOptions = {};
 
   var ext = olLayer.getExtent();
-  if (goog.isDefAndNotNull(ext) && !goog.isNull(viewProj)) {
+  if (ext != null && viewProj !== null) {
     layerOptions.rectangle = olcs.core.extentToRectangle(ext, viewProj);
   }
 

@@ -79,7 +79,7 @@ os.style.ShapeReader.prototype.getOrCreateStyle = function(config) {
 
   if (!this.cache[hash]) {
     var shapeConfig = os.style.ShapeDefaults[shapeKey];
-    if (shapeConfig && goog.isDef(shapeConfig['radius2'])) {
+    if (shapeConfig && shapeConfig['radius2'] !== undefined) {
       // radius2 should be an offset of radius, in pixels
       radius2 = radius + shapeConfig['radius2'];
     }

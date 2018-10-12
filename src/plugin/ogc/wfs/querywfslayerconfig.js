@@ -33,13 +33,13 @@ plugin.ogc.wfs.QueryWFSLayerConfig.prototype.addMappings = function(layer, optio
   plugin.ogc.wfs.QueryWFSLayerConfig.base(this, 'addMappings', layer, options);
 
   var source = /** @type {os.source.Request} */ (layer.getSource());
-  var useExclusions = goog.isDefAndNotNull(options['exclusions']) ? options['exclusions'] : false;
-  var useFilter = goog.isDefAndNotNull(options['filter']) ? options['filter'] : false;
-  var useSpatial = goog.isDefAndNotNull(options['spatial']) ? options['spatial'] : false;
-  var useTemporal = goog.isDefAndNotNull(options['temporal']) ? options['temporal'] :
+  var useExclusions = options['exclusions'] != null ? options['exclusions'] : false;
+  var useFilter = options['filter'] != null ? options['filter'] : false;
+  var useSpatial = options['spatial'] != null ? options['spatial'] : false;
+  var useTemporal = options['temporal'] != null ? options['temporal'] :
       !!this.featureType.getStartDateColumnName();
-  var featureIDs = goog.isDefAndNotNull(options['featureIDs']) ? options['featureIDs'] : null;
-  var relatedLayer = goog.isDefAndNotNull(options['relatedLayer']) ? options['relatedLayer'] : null;
+  var featureIDs = options['featureIDs'] != null ? options['featureIDs'] : null;
+  var relatedLayer = options['relatedLayer'] != null ? options['relatedLayer'] : null;
 
   // add connections to the query managers
   var qm = os.ui.queryManager;

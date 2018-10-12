@@ -94,7 +94,7 @@ os.command.AbstractStyle.prototype.canExecute = function() {
     return false;
   }
 
-  if (!goog.isDef(this.value)) {
+  if (this.value === undefined) {
     this.state = os.command.State.ERROR;
     this.details = 'Value not provided';
     return false;

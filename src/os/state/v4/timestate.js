@@ -283,7 +283,7 @@ os.state.v4.TimeState.prototype.saveInternal = function(options, rootObj) {
  */
 os.state.v4.TimeState.prototype.isTimeLineVisible = function() {
   var timeline = goog.dom.getElementByClass('js-timeline');
-  return goog.isDefAndNotNull(timeline);
+  return timeline != null;
 };
 
 
@@ -434,7 +434,7 @@ os.state.v4.TimeState.prototype.readIntervalsAsRangeSet_ = function(element, tag
  * @protected
  */
 os.state.v4.TimeState.prototype.getDurationFromDiff = function(diff, opt_numIntervals) {
-  var numIntervals = goog.isDef(opt_numIntervals) ? opt_numIntervals : 1;
+  var numIntervals = opt_numIntervals !== undefined ? opt_numIntervals : 1;
   var val = null;
 
   if (diff >= 28 * 24 * 60 * 60 * 1000) {

@@ -108,6 +108,7 @@ plugin.descriptor.ResultCardCtrl.prototype.getDescriptor = function() {
  * Get a field from the result.
  * @param {string} field
  * @return {*}
+ * @export
  */
 plugin.descriptor.ResultCardCtrl.prototype.getField = function(field) {
   var d = this.getDescriptor();
@@ -156,12 +157,11 @@ plugin.descriptor.ResultCardCtrl.prototype.getField = function(field) {
 
   return '';
 };
-goog.exportProperty(plugin.descriptor.ResultCardCtrl.prototype, 'getField',
-    plugin.descriptor.ResultCardCtrl.prototype.getField);
 
 
 /**
  * Toggles the descriptor
+ * @export
  */
 plugin.descriptor.ResultCardCtrl.prototype.toggle = function() {
   var d = this.getDescriptor();
@@ -174,17 +174,14 @@ plugin.descriptor.ResultCardCtrl.prototype.toggle = function() {
     }
   }
 };
-goog.exportProperty(plugin.descriptor.ResultCardCtrl.prototype, 'toggle',
-    plugin.descriptor.ResultCardCtrl.prototype.toggle);
 
 
 /**
  * Toggles the description text length
  * @param {boolean} full
+ * @export
  */
 plugin.descriptor.ResultCardCtrl.prototype.showFullDescription = function(full) {
   this.scope_['showFullDescription'] = full;
   os.ui.apply(this.scope_);
 };
-goog.exportProperty(plugin.descriptor.ResultCardCtrl.prototype, 'showFullDescription',
-    plugin.descriptor.ResultCardCtrl.prototype.showFullDescription);
