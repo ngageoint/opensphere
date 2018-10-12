@@ -46,8 +46,8 @@ os.ui.window.launchConfirm = function(opt_options, opt_scopeOptions) {
   scopeOptions['yesIcon'] = options.yesIcon || 'fa fa-check';
   scopeOptions['yesButtonClass'] = options.yesButtonClass || 'btn-primary';
   scopeOptions['yesButtonTitle'] = options.yesButtonTitle || '';
-  scopeOptions['noText'] = goog.isDef(options.noText) ? options.noText : 'Cancel';
-  scopeOptions['noIcon'] = goog.isDef(options.noIcon) ? options.noIcon : 'fa fa-ban';
+  scopeOptions['noText'] = options.noText !== undefined ? options.noText : 'Cancel';
+  scopeOptions['noIcon'] = options.noIcon !== undefined ? options.noIcon : 'fa fa-ban';
   scopeOptions['noButtonTitle'] = options.noButtonTitle || '';
   scopeOptions['noButtonClass'] = options.noButtonClass || 'btn-secondary';
   scopeOptions['formClass'] = options.formClass || 'form-horizontal';
@@ -144,6 +144,7 @@ os.ui.window.ConfirmCtrl.prototype.onDestroy_ = function() {
 
 /**
  * Fire the cancel callback and close the window.
+ * @export
  */
 os.ui.window.ConfirmCtrl.prototype.cancel = function() {
   if (this.scope_['cancelCallback']) {
@@ -152,11 +153,11 @@ os.ui.window.ConfirmCtrl.prototype.cancel = function() {
 
   this.close_();
 };
-goog.exportProperty(os.ui.window.ConfirmCtrl.prototype, 'cancel', os.ui.window.ConfirmCtrl.prototype.cancel);
 
 
 /**
  * Fire the confirmation callback and close the window.
+ * @export
  */
 os.ui.window.ConfirmCtrl.prototype.confirm = function() {
   if (this.scope_['confirmCallback']) {
@@ -172,7 +173,6 @@ os.ui.window.ConfirmCtrl.prototype.confirm = function() {
 
   this.close_();
 };
-goog.exportProperty(os.ui.window.ConfirmCtrl.prototype, 'confirm', os.ui.window.ConfirmCtrl.prototype.confirm);
 
 
 /**

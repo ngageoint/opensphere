@@ -22,10 +22,9 @@ goog.inherits(os.ui.action.MenuItemSeparator, os.ui.action.MenuItem);
 /**
  * Defines this class as a separator
  * @type {boolean}
+ * @export
  */
 os.ui.action.MenuItemSeparator.prototype.isSeparator = true;
-goog.exportProperty(os.ui.action.MenuItemSeparator.prototype, 'isSeparator',
-    os.ui.action.MenuItemSeparator.prototype.isSeparator);
 
 
 
@@ -45,7 +44,6 @@ goog.inherits(os.ui.action.MenuItemSeparatorHeader, os.ui.action.MenuItem);
 /**
  * Defines this class as a separator name
  * @type {boolean}
+ * @export
  */
 os.ui.action.MenuItemSeparatorHeader.prototype.isSeparatorHeader = true;
-goog.exportProperty(os.ui.action.MenuItemSeparatorHeader.prototype, 'isSeparatorHeader',
-    os.ui.action.MenuItemSeparatorHeader.prototype.isSeparatorHeader);

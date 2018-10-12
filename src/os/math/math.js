@@ -15,7 +15,7 @@ os.math.DEFAULT_DECIMAL_PRECISION = 3;
  * @return {string}
  */
 os.math.toFixed = function(num, opt_fixed) {
-  opt_fixed = goog.isDefAndNotNull(opt_fixed) ? opt_fixed : os.math.DEFAULT_DECIMAL_PRECISION;
+  opt_fixed = opt_fixed != null ? opt_fixed : os.math.DEFAULT_DECIMAL_PRECISION;
   return num.toFixed(opt_fixed);
 };
 

@@ -49,9 +49,9 @@
       Options
     </div>
     <div id="layer-options" class="js-style-content card-body collapse">
-      <div class="form-row align-items-center pb-1" ng-if="vector.showRefresh">
-        <div class="col-auto" title="Sets how often the layer will automatically refresh its data.">
-          Auto Refresh:
+      <div class="form-row align-items-center pb-1" ng-if="vector.showRefresh" title="Sets how often the layer will automatically refresh its data.">
+        <div class="col-auto">
+          Auto Refresh
         </div>
         <div class="col">
           <select class="custom-select" ng-model="vector.refresh" ng-change="vector.onRefreshChange()"
@@ -68,6 +68,16 @@
           <select class="custom-select" ng-model="vector.uniqueId" ng-change="vector.onUniqueIdChange()"
               ng-options="col as col.name for col in columns track by col.field">
               <option value="">-- None --</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row align-items-center pb-1" ng-if="vector.showAltitudeModes" title="Sets how the layer interprets altitude in 3D mode.">
+        <div class="col-auto">
+          Altitude Mode
+        </div>
+        <div class="col">
+          <select class="custom-select" ng-model="vector.altitudeMode" ng-change="vector.onAltitudeModeChange()"
+              ng-options="mode as vector.mapAltitudeModeToName(mode) for mode in vector.altitudeModes track by mode">
           </select>
         </div>
       </div>

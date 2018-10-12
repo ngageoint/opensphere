@@ -38,7 +38,7 @@ os.xml.XMLNS = 'http://www.w3.org/2000/xmlns/';
  * @return {string} The escaped string
  */
 os.xml.escape = function(text) {
-  if (goog.isString(text)) {
+  if (typeof text === 'string') {
     text = text.replace(/\&/g, '&amp;');
     text = text.replace(/</g, '&lt;');
     text = text.replace(/>/g, '&gt;');
@@ -56,7 +56,7 @@ os.xml.escape = function(text) {
  * @return {string} The escaped string
  */
 os.xml.unescape = function(text) {
-  if (goog.isString(text)) {
+  if (typeof text === 'string') {
     text = text.replace(/\&amp;/g, '&');
     text = text.replace(/&lt;/g, '<');
     text = text.replace(/&gt;/g, '>');
@@ -113,11 +113,11 @@ os.xml.createElement = function(tag, opt_doc, opt_content, opt_attr) {
   var doc = opt_doc || os.xml.DOCUMENT;
   var el = doc.createElement(tag);
 
-  if (goog.isDefAndNotNull(opt_attr)) {
+  if (opt_attr != null) {
     goog.dom.xml.setAttributes(el, opt_attr);
   }
 
-  if (goog.isDefAndNotNull(opt_content)) {
+  if (opt_content != null) {
     el.appendChild(doc.createTextNode(String(opt_content)));
   }
 
@@ -138,11 +138,11 @@ os.xml.createElementNS = function(tag, nsUri, opt_doc, opt_content, opt_attr) {
   var doc = opt_doc || os.xml.DOCUMENT;
   var el = doc.createElementNS(nsUri, tag);
 
-  if (goog.isDefAndNotNull(opt_attr)) {
+  if (opt_attr != null) {
     goog.dom.xml.setAttributes(el, opt_attr);
   }
 
-  if (goog.isDefAndNotNull(opt_content)) {
+  if (opt_content != null) {
     el.appendChild(doc.createTextNode(String(opt_content)));
   }
 

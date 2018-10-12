@@ -110,6 +110,7 @@ os.query.ui.MergeAreasCtrl.prototype.disposeInternal = function() {
 
 /**
  * @inheritDoc
+ * @export
  */
 os.query.ui.MergeAreasCtrl.prototype.accept = function() {
   var areas = this.scope['features'];
@@ -155,7 +156,3 @@ os.query.ui.MergeAreasCtrl.prototype.accept = function() {
 
   this.close();
 };
-goog.exportProperty(
-    os.query.ui.MergeAreasCtrl.prototype,
-    'accept',
-    os.query.ui.MergeAreasCtrl.prototype.accept);

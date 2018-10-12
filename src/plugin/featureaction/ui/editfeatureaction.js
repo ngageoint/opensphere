@@ -150,7 +150,7 @@ plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.buildStylePreview = 
     });
 
     var config = /** @type {!Object} */ (os.object.unsafeClone(styleAction.styleConfig));
-    if (goog.isDefAndNotNull(config)) {
+    if (config != null) {
       var geomShape = /** @type {string|undefined} */ (config['shape']) || os.style.DEFAULT_SHAPE;
       var shape = os.style.SHAPES[geomShape];
       if (shape && shape['config'] && shape['config']['image']) {
@@ -196,7 +196,7 @@ plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.buildStylePreview = 
 
       // create our actual style to be used for the render call
       var style = os.style.StyleManager.getInstance().getOrCreateStyle(config);
-      if (goog.isDefAndNotNull(style)) {
+      if (style != null) {
         var imageStyle = style.getImage();
         var imageState = imageStyle.getImageState();
 
@@ -248,13 +248,13 @@ plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.buildLabelPreview = 
     });
     var lConfig = /** @type {!Object} */ (os.object.unsafeClone(labelAction.labelConfig));
 
-    if (goog.isDefAndNotNull(lConfig)) {
+    if (lConfig != null) {
       var labelColor = os.style.toRgbaString(lConfig['color'] || os.style.DEFAULT_LAYER_COLOR);
       // var labelSize = parseInt(lConfig['size'], 10) || os.style.label.DEFAULT_SIZE;
       var labels = /** @type {Array<!os.style.label.LabelConfig>} */ (os.object.unsafeClone(lConfig['labels']));
       labels = os.style.label.filterValid(labels);
       // update label fields on the feature if there is at least one valid label config defined
-      if (goog.isDefAndNotNull(labels) && labels.length > 0) {
+      if (labels != null && labels.length > 0) {
         // get the existing feature config or create a new one
         var featureConfig = /** @type {Object|undefined} */ (feature.get(os.style.StyleType.FEATURE)) || {};
         // apply label config but change the label to be something generic
@@ -276,7 +276,7 @@ plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.buildLabelPreview = 
         // grab the label style
         os.style.setFeatureStyle(feature);
         var styleArr = /** @type {Array<!ol.style.Style>} */ (feature.getStyle());
-        if (goog.isDefAndNotNull(styleArr) && styleArr.length > 1) {
+        if (styleArr != null && styleArr.length > 1) {
           // only showing the first one since we are just previewing the style
           labelRender.drawFeature(feature, styleArr[1]);
         }

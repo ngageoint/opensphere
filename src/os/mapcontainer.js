@@ -678,7 +678,7 @@ os.MapContainer.prototype.onZoom_ = function(event) {
 os.MapContainer.prototype.resetView = function() {
   var map = this.getMap();
   var view = map.getView();
-  goog.asserts.assert(goog.isDef(view));
+  goog.asserts.assert(view !== undefined);
   view.setRotation(0);
   view.setCenter(os.map.DEFAULT_CENTER);
   view.setZoom(3);
@@ -721,7 +721,7 @@ os.MapContainer.prototype.resetRoll = function() {
   } else {
     var map = this.getMap();
     var view = map.getView();
-    goog.asserts.assert(goog.isDef(view));
+    goog.asserts.assert(view !== undefined);
     view.setRotation(0);
   }
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.RESET_ROLL, 1);
@@ -911,9 +911,9 @@ os.MapContainer.prototype.init = function() {
   ol.events.listen(view, ol.ObjectEventType.PROPERTYCHANGE, this.onViewChange_, this);
 
   // export the map's getPixelFromCoordinate/getCoordinateFromPixel methods for tests
-  goog.exportProperty(window, 'pfc', this.map_.getPixelFromCoordinate.bind(this.map_));
-  goog.exportProperty(window, 'cfp', this.map_.getCoordinateFromPixel.bind(this.map_));
-  goog.exportProperty(window, 'fte', this.flyToExtent.bind(this));
+  window['pfc'] = this.map_.getPixelFromCoordinate.bind(this.map_);
+  window['cfp'] = this.map_.getCoordinateFromPixel.bind(this.map_);
+  window['fte'] = this.flyToExtent.bind(this);
 
   // update the map canvas size on browser resize
   this.vsm_.listen(goog.events.EventType.RESIZE, this.updateSize, false, this);
@@ -1154,7 +1154,7 @@ os.MapContainer.prototype.restoreCameraStateInternal_ = function(cameraState) {
 
     // restore the 2D view if in 2D mode or the 3D camera is not defined
     var view = this.getMap().getView();
-    goog.asserts.assert(goog.isDef(view));
+    goog.asserts.assert(view !== undefined);
 
     var zoom = cameraState.zoom;
     if (zoom == null) {
@@ -1204,7 +1204,7 @@ os.MapContainer.prototype.getAltitude = function() {
   } else {
     var view = this.map_.getView();
     var resolution = view.getResolution();
-    if (!goog.isDefAndNotNull(resolution)) {
+    if (resolution == null) {
       return altitude;
     }
 
@@ -1477,7 +1477,7 @@ os.MapContainer.prototype.addGroup = function(group) {
  */
 os.MapContainer.prototype.removeLayer = function(layer, opt_dispose) {
   var dispose = opt_dispose != null ? opt_dispose : true;
-  var l = goog.isString(layer) ? this.getLayer(layer) : layer;
+  var l = typeof layer === 'string' ? this.getLayer(layer) : layer;
 
   if (l instanceof ol.layer.Layer) {
     var canRemove = true;
@@ -1627,17 +1627,17 @@ os.MapContainer.prototype.addFeatures = function(features, opt_style) {
  * @export Prevent the compiler from moving the function off the prototype.
  */
 os.MapContainer.prototype.removeFeature = function(feature, opt_dispose) {
-  if (goog.isDefAndNotNull(feature)) {
+  if (feature != null) {
     os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.REMOVE_FEATURE, 1);
     var layer = this.getLayer(os.MapContainer.DRAW_ID);
     var source = /** @type {ol.source.Vector} */ (layer.getSource());
-    if (goog.isString(feature) || goog.isNumber(feature)) {
+    if (typeof feature === 'string' || typeof feature === 'number') {
       feature = source.getFeatureById(feature);
     } else {
       feature = source.getFeatureById(feature.getId() + '');
     }
 
-    if (goog.isDefAndNotNull(feature)) {
+    if (feature != null) {
       source.removeFeature(feature);
 
       if (opt_dispose) {
@@ -1652,13 +1652,13 @@ os.MapContainer.prototype.removeFeature = function(feature, opt_dispose) {
  * @inheritDoc
  */
 os.MapContainer.prototype.containsFeature = function(feature) {
-  if (goog.isDefAndNotNull(feature)) {
+  if (feature != null) {
     var layer = this.getLayer(os.MapContainer.DRAW_ID);
 
     if (layer) {
       var source = /** @type {ol.source.Vector} */ (layer.getSource());
 
-      return !!(goog.isString(feature) || goog.isNumber(feature) ? source.getFeatureById(feature) :
+      return !!(typeof feature === 'string' || typeof feature === 'number' ? source.getFeatureById(feature) :
           source.getFeatureById(feature.getId() + ''));
     }
   }
@@ -1738,7 +1738,7 @@ os.MapContainer.prototype.getLayerCount = function(clazz) {
  * @inheritDoc
  */
 os.MapContainer.prototype.getLayer = function(layerOrFeature, opt_search, opt_remove) {
-  if (!goog.isDefAndNotNull(opt_remove)) {
+  if (opt_remove == null) {
     opt_remove = false;
   }
 
@@ -1756,7 +1756,7 @@ os.MapContainer.prototype.getLayer = function(layerOrFeature, opt_search, opt_re
         l = this.getLayer(layerOrFeature, /** @type {os.layer.Group} */ (item).getLayers(), opt_remove);
       } else {
         try {
-          if (goog.isString(layerOrFeature)) {
+          if (typeof layerOrFeature === 'string') {
             var lid = /** @type {os.layer.ILayer} */ (item).getId();
             if (lid == layerOrFeature) {
               l = /** @type {ol.layer.Layer} */ (item);

@@ -114,7 +114,7 @@ os.net.sortCache_ = function(a, b) {
  */
 os.net.getCrossOrigin = function(uri) {
   if (uri) {
-    uri = goog.isString(uri) ? new goog.Uri(uri) : uri;
+    uri = typeof uri === 'string' ? new goog.Uri(uri) : uri;
 
     var result = os.net.getCrossOriginInternal_(uri.toString());
     if (result) {
@@ -140,7 +140,7 @@ os.net.registerCrossOrigin = function(pattern, crossOrigin, opt_priority, opt_sk
   opt_priority = opt_priority || 0;
 
   os.net.crossOriginCache_.push({
-    pattern: goog.isString(pattern) ? new RegExp(pattern) : pattern,
+    pattern: typeof pattern === 'string' ? new RegExp(pattern) : pattern,
     crossOrigin: crossOrigin,
     priority: opt_priority
   });
@@ -215,7 +215,7 @@ os.net.isTrustedUri = function(uri) {
   if (uri) {
     var cache = os.net.trustedURICache_;
     if (cache) {
-      var url = goog.isString(uri) ? uri : uri.toString();
+      var url = typeof uri === 'string' ? uri : uri.toString();
       return cache.some(function(pattern) {
         return pattern.test(url);
       });
@@ -241,7 +241,7 @@ os.net.addTrustedUri = function(uri) {
  */
 os.net.registerTrustedUri = function(uri) {
   if (uri) {
-    var url = goog.isString(uri) ? uri : uri.toString();
+    var url = typeof uri === 'string' ? uri : uri.toString();
     if (url) {
       os.net.addTrustedUri(url);
 

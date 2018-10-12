@@ -96,14 +96,11 @@ os.ui.icon.IconPickerCtrl.prototype.show = function() {
  * Translates from google uri if needed
  * @param {string} path
  * @return {string}
+ * @export
  */
 os.ui.icon.IconPickerCtrl.prototype.getPath = function(path) {
   return os.ui.file.kml.GMAPS_SEARCH.test(path) ? os.ui.file.kml.replaceGoogleUri(path) : path;
 };
-goog.exportProperty(
-    os.ui.icon.IconPickerCtrl.prototype,
-    'getPath',
-    os.ui.icon.IconPickerCtrl.prototype.getPath);
 
 
 /**

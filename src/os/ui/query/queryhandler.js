@@ -384,7 +384,7 @@ os.ui.query.QueryHandler.prototype.writeFilter = function(filter) {
  * @protected
  */
 os.ui.query.QueryHandler.prototype.wrap = function(filter, order, excludes, group) {
-  group = goog.isDef(group) ? group : true;
+  group = group !== undefined ? group : true;
   var result = '';
 
   if (order == 'area') {

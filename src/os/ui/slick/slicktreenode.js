@@ -248,7 +248,7 @@ os.ui.slick.SlickTreeNode.prototype.setNodetoggleVisible = function(value) {
  * @return {string} An HTML string for the cell
  */
 os.ui.slick.SlickTreeNode.prototype.format = function(row, cell, value) {
-  if (!goog.isDefAndNotNull(value)) {
+  if (value == null) {
     return '';
   }
 
@@ -307,11 +307,11 @@ os.ui.slick.SlickTreeNode.prototype.formatWinLauncher = function() {
  * @return {string} A spacer
  */
 os.ui.slick.SlickTreeNode.prototype.getSpacer = function(opt_width, opt_unit) {
-  if (!goog.isDefAndNotNull(opt_width)) {
+  if (opt_width == null) {
     opt_width = 2;
   }
 
-  if (!goog.isDefAndNotNull(opt_unit)) {
+  if (opt_unit == null) {
     opt_unit = 'px';
   }
 
@@ -351,14 +351,11 @@ os.ui.slick.SlickTreeNode.prototype.formatValue = function(value) {
 /**
  * API call to get the HTML for the icons
  * @return {!string} The icon HTML
+ * @export
  */
 os.ui.slick.SlickTreeNode.prototype.getIcons = function() {
   return this.formatIcons();
 };
-goog.exportProperty(
-    os.ui.slick.SlickTreeNode.prototype,
-    'getIcons',
-    os.ui.slick.SlickTreeNode.prototype.getIcons);
 
 
 /**

@@ -181,12 +181,9 @@ os.ui.file.ui.csv.ConfigStepCtrl.prototype.scheduleUpdate_ = function() {
 
 /**
  * Creates a preview using a subset of the source content.
+ * @export
  */
 os.ui.file.ui.csv.ConfigStepCtrl.prototype.updatePreview = function() {
   // don't apply mappings during CSV configuration
   this.config_.updatePreview();
 };
-goog.exportProperty(
-    os.ui.file.ui.csv.ConfigStepCtrl.prototype,
-    'updatePreview',
-    os.ui.file.ui.csv.ConfigStepCtrl.prototype.updatePreview);

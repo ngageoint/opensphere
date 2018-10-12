@@ -525,3 +525,15 @@ plugin.cesium.CesiumRenderer.prototype.onCesiumCameraMoveChange_ = function(isMo
     }
   }
 };
+
+
+/**
+ * @inheritDoc
+ */
+plugin.cesium.CesiumRenderer.prototype.getAltitudeModes = function() {
+  return [
+    os.webgl.AltitudeMode.CLAMP_TO_GROUND,
+    os.webgl.AltitudeMode.ABSOLUTE,
+    os.webgl.AltitudeMode.RELATIVE_TO_GROUND
+  ];
+};

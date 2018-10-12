@@ -88,7 +88,7 @@ os.ui.layer.LayerPickerCtrl = function($scope, $element, $timeout) {
   var formatter = /** @type {Function} */ ($scope['formatter']) || this.select2Formatter_;
   var matcher = /** @type {Function} */ ($scope['matcher']) || this.matcher_;
 
-  if (!goog.isDefAndNotNull($scope['isRequired'])) {
+  if ($scope['isRequired'] == null) {
     // default the picker to required
     $scope['isRequired'] = true;
   }
@@ -130,7 +130,7 @@ os.ui.layer.LayerPickerCtrl.prototype.destroy_ = function() {
  * @private
  */
 os.ui.layer.LayerPickerCtrl.prototype.layerSelected_ = function() {
-  if (goog.isDef(this.scope_['layer'])) {
+  if (this.scope_['layer'] !== undefined) {
     this.selectLayer_();
   } else {
     this.selectLayers_();

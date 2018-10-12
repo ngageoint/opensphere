@@ -29,7 +29,7 @@ os.ui.slick.asyncrenderer.slickColActAsyncRenderer = function(node, elem, row, d
  * @param {Object} node
  */
 os.ui.slick.asyncrenderer.openDialog = function(value, colDef, colActContext, node) {
-  if (!goog.isDefAndNotNull(colActContext)) {
+  if (colActContext == null) {
     colActContext = {};
   }
   var col = new os.ui.slick.SlickColumnActionModel(colDef, node['value']);

@@ -373,7 +373,7 @@ os.geo.conv.MGRS.prototype.getCenterPoint = function() {
 os.geo.conv.MGRS.prototype.convertToUTM = function() {
   var hemisphere = '1';
 
-  if (!goog.isDef(this.zone)) {
+  if (this.zone === undefined) {
     throw new Error('Zone must be defined to convert to UTM!');
   } else if (this.letters[0] == os.geo.conv.MGRS.LETTER.X &&
       ((this.zone == 32) || (this.zone == 34) || (this.zone == 36))) {

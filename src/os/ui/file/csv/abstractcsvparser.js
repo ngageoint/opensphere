@@ -241,7 +241,7 @@ os.ui.file.csv.AbstractCsvParser.prototype.setSource = function(source) {
     source = os.file.mime.text.getText(source) || null;
   }
 
-  if (goog.isString(source)) {
+  if (typeof source === 'string') {
     // parse the entire source, using workers if available. return results in chunks.
     var config = {
       'chunk': this.handleChunk_.bind(this),

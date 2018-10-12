@@ -45,14 +45,11 @@ os.search.AbstractSearchResult.nextId_ = 0;
 /**
  * @inheritDoc
  * @final
+ * @export
  */
 os.search.AbstractSearchResult.prototype.getId = function() {
   return this.id_;
 };
-goog.exportProperty(
-    os.search.AbstractSearchResult.prototype,
-    'getId',
-    os.search.AbstractSearchResult.prototype.getId);
 
 
 /**

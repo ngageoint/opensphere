@@ -64,7 +64,7 @@ os.ogc.getException = function(response, opt_contentType) {
     // if there are headers and the header is xml and the response is a string try to parse the xml.
     // if no headers and response is a string, just try it and deal with the error in the console in IE and firefox.
     if (isXml || !opt_contentType) {
-      var doc = goog.isString(response) ? goog.dom.xml.loadXml(response) : response;
+      var doc = typeof response === 'string' ? goog.dom.xml.loadXml(response) : response;
       var ex = doc.querySelector('ExceptionText, ServiceException');
       if (ex) {
         return ex.textContent;

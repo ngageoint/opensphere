@@ -66,7 +66,7 @@ os.data.FilterNode.prototype.setEntry = function(value) {
 
     this.dispatchEvent(new os.events.PropertyChangeEvent('filter', value, old));
   }
-  if (!goog.isDefAndNotNull(os.MapContainer.getInstance().getLayer(this.entry.getType()))) {
+  if (os.MapContainer.getInstance().getLayer(this.entry.getType()) == null) {
     this.setCheckboxDisabled(true);
   }
 };

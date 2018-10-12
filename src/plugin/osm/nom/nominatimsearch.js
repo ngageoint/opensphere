@@ -167,7 +167,7 @@ plugin.osm.nom.feelingLucky = function(term) {
  * @return {ol.Feature|undefined} The parsed feature, or undefined if none could be parsed.
  */
 plugin.osm.nom.parseFirst = function(response) {
-  if (goog.isString(response) || goog.isArray(response)) {
+  if (typeof response === 'string' || goog.isArray(response)) {
     var parser = new plugin.osm.nom.NominatimParser();
     parser.setSource(response);
 

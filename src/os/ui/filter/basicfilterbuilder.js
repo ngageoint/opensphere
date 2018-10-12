@@ -94,14 +94,13 @@ os.ui.filter.BasicFilterBuilderCtrl.prototype.onDestroy_ = function() {
 /**
  * Adds an expression
  * @param {Node=} opt_node
+ * @export
  */
 os.ui.filter.BasicFilterBuilderCtrl.prototype.add = function(opt_node) {
   var child = os.ui.filter.ui.ExpressionNode.createExpressionNode(opt_node || null, this.scope_['columns']);
   this.root_.addChild(child);
   this.scrollDelay_.start();
 };
-goog.exportProperty(os.ui.filter.BasicFilterBuilderCtrl.prototype, 'add',
-    os.ui.filter.BasicFilterBuilderCtrl.prototype.add);
 
 
 /**

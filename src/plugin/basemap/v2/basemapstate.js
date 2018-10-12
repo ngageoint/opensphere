@@ -55,7 +55,7 @@ plugin.basemap.v2.BaseMapState.LOGGER_ = goog.log.getLogger('plugin.basemap.v2.B
  */
 plugin.basemap.v2.BaseMapState.prototype.isValid = function(layer) {
   try {
-    return layer instanceof plugin.basemap.layer.BaseMap && goog.isDefAndNotNull(layer.getLayerOptions());
+    return layer instanceof plugin.basemap.layer.BaseMap && layer.getLayerOptions() != null;
   } catch (e) {
     // may not be a os.layer.ILayer... so don't persist it
   }
@@ -117,17 +117,13 @@ plugin.basemap.v2.BaseMapState.prototype.xmlToOptions = function(node) {
     options['crossOrigin'] = os.net.getCrossOrigin(/** @type {string} */ (options['url']));
   }
 
-  // some notes on what's going on below:
-  // - zoom is 1 higher in opensphere than in legacy apps
-  // - the closure compiler doesn't remember goog.isNumber when bracket notation is used, thus the extra var
-  var minZoom = options['minZoom'];
-  if (goog.isNumber(minZoom)) {
-    options['minZoom'] = minZoom + 1;
+  // zoom is 1 higher in opensphere than in legacy apps
+  if (typeof options['minZoom'] === 'number') {
+    options['minZoom'] = options['minZoom'] + 1;
   }
 
-  var maxZoom = options['maxZoom'];
-  if (goog.isNumber(maxZoom)) {
-    options['maxZoom'] = maxZoom + 1;
+  if (typeof options['maxZoom'] === 'number') {
+    options['maxZoom'] = options['maxZoom'] + 1;
   }
 
   return options;

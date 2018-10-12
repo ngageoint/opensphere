@@ -30,9 +30,8 @@ goog.inherits(os.ui.action.MenuItemAction, os.ui.action.MenuItem);
 /**
  * Retrieve the action
  * @return {!os.ui.action.Action}
+ * @export
  */
 os.ui.action.MenuItemAction.prototype.getAction = function() {
   return this.action_;
 };
-goog.exportProperty(os.ui.action.MenuItemAction.prototype, 'getAction',
-    os.ui.action.MenuItemAction.prototype.getAction);

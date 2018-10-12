@@ -42,7 +42,7 @@ os.file.mime.xml.Types = {
 os.file.mime.xml.isXML = function(buffer, opt_file, opt_context) {
   var retVal;
 
-  if (opt_context && goog.isString(opt_context)) {
+  if (opt_context && typeof opt_context === 'string') {
     var lexer = xmlLexer.create();
 
     // I know this looks async. Technically it is, but because we synchronously send the

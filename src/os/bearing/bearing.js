@@ -135,7 +135,7 @@ os.bearing.modifyBearing = function(bearing, coord, date) {
  * @return {string} String formatted version of the bearing.
  */
 os.bearing.getFormattedBearing = function(bearing, opt_precision) {
-  opt_precision = goog.isDef(opt_precision) ? opt_precision : 5;
+  opt_precision = opt_precision !== undefined ? opt_precision : 5;
   var bearingType = os.settings.get(os.bearing.BearingSettingsKeys.BEARING_TYPE, os.bearing.BearingType.TRUE_NORTH);
   var typeString = bearingType == os.bearing.BearingType.TRUE_NORTH ? 'T' : 'M';
   return os.math.toFixed(bearing, opt_precision) + '° ' + typeString;
