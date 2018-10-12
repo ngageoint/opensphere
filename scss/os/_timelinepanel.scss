@@ -2,7 +2,7 @@
 // *******************************************
 .c-timeline-panel {
   background: $body-bg;
-  z-index: 1;
+  z-index: $u-zindex-base + 1;
 }
 
 .c-timeline-panel__buttons {
