@@ -96,7 +96,7 @@ os.ui.file.gml.GMLParser.prototype.setSource = function(source) {
   }
 
   var doc;
-  if (goog.isString(source)) {
+  if (typeof source === 'string') {
     doc = goog.dom.xml.loadXml(source);
   } else if (source instanceof Document) {
     doc = source;

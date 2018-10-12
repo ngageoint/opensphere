@@ -67,7 +67,7 @@ plugin.file.csv.CSVParser.prototype.processResult = function(result, opt_mapping
   var feature = new ol.Feature(result);
 
   if (this.config['ignoreMissingGeomRows']) {
-    var mappings = goog.isDefAndNotNull(opt_mappings) ? opt_mappings : this.config['mappings'];
+    var mappings = opt_mappings != null ? opt_mappings : this.config['mappings'];
     var latField = os.im.mapping.LatMapping.ID;
     var lonField = os.im.mapping.LonMapping.ID;
 
@@ -89,7 +89,7 @@ plugin.file.csv.CSVParser.prototype.processResult = function(result, opt_mapping
     var lon = /** @type {string} */ (feature.get(lonField));
 
     // if both lat and lon aren't set, throw the feature out
-    if (goog.isDefAndNotNull(lat) && goog.isDefAndNotNull(lon)) {
+    if (lat != null && lon != null) {
       if (goog.string.isEmptyOrWhitespace(lat) || goog.string.isEmptyOrWhitespace(lon)) {
         return null;
       }
@@ -113,7 +113,7 @@ plugin.file.csv.CSVParser.prototype.updateColumnsFromFeature_ = function(feature
 
   var hasTime = false;
 
-  if (goog.isDefAndNotNull(feature.get(os.data.RecordField.TIME))) {
+  if (feature.get(os.data.RecordField.TIME) != null) {
     var timeColumn = new os.data.ColumnDefinition(os.data.RecordField.TIME);
     timeColumn['id'] = 'TIME';
     timeColumn['name'] = 'TIME';

@@ -314,7 +314,7 @@ os.data.DataManager.prototype.updateFromSettings = function(settings) {
         var on = true;
 
         if ('enabled' in item) {
-          if (goog.isString(item['enabled'])) {
+          if (typeof item['enabled'] === 'string') {
             on = item['enabled'].toLowerCase() == 'true';
           } else {
             on = item['enabled'];

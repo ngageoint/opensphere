@@ -122,7 +122,7 @@ os.ui.timeline.normalizeExtent = function(extent) {
   // setting the extent with two dates. In any case, we will normalize that here.
   if (extent) {
     for (var i = 0, n = extent.length; i < n; i++) {
-      extent[i] = goog.isNumber(extent[i]) ? extent[i] : /** @type {Date} */ (extent[i]).getTime();
+      extent[i] = typeof extent[i] === 'number' ? extent[i] : /** @type {Date} */ (extent[i]).getTime();
     }
   }
 
@@ -1121,7 +1121,7 @@ os.ui.timeline.TimelineCtrl.prototype.drawHistogram_ = function() {
  * @private
  */
 os.ui.timeline.TimelineCtrl.prototype.zoomBy_ = function(dir, opt_focus) {
-  var center = [goog.isDef(opt_focus) ? opt_focus : this.element_.innerWidth() / 2, 0];
+  var center = [opt_focus !== undefined ? opt_focus : this.element_.innerWidth() / 2, 0];
   var limit = this.zoom_.scaleExtent();
   var translate = this.zoom_.translate();
   var translate0 = [];
@@ -1375,7 +1375,7 @@ os.ui.timeline.TimelineCtrl.prototype.setEnd = function(value) {
  * @param {os.ui.timeline.ITimelineItem|string} item The item or item ID to jump to
  */
 os.ui.timeline.TimelineCtrl.prototype.zoomToItem = function(item) {
-  if (goog.isString(item)) {
+  if (typeof item === 'string') {
     item = this.getItem(item);
   }
 
@@ -1410,7 +1410,7 @@ os.ui.timeline.TimelineCtrl.prototype.zoomToExtent = function(extent) {
  * @param {os.ui.timeline.ITimelineItem|string} item The item or item ID to pan to
  */
 os.ui.timeline.TimelineCtrl.prototype.panToItem = function(item) {
-  if (goog.isString(item)) {
+  if (typeof item === 'string') {
     item = this.getItem(item);
   }
 

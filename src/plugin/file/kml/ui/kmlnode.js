@@ -398,7 +398,7 @@ plugin.file.kml.ui.KMLNode.prototype.getExtent = function() {
       extent = ol.extent.createEmpty();
       for (var i = 0, n = features.length; i < n; i++) {
         var geometry = features[i].getGeometry();
-        if (goog.isDefAndNotNull(geometry)) {
+        if (geometry != null) {
           ol.extent.extend(extent, geometry.getExtent());
         }
       }
@@ -440,14 +440,11 @@ plugin.file.kml.ui.KMLNode.prototype.getId = function() {
 /**
  * Whether or not the KML node is loading.
  * @return {boolean}
+ * @export
  */
 plugin.file.kml.ui.KMLNode.prototype.isLoading = function() {
   return this.loading;
 };
-goog.exportProperty(
-    plugin.file.kml.ui.KMLNode.prototype,
-    'isLoading',
-    plugin.file.kml.ui.KMLNode.prototype.isLoading);
 
 
 /**

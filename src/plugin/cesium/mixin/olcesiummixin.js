@@ -112,7 +112,7 @@ olcs.OLCesium.prototype.setEnabled = function(enable) {
         }
       });
 
-      if (!goog.isNull(this.hiddenRootGroup_)) {
+      if (this.hiddenRootGroup_ !== null) {
         this.hiddenRootGroup_.setVisible(true);
         this.hiddenRootGroup_ = null;
       }

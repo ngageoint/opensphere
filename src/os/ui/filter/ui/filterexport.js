@@ -167,7 +167,7 @@ os.ui.filter.ui.export = function(name, filters) {
             'title': filterEntry.getTitle(),
             'description': filterEntry.getDescription() || '',
             'type': filterable.getFilterKey(),
-            'match': queryEntry['filterGroup'] == true || !goog.isDef(queryEntry['filterGroup']) ? 'AND' : 'OR'
+            'match': queryEntry['filterGroup'] == true || queryEntry['filterGroup'] === undefined ? 'AND' : 'OR'
           };
           var filterRootXml = os.xml.appendElement('filter', root, null, filterAttr);
           os.xml.clone(parsedFilter, filterRootXml, 'ogc', 'http://www.opengis.net/ogc');

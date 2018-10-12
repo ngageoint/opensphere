@@ -34,7 +34,7 @@ os.net.LongPoll = function(opt_autoReconnect, opt_getNextReconnect) {
    * @type {boolean}
    * @private
    */
-  this.autoReconnect_ = goog.isDef(opt_autoReconnect) ? opt_autoReconnect : true;
+  this.autoReconnect_ = opt_autoReconnect !== undefined ? opt_autoReconnect : true;
 
   /**
    * A function for obtaining the time until the next reconnect attempt.
@@ -167,9 +167,9 @@ os.net.LongPoll.prototype.open = function(url, opt_protocol) {
  * @private
  */
 os.net.LongPoll.isExternal_ = function(uri, opt_localUri) {
-  uri = goog.isString(uri) ? new goog.Uri(uri) : uri;
+  uri = typeof uri === 'string' ? new goog.Uri(uri) : uri;
   opt_localUri = opt_localUri ?
-      goog.isString(opt_localUri) ? new goog.Uri(opt_localUri) : opt_localUri :
+      typeof opt_localUri === 'string' ? new goog.Uri(opt_localUri) : opt_localUri :
       new goog.Uri(window.location);
 
   return !uri.hasSameDomainAs(opt_localUri);
@@ -343,7 +343,7 @@ os.net.LongPoll.prototype.getStatus = function() {
  * @private
  */
 os.net.LongPoll.prototype.clearReconnectTimer_ = function() {
-  if (goog.isDefAndNotNull(this.reconnectTimer_)) {
+  if (this.reconnectTimer_ != null) {
     goog.Timer.clear(this.reconnectTimer_);
   }
   this.reconnectTimer_ = null;

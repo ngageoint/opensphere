@@ -98,6 +98,7 @@ goog.inherits(os.ui.im.action.EditFilterActionCtrl, os.ui.filter.ui.EditFiltersC
 
 /**
  * Add a new filter action.
+ * @export
  */
 os.ui.im.action.EditFilterActionCtrl.prototype.addAction = function() {
   if (this['availableActions'].length > 0) {
@@ -114,15 +115,12 @@ os.ui.im.action.EditFilterActionCtrl.prototype.addAction = function() {
     }
   }
 };
-goog.exportProperty(
-    os.ui.im.action.EditFilterActionCtrl.prototype,
-    'addAction',
-    os.ui.im.action.EditFilterActionCtrl.prototype.addAction);
 
 
 /**
  * Remove an action.
  * @param {number} index The import action index.
+ * @export
  */
 os.ui.im.action.EditFilterActionCtrl.prototype.removeAction = function(index) {
   if (index > -1 && index < this['actions'].length) {
@@ -131,15 +129,12 @@ os.ui.im.action.EditFilterActionCtrl.prototype.removeAction = function(index) {
     os.dispatcher.dispatchEvent(os.ui.im.action.EventType.UPDATE);
   }
 };
-goog.exportProperty(
-    os.ui.im.action.EditFilterActionCtrl.prototype,
-    'removeAction',
-    os.ui.im.action.EditFilterActionCtrl.prototype.removeAction);
 
 
 /**
  * Update an action type.
  * @param {number} index The action index.
+ * @export
  */
 os.ui.im.action.EditFilterActionCtrl.prototype.updateAction = function(index) {
   var actionObj = this['actions'][index];
@@ -153,10 +148,6 @@ os.ui.im.action.EditFilterActionCtrl.prototype.updateAction = function(index) {
     os.dispatcher.dispatchEvent(os.ui.im.action.EventType.UPDATE);
   }
 };
-goog.exportProperty(
-    os.ui.im.action.EditFilterActionCtrl.prototype,
-    'updateAction',
-    os.ui.im.action.EditFilterActionCtrl.prototype.updateAction);
 
 
 /**
@@ -183,16 +174,13 @@ os.ui.im.action.EditFilterActionCtrl.prototype.updateAvailableActions = function
 /**
  * Configure an action.
  * @param {os.im.action.IImportAction<T>} action The import action.
+ * @export
  */
 os.ui.im.action.EditFilterActionCtrl.prototype.configAction = function(action) {
   if (this.entry && action) {
     os.ui.im.action.launchActionConfig(action, this.entry.getType());
   }
 };
-goog.exportProperty(
-    os.ui.im.action.EditFilterActionCtrl.prototype,
-    'configAction',
-    os.ui.im.action.EditFilterActionCtrl.prototype.configAction);
 
 
 /**
@@ -220,19 +208,17 @@ os.ui.im.action.EditFilterActionCtrl.prototype.onDestroy = function() {
 
 /**
  * @inheritDoc
+ * @export
  */
 os.ui.im.action.EditFilterActionCtrl.prototype.cancel = function() {
   os.ui.im.action.closeActionConfigWindow();
   os.ui.im.action.EditFilterActionCtrl.base(this, 'cancel');
 };
-goog.exportProperty(
-    os.ui.im.action.EditFilterActionCtrl.prototype,
-    'cancel',
-    os.ui.im.action.EditFilterActionCtrl.prototype.cancel);
 
 
 /**
  * @inheritDoc
+ * @export
  */
 os.ui.im.action.EditFilterActionCtrl.prototype.finish = function() {
   os.ui.im.action.closeActionConfigWindow();
@@ -244,14 +230,11 @@ os.ui.im.action.EditFilterActionCtrl.prototype.finish = function() {
 
   os.ui.im.action.EditFilterActionCtrl.base(this, 'finish');
 };
-goog.exportProperty(
-    os.ui.im.action.EditFilterActionCtrl.prototype,
-    'finish',
-    os.ui.im.action.EditFilterActionCtrl.prototype.finish);
 
 
 /**
  * @inheritDoc
+ * @export
  */
 os.ui.im.action.EditFilterActionCtrl.prototype.isInvalid = function() {
   if (this['actions'].length == 0) {
@@ -260,15 +243,12 @@ os.ui.im.action.EditFilterActionCtrl.prototype.isInvalid = function() {
 
   return os.ui.im.action.EditFilterActionCtrl.base(this, 'isInvalid');
 };
-goog.exportProperty(
-    os.ui.im.action.EditFilterActionCtrl.prototype,
-    'isInvalid',
-    os.ui.im.action.EditFilterActionCtrl.prototype.isInvalid);
 
 
 /**
  * Get the tooltip to display over the Add Action button.
  * @return {string}
+ * @export
  */
 os.ui.im.action.EditFilterActionCtrl.prototype.getAddActionTooltip = function() {
   if (this['availableActions'].length > 0) {
@@ -277,10 +257,6 @@ os.ui.im.action.EditFilterActionCtrl.prototype.getAddActionTooltip = function() 
     return 'All available actions have been added';
   }
 };
-goog.exportProperty(
-    os.ui.im.action.EditFilterActionCtrl.prototype,
-    'getAddActionTooltip',
-    os.ui.im.action.EditFilterActionCtrl.prototype.getAddActionTooltip);
 
 
 /**

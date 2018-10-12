@@ -33,6 +33,6 @@ os.query.SpatialQueryEvent = function(type, opt_query, opt_append) {
   /**
    * @type {boolean}
    */
-  this.append = goog.isDef(opt_append) ? opt_append : false;
+  this.append = opt_append !== undefined ? opt_append : false;
 };
 goog.inherits(os.query.SpatialQueryEvent, goog.events.Event);

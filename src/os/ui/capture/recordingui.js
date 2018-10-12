@@ -155,6 +155,7 @@ os.ui.capture.RecordingUI.prototype.close_ = function() {
 
 /**
  * Cancel the recording and close the window.
+ * @export
  */
 os.ui.capture.RecordingUI.prototype.cancel = function() {
   if (this.recorder_) {
@@ -163,14 +164,11 @@ os.ui.capture.RecordingUI.prototype.cancel = function() {
 
   this.close_();
 };
-goog.exportProperty(
-    os.ui.capture.RecordingUI.prototype,
-    'cancel',
-    os.ui.capture.RecordingUI.prototype.cancel);
 
 
 /**
  * Start the recording.
+ * @export
  */
 os.ui.capture.RecordingUI.prototype.record = function() {
   if (this.recorder_) {
@@ -192,30 +190,24 @@ os.ui.capture.RecordingUI.prototype.record = function() {
     this.close_();
   }
 };
-goog.exportProperty(
-    os.ui.capture.RecordingUI.prototype,
-    'record',
-    os.ui.capture.RecordingUI.prototype.record);
 
 
 /**
  * Get the title for a video encoder.
  * @param {os.capture.IVideoEncoder} encoder The encoder
  * @return {string}
+ * @export
  */
 os.ui.capture.RecordingUI.prototype.getEncoderTitle = function(encoder) {
   return encoder && encoder.title || 'Unknown Type';
 };
-goog.exportProperty(
-    os.ui.capture.RecordingUI.prototype,
-    'getEncoderTitle',
-    os.ui.capture.RecordingUI.prototype.getEncoderTitle);
 
 
 /**
  * Get the description for the encoder.
  * @param {os.capture.IVideoEncoder} encoder The encoder
  * @return {string}
+ * @export
  */
 os.ui.capture.RecordingUI.prototype.getEncoderDescription = function(encoder) {
   var description = encoder && encoder.description || '';
@@ -225,10 +217,6 @@ os.ui.capture.RecordingUI.prototype.getEncoderDescription = function(encoder) {
 
   return description;
 };
-goog.exportProperty(
-    os.ui.capture.RecordingUI.prototype,
-    'getEncoderDescription',
-    os.ui.capture.RecordingUI.prototype.getEncoderDescription);
 
 
 /**

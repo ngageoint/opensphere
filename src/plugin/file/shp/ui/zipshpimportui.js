@@ -53,7 +53,7 @@ plugin.file.shp.ui.ZipSHPImportUI.prototype.launchUI = function(file, opt_config
   this.dbfFile_ = null;
   this.zipFile_ = file;
 
-  if (goog.isDef(opt_config)) {
+  if (opt_config !== undefined) {
     this.config_ = opt_config;
   }
 

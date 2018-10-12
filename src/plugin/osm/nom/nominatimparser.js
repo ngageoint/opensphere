@@ -58,7 +58,7 @@ plugin.osm.nom.NominatimParser.prototype.setSource = function(source) {
   }
 
   var results;
-  if (goog.isString(source)) {
+  if (typeof source === 'string') {
     try {
       results = /** @type {Array} */ (JSON.parse(source));
     } catch (e) {

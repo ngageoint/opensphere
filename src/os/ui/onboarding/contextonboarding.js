@@ -58,11 +58,8 @@ os.ui.onboarding.ContextOnboardingCtrl.prototype.destroy_ = function() {
 
 /**
  * Called on clicking the button to display the onboarding for the element this directive is attached to.
+ * @export
  */
 os.ui.onboarding.ContextOnboardingCtrl.prototype.show = function() {
   os.ui.onboarding.OnboardingManager.getInstance().showContextOnboarding(this.scope_['context']);
 };
-goog.exportProperty(
-    os.ui.onboarding.ContextOnboardingCtrl.prototype,
-    'show',
-    os.ui.onboarding.ContextOnboardingCtrl.prototype.show);

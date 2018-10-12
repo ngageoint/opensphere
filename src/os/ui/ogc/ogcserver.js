@@ -705,7 +705,7 @@ os.ui.ogc.OGCServer.prototype.parseWmsCapabilities = function(response, uri) {
         }
       }
 
-      if (goog.isDefAndNotNull(newWms)) {
+      if (newWms != null) {
         this.wmsUrl_ = newWms || this.wmsUrl_;
       }
 
@@ -737,7 +737,7 @@ os.ui.ogc.OGCServer.prototype.parseWmsCapabilities = function(response, uri) {
         }
       }
 
-      if (goog.isDefAndNotNull(newParams)) {
+      if (newParams != null) {
         if (!this.wmsParams_) {
           this.wmsParams_ = new goog.Uri.QueryData();
         }
@@ -819,14 +819,14 @@ os.ui.ogc.OGCServer.prototype.parseWfsCapabilities = function(response, uri) {
     var op = wfsCapabilities.querySelector('Operation[name=GetFeature]');
     if (op) {
       var getFeatureEl = op.querySelector('Post');
-      if (goog.isDefAndNotNull(getFeatureEl)) {
+      if (getFeatureEl != null) {
         // Attr.value is the DOM4 property, while Attr.nodeValue inherited from Node should work on older browsers
         var attr = getFeatureEl.attributes[0];
         this.setWfsUrl(attr.value || attr.nodeValue);
         this.setWfsPost(true);
       } else {
         getFeatureEl = op.querySelector('Get');
-        if (goog.isDefAndNotNull(getFeatureEl)) {
+        if (getFeatureEl != null) {
           // Attr.value is the DOM4 property, while Attr.nodeValue inherited from Node should work on older browsers
           var attr = getFeatureEl.attributes[0];
           this.setWfsUrl(attr.value || attr.nodeValue);
@@ -1370,7 +1370,7 @@ os.ui.ogc.OGCServer.isOGCResponse = function(file) {
     }
 
     var content = file.getContent();
-    if (goog.isString(content)) {
+    if (typeof content === 'string') {
       score += os.ui.ogc.OGCServer.CONTENT_REGEXP_.test(content) ? 3 : 0;
     }
   }

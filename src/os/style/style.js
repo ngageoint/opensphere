@@ -455,7 +455,7 @@ os.style.toAbgrString = function(color) {
  * @return {string}
  */
 os.style.toRgbaString = function(color) {
-  return ol.color.asString(goog.isString(color) ? os.color.toRgbArray(color) : color);
+  return ol.color.asString(typeof color === 'string' ? os.color.toRgbArray(color) : color);
 };
 
 
@@ -594,9 +594,9 @@ os.style.setConfigIconRotation = function(config, showRotation, rotateAmount) {
 os.style.setConfigIconRotationFromObject = function(config, origin, feature) {
   var showRotation = origin[os.style.StyleField.SHOW_ROTATION] || false;
   var rotationColumn = origin[os.style.StyleField.ROTATION_COLUMN];
-  rotationColumn = goog.isString(rotationColumn) ? rotationColumn : '';
+  rotationColumn = typeof rotationColumn === 'string' ? rotationColumn : '';
   var rotateAmount = Number(feature.values_[rotationColumn]);
-  rotateAmount = goog.isNumber(rotateAmount) && !isNaN(rotateAmount) ? rotateAmount : 0;
+  rotateAmount = typeof rotateAmount === 'number' && !isNaN(rotateAmount) ? rotateAmount : 0;
   os.style.setConfigIconRotation(config, showRotation, rotateAmount);
 };
 
@@ -672,7 +672,7 @@ os.style.getConfigSize = function(config) {
         if (!os.object.isPrimitive(config[key])) {
           var result = os.style.getConfigSize(config[key]);
 
-          if (goog.isDef(result)) {
+          if (result !== undefined) {
             return result;
           }
         }
@@ -951,11 +951,11 @@ os.style.createFeatureConfig = function(feature, baseConfig, opt_layerConfig) {
     }
 
     // rotate icon as specified
-    if (goog.isDef(featureConfig[os.style.StyleField.SHOW_ROTATION]) && // feature action
-        goog.isDef(featureConfig[os.style.StyleField.ROTATION_COLUMN])) {
+    if (featureConfig[os.style.StyleField.SHOW_ROTATION] !== undefined &&
+        featureConfig[os.style.StyleField.ROTATION_COLUMN] !== undefined) {
       os.style.setConfigIconRotationFromObject(featureConfig, featureConfig, feature);
-    } else if (goog.isDef(feature.values_[os.style.StyleField.SHOW_ROTATION]) && // place
-        goog.isDef(feature.values_[os.style.StyleField.ROTATION_COLUMN])) {
+    } else if (feature.values_[os.style.StyleField.SHOW_ROTATION] !== undefined &&
+        feature.values_[os.style.StyleField.ROTATION_COLUMN] !== undefined) {
       os.style.setConfigIconRotationFromObject(featureConfig, feature.values_, feature);
     }
 
@@ -971,8 +971,8 @@ os.style.createFeatureConfig = function(feature, baseConfig, opt_layerConfig) {
       os.style.mergeConfig(opt_layerConfig[os.style.StyleField.STROKE],
           featureConfig[os.style.StyleField.STROKE]);
     }
-  } else if (opt_layerConfig && goog.isDef(opt_layerConfig[os.style.StyleField.SHOW_ROTATION]) && // rotate icon
-      goog.isDef(opt_layerConfig[os.style.StyleField.ROTATION_COLUMN])) {
+  } else if (opt_layerConfig && opt_layerConfig[os.style.StyleField.SHOW_ROTATION] !== undefined && // rotate icon
+      opt_layerConfig[os.style.StyleField.ROTATION_COLUMN] !== undefined) {
     os.style.setConfigIconRotationFromObject(featureConfig, opt_layerConfig, feature);
   }
 
@@ -1046,7 +1046,7 @@ os.style.createFeatureStyle = function(feature, baseConfig, opt_layerConfig) {
     return styles;
   }
 
-  if (goog.isNumber(baseConfig.length)) {
+  if (typeof baseConfig.length === 'number') {
     for (var i = 0, n = baseConfig.length; i < n; i++) {
       styles.push(os.style.createFeatureStyle(feature, baseConfig[i], opt_layerConfig));
     }

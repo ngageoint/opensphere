@@ -231,11 +231,8 @@ os.ui.wiz.step.TimeStepCtrl.prototype.validate_ = function() {
 
 /**
  * Launches the date/time formatting help dialog.
+ * @export
  */
 os.ui.wiz.step.TimeStepCtrl.prototype.launchHelp = function() {
   os.ui.window.launchTimeHelp();
 };
-goog.exportProperty(
-    os.ui.wiz.step.TimeStepCtrl.prototype,
-    'launchHelp',
-    os.ui.wiz.step.TimeStepCtrl.prototype.launchHelp);

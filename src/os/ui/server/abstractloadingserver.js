@@ -286,14 +286,11 @@ os.ui.server.AbstractLoadingServer.prototype.setPing = function(value) {
 
 /**
  * @inheritDoc
+ * @export
  */
 os.ui.server.AbstractLoadingServer.prototype.isLoading = function() {
   return this.isLoading_;
 };
-goog.exportProperty(
-    os.ui.server.AbstractLoadingServer.prototype,
-    'isLoading',
-    os.ui.server.AbstractLoadingServer.prototype.isLoading);
 
 
 /**

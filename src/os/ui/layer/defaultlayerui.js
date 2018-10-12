@@ -317,16 +317,16 @@ os.ui.layer.DefaultLayerUICtrl.prototype.setInitialValues_ = function() {
         var values = {};
 
         var opacity = os.layer.getOpacity(layer);
-        values['opacity'] = goog.isDefAndNotNull(opacity) ? opacity : 0;
+        values['opacity'] = opacity != null ? opacity : 0;
 
         var brightness = os.layer.getBrightness(layer);
-        values['brightness'] = goog.isDefAndNotNull(brightness) ? brightness : 0;
+        values['brightness'] = brightness != null ? brightness : 0;
 
         var contrast = os.layer.getContrast(layer);
-        values['contrast'] = goog.isDefAndNotNull(contrast) ? contrast : 0;
+        values['contrast'] = contrast != null ? contrast : 0;
 
         var saturation = os.layer.getSaturation(layer);
-        values['saturation'] = goog.isDefAndNotNull(saturation) ? saturation : 0;
+        values['saturation'] = saturation != null ? saturation : 0;
 
         this.initialValues[layerId] = values;
       }
@@ -380,7 +380,7 @@ os.ui.layer.DefaultLayerUICtrl.prototype.onSliderStop = function(callback, key, 
       function(layer) {
         var initialValues = this.initialValues[layer.getId()];
         var old = 1;
-        if (initialValues && goog.isDef(initialValues[key])) {
+        if (initialValues && initialValues[key] !== undefined) {
           old = initialValues[key];
         }
 
@@ -399,6 +399,7 @@ os.ui.layer.DefaultLayerUICtrl.prototype.onSliderStop = function(callback, key, 
 
 /**
  * Set the refresh state of the source.
+ * @export
  */
 os.ui.layer.DefaultLayerUICtrl.prototype.onRefreshChange = function() {
   var nodes = this.getLayerNodes();
@@ -417,15 +418,12 @@ os.ui.layer.DefaultLayerUICtrl.prototype.onRefreshChange = function() {
     this.createCommand(fn);
   }
 };
-goog.exportProperty(
-    os.ui.layer.DefaultLayerUICtrl.prototype,
-    'onRefreshChange',
-    os.ui.layer.DefaultLayerUICtrl.prototype.onRefreshChange);
 
 
 /**
  * Resets the value of the chosen key to the default.
  * @param {string} key
+ * @export
  */
 os.ui.layer.DefaultLayerUICtrl.prototype.reset = function(key) {
   var defaultValue = this.defaults[key];
@@ -434,15 +432,12 @@ os.ui.layer.DefaultLayerUICtrl.prototype.reset = function(key) {
     this.onSliderStop(callback, key, null, defaultValue);
   }
 };
-goog.exportProperty(
-    os.ui.layer.DefaultLayerUICtrl.prototype,
-    'reset',
-    os.ui.layer.DefaultLayerUICtrl.prototype.reset);
 
 
 /**
  * Opens an accordion and saves it to local storage.
  * @param {string} selector
+ * @export
  */
 os.ui.layer.DefaultLayerUICtrl.prototype.setOpenSection = function(selector) {
   os.settings.set('layercontrols', selector);
@@ -453,7 +448,3 @@ os.ui.layer.DefaultLayerUICtrl.prototype.setOpenSection = function(selector) {
     }
   });
 };
-goog.exportProperty(
-    os.ui.layer.DefaultLayerUICtrl.prototype,
-    'setOpenSection',
-    os.ui.layer.DefaultLayerUICtrl.prototype.setOpenSection);

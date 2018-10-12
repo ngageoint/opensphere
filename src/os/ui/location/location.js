@@ -68,9 +68,9 @@ os.ui.location.formatAsCurrent = function(lat, lon) {
   } catch (e) {
     // make this super obvious so we catch it in dev
     // some errors come as a result of poorly formatted text, ignore those
-    if (!goog.isDef(filter)) {
+    if (filter === undefined) {
       goog.log.warning(os.ui.location.LOGGER_, '$filter service unavailable!');
-    } else if (!goog.isDef(os.ui.injector)) {
+    } else if (os.ui.injector === undefined) {
       goog.log.warning(os.ui.location.LOGGER_, 'os.ui.injector service never defined!');
     } else {
       goog.log.warning(os.ui.location.LOGGER_, 'Unknown error trying to use formatter!');

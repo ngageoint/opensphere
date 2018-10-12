@@ -95,6 +95,7 @@ os.ui.history.HistoryViewCtrl.prototype.destroy_ = function() {
 
 /**
  * Prompts the user to clear the application history.
+ * @export
  */
 os.ui.history.HistoryViewCtrl.prototype.clearHistory = function() {
   os.ui.window.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
@@ -116,10 +117,6 @@ os.ui.history.HistoryViewCtrl.prototype.clearHistory = function() {
     }
   }));
 };
-goog.exportProperty(
-    os.ui.history.HistoryViewCtrl.prototype,
-    'clearHistory',
-    os.ui.history.HistoryViewCtrl.prototype.clearHistory);
 
 
 /**
@@ -135,14 +132,11 @@ os.ui.history.HistoryViewCtrl.prototype.clearHistoryInternal_ = function() {
 
 /**
  * Toggles the history view
+ * @export
  */
 os.ui.history.HistoryViewCtrl.prototype.toggleHistoryView = function() {
   this['showHistoryView'] = !this['showHistoryView'];
 };
-goog.exportProperty(
-    os.ui.history.HistoryViewCtrl.prototype,
-    'toggleHistoryView',
-    os.ui.history.HistoryViewCtrl.prototype.toggleHistoryView);
 
 
 /**
@@ -150,6 +144,7 @@ goog.exportProperty(
  * clicked item and calls os.command.CommandProcessor.setIndex() with the
  * index as the argument.  Also manipulates the DOM to highlight that item.
  * @param {number} index
+ * @export
  */
 os.ui.history.HistoryViewCtrl.prototype.setIndex = function(index) {
   if (this['current'] == index) {
@@ -158,10 +153,6 @@ os.ui.history.HistoryViewCtrl.prototype.setIndex = function(index) {
   this.scope_.$emit('historyProcessing', true);
   this.cp_.setIndex(index);
 };
-goog.exportProperty(
-    os.ui.history.HistoryViewCtrl.prototype,
-    'setIndex',
-    os.ui.history.HistoryViewCtrl.prototype.setIndex);
 
 
 /**

@@ -80,11 +80,8 @@ goog.inherits(plugin.osm.nom.ResultCardCtrl, os.ui.search.FeatureResultCardCtrl)
 /**
  * Get the title to display on the card.
  * @return {string} The title.
+ * @export
  */
 plugin.osm.nom.ResultCardCtrl.prototype.getTitle = function() {
   return /** @type {string} */ (this.feature.get(plugin.osm.nom.ResultField.DISPLAY_NAME) || 'Unknown Result');
 };
-goog.exportProperty(
-    plugin.osm.nom.ResultCardCtrl.prototype,
-    'getTitle',
-    plugin.osm.nom.ResultCardCtrl.prototype.getTitle);

@@ -22,19 +22,19 @@ os.ogc.filter.OGCFilterModifierOptions;
  * @constructor
  */
 os.ogc.filter.OGCFilterModifier = function(opt_options) {
-  var options = goog.isDefAndNotNull(opt_options) ? opt_options : {};
+  var options = opt_options != null ? opt_options : {};
 
   /**
    * @type {boolean}
    * @private
    */
-  this.filter_ = goog.isDefAndNotNull(options.filter) ? options.filter : false;
+  this.filter_ = options.filter != null ? options.filter : false;
 
   /**
    * @type {boolean}
    * @private
    */
-  this.identifiers_ = goog.isDefAndNotNull(options.identifiers) ? options.identifiers : false;
+  this.identifiers_ = options.identifiers != null ? options.identifiers : false;
 
   /**
    * @type {string}
@@ -46,7 +46,7 @@ os.ogc.filter.OGCFilterModifier = function(opt_options) {
    * @type {boolean}
    * @private
    */
-  this.temporal_ = goog.isDefAndNotNull(options.temporal) ? options.temporal : true;
+  this.temporal_ = options.temporal != null ? options.temporal : true;
 
   os.ogc.filter.OGCFilterModifier.base(this, 'constructor', 'OGCFilter', 100);
 };

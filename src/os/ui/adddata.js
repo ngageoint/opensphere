@@ -143,24 +143,21 @@ os.ui.AddDataCtrl.prototype.checkServerError_ = function(opt_event) {
 
 /**
  * Dismiss the server alert and do not show it again.
+ * @export
  */
 os.ui.AddDataCtrl.prototype.dismissServerAlert = function() {
   this['showServerAlert'] = false;
 };
-goog.exportProperty(
-    os.ui.AddDataCtrl.prototype,
-    'dismissServerAlert',
-    os.ui.AddDataCtrl.prototype.dismissServerAlert);
 
 
 /**
  * Toggles the add data drop-down menu.
+ * @export
  */
 os.ui.AddDataCtrl.prototype.launchFileImport = function() {
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.AddData.IMPORT, 1);
   os.dispatcher.dispatchEvent(os.ui.im.ImportEventType.FILE);
 };
-goog.exportProperty(os.ui.AddDataCtrl.prototype, 'launchFileImport', os.ui.AddDataCtrl.prototype.launchFileImport);
 
 
 /**
@@ -180,13 +177,10 @@ os.ui.AddDataCtrl.prototype.onParamsChange_ = function(event, params) {
 
 /**
  * Clear the filter function
+ * @export
  */
 os.ui.AddDataCtrl.prototype.clearFilter = function() {
   this.scope['filterName'] = null;
   this.setFilterFunction(null);
   // this.updateSize_(false);
 };
-goog.exportProperty(
-    os.ui.AddDataCtrl.prototype,
-    'clearFilter',
-    os.ui.AddDataCtrl.prototype.clearFilter);

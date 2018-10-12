@@ -76,7 +76,7 @@ os.alert.AlertManager.prototype.sendAlert = function(alert, opt_severity, opt_lo
   this.dispatchEvent(alertEvent);
 
   // write the message to the logger if defined
-  if (goog.isDefAndNotNull(opt_logger)) {
+  if (opt_logger != null) {
     switch (severity) {
       case os.alert.AlertEventSeverity.ERROR:
         goog.log.error(opt_logger, alert);

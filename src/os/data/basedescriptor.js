@@ -367,14 +367,11 @@ os.data.BaseDescriptor.prototype.setColor = function(value) {
 
 /**
  * @inheritDoc
+ * @export
  */
 os.data.BaseDescriptor.prototype.getDescription = function() {
   return this.desc_;
 };
-goog.exportProperty(
-    os.data.BaseDescriptor.prototype,
-    'getDescription',
-    os.data.BaseDescriptor.prototype.getDescription);
 
 
 /**

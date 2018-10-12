@@ -69,7 +69,7 @@ os.ui.query.ui.ComboNodeUICtrl = function($scope, $element) {
   this['include'] = this.getInclude();
 
   var entry = this.getEntry();
-  if (entry && !goog.isDef(entry['filterGroup'])) {
+  if (entry && entry['filterGroup'] === undefined) {
     entry['filterGroup'] = this['group'];
   }
 
@@ -114,7 +114,7 @@ os.ui.query.ui.ComboNodeUICtrl.prototype.getFilterGroup = function() {
 
     for (var x = 0; x < children.length; x++) {
       var entry = children[x].getEntry();
-      if (entry && goog.isDef(entry['filterGroup']) && !entry['filterGroup']) {
+      if (entry && entry['filterGroup'] !== undefined && !entry['filterGroup']) {
         returnValue = false;
       }
     }
@@ -136,7 +136,7 @@ os.ui.query.ui.ComboNodeUICtrl.prototype.getInclude = function() {
 
   if (entry && entry['areaId']) {
     var value = /** @type {boolean} */ (entry['includeArea']);
-    return goog.isDef(value) ? value : true;
+    return value !== undefined ? value : true;
   }
 
   return true;

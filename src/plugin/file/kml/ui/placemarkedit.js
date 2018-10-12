@@ -90,6 +90,7 @@ plugin.file.kml.ui.PlacemarkEditCtrl.prototype.disposeInternal = function() {
 
 /**
  * @inheritDoc
+ * @export
  */
 plugin.file.kml.ui.PlacemarkEditCtrl.prototype.accept = function() {
   // create a new feature if necessary
@@ -112,7 +113,3 @@ plugin.file.kml.ui.PlacemarkEditCtrl.prototype.accept = function() {
 
   this.close();
 };
-goog.exportProperty(
-    plugin.file.kml.ui.PlacemarkEditCtrl.prototype,
-    'accept',
-    plugin.file.kml.ui.PlacemarkEditCtrl.prototype.accept);

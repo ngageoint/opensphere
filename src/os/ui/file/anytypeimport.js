@@ -61,6 +61,7 @@ os.ui.file.AnyTypeImportCtrl = function($scope, $element) {
 
 /**
  * Open the correct importer
+ * @export
  */
 os.ui.file.AnyTypeImportCtrl.prototype.accept = function() {
   try {
@@ -72,19 +73,12 @@ os.ui.file.AnyTypeImportCtrl.prototype.accept = function() {
 
   this.close();
 };
-goog.exportProperty(
-    os.ui.file.AnyTypeImportCtrl.prototype,
-    'accept',
-    os.ui.file.AnyTypeImportCtrl.prototype.accept);
 
 
 /**
  * Open the correct importer
+ * @export
  */
 os.ui.file.AnyTypeImportCtrl.prototype.close = function() {
   os.ui.window.close(this.element_);
 };
-goog.exportProperty(
-    os.ui.file.AnyTypeImportCtrl.prototype,
-    'close',
-    os.ui.file.AnyTypeImportCtrl.prototype.close);

@@ -262,14 +262,14 @@ os.state.v3.LayerState.prototype.layerToXML = function(layer, options, opt_exclu
 
   // write the persisted layer on top of the cloned options so we have (most) everything in one place
   var layerConfig = goog.object.clone(layer.getLayerOptions());
-  if (goog.isDefAndNotNull(opt_layerConfig)) {
+  if (opt_layerConfig != null) {
     goog.object.extend(layerConfig, opt_layerConfig);
   }
 
   layer.persist(layerConfig);
 
   var url = /** @type {string|undefined} */ (layerConfig['url']);
-  if (goog.isString(url) && !os.file.isLocal(url)) {
+  if (typeof url === 'string' && !os.file.isLocal(url)) {
     // writing to xml, do not encode URLs, we are looking for specific values like the {X}/{Y}/{Z} layer
     url = layerConfig['url'] = decodeURIComponent(os.uri.addBase(url));
   }
@@ -280,14 +280,14 @@ os.state.v3.LayerState.prototype.layerToXML = function(layer, options, opt_exclu
     layerConfig['url'] = urls[0];
   }
 
-  var type = goog.isString(layerConfig['type']) ? layerConfig['type'].toLowerCase() : '';
+  var type = typeof layerConfig['type'] === 'string' ? layerConfig['type'].toLowerCase() : '';
 
-  if (goog.isDefAndNotNull(opt_exclusions)) {
+  if (opt_exclusions != null) {
     var exclusions = goog.isArray(opt_exclusions) ? opt_exclusions : [opt_exclusions];
     tagExclusions = goog.array.join(tagExclusions, exclusions);
   }
   for (var i = 0, n = tagExclusions.length; i < n; i++) {
-    if (goog.isDefAndNotNull(layerConfig[tagExclusions[i]])) {
+    if (layerConfig[tagExclusions[i]] != null) {
       delete layerConfig[tagExclusions[i]];
     }
   }
@@ -297,11 +297,12 @@ os.state.v3.LayerState.prototype.layerToXML = function(layer, options, opt_exclu
 
   for (var key in layerConfig) {
     var value = layerConfig[key];
-    if (goog.isDefAndNotNull(value)) {
+    if (value != null) {
       switch (key) {
         case 'params':
           var paramsEl = os.xml.appendElement(os.state.v3.LayerTag.PARAMS, layerEl);
-          var qd = goog.isString(value) ? new goog.Uri.QueryData(value) : /** @type {goog.Uri.QueryData} */ (value);
+          var qd = typeof value === 'string' ? new goog.Uri.QueryData(value) :
+              /** @type {goog.Uri.QueryData} */ (value);
           var qdKeys = qd.getKeys();
           for (var i = 0, n = qdKeys.length; i < n; i++) {
             var qdKey = qdKeys[i];
@@ -334,7 +335,7 @@ os.state.v3.LayerState.prototype.layerToXML = function(layer, options, opt_exclu
           }
           break;
         case 'contrast':
-          if (goog.isNumber(value) && !isNaN(value)) {
+          if (typeof value === 'number' && !isNaN(value)) {
             // Cesium contrast: 0 is gray, 1 is normal, > 1 increases contrast. we allow from 0 to 2.
             // 2D contrast: -100 is gray, 0 is normal, 100 is max.
             os.xml.appendElement(os.state.v3.LayerTag.CONTRAST, layerEl, Math.round((value - 1) * 100));
@@ -343,19 +344,19 @@ os.state.v3.LayerState.prototype.layerToXML = function(layer, options, opt_exclu
         case 'alpha':
         case 'opacity':
           if (bfs) {
-            value = goog.isDefAndNotNull(value) ? Number(value) : os.style.DEFAULT_ALPHA;
+            value = value != null ? Number(value) : os.style.DEFAULT_ALPHA;
 
             var opacity = Math.round(value * 255);
             os.xml.appendElement(os.state.v3.LayerTag.PT_OPACITY, bfs, opacity);
           } else {
             // write tile layer opacity/alpha as alpha
-            value = goog.isDefAndNotNull(value) ? Number(value) : os.style.DEFAULT_ALPHA;
+            value = value != null ? Number(value) : os.style.DEFAULT_ALPHA;
             os.xml.appendElement(os.state.v3.LayerTag.ALPHA, layerEl, value);
           }
           break;
         case 'size':
           if (bfs) {
-            value = goog.isDefAndNotNull(value) ? Math.floor(value) : os.style.DEFAULT_FEATURE_SIZE;
+            value = value != null ? Math.floor(value) : os.style.DEFAULT_FEATURE_SIZE;
 
             var pointSize = value * 2;
             os.xml.appendElement(os.state.v3.LayerTag.PT_SIZE, bfs, pointSize);
@@ -396,13 +397,13 @@ os.state.v3.LayerState.prototype.layerToXML = function(layer, options, opt_exclu
           }
           break;
         case os.style.StyleField.LABEL_COLOR:
-          if (bfs && goog.isString(value) && !goog.string.isEmptyOrWhitespace(goog.string.makeSafe(value))) {
+          if (bfs && typeof value === 'string' && !goog.string.isEmptyOrWhitespace(goog.string.makeSafe(value))) {
             var color = os.color.toHexString(value).replace(/^#/, '');
             os.xml.appendElement(os.state.v3.LayerTag.LABEL_COLOR, bfs, color);
           }
           break;
         case os.style.StyleField.LABEL_SIZE:
-          if (bfs && goog.isNumber(value)) {
+          if (bfs && typeof value === 'number') {
             os.xml.appendElement(os.state.v3.LayerTag.LABEL_SIZE, bfs, value);
           }
           break;
@@ -430,11 +431,13 @@ os.state.v3.LayerState.prototype.layerToXML = function(layer, options, opt_exclu
           break;
         case os.state.v3.LayerTag.CSV_DATA_ROW:
           // convert from 1 based indexing to 0 based.
-          this.defaultConfigToXML(os.state.v3.LayerTag.CSV_DATA_ROW, value - 1, layerEl);
+          if (typeof value === 'number') {
+            this.defaultConfigToXML(os.state.v3.LayerTag.CSV_DATA_ROW, value - 1, layerEl);
+          }
           break;
         case os.state.v3.LayerTag.CSV_HEADER_ROW:
           // convert from 1 based indexing to 0 based. But needs to be set to -1 when useHeader is false.
-          if (layerConfig[os.state.v3.LayerTag.CSV_USE_HEADER]) {
+          if (typeof value === 'number' && layerConfig[os.state.v3.LayerTag.CSV_USE_HEADER]) {
             this.defaultConfigToXML(os.state.v3.LayerTag.CSV_HEADER_ROW, value - 1, layerEl);
           } else {
             this.defaultConfigToXML(os.state.v3.LayerTag.CSV_HEADER_ROW, -1, layerEl);
@@ -494,8 +497,8 @@ os.state.v3.LayerState.prototype.layerToXML = function(layer, options, opt_exclu
 os.state.v3.LayerState.prototype.defaultConfigToXML = function(key, value, layerEl) {
   var node = null;
 
-  if (goog.isString(value) || goog.isNumber(value) || goog.isBoolean(value)) {
-    if (goog.isString(value) && key.search(/color/i) > -1 && key != 'colorize' && os.color.isColorString(value)) {
+  if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+    if (typeof value === 'string' && key.search(/color/i) > -1 && key != 'colorize' && os.color.isColorString(value)) {
       try {
         // output hex
         value = os.color.toHexString(value).replace(/^#/, '0x');
@@ -503,7 +506,7 @@ os.state.v3.LayerState.prototype.defaultConfigToXML = function(key, value, layer
         // default to white
         value = '0xffffff';
       }
-    } else if (goog.isString(value) && goog.string.startsWith(value, 'url')) {
+    } else if (typeof value === 'string' && goog.string.startsWith(value, 'url')) {
       // make sure url's are qualified
       value = os.uri.addBase(value);
     }
@@ -625,7 +628,7 @@ os.state.v3.LayerState.prototype.analyzeOptions = function(options, id) {
           typeName = paramsTypeName;
         }
 
-        if (goog.isString(typeName)) {
+        if (typeof typeName === 'string') {
           var idx = typeName.indexOf(':');
           if (idx > -1) {
             typeName = typeName.substring(idx + 1);
@@ -637,7 +640,7 @@ os.state.v3.LayerState.prototype.analyzeOptions = function(options, id) {
     var style = /** @type {string} */ (layerOptions['style']);
     var styles = /** @type {Array<Object>} */ (layerOptions['styles']);
     // fix any styles that don't reference the data
-    if (goog.isDefAndNotNull(style) && goog.isDefAndNotNull(styles)) {
+    if (style != null && styles != null) {
       var matchesStyle = false;
       for (var j = 0, m = styles.length; j < m; j++) {
         if (styles[j]['data'] === style) {
@@ -710,7 +713,7 @@ os.state.v3.LayerState.prototype.xmlToOptions = function(node) {
                       os.style.DEFAULT_FEATURE_SIZE;
                   break;
                 case os.state.v3.LayerTag.LABEL_COLUMN:
-                  var column = goog.isString(styleVal) ? goog.string.trim(styleVal) : '';
+                  var column = typeof styleVal === 'string' ? goog.string.trim(styleVal) : '';
                   // Is this the default?
                   if (options[os.style.StyleField.LABELS] == undefined) {
                     options[os.style.StyleField.LABELS] = [os.style.label.cloneConfig()];

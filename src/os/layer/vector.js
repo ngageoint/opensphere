@@ -311,6 +311,12 @@ os.layer.Vector.prototype.onSourceChange = function(event) {
     case os.source.PropertyChange.COLUMN_ADDED:
       this.dispatchEvent(new os.events.PropertyChangeEvent(p));
       break;
+    case os.source.PropertyChange.ALTITUDE:
+      // forward as a layer event
+      e = new os.events.PropertyChangeEvent(os.layer.PropertyChange.ALTITUDE, event.getNewValue(),
+          event.getOldValue());
+      this.dispatchEvent(e);
+      break;
     default:
       break;
   }
@@ -830,7 +836,7 @@ os.layer.Vector.prototype.getGroupUI = function() {
  * @inheritDoc
  */
 os.layer.Vector.prototype.isFilterable = function() {
-  return goog.isDefAndNotNull(this.filterLauncher_);
+  return this.filterLauncher_ != null;
 };
 
 
@@ -872,7 +878,7 @@ os.layer.Vector.prototype.getFilterableTypes = function() {
  * @inheritDoc
  */
 os.layer.Vector.prototype.launchFilterManager = function() {
-  if (goog.isDefAndNotNull(this.filterLauncher_)) {
+  if (this.filterLauncher_ != null) {
     this.filterLauncher_(this);
   }
 };
@@ -882,7 +888,7 @@ os.layer.Vector.prototype.launchFilterManager = function() {
  * @inheritDoc
  */
 os.layer.Vector.prototype.getFilterColumns = function() {
-  if (goog.isDefAndNotNull(this.filterColumns_)) {
+  if (this.filterColumns_ != null) {
     return this.filterColumns_(this);
   }
 
@@ -955,7 +961,7 @@ os.layer.Vector.prototype.supportsAction = function(type, opt_actionArgs) {
         if (isVector) {
           // look for the max date on the descriptor
           var desc = os.dataManager.getDescriptor(this.getId());
-          if (goog.isDefAndNotNull(desc)) {
+          if (desc != null) {
             maxDate = desc.getMaxDate();
           }
 

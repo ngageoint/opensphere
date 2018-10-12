@@ -135,7 +135,7 @@ os.ui.window.create = function(options, html, opt_parent, opt_scope, opt_compile
 
   for (var key in options) {
     var val = options[key];
-    if (key === 'label' && goog.isString(val)) {
+    if (key === 'label' && typeof val === 'string') {
       val = val.replace(/"/g, '&quot;');
     }
     win += ' ' + key + '="' + val + '"';
@@ -188,7 +188,7 @@ os.ui.window.launch = function(html, opt_parent, opt_scope, opt_compile, opt_sco
 os.ui.window.launchInternal = function(html, parent, $scope, $compile, opt_scopeOptions) {
   // make a new scope
   var s = $scope.$new();
-  if (goog.isDefAndNotNull(opt_scopeOptions)) {
+  if (opt_scopeOptions != null) {
     goog.object.extend(s, opt_scopeOptions);
   }
 
@@ -369,7 +369,7 @@ os.ui.window.exists = function(id) {
 os.ui.window.blink = function(id, opt_start) {
   var win = os.ui.window.getById(id);
   if (win) {
-    var start = goog.isDef(opt_start) ? opt_start : true;
+    var start = opt_start !== undefined ? opt_start : true;
     var blinkEl = win.find(os.ui.windowSelector.HEADER + ' ' + os.ui.windowSelector.HEADER_TEXT + ' i.fa');
     if (start) {
       blinkEl.addClass('a-pulsate');
@@ -758,6 +758,7 @@ os.ui.WindowCtrl.prototype.hideOverlayWindow_ = function() {
 /**
  * Closes the window
  * @param {boolean=} opt_cancel If the cancel event should be fired
+ * @export
  */
 os.ui.WindowCtrl.prototype.close = function(opt_cancel) {
   this.closing_ = true;
@@ -784,11 +785,11 @@ os.ui.WindowCtrl.prototype.close = function(opt_cancel) {
   // remove the element from the DOM
   el.remove();
 };
-goog.exportProperty(os.ui.WindowCtrl.prototype, 'close', os.ui.WindowCtrl.prototype.close);
 
 
 /**
  * Toggles the window content
+ * @export
  */
 os.ui.WindowCtrl.prototype.toggle = function() {
   if (!this.scope['modal']) {
@@ -813,11 +814,11 @@ os.ui.WindowCtrl.prototype.toggle = function() {
     }
   }
 };
-goog.exportProperty(os.ui.WindowCtrl.prototype, 'toggle', os.ui.WindowCtrl.prototype.toggle);
 
 
 /**
  * Hide (not close) the window and raise an event
+ * @export
  */
 os.ui.WindowCtrl.prototype.hide = function() {
   if (this.scope['id']) {
@@ -826,7 +827,6 @@ os.ui.WindowCtrl.prototype.hide = function() {
     os.dispatcher.dispatchEvent(event);
   }
 };
-goog.exportProperty(os.ui.WindowCtrl.prototype, 'hide', os.ui.WindowCtrl.prototype.hide);
 
 
 /**
@@ -884,7 +884,7 @@ os.ui.WindowCtrl.prototype.onDragStop_ = function(event, ui) {
  * @private
  */
 os.ui.WindowCtrl.prototype.onToggleModal_ = function(opt_new, opt_old) {
-  if (goog.isDef(opt_new) && opt_new != opt_old) {
+  if (opt_new !== undefined && opt_new != opt_old) {
     if (opt_new) {
       this.addModalBg();
     } else {
@@ -982,12 +982,9 @@ os.ui.WindowCtrl.prototype.constrainWindow_ = function() {
  * Handle header button click
  * @param {!Event} event
  * @param {!os.ui.window.HeaderBtnConfig} headerBtnCfg
+ * @export
  */
 os.ui.WindowCtrl.prototype.onHeaderBtnClick = function(event, headerBtnCfg) {
   var winEl = $(event.target).parents(os.ui.windowSelector.WINDOW);
   headerBtnCfg.onClick(winEl);
 };
-goog.exportProperty(
-    os.ui.WindowCtrl.prototype,
-    'onHeaderBtnClick',
-    os.ui.WindowCtrl.prototype.onHeaderBtnClick);
