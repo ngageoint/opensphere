@@ -88,6 +88,7 @@ os.ui.file.UrlImportCtrl.prototype.onDestroy_ = function() {
 
 /**
  * Create import command and close the window
+ * @export
  */
 os.ui.file.UrlImportCtrl.prototype.accept = function() {
   if (!this.scope_['urlForm']['$invalid'] && this.scope_['method']) {
@@ -104,24 +105,17 @@ os.ui.file.UrlImportCtrl.prototype.accept = function() {
     this.close();
   }
 };
-goog.exportProperty(
-    os.ui.file.UrlImportCtrl.prototype,
-    'accept',
-    os.ui.file.UrlImportCtrl.prototype.accept);
 
 
 /**
  * Close the window.
+ * @export
  */
 os.ui.file.UrlImportCtrl.prototype.close = function() {
   if (this.element_) {
     os.ui.window.close(this.element_);
   }
 };
-goog.exportProperty(
-    os.ui.file.UrlImportCtrl.prototype,
-    'close',
-    os.ui.file.UrlImportCtrl.prototype.close);
 
 
 /**

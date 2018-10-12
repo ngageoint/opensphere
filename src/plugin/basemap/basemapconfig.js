@@ -51,7 +51,7 @@ plugin.basemap.BaseMapConfig.prototype.createLayer = function(options) {
 
   var layerType = /** @type {string} */ (clonedOptions['baseType']);
   var layerConfig = os.layer.config.LayerConfigManager.getInstance().getLayerConfig(layerType);
-  goog.asserts.assert(goog.isDef(layerConfig));
+  goog.asserts.assert(layerConfig !== undefined);
 
   return layerConfig.createLayer(clonedOptions);
 };

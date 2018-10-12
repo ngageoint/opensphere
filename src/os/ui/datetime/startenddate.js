@@ -89,12 +89,12 @@ os.ui.datetime.StartEndDateCtrl = function($scope) {
   /**
    * @type {?boolean}
    */
-  this['showLabels'] = goog.isDefAndNotNull(this.scope['showLabels']) ? this.scope['showLabels'] : true;
+  this['showLabels'] = this.scope['showLabels'] != null ? this.scope['showLabels'] : true;
 
   /**
    * @type {?boolean}
    */
-  this['vertical'] = goog.isDefAndNotNull(this.scope['vertical']) ? this.scope['vertical'] : false;
+  this['vertical'] = this.scope['vertical'] != null ? this.scope['vertical'] : false;
 
   /**
    * If start date is prior to end date.
@@ -261,6 +261,7 @@ os.ui.datetime.StartEndDateCtrl.getDate = function(date) {
 /**
  * Checks if the start date is in an error state.
  * @return {boolean}
+ * @export
  */
 os.ui.datetime.StartEndDateCtrl.prototype.checkStartForError = function() {
   if (this.scope) {
@@ -282,13 +283,12 @@ os.ui.datetime.StartEndDateCtrl.prototype.checkStartForError = function() {
 
   return false;
 };
-goog.exportProperty(os.ui.datetime.StartEndDateCtrl.prototype, 'checkStartForError',
-    os.ui.datetime.StartEndDateCtrl.prototype.checkStartForError);
 
 
 /**
  * Checks if the end date is in an error state.
  * @return {boolean}
+ * @export
  */
 os.ui.datetime.StartEndDateCtrl.prototype.checkEndForError = function() {
   if (this.scope) {
@@ -314,5 +314,3 @@ os.ui.datetime.StartEndDateCtrl.prototype.checkEndForError = function() {
 
   return false;
 };
-goog.exportProperty(os.ui.datetime.StartEndDateCtrl.prototype, 'checkEndForError',
-    os.ui.datetime.StartEndDateCtrl.prototype.checkEndForError);

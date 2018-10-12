@@ -146,16 +146,13 @@ os.config.ThemeSettingsCtrl.prototype.onSettingsChange_ = function(event) {
  * Save to settings.
  * @param {string} newVal
  * @param {string} oldVal
+ * @export
  */
 os.config.ThemeSettingsCtrl.prototype.onThemeChange = function(newVal, oldVal) {
   if (newVal != this['theme']) {
     os.settings.set(os.config.ThemeSettings.Keys.THEME, this['theme']);
   }
 };
-goog.exportProperty(
-    os.config.ThemeSettingsCtrl.prototype,
-    'onThemeChange',
-    os.config.ThemeSettingsCtrl.prototype.onThemeChange);
 
 
 /**

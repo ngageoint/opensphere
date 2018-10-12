@@ -159,6 +159,7 @@ os.ui.data.DescriptorNode.prototype.formatIcons = function() {
 /**
  * Whether or not the descriptor (or the items the descriptor has added) is loading
  * @return {boolean}
+ * @export
  */
 os.ui.data.DescriptorNode.prototype.isLoading = function() {
   if (this.descriptor_) {
@@ -167,10 +168,6 @@ os.ui.data.DescriptorNode.prototype.isLoading = function() {
 
   return false;
 };
-goog.exportProperty(
-    os.ui.data.DescriptorNode.prototype,
-    'isLoading',
-    os.ui.data.DescriptorNode.prototype.isLoading);
 
 
 /**

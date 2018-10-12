@@ -103,6 +103,7 @@ plugin.ogc.ui.ChooseTimeColumnCtrl.prototype.disposeInternal = function() {
 
 /**
  * Save the time columns to the descriptor
+ * @export
  */
 plugin.ogc.ui.ChooseTimeColumnCtrl.prototype.save = function() {
   this.featureType_.setStartDateColumnName(this['start']);
@@ -113,10 +114,6 @@ plugin.ogc.ui.ChooseTimeColumnCtrl.prototype.save = function() {
   }
   this.close_();
 };
-goog.exportProperty(
-    plugin.ogc.ui.ChooseTimeColumnCtrl.prototype,
-    'save',
-    plugin.ogc.ui.ChooseTimeColumnCtrl.prototype.save);
 
 
 /**

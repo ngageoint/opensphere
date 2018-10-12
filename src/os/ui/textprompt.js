@@ -106,11 +106,11 @@ os.ui.TextPromptCtrl.prototype.handleKeyEvent_ = function(event) {
 
 /**
  * Close the window
+ * @export
  */
 os.ui.TextPromptCtrl.prototype.close = function() {
   os.ui.window.close(this.element_);
 };
-goog.exportProperty(os.ui.TextPromptCtrl.prototype, 'close', os.ui.TextPromptCtrl.prototype.close);
 
 
 /**

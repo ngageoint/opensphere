@@ -116,3 +116,10 @@ os.webgl.IWebGLRenderer.prototype.forEachFeatureAtPixel;
  * @param {boolean} value If user movement should be enabled.
  */
 os.webgl.IWebGLRenderer.prototype.toggleMovement;
+
+
+/**
+ * Get the altitude modes the WebGL renderer supports.
+ * @return {Array<os.webgl.AltitudeMode>} The supported modes
+ */
+os.webgl.IWebGLRenderer.prototype.getAltitudeModes;

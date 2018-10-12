@@ -88,14 +88,11 @@ plugin.file.kml.ui.KMLLayerNode.prototype.onChildChange = function(e) {
 
 /**
  * @inheritDoc
+ * @export
  */
 plugin.file.kml.ui.KMLLayerNode.prototype.isLoading = function() {
   return this.childLoadCount_ > 0 || plugin.file.kml.ui.KMLLayerNode.base(this, 'isLoading');
 };
-goog.exportProperty(
-    plugin.file.kml.ui.KMLLayerNode.prototype,
-    'isLoading',
-    plugin.file.kml.ui.KMLLayerNode.prototype.isLoading);
 
 
 /**

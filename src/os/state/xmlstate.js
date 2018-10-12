@@ -50,7 +50,7 @@ os.state.XMLState.prototype.getSource = function(obj) {
  * @return {!Element}
  */
 os.state.XMLState.ensureXML = function(elOrString) {
-  if (goog.isString(elOrString)) {
+  if (typeof elOrString === 'string') {
     var doc = goog.dom.xml.loadXml(elOrString);
     var child = goog.dom.getFirstElementChild(doc);
     if (child) {

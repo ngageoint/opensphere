@@ -171,13 +171,14 @@ os.ui.ServersCtrl.prototype.apply = function() {
 /**
  * Updates the servers from the UI enabled flag
  * @param {boolean=} opt_prompt
+ * @export
  */
 os.ui.ServersCtrl.prototype.update = function(opt_prompt) {
   if (!this.scope_) {
     return;
   }
 
-  if (!goog.isDef(opt_prompt)) {
+  if (opt_prompt === undefined) {
     opt_prompt = true;
   }
 
@@ -216,7 +217,6 @@ os.ui.ServersCtrl.prototype.update = function(opt_prompt) {
     }
   }
 };
-goog.exportProperty(os.ui.ServersCtrl.prototype, 'update', os.ui.ServersCtrl.prototype.update);
 
 
 /**
@@ -295,6 +295,7 @@ os.ui.ServersCtrl.prototype.checkForActiveDescriptors_ = function(provider, opt_
 
 /**
  * Toggles all servers
+ * @export
  */
 os.ui.ServersCtrl.prototype.toggleAll = function() {
   var list = /** @type {Array.<os.data.IDataProvider>} */ (this.scope_['data']);
@@ -307,11 +308,11 @@ os.ui.ServersCtrl.prototype.toggleAll = function() {
     this.update();
   }
 };
-goog.exportProperty(os.ui.ServersCtrl.prototype, 'toggleAll', os.ui.ServersCtrl.prototype.toggleAll);
 
 
 /**
  * Adds a new server
+ * @export
  */
 os.ui.ServersCtrl.prototype.add = function() {
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.Servers.ADD_SERVER, 1);
@@ -319,12 +320,12 @@ os.ui.ServersCtrl.prototype.add = function() {
   importProcess.setEvent(new os.ui.im.ImportEvent(os.ui.im.ImportEventType.URL));
   importProcess.begin();
 };
-goog.exportProperty(os.ui.ServersCtrl.prototype, 'add', os.ui.ServersCtrl.prototype.add);
 
 
 /**
  * Edits/Views a server
  * @param {!os.data.IDataProvider} provider
+ * @export
  */
 os.ui.ServersCtrl.prototype.edit = function(provider) {
   var im = os.ui.im.ImportManager.getInstance();
@@ -346,16 +347,16 @@ os.ui.ServersCtrl.prototype.edit = function(provider) {
     goog.log.error(os.ui.ServersCtrl.LOGGER_, errorMsg);
   }
 };
-goog.exportProperty(os.ui.ServersCtrl.prototype, 'edit', os.ui.ServersCtrl.prototype.edit);
 
 
 /**
  * Removes a server
  * @param {!os.data.IDataProvider} provider
  * @param {boolean=} opt_prompt
+ * @export
  */
 os.ui.ServersCtrl.prototype.remove = function(provider, opt_prompt) {
-  if (!goog.isDef(opt_prompt)) {
+  if (opt_prompt === undefined) {
     opt_prompt = true;
   }
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.Servers.REMOVE, 1);
@@ -372,12 +373,12 @@ os.ui.ServersCtrl.prototype.remove = function(provider, opt_prompt) {
   os.dataManager.removeProvider(provider.getId());
   goog.log.info(os.ui.ServersCtrl.LOGGER_, 'Removed provider "' + provider.getLabel() + '"');
 };
-goog.exportProperty(os.ui.ServersCtrl.prototype, 'remove', os.ui.ServersCtrl.prototype.remove);
 
 
 /**
  * Refreshes a server
  * @param {!os.data.IDataProvider} provider
+ * @export
  */
 os.ui.ServersCtrl.prototype.refresh = function(provider) {
   goog.log.info(os.ui.ServersCtrl.LOGGER_, 'Refreshing provider "' + provider.getLabel() + '"');
@@ -390,4 +391,3 @@ os.ui.ServersCtrl.prototype.refresh = function(provider) {
     provider.load(true);
   }
 };
-goog.exportProperty(os.ui.ServersCtrl.prototype, 'refresh', os.ui.ServersCtrl.prototype.refresh);

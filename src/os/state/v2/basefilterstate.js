@@ -49,7 +49,7 @@ os.state.v2.BaseFilter.OGC_NS = 'http://www.opengis.net/ogc';
 os.state.v2.BaseFilter.preload = function(el) {
   var filtersNode = el.querySelector('filters');
   var entries = el.querySelector('queryEntries');
-  if (goog.isDef(filtersNode) && goog.isDef(entries)) {
+  if (filtersNode !== undefined && entries !== undefined) {
     entries = entries ? entries.getElementsByTagName('queryEntry') : [];
 
     goog.array.forEach(entries, function(entry) {

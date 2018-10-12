@@ -163,7 +163,7 @@ plugin.cesium.Camera.prototype.setHeading = function(heading) {
   this.cam_.setView({
     destionation: carto,
     orientation: {
-      heading: 0,
+      heading: heading,
       pitch: this.cam_.pitch,
       roll: this.cam_.roll
     }

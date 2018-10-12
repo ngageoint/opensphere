@@ -80,7 +80,7 @@ os.source.ImportQueue.prototype.queueData = function(data) {
  * @protected
  */
 os.source.ImportQueue.prototype.importNext = function() {
-  goog.asserts.assert(goog.isDefAndNotNull(this.importer), 'No importer set on source "' + this.getTitle() + '"!');
+  goog.asserts.assert(this.importer != null, 'No importer set on source "' + this.getTitle() + '"!');
 
   if (this.importQueue_.length > 0) {
     var next = this.importQueue_.shift();

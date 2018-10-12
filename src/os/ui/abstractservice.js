@@ -48,7 +48,7 @@ os.ui.AbstractService.prototype.onSuccess = function(event, resolve) {
   var response = /** @type {string} */ (request.getResponse());
   request.dispose();
 
-  if (response && goog.isString(response) && goog.json.isValid(response)) {
+  if (response && typeof response === 'string' && goog.json.isValid(response)) {
     var data = /** @type {Object} */ (JSON.parse(response));
     resolve(data);
   } else {
@@ -111,7 +111,7 @@ os.ui.AbstractService.prototype.reportError = function(message, silent, opt_reje
     os.alert.AlertManager.getInstance().sendAlert(errorMsg, os.alert.AlertEventSeverity.ERROR, this.log);
   }
 
-  if (goog.isDef(opt_reject)) {
+  if (opt_reject !== undefined) {
     opt_reject(message);
   }
 };

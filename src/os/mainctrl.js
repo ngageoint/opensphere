@@ -843,7 +843,7 @@ os.MainCtrl.prototype.onSettingsReset_ = function(event) {
  * @private
  */
 os.MainCtrl.prototype.onImportEvent_ = function(opt_event) {
-  var event = goog.isDefAndNotNull(opt_event) ? opt_event : new os.ui.im.ImportEvent(os.ui.im.ImportEventType.FILE);
+  var event = opt_event != null ? opt_event : new os.ui.im.ImportEvent(os.ui.im.ImportEventType.FILE);
   var process = new os.im.ImportProcess();
   process.setEvent(event);
   process.begin();
@@ -899,8 +899,8 @@ os.MainCtrl.prototype.onToggleUI_ = function(event) {
       os.ui.window.bringToFront(event.id);
     } else {
       // Use event value if available.  Keep open if event contains parameters. Lastly just toggle the value.
-      var open = goog.isBoolean(event.value) ? event.value :
-          (goog.isDefAndNotNull(event.params) ? true : !this[event.id]);
+      var open = typeof event.value === 'boolean' ? event.value :
+          (event.params != null ? true : !this[event.id]);
       this[event.id] = open;
       os.ui.apply(this.scope);
     }
@@ -959,7 +959,7 @@ os.MainCtrl.prototype.handleResult_ = function(file) {
  * @private
  */
 os.MainCtrl.prototype.handleError_ = function(errorMsg) {
-  if (errorMsg && goog.isString(errorMsg)) {
+  if (errorMsg && typeof errorMsg === 'string') {
     goog.log.error(os.MainCtrl.LOGGER_, errorMsg);
     os.alert.AlertManager.getInstance().sendAlert(errorMsg, os.alert.AlertEventSeverity.ERROR);
   }
@@ -978,22 +978,22 @@ os.MainCtrl.prototype.handleURLDrop_ = function(url) {
 
 /**
  * Undo the last command.
+ * @export
  */
 os.MainCtrl.prototype.undoCommand = function() {
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.UNDO, 1);
   os.command.CommandProcessor.getInstance().undo();
 };
-goog.exportProperty(os.MainCtrl.prototype, 'undoCommand', os.MainCtrl.prototype.undoCommand);
 
 
 /**
  * Redo the last undone command.
+ * @export
  */
 os.MainCtrl.prototype.redoCommand = function() {
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.REDO, 1);
   os.command.CommandProcessor.getInstance().redo();
 };
-goog.exportProperty(os.MainCtrl.prototype, 'redoCommand', os.MainCtrl.prototype.redoCommand);
 
 
 /**

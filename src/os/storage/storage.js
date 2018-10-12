@@ -37,7 +37,7 @@ os.storage.clearStorage = function(opt_manualReload) {
       goog.partial(os.storage.resetInternal_, opt_manualReload),
       os.storage.reloadPage_);
 };
-goog.exportProperty(window, 'cls', os.storage.clearStorage);
+window['cls'] = os.storage.clearStorage;
 
 
 /**

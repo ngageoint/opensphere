@@ -254,6 +254,7 @@ os.ui.alert.AlertPopupCtrl.prototype.displayAlert_ = function(event) {
 
 /**
  * Clear all open alerts.
+ * @export
  */
 os.ui.alert.AlertPopupCtrl.prototype.clearAlerts = function() {
   if (this['alertPopups'] && this.scope_) {
@@ -269,16 +270,13 @@ os.ui.alert.AlertPopupCtrl.prototype.clearAlerts = function() {
     os.ui.apply(this.scope_);
   }
 };
-goog.exportProperty(
-    os.ui.alert.AlertPopupCtrl.prototype,
-    'clearAlerts',
-    os.ui.alert.AlertPopupCtrl.prototype.clearAlerts);
 
 
 /**
  * Dismisses a popup and clears its timeout
  * @param {number} $index The index of the message to dismiss
  * @param {Object} popup The popup to dismiss
+ * @export
  */
 os.ui.alert.AlertPopupCtrl.prototype.dismissAlert = function($index, popup) {
   if (this.popupsEnabled_()) {
@@ -287,10 +285,6 @@ os.ui.alert.AlertPopupCtrl.prototype.dismissAlert = function($index, popup) {
   }
   os.dispatcher.dispatchEvent(new goog.events.Event(os.alert.AlertEventTypes.DISMISS_ALERT, popup));
 };
-goog.exportProperty(
-    os.ui.alert.AlertPopupCtrl.prototype,
-    'dismissAlert',
-    os.ui.alert.AlertPopupCtrl.prototype.dismissAlert);
 
 
 /**

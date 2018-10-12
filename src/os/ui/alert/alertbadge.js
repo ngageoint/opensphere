@@ -100,14 +100,11 @@ os.ui.alert.AlertBadgeCtrl.prototype.reset = function() {
 
 /**
  * @return {string}
+ * @export
  */
 os.ui.alert.AlertBadgeCtrl.prototype.getClass = function() {
   return os.ui.alert.AlertBadgeCtrl.CLASSES[this['highestAlert']] || 'badge-light';
 };
-goog.exportProperty(
-    os.ui.alert.AlertBadgeCtrl.prototype,
-    'getClass',
-    os.ui.alert.AlertBadgeCtrl.prototype.getClass);
 
 
 /**

@@ -29,9 +29,9 @@ os.ui.query.cmd.AreaAdd = function(area, opt_include, opt_exclude, opt_append, o
   this.entries = area.getId() ?
       os.ui.queryManager.getEntries(null, /** @type {string} */ (area.getId()), null, null, true) : [];
 
-  this.include = goog.isDef(opt_include) ? opt_include : this.include;
-  this.exclude = goog.isDef(opt_exclude) ? opt_exclude : this.exclude;
-  this.append = goog.isDef(opt_append) ? opt_append : this.append;
+  this.include = opt_include !== undefined ? opt_include : this.include;
+  this.exclude = opt_exclude !== undefined ? opt_exclude : this.exclude;
+  this.append = opt_append !== undefined ? opt_append : this.append;
   this.title = 'Add ' + (this.include ? 'query ' : this.exclude ? 'exclusion ' : '') + 'area';
 
   if (area) {
@@ -45,7 +45,7 @@ os.ui.query.cmd.AreaAdd = function(area, opt_include, opt_exclude, opt_append, o
    * layers to apply this area to
    * @type {Array<string>}
    */
-  this.layerIds = goog.isDef(opt_layerIds) ? opt_layerIds : ['*'];
+  this.layerIds = opt_layerIds !== undefined ? opt_layerIds : ['*'];
 
   /**
    * @type {boolean}

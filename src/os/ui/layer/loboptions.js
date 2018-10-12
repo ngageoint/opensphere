@@ -632,7 +632,7 @@ os.ui.layer.LobOptionsCtrl.prototype.onLengthChange = function(event, value) {
   if (event) {
     event.stopPropagation();
   }
-  var result = goog.isDef(value) ? value : this.scope['length'];
+  var result = value !== undefined ? value : this.scope['length'];
   this.scope['length'] = result == 0 ? 1 : result;
   var fn = goog.bind(
       /**

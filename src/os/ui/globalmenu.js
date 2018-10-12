@@ -67,7 +67,7 @@ os.ui.GlobalMenuCtrl.prototype.destroy = function() {
  * @param {boolean=} opt_dispatch
  */
 os.ui.GlobalMenuCtrl.prototype.close = function(opt_dispatch) {
-  if (!goog.isDef(opt_dispatch)) {
+  if (opt_dispatch === undefined) {
     opt_dispatch = true;
   }
 
@@ -180,8 +180,8 @@ os.ui.GlobalMenuCtrl.prototype.position = function() {
       element.css('left', '');
       element.css('right', '');
 
-      element.css(goog.isDef(pos['right']) ? 'right' : 'left', x + 'px');
-      element.css(goog.isDef(pos['bottom']) ? 'bottom' : 'top', y + 'px');
+      element.css(pos['right'] !== undefined ? 'right' : 'left', x + 'px');
+      element.css(pos['bottom'] !== undefined ? 'bottom' : 'top', y + 'px');
     } else if (pos == 'right') {
       element.addClass('right-menu');
     }
@@ -291,21 +291,21 @@ os.ui.positionMenu_ = function(position, opt_target, opt_root) {
   var ctrl = /** @type {os.ui.GlobalMenuCtrl} */ (s['actionMenu']);
 
   var targetEl;
-  if (goog.isString(opt_target)) {
+  if (typeof opt_target === 'string') {
     // target is a selector from the document or a root element
-    targetEl = goog.isDefAndNotNull(opt_root) ? opt_root.find(opt_target) : angular.element(opt_target);
-  } else if (goog.isDef(opt_target)) {
+    targetEl = opt_root != null ? opt_root.find(opt_target) : angular.element(opt_target);
+  } else if (opt_target !== undefined) {
     // target is an element
     targetEl = opt_target;
   }
 
   var p = position;
-  if (goog.isDefAndNotNull(targetEl)) {
+  if (targetEl != null) {
     var pos = /** @type {{left: number, top:number}} */ (targetEl.offset());
     if (pos.top) {
       pos.top -= $(document).scrollTop();
     }
-    if (goog.isString(position)) {
+    if (typeof position === 'string') {
       var parts = position.split(/\s+/);
       position = parts[0];
       var offset = parts.length > 1 ? parseInt(parts[1], 10) : 2;

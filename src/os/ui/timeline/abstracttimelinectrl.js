@@ -531,6 +531,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.updateHistograms_ = function() {
  * @param {os.hist.HistogramData} histogram
  * @param {Object.<string, *>} item
  * @return {string}
+ * @export
  */
 os.ui.timeline.AbstractTimelineCtrl.prototype.getHistogramTooltip = function(histogram, item) {
   var tooltip = '';
@@ -540,8 +541,6 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.getHistogramTooltip = function(his
   tooltip += 'Features: <span class="u-text-red">' + item['value'] + '</span>';
   return tooltip;
 };
-goog.exportProperty(os.ui.timeline.AbstractTimelineCtrl.prototype, 'getHistogramTooltip',
-    os.ui.timeline.AbstractTimelineCtrl.prototype.getHistogramTooltip);
 
 
 /**
@@ -739,60 +738,49 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.getItem = function(id) {
 
 /**
  * Skip to the first frame.
+ * @export
  */
 os.ui.timeline.AbstractTimelineCtrl.prototype.firstFrame = function() {
   this.tlc.first();
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Timeline.FIRST_FRAME, 1);
 };
-goog.exportProperty(
-    os.ui.timeline.AbstractTimelineCtrl.prototype,
-    'firstFrame',
-    os.ui.timeline.AbstractTimelineCtrl.prototype.firstFrame);
 
 
 /**
  * Skip to the last frame.
+ * @export
  */
 os.ui.timeline.AbstractTimelineCtrl.prototype.lastFrame = function() {
   this.tlc.last();
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Timeline.LAST_FRAME, 1);
 };
-goog.exportProperty(
-    os.ui.timeline.AbstractTimelineCtrl.prototype,
-    'lastFrame',
-    os.ui.timeline.AbstractTimelineCtrl.prototype.lastFrame);
 
 
 /**
  * Step ahead one frame.
+ * @export
  */
 os.ui.timeline.AbstractTimelineCtrl.prototype.nextFrame = function() {
   this.tlc.next();
   this.tlc.clamp();
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Timeline.NEXT_FRAME, 1);
 };
-goog.exportProperty(
-    os.ui.timeline.AbstractTimelineCtrl.prototype,
-    'nextFrame',
-    os.ui.timeline.AbstractTimelineCtrl.prototype.nextFrame);
 
 
 /**
  * Step back one frame.
+ * @export
  */
 os.ui.timeline.AbstractTimelineCtrl.prototype.previousFrame = function() {
   this.tlc.prev();
   this.tlc.clamp();
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Timeline.PREV_FRAME, 1);
 };
-goog.exportProperty(
-    os.ui.timeline.AbstractTimelineCtrl.prototype,
-    'previousFrame',
-    os.ui.timeline.AbstractTimelineCtrl.prototype.previousFrame);
 
 
 /**
  * Resets the timeline controller back to the last saved state.
+ * @export
  */
 os.ui.timeline.AbstractTimelineCtrl.prototype.reset = function() {
   if (this.tlcState_) {
@@ -803,14 +791,11 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.reset = function() {
     refreshTimer.start();
   }
 };
-goog.exportProperty(
-    os.ui.timeline.AbstractTimelineCtrl.prototype,
-    'reset',
-    os.ui.timeline.AbstractTimelineCtrl.prototype.reset);
 
 
 /**
  * Start/stop timeline animation.
+ * @export
  */
 os.ui.timeline.AbstractTimelineCtrl.prototype.togglePlay = function() {
   this['playing'] = !this['playing'];
@@ -822,36 +807,26 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.togglePlay = function() {
   }
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Timeline.TOGGLE_PLAY, 1);
 };
-goog.exportProperty(
-    os.ui.timeline.AbstractTimelineCtrl.prototype,
-    'togglePlay',
-    os.ui.timeline.AbstractTimelineCtrl.prototype.togglePlay);
 
 
 /**
  * Zoom in
+ * @export
  */
 os.ui.timeline.AbstractTimelineCtrl.prototype.zoomIn = function() {
   this.getTimelineCtrl().zoomIn();
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Timeline.ZOOM_IN, 1);
 };
-goog.exportProperty(
-    os.ui.timeline.AbstractTimelineCtrl.prototype,
-    'zoomIn',
-    os.ui.timeline.AbstractTimelineCtrl.prototype.zoomIn);
 
 
 /**
  * Zoom out
+ * @export
  */
 os.ui.timeline.AbstractTimelineCtrl.prototype.zoomOut = function() {
   this.getTimelineCtrl().zoomOut();
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Timeline.ZOOM_OUT, 1);
 };
-goog.exportProperty(
-    os.ui.timeline.AbstractTimelineCtrl.prototype,
-    'zoomOut',
-    os.ui.timeline.AbstractTimelineCtrl.prototype.zoomOut);
 
 
 /**
@@ -866,6 +841,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.getTimelineCtrl = function() {
 
 /**
  * Start/stop timeline animation.
+ * @export
  */
 os.ui.timeline.AbstractTimelineCtrl.prototype.toggleChartType = function() {
   goog.array.rotate(this.histClasses_, 1);
@@ -877,14 +853,11 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.toggleChartType = function() {
   var metricKey = os.metrics.keys.Timeline.CHART_TYPE + os.metrics.SUB_DELIMITER + chartType;
   os.metrics.Metrics.getInstance().updateMetric(metricKey, 1);
 };
-goog.exportProperty(
-    os.ui.timeline.AbstractTimelineCtrl.prototype,
-    'toggleChartType',
-    os.ui.timeline.AbstractTimelineCtrl.prototype.toggleChartType);
 
 
 /**
  * @param {string} selector
+ * @export
  */
 os.ui.timeline.AbstractTimelineCtrl.prototype.openMenu = function(selector) {
   var menu = this.menus_[selector];
@@ -930,10 +903,6 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.openMenu = function(selector) {
     });
   }
 };
-goog.exportProperty(
-    os.ui.timeline.AbstractTimelineCtrl.prototype,
-    'openMenu',
-    os.ui.timeline.AbstractTimelineCtrl.prototype.openMenu);
 
 
 /**
@@ -947,15 +916,12 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.onMenuClose = function(evt) {
 
 /**
  * Begins selection on the timeline
+ * @export
  */
 os.ui.timeline.AbstractTimelineCtrl.prototype.select = function() {
   this.scope['selecting'] = !this.scope['selecting'];
   angular.element('.brush-select .background').css('display', this.scope['selecting'] ? 'block' : 'none');
 };
-goog.exportProperty(
-    os.ui.timeline.AbstractTimelineCtrl.prototype,
-    'select',
-    os.ui.timeline.AbstractTimelineCtrl.prototype.select);
 
 
 /**
@@ -1584,7 +1550,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.onMenuEvent = function(event) {
       break;
   }
 
-  if (goog.isDef(begin) && goog.isDef(end)) {
+  if (begin !== undefined && end !== undefined) {
     if (doOffset) {
       begin.setTime(begin.getTime() - os.time.timeOffset);
       end.setTime(end.getTime() - os.time.timeOffset);
@@ -1701,6 +1667,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.moveWindowToData = function() {
 /**
  * Closes the timeline by sending a UI toggle event. This event must be listened for by the timeline's container
  * which should hide/destroy the timeline.
+ * @export
  */
 os.ui.timeline.AbstractTimelineCtrl.prototype.close = function() {
   this.tlc.clearAnimateRanges();
@@ -1708,24 +1675,17 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.close = function() {
   var event = new os.ui.events.UIEvent(os.ui.events.UIEventType.TOGGLE_UI, 'timeline');
   os.dispatcher.dispatchEvent(event);
 };
-goog.exportProperty(
-    os.ui.timeline.AbstractTimelineCtrl.prototype,
-    'close',
-    os.ui.timeline.AbstractTimelineCtrl.prototype.close);
 
 
 /**
  * Toggles the expanded/collapsed (normal vs. ribbon) view of the timeline
+ * @export
  */
 os.ui.timeline.AbstractTimelineCtrl.prototype.toggleCollapse = function() {
   os.ui.timeline.AbstractTimelineCtrl.collapsed = !os.ui.timeline.AbstractTimelineCtrl.collapsed;
   this.scope['collapsed'] = os.ui.timeline.AbstractTimelineCtrl.collapsed;
   this.adjust();
 };
-goog.exportProperty(
-    os.ui.timeline.AbstractTimelineCtrl.prototype,
-    'toggleCollapse',
-    os.ui.timeline.AbstractTimelineCtrl.prototype.toggleCollapse);
 
 
 /**

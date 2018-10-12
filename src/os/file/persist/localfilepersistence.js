@@ -73,7 +73,7 @@ os.file.persist.LocalFilePersistence.finishImport_ = function(file) {
  */
 os.file.persist.LocalFilePersistence.onFileError_ = function(error) {
   var msg = 'Unable to store state file locally!';
-  if (goog.isString(error)) {
+  if (typeof error === 'string') {
     msg += ' ' + error;
   }
   os.dispatcher.dispatchEvent(new goog.events.Event(os.file.persist.LocalFilePersistence.SAVE_FAILED, {'error': msg}));

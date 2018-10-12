@@ -12,7 +12,7 @@ describe('os.filter.FilterEntry', function() {
   it('should initialize correctly', function() {
     var fe = new os.filter.FilterEntry();
 
-    expect(goog.isString(fe.getId())).toBe(true);
+    expect(typeof fe.getId() === 'string').toBe(true);
     expect(fe.getMatch()).toBe(true);
     expect(fe.isTemporary()).toBe(false);
     expect(fe.getTitle()).toBe('New Filter');

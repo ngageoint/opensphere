@@ -79,7 +79,7 @@ plugin.heatmap.HeatmapLayerUICtrl.prototype.initUI = function() {
 
 /**
  * Handles changes to the gradient
- * @protected
+ * @export
  */
 plugin.heatmap.HeatmapLayerUICtrl.prototype.onGradientChange = function() {
   var value = this.scope['gradient']['gradient'];
@@ -94,10 +94,6 @@ plugin.heatmap.HeatmapLayerUICtrl.prototype.onGradientChange = function() {
 
   this.createCommand(fn);
 };
-goog.exportProperty(
-    plugin.heatmap.HeatmapLayerUICtrl.prototype,
-    'onGradientChange',
-    plugin.heatmap.HeatmapLayerUICtrl.prototype.onGradientChange);
 
 
 /**

@@ -53,9 +53,9 @@ os.ogc.wfs.FeatureType = function(opt_typeName, opt_columns, opt_isDynamic) {
   this.typeName_ = null;
 
   if (opt_typeName) {
-    var columns = goog.isDefAndNotNull(opt_columns) ? opt_columns : [];
+    var columns = opt_columns != null ? opt_columns : [];
     columns.sort(os.ogc.wfs.FeatureType.sortColumns);
-    var isDynamic = goog.isDef(opt_isDynamic) ? opt_isDynamic : false;
+    var isDynamic = opt_isDynamic !== undefined ? opt_isDynamic : false;
     this.init(opt_typeName, columns, isDynamic);
   }
 };

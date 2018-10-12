@@ -112,7 +112,7 @@ os.layer.config.AbstractLayerConfig.prototype.initializeConfig = function(option
   }
 
   // avoiding instanceof here for external tools
-  if (goog.isString(options['params'])) {
+  if (typeof options['params'] === 'string') {
     this.params = new goog.Uri.QueryData(options['params']);
   } else if (options['params']) {
     this.params = goog.Uri.QueryData.createFromMap(options['params']);
@@ -128,7 +128,7 @@ os.layer.config.AbstractLayerConfig.prototype.initializeConfig = function(option
     this.color = options['color'];
   }
 
-  if (goog.isString(this.color)) {
+  if (typeof this.color === 'string') {
     this.color = /** @type {string} */ (this.color).replace(/^0x/, '#');
   }
 
