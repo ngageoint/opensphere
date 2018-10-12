@@ -131,6 +131,9 @@ plugin.im.action.feature.StyleAction.prototype.execute = function(items) {
       var originalConfig = /** @type {Array|Object|undefined} */ (item.get(os.style.StyleType.FEATURE));
       var featureConfig = os.object.unsafeClone(originalConfig) || {};
 
+      // flag this as a temporary style config
+      featureConfig['temporary'] = true;
+
       // merge style changes into the feature config and set it on the feature
       if (goog.isArray(featureConfig)) {
         for (var j = 0; j < featureConfig.length; j++) {
@@ -145,8 +148,11 @@ plugin.im.action.feature.StyleAction.prototype.execute = function(items) {
       item.set(os.style.StyleType.FEATURE, featureConfig, true);
       item.set(plugin.im.action.feature.StyleAction.FEATURE_ID, this.uid, true);
 
-      // add a reference to the original config so we can reset back to it
-      item.set(plugin.im.action.feature.StyleType.ORIGINAL, originalConfig, true);
+      if (originalConfig != null && !originalConfig['temporary'] &&
+          item.get(plugin.im.action.feature.StyleType.ORIGINAL) == null) {
+        // if the original config isn't already set, add a reference back to it
+        item.set(plugin.im.action.feature.StyleType.ORIGINAL, originalConfig, true);
+      }
 
       // set the feature shape
       var configShape = this.styleConfig[os.style.StyleField.SHAPE];
