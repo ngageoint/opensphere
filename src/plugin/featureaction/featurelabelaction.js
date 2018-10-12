@@ -135,6 +135,9 @@ plugin.im.action.feature.LabelAction.prototype.execute = function(items) {
         var originalConfig = /** @type {Array|Object|undefined} */ (item.get(os.style.StyleType.FEATURE));
         var featureConfig = os.object.unsafeClone(originalConfig) || {};
 
+        // flag this as a temporary style config
+        featureConfig['temporary'] = true;
+
         // apply label config
         if (goog.isArray(featureConfig)) {
           for (var j = 0; j < featureConfig.length; j++) {
@@ -152,8 +155,11 @@ plugin.im.action.feature.LabelAction.prototype.execute = function(items) {
         item.set(os.style.StyleType.FEATURE, featureConfig, true);
         os.ui.FeatureEditCtrl.persistFeatureLabels(item);
 
-        // add a reference to the original config so we can reset back to it
-        item.set(plugin.im.action.feature.StyleType.ORIGINAL, originalConfig, true);
+        if (originalConfig != null && !originalConfig['temporary'] &&
+          item.get(plugin.im.action.feature.StyleType.ORIGINAL) == null) {
+          // if the original config isn't already set, add a reference back to it
+          item.set(plugin.im.action.feature.StyleType.ORIGINAL, originalConfig, true);
+        }
       }
 
       // if a custom column was configured, set the value on the feature
