@@ -21,6 +21,8 @@ goog.require('os.time.TimelineEventType');
     os.dispatcher.listen(os.MapEvent.GL_REPAINT, this.notifyRepaintRequired, false, this);
     os.time.TimelineController.getInstance().listen(os.time.TimelineEventType.SHOW,
         this.notifyRepaintRequired, false, this);
+
+    this.scene_.postUpdate.addEventListener(this.onPostUpdate_, this);
     origEnable.call(this);
   };
 
@@ -35,10 +37,24 @@ goog.require('os.time.TimelineEventType');
     os.dispatcher.unlisten(os.MapEvent.GL_REPAINT, this.notifyRepaintRequired, false, this);
     os.time.TimelineController.getInstance().unlisten(os.time.TimelineEventType.SHOW,
         this.notifyRepaintRequired, false, this);
+    this.scene_.postUpdate.removeEventListener(this.onPostUpdate_, this);
     origDisable.call(this);
   };
 
   var origNotify = olcs.AutoRenderLoop.prototype.notifyRepaintRequired;
+
+
+  var lastRepaintEventTime = 0;
+
+  /**
+   * @private
+   */
+  olcs.AutoRenderLoop.prototype.onPostUpdate_ = function() {
+    // render for at least a whole second after a GL_REPAINT event is fired
+    if (goog.now() - lastRepaintEventTime < 1000) {
+      this.scene_.requestRender();
+    }
+  };
 
   /**
    * Overridden because we only care about mouse events if a button is down
@@ -57,5 +73,6 @@ goog.require('os.time.TimelineEventType');
     }
 
     origNotify.call(this);
+    lastRepaintEventTime = goog.now();
   };
 })();

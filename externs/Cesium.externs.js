@@ -3839,6 +3839,20 @@ Cesium.Scene.prototype.postRender;
 
 
 /**
+ * @type {Cesium.Event}
+ * @const
+ */
+Cesium.Scene.prototype.preUpdate;
+
+
+/**
+ * @type {Cesium.Event}
+ * @const
+ */
+Cesium.Scene.prototype.postUpdate;
+
+
+/**
  * @type {Cesium.ScreenSpaceCameraController}
  */
 Cesium.Scene.prototype.screenSpaceCameraController;
