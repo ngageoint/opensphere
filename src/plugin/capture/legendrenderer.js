@@ -13,7 +13,7 @@ goog.require('plugin.capture.MapRenderer');
  */
 plugin.capture.LegendRenderer = function() {
   plugin.capture.LegendRenderer.base(this, 'constructor');
-  this.selector = '.c-legend.c--widget canvas';
+  this.selector = '.js-legend__render-container canvas';
   this.title = 'Legend';
 };
 goog.inherits(plugin.capture.LegendRenderer, os.ui.capture.CanvasRenderer);

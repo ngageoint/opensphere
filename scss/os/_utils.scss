@@ -91,6 +91,34 @@
   text-align: center;
 }
 
+.u-fa-badge-check:after {
+  background: darken($input-bg, 5%);
+  border-radius: $border-radius;
+  bottom: -24%;
+  color: $success;
+  content: '\f00c';
+  font-size: 70%;
+  opacity: .8;
+  padding: .05rem;
+  position: absolute;
+  right: -39%;
+  text-align: center;
+}
+
+.u-fa-badge-times:after {
+  background: darken($input-bg, 5%);
+  border-radius: $border-radius;
+  bottom: -24%;
+  color: $danger;
+  content: '\f00d';
+  font-size: 70%;
+  opacity: .8;
+  padding: .08rem;
+  position: absolute;
+  right: -35%;
+  text-align: center;
+}
+
 .u-offscreen {
   left: -9999px;
   position: fixed;
