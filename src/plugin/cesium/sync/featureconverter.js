@@ -1095,7 +1095,6 @@ plugin.cesium.sync.FeatureConverter.prototype.getHeightReference = function(laye
  * @param {!plugin.cesium.VectorContext} context
  * @param {!ol.style.Style} style The OL3 style
  * @param {(Cesium.Billboard|Cesium.optionsBillboardCollectionAdd)=} opt_billboard The billboard, for updates
- * @suppress {checkTypes}
  */
 plugin.cesium.sync.FeatureConverter.prototype.createOrUpdateBillboard = function(feature, geometry, context, style,
     opt_billboard) {
@@ -1129,7 +1128,7 @@ plugin.cesium.sync.FeatureConverter.prototype.createOrUpdateBillboard = function
         }
 
         // try creating/updating again as long as the image isn't in the error state
-        if (imageStyle.getImageState() < ol.ImageState.ERROR && context.featureToShownMap[feature['id']]) {
+        if (imageStyle.getImageState() < ol.ImageState.ERROR) {
           // if the billboard has already been created, make sure it's still in the collection
           if (!(opt_billboard instanceof Cesium.Billboard) ||
               (context.billboards && context.billboards.contains(opt_billboard))) {
@@ -1156,14 +1155,17 @@ plugin.cesium.sync.FeatureConverter.prototype.createOrUpdateBillboard = function
  * @param {!plugin.cesium.VectorContext} context
  * @param {!ol.style.Image} style The image style
  * @protected
+ * @suppress {checkTypes} To allow access to feature id.
  */
 plugin.cesium.sync.FeatureConverter.prototype.createBillboard = function(feature, geometry, context, style) {
   var image = style.getImage(1); // get normal density
   if (image instanceof HTMLCanvasElement || image instanceof Image || image instanceof HTMLImageElement) {
     var heightReference = this.getHeightReference(context.layer, feature, geometry);
+    var show = context.featureToShownMap[feature['id']] == null || context.featureToShownMap[feature['id']];
 
     var options = /** @type {!Cesium.optionsBillboardCollectionAdd} */ ({
-      heightReference: heightReference
+      heightReference: heightReference,
+      show: show
     });
 
     this.updateBillboard(feature, geometry, options, style, context.layer);
