@@ -35,12 +35,15 @@ os.ui.ogc.wms.WMSLayerParserV111.prototype.parseLayer = function(node, layer) {
       var opaque = String(node['opaque']).toLowerCase();
       layer.setOpaque(opaque == '1' || opaque == 'true');
 
-      var dimensions = node['Extent'];
-      if (dimensions) {
-        for (i = 0; i < dimensions.length; i++) {
-          layer.addDimension(String(dimensions[i]['name']), String(dimensions[i]['values']));
+      var dimensionSets = ['Extent', 'Dimension'];
+      dimensionSets.forEach(function(set) {
+        var dimensions = node[set];
+        if (dimensions) {
+          for (i = 0; i < dimensions.length; i++) {
+            layer.addDimension(String(dimensions[i]['name']), String(dimensions[i]['values']));
+          }
         }
-      }
+      });
 
       layer.setSupportedCRS(/** @type {?Array<!string>} */ (node['CRS']));
       var bboxArray = node['LatLonBoundingBox'];

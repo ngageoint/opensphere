@@ -169,8 +169,8 @@ plugin.heatmap.HeatmapSynchronizer.prototype.onLayerPropertyChange_ = function(e
  * @private
  */
 plugin.heatmap.HeatmapSynchronizer.prototype.onStyleChange_ = function(event) {
-  goog.asserts.assert(!goog.isNull(this.layer));
-  goog.asserts.assert(!goog.isNull(this.activeLayer_));
+  goog.asserts.assert(this.layer !== null);
+  goog.asserts.assert(this.activeLayer_ !== null);
   plugin.cesium.updateCesiumLayerProperties(this.layer, this.activeLayer_);
   os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
 };

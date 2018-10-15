@@ -223,7 +223,7 @@ os.config.AreaSettingsCtrl.prototype.confirm_ = function() {
 
   var areas = am.getAll();
   goog.array.forEach(areas, function(area) {
-    if (goog.isDefAndNotNull(area.getStyle())) {
+    if (area.getStyle() != null) {
       var entries = os.ui.queryManager.getEntries(null, /** @type {string} */ (area.getId()));
       if (entries && entries.length > 0) {
         var expectedStyle = /** @type {boolean} */ (entries[0]['includeArea']) ?
@@ -240,7 +240,7 @@ os.config.AreaSettingsCtrl.prototype.confirm_ = function() {
 
 /**
  * Resets to the default colors
- * @protected
+ * @export
  */
 os.config.AreaSettingsCtrl.prototype.reset = function() {
   this['inColor'] = os.query.AreaManager.DEFAULT.IN_COLOR;
@@ -253,5 +253,3 @@ os.config.AreaSettingsCtrl.prototype.reset = function() {
   os.settings.set(os.query.AreaManager.KEYS.EX_WIDTH, os.query.AreaManager.DEFAULT.EX_WIDTH);
   this.confirm_();
 };
-goog.exportProperty(os.config.AreaSettingsCtrl.prototype,
-    'reset', os.config.AreaSettingsCtrl.prototype.reset);

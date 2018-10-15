@@ -762,7 +762,7 @@ os.geo.parseLatLon = function(str, opt_order, opt_format) {
       }
     }
 
-    if (!result && !goog.isDef(opt_order)) { // could be reversed
+    if (!result && opt_order === undefined) { // could be reversed
       order = 1;
       confs = os.geo.getLatLonFormatConfiguration(order, opt_format);
 
@@ -819,7 +819,7 @@ os.geo.parseLatLon = function(str, opt_order, opt_format) {
     if (!isNaN(lat) && !isNaN(lon)) {
       // if our latitude is greater than 90, we probably got it backwards and
       // we need to switch them
-      if (!(goog.isDef(opt_order) || dir0 || dir1) && Math.abs(lat) > 90) {
+      if (!(opt_order !== undefined || dir0 || dir1) && Math.abs(lat) > 90) {
         var tmp = lat;
         lat = lon;
         lon = tmp;
@@ -842,7 +842,7 @@ os.geo.parseLatLon = function(str, opt_order, opt_format) {
  * @return {Array<os.geo.ParseConf>}
  */
 os.geo.getLatLonFormatConfiguration = function(order, opt_format) {
-  if (goog.isDef(opt_format)) { // only allow relaxed in manual override
+  if (opt_format !== undefined) { // only allow relaxed in manual override
     switch (opt_format) {
       case 'DD':
         return os.geo.parseConfigsDDRELAXED_.concat(os.geo.parseConfigsDDRELAXEDNoMiddle_);
@@ -879,7 +879,7 @@ os.geo.parseLon = function(str, opt_format) {
 
   var confs = [];
 
-  if (goog.isDefAndNotNull(opt_format)) {
+  if (opt_format != null) {
     switch (opt_format) {
       case 'DD':
         confs.push({
@@ -978,7 +978,7 @@ os.geo.parseLat = function(str, opt_format) {
 
   var confs = [];
 
-  if (goog.isDefAndNotNull(opt_format)) {
+  if (opt_format != null) {
     switch (opt_format) {
       case 'DD':
         confs.push({
@@ -1528,7 +1528,7 @@ os.geo.isClosed = function(coords) {
  */
 os.geo.isPolygon = function(coords) {
   var closed = os.geo.isClosed(coords);
-  return goog.isDefAndNotNull(coords) && ((closed && coords.length > 3) || (!closed && coords.length > 2));
+  return coords != null && ((closed && coords.length > 3) || (!closed && coords.length > 2));
 };
 
 
@@ -1809,7 +1809,7 @@ os.geo.isSameCoordinate = function(c1, c2) {
  * @return {string} The padded value
  */
 os.geo.padCoordinate = function(n, opt_isLon, opt_precision) {
-  var isLon = goog.isDef(opt_isLon) ? opt_isLon : false;
+  var isLon = opt_isLon !== undefined ? opt_isLon : false;
   var length = isLon ? 3 : 2;
   // goog.string.padNumber does not handle negative numbers
   var neg = n < 0;
@@ -1827,8 +1827,8 @@ os.geo.padCoordinate = function(n, opt_isLon, opt_precision) {
  * @return {string} The formatted coordinate
  */
 os.geo.toSexagesimal = function(coordinate, opt_isLon, opt_symbols, opt_decimalSeconds) {
-  var isLon = goog.isDef(opt_isLon) ? opt_isLon : true;
-  var symbols = goog.isDef(opt_symbols) ? opt_symbols : true;
+  var isLon = opt_isLon !== undefined ? opt_isLon : true;
+  var symbols = opt_symbols !== undefined ? opt_symbols : true;
   var isNegative = coordinate < 0;
   var degrees = coordinate > 0 ? Math.floor(coordinate) : Math.ceil(coordinate);
   var tMinutes = Math.abs((degrees - coordinate) * 60);
@@ -1837,7 +1837,7 @@ os.geo.toSexagesimal = function(coordinate, opt_isLon, opt_symbols, opt_decimalS
 
   return goog.string.buildString(os.geo.padCoordinate(Math.abs(degrees), isLon), (symbols ? '° ' : ''),
       os.geo.padCoordinate(minutes), (symbols ? '\' ' : ''),
-      os.geo.padCoordinate(seconds, false, goog.isDefAndNotNull(opt_decimalSeconds) ? opt_decimalSeconds : 2),
+      os.geo.padCoordinate(seconds, false, opt_decimalSeconds != null ? opt_decimalSeconds : 2),
       (symbols ? '"' : ''), (symbols ? ' ' : ''), (isLon ? (isNegative ? 'W' : 'E') : (isNegative ? 'S' : 'N')));
 };
 
@@ -1850,8 +1850,8 @@ os.geo.toSexagesimal = function(coordinate, opt_isLon, opt_symbols, opt_decimalS
  * @return {string} The formatted coordinate
  */
 os.geo.toDegreesDecimalMinutes = function(coordinate, opt_isLon, opt_symbols) {
-  var isLon = goog.isDef(opt_isLon) ? opt_isLon : true;
-  var symbols = goog.isDef(opt_symbols) ? opt_symbols : true;
+  var isLon = opt_isLon !== undefined ? opt_isLon : true;
+  var symbols = opt_symbols !== undefined ? opt_symbols : true;
   var isNegative = coordinate < 0;
   var degrees = coordinate > 0 ? Math.floor(coordinate) : Math.ceil(coordinate);
   var minutes = Math.abs((degrees - coordinate) * 60);
@@ -1894,7 +1894,7 @@ os.geo.extentToCoordinates = function(extent) {
  * @return {number}
  */
 os.geo.normalizeLongitude = function(lon, opt_min, opt_max) {
-  if (goog.isDef(opt_min) && goog.isDef(opt_max)) {
+  if (opt_min !== undefined && opt_max !== undefined) {
     // todo: the modulo version below is a bit faster, so
     // verify if that also works with an arbitrary range.
     while (lon < opt_min) {
@@ -2280,7 +2280,7 @@ os.geo.isValidExtent = function(extent) {
 os.geo.stringifyExtent = function(extent, opt_precision) {
   var s = '';
 
-  if (goog.isDefAndNotNull(opt_precision) && opt_precision > 0) {
+  if (opt_precision != null && opt_precision > 0) {
     s = extent[1].toFixed(opt_precision) + ', ' + extent[0].toFixed(opt_precision) + ', ' +
         extent[3].toFixed(opt_precision) + ', ' + extent[2].toFixed(opt_precision);
   } else {
@@ -2326,12 +2326,12 @@ os.geo.shouldNormalize = function(coords) {
     return goog.array.every(coords, function(coord) {
       var lon = coord[0];
       if (lon >= 180 || lon <= -180) {
-        if (goog.isDef(outsideOfNormal) && !outsideOfNormal) {
+        if (outsideOfNormal !== undefined && !outsideOfNormal) {
           return false;
         } else {
           outsideOfNormal = true;
         }
-      } else if (goog.isDef(outsideOfNormal) && outsideOfNormal) {
+      } else if (outsideOfNormal !== undefined && outsideOfNormal) {
         return false;
       } else {
         outsideOfNormal = false;

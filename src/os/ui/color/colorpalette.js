@@ -98,6 +98,7 @@ os.ui.color.ColorPaletteCtrl.prototype.destroy_ = function() {
 /**
  * Notify parent scope that a color was chosen.
  * @param {string} color The selected color
+ * @export
  */
 os.ui.color.ColorPaletteCtrl.prototype.pick = function(color) {
   this.scope_['value'] = color;
@@ -105,15 +106,12 @@ os.ui.color.ColorPaletteCtrl.prototype.pick = function(color) {
   var eventType = os.ui.color.ColorPaletteCtrl.getEventType(os.ui.color.ColorPaletteEventType.CHANGE, this.name_);
   this.scope_.$emit(eventType, color);
 };
-goog.exportProperty(
-    os.ui.color.ColorPaletteCtrl.prototype,
-    'pick',
-    os.ui.color.ColorPaletteCtrl.prototype.pick);
 
 
 /**
  * Notify parent scope that the color should be reset.
  * @param {string} color The selected color
+ * @export
  */
 os.ui.color.ColorPaletteCtrl.prototype.reset = function(color) {
   this.scope_['value'] = '';
@@ -121,24 +119,17 @@ os.ui.color.ColorPaletteCtrl.prototype.reset = function(color) {
   var eventType = os.ui.color.ColorPaletteCtrl.getEventType(os.ui.color.ColorPaletteEventType.RESET, this.name_);
   this.scope_.$emit(eventType);
 };
-goog.exportProperty(
-    os.ui.color.ColorPaletteCtrl.prototype,
-    'reset',
-    os.ui.color.ColorPaletteCtrl.prototype.reset);
 
 
 /**
  * Get the tooltip to display for a color.
  * @param {string} color The selected color
  * @return {string}
+ * @export
  */
 os.ui.color.ColorPaletteCtrl.prototype.getTitle = function(color) {
   return os.color.toHexString(color);
 };
-goog.exportProperty(
-    os.ui.color.ColorPaletteCtrl.prototype,
-    'getTitle',
-    os.ui.color.ColorPaletteCtrl.prototype.getTitle);
 
 
 /**

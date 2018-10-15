@@ -334,8 +334,8 @@ os.ui.state.StateManager.prototype.saveStates = function(method, title, opt_desc
 os.ui.state.StateManager.prototype.onSaveSuccess = function(options) {
   var content = this.serializeContent(options);
   var stateFileName = this.getStateFileName(options);
-  goog.asserts.assert(goog.isDefAndNotNull(content), 'No state content to save!');
-  goog.asserts.assert(goog.isDefAndNotNull(stateFileName), 'No state file name!');
+  goog.asserts.assert(content != null, 'No state content to save!');
+  goog.asserts.assert(stateFileName != null, 'No state file name!');
 
   var persistMethod = options.method;
   if (persistMethod) {
@@ -410,7 +410,7 @@ os.ui.state.StateManager.prototype.saveLocal = function(file, options) {
  * @private
  */
 os.ui.state.StateManager.prototype.onFileError_ = function(error) {
-  if (goog.isString(error)) {
+  if (typeof error === 'string') {
     goog.log.error(this.log, 'Unable to store state file locally: ' + error);
   } else {
     goog.log.error(this.log, 'Unable to store state file locally!');

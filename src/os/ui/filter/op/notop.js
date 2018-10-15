@@ -28,20 +28,20 @@ goog.inherits(os.ui.filter.op.Not, os.ui.filter.op.Op);
 
 /**
  * @inheritDoc
+ * @export
  */
 os.ui.filter.op.Not.prototype.getTitle = function() {
   return this.op.getTitle().replace('is', 'is not');
 };
-goog.exportProperty(os.ui.filter.op.Not.prototype, 'getTitle', os.ui.filter.op.Not.prototype.getTitle);
 
 
 /**
  * @inheritDoc
+ * @export
  */
 os.ui.filter.op.Not.prototype.getShortTitle = function() {
   return 'not ' + this.op.getShortTitle();
 };
-goog.exportProperty(os.ui.filter.op.Not.prototype, 'getShortTitle', os.ui.filter.op.Not.prototype.getShortTitle);
 
 
 /**

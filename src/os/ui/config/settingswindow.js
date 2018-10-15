@@ -88,10 +88,8 @@ os.ui.config.SettingsWindowCtrl.prototype.onParamsChange_ = function(event, para
 
 /**
  * Close the window
- * @private
+ * @export
  */
-os.ui.config.SettingsWindowCtrl.prototype.close_ = function() {
+os.ui.config.SettingsWindowCtrl.prototype.close = function() {
   os.ui.window.close(this.element_);
 };
-goog.exportProperty(os.ui.config.SettingsWindowCtrl.prototype, 'close',
-    os.ui.config.SettingsWindowCtrl.prototype.close_);

@@ -33,7 +33,7 @@ os.style.IconReader.prototype.getOrCreateStyle = function(config) {
   }
   var hash = this.baseHash;
   for (var key in config) {
-    if (goog.isDef(config[key])) {
+    if (config[key] !== undefined) {
       hash += goog.string.hashCode(config[key].toString());
     }
   }
@@ -124,13 +124,13 @@ os.style.IconReader.prototype.toConfig = function(style, obj) {
 
     var rotation = iconStyle.rotation_;
 
-    if (goog.isDef(rotation) && rotation !== 0) {
+    if (rotation !== undefined && rotation !== 0) {
       obj['rotation'] = rotation;
     }
 
     var scale = iconStyle.scale_;
 
-    if (goog.isDef(scale) && scale !== 1) {
+    if (scale !== undefined && scale !== 1) {
       obj['scale'] = scale;
     }
 

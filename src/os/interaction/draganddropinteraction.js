@@ -56,7 +56,7 @@ os.interaction.DragAndDrop.LOGGER_ = goog.log.getLogger('os.interaction.DragAndD
  * @inheritDoc
  */
 os.interaction.DragAndDrop.prototype.disposeInternal = function() {
-  if (goog.isDef(this.dropListenKey_)) {
+  if (this.dropListenKey_ !== undefined) {
     goog.events.unlistenByKey(this.dropListenKey_);
   }
   os.interaction.DragAndDrop.base(this, 'disposeInternal');
@@ -98,7 +98,7 @@ os.interaction.DragAndDrop.prototype.handleResult_ = function(file) {
  * @private
  */
 os.interaction.DragAndDrop.prototype.handleError_ = function(errorMsg) {
-  if (errorMsg && goog.isString(errorMsg)) {
+  if (errorMsg && typeof errorMsg === 'string') {
     goog.log.error(os.interaction.DragAndDrop.LOGGER_, errorMsg);
     os.alert.AlertManager.getInstance().sendAlert(errorMsg, os.alert.AlertEventSeverity.ERROR);
   }
@@ -109,17 +109,17 @@ os.interaction.DragAndDrop.prototype.handleError_ = function(errorMsg) {
  * @inheritDoc
  */
 os.interaction.DragAndDrop.prototype.setMap = function(map) {
-  if (goog.isDef(this.dropListenKey_)) {
+  if (this.dropListenKey_ !== undefined) {
     goog.events.unlistenByKey(this.dropListenKey_);
     this.dropListenKey_ = undefined;
   }
-  if (!goog.isNull(this.fileDropHandler_)) {
+  if (this.fileDropHandler_ !== null) {
     goog.dispose(this.fileDropHandler_);
     this.fileDropHandler_ = null;
   }
-  goog.asserts.assert(!goog.isDef(this.dropListenKey_));
+  goog.asserts.assert(this.dropListenKey_ === undefined);
   os.interaction.DragAndDrop.base(this, 'setMap', map);
-  if (!goog.isNull(map)) {
+  if (map !== null) {
     this.fileDropHandler_ = new goog.events.FileDropHandler(map.getViewport());
     this.dropListenKey_ = goog.events.listen(
         this.fileDropHandler_, goog.events.FileDropHandler.EventType.DROP,

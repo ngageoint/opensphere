@@ -135,7 +135,7 @@ plugin.cesium.mixin.loadCesiumMixins = function() {
     this.context_ = null;
     return undefined;
   };
-  goog.exportProperty(Cesium.PickId.prototype, 'destroy', Cesium.PickId.prototype.destroy);
+  Cesium.PickId.prototype['destroy'] = Cesium.PickId.prototype.destroy;
 
 
   /**
@@ -180,5 +180,5 @@ plugin.cesium.mixin.loadCesiumMixins = function() {
     this._pickObjects[key] = object;
     return new Cesium.PickId(this, key, Cesium.Color.fromRgba(key));
   };
-  goog.exportProperty(Cesium.Context.prototype, 'createPickId', Cesium.Context.prototype.createPickId);
+  Cesium.Context.prototype['createPickId'] = Cesium.Context.prototype.createPickId;
 };

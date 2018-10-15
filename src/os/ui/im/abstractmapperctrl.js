@@ -123,6 +123,7 @@ os.ui.im.AbstractMapperCtrl.prototype.destroy = function() {
 
 /**
  * Adds the mapping rules/static value to the mapping then closes the window.
+ * @export
  */
 os.ui.im.AbstractMapperCtrl.prototype.accept = function() {
   if (this.scope['mapping']) {
@@ -144,12 +145,11 @@ os.ui.im.AbstractMapperCtrl.prototype.accept = function() {
 
   os.ui.window.close(this.element);
 };
-goog.exportProperty(os.ui.im.AbstractMapperCtrl.prototype,
-    'accept', os.ui.im.AbstractMapperCtrl.prototype.accept);
 
 
 /**
  * Closes the window. Does not save changes to the mapping.
+ * @export
  */
 os.ui.im.AbstractMapperCtrl.prototype.close = function() {
   if (this.scope['finalize']) {
@@ -157,8 +157,6 @@ os.ui.im.AbstractMapperCtrl.prototype.close = function() {
   }
   os.ui.window.close(this.element);
 };
-goog.exportProperty(os.ui.im.AbstractMapperCtrl.prototype,
-    'close', os.ui.im.AbstractMapperCtrl.prototype.close);
 
 
 /**
@@ -220,6 +218,7 @@ os.ui.im.AbstractMapperCtrl.prototype.getColumn = function() {
 /**
  * Updates the mapping rules from a change in the selected column. This should be implemented
  * to test the mappings for the extensions of this class.
+ * @export
  */
 os.ui.im.AbstractMapperCtrl.prototype.update = function() {
   var column = this.getColumn();
@@ -260,8 +259,6 @@ os.ui.im.AbstractMapperCtrl.prototype.update = function() {
     this.validateRules();
   }
 };
-goog.exportProperty(os.ui.im.AbstractMapperCtrl.prototype,
-    'update', os.ui.im.AbstractMapperCtrl.prototype.update);
 
 
 /**

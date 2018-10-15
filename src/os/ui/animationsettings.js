@@ -186,15 +186,12 @@ os.ui.AnimationSettingsCtrl.prototype.populate = function() {
 /**
  * If there is a conflict that will change manually defined animation ranges.
  * @return {boolean}
+ * @export
  */
 os.ui.AnimationSettingsCtrl.prototype.hasMultipleRanges = function() {
   var tlc = os.time.TimelineController.getInstance();
   return tlc.getAnimationRanges().length > 1;
 };
-goog.exportProperty(
-    os.ui.AnimationSettingsCtrl.prototype,
-    'hasMultipleRanges',
-    os.ui.AnimationSettingsCtrl.prototype.hasMultipleRanges);
 
 
 /**
@@ -204,11 +201,11 @@ goog.exportProperty(
  * @protected
  */
 os.ui.AnimationSettingsCtrl.prototype.onLoopDatesChange = function(newValue, oldValue) {
-  if (goog.isString(this.scope['loopStart'])) {
+  if (typeof this.scope['loopStart'] === 'string') {
     this.loopStart = os.time.parse(this.scope['loopStart'], null, true);
   }
 
-  if (goog.isString(this.scope['loopEnd'])) {
+  if (typeof this.scope['loopEnd'] === 'string') {
     this.loopEnd = os.time.parse(this.scope['loopEnd'], null, true);
   }
 
@@ -218,7 +215,7 @@ os.ui.AnimationSettingsCtrl.prototype.onLoopDatesChange = function(newValue, old
 
 /**
  * Sets the auto configuration
- * @protected
+ * @export
  */
 os.ui.AnimationSettingsCtrl.prototype.autoConfigure = function() {
   if (this.scope['autoConfig']) {
@@ -240,8 +237,6 @@ os.ui.AnimationSettingsCtrl.prototype.autoConfigure = function() {
     }
   }
 };
-goog.exportProperty(os.ui.AnimationSettingsCtrl.prototype, 'onAutoChange',
-    os.ui.AnimationSettingsCtrl.prototype.autoConfigure);
 
 
 /**
@@ -323,6 +318,7 @@ os.ui.AnimationSettingsCtrl.prototype.getLoopEnd = function() {
 
 /**
  * Apply the settings
+ * @export
  */
 os.ui.AnimationSettingsCtrl.prototype.accept = function() {
   var tlc = os.time.TimelineController.getInstance();
@@ -361,26 +357,24 @@ os.ui.AnimationSettingsCtrl.prototype.accept = function() {
   /** @type {os.ui.timeline.TimelineCtrl} */ (this.scope['timeline']).zoomToExtent([tlc.getStart(), tlc.getEnd()]);
   this.cancel();
 };
-goog.exportProperty(os.ui.AnimationSettingsCtrl.prototype, 'accept', os.ui.AnimationSettingsCtrl.prototype.accept);
 
 
 /**
  * Cancel/Close
+ * @export
  */
 os.ui.AnimationSettingsCtrl.prototype.cancel = function() {
   os.ui.window.close(this.element);
 };
-goog.exportProperty(os.ui.AnimationSettingsCtrl.prototype, 'cancel', os.ui.AnimationSettingsCtrl.prototype.cancel);
 
 
 /**
  * Handles the ui fade checkbox toggle
+ * @export
  */
 os.ui.AnimationSettingsCtrl.prototype.onFadeChange = function() {
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Timeline.FADE, 1);
 };
-goog.exportProperty(os.ui.AnimationSettingsCtrl.prototype, 'onFadeChange',
-    os.ui.AnimationSettingsCtrl.prototype.onFadeChange);
 
 
 /**

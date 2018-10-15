@@ -40,13 +40,10 @@ os.ui.slick.AbstractNodeUICtrl.prototype.destroy = function() {
 /**
  * Whether or not to show the element
  * @return {boolean}
+ * @export
  */
 os.ui.slick.AbstractNodeUICtrl.prototype.show = function() {
   // selected class may be on the cell or the row
   return this.cellEl.hasClass('hovered') || this.cellEl.hasClass('selected') ||
       this.cellEl.parent().hasClass('selected');
 };
-goog.exportProperty(
-    os.ui.slick.AbstractNodeUICtrl.prototype,
-    'show',
-    os.ui.slick.AbstractNodeUICtrl.prototype.show);

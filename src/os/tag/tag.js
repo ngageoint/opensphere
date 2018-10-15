@@ -88,7 +88,7 @@ os.tag.tagsFromXML = function(node) {
  */
 os.tag.xmlFromTags = function(tags, opt_tagName, opt_doc) {
   var t;
-  if (goog.isString(tags)) {
+  if (typeof tags === 'string') {
     t = os.tag.tagsFromString(tags);
   } else if (tags) {
     t = tags;

@@ -36,7 +36,7 @@ plugin.file.gml.GMLLayerConfig.prototype.initializeConfig = function(options) {
  */
 plugin.file.gml.GMLLayerConfig.prototype.getImporter = function(options) {
   var importer = plugin.file.gml.GMLLayerConfig.base(this, 'getImporter', options);
-  if (goog.isDefAndNotNull(this.parserConfig['mappings'])) {
+  if (this.parserConfig['mappings'] != null) {
     importer.setAutoMappings(this.parserConfig['mappings']);
   } else {
     // there was no user interaction, so default the mappings to a set the importer would have used

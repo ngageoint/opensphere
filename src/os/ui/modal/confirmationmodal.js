@@ -136,7 +136,7 @@ os.ui.modal.ConfirmationModalCtrl.prototype.setMessage = function(options) {
  */
 os.ui.modal.ConfirmationModalCtrl.prototype.cancelClick = function() {
   // call cancel callback
-  if (goog.isDefAndNotNull(this.onCancel)) {
+  if (this.onCancel != null) {
     /** @type {!Function} */
     var callback = this.onCancel;
     this.timeout_(callback);
@@ -155,7 +155,7 @@ os.ui.modal.ConfirmationModalCtrl.prototype.confirmClick = function() {
   this['saving'] = true;
 
   // call yes callback
-  if (goog.isDefAndNotNull(this.onYes)) {
+  if (this.onYes != null) {
     /** @type {!Function} */
     var callback = this.onYes;
     this.timeout_(callback);

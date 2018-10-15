@@ -60,7 +60,7 @@ os.command.LayerVisibility.prototype.revert = function() {
  */
 os.command.LayerVisibility.prototype.set = function(vis) {
   var layer = /** @type {os.layer.Vector} */ (os.MapContainer.getInstance().getLayer(this.id_));
-  if (!goog.isDefAndNotNull(layer)) {
+  if (layer == null) {
     return this.handleError('No layer found with passed ID.');
   }
   var opt = layer.getLayerOptions();

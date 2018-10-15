@@ -698,7 +698,7 @@ os.ui.menu.spatial.getLayers = function(opt_areaId) {
 
   // check to see if this area is applied to all layers first
   var enabled = true;
-  if (goog.isDef(opt_areaId)) {
+  if (opt_areaId !== undefined) {
     enabled = os.ui.queryManager.getEntries('*', opt_areaId, null).length > 0;
     if (enabled) {
       // dont lookup for individual layers if it applys to all
@@ -709,7 +709,7 @@ os.ui.menu.spatial.getLayers = function(opt_areaId) {
     var l = /** @type {os.filter.IFilterable} */ (os.MapContainer.getInstance().getLayer(key));
     try {
       if (l) {
-        if (goog.isDef(opt_areaId)) {
+        if (opt_areaId !== undefined) {
           enabled = os.ui.queryManager.getEntries(key, opt_areaId, null).length > 0;
         }
         layers.push({
@@ -867,6 +867,7 @@ os.ui.menu.spatial.LayerChooserCtrl = function($scope, $element) {
 /**
  * Fire the confirmation callback and close the window.
  * @return {boolean}
+ * @export
  */
 os.ui.menu.spatial.LayerChooserCtrl.prototype.valid = function() {
   var found = goog.array.find(this.scope_['layers'], function(layer) {
@@ -876,13 +877,11 @@ os.ui.menu.spatial.LayerChooserCtrl.prototype.valid = function() {
   // Switch the type to the correct action
   return !found;
 };
-goog.exportProperty(os.ui.menu.spatial.LayerChooserCtrl.prototype,
-    'valid',
-    os.ui.menu.spatial.LayerChooserCtrl.prototype.valid);
 
 
 /**
  * Fire the confirmation callback and close the window.
+ * @export
  */
 os.ui.menu.spatial.LayerChooserCtrl.prototype.accept = function() {
   // Switch the type to the correct action
@@ -898,21 +897,15 @@ os.ui.menu.spatial.LayerChooserCtrl.prototype.accept = function() {
   os.ui.menu.spatial.onMenuEvent(this.scope_['event'], layerIds);
   this.close();
 };
-goog.exportProperty(os.ui.menu.spatial.LayerChooserCtrl.prototype,
-    'accept',
-    os.ui.menu.spatial.LayerChooserCtrl.prototype.accept);
 
 
 /**
  * Close the window.
+ * @export
  */
 os.ui.menu.spatial.LayerChooserCtrl.prototype.close = function() {
   os.ui.window.close(this.element_);
 };
-goog.exportProperty(
-    os.ui.menu.spatial.LayerChooserCtrl.prototype,
-    'close',
-    os.ui.menu.spatial.LayerChooserCtrl.prototype.close);
 
 
 /**

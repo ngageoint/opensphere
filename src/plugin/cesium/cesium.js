@@ -174,65 +174,6 @@ plugin.cesium.getJulianDate = function() {
 
 
 /**
- * Stolen from cesiums RectangleOutlineGeometry. Build our own polygon to display in polylines instead of a polygon
- * This was done to support more than 1px line width in windows
- * @param {ol.Extent} extent
- * @param {number=} opt_altitude
- * @param {boolean=} opt_extrude
- * @return {Array<Cesium.Cartesian3>}
- */
-plugin.cesium.generateRectanglePositions = function(extent, opt_altitude, opt_extrude) {
-  // NOTE: The Cesium.RectangleGeometryLibrary.computePosition does NOT use the height parameter :(
-  // var geometry = Cesium.RectangleGeometry.createGeometry(rected);
-
-  var rect = Cesium.Rectangle.fromDegrees(extent[0], extent[1], extent[2], extent[3]);
-  var computedOptions = Cesium.RectangleGeometryLibrary.computeOptions(rect, Cesium.Math.RADIANS_PER_DEGREE, 0, 0,
-      new Cesium.Rectangle(), new Cesium.Cartographic(), new Cesium.Cartographic());
-  // computedOptions.surfaceHeight = opt_altitude ? opt_altitude : 0;
-  // computedOptions.extrudedHeight = opt_extrude ? 0 : undefined;
-  var height = computedOptions.height;
-  var width = computedOptions.width;
-  var positions = [];
-  var row = 0;
-  var col;
-
-  for (col = 0; col < width; col++) {
-    var position = new Cesium.Cartesian3();
-    Cesium.RectangleGeometryLibrary.computePosition(computedOptions, Cesium.Ellipsoid.WGS84, false, row, col, position);
-    positions.push(position);
-  }
-
-  col = width - 1;
-  for (row = 1; row < height; row++) {
-    var position = new Cesium.Cartesian3();
-    Cesium.RectangleGeometryLibrary.computePosition(computedOptions, Cesium.Ellipsoid.WGS84, false, row, col, position);
-    positions.push(position);
-  }
-
-  row = height - 1;
-  for (col = width - 2; col >= 0; col--) {
-    var position = new Cesium.Cartesian3();
-    Cesium.RectangleGeometryLibrary.computePosition(computedOptions, Cesium.Ellipsoid.WGS84, false, row, col, position);
-    positions.push(position);
-  }
-
-  col = 0;
-  for (row = height - 2; row > 0; row--) {
-    var position = new Cesium.Cartesian3();
-    Cesium.RectangleGeometryLibrary.computePosition(computedOptions, Cesium.Ellipsoid.WGS84, false, row, col, position);
-    positions.push(position);
-  }
-
-  // Push on the first position to the last to close the polygon
-  if (positions.length > 0) {
-    positions.push(positions[0]);
-  }
-
-  return positions;
-};
-
-
-/**
  * Stolen from cesiums EllipseOutlineGeometry. Build our own polygon to display in polylines instead of a polygon
  * This was done to support more than 1px line width in windows
  * @param {!Cesium.Cartesian3} center
@@ -319,7 +260,7 @@ plugin.cesium.tileLayerToImageryLayer = function(olLayer, viewProj) {
   var layerOptions = {};
 
   var ext = olLayer.getExtent();
-  if (goog.isDefAndNotNull(ext) && !goog.isNull(viewProj)) {
+  if (ext != null && viewProj !== null) {
     layerOptions.rectangle = olcs.core.extentToRectangle(ext, viewProj);
   }
 

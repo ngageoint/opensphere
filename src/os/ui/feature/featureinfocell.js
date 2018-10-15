@@ -129,18 +129,16 @@ os.ui.feature.FeatureInfoCellCtrl.prototype.init_ = function() {
 
 /**
  * Show the description tab
+ * @export
  */
 os.ui.feature.FeatureInfoCellCtrl.prototype.showDescription = function() {
   this.scope_.$emit(os.ui.feature.FeatureInfoCtrl.SHOW_DESCRIPTION);
 };
-goog.exportProperty(
-    os.ui.feature.FeatureInfoCellCtrl.prototype,
-    'showDescription',
-    os.ui.feature.FeatureInfoCellCtrl.prototype.showDescription);
 
 
 /**
  * View properties
+ * @export
  */
 os.ui.feature.FeatureInfoCellCtrl.prototype.viewProperties = function() {
   var feature = /** @type {!ol.Feature} */ (this.scope_['property']['feature']);
@@ -150,24 +148,17 @@ os.ui.feature.FeatureInfoCellCtrl.prototype.viewProperties = function() {
     os.ui.launchPropertyInfo(id, properties);
   }
 };
-goog.exportProperty(
-    os.ui.feature.FeatureInfoCellCtrl.prototype,
-    'viewProperties',
-    os.ui.feature.FeatureInfoCellCtrl.prototype.viewProperties);
 
 
 /**
  * Pick column action
+ * @export
  */
 os.ui.feature.FeatureInfoCellCtrl.prototype.pickColumnAction = function() {
   os.ui.columnactions.launchColumnActionPrompt(this.scope_['actions'],
       this.scope_['property']['value'],
       this.scope_['ca']);
 };
-goog.exportProperty(
-    os.ui.feature.FeatureInfoCellCtrl.prototype,
-    'pickColumnAction',
-    os.ui.feature.FeatureInfoCellCtrl.prototype.pickColumnAction);
 
 
 /**

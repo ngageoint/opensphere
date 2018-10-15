@@ -101,7 +101,7 @@ ol.interaction.KeyboardZoom.handleEvent = function(mapBrowserEvent) {
         map.render();
 
         var view = map.getView();
-        goog.asserts.assert(!goog.isNull(view), 'view should not be null');
+        goog.asserts.assert(view !== null, 'view should not be null');
 
         var mapContainer = os.MapContainer.getInstance();
         if (mapContainer.is3DEnabled()) {

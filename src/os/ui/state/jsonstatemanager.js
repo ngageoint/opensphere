@@ -44,7 +44,7 @@ os.ui.state.JSONStateManager.LOGGER_ = goog.log.getLogger('os.ui.state.JSONState
  * @inheritDoc
  */
 os.ui.state.JSONStateManager.prototype.analyze = function(obj) {
-  if (goog.isString(obj)) {
+  if (typeof obj === 'string') {
     var actualObject = /** @type {Object} */ (JSON.parse(obj));
     if (actualObject) {
       obj = actualObject;
@@ -84,7 +84,7 @@ os.ui.state.JSONStateManager.prototype.analyze = function(obj) {
  */
 os.ui.state.JSONStateManager.prototype.loadState = function(obj, states, stateId, opt_title) {
   if (obj && states) {
-    if (goog.isString(obj)) {
+    if (typeof obj === 'string') {
       var actualObject = /** @type {Object} */ (JSON.parse(obj));
       if (actualObject) {
         obj = actualObject;

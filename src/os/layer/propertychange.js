@@ -5,6 +5,7 @@ goog.provide('os.layer.PropertyChange');
  * @enum {string}
  */
 os.layer.PropertyChange = {
+  ALTITUDE: 'altitude',
   ANIMATION_ENABLED: 'animationEnabled',
   COLOR_MODEL: 'colorModel',
   ERROR: 'error',

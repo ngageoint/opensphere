@@ -110,18 +110,16 @@ os.ui.data.AddColumnCtrl.prototype.destroy_ = function() {
 
 /**
  * Closes the window.
+ * @export
  */
 os.ui.data.AddColumnCtrl.prototype.cancel = function() {
   os.ui.window.close(this.element_);
 };
-goog.exportProperty(
-    os.ui.data.AddColumnCtrl.prototype,
-    'cancel',
-    os.ui.data.AddColumnCtrl.prototype.cancel);
 
 
 /**
  * Finishes and adds the column.
+ * @export
  */
 os.ui.data.AddColumnCtrl.prototype.finish = function() {
   if (!this.scope_['addColumnForm'].$invalid) {
@@ -151,10 +149,6 @@ os.ui.data.AddColumnCtrl.prototype.finish = function() {
     this.cancel();
   }
 };
-goog.exportProperty(
-    os.ui.data.AddColumnCtrl.prototype,
-    'finish',
-    os.ui.data.AddColumnCtrl.prototype.finish);
 
 
 /**

@@ -121,7 +121,7 @@ os.ui.query.AreaManager.prototype.onMapReady_ = function() {
     // transform it
     feature.getGeometry().osTransform(this.loadProj_);
     var show = /** @type {boolean} */ (feature.get('shown'));
-    this.toggle(feature, goog.isDef(show) ? show : true);
+    this.toggle(feature, show !== undefined ? show : true);
   }
 
   var qm = os.ui.query.QueryManager.getInstance();
@@ -205,7 +205,7 @@ os.ui.query.AreaManager.prototype.bulkAdd = function(features, opt_show) {
  * @inheritDoc
  */
 os.ui.query.AreaManager.prototype.add = function(feature) {
-  goog.asserts.assert(goog.isDef(feature), 'Cannot add null/undefined feature');
+  goog.asserts.assert(feature !== undefined, 'Cannot add null/undefined feature');
 
   if (!feature.getId()) {
     feature.setId(os.ui.query.AreaManager.FEATURE_PREFIX + goog.string.getRandomString());
@@ -321,9 +321,9 @@ os.ui.query.AreaManager.prototype.addInternal = function(feature, opt_bulk) {
       if (this.mapReady_) {
         var show = /** @type {boolean} */ (feature.get('shown'));
         if (bulk) {
-          this.showHideFeature(feature, goog.isDef(show) ? show : true);
+          this.showHideFeature(feature, show !== undefined ? show : true);
         } else {
-          this.toggle(feature, goog.isDef(show) ? show : true);
+          this.toggle(feature, show !== undefined ? show : true);
         }
       }
       return true;
@@ -347,7 +347,7 @@ os.ui.query.AreaManager.prototype.showHideFeature = function(idOrFeature, opt_to
   var feature = this.get(idOrFeature);
 
   if (feature) {
-    var show = goog.isDef(opt_toggle) ? opt_toggle : !this.getMap().containsFeature(feature);
+    var show = opt_toggle !== undefined ? opt_toggle : !this.getMap().containsFeature(feature);
 
     feature.set('shown', show);
     if (show) {

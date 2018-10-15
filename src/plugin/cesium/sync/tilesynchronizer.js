@@ -168,8 +168,8 @@ plugin.cesium.sync.TileSynchronizer.prototype.onZoomChange_ = function(opt_evt) 
     var min = this.layer.getMinResolution();
     var max = this.layer.getMaxResolution();
 
-    min = goog.isDef(min) ? min : os.map.zoomToResolution(42, proj);
-    max = goog.isDef(max) ? max : os.map.zoomToResolution(1, proj);
+    min = min !== undefined ? min : os.map.zoomToResolution(42, proj);
+    max = max !== undefined ? max : os.map.zoomToResolution(1, proj);
 
     var maxZoom = os.map.resolutionToZoom(min, proj);
     // for layers with a max zoom of 20 or greater, we will assume that they should just stay on indefinitely as
@@ -235,7 +235,7 @@ plugin.cesium.sync.TileSynchronizer.prototype.getLastIndex = function() {
  */
 plugin.cesium.sync.TileSynchronizer.prototype.createSingle_ = function() {
   goog.asserts.assertInstanceof(this.layer, ol.layer.Tile);
-  goog.asserts.assert(!goog.isNull(this.view));
+  goog.asserts.assert(this.view !== null);
 
   ol.events.listen(this.layer, goog.events.EventType.PROPERTYCHANGE, this.onLayerPropertyChange_, this);
   this.activeLayer_ = plugin.cesium.tileLayerToImageryLayer(this.layer, this.view.getProjection());
@@ -399,7 +399,7 @@ plugin.cesium.sync.TileSynchronizer.prototype.getTimeParameter_ = function(offse
  * @private
  */
 plugin.cesium.sync.TileSynchronizer.prototype.getCacheLayer_ = function(timeParam, show) {
-  goog.asserts.assert(!goog.isNull(this.layer));
+  goog.asserts.assert(this.layer !== null);
 
   var cesiumLayer = this.animationCache_ ? this.animationCache_[timeParam] : undefined;
   if (!cesiumLayer) {
@@ -428,7 +428,7 @@ plugin.cesium.sync.TileSynchronizer.prototype.getCacheLayer_ = function(timePara
  */
 plugin.cesium.sync.TileSynchronizer.prototype.getLayerByTime_ = function(timeParam) {
   goog.asserts.assertInstanceof(this.layer, os.layer.AnimatedTile);
-  goog.asserts.assert(!goog.isNull(this.view));
+  goog.asserts.assert(this.view !== null);
 
   var originalSource = /** @type {ol.source.TileWMS} */ (this.layer.getSource());
   goog.asserts.assertInstanceof(originalSource, ol.source.TileWMS);
@@ -460,8 +460,8 @@ plugin.cesium.sync.TileSynchronizer.prototype.getLayerByTime_ = function(timePar
  * @private
  */
 plugin.cesium.sync.TileSynchronizer.prototype.onStyleChange_ = function(event) {
-  goog.asserts.assert(!goog.isNull(this.layer));
-  goog.asserts.assert(!goog.isNull(this.activeLayer_));
+  goog.asserts.assert(this.layer !== null);
+  goog.asserts.assert(this.activeLayer_ !== null);
   plugin.cesium.updateCesiumLayerProperties(this.layer, this.activeLayer_);
   this.onZoomChange_();
 };

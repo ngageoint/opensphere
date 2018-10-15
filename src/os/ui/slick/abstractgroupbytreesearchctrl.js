@@ -124,28 +124,22 @@ os.ui.slick.AbstractGroupByTreeSearchCtrl.prototype.init = function() {
 
 /**
  * Starts a search
+ * @export
  */
 os.ui.slick.AbstractGroupByTreeSearchCtrl.prototype.search = function() {
   this.searchDelay.start();
 };
-goog.exportProperty(
-    os.ui.slick.AbstractGroupByTreeSearchCtrl.prototype,
-    'search',
-    os.ui.slick.AbstractGroupByTreeSearchCtrl.prototype.search);
 
 
 /**
  * Clears the search
+ * @export
  */
 os.ui.slick.AbstractGroupByTreeSearchCtrl.prototype.clearSearch = function() {
   this.scope['term'] = '';
   this.search();
   this.element.find('.search').focus();
 };
-goog.exportProperty(
-    os.ui.slick.AbstractGroupByTreeSearchCtrl.prototype,
-    'clearSearch',
-    os.ui.slick.AbstractGroupByTreeSearchCtrl.prototype.clearSearch);
 
 
 /**

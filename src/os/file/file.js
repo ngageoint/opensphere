@@ -385,7 +385,7 @@ os.file.isFileSystem = function(file) {
     return false;
   }
 
-  var url = goog.isString(file) ? file : file.getUrl();
+  var url = typeof file === 'string' ? file : file.getUrl();
   return !!url && goog.string.startsWith(url, os.file.FileScheme.FILE + '://');
 };
 
@@ -400,7 +400,7 @@ os.file.isLocal = function(file) {
     return false;
   }
 
-  var url = goog.isString(file) ? file : file.getUrl();
+  var url = typeof file === 'string' ? file : file.getUrl();
   return !!url && goog.string.startsWith(url, os.file.FileScheme.LOCAL + '://');
 };
 

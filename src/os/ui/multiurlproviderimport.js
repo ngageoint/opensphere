@@ -112,6 +112,7 @@ os.ui.MultiUrlProviderImportCtrl.prototype.getConfigFields = function() {
 
 /**
  * Add a new alternate URL to the list.
+ * @export
  */
 os.ui.MultiUrlProviderImportCtrl.prototype.addAlternateUrl = function() {
   if (!this.scope['config']['alternateUrls']) {
@@ -120,22 +121,15 @@ os.ui.MultiUrlProviderImportCtrl.prototype.addAlternateUrl = function() {
 
   this.scope['config']['alternateUrls'].push('');
 };
-goog.exportProperty(
-    os.ui.MultiUrlProviderImportCtrl.prototype,
-    'addAlternateUrl',
-    os.ui.MultiUrlProviderImportCtrl.prototype.addAlternateUrl);
 
 
 /**
  * Remove an alternate URL from the list at the provided index.
  * @param {number} index The alternate URL index to remove
+ * @export
  */
 os.ui.MultiUrlProviderImportCtrl.prototype.removeAlternateUrl = function(index) {
   if (this.scope['config']['alternateUrls'] && this.scope['config']['alternateUrls'].length > index) {
     this.scope['config']['alternateUrls'].splice(index, 1);
   }
 };
-goog.exportProperty(
-    os.ui.MultiUrlProviderImportCtrl.prototype,
-    'removeAlternateUrl',
-    os.ui.MultiUrlProviderImportCtrl.prototype.removeAlternateUrl);

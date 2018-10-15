@@ -148,9 +148,8 @@ os.ui.search.SearchResultsCtrl.prototype.handleAutocomplete_ = function(event) {
 /**
  * @param {os.search.ISearchResult} result
  * @return {number|string}
+ * @export
  */
 os.ui.search.SearchResultsCtrl.prototype.track = function(result) {
   return result.getId();
 };
-goog.exportProperty(os.ui.search.SearchResultsCtrl.prototype, 'track',
-    os.ui.search.SearchResultsCtrl.prototype.track);

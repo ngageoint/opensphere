@@ -446,6 +446,7 @@ os.ui.LegendCtrl.prototype.positionLegend_ = function(opt_e) {
 
 /**
  * Open legend settings.
+ * @export
  */
 os.ui.LegendCtrl.prototype.openSettings = function() {
   os.ui.config.SettingsManager.getInstance().setSelectedPlugin(os.legend.ID);
@@ -453,14 +454,11 @@ os.ui.LegendCtrl.prototype.openSettings = function() {
   var event = new os.ui.events.UIEvent(os.ui.events.UIEventType.TOGGLE_UI, 'settings', true);
   os.dispatcher.dispatchEvent(event);
 };
-goog.exportProperty(
-    os.ui.LegendCtrl.prototype,
-    'openSettings',
-    os.ui.LegendCtrl.prototype.openSettings);
 
 
 /**
  * Open legend settings.
+ * @export
  */
 os.ui.LegendCtrl.prototype.close = function() {
   if (this.scope['closeFlag'] != null) {
@@ -473,7 +471,3 @@ os.ui.LegendCtrl.prototype.close = function() {
     this.scope.$parent.$destroy();
   }
 };
-goog.exportProperty(
-    os.ui.LegendCtrl.prototype,
-    'close',
-    os.ui.LegendCtrl.prototype.close);

@@ -229,7 +229,7 @@ os.webgl.AbstractWebGLRenderer.prototype.onSettingChange = function(event) {
       this.showFog(!!event.newVal);
       break;
     case os.config.DisplaySetting.FOG_DENSITY:
-      if (goog.isNumber(event.newVal)) {
+      if (typeof event.newVal === 'number') {
         this.setFogDensity(event.newVal);
       }
       break;
@@ -312,4 +312,13 @@ os.webgl.AbstractWebGLRenderer.prototype.showTerrain = function(value) {
  */
 os.webgl.AbstractWebGLRenderer.prototype.updateTerrainProvider = function() {
   // implement to support terrain
+};
+
+/**
+ * @inheritDoc
+ */
+os.webgl.AbstractWebGLRenderer.prototype.getAltitudeModes = function() {
+  return [
+    os.webgl.AltitudeMode.ABSOLUTE
+  ];
 };

@@ -48,3 +48,44 @@ os.webgl.hasPerformanceCaveat = function() {
   }
   return null;
 };
+
+
+/**
+ * Represents altitude value relative to terrain.
+ * @enum {string}
+ */
+os.webgl.AltitudeMode = {
+  /** Altitude value is ignored and value is clamped to terrain */
+  CLAMP_TO_GROUND: 'clampToGround',
+  /** Altitude value is absolute to mean sea level */
+  ABSOLUTE: 'absolute',
+  /** Altitude value is relative to terrain */
+  RELATIVE_TO_GROUND: 'relativeToGround',
+  /** Altitude value is ignored and value is clamped to the sea floor */
+  CLAMP_TO_SEA_FLOOR: 'clampToSeaFloor',
+  /** Altitude value is relative to the sea floor */
+  RELATIVE_TO_SEAFLOOR: 'relativeToSeaFloor'
+};
+
+
+/**
+ * Gets a human readable name for altitude mode
+ * @param {os.webgl.AltitudeMode} altitudeMode - The mode to map to a name
+ * @return {string}
+ */
+os.webgl.mapAltitudeModeToName = function(altitudeMode) {
+  switch (altitudeMode) {
+    case os.webgl.AltitudeMode.ABSOLUTE:
+      return 'Absolute';
+    case os.webgl.AltitudeMode.CLAMP_TO_GROUND:
+      return 'Clamp to Ground';
+    case os.webgl.AltitudeMode.RELATIVE_TO_GROUND:
+      return 'Relative to Ground';
+    case os.webgl.AltitudeMode.CLAMP_TO_SEA_FLOOR:
+      return 'Clamp to Sea Floor';
+    case os.webgl.AltitudeMode.RELATIVE_TO_SEAFLOOR:
+      return 'Relative to Sea Floor';
+    default:
+      return '';
+  }
+};

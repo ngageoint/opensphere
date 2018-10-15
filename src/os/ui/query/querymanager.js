@@ -175,8 +175,8 @@ os.ui.query.QueryManager.prototype.addEntry = function(layerId, areaId, filterId
       'layerId': layerId,
       'areaId': areaId,
       'filterId': filterId,
-      'includeArea': goog.isDef(opt_includeArea) ? opt_includeArea : true,
-      'filterGroup': goog.isDef(opt_filterGroup) ? opt_filterGroup : true
+      'includeArea': opt_includeArea !== undefined ? opt_includeArea : true,
+      'filterGroup': opt_filterGroup !== undefined ? opt_filterGroup : true
     };
 
     if (opt_temp) {
@@ -337,7 +337,7 @@ os.ui.query.QueryManager.prototype.removeEntries = function(opt_layerId, opt_are
  * @param {!Array<Object<string, string|boolean>>} entries
  */
 os.ui.query.QueryManager.prototype.removeEntriesArr = function(entries) {
-  goog.asserts.assert(goog.isDefAndNotNull(entries));
+  goog.asserts.assert(entries != null);
 
   var i = this.entries.length;
   var count = 0;
@@ -939,7 +939,7 @@ os.ui.query.QueryManager.sortEntries = function(a, b) {
  */
 os.ui.query.QueryManager.prototype.getPivotData = function(opt_pivots, opt_pivot, opt_node, opt_flatten, opt_layer,
     opt_nodeUI) {
-  opt_pivot = goog.isDef(opt_pivot) ? opt_pivot : 0;
+  opt_pivot = opt_pivot !== undefined ? opt_pivot : 0;
   opt_pivots = opt_pivots || ['layer', 'area', 'filter'];
 
   if (opt_pivot >= opt_pivots.length) {
@@ -1112,7 +1112,7 @@ os.ui.query.QueryManager.prototype.getPivotData = function(opt_pivots, opt_pivot
           var astr = a.getLabel();
           var bstr = b.getLabel();
 
-          if (goog.isString(astr) && goog.isString(bstr)) {
+          if (typeof astr === 'string' && typeof bstr === 'string') {
             return goog.string.caseInsensitiveCompare(astr, bstr);
           }
 
