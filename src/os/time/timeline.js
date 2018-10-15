@@ -52,7 +52,7 @@ os.time.timeline.YEAR = 12 * os.time.timeline.MONTH;
  * @param {string=} opt_durationHint
  */
 os.time.timeline.autoConfigureFromTimeRange = function(controller, opt_durationHint) {
-  var durationHint = goog.isDef(opt_durationHint) ? opt_durationHint : 'auto';
+  var durationHint = opt_durationHint !== undefined ? opt_durationHint : 'auto';
 
   var diff = controller.getSmallestAnimateRangeLength();
   if (durationHint == 'auto') {
@@ -118,7 +118,7 @@ os.time.timeline.setTileAnimation = function(controller, offset, duration) {
  * @return {string}
  */
 os.time.timeline.getDateForFrame = function(controller, opt_durationHint) {
-  var duration = goog.isDef(opt_durationHint) ? opt_durationHint : os.time.Duration.DAY;
+  var duration = opt_durationHint !== undefined ? opt_durationHint : os.time.Duration.DAY;
   var frameTime = controller.getCurrent();
   var loopEnd = controller.getLoopEnd();
   if (frameTime >= loopEnd) {

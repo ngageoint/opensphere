@@ -250,7 +250,7 @@ os.ui.ChecklistCtrl.prototype.updateAllCheckbox_ = function() {
  * @param {boolean=} opt_left Display the menu leftward
  */
 os.ui.ChecklistCtrl.launchChecklistMenu = function(target, items, opt_allowMultiple, opt_name, opt_scope, opt_left) {
-  var targetEl = goog.isString(target) ? angular.element(target) : target;
+  var targetEl = typeof target === 'string' ? angular.element(target) : target;
   var allowMultiple = opt_allowMultiple || false;
   var scope = opt_scope || os.ui.injector.get('$rootScope');
   var compile = os.ui.injector.get('$compile');

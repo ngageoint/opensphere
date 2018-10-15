@@ -147,3 +147,46 @@ requirement: {
 #  value: 'goog.bind'
 #  error_message: 'goog.bind(func, args) is not permitted. Use func.bind(args) instead.'
 #}
+
+#requirement: {
+#  type: BANNED_NAME
+#  value: 'goog.exportProperty'
+#  error_message: 'goog.exportProperty is not permitted. Use @export in the JSDoc to prevent function renaming, or '
+#                 'assign the property directly for aliases.'
+#}
+
+#requirement: {
+#  type: BANNED_NAME
+#  value: 'goog.isBoolean'
+#  error_message: 'goog.isBoolean(value) is not permitted. Use typeof value === \'boolean\' instead.'
+#}
+
+#requirement: {
+#  type: BANNED_NAME
+#  value: 'goog.isDef'
+#  error_message: 'goog.isDef(value) is not permitted. Use value !== undefined instead.'
+#}
+
+#requirement: {
+#  type: BANNED_NAME
+#  value: 'goog.isDefAndNotNull'
+#  error_message: 'goog.isDefAndNotNull(value) is not permitted. Use value != null instead.'
+#}
+
+#requirement: {
+#  type: BANNED_NAME
+#  value: 'goog.isNull'
+#  error_message: 'goog.isNull(value) is not permitted. Use value === null instead.'
+#}
+
+#requirement: {
+#  type: BANNED_NAME
+#  value: 'goog.isNumber'
+#  error_message: 'goog.isNumber(value) is not permitted. Use typeof value === \'number\' instead.'
+#}
+
+#requirement: {
+#  type: BANNED_NAME
+#  value: 'goog.isString'
+#  error_message: 'goog.isString(value) is not permitted. Use typeof value === \'string\' instead.'
+#}

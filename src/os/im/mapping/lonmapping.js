@@ -65,7 +65,7 @@ os.im.mapping.LonMapping.prototype.execute = function(item) {
 os.im.mapping.LonMapping.prototype.testField = function(value) {
   if (value) {
     var l = os.geo.parseLon(String(value));
-    return goog.isDefAndNotNull(l) && !isNaN(l);
+    return l != null && !isNaN(l);
   }
   return false;
 };
@@ -77,7 +77,7 @@ os.im.mapping.LonMapping.prototype.testField = function(value) {
 os.im.mapping.LonMapping.prototype.testAndGetField = function(value, opt_format) {
   if (value) {
     var l = os.geo.parseLon(String(value), opt_format);
-    if (goog.isDefAndNotNull(l) && !isNaN(l)) {
+    if (l != null && !isNaN(l)) {
       return l.toString();
     }
   }

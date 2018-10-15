@@ -116,30 +116,28 @@ os.ui.FiltersCtrl.prototype.destroy = function() {
 
 /**
  * Launches the advanced combination window
+ * @export
  */
 os.ui.FiltersCtrl.prototype.launch = function() {
   os.ui.CombinatorCtrl.launch();
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Filters.ADVANCED, 1);
 };
-goog.exportProperty(os.ui.FiltersCtrl.prototype, 'launch', os.ui.FiltersCtrl.prototype.launch);
 
 
 /**
  * Pop up filter export gui
  * @param {os.ui.filter.FilterEvent=} opt_event right click export event
+ * @export
  */
 os.ui.FiltersCtrl.prototype.export = function(opt_event) {
   os.ui.filter.ui.launchFilterExport(this.save_.bind(this));
 };
-goog.exportProperty(
-    os.ui.FiltersCtrl.prototype,
-    'export',
-    os.ui.FiltersCtrl.prototype.export);
 
 
 /**
  * Disables export button
  * @return {boolean}
+ * @export
  */
 os.ui.FiltersCtrl.prototype.exportDisabled = function() {
   // off when no filters present
@@ -150,7 +148,6 @@ os.ui.FiltersCtrl.prototype.exportDisabled = function() {
 
   return true;
 };
-goog.exportProperty(os.ui.FiltersCtrl.prototype, 'exportDisabled', os.ui.FiltersCtrl.prototype.exportDisabled);
 
 
 /**
@@ -195,7 +192,7 @@ os.ui.FiltersCtrl.prototype.flatten_ = function(arr, result, activeOnly) {
         this.flatten_(item.getChildren(), result, activeOnly);
       } else if ((activeOnly && item.getState() == 'on' || !activeOnly) && item.getEntry()) {
         var filterId = item.getId();
-        if (goog.isDef(filterId) && filterId != '*') {
+        if (filterId !== undefined && filterId != '*') {
           result.push(item);
         }
       }
@@ -206,14 +203,11 @@ os.ui.FiltersCtrl.prototype.flatten_ = function(arr, result, activeOnly) {
 
 /**
  * import filters
+ * @export
  */
 os.ui.FiltersCtrl.prototype.import = function() {
   os.query.launchQueryImport();
 };
-goog.exportProperty(
-    os.ui.FiltersCtrl.prototype,
-    'import',
-    os.ui.FiltersCtrl.prototype.import);
 
 
 /**
@@ -302,25 +296,19 @@ os.ui.FiltersCtrl.prototype.searchIfAddedOrRemoved_ = function(event) {
 
 /**
  * Handles Group By change
+ * @export
  */
 os.ui.FiltersCtrl.prototype.onGroupChange = function() {
   this.search();
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Filters.GROUP_BY, 1);
 };
-goog.exportProperty(
-    os.ui.FiltersCtrl.prototype,
-    'onGroupChange',
-    os.ui.FiltersCtrl.prototype.onGroupChange);
 
 
 /**
  * Handles Group By change
+ * @export
  */
 os.ui.FiltersCtrl.prototype.onSearchTermChange = function() {
   this.search();
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Filters.SEARCH, 1);
 };
-goog.exportProperty(
-    os.ui.FiltersCtrl.prototype,
-    'onSearchTermChange',
-    os.ui.FiltersCtrl.prototype.onSearchTermChange);

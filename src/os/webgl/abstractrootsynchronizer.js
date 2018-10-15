@@ -235,9 +235,8 @@ os.webgl.AbstractRootSynchronizer.prototype.updateGroupZ = function(group) {
  */
 os.webgl.AbstractRootSynchronizer.prototype.onLayerAdd_ = function(event) {
   if (event && event.layer) {
-    var layer = goog.isString(event.layer) ?
-        /** @type {os.layer.ILayer} */ (os.MapContainer.getInstance().getLayer(event.layer)) :
-        /** @type {os.layer.ILayer} */ (event.layer);
+    var layer = /** @type {os.layer.ILayer} */ (typeof event.layer === 'string' ?
+        os.MapContainer.getInstance().getLayer(event.layer) : event.layer);
 
     if (layer instanceof ol.layer.Layer) {
       this.synchronizeLayer_(layer);
@@ -257,9 +256,8 @@ os.webgl.AbstractRootSynchronizer.prototype.onLayerAdd_ = function(event) {
  */
 os.webgl.AbstractRootSynchronizer.prototype.onLayerRemove_ = function(event) {
   if (event && event.layer) {
-    var layer = goog.isString(event.layer) ?
-        /** @type {os.layer.ILayer} */ (os.MapContainer.getInstance().getLayer(event.layer)) :
-        /** @type {os.layer.ILayer} */ (event.layer);
+    var layer = /** @type {os.layer.ILayer} */ (typeof event.layer === 'string' ?
+        os.MapContainer.getInstance().getLayer(event.layer) : event.layer);
 
     if (layer) {
       var id = layer.getId();

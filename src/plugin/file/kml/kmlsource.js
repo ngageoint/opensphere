@@ -479,7 +479,7 @@ plugin.file.kml.KMLSource.prototype.removeNode = function(id) {
  * @param {boolean=} opt_dispose If feature nodes should be disposed on removal; defaults to false.
  */
 plugin.file.kml.KMLSource.prototype.clearNode = function(node, opt_dispose) {
-  this.disposeOnRemove_ = goog.isDef(opt_dispose) ? opt_dispose : false;
+  this.disposeOnRemove_ = opt_dispose !== undefined ? opt_dispose : false;
 
   // handle the process queue in case we're removing features lingering inside of it
   this.processNow();

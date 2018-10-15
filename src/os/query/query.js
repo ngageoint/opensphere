@@ -20,7 +20,7 @@ goog.require('os.ui.query.ui.area.userAreaDirective');
  * @param {boolean=} opt_active
  */
 os.query.addArea = function(area, opt_active) {
-  var active = goog.isDef(opt_active) ? opt_active : true;
+  var active = opt_active !== undefined ? opt_active : true;
 
   // Make sure the area is enabled if it is in the app
   os.ui.areaManager.toggle(area, active);

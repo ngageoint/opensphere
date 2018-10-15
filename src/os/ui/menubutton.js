@@ -76,6 +76,7 @@ os.ui.MenuButtonCtrl.prototype.onDestroy = function() {
 
 /**
  * Open the menu
+ * @export
  */
 os.ui.MenuButtonCtrl.prototype.openMenu = function() {
   if (this.menu) {
@@ -95,7 +96,6 @@ os.ui.MenuButtonCtrl.prototype.openMenu = function() {
 
   os.ui.apply(this.scope);
 };
-goog.exportProperty(os.ui.MenuButtonCtrl.prototype, 'openMenu', os.ui.MenuButtonCtrl.prototype.openMenu);
 
 
 /**
@@ -110,6 +110,7 @@ os.ui.MenuButtonCtrl.prototype.onMenuClose = function() {
 
 /**
  * Toggles a window
+ * @export
  */
 os.ui.MenuButtonCtrl.prototype.toggle = function() {
   if (this.flag && !os.ui.menu.windows.openWindow(this.flag)) {
@@ -117,13 +118,13 @@ os.ui.MenuButtonCtrl.prototype.toggle = function() {
     os.dispatcher.dispatchEvent(event);
   }
 };
-goog.exportProperty(os.ui.MenuButtonCtrl.prototype, 'toggle', os.ui.MenuButtonCtrl.prototype.toggle);
 
 
 /**
  * Checks if a window is open in the application
  * @param {string=} opt_flag The ID of the window to check
  * @return {boolean}
+ * @export
  */
 os.ui.MenuButtonCtrl.prototype.isWindowActive = function(opt_flag) {
   var flag = opt_flag || this.flag;
@@ -135,4 +136,3 @@ os.ui.MenuButtonCtrl.prototype.isWindowActive = function(opt_flag) {
 
   return false;
 };
-goog.exportProperty(os.ui.MenuButtonCtrl.prototype, 'isWindowActive', os.ui.MenuButtonCtrl.prototype.isWindowActive);

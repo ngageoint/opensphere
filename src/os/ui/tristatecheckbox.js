@@ -70,6 +70,7 @@ os.ui.TriStateCheckboxCtrl.prototype.destroy_ = function() {
 /**
  * Toggles the state on the scope
  * @param {MouseEvent} e The event
+ * @export
  */
 os.ui.TriStateCheckboxCtrl.prototype.toggle = function(e) {
   if (this.scope_) {
@@ -85,15 +86,12 @@ os.ui.TriStateCheckboxCtrl.prototype.toggle = function(e) {
     e.stopPropagation();
   }
 };
-goog.exportProperty(
-    os.ui.TriStateCheckboxCtrl.prototype,
-    'toggle',
-    os.ui.TriStateCheckboxCtrl.prototype.toggle);
 
 
 /**
  * Toggles the state on the scope
  * @param {MouseEvent} e The event
+ * @export
  */
 os.ui.TriStateCheckboxCtrl.prototype.onDblClick = function(e) {
   if (!this.element_.hasClass('disabled')) {
@@ -101,10 +99,6 @@ os.ui.TriStateCheckboxCtrl.prototype.onDblClick = function(e) {
     e.stopPropagation();
   }
 };
-goog.exportProperty(
-    os.ui.TriStateCheckboxCtrl.prototype,
-    'onDblClick',
-    os.ui.TriStateCheckboxCtrl.prototype.onDblClick);
 
 
 /**

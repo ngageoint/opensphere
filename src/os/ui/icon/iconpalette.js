@@ -85,25 +85,19 @@ os.ui.icon.IconPaletteCtrl.prototype.destroy_ = function() {
  * Get the icon src to use in the Image element.
  * @param {string} src The icon src.
  * @return {string} The adjusted icon source.
+ * @export
  */
 os.ui.icon.IconPaletteCtrl.prototype.getIconSrc = function(src) {
   return this.scope_ && this.scope_['iconSrc'] ? this.scope_['iconSrc'](src) : src;
 };
-goog.exportProperty(
-    os.ui.icon.IconPaletteCtrl.prototype,
-    'getIconSrc',
-    os.ui.icon.IconPaletteCtrl.prototype.getIconSrc);
 
 
 /**
  * Notify parent scope that a icon was chosen.
  * @param {string} iconPath The selected iconPath
+ * @export
  */
 os.ui.icon.IconPaletteCtrl.prototype.pick = function(iconPath) {
   this.scope_['selected']['path'] = iconPath;
   os.ui.apply(this.scope);
 };
-goog.exportProperty(
-    os.ui.icon.IconPaletteCtrl.prototype,
-    'pick',
-    os.ui.icon.IconPaletteCtrl.prototype.pick);

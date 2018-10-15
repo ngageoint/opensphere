@@ -425,7 +425,7 @@ plugin.cesium.VectorContext.prototype.removePrimitive = function(primitive) {
 plugin.cesium.VectorContext.prototype.addFeaturePrimitive = function(feature, primitive) {
   var featureId = feature['id'];
   var shown = this.featureToShownMap[featureId];
-  shown = goog.isDef(shown) ? shown : primitive.show;
+  shown = shown !== undefined ? shown : primitive.show;
 
   primitive.show = shown;
   this.featureToCesiumMap[featureId] = this.featureToCesiumMap[featureId] || [];

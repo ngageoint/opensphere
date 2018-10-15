@@ -25,13 +25,13 @@ os.interaction.Select = function(opt_options) {
     handleEvent: os.interaction.Select.handleEvent_
   });
 
-  var options = goog.isDef(opt_options) ? opt_options : {};
+  var options = opt_options !== undefined ? opt_options : {};
 
   /**
    * @type {ol.EventsConditionType}
    * @protected
    */
-  this.condition = goog.isDef(options.condition) ? options.condition : ol.events.condition.singleClick;
+  this.condition = options.condition !== undefined ? options.condition : ol.events.condition.singleClick;
 
   var layerFilter;
   if (options.layers != null) {

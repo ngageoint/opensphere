@@ -152,6 +152,7 @@ os.ui.im.FileSupportCtrl.prototype.disposeInternal = function() {
 
 /**
  * Fire the cancel callback and close the window.
+ * @export
  */
 os.ui.im.FileSupportCtrl.prototype.cancel = function() {
   if (this.cancelCallback_) {
@@ -160,11 +161,11 @@ os.ui.im.FileSupportCtrl.prototype.cancel = function() {
 
   this.close_();
 };
-goog.exportProperty(os.ui.im.FileSupportCtrl.prototype, 'cancel', os.ui.im.FileSupportCtrl.prototype.cancel);
 
 
 /**
  * Fire the confirmation callback and close the window.
+ * @export
  */
 os.ui.im.FileSupportCtrl.prototype.confirm = function() {
   if (this['choice'] === os.ui.im.FileSupportChoice.UPLOAD && os.file.upload.uploadFile != null) {
@@ -175,7 +176,6 @@ os.ui.im.FileSupportCtrl.prototype.confirm = function() {
 
   this.close_();
 };
-goog.exportProperty(os.ui.im.FileSupportCtrl.prototype, 'confirm', os.ui.im.FileSupportCtrl.prototype.confirm);
 
 
 /**

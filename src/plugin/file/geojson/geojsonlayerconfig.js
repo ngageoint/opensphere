@@ -36,7 +36,7 @@ plugin.file.geojson.GeoJSONLayerConfig.prototype.initializeConfig = function(opt
  */
 plugin.file.geojson.GeoJSONLayerConfig.prototype.getImporter = function(options) {
   var importer = plugin.file.geojson.GeoJSONLayerConfig.base(this, 'getImporter', options);
-  if (goog.isDefAndNotNull(this.parserConfig['mappings'])) {
+  if (this.parserConfig['mappings'] != null) {
     importer.setAutoMappings(this.parserConfig['mappings']);
   } else {
     // there was no user interaction, so default the mappings to a set the importer would have used

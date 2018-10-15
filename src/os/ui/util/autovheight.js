@@ -68,8 +68,8 @@ os.ui.util.AutoVHeightCtrl = function($scope, $element, $injector, $timeout) {
    */
   this.element_ = $element;
 
-  this['minHeight'] = goog.isDefAndNotNull(this.scope_['minHeight']) ? this.scope_['minHeight'] : 20;
-  this['padding'] = goog.isDefAndNotNull(this.scope_['padding']) ? this.scope_['padding'] : 0;
+  this['minHeight'] = this.scope_['minHeight'] != null ? this.scope_['minHeight'] : 20;
+  this['padding'] = this.scope_['padding'] != null ? this.scope_['padding'] : 0;
 
   /**
    * Debounce resize events over a brief period.

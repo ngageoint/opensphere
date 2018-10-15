@@ -69,19 +69,19 @@ os.net.ProxyHandler.ENCODE = true;
  */
 os.net.ProxyHandler.configure = function(conf) {
   if (conf) {
-    if (goog.isDef(conf['schemes'])) {
+    if (conf['schemes'] !== undefined) {
       os.net.ProxyHandler.SCHEMES = /** @type {Array<string>} */ (conf['schemes']);
     }
 
-    if (goog.isDef(conf['methods'])) {
+    if (conf['methods'] !== undefined) {
       os.net.ProxyHandler.METHODS = /** @type {Array<string>} */ (conf['methods']);
     }
 
-    if (goog.isDef(conf['encode'])) {
+    if (conf['encode'] !== undefined) {
       os.net.ProxyHandler.ENCODE = /** @type {boolean} */ (conf['encode']);
     }
 
-    if (goog.isDef(conf['url'])) {
+    if (conf['url'] !== undefined) {
       os.net.ProxyHandler.PROXY_URL = /** @type {string} */ (conf['url']);
     }
   }

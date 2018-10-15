@@ -73,13 +73,6 @@ os.ui.header.ScrollHeaderCtrl = function($scope, $element, $timeout, $attrs) {
    * @type {number}
    * @private
    */
-  this.heightOffset_ = 15;
-
-  /**
-   * The element height to offset from
-   * @type {number}
-   * @private
-   */
   this.resetHeight_ = 0;
 
   /**

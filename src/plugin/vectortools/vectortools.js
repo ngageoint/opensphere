@@ -107,7 +107,7 @@ plugin.vectortools.addNewLayer = function(opt_restoreFromIdOrConfig) {
   mm.addLayer(newLayer);
 
   if (opt_restoreFromIdOrConfig) {
-    if (goog.isString(opt_restoreFromIdOrConfig)) {
+    if (typeof opt_restoreFromIdOrConfig === 'string') {
       // get the other layer and restore the new one from it
       var otherLayer = /** @type {os.layer.ILayer} */ (mm.getLayer(opt_restoreFromIdOrConfig));
       if (otherLayer) {
@@ -262,12 +262,12 @@ plugin.vectortools.runColumnMapping = function(mapping, feature) {
 plugin.vectortools.getCombinedColumns = function(sources, mappings) {
   return sources.reduce(function(columns, source) {
     var filter = function(column) {
-      if (goog.isString(column)) {
+      if (typeof column === 'string') {
         return columns.indexOf(column) === -1;
       }
 
       for (var i = 0, n = columns.length; i < n; i++) {
-        if (!goog.isString(columns[i]) && columns[i]['field'] === column['field']) {
+        if (typeof columns[i] !== 'string' && columns[i]['field'] === column['field']) {
           return false;
         }
       }
@@ -277,7 +277,7 @@ plugin.vectortools.getCombinedColumns = function(sources, mappings) {
 
     return columns.concat(source.getColumns().filter(filter));
   }, []).filter(function(column) {
-    var field = goog.isString(column) ? column : column['field'];
+    var field = typeof column === 'string' ? column : column['field'];
 
     for (var id in mappings) {
       var assocs = mappings[id];

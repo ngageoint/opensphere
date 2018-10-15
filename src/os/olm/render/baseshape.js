@@ -47,7 +47,7 @@ os.olm.render.BaseShape.prototype.disposeInternal = function() {
  * @protected
  */
 os.olm.render.BaseShape.prototype.render = function() {
-  if (!goog.isNull(this.map_) && this.getGeometry()) {
+  if (this.map_ !== null && this.getGeometry()) {
     this.map_.render();
   }
 };
@@ -65,7 +65,7 @@ os.olm.render.BaseShape.prototype.getMap = function() {
  * @param {ol.PluggableMap} map Map.
  */
 os.olm.render.BaseShape.prototype.setMap = function(map) {
-  if (!goog.isNull(this.listenKey_)) {
+  if (this.listenKey_ !== null) {
     ol.events.unlistenByKey(this.listenKey_);
     this.listenKey_ = null;
     this.map_.render();
@@ -87,10 +87,10 @@ os.olm.render.BaseShape.prototype.setMap = function(map) {
  */
 os.olm.render.BaseShape.prototype.handleMapPostCompose_ = function(event) {
   var geometry = this.getGeometry();
-  goog.asserts.assert(goog.isDefAndNotNull(geometry));
+  goog.asserts.assert(geometry != null);
 
   var style = this.getStyle();
-  goog.asserts.assert(!goog.isNull(style));
+  goog.asserts.assert(style !== null);
   event.vectorContext.setStyle(style);
   this.adjustStyle(event.vectorContext);
   event.vectorContext.drawGeometry(geometry);

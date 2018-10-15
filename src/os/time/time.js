@@ -492,7 +492,7 @@ os.time.parse = function(value, format, opt_utc, opt_strict) {
  * @return {!moment} The parsed moment object.
  */
 os.time.parseMoment = function(value, formats, opt_utc, opt_strict) {
-  var strict = goog.isDef(opt_strict) ? opt_strict : true;
+  var strict = opt_strict !== undefined ? opt_strict : true;
 
   var momentFormats = [];
   if (goog.isArray(formats)) {
@@ -558,7 +558,7 @@ os.time.userizeFormat_ = function(format) {
  */
 os.time.round = function(date, duration, opt_roundDown) {
   var testDate = new Date(date.getTime());
-  var roundDown = !goog.isDef(opt_roundDown) || opt_roundDown;
+  var roundDown = opt_roundDown === undefined || opt_roundDown;
 
   duration = duration.toLowerCase();
 

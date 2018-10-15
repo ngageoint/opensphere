@@ -38,7 +38,7 @@ describe('os.im.action.FilterActionEntry', function() {
   it('should initialize correctly', function() {
     var fe = new os.im.action.FilterActionEntry();
 
-    expect(goog.isString(fe.getId())).toBe(true);
+    expect(typeof fe.getId() === 'string').toBe(true);
     expect(fe.actions.length).toBe(0);
     expect(fe.filterFn).toBe(goog.functions.FALSE);
     expect(fe.isTemporary()).toBe(false);

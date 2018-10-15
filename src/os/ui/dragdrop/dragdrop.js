@@ -396,7 +396,7 @@ os.ui.UrlDragDrop.prototype.handleDrop_ = function(event) {
     goog.dom.classlist.remove(/** @type {Element} */ (browserEvent.currentTarget), os.ui.DragDropStyle.DRAG_DROP_CLASS);
 
     if (!document.querySelector(os.ui.windowSelector.MODAL_BG)) {
-      if (goog.isDefAndNotNull(this.scope_['ddDrop'])) {
+      if (this.scope_['ddDrop'] != null) {
         this.scope_['ddDrop'](browserEvent);
       } else if (browserEvent.dataTransfer.files && browserEvent.dataTransfer.files.length > 0) {
         os.url.UrlManager.getInstance().handleFiles(browserEvent.dataTransfer.files);

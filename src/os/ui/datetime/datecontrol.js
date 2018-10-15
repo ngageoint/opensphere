@@ -194,6 +194,7 @@ os.ui.datetime.DateControlCtrl.prototype.onEndDateChanged_ = function(newVal, ol
 
 /**
  * Change handler for duration chooser.
+ * @export
  */
 os.ui.datetime.DateControlCtrl.prototype.onDurationChanged = function() {
   if (!this['disabled']) {
@@ -212,10 +213,6 @@ os.ui.datetime.DateControlCtrl.prototype.onDurationChanged = function() {
         'duration changed: ' + this['startDate'].toUTCString() + ' to ' + this['endDate'].toUTCString());
   }
 };
-goog.exportProperty(
-    os.ui.datetime.DateControlCtrl.prototype,
-    'onDurationChanged',
-    os.ui.datetime.DateControlCtrl.prototype.onDurationChanged);
 
 
 /**
@@ -254,6 +251,7 @@ os.ui.datetime.DateControlCtrl.prototype.updateController_ = function() {
 /**
  * Change handler for duration chooser.
  * @param {number} direction
+ * @export
  */
 os.ui.datetime.DateControlCtrl.prototype.shiftDate = function(direction) {
   if (!this['disabled']) {
@@ -261,10 +259,6 @@ os.ui.datetime.DateControlCtrl.prototype.shiftDate = function(direction) {
     this['endDate'] = os.time.offset(this['endDate'], this['duration'], direction, true);
   }
 };
-goog.exportProperty(
-    os.ui.datetime.DateControlCtrl.prototype,
-    'shiftDate',
-    os.ui.datetime.DateControlCtrl.prototype.shiftDate);
 
 
 /**

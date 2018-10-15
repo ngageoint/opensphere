@@ -377,7 +377,7 @@ os.query.AreaManager.prototype.normalizeGeometry = function(feature) {
  * @return {string}
  */
 os.query.AreaManager.prototype.toRgbaString = function(color) {
-  return ol.color.asString(goog.isString(color) ? os.color.toRgbArray(color) : color);
+  return ol.color.asString(typeof color === 'string' ? os.color.toRgbArray(color) : color);
 };
 
 
@@ -443,7 +443,7 @@ os.query.AreaManager.prototype.updateExWidth_ = function(event) {
 os.query.AreaManager.prototype.redrawQueryAreas_ = function() {
   var areas = this.getAll();
   goog.array.forEach(areas, function(area) {
-    if (goog.isDefAndNotNull(area.getStyle())) {
+    if (area.getStyle() != null) {
       var entries = os.ui.query.QueryManager.getInstance().getEntries(null, /** @type {string} */ (area.getId()));
       if (entries && entries.length > 0) {
         var expectedStyle = /** @type {boolean} */ (entries[0]['includeArea']) ?

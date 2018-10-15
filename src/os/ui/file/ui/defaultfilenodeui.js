@@ -52,6 +52,7 @@ goog.inherits(os.ui.file.ui.DefaultFileNodeUICtrl, os.ui.slick.AbstractNodeUICtr
 
 /**
  * Prompt the user to remove the file from the application
+ * @export
  */
 os.ui.file.ui.DefaultFileNodeUICtrl.prototype.tryRemove = function() {
   os.ui.window.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
@@ -64,8 +65,6 @@ os.ui.file.ui.DefaultFileNodeUICtrl.prototype.tryRemove = function() {
     windowOptions: this.getRemoveWindowOptions()
   }));
 };
-goog.exportProperty(os.ui.file.ui.DefaultFileNodeUICtrl.prototype, 'tryRemove',
-    os.ui.file.ui.DefaultFileNodeUICtrl.prototype.tryRemove);
 
 
 /**

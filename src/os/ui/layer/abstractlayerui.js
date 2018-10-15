@@ -97,7 +97,7 @@ os.ui.layer.AbstractLayerUICtrl.prototype.disposeInternal = function() {
  * @protected
  */
 os.ui.layer.AbstractLayerUICtrl.prototype.getValue = function(callback, opt_default) {
-  var defaultVal = goog.isDef(opt_default) ? opt_default : 1;
+  var defaultVal = opt_default !== undefined ? opt_default : 1;
 
   var nodes = this.getLayerNodes();
   for (var i = 0, n = nodes.length; i < n; i++) {
@@ -105,7 +105,7 @@ os.ui.layer.AbstractLayerUICtrl.prototype.getValue = function(callback, opt_defa
       var layer = nodes[i].getLayer();
       if (layer) {
         var val = callback(layer);
-        return goog.isDef(val) ? val : defaultVal;
+        return val !== undefined ? val : defaultVal;
       }
     } catch (e) {
     }

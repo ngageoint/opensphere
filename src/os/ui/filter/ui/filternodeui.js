@@ -70,7 +70,7 @@ os.ui.filter.ui.FilterNodeUICtrl.prototype.remove = function() {
  */
 os.ui.filter.ui.FilterNodeUICtrl.prototype.canEdit = function() {
   var filter = /** @type {os.ui.filter.ui.FilterNode} */ (this.scope['item']).getEntry();
-  return goog.isDef(os.ui.queryManager.getLayerSet()[filter.getType()]);
+  return os.ui.queryManager.getLayerSet()[filter.getType()] !== undefined;
 };
 
 

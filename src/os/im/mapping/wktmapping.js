@@ -169,5 +169,5 @@ os.im.mapping.WKTMapping.prototype.testField = function(value) {
   } catch (e) {
     goog.log.error(os.im.mapping.WKTMapping.LOGGER_, 'failed restoring descriptors from settings', e);
   }
-  return goog.isDefAndNotNull(geom);
+  return geom != null;
 };

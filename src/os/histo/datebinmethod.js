@@ -137,7 +137,7 @@ os.histo.DateBinMethod.prototype.getValue = function(item) {
   var timestamp = os.histo.DateBinMethod.MAGIC;
   var value = this.valueFunction ? this.valueFunction(item, this.field) : item[this.field];
 
-  if (goog.isDefAndNotNull(value)) {
+  if (value != null) {
     // we want to end up with millis since epoch
     //
     // Can't use instanceof here because of potential window context issues
@@ -155,7 +155,7 @@ os.histo.DateBinMethod.prototype.getValue = function(item) {
         } catch (e) {
         }
       }
-    } else if (goog.isString(value)) {
+    } else if (typeof value === 'string') {
       value = moment(value).valueOf();
       if (!isNaN(value)) {
         timestamp = value;
@@ -300,7 +300,7 @@ os.histo.DateBinMethod.prototype.getBinLabel = function(item) {
  * @inheritDoc
  */
 os.histo.DateBinMethod.prototype.getLabelForKey = function(value) {
-  if (goog.isDef(value) && value != os.histo.DateBinMethod.MAGIC) {
+  if (value !== undefined && value != os.histo.DateBinMethod.MAGIC) {
     switch (this.binType_) {
       case os.histo.DateBinType.HOUR_OF_DAY:
         // value is 0-23, so pad to 0000-2300

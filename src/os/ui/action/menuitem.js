@@ -37,26 +37,20 @@ os.ui.action.MenuItem = function(name, description, opt_menuOptions) {
 
 /**
  * @inheritDoc
+ * @export
  */
 os.ui.action.MenuItem.prototype.getName = function() {
   return this.name_;
 };
-goog.exportProperty(
-    os.ui.action.MenuItem.prototype,
-    'getName',
-    os.ui.action.MenuItem.prototype.getName);
 
 
 /**
  * @inheritDoc
+ * @export
  */
 os.ui.action.MenuItem.prototype.getDescription = function() {
   return this.description_;
 };
-goog.exportProperty(
-    os.ui.action.MenuItem.prototype,
-    'getDescription',
-    os.ui.action.MenuItem.prototype.getDescription);
 
 
 /**

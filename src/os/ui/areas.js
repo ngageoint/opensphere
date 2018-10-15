@@ -94,15 +94,16 @@ os.ui.AreasCtrl.prototype.destroy = function() {
 
 /**
  * Launches the advanced combination window
+ * @export
  */
 os.ui.AreasCtrl.prototype.launch = function() {
   os.ui.CombinatorCtrl.launch();
 };
-goog.exportProperty(os.ui.AreasCtrl.prototype, 'launch', os.ui.AreasCtrl.prototype.launch);
 
 
 /**
  * Opens the area import menu.
+ * @export
  */
 os.ui.AreasCtrl.prototype.openImportMenu = function() {
   var target = this.element.find('.js-import-group');
@@ -115,15 +116,12 @@ os.ui.AreasCtrl.prototype.openImportMenu = function() {
     });
   }
 };
-goog.exportProperty(
-    os.ui.AreasCtrl.prototype,
-    'openImportMenu',
-    os.ui.AreasCtrl.prototype.openImportMenu);
 
 
 /**
  * Disables export button
  * @return {boolean}
+ * @export
  */
 os.ui.AreasCtrl.prototype.exportDisabled = function() {
   if (this.scope['selected']) {
@@ -132,11 +130,11 @@ os.ui.AreasCtrl.prototype.exportDisabled = function() {
     return true;
   }
 };
-goog.exportProperty(os.ui.AreasCtrl.prototype, 'exportDisabled', os.ui.AreasCtrl.prototype.exportDisabled);
 
 
 /**
  * Pop up area export gui
+ * @export
  */
 os.ui.AreasCtrl.prototype.export = function() {
   var areas = /** @type {Array<os.structs.ITreeNode>} */ (this.scope['selected']).map(
@@ -158,19 +156,15 @@ os.ui.AreasCtrl.prototype.export = function() {
 
   os.ui.ex.AreaExportCtrl.start(areas);
 };
-goog.exportProperty(
-    os.ui.AreasCtrl.prototype,
-    'export',
-    os.ui.AreasCtrl.prototype.export);
 
 
 /**
  * Launches the area import window
+ * @export
  */
 os.ui.AreasCtrl.prototype.import = function() {
   os.query.launchQueryImport();
 };
-goog.exportProperty(os.ui.AreasCtrl.prototype, 'import', os.ui.AreasCtrl.prototype.import);
 
 
 /**

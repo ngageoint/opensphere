@@ -170,7 +170,7 @@ os.style.label.updateShown_ = function() {
   }
 
   var resolution = view.getResolution();
-  if (!goog.isDef(resolution)) {
+  if (resolution === undefined) {
     return false;
   }
 

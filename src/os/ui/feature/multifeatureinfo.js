@@ -162,7 +162,7 @@ os.ui.feature.MultiFeatureInfoCtrl.prototype.onSearchDelay_ = function() {
         if (value) {
           try {
             var strVal = String(value);
-            if (goog.isString(strVal) && goog.string.caseInsensitiveContains(strVal, this['term'])) {
+            if (typeof strVal === 'string' && goog.string.caseInsensitiveContains(strVal, this['term'])) {
               return true;
             }
           } catch (e) {

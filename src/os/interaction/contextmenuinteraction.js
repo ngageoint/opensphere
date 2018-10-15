@@ -18,7 +18,7 @@ os.interaction.ContextMenu = function(opt_options) {
 
   // Protractor's mouseDown/mouseUp actions don't work with the Closure event framework (not sure why), so export a
   // function to open the map context menu.
-  goog.exportProperty(window, 'omcm', this.openMapContextMenu.bind(this));
+  window['omcm'] = this.openMapContextMenu.bind(this);
 };
 goog.inherits(os.interaction.ContextMenu, os.ui.ol.interaction.ContextMenu);
 os.implements(os.interaction.ContextMenu, os.I3DSupport.ID);

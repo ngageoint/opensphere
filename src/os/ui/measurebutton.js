@@ -104,12 +104,13 @@ os.ui.MeasureButtonCtrl.MEASURE = new os.ui.menu.Menu(new os.ui.menu.MenuItem({
 /**
  * @param {boolean=} opt_value The toggle value
  * @override
+ * @export
  */
 os.ui.MeasureButtonCtrl.prototype.toggle = function(opt_value) {
   var measure = this.getMeasureInteraction_();
 
   if (measure) {
-    opt_value = goog.isDef(opt_value) ? opt_value : !measure.getActive();
+    opt_value = opt_value !== undefined ? opt_value : !measure.getActive();
 
     if (opt_value) {
       this.prevActiveMap_ = {};
@@ -142,7 +143,6 @@ os.ui.MeasureButtonCtrl.prototype.toggle = function(opt_value) {
     }
   }
 };
-goog.exportProperty(os.ui.MeasureButtonCtrl.prototype, 'toggle', os.ui.MeasureButtonCtrl.prototype.toggle);
 
 
 /**
