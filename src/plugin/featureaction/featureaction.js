@@ -70,7 +70,8 @@ plugin.im.action.feature.Metrics = {
  * @enum {string}
  */
 plugin.im.action.feature.StyleType = {
-  BASE: '_featureActionBaseConfig'
+  BASE: '_featureActionBaseConfig',
+  ORIGINAL: '_featureActionOriginalConfig'
 };
 
 
