@@ -160,7 +160,8 @@ os.ui.measureText = function(text, opt_classes, opt_font) {
   var el = angular.element('#measureText');
 
   if (!el || el.length === 0) {
-    el = $('<div id="measureText" class="u-offscreen"></div>').appendTo('body');
+    // LEAVE AS A STYLE - This runs before css is loaded leaving it on the screen while the page loads
+    el = $('<div id="measureText" style="left: -9999px; position: fixed; top: -9999px;"></div>').appendTo('body');
   }
 
   if (el && el.length > 0) {
