@@ -118,17 +118,17 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
   /**
    * @type {string}
    */
-  this.scope['featureControlsID'] = uid + 'featureControls';
+  this.scope['featureControlsID'] = 'featureControls' + uid;
 
   /**
    * @type {string}
    */
-  this.scope['featureLabelsID'] = uid + 'featureLabels';
+  this.scope['featureLabelsID'] = 'featureLabels' + uid;
 
   /**
    * @type {string}
    */
-  this.scope['featureStyleID'] = uid + 'featureStyle';
+  this.scope['featureStyleID'] = 'featureStyle' + uid;
 
   /**
    * Keyboard event handler used while listening for map clicks.
@@ -828,20 +828,6 @@ os.ui.FeatureEditCtrl.prototype.updatePreview = function() {
       }
     }
   }
-};
-
-
-/**
- * Save which section is open to local storage
- * @param {string} selector
- * @export
- */
-os.ui.FeatureEditCtrl.prototype.setOpenSection = function(selector) {
-  this.element.find('.js-style-content').each(function(i, ele) {
-    if ('#' + ele.getAttribute('id') != selector) {
-      $(ele).collapse('hide');
-    }
-  });
 };
 
 

@@ -1,9 +1,11 @@
 <div id="layerControls">
   <div class="card">
-    <div class="btn btn-secondary btn-block btn-sm" title="Style controls for the layer(s)" data-toggle="collapse" data-parent="#layerControls" data-target="#layer-style" ng-click="heatmap.setOpenSection('#layer-style')">
+    <div class="btn btn-secondary btn-block btn-sm" title="Style controls for the layer(s)"
+        data-toggle="collapse" data-target="#layer-style"
+        ng-click="heatmap.setOpenSection('#layer-style')">
       Style
     </div>
-    <div id="layer-style" class="js-style-content card-body collapse">
+    <div id="layer-style" class="card-body collapse" data-parent="#layerControls">
       <table>
         <tr title="Sets the color algorithm for the layer(s)">
           <td>Colors:</td>

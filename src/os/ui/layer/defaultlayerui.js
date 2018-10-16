@@ -435,16 +435,11 @@ os.ui.layer.DefaultLayerUICtrl.prototype.reset = function(key) {
 
 
 /**
- * Opens an accordion and saves it to local storage.
- * @param {string} selector
+ * Handle accordion toggle.
+ * @param {string} selector The toggled selector.
  * @export
  */
 os.ui.layer.DefaultLayerUICtrl.prototype.setOpenSection = function(selector) {
+  // save the open section to settings
   os.settings.set('layercontrols', selector);
-
-  this.element.find('.js-style-content').each(function(i, ele) {
-    if ('#' + ele.getAttribute('id') != selector) {
-      $(ele).collapse('hide');
-    }
-  });
 };
