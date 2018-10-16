@@ -50,6 +50,7 @@ os.metrics.keys.Timeline = {
 
   // settings
   FADE: 'timeline.features.settings-fade',
+  LOCK: 'timeline.features.settings-lock',
   TIME_RANGE: 'timeline.features.settings-timeRange',
 
   // statistics

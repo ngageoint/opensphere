@@ -90,6 +90,7 @@ os.ui.AnimationSettingsCtrl = function($scope, $element) {
   $scope['windowTip'] = 'The size of the blue active window.';
   $scope['skipTip'] = 'The amount of time that the active window skips forward or back with each frame.';
   $scope['fadeTip'] = 'Fade in/out features based on the size of your timeline window and scroll direction.';
+  $scope['lockTip'] = 'During animation this causes the visible window to lock from the start point.';
 
   /**
    * @type {!goog.events.KeyHandler}
@@ -180,6 +181,7 @@ os.ui.AnimationSettingsCtrl.prototype.populate = function() {
   this.scope['durations'] = ['day', 'week', 'month', 'year'];
   this.scope['units'] = os.ui.AnimationSettingsCtrl.UNITS;
   this.scope['fade'] = tlc.getFade();
+  this.scope['lock'] = tlc.getLock();
 };
 
 
@@ -323,9 +325,13 @@ os.ui.AnimationSettingsCtrl.prototype.getLoopEnd = function() {
 os.ui.AnimationSettingsCtrl.prototype.accept = function() {
   var tlc = os.time.TimelineController.getInstance();
 
-  if (this.scope['fade'] != tlc.getFade()) {
-    // turn fade on/off (this will reset feature opacity if needed)
+  if (this.scope['fade'] != tlc.getFade()) { // turn fade on/off (this will reset feature opacity if needed)
     tlc.setFade(this.scope['fade']);
+  }
+
+  if (this.scope['lock'] != tlc.getLock()) { // turn lock on/off
+    tlc.setLock(this.scope['lock']);
+    os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Timeline.LOCK, 1);
   }
 
   // TODO animation ranges
