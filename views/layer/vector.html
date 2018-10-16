@@ -1,9 +1,11 @@
 <div id="layerControls">
   <div class="card">
-    <div class="btn btn-secondary btn-block btn-sm" title="Style controls for the layer(s)" data-toggle="collapse" data-parent="#layerControls" data-target="#layer-style" ng-click="vector.setOpenSection('#layer-style')">
+    <div class="btn btn-secondary btn-block btn-sm" title="Style controls for the layer(s)"
+        data-toggle="collapse" data-target="#layer-style"
+        ng-click="vector.setOpenSection('#layer-style')">
       Style
     </div>
-    <div id="layer-style" class="js-style-content card-body collapse">
+    <div id="layer-style" class="card-body collapse" data-parent="#layerControls">
       <vectorstylecontrols
           color="color"
           opacity="opacity"
@@ -31,10 +33,12 @@
     </div>
   </div>
   <div class="card" ng-show="columns && items.length == 1">
-    <div class="btn btn-secondary btn-block btn-sm" title="Configure how labels are displayed for the layer" data-toggle="collapse" data-parent="#layerControls" data-target="#layer-label" ng-click="vector.setOpenSection('#layer-label')">
+    <div class="btn btn-secondary btn-block btn-sm" title="Configure how labels are displayed for the layer"
+        data-toggle="collapse" data-target="#layer-label"
+        ng-click="vector.setOpenSection('#layer-label')">
       Label
     </div>
-    <div id="layer-label" class="js-style-content card-body collapse">
+    <div id="layer-label" class="card-body collapse" data-parent="#layerControls">
       <labelcontrols
           labels="labels"
           columns="columns"
@@ -45,10 +49,12 @@
     </div>
   </div>
   <div ng-if="lockable || vector.showRefresh" class="card">
-    <div class="btn btn-secondary btn-block btn-sm" title="Configure the layer options" data-toggle="collapse" data-parent="#layerControls" data-target="#layer-options" ng-click="vector.setOpenSection('#layer-options')">
+    <div class="btn btn-secondary btn-block btn-sm" title="Configure the layer options"
+        data-toggle="collapse" data-target="#layer-options"
+        ng-click="vector.setOpenSection('#layer-options')">
       Options
     </div>
-    <div id="layer-options" class="js-style-content card-body collapse">
+    <div id="layer-options" class="card-body collapse" data-parent="#layerControls">
       <div class="form-row align-items-center pb-1" ng-if="vector.showRefresh" title="Sets how often the layer will automatically refresh its data.">
         <div class="col-auto">
           Auto Refresh
