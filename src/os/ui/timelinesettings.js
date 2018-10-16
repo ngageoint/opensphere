@@ -143,9 +143,9 @@ os.ui.TimeSettingsCtrl.prototype.accept = function() {
     }
     tlc.setLoadRanges(loadSet);
     tlc.dispatchEvent(os.time.TimelineEventType.REFRESH_LOAD);
-  }
 
-  os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Timeline.TIME_RANGE, 1);
+    os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Timeline.TIME_RANGE, 1);
+  }
 
   // move the view
   /** @type {os.ui.timeline.TimelineCtrl} */ (this.scope['timeline']).zoomToExtent([tlc.getStart(), tlc.getEnd()]);
