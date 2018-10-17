@@ -68,6 +68,12 @@ os.ui.FiltersCtrl = function($scope, $element) {
   this.viewDefault = 'Layer Type';
 
   /**
+   * Bound version of the drag-drop handler.
+   * @type {Function}
+   */
+  this['onDrop'] = this.onDrop_.bind(this);
+
+  /**
    * @type {?os.data.FilterTreeSearch}
    */
   this.treeSearch = new os.data.FilterTreeSearch('filters', this.scope);
@@ -202,11 +208,12 @@ os.ui.FiltersCtrl.prototype.flatten_ = function(arr, result, activeOnly) {
 
 
 /**
- * import filters
+ * Launches the filter import window.
+ * @param {os.file.File=} opt_file Optional file to use in the import.
  * @export
  */
-os.ui.FiltersCtrl.prototype.import = function() {
-  os.query.launchQueryImport();
+os.ui.FiltersCtrl.prototype.import = function(opt_file) {
+  os.query.launchQueryImport(undefined, opt_file);
 };
 
 
@@ -311,4 +318,26 @@ os.ui.FiltersCtrl.prototype.onGroupChange = function() {
 os.ui.FiltersCtrl.prototype.onSearchTermChange = function() {
   this.search();
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Filters.SEARCH, 1);
+};
+
+
+/**
+ * Handles file drops over the filters tab.
+ * @param {Event} event The drop event.
+ */
+os.ui.FiltersCtrl.prototype.onDrop_ = function(event) {
+  if (event.dataTransfer && event.dataTransfer.files) {
+    os.file.createFromFile(/** @type {!File} */ (event.dataTransfer.files[0]))
+        .addCallback(this.import.bind(this), this.onFail_.bind(this));
+  }
+};
+
+
+/**
+ * Handle file drag-drop.
+ * @param {!goog.events.Event|os.file.File} event
+ * @private
+ */
+os.ui.FiltersCtrl.prototype.onFail_ = function(event) {
+  os.alertManager.sendAlert('Could not handle file with drag and drop. Try again or use the browse capability.');
 };
