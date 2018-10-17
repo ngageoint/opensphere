@@ -9,7 +9,6 @@
   .select2-choice {
     @extend .form-control;
     background-image: none;
-    color: $input-color !important;
     height: $input-height;
     text-decoration: none !important;
 
@@ -51,6 +50,7 @@
           background: transparent;
           border: 0;
           box-shadow: none;
+          font-family: $font-family-base;
           line-height: $line-height-base;
           margin: 0;
           padding: 0;
