@@ -394,8 +394,7 @@ os.ui.query.ui.launchModifyArea = function(config) {
   var windowId = 'modifyArea';
   if (os.ui.window.exists(windowId)) {
     // update the existing window
-    var win = document.querySelector('.window#' + windowId);
-    var scope = angular.element(win).find('.modify-area-window').scope();
+    var scope = $('.js-window#' + windowId + ' .modal-body').scope();
     if (scope) {
       goog.object.extend(scope, config);
       os.ui.apply(scope);
