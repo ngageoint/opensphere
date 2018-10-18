@@ -487,6 +487,7 @@ os.ui.timeline.Brush.prototype.initSVG = function(container, height) {
         text(function() {
           return '\uf09c';
         }); // this breaks btoa in saveSvgAsPng, so we will strip it out for screen capture
+    this.onBrushLockButtonUp(true);
   }
 };
 
