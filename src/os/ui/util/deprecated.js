@@ -10,8 +10,8 @@ goog.require('os.ui.window');
  * @return {boolean}
  */
 os.ui.util.deprecated.isLayerDeprecated = function(name) {
-  var deprecatedLayers = os.settings.get(['deprecatedLayers'], []);
-  return !!name && deprecatedLayers.indexOf(name) !== -1;
+  var deprecatedLayers = /** @type {Object} */ (os.settings.get(['deprecatedLayers'], {}));
+  return !!name && name in deprecatedLayers;
 };
 
 
@@ -42,16 +42,21 @@ os.ui.util.deprecated.showDeprecatedWarning = function(name) {
  */
 os.ui.util.deprecated.launchDeprecatedLayersWindow_ = function() {
   var layers = os.ui.util.deprecated.deprecatedLayers_;
+
   if (layers && layers.length > 0) {
+    var deprecatedLayers = /** @type {Object} */ (os.settings.get(['deprecatedLayers'], {}));
+
     var layersMarkup = '<ul>';
     for (var i = 0, n = layers.length; i < n; i++) {
-      layersMarkup += '<li>' + layers[i] + '</li>';
+      var layer = layers[i];
+      var msg = deprecatedLayers[layer] ? deprecatedLayers[layer]['message'] : 'The layer "' + layer + '" is legacy ' +
+          'and may soon cease to function or be removed.';
+      layersMarkup += '<li>' + msg + '</li>';
     }
     layersMarkup += '</ul>';
 
-    var configMsg = os.settings.get(['deprecatedLayerMessage']);
     var text = '<b>Heads up!</b><p>The following legacy layers were just loaded into the application: </p>' +
-        layersMarkup + '<p>' + configMsg + '</p>';
+        layersMarkup;
 
     os.ui.window.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
       prompt: text,
