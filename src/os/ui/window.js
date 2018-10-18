@@ -13,6 +13,7 @@ goog.require('goog.async.Delay');
 goog.require('goog.dom.ViewportSizeMonitor');
 goog.require('goog.events.EventType');
 goog.require('goog.log');
+goog.require('ol.array');
 goog.require('os.ui.Module');
 goog.require('os.ui.events.UIEvent');
 goog.require('os.ui.onboarding.contextOnboardingDirective');
@@ -51,6 +52,14 @@ os.ui.windowZIndexMax = {
   MODAL: 1049,
   STANDARD: 990
 };
+
+
+/**
+ * Number of pixels to cascade windows.
+ * @type {number}
+ * @const
+ */
+os.ui.window.CASCADE_OFFSET = 20;
 
 
 /**
@@ -381,21 +390,55 @@ os.ui.window.blink = function(id, opt_start) {
 
 
 /**
- * Stack all the windows under this window
- * @param {string} topWinId
+ * Cascade a window against another.
+ * @param {!Element} win The window to cascade.
+ * @param {!Element} from The window to cascade against.
+ * @param {Element=} opt_container The window container.
  */
-os.ui.window.stack = function(topWinId) {
-  var windows = /** @type {Array} */ ($.makeArray($(os.ui.windowSelector.WINDOW)));
-  goog.array.sort(windows, function(a, b) {
-    return goog.array.defaultCompare($(b).draggable('option', 'zIndex'), $(a).draggable('option', 'zIndex'));
-  });
+os.ui.window.cascade = function(win, from, opt_container) {
+  // Shift the window right/down by the cascade offset.
+  var fromRect = from.getBoundingClientRect();
+  var x = fromRect.x + os.ui.window.CASCADE_OFFSET;
+  var y = fromRect.y + os.ui.window.CASCADE_OFFSET;
 
-  var topWindowIndex = goog.array.findIndex(windows, function(win) {
-    return win.id == topWinId;
-  });
+  //
+  // If there is a container:
+  //  - Test if the window would exceed the right edge. If so, move to the left edge.
+  //  - Test if the window would exceed the bottom edge. If so, move to the top edge.
+  //
+  if (opt_container) {
+    var containerRect = opt_container.getBoundingClientRect();
+    var winRect = win.getBoundingClientRect();
+    if (x + winRect.width > containerRect.x + containerRect.width) {
+      x = containerRect.x;
+    }
 
-  var topWin = windows.splice(topWindowIndex, 1);
-  windows.unshift(topWin);
+    if (y + winRect.height > containerRect.y + containerRect.height) {
+      y = containerRect.y;
+    }
+  }
+
+  // Set the window position.
+  $(win).css('left', x + 'px');
+  $(win).css('top', y + 'px');
+};
+
+
+/**
+ * Stack all the windows under this window
+ * @param {!Element} topWin The top window.
+ */
+os.ui.window.stack = function(topWin) {
+  var windows = /** @type {!Array<Element>} */ ($.makeArray($(os.ui.windowSelector.WINDOW)))
+      .sort(os.ui.window.sortByZIndex);
+
+  // move the target window to the front
+  for (var i = 0; i < windows.length; i++) {
+    if (windows[i] === topWin) {
+      windows.unshift(windows.splice(i, 1));
+      break;
+    }
+  }
 
   var windowCategories = goog.array.bucket(windows, function(win) {
     return $($(win).children()[0]).scope()['modal'] ? 'modal' : 'standard';
@@ -418,6 +461,19 @@ os.ui.window.stack = function(topWinId) {
       $(win).css('zIndex', zIndex);
     });
   }
+};
+
+
+/**
+ * Sort window elements by descending CSS `zIndex`.
+ * @param {Element} a A window.
+ * @param {Element} b Another window.
+ * @return {number} The sort value.
+ */
+os.ui.window.sortByZIndex = function(a, b) {
+  var aIndex = $(a).css('zIndex') || 0;
+  var bIndex = $(b).css('zIndex') || 0;
+  return aIndex > bIndex ? -1 : aIndex < bIndex ? 1 : 0;
 };
 
 
@@ -495,15 +551,18 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
       // Put the element off the screen at the top
       $element.css('top', '-20000px');
 
-      var that = this;
       var readyPromise;
       var readyOff;
       var onWindowReady = function() {
-        var height = $element.height();
-        $scope['y'] = (maxHeight - height) / 2;
-        $element.css('top', $scope['y'] + 'px');
-        that.constrainWindow_();
-      };
+        // Try cascading the window first. If there aren't any windows to cascade against, use the config.
+        if (!this.cascade()) {
+          var height = $element.height();
+          $scope['y'] = (maxHeight - height) / 2;
+          $element.css('top', $scope['y'] + 'px');
+        }
+
+        this.constrainWindow_();
+      }.bind(this);
 
       // make sure the window gets positioned eventually. windows should fire a os.ui.WindowEventType.READY event to
       // indicate they are initialized and ready to be positioned.
@@ -570,10 +629,6 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
     $element.resizable(resizeConfig);
   }
 
-  $element.css('left', $scope['x'] + 'px');
-  if (!($scope['y'] == 'center' && $scope['height'] == 'auto')) {
-    $element.css('top', $scope['y'] + 'px');
-  }
   $element.css('width', $scope['width'] + 'px');
 
   var height = $scope['height'];
@@ -583,6 +638,15 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
     height += 'px';
   }
   $element.css('height', height);
+
+  if (!this.cascade()) {
+    // if the window wasn't cascaded, position it based off the config
+    $element.css('left', $scope['x'] + 'px');
+
+    if (!($scope['y'] == 'center' && $scope['height'] == 'auto')) {
+      $element.css('top', $scope['y'] + 'px');
+    }
+  }
 
   /**
    * Monitor changes to the browser viewport size.
@@ -632,7 +696,7 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
 
   // Stack this new window on top of others
   $timeout(function() {
-    os.ui.window.stack(this.scope['id']);
+    this.bringToFront();
   }.bind(this));
 };
 goog.inherits(os.ui.WindowCtrl, goog.Disposable);
@@ -704,7 +768,40 @@ os.ui.WindowCtrl.prototype.removeModalBg = function() {
  * @export
  */
 os.ui.WindowCtrl.prototype.bringToFront = function() {
-  os.ui.window.stack(this.scope['id']);
+  if (this.element) {
+    os.ui.window.stack(this.element[0]);
+  }
+};
+
+
+/**
+ * Cascade the window against the top-most window with a matching id.
+ * @return {boolean} If the window was cascaded.
+ * @protected
+ */
+os.ui.WindowCtrl.prototype.cascade = function() {
+  if (this.scope && this.element) {
+    var id = /** @type {string|undefined} */ (this.scope['id']);
+    if (id) {
+      var selector = os.ui.windowSelector.WINDOW + '#' + id;
+      var existing = /** @type {!Array<Element>} */ ($.makeArray($(selector)))
+          .sort(os.ui.window.sortByZIndex);
+
+      var top = ol.array.find(existing, function(el) {
+        return el !== this.element[0];
+      }.bind(this));
+
+      if (top) {
+        var containerSelector = this.scope['windowContainer'] || os.ui.windowSelector.CONTAINER;
+        var container = document.querySelector(containerSelector);
+        os.ui.window.cascade(this.element[0], top, container);
+
+        return true;
+      }
+    }
+  }
+
+  return false;
 };
 
 
@@ -900,8 +997,8 @@ os.ui.WindowCtrl.prototype.onToggleModal_ = function(opt_new, opt_old) {
  * @private
  */
 os.ui.WindowCtrl.prototype.updateZIndex_ = function() {
-  if (!this.scope['modal'] && this.element) {
-    os.ui.window.stack(this.scope['id']);
+  if (!this.scope['modal']) {
+    this.bringToFront();
   }
 
   if (!this.scope['active']) {

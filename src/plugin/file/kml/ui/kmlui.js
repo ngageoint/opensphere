@@ -101,38 +101,29 @@ plugin.file.kml.ui.updateFolder = function(options) {
  */
 plugin.file.kml.ui.createOrEditPlace = function(options) {
   var windowId = 'placemarkEdit';
-  if (options['feature']) {
-    var featureId = options['feature'].getId();
-    windowId = os.ui.sanitizeId(windowId + '-' + featureId);
-  }
+  var scopeOptions = {
+    'options': options
+  };
 
-  if (os.ui.window.exists(windowId)) {
-    os.ui.window.bringToFront(windowId);
-  } else {
-    var scopeOptions = {
-      'options': options
-    };
+  var label = (options['feature'] ? 'Edit' : 'Add') + ' Place';
+  var windowOptions = {
+    'id': windowId,
+    'label': label,
+    'icon': 'fa fa-map-marker',
+    'x': 'center',
+    'y': 'center',
+    'width': 700,
+    'min-width': 400,
+    'max-width': 2000,
+    'height': 'auto',
+    'min-height': 300,
+    'max-height': 2000,
+    'modal': false,
+    'show-close': true
+  };
 
-    var label = (options['feature'] ? 'Edit' : 'Add') + ' Place';
-    var windowOptions = {
-      'id': windowId,
-      'label': label,
-      'icon': 'fa fa-map-marker',
-      'x': 'center',
-      'y': 'center',
-      'width': 700,
-      'min-width': 400,
-      'max-width': 2000,
-      'height': 'auto',
-      'min-height': 300,
-      'max-height': 2000,
-      'modal': false,
-      'show-close': true
-    };
-
-    var template = '<placemarkedit></placemarkedit>';
-    os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
-  }
+  var template = '<placemarkedit></placemarkedit>';
+  os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
 };
 
 

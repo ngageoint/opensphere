@@ -4,6 +4,7 @@
  */
 goog.provide('plugin.cesium.mixin');
 
+goog.require('os.MapEvent');
 goog.require('os.net.Request');
 
 
@@ -76,6 +77,11 @@ plugin.cesium.mixin.loadCesiumMixins = function() {
       deferred.resolve(response);
     }).thenCatch(function(reason) {
       deferred.reject(reason);
+    }).thenAlways(function() {
+      // The old olcs render loop fired a repaint when requests returned. While that shouldn't
+      // be necessary with Cesium's new explicit rendering, there are still cases like async
+      // Billboard/Icon loading which do not appear to be triggering a render request.
+      os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
     });
 
     return deferred.promise;
