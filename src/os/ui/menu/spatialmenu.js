@@ -208,7 +208,6 @@ os.ui.menu.spatial.setup = function() {
         label: os.ui.menu.spatial.Group.AREA,
         type: os.ui.menu.MenuItemType.GROUP,
         sort: 50,
-        beforeRender: os.ui.menu.spatial.visibleIfInAreaManager,
         children: [{
           label: os.ui.query.SAVE_WIN_LABEL,
           eventType: os.action.EventType.SAVE,
