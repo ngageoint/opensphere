@@ -208,32 +208,42 @@ os.ui.menu.MenuItem.prototype.render = function(context, opt_target) {
     return html;
   }
 
-  html += '<li class="';
+  html += '<li';
+  if (type === types.SEPARATOR) {
+    html += '>-</li>';
+    return html;
+  }
+
+  var classes = [];
+  var isItem = type !== types.SUBMENU && type !== types.GROUP;
 
   // group/category
   if (type === types.GROUP) {
     if (this.label) {
-      html += 'dropdown-header ';
+      classes.push('dropdown-header');
     } else {
-      html += 'u-dropdown-header__empty ';
+      classes.push('u-dropdown-header__empty');
     }
   }
 
   // enabled disabled
   if (!enabled) {
-    html += 'disabled ';
+    classes.push('disabled');
   }
 
-  if (type === types.SEPARATOR) {
-    html += '">-</li>';
-    return html;
+  if (isItem) {
+    classes.push('dropdown-item');
   }
 
-  if (type !== types.SUBMENU && type !== types.GROUP) {
-    html += 'dropdown-item" evt-type="' + (this.eventType || this.label) + '"';
+  if (classes.length > 0) {
+    html += ' class="' + classes.join(', ') + '"';
   }
 
-  html += '" title="' + tooltip + '">';
+  if (isItem) {
+    html += ' evt-type="' + (this.eventType || this.label) + '"';
+  }
+
+  html += (tooltip ? ' title="' + tooltip + '"' : '') + '>';
 
   // start wrapper div (required by jquery-ui 1.12+)
   html += '<div>';
