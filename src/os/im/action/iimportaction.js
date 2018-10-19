@@ -45,6 +45,7 @@ os.im.action.IImportAction.prototype.isUnique;
 
 /**
  * Execute the import action on the given items.
+ * @param {string} entry type
  * @param {!Array<T>} items The items.
  */
 os.im.action.IImportAction.prototype.execute;

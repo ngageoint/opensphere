@@ -28,9 +28,10 @@ os.im.action.MockAction.ID = 'mockaction';
 
 /**
  * Execute the mock action.
+ * @param {string} entryType The entry type.
  * @param {!Array<!Object>} items The items.
  */
-os.im.action.MockAction.prototype.execute = function(items) {
+os.im.action.MockAction.prototype.execute = function(entryType, items) {
   items.forEach(function(item) {
     item.MATCH = true;
   });
