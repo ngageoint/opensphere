@@ -1,6 +1,7 @@
 goog.provide('plugin.cesium.interaction.dragbox');
 
 goog.require('os.interaction.DragBox');
+goog.require('os.interaction.DrawPolygon');
 goog.require('plugin.cesium');
 
 
@@ -63,13 +64,15 @@ plugin.cesium.interaction.dragbox.updateWebGL = function(start, end) {
       }
 
       var coords = /** @type {ol.geom.Polygon} */ (this.box2D.getGeometry()).getCoordinates()[0];
+      var lonlats = coords.map(os.interaction.DrawPolygon.coordToLonLat);
+
       var appearance = new Cesium.PolylineColorAppearance();
       this.cesiumBox = new Cesium.Primitive({
         asynchronous: false,
         geometryInstances: new Cesium.GeometryInstance({
           id: plugin.cesium.GeometryInstanceId.GEOM_OUTLINE,
           geometry: new Cesium.PolylineGeometry({
-            positions: olcs.core.ol4326CoordinateArrayToCsCartesians(coords),
+            positions: olcs.core.ol4326CoordinateArrayToCsCartesians(lonlats),
             vertexFormat: appearance.vertexFormat,
             width: 2
           }),
