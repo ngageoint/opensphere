@@ -117,7 +117,7 @@ plugin.im.action.feature.LabelAction.prototype.reset = function(entryType, items
 /**
  * @inheritDoc
  */
-plugin.im.action.feature.LabelAction.prototype.execute = function(items) {
+plugin.im.action.feature.LabelAction.prototype.execute = function(entryType, items) {
   var customName = this.labelConfig['customName'] || undefined;
   var customValue = this.labelConfig['customValue'] || undefined;
 
