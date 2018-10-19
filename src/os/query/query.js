@@ -35,11 +35,12 @@ os.query.addArea = function(area, opt_active) {
 /**
  * Launches the import process for filters/areas.
  * @param {Object<string, *>=} opt_config Optional config to pass to the import process.
+ * @param {os.file.File=} opt_file Optional file to pass to the import process.
  */
-os.query.launchQueryImport = function(opt_config) {
+os.query.launchQueryImport = function(opt_config, opt_file) {
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Filters.IMPORT, 1);
   var importProcess = new os.ui.im.ImportProcess(os.areaImportManager, os.areaFileManager);
-  importProcess.setEvent(new os.ui.im.ImportEvent(os.ui.im.ImportEventType.FILE, undefined, undefined, opt_config));
+  importProcess.setEvent(new os.ui.im.ImportEvent(os.ui.im.ImportEventType.FILE, opt_file, undefined, opt_config));
   importProcess.begin();
 };
 

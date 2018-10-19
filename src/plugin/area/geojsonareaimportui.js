@@ -3,7 +3,6 @@ goog.provide('plugin.area.GeoJSONAreaImportUI');
 goog.require('os.query.ui.AreaOptionsStep');
 goog.require('os.ui.im.FileImportUI');
 goog.require('os.ui.window');
-goog.require('os.ui.wiz.GeometryStep');
 goog.require('plugin.area.geojsonAreaImportDirective');
 goog.require('plugin.file.geojson.GeoJSONParserConfig');
 
@@ -36,7 +35,6 @@ plugin.area.GeoJSONAreaImportUI.prototype.getTitle = function() {
 plugin.area.GeoJSONAreaImportUI.prototype.launchUI = function(file, opt_config) {
   plugin.area.GeoJSONAreaImportUI.base(this, 'launchUI', file, opt_config);
   var steps = [
-    new os.ui.wiz.GeometryStep(),
     new os.query.ui.AreaOptionsStep()
   ];
 

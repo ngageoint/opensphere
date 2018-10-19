@@ -26,14 +26,13 @@
     display: flex;
     font-size: $font-size-lg;
     justify-content: center;
-    left: 50%;
-    margin-left: -15%;
+    left: 25%;
     opacity: .7;
     padding: .5rem;
     pointer-events: none;
     position: absolute;
     top: 10%;
-    width: 30%;
+    width: 50%;
     z-index: $zindex-tooltip;
   }
 }
