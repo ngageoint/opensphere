@@ -33,6 +33,12 @@ os.net.AbstractRequestHandler = function() {
    * @type {number}
    */
   this.statusCode = -1;
+
+  /**
+   * @type {number}
+   * @protected
+   */
+  this.timeout = 0;
 };
 goog.inherits(os.net.AbstractRequestHandler, goog.events.EventTarget);
 
@@ -187,4 +193,20 @@ os.net.AbstractRequestHandler.prototype.getHandlerType = function() {
  */
 os.net.AbstractRequestHandler.prototype.isHandled = function() {
   return !!this.statusCode;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.net.AbstractRequestHandler.prototype.getTimeout = function() {
+  return this.timeout;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.net.AbstractRequestHandler.prototype.setTimeout = function(timeout) {
+  this.timeout = timeout;
 };
