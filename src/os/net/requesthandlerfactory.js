@@ -41,9 +41,10 @@ os.net.RequestHandlerFactory.removeHandler = function(clazz) {
  * Gets an array of handlers that support the given method and uri.
  * @param {string} method The request method
  * @param {goog.Uri} uri The URI
+ * @param {number} timeout The timeout
  * @return {?Array.<os.net.IRequestHandler>}
  */
-os.net.RequestHandlerFactory.getHandlers = function(method, uri) {
+os.net.RequestHandlerFactory.getHandlers = function(method, uri, timeout) {
   /** @type {?Array.<Function>} */
   var list = os.net.RequestHandlerFactory.list_;
 
@@ -54,7 +55,7 @@ os.net.RequestHandlerFactory.getHandlers = function(method, uri) {
     for (var i = 0, n = list.length; i < n; i++) {
       var clazz = /** @type {Function} */ (list[i]);
       var handler = /** @type {os.net.IRequestHandler} */ (new clazz());
-
+      handler.setTimeout(timeout);
       if (handler.handles(method, uri)) {
         if (!handlers) {
           handlers = [handler];
