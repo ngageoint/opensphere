@@ -1,5 +1,6 @@
 // sass-lint:disable no-extends, placeholder-in-extend
 ng-form,
+*[ng-form],
 form {
   input.ng-invalid.ng-dirty,
   span.ng-invalid.ng-dirty,

@@ -3,6 +3,13 @@
     <div ng-form="animationForm" class="container-fluid">
       <div class="row mb-1">
         <label class="form-check">
+          <input class="form-check-input" name="lock" type="checkbox" ng-model="lock">
+          Lock start of view window during animation
+        </label>
+        <span class="ml-auto"><popover data-title="'Lock'" content="lockTip" data-pos="'right'"></popover></span>
+      </div>
+      <div class="row mb-1">
+        <label class="form-check">
           <input class="form-check-input" name="auto" type="checkbox" ng-model="fade" ng-change="animationCtrl.onFadeChange()">
           Fade in/out features as the timeline moves
         </label>

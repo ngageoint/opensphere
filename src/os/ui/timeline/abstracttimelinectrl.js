@@ -169,6 +169,7 @@ os.ui.timeline.AbstractTimelineCtrl = function($scope, $element, $timeout) {
   this.windowBrush.setClamp(false);
   this.windowBrush.setToolTip('The currently-displayed time window');
   this.windowBrush.drawFlagCheck = os.ui.timeline.AbstractTimelineCtrl.drawFlagCheck;
+  this.windowBrush.drawLock = true;
 
   /**
    * @type {os.ui.timeline.SelectBrush}
@@ -840,7 +841,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.getTimelineCtrl = function() {
 
 
 /**
- * Start/stop timeline animation.
+ * Switch chart type between points and histogram
  * @export
  */
 os.ui.timeline.AbstractTimelineCtrl.prototype.toggleChartType = function() {

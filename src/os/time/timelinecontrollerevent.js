@@ -13,6 +13,7 @@ os.time.TimelineEventType = {
   FPS_CHANGE: 'timeline.fpsChange',
   LOOPING_TOGGLE: 'timeline.loopingToggle',
   FADE_TOGGLE: 'timeline.fadeToggle',
+  LOCK_TOGGLE: 'timeline.lockToggle',
   PLAY: 'timeline.play',
   STOP: 'timeline.stop',
   RESET: 'timeline.reset',
