@@ -288,7 +288,7 @@ os.config.ThemeSettings.isThemeLoaded = function(theme) {
   var el = os.config.ThemeSettings.getDetectionElement();
   if (el && el.length) {
     var content = window.getComputedStyle(el[0], ':before').content;
-    return content.replace(/^"(.*)"$/, '$1') === theme;
+    return content.replace(/^['"](.*)['"]$/, '$1') === theme;
   }
 
   return false;
