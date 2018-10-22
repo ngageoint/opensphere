@@ -195,6 +195,35 @@ describe('os.data.xf.DataModel', function() {
     expect(filter.getBottomRecord('number_gross')['gross']).toBe(1024560);
   });
 
+  // Get Results
+  it('should return the correct result order based on dimension used', function() {
+    filter.add(MOVIE_DATA);
+
+    filter.addDimension('number_year', function(m) {return m.year});
+    filter.addDimension('number_rating', function(m) {return m.rating});
+
+    expect(filter.getResults().length).toBe(7);
+
+    // Retrieving Results with dimension attribute retrieves a different sort order
+    expect(filter.getResults(null, 'number_year')[0]['title']).toBe('Shaun of the Dead');
+    expect(filter.getResults(null, 'number_rating')[0]['title']).toBe('Godfather');
+
+    // Sorted in reverse order
+    expect(filter.getResults(null, 'number_year', true)[0]['title']).toBe('Casablanca');
+    expect(filter.getResults(null, 'number_rating', true)[0]['title']).toBe('Tombstone');
+
+    // Only retrieve six results with reverse order sort
+    expect(filter.getResults(6).length).toBe(6);
+    expect(filter.getResults(6, 'number_year', true)[5]['title']).toBe('Braveheart');
+    expect(filter.getResults(6, 'number_rating', true)[5]['title']).toBe('Pulp Fiction');
+    expect(filter.getResults(6, 'number_rating', true)[6]).toBe(undefined);
+
+    // Requesting out of range values
+    expect(filter.getResults(10).length).toBe(7);
+    expect(filter.getResults(0).length).toBe(7);
+    expect(filter.getResults(-5).length).toBe(0);
+  });
+
   // Range
   it('should return results given a dimension range properly', function() {
     filter.add(MOVIE_DATA);

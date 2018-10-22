@@ -103,10 +103,12 @@
     </div>
 
     <div ng-attr-id="{{featureControlsID}}" class="card">
-      <div class="btn btn-secondary btn-block" title="Style controls for the layer(s)" data-toggle="collapse" data-parent="#{{featureControlsID}}" data-target="#{{featureStyleID}}" ng-click="ctrl.setOpenSection(featureStyleID)">
+      <div class="btn btn-secondary btn-block" title="Style controls for the layer(s)"
+          data-toggle="collapse" data-target="#{{featureStyleID}}">
         Style Options
       </div>
-      <div ng-attr-id="{{featureStyleID}}" class="card-body js-style-content collapse show">
+      <div class="card-body collapse show"
+          ng-attr-id="{{featureStyleID}}" data-parent="#{{featureControlsID}}">
         <vectorstylecontrols
             color="ctrl.color"
             opacity="ctrl.opacity"
@@ -125,10 +127,12 @@
       </div>
 
       <div ng-show="ctrl.labelColumns">
-        <div class="btn btn-secondary btn-block" title="Configure how labels are displayed for the feature" data-toggle="collapse" data-parent="#{{featureControlsID}}" data-target="#{{featureLabelsID}}" ng-click="ctrl.setOpenSection(featureLabelsID)">
+        <div class="btn btn-secondary btn-block" title="Configure how labels are displayed for the feature"
+            data-toggle="collapse" data-target="#{{featureLabelsID}}">
           Label Options
         </div>
-        <div ng-attr-id="{{featureLabelsID}}" class="card-body js-style-content collapse">
+        <div class="card-body collapse"
+            data-parent="#{{featureControlsID}}" ng-attr-id="{{featureLabelsID}}">
           <labelcontrols
               labels="ctrl.labels"
               columns="ctrl.labelColumns"

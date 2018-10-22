@@ -303,6 +303,21 @@ os.data.xf.DataModel.prototype.isDimensionValueEmptyAny = function(id, emptyIden
 
 
 /**
+ * Get all of the keys for a given dimension
+ * @param {!string} id The dimension id
+ * @return {Array} All of the dimension's keys, naturally sorted
+ */
+os.data.xf.DataModel.prototype.getDimensionKeys = function(id) {
+  if (!this.isDisposed() && this.hasDimension(id)) {
+    return this.dimensions[id].group().all().map(function(v) {
+      return v.key;
+    });
+  }
+  return null;
+};
+
+
+/**
  * Groups data by a dimension in the crossfilter instance.
  * @param {string} id The dimension id
  * @param {function(S):T} accessorFn The group key accessor function
@@ -350,15 +365,18 @@ os.data.xf.DataModel.prototype.groupDataInternal = function(dim, accessorFn, add
 /**
  * Gets the top opt_value results from Crossfilter.
  * @param {number=} opt_value The number of results to get, defaults to all of them (Infinity)
+ * @param {string=} opt_dim dimension to get results from
+ * @param {boolean=} opt_bottom get bottom records (as opposed to top)
  * @return {!Array<S>}
  */
-os.data.xf.DataModel.prototype.getResults = function(opt_value) {
+os.data.xf.DataModel.prototype.getResults = function(opt_value, opt_dim, opt_bottom) {
   if (!this.isDisposed()) {
-    var dim = goog.object.getAnyValue(this.dimensions);
+    var dim = opt_dim && this.hasDimension(opt_dim) ?
+          this.dimensions[opt_dim] : goog.object.getAnyValue(this.dimensions);
     opt_value = opt_value || Infinity;
 
     if (dim) {
-      var results = /** @type {!Array<S>} */ (dim.top(opt_value));
+      var results = /** @type {!Array<S>} */ (opt_bottom ? dim.bottom(opt_value) : dim.top(opt_value));
 
       if (this.filterFunction) {
         results = goog.array.filter(results, this.filterFunction, this);

@@ -16,6 +16,7 @@ goog.require('os.ui.menu.spatial');
 goog.require('os.ui.query.ui.CombinatorCtrl');
 goog.require('os.ui.query.ui.editAreaDirective');
 goog.require('os.ui.slick.AbstractGroupByTreeSearchCtrl');
+goog.require('os.ui.urlDragDropDirective');
 
 
 /**
@@ -64,6 +65,12 @@ os.ui.AreasCtrl = function($scope, $element) {
    * @type {?os.data.AreaTreeSearch}
    */
   this.treeSearch = new os.data.AreaTreeSearch('areas', this.scope);
+
+  /**
+   * Bound version of the drag-drop handler.
+   * @type {Function}
+   */
+  this['onDrop'] = this.onDrop_.bind(this);
 
   os.ui.areaManager.listen(goog.events.EventType.PROPERTYCHANGE, this.searchIfAddedOrRemoved_, false, this);
   this.init();
@@ -160,10 +167,11 @@ os.ui.AreasCtrl.prototype.export = function() {
 
 /**
  * Launches the area import window
+ * @param {os.file.File=} opt_file Optional file to use in the import.
  * @export
  */
-os.ui.AreasCtrl.prototype.import = function() {
-  os.query.launchQueryImport();
+os.ui.AreasCtrl.prototype.import = function(opt_file) {
+  os.query.launchQueryImport(undefined, opt_file);
 };
 
 
@@ -176,4 +184,26 @@ os.ui.AreasCtrl.prototype.searchIfAddedOrRemoved_ = function(e) {
   if (e && e.getProperty() !== 'toggle') {
     this.search();
   }
+};
+
+
+/**
+ * Handles file drops over the areas tab.
+ * @param {Event} event The drop event.
+ */
+os.ui.AreasCtrl.prototype.onDrop_ = function(event) {
+  if (event.dataTransfer && event.dataTransfer.files) {
+    os.file.createFromFile(/** @type {!File} */ (event.dataTransfer.files[0]))
+        .addCallback(this.import.bind(this), this.onFail_.bind(this));
+  }
+};
+
+
+/**
+ * Handle file drag-drop.
+ * @param {!goog.events.Event|os.file.File} event
+ * @private
+ */
+os.ui.AreasCtrl.prototype.onFail_ = function(event) {
+  os.alertManager.sendAlert('Could not handle file with drag and drop. Try again or use the browse capability.');
 };

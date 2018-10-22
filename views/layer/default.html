@@ -1,9 +1,11 @@
 <div id="layerControls">
   <div class="card">
-    <div class="btn btn-secondary btn-block btn-sm" title="Style controls for the layer(s)" data-toggle="collapse" data-parent="#layerControls" data-target="#layer-style" ng-click="defaultCtrl.setOpenSection('#layer-style')">
+    <div class="btn btn-secondary btn-block btn-sm" title="Style controls for the layer(s)"
+        data-toggle="collapse" data-target="#layer-style"
+        ng-click="defaultCtrl.setOpenSection('#layer-style')">
       Style
     </div>
-    <div id="layer-style" class="js-style-content card-body collapse">
+    <div id="layer-style" class="card-body collapse" data-parent="#layerControls">
       <table>
         <tr title="Sets the opacity (inverse transparency) of the layer(s)">
           <td>Opacity:</td>

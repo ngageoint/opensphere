@@ -1,9 +1,11 @@
 <div id="layerControls">
   <div class="card">
-    <div class="btn btn-secondary btn-block btn-sm" title="Style controls for the layer(s)" data-toggle="collapse" data-parent="#layerControls" data-target="#layer-style" ng-click="tile.setOpenSection('#layer-style')">
+    <div class="btn btn-secondary btn-block btn-sm" title="Style controls for the layer(s)"
+        data-toggle="collapse" data-target="#layer-style"
+        ng-click="tile.setOpenSection('#layer-style')">
       Style
     </div>
-    <div id="layer-style" class="js-style-content card-body collapse">
+    <div id="layer-style" class="card-body collapse" data-parent="#layerControls">
       <table>
         <tr title="Sets the opacity (inverse transparency) of the layer(s)">
           <td>Opacity</td>
@@ -62,10 +64,12 @@
     </div>
   </div>
   <div ng-if="tile.showRefresh" class="card">
-    <div class="btn btn-secondary btn-block btn-sm" title="Configure the layer options" data-toggle="collapse" data-parent="#layerControls" data-target="#layer-options" ng-click="tile.setOpenSection('#layer-options')">
+    <div class="btn btn-secondary btn-block btn-sm" title="Configure the layer options"
+        data-toggle="collapse" data-target="#layer-options"
+        ng-click="tile.setOpenSection('#layer-options')">
       Options
     </div>
-    <div id="layer-options" class="js-style-content card-body collapse">
+    <div id="layer-options" class="card-body collapse" data-parent="#layerControls">
       <table>
         <tr ng-if="tile.showRefresh" title="Sets how often the layer will automatically refresh its tiles.">
           <td class="text-nowrap">Auto Refresh</td>
