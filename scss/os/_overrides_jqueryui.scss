@@ -175,6 +175,22 @@
   color: $body-color;
 }
 
+.ui-state-default,
+.ui-widget-content .ui-state-default,
+.ui-widget-header .ui-state-default {
+  background: none;
+}
+
+.ui-state-default:active,
+.ui-state-active:active,
+.ui-state-default:visited {
+  color: $dropdown-link-hover-color;
+}
+
+a.ui-state-default.ui-state-highlight {
+  color: $body-color;
+}
+
 // Draggable hands
 .ui-draggable-handle {
   @include grab-cursor();
