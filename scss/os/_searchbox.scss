@@ -1,5 +1,15 @@
-.c-search-box {
-  .dropdown-item {
-    cursor: pointer;
+.c-search-box.c-search-box__route-display {
+  .c-search-box__favorites {
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+
+    &.c-search-box__no-favorite {
+      border-top-right-radius: 0;
+    }
+  }
+
+  .c-search-box__search-buttons,
+  .form-control {
+    height: calc(#{$input-height-inner * 1.5} + #{$input-height-border});
   }
 }
