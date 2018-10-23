@@ -1,30 +1,49 @@
 <div class="d-flex flex-column flex-fill">
-  <div class="modal-body">
-
-    <div class="js-import-action__header mb-2 d-flex flex-row justify-content-between w-100">
-      <div class="text-left">
-        <button type="button" class="btn btn-primary btn-sm" ng-click="ctrl.editEntry()" title="Create a new action">
-          <i class="fa fa-plus"></i>
-          Create
-        </button>
+  <div class="modal-body d-flex flex-column flex-fill">
+    <div class="d-flex flex-column flex-shrink-0">
+      <div class="form-row mb-1">
+        <div class="input-group col">
+          <input class="form-control" ng-model="term" ng-change="ctrl.search()" placeholder="Search actions" />
+          <div class="input-group-append">
+            <button class="btn btn-secondary" ng-click="ctrl.clearSearch()" title="Clear the search term">
+              <i class="fa fa-times"></i>
+            </button>
+          </div>
+        </div>
       </div>
-      <div class="text-right">
-        <popover ng-show="helpTitle && helpText" x-title="helpTitle" x-content="helpText" x-pos="'right'">
-        </popover>
+
+      <div class="form-row mb-1">
+        <div class="col-auto col-form-label">
+          Group By
+        </div>
+        <div class="col">
+          <select class="custom-select" ng-model="view" ng-change="ctrl.search()" ng-options="key for (key, value) in views"/>
+        </div>
+      </div>
+
+      <div class="form-row mb-1">
+        <div class="col">
+          <button type="button" class="btn btn-primary btn-sm" ng-click="ctrl.editEntry()" title="Create a new action">
+            <i class="fa fa-plus"></i>
+            Create
+          </button>
+        </div>
+        <div class="col-auto text-right">
+          <popover ng-show="helpTitle && helpText" x-title="helpTitle" x-content="helpText" x-pos="'right'">
+          </popover>
+        </div>
       </div>
     </div>
 
-    <div class="d-flex flex-row flex-fill" autoheight siblings=".js-import-action__header">
-      <slicktree x-data="ctrl.entries" drag-enabled="true" multi-select="true" no-root="true" selected="ctrl.selected" context-menu="ctrl.contextMenu">
-      </slicktree>
+    <div class="d-flex flex-row flex-fill">
+      <slicktree x-data="entries" drag-enabled="view == -1" multi-select="true" no-root="true" selected="ctrl.selected" context-menu="ctrl.contextMenu"></slicktree>
     </div>
-
   </div>
 
   <div class="modal-footer">
     <div class="d-flex flex-row justify-content-between w-100">
       <div class="text-left">
-        <button type="button" class="btn btn-secondary" ng-click="ctrl.launchExport()" ng-disabled="!ctrl.entries.length">
+        <button type="button" class="btn btn-secondary" ng-click="ctrl.launchExport()" ng-disabled="!entries.length">
           <i class="fa fa-download"></i>
           Export
         </button>
@@ -45,7 +64,5 @@
         </button>
       </div>
     </div>
-
   </div>
-
 </div>

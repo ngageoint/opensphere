@@ -1,14 +1,16 @@
 goog.provide('os.ui.im.action.FilterActionsCtrl');
 
-goog.require('goog.Disposable');
 goog.require('goog.array');
 goog.require('os.im.action.ImportActionEventType');
 goog.require('os.im.action.filter');
+goog.require('os.ui.data.groupby.TagGroupBy');
 goog.require('os.ui.im.ImportEvent');
 goog.require('os.ui.im.ImportEventType');
 goog.require('os.ui.im.action.FilterActionNode');
+goog.require('os.ui.im.action.FilterActionTreeSearch');
 goog.require('os.ui.im.action.editFilterActionDirective');
 goog.require('os.ui.im.action.filterActionExportDirective');
+goog.require('os.ui.slick.AbstractGroupByTreeSearchCtrl');
 goog.require('os.ui.window');
 
 
@@ -17,14 +19,16 @@ goog.require('os.ui.window');
  * Base controller for viewing/editing filter action entries.
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
- * @extends {goog.Disposable}
+ * @extends {os.ui.slick.AbstractGroupByTreeSearchCtrl}
  * @constructor
  * @abstract
  * @template T
  * @ngInject
  */
 os.ui.im.action.FilterActionsCtrl = function($scope, $element) {
-  os.ui.im.action.FilterActionsCtrl.base(this, 'constructor');
+  os.ui.im.action.FilterActionsCtrl.base(this, 'constructor', $scope, $element, 200);
+  this.viewDefault = 'None';
+  this.title = 'filterActions';
 
   /**
    * The Angular scope.
@@ -47,19 +51,26 @@ os.ui.im.action.FilterActionsCtrl = function($scope, $element) {
   this.entryType = /** @type {string|undefined} */ (this.scope['type']);
 
   /**
-   * Action entries to view/edit.
-   * @type {!Array<!os.ui.im.action.FilterActionNode>}
-   */
-  this['entries'] = [];
-
-  /**
    * The selected node(s) in the tree.
    * @type {Array<os.ui.im.action.FilterActionNode>|os.ui.im.action.FilterActionNode}
    */
   this['selected'] = null;
 
+  /**
+   * Action entries to view/edit.
+   * @type {!Array<!os.ui.im.action.FilterActionNode>}
+   */
+  this.scope['entries'] = [];
+
+  /**
+   * @type {?os.ui.im.action.FilterActionTreeSearch}
+   */
+  this.treeSearch = new os.ui.im.action.FilterActionTreeSearch('entries', this.scope, this.entryType);
+  this.scope['views'] = os.ui.im.action.FilterActionsCtrl.VIEWS;
+  this.init();
+
   var iam = os.im.action.ImportActionManager.getInstance();
-  iam.listen(os.im.action.ImportActionEventType.REFRESH, this.refresh, false, this);
+  iam.listen(os.im.action.ImportActionEventType.REFRESH, this.search, false, this);
 
   $scope.$on(os.im.action.ImportActionEventType.COPY_ENTRY, this.onCopyEvent.bind(this));
   $scope.$on(os.im.action.ImportActionEventType.EDIT_ENTRY, this.onEditEvent.bind(this));
@@ -69,9 +80,19 @@ os.ui.im.action.FilterActionsCtrl = function($scope, $element) {
 
   $scope.$on('$destroy', this.dispose.bind(this));
 
-  this.refresh();
+  this.search();
 };
-goog.inherits(os.ui.im.action.FilterActionsCtrl, goog.Disposable);
+goog.inherits(os.ui.im.action.FilterActionsCtrl, os.ui.slick.AbstractGroupByTreeSearchCtrl);
+
+
+/**
+ * The view options for grouping filters
+ * @type {!Object<string, os.data.groupby.INodeGroupBy>}
+ */
+os.ui.im.action.FilterActionsCtrl.VIEWS = {
+  'None': -1, // you can't use null because Angular treats that as the empty/unselected option
+  'Tags': new os.ui.data.groupby.TagGroupBy()
+};
 
 
 /**
@@ -81,24 +102,10 @@ os.ui.im.action.FilterActionsCtrl.prototype.disposeInternal = function() {
   os.ui.im.action.FilterActionsCtrl.base(this, 'disposeInternal');
 
   var iam = os.im.action.ImportActionManager.getInstance();
-  iam.unlisten(os.im.action.ImportActionEventType.REFRESH, this.refresh, false, this);
+  iam.unlisten(os.im.action.ImportActionEventType.REFRESH, this.search, false, this);
 
   this.scope = null;
   this.element = null;
-};
-
-
-/**
- * Refresh the displayed entries.
- * @protected
- */
-os.ui.im.action.FilterActionsCtrl.prototype.refresh = function() {
-  var entries = os.im.action.ImportActionManager.getInstance().getActionEntries(this.entryType);
-
-  // convert to tree nodes
-  this['entries'] = os.ui.im.action.FilterActionNode.fromEntries(entries);
-
-  os.ui.apply(this.scope);
 };
 
 
@@ -125,9 +132,16 @@ os.ui.im.action.FilterActionsCtrl.prototype.close = function() {
  * @protected
  */
 os.ui.im.action.FilterActionsCtrl.prototype.saveEntries = function() {
-  if (this['entries']) {
+  if (this.scope['entries']) {
     // convert tree nodes back to entries and save
-    var entries = os.ui.im.action.FilterActionNode.toEntries(this['entries']);
+    var entryNodes = [];
+
+    this.scope['entries'].forEach(os.im.action.filter.isFilterActionNode.bind(this, entryNodes));
+    var entries = os.ui.im.action.FilterActionNode.toEntries(entryNodes);
+
+    // the tag group by sometimes creates multiple nodes for the same entry, so remove duplicate entries here
+    goog.array.removeDuplicates(entries);
+
     os.im.action.ImportActionManager.getInstance().setActionEntries(this.entryType, entries);
   }
 };
@@ -159,8 +173,7 @@ os.ui.im.action.FilterActionsCtrl.prototype.getExportName = function() {
  * @abstract
  * @export
  */
-os.ui.im.action.FilterActionsCtrl.prototype.editEntry = function(opt_entry) {
-};
+os.ui.im.action.FilterActionsCtrl.prototype.editEntry = function(opt_entry) {};
 
 
 /**
@@ -235,8 +248,15 @@ os.ui.im.action.FilterActionsCtrl.prototype.hasSelected = function() {
 os.ui.im.action.FilterActionsCtrl.prototype.launchExport = function() {
   os.metrics.Metrics.getInstance().updateMetric(os.im.action.Metrics.EXPORT, 1);
 
-  var entries = os.ui.im.action.FilterActionNode.toEntries(this['entries']);
-  var selected = os.ui.im.action.FilterActionNode.toEntries(this['selected']);
+  // pull the entry nodes out of the tree
+  var entryNodes = [];
+  var selectedEntryNodes = [];
+
+  this.scope['entries'].forEach(os.im.action.filter.isFilterActionNode.bind(this, entryNodes));
+  this['selected'].forEach(os.im.action.filter.isFilterActionNode.bind(this, selectedEntryNodes));
+
+  var entries = os.ui.im.action.FilterActionNode.toEntries(entryNodes);
+  var selected = os.ui.im.action.FilterActionNode.toEntries(selectedEntryNodes);
   os.ui.im.action.launchFilterActionExport(entries, selected, this.getExportName());
 };
 
