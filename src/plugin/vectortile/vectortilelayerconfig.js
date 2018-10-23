@@ -8,6 +8,7 @@ goog.require('ol.obj');
 goog.require('ol.source.VectorTile');
 goog.require('os.layer.VectorTile');
 goog.require('os.layer.config.AbstractLayerConfig');
+goog.require('os.mixin.vectortilesource');
 goog.require('os.net');
 goog.require('os.net.Request');
 

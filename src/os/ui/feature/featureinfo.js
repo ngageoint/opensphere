@@ -193,7 +193,7 @@ os.ui.feature.FeatureInfoCtrl.prototype.onFeatureChange = function(newVal) {
 
   if (newVal) {
     var feature = newVal[0];
-    if (feature) {
+    if (feature && feature instanceof ol.Feature) {
       // listen for change events fired by the feature so the window can be updated
       this.changeKey_ = ol.events.listen(feature, ol.events.EventType.CHANGE, this.onFeatureChangeEvent, this);
     }
@@ -289,7 +289,7 @@ os.ui.feature.FeatureInfoCtrl.prototype.setInitialActiveTab_ = function() {
  * @private
  */
 os.ui.feature.FeatureInfoCtrl.prototype.getUi_ = function(item) {
-  item['data'] = /** @type {ol.Feature|undefined} */ (this.scope['items'][0]);
+  item['data'] = /** @type {ol.Feature|ol.render.Feature|undefined} */ (this.scope['items'][0]);
   return item['template'];
 };
 
