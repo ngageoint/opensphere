@@ -55,7 +55,8 @@ os.im.action.filter.exportEntries = function(entries, opt_exactType) {
         'title': entry.getTitle(),
         'description': entry.getDescription() || '',
         'type': type,
-        'typeHint': typeHint
+        'typeHint': typeHint,
+        'tags': entry.getTags()
       });
 
       var filterEl = os.xml.appendElement('filter', entryEl);
@@ -181,4 +182,18 @@ os.im.action.filter.removeEntryCmd = function(entry) {
   }
 
   return new os.im.action.cmd.FilterActionRemove(entry, index);
+};
+
+
+/**
+ * Recursive mapping function for pulling all of the feature actions out of a tree.
+ * @param {Array<os.ui.im.action.FilterActionNode>} targetArr The target array.
+ * @param {os.structs.ITreeNode} node The current node.
+ */
+os.im.action.filter.isFilterActionNode = function(targetArr, node) {
+  if (node instanceof os.ui.im.action.FilterActionNode) {
+    goog.array.insert(targetArr, node);
+  } else if (node.getChildren()) {
+    node.getChildren().forEach(os.im.action.filter.isFilterActionNode.bind(this, targetArr));
+  }
 };

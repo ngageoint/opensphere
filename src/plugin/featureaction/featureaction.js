@@ -5,7 +5,7 @@ goog.require('os.im.action');
 goog.require('os.layer');
 goog.require('os.ui');
 goog.require('os.ui.window');
-goog.require('plugin.im.action.feature.node.menu');
+goog.require('plugin.im.action.feature.node');
 goog.require('plugin.im.action.feature.ui.editFeatureActionDirective');
 
 

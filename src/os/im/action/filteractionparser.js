@@ -109,6 +109,7 @@ os.im.action.FilterActionParser.parseNode = function(node) {
 
   var title = /** @type {string} */ (node.getAttribute('title')) || '';
   var description = /** @type {?string} */ (node.getAttribute('description')) || '';
+  var tags = /** @type {?string} */ (node.getAttribute('tags')) || '';
 
   var type = /** @type {string} */ (node.getAttribute('type')) || '';
   var typeHint = /** @type {string|undefined} */ (node.getAttribute('typeHint'));
@@ -146,6 +147,7 @@ os.im.action.FilterActionParser.parseNode = function(node) {
     entry.setTitle(title);
     entry.setType(types[0]);
     entry.setDescription(description);
+    entry.setTags(tags);
     entry.setFilter(filter);
     entry.setEnabled(true);
     entry.actions = actions;

@@ -1,4 +1,5 @@
 goog.provide('os.filter.FilterEntry');
+
 goog.require('goog.dom.xml');
 goog.require('goog.events.EventTarget');
 goog.require('goog.events.EventType');
@@ -6,6 +7,7 @@ goog.require('goog.string');
 goog.require('os.IPersistable');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.filter.IFilterEntry');
+goog.require('os.ui.filter.PropertyChange');
 
 
 
@@ -71,6 +73,12 @@ os.filter.FilterEntry = function() {
    * @private
    */
   this.match_ = true;
+
+  /**
+   * @type {string}
+   * @protected
+   */
+  this.tags = '';
 };
 goog.inherits(os.filter.FilterEntry, goog.events.EventTarget);
 
@@ -155,6 +163,7 @@ os.filter.FilterEntry.prototype.isEnabled = function() {
  */
 os.filter.FilterEntry.prototype.setEnabled = function(value) {
   this['enabled'] = value;
+  this.dispatchEvent(new os.events.PropertyChangeEvent(os.ui.filter.PropertyChange.ENABLED, value, !value));
 };
 
 
@@ -222,6 +231,24 @@ os.filter.FilterEntry.prototype.getMatch = function() {
  */
 os.filter.FilterEntry.prototype.setMatch = function(match) {
   this.match_ = match;
+};
+
+
+/**
+ * Gets the tags for the filter entry.
+ * @return {string}
+ */
+os.filter.FilterEntry.prototype.getTags = function() {
+  return this.tags;
+};
+
+
+/**
+ * Sets the tags for the filter entry.
+ * @param {string} value The tags to set.
+ */
+os.filter.FilterEntry.prototype.setTags = function(value) {
+  this.tags = value;
 };
 
 
@@ -309,6 +336,7 @@ os.filter.FilterEntry.prototype.persist = function(opt_to) {
   opt_to['filter'] = this.filter_;
   opt_to['enabled'] = this['enabled'];
   opt_to['match'] = this.getMatch();
+  opt_to['tags'] = this.getTags();
 
   return opt_to;
 };
@@ -325,6 +353,7 @@ os.filter.FilterEntry.prototype.restore = function(config) {
   this.setFilter(config['filter']);
   this.setEnabled(config['enabled']);
   this.setMatch(config['match']);
+  this.setTags(config['tags']);
 };
 
 

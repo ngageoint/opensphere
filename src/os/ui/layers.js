@@ -152,14 +152,14 @@ os.ui.LayersCtrl.VIEWS = {
 /**
  * @inheritDoc
  */
-os.ui.LayersCtrl.prototype.destroy = function() {
+os.ui.LayersCtrl.prototype.disposeInternal = function() {
   var map = os.MapContainer.getInstance();
   map.unlisten(os.events.LayerEventType.ADD, this.search, false, this);
   map.unlisten(os.events.LayerEventType.REMOVE, this.search, false, this);
 
   os.settings.unlisten(os.user.settings.FavoriteManager.KEY, this.search, false, this);
 
-  os.ui.LayersCtrl.base(this, 'destroy');
+  os.ui.LayersCtrl.base(this, 'disposeInternal');
 };
 
 

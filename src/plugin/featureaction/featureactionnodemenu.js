@@ -1,4 +1,4 @@
-goog.provide('plugin.im.action.feature.node.menu');
+goog.provide('plugin.im.action.feature.node');
 
 goog.require('os.command.ParallelCommand');
 goog.require('os.im.action');
@@ -14,14 +14,14 @@ goog.require('os.ui.state.menu');
  * Application feature action node menu.
  * @type {(os.ui.menu.Menu<undefined>|undefined)}
  */
-plugin.im.action.feature.node.menu.MENU = undefined;
+plugin.im.action.feature.node.MENU = undefined;
 
 
 /**
  * Feature action node menu event types.
  * @enum {string}
  */
-plugin.im.action.feature.node.menu.EventType = {
+plugin.im.action.feature.node.EventType = {
   COPY: 'featureactionnodes:copy',
   EDIT: 'featureactionnodes:edit',
   EXPORT: 'featureactionnodes:export',
@@ -35,71 +35,71 @@ plugin.im.action.feature.node.menu.EventType = {
 /**
  * Set up the menu.
  */
-plugin.im.action.feature.node.menu.setup = function() {
-  if (!plugin.im.action.feature.node.menu.MENU) {
-    plugin.im.action.feature.node.menu.MENU = new os.ui.menu.Menu(new os.ui.menu.MenuItem({
+plugin.im.action.feature.node.setup = function() {
+  if (!plugin.im.action.feature.node.MENU) {
+    plugin.im.action.feature.node.MENU = new os.ui.menu.Menu(new os.ui.menu.MenuItem({
       type: os.ui.menu.MenuItemType.ROOT,
       children: [{
         label: 'Copy',
-        eventType: plugin.im.action.feature.node.menu.EventType.COPY,
+        eventType: plugin.im.action.feature.node.EventType.COPY,
         tooltip: 'Copy the action',
         icons: ['<i class="fa fa-copy fa-fw"></i>'],
-        beforeRender: plugin.im.action.feature.node.menu.visibleIfSelected_,
-        handler: plugin.im.action.feature.node.menu.onCopyEvent_,
+        beforeRender: plugin.im.action.feature.node.visibleIfSelected_,
+        handler: plugin.im.action.feature.node.onCopyEvent_,
         metricKey: os.im.action.Metrics.COPY
       },
       {
         label: 'Edit',
-        eventType: plugin.im.action.feature.node.menu.EventType.EDIT,
+        eventType: plugin.im.action.feature.node.EventType.EDIT,
         tooltip: 'Edit the action',
         icons: ['<i class="fa fa-pencil fa-fw"></i>'],
-        beforeRender: plugin.im.action.feature.node.menu.visibleIfOneSelected_,
-        handler: plugin.im.action.feature.node.menu.onEditEvent_,
+        beforeRender: plugin.im.action.feature.node.visibleIfOneSelected_,
+        handler: plugin.im.action.feature.node.onEditEvent_,
         metricKey: os.im.action.Metrics.EDIT
       },
       {
         label: 'Export Selected',
-        eventType: plugin.im.action.feature.node.menu.EventType.EXPORT,
+        eventType: plugin.im.action.feature.node.EventType.EXPORT,
         tooltip: 'Export the action',
         icons: ['<i class="fa fa-fw fa-download"></i>'],
-        beforeRender: plugin.im.action.feature.node.menu.visibleIfSelected_,
-        handler: plugin.im.action.feature.node.menu.onExportEvent_,
+        beforeRender: plugin.im.action.feature.node.visibleIfSelected_,
+        handler: plugin.im.action.feature.node.onExportEvent_,
         metricKey: os.im.action.Metrics.EXPORT
       },
       {
         label: 'Remove',
-        eventType: plugin.im.action.feature.node.menu.EventType.REMOVE,
+        eventType: plugin.im.action.feature.node.EventType.REMOVE,
         tooltip: 'Remove the action',
         icons: ['<i class="fa fa-fw fa-times"></i>'],
-        beforeRender: plugin.im.action.feature.node.menu.visibleIfOneSelected_,
-        handler: plugin.im.action.feature.node.menu.onRemoveEvent_,
+        beforeRender: plugin.im.action.feature.node.visibleIfOneSelected_,
+        handler: plugin.im.action.feature.node.onRemoveEvent_,
         metricKey: os.im.action.Metrics.REMOVE
       },
       {
         label: 'Remove Selected',
-        eventType: plugin.im.action.feature.node.menu.EventType.REMOVE_SELECTED,
+        eventType: plugin.im.action.feature.node.EventType.REMOVE_SELECTED,
         tooltip: 'Removes selected actions',
         icons: ['<i class="fa fa-fw fa-times"></i>'],
-        beforeRender: plugin.im.action.feature.node.menu.visibleIfMultiSelected_,
-        handler: plugin.im.action.feature.node.menu.onRemoveSelectedEvent_,
+        beforeRender: plugin.im.action.feature.node.visibleIfMultiSelected_,
+        handler: plugin.im.action.feature.node.onRemoveSelectedEvent_,
         metricKey: plugin.im.action.feature.Metrics.REMOVE_SELECTED
       },
       {
         label: 'Toggle On',
-        eventType: plugin.im.action.feature.node.menu.EventType.TOGGLE_ON,
+        eventType: plugin.im.action.feature.node.EventType.TOGGLE_ON,
         tooltip: 'Toggles the actions on',
         icons: ['<i class="fa fa-fw fa-check-square-o"></i>'],
-        beforeRender: plugin.im.action.feature.node.menu.visibleIfCanToggleOn_,
-        handler: plugin.im.action.feature.node.menu.onToggleOnEvent_,
+        beforeRender: plugin.im.action.feature.node.visibleIfCanToggleOn_,
+        handler: plugin.im.action.feature.node.onToggleOnEvent_,
         metricKey: plugin.im.action.feature.Metrics.TOGGLE_ON
       },
       {
         label: 'Toggle Off',
-        eventType: plugin.im.action.feature.node.menu.EventType.TOGGLE_OFF,
+        eventType: plugin.im.action.feature.node.EventType.TOGGLE_OFF,
         tooltip: 'Toggles the actions off',
         icons: ['<i class="fa fa-fw fa-square-o"></i>'],
-        beforeRender: plugin.im.action.feature.node.menu.visibleIfCanToggleOff_,
-        handler: plugin.im.action.feature.node.menu.onToggleOffEvent_,
+        beforeRender: plugin.im.action.feature.node.visibleIfCanToggleOff_,
+        handler: plugin.im.action.feature.node.onToggleOffEvent_,
         metricKey: plugin.im.action.feature.Metrics.TOGGLE_OFF
       }]
     }));
@@ -110,9 +110,24 @@ plugin.im.action.feature.node.menu.setup = function() {
 /**
  * Disposes feature action node menu
  */
-plugin.im.action.feature.node.menu.dispose = function() {
-  goog.dispose(plugin.im.action.feature.node.menu.MENU);
-  plugin.im.action.feature.node.menu.MENU = undefined;
+plugin.im.action.feature.node.dispose = function() {
+  goog.dispose(plugin.im.action.feature.node.MENU);
+  plugin.im.action.feature.node.MENU = undefined;
+};
+
+
+/**
+ * Gets the filter action nodes out of an array of nodes.
+ * @param {Array<os.structs.ITreeNode>} context The array of nodes.
+ * @return {!Array<os.ui.im.action.FilterActionNode>} The array of filter action nodes.
+ */
+plugin.im.action.feature.node.getFeatureActionNodes = function(context) {
+  var filterActionNodes = [];
+  if (context) {
+    context.forEach(os.im.action.filter.isFilterActionNode.bind(this, filterActionNodes));
+  }
+
+  return filterActionNodes;
 };
 
 
@@ -122,11 +137,9 @@ plugin.im.action.feature.node.menu.dispose = function() {
  * @private
  * @this {os.ui.menu.MenuItem}
  */
-plugin.im.action.feature.node.menu.visibleIfSelected_ = function(context) {
-  this.visible = false;
-  if (context && context.length >= 1) {
-    this.visible = true;
-  }
+plugin.im.action.feature.node.visibleIfSelected_ = function(context) {
+  var filterActionNodes = plugin.im.action.feature.node.getFeatureActionNodes(context);
+  this.visible = filterActionNodes.length > 0;
 };
 
 
@@ -136,11 +149,9 @@ plugin.im.action.feature.node.menu.visibleIfSelected_ = function(context) {
  * @private
  * @this {os.ui.menu.MenuItem}
  */
-plugin.im.action.feature.node.menu.visibleIfOneSelected_ = function(context) {
-  this.visible = false;
-  if (context && context.length == 1) {
-    this.visible = true;
-  }
+plugin.im.action.feature.node.visibleIfOneSelected_ = function(context) {
+  var filterActionNodes = plugin.im.action.feature.node.getFeatureActionNodes(context);
+  this.visible = filterActionNodes.length == 1;
 };
 
 
@@ -150,11 +161,9 @@ plugin.im.action.feature.node.menu.visibleIfOneSelected_ = function(context) {
  * @private
  * @this {os.ui.menu.MenuItem}
  */
-plugin.im.action.feature.node.menu.visibleIfMultiSelected_ = function(context) {
-  this.visible = false;
-  if (context && context.length > 1) {
-    this.visible = true;
-  }
+plugin.im.action.feature.node.visibleIfMultiSelected_ = function(context) {
+  var filterActionNodes = plugin.im.action.feature.node.getFeatureActionNodes(context);
+  this.visible = filterActionNodes.length > 1;
 };
 
 
@@ -164,17 +173,19 @@ plugin.im.action.feature.node.menu.visibleIfMultiSelected_ = function(context) {
  * @private
  * @this {os.ui.menu.MenuItem}
  */
-plugin.im.action.feature.node.menu.visibleIfCanToggleOn_ = function(context) {
+plugin.im.action.feature.node.visibleIfCanToggleOn_ = function(context) {
   this.visible = false;
-  if (context && context.length == 1) {
-    if (context[0].getState() == os.structs.TriState.ON) {
+
+  var filterActionNodes = plugin.im.action.feature.node.getFeatureActionNodes(context);
+  if (filterActionNodes.length == 1) {
+    if (filterActionNodes[0].getState() == os.structs.TriState.ON) {
       this.visible = false;
     } else {
       this.visible = true;
     }
-  } else if (context && context.length > 1) {
-    for (var i = 0; i < context.length; i++) {
-      if (context[i].getState() == os.structs.TriState.OFF) {
+  } else if (filterActionNodes.length > 1) {
+    for (var i = 0; i < filterActionNodes.length; i++) {
+      if (filterActionNodes[i].getState() == os.structs.TriState.OFF) {
         this.visible = true;
         break;
       }
@@ -189,17 +200,19 @@ plugin.im.action.feature.node.menu.visibleIfCanToggleOn_ = function(context) {
  * @private
  * @this {os.ui.menu.MenuItem}
  */
-plugin.im.action.feature.node.menu.visibleIfCanToggleOff_ = function(context) {
+plugin.im.action.feature.node.visibleIfCanToggleOff_ = function(context) {
   this.visible = false;
-  if (context && context.length == 1) {
-    if (context[0].getState() == os.structs.TriState.OFF) {
+
+  var filterActionNodes = plugin.im.action.feature.node.getFeatureActionNodes(context);
+  if (filterActionNodes.length == 1) {
+    if (filterActionNodes[0].getState() == os.structs.TriState.OFF) {
       this.visible = false;
     } else {
       this.visible = true;
     }
-  } else if (context && context.length > 1) {
-    for (var i = 0; i < context.length; i++) {
-      if (context[i].getState() == os.structs.TriState.ON) {
+  } else if (filterActionNodes.length > 1) {
+    for (var i = 0; i < filterActionNodes.length; i++) {
+      if (filterActionNodes[i].getState() == os.structs.TriState.ON) {
         this.visible = true;
         break;
       }
@@ -213,18 +226,19 @@ plugin.im.action.feature.node.menu.visibleIfCanToggleOff_ = function(context) {
  * @param {!os.ui.menu.MenuEvent<os.ui.menu.layer.Context>} event The menu event.
  * @private
  */
-plugin.im.action.feature.node.menu.onCopyEvent_ = function(event) {
+plugin.im.action.feature.node.onCopyEvent_ = function(event) {
   var context = event.getContext();
-  if (context && context.length == 1) {
-    var entry = /** @type {os.im.action.FilterActionEntry} */ (context[0].getEntry());
+  var filterActionNodes = plugin.im.action.feature.node.getFeatureActionNodes(context);
+  if (filterActionNodes.length == 1) {
+    var entry = /** @type {os.im.action.FilterActionEntry} */ (filterActionNodes[0].getEntry());
     if (entry) {
       var cmd = os.im.action.filter.copyEntryCmd(entry);
       os.commandStack.addCommand(cmd);
     }
-  } else if (context && context.length > 1) {
+  } else if (filterActionNodes.length > 1) {
     var cpCmds = [];
-    for (var i = 0; i < context.length; i++) {
-      var entry = /** @type {os.im.action.FilterActionEntry} */ (context[i].getEntry());
+    for (var i = 0; i < filterActionNodes.length; i++) {
+      var entry = /** @type {os.im.action.FilterActionEntry} */ (filterActionNodes[i].getEntry());
       if (entry) {
         var cpCmd = os.im.action.filter.copyEntryCmd(entry);
         cpCmds.push(cpCmd);
@@ -245,10 +259,11 @@ plugin.im.action.feature.node.menu.onCopyEvent_ = function(event) {
  * @param {!os.ui.menu.MenuEvent<os.ui.menu.layer.Context>} event The menu event.
  * @private
  */
-plugin.im.action.feature.node.menu.onEditEvent_ = function(event) {
+plugin.im.action.feature.node.onEditEvent_ = function(event) {
   var context = event.getContext();
-  if (context && context.length == 1) {
-    var entry = /** @type {os.im.action.FilterActionEntry} */ (context[0].getEntry());
+  var filterActionNodes = plugin.im.action.feature.node.getFeatureActionNodes(context);
+  if (filterActionNodes.length == 1) {
+    var entry = /** @type {os.im.action.FilterActionEntry} */ (filterActionNodes[0].getEntry());
     if (entry) {
       plugin.im.action.feature.editEntry(entry.getType(), entry);
     }
@@ -261,14 +276,15 @@ plugin.im.action.feature.node.menu.onEditEvent_ = function(event) {
  * @param {!os.ui.menu.MenuEvent<os.ui.menu.layer.Context>} event The menu event.
  * @private
  */
-plugin.im.action.feature.node.menu.onExportEvent_ = function(event) {
+plugin.im.action.feature.node.onExportEvent_ = function(event) {
   var context = event.getContext();
-  if (context && context.length >= 1) {
+  var filterActionNodes = plugin.im.action.feature.node.getFeatureActionNodes(context);
+  if (filterActionNodes.length >= 1) {
     var entries = [];
     var selected = [];
     var exportName;
-    for (var i = 0; i < context.length; i++) {
-      var entry = /** @type {os.im.action.FilterActionEntry} */ (context[i].getEntry());
+    for (var i = 0; i < filterActionNodes.length; i++) {
+      var entry = /** @type {os.im.action.FilterActionEntry} */ (filterActionNodes[i].getEntry());
       if (entry) {
         entries.push(entry);
         selected.push(entry);
@@ -288,10 +304,11 @@ plugin.im.action.feature.node.menu.onExportEvent_ = function(event) {
  * @param {!os.ui.menu.MenuEvent<os.ui.menu.layer.Context>} event The menu event.
  * @private
  */
-plugin.im.action.feature.node.menu.onRemoveEvent_ = function(event) {
+plugin.im.action.feature.node.onRemoveEvent_ = function(event) {
   var context = event.getContext();
-  if (context && context.length == 1) {
-    var entry = /** @type {os.im.action.FilterActionEntry} */ (context[0].getEntry());
+  var filterActionNodes = plugin.im.action.feature.node.getFeatureActionNodes(context);
+  if (filterActionNodes.length == 1) {
+    var entry = /** @type {os.im.action.FilterActionEntry} */ (filterActionNodes[0].getEntry());
     if (entry) {
       var cmd = os.im.action.filter.removeEntryCmd(entry);
       os.commandStack.addCommand(cmd);
@@ -305,12 +322,13 @@ plugin.im.action.feature.node.menu.onRemoveEvent_ = function(event) {
  * @param {!os.ui.menu.MenuEvent<os.ui.menu.layer.Context>} event The menu event.
  * @private
  */
-plugin.im.action.feature.node.menu.onRemoveSelectedEvent_ = function(event) {
+plugin.im.action.feature.node.onRemoveSelectedEvent_ = function(event) {
   var context = event.getContext();
-  if (context && context.length > 1) {
+  var filterActionNodes = plugin.im.action.feature.node.getFeatureActionNodes(context);
+  if (filterActionNodes.length > 1) {
     var rmCmds = [];
-    for (var i = 0; i < context.length; i++) {
-      var entry = /** @type {os.im.action.FilterActionEntry} */ (context[i].getEntry());
+    for (var i = 0; i < filterActionNodes.length; i++) {
+      var entry = /** @type {os.im.action.FilterActionEntry} */ (filterActionNodes[i].getEntry());
       if (entry) {
         var rmCmd = os.im.action.filter.removeEntryCmd(entry);
         rmCmds.push(rmCmd);
@@ -340,11 +358,12 @@ plugin.im.action.feature.node.menu.onRemoveSelectedEvent_ = function(event) {
  * @param {!os.ui.menu.MenuEvent<os.ui.menu.layer.Context>} event The menu event.
  * @private
  */
-plugin.im.action.feature.node.menu.onToggleOnEvent_ = function(event) {
+plugin.im.action.feature.node.onToggleOnEvent_ = function(event) {
   var context = event.getContext();
-  if (context && context.length >= 1) {
-    for (var i = 0; i < context.length; i++) {
-      context[i].setState(os.structs.TriState.ON);
+  var filterActionNodes = plugin.im.action.feature.node.getFeatureActionNodes(context);
+  if (filterActionNodes.length >= 1) {
+    for (var i = 0; i < filterActionNodes.length; i++) {
+      filterActionNodes[i].setState(os.structs.TriState.ON);
     }
   }
 };
@@ -355,11 +374,12 @@ plugin.im.action.feature.node.menu.onToggleOnEvent_ = function(event) {
  * @param {!os.ui.menu.MenuEvent<os.ui.menu.layer.Context>} event The menu event.
  * @private
  */
-plugin.im.action.feature.node.menu.onToggleOffEvent_ = function(event) {
+plugin.im.action.feature.node.onToggleOffEvent_ = function(event) {
   var context = event.getContext();
-  if (context && context.length >= 1) {
-    for (var i = 0; i < context.length; i++) {
-      context[i].setState(os.structs.TriState.OFF);
+  var filterActionNodes = plugin.im.action.feature.node.getFeatureActionNodes(context);
+  if (filterActionNodes.length >= 1) {
+    for (var i = 0; i < filterActionNodes.length; i++) {
+      filterActionNodes[i].setState(os.structs.TriState.OFF);
     }
   }
 };

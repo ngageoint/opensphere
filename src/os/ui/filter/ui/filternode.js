@@ -1,8 +1,10 @@
 goog.provide('os.ui.filter.ui.FilterNode');
+
 goog.require('goog.events.EventType');
 goog.require('os.data.ISearchable');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.structs.TriState');
+goog.require('os.ui.filter.PropertyChange');
 goog.require('os.ui.slick.SlickTreeNode');
 
 
@@ -128,6 +130,7 @@ os.ui.filter.ui.FilterNode.prototype.getSearchText = function() {
     t += this.entry.getTitle();
     t += ' ' + this.entry.getDescription();
     t += ' ' + this.entry.type;
+    t += ' ' + this.entry.getTags();
   }
 
   return t;
@@ -138,7 +141,7 @@ os.ui.filter.ui.FilterNode.prototype.getSearchText = function() {
  * @inheritDoc
  */
 os.ui.filter.ui.FilterNode.prototype.getTags = function() {
-  return null;
+  return this.entry ? os.tag.tagsFromString(this.entry.getTags()) : null;
 };
 
 
@@ -189,7 +192,7 @@ os.ui.filter.ui.FilterNode.prototype.updateFrom = function(other) {
 os.ui.filter.ui.FilterNode.prototype.onPropertyChange = function(event) {
   var prop = event.getProperty();
 
-  if (prop == 'enabled') {
+  if (prop == os.ui.filter.PropertyChange.ENABLED) {
     this.setState(this.entry.isEnabled() ? os.structs.TriState.ON : os.structs.TriState.OFF);
   }
 };
