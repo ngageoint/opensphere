@@ -1,4 +1,4 @@
-<div class="d-flex o-search-box c-search-box">
+<div class="d-flex o-search-box c-search-box" ng-class="{'c-search-box__route-display': routeDisplay}">
   <form ng-submit="searchBox.search()" class="flex-shrink-0 w-100">
     <div ng-show="searchBox.searchOptions.length > 0" class="input-group">
       <div class="dropdown input-group-prepend">
@@ -45,13 +45,13 @@
             {{searchBox.getSearchName(search)}}
           </a>
         </div>
-        <div ng-if="searchBox.favorites.length > 0">
+        <div ng-if="searchBox.favorites.length > 0 && !routeDisplay">
           <div class="dropdown-divider"></div>
           <div class="dropdown-header">Favorite Searches</div>
           <div ng-if="searchBox.favorites && searchBox.favorites.length > 0">
-            <a class="dropdown-item text-truncate" href="" ng-repeat="fav in searchBox.favorites"
+            <a class="dropdown-item text-truncate" href="" ng-repeat="fav in searchBox.favorites | limitTo: 5"
                 ng-click="searchBox.favoriteSearch(fav)" title="{{fav.title}}">
-              <i ng-if="searchBox.isFavoriteActive(fav)" class="fa fa-angle-double-right"></i> {{fav.name}} <span class="font-italic">({{fav.type}})</span>
+              <i ng-if="searchBox.showFavoritePopupActive(fav)" class="fa fa-angle-double-right"></i> {{fav.name}} <span class="font-italic">({{fav.type}})</span>
             </a>
           </div>
         </div>
@@ -74,16 +74,49 @@
           ng-change="searchBox.refreshAutocomplete()"
           placeholder="{{searchBox.getPlaceholderText()}}"
           data-provide="typeahead" />
-      <div class="input-group-append">
-        <button ng-if="showClear" class="btn border border-left-0 form-control w-auto"
+      <div class="input-group-append c-search-box__search-buttons" ng-class="{'d-flex align-items-end': routeDisplay}">
+        <button ng-if="showClear && !routeDisplay" class="btn border border-left-0 form-control w-auto"
             type="button"
             ng-click="searchBox.clear()"
             title="Clear search">
           <i class="fa fa-times"></i>
         </button>
-        <button class="btn btn-primary" type="submit">
-          <i class="fa fa-fw fa-search"></i>
+        <button class="btn form-control" ng-class="{'border-left-0 border': routeDisplay, 'btn-primary': !routeDisplay}" type="submit">
+          <i class="fa fa-fw fa-search" ng-class="{'fa-2x text-muted': routeDisplay}"></i>
         </button>
+        <div ng-if="routeDisplay" class="flex-shrink-0">
+          <div ng-if="searchBox.showFavoritePopup" title="Save this Search?" class="animate-present animate-fast py-1 px-2 border-left border-top border-right rounded-top bg-primary u-bg-primary-text text-center">
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="js-search-box__save-search" ng-click="searchBox.saveFavorite()">
+              <label class="custom-control-label d-flex" for="js-search-box__save-search">
+                <span class="d-none d-lg-block">Save Search</span>
+                <div class="d-lg-none d-flex align-items-center"><i class="d-block d-lg-none fa fa-star"></i></div>
+                <span class="ml-1">?</span>
+              </label>
+            </div>
+          </div>
+          <div class="dropdown">
+            <button class="c-search-box__favorites btn form-control border border-left-0 dropdown-toggle d-flex align-items-center" ng-class="{'c-search-box__no-favorite': searchBox.showFavoritePopup}" type="button" id="searchFavorites" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Saved Searches">
+              <span ng-if="searchBox.favorites.length" class="badge badge-primary mx-2 px-1">{{searchBox.favorites.length}}</span>
+              <span class="d-none d-lg-block">Saved Searches</span>
+              <i class="d-block d-lg-none fa fa-star mr-1"></i>
+            </button>
+            <div class="u-mvw-75 dropdown-menu dropdown-menu-right" aria-labelledby="searchFavorites">
+              <div ng-if="!searchBox.favorites.length" class="text-muted text-center flex-shrink-0">
+                You have no favorites yet
+              </div>
+              <a class="dropdown-item text-truncate flex-shrink-0 d-flex align-items-center" href="" ng-repeat="fav in searchBox.favorites"
+                  ng-click="searchBox.favoriteSearch(fav)" title="{{fav.title}}">
+                <i ng-if="searchBox.showFavoritePopupActive(fav)" class="fa fa-angle-double-right flex-shrink-0"></i>
+                <span class="text-truncate flex-fill">{{fav.name}}</span>
+                <span class="font-italic mx-1 flex-shrink-0">({{fav.type}})</span>
+                <button type="button" class="ml-auto close flex-shrink-0" ng-click="searchBox.deleteFavorite($event, fav)"  aria-label="Hide">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </form>
