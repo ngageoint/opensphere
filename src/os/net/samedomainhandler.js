@@ -110,6 +110,7 @@ os.net.SameDomainHandler.prototype.getResponseHeaders = function() {
  */
 os.net.SameDomainHandler.prototype.buildRequest = function() {
   this.req = new goog.net.XhrIo();
+  this.req.setTimeoutInterval(this.timeout);
   this.req.listen(
       goog.net.EventType.SUCCESS, this.onXhrComplete, false, this);
   this.req.listen(
