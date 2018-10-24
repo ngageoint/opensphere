@@ -46,12 +46,11 @@ plugin.file.csv.CSVExporter.FIELDS = {
  * @inheritDoc
  */
 plugin.file.csv.CSVExporter.prototype.processItem = function(item) {
-  var result = null;
+  var result = {};
 
-  // this cast is incorrect, but will serve our needs wrt the compiler
-  var geom = item ? /** @type {ol.geom.Point|undefined} */ (item.getGeometry()) : null;
+  var geom = item ? /** @type {ol.geom.SimpleGeometry|undefined} */ (item.getGeometry()) : null;
   if (geom != null) {
-    geom = /** @type {ol.geom.Point|undefined} */ (geom.clone().toLonLat());
+    geom = /** @type {ol.geom.SimpleGeometry|undefined} */ (geom.clone().toLonLat());
     result = {};
 
     try {
@@ -96,19 +95,18 @@ plugin.file.csv.CSVExporter.prototype.processItem = function(item) {
         result[os.Fields.TIME] = time.toISOString();
       }
     }
+  }
+  if (this.fields) {
+    for (var i = 0, n = this.fields.length; i < n; i++) {
+      var field = this.fields[i];
+      if (!(field in result)) {
+        var value = item.get(this.fields[i]);
+        if (value == null) {
+          value = '';
+        }
 
-    if (this.fields) {
-      for (var i = 0, n = this.fields.length; i < n; i++) {
-        var field = this.fields[i];
-        if (!(field in result)) {
-          var value = item.get(this.fields[i]);
-          if (value == null) {
-            value = '';
-          }
-
-          if (os.object.isPrimitive(value) && !goog.isArray(value)) {
-            result[field] = value;
-          }
+        if (os.object.isPrimitive(value) && !goog.isArray(value)) {
+          result[field] = value;
         }
       }
     }
