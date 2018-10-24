@@ -127,7 +127,8 @@ os.im.action.filter.getColumns = function(opt_entryType) {
  * @param {os.im.action.FilterActionEntry} entry The edited filter entry.
  */
 os.im.action.filter.onEditComplete = function(original, entry) {
-  if (entry) {
+  // don't do anything if there was no change
+  if (entry && (!original || entry.compare(original) !== 0)) {
     var cmds = [];
 
     var iam = os.im.action.ImportActionManager.getInstance();
