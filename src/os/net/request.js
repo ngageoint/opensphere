@@ -29,9 +29,10 @@ goog.require('os.net.VariableReplacer');
  * @extends {goog.events.EventTarget}
  * @param {goog.Uri|string=} opt_uri The uri
  * @param {string=} opt_method The request method
+ * @param {number=} opt_timeout Request timeout
  * @constructor
  */
-os.net.Request = function(opt_uri, opt_method) {
+os.net.Request = function(opt_uri, opt_method, opt_timeout) {
   os.net.Request.base(this, 'constructor');
 
   /**
@@ -139,6 +140,13 @@ os.net.Request = function(opt_uri, opt_method) {
    * @private
    */
   this.successfulHandlerType_ = null;
+
+  /**
+   * Request timeout in milliseconds
+   * @type {number}
+   * @private
+   */
+  this.timeout_ = opt_timeout || 0;
 
   if (opt_uri) {
     this.setUri(opt_uri);
@@ -600,7 +608,7 @@ os.net.Request.prototype.load = function(opt_nocache) {
 
     // get a set of handlers for the URI
     this.handlers_ = os.net.RequestHandlerFactory.getHandlers(
-        this.getMethod(), u);
+        this.getMethod(), u, this.timeout_);
 
     if (this.handlers_ && this.handlers_.length) {
       goog.log.info(os.net.Request.LOGGER_,
@@ -758,4 +766,21 @@ os.net.Request.prototype.handlerCleanup_ = function() {
 
   this.handler_ = null;
   this.handlers_ = null;
+};
+
+/**
+ * Gets the request timeout in milliseconds, 0 for indefinite, default.
+ * @return {number}
+ */
+os.net.Request.prototype.getTimeout = function() {
+  return this.timeout_;
+};
+
+
+/**
+ * Sets the request timeout in milliseconds, 0 for indefinite, default.
+ * @param {number} timeout
+ */
+os.net.Request.prototype.setTimeout = function(timeout) {
+  this.timeout_ = timeout;
 };
