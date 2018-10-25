@@ -1,7 +1,9 @@
 goog.provide('plugin.basemap.ui.BaseMapLayerUICtrl');
 goog.provide('plugin.basemap.ui.baseMapLayerUIDirective');
 goog.require('goog.async.Delay');
+goog.require('os.MapContainer');
 goog.require('os.defines');
+goog.require('os.map');
 goog.require('os.ui.Module');
 goog.require('os.ui.layer.TileLayerUICtrl');
 goog.require('os.ui.spinnerDirective');
@@ -42,7 +44,12 @@ plugin.basemap.ui.BaseMapLayerUICtrl = function($scope, $element, $timeout) {
   plugin.basemap.ui.BaseMapLayerUICtrl.base(this, 'constructor', $scope, $element, $timeout);
 
   $scope.$on('minZoom.spin', this.onMinZoomChange.bind(this));
+  $scope.$on('minZoom.spinchange', this.onMinZoomChange.bind(this));
   $scope.$on('maxZoom.spin', this.onMaxZoomChange.bind(this));
+  $scope.$on('maxZoom.spinchange', this.onMaxZoomChange.bind(this));
+
+  this['mapMinZoom'] = os.map.MIN_ZOOM;
+  this['mapMaxZoom'] = os.map.MAX_ZOOM;
 
   this.refreshDelay = new goog.async.Delay(this.onRefresh, 1000, this);
 };
@@ -150,7 +157,7 @@ plugin.basemap.ui.BaseMapLayerUICtrl.prototype.getMinZoom_ = function() {
     }
   }
 
-  return 2;
+  return os.map.MIN_ZOOM;
 };
 
 
@@ -175,12 +182,13 @@ plugin.basemap.ui.BaseMapLayerUICtrl.prototype.getMaxZoom_ = function() {
     }
   }
 
-  return 28;
+  return os.map.MAX_ZOOM;
 };
 
 
 /**
  * @param {string} key The scope value to set
+ * @export
  */
 plugin.basemap.ui.BaseMapLayerUICtrl.prototype.setCurrent = function(key) {
   var map = os.MapContainer.getInstance();
@@ -208,6 +216,4 @@ plugin.basemap.ui.BaseMapLayerUICtrl.prototype.setCurrent = function(key) {
     }
   }
 };
-goog.exportProperty(plugin.basemap.ui.BaseMapLayerUICtrl.prototype, 'setCurrent',
-    plugin.basemap.ui.BaseMapLayerUICtrl.prototype.setCurrent);
 

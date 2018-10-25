@@ -116,7 +116,7 @@ os.ui.query.ui.ModifyAreaCtrl = function($scope, $element) {
   $scope.$watch('op', this.updatePreview.bind(this));
   $scope.$watch('targetArea', this.onTargetAreaChange.bind(this));
   $scope.$on('$destroy', this.dispose.bind(this));
-  $scope.$emit('window.ready');
+  $scope.$emit(os.ui.WindowEventType.READY);
 };
 goog.inherits(os.ui.query.ui.ModifyAreaCtrl, goog.Disposable);
 
@@ -275,18 +275,16 @@ os.ui.query.ui.ModifyAreaCtrl.prototype.getMergedArea_ = function() {
 
 /**
  * Fire the cancel callback and close the window.
+ * @export
  */
 os.ui.query.ui.ModifyAreaCtrl.prototype.cancel = function() {
   this.close_();
 };
-goog.exportProperty(
-    os.ui.query.ui.ModifyAreaCtrl.prototype,
-    'cancel',
-    os.ui.query.ui.ModifyAreaCtrl.prototype.cancel);
 
 
 /**
  * Performs the area modification.
+ * @export
  */
 os.ui.query.ui.ModifyAreaCtrl.prototype.confirm = function() {
   var feature = this.getMergedArea_();
@@ -312,16 +310,13 @@ os.ui.query.ui.ModifyAreaCtrl.prototype.confirm = function() {
 
   this.close_();
 };
-goog.exportProperty(
-    os.ui.query.ui.ModifyAreaCtrl.prototype,
-    'confirm',
-    os.ui.query.ui.ModifyAreaCtrl.prototype.confirm);
 
 
 /**
  * Get the help popover title for an operation.
  * @param {string} op The operation
  * @return {string}
+ * @export
  */
 os.ui.query.ui.ModifyAreaCtrl.prototype.getPopoverTitle = function(op) {
   switch (op) {
@@ -337,16 +332,13 @@ os.ui.query.ui.ModifyAreaCtrl.prototype.getPopoverTitle = function(op) {
 
   return 'Area Help';
 };
-goog.exportProperty(
-    os.ui.query.ui.ModifyAreaCtrl.prototype,
-    'getPopoverTitle',
-    os.ui.query.ui.ModifyAreaCtrl.prototype.getPopoverTitle);
 
 
 /**
  * Get the help popover content for an operation.
  * @param {string} op The operation
  * @return {string}
+ * @export
  */
 os.ui.query.ui.ModifyAreaCtrl.prototype.getPopoverContent = function(op) {
   switch (op) {
@@ -362,10 +354,6 @@ os.ui.query.ui.ModifyAreaCtrl.prototype.getPopoverContent = function(op) {
 
   return 'Area Help';
 };
-goog.exportProperty(
-    os.ui.query.ui.ModifyAreaCtrl.prototype,
-    'getPopoverContent',
-    os.ui.query.ui.ModifyAreaCtrl.prototype.getPopoverContent);
 
 
 /**
@@ -406,8 +394,7 @@ os.ui.query.ui.launchModifyArea = function(config) {
   var windowId = 'modifyArea';
   if (os.ui.window.exists(windowId)) {
     // update the existing window
-    var win = document.querySelector('.window#' + windowId);
-    var scope = angular.element(win).find('.modify-area-window').scope();
+    var scope = $('.js-window#' + windowId + ' .modal-body').scope();
     if (scope) {
       goog.object.extend(scope, config);
       os.ui.apply(scope);

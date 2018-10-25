@@ -40,7 +40,7 @@ os.ol.feature.clone = function(feature, opt_propertyKeys) {
   clone.setGeometryName(geometryName);
 
   var geometry = feature.getGeometry();
-  if (goog.isDefAndNotNull(geometry)) {
+  if (geometry != null) {
     clone.setGeometry(os.ol.feature.cloneGeometry(geometry));
   }
 

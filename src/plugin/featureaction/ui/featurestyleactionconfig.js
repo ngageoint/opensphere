@@ -326,6 +326,7 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.updateCenterIcon_ = functi
 /**
  * When to show the icon rotation option
  * @return {boolean}
+ * @export
  */
 plugin.im.action.feature.ui.StyleConfigCtrl.prototype.showRotationOption = function() {
   if (this.scope != null) {
@@ -337,10 +338,6 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.showRotationOption = funct
 
   return false;
 };
-goog.exportProperty(
-    plugin.im.action.feature.ui.StyleConfigCtrl.prototype,
-    'showRotationOption',
-    plugin.im.action.feature.ui.StyleConfigCtrl.prototype.showRotationOption);
 
 
 /**

@@ -42,11 +42,12 @@ os.ui.Module.directive('bufferform', [os.ui.buffer.bufferFormDirective]);
 /**
  * Controller for the buffer form.
  * @param {!angular.Scope} $scope
+ * @param {!angular.$timeout} $timeout The Angular $timeout service.
  * @extends {os.ui.ex.ExportOptionsCtrl}
  * @constructor
  * @ngInject
  */
-os.ui.buffer.BufferFormCtrl = function($scope) {
+os.ui.buffer.BufferFormCtrl = function($scope, $timeout) {
   os.ui.buffer.BufferFormCtrl.base(this, 'constructor', $scope);
 
   /**
@@ -123,6 +124,11 @@ os.ui.buffer.BufferFormCtrl = function($scope) {
   this.previewFailed_ = false;
 
   $scope.$on(os.ui.ex.ExportOptionsEvent.CHANGE, this.onOptionsChange_.bind(this));
+
+  // trigger window auto height after the DOM is rendered
+  $timeout(function() {
+    $scope.$emit(os.ui.WindowEventType.READY);
+  });
 };
 goog.inherits(os.ui.buffer.BufferFormCtrl, os.ui.ex.ExportOptionsCtrl);
 
@@ -174,6 +180,7 @@ os.ui.buffer.BufferFormCtrl.prototype.onOptionsChange_ = function(event, items, 
 /**
  * Updates buffer previews on the map.
  * @param {boolean=} opt_force If a preview update should be forced.
+ * @export
  */
 os.ui.buffer.BufferFormCtrl.prototype.updatePreview = function(opt_force) {
   if (this['liveAllowed'] && this['liveEnabled'] || opt_force) {
@@ -199,10 +206,6 @@ os.ui.buffer.BufferFormCtrl.prototype.updatePreview = function(opt_force) {
     this.scope['warningMessage'] = this.getWarningMessage();
   }
 };
-goog.exportProperty(
-    os.ui.buffer.BufferFormCtrl.prototype,
-    'updatePreview',
-    os.ui.buffer.BufferFormCtrl.prototype.updatePreview);
 
 
 /**
@@ -219,7 +222,7 @@ os.ui.buffer.BufferFormCtrl.prototype.updateLivePreview = function() {
   } else {
     this['livePreviewContent'] = 'Live preview disabled for performance reasons. This is only allowed for up to ' +
         os.buffer.FEATURE_LIMIT + ' features, or ' + os.buffer.VERTEX_LIMIT + ' vertices.';
-    this['livePreviewIcon'] = 'fa fa-warning orange-icon';
+    this['livePreviewIcon'] = 'fa fa-warning text-warning';
   }
 
   this.updatePreview();
@@ -293,6 +296,7 @@ os.ui.buffer.BufferFormCtrl.prototype.getWarningMessage = function() {
 /**
  * If the target geometry supports a bidirectional buffer.
  * @return {boolean}
+ * @export
  */
 os.ui.buffer.BufferFormCtrl.prototype.supportsBidirectional = function() {
   if (this.scope && this.scope['config']) {
@@ -305,7 +309,3 @@ os.ui.buffer.BufferFormCtrl.prototype.supportsBidirectional = function() {
 
   return false;
 };
-goog.exportProperty(
-    os.ui.buffer.BufferFormCtrl.prototype,
-    'supportsBidirectional',
-    os.ui.buffer.BufferFormCtrl.prototype.supportsBidirectional);

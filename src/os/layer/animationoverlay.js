@@ -32,7 +32,7 @@ os.layer.AnimationOverlayOptions;
  * @constructor
  */
 os.layer.AnimationOverlay = function(opt_options) {
-  var options = goog.isDef(opt_options) ? opt_options : {};
+  var options = opt_options !== undefined ? opt_options : {};
 
   /**
    * @type {!Array<!ol.Feature>}

@@ -168,7 +168,7 @@ os.ui.datetime.WheelDateCtrl = function($scope, $element, $timeout) {
    * @type {Element}
    * @private
    */
-  this.inputElement_ = $element.find('.date-picker')[0];
+  this.inputElement_ = $element[0];
   goog.events.listen(this.inputElement_, goog.events.EventType.FOCUS, this.onDateFocus_, false, this);
   goog.events.listen(this.inputElement_, goog.events.EventType.BLUR, this.onDateBlur_, false, this);
 
@@ -179,7 +179,7 @@ os.ui.datetime.WheelDateCtrl = function($scope, $element, $timeout) {
     var unwatchDate = $scope.$watch('date', function(newVal, oldVal) {
       if (newVal && oldVal && newVal.getTime() == oldVal.getTime()) {
         this['date'] = new Date(newVal.getTime());
-        /** @type {!jQuery} */ (this.element_.find('.date-picker')).datepicker('setDate', this['date']);
+        /** @type {!jQuery} */ (this.element_).datepicker('setDate', this['date']);
         unwatchDate();
       }
     }.bind(this));
@@ -224,12 +224,12 @@ os.ui.datetime.WheelDateCtrl.prototype.destroy_ = function() {
 os.ui.datetime.WheelDateCtrl.prototype.onDateChanged_ = function(newVal, oldVal) {
   if (!newVal && oldVal) {
     goog.log.fine(os.ui.datetime.WheelDateCtrl.LOGGER_, 'Wheel date reset on null date');
-    /** @type {!jQuery} */ (this.element_.find('.date-picker')).datepicker('setDate', null);
+    /** @type {!jQuery} */ (this.element_).datepicker('setDate', null);
     this['date'] = null;
   }
   if (newVal && (!oldVal || newVal.getTime() !== oldVal.getTime())) {
     this['date'] = new Date(newVal.getTime());
-    this.element_.find('.date-picker').datepicker('setDate', this['date']);
+    this.element_.datepicker('setDate', this['date']);
 
     goog.log.fine(os.ui.datetime.WheelDateCtrl.LOGGER_, 'Wheel date changed to: ' + newVal.toUTCString());
   }
@@ -319,7 +319,7 @@ os.ui.datetime.WheelDateCtrl.prototype.handleWheelEvent_ = function(event) {
     }
 
     // update the jquery date picker. this will reset the selection position, so set it back to the original values.
-    this.element_.find('.date-picker').datepicker('setDate', this['date']);
+    this.element_.datepicker('setDate', this['date']);
     input.selectionStart = origStart;
     input.selectionEnd = origEnd;
 
@@ -332,6 +332,7 @@ os.ui.datetime.WheelDateCtrl.prototype.handleWheelEvent_ = function(event) {
 /**
  * Updates Angular scope's date so the parent can react. This should only fire when the user chooses a date
  * from the calendar, hits enter, or the field loses focus. Mouse wheel changes should be suppressed.
+ * @export
  */
 os.ui.datetime.WheelDateCtrl.prototype.updateScopeDate = function() {
   goog.log.fine(os.ui.datetime.WheelDateCtrl.LOGGER_, 'Wheel date updating scope.');
@@ -346,7 +347,3 @@ os.ui.datetime.WheelDateCtrl.prototype.updateScopeDate = function() {
     }
   }
 };
-goog.exportProperty(
-    os.ui.datetime.WheelDateCtrl.prototype,
-    'updateScopeDate',
-    os.ui.datetime.WheelDateCtrl.prototype.updateScopeDate);

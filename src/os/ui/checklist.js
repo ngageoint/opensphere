@@ -44,10 +44,12 @@ os.ui.Module.directive('checklist', [os.ui.checklistDirective]);
 /**
  * Controller function for the checklist directive
  * @param {!angular.Scope} $scope
+ * @param {!angular.JQLite} $element
+ * @param {!angular.$timeout} $timeout
  * @constructor
  * @ngInject
  */
-os.ui.ChecklistCtrl = function($scope) {
+os.ui.ChecklistCtrl = function($scope, $element, $timeout) {
   /**
    * @type {?angular.Scope}
    * @private
@@ -55,10 +57,18 @@ os.ui.ChecklistCtrl = function($scope) {
   this.scope_ = $scope;
 
   /**
+   * @type {?angular.JQLite}
+   * @private
+   */
+  this.element_ = $element;
+
+  /**
    * @type {boolean}
    */
   this['allCheckbox'] = false;
-  this.updateAllCheckbox_();
+  $timeout(function() {
+    this.updateAllCheckbox_();
+  }.bind(this));
 
   $scope.$watch('allowMultiple', this.onAllowMultipleChange_.bind(this));
   $scope.$watch('items', this.onItemsChange_.bind(this));
@@ -73,6 +83,7 @@ os.ui.ChecklistCtrl = function($scope) {
  */
 os.ui.ChecklistCtrl.prototype.destroy_ = function() {
   this.scope_ = null;
+  this.element_ = null;
 };
 
 
@@ -142,12 +153,16 @@ os.ui.ChecklistCtrl.prototype.onItemsChange_ = function() {
  * @private
  */
 os.ui.ChecklistCtrl.prototype.labelCompare_ = function(a, b) {
-  return goog.array.defaultCompare(a.label, b.label);
+  if (!a.label || !b.label) {
+    return goog.array.defaultCompare(a.label, b.label);
+  }
+  return a.label.localeCompare(/** @type {string} */ (b.label), undefined, {sensitivity: 'base', numeric: true});
 };
 
 
 /**
  * Toggles all items on or off.
+ * @export
  */
 os.ui.ChecklistCtrl.prototype.toggleAll = function() {
   if (this.scope_ && this.scope_['allowMultiple']) {
@@ -162,15 +177,12 @@ os.ui.ChecklistCtrl.prototype.toggleAll = function() {
     }
   }
 };
-goog.exportProperty(
-    os.ui.ChecklistCtrl.prototype,
-    'toggleAll',
-    os.ui.ChecklistCtrl.prototype.toggleAll);
 
 
 /**
  * Handle an item being checked on/off.
  * @param {!osx.ChecklistItem} item The changed item
+ * @export
  */
 os.ui.ChecklistCtrl.prototype.onItemChange = function(item) {
   if (this.scope_) {
@@ -190,10 +202,6 @@ os.ui.ChecklistCtrl.prototype.onItemChange = function(item) {
     this.emitChangeEvent_();
   }
 };
-goog.exportProperty(
-    os.ui.ChecklistCtrl.prototype,
-    'onItemChange',
-    os.ui.ChecklistCtrl.prototype.onItemChange);
 
 
 /**
@@ -202,18 +210,30 @@ goog.exportProperty(
  */
 os.ui.ChecklistCtrl.prototype.updateAllCheckbox_ = function() {
   if (this.scope_) {
+    var hasChecked = false;
+    var hasUnchecked = false;
     var items = /** @type {Array<!osx.ChecklistItem>} */ (this.scope_['items']);
     if (items && items.length > 0) {
       for (var i = 0, n = items.length; i < n; i++) {
         if (!items[i].enabled) {
           // if at least one isn't checked, uncheck the box
-          this['allCheckbox'] = false;
-          return;
+          hasUnchecked = true;
+        } else {
+          hasChecked = true;
         }
       }
 
-      // they were all checked
-      this['allCheckbox'] = true;
+      var allCheckbox = this.element_.find('.js-checklist__all');
+      // If at least 1 is checked but not all, make indeterminate
+      if (hasChecked && hasUnchecked) {
+        allCheckbox.prop('checked', true);
+        allCheckbox.prop('indeterminate', true);
+        this['allCheckbox'] = true;
+      } else {
+        allCheckbox.prop('checked', hasChecked);
+        allCheckbox.prop('indeterminate', false);
+        this['allCheckbox'] = hasChecked;
+      }
     }
   }
 };
@@ -230,7 +250,7 @@ os.ui.ChecklistCtrl.prototype.updateAllCheckbox_ = function() {
  * @param {boolean=} opt_left Display the menu leftward
  */
 os.ui.ChecklistCtrl.launchChecklistMenu = function(target, items, opt_allowMultiple, opt_name, opt_scope, opt_left) {
-  var targetEl = goog.isString(target) ? angular.element(target) : target;
+  var targetEl = typeof target === 'string' ? angular.element(target) : target;
   var allowMultiple = opt_allowMultiple || false;
   var scope = opt_scope || os.ui.injector.get('$rootScope');
   var compile = os.ui.injector.get('$compile');
@@ -245,7 +265,7 @@ os.ui.ChecklistCtrl.launchChecklistMenu = function(target, items, opt_allowMulti
     os.ui.ChecklistCtrl.checklist_.remove();
   }
 
-  var checklistHtml = '<div id="checklistContainer" class="checklist-container shadowbox">' +
+  var checklistHtml = '<div id="checklistContainer" class="position-absolute col px-0 popover">' +
       '<checklist allow-multiple="allow" items="checklistItems" name="' + name + '"></checklist></div>';
   scope = scope.$new();
   scope['allow'] = allowMultiple;

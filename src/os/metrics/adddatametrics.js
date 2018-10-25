@@ -30,13 +30,13 @@ os.metrics.AddDataMetrics = function() {
   });
   this.addChild(leaf, {
     label: 'Add Data',
-    icon: 'fa fa-plus green-icon',
+    icon: 'fa fa-plus',
     description: 'Add a data layer to the map.',
     key: os.metrics.keys.AddData.ADD_LAYER_COMMAND
   });
   this.addChild(leaf, {
     label: 'Remove Data',
-    icon: 'fa fa-plus green-icon',
+    icon: 'fa fa-plus',
     description: 'Remove a data layer from the map',
     key: os.metrics.keys.AddData.REMOVE_LAYER_COMMAND
   });

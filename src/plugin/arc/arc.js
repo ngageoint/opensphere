@@ -23,6 +23,13 @@ plugin.arc.MAP_SERVER = 'MapServer';
 
 
 /**
+ * @type {string}
+ * @const
+ */
+plugin.arc.ID = 'arc';
+
+
+/**
  * Returns a more recognizable type from an ESRI Type.
  * @param {string} esriType
  * @return {?string}
@@ -68,43 +75,17 @@ plugin.arc.getFilterColumns = function(layer) {
 
 
 /**
- * @param {os.file.File} file
- * @return {number}
+ * @type {RegExp}
+ * @const
  */
-plugin.arc.isArcResponse = function(file) {
-  var score = 0;
-
-  if (file && !os.file.isLocal(file)) {
-    var uri = file.getUrl();
-
-    if (uri) {
-      score += plugin.arc.URI_REGEXP_.test(uri) ? 3 : 0;
-    }
-
-    var content = file.getContent();
-    if (goog.isString(content)) {
-      score += plugin.arc.CONTENT_REGEXP_.test(content) ? 3 : 0;
-    }
-  }
-
-  return score;
-};
+plugin.arc.URI_REGEXP = /arcgis/i;
 
 
 /**
  * @type {RegExp}
  * @const
- * @private
  */
-plugin.arc.URI_REGEXP_ = /arcgis/i;
-
-
-/**
- * @type {RegExp}
- * @const
- * @private
- */
-plugin.arc.CONTENT_REGEXP_ = /ArcGIS REST Services Directory/i;
+plugin.arc.CONTENT_REGEXP = /ArcGIS REST Services Directory/i;
 
 
 /**

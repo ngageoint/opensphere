@@ -74,6 +74,9 @@ os.ui.config.SettingsManager.prototype.addSettingPlugin = function(plugin) {
 
     var event = new os.ui.config.SettingsManagerEvent(os.ui.config.SettingsManagerEventType.SETTING_ADDED, plugin);
     this.dispatchEvent(event);
+  } else {
+    // This is a settings override for an existing plugin
+    this.settingsModels_[id] = plugin;
   }
 };
 

@@ -16,6 +16,7 @@ goog.require('os.ui.window');
 os.ui.help.controlsDirective = function() {
   return {
     restrict: 'E',
+    replace: true,
     scope: true,
     templateUrl: os.ROOT + 'views/help/controls.html',
     controller: os.ui.help.ControlsCtrl,
@@ -71,13 +72,13 @@ os.ui.help.ControlsCtrl.launch = function() {
       'label': 'Controls',
       'show-close': true,
       'no-scroll': false,
-      'min-width': 400,
-      'min-height': 200,
-      'max-width': 1050,
-      'max-height': 1000,
+      'min-width': 850,
+      'min-height': 750,
+      'max-width': 900,
+      'max-height': 800,
       'modal': false,
-      'width': 865,
-      'height': 550,
+      'width': 850,
+      'height': 750,
       'icon': 'fa fa-keyboard-o'
     }, 'controlshelp');
   }
@@ -88,24 +89,22 @@ os.ui.help.ControlsCtrl.launch = function() {
  * Get the key text
  * @param {goog.events.KeyCodes} key
  * @return {string}
+ * @export
  */
 os.ui.help.ControlsCtrl.prototype.getKey = function(key) {
   if (key === goog.events.KeyCodes.META && os.isOSX()) {
-    return '';
+    return 'Command';
   }
 
   return goog.string.toTitleCase(goog.events.KeyNames[key]);
 };
-goog.exportProperty(
-    os.ui.help.ControlsCtrl.prototype,
-    'getKey',
-    os.ui.help.ControlsCtrl.prototype.getKey);
 
 
 /**
  * Get the key text
  * @param {string} other
  * @return {?string}
+ * @export
  */
 os.ui.help.ControlsCtrl.prototype.getMouse = function(other) {
   var mouse = os.ui.help.Controls.MOUSE_IMAGE[other];
@@ -114,16 +113,13 @@ os.ui.help.ControlsCtrl.prototype.getMouse = function(other) {
   }
   return null;
 };
-goog.exportProperty(
-    os.ui.help.ControlsCtrl.prototype,
-    'getMouse',
-    os.ui.help.ControlsCtrl.prototype.getMouse);
 
 
 /**
  * Get the key text
  * @param {string} other
  * @return {?string}
+ * @export
  */
 os.ui.help.ControlsCtrl.prototype.getFont = function(other) {
   var font = os.ui.help.Controls.FONT_CLASS[other];
@@ -132,16 +128,13 @@ os.ui.help.ControlsCtrl.prototype.getFont = function(other) {
   }
   return null;
 };
-goog.exportProperty(
-    os.ui.help.ControlsCtrl.prototype,
-    'getFont',
-    os.ui.help.ControlsCtrl.prototype.getFont);
 
 
 /**
  * Get the key text
  * @param {string} other
  * @return {?string}
+ * @export
  */
 os.ui.help.ControlsCtrl.prototype.getFontClass = function(other) {
   var font = os.ui.help.Controls.FONT_CLASS[other];
@@ -150,10 +143,6 @@ os.ui.help.ControlsCtrl.prototype.getFontClass = function(other) {
   }
   return null;
 };
-goog.exportProperty(
-    os.ui.help.ControlsCtrl.prototype,
-    'getFontClass',
-    os.ui.help.ControlsCtrl.prototype.getFontClass);
 
 
 

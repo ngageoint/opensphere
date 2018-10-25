@@ -13,6 +13,7 @@ goog.require('os.events.LayerEventType');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.layer.ILayer');
 goog.require('os.layer.PropertyChange');
+goog.require('os.net.Online');
 goog.require('os.ui.node.defaultLayerNodeUIDirective');
 
 
@@ -47,6 +48,12 @@ os.data.LayerSyncDescriptor = function() {
    */
   this.layerConfig = {};
 
+  /**
+   * @type {os.net.Online}
+   * @protected
+   */
+  this.online = os.net.Online.getInstance();
+
   os.dispatcher.listen(os.events.LayerEventType.ADD, this.onLayerAdded, false, this);
   os.dispatcher.listen(os.events.LayerEventType.REMOVE, this.onLayerRemoved, false, this);
 };
@@ -80,6 +87,14 @@ os.data.LayerSyncDescriptor.CHANGE_KEYS_ = ['minResolution', 'maxResolution'];
 
 
 /**
+ * @param {Object<string, *>} options
+ * @return {string}
+ */
+os.data.LayerSyncDescriptor.mapLayerIds_ = function(options) {
+  return /** @type {string} */ (options['id'] || '');
+};
+
+/**
  * @inheritDoc
  */
 os.data.LayerSyncDescriptor.prototype.disposeInternal = function() {
@@ -96,6 +111,14 @@ os.data.LayerSyncDescriptor.prototype.disposeInternal = function() {
  */
 os.data.LayerSyncDescriptor.prototype.getLayers = function() {
   return this.layers;
+};
+
+
+/**
+ * @param {Array<Object<string, *>>=} opt_options
+ */
+os.data.LayerSyncDescriptor.prototype.populateLayerIds = function(opt_options) {
+  this.layerIds = (opt_options || this.getOptions()).map(os.data.LayerSyncDescriptor.mapLayerIds_);
 };
 
 
@@ -203,8 +226,12 @@ os.data.LayerSyncDescriptor.prototype.removeLayer = function(layer) {
  * @protected
  */
 os.data.LayerSyncDescriptor.prototype.onLayerAdded = function(evt) {
-  if (!goog.isString(evt.layer)) {
+  if (typeof evt.layer !== 'string') {
     var layer = /** @type {os.layer.ILayer} */ (evt.layer);
+
+    if (!this.layerIds.length) {
+      this.populateLayerIds();
+    }
 
     if (this.layerIds.indexOf(layer.getId()) > -1) {
       this.addLayer(layer);
@@ -218,8 +245,12 @@ os.data.LayerSyncDescriptor.prototype.onLayerAdded = function(evt) {
  * @protected
  */
 os.data.LayerSyncDescriptor.prototype.onLayerRemoved = function(evt) {
-  if (!goog.isString(evt.layer)) {
+  if (typeof evt.layer !== 'string') {
     var layer = /** @type {os.layer.ILayer} */ (evt.layer);
+
+    if (!this.layerIds.length) {
+      this.populateLayerIds();
+    }
 
     if (this.layerIds.indexOf(layer.getId()) > -1 && this.layers.indexOf(layer) > -1) {
       this.removeLayer(layer);
@@ -234,6 +265,8 @@ os.data.LayerSyncDescriptor.prototype.onLayerRemoved = function(evt) {
  */
 os.data.LayerSyncDescriptor.prototype.createLayers_ = function() {
   var options = this.getOptions();
+  this.populateLayerIds(options);
+
   if (options) {
     for (var i = 0; i < options.length; i++) {
       var layerOptions = options[i];
@@ -241,8 +274,6 @@ os.data.LayerSyncDescriptor.prototype.createLayers_ = function() {
       // create the layer if it doesn't already exist on the map
       var layerId = /** @type {string|undefined} */ (layerOptions['id']) || '';
       if (layerId) {
-        goog.array.insert(this.layerIds, layerId);
-
         var layer = os.MapContainer.getInstance().getLayer(layerId);
         if (!layer) {
           layer = os.layer.createFromOptions(layerOptions);
@@ -272,7 +303,6 @@ os.data.LayerSyncDescriptor.prototype.removeLayers_ = function() {
     if (layer) {
       // remove it from the map
       os.MapContainer.getInstance().removeLayer(layer);
-      goog.array.remove(this.layerIds, layer.getId());
     }
   }
 

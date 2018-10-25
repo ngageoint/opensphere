@@ -118,6 +118,7 @@ os.ui.layer.EllipseOptionsCtrl.prototype.getShowGroundReference_ = function() {
 
 /**
  * Handle changes to the Show Ellipsoids option.
+ * @export
  */
 os.ui.layer.EllipseOptionsCtrl.prototype.onShowEllipsoidsChange = function() {
   var items = /** @type {Array} */ (this.scope['items']);
@@ -135,14 +136,11 @@ os.ui.layer.EllipseOptionsCtrl.prototype.onShowEllipsoidsChange = function() {
     this.createCommand(fn);
   }
 };
-goog.exportProperty(
-    os.ui.layer.EllipseOptionsCtrl.prototype,
-    'onShowEllipsoidsChange',
-    os.ui.layer.EllipseOptionsCtrl.prototype.onShowEllipsoidsChange);
 
 
 /**
  * Handle changes to the Show Ground Reference option.
+ * @export
  */
 os.ui.layer.EllipseOptionsCtrl.prototype.onShowGroundReferenceChange = function() {
   var items = /** @type {Array} */ (this.scope['items']);
@@ -160,7 +158,3 @@ os.ui.layer.EllipseOptionsCtrl.prototype.onShowGroundReferenceChange = function(
     this.createCommand(fn);
   }
 };
-goog.exportProperty(
-    os.ui.layer.EllipseOptionsCtrl.prototype,
-    'onShowGroundReferenceChange',
-    os.ui.layer.EllipseOptionsCtrl.prototype.onShowGroundReferenceChange);

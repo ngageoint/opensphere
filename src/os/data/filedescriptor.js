@@ -94,6 +94,7 @@ os.data.FileDescriptor.prototype.getLayerOptions = function() {
   options['title'] = this.getTitle();
   options['url'] = this.getUrl();
   options['mappings'] = this.getMappings();
+  options['detectColumnTypes'] = true;
 
   return options;
 };

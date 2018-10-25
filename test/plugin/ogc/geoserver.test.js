@@ -43,27 +43,4 @@ describe('plugin.ogc.GeoServer', function() {
     expect(server.getWmsTimeFormat()).toBe(timeFormat);
     expect(server.getWmsDateFormat()).toBe(dateFormat);
   });
-
-  it('should detect Geoserver server instances from files', function() {
-    var file = new os.file.File();
-    file.setUrl('https://www.example.com/geoserver');
-    expect(plugin.ogc.GeoServer.isGeoserverResponse(file)).toBe(5);
-    file.setUrl('https://www.example.com/geoserver/');
-    expect(plugin.ogc.GeoServer.isGeoserverResponse(file)).toBe(5);
-    file.setUrl('https://www.example.com/geoserver/ows');
-    expect(plugin.ogc.GeoServer.isGeoserverResponse(file)).toBe(5);
-    file.setUrl('https://www.example.com/geoserver/web');
-    expect(plugin.ogc.GeoServer.isGeoserverResponse(file)).toBe(5);
-    // Removed this detection because it is far too liberal. If we ever need content-based GeoServer detection,
-    // we can reimplement it smarter.
-    // file.setContent('<WMS_Capabilities><abstract>GeoServer</abstract></WMS_Capabilities>');
-    // expect(plugin.ogc.GeoServer.isGeoserverResponse(file)).toBe(10);
-    expect(plugin.ogc.GeoServer.isGeoserverResponse(file) > os.ui.ogc.OGCServer.isOGCResponse(file)).toBe(true);
-  });
-
-  it('should detect Geoserver instances from more specific URLs', function() {
-    var file = new os.file.File();
-    file.setUrl('https://www.example.com/geoserver/ows?thisother=thing');
-    expect(plugin.ogc.GeoServer.isGeoserverResponse(file)).toBe(5);
-  });
 });

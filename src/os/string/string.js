@@ -1,6 +1,7 @@
 goog.provide('os.string');
 goog.require('goog.array');
 goog.require('goog.string');
+goog.require('os.ui');
 goog.require('os.url');
 
 
@@ -81,14 +82,15 @@ os.string.isHex = function(str) {
  * @param {string=} opt_class Optional class to use for the links
  * @param {string=} opt_title Optional title to use for the links
  * @param {string=} opt_htmlText Optional html text name to give the links
+ * @param {string=} opt_clickHandler Optional click handler for the anchor tag
  * @return {string} Linkified text
  */
-os.string.linkify = function(text, opt_target, opt_class, opt_title, opt_htmlText) {
+os.string.linkify = function(text, opt_target, opt_class, opt_title, opt_htmlText, opt_clickHandler) {
   var addText = function(text) {
     if (!text) {
       return;
     }
-    html.push(text);
+    html.push(os.ui.escapeHtml(text));
   };
 
   var addLink = function(url, text) {
@@ -106,6 +108,11 @@ os.string.linkify = function(text, opt_target, opt_class, opt_title, opt_htmlTex
     if (opt_target) {
       html.push('target="');
       html.push(opt_target);
+      html.push('" ');
+    }
+    if (opt_clickHandler) {
+      html.push('ng-click="');
+      html.push(opt_clickHandler);
       html.push('" ');
     }
     html.push('href="');

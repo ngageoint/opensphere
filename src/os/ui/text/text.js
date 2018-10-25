@@ -46,7 +46,7 @@ os.ui.text.copy = function(text) {
         'max-height': 1000,
         'modal': true,
         'width': 300,
-        'height': 90,
+        'height': 'auto',
         'icon': 'fa fa-copy'
       }, 'textprompt', undefined, undefined, undefined, {
         'text': 'Use Ctrl+C to copy',

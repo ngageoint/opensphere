@@ -39,7 +39,7 @@ os.ui.Module.directive('scrollFocus', [os.ui.util.scrollFocusDirective]);
 os.ui.util.scrollFocusDirective.linker_ = function(scope, element, attrs, scrollFocusCtrl) {
   scope['element'] = element = element[0];
   scope.$watch('element.scrollHeight', goog.bind(function(height) {
-    if (goog.isNumber(height)) {
+    if (typeof height === 'number') {
       if (scrollFocusCtrl.hasScrollBar_()) {
         element.setAttribute('tabindex', 0);
       } else {
@@ -72,7 +72,7 @@ os.ui.util.ScrollFocusCtrl = function($element) {
   /**
    * @type {!angular.JQLite}
    */
-  this.container = angular.element(document.querySelector('#win-container'));
+  this.container = angular.element('body');
 
   // tabindex allows divs to have focus; the 0 allows the focus without mucking up the tab order
   this.element_[0].setAttribute('tabindex', 0);
@@ -117,12 +117,12 @@ os.ui.util.ScrollFocusCtrl.prototype.scrollHandler_ = function(e) {
   var x;
   var y;
   var wheelY;
-  if (goog.isDefAndNotNull(e.wheelDeltaX) &&
-      goog.isDefAndNotNull(e.wheelDeltaY)) { // chrome
+  if (e.wheelDeltaX != null &&
+      e.wheelDeltaY != null) { // chrome
     x = 0.4 * e.wheelDeltaX;
     y = -0.45 * e.wheelDeltaY;
     wheelY = e.wheelDeltaY;
-  } else if (goog.isDefAndNotNull(e.wheelDelta)) { // i freaking e.
+  } else if (e.wheelDelta != null) { // i freaking e.
     x = 0;
     y = -2.1 * e.wheelDelta; // +120 away -120 toward the user
     wheelY = e.wheelDelta;
@@ -175,6 +175,7 @@ os.ui.util.ScrollFocusCtrl.prototype.hasScrollBar_ = function() {
 /**
  * Listener for focus and blur events to activate and deactivate scrolling.
  * @param {goog.events.Event} e The event
+ * @export
  */
 os.ui.util.ScrollFocusCtrl.prototype.setFocus = function(e) {
   if (e.type === 'focus') {
@@ -183,5 +184,3 @@ os.ui.util.ScrollFocusCtrl.prototype.setFocus = function(e) {
     this['hasFocus'] = false;
   }
 };
-goog.exportProperty(os.ui.util.ScrollFocusCtrl.prototype, 'setFocus',
-    os.ui.util.ScrollFocusCtrl.prototype.setFocus);

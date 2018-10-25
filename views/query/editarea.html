@@ -1,14 +1,12 @@
-<div class="window-content-wrapper">
-  <div class="window-content area-window">
-    <form name="areaForm" class="form-horizontal form-compressed" ng-submit="ctrl.accept()">
+<div>
+  <div class="modal-body">
+    <form name="areaForm" ng-submit="ctrl.accept()">
       <basicinfo config="config" columns="columns"></basicinfo>
-      <input type="submit" style="display:none;">
+      <input class="form-control d-none" type="submit">
     </form>
   </div>
-  <div class="window-footer">
-    <div class="pull-right">
-      <button class="btn btn-default" ng-click="ctrl.accept()" ng-disabled="areaForm.$invalid"><i class="btn-icon fa fa-check color-add"></i> Save</button>
-      <button class="btn btn-default" ng-click="ctrl.close()"><i class="btn-icon fa fa-ban red-icon"></i> Cancel</button>
-    </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" ng-click="ctrl.accept()" ng-disabled="areaForm.$invalid"><i class="fa fa-check"></i> Save</button>
+    <button class="btn btn-secondary" ng-click="ctrl.close()"><i class="fa fa-ban"></i> Cancel</button>
   </div>
 </div>

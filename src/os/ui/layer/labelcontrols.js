@@ -83,13 +83,25 @@ os.ui.layer.LabelControlsCtrl = function($scope, $element, $timeout) {
   this.startIndex_ = -1;
 
   /**
+   * The maximum label size.
+   * @type {number}
+   */
+  this['maxSize'] = os.style.label.MAX_SIZE;
+
+  /**
+   * The minimum label size.
+   * @type {number}
+   */
+  this['minSize'] = os.style.label.MIN_SIZE;
+
+  /**
    * The maximum number of labels to allow.
    * @type {number}
    */
   this['labelLimit'] = os.settings.get(['maxLabels'], 5);
 
   // make the labels sortable via drag handle
-  this.element.find('.c-labelcontainer').sortable(this.getSortOptions());
+  this.element.find('.js-label-container').sortable(this.getSortOptions());
 
   $timeout(this.validate_.bind(this));
 
@@ -117,7 +129,7 @@ os.ui.layer.LabelControlsCtrl.prototype.disposeInternal = function() {
 os.ui.layer.LabelControlsCtrl.prototype.getSortOptions = function() {
   return {
     'items': 'tr',
-    'handle': '.handle',
+    'handle': '.js-handle',
     'axis': 'y',
     'containment': 'parent',
     'snap': true,
@@ -130,6 +142,7 @@ os.ui.layer.LabelControlsCtrl.prototype.getSortOptions = function() {
 
 /**
  * Handles column changes
+ * @export
  */
 os.ui.layer.LabelControlsCtrl.prototype.onColumnChange = function() {
   if (this.scope) {
@@ -139,54 +152,40 @@ os.ui.layer.LabelControlsCtrl.prototype.onColumnChange = function() {
     this.scope.$emit(os.ui.layer.LabelControlsEventType.COLUMN_CHANGE);
   }
 };
-goog.exportProperty(
-    os.ui.layer.LabelControlsCtrl.prototype,
-    'onColumnChange',
-    os.ui.layer.LabelControlsCtrl.prototype.onColumnChange);
 
 
 /**
  * Handles changes to the show labels checkbox.
- * @protected
+ * @export
  */
 os.ui.layer.LabelControlsCtrl.prototype.onShowLabelsChange = function() {
   if (this.scope) {
     this.scope.$emit(os.ui.layer.LabelControlsEventType.SHOW_LABELS_CHANGE, this.scope['showLabels']);
   }
 };
-goog.exportProperty(
-    os.ui.layer.LabelControlsCtrl.prototype,
-    'onShowLabelsChange',
-    os.ui.layer.LabelControlsCtrl.prototype.onShowLabelsChange);
 
 
 /**
  * Add a new label
+ * @export
  */
 os.ui.layer.LabelControlsCtrl.prototype.addLabel = function() {
   this.scope['labels'].push(os.style.label.cloneConfig());
   this.onColumnChange();
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.Layer.LABEL_COLUMN_ADD, 1);
 };
-goog.exportProperty(
-    os.ui.layer.LabelControlsCtrl.prototype,
-    'addLabel',
-    os.ui.layer.LabelControlsCtrl.prototype.addLabel);
 
 
 /**
  * Remove a label
  * @param {os.style.label.LabelConfig} label
+ * @export
  */
 os.ui.layer.LabelControlsCtrl.prototype.removeLabel = function(label) {
   goog.array.remove(this.scope['labels'], label);
   this.onColumnChange();
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.Layer.LABEL_COLUMN_REMOVE, 1);
 };
-goog.exportProperty(
-    os.ui.layer.LabelControlsCtrl.prototype,
-    'removeLabel',
-    os.ui.layer.LabelControlsCtrl.prototype.removeLabel);
 
 
 /**

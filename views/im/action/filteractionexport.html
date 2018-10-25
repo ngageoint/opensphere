@@ -1,43 +1,52 @@
-<div class="c-filterexport window-content-wrapper">
-  <div class="window-content">
-    <div class="export-dialog">
-      <form name="exportForm" class="form-compact">
-        <div class="control-group">
-          <label class="control-label">Name:</label>
-          <div class="controls">
-            <input class="wide" type="text" name="title" required ng-model="ctrl.fileName" ng-maxlength="200" />
-          </div>
-        </div>
+<div class="d-flex flex-column flex-fill">
+  <div class="modal-body d-flex flex-fill flex-column">
+    <form name="exportForm" class="d-flex flex-fill flex-column">
 
-        <label class="radio">
-          <input type="radio" name="exportmode" value="active" ng-model="ctrl.exportType" ng-change="ctrl.validate()">
+      <div class="d-flex flex-row form-group">
+        <label class="col-3 col-form-label text-right u-required">Name</label>
+        <div class="col">
+          <input class="form-control" type="text" name="title" required ng-model="ctrl.fileName" ng-maxlength="200" />
+          <validation-message target="exportForm.title"></validation-message>
+        </div>
+      </div>
+
+      <div class="form-check">
+        <label class="form-check-label">
+            <input class="form-check-input" type="radio" name="exportmode" value="active" ng-model="ctrl.exportType" ng-change="ctrl.validate()">
           Export Active (Checked)
         </label>
-        <label class="radio">
-          <input type="radio" name="exportmode" value="selected" ng-model="ctrl.exportType" ng-change="ctrl.validate()">
+      </div>
+      <div class="form-check">
+        <label class="form-check-label">
+            <input class="form-check-input" type="radio" name="exportmode" value="selected" ng-model="ctrl.exportType" ng-change="ctrl.validate()">
           Export Selected
         </label>
-        <label class="radio">
-          <input type="radio" name="exportmode" value="all" ng-model="ctrl.exportType" ng-change="ctrl.validate()">
+      </div>
+      <div class="form-check">
+        <label class="form-check-label">
+            <input class="form-check-input" type="radio" name="exportmode" value="all" ng-model="ctrl.exportType" ng-change="ctrl.validate()">
           Export All
         </label>
-      </form>
-      <div ng-if="ctrl.errorMsg">
-        <i class="fa fa-warning orange-icon"></i>
-        <em>{{ctrl.errorMsg}}</em>
       </div>
-    </div>
+
+    </form>
+
+    <span ng-if="ctrl.errorMsg">
+      <i class="fa fa-warning text-warning"></i>
+      <em>{{ctrl.errorMsg}}</em>
+    </span>
+
   </div>
-  <div class="window-footer">
-    <div class="pull-right">
-      <button class="btn btn-default" ng-click="ctrl.save()" ng-disabled="exportForm.$invalid || ctrl.errorMsg">
-        <i class="fa fa-check lt-blue-icon"></i>
-        OK
-      </button>
-      <button class="btn btn-default" ng-click="ctrl.cancel()">
-        <i class="fa fa-ban red-icon"></i>
-        Cancel
-      </button>
-    </div>
+  <div class="modal-footer">
+
+    <button class="btn btn-primary" ng-click="ctrl.save()" ng-disabled="exportForm.$invalid || ctrl.errorMsg">
+      <i class="fa fa-check"></i>
+      OK
+    </button>
+    <button class="btn btn-secondary" ng-click="ctrl.cancel()">
+      <i class="fa fa-ban"></i>
+      Cancel
+    </button>
+
   </div>
 </div>

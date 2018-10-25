@@ -31,7 +31,7 @@ describe('plugin.im.action.feature.Entry', function() {
       PROPERTY: 'bbbAAA'
     });
 
-    entry.processItems([feature1, feature2]);
+    entry.processItems('entryType', [feature1, feature2]);
     expect(feature1.get('MATCH')).toBe(true);
     expect(feature2.get('MATCH')).toBeUndefined();
   };
@@ -39,7 +39,7 @@ describe('plugin.im.action.feature.Entry', function() {
   it('should initialize correctly', function() {
     var fe = new plugin.im.action.feature.Entry();
 
-    expect(goog.isString(fe.getId())).toBe(true);
+    expect(typeof fe.getId() === 'string').toBe(true);
     expect(fe.actions.length).toBe(0);
     expect(fe.filterFn).toBe(goog.functions.FALSE);
     expect(fe.isTemporary()).toBe(false);

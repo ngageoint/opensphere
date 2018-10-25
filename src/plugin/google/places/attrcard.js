@@ -11,6 +11,7 @@ goog.require('os.ui.Module');
  */
 plugin.google.places.attrCardDirective = function() {
   return {
+    replace: true,
     restrict: 'E',
     templateUrl: os.ROOT + 'views/plugin/google/places/attrcard.html',
     controller: plugin.google.places.AttrCardCtrl,
@@ -41,8 +42,6 @@ plugin.google.places.AttrCardCtrl = function($scope, $element) {
     html += '<div>' + attrs[i] + '</div>';
   }
 
-  var el = $element.find('.attrs');
-  el = el.length ? el : $element;
-  el.html(html);
+  $element.html(html);
 };
 

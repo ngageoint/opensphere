@@ -4,6 +4,7 @@
  */
 goog.provide('plugin.cesium.mixin');
 
+goog.require('os.MapEvent');
 goog.require('os.net.Request');
 
 
@@ -58,7 +59,7 @@ plugin.cesium.mixin.loadCesiumMixins = function() {
    * @param {Cesium.ResourceFetchOptions} options
    * @return {Cesium.Promise<*>}
    */
-  Cesium.Resource.prototype.fetch = function(options) {
+  Cesium.Resource.prototype._makeRequest = function(options) {
     var req = new os.net.Request(options.url || this.url);
     var headers = options.headers || this.headers;
 
@@ -76,6 +77,11 @@ plugin.cesium.mixin.loadCesiumMixins = function() {
       deferred.resolve(response);
     }).thenCatch(function(reason) {
       deferred.reject(reason);
+    }).thenAlways(function() {
+      // The old olcs render loop fired a repaint when requests returned. While that shouldn't
+      // be necessary with Cesium's new explicit rendering, there are still cases like async
+      // Billboard/Icon loading which do not appear to be triggering a render request.
+      os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
     });
 
     return deferred.promise;
@@ -135,7 +141,7 @@ plugin.cesium.mixin.loadCesiumMixins = function() {
     this.context_ = null;
     return undefined;
   };
-  goog.exportProperty(Cesium.PickId.prototype, 'destroy', Cesium.PickId.prototype.destroy);
+  Cesium.PickId.prototype['destroy'] = Cesium.PickId.prototype.destroy;
 
 
   /**
@@ -180,5 +186,5 @@ plugin.cesium.mixin.loadCesiumMixins = function() {
     this._pickObjects[key] = object;
     return new Cesium.PickId(this, key, Cesium.Color.fromRgba(key));
   };
-  goog.exportProperty(Cesium.Context.prototype, 'createPickId', Cesium.Context.prototype.createPickId);
+  Cesium.Context.prototype['createPickId'] = Cesium.Context.prototype.createPickId;
 };

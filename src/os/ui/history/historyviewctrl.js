@@ -95,36 +95,28 @@ os.ui.history.HistoryViewCtrl.prototype.destroy_ = function() {
 
 /**
  * Prompts the user to clear the application history.
+ * @export
  */
 os.ui.history.HistoryViewCtrl.prototype.clearHistory = function() {
-  var scopeOptions = {
-    'confirmCallback': this.clearHistoryInternal_.bind(this),
-    'cancelCallback': goog.nullFunction,
-    'yesText': 'Clear',
-    'yesIcon': 'fa fa-trash-o',
-    'noText': 'Cancel',
-    'noIcon': 'fa fa-times'
-  };
-
-  var windowOptions = {
-    'label': 'Clear History',
-    'icon': 'fa fa-trash-o red-icon',
-    'x': 'center',
-    'y': 'center',
-    'width': '325',
-    'height': '120',
-    'modal': 'true',
-    'no-scroll': 'true'
-  };
-
-  var text = 'Are you sure you want to clear the application history? This action cannot be undone.';
-  var template = '<confirm>' + text + '</confirm>';
-  os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+  os.ui.window.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
+    confirm: this.clearHistoryInternal_.bind(this),
+    prompt: 'Are you sure you want to clear the application history? This action cannot be undone.',
+    yesText: 'Clear',
+    yesIcon: 'fa fa-trash-o',
+    yesButtonClass: 'btn-danger',
+    windowOptions: {
+      'label': 'Clear History',
+      'icon': 'fa fa-trash-o',
+      'x': 'center',
+      'y': 'center',
+      'width': '325',
+      'height': 'auto',
+      'modal': 'true',
+      'noScroll': 'true',
+      'headerClass': 'bg-danger u-bg-danger-text'
+    }
+  }));
 };
-goog.exportProperty(
-    os.ui.history.HistoryViewCtrl.prototype,
-    'clearHistory',
-    os.ui.history.HistoryViewCtrl.prototype.clearHistory);
 
 
 /**
@@ -140,14 +132,11 @@ os.ui.history.HistoryViewCtrl.prototype.clearHistoryInternal_ = function() {
 
 /**
  * Toggles the history view
+ * @export
  */
 os.ui.history.HistoryViewCtrl.prototype.toggleHistoryView = function() {
   this['showHistoryView'] = !this['showHistoryView'];
 };
-goog.exportProperty(
-    os.ui.history.HistoryViewCtrl.prototype,
-    'toggleHistoryView',
-    os.ui.history.HistoryViewCtrl.prototype.toggleHistoryView);
 
 
 /**
@@ -155,6 +144,7 @@ goog.exportProperty(
  * clicked item and calls os.command.CommandProcessor.setIndex() with the
  * index as the argument.  Also manipulates the DOM to highlight that item.
  * @param {number} index
+ * @export
  */
 os.ui.history.HistoryViewCtrl.prototype.setIndex = function(index) {
   if (this['current'] == index) {
@@ -163,10 +153,6 @@ os.ui.history.HistoryViewCtrl.prototype.setIndex = function(index) {
   this.scope_.$emit('historyProcessing', true);
   this.cp_.setIndex(index);
 };
-goog.exportProperty(
-    os.ui.history.HistoryViewCtrl.prototype,
-    'setIndex',
-    os.ui.history.HistoryViewCtrl.prototype.setIndex);
 
 
 /**
@@ -180,7 +166,7 @@ os.ui.history.HistoryViewCtrl.prototype.commandAdded_ = function(e) {
   this.timeout_(goog.bind(function() {
     this['current'] = this.cp_.getCurrent();
 
-    var objDiv = document.getElementById('historyScroll');
+    var objDiv = document.getElementById('js-history__scroll');
     objDiv.scrollTop = objDiv.scrollHeight;
   }, this));
 };

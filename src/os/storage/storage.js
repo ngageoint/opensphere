@@ -6,15 +6,21 @@ goog.require('os.events.EventType');
 
 
 /**
- * @define {string} Shared IndexedDB object store.
+ * @define {string} Shared IDB store name.
  */
 goog.define('os.SHARED_STORE_NAME', 'shared');
 
 
 /**
- * @define {string} Shared IndexedDB object store.
+ * @define {string} Shared IDB name.
  */
 goog.define('os.SHARED_DB_NAME', os.NAMESPACE + '.shared');
+
+
+/**
+ * @define {number} Shared IDB version.
+ */
+goog.define('os.SHARED_DB_VERSION', 2);
 
 
 /**
@@ -31,7 +37,7 @@ os.storage.clearStorage = function(opt_manualReload) {
       goog.partial(os.storage.resetInternal_, opt_manualReload),
       os.storage.reloadPage_);
 };
-goog.exportProperty(window, 'cls', os.storage.clearStorage);
+window['cls'] = os.storage.clearStorage;
 
 
 /**

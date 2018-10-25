@@ -23,7 +23,7 @@ Now let's register it in our plugin.
   :caption: ``src/plugin/georss/georssplugin.js``
   :linenos:
   :language: javascript
-  :emphasize-lines: 6, 58-59
+  :emphasize-lines: 6, 54-55
 
 We now have everything we need to get an entry into the Add Data window. So let's do that! Our UI launcher currently does not launch a UI (and it still won't), but it could just save a new descriptor directly without any user input at all. Here's how you hook that up:
 
@@ -31,7 +31,7 @@ We now have everything we need to get an entry into the Add Data window. So let'
   :caption: ``src/plugin/georss/georssimportui.js``
   :linenos:
   :language: javascript
-  :emphasize-lines: 3-4, 47-58
+  :emphasize-lines: 3-4, 48-59
 
 This adds the descriptor to the descriptor list, adds it as a child of the provider, and then pretends that the user went ahead and found it in Add Data and turned it on. To try this out:
 

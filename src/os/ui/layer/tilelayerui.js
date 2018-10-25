@@ -128,6 +128,7 @@ os.ui.layer.TileLayerUICtrl.prototype.onColorReset = function(event) {
 
 /**
  * Handles style changes.
+ * @export
  */
 os.ui.layer.TileLayerUICtrl.prototype.onStyleChange = function() {
   var items = /** @type {Array} */ (this.scope['items']);
@@ -145,12 +146,11 @@ os.ui.layer.TileLayerUICtrl.prototype.onStyleChange = function() {
     this.createCommand(fn);
   }
 };
-goog.exportProperty(os.ui.layer.TileLayerUICtrl.prototype, 'onStyleChange',
-    os.ui.layer.TileLayerUICtrl.prototype.onStyleChange);
 
 
 /**
  * Handles colorize changes.
+ * @export
  */
 os.ui.layer.TileLayerUICtrl.prototype.onColorizeChange = function() {
   var value = /** @type {boolean} */ (this.scope['colorize']);
@@ -165,5 +165,3 @@ os.ui.layer.TileLayerUICtrl.prototype.onColorizeChange = function() {
 
   this.createCommand(fn);
 };
-goog.exportProperty(os.ui.layer.TileLayerUICtrl.prototype, 'onColorizeChange',
-    os.ui.layer.TileLayerUICtrl.prototype.onColorizeChange);

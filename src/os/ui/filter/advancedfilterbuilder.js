@@ -230,6 +230,7 @@ os.ui.filter.AdvancedFilterBuilderCtrl.prototype.doAddExpr_ = function(expr) {
 
 /**
  * Adds a new grouping node
+ * @export
  */
 os.ui.filter.AdvancedFilterBuilderCtrl.prototype.addGrouping = function() {
   this.onEditComplete_();
@@ -251,24 +252,22 @@ os.ui.filter.AdvancedFilterBuilderCtrl.prototype.addGrouping = function() {
     goog.log.error(os.ui.filter.AdvancedFilterBuilderCtrl.LOGGER_, msg);
   }
 };
-goog.exportProperty(os.ui.filter.AdvancedFilterBuilderCtrl.prototype, 'addGrouping',
-    os.ui.filter.AdvancedFilterBuilderCtrl.prototype.addGrouping);
 
 
 /**
  * Adds a new expression node
+ * @export
  */
 os.ui.filter.AdvancedFilterBuilderCtrl.prototype.addExpr = function() {
   this.edit();
 };
-goog.exportProperty(os.ui.filter.AdvancedFilterBuilderCtrl.prototype, 'addExpr',
-    os.ui.filter.AdvancedFilterBuilderCtrl.prototype.addExpr);
 
 
 /**
  * Adds or edits an expression
  * @param {os.ui.filter.Expression=} opt_expr
  * @param {os.ui.filter.ui.ExpressionNode=} opt_node
+ * @export
  */
 os.ui.filter.AdvancedFilterBuilderCtrl.prototype.edit = function(opt_expr, opt_node) {
   if (os.ui.window.exists(os.ui.filter.AdvancedFilterBuilderCtrl.EXPR_WINDOW_ID)) {
@@ -279,34 +278,9 @@ os.ui.filter.AdvancedFilterBuilderCtrl.prototype.edit = function(opt_expr, opt_n
   var edit = !!opt_expr;
   this['editing'] = true;
 
-  var options = {
-    id: os.ui.filter.AdvancedFilterBuilderCtrl.EXPR_WINDOW_ID,
-    x: 'center',
-    y: 'center',
-    label: (edit ? 'Edit' : 'Add') + ' Expression',
-    'show-close': false,
-    'no-scroll': true,
-    'z-index': '10002',
-    width: 750,
-    'min-width': 500,
-    'max-widith': 1000,
-    height: 150,
-    'min-height': 100,
-    'max-height': 200,
-    icon: 'fa fa-file'
-  };
-
   opt_expr = opt_expr ? opt_expr.clone() : new os.ui.filter.Expression();
-  var confirmCallback = edit && opt_node ? this.doEditExpr_.bind(this, opt_expr, opt_node) :
-      this.doAddExpr_.bind(this, opt_expr);
 
   var scopeOptions = {
-    'confirmCallback': confirmCallback,
-    'cancelCallback': this.onEditComplete_.bind(this),
-    'yesText': 'OK',
-    'yesIcon': 'btn-icon fa fa-check color-add',
-    'noText': 'Cancel',
-    'noIcon': 'btn-icon fa fa-ban red-icon',
     'expr': opt_expr,
     'columns': this.scope_['columns']
   };
@@ -315,36 +289,47 @@ os.ui.filter.AdvancedFilterBuilderCtrl.prototype.edit = function(opt_expr, opt_n
     scopeOptions['columns'].sort(os.ui.filter.AdvancedFilterBuilderCtrl.sortColumns);
   }
 
-  var template = '<confirm><expression expr="expr" columns="columns"></expression></confirm>';
-  os.ui.window.create(options, template, undefined, this.scope_, undefined, scopeOptions);
+  os.ui.window.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
+    confirm: edit && opt_node ? this.doEditExpr_.bind(this, opt_expr, opt_node) : this.doAddExpr_.bind(this, opt_expr),
+    cancel: this.onEditComplete_.bind(this),
+    prompt: '<expression expr="expr" columns="columns"></expression>',
+    windowOptions: {
+      'id': os.ui.filter.AdvancedFilterBuilderCtrl.EXPR_WINDOW_ID,
+      'x': 'center',
+      'y': 'center',
+      'label': (edit ? 'Edit' : 'Add') + ' Expression',
+      'show-close': false,
+      'no-scroll': true,
+      'width': 750,
+      'min-width': 500,
+      'max-widith': 1000,
+      'height': 'auto',
+      'icon': 'fa fa-file',
+      'modal': 'true'
+    }
+  }), scopeOptions);
 };
-goog.exportProperty(
-    os.ui.filter.AdvancedFilterBuilderCtrl.prototype,
-    'edit',
-    os.ui.filter.AdvancedFilterBuilderCtrl.prototype.edit);
 
 
 /**
  * Returns whether the currently selected node is removable
  * @return {boolean}
+ * @export
  */
 os.ui.filter.AdvancedFilterBuilderCtrl.prototype.canRemove = function() {
   return this['selected'] && this['selected'] !== this.scope_['root'];
 };
-goog.exportProperty(os.ui.filter.AdvancedFilterBuilderCtrl.prototype, 'canRemove',
-    os.ui.filter.AdvancedFilterBuilderCtrl.prototype.canRemove);
 
 
 /**
  * Removes the currently selected node.
+ * @export
  */
 os.ui.filter.AdvancedFilterBuilderCtrl.prototype.remove = function() {
   if (this.canRemove()) {
     this.scope_.$emit('filterbuilder.remove', this['selected']);
   }
 };
-goog.exportProperty(os.ui.filter.AdvancedFilterBuilderCtrl.prototype, 'remove',
-    os.ui.filter.AdvancedFilterBuilderCtrl.prototype.remove);
 
 
 /**

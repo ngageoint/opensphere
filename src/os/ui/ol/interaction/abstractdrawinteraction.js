@@ -38,7 +38,7 @@ os.ui.ol.interaction.AbstractDraw = function(opt_options) {
    * @type {ol.EventsConditionType}
    * @protected
    */
-  this.condition = goog.isDef(opt_options) && goog.isDef(opt_options.condition) ?
+  this.condition = opt_options !== undefined && opt_options.condition !== undefined ?
       opt_options.condition : ol.events.condition.shiftKeyOnly;
 
   /**
@@ -51,7 +51,7 @@ os.ui.ol.interaction.AbstractDraw = function(opt_options) {
    * @type {ol.style.Style}
    * @private
    */
-  this.style_ = goog.isDef(opt_options) && goog.isDef(opt_options.style) ? opt_options.style : new ol.style.Style({
+  this.style_ = opt_options !== undefined && opt_options.style !== undefined ? opt_options.style : new ol.style.Style({
     stroke: new ol.style.Stroke({
       color: [0, 0xff, 0xff, 1.0],
       lineCap: 'square',

@@ -9,7 +9,6 @@ goog.require('plugin.im.action.feature');
 goog.require('plugin.im.action.feature.node.menu');
 
 
-
 /**
  * The featureactions directive
  * @return {angular.Directive}
@@ -69,19 +68,17 @@ plugin.im.action.feature.ui.FeatureActionsCtrl.prototype.onSourceRemoved_ = func
 
 /**
  * @inheritDoc
+ * @export
  */
 plugin.im.action.feature.ui.FeatureActionsCtrl.prototype.close = function() {
   plugin.im.action.feature.ui.FeatureActionsCtrl.base(this, 'close');
   os.dataManager.unlisten(os.data.event.DataEventType.SOURCE_REMOVED, this.onSourceRemoved_, false, this);
 };
-goog.exportProperty(
-    plugin.im.action.feature.ui.FeatureActionsCtrl.prototype,
-    'close',
-    plugin.im.action.feature.ui.FeatureActionsCtrl.prototype.close);
 
 
 /**
  * @inheritDoc
+ * @export
  */
 plugin.im.action.feature.ui.FeatureActionsCtrl.prototype.apply = function() {
   plugin.im.action.feature.ui.FeatureActionsCtrl.base(this, 'apply');
@@ -90,19 +87,23 @@ plugin.im.action.feature.ui.FeatureActionsCtrl.prototype.apply = function() {
     var dm = os.data.DataManager.getInstance();
     var source = dm.getSource(this.entryType);
     if (source) {
-      if (source.isRefreshEnabled()) {
+      var layer = /** @type {os.layer.Vector} */ (os.MapContainer.getInstance().getLayer(this.entryType));
+
+      // check to see if the layer source should be refreshed
+      var featureActionRefresh = true;
+      if (layer.getLayerOptions()['featureActionRefresh'] !== undefined) {
+        featureActionRefresh = layer.getLayerOptions()['featureActionRefresh'];
+      }
+
+      if (source.isRefreshEnabled() && featureActionRefresh) {
         source.refresh();
       } else {
         var manager = plugin.im.action.feature.Manager.getInstance();
-        manager.processItems(source.getId(), source.getFeatures());
+        manager.processItems(source.getId(), source.getFeatures(), true);
       }
     }
   }
 };
-goog.exportProperty(
-    plugin.im.action.feature.ui.FeatureActionsCtrl.prototype,
-    'apply',
-    plugin.im.action.feature.ui.FeatureActionsCtrl.prototype.apply);
 
 
 /**
@@ -123,13 +124,10 @@ plugin.im.action.feature.ui.FeatureActionsCtrl.prototype.getExportName = functio
 
 /**
  * @inheritDoc
+ * @export
  */
 plugin.im.action.feature.ui.FeatureActionsCtrl.prototype.editEntry = function(opt_entry) {
   if (this.entryType) {
     plugin.im.action.feature.editEntry(this.entryType, opt_entry);
   }
 };
-goog.exportProperty(
-    plugin.im.action.feature.ui.FeatureActionsCtrl.prototype,
-    'editEntry',
-    plugin.im.action.feature.ui.FeatureActionsCtrl.prototype.editEntry);

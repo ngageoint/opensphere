@@ -20,7 +20,8 @@ os.ui.layer.layerPickerDirective = function() {
       'maxNumLayers': '@?',
       'formatter': '=?',
       'matcher': '=?',
-      'placeholderText': '@?'
+      'placeholderText': '@?',
+      'emitName': '@?'
     },
     templateUrl: os.ROOT + 'views/layer/layerpicker.html',
     controller: os.ui.layer.LayerPickerCtrl,
@@ -73,6 +74,12 @@ os.ui.layer.LayerPickerCtrl = function($scope, $element, $timeout) {
   this.placeholderText_ = this.scope_['placeholderText'] || ('Select Layer' + (this.multiple() ? 's' : '') + '...');
 
   /**
+   * @type {string}
+   * @private
+   */
+  this.emitName_ = this.scope_['emitName'] != null ? this.scope_['emitName'] : 'layerpicker';
+
+  /**
    * Array of available layers
    * @type {!Array.<!os.data.IDataDescriptor>}
    */
@@ -81,13 +88,15 @@ os.ui.layer.LayerPickerCtrl = function($scope, $element, $timeout) {
   var formatter = /** @type {Function} */ ($scope['formatter']) || this.select2Formatter_;
   var matcher = /** @type {Function} */ ($scope['matcher']) || this.matcher_;
 
-  if (!goog.isDefAndNotNull($scope['isRequired'])) {
+  if ($scope['isRequired'] == null) {
     // default the picker to required
     $scope['isRequired'] = true;
   }
 
-  $timeout(goog.bind(function() {
-    this.select2_ = $element.find('select.layer-typeahead');
+  this.timeout_ = $timeout;
+
+  $timeout(function() {
+    this.select2_ = $element.find('.js-layer-picker');
     this.select2_.select2({
       'placeholder': this.placeholderText_,
       'maximumSelectionSize': this.maxNumLayers_,
@@ -96,7 +105,7 @@ os.ui.layer.LayerPickerCtrl = function($scope, $element, $timeout) {
       'formatResult': formatter
     });
     this.layerSelected_();
-  }, this));
+  }.bind(this));
   this.scope_.$watch('layer', this.layerSelected_.bind(this));
   this.scope_.$watch('layers', this.layerSelected_.bind(this));
   this.scope_.$on('updateLayers', goog.bind(function() {
@@ -121,7 +130,7 @@ os.ui.layer.LayerPickerCtrl.prototype.destroy_ = function() {
  * @private
  */
 os.ui.layer.LayerPickerCtrl.prototype.layerSelected_ = function() {
-  if (goog.isDef(this.scope_['layer'])) {
+  if (this.scope_['layer'] !== undefined) {
     this.selectLayer_();
   } else {
     this.selectLayers_();
@@ -183,40 +192,34 @@ os.ui.layer.LayerPickerCtrl.prototype.getLayersList = function() {
 
 /**
  * @param {os.data.IDataDescriptor} layer
+ * @export
  */
 os.ui.layer.LayerPickerCtrl.prototype.layerPicked = function(layer) {
   this.scope_['layer'] = layer;
-  this.scope_.$emit('layerpicker.layerselected', layer);
+  this.scope_.$emit(this.emitName_ + '.layerselected', layer);
 };
-goog.exportProperty(
-    os.ui.layer.LayerPickerCtrl.prototype,
-    'layerPicked',
-    os.ui.layer.LayerPickerCtrl.prototype.layerPicked);
 
 
 /**
  * @param {!Array.<!os.data.IDataDescriptor>} layers
+ * @export
  */
 os.ui.layer.LayerPickerCtrl.prototype.layersChanged = function(layers) {
   this.scope_['layers'] = layers;
+  this.timeout_(function() { // give the scope a chance to update
+    this.scope_.$emit(this.emitName_ + '.layerschanged', layers);
+  }.bind(this));
 };
-goog.exportProperty(
-    os.ui.layer.LayerPickerCtrl.prototype,
-    'layersChanged',
-    os.ui.layer.LayerPickerCtrl.prototype.layersChanged);
 
 
 /**
  * Returns if this allows multiple selection.
  * @return {boolean}
+ * @export
  */
 os.ui.layer.LayerPickerCtrl.prototype.multiple = function() {
   return this.maxNumLayers_ != 1;
 };
-goog.exportProperty(
-    os.ui.layer.LayerPickerCtrl.prototype,
-    'multiple',
-    os.ui.layer.LayerPickerCtrl.prototype.multiple);
 
 
 /**
@@ -238,8 +241,8 @@ os.ui.layer.LayerPickerCtrl.prototype.select2Formatter_ = function(item, ele) {
       var color = des.getColor();
       color = color ? os.color.toHexString(color) : 'white';
       var description = des.getDescription() || 'No Description';
-      val = '<span title="' + description + '"><i class="fa fa-bars" style="color:' + color +
-          ';margin-right:5px;"></i>' + val;
+      val = '<span title="' + description + '"><i class="fa fa-bars mr-1" style="color:' + color +
+          ';"></i>' + val;
       if (des.getProvider()) {
         // put the provider on each for clarity
         val += ' (' + des.getProvider() + ')';

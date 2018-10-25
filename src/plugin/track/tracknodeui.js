@@ -9,13 +9,14 @@ goog.require('plugin.file.kml.ui');
 /**
  * @type {string}
  */
-plugin.track.ui.TrackNodeUITemplate = '<span class="glyphs pull-right slick-node-ui" ng-if="nodeUi.show()">' +
-        '<span ng-if="nodeUi.canEdit()" ng-click="nodeUi.addFolder()">' +
-            '<i class="fa fa-folder fa-fw glyph" title="Create a new folder"></i></span>' +
-        '<span ng-if="nodeUi.isRemovable()" ng-click="nodeUi.remove()">' +
-            '<i class="fa fa-times fa-fw glyph glyph-remove" title="Remove the layer and all saved tracks"></i>' +
-        '</span>' +
-    '</span>';
+plugin.track.ui.TrackNodeUITemplate = '<span ng-if="nodeUi.show()" class="d-flex flex-shrink-0">' +
+  '<span ng-if="nodeUi.canEdit()" ng-click="nodeUi.addFolder()">' +
+      '<i class="fa fa-folder fa-fw c-glyph" title="Create a new folder"></i></span>' +
+
+  '<span ng-if="nodeUi.isRemovable()" ng-click="nodeUi.remove()">' +
+      '<i class="fa fa-times fa-fw c-glyph" title="Remove the layer and all saved tracks"></i></span>' +
+  '</span>' +
+  '</span>';
 
 
 /**
@@ -56,6 +57,7 @@ goog.inherits(plugin.track.ui.TrackNodeUICtrl, os.ui.node.DefaultLayerNodeUICtrl
 
 /**
  * Add a new folder.
+ * @export
  */
 plugin.track.ui.TrackNodeUICtrl.prototype.addFolder = function() {
   var node = /** @type {plugin.file.kml.ui.KMLLayerNode} */ (this.scope['item']);
@@ -68,21 +70,14 @@ plugin.track.ui.TrackNodeUICtrl.prototype.addFolder = function() {
     }
   }
 };
-goog.exportProperty(
-    plugin.track.ui.TrackNodeUICtrl.prototype,
-    'addFolder',
-    plugin.track.ui.TrackNodeUICtrl.prototype.addFolder);
 
 
 /**
  * If the node can be edited.
  * @return {boolean}
+ * @export
  */
 plugin.track.ui.TrackNodeUICtrl.prototype.canEdit = function() {
   var node = /** @type {plugin.file.kml.ui.KMLLayerNode} */ (this.scope['item']);
   return node != null && node.isEditable();
 };
-goog.exportProperty(
-    plugin.track.ui.TrackNodeUICtrl.prototype,
-    'canEdit',
-    plugin.track.ui.TrackNodeUICtrl.prototype.canEdit);

@@ -1,0 +1,85 @@
+<div class="d-flex flex-column flex-fill">
+  <div class="modal-body">
+    <div ng-form="animationForm" class="container-fluid">
+      <div class="row mb-1">
+        <label class="form-check">
+          <input class="form-check-input" name="lock" type="checkbox" ng-model="lock">
+          Lock start of view window during animation
+        </label>
+        <span class="ml-auto"><popover data-title="'Lock'" content="lockTip" data-pos="'right'"></popover></span>
+      </div>
+      <div class="row mb-1">
+        <label class="form-check">
+          <input class="form-check-input" name="auto" type="checkbox" ng-model="fade" ng-change="animationCtrl.onFadeChange()">
+          Fade in/out features as the timeline moves
+        </label>
+	      <span class="ml-auto"><popover data-title="'Fade'" content="fadeTip" data-pos="'right'"></popover></span>
+      </div>
+
+      <div class="row mb-1">
+        <label class="form-check">
+          <input class="form-check-input" name="manual" type="checkbox" ng-model="autoLoop">
+          Auto configure the animation timeframe
+        </label>
+        <span class="ml-auto"><popover data-title="'Loop Range'" content="loopRangeTip" data-pos="'right'"></popover></span>
+      </div>
+
+      <div class="row mb-1">
+        <label class="col-form-label col-3 text-right" title="Animation range start">Start</label>
+        <div class="col">
+          <date-time value="loopStart" disabled="autoLoop" hidecontrols="true"></date-time>
+        </div>
+      </div>
+
+      <div class="row mb-1">
+        <label class="col-form-label col-3 text-right" title="Looped range end">End</label>
+        <div class="col">
+          <date-time value="loopEnd" disabled="autoLoop" hidecontrols="true"></date-time>
+        </div>
+      </div>
+
+      <div class="row mb-1" ng-if="animationCtrl.hasMultipleRanges()">
+        <i class="fa fa-warning"></i>
+        The timeline currently has multiple animation ranges. Accepting changes on this form will override them.
+      </div>
+
+      <div class="row mb-1">
+        <label class="checkbox">
+          <input name="auto" type="checkbox" ng-model="autoConfig" ng-change="animationCtrl.autoConfigure()">
+          Auto configure the window, skip, and tiles
+        </label>
+      </div>
+
+      <div class="row mb-1">
+        <label class="col-form-label col-3 text-right" title="The tile duration">Tiles</label>
+        <div class="col form-inline">
+          <select name="durationbox" required ng-disabled="autoConfig" class="custom-select" ng-model="duration" ng-options="value for value in durations"></select>
+        </div>
+        <span class="ml-auto"><popover data-title="'Tiles'" content="tilesTip" data-pos="'right'"></popover></span>
+      </div>
+
+      <div class="row mb-1">
+        <label class="col-form-label col-3 text-right" title="The active window size">Window</label>
+        <div class="col form-inline">
+          <input name="windowInput" required ng-disabled="autoConfig" class="form-control mr-1" ng-model="window" type="number" min="1">
+          <select name="windowUnitBox" required ng-disabled="autoConfig" class="custom-select" ng-model="windowUnit" ng-options="value.label for value in units"></select>
+        </div>
+        <span class="ml-auto"><popover data-title="'Window'" content="windowTip" data-pos="'right'"></popover></span>
+      </div>
+
+      <div class="row mb-1">
+        <label class="col-form-label col-3 text-right" title="How far the active window skips forward/back per frame">Skip</label>
+        <div class="col form-inline">
+          <input name="skipInput" required ng-disabled="autoConfig" class="form-control mr-1" ng-model="skip" type="number" min="1">
+          <select name="skipUnitBox" required ng-disabled="autoConfig" class="custom-select" ng-model="skipUnit" ng-options="value.label for value in units"></select>
+        </div>
+        <span class="ml-auto"><popover data-title="'Skip'" content="skipTip" data-pos="'right'"></popover></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button class="btn btn-primary" ng-disabled="animationForm.$invalid" ng-click="animationCtrl.accept()"><i class="fa fa-check"></i> OK</button>
+    <button class="btn btn-secondary" ng-click="animationCtrl.cancel()"><i class="fa fa-ban"></i> Cancel</button>
+  </div>
+</div>

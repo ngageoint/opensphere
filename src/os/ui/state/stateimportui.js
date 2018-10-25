@@ -24,6 +24,8 @@ goog.inherits(os.ui.state.StateImportUI, os.ui.im.FileImportUI);
  * @inheritDoc
  */
 os.ui.state.StateImportUI.prototype.launchUI = function(file, opt_config) {
+  os.ui.state.StateImportUI.base(this, 'launchUI', file, opt_config);
+
   var config = new os.parse.StateParserConfig();
 
   // if an existing config was provided, merge it in
@@ -34,10 +36,11 @@ os.ui.state.StateImportUI.prototype.launchUI = function(file, opt_config) {
 
   var rawState = null;
 
+  file.convertContentToString();
   var content = file.getContent();
   var contentType = file.getContentType();
   if (content) {
-    if (goog.isString(content)) {
+    if (typeof content === 'string') {
       if (contentType == 'application/json') {
         try {
           rawState = /** @type {Object} */ (JSON.parse(content));
@@ -132,10 +135,10 @@ os.ui.state.StateImportUI.prototype.showUI = function(file, config) {
   };
   var windowOptions = {
     'label': 'Import State',
-    'icon': 'fa fa-file-text lt-blue-icon',
+    'icon': 'fa fa-file-text',
     'x': 'center',
     'y': 'center',
-    'width': '385',
+    'width': '400',
     'height': 'auto',
     'modal': 'true',
     'show-close': 'true'

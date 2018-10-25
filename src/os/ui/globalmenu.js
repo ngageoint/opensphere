@@ -29,8 +29,18 @@ os.ui.GlobalMenuEventType = {
 os.ui.GlobalMenuCtrl = function($scope, $element, $timeout) {
   os.ui.GlobalMenuCtrl.base(this, 'constructor', $scope, $element, $timeout);
 
-  this.element.css('visibility', 'hidden');
+  this.element.removeClass('show');
   this.onDownBind_ = this.onClick_.bind(this);
+
+  /**
+   * @type {angular.JQLite|string|null}
+   */
+  this.target = null;
+
+  /**
+   * @type {Object?}
+   */
+  this.targetOffset = null;
 
   /**
    * @type {goog.async.Delay}
@@ -57,24 +67,28 @@ os.ui.GlobalMenuCtrl.prototype.destroy = function() {
  * @param {boolean=} opt_dispatch
  */
 os.ui.GlobalMenuCtrl.prototype.close = function(opt_dispatch) {
-  if (!goog.isDef(opt_dispatch)) {
+  if (opt_dispatch === undefined) {
     opt_dispatch = true;
   }
 
-  if (this.element.css('visibility') != 'hidden') {
+  this.target = null;
+  this.targetOffset = null;
+
+  if (this.element.hasClass('show')) {
     if (opt_dispatch && os.dispatcher) {
       os.dispatcher.dispatchEvent(os.ui.GlobalMenuEventType.MENU_CLOSE);
     }
 
-    this.element.css('visibility', 'hidden');
+    this.element.removeClass('show');
     this.element.removeClass('right-menu');
     this.element.blur();
   }
-  this.element.find('#globalMenuTitle').remove();
+  this.element.find('#js-global-menu__title').remove();
 
   var doc = goog.dom.getDocument();
   doc.removeEventListener(goog.events.EventType.MOUSEDOWN, this.onDownBind_, true);
   doc.removeEventListener(goog.events.EventType.POINTERDOWN, this.onDownBind_, true);
+  doc.removeEventListener(goog.events.EventType.SCROLL, this.onScroll_.bind(this), true);
 
   os.ui.apply(this.scope);
 };
@@ -96,6 +110,7 @@ os.ui.GlobalMenuCtrl.prototype.onAddOutsideListener_ = function() {
   var doc = goog.dom.getDocument();
   doc.addEventListener(goog.events.EventType.MOUSEDOWN, this.onDownBind_, true);
   doc.addEventListener(goog.events.EventType.POINTERDOWN, this.onDownBind_, true);
+  doc.addEventListener(goog.events.EventType.SCROLL, this.onScroll_.bind(this), true);
 };
 
 
@@ -106,7 +121,7 @@ os.ui.GlobalMenuCtrl.prototype.onAddOutsideListener_ = function() {
  */
 os.ui.GlobalMenuCtrl.prototype.onClick_ = function(e) {
   // if we didn't click on something in the menu
-  if (!$(e.target).closest('#globalMenu').length) {
+  if (!$(e.target).closest('#js-global-menu').length) {
     // close the menu
     this.close();
   }
@@ -165,14 +180,38 @@ os.ui.GlobalMenuCtrl.prototype.position = function() {
       element.css('left', '');
       element.css('right', '');
 
-      element.css(goog.isDef(pos['right']) ? 'right' : 'left', x + 'px');
-      element.css(goog.isDef(pos['bottom']) ? 'bottom' : 'top', y + 'px');
+      element.css(pos['right'] !== undefined ? 'right' : 'left', x + 'px');
+      element.css(pos['bottom'] !== undefined ? 'bottom' : 'top', y + 'px');
     } else if (pos == 'right') {
       element.addClass('right-menu');
     }
 
-    element.css('visibility', 'visible');
+    element.addClass('show');
   }, 5);
+};
+
+
+/**
+ * Set target
+ * @param {angular.JQLite|string} target
+ */
+os.ui.GlobalMenuCtrl.prototype.setTarget = function(target) {
+  this.target = target;
+  this.targetOffset = $(target).offset();
+};
+
+
+/**
+ * Close window if target position changed
+ * @private
+ */
+os.ui.GlobalMenuCtrl.prototype.onScroll_ = function() {
+  if (this.targetOffset) {
+    var currPos = $(this.target).offset();
+    if (this.targetOffset['left'] != currPos['left'] || this.targetOffset['top'] != currPos['top']) {
+      os.ui.GlobalMenuCtrl.closeMenu();
+    }
+  }
 };
 
 
@@ -192,7 +231,7 @@ os.ui.GlobalMenuCtrl.prototype.position = function() {
  * @param {?string=} opt_title Optional title html for the menu
  */
 os.ui.openMenu = function(provider, position, opt_target, opt_root, opt_title) {
-  var menuEl = angular.element('#globalMenu');
+  var menuEl = angular.element('#js-global-menu');
   var s = menuEl.scope();
   s['provider'] = provider;
   var ctrl = /** @type {os.ui.GlobalMenuCtrl} */ (s['actionMenu']);
@@ -200,7 +239,11 @@ os.ui.openMenu = function(provider, position, opt_target, opt_root, opt_title) {
 
   // update the menu title if provided
   if (opt_title) {
-    ctrl.addTitle('#globalMenu', '<div id="globalMenuTitle">' + opt_title + '</div>');
+    ctrl.addTitle('#js-global-menu', '<div id="js-global-menu__title" class="text-truncate">' + opt_title + '</div>');
+  }
+
+  if (opt_target) {
+    ctrl.setTarget(opt_target);
   }
 
   var timeout = /** @type {angular.$timeout} */ (os.ui.injector.get('$timeout'));
@@ -219,7 +262,7 @@ os.ui.openMenu = function(provider, position, opt_target, opt_root, opt_title) {
  * Allow closing the current global menu if its up
  */
 os.ui.GlobalMenuCtrl.closeMenu = function() {
-  var menuEl = angular.element('#globalMenu');
+  var menuEl = angular.element('#js-global-menu');
   var s = menuEl.scope();
   var ctrl = /** @type {os.ui.GlobalMenuCtrl} */ (s['actionMenu']);
 
@@ -243,26 +286,26 @@ os.ui.GlobalMenuCtrl.closeMenu = function() {
  * @private
  */
 os.ui.positionMenu_ = function(position, opt_target, opt_root) {
-  var menuEl = angular.element('#globalMenu');
+  var menuEl = angular.element('#js-global-menu');
   var s = menuEl.scope();
   var ctrl = /** @type {os.ui.GlobalMenuCtrl} */ (s['actionMenu']);
 
   var targetEl;
-  if (goog.isString(opt_target)) {
+  if (typeof opt_target === 'string') {
     // target is a selector from the document or a root element
-    targetEl = goog.isDefAndNotNull(opt_root) ? opt_root.find(opt_target) : angular.element(opt_target);
-  } else if (goog.isDef(opt_target)) {
+    targetEl = opt_root != null ? opt_root.find(opt_target) : angular.element(opt_target);
+  } else if (opt_target !== undefined) {
     // target is an element
     targetEl = opt_target;
   }
 
   var p = position;
-  if (goog.isDefAndNotNull(targetEl)) {
+  if (targetEl != null) {
     var pos = /** @type {{left: number, top:number}} */ (targetEl.offset());
     if (pos.top) {
       pos.top -= $(document).scrollTop();
     }
-    if (goog.isString(position)) {
+    if (typeof position === 'string') {
       var parts = position.split(/\s+/);
       position = parts[0];
       var offset = parts.length > 1 ? parseInt(parts[1], 10) : 2;

@@ -44,6 +44,7 @@ os.ui.node.LayerTypeCtrl = function($scope, $element) {
 
 /**
  * @return {string}
+ * @export
  */
 os.ui.node.LayerTypeCtrl.prototype.getType = function() {
   if (os.settings.get(['ui', 'layers', 'showLayerTypes'], true)) {
@@ -59,5 +60,3 @@ os.ui.node.LayerTypeCtrl.prototype.getType = function() {
   return '';
 };
 
-goog.exportProperty(
-    os.ui.node.LayerTypeCtrl.prototype, 'getType', os.ui.node.LayerTypeCtrl.prototype.getType);

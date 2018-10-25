@@ -6,6 +6,7 @@ goog.require('os.data.SourceManager');
 goog.require('os.defines');
 goog.require('os.source.PropertyChange');
 goog.require('os.ui.Module');
+goog.require('os.ui.util.validationMessageDirective');
 goog.require('os.ui.window');
 goog.require('plugin.vectortools.MergeLayer');
 goog.require('plugin.vectortools.mappingCounterDirective');
@@ -72,7 +73,7 @@ plugin.vectortools.MergeCtrl = function($scope, $element) {
   this.init();
 
   $scope.$on('$destroy', this.disposeInternal.bind(this));
-  $scope.$emit('window.ready');
+  $scope.$emit(os.ui.WindowEventType.READY);
 };
 goog.inherits(plugin.vectortools.MergeCtrl, os.data.SourceManager);
 
@@ -158,19 +159,19 @@ plugin.vectortools.MergeCtrl.prototype.onUpdateDelay = function() {
 
 /**
  * Close dialog
+ * @export
  */
 plugin.vectortools.MergeCtrl.prototype.close = function() {
   os.ui.window.close(this.element_);
 };
-goog.exportProperty(plugin.vectortools.MergeCtrl.prototype, 'close', plugin.vectortools.MergeCtrl.prototype.close);
 
 
 /**
  * Adds the command to perform the merge.
+ * @export
  */
 plugin.vectortools.MergeCtrl.prototype.accept = function() {
   var merge = new plugin.vectortools.MergeLayer(this.sourceIds_, this['name']);
   os.command.CommandProcessor.getInstance().addCommand(merge);
   this.close();
 };
-goog.exportProperty(plugin.vectortools.MergeCtrl.prototype, 'accept', plugin.vectortools.MergeCtrl.prototype.accept);

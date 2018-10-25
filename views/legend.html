@@ -1,0 +1,13 @@
+<div class="u-hover-container js-legend__render-container" ng-class="legend.widget && 'position-fixed'">
+  <div class="text-right" ng-if="legend.widget">
+    <button class="btn btn-sm btn-outline-secondary border-0 bg-transparent animate-fade u-hover-show" title="Open settings"
+        ng-click="legend.openSettings()">
+      <i class="fa fa-gear"></i>
+    </button>
+    <button class="btn btn-sm btn-outline-secondary border-0 bg-transparent animate-fade u-hover-show" title="Close the legend"
+        ng-click="legend.close()">
+      <i class="fa fa-times"></i>
+    </button>
+  </div>
+  <canvas></canvas>
+</div>

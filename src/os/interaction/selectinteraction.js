@@ -7,6 +7,7 @@ goog.require('os.I3DSupport');
 goog.require('os.data.DataManager');
 goog.require('os.data.RecordField');
 goog.require('os.feature');
+goog.require('os.implements');
 goog.require('os.interaction');
 goog.require('os.source.Vector');
 
@@ -24,13 +25,13 @@ os.interaction.Select = function(opt_options) {
     handleEvent: os.interaction.Select.handleEvent_
   });
 
-  var options = goog.isDef(opt_options) ? opt_options : {};
+  var options = opt_options !== undefined ? opt_options : {};
 
   /**
    * @type {ol.EventsConditionType}
    * @protected
    */
-  this.condition = goog.isDef(options.condition) ? options.condition : ol.events.condition.singleClick;
+  this.condition = options.condition !== undefined ? options.condition : ol.events.condition.singleClick;
 
   var layerFilter;
   if (options.layers != null) {
@@ -69,7 +70,7 @@ os.interaction.Select = function(opt_options) {
   this.selectionBehavior = /** @type {boolean} */ (os.settings.get('interaction.selectionBehavior', true));
 };
 goog.inherits(os.interaction.Select, ol.interaction.Interaction);
-
+os.implements(os.interaction.Select, os.I3DSupport.ID);
 
 /**
  * @inheritDoc

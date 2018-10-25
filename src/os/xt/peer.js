@@ -253,7 +253,7 @@ os.xt.Peer.prototype.onWebMessage_ = function(evt) {
 
   var origins = this.getAllowedOrigins();
   if (!origins || origins.indexOf(evt.origin) > -1) {
-    if (goog.isString(evt.data)) {
+    if (typeof evt.data === 'string') {
       os.xt.Peer.getInstance().handleMessage(evt.data, evt.origin);
     } else {
       goog.log.error(os.xt.Peer.LOGGER_,
@@ -622,7 +622,7 @@ os.xt.Peer.prototype.getMasterId_ = function() {
 os.xt.Peer.prototype.isPeerAlive_ = function(peerId) {
   var theirPing = this.getLastPing_(peerId);
   var myPing = this.getLastPing_();
-  return goog.isDefAndNotNull(theirPing) && (myPing - theirPing < 1.5 * os.xt.Peer.PING_INTERVAL);
+  return theirPing != null && (myPing - theirPing < 1.5 * os.xt.Peer.PING_INTERVAL);
 };
 
 

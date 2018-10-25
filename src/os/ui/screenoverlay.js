@@ -16,6 +16,7 @@ os.ui.screenOverlayDrective = function() {
     restrict: 'E',
     transclude: true,
     scope: true,
+    replace: true,
     templateUrl: os.ROOT + 'views/windows/screenoverlay.html',
     controller: os.ui.ScreenOverlayCtrl,
     controllerAs: 'confirm'

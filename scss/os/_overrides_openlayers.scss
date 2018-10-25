@@ -1,0 +1,294 @@
+// Openlayers Modifications
+.ol-overlaycontainer-stopevent {
+  height: 0;
+  // Prevent IE from thinking this container should have a height, since it doesn't.
+}
+
+// Viewport
+.ol-viewport {
+  // Parent of viewport requires display: flex
+  flex: 1 1 auto;
+
+  > canvas {
+    display: inherit;
+  }
+
+  // Height: 100% not supported under a flex container
+  // The canvas adds a style tag so we have to override that
+  canvas.ol-unselectable {
+    height: auto !important;
+  }
+}
+
+// Generic Controls
+.ol-control {
+  background-color: rgba($body-bg, .8);
+  border: .1rem solid $border-color;
+  color: rgba($body-color, .8);
+  position: absolute;
+
+  &:focus,
+  &:hover {
+    background-color: rgba($body-bg, .8);
+    border: .1rem solid $border-color;
+    color: rgba($body-color, .8);
+  }
+
+  button {
+    background-color: rgba($body-bg, .1);
+    color: rgba($body-color, .8);
+    cursor: pointer;
+
+    &:hover,
+    &.active {
+      background-color: rgba($primary, .8);
+    }
+  }
+}
+
+
+// If the draw controls are absolutely positioned, position to top left
+.draw-controls {
+  bottom: auto;
+  left: .75rem;
+  right: auto;
+  top: .75rem;
+  z-index: 1;
+}
+
+
+// + / - zoom control buttons
+.ol-zoom {
+  bottom: auto;
+  left: auto;
+  right: .75rem;
+  top: .75rem;
+}
+
+
+// Arrow rotation control button
+.ol-rotate {
+  bottom: auto;
+  left: auto;
+  right: .75rem;
+  top: 4.5rem;
+}
+
+
+// 2D / 3D switcher button
+.ol-mapmode {
+  bottom: auto;
+  left: auto;
+  right: .75rem;
+  top: 6.75rem;
+
+  .ol-mapmode-text {
+    font-size: .9em;
+  }
+}
+
+
+// Zoombar needs a min width
+.ol-zoom-level {
+  font-family: monospace;
+  font-size: 110%;
+  min-width: 15rem;
+}
+
+// If the zoom level is small, dont take as much space
+.small .ol-zoom-level {
+  min-width: 10rem;
+}
+
+
+// Layer switcher
+.ol-layer-switcher {
+  bottom: auto;
+  left: auto;
+  right: 3rem;
+  text-align: left;
+  top: .75rem;
+
+  .panel {
+    padding: 0 5px;
+  }
+
+  .layers-inner {
+    background-image: url('../../images/layers.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 2.5rem;
+    margin-left: auto;
+    width: 2.5rem;
+  }
+
+  .form-check-input,
+  .form-check-label {
+    cursor: pointer;
+  }
+}
+
+
+// Overview map
+.ol-overviewmap {
+  bottom: auto;
+  left: auto;
+  right: 3rem;
+  top: .75rem;
+
+  &.ol-collapsed button {
+    position: static;
+  }
+
+  button {
+    background: rgba($body-bg, .5);
+    color: rgba($body-color, .8);
+    position: absolute;
+    right: .1rem;
+    top: .1rem;
+  }
+
+  .ol-overviewmap-map {
+    border: 0;
+    display: block;
+    height: 7.625rem;
+    margin: 0;
+    width: 15rem;
+  }
+
+  .ol-overviewmap-box {
+    border: .125rem dotted $danger;
+  }
+}
+
+// Collapsed overview map
+.ol-collapsed .ol-overviewmap-map {
+  display: none;
+}
+
+
+// Scale Line
+.ol-scale-line {
+  bottom: .75rem;
+  cursor: pointer;
+  font-family: monospace;
+  left: .75rem;
+  padding: .5rem;
+  right: auto;
+  top: auto;
+  z-index: 1;
+
+  .ol-scale-line-inner {
+    border-color: rgba($body-color, .8);
+    color: rgba($body-color, .8);
+    display: inline-block;
+    font-size: 100%;
+    height: .5rem;
+    line-height: 0;
+  }
+}
+
+
+// Attribution
+.ol-attribution,
+.ol-attribution.ol-uncollapsible {
+  bottom: .25rem;
+  // Chrome < 41 needs initial
+  // sass-lint:disable no-duplicate-properties
+  height: initial;
+  height: unset;
+  left: .25rem;
+  right: auto;
+  text-align: left;
+  top: auto;
+
+  li:nth-child(n+2):not(:last-child):after {
+    content: ', ';
+  }
+
+  &:hover {
+    background-color: rgba($white, .6);
+    color: rgba($body-color, .9);
+  }
+
+  a {
+    color: rgba($link-color, .8);
+  }
+}
+
+
+// Mouse Position
+.ol-mouse-position {
+  bottom: .75em;
+  cursor: pointer;
+  font-family: monospace;
+  font-size: 110%;
+  left: auto;
+  right: .75rem;
+  top: auto;
+}
+
+// Zoom Slider
+.ol-zoomslider {
+  height: 45%;
+  left: auto;
+  margin: 1px;
+  max-height: 12.5rem;
+  right: .75em;
+  top: 4.75em;
+
+  .ol-zoomslider-thumb {
+    background-color: rgba($body-color, .4);
+    border: 1px solid $border-color;
+  }
+}
+
+// Positioning/sizing for controls in a nav bar.
+.navbar {
+  .ol-mouse-position {
+    bottom: auto;
+    right: auto;
+  }
+
+  .ol-zoom-level {
+    min-width: 15rem;
+  }
+
+  .ol-scale-line {
+    background: transparent;
+    bottom: auto;
+    left: auto;
+    min-width: 10rem;
+    // Chrome < 41 needs initial
+    // sass-lint:disable no-duplicate-properties
+    padding: initial;
+    padding: unset;
+  }
+}
+
+// Color adjustments for dark navbars. Light navbars should use the defaults.
+.navbar-dark {
+  .ol-mouse-position {
+    color: $navbar-dark-color;
+  }
+
+  .ol-zoom-level {
+    color: $navbar-dark-color;
+  }
+
+  .ol-scale-line {
+    color: $navbar-dark-color;
+
+    .ol-scale-line-inner {
+      border-color: $navbar-dark-color;
+      color: $navbar-dark-color;
+    }
+  }
+}
+
+@include media-breakpoint-down('sm') {
+  .ol-zoom-level,
+  .ol-mouse-position {
+    font-size: $font-size-base;
+  }
+}

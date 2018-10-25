@@ -176,22 +176,3 @@ os.ui.im.DuplicateImportProcess.prototype.getDescriptorByUrl = function(url) {
 
   return null;
 };
-
-
-/**
- * @inheritDoc
- */
-os.ui.im.DuplicateImportProcess.prototype.processFile = function() {
-  if (this.file) {
-    // check to see if the URL/File should be imported as a provider
-    // e.g. The file content is a GetCapabilities response rather than a feature response
-    var type = os.dataManager.getProviderTypeByFile(this.file);
-
-    if (type) {
-      this.file.setType(type);
-      this.onFileType(type);
-    } else {
-      os.ui.im.DuplicateImportProcess.base(this, 'processFile');
-    }
-  }
-};

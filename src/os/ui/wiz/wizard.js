@@ -109,6 +109,7 @@ os.ui.wiz.WizardCtrl = function($scope, $element, $timeout, $attrs) {
   }
 
   $scope.$on(os.ui.wiz.step.WizardStepEvent.VALIDATE, this.onStepValidityChange_.bind(this));
+  $scope.$on(os.ui.wiz.step.WizardStepEvent.SAVE, this.onSave_.bind(this));
   $scope.$on(os.ui.WindowEventType.CANCEL, this.cancelInternal.bind(this));
   $scope.$on('$destroy', this.destroy_.bind(this));
 };
@@ -142,12 +143,26 @@ os.ui.wiz.WizardCtrl.prototype.onStepValidityChange_ = function(event, opt_valid
   event.stopPropagation();
 
   // default to true, relying on the step validity result
-  var valid = goog.isDef(opt_valid) ? opt_valid : true;
+  var valid = opt_valid !== undefined ? opt_valid : true;
   var step = this['steps'][this['activeIndex']];
   if (valid && step.isValid(this.config)) {
     this.setStepState(step, os.ui.wiz.StepState.NONE);
   } else {
     this.setStepState(step, os.ui.wiz.StepState.ERROR);
+  }
+};
+
+
+/**
+ * Handles save events.
+ * @param {angular.Scope.Event} event
+ * @param {os.parse.FileParserConfig=} opt_config Optional parser config.
+ * @private
+ */
+os.ui.wiz.WizardCtrl.prototype.onSave_ = function(event, opt_config) {
+  var step = this['steps'][this['activeIndex']];
+  if (step) {
+    step.finalize(opt_config);
   }
 };
 
@@ -160,13 +175,14 @@ os.ui.wiz.WizardCtrl.prototype.onStepValidityChange_ = function(event, opt_valid
  */
 os.ui.wiz.WizardCtrl.prototype.activateStep_ = function(step, opt_skipCompile) {
   var scope = opt_skipCompile ? undefined : this.scope.$new();
-  var parent = opt_skipCompile ? undefined : this.element.find('#wizard-step-content');
+  var parent = opt_skipCompile ? undefined : this.element.find('#js-wizard-step-content');
   step.activate(this.config, scope, parent);
 };
 
 
 /**
  * Check if all steps are complete and finish the wizard, or display an error.
+ * @export
  */
 os.ui.wiz.WizardCtrl.prototype.accept = function() {
   var step = this['steps'][this['activeIndex']];
@@ -176,49 +192,48 @@ os.ui.wiz.WizardCtrl.prototype.accept = function() {
     this.setStepState(step, os.ui.wiz.StepState.ERROR);
   }
 };
-goog.exportProperty(os.ui.wiz.WizardCtrl.prototype, 'accept', os.ui.wiz.WizardCtrl.prototype.accept);
 
 
 /**
  * If the accept button should be enabled.
  * @return {boolean}
+ * @export
  */
 os.ui.wiz.WizardCtrl.prototype.canAccept = function() {
   // only enable the accept button if we're on the last step and it's valid
   return this.isLastStep() && this.getStepState(this['activeIndex']) != os.ui.wiz.StepState.ERROR;
 };
-goog.exportProperty(os.ui.wiz.WizardCtrl.prototype, 'canAccept', os.ui.wiz.WizardCtrl.prototype.canAccept);
 
 
 /**
  * If the next button should be enabled.
  * @return {boolean}
+ * @export
  */
 os.ui.wiz.WizardCtrl.prototype.canContinue = function() {
   // only enable the next button if we're not on the last step and the current step is valid
   return !this.isLastStep() && this.getStepState(this['activeIndex']) != os.ui.wiz.StepState.ERROR;
 };
-goog.exportProperty(os.ui.wiz.WizardCtrl.prototype, 'canContinue', os.ui.wiz.WizardCtrl.prototype.canContinue);
 
 
 /**
  * If the accept button should be enabled.
  * @return {boolean}
+ * @export
  */
 os.ui.wiz.WizardCtrl.prototype.isLastStep = function() {
   return this['activeIndex'] == this['steps'].length - 1;
 };
-goog.exportProperty(os.ui.wiz.WizardCtrl.prototype, 'isLastStep', os.ui.wiz.WizardCtrl.prototype.isLastStep);
 
 
 /**
  * Performs wizard cancellation actions and closes the window.
+ * @export
  */
 os.ui.wiz.WizardCtrl.prototype.cancel = function() {
   this.cancelInternal();
   os.ui.window.close(this.element);
 };
-goog.exportProperty(os.ui.wiz.WizardCtrl.prototype, 'cancel', os.ui.wiz.WizardCtrl.prototype.cancel);
 
 
 /**
@@ -243,6 +258,7 @@ os.ui.wiz.WizardCtrl.prototype.finish = function() {
  * Move to the next step in the wizard.
  * @param {boolean=} opt_skipCompile If true, compilation of the next step will be skipped. Use this when moving
  *   multiple steps at a time.
+ * @export
  */
 os.ui.wiz.WizardCtrl.prototype.next = function(opt_skipCompile) {
   if (this['activeIndex'] < this['steps'].length - 1) {
@@ -267,13 +283,13 @@ os.ui.wiz.WizardCtrl.prototype.next = function(opt_skipCompile) {
     this.afterStepping_();
   }
 };
-goog.exportProperty(os.ui.wiz.WizardCtrl.prototype, 'next', os.ui.wiz.WizardCtrl.prototype.next);
 
 
 /**
  * Move to the previous step in the wizard.
  * @param {boolean=} opt_skipCompile If true, compilation of the next step will be skipped. Use this when moving
  *   multiple steps at a time.
+ * @export
  */
 os.ui.wiz.WizardCtrl.prototype.prev = function(opt_skipCompile) {
   if (this['activeIndex'] > 0) {
@@ -286,7 +302,6 @@ os.ui.wiz.WizardCtrl.prototype.prev = function(opt_skipCompile) {
     this.afterStepping_();
   }
 };
-goog.exportProperty(os.ui.wiz.WizardCtrl.prototype, 'prev', os.ui.wiz.WizardCtrl.prototype.prev);
 
 
 /**
@@ -312,6 +327,7 @@ os.ui.wiz.WizardCtrl.prototype.afterStepping_ = function() {
 /**
  * Move to a specific step in the wizard.
  * @param {number} index
+ * @export
  */
 os.ui.wiz.WizardCtrl.prototype.setStepIndex = function(index) {
   index = goog.math.clamp(index, 0, this['steps'].length - 1);
@@ -332,37 +348,31 @@ os.ui.wiz.WizardCtrl.prototype.setStepIndex = function(index) {
     }
   }
 };
-goog.exportProperty(
-    os.ui.wiz.WizardCtrl.prototype,
-    'setStepIndex',
-    os.ui.wiz.WizardCtrl.prototype.setStepIndex);
 
 
 /**
  * Determine if the provided step is set as the active step.
  * @param {os.ui.wiz.step.IWizardStep|number} step The step or the index in the steps array
  * @return {boolean}
+ * @export
  */
 os.ui.wiz.WizardCtrl.prototype.isActive = function(step) {
-  if (goog.isNumber(step)) {
+  if (typeof step === 'number') {
     return this['activeIndex'] === step;
   } else {
     return this['steps'][this['activeIndex']] === step;
   }
 };
-goog.exportProperty(
-    os.ui.wiz.WizardCtrl.prototype,
-    'isActive',
-    os.ui.wiz.WizardCtrl.prototype.isActive);
 
 
 /**
  * Get the icon to display next to the step in the wizard.
  * @param {os.ui.wiz.step.IWizardStep|number} step The step or the index in the steps array
  * @return {!string}
+ * @export
  */
 os.ui.wiz.WizardCtrl.prototype.getStepIcon = function(step) {
-  if (goog.isNumber(step)) {
+  if (typeof step === 'number') {
     step = this['steps'][step];
   }
 
@@ -370,40 +380,33 @@ os.ui.wiz.WizardCtrl.prototype.getStepIcon = function(step) {
     var state = this.getStepState(step);
     if (state == os.ui.wiz.StepState.ERROR) {
       // always show the error icon if the step is invalid, regardless of position
-      return 'fa-exclamation-triangle orange-icon';
+      return 'fa-exclamation-triangle text-warning';
     } else if (this.isActive(step)) {
       // show the caret for the active step
       return 'fa-caret-right';
     } else if (state == os.ui.wiz.StepState.COMPLETE) {
       // show checkmark for completed steps
-      return 'fa-check green-icon';
+      return 'fa-check text-success';
     }
   }
 
   return '';
 };
-goog.exportProperty(
-    os.ui.wiz.WizardCtrl.prototype,
-    'getStepIcon',
-    os.ui.wiz.WizardCtrl.prototype.getStepIcon);
 
 
 /**
  * Get the state of the provided step
  * @param {os.ui.wiz.step.IWizardStep|number} step The step or the index in the steps array
  * @return {!string}
+ * @export
  */
 os.ui.wiz.WizardCtrl.prototype.getStepState = function(step) {
-  if (goog.isNumber(step)) {
+  if (typeof step === 'number') {
     step = this['steps'][step];
   }
 
   return this['stepStates'][step.getTitle()];
 };
-goog.exportProperty(
-    os.ui.wiz.WizardCtrl.prototype,
-    'getStepState',
-    os.ui.wiz.WizardCtrl.prototype.getStepState);
 
 
 /**
@@ -413,7 +416,7 @@ goog.exportProperty(
  * @protected
  */
 os.ui.wiz.WizardCtrl.prototype.setStepState = function(step, state) {
-  if (goog.isNumber(step)) {
+  if (typeof step === 'number') {
     step = this['steps'][step];
   }
 

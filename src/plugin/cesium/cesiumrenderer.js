@@ -9,7 +9,6 @@ goog.require('os.webgl.AbstractWebGLRenderer');
 goog.require('plugin.cesium');
 goog.require('plugin.cesium.Camera');
 goog.require('plugin.cesium.TileGridTilingScheme');
-goog.require('plugin.cesium.WMSTerrainProvider');
 goog.require('plugin.cesium.interaction');
 goog.require('plugin.cesium.mixin');
 goog.require('plugin.cesium.sync.RootSynchronizer');
@@ -103,8 +102,9 @@ plugin.cesium.CesiumRenderer.prototype.initialize = function() {
           // initialize interactions that have additional support for Cesium
           plugin.cesium.interaction.loadInteractionMixins();
 
-          this.registerTerrainProviderType('cesium', Cesium.CesiumTerrainProvider);
-          this.registerTerrainProviderType('wms', plugin.cesium.WMSTerrainProvider);
+          this.registerTerrainProviderType('cesium', plugin.cesium.createCesiumTerrain);
+          this.registerTerrainProviderType('cesium-ion', plugin.cesium.createWorldTerrain);
+          this.registerTerrainProviderType('wms', plugin.cesium.createWMSTerrain);
 
           this.olCesium_ = new olcs.OLCesium({
             cameraClass: plugin.cesium.Camera,
@@ -136,9 +136,17 @@ plugin.cesium.CesiumRenderer.prototype.initialize = function() {
           this.updateTerrainProvider();
 
           // configure Cesium fog
-          scene.fog.enabled = /** @type {boolean} */ (os.settings.get(os.config.DisplaySetting.FOG_ENABLED, true));
-          scene.fog.density = /** @type {boolean} */ (os.settings.get(os.config.DisplaySetting.FOG_DENSITY,
+          this.showFog(/** @type {boolean} */ (os.settings.get(os.config.DisplaySetting.FOG_ENABLED, true)));
+
+          // legacy code saved density as the Cesium fog density value. now it is saved as a percentage from 0-1. if
+          // the settings value is non-zero (no fog) and less than 5% (not allowed by our UI), reset it to the default.
+          var density = /** @type {number} */ (os.settings.get(os.config.DisplaySetting.FOG_DENSITY,
               plugin.cesium.DEFAULT_FOG_DENSITY));
+          if (density != 0 && density < 0.05) {
+            density = plugin.cesium.DEFAULT_FOG_DENSITY;
+          }
+
+          this.setFogDensity(density);
 
           // create our camera handler
           var camera = this.olCesium_.camera_ = new plugin.cesium.Camera(scene, this.map);
@@ -249,23 +257,38 @@ plugin.cesium.CesiumRenderer.prototype.getPixelFromCoordinate = function(coordin
  * @inheritDoc
  */
 plugin.cesium.CesiumRenderer.prototype.forEachFeatureAtPixel = function(pixel, callback, opt_options) {
-  // NOTE: The Cesium version does not follow the full spec for forEachFeatureAtPixel. In all of our current
-  // calls, we are only concerned with the top feature. Therefore, Scene.pick() is used instead of
-  // Scene.drillPick(). If the calling method is attempting to loop over more than the top pixel, the 3D
-  // method will fail over to the OpenLayers method.
-
   if (this.olCesium_) {
     var cartesian = new Cesium.Cartesian2(pixel[0], pixel[1]);
-    var picked = /** @type {Cesium.Primitive} */ (this.olCesium_.getCesiumScene().pick(cartesian));
-    if (picked && picked.primitive) {
-      // convert primitive to feature
-      var feature = picked.primitive.olFeature;
-      var layer = picked.primitive.olLayer;
+    var drillPick = opt_options ? opt_options['drillPick'] : false;
+    var scene = this.olCesium_.getCesiumScene();
+    var primitives;
 
-      if (feature && layer) {
-        var layerFilter = opt_options ? opt_options.layerFilter : undefined;
-        if (!layerFilter || layerFilter(layer)) {
-          return callback(feature, layer) || null;
+    if (drillPick) {
+      // drillPick is extremely slow and should only be used in cases where it's needed (such as launching feature
+      // info for stacked features)
+      primitives = /** @type {Array<Cesium.Primitive>} */ (scene.drillPick(cartesian));
+    } else {
+      var primitive = /** @type {Cesium.Primitive} */ (scene.pick(cartesian));
+      if (primitive) {
+        primitives = [primitive];
+      }
+    }
+
+    if (primitives && primitives.length > 0) {
+      for (var i = 0, ii = primitives.length; i < ii; i++) {
+        // convert primitive to feature
+        var primitive = primitives[i];
+        var feature = primitive.primitive.olFeature;
+        var layer = primitive.primitive.olLayer;
+
+        if (feature && layer) {
+          var layerFilter = opt_options ? opt_options.layerFilter : undefined;
+          if (!layerFilter || layerFilter(layer)) {
+            var value = callback(feature, layer) || null;
+            if (value) {
+              return value;
+            }
+          }
         }
       }
     }
@@ -283,7 +306,7 @@ plugin.cesium.CesiumRenderer.prototype.renderSync = function() {
     var scene = this.olCesium_.getCesiumScene();
     if (scene) {
       scene.initializeFrame();
-      scene.render(plugin.cesium.getJulianDate());
+      scene.forceRender(plugin.cesium.getJulianDate());
     }
   }
 };
@@ -331,7 +354,8 @@ plugin.cesium.CesiumRenderer.prototype.showFog = function(value) {
 plugin.cesium.CesiumRenderer.prototype.setFogDensity = function(value) {
   var scene = this.olCesium_ ? this.olCesium_.getCesiumScene() : undefined;
   if (scene) {
-    var newDensity = value * plugin.cesium.MAX_FOG_DENSITY;
+    // density value should be between 0 (no fog) and the maximum density allowed by the application
+    var newDensity = goog.math.clamp(value * plugin.cesium.MAX_FOG_DENSITY, 0, plugin.cesium.MAX_FOG_DENSITY);
     if (scene.fog.density != newDensity) {
       scene.fog.density = newDensity;
     }
@@ -378,10 +402,10 @@ plugin.cesium.CesiumRenderer.prototype.showTerrain = function(value) {
 /**
  * Register a new Cesium terrain provider type.
  * @param {string} type The type id.
- * @param {!plugin.cesium.TerrainProviderFn} clazz The terrain provider class.
+ * @param {!plugin.cesium.TerrainProviderFn} factory Factory function to create a terrain provider instance.
  * @protected
  */
-plugin.cesium.CesiumRenderer.prototype.registerTerrainProviderType = function(type, clazz) {
+plugin.cesium.CesiumRenderer.prototype.registerTerrainProviderType = function(type, factory) {
   type = type.toLowerCase();
 
   if (type in this.terrainProviderTypes_) {
@@ -389,7 +413,7 @@ plugin.cesium.CesiumRenderer.prototype.registerTerrainProviderType = function(ty
     return;
   }
 
-  this.terrainProviderTypes_[type] = clazz;
+  this.terrainProviderTypes_[type] = factory;
 };
 
 
@@ -411,28 +435,22 @@ plugin.cesium.CesiumRenderer.prototype.updateTerrainProvider = function() {
   // clean up existing provider
   this.removeTerrainProvider_();
 
-  if (this.terrainOptions) {
-    var terrainType = this.terrainOptions.type;
-    var terrainUrl = this.terrainOptions.url;
+  var terrainOptions = /** @type {osx.map.TerrainProviderOptions|undefined} */ (os.settings.get(
+      os.config.DisplaySetting.TERRAIN_OPTIONS));
+  if (terrainOptions) {
+    var terrainType = terrainOptions.type;
+    if (terrainType && terrainType in this.terrainProviderTypes_) {
+      if (terrainOptions.url) {
+        // instruct Cesium to trust terrain servers (controlled by app configuration)
+        plugin.cesium.addTrustedServer(terrainOptions.url);
+      }
 
-    if (terrainType && terrainType in this.terrainProviderTypes_ && terrainUrl) {
-      // instruct Cesium to trust terrain servers (controlled by app configuration)
-      plugin.cesium.addTrustedServer(terrainUrl);
-
-      // create the terrain provider
-      this.terrainProvider_ = new this.terrainProviderTypes_[terrainType](this.terrainOptions);
+      this.terrainProvider_ = this.terrainProviderTypes_[terrainType](terrainOptions);
       this.terrainProvider_.errorEvent.addEventListener(this.onTerrainError_, this);
-    } else {
-      // report any errors in the configuration
-      if (!terrainType) {
-        goog.log.error(this.log, 'Terrain provider type not configured.');
-      } else if (!(terrainType in this.terrainProviderTypes_)) {
-        goog.log.error(this.log, 'Unknown terrain provider type: ' + terrainType);
-      }
-
-      if (!terrainUrl) {
-        goog.log.error(this.log, 'Terrain provider URL not configured.');
-      }
+    } else if (!terrainType) {
+      goog.log.error(this.log, 'Terrain provider type not configured.');
+    } else if (!(terrainType in this.terrainProviderTypes_)) {
+      goog.log.error(this.log, 'Unknown terrain provider type: ' + terrainType);
     }
   }
 
@@ -506,4 +524,16 @@ plugin.cesium.CesiumRenderer.prototype.onCesiumCameraMoveChange_ = function(isMo
       }
     }
   }
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.cesium.CesiumRenderer.prototype.getAltitudeModes = function() {
+  return [
+    os.webgl.AltitudeMode.CLAMP_TO_GROUND,
+    os.webgl.AltitudeMode.ABSOLUTE,
+    os.webgl.AltitudeMode.RELATIVE_TO_GROUND
+  ];
 };

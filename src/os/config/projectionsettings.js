@@ -114,6 +114,7 @@ os.config.ProjectionSettingsCtrl.prototype.updateApp = function() {
  * @private
  */
 os.config.ProjectionSettingsCtrl.prototype.onProjectionChange_ = function() {
+  os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Settings.SWITCH_PROJECTION, 1);
   this.updateApp();
   os.ui.apply(this.scope_);
 };
@@ -121,10 +122,8 @@ os.config.ProjectionSettingsCtrl.prototype.onProjectionChange_ = function() {
 
 /**
  * Applies the projection change
- * @protected
+ * @export
  */
 os.config.ProjectionSettingsCtrl.prototype.apply = function() {
   os.proj.switch.SwitchProjection.getInstance().start(this['projection']['code']);
 };
-goog.exportProperty(os.config.ProjectionSettingsCtrl.prototype,
-    'apply', os.config.ProjectionSettingsCtrl.prototype.apply);

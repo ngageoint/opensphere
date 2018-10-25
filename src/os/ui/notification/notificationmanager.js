@@ -308,3 +308,9 @@ os.ui.notification.NotificationManager.prototype.startOrContinueListeningForUser
         this);
   }
 };
+
+
+/**
+ * @type {os.ui.notification.NotificationManager}
+ */
+os.ui.notificationManager = null;

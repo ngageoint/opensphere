@@ -1,0 +1,11 @@
+<div class="invalid-feedback" ng-class="{'d-block': ctrl.hasError()}">
+  <div ng-if="target.$error.required">Required!</div>
+  <div ng-if="target.$error.max">Too high!</div>
+  <div ng-if="target.$error.min">Too low!</div>
+  <div ng-if="target.$error.maxlength">Too long!</div>
+  <div ng-if="target.$error.minlength">Too short!</div>
+  <div ng-if="target.$error.number">Input must be a number!</div>
+  <div ng-if="target.$error.unique || target.$error.exists">Already exists!</div>
+  <div ng-if="target.tags.$error.maxlength">Tags are too long!</div>
+  <div ng-if="target.$invalid && !target.$error">Invalid!</div>
+</div>

@@ -810,10 +810,10 @@ plugin.ogc.OGCLayerDescriptor.prototype.isBaseLayer = function() {
  */
 plugin.ogc.OGCLayerDescriptor.prototype.hasTimeExtent = function() {
   if (this.isWmsEnabled()) {
-    return goog.isDefAndNotNull(this.dimensions_) && 'time' in this.dimensions_;
+    return this.dimensions_ != null && 'time' in this.dimensions_;
   }
 
-  if (goog.isDefAndNotNull(this.featureType_)) {
+  if (this.featureType_ != null) {
     return this.featureType_.getStartDateColumnName() !== null || this.featureType_.getEndDateColumnName() !== null;
   }
 
@@ -932,6 +932,11 @@ plugin.ogc.OGCLayerDescriptor.prototype.getWmsOptions = function() {
 
   options['urls'] = urls;
 
+  if (options['provider']) {
+    // check to see if the visibility is configured to false, if not visibility should be true
+    options['visible'] = os.settings.get(['providers', this.getProvider().toLowerCase(), 'visible'], true);
+  }
+
   return options;
 };
 
@@ -973,6 +978,11 @@ plugin.ogc.OGCLayerDescriptor.prototype.getWfsOptions = function(opt_options) {
   options['url'] = this.replaceWithNextUrl(this.getWfsUrl());
   options['usePost'] = this.getUsePost();
   options['formats'] = this.getWfsFormats();
+
+  if (options['provider']) {
+    // check to see if the visibility is configured to false, if not visibility should be true
+    options['visible'] = os.settings.get(['providers', this.getProvider().toLowerCase(), 'visible'], true);
+  }
 
   return options;
 };
@@ -1021,8 +1031,13 @@ plugin.ogc.OGCLayerDescriptor.prototype.onDescribeComplete_ = function(event) {
  * @protected
  */
 plugin.ogc.OGCLayerDescriptor.prototype.onDescribeError = function() {
-  // feature type could not be loaded, so disable WFS for the layer
-  this.setWfsEnabled(false);
+  if (!this.online.refreshStatus()) {
+    // disable due to offline status
+    this.setActive(false);
+  } else {
+    // feature type could not be loaded, so disable WFS for the layer
+    this.setWfsEnabled(false);
+  }
 
   var msg = this.getFeatureTypeErrorMsg();
   os.alert.AlertManager.getInstance().sendAlert(msg, os.alert.AlertEventSeverity.ERROR);
@@ -1042,6 +1057,10 @@ plugin.ogc.OGCLayerDescriptor.prototype.setDescribeCallback = function(fn) {
  * @return {string}
  */
 plugin.ogc.OGCLayerDescriptor.prototype.getFeatureTypeErrorMsg = function() {
+  if (!this.online.refreshStatus()) {
+    return 'Network is disconnected. ' + this.getWfsName() + ' is unavailable.';
+  }
+
   return 'Failed loading DescribeFeatureType for ' + this.getWfsName() +
       '. Feature requests have been disabled for this layer.';
 };

@@ -40,12 +40,6 @@ os.ui.im.ImportProcess = function(opt_im, opt_fm) {
   this.log = os.ui.im.ImportProcess.LOGGER_;
 
   /**
-   * @type {?string}
-   * @private
-   */
-  this.contentHint_ = null;
-
-  /**
    * @type {os.file.IFileMethod}
    * @private
    */
@@ -143,7 +137,6 @@ os.ui.im.ImportProcess.prototype.setEvent = function(event) {
   this.file = event.file;
   this.fileSupportChecked_ = false;
 
-  this.contentHint_ = event.contentHint;
   this.config_ = event.config;
 
   if (!this.file) {
@@ -199,11 +192,8 @@ os.ui.im.ImportProcess.prototype.methodCleanup_ = function(opt_dispose) {
  * @protected
  */
 os.ui.im.ImportProcess.prototype.processFile = function() {
-  if (this.contentHint_) {
-    var type = this.fm_.getLayerTypeByContentHint(this.file, this.contentHint_);
-    this.onFileType(type);
-  } else {
-    this.fm_.getLayerType(this.file, this.onFileType.bind(this));
+  if (this.file) {
+    this.fm_.getContentType(this.file, this.onFileType.bind(this));
   }
 };
 
@@ -245,6 +235,7 @@ os.ui.im.ImportProcess.prototype.invalidFiletype = function() {
 /**
  * Look up and launch the import UI for the provided file type.
  * @param {T=} opt_config Configuration to pass to the UI for re-import cases
+ * @return {null} Returning undefined results in causing errors in Deferreds
  * @protected
  */
 os.ui.im.ImportProcess.prototype.importFile = function(opt_config) {
@@ -261,7 +252,16 @@ os.ui.im.ImportProcess.prototype.importFile = function(opt_config) {
         // notify the user that file storage is not supported and their file will be lost on refresh
         this.fileSupportChecked_ = true;
         os.ui.im.launchFileSupport(this.file).then(this.onFileSupportSuccess_, this.onFileSupportFailure_, this);
-        return;
+        return null;
+      }
+
+      if (ui.requiresStorage && !this.file.getContent()) {
+        // this indicates that we need to read the entire file into memory
+        var deferred = this.file.loadContent();
+        if (deferred) {
+          deferred.addCallbacks(this.importFile, this.abortImport, this);
+          return null;
+        }
       }
 
       if (this.deferred_) {
@@ -279,6 +279,8 @@ os.ui.im.ImportProcess.prototype.importFile = function(opt_config) {
   } else {
     this.abortImport('Unable to import file!');
   }
+
+  return null;
 };
 
 
@@ -325,6 +327,7 @@ os.ui.im.ImportProcess.prototype.onFileSupportFailure_ = function(errorMsg) {
 /**
  * Aborts the import process and alerts the user to what happened.
  * @param {string=} opt_msg Optional detailed error message
+ * @return {null} Returning undefined results in causing errors in Deferreds
  * @protected
  */
 os.ui.im.ImportProcess.prototype.abortImport = function(opt_msg) {
@@ -349,6 +352,7 @@ os.ui.im.ImportProcess.prototype.abortImport = function(opt_msg) {
   }
 
   this.methodCleanup_();
+  return null;
 };
 
 

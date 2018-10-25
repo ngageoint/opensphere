@@ -13,7 +13,7 @@ os.ui.nodeSpinnerDirective = function() {
   return {
     restrict: 'AE',
     replace: true,
-    template: '<span ng-show="item.isLoading()" class="middle ng-hide"><i class="fa fa-fw" ng-class="spinClass" ' +
+    template: '<span ng-show="item.isLoading()" class="ng-hide"><i class="fa fa-fw" ng-class="spinClass" ' +
         'title="Loading..."></i></span>',
     controller: os.ui.NodeSpinnerCtrl,
     controllerAs: 'spin'

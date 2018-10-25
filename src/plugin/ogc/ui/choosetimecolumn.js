@@ -1,5 +1,6 @@
 goog.provide('plugin.ogc.ui.ChooseTimeColumnCtrl');
 goog.provide('plugin.ogc.ui.chooseTimeColumnDirective');
+
 goog.require('goog.Disposable');
 goog.require('goog.array');
 goog.require('goog.async.Delay');
@@ -9,6 +10,7 @@ goog.require('os.data.DataManager');
 goog.require('os.defines');
 goog.require('os.layer');
 goog.require('os.ui.Module');
+goog.require('os.ui.util.validationMessageDirective');
 goog.require('plugin.ogc.OGCLayerDescriptor');
 
 
@@ -82,7 +84,7 @@ plugin.ogc.ui.ChooseTimeColumnCtrl = function($scope, $element) {
     this['end'] = this.featureType_.getEndDateColumnName();
     this['timeColumns'] = this.descriptor_.getFeatureType().getTimeColumns();
 
-    $scope.$emit('window.ready');
+    $scope.$emit(os.ui.WindowEventType.READY);
   } else {
     os.ui.window.close(this.element_);
   }
@@ -101,6 +103,7 @@ plugin.ogc.ui.ChooseTimeColumnCtrl.prototype.disposeInternal = function() {
 
 /**
  * Save the time columns to the descriptor
+ * @export
  */
 plugin.ogc.ui.ChooseTimeColumnCtrl.prototype.save = function() {
   this.featureType_.setStartDateColumnName(this['start']);
@@ -111,10 +114,6 @@ plugin.ogc.ui.ChooseTimeColumnCtrl.prototype.save = function() {
   }
   this.close_();
 };
-goog.exportProperty(
-    plugin.ogc.ui.ChooseTimeColumnCtrl.prototype,
-    'save',
-    plugin.ogc.ui.ChooseTimeColumnCtrl.prototype.save);
 
 
 /**

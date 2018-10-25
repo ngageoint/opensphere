@@ -91,8 +91,12 @@ os.ui.file.gml.GMLParser.prototype.setSource = function(source) {
   this.nextIndex = 0;
   this.dataProjection = null;
 
+  if (source instanceof ArrayBuffer) {
+    source = os.file.mime.text.getText(source) || null;
+  }
+
   var doc;
-  if (goog.isString(source)) {
+  if (typeof source === 'string') {
     doc = goog.dom.xml.loadXml(source);
   } else if (source instanceof Document) {
     doc = source;

@@ -11,7 +11,7 @@ goog.require('os.ui.capture.SvgRenderer');
  */
 os.ui.capture.TimelineRenderer = function(opt_options) {
   var options = opt_options || {};
-  options['selector'] = options['selector'] || 'svg.svg-timeline';
+  options['selector'] = options['selector'] || 'svg.c-svg-timeline';
 
   os.ui.capture.TimelineRenderer.base(this, 'constructor', options);
   this.title = 'Timeline';

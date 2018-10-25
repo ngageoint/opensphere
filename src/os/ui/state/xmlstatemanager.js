@@ -5,11 +5,13 @@ goog.require('goog.log');
 goog.require('goog.log.Logger');
 goog.require('os.config');
 goog.require('os.file.FileManager');
+goog.require('os.file.mime.xmlstate');
 goog.require('os.state');
 goog.require('os.state.Tag');
 goog.require('os.state.XMLStateOptions');
-goog.require('os.state.XMLStateTypeMethod');
 goog.require('os.tag');
+goog.require('os.ui.im.ImportManager');
+goog.require('os.ui.state.StateImportUI');
 goog.require('os.ui.state.StateManager');
 
 
@@ -31,9 +33,10 @@ os.ui.state.XMLStateManager = function() {
    */
   this.nsUri_ = os.ui.state.XMLStateManager.NS_URI;
 
-  // register the content method
-  var fm = os.file.FileManager.getInstance();
-  fm.registerContentTypeMethod(new os.state.XMLStateTypeMethod());
+  // register the import UI
+  var im = os.ui.im.ImportManager.getInstance();
+  im.registerImportDetails(os.config.getAppName('Application') + ' state files.');
+  im.registerImportUI(os.file.mime.xmlstate.TYPE, new os.ui.state.StateImportUI());
 };
 goog.inherits(os.ui.state.XMLStateManager, os.ui.state.StateManager);
 
@@ -70,7 +73,7 @@ os.ui.state.XMLStateManager.prototype.setVersion = function(version) {
  * @inheritDoc
  */
 os.ui.state.XMLStateManager.prototype.analyze = function(obj) {
-  if (goog.isString(obj)) {
+  if (typeof obj === 'string') {
     var doc = goog.dom.xml.loadXml(obj);
     if (doc) {
       obj = doc;
@@ -110,7 +113,7 @@ os.ui.state.XMLStateManager.prototype.analyze = function(obj) {
  */
 os.ui.state.XMLStateManager.prototype.loadState = function(obj, states, stateId, opt_title) {
   if (obj && states) {
-    if (goog.isString(obj)) {
+    if (typeof obj === 'string') {
       var doc = goog.dom.xml.loadXml(obj);
       if (doc) {
         obj = doc;

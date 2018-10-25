@@ -28,6 +28,8 @@ plugin.file.gpx.ui.GPXImportUI.prototype.getTitle = function() {
  * @inheritDoc
  */
 plugin.file.gpx.ui.GPXImportUI.prototype.launchUI = function(file, opt_config) {
+  plugin.file.gpx.ui.GPXImportUI.base(this, 'launchUI', file, opt_config);
+
   var config = new os.parse.FileParserConfig();
 
   // if an existing config was provided, merge it in
@@ -43,18 +45,16 @@ plugin.file.gpx.ui.GPXImportUI.prototype.launchUI = function(file, opt_config) {
   };
   var windowOptions = {
     'label': 'Import GPX',
-    'icon': 'fa fa-file-text lt-blue-icon',
+    'icon': 'fa fa-file-text',
     'x': 'center',
     'y': 'center',
-    'width': '350',
-    'min-width': '350',
-    'max-width': '600',
-    'height': '250',
-    'min-height': '250',
-    'max-height': '500',
-    'modal': 'true',
-    'show-close': 'true',
-    'no-scroll': 'true'
+    'width': 400,
+    'min-width': 400,
+    'max-width': 800,
+    'height': 'auto',
+    'modal': true,
+    'show-close': true,
+    'no-scroll': true
   };
   var template = '<gpximport></gpximport>';
   os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);

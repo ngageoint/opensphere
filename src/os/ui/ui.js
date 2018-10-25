@@ -2,7 +2,9 @@ goog.provide('os.ui');
 goog.provide('os.ui.Module');
 
 goog.require('goog.events.EventTarget');
+goog.require('goog.html.SafeHtml');
 goog.require('goog.labs.userAgent.util');
+goog.require('goog.math');
 goog.require('goog.math.Size');
 goog.require('goog.string');
 goog.require('goog.userAgent');
@@ -53,9 +55,9 @@ os.ui.sanitize = function(value) {
     } catch (e) {
       // make this super obvious so we catch it in dev
       // some errors come as a result of poorly formatted text, ignore those
-      if (!goog.isDef(os.ui.sanitize_)) {
+      if (os.ui.sanitize_ === undefined) {
         console.error('$santize service unavailable!');
-      } else if (!goog.isDef(os.ui.injector)) {
+      } else if (os.ui.injector === undefined) {
         console.error('os.ui.injector service never defined!');
       }
     }
@@ -119,6 +121,27 @@ os.ui.sanitizeId = function(value) {
 
 
 /**
+ * Strip HTML from text
+ * @param {string} html string to sanitize
+ * @return {string}
+ */
+os.ui.getUnformattedText = function(html) {
+  var doc = new DOMParser().parseFromString(html, 'text/html');
+  return os.ui.escapeHtml(doc.body.textContent || '');
+};
+
+
+/**
+ * Escape HTML in text
+ * @param {string} html
+ * @return {string}
+ */
+os.ui.escapeHtml = function(html) {
+  return goog.html.SafeHtml.unwrap(goog.html.SafeHtml.htmlEscape(html));
+};
+
+
+/**
  * Angular module "os.ui"
  */
 os.ui.Module = angular.module('os.ui', ['ui.directives', 'ngAnimate', 'ngSanitize']);
@@ -137,14 +160,19 @@ os.ui.measureText = function(text, opt_classes, opt_font) {
   var el = angular.element('#measureText');
 
   if (!el || el.length === 0) {
-    el = $('<div id="measureText" style="position: fixed; top: -2000px; left: -2000px;"></div>').appendTo('body');
+    el = $('<div id="measureText" class="u-offscreen"></div>').appendTo('body');
   }
 
   if (el && el.length > 0) {
-    el[0].setAttribute('class', opt_classes ? opt_classes : '');
+    var classes = 'u-offscreen ';
+    if (opt_classes) {
+      classes += opt_classes;
+    }
+    el[0].setAttribute('class', classes);
     el.css('font', opt_font || '');
 
-    el.html(text);
+    // replace newline characters with HTML breaks
+    el.html(text.replace(/\n/g, '<br>'));
     return new goog.math.Size(/** @type {number} */ (el.width()), /** @type {number} */ (el.height()));
   }
 
@@ -264,7 +292,7 @@ os.ui.replaceDirective = function(name, module, directiveFn, opt_priority) {
 (function() {
   'use strict'; // jshint ;_;
 
-  if (goog.isDef(window['jQuery'])) {
+  if (window['jQuery'] !== undefined) {
     var $ = window['jQuery'];
     if ($.fn && $.fn.typeahead) {
       $.extend($.fn.typeahead['Constructor'].prototype, {
@@ -315,6 +343,7 @@ os.ui.replaceDirective = function(name, module, directiveFn, opt_priority) {
         },
         'next': function(event) {
           var active = this['$menu']['find']('.active').removeClass('active');
+          active.find('a').removeClass('active');
           var next = active.next();
 
           if (!next.length) {
@@ -322,9 +351,11 @@ os.ui.replaceDirective = function(name, module, directiveFn, opt_priority) {
           }
 
           next.addClass('active');
+          next.find('a').addClass('active');
         },
         'prev': function(event) {
           var active = this['$menu']['find']('.active').removeClass('active');
+          active.find('a').removeClass('active');
           var prev = active.prev();
 
           if (!prev.length) {
@@ -332,6 +363,7 @@ os.ui.replaceDirective = function(name, module, directiveFn, opt_priority) {
           }
 
           prev.addClass('active');
+          prev.find('a').addClass('active');
         },
         'move': function(e) {
           if (!this['shown']) {
@@ -407,7 +439,8 @@ os.ui.replaceDirective = function(name, module, directiveFn, opt_priority) {
       });
 
       // make sure the user can't tab to the drop-down anchor tags
-      $.fn.typeahead.defaults.item = '<li><a tabindex="-1" href=""></a></li>';
+      $.fn.typeahead.defaults.item = '<li><a tabindex="-1" class="dropdown-item text-truncate" href=""></a></li>';
+      $.fn.typeahead.defaults.menu = '<ul class="typeahead dropdown-menu mw-100"></ul>';
 
       // Select2 has trouble with Bootstrap modals in IE only
       if (goog.userAgent.IE) {
@@ -427,6 +460,46 @@ os.ui.replaceDirective = function(name, module, directiveFn, opt_priority) {
               oldEnforceFocus.call(this); // eslint-disable-line no-invalid-this
             }
           }, this));
+        }
+      });
+    }
+  }
+})();
+
+
+/**
+ * Override jQuery UI Datepicker _checkOffset to prevent rounding/floating point equality from breaking
+ * offset top calculation
+ */
+(function() {
+  'use strict';
+
+  if (window['jQuery'] !== undefined) {
+    var $ = window['jQuery'];
+
+    if ($.datepicker) {
+      $.extend($.datepicker, {
+        '_checkOffset': function(inst, offset, isFixed) {
+          var dpWidth = inst['dpDiv']['outerWidth']();
+          var dpHeight = inst['dpDiv']['outerHeight']();
+          var inputWidth = inst['input'] ? inst['input']['outerWidth']() : 0;
+          var inputHeight = inst['input'] ? inst['input']['outerHeight']() : 0;
+          var viewWidth = document.documentElement.clientWidth + (isFixed ? 0 : $(document).scrollLeft());
+          var viewHeight = document.documentElement.clientHeight + (isFixed ? 0 : $(document).scrollTop());
+
+          offset['left'] -= (this['_get'](inst, 'isRTL') ? dpWidth - inputWidth : 0);
+          offset['left'] -= (isFixed && offset['left'] == inst['input']['offset']()['left']) ?
+              $(document).scrollLeft() : 0;
+          offset['top'] -= goog.math.nearlyEquals(isFixed && offset['top'],
+              inst['input']['offset']()['top'] + inputHeight, 1) ?
+              $(document).scrollTop() : 0;
+
+          offset['left'] -= Math.min(offset['left'], offset['left'] + dpWidth > viewWidth && viewWidth > dpWidth ?
+              Math.abs(offset['left'] + dpWidth - viewWidth) : 0);
+          offset['top'] -= Math.min(offset['top'], offset['top'] + dpHeight > viewHeight && viewHeight > dpHeight ?
+              Math.abs(dpHeight + inputHeight) : 0);
+
+          return offset;
         }
       });
     }

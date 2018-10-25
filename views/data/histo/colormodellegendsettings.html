@@ -1,25 +1,27 @@
-<div class="color-model-legend-settings">
-  <div class="control-group">
-    <label class="checkbox inline" title="Show colors applied by Auto Color in Count By's, Charts, etc">
-      <input type="checkbox" name="showAuto" ng-model="legend.options.showAuto"
+<div>
+  <div class="form-group">
+    <div class="form-check" title="Show colors applied by Auto Color in Count By's, Charts, etc">
+      <input class="form-check-input" id="legendShowAuto" type="checkbox" name="showAuto"
+          ng-model="legend.options.showAuto"
           ng-change="legend.toggle('showAuto')"/>
-      Show auto colors
-    </label>
+      <label class="form-check-label" for="legendShowAuto">Show auto colors</label>
+    </div>
   </div>
-  <div class="control-group">
-    <label class="checkbox inline" title="Show manual colors applied in Count By's, Charts, etc">
-      <input type="checkbox" name="showManual" ng-model="legend.options.showManual"
+  <div class="form-group">
+    <div class="form-check" title="Show manual colors applied in Count By's, Charts, etc">
+      <input class="form-check-input" id="legendShowManual" type="checkbox" name="showManual"
+          ng-model="legend.options.showManual"
           ng-change="legend.toggle('showManual')"/>
-      Show manual colors
-    </label>
+      <label class="form-check-label" for="legendShowManual">Show manual colors</label>
+    </div>
   </div>
-  <div class="control-group">
-    <label class="checkbox inline" title="Display the column within the label">
-      <input type="checkbox" name="showColumn"
+  <div class="form-group">
+    <div class="form-check" title="Display the column within the label">
+      <input class="form-check-input" id="legendShowColumn" type="checkbox" name="showColumn"
           ng-disabled="!legend.options.showAuto && !legend.options.showManual"
           ng-model="legend.options.showColumn"
           ng-change="legend.toggle('showColumn')"/>
-      Show column in label
-    </label>
+      <label class="form-check-label" for="legendShowColumn">Show column in label</label>
+    </div>
   </div>
 </div>

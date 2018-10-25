@@ -1,5 +1,6 @@
 goog.provide('os.ui.file.ImportDialogCtrl');
 goog.provide('os.ui.file.importDialogDirective');
+
 goog.require('goog.events.EventType');
 goog.require('goog.fs.FileReader');
 goog.require('goog.log');
@@ -13,6 +14,7 @@ goog.require('os.net.LocalFileHandler');
 goog.require('os.ui');
 goog.require('os.ui.Module');
 goog.require('os.ui.popover.popoverDirective');
+goog.require('os.ui.util.validationMessageDirective');
 goog.require('os.ui.window');
 
 
@@ -24,7 +26,13 @@ os.ui.file.importDialogDirective = function() {
   return {
     restrict: 'E',
     replace: true,
-    scope: true,
+    scope: {
+      'method': '=',
+      'manager': '=?',
+      'hideCancel': '=?',
+      'confirmText': '=?',
+      'onClose': '=?'
+    },
     templateUrl: os.ROOT + 'views/file/importdialog.html',
     controller: os.ui.file.ImportDialogCtrl,
     controllerAs: 'importdialog'
@@ -76,10 +84,9 @@ os.ui.file.ImportDialogCtrl = function($scope, $element) {
   this['url'] = null;
 
   /**
-   * If local files are supported
    * @type {boolean}
    */
-  this['fileSupported'] = /** @type {boolean} */ ($scope['fileSupported']) || false;
+  this['hideCancel'] = /** @type {boolean} */ ($scope['hideCancel']) || false;
 
   /**
    * @type {boolean}
@@ -91,6 +98,8 @@ os.ui.file.ImportDialogCtrl = function($scope, $element) {
    */
   this['loading'] = false;
 
+  $scope['confirmText'] = $scope['confirmText'] || 'Next';
+
   /**
    * @type {?Element}
    * @private
@@ -98,14 +107,15 @@ os.ui.file.ImportDialogCtrl = function($scope, $element) {
   this.fileInputEl_ = goog.dom.createDom(goog.dom.TagName.INPUT, {
     'type': 'file',
     'name': 'file',
-    'class': 'input-hidden'
+    'class': 'd-none'
   });
-  goog.dom.appendChild(goog.dom.getElement('win-container'), this.fileInputEl_);
+  goog.dom.appendChild(goog.dom.getElement(os.ui.windowSelector.CONTAINER.substring(1)), this.fileInputEl_);
   goog.events.listen(this.fileInputEl_, goog.events.EventType.CHANGE, this.onFileChange_, false, this);
 
   // bring focus to the url input
   this.element_.find('input[name="url"]').focus();
 
+  $scope.$emit(os.ui.WindowEventType.READY);
   $scope.$on('$destroy', this.onDestroy_.bind(this));
 };
 
@@ -141,6 +151,7 @@ os.ui.file.ImportDialogCtrl.prototype.onDestroy_ = function() {
 
 /**
  * Create import command and close the window
+ * @export
  */
 os.ui.file.ImportDialogCtrl.prototype.accept = function() {
   if (this.scope_['method']) {
@@ -152,16 +163,10 @@ os.ui.file.ImportDialogCtrl.prototype.accept = function() {
     if (this['fileChosen']) {
       var file = /** @type {File|undefined} */ (this['file']);
       if (file) {
-        if (file.path && os.file.FILE_URL_ENABLED) {
-          // running in Electron, so request the file with a file:// URL
-          url = os.file.getFileUrl(file.path);
-        } else {
-          // load a local file
-          var keepFile = method.getKeepFile();
-          var reader = os.file.createFromFile(this['file'], keepFile);
-          if (reader) {
-            reader.addCallbacks(this.onFileReady_, this.onFileError_, this);
-          }
+        // load a local file
+        var reader = os.file.createFromFile(this['file']);
+        if (reader) {
+          reader.addCallbacks(this.onFileReady_, this.onFileError_, this);
         }
       }
     } else {
@@ -180,26 +185,24 @@ os.ui.file.ImportDialogCtrl.prototype.accept = function() {
     this.close();
   }
 };
-goog.exportProperty(
-    os.ui.file.ImportDialogCtrl.prototype,
-    'accept',
-    os.ui.file.ImportDialogCtrl.prototype.accept);
 
 
 /**
  * Close the window.
+ * @export
  */
 os.ui.file.ImportDialogCtrl.prototype.close = function() {
+  if (this.scope_ && this.scope_['onClose']) {
+    this.scope_['onClose']();
+  }
+
   os.ui.window.close(this.element_);
 };
-goog.exportProperty(
-    os.ui.file.ImportDialogCtrl.prototype,
-    'close',
-    os.ui.file.ImportDialogCtrl.prototype.close);
 
 
 /**
  * Launch the system file browser.
+ * @export
  */
 os.ui.file.ImportDialogCtrl.prototype.clearFile = function() {
   if (this.fileInputEl_) {
@@ -214,15 +217,12 @@ os.ui.file.ImportDialogCtrl.prototype.clearFile = function() {
   this['url'] = null;
   this['fileChosen'] = false;
 };
-goog.exportProperty(
-    os.ui.file.ImportDialogCtrl.prototype,
-    'clearFile',
-    os.ui.file.ImportDialogCtrl.prototype.clearFile);
 
 
 /**
  * Get the import types supported by the application.
  * @return {string}
+ * @export
  */
 os.ui.file.ImportDialogCtrl.prototype.getImportDetails = function() {
   var result;
@@ -241,22 +241,15 @@ os.ui.file.ImportDialogCtrl.prototype.getImportDetails = function() {
 
   return result;
 };
-goog.exportProperty(
-    os.ui.file.ImportDialogCtrl.prototype,
-    'getImportDetails',
-    os.ui.file.ImportDialogCtrl.prototype.getImportDetails);
 
 
 /**
  * Launch the system file browser.
+ * @export
  */
 os.ui.file.ImportDialogCtrl.prototype.openFileBrowser = function() {
   this.fileInputEl_.click();
 };
-goog.exportProperty(
-    os.ui.file.ImportDialogCtrl.prototype,
-    'openFileBrowser',
-    os.ui.file.ImportDialogCtrl.prototype.openFileBrowser);
 
 
 /**
@@ -270,7 +263,7 @@ os.ui.file.ImportDialogCtrl.prototype.onFileChange_ = function(event) {
     this.getFileExtention_(this['file']);
   }
 
-  this['url'] = goog.isDefAndNotNull(this['file']) ? /** @type {File} */ (this['file']).name : null;
+  this['url'] = this['file'] != null ? /** @type {File} */ (this['file']).name : null;
   this['fileChosen'] = true;
 
   os.ui.apply(this.scope_);
@@ -283,6 +276,8 @@ os.ui.file.ImportDialogCtrl.prototype.onFileChange_ = function(event) {
  * @private
  */
 os.ui.file.ImportDialogCtrl.prototype.onFileReady_ = function(file) {
+  this['loading'] = false;
+
   if (file) {
     var method = /** @type {os.file.IFileMethod} */ (this.scope_['method']);
     method.setFile(file);
@@ -303,7 +298,7 @@ os.ui.file.ImportDialogCtrl.prototype.onFileReady_ = function(file) {
 os.ui.file.ImportDialogCtrl.prototype.onFileError_ = function(errorMsg) {
   this['loading'] = false;
 
-  if (!errorMsg || !goog.isString(errorMsg)) {
+  if (!errorMsg || typeof errorMsg !== 'string') {
     var fileName = this['file'] ? this['file'].name : 'unknown';
     errorMsg = 'Unable to load file "' + fileName + '"!';
   }

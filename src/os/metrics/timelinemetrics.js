@@ -122,11 +122,17 @@ os.metrics.TIME_RANGE = [
 os.metrics.TIME_SETTINGS = [
   {
     label: 'Fade',
-    description: '',
+    description: 'Fade in/out features based on the size of your timeline window and scroll direction',
     key: os.metrics.keys.Timeline.FADE
   },
   {
+    label: 'Lock',
+    description: 'Locks start of view window during animation',
+    key: os.metrics.keys.Timeline.LOCK
+  },
+  {
     label: 'Time Range',
+    description: 'Changes the load range from the timeline settings',
     key: os.metrics.keys.Timeline.TIME_RANGE
   }
 ];
@@ -151,7 +157,7 @@ os.metrics.TimelineMetrics = function() {
 
   this.addChild(leaf, {
     label: 'Open Timeline',
-    description: 'The <i class="fa fa-clock-o yellow-icon"></i> icon located at the top' +
+    description: 'The <i class="fa fa-clock-o"></i> icon located at the top' +
         ' center of the screen opens the time-line control.',
     key: os.metrics.keys.Timeline.OPEN
   });

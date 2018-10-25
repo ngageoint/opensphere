@@ -1,16 +1,8 @@
-<div class="wizard-step area-options">
-  <div class="step-content">
-    <form name="areaOptionsForm" class="form-compact form-horizontal form-popover-help">
+<div class="d-flex flex-column flex-fill">
+  <div class="modal-body">
+    <form name="areaOptionsForm">
       <basicinfo config="config" columns="config.merge ? null : config.columns" help="areaoptions.help"></basicinfo>
-
-      <div class="control-group">
-        <label class="control-label">Merge Areas:</label>
-        <div class="controls">
-          <input type="checkbox" name="merge" ng-model="config.merge"/>
-          <popover class="pull-right" ng-if="areaoptions.help.merge" x-title="'Merge Areas'"
-              x-content="areaoptions.help.merge" x-pos="'right'"></popover>
-        </div>
-      </div>
+      <mergeareaoption ng-model="config.merge" help="areaoptions.help.merge"></mergeareaoption>
     </form>
   </div>
 </div>

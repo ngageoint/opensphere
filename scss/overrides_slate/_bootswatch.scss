@@ -1,0 +1,111 @@
+@import 'slate/bootswatch';
+
+// sass-lint:disable quotes
+$web-font-path: "https://fonts.googleapis.com/css?family=Open+Sans:400,700" !default;
+
+.navbar-dark .navbar-nav .show > .nav-link,
+.navbar-dark .navbar-nav .active > .nav-link,
+.navbar-dark .navbar-nav .nav-link.show,
+.navbar-dark .navbar-nav .nav-link.active {
+  color: $navbar-dark-active-color !important;
+}
+
+.navbar {
+  .navbar-brand,
+  .nav-link {
+    @include hover-focus {
+      background-image: none;
+    }
+
+    border: 0 !important;
+    padding-bottom: $nav-link-padding-y;
+    padding-top: $nav-link-padding-y;
+  }
+
+  .nav-item.active .nav-link {
+    background-color: transparent;
+  }
+}
+
+.btn-outline-primary {
+  color: $white;
+}
+
+.form-control:disabled,
+.form-control:disabled::placeholder,
+.form-control[readonly]::placeholder {
+  background-color: $gray-600;
+}
+
+.breadcrumb {
+  background-image: none;
+  border: 0;
+}
+
+// Standard nav tabs
+.nav-tabs {
+  .nav-link {
+    background: $modal-content-bg;
+    border-color: $nav-tabs-border-color;
+    margin: 0 .1rem;
+
+    &:hover {
+      background: transparent;
+    }
+  }
+
+  .nav-link.active,
+  .nav-item.show .nav-link {
+    background: transparent;
+    border-bottom-color: $body-bg;
+  }
+}
+
+// Nav tabs within a modal (or window)
+.modal-content {
+  .nav-tabs {
+    .nav-link {
+      background: $nav-tabs-link-active-bg;
+    }
+
+    .nav-link.active,
+    .nav-item.show .nav-link {
+      background: $modal-content-bg;
+      border-bottom-color: $modal-content-bg;
+    }
+  }
+}
+
+
+@each $color, $value in $theme-colors {
+  .btn-outline-#{$color} {
+    border-color: $value;
+  }
+}
+
+// Replace the Slate override so the app is consistent with hover color.
+.list-group {
+  &-item:hover {
+    background-color: $list-group-hover-bg;
+  }
+}
+
+// Dont change the button hover on disabled buttons
+@each $color, $value in $theme-colors {
+  .btn[disabled].btn-#{$color}:hover,
+  .btn[disabled].btn-#{$color}:focus,
+  .btn.disabled.btn-#{$color}:hover,
+  .btn.disabled.btn-#{$color}:focus {
+    border-color: $value;
+  }
+
+  // We dont want the button bg to look active while focused (user feedback)
+  // This is consistent with light theme also
+  .btn-#{$color}:not([disabled]):not(.disabled):focus {
+    background-image: inherit;
+  }
+}
+
+hr {
+  border-top-color: rgba($white, .35);
+}

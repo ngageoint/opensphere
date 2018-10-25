@@ -993,7 +993,7 @@ plugin.track.promptForField = function(columns, prompt) {
       windowOptions: /** @type {!osx.window.WindowOptions} */ ({
         label: 'Choose Track Sort Column',
         width: 400,
-        icon: 'fa fa-warning orange-icon',
+        icon: 'fa fa-warning',
         modal: true
       })
     }));

@@ -120,18 +120,16 @@ plugin.places.ui.PlacesCtrl.prototype.onPlacesReady_ = function(event) {
 /**
  * If the places root node is available.
  * @return {boolean}
+ * @export
  */
 plugin.places.ui.PlacesCtrl.prototype.hasRoot = function() {
   return this.placesRoot_ != null;
 };
-goog.exportProperty(
-    plugin.places.ui.PlacesCtrl.prototype,
-    'hasRoot',
-    plugin.places.ui.PlacesCtrl.prototype.hasRoot);
 
 
 /**
  * Export places to a KMZ.
+ * @export
  */
 plugin.places.ui.PlacesCtrl.prototype.export = function() {
   if (this.placesRoot_) {
@@ -141,27 +139,21 @@ plugin.places.ui.PlacesCtrl.prototype.export = function() {
     os.alertManager.sendAlert('Nothing to export.', os.alert.AlertEventSeverity.WARNING);
   }
 };
-goog.exportProperty(
-    plugin.places.ui.PlacesCtrl.prototype,
-    'export',
-    plugin.places.ui.PlacesCtrl.prototype.export);
 
 
 /**
  * Import places from a file/URL.
+ * @export
  */
 plugin.places.ui.PlacesCtrl.prototype.import = function() {
   plugin.places.PlacesManager.getInstance().startImport();
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.Places.IMPORT, 1);
 };
-goog.exportProperty(
-    plugin.places.ui.PlacesCtrl.prototype,
-    'import',
-    plugin.places.ui.PlacesCtrl.prototype.import);
 
 
 /**
  * Create a new folder and add it to the tree.
+ * @export
  */
 plugin.places.ui.PlacesCtrl.prototype.addFolder = function() {
   var parent = this['selected'] && this['selected'].length == 1 ? this['selected'][0] : this.placesRoot_;
@@ -176,14 +168,11 @@ plugin.places.ui.PlacesCtrl.prototype.addFolder = function() {
   }
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.Places.ADD_FOLDER, 1);
 };
-goog.exportProperty(
-    plugin.places.ui.PlacesCtrl.prototype,
-    'addFolder',
-    plugin.places.ui.PlacesCtrl.prototype.addFolder);
 
 
 /**
  * Create a new place and add it to the tree.
+ * @export
  */
 plugin.places.ui.PlacesCtrl.prototype.addPlace = function() {
   var parent = this['selected'] && this['selected'].length == 1 ? this['selected'][0] : this.placesRoot_;
@@ -198,14 +187,11 @@ plugin.places.ui.PlacesCtrl.prototype.addPlace = function() {
   }
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.Places.ADD_PLACE, 1);
 };
-goog.exportProperty(
-    plugin.places.ui.PlacesCtrl.prototype,
-    'addPlace',
-    plugin.places.ui.PlacesCtrl.prototype.addPlace);
 
 
 /**
  * Fully expands the tree from the provided node. Uses the first node if multiple are selected.
+ * @export
  */
 plugin.places.ui.PlacesCtrl.prototype.expandAll = function() {
   var node = this['selected'] && this['selected'].length > 0 ? this['selected'][0] : this.placesRoot_;
@@ -215,14 +201,11 @@ plugin.places.ui.PlacesCtrl.prototype.expandAll = function() {
   }
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.Places.EXPAND_ALL, 1);
 };
-goog.exportProperty(
-    plugin.places.ui.PlacesCtrl.prototype,
-    'expandAll',
-    plugin.places.ui.PlacesCtrl.prototype.expandAll);
 
 
 /**
  * Fully collapses the tree from the provided node. Uses the first node if multiple are selected.
+ * @export
  */
 plugin.places.ui.PlacesCtrl.prototype.collapseAll = function() {
   var node = this['selected'] && this['selected'].length > 0 ? this['selected'][0] : this.placesRoot_;
@@ -232,7 +215,3 @@ plugin.places.ui.PlacesCtrl.prototype.collapseAll = function() {
   }
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.Places.COLLAPSE_ALL, 1);
 };
-goog.exportProperty(
-    plugin.places.ui.PlacesCtrl.prototype,
-    'collapseAll',
-    plugin.places.ui.PlacesCtrl.prototype.collapseAll);

@@ -37,6 +37,7 @@ os.ui.util.autoHeightDirective = function() {
   return {
     restrict: 'A',
     scope: {
+      'parent': '@',
       'siblings': '@',
       'height': '@autoheight',
       'minHeight': '@minheight'
@@ -87,17 +88,27 @@ os.ui.util.AutoHeightCtrl = function($scope, $element, $injector) {
    */
   this.resizeFn_ = this.onResize_.bind(this);
 
-  var parent = $element.parent();
-  parent.resize(this.resizeFn_);
+  /**
+   * The parent element to use for determining max height.
+   * @type {?angular.JQLite}
+   * @private
+   */
+  this.parent_ = this.getParent_();
 
-  var siblings = /** @type {string} */ ($scope['siblings']);
-  if (siblings) {
-    parent.find(siblings).resize(this.resizeFn_);
+  if (this.parent_) {
+    // listen for parent size changes
+    this.parent_.resize(this.resizeFn_);
+
+    // listen for sibling resize changes
+    var siblings = /** @type {string} */ ($scope['siblings']);
+    if (siblings) {
+      this.parent_.find(siblings).resize(this.resizeFn_);
+    }
+
+    // there are some situations where resize won't fire on creation, particularly when using IE or when swapping DOM
+    // elements with ng-if. this will make sure it fires as soon as Angular is done manipulating the DOM.
+    os.ui.waitForAngular(this.onResize_.bind(this));
   }
-
-  // there are some situations where resize won't fire on creation, particularly when using IE or when swapping DOM
-  // elements with ng-if. this will make sure it fires as soon as Angular is done manipulating the DOM.
-  os.ui.waitForAngular(this.onResize_.bind(this));
 
   $scope.$on('$destroy', this.onDestroy_.bind(this));
 };
@@ -108,19 +119,49 @@ os.ui.util.AutoHeightCtrl = function($scope, $element, $injector) {
  * @private
  */
 os.ui.util.AutoHeightCtrl.prototype.onDestroy_ = function() {
-  var parent = this.element_.parent();
-  parent.removeResize(this.resizeFn_);
+  if (this.parent_) {
+    this.parent_.removeResize(this.resizeFn_);
 
-  var siblings = /** @type {Array.<string>} */ (this.scope_['siblings']);
-  if (siblings) {
-    try {
-      parent.find(siblings).removeResize(this.resizeFn_);
-    } catch (e) {}
+    var siblings = /** @type {string} */ (this.scope_['siblings']);
+    if (siblings) {
+      try {
+        this.parent_.find(siblings).removeResize(this.resizeFn_);
+      } catch (e) {}
+    }
+
+    this.parent_ = null;
   }
 
   this.resizeFn_ = null;
   this.element_ = null;
   this.scope_ = null;
+};
+
+
+/**
+ * Get the parent for the directive.
+ * @return {?angular.JQLite}
+ * @private
+ */
+os.ui.util.AutoHeightCtrl.prototype.getParent_ = function() {
+  var parent = null;
+
+  if (this.scope_ && this.element_) {
+    var immediateParent = this.element_.parent();
+
+    var parentSelector = /** @type {string|undefined} */ (this.scope_['parent']);
+    if (parentSelector) {
+      // start searching from the parent, because we don't want to match the current element
+      parent = immediateParent.closest(parentSelector);
+    }
+
+    if (!parent || !parent.length) {
+      // parent hasn't been found, use the immediate parent
+      parent = immediateParent;
+    }
+  }
+
+  return parent;
 };
 
 
@@ -150,20 +191,18 @@ os.ui.util.AutoHeightCtrl.prototype.initHeight_ = function() {
  * @private
  */
 os.ui.util.AutoHeightCtrl.prototype.onResize_ = function() {
-  if (this.element_) {
-    var parent = this.element_.parent();
+  if (this.element_ && this.parent_) {
     var siblingHeight = 0;
-
     var siblings = /** @type {string} */ (this.scope_['siblings']);
     if (siblings) {
-      parent.find(siblings).each(function(index) {
+      this.parent_.find(siblings).each(function(index) {
         // include padding, borders, margin in the height calculation
         siblingHeight += $(this).outerHeight(true);
       });
     }
 
     var minHeight = Number(this.scope_['minHeight']) || 0;
-    var height = Math.max((parent.height() - siblingHeight) * this.height_, minHeight);
+    var height = Math.max((this.parent_.height() - siblingHeight) * this.height_, minHeight);
     this.element_.css('height', height + 'px');
   }
 };

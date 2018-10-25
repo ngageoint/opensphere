@@ -1,0 +1,7 @@
+<div class="d-flex flex-column flex-fill u-overflow-y-auto container-fluid">
+  <h4>Theme</h4>
+  <div class="form-group">
+    <select class="custom-select" ng-options="key as key for (key, value) in ctrl.themes"
+        ng-change="ctrl.onThemeChange()" ng-model="ctrl.theme"></select>
+  </div>
+</div>

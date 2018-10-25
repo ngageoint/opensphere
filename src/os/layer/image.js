@@ -16,7 +16,6 @@ goog.require('os.registerClass');
 goog.require('os.source');
 goog.require('os.style');
 goog.require('os.ui.Icons');
-goog.require('os.ui.featureInfoDirective');
 goog.require('os.ui.layer.defaultLayerUIDirective');
 goog.require('os.ui.renamelayer');
 goog.require('os.ui.window');
@@ -533,37 +532,37 @@ os.layer.Image.prototype.persist = function(opt_to) {
  * @inheritDoc
  */
 os.layer.Image.prototype.restore = function(config) {
-  if (goog.isDef(config['id'])) {
+  if (config['id'] !== undefined) {
     this.setId(config['id']);
   }
 
-  if (goog.isDef(config['provider'])) {
+  if (config['provider'] !== undefined) {
     this.setProvider(config['provider']);
   }
 
-  if (goog.isDef(config['tags'])) {
+  if (config['tags'] !== undefined) {
     this.setTags(config['tags']);
   }
 
-  if (goog.isDef(config['title'])) {
+  if (config['title'] !== undefined) {
     this.setTitle(config['title']);
   }
 
-  if (goog.isDef(config['layerType'])) {
+  if (config['layerType'] !== undefined) {
     this.setOSType(config['layerType']);
   }
 
-  if (goog.isDef(config['explicitType'])) {
+  if (config['explicitType'] !== undefined) {
     this.setExplicitType(config['explicitType']);
   }
 
-  if (goog.isDef(config['visible'])) {
+  if (config['visible'] !== undefined) {
     this.setLayerVisible(config['visible']);
   }
 
   var opacity = config['opacity'];
 
-  if (goog.isDef(opacity)) {
+  if (opacity !== undefined) {
     this.setOpacity(opacity);
   }
 

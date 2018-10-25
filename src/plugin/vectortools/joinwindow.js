@@ -5,6 +5,7 @@ goog.require('os.data.OSDataManager');
 goog.require('os.data.SourceManager');
 goog.require('os.defines');
 goog.require('os.ui.Module');
+goog.require('os.ui.util.validationMessageDirective');
 goog.require('os.ui.window');
 goog.require('plugin.vectortools.JoinLayer');
 goog.require('plugin.vectortools.mappingCounterDirective');
@@ -96,7 +97,7 @@ plugin.vectortools.JoinCtrl = function($scope, $element) {
 
   this.init();
   $scope.$on('$destroy', this.disposeInternal.bind(this));
-  $scope.$emit('window.ready');
+  $scope.$emit(os.ui.WindowEventType.READY);
 };
 goog.inherits(plugin.vectortools.JoinCtrl, os.data.SourceManager);
 
@@ -181,15 +182,16 @@ plugin.vectortools.JoinCtrl.prototype.onUpdateDelay = function() {
 
 /**
  * Close the window.
+ * @export
  */
 plugin.vectortools.JoinCtrl.prototype.close = function() {
   os.ui.window.close(this.element_);
 };
-goog.exportProperty(plugin.vectortools.JoinCtrl.prototype, 'close', plugin.vectortools.JoinCtrl.prototype.close);
 
 
 /**
  * Builds and executes the command to perform the join then closes the window.
+ * @export
  */
 plugin.vectortools.JoinCtrl.prototype.accept = function() {
   var sources = this['joinSources'].map(function(item) {
@@ -219,7 +221,6 @@ plugin.vectortools.JoinCtrl.prototype.accept = function() {
   os.command.CommandProcessor.getInstance().addCommand(cmd);
   this.close();
 };
-goog.exportProperty(plugin.vectortools.JoinCtrl.prototype, 'accept', plugin.vectortools.JoinCtrl.prototype.accept);
 
 
 /**

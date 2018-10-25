@@ -101,6 +101,7 @@ os.ui.filter.ui.CopyFilterPickerCtrl.prototype.destroy_ = function() {
 
 /**
  * Validates the picker section.
+ * @export
  */
 os.ui.filter.ui.CopyFilterPickerCtrl.prototype.validate = function() {
   var modelArray = /** @type {Array<Object>} */ (this.scope_['models']);
@@ -137,7 +138,3 @@ os.ui.filter.ui.CopyFilterPickerCtrl.prototype.validate = function() {
   this.scope_['copyFilterPickerForm'].$setValidity('duplicate', !duplicates);
   this.scope_['copyFilterPickerForm'].$setValidity('inUse', !inUse);
 };
-goog.exportProperty(
-    os.ui.filter.ui.CopyFilterPickerCtrl.prototype,
-    'validate',
-    os.ui.filter.ui.CopyFilterPickerCtrl.prototype.validate);

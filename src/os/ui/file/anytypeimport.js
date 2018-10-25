@@ -1,6 +1,7 @@
 goog.provide('os.ui.file.AnyTypeImportCtrl');
 goog.provide('os.ui.file.anyTypeImportDirective');
 
+goog.require('os.file.mime.zip');
 goog.require('os.ui.im.ImportManager');
 goog.require('os.ui.window');
 
@@ -48,13 +49,9 @@ os.ui.file.AnyTypeImportCtrl = function($scope, $element) {
    */
   this.element_ = $element;
 
-  this.scope_['isZip'] = this.scope_['file'] ? os.file.isZipFile(this.scope_['file'].getContent()) : false;
+  this.scope_['isZip'] = this.scope_['file'] ? os.file.mime.zip.isZip(this.scope_['file'].getContent()) : false;
 
-  /**
-   * The import function to use
-   */
-  this.scope_['import'] = null;
-  this.scope_.$emit('window.ready');
+  this.scope_.$emit(os.ui.WindowEventType.READY);
   this.scope_.$on('destroy', goog.bind(function() {
     this.scope_ = null;
     this.element_ = null;
@@ -64,6 +61,7 @@ os.ui.file.AnyTypeImportCtrl = function($scope, $element) {
 
 /**
  * Open the correct importer
+ * @export
  */
 os.ui.file.AnyTypeImportCtrl.prototype.accept = function() {
   try {
@@ -75,19 +73,12 @@ os.ui.file.AnyTypeImportCtrl.prototype.accept = function() {
 
   this.close();
 };
-goog.exportProperty(
-    os.ui.file.AnyTypeImportCtrl.prototype,
-    'accept',
-    os.ui.file.AnyTypeImportCtrl.prototype.accept);
 
 
 /**
  * Open the correct importer
+ * @export
  */
 os.ui.file.AnyTypeImportCtrl.prototype.close = function() {
   os.ui.window.close(this.element_);
 };
-goog.exportProperty(
-    os.ui.file.AnyTypeImportCtrl.prototype,
-    'close',
-    os.ui.file.AnyTypeImportCtrl.prototype.close);

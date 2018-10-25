@@ -18,10 +18,13 @@ goog.require('ol.source.TileImage');
 goog.require('ol.source.WMTS');
 goog.require('ol.style.Icon');
 goog.require('ol.style.Style');
+goog.require('os.fn');
 goog.require('os.geom.GeometryField');
 goog.require('os.implements');
 goog.require('os.layer.ILayer');
 goog.require('os.map');
+goog.require('os.style.label');
+goog.require('os.webgl');
 goog.require('plugin.cesium');
 goog.require('plugin.cesium.VectorContext');
 
@@ -243,25 +246,21 @@ plugin.cesium.sync.FeatureConverter.prototype.wrapFillAndOutlineGeometries = fun
 // Geometry converters
 /**
  * Create a Cesium label if style has a text component.
- * @param {!ol.Feature} feature The OL3 feature
- * @param {!ol.geom.Geometry} geometry
- * @param {Array<!ol.style.Style>} labels
- * @param {!plugin.cesium.VectorContext} context
+ * @param {!ol.Feature} feature The feature.
+ * @param {!ol.geom.Geometry} geometry The geometry.
+ * @param {!ol.style.Style} label The label style.
+ * @param {!plugin.cesium.VectorContext} context The Cesium vector context.
  * @protected
  */
-plugin.cesium.sync.FeatureConverter.prototype.createLabels = function(feature, geometry, labels, context) {
-  var allOptions = [];
-  goog.array.forEach(labels, function(label) {
-    if (!goog.string.isEmptyOrWhitespace(goog.string.makeSafe(label.getText()))) {
-      var options = /** @type {!Cesium.optionsLabelCollection} */ ({
-        heightReference: this.getHeightReference(context.layer, feature, geometry)
-      });
+plugin.cesium.sync.FeatureConverter.prototype.createLabel = function(feature, geometry, label, context) {
+  if (!goog.string.isEmptyOrWhitespace(goog.string.makeSafe(label.getText()))) {
+    var options = /** @type {!Cesium.optionsLabelCollection} */ ({
+      heightReference: this.getHeightReference(context.layer, feature, geometry)
+    });
 
-      this.updateLabel(options, geometry, label, context);
-      allOptions.push(options);
-    }
-  }, this);
-  context.addLabels(allOptions, feature, geometry);
+    this.updateLabel(options, geometry, label, context);
+    context.addLabel(options, feature, geometry);
+  }
 };
 
 
@@ -398,9 +397,9 @@ plugin.cesium.sync.FeatureConverter.prototype.updateLabel = function(label, geom
   // This removes characters outside the ASCII printable range to prevent that behavior.
   //
   var labelText = textStyle.getText() || '';
-  label.text = labelText.replace(/[^\x20-\x7e\xa0-\xff]/g, '');
+  label.text = labelText.replace(/[^\x0a\x0d\x20-\x7e\xa0-\xff]/g, '');
 
-  label.font = textStyle.getFont() || 'normal 12px Arial';
+  label.font = textStyle.getFont() || os.style.label.getFont();
   label.pixelOffset = new Cesium.Cartesian2(textStyle.getOffsetX(), textStyle.getOffsetY());
 
   // check if there is an associated primitive, and if it is shown
@@ -899,7 +898,7 @@ plugin.cesium.sync.FeatureConverter.prototype.createPolygonHierarchy = function(
   var flats = opt_flats || geometry.getFlatCoordinates();
   var offset = opt_offset || 0;
   var ends = opt_ringEnds || geometry.getEnds();
-  var extrude = opt_extrude != undefined ? opt_extrude : !!geometry.get('extrude');
+  // var extrude = opt_extrude != undefined ? opt_extrude : !!geometry.get('extrude');
   var stride = geometry.getStride();
   var coord = plugin.cesium.sync.FeatureConverter.scratchCoord1_;
   var transformedCoord = plugin.cesium.sync.FeatureConverter.scratchCoord2_;
@@ -916,16 +915,9 @@ plugin.cesium.sync.FeatureConverter.prototype.createPolygonHierarchy = function(
 
   var positions;
   var holes;
-  var epsilon = os.geo.EPSILON;
-  var rectangleCandidate = ends.length === 1;
 
   for (var r = 0, rr = ends.length; r < rr; r++) {
     var end = ends[r];
-
-    var firstLon = NaN;
-    var firstLat = NaN;
-    var lastLon = NaN;
-    var lastLat = NaN;
     var csPos = new Array((end - offset) / stride);
 
     var count = 0;
@@ -939,42 +931,8 @@ plugin.cesium.sync.FeatureConverter.prototype.createPolygonHierarchy = function(
         transform(coord, transformedCoord, coord.length);
       }
 
-      if (isNaN(firstLon)) {
-        firstLon = transformedCoord[0];
-        firstLat = transformedCoord[1];
-      }
-
-      if (rectangleCandidate) {
-        if (lastLon) {
-          var axisChanges = 0;
-          if (Math.abs(transformedCoord[0] - lastLon) > epsilon) {
-            axisChanges++;
-          }
-          if (Math.abs(transformedCoord[1] - lastLat) > epsilon) {
-            axisChanges++;
-          }
-          rectangleCandidate = axisChanges === 1;
-        }
-
-        lastLon = transformedCoord[0];
-        lastLat = transformedCoord[1];
-
-        ol.extent.extendCoordinate(extent, transformedCoord);
-      }
-
       csPos[count] = olcs.core.ol4326CoordinateToCesiumCartesian(transformedCoord);
       count++;
-    }
-
-    if (rectangleCandidate) {
-      var isRingClosed = Math.abs(transformedCoord[0] - firstLon) < epsilon &&
-          Math.abs(transformedCoord[1] - firstLat) < epsilon;
-      var isWide = extent[2] - extent[0] > epsilon;
-      var isTall = extent[3] - extent[1] > epsilon;
-
-      if (isRingClosed && end - offset === 5 && isWide && isTall) {
-        csPos = plugin.cesium.generateRectanglePositions(extent, 0, extrude);
-      }
     }
 
     // if a ring is empty, just ignore it
@@ -1134,13 +1092,20 @@ plugin.cesium.sync.FeatureConverter.prototype.olPolygonGeometryToCesiumPolyline 
 
 
 /**
- * @param {boolean} enabled
+ * @param {os.webgl.AltitudeMode} altitudeMode
  */
-plugin.cesium.sync.FeatureConverter.prototype.setAltitudeEnabled = function(enabled) {
-  if (enabled) {
-    this.heightReference_ = Cesium.HeightReference.NONE;
-  } else {
-    this.heightReference_ = Cesium.HeightReference.CLAMP_TO_GROUND;
+plugin.cesium.sync.FeatureConverter.prototype.setAltitudeMode = function(altitudeMode) {
+  switch (altitudeMode) {
+    case os.webgl.AltitudeMode.RELATIVE_TO_GROUND:
+      this.heightReference_ = Cesium.HeightReference.RELATIVE_TO_GROUND;
+      break;
+    case os.webgl.AltitudeMode.CLAMP_TO_GROUND:
+      this.heightReference_ = Cesium.HeightReference.CLAMP_TO_GROUND;
+      break;
+    case os.webgl.AltitudeMode.ABSOLUTE:
+    default:
+      this.heightReference_ = Cesium.HeightReference.NONE;
+      break;
   }
 };
 
@@ -1153,29 +1118,33 @@ plugin.cesium.sync.FeatureConverter.prototype.setAltitudeEnabled = function(enab
  */
 plugin.cesium.sync.FeatureConverter.prototype.getHeightReference = function(layer, feature, geometry) {
   // disable height reference because the implementation is fairly slow right now
+  // TODO: Should we remove this since with the function above we are seting it for the whole layer?
   return this.heightReference_;
 
   // // Read from the geometry
   // var altitudeMode = geometry.get('altitudeMode');
 
   // // Or from the feature
-  // if (!goog.isDef(altitudeMode)) {
+  // if (altitudeMode === undefined) {
   //   altitudeMode = feature.get('altitudeMode');
   // }
 
   // // Or from the layer
-  // if (!goog.isDef(altitudeMode)) {
+  // if (altitudeMode === undefined) {
   //   altitudeMode = layer.get('altitudeMode');
   // }
 
-  // var heightReference = Cesium.HeightReference.NONE;
-  // if (altitudeMode === 'clampToGround') {
-  //   heightReference = Cesium.HeightReference.CLAMP_TO_GROUND;
-  // } else if (altitudeMode === 'relativeToGround') {
-  //   heightReference = Cesium.HeightReference.RELATIVE_TO_GROUND;
+  // if (altitudeMode !== undefined) {
+  //   var heightReference = Cesium.HeightReference.NONE;
+  //   if (altitudeMode === 'clampToGround') {
+  //     heightReference = Cesium.HeightReference.CLAMP_TO_GROUND;
+  //   } else if (altitudeMode === 'relativeToGround') {
+  //     heightReference = Cesium.HeightReference.RELATIVE_TO_GROUND;
+  //   }
+  //   return heightReference;
   // }
 
-  // return heightReference;
+  // return this.heightReference_;
 };
 
 
@@ -1222,7 +1191,7 @@ plugin.cesium.sync.FeatureConverter.prototype.createOrUpdateBillboard = function
         }
 
         // try creating/updating again as long as the image isn't in the error state
-        if (imageStyle.getImageState() < ol.ImageState.ERROR && context.featureToShownMap[feature['id']]) {
+        if (imageStyle.getImageState() < ol.ImageState.ERROR) {
           // if the billboard has already been created, make sure it's still in the collection
           if (!(opt_billboard instanceof Cesium.Billboard) ||
               (context.billboards && context.billboards.contains(opt_billboard))) {
@@ -1253,15 +1222,18 @@ plugin.cesium.sync.FeatureConverter.prototype.createOrUpdateBillboard = function
  * @param {number=} opt_offset
  * @param {Cesium.BillboardCollection=} opt_collection
  * @protected
+ * @suppress {checkTypes} To allow access to feature id.
  */
 plugin.cesium.sync.FeatureConverter.prototype.createBillboard = function(feature, geometry, context, style,
     opt_flatCoords, opt_offset, opt_collection) {
   var image = style.getImage(1); // get normal density
   if (image instanceof HTMLCanvasElement || image instanceof Image || image instanceof HTMLImageElement) {
     var heightReference = this.getHeightReference(context.layer, feature, geometry);
+    var show = context.featureToShownMap[feature['id']] == null || context.featureToShownMap[feature['id']];
 
     var options = /** @type {!Cesium.optionsBillboardCollectionAdd} */ ({
-      heightReference: heightReference
+      heightReference: heightReference,
+      show: show
     });
 
     this.updateBillboard(feature, geometry, options, style, context.layer, opt_flatCoords, opt_offset);
@@ -1339,7 +1311,7 @@ plugin.cesium.sync.FeatureConverter.prototype.updateBillboard = function(feature
     imageId = style['id'] || ol.getUid(image);
   }
 
-  if (goog.isString(image) || image instanceof HTMLCanvasElement || image instanceof Image ||
+  if (typeof image === 'string' || image instanceof HTMLCanvasElement || image instanceof Image ||
       image instanceof HTMLImageElement) {
     if (bb instanceof Cesium.Billboard) {
       bb.setImage(imageId, image);
@@ -1425,7 +1397,7 @@ plugin.cesium.sync.FeatureConverter.prototype.updatePrimitive = function(feature
     // primitives won't be marked as ready until they've been loaded to the GPU. we can't update them until they're
     // ready, so call this again on a delay. limit to 20 tries in case a primitive is never ready for whatever
     // reason.
-    primitive.updateRetries = goog.isDef(primitive.updateRetries) ? primitive.updateRetries + 1 : 1;
+    primitive.updateRetries = primitive.updateRetries !== undefined ? primitive.updateRetries + 1 : 1;
 
     if (primitive.updateRetries < 20) {
       var callback = goog.partial(this.updatePrimitive, feature, geometry, style, context, primitive);
@@ -1609,19 +1581,19 @@ plugin.cesium.sync.FeatureConverter.prototype.getFeatureStyles = function(featur
 
   // feature style takes precedence
   var featureStyle = feature.getStyleFunction();
-  if (goog.isDef(featureStyle)) {
+  if (featureStyle !== undefined) {
     style = featureStyle.call(feature, resolution);
   }
 
   // use the fallback if there isn't one
-  if (!goog.isDefAndNotNull(style)) {
+  if (style == null) {
     var layerStyle = layer.getStyleFunction();
     if (layerStyle) {
       style = layerStyle(feature, resolution);
     }
   }
 
-  if (!goog.isDef(style)) {
+  if (style === undefined) {
     return null;
   }
 
@@ -1640,18 +1612,16 @@ plugin.cesium.sync.FeatureConverter.prototype.getFeatureStyles = function(featur
  * @param {!ol.geom.Geometry} geometry The geometry to be converted
  * @param {!ol.style.Style} style The geometry style
  * @param {!plugin.cesium.VectorContext} context Cesium synchronization context
- * @param {Array<!ol.style.Style>=} opt_labels - the group of labels to apply to the geometries
+ * @param {ol.style.Style=} opt_label The label to render with the geometry
  */
 plugin.cesium.sync.FeatureConverter.prototype.olGeometryToCesium = function(feature, geometry, style, context,
-    opt_labels) {
-  if (opt_labels) {
-    var currentLabels = context.getLabelsForGeometry(geometry);
-    if (currentLabels == null || opt_labels.length != currentLabels.length) {
-      this.createLabels(feature, geometry, opt_labels, context);
+    opt_label) {
+  if (opt_label) {
+    var currentLabel = context.getLabelForGeometry(geometry);
+    if (currentLabel == null) {
+      this.createLabel(feature, geometry, opt_label, context);
     } else {
-      goog.array.forEach(opt_labels, function(label, index) {
-        this.updateLabel(currentLabels[index], geometry, label, context);
-      }, this);
+      this.updateLabel(currentLabel, geometry, opt_label, context);
     }
   }
 
@@ -1806,7 +1776,7 @@ plugin.cesium.sync.FeatureConverter.prototype.updatePrimitiveLike = function(fea
 plugin.cesium.sync.FeatureConverter.prototype.olVectorLayerToCesium = function(layer, view) {
   var projection = view.getProjection();
   var resolution = view.getResolution();
-  if (!goog.isDefAndNotNull(projection) || !goog.isDef(resolution)) {
+  if (projection == null || resolution === undefined) {
     // an assertion is not enough for closure to assume resolution and projection are defined
     throw new Error('view not ready');
   }
@@ -1833,43 +1803,48 @@ plugin.cesium.sync.FeatureConverter.prototype.olVectorLayerToCesium = function(l
 plugin.cesium.sync.FeatureConverter.prototype.convert = function(feature, resolution, context) {
   context.markDirty(feature);
 
-  var styles = this.getFeatureStyles(feature, resolution, context.layer);
-
-  // Split the styles into normal styles and labels
-  var split = goog.array.bucket(styles, function(style) {
-    // MASSIVE ASSUMPTION ALERT!
-    // I decided to separate label styles from geometry styles for caching purposes, but it also allows making the below
-    // assumption that anything with a text style is for a label, and anything else is for a primitive/billboard. sorry
-    // if this wrecks your party.
-    return style.getText() ? 'labels' : 'other';
-  });
-
-  styles = split['other'];
-
-  var textStyles = split['labels'];
+  var styles = [];
+  var labelStyle;
   var labelGeometry;
 
-  if (textStyles && textStyles.length > 0) {
-    // check if the feature defines which geometry should be used to position the label
-    var labelGeometryName = /** @type {string|undefined} */ (feature.get(os.style.StyleField.LABEL_GEOMETRY));
-    if (labelGeometryName) {
-      labelGeometry = /** @type {ol.geom.Geometry|undefined} */ (feature.get(labelGeometryName));
+  //
+  // The following code makes these assumptions, based on how OpenSphere creates label styles:
+  //  - Each feature has a single label style.
+  //  - The label style is independent of styles that should be applied to geometries.
+  //
+  // Given those assumptions, treat the first style with a text component as the label and keep non-text styles for
+  // styling geometries.
+  //
+  var featureStyles = this.getFeatureStyles(feature, resolution, context.layer);
+  for (var i = 0; i < featureStyles.length; i++) {
+    if (!featureStyles[i].getText()) {
+      styles.push(featureStyles[i]);
+    } else if (!labelStyle) {
+      labelStyle = featureStyles[i];
     }
   }
 
   if (styles) {
+    if (labelStyle) {
+      // check if the feature defines which geometry should be used to position the label
+      var labelGeometryName = /** @type {string|undefined} */ (feature.get(os.style.StyleField.LABEL_GEOMETRY));
+      if (labelGeometryName) {
+        labelGeometry = /** @type {ol.geom.Geometry|undefined} */ (feature.get(labelGeometryName));
+      }
+    }
+
     for (var i = 0, n = styles.length; i < n; i++) {
       var style = styles[i];
       if (style) {
         var geometry = style.getGeometryFunction()(feature);
         if (geometry) {
           // render labels if there isn't a label geometry or the current geometry is the label geometry
-          var renderedLabels = (!labelGeometry || labelGeometry == geometry) ? textStyles : undefined;
-          this.olGeometryToCesium(feature, geometry, style, context, renderedLabels);
+          var renderedLabel = (!labelGeometry || labelGeometry == geometry) ? labelStyle : undefined;
+          this.olGeometryToCesium(feature, geometry, style, context, renderedLabel);
 
           // never render labels more than once
-          if (renderedLabels) {
-            textStyles = undefined;
+          if (renderedLabel) {
+            labelStyle = undefined;
           }
         }
       }

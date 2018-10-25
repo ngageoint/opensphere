@@ -11,7 +11,6 @@ goog.require('os.file.File');
 goog.require('os.file.FileStorage');
 goog.require('os.metrics.Metrics');
 goog.require('os.metrics.keys');
-goog.require('os.ui.im.ImportManager');
 goog.require('os.ui.state');
 goog.require('os.ui.state.StateImportUI');
 goog.require('os.ui.state.stateExportDirective');
@@ -66,11 +65,6 @@ os.ui.state.StateManager = function() {
    * @protected
    */
   this.log = os.ui.state.StateManager.LOGGER_;
-
-  // register the import UI
-  var im = os.ui.im.ImportManager.getInstance();
-  im.registerImportDetails(os.config.getAppName('Application') + ' state files.');
-  im.registerImportUI('state', new os.ui.state.StateImportUI());
 };
 goog.inherits(os.ui.state.StateManager, goog.events.EventTarget);
 goog.addSingletonGetter(os.ui.state.StateManager);
@@ -340,8 +334,8 @@ os.ui.state.StateManager.prototype.saveStates = function(method, title, opt_desc
 os.ui.state.StateManager.prototype.onSaveSuccess = function(options) {
   var content = this.serializeContent(options);
   var stateFileName = this.getStateFileName(options);
-  goog.asserts.assert(goog.isDefAndNotNull(content), 'No state content to save!');
-  goog.asserts.assert(goog.isDefAndNotNull(stateFileName), 'No state file name!');
+  goog.asserts.assert(content != null, 'No state content to save!');
+  goog.asserts.assert(stateFileName != null, 'No state file name!');
 
   var persistMethod = options.method;
   if (persistMethod) {
@@ -416,7 +410,7 @@ os.ui.state.StateManager.prototype.saveLocal = function(file, options) {
  * @private
  */
 os.ui.state.StateManager.prototype.onFileError_ = function(error) {
-  if (goog.isString(error)) {
+  if (typeof error === 'string') {
     goog.log.error(this.log, 'Unable to store state file locally: ' + error);
   } else {
     goog.log.error(this.log, 'Unable to store state file locally!');

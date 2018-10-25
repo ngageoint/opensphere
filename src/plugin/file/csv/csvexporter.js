@@ -50,7 +50,7 @@ plugin.file.csv.CSVExporter.prototype.processItem = function(item) {
 
   // this cast is incorrect, but will serve our needs wrt the compiler
   var geom = item ? /** @type {ol.geom.Point|undefined} */ (item.getGeometry()) : null;
-  if (goog.isDefAndNotNull(geom)) {
+  if (geom != null) {
     geom = /** @type {ol.geom.Point|undefined} */ (geom.clone().toLonLat());
     result = {};
 
@@ -58,7 +58,7 @@ plugin.file.csv.CSVExporter.prototype.processItem = function(item) {
       // only populate these fields for point geometries, which will return an array of numbers. unfortunately we can't
       // detect a point geometry with instanceof because of external tools
       var coords = geom.getCoordinates();
-      if (coords && goog.isNumber(coords[0])) {
+      if (coords && typeof coords[0] === 'number') {
         result[os.Fields.LAT] = String(coords[1]);
         result[os.Fields.LON] = String(coords[0]);
         result[os.Fields.LAT_DDM] = os.geo.toDegreesDecimalMinutes(coords[1], false, false);
@@ -102,7 +102,7 @@ plugin.file.csv.CSVExporter.prototype.processItem = function(item) {
         var field = this.fields[i];
         if (!(field in result)) {
           var value = item.get(this.fields[i]);
-          if (!goog.isDefAndNotNull(value)) {
+          if (value == null) {
             value = '';
           }
 

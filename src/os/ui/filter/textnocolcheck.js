@@ -43,7 +43,7 @@ os.ui.filter.TextNoColCheckCtrl = function($scope) {
 
   this['start'] = undefined;
 
-  if (goog.isDefAndNotNull($scope['expr']['literal'])) {
+  if ($scope['expr']['literal'] != null) {
     this['start'] = $scope['expr']['literal'];
   }
 
@@ -63,9 +63,8 @@ os.ui.filter.TextNoColCheckCtrl.prototype.onDestroy_ = function() {
 
 /**
  * Run when the user changes the value
+ * @export
  */
 os.ui.filter.TextNoColCheckCtrl.prototype.onChange = function() {
   this.scope_['expr']['literal'] = this['start'];
 };
-goog.exportProperty(os.ui.filter.TextNoColCheckCtrl.prototype, 'onChange',
-    os.ui.filter.TextNoColCheckCtrl.prototype.onChange);

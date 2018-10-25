@@ -186,9 +186,9 @@ os.ui.metrics.MetricNode.prototype.getTags = function() {
 os.ui.metrics.MetricNode.prototype.formatIcons = function() {
   if (!this.hasChildren()) {
     if (this.getVisited()) {
-      return '<i class="fa fa-check green-icon"></i>';
+      return '<i class="fa fa-check"></i>';
     } else {
-      return '<i class="fa fa-times red-icon"></i>';
+      return '<i class="fa fa-times"></i>';
     }
   }
 

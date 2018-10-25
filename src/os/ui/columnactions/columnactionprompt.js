@@ -72,37 +72,31 @@ os.ui.columnactions.ColumnActionsCtrl.prototype.onDestroy_ = function() {
  *
  * @param {Object} match
  * @param {string} value
- * @private
+ * @export
  */
-os.ui.columnactions.ColumnActionsCtrl.prototype.executeMatch_ = function(match, value) {
+os.ui.columnactions.ColumnActionsCtrl.prototype.executeMatch = function(match, value) {
   match.execute(value);
 };
-goog.exportProperty(os.ui.columnactions.ColumnActionsCtrl.prototype, 'executeMatch',
-    os.ui.columnactions.ColumnActionsCtrl.prototype.executeMatch_);
 
 
 /**
  *
  * @param {Object} match
  * @return {string}
- * @private
+ * @export
  */
-os.ui.columnactions.ColumnActionsCtrl.prototype.getDescription_ = function(match) {
+os.ui.columnactions.ColumnActionsCtrl.prototype.getDescription = function(match) {
   return match.getDescription();
 };
-goog.exportProperty(os.ui.columnactions.ColumnActionsCtrl.prototype, 'getDescription',
-    os.ui.columnactions.ColumnActionsCtrl.prototype.getDescription_);
 
 
 /**
  * Close the window.
- * @private
+ * @export
  */
-os.ui.columnactions.ColumnActionsCtrl.prototype.close_ = function() {
+os.ui.columnactions.ColumnActionsCtrl.prototype.close = function() {
   os.ui.window.close(this.element_);
 };
-goog.exportProperty(os.ui.columnactions.ColumnActionsCtrl.prototype, 'close',
-    os.ui.columnactions.ColumnActionsCtrl.prototype.close_);
 
 
 /**
@@ -117,7 +111,7 @@ os.ui.columnactions.launchColumnActionPrompt = function(matched, value, colDef) 
     'colDef': colDef,
     'value': value,
     'doneText': 'Close',
-    'doneIcon': 'fa fa-check icon-blue'
+    'doneIcon': 'fa fa-check'
   };
 
   var windowOptions = {
@@ -132,6 +126,6 @@ os.ui.columnactions.launchColumnActionPrompt = function(matched, value, colDef) 
     'no-scroll': 'true'
   };
 
-  var template = '<columnactions></columnactions>';
+  var template = '<columnactions class="d-flex flex-fill"></columnactions>';
   os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
 };

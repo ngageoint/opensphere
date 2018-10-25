@@ -23,6 +23,7 @@ goog.require('os.ui.menu.IMenuSupplier');
 goog.require('os.ui.slick.ColumnEventType');
 goog.require('os.ui.slick.column');
 goog.require('os.ui.text');
+goog.require('os.ui.windowSelector');
 
 
 /**
@@ -71,7 +72,8 @@ os.ui.slickGridDirective = function() {
       'defaultSortOrder': '@', /* asc|desc */
       'compare': '=?',
       'getItemMetadata': '=?',
-      'rowScope': '=?'
+      'rowScope': '=?',
+      'cellTooltips': '=?'
     },
     controller: os.ui.slick.SlickGridCtrl,
     controllerAs: 'gridCtrl'
@@ -162,10 +164,12 @@ os.ui.slick.SlickGridCtrl = function($scope, $element, $compile) {
    */
   this.copyLimitMsg = os.ui.slick.SlickGridCtrl.COPY_LIMIT_MSG;
 
+  // The order in which these watches are created matters. Any initial selection state on a slickgrid will be wiped
+  // out if the watch on columns is created before the watch on the selected items.
   this.destroyers.push($scope.$watch('data', this.onDataChange.bind(this)));
+  this.destroyers.push($scope.$watch('selected', this.onSelectedChange.bind(this)));
   this.destroyers.push($scope.$watch('columns', this.onColumnsChange.bind(this)));
   this.destroyers.push($scope.$watch('options', this.onOptionsChange.bind(this)));
-  this.destroyers.push($scope.$watch('selected', this.onSelectedChange.bind(this)));
   this.destroyers.push($scope.$on('$destroy', this.dispose.bind(this)));
   var unWatchSortColumn = $scope.$watch('defaultSortColumn', goog.bind(function(newVal) {
     if (newVal && goog.array.find($scope['columns'], function(col) {
@@ -194,7 +198,7 @@ os.ui.slick.SlickGridCtrl = function($scope, $element, $compile) {
    * @protected
    */
   this.dataView = new Slick.Data.DataView();
-  if (goog.isDef($scope['getItemMetadata'])) {
+  if ($scope['getItemMetadata'] !== undefined) {
     this.dataView.getItemMetadata = $scope['getItemMetadata'];
   }
 
@@ -246,8 +250,10 @@ os.ui.slick.SlickGridCtrl = function($scope, $element, $compile) {
   $scope.$on(os.ui.slick.SlickGridEvent.SORT_SELECTED, this.onSortBySelectionChange.bind(this));
   $scope.$on('resize', this.resizeFn);
 
+  $scope['cellTooltips'] = $scope['cellTooltips'] == undefined ? true : $scope['cellTooltips'];
+
   if ($scope['dblClickEnabled'] && $scope['dblClickEnabled'] !== 'false') {
-    if (goog.isDefAndNotNull($scope['dblClickHandler'])) {
+    if ($scope['dblClickHandler'] != null) {
       this.grid.onDblClick.subscribe($scope['dblClickHandler'].bind(this));
     } else {
       this.grid.onDblClick.subscribe(this.onDblClick.bind(this));
@@ -648,7 +654,7 @@ os.ui.slick.SlickGridCtrl.prototype.onCopyRows = function(event, mapFn) {
  */
 os.ui.slick.SlickGridCtrl.prototype.onScrollToItem = function(event, item, opt_top) {
   var row = this.mapItemsToRows(item);
-  if (goog.isDef(row)) {
+  if (row !== undefined) {
     if (opt_top) {
       this.grid.scrollRowToTop(row);
     } else {
@@ -1047,7 +1053,7 @@ os.ui.slick.SlickGridCtrl.prototype.onContextMenu_ = function(event, opt_positio
       menu.open(contextArgs, {
         my: 'left top',
         at: 'left+' + menuX + ' top+' + menuY,
-        of: '#win-container'
+        of: os.ui.windowSelector.CONTAINER
       }, this);
     }
   }
@@ -1077,7 +1083,7 @@ os.ui.slick.SlickGridCtrl.prototype.onHeaderContextMenu_ = function(event, opt_p
     position = {
       my: 'left top',
       at: 'left+' + event.clientX + ' top+' + event.clientY,
-      of: '#win-container'
+      of: os.ui.windowSelector.CONTAINER
     };
   } else if (goog.isObject(opt_position)) {
     // event was fired on the scope
@@ -1440,7 +1446,7 @@ os.ui.slick.SlickGridCtrl.prototype.onRowRemove = function(e, args) {
  * @param {*} rows
  */
 os.ui.slick.SlickGridCtrl.prototype.setSelectedRows = function(rows) {
-  if (goog.isDefAndNotNull(this.selectionModel_)) {
+  if (this.selectionModel_ != null) {
     this.grid.setSelectedRows(rows);
   }
 };
@@ -1452,7 +1458,7 @@ os.ui.slick.SlickGridCtrl.prototype.setSelectedRows = function(rows) {
  * @protected
  */
 os.ui.slick.SlickGridCtrl.prototype.getSelectedRows = function() {
-  return goog.isDefAndNotNull(this.selectionModel_) ? this.grid.getSelectedRows() : [];
+  return this.selectionModel_ != null ? this.grid.getSelectedRows() : [];
 };
 
 
@@ -1740,6 +1746,13 @@ os.ui.slick.SlickGridCtrl.prototype.onMouseEnter = function(e, args) {
   if (!this.inEvent) {
     this.inEvent = true;
     var cell = this.grid.getCellFromEvent(e);
+
+    if (this.scope['cellTooltips']) {
+      // Set the tooltip
+      var node = $(this.grid.getCellNode(cell['row'], cell['cell']));
+      node.attr('title', /** @type {string} */ (node.text()));
+    }
+
     var row = /** @type {?Array<number>} */ (cell['row']);
     var item = this.grid.getDataItem(row);
     this.scope.$emit(os.ui.slick.SlickGridEvent.HIGHLIGHT_CHANGE, item);

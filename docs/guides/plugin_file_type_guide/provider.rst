@@ -21,7 +21,7 @@ Run ``yarn test`` to ensure that works. Now let's register it in the plugin.
   :caption: ``src/plugin/georss/georssplugin.js``
   :linenos:
   :language: javascript
-  :emphasize-lines: 3, 8, 47-55
+  :emphasize-lines: 3, 8, 43-51
 
 That registers it, but providers are only instantiated if they exist in config (added by either the admin or user in Settings > Data Servers). Let's add some default config. This file is found by looking at ``package.json`` ``build.config``'s values. In OpenSphere it happens to be ``config/settings.json``, however, your project could define a different one (or several config files).
 

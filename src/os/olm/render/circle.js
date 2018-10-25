@@ -76,9 +76,9 @@ os.olm.render.Circle.WGS84_SPHERE = new ol.Sphere(6378137);
  */
 os.olm.render.Circle.prototype.createGeometry = function() {
   var map = this.getMap();
-  goog.asserts.assert(!goog.isNull(this.startCoord_));
-  goog.asserts.assert(!goog.isNull(this.endCoord_));
-  goog.asserts.assert(!goog.isNull(map));
+  goog.asserts.assert(this.startCoord_ !== null);
+  goog.asserts.assert(this.endCoord_ !== null);
+  goog.asserts.assert(map !== null);
 
   var projection = map.getView().getProjection();
   var start = ol.proj.toLonLat(this.startCoord_, projection);

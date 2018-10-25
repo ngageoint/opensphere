@@ -5,6 +5,7 @@ goog.require('os.data.ProviderEntry');
 goog.require('os.plugin.AbstractPlugin');
 goog.require('os.plugin.PluginManager');
 goog.require('plugin.tileserver.Tileserver');
+goog.require('plugin.tileserver.mime');
 
 
 /**
@@ -40,26 +41,6 @@ plugin.tileserver.TileserverPlugin.prototype.init = function() {
       ));
 
   dm.registerDescriptorType(os.data.ConfigDescriptor.ID, os.data.ConfigDescriptor);
-};
-
-
-/**
- * @param {os.file.File} file The file representing the URL and its content
- * @return {number} The score
- */
-plugin.tileserver.isTileServerResponse = function(file) {
-  var score = 0;
-
-  if (file && !os.file.isLocal(file)) {
-    var content = file.getContent();
-    if (goog.isString(content) && /^\s*\[\{.*"tilejson"/.test(content)) {
-      // doesn't really matter as long as it is non-zero, but it could potentially
-      // compete with other detection functions
-      score += 3;
-    }
-  }
-
-  return score;
 };
 
 

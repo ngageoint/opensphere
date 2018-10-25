@@ -1,5 +1,6 @@
 goog.provide('os.ui.column.mapping.ColumnMappingFormCtrl');
 goog.provide('os.ui.column.mapping.columnMappingFormDirective');
+
 goog.require('os.ui.Module');
 goog.require('os.ui.column.mapping.ColumnModelNode');
 goog.require('os.ui.column.mapping.columnModelTreeDirective');
@@ -12,6 +13,7 @@ goog.require('os.ui.column.mapping.columnModelTreeDirective');
 os.ui.column.mapping.columnMappingFormDirective = function() {
   return {
     restrict: 'E',
+    replace: true,
     scope: {
       'columnMapping': '='
     },
@@ -95,6 +97,7 @@ os.ui.column.mapping.ColumnMappingFormCtrl = function($scope, $element, $timeout
   }, this));
 
   $scope.$on('layerpicker.layerselected', this.validateLayers_.bind(this));
+  $scope.$on('columnpicker.columnselected', this.validateLayers_.bind(this));
   $scope.$on('columnmapping.remove', this.removeColumnModel_.bind(this));
   $scope.$on('$destroy', this.destroy_.bind(this));
 };
@@ -155,6 +158,7 @@ os.ui.column.mapping.ColumnMappingFormCtrl.prototype.init_ = function() {
 
 /**
  * Adds a new column model to the mapping.
+ * @export
  */
 os.ui.column.mapping.ColumnMappingFormCtrl.prototype.add = function() {
   this.cm_.addColumn('', '');
@@ -164,10 +168,6 @@ os.ui.column.mapping.ColumnMappingFormCtrl.prototype.add = function() {
   this['tree'].push(node);
   this['tree'] = this['tree'].slice();
 };
-goog.exportProperty(
-    os.ui.column.mapping.ColumnMappingFormCtrl.prototype,
-    'add',
-    os.ui.column.mapping.ColumnMappingFormCtrl.prototype.add);
 
 
 /**
@@ -213,8 +213,13 @@ os.ui.column.mapping.ColumnMappingFormCtrl.prototype.validateLayers_ = function(
         'Duplicate layers are not supported (<b>' + node.getInitialLayer().getTitle() + '</b>)';
   }
 
+  var incompleteLayer = goog.array.find(columns, function(item) {
+    return (!item.layer || item.layer.length == 0 || !item.column || item.column.length == 0);
+  });
+
   this.scope_['cmForm'].$setValidity('duplicateLayer', !duplicates);
   this.scope_['cmForm'].$setValidity('notEnoughLayers', enoughLayers);
+  this.scope_['cmForm'].$setValidity('incompleteLayers', (incompleteLayer == null));
 };
 
 
@@ -236,6 +241,7 @@ os.ui.column.mapping.ColumnMappingFormCtrl.prototype.getModelNode_ = function(co
 /**
  * Validates the column mapping against all other existing mappings to verify that no duplicate layer/column pairs
  * have been chosen.
+ * @export
  */
 os.ui.column.mapping.ColumnMappingFormCtrl.prototype.validate = function() {
   this['otherCMText'] = '';
@@ -257,14 +263,11 @@ os.ui.column.mapping.ColumnMappingFormCtrl.prototype.validate = function() {
 
   this.scope_['cmForm'].$setValidity('reusedColumn', columnsValid);
 };
-goog.exportProperty(
-    os.ui.column.mapping.ColumnMappingFormCtrl.prototype,
-    'validate',
-    os.ui.column.mapping.ColumnMappingFormCtrl.prototype.validate);
 
 
 /**
  * Confirms the add/edit of the mapping.
+ * @export
  */
 os.ui.column.mapping.ColumnMappingFormCtrl.prototype.confirm = function() {
   var cmm = os.column.ColumnMappingManager.getInstance();
@@ -272,32 +275,22 @@ os.ui.column.mapping.ColumnMappingFormCtrl.prototype.confirm = function() {
   cmm.add(this.cm_);
   this.cancel();
 };
-goog.exportProperty(
-    os.ui.column.mapping.ColumnMappingFormCtrl.prototype,
-    'confirm',
-    os.ui.column.mapping.ColumnMappingFormCtrl.prototype.confirm);
 
 
 /**
  * Cancels the add/edit of the mapping.
+ * @export
  */
 os.ui.column.mapping.ColumnMappingFormCtrl.prototype.cancel = function() {
   os.ui.window.close(this.element_);
 };
-goog.exportProperty(
-    os.ui.column.mapping.ColumnMappingFormCtrl.prototype,
-    'cancel',
-    os.ui.column.mapping.ColumnMappingFormCtrl.prototype.cancel);
 
 
 /**
  * Returns the cached descriptor list. Used by the layer pickers in the form.
  * @return {!Array.<!os.ui.ogc.IOGCDescriptor>}
+ * @export
  */
 os.ui.column.mapping.ColumnMappingFormCtrl.prototype.getLayersFunction = function() {
   return this.cachedDescriptorList_;
 };
-goog.exportProperty(
-    os.ui.column.mapping.ColumnMappingFormCtrl.prototype,
-    'getLayersFunction',
-    os.ui.column.mapping.ColumnMappingFormCtrl.prototype.getLayersFunction);

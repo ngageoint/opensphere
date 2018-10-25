@@ -12,6 +12,7 @@ goog.require('os.ui.search.FeatureResultCardCtrl');
 plugin.osm.nom.resultCardDirective = function() {
   return {
     restrict: 'E',
+    replace: true,
     templateUrl: os.ROOT + 'views/plugin/osm/nom/nominatimresultcard.html',
     controller: plugin.osm.nom.ResultCardCtrl,
     controllerAs: 'ctrl'
@@ -79,11 +80,8 @@ goog.inherits(plugin.osm.nom.ResultCardCtrl, os.ui.search.FeatureResultCardCtrl)
 /**
  * Get the title to display on the card.
  * @return {string} The title.
+ * @export
  */
 plugin.osm.nom.ResultCardCtrl.prototype.getTitle = function() {
   return /** @type {string} */ (this.feature.get(plugin.osm.nom.ResultField.DISPLAY_NAME) || 'Unknown Result');
 };
-goog.exportProperty(
-    plugin.osm.nom.ResultCardCtrl.prototype,
-    'getTitle',
-    plugin.osm.nom.ResultCardCtrl.prototype.getTitle);

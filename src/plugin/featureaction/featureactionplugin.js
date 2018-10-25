@@ -1,15 +1,16 @@
 goog.provide('plugin.im.action.feature.Plugin');
 
 goog.require('goog.events.EventTarget');
-goog.require('os.im.action.FilterActionTypeMethod');
 goog.require('os.legend');
 goog.require('os.plugin.AbstractPlugin');
 goog.require('os.state.StateManager');
 goog.require('os.state.v4.FilterAction');
 goog.require('os.ui.im.action.FilterActionImportUI');
+goog.require('plugin.featureaction.mime');
 goog.require('plugin.im.action.feature');
 goog.require('plugin.im.action.feature.LabelAction');
 goog.require('plugin.im.action.feature.Manager');
+goog.require('plugin.im.action.feature.SoundAction');
 goog.require('plugin.im.action.feature.StyleAction');
 goog.require('plugin.im.action.feature.legend');
 goog.require('plugin.im.action.feature.menu');
@@ -17,6 +18,7 @@ goog.require('plugin.im.action.feature.node.menu');
 goog.require('plugin.im.action.feature.ui.featureActionsDirective');
 goog.require('plugin.im.action.feature.ui.labelConfigDirective');
 goog.require('plugin.im.action.feature.ui.legendSettingsDirective');
+goog.require('plugin.im.action.feature.ui.soundConfigDirective');
 goog.require('plugin.im.action.feature.ui.styleConfigDirective');
 
 
@@ -56,14 +58,11 @@ plugin.im.action.feature.Plugin.prototype.init = function() {
   var manager = plugin.im.action.feature.Manager.getInstance();
   manager.registerAction(new plugin.im.action.feature.LabelAction());
   manager.registerAction(new plugin.im.action.feature.StyleAction());
+  manager.registerAction(new plugin.im.action.feature.SoundAction());
 
   // register import UI
-  os.ui.im.ImportManager.getInstance().registerImportUI(
-      os.im.action.ID,
+  os.ui.im.ImportManager.getInstance().registerImportUI(plugin.featureaction.mime.TYPE,
       new os.ui.im.action.FilterActionImportUI());
-
-  // register file type detection method
-  os.file.FileManager.getInstance().registerContentTypeMethod(new os.im.action.FilterActionTypeMethod());
 
   // add actions
   plugin.im.action.feature.layerSetup();

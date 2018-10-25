@@ -1,0 +1,19 @@
+<div>
+  <div class="d-flex flex-row form-group">
+    <label class="form-control-label text-right col-2">Sound</label>
+    <select
+        class="form-control custom-select w-100"
+        ng-model="ctrl.sound"
+        ng-change=" ctrl.onSoundChange()"
+        ng-options="sound for sound in ctrl.sounds">
+    </select>
+  </div>
+  <div class="d-flex flex-row form-group align-items-center">
+    <label class="form-control-label text-right col-2">Delay</label>
+    <spinner min="1" max="60" live="false" step="1" value="playDelay" name="playDelay"
+             title="Sets time between notification sounds">
+    </spinner>
+    <popover class="mx-2" data-title="'Notification'" content="ctrl.help" pos="'right'">
+    </popover>
+  </div>
+</div>

@@ -1,5 +1,6 @@
 goog.provide('os.ui.file.kml.AbstractKMLExporter');
 
+goog.require('goog.array');
 goog.require('goog.dom');
 goog.require('goog.dom.xml');
 goog.require('goog.object');
@@ -127,6 +128,14 @@ os.ui.file.kml.AbstractKMLExporter = function() {
    */
   this.styles_ = {};
 
+
+  /**
+   * The column used for feature icon rotation
+   * @type {string|null|undefined}
+   * @private
+   */
+  this.rotationColumn_ = null;
+
   /**
    * If the item color should be used for icons.
    * @type {boolean}
@@ -190,6 +199,7 @@ os.ui.file.kml.AbstractKMLExporter.prototype.reset = function() {
   this.icon_ = null;
   this.styles_ = {};
   this.labelMap = {};
+  this.rotationColumn_ = null;
 };
 
 
@@ -234,7 +244,7 @@ os.ui.file.kml.AbstractKMLExporter.prototype.getDefaultIcon = function() {
 os.ui.file.kml.AbstractKMLExporter.prototype.setDefaultIcon = function(href, opt_scale) {
   this.defaultIcon_.href = href;
 
-  if (goog.isNumber(opt_scale) && !isNaN(opt_scale)) {
+  if (typeof opt_scale === 'number' && !isNaN(opt_scale)) {
     this.defaultIcon_.scale = Math.max(0, opt_scale);
   }
 };
@@ -526,6 +536,14 @@ os.ui.file.kml.AbstractKMLExporter.prototype.processPlacemark = function(element
     os.xml.appendElementNS('styleUrl', this.kmlNS, element, '#' + styleId);
   }
 
+  if (this.rotationColumn_ === null) {
+    this.rotationColumn_ = this.getRotationColumn(item);
+  }
+  var pStyleEl = this.createPlacemarkMergedStyle(element, item);
+  if (pStyleEl) {
+    element.appendChild(pStyleEl);
+  }
+
   var visibility = this.isItemVisible(item) ? 1 : 0;
   os.xml.appendElementNS('visibility', this.kmlNS, element, visibility);
 
@@ -572,8 +590,8 @@ os.ui.file.kml.AbstractKMLExporter.prototype.processPlacemark = function(element
     var descEl;
     for (var i = 0, n = fields.length; i < n; i++) {
       var val = this.getField(item, fields[i]);
-      if (goog.isDefAndNotNull(val)) {
-        if (!goog.isDef(descEl) && goog.isString(val) && os.fields.DESC_REGEXP.test(fields[i])) {
+      if (val != null) {
+        if (descEl === undefined && typeof val === 'string' && os.fields.DESC_REGEXP.test(fields[i])) {
           // strip out carriage returns, because screw windows
           val.replace(/\r/g, '');
 
@@ -591,11 +609,42 @@ os.ui.file.kml.AbstractKMLExporter.prototype.processPlacemark = function(element
         }
       }
     }
+
+    // Some fields do not get automatically exported (e.g., fields that are not visible)
+    // if the rotation column is one of those fields create its data element here
+    if (this.rotationColumn_ != null && !goog.array.contains(fields, this.rotationColumn_)) {
+      var rotDataEl = os.xml.appendElementNS('Data', this.kmlNS, ed, undefined, {
+        'name': this.rotationColumn_
+      });
+      os.xml.appendElementNS('value', this.kmlNS, rotDataEl, String(this.getField(item, this.rotationColumn_)));
+    }
   }
 
   if (ed.childElementCount > 0) {
     element.appendChild(ed);
   }
+};
+
+
+/**
+ * Create placemark specific merged style.
+ * @param {!Element} placemarkEl The placemark element
+ * @param {T} item The item
+ * @return {?Element} The merged style element
+ * @protected
+ * @template T
+ */
+os.ui.file.kml.AbstractKMLExporter.prototype.createPlacemarkMergedStyle = function(placemarkEl, item) {
+  if (this.rotationColumn_) {
+    var heading = /** @type {number} */ (this.getField(item, this.rotationColumn_));
+    if (!isNaN(heading)) {
+      var mergeStyleEl = os.xml.createElementNS('Style', this.kmlNS, this.doc);
+      var mergeIconStyleEl = os.xml.appendElementNS('IconStyle', this.kmlNS, mergeStyleEl);
+      os.xml.appendElementNS('heading', this.kmlNS, mergeIconStyleEl, heading % 360);
+      return mergeStyleEl;
+    }
+  }
+  return null;
 };
 
 
@@ -733,6 +782,15 @@ os.ui.file.kml.AbstractKMLExporter.prototype.getGeometry = goog.abstractMethod;
 
 
 /**
+ * Get the icon rotation column.
+ * @param {T} item The item
+ * @return {string|null|undefined}
+ * @protected
+ */
+os.ui.file.kml.AbstractKMLExporter.prototype.getRotationColumn = goog.abstractMethod;
+
+
+/**
  * Get the id of an item.
  * @param {T} item The item
  * @return {os.ui.file.kml.Icon} The icon representing the item
@@ -852,7 +910,7 @@ os.ui.file.kml.AbstractKMLExporter.prototype.getStyleId = function(item) {
     // use the hashcode since a URL may contain restricted characters for an XML attribute
     styleParts.push(String(goog.string.hashCode(icon.href)));
 
-    if (goog.isNumber(icon.scale) && icon.scale != 1) {
+    if (typeof icon.scale === 'number' && icon.scale != 1) {
       styleParts.push(String(icon.scale));
     }
   }

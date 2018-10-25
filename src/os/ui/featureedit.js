@@ -13,6 +13,7 @@ goog.require('ol.geom.Point');
 goog.require('os.action.EventType');
 goog.require('os.data.ColumnDefinition');
 goog.require('os.map');
+goog.require('os.math.Units');
 goog.require('os.ol.feature');
 goog.require('os.style');
 goog.require('os.style.label');
@@ -28,6 +29,7 @@ goog.require('os.ui.geo.positionDirective');
 goog.require('os.ui.layer.labelControlsDirective');
 goog.require('os.ui.layer.vectorStyleControlsDirective');
 goog.require('os.ui.text.simpleMDEDirective');
+goog.require('os.ui.util.validationMessageDirective');
 goog.require('os.ui.window');
 
 
@@ -116,24 +118,17 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
   /**
    * @type {string}
    */
-  this.scope['featureControlsID'] = uid + 'featureControls';
+  this.scope['featureControlsID'] = 'featureControls' + uid;
 
   /**
    * @type {string}
    */
-  this.scope['featureLabelsID'] = uid + 'featureLabels';
+  this.scope['featureLabelsID'] = 'featureLabels' + uid;
 
   /**
    * @type {string}
    */
-  this.scope['featureStyleID'] = uid + 'featureStyle';
-
-  /**
-   * The open accordion section.
-   * @type {?string}
-   * @protected
-   */
-  this.openSection = '#' + this.scope['featureStyleID'];
+  this.scope['featureStyleID'] = 'featureStyle' + uid;
 
   /**
    * Keyboard event handler used while listening for map clicks.
@@ -252,7 +247,6 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
    */
   this['shape'] = os.style.ShapeType.POINT;
 
-
   /**
    * Supported shapes.
    * @type {string}
@@ -318,6 +312,24 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
   ];
 
   /**
+   * Feature altitude.
+   * @type {number}
+   */
+  this['altitude'] = 0;
+
+  /**
+   * Feature altitude units.
+   * @type {number}
+   */
+  this['altUnits'] = os.math.Units.METERS;
+
+  /**
+   * Altitude unit options.
+   * @type {string}
+   */
+  this['altUnitOptions'] = goog.object.getValues(os.math.Units);
+
+  /**
    * @type {string}
    */
   this['labelColor'] = os.style.DEFAULT_LAYER_COLOR;
@@ -367,7 +379,7 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
   /**
    * @type {boolean}
    */
-  this['timeEditEnabled'] = goog.isDef(this.options['timeEditEnabled']) ?
+  this['timeEditEnabled'] = this.options['timeEditEnabled'] !== undefined ?
       this.options['timeEditEnabled'] : true;
 
   /**
@@ -412,7 +424,7 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
       // we don't care about or want these sticking around, so remove them
       delete this.originalProperties_[os.style.StyleType.SELECT];
       delete this.originalProperties_[os.style.StyleType.HIGHLIGHT];
-      delete this.originalProperties_[os.style.StyleType.LABELS];
+      delete this.originalProperties_[os.style.StyleType.LABEL];
 
       // if a feature config exists, create a deep clone of it so the correct config is restored on cancel
       var oldConfig = this.originalProperties_[os.style.StyleType.FEATURE];
@@ -451,7 +463,8 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
       // new place without a geometry, initialize as a point
       this['pointGeometry'] = {
         'lat': NaN,
-        'lon': NaN
+        'lon': NaN,
+        'alt': NaN
       };
     } else if (geometry instanceof ol.geom.Point) {
       // geometry is a point, so allow editing it
@@ -515,20 +528,9 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
   $scope.$on('$destroy', this.dispose.bind(this));
 
   $timeout((function() {
-    if (this.openSection) {
-      // open the style config section
-      var section = this.element.find(this.openSection);
-      if (section) {
-        if (!section.hasClass('in')) {
-          section.addClass('in');
-          section.siblings('.accordion-heading').addClass('open');
-        }
-      }
-    }
-
     // notify the window that it can update the size
-    $scope.$emit('window.ready');
-  }).bind(this), 150);
+    $scope.$emit(os.ui.WindowEventType.READY);
+  }), 150);
 };
 goog.inherits(os.ui.FeatureEditCtrl, goog.Disposable);
 
@@ -572,6 +574,8 @@ os.ui.FeatureEditCtrl.FIELDS = [
   os.Fields.BEARING, // for icon
   os.Fields.LAT,
   os.Fields.LON,
+  os.Fields.ALT,
+  os.Fields.ALT_UNITS,
   os.Fields.LAT_DDM,
   os.Fields.LON_DDM,
   os.Fields.LAT_DMS,
@@ -624,6 +628,7 @@ os.ui.FeatureEditCtrl.prototype.disposeInternal = function() {
 
 /**
  * Accept changes, saving the feature.
+ * @export
  */
 os.ui.FeatureEditCtrl.prototype.accept = function() {
   // create a new feature if necessary
@@ -649,14 +654,11 @@ os.ui.FeatureEditCtrl.prototype.accept = function() {
 
   this.close();
 };
-goog.exportProperty(
-    os.ui.FeatureEditCtrl.prototype,
-    'accept',
-    os.ui.FeatureEditCtrl.prototype.accept);
 
 
 /**
  * Cancel edit and close the window.
+ * @export
  */
 os.ui.FeatureEditCtrl.prototype.cancel = function() {
   var feature = this.options['feature'];
@@ -673,10 +675,6 @@ os.ui.FeatureEditCtrl.prototype.cancel = function() {
 
   this.close();
 };
-goog.exportProperty(
-    os.ui.FeatureEditCtrl.prototype,
-    'cancel',
-    os.ui.FeatureEditCtrl.prototype.cancel);
 
 
 /**
@@ -710,54 +708,42 @@ os.ui.FeatureEditCtrl.prototype.handleKeyEvent = function(event) {
 /**
  * If an ellipse shape is selected.
  * @return {boolean}
+ * @export
  */
 os.ui.FeatureEditCtrl.prototype.isEllipse = function() {
   return os.style.ELLIPSE_REGEXP.test(this['shape']);
 };
-goog.exportProperty(
-    os.ui.FeatureEditCtrl.prototype,
-    'isEllipse',
-    os.ui.FeatureEditCtrl.prototype.isEllipse);
 
 
 /**
  * If the icon picker should be displayed.
  * @return {boolean}
+ * @export
  */
 os.ui.FeatureEditCtrl.prototype.showIcon = function() {
   return this['shape'] === os.style.ShapeType.ICON;
 };
-goog.exportProperty(
-    os.ui.FeatureEditCtrl.prototype,
-    'showIcon',
-    os.ui.FeatureEditCtrl.prototype.showIcon);
 
 
 /**
  * If the icon picker should be displayed.
  * @return {boolean}
+ * @export
  */
 os.ui.FeatureEditCtrl.prototype.showCenterIcon = function() {
   return os.style.CENTER_LOOKUP[this['shape']] && this['centerShape'] === os.style.ShapeType.ICON;
 };
-goog.exportProperty(
-    os.ui.FeatureEditCtrl.prototype,
-    'showCenterIcon',
-    os.ui.FeatureEditCtrl.prototype.showCenterIcon);
 
 
 /**
  * If the feature is dynamic, which means it is a time based track
  * @return {boolean}
+ * @export
  */
 os.ui.FeatureEditCtrl.prototype.isFeatureDynamic = function() {
   var feature = /** @type {ol.Feature|undefined} */ (this.options['feature']);
   return feature instanceof os.feature.DynamicFeature;
 };
-goog.exportProperty(
-    os.ui.FeatureEditCtrl.prototype,
-    'isFeatureDynamic',
-    os.ui.FeatureEditCtrl.prototype.isFeatureDynamic);
 
 
 /**
@@ -825,6 +811,7 @@ os.ui.FeatureEditCtrl.prototype.onMapClick_ = function(mapBrowserEvent) {
 
 /**
  * Updates the temporary feature style.
+ * @export
  */
 os.ui.FeatureEditCtrl.prototype.updatePreview = function() {
   if (this.previewFeature) {
@@ -842,35 +829,6 @@ os.ui.FeatureEditCtrl.prototype.updatePreview = function() {
     }
   }
 };
-goog.exportProperty(
-    os.ui.FeatureEditCtrl.prototype,
-    'updatePreview',
-    os.ui.FeatureEditCtrl.prototype.updatePreview);
-
-
-/**
- * Save which section is open to local storage
- * @param {string} selector
- */
-os.ui.FeatureEditCtrl.prototype.setOpenSection = function(selector) {
-  if (this.openSection) {
-    this.element.find(this.openSection).siblings('.accordion-heading').removeClass('open');
-  }
-
-  var section = this.element.find(selector);
-  if (section) {
-    if (this.openSection != selector) {
-      section.siblings('.accordion-heading').addClass('open');
-      this.openSection = selector;
-    } else {
-      this.openSection = null;
-    }
-  }
-};
-goog.exportProperty(
-    os.ui.FeatureEditCtrl.prototype,
-    'setOpenSection',
-    os.ui.FeatureEditCtrl.prototype.setOpenSection);
 
 
 /**
@@ -912,14 +870,16 @@ os.ui.FeatureEditCtrl.prototype.loadFromFeature_ = function(feature) {
   var featureColor;
   if (config) {
     if (goog.isArray(config)) {
+      // locate the label config in the array
       var labelsConfig = goog.array.find(config, os.style.isLabelConfig);
-
       if (labelsConfig) {
         this['labels'] = labelsConfig[os.style.StyleField.LABELS];
       }
 
-      // if the feature config is an array, assume the first config is the one we want
+      // if the feature config is an array, assume the first config has the style info we want
       config = config[0];
+    } else if (config[os.style.StyleField.LABELS]) {
+      this['labels'] = config[os.style.StyleField.LABELS];
     }
 
     var size = os.style.getConfigSize(config);
@@ -977,11 +937,18 @@ os.ui.FeatureEditCtrl.prototype.loadFromFeature_ = function(feature) {
       clone.toLonLat();
 
       var coordinate = clone.getFirstCoordinate();
-      if (coordinate) {
+      if (coordinate && coordinate.length >= 2) {
+        var altitude = coordinate[2] || 0;
+        var altUnit = /** @type {string|undefined} */ (feature.get(os.Fields.ALT_UNITS)) || os.math.Units.METERS;
+
         this['pointGeometry'] = {
           'lon': coordinate[0],
-          'lat': coordinate[1]
+          'lat': coordinate[1],
+          'alt': altitude
         };
+
+        this['altitude'] = os.math.convertUnits(altitude, altUnit, os.math.Units.METERS);
+        this['altUnits'] = altUnit;
       }
 
       this['semiMajor'] = this.getNumericField_(feature, os.Fields.SEMI_MAJOR);
@@ -996,7 +963,7 @@ os.ui.FeatureEditCtrl.prototype.loadFromFeature_ = function(feature) {
 
   if (!this.isFeatureDynamic()) {
     var rotation = feature.get(os.Fields.BEARING);
-    if (goog.isString(rotation) && !goog.string.isEmptyOrWhitespace(rotation)) {
+    if (typeof rotation === 'string' && !goog.string.isEmptyOrWhitespace(rotation)) {
       rotation = Number(rotation);
     }
     if (rotation == null || isNaN(rotation)) {
@@ -1071,7 +1038,7 @@ os.ui.FeatureEditCtrl.prototype.saveToFeature = function(feature) {
     feature.set(os.style.StyleField.CENTER_SHAPE, this['centerShape']);
 
     if (!this.isFeatureDynamic() && (this.showIcon() || this.showCenterIcon())) {
-      feature.set(os.Fields.BEARING, goog.isNumber(this['iconRotation']) ? this['iconRotation'] % 360 : undefined);
+      feature.set(os.Fields.BEARING, typeof this['iconRotation'] === 'number' ? this['iconRotation'] % 360 : undefined);
       feature.set(os.style.StyleField.SHOW_ROTATION, true);
       feature.set(os.style.StyleField.ROTATION_COLUMN, os.Fields.BEARING);
     } else {
@@ -1155,8 +1122,14 @@ os.ui.FeatureEditCtrl.prototype.saveGeometry_ = function(feature) {
     var lon = Number(this['pointGeometry']['lon']);
     var lat = Number(this['pointGeometry']['lat']);
 
+    var altUnit = this['altUnits'] || os.math.Units.METERS;
+    var alt = os.math.convertUnits(Number(this['altitude']) || 0, os.math.Units.METERS, altUnit);
+
+    feature.set(os.Fields.ALT, alt);
+    feature.set(os.Fields.ALT_UNITS, altUnit);
+
     if (!isNaN(lon) && !isNaN(lat)) {
-      var point = new ol.geom.Point([lon, lat]);
+      var point = new ol.geom.Point([lon, lat, alt]);
       point.osTransform();
       feature.setGeometry(point);
 
@@ -1215,6 +1188,7 @@ os.ui.FeatureEditCtrl.prototype.onColumnChange = function(event) {
  * Handle changes to the icon color.
  * @param {string=} opt_new The new color value
  * @param {string=} opt_old The old color value
+ * @export
  */
 os.ui.FeatureEditCtrl.prototype.onIconColorChange = function(opt_new, opt_old) {
   if (opt_new != opt_old && this['labelColor'] == opt_old) {
@@ -1223,17 +1197,13 @@ os.ui.FeatureEditCtrl.prototype.onIconColorChange = function(opt_new, opt_old) {
 
   this.updatePreview();
 };
-goog.exportProperty(
-    os.ui.FeatureEditCtrl.prototype,
-    'onIconColorChange',
-    os.ui.FeatureEditCtrl.prototype.onIconColorChange);
 
 
 /**
  * Handle icon change.
  * @param {angular.Scope.Event} event The Angular event.
  * @param {osx.icon.Icon} value The new value.
- * @protected
+ * @export
  */
 os.ui.FeatureEditCtrl.prototype.onIconChange = function(event, value) {
   event.stopPropagation();
@@ -1242,10 +1212,6 @@ os.ui.FeatureEditCtrl.prototype.onIconChange = function(event, value) {
   this['centerIcon'] = value;
   this.updatePreview();
 };
-goog.exportProperty(
-    os.ui.FeatureEditCtrl.prototype,
-    'onIconChange',
-    os.ui.FeatureEditCtrl.prototype.onIconChange);
 
 
 /**
@@ -1264,6 +1230,7 @@ os.ui.FeatureEditCtrl.prototype.onLabelColorReset = function(event) {
 /**
  * Get the minimum value for the semi-major ellipse axis by converting semi-minor to the semi-major units.
  * @return {number}
+ * @export
  */
 os.ui.FeatureEditCtrl.prototype.getSemiMajorMin = function() {
   var min = 1e-16;
@@ -1274,15 +1241,12 @@ os.ui.FeatureEditCtrl.prototype.getSemiMajorMin = function() {
 
   return min;
 };
-goog.exportProperty(
-    os.ui.FeatureEditCtrl.prototype,
-    'getSemiMajorMin',
-    os.ui.FeatureEditCtrl.prototype.getSemiMajorMin);
 
 
 /**
  * Handle changes to the semi-major or semi-minor axis. This corrects the initial arrow key/scroll value caused by
  * using "1e-16" as the min value to invalidate the form when 0 is used.
+ * @export
  */
 os.ui.FeatureEditCtrl.prototype.onAxisChange = function() {
   if (this['semiMinor'] === 1e-16) {
@@ -1295,10 +1259,6 @@ os.ui.FeatureEditCtrl.prototype.onAxisChange = function() {
 
   this.updatePreview();
 };
-goog.exportProperty(
-    os.ui.FeatureEditCtrl.prototype,
-    'onAxisChange',
-    os.ui.FeatureEditCtrl.prototype.onAxisChange);
 
 
 /**
@@ -1510,7 +1470,10 @@ os.ui.FeatureEditCtrl.updateFeatureStyle = function(feature) {
             os.style.setConfigOpacityColor(config, 0);
           }
         } else {
-          config['image']['rotation'] = goog.math.toRadians(/** @type {number} */(feature.get(os.Fields.BEARING)) || 0);
+          var bearing = /** @type {number} */ (feature.get(os.Fields.BEARING));
+          if (!isNaN(bearing)) {
+            config['image']['rotation'] = goog.math.toRadians(bearing);
+          }
         }
       }
     }

@@ -23,8 +23,8 @@ os.ui.query.ui.addFilterDirective = function() {
       'layer': '=',
       'btnText': '@'
     },
-    template: '<button class="btn btn-default" title="Add a filter" ng-disabled="!addfilterctrl.canAdd()" ' +
-        'ng-click="addfilterctrl.add()"><i class="btn-icon fa fa-plus green-icon"></i> {{btnText}}</button>',
+    template: '<button class="btn btn-primary btn-sm" title="Add a filter" ng-disabled="!addfilterctrl.canAdd()" ' +
+        'ng-click="addfilterctrl.add()"><i class="fa fa-plus"></i> {{btnText}}</button>',
     controller: os.ui.query.ui.AddFilterCtrl,
     controllerAs: 'addfilterctrl'
   };
@@ -157,6 +157,7 @@ os.ui.query.ui.AddFilterCtrl.prototype.updateLayers = function() {
 
 /**
  * Open the menu to pick the layer for the filter
+ * @export
  */
 os.ui.query.ui.AddFilterCtrl.prototype.add = function() {
   if (this.scope['layer'] && this.scope['layer']['id']) {
@@ -169,10 +170,6 @@ os.ui.query.ui.AddFilterCtrl.prototype.add = function() {
     });
   }
 };
-goog.exportProperty(
-    os.ui.query.ui.AddFilterCtrl.prototype,
-    'add',
-    os.ui.query.ui.AddFilterCtrl.prototype.add);
 
 
 /**
@@ -203,14 +200,11 @@ os.ui.query.ui.AddFilterCtrl.prototype.onFilterReady_ = function(entry) {
 /**
  * If a new filter can be added.
  * @return {boolean}
+ * @export
  */
 os.ui.query.ui.AddFilterCtrl.prototype.canAdd = function() {
   return !!this.layers && this.layers.length > 0;
 };
-goog.exportProperty(
-    os.ui.query.ui.AddFilterCtrl.prototype,
-    'canAdd',
-    os.ui.query.ui.AddFilterCtrl.prototype.canAdd);
 
 
 /**

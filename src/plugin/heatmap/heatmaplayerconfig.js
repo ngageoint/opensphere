@@ -54,7 +54,7 @@ plugin.heatmap.HeatmapLayerConfig.prototype.createLayer = function(options) {
   var layer = this.getLayer(source, options);
   layer.setId(/** @type {string} */ (options['id']));
 
-  if (goog.isDefAndNotNull(options['explicitType'])) {
+  if (options['explicitType'] != null) {
     layer.setExplicitType(/** @type {string} */ (options['explicitType']));
   }
 

@@ -57,6 +57,12 @@ os.ui.action.ActionManager = function() {
    * @private
    */
   this.tempActions_ = [];
+
+  /**
+   * @type {function(angular.JQLite)}
+   * @private
+   */
+  this.moreResultsAction_;
 };
 goog.inherits(os.ui.action.ActionManager, goog.events.EventTarget);
 
@@ -213,7 +219,7 @@ os.ui.action.ActionManager.prototype.addActions = function(actions) {
  * @param {boolean=} opt_quiet optionally suppress firing change event upon remove
  */
 os.ui.action.ActionManager.prototype.removeAction = function(action, opt_quiet) {
-  var existing = goog.isString(action) ? this.getAction(action) : action;
+  var existing = typeof action === 'string' ? this.getAction(action) : action;
   if (existing) {
     var type = existing.getEventType();
     var existingHandler = existing.getHandler();
@@ -225,7 +231,7 @@ os.ui.action.ActionManager.prototype.removeAction = function(action, opt_quiet) 
 
     if (existing.isEnabled(this.getActionArgs())) {
       this.enabledActions_.remove(type);
-      if (goog.isDefAndNotNull(opt_quiet) && !opt_quiet) {
+      if (opt_quiet != null && !opt_quiet) {
         this.fireEnabledActionsChanged_();
       }
     }
@@ -305,12 +311,11 @@ os.ui.action.ActionManager.prototype.getEnabledActions = function() {
 
 /**
  * @return {boolean} true if this.getEnabledActions().length > 0, false otherwise
+ * @export
  */
 os.ui.action.ActionManager.prototype.hasEnabledActions = function() {
   return this.getEnabledActions().length > 0;
 };
-goog.exportProperty(os.ui.action.ActionManager.prototype, 'hasEnabledActions',
-    os.ui.action.ActionManager.prototype.hasEnabledActions);
 
 
 /**
@@ -332,7 +337,7 @@ os.ui.action.ActionManager.prototype.getAction = function(eventType) {
  * @return {boolean} true if the action was invoked, false otherwise
  */
 os.ui.action.ActionManager.prototype.invoke = function(action) {
-  if (goog.isString(action)) {
+  if (typeof action === 'string') {
     action = this.getAction(action);
   }
   var args = this.getActionArgs();
@@ -368,4 +373,22 @@ os.ui.action.ActionManager.prototype.fireEnabledActionsChanged_ = function() {
  */
 os.ui.action.ActionManager.prototype.registerTempActionFunc = function(func) {
   this.tempActions_.push(func);
+};
+
+/**
+ * Register the action to take if there are more actions than what will fit on
+ * the screen.
+ * @param {function(angular.JQLite)} func Function to call when the user clicks for more menu items
+ */
+os.ui.action.ActionManager.prototype.registerMoreResultsAction = function(func) {
+  this.moreResultsAction_ = func;
+};
+
+/**
+ * Invoke the action to take if there are more actions than what will fit on
+ * the screen.
+ * @param {angular.JQLite} menu Action menu that requires the more results action
+ */
+os.ui.action.ActionManager.prototype.invokeMoreResultsAction = function(menu) {
+  this.moreResultsAction_(menu);
 };

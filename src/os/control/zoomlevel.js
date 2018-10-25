@@ -32,7 +32,7 @@ os.control.ZoomLevelOptions;
 os.control.ZoomLevel = function(opt_options) {
   var options = opt_options || {};
 
-  var className = goog.isDef(options.className) ? options.className : 'ol-zoom-level';
+  var className = options.className !== undefined ? options.className : 'ol-zoom-level';
 
   /**
    * @type {Element}
@@ -47,16 +47,22 @@ os.control.ZoomLevel = function(opt_options) {
    * @private
    */
   this.altElement_ = goog.dom.createDom(goog.dom.TagName.SPAN, {
-    'class': 'altitude-text'
+    'class': 'altitude-text mr-1'
   });
   this.element_.appendChild(this.altElement_);
+
+  var separator = goog.dom.createDom(goog.dom.TagName.SPAN, {
+    'class': 'separator mr-1'
+  });
+  goog.dom.safe.setInnerHtml(separator, goog.html.SafeHtml.htmlEscape('|'));
+  this.element_.appendChild(separator);
 
   /**
    * @type {Element}
    * @private
    */
   this.zoomElement_ = goog.dom.createDom(goog.dom.TagName.SPAN, {
-    'class': 'zoom-text'
+    'class': 'zoom-text mr-1'
   });
   this.element_.appendChild(this.zoomElement_);
 
@@ -156,7 +162,7 @@ os.control.ZoomLevel.prototype.onUnitsChange = function(event) {
  */
 os.control.ZoomLevel.render_ = function(mapEvent) {
   var frameState = mapEvent.frameState;
-  if (goog.isNull(frameState)) {
+  if (frameState === null) {
     this.viewState_ = null;
   } else {
     this.viewState_ = frameState.viewState;
@@ -303,4 +309,13 @@ os.control.ZoomLevel.prototype.updateZoomText = function() {
  */
 os.control.ZoomLevel.Property_ = {
   UNITS: 'units'
+};
+
+
+/**
+ * Get the element
+ * @return {Element}
+ */
+os.control.ZoomLevel.prototype.getElement = function() {
+  return this.element_;
 };

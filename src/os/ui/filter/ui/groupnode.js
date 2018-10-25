@@ -94,7 +94,7 @@ os.ui.filter.ui.GroupNode.prototype.updateFrom = function(other) {
 os.ui.filter.ui.GroupNode.prototype.format = function(row, cell, value) {
   var html = this.getSpacer(19 * this.depth);
   html += '<nodetogglefolder></nodetogglefolder>';
-  html += this.formatNodeUI();
   html += '<nodeicons></nodeicons>';
+  html += this.formatNodeUI();
   return html;
 };

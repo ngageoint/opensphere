@@ -95,13 +95,44 @@ plugin.im.action.feature.StyleAction.CONFIG_UI = 'featureactionstyleconfig';
 /**
  * @inheritDoc
  */
+plugin.im.action.feature.StyleAction.prototype.reset = function(entryType, items) {
+  for (var i = 0; i < items.length; i++) {
+    var item = items[i];
+    if (item) {
+      item.set(plugin.im.action.feature.StyleAction.FEATURE_ID, undefined);
+      item.set(os.style.StyleField.SHAPE, undefined, true);
+      item.set(os.style.StyleField.CENTER_SHAPE, undefined, true);
+
+      // reset the original feature config
+      var originalConfig = /** @type {Array|Object|undefined} */
+          (item.get(plugin.im.action.feature.StyleType.ORIGINAL));
+      item.set(os.style.StyleType.FEATURE, originalConfig, true);
+    }
+  }
+
+  os.style.setFeaturesStyle(items);
+
+  // notify that the layer needs to be updated
+  var layer = os.feature.getLayer(items[0]);
+  if (layer) {
+    os.style.notifyStyleChange(layer, items);
+  }
+};
+
+
+/**
+ * @inheritDoc
+ */
 plugin.im.action.feature.StyleAction.prototype.execute = function(items) {
   for (var i = 0; i < items.length; i++) {
     var item = items[i];
     if (item) {
       // get the existing feature config or create a new one
-      var featureConfig = /** @type {Array|Object|undefined} */ (os.object.unsafeClone(
-          item.get(os.style.StyleType.FEATURE))) || {};
+      var originalConfig = /** @type {Array|Object|undefined} */ (item.get(os.style.StyleType.FEATURE));
+      var featureConfig = os.object.unsafeClone(originalConfig) || {};
+
+      // flag this as a temporary style config
+      featureConfig['temporary'] = true;
 
       // merge style changes into the feature config and set it on the feature
       if (goog.isArray(featureConfig)) {
@@ -116,6 +147,12 @@ plugin.im.action.feature.StyleAction.prototype.execute = function(items) {
 
       item.set(os.style.StyleType.FEATURE, featureConfig, true);
       item.set(plugin.im.action.feature.StyleAction.FEATURE_ID, this.uid, true);
+
+      if (originalConfig != null && !originalConfig['temporary'] &&
+          item.get(plugin.im.action.feature.StyleType.ORIGINAL) == null) {
+        // if the original config isn't already set, add a reference back to it
+        item.set(plugin.im.action.feature.StyleType.ORIGINAL, originalConfig, true);
+      }
 
       // set the feature shape
       var configShape = this.styleConfig[os.style.StyleField.SHAPE];

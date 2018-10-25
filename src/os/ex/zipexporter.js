@@ -64,7 +64,7 @@ os.ex.ZipExporter.prototype.getCompress = function() {
  * @param {boolean} value
  */
 os.ex.ZipExporter.prototype.setCompress = function(value) {
-  if (value && !goog.isDef(window.zip)) {
+  if (value && window.zip === undefined) {
     value = false;
     os.alertManager.sendAlert('Compression is not supported in this application! Defaulting to uncompressed output.',
         os.alert.AlertEventSeverity.ERROR, this.log);
@@ -180,7 +180,7 @@ os.ex.ZipExporter.prototype.writeNextFile_ = function(writer) {
     var content = file.getContent();
 
     if (fileName) {
-      if (goog.isString(content)) {
+      if (typeof content === 'string') {
         writer.add(fileName, new zip.TextReader(content), this.writeNextFile_.bind(this, writer));
       } else if (content instanceof ArrayBuffer) {
         writer.add(fileName, new zip.ArrayBufferReader(content), this.writeNextFile_.bind(this, writer));

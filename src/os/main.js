@@ -17,13 +17,11 @@ goog.require('os.ui.clear.clearDirective');
 goog.require('os.ui.config.settingsWindowDirective');
 goog.require('os.ui.consentDirective');
 goog.require('os.ui.globalMenuDirective');
-goog.require('os.ui.history.historyViewDirective');
+goog.require('os.ui.historyDirective');
 goog.require('os.ui.layersDirective');
 goog.require('os.ui.mapDirective');
 goog.require('os.ui.metrics.MetricsContainerDirective');
 goog.require('os.ui.modal.aboutModalDirective');
-goog.require('os.ui.navBottomDirective');
-goog.require('os.ui.navTopDirective');
 goog.require('os.ui.savedWindowDirective');
 goog.require('os.ui.serversDirective');
 goog.require('os.ui.slick.slickTreeDirective');
@@ -101,6 +99,7 @@ os.Module.config(os.Module.configureModule);
 os.uiMainDirective = function() {
   return {
     restrict: 'E',
+    replace: true,
     scope: true,
     templateUrl: os.ROOT + 'views/main.html',
     controller: os.MainCtrl,

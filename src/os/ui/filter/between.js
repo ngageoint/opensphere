@@ -43,7 +43,7 @@ os.ui.filter.BetweenCtrl = function($scope) {
   this['min'] = 0;
   this['max'] = 1;
 
-  if (goog.isDefAndNotNull($scope['expr']['literal'])) {
+  if ($scope['expr']['literal'] != null) {
     var nums = $scope['expr']['literal'].split(/\s*,\s*/);
 
     if (nums.length == 2) {
@@ -68,6 +68,7 @@ os.ui.filter.BetweenCtrl.prototype.onDestroy_ = function() {
 
 /**
  * Run when the user changes the value
+ * @export
  */
 os.ui.filter.BetweenCtrl.prototype.onChange = function() {
   var a = parseFloat(this['min']);
@@ -84,4 +85,3 @@ os.ui.filter.BetweenCtrl.prototype.onChange = function() {
 
   this.scope_['expr']['literal'] = val;
 };
-goog.exportProperty(os.ui.filter.BetweenCtrl.prototype, 'onChange', os.ui.filter.BetweenCtrl.prototype.onChange);

@@ -5,7 +5,14 @@ goog.provide('os.I3DSupport');
 /**
  * @interface
  */
-os.I3DSupport = goog.abstractMethod;
+os.I3DSupport = function() {};
+
+
+/**
+ * @const
+ * @type {string}
+ */
+os.I3DSupport.ID = 'os.I3DSupport';
 
 
 /**

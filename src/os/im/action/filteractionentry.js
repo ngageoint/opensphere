@@ -1,6 +1,7 @@
 goog.provide('os.im.action.FilterActionEntry');
 
 goog.require('goog.functions');
+goog.require('os.IComparable');
 goog.require('os.filter.FilterEntry');
 goog.require('os.ui.filter.fn');
 
@@ -9,6 +10,7 @@ goog.require('os.ui.filter.fn');
 /**
  * Filter entry that performs actions on matched data.
  * @extends {os.filter.FilterEntry}
+ * @implements {os.IComparable<os.im.action.FilterActionEntry>}
  * @constructor
  * @template T
  */
@@ -50,13 +52,30 @@ os.im.action.FilterActionEntry.prototype.setFilter = function(filter) {
 
 
 /**
- * Execute actions on items that match the filter.
+ * Reset the features passed in
+ * @param {string} entryType The entry type.
  * @param {Array<T>} items The items.
  */
-os.im.action.FilterActionEntry.prototype.processItems = function(items) {
+os.im.action.FilterActionEntry.prototype.unprocessItems = function(entryType, items) {
+  if (items) {
+    items = items.filter(this.filterFn);
+    for (var i = 0; i < this.actions.length; i++) {
+      this.actions[i].reset(entryType, items);
+    }
+  }
+};
+
+
+/**
+ * Execute actions on items that match the filter.
+ * @param {string} entryType The entry type.
+ * @param {Array<T>} items The items.
+ */
+os.im.action.FilterActionEntry.prototype.processItems = function(entryType, items) {
   if (items) {
     items = items.filter(this.filterFn);
 
+    // apply to applicable items
     if (items.length > 0) {
       for (var i = 0; i < this.actions.length; i++) {
         this.actions[i].execute(items);
@@ -99,6 +118,40 @@ os.im.action.FilterActionEntry.prototype.restore = function(config) {
       }
     }
   }
+};
+
+
+/**
+ * Compare two filter actions by name, actions length, actions, and filter
+ * @inheritDoc
+ */
+os.im.action.FilterActionEntry.prototype.compare = function(other) {
+  var val = 0;
+  var thisTitle = this.getTitle();
+  var thatTitle = other.getTitle();
+  val = thisTitle < thatTitle ? -1 : thisTitle > thatTitle ? 1 : 0;
+
+  var length = this.actions.length;
+  if (val == 0) {
+    val = length < other.actions.length ? -1 : length > other.actions.length ? 1 : 0;
+  }
+
+  if (val == 0) {
+    // compare the important parts of the action by getting the toXml
+    while (length--) {
+      var thisComp = os.xml.serialize(this.actions[length].toXml());
+      var thatComp = os.xml.serialize(other.actions[length].toXml());
+      val = thisComp < thatComp ? -1 : thisComp > thatComp ? 1 : 0;
+    }
+  }
+
+  if (val == 0) {
+    var thisFilter = this.getFilter();
+    var thatFilter = other.getFilter();
+    val = thisFilter < thatFilter ? -1 : thisFilter > thatFilter ? 1 : 0;
+  }
+
+  return val;
 };
 
 

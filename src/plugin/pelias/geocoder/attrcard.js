@@ -11,6 +11,7 @@ goog.require('os.ui.Module');
  */
 plugin.pelias.geocoder.attrCardDirective = function() {
   return {
+    replace: true,
     restrict: 'E',
     templateUrl: os.ROOT + 'views/plugin/pelias/geocoder/attrcard.html',
     controller: plugin.pelias.geocoder.AttrCardCtrl,
@@ -41,8 +42,6 @@ plugin.pelias.geocoder.AttrCardCtrl = function($scope, $element) {
     html += '<div>' + attrs[i] + '</div>';
   }
 
-  var el = $element.find('.attrs');
-  el = el.length ? el : $element;
-  el.html(html);
+  $element.html(html);
 };
 

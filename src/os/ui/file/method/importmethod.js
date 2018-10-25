@@ -78,15 +78,6 @@ os.ui.file.method.ImportMethod.prototype.setKeepFile = function(val) {
 
 
 /**
- * If the application supports reading local files.
- * @return {boolean}
- */
-os.ui.file.method.ImportMethod.prototype.hasFileSupport = function() {
-  return os.file.canImport();
-};
-
-
-/**
  * @inheritDoc
  */
 os.ui.file.method.ImportMethod.prototype.loadFile = function(opt_options) {
@@ -95,24 +86,25 @@ os.ui.file.method.ImportMethod.prototype.loadFile = function(opt_options) {
   if (!file && !url) {
     var scopeOptions = {
       'manager': opt_options && opt_options['manager'] || os.ui.im.ImportManager.getInstance(),
-      'method': this,
-      'fileSupported': this.hasFileSupport()
+      'method': this
     };
+
     var windowOptions = {
       'id': os.ui.file.method.UrlMethod.ID,
       'label': 'Import Data',
-      'icon': 'fa fa-cloud-download lt-blue-icon',
+      'icon': 'fa fa-cloud-download',
       'x': 'center',
       'y': 'center',
       'width': '400',
       'min-width': '400',
       'max-width': '400',
-      'height': '150',
+      'height': 'auto',
       'modal': 'true',
       'show-close': 'true',
       'no-scroll': 'true'
     };
-    var template = '<importdialog></importdialog>';
+
+    var template = '<importdialog manager="manager" method="method"></importdialog>';
     os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
   } else if (url) {
     this.loadUrl();

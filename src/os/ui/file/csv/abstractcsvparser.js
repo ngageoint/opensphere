@@ -1,6 +1,7 @@
 goog.provide('os.ui.file.csv.AbstractCsvParser');
 
 goog.require('os.data.ColumnDefinition');
+goog.require('os.file.mime.text');
 goog.require('os.parse.AsyncParser');
 goog.require('os.parse.BaseParserConfig');
 
@@ -236,7 +237,11 @@ os.ui.file.csv.AbstractCsvParser.prototype.setSource = function(source) {
   goog.array.clear(this.columns);
   goog.array.clear(this.results);
 
-  if (goog.isString(source)) {
+  if (source instanceof ArrayBuffer) {
+    source = os.file.mime.text.getText(source) || null;
+  }
+
+  if (typeof source === 'string') {
     // parse the entire source, using workers if available. return results in chunks.
     var config = {
       'chunk': this.handleChunk_.bind(this),

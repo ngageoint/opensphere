@@ -15,9 +15,11 @@ goog.require('os.ui.slick.column');
 os.ui.column.columnManagerDirective = function() {
   return {
     restrict: 'E',
+    replace: true,
     scope: {
       'columns': '=',
-      'acceptCallback': '='
+      'acceptCallback': '=',
+      'shownCallback': '='
     },
     templateUrl: os.ROOT + 'views/column/columnmanager.html',
     controller: os.ui.column.ColumnManagerCtrl,
@@ -178,24 +180,21 @@ os.ui.column.ColumnManagerCtrl.prototype.destroy_ = function() {
 /**
  * Close the window
  * @param {boolean} enableListen
+ * @export
  */
 os.ui.column.ColumnManagerCtrl.prototype.listenForKeys = function(enableListen) {
-  this['highlight'] = enableListen;
   if (enableListen) {
     this.keyHandler_.listen(goog.events.KeyHandler.EventType.KEY, this.handleKeyEvent_, false, this);
   } else {
     this.keyHandler_.unlisten(goog.events.KeyHandler.EventType.KEY, this.handleKeyEvent_, false, this);
   }
 };
-goog.exportProperty(
-    os.ui.column.ColumnManagerCtrl.prototype,
-    'listenForKeys',
-    os.ui.column.ColumnManagerCtrl.prototype.listenForKeys);
 
 
 /**
  * Toggles columns to shown.
  * @param {boolean=} opt_all Whether to select all
+ * @export
  */
 os.ui.column.ColumnManagerCtrl.prototype.show = function(opt_all) {
   if (opt_all === true) {
@@ -231,15 +230,12 @@ os.ui.column.ColumnManagerCtrl.prototype.show = function(opt_all) {
   this.validate_();
   this.find(this['searchIndex'] - 1);
 };
-goog.exportProperty(
-    os.ui.column.ColumnManagerCtrl.prototype,
-    'show',
-    os.ui.column.ColumnManagerCtrl.prototype.show);
 
 
 /**
  * Toggles columns to hidden.
  * @param {boolean=} opt_all Whether to select all
+ * @export
  */
 os.ui.column.ColumnManagerCtrl.prototype.hide = function(opt_all) {
   if (opt_all === true) {
@@ -263,14 +259,11 @@ os.ui.column.ColumnManagerCtrl.prototype.hide = function(opt_all) {
   this.scope_.$broadcast(os.ui.slick.SlickGridEvent.INVALIDATE_ROWS);
   this.find(this['searchIndex'] - 1);
 };
-goog.exportProperty(
-    os.ui.column.ColumnManagerCtrl.prototype,
-    'hide',
-    os.ui.column.ColumnManagerCtrl.prototype.hide);
 
 
 /**
  * Save the state
+ * @export
  */
 os.ui.column.ColumnManagerCtrl.prototype.accept = function() {
   var srcColumns = this.scope_['columns'];
@@ -311,24 +304,21 @@ os.ui.column.ColumnManagerCtrl.prototype.accept = function() {
     this.scope_['acceptCallback']();
   }
 
+  if (this.scope_['shownCallback']) {
+    this.scope_['shownCallback'](this['shownColumns']);
+  }
+
   this.close();
 };
-goog.exportProperty(
-    os.ui.column.ColumnManagerCtrl.prototype,
-    'accept',
-    os.ui.column.ColumnManagerCtrl.prototype.accept);
 
 
 /**
  * Close the window
+ * @export
  */
 os.ui.column.ColumnManagerCtrl.prototype.close = function() {
   os.ui.window.close(this.element_);
 };
-goog.exportProperty(
-    os.ui.column.ColumnManagerCtrl.prototype,
-    'close',
-    os.ui.column.ColumnManagerCtrl.prototype.close);
 
 
 /**
@@ -377,36 +367,31 @@ os.ui.column.ColumnManagerCtrl.prototype.find_ = function(term, columnName) {
 /**
  * Select the hidden terms
  * @param {number=} opt_startIndex
+ * @export
  */
 os.ui.column.ColumnManagerCtrl.prototype.find = function(opt_startIndex) {
   if (this['term'] != '') {
     this['searchResults'] = this.find_(this['term'], 'hiddenColumns').concat(this.find_(this['term'], 'shownColumns'));
-    this['searchIndex'] = goog.isDefAndNotNull(opt_startIndex) ? opt_startIndex : -1;
+    this['searchIndex'] = opt_startIndex != null ? opt_startIndex : -1;
     this.next();
   }
 };
-goog.exportProperty(
-    os.ui.column.ColumnManagerCtrl.prototype,
-    'find',
-    os.ui.column.ColumnManagerCtrl.prototype.find);
 
 
 /**
  * Toggles columns to shown.
+ * @export
  */
 os.ui.column.ColumnManagerCtrl.prototype.clear = function() {
   this['term'] = '';
   this['searchResults'] = [];
   this['searchIndex'] = 0;
 };
-goog.exportProperty(
-    os.ui.column.ColumnManagerCtrl.prototype,
-    'clear',
-    os.ui.column.ColumnManagerCtrl.prototype.clear);
 
 
 /**
  * Toggles columns to shown.
+ * @export
  */
 os.ui.column.ColumnManagerCtrl.prototype.next = function() {
   if (this['searchResults'].length > 0) {
@@ -414,14 +399,11 @@ os.ui.column.ColumnManagerCtrl.prototype.next = function() {
     this.updateSearch_();
   }
 };
-goog.exportProperty(
-    os.ui.column.ColumnManagerCtrl.prototype,
-    'next',
-    os.ui.column.ColumnManagerCtrl.prototype.next);
 
 
 /**
  * Toggles columns to shown.
+ * @export
  */
 os.ui.column.ColumnManagerCtrl.prototype.previous = function() {
   if (this['searchResults'].length > 0) {
@@ -429,10 +411,6 @@ os.ui.column.ColumnManagerCtrl.prototype.previous = function() {
     this.updateSearch_();
   }
 };
-goog.exportProperty(
-    os.ui.column.ColumnManagerCtrl.prototype,
-    'previous',
-    os.ui.column.ColumnManagerCtrl.prototype.previous);
 
 
 /**
@@ -498,6 +476,39 @@ os.ui.column.launchColumnManager = function(columns, callback) {
     'modal': true
   };
 
-  var template = '<column-manager columns="columns" accept-callback="acceptCallback"></column-manager>';
+  var template = '<column-manager columns="columns" accept-callback="acceptCallback" ></column-manager>';
+  os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+};
+
+
+/**
+ * Launches a column manager window with the given columns
+ * @param {Array.<os.data.ColumnDefinition>} columns
+ * @param {string} header Dialog header
+ * @param {Function} callback
+ */
+os.ui.column.launchColumnManagerWithShownCallback = function(columns, header, callback) {
+  var scopeOptions = {
+    'columns': columns,
+    'shownCallback': callback
+  };
+
+  var windowOptions = {
+    'label': header,
+    'icon': 'fa fa-columns',
+    'x': 'center',
+    'y': 'center',
+    'width': '600',
+    'min-width': '500',
+    'max-width': '700',
+    'height': '400',
+    'min-height': '350',
+    'max-height': '1000',
+    'show-close': true,
+    'no-scroll': true,
+    'modal': true
+  };
+
+  var template = '<column-manager columns="columns" shown-callback="shownCallback"></column-manager>';
   os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
 };

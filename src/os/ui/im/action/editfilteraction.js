@@ -19,25 +19,6 @@ os.ui.im.action.EventType = {
   UPDATE: 'action:update'
 };
 
-/**
- * The edit filter action directive.
- * @return {angular.Directive}
- */
-os.ui.im.action.editFilterActionDirective = function() {
-  var dir = os.ui.filter.ui.editFiltersDirective();
-  dir.templateUrl = os.ROOT + 'views/im/action/editfilteraction.html';
-  dir.controller = os.ui.im.action.EditFilterActionCtrl;
-  dir.controllerAs = 'ctrl';
-  return dir;
-};
-
-
-/**
- * Add the directive to the module.
- */
-os.ui.Module.directive('editfilteraction', [os.ui.im.action.editFilterActionDirective]);
-
-
 
 /**
  * Controller for the edit filter action window.
@@ -117,6 +98,7 @@ goog.inherits(os.ui.im.action.EditFilterActionCtrl, os.ui.filter.ui.EditFiltersC
 
 /**
  * Add a new filter action.
+ * @export
  */
 os.ui.im.action.EditFilterActionCtrl.prototype.addAction = function() {
   if (this['availableActions'].length > 0) {
@@ -133,15 +115,12 @@ os.ui.im.action.EditFilterActionCtrl.prototype.addAction = function() {
     }
   }
 };
-goog.exportProperty(
-    os.ui.im.action.EditFilterActionCtrl.prototype,
-    'addAction',
-    os.ui.im.action.EditFilterActionCtrl.prototype.addAction);
 
 
 /**
  * Remove an action.
  * @param {number} index The import action index.
+ * @export
  */
 os.ui.im.action.EditFilterActionCtrl.prototype.removeAction = function(index) {
   if (index > -1 && index < this['actions'].length) {
@@ -150,15 +129,12 @@ os.ui.im.action.EditFilterActionCtrl.prototype.removeAction = function(index) {
     os.dispatcher.dispatchEvent(os.ui.im.action.EventType.UPDATE);
   }
 };
-goog.exportProperty(
-    os.ui.im.action.EditFilterActionCtrl.prototype,
-    'removeAction',
-    os.ui.im.action.EditFilterActionCtrl.prototype.removeAction);
 
 
 /**
  * Update an action type.
  * @param {number} index The action index.
+ * @export
  */
 os.ui.im.action.EditFilterActionCtrl.prototype.updateAction = function(index) {
   var actionObj = this['actions'][index];
@@ -172,10 +148,6 @@ os.ui.im.action.EditFilterActionCtrl.prototype.updateAction = function(index) {
     os.dispatcher.dispatchEvent(os.ui.im.action.EventType.UPDATE);
   }
 };
-goog.exportProperty(
-    os.ui.im.action.EditFilterActionCtrl.prototype,
-    'updateAction',
-    os.ui.im.action.EditFilterActionCtrl.prototype.updateAction);
 
 
 /**
@@ -202,16 +174,13 @@ os.ui.im.action.EditFilterActionCtrl.prototype.updateAvailableActions = function
 /**
  * Configure an action.
  * @param {os.im.action.IImportAction<T>} action The import action.
+ * @export
  */
 os.ui.im.action.EditFilterActionCtrl.prototype.configAction = function(action) {
   if (this.entry && action) {
     os.ui.im.action.launchActionConfig(action, this.entry.getType());
   }
 };
-goog.exportProperty(
-    os.ui.im.action.EditFilterActionCtrl.prototype,
-    'configAction',
-    os.ui.im.action.EditFilterActionCtrl.prototype.configAction);
 
 
 /**
@@ -239,19 +208,17 @@ os.ui.im.action.EditFilterActionCtrl.prototype.onDestroy = function() {
 
 /**
  * @inheritDoc
+ * @export
  */
 os.ui.im.action.EditFilterActionCtrl.prototype.cancel = function() {
   os.ui.im.action.closeActionConfigWindow();
   os.ui.im.action.EditFilterActionCtrl.base(this, 'cancel');
 };
-goog.exportProperty(
-    os.ui.im.action.EditFilterActionCtrl.prototype,
-    'cancel',
-    os.ui.im.action.EditFilterActionCtrl.prototype.cancel);
 
 
 /**
  * @inheritDoc
+ * @export
  */
 os.ui.im.action.EditFilterActionCtrl.prototype.finish = function() {
   os.ui.im.action.closeActionConfigWindow();
@@ -263,14 +230,11 @@ os.ui.im.action.EditFilterActionCtrl.prototype.finish = function() {
 
   os.ui.im.action.EditFilterActionCtrl.base(this, 'finish');
 };
-goog.exportProperty(
-    os.ui.im.action.EditFilterActionCtrl.prototype,
-    'finish',
-    os.ui.im.action.EditFilterActionCtrl.prototype.finish);
 
 
 /**
  * @inheritDoc
+ * @export
  */
 os.ui.im.action.EditFilterActionCtrl.prototype.isInvalid = function() {
   if (this['actions'].length == 0) {
@@ -279,15 +243,12 @@ os.ui.im.action.EditFilterActionCtrl.prototype.isInvalid = function() {
 
   return os.ui.im.action.EditFilterActionCtrl.base(this, 'isInvalid');
 };
-goog.exportProperty(
-    os.ui.im.action.EditFilterActionCtrl.prototype,
-    'isInvalid',
-    os.ui.im.action.EditFilterActionCtrl.prototype.isInvalid);
 
 
 /**
  * Get the tooltip to display over the Add Action button.
  * @return {string}
+ * @export
  */
 os.ui.im.action.EditFilterActionCtrl.prototype.getAddActionTooltip = function() {
   if (this['availableActions'].length > 0) {
@@ -296,10 +257,6 @@ os.ui.im.action.EditFilterActionCtrl.prototype.getAddActionTooltip = function() 
     return 'All available actions have been added';
   }
 };
-goog.exportProperty(
-    os.ui.im.action.EditFilterActionCtrl.prototype,
-    'getAddActionTooltip',
-    os.ui.im.action.EditFilterActionCtrl.prototype.getAddActionTooltip);
 
 
 /**
@@ -368,59 +325,6 @@ os.ui.im.action.closeActionConfigWindow = function() {
 
 
 /**
- * Create/edit a filter action entry. If no entry is provided, a new one will be created.
- * @param {string} type The entry type.
- * @param {Array} columns The filter columns.
- * @param {function(os.im.action.FilterActionEntry<T>)} callback The callback to fire when the entry is ready.
- * @param {os.im.action.FilterActionEntry<T>=} opt_entry The entry to edit.
- * @param {string=} opt_label Base window label.
- * @template T
- */
-os.ui.im.action.launchEditFilterAction = function(type, columns, callback, opt_entry, opt_label) {
-  var iam = os.im.action.ImportActionManager.getInstance();
-  var label = opt_label || iam.entryTitle;
-  var entry = opt_entry;
-  if (!entry) {
-    // create a new entry and default it to enabled
-    entry = iam.createActionEntry();
-    entry.setEnabled(true);
-    entry.setType(type);
-
-    label = 'Create ' + label;
-  } else {
-    // editing an existing entry
-    label = 'Edit ' + label;
-  }
-
-  var options = {
-    'id': 'editfilteraction',
-    'icon': 'fa ' + os.im.action.ICON,
-    'label': label,
-    'x': 'center',
-    'y': 'center',
-    'show-close': true,
-    'no-scroll': false,
-    'min-width': 400,
-    'min-height': 500,
-    'max-width': 1000,
-    'max-height': 1000,
-    'modal': true,
-    'width': 850,
-    'height': 600
-  };
-
-  var scopeOptions = {
-    'entry': entry,
-    'type': type,
-    'columns': columns,
-    'callback': callback
-  };
-
-  os.ui.window.create(options, 'editfilteraction', undefined, undefined, undefined, scopeOptions);
-};
-
-
-/**
  * Launch a dialog to configure an import action.
  * @param {!os.im.action.IImportAction} action The action.
  * @param {string} type The action entry type.
@@ -437,9 +341,11 @@ os.ui.im.action.launchActionConfig = function(action, type) {
       'action': action,
       'type': type,
       'yesText': 'OK',
-      'yesIcon': 'fa fa-check lt-blue-icon',
+      'yesIcon': 'fa fa-check',
+      'yesButtonClass': 'btn-primary',
       'noText': 'Cancel',
-      'noIcon': 'fa fa-ban red-icon'
+      'noIcon': 'fa fa-ban',
+      'noButtonClass': 'btn-secondary'
     };
 
     var windowOptions = {

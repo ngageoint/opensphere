@@ -35,6 +35,8 @@ plugin.area.CSVAreaImportUI.prototype.getTitle = function() {
  * @inheritDoc
  */
 plugin.area.CSVAreaImportUI.prototype.launchUI = function(file, opt_config) {
+  plugin.area.CSVAreaImportUI.base(this, 'launchUI', file, opt_config);
+
   var steps = [
     new os.ui.file.ui.csv.ConfigStep(),
     new os.ui.wiz.GeometryStep(),
@@ -52,7 +54,7 @@ plugin.area.CSVAreaImportUI.prototype.launchUI = function(file, opt_config) {
   };
   var windowOptions = {
     'label': 'CSV Area Import',
-    'icon': 'fa fa-sign-in lt-blue-icon',
+    'icon': 'fa fa-sign-in',
     'x': 'center',
     'y': 'center',
     'width': '850',
@@ -65,6 +67,6 @@ plugin.area.CSVAreaImportUI.prototype.launchUI = function(file, opt_config) {
     'show-close': 'true',
     'no-scroll': 'true'
   };
-  var template = '<csvareaimport resize-with=".window"></csvareaimport>';
+  var template = '<csvareaimport resize-with="' + os.ui.windowSelector.WINDOW + '"></csvareaimport>';
   os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
 };

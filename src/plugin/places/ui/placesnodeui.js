@@ -9,13 +9,14 @@ goog.require('os.ui.node.DefaultLayerNodeUICtrl');
 /**
  * @type {string}
  */
-plugin.places.ui.PlacesNodeUITemplate = '<span class="glyphs pull-right slick-node-ui" ng-if="nodeUi.show()">' +
-        '<span ng-if="nodeUi.canEdit()" ng-click="nodeUi.addFolder()">' +
-            '<i class="fa fa-folder fa-fw glyph" title="Create a new folder"></i></span>' +
-        '<span ng-if="nodeUi.canEdit()" ng-click="nodeUi.addPlace()">' +
-            '<i class="fa fa-map-marker fa-fw glyph" title="Create a new place"></i></span>' +
-        '<span ng-if="nodeUi.isRemovable()" ng-click="nodeUi.remove()">' +
-            '<i class="fa fa-times fa-fw glyph glyph-remove" title="Remove the layer"></i></span>' +
+plugin.places.ui.PlacesNodeUITemplate = '<span ng-if="nodeUi.show()" class="d-flex flex-shrink-0">' +
+      '<span ng-if="nodeUi.canEdit()" ng-click="nodeUi.addFolder()">' +
+        '<i class="fa fa-folder fa-fw c-glyph" title="Create a new folder"></i></span>' +
+      '<span ng-if="nodeUi.canEdit()" ng-click="nodeUi.addPlace()">' +
+        '<i class="fa fa-map-marker fa-fw c-glyph" title="Create a new place"></i></span>' +
+
+      '<span ng-if="nodeUi.isRemovable()" ng-click="nodeUi.remove()">' +
+      '<i class="fa fa-times fa-fw c-glyph" title="Remove the place></i></span>' +
     '</span>';
 
 
@@ -57,6 +58,7 @@ goog.inherits(plugin.places.ui.PlacesNodeUICtrl, os.ui.node.DefaultLayerNodeUICt
 
 /**
  * Add a new folder.
+ * @export
  */
 plugin.places.ui.PlacesNodeUICtrl.prototype.addFolder = function() {
   var node = /** @type {plugin.file.kml.ui.KMLLayerNode} */ (this.scope['item']);
@@ -69,14 +71,11 @@ plugin.places.ui.PlacesNodeUICtrl.prototype.addFolder = function() {
     }
   }
 };
-goog.exportProperty(
-    plugin.places.ui.PlacesNodeUICtrl.prototype,
-    'addFolder',
-    plugin.places.ui.PlacesNodeUICtrl.prototype.addFolder);
 
 
 /**
  * Add a new place.
+ * @export
  */
 plugin.places.ui.PlacesNodeUICtrl.prototype.addPlace = function() {
   var node = /** @type {plugin.file.kml.ui.KMLLayerNode} */ (this.scope['item']);
@@ -89,31 +88,23 @@ plugin.places.ui.PlacesNodeUICtrl.prototype.addPlace = function() {
     }
   }
 };
-goog.exportProperty(
-    plugin.places.ui.PlacesNodeUICtrl.prototype,
-    'addPlace',
-    plugin.places.ui.PlacesNodeUICtrl.prototype.addPlace);
 
 
 /**
  * If the node can be edited.
  * @return {boolean}
+ * @export
  */
 plugin.places.ui.PlacesNodeUICtrl.prototype.canEdit = function() {
   var node = /** @type {plugin.file.kml.ui.KMLLayerNode} */ (this.scope['item']);
-  return node != null && node.isEditable();
+  return node ? node.isEditable() : false;
 };
-goog.exportProperty(
-    plugin.places.ui.PlacesNodeUICtrl.prototype,
-    'canEdit',
-    plugin.places.ui.PlacesNodeUICtrl.prototype.canEdit);
 
 
 /**
  * @inheritDoc
+ * @export
  */
 plugin.places.ui.PlacesNodeUICtrl.prototype.remove = function() {
   plugin.places.PlacesManager.getInstance().removeLayer();
 };
-goog.exportProperty(plugin.places.ui.PlacesNodeUICtrl.prototype, 'remove',
-    plugin.places.ui.PlacesNodeUICtrl.prototype.remove);

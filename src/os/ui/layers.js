@@ -31,7 +31,7 @@ goog.require('os.ui.menu.layer');
 goog.require('os.ui.menu.windows');
 goog.require('os.ui.slick.AbstractGroupByTreeSearchCtrl');
 goog.require('os.ui.uiSwitchDirective');
-goog.require('os.ui.util.autoHeightDirective');
+goog.require('os.ui.windowSelector');
 goog.require('plugin.places.ui.placesDirective');
 
 
@@ -126,11 +126,13 @@ os.ui.LayersCtrl = function($scope, $element) {
 };
 goog.inherits(os.ui.LayersCtrl, os.ui.slick.AbstractGroupByTreeSearchCtrl);
 
+
 /**
  * The functions to be called to determine if the layer should not be toggled
 * @type {Array<function(!ol.layer.Layer):boolean>}
 */
 os.ui.LayersCtrl.SKIP_TOGGLE_FUNCS = [];
+
 
 /**
  * The view options for grouping layers
@@ -171,18 +173,18 @@ os.ui.LayersCtrl.prototype.close = function() {
 
 /**
  * Change event handler for the groupBy control
+ * @export
  */
 os.ui.LayersCtrl.prototype.onGroupByChanged = function() {
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.AddData.GROUP_BY, 1);
   this.search();
 };
-goog.exportProperty(os.ui.LayersCtrl.prototype, 'onGroupByChanged',
-    os.ui.LayersCtrl.prototype.onGroupByChanged);
 
 
 /**
  * @param {*} item
  * @return {?string}
+ * @export
  */
 os.ui.LayersCtrl.prototype.getUi = function(item) {
   if (item && item instanceof os.data.LayerNode) {
@@ -194,16 +196,16 @@ os.ui.LayersCtrl.prototype.getUi = function(item) {
 
   return null;
 };
-goog.exportProperty(os.ui.LayersCtrl.prototype, 'getUi', os.ui.LayersCtrl.prototype.getUi);
 
 
 /**
  * Checks if a window is open in the application
  * @param {string} flag The window id
  * @return {boolean}
+ * @export
  */
 os.ui.LayersCtrl.prototype.isWindowActive = function(flag) {
-  var s = angular.element('#win-container').scope();
+  var s = angular.element(os.ui.windowSelector.CONTAINER).scope();
   var result = s['mainCtrl'][flag];
 
   if (result) {
@@ -212,12 +214,12 @@ os.ui.LayersCtrl.prototype.isWindowActive = function(flag) {
 
   return !!angular.element('div[label="' + flag + '"].window').length;
 };
-goog.exportProperty(os.ui.LayersCtrl.prototype, 'isWindowActive', os.ui.LayersCtrl.prototype.isWindowActive);
 
 
 /**
  * Opens the specified menu.
  * @param {string} selector The menu target selector.
+ * @export
  */
 os.ui.LayersCtrl.prototype.openMenu = function(selector) {
   var menu = this.menus_[selector];
@@ -235,7 +237,6 @@ os.ui.LayersCtrl.prototype.openMenu = function(selector) {
     }
   }
 };
-goog.exportProperty(os.ui.LayersCtrl.prototype, 'openMenu', os.ui.LayersCtrl.prototype.openMenu);
 
 
 /**
@@ -251,6 +252,7 @@ os.ui.LayersCtrl.prototype.onMenuClose = function(evt) {
 /**
  * Toggles a flag on mainCtrl
  * @param {string} flagName The name of the flag to toggle
+ * @export
  */
 os.ui.LayersCtrl.prototype.toggle = function(flagName) {
   if (!os.ui.menu.windows.openWindow(flagName)) {
@@ -258,10 +260,11 @@ os.ui.LayersCtrl.prototype.toggle = function(flagName) {
     os.dispatcher.dispatchEvent(event);
   }
 };
-goog.exportProperty(os.ui.LayersCtrl.prototype, 'toggle', os.ui.LayersCtrl.prototype.toggle);
+
 
 /**
  * Toggles the Tile layers on/off
+ * @export
  */
 os.ui.LayersCtrl.prototype.toggleTileLayers = function() {
   this.scope['showTiles'] = !this.scope['showTiles'];
@@ -282,19 +285,21 @@ os.ui.LayersCtrl.prototype.toggleTileLayers = function() {
     }
   }
 };
-goog.exportProperty(os.ui.LayersCtrl.prototype, 'toggleTileLayers', os.ui.LayersCtrl.prototype.toggleTileLayers);
+
 
 /**
  * Checks if the Tiles should be displayed
  * @return {boolean}
+ * @export
  */
 os.ui.LayersCtrl.prototype.showTiles = function() {
   return this.scope['showTiles'];
 };
-goog.exportProperty(os.ui.LayersCtrl.prototype, 'showTiles', os.ui.LayersCtrl.prototype.showTiles);
+
 
 /**
  * Toggles the Feature layers on/off
+ * @export
  */
 os.ui.LayersCtrl.prototype.toggleFeatureLayers = function() {
   this.scope['showFeatures'] = !this.scope['showFeatures'];
@@ -317,13 +322,13 @@ os.ui.LayersCtrl.prototype.toggleFeatureLayers = function() {
     }
   }
 };
-goog.exportProperty(os.ui.LayersCtrl.prototype, 'toggleFeatureLayers', os.ui.LayersCtrl.prototype.toggleFeatureLayers);
+
 
 /**
  * Checks if the Features should be displayed
  * @return {boolean}
+ * @export
  */
 os.ui.LayersCtrl.prototype.showFeatures = function() {
   return this.scope['showFeatures'];
 };
-goog.exportProperty(os.ui.LayersCtrl.prototype, 'showFeatures', os.ui.LayersCtrl.prototype.showFeatures);

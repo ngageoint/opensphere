@@ -17,10 +17,10 @@
       "description": [
         "With the timeline, you can animate features to discover temporal patterns in loaded data."
       ],
-      "attachTo": "#timelineButton",
+      "attachTo": ".o-timeline-button",
       "position": "bottom",
-      "horizontalAlign": "center",
-      "context": "navTop"
+      "context": "navTop",
+      "xOffset": -10
     },
     {
       "title": "Layer Controls",
@@ -29,7 +29,7 @@
         "use the controls at the bottom of the window. You can adjust the appearance of tile layers in the same ",
         "fashion."
       ],
-      "attachTo": ".window[label=Layers]",
+      "attachTo": ".o-window[label=Layers]",
       "position": "right",
       "verticalAlign": "center",
       "context": "layers"

@@ -1,13 +1,13 @@
-<div class="state-list">
+<div>
   <div ng-if="statelist.stateItems.length > 0">
     <checklist name="statelist" allow-multiple="true" items="statelist.stateItems"></checklist>
-    <div ng-if="required && statelist.count <= 0" style="padding-left:6px;">
-      <i class="fa fa-warning orange-icon"></i>
+    <div ng-if="required && statelist.count <= 0" class="pl-2">
+      <i class="fa fa-warning"></i>
       <em>Please select one or more states.</em>
     </div>
   </div>
   <div ng-if="statelist.stateItems.length <= 0">
-    <i class="fa fa-warning orange-icon"></i>
+    <i class="fa fa-warning"></i>
     <em>There are no states saved to {{appName}}. If you would like to share an application state, please create one.</em>
   </div>
 </div>

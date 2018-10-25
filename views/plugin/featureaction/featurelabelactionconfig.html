@@ -1,4 +1,4 @@
-<div class="feature-action-label-config">
+<div>
   <labelcontrols
       labels="config.labels"
       columns="columns"
@@ -8,21 +8,23 @@
       required="true">
   </labelcontrols>
 
-  <div class="custom-label-section top-gapxs">
-    <label class="checkbox inline" title="Add a custom label to each feature">
-      <input class="label-checkbox checkbox inline" type="checkbox" name="addCustomLabel"
-          ng-model="ctrl.addCustomLabel"
-          ng-change="ctrl.updateCustomColumn()" />
-      Add Custom Label
-    </label>
-    <popover ng-if="ctrl.showCustomWarning" class="animate-fade"
+  <div class="row ml-0 mt-1">
+    <div class="custom-control custom-checkbox">
+      <input class="custom-control-input" type="checkbox" name="addCustomLabel" id="feature-label-action-config"
+            ng-model="ctrl.addCustomLabel"
+            ng-change="ctrl.updateCustomColumn()" />
+      <label class="custom-control-label" title="Add a custom label to each feature" for="feature-label-action-config">
+        Add Custom Label
+      </label>
+    </div>
+    <popover ng-if="ctrl.showCustomWarning" class="animate-fade col text-left"
         x-title="'Custom Label Display'"
         x-content="ctrl.customLabelWarning"
         x-pos="'right'"
-        x-icon="'fa fa-warning yellow-icon'">
+        x-icon="'fa fa-warning text-warning'">
     </popover>
-    <div class="well" ng-if="ctrl.addCustomLabel">
-      <addcolumnform name="config.customName" value="config.customValue" validators="ctrl.validators"></addcolumnform>
-    </div>
+  </div>
+  <div ng-if="ctrl.addCustomLabel">
+    <addcolumnform name="config.customName" value="config.customValue" validators="ctrl.validators"></addcolumnform>
   </div>
 </div>

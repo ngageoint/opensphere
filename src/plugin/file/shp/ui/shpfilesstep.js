@@ -10,9 +10,6 @@ goog.require('os.ui.wiz.step.WizardStepEvent');
 goog.require('os.ui.wiz.wizardPreviewDirective');
 goog.require('plugin.file.shp');
 goog.require('plugin.file.shp.SHPParserConfig');
-goog.require('plugin.file.shp.type.DBFTypeMethod');
-goog.require('plugin.file.shp.type.SHPTypeMethod');
-
 
 
 /**
@@ -74,12 +71,10 @@ os.ui.Module.directive('shpfilesstep', [plugin.file.shp.ui.configStepDirective])
 /**
  * Controller for the SHP import file selection step
  * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @param {!angular.$timeout} $timeout
  * @constructor
  * @ngInject
  */
-plugin.file.shp.ui.SHPFilesStepCtrl = function($scope, $element, $timeout) {
+plugin.file.shp.ui.SHPFilesStepCtrl = function($scope) {
   /**
    * @type {?angular.Scope}
    * @private
@@ -175,6 +170,7 @@ plugin.file.shp.ui.SHPFilesStepCtrl.prototype.validate_ = function() {
 /**
  * Launches a file browser for the specified file type.
  * @param {string} type The file type
+ * @export
  */
 plugin.file.shp.ui.SHPFilesStepCtrl.prototype.onBrowse = function(type) {
   if (type == 'dbf' && this.dbfFileEl_) {
@@ -183,10 +179,6 @@ plugin.file.shp.ui.SHPFilesStepCtrl.prototype.onBrowse = function(type) {
     this.shpFileEl_.click();
   }
 };
-goog.exportProperty(
-    plugin.file.shp.ui.SHPFilesStepCtrl.prototype,
-    'onBrowse',
-    plugin.file.shp.ui.SHPFilesStepCtrl.prototype.onBrowse);
 
 
 /**
@@ -223,8 +215,10 @@ plugin.file.shp.ui.SHPFilesStepCtrl.prototype.handleResult_ = function(type, fil
       os.file.FileStorage.getInstance().setUniqueFileName(file);
     }
 
-    var method = type == 'dbf' ? new plugin.file.shp.type.DBFTypeMethod() : new plugin.file.shp.type.SHPTypeMethod();
-    if (method.isType(file)) {
+    var method = type == 'dbf' ? plugin.file.shp.isDBFFileType : plugin.file.shp.isSHPFileType;
+    var content = file.getContent();
+
+    if (content && content instanceof ArrayBuffer && method(content)) {
       if (type == 'dbf') {
         this.config_['file2'] = file;
       } else {
@@ -295,7 +289,7 @@ plugin.file.shp.ui.SHPFilesStepCtrl.prototype.handleError_ = function(type, erro
   this['loading'] = false;
 
   var file = type + 'File';
-  if (!errorMsg || !goog.isString(errorMsg)) {
+  if (!errorMsg || typeof errorMsg !== 'string') {
     var fileName = this.scope_[file] ? this.scope_[file].name : 'unknown';
     errorMsg = 'Unable to load file "' + fileName + '".';
   }
@@ -311,6 +305,7 @@ plugin.file.shp.ui.SHPFilesStepCtrl.prototype.handleError_ = function(type, erro
 /**
  * Clears the file associated with the specified type.
  * @param {string} type The file type
+ * @export
  */
 plugin.file.shp.ui.SHPFilesStepCtrl.prototype.onClear = function(type) {
   if (type == 'dbf') {
@@ -327,10 +322,6 @@ plugin.file.shp.ui.SHPFilesStepCtrl.prototype.onClear = function(type) {
   this.updateErrorText_(type);
   this.validate_();
 };
-goog.exportProperty(
-    plugin.file.shp.ui.SHPFilesStepCtrl.prototype,
-    'onClear',
-    plugin.file.shp.ui.SHPFilesStepCtrl.prototype.onClear);
 
 
 /**
@@ -348,6 +339,7 @@ plugin.file.shp.ui.SHPFilesStepCtrl.prototype.getTypeString_ = function(type) {
 /**
  * Loads the provided URL to see if it's a valid SHP/DBF file.
  * @param {string} type The file type
+ * @export
  */
 plugin.file.shp.ui.SHPFilesStepCtrl.prototype.loadUrl = function(type) {
   var method = new os.ui.file.method.UrlMethod();
@@ -357,10 +349,6 @@ plugin.file.shp.ui.SHPFilesStepCtrl.prototype.loadUrl = function(type) {
   method.listen(os.events.EventType.CANCEL, goog.partial(this.onUrlError_, type), false, this);
   method.loadUrl();
 };
-goog.exportProperty(
-    plugin.file.shp.ui.SHPFilesStepCtrl.prototype,
-    'loadUrl',
-    plugin.file.shp.ui.SHPFilesStepCtrl.prototype.loadUrl);
 
 
 /**

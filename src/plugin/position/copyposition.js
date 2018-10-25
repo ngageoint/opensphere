@@ -56,6 +56,8 @@ plugin.position.CopyPositionCtrl = function($scope, $element) {
   this.keyHandler_ = new goog.events.KeyHandler(goog.dom.getDocument());
   this.keyHandler_.listen(goog.events.KeyHandler.EventType.KEY, this.handleKeyEvent_, false, this);
 
+  $scope.$emit(os.ui.WindowEventType.READY);
+
   $scope.$on('$destroy', this.onDestroy_.bind(this));
 };
 goog.inherits(plugin.position.CopyPositionCtrl, goog.Disposable);
@@ -108,8 +110,8 @@ plugin.position.CopyPositionCtrl.launch = function(value) {
       'icon': 'fa fa-sticky-note',
       'x': 'center',
       'y': 'center',
-      'width': '650',
-      'height': '240',
+      'width': '300',
+      'height': 'auto',
       'modal': 'true'
     };
     var scopeOptions = {

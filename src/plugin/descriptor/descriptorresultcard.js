@@ -12,6 +12,7 @@ goog.require('os.ui.Module');
 plugin.descriptor.descriptorResultCardDirective = function() {
   return {
     restrict: 'E',
+    replace: true,
     templateUrl: os.ROOT + 'views/plugin/descriptor/resultcard.html',
     controller: plugin.descriptor.ResultCardCtrl,
     controllerAs: 'ctrl'
@@ -65,6 +66,14 @@ plugin.descriptor.ResultCardCtrl = function($scope, $element) {
 
 
 /**
+ * Length of the snippet to show for long descriptions
+ * @type {number}
+ * @const
+ */
+plugin.descriptor.ResultCardCtrl.SNIPPET_LENGTH = 125;
+
+
+/**
  * Clean up the controller.
  * @private
  */
@@ -78,7 +87,7 @@ plugin.descriptor.ResultCardCtrl.prototype.destroy_ = function() {
  * Updates icons
  */
 plugin.descriptor.ResultCardCtrl.prototype.updateIcons = function() {
-  var icons = this.element_.find('.icons');
+  var icons = this.element_.find('.js-card-title-icons');
   // clear
   icons.children().remove();
   // add
@@ -99,6 +108,7 @@ plugin.descriptor.ResultCardCtrl.prototype.getDescriptor = function() {
  * Get a field from the result.
  * @param {string} field
  * @return {*}
+ * @export
  */
 plugin.descriptor.ResultCardCtrl.prototype.getField = function(field) {
   var d = this.getDescriptor();
@@ -131,8 +141,8 @@ plugin.descriptor.ResultCardCtrl.prototype.getField = function(field) {
           }
 
           var snippet = paragraphs[sx];
-          if (snippet.length > 350) {
-            snippet = snippet.substring(0, 350) + ' ...';
+          if (snippet.length > plugin.descriptor.ResultCardCtrl.SNIPPET_LENGTH) {
+            snippet = snippet.substring(0, plugin.descriptor.ResultCardCtrl.SNIPPET_LENGTH) + ' ...';
             this.scope_['short'] = true;
           }
 
@@ -147,12 +157,11 @@ plugin.descriptor.ResultCardCtrl.prototype.getField = function(field) {
 
   return '';
 };
-goog.exportProperty(plugin.descriptor.ResultCardCtrl.prototype, 'getField',
-    plugin.descriptor.ResultCardCtrl.prototype.getField);
 
 
 /**
  * Toggles the descriptor
+ * @export
  */
 plugin.descriptor.ResultCardCtrl.prototype.toggle = function() {
   var d = this.getDescriptor();
@@ -165,17 +174,14 @@ plugin.descriptor.ResultCardCtrl.prototype.toggle = function() {
     }
   }
 };
-goog.exportProperty(plugin.descriptor.ResultCardCtrl.prototype, 'toggle',
-    plugin.descriptor.ResultCardCtrl.prototype.toggle);
 
 
 /**
  * Toggles the description text length
  * @param {boolean} full
+ * @export
  */
 plugin.descriptor.ResultCardCtrl.prototype.showFullDescription = function(full) {
   this.scope_['showFullDescription'] = full;
   os.ui.apply(this.scope_);
 };
-goog.exportProperty(plugin.descriptor.ResultCardCtrl.prototype, 'showFullDescription',
-    plugin.descriptor.ResultCardCtrl.prototype.showFullDescription);

@@ -363,8 +363,8 @@ os.color.getGradientColor = function(ratio, opt_gradient) {
  */
 os.color.getHslGradient = function(size, opt_min, opt_max, opt_distinct) {
   var gradient = [];
-  var min = goog.isDef(opt_min) ? goog.math.clamp(opt_min, 0, 360) : 0;
-  var max = goog.isDef(opt_max) ? goog.math.clamp(opt_max, min, 360) : 360;
+  var min = opt_min !== undefined ? goog.math.clamp(opt_min, 0, 360) : 0;
+  var max = opt_max !== undefined ? goog.math.clamp(opt_max, min, 360) : 360;
 
   var range = max - min;
   var lastHue = 0;
@@ -666,6 +666,17 @@ os.color.yiqToRgb = function(yiq, opt_result) {
 
 
 /**
+ * Converts an integer color representation to a hex string
+ * @param {number} num The integer color.
+ * @return {string} The hex representation.
+ */
+os.color.intToHex = function(num) {
+  num = goog.math.clamp(num | 0, 0, 0xffffff);
+  return '#' + ('00000' + (num | 0).toString(16)).substr(-6);
+};
+
+
+/**
  * Transforms the hue of a color in the YIQ color space.
  *
  * @param {!Array<number>} rgb The original color in RGB
@@ -740,6 +751,44 @@ os.color.colorize = function(data, tgtColor) {
   }
 };
 
+/**
+ * Applies a color transform to an array of image data. This transform takes a target color and adjusts the color
+ * for saturation color and brightness.
+ * @param {Array<number>} data The image data to colorize
+ * @param {number} brightness The target brightness. The range is -1 to 1.
+ * @param {number} contrast The target contrast. The range is 0 to 2.
+ * @param {number} saturation The target saturation. The range is 0 to 1.
+ */
+os.color.adjustColor = function(data, brightness, contrast, saturation) {
+  var intercept = (1 - contrast) / 2;
+  var sr = (1 - saturation) * 0.3086;
+  var sg = (1 - saturation) * 0.6094;
+  var sb = (1 - saturation) * 0.0820;
+  brightness = brightness * 225;
+
+  // color transform matrix for contrast and saturation, taken from online research https://docs.rainmeter.net/tips/colormatrix-guide/
+  var m = [
+    contrast * (sr + saturation), contrast * sr, contrast * sr, 0, 0,
+    contrast * sg, contrast * (sg + saturation), sg * contrast, 0, 0,
+    contrast * sb, contrast * sb, contrast * (sb + saturation), 0, 0,
+    0, 0, 0, 1, 0,
+    intercept + brightness, intercept + brightness, intercept + brightness, 1, 0
+  ];
+
+
+  for (var i = 0, n = data.length; i < n; i += 4) {
+    var r = data[i];
+    var g = data[i + 1];
+    var b = data[i + 2];
+    var a = data[i + 3];
+    data[i] = Math.round((r * m[0] + g * m[5] + b * m[10] + a * m[15] + m[20]));
+    data[i + 1] = Math.round((r * m[1] + g * m[6] + b * m[11] + a * m[16] + m[21]));
+    data[i + 2] = Math.round((r * m[2] + g * m[7] + b * m[12] + a * m[17] + m[22]));
+    data[i] = goog.math.clamp(data[i], 0, 255);
+    data[i + 1] = goog.math.clamp(data[i + 1], 0, 255);
+    data[i + 2] = goog.math.clamp(data[i + 2], 0, 255);
+  }
+};
 
 /**
  * Applies a color transform to an array of image data. This transform takes a source and target color and blends

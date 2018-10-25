@@ -1,0 +1,417 @@
+//=== Animations ===
+//Styles used by ngAnimate
+
+
+.animate-fast {
+  transition: all cubic-bezier(.25, .46, .45, .94) 200ms;
+}
+
+.ng-hide-add,
+.ng-hide-remove {
+  display: block !important;
+}
+
+// Fade
+
+.animate-fade {
+  transition: all cubic-bezier(.25, .46, .45, .94) 500ms;
+
+  &.ng-enter,
+  &.ng-hide {
+    opacity: 0;
+  }
+
+  &.ng-leave {
+    opacity: 1;
+
+    &.ng-leave-active {
+      opacity: 0;
+    }
+
+  }
+
+  &.ng-show,
+  &.ng-enter.ng-enter-active {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  &.ng-enter,
+  &.ng-hide {
+    opacity: 0;
+    transition: all cubic-bezier(.25, .46, .45, .94) 500ms;
+  }
+
+  &.ng-leave {
+    opacity: 1;
+
+    &.ng-leave-active {
+      opacity: 0;
+      transition: all cubic-bezier(.25, .46, .45, .94) 500ms;
+    }
+  }
+
+  &.ng-show,
+  &.ng-enter.ng-enter-active {
+    opacity: 1;
+  }
+}
+
+// * Slide Vertically - element slides down*/
+// *
+// * Added -webkit-backface-visibility: hidden so animation will work in Chrome/Linux.
+// * This appears to be a Chrome/Webkit bug, preventing animations from firing properly.
+
+
+// The default slide animation - slide down (south)
+.animate-slide,
+.animate-slide-s {
+  transform-origin: 0, top;
+  transition: all 500ms;
+
+  &.ng-enter,
+  &.ng-hide,
+  &.cloak {
+    opacity: 0;
+    transform: scaleY(.3);  // sass-lint:disable-line mixin-name-format
+    visibility: hidden;
+  }
+
+  &.ng-leave {
+    opacity: 1;
+    transform: scaleY(1);  // sass-lint:disable-line mixin-name-format
+    visibility: visible;
+
+    &.ng-leave-active {
+      opacity: 0;
+      transform: scaleY(.3);  // sass-lint:disable-line mixin-name-format
+      visibility: hidden;
+    }
+  }
+
+  &.ng-show,
+  &.ng-enter.ng-enter-active {
+    opacity: 1;
+    transform: scaleY(1);  // sass-lint:disable-line mixin-name-format
+    visibility: visible;
+  }
+}
+
+// slide vertically, upward (north)
+.animate-slide-n {
+  transform-origin: 0, bottom;
+  transition: all 500ms;
+
+  &.ng-enter,
+  &.ng-hide,
+  &.cloak {
+    opacity: 0;
+    transform: scaleY(.3);  // sass-lint:disable-line mixin-name-format
+    visibility: hidden;
+  }
+
+  &.ng-leave {
+    opacity: 1;
+    transform: scaleY(1);  // sass-lint:disable-line mixin-name-format
+    visibility: visible;
+
+    &.ng-leave-active {
+      opacity: 0;
+      transform: scaleY(.3);  // sass-lint:disable-line mixin-name-format
+      visibility: hidden;
+    }
+  }
+
+  &.ng-show,
+  &.ng-enter.ng-enter-active {
+    opacity: 1;
+    transform: scaleY(1);  // sass-lint:disable-line mixin-name-format
+    visibility: visible;
+  }
+}
+
+// Slide Horizontally - element slides right (east)
+.animate-slide-h,
+.animate-slide-e {
+  transform-origin: left;
+  transition: all 500ms;
+
+  &.ng-enter,
+  &.ng-hide,
+  &.cloak {
+    opacity: 0;
+    transform: scaleX(.3);  // sass-lint:disable-line mixin-name-format
+    visibility: hidden;
+  }
+
+  &.ng-leave {
+    opacity: 1;
+    transform: scaleX(1);  // sass-lint:disable-line mixin-name-format
+    visibility: visible;
+
+    &.ng-leave-active {
+      opacity: 0;
+      transform: scaleX(.3);  // sass-lint:disable-line mixin-name-format
+      visibility: hidden;
+    }
+  }
+
+  &.ng-show,
+  &.ng-enter.ng-enter-active {
+    opacity: 1;
+    transform: scaleX(1);  // sass-lint:disable-line mixin-name-format
+    visibility: visible;
+  }
+}
+
+// Slide Horizontally - element slides left (west)
+.animate-slide-w {
+  transform-origin: right;
+  transition: all 500ms;
+
+  &.ng-enter,
+  &.ng-hide,
+  &.cloak {
+    opacity: 0;
+    transform: scaleX(.3);  // sass-lint:disable-line mixin-name-format
+    visibility: hidden;
+  }
+
+  &.ng-leave {
+    opacity: 1;
+    transform: scaleX(1);  // sass-lint:disable-line mixin-name-format
+    visibility: visible;
+
+    &.ng-leave-active {
+      opacity: 0;
+      transform: scaleX(.3);  // sass-lint:disable-line mixin-name-format
+      visibility: hidden;
+    }
+  }
+
+  &.ng-show,
+  &.ng-enter.ng-enter-active {
+    opacity: 1;
+    transform: scaleX(1); // sass-lint:disable-line mixin-name-format
+    visibility: visible;
+  }
+}
+
+// Scale Implode - element shrinks and falls away
+
+.animate-scale {
+  transform-origin: 50%, 50%;
+  transition: all cubic-bezier(.25, .46, .45, .94) 500ms;
+
+  &.ng-enter,
+  &.ng-hide {
+    opacity: 0;
+    transform: scale(.3);
+  }
+
+  &.ng-leave {
+    opacity: 1;
+    transform: scale(1);
+
+    &.ng-leave-active {
+      opacity: 0;
+      transform: scale(.3);
+    }
+  }
+
+  &.ng-show,
+  &.ng-enter.ng-enter-active {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+// Scale Explode - element expands and jumps out
+
+.animate-scale-explode {
+  transform-origin: 50%, 50%;
+  transition: all cubic-bezier(.25, .46, .45, .94) 500ms;
+
+  &.ng-enter,
+  &.ng-hide {
+    opacity: 0;
+    transform: scale(3);
+  }
+
+  &.ng-leave {
+    opacity: 1;
+    transform: scale(1);
+
+    &.ng-leave-active {
+      opacity: 0;
+      transform: scale(3);
+    }
+  }
+
+  &.ng-show,
+  &.ng-enter.ng-enter-active {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+
+//Present - element finds its place by starting low and raising up
+//(add 'animate-present-large' for large elements to reduce the displacement)
+//(use 'animate-present-in'/'animate-present-out' as alternative options to only animate one direction)
+
+
+.animate-present {
+  transition: all cubic-bezier(.25, .46, .45, .94) 500ms;
+
+  &.ng-enter,
+  &.ng-hide,
+  &.ng-leave.ng-leave-active {
+    opacity: 0;
+    transform: translateY(5%); // sass-lint:disable-line mixin-name-format
+  }
+
+  &.animate-present-large {
+    &.ng-enter,
+    &.ng-hide,
+    &.ng-leave.ng-leave-active {
+      transform: translateY(2%); // sass-lint:disable-line mixin-name-format
+    }
+  }
+
+  &.ng-leave,
+  &.ng-show,
+  &.ng-enter.ng-enter-active {
+    opacity: 1;
+    transform: translateY(0); // sass-lint:disable-line mixin-name-format
+  }
+}
+
+.animate-present-in {
+  &.ng-hide-add {
+    transition: none;
+  }
+
+  &.ng-hide-remove {
+    transition: all cubic-bezier(.25, .46, .45, .94) 500ms;
+  }
+
+  &.ng-hide {
+    opacity: 0;
+    transform: translateY(5%); // sass-lint:disable-line mixin-name-format
+  }
+
+  &.animate-present-large.ng-hide {
+    transform: translateY(2%); // sass-lint:disable-line mixin-name-format
+  }
+}
+
+.animate-present-out {
+  &.ng-hide-add {
+    transition: all cubic-bezier(.25, .46, .45, .94) 500ms;
+  }
+
+  &.ng-hide-remove {
+
+    transition: none;
+  }
+
+  &.ng-hide {
+    opacity: 0;
+    transform: translateY(5%); // sass-lint:disable-line mixin-name-format
+  }
+
+  &.animate-present-large.ng-hide {
+    transform: translateY(2%); // sass-lint:disable-line mixin-name-format
+  }
+}
+
+//Flip Vertical, Horizontal - element does a 3D flip along x-axis or y-axis
+//(requires animated element's parent to have 'animate-flip-parent' to get 3D effect)
+
+.animate-flip-parent {
+  perspective: 1300px;
+}
+
+.animate-flip-v,
+.animate-flip-h {
+  transform-style: preserve-3d;
+  transition: all cubic-bezier(.25, .46, .45, .94) 500ms;
+}
+
+.animate-flip-v {
+  &.ng-enter,
+  &.ng-hide {
+    opacity: 0;
+    transform: rotateX(70deg); // sass-lint:disable-line mixin-name-format
+  }
+
+  &.ng-leave {
+    opacity: 1;
+    transform: rotateX(0deg); // sass-lint:disable-line mixin-name-format
+
+    &.ng-leave-active {
+      opacity: 0;
+      transform: rotateX(70deg); // sass-lint:disable-line mixin-name-format
+    }
+  }
+
+  &.ng-show,
+  &.ng-enter.ng-enter-active {
+    opacity: 1;
+    transform: rotateX(0deg); // sass-lint:disable-line mixin-name-format
+  }
+}
+
+.animate-flip-h {
+  &.ng-enter,
+  &.ng-hide {
+    opacity: 0;
+    transform: rotateY(-70deg); // sass-lint:disable-line mixin-name-format
+  }
+
+  &.ng-leave {
+    opacity: 1;
+    transform: rotateY(0deg); // sass-lint:disable-line mixin-name-format
+
+    &.ng-leave-active {
+      opacity: 0;
+      transform: rotateY(-70deg); // sass-lint:disable-line mixin-name-format
+    }
+  }
+
+  &.ng-show,
+  &.ng-enter.ng-enter-active {
+    opacity: 1;
+    transform: rotateY(0deg); // sass-lint:disable-line mixin-name-format
+  }
+}
+
+//   Blur - blurs contents of element as it hides
+
+.animate-blur {
+  transition: all ease 500ms;
+
+  &.ng-enter,
+  &.ng-hide {
+    filter: blur(5px);
+    opacity: .75;
+  }
+
+  &.ng-leave {
+    filter: none;
+    opacity: 1;
+
+    &.ng-leave-active {
+      filter: blur(5px);
+      opacity: .75;
+    }
+  }
+
+  &.ng-show,
+  &.ng-enter.ng-enter-active {
+    filter: none;
+    opacity: 1;
+  }
+}

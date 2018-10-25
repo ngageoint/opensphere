@@ -32,10 +32,10 @@ os.audio.AudioManager = function() {
 
   /**
    * Set of sounds
-   * @type {Object<string, string>}
+   * @type {!Object<string, string>}
    * @private
    */
-  this.sounds_ = {'None': null};
+  this.sounds_ = {};
 
   /**
    * Cache of audio objects
@@ -163,7 +163,7 @@ os.audio.AudioManager.prototype.play = function(label, opt_timeBetweenPlays) {
     var lastPlayed = this.lastPlayed_[url] || 0;
     var now = goog.now();
 
-    if (!this.mute_ && (!goog.isDef(opt_timeBetweenPlays) || now - lastPlayed > opt_timeBetweenPlays)) {
+    if (!this.mute_ && (opt_timeBetweenPlays === undefined || now - lastPlayed > opt_timeBetweenPlays)) {
       goog.log.fine(os.audio.AudioManager.LOGGER_, 'Playing "' + label + '" from ' + url);
       audio.play();
       this.lastPlayed_[url] = now;

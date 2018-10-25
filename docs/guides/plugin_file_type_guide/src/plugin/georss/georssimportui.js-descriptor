@@ -34,6 +34,7 @@ plugin.georss.GeoRSSImportUI.prototype.getTitle = function() {
 // finished product.
 /* istanbul ignore next */
 plugin.georss.GeoRSSImportUI.prototype.launchUI = function(file, opt_config) {
+  plugin.georss.GeoRSSImportUI.base(this, 'launchUI', file, opt_config);
   var config = new os.parse.FileParserConfig();
 
   // if an existing config was provided, merge it in

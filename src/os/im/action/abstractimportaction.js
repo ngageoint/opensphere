@@ -66,50 +66,38 @@ os.im.action.AbstractImportAction.prototype.execute = goog.abstractMethod;
 
 /**
  * @inheritDoc
+ * @export
  */
 os.im.action.AbstractImportAction.prototype.getId = function() {
   return this.id;
 };
-goog.exportProperty(
-    os.im.action.AbstractImportAction.prototype,
-    'getId',
-    os.im.action.AbstractImportAction.prototype.getId);
 
 
 /**
  * @inheritDoc
+ * @export
  */
 os.im.action.AbstractImportAction.prototype.getLabel = function() {
   return this.label;
 };
-goog.exportProperty(
-    os.im.action.AbstractImportAction.prototype,
-    'getLabel',
-    os.im.action.AbstractImportAction.prototype.getLabel);
 
 
 /**
  * @inheritDoc
+ * @export
  */
 os.im.action.AbstractImportAction.prototype.getConfigUI = function() {
   return this.configUI;
 };
-goog.exportProperty(
-    os.im.action.AbstractImportAction.prototype,
-    'getConfigUI',
-    os.im.action.AbstractImportAction.prototype.getConfigUI);
 
 
 /**
  * @inheritDoc
+ * @export
  */
 os.im.action.AbstractImportAction.prototype.isUnique = function() {
   return this.unique;
 };
-goog.exportProperty(
-    os.im.action.AbstractImportAction.prototype,
-    'isUnique',
-    os.im.action.AbstractImportAction.prototype.isUnique);
 
 
 /**
@@ -153,3 +141,9 @@ os.im.action.AbstractImportAction.prototype.toXml = function() {
  * @inheritDoc
  */
 os.im.action.AbstractImportAction.prototype.fromXml = goog.abstractMethod;
+
+
+/**
+ * @inheritDoc
+ */
+os.im.action.AbstractImportAction.prototype.reset = goog.abstractMethod;

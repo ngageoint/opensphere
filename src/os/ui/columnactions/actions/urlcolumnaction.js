@@ -45,7 +45,7 @@ os.ui.columnactions.actions.UrlColumnAction.prototype.matches = function(context
   var sourceId;
   var sourceUrl;
   try {
-    if (goog.isDefAndNotNull(context)) {
+    if (context != null) {
       sourceId = context['sourceId'];
       sourceUrl = context['sourceUrl'];
     }

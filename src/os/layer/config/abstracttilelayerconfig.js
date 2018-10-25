@@ -264,7 +264,7 @@ os.layer.config.AbstractTileLayerConfig.prototype.expandUrls = function() {
   var expandedUrls = [];
   for (var i = 0; i < this.urls.length; i++) {
     var url = this.urls[i];
-    if (goog.isString(url)) {
+    if (typeof url === 'string') {
       var expanded = /** @type {Array<string>} */ (os.layer.config.AbstractTileLayerConfig.expandUrl(url));
       for (var j = 0; j < expanded.length; j++) {
         var expandedUrl = /** @type {string} */ (expanded[j]);

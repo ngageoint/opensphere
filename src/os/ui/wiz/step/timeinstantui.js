@@ -239,12 +239,11 @@ os.ui.wiz.step.TimeInstantUICtrl.prototype.updateResult_ = function() {
 
 /**
  * Handles user UI changes.
+ * @export
  */
 os.ui.wiz.step.TimeInstantUICtrl.prototype.change = function() {
   this.updateSample_();
 };
-goog.exportProperty(os.ui.wiz.step.TimeInstantUICtrl.prototype, 'change',
-    os.ui.wiz.step.TimeInstantUICtrl.prototype.change);
 
 
 /**
@@ -302,6 +301,7 @@ os.ui.wiz.step.TimeInstantUICtrl.prototype.autoDetectTime_ = function() {
 
 /**
  * Handles user UI changes to the date type.
+ * @export
  */
 os.ui.wiz.step.TimeInstantUICtrl.prototype.onDateType = function() {
   this.autoDetectDate_();
@@ -310,34 +310,31 @@ os.ui.wiz.step.TimeInstantUICtrl.prototype.onDateType = function() {
   }
   this.updateSample_();
 };
-goog.exportProperty(os.ui.wiz.step.TimeInstantUICtrl.prototype, 'onDateType',
-    os.ui.wiz.step.TimeInstantUICtrl.prototype.onDateType);
 
 
 /**
  * Handles user UI changes to the date column.
+ * @export
  */
 os.ui.wiz.step.TimeInstantUICtrl.prototype.onDateColumn = function() {
   this.autoDetectDate_();
   this.updateSample_();
 };
-goog.exportProperty(os.ui.wiz.step.TimeInstantUICtrl.prototype, 'onDateColumn',
-    os.ui.wiz.step.TimeInstantUICtrl.prototype.onDateColumn);
 
 
 /**
  * Handles user UI changes to the time column.
+ * @export
  */
 os.ui.wiz.step.TimeInstantUICtrl.prototype.onTimeColumn = function() {
   this.autoDetectTime_();
   this.updateSample_();
 };
-goog.exportProperty(os.ui.wiz.step.TimeInstantUICtrl.prototype, 'onTimeColumn',
-    os.ui.wiz.step.TimeInstantUICtrl.prototype.onTimeColumn);
 
 
 /**
  * Handles user UI changes to the date format picker.
+ * @export
  */
 os.ui.wiz.step.TimeInstantUICtrl.prototype.onDateFormat = function() {
   if (this['dateFormat'] && this['dateFormat'] != 'Custom') {
@@ -345,12 +342,11 @@ os.ui.wiz.step.TimeInstantUICtrl.prototype.onDateFormat = function() {
     this.updateSample_();
   }
 };
-goog.exportProperty(os.ui.wiz.step.TimeInstantUICtrl.prototype, 'onDateFormat',
-    os.ui.wiz.step.TimeInstantUICtrl.prototype.onDateFormat);
 
 
 /**
  * Handles user UI changes to the time format picker.
+ * @export
  */
 os.ui.wiz.step.TimeInstantUICtrl.prototype.onTimeFormat = function() {
   if (this['timeFormat'] && this['timeFormat'] != 'Custom') {
@@ -358,5 +354,3 @@ os.ui.wiz.step.TimeInstantUICtrl.prototype.onTimeFormat = function() {
     this.updateSample_();
   }
 };
-goog.exportProperty(os.ui.wiz.step.TimeInstantUICtrl.prototype, 'onTimeFormat',
-    os.ui.wiz.step.TimeInstantUICtrl.prototype.onTimeFormat);

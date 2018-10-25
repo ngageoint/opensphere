@@ -14,6 +14,7 @@ goog.require('os.ui.search.FeatureResultCardCtrl');
  */
 plugin.google.places.resultCardDirective = function() {
   return {
+    replace: true,
     restrict: 'E',
     templateUrl: os.ROOT + 'views/plugin/google/places/resultcard.html',
     controller: plugin.google.places.ResultCardCtrl,

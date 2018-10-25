@@ -43,12 +43,14 @@ goog.require('os.source');
 goog.require('os.source.ISource');
 goog.require('os.source.PropertyChange');
 goog.require('os.source.column');
+goog.require('os.string');
 goog.require('os.style.StyleManager');
 goog.require('os.style.label');
 goog.require('os.time.TimeRange');
 goog.require('os.time.TimelineController');
 goog.require('os.time.xf.TimeModel');
 goog.require('os.ui.slick.column');
+goog.require('os.webgl');
 
 
 
@@ -331,10 +333,10 @@ os.source.Vector = function(opt_options) {
   this.lockable_ = false;
 
   /**
-   * @type {boolean}
+   * @type {os.webgl.AltitudeMode}
    * @private
    */
-  this.altitudeEnabled_ = true;
+  this.altitudeMode_ = os.webgl.AltitudeMode.ABSOLUTE;
 
   /**
    * How often the source will automatically refresh itself.
@@ -369,6 +371,20 @@ os.source.Vector = function(opt_options) {
    * @private
    */
   this.uniqueId_ = null;
+
+  /**
+   * Stats of column data types.
+   * @type {?Object}
+   * @private
+   */
+  this.stats_ = {};
+
+  /**
+   * If the feature data column type should try to be determined.
+   * @type {boolean}
+   * @private
+   */
+  this.detectColumnTypes_ = false;
 
   if (!options['disableAreaSelection']) {
     os.dispatcher.listen(os.action.EventType.SELECT, this.onFeatureAction_, false, this);
@@ -760,6 +776,24 @@ os.source.Vector.prototype.addColumn = function(field, opt_header, opt_temp, opt
 
 
 /**
+ * Gets a flag to determine whether to attempt to convert feature data to a type.
+ * @return {boolean}
+ */
+os.source.Vector.prototype.getDetectColumnTypes = function() {
+  return this.detectColumnTypes_;
+};
+
+
+/**
+ * Sets a flag to determine whether to attempt to convert feature data to a type.
+ * @param {boolean} value
+ */
+os.source.Vector.prototype.setDetectColumnTypes = function(value) {
+  this.detectColumnTypes_ = value;
+};
+
+
+/**
  * Perform cleanup actions on columns.
  * @param {boolean=} opt_silent If events should not be dispatched.
  * @protected
@@ -771,14 +805,6 @@ os.source.Vector.prototype.processColumns = function(opt_silent) {
         os.object.getValueExtractor('name'));
     goog.array.removeDuplicates(this.columns, this.columns, colByName);
 
-    this.columns.forEach(function(column) {
-      // mark internal columns that were derived from another
-      os.fields.markDerived(column);
-
-      // add custom formatters
-      os.source.column.addFormatter(column);
-    }, this);
-
     var descriptor = os.dataManager.getDescriptor(this.getId());
     if (descriptor) {
       // restore descriptor column information to the source columns
@@ -786,7 +812,35 @@ os.source.Vector.prototype.processColumns = function(opt_silent) {
       if (descriptorColumns) {
         os.ui.slick.column.restore(descriptorColumns, this.columns);
       }
+    }
 
+    this.columns.forEach(function(column) {
+      // mark internal columns that were derived from another
+      os.fields.markDerived(column);
+
+      // add custom formatters
+      os.source.column.addFormatter(column);
+
+      // update the column type based on the data
+      if (!goog.object.isEmpty(this.stats_)) {
+        var types = this.stats_[column['name']];
+
+        if (types) {
+          // ignore the empty data
+          goog.object.remove(types, 'empty');
+
+          if (goog.object.getCount(types) == 1) {
+            column['type'] = goog.object.getAnyKey(types);
+          } else if (goog.object.getCount(types) == 2) {
+            if (goog.object.containsKey(types, 'integer') && goog.object.containsKey(types, 'decimal')) {
+              column['type'] = 'decimal';
+            }
+          }
+        }
+      }
+    }, this);
+
+    if (descriptor) {
       // save columns to the descriptor
       descriptor.setColumns(this.columns);
     }
@@ -859,7 +913,7 @@ os.source.Vector.prototype.updateColumns = function(features) {
  */
 os.source.Vector.prototype.hasColumn = function(value) {
   var field = null;
-  if (goog.isString(value)) {
+  if (typeof value === 'string') {
     field = value;
   } else if (goog.isObject(value)) {
     field = /** @type {os.data.ColumnDefinition} */ (value)['field'];
@@ -908,7 +962,6 @@ os.source.Vector.prototype.getGeometryShape = function() {
 /**
  * Sets the geometry shape used by features in the source.
  * @param {string} value
- * @suppress {accessControls}
  */
 os.source.Vector.prototype.setGeometryShape = function(value) {
   var oldGeomShape = this.geometryShape_;
@@ -954,17 +1007,53 @@ os.source.Vector.prototype.setGeometryShape = function(value) {
 
       if (lobTest) {
         os.feature.createLineOfBearing(features[i], true, lobOptions);
-
-        // This picks up cached ellipses even if the user has them off. While that's not ideal, we
-        // don't have a choice until we can refactor both ellipse and LOB into "derived geometries"
-        // and give them a better setup form in the app
-        geoms.push(/** @type {ol.geom.Geometry} */ (features[i].get(os.data.RecordField.ELLIPSE)));
-        geoms.push(/** @type {ol.geom.Geometry} */ (features[i].get(os.data.RecordField.LINE_OF_BEARING)));
       }
 
-      var extent = geoms.reduce(os.fn.reduceExtentFromGeometries, ol.extent.createEmpty());
-      if (!ol.extent.isEmpty(extent)) {
-        this.featuresRtree_.update(extent, features[i]);
+      this.updateIndex(features[i]);
+    }
+  }
+};
+
+
+/**
+ * @type {ol.Extent}
+ * @private
+ */
+os.source.Vector.scratchExtent_ = ol.extent.createEmpty();
+
+
+/**
+ * @param {ol.Feature} feature
+ * @suppress {accessControls}
+ */
+os.source.Vector.prototype.updateIndex = function(feature) {
+  if (feature) {
+    var style = feature.getStyle();
+    var styles = Array.isArray(style) ? style : [style];
+
+    var extent = os.source.Vector.scratchExtent_;
+    extent[0] = Infinity;
+    extent[1] = Infinity;
+    extent[2] = -Infinity;
+    extent[3] = -Infinity;
+
+    for (var s = 0, ss = styles.length; s < ss; s++) {
+      var geomFunc = styles[s].getGeometryFunction();
+      var g = geomFunc(feature);
+      if (g) {
+        var e = os.extent.getFunctionalExtent(g);
+        if (e) {
+          ol.extent.extend(extent, e);
+        }
+      }
+    }
+
+    if (!ol.extent.isEmpty(extent)) {
+      var id = ol.getUid(feature);
+      if (id in this.featuresRtree_.items_) {
+        this.featuresRtree_.update(extent, feature);
+      } else {
+        this.featuresRtree_.insert(extent, feature);
       }
     }
   }
@@ -1108,19 +1197,19 @@ os.source.Vector.prototype.getColor = function() {
 
 
 /**
- * @return {boolean}
+ * @return {os.webgl.AltitudeMode}
  */
-os.source.Vector.prototype.hasAltitudeEnabled = function() {
-  return this.altitudeEnabled_;
+os.source.Vector.prototype.getAltitudeMode = function() {
+  return this.altitudeMode_;
 };
 
 
 /**
- * @param {boolean} value
+ * @param {os.webgl.AltitudeMode} value
  */
-os.source.Vector.prototype.setAltitudeEnabled = function(value) {
-  var old = this.altitudeEnabled_;
-  this.altitudeEnabled_ = value;
+os.source.Vector.prototype.setAltitudeMode = function(value) {
+  var old = this.altitudeMode_;
+  this.altitudeMode_ = value;
   this.dispatchEvent(new os.events.PropertyChangeEvent(os.source.PropertyChange.ALTITUDE, value, old));
 };
 
@@ -1643,6 +1732,7 @@ os.source.Vector.prototype.addFeature = function(feature) {
 
 /**
  * @inheritDoc
+ * @suppress {accessControls}
  */
 os.source.Vector.prototype.addFeatures = function(features) {
   this.clearQueue();
@@ -1655,8 +1745,15 @@ os.source.Vector.prototype.addFeatures = function(features) {
     // remove duplicates and process features before adding them to the source
     this.processFeatures(features);
 
+    // we want OpenLayers to skip its default r-tree load since we are doing a better version
+    var tree = this.featuresRtree_;
+    this.featuresRtree_ = null;
+
     // add to the source
     os.source.Vector.base(this, 'addFeatures', features);
+
+    // restore r-tree
+    this.featuresRtree_ = tree;
   }
 };
 
@@ -1764,6 +1861,8 @@ os.source.Vector.prototype.processFeatures = function(features) {
 
   this.featureCount_ += features.length;
 
+  this.stats_ = {};
+
   // handle immediate processing on all features
   for (var i = 0, n = features.length; i < n; i++) {
     features[i].suppressEvents();
@@ -1866,6 +1965,56 @@ os.source.Vector.prototype.processImmediate = function(feature) {
   }
 
   os.style.setFeatureStyle(feature, this);
+  this.updateIndex(feature);
+
+  if (this.getDetectColumnTypes()) {
+    this.columnTypeDetection_(feature);
+  }
+};
+
+
+/**
+ * Detects the column types.
+ * @param {!ol.Feature} feature
+ * @private
+ *
+ * @suppress {accessControls} To allow direct access to feature metadata.
+ */
+os.source.Vector.prototype.columnTypeDetection_ = function(feature) {
+  var keys = feature.getKeys();
+  keys.forEach(function(col) {
+    var value = feature.values_[col];
+    var type = typeof (value);
+
+    if (value === '') {
+      type = 'empty';
+    } else if (type === 'number') {
+      type = Math.floor(value) === value ? 'integer' : 'decimal';
+    } else if (type === 'string') {
+      if (os.string.isFloat(String(value))) {
+        value = parseFloat(value);
+
+        if (Math.floor(value) === value) {
+          type = 'integer';
+        } else {
+          type = 'decimal';
+        }
+
+        feature.values_[col] = value;
+      }
+    }
+
+    // keep stats of the different types for each column
+    if (!(col in this.stats_)) {
+      this.stats_[col] = {};
+    }
+
+    if (!(type in this.stats_[col])) {
+      this.stats_[col][type] = 0;
+    }
+
+    this.stats_[col][type]++;
+  }, this);
 };
 
 
@@ -2007,7 +2156,7 @@ os.source.Vector.prototype.unprocessDeferred = function(features) {
   this.dynamicListeners_ = os.object.prune(this.dynamicListeners_);
 
   // removed features should never remain in the selection
-  this.removeFromSelected(features);
+  this.removeFromSelected(features, true);
 
   // update the time model from remaining data
   if (this.timeModel) {
@@ -2878,9 +3027,11 @@ os.source.Vector.prototype.addToSelected = function(features) {
 
 
 /**
- * @inheritDoc
+ * @override
+ * @param {!ol.Feature|Array<!ol.Feature>} features
+ * @param {boolean=} opt_skipStyle
  */
-os.source.Vector.prototype.removeFromSelected = function(features) {
+os.source.Vector.prototype.removeFromSelected = function(features, opt_skipStyle) {
   if (!goog.isArray(features)) {
     features = [features];
   }
@@ -2896,7 +3047,9 @@ os.source.Vector.prototype.removeFromSelected = function(features) {
 
     if (removed.length > 0) {
       // update styles for all features removed from the selection
-      os.style.setFeaturesStyle(removed, this);
+      if (opt_skipStyle !== true) {
+        os.style.setFeaturesStyle(removed, this);
+      }
 
       this.dispatchEvent(new os.events.PropertyChangeEvent(os.events.SelectionType.REMOVED, removed));
       this.changed();
@@ -3178,7 +3331,7 @@ os.source.Vector.prototype.handleFeatureHover = function(feature) {
 os.source.Vector.prototype.setHoverHandler = function(opt_fn, opt_context) {
   var fn = opt_fn || undefined;
   var ctx = opt_context || this;
-  this.hoverHandler_ = goog.isDef(fn) ? fn.bind(ctx) : undefined;
+  this.hoverHandler_ = fn !== undefined ? fn.bind(ctx) : undefined;
 };
 
 
@@ -3220,7 +3373,7 @@ os.source.Vector.prototype.persist = function(opt_to) {
   options['shapeName'] = this.getGeometryShape();
   options['centerShapeName'] = this.getCenterGeometryShape();
   options['timeEnabled'] = this.getTimeEnabled();
-  options['altitudeEnabled'] = this.hasAltitudeEnabled();
+  options['altitudeMode'] = this.getAltitudeMode();
   options['refreshInterval'] = this.refreshInterval;
 
   if (this.uniqueId_) {
@@ -3255,8 +3408,8 @@ os.source.Vector.prototype.restore = function(config) {
     this.setColumnAutoDetectLimit(config['columnDetectLimit']);
   }
 
-  if (config['altitudeEnabled'] != undefined) {
-    this.setAltitudeEnabled(config['altitudeEnabled']);
+  if (config['altitudeMode'] != undefined) {
+    this.setAltitudeMode(config['altitudeMode']);
   }
 
   if (config['refreshInterval']) {
@@ -3274,5 +3427,9 @@ os.source.Vector.prototype.restore = function(config) {
     var columnDef = new os.data.ColumnDefinition();
     columnDef.restore(config['uniqueId']);
     this.setUniqueId(columnDef);
+  }
+
+  if (config['detectColumnTypes']) {
+    this.setDetectColumnTypes(config['detectColumnTypes']);
   }
 };

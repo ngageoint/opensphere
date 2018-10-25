@@ -216,6 +216,7 @@ plugin.im.action.feature.ui.LabelConfigCtrl.prototype.onCustomNameChange = funct
 
 /**
  * Update the custom column and add it to the column list if necessary.
+ * @export
  */
 plugin.im.action.feature.ui.LabelConfigCtrl.prototype.updateCustomColumn = function() {
   goog.array.remove(this.scope['columns'], this.customColumn);
@@ -240,10 +241,6 @@ plugin.im.action.feature.ui.LabelConfigCtrl.prototype.updateCustomColumn = funct
   this.validate();
   os.ui.apply(this.scope);
 };
-goog.exportProperty(
-    plugin.im.action.feature.ui.LabelConfigCtrl.prototype,
-    'updateCustomColumn',
-    plugin.im.action.feature.ui.LabelConfigCtrl.prototype.updateCustomColumn);
 
 
 /**

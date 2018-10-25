@@ -1,6 +1,8 @@
 goog.provide('os.ui.file.UrlImportCtrl');
 goog.provide('os.ui.file.urlImportDirective');
+
 goog.require('os.ui.Module');
+goog.require('os.ui.util.validationMessageDirective');
 
 
 /**
@@ -65,6 +67,7 @@ os.ui.file.UrlImportCtrl = function($scope, $element) {
   // bring focus to the url input
   this.element_.find('input[name="url"]').focus();
 
+  $scope.$emit(os.ui.WindowEventType.READY);
   $scope.$on('$destroy', this.onDestroy_.bind(this));
 };
 
@@ -85,6 +88,7 @@ os.ui.file.UrlImportCtrl.prototype.onDestroy_ = function() {
 
 /**
  * Create import command and close the window
+ * @export
  */
 os.ui.file.UrlImportCtrl.prototype.accept = function() {
   if (!this.scope_['urlForm']['$invalid'] && this.scope_['method']) {
@@ -101,24 +105,17 @@ os.ui.file.UrlImportCtrl.prototype.accept = function() {
     this.close();
   }
 };
-goog.exportProperty(
-    os.ui.file.UrlImportCtrl.prototype,
-    'accept',
-    os.ui.file.UrlImportCtrl.prototype.accept);
 
 
 /**
  * Close the window.
+ * @export
  */
 os.ui.file.UrlImportCtrl.prototype.close = function() {
   if (this.element_) {
     os.ui.window.close(this.element_);
   }
 };
-goog.exportProperty(
-    os.ui.file.UrlImportCtrl.prototype,
-    'close',
-    os.ui.file.UrlImportCtrl.prototype.close);
 
 
 /**

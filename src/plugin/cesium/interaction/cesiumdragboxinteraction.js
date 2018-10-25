@@ -1,6 +1,7 @@
 goog.provide('plugin.cesium.interaction.dragbox');
 
 goog.require('os.interaction.DragBox');
+goog.require('os.interaction.DrawPolygon');
 goog.require('plugin.cesium');
 
 
@@ -9,6 +10,7 @@ goog.require('plugin.cesium');
  * @type {Cesium.Primitive|undefined}
  */
 os.interaction.DragBox.prototype.cesiumBox = undefined;
+
 
 /**
  * The Cesium box color.
@@ -60,15 +62,17 @@ plugin.cesium.interaction.dragbox.updateWebGL = function(start, end) {
       if (this.cesiumBox) {
         scene.primitives.remove(this.cesiumBox);
       }
-      var flip = Math.abs(os.geo.normalizeLongitude(this.extent[0]) - os.geo.normalizeLongitude(this.extent[2])) > 180;
+
+      var coords = /** @type {ol.geom.Polygon} */ (this.box2D.getGeometry()).getCoordinates()[0];
+      var lonlats = coords.map(os.interaction.DrawPolygon.coordToLonLat);
+
       var appearance = new Cesium.PolylineColorAppearance();
       this.cesiumBox = new Cesium.Primitive({
         asynchronous: false,
         geometryInstances: new Cesium.GeometryInstance({
           id: plugin.cesium.GeometryInstanceId.GEOM_OUTLINE,
           geometry: new Cesium.PolylineGeometry({
-            positions: plugin.cesium.generateRectanglePositions(
-                [this.extent[flip ? 2 : 0], this.extent[1], this.extent[flip ? 0 : 2], this.extent[3]]),
+            positions: olcs.core.ol4326CoordinateArrayToCsCartesians(lonlats),
             vertexFormat: appearance.vertexFormat,
             width: 2
           }),

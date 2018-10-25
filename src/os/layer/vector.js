@@ -24,7 +24,8 @@ goog.require('os.source.Vector');
 goog.require('os.style');
 goog.require('os.style.label');
 goog.require('os.ui.Icons');
-goog.require('os.ui.featureInfoDirective');
+goog.require('os.ui.feature.featureInfoDirective');
+goog.require('os.ui.feature.multiFeatureInfoDirective');
 goog.require('os.ui.layer.vectorLayerUIDirective');
 goog.require('os.ui.node.defaultLayerNodeUIDirective');
 goog.require('os.ui.renamelayer');
@@ -133,7 +134,7 @@ os.layer.Vector = function(options) {
    * @type {Function}
    * @private
    */
-  this.doubleClickHandler_ = os.layer.Vector.defaultDoubleClickHandler_.bind(this);
+  this.doubleClickHandler_ = os.layer.Vector.defaultDoubleClickHandler.bind(this);
 
   /**
    * Function to launch the filter manager for this layer
@@ -309,6 +310,12 @@ os.layer.Vector.prototype.onSourceChange = function(event) {
     case os.source.PropertyChange.COLUMNS:
     case os.source.PropertyChange.COLUMN_ADDED:
       this.dispatchEvent(new os.events.PropertyChangeEvent(p));
+      break;
+    case os.source.PropertyChange.ALTITUDE:
+      // forward as a layer event
+      e = new os.events.PropertyChangeEvent(os.layer.PropertyChange.ALTITUDE, event.getNewValue(),
+          event.getOldValue());
+      this.dispatchEvent(e);
       break;
     default:
       break;
@@ -829,7 +836,7 @@ os.layer.Vector.prototype.getGroupUI = function() {
  * @inheritDoc
  */
 os.layer.Vector.prototype.isFilterable = function() {
-  return goog.isDefAndNotNull(this.filterLauncher_);
+  return this.filterLauncher_ != null;
 };
 
 
@@ -871,7 +878,7 @@ os.layer.Vector.prototype.getFilterableTypes = function() {
  * @inheritDoc
  */
 os.layer.Vector.prototype.launchFilterManager = function() {
-  if (goog.isDefAndNotNull(this.filterLauncher_)) {
+  if (this.filterLauncher_ != null) {
     this.filterLauncher_(this);
   }
 };
@@ -881,7 +888,7 @@ os.layer.Vector.prototype.launchFilterManager = function() {
  * @inheritDoc
  */
 os.layer.Vector.prototype.getFilterColumns = function() {
-  if (goog.isDefAndNotNull(this.filterColumns_)) {
+  if (this.filterColumns_ != null) {
     return this.filterColumns_(this);
   }
 
@@ -954,7 +961,7 @@ os.layer.Vector.prototype.supportsAction = function(type, opt_actionArgs) {
         if (isVector) {
           // look for the max date on the descriptor
           var desc = os.dataManager.getDescriptor(this.getId());
-          if (goog.isDefAndNotNull(desc)) {
+          if (desc != null) {
             maxDate = desc.getMaxDate();
           }
 
@@ -991,6 +998,7 @@ os.layer.Vector.prototype.supportsAction = function(type, opt_actionArgs) {
 
 
 /**
+ * Gets the double click handler for the layer.
  * @return {Function}
  */
 os.layer.Vector.prototype.getDoubleClickHandler = function() {
@@ -999,6 +1007,8 @@ os.layer.Vector.prototype.getDoubleClickHandler = function() {
 
 
 /**
+ * Sets the double click handler for the layer. This can be a function that operates on either a single feature
+ * or an array of features.
  * @param {Function} handler
  */
 os.layer.Vector.prototype.setDoubleClickHandler = function(handler) {
@@ -1229,15 +1239,13 @@ os.layer.Vector.prototype.restore = function(config) {
 
 /**
  * Handles double clicks on features by popping up a window to display feature metadata.
- * @param {ol.Feature} feature
- * @private
- *
+ * @param {ol.Feature} feature *
  * @this os.layer.Vector
  */
-os.layer.Vector.defaultDoubleClickHandler_ = function(feature) {
+os.layer.Vector.defaultDoubleClickHandler = function(feature) {
   if (feature) {
     // look for a title on the feature, otherwise use the layer title
     var title = os.feature.getTitle(feature) || this.getTitle();
-    os.ui.launchFeatureInfo(feature, title, this.getFeatureDirective());
+    os.ui.feature.launchMultiFeatureInfo(feature, title);
   }
 };
