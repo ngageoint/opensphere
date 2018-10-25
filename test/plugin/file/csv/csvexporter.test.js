@@ -27,6 +27,11 @@ describe('plugin.file.csv.CSVExporter', function() {
     expect(result).toBeNull();
   });
 
+  it('should process features lacking a geometry', function() {
+    var result = ex.processItem(new ol.Feature());
+    expect(result).not.toBe(null);
+  });
+
   it('converts features with a point geometry to JSON', function() {
     var result = ex.processItem(pointFeature);
 
