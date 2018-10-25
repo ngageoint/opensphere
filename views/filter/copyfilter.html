@@ -1,26 +1,28 @@
-<div class="window-content-wrapper copy-filter">
-  <div class="window-content">
-    <div class="copy-filter__checkbox-section">
+<div class="d-flex flex-column">
+  <div class="modal-body flex-column d-flex flex-fill">
+    <div class="border rounded mx-2">
       <checklist name="layerlist" allow-multiple="true" items="copyFilterCtrl.layers"></checklist>
     </div>
-    <div class="form-horizontal copy-filter__mapping-section" ng-form="copyFilterForm">
+    <div class="mt-2 mb-1 flex-column d-flex flex-fill" ng-form="copyFilterForm">
       <div ng-show="copyFilterCtrl.hasUnmappedColumns()">
-        Unassociated Columns:
-        <popover class="pull-right" x-title="'Missing Columns'" x-content="copyFilterCtrl.helpText" x-pos="'right'"></popover>
+        Unassociated Columns
+        <popover class="float-right" x-title="'Missing Columns'" x-content="copyFilterCtrl.helpText" x-pos="'right'"></popover>
       </div>
-      <div class="copy-filter__picker-pane">
-        <copyfilterpicker ng-repeat="(layerId, models) in copyFilterCtrl.unmappedColumns" models="models" source-layer-name="copyFilterCtrl.sourceLayerName" source-filter-key="copyFilterCtrl.sourceFilterKey"></copyfilterpicker>
+      <div class="flex-column d-flex flex-fill">
+        <div class="row mx-2 mb-1" ng-repeat="(layerId, models) in copyFilterCtrl.unmappedColumns">
+          <div class="col border rounded">
+            <copyfilterpicker models="models" source-layer-name="copyFilterCtrl.sourceLayerName" source-filter-key="copyFilterCtrl.sourceFilterKey"></copyfilterpicker>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-  <div class="window-footer">
-    <div class="pull-right">
-      <button class="btn btn-default" ng-click="copyFilterCtrl.finish()" ng-disabled="copyFilterForm.$invalid || copyFilterCtrl.numLayersChecked === 0">
-        <i class="btn-icon fa fa-check color-add"></i> Copy
-      </button>
-      <button class="btn btn-default" ng-click="copyFilterCtrl.cancel()">
-        <i class="btn-icon fa fa-ban red-icon"></i> Cancel
-      </button>
-    </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" ng-click="copyFilterCtrl.finish()" ng-disabled="copyFilterForm.$invalid || copyFilterCtrl.numLayersChecked === 0">
+      <i class="fa fa-check"></i> Copy
+    </button>
+    <button class="btn btn-secondary" ng-click="copyFilterCtrl.cancel()">
+      <i class="fa fa-ban"></i> Cancel
+    </button>
   </div>
 </div>

@@ -94,6 +94,7 @@ os.ui.location.SimpleLocationCtrl.prototype.onLatLonChange_ = function() {
 /**
  * Change the display model
  * @param {os.ui.location.Format=} opt_format
+ * @export
  */
 os.ui.location.SimpleLocationCtrl.prototype.format = function(opt_format) {
   if (this.scope_ && this.scope_['latdeg'] != undefined && this.scope_['londeg'] != undefined) {
@@ -102,7 +103,7 @@ os.ui.location.SimpleLocationCtrl.prototype.format = function(opt_format) {
     var lat = this.scope_['latdeg'];
     var lon = this.scope_['londeg'];
 
-    if ((goog.isNumber(lat) || goog.isString(lat)) && (goog.isNumber(lon) || goog.isString(lon))) {
+    if ((typeof lat === 'number' || typeof lat === 'string') && (typeof lon === 'number' || typeof lon === 'string')) {
       this['location'] = formatter(this.scope_['latdeg'], this.scope_['londeg']).replace(/°/g, '&deg;');
     } else {
       this['location'] = '';
@@ -114,21 +115,18 @@ os.ui.location.SimpleLocationCtrl.prototype.format = function(opt_format) {
     os.ui.apply(this.scope_);
   }
 };
-goog.exportProperty(os.ui.location.SimpleLocationCtrl.prototype, 'format',
-    os.ui.location.SimpleLocationCtrl.prototype.format);
 
 
 /**
  * Change the display model
  * @param {os.events.SettingChangeEvent} event
+ * @export
  */
 os.ui.location.SimpleLocationCtrl.prototype.locationChanged = function(event) {
   if (event.newVal) {
     this.format(/** @type {os.ui.location.Format} */ (event.newVal));
   }
 };
-goog.exportProperty(os.ui.location.SimpleLocationCtrl.prototype, 'locationChanged',
-    os.ui.location.SimpleLocationCtrl.prototype.locationChanged);
 
 
 /**
@@ -151,6 +149,7 @@ goog.exportProperty(os.ui.location.SimpleLocationCtrl.prototype, 'locationChange
 os.ui.location.SimpleLocationDirective = function() {
   return {
     restrict: 'EA',
+    replace: true,
     template: os.ui.location.SimpleLocationDirective.template_,
     controller: os.ui.location.SimpleLocationCtrl,
     controllerAs: 'simpleLocationCtrl',
@@ -181,10 +180,10 @@ os.ui.Module.directive(os.ui.location.SimpleLocationDirective.ID, [os.ui.locatio
  * @const
  */
 os.ui.location.SimpleLocationDirective.template_ =
-    '<div class="simple-loc">' +
+    '<div>' +
     '<simple-location-controls format-default="simpleLocationCtrl.currentFormat" ' +
     'on-change="simpleLocationCtrl.format(opt_format)"></simple-location-controls>' +
-    '<span class="simple-loc-location selectable" ng-bind-html="simpleLocationCtrl.location"></span>' +
+    '<span ng-bind-html="simpleLocationCtrl.location"></span>' +
     '</div>';
 
 
@@ -243,14 +242,13 @@ os.ui.location.SimpleLocationControlsCtrl.prototype.formatChanged = function(for
 /**
  * Change the display model
  * @param {os.events.SettingChangeEvent} event
+ * @export
  */
 os.ui.location.SimpleLocationControlsCtrl.prototype.locationControlChanged = function(event) {
   if (event.newVal) {
     this.formatChanged(/** @type {os.ui.location.Format} */ (event.newVal));
   }
 };
-goog.exportProperty(os.ui.location.SimpleLocationControlsCtrl.prototype, 'locationControlChanged',
-    os.ui.location.SimpleLocationControlsCtrl.prototype.locationControlChanged);
 
 
 /**

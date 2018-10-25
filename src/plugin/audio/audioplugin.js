@@ -1,10 +1,9 @@
 goog.provide('plugin.audio.AudioPlugin');
 
-goog.require('os.file.FileManager');
 goog.require('os.plugin.AbstractPlugin');
 goog.require('os.ui.im.AudioImportUI');
 goog.require('os.ui.im.ImportManager');
-goog.require('plugin.audio.AudioFileTypeMethod');
+goog.require('plugin.audio.mime');
 
 
 
@@ -26,9 +25,5 @@ plugin.audio.AudioPlugin.prototype.init = function() {
   // register the audio import UI
   var im = os.ui.im.ImportManager.getInstance();
   im.registerImportDetails('Audio files for application sounds.');
-  im.registerImportUI(this.id, new os.ui.im.AudioImportUI());
-
-  // register the audio file method
-  var fm = os.file.FileManager.getInstance();
-  fm.registerContentTypeMethod(new plugin.audio.AudioFileTypeMethod());
+  im.registerImportUI(plugin.audio.mime.TYPE, new os.ui.im.AudioImportUI());
 };

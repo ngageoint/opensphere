@@ -127,7 +127,7 @@ plugin.places.ui.SavePlacesCtrl = function($scope, $element) {
   $scope.$on(os.ui.ex.ExportOptionsEvent.CHANGE, this.onOptionsChange_.bind(this));
 
   setTimeout(function() {
-    $scope.$emit('window.ready');
+    $scope.$emit(os.ui.WindowEventType.READY);
   }, 0);
 };
 goog.inherits(plugin.places.ui.SavePlacesCtrl, os.ui.ex.ExportOptionsCtrl);
@@ -145,18 +145,16 @@ plugin.places.ui.SavePlacesCtrl.prototype.disposeInternal = function() {
 
 /**
  * Close the window.
+ * @export
  */
 plugin.places.ui.SavePlacesCtrl.prototype.cancel = function() {
   os.ui.window.close(this.element);
 };
-goog.exportProperty(
-    plugin.places.ui.SavePlacesCtrl.prototype,
-    'cancel',
-    plugin.places.ui.SavePlacesCtrl.prototype.cancel);
 
 
 /**
  * Save selection to places and close the window.
+ * @export
  */
 plugin.places.ui.SavePlacesCtrl.prototype.confirm = function() {
   plugin.places.saveFromSource(this['config']);
@@ -168,10 +166,6 @@ plugin.places.ui.SavePlacesCtrl.prototype.confirm = function() {
 
   this.cancel();
 };
-goog.exportProperty(
-    plugin.places.ui.SavePlacesCtrl.prototype,
-    'confirm',
-    plugin.places.ui.SavePlacesCtrl.prototype.confirm);
 
 
 /**

@@ -65,7 +65,7 @@ os.config.DisplaySetting = {
 os.config.isTerrainConfigured = function() {
   var options = /** @type {osx.map.TerrainProviderOptions|undefined} */ (os.settings.get(
       os.config.DisplaySetting.TERRAIN_OPTIONS));
-  return !!(options && options.type && options.url);
+  return !!(options && options.type);
 };
 
 
@@ -347,6 +347,7 @@ os.config.DisplaySettingsCtrl.prototype.updateCameraMode_ = function(opt_new, op
 
 /**
  * Set OpenSphere to use the current map position on reset.
+ * @export
  */
 os.config.DisplaySettingsCtrl.prototype.useCurrentPosition = function() {
   this['cameraState'] = os.MapContainer.getInstance().persistCameraState();
@@ -355,10 +356,6 @@ os.config.DisplaySettingsCtrl.prototype.useCurrentPosition = function() {
     this.updateSetting_(os.config.DisplaySetting.CAMERA_STATE, JSON.stringify(this['cameraState']));
   }
 };
-goog.exportProperty(
-    os.config.DisplaySettingsCtrl.prototype,
-    'useCurrentPosition',
-    os.config.DisplaySettingsCtrl.prototype.useCurrentPosition);
 
 
 /**
@@ -377,6 +374,7 @@ os.config.DisplaySettingsCtrl.prototype.useDefaultPosition_ = function() {
 /**
  * Set OpenSphere to use the current map position on reset.
  * @return {string}
+ * @export
  */
 os.config.DisplaySettingsCtrl.prototype.getZoom = function() {
   if (this['cameraState'] && this['cameraState'].altitude > 0) {
@@ -388,23 +386,16 @@ os.config.DisplaySettingsCtrl.prototype.getZoom = function() {
 
   return os.map.DEFAULT_ZOOM.toFixed(1);
 };
-goog.exportProperty(
-    os.config.DisplaySettingsCtrl.prototype,
-    'getZoom',
-    os.config.DisplaySettingsCtrl.prototype.getZoom);
 
 
 /**
  * Update the fog display.
+ * @export
  */
 os.config.DisplaySettingsCtrl.prototype.updateFog = function() {
   os.settings.set(os.config.DisplaySetting.FOG_ENABLED, this['fogEnabled']);
   os.settings.set(os.config.DisplaySetting.FOG_DENSITY, this['fogDensity']);
 };
-goog.exportProperty(
-    os.config.DisplaySettingsCtrl.prototype,
-    'updateFog',
-    os.config.DisplaySettingsCtrl.prototype.updateFog);
 
 
 /**
@@ -436,35 +427,26 @@ os.config.DisplaySettingsCtrl.prototype.onTerrainChange_ = function(event) {
 /**
  * If terrain is available in the application.
  * @return {boolean}
+ * @export
  */
 os.config.DisplaySettingsCtrl.prototype.supportsTerrain = function() {
   return os.config.isTerrainConfigured();
 };
-goog.exportProperty(
-    os.config.DisplaySettingsCtrl.prototype,
-    'supportsTerrain',
-    os.config.DisplaySettingsCtrl.prototype.supportsTerrain);
 
 
 /**
  * Update the globe sunlight display.
+ * @export
  */
 os.config.DisplaySettingsCtrl.prototype.updateSunlight = function() {
   this.updateSetting_(os.config.DisplaySetting.ENABLE_LIGHTING, this['sunlightEnabled']);
 };
-goog.exportProperty(
-    os.config.DisplaySettingsCtrl.prototype,
-    'updateSunlight',
-    os.config.DisplaySettingsCtrl.prototype.updateSunlight);
 
 
 /**
  * Update the globe terrain display.
+ * @export
  */
 os.config.DisplaySettingsCtrl.prototype.updateTerrain = function() {
   this.updateSetting_(os.config.DisplaySetting.ENABLE_TERRAIN, this['terrainEnabled']);
 };
-goog.exportProperty(
-    os.config.DisplaySettingsCtrl.prototype,
-    'updateTerrain',
-    os.config.DisplaySettingsCtrl.prototype.updateTerrain);

@@ -2,6 +2,7 @@ goog.provide('os.ui.datetime.DurationCtrl');
 goog.provide('os.ui.datetime.durationDirective');
 goog.require('os.ui.Module');
 goog.require('os.ui.spinnerDirective');
+goog.require('os.ui.util.validationMessageDirective');
 
 
 /**
@@ -21,7 +22,8 @@ os.ui.datetime.durationDirective = function() {
       'useWeeks': '@',
       'min': '=?',
       'max': '=?',
-      'disabled': '=?'
+      'disabled': '=?',
+      'isRequired': '=?'
     },
     templateUrl: os.ROOT + 'views/datetime/duration.html',
     controller: os.ui.datetime.DurationCtrl,
@@ -78,7 +80,12 @@ os.ui.datetime.DurationCtrl = function($scope) {
   /**
    * @type {Object}
    */
-  this['errors'] = {};
+  this['errors'] = {
+    'duration': {
+      '$error': {},
+      '$dirty': false
+    }
+  };
 
   /**
    * @type {number}
@@ -105,6 +112,11 @@ os.ui.datetime.DurationCtrl = function($scope) {
    */
   this['valid'] = true;
 
+  /**
+   * @type {?boolean}
+   */
+  this['isrequired'] = this.scope_['isRequired'] != null ? this.scope_['isRequired'] : true;
+
   $scope.$watch('dur', this.onDurationUpdate_.bind(this));
   $scope.$watch('durCtrl.weeks', this.onWeeksChange_.bind(this));
   $scope.$watch('durCtrl.days', this.onDaysChange_.bind(this));
@@ -113,9 +125,12 @@ os.ui.datetime.DurationCtrl = function($scope) {
   $scope.$watch('durCtrl.seconds', this.onSecondsChange_.bind(this));
   $scope.$watch('min', this.calculateTime_.bind(this));
   $scope.$watch('max', this.calculateTime_.bind(this));
+  $scope.$watch('disabled', this.calculateTime_.bind(this));
+  $scope.$watch('isRequired', this.onIsRequiredChange_.bind(this));
   $scope.$on('$destroy', this.destroy_.bind(this));
 
   this.calculateTime_();
+  this.init_();
 };
 
 
@@ -130,27 +145,39 @@ os.ui.datetime.DurationCtrl.prototype.destroy_ = function() {
 
 
 /**
+ * Initialize
+ * @private
+ */
+os.ui.datetime.DurationCtrl.prototype.init_ = function() {
+  this['errors']['duration']['$dirty'] = false;
+};
+
+
+/**
  * Calculates the time values for each spinner element.
  * @private
  */
 os.ui.datetime.DurationCtrl.prototype.calculateTime_ = function() {
   if (this.scope_) {
-    var minDuration = goog.isNumber(this.scope_['min']) ? this.scope_['min'] : parseInt(this.scope_['min'], 10);
+    var minDuration = typeof this.scope_['min'] === 'number' ? this.scope_['min'] : parseInt(this.scope_['min'], 10);
 
     if (!minDuration) {
       minDuration = 0;
     }
 
-    var maxDuration = goog.isNumber(this.scope_['max']) ? this.scope_['max'] : parseInt(this.scope_['max'], 10);
+    var maxDuration = typeof this.scope_['max'] === 'number' ? this.scope_['max'] : parseInt(this.scope_['max'], 10);
 
     if (!maxDuration) {
       maxDuration = Infinity;
     }
 
     var r = goog.string.toNumber(this.scope_['dur']);
-    r < minDuration ? this['errors']['minDuration'] = true : delete this['errors']['minDuration'];
-    r > maxDuration ? this['errors']['maxDuration'] = true : delete this['errors']['maxDuration'];
-    this['valid'] = goog.object.isEmpty(this['errors']) && !this.scope_['disabled'] ? true : null;
+    r < minDuration ? this['errors']['duration']['$error']['minlength'] = true :
+        delete this['errors']['duration']['$error']['minlength'];
+    r > maxDuration ? this['errors']['duration']['$error']['maxlength'] = true :
+        delete this['errors']['duration']['$error']['maxlength'];
+    this['valid'] = goog.object.isEmpty(this['errors']['duration']['$error']) ||
+        this.scope_['disabled'] ? true : null;
 
     if (this.scope_['useWeeks'] === 'true') {
       this['weeks'] = Math.floor(r / 604800000);
@@ -176,6 +203,8 @@ os.ui.datetime.DurationCtrl.prototype.calculateTime_ = function() {
       this['seconds'] = Math.floor(r / 1000);
     }
     os.ui.apply(this.scope_);
+
+    this['errors']['duration']['$dirty'] = true;
   }
 };
 
@@ -266,4 +295,16 @@ os.ui.datetime.DurationCtrl.prototype.onMinutesChange_ = function(value) {
 os.ui.datetime.DurationCtrl.prototype.onSecondsChange_ = function(value) {
   this['seconds'] = value;
   this.updateDuration_();
+};
+
+
+/**
+ * Handler for required changes.
+ * @param {boolean} value
+ * @private
+ */
+os.ui.datetime.DurationCtrl.prototype.onIsRequiredChange_ = function(value) {
+  if (value != null) {
+    this['isrequired'] = value;
+  }
 };

@@ -286,26 +286,22 @@ os.ui.menu.layer.onDescription_ = function(event) {
   }
 
   var html =
-      '<div class="window-content-wrapper">' +
-          '<div class="window-content">' + msg + '</div>' +
-          '<div class="window-footer">' +
-              '<div class="pull-right">' +
-                  '<button class="btn btn-default" ng-click="close()">' +
-                  '<i class="fa fa-ban red-icon"></i> Close</button>' +
-              '</div>' +
+      '<div class="d-flex flex-column flex-fill">' +
+          '<div class="modal-body">' + msg + '</div>' +
+          '<div class="modal-footer">' +
+            '<button class="btn btn-secondary" ng-click="close()">' +
+            '<i class="fa fa-ban"></i> Close</button>' +
           '</div>' +
       '</div>';
 
   var windowOptions = {
     'id': 'layerDescription',
     'label': 'Layer Description',
-    'icon': 'fa fa-newspaper-o lt-blue-icon',
+    'icon': 'fa fa-newspaper-o',
     'x': 'center',
     'y': 'center',
     'width': '600',
-    'height': '300',
-    'min-height': 200,
-    'max-height': 0,
+    'height': 'auto',
     'show-close': true
   };
 

@@ -118,11 +118,23 @@ plugin.cesium.TileGridTilingScheme.init = function() {
 
   /**
    * @inheritDoc
+   * @suppress {accessControls}
    */
   plugin.cesium.TileGridTilingScheme.prototype.getNumberOfXTilesAtLevel = function(level) {
     var tileRange = this.tilegrid_.getFullTileRange(level);
     if (tileRange) {
       return tileRange.maxX - tileRange.minX + 1;
+    }
+
+    // Cesium assumes that all levels (0 to maxZoom) exist and uses this function to compute the current
+    // zoom level by texel spacing. Therefore, return something other than 0 by extrapolating from the
+    // levels which are defined (if a zoom factor was detected).
+    var zoomFactor = this.tilegrid_.zoomFactor_;
+    if (zoomFactor !== undefined) {
+      var minZoom = this.tilegrid_.getMinZoom();
+      tileRange = this.tilegrid_.getFullTileRange(minZoom);
+      var numXTiles = tileRange.maxX - tileRange.minX + 1;
+      return Math.pow(zoomFactor, Math.log(numXTiles) / Math.log(zoomFactor) - minZoom + level);
     }
 
     return 0;
@@ -131,11 +143,22 @@ plugin.cesium.TileGridTilingScheme.init = function() {
 
   /**
    * @inheritDoc
+   * @suppress {accessControls}
    */
   plugin.cesium.TileGridTilingScheme.prototype.getNumberOfYTilesAtLevel = function(level) {
     var tileRange = this.tilegrid_.getFullTileRange(level);
     if (tileRange) {
       return tileRange.maxY - tileRange.minY + 1;
+    }
+
+    // Cesium assumes that all levels exist, so attempt to extrapolate this value if a
+    // zoomFactor exists
+    var zoomFactor = this.tilegrid_.zoomFactor_;
+    if (zoomFactor !== undefined) {
+      var minZoom = this.tilegrid_.getMinZoom();
+      tileRange = this.tilegrid_.getFullTileRange(minZoom);
+      var numYTiles = tileRange.maxY - tileRange.minY + 1;
+      return Math.pow(zoomFactor, Math.log(numYTiles) / Math.log(zoomFactor) - minZoom + level);
     }
 
     return 0;

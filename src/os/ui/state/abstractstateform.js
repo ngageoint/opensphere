@@ -74,46 +74,38 @@ os.ui.state.AbstractStateFormCtrl.prototype.onDestroy = function() {
 
 /**
  * Save the state
+ * @export
  */
 os.ui.state.AbstractStateFormCtrl.prototype.accept = function() {
   this.close();
 };
-goog.exportProperty(
-    os.ui.state.AbstractStateFormCtrl.prototype,
-    'accept',
-    os.ui.state.AbstractStateFormCtrl.prototype.accept);
 
 
 /**
  * Close the window
+ * @export
  */
 os.ui.state.AbstractStateFormCtrl.prototype.close = function() {
   os.ui.window.close(this.element);
 };
-goog.exportProperty(
-    os.ui.state.AbstractStateFormCtrl.prototype,
-    'close',
-    os.ui.state.AbstractStateFormCtrl.prototype.close);
 
 
 /**
  * Toggle all options
+ * @export
  */
 os.ui.state.AbstractStateFormCtrl.prototype.toggleAll = function() {
   for (var i = 0, n = this['states'].length; i < n; i++) {
     this['states'][i].setEnabled(this['all']);
   }
 };
-goog.exportProperty(
-    os.ui.state.AbstractStateFormCtrl.prototype,
-    'toggleAll',
-    os.ui.state.AbstractStateFormCtrl.prototype.toggleAll);
 
 
 /**
  * Get the state's description.
  * @param {os.state.IState} state The state
  * @return {string} The description
+ * @export
  */
 os.ui.state.AbstractStateFormCtrl.prototype.getDescription = function(state) {
   var description = state.getDescription();
@@ -123,21 +115,14 @@ os.ui.state.AbstractStateFormCtrl.prototype.getDescription = function(state) {
 
   return description;
 };
-goog.exportProperty(
-    os.ui.state.AbstractStateFormCtrl.prototype,
-    'getDescription',
-    os.ui.state.AbstractStateFormCtrl.prototype.getDescription);
 
 
 /**
  * Get the state's title.
  * @param {os.state.IState} state The state
  * @return {string} The title
+ * @export
  */
 os.ui.state.AbstractStateFormCtrl.prototype.getTitle = function(state) {
   return state.getTitle();
 };
-goog.exportProperty(
-    os.ui.state.AbstractStateFormCtrl.prototype,
-    'getTitle',
-    os.ui.state.AbstractStateFormCtrl.prototype.getTitle);

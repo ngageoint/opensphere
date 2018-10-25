@@ -14,7 +14,6 @@ goog.require('os.ui.Module');
 goog.require('os.ui.location.SimpleLocationDirective');
 goog.require('os.ui.slick.formatter');
 goog.require('os.ui.slick.slickGridDirective');
-goog.require('os.ui.util.autoHeightDirective');
 goog.require('os.ui.window');
 
 
@@ -25,6 +24,7 @@ goog.require('os.ui.window');
 os.ui.descriptionInfoDirective = function() {
   return {
     restrict: 'E',
+    replace: true,
     scope: {
       'description': '='
     },
@@ -117,7 +117,7 @@ os.ui.launchDescriptionInfo = function(id, description, opt_titleDetail) {
     var windowOptions = {
       'id': windowId,
       'label': winLabel,
-      'icon': 'fa fa-newspaper-o lt-blue-icon',
+      'icon': 'fa fa-newspaper-o',
       'x': 'center',
       'y': 'center',
       'width': '800',
@@ -171,7 +171,7 @@ os.ui.SlickDescriptionAsyncRenderer = function(elem, row, dataContext, colDef) {
     if (!desc) {
       desc = /** @type {!string} */ (dataContext.get(os.Fields.DESCRIPTION.toLowerCase()));
     }
-    if (goog.isDefAndNotNull(desc) && typeof id === 'string') {
+    if (desc != null && typeof id === 'string') {
       var $elem = $(elem);
       var doc = elem.ownerDocument;
       var myWin = doc.defaultView || doc.parentWindow;

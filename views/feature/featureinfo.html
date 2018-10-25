@@ -1,0 +1,15 @@
+<div class="d-flex flex-column flex-fill">
+  <div class="flex-shrink-0">
+    <simple-location latdeg="lat" londeg="lon" ng-if="lat !== undefined && lon !== undefined"></simple-location>
+    <span ng-if="alt">Altitude: {{alt}}</span>
+  </div>
+  <div class="flex-shrink-0" ng-if="info.numTabsShown > 1">
+    <ul class="nav nav-tabs">
+      <li class="nav-item" ng-repeat="tab in info.tabs" ng-click="info.setActiveTab(tab)" ng-show="tab.isShown">
+        <a href="" class="nav-link" ng-class="{active:activeTab.id == tab.id}"><i class="fa" ng-class="tab.icon"></i> {{tab.label}}</a>
+      </li>
+    </ul>
+  </div>
+
+  <uiswitch items="activeTab" directive-function="info.getUi" generic="propertiestab" class="d-flex flex-fill"></uiswitch>
+</div>

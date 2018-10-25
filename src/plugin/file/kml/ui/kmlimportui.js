@@ -28,6 +28,8 @@ plugin.file.kml.ui.KMLImportUI.prototype.getTitle = function() {
  * @inheritDoc
  */
 plugin.file.kml.ui.KMLImportUI.prototype.launchUI = function(file, opt_config) {
+  plugin.file.kml.ui.KMLImportUI.base(this, 'launchUI', file, opt_config);
+
   var config = new os.parse.FileParserConfig();
 
   // if an existing config was provided, merge it in
@@ -43,12 +45,12 @@ plugin.file.kml.ui.KMLImportUI.prototype.launchUI = function(file, opt_config) {
   };
   var windowOptions = {
     'label': 'Import KML',
-    'icon': 'fa fa-file-text lt-blue-icon',
+    'icon': 'fa fa-file-text',
     'x': 'center',
     'y': 'center',
-    'width': 350,
-    'min-width': 350,
-    'max-width': 600,
+    'width': 400,
+    'min-width': 400,
+    'max-width': 800,
     'height': 'auto',
     'modal': true,
     'show-close': true,

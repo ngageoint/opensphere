@@ -30,8 +30,8 @@ goog.require('os.ui.filter.ui.editFiltersDirective');
 goog.require('os.ui.im.action.EditFilterActionCtrl');
 goog.require('os.ui.im.action.EventType');
 goog.require('os.ui.im.action.editFilterActionDirective');
+goog.require('os.ui.util.validationMessageDirective');
 goog.require('os.ui.window');
-
 
 
 /**
@@ -46,13 +46,10 @@ plugin.im.action.feature.ui.editFeatureActionDirective = function() {
   return dir;
 };
 
-
 /**
  * Add the directive to the module.
  */
 os.ui.Module.directive('editfeatureaction', [plugin.im.action.feature.ui.editFeatureActionDirective]);
-
-
 
 /**
  * Controller for the edit feature action window.
@@ -69,14 +66,13 @@ plugin.im.action.feature.ui.EditFeatureActionCtrl = function($scope, $element) {
   /**
    * @type {?HTMLCanvasElement}
    * @protected
-  */
+   */
   this.styleCanvas = null;
   this.labelCanvas = null;
 
   os.dispatcher.listen(os.ui.im.action.EventType.UPDATE, this.showActionPreview, false, this);
 };
 goog.inherits(plugin.im.action.feature.ui.EditFeatureActionCtrl, os.ui.im.action.EditFilterActionCtrl);
-
 
 /**
  * @inheritDoc
@@ -86,14 +82,15 @@ plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.onDestroy = function
   os.dispatcher.unlisten(os.ui.im.action.EventType.UPDATE, this.showActionPreview, false, this);
 };
 
-
 /**
  * Show a preview of the actions selected
+ * @export
  */
 plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.showActionPreview = function() {
   // get rid of the existing canvas elements to be replaced with new ones
   this.element.find('.labelCanvas').remove();
   this.element.find('.styleCanvas').remove();
+  this.element.find('.soundPreview').remove();
   this.labelCanvas = null;
   this.styleCanvas = null;
 
@@ -103,14 +100,25 @@ plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.showActionPreview = 
       this.buildStylePreview(curAction);
     } else if (curAction['id'] == 'featureLabelAction') {
       this.buildLabelPreview(curAction);
+    } else if (curAction['id'] == 'featureSoundAction') {
+      this.buildSoundPreview(curAction);
     }
   }
 };
-goog.exportProperty(
-    plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype,
-    'showActionPreview',
-    plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.showActionPreview);
 
+/**
+ * Create the preview for a selected sound
+ * @param {plugin.im.action.feature.SoundAction} soundAction
+ */
+plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.buildSoundPreview = function(soundAction) {
+  var config = /** @type {!Object} */ (os.object.unsafeClone(
+      soundAction.soundConfig));
+
+  // only add this to the applicable action
+  var query = '.js-filter-action__controls:has(option[selected=\'selected\'][value=\'string:featureSoundAction\'])';
+  var curContainer = this.element.find(query);
+  curContainer.append('<span class="soundPreview"><i class="fa fa-fw fa-music"></i> ' + config['sound'] + '</span>');
+};
 
 /**
  * Create the preview for a style action
@@ -124,10 +132,9 @@ plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.buildStylePreview = 
   this.styleCanvas.setAttribute('class', 'styleCanvas');
   this.styleCanvas.height = 27;
   this.styleCanvas.width = 150;
-  this.styleCanvas.style.setProperty('vertical-align', 'middle');
 
   // only add this to the applicable action
-  var query = '.filter-action-row:has(option[selected=\'selected\'][value=\'string:featureStyleAction\'])';
+  var query = '.js-filter-action__controls:has(option[selected=\'selected\'][value=\'string:featureStyleAction\'])';
   var curContainer = this.element.find(query);
   curContainer.append(this.styleCanvas);
 
@@ -143,7 +150,7 @@ plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.buildStylePreview = 
     });
 
     var config = /** @type {!Object} */ (os.object.unsafeClone(styleAction.styleConfig));
-    if (goog.isDefAndNotNull(config)) {
+    if (config != null) {
       var geomShape = /** @type {string|undefined} */ (config['shape']) || os.style.DEFAULT_SHAPE;
       var shape = os.style.SHAPES[geomShape];
       if (shape && shape['config'] && shape['config']['image']) {
@@ -189,13 +196,12 @@ plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.buildStylePreview = 
 
       // create our actual style to be used for the render call
       var style = os.style.StyleManager.getInstance().getOrCreateStyle(config);
-      if (goog.isDefAndNotNull(style)) {
+      if (style != null) {
         var imageStyle = style.getImage();
         var imageState = imageStyle.getImageState();
 
         if (imageState < ol.ImageState.LOADED) {
           // icon isn't loaded yet, so load it now
-
 
           if (imageState == ol.ImageState.IDLE) {
             imageStyle.load();
@@ -213,7 +219,6 @@ plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.buildStylePreview = 
   }
 };
 
-
 /**
  * Create the preview for a label action
  * @param {plugin.im.action.feature.LabelAction} labelAction
@@ -225,10 +230,9 @@ plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.buildLabelPreview = 
   this.labelCanvas.setAttribute('class', 'labelCanvas');
   this.labelCanvas.height = 24;
   this.labelCanvas.width = 150;
-  this.labelCanvas.style.setProperty('vertical-align', 'middle');
 
   // only add this to the applicable action
-  var query = '.filter-action-row:has(option[selected=\'selected\'][value=\'string:featureLabelAction\'])';
+  var query = '.js-filter-action__controls:has(option[selected=\'selected\'][value=\'string:featureLabelAction\'])';
   var curContainer = this.element.find(query);
   curContainer.append(this.labelCanvas);
 
@@ -244,13 +248,13 @@ plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.buildLabelPreview = 
     });
     var lConfig = /** @type {!Object} */ (os.object.unsafeClone(labelAction.labelConfig));
 
-    if (goog.isDefAndNotNull(lConfig)) {
+    if (lConfig != null) {
       var labelColor = os.style.toRgbaString(lConfig['color'] || os.style.DEFAULT_LAYER_COLOR);
       // var labelSize = parseInt(lConfig['size'], 10) || os.style.label.DEFAULT_SIZE;
       var labels = /** @type {Array<!os.style.label.LabelConfig>} */ (os.object.unsafeClone(lConfig['labels']));
       labels = os.style.label.filterValid(labels);
       // update label fields on the feature if there is at least one valid label config defined
-      if (goog.isDefAndNotNull(labels) && labels.length > 0) {
+      if (labels != null && labels.length > 0) {
         // get the existing feature config or create a new one
         var featureConfig = /** @type {Object|undefined} */ (feature.get(os.style.StyleType.FEATURE)) || {};
         // apply label config but change the label to be something generic
@@ -272,7 +276,7 @@ plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.buildLabelPreview = 
         // grab the label style
         os.style.setFeatureStyle(feature);
         var styleArr = /** @type {Array<!ol.style.Style>} */ (feature.getStyle());
-        if (goog.isDefAndNotNull(styleArr) && styleArr.length > 1) {
+        if (styleArr != null && styleArr.length > 1) {
           // only showing the first one since we are just previewing the style
           labelRender.drawFeature(feature, styleArr[1]);
         }
@@ -280,7 +284,6 @@ plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.buildLabelPreview = 
     }
   }
 };
-
 
 /**
  * Handler for when we receive notice that an image loaded
@@ -295,7 +298,6 @@ plugin.im.action.feature.ui.onImageChange_ = function() {
     os.dispatcher.dispatchEvent(os.ui.im.action.EventType.UPDATE);
   }
 };
-
 
 /**
  * Create/edit a feature action entry. If no entry is provided, a new one will be created.

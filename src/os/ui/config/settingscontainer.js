@@ -1,6 +1,7 @@
 goog.provide('os.ui.config.SettingsContainerCtrl');
 goog.provide('os.ui.config.SettingsContainerDirective');
 goog.require('os.ui.config.AbstractSettingsCtrl');
+goog.require('os.ui.config.settingsWindowDirective');
 
 
 /**
@@ -8,12 +9,9 @@ goog.require('os.ui.config.AbstractSettingsCtrl');
  * @return {angular.Directive}
  */
 os.ui.config.settingsContainerDirective = function() {
-  return {
-    restrict: 'E',
-    templateUrl: os.ROOT + 'views/config/settingscontainer.html',
-    controller: os.ui.config.SettingsContainerCtrl,
-    controllerAs: 'setCon'
-  };
+  var dir = os.ui.config.settingsWindowDirective();
+  dir.controller = os.ui.config.SettingsContainerCtrl;
+  return dir;
 };
 
 

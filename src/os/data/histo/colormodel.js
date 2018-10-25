@@ -6,6 +6,7 @@ goog.require('os.IPersistable');
 goog.require('os.color');
 goog.require('os.data.FeatureEvent');
 goog.require('os.data.FeatureEventType');
+goog.require('os.data.histo');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.histo');
 goog.require('os.histo.bin');

@@ -16,9 +16,9 @@ os.ui.muteButtonDirective = function() {
     scope: true,
     controller: os.ui.MuteButtonCtrl,
     controllerAs: 'ctrl',
-    template: '<button class="btn btn-default no-text" ng-click="ctrl.toggle()"' +
+    template: '<button class="btn btn-secondary" ng-click="ctrl.toggle()"' +
       ' title="{{mute ? \'Unmute\': \'Mute\'}}">' +
-      '<i class="fa {{mute ? \'fa-volume-off\' : \'fa-volume-up\'}}" style="width:1em"></i>' +
+      '<i class="fa fa-fw {{mute ? \'fa-volume-off\' : \'fa-volume-up\'}}"></i>' +
       '</button>'
   };
 };
@@ -47,12 +47,12 @@ os.ui.MuteButtonCtrl = function($scope) {
 
 /**
  * Toggles mute
+ * @export
  */
 os.ui.MuteButtonCtrl.prototype.toggle = function() {
   var am = os.audio.AudioManager.getInstance();
   am.setMute(!am.getMute());
   this.scope['mute'] = am.getMute();
 };
-goog.exportProperty(os.ui.MuteButtonCtrl.prototype, 'toggle', os.ui.MuteButtonCtrl.prototype.toggle);
 
 

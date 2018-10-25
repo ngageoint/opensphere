@@ -18,27 +18,33 @@ goog.require('os.ol.control.MousePosition');
 os.control.getControls = function() {
   var controls = [];
 
-  var scaleLine_ = new os.control.ScaleLine({
+  var scaleLine = new os.control.ScaleLine({
+    className: 'ol-scale-line',
     target: document.getElementById('scale-line')
   });
-  controls.push(scaleLine_);
+  var el = scaleLine.getElement();
+  el.className += ' position-relative';
+  controls.push(scaleLine);
 
   var mousePositionEle = document.getElementById('mouse-position');
   if (mousePositionEle) {
     var mousePositionControl = new os.ol.control.MousePosition({
       projection: os.proj.EPSG4326,
-      className: 'mouse-position',
+      className: 'ol-mouse-position',
       target: mousePositionEle,
       undefinedHTML: '&nbsp;',
       useSettings: true
     });
-
+    el = mousePositionControl.getElement();
+    el.className += ' position-relative';
     controls.push(mousePositionControl);
   }
 
   var zoomLevel = new os.control.ZoomLevel({
     target: document.getElementById('zoom-level')
   });
+  el = zoomLevel.getElement();
+  el.className += ' position-relative';
   controls.push(zoomLevel);
 
   var zoomCtrl = new os.control.Zoom();

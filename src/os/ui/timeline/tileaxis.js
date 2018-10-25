@@ -73,7 +73,7 @@ os.ui.timeline.TileAxis.prototype.initSVG = function(container, height) {
   }
 
   var group = /** @type {d3.Selection} */ (container.append('g'));
-  group.attr('class', 'axis tile-axis').call(this.axis_);
+  group.attr('class', 'axis c-svg-timeline__tile-axis').call(this.axis_);
 };
 
 
@@ -81,13 +81,13 @@ os.ui.timeline.TileAxis.prototype.initSVG = function(container, height) {
  * @inheritDoc
  */
 os.ui.timeline.TileAxis.prototype.render = function(opt_height) {
-  if (goog.isDef(opt_height)) {
+  if (opt_height !== undefined) {
     this.axis_.tickSize(-opt_height, -opt_height);
   }
 
   this.axis_.tickValues(this.getTicks());
 
-  var group = d3.select('.tile-axis');
+  var group = d3.select('.c-svg-timeline__tile-axis');
   group.call(/** @type {Function} */ (this.axis_));
 };
 

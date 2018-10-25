@@ -1,7 +1,7 @@
-<div id="time-help" class="window-content-wrapper">
-  <div class="window-content">
+<div id="time-help" class="flex-fill w-100 d-flex flex-column">
+  <div class="modal-body container flex-fill">
     <h5>Year, Month, and Day Tokens</h5>
-    <table class="table table-bordered table-striped table-condensed">
+    <table class="table table-bordered table-striped table-sm">
       <thead>
         <tr>
           <th>Input</th>
@@ -57,9 +57,9 @@
         </tr>
       </tbody>
     </table>
-    
+
     <h5>Week year, Week, and Weekday tokens</h5>
-    <table class="table table-bordered table-striped table-condensed">
+    <table class="table table-bordered table-striped table-sm">
       <thead>
         <tr>
           <th>Input</th>
@@ -110,9 +110,9 @@
         </tr>
       </tbody>
     </table>
-    
+
     <h5>Hour, Minute, Second, Millisecond, and Offset Tokens</h5>
-    <table class="table table-bordered table-striped table-condensed">
+    <table class="table table-bordered table-striped table-sm">
       <thead>
         <tr>
           <th>Input</th>
@@ -170,9 +170,10 @@
       </tbody>
     </table>
   </div>
-  <div class="window-footer">
-    <div class="pull-right">
-      <button class="btn btn-default" ng-click="th.close()"><i class="btn-icon fa fa-check"></i> Close</button>
-    </div>
+  <div class="modal-footer d-flex">
+    <button class="btn btn-primary" ng-click="th.close()">
+      <i class="fa fa-check"></i>
+      Close
+    </button>
   </div>
 </div>

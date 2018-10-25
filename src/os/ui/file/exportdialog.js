@@ -12,6 +12,7 @@ goog.require('os.ui.window');
  */
 os.ui.file.exportDialogDirective = function() {
   return {
+    replace: true,
     restrict: 'E',
     templateUrl: os.ROOT + 'views/file/exportdialog.html',
     controller: os.ui.file.ExportDialogCtrl,
@@ -102,7 +103,7 @@ os.ui.file.ExportDialogCtrl = function($scope, $element, $compile) {
   }
 
   // add application-specific UI
-  var customContainer = this.element.find('.custom-ui');
+  var customContainer = this.element.find('.js-custom-ui');
   var customOptions = this.getCustomOptions();
   if (customOptions) {
     customContainer.html(customOptions);
@@ -111,7 +112,7 @@ os.ui.file.ExportDialogCtrl = function($scope, $element, $compile) {
     customContainer.remove();
   }
 
-  $scope.$emit('window.ready');
+  $scope.$emit(os.ui.WindowEventType.READY);
   $scope.$watch('exporter', this.onExporterChange.bind(this));
   $scope.$watch('persister', this.onPersisterChange.bind(this));
   $scope.$on('$destroy', this.destroy.bind(this));
@@ -132,6 +133,7 @@ os.ui.file.ExportDialogCtrl.prototype.destroy = function() {
 /**
  * Get the label for the exporter.
  * @return {?string}
+ * @export
  */
 os.ui.file.ExportDialogCtrl.prototype.getExporterLabel = function() {
   if (this.scope && this.scope['exporter']) {
@@ -140,15 +142,12 @@ os.ui.file.ExportDialogCtrl.prototype.getExporterLabel = function() {
 
   return null;
 };
-goog.exportProperty(
-    os.ui.file.ExportDialogCtrl.prototype,
-    'getExporterLabel',
-    os.ui.file.ExportDialogCtrl.prototype.getExporterLabel);
 
 
 /**
  * Get the options UI for the exporter.
  * @return {?string}
+ * @export
  */
 os.ui.file.ExportDialogCtrl.prototype.getExporterUI = function() {
   if (this.scope && this.scope['exporter']) {
@@ -157,10 +156,6 @@ os.ui.file.ExportDialogCtrl.prototype.getExporterUI = function() {
 
   return null;
 };
-goog.exportProperty(
-    os.ui.file.ExportDialogCtrl.prototype,
-    'getExporterUI',
-    os.ui.file.ExportDialogCtrl.prototype.getExporterUI);
 
 
 /**
@@ -174,6 +169,16 @@ os.ui.file.ExportDialogCtrl.prototype.getCustomOptions = function() {
 
 
 /**
+ * Get the keys
+ * @param {Object} obj
+ * @return {Array} The custom options UI as HTML
+ * @export
+ */
+os.ui.file.ExportDialogCtrl.prototype.getKeys = function(obj) {
+  return obj != null ? Object.keys(obj) : [];
+};
+
+/**
  * Handle exporter change.
  * @param {os.ex.IExportMethod=} opt_new The new value
  * @param {os.ex.IExportMethod=} opt_old The old value
@@ -184,7 +189,7 @@ os.ui.file.ExportDialogCtrl.prototype.onExporterChange = function(opt_new, opt_o
     this.options.exporter = opt_new;
 
     // remove the old export ui
-    var uiContainer = this.element.find('.export-ui-container');
+    var uiContainer = this.element.find('.js-export-ui__container');
     uiContainer.children().remove();
 
     // and drop in the new one
@@ -212,23 +217,21 @@ os.ui.file.ExportDialogCtrl.prototype.onPersisterChange = function(opt_new, opt_
 
 /**
  * Fire the cancel callback and close the window.
+ * @export
  */
 os.ui.file.ExportDialogCtrl.prototype.cancel = function() {
   this.close_();
 };
-goog.exportProperty(
-    os.ui.file.ExportDialogCtrl.prototype,
-    'cancel',
-    os.ui.file.ExportDialogCtrl.prototype.cancel);
 
 
 /**
  * Fire the confirmation callback and close the window.
+ * @export
  */
 os.ui.file.ExportDialogCtrl.prototype.confirm = function() {
-  goog.asserts.assert(goog.isDefAndNotNull(this.options.exporter), 'exporter is not defined');
-  goog.asserts.assert(goog.isDefAndNotNull(this.options.persister), 'persister is not defined');
-  goog.asserts.assert(goog.isDefAndNotNull(this.options.title), 'export title is null');
+  goog.asserts.assert(this.options.exporter != null, 'exporter is not defined');
+  goog.asserts.assert(this.options.persister != null, 'persister is not defined');
+  goog.asserts.assert(this.options.title != null, 'export title is null');
   goog.asserts.assert(this.options.items.length > 0, 'no items to export');
   goog.asserts.assert(this.options.fields.length > 0, 'no fields defined on export');
 
@@ -236,10 +239,6 @@ os.ui.file.ExportDialogCtrl.prototype.confirm = function() {
       this.options.exporter, this.options.persister);
   this.close_();
 };
-goog.exportProperty(
-    os.ui.file.ExportDialogCtrl.prototype,
-    'confirm',
-    os.ui.file.ExportDialogCtrl.prototype.confirm);
 
 
 /**

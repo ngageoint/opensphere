@@ -42,7 +42,7 @@ plugin.arc.layer.ArcFeatureLayerConfig.prototype.createLayer = function(options)
   source.setId(this.id);
   source.setRequest(this.getRequest(options));
   source.setImporter(this.getImporter(options));
-  source.setTimeEnabled(goog.isDef(this.animate) ? this.animate : false);
+  source.setTimeEnabled(this.animate !== undefined ? this.animate : false);
   source.setTitle(this.title);
 
   var layer = this.getLayer(source, options);
@@ -55,9 +55,9 @@ plugin.arc.layer.ArcFeatureLayerConfig.prototype.createLayer = function(options)
     this.fixFeatureTypeColumns(layer, options, featureType);
   }
 
-  var useFilter = goog.isDefAndNotNull(options['filter']) ? options['filter'] : false;
-  var useSpatial = goog.isDefAndNotNull(options['spatial']) ? options['spatial'] : false;
-  var useTemporal = goog.isDefAndNotNull(options['temporal']) ? options['temporal'] : false;
+  var useFilter = options['filter'] != null ? options['filter'] : false;
+  var useSpatial = options['spatial'] != null ? options['spatial'] : false;
+  var useTemporal = options['temporal'] != null ? options['temporal'] : false;
 
   if (useFilter || useSpatial || useTemporal) {
     if (useFilter) {

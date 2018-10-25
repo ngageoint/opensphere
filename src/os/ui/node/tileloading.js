@@ -13,7 +13,7 @@ os.ui.node.tileLoadingDirective = function() {
   return {
     restrict: 'AE',
     replace: true,
-    template: '<span class="tile-loading"></span>',
+    template: '<span></span>',
     controller: os.ui.node.TileLoadingCtrl,
     controllerAs: 'tileLoading'
   };

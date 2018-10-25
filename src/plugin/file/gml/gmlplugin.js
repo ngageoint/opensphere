@@ -2,7 +2,6 @@ goog.provide('plugin.file.gml.GMLPlugin');
 
 goog.require('os.data.DataManager');
 goog.require('os.data.ProviderEntry');
-goog.require('os.file.FileManager');
 goog.require('os.layer.config.LayerConfigManager');
 goog.require('os.plugin.AbstractPlugin');
 goog.require('os.ui.im.ImportManager');
@@ -12,7 +11,7 @@ goog.require('plugin.file.gml.GMLLayerConfig');
 goog.require('plugin.file.gml.GMLMixin');
 goog.require('plugin.file.gml.GMLParser');
 goog.require('plugin.file.gml.GMLProvider');
-goog.require('plugin.file.gml.GMLTypeMethod');
+goog.require('plugin.file.gml.mime');
 
 
 
@@ -53,23 +52,18 @@ plugin.file.gml.GMLPlugin.prototype.init = function() {
       plugin.file.gml.GMLPlugin.ID,
       plugin.file.gml.GMLProvider,
       plugin.file.gml.GMLPlugin.TYPE,
-      plugin.file.gml.GMLPlugin.TYPE,
-      ''));
+      plugin.file.gml.GMLPlugin.TYPE));
 
   // register the gml descriptor type
   dm.registerDescriptorType(this.id, plugin.file.gml.GMLDescriptor);
 
   // register the gml layer config
   var lcm = os.layer.config.LayerConfigManager.getInstance();
-  lcm.registerLayerConfig('GML', plugin.file.gml.GMLLayerConfig);
-
-  // register the gml file type method
-  var fm = os.file.FileManager.getInstance();
-  fm.registerContentTypeMethod(new plugin.file.gml.GMLTypeMethod());
+  lcm.registerLayerConfig(this.id, plugin.file.gml.GMLLayerConfig);
 
   // register the gml import ui
   var im = os.ui.im.ImportManager.getInstance();
-  im.registerImportDetails('GML', true);
-  im.registerImportUI('gml', new plugin.file.gml.GMLImportUI());
-  im.registerParser('gml', plugin.file.gml.GMLParser);
+  im.registerImportDetails(this.id.toUpperCase(), true);
+  im.registerImportUI(plugin.file.gml.mime.TYPE, new plugin.file.gml.GMLImportUI());
+  im.registerParser(this.id, plugin.file.gml.GMLParser);
 };

@@ -176,7 +176,7 @@ describe('os.state.v2.TimeState', function() {
 
     // Add a fakey-fake timeline element to the DOM. The time state checks this to determine whether the
     // timeline is open and we want to simulate that state.
-    var fakeTimeline = os.xml.appendElement('div', document.body, null, {'id': 'timeline-container'});
+    var fakeTimeline = os.xml.appendElement('div', document.body, null, {'class': 'js-timeline'});
     state.saveInternal(options, rootObj);
 
     expect(goog.dom.getChildren(rootObj).length).toBe(7);

@@ -21,7 +21,7 @@ os.ui.animationSettingsDirective = function() {
     restrict: 'AE',
     replace: true,
     scope: true,
-    templateUrl: os.ROOT + 'views/windows/animation.html',
+    templateUrl: os.ROOT + 'views/windows/animationsettings.html',
     controller: os.ui.AnimationSettingsCtrl,
     controllerAs: 'animationCtrl'
   };
@@ -85,12 +85,12 @@ os.ui.AnimationSettingsCtrl = function($scope, $element) {
   $scope.$watch('loopEnd', this.onLoopDatesChange.bind(this));
   $scope.$on('$destroy', this.onDestroy.bind(this));
 
-  $scope['loopStartTip'] = 'The start of the time range used to animate data.';
-  $scope['loopEndTip'] = 'The end of the time range used to animate data.';
+  $scope['loopRangeTip'] = 'The time range used to animate data.';
   $scope['tilesTip'] = 'The size of each tile frame.';
   $scope['windowTip'] = 'The size of the blue active window.';
   $scope['skipTip'] = 'The amount of time that the active window skips forward or back with each frame.';
   $scope['fadeTip'] = 'Fade in/out features based on the size of your timeline window and scroll direction.';
+  $scope['lockTip'] = 'During animation this causes the visible window to lock from the start point.';
 
   /**
    * @type {!goog.events.KeyHandler}
@@ -181,21 +181,19 @@ os.ui.AnimationSettingsCtrl.prototype.populate = function() {
   this.scope['durations'] = ['day', 'week', 'month', 'year'];
   this.scope['units'] = os.ui.AnimationSettingsCtrl.UNITS;
   this.scope['fade'] = tlc.getFade();
+  this.scope['lock'] = tlc.getLock();
 };
 
 
 /**
  * If there is a conflict that will change manually defined animation ranges.
  * @return {boolean}
+ * @export
  */
 os.ui.AnimationSettingsCtrl.prototype.hasMultipleRanges = function() {
   var tlc = os.time.TimelineController.getInstance();
   return tlc.getAnimationRanges().length > 1;
 };
-goog.exportProperty(
-    os.ui.AnimationSettingsCtrl.prototype,
-    'hasMultipleRanges',
-    os.ui.AnimationSettingsCtrl.prototype.hasMultipleRanges);
 
 
 /**
@@ -205,11 +203,11 @@ goog.exportProperty(
  * @protected
  */
 os.ui.AnimationSettingsCtrl.prototype.onLoopDatesChange = function(newValue, oldValue) {
-  if (goog.isString(this.scope['loopStart'])) {
+  if (typeof this.scope['loopStart'] === 'string') {
     this.loopStart = os.time.parse(this.scope['loopStart'], null, true);
   }
 
-  if (goog.isString(this.scope['loopEnd'])) {
+  if (typeof this.scope['loopEnd'] === 'string') {
     this.loopEnd = os.time.parse(this.scope['loopEnd'], null, true);
   }
 
@@ -219,7 +217,7 @@ os.ui.AnimationSettingsCtrl.prototype.onLoopDatesChange = function(newValue, old
 
 /**
  * Sets the auto configuration
- * @protected
+ * @export
  */
 os.ui.AnimationSettingsCtrl.prototype.autoConfigure = function() {
   if (this.scope['autoConfig']) {
@@ -241,8 +239,6 @@ os.ui.AnimationSettingsCtrl.prototype.autoConfigure = function() {
     }
   }
 };
-goog.exportProperty(os.ui.AnimationSettingsCtrl.prototype, 'onAutoChange',
-    os.ui.AnimationSettingsCtrl.prototype.autoConfigure);
 
 
 /**
@@ -324,13 +320,18 @@ os.ui.AnimationSettingsCtrl.prototype.getLoopEnd = function() {
 
 /**
  * Apply the settings
+ * @export
  */
 os.ui.AnimationSettingsCtrl.prototype.accept = function() {
   var tlc = os.time.TimelineController.getInstance();
 
-  if (this.scope['fade'] != tlc.getFade()) {
-    // turn fade on/off (this will reset feature opacity if needed)
+  if (this.scope['fade'] != tlc.getFade()) { // turn fade on/off (this will reset feature opacity if needed)
     tlc.setFade(this.scope['fade']);
+  }
+
+  if (this.scope['lock'] != tlc.getLock()) { // turn lock on/off
+    tlc.setLock(this.scope['lock']);
+    os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Timeline.LOCK, 1);
   }
 
   // TODO animation ranges
@@ -362,26 +363,24 @@ os.ui.AnimationSettingsCtrl.prototype.accept = function() {
   /** @type {os.ui.timeline.TimelineCtrl} */ (this.scope['timeline']).zoomToExtent([tlc.getStart(), tlc.getEnd()]);
   this.cancel();
 };
-goog.exportProperty(os.ui.AnimationSettingsCtrl.prototype, 'accept', os.ui.AnimationSettingsCtrl.prototype.accept);
 
 
 /**
  * Cancel/Close
+ * @export
  */
 os.ui.AnimationSettingsCtrl.prototype.cancel = function() {
   os.ui.window.close(this.element);
 };
-goog.exportProperty(os.ui.AnimationSettingsCtrl.prototype, 'cancel', os.ui.AnimationSettingsCtrl.prototype.cancel);
 
 
 /**
  * Handles the ui fade checkbox toggle
+ * @export
  */
 os.ui.AnimationSettingsCtrl.prototype.onFadeChange = function() {
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Timeline.FADE, 1);
 };
-goog.exportProperty(os.ui.AnimationSettingsCtrl.prototype, 'onFadeChange',
-    os.ui.AnimationSettingsCtrl.prototype.onFadeChange);
 
 
 /**

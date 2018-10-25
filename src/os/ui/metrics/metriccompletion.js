@@ -14,7 +14,7 @@ os.ui.metrics.metricCompletionDirective = function() {
   return {
     restrict: 'AE',
     replace: true,
-    template: '<span class="metric-completion" style="padding-left:5px" ng-style="mc.style" ' +
+    template: '<span class="pl-1 c-slick-grid__hover-color" ng-style="mc.style" ' +
         'ng-bind-html="mc.getCompleted()" />',
     controller: os.ui.metrics.MetricCompletionCtrl,
     controllerAs: 'mc'
@@ -67,6 +67,7 @@ os.ui.metrics.MetricCompletionCtrl.prototype.onDestroy_ = function() {
 
 /**
  * @return {string}
+ * @export
  */
 os.ui.metrics.MetricCompletionCtrl.prototype.getCompleted = function() {
   try {
@@ -88,10 +89,6 @@ os.ui.metrics.MetricCompletionCtrl.prototype.getCompleted = function() {
 
   return '';
 };
-goog.exportProperty(
-    os.ui.metrics.MetricCompletionCtrl.prototype,
-    'getCompleted',
-    os.ui.metrics.MetricCompletionCtrl.prototype.getCompleted);
 
 
 /**

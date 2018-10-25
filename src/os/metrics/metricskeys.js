@@ -50,6 +50,7 @@ os.metrics.keys.Timeline = {
 
   // settings
   FADE: 'timeline.features.settings-fade',
+  LOCK: 'timeline.features.settings-lock',
   TIME_RANGE: 'timeline.features.settings-timeRange',
 
   // statistics
@@ -192,7 +193,8 @@ os.metrics.keys.Descriptor = {
 os.metrics.keys.Settings = {
   RESET_SETTINGS: 'settings.reset',
   STORAGE_REMOTE: 'settings.storage.remote',
-  STORAGE_LOCAL: 'settings.storage.local'
+  STORAGE_LOCAL: 'settings.storage.local',
+  SWITCH_PROJECTION: 'settings.projectionSwitch'
 };
 
 

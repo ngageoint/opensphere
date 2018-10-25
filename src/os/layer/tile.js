@@ -276,6 +276,42 @@ os.layer.Tile.prototype.getColor = function() {
   return null;
 };
 
+/**
+ * Get the brightness for the tile layer.
+ * @return {number}
+ * @override
+ */
+os.layer.Tile.prototype.getBrightness = function() {
+  if (this.layerOptions_) {
+    return /** @type {number} */ (this.layerOptions_['brightness'] || 0);
+  }
+  return 0;
+};
+
+/**
+ * Get the brightness for the tile layer.
+ * @override
+ * @return {number}
+ */
+os.layer.Tile.prototype.getContrast = function() {
+  if (this.layerOptions_ && this.layerOptions_['contrast'] != null) {
+    return /** @type {number} */ (this.layerOptions_['contrast']);
+  }
+  return 1;
+};
+
+/**
+ * Get the saturation for the tile layer.
+ * @override
+ * @return {number}
+ */
+os.layer.Tile.prototype.getSaturation = function() {
+  if (this.layerOptions_ && this.layerOptions_['saturation'] != null) {
+    return /** @type {number} */ (this.layerOptions_['saturation']);
+  }
+  return 1;
+};
+
 
 /**
  * Get the whether the tile layer is being colorized.
@@ -326,6 +362,72 @@ os.layer.Tile.prototype.setColor = function(value, opt_options) {
   }
 };
 
+/**
+ * Adjust the layer brightness.  A value of -1 will render the layer completely
+ * black.  A value of 0 will leave the brightness unchanged.  A value of 1 will
+ * render the layer completely white.  Other values are linear multipliers on
+ * the effect (values are clamped between -1 and 1).
+ *
+ * @override
+ * @param {number} value The brightness of the layer (values clamped between -1 and 1)
+ * @param {Object=} opt_options The layer options to use
+ */
+os.layer.Tile.prototype.setBrightness = function(value, opt_options) {
+  goog.asserts.assert(value >= -1 && value <= 1, 'brightness is not between -1 and 1');
+  os.layer.Tile.base(this, 'setBrightness', value);
+  var options = opt_options || this.layerOptions_;
+  if (options) {
+    options['brightness'] = value;
+    this.updateColorFilter();
+    this.updateIcons_();
+    os.style.notifyStyleChange(this);
+  }
+};
+
+/**
+ * Adjust the layer contrast.  A value of 0 will render the layer completely
+ * grey.  A value of 1 will leave the contrast unchanged.  Other values are
+ * linear multipliers on the effect (and values over 1 are permitted).
+ *
+ * @override
+ * @param {number} value The contrast of the layer (values clamped between 0 and 2)
+ * @param {Object=} opt_options The layer options to use
+ */
+os.layer.Tile.prototype.setContrast = function(value, opt_options) {
+  goog.asserts.assert(value >= 0 && value <= 2, 'contrast is not between 0 and 2');
+  os.layer.Tile.base(this, 'setContrast', value);
+  var options = opt_options || this.layerOptions_;
+  if (options) {
+    options['contrast'] = value;
+    this.updateColorFilter();
+    this.updateIcons_();
+    os.style.notifyStyleChange(this);
+  }
+};
+
+/**
+ * Adjust layer saturation.  A value of 0 will render the layer completely
+ * unsaturated.  A value of 1 will leave the saturation unchanged.  Other
+ * values are linear multipliers of the effect (and values over 1 are
+ * permitted).
+ *
+ * @override
+ * @param {number} value The saturation of the layer (values clamped between 0 and 1)
+ * @param {Object=} opt_options The layer options to use
+ */
+os.layer.Tile.prototype.setSaturation = function(value, opt_options) {
+  goog.asserts.assert(value >= 0, 'saturation is greater than 0');
+  os.layer.Tile.base(this, 'setSaturation', value);
+  var options = opt_options || this.layerOptions_;
+  if (options) {
+    options['saturation'] = value;
+    this.updateColorFilter();
+    this.updateIcons_();
+    os.style.notifyStyleChange(this);
+  }
+};
+
+
 
 /**
  * Updates the color filter, either adding or removing depending on whether the layer is colored to a non-default
@@ -335,7 +437,8 @@ os.layer.Tile.prototype.setColor = function(value, opt_options) {
 os.layer.Tile.prototype.updateColorFilter = function() {
   var source = this.getSource();
   if (source instanceof ol.source.TileImage) {
-    if (this.getColorize() || !os.color.equals(this.getColor(), this.getDefaultColor())) {
+    if (this.getColorize() || !os.color.equals(this.getColor(), this.getDefaultColor()) ||
+        this.getBrightness() != 0 || this.getContrast() != 1 || this.getSaturation() != 1) {
       // put the colorFilter in place if we are colorized or the current color is different from the default
       source.addTileFilter(this.colorFilter_);
     } else {
@@ -354,16 +457,21 @@ os.layer.Tile.prototype.updateColorFilter = function() {
 os.layer.Tile.prototype.applyColors = function(data) {
   var srcColor = this.getDefaultColor() || '#fffffe';
   var tgtColor = this.getColor() || '#fffffe';
+  var brightness = this.getBrightness();
+  var contrast = this.getContrast();
+  var saturation = this.getSaturation();
   var colorize = this.getColorize();
-  if (colorize || !os.color.equals(srcColor, tgtColor)) {
+  if (colorize || !os.color.equals(srcColor, tgtColor) ||
+    this.getBrightness() != 0 || this.getContrast() != 1 || this.getSaturation() != 1) {
     if (tgtColor) {
       if (colorize) {
         // colorize will set all of the colors to the target
         os.color.colorize(data, tgtColor);
-      } else {
+      } else if (!os.color.equals(srcColor, tgtColor)) {
         // transformColor blends between the src and target color, leaving densitization intact
         os.color.transformColor(data, srcColor, tgtColor);
       }
+      os.color.adjustColor(data, brightness, contrast, saturation);
     }
   }
 };
@@ -439,12 +547,10 @@ os.layer.Tile.prototype.setStyle = function(value) {
 
   this.style_ = value;
 
-  try {
-    var source = /** @type {os.source.IStyle} */ (this.getSource());
-    source.setStyle(value);
-
+  var source = this.getSource();
+  if (os.implements(source, os.source.IStyle.ID)) {
+    /** @type {os.source.IStyle} */ (source).setStyle(value);
     os.style.notifyStyleChange(this);
-  } catch (e) {
   }
 };
 
@@ -457,7 +563,7 @@ os.layer.Tile.prototype.getIcons = function() {
 
   var html = '';
   if (this.error_) {
-    html += '<i class="fa fa-warning orange-icon" title="There were errors accessing the tiles for this layer"></i>';
+    html += '<i class="fa fa-warning text-warning" title="There were errors accessing the tiles for this layer"></i>';
   }
 
   var layerColor = this.getColor();
@@ -747,6 +853,12 @@ os.layer.Tile.prototype.getGroupUI = function() {
 os.layer.Tile.prototype.supportsAction = function(type, opt_actionArgs) {
   if (os.action) {
     switch (type) {
+      case os.action.EventType.GOTO:
+        var projExtent = os.map.PROJECTION.getExtent();
+        var layerExtent = os.fn.reduceExtentFromLayers(/** @type {!ol.Extent} */ (ol.extent.createEmpty()), this);
+        var projArea = ol.extent.getArea(projExtent);
+        var layerArea = ol.extent.getArea(layerExtent);
+        return !ol.extent.isEmpty(layerExtent) && layerArea / projArea < 0.8;
       case os.action.EventType.IDENTIFY:
       case os.action.EventType.REFRESH:
       case os.action.EventType.SHOW_DESCRIPTION:
@@ -756,7 +868,7 @@ os.layer.Tile.prototype.supportsAction = function(type, opt_actionArgs) {
       case os.action.EventType.MOST_RECENT:
         // only enable if descriptor exists and max date is greater than 0
         var desc = os.dataManager.getDescriptor(this.getId());
-        if (goog.isDefAndNotNull(desc)) {
+        if (desc != null) {
           var maxDate = desc.getMaxDate();
           return maxDate > 0 && maxDate < os.time.TimeInstant.MAX_TIME;
         }
@@ -831,13 +943,17 @@ os.layer.Tile.prototype.persist = function(opt_to) {
   // we now store min and max zoom rather than resolution because the resolutions can change
   // drastically if the user or admin switches the default projection (resulting in the layer
   // being basically invisible)
-  var mm = os.MapContainer.getInstance();
-  opt_to['maxZoom'] = mm.resolutionToZoom(this.getMinResolution());
-  opt_to['minZoom'] = mm.resolutionToZoom(this.getMaxResolution());
+  var tilegrid = this.getSource().getTileGrid();
+
+  var config = this.getLayerOptions();
+  var offset = /** @type {number} */ (config ? config['zoomOffset'] || 0 : 0);
+
+  opt_to['maxZoom'] = Math.min(os.map.MAX_ZOOM, tilegrid.getZForResolution(this.getMinResolution()) - offset);
+  opt_to['minZoom'] = Math.max(os.map.MIN_ZOOM, tilegrid.getZForResolution(this.getMaxResolution()) - offset);
 
   var style = this.getStyle();
   if (style) {
-    opt_to['style'] = goog.isString(style) ? style : style.data;
+    opt_to['style'] = typeof style === 'string' ? style : style.data;
   }
 
   var source = this.getSource();
@@ -904,26 +1020,36 @@ os.layer.Tile.prototype.restore = function(config) {
     this.setColorize(colorize);
   }
 
-  if (goog.isDef(config['refreshInterval'])) {
+  if (config['refreshInterval'] !== undefined) {
     var source = this.getSource();
     if (source && source instanceof ol.source.UrlTile) {
       source.setRefreshInterval(/** @type {number} */ (config['refreshInterval']));
     }
   }
 
-  var mm = os.MapContainer.getInstance();
-  if (config['minZoom']) {
-    this.setMaxResolution(mm.zoomToResolution(config['minZoom']));
+  // A layer's min/max resolution depends directly on its own tile grid.
+  //
+  // Do not use MapContainer.zoomToResolution here. That is for overall map/view
+  // purposes and not for individual layers, which may have discrete tile matrices.
+  var offset = config['zoomOffset'] || 0;
+  var grid = this.getSource().getTileGrid();
+  var tgMin = grid.getMinZoom();
+  var tgMax = grid.getMaxZoom();
+
+  if (config['minZoom'] != null) {
+    var z = Math.min(tgMax, Math.max(tgMin, Math.round(config['minZoom']) + offset));
+    this.setMaxResolution(this.getSource().getTileGrid().getResolution(z));
   }
 
-  if (config['maxZoom']) {
-    this.setMinResolution(mm.zoomToResolution(config['maxZoom']));
+  if (config['maxZoom'] != null) {
+    z = Math.min(tgMax, Math.max(tgMin, Math.round(config['maxZoom']) + offset));
+    this.setMinResolution(this.getSource().getTileGrid().getResolution(z));
   }
 
   var style = config['style'] || '';
   var currStyle = this.getStyle();
 
-  if (!currStyle || (goog.isString(currStyle) && style != currStyle) || style != currStyle.data) {
+  if (!currStyle || (typeof currStyle === 'string' && style != currStyle) || style != currStyle.data) {
     this.setStyle(style);
   }
 };

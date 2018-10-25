@@ -71,44 +71,21 @@ os.ui.layer.IconStyleControlsCtrl.prototype.disposeInternal = function() {
 
 /**
  * Toggle the Show Rotation.
- * @protected
+ * @export
  */
 os.ui.layer.IconStyleControlsCtrl.prototype.toggleShowRotation = function() {
-  this.scope['showRotation'] = !this.scope['showRotation'];
-  this.onShowRotation();
-};
-goog.exportProperty(
-    os.ui.layer.IconStyleControlsCtrl.prototype,
-    'toggleShowRotation',
-    os.ui.layer.IconStyleControlsCtrl.prototype.toggleShowRotation);
-
-
-/**
- * Handles changes to showing rotation
- * @protected
- */
-os.ui.layer.IconStyleControlsCtrl.prototype.onShowRotation = function() {
   if (this.scope) {
     this.scope.$emit(os.ui.layer.VectorStyleControlsEventType.SHOW_ROTATION_CHANGE, this.scope['showRotation']);
   }
 };
-goog.exportProperty(
-    os.ui.layer.IconStyleControlsCtrl.prototype,
-    'onShowRotation',
-    os.ui.layer.IconStyleControlsCtrl.prototype.onShowRotation);
-
 
 
 /**
  * Handles column changes to the rotation
- * @protected
+ * @export
  */
 os.ui.layer.IconStyleControlsCtrl.prototype.onRotationColumnChange = function() {
   if (this.scope) {
     this.scope.$emit(os.ui.layer.VectorStyleControlsEventType.ROTATION_COLUMN_CHANGE, this.scope['rotationColumn']);
   }
 };
-goog.exportProperty(
-    os.ui.layer.IconStyleControlsCtrl.prototype,
-    'onRotationColumnChange',
-    os.ui.layer.IconStyleControlsCtrl.prototype.onRotationColumnChange);

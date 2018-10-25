@@ -1,6 +1,6 @@
 goog.provide('os.ui.column.mapping.ColumnMappingExportCtrl');
 goog.provide('os.ui.column.mapping.columnMappingExportDirective');
-goog.require('os.column.ColumnMappingTypeMethod');
+goog.require('os.file.mime.columnmapping');
 goog.require('os.file.persist.FilePersistence');
 goog.require('os.ui.Module');
 
@@ -87,6 +87,7 @@ os.ui.column.mapping.ColumnMappingExportCtrl = function($scope, $element) {
   // this['persisters'][urlPersister.getLabel()] = urlPersister;
   this['persister'] = filePersister;
 
+  this.scope_.$emit(os.ui.WindowEventType.READY);
   $scope.$on('$destroy', this.onDestroy_.bind(this));
 };
 
@@ -110,6 +111,7 @@ os.ui.column.mapping.ColumnMappingExportCtrl.prototype.onDestroy_ = function() {
 
 /**
  * Exports the mappings.
+ * @export
  */
 os.ui.column.mapping.ColumnMappingExportCtrl.prototype.accept = function() {
   var method = this['persister'];
@@ -122,22 +124,15 @@ os.ui.column.mapping.ColumnMappingExportCtrl.prototype.accept = function() {
   }
   content += '</' + os.column.ColumnMappingTag.COLUMN_MAPPINGS + '>';
 
-  method.save(title, content, os.column.ColumnMappingTypeMethod.CONTENT_TYPE);
+  method.save(title, content, os.file.mime.columnmapping.TYPE);
   this.close();
 };
-goog.exportProperty(
-    os.ui.column.mapping.ColumnMappingExportCtrl.prototype,
-    'accept',
-    os.ui.column.mapping.ColumnMappingExportCtrl.prototype.accept);
 
 
 /**
  * Close the window
+ * @export
  */
 os.ui.column.mapping.ColumnMappingExportCtrl.prototype.close = function() {
   os.ui.window.close(this.element_);
 };
-goog.exportProperty(
-    os.ui.column.mapping.ColumnMappingExportCtrl.prototype,
-    'close',
-    os.ui.column.mapping.ColumnMappingExportCtrl.prototype.close);

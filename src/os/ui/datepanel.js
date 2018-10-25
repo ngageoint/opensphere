@@ -15,6 +15,7 @@ goog.require('os.ui.popover.popoverDirective');
 os.ui.datePanelDirective = function() {
   return {
     restrict: 'AE',
+    replace: true,
     scope: true,
     templateUrl: os.ROOT + 'views/datepanel.html',
     controller: os.ui.DatePanelCtrl,
@@ -86,35 +87,34 @@ os.ui.DatePanelCtrl = function($scope) {
 
 /**
  * Shows the time slicer or not
+ * @export
  */
 os.ui.DatePanelCtrl.prototype.toggleExtend = function() {
   this['extended'] = !this['extended'];
-  var menuEl = angular.element('#slice-panel');
-  menuEl.toggle();
+
   if (!this['extended']) {
     this.applySlice();
   }
 };
-goog.exportProperty(os.ui.DatePanelCtrl.prototype, 'toggleExtend', os.ui.DatePanelCtrl.prototype.toggleExtend);
 
 
 /**
  * Opens timeline
+ * @export
  */
 os.ui.DatePanelCtrl.prototype.expand = function() {
   os.dispatcher.dispatchEvent(new os.ui.events.UIEvent(os.ui.events.UIEventType.TOGGLE_UI, 'timeline'));
 };
-goog.exportProperty(os.ui.DatePanelCtrl.prototype, 'expand', os.ui.DatePanelCtrl.prototype.expand);
 
 
 /**
  * Update the offset if it changes
  * @return {string}
+ * @export
  */
 os.ui.DatePanelCtrl.prototype.getOffset = function() {
   return 'UTC' + (os.time.timeOffsetLabel == 'Z' ? '+0000' : os.time.timeOffsetLabel);
 };
-goog.exportProperty(os.ui.DatePanelCtrl.prototype, 'getOffset', os.ui.DatePanelCtrl.prototype.getOffset);
 
 
 /**
@@ -123,6 +123,7 @@ goog.exportProperty(os.ui.DatePanelCtrl.prototype, 'getOffset', os.ui.DatePanelC
  * @param {number} min
  * @param {number} max
  * @param {number} oldVal
+ * @export
  */
 os.ui.DatePanelCtrl.prototype.onChange = function(varName, min, max, oldVal) {
   if (this[varName] != undefined) {
@@ -136,11 +137,11 @@ os.ui.DatePanelCtrl.prototype.onChange = function(varName, min, max, oldVal) {
   }
   this['active'] = false;
 };
-goog.exportProperty(os.ui.DatePanelCtrl.prototype, 'onChange', os.ui.DatePanelCtrl.prototype.onChange);
 
 
 /**
  * Turns on/off time slice requests
+ * @export
  */
 os.ui.DatePanelCtrl.prototype.applySlice = function() {
   var rangeSet = new goog.math.RangeSet();
@@ -157,38 +158,35 @@ os.ui.DatePanelCtrl.prototype.applySlice = function() {
     this.tlc_.setSliceRanges(rangeSet);
   }
 };
-goog.exportProperty(os.ui.DatePanelCtrl.prototype, 'applySlice', os.ui.DatePanelCtrl.prototype.applySlice);
 
 
 /**
  * Turns on time slice requests if they are in use
+ * @export
  */
 os.ui.DatePanelCtrl.prototype.applySliceIfActive = function() {
   if (this['active']) {
     this.applySlice();
   }
 };
-goog.exportProperty(os.ui.DatePanelCtrl.prototype,
-    'applySliceIfActive',
-    os.ui.DatePanelCtrl.prototype.applySliceIfActive);
 
 
 /**
  * Turns off slicing
+ * @export
  */
 os.ui.DatePanelCtrl.prototype.cancelSlice = function() {
   this.toggleExtend();
 };
-goog.exportProperty(os.ui.DatePanelCtrl.prototype, 'cancelSlice', os.ui.DatePanelCtrl.prototype.cancelSlice);
 
 
 /**
  * Validates slice
  * @return {boolean}
+ * @export
  */
 os.ui.DatePanelCtrl.prototype.sliceValid = function() {
   var start = this['startHour'] * 60 + this['startMinute'];
   var end = this['endHour'] * 60 + this['endMinute'];
   return start < end;
 };
-goog.exportProperty(os.ui.DatePanelCtrl.prototype, 'sliceValid', os.ui.DatePanelCtrl.prototype.sliceValid);

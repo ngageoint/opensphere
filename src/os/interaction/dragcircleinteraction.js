@@ -5,6 +5,7 @@ goog.require('ol');
 goog.require('os.I3DSupport');
 goog.require('os.MapEvent');
 goog.require('os.geo');
+goog.require('os.implements');
 goog.require('os.map');
 goog.require('os.ui.ol.interaction.DragCircle');
 
@@ -23,7 +24,7 @@ os.interaction.DragCircle = function() {
   this.circle2D.setUnits(os.unit.UnitManager.getInstance().getSelectedSystem());
 };
 goog.inherits(os.interaction.DragCircle, os.ui.ol.interaction.DragCircle);
-
+os.implements(os.interaction.DragCircle, os.I3DSupport.ID);
 
 /**
  * @inheritDoc

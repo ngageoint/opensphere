@@ -82,7 +82,7 @@ os.command.EditLayerFeatures.prototype.revert = function() {
  */
 os.command.EditLayerFeatures.prototype.add_ = function() {
   var layer = /** @type {os.layer.Vector} */ (os.MapContainer.getInstance().getLayer(this.layerId_));
-  if (goog.isDefAndNotNull(layer) && this.features_) {
+  if (layer != null && this.features_) {
     var source = /** @type {os.source.ISource} */ (layer.getSource());
     source.addFeatures(this.features_);
     return true;
@@ -98,7 +98,7 @@ os.command.EditLayerFeatures.prototype.add_ = function() {
  */
 os.command.EditLayerFeatures.prototype.remove_ = function() {
   var layer = /** @type {os.layer.Vector} */ (os.MapContainer.getInstance().getLayer(this.layerId_));
-  if (goog.isDefAndNotNull(layer)) {
+  if (layer != null) {
     var source = /** @type {os.source.ISource} */ (layer.getSource());
     if (source) {
       // TODO: when OL3 gets its act together and has a removeFeatures() method to go along with

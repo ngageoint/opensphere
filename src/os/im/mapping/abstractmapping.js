@@ -16,6 +16,12 @@ goog.require('os.xml');
  */
 os.im.mapping.AbstractMapping = function() {
   /**
+   * @type {string|undefined}
+   * @protected
+   */
+  this.id = undefined;
+
+  /**
    * The type attribute value for the root XML node.
    * @type {!string}
    */
@@ -53,7 +59,7 @@ os.im.mapping.AbstractMapping.prototype.autoDetect = function(items) {
  * @inheritDoc
  */
 os.im.mapping.AbstractMapping.prototype.getId = function() {
-  return undefined;
+  return this.id;
 };
 
 
@@ -99,7 +105,7 @@ os.im.mapping.AbstractMapping.prototype.execute = goog.abstractMethod;
  * @inheritDoc
  */
 os.im.mapping.AbstractMapping.prototype.testField = function(value) {
-  return goog.isDefAndNotNull(value);
+  return value != null;
 };
 
 

@@ -25,7 +25,8 @@ os.config.namespace.CORE_KEYS = [
   'search.recent',
   'storage.writeType',
   'storage.introLastSeen',
-  'userSounds'
+  'userSounds',
+  'theme'
 ];
 
 

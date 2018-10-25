@@ -24,7 +24,7 @@ function append(el, msg, test) {
     li.innerHTML = (test ? '/' : 'X') + ' ' + msg;
   } else {
     li.innerHTML = msg;
-    li.className = test ? 'found' : 'missing';
+    li.className = test ? 'js-found' : 'js-missing';
   }
   el.appendChild(li);
   return test;
@@ -58,14 +58,14 @@ function runBrowserCheck() {
  */
 function populateCheckInfo(doSpin) {
   showBrowserWaitSpin(false);
-  var el = document.getElementById('fullList');
+  var el = document.getElementsByClassName('js-full-list')[0];
   var html = document.getElementsByTagName('html')[0];
   if (el && html) {
     var result = getModernizrValues();
     el.innerHTML = result != '' ? result : 'no capabilities found';
     toggleFullList(true);
   }
-  var ul = document.getElementById('checks');
+  var ul = document.getElementsByClassName('js-checks')[0];
   if (ul) { // do each check and add the result
     append(ul, 'Canvas render - draws graphics like the map',
         typeof (Modernizr) != 'undefined' && Modernizr.canvas);
@@ -82,7 +82,7 @@ function populateCheckInfo(doSpin) {
     append(ul, 'Webworkers - allows tasks to run in the background',
         typeof (Modernizr) != 'undefined' && Modernizr.webworkers);
   }
-  var result = document.getElementById('report');
+  var result = document.getElementsByClassName('js-report')[0];
   if (result) {
     var report = 'Unsupported Browser!';
     if (checkVersion()) {
@@ -111,8 +111,8 @@ function checkCompat() {
  * @return {boolean}
  */
 function checkVersion() {
-  return typeof (platform) != 'undefined' && ((platform.name == 'Chrome' && parseFloat(platform.version) >= 29) ||
-      (platform.name == 'Firefox' && parseFloat(platform.version) >= 28));
+  return typeof (platform) != 'undefined' && ((platform.name == 'Chrome' && parseFloat(platform.version) >= 35) ||
+      (platform.name == 'Firefox' && parseFloat(platform.version) >= 38));
 }
 
 
@@ -133,6 +133,7 @@ function getModernizrValues() {
   return result;
 }
 
+
 /**
  * extracts all info from config
  * @return {string}
@@ -151,6 +152,7 @@ function getConfig() {
   return parsed;
 }
 
+
 /**
  * extracts contact info from config and put it in the DOM
  */
@@ -158,18 +160,21 @@ function setContactInfo() {
   var parsed = getConfig();
   var browserPage = '';
   if (parsed) {
-    var contactEl = document.getElementById('contactInfo');
-    if (parsed && parsed['admin']) {
-      browserPage = parsed['admin']['browserPage'];
-
-      if (contactEl) {
-        var link = parsed['admin']['supportWebsite'];
-        var text = parsed['admin']['supportWebsiteText'];
-        if (link && text) {
-          contactEl.setAttribute('href', link);
-          contactEl.className = 'btn btn btn-default';
-          contactEl.innerHTML = text;
-        }
+    var contactEl = document.getElementsByClassName('js-contact-info')[0];
+    if (parsed && parsed['admin'] && contactEl) {
+      var a = document.createElement('a');
+      var strong = document.createElement('strong');
+      strong.innerText = 'Help: ';
+      var link = parsed['admin']['supportWebsite'];
+      var text = parsed['admin']['supportWebsiteText'];
+      if (link && text) {
+        contactEl.appendChild(strong);
+        contactEl.appendChild(document.createElement('br'));
+        a.setAttribute('href', link);
+        a.className = 'btn btn-info';
+        a.innerHTML = text;
+        contactEl.appendChild(a);
+        contactEl.appendChild(document.createElement('p'));
       }
     }
   }
@@ -193,9 +198,9 @@ function setContactInfo() {
     setWarn('');
   } else {
     var minSupportInfo = '<strong>Recommended Browsers:</strong>' +
-      '<ul>' +
-      '<li>Google Chrome version 35+</li>' +
-      '<li>Mozilla Firefox version 31+</li>' +
+      '<ul class="u-bullet">' +
+      '<li>Google Chrome version 60+</li>' +
+      '<li>Mozilla Firefox version 57+</li>' +
       '</ul>' +
       '<p>If you do not have one of these browsers installed, contact your local IT department for help.</p>';
 
@@ -204,9 +209,10 @@ function setContactInfo() {
     }
     setWarn(minSupportInfo);
   }
-  var browserInfo = document.getElementById('browserInfo');
+  var browserInfo = document.getElementsByClassName('js-browser-info')[0];
   if (browserInfo && typeof (platform) != 'undefined') {
-    browserInfo.innerHTML = platform.name + ' Version ' + platform.version + ' detected';
+    browserInfo.innerHTML = '<ul><li class="' + (checkVersion() ? 'js-found' : 'js-missing' ) + '">' +
+        platform.name + ' Version ' + platform.version + ' detected</li></ul>';
   }
 }
 
@@ -217,7 +223,7 @@ function setContactInfo() {
  * @param {string=} opt_msg2
  */
 function setWarn(msg1, opt_msg2) {
-  var minBrowserEl = document.getElementById('minBrowserMsg');
+  var minBrowserEl = document.getElementsByClassName('js-min-browser-msg')[0];
   if (minBrowserEl) {
     while (minBrowserEl.hasChildNodes()) {
       minBrowserEl.removeChild(minBrowserEl.firstChild);
@@ -241,7 +247,7 @@ function setWarn(msg1, opt_msg2) {
  * @param {boolean} doSpin
  */
 function showBrowserWaitSpin(doSpin) {
-  var spin = document.getElementById('browerCheckWait');
+  var spin = document.getElementsByClassName('js-browser-check-wait')[0];
   if (spin) {
     spin.style.display = doSpin ? '' : 'none';
   }
@@ -252,14 +258,14 @@ function showBrowserWaitSpin(doSpin) {
  * removes test results and reruns browser check
  */
 function retryBrowserCheck() {
-  var ul = document.getElementById('checks');
+  var ul = document.getElementsByClassName('js-checks')[0];
   if (ul) {
     while (ul.hasChildNodes()) {
       ul.removeChild(ul.firstChild);
     }
   }
   showBrowserWaitSpin(true);
-  var result = document.getElementById('report');
+  var result = document.getElementsByClassName('js-report')[0];
   if (result) {
     result.innerHTML = '';
   }
@@ -272,7 +278,7 @@ function retryBrowserCheck() {
  * @param {boolean=} opt_hide
  */
 function toggleFullList(opt_hide) {
-  var el = document.getElementById('fullList');
+  var el = document.getElementsByClassName('js-full-list')[0];
   if (el) {
     el.style.display = opt_hide ? 'none' : el.style.display == 'none' ? '' : 'none';
   }

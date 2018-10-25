@@ -16,10 +16,6 @@ goog.require('os.geo.jsts');
 goog.require('os.map');
 goog.require('os.map.IMapContainer');
 goog.require('os.mixin.geometry');
-goog.require('os.storage');
-goog.require('os.storage.AsyncStorageWrapper');
-goog.require('os.storage.HTML5LocalStorage');
-goog.require('os.storage.IDBStorage');
 goog.require('os.style.area');
 goog.require('os.ui.window');
 
@@ -62,12 +58,7 @@ os.ui.query.AreaManager = function() {
    */
   this.saveDelay_ = new goog.async.Delay(this.save, 100, this);
 
-  /**
-   * @type {os.storage.AsyncStorage<Object>}
-   * @protected
-   */
-  this.storage = new os.storage.IDBStorage(os.SHARED_STORE_NAME, os.SHARED_DB_NAME);
-  this.storage.init().addCallbacks(this.onStorageReady, this.onStorageError, this);
+  this.load();
 };
 goog.inherits(os.ui.query.AreaManager, os.data.CollectionManager);
 goog.addSingletonGetter(os.ui.query.AreaManager);
@@ -117,83 +108,6 @@ os.ui.query.AreaManager.tempId_ = 1;
 
 
 /**
- * Handle successful IndexedDB storage initialization.
- * @protected
- */
-os.ui.query.AreaManager.prototype.onStorageReady = function() {
-  this.migrateAreasFromLsToIdb_();
-  this.migrateAreasFromIdbToSettings_().addCallbacks(this.load, this.onStorageError, this);
-};
-
-
-/**
- * Migrate areas from localStorage to IndexedDb
- * @private
- */
-os.ui.query.AreaManager.prototype.migrateAreasFromLsToIdb_ = function() {
-  // look for areas in local storage first and add them to the manager
-  var oldStorage = new os.storage.HTML5LocalStorage();
-  var oldAreas = oldStorage.get(os.AREA_STORAGE_KEY);
-  if (oldAreas) {
-    try {
-      var format = new ol.format.GeoJSON();
-      var areas = /** @type {Array<!ol.Feature>} */ (format.readFeatures(oldAreas));
-      if (areas) {
-        goog.log.info(this.log, 'Migrating ' + areas.length + ' areas from local storage to IndexedDB.');
-        this.bulkAdd(areas);
-      }
-    } catch (e) {
-      goog.log.error(this.log, 'Failed migrating old areas from local storage!', e);
-    }
-
-    // remove the old value so it won't be handled again and we can free up some space
-    oldStorage.remove(os.AREA_STORAGE_KEY);
-  }
-};
-
-
-/**
- * Migrate areas from localStorage to IndexedDb
- * @return {goog.async.Deferred}
- * @private
- */
-os.ui.query.AreaManager.prototype.migrateAreasFromIdbToSettings_ = function() {
-  return this.storage.get(os.AREA_STORAGE_KEY)
-      .addCallbacks(this.onMigrateAreasLoaded_, this.onStorageError, this);
-};
-
-
-/**
- * Handle deferred callback of areas loaded from async storage device.  Persist them to settings service
- * @param {Object} obj
- * @private
- */
-os.ui.query.AreaManager.prototype.onMigrateAreasLoaded_ = function(obj) {
-  if (obj) {
-    os.settings.set(os.AREA_STORAGE_KEY, obj);
-  }
-  if (this.storage) {
-    // clear this storage key out of the old storage, DO NOT CLEAR IT!!!!!!
-    this.storage.remove(os.AREA_STORAGE_KEY).addCallback(this.storage.dispose, this.storage);
-  }
-};
-
-
-/**
- * Handle IndexedDB storage error, degrading to using local storage.
- * @param {goog.db.Error} error The error.
- * @protected
- */
-os.ui.query.AreaManager.prototype.onStorageError = function(error) {
-  if (this.storage) {
-    this.storage.dispose();
-    this.storage = new os.storage.AsyncStorageWrapper(new os.storage.HTML5LocalStorage());
-    this.load();
-  }
-};
-
-
-/**
  * Handles map ready
  * @private
  */
@@ -207,7 +121,7 @@ os.ui.query.AreaManager.prototype.onMapReady_ = function() {
     // transform it
     feature.getGeometry().osTransform(this.loadProj_);
     var show = /** @type {boolean} */ (feature.get('shown'));
-    this.toggle(feature, goog.isDef(show) ? show : true);
+    this.toggle(feature, show !== undefined ? show : true);
   }
 
   var qm = os.ui.query.QueryManager.getInstance();
@@ -291,7 +205,7 @@ os.ui.query.AreaManager.prototype.bulkAdd = function(features, opt_show) {
  * @inheritDoc
  */
 os.ui.query.AreaManager.prototype.add = function(feature) {
-  goog.asserts.assert(goog.isDef(feature), 'Cannot add null/undefined feature');
+  goog.asserts.assert(feature !== undefined, 'Cannot add null/undefined feature');
 
   if (!feature.getId()) {
     feature.setId(os.ui.query.AreaManager.FEATURE_PREFIX + goog.string.getRandomString());
@@ -407,9 +321,9 @@ os.ui.query.AreaManager.prototype.addInternal = function(feature, opt_bulk) {
       if (this.mapReady_) {
         var show = /** @type {boolean} */ (feature.get('shown'));
         if (bulk) {
-          this.showHideFeature(feature, goog.isDef(show) ? show : true);
+          this.showHideFeature(feature, show !== undefined ? show : true);
         } else {
-          this.toggle(feature, goog.isDef(show) ? show : true);
+          this.toggle(feature, show !== undefined ? show : true);
         }
       }
       return true;
@@ -433,7 +347,7 @@ os.ui.query.AreaManager.prototype.showHideFeature = function(idOrFeature, opt_to
   var feature = this.get(idOrFeature);
 
   if (feature) {
-    var show = goog.isDef(opt_toggle) ? opt_toggle : !this.getMap().containsFeature(feature);
+    var show = opt_toggle !== undefined ? opt_toggle : !this.getMap().containsFeature(feature);
 
     feature.set('shown', show);
     if (show) {
@@ -795,7 +709,7 @@ os.ui.query.AreaManager.save = function(feature, opt_columns) {
     'x': 'center',
     'y': 'center',
     'width': 400,
-    'height': columns ? 245 : 225,
+    'height': 'auto',
     'show-close': true,
     'modal': true
   };

@@ -102,7 +102,7 @@ plugin.suncalc.launch = function(coord) {
   var windowOptions = {
     'id': plugin.suncalc.ID,
     'label': 'Sun and Moon Info',
-    'icon': 'fa fa-sun-o orange-icon',
+    'icon': 'fa fa-sun-o',
     'x': 'center',
     'y': 'center',
     'width': 400,

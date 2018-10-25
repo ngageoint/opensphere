@@ -14,7 +14,7 @@ plugin.suncalc.lightStripDirective = function() {
   return {
     restrict: 'AE',
     replace: true,
-    template: '<canvas class="lightstrip" height="2" width=""></canvas>',
+    template: '<canvas class="position-absolute" height="2" width=""></canvas>',
     controller: plugin.suncalc.LightStripCtrl,
     controllAs: 'ctrl'
   };

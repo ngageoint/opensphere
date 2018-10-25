@@ -248,13 +248,12 @@ os.ui.slick.SlickTreeNode.prototype.setNodetoggleVisible = function(value) {
  * @return {string} An HTML string for the cell
  */
 os.ui.slick.SlickTreeNode.prototype.format = function(row, cell, value) {
-  if (!goog.isDefAndNotNull(value)) {
+  if (value == null) {
     return '';
   }
 
   // this should be floated right so it should come first
-  var html = this.formatNodeUI();
-  html += this.getSpacer(15 * this.depth);
+  var html = this.getSpacer(15 * this.depth);
 
   if (this.nodetoggleVisible_) {
     html += '<nodetoggle></nodetoggle>';
@@ -272,9 +271,10 @@ os.ui.slick.SlickTreeNode.prototype.format = function(row, cell, value) {
   }
 
   html += '<nodespinner></nodespinner>';
-  html += '<nodeicons></nodeicons>';
+  html += '<nodeicons class="flex-shrink-0"></nodeicons>';
 
-  html += this.formatValue(value);
+  html += '<span class="text-truncate flex-fill">' + this.formatValue(value) + '</span>';
+  html += this.formatNodeUI();
   return html;
 };
 
@@ -307,15 +307,15 @@ os.ui.slick.SlickTreeNode.prototype.formatWinLauncher = function() {
  * @return {string} A spacer
  */
 os.ui.slick.SlickTreeNode.prototype.getSpacer = function(opt_width, opt_unit) {
-  if (!goog.isDefAndNotNull(opt_width)) {
+  if (opt_width == null) {
     opt_width = 2;
   }
 
-  if (!goog.isDefAndNotNull(opt_unit)) {
+  if (opt_unit == null) {
     opt_unit = 'px';
   }
 
-  return '<span class="tree-spacer" style="width:' + opt_width + opt_unit + '"></span>';
+  return '<span class="c-slick-tree-node__spacer" style="width:' + opt_width + opt_unit + '"></span>';
 };
 
 
@@ -351,14 +351,11 @@ os.ui.slick.SlickTreeNode.prototype.formatValue = function(value) {
 /**
  * API call to get the HTML for the icons
  * @return {!string} The icon HTML
+ * @export
  */
 os.ui.slick.SlickTreeNode.prototype.getIcons = function() {
   return this.formatIcons();
 };
-goog.exportProperty(
-    os.ui.slick.SlickTreeNode.prototype,
-    'getIcons',
-    os.ui.slick.SlickTreeNode.prototype.getIcons);
 
 
 /**

@@ -2,6 +2,7 @@ goog.provide('os.ui.window.ConfirmTextCtrl');
 goog.provide('os.ui.window.confirmTextDirective');
 
 goog.require('os.ui.Module');
+goog.require('os.ui.util.validationMessageDirective');
 goog.require('os.ui.window');
 goog.require('os.ui.window.confirmDirective');
 
@@ -47,7 +48,7 @@ os.ui.window.ConfirmTextCtrl = function($scope, $element) {
     }
   });
 
-  $scope.$emit('window.ready');
+  $scope.$emit(os.ui.WindowEventType.READY);
 };
 
 
@@ -62,9 +63,11 @@ os.ui.window.launchConfirmText = function(opt_options) {
     'cancelCallback': options.cancel || goog.nullFunction,
     'confirmValue': options.defaultValue,
     'yesText': options.yesText || 'OK',
-    'yesIcon': options.yesIcon || 'fa fa-check lt-blue-icon',
+    'yesIcon': options.yesIcon || 'fa fa-check',
+    'yesButtonClass': options.yesButtonClass || 'btn-primary',
     'noText': options.noText || 'Cancel',
-    'noIcon': options.noIcon || 'fa fa-ban red-icon',
+    'noIcon': options.noIcon || 'fa fa-ban',
+    'noButtonClass': options.noButtonClass || 'btn-secondary',
     'select': !!options.select,
     'limit': options.limit || 200,
 
@@ -80,7 +83,7 @@ os.ui.window.launchConfirmText = function(opt_options) {
     'x': windowOverrides.x || 'center',
     'y': windowOverrides.y || 'center',
     'width': windowOverrides.width || 325,
-    'height': windowOverrides.height || 142,
+    'height': windowOverrides.height || 'auto',
     'modal': windowOverrides.modal != null ? windowOverrides.modal : 'true',
     'show-close': windowOverrides.showClose != null ? windowOverrides.showClose : 'false',
     'no-scroll': windowOverrides.noScroll != null ? windowOverrides.noScroll : 'true'

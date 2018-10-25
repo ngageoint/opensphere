@@ -2,7 +2,9 @@ goog.provide('os.layer');
 goog.provide('os.layer.SynchronizerType');
 
 goog.require('goog.Timer');
+goog.require('goog.color');
 goog.require('goog.log');
+goog.require('os.color');
 goog.require('os.layer.ILayer');
 goog.require('os.layer.config.LayerConfigManager');
 goog.require('os.source.ISource');

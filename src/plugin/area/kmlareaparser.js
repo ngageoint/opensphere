@@ -2,8 +2,11 @@ goog.provide('plugin.area.KMLAreaParser');
 goog.require('ol.format.KML');
 goog.require('ol.xml');
 goog.require('os.data.ColumnDefinition');
+goog.require('os.file.mime.text');
+goog.require('os.file.mime.zip');
 goog.require('os.parse.AsyncParser');
 goog.require('os.parse.IParser');
+goog.require('os.ui.im.mergeAreaOptionDirective');
 
 
 
@@ -68,14 +71,20 @@ plugin.area.KMLAreaParser.prototype.setSource = function(source) {
 
   if (ol.xml.isDocument(source)) {
     this.document_ = /** @type {Document} */ (source);
-  } else if (goog.isString(source)) {
+  } else if (typeof source === 'string') {
     this.document_ = goog.dom.xml.loadXml(source);
   } else if (source instanceof ArrayBuffer) {
-    if (os.file.isZipFile(source)) {
+    if (os.file.mime.zip.isZip(source)) {
       this.handleZIP_(source);
       return;
     } else {
-      this.document_ = goog.dom.xml.loadXml(os.arraybuf.toString(source));
+      var s = os.file.mime.text.getText(source);
+      if (s) {
+        this.document_ = goog.dom.xml.loadXml(s);
+      } else {
+        goog.log.error(this.log_, 'The buffer source does not appear to be text');
+        this.onError();
+      }
     }
   } else if (source instanceof Blob) {
     goog.fs.FileReader.readAsArrayBuffer(source).addCallback(this.setSource, this);
@@ -196,7 +205,7 @@ plugin.area.KMLAreaParser.prototype.processZIPEntry_ = function(filename, conten
 plugin.area.KMLAreaParser.prototype.handleZIPText_ = function(filename, event) {
   var content = event.target.result;
 
-  if (content && goog.isString(content)) {
+  if (content && typeof content === 'string') {
     if (!this.document_) {
       this.setSource(content);
     }
@@ -219,7 +228,7 @@ plugin.area.KMLAreaParser.prototype.cleanup = function() {
  * @inheritDoc
  */
 plugin.area.KMLAreaParser.prototype.hasNext = function() {
-  return goog.isDefAndNotNull(this.document_);
+  return this.document_ != null;
 };
 
 

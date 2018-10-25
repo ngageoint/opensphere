@@ -1,15 +1,14 @@
-<div class="palette" ng-class="{'background': palette.showReset}">
-  <table class="palette-table" cellspacing="0" cellpadding="0">
-    <tbody class="palette-body">
-      <tr class="palette-row" ng-repeat="row in rows">
-        <td class="palette-cell" ng-repeat="color in row" ng-class="{'selected': value === color}">
-          <div class="palette-colorswatch" ng-style="{'background-color': color}" ng-click="palette.pick(color)"
-              title="{{palette.getTitle(color)}}"></div>
+<div class="c-colorpalette" ng-class="{'background': palette.showReset}">
+  <table class="c-colorpalette__table" cellspacing="0" cellpadding="0">
+    <tbody>
+      <tr ng-repeat="row in rows">
+        <td class="c-colorpalette__cell m-0 p-0" ng-repeat="color in row" ng-click="palette.pick(color)" title="{{palette.getTitle(color)}}">
+          <div class="c-colorpalette__colorswatch" ng-class="{'c-colorpalette__selected': value === color}"  ng-style="{'background-color': color}"></div>
         </td>
       </tr>
     </tbody>
   </table>
   <div ng-if="palette.showReset">
-    <button type="button" class="btn btn-default btn-mini" ng-click="palette.reset()">Reset</button>
+    <button type="button" class="btn btn-secondary btn-sm" ng-click="palette.reset()">Reset</button>
   </div>
 </div>

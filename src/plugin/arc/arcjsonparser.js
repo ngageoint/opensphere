@@ -41,6 +41,11 @@ plugin.arc.ArcJSONParser.prototype.disposeInternal = function() {
  */
 plugin.arc.ArcJSONParser.prototype.setSource = function(source) {
   var features = null;
+
+  if (source instanceof ArrayBuffer) {
+    source = os.file.mime.text.getText(source) || null;
+  }
+
   if (typeof source === 'string') {
     var json = JSON.parse(source);
     features = json['features'];
@@ -70,7 +75,7 @@ plugin.arc.ArcJSONParser.prototype.cleanup = function() {
  * @inheritDoc
  */
 plugin.arc.ArcJSONParser.prototype.hasNext = function() {
-  return goog.isDefAndNotNull(this.features_) && this.features_.length > 0;
+  return this.features_ != null && this.features_.length > 0;
 };
 
 

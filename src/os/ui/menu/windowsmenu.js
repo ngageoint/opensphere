@@ -43,7 +43,8 @@ os.ui.menu.windows.configs_ = {};
  * @return {os.ui.menu.MenuItem|undefined}
  */
 os.ui.menu.windows.addWindow = function(id, config, opt_isMajor, opt_func) {
-  if (!os.ui.menu.windows.MENU) {
+  // If theres no menu or this menu is already added
+  if (!os.ui.menu.windows.MENU || os.ui.menu.windows.configs_[id]) {
     return;
   }
 
@@ -112,7 +113,7 @@ os.ui.menu.windows.dispose = function() {
  * @return {boolean} If the open was successful.
  */
 os.ui.menu.windows.openWindow = function(evt) {
-  var id = goog.isString(evt) ? evt : evt.type.split(/\./)[1];
+  var id = typeof evt === 'string' ? evt : evt.type.split(/\./)[1];
 
   if (os.ui.window.exists(id)) {
     os.ui.window.bringToFront(id);

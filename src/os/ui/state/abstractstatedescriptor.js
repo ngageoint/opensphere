@@ -120,6 +120,7 @@ os.ui.state.AbstractStateDescriptor.prototype.activateState = function(opt_file)
     } else {
       this.setLoading(false);
 
+      opt_file.convertContentToString();
       var content = opt_file.getContent();
       goog.asserts.assertString(content, 'State file content must be a string!');
 
@@ -164,7 +165,7 @@ os.ui.state.AbstractStateDescriptor.prototype.onFileReady_ = function(file) {
  */
 os.ui.state.AbstractStateDescriptor.prototype.onFileError_ = function(error) {
   var msg;
-  if (goog.isString(error)) {
+  if (typeof error === 'string') {
     msg = 'Unable to load state file from storage: ' + error;
   } else {
     msg = 'State file not found in local storage!';

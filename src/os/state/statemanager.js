@@ -42,7 +42,7 @@ os.state.StateManager = function() {
       'state',
       os.ui.state.StateProvider,
       'State Files',
-      'Contains all state files', ''));
+      'Contains all state files'));
 
   // register the state descriptor type
   dm.registerDescriptorType('state', os.state.StateDescriptor);

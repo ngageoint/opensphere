@@ -18,7 +18,7 @@ os.ui.slick.slickTreeDirective = function() {
   return {
     restrict: 'AE',
     replace: true,
-    template: '<div class="slick-tree"></div>',
+    template: '<div class="c-slick-tree"></div>',
     scope: {
       /**
        * The data for the tree
@@ -138,7 +138,7 @@ os.ui.slick.SlickTreeCtrl = function($scope, $element, $compile) {
    * @type {string}
    * @private
    */
-  this.checkboxClass_ = $scope['checkboxClass'] || 'tristate';
+  this.checkboxClass_ = $scope['checkboxClass'] || 'c-tristate';
 
   /**
    * The tree's spinner class
@@ -152,7 +152,7 @@ os.ui.slick.SlickTreeCtrl = function($scope, $element, $compile) {
    * @type {string}
    * @private
    */
-  this.winLauncherClass_ = $scope['winLauncherClass'] || 'fa fa-plus';
+  this.winLauncherClass_ = $scope['winLauncherClass'] || 'fa fa-fw fa-plus';
 
   /**
    * @type {?Array}
@@ -167,13 +167,13 @@ os.ui.slick.SlickTreeCtrl = function($scope, $element, $compile) {
   $scope['multiSelect'] = $scope['multiSelect'] == 'true';
 
   // booleans using @ will be true if they're set to anything other than undefined/null
-  $scope['disableFolders'] = goog.isDefAndNotNull($scope['disableFolders']);
-  $scope['showRoot'] = goog.isDefAndNotNull($scope['showRoot']);
-  $scope['noRoot'] = goog.isDefAndNotNull($scope['noRoot']);
+  $scope['disableFolders'] = $scope['disableFolders'] != null;
+  $scope['showRoot'] = $scope['showRoot'] != null;
+  $scope['noRoot'] = $scope['noRoot'] != null;
   if ($scope['noRoot']) {
     $scope['showRoot'] = false;
   }
-  $scope['disposable'] = goog.isDefAndNotNull($scope['disposable']);
+  $scope['disposable'] = $scope['disposable'] != null;
 
   this.grid.onRowRender.subscribe(this.onRowRender.bind(this));
   this.grid.onRowRemove.subscribe(this.onRowRemove.bind(this));
@@ -317,7 +317,7 @@ os.ui.slick.SlickTreeCtrl.prototype.isTreeNode_ = function(node) {
   var element = /** @type {Element} */ (node);
   if (goog.dom.classlist.contains(element, 'ng-scope')) {
     var scope = angular.element(element).scope();
-    return goog.isDefAndNotNull(scope) && 'item' in scope && scope['item'] instanceof os.ui.slick.SlickTreeNode;
+    return scope != null && 'item' in scope && scope['item'] instanceof os.ui.slick.SlickTreeNode;
   }
 
   return false;
@@ -481,7 +481,7 @@ os.ui.slick.SlickTreeCtrl.getVisibleData_ = function(arr, result) {
  */
 os.ui.slick.SlickTreeCtrl.prototype.onItemClick = function(e, args) {
   var item = /** @type {os.ui.slick.SlickTreeNode} */ (this.dataView.getItem(args['row']));
-  if (item && goog.dom.classlist.contains(/** @type {!Element} */ (e.target), 'tree-expand-collapse')) {
+  if (item && goog.dom.classlist.contains(/** @type {!Element} */ (e.target), 'js-node-toggle')) {
     item.setCollapsed(!item.collapsed);
     this.dataView.updateItem(item['id'], item);
     this.scope.$emit('collapseChange');
@@ -594,7 +594,7 @@ os.ui.slick.SlickTreeCtrl.prototype.treeFilter_ = function(item) {
  * @return {string} The HTML for the row
  */
 os.ui.slick.SlickTreeCtrl.prototype.treeFormatter = function(row, cell, value, columnDef, node) {
-  if (!goog.isDefAndNotNull(value)) {
+  if (value == null) {
     value = '';
   }
 
@@ -862,11 +862,13 @@ os.ui.slick.SlickTreeCtrl.prototype.onDrag = function(e, dragInfo) {
       var targetNode = /** @type {os.ui.slick.SlickTreeNode} */ (this.dataView.getItem(insertOn));
       dragInfo['guide'].css('top', (insertBefore + (Math.round(loc) == 0 ? .5 : -.5)) * rowHeight);
       dragInfo['guide'].css('left', (targetNode.getDepth() + 1) * rowWidth);
-      dragInfo['rect'].css('background', 'blue');
+      dragInfo['rect'].removeClass('bg-danger');
+      dragInfo['rect'].addClass('bg-primary');
       dragInfo['canMove'] = true;
     } else {
       dragInfo['guide'].css('top', -1000);
-      dragInfo['rect'].css('background', 'red');
+      dragInfo['rect'].removeClass('bg-primary');
+      dragInfo['rect'].addClass('bg-danger');
       dragInfo['canMove'] = false;
     }
     dragInfo['insertBefore'] = insertOn;
@@ -878,7 +880,8 @@ os.ui.slick.SlickTreeCtrl.prototype.onDrag = function(e, dragInfo) {
       var depth = targetNode ? targetNode.getDepth() : 0;
       dragInfo['guide'].css('top', insertBefore * rowHeight);
       dragInfo['guide'].css('left', (depth + 1) * rowWidth);
-      dragInfo['rect'].css('background', 'blue');
+      dragInfo['rect'].removeClass('bg-danger');
+      dragInfo['rect'].addClass('bg-primary');
       dragInfo['canMove'] = true;
 
       if (targetNode && targetNode.getParentIndex() != currentNode.getParentIndex()) {
@@ -900,7 +903,8 @@ os.ui.slick.SlickTreeCtrl.prototype.onDrag = function(e, dragInfo) {
     } else {
       dragInfo['guide'].css('top', -1000);
       dragInfo['guide'].css('left', 0);
-      dragInfo['rect'].css('background', 'red');
+      dragInfo['rect'].removeClass('bg-primary');
+      dragInfo['rect'].addClass('bg-danger');
       dragInfo['canMove'] = false;
     }
     dragInfo['insertBefore'] = insertBefore;

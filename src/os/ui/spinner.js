@@ -21,7 +21,7 @@ os.ui.spinnerDirective = function() {
       'step': '=?',
       'css': '@'
     },
-    template: '<span ng-form class="spinner-container"><input class="spinner" name="spinner"/></span>',
+    template: '<div ng-form><input class="spinner" name="spinner"/></div>',
     controller: os.ui.SpinnerCtrl
   };
 };
@@ -44,7 +44,7 @@ os.ui.Module.directive('spinner', [os.ui.spinnerDirective]);
 os.ui.SpinnerCtrl = function($scope, $element) {
   var liveUpdate = true;
 
-  if (goog.isDef($scope['live']) && goog.isDef($scope['live']())) {
+  if ($scope['live'] !== undefined && $scope['live']() !== undefined) {
     liveUpdate = $scope['live']();
   }
 
@@ -64,7 +64,7 @@ os.ui.SpinnerCtrl = function($scope, $element) {
     'start': this.killEvent_
   };
 
-  if (goog.isDef($scope['step'])) {
+  if ($scope['step'] !== undefined) {
     options['step'] = $scope['step'];
   }
 
@@ -82,11 +82,12 @@ os.ui.SpinnerCtrl = function($scope, $element) {
   this.scope_ = $scope;
 
   this.spinner_ = $element.find('input');
-  this.spinner_['spinner'](options);
+  this.spinner_.spinner(options);
 
   if ($scope['css']) {
     $element.find('.ui-spinner').addClass($scope['css']);
   }
+  $element.find('.ui-spinner-input').addClass('form-control');
 
   var fn = this.onChange_.bind(this);
   $scope.$watch('value', fn);
@@ -131,15 +132,15 @@ os.ui.SpinnerCtrl.prototype.onChange_ = function(newVal, oldVal) {
     var key = list[i];
 
     if (key in this.scope_) {
-      this.spinner_['spinner']('option', key, this.scope_[key]);
+      this.spinner_.spinner('option', key, this.scope_[key]);
     }
   }
 
-  if (goog.isNull(this.scope_['value'])) {
+  if (this.scope_['value'] === null) {
     this.scope_['value'] = this.scope_['min'] || 0;
   }
 
-  this.spinner_['spinner']('value', this.scope_['value']);
+  this.spinner_.spinner('value', this.scope_['value']);
 
   if (newVal !== oldVal && this.scope_['name'] && this.scope_[this.scope_['name']]) {
     this.scope_[this.scope_['name']].$setDirty();
@@ -154,8 +155,8 @@ os.ui.SpinnerCtrl.prototype.onChange_ = function(newVal, oldVal) {
  * @private
  */
 os.ui.SpinnerCtrl.prototype.onDisabledChange_ = function(opt_new, opt_old) {
-  if (goog.isDef(opt_new)) {
-    this.spinner_['spinner']('option', 'disabled', opt_new);
+  if (opt_new !== undefined) {
+    this.spinner_.spinner('option', 'disabled', opt_new);
   }
 };
 
@@ -167,28 +168,37 @@ os.ui.SpinnerCtrl.prototype.onDisabledChange_ = function(opt_new, opt_old) {
  * @private
  */
 os.ui.SpinnerCtrl.prototype.onSpin_ = function(e, spinner) {
+  // jQuery UI manages the value between max and min so we don't need to
   this.killEvent_(e);
 
-  var faceValue = goog.isDef(spinner['value']) ? spinner['value'] : this.spinner_['spinner']('value');
-  var adjustedValue = goog.math.clamp(faceValue, this.scope_['min'], this.scope_['max']); // keep in valid range
-  if (adjustedValue != this.scope_['value'] || faceValue != adjustedValue) {
-    this.scope_['value'] = faceValue; // set to faceValue so UI can adjust
-    this.scope_.$emit(this.scope_['name'] + '.' + e.type, adjustedValue); // keep advertised value in range
-    os.ui.apply(this.scope_);
-  }
+  var faceValue = spinner['value'] !== undefined ? spinner['value'] : this.spinner_.spinner('value');
+  this.scope_['value'] = faceValue;
+  this.scope_.$emit(this.scope_['name'] + '.' + e.type, faceValue);
+  os.ui.apply(this.scope_);
 };
 
 
 /**
- * Handles the spinner change event for internal value changes (ie, min/max changed)
+ * Handles the spinner change event
  * @param {*} e The event
  * @param {*} spinner The spinner
  * @private
  */
 os.ui.SpinnerCtrl.prototype.onSpinnerChange_ = function(e, spinner) {
-  var value = goog.isDef(spinner['value']) ? spinner['value'] : this.spinner_['spinner']('value');
-  if (value != this.scope_['value']) {
-    this.scope_['value'] = value;
+  var faceValue = spinner['value'] !== undefined ? spinner['value'] : this.spinner_.spinner('value');
+  if (typeof faceValue !== 'number') {
+    faceValue = this.scope_['value'];
+  }
+
+  var adjustedValue = goog.math.clamp(faceValue, this.scope_['min'], this.scope_['max']);
+  if (adjustedValue != this.scope_['value'] || faceValue != adjustedValue) {
+    this.scope_['value'] = adjustedValue;
+    this.scope_.$emit(this.scope_['name'] + '.' + e.type, adjustedValue);
     os.ui.apply(this.scope_);
+  }
+
+  // Ensure ui matches angular's scope
+  if (this.spinner_.spinner('value') != this.scope_['value']) {
+    this.spinner_.spinner('value', this.scope_['value']);
   }
 };

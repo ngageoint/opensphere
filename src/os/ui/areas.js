@@ -16,7 +16,7 @@ goog.require('os.ui.menu.spatial');
 goog.require('os.ui.query.ui.CombinatorCtrl');
 goog.require('os.ui.query.ui.editAreaDirective');
 goog.require('os.ui.slick.AbstractGroupByTreeSearchCtrl');
-goog.require('os.ui.util.autoHeightDirective');
+goog.require('os.ui.urlDragDropDirective');
 
 
 /**
@@ -66,6 +66,12 @@ os.ui.AreasCtrl = function($scope, $element) {
    */
   this.treeSearch = new os.data.AreaTreeSearch('areas', this.scope);
 
+  /**
+   * Bound version of the drag-drop handler.
+   * @type {Function}
+   */
+  this['onDrop'] = this.onDrop_.bind(this);
+
   os.ui.areaManager.listen(goog.events.EventType.PROPERTYCHANGE, this.searchIfAddedOrRemoved_, false, this);
   this.init();
 };
@@ -95,18 +101,19 @@ os.ui.AreasCtrl.prototype.destroy = function() {
 
 /**
  * Launches the advanced combination window
+ * @export
  */
 os.ui.AreasCtrl.prototype.launch = function() {
   os.ui.CombinatorCtrl.launch();
 };
-goog.exportProperty(os.ui.AreasCtrl.prototype, 'launch', os.ui.AreasCtrl.prototype.launch);
 
 
 /**
  * Opens the area import menu.
+ * @export
  */
 os.ui.AreasCtrl.prototype.openImportMenu = function() {
-  var target = this.element.find('.import-group');
+  var target = this.element.find('.js-import-group');
   var menu = os.ui.menu.areaImport.MENU;
   if (menu && target && target.length) {
     menu.open(undefined, {
@@ -116,15 +123,12 @@ os.ui.AreasCtrl.prototype.openImportMenu = function() {
     });
   }
 };
-goog.exportProperty(
-    os.ui.AreasCtrl.prototype,
-    'openImportMenu',
-    os.ui.AreasCtrl.prototype.openImportMenu);
 
 
 /**
  * Disables export button
  * @return {boolean}
+ * @export
  */
 os.ui.AreasCtrl.prototype.exportDisabled = function() {
   if (this.scope['selected']) {
@@ -133,11 +137,11 @@ os.ui.AreasCtrl.prototype.exportDisabled = function() {
     return true;
   }
 };
-goog.exportProperty(os.ui.AreasCtrl.prototype, 'exportDisabled', os.ui.AreasCtrl.prototype.exportDisabled);
 
 
 /**
  * Pop up area export gui
+ * @export
  */
 os.ui.AreasCtrl.prototype.export = function() {
   var areas = /** @type {Array<os.structs.ITreeNode>} */ (this.scope['selected']).map(
@@ -159,19 +163,16 @@ os.ui.AreasCtrl.prototype.export = function() {
 
   os.ui.ex.AreaExportCtrl.start(areas);
 };
-goog.exportProperty(
-    os.ui.AreasCtrl.prototype,
-    'export',
-    os.ui.AreasCtrl.prototype.export);
 
 
 /**
  * Launches the area import window
+ * @param {os.file.File=} opt_file Optional file to use in the import.
+ * @export
  */
-os.ui.AreasCtrl.prototype.import = function() {
-  os.query.launchQueryImport();
+os.ui.AreasCtrl.prototype.import = function(opt_file) {
+  os.query.launchQueryImport(undefined, opt_file);
 };
-goog.exportProperty(os.ui.AreasCtrl.prototype, 'import', os.ui.AreasCtrl.prototype.import);
 
 
 /**
@@ -183,4 +184,26 @@ os.ui.AreasCtrl.prototype.searchIfAddedOrRemoved_ = function(e) {
   if (e && e.getProperty() !== 'toggle') {
     this.search();
   }
+};
+
+
+/**
+ * Handles file drops over the areas tab.
+ * @param {Event} event The drop event.
+ */
+os.ui.AreasCtrl.prototype.onDrop_ = function(event) {
+  if (event.dataTransfer && event.dataTransfer.files) {
+    os.file.createFromFile(/** @type {!File} */ (event.dataTransfer.files[0]))
+        .addCallback(this.import.bind(this), this.onFail_.bind(this));
+  }
+};
+
+
+/**
+ * Handle file drag-drop.
+ * @param {!goog.events.Event|os.file.File} event
+ * @private
+ */
+os.ui.AreasCtrl.prototype.onFail_ = function(event) {
+  os.alertManager.sendAlert('Could not handle file with drag and drop. Try again or use the browse capability.');
 };

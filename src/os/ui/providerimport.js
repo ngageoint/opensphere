@@ -37,7 +37,7 @@ os.ui.ProviderImportCtrl = function($scope, $element) {
 
   this.initialize();
 
-  $scope.$emit('window.ready');
+  $scope.$emit(os.ui.WindowEventType.READY);
 };
 
 
@@ -51,6 +51,7 @@ os.ui.ProviderImportCtrl.prototype.initialize = function() {
 
 /**
  * Save button handler
+ * @export
  */
 os.ui.ProviderImportCtrl.prototype.accept = function() {
   if (!this.scope['form']['$invalid'] && !this.scope['testing']) {
@@ -65,11 +66,11 @@ os.ui.ProviderImportCtrl.prototype.accept = function() {
     }
   }
 };
-goog.exportProperty(os.ui.ProviderImportCtrl.prototype, 'accept', os.ui.ProviderImportCtrl.prototype.accept);
 
 
 /**
  * Closes the window
+ * @export
  */
 os.ui.ProviderImportCtrl.prototype.close = function() {
   if (this.dp) {
@@ -78,7 +79,6 @@ os.ui.ProviderImportCtrl.prototype.close = function() {
 
   os.ui.window.close(this.element);
 };
-goog.exportProperty(os.ui.ProviderImportCtrl.prototype, 'close', os.ui.ProviderImportCtrl.prototype.close);
 
 
 /**

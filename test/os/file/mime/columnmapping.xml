@@ -1,0 +1,5 @@
+<columnmappings>
+  <columnmapping>
+    <column layer="https://bogus.local/someServer!!fake:layer1">columnA</column>
+    <column layer="https://bogus.local/someServer!!fake:layer2">columnB</column>
+

@@ -130,7 +130,7 @@ os.ui.im.FileSupportCtrl = function($scope, $element) {
 
     this.close_();
   } else {
-    $scope.$emit('window.ready');
+    $scope.$emit(os.ui.WindowEventType.READY);
   }
 };
 goog.inherits(os.ui.im.FileSupportCtrl, goog.Disposable);
@@ -152,6 +152,7 @@ os.ui.im.FileSupportCtrl.prototype.disposeInternal = function() {
 
 /**
  * Fire the cancel callback and close the window.
+ * @export
  */
 os.ui.im.FileSupportCtrl.prototype.cancel = function() {
   if (this.cancelCallback_) {
@@ -160,11 +161,11 @@ os.ui.im.FileSupportCtrl.prototype.cancel = function() {
 
   this.close_();
 };
-goog.exportProperty(os.ui.im.FileSupportCtrl.prototype, 'cancel', os.ui.im.FileSupportCtrl.prototype.cancel);
 
 
 /**
  * Fire the confirmation callback and close the window.
+ * @export
  */
 os.ui.im.FileSupportCtrl.prototype.confirm = function() {
   if (this['choice'] === os.ui.im.FileSupportChoice.UPLOAD && os.file.upload.uploadFile != null) {
@@ -175,7 +176,6 @@ os.ui.im.FileSupportCtrl.prototype.confirm = function() {
 
   this.close_();
 };
-goog.exportProperty(os.ui.im.FileSupportCtrl.prototype, 'confirm', os.ui.im.FileSupportCtrl.prototype.confirm);
 
 
 /**
@@ -214,16 +214,17 @@ os.ui.im.launchFileSupport = function(file) {
 
     var windowOptions = {
       'label': 'Unable to Store File',
-      'icon': 'fa fa-exclamation-triangle orange-icon',
+      'headerClass': 'bg-warning u-bg-warning-text',
+      'icon': 'fa fa-warning',
       'x': 'center',
       'y': 'center',
       'width': 550,
       'min-width': 400,
       'max-width': 800,
       'height': 'auto',
-      'modal': 'true',
-      'show-close': 'true',
-      'no-scroll': 'true'
+      'modal': true,
+      'show-close': true,
+      'no-scroll': true
     };
 
     var template = '<filesupport></filesupport>';

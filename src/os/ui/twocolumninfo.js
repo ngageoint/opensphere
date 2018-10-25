@@ -7,7 +7,6 @@ goog.require('os.ui');
 goog.require('os.ui.location.SimpleLocationDirective');
 goog.require('os.ui.slick.formatter');
 goog.require('os.ui.slick.slickGridDirective');
-goog.require('os.ui.util.autoHeightDirective');
 
 
 /**
@@ -39,15 +38,22 @@ os.ui.Module.directive('twocolumninfo', [os.ui.twoColumnInfoDirective]);
 /**
  * Controller function for the featureinfo directive
  * @param {!angular.Scope} $scope
+ * @param {!angular.$timeout} $timeout
  * @constructor
  * @ngInject
  */
-os.ui.TwoColumnInfoCtrl = function($scope) {
+os.ui.TwoColumnInfoCtrl = function($scope, $timeout) {
   /**
    * @type {?angular.Scope}
    * @private
    */
   this.scope_ = $scope;
+
+  /**
+   * @type {?angular.$timeout}
+   * @private
+   */
+  this.timeout_ = $timeout;
 
   /**
    * @type {Array.<Object>}
@@ -95,6 +101,7 @@ os.ui.TwoColumnInfoCtrl = function($scope) {
  */
 os.ui.TwoColumnInfoCtrl.prototype.destroy_ = function() {
   this.scope_ = null;
+  this.timeout_ = null;
 };
 
 
@@ -116,4 +123,8 @@ os.ui.TwoColumnInfoCtrl.prototype.onPropertyChange_ = function(newVal, oldVal) {
     }
     os.ui.apply(this.scope_);
   }
+
+  this.timeout_(function() {
+    this.scope_.$broadcast(os.ui.slick.SlickGridEvent.INVALIDATE_ROWS);
+  }.bind(this));
 };

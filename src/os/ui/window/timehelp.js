@@ -33,7 +33,7 @@ os.ui.window.launchTimeHelp = function() {
   if (!document.getElementById('time-help')) {
     os.ui.window.create({
       'label': 'Custom Date/Time Formats',
-      'icon': 'fa fa-clock-o lt-blue-icon',
+      'icon': 'fa fa-clock-o',
       'x': '-10',
       'y': 'center',
       'width': '445',
@@ -42,8 +42,8 @@ os.ui.window.launchTimeHelp = function() {
       'height': '445',
       'min-height': '250',
       'max-height': '600',
-      'show-close': 'true',
-      'z-index': '10002'
+      'show-close': true,
+      'modal': true
     }, '<timehelp></timehelp>');
   }
 };
@@ -78,11 +78,8 @@ os.ui.window.TimeHelpCtrl.prototype.destroy_ = function() {
 
 /**
  * Close the window
+ * @export
  */
 os.ui.window.TimeHelpCtrl.prototype.close = function() {
   os.ui.window.close(this.element_);
 };
-goog.exportProperty(
-    os.ui.window.TimeHelpCtrl.prototype,
-    'close',
-    os.ui.window.TimeHelpCtrl.prototype.close);

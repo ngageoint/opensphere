@@ -14,7 +14,15 @@ os.ui.modal.create = function(target, markup, opt_scopeOptions) {
 
   ol.obj.assign(scope, opt_scopeOptions);
 
-  $(target).append(/** @type {Element} */ (compile(markup)(scope)[0]));
+  var parent = $(target);
+  parent.append(/** @type {Element} */ (compile(markup)(scope)[0]));
+  if (parent.scope()) {
+    parent.scope().$on('$destroy', function() {
+      // If the parent is being destroyed, make sure the backdrop is removed with it
+      // This case is with a modal open and the back button hit
+      $('body > .modal-backdrop').remove();
+    });
+  }
 };
 
 
@@ -24,7 +32,7 @@ os.ui.modal.create = function(target, markup, opt_scopeOptions) {
  * @param {Object<string, *>=} opt_options
  */
 os.ui.modal.open = function(el, opt_options) {
-  el.modal(opt_options).on('hide', function() {
+  el.modal(opt_options).on('hidden.bs.modal', function() {
     // let the animation complete
     setTimeout(function() {
       // and then remove it

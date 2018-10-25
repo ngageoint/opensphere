@@ -6,6 +6,7 @@ goog.require('os.plugin.AbstractPlugin');
 goog.require('os.plugin.PluginManager');
 goog.require('os.ui.ProviderImportUI');
 goog.require('plugin.tileserver.Tileserver');
+goog.require('plugin.tileserver.mime');
 goog.require('plugin.tileserver.tileserverImportDirective');
 
 
@@ -38,35 +39,16 @@ plugin.tileserver.TileserverPlugin.prototype.init = function() {
       plugin.tileserver.ID,           // the type
       plugin.tileserver.Tileserver,   // the class
       'Tileserver',                   // the title
-      'Tileserver layers',            // the description
-      '<tileserver></tileserver>',    // the import directive
-      plugin.tileserver.isTileServerResponse // the server type detection function
+      'Tileserver layers'             // the description
       ));
 
   dm.registerDescriptorType(os.data.ConfigDescriptor.ID, os.data.ConfigDescriptor);
 
   var im = os.ui.im.ImportManager.getInstance();
-  im.registerImportUI(plugin.tileserver.ID, new os.ui.ProviderImportUI());
-};
-
-
-/**
- * @param {os.file.File} file The file representing the URL and its content
- * @return {number} The score
- */
-plugin.tileserver.isTileServerResponse = function(file) {
-  var score = 0;
-
-  if (file && !os.file.isLocal(file)) {
-    var content = file.getContent();
-    if (goog.isString(content) && /^\s*\[\{.*"tilejson"/.test(content)) {
-      // doesn't really matter as long as it is non-zero, but it could potentially
-      // compete with other detection functions
-      score += 3;
-    }
-  }
-
-  return score;
+  // The argument to ProviderImportUI is the directive. A simple one like this will
+  // be expanded under the hood to '<tileserver></tileserver>'. However, you can
+  // define your own full markup and pass it in if you like.
+  im.registerImportUI(plugin.tileserver.ID, new os.ui.ProviderImportUI('tileserver'));
 };
 
 

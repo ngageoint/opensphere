@@ -23,15 +23,14 @@ os.ui.measureButtonDirective = function() {
     },
     controller: os.ui.MeasureButtonCtrl,
     controllerAs: 'ctrl',
-    template: '<div class="measure-group btn-group" ng-right-click="ctrl.openMenu()">' +
-      '<button class="btn btn-default" id="measureButton" title="Measure between points"' +
+    template: '<div class="btn-group" ng-right-click="ctrl.openMenu()">' +
+      '<button class="btn btn-secondary" id="measureButton" title="Measure between points"' +
       ' ng-click="ctrl.toggle()"' +
       ' ng-class="{active: measuring}">' +
-      '<i class="fa fa-arrows-h"></i> {{showLabel ? \'Measure\' : \'\'}}' +
+      '<i class="fa fa-fw fa-arrows-h"></i> {{showLabel ? \'Measure\' : \'\'}}' +
       '</button>' +
-      '<button class="btn addon" ng-click="ctrl.openMenu()"' +
+      '<button class="btn btn-secondary dropdown-toggle dropdown-toggle-split" ng-click="ctrl.openMenu()"' +
       ' ng-class="{active: menu}">' +
-      '<i class="fa fa-chevron-down"></i>' +
       '</button></div>'
   };
 };
@@ -105,12 +104,13 @@ os.ui.MeasureButtonCtrl.MEASURE = new os.ui.menu.Menu(new os.ui.menu.MenuItem({
 /**
  * @param {boolean=} opt_value The toggle value
  * @override
+ * @export
  */
 os.ui.MeasureButtonCtrl.prototype.toggle = function(opt_value) {
   var measure = this.getMeasureInteraction_();
 
   if (measure) {
-    opt_value = goog.isDef(opt_value) ? opt_value : !measure.getActive();
+    opt_value = opt_value !== undefined ? opt_value : !measure.getActive();
 
     if (opt_value) {
       this.prevActiveMap_ = {};
@@ -143,7 +143,6 @@ os.ui.MeasureButtonCtrl.prototype.toggle = function(opt_value) {
     }
   }
 };
-goog.exportProperty(os.ui.MeasureButtonCtrl.prototype, 'toggle', os.ui.MeasureButtonCtrl.prototype.toggle);
 
 
 /**

@@ -224,7 +224,7 @@ os.ui.ol.OLMap.prototype.addFeatures = function(features) {
 os.ui.ol.OLMap.prototype.removeFeature = function(feature, opt_dispose) {
   if (feature) {
     var source = this.drawingLayer_.getSource();
-    if (goog.isString(feature) || goog.isNumber(feature)) {
+    if (typeof feature === 'string' || typeof feature === 'number') {
       feature = source.getFeatureById(feature);
     } else {
       feature = source.getFeatureById(feature.getId() + '');
@@ -271,13 +271,13 @@ os.ui.ol.OLMap.prototype.getDrawingLayer = function() {
  * @inheritDoc
  */
 os.ui.ol.OLMap.prototype.containsFeature = function(feature) {
-  if (goog.isDefAndNotNull(feature)) {
+  if (feature != null) {
     var layer = this.getDrawingLayer();
 
     if (layer) {
       var source = /** @type {ol.source.Vector} */ (layer.getSource());
 
-      return !!(goog.isString(feature) || goog.isNumber(feature) ? source.getFeatureById(feature) :
+      return !!(typeof feature === 'string' || typeof feature === 'number' ? source.getFeatureById(feature) :
           source.getFeatureById(feature.getId() + ''));
     }
   }
@@ -296,7 +296,7 @@ os.ui.ol.OLMap.prototype.flyToExtent = function(extent, opt_buffer, opt_maxZoom)
   var map = this.getMap();
   if (map) {
     var view = map.getView();
-    goog.asserts.assert(goog.isDef(view));
+    goog.asserts.assert(view !== undefined);
 
     if (extent) {
       if (opt_buffer && opt_buffer > 0) {
@@ -325,14 +325,7 @@ os.ui.ol.OLMap.prototype.getControls_ = function() {
     rotate: false
   });
   var mapControls = [];
-  var scaleLine = new os.control.ScaleLine({
-    target: document.getElementById('scale-line')
-  });
-  var zoomSlider = new ol.control.ZoomSlider();
   var layerSwitcher = new os.ui.ol.control.LayerSwitcher();
-
-  mapControls.push(scaleLine);
-  mapControls.push(zoomSlider);
   mapControls.push(layerSwitcher);
   controls.extend(mapControls);
   return controls;
@@ -428,7 +421,7 @@ os.ui.ol.OLMap.prototype.getLayers_ = function() {
       hasDefault = true;
     }
 
-    layer.setVisible(goog.isDef(layerConfig['isDefault']));
+    layer.setVisible(layerConfig['isDefault'] !== undefined);
     layer.set('title', layerConfig['display']);
     layer.set('type', 'base');
     layers.push(layer);
@@ -454,7 +447,7 @@ os.ui.ol.OLMap.prototype.getLayers_ = function() {
  * @inheritDoc
  */
 os.ui.ol.OLMap.prototype.getLayer = function(layerOrFeature, opt_search, opt_remove) {
-  if (!goog.isDefAndNotNull(opt_remove)) {
+  if (opt_remove == null) {
     opt_remove = false;
   }
 
@@ -469,7 +462,7 @@ os.ui.ol.OLMap.prototype.getLayer = function(layerOrFeature, opt_search, opt_rem
       var item = opt_search.item(i);
 
       try {
-        if (goog.isString(layerOrFeature)) {
+        if (typeof layerOrFeature === 'string') {
           var lid = /** @type {ol.layer.Layer} */ (item).get('id');
           if (lid == layerOrFeature) {
             l = /** @type {ol.layer.Layer} */ (item);

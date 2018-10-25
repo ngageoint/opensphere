@@ -210,6 +210,7 @@ os.data.LayerNode.prototype.formatIcons = function() {
 /**
  * Whether or not the layer is loading
  * @return {boolean}
+ * @export
  */
 os.data.LayerNode.prototype.isLoading = function() {
   if (this.layer_) {
@@ -218,10 +219,6 @@ os.data.LayerNode.prototype.isLoading = function() {
 
   return false;
 };
-goog.exportProperty(
-    os.data.LayerNode.prototype,
-    'isLoading',
-    os.data.LayerNode.prototype.isLoading);
 
 
 /**

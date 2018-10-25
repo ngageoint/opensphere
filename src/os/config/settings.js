@@ -691,7 +691,7 @@ os.config.Settings.prototype.get = function(keys, opt_default) {
       val = goog.object.clone(val);
     }
 
-    return goog.isDef(val) ? val : opt_default;
+    return val !== undefined ? val : opt_default;
   } else {
     throw new Error('Attempted to get a value before settings were loaded!');
   }
@@ -811,7 +811,7 @@ os.config.Settings.prototype.dispatchChange_ = function(keys, newVal, oldVal, op
  * @private
  */
 os.config.Settings.prototype.isAdmin_ = function(keys) {
-  return goog.isDef(goog.object.getValueByKeys(this.actualConfig_[os.config.ConfigType.CONFIG], keys));
+  return goog.object.getValueByKeys(this.actualConfig_[os.config.ConfigType.CONFIG], keys) !== undefined;
 };
 
 
@@ -827,7 +827,7 @@ os.config.Settings.prototype.isAdmin_ = function(keys) {
 os.config.Settings.prototype.markKeysForDelete_ = function(keys, newVal, oldVal) {
   if (goog.typeOf(oldVal) === 'object') {
     var oldObjKeys = goog.object.getKeys(os.object.reduce(oldVal));
-    var newObjKeys = goog.isDefAndNotNull(newVal) ? goog.object.getKeys(os.object.reduce(newVal)) : [];
+    var newObjKeys = newVal != null ? goog.object.getKeys(os.object.reduce(newVal)) : [];
     var keysAsStr = keys.join('.');
     goog.array.forEach(oldObjKeys, function(oldObjKey) {
       if (!goog.array.contains(newObjKeys, oldObjKey)) {

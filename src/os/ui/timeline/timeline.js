@@ -48,7 +48,7 @@ os.ui.timeline.TimelineScaleOptions;
  */
 os.ui.timeline.timelineDirective = function() {
   return {
-    template: '<div id="timeline-container"></div>',
+    template: '<div class="c-timeline js-timeline"></div>',
     restrict: 'AE',
     replace: true,
     scope: {
@@ -122,7 +122,7 @@ os.ui.timeline.normalizeExtent = function(extent) {
   // setting the extent with two dates. In any case, we will normalize that here.
   if (extent) {
     for (var i = 0, n = extent.length; i < n; i++) {
-      extent[i] = goog.isNumber(extent[i]) ? extent[i] : /** @type {Date} */ (extent[i]).getTime();
+      extent[i] = typeof extent[i] === 'number' ? extent[i] : /** @type {Date} */ (extent[i]).getTime();
     }
   }
 
@@ -578,7 +578,7 @@ os.ui.timeline.TimelineCtrl.prototype.destroy_ = function() {
   }
 
   if (this.tooltip_) {
-    d3.selectAll('.timeline-hist-tooltip').remove();
+    d3.selectAll('.c-histogram-tooltip').remove();
     this.tooltip_ = null;
   }
 
@@ -691,9 +691,9 @@ os.ui.timeline.TimelineCtrl.prototype.onViewportResize_ = function(event) {
 
     this.xScale_.range([0, width]);
 
-    var mainGroup = this.baseElement_.select('.svg-timeline-main');
+    var mainGroup = this.baseElement_.select('.c-svg-timeline__main');
 
-    mainGroup.select('.axis-bg').
+    mainGroup.select('.c-svg-timeline__axis-background').
         attr('points', this.getAxisBgPoints_(height - handleHeight, width));
 
     this.drawHistogram_();
@@ -832,7 +832,7 @@ os.ui.timeline.TimelineCtrl.prototype.initSvg = function() {
 
   if (!this.baseElement_) {
     this.baseElement_ = /** @type {d3.Selection} */ (d3.select(this.element_[0]).append('svg')).
-        attr('class', 'svg-timeline');
+        attr('class', 'c-svg-timeline');
   }
 
   var width = this.element_.innerWidth();
@@ -904,7 +904,7 @@ os.ui.timeline.TimelineCtrl.prototype.initSvg = function() {
 
   // draw the background
   var bgGroup = /** @type {d3.Selection} */ (this.baseElement_.append('g')).
-      attr('class', 'timeline-bg');
+      attr('class', 'js-svg-timeline__background-group');
 
   this.baseElement_.call(this.zoom_).
       // on('contextmenu', this.onContextMenu_.bind(this)). // add context menu
@@ -921,7 +921,7 @@ os.ui.timeline.TimelineCtrl.prototype.initSvg = function() {
   this.wheelHandler_.listen(goog.events.MouseWheelHandler.EventType.MOUSEWHEEL, this.onZoom_, false, this);
 
   this.backgroundElement_ = /** @type {d3.Selection} */ (bgGroup.append('rect')).
-      attr('class', 'timeline-background').
+      attr('class', 'c-svg-timeline__background').
       attr('width', '100%').
       attr('height', '100%').
       on(goog.events.EventType.MOUSEDOWN, this.styleDragStart_.bind(this)).
@@ -929,31 +929,31 @@ os.ui.timeline.TimelineCtrl.prototype.initSvg = function() {
       on(goog.events.EventType.MOUSEOUT, this.styleDragEnd_.bind(this));
 
   bgGroup.append('rect').
-      attr('class', 'axis-bg').
+      attr('class', 'c-svg-timeline__axis-background').
       attr('width', '100%').
       attr('height', '' + handleHeight);
 
   var mainGroup = this.baseElement_.append('g').
-      attr('class', 'svg-timeline-main').
+      attr('class', 'c-svg-timeline__main').
       attr('transform', 'translate(0, ' + handleHeight + ')');
 
   mainGroup.append('line').
-      attr('class', 'line').
+      attr('class', 'c-svg-timeline__line').
       attr('x2', '100%').
       attr('y2', 0);
 
   // create the histogram group
-  this.histGroup_ = /** @type {d3.Selection} */ (mainGroup.append('g')).attr('class', 'hist-group');
+  this.histGroup_ = /** @type {d3.Selection} */ (mainGroup.append('g')).attr('class', 'c-histogram-group');
 
   // draw backdrop for the x/y axis
   mainGroup.append('polygon').
       attr('points', this.getAxisBgPoints_(height - handleHeight, width)).
-      attr('class', 'axis-bg');
+      attr('class', 'c-svg-timeline__axis-background');
 
   // initialize the histogram tooltip if the tip function is available
   if (this.scope_['histTip']) {
     this.tooltip_ = d3.tip();
-    this.tooltip_.attr('class', 'timeline-hist-tooltip').offset([-10, 0]).html(this.scope_['histTip']);
+    this.tooltip_.attr('class', 'c-histogram-tooltip').offset([-10, 0]).html(this.scope_['histTip']);
     this.tooltip_(this.baseElement_);
   }
 
@@ -1121,7 +1121,7 @@ os.ui.timeline.TimelineCtrl.prototype.drawHistogram_ = function() {
  * @private
  */
 os.ui.timeline.TimelineCtrl.prototype.zoomBy_ = function(dir, opt_focus) {
-  var center = [goog.isDef(opt_focus) ? opt_focus : this.element_.innerWidth() / 2, 0];
+  var center = [opt_focus !== undefined ? opt_focus : this.element_.innerWidth() / 2, 0];
   var limit = this.zoom_.scaleExtent();
   var translate = this.zoom_.translate();
   var translate0 = [];
@@ -1203,7 +1203,7 @@ os.ui.timeline.TimelineCtrl.prototype.panRight = function() {
 os.ui.timeline.TimelineCtrl.prototype.onZoom_ = function(event) {
   // Cant depend on event.offsetX due to FF & chrome being different.
   event.preventDefault();
-  var offset = event.clientX - this.element_.find('.svg-timeline').offset().left;
+  var offset = event.clientX - this.element_.find('.c-svg-timeline').offset().left;
   this.zoomBy_(event.deltaY > 0 ? -1 : 1, offset);
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Timeline.MOUSE_ZOOM, 1);
 };
@@ -1375,7 +1375,7 @@ os.ui.timeline.TimelineCtrl.prototype.setEnd = function(value) {
  * @param {os.ui.timeline.ITimelineItem|string} item The item or item ID to jump to
  */
 os.ui.timeline.TimelineCtrl.prototype.zoomToItem = function(item) {
-  if (goog.isString(item)) {
+  if (typeof item === 'string') {
     item = this.getItem(item);
   }
 
@@ -1410,7 +1410,7 @@ os.ui.timeline.TimelineCtrl.prototype.zoomToExtent = function(extent) {
  * @param {os.ui.timeline.ITimelineItem|string} item The item or item ID to pan to
  */
 os.ui.timeline.TimelineCtrl.prototype.panToItem = function(item) {
-  if (goog.isString(item)) {
+  if (typeof item === 'string') {
     item = this.getItem(item);
   }
 
@@ -1595,7 +1595,7 @@ os.events.addExemption(
      */
     function(el, type) {
       if (type !== goog.events.EventType.CONTEXTMENU) {
-        return !!$(el).closest('.os-timeline').length;
+        return !!$(el).closest('.js-timeline').length;
       }
 
       return false;

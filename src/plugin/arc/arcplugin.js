@@ -10,6 +10,7 @@ goog.require('plugin.arc.arcImportDirective');
 goog.require('plugin.arc.layer.ArcFeatureLayerConfig');
 goog.require('plugin.arc.layer.ArcLayerDescriptor');
 goog.require('plugin.arc.layer.ArcTileLayerConfig');
+goog.require('plugin.arc.mime');
 goog.require('plugin.arc.state.v2.arcstate');
 
 
@@ -21,15 +22,9 @@ goog.require('plugin.arc.state.v2.arcstate');
  */
 plugin.arc.ArcPlugin = function() {
   plugin.arc.ArcPlugin.base(this, 'constructor');
-  this.id = plugin.arc.ArcPlugin.ID;
+  this.id = plugin.arc.ID;
 };
 goog.inherits(plugin.arc.ArcPlugin, os.plugin.AbstractPlugin);
-
-
-/**
- * @type {string}
- */
-plugin.arc.ArcPlugin.ID = 'arc';
 
 
 /**
@@ -38,7 +33,7 @@ plugin.arc.ArcPlugin.ID = 'arc';
 plugin.arc.ArcPlugin.prototype.init = function() {
   var dm = os.dataManager;
   var arcEntry = new os.data.ProviderEntry(this.id, plugin.arc.ArcServer, 'Arc Server',
-      'Arc servers provide feature and tile data.', '<arcserver></arcserver>', plugin.arc.isArcResponse);
+      'Arc servers provide feature and tile data.');
 
   dm.registerProviderType(arcEntry);
   dm.registerDescriptorType(this.id, plugin.arc.layer.ArcLayerDescriptor);
@@ -48,7 +43,7 @@ plugin.arc.ArcPlugin.prototype.init = function() {
   lcm.registerLayerConfig(plugin.arc.layer.ArcTileLayerConfig.ID, plugin.arc.layer.ArcTileLayerConfig);
 
   var im = os.ui.im.ImportManager.getInstance();
-  im.registerImportUI(this.id, new os.ui.ProviderImportUI());
+  im.registerImportUI(this.id, new os.ui.ProviderImportUI('<arcserver></arcserver>'));
 
   var sm = os.state.StateManager.getInstance();
   sm.addLoadFunction(plugin.arc.state.v2.arcstate.load);

@@ -10,7 +10,12 @@ os.ui.ol.draw.DrawEventType = {
   DRAWSTART: 'drawstart',
   DRAWCHANGE: 'drawchange',
   DRAWEND: 'drawend',
-  DRAWCANCEL: 'drawcancel'
+  DRAWCANCEL: 'drawcancel',
+  DRAWBOX: 'box',
+  DRAWCIRCLE: 'circle',
+  DRAWPOLYGON: 'polygon',
+  DRAWLINE: 'line',
+  DRAWCOUNTRY: 'country'
 };
 
 

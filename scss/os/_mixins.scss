@@ -1,0 +1,70 @@
+@mixin grab-cursor {
+  // sass-lint:disable no-duplicate-properties, no-vendor-prefixes
+  cursor: pointer;
+  cursor: -moz-grab;
+  cursor: -webkit-grab;
+  cursor: -ms-grab;
+}
+
+@mixin grabbing-cursor {
+  // sass-lint:disable no-duplicate-properties, no-vendor-prefixes
+  cursor: grabbing;
+  cursor: -moz-grabbing;
+  cursor: -webkit-grabbing;
+  cursor: -ms-grabbing;
+}
+
+// This extends bootstraps bg-<varents> to also have background colors
+@mixin bg-text-variant($background) {
+  color: color-yiq($background);
+}
+
+// Set svg to use the body background and body font color
+@mixin svg-body-styles {
+  fill: $body-bg;
+  height: 100%;
+  overflow-x: hidden;
+  width: 100%;
+
+  // d3 classname, we can't change it
+  .tick {
+    pointer-events: none;
+  }
+
+  text {
+    fill: $body-color;
+    font-weight: 800;
+    paint-order: stroke;
+    stroke: $body-bg;
+    stroke-linecap: butt;
+    stroke-linejoin: miter;
+    stroke-width: 3px;
+  }
+}
+
+@mixin hoverable-link {
+  color: $body-color;
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+@mixin font-awesome {
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  display: inline-block;
+  font: normal normal normal 14px/1 FontAwesome;
+  font-size: inherit;
+  text-rendering: auto;
+}
+
+@mixin u-bg-color-content($color) {
+  .u-bg-#{$color}-text {
+    @content;
+  }
+
+  .u-bg-#{$color}-text-a a {
+    @content;
+  }
+}

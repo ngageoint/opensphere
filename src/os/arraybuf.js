@@ -39,6 +39,7 @@ os.arraybuf.MagicNumber = {
  *
  * @param {ArrayBuffer} ab The buffer to test
  * @return {boolean}
+ * @deprecated Please use Boolean(os.file.mime.text.getText()) instead
  */
 os.arraybuf.isText = function(ab) {
   // If UTF-8 Byte Order Mark exists
@@ -98,6 +99,7 @@ os.arraybuf.isText = function(ab) {
  * printable range.
  * @param {number} b The byte
  * @return {boolean}
+ * @deprecated Please see the os.file.mime.text package instead
  */
 os.arraybuf.isTextCharacter = function(b) {
   return b == 10 || b == 13 || b == 9 || b == 8 || (b >= 32 && b <= 127);
@@ -108,6 +110,7 @@ os.arraybuf.isTextCharacter = function(b) {
  * Converts an ArrayBuffer into a UTF-8 string.
  * @param {ArrayBuffer} ab The buffer
  * @return {string} The string
+ * @deprecated Please use os.file.mime.text.getText() instead
  */
 os.arraybuf.toString = function(ab) {
   var s = '';

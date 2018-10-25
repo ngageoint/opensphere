@@ -1,22 +1,25 @@
-<div class="column-mapping-settings">
-  <div class="column-mapping-settings__help">
-    <i class="fa fa-question-circle"></i> Column associations allow you to take columns from multiple different layers and make them equivalent.<br>
-    For example, you can take an "ALTITUDE" column on one layer and map it with an "Alt" column on another layer.
+<div class="d-flex flex-column flex-fill container-fluid">
+  <h4>Column Associations</h4>
+  <div class="form-group">
+    Column associations allow you to relate like columns from different layers. For example, you can take an "ALTITUDE" column on one layer and map it with an "Alt" column on another layer.
   </div>
-  <div class="column-mapping-settings__buttons">
-    <button class="btn btn-default" type="button" ng-click="cmCtrl.create()">
-      <i class="fa fa-plus color-add"></i> Create
+  <div class="form-group row mx-0">
+    <button class="btn btn-primary" type="button" ng-click="cmCtrl.create()">
+      <i class="fa fa-plus"></i>
+      Create
     </button>
-    <div class="column-mapping-settings__import-buttons">
-      <button class="btn btn-default" type="button" ng-click="cmCtrl.export()" ng-disabled="cmCtrl.mappingTree.length === 0">
-        <i class="fa fa-download yellow-icon"></i> Export
+    <div class="text-right col">
+      <button class="btn btn-secondary" type="button" ng-click="cmCtrl.export()" ng-disabled="cmCtrl.mappingTree.length === 0">
+        <i class="fa fa-download"></i>
+        Export
       </button>
-      <button class="btn btn-default" type="button" ng-click="cmCtrl.import()">
-        <i class="fa fa-sign-in color-import"></i> Import
+      <button class="btn btn-secondary" type="button" ng-click="cmCtrl.import()">
+        <i class="fa fa-sign-in"></i>
+        Import
       </button>
     </div>
   </div>
-  <div class="column-mappings-tree" autoheight siblings=".column-mapping-settings__buttons, .column-mapping-settings__help">
+  <div class="d-flex flex-column flex-fill">
     <slicktree x-data="cmCtrl.mappingTree" selected="selected" show-root="false" multi-select="true"></slicktree>
   </div>
 </div>

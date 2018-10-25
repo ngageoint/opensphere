@@ -5,7 +5,7 @@ goog.provide('os.ui.column.mapping.ColumnMappingSettingsCtrl');
 goog.require('os.column.ColumnMapping');
 goog.require('os.column.ColumnMappingEventType');
 goog.require('os.column.ColumnMappingManager');
-goog.require('os.column.ColumnMappingTypeMethod');
+goog.require('os.file.mime.columnmapping');
 goog.require('os.ui.Module');
 goog.require('os.ui.column.mapping.ColumnMappingImportUI');
 goog.require('os.ui.column.mapping.ColumnMappingNode');
@@ -23,13 +23,10 @@ goog.require('os.ui.im.ImportProcess');
  */
 os.ui.column.mapping.ColumnMappingSettings = function() {
   os.ui.column.mapping.ColumnMappingSettings.base(this, 'constructor');
-
-  var fm = os.file.FileManager.getInstance();
   var im = os.ui.im.ImportManager.getInstance();
 
   // csv
-  fm.registerContentTypeMethod(new os.column.ColumnMappingTypeMethod());
-  im.registerImportUI('columnmapping', new os.ui.column.mapping.ColumnMappingImportUI());
+  im.registerImportUI(os.file.mime.columnmapping.TYPE, new os.ui.column.mapping.ColumnMappingImportUI());
 
   this.setLabel('Column Associations');
   this.setDescription('Configure your column associations');
@@ -143,18 +140,16 @@ os.ui.column.mapping.ColumnMappingSettingsCtrl.prototype.onMappingsChange_ = fun
 
 /**
  * Launches the create column mapping form.
+ * @export
  */
 os.ui.column.mapping.ColumnMappingSettingsCtrl.prototype.create = function() {
   os.ui.column.mapping.ColumnMappingSettings.launchColumnMappingWindow();
 };
-goog.exportProperty(
-    os.ui.column.mapping.ColumnMappingSettingsCtrl.prototype,
-    'create',
-    os.ui.column.mapping.ColumnMappingSettingsCtrl.prototype.create);
 
 
 /**
  * Launches the export column mappings form.
+ * @export
  */
 os.ui.column.mapping.ColumnMappingSettingsCtrl.prototype.export = function() {
   var selected = /** @type {Array<os.ui.column.mapping.ColumnMappingNode>} */ (this.scope_['selected']);
@@ -177,16 +172,17 @@ os.ui.column.mapping.ColumnMappingSettingsCtrl.prototype.export = function() {
 
   var scopeOptions = {
     'mappings': items,
-    'selectedMappings': selectedItems
+    'selectedMappings': selectedItems,
+    'yesButtonClass': 'btn-danger'
   };
 
   var windowOptions = {
     'label': 'Export Column Associations',
-    'icon': 'fa fa-download color-yellow',
+    'icon': 'fa fa-download',
     'x': 'center',
     'y': 'center',
-    'width': 360,
-    'height': 230,
+    'width': 400,
+    'height': 'auto',
     'show-close': 'true',
     'modal': 'true'
   };
@@ -194,24 +190,17 @@ os.ui.column.mapping.ColumnMappingSettingsCtrl.prototype.export = function() {
   var template = '<columnmappingexport></columnmappingexport>';
   os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
 };
-goog.exportProperty(
-    os.ui.column.mapping.ColumnMappingSettingsCtrl.prototype,
-    'export',
-    os.ui.column.mapping.ColumnMappingSettingsCtrl.prototype.export);
 
 
 /**
  * Launches the import column mappings form.
+ * @export
  */
 os.ui.column.mapping.ColumnMappingSettingsCtrl.prototype.import = function() {
   var importProcess = new os.ui.im.ImportProcess();
   importProcess.setEvent(new os.ui.im.ImportEvent(os.ui.im.ImportEventType.FILE));
   importProcess.begin();
 };
-goog.exportProperty(
-    os.ui.column.mapping.ColumnMappingSettingsCtrl.prototype,
-    'import',
-    os.ui.column.mapping.ColumnMappingSettingsCtrl.prototype.import);
 
 
 /**

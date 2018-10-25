@@ -95,21 +95,19 @@ os.ui.layer.VectorStyleControlsCtrl.prototype.disposeInternal = function() {
 
 /**
  * Fire a scope event when the shape is changed by the user.
+ * @export
  */
 os.ui.layer.VectorStyleControlsCtrl.prototype.onShapeChange = function() {
   if (this.scope) {
     this.scope.$emit(os.ui.layer.VectorStyleControlsEventType.SHAPE_CHANGE, this.scope['shape']);
   }
 };
-goog.exportProperty(
-    os.ui.layer.VectorStyleControlsCtrl.prototype,
-    'onShapeChange',
-    os.ui.layer.VectorStyleControlsCtrl.prototype.onShapeChange);
 
 
 /**
  * Check for ellipse with center
  * @return {boolean}
+ * @export
  */
 os.ui.layer.VectorStyleControlsCtrl.prototype.hasCenter = function() {
   if (this.scope && this.scope['shape']) {
@@ -117,15 +115,12 @@ os.ui.layer.VectorStyleControlsCtrl.prototype.hasCenter = function() {
   }
   return false;
 };
-goog.exportProperty(
-    os.ui.layer.VectorStyleControlsCtrl.prototype,
-    'hasCenter',
-    os.ui.layer.VectorStyleControlsCtrl.prototype.hasCenter);
 
 
 /**
  * Fire a scope event when the ellipse center shape is changed by the user.
  * @param {string} shape
+ * @export
  */
 os.ui.layer.VectorStyleControlsCtrl.prototype.onCenterShapeChange = function(shape) {
   if (this.scope) {
@@ -133,7 +128,3 @@ os.ui.layer.VectorStyleControlsCtrl.prototype.onCenterShapeChange = function(sha
     this.scope['centerShape'] = shape;
   }
 };
-goog.exportProperty(
-    os.ui.layer.VectorStyleControlsCtrl.prototype,
-    'onCenterShapeChange',
-    os.ui.layer.VectorStyleControlsCtrl.prototype.onCenterShapeChange);

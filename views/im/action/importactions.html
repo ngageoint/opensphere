@@ -1,48 +1,51 @@
-<div class="window-content-wrapper import-action-window">
-  <div class="window-content">
-    <div class="import-action-header bot-gapxs">
-      <button type="button" class="btn btn-default" ng-click="ctrl.editEntry()"
-          title="Create a new action">
-        <i class="fa fa-plus green-icon"></i>
-        Create
-      </button>
-      <popover class="pull-right" ng-show="helpTitle && helpText"
-          x-title="helpTitle"
-          x-content="helpText"
-          x-pos="'right'">
-      </popover>
+<div class="d-flex flex-column flex-fill">
+  <div class="modal-body">
+
+    <div class="js-import-action__header mb-2 d-flex flex-row justify-content-between w-100">
+      <div class="text-left">
+        <button type="button" class="btn btn-primary btn-sm" ng-click="ctrl.editEntry()" title="Create a new action">
+          <i class="fa fa-plus"></i>
+          Create
+        </button>
+      </div>
+      <div class="text-right">
+        <popover ng-show="helpTitle && helpText" x-title="helpTitle" x-content="helpText" x-pos="'right'">
+        </popover>
+      </div>
     </div>
-    <div class="entries-container" autoheight siblings=".import-action-header">
-      <slicktree
-          x-data="ctrl.entries"
-          drag-enabled="true"
-          multi-select="true"
-          no-root="true"
-          selected="ctrl.selected"
-          context-menu="ctrl.contextMenu">
+
+    <div class="d-flex flex-row flex-fill" autoheight siblings=".js-import-action__header">
+      <slicktree x-data="ctrl.entries" drag-enabled="true" multi-select="true" no-root="true" selected="ctrl.selected" context-menu="ctrl.contextMenu">
       </slicktree>
     </div>
+
   </div>
-  <div class="window-footer">
-    <div class="pull-left">
-      <button type="button" class="btn btn-default" ng-click="ctrl.launchExport()" ng-disabled="!ctrl.entries.length">
-        <i class="fa fa-download yellow-icon"></i>
-        Export
-      </button>
-      <button type="button" class="btn btn-default" ng-click="ctrl.launchImport()">
-        <i class="fa fa-sign-in color-import"></i>
-        Import
-      </button>
+
+  <div class="modal-footer">
+    <div class="d-flex flex-row justify-content-between w-100">
+      <div class="text-left">
+        <button type="button" class="btn btn-secondary" ng-click="ctrl.launchExport()" ng-disabled="!ctrl.entries.length">
+          <i class="fa fa-download"></i>
+          Export
+        </button>
+        <button type="button" class="btn btn-secondary" ng-click="ctrl.launchImport()">
+          <i class="fa fa-sign-in"></i>
+          Import
+        </button>
+      </div>
+
+      <div class="text-right">
+        <button class="btn btn-primary" ng-click="ctrl.apply()">
+          <i class="fa fa-fw fa-check"></i>
+          Apply
+        </button>
+        <button class="btn btn-secondary" ng-click="ctrl.close()">
+          <i class="fa fa-fw fa-ban"></i>
+          Close
+        </button>
+      </div>
     </div>
-    <div class="pull-right">
-      <button class="btn btn-default" ng-click="ctrl.apply()">
-        <i class="fa fa-fw fa-check"></i>
-        Apply
-      </button>
-      <button class="btn btn-default" ng-click="ctrl.close()">
-        <i class="fa fa-fw fa-ban red-icon"></i>
-        Close
-      </button>
-    </div>
+
   </div>
+
 </div>

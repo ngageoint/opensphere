@@ -1,5 +1,6 @@
 goog.provide('plugin.cesium.VectorContext');
 
+goog.require('goog.async.Throttle');
 goog.require('goog.disposable.IDisposable');
 goog.require('goog.log');
 
@@ -75,11 +76,11 @@ plugin.cesium.VectorContext = function(scene, layer, projection) {
   this.geometryToCesiumMap = {};
 
   /**
-   * Map of OL geometries to Cesium labels.
-   * @type {Object<number, (Array<!Cesium.Label>|undefined)>}
+   * Map of OL geometries to Cesium label.
+   * @type {Object<number, (Cesium.Label|undefined)>}
    * @protected
    */
-  this.geometryToLabelsMap = {};
+  this.geometryToLabelMap = {};
 
   /**
    * Map of shown values for feature visibility events that did not have a feature to primitive
@@ -93,6 +94,12 @@ plugin.cesium.VectorContext = function(scene, layer, projection) {
    * @type {Cesium.Scene}
    */
   this.scene = scene;
+
+  /**
+   * Throttle for billboard cleanup.
+   * @type {goog.async.Throttle}
+   */
+  this.billboardCleanupThrottle = new goog.async.Throttle(this.onBillboardCleanup, 500, this);
 
   /**
    * The Cesium primitive collection.
@@ -119,6 +126,8 @@ plugin.cesium.VectorContext.LOGGER_ = goog.log.getLogger('plugin.cesium.VectorCo
  */
 plugin.cesium.VectorContext.prototype.dispose = function() {
   if (!this.isDisposed()) {
+    goog.dispose(this.billboardCleanupThrottle);
+
     this.collection.destroyPrimitives = true;
 
     try {
@@ -165,7 +174,7 @@ plugin.cesium.VectorContext.prototype.isDisposed = function() {
 plugin.cesium.VectorContext.prototype.pruneMaps = function() {
   this.featureToCesiumMap = os.object.prune(this.featureToCesiumMap);
   this.geometryToCesiumMap = os.object.prune(this.geometryToCesiumMap);
-  this.geometryToLabelsMap = os.object.prune(this.geometryToLabelsMap);
+  this.geometryToLabelMap = os.object.prune(this.geometryToLabelMap);
   this.featureToShownMap = os.object.prune(this.featureToShownMap);
 
   this.scene.context.cleanupPickIds();
@@ -276,6 +285,14 @@ plugin.cesium.VectorContext.prototype.cleanup = function(feature) {
     }
   }
 
+  this.billboardCleanupThrottle.fire();
+};
+
+
+/**
+ * Throttleed call to debounce cleanup of billboards after removals occur.
+ */
+plugin.cesium.VectorContext.prototype.onBillboardCleanup = function() {
   this.billboards._billboardsToUpdate.length = this.billboards.length;
 };
 
@@ -348,34 +365,25 @@ plugin.cesium.VectorContext.prototype.addPrimitive = function(primitive, feature
 
 /**
  * Adds a label to the collection.
- * @param {Array<!Cesium.optionsLabelCollection>} allOptions The label configuration
- * @param {!ol.Feature} feature The OL3 feature tied to the label
+ * @param {!Cesium.optionsLabelCollection} options The label configuration
+ * @param {!ol.Feature} feature The feature tied to the label
  * @param {!ol.geom.Geometry} geometry The billboard's geometry
  */
-plugin.cesium.VectorContext.prototype.addLabels = function(allOptions, feature, geometry) {
+plugin.cesium.VectorContext.prototype.addLabel = function(options, feature, geometry) {
   var geometryId = ol.getUid(geometry);
 
   // remove the existing labels because they will be recreated
-  var existing = this.geometryToLabelsMap[geometryId];
+  var existing = this.geometryToLabelMap[geometryId];
   if (existing) {
-    existing.forEach(this.removePrimitive, this);
+    this.removePrimitive(existing);
   }
 
   if (!feature.isDisposed()) {
-    if (allOptions && allOptions.length > 0) {
-      // recreate the labels
-      this.geometryToLabelsMap[geometryId] = this.geometryToLabelsMap[geometryId] || [];
-
-      allOptions.forEach(function(labelOptions) {
-        var label = this.labels.add(labelOptions);
-        this.geometryToLabelsMap[geometryId].push(label);
-        this.addFeaturePrimitive(feature, label);
-        this.addOLReferences(label, feature, geometry);
-      }, this);
-    } else {
-      // no labels
-      this.geometryToLabelsMap[geometryId] = undefined;
-    }
+    // add the label to the collection
+    var label = this.labels.add(options);
+    this.geometryToLabelMap[geometryId] = label;
+    this.addFeaturePrimitive(feature, label);
+    this.addOLReferences(label, feature, geometry);
   }
 };
 
@@ -398,15 +406,7 @@ plugin.cesium.VectorContext.prototype.removePrimitive = function(primitive) {
     this.geometryToCesiumMap[geomId] = undefined;
   } else if (primitive instanceof Cesium.Label) {
     this.labels.remove(primitive);
-
-    var labelPrimitives = this.geometryToLabelsMap[geomId];
-    if (labelPrimitives) {
-      goog.array.remove(labelPrimitives, primitive);
-
-      if (labelPrimitives.length == 0) {
-        this.geometryToLabelsMap[geomId] = undefined;
-      }
-    }
+    this.geometryToLabelMap[geomId] = undefined;
   } else if (primitive instanceof Cesium.Polyline) {
     this.polylines.remove(primitive);
     this.geometryToCesiumMap[geomId] = undefined;
@@ -427,7 +427,7 @@ plugin.cesium.VectorContext.prototype.removePrimitive = function(primitive) {
 plugin.cesium.VectorContext.prototype.addFeaturePrimitive = function(feature, primitive) {
   var featureId = feature['id'];
   var shown = this.featureToShownMap[featureId];
-  shown = goog.isDef(shown) ? shown : primitive.show;
+  shown = shown !== undefined ? shown : primitive.show;
 
   primitive.show = shown;
   this.featureToCesiumMap[featureId] = this.featureToCesiumMap[featureId] || [];
@@ -455,17 +455,17 @@ plugin.cesium.VectorContext.prototype.removeFeaturePrimitive = function(feature,
 
 /**
  * Get the Cesium label for the provided geometry, if it exists.
- * @param {!ol.geom.Geometry} geometry The OL3 geometry
- * @return {Array<!Cesium.Label>}
+ * @param {!ol.geom.Geometry} geometry The geometry.
+ * @return {?Cesium.Label}
  */
-plugin.cesium.VectorContext.prototype.getLabelsForGeometry = function(geometry) {
-  return this.geometryToLabelsMap[ol.getUid(geometry)] || null;
+plugin.cesium.VectorContext.prototype.getLabelForGeometry = function(geometry) {
+  return this.geometryToLabelMap[ol.getUid(geometry)] || null;
 };
 
 
 /**
  * Get the Cesium primitive/billboard for the provided geometry, if it exists.
- * @param {!ol.geom.Geometry} geometry The OL3 geometry
+ * @param {!ol.geom.Geometry} geometry The geometry.
  * @return {?Cesium.PrimitiveLike}
  */
 plugin.cesium.VectorContext.prototype.getPrimitiveForGeometry = function(geometry) {

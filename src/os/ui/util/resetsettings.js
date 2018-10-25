@@ -13,26 +13,17 @@ goog.require('os.ui.window.confirmDirective');
  * @param {string=} opt_parent Optional parent selector.
  */
 os.ui.util.resetSettings = function(opt_parent) {
-  var scopeOptions = {
-    'confirmCallback': os.storage.clearStorage,
-    'cancelCallback': goog.nullFunction,
-    'yesText': 'Clear and Reload',
-    'yesIcon': 'fa fa-refresh',
-    'noText': 'Cancel',
-    'noIcon': 'fa fa-times',
-    'yesButtonClass': 'btn-danger'
-  };
-
   var windowOptions = {
     'label': 'Reset Settings',
-    'icon': 'fa fa-refresh red-icon',
+    'icon': 'fa fa-refresh',
     'x': 'center',
     'y': 300,
-    'width': 350,
-    'height': 260,
+    'width': 400,
+    'height': 'auto',
     'modal': true,
     'no-scroll': true,
-    'disable-drag': true
+    'disable-drag': true,
+    'headerClass': 'bg-danger u-bg-danger-text'
   };
   if (opt_parent) {
     windowOptions['window-container'] = opt_parent;
@@ -42,8 +33,14 @@ os.ui.util.resetSettings = function(opt_parent) {
   text += 'The current state of your application will be lost, so be sure you\'re at a good stopping point.<br>';
   text += '<br>Last reset: ' + os.config.Settings.getInstance().getLastReset();
   text += '<br><br><b>Are you sure you want to clear your settings and reload?</b>';
-  var template = '<confirm>' + text + '</confirm>';
-  os.ui.window.create(windowOptions, template, opt_parent, undefined, undefined, scopeOptions);
+
+  os.ui.window.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
+    confirm: os.storage.clearStorage,
+    prompt: text,
+    yesText: 'Clear and Reload',
+    yesButtonClass: 'btn-danger',
+    windowOptions: windowOptions
+  }));
 };
 
 

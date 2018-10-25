@@ -9,6 +9,7 @@ goog.require('ol.Feature');
 goog.require('ol.format.GPX');
 goog.require('ol.geom.Point');
 goog.require('ol.xml');
+goog.require('os.file.mime.text');
 goog.require('os.map');
 goog.require('os.parse.IParser');
 
@@ -46,9 +47,13 @@ plugin.file.gpx.GPXParser = function(options) {
  * @inheritDoc
  */
 plugin.file.gpx.GPXParser.prototype.setSource = function(source) {
+  if (source instanceof ArrayBuffer) {
+    source = os.file.mime.text.getText(source) || null;
+  }
+
   if (ol.xml.isDocument(source)) {
     this.document_ = /** @type {Document} */ (source);
-  } else if (goog.isString(source)) {
+  } else if (typeof source === 'string') {
     this.document_ = ol.xml.parse(source);
   }
 };
@@ -66,7 +71,7 @@ plugin.file.gpx.GPXParser.prototype.cleanup = function() {
  * @inheritDoc
  */
 plugin.file.gpx.GPXParser.prototype.hasNext = function() {
-  return goog.isDefAndNotNull(this.document_);
+  return this.document_ != null;
 };
 
 

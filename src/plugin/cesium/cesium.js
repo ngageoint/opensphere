@@ -13,11 +13,12 @@ goog.require('os.net');
 goog.require('os.proj');
 goog.require('os.string');
 goog.require('plugin.cesium.ImageryProvider');
+goog.require('plugin.cesium.WMSTerrainProvider');
 
 
 /**
  * Constructor for a Cesium terrain provider.
- * @typedef {function(new: Cesium.TerrainProvider, ...)}
+ * @typedef {function(...):Cesium.TerrainProvider}
  */
 plugin.cesium.TerrainProviderFn;
 
@@ -58,11 +59,11 @@ plugin.cesium.MAX_FOG_DENSITY = 3e-4;
 
 
 /**
- * The default Cesium fog density.
+ * The default Cesium fog density, as a percentage of max density.
  * @type {number}
  * @const
  */
-plugin.cesium.DEFAULT_FOG_DENSITY = plugin.cesium.MAX_FOG_DENSITY / 2;
+plugin.cesium.DEFAULT_FOG_DENSITY = 0.5;
 
 
 /**
@@ -173,71 +174,6 @@ plugin.cesium.getJulianDate = function() {
 
 
 /**
- * Stolen from cesiums RectangleOutlineGeometry. Build our own polygon to display in polylines instead of a polygon
- * This was done to support more than 1px line width in windows
- * @param {ol.Extent} extent
- * @param {number=} opt_altitude
- * @param {boolean=} opt_extrude
- * @return {Array<Cesium.Cartesian3>}
- */
-plugin.cesium.generateRectanglePositions = function(extent, opt_altitude, opt_extrude) {
-  var rect = Cesium.Rectangle.fromDegrees(extent[0], extent[1], extent[2], extent[3]);
-  var rected = new Cesium.RectangleGeometry({
-    ellipsoid: Cesium.Ellipsoid.WGS84,
-    rectangle: rect,
-    height: opt_altitude ? opt_altitude : 0,
-    extrudedHeight: opt_extrude ? 0 : undefined
-  });
-
-  // NOTE: The Cesium.RectangleGeometryLibrary.computePosition does NOT use the height parameter :(
-  // var geometry = Cesium.RectangleGeometry.createGeometry(rected);
-
-  var options = Cesium.RectangleGeometryLibrary.computeOptions(rected, rect, new Cesium.Cartographic());
-  // options.surfaceHeight = opt_altitude ? opt_altitude : 0;
-  // options.extrudedHeight = opt_extrude ? 0 : undefined;
-  var height = options.height;
-  var width = options.width;
-  var positions = [];
-  var row = 0;
-  var col;
-
-  for (col = 0; col < width; col++) {
-    var position = new Cesium.Cartesian3();
-    Cesium.RectangleGeometryLibrary.computePosition(options, row, col, position);
-    positions.push(position);
-  }
-
-  col = width - 1;
-  for (row = 1; row < height; row++) {
-    var position = new Cesium.Cartesian3();
-    Cesium.RectangleGeometryLibrary.computePosition(options, row, col, position);
-    positions.push(position);
-  }
-
-  row = height - 1;
-  for (col = width - 2; col >= 0; col--) {
-    var position = new Cesium.Cartesian3();
-    Cesium.RectangleGeometryLibrary.computePosition(options, row, col, position);
-    positions.push(position);
-  }
-
-  col = 0;
-  for (row = height - 2; row > 0; row--) {
-    var position = new Cesium.Cartesian3();
-    Cesium.RectangleGeometryLibrary.computePosition(options, row, col, position);
-    positions.push(position);
-  }
-
-  // Push on the first position to the last to close the polygon
-  if (positions.length > 0) {
-    positions.push(positions[0]);
-  }
-
-  return positions;
-};
-
-
-/**
  * Stolen from cesiums EllipseOutlineGeometry. Build our own polygon to display in polylines instead of a polygon
  * This was done to support more than 1px line width in windows
  * @param {!Cesium.Cartesian3} center
@@ -324,7 +260,7 @@ plugin.cesium.tileLayerToImageryLayer = function(olLayer, viewProj) {
   var layerOptions = {};
 
   var ext = olLayer.getExtent();
-  if (goog.isDefAndNotNull(ext) && !goog.isNull(viewProj)) {
+  if (ext != null && viewProj !== null) {
     layerOptions.rectangle = olcs.core.extentToRectangle(ext, viewProj);
   }
 
@@ -345,18 +281,7 @@ plugin.cesium.updateCesiumLayerProperties = function(olLayer, csLayer) {
     parents: []
   }), csLayer);
 
-  // saturation and contrast are working ok
-  var saturation = olLayer.getSaturation();
-  if (saturation != null) {
-    csLayer.saturation = saturation;
-  }
-
   // that little guy? I wouldn't worry about that little guy.
-  //
-  // if contrast is 1 (default value) and hue is changed from the default (0) on *any* layer, transparent pixels are
-  // blacked out.
-  var contrast = olLayer.getContrast();
-  csLayer.contrast = contrast == null || contrast == 1 ? 1.01 : contrast;
 
   // Cesium actually operates in YIQ space -> hard to emulate
   // The following values are only a rough approximations:
@@ -366,10 +291,39 @@ plugin.cesium.updateCesiumLayerProperties = function(olLayer, csLayer) {
   if (hue != null) {
     csLayer.hue = hue * Cesium.Math.RADIANS_PER_DEGREE;
   }
+};
 
-  var brightness = olLayer.getBrightness();
-  if (brightness != null) {
-    // rough estimation
-    csLayer.brightness = Math.pow(1 + parseFloat(brightness), 2);
-  }
+
+/**
+ * Create a Cesium terrain provider instance.
+ * @param {Cesium.CesiumTerrainProviderOptions} options The Cesium terrain options.
+ * @return {!Cesium.CesiumTerrainProvider}
+ */
+plugin.cesium.createCesiumTerrain = function(options) {
+  return new Cesium.CesiumTerrainProvider(options);
+};
+
+
+/**
+ * Create a Cesium World Terrain instance.
+ * @param {Cesium.WorldTerrainOptions} options The Cesium World Terrain options.
+ * @return {!Cesium.CesiumTerrainProvider}
+ */
+plugin.cesium.createWorldTerrain = function(options) {
+  var assetId = options.assetId != null ? options.assetId : 1;
+  return plugin.cesium.createCesiumTerrain({
+    url: Cesium.IonResource.fromAssetId(assetId, {
+      accessToken: options.accessToken
+    })
+  });
+};
+
+
+/**
+ * Create a Cesium WMS terrain provider instance.
+ * @param {!osx.cesium.WMSTerrainProviderOptions} options The WMS terrain options.
+ * @return {!plugin.cesium.WMSTerrainProvider}
+ */
+plugin.cesium.createWMSTerrain = function(options) {
+  return new plugin.cesium.WMSTerrainProvider(options);
 };

@@ -4,7 +4,7 @@ goog.require('os.plugin.AbstractPlugin');
 goog.require('os.plugin.PluginManager');
 goog.require('plugin.georss.GeoRSSImportUI');
 goog.require('plugin.georss.GeoRSSLayerConfig');
-goog.require('plugin.georss.GeoRSSTypeMethod');
+goog.require('plugin.georss.mime');
 
 
 /**
@@ -34,13 +34,9 @@ plugin.georss.GeoRSSPlugin.prototype.init = function() {
   var lcm = os.layer.config.LayerConfigManager.getInstance();
   lcm.registerLayerConfig(plugin.georss.ID, plugin.georss.GeoRSSLayerConfig);
 
-  // register the georss file type method
-  var fm = os.file.FileManager.getInstance();
-  fm.registerContentTypeMethod(new plugin.georss.GeoRSSTypeMethod());
-
   var im = os.ui.im.ImportManager.getInstance();
   im.registerImportDetails('GeoRSS', true);
-  im.registerImportUI(plugin.georss.ID, new plugin.georss.GeoRSSImportUI());
+  im.registerImportUI(plugin.georss.mime.TYPE, new plugin.georss.GeoRSSImportUI());
 };
 
 

@@ -420,3 +420,13 @@ os.ui.slick.column.restore = function(from, to) {
     return 0;
   });
 };
+
+
+/**
+ * Mapper function for columns to their fields.
+ * @param {os.data.ColumnDefinition} column The column.
+ * @return {string}
+ */
+os.ui.slick.column.mapField = function(column) {
+  return column['field'];
+};

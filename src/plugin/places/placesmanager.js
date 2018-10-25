@@ -98,10 +98,13 @@ plugin.places.PlacesManager.STORAGE_NAME = '//plugin.places';
 
 /**
  * The storage key used for places.
+ *
+ * Note that this is base64-encoded for compatibility reasons. os.file.getLocalUrl() no longer
+ * does that for us since btoa does not support character sets outside of latin1.
  * @type {string}
  * @const
  */
-plugin.places.PlacesManager.STORAGE_URL = os.file.getLocalUrl('//plugin.places');
+plugin.places.PlacesManager.STORAGE_URL = os.file.getLocalUrl(btoa(plugin.places.PlacesManager.STORAGE_NAME));
 
 
 /**
@@ -118,17 +121,6 @@ plugin.places.PlacesManager.LAYER_OPTIONS = 'places.options';
  */
 plugin.places.PlacesManager.EMPTY_CONTENT = '<kml xmlns="http://www.opengis.net/kml/2.2">' +
     '<Document><name>' + plugin.places.TITLE + '</name></Document></kml>';
-
-
-/**
- * Source events that should trigger saving places.
- * @type {!Array<string>}
- * @const
- */
-plugin.places.PlacesManager.SOURCE_SAVE_EVENTS = [
-  os.source.PropertyChange.FEATURES,
-  os.source.PropertyChange.FEATURE_VISIBILITY
-];
 
 
 /**
@@ -433,8 +425,14 @@ plugin.places.PlacesManager.prototype.onSourcePropertyChange_ = function(event) 
     if (!this.placesSource_.isLoading()) {
       this.onSourceLoaded_();
     }
-  } else if (this.saveDelay_ && p && plugin.places.PlacesManager.SOURCE_SAVE_EVENTS.indexOf(p) !== -1) {
-    this.saveDelay_.start();
+  } else if (this.saveDelay_ && (p === os.source.PropertyChange.FEATURE_VISIBILITY ||
+      p === os.source.PropertyChange.FEATURES)) {
+    // only save if a list of changed features was provided. if not, it's a general refresh event and can be ignored.
+    var newVal = event.getNewValue();
+    var oldVal = event.getOldValue();
+    if (newVal || oldVal) {
+      this.saveDelay_.start();
+    }
   }
 };
 

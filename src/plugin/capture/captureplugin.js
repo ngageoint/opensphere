@@ -67,7 +67,7 @@ plugin.capture.CapturePlugin.prototype.init = function() {
       label: 'Recording',
       eventType: os.time.TimelineEventType.RECORD,
       tooltip: 'Save an animated GIF recording',
-      icons: ['<i class="fa fa-fw fa-circle red-icon"></i>'],
+      icons: ['<i class="fa fa-fw fa-circle"></i>'],
       metricKey: os.metrics.keys.Map.SCREEN_RECORD,
       sort: 21
     });

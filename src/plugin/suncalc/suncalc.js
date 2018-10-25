@@ -79,11 +79,11 @@ plugin.suncalc.SunCalcCtrl.prototype.destroy_ = function() {
 
 /**
  * Close
+ * @export
  */
 plugin.suncalc.SunCalcCtrl.prototype.close = function() {
   os.ui.window.close(this.element_);
 };
-goog.exportProperty(plugin.suncalc.SunCalcCtrl.prototype, 'close', plugin.suncalc.SunCalcCtrl.prototype.close);
 
 
 /**
@@ -213,7 +213,7 @@ plugin.suncalc.SunCalcCtrl.PHASES = [
  * @private
  */
 plugin.suncalc.SunCalcCtrl.filter_ = function(item) {
-  return goog.isString(item.time) || !isNaN(item.time);
+  return typeof item.time === 'string' || !isNaN(item.time);
 };
 
 
@@ -230,30 +230,28 @@ plugin.suncalc.SunCalcCtrl.addTextColor_ = function(item) {
 /**
  * @param {number|string} t The time
  * @return {string} The formatted time
+ * @export
  */
 plugin.suncalc.SunCalcCtrl.prototype.formatTime = function(t) {
-  if (goog.isNumber(t)) {
+  if (typeof t === 'number') {
     return moment(t + os.time.timeOffset).utc().format(os.time.TIME_FORMATS[7]);
   }
 
   return t;
 };
-goog.exportProperty(plugin.suncalc.SunCalcCtrl.prototype, 'formatTime',
-    plugin.suncalc.SunCalcCtrl.prototype.formatTime);
 
 
 /**
  * @param {number} t The time
  * @return {string} The formatted date
+ * @export
  */
 plugin.suncalc.SunCalcCtrl.prototype.formatDate = function(t) {
-  if (goog.isDef(t)) {
+  if (t !== undefined) {
     return moment(t + os.time.timeOffset).utc().format(os.time.DATETIME_FORMATS[20]) +
         (os.time.timeOffset !== 0 ? ' UTC' : '') + os.time.timeOffsetLabel;
   }
 
   return '';
 };
-goog.exportProperty(plugin.suncalc.SunCalcCtrl.prototype, 'formatDate',
-    plugin.suncalc.SunCalcCtrl.prototype.formatDate);
 

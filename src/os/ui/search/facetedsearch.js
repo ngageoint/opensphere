@@ -280,12 +280,11 @@ os.ui.search.FacetedSearchCtrl.prototype.sortCategories = function(a, b) {
 
 /**
  * Kicks off the search timer
+ * @export
  */
 os.ui.search.FacetedSearchCtrl.prototype.search = function() {
   this.searchDelay.start();
 };
-goog.exportProperty(os.ui.search.FacetedSearchCtrl.prototype, 'search',
-    os.ui.search.FacetedSearchCtrl.prototype.search);
 
 
 /**
@@ -302,24 +301,22 @@ os.ui.search.FacetedSearchCtrl.prototype.update = function() {
 
 /**
  * Kicks off a more delayed search timer
+ * @export
  */
 os.ui.search.FacetedSearchCtrl.prototype.delaySearch = function() {
   this.longSearchDelay.start();
 };
-goog.exportProperty(os.ui.search.FacetedSearchCtrl.prototype, 'delaySearch',
-    os.ui.search.FacetedSearchCtrl.prototype.delaySearch);
 
 
 /**
  * Clears the search term
+ * @export
  */
 os.ui.search.FacetedSearchCtrl.prototype.clearTerm = function() {
   this.scope['term'] = '';
   os.ui.apply(this.scope);
   this.search();
 };
-goog.exportProperty(os.ui.search.FacetedSearchCtrl.prototype, 'clearTerm',
-    os.ui.search.FacetedSearchCtrl.prototype.clearTerm);
 
 
 /**
@@ -353,13 +350,12 @@ os.ui.search.FacetedSearchCtrl.prototype.clearNode = function(node) {
 
 /**
  * Clear all
+ * @export
  */
 os.ui.search.FacetedSearchCtrl.prototype.clearAll = function() {
   this.clearTerm();
   this.clearFacets();
 };
-goog.exportProperty(os.ui.search.FacetedSearchCtrl.prototype, 'clearAll',
-    os.ui.search.FacetedSearchCtrl.prototype.clearAll);
 
 
 /**
@@ -431,9 +427,8 @@ os.ui.search.FacetedSearchCtrl.prototype.onAutoComplete = function() {
 /**
  * @param {os.search.ISearchResult} result
  * @return {number|string}
+ * @export
  */
 os.ui.search.FacetedSearchCtrl.prototype.track = function(result) {
   return result.getId();
 };
-goog.exportProperty(os.ui.search.FacetedSearchCtrl.prototype, 'track',
-    os.ui.search.FacetedSearchCtrl.prototype.track);

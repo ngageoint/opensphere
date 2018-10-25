@@ -47,7 +47,7 @@ plugin.file.kml.ui.launchTreeExport = function(rootNode, opt_winLabel) {
     'icon': 'fa fa-download',
     'x': 'center',
     'y': 'center',
-    'width': 350,
+    'width': 400,
     'min-width': 300,
     'max-width': 2000,
     'height': 'auto',
@@ -116,7 +116,7 @@ plugin.file.kml.ui.KMLTreeExportCtrl = function($scope, $element) {
 
   // fire auto height event
   setTimeout(function() {
-    $scope.$emit('window.ready');
+    $scope.$emit(os.ui.WindowEventType.READY);
   }, 0);
 };
 
@@ -133,24 +133,22 @@ plugin.file.kml.ui.KMLTreeExportCtrl.prototype.destroy = function() {
 
 /**
  * Fire the cancel callback and close the window.
+ * @export
  */
 plugin.file.kml.ui.KMLTreeExportCtrl.prototype.cancel = function() {
   this.close_();
 };
-goog.exportProperty(
-    plugin.file.kml.ui.KMLTreeExportCtrl.prototype,
-    'cancel',
-    plugin.file.kml.ui.KMLTreeExportCtrl.prototype.cancel);
 
 
 /**
  * Fire the confirmation callback and close the window.
+ * @export
  */
 plugin.file.kml.ui.KMLTreeExportCtrl.prototype.confirm = function() {
-  goog.asserts.assert(goog.isDefAndNotNull(this.scope), 'scope is not defined');
-  goog.asserts.assert(goog.isDefAndNotNull(this.scope['rootNode']), 'KML root is not defined');
-  goog.asserts.assert(goog.isDefAndNotNull(this['exporter']), 'exporter is not defined');
-  goog.asserts.assert(goog.isDefAndNotNull(this['persister']), 'persister is not defined');
+  goog.asserts.assert(this.scope != null, 'scope is not defined');
+  goog.asserts.assert(this.scope['rootNode'] != null, 'KML root is not defined');
+  goog.asserts.assert(this['exporter'] != null, 'exporter is not defined');
+  goog.asserts.assert(this['persister'] != null, 'persister is not defined');
   goog.asserts.assert(!!this['title'], 'export title is empty/null');
 
   var root = /** @type {plugin.file.kml.ui.KMLNode} */ (this.scope['rootNode']);
@@ -160,10 +158,6 @@ plugin.file.kml.ui.KMLTreeExportCtrl.prototype.confirm = function() {
     this.close_();
   }
 };
-goog.exportProperty(
-    plugin.file.kml.ui.KMLTreeExportCtrl.prototype,
-    'confirm',
-    plugin.file.kml.ui.KMLTreeExportCtrl.prototype.confirm);
 
 
 /**

@@ -31,6 +31,7 @@ os.ui.datetime.AnyDateHelp;
 os.ui.datetime.anyDateDirective = function() {
   return {
     restrict: 'E',
+    replace: true,
     scope: {
       'initialStart': '=initialstart',
       'initialEnd': '=initialend',

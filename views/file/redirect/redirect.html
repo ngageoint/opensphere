@@ -1,24 +1,21 @@
-<div class="file-import window-content-wrapper">
-  <div class="window-content">
-    <form name="redirectForm" class="form-compact">
-      <div class="control-group" data-ng-class="{'error':redirectForm.title.$invalid && redirectForm.title.$dirty}">
+<div class="flex-fill w-100 d-flex flex-column">
+  <div class="modal-body">
+    <form name="redirectForm" class="m-0">
+      <div class="form-group">
         <span ng-bind-html="redirectMessage"/>
       </div>
-      <div class="pull-right">
-        <img ng-src="{{redirectAppImage}}" style="height:100px;"/>
-      </div>
+      <img ng-src="{{redirectAppImage}}" class="col-2 float-right"/>
     </form>
   </div>
-  <div class="window-footer">
-    <div class="pull-right">
-     <button ng-show="redirectAllowed" class="btn btn-default" ng-click="redirectCtrl.accept()" title="Open {{redirectAppName}}">
-       <i class="fa fa-check lt-blue-icon"></i>
+  <div class="modal-footer">
+    <button ng-show="redirectAllowed" class="btn btn-primary" ng-click="redirectCtrl.accept()" title="Open {{redirectAppName}}">
+      <i class="fa fa-check"></i>
        {{redirectButtonLabel}}
-     </button>
-     <button class="btn btn-default" ng-click="redirectCtrl.cancel()" title="{{redirectCloseButtonTitle}}">
+    </button>
+    <button class="btn" ng-click="redirectCtrl.cancel()" title="{{redirectCloseButtonTitle}}"
+        ng-class="redirectAllowed ? 'btn-secondary' : 'btn-primary'">
       <i class="{{redirectStyle}}"></i>
       {{redirectCloseButtonLabel}}
-     </button>
-    </div>
+    </button>
   </div>
 </div>

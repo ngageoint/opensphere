@@ -125,9 +125,22 @@ os.ui.menu.MenuItem.prototype.addChild = function(options) {
     this.children = [];
   }
 
-  this.children.push(item);
+  // Does this already exist as a child?
+  var existingItem = goog.array.find(this.children, function(child) {
+    return child.type == item.type &&
+      child.eventType == item.eventType &&
+      child.label == item.label &&
+      child.metricKey == item.metricKey &&
+      child.tooltip == item.tooltip &&
+      child.sort == item.sort;
+  });
 
-  return item;
+  if (!existingItem) {
+    this.children.push(item);
+    return item;
+  } else {
+    return existingItem;
+  }
 };
 
 
@@ -195,32 +208,49 @@ os.ui.menu.MenuItem.prototype.render = function(context, opt_target) {
     return html;
   }
 
-  html += '<li class="';
+  html += '<li';
+  if (type === types.SEPARATOR) {
+    html += '>-</li>';
+    return html;
+  }
+
+  var classes = [];
+  var isItem = type !== types.SUBMENU && type !== types.GROUP;
 
   // group/category
   if (type === types.GROUP) {
-    html += 'menu-item nav-header ';
+    if (this.label) {
+      classes.push('dropdown-header');
+    } else {
+      classes.push('u-dropdown-header__empty');
+    }
   }
 
   // enabled disabled
   if (!enabled) {
-    html += 'ui-state-disabled';
+    classes.push('disabled');
   }
 
-  if (type === types.SEPARATOR) {
-    html += '">-</li>';
-    return html;
+  if (isItem) {
+    classes.push('dropdown-item');
   }
 
-  if (type !== types.SUBMENU && type !== types.GROUP) {
-    html += '" evt-type="' + (this.eventType || this.label) + '"';
+  if (classes.length > 0) {
+    html += ' class="' + classes.join(', ') + '"';
   }
 
-  html += '" title="' + tooltip + '">';
+  if (isItem) {
+    html += ' evt-type="' + (this.eventType || this.label) + '"';
+  }
+
+  html += (tooltip ? ' title="' + tooltip + '"' : '') + '>';
+
+  // start wrapper div (required by jquery-ui 1.12+)
+  html += '<div>';
 
   // hotkey/shortcut
   if (this.shortcut) {
-    html += '<span class="menu-item-hotkey">' + this.shortcut + '</span>';
+    html += '<span class="text-muted d-inline-block float-right pl-2">' + this.shortcut + '</span>';
   }
 
   // checkbox type
@@ -241,10 +271,13 @@ os.ui.menu.MenuItem.prototype.render = function(context, opt_target) {
   }
 
   // label
-  html += '<span class="ellipsis-text">' + this.label + '</span>';
+  html += '<span class="text-truncate">' + this.label + '</span>';
+
+  // end wrapper div (required by jquery-ui 1.12+)
+  html += '</div>';
 
   // sub menus
-  html += type === types.SUBMENU ? '<ul>' : '</div></li>';
+  html += type === types.SUBMENU ? '<ul>' : '</li>';
 
   html += childHtml;
 

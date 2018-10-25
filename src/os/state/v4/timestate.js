@@ -116,7 +116,7 @@ os.state.v4.TimeState.prototype.load = function(obj, id) {
 os.state.v4.TimeState.testUIState = function(obj) {
   var animationEl = obj.querySelector(os.state.v4.TimeTag.ANIMATION);
   var tActive = animationEl != null && animationEl.childElementCount > 0;
-  var curActive = document.getElementById('timeline-container') != null;
+  var curActive = goog.dom.getElementByClass('js-timeline') != null;
   return tActive === curActive;
 };
 
@@ -191,14 +191,14 @@ os.state.v4.TimeState.prototype.loadInternal = function(obj, id) {
     }
 
     // force the date control to update from the timeline controller
-    var dcScope = angular.element('#date-control').scope();
+    var dcScope = angular.element('.js-date-control').scope();
     if (dcScope) {
       dcScope['dateControl'].update();
     }
 
     if (tActive) {
       // force the timeline panel to update from the timeline controller
-      var tlContainer = document.getElementById('timeline-container');
+      var tlContainer = goog.dom.getElementByClass('js-timeline');
       if (tlContainer) {
         // otherwise force it to update the viewable range if it was already open
         angular.element(tlContainer).scope()['timelineCtrl'].updateTimeline(true);
@@ -282,8 +282,8 @@ os.state.v4.TimeState.prototype.saveInternal = function(options, rootObj) {
  * @return {boolean}
  */
 os.state.v4.TimeState.prototype.isTimeLineVisible = function() {
-  var timeline = document.getElementById('timeline-container');
-  return goog.isDefAndNotNull(timeline);
+  var timeline = goog.dom.getElementByClass('js-timeline');
+  return timeline != null;
 };
 
 
@@ -434,7 +434,7 @@ os.state.v4.TimeState.prototype.readIntervalsAsRangeSet_ = function(element, tag
  * @protected
  */
 os.state.v4.TimeState.prototype.getDurationFromDiff = function(diff, opt_numIntervals) {
-  var numIntervals = goog.isDef(opt_numIntervals) ? opt_numIntervals : 1;
+  var numIntervals = opt_numIntervals !== undefined ? opt_numIntervals : 1;
   var val = null;
 
   if (diff >= 28 * 24 * 60 * 60 * 1000) {

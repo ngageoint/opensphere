@@ -151,6 +151,7 @@ os.ui.PagingBarCtrl.prototype.updatePaging_ = function() {
  * Page click handler. Checks to see if the clicked page is enabled and if it's not the same page as is currently
  * active.
  * @param {Object} page
+ * @export
  */
 os.ui.PagingBarCtrl.prototype.onPageClick = function(page) {
   if (!this.scope_['disabled'] && page && !page['disabled'] &&
@@ -160,7 +161,3 @@ os.ui.PagingBarCtrl.prototype.onPageClick = function(page) {
     this.scope_['pageClickFunction'](pageNumber);
   }
 };
-goog.exportProperty(
-    os.ui.PagingBarCtrl.prototype,
-    'onPageClick',
-    os.ui.PagingBarCtrl.prototype.onPageClick);

@@ -30,6 +30,8 @@ plugin.file.gml.GMLImportUI.prototype.getTitle = function() {
  * @inheritDoc
  */
 plugin.file.gml.GMLImportUI.prototype.launchUI = function(file, opt_config) {
+  plugin.file.gml.GMLImportUI.base(this, 'launchUI', file, opt_config);
+
   var config = new plugin.file.gml.GMLParserConfig();
 
   // if an existing config was provided, merge it in
@@ -45,12 +47,12 @@ plugin.file.gml.GMLImportUI.prototype.launchUI = function(file, opt_config) {
   };
   var windowOptions = {
     'label': 'Import GML',
-    'icon': 'fa fa-file-text lt-blue-icon',
+    'icon': 'fa fa-file-text',
     'x': 'center',
     'y': 'center',
-    'width': 350,
-    'min-width': 350,
-    'max-width': 600,
+    'width': 400,
+    'min-width': 400,
+    'max-width': 800,
     'height': 'auto',
     'modal': true,
     'show-close': true,

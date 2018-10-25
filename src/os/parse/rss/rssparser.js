@@ -1,6 +1,7 @@
 goog.provide('os.parse.RssParser');
 
 goog.require('goog.dom.xml');
+goog.require('os.file.mime.text');
 goog.require('os.parse.AsyncParser');
 goog.require('os.parse.IParser');
 goog.require('os.xml');
@@ -56,6 +57,10 @@ os.parse.RssParser.prototype.hasNext = function() {
  */
 os.parse.RssParser.prototype.setSource = function(source) {
   this.cleanup();
+
+  if (source instanceof ArrayBuffer) {
+    source = os.file.mime.text.getText(source) || null;
+  }
 
   var doc;
   if (typeof source == 'string') {

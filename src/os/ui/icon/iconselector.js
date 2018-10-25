@@ -11,7 +11,7 @@ goog.require('os.ui.list');
  * Nav bar locations.
  * @type {string}
  */
-os.ui.icon.ICON_SELECTORS = 'nav-icon-selectors';
+os.ui.icon.ICON_SELECTORS = 'js-nav-icon__selectors';
 
 
 /**
@@ -27,6 +27,7 @@ os.ui.icon.iconSelectorDirective = function() {
       'iconSet': '=',
       'iconSrc': '=?'
     },
+    replace: true,
     templateUrl: os.ROOT + 'views/icon/iconselector.html',
     controller: os.ui.icon.IconSelectorCtrl,
     controllerAs: 'selector'
@@ -67,10 +68,14 @@ os.ui.icon.IconSelectorCtrl = function($scope, $element) {
   this.scope_['activeTab'] = this.scope_['tabs'].length > 0 ? this.scope_['tabs'][0]['name'] : '';
 
   for (var i = 0; i < this.scope_['tabs'].length; i++) { // wrap each icon selector in tab structure
-    os.ui.list.add(os.ui.icon.ICON_SELECTORS, '<div class="properties-tab tab" ng-show="activeTab == \'' +
-        this.scope_['tabs'][i]['name'] + '\'">' + this.scope_['tabs'][i]['html'] + '</div>', 201);
+    var markup = '<div class="d-flex flex-fill" ng-if="activeTab == \'' +
+        this.scope_['tabs'][i]['name'] + '\'">' + this.scope_['tabs'][i]['html'] + '</div>';
+    if (!os.ui.list.exists(os.ui.icon.ICON_SELECTORS, markup)) {
+      os.ui.list.add(os.ui.icon.ICON_SELECTORS, markup, 201);
+    }
   }
 
+  this.scope_.$emit(os.ui.WindowEventType.READY);
   $scope.$on('$destroy', this.destroy_.bind(this));
 };
 goog.inherits(os.ui.icon.IconSelectorCtrl, goog.events.EventTarget);
@@ -89,26 +94,20 @@ os.ui.icon.IconSelectorCtrl.prototype.destroy_ = function() {
 /**
  * Is valid if the user has picked something
  * @return {boolean}
+ * @export
  */
 os.ui.icon.IconSelectorCtrl.prototype.isValid = function() {
   return this.scope_['selected'] && !!this.scope_['selected']['path'];
 };
-goog.exportProperty(
-    os.ui.icon.IconSelectorCtrl.prototype,
-    'isValid',
-    os.ui.icon.IconSelectorCtrl.prototype.isValid);
 
 
 /**
  * Notify parent scope that no icon was selected
+ * @export
  */
 os.ui.icon.IconSelectorCtrl.prototype.cancel = function() {
   this.close_();
 };
-goog.exportProperty(
-    os.ui.icon.IconSelectorCtrl.prototype,
-    'cancel',
-    os.ui.icon.IconSelectorCtrl.prototype.cancel);
 
 
 /**
@@ -122,6 +121,7 @@ os.ui.icon.IconSelectorCtrl.prototype.close_ = function() {
 
 /**
  * Notify parent scope which icon the user picked
+ * @export
  */
 os.ui.icon.IconSelectorCtrl.prototype.okay = function() {
   if (this.scope_['acceptCallback']) {
@@ -129,34 +129,24 @@ os.ui.icon.IconSelectorCtrl.prototype.okay = function() {
   }
   this.close_();
 };
-goog.exportProperty(
-    os.ui.icon.IconSelectorCtrl.prototype,
-    'okay',
-    os.ui.icon.IconSelectorCtrl.prototype.okay);
 
 
 /**
  * Notify parent scope which icon the user picked
  * @param {string} name
+ * @export
  */
 os.ui.icon.IconSelectorCtrl.prototype.setTab = function(name) {
   this.scope_['activeTab'] = name;
 };
-goog.exportProperty(
-    os.ui.icon.IconSelectorCtrl.prototype,
-    'setTab',
-    os.ui.icon.IconSelectorCtrl.prototype.setTab);
 
 
 /**
  * Translates from google uri if needed
  * @param {string} path
  * @return {string}
+ * @export
  */
 os.ui.icon.IconSelectorCtrl.prototype.getPath = function(path) {
   return os.ui.file.kml.GMAPS_SEARCH.test(path) ? os.ui.file.kml.replaceGoogleUri(path) : path;
 };
-goog.exportProperty(
-    os.ui.icon.IconSelectorCtrl.prototype,
-    'getPath',
-    os.ui.icon.IconSelectorCtrl.prototype.getPath);

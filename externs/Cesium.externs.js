@@ -3040,7 +3040,17 @@ Cesium.ImageryProvider.prototype.requestImage = function(x, y, level) {};
  */
 Cesium.ImageryProvider.loadImage = function(imageryProvider, url) {};
 
-Cesium.Resource = {};
+/**
+ * @constructor
+ */
+Cesium.Resource = function() {};
+
+/**
+ * @param {Cesium.ResourceFetchOptions} options
+ * @return {Cesium.Promise<*>}
+ */
+Cesium.Resource.prototype._makeRequest = function(options) {};
+
 Cesium.Resource._Implementations = {};
 
 /**
@@ -3173,22 +3183,31 @@ Cesium.RectangleGeometryLibrary = {};
 
 
 /**
- * @param {Cesium.Geometry} geometry
  * @param {Cesium.Rectangle} rectangle
- * @param {!Cesium.Cartographic} nwCorner
+ * @param {number} granularity
+ * @param {number} rotation
+ * @param {number} stRotation
+ * @param {Cesium.Rectangle} boundingRectangleScratch
+ * @param {!Cesium.Cartographic} nwCornerResult
+ * @param {!Cesium.Cartographic} stNwCornerResult
  * @return {{height: number, width: number}}
  */
-Cesium.RectangleGeometryLibrary.computeOptions = function(geometry, rectangle, nwCorner) {};
+Cesium.RectangleGeometryLibrary.computeOptions = function(rectangle, granularity, rotation, stRotation,
+    boundingRectangleScratch, nwCornerResult, stNwCornerResult) {};
 
 
 /**
- * @param {{height: number, width: number}} options
+ * @param {{height: number, width: number}} computedOptions
+ * @param {Cesium.Ellipsoid} ellipsoid
+ * @param {boolean} computeST
  * @param {number} row
  * @param {number} col
  * @param {!Cesium.Cartesian3} position
+ * @param {Cesium.Cartesian2=} opt_st
  * @return {!Cesium.Cartesian3}
  */
-Cesium.RectangleGeometryLibrary.computePosition = function(options, row, col, position) {};
+Cesium.RectangleGeometryLibrary.computePosition = function(computedOptions, ellipsoid, computeST, row, col, position,
+    opt_st) {};
 
 
 /**
@@ -3800,6 +3819,12 @@ Cesium.Scene.prototype.render = function(julianDate) {};
 
 
 /**
+ * @param {Cesium.JulianDate} julianDate
+ */
+Cesium.Scene.prototype.forceRender = function(julianDate) {};
+
+
+/**
  * @type {Cesium.Event}
  * @const
  */
@@ -3811,6 +3836,20 @@ Cesium.Scene.prototype.preRender;
  * @const
  */
 Cesium.Scene.prototype.postRender;
+
+
+/**
+ * @type {Cesium.Event}
+ * @const
+ */
+Cesium.Scene.prototype.preUpdate;
+
+
+/**
+ * @type {Cesium.Event}
+ * @const
+ */
+Cesium.Scene.prototype.postUpdate;
 
 
 /**
@@ -4771,7 +4810,7 @@ Cesium.ArcGisImageServerTerrainProvider = function(options) {};
 
 /**
  * @typedef {{
- *   url: string,
+ *   url: (Cesium.Resource|string),
  *   credit: (Cesium.Credit|string|undefined),
  *   ellipsoid: (Cesium.Ellipsoid|undefined),
  *   proxy: (Object|undefined),
@@ -5053,3 +5092,46 @@ Cesium.EntityView.prototype.update = function(currentTime, bs) {};
  * @constructor
  */
 Cesium.CallbackProperty = function(cb, constant) {};
+
+
+/**
+ * @typedef {{
+ *   accessToken: (string|undefined),
+ *   assetId: (number|undefined)
+ * }}
+ */
+Cesium.WorldTerrainOptions;
+
+
+/**
+ * @param {{requestVertexNormals: (boolean|undefined), requestWaterMask: (boolean|undefined)}} options
+ * @return {!Cesium.CesiumTerrainProvider}
+ */
+Cesium.createWorldTerrain = function(options) {};
+
+
+/**
+ * @typedef {{
+ *   accessToken: (string|undefined),
+ *   server: (Cesium.Resource|string|undefined)
+ * }}
+ */
+Cesium.AssetOptions;
+
+
+/**
+ * @param {Object} endpoint The result of the Cesium ion asset endpoint service.
+ * @param {Cesium.Resource} resource The resource used to retreive the endpoint.
+ * @extends {Cesium.Resource}
+ * @constructor
+ */
+Cesium.IonResource = function(endpoint, resource) {};
+
+
+/**
+ * Create a Cesium Ion resource from an asset id.
+ * @param {number} assetId The asset id.
+ * @param {Cesium.AssetOptions} options The asset options.
+ * @return {Cesium.IonResource}
+ */
+Cesium.IonResource.fromAssetId = function(assetId, options) {};

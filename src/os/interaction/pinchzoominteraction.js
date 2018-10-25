@@ -2,6 +2,7 @@ goog.provide('os.interaction.PinchZoom');
 
 goog.require('ol.interaction.PinchZoom');
 goog.require('os.I3DSupport');
+goog.require('os.implements');
 
 
 /**
@@ -15,6 +16,7 @@ os.interaction.PinchZoom = function(opt_options) {
   os.interaction.PinchZoom.base(this, 'constructor', opt_options);
 };
 goog.inherits(os.interaction.PinchZoom, ol.interaction.PinchZoom);
+os.implements(os.interaction.PinchZoom, os.I3DSupport.ID);
 
 
 /**

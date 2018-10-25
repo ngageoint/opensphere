@@ -4,6 +4,7 @@ goog.require('goog.crypt.hash32');
 goog.require('os.color');
 goog.require('os.defines');
 
+
 /**
  * Icon svg markup
  * @enum {string}
@@ -32,7 +33,7 @@ os.ui.Icons = {
   TILES: '<img src="' + os.ROOT + 'images/tiles-base.png" title="Tile layer"/>',
   TIME: '<img class="time-icon" src="' + os.ROOT + 'images/time-base.png" ' +
       'title="This layer supports animation over time"/>',
-  DEPRECATED: '<i class="fa fa-exclamation-circle red-icon" title="This layer is soon to be deleted"></i>',
+  DEPRECATED: '<i class="fa fa-exclamation-circle text-danger" title="This layer is soon to be deleted"></i>',
   LOCK: '<i class="fa fa-lock" title="This layer is locked."></i>',
   COLOR_MODEL: '<i class="fa fa-tint" title="This layer has auto/manual coloring rules applied"></i>'
 };
@@ -65,12 +66,12 @@ os.ui.createIconSet = function(id, svgIcons, faIcons, color) {
   id = os.ui.hashIconId(id);
 
   if (svgIcons && svgIcons.length > 0) {
-    var arrColor = goog.isString(color) ? os.color.toRgbArray(color) : color;
+    var arrColor = typeof color === 'string' ? os.color.toRgbArray(color) : color;
     var values = os.color.changeColor(os.ui.white_, arrColor || os.ui.white_);
     var width = os.ui.ICON_WIDTH * svgIcons.length;
     var filter = 'filter_';
     var matrix = 'matrix_';
-    html += '<svg width="' + width + 'px" height="16px" style="vertical-align:middle" ' +
+    html += '<svg width="' + width + 'px" height="16px" class="align-middle" ' +
         'xmlns="http://www.w3.org/2000/svg" filter="url(#' + filter + id + ')">';
 
     html += svgIcons.join('');
@@ -133,7 +134,7 @@ os.ui.xReplace_ = function(match, p1, offset, whole) {
  * @param {Array<number>|string} color
  */
 os.ui.adjustIconSet = function(id, color) {
-  if (goog.isString(color)) {
+  if (typeof color === 'string') {
     color = os.color.toRgbArray(color);
   }
 

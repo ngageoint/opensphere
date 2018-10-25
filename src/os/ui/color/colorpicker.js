@@ -11,9 +11,16 @@ goog.require('os.ui.color.colorPaletteDirective');
 /**
  * @type {string}
  */
-os.ui.color.COLOR_PICKER_TEMPLATE = '<button type="button" class="btn btn-default btn-color-picker" ' +
-    'ng-click="colorPicker.togglePopup()" ng-disabled=disabled>' +
-    '<i class="fa fa-square stroke" ng-style="{\'color\': color}"></i></button>';
+os.ui.color.COLOR_PICKER_SELECTOR = 'js-color-picker';
+
+
+/**
+ * @type {string}
+ */
+os.ui.color.COLOR_PICKER_TEMPLATE = '<button type="button" class="btn bg-transparent border ' +
+    os.ui.color.COLOR_PICKER_SELECTOR +
+    '" ng-click="colorPicker.togglePopup()" ng-disabled=disabled>' +
+    '<i class="fa fa-square" ng-style="{\'color\': color}"></i></button>';
 
 
 /**
@@ -23,6 +30,7 @@ os.ui.color.COLOR_PICKER_TEMPLATE = '<button type="button" class="btn btn-defaul
 os.ui.color.colorPickerDirective = function() {
   return {
     restrict: 'AE',
+    replace: true,
     scope: {
       'color': '=',
       'data': '=',
@@ -209,9 +217,10 @@ os.ui.color.ColorPickerCtrl.prototype.onMouseDown_ = function(e) {
 /**
  * Toggle the color picker on/off.
  * @param {boolean=} opt_value
+ * @export
  */
 os.ui.color.ColorPickerCtrl.prototype.togglePopup = function(opt_value) {
-  this['showPopup'] = goog.isDef(opt_value) ? opt_value : !this['showPopup'];
+  this['showPopup'] = opt_value !== undefined ? opt_value : !this['showPopup'];
 
   if (this['showPopup']) {
     // create a new scope
@@ -233,10 +242,6 @@ os.ui.color.ColorPickerCtrl.prototype.togglePopup = function(opt_value) {
     this.destroyControlMenu_();
   }
 };
-goog.exportProperty(
-    os.ui.color.ColorPickerCtrl.prototype,
-    'togglePopup',
-    os.ui.color.ColorPickerCtrl.prototype.togglePopup);
 
 
 /**
@@ -247,9 +252,9 @@ goog.exportProperty(
 os.ui.color.ColorPickerCtrl.prototype.getTemplate = function() {
   var menuOffset = this.element.offset();
   menuOffset['top'] += this.element.outerHeight();
-  var showReset = goog.isDef(this.scope['showReset']) ? this.scope['showReset'] : 'false';
+  var showReset = this.scope['showReset'] !== undefined ? this.scope['showReset'] : 'false';
 
-  return '<colorpalette class="fixed" value="value" ' + (this.name_ ? 'name="' + this.name_ + '" ' : '') +
+  return '<colorpalette class="position-fixed" value="value" ' + (this.name_ ? 'name="' + this.name_ + '" ' : '') +
       'show-reset="' + showReset + '" ' +
       'style="top:' + menuOffset['top'] + 'px;left:' + menuOffset['left'] + 'px;"></colorpalette>';
 };

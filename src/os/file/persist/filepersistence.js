@@ -49,7 +49,7 @@ os.file.persist.FilePersistence.prototype.save = function(fileName, content, opt
 /**
  * Static function to save a file, so it can be used without the persistence
  * @param {string} fileName The file name
- * @param {*} content The content to save
+ * @param {Object|null|string} content The content to save
  * @param {string=} opt_mimeType The mime type of the content
  * @return {boolean} Whether or not the save action was successfull
  */
@@ -59,7 +59,7 @@ os.file.persist.saveFile = function(fileName, content, opt_mimeType) {
   if (typeof (saveAs) != 'undefined') {
     var list = [];
 
-    if (goog.isString(content) && content.startsWith('\ufeff')) {
+    if (typeof content === 'string' && content.startsWith('\ufeff')) {
       // Set up us the BOM.
       // \uFEFF is the magic number for "insert byte order mark here". This is the BOM for UTF-8. Yes,
       // \uFEFF is the BOM for UTF-16 and byte order doesn't mean anything in UTF-8. This matches how
@@ -72,7 +72,7 @@ os.file.persist.saveFile = function(fileName, content, opt_mimeType) {
     var blob = new Blob(list, {'type': type});
     saveAs(blob, fileName);
     return true;
-  } else if (typeof (saveTextAs) != 'undefined' && goog.isString(content)) {
+  } else if (typeof (saveTextAs) != 'undefined' && typeof content === 'string') {
     // IE9 only supports saving text, thus has a different method
     saveTextAs(content, fileName);
     return true;

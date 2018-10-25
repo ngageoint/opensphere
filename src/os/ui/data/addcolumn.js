@@ -93,7 +93,7 @@ os.ui.data.AddColumnCtrl = function($scope, $element, $timeout) {
     $element.find('input[name="name"]').focus();
   });
 
-  $scope.$emit('window.ready');
+  $scope.$emit(os.ui.WindowEventType.READY);
   $scope.$on('$destroy', goog.bind(this.destroy_, this));
 };
 
@@ -110,18 +110,16 @@ os.ui.data.AddColumnCtrl.prototype.destroy_ = function() {
 
 /**
  * Closes the window.
+ * @export
  */
 os.ui.data.AddColumnCtrl.prototype.cancel = function() {
   os.ui.window.close(this.element_);
 };
-goog.exportProperty(
-    os.ui.data.AddColumnCtrl.prototype,
-    'cancel',
-    os.ui.data.AddColumnCtrl.prototype.cancel);
 
 
 /**
  * Finishes and adds the column.
+ * @export
  */
 os.ui.data.AddColumnCtrl.prototype.finish = function() {
   if (!this.scope_['addColumnForm'].$invalid) {
@@ -151,10 +149,6 @@ os.ui.data.AddColumnCtrl.prototype.finish = function() {
     this.cancel();
   }
 };
-goog.exportProperty(
-    os.ui.data.AddColumnCtrl.prototype,
-    'finish',
-    os.ui.data.AddColumnCtrl.prototype.finish);
 
 
 /**
@@ -172,7 +166,7 @@ os.ui.data.AddColumnCtrl.launch = function(source) {
     'modal': true,
     'width': 500,
     'height': 'auto',
-    'icon': 'color-add fa fa-plus'
+    'icon': 'fa fa-plus'
   };
 
   var scopeOptions = {

@@ -38,12 +38,13 @@ os.ui.Module.directive('mergeareas', [os.query.ui.mergeAreasDirective]);
 /**
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
+ * @param {!angular.$timeout} $timeout The Angular $timeout service.
  * @extends {os.ui.query.ui.EditAreaCtrl}
  * @constructor
  * @ngInject
  */
-os.query.ui.MergeAreasCtrl = function($scope, $element) {
-  os.query.ui.MergeAreasCtrl.base(this, 'constructor', $scope, $element);
+os.query.ui.MergeAreasCtrl = function($scope, $element, $timeout) {
+  os.query.ui.MergeAreasCtrl.base(this, 'constructor', $scope, $element, $timeout);
   this.log = os.query.ui.MergeAreasCtrl.LOGGER_;
 
   /**
@@ -81,8 +82,6 @@ os.query.ui.MergeAreasCtrl = function($scope, $element) {
       goog.log.error(this.log, 'Failed merging features:', e);
     }
   }
-
-  $scope.$emit('window.ready');
 };
 goog.inherits(os.query.ui.MergeAreasCtrl, os.ui.query.ui.EditAreaCtrl);
 
@@ -111,6 +110,7 @@ os.query.ui.MergeAreasCtrl.prototype.disposeInternal = function() {
 
 /**
  * @inheritDoc
+ * @export
  */
 os.query.ui.MergeAreasCtrl.prototype.accept = function() {
   var areas = this.scope['features'];
@@ -156,7 +156,3 @@ os.query.ui.MergeAreasCtrl.prototype.accept = function() {
 
   this.close();
 };
-goog.exportProperty(
-    os.query.ui.MergeAreasCtrl.prototype,
-    'accept',
-    os.query.ui.MergeAreasCtrl.prototype.accept);

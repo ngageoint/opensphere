@@ -11,7 +11,7 @@ goog.require('os.time.TimelineController');
 goog.require('os.ui.Module');
 goog.require('os.ui.datetime.dateTimeDirective');
 goog.require('os.ui.popover.popoverDirective');
-goog.require('os.ui.spinnerDirective');
+goog.require('os.ui.time.timeDirective');
 
 
 /**
@@ -23,7 +23,7 @@ os.ui.timeSettingsDirective = function() {
     restrict: 'AE',
     replace: true,
     scope: true,
-    templateUrl: os.ROOT + 'views/windows/time.html',
+    templateUrl: os.ROOT + 'views/windows/timelinesettings.html',
     controller: os.ui.TimeSettingsCtrl,
     controllerAs: 'timeCtrl'
   };
@@ -105,6 +105,7 @@ os.ui.TimeSettingsCtrl.prototype.populate = function() {
 
 /**
  * Apply the settings
+ * @export
  */
 os.ui.TimeSettingsCtrl.prototype.accept = function() {
   var tlc = os.time.TimelineController.getInstance();
@@ -142,24 +143,23 @@ os.ui.TimeSettingsCtrl.prototype.accept = function() {
     }
     tlc.setLoadRanges(loadSet);
     tlc.dispatchEvent(os.time.TimelineEventType.REFRESH_LOAD);
-  }
 
-  os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Timeline.TIME_RANGE, 1);
+    os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Timeline.TIME_RANGE, 1);
+  }
 
   // move the view
   /** @type {os.ui.timeline.TimelineCtrl} */ (this.scope['timeline']).zoomToExtent([tlc.getStart(), tlc.getEnd()]);
   this.cancel();
 };
-goog.exportProperty(os.ui.TimeSettingsCtrl.prototype, 'accept', os.ui.TimeSettingsCtrl.prototype.accept);
 
 
 /**
  * Cancel/Close
+ * @export
  */
 os.ui.TimeSettingsCtrl.prototype.cancel = function() {
   os.ui.window.close(this.element);
 };
-goog.exportProperty(os.ui.TimeSettingsCtrl.prototype, 'cancel', os.ui.TimeSettingsCtrl.prototype.cancel);
 
 
 /**
@@ -178,59 +178,57 @@ os.ui.TimeSettingsCtrl.prototype.handleKeyEvent_ = function(event) {
 
 /**
  * Add a slice
- * @param {Object=} opt_slice
- * @param {boolean=} opt_crossesMidnight
+ * @export
  */
-os.ui.TimeSettingsCtrl.prototype.addSlice = function(opt_slice, opt_crossesMidnight) {
+os.ui.TimeSettingsCtrl.prototype.addSlice = function() {
   var slice = {'start': {'hours': 0, 'mins': 0, 'secs': 0}, 'end': {'hours': 1, 'mins': 0, 'secs': 0}};
-  if (opt_slice) {
+  var last = this.scope['sliceRanges'].length ? this.scope['sliceRanges'][this.scope['sliceRanges'].length - 1] : null;
+  if (last) {
     slice = {
       'start': {
-        'hours': opt_slice['start']['hours'],
-        'mins': opt_slice['start']['mins'],
-        'secs': opt_slice['start']['secs']
+        'hours': last['start']['hours'],
+        'mins': last['start']['mins'],
+        'secs': last['start']['secs']
       },
       'end': {
-        'hours': opt_slice['end']['hours'],
-        'mins': opt_slice['end']['mins'],
-        'secs': opt_slice['end']['secs']
+        'hours': last['end']['hours'],
+        'mins': last['end']['mins'],
+        'secs': last['end']['secs']
       }
     };
   }
   this.scope['sliceRanges'].push(slice);
-  this.scope['sliceModels'][this.scope['sliceRanges'].length - 1] = (opt_crossesMidnight ? opt_crossesMidnight : false);
 };
-goog.exportProperty(os.ui.TimeSettingsCtrl.prototype, 'addSlice', os.ui.TimeSettingsCtrl.prototype.addSlice);
 
 
 /**
  * Remove a slice
  * @param {number} index
+ * @export
  */
 os.ui.TimeSettingsCtrl.prototype.removeSlice = function(index) {
   this.scope['sliceRanges'].splice(index, 1);
 };
-goog.exportProperty(os.ui.TimeSettingsCtrl.prototype, 'removeSlice', os.ui.TimeSettingsCtrl.prototype.removeSlice);
 
 
 /**
  * Add a load range
- * @param {Object} range
+ * @export
  */
-os.ui.TimeSettingsCtrl.prototype.addRange = function(range) {
+os.ui.TimeSettingsCtrl.prototype.addRange = function() {
+  var range = this.scope['loadRanges'][this.scope['loadRanges'].length - 1];
   this.scope['loadRanges'].push({'start': range.start, 'end': range.end});
 };
-goog.exportProperty(os.ui.TimeSettingsCtrl.prototype, 'addRange', os.ui.TimeSettingsCtrl.prototype.addRange);
 
 
 /**
  * Remove a load range
  * @param {number} index
+ * @export
  */
 os.ui.TimeSettingsCtrl.prototype.removeRange = function(index) {
   this.scope['loadRanges'].splice(index, 1);
 };
-goog.exportProperty(os.ui.TimeSettingsCtrl.prototype, 'removeRange', os.ui.TimeSettingsCtrl.prototype.removeRange);
 
 
 /**
@@ -285,24 +283,16 @@ os.ui.TimeSettingsCtrl.prototype.fromSlicesToHMS = function(ranges) {
  * @protected
  */
 os.ui.TimeSettingsCtrl.prototype.timeFromField = function(field) {
-  return (goog.isString(field) ? os.time.parse(field, null, true) : field).getTime() - os.time.timeOffset;
+  return (typeof field === 'string' ? os.time.parse(field, null, true) : field).getTime() - os.time.timeOffset;
 };
 
 
 /**
  * Checks for valid
  * @return {boolean}
+ * @export
  */
 os.ui.TimeSettingsCtrl.prototype.valid = function() {
-  var sr = this.scope['sliceRanges'];
-  for (var i = 0; i < sr.length; i++) {
-    var start = sr[i]['start']['hours'] * 3600000 + sr[i]['start']['mins'] * 60000 + sr[i]['start']['secs'] * 1000;
-    var end = sr[i]['end']['hours'] * 3600000 + sr[i]['end']['mins'] * 60000 + sr[i]['end']['secs'] * 1000;
-    if (start > end && !this.scope['sliceModels'][i]) {
-      return false;
-    }
-  }
-
   var loadRanges = this.scope['loadRanges'];
   for (var i = 0; i < loadRanges.length; i++) {
     var start = this.timeFromField(loadRanges[i].start);
@@ -314,7 +304,6 @@ os.ui.TimeSettingsCtrl.prototype.valid = function() {
 
   return true;
 };
-goog.exportProperty(os.ui.TimeSettingsCtrl.prototype, 'valid', os.ui.TimeSettingsCtrl.prototype.valid);
 
 
 /**
@@ -322,11 +311,11 @@ goog.exportProperty(os.ui.TimeSettingsCtrl.prototype, 'valid', os.ui.TimeSetting
  * @param {string} start
  * @param {string} end
  * @return {boolean}
+ * @export
  */
 os.ui.TimeSettingsCtrl.prototype.isValid = function(start, end) {
   return new Date(start) < new Date(end);
 };
-goog.exportProperty(os.ui.TimeSettingsCtrl.prototype, 'isValid', os.ui.TimeSettingsCtrl.prototype.isValid);
 
 
 /**
@@ -335,6 +324,7 @@ goog.exportProperty(os.ui.TimeSettingsCtrl.prototype, 'isValid', os.ui.TimeSetti
  * @param {Object} end
  * @param {boolean=} opt_ignore
  * @return {boolean}
+ * @export
  */
 os.ui.TimeSettingsCtrl.prototype.isValidSlice = function(start, end, opt_ignore) {
   var valid = true;
@@ -345,4 +335,3 @@ os.ui.TimeSettingsCtrl.prototype.isValidSlice = function(start, end, opt_ignore)
   }
   return /** @type {boolean} */ (valid);
 };
-goog.exportProperty(os.ui.TimeSettingsCtrl.prototype, 'isValidSlice', os.ui.TimeSettingsCtrl.prototype.isValidSlice);

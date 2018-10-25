@@ -1,7 +1,6 @@
 goog.provide('os.action.EventType');
 
 goog.require('goog.events.EventType');
-goog.require('os.ui.OpenEventType');
 
 
 /**
@@ -73,7 +72,7 @@ os.action.EventType = {
   REMOVE_FILTER: 'filter:remove',
 
   // import
-  IMPORT_FILE: os.ui.OpenEventType,
+  IMPORT_FILE: 'importFile',
   IMPORT_URL: 'importUrl',
 
   // export

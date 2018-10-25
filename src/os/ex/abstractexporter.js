@@ -46,7 +46,7 @@ os.ex.AbstractExporter = function() {
 
   /**
    * The output of the exporter
-   * @type {*}
+   * @type {Object|null|string}
    */
   this.output = null;
 };

@@ -12,7 +12,7 @@ goog.require('os.geo');
 goog.require('os.query.ui.mergeAreasDirective');
 goog.require('os.query.ui.modifyAreaDirective');
 goog.require('os.ui.ex.AreaExportCtrl');
-goog.require('os.ui.featureInfoDirective');
+goog.require('os.ui.feature.featureInfoDirective');
 goog.require('os.ui.menu.Menu');
 goog.require('os.ui.menu.MenuItem');
 goog.require('os.ui.menu.MenuItemType');
@@ -181,11 +181,11 @@ os.ui.menu.spatial.setup = function() {
           sort: 50,
           beforeRender: os.ui.menu.spatial.visibleIfPolygonal
         }, {
-          label: 'Remove Feature',
-          eventType: os.action.EventType.REMOVE_FEATURE,
+          label: 'Remove',
           tooltip: 'Remove the feature from the layer',
           icons: ['<i class="fa fa-fw fa-times"></i>'],
           sort: 60,
+          handler: os.ui.menu.spatial.removeItems,
           beforeRender: os.ui.menu.spatial.visibleIfInLayer
         }]
       }, {
@@ -249,7 +249,7 @@ os.ui.menu.spatial.setup = function() {
           tooltip: 'Merge selected areas into a new area',
           icons: ['<i class="fa fa-fw fa-link"></i>'],
           sort: 60,
-          beforeRender: os.ui.menu.spatial.visibleIfHasMultiple
+          beforeRender: os.ui.menu.spatial.visibleIfMultiplePolygonal
         }, {
           label: 'Remove Area',
           eventType: os.action.EventType.REMOVE_AREA,
@@ -430,6 +430,16 @@ os.ui.menu.spatial.visibleIfHasMultiple = function(context) {
 
 
 /**
+ * Shows a menu item if the context has multiple items.
+ * @param {Object|undefined} context The menu context.
+ * @this {os.ui.menu.MenuItem}
+ */
+os.ui.menu.spatial.visibleIfMultiplePolygonal = function(context) {
+  this.visible = os.ui.menu.spatial.hasMultiple(context) && os.ui.menu.spatial.isPolygonal(context);
+};
+
+
+/**
  * Shows a menu item if the context is polygonal.
  * @param {Object|undefined} context The menu context.
  * @this {os.ui.menu.MenuItem}
@@ -445,8 +455,46 @@ os.ui.menu.spatial.visibleIfPolygonal = function(context) {
  * @this {os.ui.menu.MenuItem}
  */
 os.ui.menu.spatial.visibleIfInLayer = function(context) {
-  var am = os.query.AreaManager.getInstance();
-  this.visible = !!context && !!context.feature && !!context.layer && !am.contains(context.feature);
+  this.visible = os.ui.menu.spatial.isInLayer(context);
+};
+
+
+/**
+ * @param {Object|undefined} context The menu context
+ * @return {boolean}
+ */
+os.ui.menu.spatial.isInLayer = function(context) {
+  if (Array.isArray(context)) {
+    for (var i = 0, n = context.length; i < n; i++) {
+      if (!os.ui.menu.spatial.isInLayer(context[i])) {
+        return false;
+      }
+    }
+    return true;
+  } else {
+    var am = os.query.AreaManager.getInstance();
+    return !!context && !!context.feature && !!context.layer && !am.contains(context.feature);
+  }
+};
+
+
+/**
+ * @param {os.ui.menu.MenuEvent<Object|undefined>} evt The menu event
+ */
+os.ui.menu.spatial.removeItems = function(evt) {
+  var context = evt.getContext();
+  if (!Array.isArray(context)) {
+    context = [context];
+  }
+
+  context.forEach(function(c) {
+    if (c.layer) {
+      var source = c.layer.getSource();
+      if (source) {
+        source.removeFeature(c.feature);
+      }
+    }
+  });
 };
 
 
@@ -479,6 +527,16 @@ os.ui.menu.spatial.visibleIfCanModify = function(context) {
  */
 os.ui.menu.spatial.visibleIfInAreaManager = function(context) {
   this.visible = os.ui.menu.spatial.inAreaManager(context);
+};
+
+
+/**
+ * Shows a menu item if the context is in the area manager.
+ * @param {Object|undefined} context The menu context.
+ * @this {os.ui.menu.MenuItem}
+ */
+os.ui.menu.spatial.notVisibleIfInAreaManager = function(context) {
+  this.visible = !os.ui.menu.spatial.inAreaManager(context);
 };
 
 
@@ -614,12 +672,8 @@ os.ui.menu.spatial.onMenuEvent = function(event, opt_layerIds) {
             break;
           case os.action.EventType.MERGE_AREAS:
           case os.action.EventType.EXPORT:
-            features.push(feature);
-            break;
           case os.action.EventType.FEATURE_INFO:
-            var layer = /** @type {os.layer.ILayer|undefined} */ (context[i].layer);
-            var title = layer ? layer.getTitle() : undefined;
-            os.ui.launchFeatureInfo(feature, title);
+            features.push(feature);
             break;
           default:
             break;
@@ -640,6 +694,11 @@ os.ui.menu.spatial.onMenuEvent = function(event, opt_layerIds) {
             cmds.push(new os.command.AreaToggle(area, true));
           }
         }
+        break;
+      case os.action.EventType.FEATURE_INFO:
+        var layer = /** @type {os.layer.ILayer|undefined} */ (context[0].layer);
+        var title = layer ? layer.getTitle() : undefined;
+        os.ui.feature.launchMultiFeatureInfo(features, title);
         break;
       default:
         break;
@@ -698,7 +757,7 @@ os.ui.menu.spatial.getLayers = function(opt_areaId) {
 
   // check to see if this area is applied to all layers first
   var enabled = true;
-  if (goog.isDef(opt_areaId)) {
+  if (opt_areaId !== undefined) {
     enabled = os.ui.queryManager.getEntries('*', opt_areaId, null).length > 0;
     if (enabled) {
       // dont lookup for individual layers if it applys to all
@@ -709,7 +768,7 @@ os.ui.menu.spatial.getLayers = function(opt_areaId) {
     var l = /** @type {os.filter.IFilterable} */ (os.MapContainer.getInstance().getLayer(key));
     try {
       if (l) {
-        if (goog.isDef(opt_areaId)) {
+        if (opt_areaId !== undefined) {
           enabled = os.ui.queryManager.getEntries(key, opt_areaId, null).length > 0;
         }
         layers.push({
@@ -867,6 +926,7 @@ os.ui.menu.spatial.LayerChooserCtrl = function($scope, $element) {
 /**
  * Fire the confirmation callback and close the window.
  * @return {boolean}
+ * @export
  */
 os.ui.menu.spatial.LayerChooserCtrl.prototype.valid = function() {
   var found = goog.array.find(this.scope_['layers'], function(layer) {
@@ -876,13 +936,11 @@ os.ui.menu.spatial.LayerChooserCtrl.prototype.valid = function() {
   // Switch the type to the correct action
   return !found;
 };
-goog.exportProperty(os.ui.menu.spatial.LayerChooserCtrl.prototype,
-    'valid',
-    os.ui.menu.spatial.LayerChooserCtrl.prototype.valid);
 
 
 /**
  * Fire the confirmation callback and close the window.
+ * @export
  */
 os.ui.menu.spatial.LayerChooserCtrl.prototype.accept = function() {
   // Switch the type to the correct action
@@ -898,21 +956,15 @@ os.ui.menu.spatial.LayerChooserCtrl.prototype.accept = function() {
   os.ui.menu.spatial.onMenuEvent(this.scope_['event'], layerIds);
   this.close();
 };
-goog.exportProperty(os.ui.menu.spatial.LayerChooserCtrl.prototype,
-    'accept',
-    os.ui.menu.spatial.LayerChooserCtrl.prototype.accept);
 
 
 /**
  * Close the window.
+ * @export
  */
 os.ui.menu.spatial.LayerChooserCtrl.prototype.close = function() {
   os.ui.window.close(this.element_);
 };
-goog.exportProperty(
-    os.ui.menu.spatial.LayerChooserCtrl.prototype,
-    'close',
-    os.ui.menu.spatial.LayerChooserCtrl.prototype.close);
 
 
 /**
@@ -946,7 +998,7 @@ os.ui.menu.spatial.onLayerPicker_ = function(event) {
     var windowOptions = {
       'id': 'spatiallayerchooser',
       'label': 'Choose Layers',
-      'icon': 'fa fa-align-justify orange-icon',
+      'icon': 'fa fa-align-justify',
       'x': 'center',
       'y': 'center',
       'width': '350',
@@ -959,7 +1011,7 @@ os.ui.menu.spatial.onLayerPicker_ = function(event) {
       'show-close': 'true'
     };
 
-    var template = '<layerchooser></layerchooser>';
+    var template = '<layerchooser class="flex-fill d-flex"></layerchooser>';
     os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
   } else {
     var layerIds = [];

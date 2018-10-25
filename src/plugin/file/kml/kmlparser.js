@@ -18,6 +18,8 @@ goog.require('ol.layer.Image');
 goog.require('ol.source.ImageStatic');
 goog.require('ol.xml');
 goog.require('os.data.ColumnDefinition');
+goog.require('os.file.mime.text');
+goog.require('os.file.mime.zip');
 goog.require('os.layer.Image');
 goog.require('os.net.Request');
 goog.require('os.object');
@@ -328,15 +330,21 @@ plugin.file.kml.KMLParser.prototype.setSource = function(source) {
 
   if (ol.xml.isDocument(source)) {
     this.document_ = /** @type {Document} */ (source);
-  } else if (goog.isString(source)) {
+  } else if (typeof source === 'string') {
     this.document_ = os.xml.loadXml(source);
   } else if (source instanceof ArrayBuffer) {
-    if (os.file.isZipFile(source)) {
+    if (os.file.mime.zip.isZip(source)) {
       this.clearAssets();
       this.handleZIP_(source);
       return;
     } else {
-      this.document_ = goog.dom.xml.loadXml(os.arraybuf.toString(source));
+      var s = os.file.mime.text.getText(source);
+      if (s) {
+        this.document_ = goog.dom.xml.loadXml(s);
+      } else {
+        goog.log.error(this.log_, 'Source buffer does not appear to be text');
+        this.onError();
+      }
     }
   } else if (source instanceof Blob) {
     goog.fs.FileReader.readAsArrayBuffer(source).addCallback(this.setSource, this);
@@ -609,7 +617,7 @@ plugin.file.kml.KMLParser.prototype.imagesRemaining_ = function() {
  * @private
  */
 plugin.file.kml.KMLParser.prototype.processZipImage_ = function(filename, uri) {
-  if (goog.isString(filename) && goog.isString(uri)) {
+  if (typeof filename === 'string' && typeof uri === 'string') {
     this.assetMap_[filename] = uri;
     this.kmzImagesRemaining_--;
   } else {
@@ -644,7 +652,7 @@ plugin.file.kml.KMLParser.prototype.processZIPEntry_ = function(filename, conten
 plugin.file.kml.KMLParser.prototype.handleZIPText_ = function(filename, event) {
   var content = event.target.result;
 
-  if (content && goog.isString(content)) {
+  if (content && typeof content === 'string') {
     if (!this.document_) {
       this.setSource(content);
     } else {
@@ -663,7 +671,7 @@ plugin.file.kml.KMLParser.prototype.handleZIPText_ = function(filename, event) {
  */
 plugin.file.kml.KMLParser.prototype.parseNext = function() {
   goog.asserts.assert(this.stack_.length > 0, 'Stack should not be empty');
-  goog.asserts.assert(goog.isDefAndNotNull(this.stack_[this.stack_.length - 1]), 'Top of stack should be an object');
+  goog.asserts.assert(this.stack_[this.stack_.length - 1] != null, 'Top of stack should be an object');
 
   var stackObj = null;
   var node = null;
@@ -813,10 +821,10 @@ plugin.file.kml.KMLParser.prototype.createTreeNode_ = function(el, opt_parent) {
       node.setLabel(id || this.getDefaultName_(el.localName));
     }
 
-    if (goog.isDefAndNotNull(opt_parent)) {
+    if (opt_parent != null) {
       // if the child already exists, the new node will be merged and the original node returned
       node = /** @type {plugin.file.kml.ui.KMLNode} */ (opt_parent.addChild(node));
-    } else if (goog.isNull(this.rootNode_)) {
+    } else if (this.rootNode_ === null) {
       this.rootNode_ = node;
     } else if (this.rootNode_.getLabel() != node.getLabel()) {
       // the root node name changed, so start with a fresh tree. if this rains on anyone's parade we can probably
@@ -887,9 +895,9 @@ plugin.file.kml.KMLParser.prototype.examineElement_ = function(el) {
  */
 plugin.file.kml.KMLParser.prototype.updateNode_ = function(el, node, parsers) {
   var n;
-  for (n = goog.dom.getFirstElementChild(el); !goog.isNull(n); n = n.nextElementSibling) {
+  for (n = goog.dom.getFirstElementChild(el); n !== null; n = n.nextElementSibling) {
     var parser = parsers[n.localName];
-    if (goog.isDef(parser)) {
+    if (parser !== undefined) {
       parser.call(this, node, n);
     }
   }
@@ -941,7 +949,7 @@ plugin.file.kml.KMLParser.prototype.readNetworkLink_ = function(el) {
           break;
         case os.ui.file.kml.RefreshMode.INTERVAL:
           var interval = /** @type {number} */ (linkObj['refreshInterval']);
-          if (goog.isNumber(interval) && !isNaN(interval)) {
+          if (typeof interval === 'number' && !isNaN(interval)) {
             node.setRefreshInterval(interval * 1000);
           }
           break;
@@ -1080,7 +1088,7 @@ plugin.file.kml.KMLParser.prototype.readGroundOverlay_ = function(el) {
   goog.asserts.assert(el.localName == 'GroundOverlay', 'localName should be GroundOverlay');
 
   // openlayers does not natively support GroundOverlay so we need to parse the xml and create an image
-  if (goog.isDef(el) && el.querySelector('name') && el.querySelector('Icon') &&
+  if (el !== undefined && el.querySelector('name') && el.querySelector('Icon') &&
       (el.querySelector('LatLonBox') || el.querySelector('LatLonQuad'))) {
     var icon = el.querySelector('Icon').querySelector('href').textContent;
     if (this.assetMap_[icon]) {
@@ -1122,12 +1130,19 @@ plugin.file.kml.KMLParser.prototype.readGroundOverlay_ = function(el) {
       }
     }
 
+    var extent = [
+      Math.min(west, east),
+      Math.min(south, north),
+      Math.max(west, east),
+      Math.max(south, north)];
+
+    extent = ol.proj.transformExtent(extent, os.proj.EPSG4326, os.map.PROJECTION);
+
     var image = new os.layer.Image({
       source: new ol.source.ImageStatic({
         url: icon,
-        imageExtent: [west, south, east, north]
+        imageExtent: extent
       }),
-      extent: [west, south, east, north],
       url: icon
     });
 
@@ -1151,7 +1166,7 @@ plugin.file.kml.KMLParser.prototype.readScreenOverlay_ = function(el) {
   goog.asserts.assert(el.localName == 'ScreenOverlay', 'localName should be ScreenOverlay');
 
   // openlayers does not natively support ScreenOverlay so we need to parse the xml and create an overlay window
-  if (goog.isDef(el) && el.querySelector('name') && el.querySelector('Icon')) {
+  if (el !== undefined && el.querySelector('name') && el.querySelector('Icon')) {
     // check if visibility is set to 0, if it is, do not proceed
     var vis = el.querySelector('visibility');
     if (vis) {
@@ -1192,7 +1207,8 @@ plugin.file.kml.KMLParser.prototype.readScreenOverlay_ = function(el) {
 /**
  * Parse XY attributes from a screenXY element and return an object with more useful location coordinates
  * @param {Element} el The XML element
- * @return {?{x: (string|number), y: (string|number)}} an object with an x and y attribute representing location in pixels
+ * @return {?{x: (string|number), y: (string|number)}} an object with an x and y
+ * attribute representing location in pixels
  * @private
  */
 plugin.file.kml.KMLParser.prototype.parseScreenXY_ = function(el) {

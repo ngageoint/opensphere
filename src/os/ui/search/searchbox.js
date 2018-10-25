@@ -21,13 +21,15 @@ goog.require('os.ui.dragDropDirective');
 os.ui.search.searchBoxDirective = function() {
   return {
     restrict: 'AE',
+    replace: true,
     scope: {
       'dataSource': '=datasource',
       'allowMultiple': '@',
       'eventPrefix': '@',
       'searchOnClear': '@',
       'showDropdownText': '@',
-      'searchManager': '=?'
+      'searchManager': '=?',
+      'showClear': '@?'
     },
     templateUrl: os.ROOT + 'views/search/searchbox.html',
     controller: os.ui.search.SearchBoxCtrl,
@@ -117,7 +119,7 @@ os.ui.search.SearchBoxCtrl = function($scope, $element) {
    * @type {!jQuery}
    * @private
    */
-  this.autocompleteSrc_ = /** @type {!jQuery} */ ($element.find('.search-query')).typeahead();
+  this.autocompleteSrc_ = /** @type {!jQuery} */ ($element.find('.js-searchbox__typeahead')).typeahead();
   goog.events.listen($element[0], 'click', this.onClick_, false, this);
   this.searchManager.listen(goog.events.EventType.CHANGE, this.onSearchManagerChange_, false, this);
   this.searchManager.listen(os.search.SearchEventType.START, this.onSearchStart_, false, this);
@@ -277,16 +279,17 @@ os.ui.search.SearchBoxCtrl.prototype.onClick_ = function(event) {
 
 /**
  * Clear the search.
+ * @export
  */
 os.ui.search.SearchBoxCtrl.prototype.clear = function() {
   this['searchTerm'] = '';
   this.search();
 };
-goog.exportProperty(os.ui.search.SearchBoxCtrl.prototype, 'clear', os.ui.search.SearchBoxCtrl.prototype.clear);
 
 
 /**
  * Perform a search.
+ * @export
  */
 os.ui.search.SearchBoxCtrl.prototype.search = function() {
   if (this['searchTerm'] || this.searchOnClear_) {
@@ -300,7 +303,6 @@ os.ui.search.SearchBoxCtrl.prototype.search = function() {
     os.ui.apply(this.scope);
   }
 };
-goog.exportProperty(os.ui.search.SearchBoxCtrl.prototype, 'search', os.ui.search.SearchBoxCtrl.prototype.search);
 
 
 /**
@@ -377,6 +379,7 @@ os.ui.search.SearchBoxCtrl.prototype.onSearchSuccess_ = function(event) {
 /**
  * Toggles a search on/off.
  * @param {!os.search.ISearch} search The search provider
+ * @export
  */
 os.ui.search.SearchBoxCtrl.prototype.toggleSearch = function(search) {
   // always toggle if multiple types are available, otherwise only allow enabling a search. this prevents disabling all
@@ -393,45 +396,36 @@ os.ui.search.SearchBoxCtrl.prototype.toggleSearch = function(search) {
     });
   }
 };
-goog.exportProperty(
-    os.ui.search.SearchBoxCtrl.prototype,
-    'toggleSearch',
-    os.ui.search.SearchBoxCtrl.prototype.toggleSearch);
 
 
 /**
  * Toggles all searches on/off.
  * @param {boolean} value The new enabled value
+ * @export
  */
 os.ui.search.SearchBoxCtrl.prototype.toggleAll = function(value) {
   this['searchOptions'].forEach(function(search) {
     search.setEnabled(value);
   });
 };
-goog.exportProperty(
-    os.ui.search.SearchBoxCtrl.prototype,
-    'toggleAll',
-    os.ui.search.SearchBoxCtrl.prototype.toggleAll);
 
 
 /**
  * Get the name of a search.
  * @param {!os.search.ISearch} search The search provider
  * @return {string}
+ * @export
  */
 os.ui.search.SearchBoxCtrl.prototype.getSearchName = function(search) {
   return search.getName();
 };
-goog.exportProperty(
-    os.ui.search.SearchBoxCtrl.prototype,
-    'getSearchName',
-    os.ui.search.SearchBoxCtrl.prototype.getSearchName);
 
 
 /**
  * Get the name of a search.
  * @param {!os.search.ISearch} search The search provider
  * @return {string}
+ * @export
  */
 os.ui.search.SearchBoxCtrl.prototype.getSearchIcon = function(search) {
   if (this['allowMultiple']) {
@@ -442,10 +436,6 @@ os.ui.search.SearchBoxCtrl.prototype.getSearchIcon = function(search) {
 
   return '';
 };
-goog.exportProperty(
-    os.ui.search.SearchBoxCtrl.prototype,
-    'getSearchIcon',
-    os.ui.search.SearchBoxCtrl.prototype.getSearchIcon);
 
 
 /**
@@ -485,6 +475,7 @@ os.ui.search.SearchBoxCtrl.prototype.setUpGroups = function() {
  * Get the group icon
  * @param {string} group The group
  * @return {string}
+ * @export
  */
 os.ui.search.SearchBoxCtrl.prototype.getGroupIcon = function(group) {
   if (this.allSearchesEnabled(group)) {
@@ -494,10 +485,6 @@ os.ui.search.SearchBoxCtrl.prototype.getGroupIcon = function(group) {
   }
   return 'fa-minus-square-o';
 };
-goog.exportProperty(
-    os.ui.search.SearchBoxCtrl.prototype,
-    'getGroupIcon',
-    os.ui.search.SearchBoxCtrl.prototype.getGroupIcon);
 
 
 /**
@@ -539,6 +526,7 @@ os.ui.search.SearchBoxCtrl.prototype.allSearchesDisabled = function(group) {
 /**
  * Enable/disable all the searches in a group
  * @param {string} group The group
+ * @export
  */
 os.ui.search.SearchBoxCtrl.prototype.toggleGroup = function(group) {
   var on = this.allSearchesEnabled(group);
@@ -547,24 +535,17 @@ os.ui.search.SearchBoxCtrl.prototype.toggleGroup = function(group) {
     searches[i].setEnabled(!on);
   }
 };
-goog.exportProperty(
-    os.ui.search.SearchBoxCtrl.prototype,
-    'toggleGroup',
-    os.ui.search.SearchBoxCtrl.prototype.toggleGroup);
 
 
 /**
  * Get a searchOptionsGroup
  * @param {string} groupName The group name
  * @return {Array<os.search.ISearch>} The searches associated with groupName
+ * @export
  */
 os.ui.search.SearchBoxCtrl.prototype.getSearchOptionsGroup = function(groupName) {
   return this['searchOptionsGroups'][groupName];
 };
-goog.exportProperty(
-    os.ui.search.SearchBoxCtrl.prototype,
-    'getSearchOptionsGroup',
-    os.ui.search.SearchBoxCtrl.prototype.getSearchOptionsGroup);
 
 
 /**
@@ -600,35 +581,30 @@ os.ui.search.SearchBoxCtrl.prototype.singleGroupSelected = function() {
  * If a search provider is enabled.
  * @param {!os.search.ISearch} search The search provider
  * @return {boolean}
+ * @export
  */
 os.ui.search.SearchBoxCtrl.prototype.isSearchEnabled = function(search) {
   return search.isEnabled();
 };
-goog.exportProperty(
-    os.ui.search.SearchBoxCtrl.prototype,
-    'isSearchEnabled',
-    os.ui.search.SearchBoxCtrl.prototype.isSearchEnabled);
 
 
 /**
  * If at least one search provider is disabled.
  * @return {boolean}
+ * @export
  */
 os.ui.search.SearchBoxCtrl.prototype.hasDisabledSearch = function() {
   return goog.array.some(this['searchOptions'], function(search) {
     return !search.isEnabled();
   });
 };
-goog.exportProperty(
-    os.ui.search.SearchBoxCtrl.prototype,
-    'hasDisabledSearch',
-    os.ui.search.SearchBoxCtrl.prototype.hasDisabledSearch);
 
 
 /**
  * Get the placeholder text to display in the search box.
  * @param {Array<string>=} opt_ids The search ids to consider in the text
  * @return {string}
+ * @export
  */
 os.ui.search.SearchBoxCtrl.prototype.getPlaceholderText = function(opt_ids) {
   if (this['searchOptions'].length > 0) {
@@ -653,15 +629,12 @@ os.ui.search.SearchBoxCtrl.prototype.getPlaceholderText = function(opt_ids) {
 
   return 'No search types available.';
 };
-goog.exportProperty(
-    os.ui.search.SearchBoxCtrl.prototype,
-    'getPlaceholderText',
-    os.ui.search.SearchBoxCtrl.prototype.getPlaceholderText);
 
 
 /**
  * Gets the selected search options to display
  * @return {string}
+ * @export
  */
 os.ui.search.SearchBoxCtrl.prototype.getDropdownText = function() {
   if (this['searchOptions'].length > 0) {
@@ -686,16 +659,13 @@ os.ui.search.SearchBoxCtrl.prototype.getDropdownText = function() {
 
   return 'None';
 };
-goog.exportProperty(
-    os.ui.search.SearchBoxCtrl.prototype,
-    'getDropdownText',
-    os.ui.search.SearchBoxCtrl.prototype.getDropdownText);
 
 
 /**
  * Get the detail text to display for a recent search.
  * @param {!osx.search.RecentSearch} recent The recent search object
  * @return {string}
+ * @export
  */
 os.ui.search.SearchBoxCtrl.prototype.getRecentDetails = function(recent) {
   var text = '';
@@ -723,16 +693,13 @@ os.ui.search.SearchBoxCtrl.prototype.getRecentDetails = function(recent) {
 
   return text;
 };
-goog.exportProperty(
-    os.ui.search.SearchBoxCtrl.prototype,
-    'getRecentDetails',
-    os.ui.search.SearchBoxCtrl.prototype.getRecentDetails);
 
 
 /**
  * Get the tooltip text to display for a recent search.
  * @param {!osx.search.RecentSearch} recent The recent search object
  * @return {string}
+ * @export
  */
 os.ui.search.SearchBoxCtrl.prototype.getRecentTitle = function(recent) {
   var text = 'Load recent search';
@@ -768,15 +735,12 @@ os.ui.search.SearchBoxCtrl.prototype.getRecentTitle = function(recent) {
 
   return text;
 };
-goog.exportProperty(
-    os.ui.search.SearchBoxCtrl.prototype,
-    'getRecentTitle',
-    os.ui.search.SearchBoxCtrl.prototype.getRecentTitle);
 
 
 /**
  * Sets the search term/type to a recent one.
  * @param {!osx.search.RecentSearch} recent
+ * @export
  */
 os.ui.search.SearchBoxCtrl.prototype.setFromRecent = function(recent) {
   // set the term to the recent value
@@ -803,14 +767,11 @@ os.ui.search.SearchBoxCtrl.prototype.setFromRecent = function(recent) {
   // save recent searches
   this.saveRecent_();
 };
-goog.exportProperty(
-    os.ui.search.SearchBoxCtrl.prototype,
-    'setFromRecent',
-    os.ui.search.SearchBoxCtrl.prototype.setFromRecent);
 
 
 /**
  * Update autocomplete results.
+ * @export
  */
 os.ui.search.SearchBoxCtrl.prototype.refreshAutocomplete = function() {
   this.autocompleteSrc_.data('typeahead').source = [];
@@ -819,15 +780,12 @@ os.ui.search.SearchBoxCtrl.prototype.refreshAutocomplete = function() {
     this.searchManager.autocomplete(this['searchTerm'], 10);
   }
 };
-goog.exportProperty(
-    os.ui.search.SearchBoxCtrl.prototype,
-    'refreshAutocomplete',
-    os.ui.search.SearchBoxCtrl.prototype.refreshAutocomplete);
 
 
 /**
  * Toggle search options on/off.
  * @param {angular.Scope.Event} event
+ * @export
  */
 os.ui.search.SearchBoxCtrl.prototype.toggleSearchOptions = function(event) {
   var originalEvent = event.originalEvent;
@@ -840,8 +798,8 @@ os.ui.search.SearchBoxCtrl.prototype.toggleSearchOptions = function(event) {
     var listenKey = goog.events.listen(document, 'click', function(e) {
       if (this.element) {
         var event = /** @type {goog.events.BrowserEvent} */ (e);
-        var optionsEl = this.element.find('.search-options')[0] || null;
-        var recentsEl = this.element.find('.recent-searches')[0] || null;
+        var optionsEl = this.element.find('.js-searchbox__search-options')[0] || null;
+        var recentsEl = this.element.find('.js-searchbox__recent-searches')[0] || null;
 
         //
         // Handle the event if this isn't the click event that opened the options and it meets one of these criteria:
@@ -874,10 +832,6 @@ os.ui.search.SearchBoxCtrl.prototype.toggleSearchOptions = function(event) {
     }, false, this);
   }
 };
-goog.exportProperty(
-    os.ui.search.SearchBoxCtrl.prototype,
-    'toggleSearchOptions',
-    os.ui.search.SearchBoxCtrl.prototype.toggleSearchOptions);
 
 
 /**
@@ -954,16 +908,13 @@ os.ui.search.SearchBoxCtrl.prototype.saveRecent_ = function() {
 /**
  * Run a favorite search
  * @param {os.search.Favorite} favorite
+ * @export
  */
 os.ui.search.SearchBoxCtrl.prototype.favoriteSearch = function(favorite) {
   os.dispatcher.dispatchEvent(new goog.events.Event(os.search.SearchEventType.FAVORITE, favorite));
   this['showSearchOptions'] = false;
   os.ui.apply(this.scope);
 };
-goog.exportProperty(
-    os.ui.search.SearchBoxCtrl.prototype,
-    'favoriteSearch',
-    os.ui.search.SearchBoxCtrl.prototype.favoriteSearch);
 
 
 /**
@@ -980,6 +931,7 @@ os.ui.search.SearchBoxCtrl.prototype.onFavoritesUpdate_ = function() {
 /**
  * @param {os.search.Favorite} favorite
  * @return {boolean}
+ * @export
  */
 os.ui.search.SearchBoxCtrl.prototype.isFavoriteActive = function(favorite) {
   // Is the url the same after the hash?
@@ -987,7 +939,3 @@ os.ui.search.SearchBoxCtrl.prototype.isFavoriteActive = function(favorite) {
   var fav = favorite['uri'].split('#');
   return current.length == 2 && fav.length == 2 && current[1] == fav[1];
 };
-goog.exportProperty(
-    os.ui.search.SearchBoxCtrl.prototype,
-    'isFavoriteActive',
-    os.ui.search.SearchBoxCtrl.prototype.isFavoriteActive);

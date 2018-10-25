@@ -18,5 +18,6 @@ goog.inherits(os.filter.im.OSFilterImportUI, os.ui.filter.FilterImportUI);
  * @inheritDoc
  */
 os.filter.im.OSFilterImportUI.prototype.getTemplate = function() {
-  return '<osfilterimport filter-data="filterData" layer-id="layerId"></osfilterimport>';
+  return '<osfilterimport class="flex-column d-flex flex-fill" filter-data="filterData" ' +
+    ' layer-id="layerId"></osfilterimport>';
 };

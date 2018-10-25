@@ -248,13 +248,14 @@ osx.window;
 
 /**
  * @typedef {{
+ *   headerClass: (string|undefined),
  *   label: (string|undefined),
  *   icon: (string|undefined),
  *   modal: (boolean|undefined),
  *   showClose: (boolean|undefined),
  *   noScroll: (boolean|undefined),
  *
- *   height: (number|undefined),
+ *   height: (string|number|undefined),
  *   minHeight: (number|undefined),
  *   maxHeight: (number|undefined),
  *
@@ -272,12 +273,15 @@ osx.window.WindowOptions;
 /**
  * @typedef {{
  *   confirm: (Function|undefined),
+ *   confirmValue: (*|undefined),
  *   cancel: (Function|undefined),
  *   yesText: (string|undefined),
  *   yesIcon: (string|undefined),
+ *   yesButtonClass: (string|undefined),
  *   yesButtonTitle: (string|undefined),
  *   noText: (string|undefined),
  *   noIcon: (string|undefined),
+ *   noButtonClass: (string|undefined),
  *   noButtonTitle: (string|undefined),
  *   formClass: (string|undefined),
  *
@@ -292,11 +296,14 @@ osx.window.ConfirmOptions;
 /**
  * @typedef {{
  *   confirm: (Function|undefined),
+ *   confirmValue: (*|undefined),
  *   cancel: (Function|undefined),
  *   yesText: (string|undefined),
+ *   yesButtonClass: (string|undefined),
  *   yesIcon: (string|undefined),
  *   noText: (string|undefined),
  *   noIcon: (string|undefined),
+ *   noButtonClass: (string|undefined),
  *
  *   windowOptions: (osx.window.WindowOptions|undefined),
  *

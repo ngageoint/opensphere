@@ -1,6 +1,8 @@
 goog.provide('plugin.file.kml.KMLFeatureParser');
+
 goog.require('ol.format.KML');
 goog.require('ol.xml');
+goog.require('os.file.mime.text');
 goog.require('os.parse.IParser');
 
 
@@ -31,9 +33,13 @@ plugin.file.kml.KMLFeatureParser = function() {
  * @inheritDoc
  */
 plugin.file.kml.KMLFeatureParser.prototype.setSource = function(source) {
+  if (source instanceof ArrayBuffer) {
+    source = os.file.mime.text.getText(source) || null;
+  }
+
   if (ol.xml.isDocument(source)) {
     this.document_ = /** @type {Document} */ (source);
-  } else if (goog.isString(source)) {
+  } else if (typeof source === 'string') {
     this.document_ = ol.xml.parse(source);
   }
 };
@@ -51,7 +57,7 @@ plugin.file.kml.KMLFeatureParser.prototype.cleanup = function() {
  * @inheritDoc
  */
 plugin.file.kml.KMLFeatureParser.prototype.hasNext = function() {
-  return goog.isDefAndNotNull(this.document_);
+  return this.document_ != null;
 };
 
 

@@ -33,7 +33,7 @@ os.ui.window.launchGeoHelp = function() {
   if (!document.getElementById('geo-help')) {
     os.ui.window.create({
       'label': 'Location Formats',
-      'icon': 'fa fa-map-marker lt-blue-icon',
+      'icon': 'fa fa-map-marker',
       'x': '-10',
       'y': 'center',
       'width': '445',
@@ -42,8 +42,8 @@ os.ui.window.launchGeoHelp = function() {
       'height': '500',
       'min-height': '250',
       'max-height': '600',
-      'show-close': 'true',
-      'z-index': '10002'
+      'show-close': true,
+      'modal': true
     }, '<geohelp></geohelp>');
   }
 };
@@ -78,11 +78,8 @@ os.ui.window.GeoHelpCtrl.prototype.destroy_ = function() {
 
 /**
  * Close the window
+ * @export
  */
 os.ui.window.GeoHelpCtrl.prototype.close = function() {
   os.ui.window.close(this.element_);
 };
-goog.exportProperty(
-    os.ui.window.GeoHelpCtrl.prototype,
-    'close',
-    os.ui.window.GeoHelpCtrl.prototype.close);

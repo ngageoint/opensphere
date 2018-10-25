@@ -7,14 +7,6 @@ goog.require('os.ui.icon.iconSelectorDirective');
 
 
 /**
- * @type {string}
- */
-os.ui.icon.ICON_PICKER_TEMPLATE = '<button type="button" class="btn btn-default btn-icon-picker btn-invisible" ' +
-    'ng-click="iconPicker.show()" ng-disabled=iconPicker.disabled>' +
-    '<img ng-src="{{iconPicker.getPath(ngModel.path)}}" style="height:100%;width:100%;"/></button>';
-
-
-/**
  * Icon picker event types.
  * @enum {string}
  */
@@ -30,13 +22,14 @@ os.ui.icon.IconPickerEventType = {
 os.ui.icon.iconPickerDirective = function() {
   return {
     restrict: 'AE',
+    replace: true,
     scope: {
       'disabled': '=',
       'ngModel': '=',
       'iconSet': '=',
       'iconSrc': '=?'
     },
-    template: os.ui.icon.ICON_PICKER_TEMPLATE,
+    templateUrl: os.ROOT + 'views/icon/iconpicker.html',
     controller: os.ui.icon.IconPickerCtrl,
     controllerAs: 'iconPicker'
   };
@@ -87,8 +80,8 @@ os.ui.icon.IconPickerCtrl.prototype.onSelection_ = function(icon) {
  * Toggle the icon picker on/off.
  */
 os.ui.icon.IconPickerCtrl.prototype.show = function() {
-  var ui = '<iconselector accept-callback="acceptCallback" selected="icon" icon-set="iconSet" icon-src="iconSrc">' +
-      '</iconselector>';
+  var ui = '<iconselector class="d-flex flex-fill" accept-callback="acceptCallback" selected="icon"' +
+      ' icon-set="iconSet" icon-src="iconSrc"> </iconselector>';
   var scopeOptions = {
     'acceptCallback': this.onSelection_.bind(this),
     'icon': os.object.unsafeClone(this.scope['ngModel']),
@@ -103,14 +96,11 @@ os.ui.icon.IconPickerCtrl.prototype.show = function() {
  * Translates from google uri if needed
  * @param {string} path
  * @return {string}
+ * @export
  */
 os.ui.icon.IconPickerCtrl.prototype.getPath = function(path) {
   return os.ui.file.kml.GMAPS_SEARCH.test(path) ? os.ui.file.kml.replaceGoogleUri(path) : path;
 };
-goog.exportProperty(
-    os.ui.icon.IconPickerCtrl.prototype,
-    'getPath',
-    os.ui.icon.IconPickerCtrl.prototype.getPath);
 
 
 /**
@@ -129,15 +119,16 @@ os.ui.icon.IconPickerCtrl.launch = function(template, scopeOptions) {
       'icon': 'fa fa-flag',
       'x': 'center',
       'y': 'center',
-      'width': '510',
-      'min-width': '510',
-      'max-width': '800',
-      'height': '510',
-      'min-height': '510',
-      'max-height': '600',
+      'width': '600',
+      'min-width': '400',
+      'max-width': '1200',
+      'height': '600',
+      'min-height': '400',
+      'max-height': '1200',
       'show-close': 'true',
       'modal': 'true'
     };
+
     os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
   }
 };

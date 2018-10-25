@@ -13,7 +13,7 @@ os.ui.node.featureCountDirective = function() {
   return {
     restrict: 'AE',
     replace: true,
-    template: '<span class="feature-count"></span>',
+    template: '<span></span>',
     controller: os.ui.node.FeatureCountCtrl,
     controllerAs: 'featureCount'
   };

@@ -19,6 +19,7 @@ goog.require('os.ui.window');
  * @param {!angular.JQLite} $element
  * @extends {goog.Disposable}
  * @constructor
+ * @abstract
  * @template T
  * @ngInject
  */
@@ -103,26 +104,20 @@ os.ui.im.action.FilterActionsCtrl.prototype.refresh = function() {
 
 /**
  * Apply changes.
+ * @export
  */
 os.ui.im.action.FilterActionsCtrl.prototype.apply = function() {
   this.saveEntries();
 };
-goog.exportProperty(
-    os.ui.im.action.FilterActionsCtrl.prototype,
-    'apply',
-    os.ui.im.action.FilterActionsCtrl.prototype.apply);
 
 
 /**
  * Close the window, discarding any pending changes.
+ * @export
  */
 os.ui.im.action.FilterActionsCtrl.prototype.close = function() {
   os.ui.window.close(this.element);
 };
-goog.exportProperty(
-    os.ui.im.action.FilterActionsCtrl.prototype,
-    'close',
-    os.ui.im.action.FilterActionsCtrl.prototype.close);
 
 
 /**
@@ -161,18 +156,11 @@ os.ui.im.action.FilterActionsCtrl.prototype.getExportName = function() {
 /**
  * Edit an action entry. If no entry is provided, a new one will be created.
  * @param {os.im.action.FilterActionEntry<T>=} opt_entry The import action entry.
+ * @abstract
+ * @export
  */
 os.ui.im.action.FilterActionsCtrl.prototype.editEntry = function(opt_entry) {
-  if (this.entryType) {
-    var entry = opt_entry ? /** @type {!os.im.action.FilterActionEntry<T>} */ (opt_entry.clone()) : undefined;
-    os.ui.im.action.launchEditFilterAction(this.entryType, this.getColumns(),
-        os.im.action.filter.onEditComplete.bind(this, opt_entry), entry);
-  }
 };
-goog.exportProperty(
-    os.ui.im.action.FilterActionsCtrl.prototype,
-    'editEntry',
-    os.ui.im.action.FilterActionsCtrl.prototype.editEntry);
 
 
 /**
@@ -233,18 +221,16 @@ os.ui.im.action.FilterActionsCtrl.prototype.onRemoveEvent = function(event, entr
 /**
  * If there is at least one selected entry.
  * @return {boolean} If one or more selected entries are available.
+ * @export
  */
 os.ui.im.action.FilterActionsCtrl.prototype.hasSelected = function() {
   return this['selected'] && this['selected'].length > 0;
 };
-goog.exportProperty(
-    os.ui.im.action.FilterActionsCtrl.prototype,
-    'hasSelected',
-    os.ui.im.action.FilterActionsCtrl.prototype.hasSelected);
 
 
 /**
  * Launch the export dialog.
+ * @export
  */
 os.ui.im.action.FilterActionsCtrl.prototype.launchExport = function() {
   os.metrics.Metrics.getInstance().updateMetric(os.im.action.Metrics.EXPORT, 1);
@@ -253,14 +239,11 @@ os.ui.im.action.FilterActionsCtrl.prototype.launchExport = function() {
   var selected = os.ui.im.action.FilterActionNode.toEntries(this['selected']);
   os.ui.im.action.launchFilterActionExport(entries, selected, this.getExportName());
 };
-goog.exportProperty(
-    os.ui.im.action.FilterActionsCtrl.prototype,
-    'launchExport',
-    os.ui.im.action.FilterActionsCtrl.prototype.launchExport);
 
 
 /**
  * Launch the import dialog.
+ * @export
  */
 os.ui.im.action.FilterActionsCtrl.prototype.launchImport = function() {
   os.metrics.Metrics.getInstance().updateMetric(os.im.action.Metrics.IMPORT, 1);
@@ -270,7 +253,3 @@ os.ui.im.action.FilterActionsCtrl.prototype.launchImport = function() {
   });
   os.dispatcher.dispatchEvent(event);
 };
-goog.exportProperty(
-    os.ui.im.action.FilterActionsCtrl.prototype,
-    'launchImport',
-    os.ui.im.action.FilterActionsCtrl.prototype.launchImport);

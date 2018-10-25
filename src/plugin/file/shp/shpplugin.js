@@ -2,7 +2,6 @@ goog.provide('plugin.file.shp.SHPPlugin');
 
 goog.require('os.data.DataManager');
 goog.require('os.data.ProviderEntry');
-goog.require('os.file.FileManager');
 goog.require('os.layer.config.LayerConfigManager');
 goog.require('os.plugin.AbstractPlugin');
 goog.require('os.ui.im.ImportManager');
@@ -11,9 +10,7 @@ goog.require('plugin.file.shp.SHPExporter');
 goog.require('plugin.file.shp.SHPLayerConfig');
 goog.require('plugin.file.shp.SHPParser');
 goog.require('plugin.file.shp.SHPProvider');
-goog.require('plugin.file.shp.type.DBFTypeMethod');
-goog.require('plugin.file.shp.type.SHPTypeMethod');
-goog.require('plugin.file.shp.type.ZipSHPTypeMethod');
+goog.require('plugin.file.shp.mime');
 goog.require('plugin.file.shp.ui.SHPImportUI');
 goog.require('plugin.file.shp.ui.ZipSHPImportUI');
 
@@ -56,28 +53,21 @@ plugin.file.shp.SHPPlugin.prototype.init = function() {
       plugin.file.shp.SHPPlugin.ID,
       plugin.file.shp.SHPProvider,
       plugin.file.shp.SHPPlugin.TYPE,
-      plugin.file.shp.SHPPlugin.TYPE,
-      ''));
+      plugin.file.shp.SHPPlugin.TYPE));
 
   // register the shp descriptor type
   dm.registerDescriptorType(this.id, plugin.file.shp.SHPDescriptor);
 
   // register the shp layer config
   var lcm = os.layer.config.LayerConfigManager.getInstance();
-  lcm.registerLayerConfig('SHP', plugin.file.shp.SHPLayerConfig);
-
-  // register the shp file type method
-  var fm = os.file.FileManager.getInstance();
-  fm.registerContentTypeMethod(new plugin.file.shp.type.SHPTypeMethod());
-  fm.registerContentTypeMethod(new plugin.file.shp.type.DBFTypeMethod());
-  fm.registerContentTypeMethod(new plugin.file.shp.type.ZipSHPTypeMethod());
+  lcm.registerLayerConfig(this.id, plugin.file.shp.SHPLayerConfig);
 
   // register the shp import ui
   var im = os.ui.im.ImportManager.getInstance();
   im.registerImportDetails('Shapefile (SHP/DBF or ZIP)', true);
-  im.registerImportUI('shp', new plugin.file.shp.ui.SHPImportUI());
-  im.registerImportUI('zipshp', new plugin.file.shp.ui.ZipSHPImportUI());
-  im.registerParser('shp', plugin.file.shp.SHPParser);
+  im.registerImportUI(plugin.file.shp.mime.TYPE, new plugin.file.shp.ui.SHPImportUI());
+  im.registerImportUI(plugin.file.shp.mime.ZIP_TYPE, new plugin.file.shp.ui.ZipSHPImportUI());
+  im.registerParser(this.id, plugin.file.shp.SHPParser);
 
   // register the shp exporter
   os.ui.exportManager.registerExportMethod(new plugin.file.shp.SHPExporter());

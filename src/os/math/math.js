@@ -15,7 +15,7 @@ os.math.DEFAULT_DECIMAL_PRECISION = 3;
  * @return {string}
  */
 os.math.toFixed = function(num, opt_fixed) {
-  opt_fixed = goog.isDefAndNotNull(opt_fixed) ? opt_fixed : os.math.DEFAULT_DECIMAL_PRECISION;
+  opt_fixed = opt_fixed != null ? opt_fixed : os.math.DEFAULT_DECIMAL_PRECISION;
   return num.toFixed(opt_fixed);
 };
 
@@ -126,4 +126,14 @@ os.math.parseNumber = function(value) {
 
   // couldn't parse a number, so return NaN
   return NaN;
+};
+
+
+/**
+ * Returns the integer part of a number by removing any fractional digits.
+ * @param {(string|number)} val The number to truncate
+ * @return {number}
+ */
+os.math.trunc = function(val) {
+  return val < 0 ? Math.ceil(val) : Math.floor(val);
 };

@@ -137,7 +137,7 @@ os.ui.query.ComboNode.prototype.setState = function(value) {
 
   if (p) {
     var parentEntry = p.getEntry();
-    if (this.entry_ && parentEntry && goog.isDef(parentEntry['filterGroup'])) {
+    if (this.entry_ && parentEntry && parentEntry['filterGroup'] !== undefined) {
       // propagate the filter group from the parent entry to the entry where it actually matters
       this.entry_['filterGroup'] = parentEntry['filterGroup'];
     }

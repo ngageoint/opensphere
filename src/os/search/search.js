@@ -87,7 +87,7 @@ os.search.isNameEqual = function(name, search) {
  * @return {!Array}
  */
 os.search.pageResults = function(results, opt_start, opt_pageSize) {
-  if (goog.isDef(opt_start) && goog.isDef(opt_pageSize)) {
+  if (opt_start !== undefined && opt_pageSize !== undefined) {
     var startIndex = opt_start * opt_pageSize;
     if (startIndex > results.length) {
       return [];

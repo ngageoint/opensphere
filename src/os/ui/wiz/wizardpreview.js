@@ -170,7 +170,7 @@ os.ui.wiz.WizardPreviewCtrl.prototype.resizePreview_ = function(opt_delay) {
  * @private
  */
 os.ui.wiz.WizardPreviewCtrl.prototype.getValue_ = function(item, col) {
-  var field = goog.isString(col) ? col : col['field'];
+  var field = typeof col === 'string' ? col : col['field'];
   return os.im.mapping.getItemField(item, field);
 };
 

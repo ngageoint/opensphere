@@ -1,31 +1,18 @@
-<div class="ui-columnactionprompt window-content-wrapper">
-  <div class="window-content">
-
-    <form name="choiceForm" class="form-compressed">
-      <div class="upload-options-group">
-        <table class="list-table table table-striped table-bordered">
-          <thead>
-            <tr>
-              <th class="ui-state-default"><h4>Actions</h4></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr ng-repeat="match in matched">
-              <td>
-                <a ng-click="columnActionPrompt.executeMatch(match, value)" href="#" 
-                   title="{{columnActionPrompt.getToolTip(match, value)}}" ng-bind-html="columnActionPrompt.getDescription(match)"></a>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+<div class="flex-fill w-100 d-flex flex-column">
+  <div class="modal-body">
+    <form name="choiceForm" class="d-flex flex-column">
+      <div ng-repeat="match in matched" ng-class="{'u-bg-body' : $index % 2 == 0}" class="flex-row border">
+        <div class="col">
+          <a ng-click="columnActionPrompt.executeMatch(match, value)" href="#" 
+             title="{{columnActionPrompt.getToolTip(match, value)}}" ng-bind-html="columnActionPrompt.getDescription(match)"></a>
+        </div>
       </div>
     </form>
-    <!--<a ng-click="columnActionPrompt.done($index)">open</a>-->
   </div>
-  <div class="window-footer">
-    <div class="pull-right" >
-      <button ng-class="doneButtonClass" class="btn btn-default" ng-click="columnActionPrompt.close();">
-        <i class="fa fa fa-ban red-icon"></i>
+  <div class="modal-footer">
+    <div>
+      <button class="btn btn-primary" ng-click="columnActionPrompt.close();">
+        <i class="fa fa fa-ban"></i>
         Cancel
       </button>
     </div>

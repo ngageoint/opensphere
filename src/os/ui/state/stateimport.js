@@ -48,7 +48,7 @@ os.ui.state.StateImportCtrl = function($scope, $element) {
    * @private
    */
   this.config_ = /** @type {os.parse.StateParserConfig} */ ($scope['config']);
-  goog.asserts.assert(goog.isDefAndNotNull(this.config_), 'Config not defined for state import UI!');
+  goog.asserts.assert(this.config_ != null, 'Config not defined for state import UI!');
 
   // the replace flag should be set when the user chooses to reimport a state. save the current title so the validator
   // can allow it
@@ -61,7 +61,7 @@ os.ui.state.StateImportCtrl = function($scope, $element) {
    * @private
    */
   this.rawState_ = /** @type {!(Document|Object)} */ (this.config_['state']);
-  goog.asserts.assert(goog.isDefAndNotNull(this.rawState_), 'State doc not defined for state import UI!');
+  goog.asserts.assert(this.rawState_ != null, 'State doc not defined for state import UI!');
 
   $scope['title'] = this.config_['title'];
   $scope['description'] = this.config_['description'];
@@ -98,7 +98,7 @@ os.ui.state.StateImportCtrl = function($scope, $element) {
       state.setEnabled(goog.array.contains(this.config_['loadItems'], state.toString()));
     }
   }
-  $scope.$emit('window.ready');
+  $scope.$emit(os.ui.WindowEventType.READY);
 };
 goog.inherits(os.ui.state.StateImportCtrl, os.ui.state.AbstractStateFormCtrl);
 
@@ -116,6 +116,7 @@ os.ui.state.StateImportCtrl.prototype.onDestroy = function() {
 
 /**
  * @inheritDoc
+ * @export
  */
 os.ui.state.StateImportCtrl.prototype.accept = function() {
   if (this['showClear']) {
@@ -140,7 +141,3 @@ os.ui.state.StateImportCtrl.prototype.accept = function() {
   os.ui.stateManager.addImportedState(/** @type {!os.file.File} */ (this.config_['file']), options);
   os.ui.state.StateImportCtrl.base(this, 'accept');
 };
-goog.exportProperty(
-    os.ui.state.StateImportCtrl.prototype,
-    'accept',
-    os.ui.state.StateImportCtrl.prototype.accept);

@@ -3,11 +3,12 @@ goog.require('goog.log');
 goog.require('goog.log.Logger');
 goog.require('os.config');
 goog.require('os.file.FileManager');
+goog.require('os.file.mime.jsonstate');
 goog.require('os.state');
 goog.require('os.state.JSONStateOptions');
-goog.require('os.state.JSONStateTypeMethod');
 goog.require('os.state.Tag');
 goog.require('os.tag');
+goog.require('os.ui.im.ImportManager');
 goog.require('os.ui.state.StateManager');
 
 
@@ -22,9 +23,10 @@ os.ui.state.JSONStateManager = function() {
   this.contentType = 'application/json';
   this.log = os.ui.state.JSONStateManager.LOGGER_;
 
-  // register the content method
-  var fm = os.file.FileManager.getInstance();
-  fm.registerContentTypeMethod(new os.state.JSONStateTypeMethod());
+  // register the import UI
+  var im = os.ui.im.ImportManager.getInstance();
+  im.registerImportDetails(os.config.getAppName('Application') + ' state files.');
+  im.registerImportUI(os.file.mime.jsonstate.TYPE, new os.ui.state.StateImportUI());
 };
 goog.inherits(os.ui.state.JSONStateManager, os.ui.state.StateManager);
 
@@ -42,7 +44,7 @@ os.ui.state.JSONStateManager.LOGGER_ = goog.log.getLogger('os.ui.state.JSONState
  * @inheritDoc
  */
 os.ui.state.JSONStateManager.prototype.analyze = function(obj) {
-  if (goog.isString(obj)) {
+  if (typeof obj === 'string') {
     var actualObject = /** @type {Object} */ (JSON.parse(obj));
     if (actualObject) {
       obj = actualObject;
@@ -82,7 +84,7 @@ os.ui.state.JSONStateManager.prototype.analyze = function(obj) {
  */
 os.ui.state.JSONStateManager.prototype.loadState = function(obj, states, stateId, opt_title) {
   if (obj && states) {
-    if (goog.isString(obj)) {
+    if (typeof obj === 'string') {
       var actualObject = /** @type {Object} */ (JSON.parse(obj));
       if (actualObject) {
         obj = actualObject;

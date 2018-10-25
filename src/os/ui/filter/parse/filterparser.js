@@ -32,9 +32,13 @@ os.ui.filter.parse.FilterParser = function() {
  * @inheritDoc
  */
 os.ui.filter.parse.FilterParser.prototype.setSource = function(source) {
+  if (source instanceof ArrayBuffer) {
+    source = os.file.mime.text.getText(source) || null;
+  }
+
   if (source instanceof Document) {
     this.document_ = /** @type {Document} */ (source);
-  } else if (goog.isString(source)) {
+  } else if (typeof source === 'string') {
     this.document_ = goog.dom.xml.loadXml(source);
   }
 };
@@ -53,7 +57,7 @@ os.ui.filter.parse.FilterParser.prototype.cleanup = function() {
  * @inheritDoc
  */
 os.ui.filter.parse.FilterParser.prototype.hasNext = function() {
-  return goog.isDefAndNotNull(this.document_);
+  return this.document_ != null;
 };
 
 

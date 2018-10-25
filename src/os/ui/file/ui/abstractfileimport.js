@@ -118,6 +118,7 @@ os.ui.file.ui.AbstractFileImportCtrl.prototype.createDescriptor = goog.abstractM
 
 /**
  * Create import command and close the window
+ * @export
  */
 os.ui.file.ui.AbstractFileImportCtrl.prototype.accept = function() {
   var descriptor = this.createDescriptor();
@@ -132,19 +133,16 @@ os.ui.file.ui.AbstractFileImportCtrl.prototype.accept = function() {
 
   os.ui.window.close(this.element);
 };
-goog.exportProperty(os.ui.file.ui.AbstractFileImportCtrl.prototype, 'accept',
-    os.ui.file.ui.AbstractFileImportCtrl.prototype.accept);
 
 
 /**
  * Cancel file import
+ * @export
  */
 os.ui.file.ui.AbstractFileImportCtrl.prototype.cancel = function() {
   this.cleanConfig();
   os.ui.window.close(this.element);
 };
-goog.exportProperty(os.ui.file.ui.AbstractFileImportCtrl.prototype, 'cancel',
-    os.ui.file.ui.AbstractFileImportCtrl.prototype.cancel);
 
 
 /**

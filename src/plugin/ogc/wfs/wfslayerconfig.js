@@ -61,11 +61,11 @@ goog.inherits(plugin.ogc.wfs.WFSLayerConfig, os.layer.config.AbstractDataSourceL
 plugin.ogc.wfs.WFSLayerConfig.prototype.initializeConfig = function(options) {
   plugin.ogc.wfs.WFSLayerConfig.base(this, 'initializeConfig', options);
 
-  if (goog.isDef(options['describeType'])) {
+  if (options['describeType'] !== undefined) {
     this.describeType = options['describeType'];
   }
 
-  if (goog.isDef(options['featureType'])) {
+  if (options['featureType'] !== undefined) {
     this.featureType = options['featureType'];
   }
 
@@ -90,7 +90,7 @@ plugin.ogc.wfs.WFSLayerConfig.prototype.createLayer = function(options) {
   source.setId(this.id);
   source.setRequest(this.getRequest(options));
   source.setImporter(this.getImporter(options));
-  source.setTimeEnabled(goog.isDef(this.animate) ? this.animate : false);
+  source.setTimeEnabled(this.animate !== undefined ? this.animate : false);
   source.setTitle(this.title);
 
   var layer = this.getLayer(source, options);
@@ -233,7 +233,7 @@ plugin.ogc.wfs.WFSLayerConfig.prototype.featureTypeAvailable = function(layer, o
  * @protected
  */
 plugin.ogc.wfs.WFSLayerConfig.prototype.addMappings = function(layer, options) {
-  var animate = goog.isDefAndNotNull(options['animate']) ? options['animate'] : false;
+  var animate = options['animate'] != null ? options['animate'] : false;
   var source = /** @type {os.source.Request} */ (layer.getSource());
   var importer = /** @type {os.im.Importer} */ (source.getImporter());
 

@@ -539,8 +539,8 @@ onColumnsResized.prototype.notify = function(args, e, scope) {};
 
 /**
  * @typedef {{
- *   row: Object,
- *   cell: Object
+ *   row: number,
+ *   cell: number
  *   }}
  */
 Slick.Grid.Cell;

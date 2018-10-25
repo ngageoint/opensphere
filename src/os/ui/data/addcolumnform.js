@@ -2,6 +2,7 @@ goog.provide('os.ui.data.AddColumnFormCtrl');
 goog.provide('os.ui.data.addColumnFormDirective');
 
 goog.require('os.ui.Module');
+goog.require('os.ui.util.validationMessageDirective');
 
 
 /**

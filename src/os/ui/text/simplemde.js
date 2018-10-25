@@ -225,7 +225,7 @@ os.ui.text.SimpleMDECtrl.prototype.getOptions = function() {
     'autosave': {
       'enabled': false
     },
-    'element': this.element_.find('.simplemdetextarea')[0],
+    'element': this.element_.find('.js-simplemde__textarea')[0],
     'initialValue': this.scope_['text'],
     'spellChecker': false,
     'toolbar': toolbar,
@@ -256,6 +256,8 @@ os.ui.text.SimpleMDECtrl.prototype.init = function() {
 
     this.simplemde.codemirror.on('change', this.onChange_.bind(this));
 
+    this.simplemde.codemirror.on('refresh', this.onToggleFullscreen_.bind(this));
+
     this.timeout_(this.resize_.bind(this), 5000);
   }
 };
@@ -284,6 +286,29 @@ os.ui.text.SimpleMDECtrl.prototype.onChange_ = function() {
 
   // Scope doesnt get applied automatically, so do it ourself
   os.ui.apply(this.scope_);
+};
+
+
+/**
+ * Workaround for "Unintended fullscreen behavior when SimpleMDE is in a Bootstrap modal"
+ * (https://github.com/sparksuite/simplemde-markdown-editor/issues/263) and fix for
+ * fixed positioning styles in window component
+ * @private
+ */
+os.ui.text.SimpleMDECtrl.prototype.onToggleFullscreen_ = function() {
+  var element = this.element_;
+  while (element && element.length) {
+    if (element.hasClass('modal')) {
+      if (this.simplemde.isFullscreenActive()) {
+        element.addClass('c-simplemde__fullscreen');
+      } else {
+        element.removeClass('c-simplemde__fullscreen');
+      }
+      break;
+    } else {
+      element = element.parent();
+    }
+  }
 };
 
 

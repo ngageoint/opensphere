@@ -38,14 +38,6 @@ os.data.IDataManager.prototype.getProviderEntry;
 
 
 /**
- * Gets a provider type by file
- * @param {!os.file.File} file
- * @return {?string} The type or null if it could not be found
- */
-os.data.IDataManager.prototype.getProviderTypeByFile;
-
-
-/**
  * Gets a provider type by class
  * @param {Function} clazz The class
  * @return {?string} The type or null if it could not be found

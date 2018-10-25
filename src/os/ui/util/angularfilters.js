@@ -16,7 +16,7 @@ os.ui.util.filters.ellipsisFilter = function() {
  * @return {string}
  */
 os.ui.util.filters.ellipsisFilter.Filter = function(text, opt_maxLength) {
-  var maxLength = goog.isDefAndNotNull(opt_maxLength) && opt_maxLength > 0 ? opt_maxLength : 100;
+  var maxLength = opt_maxLength != null && opt_maxLength > 0 ? opt_maxLength : 100;
   var ret = text;
   if (ret.length > maxLength) {
     ret = ret.substr(0, maxLength - 3) + '&hellip;';

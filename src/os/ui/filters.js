@@ -23,7 +23,6 @@ goog.require('os.ui.query.cmd.FilterRemove');
 goog.require('os.ui.query.ui.CombinatorCtrl');
 goog.require('os.ui.slick.AbstractGroupByTreeSearchCtrl');
 goog.require('os.ui.slick.slickTreeDirective');
-goog.require('os.ui.util.autoHeightDirective');
 
 
 /**
@@ -67,6 +66,12 @@ os.ui.FiltersCtrl = function($scope, $element) {
   }
 
   this.viewDefault = 'Layer Type';
+
+  /**
+   * Bound version of the drag-drop handler.
+   * @type {Function}
+   */
+  this['onDrop'] = this.onDrop_.bind(this);
 
   /**
    * @type {?os.data.FilterTreeSearch}
@@ -117,30 +122,28 @@ os.ui.FiltersCtrl.prototype.destroy = function() {
 
 /**
  * Launches the advanced combination window
+ * @export
  */
 os.ui.FiltersCtrl.prototype.launch = function() {
   os.ui.CombinatorCtrl.launch();
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Filters.ADVANCED, 1);
 };
-goog.exportProperty(os.ui.FiltersCtrl.prototype, 'launch', os.ui.FiltersCtrl.prototype.launch);
 
 
 /**
  * Pop up filter export gui
  * @param {os.ui.filter.FilterEvent=} opt_event right click export event
+ * @export
  */
 os.ui.FiltersCtrl.prototype.export = function(opt_event) {
   os.ui.filter.ui.launchFilterExport(this.save_.bind(this));
 };
-goog.exportProperty(
-    os.ui.FiltersCtrl.prototype,
-    'export',
-    os.ui.FiltersCtrl.prototype.export);
 
 
 /**
  * Disables export button
  * @return {boolean}
+ * @export
  */
 os.ui.FiltersCtrl.prototype.exportDisabled = function() {
   // off when no filters present
@@ -151,7 +154,6 @@ os.ui.FiltersCtrl.prototype.exportDisabled = function() {
 
   return true;
 };
-goog.exportProperty(os.ui.FiltersCtrl.prototype, 'exportDisabled', os.ui.FiltersCtrl.prototype.exportDisabled);
 
 
 /**
@@ -196,7 +198,7 @@ os.ui.FiltersCtrl.prototype.flatten_ = function(arr, result, activeOnly) {
         this.flatten_(item.getChildren(), result, activeOnly);
       } else if ((activeOnly && item.getState() == 'on' || !activeOnly) && item.getEntry()) {
         var filterId = item.getId();
-        if (goog.isDef(filterId) && filterId != '*') {
+        if (filterId !== undefined && filterId != '*') {
           result.push(item);
         }
       }
@@ -206,15 +208,13 @@ os.ui.FiltersCtrl.prototype.flatten_ = function(arr, result, activeOnly) {
 
 
 /**
- * import filters
+ * Launches the filter import window.
+ * @param {os.file.File=} opt_file Optional file to use in the import.
+ * @export
  */
-os.ui.FiltersCtrl.prototype.import = function() {
-  os.query.launchQueryImport();
+os.ui.FiltersCtrl.prototype.import = function(opt_file) {
+  os.query.launchQueryImport(undefined, opt_file);
 };
-goog.exportProperty(
-    os.ui.FiltersCtrl.prototype,
-    'import',
-    os.ui.FiltersCtrl.prototype.import);
 
 
 /**
@@ -303,25 +303,41 @@ os.ui.FiltersCtrl.prototype.searchIfAddedOrRemoved_ = function(event) {
 
 /**
  * Handles Group By change
+ * @export
  */
 os.ui.FiltersCtrl.prototype.onGroupChange = function() {
   this.search();
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Filters.GROUP_BY, 1);
 };
-goog.exportProperty(
-    os.ui.FiltersCtrl.prototype,
-    'onGroupChange',
-    os.ui.FiltersCtrl.prototype.onGroupChange);
 
 
 /**
  * Handles Group By change
+ * @export
  */
 os.ui.FiltersCtrl.prototype.onSearchTermChange = function() {
   this.search();
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Filters.SEARCH, 1);
 };
-goog.exportProperty(
-    os.ui.FiltersCtrl.prototype,
-    'onSearchTermChange',
-    os.ui.FiltersCtrl.prototype.onSearchTermChange);
+
+
+/**
+ * Handles file drops over the filters tab.
+ * @param {Event} event The drop event.
+ */
+os.ui.FiltersCtrl.prototype.onDrop_ = function(event) {
+  if (event.dataTransfer && event.dataTransfer.files) {
+    os.file.createFromFile(/** @type {!File} */ (event.dataTransfer.files[0]))
+        .addCallback(this.import.bind(this), this.onFail_.bind(this));
+  }
+};
+
+
+/**
+ * Handle file drag-drop.
+ * @param {!goog.events.Event|os.file.File} event
+ * @private
+ */
+os.ui.FiltersCtrl.prototype.onFail_ = function(event) {
+  os.alertManager.sendAlert('Could not handle file with drag and drop. Try again or use the browse capability.');
+};

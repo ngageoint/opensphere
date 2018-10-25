@@ -15,7 +15,6 @@ goog.require('os.ui.Module');
 goog.require('os.ui.location.SimpleLocationDirective');
 goog.require('os.ui.slick.formatter');
 goog.require('os.ui.slick.slickGridDirective');
-goog.require('os.ui.util.autoHeightDirective');
 goog.require('os.ui.window');
 
 
@@ -26,6 +25,7 @@ goog.require('os.ui.window');
 os.ui.propertyInfoDirective = function() {
   return {
     restrict: 'E',
+    replace: true,
     scope: {
       'feature': '='
     },
@@ -143,13 +143,13 @@ os.ui.launchPropertyInfo = function(id, object, opt_titleDetail) {
     var windowOptions = {
       'id': windowId,
       'label': winLabel,
-      'icon': 'fa fa-map-marker lt-blue-icon',
+      'icon': 'fa fa-map-marker',
       'x': 'center',
       'y': 'center',
-      'width': '400',
+      'width': '500',
       'min-width': '200',
       'max-width': '800',
-      'height': '300',
+      'height': '400',
       'min-height': '200',
       'max-height': '600',
       'show-close': 'true'
@@ -179,7 +179,7 @@ os.ui.formatter.PropertiesFormatter = function(row, cell, value, columnDef, node
     return /** @type {string} */ (value);
   }
   columnDef['asyncPostRender'] = os.ui.SlickPropertiesAsyncRenderer;
-  return '<div class="location-properties-link">Show Properties</div>';
+  return '<div class="btn btn-link">Show Properties</div>';
 };
 
 

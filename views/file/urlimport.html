@@ -1,26 +1,22 @@
-<div class="file-import window-content-wrapper">
-  <div class="window-content">
-    <form name="urlForm" class="form-compact" ng-submit="urlImport.accept()">
-      <div class="control-group" data-ng-class="{'error': urlForm.url.$invalid && urlForm.url.$dirty}">
-        <label class="control-label">Enter a URL:</label>
-        <div class="controls">
-          <input class="url-input" type="text" name="url" ng-model="urlImport.url" ng-required="true" ng-maxlength="1000"/>
-          <span class="help-inline" data-ng-show="urlForm.url.$error.maxlength">URL is too long!</span>
-        </div>
+<div class="flex-fill w-100 d-flex flex-column">
+  <div class="modal-body container flex-fill">
+    <form name="urlForm" ng-submit="urlImport.accept()">
+      <div class="form-group m-0" ng-class="{'text-danger': urlForm.url.$invalid && urlForm.url.$dirty}">
+        <label for="url">Enter a URL</label>
+        <input class="form-control c-url-input" type="text" name="url" ng-model="urlImport.url" ng-required="true" ng-maxlength="1000"/>
+        <validation-message target="urlForm.url"></validation-message>
       </div>
     </form>
   </div>
-  <div class="window-footer">
-    <div class="pull-right">
-      <button class="btn btn-default" ng-click="urlImport.accept()" ng-disabled="urlForm.$invalid || urlImport.loading" title="Import the URL">
-        <i class="fa lt-blue-icon" ng-class="urlImport.loading && 'fa-spin fa-spinner' || 'fa-chevron-circle-right'"></i>
-        <span ng-if="!urlImport.loading">Next</span>
-        <span ng-if="urlImport.loading">Loading</span>
-      </button>
-      <button class="btn btn-default" ng-click="urlImport.close()" title="Cancel URL import">
-        <i class="fa fa-ban red-icon"></i>
-        Cancel
-      </button>
-    </div>
+  <div class="modal-footer d-flex">
+    <button class="btn btn-primary" ng-click="urlImport.accept()" ng-disabled="urlForm.$invalid || urlImport.loading" title="Import the URL">
+      <i class="fa" ng-class="urlImport.loading && 'fa-spin fa-spinner' || 'fa-chevron-circle-right'"></i>
+      <span ng-if="!urlImport.loading">Next</span>
+      <span ng-if="urlImport.loading">Loading</span>
+    </button>
+    <button class="btn btn-secondary" ng-click="urlImport.close()" title="Cancel URL import">
+      <i class="fa fa-ban"></i>
+      Cancel
+    </button>
   </div>
 </div>

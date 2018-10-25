@@ -244,12 +244,11 @@ os.ui.ListCtrl.prototype.onDestroy_ = function() {
   this.element_ = null;
   this.compile_ = null;
 
-  // prevent element leaks when destroying lists
+  // Prevent element leaks when destroying lists by cleaning up the items.
+  // Keep around the items so when the list is displayed again it recompiles the items
   this.items.forEach(function(item) {
     item.element = undefined;
   });
-
-  this.items.length = 0;
 };
 
 

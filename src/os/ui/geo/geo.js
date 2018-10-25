@@ -26,12 +26,12 @@ os.ui.geo.geoLinkFn = function(scope, elm, attrs, ctrl) {
   var validate = function(val) {
     var origText = val;
     var result = os.geo.parseLatLon(val);
-    if (goog.isDefAndNotNull(result) && Math.abs(result.lat) > 90) {
+    if (result != null && Math.abs(result.lat) > 90) {
       // If the result isnt in range, set it to null to invalidate form
       result = null;
     }
     var valid = true;
-    if (goog.isDefAndNotNull(result)) {
+    if (result != null) {
       valid = true;
     } else {
       try {

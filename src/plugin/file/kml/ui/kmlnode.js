@@ -11,7 +11,7 @@ goog.require('os.data.IExtent');
 goog.require('os.data.ISearchable');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.structs.TriState');
-goog.require('os.ui.featureInfoDirective');
+goog.require('os.ui.feature.featureInfoDirective');
 goog.require('os.ui.slick.SlickTreeNode');
 goog.require('plugin.file.kml.ui.GeometryIcons');
 goog.require('plugin.file.kml.ui.kmlNodeUIDirective');
@@ -381,14 +381,16 @@ plugin.file.kml.ui.KMLNode.prototype.getOverlays = function(opt_unchecked) {
 
 /**
  * @inheritDoc
+ * @suppress {accessControls}
  */
 plugin.file.kml.ui.KMLNode.prototype.getExtent = function() {
   var extent = null;
 
   if (this.image_) {
-    extent = this.image_.getExtent();
-    if (!extent) {
-      extent = null;
+    var source = this.image_.getSource();
+
+    if (source instanceof ol.source.ImageStatic) {
+      extent = /** @type {ol.source.ImageStatic} */ (source).image_.getExtent();
     }
   } else {
     var features = this.getFeatures();
@@ -396,7 +398,7 @@ plugin.file.kml.ui.KMLNode.prototype.getExtent = function() {
       extent = ol.extent.createEmpty();
       for (var i = 0, n = features.length; i < n; i++) {
         var geometry = features[i].getGeometry();
-        if (goog.isDefAndNotNull(geometry)) {
+        if (geometry != null) {
           ol.extent.extend(extent, geometry.getExtent());
         }
       }
@@ -438,14 +440,11 @@ plugin.file.kml.ui.KMLNode.prototype.getId = function() {
 /**
  * Whether or not the KML node is loading.
  * @return {boolean}
+ * @export
  */
 plugin.file.kml.ui.KMLNode.prototype.isLoading = function() {
   return this.loading;
 };
-goog.exportProperty(
-    plugin.file.kml.ui.KMLNode.prototype,
-    'isLoading',
-    plugin.file.kml.ui.KMLNode.prototype.isLoading);
 
 
 /**
@@ -640,7 +639,7 @@ plugin.file.kml.ui.KMLNode.prototype.performAction = function(type) {
   if (type == plugin.file.kml.ui.KMLNodeAction.FEATURE_INFO) {
     if (this.feature_) {
       var title = this.source ? this.source.getTitle() : undefined;
-      os.ui.launchFeatureInfo(this.feature_, title);
+      os.ui.feature.launchMultiFeatureInfo(this.feature_, title);
     }
   }
 };

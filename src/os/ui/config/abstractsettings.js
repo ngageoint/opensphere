@@ -89,9 +89,9 @@ os.ui.config.AbstractSettingsCtrl.prototype.onSelected = function(newVal, oldVal
 /**
  * @param {*} item
  * @return {?string}
- * @private
+ * @export
  */
-os.ui.config.AbstractSettingsCtrl.prototype.getUi_ = function(item) {
+os.ui.config.AbstractSettingsCtrl.prototype.getUi = function(item) {
   if (item && item instanceof os.ui.config.SettingNode) {
     var node = /** @type {os.ui.config.SettingNode} */ (item);
     var model = node.getModel();
@@ -101,19 +101,15 @@ os.ui.config.AbstractSettingsCtrl.prototype.getUi_ = function(item) {
 
   return null;
 };
-goog.exportProperty(os.ui.config.AbstractSettingsCtrl.prototype, 'getUi',
-    os.ui.config.AbstractSettingsCtrl.prototype.getUi_);
 
 
 /**
  * Close the window
- * @private
+ * @export
  */
-os.ui.config.AbstractSettingsCtrl.prototype.reset_ = function() {
+os.ui.config.AbstractSettingsCtrl.prototype.reset = function() {
   os.ui.util.resetSettings();
 };
-goog.exportProperty(os.ui.config.AbstractSettingsCtrl.prototype, 'reset',
-    os.ui.config.AbstractSettingsCtrl.prototype.reset_);
 
 
 /**

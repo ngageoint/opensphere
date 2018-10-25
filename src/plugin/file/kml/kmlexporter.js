@@ -2,6 +2,7 @@ goog.provide('plugin.file.kml.KMLExporter');
 
 goog.require('goog.object');
 goog.require('goog.string');
+goog.require('ol.Feature');
 goog.require('ol.geom.GeometryCollection');
 goog.require('ol.geom.GeometryType');
 goog.require('ol.geom.Point');
@@ -12,6 +13,7 @@ goog.require('os.feature');
 goog.require('os.implements');
 goog.require('os.source');
 goog.require('os.style');
+goog.require('os.style.StyleField');
 goog.require('os.time.ITime');
 goog.require('os.ui.file.kml');
 goog.require('os.ui.file.kml.AbstractKMLExporter');
@@ -23,7 +25,7 @@ goog.require('plugin.file.kml.ui.kmlExportDirective');
 
 /**
  * KML exporter
- * @extends {os.ui.file.kml.AbstractKMLExporter.<ol.Feature>}
+ * @extends {os.ui.file.kml.AbstractKMLExporter<ol.Feature>}
  * @constructor
  */
 plugin.file.kml.KMLExporter = function() {
@@ -32,14 +34,14 @@ plugin.file.kml.KMLExporter = function() {
 
   /**
    * Folders for sources being exported.
-   * @type {!Object.<string, !Element>}
+   * @type {!Object<string, !Element>}
    * @private
    */
   this.folders_ = {};
 
   /**
    * Source color cache.
-   * @type {!Object.<string, !Array.<string>>}
+   * @type {!Object<string, !Array<string>>}
    * @private
    */
   this.sourceFields_ = {};
@@ -253,6 +255,20 @@ plugin.file.kml.KMLExporter.prototype.getGeometry = function(item) {
 
 
 /**
+ * @inheritDoc
+ */
+plugin.file.kml.KMLExporter.prototype.getRotationColumn = function(item) {
+  if (item) {
+    var layerConfig = os.style.getLayerConfig(item);
+    if (layerConfig && layerConfig[os.style.StyleField.SHOW_ROTATION]) {
+      return layerConfig[os.style.StyleField.ROTATION_COLUMN];
+    }
+  }
+  return undefined;
+};
+
+
+/**
  * Get the feature's source.
  * @param {ol.Feature} feature The feature
  * @return {os.source.Vector} The source
@@ -262,7 +278,7 @@ plugin.file.kml.KMLExporter.prototype.getSource_ = function(feature) {
   var source = null;
   if (feature) {
     var sourceId = feature.get(os.data.RecordField.SOURCE_ID);
-    if (goog.isString(sourceId)) {
+    if (typeof sourceId === 'string') {
       source = /** @type {os.source.Vector} */ (os.osDataManager.getSource(sourceId));
     }
   }
@@ -311,6 +327,7 @@ plugin.file.kml.KMLExporter.prototype.getGroupLabels = function(item) {
 
   return null;
 };
+
 
 /**
  * Check the label field array for any non-null fields.
