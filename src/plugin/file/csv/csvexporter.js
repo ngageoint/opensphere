@@ -46,12 +46,11 @@ plugin.file.csv.CSVExporter.FIELDS = {
  * @inheritDoc
  */
 plugin.file.csv.CSVExporter.prototype.processItem = function(item) {
-  var result = {};
+  var result = item == null ? null : {};
 
   var geom = item ? /** @type {ol.geom.SimpleGeometry|undefined} */ (item.getGeometry()) : null;
   if (geom != null) {
     geom = /** @type {ol.geom.SimpleGeometry|undefined} */ (geom.clone().toLonLat());
-    result = {};
 
     try {
       // only populate these fields for point geometries, which will return an array of numbers. unfortunately we can't
@@ -96,6 +95,7 @@ plugin.file.csv.CSVExporter.prototype.processItem = function(item) {
       }
     }
   }
+
   if (this.fields) {
     for (var i = 0, n = this.fields.length; i < n; i++) {
       var field = this.fields[i];
