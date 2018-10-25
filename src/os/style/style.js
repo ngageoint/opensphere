@@ -655,6 +655,36 @@ os.style.setConfigOpacityColor = function(config, opacity, opt_multiply) {
 
 
 /**
+ * Gets first color opacity values on the config. Colors are always set as an rgba string to minimize conversion both in
+ * opensphere style functions and OL3 rendering functions.
+ * @param {Object} config The style config.
+ * @return {number} The opacity value, from 0 to 1.
+ */
+os.style.getConfigOpacityColor = function(config) {
+  if (config) {
+    var styleFields = os.style.DEFAULT_COLOR_STYLE_FIELDS;
+    var colorArr;
+    for (var key in config) {
+      // color can exist in the image, fill, or stroke styles. in the case of icons, there may not be a color property
+      // but we still need to ensure the color is set correctly. set the color if a key that may contain a color is
+      // encountered.
+      if (styleFields.indexOf(key) !== -1) {
+        colorArr = os.color.toRgbArray(config[key][os.style.StyleField.COLOR]);
+        if (colorArr) {
+          return colorArr[3];
+        }
+      }
+
+      if (!os.object.isPrimitive(config[key])) {
+        return os.style.getConfigOpacityColor(config[key]);
+      }
+    }
+  }
+  return 1;
+};
+
+
+/**
  * Gets the first size value defined on the config
  * @param {Object} config
  * @return {number|undefined} The size

@@ -3,6 +3,7 @@ goog.provide('plugin.track.TrackPlugin');
 goog.require('os.layer.config.LayerConfigManager');
 goog.require('os.plugin.AbstractPlugin');
 goog.require('plugin.track');
+goog.require('plugin.track.Metrics');
 goog.require('plugin.track.TrackLayerConfig');
 goog.require('plugin.track.menu');
 
@@ -16,6 +17,7 @@ goog.require('plugin.track.menu');
 plugin.track.TrackPlugin = function() {
   plugin.track.TrackPlugin.base(this, 'constructor');
   this.id = plugin.track.ID;
+  os.ui.metricsManager.addMetricsPlugin(new plugin.track.Metrics());
 };
 goog.inherits(plugin.track.TrackPlugin, os.plugin.AbstractPlugin);
 goog.addSingletonGetter(plugin.track.TrackPlugin);
