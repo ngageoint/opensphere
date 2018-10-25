@@ -10,6 +10,6 @@
 
   .c-search-box__search-buttons,
   .form-control {
-    height: calc(#{$input-height-inner * 1.5} + #{$input-height-border});
+    height: $input-height-lg;
   }
 }
