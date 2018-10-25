@@ -7,7 +7,6 @@ goog.require('os.time.TimeInstant');
 goog.require('os.time.TimeRange');
 goog.require('plugin.file.csv.CSVExporter');
 
-
 describe('plugin.file.csv.CSVExporter', function() {
   var ex = new plugin.file.csv.CSVExporter();
   var lineFeature;
@@ -28,8 +27,16 @@ describe('plugin.file.csv.CSVExporter', function() {
   });
 
   it('should process features lacking a geometry', function() {
-    var result = ex.processItem(new ol.Feature());
-    expect(result).not.toBe(null);
+    var props = {
+      strKey: 'a',
+      numKey: 5
+    };
+
+    ex.setFields(goog.object.getKeys(props));
+    var result = ex.processItem(new ol.Feature(props));
+
+    expect(result.strKey).toBe(props.strKey);
+    expect(result.numKey).toBe(props.numKey);
   });
 
   it('converts features with a point geometry to JSON', function() {
