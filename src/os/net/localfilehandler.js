@@ -187,3 +187,19 @@ os.net.LocalFileHandler.prototype.isHandled = function() {
   }
   return false;
 };
+
+
+/**
+ * @inheritDoc
+ */
+os.net.LocalFileHandler.prototype.getTimeout = function() {
+  return 0;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.net.LocalFileHandler.prototype.setTimeout = function(timeout) {
+ // timeout not supported
+};

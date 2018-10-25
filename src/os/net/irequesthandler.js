@@ -100,3 +100,15 @@ os.net.IRequestHandler.prototype.getHandlerType;
  * @return {boolean} Returns true if this handler has handled the request.
  */
 os.net.IRequestHandler.prototype.isHandled;
+
+
+/**
+ * @return {number} Returns request timeout in milliseconds.
+ */
+os.net.IRequestHandler.prototype.getTimeout;
+
+
+/**
+ * @param {number} timeout sets the request timeout in milliseconds, default 0 for no timeout set (default).
+ */
+os.net.IRequestHandler.prototype.setTimeout;
