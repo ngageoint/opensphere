@@ -32,7 +32,7 @@ os.ui.search.searchBoxDirective = function() {
       'showDropdownText': '@',
       'searchManager': '=?',
       'showClear': '@?',
-      'routeDisplay': '@?'
+      'routeDisplay': '=?'
     },
     templateUrl: os.ROOT + 'views/search/searchbox.html',
     controller: os.ui.search.SearchBoxCtrl,
@@ -933,7 +933,7 @@ os.ui.search.SearchBoxCtrl.prototype.favoriteSearch = function(favorite) {
  */
 os.ui.search.SearchBoxCtrl.prototype.onFavoritesUpdate_ = function() {
   // Read in favorites
-  this['favorites'] = os.searchManager.getFavorites(25);
+  this['favorites'] = this.searchManager.getFavorites(25);
   os.ui.apply(this.scope);
 };
 
@@ -957,7 +957,7 @@ os.ui.search.SearchBoxCtrl.prototype.isFavoriteActive = function(favorite) {
  */
 os.ui.search.SearchBoxCtrl.prototype.toggleFavoritePopup_ = function() {
   // While we are at it, check if the current search is a favorite
-  var allSearchFavorites = os.searchManager.getFavorites();
+  var allSearchFavorites = this.searchManager.getFavorites();
   this['showFavoritePopup'] = !goog.array.find(allSearchFavorites, function(fav) {
     return this.isFavoriteActive(fav);
   }, this);
