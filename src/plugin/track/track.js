@@ -131,7 +131,8 @@ plugin.track.TrackField = {
   CURRENT_LINE: '_currentLine',
   QUERY_OPTIONS: '_trackQueryOptions',
   ORIG_SOURCE_ID: '_trackOrigSourceId',
-  SORT_FIELD: '_sortField'
+  SORT_FIELD: '_sortField',
+  INTERPOLATE_MARKER: '_interpolateMarker'
 };
 
 
@@ -214,15 +215,9 @@ plugin.track.CURRENT_CONFIG = {
 
 
 /**
- * Metric keys for the track plugin.
- * @enum {string}
+ * Style used for hiding geometries such as the line and marker
  */
-plugin.track.Metrics = {
-  CREATE_LAYER: 'track.create-layer',
-  ADD_TO_LAYER: 'track.addTo-layer',
-  FOLLOW_TRACK: 'track.followTrack',
-  UNFOLLOW_TRACK: 'track.unfollowTrack'
-};
+plugin.track.HIDE_GEOMETRY = '__hidden__';
 
 
 /**
@@ -640,8 +635,87 @@ plugin.track.disposeAnimationGeometries = function(track) {
   goog.dispose(currentPosition);
 
   var currentLine = track.get(plugin.track.TrackField.CURRENT_LINE);
-  track.set(plugin.track.TrackField.CURRENT_LINE, undefined);
+  if (plugin.track.getShowLine(track)) {
+    track.set(plugin.track.TrackField.CURRENT_LINE, undefined);
+  }
   goog.dispose(currentLine);
+};
+
+
+/**
+ * Shows or hides the track line
+ * @param {!ol.Feature} track The track
+ * @param {boolean} show
+ * @param {boolean=} opt_update
+ */
+plugin.track.setShowLine = function(track, show, opt_update) {
+  var trackStyles = /** @type {Array<Object<string, *>>} */ (track.get(os.style.StyleType.FEATURE));
+  if (trackStyles.length > 1) {
+    var lineConfig = trackStyles[0];
+    var dynamic = track instanceof os.feature.DynamicFeature && track.isDynamicEnabled;
+    lineConfig['geometry'] = show ? (dynamic ? plugin.track.TrackField.CURRENT_LINE : undefined) :
+      plugin.track.HIDE_GEOMETRY;
+
+    // set the style config for the track
+    os.style.setFeatureStyle(track);
+    track.changed();
+  }
+};
+
+
+/**
+ * Shows or hides the track line
+ * @param {!ol.Feature} track The track
+ * @return {boolean}
+ */
+plugin.track.getShowLine = function(track) {
+  var trackStyles = /** @type {Array<Object<string, *>>} */ (track.get(os.style.StyleType.FEATURE));
+  return trackStyles.length > 0 && trackStyles[0]['geometry'] != plugin.track.HIDE_GEOMETRY;
+};
+
+
+/**
+ * Shows or hides the track marker
+ * @param {!ol.Feature} track The track
+ * @param {boolean} show
+ * @param {boolean=} opt_update
+ */
+plugin.track.setShowMarker = function(track, show, opt_update) {
+  var trackStyles = /** @type {Array<Object<string, *>>} */ (track.get(os.style.StyleType.FEATURE));
+  if (trackStyles.length > 1) { // recreate marker style
+    var currentGeometry = show ? plugin.track.TrackField.CURRENT_POSITION : plugin.track.HIDE_GEOMETRY;
+    var currentConfig = trackStyles[1];
+    currentConfig['geometry'] = currentGeometry;
+    track.set(os.style.StyleField.LABEL_GEOMETRY, currentGeometry);
+
+    // set the style config for the track
+    if (opt_update) {
+      os.style.setFeatureStyle(track);
+      track.changed();
+    }
+  }
+};
+
+
+/**
+ * Turn interpolation of track marker on or off
+ * @param {!ol.Feature} track The track
+ * @param {boolean} doInterpolation
+ */
+plugin.track.setInterpolateMarker = function(track, doInterpolation) {
+  track.set(plugin.track.TrackField.INTERPOLATE_MARKER, doInterpolation);
+  var range = os.time.TimelineController.getInstance().getCurrentRange();
+  plugin.track.updateDynamic(track, range.start, range.end);
+};
+
+
+/**
+ * Get if interpolation of track marker is on or off
+ * @param {!ol.Feature} track The track
+ * @return {boolean}
+ */
+plugin.track.getInterpolateMarker = function(track) {
+  return track.get(plugin.track.TrackField.INTERPOLATE_MARKER) !== false;
 };
 
 
@@ -1099,7 +1173,9 @@ plugin.track.initDynamic = function(track) {
   var trackStyles = /** @type {Array<Object<string, *>>} */ (track.get(os.style.StyleType.FEATURE));
   var trackStyle = trackStyles ? trackStyles[0] : null;
   if (trackStyle) {
-    trackStyle['geometry'] = plugin.track.TrackField.CURRENT_LINE;
+    if (plugin.track.getShowLine(track)) {
+      trackStyle['geometry'] = plugin.track.TrackField.CURRENT_LINE;
+    }
 
     os.ui.FeatureEditCtrl.restoreFeatureLabels(track);
     os.style.setFeatureStyle(track);
@@ -1121,7 +1197,10 @@ plugin.track.disposeDynamic = function(track, opt_disposing) {
     var trackStyles = /** @type {Array<Object<string, *>>} */ (track.get(os.style.StyleType.FEATURE));
     var trackStyle = trackStyles ? trackStyles[0] : null;
     if (trackStyle) {
-      delete trackStyle['geometry'];
+      plugin.track.setShowMarker(track, true);
+      if (plugin.track.getShowLine(track)) {
+        delete trackStyle['geometry'];
+      }
       os.style.setFeatureStyle(track);
     }
 
@@ -1220,14 +1299,25 @@ plugin.track.getTrackPositionAt = function(track, timestamp, index, coordinates,
     // get the start index of each coordinate to avoid slicing the array (and resulting GC)
     var prevIndex = index - stride;
     var nextIndex = index;
-    position = [
-      goog.math.lerp(coordinates[prevIndex], coordinates[nextIndex], scale),
-      goog.math.lerp(coordinates[prevIndex + 1], coordinates[nextIndex + 1], scale)
-    ];
+    if (plugin.track.getInterpolateMarker(track)) {
+      position = [
+        goog.math.lerp(coordinates[prevIndex], coordinates[nextIndex], scale),
+        goog.math.lerp(coordinates[prevIndex + 1], coordinates[nextIndex + 1], scale)
+      ];
+    } else {
+      position = [
+        coordinates[prevIndex],
+        coordinates[prevIndex + 1]
+      ];
+    }
 
     // interpolate altitude if present
     if (stride === 4) {
-      position.push(goog.math.lerp(coordinates[prevIndex + 2], coordinates[nextIndex + 2], scale));
+      if (plugin.track.getInterpolateMarker(track)) {
+        position.push(goog.math.lerp(coordinates[prevIndex + 2], coordinates[nextIndex + 2], scale));
+      } else {
+        position.push(coordinates[prevIndex + 2]);
+      }
     }
 
     position.push(timestamp);
@@ -1264,6 +1354,15 @@ plugin.track.updateCurrentLine = function(track, startTime, startIndex, endTime,
   var flatCoordinates = [];
   for (var i = startIndex; i < endIndex; i++) {
     flatCoordinates.push(coordinates[i]);
+  }
+
+  if (flatCoordinates.length === endIndex &&
+      flatCoordinates[flatCoordinates.length - stride] === coordinates[coordinates.length - stride] &&
+      flatCoordinates[stride] === coordinates[stride]) {
+    // target is the first and last coordinate and it's already equal, so the line doesn't need to be modified
+    var show = coordinates[coordinates.length - 1] >= os.time.TimelineController.getInstance().getCurrentRange().start;
+    plugin.track.setShowMarker(track, show, true); // show the marker on the last point
+    return;
   }
 
   // strip the last coordinate, because it's probably the "most recent" and not part of the original track
@@ -1308,6 +1407,12 @@ plugin.track.updateCurrentLine = function(track, startTime, startIndex, endTime,
     // end the current line segment at the interpolated position
     if (currentEnds) {
       currentEnds.push(flatCoordinates.length);
+    }
+
+    if (endIndex == 0 || startIndex === coordinates.length) {
+      plugin.track.setShowMarker(track, false);
+    } else {
+      plugin.track.setShowMarker(track, true);
     }
   }
 
