@@ -175,19 +175,12 @@
   color: $body-color;
 }
 
-.ui-state-default,
-.ui-widget-content .ui-state-default,
-.ui-widget-header .ui-state-default {
-  background: none;
+table.ui-datepicker-calendar a.ui-state-default {
+  background: $body-bg;
 }
 
-.ui-state-default:active,
-.ui-state-active:active,
-.ui-state-default:visited {
-  color: $dropdown-link-hover-color;
-}
-
-a.ui-state-default.ui-state-highlight {
+table.ui-datepicker-calendar a.ui-state-default.ui-state-highlight {
+  background: $dropdown-link-hover-bg;
   color: $body-color;
 }
 
