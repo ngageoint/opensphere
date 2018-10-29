@@ -183,3 +183,20 @@ plugin.im.action.feature.editEntry = function(entryType, opt_entry) {
   plugin.im.action.feature.ui.launchEditFeatureAction(entryType, plugin.im.action.feature.getColumns(entryType),
       os.im.action.filter.onEditComplete.bind(null, opt_entry), entry);
 };
+
+
+/**
+ * Returns whether a given entry type should refresh the layer.
+ * @param {string} entryType The entry type to check.
+ * @return {boolean} Whether to refresh the layer.
+ */
+plugin.im.action.feature.doRefresh = function(entryType) {
+  var layer = /** @type {os.layer.Vector} */ (os.MapContainer.getInstance().getLayer(this.entryType));
+  var featureActionRefresh = true;
+
+  if (layer && layer.getLayerOptions() && layer.getLayerOptions()['featureActionRefresh'] !== undefined) {
+    featureActionRefresh = /** @type {boolean} */ (layer.getLayerOptions()['featureActionRefresh']);
+  }
+
+  return featureActionRefresh;
+};
