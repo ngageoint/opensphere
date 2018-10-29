@@ -1746,7 +1746,7 @@ plugin.cesium.sync.FeatureConverter.prototype.updatePrimitiveLike = function(fea
     context.addOLReferences(primitive, feature, geometry);
     // mark as updated so it isn't removed
     primitive.dirty = false;
-  } else if (primitive instanceof Cesium.PrimitiveCollection) {
+  } else if (primitive instanceof Cesium.PrimitiveCollection || primitive instanceof Cesium.PolylineCollection) {
     for (var i = 0, n = primitive.length; i < n; i++) {
       this.updatePrimitiveLike(feature, geometry, style, context, primitive.get(i));
     }
