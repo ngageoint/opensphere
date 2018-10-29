@@ -81,6 +81,12 @@ os.ui.slick.AbstractGroupByTreeSearchCtrl = function($scope, $element, searchDel
   $scope.$on('$destroy', this.destroy.bind(this));
   $scope.$on('search', this.onSearch.bind(this));
   $scope.$on('collapseChange', this.save.bind(this));
+
+  /**
+   * @type {string}
+   * @protected
+   */
+  this.prefix = 'groupBy';
 };
 
 
@@ -105,7 +111,7 @@ os.ui.slick.AbstractGroupByTreeSearchCtrl.prototype.destroy = function() {
  * @protected
  */
 os.ui.slick.AbstractGroupByTreeSearchCtrl.prototype.save = function() {
-  os.settings.set([this.title, 'openIds'], this.treeSearch.getOpenIds());
+  os.settings.set([this.prefix, this.title, 'openIds'], this.treeSearch.getOpenIds());
 };
 
 
@@ -113,10 +119,16 @@ os.ui.slick.AbstractGroupByTreeSearchCtrl.prototype.save = function() {
  * Init defaults
  */
 os.ui.slick.AbstractGroupByTreeSearchCtrl.prototype.init = function() {
-  this.treeSearch.setOpenIds(/** @type {Object<string, boolean>} */ (
+  // The defaults here are from the old location of the settings, some of which were conflicting. The new
+  // prefix allows us to be more specific. The old locations can be removed after a couple of releases.
+  var openIds = /** @type {Object<string, boolean>} */ (os.settings.get([this.prefix, this.title, 'openIds'],
       os.settings.get([this.title, 'openIds'], {})));
-  var viewKey = /** @type {string} */ (
-      os.settings.get([this.title, 'groupBy'], this.viewDefault));
+
+  this.treeSearch.setOpenIds(openIds);
+
+  var viewKey = /** @type {string} */ (os.settings.get([this.prefix, this.title, 'groupBy'],
+      os.settings.get([this.title, 'groupBy'], this.viewDefault)));
+
   this.scope['view'] = this.scope['views'][viewKey];
   this.search();
 };
@@ -151,7 +163,7 @@ os.ui.slick.AbstractGroupByTreeSearchCtrl.prototype.onSearch = function() {
 
   for (var key in this.scope['views']) {
     if (this.scope['views'][key] === this.scope['view']) {
-      os.settings.set([this.title, 'groupBy'], key);
+      os.settings.set([this.prefix, this.title, 'groupBy'], key);
       break;
     }
   }
