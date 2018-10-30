@@ -395,7 +395,7 @@ plugin.cesium.sync.FeatureConverter.prototype.updateLabel = function(label, geom
   // measured.
   //
   // This removes characters outside the ASCII printable range to prevent that behavior.
-  //
+
   var labelText = textStyle.getText() || '';
   label.text = labelText.replace(/[^\x0a\x0d\x20-\x7e\xa0-\xff]/g, '');
 
@@ -405,7 +405,7 @@ plugin.cesium.sync.FeatureConverter.prototype.updateLabel = function(label, geom
   // check if there is an associated primitive, and if it is shown
   var prim = context.getPrimitiveForGeometry(geometry);
   if (prim) {
-    label.show = prim.show;
+    label.show = plugin.cesium.VectorContext.isShown(prim);
   }
 
   if (context.scene) {
@@ -1637,7 +1637,7 @@ plugin.cesium.sync.FeatureConverter.prototype.olGeometryToCesium = function(feat
     var dirty = geometry.get(os.geom.GeometryField.DIRTY);
     var width = this.extractLineWidthFromOlStyle(style);
     if (dirty || primitive['olLineWidth'] != width) {
-      wasPrimitiveShown = primitive.show;
+      wasPrimitiveShown = plugin.cesium.VectorContext.isShown(primitive);
       context.removePrimitive(primitive);
       geometry.set(os.geom.GeometryField.DIRTY, false);
       primitive = null;

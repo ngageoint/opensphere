@@ -427,9 +427,9 @@ plugin.cesium.VectorContext.prototype.removePrimitive = function(primitive) {
 plugin.cesium.VectorContext.prototype.addFeaturePrimitive = function(feature, primitive) {
   var featureId = feature['id'];
   var shown = this.featureToShownMap[featureId];
-  shown = shown !== undefined ? shown : primitive.show;
+  shown = shown !== undefined ? shown : plugin.cesium.VectorContext.isShown(primitive);
 
-  primitive.show = shown;
+  plugin.cesium.VectorContext.setShow(primitive, shown);
   this.featureToCesiumMap[featureId] = this.featureToCesiumMap[featureId] || [];
   this.featureToCesiumMap[featureId].push(primitive);
 
@@ -470,4 +470,34 @@ plugin.cesium.VectorContext.prototype.getLabelForGeometry = function(geometry) {
  */
 plugin.cesium.VectorContext.prototype.getPrimitiveForGeometry = function(geometry) {
   return this.geometryToCesiumMap[ol.getUid(geometry)] || null;
+};
+
+
+/**
+ * @param {Cesium.PrimitiveLike} primitive The primitive
+ * @return {boolean}
+ */
+plugin.cesium.VectorContext.isShown = function(primitive) {
+  // This function would not be necessary if PolylineCollection didn't somehow miss
+  // implementing the "shown" member of the primitive "interface".
+  if (primitive instanceof Cesium.PolylineCollection) {
+    return primitive.length > 0 ? primitive.get(0).show : true;
+  }
+
+  return primitive.show;
+};
+
+
+/**
+ * @param {Cesium.PrimitiveLike} primitive The primitive
+ * @param {boolean} show Whether or not to show the primitive
+ */
+plugin.cesium.VectorContext.setShow = function(primitive, show) {
+  if (primitive instanceof Cesium.PolylineCollection) {
+    for (var i = 0, n = primitive.length; i < n; i++) {
+      primitive.get(i).show = show;
+    }
+  } else {
+    primitive.show = show;
+  }
 };
