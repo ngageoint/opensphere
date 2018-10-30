@@ -457,7 +457,7 @@ plugin.cesium.sync.VectorSynchronizer.prototype.resetFeatures_ = function(featur
       goog.asserts.assert(feature !== null);
 
       var prims = this.csContext.featureToCesiumMap[feature['id']];
-      var shown = prims && prims.length > 0 && prims[0].show;
+      var shown = prims && prims.length > 0 && plugin.cesium.VectorContext.isShown(prims[0]);
       this.removeFeature(feature);
       this.addFeature(feature);
 
@@ -539,7 +539,7 @@ plugin.cesium.sync.VectorSynchronizer.prototype.initializePrimitive = function(p
   if (this.source instanceof os.source.Vector) {
     var featureId = feature['id'];
     this.csContext.featureToShownMap[featureId] = this.shouldShowFeature(feature);
-    primitive.show = this.csContext.featureToShownMap[featureId];
+    plugin.cesium.VectorContext.setShow(primitive, this.csContext.featureToShownMap[featureId]);
     this.setPrimEyeOffset_(primitive);
   }
 };
@@ -632,7 +632,7 @@ plugin.cesium.sync.VectorSynchronizer.prototype.updatePrimitiveVisibility_ = fun
   if (primitives) {
     for (var i = 0, n = primitives.length; i < n; i++) {
       var primitive = primitives[i];
-      primitive.show = shown;
+      plugin.cesium.VectorContext.setShow(primitive, shown);
     }
 
     if (shown) {
