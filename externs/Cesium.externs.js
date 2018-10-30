@@ -3696,6 +3696,14 @@ Cesium.PerspectiveFrustrum.prototype.near;
  */
 Cesium.PerspectiveFrustrum.prototype.projectionMatrix;
 
+/**
+ * @param {Cesium.Cartesian3} position
+ * @param {Cesium.Cartesian3} direction
+ * @param {Cesium.Cartesian3} up
+ * @return {Cesium.CullingVolume}
+ */
+Cesium.PerspectiveFrustrum.prototype.computeCullingVolume = function(position, direction, up) {};
+
 
 /**
  * @param {!number} drawingBufferWidth
@@ -3967,6 +3975,13 @@ Cesium.Scene.prototype.skyAtmosphere;
  * @type {number}
  */
 Cesium.Scene.prototype.maximumAliasedLineWidth;
+
+
+/**
+ * @param {Cesium.Cartesian3} value
+ * @return {Cesium.Cartesian2}
+ */
+Cesium.Scene.prototype.cartesianToCanvasCoordinates = function(value) {};
 
 
 
@@ -5131,6 +5146,42 @@ Cesium.EntityView.prototype.update = function(currentTime, bs) {};
  * @constructor
  */
 Cesium.CallbackProperty = function(cb, constant) {};
+
+
+/**
+ * @param {Cesium.BoundingSphere} occluderBoundingSphere
+ * @param {Cesium.Cartesian3} cameraPosition
+ * @constructor
+ */
+Cesium.Occluder = function(occluderBoundingSphere, cameraPosition) {};
+
+/**
+ * @param {Cesium.Cartesian3} occludee
+ */
+Cesium.Occluder.prototype.isPointVisible  = function(occludee) {};
+
+
+/**
+ * @enum {number}
+ */
+Cesium.Intersect = {
+  OUTSIDE: -1,
+  INTERSECTING: 0,
+  INSIDE: 1
+};
+
+
+/**
+ * @param {Array.<Cesium.Cartesian4>} planes
+ * @constructor
+ */
+Cesium.CullingVolume = function(planes) {};
+
+/**
+ * @param {Object} boundingVolume
+ * @return {Cesium.Intersect}
+ */
+Cesium.CullingVolume.prototype.computeVisibility  = function(boundingVolume) {};
 
 
 /**
