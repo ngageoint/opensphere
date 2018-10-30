@@ -248,16 +248,43 @@ plugin.cesium.CesiumRenderer.prototype.getCoordinateFromPixel = function(pixel) 
 /**
  * @inheritDoc
  */
-plugin.cesium.CesiumRenderer.prototype.getPixelFromCoordinate = function(coordinate) {
-  // verify the coordinate is defined and numeric.
-  if (this.olCesium_ && coordinate && coordinate.length >= 2 && !isNaN(coordinate[0]) && !isNaN(coordinate[1])) {
-    var cartesian = olcs.core.ol4326CoordinateToCesiumCartesian(coordinate);
-    cartesian = Cesium.SceneTransforms.wgs84ToWindowCoordinates(this.olCesium_.getCesiumScene(), cartesian);
+plugin.cesium.CesiumRenderer.prototype.getPixelFromCoordinate = function(coordinate, opt_inView) {
+  var result = null;
 
-    return cartesian ? [cartesian.x, cartesian.y] : null;
+  if (this.olCesium_) {
+    var scene = this.olCesium_.getCesiumScene();
+    var cartesian = null;
+
+    // verify the coordinate is defined and numeric.
+    if (coordinate && coordinate.length >= 2 && !isNaN(coordinate[0]) && !isNaN(coordinate[1])) {
+      var height = coordinate[2] || 0;
+      cartesian = Cesium.Cartesian3.fromDegrees(coordinate[0], coordinate[1], height);
+    }
+
+    if (opt_inView && cartesian && this.olCesium_) {
+      var camera = scene.camera;
+
+      // check if coordinate is behind the horizon
+      var ellipsoidBoundingSphere = new Cesium.BoundingSphere(new Cesium.Cartesian3(), 6356752);
+      var occluder = new Cesium.Occluder(ellipsoidBoundingSphere, camera.position);
+      if (!occluder.isPointVisible(cartesian)) {
+        cartesian = null;
+      }
+
+      // check if coordinate is visible from the camera
+      var cullingVolume = camera.frustum.computeCullingVolume(camera.position, camera.direction, camera.up);
+      if (cullingVolume.computeVisibility(new Cesium.BoundingSphere(cartesian)) !== 1) {
+        cartesian = null;
+      }
+    }
+
+    if (cartesian) {
+      var pixelCartesian = scene.cartesianToCanvasCoordinates(cartesian);
+      result = [pixelCartesian.x, pixelCartesian.y];
+    }
   }
 
-  return null;
+  return result;
 };
 
 

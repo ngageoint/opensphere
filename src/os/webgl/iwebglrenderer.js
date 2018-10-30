@@ -84,6 +84,7 @@ os.webgl.IWebGLRenderer.prototype.getCoordinateFromPixel;
 /**
  * Get the pixel for a given coordinate.
  * @param {ol.Coordinate} coordinate The coordinate.
+ * @param {boolean=} opt_inView If the coordinate must be in the camera view and not occluded by the globe.
  * @return {ol.Pixel} The pixel, or null if no pixel at the given coordinate.
  */
 os.webgl.IWebGLRenderer.prototype.getPixelFromCoordinate;

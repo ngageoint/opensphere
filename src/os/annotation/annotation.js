@@ -1,10 +1,10 @@
 goog.provide('os.annotation.Annotation');
 
 goog.require('goog.Disposable');
-goog.require('ol.Overlay');
 goog.require('ol.OverlayPositioning');
 goog.require('ol.geom.GeometryType');
 goog.require('os.annotation.annotationDirective');
+goog.require('os.webgl.WebGLOverlay');
 goog.require('os.xml');
 
 
@@ -39,8 +39,8 @@ os.annotation.Annotation = function(feature) {
   this.scope = null;
 
   /**
-   * The OpenLayers overlay.
-   * @type {ol.Overlay}
+   * The overlay.
+   * @type {os.webgl.WebGLOverlay}
    * @protected
    */
   this.overlay = null;
@@ -62,7 +62,7 @@ os.annotation.Annotation.prototype.disposeInternal = function() {
 
 /**
  * Get the OpenLayers overlay.
- * @return {ol.Overlay}
+ * @return {os.webgl.WebGLOverlay}
  */
 os.annotation.Annotation.prototype.getOverlay = function() {
   return this.overlay;
@@ -78,7 +78,7 @@ os.annotation.Annotation.prototype.createUI = function() {
     return;
   }
 
-  this.overlay = new ol.Overlay({
+  this.overlay = new os.webgl.WebGLOverlay({
     id: ol.getUid(this.feature),
     positioning: ol.OverlayPositioning.CENTER_CENTER
   });
