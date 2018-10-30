@@ -1462,7 +1462,7 @@ plugin.cesium.sync.FeatureConverter.prototype.updatePrimitive = function(feature
  * @param {!ol.style.Style} style
  * @param {Cesium.PrimitiveLike=} opt_primitive
  * @return {?Cesium.PrimitiveLike}
- * @suppress {accessControls}
+ * @suppress {accessControls|checkTypes}
  */
 plugin.cesium.sync.FeatureConverter.prototype.olMultiGeometryToCesium = function(feature, geometry, context,
     style, opt_primitive) {
@@ -1508,6 +1508,13 @@ plugin.cesium.sync.FeatureConverter.prototype.olMultiGeometryToCesium = function
 
       primitives = opt_primitive || (feature instanceof os.feature.DynamicFeature ? new Cesium.PolylineCollection() :
           new Cesium.PrimitiveCollection());
+
+      // get the shown state so it can be restored for an existing PolylineCollection, which only has a show flag on
+      // individual polylines
+      var shown = context.featureToShownMap[feature['id']] != null ?
+          context.featureToShownMap[feature['id']] :
+          plugin.cesium.VectorContext.isShown(primitives);
+
       primitives.removeAll();
 
       for (i = 0, ii = lineEnds.length; i < ii; i++) {
@@ -1531,6 +1538,9 @@ plugin.cesium.sync.FeatureConverter.prototype.olMultiGeometryToCesium = function
 
         offset = lineEnd;
       }
+
+      // restore the shown state
+      plugin.cesium.VectorContext.setShow(primitives, shown);
 
       return primitives;
     case ol.geom.GeometryType.MULTI_POLYGON:
@@ -1717,7 +1727,7 @@ plugin.cesium.sync.FeatureConverter.prototype.olGeometryToCesium = function(feat
     if (primitive) {
       if (wasPrimitiveShown != null) {
         // primitive was recreated, so restore the show state
-        primitive.show = wasPrimitiveShown;
+        plugin.cesium.VectorContext.setShow(primitive, wasPrimitiveShown);
       }
 
       context.addPrimitive(primitive, feature, geometry);
