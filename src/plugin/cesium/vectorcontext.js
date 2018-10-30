@@ -480,7 +480,7 @@ plugin.cesium.VectorContext.prototype.getPrimitiveForGeometry = function(geometr
 plugin.cesium.VectorContext.isShown = function(primitive) {
   // This function would not be necessary if PolylineCollection didn't somehow miss
   // implementing the "shown" member of the primitive "interface".
-  if (primitive instanceof Cesium.PolylineCollection) {
+  if (primitive.show === undefined) {
     return primitive.length > 0 ? primitive.get(0).show : true;
   }
 
@@ -493,7 +493,9 @@ plugin.cesium.VectorContext.isShown = function(primitive) {
  * @param {boolean} show Whether or not to show the primitive
  */
 plugin.cesium.VectorContext.setShow = function(primitive, show) {
-  if (primitive instanceof Cesium.PolylineCollection) {
+  // This function would not be necessary if PolylineCollection didn't somehow miss
+  // implementing the "shown" member of the primitive "interface".
+  if (primitive.show === undefined) {
     for (var i = 0, n = primitive.length; i < n; i++) {
       primitive.get(i).show = show;
     }
