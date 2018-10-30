@@ -1267,21 +1267,18 @@ plugin.cesium.sync.FeatureConverter.prototype.updateBillboard = function(feature
     var offset = opt_offset || 0;
     var stride = geometry.stride;
     var coord = plugin.cesium.sync.FeatureConverter.scratchCoord1_;
-    var transformedCoord = plugin.cesium.sync.FeatureConverter.scratchCoord2_;
     coord.length = stride;
-    transformedCoord.length = stride;
 
     for (var j = 0; j < stride; j++) {
       coord[j] = flats[offset + j];
-      transformedCoord[j] = flats[offset + j];
     }
 
     var transform = this.getTransformFunction();
     if (transform) {
-      transform(coord, transformedCoord, coord.length);
+      coord = transform(coord, plugin.cesium.sync.FeatureConverter.scratchCoord2_, coord.length);
     }
 
-    bb.position = olcs.core.ol4326CoordinateToCesiumCartesian(transformedCoord);
+    bb.position = olcs.core.ol4326CoordinateToCesiumCartesian(coord);
     bb.geomRevision = geomRevision;
   }
 
