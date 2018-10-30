@@ -108,7 +108,7 @@
         Style Options
       </div>
       <div class="card-body collapse show"
-          ng-attr-id="{{featureStyleID}}" data-parent="#{{featureControlsID}}">
+          data-parent="#{{featureControlsID}}" ng-attr-id="{{featureStyleID}}">
         <vectorstylecontrols
             color="ctrl.color"
             opacity="ctrl.opacity"
@@ -142,17 +142,18 @@
           </labelcontrols>
         </div>
       </div>
+      <div list list-id="{{optionsListID}}"></div>
     </div>
   </div>
 
   <div class="modal-footer">
-      <button class="btn btn-primary" ng-click="ctrl.accept()" ng-disabled="featureEditForm.$invalid">
-        <i class="fa fa-check"></i>
-        OK
-      </button>
-      <button class="btn btn-secondary" ng-click="ctrl.cancel()">
-        <i class="fa fa-ban"></i>
-        Cancel
-      </button>
+    <button class="btn btn-primary" ng-click="ctrl.accept()" ng-disabled="featureEditForm.$invalid">
+      <i class="fa fa-check"></i>
+      OK
+    </button>
+    <button class="btn btn-secondary" ng-click="ctrl.cancel()">
+      <i class="fa fa-ban"></i>
+      Cancel
+    </button>
   </div>
 </div>

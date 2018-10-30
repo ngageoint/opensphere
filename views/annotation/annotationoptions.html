@@ -1,0 +1,15 @@
+<div>
+  <div class="btn btn-secondary btn-block" title="Annotation controls for the feature"
+      data-toggle="collapse" data-target="#{{featureAnnotationID}}">
+    Annotation Options
+  </div>
+  <div class="card-body collapse"
+      data-parent="#{{featureControlsID}}" ng-attr-id="{{featureAnnotationID}}">
+    <div class="custom-control custom-checkbox d-inline-block"
+        title="Show an interactive map annotation for this feature">
+      <input type="checkbox" class="custom-control-input" name="showAnnotation" ng-attr-id="{{showAnnotationID}}"
+          ng-model="ctrl.showAnnotation" ng-change="ctrl.updateAnnotation()"/>
+      <label class="custom-control-label" ng-attr-for="{{showAnnotationID}}"> Show Annotation</label>
+    </div>
+  </div>
+</div>

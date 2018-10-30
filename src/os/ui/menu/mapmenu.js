@@ -16,6 +16,16 @@ os.ui.menu.MAP = undefined;
 
 
 /**
+ * Last sort value used for each map menu group.
+ * @enum {number}
+ */
+os.ui.menu.map.GroupSort = {
+  GROUPS: 0,
+  MAP: 0
+};
+
+
+/**
  * Set up the menu
  */
 os.ui.menu.map.setup = function() {
@@ -29,13 +39,14 @@ os.ui.menu.map.setup = function() {
     children: [{
       label: 'Map',
       type: os.ui.menu.MenuItemType.GROUP,
+      sort: os.ui.menu.map.GroupSort.GROUPS++,
       children: [{
         label: 'Reset View',
         eventType: os.action.EventType.RESET_VIEW,
         tooltip: 'Resets to the default view',
         icons: ['<i class="fa fa-fw fa-picture-o"></i>'],
         shortcut: 'V',
-        sort: 10,
+        sort: os.ui.menu.map.GroupSort.MAP++,
         metricKey: os.metrics.keys.Map.RESET_VIEW_CONTEXT_MENU
       }, {
         label: 'Reset Rotation',
@@ -43,21 +54,21 @@ os.ui.menu.map.setup = function() {
         tooltip: 'Resets to the default rotation',
         icons: ['<i class="fa fa-fw fa-compass"></i>'],
         shortcut: 'R',
-        sort: 20,
+        sort: os.ui.menu.map.GroupSort.MAP++,
         metricKey: os.metrics.keys.Map.RESET_ROTATION_CONTEXT_MENU
       }, {
         label: 'Toggle 2D/3D View',
         eventType: os.action.EventType.TOGGLE_VIEW,
         tooltip: 'Toggle the map view between 2D and 3D views',
         icons: ['<i class="fa fa-fw fa-globe"></i>'],
-        sort: 30,
+        sort: os.ui.menu.map.GroupSort.MAP++,
         metricKey: os.metrics.keys.Map.TOGGLE_MODE
       }, {
         label: 'Show Legend',
         eventType: os.action.EventType.SHOW_LEGEND,
         tooltip: 'Display the map legend',
         icons: ['<i class="fa fa-fw ' + os.legend.ICON + '"></i>'],
-        sort: 50,
+        sort: os.ui.menu.map.GroupSort.MAP++,
         handler: os.ui.menu.map.showLegend,
         metricKey: os.metrics.keys.Map.SHOW_LEGEND_CONTEXT
       }, {
@@ -65,14 +76,14 @@ os.ui.menu.map.setup = function() {
         eventType: os.action.EventType.CLEAR_SELECTION,
         tooltip: 'Clears the selected features across all layers',
         icons: ['<i class="fa fa-fw fa-times-circle"></i>'],
-        sort: 60,
+        sort: os.ui.menu.map.GroupSort.MAP++,
         handler: os.ui.menu.map.clearSelection_,
         metricKey: os.metrics.keys.Map.CLEAR_SELECTION
       }]
     }, {
       label: 'Options',
       type: os.ui.menu.MenuItemType.GROUP,
-      sort: 5,
+      sort: os.ui.menu.map.GroupSort.GROUPS++,
       children: [{
         label: 'Background Color',
         eventType: os.config.DisplaySetting.BG_COLOR,
@@ -93,7 +104,7 @@ os.ui.menu.map.setup = function() {
       label: 'Coordinate',
       type: os.ui.menu.MenuItemType.GROUP,
       visible: false,
-      sort: 10,
+      sort: os.ui.menu.map.GroupSort.GROUPS++,
       children: [],
       beforeRender: os.ui.menu.map.showIfHasCoordinate
     }]

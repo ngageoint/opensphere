@@ -7,6 +7,7 @@ goog.require('goog.log.Logger');
 goog.require('ol.events');
 goog.require('ol.extent');
 goog.require('ol.geom.GeometryType');
+goog.require('os.annotation.Annotation');
 goog.require('os.data.IExtent');
 goog.require('os.data.ISearchable');
 goog.require('os.events.PropertyChangeEvent');
@@ -81,6 +82,13 @@ plugin.file.kml.ui.KMLNode = function() {
    * @type {boolean}
    */
   this.marked = false;
+
+  /**
+   * The feature annotation.
+   * @type {os.annotation.Annotation}
+   * @protected
+   */
+  this.annotation_ = null;
 
   /**
    * The kml ground image
@@ -158,8 +166,8 @@ plugin.file.kml.ui.KMLNode.CHILD_LOADING_EVENTS_ = ['children', 'state', 'collap
 plugin.file.kml.ui.KMLNode.prototype.disposeInternal = function() {
   plugin.file.kml.ui.KMLNode.base(this, 'disposeInternal');
 
-  this.feature_ = null;
-  this.image_ = null;
+  this.setFeature(null);
+  this.setImage(null);
   this.source = null;
 };
 
@@ -190,10 +198,19 @@ plugin.file.kml.ui.KMLNode.prototype.setFeature = function(feature) {
     ol.events.unlisten(this.feature_, goog.events.EventType.PROPERTYCHANGE, this.onFeatureChange, this);
   }
 
+  if (this.annotation_) {
+    goog.dispose(this.annotation_);
+    this.annotation_ = null;
+  }
+
   this.feature_ = feature;
 
   if (this.feature_) {
     ol.events.listen(this.feature_, goog.events.EventType.PROPERTYCHANGE, this.onFeatureChange, this);
+
+    if (feature.get(plugin.file.kml.KMLField.SHOW_BALLOON)) {
+      this.annotation_ = new os.annotation.Annotation(this.feature_);
+    }
   }
 
   this.dispatchEvent(new os.events.PropertyChangeEvent('icons'));
@@ -713,6 +730,14 @@ plugin.file.kml.ui.KMLNode.prototype.setState = function(value) {
 
   plugin.file.kml.ui.KMLNode.base(this, 'setState', value);
   var s = this.getState();
+
+  // set annotation visibility
+  if (this.annotation_) {
+    var overlay = this.annotation_.getOverlay();
+    if (overlay) {
+      os.annotation.setPosition(overlay, s === os.structs.TriState.ON ? this.feature_ : null);
+    }
+  }
 
   if (this.getOverlay()) {
     // hide/show the screen overlay window

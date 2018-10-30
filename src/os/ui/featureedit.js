@@ -29,6 +29,7 @@ goog.require('os.ui.geo.PositionEventType');
 goog.require('os.ui.geo.positionDirective');
 goog.require('os.ui.layer.labelControlsDirective');
 goog.require('os.ui.layer.vectorStyleControlsDirective');
+goog.require('os.ui.list');
 goog.require('os.ui.text.simpleMDEDirective');
 goog.require('os.ui.util.validationMessageDirective');
 goog.require('os.ui.window');
@@ -113,23 +114,32 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
    */
   this.previewFeature = null;
 
-
-  var uid = goog.getUid(this);
+  /**
+   * Global UID for this controller.
+   * @type {number}
+   * @protected
+   */
+  this.uid = goog.getUid(this);
 
   /**
    * @type {string}
    */
-  this.scope['featureControlsID'] = 'featureControls' + uid;
+  this.scope['featureControlsID'] = 'featureControls' + this.uid;
 
   /**
    * @type {string}
    */
-  this.scope['featureLabelsID'] = 'featureLabels' + uid;
+  this.scope['featureLabelsID'] = 'featureLabels' + this.uid;
 
   /**
    * @type {string}
    */
-  this.scope['featureStyleID'] = 'featureStyle' + uid;
+  this.scope['featureStyleID'] = 'featureStyle' + this.uid;
+
+  /**
+   * @type {string}
+   */
+  this.scope['optionsListID'] = 'optionsList' + this.uid;
 
   /**
    * Keyboard event handler used while listening for map clicks.
@@ -331,11 +341,13 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
   this['altUnitOptions'] = goog.object.getValues(os.math.Units);
 
   /**
+   * Configured label color.
    * @type {string}
    */
   this['labelColor'] = os.style.DEFAULT_LAYER_COLOR;
 
   /**
+   * Configured label size.
    * @type {number}
    */
   this['labelSize'] = os.style.label.DEFAULT_SIZE;
@@ -347,21 +359,25 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
   });
 
   /**
+   * Columns available for labels.
    * @type {!Array<string>}
    */
   this['labelColumns'] = defaultColumns;
 
   /**
+   * Label configuration objects.
    * @type {!Array<!Object>}
    */
   this['labels'] = [];
 
   /**
+   * If the Label Options controls should be displayed.
    * @type {boolean}
    */
   this['showLabels'] = true;
 
   /**
+   * Time help content.
    * @type {os.ui.datetime.AnyDateHelp}
    */
   this['timeHelp'] = {
@@ -372,6 +388,7 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
   };
 
   /**
+   * The feature edit options.
    * @type {!os.ui.FeatureEditOptions}
    * @protected
    */
@@ -384,6 +401,7 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
       this.options['timeEditEnabled'] : true;
 
   /**
+   * Callback to fire when the dialog is closed.
    * @type {Function}
    * @protected
    */
@@ -442,49 +460,10 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
       }
     }
 
-    this.loadFromFeature_(feature);
-
-    if (this['labels'].length == 0) {
-      // make sure there is at least one blank label so it shows up in the UI
-      this['labels'].push(os.style.label.cloneConfig());
-    }
+    this.loadFromFeature(feature);
+    this.updatePreview();
   } else {
-    this.previewFeature = new ol.Feature();
-    this.previewFeature.setId(os.ui.FeatureEditCtrl.TEMP_ID);
-    this.previewFeature.set(os.data.RecordField.DRAWING_LAYER_NODE, false);
-
-    var name = /** @type {string|undefined} */ (this.options['name']);
-    if (name) {
-      this.previewFeature.set(os.ui.FeatureEditCtrl.Field.NAME, name, true);
-      this['name'] = name;
-    }
-
-    var geometry = /** @type {ol.geom.SimpleGeometry|undefined} */ (this.options['geometry']);
-    if (!geometry) {
-      // new place without a geometry, initialize as a point
-      this['pointGeometry'] = {
-        'lat': NaN,
-        'lon': NaN,
-        'alt': NaN
-      };
-    } else if (geometry instanceof ol.geom.Point) {
-      // geometry is a point, so allow editing it
-      geometry = /** @type {ol.geom.SimpleGeometry} */ (geometry.clone().toLonLat());
-
-      var coordinate = geometry.getFirstCoordinate();
-      if (coordinate) {
-        this['pointGeometry'] = {
-          'lat': coordinate[1],
-          'lon': coordinate[0]
-        };
-      }
-    } else {
-      // not a point, so disable geometry edit
-      this.originalGeometry_ = geometry;
-    }
-
-    // default feature to show the name field
-    this['labels'].push(goog.object.clone(os.ui.FeatureEditCtrl.DEFAULT_LABEL));
+    this.createPreviewFeature();
   }
 
   if (this['pointGeometry']) {
@@ -528,10 +507,10 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
 
   $scope.$on('$destroy', this.dispose.bind(this));
 
-  $timeout((function() {
+  $timeout(function() {
     // notify the window that it can update the size
     $scope.$emit(os.ui.WindowEventType.READY);
-  }), 150);
+  }, 150);
 };
 goog.inherits(os.ui.FeatureEditCtrl, goog.Disposable);
 
@@ -732,7 +711,7 @@ os.ui.FeatureEditCtrl.prototype.showIcon = function() {
  * @export
  */
 os.ui.FeatureEditCtrl.prototype.showCenterIcon = function() {
-  return os.style.CENTER_LOOKUP[this['shape']] && this['centerShape'] === os.style.ShapeType.ICON;
+  return !!os.style.CENTER_LOOKUP[this['shape']] && this['centerShape'] === os.style.ShapeType.ICON;
 };
 
 
@@ -833,11 +812,56 @@ os.ui.FeatureEditCtrl.prototype.updatePreview = function() {
 
 
 /**
+ * Create a default preview feature.
+ * @protected
+ */
+os.ui.FeatureEditCtrl.prototype.createPreviewFeature = function() {
+  this.previewFeature = new ol.Feature();
+  this.previewFeature.enableEvents();
+  this.previewFeature.setId(os.ui.FeatureEditCtrl.TEMP_ID);
+  this.previewFeature.set(os.data.RecordField.DRAWING_LAYER_NODE, false);
+
+  var name = /** @type {string|undefined} */ (this.options['name']);
+  if (name) {
+    this.previewFeature.set(os.ui.FeatureEditCtrl.Field.NAME, name, true);
+    this['name'] = name;
+  }
+
+  var geometry = /** @type {ol.geom.SimpleGeometry|undefined} */ (this.options['geometry']);
+  if (!geometry) {
+    // new place without a geometry, initialize as a point
+    this['pointGeometry'] = {
+      'lat': NaN,
+      'lon': NaN,
+      'alt': NaN
+    };
+  } else if (geometry instanceof ol.geom.Point) {
+    // geometry is a point, so allow editing it
+    geometry = /** @type {ol.geom.SimpleGeometry} */ (geometry.clone().toLonLat());
+
+    var coordinate = geometry.getFirstCoordinate();
+    if (coordinate) {
+      this['pointGeometry'] = {
+        'lat': coordinate[1],
+        'lon': coordinate[0]
+      };
+    }
+  } else {
+    // not a point, so disable geometry edit
+    this.originalGeometry_ = geometry;
+  }
+
+  // default feature to show the name field
+  this['labels'].push(goog.object.clone(os.ui.FeatureEditCtrl.DEFAULT_LABEL));
+};
+
+
+/**
  * Restore the UI from a feature.
  * @param {!ol.Feature} feature The feature
- * @private
+ * @protected
  */
-os.ui.FeatureEditCtrl.prototype.loadFromFeature_ = function(feature) {
+os.ui.FeatureEditCtrl.prototype.loadFromFeature = function(feature) {
   this['name'] = feature.get(os.ui.FeatureEditCtrl.Field.NAME);
   this['description'] = feature.get(os.ui.FeatureEditCtrl.Field.MD_DESCRIPTION) ||
       feature.get(os.ui.FeatureEditCtrl.Field.DESCRIPTION);
@@ -973,7 +997,10 @@ os.ui.FeatureEditCtrl.prototype.loadFromFeature_ = function(feature) {
     this['iconRotation'] = rotation;
   }
 
-  this.updatePreview();
+  if (this['labels'].length == 0) {
+    // make sure there is at least one blank label so it shows up in the UI
+    this['labels'].push(os.style.label.cloneConfig());
+  }
 };
 
 
