@@ -115,38 +115,17 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
   this.previewFeature = null;
 
   /**
-   * Global UID for this controller.
-   * @type {number}
-   * @protected
-   */
-  this.uid = goog.getUid(this);
-
-  /**
-   * @type {string}
-   */
-  this.scope['featureControlsID'] = 'featureControls' + this.uid;
-
-  /**
-   * @type {string}
-   */
-  this.scope['featureLabelsID'] = 'featureLabels' + this.uid;
-
-  /**
-   * @type {string}
-   */
-  this.scope['featureStyleID'] = 'featureStyle' + this.uid;
-
-  /**
-   * @type {string}
-   */
-  this.scope['optionsListID'] = 'optionsList' + this.uid;
-
-  /**
    * Keyboard event handler used while listening for map clicks.
    * @type {goog.events.KeyHandler}
    * @protected
    */
   this.keyHandler = null;
+
+  /**
+   * Global UID for this controller, used to create unique id's for form elements.
+   * @type {number}
+   */
+  this['uid'] = goog.getUid(this);
 
   /**
    * Help tooltips.

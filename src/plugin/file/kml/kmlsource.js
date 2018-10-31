@@ -358,6 +358,8 @@ plugin.file.kml.KMLSource.prototype.addNodes = function(nodes, opt_recurse) {
         this.nodeMap_[id] = node;
         overlays.push(overlay);
       }
+
+      node.loadAnnotation();
     }
 
     if (opt_recurse) {
@@ -499,6 +501,8 @@ plugin.file.kml.KMLSource.prototype.clearNode = function(node, opt_dispose) {
   if (overlays && overlays.length > 0) {
     this.removeOverlays(overlays, true);
   }
+
+  node.clearAnnotation();
 
   // handle the unprocess queue immediately in case a network link is being refreshed
   this.unprocessNow();

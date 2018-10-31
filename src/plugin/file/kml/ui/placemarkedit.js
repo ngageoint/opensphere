@@ -2,7 +2,8 @@ goog.provide('plugin.file.kml.ui.PlacemarkEditCtrl');
 goog.provide('plugin.file.kml.ui.placemarkEditDirective');
 
 goog.require('ol.Feature');
-goog.require('os.annotation.Annotation');
+goog.require('os.annotation');
+goog.require('os.annotation.FeatureAnnotation');
 goog.require('os.annotation.annotationOptionsDirective');
 goog.require('os.data.ColumnDefinition');
 goog.require('os.ui.FeatureEditCtrl');
@@ -55,7 +56,7 @@ plugin.file.kml.ui.PlacemarkEditCtrl = function($scope, $element, $timeout) {
 
   /**
    * The preview annotation.
-   * @type {os.annotation.Annotation|undefined}
+   * @type {os.annotation.FeatureAnnotation|undefined}
    * @protected
    */
   this.previewAnnotation;
@@ -64,22 +65,6 @@ plugin.file.kml.ui.PlacemarkEditCtrl = function($scope, $element, $timeout) {
    * @type {!Array<string>}
    */
   this['labelColumns'] = defaultColumns;
-
-  /**
-   * If an annotation balloon should be shown for the feature.
-   * @type {boolean}
-   */
-  this['showAnnotation'] = !!this.previewFeature.get(plugin.file.kml.KMLField.SHOW_BALLOON);
-
-  /**
-   * @type {string}
-   */
-  this.scope['featureAnnotationID'] = 'featureAnnotation' + this.uid;
-
-  /**
-   * @type {string}
-   */
-  this.scope['showAnnotationID'] = 'showAnnotation' + this.uid;
 
   /**
    * @type {!plugin.file.kml.ui.PlacemarkOptions}
@@ -101,7 +86,9 @@ plugin.file.kml.ui.PlacemarkEditCtrl = function($scope, $element, $timeout) {
     }
   }
 
-  os.ui.list.add(this.scope['optionsListID'], 'annotationoptions');
+  var optionsListId = 'optionsList' + this['uid'];
+  os.ui.list.add(optionsListId,
+      '<annotationoptions options="ctrl.annotationOptions"></annotationoptions>');
 };
 goog.inherits(plugin.file.kml.ui.PlacemarkEditCtrl, os.ui.FeatureEditCtrl);
 
@@ -156,15 +143,19 @@ plugin.file.kml.ui.PlacemarkEditCtrl.prototype.accept = function() {
 plugin.file.kml.ui.PlacemarkEditCtrl.prototype.createPreviewFeature = function() {
   plugin.file.kml.ui.PlacemarkEditCtrl.base(this, 'createPreviewFeature');
 
+  // set the default options for the annotation
+  this['annotationOptions'] = os.object.unsafeClone(os.annotation.DEFAULT_OPTIONS);
+
   if (this.options['annotation']) {
-    // turn on the balloon
-    this.previewFeature.set(plugin.file.kml.KMLField.SHOW_BALLOON, true);
+    this.previewFeature.set(os.annotation.OPTIONS_FIELD, this['annotationOptions']);
 
     // default to hiding the center shape
     this['shape'] = os.style.ShapeType.NONE;
 
     // don't display a label, but leave the config present to populate the UI
     this['labels'][0]['column'] = '';
+  } else {
+    this['annotationOptions'].show = false;
   }
 };
 
@@ -175,8 +166,14 @@ plugin.file.kml.ui.PlacemarkEditCtrl.prototype.createPreviewFeature = function()
 plugin.file.kml.ui.PlacemarkEditCtrl.prototype.loadFromFeature = function(feature) {
   plugin.file.kml.ui.PlacemarkEditCtrl.base(this, 'loadFromFeature', feature);
 
-  this['showAnnotation'] = !!feature.get(plugin.file.kml.KMLField.SHOW_BALLOON);
+  this['annotationOptions'] = feature.get(os.annotation.OPTIONS_FIELD);
+
+  if (!this['annotationOptions']) {
+    this['annotationOptions'] = os.object.unsafeClone(os.annotation.DEFAULT_OPTIONS);
+    this['annotationOptions'].show = false;
+  }
 };
+
 
 
 /**
@@ -185,12 +182,7 @@ plugin.file.kml.ui.PlacemarkEditCtrl.prototype.loadFromFeature = function(featur
 plugin.file.kml.ui.PlacemarkEditCtrl.prototype.saveToFeature = function(feature) {
   plugin.file.kml.ui.PlacemarkEditCtrl.base(this, 'saveToFeature', feature);
 
-  if (feature) {
-    feature.set(plugin.file.kml.KMLField.SHOW_BALLOON, this['showAnnotation']);
-
-    // fire a change event on the feature so the annotation updates its content
-    feature.changed();
-  }
+  feature.set(os.annotation.OPTIONS_FIELD, this['annotationOptions']);
 };
 
 
@@ -208,14 +200,20 @@ plugin.file.kml.ui.PlacemarkEditCtrl.prototype.updatePreview = function() {
  * @export
  */
 plugin.file.kml.ui.PlacemarkEditCtrl.prototype.updateAnnotation = function() {
-  if (this.previewFeature && !this.options['feature']) {
-    if (this['showAnnotation']) {
-      if (!this.previewAnnotation) {
-        this.previewAnnotation = new os.annotation.Annotation(this.previewFeature);
+  if (this.previewFeature) {
+    if (this['annotationOptions'].show) {
+      // only create the preview annotation if not already present, and the feature isn't already displaying an
+      // annotation overlay
+      if (!this.previewAnnotation && !os.annotation.hasAnnotation(this.previewFeature)) {
+        this.previewAnnotation = new os.annotation.FeatureAnnotation(this.previewFeature);
       }
     } else {
+      // dispose the preview
       goog.dispose(this.previewAnnotation);
       this.previewAnnotation = null;
     }
+
+    // fire a change event on the feature to trigger an overlay update (if present)
+    this.previewFeature.changed();
   }
 };

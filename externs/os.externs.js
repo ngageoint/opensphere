@@ -16,6 +16,25 @@ var osx;
  * Namespace.
  * @type {Object}
  */
+osx.annotation;
+
+
+/**
+ * @typedef {{
+ *   show: boolean,
+ *   showName: boolean,
+ *   showDescription: boolean,
+ *   size: !Array<number>,
+ *   offset: !Array<number>
+ * }}
+ */
+osx.annotation.Options;
+
+
+/**
+ * Namespace.
+ * @type {Object}
+ */
 osx.geo;
 
 

@@ -7,7 +7,8 @@ goog.require('goog.log.Logger');
 goog.require('ol.events');
 goog.require('ol.extent');
 goog.require('ol.geom.GeometryType');
-goog.require('os.annotation.Annotation');
+goog.require('os.annotation');
+goog.require('os.annotation.FeatureAnnotation');
 goog.require('os.data.IExtent');
 goog.require('os.data.ISearchable');
 goog.require('os.events.PropertyChangeEvent');
@@ -85,7 +86,7 @@ plugin.file.kml.ui.KMLNode = function() {
 
   /**
    * The feature annotation.
-   * @type {os.annotation.Annotation}
+   * @type {os.annotation.FeatureAnnotation}
    * @protected
    */
   this.annotation_ = null;
@@ -196,25 +197,55 @@ plugin.file.kml.ui.KMLNode.prototype.getFeature = function() {
 plugin.file.kml.ui.KMLNode.prototype.setFeature = function(feature) {
   if (this.feature_) {
     ol.events.unlisten(this.feature_, goog.events.EventType.PROPERTYCHANGE, this.onFeatureChange, this);
-  }
-
-  if (this.annotation_) {
-    goog.dispose(this.annotation_);
-    this.annotation_ = null;
+    this.clearAnnotation();
   }
 
   this.feature_ = feature;
 
   if (this.feature_) {
     ol.events.listen(this.feature_, goog.events.EventType.PROPERTYCHANGE, this.onFeatureChange, this);
-
-    if (feature.get(plugin.file.kml.KMLField.SHOW_BALLOON)) {
-      this.annotation_ = new os.annotation.Annotation(this.feature_);
-    }
+    this.loadAnnotation();
   }
 
   this.dispatchEvent(new os.events.PropertyChangeEvent('icons'));
   this.dispatchEvent(new os.events.PropertyChangeEvent('label'));
+};
+
+
+/**
+ * Clean up the annotation for the node.
+ */
+plugin.file.kml.ui.KMLNode.prototype.clearAnnotation = function() {
+  if (this.annotation_) {
+    goog.dispose(this.annotation_);
+    this.annotation_ = null;
+  }
+};
+
+
+/**
+ * Set up the annotation for the node.
+ */
+plugin.file.kml.ui.KMLNode.prototype.loadAnnotation = function() {
+  if (this.feature_ && !this.annotation_) {
+    var annotationOptions = /** @type {osx.annotation.Options|undefined} */ (
+        this.feature_.get(os.annotation.OPTIONS_FIELD));
+    if (annotationOptions && annotationOptions.show) {
+      this.annotation_ = new os.annotation.FeatureAnnotation(this.feature_);
+      this.updateAnnotationVisibility_();
+    }
+  }
+};
+
+
+/**
+ * Update visibility of the map annotation based on the node state.
+ * @private
+ */
+plugin.file.kml.ui.KMLNode.prototype.updateAnnotationVisibility_ = function() {
+  if (this.annotation_) {
+    this.annotation_.setVisible(this.getState() === os.structs.TriState.ON);
+  }
 };
 
 
@@ -228,6 +259,8 @@ plugin.file.kml.ui.KMLNode.prototype.onFeatureChange = function(event) {
     var p = event.getProperty();
     if (p === 'loading') {
       this.setLoading(!!event.getNewValue());
+    } else if (p === os.annotation.CHANGE_EVENT) {
+      this.dispatchEvent(new os.events.PropertyChangeEvent(os.annotation.CHANGE_EVENT));
     }
   }
 };
@@ -676,8 +709,8 @@ plugin.file.kml.ui.KMLNode.prototype.onChildChange = function(e) {
 
   plugin.file.kml.ui.KMLNode.base(this, 'onChildChange', e);
 
-  if (p == 'collapsed') {
-    // propagate the collapsed event up the tree so the KML can be saved if necessary
+  if (p === 'collapsed' || p === os.annotation.CHANGE_EVENT) {
+    // propagate the event up the tree so the KML can be saved if necessary
     this.dispatchEvent(new os.events.PropertyChangeEvent(p));
   } else if (p === 'loading') {
     // propagate loading events up the tree so the layer can show the overall loading state
@@ -729,16 +762,11 @@ plugin.file.kml.ui.KMLNode.prototype.setState = function(value) {
   var old = this.getState();
 
   plugin.file.kml.ui.KMLNode.base(this, 'setState', value);
-  var s = this.getState();
 
   // set annotation visibility
-  if (this.annotation_) {
-    var overlay = this.annotation_.getOverlay();
-    if (overlay) {
-      os.annotation.setPosition(overlay, s === os.structs.TriState.ON ? this.feature_ : null);
-    }
-  }
+  this.updateAnnotationVisibility_();
 
+  var s = this.getState();
   if (this.getOverlay()) {
     // hide/show the screen overlay window
     var toggle = os.ui.window.toggleVisibility(this.getOverlay());

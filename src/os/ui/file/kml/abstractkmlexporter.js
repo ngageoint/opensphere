@@ -607,6 +607,12 @@ os.ui.file.kml.AbstractKMLExporter.prototype.processPlacemark = function(element
             'name': fields[i]
           });
           os.xml.appendElementNS('value', this.kmlNS, dataEl, String(val));
+        } else if (fields[i] === os.annotation.OPTIONS_FIELD) {
+          // write annotation options to JSON
+          var dataEl = os.xml.appendElementNS('Data', this.kmlNS, ed, undefined, {
+            'name': os.annotation.OPTIONS_FIELD
+          });
+          os.xml.appendElementNS('value', this.kmlNS, dataEl, JSON.stringify(val));
         }
       }
     }
