@@ -257,10 +257,21 @@ plugin.file.kml.ui.KMLNode.prototype.updateAnnotationVisibility_ = function() {
 plugin.file.kml.ui.KMLNode.prototype.onFeatureChange = function(event) {
   if (event instanceof os.events.PropertyChangeEvent) {
     var p = event.getProperty();
-    if (p === 'loading') {
-      this.setLoading(!!event.getNewValue());
-    } else if (p === os.annotation.CHANGE_EVENT) {
-      this.dispatchEvent(new os.events.PropertyChangeEvent(os.annotation.CHANGE_EVENT));
+    switch (p) {
+      case 'loading':
+        this.setLoading(!!event.getNewValue());
+        break;
+      case os.annotation.EventType.CHANGE:
+        this.dispatchEvent(new os.events.PropertyChangeEvent(os.annotation.EventType.CHANGE));
+        break;
+      case os.annotation.EventType.EDIT:
+        plugin.file.kml.ui.createOrEditPlace(/** @type {!plugin.file.kml.ui.PlacemarkOptions} */ ({
+          'feature': this.feature_,
+          'node': this
+        }));
+        break;
+      default:
+        break;
     }
   }
 };
@@ -709,7 +720,7 @@ plugin.file.kml.ui.KMLNode.prototype.onChildChange = function(e) {
 
   plugin.file.kml.ui.KMLNode.base(this, 'onChildChange', e);
 
-  if (p === 'collapsed' || p === os.annotation.CHANGE_EVENT) {
+  if (p === 'collapsed' || p === os.annotation.EventType.CHANGE) {
     // propagate the event up the tree so the KML can be saved if necessary
     this.dispatchEvent(new os.events.PropertyChangeEvent(p));
   } else if (p === 'loading') {

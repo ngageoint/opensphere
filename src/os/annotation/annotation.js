@@ -18,11 +18,13 @@ os.annotation.DEFAULT_OPTIONS = {
 
 
 /**
- * Event type for annotation changes.
- * @type {string}
- * @const
+ * Annotation event types.
+ * @enum {string}
  */
-os.annotation.CHANGE_EVENT = 'change:annotation';
+os.annotation.EventType = {
+  CHANGE: 'annotation:change',
+  EDIT: 'annotation:edit'
+};
 
 
 /**
