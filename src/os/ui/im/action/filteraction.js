@@ -30,7 +30,7 @@ os.im.action.filter.exportEntries = function(entries, opt_exactType) {
   var iam = os.im.action.ImportActionManager.getInstance();
   var result = [];
 
-  entries.forEach(function(entry) {
+  var parseEntries = function(entry) {
     var parsedFilter = entry.getFilterNode();
     if (parsedFilter) {
       var type;
@@ -50,13 +50,20 @@ os.im.action.filter.exportEntries = function(entries, opt_exactType) {
         typeHint = os.im.action.filter.ExportTypeHint.EXACT;
       }
 
+      var children = entry.getChildren() || [];
+      var childIds = children.map(function(child) {
+        return child.getId();
+      });
+
       var entryEl = os.xml.createElement(iam.xmlEntry, undefined, undefined, {
+        'id': entry.getId(),
         'active': entry.isEnabled() ? 'true' : 'false',
         'title': entry.getTitle(),
         'description': entry.getDescription() || '',
         'type': type,
         'typeHint': typeHint,
-        'tags': entry.getTags()
+        'tags': entry.getTags() || '',
+        'children': childIds.join(', ')
       });
 
       var filterEl = os.xml.appendElement('filter', entryEl);
@@ -69,8 +76,14 @@ os.im.action.filter.exportEntries = function(entries, opt_exactType) {
       });
 
       result.push(entryEl);
+
+      if (children.length > 0) {
+        children.forEach(parseEntries);
+      }
     }
-  });
+  };
+
+  entries.forEach(parseEntries);
 
   return result;
 };
@@ -79,17 +92,34 @@ os.im.action.filter.exportEntries = function(entries, opt_exactType) {
 /**
  * Create command to copy an entry.
  * @param {!os.im.action.FilterActionEntry} entry The import action entry.
+ * @param {number=} opt_parentIndex Optional parent index to add the entry to.
  * @return {os.command.ICommand} The copy entry command.
  */
-os.im.action.filter.copyEntryCmd = function(entry) {
-  var oldTitle = entry.getTitle();
+os.im.action.filter.copyEntryCmd = function(entry, opt_parentIndex) {
+  /**
+   * Sets up the new titles and IDs on copies recursively.
+   * @param {os.im.action.FilterActionEntry} e The filter action to set up.
+   */
+  var setupCopy = function(e) {
+    var oldTitle = e.getTitle();
+    e.setId(goog.string.getRandomString());
+    e.setTitle(oldTitle + ' Copy');
+
+    var children = e.getChildren();
+    if (children) {
+      children.forEach(setupCopy);
+    }
+  };
+
+  // only clone the root, then update any children
   var copy = /** @type {!os.im.action.FilterActionEntry} */ (entry.clone());
-  copy.setId(goog.string.getRandomString());
-  copy.setTitle(oldTitle + ' Copy');
+  setupCopy(copy);
+
+  var parentId = entry.getParent() ? entry.getParent().getId() : undefined;
 
   var iam = os.im.action.ImportActionManager.getInstance();
-  var cmd = new os.im.action.cmd.FilterActionAdd(copy);
-  cmd.title = 'Copy ' + iam.entryTitle + ' "' + oldTitle + '"';
+  var cmd = new os.im.action.cmd.FilterActionAdd(copy, opt_parentIndex, parentId);
+  cmd.title = 'Copy ' + iam.entryTitle + ' "' + entry.getTitle() + '"';
 
   return cmd;
 };
@@ -138,16 +168,23 @@ os.im.action.filter.onEditComplete = function(original, entry) {
 
     var entryTitle = entry.getTitle();
     var insertIndex;
+    var parentId;
+
     if (original) {
       insertIndex = ol.array.findIndex(entries, function(entry) {
         return entry == original;
       });
 
+      var parent = original.getParent();
+      if (parent) {
+        parentId = parent.getId();
+      }
+
       entryTitle = original.getTitle();
-      cmds.push(new os.im.action.cmd.FilterActionRemove(original, insertIndex));
+      cmds.push(new os.im.action.cmd.FilterActionRemove(original, insertIndex, parentId));
     }
 
-    cmds.push(new os.im.action.cmd.FilterActionAdd(entry, insertIndex));
+    cmds.push(new os.im.action.cmd.FilterActionAdd(entry, insertIndex, parentId));
 
     if (cmds.length > 1) {
       var cmd = new os.command.SequenceCommand();
@@ -172,6 +209,13 @@ os.im.action.filter.onEditComplete = function(original, entry) {
 os.im.action.filter.removeEntryCmd = function(entry) {
   var iam = os.im.action.ImportActionManager.getInstance();
   var entries = iam.getActionEntries(entry.getType());
+  var parent = entry.getParent();
+  var parentId = undefined;
+
+  if (parent) {
+    parentId = parent.getId();
+    entries = parent.getChildren();
+  }
 
   var index = ol.array.findIndex(entries, function(arrEntry) {
     return arrEntry == entry;
@@ -181,7 +225,7 @@ os.im.action.filter.removeEntryCmd = function(entry) {
     index = undefined;
   }
 
-  return new os.im.action.cmd.FilterActionRemove(entry, index);
+  return new os.im.action.cmd.FilterActionRemove(entry, index, parentId);
 };
 
 

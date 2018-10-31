@@ -191,7 +191,7 @@ plugin.im.action.feature.editEntry = function(entryType, opt_entry) {
  * @return {boolean} Whether to refresh the layer.
  */
 plugin.im.action.feature.doRefresh = function(entryType) {
-  var layer = /** @type {os.layer.Vector} */ (os.MapContainer.getInstance().getLayer(this.entryType));
+  var layer = /** @type {os.layer.Vector} */ (os.MapContainer.getInstance().getLayer(entryType));
   var featureActionRefresh = true;
 
   if (layer && layer.getLayerOptions() && layer.getLayerOptions()['featureActionRefresh'] !== undefined) {

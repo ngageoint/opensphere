@@ -29,8 +29,17 @@ goog.inherits(os.ui.im.action.FilterActionTreeSearch, os.ui.slick.AbstractGroupB
 /**
  * @inheritDoc
  */
-os.ui.im.action.FilterActionTreeSearch.prototype.getSearchItems = function() {
-  return os.im.action.ImportActionManager.getInstance().getActionEntries(this.entryType);
+os.ui.im.action.FilterActionTreeSearch.prototype.getSearch = function() {
+  var entries = os.im.action.ImportActionManager.getInstance().getActionEntries(this.entryType);
+  var nodes = [];
+
+  if (entries && entries.length > 0) {
+    for (var i = 0, n = entries.length; i < n; i++) {
+      nodes.push(this.setupNode(entries[i]));
+    }
+  }
+
+  return nodes;
 };
 
 
@@ -43,15 +52,97 @@ os.ui.im.action.FilterActionTreeSearch.prototype.setupNode = function(item) {
 
 
 /**
+ * Overridden to get parents and children as results
  * @override
  */
-os.ui.im.action.FilterActionTreeSearch.prototype.fillListFromSearch = function(list) {
-  var entries = os.im.action.ImportActionManager.getInstance().getActionEntries(this.entryType);
+os.ui.im.action.FilterActionTreeSearch.prototype.searchNodes = function(exp, results, nodes) {
+  var fFn = this.getFilterFunction();
 
-  if (entries && entries.length > 0) {
-    for (var i = 0, n = entries.length; i < n; i++) {
-      var node = new os.ui.im.action.FilterActionNode(entries[i]);
-      list.push(node);
+  if (nodes) {
+    var groupBy = this.getGroupBy();
+    for (var i = 0, n = nodes.length; i < n; i++) {
+      var node = nodes[i];
+
+      if (node && !node.getChildren()) {
+        var text = this.getNodeSearchText(node);
+
+        // search
+        if (text) {
+          var r = exp.test(text.toLowerCase());
+
+          if (r) {
+            // remove the "No Result" node
+            if (results.length > 0 && results[0].getId() == 'noResults') {
+              results.splice(0, 1);
+            }
+
+            // if we've already seen the same ID for some reason, skip it
+            if (node.getId() in this.searchIds) {
+              continue;
+            }
+
+            // if it passes the filter
+            if (!fFn || fFn(node)) {
+              groupBy ? groupBy.groupBy(node, results) : results.push(node);
+            }
+          }
+
+          // reset the regex for the next test
+          exp.lastIndex = 0;
+        }
+
+        if (!(node.getId() in this.searchIds)) {
+          if (groupBy) {
+            groupBy.count(node);
+          }
+
+          this.searchIds[node.getId()] = true;
+        }
+      } else {
+        var text = this.getNodeSearchText(node);
+
+        // search
+        if (text) {
+          var r = exp.test(text.toLowerCase());
+
+          // reset the regex for the next test
+          exp.lastIndex = 0;
+
+          if (r) {
+            // remove the "No Result" node
+            if (results.length > 0 && results[0].getId() == 'noResults') {
+              results.splice(0, 1);
+            }
+
+            // if it passes the filter
+            if (!fFn || fFn(node)) {
+              var newNode = node.clone();
+              if (groupBy) {
+                groupBy.groupBy(newNode, results);
+                groupBy.count(node);
+              } else {
+                results.push(newNode);
+              }
+            }
+          }
+        }
+
+        this.searchNodes(exp, results, node.getChildren());
+      }
+    }
+  }
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.ui.im.action.FilterActionTreeSearch.prototype.fillListFromSearch = function(list) {
+  var nodes = this.getSearch();
+
+  if (nodes && nodes.length > 0) {
+    for (var i = 0, n = nodes.length; i < n; i++) {
+      list.push(nodes[i]);
     }
   } else {
     this.addNoResult(list);

@@ -71,50 +71,43 @@ os.state.v4.FilterAction.prototype.load = function(obj, id) {
     var iam = os.im.action.ImportActionManager.getInstance();
     var children = goog.dom.getChildren(obj);
     if (children && children.length > 0) {
-      for (var i = 0, n = children.length; i < n; i++) {
-        var child = children[i];
-        var nodeEntries = os.im.action.FilterActionParser.parseNode(child);
+      var entries = os.im.action.FilterActionParser.parseNodes(children);
+      for (var i = 0, n = entries.length; i < n; i++) {
+        var e = entries[i];
 
-        // filter actions should be saved so they only apply to a single layer. if multiple entries are created, there
-        // is something wrong.
-        if (nodeEntries && nodeEntries.length == 1) {
-          var entry = nodeEntries[0];
+        /**
+         * Sets the proper state IDs on an entry and its children.
+         * @param {os.im.action.FilterActionEntry} entry The entry to set IDs on.
+         */
+        var setIds = function(entry) {
           entry.setId(os.state.AbstractState.createId(id, entry.getId()));
-          entry.setType(this.getLayerId(child, id));
+          entry.setType(os.state.AbstractState.createId(id, entry.getType()));
           entry.setTemporary(true);
           entry.setEnabled(true);
 
-          iam.addActionEntry(entry);
-
-          if (!(id in os.state.v4.FilterAction.ADDED_)) {
-            os.state.v4.FilterAction.ADDED_[id] = [];
+          if (entry.getChildren()) {
+            // set up the children
+            entry.getChildren().forEach(setIds);
           }
+        };
 
-          os.state.v4.FilterAction.ADDED_[id].push(entry);
-        } else {
-          goog.log.error(os.state.v4.FilterAction.LOGGER_,
-              'There was an error loading a filter action for state file ' + id +
-              '. Multiple entries were parsed from a single node.');
+        // this will set up the proper ID's and types on the full hierarchy
+        setIds(e);
+
+        // only add the root level feature actions, adding the children will result in doubling
+        iam.addActionEntry(e);
+
+        if (!(id in os.state.v4.FilterAction.ADDED_)) {
+          os.state.v4.FilterAction.ADDED_[id] = [];
         }
+
+        os.state.v4.FilterAction.ADDED_[id].push(e);
       }
     }
   } catch (e) {
     goog.log.error(os.state.v4.FilterAction.LOGGER_,
         'There was an error loading a filter action for state file ' + id, e);
   }
-};
-
-
-/**
- * Get the layer id for the filter.
- * @param {!Element} el The element
- * @param {string} stateId The state id
- * @return {string} The layer id
- * @protected
- */
-os.state.v4.FilterAction.prototype.getLayerId = function(el, stateId) {
-  var id = String(el.getAttribute('type'));
-  return os.state.AbstractState.createId(stateId, id);
 };
 
 

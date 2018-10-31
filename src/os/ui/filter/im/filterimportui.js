@@ -1,4 +1,5 @@
-goog.provide('os.ui.filter.FilterImportUI');
+goog.provide('os.ui.filter.im.FilterImportUI');
+
 goog.require('os.ui.filter.im.filterImportDirective');
 goog.require('os.ui.im.FileImportUI');
 
@@ -8,8 +9,8 @@ goog.require('os.ui.im.FileImportUI');
  * @extends {os.ui.im.FileImportUI}
  * @constructor
  */
-os.ui.filter.FilterImportUI = function() {
-  os.ui.filter.FilterImportUI.base(this, 'constructor');
+os.ui.filter.im.FilterImportUI = function() {
+  os.ui.filter.im.FilterImportUI.base(this, 'constructor');
 
   /**
    * The import window label.
@@ -20,14 +21,14 @@ os.ui.filter.FilterImportUI = function() {
   // file contents are only used in memory, not loaded from storage
   this.requiresStorage = false;
 };
-goog.inherits(os.ui.filter.FilterImportUI, os.ui.im.FileImportUI);
+goog.inherits(os.ui.filter.im.FilterImportUI, os.ui.im.FileImportUI);
 
 
 /**
  * @inheritDoc
  */
-os.ui.filter.FilterImportUI.prototype.launchUI = function(file, opt_config) {
-  os.ui.filter.FilterImportUI.base(this, 'launchUI', file, opt_config);
+os.ui.filter.im.FilterImportUI.prototype.launchUI = function(file, opt_config) {
+  os.ui.filter.im.FilterImportUI.base(this, 'launchUI', file, opt_config);
 
   var windowOptions = {
     'label': this.label,
@@ -64,6 +65,6 @@ os.ui.filter.FilterImportUI.prototype.launchUI = function(file, opt_config) {
  * @return {!string}
  * @protected
  */
-os.ui.filter.FilterImportUI.prototype.getTemplate = function() {
+os.ui.filter.im.FilterImportUI.prototype.getTemplate = function() {
   return '<filterimport filter-data="filterData" layer-id="layerId"></filterimport>';
 };

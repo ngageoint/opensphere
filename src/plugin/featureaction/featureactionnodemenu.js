@@ -231,16 +231,18 @@ plugin.im.action.feature.node.onCopyEvent_ = function(event) {
   var filterActionNodes = plugin.im.action.feature.node.getFeatureActionNodes(context);
   if (filterActionNodes.length == 1) {
     var entry = /** @type {os.im.action.FilterActionEntry} */ (filterActionNodes[0].getEntry());
+    var parentIndex = os.structs.getIndexInParent(filterActionNodes[0]);
     if (entry) {
-      var cmd = os.im.action.filter.copyEntryCmd(entry);
+      var cmd = os.im.action.filter.copyEntryCmd(entry, parentIndex == -1 ? undefined : parentIndex + 1);
       os.commandStack.addCommand(cmd);
     }
   } else if (filterActionNodes.length > 1) {
     var cpCmds = [];
     for (var i = 0; i < filterActionNodes.length; i++) {
       var entry = /** @type {os.im.action.FilterActionEntry} */ (filterActionNodes[i].getEntry());
+      var parentIndex = os.structs.getIndexInParent(filterActionNodes[i]);
       if (entry) {
-        var cpCmd = os.im.action.filter.copyEntryCmd(entry);
+        var cpCmd = os.im.action.filter.copyEntryCmd(entry, parentIndex == -1 ? undefined : parentIndex + 1);
         cpCmds.push(cpCmd);
       }
     }

@@ -73,93 +73,118 @@ os.im.action.FilterActionParser.prototype.parseNext = function() {
 
 
 /**
+ * Extracts filter actions from an array of XML nodes.
+ * @param {!IArrayLike<Node>} nodes The XML nodes to extract an entry from.
+ * @return {!Array<!os.im.action.FilterActionEntry>}
+ */
+os.im.action.FilterActionParser.parseNodes = function(nodes) {
+  var iam = os.im.action.ImportActionManager.getInstance();
+  var entries = [];
+  var parentMap = {};
+  var typeMap = {};
+
+  goog.array.forEach(nodes, function(node) {
+    var actions = [];
+    var filter = null;
+
+    var id = /** @type {string} */ (node.getAttribute('id')) || goog.string.getRandomString();
+    var title = /** @type {string} */ (node.getAttribute('title')) || '';
+    var description = /** @type {?string} */ (node.getAttribute('description')) || '';
+    var tags = /** @type {?string} */ (node.getAttribute('tags')) || '';
+    var children = /** @type {?string} */ (node.getAttribute('children')) || '';
+    var childrenArray = children ? children.split(', ') : [];
+
+    var type = /** @type {string} */ (node.getAttribute('type')) || '';
+    var typeHint = /** @type {string|undefined} */ (node.getAttribute('typeHint'));
+
+    if (typeHint == os.im.action.filter.ExportTypeHint.EXACT) {
+      typeMap[type] = [type];
+    } else {
+      typeMap[type] = os.ui.filter.getFilterableTypes(type);
+    }
+
+    var filterNode = node.querySelector('filter');
+    if (filterNode) {
+      var filterRoot = goog.dom.getFirstElementChild(filterNode);
+      filter = goog.dom.xml.serialize(filterRoot);
+      filter = filter.replace(/xmlns=("|')[^"']*("|')/g, '');
+      filter = filter.replace(/ogc:/g, '');
+      filter = filter.replace(/>\s+</g, '><');
+    }
+
+    var actionsNode = node.querySelector(os.im.action.TagName.ACTIONS);
+    if (actionsNode && actionsNode.childNodes.length) {
+      var actionEls = goog.dom.getChildren(actionsNode);
+
+      goog.array.forEach(actionEls, function(el) {
+        var action = iam.createActionFromXml(el);
+        if (action) {
+          actions.push(action);
+        }
+      });
+    }
+
+    var entry = iam.createActionEntry();
+    entry.setId(id);
+    entry.setTitle(title);
+    entry.setType(type);
+    entry.setDescription(description);
+    entry.setTags(tags);
+    entry.setFilter(filter);
+    entry.setEnabled(true);
+    entry.actions = actions;
+
+    var parents = parentMap[id];
+    if (parents) {
+      // add it as a child to its parent
+      parents.forEach(function(parent) {
+        parent.addChild(entry);
+      });
+
+      delete parentMap[id];
+    } else {
+      // add it as a root entry
+      entries.push(entry);
+    }
+
+    if (childrenArray.length > 0) {
+      childrenArray.forEach(function(childId) {
+        if (parentMap[childId]) {
+          parentMap[childId].push(entry);
+        } else {
+          parentMap[childId] = [entry];
+        }
+      });
+    }
+  });
+
+  var finalEntries = [];
+  entries.forEach(function(entry) {
+    var types = typeMap[entry.getType()];
+
+    if (types) {
+      types.forEach(function(type) {
+        var clone = entry.clone();
+        clone.setType(type);
+        finalEntries.push(clone);
+      });
+    }
+  });
+
+  return finalEntries;
+};
+
+
+/**
  * Extracts filter action entries from an XML document.
  * @param {!Document} doc The XML document to extract entries from.
  * @return {!Array<!os.im.action.FilterActionEntry>}
  */
 os.im.action.FilterActionParser.parseDocument = function(doc) {
   var iam = os.im.action.ImportActionManager.getInstance();
-  var entries = [];
-
   var root = goog.dom.getFirstElementChild(doc);
   var actionNodes = root.querySelectorAll(iam.xmlEntry);
-  if (actionNodes && actionNodes.length > 0) {
-    for (var i = 0; i < actionNodes.length; i++) {
-      var nodeEntries = os.im.action.FilterActionParser.parseNode(actionNodes[i]);
-      if (nodeEntries && nodeEntries.length > 0) {
-        entries = entries.concat(nodeEntries);
-      }
-    }
-  }
-
-  return entries;
-};
-
-
-/**
- * Extract a filter action entry from an XML node.
- * @param {!Node} node The XML node to extract an entry from.
- * @return {!Array<!os.im.action.FilterActionEntry>}
- */
-os.im.action.FilterActionParser.parseNode = function(node) {
-  var iam = os.im.action.ImportActionManager.getInstance();
-  var actions = [];
-  var entries = [];
-  var filter = null;
-
-  var title = /** @type {string} */ (node.getAttribute('title')) || '';
-  var description = /** @type {?string} */ (node.getAttribute('description')) || '';
-  var tags = /** @type {?string} */ (node.getAttribute('tags')) || '';
-
-  var type = /** @type {string} */ (node.getAttribute('type')) || '';
-  var typeHint = /** @type {string|undefined} */ (node.getAttribute('typeHint'));
-
-  var types;
-  if (typeHint == os.im.action.filter.ExportTypeHint.EXACT) {
-    types = [type];
-  } else {
-    types = os.ui.filter.getFilterableTypes(type);
-  }
-
-  var filterNode = node.querySelector('filter');
-  if (filterNode) {
-    var filterRoot = goog.dom.getFirstElementChild(filterNode);
-    filter = goog.dom.xml.serialize(filterRoot);
-    filter = filter.replace(/xmlns=("|')[^"']*("|')/g, '');
-    filter = filter.replace(/ogc:/g, '');
-    filter = filter.replace(/>\s+</g, '><');
-  }
-
-  var actionsNode = node.querySelector(os.im.action.TagName.ACTIONS);
-  if (actionsNode && actionsNode.childNodes.length) {
-    var actionEls = goog.dom.getChildren(actionsNode);
-
-    for (var i = 0; i < actionEls.length; i++) {
-      var action = iam.createActionFromXml(actionEls[i]);
-      if (action) {
-        actions.push(action);
-      }
-    }
-  }
-
-  if (filter && types.length > 0) {
-    var entry = iam.createActionEntry();
-    entry.setTitle(title);
-    entry.setType(types[0]);
-    entry.setDescription(description);
-    entry.setTags(tags);
-    entry.setFilter(filter);
-    entry.setEnabled(true);
-    entry.actions = actions;
-    entries.push(entry);
-
-    for (var i = 1; i < types.length; i++) {
-      var clone = entry.clone();
-      clone.setId(goog.string.getRandomString());
-      clone.setType(types[i]);
-      entries.push(clone);
-    }
-  }
+  var entries = os.im.action.FilterActionParser.parseNodes(actionNodes);
 
   return entries;
 };
