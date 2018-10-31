@@ -9,8 +9,6 @@ goog.require('os.ui.slick.column');
  * @enum {string}
  */
 plugin.file.kml.KMLField = {
-  SHOW_BALLOON: '_showBalloon',
-  BALLOON_OPTIONS: '_balloonOptions',
   DESCRIPTION: 'description',
   MD_DESCRIPTION: '_mdDescription',
   NAME: 'name'

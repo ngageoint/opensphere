@@ -3,6 +3,8 @@ goog.provide('os.annotation.annotationDirective');
 
 goog.require('goog.Disposable');
 goog.require('goog.async.ConditionalDelay');
+goog.require('os.annotation');
+goog.require('os.events.PropertyChangeEvent');
 goog.require('os.ui.Module');
 goog.require('os.ui.text.simpleMDEDirective');
 
@@ -90,16 +92,22 @@ os.annotation.AnnotationCtrl = function($scope, $element) {
   this.tailType_ = os.annotation.TailType.ABSOLUTE;
 
   /**
-   * The annotation title.
+   * The annotation name.
    * @type {string}
    */
-  this['title'] = '';
+  this['name'] = '';
 
   /**
-   * The annotation content.
+   * The annotation description.
    * @type {string}
    */
-  this['content'] = '';
+  this['description'] = '';
+
+  /**
+   * The annotation options.
+   * @type {!osx.annotation.Options}
+   */
+  this.options = /** @type {!osx.annotation.Options} */ (this.feature.get(os.annotation.OPTIONS_FIELD));
 
   $element.parent().draggable({
     'containment': '#map-container',
@@ -112,9 +120,9 @@ os.annotation.AnnotationCtrl = function($scope, $element) {
 
   $element.resizable({
     'containment': '#map-container',
-    'minWidth': 200,
+    'minWidth': 50,
     'maxWidth': 800,
-    'minHeight': 100,
+    'minHeight': 25,
     'maxHeight': 800,
     'handles': 'se',
     'start': this.onDragStart_.bind(this),
@@ -153,15 +161,8 @@ os.annotation.AnnotationCtrl.prototype.disposeInternal = function() {
  */
 os.annotation.AnnotationCtrl.prototype.initialize = function() {
   if (this.element && this.feature && this.overlay) {
-    var options = this.feature.get(plugin.file.kml.KMLField.BALLOON_OPTIONS);
-
-    var height = options ? options['height'] : 100;
-    var width = options ? options['width'] : 200;
-    var offset = options ? options['offset'] : [0, -75];
-
-    this.element.height(height);
-    this.element.width(width);
-    this.overlay.setOffset(offset);
+    this.element.width(this.options.size[0]);
+    this.element.height(this.options.size[1]);
 
     this.setTailType_(os.annotation.TailType.ABSOLUTE);
     this.handleFeatureChange();
@@ -182,13 +183,21 @@ os.annotation.AnnotationCtrl.prototype.initialize = function() {
  * @protected
  */
 os.annotation.AnnotationCtrl.prototype.handleFeatureChange = function() {
-  this['title'] = '';
-  this['content'] = '';
+  this['name'] = '';
+  this['description'] = '';
 
   if (this.feature && this.scope) {
-    this['title'] = this.feature.get(os.ui.FeatureEditCtrl.Field.NAME);
-    this['content'] = this.feature.get(os.ui.FeatureEditCtrl.Field.MD_DESCRIPTION) ||
-        this.feature.get(os.ui.FeatureEditCtrl.Field.DESCRIPTION);
+    // update the name if shown
+    if (this.options.showName) {
+      this['name'] = this.feature.get(os.ui.FeatureEditCtrl.Field.NAME) || '';
+    }
+
+    // update the description if shown
+    if (this.options.showDescription) {
+      this['description'] = this.feature.get(os.ui.FeatureEditCtrl.Field.MD_DESCRIPTION) ||
+          this.feature.get(os.ui.FeatureEditCtrl.Field.DESCRIPTION) || '';
+    }
+
     os.ui.apply(this.scope);
   }
 };
@@ -201,6 +210,7 @@ os.annotation.AnnotationCtrl.prototype.handleFeatureChange = function() {
  * @private
  */
 os.annotation.AnnotationCtrl.prototype.onDragStart_ = function(event, ui) {
+  // use fixed positioning during drag/resize for smoother SVG updates
   this.setTailType_(os.annotation.TailType.FIXED);
   this.updateTail_();
 };
@@ -213,6 +223,7 @@ os.annotation.AnnotationCtrl.prototype.onDragStart_ = function(event, ui) {
  * @private
  */
 os.annotation.AnnotationCtrl.prototype.onDragStop_ = function(event, ui) {
+  // use absolute positioning when drag/resize stops for smoother repositioning on map interaction
   this.setTailType_(os.annotation.TailType.ABSOLUTE);
   this.updateTail_();
 };
@@ -230,6 +241,8 @@ os.annotation.AnnotationCtrl.prototype.setTailType_ = function(type) {
     var svg = this.element.find('svg');
     svg.css('position', type);
 
+    // for fixed positioning, resize the SVG to fill the map bounds. absolute positioning will resize the SVG on each
+    // tail update.
     if (type === os.annotation.TailType.FIXED) {
       var mapRect = this.getMapRect_();
       if (mapRect) {
@@ -294,11 +307,17 @@ os.annotation.AnnotationCtrl.prototype.updateTail_ = function() {
 
 
 /**
- * Update the SVG tail for the annotation.
+ * Update the SVG tail for the annotation using an absolute position.
  * @return {boolean} If the update was successful.
  * @private
  */
 os.annotation.AnnotationCtrl.prototype.updateTailAbsolute_ = function() {
+  //
+  // Absolute positioning attaches the tail to the parent overlay. By setting the overlay's offset apporpriately to
+  // position the tail on the target, the overlay can be repositioned smoothly without re-drawing the tail on each
+  // map interaction (required with fixed positioning).
+  //
+
   if (this.element && this.overlay) {
     var position = this.overlay.getPosition();
     if (!position) {
@@ -383,11 +402,16 @@ os.annotation.AnnotationCtrl.prototype.updateTailAbsolute_ = function() {
       (cardRect.y + cardRect.height / 2) - targetPixel[1]
     ];
     this.overlay.setOffset(offset);
-    this.feature.set(plugin.file.kml.KMLField.BALLOON_OPTIONS, {
-      'height': cardHeight,
-      'width': cardWidth,
-      'offset': offset
-    });
+
+    if (this.options) {
+      this.options.size = [cardWidth, cardHeight];
+      this.options.offset = offset;
+
+      // notify that that annotation changed so it can be saved
+      if (this.feature) {
+        this.feature.dispatchEvent(new os.events.PropertyChangeEvent(os.annotation.CHANGE_EVENT));
+      }
+    }
   }
 
   return true;
@@ -395,11 +419,17 @@ os.annotation.AnnotationCtrl.prototype.updateTailAbsolute_ = function() {
 
 
 /**
- * Update the SVG tail for the annotation.
+ * Update the SVG tail for the annotation using fixed position.
  * @return {boolean} If the update was successful.
  * @private
  */
 os.annotation.AnnotationCtrl.prototype.updateTailFixed_ = function() {
+  //
+  // When dragging/resizing the overlay, the tail is updated on each movement. This update is very slow using absolute
+  // positioning because the SVG needs to be resized in addition to the tail's path change. To update the tail smoothly,
+  // the SVG is resized to fill the entire map so changes only need to update the tail's path.
+  //
+
   if (this.element && this.overlay) {
     var position = this.overlay.getPosition();
     if (!position) {

@@ -1,5 +1,6 @@
 goog.provide('plugin.places');
 
+goog.require('os.annotation');
 goog.require('os.command.SequenceCommand');
 goog.require('os.data.RecordField');
 goog.require('os.style');
@@ -54,7 +55,7 @@ plugin.places.ICON = plugin.places.Icon.PLACEMARK;
 plugin.places.EXPORT_FIELDS_ = [
   plugin.file.kml.KMLField.DESCRIPTION,
   plugin.file.kml.KMLField.MD_DESCRIPTION,
-  plugin.file.kml.KMLField.SHOW_BALLOON,
+  os.annotation.OPTIONS_FIELD,
   os.style.StyleField.CENTER_SHAPE,
   os.style.StyleField.SHAPE,
   os.style.StyleField.LABELS,

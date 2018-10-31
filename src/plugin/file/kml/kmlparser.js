@@ -1055,6 +1055,11 @@ plugin.file.kml.KMLParser.prototype.readPlacemark_ = function(el) {
     feature.setId(id);
     object[os.Fields.ID] = object[os.Fields.ID] || baseId;
 
+    // parse annotation options from JSON
+    if (object[os.annotation.OPTIONS_FIELD] && typeof object[os.annotation.OPTIONS_FIELD] === 'string') {
+      object[os.annotation.OPTIONS_FIELD] = JSON.parse(object[os.annotation.OPTIONS_FIELD]);
+    }
+
     feature.setProperties(object);
 
     // create/modify the set of columns detected in the file. for now, just keep a basic set to keep this as low
