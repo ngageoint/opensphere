@@ -135,6 +135,7 @@ os.annotation.FeatureAnnotation.prototype.createUI = function() {
 
   this.setVisibleInternal();
 
+  // create an Angular scope for the annotation UI
   var compile = /** @type {!angular.$compile} */ (os.ui.injector.get('$compile'));
   this.scope = /** @type {!angular.Scope} */ (os.ui.injector.get('$rootScope').$new());
 
@@ -143,11 +144,12 @@ os.annotation.FeatureAnnotation.prototype.createUI = function() {
     'overlay': this.overlay
   });
 
+  // compile the template and assign the element to the overlay
   var template = '<annotation feature="feature" overlay="overlay"></annotation>';
   this.element = /** @type {Element} */ (compile(template)(this.scope)[0]);
-
   this.overlay.setElement(this.element);
 
+  // add the overlay to the map
   var map = os.MapContainer.getInstance().getMap();
   if (map) {
     map.addOverlay(this.overlay);
@@ -161,15 +163,18 @@ os.annotation.FeatureAnnotation.prototype.createUI = function() {
  */
 os.annotation.FeatureAnnotation.prototype.disposeUI = function() {
   if (this.overlay) {
+    // remove the overlay from the map
     var map = os.MapContainer.getInstance().getMap();
     if (map) {
       map.removeOverlay(this.overlay);
     }
 
+    // dispose of the overlay
     this.overlay.dispose();
     this.overlay = null;
   }
 
+  // destroy the scope
   if (this.scope) {
     this.scope.$destroy();
     this.scope = null;

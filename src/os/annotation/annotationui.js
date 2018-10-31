@@ -92,6 +92,12 @@ os.annotation.AnnotationCtrl = function($scope, $element) {
   this.tailType_ = os.annotation.TailType.ABSOLUTE;
 
   /**
+   * If the annotation can be edited.
+   * @type {boolean}
+   */
+  this['canEdit'] = this.feature.getId() !== os.ui.FeatureEditCtrl.TEMP_ID;
+
+  /**
    * The annotation name.
    * @type {string}
    */
@@ -107,7 +113,7 @@ os.annotation.AnnotationCtrl = function($scope, $element) {
    * The annotation options.
    * @type {!osx.annotation.Options}
    */
-  this.options = /** @type {!osx.annotation.Options} */ (this.feature.get(os.annotation.OPTIONS_FIELD));
+  this['options'] = /** @type {!osx.annotation.Options} */ (this.feature.get(os.annotation.OPTIONS_FIELD));
 
   $element.parent().draggable({
     'containment': '#map-container',
@@ -161,8 +167,8 @@ os.annotation.AnnotationCtrl.prototype.disposeInternal = function() {
  */
 os.annotation.AnnotationCtrl.prototype.initialize = function() {
   if (this.element && this.feature && this.overlay) {
-    this.element.width(this.options.size[0]);
-    this.element.height(this.options.size[1]);
+    this.element.width(this['options'].size[0]);
+    this.element.height(this['options'].size[1]);
 
     this.setTailType_(os.annotation.TailType.ABSOLUTE);
     this.handleFeatureChange();
@@ -179,6 +185,17 @@ os.annotation.AnnotationCtrl.prototype.initialize = function() {
 
 
 /**
+ * Edit the annotation.
+ * @export
+ */
+os.annotation.AnnotationCtrl.prototype.editAnnotation = function() {
+  if (this.feature) {
+    this.feature.dispatchEvent(new os.events.PropertyChangeEvent(os.annotation.EventType.EDIT));
+  }
+};
+
+
+/**
  * Update the title from the feature.
  * @protected
  */
@@ -187,16 +204,9 @@ os.annotation.AnnotationCtrl.prototype.handleFeatureChange = function() {
   this['description'] = '';
 
   if (this.feature && this.scope) {
-    // update the name if shown
-    if (this.options.showName) {
-      this['name'] = this.feature.get(os.ui.FeatureEditCtrl.Field.NAME) || '';
-    }
-
-    // update the description if shown
-    if (this.options.showDescription) {
-      this['description'] = this.feature.get(os.ui.FeatureEditCtrl.Field.MD_DESCRIPTION) ||
-          this.feature.get(os.ui.FeatureEditCtrl.Field.DESCRIPTION) || '';
-    }
+    this['name'] = this.feature.get(os.ui.FeatureEditCtrl.Field.NAME) || '';
+    this['description'] = this.feature.get(os.ui.FeatureEditCtrl.Field.MD_DESCRIPTION) ||
+        this.feature.get(os.ui.FeatureEditCtrl.Field.DESCRIPTION) || '';
 
     os.ui.apply(this.scope);
   }
@@ -403,13 +413,13 @@ os.annotation.AnnotationCtrl.prototype.updateTailAbsolute_ = function() {
     ];
     this.overlay.setOffset(offset);
 
-    if (this.options) {
-      this.options.size = [cardWidth, cardHeight];
-      this.options.offset = offset;
+    if (this['options']) {
+      this['options'].size = [cardWidth, cardHeight];
+      this['options'].offset = offset;
 
       // notify that that annotation changed so it can be saved
       if (this.feature) {
-        this.feature.dispatchEvent(new os.events.PropertyChangeEvent(os.annotation.CHANGE_EVENT));
+        this.feature.dispatchEvent(new os.events.PropertyChangeEvent(os.annotation.EventType.CHANGE));
       }
     }
   }
