@@ -78,11 +78,12 @@ os.annotation.UI_TEMPLATE_ =
  * Controller for the annotation directive.
  * @param {!angular.Scope} $scope The Angular scope.
  * @param {!angular.JQLite} $element The root DOM element.
+ * @param {!angular.$timeout} $timeout The Angular $timeout service.
  * @extends {goog.Disposable}
  * @constructor
  * @ngInject
  */
-os.annotation.AnnotationCtrl = function($scope, $element) {
+os.annotation.AnnotationCtrl = function($scope, $element, $timeout) {
   os.annotation.AnnotationCtrl.base(this, 'constructor');
 
   /**
@@ -144,30 +145,10 @@ os.annotation.AnnotationCtrl = function($scope, $element) {
    */
   this['options'] = /** @type {!osx.annotation.Options} */ (this.feature.get(os.annotation.OPTIONS_FIELD));
 
-  $element.parent().draggable({
-    'containment': '#map-container',
-    'handle': '.js-annotation',
-    'start': this.onDragStart_.bind(this),
-    'drag': this.updateTail_.bind(this),
-    'stop': this.onDragStop_.bind(this),
-    'scroll': false
-  });
-
-  $element.resizable({
-    'containment': '#map-container',
-    'minWidth': 50,
-    'maxWidth': 800,
-    'minHeight': 25,
-    'maxHeight': 800,
-    'handles': 'se',
-    'start': this.onDragStart_.bind(this),
-    'resize': this.updateTail_.bind(this),
-    'stop': this.onDragStop_.bind(this)
-  });
-
   ol.events.listen(this.feature, ol.events.EventType.CHANGE, this.handleFeatureChange, this);
 
   this.initialize();
+  $timeout(this.initDragResize.bind(this));
 
   $scope.$on('$destroy', this.dispose.bind(this));
 };
@@ -209,6 +190,38 @@ os.annotation.AnnotationCtrl.prototype.initialize = function() {
     };
     updateDelay.onSuccess = updateDelay.onFailure = cleanup;
     updateDelay.start(50, 10000);
+  }
+};
+
+
+/**
+ * Initialize the drag/resize handlers.
+ * @protected
+ */
+os.annotation.AnnotationCtrl.prototype.initDragResize = function() {
+  if (this.element && this.element.parent().length) {
+    // OpenLayers absolutely positions the parent container, so attach the draggable handler to that and use the
+    // annotation container as the drag target.
+    this.element.parent().draggable({
+      'containment': '#map-container',
+      'handle': '.js-annotation',
+      'start': this.onDragStart_.bind(this),
+      'drag': this.updateTail_.bind(this),
+      'stop': this.onDragStop_.bind(this),
+      'scroll': false
+    });
+
+    this.element.resizable({
+      'containment': '#map-container',
+      'minWidth': 50,
+      'maxWidth': 800,
+      'minHeight': 25,
+      'maxHeight': 800,
+      'handles': 'se',
+      'start': this.onDragStart_.bind(this),
+      'resize': this.updateTail_.bind(this),
+      'stop': this.onDragStop_.bind(this)
+    });
   }
 };
 
