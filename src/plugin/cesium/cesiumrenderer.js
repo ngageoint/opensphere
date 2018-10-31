@@ -228,16 +228,20 @@ plugin.cesium.CesiumRenderer.prototype.getCamera = function() {
 plugin.cesium.CesiumRenderer.prototype.getCoordinateFromPixel = function(pixel) {
   // verify the pixel is valid and numeric. key events in particular can provide NaN pixels.
   if (this.olCesium_ && pixel && pixel.length == 2 && !isNaN(pixel[0]) && !isNaN(pixel[1])) {
-    var cartesian = new Cesium.Cartesian2(pixel[0], pixel[1]);
+    var cartesian = Cesium.Cartesian2.fromArray(pixel);
     var scene = this.olCesium_.getCesiumScene();
-    cartesian = scene && scene.camera ? scene.camera.pickEllipsoid(cartesian) : undefined;
+    if (scene && scene.camera && scene.globe) {
+      var pickRay = scene.camera.getPickRay(cartesian);
+      cartesian = scene.globe.pick(pickRay, scene);
 
-    if (cartesian) {
-      var cartographic = scene.globe.ellipsoid.cartesianToCartographic(cartesian);
-      return [
-        Cesium.Math.toDegrees(cartographic.longitude),
-        Cesium.Math.toDegrees(cartographic.latitude)
-      ];
+      if (cartesian) {
+        var cartographic = scene.globe.ellipsoid.cartesianToCartographic(cartesian);
+        return [
+          Cesium.Math.toDegrees(cartographic.longitude),
+          Cesium.Math.toDegrees(cartographic.latitude),
+          cartographic.height
+        ];
+      }
     }
   }
 
