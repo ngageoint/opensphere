@@ -136,12 +136,15 @@ plugin.capture.CapturePlugin.prototype.getDynamicRenderers = function() {
   if (map) {
     var overlays = map.getOverlays().getArray();
     overlays.forEach(function(overlay) {
-      var overlayEl = overlay.getElement();
-      if (overlayEl && overlayEl.querySelector('svg.c-annotation__svg')) {
-        renderers.push(new plugin.capture.AnnotationTailRenderer(overlay));
-      }
+      var element = overlay.getElement();
+      var position = overlay.getPosition();
+      if (element && position) {
+        if (element.querySelector('svg.c-annotation__svg')) {
+          renderers.push(new plugin.capture.AnnotationTailRenderer(overlay));
+        }
 
-      renderers.push(new plugin.capture.MapOverlayRenderer(overlay));
+        renderers.push(new plugin.capture.MapOverlayRenderer(overlay));
+      }
     });
   }
 
