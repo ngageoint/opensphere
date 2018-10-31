@@ -15,9 +15,23 @@ goog.require('os.ui.im.action.filterActionNodeUIDirective');
  */
 os.ui.im.action.FilterActionNode = function(entry) {
   os.ui.im.action.FilterActionNode.base(this, 'constructor', entry);
-  this.childrenAllowed = false;
   this.checkboxTooltip = 'If the action should automatically execute against loaded data';
   this.nodeUI = '<filteractionnodeui></filteractionnodeui>';
+  this.bubbleState = false;
+  this.bold = false;
+
+  // initialize the children to the entry
+  var childEntries = entry.getChildren();
+  if (childEntries) {
+    var children = [];
+
+    childEntries.forEach(function(childEntry) {
+      var node = new os.ui.im.action.FilterActionNode(childEntry);
+      children.push(node);
+    });
+
+    this.setChildren(children);
+  }
 };
 goog.inherits(os.ui.im.action.FilterActionNode, os.ui.filter.ui.FilterNode);
 
@@ -42,8 +56,37 @@ os.ui.im.action.FilterActionNode.prototype.generateToolTip = function() {
  * @inheritDoc
  */
 os.ui.im.action.FilterActionNode.prototype.setState = function(value) {
+  this.bubbleState = true;
   os.ui.im.action.FilterActionNode.base(this, 'setState', value);
+  this.bubbleState = false;
+
   os.im.action.ImportActionManager.getInstance().save();
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.ui.im.action.FilterActionNode.prototype.addChild = function(child, opt_skipAddParent, opt_index) {
+  this.entry.addChild(child.getEntry());
+  return os.ui.im.action.FilterActionNode.base(this, 'addChild', child, opt_skipAddParent, opt_index);
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.ui.im.action.FilterActionNode.prototype.removeChild = function(child) {
+  this.entry.removeChild(child.getEntry());
+  return os.ui.im.action.FilterActionNode.base(this, 'removeChild', child);
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.ui.im.action.FilterActionNode.prototype.clone = function() {
+  return new this.constructor(this.getEntry());
 };
 
 

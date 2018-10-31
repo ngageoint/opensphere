@@ -188,8 +188,7 @@ os.im.action.ImportActionManager.prototype.registerAction = function(action) {
  */
 os.im.action.ImportActionManager.prototype.clearActionEntries = function() {
   goog.object.clear(this.actionEntries);
-  this.dispatchEvent(os.im.action.ImportActionEventType.REFRESH);
-  this.save();
+  this.apply();
 };
 
 
@@ -248,8 +247,7 @@ os.im.action.ImportActionManager.prototype.getActionEntries = function(opt_type)
 os.im.action.ImportActionManager.prototype.setActionEntries = function(type, entries) {
   if (type) {
     this.actionEntries[type] = entries;
-    this.dispatchEvent(os.im.action.ImportActionEventType.REFRESH);
-    this.save();
+    this.apply();
   }
 };
 
@@ -258,8 +256,9 @@ os.im.action.ImportActionManager.prototype.setActionEntries = function(type, ent
  * Add an import action entry.
  * @param {os.im.action.FilterActionEntry<T>} entry The import action entry.
  * @param {number=} opt_index The index in the entry list.
+ * @param {string=} opt_parentId The parent node ID.
  */
-os.im.action.ImportActionManager.prototype.addActionEntry = function(entry, opt_index) {
+os.im.action.ImportActionManager.prototype.addActionEntry = function(entry, opt_index, opt_parentId) {
   if (entry && entry.type && entry.getFilter()) {
     var index = -1;
     if (!(entry.type in this.actionEntries)) {
@@ -273,20 +272,26 @@ os.im.action.ImportActionManager.prototype.addActionEntry = function(entry, opt_
       });
     }
 
-    var entries = this.actionEntries[entry.type];
-    if (index > -1) {
-      // replace the existing entry
-      entries[index] = entry;
-    } else if (opt_index > -1 && opt_index < entries.length) {
-      // insert at the given index
-      goog.array.insertAt(entries, entry, opt_index);
+    if (opt_parentId) {
+      var parent = this.getActionEntry(opt_parentId);
+      if (parent) {
+        parent.addChild(entry, opt_index);
+      }
     } else {
-      // append to the end of the array
-      entries.push(entry);
+      var entries = this.actionEntries[entry.type];
+      if (index > -1) {
+        // replace the existing entry
+        entries[index] = entry;
+      } else if (opt_index > -1 && opt_index < entries.length) {
+        // insert at the given index
+        goog.array.insertAt(entries, entry, opt_index);
+      } else {
+        // append to the end of the array
+        entries.push(entry);
+      }
     }
 
-    this.dispatchEvent(os.im.action.ImportActionEventType.REFRESH);
-    this.save();
+    this.apply();
   }
 };
 
@@ -345,22 +350,28 @@ os.im.action.ImportActionManager.prototype.unprocessItems = function(entryType, 
 /**
  * Remove an import action entry.
  * @param {os.im.action.FilterActionEntry<T>} entry The import action entry.
+ * @param {string=} opt_parentId The parent node ID.
  */
-os.im.action.ImportActionManager.prototype.removeActionEntry = function(entry) {
+os.im.action.ImportActionManager.prototype.removeActionEntry = function(entry, opt_parentId) {
   if (entry && entry.type in this.actionEntries) {
     this.unprocessItems(entry.type, this.getEntryItems(entry.type));
 
-    var entries = this.actionEntries[entry.type];
-    ol.array.remove(entries, entry);
+    if (opt_parentId) {
+      var parent = this.getActionEntry(opt_parentId);
+      if (parent) {
+        parent.removeChild(entry);
+      }
+    } else {
+      var entries = this.actionEntries[entry.type];
+      ol.array.remove(entries, entry);
 
-    if (entries.length == 0) {
-      delete this.actionEntries[entry.type];
+      if (entries.length == 0) {
+        delete this.actionEntries[entry.type];
+      }
     }
 
     this.processItems(entry.type);
-
-    this.dispatchEvent(os.im.action.ImportActionEventType.REFRESH);
-    this.save();
+    this.apply();
   }
 };
 
@@ -394,6 +405,15 @@ os.im.action.ImportActionManager.prototype.load = function() {
  * Initialize the manager when entries have been loaded.
  */
 os.im.action.ImportActionManager.prototype.initialize = goog.nullFunction;
+
+
+/**
+ * Apply the manager by sending out an event and saving.
+ */
+os.im.action.ImportActionManager.prototype.apply = function() {
+  this.dispatchEvent(os.im.action.ImportActionEventType.REFRESH);
+  this.save();
+};
 
 
 /**

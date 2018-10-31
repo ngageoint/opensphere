@@ -114,7 +114,7 @@ os.ui.im.action.FilterActionsCtrl.prototype.disposeInternal = function() {
  * @export
  */
 os.ui.im.action.FilterActionsCtrl.prototype.apply = function() {
-  this.saveEntries();
+  os.im.action.ImportActionManager.getInstance().apply();
 };
 
 
@@ -180,12 +180,13 @@ os.ui.im.action.FilterActionsCtrl.prototype.editEntry = function(opt_entry) {};
  * Handle node event to copy an entry.
  * @param {angular.Scope.Event} event The Angular event.
  * @param {os.im.action.FilterActionEntry<T>} entry The import action entry.
+ * @param {number} parentIndex The parent index.
  */
-os.ui.im.action.FilterActionsCtrl.prototype.onCopyEvent = function(event, entry) {
+os.ui.im.action.FilterActionsCtrl.prototype.onCopyEvent = function(event, entry, parentIndex) {
   event.stopPropagation();
 
   if (entry) {
-    var cmd = os.im.action.filter.copyEntryCmd(entry);
+    var cmd = os.im.action.filter.copyEntryCmd(entry, parentIndex == -1 ? undefined : parentIndex + 1);
     os.command.CommandProcessor.getInstance().addCommand(cmd);
   }
 };

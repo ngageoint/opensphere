@@ -36,7 +36,7 @@
     </div>
 
     <div class="d-flex flex-row flex-fill">
-      <slicktree x-data="entries" drag-enabled="view == -1" multi-select="true" no-root="true" selected="ctrl.selected" context-menu="ctrl.contextMenu"></slicktree>
+      <slicktree x-data="entries" drag-enabled="view == -1 && !term" multi-select="true" no-root="true" selected="ctrl.selected" context-menu="ctrl.contextMenu"></slicktree>
     </div>
   </div>
 
