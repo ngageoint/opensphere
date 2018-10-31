@@ -31,7 +31,7 @@ os.annotation.annotationDirective = function() {
       'feature': '=',
       'overlay': '='
     },
-    templateUrl: os.ROOT + 'views/annotation/annotation.html',
+    template: os.annotation.UI_TEMPLATE_,
     controller: os.annotation.AnnotationCtrl,
     controllerAs: 'ctrl'
   };
@@ -42,6 +42,35 @@ os.annotation.annotationDirective = function() {
  * Add the directive to the module
  */
 os.ui.Module.directive('annotation', [os.annotation.annotationDirective]);
+
+
+/**
+ * The annotation template. This must be inline to avoid timing issues between template load and positioning the
+ * element on the map.
+ * @type {string}
+ * @private
+ * @const
+ */
+os.annotation.UI_TEMPLATE_ =
+  '<div class="u-hover-container">' +
+    '<svg class="c-annotation__svg"><path/></svg>' +
+    '<div class="c-annotation__controls position-absolute text-right w-100" ng-if="ctrl.canEdit">' +
+      '<button class="btn btn-sm btn-outline-secondary border-0 bg-transparent animate-fade u-hover-show"' +
+          'title="Edit annotation"' +
+          'ng-click="ctrl.editAnnotation()">' +
+        '<i class="fa fa-pencil"></i>' +
+      '</button>' +
+    '</div>' +
+    '<div class="js-annotation card h-100">' +
+      '<div class="card-header px-1 py-0" ng-show="ctrl.options.showName"' +
+          'ng-class="!ctrl.options.showDescription && \'h-100 border-0\'">' +
+        '{{ctrl.name}}' +
+      '</div>' +
+      '<div class="card-body p-1" ng-show="ctrl.options.showDescription">' +
+        '<simplemde text="ctrl.description" edit="false" is-required="false" maxlength="4000"></simplemde>' +
+      '</div>' +
+    '</div>' +
+  '</div>';
 
 
 
