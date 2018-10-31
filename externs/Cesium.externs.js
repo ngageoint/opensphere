@@ -1141,6 +1141,13 @@ Cesium.Cartesian2.prototype.clone = function(opt_result) {};
 Cesium.Cartesian2.clone = function(cartesian, opt_result) {};
 
 
+/**
+ * @param {Array<number>} array
+ * @return {!Cesium.Cartesian2}
+ */
+Cesium.Cartesian2.fromArray = function(array) {};
+
+
 
 /**
  * @constructor

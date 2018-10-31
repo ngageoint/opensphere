@@ -820,9 +820,12 @@ os.ui.FeatureEditCtrl.prototype.createPreviewFeature = function() {
 
     var coordinate = geometry.getFirstCoordinate();
     if (coordinate) {
+      this['altitude'] = coordinate[2] || 0;
+
       this['pointGeometry'] = {
+        'lon': coordinate[0],
         'lat': coordinate[1],
-        'lon': coordinate[0]
+        'alt': this['altitude']
       };
     }
   } else {
