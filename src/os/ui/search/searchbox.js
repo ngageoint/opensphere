@@ -989,5 +989,4 @@ os.ui.search.SearchBoxCtrl.prototype.deleteFavorite = function(event, favorite) 
   event.preventDefault();
   event.stopPropagation();
   os.favoriteManager.removeFavorite(favorite['uri']);
-  this.toggleFavoritePopup_();
 };
