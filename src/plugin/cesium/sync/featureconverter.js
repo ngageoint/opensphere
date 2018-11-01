@@ -1167,7 +1167,7 @@ plugin.cesium.sync.FeatureConverter.prototype.createOrUpdateBillboard = function
     var imageState = imageStyle.getImageState();
     if (imageState < ol.ImageState.LOADED) {
       // state is either idle or loading, so wait for the image to load/error
-      if (opt_billboard instanceof Cesium.Billboard) {
+      if (opt_billboard && opt_billboard.eyeOffset != null) {
         // make sure it isn't cleaned up while waiting for the image to load
         opt_billboard.dirty = false;
       }
@@ -1193,7 +1193,7 @@ plugin.cesium.sync.FeatureConverter.prototype.createOrUpdateBillboard = function
         // try creating/updating again as long as the image isn't in the error state
         if (imageStyle.getImageState() < ol.ImageState.ERROR) {
           // if the billboard has already been created, make sure it's still in the collection
-          if (!(opt_billboard instanceof Cesium.Billboard) ||
+          if (!(opt_billboard && opt_billboard.eyeOffset != null) ||
               (context.billboards && context.billboards.contains(opt_billboard))) {
             this.createOrUpdateBillboard(feature, geometry, context, style, opt_billboard, opt_flatCoords,
                 opt_offset, opt_collection);
@@ -1225,25 +1225,22 @@ plugin.cesium.sync.FeatureConverter.prototype.createOrUpdateBillboard = function
  * @suppress {checkTypes} To allow access to feature id.
  */
 plugin.cesium.sync.FeatureConverter.prototype.createBillboard = function(feature, geometry, context, style,
-    opt_flatCoords, opt_offset, opt_collection) {
-  var image = style.getImage(1); // get normal density
-  if (image instanceof HTMLCanvasElement || image instanceof Image || image instanceof HTMLImageElement) {
-    var heightReference = this.getHeightReference(context.layer, feature, geometry);
-    var show = context.featureToShownMap[feature['id']] == null || context.featureToShownMap[feature['id']];
+  opt_flatCoords, opt_offset, opt_collection) {
+  var heightReference = this.getHeightReference(context.layer, feature, geometry);
+  var show = context.featureToShownMap[feature['id']] == null || context.featureToShownMap[feature['id']];
 
-    var options = /** @type {!Cesium.optionsBillboardCollectionAdd} */ ({
-      heightReference: heightReference,
-      show: show
-    });
+  var options = /** @type {!Cesium.optionsBillboardCollectionAdd} */ ({
+    heightReference: heightReference,
+    show: show
+  });
 
-    this.updateBillboard(feature, geometry, options, style, context.layer, opt_flatCoords, opt_offset);
+  this.updateBillboard(feature, geometry, options, style, context.layer, opt_flatCoords, opt_offset);
 
-    if (opt_collection) {
-      opt_collection.add(options);
-    } else {
-      context.addBillboard(options, feature, geometry);
-    }
-  }
+  // if (opt_collection) {
+  //   opt_collection.add(options);
+  // } else {
+  context.addBillboard(options, feature, geometry);
+  // }
 };
 
 
