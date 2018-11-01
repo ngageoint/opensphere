@@ -12,8 +12,62 @@ goog.require('ol.proj');
  */
 os.webgl.WebGLOverlay = function(options) {
   os.webgl.WebGLOverlay.base(this, 'constructor', options);
+
+  /**
+   * Function to deregister the post render handler.
+   * @type {function()|undefined}
+   * @private
+   */
+  this.unPostRender_ = undefined;
+
+  var mapContainer = os.MapContainer.getInstance();
+  if (mapContainer.is3DEnabled()) {
+    this.onWebGLActive();
+  } else {
+    mapContainer.listen(goog.events.EventType.PROPERTYCHANGE, this.onMapChange, false, this);
+  }
 };
 goog.inherits(os.webgl.WebGLOverlay, ol.Overlay);
+
+
+/**
+ * @inheritDoc
+ */
+os.webgl.WebGLOverlay.prototype.disposeInternal = function() {
+  os.webgl.WebGLOverlay.base(this, 'disposeInternal');
+
+  os.MapContainer.getInstance().unlisten(goog.events.EventType.PROPERTYCHANGE, this.onMapChange, false, this);
+
+  if (this.unPostRender_) {
+    this.unPostRender_();
+  }
+};
+
+
+/**
+ * Handle map property change events.
+ * @param {os.events.PropertyChangeEvent} event The event.
+ * @protected
+ */
+os.webgl.WebGLOverlay.prototype.onMapChange = function(event) {
+  if (event.getProperty() === os.MapChange.VIEW3D && event.getNewValue()) {
+    os.MapContainer.getInstance().unlisten(goog.events.EventType.PROPERTYCHANGE, this.onMapChange, false, this);
+    this.onWebGLActive();
+  }
+};
+
+
+/**
+ * Handle WebGL activiation on the map.
+ * @protected
+ */
+os.webgl.WebGLOverlay.prototype.onWebGLActive = function() {
+  var webGLRenderer = os.MapContainer.getInstance().getWebGLRenderer();
+  if (webGLRenderer) {
+    // update the overlay on each WebGL post render event so it moves smoothly with the globe
+    this.unPostRender_ = webGLRenderer.onPostRender(this.render.bind(this));
+  }
+};
 
 
 /**
