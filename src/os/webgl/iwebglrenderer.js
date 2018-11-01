@@ -124,3 +124,11 @@ os.webgl.IWebGLRenderer.prototype.toggleMovement;
  * @return {Array<os.webgl.AltitudeMode>} The supported modes
  */
 os.webgl.IWebGLRenderer.prototype.getAltitudeModes;
+
+
+/**
+ * Register a callback to fire after each frame is rendered.
+ * @param {function()} callback The callback.
+ * @return {function()|undefined} A deregistration function, or undefined if unsupported by the renderer.
+ */
+os.webgl.IWebGLRenderer.prototype.onPostRender;

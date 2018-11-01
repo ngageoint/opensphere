@@ -340,6 +340,21 @@ plugin.cesium.CesiumRenderer.prototype.forEachFeatureAtPixel = function(pixel, c
 /**
  * @inheritDoc
  */
+plugin.cesium.CesiumRenderer.prototype.onPostRender = function(callback) {
+  if (this.olCesium_) {
+    var scene = this.olCesium_.getCesiumScene();
+    if (scene) {
+      return scene.postRender.addEventListener(callback);
+    }
+  }
+
+  return undefined;
+};
+
+
+/**
+ * @inheritDoc
+ */
 plugin.cesium.CesiumRenderer.prototype.renderSync = function() {
   if (this.olCesium_) {
     var scene = this.olCesium_.getCesiumScene();
