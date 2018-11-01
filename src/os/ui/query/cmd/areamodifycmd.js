@@ -1,5 +1,6 @@
 goog.provide('os.ui.query.cmd.AreaModify');
 goog.require('os.command.ICommand');
+goog.require('os.interpolate');
 goog.require('os.ol.feature');
 goog.require('os.ui.query.cmd.AbstractArea');
 
@@ -53,6 +54,7 @@ os.ui.query.cmd.AreaModify.prototype.execute = function() {
     this.state = os.command.State.EXECUTING;
 
     // update the geometry and re-add the area to trigger a refresh
+    this.area.set(os.interpolate.ORIGINAL_GEOM_FIELD, undefined);
     this.area.setGeometry(this.newGeometry);
     os.ui.areaManager.remove(this.area);
     os.ui.areaManager.add(this.area);
@@ -72,6 +74,7 @@ os.ui.query.cmd.AreaModify.prototype.revert = function() {
   this.state = os.command.State.REVERTING;
 
   // revert to the original geometry and re-add the area to trigger a refresh
+  this.area.set(os.interpolate.ORIGINAL_GEOM_FIELD, undefined);
   this.area.setGeometry(this.oldGeometry);
   os.ui.areaManager.remove(this.area);
   os.ui.areaManager.add(this.area);
