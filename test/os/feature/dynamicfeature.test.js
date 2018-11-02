@@ -49,15 +49,16 @@ describe('os.feature.DynamicFeature', function() {
     spyOn(testFns, 'update');
 
     var now = Date.now();
+    var before = now - 10000;
 
     var df = new os.feature.DynamicFeature(undefined, testFns.init, testFns.dispose, testFns.update);
     df.initDynamic();
     df.disposeDynamic(true);
-    df.updateDynamic(now);
+    df.updateDynamic(before, now);
 
     expect(testFns.init).toHaveBeenCalledWith(df);
     expect(testFns.dispose).toHaveBeenCalledWith(df, true);
-    expect(testFns.update).toHaveBeenCalledWith(df, now);
+    expect(testFns.update).toHaveBeenCalledWith(df, before, now);
   });
 
   it('clones properly', function() {
