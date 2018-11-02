@@ -2396,7 +2396,7 @@ os.source.Vector.prototype.updateAnimationOverlay = function() {
       for (var dynamicId in this.dynamicFeatures_) {
         var dynamicFeature = this.dynamicFeatures_[dynamicId];
         if (dynamicFeature) {
-          dynamicFeature.updateDynamic(displayEnd);
+          dynamicFeature.updateDynamic(displayStart, displayEnd);
         }
       }
 
