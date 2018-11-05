@@ -78,3 +78,35 @@ plugin.cesium.tiles.Layer.prototype.restore = function(config) {
 
   this.checkCesiumEnabled();
 };
+
+
+/**
+ * @inheritDoc
+ */
+plugin.cesium.tiles.Layer.prototype.getExtent = function() {
+  var tileset = /** @type {Cesium.Cesium3DTileset} */ (this.primitive);
+  if (tileset && tileset.root && tileset.root.contentBoundingVolume) {
+    var extent = plugin.cesium.rectangleToExtent(tileset.root.contentBoundingVolume.rectangle);
+    if (extent) {
+      return ol.proj.transformExtent(extent, os.proj.EPSG4326, os.map.PROJECTION);
+    }
+  }
+
+  return undefined;
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.cesium.tiles.Layer.prototype.supportsAction = function(type, opt_actionArgs) {
+  if (os.action) {
+    switch (type) {
+      case os.action.EventType.GOTO:
+        return this.getExtent() != null;
+      default:
+        break;
+    }
+  }
+  return plugin.cesium.tiles.Layer.base(this, 'supportsAction', type, opt_actionArgs);
+};

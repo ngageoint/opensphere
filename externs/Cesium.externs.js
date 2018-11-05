@@ -5186,3 +5186,32 @@ Cesium.Cesium3DTileset.prototype.tileUnload;
  * @type {Cesium.Event}
  */
 Cesium.Cesium3DTileset.prototype.tileVisible;
+
+/**
+ * @type {Cesium.Cesium3DTile}
+ */
+Cesium.Cesium3DTileset.prototype.root;
+
+
+/**
+ * @constructor
+ */
+Cesium.Cesium3DTile = function() {};
+
+
+/**
+ * @type {Cesium.TileBoundingRegion}
+ */
+Cesium.Cesium3DTile.prototype.contentBoundingVolume;
+
+
+/**
+ * @constructor
+ */
+Cesium.TileBoundingRegion = function() {};
+
+
+/**
+ * @type {Cesium.Rectangle}
+ */
+Cesium.TileBoundingRegion.prototype.rectangle;

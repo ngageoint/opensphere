@@ -222,6 +222,21 @@ plugin.cesium.generateCirclePositions = function(center, radius) {
 
 
 /**
+ * Convert a Cesium rectangle to an OpenLayers extent, in degrees.
+ * @param {Cesium.Rectangle} rectangle The rectangle.
+ * @return {ol.Extent|undefined}
+ */
+plugin.cesium.rectangleToExtent = function(rectangle) {
+  return rectangle ? [
+    Cesium.Math.toDegrees(rectangle.west),
+    Cesium.Math.toDegrees(rectangle.south),
+    Cesium.Math.toDegrees(rectangle.east),
+    Cesium.Math.toDegrees(rectangle.north)
+  ] : undefined;
+};
+
+
+/**
  * Creates Cesium.ImageryLayer best corresponding to the given ol.layer.Layer. Only supports raster layers.
  * This replaces {@link olcs.core.tileLayerToImageryLayer} to use our custom provider supporting tile load counts.
  * @param {!ol.layer.Layer} olLayer
