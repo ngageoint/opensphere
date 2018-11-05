@@ -3059,6 +3059,16 @@ os.source.Vector.prototype.removeFromSelected = function(features, opt_skipStyle
 
 
 /**
+ * Invert the current selection
+ */
+os.source.Vector.prototype.invertSelection = function() {
+  var selected = this.selected_.slice();
+  this.selectAll();
+  this.removeFromSelected(selected);
+};
+
+
+/**
  * @inheritDoc
  */
 os.source.Vector.prototype.selectAll = function() {
