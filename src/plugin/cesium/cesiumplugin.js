@@ -1,5 +1,6 @@
 goog.provide('plugin.cesium.Plugin');
 
+goog.require('os.data.ProviderEntry');
 goog.require('os.layer.Group');
 goog.require('os.plugin.AbstractPlugin');
 goog.require('os.webgl.SynchronizerManager');
@@ -13,6 +14,9 @@ goog.require('plugin.cesium.sync.VectorSynchronizer');
 goog.require('plugin.cesium.tiles');
 goog.require('plugin.cesium.tiles.Descriptor');
 goog.require('plugin.cesium.tiles.LayerConfig');
+goog.require('plugin.cesium.tiles.Provider');
+goog.require('plugin.cesium.tiles.TilesetImportUI');
+goog.require('plugin.cesium.tiles.mime');
 
 
 /**
@@ -63,8 +67,17 @@ plugin.cesium.Plugin.prototype.init = function() {
 
   // register 3D tiles layers
   var lcm = os.layer.config.LayerConfigManager.getInstance();
-  lcm.registerLayerConfig(plugin.cesium.tiles.TYPE, plugin.cesium.tiles.LayerConfig);
+  lcm.registerLayerConfig(plugin.cesium.tiles.ID, plugin.cesium.tiles.LayerConfig);
 
   var dm = os.dataManager;
-  dm.registerDescriptorType(this.id, plugin.cesium.tiles.Descriptor);
+  dm.registerProviderType(new os.data.ProviderEntry(
+      plugin.cesium.tiles.ID,
+      plugin.cesium.tiles.Provider,
+      plugin.cesium.tiles.TYPE,
+      plugin.cesium.tiles.TYPE));
+  dm.registerDescriptorType(plugin.cesium.tiles.ID, plugin.cesium.tiles.Descriptor);
+
+  var im = os.ui.im.ImportManager.getInstance();
+  im.registerImportDetails(plugin.cesium.tiles.TYPE, true);
+  im.registerImportUI(plugin.cesium.tiles.mime.TYPE, new plugin.cesium.tiles.TilesetImportUI());
 };

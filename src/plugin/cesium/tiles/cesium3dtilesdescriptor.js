@@ -1,34 +1,26 @@
 goog.provide('plugin.cesium.tiles.Descriptor');
 
-goog.require('os.data.IUrlDescriptor');
-goog.require('os.data.LayerSyncDescriptor');
+goog.require('os.data.FileDescriptor');
+goog.require('plugin.cesium.tiles.Provider');
 
 
 /**
  * Cesium 3D tiles descriptor.
- * @implements {os.data.IUrlDescriptor}
- * @extends {os.data.LayerSyncDescriptor}
+ * @extends {os.data.FileDescriptor}
  * @constructor
  */
 plugin.cesium.tiles.Descriptor = function() {
   plugin.cesium.tiles.Descriptor.base(this, 'constructor');
-  this.descriptorType = plugin.cesium.tiles.TYPE;
-
-  /**
-   * @type {?string}
-   * @private
-   */
-  this.url_ = null;
+  this.descriptorType = plugin.cesium.tiles.ID;
 };
-goog.inherits(plugin.cesium.tiles.Descriptor, os.data.LayerSyncDescriptor);
-os.implements(plugin.cesium.tiles.Descriptor, os.data.IUrlDescriptor.ID);
+goog.inherits(plugin.cesium.tiles.Descriptor, os.data.FileDescriptor);
 
 
 /**
  * @inheritDoc
  */
 plugin.cesium.tiles.Descriptor.prototype.getIcons = function() {
-  return '<i class="fa fa-cube" title="Cesium 3D tile layer."></i>';
+  return plugin.cesium.tiles.ICON;
 };
 
 
@@ -36,33 +28,13 @@ plugin.cesium.tiles.Descriptor.prototype.getIcons = function() {
  * @inheritDoc
  */
 plugin.cesium.tiles.Descriptor.prototype.getLayerOptions = function() {
-  var options = {};
+  var options = plugin.cesium.tiles.Descriptor.base(this, 'getLayerOptions');
+  options['type'] = plugin.cesium.tiles.ID;
 
-  options['id'] = this.getId();
-  options['type'] = plugin.cesium.tiles.TYPE;
-  options['load'] = true;
-  options['provider'] = this.getProvider();
-  options['tags'] = this.getTags();
-  options['title'] = this.getTitle();
-  options['url'] = this.getUrl();
+  // disable the color picker
+  options[os.ui.ControlType.COLOR] = os.ui.ColorControlType.NONE;
 
   return options;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.tiles.Descriptor.prototype.getUrl = function() {
-  return this.url_;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.tiles.Descriptor.prototype.setUrl = function(value) {
-  this.url_ = value;
 };
 
 
@@ -72,7 +44,12 @@ plugin.cesium.tiles.Descriptor.prototype.setUrl = function(value) {
  * @return {!plugin.cesium.tiles.Descriptor}
  */
 plugin.cesium.tiles.Descriptor.createFromConfig = function(config) {
+  var file = config['file'];
+  var provider = plugin.cesium.tiles.Provider.getInstance();
   var descriptor = new plugin.cesium.tiles.Descriptor();
+  descriptor.setId(provider.getUniqueId());
+  descriptor.setProvider(provider.getLabel());
+  descriptor.setUrl(file.getUrl());
 
   plugin.cesium.tiles.Descriptor.updateFromConfig(descriptor, config);
 
@@ -86,8 +63,6 @@ plugin.cesium.tiles.Descriptor.createFromConfig = function(config) {
  * @param {!Object} config
  */
 plugin.cesium.tiles.Descriptor.updateFromConfig = function(descriptor, config) {
-  descriptor.setId(config['id']);
-  descriptor.setUrl(config['url']);
   descriptor.setDescription(config['description']);
   descriptor.setTitle(config['title']);
   descriptor.setTags(config['tags'] ? config['tags'].split(/\s*,\s*/) : null);
