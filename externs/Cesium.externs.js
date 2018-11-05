@@ -5151,3 +5151,38 @@ Cesium.Cesium3DTilesetOptions;
  * @constructor
  */
 Cesium.Cesium3DTileset = function(options) {};
+
+/**
+ * @type {Cesium.Event}
+ */
+Cesium.Cesium3DTileset.prototype.allTilesLoaded;
+
+/**
+ * @type {Cesium.Event}
+ */
+Cesium.Cesium3DTileset.prototype.initialTilesLoaded;
+
+/**
+ * @type {Cesium.Event}
+ */
+Cesium.Cesium3DTileset.prototype.loadProgress;
+
+/**
+ * @type {Cesium.Event}
+ */
+Cesium.Cesium3DTileset.prototype.tileFailed;
+
+/**
+ * @type {Cesium.Event}
+ */
+Cesium.Cesium3DTileset.prototype.tileLoad;
+
+/**
+ * @type {Cesium.Event}
+ */
+Cesium.Cesium3DTileset.prototype.tileUnload;
+
+/**
+ * @type {Cesium.Event}
+ */
+Cesium.Cesium3DTileset.prototype.tileVisible;
