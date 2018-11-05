@@ -9,6 +9,7 @@ goog.require('plugin.cesium.sync.DrawingLayerSynchronizer');
 goog.require('plugin.cesium.sync.ImageSynchronizer');
 goog.require('plugin.cesium.sync.TileSynchronizer');
 goog.require('plugin.cesium.sync.VectorSynchronizer');
+goog.require('plugin.cesium.tiles.LayerConfig');
 
 
 /**
@@ -43,4 +44,9 @@ plugin.cesium.Plugin.prototype.init = function() {
   sm.registerSynchronizer(os.layer.SynchronizerType.TILE, plugin.cesium.sync.TileSynchronizer);
   sm.registerSynchronizer(os.layer.SynchronizerType.IMAGE, plugin.cesium.sync.ImageSynchronizer);
   sm.registerSynchronizer(os.layer.SynchronizerType.DRAW, plugin.cesium.sync.DrawingLayerSynchronizer);
+
+  // register 3D tiles layers
+  var tileId = '3dtiles';
+  var lcm = os.layer.config.LayerConfigManager.getInstance();
+  lcm.registerLayerConfig(tileId, plugin.cesium.tiles.LayerConfig);
 };
