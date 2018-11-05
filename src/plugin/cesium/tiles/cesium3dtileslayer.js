@@ -21,6 +21,7 @@ plugin.cesium.tiles.Layer = function() {
   this.url = '';
 
   this.setOSType(plugin.cesium.CESIUM_ONLY_LAYER);
+  this.setIcons('<i class="fa fa-cubes" title="3D tile layer"></i>');
   this.setExplicitType('3D Tiles');
 };
 goog.inherits(plugin.cesium.tiles.Layer, plugin.cesium.PrimitiveLayer);
