@@ -117,6 +117,15 @@ plugin.cesium.Layer = function() {
   // set the openlayers type to something that won't find a renderer, because there's
   // no way to render Cesium-specific items in OpenLayers anyway
   this.type = /** @type {ol.LayerType} */ ('cesium');
+
+  /**
+   * @type {boolean}
+   * @private
+   */
+  this.error_ = false;
+
+  os.settings.listen(os.config.DisplaySetting.MAP_MODE, this.checkCesiumEnabled, false, this);
+  this.checkCesiumEnabled();
 };
 goog.inherits(plugin.cesium.Layer, ol.layer.Layer);
 os.implements(plugin.cesium.Layer, os.layer.ILayer.ID);
@@ -132,6 +141,30 @@ plugin.cesium.Layer.prototype.disposeInternal = function() {
     this.loadingDelay_.dispose();
     this.loadingDelay_ = null;
   }
+};
+
+
+/**
+ * @protected
+ */
+plugin.cesium.Layer.prototype.checkCesiumEnabled = function() {
+  if (window.Cesium && os.map.mapContainer.is3DEnabled()) {
+    if (this.error_) {
+      this.error_ = false;
+      this.dispatchEvent(new os.events.PropertyChangeEvent(os.layer.PropertyChange.ERROR, this.error_, !this.error_));
+    }
+  } else if (!this.error_) {
+    this.error_ = true;
+    this.dispatchEvent(new os.events.PropertyChangeEvent(os.layer.PropertyChange.ERROR, this.error_, !this.error_));
+  }
+};
+
+
+/**
+ * @return {boolean}
+ */
+plugin.cesium.Layer.prototype.hasError = function() {
+  return this.error_;
 };
 
 
@@ -197,7 +230,12 @@ plugin.cesium.Layer.prototype.setStyle = function(value) {
  * @inheritDoc
  */
 plugin.cesium.Layer.prototype.getIcons = function() {
-  return this.icons_;
+  var html = '';
+  if (this.hasError()) {
+    html += '<i class="fa fa-warning text-warning" title="This layer is only visible in 3D mode"></i>';
+  }
+
+  return this.icons_ + html;
 };
 
 
