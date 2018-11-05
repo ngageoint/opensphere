@@ -29,6 +29,20 @@ goog.inherits(plugin.cesium.tiles.Layer, plugin.cesium.PrimitiveLayer);
 /**
  * @inheritDoc
  */
+plugin.cesium.tiles.Layer.prototype.removePrimitive = function() {
+  var tileset = /** @type {Cesium.Cesium3DTileset} */ (this.getPrimitive());
+
+  if (tileset) {
+    tileset.loadProgress.removeEventListener(this.onTileProgress, this);
+  }
+
+  plugin.cesium.tiles.Layer.base(this, 'removePrimitive');
+};
+
+
+/**
+ * @inheritDoc
+ */
 plugin.cesium.tiles.Layer.prototype.checkCesiumEnabled = function() {
   plugin.cesium.tiles.Layer.base(this, 'checkCesiumEnabled');
 
@@ -38,9 +52,19 @@ plugin.cesium.tiles.Layer.prototype.checkCesiumEnabled = function() {
     });
 
     this.setPrimitive(tileset);
+    tileset.loadProgress.addEventListener(this.onTileProgress, this);
   }
 };
 
+
+/**
+ * @param {number} pendingRequests The number of pending requests
+ * @param {number} tilesProcessing The number of tiles currently being processed
+ * @protected
+ */
+plugin.cesium.tiles.Layer.prototype.onTileProgress = function(pendingRequests, tilesProcessing) {
+  this.setLoading(pendingRequests > 0);
+};
 
 /**
  * @inheritDoc
