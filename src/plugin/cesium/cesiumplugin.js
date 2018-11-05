@@ -1,5 +1,6 @@
 goog.provide('plugin.cesium.Plugin');
 
+goog.require('os.layer.Group');
 goog.require('os.plugin.AbstractPlugin');
 goog.require('os.webgl.SynchronizerManager');
 goog.require('plugin.cesium.CesiumRenderer');
@@ -44,6 +45,19 @@ plugin.cesium.Plugin.prototype.init = function() {
   sm.registerSynchronizer(os.layer.SynchronizerType.TILE, plugin.cesium.sync.TileSynchronizer);
   sm.registerSynchronizer(os.layer.SynchronizerType.IMAGE, plugin.cesium.sync.ImageSynchronizer);
   sm.registerSynchronizer(os.layer.SynchronizerType.DRAW, plugin.cesium.sync.DrawingLayerSynchronizer);
+
+  // add 3D layer group
+  var group = new os.layer.Group();
+  group.setPriority(3);
+  group.setOSType(plugin.cesium.CESIUM_ONLY_LAYER);
+  group.setCheckFunc(function(layer) {
+    if (os.implements(layer, os.layer.ILayer.ID)) {
+      return /** @type {os.layer.ILayer} */ (layer).getOSType() === plugin.cesium.CESIUM_ONLY_LAYER;
+    }
+    return false;
+  });
+
+  os.map.mapContainer.addGroup(group);
 
   // register 3D tiles layers
   var tileId = '3dtiles';
