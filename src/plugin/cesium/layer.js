@@ -124,7 +124,7 @@ plugin.cesium.Layer = function() {
    */
   this.error_ = false;
 
-  os.settings.listen(os.config.DisplaySetting.MAP_MODE, this.checkCesiumEnabled, false, this);
+  os.MapContainer.getInstance().listen(goog.events.EventType.PROPERTYCHANGE, this.onMapChange, false, this);
   this.checkCesiumEnabled();
 };
 goog.inherits(plugin.cesium.Layer, ol.layer.Layer);
@@ -137,9 +137,23 @@ os.implements(plugin.cesium.Layer, os.layer.ILayer.ID);
 plugin.cesium.Layer.prototype.disposeInternal = function() {
   plugin.cesium.Layer.base(this, 'disposeInternal');
 
+  os.MapContainer.getInstance().unlisten(goog.events.EventType.PROPERTYCHANGE, this.onMapChange, false, this);
+
   if (this.loadingDelay_) {
     this.loadingDelay_.dispose();
     this.loadingDelay_ = null;
+  }
+};
+
+
+/**
+ * Handle map change events.
+ * @param {os.events.PropertyChangeEvent} event The event.
+ * @protected
+ */
+plugin.cesium.Layer.prototype.onMapChange = function(event) {
+  if (event && event.getProperty() === os.MapChange.VIEW3D) {
+    this.checkCesiumEnabled();
   }
 };
 
