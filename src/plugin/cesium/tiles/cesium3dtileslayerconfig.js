@@ -2,7 +2,7 @@ goog.provide('plugin.cesium.tiles.LayerConfig');
 
 goog.require('os.layer.LayerType');
 goog.require('os.layer.config.AbstractLayerConfig');
-goog.require('plugin.cesium.PrimitiveLayer');
+goog.require('plugin.cesium.tiles.Layer');
 
 
 /**
@@ -25,18 +25,7 @@ plugin.cesium.tiles.LayerConfig.prototype.createLayer = function(options) {
     throw new Error('3D Tile layers must have a URL to the tileset.json');
   }
 
-  if (!Cesium) {
-    throw new Error('Cesium is not available');
-  }
-
-  var tileset = new Cesium.Cesium3DTileset({
-    url: this.url
-  });
-
-  var layer = new plugin.cesium.PrimitiveLayer();
-  layer.setOSType(plugin.cesium.CESIUM_ONLY_LAYER);
-  layer.setExplicitType('3D Tiles');
-  layer.setPrimitive(tileset);
+  var layer = new plugin.cesium.tiles.Layer();
   layer.restore(options);
 
   return layer;
