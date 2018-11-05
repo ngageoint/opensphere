@@ -1,5 +1,6 @@
 goog.provide('plugin.cesium.tiles.LayerConfig');
 
+goog.require('os.layer.LayerType');
 goog.require('os.layer.config.AbstractLayerConfig');
 goog.require('plugin.cesium.PrimitiveLayer');
 
@@ -33,6 +34,8 @@ plugin.cesium.tiles.LayerConfig.prototype.createLayer = function(options) {
   });
 
   var layer = new plugin.cesium.PrimitiveLayer();
+  layer.setOSType(plugin.cesium.CESIUM_ONLY_LAYER);
+  layer.setExplicitType('3D Tiles');
   layer.setPrimitive(tileset);
   layer.restore(options);
 

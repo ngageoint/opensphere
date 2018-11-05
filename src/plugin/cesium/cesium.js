@@ -35,6 +35,13 @@ plugin.cesium.GeometryInstanceId = {
 
 
 /**
+ * @type {string}
+ * @const
+ */
+plugin.cesium.CESIUM_ONLY_LAYER = '3D Layers';
+
+
+/**
  * Regular expression to match ellipsoid geometry instance id's.
  * @type {RegExp}
  * @const
