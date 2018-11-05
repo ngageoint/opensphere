@@ -2521,7 +2521,8 @@ Cesium.Transforms.headingPitchRollToFixedFrame = function(origin, hpr, opt_ellip
  *      Cesium.PolylineCollection|Cesium.Polyline|
  *      Cesium.BillboardCollection|Cesium.Billboard|
  *      Cesium.LabelCollection|Cesium.Label|
- *      Cesium.PrimitiveCollection|Cesium.Primitive)
+ *      Cesium.PrimitiveCollection|Cesium.Primitive|
+ *      Cesium.Cesium3DTileset)
  * }
  */
 Cesium.PrimitiveLike;
@@ -5135,3 +5136,18 @@ Cesium.IonResource = function(endpoint, resource) {};
  * @return {Cesium.IonResource}
  */
 Cesium.IonResource.fromAssetId = function(assetId, options) {};
+
+
+/**
+ * @typedef {{
+ *  url: !string
+ * }}
+ */
+Cesium.Cesium3DTilesetOptions;
+
+
+/**
+ * @param {Cesium.Cesium3DTilesetOptions} options
+ * @constructor
+ */
+Cesium.Cesium3DTileset = function(options) {};
