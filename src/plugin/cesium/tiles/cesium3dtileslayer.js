@@ -15,6 +15,20 @@ plugin.cesium.tiles.Layer = function() {
   plugin.cesium.tiles.Layer.base(this, 'constructor');
 
   /**
+   * Cesium Ion asset id.
+   * @type {number}
+   * @protected
+   */
+  this.assetId = NaN;
+
+  /**
+   * Cesium Ion access token.
+   * @type {string}
+   * @protected
+   */
+  this.accessToken = '';
+
+  /**
    * @type {string}
    * @protected
    */
@@ -47,13 +61,24 @@ plugin.cesium.tiles.Layer.prototype.removePrimitive = function() {
 plugin.cesium.tiles.Layer.prototype.checkCesiumEnabled = function() {
   plugin.cesium.tiles.Layer.base(this, 'checkCesiumEnabled');
 
-  if (this.url && !this.hasError()) {
-    var tileset = new Cesium.Cesium3DTileset({
-      url: this.url
-    });
+  if (!this.hasError()) {
+    var tilesetUrl = '';
+    if (!isNaN(this.assetId)) {
+      tilesetUrl = Cesium.IonResource.fromAssetId(this.assetId, {
+        accessToken: this.accessToken
+      });
+    } else {
+      tilesetUrl = this.url;
+    }
 
-    this.setPrimitive(tileset);
-    tileset.loadProgress.addEventListener(this.onTileProgress, this);
+    if (tilesetUrl) {
+      var tileset = new Cesium.Cesium3DTileset({
+        url: tilesetUrl
+      });
+
+      this.setPrimitive(tileset);
+      tileset.loadProgress.addEventListener(this.onTileProgress, this);
+    }
   }
 };
 
@@ -72,6 +97,14 @@ plugin.cesium.tiles.Layer.prototype.onTileProgress = function(pendingRequests, t
  */
 plugin.cesium.tiles.Layer.prototype.restore = function(config) {
   plugin.cesium.tiles.Layer.base(this, 'restore', config);
+
+  if (typeof config['assetId'] == 'number') {
+    this.assetId = /** @type {number} */ (config['assetId']);
+  }
+
+  if (config['accessToken']) {
+    this.accessToken = /** @type {string} */ (config['accessToken']);
+  }
 
   if (config['url']) {
     this.url = /** @type {string} */ (config['url']);
