@@ -1,0 +1,30 @@
+<div class="d-flex flex-column flex-fill">
+  <div class="modal-body">
+    <form class="container-fluid" name="assetForm" novalidate>
+      <div class="form-group row" title="The layer title">
+        <label class="col-4 col-form-label text-right">Title</label>
+        <input class="col form-control" type="text" placeholder="Layer title..." name="title" ng-model="ctrl.title" ng-maxlength="500" required>
+      </div>
+      <div class="form-group row" title="The Cesium Ion asset ID">
+        <label class="col-4 col-form-label text-right">Asset Id</label>
+        <input class="col form-control" type="number" placeholder="Ion asset ID..." name="assetId"
+            ng-model="ctrl.assetId" required>
+      </div>
+      <div class="form-group row" title="The access token to use for retrieving the asset">
+        <label class="col-4 col-form-label text-right">Access Token</label>
+        <input class="col form-control" type="text" placeholder="Ion access token..." name="accessToken"
+            ng-model="ctrl.accessToken">
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" ng-click="ctrl.accept()" ng-disabled="assetForm.$invalid">
+      <i class="fa fa-check"></i>
+      OK
+    </button>
+    <button class="btn btn-secondary" ng-click="ctrl.close()">
+      <i class="fa fa-ban"></i>
+      Cancel
+    </button>
+  </div>
+</div>

@@ -5140,7 +5140,7 @@ Cesium.IonResource.fromAssetId = function(assetId, options) {};
 
 /**
  * @typedef {{
- *  url: !string
+ *  url: (Cesium.IonResource|string)
  * }}
  */
 Cesium.Cesium3DTilesetOptions;

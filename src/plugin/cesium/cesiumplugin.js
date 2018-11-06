@@ -5,6 +5,7 @@ goog.require('os.layer.Group');
 goog.require('os.plugin.AbstractPlugin');
 goog.require('os.webgl.SynchronizerManager');
 goog.require('plugin.cesium.CesiumRenderer');
+goog.require('plugin.cesium.menu');
 goog.require('plugin.cesium.mixin.olcs');
 goog.require('plugin.cesium.mixin.renderloop');
 goog.require('plugin.cesium.sync.DrawingLayerSynchronizer');
@@ -64,6 +65,9 @@ plugin.cesium.Plugin.prototype.init = function() {
   });
 
   os.map.mapContainer.addGroup(group);
+
+  // set up menus
+  plugin.cesium.menu.importSetup();
 
   // register 3D tiles layers
   var lcm = os.layer.config.LayerConfigManager.getInstance();

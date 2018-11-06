@@ -21,8 +21,8 @@ goog.inherits(plugin.cesium.tiles.LayerConfig, os.layer.config.AbstractLayerConf
 plugin.cesium.tiles.LayerConfig.prototype.createLayer = function(options) {
   this.initializeConfig(options);
 
-  if (!this.url) {
-    throw new Error('3D Tile layers must have a URL to the tileset.json');
+  if (!options['url'] && options['assetId'] == null) {
+    throw new Error('3D Tile layers must have a URL to the tileset.json or an Ion asset id');
   }
 
   var layer = new plugin.cesium.tiles.Layer();
