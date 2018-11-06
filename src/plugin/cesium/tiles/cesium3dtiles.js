@@ -23,11 +23,3 @@ plugin.cesium.tiles.TYPE = '3D Tiles';
  * @const
  */
 plugin.cesium.tiles.ICON = '<i class="fa fa-cube" title="3D tile layer."></i>';
-
-
-/**
- * Default URL to use for Ion assets.
- * @type {string}
- * @const
- */
-plugin.cesium.tiles.DEFAULT_ION_URL = 'https://assets.cesium.com/';

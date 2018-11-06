@@ -1,6 +1,7 @@
 goog.provide('plugin.cesium.tiles.Descriptor');
 
 goog.require('os.data.FileDescriptor');
+goog.require('plugin.cesium');
 goog.require('plugin.cesium.tiles');
 goog.require('plugin.cesium.tiles.Provider');
 
@@ -72,7 +73,7 @@ plugin.cesium.tiles.Descriptor.prototype.setIonConfig = function(assetId, opt_ac
   }
 
   // set a URL so the descriptor gets persisted
-  this.setUrl(plugin.cesium.tiles.DEFAULT_ION_URL);
+  this.setUrl(plugin.cesium.DEFAULT_ION_URL);
 };
 
 

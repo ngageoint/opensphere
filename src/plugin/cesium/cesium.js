@@ -74,6 +74,14 @@ plugin.cesium.DEFAULT_FOG_DENSITY = 0.5;
 
 
 /**
+ * Default URL to use for Ion assets.
+ * @type {string}
+ * @const
+ */
+plugin.cesium.DEFAULT_ION_URL = 'https://assets.cesium.com/';
+
+
+/**
  * Default timeout for loading Cesium. Override by setting `cesium.loadTimeout` in the app configuration.
  * @type {number}
  * @const

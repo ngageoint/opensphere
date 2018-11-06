@@ -3,7 +3,17 @@
     <form class="container-fluid" name="assetForm" novalidate>
       <div class="form-group row" title="The layer title">
         <label class="col-4 col-form-label text-right">Title</label>
-        <input class="col form-control" type="text" placeholder="Layer title..." name="title" ng-model="ctrl.title" ng-maxlength="500" required>
+        <input class="col form-control" type="text" name="title" ng-model="ctrl.title" ng-maxlength="500" required/>
+      </div>
+      <div class="form-group row" title="The layer title">
+        <label class="col-4 col-form-label text-right">Description</label>
+        <input class="col form-control" type="text" name="description" ng-model="ctrl.description"
+            ng-maxlength="2000" placeholder="Add a custom description"/>
+      </div>
+      <div class="form-group row" title="The layer title">
+        <label class="col-4 col-form-label text-right">Tags</label>
+        <input class="col form-control" type="text" name="tags" ng-model="ctrl.tags"
+            ng-maxlength="2000" placeholder="Tags organize layers: e.g. states, population"/>
       </div>
       <div class="form-group row" title="The Cesium Ion asset ID">
         <label class="col-4 col-form-label text-right">Asset Id</label>
