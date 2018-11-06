@@ -62,6 +62,16 @@ plugin.cesium.ImportIonAssetCtrl = function($scope, $element) {
    */
   this['title'] = 'New Ion Asset';
 
+  /**
+   * @type {string}
+   */
+  this['description'] = '';
+
+  /**
+   * @type {string}
+   */
+  this['tags'] = '';
+
   $scope.$emit(os.ui.WindowEventType.READY);
   $scope.$on('$destroy', this.dispose.bind(this));
 };
@@ -86,7 +96,9 @@ plugin.cesium.ImportIonAssetCtrl.prototype.accept = function() {
   var descriptor = plugin.cesium.tiles.Descriptor.createFromConfig({
     'accessToken': this['accessToken'],
     'assetId': this['assetId'],
-    'title': this['title']
+    'title': this['title'],
+    'description': this['description'],
+    'tags': this['tags']
   });
   os.dataManager.addDescriptor(descriptor);
 
