@@ -238,9 +238,10 @@ Cesium.Color.fromRgba = function(value) {};
 
 /**
  * @param {string} name
+ * @param {Cesium.Color=} opt_result
  * @return {!Cesium.Color}
  */
-Cesium.Color.fromCssColorString = function(name) {};
+Cesium.Color.fromCssColorString = function(name, opt_result) {};
 
 
 /**
@@ -5192,6 +5193,11 @@ Cesium.Cesium3DTileset.prototype.tileVisible;
  */
 Cesium.Cesium3DTileset.prototype.root;
 
+/**
+ *
+ */
+Cesium.Cesium3DTileset.prototype.makeStyleDirty = function() {};
+
 
 /**
  * @constructor
@@ -5203,6 +5209,57 @@ Cesium.Cesium3DTile = function() {};
  * @type {Cesium.TileBoundingRegion}
  */
 Cesium.Cesium3DTile.prototype.contentBoundingVolume;
+
+
+/**
+ * @constructor
+ */
+Cesium.Cesium3DTileFeature = function() {};
+
+
+/**
+ * @type {Cesium.Color}
+ */
+Cesium.Cesium3DTileFeature.prototype.color;
+
+
+/**
+ * @type {Cesium.Cesium3DTileset}
+ */
+Cesium.Cesium3DTileFeature.prototype.primitive;
+
+
+/**
+ * @type {boolean}
+ */
+Cesium.Cesium3DTileFeature.prototype.show;
+
+
+/**
+ * @type {Cesium.Cesium3DTileset}
+ */
+Cesium.Cesium3DTileFeature.prototype.tileset;
+
+
+/**
+ * @param {string} name
+ * @return {*}
+ */
+Cesium.Cesium3DTileFeature.prototype.getProperty = function(name) {};
+
+
+/**
+ * @param {Array<string>=} opt_results
+ * @return {Array<string>}
+ */
+Cesium.Cesium3DTileFeature.prototype.getPropertyNames = function(opt_results) {};
+
+
+/**
+ * @param {Cesium.Resource|Object|string=} opt_options
+ * @constructor
+ */
+Cesium.Cesium3DTileStyle = function(opt_options) {};
 
 
 /**

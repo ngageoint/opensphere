@@ -1,6 +1,5 @@
 goog.provide('plugin.cesium.Layer');
 
-
 goog.require('goog.async.Delay');
 goog.require('goog.string');
 goog.require('ol.events');
@@ -10,6 +9,7 @@ goog.require('os.events.LayerEvent');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.implements');
 goog.require('os.layer');
+goog.require('os.layer.IColorableLayer');
 goog.require('os.layer.ILayer');
 goog.require('os.layer.PropertyChange');
 goog.require('os.ui');
@@ -21,6 +21,7 @@ goog.require('os.ui.renamelayer');
 /**
  * @extends {ol.layer.Layer}
  * @implements {os.layer.ILayer}
+ * @implements {os.layer.IColorableLayer}
  * @constructor
  */
 plugin.cesium.Layer = function() {
@@ -129,6 +130,7 @@ plugin.cesium.Layer = function() {
 };
 goog.inherits(plugin.cesium.Layer, ol.layer.Layer);
 os.implements(plugin.cesium.Layer, os.layer.ILayer.ID);
+os.implements(plugin.cesium.Layer, os.layer.IColorableLayer.ID);
 
 
 /**
@@ -199,7 +201,7 @@ plugin.cesium.Layer.prototype.setId = function(value) {
 
 
 /**
- * Get the default color for the terrain layer.
+ * Get the default color for the layer.
  * @return {?string}
  */
 plugin.cesium.Layer.prototype.getDefaultColor = function() {
@@ -208,20 +210,47 @@ plugin.cesium.Layer.prototype.getDefaultColor = function() {
 
 
 /**
- * Get the color for the terrain layer.
- * @return {?string}
+ * @inheritDoc
  */
 plugin.cesium.Layer.prototype.getColor = function() {
-  return null;
+  var color;
+  if (this.layerOptions_) {
+    color = /** @type {string} */ (this.layerOptions_['color'] || this.layerOptions_['baseColor']);
+  }
+
+  return color || os.style.DEFAULT_LAYER_COLOR;
 };
 
 
 /**
- * Set the color for the terrain layer.
- * @param {?string} value The new color
- * @param {Object=} opt_options The layer options to use
+ * @inheritDoc
  */
 plugin.cesium.Layer.prototype.setColor = function(value, opt_options) {
+  var options = this.layerOptions_ || opt_options;
+  if (options) {
+    if (value && typeof value == 'string') {
+      options['color'] = os.color.toHexString(value);
+    } else {
+      // color was reset, so use the original
+      options['color'] = null;
+    }
+
+    this.updateIcons_();
+
+    os.style.notifyStyleChange(this);
+  }
+};
+
+
+/**
+ * Update icons to use the current layer color.
+ * @private
+ */
+plugin.cesium.Layer.prototype.updateIcons_ = function() {
+  var color = this.getColor();
+  if (color) {
+    os.ui.adjustIconSet(this.getId(), os.color.toHexString(color));
+  }
 };
 
 
@@ -244,12 +273,20 @@ plugin.cesium.Layer.prototype.setStyle = function(value) {
  * @inheritDoc
  */
 plugin.cesium.Layer.prototype.getIcons = function() {
+  var color;
+
   var html = '';
   if (this.hasError()) {
     html += '<i class="fa fa-warning text-warning" title="This layer is only visible in 3D mode"></i>';
   }
 
-  return this.icons_ + html;
+  var layerColor = this.getColor();
+  if (layerColor) {
+    color = os.color.toRgbArray(layerColor);
+  }
+
+  html += color ? os.ui.createIconSet(this.getId(), null, [this.icons_], color) : this.icons_;
+  return html;
 };
 
 
@@ -603,6 +640,8 @@ plugin.cesium.Layer.prototype.setHidden = function(value) {
 plugin.cesium.Layer.prototype.persist = function(opt_to) {
   opt_to = opt_to || {};
   opt_to['visible'] = this.getVisible();
+  opt_to['opacity'] = this.getOpacity();
+  opt_to['color'] = this.getColor();
   return opt_to;
 };
 
@@ -634,21 +673,16 @@ plugin.cesium.Layer.prototype.restore = function(config) {
   if (config['visible'] != undefined) {
     this.setLayerVisible(!!config['visible']);
   }
-};
 
+  if (config['color']) {
+    var color = /** @type {string} */ (config['color']);
+    this.setColor(color, config);
+  }
 
-/**
- * @inheritDoc
- */
-plugin.cesium.Layer.prototype.getOpacity = function() {
-  return 1;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.Layer.prototype.setOpacity = function(value) {
+  var opacity = config['opacity'];
+  if (opacity != null) {
+    this.setOpacity(opacity);
+  }
 };
 
 

@@ -22,4 +22,4 @@ plugin.cesium.tiles.TYPE = '3D Tiles';
  * @type {string}
  * @const
  */
-plugin.cesium.tiles.ICON = '<i class="fa fa-cube" title="3D tile layer."></i>';
+plugin.cesium.tiles.ICON = '<i class="fa fa-cubes" title="3D tile layer"></i>';
