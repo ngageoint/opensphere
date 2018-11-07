@@ -41,9 +41,7 @@ plugin.cesium.tiles.TilesetImportUI.prototype.launchUI = function(file, opt_conf
   config['title'] = 'New 3D Tile Layer';
 
   var scopeOptions = {
-    'config': config,
-    // hide the color picker in the UI
-    'hideColor': true
+    'config': config
   };
   var windowOptions = {
     'label': 'Import ' + plugin.cesium.tiles.TYPE,

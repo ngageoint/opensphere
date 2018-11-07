@@ -47,8 +47,8 @@ plugin.cesium.tiles.Descriptor.prototype.getLayerOptions = function() {
   var options = plugin.cesium.tiles.Descriptor.base(this, 'getLayerOptions');
   options['type'] = plugin.cesium.tiles.ID;
 
-  // disable the color picker
-  options[os.ui.ControlType.COLOR] = os.ui.ColorControlType.NONE;
+  // allow resetting the layer color to the default
+  options[os.ui.ControlType.COLOR] = os.ui.ColorControlType.PICKER_RESET;
 
   // add Ion config
   if (!isNaN(this.assetId)) {
@@ -133,6 +133,7 @@ plugin.cesium.tiles.Descriptor.createFromConfig = function(config) {
  * @param {!Object} config
  */
 plugin.cesium.tiles.Descriptor.updateFromConfig = function(descriptor, config) {
+  descriptor.setColor(config['color']);
   descriptor.setDescription(config['description']);
   descriptor.setTitle(config['title']);
   descriptor.setTags(config['tags'] ? config['tags'].split(/\s*,\s*/) : null);

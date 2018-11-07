@@ -1,6 +1,6 @@
 goog.provide('os.command.TileLayerColorize');
 
-goog.require('os.command.AbstractTileStyle');
+goog.require('os.command.AbstractLayerStyle');
 goog.require('os.command.ICommand');
 goog.require('os.command.State');
 
@@ -11,7 +11,7 @@ goog.require('os.command.State');
  * @param {string} layerId
  * @param {boolean} value
  * @param {boolean=} opt_oldValue
- * @extends {os.command.AbstractTileStyle}
+ * @extends {os.command.AbstractLayerStyle}
  * @constructor
  */
 os.command.TileLayerColorize = function(layerId, value, opt_oldValue) {
@@ -19,7 +19,7 @@ os.command.TileLayerColorize = function(layerId, value, opt_oldValue) {
   this.title = 'Colorize Layer';
   this.value = value;
 };
-goog.inherits(os.command.TileLayerColorize, os.command.AbstractTileStyle);
+goog.inherits(os.command.TileLayerColorize, os.command.AbstractLayerStyle);
 
 
 /**

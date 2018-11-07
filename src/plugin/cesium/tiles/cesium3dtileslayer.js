@@ -5,6 +5,7 @@ goog.require('os.events.PropertyChangeEvent');
 goog.require('os.layer.PropertyChange');
 goog.require('plugin.cesium');
 goog.require('plugin.cesium.PrimitiveLayer');
+goog.require('plugin.cesium.tiles.cesium3DTileLayerUIDirective');
 
 
 /**
@@ -35,8 +36,9 @@ plugin.cesium.tiles.Layer = function() {
   this.url = '';
 
   this.setOSType(plugin.cesium.CESIUM_ONLY_LAYER);
-  this.setIcons('<i class="fa fa-cubes" title="3D tile layer"></i>');
-  this.setExplicitType('3D Tiles');
+  this.setIcons(plugin.cesium.tiles.ICON);
+  this.setExplicitType(plugin.cesium.tiles.TYPE);
+  this.setLayerUI('cesium3dtilelayerui');
 };
 goog.inherits(plugin.cesium.tiles.Layer, plugin.cesium.PrimitiveLayer);
 
@@ -76,9 +78,58 @@ plugin.cesium.tiles.Layer.prototype.checkCesiumEnabled = function() {
         url: tilesetUrl
       });
 
+      tileset.style = new Cesium.Cesium3DTileStyle({
+        'color': {
+          'evaluateColor': this.getFeatureColor.bind(this)
+        }
+      });
+
       this.setPrimitive(tileset);
       tileset.loadProgress.addEventListener(this.onTileProgress, this);
     }
+  }
+};
+
+
+/**
+ * Get the color for a 3D tile feature.
+ * @param {Cesium.Cesium3DTileFeature} feature The feature.
+ * @param {Cesium.Color} result The object to store the result.
+ * @return {Cesium.Color} The color.
+ */
+plugin.cesium.tiles.Layer.prototype.getFeatureColor = function(feature, result) {
+  var cssColor = this.getColor() || os.style.DEFAULT_LAYER_COLOR;
+  var cesiumColor = Cesium.Color.fromCssColorString(cssColor, result);
+  cesiumColor.alpha = this.getOpacity();
+
+  return cesiumColor;
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.cesium.tiles.Layer.prototype.setColor = function(value) {
+  plugin.cesium.tiles.Layer.base(this, 'setColor', value);
+
+  var tileset = /** @type {Cesium.Cesium3DTileset} */ (this.getPrimitive());
+  if (tileset) {
+    tileset.makeStyleDirty();
+    os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
+  }
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.cesium.tiles.Layer.prototype.setOpacity = function(value) {
+  plugin.cesium.tiles.Layer.base(this, 'setOpacity', value);
+
+  var tileset = /** @type {Cesium.Cesium3DTileset} */ (this.getPrimitive());
+  if (tileset) {
+    tileset.makeStyleDirty();
+    os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
   }
 };
 
@@ -91,6 +142,7 @@ plugin.cesium.tiles.Layer.prototype.checkCesiumEnabled = function() {
 plugin.cesium.tiles.Layer.prototype.onTileProgress = function(pendingRequests, tilesProcessing) {
   this.setLoading(pendingRequests > 0);
 };
+
 
 /**
  * @inheritDoc
