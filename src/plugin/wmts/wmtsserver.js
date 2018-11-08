@@ -360,6 +360,11 @@ plugin.wmts.Server.prototype.parseCapabilities = function(response, uri) {
         var hasTimeExtent = 'Dimension' in layer ?
             ol.array.find(layer['Dimension'], plugin.wmts.Server.hasTimeExtent_) : false;
 
+        var overrides = {};
+        if (!this.getDateFormat() && !this.getTimeFormat()) {
+          this.detectFormats_(layer['Dimension'], overrides);
+        }
+
         var config = {
           'id': fullId,
           'type': plugin.wmts.ID,
@@ -375,6 +380,8 @@ plugin.wmts.Server.prototype.parseCapabilities = function(response, uri) {
           'timeFormat': this.getTimeFormat() || null,
           'delayUpdateActive': true
         };
+
+        ol.obj.assign(config, overrides);
 
         var crossOrigin = null;
         config['wmtsOptions'] = layer['TileMatrixSetLink'].map(function(setLink) {
@@ -430,6 +437,34 @@ plugin.wmts.Server.wmtsOptionsToProjection_ = function(wmtsOptions) {
   return wmtsOptions && wmtsOptions['projection'] ?
     /** @type {ol.proj.Projection} */ (wmtsOptions['projection']).getCode() : null;
 };
+
+
+/**
+ * @param {Array<Object>} dimensions
+ * @param {Object<string, *>} config
+ */
+plugin.wmts.Server.prototype.detectFormats_ = function(dimensions, config) {
+  if (dimensions) {
+    var timeDimension = ol.array.find(dimensions, plugin.wmts.Server.hasTimeExtent_);
+    if (timeDimension) {
+      // note that this assumes that the Units of Measure is ISO8601, but the OL parser
+      // does not pull out that information to check it
+      var defaultValue = timeDimension['Default'];
+      if (defaultValue) {
+        var timeFormat = '{start}';
+
+        if (defaultValue.indexOf('/') > -1) {
+          defaultValue = defaultValue.split(/\//)[0];
+          timeFormat += '/{end}';
+        }
+
+        config['dateFormat'] = os.time.DATETIME_FORMATS[0].substring(0, defaultValue.length);
+        config['timeFormat'] = timeFormat;
+      }
+    }
+  }
+};
+
 
 /**
  * Adds the descriptor.
