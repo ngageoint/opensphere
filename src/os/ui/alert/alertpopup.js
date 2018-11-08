@@ -241,7 +241,7 @@ os.ui.alert.AlertPopupCtrl.prototype.displayAlert_ = function(event) {
 
     // Check if message has a url and if it does adds a hyperlink
     var match = message.match(os.url.URL_REGEXP_LINKY);
-    if (match) {
+    if (match && match.index + match[0].length <= 500) {
       var html = [];
       var url = match[0];
       var i = match.index;
