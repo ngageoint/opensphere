@@ -1,7 +1,5 @@
 goog.provide('plugin.wmts.Plugin');
 
-// goog.require('plugin.ogc.ui.ogcserverDirective');
-// goog.require('plugin.wmts.mime');
 goog.require('os.data.ConfigDescriptor');
 goog.require('os.data.DataManager');
 goog.require('os.data.ProviderEntry');
@@ -11,7 +9,8 @@ goog.require('os.ui.im.ImportManager');
 goog.require('plugin.wmts');
 goog.require('plugin.wmts.LayerConfig');
 goog.require('plugin.wmts.Server');
-
+goog.require('plugin.wmts.importDirective');
+goog.require('plugin.wmts.mime');
 
 
 /**
@@ -43,6 +42,6 @@ plugin.wmts.Plugin.prototype.init = function() {
   dm.registerDescriptorType(os.data.ConfigDescriptor.ID, os.data.ConfigDescriptor);
 
   // register the server forms for adding/editing servers
-  // var im = os.ui.im.ImportManager.getInstance();
-  // im.registerImportUI(plugin.wmts.ID, new os.ui.ProviderImportUI('wmtsserver'));
+  var im = os.ui.im.ImportManager.getInstance();
+  im.registerImportUI(plugin.wmts.ID, new os.ui.ProviderImportUI('wmtsserver'));
 };
