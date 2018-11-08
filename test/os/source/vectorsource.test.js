@@ -718,7 +718,7 @@ describe('os.source.Vector', function() {
         // updates to the animation overlay should update the dynamic feature
         expect(df.initDynamic).not.toHaveBeenCalled();
         expect(df.disposeDynamic).not.toHaveBeenCalled();
-        expect(df.updateDynamic).toHaveBeenCalledWith(displayEnd);
+        expect(df.updateDynamic).toHaveBeenCalledWith(displayStart, displayEnd);
       });
     });
 
@@ -737,13 +737,13 @@ describe('os.source.Vector', function() {
       expect(df.disposeDynamic).toHaveBeenCalledWith(true);
 
       // and the dynamic content updated for the new geometry
-      expect(df.updateDynamic).toHaveBeenCalledWith(displayEnd);
+      expect(df.updateDynamic).toHaveBeenCalledWith(displayStart, displayEnd);
 
       // remaining dynamic features should be updated with the animation overlay update
       for (var i = 1; i < dynamicFeatures.length; i++) {
         expect(dynamicFeatures[i].initDynamic).not.toHaveBeenCalled();
         expect(dynamicFeatures[i].disposeDynamic).not.toHaveBeenCalled();
-        expect(dynamicFeatures[i].updateDynamic).toHaveBeenCalledWith(displayEnd);
+        expect(dynamicFeatures[i].updateDynamic).toHaveBeenCalledWith(displayStart, displayEnd);
       }
     });
 
@@ -808,7 +808,7 @@ describe('os.source.Vector', function() {
       runs(function() {
         dynamicFeatures.forEach(function(df) {
           // deferred processing should have updated the animation overlay, along with dynamic features
-          expect(df.updateDynamic).toHaveBeenCalledWith(displayEnd);
+          expect(df.updateDynamic).toHaveBeenCalledWith(displayStart, displayEnd);
         });
       });
     });

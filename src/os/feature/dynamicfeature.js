@@ -21,7 +21,7 @@ os.feature.DynamicPropertyChange = {
  *     include a Geometry associated with a `geometry` key.
  * @param {function(!ol.Feature)=} opt_initFn Initialize the feature into the animating state.
  * @param {function(!ol.Feature, boolean=)=} opt_disposeFn Restore the feature to the non-animating state.
- * @param {function(!ol.Feature, number)=} opt_updateFn Update the animating state for the given timestamp.
+ * @param {function(!ol.Feature, number, number)=} opt_updateFn Update the animating state for the given timestamp.
  * @extends {ol.Feature}
  * @constructor
  */
@@ -42,7 +42,7 @@ os.feature.DynamicFeature = function(opt_geometryOrProperties, opt_initFn, opt_d
 
   /**
    * Update the animating state for the given timestamp.
-   * @type {function(!ol.Feature, number)}
+   * @type {function(!ol.Feature, number, number)}
    */
   this.updateFn = opt_updateFn || goog.nullFunction;
 };
@@ -68,10 +68,11 @@ os.feature.DynamicFeature.prototype.disposeDynamic = function(opt_disposing) {
 
 /**
  * Update the animating state for the given timestamp.
- * @param {number} timestamp The timestamp.
+ * @param {number} startTime The start timestamp.
+ * @param {number} endTime The ebd timestamp.
  */
-os.feature.DynamicFeature.prototype.updateDynamic = function(timestamp) {
-  this.updateFn(this, timestamp);
+os.feature.DynamicFeature.prototype.updateDynamic = function(startTime, endTime) {
+  this.updateFn(this, startTime, endTime);
 };
 
 

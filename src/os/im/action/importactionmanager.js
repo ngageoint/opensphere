@@ -348,7 +348,6 @@ os.im.action.ImportActionManager.prototype.unprocessItems = function(entryType, 
  */
 os.im.action.ImportActionManager.prototype.removeActionEntry = function(entry) {
   if (entry && entry.type in this.actionEntries) {
-    // unprocess any items tagged with featureActionRefresh
     this.unprocessItems(entry.type, this.getEntryItems(entry.type));
 
     var entries = this.actionEntries[entry.type];
