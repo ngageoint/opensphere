@@ -1,3 +1,10 @@
+.c-annotation {
+  .c-simplemde__preview > p {
+    // remove the bottom margin in the annotation to prevent unnecessary scrolling
+    margin: 0;
+  }
+}
+
 .c-annotation__svg {
   pointer-events: none;
 
@@ -8,4 +15,14 @@
 
 .c-annotation__controls {
   top: -1.3rem;
+}
+
+//
+// used to calculate annotation size from arbitrary text. this prevents the measured text from exceeding the max
+// allowed width for computed annotations.
+//
+.u-annotation__measure {
+  // if this value is changed, os.annotation.MAX_DEFAULT_WIDTH must be updated as well
+  max-width: 350px;
+  word-wrap: break-word;
 }

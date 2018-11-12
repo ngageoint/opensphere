@@ -17,6 +17,7 @@ goog.require('ol.geom.flat.inflate');
 goog.require('ol.layer.Image');
 goog.require('ol.source.ImageStatic');
 goog.require('ol.xml');
+goog.require('os.annotation');
 goog.require('os.data.ColumnDefinition');
 goog.require('os.file.mime.text');
 goog.require('os.file.mime.zip');
@@ -881,10 +882,7 @@ plugin.file.kml.KMLParser.prototype.readBalloonStyle_ = function(feature) {
   var style = styleId in this.otherStyleMap ? this.otherStyleMap[styleId] : null;
 
   if (style) {
-    var text = style.text;
-    var bgColor = style.bgColor || '255, 255, 255, 1';
-    var textColor = style.textColor || '0, 0, 0, 1';
-
+    var text = style['text'];
     var pattern = /[$]\[(.*?)\]/g;
     var regex = new RegExp(pattern);
 
@@ -895,8 +893,15 @@ plugin.file.kml.KMLParser.prototype.readBalloonStyle_ = function(feature) {
         return '';
       }
     });
-    var description = '<div style="background:rgba(' + bgColor + ');color:rgba(' + textColor + ')">' + text + '</div>';
-    feature.set('description', description);
+
+    text = os.ui.sanitize(text);
+
+    var annotationOptions = os.annotation.getOptionsForText(text);
+    annotationOptions.editable = false;
+    annotationOptions.show = style['displayMode'] !== 'hide';
+
+    feature.set(os.annotation.OPTIONS_FIELD, annotationOptions);
+    feature.set(os.ui.FeatureEditCtrl.Field.MD_DESCRIPTION, text);
   }
 };
 

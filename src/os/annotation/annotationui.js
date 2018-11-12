@@ -52,9 +52,9 @@ os.ui.Module.directive('annotation', [os.annotation.annotationDirective]);
  * @const
  */
 os.annotation.UI_TEMPLATE_ =
-  '<div class="u-hover-container">' +
+  '<div class="c-annotation u-hover-container">' +
     '<svg class="c-annotation__svg"><path/></svg>' +
-    '<div class="c-annotation__controls position-absolute text-right w-100" ng-if="ctrl.canEdit">' +
+    '<div class="c-annotation__controls position-absolute text-right w-100" ng-if="ctrl.options.editable">' +
       '<button class="btn btn-sm btn-outline-secondary border-0 bg-transparent animate-fade u-hover-show"' +
           'title="Edit annotation"' +
           'ng-click="ctrl.editAnnotation()">' +
@@ -66,7 +66,7 @@ os.annotation.UI_TEMPLATE_ =
           'ng-class="!ctrl.options.showDescription && \'h-100 border-0\'">' +
         '{{ctrl.name}}' +
       '</div>' +
-      '<div class="card-body p-1" ng-show="ctrl.options.showDescription">' +
+      '<div class="card-body p-1 u-overflow-y-auto" ng-show="ctrl.options.showDescription">' +
         '<simplemde text="ctrl.description" edit="false" is-required="false" maxlength="4000"></simplemde>' +
       '</div>' +
     '</div>' +
@@ -120,12 +120,6 @@ os.annotation.AnnotationCtrl = function($scope, $element, $timeout) {
    * @private
    */
   this.tailType_ = os.annotation.TailType.ABSOLUTE;
-
-  /**
-   * If the annotation can be edited.
-   * @type {boolean}
-   */
-  this['canEdit'] = this.feature.getId() !== os.ui.FeatureEditCtrl.TEMP_ID;
 
   /**
    * The annotation name.

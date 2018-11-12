@@ -21,6 +21,7 @@ osx.annotation;
 
 /**
  * @typedef {{
+ *   editable: boolean,
  *   show: boolean,
  *   showName: boolean,
  *   showDescription: boolean,
