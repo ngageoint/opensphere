@@ -109,7 +109,7 @@ os.annotation.AnnotationCtrl = function($scope, $element, $timeout) {
 
   /**
    * The OpenLayers overlay.
-   * @type {ol.Overlay}
+   * @type {os.webgl.WebGLOverlay}
    * @protected
    */
   this.overlay = $scope['overlay'];
@@ -120,6 +120,20 @@ os.annotation.AnnotationCtrl = function($scope, $element, $timeout) {
    * @private
    */
   this.tailType_ = os.annotation.TailType.ABSOLUTE;
+
+  /**
+   * If handling a visibility change event.
+   * @type {boolean}
+   * @private
+   */
+  this.inVisibleChange_ = false;
+
+  /**
+   * If the user moved/resized the overlay.
+   * @type {boolean}
+   * @private
+   */
+  this.userChanged_ = false;
 
   /**
    * The annotation name.
@@ -139,7 +153,8 @@ os.annotation.AnnotationCtrl = function($scope, $element, $timeout) {
    */
   this['options'] = /** @type {!osx.annotation.Options} */ (this.feature.get(os.annotation.OPTIONS_FIELD));
 
-  ol.events.listen(this.feature, ol.events.EventType.CHANGE, this.handleFeatureChange, this);
+  ol.events.listen(this.feature, ol.events.EventType.CHANGE, this.onFeatureChange_, this);
+  ol.events.listen(this.overlay, 'change:visible', this.onOverlayVisibleChange_, this);
 
   this.initialize();
   $timeout(this.initDragResize.bind(this));
@@ -155,7 +170,8 @@ goog.inherits(os.annotation.AnnotationCtrl, goog.Disposable);
 os.annotation.AnnotationCtrl.prototype.disposeInternal = function() {
   os.annotation.AnnotationCtrl.base(this, 'disposeInternal');
 
-  ol.events.unlisten(this.feature, ol.events.EventType.CHANGE, this.handleFeatureChange, this);
+  ol.events.unlisten(this.feature, ol.events.EventType.CHANGE, this.onFeatureChange_, this);
+  ol.events.unlisten(this.overlay, 'change:visible', this.onOverlayVisibleChange_, this);
 
   this.scope = null;
   this.element = null;
@@ -175,7 +191,7 @@ os.annotation.AnnotationCtrl.prototype.initialize = function() {
     this.element.height(this['options'].size[1]);
 
     this.setTailType_(os.annotation.TailType.ABSOLUTE);
-    this.handleFeatureChange();
+    this.onFeatureChange_();
 
     // use a conditional delay for the initial tail update in case the map isn't initialized
     var updateDelay = new goog.async.ConditionalDelay(this.updateTail_, this);
@@ -233,9 +249,9 @@ os.annotation.AnnotationCtrl.prototype.editAnnotation = function() {
 
 /**
  * Update the title from the feature.
- * @protected
+ * @private
  */
-os.annotation.AnnotationCtrl.prototype.handleFeatureChange = function() {
+os.annotation.AnnotationCtrl.prototype.onFeatureChange_ = function() {
   this['name'] = '';
   this['description'] = '';
 
@@ -245,6 +261,29 @@ os.annotation.AnnotationCtrl.prototype.handleFeatureChange = function() {
         this.feature.get(os.ui.FeatureEditCtrl.Field.DESCRIPTION) || '';
 
     os.ui.apply(this.scope);
+  }
+};
+
+
+/**
+ * Handle changes to overlay visibility.
+ * @private
+ *
+ * @suppress {accessControls} To allow rendering the overlay.
+ */
+os.annotation.AnnotationCtrl.prototype.onOverlayVisibleChange_ = function() {
+  if (!this.inVisibleChange_ && this.overlay) {
+    this.inVisibleChange_ = true;
+
+    // make sure the overlay is rendered before trying to draw the tail, or it will be drawn incorrectly.
+    this.overlay.render();
+
+    // try updating the tail
+    if (this.updateTail_()) {
+      ol.events.unlisten(this.overlay, 'change:visible', this.onOverlayVisibleChange_, this);
+    }
+
+    this.inVisibleChange_ = false;
   }
 };
 
@@ -271,6 +310,7 @@ os.annotation.AnnotationCtrl.prototype.onDragStart_ = function(event, ui) {
 os.annotation.AnnotationCtrl.prototype.onDragStop_ = function(event, ui) {
   // use absolute positioning when drag/resize stops for smoother repositioning on map interaction
   this.setTailType_(os.annotation.TailType.ABSOLUTE);
+  this.userChanged_ = true;
   this.updateTail_();
 };
 
@@ -348,7 +388,9 @@ os.annotation.AnnotationCtrl.prototype.getTargetPixel_ = function(coordinate) {
  * @private
  */
 os.annotation.AnnotationCtrl.prototype.updateTail_ = function() {
-  return this.tailType_ === os.annotation.TailType.ABSOLUTE ? this.updateTailAbsolute_() : this.updateTailFixed_();
+  return this.tailType_ === os.annotation.TailType.ABSOLUTE ?
+      this.updateTailAbsolute_() :
+      this.updateTailFixed_();
 };
 
 
@@ -366,7 +408,7 @@ os.annotation.AnnotationCtrl.prototype.updateTailAbsolute_ = function() {
 
   if (this.element && this.overlay) {
     var position = this.overlay.getPosition();
-    if (!position) {
+    if (!position || !this.overlay.isVisible()) {
       return false;
     }
 
@@ -441,22 +483,26 @@ os.annotation.AnnotationCtrl.prototype.updateTailAbsolute_ = function() {
     svg.attr('height', svgHeight);
     svg.find('path').attr('d', linePath);
 
-    // after dragging/resizing the overlay, the internal offset will be incorrect. update it to prevent OpenLayers from
-    // moving the overlay to the incorrect position.
-    var offset = [
-      (cardRect.x + cardRect.width / 2) - targetPixel[0],
-      (cardRect.y + cardRect.height / 2) - targetPixel[1]
-    ];
-    this.overlay.setOffset(offset);
+    if (this.userChanged_) {
+      // after dragging/resizing the overlay, the internal offset will be incorrect. update it to prevent OpenLayers
+      // from moving the overlay to the incorrect position.
+      var offset = [
+        (cardRect.x + cardRect.width / 2) - targetPixel[0],
+        (cardRect.y + cardRect.height / 2) - targetPixel[1]
+      ];
+      this.overlay.setOffset(offset);
 
-    if (this['options']) {
-      this['options'].size = [cardWidth, cardHeight];
-      this['options'].offset = offset;
+      if (this['options']) {
+        this['options'].size = [cardWidth, cardHeight];
+        this['options'].offset = offset;
 
-      // notify that that annotation changed so it can be saved
-      if (this.feature) {
-        this.feature.dispatchEvent(new os.events.PropertyChangeEvent(os.annotation.EventType.CHANGE));
+        // notify that that annotation changed so it can be saved
+        if (this.feature) {
+          this.feature.dispatchEvent(new os.events.PropertyChangeEvent(os.annotation.EventType.CHANGE));
+        }
       }
+
+      this.userChanged_ = false;
     }
   }
 
