@@ -613,6 +613,9 @@ plugin.file.kml.ui.KMLNode.prototype.addChild = function(child, opt_skipaddparen
 
     if (!previous) {
       return plugin.file.kml.ui.KMLNode.base(this, 'addChild', child, opt_skipaddparent, opt_index);
+    } else {
+      // node was merged with an existing one, so clean up the extra node
+      goog.dispose(child);
     }
 
     return previous;
