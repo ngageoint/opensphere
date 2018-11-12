@@ -125,6 +125,9 @@ plugin.file.kml.ui.PlacemarkEditCtrl.prototype.accept = function() {
     });
   }
 
+  // enable editing the annotation when the feature is saved
+  this['annotationOptions'].editable = true;
+
   this.saveToFeature(feature);
 
   if (!feature.getId()) {
@@ -139,12 +142,27 @@ plugin.file.kml.ui.PlacemarkEditCtrl.prototype.accept = function() {
 
 /**
  * @inheritDoc
+ * @export
+ */
+plugin.file.kml.ui.PlacemarkEditCtrl.prototype.cancel = function() {
+  plugin.file.kml.ui.PlacemarkEditCtrl.base(this, 'cancel');
+
+  // enable editing the annotation when the edit is cancelled
+  this['annotationOptions'].editable = true;
+};
+
+
+/**
+ * @inheritDoc
  */
 plugin.file.kml.ui.PlacemarkEditCtrl.prototype.createPreviewFeature = function() {
   plugin.file.kml.ui.PlacemarkEditCtrl.base(this, 'createPreviewFeature');
 
   // set the default options for the annotation
   this['annotationOptions'] = os.object.unsafeClone(os.annotation.DEFAULT_OPTIONS);
+
+  // disable annotation edit when creating an annotation
+  this['annotationOptions'].editable = false;
 
   if (this.options['annotation']) {
     this.previewFeature.set(os.annotation.OPTIONS_FIELD, this['annotationOptions']);
@@ -172,6 +190,9 @@ plugin.file.kml.ui.PlacemarkEditCtrl.prototype.loadFromFeature = function(featur
     this['annotationOptions'] = os.object.unsafeClone(os.annotation.DEFAULT_OPTIONS);
     this['annotationOptions'].show = false;
   }
+
+  // disable annotation edit when editing an annotation
+  this['annotationOptions'].editable = false;
 };
 
 
