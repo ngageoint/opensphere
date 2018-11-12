@@ -45,6 +45,43 @@ os.webgl.WebGLOverlay.prototype.disposeInternal = function() {
 
 
 /**
+ * @inheritDoc
+ */
+os.webgl.WebGLOverlay.prototype.getPosition = function() {
+  // if the WebGL renderer is being initialized, positioning the overlay will fail.
+  var mapContainer = os.MapContainer.getInstance();
+  if (mapContainer.isInitializingWebGL()) {
+    return null;
+  }
+
+  return os.webgl.WebGLOverlay.base(this, 'getPosition');
+};
+
+
+/**
+ * If the overlay is visible.
+ * @return {boolean}
+ */
+os.webgl.WebGLOverlay.prototype.isVisible = function() {
+  return this.rendered.visible;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.webgl.WebGLOverlay.prototype.setVisible = function(visible) {
+  var changed = this.rendered.visible !== visible;
+  os.webgl.WebGLOverlay.base(this, 'setVisible', visible);
+
+  if (changed) {
+    // notify when visibility changes so the annotation UI can update if needed
+    this.notify('visible', visible);
+  }
+};
+
+
+/**
  * Handle map property change events.
  * @param {os.events.PropertyChangeEvent} event The event.
  * @protected
@@ -74,7 +111,13 @@ os.webgl.WebGLOverlay.prototype.onWebGLActive = function() {
  * @inheritDoc
  */
 os.webgl.WebGLOverlay.prototype.updatePixelPosition = function() {
-  var webGLRenderer = os.MapContainer.getInstance().getWebGLRenderer();
+  // do not update the overlay while WebGL is being initialized, or it will be positioned incorrectly.
+  var mapContainer = os.MapContainer.getInstance();
+  if (mapContainer.isInitializingWebGL()) {
+    return;
+  }
+
+  var webGLRenderer = mapContainer.getWebGLRenderer();
   if (webGLRenderer && webGLRenderer.getEnabled()) {
     var map = this.getMap();
     var position = this.getPosition();
