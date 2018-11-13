@@ -2,6 +2,10 @@ goog.provide('os.ui.grid.DataGridCtrl');
 
 
 
+goog.require('os.array');
+
+
+
 /**
 *
 * @param {!angular.Scope} $scope
@@ -141,7 +145,7 @@ os.ui.grid.DataGridCtrl.prototype.createGrid = function(el) {
   this.grid_.onSelectedRowsChanged.subscribe(function(e, args) {
     var items = [];
     var rows = /** @type {Array.<number>} */ (this.grid_.getSelectedRows());
-    goog.array.forEach(rows, function(row) {
+    os.array.forEach(rows, function(row) {
       var item = this.dataView_.getItem(row);
       if (item) {
         items.push(item);

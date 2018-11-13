@@ -1,6 +1,7 @@
 goog.provide('os.ui.draw.PolygonControl');
 goog.require('goog.events.Event');
 goog.require('goog.math.Coordinate');
+goog.require('os.array');
 goog.require('os.ui.draw.AbstractDrawControl');
 
 
@@ -102,7 +103,7 @@ os.ui.draw.PolygonControl.prototype.drawMarker_ = function() {
   var points = '';
 
   // stringify the coordinate list
-  goog.array.forEach(this.coords_, function(ele, idx, arr) {
+  os.array.forEach(this.coords_, function(ele, idx, arr) {
     var coord = /** @type {goog.math.Coordinate} */ (ele);
     points = points.concat(coord.x + ',' + coord.y + ' ');
   });

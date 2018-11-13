@@ -1,6 +1,7 @@
 goog.provide('os.state.v2.BaseFilter');
 goog.provide('os.state.v2.FilterTag');
 goog.require('goog.dom.xml');
+goog.require('os.array');
 goog.require('os.filter.FilterEntry');
 goog.require('os.state.XMLState');
 goog.require('os.xml');
@@ -52,7 +53,7 @@ os.state.v2.BaseFilter.preload = function(el) {
   if (filtersNode !== undefined && entries !== undefined) {
     entries = entries ? entries.getElementsByTagName('queryEntry') : [];
 
-    goog.array.forEach(entries, function(entry) {
+    os.array.forEach(entries, function(entry) {
       var filterId = entry.getAttribute('filterId');
       var layerId = entry.getAttribute('layerId');
       var cloneId = filterId + '_' + layerId;

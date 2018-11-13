@@ -4,6 +4,7 @@ goog.provide('os.ui.slick.slickTreeDirective');
 goog.require('goog.async.Delay');
 goog.require('goog.dom.classlist');
 goog.require('goog.events.EventType');
+goog.require('os.array');
 goog.require('os.ui.GlobalMenuCtrl');
 goog.require('os.ui.Module');
 goog.require('os.ui.slick.SlickGridCtrl');
@@ -706,7 +707,7 @@ os.ui.slick.SlickTreeCtrl.prototype.updateSiblings_ = function(data, parent, row
     }
   }
 
-  goog.array.forEach(extractedRows, function(row) {
+  os.array.forEach(extractedRows, function(row) {
     goog.array.remove(left, row);
     goog.array.remove(right, row);
   });
@@ -740,7 +741,7 @@ os.ui.slick.SlickTreeCtrl.prototype.updateHierarchy_ = function(data, rows, inse
   var reparentList = [];
 
   // Just verify that any parents exist in the rows that are moving. If not remove their links
-  goog.array.forEach(rows, function(rowid) {
+  os.array.forEach(rows, function(rowid) {
     var row = data[rowid];
 
     // Only reparent top level nodes for now.
@@ -761,7 +762,7 @@ os.ui.slick.SlickTreeCtrl.prototype.updateHierarchy_ = function(data, rows, inse
   });
 
   // Set all the top level rows new parent
-  goog.array.forEach(reparentList, function(row) {
+  os.array.forEach(reparentList, function(row) {
     row.setParent(newParent);
   });
 };
@@ -943,7 +944,7 @@ os.ui.slick.SlickTreeCtrl.prototype.doMove = function(rows, insertBefore) {
       }
     } else {
       // Collapse all the data back down
-      goog.array.forEach(data, function(row) {
+      os.array.forEach(data, function(row) {
         if (!row.getParent() || (this.scope['showRoot'] && row === this.root_)) {
           unflatten.push(row);
         }
@@ -981,7 +982,7 @@ os.ui.slick.SlickTreeCtrl.prototype.doMove = function(rows, insertBefore) {
       }
 
       // Remove the old entries for the moved row
-      goog.array.forEach(extractedRows, function(row) {
+      os.array.forEach(extractedRows, function(row) {
         goog.array.remove(left, row);
         goog.array.remove(right, row);
       });
@@ -994,7 +995,7 @@ os.ui.slick.SlickTreeCtrl.prototype.doMove = function(rows, insertBefore) {
     }
 
     // Collapse all the data back down
-    goog.array.forEach(data, function(row) {
+    os.array.forEach(data, function(row) {
       if (!row.getParent() || (this.scope['showRoot'] && row === this.root_)) {
         unflatten.push(row);
       }

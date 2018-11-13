@@ -3,6 +3,7 @@ goog.provide('os.ui.search.searchBoxDirective');
 
 goog.require('goog.events.Event');
 goog.require('os.alert.AlertManager');
+goog.require('os.array');
 goog.require('os.config.Settings');
 goog.require('os.plugin.PluginManager');
 goog.require('os.search');
@@ -456,7 +457,7 @@ os.ui.search.SearchBoxCtrl.prototype.setUpGroups = function() {
     var currentGroup = [];
 
     // Iterate over the searches under the provider group, and add the search to the group
-    goog.array.forEach(searchNameArray, function(searchName) {
+    os.array.forEach(searchNameArray, function(searchName) {
       var ind = goog.array.findIndex(copiedOptions, function(searchOption) {
         return searchName == searchOption.getName();
       }, this);

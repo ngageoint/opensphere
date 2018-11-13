@@ -1,6 +1,9 @@
 goog.provide('os.ui.layer.LayerPickerCtrl');
 goog.provide('os.ui.layer.layerPickerDirective');
 
+goog.require('os.array');
+
+
 goog.require('os.ui.Module');
 
 
@@ -146,7 +149,7 @@ os.ui.layer.LayerPickerCtrl.prototype.selectLayers_ = function() {
   if (this.select2_) {
     var vals = [];
     if (this.scope_['layers']) {
-      goog.array.forEach(this.scope_['layers'], function(layer) {
+      os.array.forEach(this.scope_['layers'], function(layer) {
         var found = goog.array.find(this['layersList'], function(l) {
           return l.getId() == layer.getId();
         });

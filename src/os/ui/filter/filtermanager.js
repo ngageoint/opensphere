@@ -5,6 +5,7 @@ goog.require('goog.array');
 goog.require('goog.events.EventTarget');
 goog.require('goog.string');
 goog.require('os.IPersistable');
+goog.require('os.array');
 goog.require('os.config.Settings');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.filter.FilterEntry');
@@ -360,7 +361,7 @@ os.ui.filter.FilterManager.prototype.removeFilter = function(filter) {
  * @param {Array<os.filter.FilterEntry>} filters
  */
 os.ui.filter.FilterManager.prototype.removeFilters = function(filters) {
-  goog.array.forEach(filters, function(filter) {
+  os.array.forEach(filters, function(filter) {
     if (filter && filter.type in this.types) {
       var type = this.types[filter.type];
       goog.array.remove(type.filters, filter);
