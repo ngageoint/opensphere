@@ -1,5 +1,6 @@
 goog.provide('os.layer.LayerGroup');
 goog.require('goog.events.EventTarget');
+goog.require('ol.array');
 goog.require('os.implements');
 goog.require('os.layer.ILayer');
 goog.require('os.ui.node.defaultLayerNodeUIDirective');
@@ -561,7 +562,7 @@ os.layer.LayerGroup.prototype.getLayers = function() {
  * @param {!os.layer.ILayer} layer
  */
 os.layer.LayerGroup.prototype.removeLayer = function(layer) {
-  goog.array.remove(this.layers_, layer);
+  ol.array.remove(this.layers_, layer);
 };
 
 

@@ -298,7 +298,7 @@ os.histo.UniqueBinMethod.prototype.getFilterForBin = function(bin) {
 
 
 /**
- * Test if a value is contained within a set of values. Avoided goog.array.contains to prevent an extra function call.
+ * Test if a value is contained within a set of values. Avoided ol.array.includes to prevent an extra function call.
  * @param {!Array<string>} values
  * @param {string} value
  * @return {boolean}

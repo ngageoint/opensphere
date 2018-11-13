@@ -2,6 +2,7 @@ goog.provide('os.ui.ex.ExportOptionsCtrl');
 goog.provide('os.ui.ex.ExportOptionsEvent');
 goog.provide('os.ui.ex.exportOptionsDirective');
 goog.require('goog.Disposable');
+goog.require('ol.array');
 goog.require('os.data.OSDataManager');
 goog.require('os.defines');
 goog.require('os.events.SelectionType');
@@ -174,7 +175,7 @@ os.ui.ex.ExportOptionsCtrl.prototype.initSources_ = function() {
     var source = sources[i];
     if (this.includeSource(source)) {
       if (source.getVisible()) {
-        var enabled = enabledSources == 'all' || goog.array.contains(enabledSources, source);
+        var enabled = enabledSources == 'all' || ol.array.includes(enabledSources, source);
         this['sourceItems'].push(this.createChecklistItem_(source, enabled));
       }
 
@@ -222,9 +223,9 @@ os.ui.ex.ExportOptionsCtrl.prototype.onSourceChange_ = function(event) {
     } else if (p === os.source.PropertyChange.LABEL) {
       this.updateItems();
     } else if (item && item.enabled) {
-      if (goog.array.contains(os.ui.ex.ExportOptionsCtrl.SOURCE_EVENTS_, p)) {
+      if (ol.array.includes(os.ui.ex.ExportOptionsCtrl.SOURCE_EVENTS_, p)) {
         this.updateItems();
-      } else if (this['useSelected'] && goog.array.contains(os.ui.ex.ExportOptionsCtrl.SELECT_EVENTS_, p)) {
+      } else if (this['useSelected'] && ol.array.includes(os.ui.ex.ExportOptionsCtrl.SELECT_EVENTS_, p)) {
         this.updateItems();
       }
     }

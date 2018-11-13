@@ -2,6 +2,10 @@ goog.provide('os.ui.grid.DataGridCtrl');
 
 
 
+goog.require('ol.array');
+
+
+
 goog.require('os.array');
 
 
@@ -119,9 +123,9 @@ os.ui.grid.DataGridCtrl.prototype.createGrid = function(el) {
   this.grid_.setSelectionModel(new Slick.RowSelectionModel());
 
   if (this.scope_['defaultSortColumn']) {
-    var sortCol = goog.array.find(this.scope_['columns'], function(ele) {
+    var sortCol = ol.array.find(this.scope_['columns'], function(ele) {
       return ele['id'] == this.scope_['defaultSortColumn'];
-    }, this);
+    }.bind(this));
 
     if (sortCol) {
       this.sortColumn_ = sortCol;

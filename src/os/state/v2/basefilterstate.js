@@ -1,6 +1,7 @@
 goog.provide('os.state.v2.BaseFilter');
 goog.provide('os.state.v2.FilterTag');
 goog.require('goog.dom.xml');
+goog.require('ol.array');
 goog.require('os.array');
 goog.require('os.filter.FilterEntry');
 goog.require('os.state.XMLState');
@@ -58,14 +59,14 @@ os.state.v2.BaseFilter.preload = function(el) {
       var layerId = entry.getAttribute('layerId');
       var cloneId = filterId + '_' + layerId;
 
-      var filters = filtersNode ? filtersNode.getElementsByTagName('filter') : [];
+      var filters = /** @type {Array} */ (filtersNode ? filtersNode.getElementsByTagName('filter') : []);
       // Does this filterid exist for this layer
-      var found = goog.array.find(filters, function(filter) {
+      var found = ol.array.find(filters, function(filter) {
         return filter.getAttribute('id') == filterId && filter.getAttribute('type') == layerId ||
             filter.getAttribute('id') == cloneId && filter.getAttribute('type') == layerId;
       });
       if (!found) {
-        var similiar = goog.array.find(filters, function(filter) {
+        var similiar = ol.array.find(filters, function(filter) {
           return filter.getAttribute('id') == filterId;
         });
         if (similiar) {

@@ -4,6 +4,7 @@ goog.provide('os.ui.slick.slickTreeDirective');
 goog.require('goog.async.Delay');
 goog.require('goog.dom.classlist');
 goog.require('goog.events.EventType');
+goog.require('ol.array');
 goog.require('os.array');
 goog.require('os.ui.GlobalMenuCtrl');
 goog.require('os.ui.Module');
@@ -299,7 +300,7 @@ os.ui.slick.SlickTreeCtrl.prototype.getContextArgs = function(opt_event) {
 
   if (targetNode) {
     if (!this.scope['selected'] || (!this.multiSelect && this.scope['selected'] != targetNode) ||
-        (goog.isArray(this.scope['selected']) && !goog.array.contains(this.scope['selected'], targetNode))) {
+        (goog.isArray(this.scope['selected']) && !ol.array.includes(this.scope['selected'], targetNode))) {
       this.scope['selected'] = [targetNode];
     }
   }
@@ -686,7 +687,7 @@ os.ui.slick.SlickTreeCtrl.prototype.getData = function() {
 os.ui.slick.SlickTreeCtrl.prototype.updateSiblings_ = function(data, parent, rows, insertBefore) {
   // Find where to put the childen in the parents array
   var children = parent.getChildren();
-  var insertBeforeChild = goog.array.findIndex(children, function(child) {
+  var insertBeforeChild = ol.array.findIndex(children, function(child) {
     return child == data[insertBefore];
   });
 
@@ -708,8 +709,8 @@ os.ui.slick.SlickTreeCtrl.prototype.updateSiblings_ = function(data, parent, row
   }
 
   os.array.forEach(extractedRows, function(row) {
-    goog.array.remove(left, row);
-    goog.array.remove(right, row);
+    ol.array.remove(left, row);
+    ol.array.remove(right, row);
   });
 
   children = left.concat(extractedRows.concat(right));
@@ -752,7 +753,7 @@ os.ui.slick.SlickTreeCtrl.prototype.updateHierarchy_ = function(data, rows, inse
     // If this row has a parent, check if exists in the moving list. If not cut it!
     var parentRow = row.getParent();
     if (parentRow) {
-      var found = goog.array.find(rows, function(rowid) {
+      var found = ol.array.find(rows, function(rowid) {
         return parentRow === data[rowid];
       });
       if (!found) {
@@ -812,7 +813,7 @@ os.ui.slick.SlickTreeCtrl.prototype.canDragMove = function(rows, insertBefore) {
       parent = this.root_;
     }
     var children = parent.getChildren();
-    var index = goog.array.findIndex(children, function(child) {
+    var index = ol.array.findIndex(children, function(child) {
       return child == movedRow;
     });
     if (index < children.length - 1 && children[index + 1] == targetNode) {
@@ -959,7 +960,7 @@ os.ui.slick.SlickTreeCtrl.prototype.doMove = function(rows, insertBefore) {
       var parentToFind = data[insertBefore].getParent();
 
       // Get the event parent index
-      insertBefore = goog.array.findIndex(data, function(row) {
+      insertBefore = ol.array.findIndex(data, function(row) {
         return row.getId() == parentToFind.getId();
       });
 
@@ -983,8 +984,8 @@ os.ui.slick.SlickTreeCtrl.prototype.doMove = function(rows, insertBefore) {
 
       // Remove the old entries for the moved row
       os.array.forEach(extractedRows, function(row) {
-        goog.array.remove(left, row);
-        goog.array.remove(right, row);
+        ol.array.remove(left, row);
+        ol.array.remove(right, row);
       });
 
       data = left.concat(extractedRows.concat(right));
