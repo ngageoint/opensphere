@@ -16,6 +16,56 @@ describe('os.array', function() {
     });
   });
 
+  it('should clear arrays and array-like objects', function() {
+    var array = [1, 2, 3];
+    os.array.clear(array);
+    expect(array.length).toBe(0);
+
+    var obj = {
+      0: true,
+      1: true,
+      2: true,
+      length: 3
+    };
+
+    os.array.clear(obj);
+    expect(obj['0']).toBeUndefined();
+
+    var keys = 0;
+    for (var key in obj) {
+      if (key != 'length') {
+        keys++;
+      }
+    }
+    expect(keys).toBe(0);
+  });
+
+  it('should iterate over values in arrays and array-like objects', function() {
+    var array = [1, 2, 3, 4];
+    var obj = {
+      0: true,
+      1: true,
+      2: true,
+      length: 3
+    };
+
+    var calls = 0;
+    os.array.forEach(array, function(el, idx, arr) {
+      expect(el).toBe(array[idx]);
+      expect(arr).toBe(array);
+      calls++;
+    });
+    expect(calls).toBe(array.length);
+
+    calls = 0;
+    os.array.forEach(obj, function(el, idx, arr) {
+      expect(el).toBe(obj[idx]);
+      expect(arr).toBe(obj);
+      calls++;
+    });
+    expect(calls).toBe(3);
+  });
+
   it('should handle for each on a falsey array', function() {
     var things = [undefined, null];
 
