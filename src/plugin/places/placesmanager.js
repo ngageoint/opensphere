@@ -6,6 +6,7 @@ goog.require('goog.events.EventTarget');
 goog.require('goog.events.EventType');
 goog.require('os.object');
 goog.require('os.ui.im.ImportEvent');
+goog.require('os.ui.im.ImportProcess');
 goog.require('plugin.file.kml.KMLLayerConfig');
 goog.require('plugin.file.kml.ui');
 goog.require('plugin.file.kml.ui.KMLNode');
@@ -197,8 +198,14 @@ plugin.places.PlacesManager.prototype.removeLayer = function() {
 
 /**
  * Start the places import process.
+ * @param {os.file.File=} opt_file Optional file to use in the import.
  */
-plugin.places.PlacesManager.prototype.startImport = function() {};
+plugin.places.PlacesManager.prototype.startImport = function(opt_file) {
+  os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Filters.IMPORT, 1);
+  var importProcess = new os.ui.im.ImportProcess(os.placesImportManager, os.placesFileManager);
+  importProcess.setEvent(new os.ui.im.ImportEvent(os.ui.im.ImportEventType.FILE, opt_file, undefined));
+  importProcess.begin();
+};
 
 
 /**

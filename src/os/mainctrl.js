@@ -332,6 +332,12 @@ os.MainCtrl = function($scope, $element, $compile, $timeout, $injector) {
   os.areaImportManager.registerImportUI(os.file.mime.filter.TYPE, new os.filter.im.OSFilterImportUI());
   os.areaFileManager = new os.file.FileManager();
 
+  // initialize the places import/file managers
+  os.placesImportManager = new os.ui.im.ImportManager();
+  os.placesImportManager.registerImportDetails('Data filters for supported layers.');
+  os.placesImportManager.registerImportUI(os.file.mime.filter.TYPE, new os.filter.im.OSFilterImportUI());
+  os.placesFileManager = new os.file.FileManager();
+
   // initialize the CMM
   os.column.ColumnMappingManager.getInstance();
 
