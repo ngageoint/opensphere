@@ -5,6 +5,7 @@
 goog.provide('os.object');
 goog.require('goog.array');
 goog.require('goog.string');
+goog.require('os.array');
 
 
 /**
@@ -128,7 +129,7 @@ os.object.isPrimitive = function(value, opt_type) {
 os.object.set = function(obj, keys, value) {
   var lastLevel = obj;
   var lastKeyIndex = keys.length - 1;
-  goog.array.forEach(keys, function(key, index) {
+  os.array.forEach(keys, function(key, index) {
     if (index === lastKeyIndex) {
       lastLevel[key] = value;
     } else {

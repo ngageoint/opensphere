@@ -190,3 +190,15 @@ requirement: {
 #  value: 'goog.isString'
 #  error_message: 'goog.isString(value) is not permitted. Use typeof value === \'string\' instead.'
 #}
+
+#requirement: {
+#  type: BANNED_NAME
+#  value: 'goog.array.clear'
+#  error_message: 'goog.array.clear is not permitted. Use os.array.clear instead.'
+#}
+
+#requirement: {
+#  type: BANNED_NAME
+#  value: 'goog.array.forEach'
+#  error_message: 'goog.array.forEach is not permitted. Use os.array.forEach instead.'
+#}

@@ -1,6 +1,7 @@
 goog.provide('os.ui.slick.formatter');
 
 goog.require('goog.string');
+goog.require('os.array');
 goog.require('os.ui');
 goog.require('os.ui.columnactions.ColumnActionEvent');
 goog.require('os.ui.columnactions.ColumnActionManager');
@@ -126,7 +127,7 @@ os.ui.slick.formatter.shortUrlFormatter = function(row, cell, value, columnDef, 
   var newValue = '';
   var cite = 1;
 
-  goog.array.forEach(splitVal, function(elem, index, arr) {
+  os.array.forEach(splitVal, function(elem, index, arr) {
     if (os.url.URL_REGEXP.test(elem)) {
       var url = String(elem);
       elem = ['[', cite, ']'].join('').link(url)
@@ -158,7 +159,7 @@ os.ui.slick.formatter.urlFormatter = function(row, cell, value, columnDef, node)
   var splitVal = value.split(' ');
   var newValue = '';
 
-  goog.array.forEach(splitVal, function(elem, index, arr) {
+  os.array.forEach(splitVal, function(elem, index, arr) {
     if (os.url.URL_REGEXP.test(elem)) {
       var url = os.ui.sanitize(String(elem));
       elem = url.link(url).replace('<a', goog.string.buildString('<a title="', url, '" target="', url, '" '));

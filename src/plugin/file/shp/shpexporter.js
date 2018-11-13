@@ -4,6 +4,7 @@ goog.require('goog.log');
 goog.require('ol.Feature');
 goog.require('ol.geom.GeometryCollection');
 goog.require('ol.geom.SimpleGeometry');
+goog.require('os.array');
 goog.require('os.data.OSDataManager');
 goog.require('os.ex.ZipExporter');
 goog.require('os.file.File');
@@ -368,7 +369,7 @@ plugin.file.shp.SHPExporter.prototype.allocateArrays_ = function() {
     var geom = this.getGeometry_(item);
     if (geom != null) {
       if (geom instanceof ol.geom.GeometryCollection) {
-        goog.array.forEach(geom.getGeometries(), function(geometry) {
+        os.array.forEach(geom.getGeometries(), function(geometry) {
           this.allocateItem_(item, /** @type {ol.geom.SimpleGeometry} */ (geometry));
         }, this);
       } else {
@@ -390,12 +391,12 @@ plugin.file.shp.SHPExporter.prototype.allocateItem_ = function(item, geom) {
   // Doesnt seem like shapefiles support multi polygon. Just polygons with multiple stuff (like holes)
   if (geom.getType() == ol.geom.GeometryType.MULTI_POLYGON) {
     geom = /** @type {ol.geom.MultiPolygon} */ (geom);
-    goog.array.forEach(geom.getPolygons(), function(polygon) {
+    os.array.forEach(geom.getPolygons(), function(polygon) {
       this.allocateItemForGeom_(item, polygon);
     }, this);
   } else if (geom.getType() == ol.geom.GeometryType.MULTI_POINT) {
     geom = /** @type {ol.geom.MultiPoint} */ (geom);
-    goog.array.forEach(geom.getPoints(), function(point) {
+    os.array.forEach(geom.getPoints(), function(point) {
       this.allocateItemForGeom_(item, point);
     }, this);
   } else {
@@ -437,8 +438,8 @@ plugin.file.shp.SHPExporter.prototype.allocateItemForGeom_ = function(item, geom
       numParts = coords.length;
 
       // Flatten down the coordinates one level
-      goog.array.forEach(coords, function(coord) {
-        goog.array.forEach(coord, function(point) {
+      os.array.forEach(coords, function(coord) {
+        os.array.forEach(coord, function(point) {
           flatGroupCoords.push(point);
         });
       });
@@ -463,7 +464,7 @@ plugin.file.shp.SHPExporter.prototype.allocateItemForGeom_ = function(item, geom
   this.header_.allocation += recLength;
 
   // Add the DBF Metadata for this geometry
-  goog.array.forEach(this.columns_, function(col) {
+  os.array.forEach(this.columns_, function(col) {
     var name = col['name'];
     this.header_.dbf.allocation += this.columnLengths_[name];
   }, this);
@@ -559,7 +560,7 @@ plugin.file.shp.SHPExporter.prototype.appendDBFHeader = function() {
   this.dvDbf_.setUint16(10, recordSize + 1, true);
 
   // write header (column info)
-  goog.array.forEach(this.columns_, function(col, index) {
+  os.array.forEach(this.columns_, function(col, index) {
     var startPos = 32 + index * 32;
     var name = col['name'];
 
@@ -644,7 +645,7 @@ plugin.file.shp.SHPExporter.prototype.processItem = function(item) {
   var geom = this.getGeometry_(item);
   if (geom != null) {
     if (geom instanceof ol.geom.GeometryCollection) {
-      goog.array.forEach(geom.getGeometries(), function(geometry) {
+      os.array.forEach(geom.getGeometries(), function(geometry) {
         this.appendItem_(item, /** @type {ol.geom.SimpleGeometry} */ (geometry));
       }, this);
     } else {
@@ -822,7 +823,7 @@ plugin.file.shp.SHPExporter.prototype.appendItemForGeom_ = function(item, geom) 
   //   // Points
   //   var pointsStart = recordStart + 40;
   //   var zpointsStart = pointsStart + pointsLen;
-  //   goog.array.forEach(coords, function(coord, index) {
+  //   os.array.forEach(coords, function(coord, index) {
   //     var offset = index * 16;
   //     this.dvShp_.setFloat64(pointsStart + offset, coord[0], true);
   //     this.dvShp_.setFloat64(pointsStart + offset + 8, coord[1], true);
@@ -884,8 +885,8 @@ plugin.file.shp.SHPExporter.prototype.appendItemForGeom_ = function(item, geom) 
       numParts = coords.length;
 
       // Flatten down the coordinates one level
-      goog.array.forEach(coords, function(coord) {
-        goog.array.forEach(coord, function(point) {
+      os.array.forEach(coords, function(coord) {
+        os.array.forEach(coord, function(point) {
           flatGroupCoords.push(point);
         });
       });
@@ -981,12 +982,12 @@ plugin.file.shp.SHPExporter.prototype.appendItem_ = function(item, geom) {
   // Doesnt seem like shapefiles support multi polygon. Just polygons with multiple stuff (like holes)
   if (geom.getType() == ol.geom.GeometryType.MULTI_POLYGON) {
     geom = /** @type {ol.geom.MultiPolygon} */ (geom);
-    goog.array.forEach(geom.getPolygons(), function(polygon) {
+    os.array.forEach(geom.getPolygons(), function(polygon) {
       this.appendItemForGeom_(item, polygon);
     }, this);
   } else if (geom.getType() == ol.geom.GeometryType.MULTI_POINT) {
     geom = /** @type {ol.geom.MultiPoint} */ (geom);
-    goog.array.forEach(geom.getPoints(), function(point) {
+    os.array.forEach(geom.getPoints(), function(point) {
       this.appendItemForGeom_(item, point);
     }, this);
   } else {
@@ -1003,7 +1004,7 @@ plugin.file.shp.SHPExporter.prototype.appendItem_ = function(item, geom) {
  * @template T
  */
 plugin.file.shp.SHPExporter.prototype.addMetadata_ = function(item) {
-  goog.array.forEach(this.columns_, function(col) {
+  os.array.forEach(this.columns_, function(col) {
     var name = col['name'];
     var field = col['field'];
 

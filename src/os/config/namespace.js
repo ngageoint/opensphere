@@ -7,6 +7,7 @@ goog.provide('os.config.namespace');
 
 goog.require('goog.array');
 goog.require('goog.string');
+goog.require('os.array');
 goog.require('os.config');
 goog.require('os.object');
 
@@ -70,7 +71,7 @@ os.config.namespace.getObsoleteKeys = function() {
  * Clear obsolete keys
  */
 os.config.namespace.clearObsoleteKeys = function() {
-  goog.array.clear(os.config.namespace.getObsoleteKeys());
+  os.array.clear(os.config.namespace.getObsoleteKeys());
 };
 
 
@@ -86,7 +87,7 @@ os.config.namespace.removeObsoleteKeys = function(obj) {
   if (obj) {
     var keys = os.config.namespace.getObsoleteKeys();
     var reduced = /** @type {!Object.<string, *>} */ (os.object.reduce(obj));
-    goog.array.forEach(keys, function(key) {
+    os.array.forEach(keys, function(key) {
       if (goog.object.containsKey(reduced, key)) {
         delete reduced[key];
         goog.array.insert(os.config.namespace.keysToDelete, key);

@@ -2,6 +2,7 @@ goog.provide('os.ui.menu.filter');
 
 goog.require('os.MapContainer');
 goog.require('os.action.EventType');
+goog.require('os.array');
 goog.require('os.command.FilterEnable');
 goog.require('os.command.ParallelCommand');
 goog.require('os.command.SequenceCommand');
@@ -260,9 +261,9 @@ os.ui.menu.filter.fixEntries = function(filters) {
   var allEntries = os.ui.queryManager.getEntries(null, null, null, false);
 
   // Remove the entry for this filter if it exists
-  goog.array.forEach(filters, function(filter) {
+  os.array.forEach(filters, function(filter) {
     var entries = os.ui.queryManager.getEntries(null, null, filter.getId(), false);
-    goog.array.forEach(entries, function(entry) {
+    os.array.forEach(entries, function(entry) {
       goog.array.remove(allEntries, entry);
     });
   });
@@ -345,7 +346,7 @@ os.ui.menu.filter.onFilter_ = function(event) {
         goog.array.removeDuplicates(removeEntries, undefined, function(filter) {
           return JSON.stringify(filter);
         });
-        goog.array.forEach(removeEntries, function(entry) {
+        os.array.forEach(removeEntries, function(entry) {
           goog.array.remove(allEntries, entry);
         });
 

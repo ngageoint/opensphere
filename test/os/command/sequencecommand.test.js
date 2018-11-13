@@ -1,3 +1,4 @@
+goog.require('os.array');
 goog.require('os.command.AsyncMockCommandString');
 goog.require('os.command.MockCommand');
 goog.require('os.command.MockCommandString');
@@ -10,7 +11,7 @@ describe('os.command.SequenceCommand', function() {
     new os.command.MockCommandString(),
     new os.command.MockCommandString(),
     new os.command.MockCommandString()];
-  goog.array.forEach(syncSet, function(command, index) {
+  os.array.forEach(syncSet, function(command, index) {
     command.title = 'sync-' + index;
   });
 
@@ -18,7 +19,7 @@ describe('os.command.SequenceCommand', function() {
     new os.command.AsyncMockCommandString(),
     new os.command.AsyncMockCommandString(),
     new os.command.AsyncMockCommandString()];
-  goog.array.forEach(asyncSet, function(command, index) {
+  os.array.forEach(asyncSet, function(command, index) {
     command.title = 'async-' + index;
   });
 
@@ -26,7 +27,7 @@ describe('os.command.SequenceCommand', function() {
     new os.command.MockCommandString(),
     new os.command.AsyncMockCommandString(),
     new os.command.MockCommandString()];
-  goog.array.forEach(mixedSet, function(command, index) {
+  os.array.forEach(mixedSet, function(command, index) {
     command.title = 'mixed-' + index;
   });
 
@@ -169,13 +170,13 @@ describe('os.command.SequenceCommand', function() {
   });
 
   it('does not execute again if already executed successfully', function() {
-    goog.array.forEach(cmd.getCommands(), function(command) {
+    os.array.forEach(cmd.getCommands(), function(command) {
       spyOn(command, 'execute').andReturn(true);
     });
     expect(cmd.state).toBe(os.command.State.SUCCESS);
     expect(cmd.execute()).toBe(false);
     expect(cmd.state).toBe(os.command.State.SUCCESS);
-    goog.array.forEach(cmd.getCommands(), function(command) {
+    os.array.forEach(cmd.getCommands(), function(command) {
       expect(command.execute).not.toHaveBeenCalled();
     });
   });
@@ -252,12 +253,12 @@ describe('os.command.SequenceCommand', function() {
 
   it('does not revert if already executed and failed', function() {
     expect(cmd.state).toBe(os.command.State.ERROR);
-    goog.array.forEach(asyncSet, function(command) {
+    os.array.forEach(asyncSet, function(command) {
       spyOn(command, 'revert').andCallThrough();
     });
     expect(cmd.revert()).toBe(false);
     expect(cmd.state).toBe(os.command.State.ERROR);
-    goog.array.forEach(asyncSet, function(command) {
+    os.array.forEach(asyncSet, function(command) {
       expect(command.revert).not.toHaveBeenCalled();
     });
   });
@@ -342,7 +343,7 @@ describe('os.command.SequenceCommand', function() {
 
       seq.setCommands(commands);
       spyOn(seq.getCommands()[firstAsync], 'execute').andReturn(false);
-      goog.array.forEach(seq.getCommands(), function(command, index) {
+      os.array.forEach(seq.getCommands(), function(command, index) {
         if (index != firstAsync) {
           spyOn(command, 'execute').andCallThrough();
         }
@@ -360,7 +361,7 @@ describe('os.command.SequenceCommand', function() {
       runs(function () {
         expect(success).toBe(false);
         expect(seq.state).toBe(os.command.State.ERROR);
-        goog.array.forEach(seq.getCommands(), function(command, index) {
+        os.array.forEach(seq.getCommands(), function(command, index) {
           if (index < firstAsync) {
             expect(command.execute.calls.length).toEqual(1);
           }
@@ -384,7 +385,7 @@ describe('os.command.SequenceCommand', function() {
         failSpy.originalValue.call(commands[1]);
         return false;
       });
-      goog.array.forEach(commands, function(command, index) {
+      os.array.forEach(commands, function(command, index) {
         if (index > 1) {
           spyOn(command, 'execute').andCallThrough();
         }
@@ -404,7 +405,7 @@ describe('os.command.SequenceCommand', function() {
       runs(function() {
         expect(success).toBe(true);
         expect(seq.state).toBe(os.command.State.ERROR);
-        goog.array.forEach(seq.getCommands(), function(command, index) {
+        os.array.forEach(seq.getCommands(), function(command, index) {
           if (index > 1) {
             expect(command.execute).not.toHaveBeenCalled();
           }
@@ -424,7 +425,7 @@ describe('os.command.SequenceCommand', function() {
       ];
 
       spyOn(commands[1], 'execute').andReturn(false);
-      goog.array.forEach(commands, function(command, index) {
+      os.array.forEach(commands, function(command, index) {
         if (index != 1) {
           spyOn(command, 'execute').andCallThrough();
         }
@@ -445,7 +446,7 @@ describe('os.command.SequenceCommand', function() {
         expect(success).toBe(false);
         expect(seq.state).toBe(os.command.State.ERROR);
         expect(seq.getCommands()[0].execute).toHaveBeenCalled();
-        goog.array.forEach(seq.getCommands(), function(command, index) {
+        os.array.forEach(seq.getCommands(), function(command, index) {
           if (index > 1) {
             expect(command.execute).not.toHaveBeenCalled();
           }
