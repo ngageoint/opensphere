@@ -127,11 +127,11 @@ plugin.file.kml.KMLParser = function(options) {
   this.styleMap_ = {};
 
   /**
-   * The KML styles not supported by OpenLayers map.
+   * The KML balloon style config map.
    * @type {!Object<string, !Object>}
    * @private
    */
-  this.otherStyleMap = {};
+  this.balloonStyleMap = {};
 
   /**
    * The KML style config map for highlight styles from StyleMap tags
@@ -254,7 +254,7 @@ plugin.file.kml.KMLParser.prototype.cleanup = function() {
   this.columnMap_ = null;
   this.stack_.length = 0;
   this.styleMap_ = {};
-  this.otherStyleMap = {};
+  this.balloonStyleMap = {};
   this.unnamedCount_ = 0;
   this.screenOverlayCount_ = 0;
   this.minRefreshPeriod_ = 0;
@@ -862,7 +862,7 @@ plugin.file.kml.KMLParser.prototype.examineStyles_ = function(node) {
       var properties = ol.xml.pushParseAndPop({}, plugin.file.kml.BALLOON_PROPERTY_PARSERS, n, []);
       if (properties) {
         var id = node.id || node.getAttribute('id');
-        this.otherStyleMap[id] = properties;
+        this.balloonStyleMap[id] = properties;
       }
     }
   }
@@ -879,7 +879,7 @@ plugin.file.kml.KMLParser.prototype.examineStyles_ = function(node) {
 plugin.file.kml.KMLParser.prototype.readBalloonStyle_ = function(feature) {
   var styleUrl = /** @type {string} */ (feature.get('styleUrl'));
   var styleId = this.getStyleId(decodeURIComponent(styleUrl));
-  var style = styleId in this.otherStyleMap ? this.otherStyleMap[styleId] : null;
+  var style = styleId in this.balloonStyleMap ? this.balloonStyleMap[styleId] : null;
 
   if (style) {
     var text = style['text'];
@@ -896,9 +896,19 @@ plugin.file.kml.KMLParser.prototype.readBalloonStyle_ = function(feature) {
 
     text = os.ui.sanitize(text);
 
-    var annotationOptions = os.annotation.getOptionsForText(text);
+    //
+    // For imported KML balloons:
+    //  - Disable editing
+    //  - Hide if displayMode is set to 'hide'
+    //  - Hide the name header in the annotation
+    //  - Size the overlay to fit the text
+    //
+    var annotationOptions =
+        /** @type {osx.annotation.Options} */ (os.object.unsafeClone(os.annotation.DEFAULT_OPTIONS));
     annotationOptions.editable = false;
     annotationOptions.show = style['displayMode'] !== 'hide';
+    annotationOptions.showName = false;
+    os.annotation.scaleToText(annotationOptions, text);
 
     feature.set(os.annotation.OPTIONS_FIELD, annotationOptions);
     feature.set(os.ui.FeatureEditCtrl.Field.MD_DESCRIPTION, text);

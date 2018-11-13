@@ -225,7 +225,7 @@ plugin.file.kml.ui.PlacemarkEditCtrl.prototype.updateAnnotation = function() {
     if (this['annotationOptions'].show) {
       // only create the preview annotation if not already present, and the feature isn't already displaying an
       // annotation overlay
-      if (!this.previewAnnotation && !os.annotation.hasAnnotation(this.previewFeature)) {
+      if (!this.previewAnnotation && !os.annotation.hasOverlay(this.previewFeature)) {
         this.previewAnnotation = new os.annotation.FeatureAnnotation(this.previewFeature);
       }
     } else {

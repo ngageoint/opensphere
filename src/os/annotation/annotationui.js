@@ -62,7 +62,8 @@ os.annotation.UI_TEMPLATE_ =
       '</button>' +
     '</div>' +
     '<div class="js-annotation card h-100">' +
-      '<div class="card-header px-1 py-0" ng-show="ctrl.options.showName"' +
+      '<div class="card-header text-truncate px-1 py-0" title="{{ctrl.name}}"' +
+          'ng-show="ctrl.options.showName"' +
           'ng-class="!ctrl.options.showDescription && \'h-100 border-0\'">' +
         '{{ctrl.name}}' +
       '</div>' +
@@ -256,9 +257,8 @@ os.annotation.AnnotationCtrl.prototype.onFeatureChange_ = function() {
   this['description'] = '';
 
   if (this.feature && this.scope) {
-    this['name'] = this.feature.get(os.ui.FeatureEditCtrl.Field.NAME) || '';
-    this['description'] = this.feature.get(os.ui.FeatureEditCtrl.Field.MD_DESCRIPTION) ||
-        this.feature.get(os.ui.FeatureEditCtrl.Field.DESCRIPTION) || '';
+    this['name'] = os.annotation.getNameText(this.feature);
+    this['description'] = os.annotation.getDescriptionText(this.feature);
 
     os.ui.apply(this.scope);
   }

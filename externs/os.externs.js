@@ -33,6 +33,17 @@ osx.annotation.Options;
 
 
 /**
+ * @typedef {{
+ *   bgColor: (string|undefined),
+ *   textColor: (string|undefined),
+ *   text: (string|undefined),
+ *   displayMode: (string|undefined)
+ * }}
+ */
+osx.annotation.KMLBalloon;
+
+
+/**
  * Namespace.
  * @type {Object}
  */
