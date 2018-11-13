@@ -58,22 +58,50 @@ os.annotation.OPTIONS_FIELD = '_annotationOptions';
 
 /**
  * Generate annotation options to display the given text.
+ * @param {osx.annotation.Options} options The options.
  * @param {string} text The annotation text.
- * @return {osx.annotation.Options} The options.
  */
-os.annotation.getOptionsForText = function(text) {
-  var annotationOptions = /** @type {osx.annotation.Options} */ (os.object.unsafeClone(os.annotation.DEFAULT_OPTIONS));
-
+os.annotation.scaleToText = function(options, text) {
   // compute the annotation size from the text. the height/width must include the text size, plus the header/padding.
   var size = os.ui.measureText(text, 'u-annotation__measure');
-  var annotationHeight = Math.min(size.height + 35, os.annotation.MAX_DEFAULT_HEIGHT);
+
+  var annotationHeight = size.height + 10 + (options.showName ? 25 : 0);
+  annotationHeight = Math.min(annotationHeight, os.annotation.MAX_DEFAULT_HEIGHT);
+
   var annotationWidth = Math.min(size.width + 10, os.annotation.MAX_DEFAULT_WIDTH);
-  annotationOptions.size = [annotationWidth, annotationHeight];
+  options.size = [annotationWidth, annotationHeight];
 
   // display the annotation 25px above the target
-  annotationOptions.offset[1] = -(annotationHeight / 2) - 25;
+  options.offset[1] = -(annotationHeight / 2) - 25;
+};
 
-  return annotationOptions;
+
+/**
+ * Get the name text for an annotation balloon.
+ * @param {ol.Feature} feature The feature.
+ * @return {string} The text.
+ */
+os.annotation.getNameText = function(feature) {
+  if (feature) {
+    return /** @type {string|undefined} */ (feature.get(os.ui.FeatureEditCtrl.Field.NAME)) || '';
+  }
+
+  return '';
+};
+
+
+/**
+ * Get the description text for an annotation balloon.
+ * @param {ol.Feature} feature The feature.
+ * @return {string} The text.
+ */
+os.annotation.getDescriptionText = function(feature) {
+  if (feature) {
+    return /** @type {string|undefined} */ (feature.get(os.ui.FeatureEditCtrl.Field.MD_DESCRIPTION)) ||
+        /** @type {string|undefined} */ (feature.get(os.ui.FeatureEditCtrl.Field.DESCRIPTION)) || '';
+  }
+
+  return '';
 };
 
 
@@ -82,7 +110,7 @@ os.annotation.getOptionsForText = function(text) {
  * @param {ol.Feature} feature The feature.
  * @return {boolean}
  */
-os.annotation.hasAnnotation = function(feature) {
+os.annotation.hasOverlay = function(feature) {
   if (feature) {
     var map = os.MapContainer.getInstance().getMap();
     if (map) {
