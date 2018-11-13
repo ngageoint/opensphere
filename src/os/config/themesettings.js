@@ -32,7 +32,9 @@ goog.inherits(os.config.ThemeSettings, os.ui.config.SettingPlugin);
  */
 os.config.ThemeSettings.Keys = {
   THEME: 'theme', // NOTE: this is in namespace.js as a cross application core setting. If you change it update there.
-  THEMES: 'themes'
+  THEMES: 'themes',
+  ACCESSIBLE_THEMES: 'accessible_themes',
+  ACCESSIBLE_THEME: 'accessible_theme'
 };
 
 
@@ -112,11 +114,32 @@ os.config.ThemeSettingsCtrl = function($scope) {
   this['themes'] = os.settings.get(os.config.ThemeSettings.Keys.THEMES, os.config.ThemeSettings.DEFAULT_THEMES);
 
   /**
+   * @type {Object<string>}
+   */
+  this['accessibleThemes'] = os.settings.get(os.config.ThemeSettings.Keys.ACCESSIBLE_THEMES, {});
+
+  /**
    * @type {string}
    */
   this['theme'] = os.settings.get(os.config.ThemeSettings.Keys.THEME, os.config.ThemeSettings.DEFAULT_THEME);
 
+  /**
+   * @type {string}
+   */
+  this['accessibleTheme'] = os.settings.get(os.config.ThemeSettings.Keys.ACCESSIBLE_THEME);
+
+  /**
+   * @type {boolean}
+   */
+  this['showAccessibleThemes'] = this['accessibleTheme'] ? true : false;
+
+  /**
+   * @type {string}
+   */
+  this['supportPage'] = os.settings.get('supportContact');
+
   os.settings.listen(os.config.ThemeSettings.Keys.THEME, this.onSettingsChange_, false, this);
+  os.settings.listen(os.config.ThemeSettings.Keys.ACCESSIBLE_THEME, this.onAccessibilitySettingsChange_, false, this);
   $scope.$on('$destroy', this.destroy_.bind(this));
 };
 
@@ -126,6 +149,7 @@ os.config.ThemeSettingsCtrl = function($scope) {
  */
 os.config.ThemeSettingsCtrl.prototype.destroy_ = function() {
   os.settings.unlisten(os.config.ThemeSettings.Keys.THEME, this.onSettingsChange_, false, this);
+  os.settings.unlisten(os.config.ThemeSettings.Keys.ACCESSIBLE_THEME, this.onAccessibilitySettingsChange_, false, this);
   this.scope_ = null;
 };
 
@@ -144,6 +168,19 @@ os.config.ThemeSettingsCtrl.prototype.onSettingsChange_ = function(event) {
 
 
 /**
+ * Handle units change via settings.
+ * @param {os.events.PropertyChangeEvent} event
+ * @private
+ */
+os.config.ThemeSettingsCtrl.prototype.onAccessibilitySettingsChange_ = function(event) {
+  if (event.newVal && event.newVal !== this['accessibleTheme']) {
+    this['accessibleTheme'] = event.newVal;
+    os.ui.apply(this.scope_);
+  }
+};
+
+
+/**
  * Save to settings.
  * @param {string} newVal
  * @param {string} oldVal
@@ -153,6 +190,17 @@ os.config.ThemeSettingsCtrl.prototype.onThemeChange = function(newVal, oldVal) {
   if (newVal != this['theme']) {
     os.settings.set(os.config.ThemeSettings.Keys.THEME, this['theme']);
   }
+};
+
+
+/**
+ * Save to settings.
+ * @param {string} newVal
+ * @param {string} oldVal
+ * @export
+ */
+os.config.ThemeSettingsCtrl.prototype.onAccessableThemeChange = function(newVal, oldVal) {
+  os.settings.set(os.config.ThemeSettings.Keys.ACCESSIBLE_THEME, this['accessibleTheme']);
 };
 
 
@@ -188,19 +236,34 @@ os.config.ThemeSettings.setTheme = function() {
 
     // The currently selected theme.
     var displayTheme = os.settings.get(os.config.ThemeSettings.Keys.THEME, os.config.ThemeSettings.DEFAULT_THEME);
+    var accessibleTheme = os.settings.get(os.config.ThemeSettings.Keys.ACCESSIBLE_THEME);
 
     // The application's configured themes.
     var themes = os.settings.get(os.config.ThemeSettings.Keys.THEMES, os.config.ThemeSettings.DEFAULT_THEMES);
+    var accessibleThemes = os.settings.get(os.config.ThemeSettings.Keys.ACCESSIBLE_THEMES, {});
 
-    // If the theme is not defined in settings, use the default. This is most likely to happen when configured themes
-    // are changed.
+    // If the theme is not defined in settings, use the default.
+    // This is most likely to happen when configured themes are changed.
     if (!themes[displayTheme]) {
       displayTheme = os.config.ThemeSettings.DEFAULT_THEME;
+      accessibleTheme = null;
       os.settings.set(os.config.ThemeSettings.Keys.THEME, displayTheme);
+      os.settings.set(os.config.ThemeSettings.Keys.ACCESSIBLE_THEME, accessibleTheme);
     }
 
-    // The theme's stylesheet name.
-    var theme = themes[displayTheme];
+    var theme = null;
+    if (accessibleTheme && accessibleThemes[displayTheme]) {
+      // Get this flavor of the theme
+      theme = accessibleThemes[displayTheme][accessibleTheme];
+    }
+
+    // Couldnt find the accessible theme..
+    if (!theme) {
+      // The theme's stylesheet name.
+      theme = themes[displayTheme];
+    }
+
+    // Check to see if there is also an accessible theme selected
     if (!theme) {
       reject('Failed loading the application theme: default theme is missing.');
       return;

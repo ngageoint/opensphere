@@ -1,18 +1,19 @@
 $font-family-sans-serif: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 
 // Needed for color pallet to have white text on buttons
-$yiq-contrasted-threshold: 166;
+$yiq-contrasted-threshold: 166 !default;
+$enable-gradients: true;
 
-$blue: #08c;
-$indigo:  #6c94bc;
-$purple:  #6f42c1;
-$pink:    #e83e8c;
-$red:     #ee5f5b;
-$orange:  #f89406;
-$yellow:  #ffc107;
-$green:   #62c462;
-$teal:    #20c997;
-$cyan:    #5bc0de;
+$blue: #08c !default;
+$indigo:  #6c94bc !default;
+$purple:  #6f42c1 !default;
+$pink:    #e83e8c !default;
+$red:     #ee5f5b !default;
+$orange:  #f89406 !default;
+$yellow:  #ffc107 !default;
+$green:   #62c462 !default;
+$teal:    #20c997 !default;
+$cyan:    #5bc0de !default;
 
 $gray-100: #f8f9fa !default;
 $gray-200: #e9ecef !default;
@@ -26,12 +27,12 @@ $gray-900: #212529 !default;
 $black: #000 !default;
 $white: #fff !default;
 
-$warning: $orange;
-$primary: $blue;
-$success: $green;
-$info: $indigo;
-$dropdown-link-hover-color: #fff;
-$dropdown-link-hover-bg: $primary;
+$warning: $orange !default;
+$primary: $blue !default;
+$success: $green !default;
+$info: $indigo !default;
+$dropdown-link-hover-color: #fff !default;
+$dropdown-link-hover-bg: $primary !default;
 
 $dark: lighten(#272b30, 5%);
 

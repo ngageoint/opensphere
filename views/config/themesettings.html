@@ -1,7 +1,34 @@
 <div class="d-flex flex-column flex-fill u-overflow-y-auto container-fluid">
-  <h4>Theme</h4>
-  <div class="form-group">
-    <select class="custom-select" ng-options="key as key for (key, value) in ctrl.themes"
-        ng-change="ctrl.onThemeChange()" ng-model="ctrl.theme"></select>
+  <div>
+    <h4>Theme</h4>
+    <div class="d-flex align-items-center">
+      <div class="col-form-label mr-2 flex-shrink-0">Primary Theme</div>
+      <select class="custom-select" ng-options="key as key for (key, value) in ctrl.themes" ng-change="ctrl.onThemeChange()"
+        ng-model="ctrl.theme"></select>
+    </div>
+  </div>
+  <div ng-if="ctrl.accessibleThemes" class="mt-2">
+    <div class="animate-slide border-top pt-3 mt-3 a-transition-duration__200ms">
+      <div class="d-flex align-items-center">
+        <div class="col-form-label mr-2 flex-shrink-0">Accessibility Options</div>
+        <select class="custom-select" ng-options="key as key for (key, value) in ctrl.accessibleThemes[ctrl.theme]"
+          ng-change="ctrl.onAccessableThemeChange()" ng-model="ctrl.accessibleTheme">
+          <option value="" ng-value="null">Normal</option>
+        </select>
+      </div>
+
+      <div class="mt-3 text-center">Button Examples (for display only)</div>
+      <div class="d-flex flex-wrap mt-1 justify-content-center">
+        <button type="button" class="btn btn-primary">Primary</button>
+        <button type="button" class="ml-2 btn btn-secondary">Secondary</button>
+        <button type="button" class="ml-2 btn btn-success">Success</button>
+        <button type="button" class="ml-2 btn btn-info">Info</button>
+        <button type="button" class="ml-2 btn btn-warning">Warning</button>
+        <button type="button" class="ml-2 btn btn-danger">Danger</button>
+      </div>
+    </div>
+    <div ng-if="ctrl.supportPage" class="text-center pt-5 mt-5">
+      Want more customization? Checkout our <a href="{{ctrl.supportPage}}">support page</a>
+    </div>
   </div>
 </div>
