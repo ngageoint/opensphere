@@ -1,6 +1,7 @@
 goog.provide('os.ui.im.AbstractMapperCtrl');
 
 goog.require('goog.object');
+goog.require('ol.array');
 goog.require('os.data.ColumnDefinition');
 goog.require('os.im.mapping.Rule');
 goog.require('os.object');
@@ -241,7 +242,7 @@ os.ui.im.AbstractMapperCtrl.prototype.update = function() {
       // check if there are any rules in the new ruleset that aren't in the existing one
       for (var i = 0, ii = newRules.length; i < ii; i++) {
         var newRule = newRules[i];
-        var found = goog.array.find(ruleset, function(rule) {
+        var found = ol.array.find(ruleset, function(rule) {
           return rule['initialValue'] == newRule['initialValue'];
         });
 

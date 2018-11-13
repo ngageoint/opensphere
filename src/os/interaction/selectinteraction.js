@@ -1,6 +1,7 @@
 goog.provide('os.interaction.Select');
 
 goog.require('ol.Feature');
+goog.require('ol.array');
 goog.require('ol.events.condition');
 goog.require('ol.interaction.Interaction');
 goog.require('os.I3DSupport');
@@ -44,7 +45,7 @@ os.interaction.Select = function(opt_options) {
        * @return {boolean} Include.
        */
       layerFilter = function(layer) {
-        return goog.array.contains(layers, layer);
+        return ol.array.includes(layers, layer);
       };
     }
   } else {

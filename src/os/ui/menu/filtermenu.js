@@ -1,5 +1,6 @@
 goog.provide('os.ui.menu.filter');
 
+goog.require('ol.array');
 goog.require('os.MapContainer');
 goog.require('os.action.EventType');
 goog.require('os.array');
@@ -264,7 +265,7 @@ os.ui.menu.filter.fixEntries = function(filters) {
   os.array.forEach(filters, function(filter) {
     var entries = os.ui.queryManager.getEntries(null, null, filter.getId(), false);
     os.array.forEach(entries, function(entry) {
-      goog.array.remove(allEntries, entry);
+      ol.array.remove(allEntries, entry);
     });
   });
 
@@ -347,7 +348,7 @@ os.ui.menu.filter.onFilter_ = function(event) {
           return JSON.stringify(filter);
         });
         os.array.forEach(removeEntries, function(entry) {
-          goog.array.remove(allEntries, entry);
+          ol.array.remove(allEntries, entry);
         });
 
         cmds.push(new os.ui.query.cmd.QueryEntries(allEntries, false, os.ui.query.ALL_ID, true));

@@ -202,3 +202,27 @@ requirement: {
 #  value: 'goog.array.forEach'
 #  error_message: 'goog.array.forEach is not permitted. Use os.array.forEach instead.'
 #}
+
+#requirement: {
+#  type: BANNED_NAME
+#  value: 'goog.array.contains'
+#  error_message: 'goog.array.contains is not permitted. Use ol.array.includes instead.'
+#}
+
+#requirement: {
+#  type: BANNED_NAME
+#  value: 'goog.array.find'
+#  error_message: 'goog.array.find is not permitted. Use ol.array.find instead.'
+#}
+
+#requirement: {
+#  type: BANNED_NAME
+#  value: 'goog.array.findIndex'
+#  error_message: 'goog.array.findIndex is not permitted. Use ol.array.findIndex instead.'
+#}
+
+#requirement: {
+#  type: BANNED_NAME
+#  value: 'goog.array.remove'
+#  error_message: 'goog.array.remove is not permitted. Use ol.array.remove instead.'
+#}

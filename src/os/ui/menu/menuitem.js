@@ -5,6 +5,9 @@ goog.provide('os.ui.menu.MenuItemType');
 goog.require('goog.array');
 
 
+goog.require('ol.array');
+
+
 /**
  * @enum {string}
  */
@@ -126,7 +129,7 @@ os.ui.menu.MenuItem.prototype.addChild = function(options) {
   }
 
   // Does this already exist as a child?
-  var existingItem = goog.array.find(this.children, function(child) {
+  var existingItem = ol.array.find(this.children, function(child) {
     return child.type == item.type &&
       child.eventType == item.eventType &&
       child.label == item.label &&

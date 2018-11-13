@@ -1,3 +1,5 @@
+goog.require('ol.array');
+
 goog.require('os.structs.TreeNode');
 
 describe('os.structs.TreeNode', function() {
@@ -18,9 +20,9 @@ describe('os.structs.TreeNode', function() {
 
     var rootChildren = root.getChildren();
     expect(rootChildren.length).toBe(3);
-    expect(goog.array.contains(rootChildren, first)).toBe(true);
-    expect(goog.array.contains(rootChildren, second)).toBe(true);
-    expect(goog.array.contains(rootChildren, third)).toBe(true);
+    expect(ol.array.includes(rootChildren, first)).toBe(true);
+    expect(ol.array.includes(rootChildren, second)).toBe(true);
+    expect(ol.array.includes(rootChildren, third)).toBe(true);
     expect(goog.events.hasListener(first, goog.events.EventType.PROPERTYCHANGE, false)).toBe(true);
     expect(goog.events.hasListener(second, goog.events.EventType.PROPERTYCHANGE, false)).toBe(true);
     expect(goog.events.hasListener(third, goog.events.EventType.PROPERTYCHANGE, false)).toBe(true);

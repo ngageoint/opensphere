@@ -1,6 +1,9 @@
 goog.provide('os.ui.layer.LayerPickerCtrl');
 goog.provide('os.ui.layer.layerPickerDirective');
 
+goog.require('ol.array');
+
+
 goog.require('os.array');
 
 
@@ -150,7 +153,7 @@ os.ui.layer.LayerPickerCtrl.prototype.selectLayers_ = function() {
     var vals = [];
     if (this.scope_['layers']) {
       os.array.forEach(this.scope_['layers'], function(layer) {
-        var found = goog.array.find(this['layersList'], function(l) {
+        var found = ol.array.find(this['layersList'], function(l) {
           return l.getId() == layer.getId();
         });
         if (found) {
@@ -171,9 +174,9 @@ os.ui.layer.LayerPickerCtrl.prototype.selectLayer_ = function() {
   if (this.select2_) {
     var val = null;
     if (this.scope_['layer']) {
-      var found = goog.array.find(this['layersList'], function(l) {
+      var found = ol.array.find(this['layersList'], function(l) {
         return l.getId() == this.scope_['layer'].getId();
-      }, this);
+      }.bind(this));
       if (found) {
         val = found['$$hashKey'];
       }

@@ -2,6 +2,7 @@ goog.provide('os.ui.menu.SpatialMenu');
 goog.provide('os.ui.menu.spatial');
 
 goog.require('ol.Feature');
+goog.require('ol.array');
 goog.require('os.action.EventType');
 goog.require('os.array');
 goog.require('os.command.AreaToggle');
@@ -930,7 +931,7 @@ os.ui.menu.spatial.LayerChooserCtrl = function($scope, $element) {
  * @export
  */
 os.ui.menu.spatial.LayerChooserCtrl.prototype.valid = function() {
-  var found = goog.array.find(this.scope_['layers'], function(layer) {
+  var found = ol.array.find(this.scope_['layers'], function(layer) {
     return layer['enabled'];
   });
 

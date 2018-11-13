@@ -1,6 +1,7 @@
 goog.provide('os.ui.filter.ui.CopyFilterCtrl');
 goog.provide('os.ui.filter.ui.copyFilterDirective');
 
+goog.require('ol.array');
 goog.require('os.column.ColumnMapping');
 goog.require('os.column.ColumnMappingManager');
 goog.require('os.command.SequenceCommand');
@@ -207,7 +208,7 @@ os.ui.filter.ui.CopyFilterCtrl.prototype.update_ = function() {
           if (sourceMapping && sourceMapping.getColumn(targetFilterKey)) {
             // the mapping already exists and works between these two layers, so use it
             var targetColumn = sourceMapping.getColumn(targetFilterKey);
-            var actualTargetColumn = goog.array.find(targetColumns, function(column) {
+            var actualTargetColumn = ol.array.find(targetColumns, function(column) {
               return column['name'] === targetColumn['column'];
             });
 
@@ -224,7 +225,7 @@ os.ui.filter.ui.CopyFilterCtrl.prototype.update_ = function() {
             var selectedColumn = null;
             var oldModelArray = oldUnmappedColumns[targetFilterKey];
             if (oldModelArray) {
-              var oldModelColumn = goog.array.find(oldModelArray, function(oldModel) {
+              var oldModelColumn = ol.array.find(oldModelArray, function(oldModel) {
                 return oldModel['sourceColumnName'] === sourceColumnName &&
                     oldModel['targetFilterKey'] === targetFilterKey;
               });
@@ -241,7 +242,7 @@ os.ui.filter.ui.CopyFilterCtrl.prototype.update_ = function() {
               // HACK ALERT! Descriptors are capable of adding multiple layers with the SAME DATATYPE.
               // This check prevents us from treating those layers as separate layers for the purpose of
               // building a new mapping.
-              var duplicateModel = goog.array.find(this['unmappedColumns'][targetFilterKey], function(model) {
+              var duplicateModel = ol.array.find(this['unmappedColumns'][targetFilterKey], function(model) {
                 return model['sourceColumnName'] === sourceColumnName && model['targetFilterKey'] === targetFilterKey;
               });
               if (!duplicateModel) {

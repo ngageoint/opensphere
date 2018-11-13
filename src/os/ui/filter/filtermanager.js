@@ -4,6 +4,7 @@ goog.provide('os.ui.filter.FilterType');
 goog.require('goog.array');
 goog.require('goog.events.EventTarget');
 goog.require('goog.string');
+goog.require('ol.array');
 goog.require('os.IPersistable');
 goog.require('os.array');
 goog.require('os.config.Settings');
@@ -348,7 +349,7 @@ os.ui.filter.FilterManager.prototype.addFilter = function(filter) {
 os.ui.filter.FilterManager.prototype.removeFilter = function(filter) {
   if (filter && filter.type in this.types) {
     var type = this.types[filter.type];
-    goog.array.remove(type.filters, filter);
+    ol.array.remove(type.filters, filter);
 
     this.dispatchEvent(new os.ui.filter.FilterEvent(os.ui.filter.FilterEventType.FILTERS_REFRESH));
     this.save();
@@ -364,7 +365,7 @@ os.ui.filter.FilterManager.prototype.removeFilters = function(filters) {
   os.array.forEach(filters, function(filter) {
     if (filter && filter.type in this.types) {
       var type = this.types[filter.type];
-      goog.array.remove(type.filters, filter);
+      ol.array.remove(type.filters, filter);
       type.dirty = true;
     }
   }, this);

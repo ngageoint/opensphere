@@ -2,6 +2,7 @@ goog.provide('os.ui.filter');
 
 goog.require('goog.dom');
 goog.require('goog.string');
+goog.require('ol.array');
 goog.require('os.implements');
 goog.require('os.ui.filter.op.Between');
 goog.require('os.ui.filter.op.EqualTo');
@@ -358,7 +359,7 @@ os.ui.filter.conditionFromNode = function(node) {
 os.ui.filter.operationFromNode = function(node) {
   if (node) {
     var el = angular.element(node);
-    return goog.array.find(os.ui.filter.OPERATIONS, function(op) {
+    return ol.array.find(os.ui.filter.OPERATIONS, function(op) {
       return op.matches(el);
     });
   }

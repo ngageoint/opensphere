@@ -2,6 +2,7 @@ goog.provide('os.ui.ex.ExportCtrl');
 goog.provide('os.ui.ex.ExportDirective');
 
 goog.require('goog.array');
+goog.require('ol.array');
 goog.require('os.data.event.DataEvent');
 goog.require('os.data.event.DataEventType');
 goog.require('os.events.SelectionType');
@@ -127,7 +128,7 @@ os.ui.ex.ExportCtrl.prototype.onExportOptionsChange_ = function(event, items, so
       var sourceFields = os.source.getExportFields(sources[i]);
       if (sourceFields) {
         for (var j = 0; j < sourceFields.length; j++) {
-          if (!goog.array.contains(this.options.fields, sourceFields[j])) {
+          if (!ol.array.includes(this.options.fields, sourceFields[j])) {
             this.options.fields.push(sourceFields[j]);
           }
         }

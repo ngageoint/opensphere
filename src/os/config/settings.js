@@ -14,6 +14,7 @@ goog.require('goog.storage.Storage');
 goog.require('goog.storage.mechanism.IterableMechanism');
 goog.require('goog.storage.mechanism.Mechanism');
 goog.require('goog.storage.mechanism.mechanismfactory');
+goog.require('ol.array');
 goog.require('os.alert.AlertEventTypes');
 goog.require('os.array');
 goog.require('os.config');
@@ -831,7 +832,7 @@ os.config.Settings.prototype.markKeysForDelete_ = function(keys, newVal, oldVal)
     var newObjKeys = newVal != null ? goog.object.getKeys(os.object.reduce(newVal)) : [];
     var keysAsStr = keys.join('.');
     os.array.forEach(oldObjKeys, function(oldObjKey) {
-      if (!goog.array.contains(newObjKeys, oldObjKey)) {
+      if (!ol.array.includes(newObjKeys, oldObjKey)) {
         goog.array.insert(os.config.namespace.keysToDelete, os.config.namespace.getPrefixedKey(keysAsStr + '.' +
             oldObjKey));
       }

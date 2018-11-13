@@ -2,6 +2,7 @@ goog.provide('os.ui.state.StateImportCtrl');
 goog.provide('os.ui.state.stateImportDirective');
 
 goog.require('goog.object');
+goog.require('ol.array');
 goog.require('os.state');
 goog.require('os.state.JSONStateOptions');
 goog.require('os.state.XMLStateOptions');
@@ -95,7 +96,7 @@ os.ui.state.StateImportCtrl = function($scope, $element) {
 
     for (var i = 0, n = this['states'].length; i < n; i++) {
       var state = this['states'][i];
-      state.setEnabled(goog.array.contains(this.config_['loadItems'], state.toString()));
+      state.setEnabled(ol.array.includes(this.config_['loadItems'], state.toString()));
     }
   }
   $scope.$emit(os.ui.WindowEventType.READY);
