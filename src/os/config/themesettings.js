@@ -136,7 +136,7 @@ os.config.ThemeSettingsCtrl = function($scope) {
   /**
    * @type {string}
    */
-  this['supportPage'] = os.settings.get('supportContact');
+  this['accessibilitySupportPage'] = os.settings.get('accessibilitySupportPage');
 
   os.settings.listen(os.config.ThemeSettings.Keys.THEME, this.onSettingsChange_, false, this);
   os.settings.listen(os.config.ThemeSettings.Keys.ACCESSIBLE_THEME, this.onAccessibilitySettingsChange_, false, this);
