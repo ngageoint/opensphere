@@ -1,0 +1,12 @@
+@import 'overrides_slate/bootswatch';
+@import 'compact/bootswatch';
+@import 'cb_rg/bootswatch';
+
+.alert-danger,
+.badge-danger,
+.bg-danger,
+.btn-danger,
+.list-group-item-danger {
+  outline: 1px solid $white;
+  outline-offset: -1px;
+}

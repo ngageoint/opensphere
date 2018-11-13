@@ -1,0 +1,7 @@
+@import 'cb_b/variables';
+
+// Change the link color for light themes
+$link-color: $secondary !default;
+
+@import 'overrides_default/variables';
+@import 'compact/variables';
