@@ -10,6 +10,7 @@ goog.require('goog.events.Event');
  */
 plugin.track.EventType = {
   CREATE_TRACK: 'track:create',
+  CREATE_TRACK_KML: 'track:createkml',
   ADD_TO: 'track:addTo',
   FOLLOW: 'track:followTrack',
   UNFOLLOW: 'track:unfollowTrack'

@@ -3,6 +3,8 @@ goog.provide('plugin.vectortools.CopyLayer');
 goog.require('os.command.AbstractSource');
 goog.require('os.command.ICommand');
 goog.require('os.command.State');
+goog.require('os.feature');
+goog.require('os.feature.DynamicFeature');
 
 
 
@@ -13,12 +15,14 @@ goog.require('os.command.State');
  * @extends {os.command.AbstractSource}
  * @param {!string} sourceId The data source ID to copy
  * @param {plugin.vectortools.Options=} opt_options The feature options
+ * @param {os.feature.DynamicFeature=} opt_track
  */
-plugin.vectortools.CopyLayer = function(sourceId, opt_options) {
+plugin.vectortools.CopyLayer = function(sourceId, opt_options, opt_track) {
   plugin.vectortools.CopyLayer.base(this, 'constructor', sourceId);
   this.title = 'Copy Layer';
   this.newLayerId_ = '';
   this.options_ = opt_options;
+  this.track_ = opt_track;
 };
 goog.inherits(plugin.vectortools.CopyLayer, os.command.AbstractSource);
 
@@ -45,6 +49,9 @@ plugin.vectortools.CopyLayer.prototype.execute = function() {
       var cloneFunc = plugin.vectortools.getFeatureCloneFunction(this.newLayerId_);
       var features = plugin.vectortools.getFeatures(source, this.options_);
       newSource.addFeatures(features.map(cloneFunc));
+      if (this.track_) {
+        newSource.addFeature(this.track_);
+      }
 
       this.state = os.command.State.SUCCESS;
       return true;

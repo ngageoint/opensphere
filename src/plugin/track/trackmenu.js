@@ -21,8 +21,18 @@ plugin.track.menu.layerSetup = function() {
     goog.asserts.assert(group, 'Group should exist! Check spelling?');
 
     group.addChild({
-      label: 'Create Track',
+      label: 'Create Track As Feature Layer',
       eventType: plugin.track.EventType.CREATE_TRACK,
+      tooltip: 'Creates a new track by linking selected features (or all features if none are selected) in time order.',
+      icons: ['<i class="fa fa-fw fa-share-alt"></i>'],
+      metricKey: plugin.track.Metrics.CREATE_LAYER,
+      beforeRender: plugin.track.menu.visibleIfLayerHasFeatures,
+      handler: plugin.track.menu.handleLayerEvent_
+    });
+
+    group.addChild({
+      label: 'Create Track As KML Layer',
+      eventType: plugin.track.EventType.CREATE_TRACK_KML,
       tooltip: 'Creates a new track by linking selected features (or all features if none are selected) in time order.',
       icons: ['<i class="fa fa-fw fa-share-alt"></i>'],
       metricKey: plugin.track.Metrics.CREATE_LAYER,
@@ -323,7 +333,21 @@ plugin.track.menu.handleLayerEvent_ = function(event) {
                   sortField: sortField
                 });
 
-                plugin.track.createAndAdd(options);
+                plugin.track.createAndAdd(options, source);
+              });
+            });
+            break;
+          case plugin.track.EventType.CREATE_TRACK_KML:
+            var trackTitle = layer.getTitle() + ' Track';
+            plugin.track.promptForTitle(trackTitle).then(function(title) {
+              plugin.track.getSortField(features[0]).then(function(sortField) {
+                var options = /** @type {!plugin.track.CreateOptions} */ ({
+                  features: features,
+                  name: title,
+                  sortField: sortField
+                });
+
+                plugin.track.createAndAdd(options, source, true);
               });
             });
             break;

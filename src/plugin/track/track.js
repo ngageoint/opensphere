@@ -6,6 +6,7 @@ goog.require('ol.geom.LineString');
 goog.require('ol.geom.MultiLineString');
 goog.require('ol.geom.Point');
 goog.require('os.alert.AlertEventSeverity');
+goog.require('os.command.ParallelCommand');
 goog.require('os.config');
 goog.require('os.data.RecordField');
 goog.require('os.events.PropertyChangeEvent');
@@ -25,6 +26,7 @@ goog.require('os.ui.window.confirmTextDirective');
 goog.require('plugin.file.kml');
 goog.require('plugin.file.kml.KMLField');
 goog.require('plugin.file.kml.cmd.KMLNodeAdd');
+goog.require('plugin.vectortools.CopyLayer');
 
 
 /**
@@ -689,8 +691,10 @@ plugin.track.setGeometry = function(track, geometry) {
 /**
  * Creates a track and adds it to the tracks layer.
  * @param {!plugin.track.CreateOptions} options The options object for the track.
+ * @param {os.source.Request=} opt_source
+ * @param {boolean=} opt_dokml
  */
-plugin.track.createAndAdd = function(options) {
+plugin.track.createAndAdd = function(options, opt_source, opt_dokml) {
   var track = plugin.track.createTrack(options);
 
   if (!track) {
@@ -699,19 +703,111 @@ plugin.track.createAndAdd = function(options) {
     return;
   }
 
-  var trackNode = plugin.file.kml.ui.updatePlacemark({
-    'feature': track
-  });
-
-  var rootNode = plugin.track.getTrackNode(true);
-  if (rootNode) {
-    var cmd = new plugin.file.kml.cmd.KMLNodeAdd(trackNode, rootNode);
-    cmd.title = 'Create track from ' + options.features.length + ' features';
-    os.command.CommandProcessor.getInstance().addCommand(cmd);
+  if (opt_source && !opt_dokml) {
+    plugin.track.addNewLayer(opt_source.getId(), /** @type {os.feature.DynamicFeature} */ (track));
   } else {
-    goog.log.error(plugin.track.LOGGER_, 'Unable to create track: track layer missing');
+    var trackNode = plugin.file.kml.ui.updatePlacemark({
+      'feature': track
+    });
+
+    var s = new plugin.file.kml.KMLSource();
+    s.addFeatures(options['features']);
+
+    var folderNode = plugin.file.kml.ui.updateFolder({
+      'name': 'Metadata',
+      // 'node': trackNode
+      'source': s
+    });
+
+    var rootNode = plugin.track.getTrackNode(true);
+    if (rootNode) {
+      var cmd = new plugin.file.kml.cmd.KMLNodeAdd(folderNode, rootNode);
+      cmd.title = 'Create track from ' + options.features.length + ' features';
+      os.command.CommandProcessor.getInstance().addCommand(cmd);
+    } else {
+      goog.log.error(plugin.track.LOGGER_, 'Unable to create track: track layer missing');
+    }
   }
 };
+
+
+/**
+ * Creates a new layer and returns it.
+ * @param {string} restoreFromIdOrConfig An optional layerId or config to restore from
+ * @param {os.feature.DynamicFeature=} opt_track
+ */
+plugin.track.addNewLayer = function(restoreFromIdOrConfig, opt_track) {
+  // var cmds = context.map(plugin.vectortools.nodeToCopyCommand_).filter(os.fn.filterFalsey);
+  var cmds = [new plugin.vectortools.CopyLayer(restoreFromIdOrConfig, undefined, opt_track)];
+  if (cmds.length) {
+    var cmd = new os.command.ParallelCommand();
+    cmd.setCommands(cmds);
+    os.command.CommandProcessor.getInstance().addCommand(cmd);
+  }
+
+  // var mm = os.MapContainer.getInstance();
+  // var id = goog.string.getRandomString();
+  // var newSource = new os.source.Vector();
+  // newSource.setId(id);
+
+  // var newLayer = new os.layer.Vector({
+  //   source: newSource
+  // });
+  // newLayer.setId(id);
+  // newSource.setTitle(newLayer.getTitle());
+  // mm.addLayer(newLayer);
+
+  // if (opt_restoreFromIdOrConfig) {
+  //   if (typeof opt_restoreFromIdOrConfig === 'string') {
+  //     // get the other layer and restore the new one from it
+  //     var otherLayer = /** @type {os.layer.ILayer} */ (mm.getLayer(opt_restoreFromIdOrConfig));
+  //     if (otherLayer) {
+  //       newLayer.restore(otherLayer.persist());
+
+  //       var title = os.layer.getUniqueTitle(otherLayer.getTitle());
+  //       newLayer.setTitle(title);
+  //       newSource.setTitle(title);
+  //       newSource.addFeature(opt_track);
+  //     }
+  //   } else {
+  //     newLayer.restore(opt_restoreFromIdOrConfig);
+  //   }
+  // }
+
+  // return newLayer;
+};
+
+
+/**
+ *
+ */
+// plugin.track.newLayerCmd = function() {
+//   var sources = context.map(plugin.vectortools.nodeToSource_).filter(os.fn.filterFalsey);
+//   var count = sources.reduce(function(previous, source) {
+//     return previous + source.getFeatures().length;
+//   }, 0);
+
+//   var msg;
+//   if (2 * count > os.ogc.getMaxFeatures()) {
+//     // don't allow the copy to overcap the tool's feature limit
+//     msg = 'Heads up! The copy you just attempted would result in too many features for the tool. ' +
+//         'Reduce the number of features in your layers before copying.';
+//     os.alert.AlertManager.getInstance().sendAlert(msg, os.alert.AlertEventSeverity.WARNING);
+//     return;
+//   } else if (count === 0) {
+//     // don't allow the copy to overcap the tool's feature limit
+//     msg = 'Nothing to copy.';
+//     os.alert.AlertManager.getInstance().sendAlert(msg, os.alert.AlertEventSeverity.INFO);
+//     return;
+//   }
+
+//   var cmds = context.map(plugin.vectortools.nodeToCopyCommand_).filter(os.fn.filterFalsey);
+//   if (cmds.length) {
+//     var cmd = new os.command.ParallelCommand();
+//     cmd.setCommands(cmds);
+//     os.command.CommandProcessor.getInstance().addCommand(cmd);
+//   }
+// };
 
 
 /**
