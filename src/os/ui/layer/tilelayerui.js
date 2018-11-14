@@ -1,7 +1,7 @@
 goog.provide('os.ui.layer.TileLayerUICtrl');
 goog.provide('os.ui.layer.tileLayerUIDirective');
 
-goog.require('os.command.TileLayerColor');
+goog.require('os.command.LayerColor');
 goog.require('os.command.TileLayerColorize');
 goog.require('os.command.TileLayerStyle');
 goog.require('os.defines');
@@ -105,7 +105,7 @@ os.ui.layer.TileLayerUICtrl.prototype.onColorChange = function(event, value) {
        * @return {os.command.ICommand}
        */
       function(layer) {
-        return new os.command.TileLayerColor(layer.getId(), value);
+        return new os.command.LayerColor(layer.getId(), value);
       };
 
   this.createCommand(fn);

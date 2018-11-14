@@ -112,6 +112,9 @@
       },
       "state": {
         "type": "state"
+      },
+      "3dtiles": {
+        "type": "3dtiles"
       }
     },
     "search": {

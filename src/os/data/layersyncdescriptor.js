@@ -21,7 +21,7 @@ goog.require('os.ui.node.defaultLayerNodeUIDirective');
 
 /**
  * A descriptor that synchronizes one or more layers on the map. This descriptor should be extended to implement the
- * getLayerOptions function, which should produce the options object(s) to be used in creating the layers sycnrhonized
+ * getLayerOptions function, which should produce the options object(s) to be used in creating the layers synchronized
  * to this descriptor.
  *
  * @extends {os.data.BaseDescriptor}
