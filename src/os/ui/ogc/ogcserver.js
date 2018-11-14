@@ -7,6 +7,7 @@ goog.require('goog.dom');
 goog.require('goog.dom.xml');
 goog.require('goog.log');
 goog.require('goog.log.Logger');
+goog.require('ol.array');
 goog.require('ol.format.WMSCapabilities');
 goog.require('os.alert.AlertEventSeverity');
 goog.require('os.alert.AlertManager');
@@ -1270,7 +1271,7 @@ os.ui.ogc.OGCServer.prototype.addParentTags_ = function(node, opt_tags) {
         var keywords = descriptor.getKeywords();
         for (i = 0, n = opt_tags.length; i < n; i++) {
           var tag = opt_tags[i];
-          if (!goog.array.contains(keywords, tag)) {
+          if (!ol.array.includes(keywords, tag)) {
             keywords.push(tag);
           }
         }

@@ -1,6 +1,7 @@
 goog.provide('os.user.settings.FavoriteManager');
 goog.provide('os.user.settings.FavoriteType');
 goog.require('goog.events.EventTarget');
+goog.require('os.array');
 goog.require('os.config.Settings');
 goog.require('os.object');
 goog.require('os.url');
@@ -296,7 +297,7 @@ os.user.settings.FavoriteManager.getTypeInternal_ = function(favs, types) {
     return fav['type'];
   });
 
-  goog.array.forEach(types, function(type) {
+  os.array.forEach(types, function(type) {
     var favType = bucketFavs[type];
     if (favType) {
       goog.array.extend(result, favType);
@@ -306,7 +307,7 @@ os.user.settings.FavoriteManager.getTypeInternal_ = function(favs, types) {
   // If theres folders in the result. Re-run down the folders level
   var folders = bucketFavs[os.user.settings.FavoriteType.FOLDER];
   if (folders) {
-    goog.array.forEach(folders, function(folder) {
+    os.array.forEach(folders, function(folder) {
       goog.array.extend(result, os.user.settings.FavoriteManager.getTypeInternal_(folder['children'], types));
     });
   }
@@ -352,7 +353,7 @@ os.user.settings.FavoriteManager.getFoldersInternal_ = function(favs, opt_ignore
     }
 
     goog.array.extend(result, folders);
-    goog.array.forEach(folders, function(folder) {
+    os.array.forEach(folders, function(folder) {
       goog.array.extend(result, os.user.settings.FavoriteManager.getFoldersInternal_(folder['children'], opt_ignore));
     });
   }

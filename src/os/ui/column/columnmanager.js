@@ -3,6 +3,7 @@ goog.provide('os.ui.column.columnManagerDirective');
 
 goog.require('goog.events.KeyHandler');
 goog.require('goog.string');
+goog.require('ol.array');
 goog.require('os.ui.Module');
 goog.require('os.ui.column.columnRowDirective');
 goog.require('os.ui.slick.column');
@@ -214,7 +215,7 @@ os.ui.column.ColumnManagerCtrl.prototype.show = function(opt_all) {
     for (var i = 0; i < this['hiddenSelected'].length; i++) {
       var hidden = this['hiddenSelected'][i];
       hidden['visible'] = true;
-      goog.array.remove(this['hiddenColumns'], hidden);
+      ol.array.remove(this['hiddenColumns'], hidden);
       this['shownColumns'].push(hidden);
     }
 
@@ -248,7 +249,7 @@ os.ui.column.ColumnManagerCtrl.prototype.hide = function(opt_all) {
     for (var i = 0; i < this['shownSelected'].length; i++) {
       var shown = this['shownSelected'][i];
       shown['visible'] = false;
-      goog.array.remove(this['shownColumns'], shown);
+      ol.array.remove(this['shownColumns'], shown);
       this['hiddenColumns'].push(shown);
     }
   }
@@ -291,8 +292,7 @@ os.ui.column.ColumnManagerCtrl.prototype.accept = function() {
     if (columns[i]['id'] != srcColumns[j]['id']) {
       // if the current visible source column isn't the same as the current grid column, that column moved in the
       // grid. move it in the source.
-      var index = goog.array.findIndex(srcColumns,
-          os.ui.slick.column.findByField.bind(this, 'id', columns[i]['id']));
+      var index = ol.array.findIndex(srcColumns, os.ui.slick.column.findByField.bind(this, 'id', columns[i]['id']));
       if (index > -1) {
         var targetIndex = j > index ? j - 1 : j;
         goog.array.moveItem(srcColumns, index, targetIndex);

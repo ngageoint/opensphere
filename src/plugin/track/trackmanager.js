@@ -7,6 +7,7 @@ goog.require('goog.async.Throttle');
 goog.require('goog.events.EventTarget');
 goog.require('goog.log');
 goog.require('goog.log.Logger');
+goog.require('ol.array');
 goog.require('ol.events');
 goog.require('ol.extent');
 goog.require('os.time.TimeRange');
@@ -106,7 +107,7 @@ plugin.track.TrackManager.prototype.disposeInternal = function() {
  */
 plugin.track.TrackManager.prototype.followTracks = function(tracks) {
   tracks.forEach(function(track) {
-    if (track && !goog.array.contains(this.following_, track)) {
+    if (track && !ol.array.includes(this.following_, track)) {
       this.following_.push(track);
       ol.events.listen(track, ol.events.EventType.CHANGE, this.onFeatureValueChange_, this);
     }
@@ -149,7 +150,7 @@ plugin.track.TrackManager.prototype.unfollowTracks = function(tracks) {
  */
 plugin.track.TrackManager.prototype.isFollowed = function(tracks) {
   for (var j = 0; j < tracks.length; j++) {
-    if (!goog.array.contains(this.following_, tracks[j])) {
+    if (!ol.array.includes(this.following_, tracks[j])) {
       return false;
     }
   }
@@ -236,7 +237,7 @@ plugin.track.TrackManager.prototype.setActiveTracks_ = function() {
 
     // check which of the active tracks are to be followed
     for (var i = 0; i < this.activeTracks_.length; i++) {
-      if (!goog.array.contains(this.following_, this.activeTracks_[i])) {
+      if (!ol.array.includes(this.following_, this.activeTracks_[i])) {
         goog.array.removeAt(this.activeTracks_, i);
       }
     }

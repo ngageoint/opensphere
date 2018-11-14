@@ -2,6 +2,7 @@ goog.provide('os.ui.wiz.step.TimeInstantUICtrl');
 goog.provide('os.ui.wiz.step.timeInstantUIDirective');
 
 goog.require('goog.array');
+goog.require('ol.array');
 goog.require('os.time');
 goog.require('os.ui.Module');
 
@@ -142,14 +143,14 @@ os.ui.wiz.step.TimeInstantUICtrl.prototype.destroy_ = function() {
  */
 os.ui.wiz.step.TimeInstantUICtrl.prototype.initialize_ = function() {
   if (this.model_['dateType'] == 'combined') {
-    this['dateFormat'] = goog.array.contains(this['dtFormats'], this.model_['dateFormat']) ?
+    this['dateFormat'] = ol.array.includes(this['dtFormats'], this.model_['dateFormat']) ?
         this.model_['dateFormat'] : 'Custom';
   } else {
-    this['dateFormat'] = goog.array.contains(this['dFormats'], this.model_['dateFormat']) ?
+    this['dateFormat'] = ol.array.includes(this['dFormats'], this.model_['dateFormat']) ?
         this.model_['dateFormat'] : 'Custom';
 
     if (this.model_['dateType'] == 'separate') {
-      this['timeFormat'] = goog.array.contains(this['tFormats'], this.model_['timeFormat']) ?
+      this['timeFormat'] = ol.array.includes(this['tFormats'], this.model_['timeFormat']) ?
           this.model_['timeFormat'] : 'Custom';
     }
   }

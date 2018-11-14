@@ -5,6 +5,7 @@ goog.require('goog.log');
 goog.require('goog.structs.CircularBuffer');
 goog.require('os.alert.AlertEvent');
 goog.require('os.alert.AlertEventSeverity');
+goog.require('os.array');
 goog.require('os.structs.EventType');
 
 
@@ -143,7 +144,7 @@ os.alert.AlertManager.prototype.processMissedAlerts = function(clientId, handler
   if (!this.missedAlertsProcessed_) {
     var beforeCount = this.processedByClientCount_[clientId] || 0;
     var alerts = goog.array.slice(this.savedAlerts_.getValues(), 0, this.savedAlerts_.getCount() - beforeCount);
-    goog.array.forEach(alerts, handler, opt_context);
+    os.array.forEach(alerts, handler, opt_context);
     this.processedByClientCount_[clientId] = this.savedAlerts_.getCount();
     this.missedAlertsProcessed_ = true;
   }

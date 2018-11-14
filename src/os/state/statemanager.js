@@ -2,6 +2,7 @@ goog.provide('os.state.StateManager');
 
 goog.require('goog.log');
 goog.require('goog.log.Logger');
+goog.require('ol.array');
 goog.require('os.data.DataManager');
 goog.require('os.data.ProviderEntry');
 goog.require('os.file.FileStorage');
@@ -299,7 +300,7 @@ os.state.StateManager.prototype.removeLoadFunction = function(loadFunction, opt_
   if (!opt_versionKey) {
     opt_versionKey = this.getVersion();
   }
-  goog.array.remove(this.functionMap_[opt_versionKey].loadFunctions, loadFunction);
+  ol.array.remove(this.functionMap_[opt_versionKey].loadFunctions, loadFunction);
 };
 
 
@@ -328,7 +329,7 @@ os.state.StateManager.prototype.removeSaveFunction = function(saveFunction, opt_
   if (!opt_versionKey) {
     opt_versionKey = this.getVersion();
   }
-  goog.array.remove(this.functionMap_[opt_versionKey].saveFunctions, saveFunction);
+  ol.array.remove(this.functionMap_[opt_versionKey].saveFunctions, saveFunction);
 };
 
 

@@ -1,5 +1,6 @@
 goog.provide('os.ui.server.AbstractLoadingServer');
 
+goog.require('ol.array');
 goog.require('os.data.DataProviderEvent');
 goog.require('os.data.DataProviderEventType');
 goog.require('os.data.ILoadingProvider');
@@ -183,7 +184,7 @@ os.ui.server.AbstractLoadingServer.prototype.addAlternateUrl = function(value) {
  */
 os.ui.server.AbstractLoadingServer.prototype.removeAlternateUrl = function(value) {
   if (this.alternateUrls_) {
-    goog.array.remove(this.alternateUrls_, value);
+    ol.array.remove(this.alternateUrls_, value);
 
     if (this.alternateUrls_.length == 0) {
       this.alternateUrls_ = null;

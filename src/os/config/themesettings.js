@@ -6,6 +6,7 @@ goog.require('goog.Promise');
 goog.require('goog.async.ConditionalDelay');
 goog.require('goog.dom.safe');
 goog.require('goog.events.Event');
+goog.require('ol.array');
 goog.require('os.config.Settings');
 goog.require('os.ui.config.SettingPlugin');
 
@@ -169,10 +170,21 @@ os.config.ThemeSettings.loadingPromise = null;
 os.config.ThemeSettings.setTheme = function() {
   return new goog.Promise(function(resolve, reject) {
     var themeRegEx = /(themes\/).*?(\..*\.css)/;
-    var stylesheets = $('[rel=stylesheet]');
-    var ssEl = goog.array.find(stylesheets, function(el) {
-      return themeRegEx.test(el.href);
-    });
+    var stylesheets = document.querySelectorAll('[rel=stylesheet]');
+    var ssEl;
+
+    for (var i = 0; i < stylesheets.length; i++) {
+      var el = stylesheets[i];
+      if (el && themeRegEx.test(el.href)) {
+        ssEl = el;
+        break;
+      }
+    }
+
+    if (!ssEl) {
+      reject('Failed loading the application theme: theme style element is missing.');
+      return;
+    }
 
     // The currently selected theme.
     var displayTheme = os.settings.get(os.config.ThemeSettings.Keys.THEME, os.config.ThemeSettings.DEFAULT_THEME);

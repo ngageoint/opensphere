@@ -2,6 +2,7 @@ goog.provide('plugin.im.action.feature.ui.LabelConfigCtrl');
 goog.provide('plugin.im.action.feature.ui.labelConfigDirective');
 
 goog.require('goog.async.Delay');
+goog.require('ol.array');
 goog.require('os.color');
 goog.require('os.data.ColumnDefinition');
 goog.require('os.implements');
@@ -219,7 +220,7 @@ plugin.im.action.feature.ui.LabelConfigCtrl.prototype.onCustomNameChange = funct
  * @export
  */
 plugin.im.action.feature.ui.LabelConfigCtrl.prototype.updateCustomColumn = function() {
-  goog.array.remove(this.scope['columns'], this.customColumn);
+  ol.array.remove(this.scope['columns'], this.customColumn);
 
   var name = (this.labelConfig && this.labelConfig['customName'] || '').trim();
   if (name) {
@@ -231,7 +232,7 @@ plugin.im.action.feature.ui.LabelConfigCtrl.prototype.updateCustomColumn = funct
     // if a custom label is configured, make it available for selection in the column picker
     if (this['addCustomLabel'] && this.scope && this.scope['columns']) {
       var findFn = os.ui.slick.column.findByField.bind(undefined, 'field', name);
-      if (!goog.array.find(this.scope['columns'], findFn)) {
+      if (!ol.array.find(this.scope['columns'], findFn)) {
         this.scope['columns'].push(this.customColumn);
         this.scope['columns'].sort(os.ui.slick.column.nameCompare);
       }

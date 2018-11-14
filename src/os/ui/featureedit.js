@@ -8,6 +8,7 @@ goog.require('goog.log');
 goog.require('goog.log.Logger');
 goog.require('ol.Feature');
 goog.require('ol.MapBrowserEventType');
+goog.require('ol.array');
 goog.require('ol.events');
 goog.require('ol.geom.Point');
 goog.require('os.action.EventType');
@@ -871,7 +872,7 @@ os.ui.FeatureEditCtrl.prototype.loadFromFeature_ = function(feature) {
   if (config) {
     if (goog.isArray(config)) {
       // locate the label config in the array
-      var labelsConfig = goog.array.find(config, os.style.isLabelConfig);
+      var labelsConfig = ol.array.find(config, os.style.isLabelConfig);
       if (labelsConfig) {
         this['labels'] = labelsConfig[os.style.StyleField.LABELS];
       }

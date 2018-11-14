@@ -5,6 +5,7 @@ goog.require('goog.dom');
 goog.require('goog.dom.xml');
 goog.require('goog.object');
 goog.require('goog.string');
+goog.require('ol.array');
 goog.require('os.Fields');
 goog.require('os.ex.ZipExporter');
 goog.require('os.file.File');
@@ -612,7 +613,7 @@ os.ui.file.kml.AbstractKMLExporter.prototype.processPlacemark = function(element
 
     // Some fields do not get automatically exported (e.g., fields that are not visible)
     // if the rotation column is one of those fields create its data element here
-    if (this.rotationColumn_ != null && !goog.array.contains(fields, this.rotationColumn_)) {
+    if (this.rotationColumn_ != null && !ol.array.includes(fields, this.rotationColumn_)) {
       var rotDataEl = os.xml.appendElementNS('Data', this.kmlNS, ed, undefined, {
         'name': this.rotationColumn_
       });

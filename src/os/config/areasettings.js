@@ -1,6 +1,7 @@
 goog.provide('os.config.AreaSettings');
 goog.provide('os.config.AreaSettingsCtrl');
 
+goog.require('os.array');
 goog.require('os.defines');
 goog.require('os.query.AreaManager');
 goog.require('os.ui.Module');
@@ -222,7 +223,7 @@ os.config.AreaSettingsCtrl.prototype.confirm_ = function() {
   var am = os.ui.query.AreaManager.getInstance();
 
   var areas = am.getAll();
-  goog.array.forEach(areas, function(area) {
+  os.array.forEach(areas, function(area) {
     if (area.getStyle() != null) {
       var entries = os.ui.queryManager.getEntries(null, /** @type {string} */ (area.getId()));
       if (entries && entries.length > 0) {

@@ -5,6 +5,7 @@ goog.require('goog.dom');
 goog.require('goog.dom.xml');
 goog.require('goog.events.EventTarget');
 goog.require('goog.log');
+goog.require('ol.array');
 goog.require('os.column.ColumnMappingEvent');
 goog.require('os.column.ColumnMappingEventType');
 goog.require('os.column.ColumnModel');
@@ -171,7 +172,7 @@ os.column.ColumnMapping.prototype.addColumn = function(layerKey, column, opt_uni
  * @inheritDoc
  */
 os.column.ColumnMapping.prototype.removeColumn = function(columnModel) {
-  var removed = goog.array.remove(this.columns_, columnModel);
+  var removed = ol.array.remove(this.columns_, columnModel);
 
   var model = removed ? columnModel : null;
   var event = new os.column.ColumnMappingEvent(os.column.ColumnMappingEventType.COLUMN_REMOVED, model);
@@ -191,7 +192,7 @@ os.column.ColumnMapping.prototype.getColumns = function() {
  * @inheritDoc
  */
 os.column.ColumnMapping.prototype.getColumn = function(layerKey) {
-  var found = goog.array.find(this.columns_, function(columnModel) {
+  var found = ol.array.find(this.columns_, function(columnModel) {
     return columnModel['layer'] === layerKey;
   });
 

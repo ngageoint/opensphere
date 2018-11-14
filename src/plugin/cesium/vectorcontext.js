@@ -3,6 +3,7 @@ goog.provide('plugin.cesium.VectorContext');
 goog.require('goog.async.Throttle');
 goog.require('goog.disposable.IDisposable');
 goog.require('goog.log');
+goog.require('ol.array');
 
 
 
@@ -448,7 +449,7 @@ plugin.cesium.VectorContext.prototype.removeFeaturePrimitive = function(feature,
   var featureId = feature['id'];
   var primitives = this.featureToCesiumMap[featureId];
   if (primitives) {
-    goog.array.remove(primitives, primitive);
+    ol.array.remove(primitives, primitive);
   }
 };
 

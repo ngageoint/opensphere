@@ -1,6 +1,7 @@
 goog.provide('os.layer.Tile');
 
 goog.require('goog.string');
+goog.require('ol.array');
 goog.require('ol.events');
 goog.require('ol.layer.Property');
 goog.require('ol.layer.Tile');
@@ -542,7 +543,7 @@ os.layer.Tile.prototype.getStyle = function() {
  */
 os.layer.Tile.prototype.setStyle = function(value) {
   if (typeof value == 'string') {
-    value = this.styles_ ? goog.array.find(this.styles_, os.layer.Tile.findStyleByData.bind(this, value)) : null;
+    value = this.styles_ ? ol.array.find(this.styles_, os.layer.Tile.findStyleByData.bind(this, value)) : null;
   }
 
   this.style_ = value;

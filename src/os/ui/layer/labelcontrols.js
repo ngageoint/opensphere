@@ -3,6 +3,7 @@ goog.provide('os.ui.layer.labelControlsDirective');
 
 goog.require('goog.Disposable');
 goog.require('goog.array');
+goog.require('ol.array');
 goog.require('os.defines');
 goog.require('os.metrics.Metrics');
 goog.require('os.style.label');
@@ -182,7 +183,7 @@ os.ui.layer.LabelControlsCtrl.prototype.addLabel = function() {
  * @export
  */
 os.ui.layer.LabelControlsCtrl.prototype.removeLabel = function(label) {
-  goog.array.remove(this.scope['labels'], label);
+  ol.array.remove(this.scope['labels'], label);
   this.onColumnChange();
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.Layer.LABEL_COLUMN_REMOVE, 1);
 };
