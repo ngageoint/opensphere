@@ -21,6 +21,15 @@ goog.inherits(plugin.cesium.PrimitiveLayer, plugin.cesium.Layer);
 
 
 /**
+ * @inheritDoc
+ */
+plugin.cesium.PrimitiveLayer.prototype.disposeInternal = function() {
+  plugin.cesium.PrimitiveLayer.base(this, 'disposeInternal');
+  this.removePrimitive();
+};
+
+
+/**
  * @return {?Cesium.PrimitiveLike}
  */
 plugin.cesium.PrimitiveLayer.prototype.getPrimitive = function() {
@@ -87,27 +96,4 @@ plugin.cesium.PrimitiveLayer.prototype.removePrimitive = function() {
   }
 
   os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
-};
-
-
-/**
- * @return {Cesium.Scene|undefined}
- * @protected
- */
-plugin.cesium.PrimitiveLayer.prototype.getScene = function() {
-  try {
-    var renderer = os.map.mapContainer.getWebGLRenderer();
-    var scene = /** @type {plugin.cesium.CesiumRenderer} */ (renderer).getCesiumScene();
-    return scene;
-  } catch (e) {
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.PrimitiveLayer.prototype.disposeInternal = function() {
-  this.removePrimitive();
-  plugin.cesium.PrimitiveLayer.base(this, 'disposeInternal');
 };

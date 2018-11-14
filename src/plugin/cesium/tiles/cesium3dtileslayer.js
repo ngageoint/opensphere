@@ -60,8 +60,8 @@ plugin.cesium.tiles.Layer.prototype.removePrimitive = function() {
 /**
  * @inheritDoc
  */
-plugin.cesium.tiles.Layer.prototype.checkCesiumEnabled = function() {
-  plugin.cesium.tiles.Layer.base(this, 'checkCesiumEnabled');
+plugin.cesium.tiles.Layer.prototype.synchronize = function() {
+  plugin.cesium.tiles.Layer.base(this, 'synchronize');
 
   if (!this.hasError()) {
     var tilesetUrl = '';
@@ -162,7 +162,7 @@ plugin.cesium.tiles.Layer.prototype.restore = function(config) {
     this.url = /** @type {string} */ (config['url']);
   }
 
-  this.checkCesiumEnabled();
+  this.synchronize();
 };
 
 

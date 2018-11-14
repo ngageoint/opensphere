@@ -55,6 +55,15 @@ Cesium.Promise = function() {};
 
 
 /**
+ * @param {Function=} opt_onFulfilled
+ * @param {Function=} opt_onRejected
+ * @param {Function=} opt_onProgress
+ * @return {Cesium.Promise}
+ */
+Cesium.Promise.prototype.then = function(opt_onFulfilled, opt_onRejected, opt_onProgress) {};
+
+
+/**
  * @type {Object}
  */
 Cesium.TrustedServers = {};
@@ -151,11 +160,11 @@ Cesium.loadArrayBuffer = function(url, opt_headers, opt_request) {};
 
 
 /**
- * @param {*} promiseOrValue
+ * @param {T} promiseOrValue
  * @param {Function=} opt_onFulfilled
  * @param {Function=} opt_onRejected
  * @param {Function=} opt_onProgress
- * @return {T}
+ * @return {Cesium.Promise<T>}
  * @template T
  */
 Cesium.when = function(promiseOrValue, opt_onFulfilled, opt_onRejected, opt_onProgress) {};
@@ -167,6 +176,13 @@ Cesium.when = function(promiseOrValue, opt_onFulfilled, opt_onRejected, opt_onPr
  */
 Cesium.when.defer = function() {};
 
+
+/**
+ * @param {T} promiseOrValue
+ * @return {Cesium.Promise<T>}
+ * @template T
+ */
+Cesium.when.resolve = function(promiseOrValue) {};
 
 
 /**
@@ -3060,6 +3076,22 @@ Cesium.Resource._Implementations = {};
  */
 Cesium.Resource._Implementations.createImage;
 
+/**
+ * @typedef {{
+ *   url: string,
+ *   queryParameters: (Object|undefined),
+ *   templateValues: (Object|undefined),
+ *   headers: (Object|undefined),
+ *   request: (Cesium.Request|undefined)
+ * }}
+ */
+Cesium.Resource.FetchArrayBufferOptions;
+
+/**
+ * @param {Cesium.Resource.FetchArrayBufferOptions} options
+ * @return {Cesium.Promise<ArrayBuffer>|undefined}
+ */
+Cesium.Resource.fetchArrayBuffer = function(options) {};
 
 
 /**
@@ -4772,10 +4804,15 @@ Cesium.TerrainProvider.prototype.getTileDataAvailable = function(x, y, level) {}
  * @param {number} x
  * @param {number} y
  * @param {number} level
- * @param {boolean} throttleRequests
- * @return {Cesium.Promise|Cesium.TerrainData|undefined}
+ * @param {Cesium.Request=} opt_request
+ * @return {Cesium.Promise<Cesium.TerrainData>|undefined}
  */
-Cesium.TerrainProvider.prototype.requestTileGeometry = function(x, y, level, throttleRequests) {};
+Cesium.TerrainProvider.prototype.requestTileGeometry = function(x, y, level, opt_request) {};
+
+/**
+ * @typedef {function(this:Cesium.TerrainProvider, number, number, number, Cesium.Request=):(Cesium.Promise<Cesium.TerrainData>|undefined)}
+ */
+Cesium.RequestTileGeometryFn;
 
 
 /**

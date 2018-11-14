@@ -1,6 +1,7 @@
 goog.provide('plugin.cesium.Layer');
 
 goog.require('goog.async.Delay');
+goog.require('goog.log');
 goog.require('goog.string');
 goog.require('ol.events');
 goog.require('ol.layer.Layer');
@@ -115,22 +116,40 @@ plugin.cesium.Layer = function() {
    */
   this.explicitType_ = '';
 
+  /**
+   * The logger.
+   * @type {goog.log.Logger}
+   * @protected
+   */
+  this.log = plugin.cesium.Layer.LOGGER_;
+
   // set the openlayers type to something that won't find a renderer, because there's
   // no way to render Cesium-specific items in OpenLayers anyway
   this.type = /** @type {ol.LayerType} */ ('cesium');
 
   /**
-   * @type {boolean}
+   * @type {string}
    * @private
    */
-  this.error_ = false;
+  this.error = '';
 
   os.MapContainer.getInstance().listen(goog.events.EventType.PROPERTYCHANGE, this.onMapChange, false, this);
-  this.checkCesiumEnabled();
+
+  // allow extending classes to finish initializing before trying to sync
+  setTimeout(this.synchronize.bind(this), 0);
 };
 goog.inherits(plugin.cesium.Layer, ol.layer.Layer);
 os.implements(plugin.cesium.Layer, os.layer.ILayer.ID);
 os.implements(plugin.cesium.Layer, os.layer.IColorableLayer.ID);
+
+
+/**
+ * The logger.
+ * @type {goog.log.Logger}
+ * @private
+ * @const
+ */
+plugin.cesium.Layer.LOGGER_ = goog.log.getLogger('plugin.cesium.Layer');
 
 
 /**
@@ -155,24 +174,36 @@ plugin.cesium.Layer.prototype.disposeInternal = function() {
  */
 plugin.cesium.Layer.prototype.onMapChange = function(event) {
   if (event && event.getProperty() === os.MapChange.VIEW3D) {
-    this.checkCesiumEnabled();
+    this.synchronize();
   }
 };
 
 
 /**
+ * Test if Cesium is enabled and synchronize with Cesium.
  * @protected
  */
-plugin.cesium.Layer.prototype.checkCesiumEnabled = function() {
-  if (window.Cesium && os.map.mapContainer.is3DEnabled()) {
-    if (this.error_) {
-      this.error_ = false;
-      this.dispatchEvent(new os.events.PropertyChangeEvent(os.layer.PropertyChange.ERROR, this.error_, !this.error_));
-    }
-  } else if (!this.error_) {
-    this.error_ = true;
-    this.dispatchEvent(new os.events.PropertyChangeEvent(os.layer.PropertyChange.ERROR, this.error_, !this.error_));
+plugin.cesium.Layer.prototype.synchronize = function() {
+  var oldError = this.error;
+  this.error = this.getErrorMessage();
+
+  if (oldError != this.error) {
+    this.dispatchEvent(new os.events.PropertyChangeEvent(os.layer.PropertyChange.ERROR, this.error, oldError));
   }
+};
+
+
+/**
+ * Get the error message to display on the layer.
+ * @return {string} The message.
+ * @protected
+ */
+plugin.cesium.Layer.prototype.getErrorMessage = function() {
+  if (!window.Cesium || !os.map.mapContainer.is3DEnabled()) {
+    return 'This layer is only visible in 3D mode';
+  }
+
+  return '';
 };
 
 
@@ -180,7 +211,7 @@ plugin.cesium.Layer.prototype.checkCesiumEnabled = function() {
  * @return {boolean}
  */
 plugin.cesium.Layer.prototype.hasError = function() {
-  return this.error_;
+  return !!this.error;
 };
 
 
@@ -277,7 +308,7 @@ plugin.cesium.Layer.prototype.getIcons = function() {
 
   var html = '';
   if (this.hasError()) {
-    html += '<i class="fa fa-warning text-warning" title="This layer is only visible in 3D mode"></i>';
+    html += '<i class="fa fa-warning text-warning" title="' + this.error + '"></i>';
   }
 
   var layerColor = this.getColor();
@@ -695,10 +726,26 @@ plugin.cesium.Layer.prototype.getLayerStatesArray = function() {
 
 
 /**
+ * @return {Cesium.Scene|undefined}
+ * @protected
+ */
+plugin.cesium.Layer.prototype.getScene = function() {
+  if (os.map.mapContainer) {
+    var renderer = os.map.mapContainer.getWebGLRenderer();
+    if (renderer) {
+      return /** @type {plugin.cesium.CesiumRenderer} */ (renderer).getCesiumScene();
+    }
+  }
+
+  return undefined;
+};
+
+
+/**
  * Decrements loading
  */
 plugin.cesium.Layer.prototype.decrementLoading = function() {
-  this.loadCount_--;
+  this.loadCount_ = Math.max(this.loadCount_ - 1, 0);
 
   if (this.loadCount_ === 0) {
     this.setLoading(false);
