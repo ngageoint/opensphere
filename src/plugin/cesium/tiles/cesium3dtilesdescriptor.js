@@ -73,7 +73,7 @@ plugin.cesium.tiles.Descriptor.prototype.setIonConfig = function(assetId, opt_ac
   }
 
   // set a URL so the descriptor gets persisted
-  this.setUrl(plugin.cesium.DEFAULT_ION_URL);
+  this.setUrl(plugin.cesium.ionUrl);
 };
 
 
