@@ -1,6 +1,7 @@
 goog.provide('os.ui.filter.ui.FilterExportChoice');
 goog.provide('os.ui.filter.ui.FilterExportCtrl');
 goog.provide('os.ui.filter.ui.filterExportDirective');
+goog.require('os.array');
 goog.require('os.ui.Module');
 goog.require('os.ui.checklistDirective');
 goog.require('os.ui.util.validationMessageDirective');
@@ -151,7 +152,7 @@ os.ui.filter.ui.export = function(name, filters) {
     var root = os.xml.createElementNS('filters', 'http://www.bit-sys.com/state/v2');
 
     var exportSuccess = false;
-    goog.array.forEach(filters, function(filter) {
+    os.array.forEach(filters, function(filter) {
       var queryEntry = filter.getEntry();
       var filterEntry = queryEntry instanceof os.filter.FilterEntry ?
           queryEntry : os.ui.filterManager.getFilter(queryEntry['filterId']);

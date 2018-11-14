@@ -3,6 +3,7 @@ goog.provide('plugin.file.kml.KMLExporter');
 goog.require('goog.object');
 goog.require('goog.string');
 goog.require('ol.Feature');
+goog.require('ol.array');
 goog.require('ol.geom.GeometryCollection');
 goog.require('ol.geom.GeometryType');
 goog.require('ol.geom.Point');
@@ -312,7 +313,7 @@ plugin.file.kml.KMLExporter.prototype.getGroupLabels = function(item) {
           this.labelMap[sourceId] = cfg['labels'];
         } else if (itemStyle && goog.isArray(itemStyle)) {
           // Check the feature level
-          var labels = goog.array.find(itemStyle, os.style.isLabelConfig);
+          var labels = ol.array.find(itemStyle, os.style.isLabelConfig);
           if (labels) {
             this.labelMap[sourceId] = labels['labels'];
           }

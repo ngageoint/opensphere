@@ -3,6 +3,7 @@ goog.provide('os.ui.alert.alertPopupDirective');
 goog.require('goog.async.Delay');
 goog.require('goog.events.Event');
 goog.require('goog.events.EventTarget');
+goog.require('ol.array');
 goog.require('os.alert.AlertEvent');
 goog.require('os.alert.AlertEventSeverity');
 goog.require('os.alertManager');
@@ -204,11 +205,11 @@ os.ui.alert.AlertPopupCtrl.prototype.displayAlert_ = function(event) {
         var msg = event.target['msg'];
         var idx = '';
         if (msg) {
-          idx = goog.array.findIndex(this['alertPopups'], function(popupObj) {
+          idx = ol.array.findIndex(this['alertPopups'], function(popupObj) {
             return popupObj['msg'] == msg;
           });
         } else {
-          idx = goog.array.findIndex(this['alertPopups'], function(popupObj) {
+          idx = ol.array.findIndex(this['alertPopups'], function(popupObj) {
             return popupObj['id'] == id;
           });
         }

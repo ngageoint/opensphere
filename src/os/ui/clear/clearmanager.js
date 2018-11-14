@@ -2,6 +2,7 @@ goog.provide('os.ui.clear.ClearManager');
 goog.provide('os.ui.clearManager');
 goog.require('goog.log');
 goog.require('goog.log.Logger');
+goog.require('ol.array');
 goog.require('os.command.SequenceCommand');
 goog.require('os.ui.clear.ClearEntry');
 
@@ -70,7 +71,7 @@ os.ui.clear.ClearManager.prototype.clear = function(opt_all, opt_skip) {
   var types = [];
   for (var key in this.entries_) {
     var entry = this.entries_[key];
-    if (opt_skip && opt_skip.length && goog.array.contains(opt_skip, key)) {
+    if (opt_skip && opt_skip.length && ol.array.includes(opt_skip, key)) {
       continue;
     }
     if (entry.enabled || opt_all) {

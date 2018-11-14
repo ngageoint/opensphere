@@ -3,6 +3,7 @@ goog.provide('os.ui.layer.vectorLayerUIDirective');
 
 goog.require('goog.color');
 goog.require('os.MapChange');
+goog.require('os.array');
 goog.require('os.command.VectorLayerAutoRefresh');
 goog.require('os.command.VectorLayerCenterShape');
 goog.require('os.command.VectorLayerColor');
@@ -259,7 +260,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.reconcileLabelsState_ = function() {
 
   // the UI modifies the label config objects, so they must be cloned or undo/redo will not work.
   var clone = [];
-  goog.array.forEach(labels, function(label) {
+  os.array.forEach(labels, function(label) {
     clone.push(os.style.label.cloneConfig(label));
   }, this);
 

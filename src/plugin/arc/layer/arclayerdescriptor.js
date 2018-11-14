@@ -3,6 +3,7 @@ goog.provide('plugin.arc.layer.ArcLayerDescriptor');
 goog.require('goog.Uri.QueryData');
 goog.require('goog.array');
 goog.require('goog.string');
+goog.require('ol.array');
 goog.require('os.command.LayerAdd');
 goog.require('os.command.LayerRemove');
 goog.require('os.command.SequenceCommand');
@@ -304,8 +305,8 @@ plugin.arc.layer.ArcLayerDescriptor.prototype.configureDescriptor = function(con
   var capabilities = /** @type {string} */ (config['capabilities']);
   if (capabilities) {
     var capsArr = capabilities.split(/\s*,\s*/);
-    this.setTilesEnabled(goog.array.contains(capsArr, 'Map'));
-    this.setFeaturesEnabled(goog.array.contains(capsArr, 'Data'));
+    this.setTilesEnabled(ol.array.includes(capsArr, 'Map'));
+    this.setFeaturesEnabled(ol.array.includes(capsArr, 'Data'));
   } else {
     this.setTilesEnabled(true);
     this.setFeaturesEnabled(true);

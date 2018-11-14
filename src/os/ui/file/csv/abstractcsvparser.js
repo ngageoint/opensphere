@@ -1,5 +1,6 @@
 goog.provide('os.ui.file.csv.AbstractCsvParser');
 
+goog.require('os.array');
 goog.require('os.data.ColumnDefinition');
 goog.require('os.file.mime.text');
 goog.require('os.parse.AsyncParser');
@@ -54,7 +55,7 @@ os.ui.file.csv.AbstractCsvParser.PREVIEW_SIZE = 1000;
  * @inheritDoc
  */
 os.ui.file.csv.AbstractCsvParser.prototype.cleanup = function() {
-  goog.array.clear(this.results);
+  os.array.clear(this.results);
 
   if (this.handle_) {
     this.handle_.abort();
@@ -234,8 +235,8 @@ os.ui.file.csv.AbstractCsvParser.prototype.parseNext = function() {
  * @inheritDoc
  */
 os.ui.file.csv.AbstractCsvParser.prototype.setSource = function(source) {
-  goog.array.clear(this.columns);
-  goog.array.clear(this.results);
+  os.array.clear(this.columns);
+  os.array.clear(this.results);
 
   if (source instanceof ArrayBuffer) {
     source = os.file.mime.text.getText(source) || null;

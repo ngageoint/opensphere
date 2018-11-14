@@ -1,5 +1,6 @@
 goog.require('goog.Uri');
 goog.require('goog.array');
+goog.require('ol.array');
 goog.require('os.net.ExtDomainHandler');
 goog.require('os.net.Request');
 goog.require('os.net.RequestHandlerFactory');
@@ -99,7 +100,7 @@ describe('os.net.Request', function() {
       r.load();
     };
 
-    goog.array.remove(os.net.RequestHandlerFactory.list_, os.net.ExtDomainHandler);
+    ol.array.remove(os.net.RequestHandlerFactory.list_, os.net.ExtDomainHandler);
     expect(fn).toThrow();
   });
 
