@@ -878,9 +878,11 @@ os.ui.query.QueryManager.prototype.getExpanded = function(opt_entries) {
             }
           }
         } else if (!e['includeArea'] || !filterSet[layerId]) {
-          // preserve areas for layers without filters
-          key = os.ui.query.QueryManager.getKey_(e);
-          set[key] = e;
+          if (e['layerId'] !== '*') {
+            // preserve areas for layers without filters
+            key = os.ui.query.QueryManager.getKey_(e);
+            set[key] = e;
+          }
         } else {
           newWildcards.push(e);
         }
