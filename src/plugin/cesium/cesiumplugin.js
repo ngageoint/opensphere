@@ -44,6 +44,12 @@ plugin.cesium.Plugin.ID = 'cesium';
  * @inheritDoc
  */
 plugin.cesium.Plugin.prototype.init = function() {
+  // update the Ion service URL from settings. this should be done first, as it impacts if Ion-related features are
+  // loaded in the application.
+  plugin.cesium.ionUrl = /** @type {string} */ (os.settings.get(plugin.cesium.SettingsKey.ION_URL,
+      plugin.cesium.DEFAULT_ION_URL));
+
+  // set the WebGL renderer to use Cesium
   os.MapContainer.getInstance().setWebGLRenderer(new plugin.cesium.CesiumRenderer());
 
   // register the default set of synchronizers

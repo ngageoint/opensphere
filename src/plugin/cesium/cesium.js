@@ -35,6 +35,16 @@ plugin.cesium.GeometryInstanceId = {
 
 
 /**
+ * Cesium setting keys.
+ * @enum {string}
+ */
+plugin.cesium.SettingsKey = {
+  ION_URL: 'cesium.ionUrl',
+  LOAD_TIMEOUT: 'cesium.loadTimeout'
+};
+
+
+/**
  * @type {string}
  * @const
  */
@@ -90,6 +100,13 @@ plugin.cesium.DEFAULT_LOAD_TIMEOUT = 30000;
 
 
 /**
+ * URL to use for Ion assets. Override to change/disable Ion service integration.
+ * @type {string}
+ */
+plugin.cesium.ionUrl = '';
+
+
+/**
  * @define {string} Base path to the Cesium library, from the OpenSphere root.
  */
 goog.define('plugin.cesium.LIBRARY_BASE_PATH', 'vendor/cesium');
@@ -122,6 +139,15 @@ plugin.cesium.addTrustedServer = function(url) {
 
 
 /**
+ * If Cesium Ion services should be enabled.
+ * @return {boolean}
+ */
+plugin.cesium.isIonEnabled = function() {
+  return !!plugin.cesium.ionUrl;
+};
+
+
+/**
  * Load the Cesium library.
  * @return {!(goog.Promise|goog.async.Deferred)} A promise that resolves when Cesium has been loaded.
  */
@@ -136,7 +162,8 @@ plugin.cesium.loadCesium = function() {
     var trustedUrl = goog.html.TrustedResourceUrl.fromConstant(os.string.createConstant(cesiumUrl));
 
     // extend default timeout (5 seconds) for slow connections and debugging with unminified version
-    var timeout = /** @type {number} */ (os.settings.get('cesium.loadTimeout', plugin.cesium.DEFAULT_LOAD_TIMEOUT));
+    var timeout = /** @type {number} */ (os.settings.get(plugin.cesium.SettingsKey.LOAD_TIMEOUT,
+        plugin.cesium.DEFAULT_LOAD_TIMEOUT));
     return goog.net.jsloader.safeLoad(trustedUrl, {
       timeout: timeout
     });

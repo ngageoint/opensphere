@@ -1,5 +1,6 @@
 goog.provide('plugin.cesium.menu');
 
+goog.require('plugin.cesium');
 goog.require('plugin.cesium.importIonAssetDirective');
 
 
@@ -16,15 +17,17 @@ plugin.cesium.menu.EventType = {
  * Add Cesium items to the import menu.
  */
 plugin.cesium.menu.importSetup = function() {
-  var group = os.ui.menu.import.MENU.getRoot().find(os.ui.menu.import.GroupType.MAJOR);
-  group.addChild({
-    label: 'Add Cesium Ion Asset',
-    eventType: plugin.cesium.menu.EventType.ADD_ION_RESOURCE,
-    tooltip: 'Loads a Cesium Ion asset in 3D mode',
-    icons: ['<i class="fa fa-fw fa-plus"></i>'],
-    handler: plugin.cesium.menu.launchAddIonAsset,
-    sort: 10
-  });
+  if (plugin.cesium.isIonEnabled()) {
+    var group = os.ui.menu.import.MENU.getRoot().find(os.ui.menu.import.GroupType.MAJOR);
+    group.addChild({
+      label: 'Add Cesium Ion Asset',
+      eventType: plugin.cesium.menu.EventType.ADD_ION_RESOURCE,
+      tooltip: 'Loads a Cesium Ion asset in 3D mode',
+      icons: ['<i class="fa fa-fw fa-plus"></i>'],
+      handler: plugin.cesium.menu.launchAddIonAsset,
+      sort: 10
+    });
+  }
 };
 
 
