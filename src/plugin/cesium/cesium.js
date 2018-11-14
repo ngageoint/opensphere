@@ -35,6 +35,23 @@ plugin.cesium.GeometryInstanceId = {
 
 
 /**
+ * Cesium setting keys.
+ * @enum {string}
+ */
+plugin.cesium.SettingsKey = {
+  ION_URL: 'cesium.ionUrl',
+  LOAD_TIMEOUT: 'cesium.loadTimeout'
+};
+
+
+/**
+ * @type {string}
+ * @const
+ */
+plugin.cesium.CESIUM_ONLY_LAYER = '3D Layers';
+
+
+/**
  * Regular expression to match ellipsoid geometry instance id's.
  * @type {RegExp}
  * @const
@@ -67,11 +84,26 @@ plugin.cesium.DEFAULT_FOG_DENSITY = 0.5;
 
 
 /**
+ * Default URL to use for Ion assets.
+ * @type {string}
+ * @const
+ */
+plugin.cesium.DEFAULT_ION_URL = 'https://assets.cesium.com/';
+
+
+/**
  * Default timeout for loading Cesium. Override by setting `cesium.loadTimeout` in the app configuration.
  * @type {number}
  * @const
  */
 plugin.cesium.DEFAULT_LOAD_TIMEOUT = 30000;
+
+
+/**
+ * URL to use for Ion assets. Override to change/disable Ion service integration.
+ * @type {string}
+ */
+plugin.cesium.ionUrl = '';
 
 
 /**
@@ -107,6 +139,15 @@ plugin.cesium.addTrustedServer = function(url) {
 
 
 /**
+ * If Cesium Ion services should be enabled.
+ * @return {boolean}
+ */
+plugin.cesium.isIonEnabled = function() {
+  return !!plugin.cesium.ionUrl;
+};
+
+
+/**
  * Load the Cesium library.
  * @return {!(goog.Promise|goog.async.Deferred)} A promise that resolves when Cesium has been loaded.
  */
@@ -121,7 +162,8 @@ plugin.cesium.loadCesium = function() {
     var trustedUrl = goog.html.TrustedResourceUrl.fromConstant(os.string.createConstant(cesiumUrl));
 
     // extend default timeout (5 seconds) for slow connections and debugging with unminified version
-    var timeout = /** @type {number} */ (os.settings.get('cesium.loadTimeout', plugin.cesium.DEFAULT_LOAD_TIMEOUT));
+    var timeout = /** @type {number} */ (os.settings.get(plugin.cesium.SettingsKey.LOAD_TIMEOUT,
+        plugin.cesium.DEFAULT_LOAD_TIMEOUT));
     return goog.net.jsloader.safeLoad(trustedUrl, {
       timeout: timeout
     });
@@ -211,6 +253,21 @@ plugin.cesium.generateCirclePositions = function(center, radius) {
 
   // Return an array of cartesians
   return positions;
+};
+
+
+/**
+ * Convert a Cesium rectangle to an OpenLayers extent, in degrees.
+ * @param {Cesium.Rectangle} rectangle The rectangle.
+ * @return {ol.Extent|undefined}
+ */
+plugin.cesium.rectangleToExtent = function(rectangle) {
+  return rectangle ? [
+    Cesium.Math.toDegrees(rectangle.west),
+    Cesium.Math.toDegrees(rectangle.south),
+    Cesium.Math.toDegrees(rectangle.east),
+    Cesium.Math.toDegrees(rectangle.north)
+  ] : undefined;
 };
 
 
