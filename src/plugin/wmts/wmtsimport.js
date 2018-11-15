@@ -8,7 +8,7 @@ goog.require('plugin.wmts.Server');
 
 
 /**
- * The geoserver import directive
+ * The WMTS Server import directive
  * @return {angular.Directive}
  */
 plugin.wmts.importDirective = function() {
@@ -30,7 +30,7 @@ os.ui.Module.directive('wmtsserver', [plugin.wmts.importDirective]);
 
 
 /**
- * Controller for the geoserver import dialog
+ * Controller for the WMTS import dialog
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @extends {os.ui.SingleUrlProviderImportCtrl}
@@ -62,5 +62,5 @@ plugin.wmts.ImportCtrl.prototype.getDataProvider = function() {
  * @inheritDoc
  */
 plugin.wmts.ImportCtrl.prototype.getUrl = function() {
-  return this.dp ? /** @type {plugin.ogc.GeoServer} */ (this.dp).getUrl() : '';
+  return this.dp ? /** @type {plugin.wmts.Server} */ (this.dp).getUrl() : '';
 };
