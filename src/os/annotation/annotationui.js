@@ -62,7 +62,7 @@ os.annotation.UI_TEMPLATE_ =
       '</button>' +
     '</div>' +
     '<div class="js-annotation card h-100">' +
-      '<div class="card-header text-truncate px-1 py-0" title="{{ctrl.name}}"' +
+      '<div class="card-header flex-shrink-0 text-truncate px-1 py-0" title="{{ctrl.name}}"' +
           'ng-show="ctrl.options.showName"' +
           'ng-class="!ctrl.options.showDescription && \'h-100 border-0\'">' +
         '{{ctrl.name}}' +
