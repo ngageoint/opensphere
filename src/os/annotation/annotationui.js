@@ -423,8 +423,6 @@ os.annotation.AnnotationCtrl.prototype.updateTailAbsolute_ = function() {
     targetPixel[1] += mapRect.y;
 
     var cardRect = this.element.find('.js-annotation')[0].getBoundingClientRect();
-    var cardHeight = cardRect.height;
-    var cardWidth = cardRect.width;
 
     var svgWidth = Math.max(targetPixel[0], cardRect.x + cardRect.width) -
         Math.min(targetPixel[0], cardRect.x);
@@ -434,50 +432,47 @@ os.annotation.AnnotationCtrl.prototype.updateTailAbsolute_ = function() {
     var cardOffsetX = 0;
     var cardOffsetY = 0;
 
-    var pathTargetX = 0;
+    var pathTarget = [0, 0];
     if (targetPixel[0] < cardRect.x) {
       // target x is left of the annotation
-      pathTargetX = 0;
-      cardOffsetX = svgWidth - cardWidth;
+      cardOffsetX = svgWidth - cardRect.width;
       svg.css('left', 'auto');
       svg.css('right', '0');
-    } else if (targetPixel[0] <= cardRect.x + cardWidth) {
+    } else if (targetPixel[0] <= cardRect.x + cardRect.width) {
       // target x is within the annotation
-      pathTargetX = targetPixel[0] - cardRect.x;
+      pathTarget[0] = targetPixel[0] - cardRect.x;
       svg.css('left', '0');
       svg.css('right', 'auto');
     } else {
       // target x is right of the annotation
-      pathTargetX = svgWidth;
+      pathTarget[0] = svgWidth;
       svg.css('left', '0');
       svg.css('right', 'auto');
     }
 
-    var pathTargetY = 0;
     if (targetPixel[1] < cardRect.y) {
       // target y is above of the annotation
-      pathTargetY = 0;
-      cardOffsetY = svgHeight - cardHeight;
-      svg.attr('height', cardRect.y - targetPixel[1] + cardHeight);
+      cardOffsetY = svgHeight - cardRect.height;
+      svg.attr('height', cardRect.y - targetPixel[1] + cardRect.height);
       svg.css('top', 'auto');
       svg.css('bottom', '0');
-    } else if (targetPixel[1] <= cardRect.y + cardHeight) {
+    } else if (targetPixel[1] <= cardRect.y + cardRect.height) {
       // target y is within the annotation
-      pathTargetY = targetPixel[1] - cardRect.y;
-      svg.attr('height', cardHeight);
+      pathTarget[1] = targetPixel[1] - cardRect.y;
+      svg.attr('height', cardRect.height);
       svg.css('top', '0');
       svg.css('bottom', 'auto');
     } else {
       // target y is below of the annotation
-      pathTargetY = targetPixel[1] - cardRect.y;
+      pathTarget[1] = targetPixel[1] - cardRect.y;
       svg.attr('height', svgHeight);
       svg.css('top', '0');
       svg.css('bottom', 'auto');
     }
 
-    var linePath = 'M' + (cardOffsetX + cardWidth * .33) + ' ' + (cardOffsetY + cardHeight / 2) +
-        ' L' + pathTargetX + ' ' + pathTargetY +
-        ' L' + (cardOffsetX + cardWidth * .66) + ' ' + (cardOffsetY + cardHeight / 2);
+    var cardCenter = [cardOffsetX + cardRect.width / 2, cardOffsetY + cardRect.height / 2];
+    var anchorWidth = Math.min(cardRect.height, cardRect.width) * .33;
+    var linePath = os.annotation.AnnotationCtrl.createTailPath_(cardCenter, pathTarget, anchorWidth);
 
     svg.attr('width', svgWidth);
     svg.attr('height', svgHeight);
@@ -493,7 +488,7 @@ os.annotation.AnnotationCtrl.prototype.updateTailAbsolute_ = function() {
       this.overlay.setOffset(offset);
 
       if (this['options']) {
-        this['options'].size = [cardWidth, cardHeight];
+        this['options'].size = [cardRect.width, cardRect.height];
         this['options'].offset = offset;
 
         // notify that that annotation changed so it can be saved
@@ -538,12 +533,50 @@ os.annotation.AnnotationCtrl.prototype.updateTailFixed_ = function() {
     cardRect.x -= mapRect.x;
     cardRect.y -= mapRect.y;
 
-    var linePath = 'M' + (cardRect.x + cardRect.width * .33) + ' ' + (cardRect.y + cardRect.height / 2) +
-        ' L' + targetPixel[0] + ' ' + targetPixel[1] +
-        ' L' + (cardRect.x + cardRect.width * .66) + ' ' + (cardRect.y + cardRect.height / 2);
+    var cardCenter = [cardRect.x + cardRect.width / 2, cardRect.y + cardRect.height / 2];
+    var anchorWidth = Math.min(cardRect.height, cardRect.width) * .33;
+    var linePath = os.annotation.AnnotationCtrl.createTailPath_(cardCenter, targetPixel, anchorWidth);
 
     this.element.find('path').attr('d', linePath);
   }
 
   return true;
+};
+
+
+/**
+ * Generate the SVG tail path for an annotation.
+ * @param {!Array<number>} center The annotation center coordinate, in pixels.
+ * @param {!Array<number>} target The annotation target coordinate, in pixels.
+ * @param {number} radius The anchor line radius, in pixels.
+ * @return {string} The SVG tail path.
+ * @private
+ */
+os.annotation.AnnotationCtrl.createTailPath_ = function(center, target, radius) {
+  var anchor1 = os.annotation.AnnotationCtrl.rotateAnchor_(center, target, radius);
+  var anchor2 = os.annotation.AnnotationCtrl.rotateAnchor_(center, target, -radius);
+
+  return 'M' + anchor1[0] + ' ' + anchor1[1] +
+      ' L' + target[0] + ' ' + target[1] +
+      ' L' + anchor2[0] + ' ' + anchor2[1];
+};
+
+
+/**
+ * Rotate a tail anchor position around the annotation center. This is used to create an anchor line that is
+ * perpendicular to the line from center to target.
+ * @param {!Array<number>} center The annotation center coordinate, in pixels.
+ * @param {!Array<number>} target The annotation target coordinate, in pixels.
+ * @param {number} x The x offset from center.
+ * @return {!Array<number>} The rotated pixel coordinate.
+ * @private
+ */
+os.annotation.AnnotationCtrl.rotateAnchor_ = function(center, target, x) {
+  var angle = Math.atan2(center[1] - target[1], center[0] - target[0]) + Math.PI / 2;
+  var anchor = [
+    x * Math.cos(angle) + center[0],
+    x * Math.sin(angle) + center[1]
+  ];
+
+  return anchor;
 };
