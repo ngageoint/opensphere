@@ -197,7 +197,7 @@ plugin.file.kml.ui.KMLNode.prototype.getFeature = function() {
 plugin.file.kml.ui.KMLNode.prototype.setFeature = function(feature) {
   if (this.feature_) {
     ol.events.unlisten(this.feature_, goog.events.EventType.PROPERTYCHANGE, this.onFeatureChange, this);
-    this.clearAnnotation();
+    this.clearAnnotations();
   }
 
   this.feature_ = feature;
@@ -213,12 +213,19 @@ plugin.file.kml.ui.KMLNode.prototype.setFeature = function(feature) {
 
 
 /**
- * Clean up the annotation for the node.
+ * Clean up the annotation for the node and all children.
  */
-plugin.file.kml.ui.KMLNode.prototype.clearAnnotation = function() {
+plugin.file.kml.ui.KMLNode.prototype.clearAnnotations = function() {
   if (this.annotation_) {
     goog.dispose(this.annotation_);
     this.annotation_ = null;
+  }
+
+  var children = this.getChildren();
+  if (children) {
+    for (var i = 0, n = children.length; i < n; i++) {
+      children[i].clearAnnotations();
+    }
   }
 };
 
