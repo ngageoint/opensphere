@@ -502,7 +502,7 @@ plugin.file.kml.KMLSource.prototype.clearNode = function(node, opt_dispose) {
     this.removeOverlays(overlays, true);
   }
 
-  node.clearAnnotation();
+  node.clearAnnotations();
 
   // handle the unprocess queue immediately in case a network link is being refreshed
   this.unprocessNow();
