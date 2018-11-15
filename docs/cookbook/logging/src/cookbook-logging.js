@@ -40,7 +40,8 @@ plugin.cookbook_logging.ID = 'cookbook_logging';
 plugin.cookbook_logging.CookbookLogging.prototype.init = function() {
   goog.log.info(plugin.cookbook_logging.CookbookLogging.LOGGER_, 'Visible at INFO or below');
   goog.log.warning(plugin.cookbook_logging.CookbookLogging.LOGGER_, 'Visible at WARN or below');
-  goog.log.log(plugin.cookbook_logging.CookbookLogging.LOGGER_, goog.debug.Logger.Level.FINEST, 'Visible only at FINEST or ALL');
+  goog.log.log(plugin.cookbook_logging.CookbookLogging.LOGGER_, goog.debug.Logger.Level.FINEST,
+      'Visible only at FINEST or ALL');
   goog.log.error(plugin.cookbook_logging.CookbookLogging.LOGGER_, 'ALWAYS VISIBLE!');
 };
 
