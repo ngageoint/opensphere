@@ -33,8 +33,11 @@ plugin.file.kml.export.getBalloonOptions = function(feature) {
       }
 
       if (balloonParts.length) {
+        var text = balloonParts.join('<br/>');
+        text = text.replace(/\n/g, '<br/>');
+
         balloonOptions = /** @type {osx.annotation.KMLBalloon} */ ({
-          text: balloonParts.join('<br/>')
+          text: text
         });
       }
     }

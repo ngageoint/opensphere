@@ -871,15 +871,29 @@ plugin.file.kml.KMLParser.prototype.examineStyles_ = function(node) {
 
 /**
  * Read the KML balloon style.
+ * @param {Element} el The XML element
  * @param {ol.Feature} feature The feature
  * @private
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-plugin.file.kml.KMLParser.prototype.readBalloonStyle_ = function(feature) {
-  var styleUrl = /** @type {string} */ (feature.get('styleUrl'));
-  var styleId = this.getStyleId(decodeURIComponent(styleUrl));
-  var style = styleId in this.balloonStyleMap ? this.balloonStyleMap[styleId] : null;
+plugin.file.kml.KMLParser.prototype.readBalloonStyle_ = function(el, feature) {
+  if (feature.get(os.annotation.OPTIONS_FIELD)) {
+    // annotation options already set
+    return;
+  }
+
+  var style;
+  var balloonEl = el.querySelector('BalloonStyle');
+  if (balloonEl) {
+    // the placemark has an internal balloon style
+    style = ol.xml.pushParseAndPop({}, plugin.file.kml.BALLOON_PROPERTY_PARSERS, balloonEl, []);
+  } else {
+    // look for a balloon style referenced by styleUrl
+    var styleUrl = /** @type {string} */ (feature.get('styleUrl'));
+    var styleId = this.getStyleId(decodeURIComponent(styleUrl));
+    style = styleId in this.balloonStyleMap ? this.balloonStyleMap[styleId] : null;
+  }
 
   if (style) {
     var text = style['text'];
@@ -1418,7 +1432,7 @@ plugin.file.kml.KMLParser.prototype.applyStyles_ = function(el, feature) {
     highlightStyle = styleId in this.highlightStyleMap_ ? this.highlightStyleMap_[styleId] : null;
   }
 
-  this.readBalloonStyle_(feature);
+  this.readBalloonStyle_(el, feature);
 
 
   // local style
