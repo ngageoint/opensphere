@@ -257,7 +257,7 @@ plugin.places.menu.mapSetup = function() {
     root.addChild({
       label: plugin.places.menu.GROUP_LABEL,
       type: os.ui.menu.MenuItemType.GROUP,
-      sort: os.ui.menu.map.GroupSort.GROUPS++,
+      sort: 50,
       children: [
         {
           label: 'Save to Places...',
@@ -286,7 +286,7 @@ plugin.places.menu.mapSetup = function() {
 plugin.places.menu.mapDispose = function() {
   var menu = os.ui.menu.MAP;
   if (menu) {
-    var group = menu.getRoot().find('Coordinate');
+    var group = menu.getRoot().find(os.ui.menu.map.GroupLabel.COORDINATE);
     if (group) {
       group.removeChild(plugin.places.menu.EventType.SAVE_TO);
     }
