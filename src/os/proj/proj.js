@@ -183,3 +183,23 @@ os.proj.getBestSupportedProjection = function(options) {
       '. projections=' + supportedProjections.toString());
   return null;
 };
+
+/**
+ * Given a projection, returns the equivalent projection with the shortest code.
+ * @param {ol.ProjectionLike} proj
+ * @return {ol.proj.Projection}
+ * @suppress {accessControls}
+ */
+os.proj.getBestEquivalent = function(proj) {
+  var projection = ol.proj.get(proj);
+  var projMap = ol.proj.projections.cache_;
+  var shortest = '';
+  for (var key in projMap) {
+    if (key !== 'CRS:84' && ol.proj.equivalent(projMap[key], projection) &&
+        (!shortest || key.length < shortest.length)) {
+      shortest = key;
+    }
+  }
+
+  return ol.proj.get(shortest);
+};

@@ -54,12 +54,20 @@ os.layer.AnimatedTile = function(options) {
    */
   this.dateFormat_ = 'YYYY-MM-DDTHH:mm:ss[Z]';
 
+  /**
+   * @type {string}
+   */
+  this.timeFormat_ = '{start}/{end}';
+
   // register timeline controller listeners
   this.timelineController_.listen(os.time.TimelineEventType.DURATION_CHANGE, this.scheduleReset_, false, this);
   this.timelineController_.listen(os.time.TimelineEventType.RESET, this.scheduleReset_, false, this);
   this.timelineController_.listen(os.time.TimelineEventType.SHOW, this.scheduleReset_, false, this);
 
-  this.computeTime_();
+  /**
+   * @type {?function(this: os.layer.AnimatedTile, string)}
+   */
+  this.timeFunction = null;
 };
 goog.inherits(os.layer.AnimatedTile, os.layer.Tile);
 
@@ -84,6 +92,15 @@ os.layer.AnimatedTile.prototype.disposeInternal = function() {
       os.ui.window.close(os.ui.window.getById(this.legendId_));
     }
   }
+};
+
+
+/**
+ * @param {!function(this: os.layer.AnimatedTile, string)} value
+ */
+os.layer.AnimatedTile.prototype.setTimeFunction = function(value) {
+  this.timeFunction = value;
+  this.computeTime_();
 };
 
 
@@ -198,6 +215,23 @@ os.layer.AnimatedTile.prototype.setDateFormat = function(format) {
 
 
 /**
+ * @return {string}
+ */
+os.layer.AnimatedTile.prototype.getTimeFormat = function() {
+  return this.timeFormat_;
+};
+
+
+/**
+ * @param {string} format
+ */
+os.layer.AnimatedTile.prototype.setTimeFormat = function(format) {
+  this.timeFormat_ = format;
+  this.computeTime_();
+};
+
+
+/**
  * If the layer has been enabled for animation.
  * @return {boolean}
  */
@@ -223,10 +257,22 @@ os.layer.AnimatedTile.prototype.setAnimationEnabled = function(value) {
  * @private
  */
 os.layer.AnimatedTile.prototype.computeTime_ = function() {
+  var timeValue = this.getFormattedDate();
+  if (this.timeFunction) {
+    this.timeFunction.call(this, timeValue);
+  }
+};
+
+
+/**
+ * @param {string} timeValue
+ * @this {os.layer.AnimatedTile}
+ */
+os.layer.AnimatedTile.updateParams = function(timeValue) {
   var source = /** @type {(ol.source.TileWMS|ol.source.TileArcGISRest)} */ (this.getSource());
   var oldParams = source.getParams();
   var newParams = {
-    'TIME': this.getFormattedDate()
+    'TIME': timeValue
   };
 
   if (newParams['TIME'] != oldParams['TIME']) {
@@ -248,7 +294,7 @@ os.layer.AnimatedTile.prototype.getFormattedDate = function() {
   var start = duration == os.time.Duration.CUSTOM ? tlc.getStart() : tlc.getCurrent() - tlc.getOffset();
   var end = tlc.getCurrent();
 
-  return os.layer.AnimatedTile.getTimeParameter(this.dateFormat_, start, end, duration);
+  return os.layer.AnimatedTile.getTimeParameter(this.dateFormat_, this.timeFormat_, start, end, duration);
 };
 
 
@@ -285,12 +331,13 @@ os.layer.AnimatedTile.prototype.restore = function(config) {
 /**
  * Creates an appropriately formatted date for tile requests.
  * @param {string} dateFormat The date format string
+ * @param {string} timeFormat The full TIME value format string (e.g. '{start}/{end}')
  * @param {number} start
  * @param {number} end
  * @param {string} duration
  * @return {string}
  */
-os.layer.AnimatedTile.getTimeParameter = function(dateFormat, start, end, duration) {
+os.layer.AnimatedTile.getTimeParameter = function(dateFormat, timeFormat, start, end, duration) {
   var actualStart;
   var actualEnd;
   if (duration != os.time.Duration.CUSTOM) {
@@ -308,7 +355,7 @@ os.layer.AnimatedTile.getTimeParameter = function(dateFormat, start, end, durati
   var startDate = os.time.momentFormat(flooredStart, dateFormat || undefined, true);
   var endDate = os.time.momentFormat(cappedEnd, dateFormat || undefined, true);
 
-  return startDate + '/' + endDate;
+  return timeFormat.replace(/{start}/g, startDate).replace(/{end}/g, endDate);
 };
 
 

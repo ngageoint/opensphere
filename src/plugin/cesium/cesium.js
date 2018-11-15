@@ -286,12 +286,6 @@ plugin.cesium.tileLayerToImageryLayer = function(olLayer, viewProj) {
   var source = olLayer.getSource();
   var provider = null;
 
-  // handle special cases before the general synchronization
-  if (source instanceof ol.source.WMTS) {
-    // WMTS uses different TileGrid which is not currently supported
-    return null;
-  }
-
   if (source instanceof ol.source.TileImage) {
     var projection = source.getProjection();
 
@@ -300,8 +294,8 @@ plugin.cesium.tileLayerToImageryLayer = function(olLayer, viewProj) {
       projection = viewProj;
     }
 
-    var is3857 = projection === ol.proj.get(os.proj.EPSG3857);
-    var is4326 = projection === ol.proj.get(os.proj.EPSG4326);
+    var is3857 = ol.proj.equivalent(projection, ol.proj.get(os.proj.EPSG3857));
+    var is4326 = ol.proj.equivalent(projection, ol.proj.get(os.proj.EPSG4326));
     if (is3857 || is4326) {
       provider = new plugin.cesium.ImageryProvider(source, viewProj);
     } else {

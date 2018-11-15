@@ -243,7 +243,7 @@ os.proj.switch.SwitchProjection.prototype.addLayer = function(layer) {
   }
 
   if (!this.newProjection_) {
-    this.newProjection_ = layer.getSource().getProjection();
+    this.newProjection_ = os.proj.getBestEquivalent(layer.getSource().getProjection());
   }
 
   if (this.layers_.indexOf(layer) === -1) {
@@ -272,7 +272,7 @@ os.proj.switch.SwitchProjection.prototype.start = function(projection) {
   }
 
   if (!this.newProjection_) {
-    var p = ol.proj.get(projection);
+    var p = os.proj.getBestEquivalent(projection);
 
     if (p) {
       this.newProjection_ = p;
