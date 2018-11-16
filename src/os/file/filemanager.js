@@ -2,6 +2,7 @@ goog.provide('os.file.FileManager');
 
 goog.require('goog.log');
 goog.require('goog.log.Logger');
+goog.require('ol.array');
 goog.require('os.file');
 goog.require('os.file.mime');
 goog.require('os.file.mime.text');
@@ -27,7 +28,7 @@ goog.addSingletonGetter(os.file.FileManager);
  * @return {?os.file.IFileMethod} The highest priority supported method.
  */
 os.file.FileManager.prototype.getFileMethod = function() {
-  var method = /** @type {os.file.IFileMethod} */ (goog.array.find(this.fileMethods_, this.isMethodSupported_));
+  var method = /** @type {os.file.IFileMethod} */ (ol.array.find(this.fileMethods_, this.isMethodSupported_));
   return method ? method.clone() : null;
 };
 
@@ -129,7 +130,7 @@ os.file.FileManager.prototype.isMethodSupported_ = function(method) {
  * @param {!os.file.IFileMethod} fileMethod The file import method.
  */
 os.file.FileManager.prototype.registerFileMethod = function(fileMethod) {
-  if (!goog.array.contains(this.fileMethods_, fileMethod)) {
+  if (!ol.array.includes(this.fileMethods_, fileMethod)) {
     this.fileMethods_.push(fileMethod);
     this.fileMethods_.sort(this.sortDescPriority_);
   }

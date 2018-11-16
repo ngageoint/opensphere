@@ -2,6 +2,7 @@ goog.provide('os.ui.action.ActionManager');
 goog.require('goog.events.Event');
 goog.require('goog.events.EventTarget');
 goog.require('goog.structs.LinkedMap');
+goog.require('os.array');
 goog.require('os.ui.action.Action');
 goog.require('os.ui.action.ActionEvent');
 goog.require('os.ui.action.EventType');
@@ -205,7 +206,7 @@ os.ui.action.ActionManager.prototype.addAction = function(action, opt_handler, o
  * @param {!Array.<os.ui.action.Action>} actions
  */
 os.ui.action.ActionManager.prototype.addActions = function(actions) {
-  goog.array.forEach(actions, function(action) {
+  os.array.forEach(actions, function(action) {
     this.addAction(action, null, true);
   }, this);
   this.fireEnabledActionsChanged_();
@@ -247,7 +248,7 @@ os.ui.action.ActionManager.prototype.removeAction = function(action, opt_quiet) 
  */
 os.ui.action.ActionManager.prototype.removeActions = function(opt_types) {
   if (opt_types) {
-    goog.array.forEach(opt_types, function(type) {
+    os.array.forEach(opt_types, function(type) {
       this.removeAction(type, true);
     }, this);
   } else if (this.actions_) {

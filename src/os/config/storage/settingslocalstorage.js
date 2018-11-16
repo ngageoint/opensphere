@@ -6,6 +6,7 @@ goog.require('goog.async.DeferredList');
 goog.require('goog.functions');
 goog.require('goog.object');
 goog.require('goog.storage.mechanism.PrefixedMechanism');
+goog.require('os.array');
 goog.require('os.config.storage.BaseLocalSettingsStorage');
 goog.require('os.config.storage.ISettingsReadableStorage');
 goog.require('os.config.storage.ISettingsStorage');
@@ -65,7 +66,7 @@ os.config.storage.SettingsLocalStorage.prototype.onInit = function() {
     if (str) {
       var prefs = os.config.namespace.addNamespaces(/** @type {Object.<string, *>} */ (JSON.parse(str)));
 
-      goog.array.forEach(this.namespaces, function(namespace) {
+      os.array.forEach(this.namespaces, function(namespace) {
         var nsPrefs = prefs[namespace] || {};
         this.mechanism_.set(namespace, JSON.stringify(nsPrefs));
       }, this);

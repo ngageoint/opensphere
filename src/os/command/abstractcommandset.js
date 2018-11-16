@@ -1,6 +1,7 @@
 goog.provide('os.command.AbstractCommandSet');
 goog.require('goog.disposable.IDisposable');
 goog.require('goog.events.EventTarget');
+goog.require('os.array');
 goog.require('os.command.ICommand');
 goog.require('os.command.State');
 
@@ -68,7 +69,7 @@ os.command.AbstractCommandSet.prototype.setCommands = function(set) {
 
     if (!this.title) {
       /** @type {Array.<string>} */ var titles = [];
-      goog.array.forEach(set, function(ele, idx, arr) {
+      os.array.forEach(set, function(ele, idx, arr) {
         var command = /** @type {os.command.ICommand} */ (ele);
         if (command.title) {
           titles.push(command.title);

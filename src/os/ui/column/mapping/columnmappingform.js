@@ -1,6 +1,7 @@
 goog.provide('os.ui.column.mapping.ColumnMappingFormCtrl');
 goog.provide('os.ui.column.mapping.columnMappingFormDirective');
 
+goog.require('ol.array');
 goog.require('os.ui.Module');
 goog.require('os.ui.column.mapping.ColumnModelNode');
 goog.require('os.ui.column.mapping.columnModelTreeDirective');
@@ -206,14 +207,14 @@ os.ui.column.mapping.ColumnMappingFormCtrl.prototype.validateLayers_ = function(
   var enoughLayers = columns.length > 1;
 
   if (duplicates) {
-    var node = goog.array.find(this['tree'], function(item) {
+    var node = ol.array.find(this['tree'], function(item) {
       return item.getInitialLayer().getUrlKey() === found[0]['layer'];
     });
     this['duplicateLayerText'] =
         'Duplicate layers are not supported (<b>' + node.getInitialLayer().getTitle() + '</b>)';
   }
 
-  var incompleteLayer = goog.array.find(columns, function(item) {
+  var incompleteLayer = ol.array.find(columns, function(item) {
     return (!item.layer || item.layer.length == 0 || !item.column || item.column.length == 0);
   });
 

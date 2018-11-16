@@ -1,6 +1,7 @@
 goog.provide('os.ui.hist.BarChartOptions');
 goog.provide('os.ui.hist.HorizontalBarChart');
 goog.require('goog.Disposable');
+goog.require('os.array');
 goog.require('os.hist');
 goog.require('os.ui.hist.IHistogramChart');
 
@@ -184,7 +185,7 @@ os.ui.hist.HorizontalBarChart.prototype.drawTotals_ = function(xFn, yFn, ticks) 
   var parentSelection = d3.select(this.parent_);
   var g = parentSelection.append('g');
 
-  goog.array.forEach(ticks, function(tick, idx) {
+  os.array.forEach(ticks, function(tick, idx) {
     var text = goog.object.getValues(ticks[idx])[0];
     var x = xFn(text) + (text + '').length * 6;
     var y = yFn(idx + 1) - os.ui.hist.HorizontalBarChart.DEFAULT_HEIGHT_ / 4;

@@ -3,6 +3,7 @@ goog.provide('plugin.cesium.VectorContext');
 goog.require('goog.async.Throttle');
 goog.require('goog.disposable.IDisposable');
 goog.require('goog.log');
+goog.require('ol.array');
 
 
 
@@ -186,16 +187,17 @@ plugin.cesium.VectorContext.prototype.pruneMaps = function() {
  * @param {Cesium.PrimitiveLike} primitive
  * @param {!ol.Feature} feature The OL3 feature
  * @param {!ol.geom.Geometry} geometry The OL3 geometry
- * @protected
  */
 plugin.cesium.VectorContext.prototype.addOLReferences = function(primitive, feature, geometry) {
   if (primitive) {
     primitive.olLayer = this.layer;
     primitive.olFeature = feature;
     primitive.olGeometry = geometry;
+    primitive.geomRevision = geometry.getRevision();
 
     // primitives in a collection need a feature reference or hover will not work
-    if (primitive instanceof Cesium.PrimitiveCollection) {
+    if (primitive instanceof Cesium.PrimitiveCollection || primitive instanceof Cesium.BillboardCollection ||
+        primitive instanceof Cesium.PolylineCollection) {
       for (var i = 0, n = primitive.length; i < n; i++) {
         var p = primitive.get(i);
         if (p) {
@@ -220,7 +222,7 @@ plugin.cesium.VectorContext.prototype.removeOLReferences = function(primitive) {
 
     // clean up feature references on collections
     if (primitive instanceof Cesium.PrimitiveCollection || primitive instanceof Cesium.BillboardCollection ||
-        primitive instanceof Cesium.LabelCollection) {
+        primitive instanceof Cesium.PolylineCollection || primitive instanceof Cesium.LabelCollection) {
       for (var i = 0, n = primitive.length; i < n; i++) {
         var p = primitive.get(i);
         if (p) {
@@ -393,6 +395,13 @@ plugin.cesium.VectorContext.prototype.addLabel = function(options, feature, geom
  */
 plugin.cesium.VectorContext.prototype.removePrimitive = function(primitive) {
   var geomId = ol.getUid(primitive.olGeometry);
+
+  if (primitive.olFeature) {
+    this.removeFeaturePrimitive(primitive.olFeature, primitive);
+  }
+
+  this.removeOLReferences(primitive);
+
   if (primitive instanceof Cesium.Billboard) {
     this.billboards.remove(primitive);
     this.geometryToCesiumMap[geomId] = undefined;
@@ -406,12 +415,6 @@ plugin.cesium.VectorContext.prototype.removePrimitive = function(primitive) {
     this.collection.remove(primitive);
     this.geometryToCesiumMap[geomId] = undefined;
   }
-
-  if (primitive.olFeature) {
-    this.removeFeaturePrimitive(primitive.olFeature, primitive);
-  }
-
-  this.removeOLReferences(primitive);
 };
 
 
@@ -425,9 +428,9 @@ plugin.cesium.VectorContext.prototype.removePrimitive = function(primitive) {
 plugin.cesium.VectorContext.prototype.addFeaturePrimitive = function(feature, primitive) {
   var featureId = feature['id'];
   var shown = this.featureToShownMap[featureId];
-  shown = shown !== undefined ? shown : primitive.show;
+  shown = shown !== undefined ? shown : plugin.cesium.VectorContext.isShown(primitive);
 
-  primitive.show = shown;
+  plugin.cesium.VectorContext.setShow(primitive, shown);
   this.featureToCesiumMap[featureId] = this.featureToCesiumMap[featureId] || [];
   this.featureToCesiumMap[featureId].push(primitive);
 
@@ -446,7 +449,7 @@ plugin.cesium.VectorContext.prototype.removeFeaturePrimitive = function(feature,
   var featureId = feature['id'];
   var primitives = this.featureToCesiumMap[featureId];
   if (primitives) {
-    goog.array.remove(primitives, primitive);
+    ol.array.remove(primitives, primitive);
   }
 };
 
@@ -468,4 +471,36 @@ plugin.cesium.VectorContext.prototype.getLabelForGeometry = function(geometry) {
  */
 plugin.cesium.VectorContext.prototype.getPrimitiveForGeometry = function(geometry) {
   return this.geometryToCesiumMap[ol.getUid(geometry)] || null;
+};
+
+
+/**
+ * @param {Cesium.PrimitiveLike} primitive The primitive
+ * @return {boolean}
+ */
+plugin.cesium.VectorContext.isShown = function(primitive) {
+  // This function would not be necessary if PolylineCollection didn't somehow miss
+  // implementing the "shown" member of the primitive "interface".
+  if (primitive.show === undefined) {
+    return primitive.length > 0 ? primitive.get(0).show : true;
+  }
+
+  return primitive.show;
+};
+
+
+/**
+ * @param {Cesium.PrimitiveLike} primitive The primitive
+ * @param {boolean} show Whether or not to show the primitive
+ */
+plugin.cesium.VectorContext.setShow = function(primitive, show) {
+  // This function would not be necessary if PolylineCollection didn't somehow miss
+  // implementing the "shown" member of the primitive "interface".
+  if (primitive.show === undefined) {
+    for (var i = 0, n = primitive.length; i < n; i++) {
+      primitive.get(i).show = show;
+    }
+  } else {
+    primitive.show = show;
+  }
 };

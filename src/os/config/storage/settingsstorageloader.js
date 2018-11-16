@@ -2,6 +2,7 @@ goog.provide('os.config.storage.SettingsStorageLoader');
 goog.require('goog.async.Deferred');
 goog.require('goog.async.DeferredList');
 goog.require('goog.log.Logger');
+goog.require('os.array');
 goog.require('os.config.storage.ISettingsReadableStorage');
 goog.require('os.config.storage.SettingsFile');
 
@@ -68,7 +69,7 @@ os.config.storage.SettingsStorageLoader.prototype.init = function() {
  * @private
  */
 os.config.storage.SettingsStorageLoader.prototype.onInit_ = function(deferredListResults) {
-  goog.array.forEach(deferredListResults, function(deferredListResult, index) {
+  os.array.forEach(deferredListResults, function(deferredListResult, index) {
     if (!deferredListResult[0]) {
       this.registry_.getStorageAt(index).canAccess = false;
     }

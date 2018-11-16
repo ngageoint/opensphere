@@ -1,6 +1,7 @@
 goog.provide('os.layer.Tile');
 
 goog.require('goog.string');
+goog.require('ol.array');
 goog.require('ol.events');
 goog.require('ol.layer.Property');
 goog.require('ol.layer.Tile');
@@ -10,6 +11,7 @@ goog.require('os.events.PropertyChangeEvent');
 goog.require('os.implements');
 goog.require('os.layer');
 goog.require('os.layer.ExplicitLayerType');
+goog.require('os.layer.IColorableLayer');
 goog.require('os.layer.ILayer');
 goog.require('os.layer.LayerType');
 goog.require('os.layer.PropertyChange');
@@ -28,6 +30,7 @@ goog.require('os.ui.renamelayer');
 /**
  * @extends {ol.layer.Tile}
  * @implements {os.layer.ILayer}
+ * @implements {os.layer.IColorableLayer}
  * @implements {os.legend.ILegendRenderer}
  * @param {olx.layer.TileOptions} options Tile layer options
  * @constructor
@@ -145,6 +148,7 @@ os.layer.Tile = function(options) {
 };
 goog.inherits(os.layer.Tile, ol.layer.Tile);
 os.implements(os.layer.Tile, os.layer.ILayer.ID);
+os.implements(os.layer.Tile, os.layer.IColorableLayer.ID);
 os.implements(os.layer.Tile, os.legend.ILegendRenderer.ID);
 
 
@@ -265,8 +269,7 @@ os.layer.Tile.prototype.getDefaultColor = function() {
 
 
 /**
- * Get the color for the tile layer.
- * @return {?string}
+ * @inheritDoc
  */
 os.layer.Tile.prototype.getColor = function() {
   if (this.layerOptions_) {
@@ -341,9 +344,7 @@ os.layer.Tile.prototype.setColorize = function(value) {
 
 
 /**
- * Set the color for the tile layer.
- * @param {?string} value The new color
- * @param {Object=} opt_options The layer options to use
+ * @inheritDoc
  */
 os.layer.Tile.prototype.setColor = function(value, opt_options) {
   var options = opt_options || this.layerOptions_;
@@ -542,7 +543,7 @@ os.layer.Tile.prototype.getStyle = function() {
  */
 os.layer.Tile.prototype.setStyle = function(value) {
   if (typeof value == 'string') {
-    value = this.styles_ ? goog.array.find(this.styles_, os.layer.Tile.findStyleByData.bind(this, value)) : null;
+    value = this.styles_ ? ol.array.find(this.styles_, os.layer.Tile.findStyleByData.bind(this, value)) : null;
   }
 
   this.style_ = value;
