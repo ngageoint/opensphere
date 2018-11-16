@@ -3,6 +3,7 @@ goog.provide('os.ui.featureEditDirective');
 
 goog.require('goog.Disposable');
 goog.require('goog.asserts');
+goog.require('goog.dom.classlist');
 goog.require('goog.events.KeyHandler');
 goog.require('goog.log');
 goog.require('goog.log.Logger');
@@ -387,6 +388,13 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
   this.callback = this.options['callback'];
 
   /**
+   * The default expanded options section.
+   * @type {string}
+   * @protected
+   */
+  this.defaultExpandedOptionsId = 'featureStyle' + this['uid'];
+
+  /**
    * Original properties when editing a feature.
    * @type {Object<string, *>}
    * @private
@@ -487,9 +495,17 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
   $scope.$on('$destroy', this.dispose.bind(this));
 
   $timeout(function() {
+    // expand the default section if set
+    if (this.defaultExpandedOptionsId) {
+      var el = document.getElementById(this.defaultExpandedOptionsId);
+      if (el) {
+        goog.dom.classlist.add(el, 'show');
+      }
+    }
+
     // notify the window that it can update the size
     $scope.$emit(os.ui.WindowEventType.READY);
-  }, 150);
+  }.bind(this), 150);
 };
 goog.inherits(os.ui.FeatureEditCtrl, goog.Disposable);
 

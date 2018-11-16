@@ -89,6 +89,11 @@ plugin.file.kml.ui.PlacemarkEditCtrl = function($scope, $element, $timeout) {
   var optionsListId = 'optionsList' + this['uid'];
   os.ui.list.add(optionsListId,
       '<annotationoptions options="ctrl.annotationOptions"></annotationoptions>');
+
+  if (this.options['annotation']) {
+    // if creating a new annotation, expand the Annotation Options section by default
+    this.defaultExpandedOptionsId = 'featureAnnotation' + this['uid'];
+  }
 };
 goog.inherits(plugin.file.kml.ui.PlacemarkEditCtrl, os.ui.FeatureEditCtrl);
 
