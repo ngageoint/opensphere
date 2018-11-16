@@ -678,13 +678,11 @@ plugin.file.kml.ui.KMLNode.prototype.formatIcons = function() {
   } else if (this.overlay_) {
     return '<i class="fa fa-photo fa-fw compact" title="Screen Overlay"></i>';
   } else {
-    // start with the base info icon that will launch a feature info dialog
-    var icons = '<i class="fa fa-info-circle fa-fw compact gold-icon pointer" title="Feature Info" ' +
-        'ng-click="itemAction(\'' + plugin.file.kml.ui.KMLNodeAction.FEATURE_INFO + '\')"></i>';
+    var icons = [];
 
+    // if the node has a geometry, add the geometry icon
     var geom = this.feature_.getGeometry();
     if (geom) {
-      // if the node has a geometry, add the geometry icon
       var type = geom.getType();
       if (type in plugin.file.kml.ui.GeometryIcons) {
         var geomIcon = plugin.file.kml.ui.GeometryIcons[type];
@@ -694,11 +692,20 @@ plugin.file.kml.ui.KMLNode.prototype.formatIcons = function() {
           geomIcon = geomIcon.replace('><', ' style="color:' + os.color.toHexString(color) + '"><');
         }
 
-        icons = geomIcon + icons;
+        icons.push(geomIcon);
       }
     }
 
-    return icons;
+    // if an annotation is displayed, add an icon for it
+    if (this.annotation_) {
+      icons.push('<i class="fa fa-comment fa-fw" title="Annotation"></i>');
+    }
+
+    // add an info icon to launch feature info
+    icons.push('<i class="fa fa-info-circle fa-fw compact gold-icon pointer" title="Feature Info" ' +
+        'ng-click="itemAction(\'' + plugin.file.kml.ui.KMLNodeAction.FEATURE_INFO + '\')"></i>');
+
+    return icons.join('');
   }
 };
 
