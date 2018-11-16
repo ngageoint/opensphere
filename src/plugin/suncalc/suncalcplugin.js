@@ -32,7 +32,7 @@ plugin.suncalc.ID = 'suncalc';
 plugin.suncalc.Plugin.prototype.init = function() {
   var menu = os.ui.menu.MAP;
   if (menu) {
-    var group = menu.getRoot().find('Coordinate');
+    var group = menu.getRoot().find(os.ui.menu.map.GroupLabel.COORDINATE);
 
     if (group) {
       group.addChild({
@@ -45,7 +45,7 @@ plugin.suncalc.Plugin.prototype.init = function() {
       menu.listen(plugin.suncalc.ID, plugin.suncalc.onMenuItem_);
     }
 
-    group = menu.getRoot().find('Options');
+    group = menu.getRoot().find(os.ui.menu.map.GroupLabel.OPTIONS);
     if (group) {
       group.addChild({
         label: 'Sunlight',

@@ -9,8 +9,10 @@ goog.require('os.metrics.keys');
 goog.require('os.ui.capture.AbstractCapturePlugin');
 goog.require('os.ui.capture.TimelineRenderer');
 goog.require('os.ui.menu.save');
+goog.require('plugin.capture.AnnotationTailRenderer');
 goog.require('plugin.capture.LegendRenderer');
 goog.require('plugin.capture.MapOverlayRenderer');
+goog.require('plugin.capture.MapOverviewRenderer');
 goog.require('plugin.capture.MapRenderer');
 goog.require('plugin.capture.TimelineRecorder');
 
@@ -110,7 +112,7 @@ plugin.capture.recordSupported = function() {
 plugin.capture.CapturePlugin.prototype.initRenderers = function() {
   var renderers = [
     new plugin.capture.MapRenderer(),
-    new plugin.capture.MapOverlayRenderer(),
+    new plugin.capture.MapOverviewRenderer(),
     new plugin.capture.LegendRenderer()
   ];
 
@@ -118,6 +120,32 @@ plugin.capture.CapturePlugin.prototype.initRenderers = function() {
     renderers.push(new os.ui.capture.TimelineRenderer({
       'fill': '#888'
     }));
+  }
+
+  return renderers;
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.capture.CapturePlugin.prototype.getDynamicRenderers = function() {
+  var renderers = [];
+
+  var map = os.MapContainer.getInstance().getMap();
+  if (map) {
+    var overlays = map.getOverlays().getArray();
+    overlays.forEach(function(overlay) {
+      var element = overlay.getElement();
+      var position = overlay.getPosition();
+      if (element && position) {
+        if (element.querySelector('svg.c-annotation__svg')) {
+          renderers.push(new plugin.capture.AnnotationTailRenderer(overlay));
+        }
+
+        renderers.push(new plugin.capture.MapOverlayRenderer(overlay));
+      }
+    });
   }
 
   return renderers;

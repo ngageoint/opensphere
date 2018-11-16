@@ -1,17 +1,17 @@
-goog.provide('plugin.capture.MapOverlayRenderer');
+goog.provide('plugin.capture.AnnotationTailRenderer');
 
-goog.require('os.ui.capture.HtmlRenderer');
+goog.require('os.ui.capture.SvgRenderer');
 
 
 /**
- * Renders a map overlay to a canvas.
- * @param {!ol.Overlay} overlay The overlay to render.
- * @extends {os.ui.capture.HtmlRenderer}
+ * Renders the SVG tail for a map annotation to a canvas.
+ * @param {!ol.Overlay} overlay The annotation overlay.
+ * @extends {os.ui.capture.SvgRenderer}
  * @constructor
  */
-plugin.capture.MapOverlayRenderer = function(overlay) {
-  plugin.capture.MapOverlayRenderer.base(this, 'constructor');
-  this.title = 'Map Overlay';
+plugin.capture.AnnotationTailRenderer = function(overlay) {
+  plugin.capture.AnnotationTailRenderer.base(this, 'constructor');
+  this.title = 'Annotation Tail';
 
   /**
    * The OpenLayers overlay.
@@ -20,15 +20,18 @@ plugin.capture.MapOverlayRenderer = function(overlay) {
    */
   this.overlay_ = overlay;
 };
-goog.inherits(plugin.capture.MapOverlayRenderer, os.ui.capture.HtmlRenderer);
+goog.inherits(plugin.capture.AnnotationTailRenderer, os.ui.capture.SvgRenderer);
 
 
 /**
  * @inheritDoc
  */
-plugin.capture.MapOverlayRenderer.prototype.getRenderElement = function() {
+plugin.capture.AnnotationTailRenderer.prototype.getRenderElement = function() {
   if (this.overlay_) {
-    return this.overlay_.getElement() || null;
+    var overlayEl = this.overlay_.getElement();
+    if (overlayEl) {
+      return overlayEl.querySelector('svg.c-annotation__svg');
+    }
   }
 
   return null;
@@ -38,7 +41,7 @@ plugin.capture.MapOverlayRenderer.prototype.getRenderElement = function() {
 /**
  * @inheritDoc
  */
-plugin.capture.MapOverlayRenderer.prototype.getPosition = function(canvas) {
+plugin.capture.AnnotationTailRenderer.prototype.getPosition = function(canvas) {
   var x = 0;
   var y = 0;
 
