@@ -9,6 +9,7 @@ goog.require('ol.Feature');
 goog.require('ol.format.GeoJSON');
 goog.require('ol.source.Vector');
 goog.require('ol.source.VectorEventType');
+goog.require('os.array');
 goog.require('os.data.CollectionManager');
 goog.require('os.data.RecordField');
 goog.require('os.events.PropertyChangeEvent');
@@ -185,7 +186,7 @@ os.ui.query.AreaManager.prototype.getId = function(item) {
 os.ui.query.AreaManager.prototype.bulkAdd = function(features, opt_show) {
   var show = opt_show || false;
 
-  goog.array.forEach(features, function(feature) {
+  os.array.forEach(features, function(feature) {
     if (!feature.getId()) {
       feature.setId(os.ui.query.AreaManager.FEATURE_PREFIX + goog.string.getRandomString());
     }

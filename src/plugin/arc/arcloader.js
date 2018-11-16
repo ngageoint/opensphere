@@ -1,6 +1,7 @@
 goog.provide('plugin.arc.ArcLoader');
 goog.require('goog.events.EventTarget');
 goog.require('goog.log.Logger');
+goog.require('ol.array');
 goog.require('os.net.Request');
 goog.require('plugin.arc.node.ArcFolderNode');
 goog.require('plugin.arc.node.ArcServiceNode');
@@ -263,7 +264,7 @@ plugin.arc.ArcLoader.prototype.onChildLoad = function(evt) {
     this.futureChildren_.push(node);
   }
 
-  goog.array.remove(this.toLoad_, node);
+  ol.array.remove(this.toLoad_, node);
 
   if (this.toLoad_.length === 0) {
     this.node_.setChildren(this.futureChildren_);

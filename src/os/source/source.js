@@ -1,6 +1,7 @@
 goog.provide('os.source');
 
 goog.require('goog.Timer');
+goog.require('ol.array');
 goog.require('ol.layer.Property');
 goog.require('os');
 goog.require('os.data.ColumnDefinition');
@@ -240,7 +241,7 @@ os.source.getExportFields = function(source, opt_internal) {
         //
         if (column['visible'] &&
             !goog.string.isEmptyOrWhitespace(goog.string.makeSafe(field)) &&
-            !goog.array.contains(fields, field) &&
+            !ol.array.includes(fields, field) &&
             (opt_internal || !os.feature.isInternalField(field))) {
           fields.push(field);
         }

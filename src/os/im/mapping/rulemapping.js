@@ -1,6 +1,7 @@
 goog.provide('os.im.mapping.Rule');
 goog.provide('os.im.mapping.RuleMapping');
 
+goog.require('ol.array');
 goog.require('os.IPersistable');
 goog.require('os.geo');
 goog.require('os.im.mapping.AbstractMapping');
@@ -172,7 +173,7 @@ os.im.mapping.RuleMapping.prototype.execute = function(item, targetItem) {
       targetItem[this.targetField] = staticValue;
     } else if (fieldValue && rules) {
       // select the appropriate rule and use its mappedValue
-      var rule = goog.array.find(rules, function(r) {
+      var rule = ol.array.find(rules, function(r) {
         return r['initialValue'] == fieldValue;
       });
 

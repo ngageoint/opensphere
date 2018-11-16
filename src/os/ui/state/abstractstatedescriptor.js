@@ -1,6 +1,7 @@
 goog.provide('os.ui.state.AbstractStateDescriptor');
 
 goog.require('goog.json');
+goog.require('ol.array');
 goog.require('os.data.BaseDescriptor');
 goog.require('os.data.DescriptorEvent');
 goog.require('os.data.DescriptorEventType');
@@ -132,7 +133,7 @@ os.ui.state.AbstractStateDescriptor.prototype.activateState = function(opt_file)
       if (loadItems) {
         for (var i = 0, n = list.length; i < n; i++) {
           var state = list[i];
-          state.setEnabled(goog.array.contains(loadItems, state.toString()));
+          state.setEnabled(ol.array.includes(loadItems, state.toString()));
         }
       }
 

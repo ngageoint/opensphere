@@ -8,6 +8,7 @@ goog.require('os.MapEvent');
 goog.require('os.webgl.AbstractWebGLRenderer');
 goog.require('plugin.cesium');
 goog.require('plugin.cesium.Camera');
+goog.require('plugin.cesium.TerrainLayer');
 goog.require('plugin.cesium.TileGridTilingScheme');
 goog.require('plugin.cesium.interaction');
 goog.require('plugin.cesium.mixin');
@@ -43,6 +44,13 @@ plugin.cesium.CesiumRenderer = function() {
    * @private
    */
   this.csListeners_ = [];
+
+  /**
+   * OpenLayers layer to sync Cesium terrain.
+   * @type {plugin.cesium.TerrainLayer|undefined}
+   * @private
+   */
+  this.terrainLayer_ = undefined;
 
   /**
    * Cesium terrain provider.
@@ -380,22 +388,18 @@ plugin.cesium.CesiumRenderer.prototype.showSunlight = function(value) {
  * @inheritDoc
  */
 plugin.cesium.CesiumRenderer.prototype.showTerrain = function(value) {
-  if (this.olCesium_) {
-    var scene = this.olCesium_.getCesiumScene();
-    if (scene) {
-      // use the configured provider if terrain is enabled, falling back on the default provider
-      var provider = (value ? this.terrainProvider_ : undefined) ||
-          plugin.cesium.getDefaultTerrainProvider();
-
-      // only change this if there is a provider to switch to. Cesium will render a blank globe without any terrain
-      // provider.
-      if (provider) {
-        scene.terrainProvider = provider;
-      }
-
-      os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
+  if (value) {
+    if (!this.terrainLayer_) {
+      this.terrainLayer_ = new plugin.cesium.TerrainLayer(this.terrainProvider_);
+      os.MapContainer.getInstance().addLayer(this.terrainLayer_);
+    } else {
+      this.terrainLayer_.setTerrainProvider(this.terrainProvider_);
     }
+  } else {
+    this.removeTerrainLayer_();
   }
+
+  os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
 };
 
 
@@ -422,7 +426,7 @@ plugin.cesium.CesiumRenderer.prototype.registerTerrainProviderType = function(ty
  */
 plugin.cesium.CesiumRenderer.prototype.disableTerrain = function() {
   // remove the provider first so it's gone when any active terrain gets updated
-  this.removeTerrainProvider_();
+  this.removeTerrainLayer_();
 
   plugin.cesium.CesiumRenderer.base(this, 'disableTerrain');
 };
@@ -432,8 +436,8 @@ plugin.cesium.CesiumRenderer.prototype.disableTerrain = function() {
  * @inheritDoc
  */
 plugin.cesium.CesiumRenderer.prototype.updateTerrainProvider = function() {
-  // clean up existing provider
-  this.removeTerrainProvider_();
+  // clean up existing layer
+  this.removeTerrainLayer_();
 
   var terrainOptions = /** @type {osx.map.TerrainProviderOptions|undefined} */ (os.settings.get(
       os.config.DisplaySetting.TERRAIN_OPTIONS));
@@ -446,7 +450,6 @@ plugin.cesium.CesiumRenderer.prototype.updateTerrainProvider = function() {
       }
 
       this.terrainProvider_ = this.terrainProviderTypes_[terrainType](terrainOptions);
-      this.terrainProvider_.errorEvent.addEventListener(this.onTerrainError_, this);
     } else if (!terrainType) {
       goog.log.error(this.log, 'Terrain provider type not configured.');
     } else if (!(terrainType in this.terrainProviderTypes_)) {
@@ -461,29 +464,24 @@ plugin.cesium.CesiumRenderer.prototype.updateTerrainProvider = function() {
 
 
 /**
- * Clean up the terrain provider.
+ * Clean up the terrain layer.
  * @private
  */
-plugin.cesium.CesiumRenderer.prototype.removeTerrainProvider_ = function() {
-  if (this.terrainProvider_) {
-    this.terrainProvider_.errorEvent.removeEventListener(this.onTerrainError_, this);
-    this.terrainProvider_ = undefined;
+plugin.cesium.CesiumRenderer.prototype.removeTerrainLayer_ = function() {
+  if (this.terrainLayer_) {
+    os.MapContainer.getInstance().removeLayer(this.terrainLayer_);
+
+    goog.dispose(this.terrainLayer_);
+    this.terrainLayer_ = undefined;
   }
-};
 
-
-/**
- * Handle error raised from a Cesium terrain provider.
- * @param {Cesium.TileProviderError} error The tile provider error.
- * @private
- */
-plugin.cesium.CesiumRenderer.prototype.onTerrainError_ = function(error) {
-  // notify the user that terrain will be disabled
-  goog.log.error(this.log, 'Terrain provider initialization error: ' + error.message);
-  os.alertManager.sendAlert('Terrain provider failed to initialize and will be disabled. Please see the log for ' +
-      'more details.', os.alert.AlertEventSeverity.ERROR);
-
-  this.disableTerrain();
+  var provider = plugin.cesium.getDefaultTerrainProvider();
+  if (provider) {
+    var scene = this.olCesium_ ? this.olCesium_.getCesiumScene() : undefined;
+    if (scene) {
+      scene.terrainProvider = provider;
+    }
+  }
 };
 
 

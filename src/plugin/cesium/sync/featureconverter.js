@@ -10,6 +10,7 @@ goog.require('ol.events');
 goog.require('ol.extent');
 goog.require('ol.geom.LineString');
 goog.require('ol.geom.SimpleGeometry');
+goog.require('ol.geom.flat.inflate');
 goog.require('ol.layer.Tile');
 goog.require('ol.layer.Vector');
 goog.require('ol.proj');
@@ -394,7 +395,7 @@ plugin.cesium.sync.FeatureConverter.prototype.updateLabel = function(label, geom
   // measured.
   //
   // This removes characters outside the ASCII printable range to prevent that behavior.
-  //
+
   var labelText = textStyle.getText() || '';
   label.text = labelText.replace(/[^\x0a\x0d\x20-\x7e\xa0-\xff]/g, '');
 
@@ -404,7 +405,7 @@ plugin.cesium.sync.FeatureConverter.prototype.updateLabel = function(label, geom
   // check if there is an associated primitive, and if it is shown
   var prim = context.getPrimitiveForGeometry(geometry);
   if (prim) {
-    label.show = prim.show;
+    label.show = plugin.cesium.VectorContext.isShown(prim);
   }
 
   if (context.scene) {
@@ -482,30 +483,21 @@ plugin.cesium.sync.FeatureConverter.prototype.olCircleGeometryToCesium = functio
 /**
  * Convert an OpenLayers line string geometry to Cesium.
  * @param {!ol.Feature} feature Ol3 feature..
- * @param {!ol.geom.LineString} geometry Ol3 line string geometry.
+ * @param {!(ol.geom.LineString|ol.geom.MultiLineString)} geometry Ol3 line string geometry.
  * @param {!plugin.cesium.VectorContext} context
  * @param {!ol.style.Style} style
+ * @param {Array<number>=} opt_flatCoords
+ * @param {number=} opt_offset
+ * @param {number=} opt_end
  * @return {Cesium.Primitive}
  */
 plugin.cesium.sync.FeatureConverter.prototype.olLineStringGeometryToCesium = function(feature, geometry, context,
-    style) {
-  goog.asserts.assert(geometry.getType() == 'LineString');
-  var transform = this.getTransformFunction();
-
-  var coordinates = geometry.getCoordinates();
-  if (coordinates.length < 2) {
-    // ol3 allows line strings to have a single coordinate, while Cesium does not
-    return null;
-  }
-
-  if (transform) {
-    coordinates = coordinates.map(function(coord) {
-      return transform(coord, undefined, coord.length);
-    });
-  }
+    style, opt_flatCoords, opt_offset, opt_end) {
+  goog.asserts.assert(geometry.getType() == ol.geom.GeometryType.LINE_STRING ||
+      geometry.getType() == ol.geom.GeometryType.MULTI_LINE_STRING);
 
   var lineGeometryToCreate = geometry.get('extrude') ? 'WallGeometry' : 'PolylineGeometry';
-  var positions = olcs.core.ol4326CoordinateArrayToCsCartesians(coordinates);
+  var positions = this.getLineStringPositions(geometry, opt_flatCoords, opt_offset, opt_end);
   return this.createLinePrimitive(positions, context, style, lineGeometryToCreate);
 };
 
@@ -549,17 +541,21 @@ plugin.cesium.sync.FeatureConverter.prototype.createLinePrimitive = function(pos
 /**
  * Creates or updates a Cesium Billboard.
  * @param {!ol.Feature} feature The OL3 feature
- * @param {!(ol.geom.LineString|os.geom.Ellipse)} geometry The OL3 geometry
+ * @param {!(ol.geom.LineString|os.geom.Ellipse|ol.geom.MultiLineString)} geometry The OL3 geometry
  * @param {!plugin.cesium.VectorContext} context
  * @param {!ol.style.Style} style The OL3 style
  * @param {(Cesium.Polyline|Cesium.PolylineOptions)=} opt_polyline The polyline, for updates.
+ * @param {Array<number>=} opt_flatCoords The flat coordinates from a multiline
+ * @param {number=} opt_offset
+ * @param {number=} opt_end
+ * @param {Cesium.PolylineCollection=} opt_collection
  */
 plugin.cesium.sync.FeatureConverter.prototype.createOrUpdatePolyline = function(feature, geometry, context, style,
-    opt_polyline) {
+    opt_polyline, opt_flatCoords, opt_offset, opt_end, opt_collection) {
   if (opt_polyline) {
-    this.updatePolyline(feature, geometry, context, style, opt_polyline);
+    this.updatePolyline(feature, geometry, context, style, opt_polyline, opt_flatCoords, opt_offset, opt_end);
   } else {
-    this.createPolyline(feature, geometry, context, style);
+    this.createPolyline(feature, geometry, context, style, opt_flatCoords, opt_offset, opt_end, opt_collection);
   }
 };
 
@@ -567,43 +563,43 @@ plugin.cesium.sync.FeatureConverter.prototype.createOrUpdatePolyline = function(
 /**
  * Create a Cesium line primitive.
  * @param {!ol.Feature} feature Ol3 feature..
- * @param {!(ol.geom.LineString|os.geom.Ellipse)} geometry Ol3 line string geometry.
+ * @param {!(ol.geom.LineString|os.geom.Ellipse|ol.geom.MultiLineString)} geometry Ol3 line string geometry.
  * @param {!plugin.cesium.VectorContext} context
  * @param {!ol.style.Style} style
+ * @param {Array<number>=} opt_flatCoords The flat coordinates from a multiline
+ * @param {number=} opt_offset
+ * @param {number=} opt_end
+ * @param {Cesium.PolylineCollection=} opt_collection
  */
-plugin.cesium.sync.FeatureConverter.prototype.createPolyline = function(feature, geometry, context, style) {
+plugin.cesium.sync.FeatureConverter.prototype.createPolyline = function(feature, geometry, context, style,
+    opt_flatCoords, opt_offset, opt_end, opt_collection) {
   var polylineOptions = /** @type {Cesium.PolylineOptions} */ ({});
-  this.updatePolyline(feature, geometry, context, style, polylineOptions);
+  this.updatePolyline(feature, geometry, context, style, polylineOptions, opt_flatCoords, opt_offset, opt_end);
 
-  context.addPolyline(polylineOptions, feature, geometry);
+  if (opt_collection) {
+    opt_collection.add(polylineOptions);
+  } else {
+    context.addPolyline(polylineOptions, feature, geometry);
+  }
 };
 
 
 /**
  * Create a Cesium line primitive.
  * @param {!ol.Feature} feature Ol3 feature..
- * @param {!(ol.geom.LineString|os.geom.Ellipse)} geometry Ol3 line string geometry.
+ * @param {!(ol.geom.LineString|os.geom.Ellipse|ol.geom.MultiLineString)} geometry Ol3 line string geometry.
  * @param {!plugin.cesium.VectorContext} context
  * @param {!ol.style.Style} style
  * @param {!(Cesium.Polyline|Cesium.PolylineOptions)} polyline The polyline, for updates.
+ * @param {Array<number>=} opt_flatCoords The flat coordinates from a multiline
+ * @param {number=} opt_offset
+ * @param {number=} opt_end
  */
-plugin.cesium.sync.FeatureConverter.prototype.updatePolyline = function(feature, geometry, context, style, polyline) {
+plugin.cesium.sync.FeatureConverter.prototype.updatePolyline = function(feature, geometry, context, style, polyline,
+    opt_flatCoords, opt_offset, opt_end) {
   var geomRevision = geometry.getRevision();
   if (polyline.geomRevision != geomRevision) {
-    var coordinates = geometry.getCoordinates();
-
-    if (coordinates.length && geometry instanceof os.geom.Ellipse) {
-      coordinates = coordinates[0];
-    }
-
-    var transform = this.getTransformFunction();
-    if (transform) {
-      coordinates = coordinates.map(function(coord) {
-        return transform(coord, undefined, coord.length);
-      });
-    }
-
-    polyline.positions = olcs.core.ol4326CoordinateArrayToCsCartesians(coordinates);
+    polyline.positions = this.getLineStringPositions(geometry, opt_flatCoords, opt_offset, opt_end);
     polyline.geomRevision = geomRevision;
   }
 
@@ -620,6 +616,46 @@ plugin.cesium.sync.FeatureConverter.prototype.updatePolyline = function(feature,
     // mark as updated so it isn't deleted
     polyline.dirty = false;
   }
+};
+
+
+/**
+ * @param {!(ol.geom.LineString|os.geom.Ellipse|ol.geom.MultiLineString)} geometry Ol3 line string geometry.
+ * @param {Array<number>=} opt_flatCoords The flat coordinates from a multiline
+ * @param {number=} opt_offset
+ * @param {number=} opt_end
+ * @return {!Array<Cesium.Cartesian3>}
+ */
+plugin.cesium.sync.FeatureConverter.prototype.getLineStringPositions = function(geometry, opt_flatCoords, opt_offset,
+    opt_end) {
+  var transform = this.getTransformFunction();
+  var flats = opt_flatCoords || geometry.getFlatCoordinates();
+  var stride = geometry.stride;
+  var offset = opt_offset || 0;
+  var end = opt_end || flats.length;
+
+  var coord = plugin.cesium.sync.FeatureConverter.scratchCoord1_;
+  var transformedCoord = plugin.cesium.sync.FeatureConverter.scratchCoord2_;
+  coord.length = stride;
+  transformedCoord.length = stride;
+
+  var positions = new Array((end - offset) / stride);
+  var count = 0;
+  for (var i = offset; i < end; i += stride) {
+    for (var j = 0; j < stride; j++) {
+      coord[j] = flats[i + j];
+      transformedCoord[j] = coord[j];
+    }
+
+    if (transform) {
+      transform(coord, transformedCoord, stride);
+    }
+
+    positions[count] = olcs.core.ol4326CoordinateToCesiumCartesian(transformedCoord);
+    count++;
+  }
+
+  return positions;
 };
 
 
@@ -826,41 +862,90 @@ plugin.cesium.sync.FeatureConverter.prototype.olEllipseGeometryToEllipsoid = fun
 
 
 /**
+ * @type {!ol.Coordinate}
+ * @const
+ */
+plugin.cesium.sync.FeatureConverter.scratchCoord1_ = [];
+
+
+/**
+ * @type {!ol.Coordinate}
+ * @const
+ */
+plugin.cesium.sync.FeatureConverter.scratchCoord2_ = [];
+
+
+/**
+ * @type {!ol.Extent}
+ * @const
+ */
+plugin.cesium.sync.FeatureConverter.scratchExtent1_ = [Infinity, Infinity, -Infinity, -Infinity];
+
+
+/**
  * Creates a Cesium.PolygonHierarchy from an ol.geom.Polygon.
- * @param {!ol.geom.Polygon} geometry The OL polygon
+ * @param {!(ol.geom.Polygon|ol.geom.MultiPolygon)} geometry The OL polygon
+ * @param {Array<number>=} opt_flats
+ * @param {number=} opt_offset
+ * @param {Array<number>=} opt_ringEnds
+ * @param {boolean=} opt_extrude
  * @return {Cesium.PolygonHierarchy}
  */
-plugin.cesium.sync.FeatureConverter.prototype.createPolygonHierarchy = function(geometry) {
+plugin.cesium.sync.FeatureConverter.prototype.createPolygonHierarchy = function(geometry, opt_flats, opt_offset,
+    opt_ringEnds, opt_extrude) {
   var transform = this.getTransformFunction();
 
-  var rings = geometry.getLinearRings();
+  var flats = opt_flats || geometry.getFlatCoordinates();
+  var offset = opt_offset || 0;
+  var ends = opt_ringEnds || geometry.getEnds();
+  // var extrude = opt_extrude != undefined ? opt_extrude : !!geometry.get('extrude');
+  var stride = geometry.getStride();
+  var coord = plugin.cesium.sync.FeatureConverter.scratchCoord1_;
+  var transformedCoord = plugin.cesium.sync.FeatureConverter.scratchCoord2_;
+  coord.length = stride;
+  transformedCoord.length = stride;
+
+  var extent = plugin.cesium.sync.FeatureConverter.scratchExtent1_;
+
+  // reset extent
+  extent[0] = Infinity;
+  extent[1] = Infinity;
+  extent[2] = -Infinity;
+  extent[3] = -Infinity;
+
   var positions;
   var holes;
-  goog.asserts.assert(rings.length > 0);
 
-  for (var i = 0; i < rings.length; ++i) {
-    var olPos = rings[i].getCoordinates();
-    var csPos;
-    var extent = rings[i].getExtent();
+  for (var r = 0, rr = ends.length; r < rr; r++) {
+    var end = ends[r];
+    var csPos = new Array((end - offset) / stride);
 
-    if (transform) {
-      extent = transform(extent);
-      olPos = olPos.map(function(coord) {
-        return transform(coord, undefined, coord.length);
-      });
+    var count = 0;
+    for (var i = offset; i < end; i += stride) {
+      for (var j = 0; j < stride; j++) {
+        coord[j] = flats[i + j];
+        transformedCoord[j] = coord[j];
+      }
+
+      if (transform) {
+        transform(coord, transformedCoord, coord.length);
+      }
+
+      csPos[count] = olcs.core.ol4326CoordinateToCesiumCartesian(transformedCoord);
+      count++;
     }
 
-    csPos = olcs.core.ol4326CoordinateArrayToCsCartesians(olPos);
-
     // if a ring is empty, just ignore it
-    if (csPos && csPos.length > 0) {
-      if (i == 0) {
+    if (csPos && csPos.length) {
+      if (r == 0) {
         positions = csPos;
       } else {
         holes = holes || [];
         holes.push(new Cesium.PolygonHierarchy(csPos));
       }
     }
+
+    offset = end;
   }
 
   // don't create a polygon if we don't have an outer ring
@@ -872,68 +957,38 @@ plugin.cesium.sync.FeatureConverter.prototype.createPolygonHierarchy = function(
  * Convert an OpenLayers polygon geometry to Cesium, this method does NOT handle line width
  * in windows.
  * @param {!ol.Feature} feature Ol3 feature..
- * @param {!ol.geom.Polygon} geometry Ol3 polygon geometry.
+ * @param {!(ol.geom.Polygon|ol.geom.MultiPolygon)} geometry Ol3 polygon geometry.
  * @param {!plugin.cesium.VectorContext} context
  * @param {!ol.style.Style} style
  * @return {Cesium.PrimitiveCollection}
+ * @param {Array<number>=} opt_polyFlats
+ * @param {number=} opt_offset
+ * @param {Array<number>=} opt_ringEnds
+ * @param {boolean=} opt_extrude
  */
-plugin.cesium.sync.FeatureConverter.prototype.olPolygonGeometryToCesium = function(feature, geometry, context, style) {
+plugin.cesium.sync.FeatureConverter.prototype.olPolygonGeometryToCesium = function(feature, geometry, context, style,
+    opt_polyFlats, opt_offset, opt_ringEnds, opt_extrude) {
   var fillGeometry = null;
   var outlineGeometry = null;
-  var transform = this.getTransformFunction();
-  var extrude = !!geometry.get('extrude');
+  var extrude = opt_extrude !== undefined ? opt_extrude : !!geometry.get('extrude');
+  var hierarchy = this.createPolygonHierarchy(geometry, opt_polyFlats, opt_offset, opt_ringEnds, opt_extrude);
+  if (!hierarchy) {
+    return null;
+  }
 
-  var clone = geometry.clone();
-  clone.toLonLat();
-
-  if (os.geo.isGeometryRectangular(clone)) {
-    // NOTE: This will always return 0. LinearRings.getCoordintates() returns only xy values (Array<[number, number]>)
-    var altitude = os.geo.getAverageAltitude(geometry.getLinearRings()[0].getCoordinates());
-    var extent = geometry.getLinearRings()[0].getExtent();
-
-    if (transform) {
-      extent = transform(extent);
-    }
-
-    var rect = Cesium.Rectangle.fromDegrees(extent[0], extent[1], extent[2], extent[3]);
-
-    if (style.getFill()) {
-      fillGeometry = new Cesium.RectangleGeometry({
-        ellipsoid: Cesium.Ellipsoid.WGS84,
-        rectangle: rect,
-        height: altitude,
-        closeTop: true,
-        closeBottom: false,
-        extrudedHeight: extrude ? 0 : undefined
-      });
-    }
-
-    outlineGeometry = new Cesium.RectangleOutlineGeometry({
-      ellipsoid: Cesium.Ellipsoid.WGS84,
-      rectangle: rect,
-      height: altitude,
-      extrudedHeight: extrude ? 0 : undefined
-    });
-  } else {
-    var hierarchy = this.createPolygonHierarchy(geometry);
-    if (!hierarchy) {
-      return null;
-    }
-
-    if (style.getFill()) {
-      fillGeometry = new Cesium.PolygonGeometry({
-        polygonHierarchy: hierarchy,
-        perPositionHeight: true,
-        extrudedHeight: extrude ? 0 : undefined
-      });
-    }
-
-    outlineGeometry = new Cesium.PolygonOutlineGeometry({
+  if (style.getFill()) {
+    fillGeometry = new Cesium.PolygonGeometry({
       polygonHierarchy: hierarchy,
       perPositionHeight: true,
       extrudedHeight: extrude ? 0 : undefined
     });
   }
+
+  outlineGeometry = new Cesium.PolygonOutlineGeometry({
+    polygonHierarchy: hierarchy,
+    perPositionHeight: true,
+    extrudedHeight: extrude ? 0 : undefined
+  });
 
   return this.wrapFillAndOutlineGeometries(fillGeometry, outlineGeometry, style, context);
 };
@@ -942,20 +997,25 @@ plugin.cesium.sync.FeatureConverter.prototype.olPolygonGeometryToCesium = functi
 /**
  * Convert an OpenLayers polygon geometry to Cesium.
  * @param {!ol.Feature} feature Ol3 feature..
- * @param {!ol.geom.Polygon} geometry Ol3 polygon geometry.
+ * @param {!(ol.geom.Polygon|ol.geom.MultiPolygon)} geometry Ol3 polygon geometry.
  * @param {!plugin.cesium.VectorContext} context
  * @param {!ol.style.Style} style
+ * @param {Array<number>=} opt_polyFlats
+ * @param {number=} opt_offset
+ * @param {Array<number>=} opt_ringEnds
+ * @param {boolean=} opt_extrude
  * @return {Cesium.PrimitiveCollection|Cesium.Primitive}
  */
 plugin.cesium.sync.FeatureConverter.prototype.olPolygonGeometryToCesiumPolyline = function(feature, geometry,
-    context, style) {
+    context, style, opt_polyFlats, opt_offset, opt_ringEnds, opt_extrude) {
   // extruded polygons cannot be rendered as a polyline. since polygons will not respect line width on Windows, make
   // sure the geometry is both extruded and has an altitude before using the polygon primitive.
-  var extrude = !!geometry.get('extrude');
+  var extrude = opt_extrude != undefined ? opt_extrude : !!geometry.get('extrude');
   if (extrude && os.geo.hasAltitudeGeometry(geometry)) {
-    return this.olPolygonGeometryToCesium(feature, geometry, context, style);
+    return this.olPolygonGeometryToCesium(feature, geometry, context, style, opt_polyFlats, opt_offset,
+        opt_ringEnds, opt_extrude);
   } else {
-    var hierarchy = this.createPolygonHierarchy(geometry);
+    var hierarchy = this.createPolygonHierarchy(geometry, opt_polyFlats, opt_offset, opt_ringEnds, opt_extrude);
     if (!hierarchy) {
       return null;
     }
@@ -1091,19 +1151,23 @@ plugin.cesium.sync.FeatureConverter.prototype.getHeightReference = function(laye
 /**
  * Creates or updates a Cesium Billboard.
  * @param {!ol.Feature} feature The OL3 feature
- * @param {!ol.geom.Point} geometry The OL3 geometry
+ * @param {!(ol.geom.Point|ol.geom.MultiPoint)} geometry The OL3 geometry
  * @param {!plugin.cesium.VectorContext} context
  * @param {!ol.style.Style} style The OL3 style
  * @param {(Cesium.Billboard|Cesium.optionsBillboardCollectionAdd)=} opt_billboard The billboard, for updates
+ * @param {Array<number>=} opt_flatCoords
+ * @param {number=} opt_offset
+ * @param {Cesium.BillboardCollection=} opt_collection
+ * @suppress {checkTypes}
  */
 plugin.cesium.sync.FeatureConverter.prototype.createOrUpdateBillboard = function(feature, geometry, context, style,
-    opt_billboard) {
+    opt_billboard, opt_flatCoords, opt_offset, opt_collection) {
   var imageStyle = style.getImage();
   if (imageStyle) {
     var imageState = imageStyle.getImageState();
     if (imageState < ol.ImageState.LOADED) {
       // state is either idle or loading, so wait for the image to load/error
-      if (opt_billboard instanceof Cesium.Billboard) {
+      if (opt_billboard && opt_billboard.eyeOffset != null) {
         // make sure it isn't cleaned up while waiting for the image to load
         opt_billboard.dirty = false;
       }
@@ -1112,7 +1176,6 @@ plugin.cesium.sync.FeatureConverter.prototype.createOrUpdateBillboard = function
       if (imageState == ol.ImageState.IDLE) {
         imageStyle.load();
       }
-
 
       // avoid duplicate listeners
       var fid = feature.getId();
@@ -1130,9 +1193,10 @@ plugin.cesium.sync.FeatureConverter.prototype.createOrUpdateBillboard = function
         // try creating/updating again as long as the image isn't in the error state
         if (imageStyle.getImageState() < ol.ImageState.ERROR) {
           // if the billboard has already been created, make sure it's still in the collection
-          if (!(opt_billboard instanceof Cesium.Billboard) ||
+          if (!(opt_billboard && opt_billboard.eyeOffset != null) ||
               (context.billboards && context.billboards.contains(opt_billboard))) {
-            this.createOrUpdateBillboard(feature, geometry, context, style, opt_billboard);
+            this.createOrUpdateBillboard(feature, geometry, context, style, opt_billboard, opt_flatCoords,
+                opt_offset, opt_collection);
           }
         }
 
@@ -1140,9 +1204,9 @@ plugin.cesium.sync.FeatureConverter.prototype.createOrUpdateBillboard = function
         // TODO: handle image error?
       }, this);
     } else if (opt_billboard) {
-      this.updateBillboard(feature, geometry, opt_billboard, imageStyle, context.layer);
+      this.updateBillboard(feature, geometry, opt_billboard, imageStyle, context.layer, opt_flatCoords, opt_offset);
     } else {
-      this.createBillboard(feature, geometry, context, imageStyle);
+      this.createBillboard(feature, geometry, context, imageStyle, opt_flatCoords, opt_offset, opt_collection);
     }
   }
 };
@@ -1154,45 +1218,64 @@ plugin.cesium.sync.FeatureConverter.prototype.createOrUpdateBillboard = function
  * @param {!ol.geom.Point} geometry The OL3 geometry
  * @param {!plugin.cesium.VectorContext} context
  * @param {!ol.style.Image} style The image style
+ * @param {Array<number>=} opt_flatCoords
+ * @param {number=} opt_offset
+ * @param {Cesium.BillboardCollection=} opt_collection
  * @protected
  * @suppress {checkTypes} To allow access to feature id.
  */
-plugin.cesium.sync.FeatureConverter.prototype.createBillboard = function(feature, geometry, context, style) {
-  var image = style.getImage(1); // get normal density
-  if (image instanceof HTMLCanvasElement || image instanceof Image || image instanceof HTMLImageElement) {
-    var heightReference = this.getHeightReference(context.layer, feature, geometry);
-    var show = context.featureToShownMap[feature['id']] == null || context.featureToShownMap[feature['id']];
+plugin.cesium.sync.FeatureConverter.prototype.createBillboard = function(feature, geometry, context, style,
+  opt_flatCoords, opt_offset, opt_collection) {
+  var heightReference = this.getHeightReference(context.layer, feature, geometry);
+  var show = context.featureToShownMap[feature['id']] == null || context.featureToShownMap[feature['id']];
 
-    var options = /** @type {!Cesium.optionsBillboardCollectionAdd} */ ({
-      heightReference: heightReference,
-      show: show
-    });
+  var options = /** @type {!Cesium.optionsBillboardCollectionAdd} */ ({
+    heightReference: heightReference,
+    show: show
+  });
 
-    this.updateBillboard(feature, geometry, options, style, context.layer);
-    context.addBillboard(options, feature, geometry);
-  }
+  this.updateBillboard(feature, geometry, options, style, context.layer, opt_flatCoords, opt_offset);
+
+  // if (opt_collection) {
+  //   opt_collection.add(options);
+  // } else {
+  context.addBillboard(options, feature, geometry);
+  // }
 };
 
 
 /**
  * Update a Cesium Billboard from an OpenLayers image style.
  * @param {!ol.Feature} feature The OL3 feature
- * @param {!ol.geom.Point} geometry The OL3 geometry
+ * @param {!(ol.geom.Point|ol.geom.MultiPoint)} geometry The OL3 geometry
  * @param {!(Cesium.Billboard|Cesium.optionsBillboardCollectionAdd)} bb The billboard or billboard options
  * @param {!ol.style.Image} style The image style
  * @param {!ol.layer.Vector} layer The OL3 layer
+ * @param {Array<number>=} opt_flatCoords
+ * @param {number=} opt_offset
  * @protected
  */
-plugin.cesium.sync.FeatureConverter.prototype.updateBillboard = function(feature, geometry, bb, style, layer) {
+plugin.cesium.sync.FeatureConverter.prototype.updateBillboard = function(feature, geometry, bb, style, layer,
+    opt_flatCoords, opt_offset) {
   // update the position if the geometry changed
   var geomRevision = geometry.getRevision();
-  if (bb.geomRevision == null || bb.geomRevision != geomRevision) {
+  if (!bb.geomRevision || bb.geomRevision != geomRevision) {
+    var flats = opt_flatCoords || geometry.getFlatCoordinates();
+    var offset = opt_offset || 0;
+    var stride = geometry.stride;
+    var coord = plugin.cesium.sync.FeatureConverter.scratchCoord1_;
+    coord.length = stride;
+
+    for (var j = 0; j < stride; j++) {
+      coord[j] = flats[offset + j];
+    }
+
     var transform = this.getTransformFunction();
-    var center = geometry.getCoordinates();
-    center = transform ? transform(center, undefined, center.length) : center;
+    if (transform) {
+      coord = transform(coord, plugin.cesium.sync.FeatureConverter.scratchCoord2_, coord.length);
+    }
 
-    bb.position = olcs.core.ol4326CoordinateToCesiumCartesian(center);
-
+    bb.position = olcs.core.ol4326CoordinateToCesiumCartesian(coord);
     bb.geomRevision = geomRevision;
   }
 
@@ -1371,79 +1454,116 @@ plugin.cesium.sync.FeatureConverter.prototype.updatePrimitive = function(feature
  * @param {!ol.geom.Geometry} geometry Ol3 geometry.
  * @param {!plugin.cesium.VectorContext} context
  * @param {!ol.style.Style} style
+ * @param {Cesium.PrimitiveLike=} opt_primitive
  * @return {?Cesium.PrimitiveLike}
+ * @suppress {accessControls|checkTypes}
  */
-plugin.cesium.sync.FeatureConverter.prototype.olMultiGeometryToCesium = function(feature, geometry, context, style) {
+plugin.cesium.sync.FeatureConverter.prototype.olMultiGeometryToCesium = function(feature, geometry, context,
+    style, opt_primitive) {
   // FIXME: would be better to combine all child geometries in one primitive. instead we create n primitives for
   // simplicity (eg, laziness).
 
-  var subGeos;
   var geomType = geometry.getType();
+  var i;
+  var ii;
+  var primitives;
+  var count = 0;
+
+  // Note: Multi geometry types such as MultiPoint, MultiLineString, MultiPolygon, and MultiGeometry reconstitute the
+  // underlying geometries when getPoints(), getLineStrings(), getPolygons(), and getGeometries() is called. This
+  // causes the geometry-to-cesium-thing map to be stale every time and forces them to be dumped and recreated.
+  //
+  //      "Turrible, just turrible"
+  //          - Charles Barkley
+  //
+  // To avoid this, we're gonna operate on the flat coords directly. Hold on to something.
   switch (geomType) {
-    case 'MultiPoint':
+    case ol.geom.GeometryType.MULTI_POINT:
       geometry = /** @type {!ol.geom.MultiPoint} */ (geometry);
-      subGeos = geometry.getPoints();
+      var pointFlats = geometry.getFlatCoordinates();
+      var stride = geometry.stride;
 
-      subGeos.forEach(function(subGeo) {
-        goog.asserts.assert(subGeo !== null);
-        this.createOrUpdateBillboard(feature, subGeo, context, style);
-      }, this);
-      break;
-    case 'MultiLineString':
+      primitives = /** @type {Cesium.BillboardCollection} */ (opt_primitive || new Cesium.BillboardCollection({
+        scene: context.scene
+      }));
+
+      for (i = 0, ii = pointFlats.length; i < ii; i += stride) {
+        var bb = count < primitives.length ? primitives.get(count) : undefined;
+        this.createOrUpdateBillboard(feature, geometry, context, style, bb, pointFlats, i, primitives);
+        count++;
+      }
+
+      return primitives;
+    case ol.geom.GeometryType.MULTI_LINE_STRING:
       geometry = /** @type {!ol.geom.MultiLineString} */ (geometry);
-      subGeos = geometry.getLineStrings();
+      var lineFlats = geometry.getFlatCoordinates();
+      var lineEnds = geometry.getEnds();
+      var offset = 0;
 
-      if (feature instanceof os.feature.DynamicFeature) {
-        // dynamic lines may change frequently and should use Cesium.Polyline to avoid recreating on each change,
-        // which will cause a flicker while the new Primitive is loaded to the GPU.
-        subGeos.forEach(function(subGeo) {
-          if (subGeo) {
-            this.createOrUpdatePolyline(feature, subGeo, context, style);
-          }
-        }, this);
-      } else {
-        // all other lines should use Cesium.Primitive/Cesium.PolylineGeometry, which is more performant for picking.
-        var primitives = new Cesium.PrimitiveCollection();
-        subGeos.forEach(function(subGeo) {
-          if (subGeo) {
-            var prim = this.olLineStringGeometryToCesium(feature, subGeo, context, style);
-            if (prim) {
-              primitives.add(prim);
+      primitives = opt_primitive || (feature instanceof os.feature.DynamicFeature ? new Cesium.PolylineCollection() :
+          new Cesium.PrimitiveCollection());
 
-              // all lines share a style, so they will all have the same width.
-              primitives['olLineWidth'] = prim['olLineWidth'];
-            }
-          }
-        }, this);
-        return primitives;
-      }
-      break;
-    case 'MultiPolygon':
-      geometry = /** @type {!ol.geom.MultiPolygon} */ (geometry);
-      subGeos = geometry.getPolygons();
+      // get the shown state so it can be restored for an existing PolylineCollection, which only has a show flag on
+      // individual polylines
+      var shown = context.featureToShownMap[feature['id']] != null ?
+          context.featureToShownMap[feature['id']] :
+          plugin.cesium.VectorContext.isShown(primitives);
 
-      // ol.geom.MultiPolygon#getPolygons recreates polys from the flat coordinates, so the extrude values need to be
-      // reconstituted from the MultiPolygon.
-      var extrude = /** @type {Array<boolean>|undefined} */ (geometry.get('extrude'));
-      if (extrude && extrude.length == subGeos.length) {
-        for (var i = 0; i < extrude.length; i++) {
-          subGeos[i].set('extrude', extrude[i], true);
-        }
-      }
+      primitives.removeAll();
 
-      var primitives = new Cesium.PrimitiveCollection();
-      subGeos.forEach(function(subGeo) {
-        if (subGeo) {
-          var prim = this.olPolygonGeometryToCesiumPolyline(feature, subGeo, context, style);
-          // var prim = this.olPolygonGeometryToCesium(feature, subGeo, context, style);
+      for (i = 0, ii = lineEnds.length; i < ii; i++) {
+        var lineEnd = lineEnds[i];
+
+        if (feature instanceof os.feature.DynamicFeature) {
+          // dynamic lines may change frequently and should use Cesium.Polyline to avoid recreating on each change,
+          // which will cause a flicker while the new Primitive is loaded to the GPU.
+          this.createOrUpdatePolyline(feature, geometry, context, style, undefined,
+              lineFlats, offset, lineEnd, /** @type {Cesium.PolylineCollection} */ (primitives));
+        } else {
+          // all other lines should use Cesium.Primitive/Cesium.PolylineGeometry, which is more performant for picking.
+          var prim = this.olLineStringGeometryToCesium(feature, geometry, context, style, lineFlats, offset, lineEnd);
           if (prim) {
             primitives.add(prim);
 
-            // all polygons share a style, so they will all have the same width.
+            // all lines share a style, so they will all have the same width.
             primitives['olLineWidth'] = prim['olLineWidth'];
           }
         }
-      }, this);
+
+        offset = lineEnd;
+      }
+
+      // restore the shown state
+      plugin.cesium.VectorContext.setShow(primitives, shown);
+
+      return primitives;
+    case ol.geom.GeometryType.MULTI_POLYGON:
+      geometry = /** @type {!ol.geom.MultiPolygon} */ (geometry);
+      var polyFlats = geometry.getFlatCoordinates();
+      var polyEnds = geometry.getEndss();
+
+      primitives = opt_primitive || new Cesium.PrimitiveCollection();
+      primitives.removeAll();
+
+      var extrudes = /** @type {Array<boolean>|undefined} */ (geometry.get('extrude'));
+      offset = 0;
+
+      for (i = 0, ii = polyEnds.length; i < ii; i++) {
+        var ringEnds = polyEnds[i];
+        var extrude = extrudes && extrudes.length === polyEnds.length ? extrudes[i] : false;
+
+        var poly = this.olPolygonGeometryToCesiumPolyline(feature, geometry, context, style,
+            polyFlats, offset, ringEnds, extrude);
+        if (poly) {
+          primitives.add(poly);
+
+          // all polygons share a style, so they will all have the same width.
+          primitives['olLineWidth'] = poly['olLineWidth'];
+        }
+
+        offset = ringEnds[ringEnds.length - 1];
+      }
+
       return primitives;
     default:
       goog.asserts.fail('Unhandled multi geometry type' + geometry.getType());
@@ -1521,7 +1641,7 @@ plugin.cesium.sync.FeatureConverter.prototype.olGeometryToCesium = function(feat
     var dirty = geometry.get(os.geom.GeometryField.DIRTY);
     var width = this.extractLineWidthFromOlStyle(style);
     if (dirty || primitive['olLineWidth'] != width) {
-      wasPrimitiveShown = primitive.show;
+      wasPrimitiveShown = plugin.cesium.VectorContext.isShown(primitive);
       context.removePrimitive(primitive);
       geometry.set(os.geom.GeometryField.DIRTY, false);
       primitive = null;
@@ -1601,7 +1721,7 @@ plugin.cesium.sync.FeatureConverter.prototype.olGeometryToCesium = function(feat
     if (primitive) {
       if (wasPrimitiveShown != null) {
         // primitive was recreated, so restore the show state
-        primitive.show = wasPrimitiveShown;
+        plugin.cesium.VectorContext.setShow(primitive, wasPrimitiveShown);
       }
 
       context.addPrimitive(primitive, feature, geometry);
@@ -1620,7 +1740,17 @@ plugin.cesium.sync.FeatureConverter.prototype.olGeometryToCesium = function(feat
  */
 plugin.cesium.sync.FeatureConverter.prototype.updatePrimitiveLike = function(feature, geometry, style, context,
     primitive) {
-  if (primitive instanceof Cesium.PrimitiveCollection) {
+  var type = geometry.getType();
+
+  if (type === ol.geom.GeometryType.MULTI_POINT || (primitive.geomRevision !== geometry.getRevision() &&
+      (type === ol.geom.GeometryType.MULTI_LINE_STRING || type === ol.geom.GeometryType.MULTI_POLYGON))) {
+    this.olMultiGeometryToCesium(feature, geometry, context, style, primitive);
+    // multi-geom cases can often add new primitives to the collection as a result of a geometry update,
+    // so ensure they can be picked
+    context.addOLReferences(primitive, feature, geometry);
+    // mark as updated so it isn't removed
+    primitive.dirty = false;
+  } else if (primitive instanceof Cesium.PrimitiveCollection || primitive instanceof Cesium.PolylineCollection) {
     for (var i = 0, n = primitive.length; i < n; i++) {
       this.updatePrimitiveLike(feature, geometry, style, context, primitive.get(i));
     }

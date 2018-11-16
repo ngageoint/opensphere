@@ -14,6 +14,7 @@ goog.require('goog.dom.ViewportSizeMonitor');
 goog.require('goog.events.EventType');
 goog.require('goog.log');
 goog.require('ol.array');
+goog.require('os.array');
 goog.require('os.ui.Module');
 goog.require('os.ui.events.UIEvent');
 goog.require('os.ui.onboarding.contextOnboardingDirective');
@@ -317,7 +318,7 @@ os.ui.window.closeAll = function(opt_parent) {
   if (winContainer.length) {
     var wins = winContainer.find(os.ui.windowSelector.WINDOW);
     if (wins instanceof Array) {
-      goog.array.forEach(wins, function(win) {
+      os.array.forEach(wins, function(win) {
         os.ui.window.close(win);
       });
     } else {

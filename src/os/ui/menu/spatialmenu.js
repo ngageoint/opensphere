@@ -2,7 +2,9 @@ goog.provide('os.ui.menu.SpatialMenu');
 goog.provide('os.ui.menu.spatial');
 
 goog.require('ol.Feature');
+goog.require('ol.array');
 goog.require('os.action.EventType');
+goog.require('os.array');
 goog.require('os.command.AreaToggle');
 goog.require('os.command.SequenceCommand');
 goog.require('os.data.AreaNode');
@@ -929,7 +931,7 @@ os.ui.menu.spatial.LayerChooserCtrl = function($scope, $element) {
  * @export
  */
 os.ui.menu.spatial.LayerChooserCtrl.prototype.valid = function() {
-  var found = goog.array.find(this.scope_['layers'], function(layer) {
+  var found = ol.array.find(this.scope_['layers'], function(layer) {
     return layer['enabled'];
   });
 
@@ -948,7 +950,7 @@ os.ui.menu.spatial.LayerChooserCtrl.prototype.accept = function() {
 
   // Create an array of enabled layerids
   var layerIds = [];
-  goog.array.forEach(this.scope_['layers'], function(layer) {
+  os.array.forEach(this.scope_['layers'], function(layer) {
     if (layer.enabled) {
       layerIds.push(layer.id);
     }

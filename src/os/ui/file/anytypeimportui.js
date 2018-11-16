@@ -1,4 +1,5 @@
 goog.provide('os.ui.file.AnyTypeImportUI');
+goog.require('os.array');
 goog.require('os.file.mime.zip');
 goog.require('os.ui.file.anyTypeImportDirective');
 goog.require('os.ui.im.AbstractImportUI');
@@ -23,7 +24,7 @@ goog.inherits(os.ui.file.AnyTypeImportUI, os.ui.im.AbstractImportUI);
 os.ui.file.AnyTypeImportUI.prototype.launchUI = function(file, opt_config) {
   var importers = os.ui.im.ImportManager.getInstance().getImporters();
   var visibleImporters = [];
-  goog.array.forEach(importers, function(importor) {
+  os.array.forEach(importers, function(importor) {
     if (importor.getTitle()) {
       importor['title'] = importor.getTitle();
       visibleImporters.push(importor);

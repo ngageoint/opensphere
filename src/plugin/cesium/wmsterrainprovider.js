@@ -53,15 +53,16 @@ plugin.cesium.WMSTerrainProvider.prototype.getTileDataAvailable = function(x, y,
 /**
  * @inheritDoc
  */
-plugin.cesium.WMSTerrainProvider.prototype.requestTileGeometry = function(x, y, level, throttleRequests) {
+plugin.cesium.WMSTerrainProvider.prototype.requestTileGeometry = function(x, y, level, opt_request) {
   var layerName = this.getLayerForLevel_(level);
   if (!layerName) {
     // no terrain at this zoom level
-    return new Cesium.HeightmapTerrainData({
+    var terrainData = new Cesium.HeightmapTerrainData({
       buffer: new Uint8Array(this.tileSize * this.tileSize),
       width: this.tileSize,
       height: this.tileSize
     });
+    return Cesium.when.resolve(terrainData);
   }
 
   var url = this.getRequestUrl_(x, y, level, layerName);
@@ -69,18 +70,13 @@ plugin.cesium.WMSTerrainProvider.prototype.requestTileGeometry = function(x, y, 
     url = os.net.ProxyHandler.getProxyUri(url);
   }
 
-  var promise;
-  throttleRequests = Cesium.defaultValue(throttleRequests, true);
-  if (throttleRequests) {
-    promise = Cesium.loadArrayBuffer(url, undefined, new Cesium.Request({
-      throttle: true
-    }));
+  var promise = Cesium.Resource.fetchArrayBuffer({
+    url: url,
+    request: opt_request
+  });
 
-    if (!promise) {
-      return undefined;
-    }
-  } else {
-    promise = Cesium.loadArrayBuffer(url);
+  if (!promise) {
+    return undefined;
   }
 
   var childMask = this.getTerrainChildMask(x, y, level);

@@ -1203,7 +1203,7 @@ os.geo.interpolateCircle = function(center, radius, opt_pointsPerQuad) {
   unitCircle.push(unitCircle[0]);
 
   var locations = [];
-  goog.array.forEach(unitCircle, function(loc) {
+  os.array.forEach(unitCircle, function(loc) {
     locations.push([center[0] + loc[0] * radius, center[1] + loc[1] * radius]);
   });
 

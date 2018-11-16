@@ -1,6 +1,7 @@
 goog.provide('os.data.histo');
 
 goog.require('goog.dom');
+goog.require('ol.array');
 goog.require('os.alert.Alert');
 goog.require('os.data.OSDataManager');
 goog.require('os.filter.FilterEntry');
@@ -88,7 +89,7 @@ os.data.histo.filterValidControllers = function(controllers, columns, opt_allowA
     var columnName = column && column['name'] || null;
     var columnField = column && column['field'] || null;
 
-    var matchedSourceColumn = goog.array.find(columns, function(c) {
+    var matchedSourceColumn = ol.array.find(columns, function(c) {
       return c['field'] == columnField || c['name'] == columnName;
     });
 

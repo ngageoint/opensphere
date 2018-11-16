@@ -4,6 +4,7 @@ goog.require('goog.events.EventTarget');
 goog.require('goog.log');
 goog.require('goog.log.Logger');
 goog.require('goog.string');
+goog.require('ol.array');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.ui.filter.FilterManager');
 goog.require('os.ui.query');
@@ -128,7 +129,7 @@ os.ui.query.QueryManager.prototype.getEntries = function(opt_layerId, opt_areaId
  */
 os.ui.query.QueryManager.prototype.addIdsToUpdate_ = function(oldEntries, newEntries) {
   for (var i = 0; i < newEntries.length; i++) {
-    var newEntry = goog.array.findIndex(oldEntries, function(oldEntry) {
+    var newEntry = ol.array.findIndex(oldEntries, function(oldEntry) {
       return goog.object.equals(oldEntry, newEntries[i]);
     }) == -1;
     if (newEntry && this.isActive(/** @type {string} */ (newEntries[i]['areaId']))) {

@@ -4,6 +4,7 @@ goog.provide('os.ui.help.controlsDirective');
 
 goog.require('goog.events.KeyCodes');
 goog.require('goog.events.KeyNames');
+goog.require('ol.array');
 goog.require('os.ui');
 goog.require('os.ui.Module');
 goog.require('os.ui.window');
@@ -251,7 +252,7 @@ os.ui.help.Controls.prototype.getControls = function() {
  * @param {Array<string>=} opt_other
  */
 os.ui.help.Controls.prototype.addControl = function(section, order, text, opt_keys, opt_other) {
-  var ctrlGroup = goog.array.find(this.controls_, function(group) {
+  var ctrlGroup = ol.array.find(this.controls_, function(group) {
     return group['section'] == section;
   });
   if (!ctrlGroup) {
