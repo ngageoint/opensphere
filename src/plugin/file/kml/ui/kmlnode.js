@@ -7,6 +7,8 @@ goog.require('goog.log.Logger');
 goog.require('ol.events');
 goog.require('ol.extent');
 goog.require('ol.geom.GeometryType');
+goog.require('os.annotation');
+goog.require('os.annotation.FeatureAnnotation');
 goog.require('os.data.IExtent');
 goog.require('os.data.ISearchable');
 goog.require('os.events.PropertyChangeEvent');
@@ -81,6 +83,13 @@ plugin.file.kml.ui.KMLNode = function() {
    * @type {boolean}
    */
   this.marked = false;
+
+  /**
+   * The feature annotation.
+   * @type {os.annotation.FeatureAnnotation}
+   * @protected
+   */
+  this.annotation_ = null;
 
   /**
    * The kml ground image
@@ -158,8 +167,8 @@ plugin.file.kml.ui.KMLNode.CHILD_LOADING_EVENTS_ = ['children', 'state', 'collap
 plugin.file.kml.ui.KMLNode.prototype.disposeInternal = function() {
   plugin.file.kml.ui.KMLNode.base(this, 'disposeInternal');
 
-  this.feature_ = null;
-  this.image_ = null;
+  this.setFeature(null);
+  this.setImage(null);
   this.source = null;
 };
 
@@ -188,16 +197,62 @@ plugin.file.kml.ui.KMLNode.prototype.getFeature = function() {
 plugin.file.kml.ui.KMLNode.prototype.setFeature = function(feature) {
   if (this.feature_) {
     ol.events.unlisten(this.feature_, goog.events.EventType.PROPERTYCHANGE, this.onFeatureChange, this);
+    this.clearAnnotations();
   }
 
   this.feature_ = feature;
 
   if (this.feature_) {
     ol.events.listen(this.feature_, goog.events.EventType.PROPERTYCHANGE, this.onFeatureChange, this);
+    this.loadAnnotation();
   }
 
   this.dispatchEvent(new os.events.PropertyChangeEvent('icons'));
   this.dispatchEvent(new os.events.PropertyChangeEvent('label'));
+};
+
+
+/**
+ * Clean up the annotation for the node and all children.
+ */
+plugin.file.kml.ui.KMLNode.prototype.clearAnnotations = function() {
+  if (this.annotation_) {
+    goog.dispose(this.annotation_);
+    this.annotation_ = null;
+  }
+
+  var children = this.getChildren();
+  if (children) {
+    for (var i = 0, n = children.length; i < n; i++) {
+      children[i].clearAnnotations();
+    }
+  }
+};
+
+
+/**
+ * Set up the annotation for the node.
+ */
+plugin.file.kml.ui.KMLNode.prototype.loadAnnotation = function() {
+  if (this.feature_ && !this.annotation_) {
+    var annotationOptions = /** @type {osx.annotation.Options|undefined} */ (
+        this.feature_.get(os.annotation.OPTIONS_FIELD));
+    if (annotationOptions && annotationOptions.show) {
+      this.annotation_ = new os.annotation.FeatureAnnotation(this.feature_);
+      this.updateAnnotationVisibility_();
+    }
+  }
+};
+
+
+/**
+ * Update visibility of the map annotation based on the node state.
+ * @private
+ */
+plugin.file.kml.ui.KMLNode.prototype.updateAnnotationVisibility_ = function() {
+  if (this.annotation_) {
+    this.annotation_.setVisible(this.getState() === os.structs.TriState.ON);
+  }
 };
 
 
@@ -209,8 +264,21 @@ plugin.file.kml.ui.KMLNode.prototype.setFeature = function(feature) {
 plugin.file.kml.ui.KMLNode.prototype.onFeatureChange = function(event) {
   if (event instanceof os.events.PropertyChangeEvent) {
     var p = event.getProperty();
-    if (p === 'loading') {
-      this.setLoading(!!event.getNewValue());
+    switch (p) {
+      case 'loading':
+        this.setLoading(!!event.getNewValue());
+        break;
+      case os.annotation.EventType.CHANGE:
+        this.dispatchEvent(new os.events.PropertyChangeEvent(os.annotation.EventType.CHANGE));
+        break;
+      case os.annotation.EventType.EDIT:
+        plugin.file.kml.ui.createOrEditPlace(/** @type {!plugin.file.kml.ui.PlacemarkOptions} */ ({
+          'feature': this.feature_,
+          'node': this
+        }));
+        break;
+      default:
+        break;
     }
   }
 };
@@ -552,6 +620,9 @@ plugin.file.kml.ui.KMLNode.prototype.addChild = function(child, opt_skipaddparen
 
     if (!previous) {
       return plugin.file.kml.ui.KMLNode.base(this, 'addChild', child, opt_skipaddparent, opt_index);
+    } else {
+      // node was merged with an existing one, so clean up the extra node
+      goog.dispose(child);
     }
 
     return previous;
@@ -607,13 +678,11 @@ plugin.file.kml.ui.KMLNode.prototype.formatIcons = function() {
   } else if (this.overlay_) {
     return '<i class="fa fa-photo fa-fw compact" title="Screen Overlay"></i>';
   } else {
-    // start with the base info icon that will launch a feature info dialog
-    var icons = '<i class="fa fa-info-circle fa-fw compact gold-icon pointer" title="Feature Info" ' +
-        'ng-click="itemAction(\'' + plugin.file.kml.ui.KMLNodeAction.FEATURE_INFO + '\')"></i>';
+    var icons = [];
 
+    // if the node has a geometry, add the geometry icon
     var geom = this.feature_.getGeometry();
     if (geom) {
-      // if the node has a geometry, add the geometry icon
       var type = geom.getType();
       if (type in plugin.file.kml.ui.GeometryIcons) {
         var geomIcon = plugin.file.kml.ui.GeometryIcons[type];
@@ -623,11 +692,20 @@ plugin.file.kml.ui.KMLNode.prototype.formatIcons = function() {
           geomIcon = geomIcon.replace('><', ' style="color:' + os.color.toHexString(color) + '"><');
         }
 
-        icons = geomIcon + icons;
+        icons.push(geomIcon);
       }
     }
 
-    return icons;
+    // if an annotation is displayed, add an icon for it
+    if (this.annotation_) {
+      icons.push('<i class="fa fa-comment fa-fw" title="Annotation"></i>');
+    }
+
+    // add an info icon to launch feature info
+    icons.push('<i class="fa fa-info-circle fa-fw compact gold-icon pointer" title="Feature Info" ' +
+        'ng-click="itemAction(\'' + plugin.file.kml.ui.KMLNodeAction.FEATURE_INFO + '\')"></i>');
+
+    return icons.join('');
   }
 };
 
@@ -659,8 +737,8 @@ plugin.file.kml.ui.KMLNode.prototype.onChildChange = function(e) {
 
   plugin.file.kml.ui.KMLNode.base(this, 'onChildChange', e);
 
-  if (p == 'collapsed') {
-    // propagate the collapsed event up the tree so the KML can be saved if necessary
+  if (p === 'collapsed' || p === os.annotation.EventType.CHANGE) {
+    // propagate the event up the tree so the KML can be saved if necessary
     this.dispatchEvent(new os.events.PropertyChangeEvent(p));
   } else if (p === 'loading') {
     // propagate loading events up the tree so the layer can show the overall loading state
@@ -712,8 +790,11 @@ plugin.file.kml.ui.KMLNode.prototype.setState = function(value) {
   var old = this.getState();
 
   plugin.file.kml.ui.KMLNode.base(this, 'setState', value);
-  var s = this.getState();
 
+  // set annotation visibility
+  this.updateAnnotationVisibility_();
+
+  var s = this.getState();
   if (this.getOverlay()) {
     // hide/show the screen overlay window
     var toggle = os.ui.window.toggleVisibility(this.getOverlay());

@@ -30,10 +30,12 @@ plugin.places.menu.GROUP_LABEL = plugin.places.TITLE;
  */
 plugin.places.menu.EventType = {
   SAVE_TO: 'places:saveToPlaces',
+  SAVE_TO_ANNOTATION: 'places:saveToAnnotation',
   EXPORT: 'places:export',
 
   // create/edit
   ADD_FOLDER: 'places:addFolder',
+  ADD_ANNOTATION: 'places:addAnnotation',
   ADD_PLACEMARK: 'places:addPlacemark',
   EDIT_FOLDER: 'places:editFolder',
   EDIT_PLACEMARK: 'places:editPlacemark',
@@ -104,7 +106,7 @@ plugin.places.menu.layerSetup = function() {
           eventType: plugin.places.menu.EventType.SAVE_TO,
           tooltip: 'Copies selected features to the ' + plugin.places.TITLE +
               ' layer, or all features if none selected',
-          icons: ['<i class="fa fa-fw ' + plugin.places.ICON + '"></i>'],
+          icons: ['<i class="fa fa-fw ' + plugin.places.Icon.PLACEMARK + '"></i>'],
           beforeRender: plugin.places.menu.visibleIfCanSaveLayer,
           handler: plugin.places.menu.saveLayerToPlaces,
           metricKey: os.metrics.Places.SAVE_TO
@@ -250,17 +252,30 @@ plugin.places.menu.visibleIfLayerNodeSupported_ = function(context) {
 plugin.places.menu.mapSetup = function() {
   var menu = os.ui.menu.MAP;
 
-  if (menu && !menu.getRoot().find(plugin.places.menu.EventType.SAVE_TO)) {
-    var group = menu.getRoot().find('Coordinate');
-    if (group) {
-      group.addChild({
-        label: 'Save to Places...',
-        eventType: plugin.places.menu.EventType.SAVE_TO,
-        tooltip: 'Creates a new saved place from this location',
-        icons: ['<i class="fa fa-fw ' + plugin.places.ICON + '"></i>'],
-        handler: plugin.places.menu.saveCoordinateToPlaces
-      });
-    }
+  if (menu && !menu.getRoot().find(plugin.places.menu.GROUP_LABEL)) {
+    var root = menu.getRoot();
+    root.addChild({
+      label: plugin.places.menu.GROUP_LABEL,
+      type: os.ui.menu.MenuItemType.GROUP,
+      sort: 50,
+      children: [
+        {
+          label: 'Save to Places...',
+          eventType: plugin.places.menu.EventType.SAVE_TO,
+          tooltip: 'Creates a new saved place from this location',
+          icons: ['<i class="fa fa-fw ' + plugin.places.Icon.PLACEMARK + '"></i>'],
+          handler: plugin.places.menu.saveCoordinateToPlaces,
+          sort: 0
+        }, {
+          label: 'Create Annotation...',
+          eventType: plugin.places.menu.EventType.SAVE_TO_ANNOTATION,
+          tooltip: 'Creates a new annotation at this location',
+          icons: ['<i class="fa fa-fw ' + plugin.places.Icon.ANNOTATION + '"></i>'],
+          handler: plugin.places.menu.createAnnotationFromCoordinate,
+          sort: 1
+        }
+      ]
+    });
   }
 };
 
@@ -271,7 +286,7 @@ plugin.places.menu.mapSetup = function() {
 plugin.places.menu.mapDispose = function() {
   var menu = os.ui.menu.MAP;
   if (menu) {
-    var group = menu.getRoot().find('Coordinate');
+    var group = menu.getRoot().find(os.ui.menu.map.GroupLabel.COORDINATE);
     if (group) {
       group.removeChild(plugin.places.menu.EventType.SAVE_TO);
     }
@@ -294,7 +309,7 @@ plugin.places.menu.spatialSetup = function() {
         eventType: plugin.places.menu.EventType.SAVE_TO,
         label: 'Save to Places...',
         tooltip: 'Creates a new saved place from the area',
-        icons: ['<i class="fa fa-fw ' + plugin.places.ICON + '"></i>'],
+        icons: ['<i class="fa fa-fw ' + plugin.places.Icon.PLACEMARK + '"></i>'],
         beforeRender: plugin.places.menu.visibleIfCanSaveSpatial,
         handler: plugin.places.menu.saveSpatialToPlaces
       });
@@ -564,6 +579,29 @@ plugin.places.menu.saveCoordinateToPlaces = function(event) {
 
     var rootNode = plugin.places.PlacesManager.getInstance().getPlacesRoot();
     plugin.file.kml.ui.createOrEditPlace(/** @type {!plugin.file.kml.ui.PlacemarkOptions} */ ({
+      'geometry': new ol.geom.Point(context),
+      'parent': rootNode
+    }));
+  }
+};
+
+
+/**
+ * Save a coordinate to places.
+ * @param {os.ui.menu.MenuEvent<ol.Coordinate>} event The menu event.
+ */
+plugin.places.menu.createAnnotationFromCoordinate = function(event) {
+  var context = event.getContext();
+  if (context && event instanceof goog.events.Event && !os.inIframe()) {
+    // Here's a fun exploitation of the whole window context and instanceof problem.
+    // We only want to handle the event if it was created in *this* window context and
+    // this context isn't in an iframe.
+    event.preventDefault();
+    event.stopPropagation();
+
+    var rootNode = plugin.places.PlacesManager.getInstance().getPlacesRoot();
+    plugin.file.kml.ui.createOrEditPlace(/** @type {!plugin.file.kml.ui.PlacemarkOptions} */ ({
+      'annotation': true,
       'geometry': new ol.geom.Point(context),
       'parent': rootNode
     }));
