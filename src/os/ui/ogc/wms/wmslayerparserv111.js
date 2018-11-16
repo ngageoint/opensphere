@@ -1,5 +1,6 @@
 goog.provide('os.ui.ogc.wms.WMSLayerParserV111');
 
+goog.require('ol.array');
 goog.require('os.ogc');
 goog.require('os.ui.ogc.wms.AbstractWMSLayerParser');
 
@@ -106,7 +107,7 @@ os.ui.ogc.wms.WMSLayerParserV111.prototype.parseLayer = function(node, layer) {
         i = kList.length;
         while (i--) {
           var keyword = String(kList[i]);
-          if (!goog.array.contains(keywords, keyword)) {
+          if (!ol.array.includes(keywords, keyword)) {
             keywords.push(keyword);
           }
         }

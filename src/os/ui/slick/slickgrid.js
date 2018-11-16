@@ -13,6 +13,7 @@ goog.require('goog.dom.classlist');
 goog.require('goog.events.KeyCodes');
 goog.require('goog.object');
 goog.require('goog.string');
+goog.require('ol.array');
 goog.require('os.data.ColumnDefinition');
 goog.require('os.events');
 goog.require('os.string');
@@ -172,7 +173,7 @@ os.ui.slick.SlickGridCtrl = function($scope, $element, $compile) {
   this.destroyers.push($scope.$watch('options', this.onOptionsChange.bind(this)));
   this.destroyers.push($scope.$on('$destroy', this.dispose.bind(this)));
   var unWatchSortColumn = $scope.$watch('defaultSortColumn', goog.bind(function(newVal) {
-    if (newVal && goog.array.find($scope['columns'], function(col) {
+    if (newVal && ol.array.find($scope['columns'], function(col) {
       return newVal == col['id'];
     })) {
       setTimeout(goog.bind(function() {
@@ -810,8 +811,7 @@ os.ui.slick.SlickGridCtrl.prototype.onColumnsReordered_ = function(e, args) {
       if (columns[i]['id'] != srcColumns[j]['id']) {
         // if the current visible source column isn't the same as the current grid column, that column moved in the
         // grid. move it in the source.
-        var index = goog.array.findIndex(srcColumns,
-            os.ui.slick.column.findByField.bind(this, 'id', columns[i]['id']));
+        var index = ol.array.findIndex(srcColumns, os.ui.slick.column.findByField.bind(this, 'id', columns[i]['id']));
         if (index > -1) {
           var targetIndex = j > index ? j - 1 : j;
           goog.array.insert(changed, srcColumns[index]);
@@ -847,7 +847,7 @@ os.ui.slick.SlickGridCtrl.prototype.onColumnsResized_ = function(e, args) {
       var nodeWidth = $(columnNodes[i]).outerWidth();
       var columnData = $(columnNodes[i]).data();
       if (nodeWidth > 0 && columnData && columnData['column']) {
-        var index = goog.array.findIndex(columns,
+        var index = ol.array.findIndex(columns,
             os.ui.slick.column.findByField.bind(this, 'id', columnData['column']['id']));
         if (index > -1) {
           columns[index]['width'] = nodeWidth;
@@ -894,8 +894,7 @@ os.ui.slick.SlickGridCtrl.prototype.onColumnRemove = function(event) {
   var context = event.getContext();
   if (context && context.grid === this && context.column) {
     var columns = this.getColumnsInternal();
-    var index = goog.array.findIndex(columns,
-        os.ui.slick.column.findByField.bind(this, 'id', context.column['id']));
+    var index = ol.array.findIndex(columns, os.ui.slick.column.findByField.bind(this, 'id', context.column['id']));
     if (index > -1) {
       columns[index]['visible'] = false;
       this.onUserColumnsChange([columns[index]]);
@@ -913,8 +912,7 @@ os.ui.slick.SlickGridCtrl.prototype.onColumnFirst = function(event) {
   var context = event.getContext();
   if (context && context.grid === this && context.column) {
     var columns = this.getColumnsInternal();
-    var index = goog.array.findIndex(columns,
-        os.ui.slick.column.findByField.bind(this, 'id', context.column['id']));
+    var index = ol.array.findIndex(columns, os.ui.slick.column.findByField.bind(this, 'id', context.column['id']));
     if (index > -1) {
       goog.array.moveItem(columns, index, 0);
       this.onUserColumnsChange([columns[index]]);
@@ -932,8 +930,7 @@ os.ui.slick.SlickGridCtrl.prototype.onColumnLast = function(event) {
   var context = event.getContext();
   if (context && context.grid === this && context.column) {
     var columns = this.getColumnsInternal();
-    var index = goog.array.findIndex(columns,
-        os.ui.slick.column.findByField.bind(this, 'id', context.column['id']));
+    var index = ol.array.findIndex(columns, os.ui.slick.column.findByField.bind(this, 'id', context.column['id']));
     if (index > -1) {
       goog.array.moveItem(columns, index, columns.length - 1);
       this.onUserColumnsChange([columns[index]]);

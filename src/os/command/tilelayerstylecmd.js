@@ -1,6 +1,6 @@
 goog.provide('os.command.TileLayerStyle');
 
-goog.require('os.command.AbstractTileStyle');
+goog.require('os.command.AbstractLayerStyle');
 goog.require('os.command.ICommand');
 goog.require('os.command.State');
 goog.require('os.ui');
@@ -14,14 +14,14 @@ goog.require('os.ui');
  * @param {?(string|osx.ogc.TileStyle)} style
  * @param {(?(string|osx.ogc.TileStyle))=} opt_oldStyle
  *
- * @extends {os.command.AbstractTileStyle}
+ * @extends {os.command.AbstractLayerStyle}
  * @constructor
  */
 os.command.TileLayerStyle = function(layerId, style, opt_oldStyle) {
   os.command.TileLayerStyle.base(this, 'constructor', layerId, style, opt_oldStyle);
   this.title = 'Change Layer Style';
 };
-goog.inherits(os.command.TileLayerStyle, os.command.AbstractTileStyle);
+goog.inherits(os.command.TileLayerStyle, os.command.AbstractLayerStyle);
 
 
 /**

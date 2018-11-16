@@ -5,6 +5,7 @@ goog.require('goog.dom.xml');
 goog.require('goog.log');
 goog.require('goog.log.Logger');
 goog.require('ol.Feature');
+goog.require('os.array');
 goog.require('os.ogc.spatial');
 goog.require('os.ogc.spatial.Format');
 goog.require('os.state.XMLState');
@@ -185,7 +186,7 @@ os.state.v4.QueryArea.prototype.remove = function(id) {
       qm.removeEntriesArr(removeEntries);
     }
 
-    goog.array.forEach(removeFeatures, am.remove, am);
+    os.array.forEach(removeFeatures, am.remove, am);
     delete os.state.v4.QueryArea.ADDED_[id];
   }
 };

@@ -9,6 +9,7 @@ goog.require('goog.log.Logger');
 goog.require('goog.object');
 goog.require('goog.string');
 goog.require('ol.format.XSD');
+goog.require('os.array');
 goog.require('os.color');
 goog.require('os.command.LayerAdd');
 goog.require('os.data.DataManager');
@@ -498,7 +499,7 @@ os.state.v4.BaseLayerState.prototype.configKeyToXML = function(layerConfig, type
           !goog.string.isEmptyOrWhitespace(goog.string.makeSafe(labelColumn[0]['column']))) {
         // New Multi column
         var labelColumns = os.xml.appendElement(os.state.v4.LayerTag.LABEL_COLUMNS, bfs);
-        goog.array.forEach(labelColumn, function(label) {
+        os.array.forEach(labelColumn, function(label) {
           os.xml.appendElement(os.state.v4.LayerTag.LABEL, labelColumns, undefined, {
             'column': label['column'],
             'showColumn': label['showColumn']
@@ -918,7 +919,7 @@ os.state.v4.BaseLayerState.prototype.xmlToConfigKey = function(node, child, name
           case os.state.v4.LayerTag.LABEL_COLUMNS:
             var labels = [];
             var labelColumns = goog.dom.getChildren(styleList[j]);
-            goog.array.forEach(labelColumns, function(label) {
+            os.array.forEach(labelColumns, function(label) {
               labels.push({
                 'column': label.getAttribute('column'),
                 'showColumn': label.getAttribute('showColumn') == 'true' ? true : false

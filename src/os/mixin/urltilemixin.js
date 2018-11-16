@@ -8,6 +8,7 @@ goog.require('goog.events.EventType');
 goog.require('ol.events');
 goog.require('ol.source.TileEventType');
 goog.require('ol.source.UrlTile');
+goog.require('os.array');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.implements');
 goog.require('os.ol.source.ILoadingSource');
@@ -286,7 +287,7 @@ ol.source.UrlTile.prototype.disposeInternal = function() {
 
   // remove any pending listeners
   if (this.listenerKeys_) {
-    goog.array.forEach(this.listenerKeys_, ol.events.unlistenByKey);
+    os.array.forEach(this.listenerKeys_, ol.events.unlistenByKey);
     this.listenerKeys_.length = 0;
   }
 

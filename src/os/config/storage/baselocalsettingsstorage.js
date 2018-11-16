@@ -1,6 +1,7 @@
 goog.provide('os.config.storage.BaseLocalSettingsStorage');
 goog.require('goog.async.Deferred');
 goog.require('goog.async.DeferredList');
+goog.require('os.array');
 goog.require('os.config');
 goog.require('os.config.storage.ISettingsReadableStorage');
 goog.require('os.config.storage.ISettingsStorage');
@@ -63,7 +64,7 @@ os.config.storage.BaseLocalSettingsStorage.prototype.getSettings = function() {
   var prefs = {};
   prefs[os.config.ConfigType.PREFERENCE] = {};
 
-  goog.array.forEach(this.namespaces, function(namespace) {
+  os.array.forEach(this.namespaces, function(namespace) {
     deferreds.push(this.store.get(namespace));
   }, this);
 
@@ -87,7 +88,7 @@ os.config.storage.BaseLocalSettingsStorage.prototype.onGet_ = function(deferredL
 
   // DeferredList results are an array of 2-element arrays indicating the result of every deferred in the list.
   // The first index is pass/fail boolean, the second index is the results
-  goog.array.forEach(deferredListResults, function(deferredListResult, index) {
+  os.array.forEach(deferredListResults, function(deferredListResult, index) {
     success = success && deferredListResult[0];
     if (success) {
       var namespace = this.namespaces[index];
@@ -119,7 +120,7 @@ os.config.storage.BaseLocalSettingsStorage.prototype.onFail_ = function() {
 os.config.storage.BaseLocalSettingsStorage.prototype.setSettings = function(map) {
   var deferreds = [];
   try {
-    goog.array.forEach(this.namespaces, function(namespace) {
+    os.array.forEach(this.namespaces, function(namespace) {
       var prefs = map[namespace] || {};
       deferreds.push(this.store.set(namespace, prefs, true));
     }, this);

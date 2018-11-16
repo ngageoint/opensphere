@@ -8,6 +8,7 @@
 goog.provide('os.mixin.TileImage');
 
 goog.require('ol.TileState');
+goog.require('ol.array');
 goog.require('ol.source.TileImage');
 goog.require('os');
 goog.require('os.TileClass');
@@ -58,7 +59,7 @@ ol.source.TileImage.prototype.removeTileFilter = function(fn) {
     this.tileFilters = [];
   }
 
-  goog.array.remove(this.tileFilters, fn);
+  ol.array.remove(this.tileFilters, fn);
   this.applyTileFilters();
 };
 

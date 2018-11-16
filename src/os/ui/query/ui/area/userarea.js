@@ -7,6 +7,7 @@ goog.require('goog.async.Delay');
 goog.require('goog.dom');
 goog.require('goog.events.KeyHandler');
 goog.require('ol.Feature');
+goog.require('ol.array');
 goog.require('ol.geom.Point');
 goog.require('ol.geom.Polygon');
 goog.require('os.events.EventType');
@@ -231,7 +232,7 @@ os.ui.query.ui.area.UserAreaCtrl = function($scope, $element, $timeout) {
 
   if (this.editArea) {
     // remove unsupported edit types
-    goog.array.remove(this['areaTypes'], os.ui.query.ui.area.AreaType.CIRCLE);
+    ol.array.remove(this['areaTypes'], os.ui.query.ui.area.AreaType.CIRCLE);
 
     // prepopulate the form from the provided area
     var geometry = this.editArea.getGeometry();
