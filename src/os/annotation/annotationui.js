@@ -268,15 +268,10 @@ os.annotation.AnnotationCtrl.prototype.onFeatureChange_ = function() {
 /**
  * Handle changes to overlay visibility.
  * @private
- *
- * @suppress {accessControls} To allow rendering the overlay.
  */
 os.annotation.AnnotationCtrl.prototype.onOverlayVisibleChange_ = function() {
   if (!this.inVisibleChange_ && this.overlay) {
     this.inVisibleChange_ = true;
-
-    // make sure the overlay is rendered before trying to draw the tail, or it will be drawn incorrectly.
-    this.overlay.render();
 
     // try updating the tail
     if (this.updateTail_()) {
@@ -398,6 +393,8 @@ os.annotation.AnnotationCtrl.prototype.updateTail_ = function() {
  * Update the SVG tail for the annotation using an absolute position.
  * @return {boolean} If the update was successful.
  * @private
+ *
+ * @suppress {accessControls} To allow rendering the overlay.
  */
 os.annotation.AnnotationCtrl.prototype.updateTailAbsolute_ = function() {
   //
@@ -407,6 +404,9 @@ os.annotation.AnnotationCtrl.prototype.updateTailAbsolute_ = function() {
   //
 
   if (this.element && this.overlay) {
+    // make sure the overlay is rendered before trying to draw the tail, or it will be drawn incorrectly.
+    this.overlay.render();
+
     var position = this.overlay.getPosition();
     if (!position || !this.overlay.isVisible()) {
       return false;
@@ -423,6 +423,9 @@ os.annotation.AnnotationCtrl.prototype.updateTailAbsolute_ = function() {
     targetPixel[1] += mapRect.y;
 
     var cardRect = this.element.find('.js-annotation')[0].getBoundingClientRect();
+    if (!cardRect.width || !cardRect.height) {
+      return false;
+    }
 
     var svgWidth = Math.max(targetPixel[0], cardRect.x + cardRect.width) -
         Math.min(targetPixel[0], cardRect.x);
