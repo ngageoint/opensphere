@@ -11,6 +11,7 @@ goog.require('goog.events.EventType');
 goog.require('goog.log');
 goog.require('goog.log.Logger');
 goog.require('goog.string');
+goog.require('ol.array');
 goog.require('os.alert.AlertManager');
 goog.require('os.xt.IMessageHandler');
 goog.require('os.xt.events');
@@ -567,7 +568,7 @@ os.xt.Peer.prototype.send = function(type, data, opt_to) {
  * @return {boolean} True if the given app ID exists in the peer list, false otherwise
  */
 os.xt.Peer.prototype.isAppOpen = function(appId, opt_messageType) {
-  return goog.array.contains(this.getPeers(opt_messageType), appId);
+  return ol.array.includes(this.getPeers(opt_messageType), appId);
 };
 
 
@@ -958,7 +959,7 @@ os.xt.Peer.prototype.processWaitList_ = function() {
     var messageType = wait.messageType;
     var peerInfo = os.xt.PeerInfo.load(this.group_, wait.peerId, this.storage_);
     if (peerInfo && messageType) {
-      if (!goog.array.contains(peerInfo.types, messageType)) {
+      if (!ol.array.includes(peerInfo.types, messageType)) {
         peerInfo = null;
       }
     }

@@ -1,3 +1,4 @@
+goog.require('os.array');
 goog.require('os.command.AsyncMockCommandString');
 goog.require('os.command.MockCommand');
 goog.require('os.command.MockCommandString');
@@ -128,7 +129,7 @@ describe('os.command.ParallelCommand', function() {
 
 describe('os.command.ParallelCommand error handling', function() {
   var addTitlesTo = function(commands) {
-    goog.array.forEach(commands, function(command, index) {
+    os.array.forEach(commands, function(command, index) {
       command.title = jasmine.getEnv().currentSpec.description + ' [' + index + ']';
     })
   };

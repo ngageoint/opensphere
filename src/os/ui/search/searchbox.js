@@ -2,7 +2,9 @@ goog.provide('os.ui.search.SearchBoxCtrl');
 goog.provide('os.ui.search.searchBoxDirective');
 
 goog.require('goog.events.Event');
+goog.require('ol.array');
 goog.require('os.alert.AlertManager');
+goog.require('os.array');
 goog.require('os.config.Settings');
 goog.require('os.plugin.PluginManager');
 goog.require('os.search');
@@ -215,7 +217,7 @@ os.ui.search.SearchBoxCtrl.prototype.validateRecents_ = function() {
             // assume the available providers haven't changed and enable all
             recent.ids = allIds;
           } else {
-            var search = goog.array.find(searches, os.search.isNameEqual.bind(undefined, oldName));
+            var search = ol.array.find(searches, os.search.isNameEqual.bind(undefined, oldName));
             if (search) {
               // update to the new model
               recent.ids = [search.getId()];
@@ -456,10 +458,10 @@ os.ui.search.SearchBoxCtrl.prototype.setUpGroups = function() {
     var currentGroup = [];
 
     // Iterate over the searches under the provider group, and add the search to the group
-    goog.array.forEach(searchNameArray, function(searchName) {
-      var ind = goog.array.findIndex(copiedOptions, function(searchOption) {
+    os.array.forEach(searchNameArray, function(searchName) {
+      var ind = ol.array.findIndex(copiedOptions, function(searchOption) {
         return searchName == searchOption.getName();
-      }, this);
+      });
       if (ind > -1) {
         currentGroup.push(copiedOptions[ind]);
         goog.array.removeAt(copiedOptions, ind);
@@ -859,9 +861,9 @@ os.ui.search.SearchBoxCtrl.prototype.updateRecents = function() {
   if (this['searchTerm']) {
     var enabledIds = this.searchManager.getEnabledSearches().map(os.search.getSearchId).sort();
 
-    var recentIndex = goog.array.findIndex(this['recentSearches'], function(recent) {
+    var recentIndex = ol.array.findIndex(this['recentSearches'], function(recent) {
       return recent.term == this['searchTerm'];
-    }, this);
+    }.bind(this));
 
     if (recentIndex > -1) {
       // already in the array, so move it to the top

@@ -7,6 +7,7 @@ goog.require('goog.dom');
 goog.require('goog.dom.xml');
 goog.require('goog.log');
 goog.require('goog.log.Logger');
+goog.require('ol.array');
 goog.require('ol.format.WMSCapabilities');
 goog.require('os.alert.AlertEventSeverity');
 goog.require('os.alert.AlertManager');
@@ -411,8 +412,34 @@ os.ui.ogc.OGCServer.prototype.configure = function(config) {
   this.setLowerCase(/** @type {boolean} */ (config['lowerCase']));
   this.setWpsUrl(/** @type {string} */ (config['wps']));
 
-  this.setWfsParams('wfsParams' in config ? new goog.Uri.QueryData(/** @type {string} */ (config['wfsParams'])) : null);
-  this.setWmsParams('wmsParams' in config ? new goog.Uri.QueryData(/** @type {string} */ (config['wmsParams'])) : null);
+  var wfsUrl = this.getWfsUrl();
+
+  if ('wfsParams' in config) {
+    this.setWfsParams(new goog.Uri.QueryData(/** @type {string} */ (config['wfsParams'])));
+  } else if (wfsUrl) {
+    // attempt to generate custom WFS params from the wfsUrl
+    var wfsUri = new goog.Uri(wfsUrl);
+    var queryData = wfsUri.getQueryData();
+    queryData.setIgnoreCase(true);
+    queryData.remove('request');
+    this.setWfsParams(queryData.getCount() ? queryData : null);
+  } else {
+    this.setWfsParams(null);
+  }
+
+  var wmsUrl = this.getWmsUrl();
+  if ('wmsParams' in config) {
+    this.setWmsParams(new goog.Uri.QueryData(/** @type {string} */ (config['wmsParams'])));
+  } else if (wmsUrl) {
+    // attempt to generate custom WMS params from the wmsUrl
+    var wmsUri = new goog.Uri(wmsUrl);
+    queryData = wmsUri.getQueryData();
+    queryData.setIgnoreCase(true);
+    queryData.remove('request');
+    this.setWmsParams(queryData.getCount() ? queryData : null);
+  } else {
+    this.setWmsParams(null);
+  }
 };
 
 
@@ -1244,7 +1271,7 @@ os.ui.ogc.OGCServer.prototype.addParentTags_ = function(node, opt_tags) {
         var keywords = descriptor.getKeywords();
         for (i = 0, n = opt_tags.length; i < n; i++) {
           var tag = opt_tags[i];
-          if (!goog.array.contains(keywords, tag)) {
+          if (!ol.array.includes(keywords, tag)) {
             keywords.push(tag);
           }
         }

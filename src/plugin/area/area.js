@@ -1,6 +1,7 @@
 goog.provide('plugin.area');
 
 goog.require('ol.Feature');
+goog.require('ol.array');
 goog.require('os.data.RecordField');
 goog.require('os.fn');
 goog.require('os.geo.jsts');
@@ -56,7 +57,7 @@ plugin.area.processFeature_ = function(feature, config, mappings) {
 
   // Strip out unnecessary feature values (kml style was breaking the refresh)
   feature.getKeys().forEach(function(value) {
-    var found = goog.array.find(os.ui.query.featureKeys, function(key) {
+    var found = ol.array.find(os.ui.query.featureKeys, function(key) {
       return key.toLowerCase() == value.toLowerCase();
     });
     if (!found) {

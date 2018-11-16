@@ -1,6 +1,7 @@
 goog.provide('os.im.action.filter');
 goog.provide('os.im.action.filter.ExportTypeHint');
 
+goog.require('ol.array');
 goog.require('os.command.SequenceCommand');
 goog.require('os.im.action');
 goog.require('os.im.action.cmd.FilterActionAdd');
@@ -137,7 +138,7 @@ os.im.action.filter.onEditComplete = function(original, entry) {
     var entryTitle = entry.getTitle();
     var insertIndex;
     if (original) {
-      insertIndex = goog.array.findIndex(entries, function(entry) {
+      insertIndex = ol.array.findIndex(entries, function(entry) {
         return entry == original;
       });
 
@@ -171,7 +172,7 @@ os.im.action.filter.removeEntryCmd = function(entry) {
   var iam = os.im.action.ImportActionManager.getInstance();
   var entries = iam.getActionEntries(entry.getType());
 
-  var index = goog.array.findIndex(entries, function(arrEntry) {
+  var index = ol.array.findIndex(entries, function(arrEntry) {
     return arrEntry == entry;
   });
 

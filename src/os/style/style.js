@@ -1240,7 +1240,10 @@ os.style.notifyStyleChange = function(layer, opt_features, opt_type) {
   layer.dispatchEvent(new os.events.PropertyChangeEvent(eventType, opt_features));
 
   // ol map will refresh off this one. firing the event off the source causes the animation overlay to update as well.
-  layer.getSource().changed();
+  var source = layer.getSource();
+  if (source) {
+    source.changed();
+  }
 };
 
 

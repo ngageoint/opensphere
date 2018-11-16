@@ -1,5 +1,6 @@
 goog.provide('os.net.RequestHandlerFactory');
 goog.require('goog.array');
+goog.require('ol.array');
 goog.require('os.net.IRequestHandler');
 
 
@@ -33,7 +34,7 @@ os.net.RequestHandlerFactory.addHandler = function(clazz) {
  * @param {Function} clazz The class to remove
  */
 os.net.RequestHandlerFactory.removeHandler = function(clazz) {
-  goog.array.remove(os.net.RequestHandlerFactory.list_, clazz);
+  ol.array.remove(os.net.RequestHandlerFactory.list_, clazz);
 };
 
 

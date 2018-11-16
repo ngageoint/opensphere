@@ -1,5 +1,6 @@
 goog.provide('os.ui.ex.AreaExportCtrl');
 goog.provide('os.ui.ex.areaExportDirective');
+goog.require('os.array');
 goog.require('os.ui.Module');
 goog.require('os.ui.file.ExportDialogCtrl');
 goog.require('os.ui.file.exportDialogDirective');
@@ -47,7 +48,7 @@ os.ui.ex.AreaExportCtrl = function($scope, $element, $compile) {
   $scope['allowMultiple'] = true;
 
   // Used for Desktop's 'My Places'
-  goog.array.forEach(this.options.items, function(area) {
+  os.array.forEach(this.options.items, function(area) {
     area.set('mapVisualizationType', 'ANNOTATION_REGIONS');
   });
 };

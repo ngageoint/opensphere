@@ -2,6 +2,7 @@ goog.provide('os.ui.layer.DefaultLayerUICtrl');
 goog.provide('os.ui.layer.defaultLayerUIDirective');
 
 goog.require('goog.array');
+goog.require('ol.array');
 goog.require('os.command.LayerAutoRefresh');
 goog.require('os.command.LayerStyle');
 goog.require('os.command.ParallelCommand');
@@ -208,7 +209,7 @@ os.ui.layer.DefaultLayerUICtrl.prototype.updateRefresh_ = function() {
 
     if (refreshInterval != null) {
       // find the refresh interval by interval
-      this['refresh'] = goog.array.find(this['refreshOptions'], function(option) {
+      this['refresh'] = ol.array.find(this['refreshOptions'], function(option) {
         return option.interval == refreshInterval;
       });
     }
