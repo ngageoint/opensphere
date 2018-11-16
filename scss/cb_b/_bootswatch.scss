@@ -29,6 +29,7 @@
 }
 
 .text-danger {
-  color: $body-color !important;
+  color: color-yiq($body-color) !important;
   font-weight: bold;
+  text-shadow: -1px -1px 0 $body-color, 1px -1px 0 $body-color, -1px 1px 0 $body-color, 1px 1px 0 $body-color;
 }
