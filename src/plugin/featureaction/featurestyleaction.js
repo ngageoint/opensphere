@@ -123,7 +123,7 @@ plugin.im.action.feature.StyleAction.prototype.reset = function(entryType, items
 /**
  * @inheritDoc
  */
-plugin.im.action.feature.StyleAction.prototype.execute = function(items) {
+plugin.im.action.feature.StyleAction.prototype.execute = function(entryType, items) {
   for (var i = 0; i < items.length; i++) {
     var item = items[i];
     if (item) {
