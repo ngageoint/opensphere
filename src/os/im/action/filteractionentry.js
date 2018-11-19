@@ -67,21 +67,20 @@ os.im.action.FilterActionEntry.prototype.setFilter = function(filter) {
 
 /**
  * Reset the features passed in
- * @param {string} entryType The entry type.
  * @param {Array<T>} items The items.
  */
-os.im.action.FilterActionEntry.prototype.unprocessItems = function(entryType, items) {
+os.im.action.FilterActionEntry.prototype.unprocessItems = function(items) {
   if (items) {
     items = items.filter(this.filterFn);
 
     for (var i = 0; i < this.actions.length; i++) {
-      this.actions[i].reset(entryType, items);
+      this.actions[i].reset(items);
 
       // unapply children to each item that passed the filter
       var children = this.getChildren();
       if (children) {
         for (var j = 0, jj = children.length; j < jj; j++) {
-          children[j].unprocessItems(entryType, items);
+          children[j].unprocessItems(items);
         }
       }
     }
@@ -91,24 +90,23 @@ os.im.action.FilterActionEntry.prototype.unprocessItems = function(entryType, it
 
 /**
  * Execute actions on items that match the filter.
- * @param {string} entryType The entry type.
  * @param {Array<T>} items The items.
  */
-os.im.action.FilterActionEntry.prototype.processItems = function(entryType, items) {
+os.im.action.FilterActionEntry.prototype.processItems = function(items) {
   if (items) {
     items = items.filter(this.filterFn);
 
     // apply to applicable items
     if (items.length > 0) {
       for (var i = 0; i < this.actions.length; i++) {
-        this.actions[i].execute(entryType, items);
+        this.actions[i].execute(items);
 
         // apply children to each item that passed the filter
         var children = this.getChildren();
         if (children) {
           for (var j = 0, jj = children.length; j < jj; j++) {
             if (children[j].isEnabled()) {
-              children[j].processItems(entryType, items);
+              children[j].processItems(items);
             }
           }
         }

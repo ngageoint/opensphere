@@ -242,6 +242,6 @@ os.im.action.filter.isFilterActionNode = function(targetArr, node) {
   if (node instanceof os.ui.im.action.FilterActionNode) {
     goog.array.insert(targetArr, node);
   } else if (node.getChildren()) {
-    node.getChildren().forEach(os.im.action.filter.isFilterActionNode.bind(this, targetArr));
+    node.getChildren().forEach(os.im.action.filter.isFilterActionNode.bind(undefined, targetArr));
   }
 };

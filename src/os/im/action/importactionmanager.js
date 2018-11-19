@@ -338,9 +338,9 @@ os.im.action.ImportActionManager.prototype.processItems = function(entryType, op
     if (entries && entries.length > 0) {
       for (var i = 0; i < entries.length; i++) {
         if (entries[i].isEnabled()) {
-          entries[i].processItems(entryType, items);
+          entries[i].processItems(items);
         } else if (opt_unprocess) {
-          entries[i].unprocessItems(entryType, items);
+          entries[i].unprocessItems(items);
         }
       }
     }
@@ -358,7 +358,7 @@ os.im.action.ImportActionManager.prototype.unprocessItems = function(entryType, 
     var entries = this.actionEntries[entryType];
     if (entries && entries.length > 0) {
       for (var i = 0; i < entries.length; i++) {
-        entries[i].unprocessItems(entryType, items);
+        entries[i].unprocessItems(items);
       }
     }
   }
@@ -498,23 +498,22 @@ os.im.action.ImportActionManager.prototype.onAddActionEntry_ = function(event) {
     var msg = 'Failed adding ' + this.entryTitle.toLowerCase() + '. See the log for details.';
     os.alertManager.sendAlert(msg, os.alert.AlertEventSeverity.ERROR);
   }
+
   this.refreshActionEntries(entry.type);
 };
+
 
 /**
  * Refresh action entries.
  * @param {string} entryType The entry type.
  */
 os.im.action.ImportActionManager.prototype.refreshActionEntries = function(entryType) {
-  var dm = os.data.DataManager.getInstance();
-  var source = dm.getSource(entryType);
-  // check to see if the layer source should be refreshed
-  var layer = /** @type {os.layer.Vector} */ (os.MapContainer.getInstance().getLayer(entryType));
-  var featureActionRefresh = true;
-  if (layer.getLayerOptions()['featureActionRefresh'] !== undefined) {
-    featureActionRefresh = layer.getLayerOptions()['featureActionRefresh'];
-  }
-  if (source.isRefreshEnabled() && source && featureActionRefresh) {
-    source.refresh();
+  var featureActionRefresh = plugin.im.action.feature.shouldRefresh(entryType);
+  if (featureActionRefresh) {
+    var dm = os.data.DataManager.getInstance();
+    var source = dm.getSource(entryType);
+    if (source && source.isRefreshEnabled()) {
+      source.refresh();
+    }
   }
 };

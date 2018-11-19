@@ -124,7 +124,7 @@ plugin.im.action.feature.node.dispose = function() {
 plugin.im.action.feature.node.getFeatureActionNodes = function(context) {
   var filterActionNodes = [];
   if (context) {
-    context.forEach(os.im.action.filter.isFilterActionNode.bind(this, filterActionNodes));
+    context.forEach(os.im.action.filter.isFilterActionNode.bind(undefined, filterActionNodes));
   }
 
   return filterActionNodes;
