@@ -28,7 +28,7 @@ plugin.audioalert.ID = 'audioalert';
  */
 plugin.audioalert.AudioAlertPlugin.prototype.init = function() {
   var audioManager = os.audio.AudioManager.getInstance();
-  audioManager.play("sound1");
+  audioManager.play('sound1');
 };
 
 // add the plugin to the application
