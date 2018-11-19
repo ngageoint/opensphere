@@ -87,7 +87,7 @@ plugin.im.action.feature.ui.FeatureActionsCtrl.prototype.apply = function() {
     var source = dm.getSource(this.entryType);
     if (source) {
       // check to see if the layer source should be refreshed
-      var featureActionRefresh = plugin.im.action.feature.doRefresh(this.entryType);
+      var featureActionRefresh = plugin.im.action.feature.shouldRefresh(this.entryType);
 
       if (source.isRefreshEnabled() && featureActionRefresh) {
         source.refresh();
