@@ -78,7 +78,7 @@ os.im.action.FilterActionEntry.prototype.processItems = function(entryType, item
     // apply to applicable items
     if (items.length > 0) {
       for (var i = 0; i < this.actions.length; i++) {
-        this.actions[i].execute(items);
+        this.actions[i].execute(entryType, items);
       }
     }
   }

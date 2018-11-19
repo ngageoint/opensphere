@@ -11,7 +11,6 @@ goog.require('os.im.action.cmd.FilterActionAdd');
 goog.require('os.plugin.PluginManager');
 
 
-
 /**
  * Manager for import actions.
  * @extends {goog.events.EventTarget}
@@ -424,7 +423,7 @@ os.im.action.ImportActionManager.prototype.save = function() {
 
 /**
  * Handle an add action entry event fired on the global dispatcher.
- * @param {goog.events.Event} event The event.
+ * @param {os.im.action.ImportActionEvent} event The event.
  * @private
  */
 os.im.action.ImportActionManager.prototype.onAddActionEntry_ = function(event) {
@@ -440,7 +439,7 @@ os.im.action.ImportActionManager.prototype.onAddActionEntry_ = function(event) {
         entry = clone;
       } else {
         goog.log.error(this.log, 'Failed adding ' + this.entryTitle.toLowerCase() +
-            '. Unable to determine entry type.');
+          '. Unable to determine entry type.');
         entry = null;
       }
     } catch (e) {
@@ -455,10 +454,29 @@ os.im.action.ImportActionManager.prototype.onAddActionEntry_ = function(event) {
 
     if (event.execute) {
       var items = this.getEntryItems(entry.getType());
-      entry.processItems(items);
+      this.processItems(entry.type, items);
     }
   } else {
     var msg = 'Failed adding ' + this.entryTitle.toLowerCase() + '. See the log for details.';
     os.alertManager.sendAlert(msg, os.alert.AlertEventSeverity.ERROR);
+  }
+  this.refreshActionEntries(entry.type);
+};
+
+/**
+ * Refresh action entries.
+ * @param {string} entryType The entry type.
+ */
+os.im.action.ImportActionManager.prototype.refreshActionEntries = function(entryType) {
+  var dm = os.data.DataManager.getInstance();
+  var source = dm.getSource(entryType);
+  // check to see if the layer source should be refreshed
+  var layer = /** @type {os.layer.Vector} */ (os.MapContainer.getInstance().getLayer(entryType));
+  var featureActionRefresh = true;
+  if (layer.getLayerOptions()['featureActionRefresh'] !== undefined) {
+    featureActionRefresh = layer.getLayerOptions()['featureActionRefresh'];
+  }
+  if (source.isRefreshEnabled() && source && featureActionRefresh) {
+    source.refresh();
   }
 };
