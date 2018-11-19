@@ -209,9 +209,27 @@ os.im.action.ImportActionManager.prototype.createActionEntry = function() {
  */
 os.im.action.ImportActionManager.prototype.getActionEntry = function(id, opt_type) {
   var list = this.getActionEntries(opt_type);
-  return ol.array.find(list, function(entry) {
-    return entry.getId() == id;
-  });
+  var val = null;
+
+  var finder = function(entry) {
+    if (val) {
+      return;
+    }
+
+    if (entry.getId() == id) {
+      val = entry;
+      return;
+    }
+
+    var children = entry.getChildren();
+    if (children) {
+      children.forEach(finder);
+    }
+  };
+
+  list.forEach(finder);
+
+  return val;
 };
 
 

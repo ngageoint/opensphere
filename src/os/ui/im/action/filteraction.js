@@ -30,6 +30,10 @@ os.im.action.filter.exportEntries = function(entries, opt_exactType) {
   var iam = os.im.action.ImportActionManager.getInstance();
   var result = [];
 
+  /**
+   * Parses entries out of the passed in entry. Recurses if it has children.
+   * @param {os.im.action.FilterActionEntry} entry The entry.
+   */
   var parseEntries = function(entry) {
     var parsedFilter = entry.getFilterNode();
     if (parsedFilter) {
