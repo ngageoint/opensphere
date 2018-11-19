@@ -25,7 +25,7 @@ plugin.track.menu.layerSetup = function() {
       eventType: plugin.track.EventType.CREATE_TRACK,
       tooltip: 'Creates a new track by linking selected features (or all features if none are selected) in time order.',
       icons: ['<i class="fa fa-fw fa-share-alt"></i>'],
-      metricKey: plugin.track.Metrics.CREATE_LAYER,
+      metricKey: plugin.track.Metrics.Keys.CREATE_LAYER,
       beforeRender: plugin.track.menu.visibleIfLayerHasFeatures,
       handler: plugin.track.menu.handleLayerEvent_
     });
@@ -35,7 +35,7 @@ plugin.track.menu.layerSetup = function() {
       eventType: plugin.track.EventType.ADD_TO,
       tooltip: 'Adds selected features (or all features if none are selected) to an existing track.',
       icons: ['<i class="fa fa-fw fa-share-alt"></i>'],
-      metricKey: plugin.track.Metrics.ADD_TO_LAYER,
+      metricKey: plugin.track.Metrics.Keys.ADD_TO_LAYER,
       beforeRender: plugin.track.menu.visibleIfTracksExist,
       handler: plugin.track.menu.handleLayerEvent_
     });
@@ -45,7 +45,7 @@ plugin.track.menu.layerSetup = function() {
       eventType: plugin.track.EventType.FOLLOW,
       tooltip: 'Follow the track as it animates.',
       icons: ['<i class="fa fa-fw fa-globe"></i>'],
-      metricKey: plugin.track.Metrics.FOLLOW_TRACK,
+      metricKey: plugin.track.Metrics.Keys.FOLLOW_TRACK,
       beforeRender: plugin.track.menu.visibleIfIsNotFollowed,
       handler: plugin.track.menu.handleFollowTrackEvent
     });
@@ -55,9 +55,51 @@ plugin.track.menu.layerSetup = function() {
       eventType: plugin.track.EventType.UNFOLLOW,
       tooltip: 'Cancel following the track during animation.',
       icons: ['<i class="fa fa-fw fa-globe"></i>'],
-      metricKey: plugin.track.Metrics.UNFOLLOW_TRACK,
+      metricKey: plugin.track.Metrics.Keys.UNFOLLOW_TRACK,
       beforeRender: plugin.track.menu.visibleIfIsFollowed,
       handler: plugin.track.menu.handleUnfollowTrackEvent
+    });
+
+    group.addChild({
+      label: 'Hide Track Line',
+      eventType: plugin.track.EventType.HIDE_LINE,
+      tooltip: 'Do not show the track line.',
+      icons: ['<i class="fa fa-fw fa-level-up"></i>'],
+      metricKey: plugin.track.Metrics.Keys.HIDE_TRACK_LINE,
+      sort: 100,
+      beforeRender: plugin.track.menu.visibleIfLineIsShown,
+      handler: goog.partial(plugin.track.menu.setShowTrackLine, false)
+    });
+
+    group.addChild({
+      label: 'Show Track Line',
+      eventType: plugin.track.EventType.SHOW_LINE,
+      tooltip: 'Show the track line.',
+      icons: ['<i class="fa fa-fw fa-level-up"></i>'],
+      metricKey: plugin.track.Metrics.Keys.SHOW_TRACK_LINE,
+      sort: 100,
+      beforeRender: plugin.track.menu.visibleIfLineIsHidden,
+      handler: goog.partial(plugin.track.menu.setShowTrackLine, true)
+    });
+
+    group.addChild({
+      label: 'Disable Track Interpolation',
+      eventType: plugin.track.EventType.ENABLE_INTERPOLATE_MARKER,
+      tooltip: 'Only move track marker when there is a supporting feature.',
+      icons: ['<i class="fa fa-fw fa-star-half-o fa-rotate-270"></i>'],
+      metricKey: plugin.track.Metrics.Keys.ENABLE_INTERPOLATE_MARKER,
+      beforeRender: plugin.track.menu.visibleIfMarkerInterpolationEnabled,
+      handler: goog.partial(plugin.track.menu.setMarkerInterpolationEnabled, false)
+    });
+
+    group.addChild({
+      label: 'Enable Track Interpolation',
+      eventType: plugin.track.EventType.DISABLE_INTERPOLATE_MARKER,
+      tooltip: 'Show the interpolated position of the track marker.',
+      icons: ['<i class="fa fa-fw fa-star-half-o fa-rotate-270"></i>'],
+      metricKey: plugin.track.Metrics.Keys.DISABLE_INTERPOLATE_MARKER,
+      beforeRender: plugin.track.menu.visibleIfMarkerInterpolationDisabled,
+      handler: goog.partial(plugin.track.menu.setMarkerInterpolationEnabled, true)
     });
   }
 };
@@ -113,7 +155,7 @@ plugin.track.menu.visibleIfTracksExist = function(context) {
 plugin.track.menu.visibleIfTrackNode = function(context) {
   this.visible = false;
 
-  if (context && context.length === 1) {
+  if (context) {
     var trackNodes = plugin.track.menu.getTrackNodes(context);
     this.visible = trackNodes.length === context.length;
   }
@@ -136,6 +178,7 @@ plugin.track.menu.spatialSetup = function() {
       tooltip: 'Follow the track as it animates.',
       icons: ['<i class="fa fa-fw fa-globe"></i>'],
       sort: 80,
+      metricKey: plugin.track.Metrics.Keys.FOLLOW_TRACK,
       beforeRender: plugin.track.menu.visibleIfIsNotFollowed,
       handler: plugin.track.menu.handleFollowTrackEvent
     });
@@ -146,10 +189,161 @@ plugin.track.menu.spatialSetup = function() {
       tooltip: 'Cancel following the track during animation.',
       icons: ['<i class="fa fa-fw fa-globe"></i>'],
       sort: 90,
+      metricKey: plugin.track.Metrics.Keys.UNFOLLOW_TRACK,
       beforeRender: plugin.track.menu.visibleIfIsFollowed,
       handler: plugin.track.menu.handleUnfollowTrackEvent
     });
+
+    group.addChild({
+      eventType: plugin.track.EventType.HIDE_LINE,
+      label: 'Hide Track Line',
+      tooltip: 'Do not show the track line.',
+      icons: ['<i class="fa fa-fw fa-level-up"></i>'],
+      sort: 100,
+      metricKey: plugin.track.Metrics.Keys.HIDE_TRACK_LINE,
+      beforeRender: plugin.track.menu.visibleIfLineIsShown,
+      handler: goog.partial(plugin.track.menu.setShowTrackLine, false)
+    });
+
+    group.addChild({
+      eventType: plugin.track.EventType.SHOW_LINE,
+      label: 'Show Track Line',
+      tooltip: 'Show the track line.',
+      icons: ['<i class="fa fa-fw fa-level-up"></i>'],
+      sort: 110,
+      metricKey: plugin.track.Metrics.Keys.SHOW_TRACK_LINE,
+      beforeRender: plugin.track.menu.visibleIfLineIsHidden,
+      handler: goog.partial(plugin.track.menu.setShowTrackLine, true)
+    });
+
+    group.addChild({
+      eventType: plugin.track.EventType.ENABLE_INTERPOLATE_MARKER,
+      label: 'Disable Marker Interpolation',
+      tooltip: 'Only move track marker when there is a supporting feature.',
+      icons: ['<i class="fa fa-fw fa-star-half-o fa-rotate-270"></i>'],
+      metricKey: plugin.track.Metrics.Keys.ENABLE_INTERPOLATE_MARKER,
+      sort: 120,
+      beforeRender: plugin.track.menu.visibleIfMarkerInterpolationEnabled,
+      handler: goog.partial(plugin.track.menu.setMarkerInterpolationEnabled, false)
+    });
+
+    group.addChild({
+      eventType: plugin.track.EventType.DISABLE_INTERPOLATE_MARKER,
+      label: 'Enable Marker Interpolation',
+      tooltip: 'Show the interpolated position of the track marker.',
+      icons: ['<i class="fa fa-fw fa-star-half-o fa-rotate-270"></i>'],
+      metricKey: plugin.track.Metrics.Keys.DISABLE_INTERPOLATE_MARKER,
+      sort: 130,
+      beforeRender: plugin.track.menu.visibleIfMarkerInterpolationDisabled,
+      handler: goog.partial(plugin.track.menu.setMarkerInterpolationEnabled, true)
+    });
   }
+};
+
+
+/**
+ * Shows a menu item if the menu context contains tracks where their line is shown.
+ * @param {Object|undefined} context The menu context.
+ * @this {os.ui.menu.MenuItem}
+ */
+plugin.track.menu.visibleIfMarkerInterpolationEnabled = function(context) {
+  this.visible = !!context && plugin.track.menu.isMarkerInterpolationOn(context);
+};
+
+
+/**
+ * Shows a menu item if the menu context contains tracks where their line is hidden.
+ * @param {Object|undefined} context The menu context.
+ * @this {os.ui.menu.MenuItem}
+ */
+plugin.track.menu.visibleIfMarkerInterpolationDisabled = function(context) {
+  this.visible = !!context && plugin.track.menu.getTracks(context).length > 0
+      && !plugin.track.menu.isMarkerInterpolationOn(context);
+};
+
+
+/**
+ * Check if a track's line is currently visible.
+ * @param {*=} opt_context The menu event context.
+ * @return {boolean} If the track is followed.
+ */
+plugin.track.menu.isMarkerInterpolationOn = function(opt_context) {
+  if (opt_context) {
+    var tracks = plugin.track.menu.getTracks(/** @type {Object} */ (opt_context));
+    if (tracks.length > 0) {
+      return plugin.track.getInterpolateMarker(/** @type {!ol.Feature} */ (tracks[0]));
+    }
+  }
+
+  return false;
+};
+
+
+/**
+ * Check if a track's line is hidden.
+ * @param {*=} opt_context The menu event context.
+ * @return {boolean} If the track is not followed.
+ */
+plugin.track.menu.isMarkerInterpolationOff = function(opt_context) {
+  if (opt_context) {
+    return plugin.track.menu.getTracks(/** @type {Object} */ (opt_context)).length > 0 &&
+      !plugin.track.menu.isMarkerInterpolationOn(opt_context);
+  }
+
+  return false;
+};
+
+
+/**
+ * Shows a menu item if the menu context contains tracks where their line is shown.
+ * @param {Object|undefined} context The menu context.
+ * @this {os.ui.menu.MenuItem}
+ */
+plugin.track.menu.visibleIfLineIsShown = function(context) {
+  this.visible = !!context && plugin.track.menu.isLineShown(context);
+};
+
+
+/**
+ * Shows a menu item if the menu context contains tracks where their line is hidden.
+ * @param {Object|undefined} context The menu context.
+ * @this {os.ui.menu.MenuItem}
+ */
+plugin.track.menu.visibleIfLineIsHidden = function(context) {
+  this.visible = !!context && plugin.track.menu.getTracks(context).length > 0
+      && !plugin.track.menu.isLineShown(context);
+};
+
+
+/**
+ * Check if a track's line is currently visible.
+ * @param {*=} opt_context The menu event context.
+ * @return {boolean} If the track is followed.
+ */
+plugin.track.menu.isLineShown = function(opt_context) {
+  if (opt_context) {
+    var tracks = plugin.track.menu.getTracks(/** @type {Object} */ (opt_context));
+    if (tracks.length > 0) {
+      return plugin.track.getShowLine(/** @type {!ol.Feature} */ (tracks[0]));
+    }
+  }
+
+  return false;
+};
+
+
+/**
+ * Check if a track's line is hidden.
+ * @param {*=} opt_context The menu event context.
+ * @return {boolean} If the track is not followed.
+ */
+plugin.track.menu.isLineHidden = function(opt_context) {
+  if (opt_context) {
+    return plugin.track.menu.getTracks(/** @type {Object} */ (opt_context)).length > 0 &&
+      !plugin.track.menu.isLineShown(opt_context);
+  }
+
+  return false;
 };
 
 
@@ -265,8 +459,40 @@ plugin.track.menu.handleUnfollowTrackEvent = function(event) {
 
 
 /**
+ * Handle the show track line menu event.
+ * @param {boolean} show
+ * @param {!(os.ui.action.ActionEvent|os.ui.menu.MenuEvent)} event The menu event.
+ */
+plugin.track.menu.setShowTrackLine = function(show, event) {
+  var context = event.getContext();
+  if (context) {
+    var tracks = plugin.track.menu.getTracks(/** @type {Object} */ (context));
+    for (var i = 0; i < tracks.length; i++) {
+      plugin.track.setShowLine(/** @type {!ol.Feature} */ (tracks[i]), show);
+    }
+  }
+};
+
+
+/**
+ * Handle the show track line menu event.
+ * @param {boolean} show
+ * @param {!(os.ui.action.ActionEvent|os.ui.menu.MenuEvent)} event The menu event.
+ */
+plugin.track.menu.setMarkerInterpolationEnabled = function(show, event) {
+  var context = event.getContext();
+  if (context) {
+    var tracks = plugin.track.menu.getTracks(/** @type {Object} */ (context));
+    for (var i = 0; i < tracks.length; i++) {
+      plugin.track.setInterpolateMarker(/** @type {!ol.Feature} */ (tracks[i]), show);
+    }
+  }
+};
+
+
+/**
  * Determine the track based on the received event
- * @param {Object|undefined} context The menu context.
+ * @param {Array<Object>|Object|undefined} context The menu context.
  * @return {Array<ol.Feature>}
  */
 plugin.track.menu.getTracks = function(context) {
@@ -274,10 +500,12 @@ plugin.track.menu.getTracks = function(context) {
   if (context) {
     if (context.feature && plugin.track.isTrackFeature(context.feature)) {
       tracks.push(/** @type {!ol.Feature} */ (context.feature));
-    } else if (goog.isArray(context) && context.length === 1) {
+    } else if (goog.isArray(context)) {
       var trackNodes = plugin.track.menu.getTrackNodes(context);
       if (trackNodes.length === context.length) {
-        tracks.push(trackNodes[0].getFeature());
+        for (var i = 0; i < trackNodes.length; i++) {
+          tracks.push(trackNodes[i].getFeature());
+        }
       }
     } else if (os.instanceOf(context, os.source.Vector.NAME)) {
       var source = /** @type {!os.source.Vector} */ (context);

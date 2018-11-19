@@ -62,7 +62,7 @@ plugin.cookbook_submenu.CookbookSubmenu.prototype.init = function() {
     var submenu2 = submenu1.addChild({
       type: os.ui.menu.MenuItemType.SUBMENU,
       label: 'SubSubMenu',
-      
+
       // You can specify child menu items directly
       children: [{
         type: os.ui.menu.MenuItemType.ITEM,
@@ -88,7 +88,6 @@ plugin.cookbook_submenu.CookbookSubmenu.prototype.init = function() {
       handler: plugin.cookbook_submenu.handleItem
     });
   }
-
 };
 
 
@@ -130,7 +129,7 @@ plugin.cookbook_submenu.ifIsPointInSouthernHemisphere_ = function(context) {
       var coords = ol.proj.toLonLat(geom.getFlatCoordinates(), os.map.PROJECTION);
       if (coords[1] < 0) {
         return true;
-      } 
+      }
     }
   }
   return false;
@@ -143,7 +142,7 @@ plugin.cookbook_submenu.ifIsPointInSouthernHemisphere_ = function(context) {
  */
 plugin.cookbook_submenu.handleItem1 = function(event) {
   alert('cookbook_submenu item1 selected');
-}
+};
 
 
 /**
@@ -154,7 +153,7 @@ plugin.cookbook_submenu.handleItem = function(event) {
   // event provides context for the elected item
   var eventType = event.type;
   alert('cookbook_submenu item selected:' + eventType);
-}
- 
+};
+
 // add the plugin to the application
 os.plugin.PluginManager.getInstance().addPlugin(new plugin.cookbook_submenu.CookbookSubmenu());
