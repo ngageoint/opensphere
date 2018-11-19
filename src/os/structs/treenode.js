@@ -387,7 +387,7 @@ os.structs.TreeNode.prototype.onChildChange = function(e) {
  * @inheritDoc
  */
 os.structs.TreeNode.prototype.getSearchText = function() {
-  return '';
+  return this.getLabel() || '';
 };
 
 

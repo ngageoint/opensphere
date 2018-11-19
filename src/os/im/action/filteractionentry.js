@@ -152,9 +152,6 @@ os.im.action.FilterActionEntry.prototype.addChild = function(child, opt_index) {
     // insert at the specified index, or at the end if unspecified
     var index = opt_index != null ? opt_index : this.children_.length;
     goog.array.insertAt(this.children_, child, index);
-
-    // this.initChild(child);
-
     child.setParent(this);
 
     return child;
@@ -178,7 +175,6 @@ os.im.action.FilterActionEntry.prototype.removeChild = function(child) {
       }
 
       this.children_.splice(index, 1);
-      // this.destroyChild(child);
 
       if (this.children_.length === 0) {
         this.children_ = null;
@@ -310,9 +306,11 @@ os.im.action.FilterActionEntry.prototype.compare = function(other) {
   var thatTitle = other.getTitle();
   val = thisTitle < thatTitle ? -1 : thisTitle > thatTitle ? 1 : 0;
 
-  var thisTags = this.getTags();
-  var thatTags = other.getTags();
-  val = thisTags < thatTags ? -1 : thisTags > thatTags ? 1 : 0;
+  if (val == 0) {
+    var thisTags = this.getTags();
+    var thatTags = other.getTags();
+    val = thisTags < thatTags ? -1 : thisTags > thatTags ? 1 : 0;
+  }
 
   var length = this.actions.length;
   if (val == 0) {

@@ -67,6 +67,18 @@ os.ui.im.action.FilterActionNode.prototype.setState = function(value) {
 /**
  * @inheritDoc
  */
+os.ui.im.action.FilterActionNode.prototype.onChildChange = function(e) {
+  if (e.getProperty() == 'state' && e.getNewValue() == os.structs.TriState.ON) {
+    this.bubbleState = true;
+  }
+  os.ui.im.action.FilterActionNode.base(this, 'onChildChange', e);
+  this.bubbleState = false;
+};
+
+
+/**
+ * @inheritDoc
+ */
 os.ui.im.action.FilterActionNode.prototype.addChild = function(child, opt_skipAddParent, opt_index) {
   this.entry.addChild(child.getEntry());
   return os.ui.im.action.FilterActionNode.base(this, 'addChild', child, opt_skipAddParent, opt_index);
