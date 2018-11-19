@@ -1830,11 +1830,7 @@ plugin.cesium.sync.FeatureConverter.prototype.convert = function(feature, resolu
 
   if (styles) {
     if (labelStyle) {
-      // check if the feature defines which geometry should be used to position the label
-      var labelGeometryName = /** @type {string|undefined} */ (feature.get(os.style.StyleField.LABEL_GEOMETRY));
-      if (labelGeometryName) {
-        labelGeometry = /** @type {ol.geom.Geometry|undefined} */ (feature.get(labelGeometryName));
-      }
+      labelGeometry = /** @type {ol.geom.Geometry|undefined} */ (labelStyle.getGeometryFunction()(feature));
     }
 
     for (var i = 0, n = styles.length; i < n; i++) {
@@ -1842,8 +1838,8 @@ plugin.cesium.sync.FeatureConverter.prototype.convert = function(feature, resolu
       if (style) {
         var geometry = style.getGeometryFunction()(feature);
         if (geometry) {
-          // render labels if there isn't a label geometry or the current geometry is the label geometry
-          var renderedLabel = (!labelGeometry || labelGeometry == geometry) ? labelStyle : undefined;
+          // render a label if the current geometry is the label geometry
+          var renderedLabel = labelGeometry === geometry ? labelStyle : undefined;
           this.olGeometryToCesium(feature, geometry, style, context, renderedLabel);
 
           // never render labels more than once
