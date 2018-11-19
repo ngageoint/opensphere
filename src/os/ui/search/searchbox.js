@@ -31,8 +31,7 @@ os.ui.search.searchBoxDirective = function() {
       'searchOnClear': '@',
       'showDropdownText': '@',
       'searchManager': '=?',
-      'showClear': '@?',
-      'routeDisplay': '=?'
+      'showClear': '@?'
     },
     templateUrl: os.ROOT + 'views/search/searchbox.html',
     controller: os.ui.search.SearchBoxCtrl,
@@ -119,11 +118,6 @@ os.ui.search.SearchBoxCtrl = function($scope, $element) {
       os.search.SearchSetting.RECENT, []));
 
   /**
-   * @type {boolean}
-   */
-  this['showFavoritePopup'] = false;
-
-  /**
    * @type {!jQuery}
    * @private
    */
@@ -161,8 +155,8 @@ os.ui.search.SearchBoxCtrl = function($scope, $element) {
     pm.listenOnce(goog.events.EventType.LOAD, this.validateRecents_, false, this);
   }
 
-  this.onFavoritesUpdate_();
-  os.settings.listen(os.user.settings.FavoriteManager.KEY, this.onFavoritesUpdate_, false, this);
+  this.onFavoritesUpdate();
+  os.settings.listen(os.user.settings.FavoriteManager.KEY, this.onFavoritesUpdate, false, this);
   $scope.$on('$destroy', this.destroy.bind(this));
 };
 
@@ -188,7 +182,7 @@ os.ui.search.SearchBoxCtrl.prototype.destroy = function() {
   this.searchManager.unlisten(os.search.SearchEventType.AUTOCOMPLETED, this.populateAutocomplete_, false, this);
   this.searchManager.unlisten(os.search.SearchEventType.SUCCESS, this.onSearchSuccess_, false, this);
   os.dispatcher.unlisten(os.search.SearchEventType.REFRESH, this.search, false, this);
-  os.settings.unlisten(os.user.settings.FavoriteManager.KEY, this.onFavoritesUpdate_);
+  os.settings.unlisten(os.user.settings.FavoriteManager.KEY, this.onFavoritesUpdate);
 
   this.element = null;
   this.scope = null;
@@ -334,7 +328,7 @@ os.ui.search.SearchBoxCtrl.prototype.onSearchManagerChange_ = function(opt_event
   this.setUpGroups();
 
   // update the favorites
-  this.onFavoritesUpdate_();
+  this.onFavoritesUpdate();
 
   if (!this['allowMultiple']) {
     // if multiple providers aren't allowed, make sure only one is enabled
@@ -640,36 +634,6 @@ os.ui.search.SearchBoxCtrl.prototype.getPlaceholderText = function(opt_ids) {
 
 
 /**
- * Gets the selected search options to display
- * @return {string}
- * @export
- */
-os.ui.search.SearchBoxCtrl.prototype.getDropdownText = function() {
-  if (this['searchOptions'].length > 0) {
-    var enabled = this['searchOptions'].filter(function(search) {
-      return search.isEnabled();
-    });
-
-    if (enabled.length == 1) {
-      return enabled[0].getName();
-    } else if (enabled.length == this['searchOptions'].length) {
-      return 'All';
-    } else if (enabled.length == 0) {
-      return 'None';
-    } else {
-      var selectedGroup = this.singleGroupSelected();
-      if (selectedGroup) {
-        return selectedGroup;
-      }
-      return enabled.length + ' Types';
-    }
-  }
-
-  return 'None';
-};
-
-
-/**
  * Get the detail text to display for a recent search.
  * @param {!osx.search.RecentSearch} recent The recent search object
  * @return {string}
@@ -889,8 +853,6 @@ os.ui.search.SearchBoxCtrl.prototype.updateRecents = function() {
 
     this.saveRecent_();
   }
-
-  this.toggleFavoritePopup_();
 };
 
 
@@ -929,11 +891,11 @@ os.ui.search.SearchBoxCtrl.prototype.favoriteSearch = function(favorite) {
 
 /**
  * Update the favorites
- * @private
+ * @protected
  */
-os.ui.search.SearchBoxCtrl.prototype.onFavoritesUpdate_ = function() {
+os.ui.search.SearchBoxCtrl.prototype.onFavoritesUpdate = function() {
   // Read in favorites
-  this['favorites'] = this.searchManager.getFavorites(25);
+  this['favorites'] = os.searchManager.getFavorites(5);
   os.ui.apply(this.scope);
 };
 
@@ -948,45 +910,4 @@ os.ui.search.SearchBoxCtrl.prototype.isFavoriteActive = function(favorite) {
   var current = location.href.split('#');
   var fav = favorite['uri'].split('#');
   return current.length == 2 && fav.length == 2 && current[1] == fav[1];
-};
-
-
-/**
- * Set if we have a favorite active
- * @private
- */
-os.ui.search.SearchBoxCtrl.prototype.toggleFavoritePopup_ = function() {
-  // While we are at it, check if the current search is a favorite
-  var allSearchFavorites = this.searchManager.getFavorites();
-  this['showFavoritePopup'] = !goog.array.find(allSearchFavorites, function(fav) {
-    return this.isFavoriteActive(fav);
-  }, this);
-  if (this['showFavoritePopup']) {
-    setTimeout(function() {
-      this['showFavoritePopup'] = false;
-      os.ui.apply(this.scope);
-    }.bind(this), 5000);
-  }
-};
-
-
-/**
- * Save the current URL as a favorite
- * @export
- */
-os.ui.search.SearchBoxCtrl.prototype.saveFavorite = function() {
-  os.favoriteManager.save(
-      os.user.settings.FavoriteType.SEARCH, location.href, this['searchTerm'] || 'New Favorite', true);
-  this['showFavoritePopup'] = false;
-};
-
-/**
- * @param {Event} event
- * @param {os.search.Favorite} favorite
- * @export
- */
-os.ui.search.SearchBoxCtrl.prototype.deleteFavorite = function(event, favorite) {
-  event.preventDefault();
-  event.stopPropagation();
-  os.favoriteManager.removeFavorite(favorite['uri']);
 };
