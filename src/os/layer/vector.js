@@ -777,6 +777,7 @@ os.layer.Vector.prototype.callAction = function(type) {
             }
           }
         }
+        os.ui.timeline.TimelineCtrl.setView();
         break;
       case os.action.EventType.REFRESH:
         if (source instanceof os.source.Request) {
