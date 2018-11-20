@@ -1,13 +1,13 @@
 goog.provide('os.ui.im.action.FilterActionImportUI');
 
-goog.require('os.ui.filter.FilterImportUI');
+goog.require('os.ui.filter.im.FilterImportUI');
 goog.require('os.ui.im.action.filterActionImportDirective');
 
 
 
 /**
  * Filter action import UI.
- * @extends {os.ui.filter.FilterImportUI}
+ * @extends {os.ui.filter.im.FilterImportUI}
  * @constructor
  */
 os.ui.im.action.FilterActionImportUI = function() {
@@ -15,7 +15,7 @@ os.ui.im.action.FilterActionImportUI = function() {
   var iam = os.im.action.ImportActionManager.getInstance();
   this.label = 'Import ' + iam.entryTitle + 's';
 };
-goog.inherits(os.ui.im.action.FilterActionImportUI, os.ui.filter.FilterImportUI);
+goog.inherits(os.ui.im.action.FilterActionImportUI, os.ui.filter.im.FilterImportUI);
 
 
 /**

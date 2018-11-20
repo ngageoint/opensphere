@@ -1,4 +1,6 @@
 goog.provide('os.ui.slick.AbstractGroupByTreeSearchCtrl');
+
+goog.require('goog.Disposable');
 goog.require('goog.async.Delay');
 goog.require('os.config.Settings');
 goog.require('os.ui');
@@ -10,6 +12,7 @@ goog.require('os.ui');
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {number} searchDelay how long to delay the search
+ * @extends {goog.Disposable}
  * @constructor
  * @ngInject
  */
@@ -78,7 +81,7 @@ os.ui.slick.AbstractGroupByTreeSearchCtrl = function($scope, $element, searchDel
    */
   this.scope['contextMenu'] = null;
 
-  $scope.$on('$destroy', this.destroy.bind(this));
+  $scope.$on('$destroy', this.dispose.bind(this));
   $scope.$on('search', this.onSearch.bind(this));
   $scope.$on('collapseChange', this.save.bind(this));
 
@@ -88,18 +91,19 @@ os.ui.slick.AbstractGroupByTreeSearchCtrl = function($scope, $element, searchDel
    */
   this.prefix = 'groupBy';
 };
+goog.inherits(os.ui.slick.AbstractGroupByTreeSearchCtrl, goog.Disposable);
 
 
 /**
- * On destroy
- * @protected
+ * @inheritDoc
  */
-os.ui.slick.AbstractGroupByTreeSearchCtrl.prototype.destroy = function() {
+os.ui.slick.AbstractGroupByTreeSearchCtrl.prototype.disposeInternal = function() {
   this.save();
-  this.searchDelay.dispose();
+
+  goog.dispose(this.searchDelay);
   this.searchDelay = null;
 
-  this.treeSearch.dispose();
+  goog.dispose(this.treeSearch);
   this.treeSearch = null;
 
   this.scope = null;

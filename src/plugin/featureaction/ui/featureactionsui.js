@@ -4,9 +4,8 @@ goog.provide('plugin.im.action.feature.ui.featureActionsDirective');
 goog.require('os.source');
 goog.require('os.ui.Module');
 goog.require('os.ui.im.action.FilterActionsCtrl');
-goog.require('os.ui.util.autoHeightDirective');
 goog.require('plugin.im.action.feature');
-goog.require('plugin.im.action.feature.node.menu');
+goog.require('plugin.im.action.feature.node');
 
 
 /**
@@ -44,7 +43,7 @@ plugin.im.action.feature.ui.FeatureActionsCtrl = function($scope, $element) {
    * The context menu for feature action nodes.
    * @type {os.ui.menu.Menu<os.ui.menu.layer.Context>|undefined}
    */
-  this['contextMenu'] = plugin.im.action.feature.node.menu.MENU;
+  this['contextMenu'] = plugin.im.action.feature.node.MENU;
 
   plugin.im.action.feature.ui.FeatureActionsCtrl.base(this, 'constructor', $scope, $element);
   os.dataManager.listen(os.data.event.DataEventType.SOURCE_REMOVED, this.onSourceRemoved_, false, this);
@@ -88,7 +87,7 @@ plugin.im.action.feature.ui.FeatureActionsCtrl.prototype.apply = function() {
     var source = dm.getSource(this.entryType);
     if (source) {
       // check to see if the layer source should be refreshed
-      var featureActionRefresh = plugin.im.action.feature.doRefresh(this.entryType);
+      var featureActionRefresh = plugin.im.action.feature.shouldRefresh(this.entryType);
 
       if (source.isRefreshEnabled() && featureActionRefresh) {
         source.refresh();

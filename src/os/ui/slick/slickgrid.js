@@ -63,7 +63,7 @@ os.ui.slickGridDirective = function() {
       'columnMenuEnabled': '@',
       'dblClickEnabled': '@',
       'dblClickHandler': '=?',
-      'dragEnabled': '@',
+      'dragEnabled': '=',
       'resizeWith': '@',
       'idField': '@',
       'disableSelection': '@',
@@ -261,7 +261,7 @@ os.ui.slick.SlickGridCtrl = function($scope, $element, $compile) {
     }
   }
 
-  if ($scope['dragEnabled'] && $scope['dragEnabled'] !== 'false') {
+  if ($scope['dragEnabled']) {
     this.grid.onDragInit.subscribe(this.onDragInit.bind(this));
     this.grid.onDragStart.subscribe(this.onDragStart.bind(this));
     this.grid.onDrag.subscribe(this.onDrag.bind(this));
@@ -1516,6 +1516,10 @@ os.ui.slick.SlickGridCtrl.prototype.onDragInit = function(e, dragInfo) {
  * @protected
  */
 os.ui.slick.SlickGridCtrl.prototype.onDragStart = function(e, dragInfo) {
+  if (!this.scope['dragEnabled']) {
+    return false;
+  }
+
   var cell = this.grid.getCellFromEvent(e);
   if (!cell) {
     return false;

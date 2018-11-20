@@ -50,8 +50,7 @@ goog.object.extend(os.im.action.ImportActionManager, {
  * @private
  * @const
  */
-plugin.im.action.feature.Manager.LOGGER_ =
-    goog.log.getLogger('plugin.im.action.feature.Manager');
+plugin.im.action.feature.Manager.LOGGER_ = goog.log.getLogger('plugin.im.action.feature.Manager');
 
 
 /**

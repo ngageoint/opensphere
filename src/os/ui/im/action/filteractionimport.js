@@ -116,7 +116,7 @@ os.ui.im.action.FilterActionImportCtrl.prototype.finish = function() {
 
     os.commandStack.addCommand(cmd);
 
-    msg = 'Successfully imported <b>' + entries.length + '</b> ' + entryTitle + '.';
+    msg = 'Successfully imported <b>' + this['foundCount'] + '</b> ' + entryTitle + '.';
     am.sendAlert(msg, os.alert.AlertEventSeverity.SUCCESS);
   } else {
     msg = 'No ' + iam.entryTitle + 's were imported!';
@@ -133,4 +133,30 @@ os.ui.im.action.FilterActionImportCtrl.prototype.finish = function() {
  */
 os.ui.im.action.FilterActionImportCtrl.prototype.getFilterIcon = function() {
   return os.im.action.ICON;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.ui.im.action.FilterActionImportCtrl.prototype.getFilterModel = function(
+    title, filter, tooltip, opt_type, opt_match) {
+  var children = filter.getChildren();
+  var childModels;
+  if (children) {
+    childModels = [];
+    children.forEach(function(child) {
+      var model = this.getFilterModel(child.getTitle(), child, this.getFilterTooltip(child), opt_type);
+      childModels.push(model);
+    }, this);
+  }
+
+  return {
+    'title': title,
+    'filter': filter,
+    'tooltip': tooltip,
+    'type': opt_type,
+    'matches': opt_match,
+    'children': childModels
+  };
 };
