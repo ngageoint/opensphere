@@ -201,7 +201,6 @@ plugin.places.PlacesManager.prototype.removeLayer = function() {
  * @param {os.file.File=} opt_file Optional file to use in the import.
  */
 plugin.places.PlacesManager.prototype.startImport = function(opt_file) {
-  os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Filters.IMPORT, 1);
   var importProcess = new os.ui.im.ImportProcess(os.placesImportManager, os.placesFileManager);
   importProcess.setEvent(new os.ui.im.ImportEvent(os.ui.im.ImportEventType.FILE, opt_file, undefined));
   importProcess.begin();
