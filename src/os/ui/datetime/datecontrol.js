@@ -348,7 +348,5 @@ os.ui.datetime.DateControlCtrl.prototype.getUIEndDate = function() {
  * @private
  */
 os.ui.datetime.DateControlCtrl.prototype.onTimelineReset_ = function(event) {
-  if (!this['disabled']) {
-    this.update();
-  }
+  this.update();
 };
