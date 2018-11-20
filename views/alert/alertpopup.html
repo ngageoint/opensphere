@@ -7,6 +7,6 @@
     </button>
     <h4><i class="fa" ng-class="{'Error':'fa-ban','Warning':'fa-warning','Success':'fa-check','Info':'fa-info-circle'}[alert.severity]"></i>
       {{alert.severity}}!</h4>
-    <span title="{{alert.tooltip}}" ng-bind-html="alert.msg | alertlink"></span>
+    <span ng-bind-html="alert.msg | alertlink"></span>
   </div>
 </div>
