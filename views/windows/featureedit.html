@@ -49,7 +49,7 @@
             <select class="custom-select ml-2 col-2" ng-model="ctrl.semiMajorUnits" ng-change="ctrl.updatePreview()"
                 ng-options="unit for unit in ctrl.units">
             </select>
-            <popover  class="mx-2" title="'Semi-Major Axis'" content="ctrl.help.semiMajor" pos="'right'">
+            <popover  class="mx-2" data-title="'Semi-Major Axis'" content="ctrl.help.semiMajor" pos="'right'">
             </popover>
           </div>
         </div>
@@ -69,7 +69,7 @@
             <select class="custom-select ml-2 col-2" ng-model="ctrl.semiMinorUnits" ng-change="ctrl.updatePreview()"
                 ng-options="unit for unit in ctrl.units">
             </select>
-            <popover class="mx-2" title="'Semi-Minor Axis'" content="ctrl.help.semiMinor" pos="'right'">
+            <popover class="mx-2" data-title="'Semi-Minor Axis'" content="ctrl.help.semiMinor" pos="'right'">
             </popover>
           </div>
         </div>
@@ -82,7 +82,7 @@
           <label class="col-2 col-form-label text-right u-required">Orientation</label>
           <div class="d-inline-flex col">
             <input class="form-control col-4" type="number" name="orientation" ng-model="ctrl.orientation" ng-change="ctrl.updatePreview()" step="any" required="true" />
-            <popover class="mx-2" title="'Ellipse Orientation'" content="ctrl.help.orientation" pos="'right'">
+            <popover class="mx-2" data-title="'Ellipse Orientation'" content="ctrl.help.orientation" pos="'right'">
             </popover>
           </div>
         </div>
@@ -94,7 +94,7 @@
           <div class="d-inline-flex col">
             <input class="form-control col-4" type="number" name="iconRotation" ng-model="ctrl.iconRotation" ng-change="ctrl.updatePreview()" step="any" />
             <div class="mx-2">degrees</div>
-            <popover title="'Icon Rotation'" content="ctrl.help.iconRotation" pos="'right'">
+            <popover data-title="'Icon Rotation'" content="ctrl.help.iconRotation" pos="'right'">
             </popover>
           </div>
         </div>
