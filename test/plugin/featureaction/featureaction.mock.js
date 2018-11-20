@@ -29,10 +29,9 @@ plugin.im.action.feature.MockAction.ID = 'mockfeatureaction';
 
 /**
  * Execute the mock action.
- * @param {string} entryType The entry type.
  * @param {!Array<!ol.Feature>} items The items.
  */
-plugin.im.action.feature.MockAction.prototype.execute = function(entryType, items) {
+plugin.im.action.feature.MockAction.prototype.execute = function(items) {
   items.forEach(function(item) {
     item.set('MATCH', true);
   });

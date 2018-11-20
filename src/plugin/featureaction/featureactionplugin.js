@@ -14,7 +14,7 @@ goog.require('plugin.im.action.feature.SoundAction');
 goog.require('plugin.im.action.feature.StyleAction');
 goog.require('plugin.im.action.feature.legend');
 goog.require('plugin.im.action.feature.menu');
-goog.require('plugin.im.action.feature.node.menu');
+goog.require('plugin.im.action.feature.node');
 goog.require('plugin.im.action.feature.ui.featureActionsDirective');
 goog.require('plugin.im.action.feature.ui.labelConfigDirective');
 goog.require('plugin.im.action.feature.ui.legendSettingsDirective');
@@ -46,7 +46,7 @@ plugin.im.action.feature.Plugin.prototype.disposeInternal = function() {
 
   plugin.im.action.feature.layerDispose();
 
-  plugin.im.action.feature.node.menu.dispose();
+  plugin.im.action.feature.node.dispose();
 };
 
 
@@ -74,7 +74,7 @@ plugin.im.action.feature.Plugin.prototype.init = function() {
   sm.addStateImplementation(os.state.Versions.V3, os.state.v4.FilterAction);
   sm.addStateImplementation(os.state.Versions.V4, os.state.v4.FilterAction);
 
-  plugin.im.action.feature.node.menu.setup();
+  plugin.im.action.feature.node.setup();
 
   // add legend renderer
   os.legend.registerLayerPlugin(/** @type {!osx.legend.PluginOptions} */ ({

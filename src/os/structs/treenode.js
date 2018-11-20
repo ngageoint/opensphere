@@ -55,6 +55,8 @@ os.structs.TreeNode = function() {
   this.childIdMap = {};
 };
 goog.inherits(os.structs.TreeNode, goog.events.EventTarget);
+os.implements(os.structs.TreeNode, os.data.ISearchable.ID);
+os.implements(os.structs.TreeNode, os.structs.ITreeNode.ID);
 
 
 /**
@@ -384,6 +386,22 @@ os.structs.TreeNode.prototype.onChildChange = function(e) {
 /**
  * @inheritDoc
  */
+os.structs.TreeNode.prototype.getSearchText = function() {
+  return this.getLabel() || '';
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.structs.TreeNode.prototype.getTags = function() {
+  return null;
+};
+
+
+/**
+ * @inheritDoc
+ */
 os.structs.TreeNode.prototype.clone = function() {
   var other = new this.constructor();
   other.updateFrom(this);
@@ -441,4 +459,44 @@ os.structs.getLeafNodes = function(root) {
   }
 
   return root;
+};
+
+
+/**
+ * Gets the branch of the tree as an array of nodes starting from the root to this node.
+ * @param {os.structs.ITreeNode} node The current node.
+ * @param {Array<!os.structs.ITreeNode>=} opt_array Optional array to push to.
+ * @return {!Array<!os.structs.ITreeNode>} The branch of the tree.
+ * @protected
+ */
+os.structs.getBranch = function(node, opt_array) {
+  var branch = opt_array || [];
+  branch.unshift(node);
+
+  var parent = node.getParent();
+  if (parent) {
+    os.structs.getBranch(parent, branch);
+  }
+
+  return branch;
+};
+
+
+/**
+ * Gets the index that the node occupies in the parent's children array, or -1 if it's a root node.
+ * @param {os.structs.ITreeNode} node The node.
+ * @return {number} The index in the parent's children array.
+ */
+os.structs.getIndexInParent = function(node) {
+  var parentIndex = -1;
+
+  var parent = node.getParent();
+  if (parent) {
+    var children = parent.getChildren();
+    parentIndex = goog.array.findIndex(children, function(child) {
+      return child === node;
+    });
+  }
+
+  return parentIndex;
 };
