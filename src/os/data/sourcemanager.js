@@ -2,6 +2,7 @@ goog.provide('os.data.SourceManager');
 
 goog.require('goog.Disposable');
 goog.require('goog.async.Delay');
+goog.require('ol.array');
 goog.require('ol.events');
 goog.require('os.data.DataManager');
 goog.require('os.data.event.DataEventType');
@@ -134,7 +135,7 @@ os.data.SourceManager.prototype.addSource = function(source) {
  * @protected
  */
 os.data.SourceManager.prototype.removeSource = function(source) {
-  goog.array.remove(this.sources, source);
+  ol.array.remove(this.sources, source);
 };
 
 

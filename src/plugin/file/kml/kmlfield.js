@@ -1,6 +1,7 @@
 goog.provide('plugin.file.kml.KMLField');
 
 goog.require('os.Fields');
+goog.require('os.annotation');
 goog.require('os.style');
 goog.require('os.ui.slick.column');
 
@@ -36,6 +37,7 @@ goog.object.extend(os.ui.slick.column.fix, {
 plugin.file.kml.SOURCE_FIELDS = [
   plugin.file.kml.KMLField.NAME,
   plugin.file.kml.KMLField.DESCRIPTION,
+  os.annotation.OPTIONS_FIELD,
   os.Fields.BEARING,
   os.Fields.LAT,
   os.Fields.LON,

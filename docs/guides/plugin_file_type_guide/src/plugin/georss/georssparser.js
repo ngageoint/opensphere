@@ -207,4 +207,3 @@ plugin.georss.GeoRSSParser.parseCoords_ = function(el) {
 
   return coords;
 };
-

@@ -79,7 +79,8 @@ goog.inherits(plugin.ogc.wms.WMSLayerConfig, os.layer.config.AbstractTileLayerCo
  */
 plugin.ogc.wms.WMSLayerConfig.prototype.initializeConfig = function(options) {
   plugin.ogc.wms.WMSLayerConfig.base(this, 'initializeConfig', options);
-  this.layerClass = options['animate'] ? os.layer.AnimatedTile : this.layerClass;
+  this.animate = !!options['animate'];
+  this.layerClass = this.animate ? os.layer.AnimatedTile : this.layerClass;
 };
 
 
@@ -92,8 +93,17 @@ plugin.ogc.wms.WMSLayerConfig.prototype.configureLayer = function(layer, options
   layer.setStyles(/** @type {?Array<osx.ogc.TileStyle>} */ (options['styles'] || null));
 
   if (this.animate) {
-    if (layer instanceof os.layer.AnimatedTile && options['dateFormat']) {
-      /** @type {os.layer.AnimatedTile} */ (layer).setDateFormat(/** @type {string} */ (options['dateFormat']));
+    if (layer instanceof os.layer.AnimatedTile) {
+      var animatedLayer = /** @type {os.layer.AnimatedTile} */ (layer);
+      animatedLayer.setTimeFunction(os.layer.AnimatedTile.updateParams);
+
+      if (options['dateFormat']) {
+        animatedLayer.setDateFormat(/** @type {string} */ (options['dateFormat']));
+      }
+
+      if (options['timeFormat']) {
+        animatedLayer.setTimeFormat(/** @type {string} */ (options['timeFormat']));
+      }
     }
   }
 };

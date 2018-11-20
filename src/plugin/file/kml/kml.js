@@ -21,7 +21,6 @@ goog.require('os.time.TimeRange');
 goog.require('os.ui.file.kml');
 goog.require('os.xml');
 
-
 /**
  * Key used to store the parsed KML style on features.
  * @type {string}
@@ -215,6 +214,20 @@ plugin.file.kml.replaceParsers_(ol.format.KML.POLY_STYLE_PARSERS_, 'color',
 plugin.file.kml.readStyle = function(node, objectStack) {
   return ol.format.KML.readStyle_(node, objectStack);
 };
+
+
+/**
+ * Property parsers for BalloonStyle Style.
+ * @type {Object<string, Object<string, ol.XmlParser>>}
+ * @const
+ */
+plugin.file.kml.BALLOON_PROPERTY_PARSERS = ol.xml.makeStructureNS(
+    plugin.file.kml.OL_NAMESPACE_URIS(), {
+      'bgColor': ol.xml.makeObjectPropertySetter(plugin.file.kml.readColor_),
+      'textColor': ol.xml.makeObjectPropertySetter(plugin.file.kml.readColor_),
+      'text': ol.xml.makeObjectPropertySetter(ol.format.XSD.readString),
+      'displayMode': ol.xml.makeObjectPropertySetter(ol.format.XSD.readString)
+    });
 
 
 /**

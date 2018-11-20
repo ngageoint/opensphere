@@ -1,6 +1,7 @@
 goog.provide('plugin.vectortools.MergeCtrl');
 goog.provide('plugin.vectortools.mergeDirective');
 
+goog.require('ol.array');
 goog.require('os.data.OSDataManager');
 goog.require('os.data.SourceManager');
 goog.require('os.defines');
@@ -104,7 +105,7 @@ plugin.vectortools.MergeCtrl.prototype.init = function() {
 plugin.vectortools.MergeCtrl.prototype.removeSource = function(source) {
   plugin.vectortools.MergeCtrl.base(this, 'removeSource', source);
 
-  goog.array.remove(this.sourceIds_, source.getId());
+  ol.array.remove(this.sourceIds_, source.getId());
   this.onUpdateDelay();
 };
 

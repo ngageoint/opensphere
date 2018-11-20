@@ -2,6 +2,7 @@ goog.provide('os.time.xf.TimeModel');
 
 goog.require('goog.log');
 goog.require('goog.log.Logger');
+goog.require('ol.array');
 goog.require('os.data.xf.DataModel');
 goog.require('os.data.xf.PropertyChange');
 goog.require('os.events.PropertyChangeEvent');
@@ -291,7 +292,7 @@ os.time.xf.TimeModel.prototype.groupData = function(id, accessorFn, addFn, remov
       // merge groups into the set created from data with time, ignore timeless data (no results)
       for (var i = 0, ii = groups.length; i < ii; i++) {
         var group = /** @type {!os.histo.Result} */ (groups[i]);
-        var existing = /** @type {os.histo.Result|undefined} */ (goog.array.find(results, function(result) {
+        var existing = /** @type {os.histo.Result|undefined} */ (ol.array.find(results, function(result) {
           return result['key'] == group['key'];
         }));
 

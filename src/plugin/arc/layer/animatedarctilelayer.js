@@ -13,6 +13,7 @@ goog.require('os.time.TimelineController');
  */
 plugin.arc.layer.AnimatedArcTile = function(options) {
   plugin.arc.layer.AnimatedArcTile.base(this, 'constructor', options);
+  this.setTimeFunction(os.layer.AnimatedTile.updateParams);
 };
 goog.inherits(plugin.arc.layer.AnimatedArcTile, os.layer.AnimatedTile);
 

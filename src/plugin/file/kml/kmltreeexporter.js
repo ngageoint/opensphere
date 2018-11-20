@@ -11,6 +11,7 @@ goog.require('os.ui.file.kml');
 goog.require('os.ui.file.kml.AbstractKMLExporter');
 goog.require('os.xml');
 goog.require('plugin.file.kml');
+goog.require('plugin.file.kml.export');
 
 
 
@@ -321,13 +322,14 @@ plugin.file.kml.KMLTreeExporter.prototype.getGeometry = function(item) {
 /**
  * @inheritDoc
  */
+plugin.file.kml.KMLTreeExporter.prototype.getBalloonOptions = function(item) {
+  return plugin.file.kml.export.getBalloonOptions(item ? item.getFeature() : null);
+};
+
+
+/**
+ * @inheritDoc
+ */
 plugin.file.kml.KMLTreeExporter.prototype.getRotationColumn = function(item) {
-  var feature = item ? item.getFeature() : null;
-  if (feature) {
-    var layerConfig = os.style.getLayerConfig(feature);
-    if (layerConfig && layerConfig[os.style.StyleField.SHOW_ROTATION]) {
-      return layerConfig[os.style.StyleField.ROTATION_COLUMN];
-    }
-  }
-  return undefined;
+  return plugin.file.kml.export.getRotationColumn(item ? item.getFeature() : null);
 };

@@ -14,7 +14,7 @@ describe('os.layer.AnimatedTile', function() {
 
     layer = new os.layer.AnimatedTile({
       source: new ol.source.TileWMS(/** @type {olx.source.TileWMSOptions} */ ({
-        params: { 'LAYERS': 'dontcare' }
+        params: {'LAYERS': 'dontcare'}
       }))
     });
   });
@@ -57,18 +57,18 @@ describe('os.layer.AnimatedTile', function() {
   it('should get time parameters correctly for tiles', function() {
     // days should have a / and the next day's date
     expect(os.layer.AnimatedTile.getTimeParameter(
-        'YYYY-MM-DD', 1472947200000, 1473033600000, os.time.Duration.DAY)).toBe('2016-09-04/2016-09-05');
+        'YYYY-MM-DD', '{start}/{end}', 1472947200000, 1473033600000, os.time.Duration.DAY)).toBe('2016-09-04/2016-09-05');
 
     // weeks should be fully qualified
     expect(os.layer.AnimatedTile.getTimeParameter(
-        'YYYY-MM-DD', 1472947200000, 1473552000000, os.time.Duration.WEEK)).toBe('2016-09-04/2016-09-11');
+        'YYYY-MM-DD', '{start}/{end}', 1472947200000, 1473552000000, os.time.Duration.WEEK)).toBe('2016-09-04/2016-09-11');
 
     // months should increment to the first day of next month
     expect(os.layer.AnimatedTile.getTimeParameter(
-        'YYYY-MM-DD', 1472688000000, 1475280000000, os.time.Duration.MONTH)).toBe('2016-09-01/2016-10-01');
+        'YYYY-MM-DD', '{start}/{end}', 1472688000000, 1475280000000, os.time.Duration.MONTH)).toBe('2016-09-01/2016-10-01');
 
     // custom should add a day, i.e. this case would show as 2016/09/01 - 2016/09/06 on the date chooser
     expect(os.layer.AnimatedTile.getTimeParameter(
-        'YYYY-MM-DD', 1472688000000, 1473206399000, os.time.Duration.CUSTOM)).toBe('2016-09-01/2016-09-07');
+        'YYYY-MM-DD', '{start}/{end}', 1472688000000, 1473206399000, os.time.Duration.CUSTOM)).toBe('2016-09-01/2016-09-07');
   });
 });

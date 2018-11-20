@@ -4,6 +4,7 @@ goog.provide('os.ui.query.ui.combinatorDirective');
 goog.require('goog.asserts');
 goog.require('goog.async.Delay');
 goog.require('goog.string');
+goog.require('ol.array');
 goog.require('os.alertManager');
 goog.require('os.command.SequenceCommand');
 goog.require('os.events.PropertyChangeEvent');
@@ -467,7 +468,7 @@ os.ui.query.ui.CombinatorCtrl.sortLayers = function(a, b) {
  */
 os.ui.query.ui.CombinatorCtrl.prototype.onSetLayer_ = function(event, id) {
   if (this.scope && id) {
-    var layer = goog.array.find(this.scope['layers'], function(l) {
+    var layer = ol.array.find(this.scope['layers'], function(l) {
       return l['id'] === id;
     });
 
@@ -717,7 +718,7 @@ os.ui.query.ui.CombinatorCtrl.prototype.onEdit_ = function(evt, isFilter, entry)
 
         if (filter) {
           var layerId = /** @type {string} */ (entry['layerId']);
-          var layer = goog.array.find(this.scope['layers'], function(layer) {
+          var layer = ol.array.find(this.scope['layers'], function(layer) {
             return layer['id'] == layerId;
           });
 
@@ -761,7 +762,7 @@ os.ui.query.ui.CombinatorCtrl.prototype.onView_ = function(evt, isFilter, entry)
 
         if (filter) {
           var layerId = /** @type {string} */ (entry['layerId']);
-          var layer = goog.array.find(this.scope['layers'], function(layer) {
+          var layer = ol.array.find(this.scope['layers'], function(layer) {
             return layer['id'] == layerId;
           });
 

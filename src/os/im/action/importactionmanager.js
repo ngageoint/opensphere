@@ -3,6 +3,7 @@ goog.provide('os.im.action.ImportActionManager');
 goog.require('goog.events.EventTarget');
 goog.require('goog.events.EventType');
 goog.require('goog.log');
+goog.require('ol.array');
 goog.require('os.im.action.FilterActionEntry');
 goog.require('os.im.action.ImportActionEventType');
 goog.require('os.im.action.TagName');
@@ -210,7 +211,7 @@ os.im.action.ImportActionManager.prototype.createActionEntry = function() {
  */
 os.im.action.ImportActionManager.prototype.getActionEntry = function(id, opt_type) {
   var list = this.getActionEntries(opt_type);
-  return goog.array.find(list, function(entry) {
+  return ol.array.find(list, function(entry) {
     return entry.getId() == id;
   });
 };
@@ -268,7 +269,7 @@ os.im.action.ImportActionManager.prototype.addActionEntry = function(entry, opt_
     } else {
       // check if the entry already exists
       var list = this.getActionEntries(entry.type);
-      index = goog.array.findIndex(list, function(e) {
+      index = ol.array.findIndex(list, function(e) {
         return e.getId() == entry.getId();
       });
     }
@@ -348,11 +349,10 @@ os.im.action.ImportActionManager.prototype.unprocessItems = function(entryType, 
  */
 os.im.action.ImportActionManager.prototype.removeActionEntry = function(entry) {
   if (entry && entry.type in this.actionEntries) {
-    // unprocess any items tagged with featureActionRefresh
     this.unprocessItems(entry.type, this.getEntryItems(entry.type));
 
     var entries = this.actionEntries[entry.type];
-    goog.array.remove(entries, entry);
+    ol.array.remove(entries, entry);
 
     if (entries.length == 0) {
       delete this.actionEntries[entry.type];

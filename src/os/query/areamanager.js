@@ -9,6 +9,7 @@ goog.require('ol.format.GeoJSON');
 goog.require('ol.source.Vector');
 goog.require('ol.source.VectorEventType');
 goog.require('os.MapContainer');
+goog.require('os.array');
 goog.require('os.command.TransformAreas');
 goog.require('os.config.Settings');
 goog.require('os.data.CollectionManager');
@@ -442,7 +443,7 @@ os.query.AreaManager.prototype.updateExWidth_ = function(event) {
  */
 os.query.AreaManager.prototype.redrawQueryAreas_ = function() {
   var areas = this.getAll();
-  goog.array.forEach(areas, function(area) {
+  os.array.forEach(areas, function(area) {
     if (area.getStyle() != null) {
       var entries = os.ui.query.QueryManager.getInstance().getEntries(null, /** @type {string} */ (area.getId()));
       if (entries && entries.length > 0) {

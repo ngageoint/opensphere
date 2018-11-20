@@ -1,4 +1,7 @@
 goog.provide('os.ui.formatter');
+goog.require('os.array');
+
+
 goog.require('os.time.TimeInstant');
 
 
@@ -24,7 +27,7 @@ os.ui.formatter.urlNewTabFormatter = function(value) {
           }
         } else {
           // If theres more than 1 value, put a number on it
-          goog.array.forEach(splitVal, function(elem, index, arr) {
+          os.array.forEach(splitVal, function(elem, index, arr) {
             if (os.url.URL_REGEXP_LINKY.test(elem)) {
               var url = os.ui.sanitize(String(elem));
               elem = os.string.linkify(url, '_blank', 'slick-cell-link', url, '[' + cite + ']');

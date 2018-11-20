@@ -1,6 +1,7 @@
 goog.provide('os.ui.query.ui.AddFilterCtrl');
 goog.provide('os.ui.query.ui.addFilterDirective');
 
+goog.require('ol.array');
 goog.require('os.filter.FilterEntry');
 goog.require('os.ui.Module');
 goog.require('os.ui.filter.ui.editFiltersDirective');
@@ -178,7 +179,7 @@ os.ui.query.ui.AddFilterCtrl.prototype.add = function() {
  * @protected
  */
 os.ui.query.ui.AddFilterCtrl.prototype.addFilter = function(layerId) {
-  var layer = goog.array.find(this.layers, function(layer) {
+  var layer = ol.array.find(this.layers, function(layer) {
     return layer['id'] == layerId;
   });
   os.ui.filter.FilterManager.edit(layerId, layer['columns'], this.onFilterReady_.bind(this));

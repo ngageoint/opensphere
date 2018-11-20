@@ -16,6 +16,28 @@ os.ui.menu.MAP = undefined;
 
 
 /**
+ * Sort value used for each map menu group.
+ * @enum {number}
+ */
+os.ui.menu.map.GroupSort = {
+  MAP: 0,
+  OPTIONS: 5,
+  COORDINATE: 10
+};
+
+
+/**
+ * Group labels for the map menu.
+ * @enum {string}
+ */
+os.ui.menu.map.GroupLabel = {
+  MAP: 'Map',
+  OPTIONS: 'Options',
+  COORDINATE: 'Coordinate'
+};
+
+
+/**
  * Set up the menu
  */
 os.ui.menu.map.setup = function() {
@@ -27,8 +49,9 @@ os.ui.menu.map.setup = function() {
   os.ui.menu.MAP = new os.ui.menu.Menu(new os.ui.menu.MenuItem({
     type: os.ui.menu.MenuItemType.ROOT,
     children: [{
-      label: 'Map',
+      label: os.ui.menu.map.GroupLabel.MAP,
       type: os.ui.menu.MenuItemType.GROUP,
+      sort: os.ui.menu.map.GroupSort.MAP,
       children: [{
         label: 'Reset View',
         eventType: os.action.EventType.RESET_VIEW,
@@ -57,7 +80,7 @@ os.ui.menu.map.setup = function() {
         eventType: os.action.EventType.SHOW_LEGEND,
         tooltip: 'Display the map legend',
         icons: ['<i class="fa fa-fw ' + os.legend.ICON + '"></i>'],
-        sort: 50,
+        sort: 40,
         handler: os.ui.menu.map.showLegend,
         metricKey: os.metrics.keys.Map.SHOW_LEGEND_CONTEXT
       }, {
@@ -65,14 +88,14 @@ os.ui.menu.map.setup = function() {
         eventType: os.action.EventType.CLEAR_SELECTION,
         tooltip: 'Clears the selected features across all layers',
         icons: ['<i class="fa fa-fw fa-times-circle"></i>'],
-        sort: 60,
+        sort: 50,
         handler: os.ui.menu.map.clearSelection_,
         metricKey: os.metrics.keys.Map.CLEAR_SELECTION
       }]
     }, {
-      label: 'Options',
+      label: os.ui.menu.map.GroupLabel.OPTIONS,
       type: os.ui.menu.MenuItemType.GROUP,
-      sort: 5,
+      sort: os.ui.menu.map.GroupSort.OPTIONS,
       children: [{
         label: 'Background Color',
         eventType: os.config.DisplaySetting.BG_COLOR,
@@ -90,10 +113,10 @@ os.ui.menu.map.setup = function() {
         handler: os.ui.menu.map.onTerrain
       }]
     }, {
-      label: 'Coordinate',
+      label: os.ui.menu.map.GroupLabel.COORDINATE,
       type: os.ui.menu.MenuItemType.GROUP,
       visible: false,
-      sort: 10,
+      sort: os.ui.menu.map.GroupSort.COORDINATE,
       children: [],
       beforeRender: os.ui.menu.map.showIfHasCoordinate
     }]

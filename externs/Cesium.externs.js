@@ -55,6 +55,15 @@ Cesium.Promise = function() {};
 
 
 /**
+ * @param {Function=} opt_onFulfilled
+ * @param {Function=} opt_onRejected
+ * @param {Function=} opt_onProgress
+ * @return {Cesium.Promise}
+ */
+Cesium.Promise.prototype.then = function(opt_onFulfilled, opt_onRejected, opt_onProgress) {};
+
+
+/**
  * @type {Object}
  */
 Cesium.TrustedServers = {};
@@ -151,11 +160,11 @@ Cesium.loadArrayBuffer = function(url, opt_headers, opt_request) {};
 
 
 /**
- * @param {*} promiseOrValue
+ * @param {T} promiseOrValue
  * @param {Function=} opt_onFulfilled
  * @param {Function=} opt_onRejected
  * @param {Function=} opt_onProgress
- * @return {T}
+ * @return {Cesium.Promise<T>}
  * @template T
  */
 Cesium.when = function(promiseOrValue, opt_onFulfilled, opt_onRejected, opt_onProgress) {};
@@ -167,6 +176,13 @@ Cesium.when = function(promiseOrValue, opt_onFulfilled, opt_onRejected, opt_onPr
  */
 Cesium.when.defer = function() {};
 
+
+/**
+ * @param {T} promiseOrValue
+ * @return {Cesium.Promise<T>}
+ * @template T
+ */
+Cesium.when.resolve = function(promiseOrValue) {};
 
 
 /**
@@ -238,9 +254,10 @@ Cesium.Color.fromRgba = function(value) {};
 
 /**
  * @param {string} name
+ * @param {Cesium.Color=} opt_result
  * @return {!Cesium.Color}
  */
-Cesium.Color.fromCssColorString = function(name) {};
+Cesium.Color.fromCssColorString = function(name, opt_result) {};
 
 
 /**
@@ -1122,6 +1139,13 @@ Cesium.Cartesian2.prototype.clone = function(opt_result) {};
  * @return {Cesium.Cartesian2}
  */
 Cesium.Cartesian2.clone = function(cartesian, opt_result) {};
+
+
+/**
+ * @param {Array<number>} array
+ * @return {!Cesium.Cartesian2}
+ */
+Cesium.Cartesian2.fromArray = function(array) {};
 
 
 
@@ -2521,7 +2545,8 @@ Cesium.Transforms.headingPitchRollToFixedFrame = function(origin, hpr, opt_ellip
  *      Cesium.PolylineCollection|Cesium.Polyline|
  *      Cesium.BillboardCollection|Cesium.Billboard|
  *      Cesium.LabelCollection|Cesium.Label|
- *      Cesium.PrimitiveCollection|Cesium.Primitive)
+ *      Cesium.PrimitiveCollection|Cesium.Primitive|
+ *      Cesium.Cesium3DTileset)
  * }
  */
 Cesium.PrimitiveLike;
@@ -3058,6 +3083,22 @@ Cesium.Resource._Implementations = {};
  */
 Cesium.Resource._Implementations.createImage;
 
+/**
+ * @typedef {{
+ *   url: string,
+ *   queryParameters: (Object|undefined),
+ *   templateValues: (Object|undefined),
+ *   headers: (Object|undefined),
+ *   request: (Cesium.Request|undefined)
+ * }}
+ */
+Cesium.Resource.FetchArrayBufferOptions;
+
+/**
+ * @param {Cesium.Resource.FetchArrayBufferOptions} options
+ * @return {Cesium.Promise<ArrayBuffer>|undefined}
+ */
+Cesium.Resource.fetchArrayBuffer = function(options) {};
 
 
 /**
@@ -3662,6 +3703,14 @@ Cesium.PerspectiveFrustrum.prototype.near;
  */
 Cesium.PerspectiveFrustrum.prototype.projectionMatrix;
 
+/**
+ * @param {Cesium.Cartesian3} position
+ * @param {Cesium.Cartesian3} direction
+ * @param {Cesium.Cartesian3} up
+ * @return {Cesium.CullingVolume}
+ */
+Cesium.PerspectiveFrustrum.prototype.computeCullingVolume = function(position, direction, up) {};
+
 
 /**
  * @param {!number} drawingBufferWidth
@@ -3933,6 +3982,13 @@ Cesium.Scene.prototype.skyAtmosphere;
  * @type {number}
  */
 Cesium.Scene.prototype.maximumAliasedLineWidth;
+
+
+/**
+ * @param {Cesium.Cartesian3} value
+ * @return {Cesium.Cartesian2}
+ */
+Cesium.Scene.prototype.cartesianToCanvasCoordinates = function(value) {};
 
 
 
@@ -4770,10 +4826,15 @@ Cesium.TerrainProvider.prototype.getTileDataAvailable = function(x, y, level) {}
  * @param {number} x
  * @param {number} y
  * @param {number} level
- * @param {boolean} throttleRequests
- * @return {Cesium.Promise|Cesium.TerrainData|undefined}
+ * @param {Cesium.Request=} opt_request
+ * @return {Cesium.Promise<Cesium.TerrainData>|undefined}
  */
-Cesium.TerrainProvider.prototype.requestTileGeometry = function(x, y, level, throttleRequests) {};
+Cesium.TerrainProvider.prototype.requestTileGeometry = function(x, y, level, opt_request) {};
+
+/**
+ * @typedef {function(this:Cesium.TerrainProvider, number, number, number, Cesium.Request=):(Cesium.Promise<Cesium.TerrainData>|undefined)}
+ */
+Cesium.RequestTileGeometryFn;
 
 
 /**
@@ -5095,6 +5156,42 @@ Cesium.CallbackProperty = function(cb, constant) {};
 
 
 /**
+ * @param {Cesium.BoundingSphere} occluderBoundingSphere
+ * @param {Cesium.Cartesian3} cameraPosition
+ * @constructor
+ */
+Cesium.Occluder = function(occluderBoundingSphere, cameraPosition) {};
+
+/**
+ * @param {Cesium.Cartesian3} occludee
+ */
+Cesium.Occluder.prototype.isPointVisible  = function(occludee) {};
+
+
+/**
+ * @enum {number}
+ */
+Cesium.Intersect = {
+  OUTSIDE: -1,
+  INTERSECTING: 0,
+  INSIDE: 1
+};
+
+
+/**
+ * @param {Array.<Cesium.Cartesian4>} planes
+ * @constructor
+ */
+Cesium.CullingVolume = function(planes) {};
+
+/**
+ * @param {Object} boundingVolume
+ * @return {Cesium.Intersect}
+ */
+Cesium.CullingVolume.prototype.computeVisibility  = function(boundingVolume) {};
+
+
+/**
  * @typedef {{
  *   accessToken: (string|undefined),
  *   assetId: (number|undefined)
@@ -5135,3 +5232,138 @@ Cesium.IonResource = function(endpoint, resource) {};
  * @return {Cesium.IonResource}
  */
 Cesium.IonResource.fromAssetId = function(assetId, options) {};
+
+
+/**
+ * @typedef {{
+ *  url: (Cesium.IonResource|string)
+ * }}
+ */
+Cesium.Cesium3DTilesetOptions;
+
+
+/**
+ * @param {Cesium.Cesium3DTilesetOptions} options
+ * @constructor
+ */
+Cesium.Cesium3DTileset = function(options) {};
+
+/**
+ * @type {Cesium.Event}
+ */
+Cesium.Cesium3DTileset.prototype.allTilesLoaded;
+
+/**
+ * @type {Cesium.Event}
+ */
+Cesium.Cesium3DTileset.prototype.initialTilesLoaded;
+
+/**
+ * @type {Cesium.Event}
+ */
+Cesium.Cesium3DTileset.prototype.loadProgress;
+
+/**
+ * @type {Cesium.Event}
+ */
+Cesium.Cesium3DTileset.prototype.tileFailed;
+
+/**
+ * @type {Cesium.Event}
+ */
+Cesium.Cesium3DTileset.prototype.tileLoad;
+
+/**
+ * @type {Cesium.Event}
+ */
+Cesium.Cesium3DTileset.prototype.tileUnload;
+
+/**
+ * @type {Cesium.Event}
+ */
+Cesium.Cesium3DTileset.prototype.tileVisible;
+
+/**
+ * @type {Cesium.Cesium3DTile}
+ */
+Cesium.Cesium3DTileset.prototype.root;
+
+/**
+ *
+ */
+Cesium.Cesium3DTileset.prototype.makeStyleDirty = function() {};
+
+
+/**
+ * @constructor
+ */
+Cesium.Cesium3DTile = function() {};
+
+
+/**
+ * @type {Cesium.TileBoundingRegion}
+ */
+Cesium.Cesium3DTile.prototype.contentBoundingVolume;
+
+
+/**
+ * @constructor
+ */
+Cesium.Cesium3DTileFeature = function() {};
+
+
+/**
+ * @type {Cesium.Color}
+ */
+Cesium.Cesium3DTileFeature.prototype.color;
+
+
+/**
+ * @type {Cesium.Cesium3DTileset}
+ */
+Cesium.Cesium3DTileFeature.prototype.primitive;
+
+
+/**
+ * @type {boolean}
+ */
+Cesium.Cesium3DTileFeature.prototype.show;
+
+
+/**
+ * @type {Cesium.Cesium3DTileset}
+ */
+Cesium.Cesium3DTileFeature.prototype.tileset;
+
+
+/**
+ * @param {string} name
+ * @return {*}
+ */
+Cesium.Cesium3DTileFeature.prototype.getProperty = function(name) {};
+
+
+/**
+ * @param {Array<string>=} opt_results
+ * @return {Array<string>}
+ */
+Cesium.Cesium3DTileFeature.prototype.getPropertyNames = function(opt_results) {};
+
+
+/**
+ * @param {Cesium.Resource|Object|string=} opt_options
+ * @constructor
+ */
+Cesium.Cesium3DTileStyle = function(opt_options) {};
+
+
+/**
+ * @constructor
+ */
+Cesium.TileBoundingRegion = function() {};
+
+
+/**
+ * @type {Cesium.Rectangle}
+ */
+Cesium.TileBoundingRegion.prototype.rectangle;

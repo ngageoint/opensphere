@@ -1,5 +1,6 @@
 goog.provide('os.xt.MockHandler');
 
+goog.require('ol.array');
 goog.require('os.xt.Peer');
 goog.require('os.xt.events');
 
@@ -335,14 +336,14 @@ describe('os.xt.Peer', function() {
     b.setTitle('bob');
 
     expect(a.getPeers().length).toBe(0);
-    expect(goog.array.find(a.getPeerInfo(), function(maybeB) {
+    expect(ol.array.find(a.getPeerInfo(), function(maybeB) {
       return maybeB.id === b.getId();
     })).toBeNull();
 
     b.init();
 
     expect(a.getPeers()).toContain(b.getId());
-    expect(goog.array.find(a.getPeerInfo(), function(maybeB) {
+    expect(ol.array.find(a.getPeerInfo(), function(maybeB) {
       return maybeB.id === b.getId();
     })).toBeTruthy();
 

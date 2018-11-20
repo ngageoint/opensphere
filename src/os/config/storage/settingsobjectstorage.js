@@ -1,6 +1,7 @@
 goog.provide('os.config.storage.SettingsObjectStorage');
 goog.require('goog.async.Deferred');
 goog.require('goog.object');
+goog.require('os.array');
 goog.require('os.config.storage.ISettingsReadableStorage');
 goog.require('os.config.storage.ISettingsStorage');
 goog.require('os.config.storage.ISettingsWritableStorage');
@@ -115,7 +116,7 @@ os.config.storage.SettingsObjectStorage.prototype.setSettings = function(map, op
  * @private
  */
 os.config.storage.SettingsObjectStorage.prototype.setSettings_ = function(map) {
-  goog.array.forEach(this.namespaces, function(namespace) {
+  os.array.forEach(this.namespaces, function(namespace) {
     var prefs = map[namespace] || {};
     this.store[namespace] = prefs;
   }, this);
