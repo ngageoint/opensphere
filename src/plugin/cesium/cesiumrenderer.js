@@ -127,8 +127,6 @@ plugin.cesium.CesiumRenderer.prototype.initialize = function() {
 
           var scene = this.olCesium_.getCesiumScene();
 
-          scene.globe.enableLighting = !!os.settings.get(os.config.DisplaySetting.ENABLE_LIGHTING, false);
-
           // set the FOV to 60 degrees to match Google Earth
           scene.camera.frustum.fov = Cesium.Math.PI_OVER_THREE;
 
@@ -143,8 +141,10 @@ plugin.cesium.CesiumRenderer.prototype.initialize = function() {
           Cesium.TerrainProvider.heightmapTerrainQuality = goog.userAgent.GECKO ? 0.05 : 0.25;
           this.updateTerrainProvider();
 
-          // configure Cesium fog
-          this.showFog(/** @type {boolean} */ (os.settings.get(os.config.DisplaySetting.FOG_ENABLED, true)));
+          // configure WebGL features
+          this.showFog(!!os.settings.get(os.config.DisplaySetting.FOG_ENABLED, true));
+          this.showSunlight(!!os.settings.get(os.config.DisplaySetting.ENABLE_LIGHTING, false));
+          this.showSky(!!os.settings.get(os.config.DisplaySetting.ENABLE_SKY, false));
 
           // legacy code saved density as the Cesium fog density value. now it is saved as a percentage from 0-1. if
           // the settings value is non-zero (no fog) and less than 5% (not allowed by our UI), reset it to the default.
@@ -413,6 +413,31 @@ plugin.cesium.CesiumRenderer.prototype.setFogDensity = function(value) {
     if (scene.fog.density != newDensity) {
       scene.fog.density = newDensity;
     }
+    os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
+  }
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.cesium.CesiumRenderer.prototype.showSky = function(value) {
+  var scene = this.olCesium_ ? this.olCesium_.getCesiumScene() : undefined;
+  if (scene) {
+    if (!scene.skyBox && value) {
+      var skyBoxOptions = /** @type {Cesium.SkyBoxOptions|undefined} */ (os.settings.get(
+          plugin.cesium.SettingsKey.SKYBOX_OPTIONS));
+      if (!skyBoxOptions) {
+        skyBoxOptions = plugin.cesium.getDefaultSkyBoxOptions();
+      }
+
+      scene.skyBox = new Cesium.SkyBox(skyBoxOptions);
+    }
+
+    if (scene.skyBox) {
+      scene.skyBox.show = value;
+    }
+
     os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
   }
 };

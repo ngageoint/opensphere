@@ -40,7 +40,8 @@ plugin.cesium.GeometryInstanceId = {
  */
 plugin.cesium.SettingsKey = {
   ION_URL: 'cesium.ionUrl',
-  LOAD_TIMEOUT: 'cesium.loadTimeout'
+  LOAD_TIMEOUT: 'cesium.loadTimeout',
+  SKYBOX_OPTIONS: 'cesium.skyBoxOptions'
 };
 
 
@@ -192,6 +193,25 @@ plugin.cesium.getDefaultTerrainProvider = function() {
   }
 
   return plugin.cesium.defaultTerrainProvider_;
+};
+
+
+/**
+ * Get the default SkyBox using Cesium's assets.
+ * @return {!Cesium.SkyBoxOptions}
+ */
+plugin.cesium.getDefaultSkyBoxOptions = function() {
+  var baseUrl = os.ROOT + plugin.cesium.LIBRARY_BASE_PATH + '/Assets/Textures/SkyBox/';
+  return /** @type {!Cesium.SkyBoxOptions} */ ({
+    sources: {
+      positiveX: baseUrl + 'tycho2t3_80_px.jpg',
+      negativeX: baseUrl + 'tycho2t3_80_mx.jpg',
+      positiveY: baseUrl + 'tycho2t3_80_py.jpg',
+      negativeY: baseUrl + 'tycho2t3_80_my.jpg',
+      positiveZ: baseUrl + 'tycho2t3_80_pz.jpg',
+      negativeZ: baseUrl + 'tycho2t3_80_mz.jpg'
+    }
+  });
 };
 
 
