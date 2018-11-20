@@ -228,6 +228,17 @@
   border-bottom-right-radius: 0 !important;
 }
 
+.u-horizontal-border:before {
+  border-top: 1px dotted $border-color;
+  content: ' ';
+  display: block;
+  left: -($spacer * 1.5);
+  position: relative;
+  top: $spacer;
+  width: ($spacer * 1.5);
+}
+
+
 // At certain breakpoints, forms look really bad (especially in modals. Lets adjust forms to takeup more of the screen)
 // To use, just add u-form-vertical-at-<breakpoint>. (u-form-veritical-at-md).
 // This will apply to all form-groups under this selector
