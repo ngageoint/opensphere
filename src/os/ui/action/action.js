@@ -86,7 +86,7 @@ os.ui.action.Action = function(eventType, opt_title, opt_description, opt_icon, 
   this.isActive = true;
 
   /**
-   * @type {string}
+   * @type {?string}
    * @private
    */
   this.inactiveTooltip_ = null;
@@ -229,7 +229,7 @@ os.ui.action.Action.prototype.enableWhen = function(isEnabled) {
  */
 os.ui.action.Action.prototype.activeWhen = function(activeCheckFunc, opt_inactiveTooltip) {
   this.activeCheckFunc_ = activeCheckFunc || null;
-  this.inactiveTooltip_ = opt_inactiveTooltip;
+  this.inactiveTooltip_ = opt_inactiveTooltip || null;
   return this;
 };
 
