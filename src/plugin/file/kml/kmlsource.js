@@ -4,6 +4,7 @@ goog.require('goog.async.Delay');
 goog.require('goog.log');
 goog.require('goog.log.Logger');
 goog.require('goog.object');
+goog.require('ol.array');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.layer.Image');
 goog.require('os.source.PropertyChange');
@@ -244,7 +245,7 @@ plugin.file.kml.KMLSource.prototype.removeImages = function(images, removeNode) 
   for (var i = 0; i < images.length; i++) {
     var image = images[i];
     os.MapContainer.getInstance().removeLayer(image);
-    goog.array.remove(this.images, image);
+    ol.array.remove(this.images, image);
 
     if (removeNode) {
       this.removeNode(/** @type {string} */ (image.getId()));
@@ -266,7 +267,7 @@ plugin.file.kml.KMLSource.prototype.removeOverlays = function(overlays, removeNo
   for (var i = 0; i < overlays.length; i++) {
     var overlay = overlays[i];
     var id = os.ui.window.getById(overlay);
-    goog.array.remove(this.overlays, overlay);
+    ol.array.remove(this.overlays, overlay);
 
     if (removeNode) {
       os.ui.window.close(id);
@@ -277,7 +278,7 @@ plugin.file.kml.KMLSource.prototype.removeOverlays = function(overlays, removeNo
 
 
 /**
- * Clears the whole images array. Faster than removeOverlays due to no calls to goog.array.remove.
+ * Clears the whole images array. Faster than removeOverlays due to no calls to ol.array.remove.
  * @param {boolean} removeNode Whether to remove nodes (false for refresh)
  * @suppress {checkTypes}
  */
@@ -299,7 +300,7 @@ plugin.file.kml.KMLSource.prototype.clearImages = function(removeNode) {
 
 
 /**
- * Clears the whole overlays array. Faster than removeOverlays due to no calls to goog.array.remove.
+ * Clears the whole overlays array. Faster than removeOverlays due to no calls to ol.array.remove.
  * @param {boolean} removeNode Whether to remove nodes (false for refresh)
  * @suppress {checkTypes}
  */
@@ -357,6 +358,8 @@ plugin.file.kml.KMLSource.prototype.addNodes = function(nodes, opt_recurse) {
         this.nodeMap_[id] = node;
         overlays.push(overlay);
       }
+
+      node.loadAnnotation();
     }
 
     if (opt_recurse) {
@@ -498,6 +501,8 @@ plugin.file.kml.KMLSource.prototype.clearNode = function(node, opt_dispose) {
   if (overlays && overlays.length > 0) {
     this.removeOverlays(overlays, true);
   }
+
+  node.clearAnnotations();
 
   // handle the unprocess queue immediately in case a network link is being refreshed
   this.unprocessNow();

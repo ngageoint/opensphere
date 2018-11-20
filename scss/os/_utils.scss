@@ -125,6 +125,21 @@
   top: -9999px;
 }
 
+.u-user-select-all {
+  user-select: all;
+}
+
+.u-user-select-auto {
+  user-select: auto;
+}
+
+.u-user-select-text {
+  user-select: text;
+}
+
+.u-user-select-none {
+  user-select: none;
+}
 
 // --------------------------------- Font Utilities --------------------------------- //
 .u-font-family-sans-serif {

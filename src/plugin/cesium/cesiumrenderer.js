@@ -8,6 +8,7 @@ goog.require('os.MapEvent');
 goog.require('os.webgl.AbstractWebGLRenderer');
 goog.require('plugin.cesium');
 goog.require('plugin.cesium.Camera');
+goog.require('plugin.cesium.TerrainLayer');
 goog.require('plugin.cesium.TileGridTilingScheme');
 goog.require('plugin.cesium.interaction');
 goog.require('plugin.cesium.mixin');
@@ -43,6 +44,13 @@ plugin.cesium.CesiumRenderer = function() {
    * @private
    */
   this.csListeners_ = [];
+
+  /**
+   * OpenLayers layer to sync Cesium terrain.
+   * @type {plugin.cesium.TerrainLayer|undefined}
+   * @private
+   */
+  this.terrainLayer_ = undefined;
 
   /**
    * Cesium terrain provider.
@@ -220,16 +228,20 @@ plugin.cesium.CesiumRenderer.prototype.getCamera = function() {
 plugin.cesium.CesiumRenderer.prototype.getCoordinateFromPixel = function(pixel) {
   // verify the pixel is valid and numeric. key events in particular can provide NaN pixels.
   if (this.olCesium_ && pixel && pixel.length == 2 && !isNaN(pixel[0]) && !isNaN(pixel[1])) {
-    var cartesian = new Cesium.Cartesian2(pixel[0], pixel[1]);
+    var cartesian = Cesium.Cartesian2.fromArray(pixel);
     var scene = this.olCesium_.getCesiumScene();
-    cartesian = scene && scene.camera ? scene.camera.pickEllipsoid(cartesian) : undefined;
+    if (scene && scene.camera && scene.globe) {
+      var pickRay = scene.camera.getPickRay(cartesian);
+      cartesian = scene.globe.pick(pickRay, scene);
 
-    if (cartesian) {
-      var cartographic = scene.globe.ellipsoid.cartesianToCartographic(cartesian);
-      return [
-        Cesium.Math.toDegrees(cartographic.longitude),
-        Cesium.Math.toDegrees(cartographic.latitude)
-      ];
+      if (cartesian) {
+        var cartographic = scene.globe.ellipsoid.cartesianToCartographic(cartesian);
+        return [
+          Cesium.Math.toDegrees(cartographic.longitude),
+          Cesium.Math.toDegrees(cartographic.latitude),
+          cartographic.height
+        ];
+      }
     }
   }
 
@@ -240,16 +252,43 @@ plugin.cesium.CesiumRenderer.prototype.getCoordinateFromPixel = function(pixel) 
 /**
  * @inheritDoc
  */
-plugin.cesium.CesiumRenderer.prototype.getPixelFromCoordinate = function(coordinate) {
-  // verify the coordinate is defined and numeric.
-  if (this.olCesium_ && coordinate && coordinate.length >= 2 && !isNaN(coordinate[0]) && !isNaN(coordinate[1])) {
-    var cartesian = olcs.core.ol4326CoordinateToCesiumCartesian(coordinate);
-    cartesian = Cesium.SceneTransforms.wgs84ToWindowCoordinates(this.olCesium_.getCesiumScene(), cartesian);
+plugin.cesium.CesiumRenderer.prototype.getPixelFromCoordinate = function(coordinate, opt_inView) {
+  var result = null;
 
-    return cartesian ? [cartesian.x, cartesian.y] : null;
+  if (this.olCesium_) {
+    var scene = this.olCesium_.getCesiumScene();
+    var cartesian = null;
+
+    // verify the coordinate is defined and numeric.
+    if (coordinate && coordinate.length >= 2 && !isNaN(coordinate[0]) && !isNaN(coordinate[1])) {
+      var height = coordinate[2] || 0;
+      cartesian = Cesium.Cartesian3.fromDegrees(coordinate[0], coordinate[1], height);
+    }
+
+    if (opt_inView && cartesian && this.olCesium_) {
+      var camera = scene.camera;
+
+      // check if coordinate is behind the horizon
+      var ellipsoidBoundingSphere = new Cesium.BoundingSphere(new Cesium.Cartesian3(), 6356752);
+      var occluder = new Cesium.Occluder(ellipsoidBoundingSphere, camera.position);
+      if (!occluder.isPointVisible(cartesian)) {
+        cartesian = null;
+      }
+
+      // check if coordinate is visible from the camera
+      var cullingVolume = camera.frustum.computeCullingVolume(camera.position, camera.direction, camera.up);
+      if (cullingVolume.computeVisibility(new Cesium.BoundingSphere(cartesian)) !== 1) {
+        cartesian = null;
+      }
+    }
+
+    if (cartesian) {
+      var pixelCartesian = scene.cartesianToCanvasCoordinates(cartesian);
+      result = [pixelCartesian.x, pixelCartesian.y];
+    }
   }
 
-  return null;
+  return result;
 };
 
 
@@ -295,6 +334,21 @@ plugin.cesium.CesiumRenderer.prototype.forEachFeatureAtPixel = function(pixel, c
   }
 
   return null;
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.cesium.CesiumRenderer.prototype.onPostRender = function(callback) {
+  if (this.olCesium_) {
+    var scene = this.olCesium_.getCesiumScene();
+    if (scene) {
+      return scene.postRender.addEventListener(callback);
+    }
+  }
+
+  return undefined;
 };
 
 
@@ -380,22 +434,18 @@ plugin.cesium.CesiumRenderer.prototype.showSunlight = function(value) {
  * @inheritDoc
  */
 plugin.cesium.CesiumRenderer.prototype.showTerrain = function(value) {
-  if (this.olCesium_) {
-    var scene = this.olCesium_.getCesiumScene();
-    if (scene) {
-      // use the configured provider if terrain is enabled, falling back on the default provider
-      var provider = (value ? this.terrainProvider_ : undefined) ||
-          plugin.cesium.getDefaultTerrainProvider();
-
-      // only change this if there is a provider to switch to. Cesium will render a blank globe without any terrain
-      // provider.
-      if (provider) {
-        scene.terrainProvider = provider;
-      }
-
-      os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
+  if (value) {
+    if (!this.terrainLayer_) {
+      this.terrainLayer_ = new plugin.cesium.TerrainLayer(this.terrainProvider_);
+      os.MapContainer.getInstance().addLayer(this.terrainLayer_);
+    } else {
+      this.terrainLayer_.setTerrainProvider(this.terrainProvider_);
     }
+  } else {
+    this.removeTerrainLayer_();
   }
+
+  os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
 };
 
 
@@ -422,7 +472,7 @@ plugin.cesium.CesiumRenderer.prototype.registerTerrainProviderType = function(ty
  */
 plugin.cesium.CesiumRenderer.prototype.disableTerrain = function() {
   // remove the provider first so it's gone when any active terrain gets updated
-  this.removeTerrainProvider_();
+  this.removeTerrainLayer_();
 
   plugin.cesium.CesiumRenderer.base(this, 'disableTerrain');
 };
@@ -432,8 +482,8 @@ plugin.cesium.CesiumRenderer.prototype.disableTerrain = function() {
  * @inheritDoc
  */
 plugin.cesium.CesiumRenderer.prototype.updateTerrainProvider = function() {
-  // clean up existing provider
-  this.removeTerrainProvider_();
+  // clean up existing layer
+  this.removeTerrainLayer_();
 
   var terrainOptions = /** @type {osx.map.TerrainProviderOptions|undefined} */ (os.settings.get(
       os.config.DisplaySetting.TERRAIN_OPTIONS));
@@ -446,7 +496,6 @@ plugin.cesium.CesiumRenderer.prototype.updateTerrainProvider = function() {
       }
 
       this.terrainProvider_ = this.terrainProviderTypes_[terrainType](terrainOptions);
-      this.terrainProvider_.errorEvent.addEventListener(this.onTerrainError_, this);
     } else if (!terrainType) {
       goog.log.error(this.log, 'Terrain provider type not configured.');
     } else if (!(terrainType in this.terrainProviderTypes_)) {
@@ -461,29 +510,24 @@ plugin.cesium.CesiumRenderer.prototype.updateTerrainProvider = function() {
 
 
 /**
- * Clean up the terrain provider.
+ * Clean up the terrain layer.
  * @private
  */
-plugin.cesium.CesiumRenderer.prototype.removeTerrainProvider_ = function() {
-  if (this.terrainProvider_) {
-    this.terrainProvider_.errorEvent.removeEventListener(this.onTerrainError_, this);
-    this.terrainProvider_ = undefined;
+plugin.cesium.CesiumRenderer.prototype.removeTerrainLayer_ = function() {
+  if (this.terrainLayer_) {
+    os.MapContainer.getInstance().removeLayer(this.terrainLayer_);
+
+    goog.dispose(this.terrainLayer_);
+    this.terrainLayer_ = undefined;
   }
-};
 
-
-/**
- * Handle error raised from a Cesium terrain provider.
- * @param {Cesium.TileProviderError} error The tile provider error.
- * @private
- */
-plugin.cesium.CesiumRenderer.prototype.onTerrainError_ = function(error) {
-  // notify the user that terrain will be disabled
-  goog.log.error(this.log, 'Terrain provider initialization error: ' + error.message);
-  os.alertManager.sendAlert('Terrain provider failed to initialize and will be disabled. Please see the log for ' +
-      'more details.', os.alert.AlertEventSeverity.ERROR);
-
-  this.disableTerrain();
+  var provider = plugin.cesium.getDefaultTerrainProvider();
+  if (provider) {
+    var scene = this.olCesium_ ? this.olCesium_.getCesiumScene() : undefined;
+    if (scene) {
+      scene.terrainProvider = provider;
+    }
+  }
 };
 
 

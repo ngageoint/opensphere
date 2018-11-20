@@ -1,4 +1,5 @@
 goog.provide('os.ui.query.cmd.AreaAdd');
+goog.require('os.array');
 goog.require('os.command.ICommand');
 goog.require('os.ol.feature');
 goog.require('os.ui.query.cmd.AbstractArea');
@@ -76,7 +77,7 @@ os.ui.query.cmd.AreaAdd.prototype.execute = function() {
     }
 
     if (this.include || this.exclude) {
-      goog.array.forEach(this.layerIds, function(id) {
+      os.array.forEach(this.layerIds, function(id) {
         qm.addEntry(id, /** @type {string} */ (this.area.getId()), '*', this.include);
       }, this);
     }

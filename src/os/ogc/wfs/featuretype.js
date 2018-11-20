@@ -2,6 +2,7 @@ goog.provide('os.ogc.wfs.FeatureType');
 goog.require('goog.array');
 goog.require('goog.object');
 goog.require('goog.string');
+goog.require('ol.array');
 goog.require('os.geo');
 goog.require('os.ogc.IFeatureType');
 goog.require('os.registerClass');
@@ -437,5 +438,5 @@ os.ogc.wfs.FeatureType.IGNORED_FIELDS = ['ID', 'DATE_TIME'];
  * @return {boolean}
  */
 os.ogc.wfs.FeatureType.isFieldIgnored = function(field) {
-  return goog.array.contains(os.ogc.wfs.FeatureType.IGNORED_FIELDS, field);
+  return ol.array.includes(os.ogc.wfs.FeatureType.IGNORED_FIELDS, field);
 };

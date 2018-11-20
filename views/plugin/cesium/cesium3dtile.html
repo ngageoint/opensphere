@@ -1,0 +1,28 @@
+<div id="layerControls">
+  <div class="card">
+    <div class="btn btn-secondary btn-block btn-sm" title="Style controls for the layer(s)"
+        data-toggle="collapse" data-target="#layer-style"
+        ng-click="ctrl.setOpenSection('#layer-style')">
+      Style
+    </div>
+    <div id="layer-style" class="card-body collapse" data-parent="#layerControls">
+      <table>
+        <tr title="Sets the opacity (inverse transparency) of the layer(s)">
+          <td>Opacity</td>
+          <td class="w-100"><slider min="0" max="1" step="0.05" value="opacity" name="opacity"></slider></td>
+          <td class="text-right pl-2">
+            <button class="btn btn-secondary" ng-click="ctrl.reset('opacity')" title="Restore default opacity">
+              <i class="fa fa-undo"></i>
+            </button>
+          </td>
+        </tr>
+        <tr title="Sets the color of the layer(s)">
+          <td>Color</td>
+          <td>
+            <colorpicker name="color" color="color" show-reset="true"></colorpicker>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>

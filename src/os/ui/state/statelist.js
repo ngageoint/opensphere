@@ -2,6 +2,7 @@ goog.provide('os.ui.state.StateListCtrl');
 goog.provide('os.ui.state.StateListEvent');
 goog.provide('os.ui.state.stateListDirective');
 
+goog.require('ol.array');
 goog.require('os.config');
 goog.require('os.data.DescriptorEvent');
 goog.require('os.data.DescriptorEventType');
@@ -115,7 +116,7 @@ os.ui.state.StateListCtrl.prototype.initStates_ = function() {
   for (var i = 0, n = descriptors.length; i < n; i++) {
     var descriptor = descriptors[i];
     if (descriptor instanceof os.ui.state.AbstractStateDescriptor) {
-      var enabled = enabledStates == 'all' || goog.array.contains(enabledStates, descriptor);
+      var enabled = enabledStates == 'all' || ol.array.includes(enabledStates, descriptor);
       this['stateItems'].push(this.createChecklistItem_(descriptor, enabled));
     }
   }

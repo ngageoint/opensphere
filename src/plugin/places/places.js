@@ -1,5 +1,6 @@
 goog.provide('plugin.places');
 
+goog.require('os.annotation');
 goog.require('os.command.SequenceCommand');
 goog.require('os.data.RecordField');
 goog.require('os.style');
@@ -25,11 +26,22 @@ plugin.places.TITLE = 'Saved Places';
 
 
 /**
+ * Places icons.
+ * @enum {string}
+ */
+plugin.places.Icon = {
+  ANNOTATION: 'fa-comment',
+  FOLDER: 'fa-folder',
+  PLACEMARK: 'fa-map-marker'
+};
+
+
+/**
  * Places icon.
  * @type {string}
  * @const
  */
-plugin.places.ICON = 'fa-map-marker';
+plugin.places.ICON = plugin.places.Icon.PLACEMARK;
 
 
 /**
@@ -43,6 +55,7 @@ plugin.places.ICON = 'fa-map-marker';
 plugin.places.EXPORT_FIELDS_ = [
   plugin.file.kml.KMLField.DESCRIPTION,
   plugin.file.kml.KMLField.MD_DESCRIPTION,
+  os.annotation.OPTIONS_FIELD,
   os.style.StyleField.CENTER_SHAPE,
   os.style.StyleField.SHAPE,
   os.style.StyleField.LABELS,

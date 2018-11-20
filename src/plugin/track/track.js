@@ -70,9 +70,9 @@ plugin.track.MENU_GROUP = 'Tracks';
 
 /**
  * Text to display when elapsed distance/duration is zero.
- * @type {string}
+ * @type {number}
  */
-plugin.track.ELAPSED_ZERO = 'Not Started';
+plugin.track.ELAPSED_ZERO = 0;
 
 
 /**
@@ -122,15 +122,17 @@ plugin.track.CreateOptions;
  * @enum {string}
  */
 plugin.track.TrackField = {
+  ELAPSED_AVERAGE_SPEED: 'ELAPSED_AVERAGE_SPEED',
   ELAPSED_DISTANCE: 'ELAPSED_DISTANCE',
-  TOTAL_DISTANCE: 'TOTAL_DISTANCE',
   ELAPSED_DURATION: 'ELAPSED_DURATION',
+  TOTAL_DISTANCE: 'TOTAL_DISTANCE',
   TOTAL_DURATION: 'TOTAL_DURATION',
   CURRENT_POSITION: '_currentPosition',
   CURRENT_LINE: '_currentLine',
   QUERY_OPTIONS: '_trackQueryOptions',
   ORIG_SOURCE_ID: '_trackOrigSourceId',
-  SORT_FIELD: '_sortField'
+  SORT_FIELD: '_sortField',
+  INTERPOLATE_MARKER: '_interpolateMarker'
 };
 
 
@@ -143,9 +145,10 @@ plugin.track.TrackField = {
 plugin.track.SOURCE_FIELDS = [
   plugin.file.kml.KMLField.NAME,
   plugin.file.kml.KMLField.DESCRIPTION,
+  plugin.track.TrackField.ELAPSED_AVERAGE_SPEED,
   plugin.track.TrackField.ELAPSED_DISTANCE,
-  plugin.track.TrackField.TOTAL_DISTANCE,
   plugin.track.TrackField.ELAPSED_DURATION,
+  plugin.track.TrackField.TOTAL_DISTANCE,
   plugin.track.TrackField.TOTAL_DURATION,
   os.Fields.LAT,
   os.Fields.LON,
@@ -212,15 +215,9 @@ plugin.track.CURRENT_CONFIG = {
 
 
 /**
- * Metric keys for the track plugin.
- * @enum {string}
+ * Style used for hiding geometries such as the line and marker
  */
-plugin.track.Metrics = {
-  CREATE_LAYER: 'track.create-layer',
-  ADD_TO_LAYER: 'track.addTo-layer',
-  FOLLOW_TRACK: 'track.followTrack',
-  UNFOLLOW_TRACK: 'track.unfollowTrack'
-};
+plugin.track.HIDE_GEOMETRY = '__hidden__';
 
 
 /**
@@ -482,8 +479,9 @@ plugin.track.createTrack = function(options) {
   // keep a copy of the features used to assemble the track
   track.set(plugin.track.TrackField.SORT_FIELD, sortField);
 
-  plugin.track.updateDistance(track, true);
-  plugin.track.updateDuration(track);
+  var distance = plugin.track.updateDistance(track, true);
+  var duration = plugin.track.updateDuration(track);
+  plugin.track.updateAverageSpeed(track, distance, duration);
   plugin.track.updateTime(track);
 
   // create the track and current position styles. color is the first defined value in:
@@ -637,8 +635,87 @@ plugin.track.disposeAnimationGeometries = function(track) {
   goog.dispose(currentPosition);
 
   var currentLine = track.get(plugin.track.TrackField.CURRENT_LINE);
-  track.set(plugin.track.TrackField.CURRENT_LINE, undefined);
+  if (plugin.track.getShowLine(track)) {
+    track.set(plugin.track.TrackField.CURRENT_LINE, undefined);
+  }
   goog.dispose(currentLine);
+};
+
+
+/**
+ * Shows or hides the track line
+ * @param {!ol.Feature} track The track
+ * @param {boolean} show
+ * @param {boolean=} opt_update
+ */
+plugin.track.setShowLine = function(track, show, opt_update) {
+  var trackStyles = /** @type {Array<Object<string, *>>} */ (track.get(os.style.StyleType.FEATURE));
+  if (trackStyles.length > 1) {
+    var lineConfig = trackStyles[0];
+    var dynamic = track instanceof os.feature.DynamicFeature && track.isDynamicEnabled;
+    lineConfig['geometry'] = show ? (dynamic ? plugin.track.TrackField.CURRENT_LINE : undefined) :
+      plugin.track.HIDE_GEOMETRY;
+
+    // set the style config for the track
+    os.style.setFeatureStyle(track);
+    track.changed();
+  }
+};
+
+
+/**
+ * Shows or hides the track line
+ * @param {!ol.Feature} track The track
+ * @return {boolean}
+ */
+plugin.track.getShowLine = function(track) {
+  var trackStyles = /** @type {Array<Object<string, *>>} */ (track.get(os.style.StyleType.FEATURE));
+  return trackStyles.length > 0 && trackStyles[0]['geometry'] != plugin.track.HIDE_GEOMETRY;
+};
+
+
+/**
+ * Shows or hides the track marker
+ * @param {!ol.Feature} track The track
+ * @param {boolean} show
+ * @param {boolean=} opt_update
+ */
+plugin.track.setShowMarker = function(track, show, opt_update) {
+  var trackStyles = /** @type {Array<Object<string, *>>} */ (track.get(os.style.StyleType.FEATURE));
+  if (trackStyles.length > 1) { // recreate marker style
+    var currentGeometry = show ? plugin.track.TrackField.CURRENT_POSITION : plugin.track.HIDE_GEOMETRY;
+    var currentConfig = trackStyles[1];
+    currentConfig['geometry'] = currentGeometry;
+    track.set(os.style.StyleField.LABEL_GEOMETRY, currentGeometry);
+
+    // set the style config for the track
+    if (opt_update) {
+      os.style.setFeatureStyle(track);
+      track.changed();
+    }
+  }
+};
+
+
+/**
+ * Turn interpolation of track marker on or off
+ * @param {!ol.Feature} track The track
+ * @param {boolean} doInterpolation
+ */
+plugin.track.setInterpolateMarker = function(track, doInterpolation) {
+  track.set(plugin.track.TrackField.INTERPOLATE_MARKER, doInterpolation);
+  var range = os.time.TimelineController.getInstance().getCurrentRange();
+  plugin.track.updateDynamic(track, range.start, range.end);
+};
+
+
+/**
+ * Get if interpolation of track marker is on or off
+ * @param {!ol.Feature} track The track
+ * @return {boolean}
+ */
+plugin.track.getInterpolateMarker = function(track) {
+  return track.get(plugin.track.TrackField.INTERPOLATE_MARKER) !== false;
 };
 
 
@@ -669,8 +746,9 @@ plugin.track.setGeometry = function(track, geometry) {
   os.interpolate.interpolateFeature(track);
 
   // update metadata fields on the track
-  plugin.track.updateDistance(track, true);
-  plugin.track.updateDuration(track);
+  var distance = plugin.track.updateDistance(track, true);
+  var duration = plugin.track.updateDuration(track);
+  plugin.track.updateAverageSpeed(track, distance, duration);
   plugin.track.updateTime(track);
   plugin.track.updateCurrentPosition(track);
 
@@ -748,29 +826,30 @@ plugin.track.updateCurrentPosition = function(track) {
  * Update the distance column(s) on a track.
  * @param {!ol.Feature} track The track to update.
  * @param {boolean=} opt_updateTotal If the total distance should be updated.
+ * @return {number} applied distance
  */
 plugin.track.updateDistance = function(track, opt_updateTotal) {
   var um = os.unit.UnitManager.getInstance();
-
+  var distance = 0;
   if (opt_updateTotal) {
     // set the human-readable total distance on the track
     var geometry = track.getGeometry();
-    var distance = plugin.track.getGeometryDistance(geometry);
-    if (distance > 0) {
-      distance = Math.round(distance * 100) / 100;
+    var dist = plugin.track.getGeometryDistance(geometry);
+    if (dist > 0) {
+      distance = Math.round(dist * 100) / 100;
       track.set(plugin.track.TrackField.TOTAL_DISTANCE,
           um.formatToBestFit('distance', distance, 'm', um.getBaseSystem(), 3));
     } else {
-      track.set(plugin.track.TrackField.TOTAL_DISTANCE, plugin.track.TOTAL_ZERO);
+      track.set(plugin.track.TrackField.TOTAL_DISTANCE, plugin.track.ELAPSED_ZERO);
     }
   }
 
   var current = /** @type {ol.geom.Geometry|undefined} */ (track.get(plugin.track.TrackField.CURRENT_LINE));
   if (current) {
     // set the human-readable elapsed distance on the track
-    var distance = plugin.track.getGeometryDistance(current);
-    if (distance > 0) {
-      distance = Math.round(distance * 100) / 100;
+    var dist = plugin.track.getGeometryDistance(current);
+    if (dist > 0) {
+      distance = Math.round(dist * 100) / 100;
       track.set(plugin.track.TrackField.ELAPSED_DISTANCE,
           um.formatToBestFit('distance', distance, 'm', um.getBaseSystem(), 3));
     } else {
@@ -778,18 +857,26 @@ plugin.track.updateDistance = function(track, opt_updateTotal) {
     }
   } else {
     // set to the total distance
+    var geometry = track.getGeometry();
+    var dist = plugin.track.getGeometryDistance(geometry);
+    if (dist > 0) {
+      distance = Math.round(dist * 100) / 100;
+    }
     track.set(plugin.track.TrackField.ELAPSED_DISTANCE, track.get(plugin.track.TrackField.TOTAL_DISTANCE));
   }
+  return distance;
 };
 
 
 /**
  * Update the duration column on a track.
  * @param {!ol.Feature} track The track to update
+ * @return {number} the elapsed duration
  */
 plugin.track.updateDuration = function(track) {
   var trackGeometry = /** @type {ol.geom.LineString} */ (track.getGeometry());
   var sortField = track.get(plugin.track.TrackField.SORT_FIELD);
+  var duration = 0;
   if (trackGeometry && sortField == os.data.RecordField.TIME) {
     var coordinates = trackGeometry.getFlatCoordinates();
     var stride = trackGeometry.getStride();
@@ -801,13 +888,16 @@ plugin.track.updateDuration = function(track) {
     track.set(plugin.track.TrackField.TOTAL_DURATION,
         totalDuration > 0 ? moment.duration(totalDuration).humanize() : plugin.track.TOTAL_ZERO);
 
-    if (track.get(plugin.track.TrackField.CURRENT_LINE) != null) {
+    var current = /** @type {ol.geom.Geometry|undefined} */ (track.get(plugin.track.TrackField.CURRENT_LINE));
+    if (current) {
       // partial track is being displayed, so compute the elapsed duration
-      var elapsedTime = Math.min(endTime, os.time.TimelineController.getInstance().getCurrent()) - startTime;
+      var currentRange = plugin.track.getGeometryTime(current);
+      duration = Math.min(totalDuration, currentRange);
       track.set(plugin.track.TrackField.ELAPSED_DURATION,
-          elapsedTime > 0 ? moment.duration(elapsedTime).humanize() : plugin.track.ELAPSED_ZERO);
+          duration > 0 ? moment.duration(duration).humanize() : plugin.track.ELAPSED_ZERO);
     } else {
       // full track is being displayed, so use the total duration
+      duration = totalDuration;
       track.set(plugin.track.TrackField.ELAPSED_DURATION, track.get(plugin.track.TrackField.TOTAL_DURATION));
     }
   } else {
@@ -815,6 +905,23 @@ plugin.track.updateDuration = function(track) {
     track.set(plugin.track.TrackField.ELAPSED_DURATION, plugin.track.TOTAL_ZERO);
     track.set(plugin.track.TrackField.TOTAL_DURATION, plugin.track.TOTAL_ZERO);
   }
+  return duration;
+};
+
+
+/**
+ * Update the average speed on a track
+ * @param {!ol.Feature} track The track to update
+ * @param {number} distance
+ * @param {number} duration
+ */
+plugin.track.updateAverageSpeed = function(track, distance, duration) {
+  var distanceString = plugin.track.ELAPSED_ZERO;
+  if (distance > 0) {
+    var dist = distance / (duration / 3600);
+    distanceString = dist.toFixed(3) + ' km/h';
+  }
+  track.set(plugin.track.TrackField.ELAPSED_AVERAGE_SPEED, distanceString);
 };
 
 
@@ -905,6 +1012,62 @@ plugin.track.getMultiLineDistance = function(coords) {
   }
 
   return distance;
+};
+
+
+/**
+ * Get the time for a line geometry.
+ * @param {ol.geom.Geometry|undefined} geometry The geometry.
+ * @return {number} The time
+ */
+plugin.track.getGeometryTime = function(geometry) {
+  var time = 0;
+
+  if (geometry instanceof ol.geom.LineString) {
+    geometry.toLonLat();
+    time = plugin.track.getLineTime(geometry.getCoordinates());
+    geometry.osTransform();
+  } else if (geometry instanceof ol.geom.MultiLineString) {
+    geometry.toLonLat();
+    time = plugin.track.getMultiLineTime(geometry.getCoordinates());
+    geometry.osTransform();
+  }
+
+  return time;
+};
+
+
+/**
+ * Get the time (in seconds) covered by a set of coordinates.
+ * @param {Array<ol.Coordinate>} coords The line coordinates
+ * @return {number} The time
+ */
+plugin.track.getLineTime = function(coords) {
+  var time = 0;
+  if (coords && coords.length > 1) {
+    var first = coords[0];
+    var last = coords[coords.length - 1];
+    time = last[last.length - 1] - first[first.length - 1];
+  }
+
+  return time;
+};
+
+
+/**
+ * Get the time (in meters) covered by a set of coordinates for a multi-line.
+ * @param {Array<Array<ol.Coordinate>>} coords The multi-line coordinates
+ * @return {number} The time
+ */
+plugin.track.getMultiLineTime = function(coords) {
+  var time = 0;
+  if (coords) {
+    coords.forEach(function(c) {
+      time += plugin.track.getLineTime(c);
+    });
+  }
+
+  return time;
 };
 
 
@@ -1010,7 +1173,9 @@ plugin.track.initDynamic = function(track) {
   var trackStyles = /** @type {Array<Object<string, *>>} */ (track.get(os.style.StyleType.FEATURE));
   var trackStyle = trackStyles ? trackStyles[0] : null;
   if (trackStyle) {
-    trackStyle['geometry'] = plugin.track.TrackField.CURRENT_LINE;
+    if (plugin.track.getShowLine(track)) {
+      trackStyle['geometry'] = plugin.track.TrackField.CURRENT_LINE;
+    }
 
     os.ui.FeatureEditCtrl.restoreFeatureLabels(track);
     os.style.setFeatureStyle(track);
@@ -1032,13 +1197,17 @@ plugin.track.disposeDynamic = function(track, opt_disposing) {
     var trackStyles = /** @type {Array<Object<string, *>>} */ (track.get(os.style.StyleType.FEATURE));
     var trackStyle = trackStyles ? trackStyles[0] : null;
     if (trackStyle) {
-      delete trackStyle['geometry'];
+      plugin.track.setShowMarker(track, true);
+      if (plugin.track.getShowLine(track)) {
+        delete trackStyle['geometry'];
+      }
       os.style.setFeatureStyle(track);
     }
 
     // reset coordinate fields and update time/distance to the full track
-    plugin.track.updateDistance(track);
-    plugin.track.updateDuration(track);
+    var distance = plugin.track.updateDistance(track);
+    var duration = plugin.track.updateDuration(track);
+    plugin.track.updateAverageSpeed(track, distance, duration);
     plugin.track.updateCurrentPosition(track);
   }
 };
@@ -1047,9 +1216,10 @@ plugin.track.disposeDynamic = function(track, opt_disposing) {
 /**
  * Update a track feature to represent the track at a provided timestamp.
  * @param {!ol.Feature} track The track.
- * @param {number} timestamp The timestamp.
+ * @param {number} startTime The start timestamp.
+ * @param {number} endTime The end timestamp.
  */
-plugin.track.updateDynamic = function(track, timestamp) {
+plugin.track.updateDynamic = function(track, startTime, endTime) {
   var sortField = track.get(plugin.track.TrackField.SORT_FIELD);
   if (sortField !== os.data.RecordField.TIME) {
     // isn't sorted by time - can't create a current track
@@ -1071,11 +1241,13 @@ plugin.track.updateDynamic = function(track, timestamp) {
     return;
   }
 
-  var timeIndex = plugin.track.getTimeIndex(flatCoordinates, timestamp, stride);
-  plugin.track.updateCurrentLine(track, timestamp, timeIndex, flatCoordinates, stride, ends);
+  var startIndex = plugin.track.getTimeIndex(flatCoordinates, startTime, stride);
+  var endIndex = plugin.track.getTimeIndex(flatCoordinates, endTime, stride);
+  plugin.track.updateCurrentLine(track, startTime, startIndex, endTime, endIndex, flatCoordinates, stride, ends);
 
-  plugin.track.updateDistance(track);
-  plugin.track.updateDuration(track);
+  var distance = plugin.track.updateDistance(track);
+  var duration = plugin.track.updateDuration(track);
+  plugin.track.updateAverageSpeed(track, distance, duration);
   track.changed();
 };
 
@@ -1127,14 +1299,25 @@ plugin.track.getTrackPositionAt = function(track, timestamp, index, coordinates,
     // get the start index of each coordinate to avoid slicing the array (and resulting GC)
     var prevIndex = index - stride;
     var nextIndex = index;
-    position = [
-      goog.math.lerp(coordinates[prevIndex], coordinates[nextIndex], scale),
-      goog.math.lerp(coordinates[prevIndex + 1], coordinates[nextIndex + 1], scale)
-    ];
+    if (plugin.track.getInterpolateMarker(track)) {
+      position = [
+        goog.math.lerp(coordinates[prevIndex], coordinates[nextIndex], scale),
+        goog.math.lerp(coordinates[prevIndex + 1], coordinates[nextIndex + 1], scale)
+      ];
+    } else {
+      position = [
+        coordinates[prevIndex],
+        coordinates[prevIndex + 1]
+      ];
+    }
 
     // interpolate altitude if present
     if (stride === 4) {
-      position.push(goog.math.lerp(coordinates[prevIndex + 2], coordinates[nextIndex + 2], scale));
+      if (plugin.track.getInterpolateMarker(track)) {
+        position.push(goog.math.lerp(coordinates[prevIndex + 2], coordinates[nextIndex + 2], scale));
+      } else {
+        position.push(coordinates[prevIndex + 2]);
+      }
     }
 
     position.push(timestamp);
@@ -1147,15 +1330,18 @@ plugin.track.getTrackPositionAt = function(track, timestamp, index, coordinates,
 /**
  * Update the track's line geometry to display its position up to the provided timestamp.
  * @param {!ol.Feature} track The track.
- * @param {number} timestamp The timestamp.
- * @param {number} index The index of the most recent known coordinate.
+ * @param {number} startTime The start timestamp.
+ * @param {number} startIndex The start index of the starting coordinate.
+ * @param {number} endTime The end timestamp.
+ * @param {number} endIndex The index of the most recent known coordinate.
  * @param {!Array<number>} coordinates The flat track coordinate array.
  * @param {number} stride The stride of the coordinate array.
  * @param {Array<number>=} opt_ends The end indicies of each line in a multi-line. Undefined if not a multi-line.
  *
  * @suppress {accessControls} To allow direct access to line string coordinates.
  */
-plugin.track.updateCurrentLine = function(track, timestamp, index, coordinates, stride, opt_ends) {
+plugin.track.updateCurrentLine = function(track, startTime, startIndex, endTime, endIndex, coordinates, stride,
+    opt_ends) {
   var currentLine = /** @type {plugin.track.TrackLike|undefined} */ (track.get(plugin.track.TrackField.CURRENT_LINE));
   var layout = stride === 4 ? ol.geom.GeometryLayout.XYZM : ol.geom.GeometryLayout.XYM;
   if (!currentLine) {
@@ -1165,42 +1351,56 @@ plugin.track.updateCurrentLine = function(track, timestamp, index, coordinates, 
     track.set(plugin.track.TrackField.CURRENT_LINE, currentLine);
   }
 
-  var flatCoordinates = currentLine.flatCoordinates;
-  if (flatCoordinates.length === index &&
-      flatCoordinates[flatCoordinates.length - stride] === coordinates[coordinates.length - stride]) {
-    // target is the last coordinate and it's already equal, so the line doesn't need to be modified
+  var flatCoordinates = [];
+  for (var i = startIndex; i < endIndex; i++) {
+    flatCoordinates.push(coordinates[i]);
+  }
+
+  if (flatCoordinates.length === endIndex &&
+      flatCoordinates[flatCoordinates.length - stride] === coordinates[coordinates.length - stride] &&
+      flatCoordinates[stride] === coordinates[stride]) {
+    // target is the first and last coordinate and it's already equal, so the line doesn't need to be modified
+    var show = coordinates[coordinates.length - 1] >= os.time.TimelineController.getInstance().getCurrentRange().start;
+    plugin.track.setShowMarker(track, show, true); // show the marker on the last point
     return;
   }
 
   // strip the last coordinate, because it's probably the "most recent" and not part of the original track
-  if (flatCoordinates.length > stride) {
-    flatCoordinates.length = flatCoordinates.length - stride;
+  if (flatCoordinates.length + startIndex > stride) {
+    flatCoordinates.length = flatCoordinates.length + startIndex - stride;
   }
 
-  if (flatCoordinates.length >= index) {
+  if (flatCoordinates.length >= endIndex - startIndex) {
     // the current line is longer than the expected line, so remove extra coordinates
-    flatCoordinates.length = index;
-  } else if (index > 0) {
+    flatCoordinates.length = endIndex - startIndex;
+  } else if (endIndex - startIndex > 0) {
     // the expected line is longer, so push missing coordinates to the array. the array is modified in place to avoid
     // having to set the coordinates on the line string.
-    for (var i = flatCoordinates.length; i < index; i++) {
+    for (var i = flatCoordinates.length; i < endIndex - startIndex; i++) {
       flatCoordinates.push(coordinates[i]);
     }
   }
 
   // add ends indices that are in the current line
   var currentEnds = opt_ends ? opt_ends.filter(function(end) {
-    return end <= flatCoordinates.length;
+    return end <= flatCoordinates.length + startIndex;
   }) : undefined;
 
   // interpolate the current position if we haven't exhausted the available coordinates and the last known position
   // isn't at one of the ends. if the current position is an end, the current time is between tracks in a multi track.
   if (flatCoordinates.length < coordinates.length &&
       (!currentEnds || !currentEnds.length || currentEnds[currentEnds.length - 1] !== flatCoordinates.length)) {
-    var position = plugin.track.getTrackPositionAt(track, timestamp, index, coordinates, stride);
-    if (position) {
-      for (var i = 0; i < position.length; i++) {
-        flatCoordinates.push(position[i]);
+    var end = plugin.track.getTrackPositionAt(track, endTime, endIndex, coordinates, stride);
+    if (end) {
+      for (var i = 0; i < end.length; i++) {
+        flatCoordinates.push(end[i]);
+      }
+    }
+
+    var start = plugin.track.getTrackPositionAt(track, startTime, startIndex, coordinates, stride);
+    if (start) {
+      for (var i = 0; i < start.length; i++) {
+        goog.array.insertAt(flatCoordinates, start[i], i);
       }
     }
 
@@ -1208,10 +1408,13 @@ plugin.track.updateCurrentLine = function(track, timestamp, index, coordinates, 
     if (currentEnds) {
       currentEnds.push(flatCoordinates.length);
     }
-  }
 
-  // update the current position marker
-  plugin.track.updateCurrentPosition(track);
+    if (endIndex == 0 || startIndex === coordinates.length) {
+      plugin.track.setShowMarker(track, false);
+    } else {
+      plugin.track.setShowMarker(track, true);
+    }
+  }
 
   // mark the line as dirty so the WebGL feature converter recreates it
   currentLine.set(os.geom.GeometryField.DIRTY, true);
@@ -1222,6 +1425,9 @@ plugin.track.updateCurrentLine = function(track, timestamp, index, coordinates, 
   } else if (currentEnds) {
     currentLine.setFlatCoordinates(layout, flatCoordinates, currentEnds);
   }
+
+  // update the current position marker
+  plugin.track.updateCurrentPosition(track);
 };
 
 

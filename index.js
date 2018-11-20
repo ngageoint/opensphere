@@ -306,6 +306,11 @@ const indexResources = sharedResources.concat([
     scripts: ['saveSvgAsPng.js']
   },
   {
+    source: resolver.resolveModulePath('html2canvas/dist', __dirname),
+    target: 'vendor/html2canvas',
+    scripts: ['html2canvas.min.js']
+  },
+  {
     source: resolver.resolveModulePath('papaparse', __dirname),
     target: 'vendor/papaparse',
     scripts: ['papaparse.min.js']

@@ -322,3 +322,11 @@ os.webgl.AbstractWebGLRenderer.prototype.getAltitudeModes = function() {
     os.webgl.AltitudeMode.ABSOLUTE
   ];
 };
+
+
+/**
+ * @inheritDoc
+ */
+os.webgl.AbstractWebGLRenderer.prototype.onPostRender = function(callback) {
+  return undefined;
+};

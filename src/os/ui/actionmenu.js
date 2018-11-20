@@ -2,6 +2,7 @@ goog.provide('os.ui.ActionMenuCtrl');
 goog.provide('os.ui.actionMenuDirective');
 
 goog.require('goog.events.EventType');
+goog.require('os.array');
 goog.require('os.metrics.Metrics');
 goog.require('os.ui.Module');
 goog.require('os.ui.action.ActionManager');
@@ -183,7 +184,7 @@ os.ui.ActionMenuCtrl.prototype.constructMenu_ = function(actions) {
 
   // Establish nested menu structure by placing all contributed actions into a JSON object using utility functions
   var menuStructure = {};
-  goog.array.forEach(actions, function(action) {
+  os.array.forEach(actions, function(action) {
     var menuOptions = action.getMenuOptions();
     if (menuOptions) {
       var subMenu = menuOptions.menu;
@@ -223,7 +224,7 @@ os.ui.ActionMenuCtrl.prototype.constructMenu_ = function(actions) {
  */
 os.ui.ActionMenuCtrl.prototype.insertMenuItems_ = function(menuStructure, menuItems) {
   // insert item is sorted order
-  goog.array.forEach(goog.object.getKeys(menuStructure), function(key) {
+  os.array.forEach(goog.object.getKeys(menuStructure), function(key) {
     var value = menuStructure[key];
 
     // You shouldn't use "value instanceof os.ui.action.Action" here because there is no guarantee that the

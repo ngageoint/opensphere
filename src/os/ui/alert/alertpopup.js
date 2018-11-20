@@ -3,6 +3,7 @@ goog.provide('os.ui.alert.alertPopupDirective');
 goog.require('goog.async.Delay');
 goog.require('goog.events.Event');
 goog.require('goog.events.EventTarget');
+goog.require('ol.array');
 goog.require('os.alert.AlertEvent');
 goog.require('os.alert.AlertEventSeverity');
 goog.require('os.alertManager');
@@ -204,11 +205,11 @@ os.ui.alert.AlertPopupCtrl.prototype.displayAlert_ = function(event) {
         var msg = event.target['msg'];
         var idx = '';
         if (msg) {
-          idx = goog.array.findIndex(this['alertPopups'], function(popupObj) {
+          idx = ol.array.findIndex(this['alertPopups'], function(popupObj) {
             return popupObj['msg'] == msg;
           });
         } else {
-          idx = goog.array.findIndex(this['alertPopups'], function(popupObj) {
+          idx = ol.array.findIndex(this['alertPopups'], function(popupObj) {
             return popupObj['id'] == id;
           });
         }
@@ -238,6 +239,24 @@ os.ui.alert.AlertPopupCtrl.prototype.displayAlert_ = function(event) {
     dismissDispatcher.listenOnce(os.alert.AlertEventTypes.DISMISS_ALERT, dismiss, false, this);
 
     var message = event.getMessage();
+
+    // Check if message has a url and if it does adds a hyperlink
+    var match = message.match(os.url.URL_REGEXP_LINKY);
+    if (match && match.index + match[0].length <= 500) {
+      var html = [];
+      var url = match[0];
+      var i = match.index;
+      html.push(message.substring(0, i));
+      html.push('<a ');
+      html.push('href="');
+      html.push(url);
+      html.push('">');
+      html.push(os.ui.escapeHtml(message.substring(i, i + match[0].length)));
+      html.push('</a>');
+      message = message.substring(i + match[0].length);
+      html.push(message);
+      message = html.join('');
+    }
     var popup = {
       'id': id,
       'msg': goog.string.truncate(message, 500),

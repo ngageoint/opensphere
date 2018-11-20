@@ -12,7 +12,11 @@ plugin.track.EventType = {
   CREATE_TRACK: 'track:create',
   ADD_TO: 'track:addTo',
   FOLLOW: 'track:followTrack',
-  UNFOLLOW: 'track:unfollowTrack'
+  UNFOLLOW: 'track:unfollowTrack',
+  HIDE_LINE: 'track:hideLine',
+  SHOW_LINE: 'track:showLine',
+  ENABLE_INTERPOLATE_MARKER: 'track:enableInterpolateMarker',
+  DISABLE_INTERPOLATE_MARKER: 'track:disableInterpolateMarker'
 };
 
 

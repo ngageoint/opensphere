@@ -30,6 +30,37 @@ os.array.binaryInsert = function(array, value, opt_compareFn) {
 
 
 /**
+ * Clear an array.
+ * @param {IArrayLike<?>} arr The array or array-like object.
+ */
+os.array.clear = function(arr) {
+  if (Array.isArray(arr)) {
+    arr.length = 0;
+  } else if (arr && arr.length != null) {
+    for (var i = arr.length - 1; i >= 0; i--) {
+      delete arr[i];
+    }
+  }
+};
+
+
+/**
+ * Calls a function for each element in an array.
+ *
+ * @param {IArrayLike<T>} arr The array or array-like object.
+ * @param {?function(this: S, T, number, ?): ?} f The function to call for every element. This function takes 3
+ *     arguments (the element, the index and the array). The return value is ignored.
+ * @param {S=} opt_obj The object to be used as the value of 'this' within f.
+ * @template T,S
+ */
+os.array.forEach = function(arr, f, opt_obj) {
+  if (arr && arr.length != null) {
+    Array.prototype.forEach.call(arr, f, opt_obj);
+  }
+};
+
+
+/**
  * Sort items by the specified field in ascending order. Inject the field using goog.bind or goog.partial.
  * @param {string} field
  * @param {VALUE} a
@@ -63,12 +94,9 @@ os.array.sortByFieldDesc = function(field, a, b) {
  *     array). The return value is ignored.
  * @param {S=} opt_obj The object to be used as the value of 'this' within f.
  * @template T,S
+ * @deprecated Please use {@link os.array.forEach} instead.
  */
-os.array.forEachSafe = function(arr, f, opt_obj) {
-  if (arr) {
-    goog.array.forEach(arr, f, opt_obj);
-  }
-};
+os.array.forEachSafe = os.array.forEach;
 
 
 /**

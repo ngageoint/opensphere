@@ -4,6 +4,7 @@ goog.provide('os.ui.list.ListEventType');
 goog.provide('os.ui.listDirective');
 
 goog.require('goog.events.EventTarget');
+goog.require('ol.array');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.ui.Module');
 
@@ -72,7 +73,7 @@ os.ui.list.add = function(id, markup, opt_priority) {
 os.ui.list.remove = function(id, markup) {
   var map = os.ui.list.map_[id];
   if (map) {
-    var item = goog.array.find(map, function(item) {
+    var item = ol.array.find(map, function(item) {
       return item.markup == markup;
     });
     if (item) {
@@ -81,7 +82,7 @@ os.ui.list.remove = function(id, markup) {
         item.scope = undefined;
       }
 
-      goog.array.remove(map, item);
+      ol.array.remove(map, item);
       os.ui.list.map_[id] = map;
       os.ui.list.dispatcher_.dispatchEvent(new os.events.PropertyChangeEvent(id, null, item));
     }
@@ -119,7 +120,7 @@ os.ui.list.exists = function(id, markup) {
   var found = null;
   var map = os.ui.list.map_[id];
   if (map) {
-    found = goog.array.find(map, function(item) {
+    found = ol.array.find(map, function(item) {
       return item.markup == markup;
     });
   }

@@ -37,7 +37,7 @@ plugin.position.PositionPlugin.prototype.init = function() {
   if (os.ui.menu.MAP) {
     var menu = os.ui.menu.MAP;
 
-    var group = menu.getRoot().find('Coordinate');
+    var group = menu.getRoot().find(os.ui.menu.map.GroupLabel.COORDINATE);
     if (group) {
       group.addChild({
         label: 'Copy Coordinates',

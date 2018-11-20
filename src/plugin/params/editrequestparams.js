@@ -2,6 +2,7 @@ goog.provide('plugin.params.EditRequestParamsCtrl');
 goog.provide('plugin.params.editRequestParamsDirective');
 
 goog.require('goog.Disposable');
+goog.require('ol.array');
 goog.require('os.data.ColumnDefinition');
 goog.require('os.defines');
 goog.require('os.ui.Module');
@@ -244,7 +245,7 @@ plugin.params.EditRequestParamsCtrl.prototype.addRow = function() {
  */
 plugin.params.EditRequestParamsCtrl.prototype.removeRow = function() {
   if (this['selected'] && this['params']) {
-    goog.array.remove(this['params'], this['selected']);
+    ol.array.remove(this['params'], this['selected']);
     this['params'] = this['params'].slice();
   }
 };

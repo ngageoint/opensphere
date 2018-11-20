@@ -3,6 +3,7 @@ goog.provide('os.data.LayerSyncDescriptor');
 goog.require('goog.events.EventType');
 goog.require('goog.log');
 goog.require('goog.log.Logger');
+goog.require('ol.array');
 goog.require('ol.events');
 goog.require('os.IPersistable');
 goog.require('os.command.LayerAdd');
@@ -20,7 +21,7 @@ goog.require('os.ui.node.defaultLayerNodeUIDirective');
 
 /**
  * A descriptor that synchronizes one or more layers on the map. This descriptor should be extended to implement the
- * getLayerOptions function, which should produce the options object(s) to be used in creating the layers sycnrhonized
+ * getLayerOptions function, which should produce the options object(s) to be used in creating the layers synchronized
  * to this descriptor.
  *
  * @extends {os.data.BaseDescriptor}
@@ -212,7 +213,7 @@ os.data.LayerSyncDescriptor.prototype.removeLayer = function(layer) {
     ol.events.unlisten(/** @type {ol.events.EventTarget} */ (layer), goog.events.EventType.PROPERTYCHANGE,
         this.onLayerChange, this);
 
-    goog.array.remove(this.layers, layer);
+    ol.array.remove(this.layers, layer);
   }
 
   if (!this.layers.length) {

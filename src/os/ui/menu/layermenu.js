@@ -1,6 +1,7 @@
 goog.provide('os.ui.menu.layer');
 
 goog.require('goog.Timer');
+goog.require('ol.array');
 goog.require('ol.extent');
 goog.require('os.action.EventType');
 goog.require('os.command.FlyToExtent');
@@ -357,7 +358,7 @@ os.ui.menu.layer.onIdentify_ = function(event) {
     // leave the basemaps on, it's slow and ugly to hide during an identify
     if (e instanceof plugin.basemap.layer.BaseMap) {
       return false;
-    } else if (!goog.array.contains(layers, e)) {
+    } else if (!ol.array.includes(layers, e)) {
       return (e.getVisible() || /** @type {os.layer.ILayer} */ (e).getLayerVisible());
     }
   });

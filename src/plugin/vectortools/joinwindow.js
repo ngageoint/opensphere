@@ -1,6 +1,7 @@
 goog.provide('plugin.vectortools.JoinCtrl');
 goog.provide('plugin.vectortools.joinDirective');
 
+goog.require('ol.array');
 goog.require('os.data.OSDataManager');
 goog.require('os.data.SourceManager');
 goog.require('os.defines');
@@ -127,7 +128,7 @@ plugin.vectortools.JoinCtrl.prototype.init = function() {
  */
 plugin.vectortools.JoinCtrl.prototype.removeSource = function(source) {
   plugin.vectortools.JoinCtrl.base(this, 'removeSource', source);
-  goog.array.remove(this.sourceIds_, source.getId());
+  ol.array.remove(this.sourceIds_, source.getId());
   this.onUpdateDelay();
 };
 
