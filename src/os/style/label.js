@@ -575,14 +575,16 @@ os.style.label.defaultGeometryFunction = function(feature) {
   var geometry;
   goog.asserts.assert(feature != undefined, 'feature must be defined');
 
-  // check if the label geometry field is defined explicitly on the feature
   var labelGeometry = /** @type {string|undefined} */ (feature.get(os.style.StyleField.LABEL_GEOMETRY));
   if (labelGeometry) {
-    geometry = /** @type {ol.geom.Geometry|undefined} */ (feature.get(labelGeometry));
-  }
+    // get the defined label geometry, and verify it is an OpenLayers geometry
+    geometry = feature.get(labelGeometry);
 
-  // if a geometry isn't found, use the feature default
-  if (!geometry) {
+    if (!(geometry instanceof ol.geom.Geometry)) {
+      geometry = undefined;
+    }
+  } else {
+    // use the feature default
     geometry = feature.getGeometry();
   }
 
