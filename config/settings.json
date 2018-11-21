@@ -136,6 +136,20 @@
       "Default": "overrides_slate_compact",
       "Light": "overrides_default_compact",
       "Dark": "overrides_slate_compact"
+    },
+    "accessible_themes": {
+      "Default": {
+        "Red & Green Deficiency (Protanomaly & Deuteranomaly)": "overrides_slate_compact_cb_rg",
+        "Blue Deficiency (Tritanopia)": "overrides_slate_compact_cb_b"
+      },
+      "Light": {
+        "Red & Green Deficiency (Protanomaly & Deuteranomaly)": "overrides_default_compact_cb_rg",
+        "Blue Deficiency (Tritanopia)": "overrides_default_compact_cb_b"
+      },
+      "Dark": {
+        "Red & Green Deficiency (Protanomaly & Deuteranomaly)": "overrides_slate_compact_cb_rg",
+        "Blue Deficiency (Tritanopia)": "overrides_slate_compact_cb_b"
+      }
     }
   },
   "user": {
