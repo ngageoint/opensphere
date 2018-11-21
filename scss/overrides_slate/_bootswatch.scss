@@ -109,3 +109,11 @@ $web-font-path: "https://fonts.googleapis.com/css?family=Open+Sans:400,700" !def
 hr {
   border-top-color: rgba($white, .35);
 }
+
+// The gradients are nice for buttons but bad for alerts
+@each $color, $value in $theme-colors {
+  .alert-#{$color} {
+    background-color: $value;
+    background-image: none;
+  }
+}
