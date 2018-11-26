@@ -145,6 +145,13 @@ os.ui.search.SearchBoxCtrl = function($scope, $element) {
    */
   this['searchOptionsNoGroup'] = [];
 
+
+  /**
+   * Listener for click event
+   * @type {?goog.events.ListenableKey|number}
+   */
+  this.listenKey = null;
+
   this.setUpGroups();
 
   // make sure the plugin manager is loaded before migrating recent searches, or they will not be migrated correctly.
@@ -176,6 +183,11 @@ os.ui.search.SearchBoxCtrl.MAX_RECENT_ = 5;
  */
 os.ui.search.SearchBoxCtrl.prototype.destroy = function() {
   goog.events.unlisten(this.element[0], 'click', this.onClick_, false, this);
+
+  if (this.listenKey) {
+    goog.events.unlistenByKey(this.listenKey);
+    this.listenKey = null;
+  }
 
   this.searchManager.unlisten(goog.events.EventType.CHANGE, this.onSearchManagerChange_, false, this);
   this.searchManager.unlisten(os.search.SearchEventType.START, this.onSearchStart_, false, this);
@@ -767,7 +779,7 @@ os.ui.search.SearchBoxCtrl.prototype.toggleSearchOptions = function(event) {
   if (this['showSearchOptions']) {
     // save the ids of currently enabled searches
     var enabledIds = this.searchManager.getEnabledSearches().map(os.search.getSearchId).sort();
-    var listenKey = goog.events.listen(document, 'click', function(e) {
+    this.listenKey = goog.events.listen(document, 'click', function(e) {
       if (this.element) {
         var event = /** @type {goog.events.BrowserEvent} */ (e);
         var optionsEl = this.element.find('.js-searchbox__search-options')[0] || null;
@@ -783,7 +795,7 @@ os.ui.search.SearchBoxCtrl.prototype.toggleSearchOptions = function(event) {
         var recentClicked = goog.dom.contains(recentsEl, event.target);
         if (event.getBrowserEvent() != originalEvent && (!optionsClicked || recentClicked || !this['allowMultiple'])) {
           // clean up the listener and kill the event
-          goog.events.unlistenByKey(listenKey);
+          goog.events.unlistenByKey(this.listenKey);
           event.stopPropagation();
 
           // close options
@@ -801,7 +813,7 @@ os.ui.search.SearchBoxCtrl.prototype.toggleSearchOptions = function(event) {
           os.ui.apply(this.scope);
         }
       }
-    }, false, this);
+    }, true, this);
   }
 };
 
