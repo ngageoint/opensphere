@@ -58,7 +58,9 @@ plugin.file.kml.ui.KMLImportCtrl.prototype.createDescriptor = function() {
     // this is a new import
     descriptor = plugin.file.kml.KMLDescriptor.createFromConfig(this.config);
   }
-  plugin.places.saveFromSource(this.config);
+  // var config = this.config;
+  // config['features'] = plugin.places.getPlacesRoot();
+  // plugin.places.saveFromSource(config);
   return descriptor;
 };
 
