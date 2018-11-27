@@ -6,6 +6,7 @@ goog.require('os.im.Importer');
 goog.require('os.implements');
 goog.require('os.ui.Module');
 goog.require('os.ui.filter');
+goog.require('os.ui.filter.im.filterImportModelDirective');
 goog.require('os.ui.filter.parse.FilterParser');
 goog.require('os.ui.layer.layerPickerDirective');
 goog.require('os.ui.ogc.IOGCDescriptor');
@@ -232,7 +233,7 @@ os.ui.filter.im.FilterImportCtrl.prototype.onImportComplete = function(event) {
         found[type] = layerModel;
       }
 
-      foundCount++;
+      foundCount = os.ui.filter.im.FilterImportCtrl.getFilterCount(filterModel, foundCount);
       wasFound = true;
     }
 
@@ -260,7 +261,7 @@ os.ui.filter.im.FilterImportCtrl.prototype.onImportComplete = function(event) {
           found[layerId] = layerModel;
         }
 
-        foundCount++;
+        foundCount = os.ui.filter.im.FilterImportCtrl.getFilterCount(filterModel, foundCount);
         wasFound = true;
       }
     }
@@ -276,6 +277,7 @@ os.ui.filter.im.FilterImportCtrl.prototype.onImportComplete = function(event) {
   this['found'] = found;
   this['notFound'] = notFound;
   this['foundCount'] = foundCount;
+  this['notFoundCount'] = os.ui.filter.im.FilterImportCtrl.getFilterCount(this['notFound']);
 
   if (this.scope['layerId']) {
     // initial layer ID was passed, so go get the descriptor for it
@@ -291,7 +293,7 @@ os.ui.filter.im.FilterImportCtrl.prototype.onImportComplete = function(event) {
 /**
  * Gets a filter model for the UI.
  * @param {string} title
- * @param {os.filter.FilterEntry} filter
+ * @param {os.filter.IFilterEntry} filter
  * @param {string} tooltip
  * @param {string=} opt_type
  * @param {boolean=} opt_match
@@ -310,7 +312,7 @@ os.ui.filter.im.FilterImportCtrl.prototype.getFilterModel = function(title, filt
 
 /**
  * Get the tooltip to display for a filter entry.
- * @param {!os.filter.FilterEntry} entry The filter entry.
+ * @param {!os.filter.IFilterEntry} entry The filter entry.
  * @return {string}
  * @protected
  */
@@ -393,7 +395,20 @@ os.ui.filter.im.FilterImportCtrl.prototype.testColumns_ = function() {
     var filterModel = this['notFound'][i];
     if (this.columns) {
       var filterEntry = filterModel['filter'];
-      filterModel['matches'] = filterEntry.matches(this.columns);
+      var matches = filterEntry.matches(this.columns);
+      filterModel['matches'] = matches;
+
+      if (filterModel['children']) {
+        // set all of the descendants match state
+        var fn = function(model) {
+          model['matches'] = matches;
+          if (model['children']) {
+            fn(model['children']);
+          }
+        };
+
+        filterModel['children'].forEach(fn);
+      }
     } else {
       filterModel['matches'] = false;
     }
@@ -428,7 +443,7 @@ os.ui.filter.im.FilterImportCtrl.prototype.removeLayer = function(layerId) {
   if (layerId && this['found'][layerId]) {
     var layerModel = this['found'][layerId];
     if (layerModel && layerModel['filterModels']) {
-      this['foundCount'] -= layerModel['filterModels'].length;
+      this['foundCount'] -= os.ui.filter.im.FilterImportCtrl.getFilterCount(layerModel['filterModels']);
     }
 
     delete this['found'][layerId];
@@ -444,7 +459,6 @@ os.ui.filter.im.FilterImportCtrl.prototype.addNotFound = function() {
   var layer = /** @type {os.data.IDataDescriptor} */ (this['layer']);
   if (os.implements(layer, os.filter.IFilterable.ID)) {
     var f = /** @type {!os.filter.IFilterable} */ (layer);
-
     var i = this['notFound'].length;
     var foundCount = 0;
 
@@ -454,6 +468,8 @@ os.ui.filter.im.FilterImportCtrl.prototype.addNotFound = function() {
       if (filterModel['matches']) {
         // take it out of the notFound array and put it in the found object
         this['notFound'].splice(i, 1);
+        filterModel = this.getFilterModel(filterModel['title'], filterModel['filter'], filterModel['tooltip'],
+            filterModel['type'], filterModel['match']);
 
         // since a single layer can have multiple filterable types, add it for all
         var types = f.getFilterableTypes();
@@ -462,7 +478,7 @@ os.ui.filter.im.FilterImportCtrl.prototype.addNotFound = function() {
           var type = types[j];
           // make sure to set the type or none of this works
           filterModel['filter'].setType(type);
-          foundCount++;
+          foundCount = os.ui.filter.im.FilterImportCtrl.getFilterCount(filterModel, foundCount);
 
           if (this['found'][type]) {
             this['found'][type]['filterModels'].push(filterModel);
@@ -636,4 +652,25 @@ os.ui.filter.im.FilterImportCtrl.prototype.getIconsFromFilterable = function(fil
   }
 
   return icons;
+};
+
+
+/**
+ * Gets the total count of filters from a filter model or array of filter models
+ * @param {(Object|Array<Object>)} filters The filters.
+ * @param {number=} opt_count The current count.
+ * @return {number} The total count.
+ */
+os.ui.filter.im.FilterImportCtrl.getFilterCount = function(filters, opt_count) {
+  var count = opt_count || 0;
+  filters = goog.isArray(filters) ? filters : [filters];
+  filters.forEach(function(filter) {
+    count++;
+
+    if (filter['children']) {
+      count = os.ui.filter.im.FilterImportCtrl.getFilterCount(filter['children'], count);
+    }
+  });
+
+  return count;
 };

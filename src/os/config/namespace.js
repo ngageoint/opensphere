@@ -27,7 +27,8 @@ os.config.namespace.CORE_KEYS = [
   'storage.writeType',
   'storage.introLastSeen',
   'userSounds',
-  'theme'
+  'theme',
+  'accessible_theme'
 ];
 
 

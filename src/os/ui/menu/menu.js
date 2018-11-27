@@ -111,8 +111,9 @@ os.ui.menu.Menu.prototype.onClick_ = function(e) {
     } catch (error) {
       var test = $(e.target).closest(str).length ? true : false;
     }
-    // test to see if the map or timeline was clicked, those should always close a menu
-    if (test && opener != '#map-container' && opener != '.c-svg-timeline') {
+    // test to see if the map or timeline was clicked, those should always close a menu, as should clicking on a canvas
+    if (test && opener != '#map-container' && opener != '.c-svg-timeline' && typeof e.target.nodeName === 'string' &&
+      e.target.nodeName.toLowerCase() != 'canvas') {
       // leave the open flag so the next call to open wont open anything
       this.close(false, true);
     } else {

@@ -54,9 +54,12 @@ goog.inherits(os.ui.im.action.FilterActionNodeUICtrl, os.ui.filter.ui.FilterNode
  * @export
  */
 os.ui.im.action.FilterActionNodeUICtrl.prototype.copy = function() {
-  var entry = /** @type {os.ui.im.action.FilterActionNode} */ (this.scope['item']).getEntry();
+  var node = /** @type {os.ui.im.action.FilterActionNode} */ (this.scope['item']);
+  var entry = node.getEntry();
+  var parentIndex = os.structs.getIndexInParent(node);
+
   if (entry) {
-    this.scope.$emit(os.im.action.ImportActionEventType.COPY_ENTRY, entry);
+    this.scope.$emit(os.im.action.ImportActionEventType.COPY_ENTRY, entry, parentIndex);
     os.metrics.Metrics.getInstance().updateMetric(os.im.action.Metrics.COPY, 1);
   }
 };

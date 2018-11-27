@@ -5,7 +5,7 @@ goog.require('os.im.action');
 goog.require('os.layer');
 goog.require('os.ui');
 goog.require('os.ui.window');
-goog.require('plugin.im.action.feature.node.menu');
+goog.require('plugin.im.action.feature.node');
 goog.require('plugin.im.action.feature.ui.editFeatureActionDirective');
 
 
@@ -190,8 +190,8 @@ plugin.im.action.feature.editEntry = function(entryType, opt_entry) {
  * @param {string} entryType The entry type to check.
  * @return {boolean} Whether to refresh the layer.
  */
-plugin.im.action.feature.doRefresh = function(entryType) {
-  var layer = /** @type {os.layer.Vector} */ (os.MapContainer.getInstance().getLayer(this.entryType));
+plugin.im.action.feature.shouldRefresh = function(entryType) {
+  var layer = /** @type {os.layer.Vector} */ (os.MapContainer.getInstance().getLayer(entryType));
   var featureActionRefresh = true;
 
   if (layer && layer.getLayerOptions() && layer.getLayerOptions()['featureActionRefresh'] !== undefined) {

@@ -130,7 +130,7 @@
         @include gradient-bg($dropdown-link-hover-bg);
         background: $dropdown-link-hover-bg;
         border: 0;
-        color: $dropdown-link-hover-color;
+        color: color-yiq($dropdown-link-hover-bg);
         font-weight: inherit;
         text-decoration: none;
 

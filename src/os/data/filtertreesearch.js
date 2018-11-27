@@ -20,9 +20,7 @@ goog.inherits(os.data.FilterTreeSearch, os.ui.slick.AbstractGroupByTreeSearch);
 
 
 /**
- * Overridden in inheriting class
- * @return {!Array}
- * @override
+ * @inheritDoc
  */
 os.data.FilterTreeSearch.prototype.getSearchItems = function() {
   return /** @type {!Array} */ (os.ui.filterManager.getFilters());
@@ -30,10 +28,7 @@ os.data.FilterTreeSearch.prototype.getSearchItems = function() {
 
 
 /**
- * Overridden in inheriting class
- * @param {Object} item - search item to setup as a node
- * @return {!os.structs.ITreeNode}
- * @override
+ * @inheritDoc
  */
 os.data.FilterTreeSearch.prototype.setupNode = function(item) {
   return new os.data.FilterNode(/** @type {os.filter.FilterEntry} */ (item));

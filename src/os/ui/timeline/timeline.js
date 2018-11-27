@@ -1586,6 +1586,20 @@ os.ui.timeline.TimelineCtrl.prototype.brushCollectionChanged_ = function(brushes
 };
 
 
+/**
+ * Set the timeline view to the load range.
+ *
+ */
+os.ui.timeline.TimelineCtrl.setView = function() {
+  var tlc = os.time.TimelineController.getInstance();
+  var tlScope = angular.element('.c-svg-timeline').scope();
+  if (tlScope && tlScope['timeline']) {
+    var timeline = /** @type {os.ui.timeline.TimelineCtrl} */ (tlScope['timeline']);
+    timeline.zoomToExtent([tlc.getStart(), tlc.getEnd()]);
+  }
+};
+
+
 // the timeline should be exempt from right-click prevention
 os.events.addExemption(
     /**
