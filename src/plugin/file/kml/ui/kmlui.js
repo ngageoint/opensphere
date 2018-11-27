@@ -1,10 +1,12 @@
 goog.provide('plugin.file.kml.ui');
 
 goog.require('goog.asserts');
+goog.require('goog.events.Event');
 goog.require('os.object');
 goog.require('os.style');
 goog.require('plugin.file.kml.KMLField');
 goog.require('plugin.file.kml.cmd.KMLNodeAdd');
+goog.require('plugin.file.kml.kmlNodeLayerUIDirective');
 goog.require('plugin.file.kml.ui.KMLNode');
 
 
@@ -144,6 +146,7 @@ plugin.file.kml.ui.updatePlacemark = function(options) {
     placemark.editable = true;
     placemark.internalDrag = true;
     placemark.removable = true;
+    placemark.layerUI = 'kmlnodelayerui';
   }
 
   var feature = options['feature'] || null;
@@ -154,6 +157,7 @@ plugin.file.kml.ui.updatePlacemark = function(options) {
     placemark.setLabel(feature.get(plugin.file.kml.KMLField.NAME) || 'Unnamed Place');
     os.feature.update(feature);
     feature.changed();
+    os.dispatcher.dispatchEvent(new goog.events.Event(plugin.file.kml.KMLNodeLayerUICtrl.UIEventType.REFRESH));
   }
 
   // add the placemark to a parent if provided

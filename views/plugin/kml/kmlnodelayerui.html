@@ -1,0 +1,45 @@
+<div id="layerControls">
+  <div class="card">
+    <div class="btn btn-secondary btn-block btn-sm" title="Style controls for the layer(s)"
+        data-toggle="collapse" data-target="#layer-style"
+        ng-click="vector.setOpenSection('#layer-style')">
+      Style
+    </div>
+    <div id="layer-style" class="card-body collapse" data-parent="#layerControls">
+      <vectorstylecontrols
+          color="color"
+          opacity="opacity"
+          icon="icon"
+          center-icon="icon"
+          icon-set="vector.iconSet"
+          icon-src="vector.iconSrc"
+          size="size"
+          shape="shape"
+          shapes="shapes"
+          center-shape="centerShape"
+          center-shapes="centerShapes"
+          show-color-reset="vector.showColorReset"
+          show-icon="vector.showIcon()"
+          show-center-icon="vector.showCenterIcon()">
+      </vectorstylecontrols>
+      <iconstylecontrols ng-if="vector.showRotationOption()" columns="columns" show-rotation="vector.showRotation" rotation-column="vector.rotationColumn"></iconstylecontrols>
+      <uiswitch items="items" directive-function="vector.getShapeUI"></uiswitch>
+    </div>
+  </div>
+  <div class="card" ng-show="columns && items.length == 1">
+    <div class="btn btn-secondary btn-block btn-sm" title="Configure how labels are displayed for the layer"
+        data-toggle="collapse" data-target="#layer-label"
+        ng-click="vector.setOpenSection('#layer-label')">
+      Label
+    </div>
+    <div id="layer-label" class="card-body collapse" data-parent="#layerControls">
+      <labelcontrols
+          labels="labels"
+          columns="columns"
+          show-labels="showLabels"
+          label-color="labelColor"
+          label-size="labelSize">
+      </labelcontrols>
+    </div>
+  </div>
+</div>

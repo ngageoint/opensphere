@@ -235,6 +235,13 @@ os.style.SHAPES = {
  * @type {RegExp}
  * @const
  */
+os.style.ICON_REGEXP = /icon/i;
+
+
+/**
+ * @type {RegExp}
+ * @const
+ */
 os.style.LOB_REGEXP = /line of bearing/i;
 
 

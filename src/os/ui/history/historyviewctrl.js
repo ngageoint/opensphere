@@ -247,6 +247,8 @@ os.ui.history.HistoryViewCtrl.prototype.commandReverted_ = function(e) {
 os.ui.history.HistoryViewCtrl.prototype.limitChanged_ = function(e) {
   this.timeout_(goog.bind(function() {
     var objDiv = document.getElementById('historyScroll');
-    objDiv.scrollTop = this['commandHistory'].length > 0 ? objDiv.scrollHeight : 0;
+    if (objDiv) {
+      objDiv.scrollTop = this['commandHistory'].length > 0 ? objDiv.scrollHeight : 0;
+    }
   }, this));
 };

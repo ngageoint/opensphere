@@ -147,7 +147,7 @@ os.ui.layer.VectorLayerUICtrl = function($scope, $element, $timeout) {
 
   $scope.$on(os.ui.layer.LabelControlsEventType.COLUMN_CHANGE, this.onLabelColumnChange.bind(this));
   $scope.$on(os.ui.layer.LabelControlsEventType.SHOW_LABELS_CHANGE, this.onShowLabelsChange.bind(this));
-  $scope.$on(os.ui.layer.VectorStyleControlsEventType.SHOW_ROTATION_CHANGE, this.onShowRotationChange_.bind(this));
+  $scope.$on(os.ui.layer.VectorStyleControlsEventType.SHOW_ROTATION_CHANGE, this.onShowRotationChange.bind(this));
   $scope.$on(os.ui.layer.VectorStyleControlsEventType.ROTATION_COLUMN_CHANGE, this.onRotationColumnChange.bind(this));
 };
 goog.inherits(os.ui.layer.VectorLayerUICtrl, os.ui.layer.DefaultLayerUICtrl);
@@ -160,40 +160,40 @@ os.ui.layer.VectorLayerUICtrl.prototype.initUI = function() {
   os.ui.layer.VectorLayerUICtrl.base(this, 'initUI');
 
   if (this.scope) {
-    this.scope['color'] = this.getColor_();
-    this.scope['size'] = this.getSize_();
-    this.scope['icon'] = this.getIcon_();
-    this.scope['centerIcon'] = this.getCenterIcon_();
-    this.scope['shape'] = this.getShape_();
-    this.scope['shapes'] = this.getShapes_();
-    this.scope['centerShape'] = this.getCenterShape_();
-    this.scope['centerShapes'] = this.getCenterShapes_();
-    this.scope['lockable'] = this.getLockable_();
-    this['altitudeMode'] = this.getAltitudeMode_();
-    this['columns'] = this.getValue(os.ui.layer.getColumns);
-    this['showRotation'] = this.getShowRotation_();
-    this['rotationColumn'] = this.getRotationColumn_();
+    this.scope['color'] = this.getColor();
+    this.scope['size'] = this.getSize();
+    this.scope['icon'] = this.getIcon();
+    this.scope['centerIcon'] = this.getCenterIcon();
+    this.scope['shape'] = this.getShape();
+    this.scope['shapes'] = this.getShapes();
+    this.scope['centerShape'] = this.getCenterShape();
+    this.scope['centerShapes'] = this.getCenterShapes();
+    this.scope['lockable'] = this.getLockable();
+    this['altitudeMode'] = this.getAltitudeMode();
+    this['columns'] = this.getColumns();
+    this['showRotation'] = this.getShowRotation();
+    this['rotationColumn'] = this.getRotationColumn();
 
     this.updateReplaceStyle_();
 
     if (this.scope['items'] && this.scope['items'].length == 1) {
       // NOTE: This initUI method can get called a-lot, depending on some events that get routed to this method.
-      this.scope['columns'] = this.getValue(os.ui.layer.getColumns);
-      this['uniqueId'] = this.getValue(os.ui.layer.getUniqueId);
+      this.scope['columns'] = this.getColumns();
+      this['uniqueId'] = this.getUniqueId();
 
       this.reconcileLabelsState_();
 
-      if (this.scope['showLabels'] !== this.getValue(os.ui.layer.getShowLabel)) {
-        this.scope['showLabels'] = this.getValue(os.ui.layer.getShowLabel);
+      if (this.scope['showLabels'] !== this.getShowLabel()) {
+        this.scope['showLabels'] = this.getShowLabel();
       }
 
-      if (this.scope['labelColor'] !== this.getValue(os.ui.layer.getLabelColor)) {
-        this.scope['labelColor'] = this.getValue(os.ui.layer.getLabelColor);
+      if (this.scope['labelColor'] !== this.getLabelColor()) {
+        this.scope['labelColor'] = this.getLabelColor();
       }
 
-      if (this.scope['labelSize'] !== this.getValue(os.ui.layer.getLabelSize) ||
+      if (this.scope['labelSize'] !== this.getLabelSize() ||
           this.scope['labelSize'] !== os.style.label.DEFAULT_SIZE) {
-        this.scope['labelSize'] = this.getValue(os.ui.layer.getLabelSize) || os.style.label.DEFAULT_SIZE;
+        this.scope['labelSize'] = this.getLabelSize() || os.style.label.DEFAULT_SIZE;
       }
     } else {
       this.scope['columns'] = null;
@@ -218,7 +218,6 @@ os.ui.layer.VectorLayerUICtrl.prototype.initUI = function() {
 /**
  * Get the shape-specific configuration UI.
  * @return {string|undefined}
- * @protected
  */
 os.ui.layer.VectorLayerUICtrl.prototype.getShapeUIInternal = function() {
   if (this.scope != null) {
@@ -256,7 +255,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.showRotationOption = function() {
  */
 os.ui.layer.VectorLayerUICtrl.prototype.reconcileLabelsState_ = function() {
   // Duplicate the labels so the command stack undo/redo works
-  var labels = this.getValue(os.ui.layer.getColumn, []);
+  var labels = this.getColumn();
 
   // the UI modifies the label config objects, so they must be cloned or undo/redo will not work.
   var clone = [];
@@ -307,7 +306,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.onColorReset = function(event) {
   this.onColorChange(event, '');
 
   // reset to the layer color
-  this.scope['color'] = this.getColor_();
+  this.scope['color'] = this.getColor();
 };
 
 
@@ -432,16 +431,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.onLabelColorChange = function(event, val
  */
 os.ui.layer.VectorLayerUICtrl.prototype.onLabelColorReset = function(event) {
   event.stopPropagation();
-
-  // reset to the layer color
-  var items = /** @type {Array.<!os.data.LayerNode>} */ (this.scope['items']);
-  if (items && items.length > 0) {
-    var layer = items[0].getLayer();
-    if (layer) {
-      var layerConfig = os.style.StyleManager.getInstance().getLayerConfig(layer.getId());
-      this.scope['labelColor'] = os.style.getConfigColor(layerConfig);
-    }
-  }
+  this.scope['labelColor'] = this.getLabelColor();
 
   // clear the label color config value
   this.onLabelColorChange(event, '');
@@ -522,25 +512,22 @@ os.ui.layer.VectorLayerUICtrl.prototype.onShowLabelsChange = function(event, val
 /**
  * Gets the color from the item(s)
  * @return {?string} a hex color string
- * @private
+ * @protected
  */
-os.ui.layer.VectorLayerUICtrl.prototype.getColor_ = function() {
+os.ui.layer.VectorLayerUICtrl.prototype.getColor = function() {
   var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
 
   if (items) {
     for (var i = 0, n = items.length; i < n; i++) {
-      try {
-        var layer = items[i].getLayer();
+      var layer = items[i].getLayer();
 
-        if (layer) {
-          var config = os.style.StyleManager.getInstance().getLayerConfig(items[0].getId());
+      if (layer) {
+        var config = os.style.StyleManager.getInstance().getLayerConfig(items[0].getId());
 
-          if (config) {
-            var color = /** @type {Array<number>} */ (os.style.getConfigColor(config, true));
-            return color ? goog.color.rgbArrayToHex(color) : color;
-          }
+        if (config) {
+          var color = /** @type {Array<number>} */ (os.style.getConfigColor(config, true));
+          return color ? goog.color.rgbArrayToHex(color) : color;
         }
-      } catch (e) {
       }
     }
   }
@@ -552,25 +539,21 @@ os.ui.layer.VectorLayerUICtrl.prototype.getColor_ = function() {
 /**
  * Gets the size from the item(s)
  * @return {number} The size
- * @private
  */
-os.ui.layer.VectorLayerUICtrl.prototype.getSize_ = function() {
+os.ui.layer.VectorLayerUICtrl.prototype.getSize = function() {
   var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
   var size;
 
   if (items) {
     for (var i = 0, n = items.length; i < n; i++) {
-      try {
-        var layer = items[i].getLayer();
+      var layer = items[i].getLayer();
 
-        if (layer) {
-          var config = os.style.StyleManager.getInstance().getLayerConfig(items[0].getId());
+      if (layer) {
+        var config = os.style.StyleManager.getInstance().getLayerConfig(items[0].getId());
 
-          if (config) {
-            size = os.style.getConfigSize(config);
-          }
+        if (config) {
+          size = os.style.getConfigSize(config);
         }
-      } catch (e) {
       }
     }
   }
@@ -580,22 +563,18 @@ os.ui.layer.VectorLayerUICtrl.prototype.getSize_ = function() {
 
 
 /**
- * Gets the icon from the item(s).
- * @return {?osx.icon.Icon} The icon.
- * @private
+ * Gets the icon from the item(s)
+ * @return {?osx.icon.Icon} The icon
  */
-os.ui.layer.VectorLayerUICtrl.prototype.getIcon_ = function() {
+os.ui.layer.VectorLayerUICtrl.prototype.getIcon = function() {
   var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
   var icon = null;
 
   if (items && items.length > 0) {
-    try {
-      var source = os.data.DataManager.getInstance().getSource(items[0].getId());
-      if (source && source.getGeometryShape() == os.style.ShapeType.ICON) {
-        var config = os.style.StyleManager.getInstance().getLayerConfig(items[0].getId());
-        icon = os.style.getConfigIcon(config) || os.ui.file.kml.getDefaultIcon();
-      }
-    } catch (e) {
+    var source = os.data.DataManager.getInstance().getSource(items[0].getId());
+    if (source && source.getGeometryShape() == os.style.ShapeType.ICON) {
+      var config = os.style.StyleManager.getInstance().getLayerConfig(items[0].getId());
+      icon = os.style.getConfigIcon(config) || os.ui.file.kml.getDefaultIcon();
     }
   }
 
@@ -606,20 +585,16 @@ os.ui.layer.VectorLayerUICtrl.prototype.getIcon_ = function() {
 /**
  * Gets the icon from the item(s).
  * @return {?osx.icon.Icon} The icon.
- * @private
  */
-os.ui.layer.VectorLayerUICtrl.prototype.getCenterIcon_ = function() {
+os.ui.layer.VectorLayerUICtrl.prototype.getCenterIcon = function() {
   var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
   var icon = null;
 
   if (items && items.length > 0) {
-    try {
-      var source = os.data.DataManager.getInstance().getSource(items[0].getId());
-      if (source && source.getCenterGeometryShape() == os.style.ShapeType.ICON) {
-        var config = os.style.StyleManager.getInstance().getLayerConfig(items[0].getId());
-        icon = os.style.getConfigIcon(config) || os.ui.file.kml.getDefaultIcon();
-      }
-    } catch (e) {
+    var source = os.data.DataManager.getInstance().getSource(items[0].getId());
+    if (source && source.getCenterGeometryShape() == os.style.ShapeType.ICON) {
+      var config = os.style.StyleManager.getInstance().getLayerConfig(items[0].getId());
+      icon = os.style.getConfigIcon(config) || os.ui.file.kml.getDefaultIcon();
     }
   }
 
@@ -630,19 +605,15 @@ os.ui.layer.VectorLayerUICtrl.prototype.getCenterIcon_ = function() {
 /**
  * Gets the shape from the item(s)
  * @return {string} The shape
- * @private
  */
-os.ui.layer.VectorLayerUICtrl.prototype.getShape_ = function() {
+os.ui.layer.VectorLayerUICtrl.prototype.getShape = function() {
   var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
   var shape;
 
   if (items && items.length > 0) {
-    try {
-      var source = os.osDataManager.getSource(items[0].getId());
-      if (source) {
-        shape = source.getGeometryShape();
-      }
-    } catch (e) {
+    var source = os.osDataManager.getSource(items[0].getId());
+    if (source) {
+      shape = source.getGeometryShape();
     }
   }
 
@@ -653,20 +624,16 @@ os.ui.layer.VectorLayerUICtrl.prototype.getShape_ = function() {
 /**
  * Gets the shape options that apply to the item(s)
  * @return {Array<string>} The available shape options
- * @private
  */
-os.ui.layer.VectorLayerUICtrl.prototype.getShapes_ = function() {
+os.ui.layer.VectorLayerUICtrl.prototype.getShapes = function() {
   var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
   var shapes = goog.object.getKeys(os.style.SHAPES);
 
   if (items && items.length > 0) {
     for (var i = 0, n = items.length; i < n; i++) {
-      try {
-        var source = os.osDataManager.getSource(items[i].getId());
-        if (source && source instanceof os.source.Vector) {
-          shapes = goog.array.filter(shapes, source.supportsShape, source);
-        }
-      } catch (e) {
+      var source = os.osDataManager.getSource(items[i].getId());
+      if (source && source instanceof os.source.Vector) {
+        shapes = goog.array.filter(shapes, source.supportsShape, source);
       }
     }
   }
@@ -678,22 +645,18 @@ os.ui.layer.VectorLayerUICtrl.prototype.getShapes_ = function() {
 /**
  * Gets the shape from the item(s)
  * @return {string} The shape
- * @private
  */
-os.ui.layer.VectorLayerUICtrl.prototype.getCenterShape_ = function() {
+os.ui.layer.VectorLayerUICtrl.prototype.getCenterShape = function() {
   var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
   var shape;
 
   if (items && items.length > 0) {
-    try {
-      var source = os.osDataManager.getSource(items[0].getId());
-      if (source) {
-        var tempShape = source.getCenterGeometryShape();
-        if (!os.style.ELLIPSE_REGEXP.test(tempShape) && !os.style.DEFAULT_REGEXP.test(tempShape)) {
-          shape = tempShape;
-        }
+    var source = os.osDataManager.getSource(items[0].getId());
+    if (source) {
+      var tempShape = source.getCenterGeometryShape();
+      if (!os.style.ELLIPSE_REGEXP.test(tempShape) && !os.style.DEFAULT_REGEXP.test(tempShape)) {
+        shape = tempShape;
       }
-    } catch (e) {
     }
   }
 
@@ -704,20 +667,16 @@ os.ui.layer.VectorLayerUICtrl.prototype.getCenterShape_ = function() {
 /**
  * Gets the shape options that apply to the item(s)
  * @return {Array<string>} The available shape options
- * @private
  */
-os.ui.layer.VectorLayerUICtrl.prototype.getCenterShapes_ = function() {
+os.ui.layer.VectorLayerUICtrl.prototype.getCenterShapes = function() {
   var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
   var shapes = goog.object.getKeys(os.style.SHAPES);
 
   if (items && items.length > 0) {
     for (var i = 0, n = items.length; i < n; i++) {
-      try {
-        var source = os.osDataManager.getSource(items[i].getId());
-        if (source && source instanceof os.source.Vector) {
-          shapes = goog.array.filter(shapes, source.isNotEllipseOrLOBOrDefault, source);
-        }
-      } catch (e) {
+      var source = os.osDataManager.getSource(items[i].getId());
+      if (source && source instanceof os.source.Vector) {
+        shapes = goog.array.filter(shapes, source.isNotEllipseOrLOBOrDefault, source);
       }
     }
   }
@@ -729,29 +688,80 @@ os.ui.layer.VectorLayerUICtrl.prototype.getCenterShapes_ = function() {
 /**
  * Updates the locked state on the UI.
  * @return {boolean} are all the items locable
- * @private
  */
-os.ui.layer.VectorLayerUICtrl.prototype.getLockable_ = function() {
+os.ui.layer.VectorLayerUICtrl.prototype.getLockable = function() {
   this['lock'] = false;
   // Only display lock option if all sources are lockable
   var lockable = true;
   var items = /** @type {Array} */ (this.scope['items']);
   if (items && items.length > 0) {
     for (var i = 0, n = items.length; i < n; i++) {
-      try {
-        var source = os.osDataManager.getSource(items[i].getId());
-        if (source && source instanceof os.source.Vector && !source.isLockable()) {
+      var source = os.osDataManager.getSource(items[i].getId());
+      if (source && source instanceof os.source.Vector) {
+        if (!source.isLockable()) {
           lockable = false;
           break;
         } else {
           this['lock'] = source.isLocked();
         }
-      } catch (e) {
-        lockable = false;
       }
     }
   }
   return lockable;
+};
+
+
+/**
+ * Gets the label size
+ * @return {number} The size
+ */
+os.ui.layer.VectorLayerUICtrl.prototype.getLabelSize = function() {
+  return Number(this.getValue(os.ui.layer.getLabelSize));
+};
+
+
+/**
+ * Gets the label color
+ * @return {string} The color
+ */
+os.ui.layer.VectorLayerUICtrl.prototype.getLabelColor = function() {
+  return this.getValue(os.ui.layer.getLabelColor);
+};
+
+
+/**
+ * Gets the columns to use for the label
+ * @return {Array<os.data.ColumnDefinition>} The columns
+ */
+os.ui.layer.VectorLayerUICtrl.prototype.getColumns = function() {
+  return this.getValue(os.ui.layer.getColumns);
+};
+
+
+/**
+ * Gets the selected columns to use for the label
+ * @return {Array<!os.style.label.LabelConfig>} The columns
+ */
+os.ui.layer.VectorLayerUICtrl.prototype.getColumn = function() {
+  return this.getValue(os.ui.layer.getColumn, []);
+};
+
+
+/**
+ * Gets the show label value
+ * @return {boolean} The show label
+ */
+os.ui.layer.VectorLayerUICtrl.prototype.getShowLabel = function() {
+  return this.getValue(os.ui.layer.getUniqueId);
+};
+
+
+/**
+ * Gets the unique id
+ * @return {boolean} The show label
+ */
+os.ui.layer.VectorLayerUICtrl.prototype.getUniqueId = function() {
+  return this.getValue(os.ui.layer.getUniqueId);
 };
 
 
@@ -763,12 +773,9 @@ os.ui.layer.VectorLayerUICtrl.prototype.onLockChange = function() {
   var items = /** @type {Array} */ (this.scope['items']);
   if (items && items.length > 0) {
     for (var i = 0, n = items.length; i < n; i++) {
-      try {
-        var source = os.osDataManager.getSource(items[i].getId());
-        if (source && source instanceof os.source.Vector && source.isLockable()) {
-          source.setLocked(this['lock']);
-        }
-      } catch (e) {
+      var source = os.osDataManager.getSource(items[i].getId());
+      if (source && source instanceof os.source.Vector && source.isLockable()) {
+        source.setLocked(this['lock']);
       }
     }
   }
@@ -838,20 +845,16 @@ os.ui.layer.VectorLayerUICtrl.prototype.onReplaceStyleChange = function() {
 
 /**
  * @return {os.webgl.AltitudeMode}
- * @private
  */
-os.ui.layer.VectorLayerUICtrl.prototype.getAltitudeMode_ = function() {
+os.ui.layer.VectorLayerUICtrl.prototype.getAltitudeMode = function() {
   var altitudeMode = os.webgl.AltitudeMode.ABSOLUTE;
   var items = /** @type {Array} */ (this.scope['items']);
   if (items && items.length > 0) {
     for (var i = 0, n = items.length; i < n; i++) {
-      try {
-        var source = os.osDataManager.getSource(items[i].getId());
-        if (source && source instanceof os.source.Vector) {
-          altitudeMode = source.getAltitudeMode();
-          break;
-        }
-      } catch (e) {
+      var source = os.osDataManager.getSource(items[i].getId());
+      if (source && source instanceof os.source.Vector) {
+        altitudeMode = source.getAltitudeMode();
+        break;
       }
     }
   }
@@ -867,12 +870,9 @@ os.ui.layer.VectorLayerUICtrl.prototype.onAltitudeModeChange = function() {
   var items = /** @type {Array} */ (this.scope['items']);
   if (items && items.length > 0) {
     for (var i = 0, n = items.length; i < n; i++) {
-      try {
-        var source = os.osDataManager.getSource(items[i].getId());
-        if (source && source instanceof os.source.Vector) {
-          source.setAltitudeMode(this['altitudeMode']);
-        }
-      } catch (e) {
+      var source = os.osDataManager.getSource(items[i].getId());
+      if (source && source instanceof os.source.Vector) {
+        source.setAltitudeMode(this['altitudeMode']);
       }
     }
   }
@@ -904,9 +904,8 @@ os.ui.layer.VectorLayerUICtrl.prototype.onUniqueIdChange = function() {
 /**
  * The column for the icon rotation
  * @return {string}
- * @private
  */
-os.ui.layer.VectorLayerUICtrl.prototype.getRotationColumn_ = function() {
+os.ui.layer.VectorLayerUICtrl.prototype.getRotationColumn = function() {
   var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
   if (items && items.length > 0) {
     var config = os.style.StyleManager.getInstance().getLayerConfig(items[0].getId());
@@ -922,9 +921,8 @@ os.ui.layer.VectorLayerUICtrl.prototype.getRotationColumn_ = function() {
 /**
  * If arrow should be displayed for the layer(s).
  * @return {boolean}
- * @private
  */
-os.ui.layer.VectorLayerUICtrl.prototype.getShowRotation_ = function() {
+os.ui.layer.VectorLayerUICtrl.prototype.getShowRotation = function() {
   var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
   if (items && items.length > 0) {
     var config = os.style.StyleManager.getInstance().getLayerConfig(items[0].getId());
@@ -941,9 +939,8 @@ os.ui.layer.VectorLayerUICtrl.prototype.getShowRotation_ = function() {
  * Handle changes to the Show Rotation option.
  * @param {angular.Scope.Event} event
  * @param {boolean} value
- * @private
  */
-os.ui.layer.VectorLayerUICtrl.prototype.onShowRotationChange_ = function(event, value) {
+os.ui.layer.VectorLayerUICtrl.prototype.onShowRotationChange = function(event, value) {
   var items = /** @type {Array} */ (this.scope['items']);
   if (items && items.length > 0) {
     var fn =
@@ -964,7 +961,6 @@ os.ui.layer.VectorLayerUICtrl.prototype.onShowRotationChange_ = function(event, 
  * Handles column changes to the rotation
  * @param {angular.Scope.Event} event
  * @param {string} value
- * @private
  */
 os.ui.layer.VectorLayerUICtrl.prototype.onRotationColumnChange = function(event, value) {
   var items = /** @type {Array} */ (this.scope['items']);

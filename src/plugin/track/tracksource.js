@@ -70,3 +70,19 @@ plugin.track.TrackSource.prototype.updateTrackZIndex = function() {
 plugin.track.TrackSource.prototype.isTimeEditEnabled = function() {
   return false;
 };
+
+
+/**
+ * @inheritDoc
+ */
+plugin.track.TrackSource.prototype.supportsShape = function(shapeName) {
+  return os.style.ICON_REGEXP.test(shapeName);
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.track.TrackSource.prototype.getGeometryShape = function() {
+  return os.style.ShapeType.ICON;
+};

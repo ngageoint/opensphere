@@ -7,7 +7,6 @@ goog.require('os.metrics');
 
 /**
  * Changes the size of a layer
- * @implements {os.command.ICommand}
  * @extends {os.command.AbstractVectorStyle}
  * @param {string} layerId
  * @param {number} size
