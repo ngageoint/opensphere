@@ -1351,70 +1351,90 @@ plugin.track.updateCurrentLine = function(track, startTime, startIndex, endTime,
     track.set(plugin.track.TrackField.CURRENT_LINE, currentLine);
   }
 
-  var flatCoordinates = [];
-  for (var i = startIndex; i < endIndex; i++) {
-    flatCoordinates.push(coordinates[i]);
-  }
-
-  if (flatCoordinates.length === endIndex &&
-      flatCoordinates[flatCoordinates.length - stride] === coordinates[coordinates.length - stride] &&
-      flatCoordinates[stride] === coordinates[stride]) {
-    // target is the first and last coordinate and it's already equal, so the line doesn't need to be modified
-    var show = coordinates[coordinates.length - 1] >= os.time.TimelineController.getInstance().getCurrentRange().start;
-    plugin.track.setShowMarker(track, show, true); // show the marker on the last point
+  // test if the current line appears to have the correct coordinates already. if so, do not modify it.
+  var flatCoordinates = currentLine.flatCoordinates;
+  if (flatCoordinates.length === endIndex - startIndex &&
+      (!flatCoordinates.length || (flatCoordinates[0] === coordinates[startIndex] &&
+          flatCoordinates[flatCoordinates.length - stride] === coordinates[endIndex - stride]))) {
+    // show the marker on the last point if it's after the timeline range start
+    var show = !!flatCoordinates.length &&
+        flatCoordinates[flatCoordinates.length - 1] >= os.time.TimelineController.getInstance().getCurrentRange().start;
+    plugin.track.setShowMarker(track, show, true);
     return;
   }
 
-  // strip the last coordinate, because it's probably the "most recent" and not part of the original track
-  if (flatCoordinates.length + startIndex > stride) {
-    flatCoordinates.length = flatCoordinates.length + startIndex - stride;
-  }
+  // slice the original array to get the current line coordinates
+  flatCoordinates = coordinates.slice(startIndex, endIndex);
 
-  if (flatCoordinates.length >= endIndex - startIndex) {
-    // the current line is longer than the expected line, so remove extra coordinates
-    flatCoordinates.length = endIndex - startIndex;
-  } else if (endIndex - startIndex > 0) {
-    // the expected line is longer, so push missing coordinates to the array. the array is modified in place to avoid
-    // having to set the coordinates on the line string.
-    for (var i = flatCoordinates.length; i < endIndex - startIndex; i++) {
-      flatCoordinates.push(coordinates[i]);
+  // if ends have been provided, we're working with a MultiLineString and they will need to be recomputed for the
+  // partial line
+  var currentEnds;
+  var startIndexIsEnd = false;
+  var endIndexIsEnd = false;
+  if (opt_ends) {
+    currentEnds = [];
+
+    for (var i = 0; i < opt_ends.length; i++) {
+      var end = opt_ends[i];
+
+      // track if the current segment starts or ends on a multi-line end
+      startIndexIsEnd = startIndexIsEnd || end === startIndex;
+      endIndexIsEnd = endIndexIsEnd || end === endIndex;
+
+      // if the end is between the current indices
+      if (end > startIndex && end <= endIndex) {
+        // add it, offset by the start index
+        currentEnds.push(end - startIndex);
+      }
     }
   }
 
-  // add ends indices that are in the current line
-  var currentEnds = opt_ends ? opt_ends.filter(function(end) {
-    return end <= flatCoordinates.length + startIndex;
-  }) : undefined;
+  if (startIndex !== endIndex) {
+    //
+    // interpolate the start position if the current line starts past the first index and is not on a multi-line end
+    //
+    // if the line starts at a multi-line end, the start time is between tracks in a multi track.
+    //
+    if (startIndex > 0 && !startIndexIsEnd) {
+      var interpolatedStart = plugin.track.getTrackPositionAt(track, startTime, startIndex, coordinates, stride);
+      if (interpolatedStart && interpolatedStart.length === stride) {
+        var i = interpolatedStart.length;
+        while (i--) {
+          flatCoordinates.unshift(interpolatedStart[i]);
+        }
 
-  // interpolate the current position if we haven't exhausted the available coordinates and the last known position
-  // isn't at one of the ends. if the current position is an end, the current time is between tracks in a multi track.
-  if (flatCoordinates.length < coordinates.length &&
-      (!currentEnds || !currentEnds.length || currentEnds[currentEnds.length - 1] !== flatCoordinates.length)) {
-    var end = plugin.track.getTrackPositionAt(track, endTime, endIndex, coordinates, stride);
-    if (end) {
-      for (var i = 0; i < end.length; i++) {
-        flatCoordinates.push(end[i]);
+        // offset ends by the extra coordinate length
+        if (currentEnds) {
+          for (i = 0; i < currentEnds.length; i++) {
+            currentEnds[i] += stride;
+          }
+        }
       }
     }
 
-    var start = plugin.track.getTrackPositionAt(track, startTime, startIndex, coordinates, stride);
-    if (start) {
-      for (var i = 0; i < start.length; i++) {
-        goog.array.insertAt(flatCoordinates, start[i], i);
+    //
+    // interpolate the end position if we haven't exhausted the available coordinates and the last known position
+    // isn't at one of the ends.
+    //
+    // if the line ends at a multi-line end, the end time is between tracks in a multi track.
+    //
+    if (endIndex < coordinates.length && !endIndexIsEnd) {
+      var end = plugin.track.getTrackPositionAt(track, endTime, endIndex, coordinates, stride);
+      if (end && end.length === stride) {
+        for (var i = 0; i < end.length; i++) {
+          flatCoordinates.push(end[i]);
+        }
+      }
+
+      // end the current line segment at the interpolated position
+      if (currentEnds) {
+        currentEnds.push(flatCoordinates.length);
       }
     }
-
-    // end the current line segment at the interpolated position
-    if (currentEnds) {
-      currentEnds.push(flatCoordinates.length);
-    }
-
-    if (endIndex == 0 || startIndex === coordinates.length) {
-      plugin.track.setShowMarker(track, false);
-    } else {
-      plugin.track.setShowMarker(track, true);
-    }
   }
+
+  // show the current position marker if the current line has points
+  plugin.track.setShowMarker(track, flatCoordinates.length > 0);
 
   // mark the line as dirty so the WebGL feature converter recreates it
   currentLine.set(os.geom.GeometryField.DIRTY, true);

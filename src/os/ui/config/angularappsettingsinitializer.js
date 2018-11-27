@@ -53,6 +53,8 @@ os.ui.config.AngularAppSettingsInitializer.prototype.onSettingsLoaded = function
 
         // On settings change, update the theme
         os.settings.listen(os.config.ThemeSettings.Keys.THEME, os.config.ThemeSettings.updateTheme, false, this);
+        os.settings.listen(os.config.ThemeSettings.Keys.ACCESSIBLE_THEME,
+            os.config.ThemeSettings.updateTheme, false, this);
       }, this));
     }
   }, function(error) {

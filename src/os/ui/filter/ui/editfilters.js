@@ -77,6 +77,11 @@ os.ui.filter.ui.EditFiltersCtrl = function($scope, $element) {
   this['description'] = this.entry.getDescription();
 
   /**
+   * @type {string}
+   */
+  this['tags'] = this.entry.getTags();
+
+  /**
    * @type {boolean}
    */
   this['isComplex'] = false;
@@ -325,6 +330,7 @@ os.ui.filter.ui.EditFiltersCtrl.prototype.cancel = function() {
 os.ui.filter.ui.EditFiltersCtrl.prototype.finish = function() {
   this.entry.setTitle(this['title']);
   this.entry.setDescription(this['description']);
+  this.entry.setTags(this['tags']);
 
   var filter = this['root'].writeFilter(this['title'], this['description']);
   this.entry.setFilter(filter);

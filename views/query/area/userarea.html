@@ -73,7 +73,7 @@
             <label class="col-form-label col-3 text-right u-required">Coordinates</label>
             <div class="col">
               <span class="ml-auto float-right">
-                <popover title="'Entering Coordinates'" content="ctrl.customPopoverContent" pos="'right'"></popover>
+                <popover data-title="'Entering Coordinates'" content="ctrl.customPopoverContent" pos="'right'"></popover>
               </span>
               <textarea class="col-11 form-control flex-fill" name="coordinates" rows="5" required placeholder="Enter Coordinates" ng-model="ctrl.coordinates" ng-change="ctrl.updateArea()"></textarea>
               <span class="invalid-feedback d-block" ng-if="ctrl.coordinates && !ctrl.area">

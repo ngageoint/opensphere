@@ -219,7 +219,7 @@ os.ui.slick.TreeSearch.prototype.beginSearch = function(term, groupBy) {
 
     // search!
     this.searchIds = {};
-    this.searchNodes(exp, list, this.search_);
+    this.searchNodes(exp, list, this.getSearch());
     this.finalizeSearch(this.groupBy_, list);
     this.searchIds = null;
 
@@ -333,9 +333,10 @@ os.ui.slick.TreeSearch.prototype.setSort = function(list) {
  * @protected
  */
 os.ui.slick.TreeSearch.prototype.fillListFromSearch = function(list) {
-  if (this.search_.length > 0) {
-    for (var i = 0, n = this.search_.length; i < n; i++) {
-      list.push(this.search_[i]);
+  var search = this.getSearch();
+  if (search.length > 0) {
+    for (var i = 0, n = search.length; i < n; i++) {
+      list.push(search[i]);
     }
   } else {
     this.addNoResult(list);
@@ -432,8 +433,7 @@ os.ui.slick.TreeSearch.prototype.getNodeSearchText = function(node) {
   if (node) {
     var s = /** @type {os.data.ISearchable} */ (node);
 
-    // throwing exceptions as flow logic is expensive. Check for the method existance instead.
-    if (s.getSearchText) {
+    if (os.implements(s, os.data.ISearchable.ID)) {
       t = s.getSearchText();
     } else if (!node.getChildren()) {
       t = node.getLabel();

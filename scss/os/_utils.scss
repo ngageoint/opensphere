@@ -141,6 +141,18 @@
   user-select: none;
 }
 
+.u-link-style {
+  @include hover {
+    color: $link-hover-color;
+    text-decoration: $link-hover-decoration;
+  }
+
+  background-color: transparent; // Remove the gray background on active links in IE 10.
+  color: $link-color;
+  cursor: pointer;
+  text-decoration: $link-decoration;
+}
+
 // --------------------------------- Font Utilities --------------------------------- //
 .u-font-family-sans-serif {
   font-family: sans-serif;
@@ -389,4 +401,10 @@ $somesizes: map-merge((
       color: $list-group-action-hover-color;
     }
   }
+}
+
+
+// --------------------------------- Z-Index Utilities --------------------------------- //
+.u-zindex-base {
+  z-index: $u-zindex-base;
 }

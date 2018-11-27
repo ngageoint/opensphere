@@ -10,10 +10,11 @@ goog.require('os.ui.query.cmd.QueryEntries');
  * Abstract command for adding/removing filter actions.
  * @param {!os.im.action.FilterActionEntry} entry The filter action.
  * @param {number=} opt_index The index in the entry list.
+ * @param {string=} opt_parentId The parent node ID.
  * @implements {os.command.ICommand}
  * @constructor
  */
-os.im.action.cmd.AbstractFilterAction = function(entry, opt_index) {
+os.im.action.cmd.AbstractFilterAction = function(entry, opt_index, opt_parentId) {
   /**
    * @type {!os.im.action.FilterActionEntry}
    * @protected
@@ -25,6 +26,13 @@ os.im.action.cmd.AbstractFilterAction = function(entry, opt_index) {
    * @type {number|undefined}
    */
   this.index = opt_index;
+
+  /**
+   * The parent node ID to add to (as opposed to the manager itself).
+   * @type {string|undefined}
+   * @protected
+   */
+  this.parentId = opt_parentId;
 
   /**
    * @type {boolean}
@@ -98,7 +106,7 @@ os.im.action.cmd.AbstractFilterAction.prototype.canExecute = function() {
  */
 os.im.action.cmd.AbstractFilterAction.prototype.add = function() {
   if (this.entry) {
-    os.im.action.ImportActionManager.getInstance().addActionEntry(this.entry, this.index);
+    os.im.action.ImportActionManager.getInstance().addActionEntry(this.entry, this.index, this.parentId);
   }
 };
 
@@ -109,6 +117,6 @@ os.im.action.cmd.AbstractFilterAction.prototype.add = function() {
  */
 os.im.action.cmd.AbstractFilterAction.prototype.remove = function() {
   if (this.entry) {
-    os.im.action.ImportActionManager.getInstance().removeActionEntry(this.entry);
+    os.im.action.ImportActionManager.getInstance().removeActionEntry(this.entry, this.parentId);
   }
 };

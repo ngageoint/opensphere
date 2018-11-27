@@ -1,17 +1,17 @@
 goog.provide('os.filter.im.OSFilterImportUI');
 goog.require('os.filter.im.osFilterImportDirective');
-goog.require('os.ui.filter.FilterImportUI');
+goog.require('os.ui.filter.im.FilterImportUI');
 
 
 
 /**
- * @extends {os.ui.filter.FilterImportUI}
+ * @extends {os.ui.filter.im.FilterImportUI}
  * @constructor
  */
 os.filter.im.OSFilterImportUI = function() {
   os.filter.im.OSFilterImportUI.base(this, 'constructor');
 };
-goog.inherits(os.filter.im.OSFilterImportUI, os.ui.filter.FilterImportUI);
+goog.inherits(os.filter.im.OSFilterImportUI, os.ui.filter.im.FilterImportUI);
 
 
 /**

@@ -1,4 +1,5 @@
 goog.provide('os.ui.filter');
+goog.provide('os.ui.filter.PropertyChange');
 
 goog.require('goog.dom');
 goog.require('goog.string');
@@ -31,6 +32,14 @@ os.ui.filter.Condition = {
   AND: 'And',
   OR: 'Or',
   NOT: 'Not'
+};
+
+
+/**
+ * @enum {string}
+ */
+os.ui.filter.PropertyChange = {
+  ENABLED: 'filter:enabled'
 };
 
 

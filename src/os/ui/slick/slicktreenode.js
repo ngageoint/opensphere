@@ -1,4 +1,5 @@
 goog.provide('os.ui.slick.SlickTreeNode');
+
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.structs.TriStateTreeNode');
 goog.require('os.ui.nodeIconsDirective');
