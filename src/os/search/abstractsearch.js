@@ -66,6 +66,13 @@ os.search.AbstractSearch = function(id, name, opt_type, opt_priority, opt_defaul
   this.term = null;
 
   /**
+   * Is the search provider external?
+   * @type {boolean}
+   * @private
+   */
+  this.isExternal_ = false;
+
+  /**
    * The logger used by the search provider.
    * @type {goog.log.Logger}
    * @protected
@@ -184,6 +191,22 @@ os.search.AbstractSearch.prototype.autocomplete = goog.abstractMethod;
  * @return {boolean} Return true to continue, othereise false.
  */
 os.search.AbstractSearch.prototype.searchTerm = goog.abstractMethod;
+
+
+/**
+ * @inheritDoc
+ */
+os.search.AbstractSearch.prototype.isExternal = function() {
+  return this.isExternal_;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.search.AbstractSearch.prototype.setExternal = function(external) {
+  this.isExternal_ = external;
+};
 
 
 /**
