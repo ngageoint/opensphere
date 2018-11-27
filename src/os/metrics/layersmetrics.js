@@ -39,6 +39,11 @@ os.metrics.LayersMetrics = function() {
     key: os.metrics.Layer.VECTOR_SHAPE
   });
   this.addChild(styleLeaf, {
+    label: 'Change Feature Layer Icon',
+    description: 'The icon used for data points on this layer.',
+    key: os.metrics.Layer.VECTOR_ICON
+  });
+  this.addChild(styleLeaf, {
     label: 'Change Feature Layer Center Shape',
     description: 'The icon shape used in the ellipse center for data points on this layer.',
     key: os.metrics.Layer.VECTOR_CENTER_SHAPE
@@ -149,9 +154,39 @@ os.metrics.LayersMetrics = function() {
     key: os.metrics.Layer.VECTOR_ROTATION_COLUMN
   });
   this.addChild(styleLeaf, {
-    label: 'Change Feature Auto Refresh',
+    label: 'Change Feature Layer Auto Refresh',
     description: 'How often the layer will automatically refresh its data.',
     key: os.metrics.Layer.VECTOR_AUTO_REFRESH
+  });
+  this.addChild(styleLeaf, {
+    label: 'Change Feature Color',
+    description: 'The color used to render the data for this feature.',
+    key: os.metrics.Layer.FEATURE_COLOR
+  });
+  this.addChild(styleLeaf, {
+    label: 'Change Feature Icon',
+    description: 'The icon used for data points on this feature.',
+    key: os.metrics.Layer.FEATURE_ICON
+  });
+  this.addChild(styleLeaf, {
+    label: 'Change Feature Opacity',
+    description: 'The opacity used to render the data for this feature.',
+    key: os.metrics.Layer.FEATURE_OPACITY
+  });
+  this.addChild(styleLeaf, {
+    label: 'Change Feature Layer Size',
+    description: 'The icon size used for data points on this feature.',
+    key: os.metrics.Layer.FEATURE_SIZE
+  });
+  this.addChild(styleLeaf, {
+    label: 'Change Feature Shape',
+    description: 'The icon shape used for data points on this feature.',
+    key: os.metrics.Layer.FEATURE_SHAPE
+  });
+  this.addChild(styleLeaf, {
+    label: 'Change Feature Center Shape',
+    description: 'The icon shape used in the ellipse center for data points on this feature.',
+    key: os.metrics.Layer.FEATURE_CENTER_SHAPE
   });
 
   var labelLeaf = this.addChild(leaf, {
@@ -191,6 +226,28 @@ os.metrics.LayersMetrics = function() {
     label: 'Remove a label column',
     description: 'Add remove columns used for the labels.',
     key: os.metrics.Layer.LABEL_COLUMN_REMOVE
+  });
+  this.addChild(labelLeaf, {
+    label: 'Change Feature Label Color',
+    description: 'The color used for labels on this feature when "Always Show Labels"' +
+        ' is checked. <br/>NOTE: The label color does not affect the label color' +
+        ' used when hovering, which is alaways red.',
+    key: os.metrics.Layer.FEATURE_LABEL_COLOR
+  });
+  this.addChild(labelLeaf, {
+    label: 'Change Feature Label Size',
+    description: 'The font size used for labels on this feature.',
+    key: os.metrics.Layer.FEATURE_LABEL_SIZE
+  });
+  this.addChild(labelLeaf, {
+    label: 'Always Show Feature Labels',
+    description: 'When checked, labels will be rendered this feature.',
+    key: os.metrics.Layer.FEATURE_LABEL_TOGGLE
+  });
+  this.addChild(labelLeaf, {
+    label: 'Select a feature label column',
+    description: 'Controls the data column used for labels on this feature.',
+    key: os.metrics.Layer.FEATURE_LABEL_COLUMN_SELECT
   });
 
   var contextLayersMenuLeaf = this.addChild(leaf, {
