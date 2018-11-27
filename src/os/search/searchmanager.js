@@ -34,10 +34,9 @@ os.search.ProviderResults;
  * Responsible for executing search terms against the registered searches
  * @extends {os.search.AbstractSearchManager}
  * @param {string=} opt_id
- * @param {boolean=} opt_isFederated
  * @constructor
  */
-os.search.SearchManager = function(opt_id, opt_isFederated) {
+os.search.SearchManager = function(opt_id) {
   os.search.SearchManager.base(this, 'constructor', opt_id);
 
   /**
@@ -76,12 +75,6 @@ os.search.SearchManager = function(opt_id, opt_isFederated) {
    * @private
    */
   this.total_ = 0;
-
-  /**
-   * @type {boolean}
-   * @private
-   */
-  this.isFederated_ = !!opt_isFederated;
 };
 goog.inherits(os.search.SearchManager, os.search.AbstractSearchManager);
 goog.addSingletonGetter(os.search.SearchManager);
@@ -145,8 +138,10 @@ os.search.SearchManager.prototype.registerSearch = function(search) {
 /**
  * @inheritDoc
  */
-os.search.SearchManager.prototype.getRegisteredSearches = function() {
-  return goog.object.getValues(this.registeredSearches_);
+os.search.SearchManager.prototype.getRegisteredSearches = function(opt_excludeExternal) {
+  return goog.object.getValues(this.registeredSearches_).filter(function(search) {
+    return (!opt_excludeExternal || !search.isExternal());
+  });
 };
 
 
@@ -421,7 +416,7 @@ os.search.SearchManager.prototype.getTotal = function() {
  * @export
  */
 os.search.SearchManager.prototype.isFederated = function() {
-  return this.isFederated_;
+  return !this.getRegisteredSearches(true).length;
 };
 
 
