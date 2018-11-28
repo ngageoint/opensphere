@@ -94,6 +94,15 @@ os.ui.menu.Menu.prototype.setRoot = function(root) {
 
 
 /**
+ * If the menu is currently open.
+ * @return {boolean}
+ */
+os.ui.menu.Menu.prototype.isOpen = function() {
+  return this.isOpen_;
+};
+
+
+/**
  * Handle click event.
  * @param {Event} e The event.
  * @private
