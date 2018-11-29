@@ -36,10 +36,18 @@ os.ui.capture.AbstractCapturePlugin = function() {
   this.checkedSupport_ = false;
 
   /**
+   * Renderers that are static for each frame.
    * @type {!Array<!os.ui.capture.ElementRenderer>}
    * @protected
    */
-  this.renderers = this.initRenderers();
+  this.staticRenderers = this.initRenderers();
+
+  /**
+   * The current set of renderers for the frame.
+   * @type {!Array<!os.ui.capture.ElementRenderer>}
+   * @protected
+   */
+  this.renderers = [];
 };
 goog.inherits(os.ui.capture.AbstractCapturePlugin, os.plugin.AbstractPlugin);
 
@@ -77,8 +85,27 @@ os.ui.capture.AbstractCapturePlugin.prototype.initRenderers = function() {
  * @param {!os.ui.capture.ElementRenderer} renderer The renderer.
  */
 os.ui.capture.AbstractCapturePlugin.prototype.addRenderer = function(renderer) {
-  this.renderers.push(renderer);
-  this.renderers.sort(os.ui.capture.rendererPrioritySort);
+  this.staticRenderers.push(renderer);
+  this.staticRenderers.sort(os.ui.capture.rendererPrioritySort);
+};
+
+
+/**
+ * Get dynamic renderers for the current frame.
+ * @return {!Array<!os.ui.capture.ElementRenderer>}
+ * @protected
+ */
+os.ui.capture.AbstractCapturePlugin.prototype.getDynamicRenderers = function() {
+  return [];
+};
+
+
+/**
+ * Update renderers that change by frame.
+ * @private
+ */
+os.ui.capture.AbstractCapturePlugin.prototype.updateRenderers_ = function() {
+  this.renderers = this.staticRenderers.concat(this.getDynamicRenderers());
 };
 
 
@@ -170,6 +197,8 @@ os.ui.capture.AbstractCapturePlugin.prototype.record_ = function() {
  */
 os.ui.capture.AbstractCapturePlugin.prototype.getCanvas = function() {
   return new goog.Promise(function(resolve, reject) {
+    this.updateRenderers_();
+
     var canvas = null;
 
     var height = 0;

@@ -7,6 +7,7 @@ goog.require('goog.object');
 goog.require('goog.string');
 goog.require('ol.array');
 goog.require('os.Fields');
+goog.require('os.annotation');
 goog.require('os.ex.ZipExporter');
 goog.require('os.file.File');
 goog.require('os.instanceOf');
@@ -129,14 +130,6 @@ os.ui.file.kml.AbstractKMLExporter = function() {
    */
   this.styles_ = {};
 
-
-  /**
-   * The column used for feature icon rotation
-   * @type {string|null|undefined}
-   * @private
-   */
-  this.rotationColumn_ = null;
-
   /**
    * If the item color should be used for icons.
    * @type {boolean}
@@ -200,7 +193,6 @@ os.ui.file.kml.AbstractKMLExporter.prototype.reset = function() {
   this.icon_ = null;
   this.styles_ = {};
   this.labelMap = {};
-  this.rotationColumn_ = null;
 };
 
 
@@ -537,9 +529,6 @@ os.ui.file.kml.AbstractKMLExporter.prototype.processPlacemark = function(element
     os.xml.appendElementNS('styleUrl', this.kmlNS, element, '#' + styleId);
   }
 
-  if (this.rotationColumn_ === null) {
-    this.rotationColumn_ = this.getRotationColumn(item);
-  }
   var pStyleEl = this.createPlacemarkMergedStyle(element, item);
   if (pStyleEl) {
     element.appendChild(pStyleEl);
@@ -607,17 +596,24 @@ os.ui.file.kml.AbstractKMLExporter.prototype.processPlacemark = function(element
             'name': fields[i]
           });
           os.xml.appendElementNS('value', this.kmlNS, dataEl, String(val));
+        } else if (fields[i] === os.annotation.OPTIONS_FIELD) {
+          // write annotation options to JSON
+          var dataEl = os.xml.appendElementNS('Data', this.kmlNS, ed, undefined, {
+            'name': os.annotation.OPTIONS_FIELD
+          });
+          os.xml.appendElementNS('value', this.kmlNS, dataEl, JSON.stringify(val));
         }
       }
     }
 
     // Some fields do not get automatically exported (e.g., fields that are not visible)
     // if the rotation column is one of those fields create its data element here
-    if (this.rotationColumn_ != null && !ol.array.includes(fields, this.rotationColumn_)) {
+    var rotationColumn = this.getRotationColumn(item);
+    if (rotationColumn != null && !ol.array.includes(fields, rotationColumn)) {
       var rotDataEl = os.xml.appendElementNS('Data', this.kmlNS, ed, undefined, {
-        'name': this.rotationColumn_
+        'name': rotationColumn
       });
-      os.xml.appendElementNS('value', this.kmlNS, rotDataEl, String(this.getField(item, this.rotationColumn_)));
+      os.xml.appendElementNS('value', this.kmlNS, rotDataEl, String(this.getField(item, rotationColumn)));
     }
   }
 
@@ -636,16 +632,25 @@ os.ui.file.kml.AbstractKMLExporter.prototype.processPlacemark = function(element
  * @template T
  */
 os.ui.file.kml.AbstractKMLExporter.prototype.createPlacemarkMergedStyle = function(placemarkEl, item) {
-  if (this.rotationColumn_) {
-    var heading = /** @type {number} */ (this.getField(item, this.rotationColumn_));
+  var styleEl = null;
+
+  var rotationColumn = this.getRotationColumn(item);
+  if (rotationColumn) {
+    var heading = /** @type {number} */ (this.getField(item, rotationColumn));
     if (!isNaN(heading)) {
-      var mergeStyleEl = os.xml.createElementNS('Style', this.kmlNS, this.doc);
-      var mergeIconStyleEl = os.xml.appendElementNS('IconStyle', this.kmlNS, mergeStyleEl);
-      os.xml.appendElementNS('heading', this.kmlNS, mergeIconStyleEl, heading % 360);
-      return mergeStyleEl;
+      styleEl = styleEl || os.xml.createElementNS('Style', this.kmlNS, this.doc);
+      var iconStyleEl = os.xml.appendElementNS('IconStyle', this.kmlNS, styleEl);
+      os.xml.appendElementNS('heading', this.kmlNS, iconStyleEl, heading % 360);
     }
   }
-  return null;
+
+  var balloonOptions = this.getBalloonOptions(item);
+  if (balloonOptions && balloonOptions.text) {
+    styleEl = styleEl || os.xml.createElementNS('Style', this.kmlNS, this.doc);
+    this.writeBalloonStyle(styleEl, balloonOptions);
+  }
+
+  return styleEl;
 };
 
 
@@ -952,4 +957,40 @@ os.ui.file.kml.AbstractKMLExporter.prototype.getTime = goog.abstractMethod;
  */
 os.ui.file.kml.AbstractKMLExporter.prototype.getGroupLabels = function(item) {
   return null;
+};
+
+
+/**
+ * Get the KML balloon style options for the item.
+ * @param {T} item The item.
+ * @return {?osx.annotation.KMLBalloon} The balloon options.
+ * @protected
+ * @template T
+ */
+os.ui.file.kml.AbstractKMLExporter.prototype.getBalloonOptions = function(item) {
+  return null;
+};
+
+
+/**
+ * Add a BalloonStyle to a Style element.
+ * @param {!Element} styleEl The Style element.
+ * @param {!osx.annotation.KMLBalloon} options The balloon options.
+ * @protected
+ */
+os.ui.file.kml.AbstractKMLExporter.prototype.writeBalloonStyle = function(styleEl, options) {
+  var balloonStyleEl = os.xml.appendElementNS('BalloonStyle', this.kmlNS, styleEl);
+  os.xml.appendElementNS('text', this.kmlNS, balloonStyleEl, options.text);
+
+  if (options.bgColor != null) {
+    os.xml.appendElementNS('bgColor', this.kmlNS, balloonStyleEl, options.bgColor);
+  }
+
+  if (options.textColor != null) {
+    os.xml.appendElementNS('textColor', this.kmlNS, balloonStyleEl, options.textColor);
+  }
+
+  if (options.displayMode != null) {
+    os.xml.appendElementNS('displayMode', this.kmlNS, balloonStyleEl, options.displayMode);
+  }
 };

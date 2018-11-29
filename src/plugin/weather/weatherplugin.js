@@ -35,7 +35,7 @@ plugin.weather.WeatherPlugin.prototype.init = function() {
   var menu = os.ui.menu.MAP;
 
   if (url && menu) {
-    var group = menu.getRoot().find('Coordinate');
+    var group = menu.getRoot().find(os.ui.menu.map.GroupLabel.COORDINATE);
 
     if (group) {
       group.addChild({
