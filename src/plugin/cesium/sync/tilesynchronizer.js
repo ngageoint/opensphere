@@ -380,11 +380,12 @@ plugin.cesium.sync.TileSynchronizer.prototype.getTimeParameter_ = function(offse
   goog.asserts.assertInstanceof(this.layer, os.layer.AnimatedTile);
 
   var dateFormat = this.layer.getDateFormat();
+  var timeFormat = this.layer.getTimeFormat();
   var duration = this.tlc.getDuration();
   var start = this.tlc.getCurrent() - this.tlc.getOffset();
   var end = this.tlc.getCurrent();
 
-  return os.layer.AnimatedTile.getTimeParameter(dateFormat,
+  return os.layer.AnimatedTile.getTimeParameter(dateFormat, timeFormat,
       os.time.offset(new Date(start), duration, offset).getTime(),
       os.time.offset(new Date(end), duration, offset).getTime(),
       duration);
