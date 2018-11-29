@@ -145,6 +145,13 @@ os.ui.search.SearchBoxCtrl = function($scope, $element) {
    */
   this['searchOptionsNoGroup'] = [];
 
+
+  /**
+   * Listener for click event
+   * @type {?goog.events.ListenableKey|number}
+   */
+  this.listenKey = null;
+
   this.setUpGroups();
 
   // make sure the plugin manager is loaded before migrating recent searches, or they will not be migrated correctly.
@@ -155,8 +162,8 @@ os.ui.search.SearchBoxCtrl = function($scope, $element) {
     pm.listenOnce(goog.events.EventType.LOAD, this.validateRecents_, false, this);
   }
 
-  this.onFavoritesUpdate_();
-  os.settings.listen(os.user.settings.FavoriteManager.KEY, this.onFavoritesUpdate_, false, this);
+  this.onFavoritesUpdate();
+  os.settings.listen(os.user.settings.FavoriteManager.KEY, this.onFavoritesUpdate, false, this);
   $scope.$on('$destroy', this.destroy.bind(this));
 };
 
@@ -177,12 +184,17 @@ os.ui.search.SearchBoxCtrl.MAX_RECENT_ = 5;
 os.ui.search.SearchBoxCtrl.prototype.destroy = function() {
   goog.events.unlisten(this.element[0], 'click', this.onClick_, false, this);
 
+  if (this.listenKey) {
+    goog.events.unlistenByKey(this.listenKey);
+    this.listenKey = null;
+  }
+
   this.searchManager.unlisten(goog.events.EventType.CHANGE, this.onSearchManagerChange_, false, this);
   this.searchManager.unlisten(os.search.SearchEventType.START, this.onSearchStart_, false, this);
   this.searchManager.unlisten(os.search.SearchEventType.AUTOCOMPLETED, this.populateAutocomplete_, false, this);
   this.searchManager.unlisten(os.search.SearchEventType.SUCCESS, this.onSearchSuccess_, false, this);
   os.dispatcher.unlisten(os.search.SearchEventType.REFRESH, this.search, false, this);
-  os.settings.unlisten(os.user.settings.FavoriteManager.KEY, this.onFavoritesUpdate_);
+  os.settings.unlisten(os.user.settings.FavoriteManager.KEY, this.onFavoritesUpdate);
 
   this.element = null;
   this.scope = null;
@@ -328,7 +340,7 @@ os.ui.search.SearchBoxCtrl.prototype.onSearchManagerChange_ = function(opt_event
   this.setUpGroups();
 
   // update the favorites
-  this.onFavoritesUpdate_();
+  this.onFavoritesUpdate();
 
   if (!this['allowMultiple']) {
     // if multiple providers aren't allowed, make sure only one is enabled
@@ -634,36 +646,6 @@ os.ui.search.SearchBoxCtrl.prototype.getPlaceholderText = function(opt_ids) {
 
 
 /**
- * Gets the selected search options to display
- * @return {string}
- * @export
- */
-os.ui.search.SearchBoxCtrl.prototype.getDropdownText = function() {
-  if (this['searchOptions'].length > 0) {
-    var enabled = this['searchOptions'].filter(function(search) {
-      return search.isEnabled();
-    });
-
-    if (enabled.length == 1) {
-      return enabled[0].getName();
-    } else if (enabled.length == this['searchOptions'].length) {
-      return 'All';
-    } else if (enabled.length == 0) {
-      return 'None';
-    } else {
-      var selectedGroup = this.singleGroupSelected();
-      if (selectedGroup) {
-        return selectedGroup;
-      }
-      return enabled.length + ' Types';
-    }
-  }
-
-  return 'None';
-};
-
-
-/**
  * Get the detail text to display for a recent search.
  * @param {!osx.search.RecentSearch} recent The recent search object
  * @return {string}
@@ -797,7 +779,7 @@ os.ui.search.SearchBoxCtrl.prototype.toggleSearchOptions = function(event) {
   if (this['showSearchOptions']) {
     // save the ids of currently enabled searches
     var enabledIds = this.searchManager.getEnabledSearches().map(os.search.getSearchId).sort();
-    var listenKey = goog.events.listen(document, 'click', function(e) {
+    this.listenKey = goog.events.listen(document, 'click', function(e) {
       if (this.element) {
         var event = /** @type {goog.events.BrowserEvent} */ (e);
         var optionsEl = this.element.find('.js-searchbox__search-options')[0] || null;
@@ -813,7 +795,7 @@ os.ui.search.SearchBoxCtrl.prototype.toggleSearchOptions = function(event) {
         var recentClicked = goog.dom.contains(recentsEl, event.target);
         if (event.getBrowserEvent() != originalEvent && (!optionsClicked || recentClicked || !this['allowMultiple'])) {
           // clean up the listener and kill the event
-          goog.events.unlistenByKey(listenKey);
+          goog.events.unlistenByKey(this.listenKey);
           event.stopPropagation();
 
           // close options
@@ -831,7 +813,7 @@ os.ui.search.SearchBoxCtrl.prototype.toggleSearchOptions = function(event) {
           os.ui.apply(this.scope);
         }
       }
-    }, false, this);
+    }, true, this);
   }
 };
 
@@ -921,9 +903,9 @@ os.ui.search.SearchBoxCtrl.prototype.favoriteSearch = function(favorite) {
 
 /**
  * Update the favorites
- * @private
+ * @protected
  */
-os.ui.search.SearchBoxCtrl.prototype.onFavoritesUpdate_ = function() {
+os.ui.search.SearchBoxCtrl.prototype.onFavoritesUpdate = function() {
   // Read in favorites
   this['favorites'] = os.searchManager.getFavorites(5);
   os.ui.apply(this.scope);
