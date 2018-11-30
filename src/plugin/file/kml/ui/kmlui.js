@@ -21,7 +21,9 @@ plugin.file.kml.ui.FolderOptions;
 
 /**
  * @typedef {{
+ *   annotation: (boolean|undefined),
  *   feature: (ol.Feature|undefined),
+ *   geometry: (ol.geom.Geometry|undefined),
  *   node: (plugin.file.kml.ui.KMLNode|undefined),
  *   parent: (plugin.file.kml.ui.KMLNode|undefined)
  * }}

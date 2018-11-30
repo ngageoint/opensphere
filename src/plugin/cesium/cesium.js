@@ -40,7 +40,8 @@ plugin.cesium.GeometryInstanceId = {
  */
 plugin.cesium.SettingsKey = {
   ION_URL: 'cesium.ionUrl',
-  LOAD_TIMEOUT: 'cesium.loadTimeout'
+  LOAD_TIMEOUT: 'cesium.loadTimeout',
+  SKYBOX_OPTIONS: 'cesium.skyBoxOptions'
 };
 
 
@@ -196,6 +197,25 @@ plugin.cesium.getDefaultTerrainProvider = function() {
 
 
 /**
+ * Get the default SkyBox using Cesium's assets.
+ * @return {!Cesium.SkyBoxOptions}
+ */
+plugin.cesium.getDefaultSkyBoxOptions = function() {
+  var baseUrl = os.ROOT + plugin.cesium.LIBRARY_BASE_PATH + '/Assets/Textures/SkyBox/';
+  return /** @type {!Cesium.SkyBoxOptions} */ ({
+    sources: {
+      positiveX: baseUrl + 'tycho2t3_80_px.jpg',
+      negativeX: baseUrl + 'tycho2t3_80_mx.jpg',
+      positiveY: baseUrl + 'tycho2t3_80_py.jpg',
+      negativeY: baseUrl + 'tycho2t3_80_my.jpg',
+      positiveZ: baseUrl + 'tycho2t3_80_pz.jpg',
+      negativeZ: baseUrl + 'tycho2t3_80_mz.jpg'
+    }
+  });
+};
+
+
+/**
  * The Cesium Julian date object.
  * @type {Cesium.JulianDate|undefined}
  * @private
@@ -286,12 +306,6 @@ plugin.cesium.tileLayerToImageryLayer = function(olLayer, viewProj) {
   var source = olLayer.getSource();
   var provider = null;
 
-  // handle special cases before the general synchronization
-  if (source instanceof ol.source.WMTS) {
-    // WMTS uses different TileGrid which is not currently supported
-    return null;
-  }
-
   if (source instanceof ol.source.TileImage) {
     var projection = source.getProjection();
 
@@ -300,8 +314,8 @@ plugin.cesium.tileLayerToImageryLayer = function(olLayer, viewProj) {
       projection = viewProj;
     }
 
-    var is3857 = projection === ol.proj.get(os.proj.EPSG3857);
-    var is4326 = projection === ol.proj.get(os.proj.EPSG4326);
+    var is3857 = ol.proj.equivalent(projection, ol.proj.get(os.proj.EPSG3857));
+    var is4326 = ol.proj.equivalent(projection, ol.proj.get(os.proj.EPSG4326));
     if (is3857 || is4326) {
       provider = new plugin.cesium.ImageryProvider(source, viewProj);
     } else {

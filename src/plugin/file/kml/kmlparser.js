@@ -17,6 +17,7 @@ goog.require('ol.geom.flat.inflate');
 goog.require('ol.layer.Image');
 goog.require('ol.source.ImageStatic');
 goog.require('ol.xml');
+goog.require('os.annotation');
 goog.require('os.data.ColumnDefinition');
 goog.require('os.file.mime.text');
 goog.require('os.file.mime.zip');
@@ -124,6 +125,13 @@ plugin.file.kml.KMLParser = function(options) {
    * @private
    */
   this.styleMap_ = {};
+
+  /**
+   * The KML balloon style config map.
+   * @type {!Object<string, !Object>}
+   * @private
+   */
+  this.balloonStyleMap = {};
 
   /**
    * The KML style config map for highlight styles from StyleMap tags
@@ -246,6 +254,7 @@ plugin.file.kml.KMLParser.prototype.cleanup = function() {
   this.columnMap_ = null;
   this.stack_.length = 0;
   this.styleMap_ = {};
+  this.balloonStyleMap = {};
   this.unnamedCount_ = 0;
   this.screenOverlayCount_ = 0;
   this.minRefreshPeriod_ = 0;
@@ -842,6 +851,86 @@ plugin.file.kml.KMLParser.prototype.createTreeNode_ = function(el, opt_parent) {
 
 
 /**
+ * Examine styles that are unsupported in OpenLayers KML styles.
+ * @param {Node} node Node.
+ * @private
+ */
+plugin.file.kml.KMLParser.prototype.examineStyles_ = function(node) {
+  var n;
+  for (n = node.firstElementChild; n; n = n.nextElementSibling) {
+    if (n.localName == 'BalloonStyle') {
+      var properties = ol.xml.pushParseAndPop({}, plugin.file.kml.BALLOON_PROPERTY_PARSERS, n, []);
+      if (properties) {
+        var id = node.id || node.getAttribute('id');
+        this.balloonStyleMap[id] = properties;
+      }
+    }
+  }
+};
+
+
+/**
+ * Read the KML balloon style.
+ * @param {Element} el The XML element
+ * @param {ol.Feature} feature The feature
+ * @private
+ *
+ * @suppress {accessControls} To allow direct access to feature metadata.
+ */
+plugin.file.kml.KMLParser.prototype.readBalloonStyle_ = function(el, feature) {
+  if (feature.get(os.annotation.OPTIONS_FIELD)) {
+    // annotation options already set
+    return;
+  }
+
+  var style;
+  var balloonEl = el.querySelector('BalloonStyle');
+  if (balloonEl) {
+    // the placemark has an internal balloon style
+    style = ol.xml.pushParseAndPop({}, plugin.file.kml.BALLOON_PROPERTY_PARSERS, balloonEl, []);
+  } else {
+    // look for a balloon style referenced by styleUrl
+    var styleUrl = /** @type {string} */ (feature.get('styleUrl'));
+    var styleId = this.getStyleId(decodeURIComponent(styleUrl));
+    style = styleId in this.balloonStyleMap ? this.balloonStyleMap[styleId] : null;
+  }
+
+  if (style) {
+    var text = style['text'];
+    var pattern = /[$]\[(.*?)\]/g;
+    var regex = new RegExp(pattern);
+
+    text = text.replace(regex, function(match, key) {
+      if (key in feature.values_) {
+        return feature.get(key);
+      } else {
+        return '';
+      }
+    });
+
+    text = os.ui.sanitize(text);
+
+    //
+    // For imported KML balloons:
+    //  - Disable editing
+    //  - Hide if displayMode is set to 'hide'
+    //  - Hide the name header in the annotation
+    //  - Size the overlay to fit the text
+    //
+    var annotationOptions =
+        /** @type {osx.annotation.Options} */ (os.object.unsafeClone(os.annotation.DEFAULT_OPTIONS));
+    annotationOptions.editable = false;
+    annotationOptions.show = style['displayMode'] !== 'hide';
+    annotationOptions.showName = false;
+    os.annotation.scaleToText(annotationOptions, text);
+
+    feature.set(os.annotation.OPTIONS_FIELD, annotationOptions);
+    feature.set(os.ui.FeatureEditCtrl.Field.MD_DESCRIPTION, text);
+  }
+};
+
+
+/**
  * Creates a tree node from an XML element
  * @param {Element} el The XML element
  * @return {plugin.file.kml.ui.KMLNode} The tree node
@@ -1054,6 +1143,11 @@ plugin.file.kml.KMLParser.prototype.readPlacemark_ = function(el) {
     var id = this.id_ + '#' + baseId;
     feature.setId(id);
     object[os.Fields.ID] = object[os.Fields.ID] || baseId;
+
+    // parse annotation options from JSON
+    if (object[os.annotation.OPTIONS_FIELD] && typeof object[os.annotation.OPTIONS_FIELD] === 'string') {
+      object[os.annotation.OPTIONS_FIELD] = JSON.parse(object[os.annotation.OPTIONS_FIELD]);
+    }
 
     feature.setProperties(object);
 
@@ -1333,9 +1427,13 @@ plugin.file.kml.KMLParser.prototype.applyStyles_ = function(el, feature) {
   // style from style url
   var styleUrl = /** @type {string} */ (feature.get('styleUrl'));
   if (styleUrl) {
-    styleSets.push(this.findStyle_(decodeURIComponent(styleUrl)));
-    highlightStyle = this.findStyle_(decodeURIComponent(styleUrl), true);
+    var styleId = this.getStyleId(decodeURIComponent(styleUrl));
+    styleSets.push(styleId in this.styleMap_ ? this.styleMap_[styleId] : null);
+    highlightStyle = styleId in this.highlightStyleMap_ ? this.highlightStyleMap_[styleId] : null;
   }
+
+  this.readBalloonStyle_(el, feature);
+
 
   // local style
   var styles = /** @type {Array<ol.style.Style>} */ (feature.get(plugin.file.kml.STYLE_KEY));
@@ -1423,6 +1521,8 @@ plugin.file.kml.KMLParser.prototype.extractStyles_ = function(el) {
   var styleEls = os.xml.getChildrenByTagName(el, 'Style');
   for (var i = 0, n = styleEls.length; i < n; i++) {
     var style = styleEls[i];
+
+    this.examineStyles_(style);
 
     var styles = plugin.file.kml.readStyle(style, []);
     var id = style.id || style.getAttribute('id');
@@ -1587,21 +1687,17 @@ plugin.file.kml.KMLParser.prototype.mapStyleToConfig_ = function(style) {
 
 
 /**
- * Finds the first instance of a style id on the style stack
- * @param {string} id The style id
- * @param {boolean=} opt_highlight Whether to check the highlight style map
- * @return {Array<Object>} The style configs, or null if not found
- * @private
+ * Parse the StyleUrl into the correct id format.
+ * @param {string} id The StyleUrl.
+ * @return {string} The Parsed Style id.
  */
-plugin.file.kml.KMLParser.prototype.findStyle_ = function(id, opt_highlight) {
+plugin.file.kml.KMLParser.prototype.getStyleId = function(id) {
   var x = id.indexOf('#');
 
   if (x > -1) {
     id = id.substring(x + 1);
   }
-
-  var map = opt_highlight ? this.highlightStyleMap_ : this.styleMap_;
-  return id in map ? map[id] : null;
+  return id;
 };
 
 

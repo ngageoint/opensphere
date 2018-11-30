@@ -52,6 +52,7 @@ os.config.DisplaySetting = {
   MAP_MODE: os.config.DisplaySettings.BASE_KEY + 'mapMode',
   FOG_ENABLED: os.config.DisplaySettings.BASE_KEY + 'fogEnabled',
   FOG_DENSITY: os.config.DisplaySettings.BASE_KEY + 'fogDensity',
+  ENABLE_SKY: os.config.DisplaySettings.BASE_KEY + 'enableSky',
   ENABLE_LIGHTING: os.config.DisplaySettings.BASE_KEY + 'enableLighting',
   ENABLE_TERRAIN: os.config.DisplaySettings.BASE_KEY + 'enableTerrain',
   TERRAIN_OPTIONS: os.config.DisplaySettings.BASE_KEY + 'terrainOptions'
@@ -111,6 +112,7 @@ os.config.DisplaySettingsCtrl = function($scope) {
   this['help'] = {
     'fog': 'Fog is displayed when tilting the globe to reduce rendered tiles and terrain near the horizon. Disabling ' +
         'fog or reducing density may degrade application performance.',
+    'sky': 'Show the sky/stars around the 3D globe.',
     'sunlight': 'Light the 3D scene with the Sun.',
     'terrain': 'Show terrain on the 3D globe.'
   };
@@ -175,6 +177,12 @@ os.config.DisplaySettingsCtrl = function($scope) {
   this['fogDensity'] = density;
 
   /**
+   * If the sky is enabled on the 3D globe.
+   * @type {boolean}
+   */
+  this['skyEnabled'] = /** @type {boolean} */ (os.settings.get(os.config.DisplaySetting.ENABLE_SKY, false));
+
+  /**
    * If sunlight is enabled on the 3D globe.
    * @type {boolean}
    */
@@ -191,6 +199,7 @@ os.config.DisplaySettingsCtrl = function($scope) {
 
   os.settings.listen(os.config.DisplaySetting.CAMERA_STATE, this.onCameraStateChange_, false, this);
   os.settings.listen(os.config.DisplaySetting.MAP_MODE, this.onMapModeChange_, false, this);
+  os.settings.listen(os.config.DisplaySetting.ENABLE_SKY, this.onSkyChange_, false, this);
   os.settings.listen(os.config.DisplaySetting.ENABLE_LIGHTING, this.onSunlightChange_, false, this);
   os.settings.listen(os.config.DisplaySetting.ENABLE_TERRAIN, this.onTerrainChange_, false, this);
 
@@ -207,6 +216,7 @@ os.config.DisplaySettingsCtrl = function($scope) {
 os.config.DisplaySettingsCtrl.prototype.destroy_ = function() {
   os.settings.unlisten(os.config.DisplaySetting.CAMERA_STATE, this.onCameraStateChange_, false, this);
   os.settings.unlisten(os.config.DisplaySetting.MAP_MODE, this.onMapModeChange_, false, this);
+  os.settings.unlisten(os.config.DisplaySetting.ENABLE_SKY, this.onSkyChange_, false, this);
   os.settings.unlisten(os.config.DisplaySetting.ENABLE_LIGHTING, this.onSunlightChange_, false, this);
   os.settings.unlisten(os.config.DisplaySetting.ENABLE_TERRAIN, this.onTerrainChange_, false, this);
 
@@ -399,6 +409,19 @@ os.config.DisplaySettingsCtrl.prototype.updateFog = function() {
 
 
 /**
+ * Handle changes to the sky enabled setting.
+ * @param {os.events.SettingChangeEvent} event
+ * @private
+ */
+os.config.DisplaySettingsCtrl.prototype.onSkyChange_ = function(event) {
+  if (!this.ignoreSettingsEvents_ && event.newVal !== this['skyEnabled']) {
+    this['skyEnabled'] = event.newVal;
+    os.ui.apply(this.scope_);
+  }
+};
+
+
+/**
  * Handle changes to the sunlight enabled setting.
  * @param {os.events.SettingChangeEvent} event
  * @private
@@ -431,6 +454,15 @@ os.config.DisplaySettingsCtrl.prototype.onTerrainChange_ = function(event) {
  */
 os.config.DisplaySettingsCtrl.prototype.supportsTerrain = function() {
   return os.config.isTerrainConfigured();
+};
+
+
+/**
+ * Update the globe sky display.
+ * @export
+ */
+os.config.DisplaySettingsCtrl.prototype.updateSky = function() {
+  this.updateSetting_(os.config.DisplaySetting.ENABLE_SKY, this['skyEnabled']);
 };
 
 

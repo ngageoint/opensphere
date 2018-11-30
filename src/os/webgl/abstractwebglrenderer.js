@@ -66,6 +66,7 @@ os.webgl.AbstractWebGLRenderer = function() {
   this.watchedSettings = [
     os.config.DisplaySetting.BG_COLOR,
     os.config.DisplaySetting.ENABLE_LIGHTING,
+    os.config.DisplaySetting.ENABLE_SKY,
     os.config.DisplaySetting.ENABLE_TERRAIN,
     os.config.DisplaySetting.FOG_ENABLED,
     os.config.DisplaySetting.FOG_DENSITY,
@@ -219,6 +220,9 @@ os.webgl.AbstractWebGLRenderer.prototype.onSettingChange = function(event) {
         this.setBGColor(color);
       }
       break;
+    case os.config.DisplaySetting.ENABLE_SKY:
+      this.showSky(!!event.newVal);
+      break;
     case os.config.DisplaySetting.ENABLE_LIGHTING:
       this.showSunlight(!!event.newVal);
       break;
@@ -274,6 +278,16 @@ os.webgl.AbstractWebGLRenderer.prototype.setFogDensity = function(value) {
 
 
 /**
+ * Toggle if the sky is displayed.
+ * @param {boolean} value If the sky should be displayed.
+ * @protected
+ */
+os.webgl.AbstractWebGLRenderer.prototype.showSky = function(value) {
+  // implement to support sky
+};
+
+
+/**
  * Toggle if sunlight is displayed.
  * @param {boolean} value If sunlight should be displayed.
  * @protected
@@ -321,4 +335,12 @@ os.webgl.AbstractWebGLRenderer.prototype.getAltitudeModes = function() {
   return [
     os.webgl.AltitudeMode.ABSOLUTE
   ];
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.webgl.AbstractWebGLRenderer.prototype.onPostRender = function(callback) {
+  return undefined;
 };

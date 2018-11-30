@@ -71,7 +71,7 @@ os.ui.menu.buffer.layerDispose = function() {
 os.ui.menu.buffer.mapSetup = function() {
   var menu = os.ui.menu.MAP;
   if (menu && !menu.getRoot().find(os.action.EventType.BUFFER)) {
-    var group = menu.getRoot().find('Coordinate');
+    var group = menu.getRoot().find(os.ui.menu.map.GroupLabel.COORDINATE);
     goog.asserts.assert(group, 'Group should exist! Check spelling?');
 
     group.addChild({
@@ -91,7 +91,7 @@ os.ui.menu.buffer.mapSetup = function() {
 os.ui.menu.buffer.mapDispose = function() {
   var menu = os.ui.menu.MAP;
   if (menu) {
-    var group = menu.getRoot().find('Coordinate');
+    var group = menu.getRoot().find(os.ui.menu.map.GroupLabel.COORDINATE);
     if (group) {
       group.removeChild(os.action.EventType.BUFFER);
     }

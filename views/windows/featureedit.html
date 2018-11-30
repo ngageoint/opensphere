@@ -102,13 +102,13 @@
 
     </div>
 
-    <div ng-attr-id="{{featureControlsID}}" class="card">
+    <div ng-attr-id="featureControls{{ctrl.uid}}" class="card">
       <div class="btn btn-secondary btn-block" title="Style controls for the layer(s)"
-          data-toggle="collapse" data-target="#{{featureStyleID}}">
+          data-toggle="collapse" data-target="#featureStyle{{ctrl.uid}}">
         Style Options
       </div>
-      <div class="card-body collapse show"
-          ng-attr-id="{{featureStyleID}}" data-parent="#{{featureControlsID}}">
+      <div class="card-body collapse"
+          data-parent="#featureControls{{ctrl.uid}}" ng-attr-id="featureStyle{{ctrl.uid}}">
         <vectorstylecontrols
             color="ctrl.color"
             opacity="ctrl.opacity"
@@ -128,11 +128,11 @@
 
       <div ng-show="ctrl.labelColumns">
         <div class="btn btn-secondary btn-block" title="Configure how labels are displayed for the feature"
-            data-toggle="collapse" data-target="#{{featureLabelsID}}">
+            data-toggle="collapse" data-target="#featureLabels{{ctrl.uid}}">
           Label Options
         </div>
         <div class="card-body collapse"
-            data-parent="#{{featureControlsID}}" ng-attr-id="{{featureLabelsID}}">
+            data-parent="#featureControls{{ctrl.uid}}" ng-attr-id="featureLabels{{ctrl.uid}}">
           <labelcontrols
               labels="ctrl.labels"
               columns="ctrl.labelColumns"
@@ -142,17 +142,18 @@
           </labelcontrols>
         </div>
       </div>
+      <div list list-id="optionsList{{ctrl.uid}}"></div>
     </div>
   </div>
 
   <div class="modal-footer">
-      <button class="btn btn-primary" ng-click="ctrl.accept()" ng-disabled="featureEditForm.$invalid">
-        <i class="fa fa-check"></i>
-        OK
-      </button>
-      <button class="btn btn-secondary" ng-click="ctrl.cancel()">
-        <i class="fa fa-ban"></i>
-        Cancel
-      </button>
+    <button class="btn btn-primary" ng-click="ctrl.accept()" ng-disabled="featureEditForm.$invalid">
+      <i class="fa fa-check"></i>
+      OK
+    </button>
+    <button class="btn btn-secondary" ng-click="ctrl.cancel()">
+      <i class="fa fa-ban"></i>
+      Cancel
+    </button>
   </div>
 </div>
