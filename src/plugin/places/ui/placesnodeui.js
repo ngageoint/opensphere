@@ -11,9 +11,14 @@ goog.require('os.ui.node.DefaultLayerNodeUICtrl');
  */
 plugin.places.ui.PlacesNodeUITemplate = '<span ng-if="nodeUi.show()" class="d-flex flex-shrink-0">' +
       '<span ng-if="nodeUi.canEdit()" ng-click="nodeUi.addFolder()">' +
-        '<i class="fa fa-folder fa-fw c-glyph" title="Create a new folder"></i></span>' +
+        '<i class="fa ' + plugin.places.Icon.FOLDER + ' fa-fw c-glyph" title="Create a new folder"></i>' +
+      '</span>' +
       '<span ng-if="nodeUi.canEdit()" ng-click="nodeUi.addPlace()">' +
-        '<i class="fa fa-map-marker fa-fw c-glyph" title="Create a new place"></i></span>' +
+        '<i class="fa ' + plugin.places.Icon.PLACEMARK + ' fa-fw c-glyph" title="Create a new place"></i>' +
+      '</span>' +
+      '<span ng-if="nodeUi.canEdit()" ng-click="nodeUi.addAnnotation()">' +
+        '<i class="fa ' + plugin.places.Icon.ANNOTATION + ' fa-fw c-glyph" title="Create a new annotation"></i>' +
+      '</span>' +
 
       '<span ng-if="nodeUi.isRemovable()" ng-click="nodeUi.remove()">' +
       '<i class="fa fa-times fa-fw c-glyph" title="Remove the place></i></span>' +
@@ -54,6 +59,24 @@ plugin.places.ui.PlacesNodeUICtrl = function($scope, $element) {
   plugin.places.ui.PlacesNodeUICtrl.base(this, 'constructor', $scope, $element);
 };
 goog.inherits(plugin.places.ui.PlacesNodeUICtrl, os.ui.node.DefaultLayerNodeUICtrl);
+
+
+/**
+ * Add a new folder.
+ * @export
+ */
+plugin.places.ui.PlacesNodeUICtrl.prototype.addAnnotation = function() {
+  var node = /** @type {plugin.file.kml.ui.KMLLayerNode} */ (this.scope['item']);
+  if (node) {
+    var rootNode = plugin.places.getPlacesRoot(node);
+    if (rootNode) {
+      plugin.file.kml.ui.createOrEditPlace(/** @type {!plugin.file.kml.ui.FolderOptions} */ ({
+        'annotation': true,
+        'parent': rootNode
+      }));
+    }
+  }
+};
 
 
 /**

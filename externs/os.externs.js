@@ -16,6 +16,37 @@ var osx;
  * Namespace.
  * @type {Object}
  */
+osx.annotation;
+
+
+/**
+ * @typedef {{
+ *   editable: boolean,
+ *   show: boolean,
+ *   showName: boolean,
+ *   showDescription: boolean,
+ *   size: !Array<number>,
+ *   offset: !Array<number>
+ * }}
+ */
+osx.annotation.Options;
+
+
+/**
+ * @typedef {{
+ *   bgColor: (string|undefined),
+ *   textColor: (string|undefined),
+ *   text: (string|undefined),
+ *   displayMode: (string|undefined)
+ * }}
+ */
+osx.annotation.KMLBalloon;
+
+
+/**
+ * Namespace.
+ * @type {Object}
+ */
 osx.geo;
 
 
