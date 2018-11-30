@@ -449,7 +449,13 @@ plugin.cesium.CesiumRenderer.prototype.showSky = function(value) {
 plugin.cesium.CesiumRenderer.prototype.showSunlight = function(value) {
   var scene = this.olCesium_ ? this.olCesium_.getCesiumScene() : undefined;
   if (scene) {
+    if (!scene.sun) {
+      scene.sun = new Cesium.Sun();
+    }
+
+    scene.sun.show = value;
     scene.globe.enableLighting = value;
+
     os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
   }
 };
