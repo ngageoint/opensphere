@@ -81,7 +81,7 @@ os.alert.AlertManager.prototype.sendAlert = function(alert, opt_severity, opt_lo
       html.push('<a ');
       html.push('href="');
       html.push(url);
-      html.push('">');
+      html.push('" target="_blank">');
       html.push(os.ui.escapeHtml(alert.substring(i, i + match[0].length)));
       html.push('</a>');
       alert = alert.substring(i + match[0].length);
