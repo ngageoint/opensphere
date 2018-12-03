@@ -11,6 +11,7 @@ goog.require('os.file');
 goog.require('os.file.FileManager');
 goog.require('os.file.FileStorage');
 goog.require('os.storage.IDBStorage');
+goog.require('os.ui.file.AnyTypeImportUI');
 goog.require('os.ui.file.method.UrlMethod');
 goog.require('os.ui.im.ImportEvent');
 goog.require('os.ui.im.ImportEventType');
@@ -274,7 +275,8 @@ os.ui.im.ImportProcess.prototype.importFile = function(opt_config) {
         this.invalidFiletype();
       }
     } else {
-      this.abortImport('No import UI was registered for file type "' + type + '"!');
+      var anyType = new os.ui.file.AnyTypeImportUI();
+      anyType.launchUI(this.file);
     }
   } else {
     this.abortImport('Unable to import file!');
