@@ -2,8 +2,11 @@ goog.provide('os.olm.render.BaseShape');
 
 goog.require('goog.Disposable');
 goog.require('goog.asserts');
+goog.require('ol.Feature');
 goog.require('ol.events');
+goog.require('ol.layer.Vector');
 goog.require('ol.render.EventType');
+goog.require('ol.source.Vector');
 
 
 
@@ -22,15 +25,30 @@ os.olm.render.BaseShape = function(style) {
 
   /**
    * @private
-   * @type {?ol.EventsKey}
-   */
-  this.listenKey_ = null;
-
-  /**
-   * @private
    * @type {ol.style.Style}
    */
   this.style_ = style;
+
+  /**
+   * Draw overlay where our sketch features are drawn.
+   * @type {ol.layer.Vector}
+   * @private
+   */
+  this.overlay_ = new ol.layer.Vector({
+    source: new ol.source.Vector({
+      useSpatialIndex: false,
+      wrapX: os.map.PROJECTION.canWrapX()
+    }),
+    style: style,
+    updateWhileAnimating: true,
+    updateWhileInteracting: true
+  });
+
+  /**
+   * @type {ol.Feature}
+   * @private
+   */
+  this.feature_ = new ol.Feature();
 };
 goog.inherits(os.olm.render.BaseShape, goog.Disposable);
 
@@ -47,8 +65,14 @@ os.olm.render.BaseShape.prototype.disposeInternal = function() {
  * @protected
  */
 os.olm.render.BaseShape.prototype.render = function() {
-  if (this.map_ !== null && this.getGeometry()) {
-    this.map_.render();
+  var geom = this.getGeometry();
+  var overlaySource = this.overlay_.getSource();
+  overlaySource.clear(true);
+
+  if (this.map_ !== null && geom) {
+    this.feature_.setGeometry(geom);
+    this.feature_.setStyle(this.getStyle());
+    overlaySource.addFeature(this.feature_);
   }
 };
 
@@ -65,35 +89,9 @@ os.olm.render.BaseShape.prototype.getMap = function() {
  * @param {ol.PluggableMap} map Map.
  */
 os.olm.render.BaseShape.prototype.setMap = function(map) {
-  if (this.listenKey_ !== null) {
-    ol.events.unlistenByKey(this.listenKey_);
-    this.listenKey_ = null;
-    this.map_.render();
-    this.map_ = null;
-  }
-
+  this.overlay_.setMap(map);
   this.map_ = map;
-
-  if (this.map_ != null) {
-    this.listenKey_ = ol.events.listen(map, ol.render.EventType.POSTCOMPOSE, this.handleMapPostCompose_, this);
-    this.render();
-  }
-};
-
-
-/**
- * @param {ol.render.Event} event Event.
- * @private
- */
-os.olm.render.BaseShape.prototype.handleMapPostCompose_ = function(event) {
-  var geometry = this.getGeometry();
-  goog.asserts.assert(geometry != null);
-
-  var style = this.getStyle();
-  goog.asserts.assert(style !== null);
-  event.vectorContext.setStyle(style);
-  this.adjustStyle(event.vectorContext);
-  event.vectorContext.drawGeometry(geometry);
+  this.render();
 };
 
 
