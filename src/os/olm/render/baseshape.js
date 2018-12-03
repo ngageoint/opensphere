@@ -87,9 +87,13 @@ os.olm.render.BaseShape.prototype.getMap = function() {
 
 /**
  * @param {ol.PluggableMap} map Map.
+ *
+ * @suppress {accessControls}
  */
 os.olm.render.BaseShape.prototype.setMap = function(map) {
   this.overlay_.setMap(map);
+  // update the wrap value in the event that the projection has changed since creation
+  this.overlay_.getSource().wrapX_ = os.map.PROJECTION.canWrapX();
   this.map_ = map;
   this.render();
 };
