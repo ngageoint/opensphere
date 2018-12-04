@@ -147,9 +147,6 @@ plugin.places.ui.PlacesCtrl.prototype.export = function() {
  */
 plugin.places.ui.PlacesCtrl.prototype.import = function() {
   plugin.places.PlacesManager.getInstance().startImport();
-  if (this.placesRoot_) {
-    plugin.places.saveFromSource(this.placesRoot_);
-  }
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.Places.IMPORT, 1);
 };
 

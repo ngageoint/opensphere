@@ -3973,6 +3973,12 @@ Cesium.Scene.prototype.skyBox;
 
 
 /**
+ * @type {Cesium.Sun}
+ */
+Cesium.Scene.prototype.sun;
+
+
+/**
  * @type {Cesium.SkyAtmosphere}
  */
 Cesium.Scene.prototype.skyAtmosphere;
@@ -4544,6 +4550,30 @@ Cesium.SkyAtmosphere = function() {};
  * @param {Cesium.SkyBoxOptions} options
  */
 Cesium.SkyBox = function(options) {};
+
+
+/**
+ * @type {boolean}
+ */
+Cesium.SkyBox.prototype.show;
+
+
+/**
+ * @constructor
+ */
+Cesium.Sun = function() {};
+
+
+/**
+ * @type {number}
+ */
+Cesium.Sun.prototype.glowFactor;
+
+
+/**
+ * @type {boolean}
+ */
+Cesium.Sun.prototype.show;
 
 
 /**

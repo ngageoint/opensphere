@@ -63,6 +63,14 @@
   <div ng-if="display.show3DSettings">
     <h5>3D Globe Options</h5>
     <div class="form-group">
+      <div class="form-check" title="{{display.help.sky}}">
+        <input class="form-check-input" id="skyEnabled" type="checkbox" ng-model="display.skyEnabled"
+            ng-change="display.updateSky()" />
+        <label class="form-check-label col-4 p-0" for="skyEnabled">Enable Sky</label>
+        <popover x-title="'Enable Sky'" content="display.help.sky" pos="'right'"></popover>
+      </div>
+    </div>
+    <div class="form-group">
       <div class="form-check" title="{{display.help.sunlight}}">
         <input class="form-check-input" id="sunlightEnabled" type="checkbox" ng-model="display.sunlightEnabled"
             ng-change="display.updateSunlight()" />

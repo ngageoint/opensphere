@@ -109,14 +109,14 @@ os.ui.FiltersCtrl.VIEWS = {
 /**
  * @inheritDoc
  */
-os.ui.FiltersCtrl.prototype.destroy = function() {
+os.ui.FiltersCtrl.prototype.disposeInternal = function() {
   os.ui.filterManager.unlisten(os.ui.filter.FilterEventType.EXPORT_FILTER, this.export, false, this);
   os.ui.filterManager.unlisten(os.ui.filter.FilterEventType.FILTERS_REFRESH, this.search, false, this);
   os.ui.filterManager.unlisten(goog.events.EventType.PROPERTYCHANGE, this.searchIfAddedOrRemoved_, false, this);
   var map = os.MapContainer.getInstance();
   map.unlisten(os.events.LayerEventType.ADD, this.search, false, this);
   map.unlisten(os.events.LayerEventType.REMOVE, this.search, false, this);
-  os.ui.FiltersCtrl.base(this, 'destroy');
+  os.ui.FiltersCtrl.base(this, 'disposeInternal');
 };
 
 

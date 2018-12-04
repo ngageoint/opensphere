@@ -93,7 +93,7 @@ plugin.im.action.feature.LabelAction.DEFAULT_CONFIG = {
  * Undo all feature action label changes, resetting to the user/default layer settings.
  * @override
  */
-plugin.im.action.feature.LabelAction.prototype.reset = function(entryType, items) {
+plugin.im.action.feature.LabelAction.prototype.reset = function(items) {
   for (var i = 0; i < items.length; i++) {
     var item = items[i];
     if (item) {

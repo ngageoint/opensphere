@@ -707,7 +707,6 @@ plugin.places.menu.saveLayerToPlaces = function(event) {
 /**
  * Save a KML tree to places.
  * @param {!Array<plugin.file.kml.ui.KMLNode>|plugin.file.kml.ui.KMLNode} nodes The root KML node to save
- * @private
  */
 plugin.places.menu.saveKMLToPlaces_ = function(nodes) {
   // don't allow this if the places root node doesn't exist

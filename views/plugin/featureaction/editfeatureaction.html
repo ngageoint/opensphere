@@ -14,6 +14,12 @@
           <input class="form-control w-50" id="filterDesc" type="text" ng-model="ctrl.description" name="description"/>
         </div>
       </div>
+      <div class="row mb-1">
+        <label class="col-form-label col-2 text-right" for="filterTags">Tags</label>
+        <div class="col form-inline">
+          <input class="form-control w-50" id="filterTags" type="text" ng-model="ctrl.tags" name="tags" placeholder="e.g. Vehicles, People"/>
+        </div>
+      </div>
 
       <h5 class="mt-1">For data matching the filter...</h5>
 
@@ -32,10 +38,10 @@
         </div>
       </div>
 
-      <h5 class="c-editfilteraction__header mt-2">Perform the following actions...</h5>
+      <h5 class="mt-2">Perform the following actions...</h5>
 
       <div class="h-25">
-        <div class="c-editfilteraction__controls mb-1">
+        <div class="mb-1">
           <button class="btn btn-sm btn-primary" ng-click="ctrl.addAction()" ng-disabled="ctrl.availableActions.length == 0"
               title="{{ctrl.getAddActionTooltip()}}">
             <i class="fa fa-plus"></i>

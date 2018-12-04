@@ -7,7 +7,6 @@ goog.require('goog.Timer');
 goog.require('goog.array');
 goog.require('goog.async.Throttle');
 goog.require('goog.dom');
-goog.require('goog.dom.ViewportSizeMonitor');
 goog.require('goog.events.EventType');
 goog.require('goog.events.MouseWheelHandler');
 goog.require('goog.math');
@@ -352,7 +351,7 @@ os.ui.timeline.TimelineCtrl = function($scope, $element, $timeout) {
    * @type {!Array<os.ui.timeline.ITimelineItem>}
    * @private
    */
-  this.items_ = $scope['items'];
+  this.items_ = $scope['items'] || [];
 
   /**
    * The start date of the timeline. Defaults to the start of today in UTC.
@@ -403,13 +402,6 @@ os.ui.timeline.TimelineCtrl = function($scope, $element, $timeout) {
   this.wheelHandler_ = null;
 
   /**
-   * @type {?goog.dom.ViewportSizeMonitor}
-   * @private
-   */
-  this.vsm_ = new goog.dom.ViewportSizeMonitor();
-  this.vsm_.listen(goog.events.EventType.RESIZE, this.onViewportResize_, false, this);
-
-  /**
    * @type {os.ui.timeline.OffArrows}
    * @private
    */
@@ -451,6 +443,14 @@ os.ui.timeline.TimelineCtrl = function($scope, $element, $timeout) {
   if (!os.ui.timeline.multiFormat_) {
     os.ui.timeline.multiFormat_ = d3.time.format.utc.multi(os.ui.timeline.formats_);
   }
+
+  /**
+   * Resize handler.
+   * @type {?function()}
+   * @private
+   */
+  this.resizeFn_ = this.updateSize_.bind(this);
+  this.element_.resize(this.resizeFn_);
 
   $scope.$on('$destroy', this.destroy_.bind(this));
 
@@ -529,9 +529,9 @@ os.ui.timeline.TimelineCtrl.prototype.destroyBrushCollection_ = function(brushCo
  * @private
  */
 os.ui.timeline.TimelineCtrl.prototype.destroy_ = function() {
-  if (this.vsm_) {
-    this.vsm_.dispose();
-    this.vsm_ = null;
+  if (this.element_ && this.resizeFn_) {
+    this.element_.removeResize(this.resizeFn_);
+    this.resizeFn_ = null;
   }
 
   this.destroyBrushCollection_(this.scope_['sliceBrushes']);
@@ -679,12 +679,11 @@ os.ui.timeline.TimelineCtrl.prototype.onOffsetChange_ = function(e) {
 
 
 /**
- * Handles viewport resizes
- * @param {goog.events.Event} event
+ * Update the timeline from the DOM element size.
  * @private
  */
-os.ui.timeline.TimelineCtrl.prototype.onViewportResize_ = function(event) {
-  try {
+os.ui.timeline.TimelineCtrl.prototype.updateSize_ = function() {
+  if (this.element_ && this.xScale_ && this.baseElement_) {
     var width = this.element_.innerWidth();
     var height = this.getHeight_();
     var handleHeight = os.ui.timeline.TimelineCtrl.HANDLE_HEIGHT;
@@ -692,14 +691,11 @@ os.ui.timeline.TimelineCtrl.prototype.onViewportResize_ = function(event) {
     this.xScale_.range([0, width]);
 
     var mainGroup = this.baseElement_.select('.c-svg-timeline__main');
-
     mainGroup.select('.c-svg-timeline__axis-background').
         attr('points', this.getAxisBgPoints_(height - handleHeight, width));
 
     this.drawHistogram_();
     this.updateItems_();
-  } catch (err) {
-    goog.log.error(os.ui.timeline.TimelineCtrl.LOGGER_, 'onViewportResize_', err);
   }
 };
 
@@ -811,8 +807,12 @@ os.ui.timeline.TimelineCtrl.prototype.getTicks = function() {
  * @private
  */
 os.ui.timeline.TimelineCtrl.prototype.getHeight_ = function() {
-  var height = this.element_.innerHeight();
-  return height > 150 ? 150 : height;
+  if (this.element_) {
+    var height = this.element_.innerHeight();
+    return height > 150 ? 150 : height;
+  }
+
+  return 0;
 };
 
 
@@ -1582,6 +1582,20 @@ os.ui.timeline.TimelineCtrl.prototype.brushCollectionChanged_ = function(brushes
         brushes[i].initSVG(element, height - axisHeight - handleHeight);
       }
     }
+  }
+};
+
+
+/**
+ * Set the timeline view to the load range.
+ *
+ */
+os.ui.timeline.TimelineCtrl.setView = function() {
+  var tlc = os.time.TimelineController.getInstance();
+  var tlScope = angular.element('.c-svg-timeline').scope();
+  if (tlScope && tlScope['timeline']) {
+    var timeline = /** @type {os.ui.timeline.TimelineCtrl} */ (tlScope['timeline']);
+    timeline.zoomToExtent([tlc.getStart(), tlc.getEnd()]);
   }
 };
 

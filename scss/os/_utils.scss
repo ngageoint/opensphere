@@ -15,7 +15,7 @@
   flex-basis: 0% !important;
 }
 
-.u-word-break {
+.u-word-wrap-break-all {
   word-break: break-all;
 }
 
@@ -119,12 +119,6 @@
   text-align: center;
 }
 
-.u-offscreen {
-  left: -9999px;
-  position: fixed;
-  top: -9999px;
-}
-
 .u-user-select-all {
   user-select: all;
 }
@@ -139,6 +133,18 @@
 
 .u-user-select-none {
   user-select: none;
+}
+
+.u-link-style {
+  @include hover {
+    color: $link-hover-color;
+    text-decoration: $link-hover-decoration;
+  }
+
+  background-color: transparent; // Remove the gray background on active links in IE 10.
+  color: $link-color;
+  cursor: pointer;
+  text-decoration: $link-decoration;
 }
 
 // --------------------------------- Font Utilities --------------------------------- //
@@ -196,6 +202,26 @@
 
 .u-required.btn-group::after {
   right: .3rem;
+}
+
+.u-rounded-right-0 {
+  border-bottom-right-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+}
+
+.u-rounded-left-0 {
+  border-bottom-left-radius: 0 !important;
+  border-top-left-radius: 0 !important;
+}
+
+.u-rounded-top-0 {
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+}
+
+.u-rounded-bottom-0 {
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
 }
 
 // At certain breakpoints, forms look really bad (especially in modals. Lets adjust forms to takeup more of the screen)
@@ -279,6 +305,10 @@
 
 .u-bg-body-offset {
   background-color: $u-theme-variables--bg-offset;
+}
+
+.u-btn-body-offset {
+  @include button-variant($u-theme-variables--bg-offset, $u-theme-variables--bg-offset);
 }
 
 .u-bg-body-text {
@@ -389,4 +419,10 @@ $somesizes: map-merge((
       color: $list-group-action-hover-color;
     }
   }
+}
+
+
+// --------------------------------- Z-Index Utilities --------------------------------- //
+.u-zindex-base {
+  z-index: $u-zindex-base;
 }

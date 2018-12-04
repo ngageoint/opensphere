@@ -12,6 +12,7 @@ goog.require('os.alert.AlertManager');
 goog.require('os.config');
 goog.require('os.metrics.keys');
 goog.require('os.search');
+goog.require('os.search.AbstractSearchManager');
 goog.require('os.search.Favorite');
 goog.require('os.search.ISearch');
 goog.require('os.search.ISearchResult');
@@ -31,17 +32,13 @@ os.search.ProviderResults;
 
 /**
  * Responsible for executing search terms against the registered searches
- * @extends {goog.events.EventTarget}
+ * @extends {os.search.AbstractSearchManager}
+ * @param {string=} opt_id
+ * @param {boolean=} opt_isFederated
  * @constructor
  */
-os.search.SearchManager = function() {
-  os.search.SearchManager.base(this, 'constructor');
-
-  /**
-   * @type {string}
-   * @private
-   */
-  this.term_ = '';
+os.search.SearchManager = function(opt_id, opt_isFederated) {
+  os.search.SearchManager.base(this, 'constructor', opt_id);
 
   /**
    * @type {!Object<string, !os.search.ISearch>}
@@ -81,24 +78,12 @@ os.search.SearchManager = function() {
   this.total_ = 0;
 
   /**
-   * @type {string}
+   * @type {boolean}
    * @private
    */
-  this.sortBy_ = '';
-
-  /**
-   * @type {?Function}
-   * @private
-   */
-  this.noResultClass_ = null;
-
-  /**
-   * Function to filter out favorites
-   * @type {function (Array<os.user.settings.favorite>): Array<os.search.Favorite>}
-   */
-  this.filterFavorites_ = this.defaultFilterFavorites_;
+  this.isFederated_ = !!opt_isFederated;
 };
-goog.inherits(os.search.SearchManager, goog.events.EventTarget);
+goog.inherits(os.search.SearchManager, os.search.AbstractSearchManager);
 goog.addSingletonGetter(os.search.SearchManager);
 
 
@@ -116,14 +101,6 @@ os.search.SearchManager.LOGGER_ = goog.log.getLogger('os.search.SearchManager');
  * @const
  */
 os.search.SearchManager.SEARCH_ALL = 'Search All Sources';
-
-
-/**
- * @param {Function} noResultClass
- */
-os.search.SearchManager.prototype.setNoResultClass = function(noResultClass) {
-  this.noResultClass_ = noResultClass;
-};
 
 
 /**
@@ -166,8 +143,7 @@ os.search.SearchManager.prototype.registerSearch = function(search) {
 
 
 /**
- * Retrieve the identifying names of all the registered searches.
- * @return {!Array<!os.search.ISearch>}
+ * @inheritDoc
  */
 os.search.SearchManager.prototype.getRegisteredSearches = function() {
   return goog.object.getValues(this.registeredSearches_);
@@ -175,10 +151,7 @@ os.search.SearchManager.prototype.getRegisteredSearches = function() {
 
 
 /**
- * Get the search providers that are currently enabled, and
- * optionally support the search term.
- * @param {string=} opt_term
- * @return {!Array<!os.search.ISearch>}
+ * @inheritDoc
  */
 os.search.SearchManager.prototype.getEnabledSearches = function(opt_term) {
   var searches = this.getRegisteredSearches();
@@ -194,40 +167,15 @@ os.search.SearchManager.prototype.getEnabledSearches = function(opt_term) {
 
 
 /**
- * Gets the last term.
- * @return {string}
- */
-os.search.SearchManager.prototype.getTerm = function() {
-  return this.term_;
-};
-
-
-/**
- * Gets the sort term.
- * @return {string}
- */
-os.search.SearchManager.prototype.getSort = function() {
-  return this.sortBy_;
-};
-
-
-/**
- * Execute search using registered searches.
- * @param {string} term The keyword search term
- * @param {number=} opt_start The index of the search results page
- * @param {number=} opt_pageSize The number of results to include per page
- * @param {string=} opt_sortBy The sort by string
- * @param {boolean=} opt_force Force a search
- * @param {boolean=} opt_noFacets flag for indicating facet search is not needed
- * @param {string=} opt_sortOrder The sort order
+ * @inheritDoc
  */
 os.search.SearchManager.prototype.search = function(term, opt_start, opt_pageSize,
     opt_sortBy, opt_force, opt_noFacets, opt_sortOrder) {
-  this.term_ = term;
+  this.setTerm(term);
   this.providerResults_ = {};
   this.results_ = [];
   this.total_ = 0;
-  this.sortBy_ = opt_sortBy || '';
+  this.setSort(opt_sortBy || '');
 
   // don't bother searching if the term is empty or page size is 0
   if ((term || opt_force) && opt_pageSize !== 0) {
@@ -235,7 +183,7 @@ os.search.SearchManager.prototype.search = function(term, opt_start, opt_pageSiz
     if (enabled.length > 0) {
       // TODO: should we dedupe by search type/priority??
 
-      this.dispatchEvent(new os.search.SearchEvent(os.search.SearchEventType.START, this.term_, [], 0));
+      this.dispatchEvent(new os.search.SearchEvent(os.search.SearchEventType.START, this.getTerm(), [], 0));
 
       // cancel any searches that are currently loading
       for (var id in this.loading_) {
@@ -280,6 +228,16 @@ os.search.SearchManager.prototype.search = function(term, opt_start, opt_pageSiz
 
 
 /**
+ * Generate a search key for search results
+ * @param {os.search.ISearch} search
+ * @return {string}
+ */
+os.search.SearchManager.prototype.getSearchKey = function(search) {
+  return search.getName() + '_' + search.getType();
+};
+
+
+/**
  * Handle search success event for a single search provider.
  * @param {os.search.SearchEvent} event
  * @private
@@ -293,7 +251,7 @@ os.search.SearchManager.prototype.handleSearchSuccess_ = function(event) {
     this.normalizeResults_(results);
   }
 
-  this.providerResults_[search.getName() + '_' + search.getType()] = {
+  this.providerResults_[this.getSearchKey(search)] = {
     'results': results,
     'total': event.getTotal()
   };
@@ -307,14 +265,14 @@ os.search.SearchManager.prototype.handleSearchSuccess_ = function(event) {
   }, this);
 
   // A search can be started by a provider, make sure the terms match.
-  if (this.term_ !== event.getSearchTerm()) {
-    this.term_ = event.getSearchTerm() || '';
+  if (this.getTerm() !== event.getSearchTerm()) {
+    this.setTerm(event.getSearchTerm() || '');
   }
 
   // sort results in order of descending score
   goog.array.sort(this.results_, this.scoreCompare_);
 
-  this.dispatch_();
+  this.dispatch();
 };
 
 
@@ -325,24 +283,23 @@ os.search.SearchManager.prototype.handleSearchSuccess_ = function(event) {
 os.search.SearchManager.prototype.handleSearchError_ = function(event) {
   var search = /** @type {os.search.ISearch} */ (event.target);
   delete this.loading_[search.getId()];
-  this.dispatch_();
+  this.dispatch();
 };
 
 
 /**
  * Dispatches a progress or success event
- * @private
  */
-os.search.SearchManager.prototype.dispatch_ = function() {
+os.search.SearchManager.prototype.dispatch = function() {
   // remove or display the "No Results" node as appropriate
-  if (this.noResultClass_) {
+  if (this.getNoResultClass()) {
     if (this.results_.length === 0) {
       // add "No Results" result
-      this.results_.push(new this.noResultClass_());
+      this.results_.push(new (this.getNoResultClass())());
     } else if (this.results_.length > 1) {
       // remove "No Results" result
       for (var i = 0, n = this.results_.length; i < n; i++) {
-        if (this.results_[i] instanceof this.noResultClass_) {
+        if (this.results_[i] instanceof this.getNoResultClass()) {
           this.results_.splice(i, 1);
           break;
         }
@@ -357,25 +314,23 @@ os.search.SearchManager.prototype.dispatch_ = function() {
     type = os.search.SearchEventType.PROGRESS;
   }
 
-  this.dispatchEvent(new os.search.SearchEvent(type, this.term_, this.results_, this.total_));
+  this.dispatchEvent(new os.search.SearchEvent(type, this.getTerm(), this.results_, this.total_));
 };
 
 
 /**
- * Force events to fire indicating whether there is a search in progress.
+ * @inheritDoc
  */
 os.search.SearchManager.prototype.checkProgress = function() {
-  this.dispatch_();
+  this.dispatch();
 };
 
 
 /**
- * Requests autocomplete results from a search term.
- * @param {string} term The keyword to use in the search
- * @param {number=} opt_maxResults The maximum number of autocomplete results.
+ * @inheritDoc
  */
 os.search.SearchManager.prototype.autocomplete = function(term, opt_maxResults) {
-  this.term_ = term;
+  this.setTerm(term);
   this.acResults_ = [];
 
   var enabled = this.getEnabledSearches(term);
@@ -396,7 +351,8 @@ os.search.SearchManager.prototype.handleAutocompleteSuccess_ = function(event) {
     this.acResults_ = this.acResults_.concat(results);
   }
 
-  this.dispatchEvent(new os.search.SearchEvent(os.search.SearchEventType.AUTOCOMPLETED, this.term_, this.acResults_));
+  this.dispatchEvent(new os.search.SearchEvent(os.search.SearchEventType.AUTOCOMPLETED,
+      this.getTerm(), this.acResults_));
 };
 
 
@@ -411,16 +367,15 @@ os.search.SearchManager.prototype.handleAutocompleteFailure_ = function(event) {
 
 
 /**
- * Clear the search results.
- * @param {string=} opt_term A default search term. If not provided, the term will be cleared.
+ * @inheritDoc
  */
 os.search.SearchManager.prototype.clear = function(opt_term) {
-  this.term_ = opt_term || '';
+  this.setTerm(opt_term || '');
 
   this.providerResults_ = {};
   this.results_ = [];
   this.total_ = 0;
-  this.sortBy_ = '';
+  this.setSort('');
 
   // cancel anything that may be still pending
   for (var key in this.registeredSearches_) {
@@ -428,25 +383,45 @@ os.search.SearchManager.prototype.clear = function(opt_term) {
   }
 
   this.loading_ = {};
-  this.dispatchEvent(new os.search.SearchEvent(os.search.SearchEventType.SUCCESS, this.term_, this.results_, 0));
+  this.dispatchEvent(new os.search.SearchEvent(os.search.SearchEventType.SUCCESS, this.getTerm(), this.results_, 0));
 };
 
 
 /**
- * Retrieve search results as they have been captured be all searches
- * @return {Array} A shallow copy of the search results
+ * @inheritDoc
  */
-os.search.SearchManager.prototype.getResults = function() {
-  return goog.array.clone(this.results_);
+os.search.SearchManager.prototype.getResults = function(opt_limit) {
+  var results = goog.array.clone(this.results_);
+  return opt_limit ? goog.array.slice(results, 0, opt_limit) : results;
 };
 
 
 /**
- * Retrieve the total number of search results
+ * Get count of results
+ * @param {number=} opt_limit
  * @return {number}
+ * @export
+ */
+os.search.SearchManager.prototype.getResultsCount = function(opt_limit) {
+  return opt_limit ? Math.min(this.results_.length, opt_limit) : this.results_.length;
+};
+
+
+/**
+ * @inheritDoc
+ * @export
  */
 os.search.SearchManager.prototype.getTotal = function() {
   return this.total_;
+};
+
+
+/**
+ * @return {boolean}
+ * @export
+ */
+os.search.SearchManager.prototype.isFederated = function() {
+  return this.isFederated_;
 };
 
 
@@ -498,24 +473,7 @@ os.search.SearchManager.prototype.scoreCompare_ = function(a, b) {
 
 
 /**
- * Gets favorite searches
- * @param {number} max max number of reusltes to return.
- * @return {Array<os.search.Favorite>} array of favorite items
- */
-os.search.SearchManager.prototype.getFavorites = function(max) {
-  var favorites = [];
-  if (this.filterFavorites_) {
-    favorites = this.filterFavorites_(os.favoriteManager.filter(os.favoriteManager.getFavorites(),
-        [os.user.settings.FavoriteType.SEARCH], max));
-  }
-
-  return favorites;
-};
-
-
-/**
- * gets the providers still loading.
- * @return {!Object<string, boolean>} object of loading providers
+ * @inheritDoc
  */
 os.search.SearchManager.prototype.getLoading = function() {
   return goog.object.clone(this.loading_);
@@ -523,22 +481,11 @@ os.search.SearchManager.prototype.getLoading = function() {
 
 
 /**
- * Filter favorites to only enabled providers
- * @param {Array<os.user.settings.favorite>} favorites
- * @return {Array<os.search.Favorite>}
- * @private
+ * @inheritDoc
+ * @export
  */
-os.search.SearchManager.prototype.defaultFilterFavorites_ = function(favorites) {
-  return [];
-};
-
-
-/**
- * register the filter favorites function
- * @param {function (Array<os.user.settings.favorite>): Array<os.search.Favorite>} fn
- */
-os.search.SearchManager.prototype.registerFilterFavoritesFn_ = function(fn) {
-  this.filterFavorites_ = fn;
+os.search.SearchManager.prototype.isLoading = function() {
+  return !goog.object.isEmpty(this.loading_);
 };
 
 

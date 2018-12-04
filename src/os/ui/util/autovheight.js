@@ -33,7 +33,8 @@ os.ui.util.autoVHeightDirective = function() {
     scope: {
       'siblings': '@',
       'padding': '@?',
-      'minHeight': '@?'
+      'minHeight': '@?',
+      'autovheightDisabled': '=?'
     },
     controller: os.ui.util.AutoVHeightCtrl
   };
@@ -68,32 +69,34 @@ os.ui.util.AutoVHeightCtrl = function($scope, $element, $injector, $timeout) {
    */
   this.element_ = $element;
 
-  this['minHeight'] = this.scope_['minHeight'] != null ? this.scope_['minHeight'] : 20;
-  this['padding'] = this.scope_['padding'] != null ? this.scope_['padding'] : 0;
+  if (!$scope['autovheightDisabled']) {
+    this['minHeight'] = this.scope_['minHeight'] != null ? this.scope_['minHeight'] : 20;
+    this['padding'] = this.scope_['padding'] != null ? this.scope_['padding'] : 0;
 
-  /**
-   * Debounce resize events over a brief period.
-   * @type {?function()}
-   * @private
-   */
-  this.resizeFn_ = this.onResize_.bind(this);
+    /**
+     * Debounce resize events over a brief period.
+     * @type {?function()}
+     * @private
+     */
+    this.resizeFn_ = this.onResize_.bind(this);
 
-  var parent = $element.parent();
-  parent.resize(this.resizeFn_);
+    var parent = $element.parent();
+    parent.resize(this.resizeFn_);
 
-  $timeout(this.resizeSiblings_.bind(this));
+    $timeout(this.resizeSiblings_.bind(this));
 
-  // add resize to common elements
-  goog.object.getValues(os.ui.windowCommonElements).forEach(function(sibling) {
-    $(/** @type {string} */ (sibling)).resize(this.resizeFn_);
-  }.bind(this));
+    // add resize to common elements
+    goog.object.getValues(os.ui.windowCommonElements).forEach(function(sibling) {
+      $(/** @type {string} */ (sibling)).resize(this.resizeFn_);
+    }.bind(this));
 
-  // there are some situations where resize won't fire on creation, particularly when using IE or when swapping DOM
-  // elements with ng-if. this will make sure it fires as soon as Angular is done manipulating the DOM.
-  os.ui.waitForAngular(this.onResize_.bind(this));
+    // there are some situations where resize won't fire on creation, particularly when using IE or when swapping DOM
+    // elements with ng-if. this will make sure it fires as soon as Angular is done manipulating the DOM.
+    os.ui.waitForAngular(this.onResize_.bind(this));
 
-  os.dispatcher.listen(os.config.ThemeSettingsChangeEvent, this.onResize_, false, this);
-  $scope.$on('resize', this.onResize_.bind(this));
+    os.dispatcher.listen(os.config.ThemeSettingsChangeEvent, this.onResize_, false, this);
+    $scope.$on('resize', this.onResize_.bind(this));
+  }
   $scope.$on('$destroy', this.onDestroy_.bind(this));
 };
 
@@ -103,19 +106,21 @@ os.ui.util.AutoVHeightCtrl = function($scope, $element, $injector, $timeout) {
  * @private
  */
 os.ui.util.AutoVHeightCtrl.prototype.onDestroy_ = function() {
-  os.dispatcher.unlisten(os.config.ThemeSettingsChangeEvent, this.onResize_, false, this);
+  if (!this.scope_['autovheightDisabled']) {
+    os.dispatcher.unlisten(os.config.ThemeSettingsChangeEvent, this.onResize_, false, this);
 
-  var parent = this.element_.parent();
-  parent.removeResize(this.resizeFn_);
+    var parent = this.element_.parent();
+    parent.removeResize(this.resizeFn_);
 
-  var siblings = /** @type {Array.<string>} */ (this.scope_['siblings']);
-  if (siblings && this.resizeFn_) {
-    try {
-      $(siblings).removeResize(this.resizeFn_);
-    } catch (e) {}
+    var siblings = /** @type {Array.<string>} */ (this.scope_['siblings']);
+    if (siblings && this.resizeFn_) {
+      try {
+        $(siblings).removeResize(this.resizeFn_);
+      } catch (e) {}
+    }
+
+    this.resizeFn_ = null;
   }
-
-  this.resizeFn_ = null;
   this.element_ = null;
   this.scope_ = null;
 };
