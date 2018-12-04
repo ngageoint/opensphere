@@ -72,16 +72,6 @@ plugin.file.geojson.GeoJSONSimpleStyleParser.prototype.process = function(featur
       return;
     }
 
-    // Set the default values.
-    markersize = (markersize || 'medium');
-    markersymbol = (markersymbol || '');
-    markercolor = (markercolor || '7e7e7e');
-    stroke = (stroke || '555555');
-    strokeopacity = (strokeopacity || 1.0);
-    strokewidth = (strokewidth || 2);
-    fill = (fill || '555555');
-    fillopacity = (fillopacity || 0.6);
-
     var config = {};
 
     // Convert to RGBA
@@ -89,14 +79,19 @@ plugin.file.geojson.GeoJSONSimpleStyleParser.prototype.process = function(featur
     var fillRGBA = os.color.toRgbArray(fill);
     var markerRGBA = os.color.toRgbArray(markercolor);
 
-    var fillColor = 'rgba(' + fillRGBA[0] + ',' + fillRGBA[1] + ',' + fillRGBA[2] + ',' + fillopacity + ')';
-    var strokeColor = 'rgba(' + strokeRGBA[0] + ',' + strokeRGBA[1] + ',' + strokeRGBA[2] + ',' + strokeopacity + ')';
+    if (fillRGBA) {
+      var fillColor = 'rgba(' + fillRGBA[0] + ',' + fillRGBA[1] + ',' + fillRGBA[2] + ',' + fillopacity + ')';
+    }
+
+    if (strokeRGBA) {
+      var strokeColor = 'rgba(' + strokeRGBA[0] + ',' + strokeRGBA[1] + ',' + strokeRGBA[2] + ',' + strokeopacity + ')';
+    }
 
     // The current polygons do not support using both fill and stroke attributes for color.
     var foundFill = false;
 
     // Prefer to use the fill color before the stroke color.
-    if (85 != fillRGBA[0] || 85 != fillRGBA[1] || 85 != fillRGBA[2]) {
+    if (fillRGBA && 85 != fillRGBA[0] || 85 != fillRGBA[1] || 85 != fillRGBA[2]) {
       config['fill'] = {
         'color': fillColor
       };
@@ -116,7 +111,7 @@ plugin.file.geojson.GeoJSONSimpleStyleParser.prototype.process = function(featur
     }
 
     // A marker was defined, so set an icon.
-    if (markersymbol) {
+    if (markersymbol && markerRGBA) {
       var png = markersymbol + '-24.png';
 
       // Marker symbols can be the integers 1 - 9
@@ -154,6 +149,12 @@ plugin.file.geojson.GeoJSONSimpleStyleParser.prototype.process = function(featur
           'color': fillColor
         }
       };
+    }
+
+    if (this.sourceId) {
+      // merge in the layer config to set anything that wasn't provided by the simplestyle spec
+      var layerConfig = os.style.StyleManager.getInstance().getLayerConfig(this.sourceId);
+      os.style.mergeConfig(layerConfig, config);
     }
 
     feature.set(os.style.StyleType.FEATURE, config);
