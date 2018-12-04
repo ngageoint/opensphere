@@ -49,6 +49,12 @@ os.ui.file.AnyTypeImportCtrl = function($scope, $element) {
    */
   this.element_ = $element;
 
+  /**
+   * @type {?os.ui.im.IImportUI}
+   * @private
+   */
+  this['import'] = null;
+
   this.scope_['isZip'] = this.scope_['file'] ? os.file.mime.zip.isZip(this.scope_['file'].getContent()) : false;
 
   this.scope_.$emit(os.ui.WindowEventType.READY);
@@ -64,7 +70,7 @@ os.ui.file.AnyTypeImportCtrl = function($scope, $element) {
  */
 os.ui.file.AnyTypeImportCtrl.prototype.accept = function() {
   try {
-    this.scope_['import'].launchUI(this.scope_['file'], this.scope_['config']);
+    this['import'].launchUI(this.scope_['file'], this.scope_['config']);
   } catch (e) {
     os.alert.AlertManager.getInstance().sendAlert(
         'Error loading file: <b>' + this.scope_['file'].getFileName() + '</b>', os.alert.AlertEventSeverity.ERROR);
