@@ -13,6 +13,7 @@ goog.require('os.ui.menu.MenuItem');
 goog.require('os.ui.menu.MenuItemType');
 goog.require('os.ui.menu.common');
 goog.require('os.ui.window');
+goog.require('os.ui.window.confirmDirective');
 
 
 /**
@@ -286,33 +287,27 @@ os.ui.menu.layer.onDescription_ = function(event) {
     }
   }
 
-  var html =
-      '<div class="d-flex flex-column flex-fill">' +
-          '<div class="modal-body">' + msg + '</div>' +
-          '<div class="modal-footer">' +
-            '<button class="btn btn-secondary" ng-click="close()">' +
-            '<i class="fa fa-ban"></i> Close</button>' +
-          '</div>' +
-      '</div>';
+  var windowOptions = /** @type {!osx.window.WindowOptions} */ ({
+    label: 'Layer Description',
+    icon: 'fa fa-newspaper-o',
+    x: 'center',
+    y: 'center',
+    width: 600,
+    height: 'auto',
+    modal: false,
+    showClose: true
+  });
 
-  var windowOptions = {
-    'id': 'layerDescription',
-    'label': 'Layer Description',
-    'icon': 'fa fa-newspaper-o',
-    'x': 'center',
-    'y': 'center',
-    'width': '600',
-    'height': 'auto',
-    'show-close': true
-  };
+  var confirmOptions = /** @type {!osx.window.ConfirmOptions} */ ({
+    prompt: msg,
+    yesText: 'Close',
+    yesIcon: 'fa fa-times',
+    yesButtonClass: 'btn-secondary',
+    noText: '',
+    windowOptions: windowOptions
+  });
 
-  var scopeOptions = {
-    'close': function() {
-      os.ui.window.close(os.ui.window.getById('layerDescription'));
-    }
-  };
-
-  os.ui.window.create(windowOptions, html, undefined, undefined, undefined, scopeOptions);
+  os.ui.window.launchConfirm(confirmOptions);
 };
 
 
