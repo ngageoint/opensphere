@@ -47,6 +47,7 @@ os.ui.im.ImportProcess = function(opt_im, opt_fm) {
 
   /**
    * @type {os.ui.im.ImportManager}
+   * @private
    */
   this.im_ = opt_im || os.ui.im.ImportManager.getInstance();
 

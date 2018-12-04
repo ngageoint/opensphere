@@ -148,7 +148,7 @@ plugin.places.KMLPlacesCtrl.prototype.finish = function() {
 plugin.places.KMLPlacesCtrl.prototype.onImportComplete_ = function(event) {
   var importer = /** @type {os.im.Importer} */ (event.target);
   var nodes = importer.getData();
-  for (i = 0; i < nodes.length; i++) {
+  for (var i = 0; i < nodes.length; i++) {
     if (nodes[i].label == 'kmlroot' || nodes[i].label == 'Saved Places') {
       nodes.splice(i, 1);
       i--;
