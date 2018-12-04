@@ -26,6 +26,8 @@ os.interaction.DrawLineClick;
  */
 os.interaction.DrawLine = function(opt_options) {
   os.interaction.DrawLine.base(this, 'constructor');
+
+  this.origHandleEvent = this.handleEvent;
   this.handleEvent = os.interaction.DrawLine.handleEvent.bind(this);
   this.type = os.interaction.DrawLine.TYPE;
 
@@ -111,7 +113,7 @@ os.interaction.DrawLine.prototype.shouldFinish = function(mapBrowserEvent) {
 os.interaction.DrawLine.prototype.update = function(mapBrowserEvent) {
   os.interaction.DrawLine.base(this, 'update', mapBrowserEvent);
 
-  if (mapBrowserEvent.type === ol.MapBrowserEventType.POINTERDOWN) {
+  if (mapBrowserEvent.type === ol.MapBrowserEventType.POINTERUP) {
     this.lastDown = /** @type {os.interaction.DrawLineClick} */ ({
       time: Date.now(),
       pixel: mapBrowserEvent.pixel.slice()
@@ -132,5 +134,5 @@ os.interaction.DrawLine.handleEvent = function(mapBrowserEvent) {
     return false;
   }
 
-  return ol.interaction.Pointer.handleEvent.call(this, mapBrowserEvent);
+  return this.origHandleEvent.call(this, mapBrowserEvent);
 };
