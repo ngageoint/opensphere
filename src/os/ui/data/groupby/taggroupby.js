@@ -1,4 +1,5 @@
 goog.provide('os.ui.data.groupby.TagGroupBy');
+
 goog.require('goog.array');
 goog.require('os.data.groupby.BaseGroupBy');
 goog.require('os.ui.slick.SlickTreeNode');
@@ -65,7 +66,7 @@ os.ui.data.groupby.TagGroupBy.prototype.createGroup = function(node, id) {
   var group = new os.ui.slick.SlickTreeNode();
   group.setId(id);
   group.setLabel(id.substring(1));
-  group.setCheckboxVisible(false);
+  group.setCheckboxVisible(true);
   group.collapsed = !this.open_;
   return group;
 };

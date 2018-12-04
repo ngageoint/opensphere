@@ -1,6 +1,8 @@
 goog.provide('os.structs.ITreeNode');
+
 goog.require('goog.disposable.IDisposable');
 goog.require('goog.events.Listenable');
+goog.require('os.data.ISearchable');
 
 
 
@@ -9,8 +11,16 @@ goog.require('goog.events.Listenable');
  * @interface
  * @extends {goog.disposable.IDisposable}
  * @extends {goog.events.Listenable}
+ * @extends {os.data.ISearchable}
  */
 os.structs.ITreeNode = function() {};
+
+
+/**
+ * ID for {@see os.implements}.
+ * @const {string}
+ */
+os.structs.ITreeNode.ID = 'os.structs.ITreeNode';
 
 
 /**

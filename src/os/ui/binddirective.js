@@ -22,8 +22,7 @@ os.ui.bindDirectiveDirective = function($parse, $compile) {
         $compile.$$addBindingInfo(element, attr['bindDirective']);
 
         scope.$watch(bindDirectiveWatch, function(value) {
-          // append the content to the child
-          element.append(value);
+          element.html(value);
 
           // compile it, which will compile any directives contained therein
           $compile(element.children())(scope.$new());

@@ -16,7 +16,7 @@ describe('os.state.v4.FilterAction', function() {
     stateManager.setVersion(os.state.Versions.V4);
   });
 
-  it('Should validate against the v4 XSD state', function() {
+  xit('Should validate against the v4 XSD state', function() {
     var resultSchemas = null;
     runs(function() {
       os.test.xsd.loadStateXsdFiles().then(function(result) {

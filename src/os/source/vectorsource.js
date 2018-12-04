@@ -1845,7 +1845,17 @@ os.source.Vector.prototype.checkFeatureLimit = function(features) {
 
   if (totalCount + features.length >= maxFeatures) {
     // max feature count hit, only add features up to the limit
-    features.length = Math.max(maxFeatures - totalCount, 0);
+    var length = Math.max(maxFeatures - totalCount, 0);
+    if (isNaN(length) || length >= Math.pow(2, 32)) {
+      // something went wrong, log an error and don't allow more features to be added
+      features.length = 0;
+      var msg = 'Failed to check feature limit for ' + this.getTitle() + '.\n Current feature count: ' +
+        JSON.stringify(totalCount) + '.\n Expected maximum feature count: ' + JSON.stringify(maxFeatures) +
+        '.\n Cannot add additional features.';
+      goog.log.error(this.log, msg);
+    } else {
+      features.length = length;
+    }
     os.source.handleMaxFeatureCount(maxFeatures);
   }
 };
@@ -3055,6 +3065,16 @@ os.source.Vector.prototype.removeFromSelected = function(features, opt_skipStyle
       this.changed();
     }
   }
+};
+
+
+/**
+ * Invert the current selection
+ */
+os.source.Vector.prototype.invertSelection = function() {
+  var selected = this.selected_.slice();
+  this.selectAll();
+  this.removeFromSelected(selected);
 };
 
 

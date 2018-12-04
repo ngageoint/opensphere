@@ -95,7 +95,7 @@ plugin.im.action.feature.StyleAction.CONFIG_UI = 'featureactionstyleconfig';
 /**
  * @inheritDoc
  */
-plugin.im.action.feature.StyleAction.prototype.reset = function(entryType, items) {
+plugin.im.action.feature.StyleAction.prototype.reset = function(items) {
   for (var i = 0; i < items.length; i++) {
     var item = items[i];
     if (item) {
@@ -158,8 +158,6 @@ plugin.im.action.feature.StyleAction.prototype.execute = function(items) {
       var configShape = this.styleConfig[os.style.StyleField.SHAPE];
       if (configShape && configShape != os.style.DEFAULT_SHAPE) {
         item.set(os.style.StyleField.SHAPE, configShape, true);
-      } else {
-        item.set(os.style.StyleField.SHAPE, undefined, true);
       }
 
       // set the feature center shape

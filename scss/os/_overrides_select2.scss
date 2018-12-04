@@ -35,9 +35,10 @@
         color: color-yiq(lighten($body-bg, 5%));
         margin: 0 .125rem;
 
+        // this is an ugly style, but it's the only selector for the chip elements in a multi-select2
         div {
           max-width: 35rem;
-          min-height: 1.125rem;
+          min-height: 1rem;
           overflow: hidden;
           text-overflow: ellipsis;
         }
@@ -46,13 +47,10 @@
       // sass-lint:disable no-extends, placeholder-in-extend
       .select2-search-field {
         input.select2-input {
-          @extend .form-control;
           background: transparent;
           border: 0;
           box-shadow: none;
           font-family: $font-family-base;
-          line-height: $line-height-base;
-          margin: 0;
           padding: 0;
 
           &.select2-active {

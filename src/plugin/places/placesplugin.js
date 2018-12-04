@@ -5,8 +5,8 @@ goog.require('os.plugin.AbstractPlugin');
 goog.require('os.ui.clear.ClearEntry');
 goog.require('os.ui.clearManager');
 goog.require('os.ui.file.method.ImportMethod');
-goog.require('plugin.file.kml.ui.KMLImportUI');
 goog.require('plugin.places');
+goog.require('plugin.places.KMLPlacesImportUI');
 goog.require('plugin.places.PlacesClear');
 goog.require('plugin.places.PlacesManager');
 goog.require('plugin.places.menu');
@@ -71,7 +71,7 @@ plugin.places.PlacesPlugin.prototype.init = function() {
   pfm.registerFileMethod(new os.ui.file.method.ImportMethod(false));
 
   // kml
-  pim.registerImportUI(plugin.file.kml.mime.TYPE, new plugin.file.kml.ui.KMLImportUI());
-  pim.registerImportUI(plugin.file.kml.mime.KMZ_TYPE, new plugin.file.kml.ui.KMLImportUI());
+  pim.registerImportUI(plugin.file.kml.mime.TYPE, new plugin.places.KMLPlacesImportUI());
+  pim.registerImportUI(plugin.file.kml.mime.KMZ_TYPE, new plugin.places.KMLPlacesImportUI());
   pim.registerImportDetails('KML/KMZ', true);
 };

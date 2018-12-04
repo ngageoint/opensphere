@@ -75,6 +75,23 @@ os.ui.action.Action = function(eventType, opt_title, opt_description, opt_icon, 
   this.isEnabled_ = null;
 
   /**
+   * @type {?function(this:os.ui.action.Action, ?):boolean}
+   * @private
+   */
+  this.activeCheckFunc_ = null;
+
+  /**
+   * @type {boolean}
+   */
+  this.isActive = true;
+
+  /**
+   * @type {?string}
+   * @private
+   */
+  this.inactiveTooltip_ = null;
+
+  /**
    * @type {?function(goog.events.Event=):boolean|function(goog.events.Event=)}
    * @private
    */
@@ -185,7 +202,7 @@ os.ui.action.Action.prototype.getHotkey = function() {
  * @export
  */
 os.ui.action.Action.prototype.getDescription = function() {
-  return this.description_;
+  return (!this.isActive && this.inactiveTooltip_ != null) ? this.inactiveTooltip_ : this.description_;
 };
 
 
@@ -198,6 +215,21 @@ os.ui.action.Action.prototype.getDescription = function() {
  */
 os.ui.action.Action.prototype.enableWhen = function(isEnabled) {
   this.isEnabled_ = isEnabled || null;
+  return this;
+};
+
+
+/**
+ * Set the function that determines whether this action is active.  The Action passes itself as the context
+ * when calling the function.
+ *
+ * @param {function(this:os.ui.action.Action, ?):boolean} activeCheckFunc
+ * @param {string=} opt_inactiveTooltip
+ * @return {os.ui.action.Action} this action
+ */
+os.ui.action.Action.prototype.activeWhen = function(activeCheckFunc, opt_inactiveTooltip) {
+  this.activeCheckFunc_ = activeCheckFunc || null;
+  this.inactiveTooltip_ = opt_inactiveTooltip || null;
   return this;
 };
 
@@ -222,6 +254,12 @@ os.ui.action.Action.prototype.handleWith = function(handler) {
  * @return {boolean}
  */
 os.ui.action.Action.prototype.isEnabled = function(opt_actionArgs) {
+  if (this.activeCheckFunc_ != null) {
+    this.isActive = this.activeCheckFunc_.apply(this, arguments);
+  } else {
+    this.isActive = true;
+  }
+
   if (this.isEnabled_ !== null) {
     return this.isEnabled_.apply(this, arguments);
   }

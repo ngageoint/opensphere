@@ -92,10 +92,10 @@ os.ui.AreasCtrl.VIEWS = {
 /**
  * @inheritDoc
  */
-os.ui.AreasCtrl.prototype.destroy = function() {
+os.ui.AreasCtrl.prototype.disposeInternal = function() {
   os.ui.areaManager.unlisten(goog.events.EventType.PROPERTYCHANGE, this.searchIfAddedOrRemoved_, false, this);
 
-  os.ui.AreasCtrl.base(this, 'destroy');
+  os.ui.AreasCtrl.base(this, 'disposeInternal');
 };
 
 

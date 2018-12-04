@@ -59,7 +59,6 @@ os.im.action.IImportAction.prototype.clone;
 
 /**
  * Reset the import action.
- * @param {string} entry type
  * @param {!Array<T>} items The items.
  */
 os.im.action.IImportAction.prototype.reset;

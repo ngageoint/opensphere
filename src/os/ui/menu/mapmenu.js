@@ -105,6 +105,13 @@ os.ui.menu.map.setup = function() {
         handler: os.ui.menu.map.changeColor_,
         metricKey: os.metrics.keys.Map.BACKGROUND_COLOR
       }, {
+        label: 'Sky',
+        eventType: os.config.DisplaySetting.ENABLE_SKY,
+        type: os.ui.menu.MenuItemType.CHECK,
+        tooltip: 'Show the sky/stars around the 3D globe',
+        beforeRender: os.ui.menu.map.updateSkyItem,
+        handler: os.ui.menu.map.onSky
+      }, {
         label: 'Terrain',
         eventType: os.config.DisplaySetting.ENABLE_TERRAIN,
         type: os.ui.menu.MenuItemType.CHECK,
@@ -194,6 +201,26 @@ os.ui.menu.map.changeColor_ = function() {
  */
 os.ui.menu.map.onColorChosen_ = function(color) {
   os.settings.set(os.config.DisplaySetting.BG_COLOR, color);
+};
+
+
+/**
+ * Update the Sky menu item.
+ * @this {os.ui.menu.MenuItem}
+ */
+os.ui.menu.map.updateSkyItem = function() {
+  this.visible = os.MapContainer.getInstance().is3DEnabled();
+  this.selected = !!os.settings.get(os.config.DisplaySetting.ENABLE_SKY, false);
+};
+
+
+/**
+ * Enable terrain menu option listener.
+ * @param {os.ui.menu.MenuEvent<ol.Coordinate>} event The event.
+ * @this {os.ui.menu.MenuItem}
+ */
+os.ui.menu.map.onSky = function(event) {
+  os.settings.set(os.config.DisplaySetting.ENABLE_SKY, !this.selected);
 };
 
 

@@ -9,11 +9,12 @@ goog.require('os.im.action.cmd.AbstractFilterAction');
  * Command for removing filter actions.
  * @param {!os.im.action.FilterActionEntry} entry The filter action.
  * @param {number=} opt_index The index in the entry list.
+ * @param {string=} opt_parentId The parent node ID.
  * @extends {os.im.action.cmd.AbstractFilterAction}
  * @constructor
  */
-os.im.action.cmd.FilterActionRemove = function(entry, opt_index) {
-  os.im.action.cmd.FilterActionRemove.base(this, 'constructor', entry, opt_index);
+os.im.action.cmd.FilterActionRemove = function(entry, opt_index, opt_parentId) {
+  os.im.action.cmd.FilterActionRemove.base(this, 'constructor', entry, opt_index, opt_parentId);
 
   if (entry) {
     var appEntryTitle = os.im.action.ImportActionManager.getInstance().entryTitle;
