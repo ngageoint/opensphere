@@ -169,11 +169,11 @@
   &:not(.u-table__no-hover) .u-table__head,
   &:not(.u-table__no-hover) .u-table__row {
     @include hover {
-      background-color: $list-group-active-bg !important;
-      color: $dropdown-link-hover-color;
+      background-color: $list-group-hover-bg !important;
+      color: color-yiq($list-group-hover-bg);
 
       a {
-        color: $dropdown-link-hover-color;
+        color: color-yiq($list-group-hover-bg);
       }
     }
   }
@@ -185,9 +185,16 @@
 
   .u-table__row {
     background-color: $table-bg;
+
+    &.active {
+      background-color: $list-group-active-bg !important;
+      color: color-yiq($list-group-active-bg);
+    }
   }
 
   &.u-table-striped {
+    cursor: pointer;
+
     .u-table__row:nth-child(odd) {
       background-color: $table-accent-bg;
     }
