@@ -22,6 +22,7 @@ goog.require('os.ui.ol.interaction.AbstractDraw');
  */
 os.ui.ol.interaction.DrawPolygon = function() {
   os.ui.ol.interaction.DrawPolygon.base(this, 'constructor', {
+    handleEvent: os.ui.ol.interaction.DrawPolygon.handleEvent_,
     handleDownEvent: os.ui.ol.interaction.DrawPolygon.handleDownEvent_,
     handleMoveEvent: os.ui.ol.interaction.DrawPolygon.handleMoveEvent_,
     handleUpEvent: os.ui.ol.interaction.DrawPolygon.handleUpEvent_
@@ -51,6 +52,12 @@ os.ui.ol.interaction.DrawPolygon = function() {
    * @protected
    */
   this.finish = false;
+
+  /**
+   * @type {?ol.Pixel}
+   * @private
+   */
+  this.downPixel_ = null;
 };
 goog.inherits(os.ui.ol.interaction.DrawPolygon, os.ui.ol.interaction.AbstractDraw);
 
@@ -110,14 +117,52 @@ os.ui.ol.interaction.DrawPolygon.handleMoveEvent_ = function(mapBrowserEvent) {
 
 
 /**
- * @param {ol.MapBrowserPointerEvent} mapBrowserEvent Event.
- * @return {boolean}
+ * @param {ol.MapBrowserEvent} mapBrowserEvent Event.
  * @this os.ui.ol.interaction.DrawPolygon
+ * @return {boolean}
+ * @private
+ * @suppress {accessControls}
+ */
+os.ui.ol.interaction.DrawPolygon.handleEvent_ = function(mapBrowserEvent) {
+  if (!(mapBrowserEvent instanceof ol.MapBrowserPointerEvent)) {
+    return true;
+  }
+
+  this.updateTrackedPointers_(mapBrowserEvent);
+
+  if (mapBrowserEvent.type == ol.MapBrowserEventType.POINTERUP) {
+    this.handleUpEvent_(mapBrowserEvent);
+  } else if (mapBrowserEvent.type == ol.MapBrowserEventType.POINTERDOWN) {
+    this.handleDownEvent_(mapBrowserEvent);
+  } else if (mapBrowserEvent.type == ol.MapBrowserEventType.POINTERMOVE) {
+    this.handleMoveEvent_(mapBrowserEvent);
+  }
+
+  return true;
+};
+
+
+/**
+ * @param {ol.MapBrowserPointerEvent} mapBrowserEvent Event.
+ * @this os.ui.ol.interaction.DrawPolygon
+ * @return {boolean}
  * @private
  */
 os.ui.ol.interaction.DrawPolygon.handleUpEvent_ = function(mapBrowserEvent) {
-  if (this.drawing && this.finish) {
-    this.end(mapBrowserEvent);
+  var px = mapBrowserEvent.pixel;
+
+  if (this.downPixel_ && Math.abs(px[0] - this.downPixel_[0]) < 3 && Math.abs(px[1] - this.downPixel_[1]) < 3) {
+    this.downPixel_ = null;
+    if (!this.drawing) {
+      this.begin(mapBrowserEvent);
+    }
+
+    if (this.shouldFinish(mapBrowserEvent)) {
+      this.saveLast(mapBrowserEvent);
+      this.end(mapBrowserEvent);
+    } else {
+      this.update(mapBrowserEvent);
+    }
   }
 
   return false;
@@ -126,25 +171,17 @@ os.ui.ol.interaction.DrawPolygon.handleUpEvent_ = function(mapBrowserEvent) {
 
 /**
  * @param {ol.MapBrowserPointerEvent} mapBrowserEvent Event.
- * @return {boolean} Must return true to get the up handler working
  * @this os.ui.ol.interaction.DrawPolygon
+ * @return {boolean}
  * @private
  */
 os.ui.ol.interaction.DrawPolygon.handleDownEvent_ = function(mapBrowserEvent) {
+  // In order to allow dragging while this interaction is enabled, we're just
+  // gonna store the mouse down pixel for now and check it again on the up
+  // event. If it is close enough, we'll call it a click and not a click+drag.
   var browserEvent = new goog.events.BrowserEvent(mapBrowserEvent.originalEvent);
   if (browserEvent.isMouseActionButton() && (this.drawing || this.condition(mapBrowserEvent))) {
-    if (!this.drawing) {
-      this.begin(mapBrowserEvent);
-    }
-
-    if (this.shouldFinish(mapBrowserEvent)) {
-      this.saveLast(mapBrowserEvent);
-      this.finish = true;
-    } else {
-      this.update(mapBrowserEvent);
-    }
-
-    return true;
+    this.downPixel_ = mapBrowserEvent.pixel;
   }
 
   return false;
@@ -205,7 +242,7 @@ os.ui.ol.interaction.DrawPolygon.prototype.update = function(mapBrowserEvent) {
  */
 os.ui.ol.interaction.DrawPolygon.prototype.addCoord = function(coord, mapBrowserEvent) {
   if (coord) {
-    if (mapBrowserEvent.type === ol.MapBrowserEventType.POINTERDOWN) {
+    if (mapBrowserEvent.type === ol.MapBrowserEventType.POINTERUP) {
       this.coords.push(coord);
 
       if (this.coords.length == 1) {
