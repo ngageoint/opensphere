@@ -40,6 +40,13 @@ plugin.file.geojson.GeoJSONParser = function() {
    * @protected
    */
   this.nextIndex = 0;
+
+  /**
+   * The ID of the data source this is parsing for.
+   * @type {?string}
+   * @protected
+   */
+  this.sourceId = null;
 };
 goog.inherits(plugin.file.geojson.GeoJSONParser, goog.Disposable);
 
@@ -50,6 +57,24 @@ goog.inherits(plugin.file.geojson.GeoJSONParser, goog.Disposable);
 plugin.file.geojson.GeoJSONParser.prototype.disposeInternal = function() {
   plugin.file.geojson.GeoJSONParser.base(this, 'disposeInternal');
   this.cleanup();
+};
+
+
+/**
+ * Get the source ID.
+ * @return {?string}
+ */
+plugin.file.geojson.GeoJSONParser.prototype.getSourceId = function() {
+  return this.sourceId;
+};
+
+
+/**
+ * Set the source ID.
+ * @param {?string} value
+ */
+plugin.file.geojson.GeoJSONParser.prototype.setSourceId = function(value) {
+  this.sourceId = value;
 };
 
 
