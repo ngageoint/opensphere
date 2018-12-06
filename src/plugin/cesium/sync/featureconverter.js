@@ -1624,16 +1624,14 @@ plugin.cesium.sync.FeatureConverter.prototype.getFeatureStyles = function(featur
  * @param {!ol.geom.Geometry} geometry The geometry to be converted
  * @param {!ol.style.Style} style The geometry style
  * @param {!plugin.cesium.VectorContext} context Cesium synchronization context
- * @param {ol.style.Style=} opt_label The label to render with the geometry
  */
-plugin.cesium.sync.FeatureConverter.prototype.olGeometryToCesium = function(feature, geometry, style, context,
-    opt_label) {
-  if (opt_label) {
+plugin.cesium.sync.FeatureConverter.prototype.olGeometryToCesium = function(feature, geometry, style, context) {
+  if (style.getText()) {
     var currentLabel = context.getLabelForGeometry(geometry);
     if (currentLabel == null) {
-      this.createLabel(feature, geometry, opt_label, context);
+      this.createLabel(feature, geometry, style, context);
     } else {
-      this.updateLabel(currentLabel, geometry, opt_label, context);
+      this.updateLabel(currentLabel, geometry, style, context);
     }
   }
 
@@ -1815,45 +1813,14 @@ plugin.cesium.sync.FeatureConverter.prototype.olVectorLayerToCesium = function(l
 plugin.cesium.sync.FeatureConverter.prototype.convert = function(feature, resolution, context) {
   context.markDirty(feature);
 
-  var styles = [];
-  var labelStyle;
-  var labelGeometry;
-
-  //
-  // The following code makes these assumptions, based on how OpenSphere creates label styles:
-  //  - Each feature has a single label style.
-  //  - The label style is independent of styles that should be applied to geometries.
-  //
-  // Given those assumptions, treat the first style with a text component as the label and keep non-text styles for
-  // styling geometries.
-  //
-  var featureStyles = this.getFeatureStyles(feature, resolution, context.layer);
-  for (var i = 0; i < featureStyles.length; i++) {
-    if (!featureStyles[i].getText()) {
-      styles.push(featureStyles[i]);
-    } else if (!labelStyle) {
-      labelStyle = featureStyles[i];
-    }
-  }
-
+  var styles = this.getFeatureStyles(feature, resolution, context.layer);
   if (styles) {
-    if (labelStyle) {
-      labelGeometry = /** @type {ol.geom.Geometry|undefined} */ (labelStyle.getGeometryFunction()(feature));
-    }
-
     for (var i = 0, n = styles.length; i < n; i++) {
       var style = styles[i];
       if (style) {
         var geometry = style.getGeometryFunction()(feature);
         if (geometry) {
-          // render a label if the current geometry is the label geometry
-          var renderedLabel = labelGeometry === geometry ? labelStyle : undefined;
-          this.olGeometryToCesium(feature, geometry, style, context, renderedLabel);
-
-          // never render labels more than once
-          if (renderedLabel) {
-            labelStyle = undefined;
-          }
+          this.olGeometryToCesium(feature, geometry, style, context);
         }
       }
     }
