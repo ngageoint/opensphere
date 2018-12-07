@@ -1,5 +1,6 @@
 goog.provide('plugin.file.kml.ui.KMLNetworkLinkNode');
 
+goog.require('goog.Uri');
 goog.require('goog.async.Delay');
 goog.require('goog.log');
 goog.require('goog.log.Logger');
@@ -95,6 +96,27 @@ plugin.file.kml.ui.KMLNetworkLinkNode = function(uri) {
   this.refreshTimer_ = null;
 
   /**
+   * How often the network link will refresh in milliseconds.
+   * @type {number}
+   * @private
+   */
+  this.viewRefreshInterval_ = 4000;
+
+  /**
+   * The view refresh mode for the network link.
+   * @type {os.ui.file.kml.ViewRefreshMode}
+   * @private
+   */
+  this.viewRefreshMode_ = os.ui.file.kml.ViewRefreshMode.NEVER;
+
+  /**
+   * The view refresh timer.
+   * @type {goog.async.Delay}
+   * @private
+   */
+  this.viewRefreshTimer_ = null;
+
+  /**
    * The network link URI
    * @type {string}
    * @private
@@ -121,20 +143,11 @@ plugin.file.kml.ui.KMLNetworkLinkNode.LOGGER_ = goog.log.getLogger('plugin.file.
 plugin.file.kml.ui.KMLNetworkLinkNode.prototype.disposeInternal = function() {
   plugin.file.kml.ui.KMLNetworkLinkNode.base(this, 'disposeInternal');
 
-  if (this.importer_) {
-    this.importer_.dispose();
-    this.importer_ = null;
-  }
-
-  if (this.request_) {
-    this.request_.dispose();
-    this.request_ = null;
-  }
-
-  if (this.refreshTimer_) {
-    this.refreshTimer_.dispose();
-    this.refreshTimer_ = null;
-  }
+  os.MapContainer.getInstance().unlisten(os.MapEvent.VIEW_CHANGE, this.onViewChange_, false, this);
+  goog.dispose(this.importer_);
+  goog.dispose(this.request_);
+  goog.dispose(this.refreshTimer_);
+  goog.dispose(this.viewRefreshTimer_);
 };
 
 
@@ -243,18 +256,6 @@ plugin.file.kml.ui.KMLNetworkLinkNode.prototype.setRefreshMode = function(value)
 
 
 /**
- * Manually trigger a network link refresh.
- */
-plugin.file.kml.ui.KMLNetworkLinkNode.prototype.refresh = function() {
-  if (this.refreshTimer_) {
-    this.refreshTimer_.fire();
-  } else {
-    this.onRefreshTimer_();
-  }
-};
-
-
-/**
  * Updates the refresh timer based on the current refresh mode/interval.
  * @private
  */
@@ -268,6 +269,81 @@ plugin.file.kml.ui.KMLNetworkLinkNode.prototype.updateRefreshTimer_ = function()
   this.refreshTimer_ = new goog.async.Delay(this.onRefreshTimer_, this.getRefreshInterval(), this);
   if (active) {
     this.refreshTimer_.start();
+  }
+};
+
+
+/**
+ * Get the view refresh mode.
+ * @return {os.ui.file.kml.ViewRefreshMode}
+ */
+plugin.file.kml.ui.KMLNetworkLinkNode.prototype.getViewRefreshMode = function() {
+  return this.viewRefreshMode_;
+};
+
+
+/**
+ * Set the view refresh mode.
+ * @param {os.ui.file.kml.ViewRefreshMode} value
+ */
+plugin.file.kml.ui.KMLNetworkLinkNode.prototype.setViewRefreshMode = function(value) {
+  this.viewRefreshMode_ = value;
+};
+
+
+/**
+ * Set the view refresh interval for the network link. If {@link viewRefreshMode} is set to
+ * {@link os.ui.file.kml.ViewRefreshMode.STOP}, the link refreshes this many milliseconds after the camera stops moving.
+ * @param {number} value The refresh timer in seconds, or zero to prevent automatic refresh
+ */
+plugin.file.kml.ui.KMLNetworkLinkNode.prototype.setViewRefreshTimer = function(value) {
+  // value should always be positive - negative values will prevent refresh
+  this.viewRefreshInterval_ = Math.max(value, 0);
+  this.updateViewRefreshTimer_();
+};
+
+
+/**
+ * Updates the view refresh timer.
+ * @private
+ */
+plugin.file.kml.ui.KMLNetworkLinkNode.prototype.updateViewRefreshTimer_ = function() {
+  goog.dispose(this.viewRefreshTimer_);
+
+  if (this.viewRefreshInterval_) {
+    os.MapContainer.getInstance().listen(os.MapEvent.VIEW_CHANGE, this.onViewChange_, false, this);
+    this.viewRefreshTimer_ = new goog.async.Delay(this.onRefreshTimer_, this.viewRefreshInterval_, this);
+  } else {
+    os.MapContainer.getInstance().unlisten(os.MapEvent.VIEW_CHANGE, this.onViewChange_, false, this);
+    this.viewRefreshTimer_ = null;
+  }
+};
+
+
+/**
+ * Handles changes to the view.
+ * @private
+ */
+plugin.file.kml.ui.KMLNetworkLinkNode.prototype.onViewChange_ = function() {
+  if (this.viewRefreshTimer_ && this.getState() != os.structs.TriState.OFF) {
+    if (this.isLoading() && this.request_) {
+      // cancel the pending request
+      this.request_.abort();
+    }
+
+    this.viewRefreshTimer_.start();
+  }
+};
+
+
+/**
+ * Manually trigger a network link refresh.
+ */
+plugin.file.kml.ui.KMLNetworkLinkNode.prototype.refresh = function() {
+  if (this.refreshTimer_) {
+    this.refreshTimer_.fire();
+  } else {
+    this.onRefreshTimer_();
   }
 };
 
@@ -299,6 +375,12 @@ plugin.file.kml.ui.KMLNetworkLinkNode.prototype.onRefreshTimer_ = function() {
 
     this.setLoading(true);
     this.setIcon_(plugin.file.kml.ui.NetworkLinkIcons.LOADING);
+
+    if (this.viewRefreshMode_ !== os.ui.file.kml.ViewRefreshMode.NEVER) {
+      // include the BBOX as part of the request URL, the {extent} tag is handled by the variable replacer
+      var uri = this.request_.getUri();
+      uri.setParameterValue('BBOX', '{extent:west},{extent:south},{extent:east},{extent:north}');
+    }
 
     this.durationStart_ = goog.now();
     this.request_.load();
