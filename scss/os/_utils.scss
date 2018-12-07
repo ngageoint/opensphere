@@ -169,11 +169,11 @@
   &:not(.u-table__no-hover) .u-table__head,
   &:not(.u-table__no-hover) .u-table__row {
     @include hover {
-      background-color: $list-group-active-bg !important;
-      color: $dropdown-link-hover-color;
+      background-color: $list-group-hover-bg !important;
+      color: color-yiq($list-group-hover-bg);
 
       a {
-        color: $dropdown-link-hover-color;
+        color: color-yiq($list-group-hover-bg);
       }
     }
   }
@@ -185,9 +185,16 @@
 
   .u-table__row {
     background-color: $table-bg;
+
+    &.active {
+      background-color: $list-group-active-bg !important;
+      color: color-yiq($list-group-active-bg);
+    }
   }
 
   &.u-table-striped {
+    cursor: pointer;
+
     .u-table__row:nth-child(odd) {
       background-color: $table-accent-bg;
     }
@@ -227,6 +234,7 @@
   border-bottom-left-radius: 0 !important;
   border-bottom-right-radius: 0 !important;
 }
+
 
 // At certain breakpoints, forms look really bad (especially in modals. Lets adjust forms to takeup more of the screen)
 // To use, just add u-form-vertical-at-<breakpoint>. (u-form-veritical-at-md).
@@ -307,7 +315,8 @@
   background-color: $body-bg;
 }
 
-.u-bg-body-offset {
+.u-bg-body-offset,
+.u-bg-body-offset__on-hover:hover {
   background-color: $u-theme-variables--bg-offset;
 }
 
