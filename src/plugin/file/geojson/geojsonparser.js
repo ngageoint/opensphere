@@ -83,11 +83,11 @@ plugin.file.geojson.GeoJSONParser.prototype.setSource = function(source) {
     } else {
       var o = /** @type {GeoJSONObject} */ (src);
 
-      if (o.type == 'Feature') {
-        this.features = [o];
-      } else if (o.type == 'FeatureCollection') {
+      if (o.type == 'FeatureCollection') {
         var c = /** @type {GeoJSONFeatureCollection} */ (o);
         this.features = c.features;
+      } else if (o.type) {
+        this.features = [o];
       }
     }
   }
