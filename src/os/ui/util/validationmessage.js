@@ -12,7 +12,8 @@ os.ui.util.validationMessageDirective = function() {
     restrict: 'E',
     replace: true,
     scope: {
-      'target': '='
+      'target': '=',
+      'context': '@?'
     },
     templateUrl: os.ROOT + 'views/util/validationmessage.html',
     controller: os.ui.util.ValidationMessageCtrl,
