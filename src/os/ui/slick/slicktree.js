@@ -60,7 +60,7 @@ os.ui.slick.slickTreeDirective = function() {
       /**
        * Whether or not to enable drag/drop
        */
-      'dragEnabled': '=',
+      'dragEnabled': '=?',
 
       /**
        * Whether or not to enable multiselect
