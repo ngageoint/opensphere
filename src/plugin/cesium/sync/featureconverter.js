@@ -1244,11 +1244,11 @@ plugin.cesium.sync.FeatureConverter.prototype.createBillboard = function(feature
 
   this.updateBillboard(feature, geometry, options, style, context.layer, opt_flatCoords, opt_offset);
 
-  // if (opt_collection) {
-  //   opt_collection.add(options);
-  // } else {
-  context.addBillboard(options, feature, geometry);
-  // }
+  if (opt_collection) {
+    opt_collection.add(options);
+  } else {
+    context.addBillboard(options, feature, geometry);
+  }
 };
 
 
