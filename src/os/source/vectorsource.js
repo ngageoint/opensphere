@@ -1844,7 +1844,15 @@ os.source.Vector.prototype.checkFeatureLimit = function(features) {
 
   if (totalCount + features.length >= maxFeatures) {
     // max feature count hit, only add features up to the limit
-    features.length = Math.max(maxFeatures - totalCount, 0);
+    try {
+      features.length = Math.max(maxFeatures - totalCount, 0);
+    } catch (e) {
+      // This is to help catch a weird production error to determine the root cause
+      // See THIN-12518
+      goog.log.error(this.log, 'totalCount ' + totalCount + 'maxFeatures ' + maxFeatures, e);
+      features.length = 0;
+    }
+
     os.source.handleMaxFeatureCount(maxFeatures);
   }
 };
