@@ -1845,17 +1845,15 @@ os.source.Vector.prototype.checkFeatureLimit = function(features) {
 
   if (totalCount + features.length >= maxFeatures) {
     // max feature count hit, only add features up to the limit
-    var length = Math.max(maxFeatures - totalCount, 0);
-    if (isNaN(length) || length >= Math.pow(2, 32)) {
-      // something went wrong, log an error and don't allow more features to be added
+    try {
+      features.length = Math.max(maxFeatures - totalCount, 0);
+    } catch (e) {
+      // This is to help catch a weird production error to determine the root cause
+      // See THIN-12518
+      goog.log.error(this.log, 'totalCount ' + totalCount + 'maxFeatures ' + maxFeatures, e);
       features.length = 0;
-      var msg = 'Failed to check feature limit for ' + this.getTitle() + '.\n Current feature count: ' +
-        JSON.stringify(totalCount) + '.\n Expected maximum feature count: ' + JSON.stringify(maxFeatures) +
-        '.\n Cannot add additional features.';
-      goog.log.error(this.log, msg);
-    } else {
-      features.length = length;
     }
+
     os.source.handleMaxFeatureCount(maxFeatures);
   }
 };
