@@ -56,7 +56,7 @@ plugin.ogc.ui.OGCLayerNodeUICtrl = function($scope, $element) {
     var featureType = this.descriptor_.getFeatureType();
     if (featureType) {
       chooseTime = (featureType.getStartDateColumnName() !== null || featureType.getEndDateColumnName() !== null)
-        && featureType.getTimeColumns().length >= 2 && featureType.getStartDateColumnName() != 'validTime';
+        && featureType.getTimeColumns().length >= 2;
     }
   }
   $scope['chooseTime'] = chooseTime;
