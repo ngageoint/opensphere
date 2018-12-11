@@ -36,6 +36,12 @@ os.ogc.wfs.FeatureType = function(opt_typeName, opt_columns, opt_isDynamic) {
   this.isDynamic_ = false;
 
   /**
+   * @type {boolean}
+   * @private
+   */
+  this.overrideDynamic_ = false;
+
+  /**
    * @type {?string}
    * @private
    */
@@ -182,11 +188,11 @@ os.ogc.wfs.FeatureType.prototype.setGeometryColumnName = function(value) {
  * @inheritDoc
  */
 os.ogc.wfs.FeatureType.prototype.getStartDateColumnName = function() {
-  if (this.startDateColumnName_ || !this.isDynamic_) {
-    return this.startDateColumnName_;
-  } else {
+  if (this.isDynamic_ && !this.overrideDynamic_) {
     return 'validTime';
   }
+
+  return this.startDateColumnName_;
 };
 
 
@@ -194,6 +200,7 @@ os.ogc.wfs.FeatureType.prototype.getStartDateColumnName = function() {
  * @inheritDoc
  */
 os.ogc.wfs.FeatureType.prototype.setStartDateColumnName = function(value) {
+  this.overrideDynamic_ = true;
   this.startDateColumnName_ = value;
 };
 
@@ -202,11 +209,11 @@ os.ogc.wfs.FeatureType.prototype.setStartDateColumnName = function(value) {
  * @inheritDoc
  */
 os.ogc.wfs.FeatureType.prototype.getEndDateColumnName = function() {
-  if (this.startDateColumnName_ && this.endDateColumnName_) {
-    return this.endDateColumnName_;
-  } else {
-    return this.getStartDateColumnName();
+  if (this.isDynamic_ && !this.overrideDynamic_) {
+    return 'validTime';
   }
+
+  return this.endDateColumnName_ || this.startDateColumnName_;
 };
 
 
@@ -214,6 +221,7 @@ os.ogc.wfs.FeatureType.prototype.getEndDateColumnName = function() {
  * @inheritDoc
  */
 os.ogc.wfs.FeatureType.prototype.setEndDateColumnName = function(value) {
+  this.overrideDynamic_ = true;
   this.endDateColumnName_ = value;
 };
 
@@ -298,7 +306,12 @@ os.ogc.wfs.FeatureType.prototype.init = function(typeName, columns, isDynamic) {
  */
 os.ogc.wfs.FeatureType.prototype.isStartDate = function(name) {
   if (this.typeName_ && this.typeName_ in os.ogc.wfs.FeatureType.TIME_COLUMNS_) {
-    return os.ogc.wfs.FeatureType.TIME_COLUMNS_[this.typeName_][0].toLowerCase() == name;
+    var val = os.ogc.wfs.FeatureType.TIME_COLUMNS_[this.typeName_][0].toLowerCase() == name;
+    if (val) {
+      this.overrideDynamic_ = true;
+    }
+
+    return val;
   }
 
   var i = os.ogc.wfs.FeatureType.START_TIME_NAMES_.length;
@@ -308,7 +321,7 @@ os.ogc.wfs.FeatureType.prototype.isStartDate = function(name) {
     }
   }
 
-  return false;
+  return /^date_?time$/i.test(name);
 };
 
 
@@ -319,7 +332,11 @@ os.ogc.wfs.FeatureType.prototype.isStartDate = function(name) {
  */
 os.ogc.wfs.FeatureType.prototype.isEndDate = function(name) {
   if (this.typeName_ && this.typeName_ in os.ogc.wfs.FeatureType.TIME_COLUMNS_) {
-    return os.ogc.wfs.FeatureType.TIME_COLUMNS_[this.typeName_][1].toLowerCase() == name;
+    var val = os.ogc.wfs.FeatureType.TIME_COLUMNS_[this.typeName_][1].toLowerCase() == name;
+    if (val) {
+      this.overrideDynamic_ = true;
+    }
+    return val;
   }
 
   var i = os.ogc.wfs.FeatureType.END_TIME_NAMES_.length;
