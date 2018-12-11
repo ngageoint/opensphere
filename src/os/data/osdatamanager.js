@@ -140,13 +140,19 @@ os.data.OSDataManager.prototype.getSources = function() {
 
 /**
  * Gets the total count of all the features currently loaded
- * @return {number}
+ * @return {!number}
  */
 os.data.OSDataManager.prototype.getTotalFeatureCount = function() {
   var count = 0;
   var sources = this.getSources();
   for (var i = 0, n = sources.length; i < n; i++) {
-    count += sources[i].getFeatureCount();
+    var fc = sources[i].getFeatureCount();
+
+    if (typeof fc != 'number' || isNaN(fc) || fc < 0) {
+      goog.log.error(os.data.OSDataManager.LOGGER_, 'getFeatureCount() for ' + sources[i].getId() + ' was invalid!');
+    } else {
+      count += fc;
+    }
   }
 
   return count;
