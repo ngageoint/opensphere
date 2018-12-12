@@ -25,9 +25,11 @@ os.extent.clamp = function(extent, clampTo, opt_extent) {
  * produces an extent from longitudes normalized to [0, 360] instead.
  *
  * @param {?ol.geom.Geometry} geom The geom
+ * @param {boolean=} opt_allowLargeWidths Leave false (default) for zooming. Use true if the extent
+ *   is to be used in an RBush.
  * @return {?ol.Extent} the extent
  */
-os.extent.getFunctionalExtent = function(geom) {
+os.extent.getFunctionalExtent = function(geom, opt_allowLargeWidths) {
   if (!geom) {
     return null;
   }
@@ -55,7 +57,11 @@ os.extent.getFunctionalExtent = function(geom) {
     extent[2] = max;
   }
 
-  if (extent[2] - extent[0] > 180) {
+  // This case is for zooming to multi-items which occupy a small area around the antimeridian
+  // but don't cross it. Such as a MultiPoint of [[-179, 0], [179, 0]].
+  //
+  // However, this will BREAK the index case if you attempt to put these extents in an R-Tree.
+  if (!opt_allowLargeWidths && extent[2] - extent[0] > 180) {
     // assume the inverse
     var tmp = extent[0] + 360;
     extent[0] = extent[2];
