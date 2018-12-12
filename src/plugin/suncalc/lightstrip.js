@@ -1,7 +1,7 @@
 goog.provide('plugin.suncalc.LightStripCtrl');
 goog.provide('plugin.suncalc.lightStripDirective');
 
-goog.require('goog.dom.ViewportSizeMonitor');
+goog.require('goog.async.ConditionalDelay');
 goog.require('os.defines');
 goog.require('os.ui.Module');
 
@@ -54,16 +54,18 @@ plugin.suncalc.LightStripCtrl = function($scope, $element) {
   this.options_ = null;
 
   /**
-   * @type {?goog.dom.ViewportSizeMonitor}
+   * Resize handler.
+   * @type {?function()}
    * @private
    */
-  this.vsm_ = new goog.dom.ViewportSizeMonitor();
-  this.vsm_.listen(goog.events.EventType.RESIZE, this.update_.bind(this), false);
+  this.resizeFn_ = this.update_.bind(this);
+  this.element_.parent().resize(this.resizeFn_);
 
   os.dispatcher.listen(os.ui.timeline.TimelineScaleEvent.TYPE, this.update_, false, this);
   $scope.$on('$destroy', this.destroy_.bind(this));
 
-  this.update_();
+  var updateDelay = new goog.async.ConditionalDelay(this.update_, this);
+  updateDelay.start(100, 5000);
 };
 
 
@@ -72,6 +74,11 @@ plugin.suncalc.LightStripCtrl = function($scope, $element) {
  * @private
  */
 plugin.suncalc.LightStripCtrl.prototype.destroy_ = function() {
+  if (this.element_ && this.resizeFn_) {
+    this.element_.parent().removeResize(this.resizeFn_);
+    this.resizeFn_ = null;
+  }
+
   this.scope_ = null;
   this.element_ = null;
   this.vsm_.dispose();
@@ -100,7 +107,9 @@ plugin.suncalc.LightStripCtrl.EVENTS = [{
 
 
 /**
+ * Update the light strip.
  * @param {goog.events.Event=} opt_evt The event
+ * @return {boolean} If the update succeeded.
  * @private
  */
 plugin.suncalc.LightStripCtrl.prototype.update_ = function(opt_evt) {
@@ -109,19 +118,19 @@ plugin.suncalc.LightStripCtrl.prototype.update_ = function(opt_evt) {
   }
 
   if (!this.options_) {
-    return;
+    return false;
   }
 
   var map = os.MapContainer.getInstance().getMap();
   if (!map) {
-    return;
+    return false;
   }
 
   if (!this.view_) {
     this.view_ = map.getView();
 
     if (!this.view_) {
-      return;
+      return false;
     }
 
     this.view_.on('change:center', this.update_, this);
@@ -129,7 +138,7 @@ plugin.suncalc.LightStripCtrl.prototype.update_ = function(opt_evt) {
 
   var coord = this.view_.getCenter();
   if (!coord) {
-    return;
+    return false;
   }
 
   this.element_.attr('width', this.element_.parent().width());
@@ -140,7 +149,7 @@ plugin.suncalc.LightStripCtrl.prototype.update_ = function(opt_evt) {
   if (this.options_.interval > 4 * 60 * 60 * 1000) {
     // the view is going to be too small to matter
     ctx.clearRect(0, 0, width, height);
-    return;
+    return false;
   }
 
   coord = ol.proj.toLonLat(coord, os.map.PROJECTION);
@@ -169,4 +178,6 @@ plugin.suncalc.LightStripCtrl.prototype.update_ = function(opt_evt) {
     ctx.fillStyle = events[0].color;
     ctx.fillRect(r, 0, width - r, height);
   }
+
+  return true;
 };
