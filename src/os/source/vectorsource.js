@@ -1041,7 +1041,7 @@ os.source.Vector.prototype.updateIndex = function(feature) {
       var geomFunc = styles[s].getGeometryFunction();
       var g = geomFunc(feature);
       if (g) {
-        var e = os.extent.getFunctionalExtent(g);
+        var e = os.extent.getFunctionalExtent(g, true);
         if (e) {
           ol.extent.extend(extent, e);
         }
