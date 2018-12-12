@@ -1,5 +1,6 @@
 goog.provide('os.ui.util.PunyParentCtrl');
 goog.provide('os.ui.util.punyParentDirective');
+goog.require('goog.async.Debouncer');
 goog.require('os.ui.Module');
 
 
@@ -43,6 +44,13 @@ os.ui.util.PunyParentCtrl = function($scope, $element) {
   this.element_ = $element;
 
   /**
+   * Used to delay searching until we are done typing
+   * @type {goog.async.Debouncer}
+   * @private
+   */
+  this.debounce_ = new goog.async.Debouncer(this.onDebouncedResize_, 200, this);
+
+  /**
    * @type {Function}
    * @private
    */
@@ -74,27 +82,37 @@ os.ui.util.PunyParentCtrl.prototype.destroy_ = function() {
  * @private
  */
 os.ui.util.PunyParentCtrl.prototype.onResize_ = function() {
-  var children = this.element_.children().toArray();
-  var childrenWidth = 0;
-  children.forEach(function(child) {
-    var c = $(child);
-    // ignore the resize trigger since thats the parent size
-    if (!c.hasClass('resize-triggers')) {
-      childrenWidth += c.outerWidth(true);
-    }
-  });
+  this.debounce_.fire();
+};
 
-  if (childrenWidth > this.fullSize) {
-    this.fullSize = childrenWidth;
+
+/**
+ * @private
+ */
+os.ui.util.PunyParentCtrl.prototype.onDebouncedResize_ = function() {
+  if (this.element_) {
+    var children = this.element_.children().toArray();
+    var childrenWidth = 0;
+    children.forEach(function(child) {
+      var c = $(child);
+      // ignore the resize trigger since thats the parent size
+      if (!c.hasClass('resize-triggers')) {
+        childrenWidth += c.outerWidth(true);
+      }
+    });
+
+    if (childrenWidth > this.fullSize) {
+      this.fullSize = childrenWidth;
+    }
+
+    // Set the puny state on the child scope
+    children.forEach(function(child) {
+      var c = $(child);
+      var cscope = c.scope();
+      if (!c.hasClass('resize-triggers') && cscope) {
+        cscope['puny'] = this.element_.outerWidth(true) < this.fullSize;
+      }
+    }.bind(this));
+    os.ui.apply(this.scope_);
   }
-
-  // Set the puny state on the child scope
-  children.forEach(function(child) {
-    var c = $(child);
-    var cscope = c.scope();
-    if (!c.hasClass('resize-triggers') && cscope) {
-      cscope['puny'] = this.element_.outerWidth(true) < this.fullSize;
-    }
-  }.bind(this));
-  os.ui.apply(this.scope_);
 };
