@@ -26,15 +26,15 @@ os.ui.slick.TreeSearch = function(search, setAs, onObj, opt_noResultLabel) {
 
   /**
    * @type {!string}
-   * @private
+   * @protected
    */
-  this.field_ = setAs;
+  this.field = setAs;
 
   /**
    * @type {Object}
-   * @private
+   * @protected
    */
-  this.target_ = onObj;
+  this.target = onObj;
 
   /**
    * @type {?function(os.structs.ITreeNode):boolean}
@@ -128,9 +128,9 @@ os.ui.slick.TreeSearch.prototype.getOpenIds = function() {
    */
   var openIds = {};
 
-  if (this.field_ && this.target_ && this.target_[this.field_]) {
+  if (this.field && this.target && this.target[this.field]) {
     os.ui.slick.TreeSearch.getOpenIds(openIds,
-        /** @type {!Array.<!os.structs.ITreeNode>} */ (this.target_[this.field_]));
+        /** @type {!Array.<!os.structs.ITreeNode>} */ (this.target[this.field]));
   }
 
   os.object.merge(this.externalOpenIds_, openIds, true);
@@ -197,7 +197,7 @@ os.ui.slick.TreeSearch.prototype.beginSearch = function(term, groupBy) {
   // if we had a previous group by, clean up the cloned nodes
   if (this.lastGroupBy_) {
     // get the last array of data
-    var oldList = /** @type {!Array.<!os.structs.ITreeNode>} */ (this.target_[this.field_]);
+    var oldList = /** @type {!Array.<!os.structs.ITreeNode>} */ (this.target[this.field]);
 
     for (var i = 0, n = oldList.length; i < n; i++) {
       oldList[i].dispose();
@@ -236,7 +236,7 @@ os.ui.slick.TreeSearch.prototype.beginSearch = function(term, groupBy) {
   this.setSort(list);
   os.ui.slick.TreeSearch.setOpenIds(openIds, list, this.externalOpenIds_);
 
-  this.target_[this.field_] = list;
+  this.target[this.field] = list;
   this.lastGroupBy_ = groupBy;
 };
 

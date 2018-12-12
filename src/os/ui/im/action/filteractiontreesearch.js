@@ -29,6 +29,24 @@ goog.inherits(os.ui.im.action.FilterActionTreeSearch, os.ui.slick.AbstractGroupB
 /**
  * @inheritDoc
  */
+os.ui.im.action.FilterActionTreeSearch.prototype.beginSearch = function(term, groupBy) {
+  var oldSearch = /** @type {!Array<!os.structs.ITreeNode>} */ (this.target[this.field]);
+  if (Array.isArray(oldSearch)) {
+    // dispose the old nodes, otherwise they will be retained in memory due to listeners on the filter action entries
+    oldSearch.forEach(function(node) {
+      node.dispose();
+    });
+
+    oldSearch.length = 0;
+  }
+
+  os.ui.im.action.FilterActionTreeSearch.base(this, 'beginSearch', term, groupBy);
+};
+
+
+/**
+ * @inheritDoc
+ */
 os.ui.im.action.FilterActionTreeSearch.prototype.getSearch = function() {
   var entries = os.im.action.ImportActionManager.getInstance().getActionEntries(this.entryType);
   var nodes = [];
