@@ -2,6 +2,7 @@ goog.provide('os.ui.NavBarCtrl');
 
 goog.require('goog.Disposable');
 goog.require('goog.events.Event');
+goog.require('os.ui.list');
 goog.require('os.ui.nav.EventType');
 
 
@@ -67,6 +68,40 @@ os.ui.NavBarCtrl.prototype.getNavContentSize = function() {
   });
 
   return size;
+};
+
+
+/**
+ * Returns true if navbar only contains elements from one list
+ * @param {?Array.<string>} listIds Array containing the list ids of the navbar lists
+ * @return {?boolean} true if NavBar elements come from a single list
+ * @export
+ */
+os.ui.NavBarCtrl.prototype.navItemsFromSingleList = function(listIds) {
+  if (listIds == null) {
+    return null;
+  }
+
+  var numListsPopulated = 0;
+  listIds.forEach(function(id) {
+    var list = os.ui.list.get(id);
+    if (list) {
+      numListsPopulated++;
+    }
+  });
+
+  return numListsPopulated < 2;
+};
+
+
+/**
+ * Number of navItems within the given list id
+ * @param {string} listId The list id
+ * @return {number} the number of navItems in the list
+ * @export
+ */
+os.ui.NavBarCtrl.prototype.numNavItems = function(listId) {
+  return os.ui.list.get(listId) ? os.ui.list.get(listId).length : 0;
 };
 
 
