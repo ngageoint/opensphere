@@ -62,6 +62,18 @@ os.filter.impl.ecql.AreaFormatter.prototype.setSupportsAltitude = function(value
 
 
 /**
+ * @param {Array} coords The array of coords, rings, or polygons
+ */
+os.filter.impl.ecql.AreaFormatter.stripAltitude = function(coords) {
+  if (coords[0].length === undefined) {
+    coords.length = 2;
+  } else {
+    coords.forEach(os.filter.impl.ecql.AreaFormatter.stripAltitude);
+  }
+};
+
+
+/**
  * @inheritDoc
  */
 os.filter.impl.ecql.AreaFormatter.prototype.format = function(feature) {
@@ -69,19 +81,15 @@ os.filter.impl.ecql.AreaFormatter.prototype.format = function(feature) {
   var geom = /** @type {ol.geom.Geometry} */ (feature.get(os.interpolate.ORIGINAL_GEOM_FIELD)) || feature.getGeometry();
 
   if (geom) {
-    geom = /** @type {ol.geom.Polygon} */ (geom.clone().toLonLat());
+    geom = geom.clone().toLonLat();
     os.geo.normalizeGeometryCoordinates(geom);
 
     if (!this.supportsAltitude) {
-      var rings = geom.getCoordinates();
-      for (var r = 0, rr = rings.length; r < rr; r++) {
-        var ring = rings[r];
-        for (var c = 0, cc = ring.length; c < cc; c++) {
-          ring[c].length = 2;
-        }
-      }
+      var poly = /** @type {ol.geom.MultiPolygon|ol.geom.Polygon} */ (geom);
 
-      geom.setCoordinates(rings);
+      var coords = poly.getCoordinates();
+      os.filter.impl.ecql.AreaFormatter.stripAltitude(coords);
+      poly.setCoordinates(coords);
     }
 
     result += '(' + this.spatialPredicate + '(' + this.column + ',' + this.wkt.writeGeometry(geom) + '))';
