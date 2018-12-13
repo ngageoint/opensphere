@@ -25,11 +25,18 @@ os.file.mime.LOGGER_ = goog.log.getLogger('os.file.mime');
 
 
 /**
+ * @const
+ * @type {string}
+ */
+os.file.mime.BASE_TYPE = 'application/octet-stream';
+
+
+/**
  * @type {os.file.mime.Node}
  * @private
  */
 os.file.mime.root_ = {
-  type: 'application/octet-stream',
+  type: os.file.mime.BASE_TYPE,
   detect: function() {
     return goog.Promise.resolve(true);
   },
