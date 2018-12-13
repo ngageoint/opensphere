@@ -689,6 +689,7 @@ os.ui.timeline.TimelineCtrl.prototype.updateSize_ = function() {
     var handleHeight = os.ui.timeline.TimelineCtrl.HANDLE_HEIGHT;
 
     this.xScale_.range([0, width]);
+    this.zoom_.x(this.xScale_);
 
     var mainGroup = this.baseElement_.select('.c-svg-timeline__main');
     mainGroup.select('.c-svg-timeline__axis-background').
