@@ -31,9 +31,11 @@ plugin.file.geojson.mime.isGeoJSON = function(buffer, opt_file, opt_context) {
  * @param {Array|Object} obj
  * @return {boolean}
  * @private
+ * @suppress {accessControls}
  */
 plugin.file.geojson.mime.find_ = function(obj) {
-  if (obj['type'] === 'FeatureCollection' || obj['type'] === 'Feature') {
+  var type = obj['type'];
+  if (type === 'FeatureCollection' || type === 'Feature' || type in ol.format.GeoJSON.GEOMETRY_READERS_) {
     return true;
   }
 
