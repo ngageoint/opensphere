@@ -80,15 +80,7 @@ os.ui.util.AutoVHeightCtrl = function($scope, $element, $injector, $timeout) {
      */
     this.resizeFn_ = this.onResize_.bind(this);
 
-    var parent = $element.parent();
-    parent.resize(this.resizeFn_);
-
-    $timeout(this.resizeSiblings_.bind(this));
-
-    // add resize to common elements
-    goog.object.getValues(os.ui.windowCommonElements).forEach(function(sibling) {
-      $(/** @type {string} */ (sibling)).resize(this.resizeFn_);
-    }.bind(this));
+    this.addResizeListeners_();
 
     // there are some situations where resize won't fire on creation, particularly when using IE or when swapping DOM
     // elements with ng-if. this will make sure it fires as soon as Angular is done manipulating the DOM.
@@ -109,8 +101,8 @@ os.ui.util.AutoVHeightCtrl.prototype.onDestroy_ = function() {
   if (!this.scope_['autovheightDisabled']) {
     os.dispatcher.unlisten(os.config.ThemeSettingsChangeEvent, this.onResize_, false, this);
 
-    var parent = this.element_.parent();
-    parent.removeResize(this.resizeFn_);
+    var vsm = goog.dom.ViewportSizeMonitor.getInstanceForWindow();
+    vsm.unlisten(goog.events.EventType.RESIZE, this.onResize_, false, this);
 
     var siblings = /** @type {Array.<string>} */ (this.scope_['siblings']);
     if (siblings && this.resizeFn_) {
@@ -160,9 +152,19 @@ os.ui.util.AutoVHeightCtrl.prototype.onResize_ = function() {
  * Add resize handlers to siblings
  * @private
  */
-os.ui.util.AutoVHeightCtrl.prototype.resizeSiblings_ = function() {
-  var siblings = /** @type {string} */ (this.scope_['siblings']);
-  if (siblings) {
-    $(siblings).resize(this.resizeFn_);
+os.ui.util.AutoVHeightCtrl.prototype.addResizeListeners_ = function() {
+  if (this.scope_) {
+    var vsm = goog.dom.ViewportSizeMonitor.getInstanceForWindow();
+    vsm.listen(goog.events.EventType.RESIZE, this.onResize_, false, this);
+
+    // add resize to common elements
+    goog.object.getValues(os.ui.windowCommonElements).forEach(function(sibling) {
+      $(/** @type {string} */ (sibling)).resize(this.resizeFn_);
+    }.bind(this));
+
+    var siblings = /** @type {string} */ (this.scope_['siblings']);
+    if (siblings) {
+      $(siblings).resize(this.resizeFn_);
+    }
   }
 };
