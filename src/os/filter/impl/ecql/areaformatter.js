@@ -36,6 +36,28 @@ os.filter.impl.ecql.AreaFormatter = function(opt_column) {
    * @protected
    */
   this.group = 'OR';
+
+  /**
+   * @type {boolean}
+   * @protected
+   */
+  this.supportsAltitude = true;
+};
+
+
+/**
+ * @return {boolean}
+ */
+os.filter.impl.ecql.AreaFormatter.prototype.getSupportsAltitude = function() {
+  return this.supportsAltitude;
+};
+
+
+/**
+ * @param {boolean} value
+ */
+os.filter.impl.ecql.AreaFormatter.prototype.setSupportsAltitude = function(value) {
+  this.supportsAltitude = value;
 };
 
 
@@ -47,8 +69,21 @@ os.filter.impl.ecql.AreaFormatter.prototype.format = function(feature) {
   var geom = /** @type {ol.geom.Geometry} */ (feature.get(os.interpolate.ORIGINAL_GEOM_FIELD)) || feature.getGeometry();
 
   if (geom) {
-    geom = geom.clone().toLonLat();
+    geom = /** @type {ol.geom.Polygon} */ (geom.clone().toLonLat());
     os.geo.normalizeGeometryCoordinates(geom);
+
+    if (!this.supportsAltitude) {
+      var rings = geom.getCoordinates();
+      for (var r = 0, rr = rings.length; r < rr; r++) {
+        var ring = rings[r];
+        for (var c = 0, cc = ring.length; c < cc; c++) {
+          ring[c].length = 2;
+        }
+      }
+
+      geom.setCoordinates(rings);
+    }
+
     result += '(' + this.spatialPredicate + '(' + this.column + ',' + this.wkt.writeGeometry(geom) + '))';
   }
 
