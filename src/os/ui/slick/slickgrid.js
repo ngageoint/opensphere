@@ -761,8 +761,10 @@ os.ui.slick.SlickGridCtrl.prototype.onDataChange = function(opt_newVal, opt_oldV
  */
 os.ui.slick.SlickGridCtrl.prototype.onColumnsChange = function(opt_newVal, opt_oldVal) {
   if (!opt_newVal || this.getColumns() != opt_newVal) {
-    this.grid.setColumns(this.getColumns());
-    this.setSelectedRows(this.getSelectedRows());
+    if (this.grid) {
+      this.grid.setColumns(this.getColumns());
+      this.setSelectedRows(this.getSelectedRows());
+    }
   }
 };
 
