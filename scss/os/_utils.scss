@@ -196,9 +196,11 @@
     }
   }
 
-  &.u-table-striped {
+  .u-table__selectable {
     cursor: pointer;
+  }
 
+  &.u-table-striped {
     .u-table__row:nth-child(odd) {
       background-color: $table-accent-bg;
     }
