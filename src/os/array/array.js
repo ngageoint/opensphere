@@ -117,6 +117,26 @@ os.array.arrayCopy = function(src, srcPos, dest, destPos, length) {
 
 
 /**
+ * Copies array elements from a source array to a destination array.
+ * @param {Array} arr1 first array to check interesection
+ * @param {Array} arr2 first array to check interesection
+ * @return {Array} an array with only the items present that are in both arrays
+ */
+os.array.intersection = function(arr1, arr2) {
+  var t;
+  // Optimization so that indexOf loops over smaller array
+  if (arr1.length > arr2.length) {
+    t = arr2; arr2 = arr1; arr1 = t;
+  }
+  return arr1.filter(function(element) {
+    return arr2.indexOf(element) > -1;
+  }).filter(function(element, index, arr) { // Extra  step to remove duplication
+    return arr.indexOf(element) === index;
+  });
+};
+
+
+/**
  * Based on the goog.array.removeDuplicates method. This function discovers all the duplicate entries in an array
  * and returns them.
  * @param {Array<T>} arr The array to search for duplicates
@@ -148,6 +168,7 @@ os.array.findDuplicates = function(arr, opt_hashFn) {
   }
   return returnArray;
 };
+
 
 /**
  * Based on the goog.array.removeDuplicates method but will also work when the items you are comparing are arrays,

@@ -41,10 +41,8 @@ os.ui.file.AnyTypeImportUI.prototype.launchUI = function(file, opt_config) {
       'file': file,
       'config': opt_config
     };
-    var content = file.getContent();
     var windowOptions = {
-      'label': content instanceof ArrayBuffer && os.file.mime.zip.isZip(content) ? 'Import Zip' :
-          'Choose Import Method',
+      'label': 'Choose Import Method',
       'icon': 'fa fa-cloud-download',
       'x': 'center',
       'y': 'center',

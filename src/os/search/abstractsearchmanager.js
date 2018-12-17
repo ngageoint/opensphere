@@ -2,6 +2,7 @@ goog.provide('os.search.AbstractSearchManager');
 
 goog.require('goog.events.Event');
 goog.require('goog.events.EventTarget');
+goog.require('os.user.settings.FavoriteManager');
 
 
 
@@ -242,6 +243,7 @@ os.search.AbstractSearchManager.prototype.getTotal = goog.abstractMethod;
 
 /**
  * Retrieve the identifying names of all the registered searches.
+ * @param {boolean=} opt_excludeExternal
  * @return {!Array<!os.search.ISearch>}
  */
 os.search.AbstractSearchManager.prototype.getRegisteredSearches = goog.abstractMethod;

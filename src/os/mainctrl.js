@@ -224,7 +224,6 @@ os.MainCtrl = function($scope, $element, $compile, $timeout, $injector) {
   var im = os.ui.im.ImportManager.getInstance();
   im.registerImportDetails('Data filters for supported layers.');
   im.registerImportUI(os.file.mime.filter.TYPE, new os.filter.im.OSFilterImportUI());
-  im.registerImportUI(os.file.mime.any.TYPE, new os.ui.file.AnyTypeImportUI());
 
   // register importers
   im.registerImporter('os', os.im.FeatureImporter);
