@@ -363,6 +363,8 @@ plugin.ogc.wfs.WFSLayerConfig.prototype.getParser = function(options) {
     if (!parser) {
       parser = new plugin.file.geojson.GeoJSONParser();
     }
+
+    parser.setSourceId(this.id);
   } else {
     parser = new plugin.file.gml.GMLParser();
 

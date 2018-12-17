@@ -52,5 +52,7 @@ plugin.file.geojson.GeoJSONLayerConfig.prototype.getImporter = function(options)
  */
 plugin.file.geojson.GeoJSONLayerConfig.prototype.getParser = function(options) {
   var im = os.ui.im.ImportManager.getInstance();
-  return im.getParser('geojson');
+  var parser = im.getParser('geojson');
+  parser.setSourceId(this.id);
+  return parser;
 };

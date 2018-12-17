@@ -97,3 +97,17 @@ os.search.ISearch.prototype.supportsSearchTerm;
  * @return {boolean}
  */
 os.search.ISearch.prototype.shouldNormalize;
+
+
+/**
+ * Whether the search is sent to external search providers.
+ * @return {boolean} [description]
+ */
+os.search.ISearch.prototype.isExternal;
+
+
+/**
+ * Set if the search is external
+ * @param {boolean} external
+ */
+os.search.ISearch.prototype.setExternal;

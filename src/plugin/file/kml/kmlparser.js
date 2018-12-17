@@ -1047,7 +1047,33 @@ plugin.file.kml.KMLParser.prototype.readNetworkLink_ = function(el) {
       }
     }
 
-    // TODO handle viewRefreshMode
+    var viewRefreshMode = linkObj['viewRefreshMode'];
+    if (viewRefreshMode && goog.object.containsValue(os.ui.file.kml.ViewRefreshMode, viewRefreshMode)) {
+      node.setViewRefreshMode(viewRefreshMode);
+
+      switch (viewRefreshMode) {
+        case os.ui.file.kml.ViewRefreshMode.NEVER:
+          // do nothing
+          break;
+        case os.ui.file.kml.ViewRefreshMode.REQUEST:
+          // the node handles this case by automatically populating the current view BBOX when the user manually
+          // refreshes the layer
+          break;
+        case os.ui.file.kml.ViewRefreshMode.STOP:
+        case os.ui.file.kml.ViewRefreshMode.REGION:
+          // TODO: Region support. For now I'm going to treat it like onStop, but regions are a more
+          // complicated construct for determining view refreshes that we don't support yet.
+
+          // there should be a second parameter defining a time delay after changes for these cases
+          var time = /** @type {number} */ (linkObj['viewRefreshTime']);
+          if (typeof time === 'number' && !isNaN(time)) {
+            node.setViewRefreshTimer(time * 1000);
+          }
+          break;
+        default:
+          break;
+      }
+    }
   }
 
   return node;

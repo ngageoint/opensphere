@@ -1065,10 +1065,18 @@ plugin.cesium.sync.FeatureConverter.prototype.olPolygonGeometryToCesiumPolyline 
 
     if (style.getFill()) {
       // perPositionHeight: true on the fill was causing weird visual artifacts on large polygons, so it's disabled here
+      // Grab the height from the first coordinate of the OL geometry
+      var coords = geometry.getCoordinates();
+      var height = undefined;
+
+      if (coords[0] && coords[0][0]) {
+        height = coords[0][0][2] || undefined;
+      }
+
       var fillGeometry = new Cesium.PolygonGeometry({
         polygonHierarchy: hierarchy,
         perPositionHeight: false,
-        extrudedHeight: undefined
+        height: height
       });
 
       var fillColor = this.extractColorFromOlStyle(style, false);
@@ -1236,11 +1244,11 @@ plugin.cesium.sync.FeatureConverter.prototype.createBillboard = function(feature
 
   this.updateBillboard(feature, geometry, options, style, context.layer, opt_flatCoords, opt_offset);
 
-  // if (opt_collection) {
-  //   opt_collection.add(options);
-  // } else {
-  context.addBillboard(options, feature, geometry);
-  // }
+  if (opt_collection) {
+    opt_collection.add(options);
+  } else {
+    context.addBillboard(options, feature, geometry);
+  }
 };
 
 
