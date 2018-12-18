@@ -61,23 +61,14 @@ os.ui.wiz.WizardPreviewCtrl = function($scope, $element, $timeout) {
    */
   this.timeout_ = $timeout;
 
-  var avgColWidth;
-  try {
-    avgColWidth = $element.width() / $scope['config']['columns'].length;
-  } catch (e) {
-    avgColWidth = 0;
-  }
-
   /**
    * Grid options.
    * @type {Object.<string, *>}
    */
   this['options'] = {
     'dataItemColumnValueExtractor': this.getValue_,
-    'defaultColumnWidth': 120,
     'enableColumnReorder': false,
     'fullWidthRows': true,
-    'forceFitColumns': avgColWidth >= 200,
     'multiSelect': false,
     'rowHeight': 21
   };
