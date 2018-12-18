@@ -152,7 +152,7 @@ os.data.OSDataManager.prototype.getTotalFeatureCount = function() {
       count += fc;
     } else {
       goog.log.error(os.data.OSDataManager.LOGGER_, 'getFeatureCount() for ' + sources[i].getId() +
-        ' was not an integer! ' + fc);
+          ' was not an integer! ' + fc);
     }
   }
 
