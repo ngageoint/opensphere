@@ -147,7 +147,6 @@ os.ui.file.ui.csv.ConfigStepCtrl = function($scope, $timeout) {
    */
   this['linePreviewOptions'] = {
     'fullWidthRows': true,
-    // 'forceFitColumns': true,
     'multiSelect': false,
     'useRowRenderEvents': true,
     'headerRowHeight': 0,
