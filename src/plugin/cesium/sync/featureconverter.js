@@ -1626,15 +1626,6 @@ plugin.cesium.sync.FeatureConverter.prototype.getFeatureStyles = function(featur
  * @param {!plugin.cesium.VectorContext} context Cesium synchronization context
  */
 plugin.cesium.sync.FeatureConverter.prototype.olGeometryToCesium = function(feature, geometry, style, context) {
-  if (style.getText()) {
-    var currentLabel = context.getLabelForGeometry(geometry);
-    if (currentLabel == null) {
-      this.createLabel(feature, geometry, style, context);
-    } else {
-      this.updateLabel(currentLabel, geometry, style, context);
-    }
-  }
-
   // only set this if a primitive is being recreated and we need to preserve the show state
   var wasPrimitiveShown;
 
@@ -1820,7 +1811,18 @@ plugin.cesium.sync.FeatureConverter.prototype.convert = function(feature, resolu
       if (style) {
         var geometry = style.getGeometryFunction()(feature);
         if (geometry) {
-          this.olGeometryToCesium(feature, geometry, style, context);
+          if (style.getText()) {
+            // style is for a label
+            var currentLabel = context.getLabelForGeometry(geometry);
+            if (currentLabel == null) {
+              this.createLabel(feature, geometry, style, context);
+            } else {
+              this.updateLabel(currentLabel, geometry, style, context);
+            }
+          } else {
+            // style is for a geometry
+            this.olGeometryToCesium(feature, geometry, style, context);
+          }
         }
       }
     }
