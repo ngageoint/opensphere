@@ -9,6 +9,7 @@ goog.require('os.ui.animationSettingsDirective');
 goog.require('os.ui.hist.HistogramEventType');
 goog.require('os.ui.timeSettingsDirective');
 goog.require('os.ui.timeline.AbstractTimelineCtrl');
+goog.require('os.ui.timeline.Brush');
 
 
 /**
@@ -51,6 +52,18 @@ os.ui.resizeMap = 'resizeMap';
  */
 os.ui.TimelinePanelCtrl = function($scope, $element, $timeout) {
   os.ui.TimelinePanelCtrl.base(this, 'constructor', $scope, $element, $timeout);
+
+  /**
+   * @type {boolean}
+   */
+  this['locked'] = os.time.TimelineController.getInstance().getLock();
+
+  /**
+   * @type {?angular.Scope}
+   */
+  this['scope'] = $scope;
+
+  this.tlc.listen(os.time.TimelineEventType.LOCK_TOGGLE, goog.partial(this.setLock, true), false, this);
 
   /**
    * @type {?os.data.histo.TimelineHistManager}
@@ -232,4 +245,41 @@ os.ui.TimelinePanelCtrl.prototype.adjust = function() {
 
   os.MapContainer.getInstance().updateSize();
   os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
+};
+
+
+/**
+ * Panel lock button click.
+ * @export
+ */
+os.ui.TimelinePanelCtrl.prototype.lock = function() {
+  this.onBrushLockButtonUp();
+};
+
+
+/**
+ * Synchs both lock buttons
+ */
+os.ui.TimelinePanelCtrl.prototype.setLock = function() {
+  this['locked'] = this.tlc.getLock();
+  os.ui.apply(this.scope);
+};
+
+
+/**
+ * Panel lock button click.
+ * @param {boolean=} opt_getlock
+ */
+os.ui.TimelinePanelCtrl.prototype.onBrushLockButtonUp = function(opt_getlock) {
+  var isLocked = opt_getlock ? this.tlc.getLock() :
+      this.tlc.toggleLock();
+  this['locked'] = this.tlc.getLock();
+  if (isLocked) {
+    angular.element('.js-svg-timeline_unlock').addClass('d-none');
+    angular.element('.js-svg-timeline_lock').removeClass('d-none');
+  } else {
+    angular.element('.js-svg-timeline_lock').addClass('d-none');
+    angular.element('.js-svg-timeline_unlock').removeClass('d-none');
+  }
+  os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Timeline.LOCK, 1);
 };

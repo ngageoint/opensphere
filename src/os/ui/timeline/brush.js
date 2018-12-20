@@ -456,8 +456,6 @@ os.ui.timeline.Brush.prototype.initSVG = function(container, height) {
   }
 
   if (this.drawLock) {
-    os.time.TimelineController.getInstance().listen(os.time.TimelineEventType.LOCK_TOGGLE,
-        goog.partial(this.onBrushLockButtonUp, true), false, this);
     var buttongroup = /** @type {d3.Selection} */ (group.append('g'));
     var locktip = 'Locks start edge of view window during animation';
     buttongroup.attr('class', 'lock');
@@ -487,7 +485,6 @@ os.ui.timeline.Brush.prototype.initSVG = function(container, height) {
         text(function() {
           return '\uf09c';
         }); // this breaks btoa in saveSvgAsPng, so we will strip it out for screen capture
-    this.onBrushLockButtonUp(true);
   }
 };
 
@@ -792,6 +789,7 @@ os.ui.timeline.Brush.prototype.onBrushLockButtonUp = function(opt_getlock) {
   if (!os.ui.timeline.Brush.isDragging) {
     var isLocked = opt_getlock ? os.time.TimelineController.getInstance().getLock() :
         os.time.TimelineController.getInstance().toggleLock();
+    os.time.TimelineController.getInstance().setLock(isLocked);
     if (isLocked) {
       angular.element('.js-svg-timeline_unlock').addClass('d-none');
       angular.element('.js-svg-timeline_lock').removeClass('d-none');

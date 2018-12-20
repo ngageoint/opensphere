@@ -607,9 +607,12 @@ os.time.TimelineController.prototype.stop = function() {
 os.time.TimelineController.prototype.first = function() {
   var animateRange = this.getAnimationRange();
   if (this.getLock()) {
-    this.setOffset(this.skip_);
+    var current = this.getCurrentRange();
+    this.setOffset(0);
+    this.setCurrent(current.start + this.offset_);
+  } else {
+    this.setCurrent(animateRange.start + this.offset_);
   }
-  this.setCurrent(animateRange.start + this.offset_);
 };
 
 

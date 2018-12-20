@@ -23,6 +23,9 @@
   <div class="text-center d-flex align-items-center w-100 my-1 justify-content-between flex-md-nowrap flex-wrap">
     <small class="order-0 ml-2 flex-shrink-0">{{start}}</small>
     <div class="order-md-1 order-2">
+      <button class="btn btn-secondary btn-sm" ng-class="{'active': timelineCtrl.locked}" ng-click="timelineCtrl.lock()" title="Locks start edge of view window during animation">
+          <i class="fa fa-fw" ng-class="{'fa-lock': timelineCtrl.locked, 'fa-unlock': !timelineCtrl.locked}"></i>
+        </button>
       <button class="btn btn-secondary btn-sm" ng-click="timelineCtrl.settings()" title="Change timeline settings...">
         <i class="fa fa-fw fa-clock-o"></i>
       </button>
