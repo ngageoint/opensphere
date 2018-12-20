@@ -198,7 +198,7 @@ os.ui.menu.layer.setup = function() {
       children: [{
         label: 'Export...',
         eventType: os.action.EventType.EXPORT,
-        tooltip: 'Repositions the map to show the layer',
+        tooltip: 'Exports data from this layer',
         icons: ['<i class="fa fa-fw fa-download"></i>'],
         beforeRender: os.ui.menu.layer.visibleIfSupported,
         handler: os.ui.menu.layer.onExport_,
