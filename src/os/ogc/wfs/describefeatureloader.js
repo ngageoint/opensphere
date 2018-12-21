@@ -87,6 +87,10 @@ os.ogc.wfs.DescribeFeatureLoader.prototype.setUrl = function(value) {
           this.typename_ = /** @type {string} */ (qd.get('typename'));
         }
       }
+
+      if (!this.params_.getKeys().length) {
+        this.setParams(qd);
+      }
     }
   } else {
     this.url_ = value;
