@@ -397,12 +397,21 @@ plugin.wmts.Server.prototype.parseCapabilities = function(response, uri) {
 
         ol.obj.assign(config, overrides);
 
+        // OpenLayers defaults to the first format. Instead, we want to prefer
+        // image/png over anything else unless it is unsupported.
+        var formats = layer['Format'];
+        var defaultFormat = 'image/png';
+        var format = formats && Array.isArray(formats) ?
+          formats.indexOf(defaultFormat) > -1 ? defaultFormat : formats[0] :
+          defaultFormat;
+
         var crossOrigin = null;
         config['wmtsOptions'] = layer['TileMatrixSetLink'].reduce(function(wmtsOptions, setLink) {
           if (setLink['TileMatrixSet'] in availableSets) {
             var options = ol.source.WMTS.optionsFromCapabilities(/** @type {!Object} */ (result), {
               'layer': id,
-              'matrixSet': setLink['TileMatrixSet']
+              'matrixSet': setLink['TileMatrixSet'],
+              'format': format
             });
             options.crossOrigin = os.net.getCrossOrigin(options.urls[0]);
             if (!crossOrigin) {
