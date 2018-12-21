@@ -200,7 +200,7 @@
     }
   }
 
-  .u-table__selectable {
+  &.u-table__selectable .u-table__row {
     cursor: pointer;
   }
 
