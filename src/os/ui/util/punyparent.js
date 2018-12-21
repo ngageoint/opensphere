@@ -1,6 +1,6 @@
 goog.provide('os.ui.util.PunyParentCtrl');
 goog.provide('os.ui.util.punyParentDirective');
-goog.require('goog.async.Debouncer');
+goog.require('goog.Throttle');
 goog.require('os.ui.Module');
 
 
@@ -45,10 +45,10 @@ os.ui.util.PunyParentCtrl = function($scope, $element) {
 
   /**
    * Used to delay searching until we are done typing
-   * @type {goog.async.Debouncer}
+   * @type {goog.Throttle}
    * @private
    */
-  this.debounce_ = new goog.async.Debouncer(this.onDebouncedResize_, 200, this);
+  this.throttle_ = new goog.Throttle(this.onThrottleResize_, 200, this);
 
   /**
    * @type {Function}
@@ -73,6 +73,10 @@ os.ui.util.PunyParentCtrl = function($scope, $element) {
  */
 os.ui.util.PunyParentCtrl.prototype.destroy_ = function() {
   this.element_.removeResize(this.resizeFn_);
+  if (this.throttle_) {
+    this.throttle_.dispose();
+    this.throttle_ = null;
+  }
   this.scope_ = null;
   this.element_ = null;
 };
@@ -82,14 +86,14 @@ os.ui.util.PunyParentCtrl.prototype.destroy_ = function() {
  * @private
  */
 os.ui.util.PunyParentCtrl.prototype.onResize_ = function() {
-  this.debounce_.fire();
+  this.throttle_.fire();
 };
 
 
 /**
  * @private
  */
-os.ui.util.PunyParentCtrl.prototype.onDebouncedResize_ = function() {
+os.ui.util.PunyParentCtrl.prototype.onThrottleResize_ = function() {
   if (this.element_) {
     var children = this.element_.children().toArray();
     var childrenWidth = 0;
