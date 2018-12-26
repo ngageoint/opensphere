@@ -1,5 +1,6 @@
 goog.provide('os.ui.datetime.DurationCtrl');
 goog.provide('os.ui.datetime.durationDirective');
+
 goog.require('os.ui.Module');
 goog.require('os.ui.spinnerDirective');
 goog.require('os.ui.util.validationMessageDirective');
@@ -23,7 +24,8 @@ os.ui.datetime.durationDirective = function() {
       'min': '=?',
       'max': '=?',
       'disabled': '=?',
-      'isRequired': '=?'
+      'isRequired': '=?',
+      'short': '=?'
     },
     templateUrl: os.ROOT + 'views/datetime/duration.html',
     controller: os.ui.datetime.DurationCtrl,

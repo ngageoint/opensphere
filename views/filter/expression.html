@@ -1,11 +1,11 @@
 <div ng-form="exprForm" class="container-fluid">
 	<div class="row">
-    <span class="col-4">
+    <span class="col-3">
       <select class="custom-select" ng-model="expr.column" ng-options="value.name for value in columns" required/>
     </span>
-    <span class="col-4">
+    <span class="col-3">
       <select class="custom-select" ng-model="expr.op" ng-options="value.getTitle() for value in ops" required/>
     </span>
-	  <opuiswitch class="col-4" items="expr.op" directive-function="exprCtrl.getUi" generic="text" expr="expr"></opuiswitch>
+    <opuiswitch class="col-6" items="expr.op" directive-function="exprCtrl.getUi" generic="text" expr="expr"></opuiswitch>
 	</div>
 </div>

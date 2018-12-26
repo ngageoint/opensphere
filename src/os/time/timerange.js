@@ -42,6 +42,7 @@ os.registerClass(os.time.TimeRange.NAME, os.time.TimeRange);
 
 /**
  * @inheritDoc
+ * @export
  */
 os.time.TimeRange.prototype.getStart = function() {
   return this.start < this.end_ ? this.start : this.end_;
@@ -50,6 +51,7 @@ os.time.TimeRange.prototype.getStart = function() {
 
 /**
  * @inheritDoc
+ * @export
  */
 os.time.TimeRange.prototype.getEnd = function() {
   return this.end_ > this.start ? this.end_ : this.start;
