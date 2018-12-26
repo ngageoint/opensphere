@@ -191,6 +191,7 @@ os.ui.filter.ExpressionCtrl.prototype.filterColumns_ = function(col, c, arr) {
       }
     }
   }
+
   return false;
 };
 
