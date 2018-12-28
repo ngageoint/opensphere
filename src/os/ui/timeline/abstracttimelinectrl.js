@@ -645,20 +645,6 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.onTimelineEvent = function(event) 
   }
 
   os.ui.apply(this.scope);
-
-  if (event.type == os.time.TimelineEventType.PLAY) {
-    this.durationStart_ = goog.now();
-  } else if (event.type == os.time.TimelineEventType.STOP) {
-    if (this.durationStart_ > 0) {
-      var metrics = os.metrics.Metrics.getInstance();
-      if (metrics.isEnabled()) { // track play duration here because play/pause can be controlled via a number of means
-        var duration = goog.now() - this.durationStart_;
-        metrics.updateMetric(os.metrics.keys.Timeline.MAX_PLAY, duration);
-        metrics.updateMetric(os.metrics.keys.Timeline.MIN_PLAY, duration);
-      }
-    }
-    this.durationStart_ = 0;
-  }
 };
 
 

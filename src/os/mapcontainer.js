@@ -1630,18 +1630,20 @@ os.MapContainer.prototype.removeFeature = function(feature, opt_dispose) {
   if (feature != null) {
     os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.REMOVE_FEATURE, 1);
     var layer = this.getLayer(os.MapContainer.DRAW_ID);
-    var source = /** @type {ol.source.Vector} */ (layer.getSource());
-    if (typeof feature === 'string' || typeof feature === 'number') {
-      feature = source.getFeatureById(feature);
-    } else {
-      feature = source.getFeatureById(feature.getId() + '');
-    }
+    if (layer != null) {
+      var source = /** @type {ol.source.Vector} */ (layer.getSource());
+      if (typeof feature === 'string' || typeof feature === 'number') {
+        feature = source.getFeatureById(feature);
+      } else {
+        feature = source.getFeatureById(feature.getId() + '');
+      }
 
-    if (feature != null) {
-      source.removeFeature(feature);
+      if (feature != null) {
+        source.removeFeature(feature);
 
-      if (opt_dispose) {
-        feature.dispose();
+        if (opt_dispose) {
+          feature.dispose();
+        }
       }
     }
   }
