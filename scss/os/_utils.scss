@@ -66,6 +66,10 @@
   @include grabbing-cursor();
 }
 
+.u-cursor-default {
+  cursor: default;
+}
+
 .u-btn-separator {
   border-left: 1px solid $body-color;
   border-right: 1px solid $body-bg;
