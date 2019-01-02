@@ -49,6 +49,10 @@
   overflow-y: hidden !important;
 }
 
+.u-overflow-y-scroll {
+  overflow-y: scroll !important;
+}
+
 // Bootstrap by default puts a focus style around items. This turns that off
 .u-focus-outline-none:focus {
   outline: none;
@@ -60,10 +64,6 @@
 
 .u-cursor-grab.moving {
   @include grabbing-cursor();
-}
-
-.u-cursor-pointer {
-  cursor: pointer;
 }
 
 .u-btn-separator {
@@ -196,9 +196,11 @@
     }
   }
 
-  &.u-table-striped {
+  .u-table__selectable {
     cursor: pointer;
+  }
 
+  &.u-table-striped {
     .u-table__row:nth-child(odd) {
       background-color: $table-accent-bg;
     }

@@ -112,15 +112,15 @@ plugin.ogc.ui.ChooseTimeColumnCtrl.prototype.save = function() {
   if (this.scope_['deferred']) {
     this.scope_['deferred'].callback();
   }
-  this.close_();
+  this.close();
 };
 
 
 /**
  * Close the window
- * @private
+ * @export
  */
-plugin.ogc.ui.ChooseTimeColumnCtrl.prototype.close_ = function() {
+plugin.ogc.ui.ChooseTimeColumnCtrl.prototype.close = function() {
   os.ui.window.close(this.element_);
   this.dispose();
 };

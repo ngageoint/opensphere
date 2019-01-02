@@ -61,6 +61,29 @@ $web-font-path: "https://fonts.googleapis.com/css?family=Open+Sans:400,700" !def
   }
 }
 
+.nav-pills {
+  .nav-link {
+    background-image: none;
+    border: 0;
+    color: $link-color;
+
+    &:hover {
+      background: transparent;
+      border: 0;
+    }
+
+    &:hover:not(.active) {
+      color: $link-hover-color;
+    }
+  }
+
+  .nav-link.active {
+    background-color: $primary;
+    background-image: none;
+    border: 0;
+  }
+}
+
 // Nav tabs within a modal (or window)
 .modal-content {
   .nav-tabs {

@@ -148,10 +148,11 @@ os.data.OSDataManager.prototype.getTotalFeatureCount = function() {
   for (var i = 0, n = sources.length; i < n; i++) {
     var fc = sources[i].getFeatureCount();
 
-    if (typeof fc != 'number' || isNaN(fc) || fc < 0) {
-      goog.log.error(os.data.OSDataManager.LOGGER_, 'getFeatureCount() for ' + sources[i].getId() + ' was invalid!');
-    } else {
+    if (Number.isInteger(fc)) {
       count += fc;
+    } else {
+      goog.log.error(os.data.OSDataManager.LOGGER_, 'getFeatureCount() for ' + sources[i].getId() +
+          ' was not an integer! ' + fc);
     }
   }
 

@@ -35,7 +35,7 @@ describe('os.ogc.wfs.FeatureType', function() {
       {name: 'enddt2', type: 'datetime'}
     ];
 
-    var type = new os.ogc.wfs.FeatureType('yermom', cols, true);
+    var type = new os.ogc.wfs.FeatureType('yermom', cols);
     expect(type.getStartDateColumnName()).toBe('startdt2');
     expect(type.getEndDateColumnName()).toBe('enddt2');
   });
@@ -43,7 +43,11 @@ describe('os.ogc.wfs.FeatureType', function() {
   it('should default to validTime for dynamic types', function() {
     var cols = [
       {name: 'Title', type: 'string'},
-      {name: 'GEOM', type: 'gml:Point'}
+      {name: 'GEOM', type: 'gml:Point'},
+      {name: 'startdt1', type: 'datetime'},
+      {name: 'startdt2', type: 'datetime'},
+      {name: 'enddt1', type: 'datetime'},
+      {name: 'enddt2', type: 'datetime'}
     ];
 
     var type = new os.ogc.wfs.FeatureType('yermom', cols, true);
@@ -60,7 +64,7 @@ describe('os.ogc.wfs.FeatureType', function() {
       {name: 'stopDate', type: 'datetime'}
     ];
 
-    var type = new os.ogc.wfs.FeatureType('yermom', cols, true);
+    var type = new os.ogc.wfs.FeatureType('yermom', cols);
     expect(type.getStartDateColumnName()).toBe('startDate');
     expect(type.getEndDateColumnName()).toBe('stopDate');
   });
