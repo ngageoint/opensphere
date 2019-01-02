@@ -473,6 +473,23 @@ plugin.file.kml.KMLParser.prototype.handleExternalStylesheet_ = function(content
       // append it to the main document
       appendTo.appendChild(style);
     }
+
+    var styleMaps = doc.querySelectorAll('StyleMap');
+    for (var i = 0, n = styleMaps.length; i < n; i++) {
+      var styleMap = styleMaps[i];
+
+      // "namespace" the style with the URL
+      styleMap.setAttribute('id', url + '_' + styleMap.getAttribute('id'));
+
+      var styleUrls = Array.prototype.slice.call(styleMap.querySelectorAll('styleUrl'));
+      styleUrls.forEach(function(styleUrl) {
+        var current = styleUrl.textContent.replace(/^#/, '');
+        styleUrl.textContent = '#' + url + '_' + current;
+      });
+
+      // append it to the main document
+      appendTo.appendChild(styleMap);
+    }
   } catch (e) {
     goog.log.error(this.log_, 'Could not parse KML stylesheet ' + url);
   }
