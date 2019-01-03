@@ -29,6 +29,7 @@ goog.require('os.ui.feature.multiFeatureInfoDirective');
 goog.require('os.ui.layer.vectorLayerUIDirective');
 goog.require('os.ui.node.defaultLayerNodeUIDirective');
 goog.require('os.ui.renamelayer');
+goog.require('os.ui.timeline.TimelineCtrl');
 goog.require('os.ui.window');
 
 
