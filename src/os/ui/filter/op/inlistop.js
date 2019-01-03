@@ -26,11 +26,6 @@ os.ui.filter.op.InList = function(opt_title, opt_shortTitle, opt_supportedTypes,
 
   os.ui.filter.op.InList.base(this, 'constructor',
       'Or', opt_title, opt_shortTitle, opt_supportedTypes, opt_attrs, opt_hint, opt_ui);
-
-  /**
-   * @type {string}
-   * @protected
-   */
   this.matchHint = 'in list';
 };
 goog.inherits(os.ui.filter.op.InList, os.ui.filter.op.Op);
