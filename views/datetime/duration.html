@@ -3,7 +3,7 @@
     <div class="row">
       <div class="text-center" ng-if="useWeeks">
         <spinner
-            class="u-input-number__width-4"
+            ng-class="{'d-inline-block u-input-number__width-2': short, 'u-input-number__width-4': !short}"
             min="0"
             step="1"
             value="durCtrl.weeks"
@@ -11,13 +11,13 @@
             live="true"
             disabled="disabled">
         </spinner>
-        <label ng-class="{'disabled': disabled}">
-          weeks
+        <label class="mb-0" ng-class="{'disabled': disabled}">
+          {{short ? 'w ' : 'weeks'}}
         </label>
       </div>
       <div class="text-center" ng-if="useDays">
         <spinner
-            class="u-input-number__width-4"
+            ng-class="{'d-inline-block u-input-number__width-2': short, 'u-input-number__width-4': !short}"
             min="0"
             max="durCtrl.maxdays"
             step="1"
@@ -26,13 +26,13 @@
             live="true"
             disabled="disabled">
         </spinner>
-        <label ng-class="{'disabled': disabled}">
-          days
+        <label class="mb-0" ng-class="{'disabled': disabled}">
+          {{short ? 'd ' : 'days'}}
         </label>
       </div>
       <div class="text-center" ng-if="useHours">
         <spinner
-            class="u-input-number__width-4"
+            ng-class="{'d-inline-block u-input-number__width-2': short, 'u-input-number__width-4': !short}"
             min="0"
             max="durCtrl.maxhours"
             step="1"
@@ -41,13 +41,13 @@
             live="true"
             disabled="disabled">
         </spinner>
-        <label ng-class="{'disabled': disabled}">
-          hours
+        <label class="mb-0" ng-class="{'disabled': disabled}">
+          {{short ? 'h&nbsp;' : 'hours'}}
         </label>
       </div>
       <div class="text-center" ng-if="useMinutes">
         <spinner
-            class="u-input-number__width-4"
+            ng-class="{'d-inline-block u-input-number__width-2': short, 'u-input-number__width-4': !short}"
             min="0"
             max="durCtrl.maxminutes"
             step="1"
@@ -56,13 +56,13 @@
             live="true"
             disabled="disabled">
         </spinner>
-        <label ng-class="{'disabled': disabled}">
-          mins
+        <label class="mb-0" ng-class="{'disabled': disabled}">
+          {{short ? 'm&nbsp;' : 'min'}}
         </label>
       </div>
       <div class="text-center" ng-if="useSeconds">
         <spinner
-            class="u-input-number__width-4"
+            ng-class="{'d-inline-block u-input-number__width-2': short, 'u-input-number__width-4': !short}"
             min="0"
             max="durCtrl.maxseconds"
             step="1"
@@ -71,11 +71,11 @@
             live="true"
             disabled="disabled">
         </spinner>
-        <label ng-class="{'disabled': disabled}">
-          secs
+        <label class="mb-0" ng-class="{'disabled': disabled}">
+          {{short ? 's' : 'sec'}}
         </label>
       </div>
-      <div class="pl-2">
+      <div class="pl-2" ng-if="!short">
         <validation-message target="durCtrl.errors.duration"></validation-message>
       </div>
       <input type="hidden" name="duration" ng-model="durCtrl.valid" ng-required="durCtrl.isrequired"/>

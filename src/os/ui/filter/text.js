@@ -36,13 +36,15 @@ os.ui.filter.colTypeCheckValidation = function() {
 
 
 /**
- * @type {Object.<string, RegExp>}
+ * Enum of validation regexes for different logical column types.
+ * @type {Object<string, RegExp>}
  * @const
  */
 os.ui.filter.PATTERNS = {
   'string': /.*/,
   'decimal': /^\-?\d+((\.|\,)\d+)?$/,
-  'integer': /^\-?\d+$/
+  'integer': /^\-?\d+$/,
+  'recordtime': /^\-?\d+((\.|\,)\d+)?$/
 };
 
 
