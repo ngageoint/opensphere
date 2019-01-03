@@ -81,8 +81,6 @@ plugin.suncalc.LightStripCtrl.prototype.destroy_ = function() {
 
   this.scope_ = null;
   this.element_ = null;
-  this.vsm_.dispose();
-  this.vsm_ = null;
   this.view_.un('change:center', this.update_, this);
   os.dispatcher.unlisten(os.ui.timeline.TimelineScaleEvent.TYPE, this.update_, false, this);
 };

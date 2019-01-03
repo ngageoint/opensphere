@@ -12,11 +12,6 @@ goog.require('os.ui.filter.op.IsLikeNumeric');
 os.ui.filter.op.LikeListNumeric = function() {
   os.ui.filter.op.LikeListNumeric.base(this, 'constructor', 'is like list', 'like list', ['decimal', 'integer'], '',
       'eg. 12.45*, 3.568*, ...', 'fb-list-no-col-check');
-
-  /**
-  * @type {string}
-  * @protected
-  */
   this.matchHint = 'like list numeric';
 };
 goog.inherits(os.ui.filter.op.LikeListNumeric, os.ui.filter.op.IsLikeNumeric);
