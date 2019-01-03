@@ -3214,6 +3214,20 @@ os.source.Vector.prototype.showFeatures = function(features) {
 
 
 /**
+ * Convenience show only the given features; hide others
+ * @param {!ol.Feature|Array<!ol.Feature>} features
+ */
+os.source.Vector.prototype.setVisibleFeatures = function(features) {
+  if (!goog.isArray(features)) {
+    features = [features];
+  }
+
+  this.updateFeaturesVisibility(this.getFeatures(), false);
+  this.updateFeaturesVisibility(features, true);
+};
+
+
+/**
  * @inheritDoc
  */
 os.source.Vector.prototype.hideSelected = function() {
