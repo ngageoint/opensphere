@@ -258,10 +258,10 @@ plugin.file.kml.readTime = function(node, objectStack) {
  */
 plugin.file.kml.LINK_PARSERS = ol.xml.makeStructureNS(
     plugin.file.kml.OL_NAMESPACE_URIS(), {
-      'refreshInterval': ol.xml.makeObjectPropertySetter(ol.format.XSD.readNonNegativeInteger),
+      'refreshInterval': ol.xml.makeObjectPropertySetter(ol.format.XSD.readDecimal),
       'refreshMode': ol.xml.makeObjectPropertySetter(ol.format.XSD.readString),
       'viewRefreshMode': ol.xml.makeObjectPropertySetter(ol.format.XSD.readString),
-      'viewRefreshTime': ol.xml.makeObjectPropertySetter(ol.format.XSD.readNonNegativeInteger)
+      'viewRefreshTime': ol.xml.makeObjectPropertySetter(ol.format.XSD.readDecimal)
     });
 
 
