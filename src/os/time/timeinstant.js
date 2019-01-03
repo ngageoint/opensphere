@@ -59,6 +59,7 @@ os.time.TimeInstant.MAX_TIME = moment.utc('9999-12-31T23:59:59Z').valueOf();
 
 /**
  * @inheritDoc
+ * @export
  */
 os.time.TimeInstant.prototype.getStart = function() {
   return this.start;
@@ -75,6 +76,7 @@ os.time.TimeInstant.prototype.setStart = function(value) {
 
 /**
  * @inheritDoc
+ * @export
  */
 os.time.TimeInstant.prototype.getEnd = function() {
   return this.start;

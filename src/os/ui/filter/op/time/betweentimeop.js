@@ -1,29 +1,33 @@
-goog.provide('os.ui.filter.op.Between');
+goog.provide('os.ui.filter.op.time.Between');
 
-goog.require('os.ui.filter.betweenDirective');
 goog.require('os.ui.filter.op.Op');
+goog.require('os.ui.filter.op.time.betweenTimeDirective');
 
 
 
 /**
- * @constructor
+ * Operator for times between a start and an end.
  * @extends {os.ui.filter.op.Op}
+ * @constructor
  */
-os.ui.filter.op.Between = function() {
-  os.ui.filter.op.Between.base(this, 'constructor',
-      'And', 'is between', 'between', ['integer', 'decimal'], 'hint="between"', undefined, 'fb-between');
-  this.matchHint = 'between';
+os.ui.filter.op.time.Between = function() {
+  os.ui.filter.op.time.Between.base(this, 'constructor',
+      'And', 'is between', 'between', ['recordtime'], 'hint="betweentime"', undefined, 'betweentime');
+  this.matchHint = 'betweentime';
 };
-goog.inherits(os.ui.filter.op.Between, os.ui.filter.op.Op);
+goog.inherits(os.ui.filter.op.time.Between, os.ui.filter.op.Op);
 
 
 /**
  * @inheritDoc
  */
-os.ui.filter.op.Between.prototype.getEvalExpression = function(varName, literal) {
+os.ui.filter.op.time.Between.prototype.getEvalExpression = function(varName, literal) {
   var range = this.getRangeFromLiteral(literal);
   if (range && range.length == 2 && range[0] !== range[1]) {
-    return '(' + varName + '>=' + range[0] + '&&' + varName + '<=' + range[1] + ')';
+    var r0 = range[0];
+    var r1 = range[1];
+    return varName + '!=null&&os.ui.filter.currentTimestamp-' + varName + '.getStart()<=' + r1 +
+        '&&os.ui.filter.currentTimestamp-' + varName + '.getEnd()>=' + r0;
   }
 
   // range couldn't be parsed, so don't return an expression
@@ -34,18 +38,14 @@ os.ui.filter.op.Between.prototype.getEvalExpression = function(varName, literal)
 /**
  * @inheritDoc
  */
-os.ui.filter.op.Between.prototype.getFilter = function(column, literal) {
+os.ui.filter.op.time.Between.prototype.getFilter = function(column, literal) {
   var f = '';
-
   var range = this.getRangeFromLiteral(literal);
+
   if (range && range.length == 2 && range[0] !== range[1]) {
     var attr = this.getAttributes();
 
     f = '<' + this.localName + (attr ? ' ' + attr : '') + '>';
-
-    // yes, I realize that a non-inclusive end and/or a non-inclusive start is much more
-    // technically useful, but these are apparently non-intuitive to our users (glare face).
-
     f += '<PropertyIsGreaterThanOrEqualTo>' +
         '<PropertyName>' + column + '</PropertyName>' +
         '<Literal><![CDATA[' + range[0] + ']]></Literal>' +
@@ -54,7 +54,6 @@ os.ui.filter.op.Between.prototype.getFilter = function(column, literal) {
         '<PropertyName>' + column + '</PropertyName>' +
         '<Literal><![CDATA[' + range[1] + ']]></Literal>' +
         '</PropertyIsLessThanOrEqualTo>';
-
     f += '</' + this.localName + '>';
   }
 
@@ -68,7 +67,7 @@ os.ui.filter.op.Between.prototype.getFilter = function(column, literal) {
  * @return {Array<number>} The range, in the form [min, max].
  * @protected
  */
-os.ui.filter.op.Between.prototype.getRangeFromLiteral = function(literal) {
+os.ui.filter.op.time.Between.prototype.getRangeFromLiteral = function(literal) {
   if (literal) {
     var list = literal.trim().split(/\s*,\s*/);
 
@@ -88,7 +87,7 @@ os.ui.filter.op.Between.prototype.getRangeFromLiteral = function(literal) {
 /**
  * @inheritDoc
  */
-os.ui.filter.op.Between.prototype.getLiteral = function(el) {
+os.ui.filter.op.time.Between.prototype.getLiteral = function(el) {
   var arr = el.find('Literal');
   var literals = [];
 
@@ -103,7 +102,7 @@ os.ui.filter.op.Between.prototype.getLiteral = function(el) {
 /**
  * @inheritDoc
  */
-os.ui.filter.op.Between.prototype.matches = function(el) {
+os.ui.filter.op.time.Between.prototype.matches = function(el) {
   if (el) {
     return el.attr('hint') == this.matchHint;
   }
@@ -115,7 +114,7 @@ os.ui.filter.op.Between.prototype.matches = function(el) {
 /**
  * @inheritDoc
  */
-os.ui.filter.op.Between.prototype.validate = function(value, key) {
+os.ui.filter.op.time.Between.prototype.validate = function(value, key) {
   if (value) {
     var list = value.trim().split(/\s*,\s*/);
 

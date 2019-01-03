@@ -27,11 +27,6 @@ os.ui.filter.op.IsLikeNumeric = function(opt_title, opt_shortTitle, opt_supporte
 
   os.ui.filter.op.IsLikeNumeric.base(this, 'constructor', 'And', opt_title, opt_shortTitle, opt_supportedTypes,
       opt_attributes, opt_hint, opt_ui);
-
-  /**
-    * @type {string}
-    * @protected
-    */
   this.matchHint = 'is like numeric';
 };
 goog.inherits(os.ui.filter.op.IsLikeNumeric, os.ui.filter.op.Op);
