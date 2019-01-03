@@ -1,5 +1,6 @@
 goog.provide('plugin.im.action.feature.Manager');
 
+goog.require('goog.Timer');
 goog.require('goog.log');
 goog.require('goog.object');
 goog.require('ol.events');
@@ -31,6 +32,15 @@ plugin.im.action.feature.Manager = function() {
    * @private
    */
   this.sourceListeners_ = {};
+
+  /**
+   * Timer for periodically updating time-based feature actions.
+   * @type {goog.Timer}
+   * @private
+   */
+  this.timer_ = new goog.Timer(15000);
+  this.timer_.listen(goog.Timer.TICK, this.refreshTimeEntries, false, this);
+  this.timer_.start();
 };
 goog.inherits(plugin.im.action.feature.Manager, os.im.action.ImportActionManager);
 goog.addSingletonGetter(plugin.im.action.feature.Manager);
@@ -58,6 +68,8 @@ plugin.im.action.feature.Manager.LOGGER_ = goog.log.getLogger('plugin.im.action.
  */
 plugin.im.action.feature.Manager.prototype.disposeInternal = function() {
   plugin.im.action.feature.Manager.base(this, 'disposeInternal');
+
+  goog.dispose(this.timer_);
 
   var dm = os.data.OSDataManager.getInstance();
   if (dm) {
@@ -173,4 +185,29 @@ plugin.im.action.feature.Manager.prototype.onSourcePropertyChange_ = function(ev
       this.processItems(source.getId(), features);
     }
   }
+};
+
+
+/**
+ * Refreshes the time-based feature actions.
+ * @protected
+ */
+plugin.im.action.feature.Manager.prototype.refreshTimeEntries = function() {
+  var entries = this.getActionEntries();
+  var fn = function(entry) {
+    var source = os.dataManager.getSource(entry.type);
+    if (entry.isEnabled() && source) {
+      var filter = entry.getFilter();
+      if (filter && filter.indexOf(os.data.RecordField.TIME) != -1) {
+        this.processItems(source.getId(), source.getFeatures(), true);
+      }
+    }
+
+    var children = entry.getChildren();
+    if (children) {
+      children.forEach(fn, this);
+    }
+  };
+
+  entries.forEach(fn, this);
 };

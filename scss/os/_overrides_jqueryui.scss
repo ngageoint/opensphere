@@ -53,12 +53,12 @@
 }
 
 // Spinners
-
 .ui-spinner {
+  border: 0 !important;
   width: 100%;
 
   .ui-spinner-input {
-    border: 0;
+    border: $border-width solid $border-color;
     color: inherit;
     margin: 0;
     padding: $input-padding-y $input-padding-x;
@@ -87,6 +87,11 @@
     margin-top: 0;
     text-indent: 0;
     top: .5em;
+  }
+
+  a.ui-spinner-button {
+    // spinner buttons should always be the body color
+    color: $body-color !important;
   }
 }
 

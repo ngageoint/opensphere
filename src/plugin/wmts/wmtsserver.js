@@ -207,7 +207,7 @@ plugin.wmts.Server.prototype.configure = function(config) {
   this.setDateFormat(/** @type {string} */ (config['dateFormat']));
   this.setTimeFormat(/** @type {string} */ (config['timeFormat']));
 
-  this.setParams('params' in config ? new goog.Uri.QueryData(/** @type {string} */ (config['wmsParams'])) : null);
+  this.setParams('params' in config ? new goog.Uri.QueryData(/** @type {string} */ (config['params'])) : null);
 };
 
 
@@ -350,6 +350,20 @@ plugin.wmts.Server.prototype.parseCapabilities = function(response, uri) {
         this.abstracts_.push(serviceAbstract);
       }
 
+      // prune sets in unsupported projections since OL will throw an exception if it can't find the projection
+      var matrixSets = result['Contents']['TileMatrixSet'] = result['Contents']['TileMatrixSet'].filter(
+          function(matrixSet) {
+          // openlayers/src/ol/source/wmts.js is the source for these lines
+            var code = matrixSet['SupportedCRS'];
+            return code && !!(ol.proj.get(code.replace(/urn:ogc:def:crs:(\w+):(.*:)?(\w+)$/, '$1:$3')) ||
+              ol.proj.get(code));
+          });
+
+      var availableSets = matrixSets.reduce(function(map, matrixSet) {
+        map[matrixSet['Identifier']] = true;
+        return map;
+      }, {});
+
       var layers = goog.object.getValueByKeys(result, 'Contents', 'Layer');
 
       this.toAdd_ = [];
@@ -383,32 +397,47 @@ plugin.wmts.Server.prototype.parseCapabilities = function(response, uri) {
 
         ol.obj.assign(config, overrides);
 
+        // OpenLayers defaults to the first format. Instead, we want to prefer
+        // image/png over anything else unless it is unsupported.
+        var formats = layer['Format'];
+        var defaultFormat = 'image/png';
+        var format = formats && Array.isArray(formats) ?
+          formats.indexOf(defaultFormat) > -1 ? defaultFormat : formats[0] :
+          defaultFormat;
+
         var crossOrigin = null;
-        config['wmtsOptions'] = layer['TileMatrixSetLink'].map(function(setLink) {
-          var options = ol.source.WMTS.optionsFromCapabilities(/** @type {!Object} */ (result), {
-            'layer': id,
-            'matrixSet': setLink['TileMatrixSet']
-          });
-          options.crossOrigin = os.net.getCrossOrigin(options.urls[0]);
-          if (!crossOrigin) {
-            crossOrigin = options.crossOrigin;
+        config['wmtsOptions'] = layer['TileMatrixSetLink'].reduce(function(wmtsOptions, setLink) {
+          if (setLink['TileMatrixSet'] in availableSets) {
+            var options = ol.source.WMTS.optionsFromCapabilities(/** @type {!Object} */ (result), {
+              'layer': id,
+              'matrixSet': setLink['TileMatrixSet'],
+              'format': format
+            });
+            options.crossOrigin = os.net.getCrossOrigin(options.urls[0]);
+            if (!crossOrigin) {
+              crossOrigin = options.crossOrigin;
+            }
+            wmtsOptions.push(options);
           }
-          return options;
-        });
+
+          return wmtsOptions;
+        }, []);
 
         config['crossOrigin'] = crossOrigin;
         config['projections'] = config['wmtsOptions'].map(plugin.wmts.Server.wmtsOptionsToProjection_);
 
-        var descriptor = /** @type {os.data.ConfigDescriptor} */ (os.dataManager.getDescriptor(fullId));
-        if (!descriptor) {
-          descriptor = new os.data.ConfigDescriptor();
-        }
+        if (config['wmtsOptions'].length) {
+          var descriptor = /** @type {os.data.ConfigDescriptor} */ (os.dataManager.getDescriptor(fullId));
+          if (!descriptor) {
+            descriptor = new os.data.ConfigDescriptor();
+          }
 
-        descriptor.setBaseConfig(config);
-        var node = new os.ui.data.DescriptorNode();
-        node.setDescriptor(descriptor);
-        this.toAdd_.push(node);
-        this.addDescriptor(descriptor);
+          descriptor.setBaseConfig(config);
+          var node = new os.ui.data.DescriptorNode();
+          node.setDescriptor(descriptor);
+          this.toAdd_.push(node);
+          this.addDescriptor(descriptor);
+        }
       }, this);
     }
 

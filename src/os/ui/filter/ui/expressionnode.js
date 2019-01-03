@@ -75,10 +75,35 @@ os.ui.filter.ui.ExpressionNode.prototype.writeFilter = function() {
  */
 os.ui.filter.ui.ExpressionNode.prototype.getLabel = function() {
   if (this.expr_ && this.expr_['column']) {
+    var field = this.expr_['column']['field'];
     var name = this.expr_['column']['name'];
     var title = this.expr_['op'].getTitle();
+    var label = name + ' <b>' + title + '</b> ';
     var literal = this.expr_['op'].getExcludeLiteral() ? '' : this.expr_['literal'] || '';
-    return name + ' <b>' + title + '</b> ' + literal;
+
+    if (field === os.data.RecordField.TIME) {
+      // times are stored in ms, which doesn't display nicely in the advanced filter tree, so clean it up
+      // the literal is stored is a string, so parse it into a number
+      var time = parseFloat(literal);
+
+      if (!isNaN(time)) {
+        var readable;
+
+        if (this.expr_['op'] instanceof os.ui.filter.op.time.Between) {
+          var range = this.expr_['op'].getRangeFromLiteral(literal);
+          var start = moment.duration(range[0]);
+          var end = moment.duration(range[1]);
+          readable = os.time.humanize(start) + ' and ' + os.time.humanize(end);
+        } else {
+          var duration = moment.duration(time);
+          readable = os.time.humanize(duration);
+        }
+
+        return label + readable;
+      }
+    } else {
+      return label + literal;
+    }
   }
 
   return os.ui.filter.ui.ExpressionNode.superClass_.getLabel.call(this);
