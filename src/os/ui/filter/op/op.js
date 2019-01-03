@@ -59,6 +59,13 @@ os.ui.filter.op.Op = function(localName, title, opt_shortTitle, opt_supportedTyp
   this['hint'] = opt_hint || '';
 
   /**
+   * String for matching the hint saved to the filter XML.
+   * @type {?string}
+   * @protected
+   */
+  this.matchHint = null;
+
+  /**
    * @type {boolean}
    * @private
    */
@@ -205,7 +212,8 @@ os.ui.filter.op.Op.prototype.getLiteral = function(el) {
  */
 os.ui.filter.op.Op.prototype.matches = function(el) {
   if (el && el.length) {
-    return el[0].localName == this.localName;
+    var hint = el[0].getAttribute('hint');
+    return el[0].localName == this.localName && hint == this.matchHint;
   }
 
   return false;
@@ -221,8 +229,8 @@ os.ui.filter.op.Op.prototype.isSupported = function(type) {
     return this.supportedTypes.indexOf(type) > -1;
   }
 
-  // no support for spatial types
-  if (type && type.indexOf('gml:') === 0) {
+  // no support for spatial types and most ops don't support time
+  if (type && (type.indexOf('gml:') === 0 || type.indexOf('datetime') !== -1 || type.indexOf('recordtime') !== -1)) {
     return false;
   }
 

@@ -12,7 +12,6 @@ goog.require('os.ui.filter.string');
 os.ui.filter.op.LikeList = function() {
   os.ui.filter.op.LikeList.base(this, 'constructor',
       'is like list', 'like list', ['string'], 'hint="like list"', 'A, b*, ...', 'fb-list');
-
   this.matchHint = 'like list';
 };
 goog.inherits(os.ui.filter.op.LikeList, os.ui.filter.op.InList);

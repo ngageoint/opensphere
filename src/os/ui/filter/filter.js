@@ -23,6 +23,10 @@ goog.require('os.ui.filter.op.NotEqualTo');
 goog.require('os.ui.filter.op.NotLike');
 goog.require('os.ui.filter.op.NotNull');
 goog.require('os.ui.filter.op.Op');
+goog.require('os.ui.filter.op.time.Between');
+goog.require('os.ui.filter.op.time.NewerThan');
+goog.require('os.ui.filter.op.time.OlderThan');
+
 
 
 /**
@@ -78,8 +82,19 @@ os.ui.filter.OPERATIONS = [
   new os.ui.filter.op.LikeList(),
   new os.ui.filter.op.Not(new os.ui.filter.op.LikeList()),
   new os.ui.filter.op.IsLikeNumeric(),
-  new os.ui.filter.op.LikeListNumeric()
+  new os.ui.filter.op.LikeListNumeric(),
+  new os.ui.filter.op.time.NewerThan(),
+  new os.ui.filter.op.time.Between(),
+  new os.ui.filter.op.time.OlderThan()
 ];
+
+
+/**
+ * Field for storing the current timestamp on the window object.
+ * @type {number}
+ * @export
+ */
+os.ui.filter.currentTimestamp = Date.now();
 
 
 /**

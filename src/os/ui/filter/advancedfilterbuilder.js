@@ -300,7 +300,7 @@ os.ui.filter.AdvancedFilterBuilderCtrl.prototype.edit = function(opt_expr, opt_n
       'label': (edit ? 'Edit' : 'Add') + ' Expression',
       'show-close': false,
       'no-scroll': true,
-      'width': 750,
+      'width': 850,
       'min-width': 500,
       'max-widith': 1000,
       'height': 'auto',

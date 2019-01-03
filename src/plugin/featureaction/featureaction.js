@@ -165,7 +165,7 @@ plugin.im.action.feature.getColumns = function(opt_entryType) {
     var dm = os.data.DataManager.getInstance();
     var source = dm.getSource(opt_entryType);
     if (source) {
-      columns = os.source.getFilterColumns(source, true);
+      columns = os.source.getFilterColumns(source, true, true);
     }
   }
 
@@ -182,21 +182,4 @@ plugin.im.action.feature.editEntry = function(entryType, opt_entry) {
   var entry = opt_entry ? /** @type {!os.im.action.FilterActionEntry} */ (opt_entry.clone()) : undefined;
   plugin.im.action.feature.ui.launchEditFeatureAction(entryType, plugin.im.action.feature.getColumns(entryType),
       os.im.action.filter.onEditComplete.bind(null, opt_entry), entry);
-};
-
-
-/**
- * Returns whether a given entry type should refresh the layer.
- * @param {string} entryType The entry type to check.
- * @return {boolean} Whether to refresh the layer.
- */
-plugin.im.action.feature.shouldRefresh = function(entryType) {
-  var layer = /** @type {os.layer.Vector} */ (os.MapContainer.getInstance().getLayer(entryType));
-  var featureActionRefresh = true;
-
-  if (layer && layer.getLayerOptions() && layer.getLayerOptions()['featureActionRefresh'] !== undefined) {
-    featureActionRefresh = /** @type {boolean} */ (layer.getLayerOptions()['featureActionRefresh']);
-  }
-
-  return featureActionRefresh;
 };
