@@ -567,7 +567,11 @@ os.ui.search.SearchBoxCtrl.prototype.toggleGroup = function(group) {
  * @export
  */
 os.ui.search.SearchBoxCtrl.prototype.getSearchOptionsGroup = function(groupName) {
-  return this['searchOptionsGroups'][groupName];
+  var group = this['searchOptionsGroups'][groupName];
+  goog.array.sort(group, function(a, b) {
+    return goog.array.defaultCompare(a.getName(), b.getName());
+  });
+  return group;
 };
 
 
