@@ -48,6 +48,7 @@ os.file.mime.zip.detectZip = function(buffer, opt_file) {
         try {
           zip.createReader(reader, function(reader) {
             reader.getEntries(function(entries) {
+              reader.close();
               resolve(entries);
             });
           }, function(error) {

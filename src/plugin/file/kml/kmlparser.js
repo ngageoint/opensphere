@@ -24,7 +24,7 @@ goog.require('os.file.mime.zip');
 goog.require('os.layer.Image');
 goog.require('os.net.Request');
 goog.require('os.object');
-goog.require('os.parse.AsyncParser');
+goog.require('os.parse.AsyncZipParser');
 goog.require('os.parse.IParser');
 goog.require('os.ui.ScreenOverlayCtrl');
 goog.require('os.ui.file.kml');
@@ -55,7 +55,7 @@ plugin.file.kml.KMLParserStackObj;
 /**
  * Parses a KML source
  * @param {Object.<string, *>} options Layer configuration options.
- * @extends {os.parse.AsyncParser}
+ * @extends {os.parse.AsyncZipParser}
  * @implements {os.parse.IParser.<plugin.file.kml.ui.KMLNode>}
  * @template T
  * @constructor
@@ -212,7 +212,7 @@ plugin.file.kml.KMLParser = function(options) {
     }
   };
 };
-goog.inherits(plugin.file.kml.KMLParser, os.parse.AsyncParser);
+goog.inherits(plugin.file.kml.KMLParser, os.parse.AsyncZipParser);
 
 
 /**
@@ -238,6 +238,16 @@ plugin.file.kml.KMLParser.LOGGER_ = goog.log.getLogger('plugin.file.kml.KMLParse
  * @const
  */
 plugin.file.kml.KMLParser.SKIPPED_COLUMNS_ = /^(geometry|recordtime|time|styleurl|_kmlStyle)$/i;
+
+
+/**
+ * @inheritDoc
+ */
+plugin.file.kml.KMLParser.prototype.disposeInternal = function() {
+  this.cleanup();
+  this.clearAssets();
+  plugin.file.kml.KMLParser.base(this, 'disposeInternal');
+};
 
 
 /**
@@ -344,7 +354,7 @@ plugin.file.kml.KMLParser.prototype.setSource = function(source) {
   } else if (source instanceof ArrayBuffer) {
     if (os.file.mime.zip.isZip(source)) {
       this.clearAssets();
-      this.handleZIP_(source);
+      this.createZipReader(source);
       return;
     } else {
       var s = os.file.mime.text.getText(source);
@@ -545,16 +555,11 @@ plugin.file.kml.KMLParser.prototype.begin = function() {
 
 
 /**
- * @param {ArrayBuffer} source
- * @private
+ * @inheritDoc
  */
-plugin.file.kml.KMLParser.prototype.handleZIP_ = function(source) {
-  zip.createReader(new zip.ArrayBufferReader(source), goog.bind(function(reader) {
-    reader.getEntries(this.processZIPEntries_.bind(this));
-  }, this), goog.bind(function() {
-    this.onError();
-    goog.log.error(this.log_, 'Error reading zip file!');
-  }, this));
+plugin.file.kml.KMLParser.prototype.handleZipReaderError = function() {
+  plugin.file.kml.KMLParser.base(this, 'handleZipReaderError');
+  this.onError();
 };
 
 
@@ -562,10 +567,9 @@ plugin.file.kml.KMLParser.prototype.handleZIP_ = function(source) {
  * HACK ALERT! zip.js has a zip.TextWriter() class that directly turns the zip entry into the string we want.
  * Unfortunately, it doesn't work in FF24 for some reason, but luckily, the BlobWriter does. Here, we read
  * the zip as a Blob, then feed it to a FileReader in the next callback in order to extract the text.
- * @param {Array.<!zip.Entry>} entries
- * @private
+ * @inheritDoc
  */
-plugin.file.kml.KMLParser.prototype.processZIPEntries_ = function(entries) {
+plugin.file.kml.KMLParser.prototype.handleZipEntries = function(entries) {
   var mainEntry = null;
   var firstEntry = null;
   var mainKml = /(doc|index)\.kml$/i;
@@ -770,6 +774,10 @@ plugin.file.kml.KMLParser.prototype.parseNext = function() {
     // current element is a container, so parse its children next
     this.stack_.push(stackObj);
     this.extractStyles_(currentEl);
+  }
+
+  if (!this.hasNext()) {
+    this.closeZipReaders();
   }
 
   return node;
