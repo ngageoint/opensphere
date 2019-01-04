@@ -2,7 +2,7 @@ goog.provide('os.data.ZOrder');
 goog.provide('os.data.ZOrderEntry');
 goog.provide('os.data.ZOrderEventType');
 
-goog.require('goog.array');
+goog.require('ol.array');
 goog.require('os.config.Settings');
 
 
@@ -157,8 +157,8 @@ os.data.ZOrder.prototype.update = function() {
     var list = /** @type {Array.<os.data.ZOrderEntry>} */ (this.groups_[type]);
 
     if (list) {
-      var changed = false;
       var groupLayers = group.getLayers().getArray();
+      var prev = groupLayers.slice();
       groupLayers.sort(
           /**
            * @param {os.layer.ILayer|ol.layer.Base} a
@@ -183,13 +183,7 @@ os.data.ZOrder.prototype.update = function() {
               }
             }
 
-            var val = goog.array.defaultCompare(ai, bi);
-
-            if (!changed) {
-              changed = val > 0;
-            }
-
-            return val;
+            return ai - bi;
           });
 
       // reset z-index for all layers in the group. groups should be handled from low to high z-index and the layers
@@ -198,7 +192,7 @@ os.data.ZOrder.prototype.update = function() {
         groupLayers[j].setZIndex(zIndex++);
       }
 
-      if (changed) {
+      if (!ol.array.equals(prev, groupLayers)) {
         group.dispatchEvent(os.data.ZOrderEventType.UPDATE);
         group.changed();
       }
@@ -332,7 +326,7 @@ os.data.ZOrder.prototype.moveHighestAndUpdate = function(id) {
  * @return {boolean} True if moved, false otherwise
  */
 os.data.ZOrder.prototype.move = function(id, otherId, opt_after) {
-  if (!this.groups_ || !otherId) {
+  if (!this.groups_ || !id || !otherId || id === otherId) {
     return false;
   }
 
