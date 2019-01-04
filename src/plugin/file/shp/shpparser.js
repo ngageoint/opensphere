@@ -61,6 +61,22 @@ plugin.file.shp.SHPParser = function(config) {
    * @private
    */
   this.source_ = [];
+
+  /**
+   * @protected
+   * @type {!Array<!zip.Reader>}
+   */
+  this.zipReaders = [];
+
+  /**
+   * @private
+   */
+  this.boundZipHandler_ = this.handleZipReader.bind(this);
+
+  /**
+   * @private
+   */
+  this.boundZipErrorHandler_ = this.handleZipReaderError.bind(this);
 };
 goog.inherits(plugin.file.shp.SHPParser, os.parse.AsyncParser);
 
@@ -84,10 +100,22 @@ plugin.file.shp.SHPParser.prototype.cleanup = function() {
 
 
 /**
+ * @protected
+ */
+plugin.file.shp.SHPParser.prototype.closeReaders = function() {
+  this.zipReaders.forEach(function(reader) {
+    reader.close();
+  });
+  this.zipReaders.length = 0;
+};
+
+
+/**
  * @inheritDoc
  */
 plugin.file.shp.SHPParser.prototype.disposeInternal = function() {
   this.cleanup();
+  this.closeReaders();
   this.source_.length = 0;
 };
 
@@ -313,6 +341,10 @@ plugin.file.shp.SHPParser.prototype.parseNext = function() {
     feature.setId(String(ol.getUid(feature)));
   }
 
+  if (!this.hasNext()) {
+    this.closeReaders();
+  }
+
   return feature;
 };
 
@@ -457,6 +489,7 @@ plugin.file.shp.SHPParser.prototype.initialize_ = function() {
 plugin.file.shp.SHPParser.prototype.onError = function() {
   this.initialized_ = true;
   this.processingZip_ = false;
+  this.closeReaders();
   plugin.file.shp.SHPParser.base(this, 'onError');
 };
 
@@ -513,13 +546,26 @@ plugin.file.shp.SHPParser.prototype.updateColumns_ = function() {
  */
 plugin.file.shp.SHPParser.prototype.setupZIPFile_ = function(source) {
   this.processingZip_ = true;
+  zip.createReader(new zip.ArrayBufferReader(source), this.boundZipHandler_, this.boundZipErrorHandler_);
+};
 
-  zip.createReader(new zip.ArrayBufferReader(source), goog.bind(function(reader) {
-    // get the entries in the zip file, then launch the UI
-    reader.getEntries(this.processZIPEntries_.bind(this));
-  }, this), goog.bind(function() {
-    this.logError_('Error reading zip file!');
-  }, this));
+
+/**
+ * @param {!zip.Reader} reader
+ * @protected
+ */
+plugin.file.shp.SHPParser.prototype.handleZipReader = function(reader) {
+  // get the entries in the zip file, then launch the UI
+  this.zipReaders.push(reader);
+  reader.getEntries(this.processZIPEntries_.bind(this));
+};
+
+
+/**
+ * @protected
+ */
+plugin.file.shp.SHPParser.prototype.handleZipReaderError = function() {
+  this.logError_('Error reading zip file!');
 };
 
 

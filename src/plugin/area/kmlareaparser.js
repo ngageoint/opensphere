@@ -51,6 +51,22 @@ plugin.area.KMLAreaParser = function() {
    * @private
    */
   this.log_ = plugin.area.KMLAreaParser.LOGGER_;
+
+  /**
+   * @type {!Array<!zip.Reader>}
+   * @protected
+   */
+  this.zipReaders = [];
+
+  /**
+   * @private
+   */
+  this.boundZipHandler_ = this.handleZipReader.bind(this);
+
+  /**
+   * @private
+   */
+  this.boundZipErrorHandler_ = this.handleZipReaderError.bind(this);
 };
 goog.inherits(plugin.area.KMLAreaParser, os.parse.AsyncParser);
 
@@ -121,12 +137,26 @@ plugin.area.KMLAreaParser.prototype.setSource = function(source) {
  * @private
  */
 plugin.area.KMLAreaParser.prototype.handleZIP_ = function(source) {
-  zip.createReader(new zip.ArrayBufferReader(source), goog.bind(function(reader) {
-    reader.getEntries(this.processZIPEntries_.bind(this));
-  }, this), goog.bind(function() {
-    this.onError();
-    goog.log.error(this.log_, 'Error reading zip file!');
-  }, this));
+  zip.createReader(new zip.ArrayBufferReader(source), this.boundZipHandler_, this.boundZipErrorHandler_);
+};
+
+
+/**
+ * @param {!zip.Reader} reader
+ * @protected
+ */
+plugin.area.KMLAreaParser.prototype.handleZipReader = function(reader) {
+  this.zipReaders.push(reader);
+  reader.getEntries(this.processZIPEntries_.bind(this));
+};
+
+
+/**
+ * @protected
+ */
+plugin.area.KMLAreaParser.prototype.handleZipReaderError = function() {
+  this.onError();
+  goog.log.error(this.log_, 'Error reading zip file!');
 };
 
 
@@ -221,6 +251,12 @@ plugin.area.KMLAreaParser.prototype.handleZIPText_ = function(filename, event) {
  */
 plugin.area.KMLAreaParser.prototype.cleanup = function() {
   this.document_ = null;
+
+  this.zipReaders.forEach(function(reader) {
+    reader.close();
+  });
+
+  this.zipReaders.length = 0;
 };
 
 
@@ -265,6 +301,7 @@ plugin.area.KMLAreaParser.prototype.parseNext = function() {
     }
   }
 
+  this.cleanup();
   return features;
 };
 

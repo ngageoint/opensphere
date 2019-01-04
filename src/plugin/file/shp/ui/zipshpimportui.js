@@ -39,6 +39,12 @@ plugin.file.shp.ui.ZipSHPImportUI = function() {
    * @private
    */
   this.config_ = null;
+
+  /**
+   * @type {!Array<!zip.Reader>}
+   * @protected
+   */
+  this.zipReaders = [];
 };
 goog.inherits(plugin.file.shp.ui.ZipSHPImportUI, os.ui.im.FileImportUI);
 
@@ -58,14 +64,28 @@ plugin.file.shp.ui.ZipSHPImportUI.prototype.launchUI = function(file, opt_config
   }
 
   var content = /** @type {ArrayBuffer} */ (file.getContent());
-  zip.createReader(new zip.ArrayBufferReader(content), goog.bind(function(reader) {
-    // get the entries in the zip file, then launch the UI
-    reader.getEntries(this.processEntries_.bind(this));
-  }, this), function() {
-    // failed reading the zip file
-    var msg = 'Error reading zip file "' + file.getFileName() + '"!';
-    os.alert.AlertManager.getInstance().sendAlert(msg, os.alert.AlertEventSeverity.ERROR);
-  });
+  zip.createReader(new zip.ArrayBufferReader(content),
+      this.handleZipReader.bind(this), this.handleZipReaderError.bind(this));
+};
+
+
+/**
+ * @param {!zip.Reader} reader
+ * @protected
+ */
+plugin.file.shp.ui.ZipSHPImportUI.prototype.handleZipReader = function(reader) {
+  this.zipReaders.push(reader);
+  reader.getEntries(this.processEntries_.bind(this));
+};
+
+
+/**
+ * @protected
+ */
+plugin.file.shp.ui.ZipSHPImportUI.prototype.handleZipReaderError = function() {
+  // failed reading the zip file
+  var msg = 'Error reading zip file!"';
+  os.alert.AlertManager.getInstance().sendAlert(msg, os.alert.AlertEventSeverity.ERROR);
 };
 
 
@@ -171,6 +191,10 @@ plugin.file.shp.ui.ZipSHPImportUI.prototype.launchUIInternal_ = function() {
   }
 
   // drop file references once the UI is launched
+  this.zipReaders.forEach(function(reader) {
+    reader.close();
+  });
+  this.zipReaders.length = 0;
   this.shpFile_ = null;
   this.dbfFile_ = null;
   this.zipFile_ = null;
