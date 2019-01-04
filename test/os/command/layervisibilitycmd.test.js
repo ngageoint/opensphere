@@ -2,7 +2,7 @@ goog.require('os.MapContainer');
 goog.require('os.command.LayerAdd');
 goog.require('os.command.LayerVisibility');
 goog.require('os.layer.config.LayerConfigManager');
-goog.require('os.layer.config.MockLayerConfig');
+goog.require('os.layer.config.MockTileLayerConfig');
 goog.require('os.mock');
 goog.require('os.style.StyleManager');
 
@@ -12,7 +12,7 @@ describe('os.command.addFeature', function() {
   var testLayerId = 'test-layer';
   var testOptions = {
     'id': testLayerId,
-    'type': os.layer.config.MockLayerConfig.TYPE
+    'type': os.layer.config.MockTileLayerConfig.TYPE
   };
 
   it('should fail with no layer', function() {
@@ -23,8 +23,8 @@ describe('os.command.addFeature', function() {
   var addCommand;
   it('should be able to add a layer', function() {
     os.layerConfigManager = os.layer.config.LayerConfigManager.getInstance();
-    os.layerConfigManager.registerLayerConfig(os.layer.config.MockLayerConfig.TYPE,
-        os.layer.config.MockLayerConfig);
+    os.layerConfigManager.registerLayerConfig(os.layer.config.MockTileLayerConfig.TYPE,
+        os.layer.config.MockTileLayerConfig);
     addCommand = new os.command.LayerAdd(testOptions);
     addCommand.execute();
     expect(os.MapContainer.getInstance().getLayer(testLayerId)).not.toBe(null);
