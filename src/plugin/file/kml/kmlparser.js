@@ -211,6 +211,22 @@ plugin.file.kml.KMLParser = function(options) {
       parsers: plugin.file.kml.OL_PLACEMARK_PARSERS()
     }
   };
+
+  /**
+   * @type {!Array<!zip.Reader>}
+   * @protected
+   */
+  this.zipReaders = [];
+
+  /**
+   * @private
+   */
+  this.boundZipHandler_ = this.handleZipReader.bind(this);
+
+  /**
+   * @private
+   */
+  this.boundZipErrorHandler_ = this.handleZipReaderError.bind(this);
 };
 goog.inherits(plugin.file.kml.KMLParser, os.parse.AsyncParser);
 
@@ -243,6 +259,17 @@ plugin.file.kml.KMLParser.SKIPPED_COLUMNS_ = /^(geometry|recordtime|time|styleur
 /**
  * @inheritDoc
  */
+plugin.file.kml.KMLParser.prototype.disposeInternal = function() {
+  this.cleanup();
+  this.clearAssets();
+  this.closeZipReaders();
+  plugin.file.kml.KMLParser.base(this, 'disposeInternal');
+};
+
+
+/**
+ * @inheritDoc
+ */
 plugin.file.kml.KMLParser.prototype.cleanup = function() {
   // FIXME: we should be clearing assets here, but they won't be available at load time
   // this.clearAssets();
@@ -258,6 +285,27 @@ plugin.file.kml.KMLParser.prototype.cleanup = function() {
   this.unnamedCount_ = 0;
   this.screenOverlayCount_ = 0;
   this.minRefreshPeriod_ = 0;
+};
+
+
+/**
+ * @protected
+ */
+plugin.file.kml.KMLParser.prototype.closeZipReaders = function() {
+  this.zipReaders.forEach(function(reader) {
+    reader.close();
+  });
+
+  this.zipReaders.length = 0;
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.file.kml.KMLParser.prototype.onError = function() {
+  this.closeZipReaders();
+  plugin.file.kml.KMLParser.base(this, 'onError');
 };
 
 
@@ -549,12 +597,26 @@ plugin.file.kml.KMLParser.prototype.begin = function() {
  * @private
  */
 plugin.file.kml.KMLParser.prototype.handleZIP_ = function(source) {
-  zip.createReader(new zip.ArrayBufferReader(source), goog.bind(function(reader) {
-    reader.getEntries(this.processZIPEntries_.bind(this));
-  }, this), goog.bind(function() {
-    this.onError();
-    goog.log.error(this.log_, 'Error reading zip file!');
-  }, this));
+  zip.createReader(new zip.ArrayBufferReader(source), this.boundZipHandler_, this.boundZipErrorHandler_);
+};
+
+
+/**
+ * @param {!zip.Reader} reader
+ * @protected
+ */
+plugin.file.kml.KMLParser.prototype.handleZipReader = function(reader) {
+  this.zipReaders.push(reader);
+  reader.getEntries(this.processZIPEntries_.bind(this));
+};
+
+
+/**
+ * @protected
+ */
+plugin.file.kml.KMLParser.prototype.handleZipReaderError = function() {
+  this.onError();
+  goog.log.error(this.log_, 'Error reading zip file!');
 };
 
 
@@ -770,6 +832,10 @@ plugin.file.kml.KMLParser.prototype.parseNext = function() {
     // current element is a container, so parse its children next
     this.stack_.push(stackObj);
     this.extractStyles_(currentEl);
+  }
+
+  if (!this.hasNext()) {
+    this.closeZipReaders();
   }
 
   return node;
