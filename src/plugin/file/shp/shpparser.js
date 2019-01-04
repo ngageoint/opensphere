@@ -15,7 +15,7 @@ goog.require('os.file');
 goog.require('os.file.mime.text');
 goog.require('os.file.mime.zip');
 goog.require('os.geo');
-goog.require('os.parse.AsyncParser');
+goog.require('os.parse.AsyncZipParser');
 goog.require('plugin.file.shp');
 goog.require('plugin.file.shp.data.DBFField');
 goog.require('plugin.file.shp.data.DBFHeader');
@@ -26,7 +26,7 @@ goog.require('plugin.file.shp.data.SHPHeader');
 /**
  * A Shapefile parser
  * @param {plugin.file.shp.SHPParserConfig} config
- * @extends {os.parse.AsyncParser<ol.Feature>}
+ * @extends {os.parse.AsyncZipParser<ol.Feature>}
  * @constructor
  */
 plugin.file.shp.SHPParser = function(config) {
@@ -61,24 +61,8 @@ plugin.file.shp.SHPParser = function(config) {
    * @private
    */
   this.source_ = [];
-
-  /**
-   * @protected
-   * @type {!Array<!zip.Reader>}
-   */
-  this.zipReaders = [];
-
-  /**
-   * @private
-   */
-  this.boundZipHandler_ = this.handleZipReader.bind(this);
-
-  /**
-   * @private
-   */
-  this.boundZipErrorHandler_ = this.handleZipReaderError.bind(this);
 };
-goog.inherits(plugin.file.shp.SHPParser, os.parse.AsyncParser);
+goog.inherits(plugin.file.shp.SHPParser, os.parse.AsyncZipParser);
 
 
 /**
@@ -100,22 +84,11 @@ plugin.file.shp.SHPParser.prototype.cleanup = function() {
 
 
 /**
- * @protected
- */
-plugin.file.shp.SHPParser.prototype.closeReaders = function() {
-  this.zipReaders.forEach(function(reader) {
-    reader.close();
-  });
-  this.zipReaders.length = 0;
-};
-
-
-/**
  * @inheritDoc
  */
 plugin.file.shp.SHPParser.prototype.disposeInternal = function() {
+  plugin.file.shp.SHPParser.base(this, 'disposeInternal');
   this.cleanup();
-  this.closeReaders();
   this.source_.length = 0;
 };
 
@@ -321,6 +294,7 @@ plugin.file.shp.SHPParser.prototype.parseNext = function() {
       }
 
       // TODO: there should be a way to determine the projection from the SHP file rather than assuming EPSG:4326
+      // ^ There is, but it would require loading the .prj file. That's trivial from a zip but terrible when given the files one at a time.
       feature.setGeometry(geom.osTransform());
     } else if (shapeType != plugin.file.shp.TYPE.NULLRECORD) {
       // skip null records, but warn on unknown types
@@ -342,7 +316,7 @@ plugin.file.shp.SHPParser.prototype.parseNext = function() {
   }
 
   if (!this.hasNext()) {
-    this.closeReaders();
+    this.closeZipReaders();
   }
 
   return feature;
@@ -452,7 +426,7 @@ plugin.file.shp.SHPParser.prototype.initialize_ = function() {
   while (i--) {
     var source = this.source_[i];
     if (os.file.mime.zip.isZip(source)) {
-      this.setupZIPFile_(source);
+      this.createZipReader(source);
     } else if (plugin.file.shp.isSHPFileType(source)) {
       if (!this.header_.data) {
         this.setupSHPFile_(source);
@@ -489,7 +463,6 @@ plugin.file.shp.SHPParser.prototype.initialize_ = function() {
 plugin.file.shp.SHPParser.prototype.onError = function() {
   this.initialized_ = true;
   this.processingZip_ = false;
-  this.closeReaders();
   plugin.file.shp.SHPParser.base(this, 'onError');
 };
 
@@ -541,39 +514,18 @@ plugin.file.shp.SHPParser.prototype.updateColumns_ = function() {
 
 
 /**
- * @param {ArrayBuffer} source
- * @private
+ * @inheritDoc
  */
-plugin.file.shp.SHPParser.prototype.setupZIPFile_ = function(source) {
+plugin.file.shp.SHPParser.prototype.createZipReader = function(source) {
   this.processingZip_ = true;
-  zip.createReader(new zip.ArrayBufferReader(source), this.boundZipHandler_, this.boundZipErrorHandler_);
+  plugin.file.shp.SHPParser.base(this, 'createZipReader', source);
 };
 
 
 /**
- * @param {!zip.Reader} reader
- * @protected
+ * @inheritDoc
  */
-plugin.file.shp.SHPParser.prototype.handleZipReader = function(reader) {
-  // get the entries in the zip file, then launch the UI
-  this.zipReaders.push(reader);
-  reader.getEntries(this.processZIPEntries_.bind(this));
-};
-
-
-/**
- * @protected
- */
-plugin.file.shp.SHPParser.prototype.handleZipReaderError = function() {
-  this.logError_('Error reading zip file!');
-};
-
-
-/**
- * @param {Array.<!zip.Entry>} entries
- * @private
- */
-plugin.file.shp.SHPParser.prototype.processZIPEntries_ = function(entries) {
+plugin.file.shp.SHPParser.prototype.handleZipEntries = function(entries) {
   var foundSHP = false;
   var foundDBF = false;
   for (var i = 0, n = entries.length; i < n; i++) {
