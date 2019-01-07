@@ -19,6 +19,10 @@
   word-break: break-all;
 }
 
+.u-word-break-break-word {
+  word-break: break-word;
+}
+
 .u-word-wrap-break-word {
   word-wrap: break-word;
 }
@@ -64,6 +68,10 @@
 
 .u-cursor-grab.moving {
   @include grabbing-cursor();
+}
+
+.u-cursor-default {
+  cursor: default;
 }
 
 .u-btn-separator {
@@ -196,7 +204,7 @@
     }
   }
 
-  .u-table__selectable {
+  &.u-table__selectable .u-table__row {
     cursor: pointer;
   }
 
