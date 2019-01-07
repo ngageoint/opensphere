@@ -481,6 +481,15 @@ os.ui.search.SearchBoxCtrl.prototype.setUpGroups = function() {
     }, this);
     this['searchOptionsGroups'][groupName] = currentGroup;
   }, this);
+
+  var order =  /** @type {Array} */ (os.settings.get('providerGroupOrder', []));
+  order.forEach(function(value, index) {
+    var currentIndex = this['providerGroups'].indexOf(value);
+    if (currentIndex > 0) {
+      goog.array.moveItem(this['providerGroups'], currentIndex, index);
+    }
+  }, this);
+
   this['searchOptionsNoGroup'] = copiedOptions;
 };
 
@@ -558,7 +567,11 @@ os.ui.search.SearchBoxCtrl.prototype.toggleGroup = function(group) {
  * @export
  */
 os.ui.search.SearchBoxCtrl.prototype.getSearchOptionsGroup = function(groupName) {
-  return this['searchOptionsGroups'][groupName];
+  var group = this['searchOptionsGroups'][groupName];
+  goog.array.sort(group, function(a, b) {
+    return goog.array.defaultCompare(a.getName(), b.getName());
+  });
+  return group;
 };
 
 
