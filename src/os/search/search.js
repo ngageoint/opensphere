@@ -122,7 +122,7 @@ os.search.pageResults = function(results, opt_start, opt_pageSize) {
  * @return {number}
  */
 os.search.dateScore = function(time, order) {
-  if (time) {
+  if (time || time == 0) {
     if (order == os.search.SortOrder.DESC) {
       return time;
     } else {
