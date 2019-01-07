@@ -3214,7 +3214,7 @@ os.source.Vector.prototype.showFeatures = function(features) {
 
 
 /**
- * Convenience show only the given features; hide others
+ * Convenience show only the given features; hide others; maintain selection on visible features
  * @param {!ol.Feature|Array<!ol.Feature>} features
  */
 os.source.Vector.prototype.setVisibleFeatures = function(features) {
@@ -3222,8 +3222,21 @@ os.source.Vector.prototype.setVisibleFeatures = function(features) {
     features = [features];
   }
 
+  var selected = [];
+  if (this.selected_.length > 0) {
+    features.forEach(function(v) {
+      if (this.selectedById_[v.id]) {
+        selected.push(v);
+      }
+    }.bind(this));
+  }
+
   this.updateFeaturesVisibility(this.getFeatures(), false);
   this.updateFeaturesVisibility(features, true);
+
+  if (selected.length) {
+    this.setSelectedItems(selected);
+  }
 };
 
 
