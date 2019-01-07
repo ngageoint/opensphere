@@ -126,6 +126,12 @@ os.ui.ogc.OGCDescriptor = function() {
   this.wmsParams_ = null;
 
   /**
+   * @type {goog.Uri.QueryData}
+   * @private
+   */
+  this.wfsParams_ = null;
+
+  /**
    * @type {?string}
    * @private
    */
@@ -479,6 +485,22 @@ os.ui.ogc.OGCDescriptor.prototype.setWmsDateFormat = function(value) {
 /**
  * @inheritDoc
  */
+os.ui.ogc.OGCDescriptor.prototype.getWfsParams = function() {
+  return this.wfsParams_;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.ui.ogc.OGCDescriptor.prototype.setWfsParams = function(value) {
+  this.wfsParams_ = value;
+};
+
+
+/**
+ * @inheritDoc
+ */
 os.ui.ogc.OGCDescriptor.prototype.getWmsParams = function() {
   return this.wmsParams_;
 };
@@ -490,6 +512,7 @@ os.ui.ogc.OGCDescriptor.prototype.getWmsParams = function() {
 os.ui.ogc.OGCDescriptor.prototype.setWmsParams = function(value) {
   this.wmsParams_ = value;
 };
+
 
 
 /**
