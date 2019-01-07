@@ -1,4 +1,6 @@
 goog.provide('os.search');
+goog.provide('os.search.SortOrder');
+goog.provide('os.search.SortType');
 
 
 /**
@@ -34,6 +36,15 @@ os.search.SearchSetting = {
 os.search.SortType = {
   DATE: 'Date',
   RELEVANCE: 'Relevance'
+};
+
+
+/**
+ * @enum {string}
+ */
+os.search.SortOrder = {
+  ASC: 'asc',
+  DESC: 'desc'
 };
 
 
@@ -100,5 +111,24 @@ os.search.pageResults = function(results, opt_start, opt_pageSize) {
     }
   } else {
     return results;
+  }
+};
+
+
+/**
+ * Create a score for date sorting by sort order
+ * @param {number} time
+ * @param {string} order
+ * @return {number}
+ */
+os.search.dateScore = function(time, order) {
+  if (time) {
+    if (order == os.search.SortOrder.DESC) {
+      return time;
+    } else {
+      return new Date().getTime() - time;
+    }
+  } else {
+    return 0;
   }
 };
