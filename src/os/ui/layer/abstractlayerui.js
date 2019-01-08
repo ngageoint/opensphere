@@ -101,40 +101,33 @@ os.ui.layer.AbstractLayerUICtrl.prototype.getValue = function(callback, opt_defa
 
   var nodes = this.getLayerNodes();
   for (var i = 0, n = nodes.length; i < n; i++) {
-    try {
-      var layer = nodes[i].getLayer();
-      if (layer) {
-        var val = callback(layer);
-        return val !== undefined ? val : defaultVal;
-      }
-    } catch (e) {
+    var layer = nodes[i].getLayer();
+    if (layer) {
+      var val = callback(layer);
+      return val !== undefined ? val : defaultVal;
     }
   }
 
-  return 1;
+  return defaultVal;
 };
 
 
 /**
  * Creates a command to run on each layer node
  * @param {function(os.layer.ILayer):os.command.ICommand} commandFunction
- * @protected
  */
 os.ui.layer.AbstractLayerUICtrl.prototype.createCommand = function(commandFunction) {
   var cmds = [];
 
   var nodes = this.getLayerNodes();
   for (var i = 0, n = nodes.length; i < n; i++) {
-    try {
-      var layer = nodes[i].getLayer();
-      if (layer) {
-        var cmd = commandFunction(layer);
-        if (cmd) {
-          // if we have a layer and get a command, add it
-          cmds.push(cmd);
-        }
+    var layer = nodes[i].getLayer();
+    if (layer) {
+      var cmd = commandFunction(layer);
+      if (cmd) {
+        // if we have a layer and get a command, add it
+        cmds.push(cmd);
       }
-    } catch (e) {
     }
   }
 

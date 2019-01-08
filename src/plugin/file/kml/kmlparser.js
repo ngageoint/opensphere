@@ -979,6 +979,7 @@ plugin.file.kml.KMLParser.prototype.examineElement_ = function(el) {
     if (feature) {
       node = new plugin.file.kml.ui.KMLNode();
       node.setFeature(feature);
+      node.layerUI = 'kmlnodelayerui';
     }
   } else {
     node = new plugin.file.kml.ui.KMLNode();
