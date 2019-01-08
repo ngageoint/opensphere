@@ -220,7 +220,7 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
 
   /**
    * Supported shapes.
-   * @type {string}
+   * @type {Array}
    */
   this['shapes'] = [
     os.style.ShapeType.NONE,
@@ -239,8 +239,8 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
   this['shape'] = os.style.ShapeType.POINT;
 
   /**
-   * Supported shapes.
-   * @type {string}
+   * Supported center shapes.
+   * @type {Array}
    */
   this['centerShapes'] = [
     os.style.ShapeType.POINT,
@@ -570,6 +570,12 @@ os.ui.FeatureEditCtrl.FIELDS = [
 
 
 /**
+ * Style used for hiding geometries such as the line and marker
+ */
+os.ui.FeatureEditCtrl.HIDE_GEOMETRY = '__hidden__';
+
+
+/**
  * @inheritDoc
  */
 os.ui.FeatureEditCtrl.prototype.disposeInternal = function() {
@@ -696,7 +702,7 @@ os.ui.FeatureEditCtrl.prototype.isEllipse = function() {
  * @export
  */
 os.ui.FeatureEditCtrl.prototype.showIcon = function() {
-  return this['shape'] === os.style.ShapeType.ICON;
+  return os.style.ICON_REGEXP.test(this['shape']);
 };
 
 
@@ -706,7 +712,7 @@ os.ui.FeatureEditCtrl.prototype.showIcon = function() {
  * @export
  */
 os.ui.FeatureEditCtrl.prototype.showCenterIcon = function() {
-  return !!os.style.CENTER_LOOKUP[this['shape']] && this['centerShape'] === os.style.ShapeType.ICON;
+  return !!os.style.CENTER_LOOKUP[this['shape']] && os.style.ICON_REGEXP.test(this['centerShape']);
 };
 
 
@@ -1074,7 +1080,7 @@ os.ui.FeatureEditCtrl.prototype.saveToFeature = function(feature) {
     }
     os.ui.FeatureEditCtrl.updateFeatureStyle(feature);
 
-    if (configs instanceof Array) {
+    if (Array.isArray(configs)) {
       configs.forEach(function(config) {
         this.setFeatureConfig_(config);
       }, this);
@@ -1492,7 +1498,7 @@ os.ui.FeatureEditCtrl.updateFeatureStyle = function(feature) {
           config['stroke']['width'] = config['stroke']['width'] || size;
 
           // drop opacity to 0 if the shape style is set to 'None'
-          if (shape == os.style.ShapeType.NONE) {
+          if (this['shape'] === os.style.ShapeType.NONE) {
             os.style.setConfigOpacityColor(config, 0);
           }
         } else {

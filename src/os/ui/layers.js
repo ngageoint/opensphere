@@ -187,11 +187,8 @@ os.ui.LayersCtrl.prototype.onGroupByChanged = function() {
  * @export
  */
 os.ui.LayersCtrl.prototype.getUi = function(item) {
-  if (item && item instanceof os.data.LayerNode) {
-    var node = /** @type {os.data.LayerNode} */ (item);
-    var l = node.getLayer();
-
-    return l.getLayerUI() || 'defaultlayerui';
+  if (item && os.implements(item, os.ui.ILayerUIProvider.ID)) {
+    return item.getLayerUI(item);
   }
 
   return null;

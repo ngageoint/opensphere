@@ -13,7 +13,9 @@ goog.require('os.data.IExtent');
 goog.require('os.data.ISearchable');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.structs.TriState');
+goog.require('os.ui.ILayerUIProvider');
 goog.require('os.ui.feature.featureInfoDirective');
+goog.require('os.ui.node.defaultLayerNodeUIDirective');
 goog.require('os.ui.slick.SlickTreeNode');
 goog.require('plugin.file.kml.ui.GeometryIcons');
 goog.require('plugin.file.kml.ui.kmlNodeUIDirective');
@@ -34,6 +36,7 @@ plugin.file.kml.ui.KMLNodeAction = {
  * @extends {os.ui.slick.SlickTreeNode}
  * @implements {os.data.ISearchable}
  * @implements {os.data.IExtent}
+ * @implements {os.ui.ILayerUIProvider}
  * @constructor
  */
 plugin.file.kml.ui.KMLNode = function() {
@@ -138,8 +141,14 @@ plugin.file.kml.ui.KMLNode = function() {
    * @protected
    */
   this.childLabelMap = {};
+
+  /**
+   * @type {?string}
+   */
+  this.layerUI = null;
 };
 goog.inherits(plugin.file.kml.ui.KMLNode, os.ui.slick.SlickTreeNode);
+os.implements(plugin.file.kml.ui.KMLNode, os.ui.ILayerUIProvider.ID);
 
 
 /**
@@ -854,4 +863,16 @@ plugin.file.kml.ui.KMLNode.collapseEmpty = function(target) {
   } else {
     target.collapsed = true;
   }
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.file.kml.ui.KMLNode.prototype.getLayerUI = function(item) {
+  if (item && item instanceof plugin.file.kml.ui.KMLNode && item.editable && item.feature_) {
+    return item.layerUI || 'defaultlayerui';
+  }
+
+  return null;
 };

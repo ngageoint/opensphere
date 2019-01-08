@@ -8,6 +8,7 @@ goog.require('os.events.PropertyChangeEvent');
 goog.require('os.layer.LayerGroup');
 goog.require('os.layer.Vector');
 goog.require('os.structs.TriState');
+goog.require('os.ui.ILayerUIProvider');
 goog.require('os.ui.node.defaultLayerNodeUIDirective');
 goog.require('os.ui.node.featureCountDirective');
 goog.require('os.ui.node.layerTypeDirective');
@@ -21,6 +22,7 @@ goog.require('os.ui.slick.SlickTreeNode');
  * @extends {os.ui.slick.SlickTreeNode}
  * @implements {os.data.ISearchable}
  * @implements {os.data.IExtent}
+ * @implements {os.ui.ILayerUIProvider}
  * @constructor
  */
 os.data.LayerNode = function() {
@@ -33,6 +35,7 @@ os.data.LayerNode = function() {
   this.layer_ = null;
 };
 goog.inherits(os.data.LayerNode, os.ui.slick.SlickTreeNode);
+os.implements(os.data.LayerNode, os.ui.ILayerUIProvider.ID);
 
 
 /**
@@ -288,4 +291,19 @@ os.data.LayerNode.prototype.formatValue = function(value) {
   }
 
   return s;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.data.LayerNode.prototype.getLayerUI = function(item) {
+  if (item && item instanceof os.data.LayerNode) {
+    var node = /** @type {os.data.LayerNode} */ (item);
+    var l = node.getLayer();
+
+    return l.getLayerUI() || 'defaultlayerui';
+  }
+
+  return null;
 };
