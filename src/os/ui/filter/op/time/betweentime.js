@@ -4,6 +4,7 @@ goog.provide('os.ui.filter.op.time.betweenTimeDirective');
 goog.require('os.ui.Module');
 goog.require('os.ui.datetime.durationDirective');
 goog.require('os.ui.filter.colTypeCheckValidation');
+goog.require('os.ui.popover.popoverDirective');
 
 
 /**

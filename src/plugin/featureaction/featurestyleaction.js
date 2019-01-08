@@ -89,6 +89,8 @@ plugin.im.action.feature.StyleAction.CONFIG_UI = 'featureactionstyleconfig';
  * @inheritDoc
  */
 plugin.im.action.feature.StyleAction.prototype.reset = function(items) {
+  var resetItems = [];
+
   for (var i = 0; i < items.length; i++) {
     var item = items[i];
     if (item && this.isFeatureStyled(item)) {
@@ -100,15 +102,16 @@ plugin.im.action.feature.StyleAction.prototype.reset = function(items) {
       var originalConfig = /** @type {Array|Object|undefined} */
           (item.get(plugin.im.action.feature.StyleType.ORIGINAL));
       item.set(os.style.StyleType.FEATURE, originalConfig, true);
+      resetItems.push(item);
     }
   }
 
-  os.style.setFeaturesStyle(items);
+  os.style.setFeaturesStyle(resetItems);
 
   // notify that the layer needs to be updated
   var layer = os.feature.getLayer(items[0]);
   if (layer) {
-    os.style.notifyStyleChange(layer, items);
+    os.style.notifyStyleChange(layer, resetItems);
   }
 };
 
