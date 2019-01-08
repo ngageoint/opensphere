@@ -44,13 +44,6 @@ plugin.im.action.feature.StyleAction = function() {
   this.xmlType = plugin.im.action.feature.StyleAction.ID;
 
   /**
-   * Unique identifier for this action.
-   * @type {number}
-   * @protected
-   */
-  this.uid = goog.getUid(this);
-
-  /**
    * The feature style config.
    * @type {!Object}
    */
@@ -98,7 +91,7 @@ plugin.im.action.feature.StyleAction.CONFIG_UI = 'featureactionstyleconfig';
 plugin.im.action.feature.StyleAction.prototype.reset = function(items) {
   for (var i = 0; i < items.length; i++) {
     var item = items[i];
-    if (item) {
+    if (item && this.isFeatureStyled(item)) {
       item.set(plugin.im.action.feature.StyleAction.FEATURE_ID, undefined);
       item.set(os.style.StyleField.SHAPE, undefined, true);
       item.set(os.style.StyleField.CENTER_SHAPE, undefined, true);
@@ -307,7 +300,7 @@ plugin.im.action.feature.StyleAction.prototype.fromXml = function(xml) {
  */
 plugin.im.action.feature.StyleAction.prototype.renderLegend = function(options, var_args) {
   var features = /** @type {Array<!ol.Feature>} */ (arguments[1]);
-  if (features && features.length > 0 && features.some(plugin.im.action.feature.StyleAction.isFeatureStyled, this)) {
+  if (features && features.length > 0 && features.some(this.isFeatureStyled, this)) {
     var entry = arguments[2];
     if (entry instanceof os.im.action.FilterActionEntry) {
       // clone so we can modify it freely
@@ -338,10 +331,9 @@ plugin.im.action.feature.StyleAction.prototype.renderLegend = function(options, 
  * If a feature is styled by the action.
  * @param {!ol.Feature} feature The feature.
  * @return {boolean} If the feature is using this style action.
- * @this plugin.im.action.feature.StyleAction
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-plugin.im.action.feature.StyleAction.isFeatureStyled = function(feature) {
+plugin.im.action.feature.StyleAction.prototype.isFeatureStyled = function(feature) {
   return feature.values_[plugin.im.action.feature.StyleAction.FEATURE_ID] === this.uid;
 };
