@@ -27,8 +27,7 @@ os.ui.filter.op.time.OlderThan.prototype.getEvalExpression = function(varName, l
   if (!goog.string.isEmptyOrWhitespace(goog.string.makeSafe(literal))) {
     // the value stored in the variable for a time-based operator is an {@link os.time.ITime}
     // to execute the filter, we need to extract the raw time value and compare it to now
-    return varName + '!=null?(os.ui.filter.currentTimestamp-' + varName + '.getEnd()>' +
-        os.ui.filter.string.quoteString(literal) + '):false';
+    return varName + '!=null&&currentFilterTimestamp-' + literal + '>' + varName + '.getStart()';
   }
 
   // null/empty string is not supported, so don't return an expression
