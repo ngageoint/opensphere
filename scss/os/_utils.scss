@@ -393,6 +393,7 @@
 // ----------- Generic max sizes. Use with caution only when absoluted needed ----------- //
 $somesizes: () !default;
 $somesizes: map-merge((
+    0: 0%,
     25: 25%,
     50: 50%,
     75: 75%
