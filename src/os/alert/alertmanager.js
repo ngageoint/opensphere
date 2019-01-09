@@ -71,26 +71,6 @@ os.alert.AlertManager.prototype.sendAlert = function(alert, opt_severity, opt_lo
     opt_dismissDispatcher) {
   var severity = opt_severity || os.alert.AlertEventSeverity.ERROR;
 
-  // Check if message has a url and if it does adds a hyperlink
-  if (alert) {
-    var match = alert.match(os.url.URL_REGEXP_LINKY);
-    if (match && match.index + match[0].length <= 500) {
-      var html = [];
-      var url = match[0];
-      var i = match.index;
-      html.push(alert.substring(0, i));
-      html.push('<a ');
-      html.push('href="');
-      html.push(url);
-      html.push('" target="_blank">');
-      html.push(os.ui.escapeHtml(alert.substring(i, i + match[0].length)));
-      html.push('</a>');
-      alert = alert.substring(i + match[0].length);
-      html.push(alert);
-      alert = html.join('');
-    }
-  }
-
   // fire off the alert
   var alertEvent = new os.alert.AlertEvent(alert, severity, opt_limit, opt_dismissDispatcher);
   this.savedAlerts_.add(alertEvent);
