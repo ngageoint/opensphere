@@ -236,6 +236,8 @@ plugin.cesium.CesiumRenderer.prototype.getCoordinateFromPixel = function(pixel) 
 
       if (cartesian) {
         var cartographic = scene.globe.ellipsoid.cartesianToCartographic(cartesian);
+        // The height provided with terrain on is often unreliable; with terrain off it's wrong; default to zero
+        cartographic.height = 0;
         return [
           Cesium.Math.toDegrees(cartographic.longitude),
           Cesium.Math.toDegrees(cartographic.latitude),
