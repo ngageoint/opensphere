@@ -241,6 +241,28 @@ plugin.ogc.wfs.WFSLayerConfig.prototype.addMappings = function(layer, options) {
   var startField = this.featureType.getStartDateColumnName();
   var endField = this.featureType.getEndDateColumnName();
   if (animate && startField) {
+    if (startField === 'validTime' && this.url.indexOf('/ogc/wfsServer') > -1) {
+      // validTime means that the feature type is dynamic, which means we need to find the actual start/end fields
+      // for the purposes of our mappings
+      var columns = this.featureType.getColumns();
+      for (var i = 0, ii = columns.length; i < ii; i++) {
+        var col = columns[i];
+        if (col['name'] === 'DATE_TIME') {
+          // if a DATE_TIME field is defined, then that's the field we need to use
+          startField = 'DATE_TIME';
+          endField = 'DATE_TIME';
+          break;
+        }
+
+        if (col['name'] === 'UP_DATE_TIME' || col['name'] === 'DOWN_DATE_TIME') {
+          // if UP_DATE_TIME or DOWN_TIME_TIME is defined, then those are the fields we need to use
+          startField = 'UP_DATE_TIME';
+          endField = 'DOWN_DATE_TIME';
+          break;
+        }
+      }
+    }
+
     if (startField != endField) {
       // add a start/end datetime mapping
       // this mapping does not remove the original fields since it's mapping two fields to one, and the original
@@ -260,12 +282,6 @@ plugin.ogc.wfs.WFSLayerConfig.prototype.addMappings = function(layer, options) {
       // add a datetime mapping
       // this mapping removes the original field since we're replacing the original with our own
       mapping = new os.im.mapping.time.DateTimeMapping(os.im.mapping.TimeType.INSTANT);
-
-      // This is a workaround for wfs servers with no start time
-      if (startField == 'validTime' && this.url.indexOf('/ogc/wfsServer') > -1) {
-        startField = 'DATE_TIME';
-      }
-
       mapping.field = startField;
       mapping.setFormat(os.im.mapping.TimeFormat.ISO);
 

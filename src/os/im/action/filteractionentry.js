@@ -71,8 +71,6 @@ os.im.action.FilterActionEntry.prototype.setFilter = function(filter) {
  */
 os.im.action.FilterActionEntry.prototype.unprocessItems = function(items) {
   if (items) {
-    items = items.filter(this.filterFn);
-
     for (var i = 0; i < this.actions.length; i++) {
       this.actions[i].reset(items);
 
@@ -107,6 +105,39 @@ os.im.action.FilterActionEntry.prototype.processItems = function(items) {
           for (var j = 0, jj = children.length; j < jj; j++) {
             if (children[j].isEnabled()) {
               children[j].processItems(items);
+            }
+          }
+        }
+      }
+    }
+  }
+};
+
+
+/**
+ * Update all of the items. This will execute actions on items that now pass and reset items that don't.
+ * @param {Array<T>} items The items.
+ */
+os.im.action.FilterActionEntry.prototype.updateItems = function(items) {
+  if (items) {
+    var pass = [];
+    var fail = [];
+    items.forEach(function(item) {
+      this.filterFn(item) ? pass.push(item) : fail.push(item);
+    }, this);
+
+    // apply to applicable items
+    if (pass.length > 0 || fail.length > 0) {
+      for (var i = 0; i < this.actions.length; i++) {
+        this.actions[i].execute(pass);
+        this.actions[i].reset(fail);
+
+        // apply children to each item that passed the filter
+        var children = this.getChildren();
+        if (children) {
+          for (var j = 0, jj = children.length; j < jj; j++) {
+            if (children[j].isEnabled()) {
+              children[j].processItems(pass);
             }
           }
         }

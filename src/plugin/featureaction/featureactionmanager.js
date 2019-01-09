@@ -195,11 +195,10 @@ plugin.im.action.feature.Manager.prototype.onSourcePropertyChange_ = function(ev
 plugin.im.action.feature.Manager.prototype.refreshTimeEntries = function() {
   var entries = this.getActionEntries();
   var fn = function(entry) {
-    var source = os.dataManager.getSource(entry.type);
-    if (entry.isEnabled() && source) {
+    if (entry.isEnabled()) {
       var filter = entry.getFilter();
       if (filter && filter.indexOf(os.data.RecordField.TIME) != -1) {
-        this.processItems(source.getId(), source.getFeatures(), true);
+        this.updateItems(entry.type);
       }
     }
 
