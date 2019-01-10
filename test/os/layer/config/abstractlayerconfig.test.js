@@ -1,7 +1,7 @@
 goog.require('ol.source.XYZ');
 goog.require('os.layer.config.AbstractTileLayerConfig');
 goog.require('os.layer.config.LayerConfigManager');
-goog.require('os.layer.config.MockLayerConfig');
+goog.require('os.layer.config.MockTileLayerConfig');
 goog.require('os.mock');
 goog.require('os.net');
 goog.require('os.source.MockSource');
