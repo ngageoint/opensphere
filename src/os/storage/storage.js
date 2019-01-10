@@ -30,10 +30,11 @@ goog.define('os.SHARED_DB_VERSION', 2);
  * beforeunload event.
  *
  * @param {boolean=} opt_manualReload If the page will be manually reloaded. This is intended for use by Protractor.
+ * @return {!goog.Promise}
  */
 os.storage.clearStorage = function(opt_manualReload) {
   // reset application settings
-  os.settings.reset().then(
+  return os.settings.reset().then(
       goog.partial(os.storage.resetInternal_, opt_manualReload),
       os.storage.reloadPage_);
 };

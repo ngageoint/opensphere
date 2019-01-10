@@ -1,7 +1,8 @@
 goog.require('os.MapContainer');
 goog.require('os.data.ZOrder');
 goog.require('os.layer.config.LayerConfigManager');
-goog.require('os.layer.config.MockLayerConfig');
+goog.require('os.layer.config.MockTileLayerConfig');
+goog.require('os.layer.config.MockVectorLayerConfig');
 goog.require('os.mock');
 
 
@@ -11,8 +12,10 @@ describe('os.data.ZOrder', function() {
 
   it('setup', function() {
     os.layerConfigManager = os.layer.config.LayerConfigManager.getInstance();
-    os.layerConfigManager.registerLayerConfig(os.layer.config.MockLayerConfig.TYPE,
-        os.layer.config.MockLayerConfig);
+    os.layerConfigManager.registerLayerConfig(os.layer.config.MockTileLayerConfig.TYPE,
+        os.layer.config.MockTileLayerConfig);
+    os.layerConfigManager.registerLayerConfig(os.layer.config.MockVectorLayerConfig.TYPE,
+        os.layer.config.MockVectorLayerConfig);
 
     z = os.data.ZOrder.getInstance();
     z.clear();
@@ -45,48 +48,81 @@ describe('os.data.ZOrder', function() {
   });
 
   it('should merge in map layers from a non-empty map', function() {
-    var lc = os.layerConfigManager.getLayerConfig(os.layer.config.MockLayerConfig.TYPE);
-    map.addLayer(lc.createLayer({id: 'layer1'}));
-    map.addLayer(lc.createLayer({id: 'layer2'}));
-    map.addLayer(lc.createLayer({id: 'layer3'}));
+    var tlc = os.layerConfigManager.getLayerConfig(os.layer.config.MockTileLayerConfig.TYPE);
+    map.addLayer(tlc.createLayer({id: 'tileLayer1'}));
+    map.addLayer(tlc.createLayer({id: 'tileLayer2'}));
+    map.addLayer(tlc.createLayer({id: 'tileLayer3'}));
+
+    var vlc = os.layerConfigManager.getLayerConfig(os.layer.config.MockVectorLayerConfig.TYPE);
+    map.addLayer(vlc.createLayer({id: 'vectorLayer1'}));
+    map.addLayer(vlc.createLayer({id: 'vectorLayer2'}));
 
     z.init_();
     z.mergeFromMap_();
 
     expect(z.groups_['Tile Layers'].length).toBe(3);
+    expect(z.groups_['Feature Layers'].length).toBe(2);
   });
 
   it('should move layers after other layers', function() {
-    z.moveAfter('layer2', 'layer3');
-    expect(z.groups_['Tile Layers'][1].id).toBe('layer3');
-    expect(z.groups_['Tile Layers'][2].id).toBe('layer2');
+    z.moveAfter('tileLayer2', 'tileLayer3');
+    expect(z.groups_['Tile Layers'][1].id).toBe('tileLayer3');
+    expect(z.groups_['Tile Layers'][2].id).toBe('tileLayer2');
+
+    z.moveAfter('vectorLayer1', 'vectorLayer2');
+    expect(z.groups_['Feature Layers'][0].id).toBe('vectorLayer2');
+    expect(z.groups_['Feature Layers'][1].id).toBe('vectorLayer1');
   });
 
   it('should move layers before other layers', function() {
-    z.moveBefore('layer3', 'layer1');
-    expect(z.groups_['Tile Layers'][0].id).toBe('layer3');
-    expect(z.groups_['Tile Layers'][1].id).toBe('layer1');
-    expect(z.groups_['Tile Layers'][2].id).toBe('layer2');
+    z.moveBefore('tileLayer3', 'tileLayer1');
+    expect(z.groups_['Tile Layers'][0].id).toBe('tileLayer3');
+    expect(z.groups_['Tile Layers'][1].id).toBe('tileLayer1');
+    expect(z.groups_['Tile Layers'][2].id).toBe('tileLayer2');
   });
 
   it('should still work if given the same IDs', function() {
-    z.moveAfter('layer2', 'layer2');
-    expect(z.groups_['Tile Layers'][0].id).toBe('layer3');
-    expect(z.groups_['Tile Layers'][1].id).toBe('layer1');
-    expect(z.groups_['Tile Layers'][2].id).toBe('layer2');
+    z.moveAfter('tileLayer2', 'tileLayer2');
+    expect(z.groups_['Tile Layers'][0].id).toBe('tileLayer3');
+    expect(z.groups_['Tile Layers'][1].id).toBe('tileLayer1');
+    expect(z.groups_['Tile Layers'][2].id).toBe('tileLayer2');
 
-    z.moveBefore('layer2', 'layer2');
-    expect(z.groups_['Tile Layers'][0].id).toBe('layer3');
-    expect(z.groups_['Tile Layers'][1].id).toBe('layer1');
-    expect(z.groups_['Tile Layers'][2].id).toBe('layer2');
+    z.moveBefore('tileLayer2', 'tileLayer2');
+    expect(z.groups_['Tile Layers'][0].id).toBe('tileLayer3');
+    expect(z.groups_['Tile Layers'][1].id).toBe('tileLayer1');
+    expect(z.groups_['Tile Layers'][2].id).toBe('tileLayer2');
+
+    z.moveAfter('vectorLayer2', 'vectorLayer2');
+    expect(z.groups_['Feature Layers'][0].id).toBe('vectorLayer2');
+    expect(z.groups_['Feature Layers'][1].id).toBe('vectorLayer1');
+
+    z.moveBefore('vectorLayer2', 'vectorLayer2');
+    expect(z.groups_['Feature Layers'][0].id).toBe('vectorLayer2');
+    expect(z.groups_['Feature Layers'][1].id).toBe('vectorLayer1');
   });
 
   it('should update the map from the z-order data', function() {
+    var groups = z.getMap().getLayers().getArray();
+    groups.forEach(function(group) {
+      spyOn(group, 'dispatchEvent');
+    });
+
     z.update();
+
+    // verify layer order change was detected and notified
+    groups.forEach(function(group) {
+      var type = group.getOSType();
+      if (type === 'Tile Layers' || type === 'Feature Layers') {
+        expect(group.dispatchEvent).toHaveBeenCalledWith(os.data.ZOrderEventType.UPDATE);
+      } else {
+        expect(group.dispatchEvent).not.toHaveBeenCalled();
+      }
+    });
+
     var tileLayers = map.getMap().getLayers().getArray()[0].getLayers().getArray();
-    expect(tileLayers[0].getId()).toBe('layer3');
-    expect(tileLayers[1].getId()).toBe('layer1');
-    expect(tileLayers[2].getId()).toBe('layer2');
+    expect(tileLayers[0].getId()).toBe('tileLayer3');
+    expect(tileLayers[1].getId()).toBe('tileLayer1');
+    expect(tileLayers[2].getId()).toBe('tileLayer2');
   });
 
   it('should save and restore properly', function() {
@@ -94,9 +130,9 @@ describe('os.data.ZOrder', function() {
     z.groups_ = null;
     z.init_();
 
-    expect(z.groups_['Tile Layers'][0].id).toBe('layer3');
-    expect(z.groups_['Tile Layers'][1].id).toBe('layer1');
-    expect(z.groups_['Tile Layers'][2].id).toBe('layer2');
+    expect(z.groups_['Tile Layers'][0].id).toBe('tileLayer3');
+    expect(z.groups_['Tile Layers'][1].id).toBe('tileLayer1');
+    expect(z.groups_['Tile Layers'][2].id).toBe('tileLayer2');
   });
 
   it('should expire old data', function() {
@@ -107,8 +143,8 @@ describe('os.data.ZOrder', function() {
     z.groups_ = null;
     z.init_();
 
-    expect(z.groups_['Tile Layers'][0].id).toBe('layer3');
-    expect(z.groups_['Tile Layers'][1].id).toBe('layer2');
+    expect(z.groups_['Tile Layers'][0].id).toBe('tileLayer3');
+    expect(z.groups_['Tile Layers'][1].id).toBe('tileLayer2');
   });
 
   it('should clean up', function() {

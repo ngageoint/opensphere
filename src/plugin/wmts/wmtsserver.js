@@ -397,21 +397,15 @@ plugin.wmts.Server.prototype.parseCapabilities = function(response, uri) {
 
         ol.obj.assign(config, overrides);
 
-        // OpenLayers defaults to the first format. Instead, we want to prefer
-        // image/png over anything else unless it is unsupported.
-        var formats = layer['Format'];
-        var defaultFormat = 'image/png';
-        var format = formats && Array.isArray(formats) ?
-          formats.indexOf(defaultFormat) > -1 ? defaultFormat : formats[0] :
-          defaultFormat;
+        // OpenLayers defaults to the first format so get them sorted in our preferred order
+        layer['Format'].sort(plugin.wmts.Server.sortFormats_);
 
         var crossOrigin = null;
         config['wmtsOptions'] = layer['TileMatrixSetLink'].reduce(function(wmtsOptions, setLink) {
           if (setLink['TileMatrixSet'] in availableSets) {
             var options = ol.source.WMTS.optionsFromCapabilities(/** @type {!Object} */ (result), {
               'layer': id,
-              'matrixSet': setLink['TileMatrixSet'],
-              'format': format
+              'matrixSet': setLink['TileMatrixSet']
             });
             options.crossOrigin = os.net.getCrossOrigin(options.urls[0]);
             if (!crossOrigin) {
@@ -446,6 +440,29 @@ plugin.wmts.Server.prototype.parseCapabilities = function(response, uri) {
     this.logError(link + ' response is empty!');
   }
 };
+
+
+/**
+ * @type {!Array<!string>}
+ * @const
+ */
+plugin.wmts.Server.PREFERRED_FORMATS_ = ['image/vnd.jpeg-png', 'image/png', 'image/jpeg'];
+
+
+/**
+ * @param {string} a Format a
+ * @param {string} b Format b
+ * @return {number} per typical compare function
+ */
+plugin.wmts.Server.sortFormats_ = function(a, b) {
+  var preferred = plugin.wmts.Server.PREFERRED_FORMATS_;
+  var ax = preferred.indexOf(a);
+  ax = ax < 0 ? Number.MAX_SAFE_INTEGER : ax;
+  var bx = preferred.indexOf(b);
+  bx = bx < 0 ? Number.MAX_SAFE_INTEGER : bx;
+  return ax - bx;
+};
+
 
 
 /**
