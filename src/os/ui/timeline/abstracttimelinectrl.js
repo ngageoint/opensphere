@@ -1360,7 +1360,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.initMenus = function() {
         label: 'Ranges',
         sort: 10,
         children: [{
-          eventType: 'load:item.load',
+          eventType: 'zoom:item.load',
           label: 'Loaded Range',
           tooltip: 'Zooms to the loaded range',
           icons: ['<i class="fa fa-fw fa-arrows-h"></i>'],
