@@ -1,30 +1,31 @@
 goog.provide('os.query.FilterManager');
+
 goog.require('goog.array');
 goog.require('goog.events.EventTarget');
 goog.require('goog.string');
 goog.require('os.config.Settings');
+goog.require('os.filter.BaseFilterManager');
 goog.require('os.filter.FilterEntry');
+goog.require('os.filter.FilterType');
 goog.require('os.filter.IFilterable');
 goog.require('os.ui.filter.FilterEvent');
-goog.require('os.ui.filter.FilterManager');
-goog.require('os.ui.filter.FilterType');
 
 
 
 /**
  * OS implementation of the filter manager.
  * @constructor
- * @extends {os.ui.filter.FilterManager}
+ * @extends {os.filter.BaseFilterManager}
  */
 os.query.FilterManager = function() {
   os.query.FilterManager.base(this, 'constructor');
 };
-goog.inherits(os.query.FilterManager, os.ui.filter.FilterManager);
+goog.inherits(os.query.FilterManager, os.filter.BaseFilterManager);
 goog.addSingletonGetter(os.query.FilterManager);
 
 
 // replace the os.ui FilterManager's getInstance with this one so we never instantiate a second instance
-goog.object.extend(os.ui.filter.FilterManager, {
+goog.object.extend(os.filter.BaseFilterManager, {
   getInstance: function() {
     return os.query.FilterManager.getInstance();
   }
@@ -39,7 +40,7 @@ os.query.FilterManager.prototype.load = function() {
 
   if (obj) {
     for (var key in obj) {
-      var type = new os.ui.filter.FilterType();
+      var type = new os.filter.FilterType();
       type.restore(obj[key]);
       this.types[key] = type;
     }

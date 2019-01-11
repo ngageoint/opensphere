@@ -12,6 +12,7 @@ goog.require('os.file.persist.FilePersistence');
 goog.require('os.filter.FilterEntry');
 goog.require('os.metrics.Metrics');
 goog.require('os.metrics.keys');
+goog.require('os.query.BaseQueryManager');
 goog.require('os.ui.Module');
 goog.require('os.ui.action.Action');
 goog.require('os.ui.action.ActionManager');
@@ -23,7 +24,6 @@ goog.require('os.ui.filter.ui.viewFiltersDirective');
 goog.require('os.ui.im.ImportEvent');
 goog.require('os.ui.menu.areaImport');
 goog.require('os.ui.query');
-goog.require('os.ui.query.QueryManager');
 goog.require('os.ui.query.addFilterDirective');
 goog.require('os.ui.query.cmd.AreaRemove');
 goog.require('os.ui.query.cmd.FilterAdd');
@@ -46,7 +46,10 @@ os.ui.query.baseCombinatorDirective = function() {
       'layerId': '=',
       'updateImmediate': '=?',
       'hideAdvanced': '@?',
-      'hideLayerChooser': '=?'
+      'hideLayerChooser': '=?',
+      'queryManager': '=?',
+      'filterManager': '=?',
+      'areaManager': '=?'
     },
     templateUrl: os.ROOT + 'views/query/combinator.html',
     controller: os.ui.query.BaseCombinatorCtrl,
@@ -116,7 +119,25 @@ os.ui.query.BaseCombinatorCtrl = function($scope, $element) {
    */
   this.applyImmediate = $scope['updateImmediate'] === true;
 
-  $scope['advanced'] = !$scope['hideAdvanced'] && os.ui.queryManager.hasActiveExplicitEntries();
+  /**
+   * Query manager reference used by this combinator;
+   * @type {os.query.BaseQueryManager}
+   */
+  this.qm = $scope['queryManager'] || os.ui.queryManager;
+
+  /**
+   * Area manager reference used by this combinator;
+   * @type {os.query.BaseAreaManager}
+   */
+  this.am = $scope['areaManager'] || os.ui.areaManager;
+
+  /**
+   * Filter manager reference used by this combinator;
+   * @type {os.filter.BaseFilterManager}
+   */
+  this.fm = $scope['filterManager'] || os.ui.filterManager;
+
+  $scope['advanced'] = !$scope['hideAdvanced'] && this.qm.hasActiveExplicitEntries();
   var orders = os.ui.query.BaseCombinatorCtrl.ORDERS_;
   $scope['orders'] = orders;
 
@@ -143,10 +164,10 @@ os.ui.query.BaseCombinatorCtrl = function($scope, $element) {
 
   this.update();
 
-  os.ui.filterManager.listen(os.ui.filter.FilterEventType.FILTERS_REFRESH, this.scheduleUpdate, false, this);
-  os.ui.filterManager.listen(goog.events.EventType.PROPERTYCHANGE, this.scheduleUpdate, false, this);
-  os.ui.areaManager.listen(goog.events.EventType.PROPERTYCHANGE, this.scheduleUpdate, false, this);
-  os.ui.queryManager.listen(goog.events.EventType.PROPERTYCHANGE, this.scheduleUpdate, false, this);
+  this.fm.listen(os.ui.filter.FilterEventType.FILTERS_REFRESH, this.scheduleUpdate, false, this);
+  this.fm.listen(goog.events.EventType.PROPERTYCHANGE, this.scheduleUpdate, false, this);
+  this.am.listen(goog.events.EventType.PROPERTYCHANGE, this.scheduleUpdate, false, this);
+  this.qm.listen(goog.events.EventType.PROPERTYCHANGE, this.scheduleUpdate, false, this);
 };
 
 
@@ -257,10 +278,10 @@ os.ui.query.BaseCombinatorCtrl.prototype.getEntries_ = function() {
  * @protected
  */
 os.ui.query.BaseCombinatorCtrl.prototype.onDestroy = function() {
-  os.ui.filterManager.unlisten(os.ui.filter.FilterEventType.FILTERS_REFRESH, this.scheduleUpdate, false, this);
-  os.ui.filterManager.unlisten(goog.events.EventType.PROPERTYCHANGE, this.scheduleUpdate, false, this);
-  os.ui.areaManager.unlisten(goog.events.EventType.PROPERTYCHANGE, this.scheduleUpdate, false, this);
-  os.ui.queryManager.unlisten(goog.events.EventType.PROPERTYCHANGE, this.scheduleUpdate, false, this);
+  this.fm.unlisten(os.ui.filter.FilterEventType.FILTERS_REFRESH, this.scheduleUpdate, false, this);
+  this.fm.unlisten(goog.events.EventType.PROPERTYCHANGE, this.scheduleUpdate, false, this);
+  this.am.unlisten(goog.events.EventType.PROPERTYCHANGE, this.scheduleUpdate, false, this);
+  this.qm.unlisten(goog.events.EventType.PROPERTYCHANGE, this.scheduleUpdate, false, this);
 
   goog.dispose(this.updateDelay_);
   this.updateDelay_ = null;
@@ -328,7 +349,7 @@ os.ui.query.BaseCombinatorCtrl.prototype.disposeTree_ = function() {
  * @return {os.ui.query.ComboNode}
  */
 os.ui.query.BaseCombinatorCtrl.prototype.getPivotData = function(opt_order, opt_advanced, opt_layer) {
-  return /** @type {os.ui.query.ComboNode} */ (os.ui.queryManager.getPivotData(
+  return /** @type {os.ui.query.ComboNode} */ (this.qm.getPivotData(
       opt_order, undefined, undefined, !opt_advanced, opt_layer));
 };
 
@@ -484,7 +505,7 @@ os.ui.query.BaseCombinatorCtrl.prototype.onSetLayer_ = function(event, id) {
  * @protected
  */
 os.ui.query.BaseCombinatorCtrl.prototype.updateLayers = function() {
-  var qm = os.ui.queryManager;
+  var qm = this.qm;
   var set = qm.getLayerSet();
   var layers = [];
   // if the chooser is hidden, always use the layerId on the scope
@@ -492,7 +513,7 @@ os.ui.query.BaseCombinatorCtrl.prototype.updateLayers = function() {
       this.scope['layerId'] : (this.scope['layer'] || this.scope['layerId']);
 
   for (var key in set) {
-    var filterable = /** @type {os.filter.IFilterable} */ (os.ui.filterManager.getFilterable(key));
+    var filterable = /** @type {os.filter.IFilterable} */ (this.fm.getFilterable(key));
 
     try {
       if (filterable) {
@@ -621,7 +642,7 @@ os.ui.query.BaseCombinatorCtrl.prototype.createEntriesFromTree = function() {
 
   if (tree) {
     this.entries_ = [];
-    os.ui.query.BaseCombinatorCtrl.parseEntries(tree, this.entries_);
+    this.parseEntries(tree, this.entries_);
   }
 };
 
@@ -631,7 +652,7 @@ os.ui.query.BaseCombinatorCtrl.prototype.createEntriesFromTree = function() {
  * @private
  */
 os.ui.query.BaseCombinatorCtrl.prototype.getGoldCopy_ = function() {
-  return os.ui.queryManager.getEntries(null, null, null, true);
+  return this.qm.getEntries(null, null, null, true);
 };
 
 
@@ -675,7 +696,7 @@ os.ui.query.BaseCombinatorCtrl.prototype.applyEntries = function(opt_restoreStat
     }
   }
 
-  entries = os.ui.queryManager.getExpanded(entries);
+  entries = this.qm.getExpanded(entries);
   var tree = this.getRoot();
 
   if (tree) {
@@ -712,7 +733,7 @@ os.ui.query.BaseCombinatorCtrl.prototype.onEdit_ = function(evt, isFilter, entry
 
     if (id) {
       if (isFilter) {
-        var fm = os.ui.filterManager;
+        var fm = this.fm;
         var filter = fm.getFilter(id);
 
         if (filter) {
@@ -723,7 +744,7 @@ os.ui.query.BaseCombinatorCtrl.prototype.onEdit_ = function(evt, isFilter, entry
 
           var columns = layer && layer['columns'] || null;
           if (columns) {
-            os.ui.filter.FilterManager.edit(layerId, columns, this.onEditComplete_.bind(this), filter);
+            os.filter.BaseFilterManager.edit(layerId, columns, this.onEditComplete_.bind(this), filter);
           } else {
             // if columns aren't available the filter edit is going to fail wildly, so don't allow it
             os.alertManager.sendAlert('This layer is missing required information to edit filters.',
@@ -731,11 +752,11 @@ os.ui.query.BaseCombinatorCtrl.prototype.onEdit_ = function(evt, isFilter, entry
           }
         }
       } else {
-        var am = os.ui.areaManager;
+        var am = this.am;
         var area = am.get(id);
 
         if (area) {
-          os.ui.query.AreaManager.save(area);
+          os.query.BaseAreaManager.save(area);
         }
       }
     }
@@ -756,7 +777,7 @@ os.ui.query.BaseCombinatorCtrl.prototype.onView_ = function(evt, isFilter, entry
 
     if (id) {
       if (isFilter) {
-        var fm = os.ui.filterManager;
+        var fm = this.fm;
         var filter = fm.getFilter(id);
 
         if (filter) {
@@ -767,7 +788,7 @@ os.ui.query.BaseCombinatorCtrl.prototype.onView_ = function(evt, isFilter, entry
 
           var columns = layer && layer['columns'] || null;
           if (columns) {
-            os.ui.filter.FilterManager.view(layerId, columns, this.onEditComplete_.bind(this), filter);
+            os.filter.BaseFilterManager.view(layerId, columns, this.onEditComplete_.bind(this), filter);
           } else {
             // if columns aren't available the filter edit is going to fail wildly, so don't allow it
             os.alertManager.sendAlert('This layer is missing required information to edit filters.',
@@ -792,9 +813,9 @@ os.ui.query.BaseCombinatorCtrl.prototype.onCopy_ = function(event, entry) {
   if (entry) {
     var id = /** @type {string} */ (entry['filterId']);
     if (id) {
-      var filter = os.ui.filterManager.getFilter(id);
+      var filter = this.fm.getFilter(id);
       if (filter) {
-        os.ui.filter.FilterManager.copy(filter, /** @type {string} */ (entry['layerId']));
+        os.filter.BaseFilterManager.copy(filter, /** @type {string} */ (entry['layerId']));
       }
     }
   }
@@ -814,7 +835,7 @@ os.ui.query.BaseCombinatorCtrl.prototype.onRemove_ = function(evt, isFilter, ent
 
     if (id) {
       if (isFilter) {
-        var fm = os.ui.filterManager;
+        var fm = this.fm;
         var filter = fm.getFilter(id);
 
         if (filter) {
@@ -822,7 +843,7 @@ os.ui.query.BaseCombinatorCtrl.prototype.onRemove_ = function(evt, isFilter, ent
           this.doCommand(cmd);
         }
       } else {
-        var am = os.ui.areaManager;
+        var am = this.am;
         var area = am.get(id);
 
         if (area) {
@@ -880,7 +901,7 @@ os.ui.query.BaseCombinatorCtrl.prototype.toggle = function(collapsed, opt_node) 
  * @param {!Array<!Object<string, string|boolean>>} entries
  * @param {Object<string, string|boolean>=} opt_entry
  */
-os.ui.query.BaseCombinatorCtrl.parseEntries = function(node, entries, opt_entry) {
+os.ui.query.BaseCombinatorCtrl.prototype.parseEntries = function(node, entries, opt_entry) {
   if (node) {
     var item = node.getEntry();
     var entry = opt_entry ? goog.object.clone(opt_entry) : os.ui.query.BaseCombinatorCtrl.getDefaultEntry_();
@@ -899,7 +920,7 @@ os.ui.query.BaseCombinatorCtrl.parseEntries = function(node, entries, opt_entry)
 
       if (areaId && areaId !== '*' && layerId) {
         // see if this area is a double wildcard
-        var result = os.ui.queryManager.getEntries('*', areaId, '*');
+        var result = this.qm.getEntries('*', areaId, '*');
 
         if (result && result.length) {
           delete entry['disabled'];
@@ -919,7 +940,7 @@ os.ui.query.BaseCombinatorCtrl.parseEntries = function(node, entries, opt_entry)
 
     if (children) {
       for (var i = 0, n = children.length; i < n; i++) {
-        os.ui.query.BaseCombinatorCtrl.parseEntries(
+        this.parseEntries(
             /** @type {!os.ui.query.ComboNode} */ (children[i]), entries, entry);
       }
     }
@@ -1089,7 +1110,7 @@ os.ui.query.BaseCombinatorCtrl.prototype.doState = function(node, collapsed, opt
  */
 os.ui.query.BaseCombinatorCtrl.prototype.editEntry = function(entry) {
   if (entry) {
-    var fqm = os.ui.filterManager;
+    var fqm = this.fm;
     var original = fqm.getFilter(entry.getId());
 
     if (original) {
@@ -1196,7 +1217,7 @@ os.ui.query.BaseCombinatorCtrl.prototype.save_ = function(name, mode) {
 os.ui.query.BaseCombinatorCtrl.prototype.exportDisabled = function() {
   // off when no filters present for this layer
   var layerId = this.getLayerId_();
-  var filters = os.ui.filterManager.getFilters(layerId);
+  var filters = this.fm.getFilters(layerId);
   if (filters && filters.length > 0) {
     return false;
   }

@@ -1,6 +1,6 @@
 goog.provide('os.data.FilterTreeSearch');
+
 goog.require('os.data.FilterNode');
-goog.require('os.ui.filter.FilterManager');
 goog.require('os.ui.slick.AbstractGroupByTreeSearch');
 
 

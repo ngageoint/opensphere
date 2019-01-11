@@ -49,7 +49,7 @@ os.ui.query.CombinatorCtrl = function($scope, $element) {
   os.MapContainer.getInstance().listen(os.events.LayerEventType.ADD, this.scheduleUpdate, false, this);
   os.MapContainer.getInstance().listen(os.events.LayerEventType.REMOVE, this.scheduleUpdate, false, this);
   os.MapContainer.getInstance().listen(os.events.LayerEventType.RENAME, this.scheduleUpdate, false, this);
-  os.ui.filterManager.listen(os.ui.filter.FilterEventType.EXPORT_FILTER, this.launchExport, false, this);
+  this.fm.listen(os.ui.filter.FilterEventType.EXPORT_FILTER, this.launchExport, false, this);
 };
 goog.inherits(os.ui.query.CombinatorCtrl, os.ui.query.BaseCombinatorCtrl);
 
@@ -62,7 +62,7 @@ os.ui.query.CombinatorCtrl.prototype.updateLayers = function() {
     var layerId = /** @type {string} */ (this.scope['layerId']);
     var layers = [];
     var layer = null;
-    var filterable = os.ui.filterManager.getFilterable(layerId);
+    var filterable = this.fm.getFilterable(layerId);
 
     if (filterable) {
       try {
@@ -98,7 +98,7 @@ os.ui.query.CombinatorCtrl.prototype.onDestroy = function() {
   os.MapContainer.getInstance().unlisten(os.events.LayerEventType.ADD, this.scheduleUpdate, false, this);
   os.MapContainer.getInstance().unlisten(os.events.LayerEventType.REMOVE, this.scheduleUpdate, false, this);
   os.MapContainer.getInstance().unlisten(os.events.LayerEventType.RENAME, this.scheduleUpdate, false, this);
-  os.ui.filterManager.unlisten(os.ui.filter.FilterEventType.EXPORT_FILTER, this.launchExport, false, this);
+  this.fm.unlisten(os.ui.filter.FilterEventType.EXPORT_FILTER, this.launchExport, false, this);
 };
 
 
@@ -107,7 +107,7 @@ os.ui.query.CombinatorCtrl.prototype.onDestroy = function() {
  */
 os.ui.query.CombinatorCtrl.prototype.editEntry = function(entry) {
   if (entry) {
-    var fqm = os.ui.filterManager;
+    var fqm = this.fm;
     var original = fqm.getFilter(entry.getId());
 
     if (original) {

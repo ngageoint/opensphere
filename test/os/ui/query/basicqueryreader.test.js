@@ -1,11 +1,11 @@
 goog.require('goog.net.XhrIo');
 goog.require('goog.object');
 goog.require('ol.geom.Polygon');
+goog.require('os.filter.BaseFilterManager');
 goog.require('os.mock');
-goog.require('os.ui.filter.FilterManager');
-goog.require('os.ui.query.AreaManager');
+goog.require('os.query.BaseAreaManager');
+goog.require('os.query.BaseQueryManager');
 goog.require('os.ui.query.BasicQueryReader');
-goog.require('os.ui.query.QueryManager');
 
 
 describe('os.ui.query.BasicQueryReader', function() {

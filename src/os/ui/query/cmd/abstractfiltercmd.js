@@ -92,7 +92,7 @@ os.ui.query.cmd.AbstractFilter.prototype.canExecute = function() {
  * Adds the filter
  */
 os.ui.query.cmd.AbstractFilter.prototype.add = function() {
-  os.ui.filter.FilterManager.getInstance().addFilter(this.filter);
+  os.filter.BaseFilterManager.getInstance().addFilter(this.filter);
   this.addEntries();
 };
 
@@ -102,7 +102,7 @@ os.ui.query.cmd.AbstractFilter.prototype.add = function() {
  */
 os.ui.query.cmd.AbstractFilter.prototype.remove = function() {
   this.removeEntries();
-  os.ui.filter.FilterManager.getInstance().removeFilter(this.filter);
+  os.filter.BaseFilterManager.getInstance().removeFilter(this.filter);
 };
 
 
