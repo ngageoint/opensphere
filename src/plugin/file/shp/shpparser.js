@@ -15,7 +15,7 @@ goog.require('os.file');
 goog.require('os.file.mime.text');
 goog.require('os.file.mime.zip');
 goog.require('os.geo');
-goog.require('os.parse.AsyncParser');
+goog.require('os.parse.AsyncZipParser');
 goog.require('plugin.file.shp');
 goog.require('plugin.file.shp.data.DBFField');
 goog.require('plugin.file.shp.data.DBFHeader');
@@ -26,7 +26,7 @@ goog.require('plugin.file.shp.data.SHPHeader');
 /**
  * A Shapefile parser
  * @param {plugin.file.shp.SHPParserConfig} config
- * @extends {os.parse.AsyncParser<ol.Feature>}
+ * @extends {os.parse.AsyncZipParser<ol.Feature>}
  * @constructor
  */
 plugin.file.shp.SHPParser = function(config) {
@@ -62,7 +62,7 @@ plugin.file.shp.SHPParser = function(config) {
    */
   this.source_ = [];
 };
-goog.inherits(plugin.file.shp.SHPParser, os.parse.AsyncParser);
+goog.inherits(plugin.file.shp.SHPParser, os.parse.AsyncZipParser);
 
 
 /**
@@ -87,6 +87,7 @@ plugin.file.shp.SHPParser.prototype.cleanup = function() {
  * @inheritDoc
  */
 plugin.file.shp.SHPParser.prototype.disposeInternal = function() {
+  plugin.file.shp.SHPParser.base(this, 'disposeInternal');
   this.cleanup();
   this.source_.length = 0;
 };
@@ -293,6 +294,7 @@ plugin.file.shp.SHPParser.prototype.parseNext = function() {
       }
 
       // TODO: there should be a way to determine the projection from the SHP file rather than assuming EPSG:4326
+      // ^ There is, but it would require loading the .prj file. That's trivial from a zip but terrible when given the files one at a time.
       feature.setGeometry(geom.osTransform());
     } else if (shapeType != plugin.file.shp.TYPE.NULLRECORD) {
       // skip null records, but warn on unknown types
@@ -311,6 +313,10 @@ plugin.file.shp.SHPParser.prototype.parseNext = function() {
 
   if (feature) {
     feature.setId(String(ol.getUid(feature)));
+  }
+
+  if (!this.hasNext()) {
+    this.closeZipReaders();
   }
 
   return feature;
@@ -420,7 +426,7 @@ plugin.file.shp.SHPParser.prototype.initialize_ = function() {
   while (i--) {
     var source = this.source_[i];
     if (os.file.mime.zip.isZip(source)) {
-      this.setupZIPFile_(source);
+      this.createZipReader(source);
     } else if (plugin.file.shp.isSHPFileType(source)) {
       if (!this.header_.data) {
         this.setupSHPFile_(source);
@@ -508,26 +514,18 @@ plugin.file.shp.SHPParser.prototype.updateColumns_ = function() {
 
 
 /**
- * @param {ArrayBuffer} source
- * @private
+ * @inheritDoc
  */
-plugin.file.shp.SHPParser.prototype.setupZIPFile_ = function(source) {
+plugin.file.shp.SHPParser.prototype.createZipReader = function(source) {
   this.processingZip_ = true;
-
-  zip.createReader(new zip.ArrayBufferReader(source), goog.bind(function(reader) {
-    // get the entries in the zip file, then launch the UI
-    reader.getEntries(this.processZIPEntries_.bind(this));
-  }, this), goog.bind(function() {
-    this.logError_('Error reading zip file!');
-  }, this));
+  plugin.file.shp.SHPParser.base(this, 'createZipReader', source);
 };
 
 
 /**
- * @param {Array.<!zip.Entry>} entries
- * @private
+ * @inheritDoc
  */
-plugin.file.shp.SHPParser.prototype.processZIPEntries_ = function(entries) {
+plugin.file.shp.SHPParser.prototype.handleZipEntries = function(entries) {
   var foundSHP = false;
   var foundDBF = false;
   for (var i = 0, n = entries.length; i < n; i++) {
