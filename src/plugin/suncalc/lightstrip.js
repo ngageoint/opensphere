@@ -61,11 +61,17 @@ plugin.suncalc.LightStripCtrl = function($scope, $element) {
   this.resizeFn_ = this.update_.bind(this);
   this.element_.parent().resize(this.resizeFn_);
 
+  /**
+   * Delay to ensure the lightstrip is initialized on creation.
+   * @type {goog.async.ConditionalDelay}
+   * @private
+   */
+  this.updateDelay_ = new goog.async.ConditionalDelay(this.update_, this);
+
   os.dispatcher.listen(os.ui.timeline.TimelineScaleEvent.TYPE, this.update_, false, this);
   $scope.$on('$destroy', this.destroy_.bind(this));
 
-  var updateDelay = new goog.async.ConditionalDelay(this.update_, this);
-  updateDelay.start(100, 5000);
+  this.updateDelay_.start(100, 5000);
 };
 
 
@@ -74,15 +80,22 @@ plugin.suncalc.LightStripCtrl = function($scope, $element) {
  * @private
  */
 plugin.suncalc.LightStripCtrl.prototype.destroy_ = function() {
+  goog.dispose(this.updateDelay_);
+  this.updateDelay_ = null;
+
   if (this.element_ && this.resizeFn_) {
     this.element_.parent().removeResize(this.resizeFn_);
     this.resizeFn_ = null;
   }
 
-  this.scope_ = null;
-  this.element_ = null;
-  this.view_.un('change:center', this.update_, this);
+  if (this.view_) {
+    this.view_.un('change:center', this.update_, this);
+    this.view_ = null;
+  }
+
   os.dispatcher.unlisten(os.ui.timeline.TimelineScaleEvent.TYPE, this.update_, false, this);
+
+  this.element_ = null;
 };
 
 
@@ -111,6 +124,11 @@ plugin.suncalc.LightStripCtrl.EVENTS = [{
  * @private
  */
 plugin.suncalc.LightStripCtrl.prototype.update_ = function(opt_evt) {
+  if (!this.element_) {
+    // can't update without an element - controller was likely disposed.
+    return true;
+  }
+
   if (opt_evt instanceof os.ui.timeline.TimelineScaleEvent) {
     this.options_ = opt_evt.options;
   }
