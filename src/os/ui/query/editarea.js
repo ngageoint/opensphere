@@ -1,26 +1,26 @@
-goog.provide('os.ui.query.ui.EditAreaCtrl');
-goog.provide('os.ui.query.ui.editAreaDirective');
+goog.provide('os.ui.query.EditAreaCtrl');
+goog.provide('os.ui.query.editAreaDirective');
 
 goog.require('os.command.CommandProcessor');
 goog.require('os.ui.Module');
 goog.require('os.ui.im.basicInfoDirective');
 goog.require('os.ui.query');
+goog.require('os.ui.query.AreaImportCtrl');
 goog.require('os.ui.query.AreaManager');
 goog.require('os.ui.query.cmd.AreaAdd');
-goog.require('os.ui.query.ui.AreaImportCtrl');
 
 
 /**
  * The edit area directive
  * @return {angular.Directive}
  */
-os.ui.query.ui.editAreaDirective = function() {
+os.ui.query.editAreaDirective = function() {
   return {
     restrict: 'AE',
     replace: true,
     scope: true,
     templateUrl: os.ROOT + 'views/query/editarea.html',
-    controller: os.ui.query.ui.EditAreaCtrl,
+    controller: os.ui.query.EditAreaCtrl,
     controllerAs: 'ctrl'
   };
 };
@@ -29,7 +29,7 @@ os.ui.query.ui.editAreaDirective = function() {
 /**
  * Add the directive to the os.ui module
  */
-os.ui.Module.directive('editarea', [os.ui.query.ui.editAreaDirective]);
+os.ui.Module.directive('editarea', [os.ui.query.editAreaDirective]);
 
 
 
@@ -38,12 +38,12 @@ os.ui.Module.directive('editarea', [os.ui.query.ui.editAreaDirective]);
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$timeout} $timeout The Angular $timeout service.
- * @extends {os.ui.query.ui.AreaImportCtrl}
+ * @extends {os.ui.query.AreaImportCtrl}
  * @constructor
  * @ngInject
  */
-os.ui.query.ui.EditAreaCtrl = function($scope, $element, $timeout) {
-  os.ui.query.ui.EditAreaCtrl.base(this, 'constructor', $scope, $element, $timeout);
+os.ui.query.EditAreaCtrl = function($scope, $element, $timeout) {
+  os.ui.query.EditAreaCtrl.base(this, 'constructor', $scope, $element, $timeout);
 
   this.config = $scope['config'] = {
     'title': null,
@@ -70,14 +70,14 @@ os.ui.query.ui.EditAreaCtrl = function($scope, $element, $timeout) {
     $scope.$emit(os.ui.WindowEventType.READY);
   });
 };
-goog.inherits(os.ui.query.ui.EditAreaCtrl, os.ui.query.ui.AreaImportCtrl);
+goog.inherits(os.ui.query.EditAreaCtrl, os.ui.query.AreaImportCtrl);
 
 
 /**
  * Finish the dialog
  * @export
  */
-os.ui.query.ui.EditAreaCtrl.prototype.accept = function() {
+os.ui.query.EditAreaCtrl.prototype.accept = function() {
   var feature = /** @type {!ol.Feature} */ (this.scope['feature']);
   if (feature) {
     // apply mappings from the configuration
