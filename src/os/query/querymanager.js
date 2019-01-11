@@ -7,25 +7,28 @@ goog.require('goog.log.Logger');
 goog.require('goog.string');
 goog.require('os.data.event.DataEventType');
 goog.require('os.events.PropertyChangeEvent');
-goog.require('os.ui.query.QueryManager');
+goog.require('os.query.BaseQueryManager');
 
 
 
 /**
+ * Implementation of the query manager that hooks up to the OS data manager.
+ * @param {os.query.BaseAreaManager=} opt_areaManager Optional area manager reference. Defaults to the singleton.
+ * @param {os.filter.BaseFilterManager=} opt_filterManager Optional filter manager reference. Defaults to the singleton.
+ * @extends {os.query.BaseQueryManager}
  * @constructor
- * @extends {os.ui.query.QueryManager}
  */
-os.query.QueryManager = function() {
+os.query.QueryManager = function(opt_areaManager, opt_filterManager) {
   var dm = os.dataManager;
   dm.listen(os.data.event.DataEventType.SOURCE_REMOVED, this.onDataSourceRemoved_, false, this);
 
-  os.query.QueryManager.base(this, 'constructor');
+  os.query.QueryManager.base(this, 'constructor', opt_areaManager, opt_filterManager);
 };
-goog.inherits(os.query.QueryManager, os.ui.query.QueryManager);
+goog.inherits(os.query.QueryManager, os.query.BaseQueryManager);
 goog.addSingletonGetter(os.query.QueryManager);
 
 // replace the os.ui QueryManager's getInstance with this one so we never instantiate a second instance
-goog.object.extend(os.ui.query.QueryManager, {
+goog.object.extend(os.query.BaseQueryManager, {
   getInstance: function() {
     return os.query.QueryManager.getInstance();
   }
@@ -71,12 +74,11 @@ os.query.QueryManager.prototype.onDataSourceRemoved_ = function(event) {
  * @inheritDoc
  */
 os.query.QueryManager.prototype.load = function() {
-  this.entries = /** @type {Array<!Object<string, string|boolean>>} */ (
-      os.settings.get(['query', 'entries'], []));
+  this.entries = /** @type {Array<!Object<string, string|boolean>>} */ (os.settings.get('query.entries', []));
   this.entries = this.entries || [];
 
-  var am = os.ui.areaManager;
-  var fqm = os.ui.filterManager;
+  var am = this.am;
+  var fm = this.fm;
 
   // remove entries referencing areas or filters that don't exist
   this.entries = this.entries.filter(function(item) {
@@ -87,7 +89,7 @@ os.query.QueryManager.prototype.load = function() {
       return false;
     }
 
-    if (filterId && filterId !== '*' && !fqm.getFilter(filterId)) {
+    if (filterId && filterId !== '*' && !fm.getFilter(filterId)) {
       return false;
     }
 

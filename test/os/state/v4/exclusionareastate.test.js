@@ -3,10 +3,10 @@ goog.require('goog.dom.xml');
 goog.require('goog.string');
 goog.require('ol.Feature');
 goog.require('ol.geom.Polygon');
+goog.require('os.query.BaseAreaManager');
 goog.require('os.state.XMLStateOptions');
 goog.require('os.state.v2.ExclusionArea'); // v2 state implemention works with v4
 goog.require('os.test.xsd');
-goog.require('os.ui.query.AreaManager');
 goog.require('os.ui.state.XMLStateManager');
 goog.require('os.xml');
 

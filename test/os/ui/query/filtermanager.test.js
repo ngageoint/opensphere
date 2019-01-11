@@ -1,12 +1,12 @@
+goog.require('os.filter.BaseFilterManager');
 goog.require('os.filter.FilterEntry');
-goog.require('os.ui.filter.FilterManager');
-goog.require('os.ui.query.AreaManager');
-goog.require('os.ui.query.QueryManager');
+goog.require('os.query.BaseAreaManager');
+goog.require('os.query.BaseQueryManager');
 
-describe('os.ui.filter.FilterManager', function() {
+describe('os.filter.BaseFilterManager', function() {
   var fm = null;
   beforeEach(function() {
-    fm = os.ui.filter.FilterManager.getInstance();
+    fm = os.filter.BaseFilterManager.getInstance();
   });
 
   it('should work correctly when empty', function() {

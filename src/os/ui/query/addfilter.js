@@ -2,6 +2,7 @@ goog.provide('os.ui.query.AddFilterCtrl');
 goog.provide('os.ui.query.addFilterDirective');
 
 goog.require('ol.array');
+goog.require('os.filter.BaseFilterManager');
 goog.require('os.filter.FilterEntry');
 goog.require('os.ui.Module');
 goog.require('os.ui.filter.ui.editFiltersDirective');
@@ -182,7 +183,7 @@ os.ui.query.AddFilterCtrl.prototype.addFilter = function(layerId) {
   var layer = ol.array.find(this.layers, function(layer) {
     return layer['id'] == layerId;
   });
-  os.ui.filter.FilterManager.edit(layerId, layer['columns'], this.onFilterReady_.bind(this));
+  os.filter.BaseFilterManager.edit(layerId, layer['columns'], this.onFilterReady_.bind(this));
 };
 
 

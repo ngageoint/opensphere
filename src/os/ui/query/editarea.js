@@ -2,11 +2,11 @@ goog.provide('os.ui.query.EditAreaCtrl');
 goog.provide('os.ui.query.editAreaDirective');
 
 goog.require('os.command.CommandProcessor');
+goog.require('os.query.BaseAreaManager');
 goog.require('os.ui.Module');
 goog.require('os.ui.im.basicInfoDirective');
 goog.require('os.ui.query');
 goog.require('os.ui.query.AreaImportCtrl');
-goog.require('os.ui.query.AreaManager');
 goog.require('os.ui.query.cmd.AreaAdd');
 
 
@@ -87,7 +87,7 @@ os.ui.query.EditAreaCtrl.prototype.accept = function() {
     // if we save it, it should not longer be a temporary area
     feature.set('temp', undefined);
 
-    var am = os.ui.query.AreaManager.getInstance();
+    var am = os.query.BaseAreaManager.getInstance();
     if (!am.get(feature)) {
       // new areas should be on the stack
       var cmd = new os.ui.query.cmd.AreaAdd(feature);

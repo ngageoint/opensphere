@@ -1,6 +1,7 @@
 goog.provide('os.ui.FilterLayerGroupBy');
+
+goog.require('os.filter.BaseFilterManager');
 goog.require('os.ui.filter.ui.FilterGroupBy');
-// goog.require('os.layer.Vector');
 
 
 
@@ -49,7 +50,7 @@ os.ui.FilterLayerGroupBy.prototype.getGroupIds = function(node) {
         val += ' (' + provider + ')';
       }
     } else {
-      val = os.ui.filter.FilterManager.prettyPrintType(type, this.useType_) + ' (not loaded)';
+      val = os.filter.BaseFilterManager.prettyPrintType(type, this.useType_) + ' (not loaded)';
     }
   }
 
