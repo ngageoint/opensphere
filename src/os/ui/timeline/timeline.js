@@ -496,13 +496,15 @@ os.ui.timeline.TimelineCtrl.HANDLE_HEIGHT = 10;
  * @private
  */
 os.ui.timeline.TimelineCtrl.prototype.init_ = function() {
-  this.scope_.$watch('histClass', goog.bind(this.onHistClassChange_, this));
-  this.scope_.$watch('histData', goog.bind(this.onHistDataChange_, this));
-  this.scope_.$watch('sliceBrushes', goog.bind(this.sliceBrushCollectionChanged_, this));
-  this.scope_.$watch('loadBrushes', goog.bind(this.loadBrushCollectionChanged_, this));
-  this.scope_.$watch('animationBrushes', goog.bind(this.animationBrushCollectionChanged_, this));
-  this.scope_.$watch('holdBrushes', goog.bind(this.holdBrushCollectionChanged_, this));
-  this.initSvg();
+  if (this.scope_) {
+    this.scope_.$watch('histClass', goog.bind(this.onHistClassChange_, this));
+    this.scope_.$watch('histData', goog.bind(this.onHistDataChange_, this));
+    this.scope_.$watch('sliceBrushes', goog.bind(this.sliceBrushCollectionChanged_, this));
+    this.scope_.$watch('loadBrushes', goog.bind(this.loadBrushCollectionChanged_, this));
+    this.scope_.$watch('animationBrushes', goog.bind(this.animationBrushCollectionChanged_, this));
+    this.scope_.$watch('holdBrushes', goog.bind(this.holdBrushCollectionChanged_, this));
+    this.initSvg();
+  }
 };
 
 
