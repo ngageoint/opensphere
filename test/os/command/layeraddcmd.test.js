@@ -1,7 +1,7 @@
 goog.require('os.MapContainer');
 goog.require('os.command.LayerAdd');
 goog.require('os.layer.config.LayerConfigManager');
-goog.require('os.layer.config.MockLayerConfig');
+goog.require('os.layer.config.MockTileLayerConfig');
 goog.require('os.mock');
 goog.require('os.style.StyleManager');
 
@@ -10,13 +10,13 @@ describe('os.command.LayerAdd', function() {
   var testLayerId = 'test-layer';
   var testOptions = {
     'id': testLayerId,
-    'type': os.layer.config.MockLayerConfig.TYPE
+    'type': os.layer.config.MockTileLayerConfig.TYPE
   };
 
   beforeEach(function() {
     os.layerConfigManager = os.layer.config.LayerConfigManager.getInstance();
-    os.layerConfigManager.registerLayerConfig(os.layer.config.MockLayerConfig.TYPE,
-        os.layer.config.MockLayerConfig);
+    os.layerConfigManager.registerLayerConfig(os.layer.config.MockTileLayerConfig.TYPE,
+        os.layer.config.MockTileLayerConfig);
   });
 
   it('should fail when layer options arent provided', function() {
@@ -26,7 +26,7 @@ describe('os.command.LayerAdd', function() {
   });
 
   it('should fail when id isnt provided', function() {
-    var command = new os.command.LayerAdd({'type': os.layer.config.MockLayerConfig.TYPE});
+    var command = new os.command.LayerAdd({'type': os.layer.config.MockTileLayerConfig.TYPE});
     expect(command.execute()).toBe(false);
     expect(command.state).toBe(os.command.State.ERROR);
   });

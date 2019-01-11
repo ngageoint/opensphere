@@ -4,7 +4,7 @@ goog.require('ol.xml');
 goog.require('os.data.ColumnDefinition');
 goog.require('os.file.mime.text');
 goog.require('os.file.mime.zip');
-goog.require('os.parse.AsyncParser');
+goog.require('os.parse.AsyncZipParser');
 goog.require('os.parse.IParser');
 goog.require('os.ui.im.mergeAreaOptionDirective');
 
@@ -13,7 +13,7 @@ goog.require('os.ui.im.mergeAreaOptionDirective');
 /**
  * Simple KML parser that extracts areas from a KML. Has asynchronous support for KMZ files.
  * @implements {os.parse.IParser.<ol.Feature>}
- * @extends {os.parse.AsyncParser}
+ * @extends {os.parse.AsyncZipParser}
  * @template T
  * @constructor
  */
@@ -52,7 +52,7 @@ plugin.area.KMLAreaParser = function() {
    */
   this.log_ = plugin.area.KMLAreaParser.LOGGER_;
 };
-goog.inherits(plugin.area.KMLAreaParser, os.parse.AsyncParser);
+goog.inherits(plugin.area.KMLAreaParser, os.parse.AsyncZipParser);
 
 
 /**
@@ -75,7 +75,7 @@ plugin.area.KMLAreaParser.prototype.setSource = function(source) {
     this.document_ = goog.dom.xml.loadXml(source);
   } else if (source instanceof ArrayBuffer) {
     if (os.file.mime.zip.isZip(source)) {
-      this.handleZIP_(source);
+      this.createZipReader(source);
       return;
     } else {
       var s = os.file.mime.text.getText(source);
@@ -117,27 +117,12 @@ plugin.area.KMLAreaParser.prototype.setSource = function(source) {
 
 
 /**
- * @param {ArrayBuffer} source
- * @private
- */
-plugin.area.KMLAreaParser.prototype.handleZIP_ = function(source) {
-  zip.createReader(new zip.ArrayBufferReader(source), goog.bind(function(reader) {
-    reader.getEntries(this.processZIPEntries_.bind(this));
-  }, this), goog.bind(function() {
-    this.onError();
-    goog.log.error(this.log_, 'Error reading zip file!');
-  }, this));
-};
-
-
-/**
  * HACK ALERT! zip.js has a zip.TextWriter() class that directly turns the zip entry into the string we want.
  * Unfortunately, it doesn't work in FF24 for some reason, but luckily, the BlobWriter does. Here, we read
  * the zip as a Blob, then feed it to a FileReader in the next callback in order to extract the text.
- * @param {Array.<!zip.Entry>} entries
- * @private
+ * @inheritDoc
  */
-plugin.area.KMLAreaParser.prototype.processZIPEntries_ = function(entries) {
+plugin.area.KMLAreaParser.prototype.handleZipEntries = function(entries) {
   var mainEntry = null;
   var firstEntry = null;
   var mainKml = /(doc|index)\.kml$/i;
@@ -221,6 +206,12 @@ plugin.area.KMLAreaParser.prototype.handleZIPText_ = function(filename, event) {
  */
 plugin.area.KMLAreaParser.prototype.cleanup = function() {
   this.document_ = null;
+
+  this.zipReaders.forEach(function(reader) {
+    reader.close();
+  });
+
+  this.zipReaders.length = 0;
 };
 
 
@@ -265,6 +256,7 @@ plugin.area.KMLAreaParser.prototype.parseNext = function() {
     }
   }
 
+  this.cleanup();
   return features;
 };
 
