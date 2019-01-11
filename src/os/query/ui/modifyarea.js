@@ -2,8 +2,8 @@ goog.provide('os.query.ui.ModifyAreaCtrl');
 goog.provide('os.query.ui.modifyAreaDirective');
 
 goog.require('goog.log');
-goog.require('os.ui.query.ui.ModifyAreaCtrl');
-goog.require('os.ui.query.ui.modifyAreaDirective');
+goog.require('os.ui.query.ModifyAreaCtrl');
+goog.require('os.ui.query.modifyAreaDirective');
 goog.require('os.ui.util.validationMessageDirective');
 
 
@@ -12,7 +12,7 @@ goog.require('os.ui.util.validationMessageDirective');
  * @return {angular.Directive}
  */
 os.query.ui.modifyAreaDirective = function() {
-  var directive = os.ui.query.ui.modifyAreaDirective();
+  var directive = os.ui.query.modifyAreaDirective();
   directive.controller = os.query.ui.ModifyAreaCtrl;
   return directive;
 };
@@ -28,7 +28,7 @@ os.ui.Module.directive('osModifyarea', [os.query.ui.modifyAreaDirective]);
 /**
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
- * @extends {os.ui.query.ui.ModifyAreaCtrl}
+ * @extends {os.ui.query.ModifyAreaCtrl}
  * @constructor
  * @ngInject
  */
@@ -48,7 +48,7 @@ os.query.ui.ModifyAreaCtrl = function($scope, $element) {
    */
   this.targetPreview = null;
 };
-goog.inherits(os.query.ui.ModifyAreaCtrl, os.ui.query.ui.ModifyAreaCtrl);
+goog.inherits(os.query.ui.ModifyAreaCtrl, os.ui.query.ModifyAreaCtrl);
 
 
 /**

@@ -7,9 +7,9 @@ goog.require('os.command.SequenceCommand');
 goog.require('os.fn');
 goog.require('os.geo.jsts');
 goog.require('os.ui.Module');
+goog.require('os.ui.query.EditAreaCtrl');
 goog.require('os.ui.query.cmd.AreaAdd');
 goog.require('os.ui.query.cmd.AreaRemove');
-goog.require('os.ui.query.ui.EditAreaCtrl');
 
 
 /**
@@ -39,7 +39,7 @@ os.ui.Module.directive('mergeareas', [os.query.ui.mergeAreasDirective]);
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$timeout} $timeout The Angular $timeout service.
- * @extends {os.ui.query.ui.EditAreaCtrl}
+ * @extends {os.ui.query.EditAreaCtrl}
  * @constructor
  * @ngInject
  */
@@ -83,7 +83,7 @@ os.query.ui.MergeAreasCtrl = function($scope, $element, $timeout) {
     }
   }
 };
-goog.inherits(os.query.ui.MergeAreasCtrl, os.ui.query.ui.EditAreaCtrl);
+goog.inherits(os.query.ui.MergeAreasCtrl, os.ui.query.EditAreaCtrl);
 
 
 /**

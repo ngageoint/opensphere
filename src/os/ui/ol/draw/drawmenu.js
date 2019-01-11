@@ -3,8 +3,8 @@ goog.provide('os.ui.ol.draw.drawMenuDirective');
 
 goog.require('os.query');
 goog.require('os.ui.Module');
+goog.require('os.ui.query.area.chooseAreaDirective');
 goog.require('os.ui.query.cmd.AreaAdd');
-goog.require('os.ui.query.ui.area.chooseAreaDirective');
 
 
 /**

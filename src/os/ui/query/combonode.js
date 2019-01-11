@@ -1,6 +1,7 @@
 goog.provide('os.ui.query.ComboNode');
+
 goog.require('os.ui.filter');
-goog.require('os.ui.query.ui.comboNodeUIDirective');
+goog.require('os.ui.query.comboNodeUIDirective');
 goog.require('os.ui.slick.SlickTreeNode');
 
 

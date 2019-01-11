@@ -1,5 +1,5 @@
-goog.provide('os.ui.query.ui.area.UserAreaCtrl');
-goog.provide('os.ui.query.ui.area.userAreaDirective');
+goog.provide('os.ui.query.area.UserAreaCtrl');
+goog.provide('os.ui.query.area.userAreaDirective');
 
 goog.require('goog.Disposable');
 goog.require('goog.Promise');
@@ -27,7 +27,7 @@ goog.require('os.ui.window');
  * Supported area input types.
  * @enum {string}
  */
-os.ui.query.ui.area.AreaType = {
+os.ui.query.area.AreaType = {
   BBOX: 'bbox',
   CIRCLE: 'circle',
   POLYGON: 'polygon'
@@ -38,7 +38,7 @@ os.ui.query.ui.area.AreaType = {
  * UI details for each area type.
  * @type {Object}
  */
-os.ui.query.ui.area.AreaTypeDetails = {
+os.ui.query.area.AreaTypeDetails = {
   'bbox': {
     'name': 'Bounding Box',
     'icon': 'fa-square-o',
@@ -61,13 +61,13 @@ os.ui.query.ui.area.AreaTypeDetails = {
  * Directive to enter a user-defined area.
  * @return {angular.Directive}
  */
-os.ui.query.ui.area.userAreaDirective = function() {
+os.ui.query.area.userAreaDirective = function() {
   return {
     restrict: 'E',
     replace: true,
     scope: true,
     templateUrl: os.ROOT + 'views/query/area/userarea.html',
-    controller: os.ui.query.ui.area.UserAreaCtrl,
+    controller: os.ui.query.area.UserAreaCtrl,
     controllerAs: 'ctrl'
   };
 };
@@ -76,7 +76,7 @@ os.ui.query.ui.area.userAreaDirective = function() {
 /**
  * Add the directive to the Angular module.
  */
-os.ui.Module.directive('userarea', [os.ui.query.ui.area.userAreaDirective]);
+os.ui.Module.directive('userarea', [os.ui.query.area.userAreaDirective]);
 
 
 /**
@@ -88,8 +88,8 @@ os.ui.Module.directive('userarea', [os.ui.query.ui.area.userAreaDirective]);
  * @constructor
  * @ngInject
  */
-os.ui.query.ui.area.UserAreaCtrl = function($scope, $element, $timeout) {
-  os.ui.query.ui.area.UserAreaCtrl.base(this, 'constructor');
+os.ui.query.area.UserAreaCtrl = function($scope, $element, $timeout) {
+  os.ui.query.area.UserAreaCtrl.base(this, 'constructor');
 
   /**
    * The Angular scope.
@@ -136,13 +136,13 @@ os.ui.query.ui.area.UserAreaCtrl = function($scope, $element, $timeout) {
    * The input area type.
    * @type {string}
    */
-  this['areaType'] = os.ui.query.ui.area.AreaType.BBOX;
+  this['areaType'] = os.ui.query.area.AreaType.BBOX;
 
   /**
    * The allowed input area types.
    * @type {!Array<string>}
    */
-  this['areaTypes'] = this.scope['areaTypes'] || goog.object.getValues(os.ui.query.ui.area.AreaType);
+  this['areaTypes'] = this.scope['areaTypes'] || goog.object.getValues(os.ui.query.area.AreaType);
 
   /**
    * @type {string}
@@ -232,7 +232,7 @@ os.ui.query.ui.area.UserAreaCtrl = function($scope, $element, $timeout) {
 
   if (this.editArea) {
     // remove unsupported edit types
-    ol.array.remove(this['areaTypes'], os.ui.query.ui.area.AreaType.CIRCLE);
+    ol.array.remove(this['areaTypes'], os.ui.query.area.AreaType.CIRCLE);
 
     // prepopulate the form from the provided area
     var geometry = this.editArea.getGeometry();
@@ -248,9 +248,9 @@ os.ui.query.ui.area.UserAreaCtrl = function($scope, $element, $timeout) {
           this['canEditGeometry'] = true;
 
           if (os.geo.isRectangular(coords[0], extent)) {
-            this['areaType'] = os.ui.query.ui.area.AreaType.BBOX;
+            this['areaType'] = os.ui.query.area.AreaType.BBOX;
           } else {
-            this['areaType'] = os.ui.query.ui.area.AreaType.POLYGON;
+            this['areaType'] = os.ui.query.area.AreaType.POLYGON;
           }
 
           // prepopulate bbox fields
@@ -291,14 +291,14 @@ os.ui.query.ui.area.UserAreaCtrl = function($scope, $element, $timeout) {
     $scope.$emit(os.ui.WindowEventType.READY);
   });
 };
-goog.inherits(os.ui.query.ui.area.UserAreaCtrl, goog.Disposable);
+goog.inherits(os.ui.query.area.UserAreaCtrl, goog.Disposable);
 
 
 /**
  * @inheritDoc
  */
-os.ui.query.ui.area.UserAreaCtrl.prototype.disposeInternal = function() {
-  os.ui.query.ui.area.UserAreaCtrl.base(this, 'disposeInternal');
+os.ui.query.area.UserAreaCtrl.prototype.disposeInternal = function() {
+  os.ui.query.area.UserAreaCtrl.base(this, 'disposeInternal');
 
   os.settings.unlisten(os.interpolate.SettingsKey.INTERPOLATION, this.updateArea, false, this);
 
@@ -319,7 +319,7 @@ os.ui.query.ui.area.UserAreaCtrl.prototype.disposeInternal = function() {
  * Fire the cancel callback and close the window.
  * @export
  */
-os.ui.query.ui.area.UserAreaCtrl.prototype.cancel = function() {
+os.ui.query.area.UserAreaCtrl.prototype.cancel = function() {
   if (this.scope && this.scope['cancel']) {
     this.scope['cancel'](os.events.EventType.CANCEL);
   }
@@ -332,7 +332,7 @@ os.ui.query.ui.area.UserAreaCtrl.prototype.cancel = function() {
  * Fire the confirmation callback and close the window.
  * @export
  */
-os.ui.query.ui.area.UserAreaCtrl.prototype.confirm = function() {
+os.ui.query.area.UserAreaCtrl.prototype.confirm = function() {
   if (this.scope && this.scope['confirm'] && this['area']) {
     var area = this.editArea;
     if (area) {
@@ -362,7 +362,7 @@ os.ui.query.ui.area.UserAreaCtrl.prototype.confirm = function() {
  * Close the window.
  * @protected
  */
-os.ui.query.ui.area.UserAreaCtrl.prototype.close = function() {
+os.ui.query.area.UserAreaCtrl.prototype.close = function() {
   if (this.element) {
     os.ui.window.close(this.element);
   }
@@ -374,7 +374,7 @@ os.ui.query.ui.area.UserAreaCtrl.prototype.close = function() {
  * @param {goog.events.KeyEvent} event
  * @protected
  */
-os.ui.query.ui.area.UserAreaCtrl.prototype.handleKeyEvent = function(event) {
+os.ui.query.area.UserAreaCtrl.prototype.handleKeyEvent = function(event) {
   if (event.keyCode == goog.events.KeyCodes.ESC) {
     this.cancel();
   }
@@ -387,8 +387,8 @@ os.ui.query.ui.area.UserAreaCtrl.prototype.handleKeyEvent = function(event) {
  * @return {string} The user-facing name for the area type.
  * @export
  */
-os.ui.query.ui.area.UserAreaCtrl.prototype.getAreaTypeName = function(type) {
-  var typeDetails = os.ui.query.ui.area.AreaTypeDetails[type];
+os.ui.query.area.UserAreaCtrl.prototype.getAreaTypeName = function(type) {
+  var typeDetails = os.ui.query.area.AreaTypeDetails[type];
   if (typeDetails && typeDetails['name']) {
     return typeDetails['name'];
   }
@@ -403,8 +403,8 @@ os.ui.query.ui.area.UserAreaCtrl.prototype.getAreaTypeName = function(type) {
  * @return {string} The user-facing name for the area type.
  * @export
  */
-os.ui.query.ui.area.UserAreaCtrl.prototype.getAreaTypeIcon = function(type) {
-  var typeDetails = os.ui.query.ui.area.AreaTypeDetails[type];
+os.ui.query.area.UserAreaCtrl.prototype.getAreaTypeIcon = function(type) {
+  var typeDetails = os.ui.query.area.AreaTypeDetails[type];
   if (typeDetails && typeDetails['icon']) {
     return typeDetails['icon'];
   }
@@ -419,8 +419,8 @@ os.ui.query.ui.area.UserAreaCtrl.prototype.getAreaTypeIcon = function(type) {
  * @return {string} The user-facing tooltip for the area type.
  * @export
  */
-os.ui.query.ui.area.UserAreaCtrl.prototype.getAreaTypeTooltip = function(type) {
-  var typeDetails = os.ui.query.ui.area.AreaTypeDetails[type];
+os.ui.query.area.UserAreaCtrl.prototype.getAreaTypeTooltip = function(type) {
+  var typeDetails = os.ui.query.area.AreaTypeDetails[type];
   if (typeDetails && typeDetails['tooltip']) {
     return typeDetails['tooltip'];
   }
@@ -434,7 +434,7 @@ os.ui.query.ui.area.UserAreaCtrl.prototype.getAreaTypeTooltip = function(type) {
  * @param {ol.Feature|undefined} area The area.
  * @protected
  */
-os.ui.query.ui.area.UserAreaCtrl.prototype.setArea = function(area) {
+os.ui.query.area.UserAreaCtrl.prototype.setArea = function(area) {
   if (this['area'] && os.map.mapContainer) {
     // remove the existing preview
     os.map.mapContainer.removeFeature(this['area']);
@@ -455,7 +455,7 @@ os.ui.query.ui.area.UserAreaCtrl.prototype.setArea = function(area) {
  * Update the name on the area.
  * @export
  */
-os.ui.query.ui.area.UserAreaCtrl.prototype.onLonFirstChange = function() {
+os.ui.query.area.UserAreaCtrl.prototype.onLonFirstChange = function() {
   this['coordOrder'] = this['lonFirst'] ? os.geo.PREFER_LON_FIRST : undefined;
   this.updateArea();
 };
@@ -465,7 +465,7 @@ os.ui.query.ui.area.UserAreaCtrl.prototype.onLonFirstChange = function() {
  * Update the area from the form.
  * @export
  */
-os.ui.query.ui.area.UserAreaCtrl.prototype.updateArea = function() {
+os.ui.query.area.UserAreaCtrl.prototype.updateArea = function() {
   if (this.updateDelay) {
     this.updateDelay.start();
   }
@@ -476,7 +476,7 @@ os.ui.query.ui.area.UserAreaCtrl.prototype.updateArea = function() {
  * Update the area from the form.
  * @protected
  */
-os.ui.query.ui.area.UserAreaCtrl.prototype.onUpdateDelay = function() {
+os.ui.query.area.UserAreaCtrl.prototype.onUpdateDelay = function() {
   if (!this.isDisposed()) {
     var area;
     var geometry;
@@ -487,15 +487,15 @@ os.ui.query.ui.area.UserAreaCtrl.prototype.onUpdateDelay = function() {
       var interpolationMethod = conf['method'];
 
       switch (this['areaType']) {
-        case os.ui.query.ui.area.AreaType.BBOX:
+        case os.ui.query.area.AreaType.BBOX:
           geometry = this.getBbox();
           interpolationMethod = os.interpolate.Method.RHUMB;
           break;
-        case os.ui.query.ui.area.AreaType.CIRCLE:
+        case os.ui.query.area.AreaType.CIRCLE:
           geometry = this.getCircle();
           interpolationMethod = os.interpolate.Method.NONE;
           break;
-        case os.ui.query.ui.area.AreaType.POLYGON:
+        case os.ui.query.area.AreaType.POLYGON:
           geometry = this.getPolygon();
           break;
         default:
@@ -523,7 +523,7 @@ os.ui.query.ui.area.UserAreaCtrl.prototype.onUpdateDelay = function() {
  * @return {Array<number>|undefined}
  * @protected
  */
-os.ui.query.ui.area.UserAreaCtrl.prototype.getExtent = function() {
+os.ui.query.area.UserAreaCtrl.prototype.getExtent = function() {
   var extent;
   if (this['corner1']['lon'] != null && this['corner1']['lat'] != null &&
       this['corner2']['lon'] != null && this['corner2']['lat'] != null) {
@@ -544,7 +544,7 @@ os.ui.query.ui.area.UserAreaCtrl.prototype.getExtent = function() {
  * @return {ol.geom.Geometry|undefined}
  * @protected
  */
-os.ui.query.ui.area.UserAreaCtrl.prototype.getBbox = function() {
+os.ui.query.area.UserAreaCtrl.prototype.getBbox = function() {
   var geometry;
   if (this['canEditGeometry'] || !this.scope['geometry']) {
     var extent = this.getExtent();
@@ -565,7 +565,7 @@ os.ui.query.ui.area.UserAreaCtrl.prototype.getBbox = function() {
  * @return {ol.geom.Geometry|undefined}
  * @protected
  */
-os.ui.query.ui.area.UserAreaCtrl.prototype.getCircle = function() {
+os.ui.query.area.UserAreaCtrl.prototype.getCircle = function() {
   var center = [this['center']['lon'], this['center']['lat']];
   var point = new ol.geom.Point(center);
   var radius = os.math.convertUnits(this['radius'], os.math.Units.METERS, this['radiusUnits']);
@@ -578,7 +578,7 @@ os.ui.query.ui.area.UserAreaCtrl.prototype.getCircle = function() {
  * @return {ol.geom.Geometry|undefined}
  * @protected
  */
-os.ui.query.ui.area.UserAreaCtrl.prototype.getPolygon = function() {
+os.ui.query.area.UserAreaCtrl.prototype.getPolygon = function() {
   var geometry;
 
   this['numInvalidCoords'] = 0;
@@ -639,7 +639,7 @@ os.ui.query.ui.area.UserAreaCtrl.prototype.getPolygon = function() {
  * @return {string} The coordinate, for display in the UI.
  * @protected
  */
-os.ui.query.ui.area.UserAreaCtrl.prototype.toFixed = function(coord) {
+os.ui.query.area.UserAreaCtrl.prototype.toFixed = function(coord) {
   return coord.toFixed(14).replace(/\.?0+$/, '');
 };
 
@@ -651,7 +651,7 @@ os.ui.query.ui.area.UserAreaCtrl.prototype.toFixed = function(coord) {
  * @param {boolean=} opt_modal If the window should be modal.
  * @return {!goog.Promise} A promise that resolves to the entered area, or is rejected if the UI is closed.
  */
-os.ui.query.ui.area.getUserArea = function(opt_area, opt_areaTypes, opt_modal) {
+os.ui.query.area.getUserArea = function(opt_area, opt_areaTypes, opt_modal) {
   return new goog.Promise(function(resolve, reject) {
     var id = opt_area ? opt_area.getId() : undefined;
     var title = 'Enter Area Coordinates';

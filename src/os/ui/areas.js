@@ -6,15 +6,15 @@ goog.require('os.data.AreaTreeSearch');
 goog.require('os.data.groupby.SourceGroupBy');
 goog.require('os.defines');
 goog.require('os.query.AreaManager');
-goog.require('os.ui.CombinatorCtrl');
 goog.require('os.ui.Module');
 goog.require('os.ui.data.groupby.TagGroupBy');
 goog.require('os.ui.ex.AreaExportCtrl');
 goog.require('os.ui.im.ImportEvent');
 goog.require('os.ui.menu.areaImport');
 goog.require('os.ui.menu.spatial');
-goog.require('os.ui.query.ui.CombinatorCtrl');
-goog.require('os.ui.query.ui.editAreaDirective');
+goog.require('os.ui.query.BaseCombinatorCtrl');
+goog.require('os.ui.query.CombinatorCtrl');
+goog.require('os.ui.query.editAreaDirective');
 goog.require('os.ui.slick.AbstractGroupByTreeSearchCtrl');
 goog.require('os.ui.urlDragDropDirective');
 
@@ -104,7 +104,7 @@ os.ui.AreasCtrl.prototype.disposeInternal = function() {
  * @export
  */
 os.ui.AreasCtrl.prototype.launch = function() {
-  os.ui.CombinatorCtrl.launch();
+  os.ui.query.CombinatorCtrl.launch();
 };
 
 

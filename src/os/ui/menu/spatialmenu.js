@@ -667,10 +667,10 @@ os.ui.menu.spatial.onMenuEvent = function(event, opt_layerIds) {
             } else {
               // the feature was just drawn, so we will treat it as the targetArea
               conf['targetArea'] = feature;
-              conf['op'] = os.ui.query.ui.ModifyOp.ADD;
+              conf['op'] = os.ui.query.ModifyOp.ADD;
             }
 
-            os.ui.query.ui.launchModifyArea(conf);
+            os.ui.query.launchModifyArea(conf);
             break;
           case os.action.EventType.MERGE_AREAS:
           case os.action.EventType.EXPORT:

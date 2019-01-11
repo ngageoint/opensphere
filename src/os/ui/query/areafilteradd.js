@@ -1,5 +1,5 @@
-goog.provide('os.ui.query.ui.AreaFilterAddCtrl');
-goog.provide('os.ui.query.ui.areaFilterAddDirective');
+goog.provide('os.ui.query.AreaFilterAddCtrl');
+goog.provide('os.ui.query.areaFilterAddDirective');
 goog.require('goog.async.Delay');
 goog.require('goog.events.EventTarget');
 goog.require('os.events.PropertyChangeEvent');
@@ -20,13 +20,13 @@ goog.require('os.ui.slick.TreeSearch');
  * The areafilteradd directive
  * @return {angular.Directive}
  */
-os.ui.query.ui.areaFilterAddDirective = function() {
+os.ui.query.areaFilterAddDirective = function() {
   return {
     restrict: 'E',
     replace: true,
     scope: {},
     templateUrl: os.ROOT + 'views/query/areafilteradd.html',
-    controller: os.ui.query.ui.AreaFilterAddCtrl,
+    controller: os.ui.query.AreaFilterAddCtrl,
     controllerAs: 'afa'
   };
 };
@@ -35,7 +35,7 @@ os.ui.query.ui.areaFilterAddDirective = function() {
 /**
  * Add the directive to the module.
  */
-os.ui.Module.directive('areafilteradd', [os.ui.query.ui.areaFilterAddDirective]);
+os.ui.Module.directive('areafilteradd', [os.ui.query.areaFilterAddDirective]);
 
 
 
@@ -48,16 +48,16 @@ os.ui.Module.directive('areafilteradd', [os.ui.query.ui.areaFilterAddDirective])
  * @constructor
  * @ngInject
  */
-os.ui.query.ui.AreaFilterAddCtrl = function($scope, $element, $timeout) {
-  os.ui.query.ui.AreaFilterAddCtrl.base(this, 'constructor');
+os.ui.query.AreaFilterAddCtrl = function($scope, $element, $timeout) {
+  os.ui.query.AreaFilterAddCtrl.base(this, 'constructor');
   $scope['areaTerm'] = '';
   $scope['filterTerm'] = '';
   $scope['areas'] = [];
   $scope['filters'] = [];
 
   var view = /** @type {string} */ (os.settings.get(['areas', 'groupBy'], 'None'));
-  $scope['areaViews'] = os.ui.query.ui.AreaFilterAddCtrl.AREA_VIEWS;
-  $scope['areaView'] = os.ui.query.ui.AreaFilterAddCtrl.AREA_VIEWS[view];
+  $scope['areaViews'] = os.ui.query.AreaFilterAddCtrl.AREA_VIEWS;
+  $scope['areaView'] = os.ui.query.AreaFilterAddCtrl.AREA_VIEWS[view];
 
   /**
    * @type {?angular.Scope}
@@ -124,14 +124,14 @@ os.ui.query.ui.AreaFilterAddCtrl = function($scope, $element, $timeout) {
     $scope.$emit(os.ui.WindowEventType.READY);
   });
 };
-goog.inherits(os.ui.query.ui.AreaFilterAddCtrl, goog.events.EventTarget);
+goog.inherits(os.ui.query.AreaFilterAddCtrl, goog.events.EventTarget);
 
 
 /**
  * Clean up.
  * @private
  */
-os.ui.query.ui.AreaFilterAddCtrl.prototype.destroy_ = function() {
+os.ui.query.AreaFilterAddCtrl.prototype.destroy_ = function() {
   this.areaSearchDelay_.dispose();
   this.areaSearchDelay_ = null;
 
@@ -148,8 +148,8 @@ os.ui.query.ui.AreaFilterAddCtrl.prototype.destroy_ = function() {
   os.settings.unlisten(os.FILTER_STORAGE_KEY, this.onSettingsUpdate_, false, this);
 
   var view = 'None';
-  for (var key in os.ui.query.ui.AreaFilterAddCtrl.AREA_VIEWS) {
-    if (this.scope_['areaView'] === os.ui.query.ui.AreaFilterAddCtrl.AREA_VIEWS[key]) {
+  for (var key in os.ui.query.AreaFilterAddCtrl.AREA_VIEWS) {
+    if (this.scope_['areaView'] === os.ui.query.AreaFilterAddCtrl.AREA_VIEWS[key]) {
       view = key;
       break;
     }
@@ -166,7 +166,7 @@ os.ui.query.ui.AreaFilterAddCtrl.prototype.destroy_ = function() {
  * @param {Array<ol.Feature>} areas
  * @private
  */
-os.ui.query.ui.AreaFilterAddCtrl.prototype.onAreasReady_ = function(areas) {
+os.ui.query.AreaFilterAddCtrl.prototype.onAreasReady_ = function(areas) {
   var areaTree = [];
   if (areas) {
     for (var i = 0; i < areas.length; i++) {
@@ -209,7 +209,7 @@ os.ui.query.ui.AreaFilterAddCtrl.prototype.onAreasReady_ = function(areas) {
  * The view options for grouping areas
  * @type {!Object<string, os.data.groupby.INodeGroupBy>}
  */
-os.ui.query.ui.AreaFilterAddCtrl.AREA_VIEWS = {
+os.ui.query.AreaFilterAddCtrl.AREA_VIEWS = {
   'None': -1, // you can't use null because Angular treats that as the empty/unselected option
   'Tag': new os.ui.data.groupby.TagGroupBy(true)
 };
@@ -220,7 +220,7 @@ os.ui.query.ui.AreaFilterAddCtrl.AREA_VIEWS = {
  * @const
  * @private
  */
-os.ui.query.ui.AreaFilterAddCtrl.TYPE_GROUP_BY_ = new os.ui.filter.ui.FilterGroupBy();
+os.ui.query.AreaFilterAddCtrl.TYPE_GROUP_BY_ = new os.ui.filter.ui.FilterGroupBy();
 
 
 /**
@@ -228,7 +228,7 @@ os.ui.query.ui.AreaFilterAddCtrl.TYPE_GROUP_BY_ = new os.ui.filter.ui.FilterGrou
  * @param {os.events.PropertyChangeEvent} event
  * @private
  */
-os.ui.query.ui.AreaFilterAddCtrl.prototype.onSettingsUpdate_ = function(event) {
+os.ui.query.AreaFilterAddCtrl.prototype.onSettingsUpdate_ = function(event) {
   os.ui.areaManager.getStoredAreas().addCallback(this.onAreasUpdate_, this);
   os.ui.filterManager.load();
   this.updateFilters_();
@@ -240,7 +240,7 @@ os.ui.query.ui.AreaFilterAddCtrl.prototype.onSettingsUpdate_ = function(event) {
  * @param {Array<ol.Feature>=} opt_areas
  * @private
  */
-os.ui.query.ui.AreaFilterAddCtrl.prototype.onAreasUpdate_ = function(opt_areas) {
+os.ui.query.AreaFilterAddCtrl.prototype.onAreasUpdate_ = function(opt_areas) {
   var areas = opt_areas || this.areaTreeSearch_.getSearch().map(function(node) {
     return node.getArea();
   });
@@ -268,7 +268,7 @@ os.ui.query.ui.AreaFilterAddCtrl.prototype.onAreasUpdate_ = function(opt_areas) 
 /**
  * @private
  */
-os.ui.query.ui.AreaFilterAddCtrl.prototype.updateFilters_ = function() {
+os.ui.query.AreaFilterAddCtrl.prototype.updateFilters_ = function() {
   var filters = os.ui.filterManager.getStoredFilters();
   var filterTree = [];
 
@@ -294,7 +294,7 @@ os.ui.query.ui.AreaFilterAddCtrl.prototype.updateFilters_ = function() {
  * Starts the area search delay
  * @export
  */
-os.ui.query.ui.AreaFilterAddCtrl.prototype.searchAreas = function() {
+os.ui.query.AreaFilterAddCtrl.prototype.searchAreas = function() {
   if (this.areaSearchDelay_) {
     this.areaSearchDelay_.start();
   }
@@ -305,7 +305,7 @@ os.ui.query.ui.AreaFilterAddCtrl.prototype.searchAreas = function() {
  * Performs the area search
  * @private
  */
-os.ui.query.ui.AreaFilterAddCtrl.prototype.onAreaSearch_ = function() {
+os.ui.query.AreaFilterAddCtrl.prototype.onAreaSearch_ = function() {
   if (this.areaTreeSearch_) {
     var t = this.scope_['areaTerm'];
 
@@ -327,7 +327,7 @@ os.ui.query.ui.AreaFilterAddCtrl.prototype.onAreaSearch_ = function() {
  * Starts the filter search delay
  * @export
  */
-os.ui.query.ui.AreaFilterAddCtrl.prototype.searchFilters = function() {
+os.ui.query.AreaFilterAddCtrl.prototype.searchFilters = function() {
   if (this.filterSearchDelay_) {
     this.filterSearchDelay_.start();
   }
@@ -338,10 +338,10 @@ os.ui.query.ui.AreaFilterAddCtrl.prototype.searchFilters = function() {
  * Performs the filter search
  * @private
  */
-os.ui.query.ui.AreaFilterAddCtrl.prototype.onFilterSearch_ = function() {
+os.ui.query.AreaFilterAddCtrl.prototype.onFilterSearch_ = function() {
   if (this.filterTreeSearch_) {
     var t = this.scope_['filterTerm'];
-    var view = os.ui.query.ui.AreaFilterAddCtrl.TYPE_GROUP_BY_;
+    var view = os.ui.query.AreaFilterAddCtrl.TYPE_GROUP_BY_;
 
     // do the search
     this.filterTreeSearch_.beginSearch(t, view);
@@ -354,7 +354,7 @@ os.ui.query.ui.AreaFilterAddCtrl.prototype.onFilterSearch_ = function() {
  * Adds the toggled on filters and areas to their managers.
  * @export
  */
-os.ui.query.ui.AreaFilterAddCtrl.prototype.add = function() {
+os.ui.query.AreaFilterAddCtrl.prototype.add = function() {
   if (this.areaTreeSearch_) {
     var areas = /** @type {Array<os.ui.slick.SlickTreeNode>} */ (this.areaTreeSearch_.getSearch());
     this.addFromNodes_(areas);
@@ -374,7 +374,7 @@ os.ui.query.ui.AreaFilterAddCtrl.prototype.add = function() {
  * @param {Array<os.ui.slick.SlickTreeNode>|os.ui.slick.SlickTreeNode} nodes
  * @private
  */
-os.ui.query.ui.AreaFilterAddCtrl.prototype.addFromNodes_ = function(nodes) {
+os.ui.query.AreaFilterAddCtrl.prototype.addFromNodes_ = function(nodes) {
   if (!goog.isArray(nodes)) {
     nodes = [nodes];
   }
@@ -425,7 +425,7 @@ os.ui.query.ui.AreaFilterAddCtrl.prototype.addFromNodes_ = function(nodes) {
  * @param {string} layer
  * @return {!Array<!os.data.IDataDescriptor>}
  */
-os.ui.query.ui.AreaFilterAddCtrl.prototype.getDescriptors = function(layer) {
+os.ui.query.AreaFilterAddCtrl.prototype.getDescriptors = function(layer) {
   var filteredDescriptors = [];
   var descriptors = os.dataManager.getDescriptors();
   descriptors.forEach(function(desc) {
@@ -441,7 +441,7 @@ os.ui.query.ui.AreaFilterAddCtrl.prototype.getDescriptors = function(layer) {
  * Closes the window without doing anything.
  * @export
  */
-os.ui.query.ui.AreaFilterAddCtrl.prototype.close = function() {
+os.ui.query.AreaFilterAddCtrl.prototype.close = function() {
   os.ui.window.close(this.element_);
 };
 
@@ -450,7 +450,7 @@ os.ui.query.ui.AreaFilterAddCtrl.prototype.close = function() {
  * Fires an event telling the form to scroll the map into the view.
  * @export
  */
-os.ui.query.ui.AreaFilterAddCtrl.prototype.scrollToMap = function() {
+os.ui.query.AreaFilterAddCtrl.prototype.scrollToMap = function() {
   os.dispatcher.dispatchEvent(new os.ui.events.ScrollEvent('#mapSection'));
 };
 
@@ -460,7 +460,7 @@ os.ui.query.ui.AreaFilterAddCtrl.prototype.scrollToMap = function() {
  * @param {angular.Scope.Event=} opt_event
  * @private
  */
-os.ui.query.ui.AreaFilterAddCtrl.prototype.count_ = function(opt_event) {
+os.ui.query.AreaFilterAddCtrl.prototype.count_ = function(opt_event) {
   if (opt_event) {
     opt_event.stopPropagation();
     opt_event.preventDefault();
@@ -510,7 +510,7 @@ os.ui.query.ui.AreaFilterAddCtrl.prototype.count_ = function(opt_event) {
  * Launches a window to choose objects to add areas from.
  * @export
  */
-os.ui.query.ui.AreaFilterAddCtrl.prototype.launchAddObjectAreas = function() {
+os.ui.query.AreaFilterAddCtrl.prototype.launchAddObjectAreas = function() {
   var id = 'areaobjectadd';
   if (os.ui.window.exists(id)) {
     os.ui.window.bringToFront(id);
@@ -542,7 +542,7 @@ os.ui.query.ui.AreaFilterAddCtrl.prototype.launchAddObjectAreas = function() {
  * @param {Array<ol.Feature>} features
  * @private
  */
-os.ui.query.ui.AreaFilterAddCtrl.prototype.onAreasSelected_ = function(features) {
+os.ui.query.AreaFilterAddCtrl.prototype.onAreasSelected_ = function(features) {
   this.objectAreas_ = features;
   this.onAreasUpdate_();
 };

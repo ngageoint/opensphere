@@ -9,7 +9,6 @@ goog.require('os.layer');
 goog.require('os.metrics.Metrics');
 goog.require('os.query');
 goog.require('os.query.FilterManager');
-goog.require('os.ui.CombinatorCtrl');
 goog.require('os.ui.FilterLayerGroupBy');
 goog.require('os.ui.Module');
 goog.require('os.ui.addFilterDirective');
@@ -17,10 +16,11 @@ goog.require('os.ui.filter.ui.FilterGroupBy');
 goog.require('os.ui.filter.ui.filterTreeDirective');
 goog.require('os.ui.im.ImportEvent');
 goog.require('os.ui.menu.filter');
+goog.require('os.ui.query.BaseCombinatorCtrl');
+goog.require('os.ui.query.CombinatorCtrl');
 goog.require('os.ui.query.QueryManager');
 goog.require('os.ui.query.cmd.FilterAdd');
 goog.require('os.ui.query.cmd.FilterRemove');
-goog.require('os.ui.query.ui.CombinatorCtrl');
 goog.require('os.ui.slick.AbstractGroupByTreeSearchCtrl');
 goog.require('os.ui.slick.slickTreeDirective');
 
@@ -125,7 +125,7 @@ os.ui.FiltersCtrl.prototype.disposeInternal = function() {
  * @export
  */
 os.ui.FiltersCtrl.prototype.launch = function() {
-  os.ui.CombinatorCtrl.launch();
+  os.ui.query.CombinatorCtrl.launch();
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Filters.ADVANCED, 1);
 };
 
