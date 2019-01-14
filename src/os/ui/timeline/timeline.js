@@ -496,13 +496,15 @@ os.ui.timeline.TimelineCtrl.HANDLE_HEIGHT = 10;
  * @private
  */
 os.ui.timeline.TimelineCtrl.prototype.init_ = function() {
-  this.scope_.$watch('histClass', goog.bind(this.onHistClassChange_, this));
-  this.scope_.$watch('histData', goog.bind(this.onHistDataChange_, this));
-  this.scope_.$watch('sliceBrushes', goog.bind(this.sliceBrushCollectionChanged_, this));
-  this.scope_.$watch('loadBrushes', goog.bind(this.loadBrushCollectionChanged_, this));
-  this.scope_.$watch('animationBrushes', goog.bind(this.animationBrushCollectionChanged_, this));
-  this.scope_.$watch('holdBrushes', goog.bind(this.holdBrushCollectionChanged_, this));
-  this.initSvg();
+  if (this.scope_) {
+    this.scope_.$watch('histClass', this.onHistClassChange_.bind(this));
+    this.scope_.$watch('histData', this.onHistDataChange_.bind(this));
+    this.scope_.$watch('sliceBrushes', this.sliceBrushCollectionChanged_.bind(this));
+    this.scope_.$watch('loadBrushes', this.loadBrushCollectionChanged_.bind(this));
+    this.scope_.$watch('animationBrushes', this.animationBrushCollectionChanged_.bind(this));
+    this.scope_.$watch('holdBrushes', this.holdBrushCollectionChanged_.bind(this));
+    this.initSvg();
+  }
 };
 
 
@@ -548,29 +550,14 @@ os.ui.timeline.TimelineCtrl.prototype.destroy_ = function() {
     this.items_[i].unlisten(os.ui.timeline.DragPanEventType.STOP, this.onDragPanStop_, false, this);
   }
 
-  if (this.offArrows_) {
-    this.offArrows_.dispose();
-  }
-
-  if (this.wheelHandler_) {
-    this.wheelHandler_.dispose();
-  }
-
-  if (this.dragPanTimer_) {
-    this.dragPanTimer_.dispose();
-  }
+  goog.dispose(this.offArrows_);
+  goog.dispose(this.wheelHandler_);
+  goog.dispose(this.dragPanTimer_);
+  goog.dispose(this.throttle_);
+  goog.dispose(this.histChart_);
 
   this.scope_ = null;
   this.element_ = null;
-
-  if (this.throttle_) {
-    this.throttle_.dispose();
-  }
-
-  if (this.histChart_) {
-    this.histChart_.dispose();
-    this.histChart_ = null;
-  }
 
   if (this.histGroup_) {
     this.histGroup_.remove();
@@ -588,8 +575,10 @@ os.ui.timeline.TimelineCtrl.prototype.destroy_ = function() {
   this.yAxis_ = null;
   this.backgroundElement_ = null;
 
-  this.baseElement_.remove();
-  this.baseElement_ = null;
+  if (this.baseElement_) {
+    this.baseElement_.remove();
+    this.baseElement_ = null;
+  }
 
   os.settings.unlisten(os.time.OFFSET_KEY, this.onOffsetChange_, false, this);
 };
@@ -689,6 +678,7 @@ os.ui.timeline.TimelineCtrl.prototype.updateSize_ = function() {
     var handleHeight = os.ui.timeline.TimelineCtrl.HANDLE_HEIGHT;
 
     this.xScale_.range([0, width]);
+    this.zoom_.x(this.xScale_);
 
     var mainGroup = this.baseElement_.select('.c-svg-timeline__main');
     mainGroup.select('.c-svg-timeline__axis-background').

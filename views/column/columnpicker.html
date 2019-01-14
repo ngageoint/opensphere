@@ -1,0 +1,6 @@
+<div>
+  <select ng-if="!multiple" ng-model="column" ng-options="col.name for col in columnOptions"
+    ng-change="pickerCtrl.columnPicked(column)" class="js-column-picker w-100" ng-required="isRequired"/>
+  <select ng-if="multiple" ng-model="columns" ng-options="col.name for col in columnOptions"
+    ng-change="pickerCtrl.columnsChanged(columns)" class="js-column-picker w-100" ng-required="isRequired" multiple/>
+</div>

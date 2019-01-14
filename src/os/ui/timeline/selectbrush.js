@@ -169,6 +169,13 @@ os.ui.timeline.SelectBrush.prototype.updateBrush = function(opt_silent) {
 
       var target = '.c-svg-timeline';
 
+      var targetEl = document.querySelector(target);
+      if (targetEl) {
+        // offset the brush position by the timeline's left edge
+        var rect = targetEl.getBoundingClientRect();
+        pos.x -= rect.x;
+      }
+
       if (this.menu_) {
         this.menu_.open(ex, {
           my: 'left top',

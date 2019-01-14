@@ -378,7 +378,7 @@ os.ui.timeline.Brush.prototype.initSVG = function(container, height) {
       attr('y', 13);
 
   // create gradients for our fade in/out windows
-  var baseSVG = d3.select('svg');
+  var baseSVG = d3.select('svg.c-svg-timeline');
 
   if (!baseSVG.select('#right-gradient')[0][0]) {
     var gradient = baseSVG.append('svg:defs')

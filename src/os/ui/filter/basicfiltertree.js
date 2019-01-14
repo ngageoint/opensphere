@@ -54,7 +54,7 @@ os.ui.filter.BasicFilterTreeCtrl.prototype.treeFormatter = function(row, cell, v
  */
 os.ui.filter.BasicFilterTreeCtrl.prototype.getOptions = function() {
   var opts = os.ui.filter.BasicFilterTreeCtrl.base(this, 'getOptions');
-  opts['rowHeight'] = 26;
+  opts['rowHeight'] = 30;
   return opts;
 };
 

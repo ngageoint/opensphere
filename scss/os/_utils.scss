@@ -19,6 +19,10 @@
   word-break: break-all;
 }
 
+.u-word-break-break-word {
+  word-break: break-word;
+}
+
 .u-word-wrap-break-word {
   word-wrap: break-word;
 }
@@ -49,6 +53,10 @@
   overflow-y: hidden !important;
 }
 
+.u-overflow-y-scroll {
+  overflow-y: scroll !important;
+}
+
 // Bootstrap by default puts a focus style around items. This turns that off
 .u-focus-outline-none:focus {
   outline: none;
@@ -60,6 +68,10 @@
 
 .u-cursor-grab.moving {
   @include grabbing-cursor();
+}
+
+.u-cursor-default {
+  cursor: default;
 }
 
 .u-btn-separator {
@@ -152,6 +164,10 @@
   font-family: sans-serif;
 }
 
+.u-text-decoration-none {
+  text-decoration: none;
+}
+
 
 // --------------------------------- Visibility Utilities --------------------------------- //
 .u-opacity__95 {
@@ -165,11 +181,11 @@
   &:not(.u-table__no-hover) .u-table__head,
   &:not(.u-table__no-hover) .u-table__row {
     @include hover {
-      background-color: $list-group-active-bg !important;
-      color: $dropdown-link-hover-color;
+      background-color: $list-group-hover-bg !important;
+      color: color-yiq($list-group-hover-bg);
 
       a {
-        color: $dropdown-link-hover-color;
+        color: color-yiq($list-group-hover-bg);
       }
     }
   }
@@ -181,6 +197,15 @@
 
   .u-table__row {
     background-color: $table-bg;
+
+    &.active {
+      background-color: $list-group-active-bg !important;
+      color: color-yiq($list-group-active-bg);
+    }
+  }
+
+  &.u-table__selectable .u-table__row {
+    cursor: pointer;
   }
 
   &.u-table-striped {
@@ -223,6 +248,7 @@
   border-bottom-left-radius: 0 !important;
   border-bottom-right-radius: 0 !important;
 }
+
 
 // At certain breakpoints, forms look really bad (especially in modals. Lets adjust forms to takeup more of the screen)
 // To use, just add u-form-vertical-at-<breakpoint>. (u-form-veritical-at-md).
@@ -303,7 +329,8 @@
   background-color: $body-bg;
 }
 
-.u-bg-body-offset {
+.u-bg-body-offset,
+.u-bg-body-offset__on-hover:hover {
   background-color: $u-theme-variables--bg-offset;
 }
 

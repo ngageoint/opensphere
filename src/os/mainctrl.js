@@ -224,7 +224,6 @@ os.MainCtrl = function($scope, $element, $compile, $timeout, $injector) {
   var im = os.ui.im.ImportManager.getInstance();
   im.registerImportDetails('Data filters for supported layers.');
   im.registerImportUI(os.file.mime.filter.TYPE, new os.filter.im.OSFilterImportUI());
-  im.registerImportUI(os.file.mime.any.TYPE, new os.ui.file.AnyTypeImportUI());
 
   // register importers
   im.registerImporter('os', os.im.FeatureImporter);
@@ -329,9 +328,14 @@ os.MainCtrl = function($scope, $element, $compile, $timeout, $injector) {
 
   // initialize the area/filter import/file managers
   os.areaImportManager = new os.ui.im.ImportManager();
-  os.areaImportManager.registerImportDetails('Data filters for supported layers.');
+  os.areaImportManager.registerImportDetails('Area filters for supported layers.');
   os.areaImportManager.registerImportUI(os.file.mime.filter.TYPE, new os.filter.im.OSFilterImportUI());
   os.areaFileManager = new os.file.FileManager();
+
+  // initialize the places import/file managers
+  os.placesImportManager = new os.ui.im.ImportManager();
+  os.placesImportManager.registerImportUI(os.file.mime.filter.TYPE, new os.filter.im.OSFilterImportUI());
+  os.placesFileManager = new os.file.FileManager();
 
   // initialize the CMM
   os.column.ColumnMappingManager.getInstance();

@@ -123,12 +123,12 @@ os.ui.search.SearchBoxCtrl = function($scope, $element) {
    */
   this.autocompleteSrc_ = /** @type {!jQuery} */ ($element.find('.js-searchbox__typeahead')).typeahead();
   goog.events.listen($element[0], 'click', this.onClick_, false, this);
-  this.searchManager.listen(goog.events.EventType.CHANGE, this.onSearchManagerChange_, false, this);
+  this.searchManager.listen(goog.events.EventType.CHANGE, this.onSearchManagerChange, false, this);
   this.searchManager.listen(os.search.SearchEventType.START, this.onSearchStart_, false, this);
   this.searchManager.listen(os.search.SearchEventType.AUTOCOMPLETED, this.populateAutocomplete_, false, this);
   this.searchManager.listen(os.search.SearchEventType.SUCCESS, this.onSearchSuccess_, false, this);
   os.dispatcher.listen(os.search.SearchEventType.REFRESH, this.search, false, this);
-  this.onSearchManagerChange_();
+  this.onSearchManagerChange();
 
   /**
    * @type {!Array<string>}
@@ -189,7 +189,7 @@ os.ui.search.SearchBoxCtrl.prototype.destroy = function() {
     this.listenKey = null;
   }
 
-  this.searchManager.unlisten(goog.events.EventType.CHANGE, this.onSearchManagerChange_, false, this);
+  this.searchManager.unlisten(goog.events.EventType.CHANGE, this.onSearchManagerChange, false, this);
   this.searchManager.unlisten(os.search.SearchEventType.START, this.onSearchStart_, false, this);
   this.searchManager.unlisten(os.search.SearchEventType.AUTOCOMPLETED, this.populateAutocomplete_, false, this);
   this.searchManager.unlisten(os.search.SearchEventType.SUCCESS, this.onSearchSuccess_, false, this);
@@ -332,9 +332,9 @@ os.ui.search.SearchBoxCtrl.prototype.getSearchTerm_ = function() {
 /**
  * Handles changes to the search manager.
  * @param {goog.events.Event=} opt_event
- * @private
+ * @protected
  */
-os.ui.search.SearchBoxCtrl.prototype.onSearchManagerChange_ = function(opt_event) {
+os.ui.search.SearchBoxCtrl.prototype.onSearchManagerChange = function(opt_event) {
   // update available options and the selection
   this['searchOptions'] = this.searchManager.getRegisteredSearches();
   this.setUpGroups();
@@ -481,6 +481,15 @@ os.ui.search.SearchBoxCtrl.prototype.setUpGroups = function() {
     }, this);
     this['searchOptionsGroups'][groupName] = currentGroup;
   }, this);
+
+  var order =  /** @type {Array} */ (os.settings.get('providerGroupOrder', []));
+  order.forEach(function(value, index) {
+    var currentIndex = this['providerGroups'].indexOf(value);
+    if (currentIndex > 0) {
+      goog.array.moveItem(this['providerGroups'], currentIndex, index);
+    }
+  }, this);
+
   this['searchOptionsNoGroup'] = copiedOptions;
 };
 
@@ -558,7 +567,11 @@ os.ui.search.SearchBoxCtrl.prototype.toggleGroup = function(group) {
  * @export
  */
 os.ui.search.SearchBoxCtrl.prototype.getSearchOptionsGroup = function(groupName) {
-  return this['searchOptionsGroups'][groupName];
+  var group = this['searchOptionsGroups'][groupName];
+  goog.array.sort(group, function(a, b) {
+    return goog.array.defaultCompare(a.getName(), b.getName());
+  });
+  return group;
 };
 
 

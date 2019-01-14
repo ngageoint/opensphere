@@ -332,6 +332,9 @@ os.im.action.ImportActionManager.prototype.getEntryItems = function(type) {
  * @param {boolean=} opt_unprocess Reset existing items
  */
 os.im.action.ImportActionManager.prototype.processItems = function(entryType, opt_items, opt_unprocess) {
+  // all calls to process feature actions run through here, so update the current timestamp every time
+  os.ui.filter.currentTimestamp = Date.now();
+
   var items = opt_items || this.getEntryItems(entryType);
   if (items && items.length > 0) {
     var entries = this.actionEntries[entryType];
@@ -497,23 +500,5 @@ os.im.action.ImportActionManager.prototype.onAddActionEntry_ = function(event) {
   } else {
     var msg = 'Failed adding ' + this.entryTitle.toLowerCase() + '. See the log for details.';
     os.alertManager.sendAlert(msg, os.alert.AlertEventSeverity.ERROR);
-  }
-
-  this.refreshActionEntries(entry.type);
-};
-
-
-/**
- * Refresh action entries.
- * @param {string} entryType The entry type.
- */
-os.im.action.ImportActionManager.prototype.refreshActionEntries = function(entryType) {
-  var featureActionRefresh = plugin.im.action.feature.shouldRefresh(entryType);
-  if (featureActionRefresh) {
-    var dm = os.data.DataManager.getInstance();
-    var source = dm.getSource(entryType);
-    if (source && source.isRefreshEnabled()) {
-      source.refresh();
-    }
   }
 };

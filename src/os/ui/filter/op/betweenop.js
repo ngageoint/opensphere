@@ -12,11 +12,6 @@ goog.require('os.ui.filter.op.Op');
 os.ui.filter.op.Between = function() {
   os.ui.filter.op.Between.base(this, 'constructor',
       'And', 'is between', 'between', ['integer', 'decimal'], 'hint="between"', undefined, 'fb-between');
-
-  /**
-   * @type {string}
-   * @protected
-   */
   this.matchHint = 'between';
 };
 goog.inherits(os.ui.filter.op.Between, os.ui.filter.op.Op);
