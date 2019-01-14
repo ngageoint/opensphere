@@ -752,7 +752,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.getColumn = function() {
  * @return {boolean} The show label
  */
 os.ui.layer.VectorLayerUICtrl.prototype.getShowLabel = function() {
-  return this.getValue(os.ui.layer.getUniqueId);
+  return this.getValue(os.ui.layer.getShowLabel);
 };
 
 
