@@ -220,9 +220,6 @@ os.time.TimelineController.prototype.getCurrent = function() {
  */
 os.time.TimelineController.prototype.setCurrent = function(value) {
   if (this.current_ !== value) {
-    if (this.lock_) {
-      this.setOffset(value - this.getAnimationRange().start);
-    }
     this.lastCurrent_ = this.current_;
     this.current_ = value;
     this.dispatchShowEvent_();
