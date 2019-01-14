@@ -335,7 +335,11 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.destroy = function() {
  */
 os.ui.timeline.AbstractTimelineCtrl.prototype.onWindow = function(event, range) {
   if (!this.inEvent && range && range.length === 2) {
+    // if (this.tlc.getLock()) {
+    //   this.tlc.setOffset(range[1] - this.tlc.getAnimationRange().start);
+    // }
     this.inEvent = true;
+
     var diff = range[1] - range[0];
 
     // only change skip if the size actually changed

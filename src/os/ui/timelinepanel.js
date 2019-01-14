@@ -59,13 +59,6 @@ os.ui.TimelinePanelCtrl = function($scope, $element, $timeout) {
   this['locked'] = os.time.TimelineController.getInstance().getLock();
 
   /**
-   * @type {?angular.Scope}
-   */
-  this['scope'] = $scope;
-
-  this.tlc.listen(os.time.TimelineEventType.LOCK_TOGGLE, goog.partial(this.setLock, true), false, this);
-
-  /**
    * @type {?os.data.histo.TimelineHistManager}
    */
   this.histManager = os.data.histo.TimelineHistManager.getInstance();
@@ -250,27 +243,9 @@ os.ui.TimelinePanelCtrl.prototype.adjust = function() {
 
 /**
  * Panel lock button click.
- * @export
- */
-os.ui.TimelinePanelCtrl.prototype.lock = function() {
-  this.onBrushLockButtonUp();
-};
-
-
-/**
- * Synchs both lock buttons
- */
-os.ui.TimelinePanelCtrl.prototype.setLock = function() {
-  this['locked'] = this.tlc.getLock();
-  os.ui.apply(this.scope);
-};
-
-
-/**
- * Panel lock button click.
  * @param {boolean=} opt_getlock
  */
-os.ui.TimelinePanelCtrl.prototype.onBrushLockButtonUp = function(opt_getlock) {
+os.ui.TimelinePanelCtrl.prototype.lock = function(opt_getlock) {
   var isLocked = opt_getlock ? this.tlc.getLock() :
       this.tlc.toggleLock();
   this['locked'] = this.tlc.getLock();

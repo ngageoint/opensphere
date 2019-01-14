@@ -63,6 +63,12 @@ os.time.TimelineController = function() {
    * @type {number}
    * @private
    */
+  this.lockRange_ = 0;
+
+  /**
+   * @type {number}
+   * @private
+   */
   this.offset_ = 1000;
 
   /**
@@ -214,6 +220,9 @@ os.time.TimelineController.prototype.getCurrent = function() {
  */
 os.time.TimelineController.prototype.setCurrent = function(value) {
   if (this.current_ !== value) {
+    if (this.lock_) {
+      this.setOffset(value - this.getAnimationRange().start);
+    }
     this.lastCurrent_ = this.current_;
     this.current_ = value;
     this.dispatchShowEvent_();
@@ -299,6 +308,11 @@ os.time.TimelineController.prototype.getLock = function() {
  */
 os.time.TimelineController.prototype.toggleLock = function() {
   this.lock_ = !this.lock_;
+  if (this.lock_) {
+    this.lockRange_ = this.getCurrentRange().end - this.getCurrentRange().start;
+    this.setSkip(this.lockRange_);
+    this.first();
+  }
   return this.lock_;
 };
 
@@ -308,6 +322,11 @@ os.time.TimelineController.prototype.toggleLock = function() {
  */
 os.time.TimelineController.prototype.setLock = function(value) {
   this.lock_ = value;
+  if (this.lock_) {
+    this.lockRange_ = this.getCurrentRange().end - this.getCurrentRange().start;
+    this.setSkip(this.lockRange_);
+    this.first();
+  }
   this.dispatchEvent(os.time.TimelineEventType.LOCK_TOGGLE);
 };
 
@@ -607,12 +626,9 @@ os.time.TimelineController.prototype.stop = function() {
 os.time.TimelineController.prototype.first = function() {
   var animateRange = this.getAnimationRange();
   if (this.getLock()) {
-    var current = this.getCurrentRange();
-    this.setOffset(0);
-    this.setCurrent(current.start + this.offset_);
-  } else {
-    this.setCurrent(animateRange.start + this.offset_);
+    this.setOffset(this.lockRange_);
   }
+  this.setCurrent(animateRange.start + this.offset_);
 };
 
 
