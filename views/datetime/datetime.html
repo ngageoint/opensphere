@@ -1,5 +1,5 @@
 <div class="form-inline" ng-form="dateTimeForm">
-  <wheel-date class="c-date-time__wheel-date px-1" date="dateTimeCtrl.date" disable="disabled" is-required="required || invalid"></wheel-date>&nbsp;
+  <wheel-date class="u-input__width-10 px-1" date="dateTimeCtrl.date" disable="disabled" is-required="required || invalid"></wheel-date>&nbsp;
   <input class="form-control js-date-time__time-input c-date-time__time-input px-1" ng-disabled="disabled" type="number" ng-model="dateTimeCtrl.hour" ng-change="dateTimeCtrl.updateValue('hour')" min="0" max="23" placeholder="h" ng-required="required || invalid"> :
   <input class="form-control js-date-time__time-input c-date-time__time-input px-1" ng-disabled="disabled" type="number" ng-model="dateTimeCtrl.minute" ng-change="dateTimeCtrl.updateValue('minute')" min="0" max="59" placeholder="m" ng-required="required || invalid"> :
   <input class="form-control js-date-time__time-input c-date-time__time-input px-1" ng-disabled="disabled" type="number" ng-model="dateTimeCtrl.second" ng-change="dateTimeCtrl.updateValue('second')" min="0" max="59" placeholder="s" ng-required="required || invalid">
