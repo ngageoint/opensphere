@@ -1498,7 +1498,7 @@ os.ui.FeatureEditCtrl.updateFeatureStyle = function(feature) {
           config['stroke']['width'] = config['stroke']['width'] || size;
 
           // drop opacity to 0 if the shape style is set to 'None'
-          if (this['shape'] === os.style.ShapeType.NONE) {
+          if (shape === os.style.ShapeType.NONE) {
             os.style.setConfigOpacityColor(config, 0);
           }
         } else {
