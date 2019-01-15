@@ -22,6 +22,7 @@ goog.require('os.ui.menu.MenuItemType');
 goog.require('os.ui.sliderDirective');
 goog.require('os.ui.timeline.Brush');
 goog.require('os.ui.timeline.Brush.EventType');
+goog.require('os.ui.timeline.CurrentTimeMarker');
 goog.require('os.ui.timeline.ITimelineItem');
 goog.require('os.ui.timeline.SelectBrush');
 goog.require('os.ui.timeline.TileAxis');
@@ -187,9 +188,14 @@ os.ui.timeline.AbstractTimelineCtrl = function($scope, $element, $timeout) {
   var tileAxis = new os.ui.timeline.TileAxis();
 
   /**
+   * @type {os.ui.timeline.CurrentTimeMarker}
+   */
+  var currentTimeMarker = new os.ui.timeline.CurrentTimeMarker();
+
+  /**
    * @type {?Array.<!os.ui.timeline.ITimelineItem>}
    */
-  this['items'] = [tileAxis, this.windowBrush, this.selectBrush];
+  this['items'] = [tileAxis, currentTimeMarker, this.windowBrush, this.selectBrush];
 
 
   /**
