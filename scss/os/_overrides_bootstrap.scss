@@ -64,6 +64,11 @@ $form-control-disabled-border: $gray-600 !default;
   cursor: pointer;
 }
 
+.carousel-control-prev,
+.carousel-control-next {
+  cursor: pointer;
+}
+
 html {
   // (Part 1) How bootstrap does box-sizing breaks 3rd party libraries box sizing.
   // This technique allows slickgrid to work

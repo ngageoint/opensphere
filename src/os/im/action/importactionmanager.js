@@ -9,6 +9,7 @@ goog.require('os.im.action.ImportActionEventType');
 goog.require('os.im.action.TagName');
 goog.require('os.im.action.cmd.FilterActionAdd');
 goog.require('os.plugin.PluginManager');
+goog.require('os.ui.filter');
 
 
 /**
@@ -332,9 +333,6 @@ os.im.action.ImportActionManager.prototype.getEntryItems = function(type) {
  * @param {boolean=} opt_unprocess Reset existing items
  */
 os.im.action.ImportActionManager.prototype.processItems = function(entryType, opt_items, opt_unprocess) {
-  // all calls to process feature actions run through here, so update the current timestamp every time
-  os.ui.filter.currentTimestamp = Date.now();
-
   var items = opt_items || this.getEntryItems(entryType);
   if (items && items.length > 0) {
     var entries = this.actionEntries[entryType];
@@ -362,6 +360,29 @@ os.im.action.ImportActionManager.prototype.unprocessItems = function(entryType, 
     if (entries && entries.length > 0) {
       for (var i = 0; i < entries.length; i++) {
         entries[i].unprocessItems(items);
+      }
+    }
+  }
+};
+
+
+/**
+ * Reapplies all actions on applicable data types. This acts to both apply the actions to new features as well
+ * as to unapply them from old features.
+ * @param {string} entryType The entry type.
+ * @param {Array<T>=} opt_items The items to process.
+ */
+os.im.action.ImportActionManager.prototype.updateItems = function(entryType, opt_items) {
+  window['currentFilterTimestamp'] = Date.now();
+
+  var items = opt_items || this.getEntryItems(entryType);
+  if (items && items.length > 0) {
+    var entries = this.actionEntries[entryType];
+    if (entries && entries.length > 0) {
+      for (var i = 0; i < entries.length; i++) {
+        if (entries[i].isEnabled()) {
+          entries[i].updateItems(items);
+        }
       }
     }
   }

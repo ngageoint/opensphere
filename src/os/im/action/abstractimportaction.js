@@ -22,6 +22,13 @@ os.im.action.AbstractImportAction = function() {
   this.id = '';
 
   /**
+   * Unique identifier for this action.
+   * @type {number}
+   * @protected
+   */
+  this.uid = goog.getUid(this);
+
+  /**
    * The label or title for the import action.
    * @type {string}
    * @protected

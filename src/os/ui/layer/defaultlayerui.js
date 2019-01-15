@@ -116,10 +116,12 @@ os.ui.layer.DefaultLayerUICtrl = function($scope, $element, $timeout) {
    */
   this.initialValues = {};
 
+  var properties = this.getProperties();
+
   // Listen for slider start, change and stop events for each of the slider properties. These will handle live updates
   // of the layer in the view as well as placing commands on the stack on stop for each change.
-  for (var key in os.ui.layer.DefaultLayerUICtrl.PROPERTIES_) {
-    var fn = os.ui.layer.DefaultLayerUICtrl.PROPERTIES_[key];
+  for (var key in properties) {
+    var fn = properties[key];
     $scope.$on(key + '.slide', this.onValueChange.bind(this, fn));
     $scope.$on(key + '.slidestart', this.onSliderStart.bind(this));
     $scope.$on(key + '.slidestop', this.onSliderStop.bind(this, fn, key));
@@ -145,15 +147,16 @@ goog.inherits(os.ui.layer.DefaultLayerUICtrl, os.ui.layer.AbstractLayerUICtrl);
 
 /**
  * The basic layer properties controlled by this UI.
- * @type {Object}
- * @private
+ * @return {Object}
  */
-os.ui.layer.DefaultLayerUICtrl.PROPERTIES_ = {
-  'opacity': os.layer.setOpacity,
-  'brightness': os.layer.setBrightness,
-  'contrast': os.layer.setContrast,
-  'hue': os.layer.setHue,
-  'saturation': os.layer.setSaturation
+os.ui.layer.DefaultLayerUICtrl.prototype.getProperties = function() {
+  return {
+    'opacity': os.layer.setOpacity,
+    'brightness': os.layer.setBrightness,
+    'contrast': os.layer.setContrast,
+    'hue': os.layer.setHue,
+    'saturation': os.layer.setSaturation
+  };
 };
 
 
@@ -167,10 +170,10 @@ os.ui.layer.DefaultLayerUICtrl.prototype.initUI = function() {
     this.scope['brightness'] = this.getValue(os.layer.getBrightness, 0);
     this.scope['contrast'] = this.getValue(os.layer.getContrast);
     this.scope['hue'] = this.getValue(os.layer.getHue, 0);
-    this.scope['opacity'] = this.getValue(os.layer.getOpacity);
+    this.scope['opacity'] = this.getOpacity();
     this.scope['saturation'] = this.getValue(os.layer.getSaturation);
 
-    this.updateRefresh_();
+    this.updateRefresh();
     this.initColorControls_();
   }
 };
@@ -178,9 +181,8 @@ os.ui.layer.DefaultLayerUICtrl.prototype.initUI = function() {
 
 /**
  * Updates the auto refresh state on the UI.
- * @private
  */
-os.ui.layer.DefaultLayerUICtrl.prototype.updateRefresh_ = function() {
+os.ui.layer.DefaultLayerUICtrl.prototype.updateRefresh = function() {
   this['showRefresh'] = false;
   this['refresh'] = null;
 
@@ -230,57 +232,54 @@ os.ui.layer.DefaultLayerUICtrl.prototype.initColorControls_ = function() {
 
   var nodes = this.getLayerNodes();
   if (nodes && nodes.length > 0) {
-    try {
       // make sure all selected layers have the same color control type
-      var baseType;
-      for (var i = 0, n = nodes.length; i < n; i++) {
-        var layer = nodes[i].getLayer();
-        if (baseType == null) {
-          baseType = this.getColorControlType(layer);
+    var baseType;
+    for (var i = 0, n = nodes.length; i < n; i++) {
+      var layer = nodes[i].getLayer();
+      if (baseType == null) {
+        baseType = this.getColorControlType(layer);
 
-          // first one doesn't have a color control, so don't show one
-          if (baseType == os.ui.ColorControlType.NONE) {
-            break;
-          }
-        } else if (this.getColorControlType(layer) !== baseType) {
-          // at least one layer has a different type, so don't show the control
-          baseType = os.ui.ColorControlType.NONE;
+        // first one doesn't have a color control, so don't show one
+        if (baseType == os.ui.ColorControlType.NONE) {
           break;
         }
+      } else if (this.getColorControlType(layer) !== baseType) {
+        // at least one layer has a different type, so don't show the control
+        baseType = os.ui.ColorControlType.NONE;
+        break;
       }
+    }
 
-      switch (baseType) {
-        case os.ui.ColorControlType.PICKER_RESET:
-          // show the color picker with a reset button
-          this['showColorPicker'] = true;
-          this['showColorReset'] = true;
-          this['showBasicColor'] = true;
+    switch (baseType) {
+      case os.ui.ColorControlType.PICKER_RESET:
+        // show the color picker with a reset button
+        this['showColorPicker'] = true;
+        this['showColorReset'] = true;
+        this['showBasicColor'] = true;
 
-          break;
-        case os.ui.ColorControlType.PICKER:
-          // show the color picker without a reset button
-          this['showColorPicker'] = true;
+        break;
+      case os.ui.ColorControlType.PICKER:
+        // show the color picker without a reset button
+        this['showColorPicker'] = true;
 
-          this['showBasicColor'] = false;
-          this['showColorReset'] = false;
-          break;
-        case os.ui.ColorControlType.BASIC:
-          // show brightness, saturation
-          this['showBasicColor'] = true;
+        this['showBasicColor'] = false;
+        this['showColorReset'] = false;
+        break;
+      case os.ui.ColorControlType.BASIC:
+        // show brightness, saturation
+        this['showBasicColor'] = true;
 
-          this['showColorPicker'] = false;
-          this['showColorReset'] = false;
+        this['showColorPicker'] = false;
+        this['showColorReset'] = false;
 
-          break;
-        case os.ui.ColorControlType.NONE:
-        default:
-          // don't show any color controls
-          this['showBasicColor'] = false;
-          this['showColorPicker'] = false;
-          this['showColorReset'] = false;
-          break;
-      }
-    } catch (e) {
+        break;
+      case os.ui.ColorControlType.NONE:
+      default:
+        // don't show any color controls
+        this['showBasicColor'] = false;
+        this['showColorPicker'] = false;
+        this['showColorReset'] = false;
+        break;
     }
   }
 };
@@ -305,33 +304,39 @@ os.ui.layer.DefaultLayerUICtrl.prototype.getColorControlType = function(layer) {
 
 
 /**
+ * Gets the opacity from the item(s)
+ * @return {number} The opacity
+ */
+os.ui.layer.DefaultLayerUICtrl.prototype.getOpacity = function() {
+  return this.getValue(os.layer.getOpacity);
+};
+
+
+/**
  * Builds the current set of initial values and places them in the map.
  * @private
  */
 os.ui.layer.DefaultLayerUICtrl.prototype.setInitialValues_ = function() {
   var nodes = this.getLayerNodes();
   for (var i = 0, n = nodes.length; i < n; i++) {
-    try {
-      var layer = nodes[i].getLayer();
-      if (layer) {
-        var layerId = layer.getId();
-        var values = {};
+    var layer = nodes[i].getLayer();
+    if (layer) {
+      var layerId = layer.getId();
+      var values = {};
 
-        var opacity = os.layer.getOpacity(layer);
-        values['opacity'] = opacity != null ? opacity : 0;
+      var opacity = this.getOpacity();
+      values['opacity'] = opacity != null ? opacity : 0;
 
-        var brightness = os.layer.getBrightness(layer);
-        values['brightness'] = brightness != null ? brightness : 0;
+      var brightness = os.layer.getBrightness(layer);
+      values['brightness'] = brightness != null ? brightness : 0;
 
-        var contrast = os.layer.getContrast(layer);
-        values['contrast'] = contrast != null ? contrast : 0;
+      var contrast = os.layer.getContrast(layer);
+      values['contrast'] = contrast != null ? contrast : 0;
 
-        var saturation = os.layer.getSaturation(layer);
-        values['saturation'] = saturation != null ? saturation : 0;
+      var saturation = os.layer.getSaturation(layer);
+      values['saturation'] = saturation != null ? saturation : 0;
 
-        this.initialValues[layerId] = values;
-      }
-    } catch (e) {
+      this.initialValues[layerId] = values;
     }
   }
 };
@@ -429,7 +434,7 @@ os.ui.layer.DefaultLayerUICtrl.prototype.onRefreshChange = function() {
 os.ui.layer.DefaultLayerUICtrl.prototype.reset = function(key) {
   var defaultValue = this.defaults[key];
   if (defaultValue != null) {
-    var callback = os.ui.layer.DefaultLayerUICtrl.PROPERTIES_[key];
+    var callback = this.getProperties()[key];
     this.onSliderStop(callback, key, null, defaultValue);
   }
 };

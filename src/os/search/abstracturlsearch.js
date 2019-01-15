@@ -162,9 +162,12 @@ os.search.AbstractUrlSearch.prototype.onAutoCompleteError = function(evt) {
 /**
  * @inheritDoc
  */
-os.search.AbstractUrlSearch.prototype.searchTerm = function(term, opt_start, opt_pageSize) {
+os.search.AbstractUrlSearch.prototype.searchTerm = function(term, opt_start, opt_pageSize, opt_sortBy,
+    opt_noFacets, opt_sortOrder) {
   this.cancel();
   this.term = term;
+  this.sortBy = opt_sortBy;
+  this.sortOrder = opt_sortOrder;
 
   // require a term for url searches
   if (term) {

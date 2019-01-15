@@ -162,6 +162,11 @@ os.style.IconReader.translateIcons = function(config) {
     config['src'] = os.style.IconReader.DEFAULT_ICON;
   }
 
+  if (config['rotation']) {
+    // convert to degrees, round it, and convert back to radians
+    config['rotation'] = ol.math.toRadians(Math.round(ol.math.toDegrees(/** @type {number} */ (config['rotation']))));
+  }
+
   // replace google maps/earth icon urls with our copies
   var src = /** @type {string|undefined} */ (config['src']);
   if (src) {

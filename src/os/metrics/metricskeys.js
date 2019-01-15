@@ -246,6 +246,18 @@ os.metrics.Layer = {
   VECTOR_LOB_BEARING_ERROR: 'layers.features.changeVectorLineOfBearingBearingError',
   VECTOR_LOB_BEARING_ERROR_COLUMN: 'layers.features.changeVectorLineOfBearingBearingErrorColumn',
   VECTOR_ROTATION_COLUMN: 'layers.features.changeVectorRotationColumn',
+  FEATURE_COLOR: 'layers.features.changeFeatureColor',
+  FEATURE_ICON: 'layers.features.changeFeatureIcon',
+  FEATURE_OPACITY: 'layers.features.changeFeatureOpacity',
+  FEATURE_SIZE: 'layers.features.changeFeatureSize',
+  FEATURE_LABEL_COLOR: 'layers.features.changeFeatureLabelColor',
+  FEATURE_LABEL_SIZE: 'layers.features.changeFeatureLabelSize',
+  FEATURE_LABEL_TOGGLE: 'layers.features.changeFeatureLabelToggle',
+  FEATURE_LABEL_COLUMN_SELECT: 'layers.features.featureLabelColumnSelect',
+  FEATURE_ROTATION_COLUMN: 'layers.features.changeFeatureRotationColumn',
+  FEATURE_SHOW_ROTATION: 'layers.features.changeFeatureShowRotation',
+  FEATURE_SHAPE: 'layers.features.changeFeatureShape',
+  FEATURE_CENTER_SHAPE: 'layers.features.changeFeatureCenterShape',
   LABEL_COLOR: 'layers.features.changeLabelColor',
   LABEL_SIZE: 'layers.features.changeLabelSize',
   LABEL_TOGGLE: 'layers.features.changeLabelToggle',
@@ -266,6 +278,14 @@ os.metrics.Layer = {
   EXPORT: 'layers.contextMenu.export',
   CREATE_BUFFER: 'layers.contextMenu.createBuffer',
   SHOW_DESCRIPTION: 'layers.contextMenu.showDescription'
+};
+
+
+/**
+ * Layer metrics
+ * @enum {string}
+ */
+os.metrics.Feature = {
 };
 
 

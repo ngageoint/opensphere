@@ -60,6 +60,14 @@ plugin.im.action.feature.LabelAction.ID = 'featureLabelAction';
 
 
 /**
+ * Property set on features to indicate they're using a feature label action.
+ * @type {string}
+ * @const
+ */
+plugin.im.action.feature.LabelAction.FEATURE_ID = '_featureLabelAction';
+
+
+/**
  * Action label.
  * @type {string}
  * @const
@@ -96,7 +104,7 @@ plugin.im.action.feature.LabelAction.DEFAULT_CONFIG = {
 plugin.im.action.feature.LabelAction.prototype.reset = function(items) {
   for (var i = 0; i < items.length; i++) {
     var item = items[i];
-    if (item) {
+    if (item && this.isFeatureLabeled(item)) {
       // reset the original feature config
       var originalConfig = /** @type {Array|Object|undefined} */
           (item.get(plugin.im.action.feature.StyleType.ORIGINAL));
@@ -154,6 +162,7 @@ plugin.im.action.feature.LabelAction.prototype.execute = function(items) {
 
         // save the feature config(s) to the feature, and persist the label config to the feature
         item.set(os.style.StyleType.FEATURE, featureConfig, true);
+        item.set(plugin.im.action.feature.LabelAction.FEATURE_ID, this.uid, true);
         os.ui.FeatureEditCtrl.persistFeatureLabels(item);
 
         if (originalConfig != null && !originalConfig['temporary'] &&
@@ -308,4 +317,16 @@ plugin.im.action.feature.LabelAction.prototype.fromXml = function(xml) {
   }
 
   this.labelConfig = labelConfig;
+};
+
+
+/**
+ * If a feature is styled by the action.
+ * @param {!ol.Feature} feature The feature.
+ * @return {boolean} If the feature is using this style action.
+ *
+ * @suppress {accessControls} To allow direct access to feature metadata.
+ */
+plugin.im.action.feature.LabelAction.prototype.isFeatureLabeled = function(feature) {
+  return feature.values_[plugin.im.action.feature.LabelAction.FEATURE_ID] === this.uid;
 };
