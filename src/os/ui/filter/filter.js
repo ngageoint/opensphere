@@ -90,11 +90,11 @@ os.ui.filter.OPERATIONS = [
 
 
 /**
- * Field for storing the current timestamp on the window object.
+ * Field for storing the current timestamp on the window object. This is an ugly way to do this, but the value is
+ * read by functions instantiated in an unusual way, so it needs to be defined in an unminified way.
  * @type {number}
- * @export
  */
-os.ui.filter.currentTimestamp = Date.now();
+window['currentFilterTimestamp'] = Date.now();
 
 
 /**

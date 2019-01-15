@@ -26,8 +26,8 @@ os.ui.filter.op.time.Between.prototype.getEvalExpression = function(varName, lit
   if (range && range.length == 2 && range[0] !== range[1]) {
     var r0 = range[0];
     var r1 = range[1];
-    return varName + '!=null&&os.ui.filter.currentTimestamp-' + varName + '.getStart()<=' + r1 +
-        '&&os.ui.filter.currentTimestamp-' + varName + '.getEnd()>=' + r0;
+    return varName + '!=null&&currentFilterTimestamp-' + r1 + '<=' + varName + '.getEnd()' +
+        '&&currentFilterTimestamp-' + r0 + '>=' + varName + '.getStart()';
   }
 
   // range couldn't be parsed, so don't return an expression

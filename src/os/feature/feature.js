@@ -613,6 +613,20 @@ os.feature.isInternalField = function(field) {
 
 
 /**
+ * Get the layer id of a feature
+ * @param {ol.Feature} feature The feature
+ * @return {string|undefined}
+ */
+os.feature.getLayerId = function(feature) {
+  var sourceId = undefined;
+  if (feature) {
+    sourceId = /** @type {string|undefined} */ (feature.get(os.data.RecordField.SOURCE_ID));
+  }
+  return sourceId;
+};
+
+
+/**
  * Get the layer containing a feature. This accounts for features that may be rendered in a
  * {@link os.layer.AnimationOverlay}, which uses an OL layer/source with hit detection disabled. In that case, find
  * the original layer from the map.
@@ -622,7 +636,7 @@ os.feature.isInternalField = function(field) {
 os.feature.getLayer = function(feature) {
   var layer = null;
   if (feature) {
-    var sourceId = /** @type {string|undefined} */ (feature.get(os.data.RecordField.SOURCE_ID));
+    var sourceId = os.feature.getLayerId(feature);
     if (sourceId) {
       // look up the layer via the id
       layer = os.MapContainer.getInstance().getLayer(sourceId);
@@ -653,7 +667,7 @@ os.feature.getSource = function(feature, opt_layer) {
 
   if (source == null && feature != null) {
     // no layer or not an OS source, so check if the feature has the source id
-    var sourceId = /** @type {string|undefined} */ (feature.get(os.data.RecordField.SOURCE_ID));
+    var sourceId = os.feature.getLayerId(feature);
     if (sourceId) {
       // have the source id - check if it's in the data manager
       source = os.osDataManager.getSource(sourceId);
