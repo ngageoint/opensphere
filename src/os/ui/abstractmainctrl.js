@@ -82,6 +82,16 @@ os.ui.AbstractMainCtrl = function($scope, $injector, rootPath, defaultAppName) {
    */
   $scope['pluginsReady'] = false;
 
+  /**
+   * Are the plugins loading? Wait for a time to display loading spinner
+   * @type {boolean}
+   */
+  $scope['pluginsLoading'] = false;
+  this.pluginLoadingTimer_ = goog.Timer.callOnce(function() {
+    $scope['pluginsLoading'] = true;
+    os.ui.apply($scope);
+  }, 1500);
+
   // add window close handler
   window.addEventListener(goog.events.EventType.BEFOREUNLOAD, this.onClose.bind(this));
 
@@ -289,6 +299,10 @@ os.ui.AbstractMainCtrl.prototype.onPluginsLoaded = function(opt_e) {
   // send browser info metric
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.BROWSER + '.' + os.browserVersion(), 1);
   this.scope['pluginsReady'] = true;
+  goog.Timer.clear(this.pluginLoadingTimer_);
+  this.scope['pluginsLoading'] = false;
+  os.ui.apply(this.scope);
+
   this.initXt();
 };
 
