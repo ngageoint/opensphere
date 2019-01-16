@@ -39,6 +39,17 @@
   @include grabbing-cursor();
 }
 
+.c-svg-timeline__background-future {
+  @include grab-cursor();
+  fill: darken($u-theme-variables--bg-offset, 10%);
+  fill-opacity: .5;
+  width: 100%;
+}
+
+.c-svg-timeline__background-future.dragging {
+  @include grabbing-cursor();
+}
+
 .c-svg-timeline__axis-background {
   fill: darken($u-theme-variables--bg-offset, 5);
   fill-opacity: .8;
