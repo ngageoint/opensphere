@@ -243,11 +243,10 @@ os.ui.TimelinePanelCtrl.prototype.adjust = function() {
 
 /**
  * Panel lock button click.
- * @param {boolean=} opt_getlock
  */
-os.ui.TimelinePanelCtrl.prototype.lock = function(opt_getlock) {
-  var isLocked = opt_getlock ? this.tlc.getLock() :
-      this.tlc.toggleLock();
+os.ui.TimelinePanelCtrl.prototype.lock = function() {
+  var isLocked = this.tlc.getLock();
+  this.tlc.toggleLock();
   this['locked'] = this.tlc.getLock();
   if (isLocked) {
     angular.element('.js-svg-timeline_unlock').addClass('d-none');
