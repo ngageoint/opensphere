@@ -158,6 +158,19 @@ os.ui.ogc.IOGCDescriptor.prototype.setWmsParams;
 
 
 /**
+ * Get the additional WFS parameters to include in requests
+ * @return {?goog.Uri.QueryData}
+ */
+os.ui.ogc.IOGCDescriptor.prototype.getWfsParams;
+
+/**
+ * Set the additional WFS parameters to include in requests
+ * @param {?goog.Uri.QueryData} value
+ */
+os.ui.ogc.IOGCDescriptor.prototype.setWfsParams;
+
+
+/**
  * Get the WMS type name.
  * @return {?string}
  */
