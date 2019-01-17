@@ -935,6 +935,8 @@ os.ui.ogc.OGCServer.prototype.parseWfsCapabilities = function(response, uri) {
         descriptor.setProvider(this.getLabel());
       }
 
+      descriptor.setWfsParams(this.getWfsParams());
+
       // set the provider type so we know which type of OGC server the descriptor was created by
       descriptor.setProviderType(this.providerType);
 
