@@ -2,6 +2,7 @@ goog.provide('os.ui.UrlDragDrop');
 goog.provide('os.ui.urlDragDropDirective');
 
 goog.require('goog.dom.classlist');
+goog.require('goog.events.Event');
 goog.require('goog.events.EventType');
 goog.require('goog.events.FileDropHandler');
 goog.require('goog.fx.DragDrop');
@@ -87,6 +88,26 @@ os.ui.UrlDragDrop = function($scope, $element) {
       this.element_.attr('data-text', 'Drag & Drop');
     }
   }
+
+  os.dispatcher.listen(os.ui.UrlDragDrop.CLEAR, this.onClear_, false, this);
+};
+
+
+/**
+ * @type {string}
+ */
+os.ui.UrlDragDrop.CLEAR = 'urldragdrop.clear';
+
+
+/**
+ * @param {goog.events.Event} event
+ */
+os.ui.UrlDragDrop.prototype.onClear_ = function(event) {
+  if (this.scope_['enabled']) {
+    if (this.element_[0] != event.target) {
+      goog.dom.classlist.remove(/** @type {Element} */ (this.element_[0]), os.ui.DragDropStyle.DRAG_DROP_CLASS);
+    }
+  }
 };
 
 
@@ -105,6 +126,7 @@ os.ui.UrlDragDrop.prototype.handleDrag_ = function(event) {
       if (browserEvent.type == 'dragover') {
         goog.dom.classlist.add(/** @type {Element} */ (browserEvent.currentTarget),
             os.ui.DragDropStyle.DRAG_DROP_CLASS);
+        os.dispatcher.dispatchEvent(new goog.events.Event(os.ui.UrlDragDrop.CLEAR, browserEvent.currentTarget));
       } else if (browserEvent.relatedTarget !== undefined
           && $(browserEvent.currentTarget).find(/** @type {Element} */ (browserEvent.relatedTarget)).length == 0) {
         // check to see if the related target is inside the current target, if not then remove the overlay styling
@@ -165,6 +187,7 @@ os.ui.UrlDragDrop.prototype.destroy = function() {
   goog.events.unlisten(this.element_[0], 'drop', this.handleDrop_, this.scope_['ddCapture'] === 'true', this);
   goog.events.unlisten(this.element_[0], 'dragover', this.handleDrag_, false, this);
   goog.events.unlisten(this.element_[0], 'dragleave', this.handleDrag_, false, this);
+  os.dispatcher.unlisten(os.ui.UrlDragDrop.CLEAR, this.onClear_, false, this);
   this.scope_ = null;
   this.element_ = null;
 };
