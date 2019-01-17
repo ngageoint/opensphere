@@ -146,6 +146,12 @@ plugin.ogc.OGCLayerDescriptor = function() {
   this.wmsParams_ = null;
 
   /**
+   * @type {goog.Uri.QueryData}
+   * @private
+   */
+  this.wfsParams_ = null;
+
+  /**
    * @type {?string}
    * @private
    */
@@ -599,6 +605,22 @@ plugin.ogc.OGCLayerDescriptor.prototype.setWmsParams = function(value) {
 /**
  * @inheritDoc
  */
+plugin.ogc.OGCLayerDescriptor.prototype.getWfsParams = function() {
+  return this.wfsParams_;
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.ogc.OGCLayerDescriptor.prototype.setWfsParams = function(value) {
+  this.wfsParams_ = value;
+};
+
+
+/**
+ * @inheritDoc
+ */
 plugin.ogc.OGCLayerDescriptor.prototype.getWmsName = function() {
   return this.wmsName_;
 };
@@ -952,6 +974,12 @@ plugin.ogc.OGCLayerDescriptor.prototype.getWfsOptions = function(opt_options) {
 
   var params = os.ogc.getDefaultWfsParams();
   params.set('typename', this.getWfsName());
+
+  // merge custom WFS params
+  var customWfsParams = this.getWfsParams();
+  if (customWfsParams) {
+    params.extend(customWfsParams);
+  }
 
   if (this.getWfsNamespace()) {
     params.set('namespace', this.getWfsNamespace());
