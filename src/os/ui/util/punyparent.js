@@ -44,7 +44,6 @@ os.ui.util.PunyParentCtrl = function($scope, $element) {
   this.element_ = $element;
 
   /**
-   * Used to delay searching until we are done typing
    * @type {goog.Throttle}
    * @private
    */
