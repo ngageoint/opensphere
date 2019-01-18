@@ -7,6 +7,7 @@ goog.require('goog.events.EventType');
 goog.require('goog.events.FileDropHandler');
 goog.require('goog.fx.DragDrop');
 goog.require('goog.math.Coordinate');
+goog.require('os.ui.DragDropStyle');
 goog.require('os.ui.Module');
 goog.require('os.ui.windowSelector');
 goog.require('os.url');
