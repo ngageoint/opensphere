@@ -23,7 +23,7 @@ os.search.SEARCH_ALL = 'Search All Sources';
  */
 os.search.SearchSetting = {
   // global search settings
-  RECENT: os.search.BASE_KEY + '.recent',
+  RECENT: os.search.BASE_KEY + '.recentlocal',
 
   // provider specific settings - retrieve these with {@link os.search.getSettingKey}
   ENABLED: 'enabled'
