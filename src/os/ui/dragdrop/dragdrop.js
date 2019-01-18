@@ -1,4 +1,5 @@
 goog.provide('os.ui.DragDrop');
+goog.provide('os.ui.DragDropStyle');
 goog.provide('os.ui.dragDropDirective');
 
 goog.require('goog.dom.classlist');
