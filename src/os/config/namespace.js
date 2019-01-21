@@ -23,7 +23,6 @@ os.config.namespace.CORE_KEYS = [
   'favorite',
   'locationFormat',
   'mute',
-  'search.recent',
   'storage.writeType',
   'storage.introLastSeen',
   'userSounds',
