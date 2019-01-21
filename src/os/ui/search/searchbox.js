@@ -809,7 +809,6 @@ os.ui.search.SearchBoxCtrl.prototype.toggleSearchOptions = function(event) {
         if (event.getBrowserEvent() != originalEvent && (!optionsClicked || recentClicked || !this['allowMultiple'])) {
           // clean up the listener and kill the event
           goog.events.unlistenByKey(this.listenKey);
-          event.stopPropagation();
 
           // close options
           this['showSearchOptions'] = false;
@@ -817,6 +816,7 @@ os.ui.search.SearchBoxCtrl.prototype.toggleSearchOptions = function(event) {
           // if enabled searches changed while the options were open, run the search again. don't bother for recents
           // because they already update the search.
           if (!recentClicked) {
+            event.stopPropagation();
             var newEnabledIds = this.searchManager.getEnabledSearches().map(os.search.getSearchId).sort();
             if (!goog.array.equals(newEnabledIds, enabledIds)) {
               this.search();
