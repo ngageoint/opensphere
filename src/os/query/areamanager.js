@@ -16,14 +16,14 @@ goog.require('os.data.CollectionManager');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.map');
 goog.require('os.query');
-goog.require('os.ui.query.AreaManager');
+goog.require('os.query.BaseAreaManager');
 goog.require('os.ui.window');
 
 
 
 /**
  * Manages spatial areas
- * @extends {os.ui.query.AreaManager}
+ * @extends {os.query.BaseAreaManager}
  * @constructor
  */
 os.query.AreaManager = function() {
@@ -57,11 +57,11 @@ os.query.AreaManager = function() {
   os.proj.switch.SwitchProjection.getInstance().listen(
       os.proj.switch.CommandListEvent.TYPE, this.onSwitchProjection, false, this);
 };
-goog.inherits(os.query.AreaManager, os.ui.query.AreaManager);
+goog.inherits(os.query.AreaManager, os.query.BaseAreaManager);
 goog.addSingletonGetter(os.query.AreaManager);
 
 // replace the os.ui AreaManager's getInstance with this one so we never instantiate a second instance
-goog.object.extend(os.ui.query.AreaManager, {
+goog.object.extend(os.query.BaseAreaManager, {
   getInstance: function() {
     return os.query.AreaManager.getInstance();
   }
@@ -181,7 +181,7 @@ os.query.AreaManager.prototype.load = function() {
 os.query.AreaManager.prototype.save = function() {
   var format = new ol.format.GeoJSON();
   var areasAll = this.getAll();
-  var areas = areasAll.filter(os.ui.query.AreaManager.filterTemp).map(os.query.AreaManager.mapOriginalGeoms);
+  var areas = areasAll.filter(os.query.BaseAreaManager.filterTemp).map(os.query.AreaManager.mapOriginalGeoms);
   var obj = format.writeFeaturesObject(areas, {
     featureProjection: os.map.PROJECTION
   });
@@ -445,7 +445,7 @@ os.query.AreaManager.prototype.redrawQueryAreas_ = function() {
   var areas = this.getAll();
   os.array.forEach(areas, function(area) {
     if (area.getStyle() != null) {
-      var entries = os.ui.query.QueryManager.getInstance().getEntries(null, /** @type {string} */ (area.getId()));
+      var entries = os.query.BaseQueryManager.getInstance().getEntries(null, /** @type {string} */ (area.getId()));
       if (entries && entries.length > 0) {
         var expectedStyle = /** @type {boolean} */ (entries[0]['includeArea']) ?
             goog.object.unsafeClone(os.query.AreaManager.FULL_INCLUSION_STYLE) :

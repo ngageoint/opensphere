@@ -220,7 +220,7 @@ os.config.AreaSettingsCtrl.prototype.confirm_ = function() {
   os.query.AreaManager.FULL_EXCLUSION_STYLE.stroke.color = this['exColor'];
   os.query.AreaManager.FULL_EXCLUSION_STYLE.stroke.width = this['exWidth'];
 
-  var am = os.ui.query.AreaManager.getInstance();
+  var am = os.query.AreaManager.getInstance();
 
   var areas = am.getAll();
   os.array.forEach(areas, function(area) {

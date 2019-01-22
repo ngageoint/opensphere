@@ -10,8 +10,8 @@ goog.require('os.metrics.Metrics');
 goog.require('os.ui.im.ImportEvent');
 goog.require('os.ui.im.ImportProcess');
 goog.require('os.ui.menu.MenuEvent');
+goog.require('os.ui.query.area.userAreaDirective');
 goog.require('os.ui.query.cmd.AreaAdd');
-goog.require('os.ui.query.ui.area.userAreaDirective');
 
 
 /**
@@ -50,7 +50,7 @@ os.query.launchQueryImport = function(opt_config, opt_file) {
  */
 os.query.launchCoordinates = function() {
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.LOAD_FROM_COORDINATES, 1);
-  os.ui.query.ui.area.getUserArea().then(os.query.addArea, goog.nullFunction);
+  os.ui.query.area.getUserArea().then(os.query.addArea, goog.nullFunction);
 };
 
 
@@ -59,7 +59,7 @@ os.query.launchCoordinates = function() {
  */
 os.query.launchChooseArea = function() {
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.LOAD_FROM_AREA, 1);
-  os.ui.query.ui.area.launchChooseArea(os.query.addArea);
+  os.ui.query.area.launchChooseArea(os.query.addArea);
 };
 
 

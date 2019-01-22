@@ -1,4 +1,4 @@
-goog.provide('os.ui.query.ui.AreaImportCtrl');
+goog.provide('os.ui.query.AreaImportCtrl');
 
 goog.require('goog.Disposable');
 goog.require('os.ui.im.basicInfoDirective');
@@ -17,7 +17,7 @@ goog.require('os.ui.window');
  * @ngInject
  * @template T
  */
-os.ui.query.ui.AreaImportCtrl = function($scope, $element, $timeout) {
+os.ui.query.AreaImportCtrl = function($scope, $element, $timeout) {
   /**
    * @type {?angular.Scope}
    * @protected
@@ -53,14 +53,14 @@ os.ui.query.ui.AreaImportCtrl = function($scope, $element, $timeout) {
     $scope.$emit(os.ui.WindowEventType.READY);
   });
 };
-goog.inherits(os.ui.query.ui.AreaImportCtrl, goog.Disposable);
+goog.inherits(os.ui.query.AreaImportCtrl, goog.Disposable);
 
 
 /**
  * @inheritDoc
  */
-os.ui.query.ui.AreaImportCtrl.prototype.disposeInternal = function() {
-  os.ui.query.ui.AreaImportCtrl.base(this, 'disposeInternal');
+os.ui.query.AreaImportCtrl.prototype.disposeInternal = function() {
+  os.ui.query.AreaImportCtrl.base(this, 'disposeInternal');
 
   this.scope = null;
   this.element = null;
@@ -71,7 +71,7 @@ os.ui.query.ui.AreaImportCtrl.prototype.disposeInternal = function() {
  * Close the window
  * @export
  */
-os.ui.query.ui.AreaImportCtrl.prototype.close = function() {
+os.ui.query.AreaImportCtrl.prototype.close = function() {
   os.ui.window.close(this.element);
 };
 
@@ -80,6 +80,6 @@ os.ui.query.ui.AreaImportCtrl.prototype.close = function() {
  * Load areas from the selected file(s).
  * @export
  */
-os.ui.query.ui.AreaImportCtrl.prototype.finish = function() {
+os.ui.query.AreaImportCtrl.prototype.finish = function() {
   this['loading'] = true;
 };

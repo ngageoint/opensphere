@@ -1,5 +1,6 @@
-goog.provide('os.ui.query.ui.ComboNodeUICtrl');
-goog.provide('os.ui.query.ui.comboNodeUIDirective');
+goog.provide('os.ui.query.ComboNodeUICtrl');
+goog.provide('os.ui.query.comboNodeUIDirective');
+
 goog.require('os.metrics.Metrics');
 goog.require('os.metrics.keys');
 goog.require('os.ui.Module');
@@ -8,7 +9,7 @@ goog.require('os.ui.Module');
 /**
  * @return {angular.Directive}
  */
-os.ui.query.ui.comboNodeUIDirective = function() {
+os.ui.query.comboNodeUIDirective = function() {
   return {
     restrict: 'AE',
     replace: true,
@@ -30,7 +31,7 @@ os.ui.query.ui.comboNodeUIDirective = function() {
         '<span ng-if="nodeUi.isFilter() || nodeUi.isArea()" ng-click="nodeUi.remove()">' +
         '<i class="fa fa-times fa-fw c-glyph" title="Remove"></i></span>' +
         '</span></span>',
-    controller: os.ui.query.ui.ComboNodeUICtrl,
+    controller: os.ui.query.ComboNodeUICtrl,
     controllerAs: 'nodeUi'
   };
 };
@@ -39,7 +40,7 @@ os.ui.query.ui.comboNodeUIDirective = function() {
 /**
  * Add the directive to the os.ui module
  */
-os.ui.Module.directive('combonodeui', [os.ui.query.ui.comboNodeUIDirective]);
+os.ui.Module.directive('combonodeui', [os.ui.query.comboNodeUIDirective]);
 
 
 
@@ -50,7 +51,7 @@ os.ui.Module.directive('combonodeui', [os.ui.query.ui.comboNodeUIDirective]);
  * @constructor
  * @ngInject
  */
-os.ui.query.ui.ComboNodeUICtrl = function($scope, $element) {
+os.ui.query.ComboNodeUICtrl = function($scope, $element) {
   /**
    * @type {?angular.Scope}
    * @private
@@ -65,7 +66,7 @@ os.ui.query.ui.ComboNodeUICtrl = function($scope, $element) {
 
   this['group'] = this.getFilterGroup();
   this['activeGroup'] =
-    this['group'] ? os.ui.query.ui.ComboNodeUICtrl.GROUPS[0] : os.ui.query.ui.ComboNodeUICtrl.GROUPS[1];
+    this['group'] ? os.ui.query.ComboNodeUICtrl.GROUPS[0] : os.ui.query.ComboNodeUICtrl.GROUPS[1];
   this['include'] = this.getInclude();
 
   var entry = this.getEntry();
@@ -73,7 +74,7 @@ os.ui.query.ui.ComboNodeUICtrl = function($scope, $element) {
     entry['filterGroup'] = this['group'];
   }
 
-  this['groups'] = os.ui.query.ui.ComboNodeUICtrl.GROUPS;
+  this['groups'] = os.ui.query.ComboNodeUICtrl.GROUPS;
 
   $scope.$on('$destroy', this.onDestroy_.bind(this));
 };
@@ -85,7 +86,7 @@ os.ui.query.ui.ComboNodeUICtrl = function($scope, $element) {
  * @type {Array<string>}
  * @const
  */
-os.ui.query.ui.ComboNodeUICtrl.GROUPS = [
+os.ui.query.ComboNodeUICtrl.GROUPS = [
   'All (AND)',
   'Any (OR)'
 ];
@@ -95,7 +96,7 @@ os.ui.query.ui.ComboNodeUICtrl.GROUPS = [
  * Clean up
  * @private
  */
-os.ui.query.ui.ComboNodeUICtrl.prototype.onDestroy_ = function() {
+os.ui.query.ComboNodeUICtrl.prototype.onDestroy_ = function() {
   this.scope_ = null;
 };
 
@@ -105,7 +106,7 @@ os.ui.query.ui.ComboNodeUICtrl.prototype.onDestroy_ = function() {
  * @return {boolean}
  * @protected
  */
-os.ui.query.ui.ComboNodeUICtrl.prototype.getFilterGroup = function() {
+os.ui.query.ComboNodeUICtrl.prototype.getFilterGroup = function() {
   var children = this.node_.getChildren();
 
   if (children && children.length) {
@@ -131,7 +132,7 @@ os.ui.query.ui.ComboNodeUICtrl.prototype.getFilterGroup = function() {
  * @return {boolean}
  * @protected
  */
-os.ui.query.ui.ComboNodeUICtrl.prototype.getInclude = function() {
+os.ui.query.ComboNodeUICtrl.prototype.getInclude = function() {
   var entry = this.node_.getEntry();
 
   if (entry && entry['areaId']) {
@@ -147,7 +148,7 @@ os.ui.query.ui.ComboNodeUICtrl.prototype.getInclude = function() {
  * Toggles the filter group value
  * @export
  */
-os.ui.query.ui.ComboNodeUICtrl.prototype.toggleGroup = function() {
+os.ui.query.ComboNodeUICtrl.prototype.toggleGroup = function() {
   this['group'] = !this['group'];
   this.getEntry()['filterGroup'] = this['group'];
   var children = this.node_.getChildren();
@@ -174,7 +175,7 @@ os.ui.query.ui.ComboNodeUICtrl.prototype.toggleGroup = function() {
  * @return {boolean} Whether or not to show the filter group UI
  * @export
  */
-os.ui.query.ui.ComboNodeUICtrl.prototype.isGroup = function() {
+os.ui.query.ComboNodeUICtrl.prototype.isGroup = function() {
   var children = this.node_.getChildren();
 
   if (children && children.length) {
@@ -189,7 +190,7 @@ os.ui.query.ui.ComboNodeUICtrl.prototype.isGroup = function() {
 /**
  * @return {Object<string, string|boolean>}
  */
-os.ui.query.ui.ComboNodeUICtrl.prototype.getEntry = function() {
+os.ui.query.ComboNodeUICtrl.prototype.getEntry = function() {
   return this.node_.getEntry();
 };
 
@@ -198,7 +199,7 @@ os.ui.query.ui.ComboNodeUICtrl.prototype.getEntry = function() {
  * Toggles area query/exclude
  * @export
  */
-os.ui.query.ui.ComboNodeUICtrl.prototype.toggleQuery = function() {
+os.ui.query.ComboNodeUICtrl.prototype.toggleQuery = function() {
   this['include'] = !this['include'];
   var entry = this.getEntry();
 
@@ -214,7 +215,7 @@ os.ui.query.ui.ComboNodeUICtrl.prototype.toggleQuery = function() {
  * @return {boolean} Whether or not to show the area UI
  * @export
  */
-os.ui.query.ui.ComboNodeUICtrl.prototype.isArea = function() {
+os.ui.query.ComboNodeUICtrl.prototype.isArea = function() {
   var entry = this.getEntry();
   return !!entry && !!entry['areaId'] && entry['areaId'] !== '*';
 };
@@ -224,7 +225,7 @@ os.ui.query.ui.ComboNodeUICtrl.prototype.isArea = function() {
  * @return {boolean} Whether or not the node is enabled
  * @export
  */
-os.ui.query.ui.ComboNodeUICtrl.prototype.isEnabled = function() {
+os.ui.query.ComboNodeUICtrl.prototype.isEnabled = function() {
   return this.node_.getState() !== os.structs.TriState.OFF;
 };
 
@@ -233,7 +234,7 @@ os.ui.query.ui.ComboNodeUICtrl.prototype.isEnabled = function() {
  * @return {boolean} Whether or not to show the filter entry UI
  * @export
  */
-os.ui.query.ui.ComboNodeUICtrl.prototype.isFilter = function() {
+os.ui.query.ComboNodeUICtrl.prototype.isFilter = function() {
   var entry = this.getEntry();
   return !!entry && !!entry['filterId'] && entry['filterId'] !== '*';
 };
@@ -243,7 +244,7 @@ os.ui.query.ui.ComboNodeUICtrl.prototype.isFilter = function() {
  * Edit a thing
  * @export
  */
-os.ui.query.ui.ComboNodeUICtrl.prototype.edit = function() {
+os.ui.query.ComboNodeUICtrl.prototype.edit = function() {
   this.scope_.$emit('edit', this.isFilter(), this.getEntry());
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Filters.ADVANCED_AREA_EDIT, 1);
 };
@@ -253,7 +254,7 @@ os.ui.query.ui.ComboNodeUICtrl.prototype.edit = function() {
  * View a thing
  * @export
  */
-os.ui.query.ui.ComboNodeUICtrl.prototype.view = function() {
+os.ui.query.ComboNodeUICtrl.prototype.view = function() {
   this.scope_.$emit('view', this.isFilter(), this.getEntry());
 };
 
@@ -263,7 +264,7 @@ os.ui.query.ui.ComboNodeUICtrl.prototype.view = function() {
  * @return {boolean}
  * @export
  */
-os.ui.query.ui.ComboNodeUICtrl.prototype.showCopy = function() {
+os.ui.query.ComboNodeUICtrl.prototype.showCopy = function() {
   // we must have both a descriptor for the layer and more than 1 layer loaded
   var layerId = /** @type {string} */ (this.getEntry()['layerId']);
   var d = os.dataManager.getDescriptor(layerId);
@@ -276,7 +277,7 @@ os.ui.query.ui.ComboNodeUICtrl.prototype.showCopy = function() {
  * Copy a thing
  * @export
  */
-os.ui.query.ui.ComboNodeUICtrl.prototype.copy = function() {
+os.ui.query.ComboNodeUICtrl.prototype.copy = function() {
   this.scope_.$emit('copy', this.getEntry());
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Filters.ADVANCED_AREA_COPY, 1);
 };
@@ -286,7 +287,7 @@ os.ui.query.ui.ComboNodeUICtrl.prototype.copy = function() {
  * Remove a thing
  * @export
  */
-os.ui.query.ui.ComboNodeUICtrl.prototype.remove = function() {
+os.ui.query.ComboNodeUICtrl.prototype.remove = function() {
   this.scope_.$emit('remove', this.isFilter(), this.getEntry());
   this.scope_.$emit('dirty');
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Filters.ADVANCED_AREA_REMOVE, 1);

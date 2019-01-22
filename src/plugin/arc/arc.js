@@ -1,5 +1,7 @@
 goog.provide('plugin.arc');
 goog.provide('plugin.arc.ESRIType');
+
+goog.require('os.ui.query.CombinatorCtrl');
 goog.require('plugin.arc.ArcLoader');
 
 
@@ -52,7 +54,7 @@ plugin.arc.getColumnType = function(esriType) {
  * @param {!os.layer.Vector} layer The layer
  */
 plugin.arc.launchFilterManager = function(layer) {
-  os.ui.CombinatorCtrl.launchForLayer(layer.getId());
+  os.ui.query.CombinatorCtrl.launchForLayer(layer.getId());
 };
 
 

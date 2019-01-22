@@ -1,4 +1,5 @@
 goog.provide('os.ui.query.BasicQueryReader');
+
 goog.require('goog.asserts');
 goog.require('os.filter.FilterEntry');
 goog.require('os.ui.filter');
@@ -139,7 +140,7 @@ os.ui.query.BasicQueryReader.prototype.parseEntries_ = function(ele) {
         filterEntry.type = layerId;
         filterEntry.setTemporary(true);
 
-        var fm = os.ui.filter.FilterManager.getInstance();
+        var fm = os.filter.BaseFilterManager.getInstance();
         fm.addFilter(filterEntry);
         fm.setGrouping(filterEntry.type, grouping);
 

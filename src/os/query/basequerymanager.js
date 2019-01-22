@@ -1,4 +1,5 @@
-goog.provide('os.ui.query.QueryManager');
+goog.provide('os.query.BaseQueryManager');
+
 goog.require('goog.async.Delay');
 goog.require('goog.events.EventTarget');
 goog.require('goog.log');
@@ -6,19 +7,23 @@ goog.require('goog.log.Logger');
 goog.require('goog.string');
 goog.require('ol.array');
 goog.require('os.events.PropertyChangeEvent');
-goog.require('os.ui.filter.FilterManager');
+goog.require('os.filter.BaseFilterManager');
+goog.require('os.query.BaseAreaManager');
 goog.require('os.ui.query');
-goog.require('os.ui.query.AreaManager');
 goog.require('os.ui.query.ComboNode');
 
 
 
 /**
- * @constructor
+ * The base query manager class. This version of the query manager implements all of the logic for managing query
+ * entries as well as connecting to the area and filter managers.
+ * @param {os.query.BaseAreaManager=} opt_areaManager Optional area manager reference. Defaults to the singleton.
+ * @param {os.filter.BaseFilterManager=} opt_filterManager Optional filter manager reference. Defaults to the singleton.
  * @extends {goog.events.EventTarget}
+ * @constructor
  */
-os.ui.query.QueryManager = function() {
-  os.ui.query.QueryManager.base(this, 'constructor');
+os.query.BaseQueryManager = function(opt_areaManager, opt_filterManager) {
+  os.query.BaseQueryManager.base(this, 'constructor');
 
   /**
    * @protected
@@ -56,13 +61,25 @@ os.ui.query.QueryManager = function() {
    */
   this.updateTimer = new goog.async.Delay(this.onUpdateTimer_, 20, this);
 
-  os.ui.areaManager.listen(goog.events.EventType.PROPERTYCHANGE, this.onAreaToggle, false, this);
-  os.ui.filterManager.listen(goog.events.EventType.PROPERTYCHANGE, this.onFilterToggle, false, this);
+  /**
+   * @type {os.query.BaseAreaManager}
+   * @protected
+   */
+  this.am = opt_areaManager || os.ui.areaManager;
+
+  /**
+   * @type {os.filter.BaseFilterManager}
+   * @protected
+   */
+  this.fm = opt_filterManager || os.ui.filterManager;
+
+  this.am.listen(goog.events.EventType.PROPERTYCHANGE, this.onAreaToggle, false, this);
+  this.fm.listen(goog.events.EventType.PROPERTYCHANGE, this.onFilterToggle, false, this);
 
   this.load();
 };
-goog.inherits(os.ui.query.QueryManager, goog.events.EventTarget);
-goog.addSingletonGetter(os.ui.query.QueryManager);
+goog.inherits(os.query.BaseQueryManager, goog.events.EventTarget);
+goog.addSingletonGetter(os.query.BaseQueryManager);
 
 
 /**
@@ -71,21 +88,21 @@ goog.addSingletonGetter(os.ui.query.QueryManager);
  * @private
  * @const
  */
-os.ui.query.QueryManager.LOGGER_ = goog.log.getLogger('os.ui.query.QueryManager');
+os.query.BaseQueryManager.LOGGER_ = goog.log.getLogger('os.query.BaseQueryManager');
 
 
 /**
  * Saves the entry data
  * @protected
  */
-os.ui.query.QueryManager.prototype.save = function() {};
+os.query.BaseQueryManager.prototype.save = goog.nullFunction;
 
 
 /**
  * Loads the entry data
  * @protected
  */
-os.ui.query.QueryManager.prototype.load = function() {};
+os.query.BaseQueryManager.prototype.load = goog.nullFunction;
 
 
 /**
@@ -96,7 +113,7 @@ os.ui.query.QueryManager.prototype.load = function() {};
  * @param {?boolean=} opt_includeNegations Whether to include negation entries in the result
  * @return {!Array<!Object<string, string|boolean>>}
  */
-os.ui.query.QueryManager.prototype.getEntries = function(opt_layerId, opt_areaId, opt_filterId, opt_expanded,
+os.query.BaseQueryManager.prototype.getEntries = function(opt_layerId, opt_areaId, opt_filterId, opt_expanded,
     opt_includeNegations) {
   var entries = opt_expanded ? this.expandedEntries : this.entries;
   opt_includeNegations = !!opt_includeNegations;
@@ -127,7 +144,7 @@ os.ui.query.QueryManager.prototype.getEntries = function(opt_layerId, opt_areaId
  * @param {Array<!Object<string, string|boolean>>} newEntries
  * @private
  */
-os.ui.query.QueryManager.prototype.addIdsToUpdate_ = function(oldEntries, newEntries) {
+os.query.BaseQueryManager.prototype.addIdsToUpdate_ = function(oldEntries, newEntries) {
   for (var i = 0; i < newEntries.length; i++) {
     var newEntry = ol.array.findIndex(oldEntries, function(oldEntry) {
       return goog.object.equals(oldEntry, newEntries[i]);
@@ -144,7 +161,7 @@ os.ui.query.QueryManager.prototype.addIdsToUpdate_ = function(oldEntries, newEnt
  * Updates local expanded collection before eventing and saving.
  * @private
  */
-os.ui.query.QueryManager.prototype.onUpdateTimer_ = function() {
+os.query.BaseQueryManager.prototype.onUpdateTimer_ = function() {
   var expandedEntries = this.getExpanded();
   this.addIdsToUpdate_(this.expandedEntries, expandedEntries);
   this.expandedEntries = expandedEntries;
@@ -163,7 +180,7 @@ os.ui.query.QueryManager.prototype.onUpdateTimer_ = function() {
  * @param {boolean=} opt_temp
  * @param {boolean=} opt_immediate
  */
-os.ui.query.QueryManager.prototype.addEntry = function(layerId, areaId, filterId, opt_includeArea, opt_filterGroup,
+os.query.BaseQueryManager.prototype.addEntry = function(layerId, areaId, filterId, opt_includeArea, opt_filterGroup,
     opt_temp, opt_immediate) {
   var current = this.getEntries(layerId, areaId, filterId);
   var add = current.length === 0 || current[0]['includeArea'] !== opt_includeArea ||
@@ -201,7 +218,7 @@ os.ui.query.QueryManager.prototype.addEntry = function(layerId, areaId, filterId
  * means that the entry does not contain wildcards.
  * @return {boolean}
  */
-os.ui.query.QueryManager.prototype.hasActiveExplicitEntries = function() {
+os.query.BaseQueryManager.prototype.hasActiveExplicitEntries = function() {
   // An entry containing no wildcards indicates that the advanced area/filter combination was used
   var layerSet = this.getLayerSet();
 
@@ -224,7 +241,7 @@ os.ui.query.QueryManager.prototype.hasActiveExplicitEntries = function() {
  * @param {boolean=} opt_immediate Whether to apply the update immediately
  * @param {string=} opt_layerHint The layer id to update
  */
-os.ui.query.QueryManager.prototype.addEntries = function(entries, opt_immediate, opt_layerHint) {
+os.query.BaseQueryManager.prototype.addEntries = function(entries, opt_immediate, opt_layerHint) {
   var layerId = opt_layerHint ? (opt_layerHint === os.ui.query.ALL_ID ? '*' : opt_layerHint) : undefined;
   if (layerId) {
     // if the layer id was provided, only update that layer
@@ -252,10 +269,10 @@ os.ui.query.QueryManager.prototype.addEntries = function(entries, opt_immediate,
  * @param {boolean=} opt_expanded Whether to get from the original list or expanded list
  * @return {Array<Object<string, string|boolean>>} entries
  */
-os.ui.query.QueryManager.prototype.getActiveEntries = function(opt_expanded) {
+os.query.BaseQueryManager.prototype.getActiveEntries = function(opt_expanded) {
   var layerSet = this.getLayerSet();
-  var am = os.ui.areaManager;
-  var fm = os.ui.filterManager;
+  var am = this.am;
+  var fm = this.fm;
 
   var entries = opt_expanded ? this.expandedEntries : this.entries;
   return entries.filter(
@@ -296,9 +313,9 @@ os.ui.query.QueryManager.prototype.getActiveEntries = function(opt_expanded) {
  * @param {?string=} opt_filterId
  * @param {boolean=} opt_skipUpdate
  */
-os.ui.query.QueryManager.prototype.removeEntries = function(opt_layerId, opt_areaId, opt_filterId, opt_skipUpdate) {
+os.query.BaseQueryManager.prototype.removeEntries = function(opt_layerId, opt_areaId, opt_filterId, opt_skipUpdate) {
   if (!opt_layerId && !opt_areaId && !opt_filterId) {
-    goog.log.fine(os.ui.query.QueryManager.LOGGER_, 'Clearing all query entries');
+    goog.log.fine(os.query.BaseQueryManager.LOGGER_, 'Clearing all query entries');
     this.entries.length = 0;
     this.expandedEntries.length = 0;
 
@@ -326,7 +343,7 @@ os.ui.query.QueryManager.prototype.removeEntries = function(opt_layerId, opt_are
   }
 
   if (count > 0) {
-    goog.log.fine(os.ui.query.QueryManager.LOGGER_, 'Removed ' + count + ' entries matching layer: ' + opt_layerId +
+    goog.log.fine(os.query.BaseQueryManager.LOGGER_, 'Removed ' + count + ' entries matching layer: ' + opt_layerId +
         ' area: ' + opt_areaId + ' filter: ' + opt_filterId);
     this.updateTimer.start();
   }
@@ -337,7 +354,7 @@ os.ui.query.QueryManager.prototype.removeEntries = function(opt_layerId, opt_are
  * Removes all entries
  * @param {!Array<Object<string, string|boolean>>} entries
  */
-os.ui.query.QueryManager.prototype.removeEntriesArr = function(entries) {
+os.query.BaseQueryManager.prototype.removeEntriesArr = function(entries) {
   goog.asserts.assert(entries != null);
 
   var i = this.entries.length;
@@ -357,7 +374,7 @@ os.ui.query.QueryManager.prototype.removeEntriesArr = function(entries) {
   }
 
   if (count > 0) {
-    goog.log.fine(os.ui.query.QueryManager.LOGGER_, 'Removed ' + count + ' entries.');
+    goog.log.fine(os.query.BaseQueryManager.LOGGER_, 'Removed ' + count + ' entries.');
     this.updateTimer.start();
   }
 };
@@ -368,7 +385,7 @@ os.ui.query.QueryManager.prototype.removeEntriesArr = function(entries) {
  * @param {!os.ui.query.QueryHandler} handler The handler to register
  * @param {boolean=} opt_immediate Whether to force an immediate update
  */
-os.ui.query.QueryManager.prototype.registerHandler = function(handler, opt_immediate) {
+os.query.BaseQueryManager.prototype.registerHandler = function(handler, opt_immediate) {
   goog.asserts.assert(handler);
   this.handlers.push(handler);
   opt_immediate ? this.onUpdateTimer_() : this.updateTimer.start();
@@ -378,7 +395,7 @@ os.ui.query.QueryManager.prototype.registerHandler = function(handler, opt_immed
 /**
  * @param {!(os.ui.query.QueryHandler|string)} idOrHandler
  */
-os.ui.query.QueryManager.prototype.unregisterHandler = function(idOrHandler) {
+os.query.BaseQueryManager.prototype.unregisterHandler = function(idOrHandler) {
   var found = false;
 
   for (var i = 0, n = this.handlers.length; i < n; i++) {
@@ -400,7 +417,7 @@ os.ui.query.QueryManager.prototype.unregisterHandler = function(idOrHandler) {
  * @param {string} layerId
  * @return {?os.ui.query.QueryHandler}
  */
-os.ui.query.QueryManager.prototype.getHandlerById = function(layerId) {
+os.query.BaseQueryManager.prototype.getHandlerById = function(layerId) {
   for (var i = 0, n = this.handlers.length; i < n; i++) {
     if (this.handlers[i].getLayerId() === layerId) {
       return this.handlers[i];
@@ -415,10 +432,10 @@ os.ui.query.QueryManager.prototype.getHandlerById = function(layerId) {
  * @param {!(string|ol.Feature)} areaOrId
  * @return {number} 0 for none, 1 for exclusion, 2 for inclusion, 3 for both
  */
-os.ui.query.QueryManager.prototype.hasArea = function(areaOrId) {
+os.query.BaseQueryManager.prototype.hasArea = function(areaOrId) {
   var type = typeof areaOrId;
   var id = type == 'string' || type == 'number' ? areaOrId : /** @type {string} */ (areaOrId.getId());
-  var am = os.ui.areaManager;
+  var am = this.am;
 
   var incl = false;
   var excl = false;
@@ -448,10 +465,10 @@ os.ui.query.QueryManager.prototype.hasArea = function(areaOrId) {
  * @param {!(string|os.filter.FilterEntry)} filterOrId
  * @return {boolean}
  */
-os.ui.query.QueryManager.prototype.hasFilter = function(filterOrId) {
+os.query.BaseQueryManager.prototype.hasFilter = function(filterOrId) {
   var type = typeof filterOrId;
   var id = type == 'string' || type == 'number' ? filterOrId : /** @type {string} */ (filterOrId.getId());
-  var fm = os.ui.filterManager;
+  var fm = this.fm;
 
   for (var i = 0, n = this.entries.length; i < n; i++) {
     var e = this.entries[i];
@@ -476,7 +493,7 @@ os.ui.query.QueryManager.prototype.hasFilter = function(filterOrId) {
  * @param {string=} opt_layerId
  * @return {boolean} true for and, false for or
  */
-os.ui.query.QueryManager.prototype.isAnd = function(filterOrId, opt_layerId) {
+os.query.BaseQueryManager.prototype.isAnd = function(filterOrId, opt_layerId) {
   var type = typeof filterOrId;
   var id = type == 'string' || type == 'number' ? filterOrId : /** @type {string} */ (filterOrId.getId());
 
@@ -498,7 +515,7 @@ os.ui.query.QueryManager.prototype.isAnd = function(filterOrId, opt_layerId) {
  * Schedules a refresh for the given id
  * @param {!string} id
  */
-os.ui.query.QueryManager.prototype.scheduleRefresh = function(id) {
+os.query.BaseQueryManager.prototype.scheduleRefresh = function(id) {
   this.idsToUpdate[id] = true;
   this.refreshTimer.start();
 };
@@ -508,8 +525,8 @@ os.ui.query.QueryManager.prototype.scheduleRefresh = function(id) {
  * Handles refresh
  * @private
  */
-os.ui.query.QueryManager.prototype.onRefreshTimer_ = function() {
-  goog.log.fine(os.ui.query.QueryManager.LOGGER_, 'Refreshing layers');
+os.query.BaseQueryManager.prototype.onRefreshTimer_ = function() {
+  goog.log.fine(os.query.BaseQueryManager.LOGGER_, 'Refreshing layers');
   this.dispatchEvent(new os.events.PropertyChangeEvent('queries', this.idsToUpdate));
   this.idsToUpdate = {};
 };
@@ -519,7 +536,7 @@ os.ui.query.QueryManager.prototype.onRefreshTimer_ = function() {
  * @param {!(string|ol.Feature)} areaOrId
  * @return {boolean} Whether the area is registered as an inclusion or exclusion area
  */
-os.ui.query.QueryManager.prototype.isActive = function(areaOrId) {
+os.query.BaseQueryManager.prototype.isActive = function(areaOrId) {
   return this.hasArea(areaOrId) > 0;
 };
 
@@ -528,7 +545,7 @@ os.ui.query.QueryManager.prototype.isActive = function(areaOrId) {
  * @param {!(string|ol.Feature)} areaOrId
  * @return {boolean} Whether the area is registered as an inclusion area
  */
-os.ui.query.QueryManager.prototype.isInclusion = function(areaOrId) {
+os.query.BaseQueryManager.prototype.isInclusion = function(areaOrId) {
   return this.hasArea(areaOrId) > 1;
 };
 
@@ -537,7 +554,7 @@ os.ui.query.QueryManager.prototype.isInclusion = function(areaOrId) {
  * @param {!(string|ol.Feature)} areaOrId
  * @return {boolean} Whether the area is registered as an exclusion area
  */
-os.ui.query.QueryManager.prototype.isExclusion = function(areaOrId) {
+os.query.BaseQueryManager.prototype.isExclusion = function(areaOrId) {
   return this.hasArea(areaOrId) % 2 !== 0;
 };
 
@@ -547,8 +564,8 @@ os.ui.query.QueryManager.prototype.isExclusion = function(areaOrId) {
  * @param {!string} layerId
  * @return {boolean}
  */
-os.ui.query.QueryManager.prototype.hasInclusion = function(layerId) {
-  var am = os.ui.areaManager;
+os.query.BaseQueryManager.prototype.hasInclusion = function(layerId) {
+  var am = this.am;
 
   for (var i = 0, n = this.entries.length; i < n; i++) {
     var e = this.entries[i];
@@ -568,7 +585,7 @@ os.ui.query.QueryManager.prototype.hasInclusion = function(layerId) {
  * Gets the set of layers
  * @return {Object<string, string>}
  */
-os.ui.query.QueryManager.prototype.getLayerSet = function() {
+os.query.BaseQueryManager.prototype.getLayerSet = function() {
   var layerIds = {};
   for (var i = 0, n = this.handlers.length; i < n; i++) {
     var layerId = this.handlers[i].getLayerId();
@@ -586,7 +603,7 @@ os.ui.query.QueryManager.prototype.getLayerSet = function() {
 /**
  * @param {!Array<!Object<string, string|boolean>>} entries
  */
-os.ui.query.QueryManager.prototype.onToggle = function(entries) {
+os.query.BaseQueryManager.prototype.onToggle = function(entries) {
   this.updateTimer.start();
   var layers = {};
 
@@ -608,7 +625,7 @@ os.ui.query.QueryManager.prototype.onToggle = function(entries) {
  * @param {os.events.PropertyChangeEvent} event
  * @protected
  */
-os.ui.query.QueryManager.prototype.onAreaToggle = function(event) {
+os.query.BaseQueryManager.prototype.onAreaToggle = function(event) {
   var prop = event.getProperty();
 
   if (prop === 'toggle') {
@@ -625,7 +642,7 @@ os.ui.query.QueryManager.prototype.onAreaToggle = function(event) {
  * @param {os.events.PropertyChangeEvent} event
  * @protected
  */
-os.ui.query.QueryManager.prototype.onFilterToggle = function(event) {
+os.query.BaseQueryManager.prototype.onFilterToggle = function(event) {
   var prop = event.getProperty();
 
   if (prop === 'toggle') {
@@ -642,7 +659,7 @@ os.ui.query.QueryManager.prototype.onFilterToggle = function(event) {
  * Gets the array of layer ids
  * @return {!Array<string>}
  */
-os.ui.query.QueryManager.prototype.getLayerIds = function() {
+os.query.BaseQueryManager.prototype.getLayerIds = function() {
   return goog.object.getKeys(this.getLayerSet());
 };
 
@@ -652,7 +669,7 @@ os.ui.query.QueryManager.prototype.getLayerIds = function() {
  * @return {!string}
  * @private
  */
-os.ui.query.QueryManager.getKey_ = function(e) {
+os.query.BaseQueryManager.getKey_ = function(e) {
   var list = [e['layerId'], e['areaId'], e['filterId'], e['includeArea'], e['filterGroup']];
 
   if ('negate' in e) {
@@ -676,7 +693,7 @@ os.ui.query.QueryManager.getKey_ = function(e) {
  * @param {Array<!Object<string, string|boolean>>=} opt_entries
  * @return {!Array<!Object<string, string|boolean>>}
  */
-os.ui.query.QueryManager.prototype.getExpanded = function(opt_entries) {
+os.query.BaseQueryManager.prototype.getExpanded = function(opt_entries) {
   var entries = opt_entries || this.entries;
   var set = {};
   var key;
@@ -690,7 +707,7 @@ os.ui.query.QueryManager.prototype.getExpanded = function(opt_entries) {
     if (e['layerId'] === '*' || e['areaId'] === '*' || e['filterId'] === '*') {
       wildcards.push(e);
     } else {
-      key = os.ui.query.QueryManager.getKey_(e);
+      key = os.query.BaseQueryManager.getKey_(e);
       set[key] = e;
     }
   }
@@ -874,14 +891,14 @@ os.ui.query.QueryManager.prototype.getExpanded = function(opt_entries) {
             if (stillWildcard) {
               newWildcards.push(clone);
             } else {
-              key = os.ui.query.QueryManager.getKey_(/** @type {!Object<string, string|boolean>} */ (clone));
+              key = os.query.BaseQueryManager.getKey_(/** @type {!Object<string, string|boolean>} */ (clone));
               set[key] = clone;
             }
           }
         } else if (!e['includeArea'] || !filterSet[layerId]) {
           if (e['layerId'] !== '*') {
             // preserve areas for layers without filters
-            key = os.ui.query.QueryManager.getKey_(e);
+            key = os.query.BaseQueryManager.getKey_(e);
             set[key] = e;
           }
         } else {
@@ -905,7 +922,7 @@ os.ui.query.QueryManager.prototype.getExpanded = function(opt_entries) {
  * @const
  * @private
  */
-os.ui.query.QueryManager.sortFields_ = ['layerId', 'areaId', 'filterId', 'includeArea', 'filterGroup'];
+os.query.BaseQueryManager.sortFields_ = ['layerId', 'areaId', 'filterId', 'includeArea', 'filterGroup'];
 
 
 /**
@@ -913,8 +930,8 @@ os.ui.query.QueryManager.sortFields_ = ['layerId', 'areaId', 'filterId', 'includ
  * @param {Object<string, string|boolean>} b
  * @return {number} per compare method standards
  */
-os.ui.query.QueryManager.sortEntries = function(a, b) {
-  var fields = os.ui.query.QueryManager.sortFields_;
+os.query.BaseQueryManager.sortEntries = function(a, b) {
+  var fields = os.query.BaseQueryManager.sortFields_;
 
   var result = 0;
   for (var i = 0, n = fields.length; i < n; i++) {
@@ -940,7 +957,7 @@ os.ui.query.QueryManager.sortEntries = function(a, b) {
  * @param {string=} opt_nodeUI
  * @return {os.ui.query.ComboNode}
  */
-os.ui.query.QueryManager.prototype.getPivotData = function(opt_pivots, opt_pivot, opt_node, opt_flatten, opt_layer,
+os.query.BaseQueryManager.prototype.getPivotData = function(opt_pivots, opt_pivot, opt_node, opt_flatten, opt_layer,
     opt_nodeUI) {
   opt_pivot = opt_pivot !== undefined ? opt_pivot : 0;
   opt_pivots = opt_pivots || ['layer', 'area', 'filter'];
@@ -980,7 +997,7 @@ os.ui.query.QueryManager.prototype.getPivotData = function(opt_pivots, opt_pivot
     node = node.getParent();
   }
 
-  var fqm = os.ui.filterManager;
+  var fqm = this.fm;
 
   if (opt_flatten && opt_pivot == 2 && opt_node.getId() !== '*') {
     for (var j = opt_pivot - 1; j < opt_pivots.length; j++) {
@@ -1049,7 +1066,7 @@ os.ui.query.QueryManager.prototype.getPivotData = function(opt_pivots, opt_pivot
       }
       break;
     case 'area':
-      var areas = os.ui.areaManager.getAll();
+      var areas = this.am.getAll();
       for (i = 0, n = areas.length; i < n; i++) {
         if (areas[i].get('shown')) {
           node = new os.ui.query.ComboNode(opt_nodeUI);
@@ -1128,6 +1145,6 @@ os.ui.query.QueryManager.prototype.getPivotData = function(opt_pivots, opt_pivot
 
 
 /**
- * @type {?os.ui.query.QueryManager}
+ * @type {?os.query.BaseQueryManager}
  */
 os.ui.queryManager = null;

@@ -1,9 +1,10 @@
 goog.provide('os.ui.filter.ui.FilterGroupUICtrl');
 goog.provide('os.ui.filter.ui.filterGroupUIDirective');
+
+goog.require('os.filter.BaseFilterManager');
 goog.require('os.ui.Module');
 goog.require('os.ui.filter.FilterEvent');
 goog.require('os.ui.filter.FilterEventType');
-goog.require('os.ui.filter.FilterManager');
 goog.require('os.ui.filter.ui.FilterNode');
 
 
@@ -47,7 +48,7 @@ os.ui.filter.ui.FilterGroupUICtrl = function($scope, $element) {
    */
   this.scope_ = $scope;
 
-  var fqm = os.ui.filter.FilterManager.getInstance();
+  var fqm = os.filter.BaseFilterManager.getInstance();
   fqm.listen(os.ui.filter.FilterEventType.GROUPING_CHANGED, this.onGroupChanged_, false, this);
   var node = /** @type {os.structs.ITreeNode} */ (this.scope_['item']);
 
@@ -74,7 +75,7 @@ os.ui.filter.ui.FilterGroupUICtrl.GROUPS = {
  * @private
  */
 os.ui.filter.ui.FilterGroupUICtrl.prototype.onDestroy_ = function() {
-  var fqm = os.ui.filter.FilterManager.getInstance();
+  var fqm = os.filter.BaseFilterManager.getInstance();
   fqm.unlisten(os.ui.filter.FilterEventType.GROUPING_CHANGED, this.onGroupChanged_, false, this);
 };
 
@@ -88,7 +89,7 @@ os.ui.filter.ui.FilterGroupUICtrl.prototype.onGroupChanged_ = function(event) {
   var node = /** @type {os.structs.ITreeNode} */ (this.scope_['item']);
 
   if (event.key == node.getId()) {
-    var fqm = os.ui.filter.FilterManager.getInstance();
+    var fqm = os.filter.BaseFilterManager.getInstance();
     this['group'] = fqm.getGrouping(event.key);
   }
 };
@@ -99,7 +100,7 @@ os.ui.filter.ui.FilterGroupUICtrl.prototype.onGroupChanged_ = function(event) {
  * @export
  */
 os.ui.filter.ui.FilterGroupUICtrl.prototype.onGroup = function() {
-  var fqm = os.ui.filter.FilterManager.getInstance();
+  var fqm = os.filter.BaseFilterManager.getInstance();
   var node = /** @type {os.structs.ITreeNode} */ (this.scope_['item']);
   fqm.setGrouping(node.getId(), /** @type {boolean} */ (this['group']));
 };

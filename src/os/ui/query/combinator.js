@@ -1,5 +1,5 @@
-goog.provide('os.ui.CombinatorCtrl');
-goog.provide('os.ui.combinatorDirective');
+goog.provide('os.ui.query.CombinatorCtrl');
+goog.provide('os.ui.query.combinatorDirective');
 
 goog.require('os.command.CommandProcessor');
 goog.require('os.command.SequenceCommand');
@@ -10,10 +10,10 @@ goog.require('os.ui.Module');
 goog.require('os.ui.addFilterDirective');
 goog.require('os.ui.filter.ui.editFiltersDirective');
 goog.require('os.ui.filter.ui.filterExportDirective');
+goog.require('os.ui.query.BaseCombinatorCtrl');
+goog.require('os.ui.query.baseCombinatorDirective');
 goog.require('os.ui.query.cmd.FilterAdd');
 goog.require('os.ui.query.cmd.FilterRemove');
-goog.require('os.ui.query.ui.CombinatorCtrl');
-goog.require('os.ui.query.ui.combinatorDirective');
 goog.require('os.ui.slick.SlickTreeCtrl');
 goog.require('os.ui.window');
 
@@ -22,10 +22,9 @@ goog.require('os.ui.window');
  * The combinator window directive
  * @return {angular.Directive}
  */
-os.ui.combinatorDirective = function() {
-  var dir = os.ui.query.ui.combinatorDirective();
-  dir.controller = os.ui.CombinatorCtrl;
-  dir.templateUrl = os.ROOT + 'views/windows/combinator.html';
+os.ui.query.combinatorDirective = function() {
+  var dir = os.ui.query.baseCombinatorDirective();
+  dir.controller = os.ui.query.CombinatorCtrl;
   return dir;
 };
 
@@ -33,37 +32,37 @@ os.ui.combinatorDirective = function() {
 /**
  * Add the directive to the module
  */
-os.ui.Module.directive('osCombinator', [os.ui.combinatorDirective]);
+os.ui.Module.directive('combinator', [os.ui.query.combinatorDirective]);
 
 
 
 /**
- * Controller for combinator window
+ * The controller for the combinator window. This implements the combinator's interface with the map container.
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
- * @extends {os.ui.query.ui.CombinatorCtrl}
+ * @extends {os.ui.query.BaseCombinatorCtrl}
  * @constructor
  * @ngInject
  */
-os.ui.CombinatorCtrl = function($scope, $element) {
-  os.ui.CombinatorCtrl.base(this, 'constructor', $scope, $element);
+os.ui.query.CombinatorCtrl = function($scope, $element) {
+  os.ui.query.CombinatorCtrl.base(this, 'constructor', $scope, $element);
   os.MapContainer.getInstance().listen(os.events.LayerEventType.ADD, this.scheduleUpdate, false, this);
   os.MapContainer.getInstance().listen(os.events.LayerEventType.REMOVE, this.scheduleUpdate, false, this);
   os.MapContainer.getInstance().listen(os.events.LayerEventType.RENAME, this.scheduleUpdate, false, this);
-  os.ui.filterManager.listen(os.ui.filter.FilterEventType.EXPORT_FILTER, this.launchExport, false, this);
+  this.fm.listen(os.ui.filter.FilterEventType.EXPORT_FILTER, this.launchExport, false, this);
 };
-goog.inherits(os.ui.CombinatorCtrl, os.ui.query.ui.CombinatorCtrl);
+goog.inherits(os.ui.query.CombinatorCtrl, os.ui.query.BaseCombinatorCtrl);
 
 
 /**
  * @inheritDoc
  */
-os.ui.CombinatorCtrl.prototype.updateLayers = function() {
+os.ui.query.CombinatorCtrl.prototype.updateLayers = function() {
   if (this.scope['hideLayerChooser'] && this.scope['layerId']) {
     var layerId = /** @type {string} */ (this.scope['layerId']);
     var layers = [];
     var layer = null;
-    var filterable = os.ui.filterManager.getFilterable(layerId);
+    var filterable = this.fm.getFilterable(layerId);
 
     if (filterable) {
       try {
@@ -87,28 +86,28 @@ os.ui.CombinatorCtrl.prototype.updateLayers = function() {
     return;
   }
 
-  os.ui.CombinatorCtrl.base(this, 'updateLayers');
+  os.ui.query.CombinatorCtrl.base(this, 'updateLayers');
 };
 
 
 /**
  * @inheritDoc
  */
-os.ui.CombinatorCtrl.prototype.onDestroy = function() {
-  os.ui.CombinatorCtrl.base(this, 'onDestroy');
+os.ui.query.CombinatorCtrl.prototype.onDestroy = function() {
+  os.ui.query.CombinatorCtrl.base(this, 'onDestroy');
   os.MapContainer.getInstance().unlisten(os.events.LayerEventType.ADD, this.scheduleUpdate, false, this);
   os.MapContainer.getInstance().unlisten(os.events.LayerEventType.REMOVE, this.scheduleUpdate, false, this);
   os.MapContainer.getInstance().unlisten(os.events.LayerEventType.RENAME, this.scheduleUpdate, false, this);
-  os.ui.filterManager.unlisten(os.ui.filter.FilterEventType.EXPORT_FILTER, this.launchExport, false, this);
+  this.fm.unlisten(os.ui.filter.FilterEventType.EXPORT_FILTER, this.launchExport, false, this);
 };
 
 
 /**
  * @inheritDoc
  */
-os.ui.CombinatorCtrl.prototype.editEntry = function(entry) {
+os.ui.query.CombinatorCtrl.prototype.editEntry = function(entry) {
   if (entry) {
-    var fqm = os.ui.filterManager;
+    var fqm = this.fm;
     var original = fqm.getFilter(entry.getId());
 
     if (original) {
@@ -129,7 +128,7 @@ os.ui.CombinatorCtrl.prototype.editEntry = function(entry) {
 /**
  * @inheritDoc
  */
-os.ui.CombinatorCtrl.prototype.doCommand = function(cmd) {
+os.ui.query.CombinatorCtrl.prototype.doCommand = function(cmd) {
   os.command.CommandProcessor.getInstance().addCommand(cmd);
 };
 
@@ -137,7 +136,7 @@ os.ui.CombinatorCtrl.prototype.doCommand = function(cmd) {
 /**
  * Launches the filter/combinator dialog if it is not already open.
  */
-os.ui.CombinatorCtrl.launch = function() {
+os.ui.query.CombinatorCtrl.launch = function() {
   var label = 'Advanced';
   var openWindows = angular.element('div[label="' + label + '"].window');
 
@@ -162,7 +161,7 @@ os.ui.CombinatorCtrl.launch = function() {
       'layerId': undefined
     };
 
-    var template = '<os-combinator layer-id="layerId" hide-layer-chooser="hideChooser"></os-combinator>';
+    var template = '<combinator layer-id="layerId" hide-layer-chooser="hideChooser"></combinator>';
     os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scope);
   } else {
     os.ui.window.bringToFront('filters');
@@ -175,7 +174,7 @@ os.ui.CombinatorCtrl.launch = function() {
  * @param {string} layerId Layer ID for the combinator
  * @param {string=} opt_layerName Optional name to include
  */
-os.ui.CombinatorCtrl.launchForLayer = function(layerId, opt_layerName) {
+os.ui.query.CombinatorCtrl.launchForLayer = function(layerId, opt_layerName) {
   var label = 'Filters';
   var windowId = os.ui.sanitizeId('filters-' + layerId);
 
@@ -212,7 +211,7 @@ os.ui.CombinatorCtrl.launchForLayer = function(layerId, opt_layerName) {
       'hideChooser': true
     };
 
-    var template = '<os-combinator layer-id="layerId" hide-layer-chooser="hideChooser"></os-combinator>';
+    var template = '<combinator layer-id="layerId" hide-layer-chooser="hideChooser"></combinator>';
     os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scope);
   } else {
     os.ui.window.bringToFront(windowId);

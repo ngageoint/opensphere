@@ -1,4 +1,4 @@
-goog.provide('os.ui.query.AreaManager');
+goog.provide('os.query.BaseAreaManager');
 
 goog.require('goog.array');
 goog.require('goog.async.Deferred');
@@ -23,18 +23,18 @@ goog.require('os.ui.window');
 
 
 /**
- * Manages spatial areas
+ * Base class for managing areas on the map.
  * @extends {os.data.CollectionManager<!ol.Feature>}
  * @constructor
  */
-os.ui.query.AreaManager = function() {
-  os.ui.query.AreaManager.base(this, 'constructor');
+os.query.BaseAreaManager = function() {
+  os.query.BaseAreaManager.base(this, 'constructor');
 
   /**
    * @type {goog.log.Logger}
    * @protected
    */
-  this.log = os.ui.query.AreaManager.LOGGER_;
+  this.log = os.query.BaseAreaManager.LOGGER_;
 
   /**
    * @type {boolean}
@@ -61,8 +61,8 @@ os.ui.query.AreaManager = function() {
 
   this.load();
 };
-goog.inherits(os.ui.query.AreaManager, os.data.CollectionManager);
-goog.addSingletonGetter(os.ui.query.AreaManager);
+goog.inherits(os.query.BaseAreaManager, os.data.CollectionManager);
+goog.addSingletonGetter(os.query.BaseAreaManager);
 
 
 /**
@@ -71,7 +71,7 @@ goog.addSingletonGetter(os.ui.query.AreaManager);
  * @const
  * @private
  */
-os.ui.query.AreaManager.LOGGER_ = goog.log.getLogger('os.ui.query.AreaManager');
+os.query.BaseAreaManager.LOGGER_ = goog.log.getLogger('os.query.BaseAreaManager');
 
 
 /**
@@ -86,7 +86,7 @@ os.ui.query.DRAW_ID = 'draw';
  * @type {string}
  * @const
  */
-os.ui.query.AreaManager.FEATURE_PREFIX = 'area_';
+os.query.BaseAreaManager.FEATURE_PREFIX = 'area_';
 
 
 /**
@@ -105,14 +105,14 @@ goog.define('os.ALL_AREA_STORAGE_KEY', 'areasAll');
  * @type {number}
  * @private
  */
-os.ui.query.AreaManager.tempId_ = 1;
+os.query.BaseAreaManager.tempId_ = 1;
 
 
 /**
  * Handles map ready
  * @private
  */
-os.ui.query.AreaManager.prototype.onMapReady_ = function() {
+os.query.BaseAreaManager.prototype.onMapReady_ = function() {
   this.mapReady_ = true;
 
   var areas = this.getAll();
@@ -125,7 +125,7 @@ os.ui.query.AreaManager.prototype.onMapReady_ = function() {
     this.toggle(feature, show !== undefined ? show : true);
   }
 
-  var qm = os.ui.query.QueryManager.getInstance();
+  var qm = os.query.BaseQueryManager.getInstance();
   qm.listen(goog.events.EventType.PROPERTYCHANGE, this.updateStyles_, false, this);
   this.updateStyles_();
 };
@@ -135,9 +135,9 @@ os.ui.query.AreaManager.prototype.onMapReady_ = function() {
  * Handles map ready
  * @private
  */
-os.ui.query.AreaManager.prototype.onMapUnready_ = function() {
+os.query.BaseAreaManager.prototype.onMapUnready_ = function() {
   this.mapReady_ = false;
-  var qm = os.ui.query.QueryManager.getInstance();
+  var qm = os.query.BaseQueryManager.getInstance();
   qm.unlisten(goog.events.EventType.PROPERTYCHANGE, this.updateStyles_, false, this);
 };
 
@@ -146,7 +146,7 @@ os.ui.query.AreaManager.prototype.onMapUnready_ = function() {
  * Gets the map reference relevant to this area manager.
  * @return {os.map.IMapContainer}
  */
-os.ui.query.AreaManager.prototype.getMap = function() {
+os.query.BaseAreaManager.prototype.getMap = function() {
   return this.map_;
 };
 
@@ -155,7 +155,7 @@ os.ui.query.AreaManager.prototype.getMap = function() {
  * Sets the map reference relevant to this area manager.
  * @param {os.map.IMapContainer} map
  */
-os.ui.query.AreaManager.prototype.setMap = function(map) {
+os.query.BaseAreaManager.prototype.setMap = function(map) {
   if (this.getMap()) {
     this.getMap().unlisten('map:ready', this.onMapReady_, false, this);
     this.onMapUnready_();
@@ -173,7 +173,7 @@ os.ui.query.AreaManager.prototype.setMap = function(map) {
 /**
  * @inheritDoc
  */
-os.ui.query.AreaManager.prototype.getId = function(item) {
+os.query.BaseAreaManager.prototype.getId = function(item) {
   return '' + item.getId();
 };
 
@@ -183,16 +183,16 @@ os.ui.query.AreaManager.prototype.getId = function(item) {
  * @param {Array<!ol.Feature>} features
  * @param {boolean=} opt_show
  */
-os.ui.query.AreaManager.prototype.bulkAdd = function(features, opt_show) {
+os.query.BaseAreaManager.prototype.bulkAdd = function(features, opt_show) {
   var show = opt_show || false;
 
   os.array.forEach(features, function(feature) {
     if (!feature.getId()) {
-      feature.setId(os.ui.query.AreaManager.FEATURE_PREFIX + goog.string.getRandomString());
+      feature.setId(os.query.BaseAreaManager.FEATURE_PREFIX + goog.string.getRandomString());
     }
     if (!feature.get('temp') && !feature.get('title')) {
       feature.set('temp', true);
-      feature.set('title', 'temp area ' + os.ui.query.AreaManager.tempId_++);
+      feature.set('title', 'temp area ' + os.query.BaseAreaManager.tempId_++);
     }
 
     feature.set('shown', show);
@@ -205,11 +205,11 @@ os.ui.query.AreaManager.prototype.bulkAdd = function(features, opt_show) {
 /**
  * @inheritDoc
  */
-os.ui.query.AreaManager.prototype.add = function(feature) {
+os.query.BaseAreaManager.prototype.add = function(feature) {
   goog.asserts.assert(feature !== undefined, 'Cannot add null/undefined feature');
 
   if (!feature.getId()) {
-    feature.setId(os.ui.query.AreaManager.FEATURE_PREFIX + goog.string.getRandomString());
+    feature.setId(os.query.BaseAreaManager.FEATURE_PREFIX + goog.string.getRandomString());
   }
 
   if (!feature.get('title') && feature.get('name')) {
@@ -218,7 +218,7 @@ os.ui.query.AreaManager.prototype.add = function(feature) {
     feature.set('title', feature.get('name'));
   } else if (!feature.get('temp') && !feature.get('title')) {
     feature.set('temp', true);
-    feature.set('title', 'temp area ' + os.ui.query.AreaManager.tempId_++);
+    feature.set('title', 'temp area ' + os.query.BaseAreaManager.tempId_++);
   }
 
   var added = this.addInternal(feature);
@@ -238,7 +238,7 @@ os.ui.query.AreaManager.prototype.add = function(feature) {
  * @return {boolean}
  * @protected
  */
-os.ui.query.AreaManager.prototype.isValidFeature = function(feature) {
+os.query.BaseAreaManager.prototype.isValidFeature = function(feature) {
   var geometry = feature.getGeometry();
   var originalGeometry = /** @type {ol.geom.Geometry} */ (feature.get(os.interpolate.ORIGINAL_GEOM_FIELD));
   if (!geometry) {
@@ -284,7 +284,7 @@ os.ui.query.AreaManager.prototype.isValidFeature = function(feature) {
  * @param {ol.Feature} feature
  * @protected
  */
-os.ui.query.AreaManager.prototype.normalizeGeometry = function(feature) {
+os.query.BaseAreaManager.prototype.normalizeGeometry = function(feature) {
   os.geo.normalizeGeometryCoordinates(feature.getGeometry());
 };
 
@@ -294,7 +294,7 @@ os.ui.query.AreaManager.prototype.normalizeGeometry = function(feature) {
  * @param {Array<ol.Feature>} features
  * @return {Array<ol.Feature>}
  */
-os.ui.query.AreaManager.prototype.filterFeatures = function(features) {
+os.query.BaseAreaManager.prototype.filterFeatures = function(features) {
   if (features) {
     return goog.array.filter(features, function(feature) {
       return feature != null && this.isValidFeature(feature);
@@ -312,13 +312,13 @@ os.ui.query.AreaManager.prototype.filterFeatures = function(features) {
  * @protected
  * @override
  */
-os.ui.query.AreaManager.prototype.addInternal = function(feature, opt_bulk) {
+os.query.BaseAreaManager.prototype.addInternal = function(feature, opt_bulk) {
   var bulk = opt_bulk || false;
 
   if (feature != null && this.isValidFeature(feature)) {
     feature.unset(os.data.RecordField.DRAWING_LAYER_NODE, true);
 
-    if (os.ui.query.AreaManager.base(this, 'addInternal', feature)) {
+    if (os.query.BaseAreaManager.base(this, 'addInternal', feature)) {
       if (this.mapReady_) {
         var show = /** @type {boolean} */ (feature.get('shown'));
         if (bulk) {
@@ -344,7 +344,7 @@ os.ui.query.AreaManager.prototype.addInternal = function(feature, opt_bulk) {
  * @param {string|ol.Feature} idOrFeature
  * @param {boolean=} opt_toggle Optional toggle value. If not set, the value will flip.
  */
-os.ui.query.AreaManager.prototype.showHideFeature = function(idOrFeature, opt_toggle) {
+os.query.BaseAreaManager.prototype.showHideFeature = function(idOrFeature, opt_toggle) {
   var feature = this.get(idOrFeature);
 
   if (feature) {
@@ -373,7 +373,7 @@ os.ui.query.AreaManager.prototype.showHideFeature = function(idOrFeature, opt_to
  * Show or hide all area features
  * @param {boolean} show
  */
-os.ui.query.AreaManager.prototype.toggleAllFeatures = function(show) {
+os.query.BaseAreaManager.prototype.toggleAllFeatures = function(show) {
   var areas = this.getAll();
   for (var i = 0; i < areas.length; i = i + 1) {
     this.toggle(areas[i], show);
@@ -386,7 +386,7 @@ os.ui.query.AreaManager.prototype.toggleAllFeatures = function(show) {
  * @param {string|ol.Feature} idOrFeature
  * @param {boolean=} opt_toggle Optional toggle value. If not set, the value will flip.
  */
-os.ui.query.AreaManager.prototype.toggle = function(idOrFeature, opt_toggle) {
+os.query.BaseAreaManager.prototype.toggle = function(idOrFeature, opt_toggle) {
   this.showHideFeature(idOrFeature, opt_toggle);
 
   var feature = this.get(idOrFeature);
@@ -400,8 +400,8 @@ os.ui.query.AreaManager.prototype.toggle = function(idOrFeature, opt_toggle) {
 /**
  * @inheritDoc
  */
-os.ui.query.AreaManager.prototype.remove = function(feature) {
-  var val = os.ui.query.AreaManager.base(this, 'remove', feature);
+os.query.BaseAreaManager.prototype.remove = function(feature) {
+  var val = os.query.BaseAreaManager.base(this, 'remove', feature);
 
   if (val && this.getMap()) {
     this.unhighlight(feature);
@@ -417,7 +417,7 @@ os.ui.query.AreaManager.prototype.remove = function(feature) {
  * Clears all areas in the manager.
  * @return {Array<ol.Feature>} The areas that were removed.
  */
-os.ui.query.AreaManager.prototype.clear = function() {
+os.query.BaseAreaManager.prototype.clear = function() {
   var qm = os.ui.queryManager;
   var areas = this.getAll();
   var removed = [];
@@ -441,7 +441,7 @@ os.ui.query.AreaManager.prototype.clear = function() {
  * Clears all the temporary areas in the manager.
  * @return {Array<ol.Feature>} The areas that were removed.
  */
-os.ui.query.AreaManager.prototype.clearTemp = function() {
+os.query.BaseAreaManager.prototype.clearTemp = function() {
   var qm = os.ui.queryManager;
   var areas = this.getAll();
   var removed = [];
@@ -467,7 +467,7 @@ os.ui.query.AreaManager.prototype.clearTemp = function() {
  * saves the areas
  * @return {!goog.async.Deferred}
  */
-os.ui.query.AreaManager.prototype.save = function() {
+os.query.BaseAreaManager.prototype.save = function() {
   // base area manager doesn't save/load, so fire the callback immediately
   return goog.async.Deferred.succeed();
 };
@@ -477,7 +477,7 @@ os.ui.query.AreaManager.prototype.save = function() {
  * loads the areas
  * @return {!goog.async.Deferred<Array<ol.Feature>>}
  */
-os.ui.query.AreaManager.prototype.load = function() {
+os.query.BaseAreaManager.prototype.load = function() {
   this.dispatchEvent(new os.events.PropertyChangeEvent('areas'));
 
   // base area manager doesn't save/load, so fire the callback immediately
@@ -489,7 +489,7 @@ os.ui.query.AreaManager.prototype.load = function() {
  * Gets areas from storage
  * @return {!goog.async.Deferred<Array<ol.Feature>>}
  */
-os.ui.query.AreaManager.prototype.getStoredAreas = function() {
+os.query.BaseAreaManager.prototype.getStoredAreas = function() {
   return goog.async.Deferred.succeed(this.onAreasLoaded_(
       /** @type {?Object} */ (os.settings.get(os.AREA_STORAGE_KEY))));
 };
@@ -501,7 +501,7 @@ os.ui.query.AreaManager.prototype.getStoredAreas = function() {
  * @return {Array<!ol.Feature>}
  * @private
  */
-os.ui.query.AreaManager.prototype.onAreasLoaded_ = function(obj) {
+os.query.BaseAreaManager.prototype.onAreasLoaded_ = function(obj) {
   if (obj) {
     var format = new ol.format.GeoJSON();
     this.loadProj_ = os.map.PROJECTION;
@@ -532,7 +532,7 @@ os.ui.query.AreaManager.prototype.onAreasLoaded_ = function(obj) {
  * @param {ol.Feature} feature
  * @protected
  */
-os.ui.query.AreaManager.prototype.setDefaultStyle = function(feature) {
+os.query.BaseAreaManager.prototype.setDefaultStyle = function(feature) {
   feature.setStyle(os.style.area.DEFAULT_STYLE);
 };
 
@@ -541,7 +541,7 @@ os.ui.query.AreaManager.prototype.setDefaultStyle = function(feature) {
  * Updates styles based on queries in query manager
  * @private
  */
-os.ui.query.AreaManager.prototype.updateStyles_ = function() {
+os.query.BaseAreaManager.prototype.updateStyles_ = function() {
   var areas = this.getAll();
   var changed = false;
 
@@ -565,8 +565,8 @@ os.ui.query.AreaManager.prototype.updateStyles_ = function() {
  * @return {boolean} true if changed
  * @protected
  */
-os.ui.query.AreaManager.prototype.updateStyle = function(area, opt_suppress) {
-  var qm = os.ui.query.QueryManager.getInstance();
+os.query.BaseAreaManager.prototype.updateStyle = function(area, opt_suppress) {
+  var qm = os.query.BaseQueryManager.getInstance();
 
   var changed = false;
   var defaultStyle = os.style.area.DEFAULT_STYLE;
@@ -619,7 +619,7 @@ os.ui.query.AreaManager.prototype.updateStyle = function(area, opt_suppress) {
  * Dispatch a change event
  * @param {!ol.Feature} area
  */
-os.ui.query.AreaManager.prototype.redraw = function(area) {
+os.query.BaseAreaManager.prototype.redraw = function(area) {
   var source = /** @type {ol.source.Vector} */ (this.getMap().getLayer(os.ui.query.DRAW_ID).getSource());
   var id = area.getId();
   if (id && source.getFeatureById(id)) {
@@ -632,7 +632,7 @@ os.ui.query.AreaManager.prototype.redraw = function(area) {
 /**
  * @param {string|ol.Feature} idOrFeature
  */
-os.ui.query.AreaManager.prototype.unhighlight = function(idOrFeature) {
+os.query.BaseAreaManager.prototype.unhighlight = function(idOrFeature) {
   var area = this.get(idOrFeature);
 
   if (area && this.getMap().containsFeature(area)) {
@@ -652,7 +652,7 @@ os.ui.query.AreaManager.prototype.unhighlight = function(idOrFeature) {
 /**
  * @param {string|ol.Feature} idOrFeature
  */
-os.ui.query.AreaManager.prototype.highlight = function(idOrFeature) {
+os.query.BaseAreaManager.prototype.highlight = function(idOrFeature) {
   var area = this.get(idOrFeature);
 
   if (area && this.getMap().containsFeature(area)) {
@@ -671,7 +671,7 @@ os.ui.query.AreaManager.prototype.highlight = function(idOrFeature) {
  * @param {ol.Feature} feature The feature
  * @param {string} evt The name of the event
  */
-os.ui.query.AreaManager.prototype.fireStateChangeEvent = function(feature, evt) {
+os.query.BaseAreaManager.prototype.fireStateChangeEvent = function(feature, evt) {
   if (feature) {
     this.dispatchEvent(new os.events.PropertyChangeEvent(evt, feature.getId()));
   }
@@ -682,7 +682,7 @@ os.ui.query.AreaManager.prototype.fireStateChangeEvent = function(feature, evt) 
  * @param {!ol.Feature} area
  * @return {boolean}
  */
-os.ui.query.AreaManager.filterTemp = function(area) {
+os.query.BaseAreaManager.filterTemp = function(area) {
   return /** @type {boolean} */ (!area.get('temp'));
 };
 
@@ -691,7 +691,7 @@ os.ui.query.AreaManager.filterTemp = function(area) {
  * @param {!ol.Feature} feature The feature to save as an area
  * @param {Array<os.data.ColumnDefinition>=} opt_columns Columns to display in the save area dialog
  */
-os.ui.query.AreaManager.save = function(feature, opt_columns) {
+os.query.BaseAreaManager.save = function(feature, opt_columns) {
   var columns = opt_columns || undefined;
   var scopeOptions = {
     'feature': feature,
@@ -724,7 +724,7 @@ os.ui.query.AreaManager.save = function(feature, opt_columns) {
  * @param {!Array<!ol.Feature>} features The feature to merge into a new area
  * @param {string=} opt_ui The directive to use
  */
-os.ui.query.AreaManager.merge = function(features, opt_ui) {
+os.query.BaseAreaManager.merge = function(features, opt_ui) {
   var scopeOptions = {
     'features': features
   };
@@ -746,6 +746,6 @@ os.ui.query.AreaManager.merge = function(features, opt_ui) {
 
 
 /**
- * @type {?os.ui.query.AreaManager}
+ * @type {?os.query.BaseAreaManager}
  */
 os.ui.areaManager = null;
