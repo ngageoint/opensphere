@@ -1,6 +1,7 @@
 goog.provide('os.ui.node.AreaNodeUICtrl');
 goog.provide('os.ui.node.areaNodeUIDirective');
 
+goog.require('os.query.BaseAreaManager');
 goog.require('os.ui.Module');
 goog.require('os.ui.query.cmd.AreaRemove');
 goog.require('os.ui.slick.AbstractNodeUICtrl');
@@ -82,6 +83,6 @@ os.ui.node.AreaNodeUICtrl.prototype.edit = function() {
   var area = /** @type {os.data.AreaNode} */ (this.scope['item']).getArea();
 
   if (area) {
-    os.ui.query.AreaManager.save(area);
+    os.query.BaseAreaManager.save(area);
   }
 };

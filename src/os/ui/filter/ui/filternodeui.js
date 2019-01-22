@@ -1,8 +1,9 @@
 goog.provide('os.ui.filter.ui.FilterNodeUICtrl');
 goog.provide('os.ui.filter.ui.filterNodeUIDirective');
+
+goog.require('os.query.BaseQueryManager');
 goog.require('os.ui.Module');
 goog.require('os.ui.filter.ui.FilterNode');
-goog.require('os.ui.query.QueryManager');
 goog.require('os.ui.query.cmd.FilterRemove');
 goog.require('os.ui.slick.AbstractNodeUICtrl');
 

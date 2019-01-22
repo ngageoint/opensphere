@@ -1,10 +1,10 @@
 goog.require('os.filter.FilterEntry');
-goog.require('os.ui.filter.FilterType');
+goog.require('os.filter.FilterType');
 
 
-describe('os.ui.filter.FilterType', function() {
+describe('os.filter.FilterType', function() {
   it('should persist and restore properly', function() {
-    var a = new os.ui.filter.FilterType();
+    var a = new os.filter.FilterType();
     var filter = new os.filter.FilterEntry();
     filter.title = 'Test';
     filter.description = 'A test';
@@ -20,7 +20,7 @@ describe('os.ui.filter.FilterType', function() {
     expect(p.filters.length).toBe(1);
     expect(p.filters[0].id).toBe(filter.getId());
 
-    var b = new os.ui.filter.FilterType();
+    var b = new os.filter.FilterType();
     b.restore(p);
 
     expect(b.and).toBe(a.and);

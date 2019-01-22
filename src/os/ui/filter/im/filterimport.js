@@ -131,7 +131,7 @@ os.ui.filter.im.FilterImportCtrl = function($scope, $element, $sce) {
   /**
    * @type {Array<string>}
    */
-  this['groups'] = os.ui.query.ui.ComboNodeUICtrl.GROUPS;
+  this['groups'] = os.ui.query.ComboNodeUICtrl.GROUPS;
 
   var descriptors = os.dataManager.getDescriptors();
   var filterables = [];

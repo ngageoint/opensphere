@@ -98,7 +98,7 @@ os.source.getFilterColumns = function(source, opt_local, opt_includeTime) {
     }
 
     if (!columns) {
-      var filterable = os.ui.filter.FilterManager.getInstance().getFilterable(source.getId());
+      var filterable = os.filter.BaseFilterManager.getInstance().getFilterable(source.getId());
       if (filterable) {
         columns = filterable.getFilterColumns().map(os.source.mapFilterColumns);
       }

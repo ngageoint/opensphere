@@ -1,9 +1,10 @@
 goog.provide('os.ui.filter.ui.FilterTreeCtrl');
 goog.provide('os.ui.filter.ui.filterTreeDirective');
+
 goog.require('os.data.groupby.INodeGroupBy');
+goog.require('os.filter.BaseFilterManager');
 goog.require('os.ui');
 goog.require('os.ui.Module');
-goog.require('os.ui.filter.FilterManager');
 goog.require('os.ui.filter.ui.FilterGroupBy');
 goog.require('os.ui.filter.ui.FilterNode');
 goog.require('os.ui.filter.ui.filterNodeUIDirective');
@@ -58,7 +59,7 @@ os.ui.filter.ui.FilterTreeCtrl = function($scope) {
    */
   this.treeSearch_ = new os.ui.slick.TreeSearch([], 'filters', $scope);
 
-  os.ui.filter.FilterManager.getInstance().listen(
+  os.filter.BaseFilterManager.getInstance().listen(
       os.ui.filter.FilterEventType.FILTERS_REFRESH, this.refresh_, false, this);
 
   $scope.$watch('type', this.refresh_.bind(this));
@@ -72,7 +73,7 @@ os.ui.filter.ui.FilterTreeCtrl = function($scope) {
  * @private
  */
 os.ui.filter.ui.FilterTreeCtrl.prototype.onDestroy_ = function() {
-  os.ui.filter.FilterManager.getInstance().unlisten(
+  os.filter.BaseFilterManager.getInstance().unlisten(
       os.ui.filter.FilterEventType.FILTERS_REFRESH, this.refresh_, false, this);
   this.scope_ = null;
 };
@@ -93,7 +94,7 @@ os.ui.filter.ui.FilterTreeCtrl.TYPE_GROUP_BY_ = new os.ui.filter.ui.FilterGroupB
  */
 os.ui.filter.ui.FilterTreeCtrl.prototype.refresh_ = function(opt_e) {
   var type = this.scope_['type'];
-  var fqm = os.ui.filter.FilterManager.getInstance();
+  var fqm = os.filter.BaseFilterManager.getInstance();
   var list = fqm.getFilters(type);
   var nodes = [];
 

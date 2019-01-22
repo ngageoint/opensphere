@@ -17,12 +17,12 @@ goog.require('os.filter.IFilterable');
 goog.require('os.implements');
 goog.require('os.layer.LayerType');
 goog.require('os.ogc.wfs.DescribeFeatureLoader');
-goog.require('os.ui.CombinatorCtrl');
 goog.require('os.ui.ControlType');
 goog.require('os.ui.Icons');
 goog.require('os.ui.filter.ui.filterableDescriptorNodeUIDirective');
 goog.require('os.ui.ogc.IOGCDescriptor');
-goog.require('os.ui.query.ui.CombinatorCtrl');
+goog.require('os.ui.query.BaseCombinatorCtrl');
+goog.require('os.ui.query.CombinatorCtrl');
 goog.require('os.ui.util.deprecated');
 
 
@@ -1102,7 +1102,7 @@ plugin.ogc.OGCLayerDescriptor.prototype.launchFilterManager = function() {
 
   if (this.isFeatureTypeReady()) {
     var id = this.getId() + os.ui.data.BaseProvider.ID_DELIMITER + 'features';
-    os.ui.CombinatorCtrl.launchForLayer(id, this.getTitle() + ' Features');
+    os.ui.query.CombinatorCtrl.launchForLayer(id, this.getTitle() + ' Features');
   }
 };
 

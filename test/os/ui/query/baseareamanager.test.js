@@ -4,10 +4,10 @@ goog.require('ol.geom.MultiLineString');
 goog.require('ol.geom.MultiPolygon');
 goog.require('ol.geom.Point');
 goog.require('ol.geom.Polygon');
-goog.require('os.ui.query.AreaManager');
+goog.require('os.query.BaseAreaManager');
 
 
-describe('os.ui.query.AreaManager', function() {
+describe('os.query.BaseAreaManager', function() {
   var am;
   var area;
 
