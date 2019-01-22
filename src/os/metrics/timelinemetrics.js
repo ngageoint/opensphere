@@ -12,47 +12,37 @@ os.metrics.TIMELINE_CONTROLS = [
     label: 'Play',
     description: 'The play or pause button animates loaded data over time.',
     key: os.metrics.keys.Timeline.TOGGLE_PLAY
-  },
-  {
+  }, {
     label: 'Next Frame',
     description: 'This button moves the blue time frame window to the next frame.',
     key: os.metrics.keys.Timeline.NEXT_FRAME
-  },
-  {
+  }, {
     label: 'Previous Frame',
     description: 'This button moves the blue time frame window to the previous frame.',
     key: os.metrics.keys.Timeline.PREV_FRAME
-  },
-  {
+  }, {
     label: 'First Frame',
     key: os.metrics.keys.Timeline.FIRST_FRAME
-  },
-  {
+  }, {
     label: 'Last Frame',
     key: os.metrics.keys.Timeline.LAST_FRAME
-  },
-  {
+  }, {
     label: 'Zoom In',
     key: os.metrics.keys.Timeline.ZOOM_IN
-  },
-  {
+  }, {
     label: 'Zoom Out',
     key: os.metrics.keys.Timeline.ZOOM_OUT
-  },
-  {
+  }, {
     label: 'Mouse Wheel Zoom',
     description: 'Zooms the timeline in or out',
     key: os.metrics.keys.Timeline.MOUSE_ZOOM
-  },
-  {
+  }, {
     label: 'Record',
     key: os.metrics.keys.Timeline.RECORD
-  },
-  {
+  }, {
     label: 'Reset',
     key: os.metrics.keys.Timeline.RESET
-  },
-  {
+  }, {
     label: 'Chart Type',
     key: os.metrics.keys.Timeline.CHART_TYPE
   }
@@ -76,42 +66,47 @@ os.metrics.TIME_RANGE = [
     label: 'Load',
     description: 'Queries a time range drawn on the timeline. ' + os.metrics.TIMELINE_RANGE_INFO,
     key: os.metrics.keys.Timeline.RANGE_LOAD
-  },
-  {
+  }, {
     label: 'Add',
     description: 'Adds a time range drawn on the timeline. ' + os.metrics.TIMELINE_RANGE_INFO,
     key: os.metrics.keys.Timeline.RANGE_ADD
-  },
-  {
+  }, {
     label: 'Slice',
     description: 'Adds a slice range drawn on the timeline. ' + os.metrics.TIMELINE_RANGE_INFO,
     key: os.metrics.keys.Timeline.RANGE_SLICE
-  },
-  {
+  }, {
     label: 'Select',
     description: 'Selects features in the drawn time range. ' + os.metrics.TIMELINE_RANGE_INFO,
     key: os.metrics.keys.Timeline.RANGE_SELECT
-  },
-  {
+  }, {
     label: 'Select Exclusive',
     description: 'Selects only features in the drawn time range, deselecting all other features. ' +
         os.metrics.TIMELINE_RANGE_INFO,
     key: os.metrics.keys.Timeline.RANGE_SELECTEX
-  },
-  {
+  }, {
     label: 'Deselect',
     description: 'Deselects all features in the drawn time range. ' + os.metrics.TIMELINE_RANGE_INFO,
     key: os.metrics.keys.Timeline.RANGE_DESELECT
-  },
-  {
+  }, {
     label: 'Zoom',
     description: 'Zooms to the drawn time range. ' + os.metrics.TIMELINE_RANGE_INFO,
     key: os.metrics.keys.Timeline.RANGE_ZOOM
-  },
-  {
-    label: 'Animates this time range',
+  }, {
+    label: 'Animate',
     description: 'Animates data over the drawn time range. ' + os.metrics.TIMELINE_RANGE_INFO,
     key: os.metrics.keys.Timeline.RANGE_ANIMATE
+  }, {
+    label: 'Remove',
+    description: 'Removes the features in this time range. ' + os.metrics.TIMELINE_RANGE_INFO,
+    key: os.metrics.keys.Timeline.REMOVE
+  }, {
+    label: 'Feature Info',
+    description: 'Shows detailed metadata for the features in this time range. ' + os.metrics.TIMELINE_RANGE_INFO,
+    key: os.metrics.keys.Timeline.FEATURE_INFO
+  }, {
+    label: 'Go To',
+    description: 'Repositions the map to show the features in this time range. ' + os.metrics.TIMELINE_RANGE_INFO,
+    key: os.metrics.keys.Timeline.GO_TO
   }
 ];
 
@@ -124,13 +119,11 @@ os.metrics.TIME_SETTINGS = [
     label: 'Fade',
     description: 'Fade in/out features based on the size of your timeline window and scroll direction',
     key: os.metrics.keys.Timeline.FADE
-  },
-  {
+  }, {
     label: 'Lock',
     description: 'Locks start of view window during animation',
     key: os.metrics.keys.Timeline.LOCK
-  },
-  {
+  }, {
     label: 'Time Range',
     description: 'Changes the load range from the timeline settings',
     key: os.metrics.keys.Timeline.TIME_RANGE
