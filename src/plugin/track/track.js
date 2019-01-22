@@ -1389,8 +1389,10 @@ plugin.track.updateCurrentLine = function(track, startTime, startIndex, endTime,
     }
   }
 
-  if (startIndex !== endIndex) {
-    //
+  // interpolate the current position if we haven't exhausted the available coordinates and the last known position
+  // isn't at one of the ends. if the current position is an end, the current time is between tracks in a multi track.
+  if (flatCoordinates.length < coordinates.length &&
+      (!currentEnds || !currentEnds.length || currentEnds[currentEnds.length - 1] !== flatCoordinates.length)) {
     // interpolate the start position if the current line starts past the first index and is not on a multi-line end
     //
     // if the line starts at a multi-line end, the start time is between tracks in a multi track.
@@ -1431,10 +1433,13 @@ plugin.track.updateCurrentLine = function(track, startTime, startIndex, endTime,
         currentEnds.push(flatCoordinates.length);
       }
     }
-  }
 
-  // show the current position marker if the current line has points
-  plugin.track.setShowMarker(track, flatCoordinates.length > 0);
+    if (endIndex == 0 || startIndex === coordinates.length) {
+      plugin.track.setShowMarker(track, false);
+    } else {
+      plugin.track.setShowMarker(track, true);
+    }
+  }
 
   // mark the line as dirty so the WebGL feature converter recreates it
   currentLine.set(os.geom.GeometryField.DIRTY, true);
