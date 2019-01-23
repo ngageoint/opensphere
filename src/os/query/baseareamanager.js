@@ -78,7 +78,7 @@ os.query.BaseAreaManager.LOGGER_ = goog.log.getLogger('os.query.BaseAreaManager'
  * Drawing layer ID
  * @type {string}
  */
-os.ui.query.DRAW_ID = 'draw';
+os.query.DRAW_ID = 'draw';
 
 
 /**
@@ -553,7 +553,7 @@ os.query.BaseAreaManager.prototype.updateStyles_ = function() {
 
   if (changed) {
     // 2D just needs one redraw at the end
-    var source = /** @type {ol.source.Vector} */ (this.getMap().getLayer(os.ui.query.DRAW_ID).getSource());
+    var source = /** @type {ol.source.Vector} */ (this.getMap().getLayer(os.query.DRAW_ID).getSource());
     source.changed();
   }
 };
@@ -575,7 +575,7 @@ os.query.BaseAreaManager.prototype.updateStyle = function(area, opt_suppress) {
   var entries = qm.getEntries(null, /** @type {string} */ (area.getId()));
 
   var expectedStyle = defaultStyle;
-  var source = /** @type {ol.source.Vector} */ (this.getMap().getLayer(os.ui.query.DRAW_ID).getSource());
+  var source = /** @type {ol.source.Vector} */ (this.getMap().getLayer(os.query.DRAW_ID).getSource());
 
   if (entries && entries.length > 0) {
     var layerSet = os.ui.queryManager.getLayerSet();
@@ -620,7 +620,7 @@ os.query.BaseAreaManager.prototype.updateStyle = function(area, opt_suppress) {
  * @param {!ol.Feature} area
  */
 os.query.BaseAreaManager.prototype.redraw = function(area) {
-  var source = /** @type {ol.source.Vector} */ (this.getMap().getLayer(os.ui.query.DRAW_ID).getSource());
+  var source = /** @type {ol.source.Vector} */ (this.getMap().getLayer(os.query.DRAW_ID).getSource());
   var id = area.getId();
   if (id && source.getFeatureById(id)) {
     source.dispatchEvent(new ol.source.Vector.Event(ol.source.VectorEventType.CHANGEFEATURE, area));
