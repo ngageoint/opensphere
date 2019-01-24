@@ -16,7 +16,8 @@ os.math.Units = {
   METERS: 'm',
   NAUTICAL_MILES: 'nmi',
   MILES: 'mi',
-  FEET: 'ft'
+  FEET: 'ft',
+  YARD: 'yd'
 };
 
 
@@ -49,7 +50,8 @@ os.math.UnitLabels = {
   'Meters': os.math.Units.METERS,
   'Nautical Miles': os.math.Units.NAUTICAL_MILES,
   'Miles': os.math.Units.MILES,
-  'Feet': os.math.Units.FEET
+  'Feet': os.math.Units.FEET,
+  'Yard': os.math.Units.YARD
 };
 
 
@@ -91,6 +93,12 @@ os.math.METERS_TO_KILOMETERS = .001;
 
 
 /**
+ * @type {number}
+ */
+os.math.METERS_TO_YARDS = 1.09361;
+
+
+/**
  * function to simplify unit conversion
  * @param {number} value
  * @param {string} newUnit
@@ -119,6 +127,9 @@ os.math.convertUnits = function(value, newUnit, opt_oldUnit) {
       case os.math.Units.FEET:
         value = value / os.math.METERS_TO_FEET;
         break;
+      case os.math.Units.YARD:
+        value = value / os.math.METERS_TO_YARDS;
+        break;
       default:
         return NaN;
     }
@@ -137,6 +148,9 @@ os.math.convertUnits = function(value, newUnit, opt_oldUnit) {
       break;
     case os.math.Units.FEET:
       multiplier = os.math.METERS_TO_FEET;
+      break;
+    case os.math.Units.YARD:
+      multiplier = os.math.METERS_TO_YARDS;
       break;
     case os.math.Units.NAUTICAL_MILES:
       multiplier = os.math.METERS_TO_NAUTICAL_MILES;

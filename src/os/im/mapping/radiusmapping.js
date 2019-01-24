@@ -3,6 +3,7 @@ goog.require('os.Fields');
 goog.require('os.geo');
 goog.require('os.im.mapping.MappingRegistry');
 goog.require('os.im.mapping.RenameMapping');
+goog.require('os.math.Units');
 
 
 
@@ -111,7 +112,7 @@ os.im.mapping.RadiusMapping.prototype.execute = function(item) {
     var current = os.math.parseNumber(os.im.mapping.getItemField(item, this.field));
     if (!isNaN(current)) {
       if (this.units) {
-        current = current * os.geo.UNIT_MULTIPLIERS[this.units];
+        current = os.math.convertUnits(current, os.style.DEFAULT_UNITS, this.units);
       }
 
       os.im.mapping.setItemField(item, this.toField, current);
@@ -145,7 +146,7 @@ os.im.mapping.RadiusMapping.prototype.autoDetect = function(items) {
             if (typeof units == 'string') {
               units = units.toLowerCase();
 
-              if (units in os.geo.UNIT_MULTIPLIERS) {
+              if (goog.object.getValues(os.math.Units).indexOf(units) !== -1) {
                 m.setUnits(units);
               }
             }
