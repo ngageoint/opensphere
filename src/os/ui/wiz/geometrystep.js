@@ -411,7 +411,7 @@ os.ui.wiz.GeometryStepCtrl = function($scope) {
   /**
    * @type {Array<string>}
    */
-  this['units'] = goog.object.getKeys(os.geo.UNIT_MULTIPLIERS);
+  this['units'] = goog.object.getValues(os.math.Units);
 
   /**
    * @type {Array<string>}
