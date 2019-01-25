@@ -53,10 +53,18 @@ os.ui.TimelinePanelCtrl = function($scope, $element, $timeout) {
   os.ui.TimelinePanelCtrl.base(this, 'constructor', $scope, $element, $timeout);
 
   /**
+   * @type {boolean}
+   */
+  this['locked'] = os.time.TimelineController.getInstance().getLock();
+
+  this.tlc.listen(os.time.TimelineEventType.LOCK_TOGGLE, this.setLock, false, this);
+
+  /**
    * @type {?os.data.histo.TimelineHistManager}
    */
   this.histManager = os.data.histo.TimelineHistManager.getInstance();
   this.histManager.listen(os.ui.hist.HistogramEventType.CHANGE, this.onHistogramChange, false, this);
+
 
   if (os.ui.menu && os.ui.menu.TIMELINE) {
     this.selectBrush.setMenu(os.ui.menu.TIMELINE);
@@ -70,6 +78,7 @@ goog.inherits(os.ui.TimelinePanelCtrl, os.ui.timeline.AbstractTimelineCtrl);
  */
 os.ui.TimelinePanelCtrl.prototype.destroy = function() {
   this.histManager.unlisten(os.ui.hist.HistogramEventType.CHANGE, this.onHistogramChange, false, this);
+  this.tlc.unlisten(os.time.TimelineEventType.LOCK_TOGGLE, this.setLock, false, this);
   this.histManager = null;
   os.ui.TimelinePanelCtrl.base(this, 'destroy');
 };
@@ -233,3 +242,30 @@ os.ui.TimelinePanelCtrl.prototype.adjust = function() {
   os.MapContainer.getInstance().updateSize();
   os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
 };
+
+/**
+ * Panel lock button click.
+ * @export
+ */
+os.ui.TimelinePanelCtrl.prototype.lock = function() {
+  var isLocked = this.tlc.getLock();
+  this.tlc.toggleLock();
+  this['locked'] = this.tlc.getLock();
+  if (isLocked) {
+    angular.element('.js-svg-timeline_unlock').addClass('d-none');
+    angular.element('.js-svg-timeline_lock').removeClass('d-none');
+  } else {
+    angular.element('.js-svg-timeline_lock').addClass('d-none');
+    angular.element('.js-svg-timeline_unlock').removeClass('d-none');
+  }
+  os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Timeline.LOCK, 1);
+};
+
+/**
+ * Set lock
+ */
+os.ui.TimelinePanelCtrl.prototype.setLock = function() {
+  this['locked'] = this.tlc.getLock();
+  os.ui.apply(this.scope);
+};
+
