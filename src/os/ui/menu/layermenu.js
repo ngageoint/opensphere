@@ -6,6 +6,7 @@ goog.require('ol.extent');
 goog.require('os.action.EventType');
 goog.require('os.command.FlyToExtent');
 goog.require('os.fn');
+goog.require('os.layer.ILayer');
 goog.require('os.metrics.keys');
 goog.require('os.ui.ex.ExportDirective');
 goog.require('os.ui.menu.Menu');
@@ -351,7 +352,7 @@ os.ui.menu.layer.onIdentify_ = function(event) {
   // ignore base map and tile layers, we don't want to remove and re-add these during identify
   var visibleVectorLayers = os.MapContainer.getInstance().getLayers().filter(function(e) {
     // leave the basemaps on, it's slow and ugly to hide during an identify
-    if (e instanceof plugin.basemap.layer.BaseMap) {
+    if (/** @type {os.layer.ILayer} */ (e).getOSType() === 'Map Layers') {
       return false;
     } else if (!ol.array.includes(layers, e)) {
       return (e.getVisible() || /** @type {os.layer.ILayer} */ (e).getLayerVisible());
