@@ -347,7 +347,16 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.onWindow = function(event, range) 
     // only change skip if the size actually changed
     if (diff != this.tlc.getOffset()) {
       this.tlc.setOffset(diff);
-      this.tlc.setSkip(diff / 2);
+      if (!this.tlc.getLock()) {
+        this.tlc.setSkip(diff / 2);
+      }
+    }
+    if (this.tlc.getLock()) {
+      if (this.tlc.getAnimationRange().start != range[0]) {
+        this.tlc.setLock(false);
+        os.alertManager.sendAlert('Moving the currently displayed window turns off the timeline lock. ' +
+        'Relock at the new location if desired.');
+      }
     }
 
     this.tlc.setCurrent(range[1]);

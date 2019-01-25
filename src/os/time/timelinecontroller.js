@@ -63,6 +63,12 @@ os.time.TimelineController = function() {
    * @type {number}
    * @private
    */
+  this.lockRange_ = 0;
+
+  /**
+   * @type {number}
+   * @private
+   */
   this.offset_ = 1000;
 
   /**
@@ -299,6 +305,11 @@ os.time.TimelineController.prototype.getLock = function() {
  */
 os.time.TimelineController.prototype.toggleLock = function() {
   this.lock_ = !this.lock_;
+  if (this.lock_) {
+    this.lockRange_ = this.getCurrentRange().end - this.getCurrentRange().start;
+    this.setSkip(this.lockRange_);
+    this.first();
+  }
   return this.lock_;
 };
 
@@ -308,6 +319,11 @@ os.time.TimelineController.prototype.toggleLock = function() {
  */
 os.time.TimelineController.prototype.setLock = function(value) {
   this.lock_ = value;
+  if (this.lock_) {
+    this.lockRange_ = this.getCurrentRange().end - this.getCurrentRange().start;
+    this.setSkip(this.lockRange_);
+    this.first();
+  }
   this.dispatchEvent(os.time.TimelineEventType.LOCK_TOGGLE);
 };
 
@@ -607,7 +623,7 @@ os.time.TimelineController.prototype.stop = function() {
 os.time.TimelineController.prototype.first = function() {
   var animateRange = this.getAnimationRange();
   if (this.getLock()) {
-    this.setOffset(this.skip_);
+    this.setOffset(this.lockRange_);
   }
   this.setCurrent(animateRange.start + this.offset_);
 };
@@ -791,7 +807,8 @@ os.time.TimelineController.prototype.adjustCurrent_ = function(dir) {
       this.lastRange_ = range;
 
       if (this.lock_) {
-        if (this.loadRanges_.getBounds().end === range.end && (this.skip_ + nextPosition - range.end) > 0) {
+        if (this.loadRanges_.getBounds().end === range.end && (this.skip_ + nextPosition -
+          this.getAnimationRange().end) > 0) {
           // for last frame only, let it go past end
           this.current_ = lastCurrent;
         } else {
@@ -1391,6 +1408,9 @@ os.time.TimelineController.prototype.updateAnimateRange = function(newTimerange,
   if (newTimerange.start != oldTimerange.start || newTimerange.end != oldTimerange.end) {
     this.animateRanges_.remove(oldTimerange);
     this.addAnimateRange(newTimerange);
+    if (this.getLock()) {
+      this.setCurrent(this.getAnimationRange().start + this.getOffset());
+    }
   }
 };
 
