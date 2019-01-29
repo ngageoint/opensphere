@@ -1,6 +1,6 @@
 goog.provide('plugin.area.AreaImportCtrl');
 
-goog.require('os.ui.query.ui.AreaImportCtrl');
+goog.require('os.ui.query.AreaImportCtrl');
 goog.require('plugin.area');
 
 
@@ -10,7 +10,7 @@ goog.require('plugin.area');
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$timeout} $timeout The Angular $timeout service.
- * @extends {os.ui.query.ui.AreaImportCtrl}
+ * @extends {os.ui.query.AreaImportCtrl}
  * @constructor
  * @ngInject
  * @template T
@@ -18,7 +18,7 @@ goog.require('plugin.area');
 plugin.area.AreaImportCtrl = function($scope, $element, $timeout) {
   plugin.area.AreaImportCtrl.base(this, 'constructor', $scope, $element, $timeout);
 };
-goog.inherits(plugin.area.AreaImportCtrl, os.ui.query.ui.AreaImportCtrl);
+goog.inherits(plugin.area.AreaImportCtrl, os.ui.query.AreaImportCtrl);
 
 
 /**

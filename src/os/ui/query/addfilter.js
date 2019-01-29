@@ -1,7 +1,8 @@
-goog.provide('os.ui.query.ui.AddFilterCtrl');
-goog.provide('os.ui.query.ui.addFilterDirective');
+goog.provide('os.ui.query.AddFilterCtrl');
+goog.provide('os.ui.query.addFilterDirective');
 
 goog.require('ol.array');
+goog.require('os.filter.BaseFilterManager');
 goog.require('os.filter.FilterEntry');
 goog.require('os.ui.Module');
 goog.require('os.ui.filter.ui.editFiltersDirective');
@@ -16,7 +17,7 @@ goog.require('os.ui.window');
  * The combinator window directive
  * @return {angular.Directive}
  */
-os.ui.query.ui.addFilterDirective = function() {
+os.ui.query.addFilterDirective = function() {
   return {
     restrict: 'AE',
     replace: true,
@@ -26,7 +27,7 @@ os.ui.query.ui.addFilterDirective = function() {
     },
     template: '<button class="btn btn-primary btn-sm" title="Add a filter" ng-disabled="!addfilterctrl.canAdd()" ' +
         'ng-click="addfilterctrl.add()"><i class="fa fa-plus"></i> {{btnText}}</button>',
-    controller: os.ui.query.ui.AddFilterCtrl,
+    controller: os.ui.query.AddFilterCtrl,
     controllerAs: 'addfilterctrl'
   };
 };
@@ -35,7 +36,7 @@ os.ui.query.ui.addFilterDirective = function() {
 /**
  * Add the directive to the module
  */
-os.ui.Module.directive('addfilter', [os.ui.query.ui.addFilterDirective]);
+os.ui.Module.directive('addfilter', [os.ui.query.addFilterDirective]);
 
 
 
@@ -46,7 +47,7 @@ os.ui.Module.directive('addfilter', [os.ui.query.ui.addFilterDirective]);
  * @constructor
  * @ngInject
  */
-os.ui.query.ui.AddFilterCtrl = function($scope, $element) {
+os.ui.query.AddFilterCtrl = function($scope, $element) {
   /**
    * @type {?angular.JQLite}
    * @private
@@ -85,7 +86,7 @@ os.ui.query.ui.AddFilterCtrl = function($scope, $element) {
  * Clean up
  * @protected
  */
-os.ui.query.ui.AddFilterCtrl.prototype.onDestroy = function() {
+os.ui.query.AddFilterCtrl.prototype.onDestroy = function() {
   os.ui.queryManager.unlisten(goog.events.EventType.PROPERTYCHANGE, this.updateLayers, false, this);
 
   goog.dispose(this.layerMenu);
@@ -100,7 +101,7 @@ os.ui.query.ui.AddFilterCtrl.prototype.onDestroy = function() {
  * Updates the list of layers in the combo box
  * @protected
  */
-os.ui.query.ui.AddFilterCtrl.prototype.updateLayers = function() {
+os.ui.query.AddFilterCtrl.prototype.updateLayers = function() {
   if (!this.layerMenu) {
     return;
   }
@@ -141,7 +142,7 @@ os.ui.query.ui.AddFilterCtrl.prototype.updateLayers = function() {
     }
   }
 
-  layers.sort(os.ui.query.ui.AddFilterCtrl.sortLayers);
+  layers.sort(os.ui.query.AddFilterCtrl.sortLayers);
 
   for (var i = 0, n = layers.length; i < n; i++) {
     var id = layers[i]['id'];
@@ -160,7 +161,7 @@ os.ui.query.ui.AddFilterCtrl.prototype.updateLayers = function() {
  * Open the menu to pick the layer for the filter
  * @export
  */
-os.ui.query.ui.AddFilterCtrl.prototype.add = function() {
+os.ui.query.AddFilterCtrl.prototype.add = function() {
   if (this.scope['layer'] && this.scope['layer']['id']) {
     this.addFilter(this.scope['layer']['id']);
   } else if (this.layerMenu && this.element_) {
@@ -178,11 +179,11 @@ os.ui.query.ui.AddFilterCtrl.prototype.add = function() {
  * @param {string} layerId
  * @protected
  */
-os.ui.query.ui.AddFilterCtrl.prototype.addFilter = function(layerId) {
+os.ui.query.AddFilterCtrl.prototype.addFilter = function(layerId) {
   var layer = ol.array.find(this.layers, function(layer) {
     return layer['id'] == layerId;
   });
-  os.ui.filter.FilterManager.edit(layerId, layer['columns'], this.onFilterReady_.bind(this));
+  os.filter.BaseFilterManager.edit(layerId, layer['columns'], this.onFilterReady_.bind(this));
 };
 
 
@@ -191,7 +192,7 @@ os.ui.query.ui.AddFilterCtrl.prototype.addFilter = function(layerId) {
  * @param {os.filter.FilterEntry} entry
  * @private
  */
-os.ui.query.ui.AddFilterCtrl.prototype.onFilterReady_ = function(entry) {
+os.ui.query.AddFilterCtrl.prototype.onFilterReady_ = function(entry) {
   if (entry) {
     this.scope.$emit('filterComplete', entry);
   }
@@ -203,7 +204,7 @@ os.ui.query.ui.AddFilterCtrl.prototype.onFilterReady_ = function(entry) {
  * @return {boolean}
  * @export
  */
-os.ui.query.ui.AddFilterCtrl.prototype.canAdd = function() {
+os.ui.query.AddFilterCtrl.prototype.canAdd = function() {
   return !!this.layers && this.layers.length > 0;
 };
 
@@ -214,6 +215,6 @@ os.ui.query.ui.AddFilterCtrl.prototype.canAdd = function() {
  * @param {Object} b
  * @return {number} per compare functions
  */
-os.ui.query.ui.AddFilterCtrl.sortLayers = function(a, b) {
+os.ui.query.AddFilterCtrl.sortLayers = function(a, b) {
   return goog.string.caseInsensitiveCompare(a['label'], b['label']);
 };

@@ -1,5 +1,5 @@
-goog.provide('os.ui.query.ui.area.ChooseAreaCtrl');
-goog.provide('os.ui.query.ui.area.chooseAreaDirective');
+goog.provide('os.ui.query.area.ChooseAreaCtrl');
+goog.provide('os.ui.query.area.chooseAreaDirective');
 
 goog.require('goog.Disposable');
 goog.require('os.ui.Module');
@@ -9,7 +9,7 @@ goog.require('os.ui.window.confirmDirective');
 /**
  * @return {angular.Directive}
  */
-os.ui.query.ui.area.chooseAreaDirective = function() {
+os.ui.query.area.chooseAreaDirective = function() {
   return {
     restrict: 'E',
     scope: {
@@ -20,7 +20,7 @@ os.ui.query.ui.area.chooseAreaDirective = function() {
       'helpContent': '@'
     },
     templateUrl: os.ROOT + 'views/query/area/choosearea.html',
-    controller: os.ui.query.ui.area.ChooseAreaCtrl,
+    controller: os.ui.query.area.ChooseAreaCtrl,
     controllerAs: 'choosearea'
   };
 };
@@ -29,7 +29,7 @@ os.ui.query.ui.area.chooseAreaDirective = function() {
 /**
  * Add the directive to the os module
  */
-os.ui.Module.directive('choosearea', [os.ui.query.ui.area.chooseAreaDirective]);
+os.ui.Module.directive('choosearea', [os.ui.query.area.chooseAreaDirective]);
 
 
 
@@ -39,7 +39,7 @@ os.ui.Module.directive('choosearea', [os.ui.query.ui.area.chooseAreaDirective]);
  * @constructor
  * @ngInject
  */
-os.ui.query.ui.area.ChooseAreaCtrl = function($scope) {
+os.ui.query.area.ChooseAreaCtrl = function($scope) {
   /**
    * @type {?angular.Scope}
    * @private
@@ -66,14 +66,14 @@ os.ui.query.ui.area.ChooseAreaCtrl = function($scope) {
 
   $scope.$on('$destroy', this.dispose.bind(this));
 };
-goog.inherits(os.ui.query.ui.area.ChooseAreaCtrl, goog.Disposable);
+goog.inherits(os.ui.query.area.ChooseAreaCtrl, goog.Disposable);
 
 
 /**
  * @inheritDoc
  */
-os.ui.query.ui.area.ChooseAreaCtrl.prototype.disposeInternal = function() {
-  os.ui.query.ui.area.ChooseAreaCtrl.base(this, 'disposeInternal');
+os.ui.query.area.ChooseAreaCtrl.prototype.disposeInternal = function() {
+  os.ui.query.area.ChooseAreaCtrl.base(this, 'disposeInternal');
   os.ui.areaManager.unlisten(goog.events.EventType.PROPERTYCHANGE, this.onAreasChanged_, false, this);
 };
 
@@ -82,7 +82,7 @@ os.ui.query.ui.area.ChooseAreaCtrl.prototype.disposeInternal = function() {
  * @param {os.events.PropertyChangeEvent} event
  * @private
  */
-os.ui.query.ui.area.ChooseAreaCtrl.prototype.onAreasChanged_ = function(event) {
+os.ui.query.area.ChooseAreaCtrl.prototype.onAreasChanged_ = function(event) {
   if (this.scope_) {
     this.updateAreas_();
 
@@ -99,7 +99,7 @@ os.ui.query.ui.area.ChooseAreaCtrl.prototype.onAreasChanged_ = function(event) {
 /**
  * @private
  */
-os.ui.query.ui.area.ChooseAreaCtrl.prototype.updateAreas_ = function() {
+os.ui.query.area.ChooseAreaCtrl.prototype.updateAreas_ = function() {
   if (this.scope_) {
     this.scope_['areas'] = os.ui.areaManager.getAll();
 
@@ -114,7 +114,7 @@ os.ui.query.ui.area.ChooseAreaCtrl.prototype.updateAreas_ = function() {
  * @param {function(!ol.Feature)} confirm
  * @param {ol.Feature=} opt_default The default area to select
  */
-os.ui.query.ui.area.launchChooseArea = function(confirm, opt_default) {
+os.ui.query.area.launchChooseArea = function(confirm, opt_default) {
   os.ui.window.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
     confirm: confirm,
     confirmValue: opt_default,

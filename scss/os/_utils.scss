@@ -157,6 +157,10 @@
   color: $link-color;
   cursor: pointer;
   text-decoration: $link-decoration;
+
+  &.nav-link {
+    text-decoration: none;
+  }
 }
 
 // --------------------------------- Font Utilities --------------------------------- //
@@ -215,6 +219,46 @@
   }
 }
 
+.u-nav-tabs__vertical.nav-tabs {
+  border-bottom: 0;
+  border-right: 1px solid $nav-tabs-border-color;
+  display: flex;
+  flex-flow: column nowrap;
+  margin-left: $nav-link-padding-x;
+
+  .nav-link {
+    border-bottom-color: $nav-tabs-border-color;
+    border-bottom-left-radius: $nav-tabs-border-radius;
+    border-right-color: $body-bg;
+    border-top-left-radius: $nav-tabs-border-radius;
+    border-top-right-radius: 0;
+    margin: 0;
+    white-space: nowrap;
+
+    &:not(.active) {
+      border-right: 0;
+      border-top-right-radius: 0;
+    }
+
+    &.active {
+      background: $body-bg;
+      border-right-color: $body-bg;
+      margin-right: -1px;
+    }
+
+    &:hover {
+      color: inherit;
+    }
+  }
+
+  .nav-item:first-child {
+    margin-top: ($spacer / 2);
+  }
+
+  .nav-item + .nav-item {
+    margin-top: .25rem;
+  }
+}
 
 // --------------------------------- Form Utilities --------------------------------- //
 .u-required:after {
@@ -323,6 +367,9 @@
   width: 3.5rem;
 }
 
+.u-input__width-10 {
+  width: 6.5rem !important;
+}
 
 // --------------------------------- Color Utilities --------------------------------- //
 .u-bg-body {

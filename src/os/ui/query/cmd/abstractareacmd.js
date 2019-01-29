@@ -1,10 +1,11 @@
 goog.provide('os.ui.query.cmd.AbstractArea');
+
 goog.require('goog.Disposable');
 goog.require('ol.Feature');
 goog.require('os.command.ICommand');
 goog.require('os.command.State');
 goog.require('os.events.PropertyChangeEvent');
-goog.require('os.ui.query.AreaManager');
+goog.require('os.query.BaseAreaManager');
 
 
 

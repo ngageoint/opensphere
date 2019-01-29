@@ -45,7 +45,9 @@ os.time.TimelineActionEventType = {
   ANIMATE_SKIP: 'timeline.animateSkip',
   ANIMATE_HOLD: 'timeline.animateHold',
   ACTIVE_WINDOW: 'timeline.activeWindow',
-  ZOOM: 'timeline.zoom'
+  ZOOM: 'timeline.zoom',
+  FEATURE_INFO: 'timeline.featureInfo',
+  GO_TO: 'timeline.goTo'
 };
 
 
