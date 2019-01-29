@@ -18,10 +18,10 @@ goog.require('os.im.mapping.SemiMajorMapping');
 goog.require('os.im.mapping.SemiMinorMapping');
 goog.require('os.im.mapping.time.DateTimeMapping');
 goog.require('os.layer.LayerType');
-goog.require('os.ui.CombinatorCtrl');
 goog.require('os.ui.ControlType');
 goog.require('os.ui.Icons');
 goog.require('os.ui.ogc.IFeatureTypeDescriptor');
+goog.require('os.ui.query.CombinatorCtrl');
 goog.require('plugin.arc.ArcFeatureType');
 
 
@@ -546,7 +546,7 @@ plugin.arc.layer.ArcLayerDescriptor.prototype.isFilterable = function() {
  */
 plugin.arc.layer.ArcLayerDescriptor.prototype.launchFilterManager = function() {
   var id = this.getId() + os.ui.data.BaseProvider.ID_DELIMITER + 'features';
-  os.ui.CombinatorCtrl.launchForLayer(id, this.getTitle() + ' Features');
+  os.ui.query.CombinatorCtrl.launchForLayer(id, this.getTitle() + ' Features');
 };
 
 

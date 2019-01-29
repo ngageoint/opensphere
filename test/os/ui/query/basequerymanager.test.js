@@ -28,7 +28,7 @@ os.ui.query.Handler.prototype.getLayerName = function() {
   return this.id;
 };
 
-describe('os.ui.query.QueryManager', function() {
+describe('os.query.BaseQueryManager', function() {
   var am, qm;
   var testPolygon;
   beforeEach(function() {
@@ -65,10 +65,10 @@ describe('os.ui.query.QueryManager', function() {
       qm.unlisten(goog.events.EventType.PROPERTYCHANGE, listener);
       var entries = qm.getEntries(null, null, null, true);
 
-      entries.sort(os.ui.query.QueryManager.sortEntries);
+      entries.sort(os.query.BaseQueryManager.sortEntries);
 
       for (var i = 0, n = entries.length; i < n; i++) {
-        var key = os.ui.query.QueryManager.getKey_(entries[i]);
+        var key = os.query.BaseQueryManager.getKey_(entries[i]);
 
         if (opt_debug) {
           console.log(key);
@@ -282,7 +282,7 @@ describe('os.ui.query.QueryManager', function() {
   });
 
   it('should return whether an area exists', function() {
-    var am = os.ui.query.AreaManager.getInstance();
+    var am = os.query.BaseAreaManager.getInstance();
     // don't do map stuff
     am.mapReady_ = false;
     qm.removeEntries();

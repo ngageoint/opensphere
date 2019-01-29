@@ -11,6 +11,7 @@ goog.require('os.data.AreaNode');
 goog.require('os.defines');
 goog.require('os.fn');
 goog.require('os.geo');
+goog.require('os.query.BaseAreaManager');
 goog.require('os.query.ui.mergeAreasDirective');
 goog.require('os.query.ui.modifyAreaDirective');
 goog.require('os.ui.ex.AreaExportCtrl');
@@ -647,7 +648,7 @@ os.ui.menu.spatial.onMenuEvent = function(event, opt_layerIds) {
               feature = /** @type {!ol.Feature} */ (feature.clone());
               feature.set(os.data.RecordField.SOURCE_NAME, source.getTitle(), true);
             }
-            os.ui.query.AreaManager.save(feature, columns);
+            os.query.BaseAreaManager.save(feature, columns);
             break;
           case os.action.EventType.ENABLE:
           case os.action.EventType.DISABLE:
@@ -667,10 +668,10 @@ os.ui.menu.spatial.onMenuEvent = function(event, opt_layerIds) {
             } else {
               // the feature was just drawn, so we will treat it as the targetArea
               conf['targetArea'] = feature;
-              conf['op'] = os.ui.query.ui.ModifyOp.ADD;
+              conf['op'] = os.ui.query.ModifyOp.ADD;
             }
 
-            os.ui.query.ui.launchModifyArea(conf);
+            os.ui.query.launchModifyArea(conf);
             break;
           case os.action.EventType.MERGE_AREAS:
           case os.action.EventType.EXPORT:
@@ -707,7 +708,7 @@ os.ui.menu.spatial.onMenuEvent = function(event, opt_layerIds) {
     }
 
     if (event.type === os.action.EventType.MERGE_AREAS) {
-      os.ui.query.AreaManager.merge(/** @type {!Array<!ol.Feature>} */ (features), 'mergeareas');
+      os.query.BaseAreaManager.merge(/** @type {!Array<!ol.Feature>} */ (features), 'mergeareas');
     } else if (event.type === os.action.EventType.EXPORT) {
       // I don't really have any idea why this one type doesn't operate with the menu properly without these
       event.preventDefault();

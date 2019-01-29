@@ -35,6 +35,9 @@ os.metrics.keys.Timeline = {
   FPS: 'timeline.features.controls-changeFps',
   LOAD: 'timeline.features.controls-load',
   RANGE: 'timeline.features.controls-range',
+  REMOVE: 'timeline.features.controls-remove',
+  FEATURE_INFO: 'timeline.features.controls-featureInfo',
+  GO_TO: 'timeline.features.controls-goTo',
 
   // time range
   RANGE_ANIMATE: 'timeline.features.timeRange-animate',

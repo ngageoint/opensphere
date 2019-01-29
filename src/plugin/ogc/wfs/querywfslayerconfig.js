@@ -4,8 +4,8 @@ goog.require('os.net.ParamModifier');
 goog.require('os.ogc.filter.OGCFilterModifier');
 goog.require('os.query.TemporalHandler');
 goog.require('os.query.TemporalQueryManager');
-goog.require('os.ui.CombinatorCtrl');
-goog.require('os.ui.query.ui.CombinatorCtrl');
+goog.require('os.ui.query.BaseCombinatorCtrl');
+goog.require('os.ui.query.CombinatorCtrl');
 goog.require('plugin.ogc.query.FilterIDModifier');
 goog.require('plugin.ogc.query.OGCQueryHandler');
 goog.require('plugin.ogc.query.OGCTemporalFormatter');
@@ -112,7 +112,7 @@ plugin.ogc.wfs.QueryWFSLayerConfig.prototype.addMappings = function(layer, optio
  * @param {!os.layer.Vector} layer The layer
  */
 plugin.ogc.wfs.launchFilterManager = function(layer) {
-  os.ui.CombinatorCtrl.launchForLayer(layer.getId());
+  os.ui.query.CombinatorCtrl.launchForLayer(layer.getId());
 };
 
 

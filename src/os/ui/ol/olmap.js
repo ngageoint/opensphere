@@ -32,11 +32,11 @@ goog.require('os.fn');
 goog.require('os.map');
 goog.require('os.map.IMapContainer');
 goog.require('os.ol.source.XYZ');
+goog.require('os.query.BaseAreaManager');
 goog.require('os.ui.ol.control.LayerSwitcher');
 goog.require('os.ui.ol.interaction.AreaHover');
 goog.require('os.ui.ol.interaction.FocusInteraction');
 goog.require('os.ui.ol.interaction.MouseWheelZoom');
-goog.require('os.ui.query.AreaManager');
 
 
 
@@ -179,7 +179,7 @@ os.ui.ol.OLMap.prototype.init = function(opt_container) {
   }
 
   $(this.map_.getViewport()).attr('tabindex', 50);
-  os.ui.query.AreaManager.getInstance().setMap(this);
+  os.query.BaseAreaManager.getInstance().setMap(this);
 
   // If any control element gets clicked. set the map focus
   $('.ol-overlaycontainer-stopevent > div, .ol-overlaycontainer-stopevent > div *').click(goog.bind(function() {

@@ -1,5 +1,5 @@
-goog.provide('os.ui.query.ui.ModifyAreaCtrl');
-goog.provide('os.ui.query.ui.modifyAreaDirective');
+goog.provide('os.ui.query.ModifyAreaCtrl');
+goog.provide('os.ui.query.modifyAreaDirective');
 
 goog.require('goog.Disposable');
 goog.require('goog.log');
@@ -14,7 +14,7 @@ goog.require('os.ui.query.cmd.AreaModify');
  * The modifyarea directive
  * @return {angular.Directive}
  */
-os.ui.query.ui.modifyAreaDirective = function() {
+os.ui.query.modifyAreaDirective = function() {
   return {
     restrict: 'E',
     replace: true,
@@ -24,7 +24,7 @@ os.ui.query.ui.modifyAreaDirective = function() {
       'op': '=?'
     },
     templateUrl: os.ROOT + 'views/query/modifyarea.html',
-    controller: os.ui.query.ui.ModifyAreaCtrl,
+    controller: os.ui.query.ModifyAreaCtrl,
     controllerAs: 'modarea'
   };
 };
@@ -33,7 +33,7 @@ os.ui.query.ui.modifyAreaDirective = function() {
 /**
  * Add the directive to the module.
  */
-os.ui.Module.directive('modifyarea', [os.ui.query.ui.modifyAreaDirective]);
+os.ui.Module.directive('modifyarea', [os.ui.query.modifyAreaDirective]);
 
 
 
@@ -45,7 +45,7 @@ os.ui.Module.directive('modifyarea', [os.ui.query.ui.modifyAreaDirective]);
  * @constructor
  * @ngInject
  */
-os.ui.query.ui.ModifyAreaCtrl = function($scope, $element) {
+os.ui.query.ModifyAreaCtrl = function($scope, $element) {
   /**
    * @type {?angular.Scope}
    * @protected
@@ -62,7 +62,7 @@ os.ui.query.ui.ModifyAreaCtrl = function($scope, $element) {
    * @type {goog.log.Logger}
    * @protected
    */
-  this.log = os.ui.query.ui.ModifyAreaCtrl.LOGGER_;
+  this.log = os.ui.query.ModifyAreaCtrl.LOGGER_;
 
   /**
    * @type {ol.Feature|undefined}
@@ -110,7 +110,7 @@ os.ui.query.ui.ModifyAreaCtrl = function($scope, $element) {
   this['title'] = 'New Area';
 
   // defaults
-  $scope['op'] = $scope['op'] || os.ui.query.ui.ModifyOp.ADD;
+  $scope['op'] = $scope['op'] || os.ui.query.ModifyOp.ADD;
 
   $scope.$watch('area', this.onAreaChange.bind(this));
   $scope.$watch('op', this.updatePreview.bind(this));
@@ -118,23 +118,23 @@ os.ui.query.ui.ModifyAreaCtrl = function($scope, $element) {
   $scope.$on('$destroy', this.dispose.bind(this));
   $scope.$emit(os.ui.WindowEventType.READY);
 };
-goog.inherits(os.ui.query.ui.ModifyAreaCtrl, goog.Disposable);
+goog.inherits(os.ui.query.ModifyAreaCtrl, goog.Disposable);
 
 
 /**
- * Logger for os.ui.query.ui.ModifyAreaCtrl
+ * Logger for os.ui.query.ModifyAreaCtrl
  * @type {goog.log.Logger}
  * @private
  * @const
  */
-os.ui.query.ui.ModifyAreaCtrl.LOGGER_ = goog.log.getLogger('os.ui.query.ui.ModifyAreaCtrl');
+os.ui.query.ModifyAreaCtrl.LOGGER_ = goog.log.getLogger('os.ui.query.ModifyAreaCtrl');
 
 
 /**
  * @inheritDoc
  */
-os.ui.query.ui.ModifyAreaCtrl.prototype.disposeInternal = function() {
-  os.ui.query.ui.ModifyAreaCtrl.base(this, 'disposeInternal');
+os.ui.query.ModifyAreaCtrl.prototype.disposeInternal = function() {
+  os.ui.query.ModifyAreaCtrl.base(this, 'disposeInternal');
   this.setPreviewFeature(undefined);
 
   this.scope = null;
@@ -146,7 +146,7 @@ os.ui.query.ui.ModifyAreaCtrl.prototype.disposeInternal = function() {
  * Make sure everything is kosher.
  * @protected
  */
-os.ui.query.ui.ModifyAreaCtrl.prototype.validate = function() {
+os.ui.query.ModifyAreaCtrl.prototype.validate = function() {
   this['error'] = null;
 
   if (this.scope) {
@@ -162,9 +162,9 @@ os.ui.query.ui.ModifyAreaCtrl.prototype.validate = function() {
     } else if (this.error_) {
       switch (this.error_.message) {
         case os.geo.jsts.ErrorMessage.EMPTY:
-          if (this.scope['op'] == os.ui.query.ui.ModifyOp.REMOVE) {
+          if (this.scope['op'] == os.ui.query.ModifyOp.REMOVE) {
             this['error'] = 'Area to Remove cannot fully contain the Area to Modify, or the result will be empty.';
-          } else if (this.scope['op'] == os.ui.query.ui.ModifyOp.INTERSECT) {
+          } else if (this.scope['op'] == os.ui.query.ModifyOp.INTERSECT) {
             this['error'] = 'Areas do not have an intersection.';
           } else {
             // really hope we don't get here... add shouldn't result in an empty geometry
@@ -172,7 +172,7 @@ os.ui.query.ui.ModifyAreaCtrl.prototype.validate = function() {
           }
           break;
         case os.geo.jsts.ErrorMessage.NO_OP:
-          if (this.scope['op'] == os.ui.query.ui.ModifyOp.REMOVE) {
+          if (this.scope['op'] == os.ui.query.ModifyOp.REMOVE) {
             this['error'] = 'Area to Remove will not remove anything from the Area to Modify.';
           } else {
             this['error'] = 'Area to Add will not add anything to the Area to Modify.';
@@ -195,7 +195,7 @@ os.ui.query.ui.ModifyAreaCtrl.prototype.validate = function() {
  * @param {ol.Feature=} opt_old
  * @protected
  */
-os.ui.query.ui.ModifyAreaCtrl.prototype.onAreaChange = function(opt_new, opt_old) {
+os.ui.query.ModifyAreaCtrl.prototype.onAreaChange = function(opt_new, opt_old) {
   // area was provided, but it isn't in the area manager. assume it's a user-drawn area, or from a source.
   this.scope['fixArea'] = this.scope['area'] && !os.ui.areaManager.contains(this.scope['area']);
 
@@ -209,7 +209,7 @@ os.ui.query.ui.ModifyAreaCtrl.prototype.onAreaChange = function(opt_new, opt_old
  * @param {ol.Feature=} opt_old
  * @protected
  */
-os.ui.query.ui.ModifyAreaCtrl.prototype.onTargetAreaChange = function(opt_new, opt_old) {
+os.ui.query.ModifyAreaCtrl.prototype.onTargetAreaChange = function(opt_new, opt_old) {
   // target area was provided, but it isn't in the area manager. assume it's a user-drawn area, or from a source.
   this.scope['fixTargetArea'] = this.scope['targetArea'] && !os.ui.areaManager.contains(this.scope['targetArea']);
 
@@ -220,7 +220,7 @@ os.ui.query.ui.ModifyAreaCtrl.prototype.onTargetAreaChange = function(opt_new, o
 /**
  * Update the preview feature.
  */
-os.ui.query.ui.ModifyAreaCtrl.prototype.updatePreview = function() {
+os.ui.query.ModifyAreaCtrl.prototype.updatePreview = function() {
   this.setPreviewFeature(this.getMergedArea_());
   this.validate();
 };
@@ -230,7 +230,7 @@ os.ui.query.ui.ModifyAreaCtrl.prototype.updatePreview = function() {
  * @param {ol.Feature|undefined} feature
  * @protected
  */
-os.ui.query.ui.ModifyAreaCtrl.prototype.setPreviewFeature = function(feature) {
+os.ui.query.ModifyAreaCtrl.prototype.setPreviewFeature = function(feature) {
   this.preview = feature;
 };
 
@@ -240,20 +240,20 @@ os.ui.query.ui.ModifyAreaCtrl.prototype.setPreviewFeature = function(feature) {
  * @return {ol.Feature|undefined}
  * @private
  */
-os.ui.query.ui.ModifyAreaCtrl.prototype.getMergedArea_ = function() {
+os.ui.query.ModifyAreaCtrl.prototype.getMergedArea_ = function() {
   this.error_ = null;
 
   var feature;
   if (this.scope['area'] && this.scope['targetArea']) {
     try {
       switch (this.scope['op']) {
-        case os.ui.query.ui.ModifyOp.ADD:
+        case os.ui.query.ModifyOp.ADD:
           feature = os.geo.jsts.addTo(this.scope['area'], this.scope['targetArea']);
           break;
-        case os.ui.query.ui.ModifyOp.REMOVE:
+        case os.ui.query.ModifyOp.REMOVE:
           feature = os.geo.jsts.removeFrom(this.scope['area'], this.scope['targetArea']);
           break;
-        case os.ui.query.ui.ModifyOp.INTERSECT:
+        case os.ui.query.ModifyOp.INTERSECT:
           feature = os.geo.jsts.intersect(this.scope['area'], this.scope['targetArea']);
           break;
         default:
@@ -277,7 +277,7 @@ os.ui.query.ui.ModifyAreaCtrl.prototype.getMergedArea_ = function() {
  * Fire the cancel callback and close the window.
  * @export
  */
-os.ui.query.ui.ModifyAreaCtrl.prototype.cancel = function() {
+os.ui.query.ModifyAreaCtrl.prototype.cancel = function() {
   this.close_();
 };
 
@@ -286,7 +286,7 @@ os.ui.query.ui.ModifyAreaCtrl.prototype.cancel = function() {
  * Performs the area modification.
  * @export
  */
-os.ui.query.ui.ModifyAreaCtrl.prototype.confirm = function() {
+os.ui.query.ModifyAreaCtrl.prototype.confirm = function() {
   var feature = this.getMergedArea_();
   var geometry = feature ? feature.getGeometry() : null;
   if (feature && geometry) {
@@ -318,13 +318,13 @@ os.ui.query.ui.ModifyAreaCtrl.prototype.confirm = function() {
  * @return {string}
  * @export
  */
-os.ui.query.ui.ModifyAreaCtrl.prototype.getPopoverTitle = function(op) {
+os.ui.query.ModifyAreaCtrl.prototype.getPopoverTitle = function(op) {
   switch (op) {
-    case os.ui.query.ui.ModifyOp.ADD:
+    case os.ui.query.ModifyOp.ADD:
       return 'Add Area';
-    case os.ui.query.ui.ModifyOp.REMOVE:
+    case os.ui.query.ModifyOp.REMOVE:
       return 'Remove Area';
-    case os.ui.query.ui.ModifyOp.INTERSECT:
+    case os.ui.query.ModifyOp.INTERSECT:
       return 'Area Intersection';
     default:
       break;
@@ -340,13 +340,13 @@ os.ui.query.ui.ModifyAreaCtrl.prototype.getPopoverTitle = function(op) {
  * @return {string}
  * @export
  */
-os.ui.query.ui.ModifyAreaCtrl.prototype.getPopoverContent = function(op) {
+os.ui.query.ModifyAreaCtrl.prototype.getPopoverContent = function(op) {
   switch (op) {
-    case os.ui.query.ui.ModifyOp.ADD:
+    case os.ui.query.ModifyOp.ADD:
       return this['help']['addOp'];
-    case os.ui.query.ui.ModifyOp.REMOVE:
+    case os.ui.query.ModifyOp.REMOVE:
       return this['help']['removeOp'];
-    case os.ui.query.ui.ModifyOp.INTERSECT:
+    case os.ui.query.ModifyOp.INTERSECT:
       return this['help']['intersectOp'];
     default:
       break;
@@ -360,7 +360,7 @@ os.ui.query.ui.ModifyAreaCtrl.prototype.getPopoverContent = function(op) {
  * Close the window.
  * @private
  */
-os.ui.query.ui.ModifyAreaCtrl.prototype.close_ = function() {
+os.ui.query.ModifyAreaCtrl.prototype.close_ = function() {
   os.ui.window.close(this.element);
 };
 
@@ -373,13 +373,13 @@ os.ui.query.ui.ModifyAreaCtrl.prototype.close_ = function() {
  *    ui: (string|undefined)
  * }}
  */
-os.ui.query.ui.ModifyAreaConfig;
+os.ui.query.ModifyAreaConfig;
 
 
 /**
  * @enum {string}
  */
-os.ui.query.ui.ModifyOp = {
+os.ui.query.ModifyOp = {
   ADD: 'Add',
   REMOVE: 'Remove',
   INTERSECT: 'Intersect'
@@ -388,9 +388,9 @@ os.ui.query.ui.ModifyOp = {
 
 /**
  * Launch a dialog to modify an area.
- * @param {!os.ui.query.ui.ModifyAreaConfig} config
+ * @param {!os.ui.query.ModifyAreaConfig} config
  */
-os.ui.query.ui.launchModifyArea = function(config) {
+os.ui.query.launchModifyArea = function(config) {
   var windowId = 'modifyArea';
   if (os.ui.window.exists(windowId)) {
     // update the existing window

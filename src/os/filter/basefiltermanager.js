@@ -1,5 +1,5 @@
-goog.provide('os.ui.filter.FilterManager');
-goog.provide('os.ui.filter.FilterType');
+goog.provide('os.filter.BaseFilterManager');
+goog.provide('os.filter.FilterType');
 
 goog.require('goog.array');
 goog.require('goog.events.EventTarget');
@@ -22,7 +22,7 @@ goog.require('os.ui.query.cmd.FilterAdd');
  * @constructor
  * @implements {os.IPersistable}
  */
-os.ui.filter.FilterType = function() {
+os.filter.FilterType = function() {
   /**
    * @type {Array.<os.filter.FilterEntry>}
    */
@@ -38,7 +38,7 @@ os.ui.filter.FilterType = function() {
 /**
  * @inheritDoc
  */
-os.ui.filter.FilterType.prototype.persist = function(opt_to) {
+os.filter.FilterType.prototype.persist = function(opt_to) {
   if (!opt_to) {
     opt_to = {};
   }
@@ -59,7 +59,7 @@ os.ui.filter.FilterType.prototype.persist = function(opt_to) {
 /**
  * @inheritDoc
  */
-os.ui.filter.FilterType.prototype.restore = function(config) {
+os.filter.FilterType.prototype.restore = function(config) {
   this.and = config['and'];
   var list = config['filters'];
 
@@ -81,22 +81,20 @@ os.ui.filter.FilterType.prototype.restore = function(config) {
  * @extends {goog.events.EventTarget}
  * @constructor
  */
-os.ui.filter.FilterManager = function() {
-  os.ui.filter.FilterManager.base(this, 'constructor');
+os.filter.BaseFilterManager = function() {
+  os.filter.BaseFilterManager.base(this, 'constructor');
 
   /**
-   * @type {!Object<string, os.ui.filter.FilterType>}
+   * @type {!Object<string, os.filter.FilterType>}
    * @protected
    */
   this.types = {};
 
-  this.migrateFilters_();
   this.load();
-
   os.dispatcher.listen(os.ui.filter.FilterEventType.ADD_FILTER, this.onAddFilterEvent_, false, this);
 };
-goog.inherits(os.ui.filter.FilterManager, goog.events.EventTarget);
-goog.addSingletonGetter(os.ui.filter.FilterManager);
+goog.inherits(os.filter.BaseFilterManager, goog.events.EventTarget);
+goog.addSingletonGetter(os.filter.BaseFilterManager);
 
 
 /**
@@ -108,7 +106,7 @@ goog.define('os.FILTER_STORAGE_KEY', 'filters');
 /**
  * @inheritDoc
  */
-os.ui.filter.FilterManager.prototype.disposeInternal = function() {
+os.filter.BaseFilterManager.prototype.disposeInternal = function() {
   os.dispatcher.unlisten(os.ui.filter.FilterEventType.ADD_FILTER, this.onAddFilterEvent_, false, this);
 };
 
@@ -117,13 +115,13 @@ os.ui.filter.FilterManager.prototype.disposeInternal = function() {
  * Saves the filter data
  * @protected
  */
-os.ui.filter.FilterManager.prototype.save = function() {};
+os.filter.BaseFilterManager.prototype.save = function() {};
 
 
 /**
  * Loads the filter data
  */
-os.ui.filter.FilterManager.prototype.load = function() {
+os.filter.BaseFilterManager.prototype.load = function() {
   this.dispatchEvent(new os.events.PropertyChangeEvent('filters'));
 };
 
@@ -133,14 +131,14 @@ os.ui.filter.FilterManager.prototype.load = function() {
  * @param {string=} opt_layerId
  * @return {?Array<os.filter.FilterEntry>}
  */
-os.ui.filter.FilterManager.prototype.getStoredFilters = function(opt_layerId) {
+os.filter.BaseFilterManager.prototype.getStoredFilters = function(opt_layerId) {
   var obj = os.settings.get(os.FILTER_STORAGE_KEY);
 
   if (obj) {
     var all = [];
 
     for (var key in obj) {
-      var type = new os.ui.filter.FilterType();
+      var type = new os.filter.FilterType();
       type.restore(obj[key]);
       all = all.concat(type.filters);
     }
@@ -159,7 +157,7 @@ os.ui.filter.FilterManager.prototype.getStoredFilters = function(opt_layerId) {
 /**
  * Clears the filter data
  */
-os.ui.filter.FilterManager.prototype.clear = function() {
+os.filter.BaseFilterManager.prototype.clear = function() {
   goog.object.clear(this.types);
   this.save();
 };
@@ -168,7 +166,7 @@ os.ui.filter.FilterManager.prototype.clear = function() {
 /**
  * Clears the filter data
  */
-os.ui.filter.FilterManager.prototype.clearTemp = function() {
+os.filter.BaseFilterManager.prototype.clearTemp = function() {
   if (this.types) {
     for (var type in this.types) {
       var filters = this.types[type].filters;
@@ -190,7 +188,7 @@ os.ui.filter.FilterManager.prototype.clearTemp = function() {
  * @param {string} type
  * @return {?Array.<os.filter.FilterEntry>}
  */
-os.ui.filter.FilterManager.prototype.getFiltersByType = function(type) {
+os.filter.BaseFilterManager.prototype.getFiltersByType = function(type) {
   if (type in this.types) {
     return this.types[type].filters;
   }
@@ -204,7 +202,7 @@ os.ui.filter.FilterManager.prototype.getFiltersByType = function(type) {
  * @param {?string=} opt_layerId
  * @return {?Array.<os.filter.FilterEntry>}
  */
-os.ui.filter.FilterManager.prototype.getFilters = function(opt_layerId) {
+os.filter.BaseFilterManager.prototype.getFilters = function(opt_layerId) {
   var all = [];
   for (var type in this.types) {
     all = all.concat(this.types[type].filters);
@@ -223,7 +221,7 @@ os.ui.filter.FilterManager.prototype.getFilters = function(opt_layerId) {
  * @param {!string} layerId
  * @return {?os.filter.IFilterable}
  */
-os.ui.filter.FilterManager.prototype.getFilterable = function(layerId) {
+os.filter.BaseFilterManager.prototype.getFilterable = function(layerId) {
   return /** @type {os.filter.IFilterable} */ (os.dataManager.getDescriptor(layerId));
 };
 
@@ -234,7 +232,7 @@ os.ui.filter.FilterManager.prototype.getFilterable = function(layerId) {
  * @param {Array<os.filter.FilterEntry>} filters
  * @return {?Array<os.filter.FilterEntry>}
  */
-os.ui.filter.FilterManager.prototype.matchFilters = function(layerId, filters) {
+os.filter.BaseFilterManager.prototype.matchFilters = function(layerId, filters) {
   var filterable = this.getFilterable(layerId);
   var cols = null;
 
@@ -268,7 +266,7 @@ os.ui.filter.FilterManager.prototype.matchFilters = function(layerId, filters) {
  * @param {string} id The ID
  * @return {?os.filter.FilterEntry} The filter or null if none was found
  */
-os.ui.filter.FilterManager.prototype.getFilter = function(id) {
+os.filter.BaseFilterManager.prototype.getFilter = function(id) {
   var list = this.getFilters();
 
   if (list) {
@@ -288,7 +286,7 @@ os.ui.filter.FilterManager.prototype.getFilter = function(id) {
  * @param {string=} opt_type
  * @return {boolean} True if filters exist, false otherwise
  */
-os.ui.filter.FilterManager.prototype.hasFilters = function(opt_type) {
+os.filter.BaseFilterManager.prototype.hasFilters = function(opt_type) {
   var result = this.getFilters(opt_type);
   return !!result && result.length > 0;
 };
@@ -299,7 +297,7 @@ os.ui.filter.FilterManager.prototype.hasFilters = function(opt_type) {
  * @param {string=} opt_type
  * @return {boolean} True if enabled filters exist, false otherwise
  */
-os.ui.filter.FilterManager.prototype.hasEnabledFilters = function(opt_type) {
+os.filter.BaseFilterManager.prototype.hasEnabledFilters = function(opt_type) {
   var result = this.getFilters(opt_type);
 
   if (result) {
@@ -320,7 +318,7 @@ os.ui.filter.FilterManager.prototype.hasEnabledFilters = function(opt_type) {
  * @param {string=} opt_type
  * @return {boolean}
  */
-os.ui.filter.FilterManager.prototype.isEnabled = function(filter, opt_type) {
+os.filter.BaseFilterManager.prototype.isEnabled = function(filter, opt_type) {
   return filter.isEnabled();
 };
 
@@ -329,10 +327,10 @@ os.ui.filter.FilterManager.prototype.isEnabled = function(filter, opt_type) {
  * Adds a filter
  * @param {os.filter.FilterEntry} filter
  */
-os.ui.filter.FilterManager.prototype.addFilter = function(filter) {
+os.filter.BaseFilterManager.prototype.addFilter = function(filter) {
   if (filter && filter.type && filter.getFilter()) {
     if (!(filter.type in this.types)) {
-      this.types[filter.type] = new os.ui.filter.FilterType();
+      this.types[filter.type] = new os.filter.FilterType();
     }
 
     this.types[filter.type].filters.push(filter);
@@ -346,7 +344,7 @@ os.ui.filter.FilterManager.prototype.addFilter = function(filter) {
  * Removes a filter
  * @param {os.filter.FilterEntry} filter
  */
-os.ui.filter.FilterManager.prototype.removeFilter = function(filter) {
+os.filter.BaseFilterManager.prototype.removeFilter = function(filter) {
   if (filter && filter.type in this.types) {
     var type = this.types[filter.type];
     ol.array.remove(type.filters, filter);
@@ -361,7 +359,7 @@ os.ui.filter.FilterManager.prototype.removeFilter = function(filter) {
  * Removes a filter
  * @param {Array<os.filter.FilterEntry>} filters
  */
-os.ui.filter.FilterManager.prototype.removeFilters = function(filters) {
+os.filter.BaseFilterManager.prototype.removeFilters = function(filters) {
   os.array.forEach(filters, function(filter) {
     if (filter && filter.type in this.types) {
       var type = this.types[filter.type];
@@ -379,7 +377,7 @@ os.ui.filter.FilterManager.prototype.removeFilters = function(filters) {
  * Removes a type
  * @param {!string} type
  */
-os.ui.filter.FilterManager.prototype.removeType = function(type) {
+os.filter.BaseFilterManager.prototype.removeType = function(type) {
   if (type in this.types) {
     this.types[type].filters = [];
   }
@@ -393,7 +391,7 @@ os.ui.filter.FilterManager.prototype.removeType = function(type) {
  * @param {string} type
  * @return {boolean} True for AND, false for OR
  */
-os.ui.filter.FilterManager.prototype.getGrouping = function(type) {
+os.filter.BaseFilterManager.prototype.getGrouping = function(type) {
   if (type in this.types) {
     return this.types[type].and;
   }
@@ -408,7 +406,7 @@ os.ui.filter.FilterManager.prototype.getGrouping = function(type) {
  * @param {!string} type
  * @param {boolean} and
  */
-os.ui.filter.FilterManager.prototype.setGrouping = function(type, and) {
+os.filter.BaseFilterManager.prototype.setGrouping = function(type, and) {
   if (type in this.types) {
     var t = this.types[type];
     var old = t.and;
@@ -430,7 +428,7 @@ os.ui.filter.FilterManager.prototype.setGrouping = function(type, and) {
  * @param {string|os.filter.FilterEntry} filterOrId
  * @param {boolean=} opt_toggle Optional toggle value. If not set, the value will flip.
  */
-os.ui.filter.FilterManager.prototype.toggle = function(filterOrId, opt_toggle) {
+os.filter.BaseFilterManager.prototype.toggle = function(filterOrId, opt_toggle) {
   var id = filterOrId instanceof os.filter.FilterEntry ? filterOrId.getId() : filterOrId;
   if (id) {
     var filter = this.getFilter(id);
@@ -452,7 +450,7 @@ os.ui.filter.FilterManager.prototype.toggle = function(filterOrId, opt_toggle) {
  * @param {goog.events.Event} event
  * @private
  */
-os.ui.filter.FilterManager.prototype.onAddFilterEvent_ = function(event) {
+os.filter.BaseFilterManager.prototype.onAddFilterEvent_ = function(event) {
   var entry = os.filter.cloneToContext(event.entry);
   if (entry) {
     var cmd = new os.ui.query.cmd.FilterAdd(entry);
@@ -465,20 +463,6 @@ os.ui.filter.FilterManager.prototype.onAddFilterEvent_ = function(event) {
 
 
 /**
- * Migrate descriptors from direct reference of local storage to settings, which may be server or local persistence
- * @private
- */
-os.ui.filter.FilterManager.prototype.migrateFilters_ = function() {
-  var str = window.localStorage.getItem(os.FILTER_STORAGE_KEY);
-  if (str) {
-    var obj = /** @type {Object} */ (JSON.parse(str));
-    os.settings.set(os.FILTER_STORAGE_KEY, obj);
-    window.localStorage.removeItem(os.FILTER_STORAGE_KEY);
-  }
-};
-
-
-/**
  * Add / Edit the filter
  * @param {string} layerId - the layer id
  * @param {Array} layerColumns - the layer columns
@@ -486,7 +470,7 @@ os.ui.filter.FilterManager.prototype.migrateFilters_ = function() {
  * @param {string|os.filter.FilterEntry=} opt_entry
  * @param {string=} opt_label
  */
-os.ui.filter.FilterManager.edit = function(layerId, layerColumns, callback, opt_entry, opt_label) {
+os.filter.BaseFilterManager.edit = function(layerId, layerColumns, callback, opt_entry, opt_label) {
   var edit = false;
   if (opt_entry) {
     edit = true;
@@ -539,7 +523,7 @@ os.ui.filter.FilterManager.edit = function(layerId, layerColumns, callback, opt_
  * @param {string|os.filter.FilterEntry=} opt_entry
  * @param {string=} opt_label
  */
-os.ui.filter.FilterManager.view = function(layerId, layerColumns, callback, opt_entry, opt_label) {
+os.filter.BaseFilterManager.view = function(layerId, layerColumns, callback, opt_entry, opt_label) {
   var options = {
     'id': 'editfilter',
     'x': 'center',
@@ -578,7 +562,7 @@ os.ui.filter.FilterManager.view = function(layerId, layerColumns, callback, opt_
  * @param {os.filter.FilterEntry} entry
  * @param {string} layerId
  */
-os.ui.filter.FilterManager.copy = function(entry, layerId) {
+os.filter.BaseFilterManager.copy = function(entry, layerId) {
   var options = {
     'id': 'copyfilter',
     'x': 'center',
@@ -608,7 +592,7 @@ os.ui.filter.FilterManager.copy = function(entry, layerId) {
  * @param {boolean=} opt_useType
  * @return {string}
  */
-os.ui.filter.FilterManager.prettyPrintType = function(val, opt_useType) {
+os.filter.BaseFilterManager.prettyPrintType = function(val, opt_useType) {
   var firstHashIdx = val.indexOf('#');
   if (firstHashIdx != -1) {
     // States are ugly, just get the end of it all
@@ -633,6 +617,6 @@ os.ui.filter.FilterManager.prettyPrintType = function(val, opt_useType) {
 
 
 /**
- * @type {?os.ui.filter.FilterManager}
+ * @type {?os.filter.BaseFilterManager}
  */
 os.ui.filterManager = null;
