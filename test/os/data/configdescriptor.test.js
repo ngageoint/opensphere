@@ -36,82 +36,90 @@ describe('os.data.ConfigDescriptor', function() {
     'icons': '<feature><time>'
   };
 
-  it('should get id from config', function() {
-    var d = new os.data.ConfigDescriptor();
-    d.setBaseConfig(tileConfig);
-    expect(d.getId()).toBe(tileConfig.id);
-  });
+  var bareConfig = {
+    'id': 'config#descriptor#bare',
+    'type': 'GeoJSON',
+    'url': 'http://localhost/bogus/test.geojson'
+  };
 
-  it('should get title from config', function() {
-    var d = new os.data.ConfigDescriptor();
-    d.setBaseConfig(tileConfig);
-    expect(d.getTitle()).toBe(tileConfig.title);
-  });
+  [bareConfig, tileConfig].forEach(function(config) {
+    it('should get id from config', function() {
+      var d = new os.data.ConfigDescriptor();
+      d.setBaseConfig(config);
+      expect(d.getId()).toEqual(config.id);
+    });
 
-  it('should get type from config', function() {
-    var d = new os.data.ConfigDescriptor();
-    d.setBaseConfig(tileConfig);
-    expect(d.getType()).toBe(tileConfig.layerType);
-  });
+    it('should get title from config', function() {
+      var d = new os.data.ConfigDescriptor();
+      d.setBaseConfig(config);
+      expect(d.getTitle()).toEqual(config.title);
+    });
 
-  it('should get provider from config', function() {
-    var d = new os.data.ConfigDescriptor();
-    d.setBaseConfig(tileConfig);
-    expect(d.getProvider()).toBe(tileConfig.provider);
-  });
+    it('should get type from config', function() {
+      var d = new os.data.ConfigDescriptor();
+      d.setBaseConfig(config);
+      expect(d.getType()).toEqual(config.layerType);
+    });
 
-  it('should get description from config', function() {
-    var d = new os.data.ConfigDescriptor();
-    d.setBaseConfig(tileConfig);
-    expect(d.getDescription()).toBe(tileConfig.description);
-  });
+    it('should get provider from config', function() {
+      var d = new os.data.ConfigDescriptor();
+      d.setBaseConfig(config);
+      expect(d.getProvider()).toEqual(config.provider);
+    });
 
-  it('should get tags from config', function() {
-    var d = new os.data.ConfigDescriptor();
-    d.setBaseConfig(tileConfig);
-    expect(d.getTags()).toEqual(tileConfig.tags);
-  });
+    it('should get description from config', function() {
+      var d = new os.data.ConfigDescriptor();
+      d.setBaseConfig(config);
+      expect(d.getDescription()).toEqual(config.description);
+    });
 
-  it('should get descriptor type from config', function() {
-    var d = new os.data.ConfigDescriptor();
-    d.setBaseConfig(tileConfig);
-    expect(d.getDescriptorType()).toBe(tileConfig.descriptorType);
-  });
+    it('should get tags from config', function() {
+      var d = new os.data.ConfigDescriptor();
+      d.setBaseConfig(config);
+      expect(d.getTags()).toEqual(config.tags);
+    });
 
-  it('should get icons from config', function() {
-    var d = new os.data.ConfigDescriptor();
-    d.setBaseConfig(tileConfig);
-    expect(d.getIcons()).toBe(tileConfig.icons);
-  });
+    it('should get descriptor type from config', function() {
+      var d = new os.data.ConfigDescriptor();
+      d.setBaseConfig(config);
+      expect(d.getDescriptorType()).toBe(config.descriptorType || 'config');
+    });
 
-  it('should get search type from config', function() {
-    var d = new os.data.ConfigDescriptor();
-    d.setBaseConfig(tileConfig);
-    expect(d.getSearchType()).toBe(tileConfig.layerType.toLowerCase().replace(/s$/, ''));
-  });
+    it('should get icons from config', function() {
+      var d = new os.data.ConfigDescriptor();
+      d.setBaseConfig(config);
+      expect(d.getIcons()).toBe(config.icons || '');
+    });
 
-  it('should match URLs', function() {
-    var d = new os.data.ConfigDescriptor();
-    d.setBaseConfig(tileConfig);
-    expect(d.matchesURL('https://nope.com')).toBe(false);
-    expect(d.matchesURL(tileConfig.url)).toBe(true);
-    expect(d.matchesURL('http://localhost/bogus')).toBe(false);
-  });
+    it('should get search type from config', function() {
+      var d = new os.data.ConfigDescriptor();
+      d.setBaseConfig(config);
+      expect(d.getSearchType() || '').toBe((config.layerType || '').toLowerCase().replace(/s$/, ''));
+    });
 
-  it('should persist properly', function() {
-    var d = new os.data.ConfigDescriptor();
-    d.setBaseConfig(tileConfig);
-    var obj = d.persist();
-    expect(obj.base).toEqual(tileConfig);
-  });
+    it('should match URLs', function() {
+      var d = new os.data.ConfigDescriptor();
+      d.setBaseConfig(config);
+      expect(d.matchesURL('https://nope.com')).toBe(false);
+      expect(d.matchesURL(config.url)).toBe(true);
+      expect(d.matchesURL('http://localhost/bogus')).toBe(false);
+    });
 
-  it('should restore properly', function() {
-    var d = new os.data.ConfigDescriptor();
-    d.setBaseConfig(tileConfig);
-    var obj = d.persist();
-    d = new os.data.ConfigDescriptor();
-    d.restore(obj);
-    expect(d.getBaseConfig()).toEqual(tileConfig);
+    it('should persist properly', function() {
+      var d = new os.data.ConfigDescriptor();
+      d.setBaseConfig(config);
+      var obj = d.persist();
+      expect(obj.base).toEqual(config);
+    });
+
+    it('should restore properly', function() {
+      var d = new os.data.ConfigDescriptor();
+      d.setBaseConfig(config);
+      var obj = d.persist();
+      d = new os.data.ConfigDescriptor();
+      d.restore(obj);
+      expect(d.getBaseConfig()).toEqual(config);
+    });
   });
 
   // Multi Layer Tests
