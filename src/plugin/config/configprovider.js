@@ -1,5 +1,7 @@
 goog.provide('plugin.config.Provider');
 
+goog.require('goog.log');
+goog.require('goog.log.Logger');
 goog.require('os.MapEvent');
 goog.require('os.data.BaseDescriptor');
 goog.require('os.data.ConfigDescriptor');
@@ -29,6 +31,7 @@ goog.require('plugin.basemap.layer.BaseMap');
 plugin.config.Provider = function() {
   plugin.config.Provider.base(this, 'constructor');
 
+  this.log = plugin.config.Provider.LOGGER_;
   this.setId(plugin.config.ID);
 
   /**
@@ -38,6 +41,15 @@ plugin.config.Provider = function() {
   this.layers_;
 };
 goog.inherits(plugin.config.Provider, os.ui.data.DescriptorProvider);
+
+
+/**
+ * The logger.
+ * @const
+ * @type {goog.debug.Logger}
+ * @private
+ */
+plugin.config.Provider.LOGGER_ = goog.log.getLogger('plugin.config.Provider');
 
 
 /**
@@ -59,20 +71,24 @@ plugin.config.Provider.prototype.load = function(ping) {
 
   if (this.layers_) {
     for (var id in this.layers_) {
-      var conf = this.layers_[id];
-      var fullId = this.getId() + os.data.BaseDescriptor.ID_DELIMITER + id;
-      var descriptor = os.dataManager.getDescriptor(fullId);
+      try {
+        var conf = this.layers_[id];
+        var fullId = this.getId() + os.data.BaseDescriptor.ID_DELIMITER + id;
+        var descriptor = os.dataManager.getDescriptor(fullId);
 
-      if (!descriptor) {
-        descriptor = new os.data.ConfigDescriptor();
+        if (!descriptor) {
+          descriptor = new os.data.ConfigDescriptor();
+        }
+
+        this.fixId(fullId, conf);
+        this.addIcons(conf);
+
+        descriptor.setBaseConfig(conf);
+        os.dataManager.addDescriptor(descriptor);
+        this.addDescriptor(descriptor, false, false);
+      } catch (e) {
+        goog.log.error(this.log, 'There was an error processing the configuration', e);
       }
-
-      this.fixId(fullId, conf);
-      this.addIcons(conf);
-
-      descriptor.setBaseConfig(conf);
-      os.dataManager.addDescriptor(descriptor);
-      this.addDescriptor(descriptor, false, false);
     }
   }
 
@@ -89,6 +105,9 @@ plugin.config.Provider.prototype.fixId = function(fullId, conf) {
   if (Array.isArray(conf)) {
     conf.forEach(this.fixId.bind(this, fullId));
   } else {
+    if (!('id' in conf)) {
+      throw new Error('Config for "' + fullId + '" does not contain the "id" field!');
+    }
     conf['id'] = fullId + os.data.BaseDescriptor.ID_DELIMITER + conf['id'];
   }
 };
