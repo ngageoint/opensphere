@@ -238,8 +238,21 @@ plugin.ogc.wfs.WFSLayerConfig.prototype.addMappings = function(layer, options) {
   var importer = /** @type {os.im.Importer} */ (source.getImporter());
 
   var execMappings = [];
+
+
+  var timeFields = options['timeFields'];
+  if (timeFields) {
+    if (!Array.isArray(timeFields)) {
+      timeFields = [timeFields];
+    }
+
+    this.featureType.setStartDateColumnName(timeFields[0]);
+    this.featureType.setEndDateColumnName(timeFields[1] || timeFields[0]);
+  }
+
   var startField = this.featureType.getStartDateColumnName();
   var endField = this.featureType.getEndDateColumnName();
+
   if (animate && startField) {
     if (startField === 'validTime' && this.url.indexOf('/ogc/wfsServer') > -1) {
       // validTime means that the feature type is dynamic, which means we need to find the actual start/end fields
