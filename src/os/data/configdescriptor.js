@@ -127,7 +127,9 @@ os.data.ConfigDescriptor.prototype.getTags = function() {
   }
 
   tags = tags || os.data.ConfigDescriptor.base(this, 'getTags');
-  os.array.removeDuplicates(tags);
+  if (tags) {
+    os.array.removeDuplicates(tags);
+  }
   return tags;
 };
 
