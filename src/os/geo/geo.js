@@ -42,21 +42,6 @@ os.geo.VINCENTY_ELLIPSOIDS = {
 
 
 /**
- * Multipliers to convert units to nautical miles.
- * @type {Object.<string, number>}
- * @const
- */
-os.geo.UNIT_MULTIPLIERS = {
-  'ft': 1 / 6076.0,
-  'yd': 1 / 2025.333333333333,
-  'mi': 5280 / 6076,
-  'm': 1 / 1852.0,
-  'km': 1 / 1.852,
-  'nmi': 1.0
-};
-
-
-/**
  * @type {!RegExp}
  * @const
  */
