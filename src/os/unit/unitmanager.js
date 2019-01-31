@@ -171,7 +171,7 @@ os.unit.UnitManager.prototype.convert = function(unitType, valueToConvert, multF
   // Convert to the default multiplier within the 'to' units
   var toMultiplier = toUnit.getMultiplier(multToKey);
   var toDefaultMultiplier = toUnit.getDefaultMultiplier();
-  if (toMultiplier !== toDefaultMultiplier) {
+  if (toMultiplier && toMultiplier !== toDefaultMultiplier) {
     valueToConvert /= toMultiplier.getMultiplier();
   }
   return valueToConvert;
