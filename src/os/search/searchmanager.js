@@ -322,6 +322,15 @@ os.search.SearchManager.prototype.checkProgress = function() {
 
 
 /**
+ * @param {os.search.ISearch} search
+ * @return {os.search.ProviderResults}
+ */
+os.search.SearchManager.prototype.getProviderResults = function(search) {
+  return this.providerResults_[this.getSearchKey(search)];
+};
+
+
+/**
  * @inheritDoc
  */
 os.search.SearchManager.prototype.autocomplete = function(term, opt_maxResults) {
