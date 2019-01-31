@@ -46,9 +46,7 @@ If you prefer to use NPM, that's fine too:
 
 ## Hosting
 
-OpenSphere is a web application and needs to be hosted by a http server. Any HTTP server will work fine. To get started quickly, a very simple to use node [http-server](https://github.com/indexzero/http-server) is pre-configured, it only needs to be installed:
-
- ``` npm install http-server -g ```
+OpenSphere is a web application and needs to be hosted by a http server. Any HTTP server will work fine. To get started quickly, a very simple to use node [http-server](https://github.com/indexzero/http-server) is pre-configured.
 
 To start:
 
@@ -57,8 +55,8 @@ To start:
 This will start http-server rooted at the project workspace on port 8282.
 
 If developing locally, navigating to:
- http://localhost:8282/opensphere  will open a debug-able build, where as
- http://localhost:8282/opensphere/dist/opensphere will open the compiled/optimized version.
+ http://localhost:8282/workspace/opensphere  will open a debug-able build, where as
+ http://localhost:8282/workspace/opensphere/dist/opensphere will open the compiled/optimized version.
 
 The debug path can be reloaded in the browser to pick up any changes, generally without re-compiling. This allows for much simpler and rapid development. The compiled/optimized path requires rebuilding to pick up any changes. e.g. ``` npm run build ```
 
