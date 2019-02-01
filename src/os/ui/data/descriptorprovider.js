@@ -111,6 +111,7 @@ os.ui.data.DescriptorProvider.prototype.findNode = function(descriptor) {
  * @inheritDoc
  */
 os.ui.data.DescriptorProvider.prototype.configure = function(config) {
+  os.ui.data.DescriptorProvider.base(this, 'configure', config);
   this.setState(os.structs.TriState.OFF);
   this.setEditable(false);
   this.setEnabled(true);
