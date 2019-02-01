@@ -1,6 +1,7 @@
 goog.provide('os.data.ConfigDescriptor');
 
 goog.require('goog.object');
+goog.require('os.array');
 goog.require('os.command.LayerAdd');
 goog.require('os.data.IReimport');
 goog.require('os.data.LayerSyncDescriptor');
@@ -21,7 +22,7 @@ os.data.ConfigDescriptor = function() {
   this.descriptorType = os.data.ConfigDescriptor.ID;
 
   /**
-   * @type {?Object<string, *>}
+   * @type {?(Array<Object<string, *>>|Object<string, *>)}
    * @protected
    */
   this.baseConfig = null;
@@ -41,7 +42,27 @@ os.data.ConfigDescriptor.ID = 'config';
  * @inheritDoc
  */
 os.data.ConfigDescriptor.prototype.getId = function() {
-  return /** @type {string} */ (this.get('id')) || os.data.ConfigDescriptor.base(this, 'getId');
+  var ids = /** @type {string} */ (os.data.ConfigDescriptor.getAll_(this.baseConfig, 'id'));
+
+  if (Array.isArray(ids)) {
+    if (ids.length > 1) {
+      var done = false;
+      for (var x = 0, xx = ids[0].length; x < xx && !done; x++) {
+        var char = ids[0].charAt(x);
+        for (var i = 1, ii = ids.length; i < ii && !done; i++) {
+          if (ids[i].charAt(x) !== char) {
+            done = true;
+          }
+        }
+      }
+
+      ids = ids[0].substring(0, x - 1);
+    } else if (ids.length) {
+      ids = ids[0];
+    }
+  }
+
+  return ids || os.data.ConfigDescriptor.base(this, 'getId');
 };
 
 
@@ -49,7 +70,7 @@ os.data.ConfigDescriptor.prototype.getId = function() {
  * @inheritDoc
  */
 os.data.ConfigDescriptor.prototype.getTitle = function() {
-  return /** @type {string} */ (this.get('title')) || os.data.ConfigDescriptor.base(this, 'getTitle');
+  return /** @type {string} */ (this.getFirst('title')) || os.data.ConfigDescriptor.base(this, 'getTitle');
 };
 
 
@@ -57,7 +78,18 @@ os.data.ConfigDescriptor.prototype.getTitle = function() {
  * @inheritDoc
  */
 os.data.ConfigDescriptor.prototype.getType = function() {
-  return /** @type {string} */ (this.get('layerType')) || os.data.ConfigDescriptor.base(this, 'getType');
+  var types = /** @type {Array<string>|string} */ (os.data.ConfigDescriptor.getAll_(this.baseConfig, 'layerType'));
+
+  if (Array.isArray(types)) {
+    if (types.indexOf(os.layer.LayerType.TILES) > -1 &&
+        types.indexOf(os.layer.LayerType.FEATURES) > -1) {
+      types = os.layer.LayerType.GROUPS;
+    } else {
+      types = types[0];
+    }
+  }
+
+  return types || os.data.ConfigDescriptor.base(this, 'getType');
 };
 
 
@@ -65,7 +97,7 @@ os.data.ConfigDescriptor.prototype.getType = function() {
  * @inheritDoc
  */
 os.data.ConfigDescriptor.prototype.getProvider = function() {
-  return /** @type {string} */ (this.get('provider')) || os.data.ConfigDescriptor.base(this, 'getProvider');
+  return /** @type {string} */ (this.getFirst('provider') || os.data.ConfigDescriptor.base(this, 'getProvider'));
 };
 
 
@@ -73,7 +105,9 @@ os.data.ConfigDescriptor.prototype.getProvider = function() {
  * @inheritDoc
  */
 os.data.ConfigDescriptor.prototype.getDescription = function() {
-  return /** @type {string} */ (this.get('description')) || os.data.ConfigDescriptor.base(this, 'getDescription');
+  var val = /** @type {Array<string>|string} */ (os.data.ConfigDescriptor.getAll_(this.baseConfig, 'description'));
+  val = Array.isArray(val) ? val.join('\n\n') : val;
+  return val || os.data.ConfigDescriptor.base(this, 'getDescription');
 };
 
 
@@ -81,7 +115,22 @@ os.data.ConfigDescriptor.prototype.getDescription = function() {
  * @inheritDoc
  */
 os.data.ConfigDescriptor.prototype.getTags = function() {
-  return /** @type {Array<string>} */ (this.get('tags')) || os.data.ConfigDescriptor.base(this, 'getTags');
+  var tagSets = /** @type {Array<string>} */ (os.data.ConfigDescriptor.getAll_(this.baseConfig, 'tags'));
+  var tags = null;
+
+  if (Array.isArray(tagSets)) {
+    tags = tagSets.reduce(function(all, set) {
+      return all.concat(set);
+    }, []);
+  } else {
+    tags = tagSets;
+  }
+
+  tags = tags || os.data.ConfigDescriptor.base(this, 'getTags');
+  if (tags) {
+    os.array.removeDuplicates(tags);
+  }
+  return tags;
 };
 
 
@@ -89,7 +138,8 @@ os.data.ConfigDescriptor.prototype.getTags = function() {
  * @inheritDoc
  */
 os.data.ConfigDescriptor.prototype.getDescriptorType = function() {
-  return /** @type {string} */ (this.get('descriptorType')) || os.data.ConfigDescriptor.base(this, 'getDescriptorType');
+  return /** @type {string} */ (this.getFirst('descriptorType') ||
+      os.data.ConfigDescriptor.base(this, 'getDescriptorType'));
 };
 
 
@@ -97,7 +147,13 @@ os.data.ConfigDescriptor.prototype.getDescriptorType = function() {
  * @inheritDoc
  */
 os.data.ConfigDescriptor.prototype.getIcons = function() {
-  return /** @type {string} */ (this.get('icons')) || os.data.ConfigDescriptor.base(this, 'getIcons');
+  var icons = /** @type {Array<string>|string} */ (os.data.ConfigDescriptor.getAll_(this.baseConfig, 'icons'));
+  icons = Array.isArray(icons) ? icons.join('') : icons;
+  icons = icons || os.data.ConfigDescriptor.base(this, 'getIcons');
+  icons = os.string.removeDuplicates(icons, os.ui.Icons.TILES);
+  icons = os.string.removeDuplicates(icons, os.ui.Icons.FEATURES);
+  icons = os.string.removeDuplicates(icons, os.ui.Icons.TIME);
+  return icons;
 };
 
 
@@ -116,11 +172,30 @@ os.data.ConfigDescriptor.prototype.getSearchType = function() {
 
 
 /**
- * @param {!string} key
+ * @param {string} key
  * @return {*}
+ * @protected
  */
-os.data.ConfigDescriptor.prototype.get = function(key) {
-  return key in this.baseConfig ? this.baseConfig[key] : null;
+os.data.ConfigDescriptor.prototype.getFirst = function(key) {
+  var val = os.data.ConfigDescriptor.getAll_(this.baseConfig, key);
+  return Array.isArray(val) && val.length ? val[0] : val;
+};
+
+
+/**
+ * @param {Array|Object} objOrArr
+ * @param {string} key
+ * @return {*}
+ * @private
+ */
+os.data.ConfigDescriptor.getAll_ = function(objOrArr, key) {
+  if (Array.isArray(objOrArr)) {
+    return objOrArr.map(function(item) {
+      return os.data.ConfigDescriptor.getAll_(item, key);
+    });
+  } else {
+    return key in objOrArr ? objOrArr[key] : null;
+  }
 };
 
 
@@ -152,13 +227,32 @@ os.data.ConfigDescriptor.prototype.getLayerOptions = function() {
  * @inheritDoc
  */
 os.data.ConfigDescriptor.prototype.matchesURL = function(url) {
-  if (url) {
-    var myUrl = this.get('url');
+  return os.data.ConfigDescriptor.matchesURL_(this.baseConfig, url);
+};
+
+
+/**
+ * @param {Array|Object} objOrArr
+ * @param {string} url
+ * @return {boolean}
+ * @private
+ */
+os.data.ConfigDescriptor.matchesURL_ = function(objOrArr, url) {
+  if (Array.isArray(objOrArr)) {
+    return objOrArr.reduce(function(prev, curr) {
+      if (prev) {
+        return prev;
+      }
+
+      return os.data.ConfigDescriptor.matchesURL_(curr, url);
+    }, false);
+  } else if (url) {
+    var myUrl = /** @type {string} */ (os.data.ConfigDescriptor.getAll_(objOrArr, 'url'));
     if (url == myUrl) {
       return true;
     }
 
-    var myUrls = this.get('urls');
+    var myUrls = /** @type {Array<string>} */ (os.data.ConfigDescriptor.getAll_(objOrArr, 'urls'));
     if (Array.isArray(myUrls) && myUrls.indexOf(url) > -1) {
       return true;
     }
@@ -172,7 +266,7 @@ os.data.ConfigDescriptor.prototype.matchesURL = function(url) {
  * @inheritDoc
  */
 os.data.ConfigDescriptor.prototype.canReimport = function() {
-  var importUrl = this.getBaseConfig()['importUrl'];
+  var importUrl = this.getFirst('importUrl');
   return !!importUrl;
 };
 
@@ -183,7 +277,7 @@ os.data.ConfigDescriptor.prototype.canReimport = function() {
 os.data.ConfigDescriptor.prototype.reimport = function() {
   var config = this.getBaseConfig();
   var evt = new os.ui.im.ImportEvent(os.ui.im.ImportEventType.URL,
-      /** @type {string} */ (config['importUrl'] || config['url']));
+      /** @type {string} */ (this.getFirst('importUrl') || this.getFirst('url')));
 
   var process = new os.im.ImportProcess();
   process.setEvent(evt);
@@ -196,11 +290,7 @@ os.data.ConfigDescriptor.prototype.reimport = function() {
  * @inheritDoc
  */
 os.data.ConfigDescriptor.prototype.getNodeUI = function() {
-  if (this.baseConfig && this.baseConfig['nodeUi']) {
-    return /** @type {string} */ (this.baseConfig['nodeUi']);
-  } else {
-    return '<defaultlayernodeui></defaultlayernodeui>';
-  }
+  return /** @type {string} */ (this.getFirst('nodeUi')) || '<defaultlayernodeui></defaultlayernodeui>';
 };
 
 
@@ -212,18 +302,31 @@ os.data.ConfigDescriptor.prototype.persist = function(opt_obj) {
     opt_obj = {};
   }
 
+  opt_obj['base'] = this.persistBase_(this.baseConfig);
+  return os.data.ConfigDescriptor.base(this, 'persist', opt_obj);
+};
+
+
+/**
+ * @param {Array<Object<string, *>>|Object<string, *>} obj
+ * @return {Array<Object<string, *>>|Object<string, *>}
+ * @private
+ */
+os.data.ConfigDescriptor.prototype.persistBase_ = function(obj) {
+  if (Array.isArray(obj)) {
+    return obj.map(this.persistBase_, this);
+  }
   // we are going to shallow-copy everything that is not an instance object
   var base = {};
-  for (var key in this.baseConfig) {
-    var thing = this.baseConfig[key];
+  for (var key in obj) {
+    var thing = obj[key];
 
-    if (goog.typeOf(thing) !== 'object' || thing.prototype === Object.prototype) {
+    if (goog.typeOf(thing) !== 'object' || thing.constructor === Object) {
       base[key] = thing;
     }
   }
 
-  opt_obj['base'] = base;
-  return os.data.ConfigDescriptor.base(this, 'persist', opt_obj);
+  return base;
 };
 
 
