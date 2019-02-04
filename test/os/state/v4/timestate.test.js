@@ -4,7 +4,6 @@ goog.require('goog.math.RangeSet');
 goog.require('goog.string');
 goog.require('os.MapContainer');
 goog.require('os.state.v4.TimeState');
-goog.require('os.ui.state.XMLStateManager');
 
 describe('os.state.v4.TimeState', function() {
   var stateManager = null;

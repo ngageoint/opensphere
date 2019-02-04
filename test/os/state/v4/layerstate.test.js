@@ -1,10 +1,10 @@
 goog.require('os.layer.Vector');
 goog.require('os.ogc.wfs.FeatureType');
 goog.require('os.state.StateManager');
+goog.require('os.state.XMLStateManager');
 goog.require('os.state.XMLStateOptions');
 goog.require('os.state.v4.LayerState');
 goog.require('os.test.xsd');
-goog.require('os.ui.state.XMLStateManager');
 goog.require('os.xml');
 
 
@@ -202,7 +202,7 @@ describe('os.state.v4.LayerState', function() {
 
     // waiting for the xsd files to load
     waitsFor(function() {
-      return (resultSchemas && os.ui.state && os.ui.state.StateManager);
+      return (resultSchemas && os.ui.state && os.state.BaseStateManager);
     }, 'Wait for XSD(s) to load', 2 * jasmine.DEFAULT_TIMEOUT_INTERVAL);
 
     // Runs the tests.

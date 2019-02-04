@@ -29,7 +29,7 @@ os.ui.state.stateTitleLinkFn = function(scope, element, attrs, ctrl) {
       // being exported to something other than the application so we don't need to check the title.
       var valid = true;
       if (scope['oldTitle'] !== val && scope['stateForm']['persister'] == null) {
-        valid = !os.ui.stateManager.hasState(val);
+        valid = !os.stateManager.hasState(val);
       }
 
       ctrl.$setValidity('title', valid);

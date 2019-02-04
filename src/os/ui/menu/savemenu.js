@@ -48,5 +48,5 @@ os.ui.menu.save.dispose = function() {
  * Save the application state.
  */
 os.ui.menu.save.onSaveState = function() {
-  os.ui.stateManager.startExport();
+  os.stateManager.startExport();
 };

@@ -2,11 +2,11 @@ goog.require('goog.dom');
 goog.require('goog.dom.xml');
 goog.require('goog.string');
 goog.require('os.filter.FilterEntry');
+goog.require('os.state.XMLStateManager');
 goog.require('os.state.XMLStateOptions');
 goog.require('os.state.v2.Filter'); // v2 state implemention works with v4
 goog.require('os.test.xsd');
 goog.require('os.ui.filter.ui.GroupNode');
-goog.require('os.ui.state.XMLStateManager');
 goog.require('os.xml');
 
 
@@ -36,7 +36,7 @@ describe('Filter XSD State Test', function() {
 
     // waiting for the xsd files to load
     waitsFor(function() {
-      return (resultSchemas && os.ui.state && os.ui.state.StateManager);
+      return (resultSchemas && os.ui.state && os.state.BaseStateManager);
     }, 'Wait for XSD(s) to load', 2 * jasmine.DEFAULT_TIMEOUT_INTERVAL);
 
     // Runs the tests.

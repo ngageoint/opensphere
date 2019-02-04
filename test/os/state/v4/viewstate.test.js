@@ -3,7 +3,6 @@ goog.require('goog.dom.xml');
 goog.require('goog.string');
 goog.require('os.MapContainer');
 goog.require('os.state.v4.ViewState');
-goog.require('os.ui.state.XMLStateManager');
 
 describe('os.state.v4.ViewState', function() {
   var stateManager = null;

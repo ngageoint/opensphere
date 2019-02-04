@@ -1,34 +1,35 @@
-goog.provide('os.ui.state.JSONStateManager');
+goog.provide('os.state.JSONStateManager');
+
 goog.require('goog.log');
 goog.require('goog.log.Logger');
 goog.require('os.config');
 goog.require('os.file.FileManager');
 goog.require('os.file.mime.jsonstate');
 goog.require('os.state');
+goog.require('os.state.BaseStateManager');
 goog.require('os.state.JSONStateOptions');
 goog.require('os.state.Tag');
 goog.require('os.tag');
 goog.require('os.ui.im.ImportManager');
-goog.require('os.ui.state.StateManager');
 
 
 
 /**
  * Base JSON state manager.
- * @extends {os.ui.state.StateManager.<!Object.<string, *>, !os.state.JSONStateOptions>}
+ * @extends {os.state.BaseStateManager.<!Object.<string, *>, !os.state.JSONStateOptions>}
  * @constructor
  */
-os.ui.state.JSONStateManager = function() {
-  os.ui.state.JSONStateManager.base(this, 'constructor');
+os.state.JSONStateManager = function() {
+  os.state.JSONStateManager.base(this, 'constructor');
   this.contentType = 'application/json';
-  this.log = os.ui.state.JSONStateManager.LOGGER_;
+  this.log = os.state.JSONStateManager.LOGGER_;
 
   // register the import UI
   var im = os.ui.im.ImportManager.getInstance();
   im.registerImportDetails(os.config.getAppName('Application') + ' state files.');
   im.registerImportUI(os.file.mime.jsonstate.TYPE, new os.ui.state.StateImportUI());
 };
-goog.inherits(os.ui.state.JSONStateManager, os.ui.state.StateManager);
+goog.inherits(os.state.JSONStateManager, os.state.BaseStateManager);
 
 
 /**
@@ -37,13 +38,13 @@ goog.inherits(os.ui.state.JSONStateManager, os.ui.state.StateManager);
  * @private
  * @const
  */
-os.ui.state.JSONStateManager.LOGGER_ = goog.log.getLogger('os.ui.state.JSONStateManager');
+os.state.JSONStateManager.LOGGER_ = goog.log.getLogger('os.state.JSONStateManager');
 
 
 /**
  * @inheritDoc
  */
-os.ui.state.JSONStateManager.prototype.analyze = function(obj) {
+os.state.JSONStateManager.prototype.analyze = function(obj) {
   if (typeof obj === 'string') {
     var actualObject = /** @type {Object} */ (JSON.parse(obj));
     if (actualObject) {
@@ -82,7 +83,7 @@ os.ui.state.JSONStateManager.prototype.analyze = function(obj) {
 /**
  * @inheritDoc
  */
-os.ui.state.JSONStateManager.prototype.loadState = function(obj, states, stateId, opt_title) {
+os.state.JSONStateManager.prototype.loadState = function(obj, states, stateId, opt_title) {
   if (obj && states) {
     if (typeof obj === 'string') {
       var actualObject = /** @type {Object} */ (JSON.parse(obj));
@@ -114,7 +115,7 @@ os.ui.state.JSONStateManager.prototype.loadState = function(obj, states, stateId
 /**
  * @inheritDoc
  */
-os.ui.state.JSONStateManager.prototype.createStateObject = function(method, title, opt_desc, opt_tags) {
+os.state.JSONStateManager.prototype.createStateObject = function(method, title, opt_desc, opt_tags) {
   var appName = os.config.getAppName('Unknown Application');
   var version = os.config.getAppVersion('Unknown Version');
   var object = {};
@@ -137,7 +138,7 @@ os.ui.state.JSONStateManager.prototype.createStateObject = function(method, titl
 /**
  * @inheritDoc
  */
-os.ui.state.JSONStateManager.prototype.createStateOptions = function(method, title, obj, opt_desc, opt_tags) {
+os.state.JSONStateManager.prototype.createStateOptions = function(method, title, obj, opt_desc, opt_tags) {
   var options = new os.state.JSONStateOptions(title, obj);
   options.description = opt_desc || null;
   options.method = method;
@@ -151,7 +152,7 @@ os.ui.state.JSONStateManager.prototype.createStateOptions = function(method, tit
 /**
  * @inheritDoc
  */
-os.ui.state.JSONStateManager.prototype.serializeContent = function(options) {
+os.state.JSONStateManager.prototype.serializeContent = function(options) {
   return options.obj ? JSON.stringify(options.obj) : null;
 };
 
@@ -159,6 +160,6 @@ os.ui.state.JSONStateManager.prototype.serializeContent = function(options) {
 /**
  * @inheritDoc
  */
-os.ui.state.JSONStateManager.prototype.getStateFileName = function(options) {
+os.state.JSONStateManager.prototype.getStateFileName = function(options) {
   return options.obj ? options.obj[os.state.Tag.TITLE] + '_state.json' : null;
 };
