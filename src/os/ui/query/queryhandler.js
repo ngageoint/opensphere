@@ -170,6 +170,24 @@ os.ui.query.QueryHandler.prototype.setFilterFormatter = function(formatter) {
 
 
 /**
+ * Get the Spatial Required on this handler
+ * @return {boolean}
+ */
+os.ui.query.QueryHandler.prototype.getSpatialRequired = function() {
+  return this.spatialRequired;
+};
+
+
+/**
+ * Set the Spatial Required on this handler
+ * @param {boolean} value
+ */
+os.ui.query.QueryHandler.prototype.setSpatialRequired = function(value) {
+  this.spatialRequired = value;
+};
+
+
+/**
  * @param {!Object<string, string|boolean>} item
  * @return {boolean}
  */
