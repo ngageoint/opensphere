@@ -4,10 +4,10 @@ goog.require('goog.string');
 goog.require('ol.Feature');
 goog.require('ol.geom.Polygon');
 goog.require('os.query.BaseAreaManager');
+goog.require('os.state.XMLStateManager');
 goog.require('os.state.XMLStateOptions');
 goog.require('os.state.v2.QueryEntries'); // v2 state implemention works with v4
 goog.require('os.test.xsd');
-goog.require('os.ui.state.XMLStateManager');
 goog.require('os.xml');
 
 
@@ -31,7 +31,7 @@ describe('QueryArea XSD State Test', function() {
 
     // waiting for the xsd files to load
     waitsFor(function() {
-      return (resultSchemas && os.ui.state && os.ui.state.StateManager);
+      return (resultSchemas && os.ui.state && os.state.BaseStateManager);
     }, 'Wait for XSD(s) to laod', 2 * jasmine.DEFAULT_TIMEOUT_INTERVAL);
 
     // Runs the tests.

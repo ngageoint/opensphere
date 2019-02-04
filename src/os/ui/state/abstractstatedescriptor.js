@@ -11,7 +11,6 @@ goog.require('os.parse.StateParserConfig');
 goog.require('os.ui.file.method.UrlMethod');
 goog.require('os.ui.file.ui.defaultFileNodeUIDirective');
 goog.require('os.ui.state.IStateDescriptor');
-goog.require('os.ui.state.StateManager');
 
 
 
@@ -128,7 +127,7 @@ os.ui.state.AbstractStateDescriptor.prototype.activateState = function(opt_file)
       // decide whether it's a JSON file or an XML
       var doc = goog.json.isValid(content) ? JSON.parse(content) : goog.dom.xml.loadXml(content);
 
-      var list = os.ui.stateManager.analyze(doc);
+      var list = os.stateManager.analyze(doc);
       var loadItems = this.getLoadItems();
       if (loadItems) {
         for (var i = 0, n = list.length; i < n; i++) {
@@ -137,7 +136,7 @@ os.ui.state.AbstractStateDescriptor.prototype.activateState = function(opt_file)
         }
       }
 
-      os.ui.stateManager.loadState(doc, list, this.getId() + '-', this.getTitle());
+      os.stateManager.loadState(doc, list, this.getId() + '-', this.getTitle());
     }
   } catch (e) {
     this.logError('Unable to activate state: ' + e.message, e);
@@ -186,10 +185,11 @@ os.ui.state.AbstractStateDescriptor.prototype.onUrlComplete_ = function(event) {
   var file = method.getFile();
   method.dispose();
 
-  if (file) {
+  var active = this.isActive();
+  if (active && file) {
     this.activateState(file);
   } else {
-    this.logError('Unable to load state file from URL!');
+    this.logError(active ? 'Unable to load state file from URL!' : 'Descriptor deactivated before file loaded.');
   }
 };
 
@@ -224,7 +224,7 @@ os.ui.state.AbstractStateDescriptor.prototype.logError = function(msg, opt_e) {
  * @protected
  */
 os.ui.state.AbstractStateDescriptor.prototype.deactivateState = function() {
-  os.ui.stateManager.removeState(this.getId() + '-');
+  os.stateManager.removeState(this.getId() + '-');
 };
 
 
