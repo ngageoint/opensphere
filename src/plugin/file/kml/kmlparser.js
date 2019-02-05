@@ -30,6 +30,7 @@ goog.require('os.ui.ScreenOverlayCtrl');
 goog.require('os.ui.file.kml');
 goog.require('os.xml');
 goog.require('plugin.file.kml');
+goog.require('plugin.file.kml.KMLField');
 goog.require('plugin.file.kml.tour.FlyTo');
 goog.require('plugin.file.kml.tour.Tour');
 goog.require('plugin.file.kml.tour.TourControl');
@@ -904,7 +905,8 @@ plugin.file.kml.KMLParser.prototype.examineStyles_ = function(node) {
  */
 plugin.file.kml.KMLParser.prototype.readBalloonStyle_ = function(el, feature) {
   if (feature.get(os.annotation.OPTIONS_FIELD)) {
-    // annotation options already set
+    // the feature is an Open Sphere annotation, so ignore the balloon style. it's there for display in other
+    // applications, like Google Earth.
     return;
   }
 
@@ -935,22 +937,7 @@ plugin.file.kml.KMLParser.prototype.readBalloonStyle_ = function(el, feature) {
 
     text = os.ui.sanitize(text);
 
-    //
-    // For imported KML balloons:
-    //  - Disable editing
-    //  - Hide if displayMode is set to 'hide'
-    //  - Hide the name header in the annotation
-    //  - Size the overlay to fit the text
-    //
-    var annotationOptions =
-        /** @type {osx.annotation.Options} */ (os.object.unsafeClone(os.annotation.DEFAULT_OPTIONS));
-    annotationOptions.editable = false;
-    annotationOptions.show = style['displayMode'] !== 'hide';
-    annotationOptions.showName = false;
-    os.annotation.scaleToText(annotationOptions, text);
-
-    feature.set(os.annotation.OPTIONS_FIELD, annotationOptions);
-    feature.set(os.ui.FeatureEditCtrl.Field.MD_DESCRIPTION, text);
+    feature.set(plugin.file.kml.KMLField.BALLOON_TEXT, text);
   }
 };
 
