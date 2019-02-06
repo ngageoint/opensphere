@@ -10,7 +10,8 @@ $web-font-path: "https://fonts.googleapis.com/css?family=Open+Sans:400,700" !def
   color: $navbar-dark-active-color !important;
 }
 
-.navbar {
+// do not select tabs
+.navbar ul:not(.nav-tabs) {
   .navbar-brand,
   .nav-link {
     @include hover-focus {
@@ -50,13 +51,13 @@ $web-font-path: "https://fonts.googleapis.com/css?family=Open+Sans:400,700" !def
     margin: 0 .1rem;
 
     &:hover {
-      background: transparent;
+      background: $body-bg;
     }
   }
 
   .nav-link.active,
   .nav-item.show .nav-link {
-    background: transparent;
+    background: $body-bg;
     border-bottom-color: $body-bg;
   }
 }
