@@ -1,6 +1,7 @@
 goog.provide('plugin.places.KMLPlacesCtrl');
 goog.provide('plugin.places.KMLPlacesImportUI');
 
+goog.require('os.command.SequenceCommand');
 goog.require('os.defines');
 goog.require('os.im.Importer');
 goog.require('os.im.mapping.RenameMapping');
@@ -9,6 +10,7 @@ goog.require('os.ui.file.FileImportCtrl');
 goog.require('os.ui.im.FileImportUI');
 goog.require('os.ui.query');
 goog.require('plugin.file.kml.KMLParser');
+goog.require('plugin.file.kml.cmd.KMLNodeAdd');
 
 
 
@@ -154,7 +156,20 @@ plugin.places.KMLPlacesCtrl.prototype.onImportComplete_ = function(event) {
       i--;
     }
   }
-  plugin.places.menu.saveKMLToPlaces_(nodes);
+  // plugin.places.menu.saveKMLToPlaces_(nodes);
+  var rootNode = plugin.places.PlacesManager.getInstance().getPlacesRoot();
+  if (rootNode) {
+    var cmds = [];
+    for (var i = 0; i < nodes.length; i++) {
+      var cmd = new plugin.file.kml.cmd.KMLNodeAdd(nodes[i], rootNode);
+      cmd.title = 'Save ' + nodes[i].getLabel() + ' to Places';
+      cmds.push(cmd);
+    }
+    var seq = new os.command.SequenceCommand();
+    seq.setCommands(cmds);
+    os.command.CommandProcessor.getInstance().addCommand(seq);
+  }
+
   importer.dispose();
   this.close();
 };

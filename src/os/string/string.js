@@ -193,3 +193,26 @@ os.string.split = function(str, opt_removeSpaces, opt_precedence) {
 os.string.createConstant = function(str) {
   return goog.string.Const.create__googStringSecurityPrivate_(str);
 };
+
+
+/**
+ * This keeps the last instance of the substring and removes all others
+ * @param {?string} str The full string
+ * @param {?string} substr The substring whose duplicates to remove
+ * @return {string}
+ */
+os.string.removeDuplicates = function(str, substr) {
+  var result = str || '';
+  if (str && substr) {
+    var parts = str.split(substr);
+    if (parts.length > 1) {
+      var b = parts.pop();
+      var a = parts.pop();
+      result = parts.join('') + a + substr + b;
+    } else if (parts.length == 1) {
+      result = parts[0];
+    }
+  }
+
+  return result;
+};
