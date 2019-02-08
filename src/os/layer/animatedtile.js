@@ -6,6 +6,8 @@ goog.require('os.layer.Tile');
 goog.require('os.query.TemporalFormatter');
 goog.require('os.time');
 goog.require('os.time.TimelineController');
+goog.require('os.ui.Icons');
+goog.require('os.ui.IconsSVG');
 goog.require('os.ui.ScreenOverlayCtrl');
 
 
@@ -92,6 +94,24 @@ os.layer.AnimatedTile.prototype.disposeInternal = function() {
       os.ui.window.close(os.ui.window.getById(this.legendId_));
     }
   }
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.layer.AnimatedTile.prototype.getSVGIconsInternal = function() {
+  var icons = os.layer.AnimatedTile.base(this, 'getSVGIconsInternal');
+  icons.push(os.ui.IconsSVG.TIME);
+  return icons;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.layer.AnimatedTile.prototype.getIconsInternal = function() {
+  return os.layer.AnimatedTile.base(this, 'getIconsInternal') + os.ui.Icons.TIME;
 };
 
 

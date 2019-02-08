@@ -213,7 +213,6 @@ plugin.file.kml.ui.KMLNode.prototype.setFeature = function(feature) {
 
   if (this.feature_) {
     ol.events.listen(this.feature_, goog.events.EventType.PROPERTYCHANGE, this.onFeatureChange, this);
-    this.loadAnnotation();
   }
 
   this.dispatchEvent(new os.events.PropertyChangeEvent('icons'));
