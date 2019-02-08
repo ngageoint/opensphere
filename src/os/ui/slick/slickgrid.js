@@ -1273,7 +1273,7 @@ os.ui.slick.SlickGridCtrl.prototype.multiColumnSort = function(cols, a, b) {
 
     var t1 = typeof v1;
     if (t1 === 'string') {
-      v1 = v1.trim();
+      v1 = v1.trim().toLowerCase();
 
       // sort empty strings the same as undefined/null
       if (!v1) {
@@ -1283,7 +1283,7 @@ os.ui.slick.SlickGridCtrl.prototype.multiColumnSort = function(cols, a, b) {
 
     var t2 = typeof v2;
     if (t2 === 'string') {
-      v2 = v2.trim();
+      v2 = v2.trim().toLowerCase();
 
       // sort empty strings the same as undefined/null
       if (!v2) {
