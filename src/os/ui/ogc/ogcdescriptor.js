@@ -228,15 +228,6 @@ os.ui.ogc.OGCDescriptor.prototype.setActive = function(value) {
 /**
  * @inheritDoc
  */
-os.ui.ogc.OGCDescriptor.prototype.getAliases = function() {
-  var aliases = [this.getId()];
-  return aliases;
-};
-
-
-/**
- * @inheritDoc
- */
 os.ui.ogc.OGCDescriptor.prototype.getAttribution = function() {
   return this.attribution_;
 };

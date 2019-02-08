@@ -81,4 +81,40 @@ describe('os.string', function() {
     expect(r4[1]).toBe('d,e;f;g');
     expect(r4[2]).toBe('h');
   });
+
+  it('should test removing duplicates', function() {
+    var tests = [{
+      original: 'abcabcabc',
+      item: 'a',
+      expected: 'bcbcabc'
+    }, {
+      original: '',
+      item: 'whatever',
+      expected: ''
+    }, {
+      original: null,
+      item: 'whatever',
+      expected: ''
+    }, {
+      original: 'whatever',
+      item: null,
+      expected: 'whatever'
+    }, {
+      original: 'whatever',
+      item: 'bogus',
+      expected: 'whatever'
+    }, {
+      original: 'abc',
+      item: 'a',
+      expected: 'abc'
+    }, {
+      original: 'onetwothreeonetwothree',
+      item: 'two',
+      expected: 'onethreeonetwothree'
+    }];
+
+    tests.forEach(function(test) {
+      expect(os.string.removeDuplicates(test.original, test.item)).toBe(test.expected);
+    });
+  });
 });

@@ -51,6 +51,7 @@ plugin.file.kml.SOURCE_FIELDS = [
   os.Fields.SEMI_MINOR,
   os.Fields.SEMI_MAJOR_UNITS,
   os.Fields.SEMI_MINOR_UNITS,
+  os.Fields.TIME,
   os.Fields.ORIENTATION,
   os.style.StyleField.CENTER_SHAPE,
   os.style.StyleField.SHAPE,
