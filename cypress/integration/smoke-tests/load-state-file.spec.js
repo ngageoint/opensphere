@@ -36,7 +36,7 @@ describe('Import state file', function() {
     cy.get(os.Map.CANVAS_3D, {timeout: 30000});
     cy.get(os.Map.MAP_MODE_BUTTON).should('contain', '3D');
     cy.get(os.Application.PAGE).trigger('mouseenter').trigger('mousemove');
-    cy.get(os.statusBar.COORDINATES).should('contain', '+39.7');
+    cy.get(os.statusBar.COORDINATES).should('contain', '+39');
     cy.get(os.layersDialog.Layers.Tree.LAYER_4).should('contain', 'Police Stations Features (3)');
     cy.get(os.layersDialog.Layers.Tree.LAYER_5).should('contain', 'Fire Hydrants Features (747)');
     cy.get(os.layersDialog.Layers.Tree.LAYER_5).rightClick();
