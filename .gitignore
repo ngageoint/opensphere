@@ -50,8 +50,3 @@ package-lock.json
 ###########################
 cypress/videos/
 cypress/screenshots/
-
-
-# VS Code generated files #
-###########################
-.vscode/
