@@ -82,7 +82,7 @@
     "test": "npm run test:init && npm run test:run",
     "test:prep": "if ! diff -q config/settings.json dist/opensphere/config/settings.json; then echo 'WARNING: replacing dist/opensphere/config/settings.json'; mv dist/opensphere/config/settings.json dist/opensphere/config/settings.bak && cp config/settings.json dist/opensphere/config/settings.json; fi",
     "test:restore": "echo 'INFO: restoring dist/opensphere/config/settings.json'; mv dist/opensphere/config/settings.bak dist/opensphere/config/settings.json",
-    "test:cypress": "npm run test:prep && npm run start-server && npx cypress run && npm run stop-server && npm run test:restore",
+    "test:cypress": "npm run test:prep && npm run start-server && npx cypress run; npm run stop-server; npm run test:restore",
     "test:cypress-smoke": "npm run test:prep && npm run start-server && npx cypress run --spec cypress/integration/smoke-tests/* && npm run stop-server && npm run test:restore",
     "init:apidoc": "rimraf .build/*.conf.json dist/apidoc && mkdirp .build dist/apidoc",
     "init:base": "rimraf .build dist && mkdirp .build dist/opensphere",
