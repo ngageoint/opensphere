@@ -1,0 +1,37 @@
+<div class="d-flex">
+  <div class="mx-1 d-inline-flex">
+    <button class="btn btn-secondary flex-shrink-0" title="Previous {{dateCustom.duration}}"
+        ng-click="dateCustom.shiftDate(-1)"
+        ng-disabled="disabled"
+        ng-if="dateCustom.duration !== 'custom'">
+      <i class="fa fa-chevron-left"></i>
+    </button>
+    <wheel-date title="Start date"
+        class="u-input__width-10"
+        blur-on-select="true"
+        date="startDate"
+        disable="disabled">
+    </wheel-date>
+    <wheel-date title="End date (inclusive)"
+        class="u-input__width-10"
+        ng-class="{'d-none': dateCustom.duration !== 'custom'}"
+        blur-on-select="true"
+        date="endDate"
+        disable="disabled">
+    </wheel-date>
+    <button class="btn btn-secondary flex-shrink-0" title="Next {{dateCustom.duration}}"
+        ng-click="dateCustom.shiftDate(1)"
+        ng-disabled="disabled"
+        ng-if="dateCustom.duration !== 'custom'">
+      <i class="fa fa-chevron-right"></i>
+    </button>
+  </div>
+  <div class="flex-shrink-0">
+    <select title="Duration" class="custom-select"
+        ng-model="dateCustom.duration"
+        ng-change="dateCustom.onDurationChanged()"
+        ng-disabled="disabled">
+      <option ng-repeat="duration in dateCustom.durations">{{duration}}</option>
+    </select>
+  </div>
+</div>
