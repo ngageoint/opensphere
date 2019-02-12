@@ -71,7 +71,7 @@ os.ui.state.StateImportCtrl = function($scope, $element) {
   /**
    * @type {!Array.<!os.state.IState>}
    */
-  this['states'] = os.ui.stateManager.analyze(this.rawState_);
+  this['states'] = os.stateManager.analyze(this.rawState_);
 
   /**
    * @type {boolean}
@@ -139,6 +139,6 @@ os.ui.state.StateImportCtrl.prototype.accept = function() {
   options.tags = /** @type {?string} */ (this.scope['tags']);
   options.load = true;
 
-  os.ui.stateManager.addImportedState(/** @type {!os.file.File} */ (this.config_['file']), options);
+  os.stateManager.addImportedState(/** @type {!os.file.File} */ (this.config_['file']), options);
   os.ui.state.StateImportCtrl.base(this, 'accept');
 };

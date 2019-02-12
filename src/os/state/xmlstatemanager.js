@@ -1,4 +1,5 @@
-goog.provide('os.ui.state.XMLStateManager');
+goog.provide('os.state.XMLStateManager');
+
 goog.require('goog.dom');
 goog.require('goog.dom.xml');
 goog.require('goog.log');
@@ -7,38 +8,38 @@ goog.require('os.config');
 goog.require('os.file.FileManager');
 goog.require('os.file.mime.xmlstate');
 goog.require('os.state');
+goog.require('os.state.BaseStateManager');
 goog.require('os.state.Tag');
 goog.require('os.state.XMLStateOptions');
 goog.require('os.tag');
 goog.require('os.ui.im.ImportManager');
 goog.require('os.ui.state.StateImportUI');
-goog.require('os.ui.state.StateManager');
 
 
 
 /**
  * XML state manager.
- * @extends {os.ui.state.StateManager.<!Document, !os.state.XMLStateOptions>}
+ * @extends {os.state.BaseStateManager.<!Document, !os.state.XMLStateOptions>}
  * @constructor
  */
-os.ui.state.XMLStateManager = function() {
-  os.ui.state.XMLStateManager.base(this, 'constructor');
+os.state.XMLStateManager = function() {
+  os.state.XMLStateManager.base(this, 'constructor');
   this.contentType = 'text/xml';
-  this.log = os.ui.state.XMLStateManager.LOGGER_;
+  this.log = os.state.XMLStateManager.LOGGER_;
 
   /**
    * The namespace URI to use in exported state files
    * @type {string}
    * @private
    */
-  this.nsUri_ = os.ui.state.XMLStateManager.NS_URI;
+  this.nsUri_ = os.state.XMLStateManager.NS_URI;
 
   // register the import UI
   var im = os.ui.im.ImportManager.getInstance();
   im.registerImportDetails(os.config.getAppName('Application') + ' state files.');
   im.registerImportUI(os.file.mime.xmlstate.TYPE, new os.ui.state.StateImportUI());
 };
-goog.inherits(os.ui.state.XMLStateManager, os.ui.state.StateManager);
+goog.inherits(os.state.XMLStateManager, os.state.BaseStateManager);
 
 
 /**
@@ -47,7 +48,7 @@ goog.inherits(os.ui.state.XMLStateManager, os.ui.state.StateManager);
  * @private
  * @const
  */
-os.ui.state.XMLStateManager.LOGGER_ = goog.log.getLogger('os.ui.state.XMLStateManager');
+os.state.XMLStateManager.LOGGER_ = goog.log.getLogger('os.state.XMLStateManager');
 
 
 /**
@@ -55,24 +56,24 @@ os.ui.state.XMLStateManager.LOGGER_ = goog.log.getLogger('os.ui.state.XMLStateMa
  * @type {string}
  * @const
  */
-// os.ui.state.XMLStateManager.NS_URI = 'http://www.bit-sys.com/state/';
+// os.state.XMLStateManager.NS_URI = 'http://www.bit-sys.com/state/';
 // TODO:STATE -> Was the namespace rename intentional?
-os.ui.state.XMLStateManager.NS_URI = 'http://www.bit-sys.com/mist/state/';
+os.state.XMLStateManager.NS_URI = 'http://www.bit-sys.com/mist/state/';
 
 
 /**
  * @inheritDoc
  */
-os.ui.state.XMLStateManager.prototype.setVersion = function(version) {
-  os.ui.state.XMLStateManager.base(this, 'setVersion', version);
-  this.nsUri_ = os.ui.state.XMLStateManager.NS_URI + version;
+os.state.XMLStateManager.prototype.setVersion = function(version) {
+  os.state.XMLStateManager.base(this, 'setVersion', version);
+  this.nsUri_ = os.state.XMLStateManager.NS_URI + version;
 };
 
 
 /**
  * @inheritDoc
  */
-os.ui.state.XMLStateManager.prototype.analyze = function(obj) {
+os.state.XMLStateManager.prototype.analyze = function(obj) {
   if (typeof obj === 'string') {
     var doc = goog.dom.xml.loadXml(obj);
     if (doc) {
@@ -111,7 +112,7 @@ os.ui.state.XMLStateManager.prototype.analyze = function(obj) {
 /**
  * @inheritDoc
  */
-os.ui.state.XMLStateManager.prototype.loadState = function(obj, states, stateId, opt_title) {
+os.state.XMLStateManager.prototype.loadState = function(obj, states, stateId, opt_title) {
   if (obj && states) {
     if (typeof obj === 'string') {
       var doc = goog.dom.xml.loadXml(obj);
@@ -143,7 +144,7 @@ os.ui.state.XMLStateManager.prototype.loadState = function(obj, states, stateId,
 /**
  * @inheritDoc
  */
-os.ui.state.XMLStateManager.prototype.createStateObject = function(method, title, opt_desc, opt_tags) {
+os.state.XMLStateManager.prototype.createStateObject = function(method, title, opt_desc, opt_tags) {
   var appName = os.config.getAppName('Unknown Application');
   var version = os.config.getAppVersion('Unknown Version');
   var doc = goog.dom.xml.createDocument();
@@ -173,7 +174,7 @@ os.ui.state.XMLStateManager.prototype.createStateObject = function(method, title
 /**
  * @inheritDoc
  */
-os.ui.state.XMLStateManager.prototype.createStateOptions = function(method, title, obj, opt_desc, opt_tags) {
+os.state.XMLStateManager.prototype.createStateOptions = function(method, title, obj, opt_desc, opt_tags) {
   var options = new os.state.XMLStateOptions(title, obj);
   options.description = opt_desc || null;
   options.method = method;
@@ -185,7 +186,7 @@ os.ui.state.XMLStateManager.prototype.createStateOptions = function(method, titl
 /**
  * @inheritDoc
  */
-os.ui.state.XMLStateManager.prototype.serializeContent = function(options) {
+os.state.XMLStateManager.prototype.serializeContent = function(options) {
   return options.doc ? os.xml.serialize(options.doc) : null;
 };
 
@@ -193,6 +194,6 @@ os.ui.state.XMLStateManager.prototype.serializeContent = function(options) {
 /**
  * @inheritDoc
  */
-os.ui.state.XMLStateManager.prototype.getStateFileName = function(options) {
+os.state.XMLStateManager.prototype.getStateFileName = function(options) {
   return options.doc ? options.doc.querySelector(os.state.Tag.TITLE).textContent + '_state.xml' : null;
 };
