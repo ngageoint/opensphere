@@ -1,14 +1,14 @@
 <div class="d-flex flex-column flex-fill">
   <div class="modal-body d-flex flex-column">
-    <div class="js-filters-header">
+    <div class="js-filters-header" ng-if="!hideFilter">
       <b><i class="fa fa-fw fa-filter"></i>Choose filters to add</b>
       <input class="form-control" type="text" ng-model="filterTerm" ng-change="afa.searchFilters()" placeholder="Search filters"/>
     </div>
-    <div class="js-filter-tree d-flex" autoheight="50%" siblings=".js-areas-header, .js-filters-header, js-area-tree">
+    <div class="js-filter-tree d-flex" ng-if="!hideFilter" autoheight="!hideArea ? 50% : 100%" siblings=".js-areas-header, .js-filters-header, js-area-tree">
       <slicktree x-data="filters" selected="selected" show-root="true" multi-select="true"></slicktree>
     </div>
 
-    <div class="js-areas-header">
+    <div class="js-areas-header" ng-if="!hideArea">
       <b>
         <i class="fa fa-fw fa-star-o"></i>Choose areas to add
         <div class="float-right">
@@ -27,7 +27,7 @@
       </div>
       <input class="form-control" type="text" ng-model="areaTerm" ng-change="afa.searchAreas()" placeholder="Search areas"/>
     </div>
-    <div class="js-area-tree d-flex" autoheight="50%" siblings=".js-areas-header, .js-filters-header, js-filter-tree">
+    <div class="js-area-tree d-flex" ng-if="!hideArea" autoheight="!hideFilter ? 50% : 100%" siblings=".js-areas-header, .js-filters-header, js-filter-tree">
       <slicktree x-data="areas" selected="selected" show-root="true" multi-select="true"></slicktree>
     </div>
   </div>
