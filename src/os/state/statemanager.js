@@ -8,6 +8,7 @@ goog.require('os.data.ProviderEntry');
 goog.require('os.file.FileStorage');
 goog.require('os.state');
 goog.require('os.state.StateDescriptor');
+goog.require('os.state.XMLStateManager');
 goog.require('os.state.XMLStateOptions');
 goog.require('os.state.v2.BaseFilter');
 goog.require('os.state.v2.ExclusionArea');
@@ -23,13 +24,12 @@ goog.require('os.state.v4.QueryArea');
 goog.require('os.state.v4.TimeState');
 goog.require('os.state.v4.ViewState');
 goog.require('os.ui.state.StateProvider');
-goog.require('os.ui.state.XMLStateManager');
 
 
 
 /**
  * State manager.
- * @extends {os.ui.state.XMLStateManager}
+ * @extends {os.state.XMLStateManager}
  * @constructor
  */
 os.state.StateManager = function() {
@@ -96,7 +96,7 @@ os.state.StateManager = function() {
     saveFunctions: []
   };
 };
-goog.inherits(os.state.StateManager, os.ui.state.XMLStateManager);
+goog.inherits(os.state.StateManager, os.state.XMLStateManager);
 goog.addSingletonGetter(os.state.StateManager);
 
 
@@ -119,7 +119,7 @@ os.state.StateManager.prototype.clearStates = function() {
     d.setActive(false);
   });
 
-  this.dispatchEvent(os.ui.state.StateManager.EventType.CLEAR);
+  this.dispatchEvent(os.state.BaseStateManager.EventType.CLEAR);
 };
 
 

@@ -134,7 +134,7 @@ os.ui.state.menu.onDescriptorChange_ = function(event) {
 os.ui.state.menu.onStateMenuEvent_ = function(event) {
   switch (event.type) {
     case os.ui.state.menu.EventType.SAVE_STATE:
-      os.ui.stateManager.startExport();
+      os.stateManager.startExport();
       break;
     case os.ui.state.menu.EventType.CLEAR_STATES:
       var cmd = new os.ui.state.cmd.StateClear();

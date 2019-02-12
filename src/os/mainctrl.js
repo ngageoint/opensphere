@@ -255,7 +255,7 @@ os.MainCtrl = function($scope, $element, $compile, $timeout, $injector) {
   os.ui.exportManager.registerPersistenceMethod(new os.file.persist.FilePersistence());
 
   // set state manager global reference
-  os.ui.stateManager = os.state.StateManager.getInstance();
+  os.stateManager = os.state.StateManager.getInstance();
 
   // set up clear control
   os.ui.clearManager.addEntry(new os.ui.clear.ClearEntry('exclusionAreas', 'Exclusion Areas',
@@ -757,7 +757,7 @@ os.MainCtrl.prototype.handleKeyEvent_ = function(event) {
         if (ctrlOr) {
           os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.SAVE_STATE_KB, 1);
           event.preventDefault();
-          os.ui.stateManager.startExport();
+          os.stateManager.startExport();
           os.ui.apply(this.scope);
         }
         break;

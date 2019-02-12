@@ -39,7 +39,7 @@ os.ui.state.cmd.StateClear.prototype.execute = function() {
     }
   }
 
-  os.ui.stateManager.clearStates();
+  os.stateManager.clearStates();
 
   this.state = os.command.State.SUCCESS;
   return true;
