@@ -12,7 +12,8 @@ goog.require('os.ui.Module');
 os.ui.alert.alertLinkFilter = function($sce) {
   return function(text) {
     text = os.ui.sanitize(text);
-    text = text.replace(/\[([^|]+)\|([^\]]+)\]/g, '<a onclick="$(this).scope().$emit(\'dispatch\',\'$2\')">$1</a>');
+    text = text.replace(/\[([^|]+)\|([^\]]+)\]/g,
+        '<a href onclick="$(this).scope().$emit(\'dispatch\',\'$2\')">$1</a>');
     return $sce.trustAsHtml(text);
   };
 };
