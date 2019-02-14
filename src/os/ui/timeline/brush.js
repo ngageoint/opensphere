@@ -134,11 +134,6 @@ os.ui.timeline.Brush = function() {
   /**
   * @type {boolean}
   */
-  this.drawLock = false;
-
-  /**
-  * @type {boolean}
-  */
   this.init = false;
 
   /**
@@ -156,6 +151,12 @@ os.ui.timeline.Brush = function() {
    * @private
    */
   this.brushClass_ = 'brush';
+
+  /**
+   * @type {?os.time.TimelineController}
+   * @protected
+   */
+  this.tlc = os.time.TimelineController.getInstance();
 };
 goog.inherits(os.ui.timeline.Brush, os.ui.timeline.BaseItem);
 
@@ -454,41 +455,6 @@ os.ui.timeline.Brush.prototype.initSVG = function(container, height) {
     group.selectAll('.resize').append('polygon').attr('points', '0,0 0,-10 10,-10 10,-4');
     group.select('.resize.w > polygon').attr('transform', 'scale(-1, 1)');
   }
-
-  if (this.drawLock) {
-    os.time.TimelineController.getInstance().listen(os.time.TimelineEventType.LOCK_TOGGLE,
-        goog.partial(this.onBrushLockButtonUp, true), false, this);
-    var buttongroup = /** @type {d3.Selection} */ (group.append('g'));
-    var locktip = 'Locks start edge of view window during animation';
-    buttongroup.attr('class', 'lock');
-    buttongroup.append('title').text(locktip);
-
-    buttongroup.append('text').attr('class', 'button fa c-glyph js-svg-timeline_lock d-none').
-        attr('aria-label', locktip).
-        attr('role', 'img').
-        attr('y', '-1').
-        attr('font-family', 'FontAwesome').
-        style('font-size', '0.7rem').
-        on('mouseup', this.onBrushLockButtonUp.bind(this)).
-        on('mouseover', this.onBrushDeleteButtonOver.bind(this)). // ignore drag mousedown
-        on('mouseout', this.onBrushDeleteButtonOut.bind(this)). // enable drag mousedown
-        text(function() {
-          return '\uf023';
-        }); // this breaks btoa in saveSvgAsPng, so we will strip it out for screen capture
-    buttongroup.append('text').attr('class', 'button fa c-glyph js-svg-timeline_unlock').
-        attr('aria-label', locktip).
-        attr('role', 'img').
-        attr('y', '-1').
-        attr('font-family', 'FontAwesome').
-        style('font-size', '0.7rem').
-        on('mouseup', this.onBrushLockButtonUp.bind(this)).
-        on('mouseover', this.onBrushDeleteButtonOver.bind(this)).
-        on('mouseout', this.onBrushDeleteButtonOut.bind(this)).
-        text(function() {
-          return '\uf09c';
-        }); // this breaks btoa in saveSvgAsPng, so we will strip it out for screen capture
-    this.onBrushLockButtonUp(true);
-  }
 };
 
 
@@ -536,6 +502,9 @@ os.ui.timeline.Brush.prototype.snap_ = function(extent) {
  */
 os.ui.timeline.Brush.prototype.updateBrush = function(opt_silent) {
   if (!opt_silent) {
+    if (this.tlc.getLock()) {
+      this.tlc.setCurrent(this.tlc.getAnimationRange().start + this.tlc.getOffset());
+    }
     this.throttle_.fire();
   }
 };
@@ -785,26 +754,6 @@ os.ui.timeline.Brush.prototype.clear = function() {
 
 
 /**
- * Handler for brush lock click.
- * @param {boolean=} opt_getlock
- */
-os.ui.timeline.Brush.prototype.onBrushLockButtonUp = function(opt_getlock) {
-  if (!os.ui.timeline.Brush.isDragging) {
-    var isLocked = opt_getlock ? os.time.TimelineController.getInstance().getLock() :
-        os.time.TimelineController.getInstance().toggleLock();
-    if (isLocked) {
-      angular.element('.js-svg-timeline_unlock').addClass('d-none');
-      angular.element('.js-svg-timeline_lock').removeClass('d-none');
-    } else {
-      angular.element('.js-svg-timeline_lock').addClass('d-none');
-      angular.element('.js-svg-timeline_unlock').removeClass('d-none');
-    }
-    os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Timeline.LOCK, 1);
-  }
-};
-
-
-/**
  * Handler for brush delete click.
  */
 os.ui.timeline.Brush.prototype.onBrushDeleteButtonUp = function() {
@@ -838,24 +787,6 @@ os.ui.timeline.Brush.prototype.updateButtons = function() {
   var box = /** @type {SVGElement} */ (svg.node()).getBBox();
   var xPos = (box.width / 2) - 4 + box.x;
   svg.selectAll('.buttons > .button').
-      style('display', 'block').
-      style('pointer-events', 'auto').
-      attr('x', xPos);
-  if (this.drawLock) {
-    this.updateLock();
-  }
-};
-
-
-/**
- * Updates the lock location for this instance.
- */
-os.ui.timeline.Brush.prototype.updateLock = function() {
-  var svg = d3.select('.brush-' + this.getId());
-  var extent = svg.select('.extent');
-  var box = /** @type {SVGElement} */ (extent.node()).getBBox();
-  var xPos = box.x - 25;
-  svg.selectAll('.lock > .button').
       style('display', 'block').
       style('pointer-events', 'auto').
       attr('x', xPos);
@@ -917,14 +848,12 @@ os.ui.timeline.Brush.prototype.deleteBrush = function(opt_silent) {
       this.node.remove();
     }
 
-    if (this.drawLock) {
-      os.time.TimelineController.getInstance().unlisten(os.time.TimelineEventType.LOCK_TOGGLE,
-          goog.partial(this.onBrushLockButtonUp, true), false, this);
-    }
-
     this.init = false;
     if (!opt_silent) {
       this.dispatchEvent(new goog.events.Event('deleted', this));
+    }
+    if (this.tlc.getLock()) {
+      this.tlc.first();
     }
     this.dispose();
   }
