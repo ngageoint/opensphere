@@ -79,7 +79,6 @@ os.ui.data.DescriptorProvider.prototype.removeDescriptor = function(descriptor, 
 /**
  * Get the descriptors registered to this provider.
  * @return {!Array.<T>} The descriptors
- * @protected
  */
 os.ui.data.DescriptorProvider.prototype.getDescriptors = function() {
   var dm = os.dataManager;
