@@ -239,7 +239,7 @@ os.ui.layer.LabelControlsCtrl.prototype.validate_ = function() {
  */
 os.ui.layer.LabelControlsCtrl.prototype.onDragStart = function(event, ui) {
   // add a buffer to the bottom of the containment to account for the container padding
-  var sortable = this.element.find('.c-labelcontainer').sortable('instance');
+  var sortable = this.element.find('.js-label-container').sortable('instance');
   if (sortable && sortable['containment']) {
     sortable['containment'][3] += 3;
   }
