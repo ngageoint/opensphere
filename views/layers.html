@@ -8,11 +8,11 @@
     </div>
     <div class="col-auto">
       <div class="btn-group add-data-group" ng-right-click="layers.openMenu('.add-data-group')">
-        <button class="btn btn-success" title="Add data to the map" ng-click="layers.toggle('addData')"
+        <button class="btn btn-sm btn-success" title="Add data to the map" ng-click="layers.toggle('addData')"
           ng-class="{active: layers.isWindowActive('addData')}">
           <i class="fa fa-plus color-secondary"></i>
         </button>
-        <button class="btn btn-success dropdown-toggle" ng-click="layers.openMenu('.add-data-group')"></button>
+        <button class="btn btn-sm btn-success dropdown-toggle" ng-click="layers.openMenu('.add-data-group')"></button>
       </div>
     </div>
   </div>
@@ -30,10 +30,10 @@
     </div>
     <div class="col-auto">
       <div class="btn-group">
-        <button class="btn btn-secondary" title="Toggle Tile Layers" ng-click="layers.toggleTileLayers()">
+        <button class="btn btn-sm btn-secondary" title="Toggle Tile Layers" ng-click="layers.toggleTileLayers()">
           <img ng-src="{{tilesBtnIcon}}"/>
         </button>
-        <button class="btn btn-secondary" title="Toggle Feature Layers" ng-click="layers.toggleFeatureLayers()">
+        <button class="btn btn-sm btn-secondary" title="Toggle Feature Layers" ng-click="layers.toggleFeatureLayers()">
           <img ng-src="{{featuresBtnIcon}}"/>
         </button>
       </div>
