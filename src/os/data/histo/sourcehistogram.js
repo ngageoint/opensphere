@@ -40,6 +40,13 @@ os.data.histo.SourceHistogram = function(source, opt_parent) {
   this.id_ = os.data.histo.SourceHistogram.ID + os.data.histo.SourceHistogram.nextId++;
 
   /**
+   * Key for xf dimension with multi key string
+   * @type {string}
+   * @private
+   */
+  this.multiId_ = this.id_ + 'multi';
+
+  /**
    * @type {goog.log.Logger}
    * @protected
    */
@@ -57,6 +64,28 @@ os.data.histo.SourceHistogram = function(source, opt_parent) {
    * @protected
    */
   this.binMethod = null;
+
+  /**
+   * Bin method that does not get it's own dimension on the dataModel, rather it creates a dimension pivoted
+   * from this.binMethod
+   * @type {?os.histo.IBinMethod<ol.Feature>}
+   * @protected
+   */
+  this.secondaryBinMethod = null;
+
+  /**
+   * The accessor function created from smashing together the primary and secondary bin methods
+   * @type {null|function(ol.Feature):string}
+   * @protected
+   */
+  this.combinedAccessor = null;
+
+  /**
+   * The key method created from smashing together the primary and secondary key functions
+   * @type {null|function(string):string}
+   * @protected
+   */
+  this.combinedKeyMethod = null;
 
   /**
    * The source for the histogram
@@ -99,6 +128,13 @@ os.data.histo.SourceHistogram = function(source, opt_parent) {
    * @private
    */
   this.binRanges_ = false;
+
+  /**
+   * Whether the filters on the timemodel should be ignored when grouping data
+   * @type {boolean}
+   * @private
+   */
+  this.forceAllData_ = false;
 
   /**
    * The sorting function
@@ -187,8 +223,12 @@ os.data.histo.SourceHistogram.prototype.disposeInternal = function() {
   this.updateDelay_ = null;
 
   this.setBinMethod(null);
+  this.setSecondaryBinMethod(null);
 
   this.results.length = 0;
+
+  this.timeModel_.removeDimension(this.id_);
+  this.timeModel_.removeDimension(this.multiId_);
 };
 
 
@@ -238,6 +278,15 @@ os.data.histo.SourceHistogram.prototype.onDataChange = function() {
  */
 os.data.histo.SourceHistogram.prototype.getId = function() {
   return this.id_;
+};
+
+
+/**
+ * Get the 2D histogram id.
+ * @return {string}
+ */
+os.data.histo.SourceHistogram.prototype.getMultiId = function() {
+  return this.multiId_;
 };
 
 
@@ -312,6 +361,15 @@ os.data.histo.SourceHistogram.prototype.getBinMethod = function() {
 
 
 /**
+ * Get the secondary bin method.
+ * @return {os.histo.IBinMethod<ol.Feature>}
+ */
+os.data.histo.SourceHistogram.prototype.getSecondaryBinMethod = function() {
+  return this.secondaryBinMethod;
+};
+
+
+/**
  * Sets the bin method.
  * @param {os.histo.IBinMethod<ol.Feature>} method
  *
@@ -322,8 +380,57 @@ os.data.histo.SourceHistogram.prototype.setBinMethod = function(method) {
   this.binMethod = os.histo.cloneMethod(method);
 
   if (this.binMethod) {
-    this.binMethod.setValueFunction(os.feature.getField);
+    if (this.binMethod.getValueFunction() == null) {
+      this.binMethod.setValueFunction(os.feature.getField);
+    }
     this.binRanges_ = this.binMethod.getArrayKeys() || false;
+  }
+
+  this.reindex();
+  this.update();
+  this.dispatchEvent(os.data.histo.HistoEventType.BIN_CHANGE);
+};
+
+
+/**
+ * Sets the secondary bin method.
+ * @param {os.histo.IBinMethod<ol.Feature>} method
+ *
+ * @export Prevent the compiler from moving the function off the prototype.
+ */
+os.data.histo.SourceHistogram.prototype.setSecondaryBinMethod = function(method) {
+  // clone to the local context to prevent leaks
+  this.secondaryBinMethod = os.histo.cloneMethod(method);
+
+  if (this.secondaryBinMethod) {
+    if (this.secondaryBinMethod.getValueFunction() == null) {
+      this.secondaryBinMethod.setValueFunction(os.feature.getField);
+    }
+
+    /**
+     * Do the binning for each dimension to create a xf key that represents the bins that would contain the item
+     * @param {ol.Feature} item
+     * @return {string}
+     */
+    this.combinedAccessor = function(item) {
+      return this.binMethod.getBinKey(this.binMethod.getValue(item)).toString() + os.data.xf.DataModel.SEPARATOR +
+        this.secondaryBinMethod.getBinKey(this.secondaryBinMethod.getValue(item)).toString();
+    };
+
+    /**
+     * Warning: returning anything but the xf key may result in unexpected binning as the order in xf for the accessor
+     * and this key grouping method must be the same
+     * @param {string} key
+     * @return {string}
+     */
+    this.combinedKeyMethod = function(key) {
+      return key;
+    };
+  } else {
+    // no method provided; remove the current one
+    this.secondaryBinMethod = null;
+    this.combinedAccessor = null;
+    this.combinedKeyMethod = null;
   }
 
   this.reindex();
@@ -347,6 +454,12 @@ os.data.histo.SourceHistogram.prototype.reindex = function() {
           os.histo.DateRangeBinType[this.binMethod.getDateBinType()] : false;
       isArray = this.binRanges_ ? isArray : false;
       this.timeModel_.addDimension(this.id_, valueFn, isArray);
+
+      if (this.secondaryBinMethod) {
+        this.timeModel_.addDimension(this.multiId_, this.combinedAccessor.bind(this), isArray);
+      } else {
+        this.timeModel_.removeDimension(this.multiId_);
+      }
     }
   }
 };
@@ -414,7 +527,6 @@ os.data.histo.SourceHistogram.prototype.getResults = function() {
 
 /**
  * Update results from crossfilter.
- * @protected
  */
 os.data.histo.SourceHistogram.prototype.updateResults = function() {
   var results = [];
@@ -437,15 +549,32 @@ os.data.histo.SourceHistogram.prototype.updateResults = function() {
       }
     }
 
-    results = /** @type {!Array<!os.histo.Result<!ol.Feature>>} */ (this.timeModel_.groupData(this.id_,
-        this.binMethod.getBinKey.bind(this.binMethod), this.reduceAdd.bind(this),
-        this.reduceRemove.bind(this), this.reduceInit.bind(this)));
+    // clear the filters to get all of the data
+    if (this.forceAllData_ == true) {
+      this.timeModel_.clearAllFilters();
+    }
+
+    if (this.secondaryBinMethod) {
+      results = /** @type {!Array<!os.histo.Result<!ol.Feature>>} */ (this.timeModel_.groupData(this.multiId_,
+          this.combinedKeyMethod.bind(this), this.reduceAdd.bind(this),
+          this.reduceRemove.bind(this), this.reduceInit.bind(this)));
+    } else {
+      results = /** @type {!Array<!os.histo.Result<!ol.Feature>>} */ (this.timeModel_.groupData(this.id_,
+          this.binMethod.getBinKey.bind(this.binMethod), this.reduceAdd.bind(this),
+          this.reduceRemove.bind(this), this.reduceInit.bind(this)));
+    }
+
+    // reapply the time ranges
+    if (this.source && this.forceAllData_ == true) {
+      this.source.getFilteredFeatures();
+    }
 
     if (filters) {
       for (var id in filters) {
         this.timeModel_.filterDimension(id, undefined);
       }
     }
+
 
     results = /** @type {!Array<!os.data.histo.ColorBin>} */ (results.map(this.map, this).filter(function(item) {
       return item != undefined;
@@ -476,7 +605,13 @@ os.data.histo.SourceHistogram.prototype.map = function(item, i, arr) {
   }
 
   bin.setKey(item.key);
-  bin.setLabel(this.binMethod.getLabelForKey(item.key));
+
+  if (this.secondaryBinMethod) {
+    bin.setLabel(this.binMethod.getLabelForKey(item.key, false, true) + os.data.xf.DataModel.SEPARATOR +
+      this.secondaryBinMethod.getLabelForKey(item.key, true, true));
+  } else {
+    bin.setLabel(this.binMethod.getLabelForKey(item.key));
+  }
 
   return bin;
 };
@@ -630,6 +765,15 @@ os.data.histo.SourceHistogram.prototype.onFeatureColor_ = function(event) {
 
 
 /**
+ * @param {string|number} id The feature id
+ * @return {os.data.histo.ColorBin}
+ */
+os.data.histo.SourceHistogram.prototype.getBinByFeatureId = function(id) {
+  return this.featureBins_[id] || null;
+};
+
+
+/**
  * @param {boolean} value The value
  */
 os.data.histo.SourceHistogram.prototype.setBinRanges = function(value) {
@@ -650,4 +794,20 @@ os.data.histo.SourceHistogram.prototype.setBinRanges = function(value) {
  */
 os.data.histo.SourceHistogram.prototype.getBinRanges = function() {
   return this.binRanges_;
+};
+
+
+/**
+ * @param {boolean} value The value
+ */
+os.data.histo.SourceHistogram.prototype.setForceAllData = function(value) {
+  this.forceAllData_ = value;
+};
+
+
+/**
+ * @return {boolean} the value
+ */
+os.data.histo.SourceHistogram.prototype.getForceAllData = function() {
+  return this.forceAllData_;
 };

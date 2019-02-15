@@ -216,3 +216,17 @@ os.string.removeDuplicates = function(str, substr) {
 
   return result;
 };
+
+
+/**
+ * Generate a random string that conforms to the rules of js variable name conventions
+ * @return {string}
+ */
+os.string.randomString = function() {
+  var s = goog.string.getRandomString();
+  var code = s.charCodeAt(0);
+  if (code > 64) {
+    return s;
+  }
+  return String.fromCharCode(code + 50) + s.substring(1);
+};

@@ -2956,6 +2956,29 @@ os.source.Vector.prototype.isSelected = function(feature) {
 
 
 /**
+ * Convenience check for whether something in array is selected
+ * @param {Array<!ol.Feature>} features
+ * @return {boolean|undefined} All == true; partial === undefined; none === false
+ * @suppress {checkTypes}
+ */
+os.source.Vector.prototype.isSelectedArray = function(features) {
+  var l = features.length;
+  if (!(Object.keys(this.selectedById_).length) || !l) {
+    // nothing selected, don't bother
+    return false;
+  }
+  var value = this.selectedById_[features[0]['id']];
+  for (var i = 1; i < l; i++) {
+    if (!value != !this.selectedById_[features[i]['id']]) {
+      // previous wasn't selected but this one is (or vice versa)
+      return undefined;
+    }
+  }
+  return value || false;
+};
+
+
+/**
  * @inheritDoc
  */
 os.source.Vector.prototype.forEachFeature = function(callback, opt_this) {

@@ -112,8 +112,8 @@ os.histo.NumericBinMethod.prototype.getWidth = function() {
 os.histo.NumericBinMethod.prototype.setWidth = function(width) {
   this.width = width;
   this.precision = Math.max(
-      os.histo.NumericBinMethod.getPrecision(this.getWidth()),
-      os.histo.NumericBinMethod.getPrecision(this.getOffset()));
+      os.histo.NumericBinMethod.getPrecision(this.width),
+      os.histo.NumericBinMethod.getPrecision(this.offset));
 };
 
 
@@ -131,8 +131,8 @@ os.histo.NumericBinMethod.prototype.getOffset = function() {
 os.histo.NumericBinMethod.prototype.setOffset = function(offset) {
   this.offset = offset;
   this.precision = Math.max(
-      os.histo.NumericBinMethod.getPrecision(this.getWidth()),
-      os.histo.NumericBinMethod.getPrecision(this.getOffset()));
+      os.histo.NumericBinMethod.getPrecision(this.width),
+      os.histo.NumericBinMethod.getPrecision(this.offset));
 };
 
 
@@ -182,9 +182,15 @@ os.histo.NumericBinMethod.prototype.getBinLabel = function(item) {
 /**
  * @inheritDoc
  */
-os.histo.NumericBinMethod.prototype.getLabelForKey = function(key) {
-  var width = this.getWidth();
-  var precision = this.getPrecision();
+os.histo.NumericBinMethod.prototype.getLabelForKey = function(key, opt_secondary, opt_smallLabel) {
+  if (typeof key === 'string' && key.indexOf(os.data.xf.DataModel.SEPARATOR) >= 0) {
+    // this key is in a bin that represents the intersection of two values; split them apart with the separator
+    key = !opt_secondary ? Number(key.split(os.data.xf.DataModel.SEPARATOR)[0]) :
+        Number(key.split(os.data.xf.DataModel.SEPARATOR)[1]);
+  }
+
+  var width = this.width;
+  var precision = this.precision;
 
   if (key === os.histo.NumericBinMethod.MAGIC_EMPTY) {
     // value is empty
@@ -194,7 +200,8 @@ os.histo.NumericBinMethod.prototype.getLabelForKey = function(key) {
     return os.histo.NumericBinMethod.NAN_LABEL;
   } else {
     // the key should be a number, so if it's not a magic value return the bin range
-    return key.toFixed(precision) + ' to ' + (key + width).toFixed(precision);
+    return !opt_smallLabel ? key.toFixed(precision) + ' to ' +
+    (key + width).toFixed(precision) : key.toFixed(precision);
   }
 };
 
@@ -205,7 +212,7 @@ os.histo.NumericBinMethod.prototype.getLabelForKey = function(key) {
 os.histo.NumericBinMethod.prototype.filterDimension = function(dimension, item) {
   var value = this.getValue(item);
   var start = this.getBinKey(value);
-  var width = this.getWidth();
+  var width = this.width;
   dimension.filterRange([start, start + width]);
 };
 
@@ -216,8 +223,8 @@ os.histo.NumericBinMethod.prototype.filterDimension = function(dimension, item) 
  * @return {number}
  */
 os.histo.NumericBinMethod.prototype.getFloor = function(value) {
-  var width = this.getWidth();
-  var offset = this.getOffset();
+  var width = this.width;
+  var offset = this.offset;
   return Math.floor((value - offset) / width) * width + offset;
 };
 
@@ -249,8 +256,8 @@ os.histo.NumericBinMethod.getPrecision = function(num) {
 os.histo.NumericBinMethod.prototype.persist = function(opt_to) {
   opt_to = os.histo.NumericBinMethod.base(this, 'persist', opt_to) || {};
 
-  opt_to['width'] = this.getWidth();
-  opt_to['offset'] = this.getOffset();
+  opt_to['width'] = this.width;
+  opt_to['offset'] = this.offset;
 
   return opt_to;
 };
