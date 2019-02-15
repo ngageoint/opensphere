@@ -115,6 +115,17 @@ os.histo.DateBinMethod.prototype.setDateBinType = function(value) {
 
 
 /**
+ * Return a map of the date bin types
+ * @return {Object<string,string>}
+ */
+os.histo.DateBinMethod.getTypesMap = function() {
+  return Object.keys(os.histo.DateBinType).map(function(v) {
+    return {'key': v, 'value': os.histo.DateBinType[v]};
+  });
+};
+
+
+/**
  * @inheritDoc
  */
 os.histo.DateBinMethod.prototype.getSortLabelFnAsc = function() {
@@ -155,9 +166,9 @@ os.histo.DateBinMethod.prototype.getValue = function(item) {
         } catch (e) {
         }
       }
-    } else if (typeof value === 'string') {
-      value = moment(value).valueOf();
-      if (!isNaN(value)) {
+    } else if (typeof value === 'string' || typeof value === 'number') {
+      value = new Date(value).valueOf();
+      if (!isNaN(parseFloat(value)) && isFinite(value)) {
         timestamp = value;
       }
     }
@@ -281,7 +292,7 @@ os.histo.DateBinMethod.prototype.getBinKey = function(value) {
   if (Array.isArray(value)) {
     return value;
   }
-  return Number(value);
+  return Number(value) || value.toString();
 };
 
 
@@ -299,33 +310,39 @@ os.histo.DateBinMethod.prototype.getBinLabel = function(item) {
 /**
  * @inheritDoc
  */
-os.histo.DateBinMethod.prototype.getLabelForKey = function(value) {
-  if (value !== undefined && value != os.histo.DateBinMethod.MAGIC) {
+os.histo.DateBinMethod.prototype.getLabelForKey = function(key, opt_secondary, opt_smallLabel) {
+  if (typeof key === 'string' && key.indexOf(os.data.xf.DataModel.SEPARATOR) >= 0) {
+    // this key is in a bin that represents the intersection of two keys; split them apart with the separator
+    key = !opt_secondary ? Number(key.split(os.data.xf.DataModel.SEPARATOR)[0]) :
+        Number(key.split(os.data.xf.DataModel.SEPARATOR)[1]);
+  }
+
+  if (key !== undefined && key != os.histo.DateBinMethod.MAGIC) {
     switch (this.binType_) {
       case os.histo.DateBinType.HOUR_OF_DAY:
-        // value is 0-23, so pad to 0000-2300
-        return goog.string.padNumber(/** @type {number} */ (value), 2) + '00';
+        // key is 0-23, so pad to 0000-2300
+        return goog.string.padNumber(/** @type {number} */ (key), 2) + '00';
       case os.histo.DateBinType.DAY_OF_WEEK:
         // convert from 0-6 to Sunday-Saturday
-        return moment().isoWeekday(/** @type {number} */ (value)).format('dddd');
+        return moment().isoWeekday(/** @type {number} */ (key)).format('dddd');
       case os.histo.DateBinType.MINUTE:
-        return moment.utc(/** @type {number} */ (value)).format('YYYY-MM-DD HH:mm');
+        return moment.utc(/** @type {number} */ (key)).format('YYYY-MM-DD HH:mm');
       case os.histo.DateBinType.HOUR:
-        return moment.utc(/** @type {number} */ (value)).format('YYYY-MM-DD HH');
+        return moment.utc(/** @type {number} */ (key)).format('YYYY-MM-DD HH');
       case os.histo.DateBinType.DAY:
-        return moment.utc(/** @type {number} */ (value)).format('YYYY-MM-DD');
+        return moment.utc(/** @type {number} */ (key)).format('YYYY-MM-DD');
       case os.histo.DateBinType.WEEK:
-        return moment.utc(/** @type {number} */ (value)).day(0).format('YYYY-MM-DD');
+        return moment.utc(/** @type {number} */ (key)).day(0).format('YYYY-MM-DD');
       case os.histo.DateBinType.MONTH:
-        return moment.utc(/** @type {number} */ (value)).format('YYYY-MM');
+        return moment.utc(/** @type {number} */ (key)).format('YYYY-MM');
       case os.histo.DateBinType.YEAR:
-        return moment.utc(/** @type {number} */ (value)).format('YYYY');
+        return moment.utc(/** @type {number} */ (key)).format('YYYY');
       case os.histo.DateBinType.HOUR_OF_WEEK:
       case os.histo.DateBinType.HOUR_OF_MONTH:
       case os.histo.DateBinType.HOUR_OF_YEAR:
-        return value.toString();
+        return key.toString();
       default:
-        return os.time.toOffsetString(/** @type {number} */ (value));
+        return os.time.toOffsetString(/** @type {number} */ (key));
     }
   }
 
@@ -335,9 +352,43 @@ os.histo.DateBinMethod.prototype.getLabelForKey = function(value) {
 
 /**
  * TODO: Implement this if pivot tables are ever needed
+ * For this basic implementation types like DAY_OF_WEEK and HOUR_OF_DAY are assumed to be DAY and HOUR respectively
+ * MONTH and YEAR are handled by momentjs
  * @inheritDoc
  */
-os.histo.DateBinMethod.prototype.filterDimension = goog.abstractMethod;
+os.histo.DateBinMethod.prototype.filterDimension = function(dimension, item) {
+  var value = /** @type {number} */ (this.getValue(item));
+  var width = 0;
+  switch (this.binType_) {
+    case os.histo.DateBinType.DAY:
+    case os.histo.DateBinType.DAY_OF_WEEK:
+      width = 1000 * 60 * 60 * 24;
+      break;
+    case os.histo.DateBinType.MINUTE:
+      width = 1000 * 60;
+      break;
+    case os.histo.DateBinType.HOUR:
+    case os.histo.DateBinType.HOUR_OF_DAY:
+    case os.histo.DateBinType.HOUR_OF_WEEK:
+    case os.histo.DateBinType.HOUR_OF_MONTH:
+    case os.histo.DateBinType.HOUR_OF_YEAR:
+      width = 1000 * 60 * 60;
+      break;
+    case os.histo.DateBinType.WEEK:
+      width = 1000 * 60 * 60 * 24 * 7;
+      break;
+    case os.histo.DateBinType.MONTH:
+      width = moment(value).add(1, 'months').valueOf();
+      break;
+    case os.histo.DateBinType.YEAR:
+      width = moment(value).add(1, 'years').valueOf();
+      break;
+    default:
+      width = 0;
+      break;
+  }
+  dimension.filterRange([value, value + width + 1]);
+};
 
 
 /**
