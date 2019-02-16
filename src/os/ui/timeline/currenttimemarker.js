@@ -48,7 +48,8 @@ os.ui.timeline.CurrentTimeMarker.prototype.initSVG = function(container, height)
   var past = /** @type {d3.Selection} */ (container.append('g'));
   past.append('rect').
       attr('class', 'c-svg-timeline__background-future').
-      attr('height', '' + this.height_);
+      attr('height', '' + this.height_).
+      attr('width', '100%');
   past.append('text').attr('class', 'label js-c-svg-timeline__current-time').style('text-anchor', 'middle');
   this.animationFrameRef_ = window.requestAnimationFrame(this.updateCurrentTimeRAF.bind(this));
 };
