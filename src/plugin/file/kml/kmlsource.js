@@ -6,6 +6,7 @@ goog.require('goog.log.Logger');
 goog.require('goog.object');
 goog.require('ol.array');
 goog.require('os.events.PropertyChangeEvent');
+goog.require('os.layer.AnimationOverlay');
 goog.require('os.layer.Image');
 goog.require('os.object');
 goog.require('os.source.PropertyChange');
@@ -758,3 +759,80 @@ plugin.file.kml.KMLSource.prototype.restore = function(config) {
     this.setMinRefreshPeriod(config['minRefreshPeriod']);
   }
 };
+
+
+/**
+ * Creates a basic feature overlay used to animate features on the map.
+ * @protected
+ * @override
+ */
+plugin.file.kml.KMLSource.prototype.createAnimationOverlay = function() {
+  plugin.file.kml.KMLSource.base(this, 'createAnimationOverlay');
+  var features = this.getFeatures();
+
+  // Hide all annotations
+  for (var i = 0, n = features.length; i < n; i++) {
+    var feature = features[i];
+    var annotation = this.getFeatureNode(feature).getAnnotation();
+    if (annotation) {
+      annotation.setVisible(false);
+    }
+  }
+};
+
+
+/**
+ * Updates features displayed by the animation overlay if it exists.
+ * @protected
+ * @override
+ */
+plugin.file.kml.KMLSource.prototype.updateAnimationOverlay = function() {
+  if (this.animationOverlay) {
+    var overlayFeatures = this.animationOverlay.getFeatures();
+
+    // hide annotations in overlay
+    for (var i = 0, n = overlayFeatures.length; i < n; i++) {
+      var feature = overlayFeatures[i];
+      var annotation = this.getFeatureNode(feature).getAnnotation();
+      if (annotation) {
+        annotation.setVisible(false);
+      }
+    }
+  }
+
+  plugin.file.kml.KMLSource.base(this, 'updateAnimationOverlay');
+
+  if (this.animationOverlay) {
+    var overlayFeatures = this.animationOverlay.getFeatures();
+
+    // show annotations in overlay
+    for (var i = 0, n = overlayFeatures.length; i < n; i++) {
+      var feature = overlayFeatures[i];
+      var annotation = this.getFeatureNode(feature).getAnnotation();
+      if (annotation) {
+        annotation.setVisible(true);
+      }
+    }
+  }
+};
+
+
+/**
+ * Disposes of the animation overlay and cached features.
+ * @protected
+ * @override
+ */
+plugin.file.kml.KMLSource.prototype.disposeAnimationOverlay = function() {
+  plugin.file.kml.KMLSource.base(this, 'disposeAnimationOverlay');
+  var features = this.getFeatures();
+
+  // Show all annotations
+  for (var i = 0, n = features.length; i < n; i++) {
+    var feature = features[i];
+    var annotation = this.getFeatureNode(feature).getAnnotation();
+    if (annotation) {
+      annotation.setVisible(true);
+    }
+  }
+};
+

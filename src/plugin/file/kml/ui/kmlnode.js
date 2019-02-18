@@ -875,3 +875,13 @@ plugin.file.kml.ui.KMLNode.prototype.getLayerUI = function(item) {
 
   return null;
 };
+
+
+/**
+ * @return {os.annotation.FeatureAnnotation}
+ */
+plugin.file.kml.ui.KMLNode.prototype.getAnnotation = function() {
+  return this.annotation_;
+};
+
+
