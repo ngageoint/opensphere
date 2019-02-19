@@ -63,9 +63,14 @@ os.ui.ol.interaction.AbstractDraw = function(opt_options) {
     }),
     new ol.style.Style({
       text: new ol.style.Text({
+        stroke: new ol.style.Stroke({
+          width: 2,
+          color: [0, 0, 0, 1.0]
+        }),
         fill: new ol.style.Fill({
-          color: [0, 0xff, 0xff, 1.0]
-        })
+          color: [0xff, 0xff, 0xff, 1.0]
+        }),
+        textAlign: 'left'
       })
     })];
 
