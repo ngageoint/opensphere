@@ -24,6 +24,7 @@ script:
 - set -e
 - yarn run build
 - yarn run test
+- yarn run test:cypress
 - yarn run apidoc
 - set +e
 after_success:
