@@ -241,7 +241,7 @@ os.ui.alert.AlertPopupCtrl.prototype.displayAlert_ = function(event) {
     var message = event.getMessage();
     var popup = {
       'id': id,
-      'msg': goog.string.truncate(message, 500),
+      'msg': message,
       'severity': event.getSeverity().toString(),
       'timeout': dismiss
     };
@@ -284,6 +284,7 @@ os.ui.alert.AlertPopupCtrl.prototype.dismissAlert = function($index, popup) {
     clearTimeout(popup['timeout']);
   }
   os.dispatcher.dispatchEvent(new goog.events.Event(os.alert.AlertEventTypes.DISMISS_ALERT, popup));
+  os.ui.apply(this.scope_);
 };
 
 
