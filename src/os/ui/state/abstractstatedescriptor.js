@@ -386,3 +386,11 @@ os.ui.state.AbstractStateDescriptor.prototype.restore = function(conf) {
 os.ui.state.AbstractStateDescriptor.prototype.getMenuGroup = function() {
   return '1:Saved States';
 };
+
+
+/**
+ * @inheritDoc
+ */
+os.ui.state.AbstractStateDescriptor.prototype.getDefaultPersister = function() {
+  return 'File';
+};
