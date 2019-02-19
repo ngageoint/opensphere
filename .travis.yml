@@ -11,6 +11,8 @@ os:
 - linux
 addons:
   chrome: stable
+  hosts:
+    - localhost
   apt:
     sources:
     - sourceline: "deb https://dl.yarnpkg.com/debian/ stable main"
