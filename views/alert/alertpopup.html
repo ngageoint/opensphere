@@ -5,8 +5,10 @@
     <button ng-click="alertPopupCtrl.dismissAlert($index, alert)" class="close float-right" type="button" aria-label="Close">
       <span aria-hidden="true">&times;</span>
     </button>
-    <h4><i class="fa" ng-class="{'Error':'fa-ban','Warning':'fa-warning','Success':'fa-check','Info':'fa-info-circle'}[alert.severity]"></i>
-      {{alert.severity}}!</h4>
-    <span ng-bind-html="alert.msg | alertlink"></span>
+    <h4>
+      <i class="fa" ng-class="{'Error':'fa-ban','Warning':'fa-warning','Success':'fa-check','Info':'fa-info-circle'}[alert.severity]"></i>
+      {{alert.severity}}!
+    </h4>
+    <span class="d-block c-alert-popup__text" ng-bind-html="alert.msg | alertlink"></span>
   </div>
 </div>
