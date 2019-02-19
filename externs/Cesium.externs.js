@@ -217,6 +217,13 @@ Cesium.Color = function(opt_r, opt_g, opt_b, opt_a) {};
  * @type {!Cesium.Color}
  * @const
  */
+Cesium.Color.BLACK;
+
+
+/**
+ * @type {!Cesium.Color}
+ * @const
+ */
 Cesium.Color.YELLOW;
 
 
