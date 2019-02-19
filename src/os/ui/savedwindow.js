@@ -80,6 +80,21 @@ os.ui.SavedWindowCtrl.prototype.onChange = function(event, ui) {
 
 
 /**
+ * @inheritDoc
+ */
+os.ui.SavedWindowCtrl.prototype.getWindowKeys = function() {
+  var keys = os.ui.SavedWindowCtrl.base(this, 'getWindowKeys');
+
+  var key = this.scope ? /** @type {string|undefined} */ (this.scope['key']) : undefined;
+  if (key) {
+    keys.push(key);
+  }
+
+  return keys;
+};
+
+
+/**
  * Gets the window config
  * @param {string} key The window key
  * @return {Object}
