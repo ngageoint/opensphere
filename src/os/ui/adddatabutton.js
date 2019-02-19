@@ -19,15 +19,15 @@ os.ui.addDataButtonDirective = function() {
     controller: os.ui.AddDataButtonCtrl,
     controllerAs: 'ctrl',
     template: '<div class="btn-group o-add-data-button" ng-right-click="ctrl.openMenu()">' +
-      '<button class="btn btn-primary" id="addDataButton" title="Add data to the map"' +
+      '<button class="btn btn-success" id="addDataButton" title="Add data to the map"' +
       ' ng-click="ctrl.toggle()"' +
       ' ng-class="{active: ctrl.isWindowActive()}" metric="{{metrics.addDataOpen}}">' +
       '<i class="fa fa-plus" ng-class="{\'fa-fw\': puny}"></i> <span ng-class="{\'d-none\': puny}">Add Data</span>' +
       '</button>' +
-      '<button class="btn btn-primary" title="Open a file or URL" ng-click="ctrl.open()">' +
+      '<button class="btn btn-success" title="Open a file or URL" ng-click="ctrl.open()">' +
       '<i class="fa fa-fw fa-folder-open"></i>' +
       '</button>' +
-      '<button class="btn btn-primary dropdown-toggle dropdown-toggle-split" ng-click="ctrl.openMenu()"' +
+      '<button class="btn btn-success dropdown-toggle dropdown-toggle-split" ng-click="ctrl.openMenu()"' +
       ' ng-class="{active: menu}">' +
       '</button></div>'
   };

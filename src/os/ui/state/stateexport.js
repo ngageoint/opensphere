@@ -68,7 +68,7 @@ os.ui.state.StateExportCtrl = function($scope, $element, $timeout) {
   /**
    * @type {Array.<os.state.IState>}
    */
-  this['states'] = os.ui.stateManager.getAvailable();
+  this['states'] = os.stateManager.getAvailable();
 
   /**
    * @type {boolean}
@@ -109,7 +109,7 @@ os.ui.state.StateExportCtrl.prototype.accept = function() {
       }
     }
   }
-  os.ui.stateManager.saveStates(method, title, description, tags, states);
+  os.stateManager.saveStates(method, title, description, tags, states);
 
   os.ui.state.StateExportCtrl.base(this, 'accept');
 };

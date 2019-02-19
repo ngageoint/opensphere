@@ -30,7 +30,7 @@ os.ui.state.cmd.StateDelete.prototype.execute = function() {
   this.state = os.command.State.EXECUTING;
   this.lastActive_.length = 0;
 
-  os.ui.stateManager.deleteStates();
+  os.stateManager.deleteStates();
 
   this.state = os.command.State.SUCCESS;
   return true;

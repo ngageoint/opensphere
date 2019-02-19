@@ -1,6 +1,6 @@
+goog.provide('os.state.BaseStateManager');
+goog.provide('os.state.BaseStateManager.EventType');
 goog.provide('os.state.Versions');
-goog.provide('os.ui.state.StateManager');
-goog.provide('os.ui.state.StateManager.EventType');
 
 goog.require('goog.async.Deferred');
 goog.require('goog.events.EventTarget');
@@ -19,9 +19,9 @@ goog.require('os.ui.window');
 
 /**
  * Global state manager reference. Set this in each application with the app-specific manager reference.
- * @type {os.ui.state.StateManager}
+ * @type {os.state.BaseStateManager}
  */
-os.ui.stateManager = null;
+os.stateManager = null;
 
 
 
@@ -31,8 +31,8 @@ os.ui.stateManager = null;
  * @constructor
  * @template T,S
  */
-os.ui.state.StateManager = function() {
-  os.ui.state.StateManager.base(this, 'constructor');
+os.state.BaseStateManager = function() {
+  os.state.BaseStateManager.base(this, 'constructor');
 
   /**
    * Content type to use when saving state files.
@@ -64,10 +64,10 @@ os.ui.state.StateManager = function() {
    * @type {goog.log.Logger}
    * @protected
    */
-  this.log = os.ui.state.StateManager.LOGGER_;
+  this.log = os.state.BaseStateManager.LOGGER_;
 };
-goog.inherits(os.ui.state.StateManager, goog.events.EventTarget);
-goog.addSingletonGetter(os.ui.state.StateManager);
+goog.inherits(os.state.BaseStateManager, goog.events.EventTarget);
+goog.addSingletonGetter(os.state.BaseStateManager);
 
 
 /**
@@ -76,7 +76,7 @@ goog.addSingletonGetter(os.ui.state.StateManager);
  * @private
  * @const
  */
-os.ui.state.StateManager.LOGGER_ = goog.log.getLogger('os.ui.state.StateManager');
+os.state.BaseStateManager.LOGGER_ = goog.log.getLogger('os.state.BaseStateManager');
 
 
 /**
@@ -95,7 +95,7 @@ os.state.Versions = {
  * Event types
  * @enum {string}
  */
-os.ui.state.StateManager.EventType = {
+os.state.BaseStateManager.EventType = {
   CLEAR: 'clear',
   DELETE: 'delete'
 };
@@ -105,7 +105,7 @@ os.ui.state.StateManager.EventType = {
  * Sets the state export version used by the application.
  * @param {string} version The state version string
  */
-os.ui.state.StateManager.prototype.setVersion = function(version) {
+os.state.BaseStateManager.prototype.setVersion = function(version) {
   this.version_ = version;
 };
 
@@ -115,7 +115,7 @@ os.ui.state.StateManager.prototype.setVersion = function(version) {
  * @return {string}
  * @protected
  */
-os.ui.state.StateManager.prototype.getVersion = function() {
+os.state.BaseStateManager.prototype.getVersion = function() {
   return this.version_;
 };
 
@@ -125,7 +125,7 @@ os.ui.state.StateManager.prototype.getVersion = function() {
  * @param {string} key The object key
  * @param {!function(new:os.IPersistable)} clazz The persistable class
  */
-os.ui.state.StateManager.prototype.registerPersistable = function(key, clazz) {
+os.state.BaseStateManager.prototype.registerPersistable = function(key, clazz) {
   if (!(key in this.persistableMap_)) {
     this.persistableMap_[key] = clazz;
   } else {
@@ -139,7 +139,7 @@ os.ui.state.StateManager.prototype.registerPersistable = function(key, clazz) {
  * @param {string} key The object key
  * @return {os.IPersistable}
  */
-os.ui.state.StateManager.prototype.getPersistable = function(key) {
+os.state.BaseStateManager.prototype.getPersistable = function(key) {
   if (key in this.persistableMap_) {
     return new this.persistableMap_[key]();
   }
@@ -154,7 +154,7 @@ os.ui.state.StateManager.prototype.getPersistable = function(key) {
  * @param {function(new:os.state.IState)} clazz The state class
  * @param {string=} opt_type The state type
  */
-os.ui.state.StateManager.prototype.addStateImplementation = function(version, clazz, opt_type) {
+os.state.BaseStateManager.prototype.addStateImplementation = function(version, clazz, opt_type) {
   if (!version) {
     throw new Error('version cannot be empty or null!');
   }
@@ -187,7 +187,7 @@ os.ui.state.StateManager.prototype.addStateImplementation = function(version, cl
 /**
  * Deactivates all states in the application.
  */
-os.ui.state.StateManager.prototype.clearStates = function() {
+os.state.BaseStateManager.prototype.clearStates = function() {
   // applications should extend this to actually do something, assuming they can save locally
 };
 
@@ -195,7 +195,7 @@ os.ui.state.StateManager.prototype.clearStates = function() {
 /**
  * Deletes all local states
  */
-os.ui.state.StateManager.prototype.deleteStates = function() {
+os.state.BaseStateManager.prototype.deleteStates = function() {
   // applications should extend this to actually do something, assuming they can save locally
 };
 
@@ -205,7 +205,7 @@ os.ui.state.StateManager.prototype.deleteStates = function() {
  * @param {boolean=} opt_allVersions Whether to get all versions.
  * @return {!Array.<!os.state.IState>} The states
  */
-os.ui.state.StateManager.prototype.getAvailable = function(opt_allVersions) {
+os.state.BaseStateManager.prototype.getAvailable = function(opt_allVersions) {
   var list = [];
 
   if (!opt_allVersions) {
@@ -236,7 +236,7 @@ os.ui.state.StateManager.prototype.getAvailable = function(opt_allVersions) {
  * @param {!os.file.File} file The state file
  * @param {S} options The state save options
  */
-os.ui.state.StateManager.prototype.addImportedState = function(file, options) {
+os.state.BaseStateManager.prototype.addImportedState = function(file, options) {
   var url = file.getUrl();
   if (url && os.file.isLocal(url)) {
     // local file, so store it before finishing the import
@@ -253,7 +253,7 @@ os.ui.state.StateManager.prototype.addImportedState = function(file, options) {
  * @param {string} title The title
  * @return {boolean} If the title has been used
  */
-os.ui.state.StateManager.prototype.hasState = function(title) {
+os.state.BaseStateManager.prototype.hasState = function(title) {
   return false;
 };
 
@@ -263,7 +263,7 @@ os.ui.state.StateManager.prototype.hasState = function(title) {
  * @param {!os.file.File} file The stored file
  * @param {S} options The save options
  */
-os.ui.state.StateManager.prototype.finishImport = function(file, options) {
+os.state.BaseStateManager.prototype.finishImport = function(file, options) {
   // applications should override this function so it does something
 };
 
@@ -272,7 +272,7 @@ os.ui.state.StateManager.prototype.finishImport = function(file, options) {
  * Initiate the state export process.
  * @param {os.ex.IPersistenceMethod=} opt_method The persistence method
  */
-os.ui.state.StateManager.prototype.startExport = function(opt_method) {
+os.state.BaseStateManager.prototype.startExport = function(opt_method) {
   var scopeOptions = {
     'defaultMethod': opt_method
   };
@@ -302,7 +302,7 @@ os.ui.state.StateManager.prototype.startExport = function(opt_method) {
  * @param {string=} opt_tags The tags
  * @param {Array.<!os.state.IState>=} opt_states The states to save
  */
-os.ui.state.StateManager.prototype.saveStates = function(method, title, opt_desc, opt_tags, opt_states) {
+os.state.BaseStateManager.prototype.saveStates = function(method, title, opt_desc, opt_tags, opt_states) {
   var obj = this.createStateObject(method, title, opt_desc, opt_tags);
   var options = this.createStateOptions(method, title, obj, opt_desc, opt_tags);
 
@@ -331,7 +331,7 @@ os.ui.state.StateManager.prototype.saveStates = function(method, title, opt_desc
  * @param {S} options The state save options
  * @protected
  */
-os.ui.state.StateManager.prototype.onSaveSuccess = function(options) {
+os.state.BaseStateManager.prototype.onSaveSuccess = function(options) {
   var content = this.serializeContent(options);
   var stateFileName = this.getStateFileName(options);
   goog.asserts.assert(content != null, 'No state content to save!');
@@ -367,7 +367,7 @@ os.ui.state.StateManager.prototype.onSaveSuccess = function(options) {
  * @param {string} errorMsg The error message
  * @protected
  */
-os.ui.state.StateManager.prototype.onSaveError = function(errorMsg) {
+os.state.BaseStateManager.prototype.onSaveError = function(errorMsg) {
   goog.log.error(this.log, 'Failed saving state: ' + errorMsg);
 };
 
@@ -376,7 +376,7 @@ os.ui.state.StateManager.prototype.onSaveError = function(errorMsg) {
  * Removes components of a state file from the application.
  * @param {string} id The base state id
  */
-os.ui.state.StateManager.prototype.removeState = function(id) {
+os.state.BaseStateManager.prototype.removeState = function(id) {
   var list = this.getAvailable(true);
   for (var i = 0, n = list.length; i < n; i++) {
     try {
@@ -395,7 +395,7 @@ os.ui.state.StateManager.prototype.removeState = function(id) {
  * @param {S} options The save options
  * @return {boolean} If the operation is supported and succeeded
  */
-os.ui.state.StateManager.prototype.saveLocal = function(file, options) {
+os.state.BaseStateManager.prototype.saveLocal = function(file, options) {
   // always replace. if we got here the application should have done duplicate file detection already.
   var fs = os.file.FileStorage.getInstance();
   fs.storeFile(file, true).addCallbacks(goog.partial(this.finishImport, file, options), this.onFileError_, this);
@@ -409,7 +409,7 @@ os.ui.state.StateManager.prototype.saveLocal = function(file, options) {
  * @param {*} error
  * @private
  */
-os.ui.state.StateManager.prototype.onFileError_ = function(error) {
+os.state.BaseStateManager.prototype.onFileError_ = function(error) {
   if (typeof error === 'string') {
     goog.log.error(this.log, 'Unable to store state file locally: ' + error);
   } else {
@@ -423,7 +423,7 @@ os.ui.state.StateManager.prototype.onFileError_ = function(error) {
  * @param {T|string} obj The state
  * @return {!Array.<!os.state.IState>} Supported states
  */
-os.ui.state.StateManager.prototype.analyze = goog.abstractMethod;
+os.state.BaseStateManager.prototype.analyze = goog.abstractMethod;
 
 
 /**
@@ -435,7 +435,7 @@ os.ui.state.StateManager.prototype.analyze = goog.abstractMethod;
  * @return {T} The save options
  * @protected
  */
-os.ui.state.StateManager.prototype.createStateObject = goog.abstractMethod;
+os.state.BaseStateManager.prototype.createStateObject = goog.abstractMethod;
 
 
 /**
@@ -448,7 +448,7 @@ os.ui.state.StateManager.prototype.createStateObject = goog.abstractMethod;
  * @return {S} The save options
  * @protected
  */
-os.ui.state.StateManager.prototype.createStateOptions = goog.abstractMethod;
+os.state.BaseStateManager.prototype.createStateOptions = goog.abstractMethod;
 
 
 /**
@@ -456,7 +456,7 @@ os.ui.state.StateManager.prototype.createStateOptions = goog.abstractMethod;
  * @param {S} options The state options
  * @return {?string} The file name
  */
-os.ui.state.StateManager.prototype.getStateFileName = goog.abstractMethod;
+os.state.BaseStateManager.prototype.getStateFileName = goog.abstractMethod;
 
 
 /**
@@ -466,7 +466,7 @@ os.ui.state.StateManager.prototype.getStateFileName = goog.abstractMethod;
  * @param {string} stateId The state's identifier
  * @param {?string=} opt_title The state's title
  */
-os.ui.state.StateManager.prototype.loadState = goog.abstractMethod;
+os.state.BaseStateManager.prototype.loadState = goog.abstractMethod;
 
 
 /**
@@ -474,4 +474,4 @@ os.ui.state.StateManager.prototype.loadState = goog.abstractMethod;
  * @param {S} options The state options
  * @return {?string} The serialized content
  */
-os.ui.state.StateManager.prototype.serializeContent = goog.abstractMethod;
+os.state.BaseStateManager.prototype.serializeContent = goog.abstractMethod;

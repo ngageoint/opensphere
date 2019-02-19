@@ -904,7 +904,7 @@ os.ui.query.BaseCombinatorCtrl.prototype.toggle = function(collapsed, opt_node) 
 os.ui.query.BaseCombinatorCtrl.prototype.parseEntries = function(node, entries, opt_entry) {
   if (node) {
     var item = node.getEntry();
-    var entry = opt_entry ? goog.object.clone(opt_entry) : os.ui.query.BaseCombinatorCtrl.getDefaultEntry_();
+    var entry = opt_entry ? goog.object.clone(opt_entry) : os.ui.query.BaseCombinatorCtrl.getDefaultEntry();
 
     // apply this node's stuff to the entry
     if (item && entry) {
@@ -950,9 +950,9 @@ os.ui.query.BaseCombinatorCtrl.prototype.parseEntries = function(node, entries, 
 
 /**
  * @return {!Object<string, string|boolean>}
- * @private
+ * @protected
  */
-os.ui.query.BaseCombinatorCtrl.getDefaultEntry_ = function() {
+os.ui.query.BaseCombinatorCtrl.getDefaultEntry = function() {
   return {
     'layerId': '*',
     'areaId': '*',
@@ -972,7 +972,7 @@ os.ui.query.BaseCombinatorCtrl.getDefaultEntry_ = function() {
  */
 os.ui.query.BaseCombinatorCtrl.applyEntries = function(node, entries, opt_entry, opt_advanced) {
   if (node) {
-    var entry = opt_entry ? goog.object.clone(opt_entry) : os.ui.query.BaseCombinatorCtrl.getDefaultEntry_();
+    var entry = opt_entry ? goog.object.clone(opt_entry) : os.ui.query.BaseCombinatorCtrl.getDefaultEntry();
     var item = node.getEntry();
     if (item) {
       for (var key in item) {
