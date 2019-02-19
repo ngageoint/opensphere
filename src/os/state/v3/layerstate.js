@@ -523,7 +523,7 @@ os.state.v3.LayerState.prototype.defaultConfigToXML = function(key, value, layer
     }
   } else {
     // classes
-    var persistObj = os.ui.stateManager.getPersistable(key);
+    var persistObj = os.stateManager.getPersistable(key);
     if (persistObj) {
       // only try this if the key is registered with the state manager
       try {
@@ -554,7 +554,7 @@ os.state.v3.LayerState.prototype.defaultConfigToXML = function(key, value, layer
  */
 os.state.v3.LayerState.prototype.defaultXmlToConfig = function(key, el) {
   var result = null;
-  var persistObj = os.ui.stateManager.getPersistable(key);
+  var persistObj = os.stateManager.getPersistable(key);
   var value = el.textContent;
   var children = goog.dom.getChildren(el);
 

@@ -25,7 +25,7 @@ os.ui.query.addFilterDirective = function() {
       'layer': '=',
       'btnText': '@'
     },
-    template: '<button class="btn btn-primary btn-sm" title="Add a filter" ng-disabled="!addfilterctrl.canAdd()" ' +
+    template: '<button class="btn btn-success btn-sm" title="Add a filter" ng-disabled="!addfilterctrl.canAdd()" ' +
         'ng-click="addfilterctrl.add()"><i class="fa fa-plus"></i> {{btnText}}</button>',
     controller: os.ui.query.AddFilterCtrl,
     controllerAs: 'addfilterctrl'

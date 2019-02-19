@@ -58,6 +58,7 @@ os.ui.data.DescriptorProvider.prototype.addDescriptor = function(descriptor, opt
  * @param {T} descriptor The descriptor
  * @param {boolean=} opt_clear If data should be cleared on the descriptor
  * @template T
+ * @return {goog.Promise|undefined} This function can return a promise if it is asynchronous.
  */
 os.ui.data.DescriptorProvider.prototype.removeDescriptor = function(descriptor, opt_clear) {
   var node = this.findNode(descriptor);
@@ -70,13 +71,14 @@ os.ui.data.DescriptorProvider.prototype.removeDescriptor = function(descriptor, 
   if (opt_clear) {
     descriptor.clearData();
   }
+
+  return undefined;
 };
 
 
 /**
  * Get the descriptors registered to this provider.
  * @return {!Array.<T>} The descriptors
- * @protected
  */
 os.ui.data.DescriptorProvider.prototype.getDescriptors = function() {
   var dm = os.dataManager;

@@ -14,7 +14,8 @@ os.ui.time.timeDirective = function() {
     scope: {
       'hours': '=',
       'mins': '=',
-      'secs': '='
+      'secs': '=',
+      'isRequired': '=?'
     },
     templateUrl: os.ROOT + 'views/time/time.html',
     controllerAs: 'time'

@@ -1,6 +1,7 @@
 goog.provide('os.search.AppliedFacets');
 goog.provide('os.search.Facet');
 goog.provide('os.search.FacetDefinition');
+goog.provide('os.search.FacetResults');
 goog.provide('os.search.FacetSet');
 
 /**
