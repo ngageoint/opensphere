@@ -2,10 +2,8 @@ goog.provide('os.ui.feature.FeatureInfoCtrl');
 goog.provide('os.ui.feature.featureInfoDirective');
 
 goog.require('goog.Disposable');
-goog.require('ol.Feature');
 goog.require('ol.events');
 goog.require('ol.geom.Point');
-goog.require('os.feature');
 goog.require('os.layer');
 goog.require('os.map');
 goog.require('os.plugin.PluginManager');
