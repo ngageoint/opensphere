@@ -298,7 +298,7 @@ os.ui.feature.FeatureInfoCtrl.prototype.showDescription = function(event) {
  */
 os.ui.feature.FeatureInfoCtrl.prototype.showFeatureTitle = function() {
   var feature = this.scope['items'][0];
-  var sourceId = feature.values_['sourceId'];
+  var sourceId = feature.get('sourceId');
   var layerTitle = os.layer.getTitle(sourceId, true);
   var title = '<h5>' + layerTitle + '</h5>';
   return title;
