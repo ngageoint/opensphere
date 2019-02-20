@@ -252,7 +252,7 @@ os.ui.LayersCtrl.prototype.onMenuClose = function(evt) {
  * @export
  */
 os.ui.LayersCtrl.prototype.toggle = function(flagName) {
-  if (!os.ui.menu.windows.openWindow(flagName)) {
+  if (!os.ui.menu.windows.toggleWindow(flagName)) {
     var event = new os.ui.events.UIEvent(os.ui.events.UIEventType.TOGGLE_UI, flagName);
     os.dispatcher.dispatchEvent(event);
   }
