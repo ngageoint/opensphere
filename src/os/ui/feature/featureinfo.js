@@ -2,8 +2,10 @@ goog.provide('os.ui.feature.FeatureInfoCtrl');
 goog.provide('os.ui.feature.featureInfoDirective');
 
 goog.require('goog.Disposable');
+goog.require('ol.Feature');
 goog.require('ol.events');
 goog.require('ol.geom.Point');
+goog.require('os.feature');
 goog.require('os.layer');
 goog.require('os.map');
 goog.require('os.plugin.PluginManager');
@@ -297,8 +299,9 @@ os.ui.feature.FeatureInfoCtrl.prototype.showDescription = function(event) {
  * @return {string}
  */
 os.ui.feature.FeatureInfoCtrl.prototype.showFeatureTitle = function() {
-  var feature = /** @type {ol.Feature|undefined} */ (this.scope['items'][0]);
-  var layerTitle = os.layer.getTitle(feature.values_['sourceId'], true);
+  var feature = this.scope['items'][0];
+  var sourceId = feature.values_['sourceId'];
+  var layerTitle = os.layer.getTitle(sourceId, true);
   var title = '<h5>' + layerTitle + '</h5>';
   return title;
 };
