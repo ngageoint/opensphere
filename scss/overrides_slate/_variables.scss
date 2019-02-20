@@ -3,7 +3,7 @@ $yiq-contrasted-threshold: 166 !default;
 $enable-gradients: true;
 
 $blue: #08c !default;
-$green: #62c462 !default;
+$green: #20b320 !default;
 $yellow: #ff0 !default;
 $orange: #f89406 !default;
 $indigo: #6c94bc !default;
@@ -66,7 +66,7 @@ $navbar-padding-y: .5rem;
 $navbar-padding-x: 1rem;
 
 // Active/selected color.
-$list-group-active-bg: darken($success, 25%);
+$list-group-active-bg: darken($success, 15%);
 $list-group-active-color: $white;
 
 // Highlight/hover color.
