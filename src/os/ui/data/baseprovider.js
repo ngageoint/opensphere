@@ -75,8 +75,12 @@ os.ui.data.BaseProvider.TYPE = 'default';
  * @inheritDoc
  */
 os.ui.data.BaseProvider.prototype.configure = function(config) {
-  this.setEnabled(/** @type {boolean} */ (config['enabled']));
-  this.setLabel(/** @type {string} */ (config['label']));
+  this.setEnabled(!!config['enabled']);
+
+  var label = /** @type {string|undefined} */ (config['label']);
+  if (label) {
+    this.setLabel(label);
+  }
 };
 
 
