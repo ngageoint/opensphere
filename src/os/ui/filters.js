@@ -235,6 +235,9 @@ os.ui.FiltersCtrl.prototype.onEditFilter_ = function(event, entry) {
   }
   if (cols) {
     os.filter.BaseFilterManager.edit(entry.getType(), cols, this.editEntry.bind(this), entry);
+  } else {
+    os.alertManager.sendAlert('This layer is missing required information to edit filters.',
+        os.alert.AlertEventSeverity.WARNING);
   }
 };
 
