@@ -129,7 +129,7 @@ os.ui.menu.MenuButtonCtrl.prototype.onMenuClose = function() {
  * @export
  */
 os.ui.menu.MenuButtonCtrl.prototype.toggle = function() {
-  if (this.flag && !os.ui.menu.windows.openWindow(this.flag)) {
+  if (this.flag && !os.ui.menu.windows.toggleWindow(this.flag)) {
     var event = new os.ui.events.UIEvent(os.ui.events.UIEventType.TOGGLE_UI, this.flag, null, null, this.metricKey);
     os.dispatcher.dispatchEvent(event);
   }
