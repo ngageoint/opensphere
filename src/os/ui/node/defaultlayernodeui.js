@@ -4,10 +4,10 @@ goog.provide('os.ui.node.defaultLayerNodeUIDirective');
 goog.require('goog.events.EventType');
 goog.require('os.events.LayerEvent');
 goog.require('os.events.LayerEventType');
+goog.require('os.filter.BaseFilterManager');
 goog.require('os.filter.IFilterable');
 goog.require('os.implements');
 goog.require('os.layer.ILayer');
-goog.require('os.query.FilterManager');
 goog.require('os.ui.Module');
 goog.require('os.ui.slick.AbstractNodeUICtrl');
 
@@ -209,7 +209,7 @@ os.ui.node.DefaultLayerNodeUICtrl.prototype.filter = function() {
 os.ui.node.DefaultLayerNodeUICtrl.prototype.updateFilters_ = function(opt_event) {
   var node = /** @type {os.data.LayerNode} */ (this.scope['item']);
 
-  var fqm = os.query.FilterManager.getInstance();
+  var fqm = os.filter.BaseFilterManager.getInstance();
   this['filtered'] = fqm.hasEnabledFilters(node.getId());
 
   if (this['filtered']) {
