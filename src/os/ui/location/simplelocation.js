@@ -180,10 +180,10 @@ os.ui.Module.directive(os.ui.location.SimpleLocationDirective.ID, [os.ui.locatio
  * @const
  */
 os.ui.location.SimpleLocationDirective.template_ =
-    '<div>' +
+    '<div class="d-flex">' +
+    '<span ng-bind-html="simpleLocationCtrl.location"></span>' +
     '<simple-location-controls format-default="simpleLocationCtrl.currentFormat" ' +
     'on-change="simpleLocationCtrl.format(opt_format)"></simple-location-controls>' +
-    '<span ng-bind-html="simpleLocationCtrl.location"></span>' +
     '</div>';
 
 
