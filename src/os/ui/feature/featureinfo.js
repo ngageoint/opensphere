@@ -295,6 +295,7 @@ os.ui.feature.FeatureInfoCtrl.prototype.showDescription = function(event) {
 /**
  * Parses feature info for title.
  * @return {string}
+ * @export
  */
 os.ui.feature.FeatureInfoCtrl.prototype.showFeatureTitle = function() {
   var feature = this.scope['items'][0];
