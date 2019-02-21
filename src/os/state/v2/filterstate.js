@@ -2,7 +2,7 @@ goog.provide('os.state.v2.Filter');
 goog.require('goog.log');
 goog.require('goog.log.Logger');
 goog.require('os.data.OSDataManager');
-goog.require('os.query.FilterManager');
+goog.require('os.filter.BaseFilterManager');
 goog.require('os.state.v2.BaseFilter');
 
 
@@ -67,8 +67,8 @@ os.state.v2.Filter.prototype.load = function(obj, id) {
           entry.setTemporary(true);
           entry.setEnabled(true);
 
-          os.query.FilterManager.getInstance().addFilter(entry);
-          os.query.FilterManager.getInstance().setGrouping(layerId, group);
+          os.filter.BaseFilterManager.getInstance().addFilter(entry);
+          os.filter.BaseFilterManager.getInstance().setGrouping(layerId, group);
 
           if (!queryEntries) {
             qm.addEntry(layerId, '*', entry.getId(), true, group, true);
@@ -99,7 +99,7 @@ os.state.v2.Filter.prototype.remove = function(id) {
     var added = os.state.v2.Filter.ADDED_[id];
     for (var i = 0, n = added.length; i < n; i++) {
       qm.removeEntries(null, null, added[i].getId());
-      os.query.FilterManager.getInstance().removeFilter(added[i]);
+      os.filter.BaseFilterManager.getInstance().removeFilter(added[i]);
     }
 
     delete os.state.v2.Filter.ADDED_[id];
