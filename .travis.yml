@@ -11,6 +11,8 @@ os:
 - linux
 addons:
   chrome: stable
+  hosts:
+    - localhost
   apt:
     sources:
     - sourceline: "deb https://dl.yarnpkg.com/debian/ stable main"
@@ -24,6 +26,7 @@ script:
 - set -e
 - yarn run build
 - yarn run test
+- ./cypress/support/execute-tests.sh ci all
 - yarn run apidoc
 - set +e
 after_success:
