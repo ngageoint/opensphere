@@ -73,6 +73,14 @@ os.ui.window.LOGGER_ = goog.log.getLogger('os.ui.window');
 
 
 /**
+ * Map of currently open windows.
+ * @type {!Object<string, !Array<!Element>>}
+ * @private
+ */
+os.ui.window.openWindows_ = {};
+
+
+/**
  * A draggable, resizable window. The directive uses transclusion, meaning that you
  * can place custom content into the window.
  *
@@ -329,19 +337,20 @@ os.ui.window.closeAll = function(opt_parent) {
 
 
 /**
- * Gets a reference to a window with the provided id, if it exists in the application.
- * @param {string} id The window's id (without the #)
- * @return {?angular.JQLite} The window, if it exists.
+ * Gets a reference to all windows with the provided id, if open in the application.
+ * @param {string} id The id, without the leading `#`.
+ * @return {?angular.JQLite} The window(s), if found.
  */
 os.ui.window.getById = function(id) {
-  var win = angular.element(os.ui.windowSelector.WINDOW + '#' + id);
-  if (win.length == 0) {
-    win = angular.element('[key="' + id + '"]');
+  // check if registered by id
+  var wins = os.ui.window.openWindows_['#' + id];
+
+  if (!wins || !wins.length) {
+    // check if registered by key
+    wins = os.ui.window.openWindows_[id];
   }
-  if (win.length == 0) {
-    win = null;
-  }
-  return win;
+
+  return wins && wins.length ? angular.element(wins) : null;
 };
 
 
@@ -363,7 +372,7 @@ os.ui.window.setParams = function(id, params) {
 
 /**
  * Checks if a window with the provided id exists in the application.
- * @param {string} id The window's id (without the #)
+ * @param {string} id The id, without the leading `#`.
  * @return {boolean} If the window exists.
  */
 os.ui.window.exists = function(id) {
@@ -479,6 +488,37 @@ os.ui.window.sortByZIndex = function(a, b) {
 
 
 /**
+ * Register an open window.
+ * @param {string} id The window id.
+ * @param {!Element} el The element.
+ */
+os.ui.window.registerWindow = function(id, el) {
+  if (!os.ui.window.openWindows_[id]) {
+    os.ui.window.openWindows_[id] = [el];
+  } else {
+    os.ui.window.openWindows_[id].push(el);
+  }
+};
+
+
+/**
+ * Remove a window from the open window map.
+ * @param {string} id The window id.
+ * @param {!Element} el The element.
+ */
+os.ui.window.unregisterWindow = function(id, el) {
+  var wins = os.ui.window.openWindows_[id];
+  if (wins) {
+    ol.array.remove(wins, el);
+
+    if (wins.length === 0) {
+      delete os.ui.window.openWindows_[id];
+    }
+  }
+};
+
+
+/**
  * @typedef {{
  *   id: string,
  *   iconClass: string,
@@ -541,6 +581,10 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
   }
 
   $element[0].id = $scope['id'];
+
+  this.getWindowKeys().forEach(function(key) {
+    os.ui.window.registerWindow(key, this.element[0]);
+  }, this);
 
   if ($scope['x'] == 'center') {
     $scope['x'] = (container.width() - $scope['width']) / 2;
@@ -732,11 +776,32 @@ os.ui.WindowCtrl.prototype.disposeInternal = function() {
     this.removeModalBg();
   }
 
+  this.getWindowKeys().forEach(function(key) {
+    os.ui.window.unregisterWindow(key, this.element[0]);
+  }, this);
+
   goog.dispose(this.vsm_);
   this.vsm_ = null;
 
   this.element = null;
   this.scope = null;
+};
+
+
+/**
+ * Get all keys used to identify the open window.
+ * @return {!Array<string>}
+ * @protected
+ */
+os.ui.WindowCtrl.prototype.getWindowKeys = function() {
+  var keys = [];
+
+  var id = this.scope ? /** @type {string|undefined} */ (this.scope['id']) : undefined;
+  if (id) {
+    keys.push('#' + id);
+  }
+
+  return keys;
 };
 
 
