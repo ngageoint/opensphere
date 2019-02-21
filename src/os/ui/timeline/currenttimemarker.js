@@ -19,6 +19,12 @@ os.ui.timeline.CurrentTimeMarker = function() {
    * @private
    */
   this.animationFrameRef_ = null;
+
+  /**
+   * @type {number?}
+   * @private
+   */
+  this.height_ = 0;
 };
 goog.inherits(os.ui.timeline.CurrentTimeMarker, os.ui.timeline.BaseItem);
 
@@ -38,11 +44,13 @@ os.ui.timeline.CurrentTimeMarker.prototype.dispose = function() {
  * @inheritDoc
  */
 os.ui.timeline.CurrentTimeMarker.prototype.initSVG = function(container, height) {
+  this.height_ = height;
   var past = /** @type {d3.Selection} */ (container.append('g'));
   past.append('rect').
       attr('class', 'c-svg-timeline__background-future').
-      attr('height', '' + height);
-  past.append('text').attr('class', 'label js-c-svg-timeline__current-time').style('text-anchor', 'middle');
+      attr('height', '' + this.height_).
+      attr('width', '100%');
+  past.append('text').attr('class', 'label js-c-svg-timeline__current-time');
   this.animationFrameRef_ = window.requestAnimationFrame(this.updateCurrentTimeRAF.bind(this));
 };
 
@@ -61,11 +69,13 @@ os.ui.timeline.CurrentTimeMarker.prototype.updateCurrentTimeRAF = function(times
  * @param {boolean=} opt_loop loop for request animation frame
  */
 os.ui.timeline.CurrentTimeMarker.prototype.updateCurrentTime = function(opt_loop) {
-  var times = os.ui.timeline.normalizeExtent(this.xScale.domain());
+  var times = this.getExtent();
   var dates = [new Date(times[0]), new Date(times[1])];
   var range = this.xScale.range();
   var today = new Date();
-  var prettyDate = new os.time.TimeInstant(today).toISOString().split(' ')[1];
+  var date = new os.time.TimeInstant(today).toISOString().split(' ');
+  // include offset block if there is one
+  var prettyDate = date.length === 2 ? date[1] : date.length === 3 ? date[1] + ' ' + date[2] : '';
   var shade = d3.select('.c-svg-timeline__background-future');
   var currentDateText = d3.select('.js-c-svg-timeline__current-time');
 
@@ -73,8 +83,9 @@ os.ui.timeline.CurrentTimeMarker.prototype.updateCurrentTime = function(opt_loop
     var currentDiff = today - dates[0];
     var ratio = currentDiff / (dates[1] - dates[0]);
     var translate = range[1] * ratio;
+    var transformString = 'translate(' + (translate + prettyDate.length - 7) + ', ' + (this.height_ - 7) + ')';
     shade.style('display', 'block').attr('transform', 'translate(' + translate + ', 0)');
-    currentDateText.style('display', 'block').text(prettyDate).attr('transform', 'translate(' + translate + ', 0)');
+    currentDateText.style('display', 'block').text(prettyDate).attr('transform', transformString);
   } else if (today > dates[0]) { // completely in past
     shade.style('display', 'none');
     currentDateText.style('display', 'none');
