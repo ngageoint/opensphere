@@ -140,6 +140,22 @@ os.ui.menu.windows.openWindow = function(evt) {
 
 
 /**
+ * Toggle a window.
+ * @param {string} id The window id.
+ * @return {boolean} If the toggle was successful.
+ */
+os.ui.menu.windows.toggleWindow = function(id) {
+  var win = os.ui.window.getById(id);
+  if (win) {
+    os.ui.window.close(win);
+    return true;
+  }
+
+  return os.ui.menu.windows.openWindow(id);
+};
+
+
+/**
  * Opens settings with a specific plugin selected
  * @param {string} id
  */
