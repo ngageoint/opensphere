@@ -19,8 +19,7 @@ os.ui.legendDirective = function() {
     restrict: 'E',
     replace: true,
     scope: {
-      'closeFlag': '=',
-      'widget': '@'
+      'closeFlag': '='
     },
     templateUrl: os.ROOT + 'views/legend.html',
     controller: os.ui.LegendCtrl,
@@ -118,15 +117,17 @@ os.ui.LegendCtrl = function($scope, $element) {
    */
   this.layerListeners_ = {};
 
-  /**
-   * @type {boolean}
-   * @private
-   */
-  this['widget'] = $scope['widget'] == 'true';
-
   this.init();
 };
 goog.inherits(os.ui.LegendCtrl, os.data.SourceManager);
+
+
+/**
+ * CSS selector for the legend container.
+ * @type {string}
+ * @const
+ */
+os.ui.LegendCtrl.CONTAINER_SELECTOR = '#map-container';
 
 
 /**
@@ -148,11 +149,9 @@ os.ui.LegendCtrl.prototype.disposeInternal = function() {
   goog.dispose(this.drawThrottle);
   this.drawThrottle = null;
 
-  if (this['widget']) {
-    var olMap = map.getMap();
-    if (olMap) {
-      ol.events.unlisten(olMap, 'change:size', this.onUpdateDelay, this);
-    }
+  var olMap = map.getMap();
+  if (olMap) {
+    ol.events.unlisten(olMap, 'change:size', this.onUpdateDelay, this);
   }
 
   this.canvas_ = null;
@@ -186,36 +185,26 @@ os.ui.LegendCtrl.prototype.init = function() {
     this.addLayerListener_(tileLayers[i]);
   }
 
-  if (this['widget']) {
-    var olMap = map.getMap();
-    if (olMap) {
-      ol.events.listen(olMap, 'change:size', this.onUpdateDelay, this);
-    }
-
-    // positioning off the screen will auto correct to the bottom/right
-    var x = /** @type {string} */ (os.settings.get(os.config.LegendSetting.LEFT, '15000px'));
-    var y = /** @type {string} */ (os.settings.get(os.config.LegendSetting.TOP, '15000px'));
-    this.element.css('left', x);
-    this.element.css('top', y);
-
-    this.element.draggable({
-      'containment': os.ui.LegendCtrl.CONTAINER_SELECTOR,
-      'start': this.onDragStart_.bind(this),
-      'stop': this.onDragStop_.bind(this)
-    });
-
-    // defer the initial update so the CSS left/top attributes are updated
-    goog.async.nextTick(this.onUpdateDelay, this);
+  var olMap = map.getMap();
+  if (olMap) {
+    ol.events.listen(olMap, 'change:size', this.onUpdateDelay, this);
   }
+
+  // positioning off the screen will auto correct to the bottom/right
+  var x = /** @type {string} */ (os.settings.get(os.config.LegendSetting.LEFT, '15000px'));
+  var y = /** @type {string} */ (os.settings.get(os.config.LegendSetting.TOP, '15000px'));
+  this.element.css('left', x);
+  this.element.css('top', y);
+
+  this.element.draggable({
+    'containment': os.ui.LegendCtrl.CONTAINER_SELECTOR,
+    'start': this.onDragStart_.bind(this),
+    'stop': this.onDragStop_.bind(this)
+  });
+
+  // defer the initial update so the CSS left/top attributes are updated
+  goog.async.nextTick(this.onUpdateDelay, this);
 };
-
-
-/**
- * CSS selector for the legend container in widget mode.
- * @type {string}
- * @const
- */
-os.ui.LegendCtrl.CONTAINER_SELECTOR = '#map-container';
 
 
 /**
@@ -234,18 +223,10 @@ os.ui.LegendCtrl.prototype.onUpdateDelay = function() {
  */
 os.ui.LegendCtrl.prototype.drawLegend_ = function() {
   if (this.canvas_) {
-    var maxHeight;
-    var maxWidth;
-
-    if (this['widget']) {
-      // limit the height/width to not exceed the container size
-      var container = angular.element(os.ui.LegendCtrl.CONTAINER_SELECTOR);
-      maxHeight = container.height() - 50;
-      maxWidth = container.width() - 50;
-    } else {
-      // set a reasonable height limit
-      maxHeight = 2000;
-    }
+    // limit the height/width to not exceed the container size
+    var container = angular.element(os.ui.LegendCtrl.CONTAINER_SELECTOR);
+    var maxHeight = container.height() - 50;
+    var maxWidth = container.width() - 50;
 
     os.legend.drawToCanvas(this.canvas_, maxHeight, maxWidth);
     this.positionLegend_();
@@ -395,12 +376,12 @@ os.ui.LegendCtrl.prototype.savePosition_ = function() {
  */
 os.ui.LegendCtrl.prototype.positionLegend_ = function(opt_e) {
   // don't reposition the legend while it's being dragged
-  if (!this.dragging_ && this.element && this['widget']) {
+  if (!this.dragging_ && this.element) {
     // this moves the legend back into view rather simplistically
     var strX = this.element.css('left').replace('px', '');
     var strY = this.element.css('top').replace('px', '');
     if (isNaN(strX) || isNaN(strY)) {
-      // widget position isn't set yet
+      // position isn't set yet
       return;
     }
 
