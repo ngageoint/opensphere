@@ -1066,11 +1066,13 @@ plugin.cesium.sync.FeatureConverter.prototype.olPolygonGeometryToCesiumPolyline 
     if (style.getFill()) {
       // perPositionHeight: true on the fill was causing weird visual artifacts on large polygons, so it's disabled here
       // Grab the height from the first coordinate of the OL geometry
-      var coords = geometry.getCoordinates();
       var height = undefined;
-
-      if (coords[0] && coords[0][0]) {
-        height = coords[0][0][2] || undefined;
+      var stride = geometry.getStride();
+      if (stride > 2) {
+        var flatCoords = geometry.getFlatCoordinates();
+        if (flatCoords && flatCoords.length > 2) {
+          height = flatCoords[2];
+        }
       }
 
       var fillGeometry = new Cesium.PolygonGeometry({
