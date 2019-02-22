@@ -1,4 +1,9 @@
 // We want alerts to popup above windows and modals
 .c-alert-popup {
   z-index: $zindex-modal + 1;
+
+  .c-alert-popup__text {
+    max-height: 15rem;
+    overflow: hidden;
+  }
 }

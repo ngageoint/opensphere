@@ -44,6 +44,13 @@ os.ui.state.IStateDescriptor.prototype.getStateType;
 
 /**
  * @return {string} The order:group string that specifies the order in the menu and the group it belongs to.
- *  example: '1:Saved States'
+ *     example: '1:Saved States'
  */
 os.ui.state.IStateDescriptor.prototype.getMenuGroup;
+
+
+/**
+ * @return {string} The label of the default persister for this state descriptor. Used when saving to default
+ *     back to saving a state with the same persister as it used.
+ */
+os.ui.state.IStateDescriptor.prototype.getDefaultPersister;

@@ -60,7 +60,7 @@ os.ui.state.StateExportCtrl = function($scope, $element, $timeout) {
     }
   }
 
-  var defaultMethod = /** @type {string|undefined} */ ($scope['defaultMethod']) || 'File';
+  var defaultMethod = /** @type {string|undefined} */ ($scope['method']) || 'File';
   if (defaultMethod && defaultMethod in this['persisters']) {
     this['persister'] = this['persisters'][defaultMethod];
   }

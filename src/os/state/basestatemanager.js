@@ -270,11 +270,11 @@ os.state.BaseStateManager.prototype.finishImport = function(file, options) {
 
 /**
  * Initiate the state export process.
- * @param {os.ex.IPersistenceMethod=} opt_method The persistence method
+ * @param {string=} opt_method Optional string label for the persistence method to default to.
  */
 os.state.BaseStateManager.prototype.startExport = function(opt_method) {
   var scopeOptions = {
-    'defaultMethod': opt_method
+    'method': opt_method
   };
 
   var windowOptions = {
@@ -289,7 +289,7 @@ os.state.BaseStateManager.prototype.startExport = function(opt_method) {
     'show-close': 'true'
   };
 
-  var template = '<stateexport default-method="defaultMethod"></stateexport>';
+  var template = '<stateexport method="method"></stateexport>';
   os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
 };
 
