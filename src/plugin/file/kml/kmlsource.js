@@ -436,18 +436,12 @@ plugin.file.kml.KMLSource.prototype.onImportComplete = function(opt_event) {
  * @inheritDoc
  */
 plugin.file.kml.KMLSource.prototype.clearQueue = function() {
-  var toRemove = [];
   for (var key in this.nodeMap_) {
     var node = this.nodeMap_[key];
     if (node && node.isDisposed()) {
-      toRemove.push(key);
+      this.nodeMap_[key] = undefined;
     }
   }
-
-  var nmap = this.nodeMap_;
-  toRemove.forEach(function(key) {
-    nmap[key] = undefined;
-  });
 
   plugin.file.kml.KMLSource.base(this, 'clearQueue');
 };
