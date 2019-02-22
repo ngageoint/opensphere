@@ -435,6 +435,27 @@ plugin.file.kml.KMLSource.prototype.onImportComplete = function(opt_event) {
 /**
  * @inheritDoc
  */
+plugin.file.kml.KMLSource.prototype.clearQueue = function() {
+  var toRemove = [];
+  for (var key in this.nodeMap_) {
+    var node = this.nodeMap_[key];
+    if (node && node.isDisposed()) {
+      toRemove.push(key);
+    }
+  }
+
+  var nmap = this.nodeMap_;
+  toRemove.forEach(function(key) {
+    nmap[key] = undefined;
+  });
+
+  plugin.file.kml.KMLSource.base(this, 'clearQueue');
+};
+
+
+/**
+ * @inheritDoc
+ */
 plugin.file.kml.KMLSource.prototype.removeFeature = function(feature) {
   this.removeNode(/** @type {string} */ (feature.getId()));
 
@@ -453,22 +474,22 @@ plugin.file.kml.KMLSource.prototype.removeNode = function(id) {
   if (this.disposeOnRemove_) {
     var node = this.nodeMap_[id];
     if (node) {
-      if (node.getId() == id) {
-        // get rid of the node
-        this.nodeMap_[id] = undefined;
+      this.nodeMap_[id] = undefined;
 
-        // dispose first to remove listeners
-        node.dispose();
+      if (!node.isDisposed()) {
+        if (node.getId() == id) {
+          // dispose first to remove listeners
+          node.dispose();
 
-        // then unlink from the parent
-        var parent = node.getParent();
-        if (parent) {
-          parent.removeChild(node);
+          // then unlink from the parent
+          var parent = node.getParent();
+          if (parent) {
+            parent.removeChild(node);
+          }
+        } else {
+          // the node's ID changed as a result of a merge, so update the reference in the map
+          this.nodeMap_[node.getId()] = node;
         }
-      } else {
-        // the node's ID changed as a result of a merge, so update the reference in the map
-        this.nodeMap_[id] = undefined;
-        this.nodeMap_[node.getId()] = node;
       }
     }
   }
