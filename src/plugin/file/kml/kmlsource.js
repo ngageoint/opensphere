@@ -7,6 +7,7 @@ goog.require('goog.object');
 goog.require('ol.array');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.layer.Image');
+goog.require('os.object');
 goog.require('os.source.PropertyChange');
 goog.require('os.source.Request');
 goog.require('os.structs.TriState');
@@ -442,6 +443,8 @@ plugin.file.kml.KMLSource.prototype.clearQueue = function() {
       this.nodeMap_[key] = undefined;
     }
   }
+
+  this.nodeMap_ = os.object.prune(this.nodeMap_);
 
   plugin.file.kml.KMLSource.base(this, 'clearQueue');
 };
