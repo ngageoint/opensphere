@@ -117,6 +117,9 @@ os.ui.LegendCtrl = function($scope, $element) {
    */
   this.layerListeners_ = {};
 
+  // register the legend as a window so it can be toggled by os.ui.menu.windows.toggleWindow
+  os.ui.window.registerWindow('legend', this.element[0]);
+
   this.init();
 };
 goog.inherits(os.ui.LegendCtrl, os.data.SourceManager);
@@ -135,6 +138,9 @@ os.ui.LegendCtrl.CONTAINER_SELECTOR = '#map-container';
  */
 os.ui.LegendCtrl.prototype.disposeInternal = function() {
   os.ui.LegendCtrl.base(this, 'disposeInternal');
+
+  // remove from the open window registry
+  os.ui.window.unregisterWindow('legend', this.element[0]);
 
   os.dispatcher.unlisten(os.legend.EventType.UPDATE, this.onUpdateDelay, false, this);
 
