@@ -388,6 +388,8 @@ plugin.file.kml.KMLSource.prototype.addNodes = function(nodes, opt_recurse) {
  * @inheritDoc
  */
 plugin.file.kml.KMLSource.prototype.onImportProgress = function(opt_event) {
+  this.clearQueue();
+
   // KML parsing is about 30% faster in FF if this is done in one shot in the complete handler, instead of here. the
   // slowdown is caused by the renderer and parser competing for resources, since FF has a much slower canvas renderer.
   // moving this to the complete handler will prevent any features from displaying until the parser is done, instead of
