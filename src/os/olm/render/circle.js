@@ -18,7 +18,7 @@ goog.require('os.unit.UnitManager');
 /**
  * @constructor
  * @extends {os.olm.render.BaseShape}
- * @param {ol.style.Style} style Style.
+ * @param {Array<ol.style.Style>|ol.style.Style} style Style.
  * @param {string=} opt_units - units for text
  */
 os.olm.render.Circle = function(style, opt_units) {
@@ -53,12 +53,6 @@ os.olm.render.Circle = function(style, opt_units) {
    * @type {ol.geom.Polygon}
    */
   this.originalGeometry_ = null;
-
-  /**
-   * @private
-   * @type {null | string}
-   */
-  this.units_ = opt_units || null;
 };
 goog.inherits(os.olm.render.Circle, os.olm.render.BaseShape);
 
@@ -94,17 +88,20 @@ os.olm.render.Circle.prototype.createGeometry = function() {
 
 
 /**
- * @inheritDoc
+ * @protected
  */
-os.olm.render.Circle.prototype.adjustStyle = function(context) {
+os.olm.render.Circle.prototype.adjustStyle = function() {
   var um = os.unit.UnitManager.getInstance();
-  if (this.units_) {
-    context.setTextStyle(new ol.style.Text({
-      fill: new ol.style.Fill({
-        color: [0, 0xff, 0xff, 1]
-      }),
-      text: um.formatToBestFit('distance', this.distance_, 'm', um.getBaseSystem(), 3)
-    }));
+  var style = this.getStyle();
+
+  var styles = Array.isArray(style) ? style : [style];
+  var value = um.formatToBestFit('distance', this.distance_, 'm', um.getBaseSystem(), 3);
+
+  for (var i = 0, ii = styles.length; i < ii; i++) {
+    var text = styles[i].getText();
+    if (text) {
+      text.setText(value);
+    }
   }
 };
 
@@ -135,13 +132,6 @@ os.olm.render.Circle.prototype.setCoordinates = function(startCoord, endCoord) {
   this.originalGeometry_ = this.createGeometry();
   this.geometry_ = this.originalGeometry_.clone();
   os.interpolate.interpolateGeom(this.geometry_);
+  this.adjustStyle();
   this.render();
-};
-
-
-/**
- * @param {string} units The text overlay units.
- */
-os.olm.render.Circle.prototype.setUnits = function(units) {
-  this.units_ = units;
 };

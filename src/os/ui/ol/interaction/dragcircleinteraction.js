@@ -24,7 +24,7 @@ os.ui.ol.interaction.DragCircle = function() {
    * @type {!os.olm.render.Circle}
    * @protected
    */
-  this.circle2D = new os.olm.render.Circle(/** @type {ol.style.Style} */ (this.getStyle()), os.math.Units.KILOMETERS);
+  this.circle2D = new os.olm.render.Circle(this.getStyle(), os.math.Units.KILOMETERS);
 
   /**
    * @type {?ol.Coordinate}
@@ -112,7 +112,6 @@ os.ui.ol.interaction.DragCircle.prototype.update = function(mapBrowserEvent) {
 os.ui.ol.interaction.DragCircle.prototype.update2D = function(start, end) {
   if (start && end) {
     this.circle2D.setCoordinates(start, end);
-    this.circle2D.setUnits(os.math.Units.KILOMETERS);
   }
 };
 

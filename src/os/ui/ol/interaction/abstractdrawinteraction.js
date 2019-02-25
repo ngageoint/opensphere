@@ -10,8 +10,10 @@ goog.require('goog.log.Logger');
 goog.require('ol.ViewHint');
 goog.require('ol.events.condition');
 goog.require('ol.interaction.Pointer');
+goog.require('ol.style.Fill');
 goog.require('ol.style.Stroke');
 goog.require('ol.style.Style');
+goog.require('ol.style.Text');
 goog.require('os.ui.ol.draw.DrawEvent');
 goog.require('os.ui.ol.draw.DrawEventType');
 
@@ -48,16 +50,29 @@ os.ui.ol.interaction.AbstractDraw = function(opt_options) {
   this.type = '';
 
   /**
-   * @type {ol.style.Style}
+   * @type {ol.style.Style|Array<ol.style.Style>}
    * @private
    */
-  this.style_ = opt_options !== undefined && opt_options.style !== undefined ? opt_options.style : new ol.style.Style({
-    stroke: new ol.style.Stroke({
-      color: [0, 0xff, 0xff, 1.0],
-      lineCap: 'square',
-      width: 2
-    })
-  });
+  this.style_ = opt_options !== undefined && opt_options.style !== undefined ? opt_options.style : [
+    new ol.style.Style({
+      stroke: new ol.style.Stroke({
+        color: [0, 0xff, 0xff, 1.0],
+        lineCap: 'square',
+        width: 2
+      })
+    }),
+    new ol.style.Style({
+      text: new ol.style.Text({
+        stroke: new ol.style.Stroke({
+          width: 2,
+          color: [0, 0, 0, 1.0]
+        }),
+        fill: new ol.style.Fill({
+          color: [0xff, 0xff, 0xff, 1.0]
+        }),
+        textAlign: 'left'
+      })
+    })];
 
   /**
    * @type {goog.events.KeyHandler}
@@ -136,7 +151,7 @@ os.ui.ol.interaction.AbstractDraw.prototype.getStyle = function() {
 
 
 /**
- * @param {ol.style.Style} style
+ * @param {ol.style.Style|Array<ol.style.Style>} style
  */
 os.ui.ol.interaction.AbstractDraw.prototype.setStyle = function(style) {
   this.style_ = style;

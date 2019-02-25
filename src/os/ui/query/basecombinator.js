@@ -154,7 +154,7 @@ os.ui.query.BaseCombinatorCtrl = function($scope, $element) {
   $scope.$on('edit', this.onEdit_.bind(this));
   $scope.$on('view', this.onView_.bind(this));
   $scope.$on('copy', this.onCopy_.bind(this));
-  $scope.$on('remove', this.onRemove_.bind(this));
+  $scope.$on('remove', this.onRemove.bind(this));
   $scope.$on('filterComplete', this.onFilterComplete_.bind(this));
   $scope.$on('combinator.setLayer', this.onSetLayer_.bind(this));
 
@@ -826,9 +826,9 @@ os.ui.query.BaseCombinatorCtrl.prototype.onCopy_ = function(event, entry) {
  * @param {angular.Scope.Event} evt
  * @param {boolean} isFilter
  * @param {!Object<string, string|boolean>} entry
- * @private
+ * @protected
  */
-os.ui.query.BaseCombinatorCtrl.prototype.onRemove_ = function(evt, isFilter, entry) {
+os.ui.query.BaseCombinatorCtrl.prototype.onRemove = function(evt, isFilter, entry) {
   var field = isFilter ? 'filterId' : 'areaId';
   if (entry) {
     var id = /** @type {string} */ (entry[field]);

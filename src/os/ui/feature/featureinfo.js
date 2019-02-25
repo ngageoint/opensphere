@@ -4,6 +4,7 @@ goog.provide('os.ui.feature.featureInfoDirective');
 goog.require('goog.Disposable');
 goog.require('ol.events');
 goog.require('ol.geom.Point');
+goog.require('os.layer');
 goog.require('os.map');
 goog.require('os.plugin.PluginManager');
 goog.require('os.ui.Module');
@@ -289,4 +290,17 @@ os.ui.feature.FeatureInfoCtrl.prototype.showDescription = function(event) {
   if (descTabIndex > -1) {
     this.setActiveTab(this['tabs'][descTabIndex]);
   }
+};
+
+/**
+ * Parses feature info for title.
+ * @return {string}
+ * @export
+ */
+os.ui.feature.FeatureInfoCtrl.prototype.showFeatureTitle = function() {
+  var feature = this.scope['items'][0];
+  var sourceId = feature.get('sourceId');
+  var layerTitle = os.layer.getTitle(sourceId, true);
+  var title = '<h5>' + layerTitle + '</h5>';
+  return title;
 };
