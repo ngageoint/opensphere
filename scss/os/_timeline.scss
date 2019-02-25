@@ -5,7 +5,6 @@
   background: $u-theme-variables--bg-offset;
   border-bottom: 1px solid $border-color;
   border-top: 1px solid $border-color;
-  margin-top: .25rem;
   z-index: 200;
 }
 
@@ -43,11 +42,15 @@
   @include grab-cursor();
   fill: darken($u-theme-variables--bg-offset, 10%);
   fill-opacity: .5;
-  width: 100%;
 }
 
 .c-svg-timeline__background-future.dragging {
   @include grabbing-cursor();
+}
+
+.c-svg-timeline__current-time {
+  fill: $gray-300;
+  font-weight: bold;
 }
 
 .c-svg-timeline__axis-background {
