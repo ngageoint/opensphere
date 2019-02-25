@@ -13,7 +13,7 @@ goog.require('ol.source.Vector');
 /**
  * @constructor
  * @extends {goog.Disposable}
- * @param {ol.style.Style} style Style.
+ * @param {ol.style.Style|Array<ol.style.Style>} style Style.
  * @abstract
  */
 os.olm.render.BaseShape = function(style) {
@@ -25,7 +25,7 @@ os.olm.render.BaseShape = function(style) {
 
   /**
    * @private
-   * @type {ol.style.Style}
+   * @type {ol.style.Style|Array<ol.style.Style>}
    */
   this.style_ = style;
 
@@ -106,15 +106,8 @@ os.olm.render.BaseShape.prototype.getGeometry = goog.abstractMethod;
 
 
 /**
- * @return {ol.style.Style} The style
+ * @return {ol.style.Style|Array<ol.style.Style>} The style
  */
 os.olm.render.BaseShape.prototype.getStyle = function() {
   return this.style_;
-};
-
-
-/**
- * @param {ol.render.VectorContext} context The vector context
- */
-os.olm.render.BaseShape.prototype.adjustStyle = function(context) {
 };

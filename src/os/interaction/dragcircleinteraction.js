@@ -21,7 +21,6 @@ goog.require('os.ui.ol.interaction.DragCircle');
  */
 os.interaction.DragCircle = function() {
   os.interaction.DragCircle.base(this, 'constructor');
-  this.circle2D.setUnits(os.unit.UnitManager.getInstance().getSelectedSystem());
 };
 goog.inherits(os.interaction.DragCircle, os.ui.ol.interaction.DragCircle);
 os.implements(os.interaction.DragCircle, os.I3DSupport.ID);
@@ -32,7 +31,6 @@ os.implements(os.interaction.DragCircle, os.I3DSupport.ID);
 os.interaction.DragCircle.prototype.update2D = function(start, end) {
   if (start && end) {
     this.circle2D.setCoordinates(start, end);
-    this.circle2D.setUnits(os.unit.UnitManager.getInstance().getSelectedSystem());
   }
 
   this.updateWebGL(start, end);

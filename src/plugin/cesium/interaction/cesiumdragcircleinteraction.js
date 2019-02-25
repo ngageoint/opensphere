@@ -81,8 +81,13 @@ plugin.cesium.interaction.dragcircle.updateWebGL = function(start, end) {
       if (!this.cesiumLabel) {
         this.cesiumLabel = this.cesiumLabels.add();
         this.cesiumLabel.show = false;
-        this.cesiumLabel.fillColor = Cesium.Color.YELLOW;
-        this.cesiumLabel.scale = 0.6;
+        this.cesiumLabel.fillColor = Cesium.Color.WHITE;
+        this.cesiumLabel.outlineColor = Cesium.Color.BLACK;
+        this.cesiumLabel.outlineWidth = 2;
+        this.cesiumLabel.style = Cesium.LabelStyle.FILL_AND_OUTLINE;
+        this.cesiumLabel.horizontalOrigin = Cesium.HorizontalOrigin.LEFT;
+        this.cesiumLabel.verticalOrigin = Cesium.VerticalOrigin.BOTTOM;
+        this.cesiumLabel.font = os.style.label.getFont();
       }
 
       if (this.cesiumCircle) {

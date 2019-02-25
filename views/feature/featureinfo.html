@@ -1,5 +1,7 @@
 <div class="d-flex flex-column flex-fill">
-  <div class="flex-shrink-0">
+    <div ng-bind-html="info.showFeatureTitle()">
+    </div>
+  <div class="flex-shrink-0 w-100">
     <simple-location latdeg="lat" londeg="lon" ng-if="lat !== undefined && lon !== undefined"></simple-location>
     <span ng-if="alt">Altitude: {{alt}}</span>
   </div>
@@ -10,6 +12,5 @@
       </li>
     </ul>
   </div>
-
   <uiswitch items="activeTab" directive-function="info.getUi" generic="propertiestab" class="d-flex flex-fill"></uiswitch>
 </div>

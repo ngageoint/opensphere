@@ -217,6 +217,55 @@ os.state.StateManager.prototype.finishImport = function(file, options) {
 
 
 /**
+ * This override attempts to populate some data into the state form based on the most recently activated state.
+ * @override
+ */
+os.state.StateManager.prototype.startExport = function(opt_method) {
+  var scopeOptions = {
+    'method': opt_method
+  };
+
+  var windowOptions = {
+    'id': os.ui.state.EXPORT_WINDOW_ID,
+    'label': 'Save State',
+    'icon': 'fa fa-floppy-o',
+    'x': 'center',
+    'y': 'center',
+    'width': '385',
+    'height': 'auto',
+    'modal': 'true',
+    'show-close': 'true'
+  };
+
+  var descriptors = os.dataManager.getDescriptors();
+  var stateDescriptors = [];
+
+  descriptors.forEach(function(descriptor) {
+    if (os.implements(descriptor, os.ui.state.IStateDescriptor.ID) && descriptor.isActive()) {
+      var stateDescriptor = /** @type {os.ui.state.IStateDescriptor} */ (descriptor);
+      stateDescriptors.push(stateDescriptor);
+    }
+  });
+
+  if (stateDescriptors.length) {
+    // sort by last active to get the most recently activated state and default in its details
+    stateDescriptors.sort(function(a, b) {
+      return goog.array.defaultCompare(a, b);
+    });
+
+    var descriptor = /** @type {os.ui.state.IStateDescriptor} */ (stateDescriptors[0]);
+    scopeOptions['title'] = descriptor.getTitle();
+    scopeOptions['method'] = descriptor.getDefaultPersister();
+    scopeOptions['description'] = descriptor.getDescription();
+    scopeOptions['tags'] = descriptor.getTags() ? descriptor.getTags().join(', ') : undefined;
+  }
+
+  var template = '<stateexport method="method" title="title"></stateexport>';
+  os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+};
+
+
+/**
  * @param  {Document|string} obj
  * @private
  */
