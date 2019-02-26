@@ -61,7 +61,7 @@ exports.Toolbar = {
   DURATION_SELECT: '[title=Duration]',
   timeFilter: {
     BUTTON: '[title=\'Show/hide time filter panel\']',
-    BUTTON_IS_ACTIVE: 'btn-success',
+    BUTTON_IS_ACTIVE: 'btn-info',
     PANEL: '.c-date-panel__extended',
     START_HOUR: '[ng-model=\'ctrl.startHour\']',
     START_MINUTE: '[ng-model=\'ctrl.startMinute\']',
