@@ -54,15 +54,15 @@ os.search.SearchManager = function(opt_id) {
   /**
    * Track where the results come from. Each provider can only provide 1 set of results
    * @type {!Object<string, os.search.ProviderResults>}
-   * @private
+   * @protected
    */
-  this.providerResults_ = {};
+  this.providerResults = {};
 
   /**
    * @type {!Array<!os.search.ISearchResult>}
-   * @private
+   * @protected
    */
-  this.results_ = [];
+  this.results = [];
 
   /**
    * @type {!Object<string, boolean>}
@@ -167,8 +167,8 @@ os.search.SearchManager.prototype.getEnabledSearches = function(opt_term) {
 os.search.SearchManager.prototype.search = function(term, opt_start, opt_pageSize,
     opt_sortBy, opt_force, opt_noFacets, opt_sortOrder) {
   this.setTerm(term);
-  this.providerResults_ = {};
-  this.results_ = [];
+  this.providerResults = {};
+  this.results = [];
   this.total_ = 0;
   this.setSort(opt_sortBy || '');
 
@@ -243,19 +243,19 @@ os.search.SearchManager.prototype.handleSearchSuccess_ = function(event) {
 
   var results = event.getResults() || [];
   if (search.shouldNormalize()) {
-    this.normalizeResults_(results);
+    this.normalizeResults(results);
   }
 
-  this.providerResults_[this.getSearchKey(search)] = {
+  this.providerResults[this.getSearchKey(search)] = {
     'results': results,
     'total': event.getTotal()
   };
 
   // Create the results from each provider
-  this.results_ = [];
+  this.results = [];
   this.total_ = 0;
-  goog.object.forEach(this.providerResults_, function(pr) {
-    this.results_ = this.results_.concat(pr['results']);
+  goog.object.forEach(this.providerResults, function(pr) {
+    this.results = this.results.concat(pr['results']);
     this.total_ += pr['total'];
   }, this);
 
@@ -263,11 +263,18 @@ os.search.SearchManager.prototype.handleSearchSuccess_ = function(event) {
   if (this.getTerm() !== event.getSearchTerm()) {
     this.setTerm(event.getSearchTerm() || '');
   }
-
-  // sort results in order of descending score
-  goog.array.sort(this.results_, this.scoreCompare_);
-
+  this.sortResults();
   this.dispatch();
+};
+
+
+/**
+ * Sort results
+ * @protected
+ */
+os.search.SearchManager.prototype.sortResults = function() {
+  // sort results in order of descending score
+  goog.array.sort(this.results, this.scoreCompare);
 };
 
 
@@ -288,14 +295,14 @@ os.search.SearchManager.prototype.handleSearchError_ = function(event) {
 os.search.SearchManager.prototype.dispatch = function() {
   // remove or display the "No Results" node as appropriate
   if (this.getNoResultClass()) {
-    if (this.results_.length === 0) {
+    if (this.results.length === 0) {
       // add "No Results" result
-      this.results_.push(new (this.getNoResultClass())());
-    } else if (this.results_.length > 1) {
+      this.results.push(new (this.getNoResultClass())());
+    } else if (this.results.length > 1) {
       // remove "No Results" result
-      for (var i = 0, n = this.results_.length; i < n; i++) {
-        if (this.results_[i] instanceof this.getNoResultClass()) {
-          this.results_.splice(i, 1);
+      for (var i = 0, n = this.results.length; i < n; i++) {
+        if (this.results[i] instanceof this.getNoResultClass()) {
+          this.results.splice(i, 1);
           break;
         }
       }
@@ -309,7 +316,7 @@ os.search.SearchManager.prototype.dispatch = function() {
     type = os.search.SearchEventType.PROGRESS;
   }
 
-  this.dispatchEvent(new os.search.SearchEvent(type, this.getTerm(), this.results_, this.total_));
+  this.dispatchEvent(new os.search.SearchEvent(type, this.getTerm(), this.results, this.total_));
 };
 
 
@@ -326,7 +333,7 @@ os.search.SearchManager.prototype.checkProgress = function() {
  * @return {os.search.ProviderResults}
  */
 os.search.SearchManager.prototype.getProviderResults = function(search) {
-  return this.providerResults_[this.getSearchKey(search)];
+  return this.providerResults[this.getSearchKey(search)];
 };
 
 
@@ -376,8 +383,8 @@ os.search.SearchManager.prototype.handleAutocompleteFailure_ = function(event) {
 os.search.SearchManager.prototype.clear = function(opt_term) {
   this.setTerm(opt_term || '');
 
-  this.providerResults_ = {};
-  this.results_ = [];
+  this.providerResults = {};
+  this.results = [];
   this.total_ = 0;
   this.setSort('');
 
@@ -387,7 +394,7 @@ os.search.SearchManager.prototype.clear = function(opt_term) {
   }
 
   this.loading_ = {};
-  this.dispatchEvent(new os.search.SearchEvent(os.search.SearchEventType.SUCCESS, this.getTerm(), this.results_, 0));
+  this.dispatchEvent(new os.search.SearchEvent(os.search.SearchEventType.SUCCESS, this.getTerm(), this.results, 0));
 };
 
 
@@ -395,7 +402,7 @@ os.search.SearchManager.prototype.clear = function(opt_term) {
  * @inheritDoc
  */
 os.search.SearchManager.prototype.getResults = function(opt_limit) {
-  var results = goog.array.clone(this.results_);
+  var results = goog.array.clone(this.results);
   return opt_limit ? goog.array.slice(results, 0, opt_limit) : results;
 };
 
@@ -407,7 +414,7 @@ os.search.SearchManager.prototype.getResults = function(opt_limit) {
  * @export
  */
 os.search.SearchManager.prototype.getResultsCount = function(opt_limit) {
-  return opt_limit ? Math.min(this.results_.length, opt_limit) : this.results_.length;
+  return opt_limit ? Math.min(this.results.length, opt_limit) : this.results.length;
 };
 
 
@@ -432,9 +439,9 @@ os.search.SearchManager.prototype.isFederated = function() {
 /**
  * Normalizes the scores within the results
  * @param {Array<os.search.ISearchResult>} results
- * @private
+ * @protected
  */
-os.search.SearchManager.prototype.normalizeResults_ = function(results) {
+os.search.SearchManager.prototype.normalizeResults = function(results) {
   if (results.length) {
     // Check to see if all the scores are the same
     var score = results[0].getScore();
@@ -460,19 +467,6 @@ os.search.SearchManager.prototype.normalizeResults_ = function(results) {
       });
     }
   }
-};
-
-
-/**
- * Compares two search results by their score, for sorting in descending order.
- * @param {os.search.ISearchResult} a First result
- * @param {os.search.ISearchResult} b Second result
- * @return {number}
- * @private
- */
-os.search.SearchManager.prototype.scoreCompare_ = function(a, b) {
-  // default is ascending order, so flip the sign
-  return -goog.array.defaultCompare(a.getScore(), b.getScore());
 };
 
 
