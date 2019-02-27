@@ -1,9 +1,9 @@
 <table class="w-100">
   <tr>
     <td>
-      <div class="custom-control custom-checkbox d-inline-block">
-        <input type="checkbox" class="custom-control-input" id="showRotation" name="showRotation" ng-model="showRotation" ng-click="ctrl.toggleShowRotation()"/>
-        <label class="custom-control-label" for="showRotation"> Rotation</label>
+      <div class="custom-control custom-checkbox d-inline-block" ng-init="checkId = $root.getUniqueString()">
+        <input type="checkbox" class="custom-control-input" id="{{'showRotation' + checkId}}" name="showRotation" ng-model="showRotation" ng-click="ctrl.toggleShowRotation()"/>
+        <label class="custom-control-label" for="{{'showRotation' + checkId}}"> Rotation</label>
       </div>
     </td>
     <td class="w-100">
