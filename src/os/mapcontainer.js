@@ -676,19 +676,25 @@ os.MapContainer.prototype.onZoom_ = function(event) {
  * Resets the map/globe to the default view.
  */
 os.MapContainer.prototype.resetView = function() {
-  var map = this.getMap();
-  var view = map.getView();
-  goog.asserts.assert(view !== undefined);
-  view.setRotation(0);
-  view.setCenter(os.map.DEFAULT_CENTER);
-  view.setZoom(3);
-
   if (this.is3DEnabled()) {
     var camera = this.getWebGLCamera();
     if (camera) {
-      camera.setTilt(0);
-      camera.readFromView();
+      var resolution = this.zoomToResolution(3);
+      var distance = camera.calcDistanceForResolution(resolution, 0);
+      camera.flyTo(/** @type {!osx.map.FlyToOptions} */ ({
+        range: distance,
+        center: [0, 0],
+        heading: 0,
+        pitch: 0
+      }));
     }
+  } else {
+    var map = this.getMap();
+    var view = map.getView();
+    goog.asserts.assert(view !== undefined);
+    view.setRotation(0);
+    view.setCenter(os.map.DEFAULT_CENTER);
+    view.setZoom(3);
   }
 
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.RESET_VIEW, 1);
@@ -696,27 +702,19 @@ os.MapContainer.prototype.resetView = function() {
 
 
 /**
- * Reset the tilt in 3D
+ * Resets the rotation of the map and the tilt of the globe if 3D mode is enabled.
  */
-os.MapContainer.prototype.resetTilt = function() {
+os.MapContainer.prototype.resetRotation = function() {
   if (this.is3DEnabled()) {
     var camera = this.getWebGLCamera();
     if (camera) {
-      camera.setTilt(0);
-    }
-  }
-  os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.RESET_TILT, 1);
-};
-
-
-/**
- * Reset the rotation
- */
-os.MapContainer.prototype.resetRoll = function() {
-  if (this.is3DEnabled()) {
-    var camera = this.getWebGLCamera();
-    if (camera) {
-      camera.setHeading(0);
+      camera.flyTo({
+        range: camera.getDistanceToCenter(),
+        center: camera.getCenter(),
+        heading: 0,
+        pitch: 0,
+        roll: 0
+      });
     }
   } else {
     var map = this.getMap();
@@ -724,16 +722,7 @@ os.MapContainer.prototype.resetRoll = function() {
     goog.asserts.assert(view !== undefined);
     view.setRotation(0);
   }
-  os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.RESET_ROLL, 1);
-};
 
-
-/**
- * Resets the rotation of the map and the tilt of the globe if 3D mode is enabled.
- */
-os.MapContainer.prototype.resetRotation = function() {
-  this.resetTilt();
-  this.resetRoll();
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.RESET_ROTATION, 1);
 };
 
