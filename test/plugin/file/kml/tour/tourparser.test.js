@@ -152,7 +152,7 @@ describe('plugin.file.kml.tour.parseTour', function() {
 
         // tilt converted to Cesium pitch
         expect(flyTo.options_.tilt).toBeUndefined();
-        expect(flyTo.options_.pitch).toBe(42 - 90);
+        expect(flyTo.options_.pitch).toBe(42);
       });
 
       it('parses a ' + namespace + 'FlyTo element with a LookAt definition', function() {
@@ -192,7 +192,7 @@ describe('plugin.file.kml.tour.parseTour', function() {
 
         // tilt converted to Cesium pitch
         expect(flyTo.options_.tilt).toBeUndefined();
-        expect(flyTo.options_.pitch).toBe(42 - 90);
+        expect(flyTo.options_.pitch).toBe(42);
       });
 
       it('parses a ' + namespace + 'SoundCue element', function() {
