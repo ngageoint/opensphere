@@ -313,13 +313,37 @@ os.filter.BaseFilterManager.prototype.hasEnabledFilters = function(opt_type) {
 
 
 /**
+ * Determine the number of enabled filters
+ * @param {string=} opt_type
+ * @return {number} The number of enabled filters
+ */
+os.filter.BaseFilterManager.prototype.getNumEnabledFilters = function(opt_type) {
+  var numEnabledFilters = 0;
+  var filters = this.getFilters(opt_type) || [];
+  for (var i = 0; i < filters.length; i++) {
+    if (this.isEnabled(filters[i], opt_type)) {
+      numEnabledFilters += 1;
+    }
+  }
+  return numEnabledFilters;
+};
+
+
+/**
  * Checks whether the filter is active against the opt_type layer.
  * @param {os.filter.FilterEntry} filter
  * @param {string=} opt_type
  * @return {boolean}
  */
 os.filter.BaseFilterManager.prototype.isEnabled = function(filter, opt_type) {
-  return filter.isEnabled();
+  var qm = os.ui.queryManager;
+
+  if (filter) {
+    var results = qm.getEntries(opt_type, null, filter.getId());
+    return !!results && !!results.length;
+  }
+
+  return false;
 };
 
 

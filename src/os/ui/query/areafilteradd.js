@@ -25,7 +25,10 @@ os.ui.query.areaFilterAddDirective = function() {
   return {
     restrict: 'E',
     replace: true,
-    scope: {},
+    scope: {
+      'hideArea': '=?',
+      'hideFilter': '=?'
+    },
     templateUrl: os.ROOT + 'views/query/areafilteradd.html',
     controller: os.ui.query.AreaFilterAddCtrl,
     controllerAs: 'afa'
@@ -546,4 +549,46 @@ os.ui.query.AreaFilterAddCtrl.prototype.launchAddObjectAreas = function() {
 os.ui.query.AreaFilterAddCtrl.prototype.onAreasSelected_ = function(features) {
   this.objectAreas_ = features;
   this.onAreasUpdate_();
+};
+
+
+/**
+ * Launch the area/filter adder.
+ * @param {string} label
+ * @param {boolean=} opt_hideArea
+ * @param {boolean=} opt_hideFilter
+ */
+os.ui.query.AreaFilterAddCtrl.launch = function(label, opt_hideArea, opt_hideFilter) {
+  var id = 'areafilteradd';
+  if (os.ui.window.exists(id)) {
+    os.ui.window.bringToFront(id);
+    return;
+  }
+
+  var options = {
+    'id': id,
+    'x': 300,
+    'y': 'center',
+    'label': label,
+    'show-close': true,
+    'no-scroll': false,
+    'width': 400,
+    'min-width': 300,
+    'max-width': 1000,
+    'height': 600,
+    'min-height': 300,
+    'max-height': 1000
+  };
+
+  var template = '<areafilteradd';
+  if (opt_hideArea) {
+    template += ' hide-area="' + opt_hideArea + '"';
+  }
+
+  if (opt_hideFilter) {
+    template += ' hide-filter="' + opt_hideFilter + '"';
+  }
+  template += '></areafilteradd>';
+
+  os.ui.window.create(options, template);
 };
