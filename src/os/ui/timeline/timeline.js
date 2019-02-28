@@ -978,7 +978,7 @@ os.ui.timeline.TimelineCtrl.prototype.initSvg = function() {
   this.skipHoldElement_ = mainGroup.append('g').attr('class', 'skip-hold-brushes');
   mainGroup.append('use').attr('href', '#js-svg-timeline__time-background').
       attr('id', 'js-svg-timeline__background-time-placeholder').
-      on('click', this.toggleVisible_.bind(this)).
+      on(goog.events.EventType.MOUSEUP, this.toggleVisible_.bind(this)).
       append('title').text('Click to hide/show current time');
 
   this.offArrows_.setXScale(this.xScale_);
@@ -1011,14 +1011,14 @@ os.ui.timeline.TimelineCtrl.prototype.toggleVisible_ = function() {
   var opacity = d3.select('#js-svg-timeline__time-background').style('opacity');
   if (opacity == '0') {
     d3.select('#js-svg-timeline__time-background').style('opacity', '1').style('cursor', 'pointer').
-        on('click', function() {});
+        on(goog.events.EventType.MOUSEUP, function() {});
     d3.select('#js-svg-timeline__background-time-placeholder').attr('href', '#js-svg-timeline__time-background').
-        on('click', this.toggleVisible_.bind(this));
+        on(goog.events.EventType.MOUSEUP, this.toggleVisible_.bind(this));
   } else {
     d3.select('#js-svg-timeline__time-background').style('opacity', '0').style('cursor', 'cell').
-        on('click', this.toggleVisible_.bind(this));
+        on(goog.events.EventType.MOUSEUP, this.toggleVisible_.bind(this));
     d3.select('#js-svg-timeline__background-time-placeholder').attr('href', '#js-svg-timeline__time-background-none').
-        on('click', function() {});
+        on(goog.events.EventType.MOUSEUP, function() {});
   }
 };
 
