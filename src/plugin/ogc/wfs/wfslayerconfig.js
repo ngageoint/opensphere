@@ -162,7 +162,11 @@ plugin.ogc.wfs.WFSLayerConfig.prototype.getRequest = function(options) {
   }
 
   request.setValidator(os.ogc.getException);
-  request.setDataFormatter(new os.ogc.wfs.WFSFormatter());
+
+  if (options['postFormat'] !== 'kvp') {
+    request.setDataFormatter(new os.ogc.wfs.WFSFormatter());
+  }
+
   return request;
 };
 

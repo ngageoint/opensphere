@@ -7,6 +7,7 @@ goog.require('goog.object');
 goog.require('ol.array');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.layer.Image');
+goog.require('os.object');
 goog.require('os.source.PropertyChange');
 goog.require('os.source.Request');
 goog.require('os.structs.TriState');
@@ -437,6 +438,23 @@ plugin.file.kml.KMLSource.prototype.onImportComplete = function(opt_event) {
 /**
  * @inheritDoc
  */
+plugin.file.kml.KMLSource.prototype.clearQueue = function() {
+  for (var key in this.nodeMap_) {
+    var node = this.nodeMap_[key];
+    if (node && node.isDisposed()) {
+      this.nodeMap_[key] = undefined;
+    }
+  }
+
+  this.nodeMap_ = os.object.prune(this.nodeMap_);
+
+  plugin.file.kml.KMLSource.base(this, 'clearQueue');
+};
+
+
+/**
+ * @inheritDoc
+ */
 plugin.file.kml.KMLSource.prototype.removeFeature = function(feature) {
   this.removeNode(/** @type {string} */ (feature.getId()));
 
@@ -455,22 +473,22 @@ plugin.file.kml.KMLSource.prototype.removeNode = function(id) {
   if (this.disposeOnRemove_) {
     var node = this.nodeMap_[id];
     if (node) {
-      if (node.getId() == id) {
-        // get rid of the node
-        this.nodeMap_[id] = undefined;
+      this.nodeMap_[id] = undefined;
 
-        // dispose first to remove listeners
-        node.dispose();
+      if (!node.isDisposed()) {
+        if (node.getId() == id) {
+          // dispose first to remove listeners
+          node.dispose();
 
-        // then unlink from the parent
-        var parent = node.getParent();
-        if (parent) {
-          parent.removeChild(node);
+          // then unlink from the parent
+          var parent = node.getParent();
+          if (parent) {
+            parent.removeChild(node);
+          }
+        } else {
+          // the node's ID changed as a result of a merge, so update the reference in the map
+          this.nodeMap_[node.getId()] = node;
         }
-      } else {
-        // the node's ID changed as a result of a merge, so update the reference in the map
-        this.nodeMap_[id] = undefined;
-        this.nodeMap_[node.getId()] = node;
       }
     }
   }

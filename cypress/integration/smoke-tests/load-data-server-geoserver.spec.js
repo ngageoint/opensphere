@@ -58,13 +58,13 @@ describe('Add GeoServer', function() {
     cy.get(os.layersDialog.LAYERS_TAB).click();
     cy.get(os.layersDialog.Layers.Tree.LAYER_4).should('contain', 'VIIRS Detection');
     cy.get(os.layersDialog.Layers.Tree.LAYER_4)
-        .find(os.layersDialog.Layers.Tree.LAYER_FEATURE_COUNT, {timeout: 8000})
+        .find(os.layersDialog.Layers.Tree.LAYER_FEATURE_COUNT, {timeout: 12000})
         .should('not.contain', 'Loading...'); // wait for feature count value to stabilize
     cy.get(os.layersDialog.Layers.Tree.LAYER_4)
         .find(os.layersDialog.Layers.Tree.LAYER_FEATURE_COUNT)
         .should('not.contain', '(0)'); // wait for feature count value to stabilize
     cy.get(os.layersDialog.Layers.Tree.LAYER_4)
-        .find(os.layersDialog.Layers.Tree.LAYER_FEATURE_COUNT, {timeout: 8000})
+        .find(os.layersDialog.Layers.Tree.LAYER_FEATURE_COUNT, {timeout: 12000})
         .invoke('text')
         .should('match', /\([1-9]\d{0,3}\)/); // Any number 1-9999, surrounded by ()
 
