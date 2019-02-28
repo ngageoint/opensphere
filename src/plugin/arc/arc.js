@@ -2,6 +2,7 @@ goog.provide('plugin.arc');
 goog.provide('plugin.arc.ESRIType');
 
 goog.require('os.ui.query.CombinatorCtrl');
+goog.require('plugin.arc.ArcFeatureType');
 goog.require('plugin.arc.ArcLoader');
 
 
@@ -100,4 +101,54 @@ plugin.arc.CONTENT_REGEXP = /ArcGIS REST Services Directory/i;
 plugin.arc.getArcLoader = function(node, url, server) {
   var loader = new plugin.arc.ArcLoader(node, url, server);
   return loader;
+};
+
+
+/**
+ * Create an Arc feature type from the layer metadata.
+ * @param {Object} config The layer metadata.
+ * @return {plugin.arc.ArcFeatureType} The feature type.
+ */
+plugin.arc.createFeatureType = function(config) {
+  var featureType = null;
+
+  var fields = config ? /** @type {Array} */ (config['fields']) : null;
+  if (fields && Array.isArray(fields) && fields.length > 0) {
+    featureType = new plugin.arc.ArcFeatureType();
+
+    var startField = null;
+    var endField = null;
+    var timeInfo = /** @type {Object} */ (config['timeInfo']);
+    if (timeInfo) {
+      startField = /** @type {string} */ (timeInfo['startTimeField']);
+      endField = /** @type {string} */ (timeInfo['endTimeField']);
+    }
+
+    var columns = [];
+    for (var i = 0, ii = fields.length; i < ii; i++) {
+      var field = fields[i];
+      var name = /** @type {string} */ (field['name']);
+      var type = plugin.arc.getColumnType(/** @type {string} */ (field['type']));
+      var c = /** @type {os.ogc.FeatureTypeColumn} */ ({
+        'name': name,
+        'type': type
+      });
+      columns.push(c);
+
+      if (name === startField) {
+        featureType.setStartDateColumnName(startField);
+      } else if (name === endField) {
+        featureType.setEndDateColumnName(endField);
+      } else if (name === 'esriFieldTypeGeometry') {
+        featureType.setGeometryColumnName(name);
+      }
+    }
+
+    columns.sort(function(a, b) {
+      return goog.string.numerateCompare(a.name, b.name);
+    });
+    featureType.setColumns(columns);
+  }
+
+  return featureType;
 };

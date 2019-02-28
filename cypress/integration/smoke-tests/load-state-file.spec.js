@@ -9,8 +9,6 @@ describe('Import state file', function() {
   it('Load data from state file', function() {
     // Setup
     cy.get(os.Toolbar.Date.FIELD).should('not.have.value', '2019-01-07');
-    cy.get(os.Map.MAP_MODE_BUTTON).should('contain', '3D');
-    cy.get(os.Map.MAP_MODE_BUTTON).click();
     cy.get(os.Map.MAP_MODE_BUTTON).should('contain', '2D');
     cy.get(os.statusBar.COORDINATES).should('contain', 'No coordinate');
     cy.get(os.layersDialog.DIALOG).should('not.contain', 'Police Stations Features');
@@ -33,8 +31,7 @@ describe('Import state file', function() {
     cy.get(os.importStateDialog.CLEAR_CHECKBOX).check();
     cy.get(os.importStateDialog.OK_BUTTON).click();
     cy.get(os.Toolbar.Date.FIELD).should('have.value', '2019-01-07');
-    cy.get(os.Map.CANVAS_3D, {timeout: 30000});
-    cy.get(os.Map.MAP_MODE_BUTTON).should('contain', '3D');
+    cy.get(os.Map.MAP_MODE_BUTTON).should('contain', '2D');
     cy.get(os.Application.PAGE).trigger('mouseenter').trigger('mousemove');
     cy.get(os.statusBar.COORDINATES).should('contain', '+39');
     cy.get(os.layersDialog.Layers.Tree.LAYER_4).should('contain', 'Police Stations Features (3)');

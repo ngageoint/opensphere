@@ -306,8 +306,17 @@ os.ui.window.close = function(el) {
   if (el) {
     var scope = el.is(os.ui.windowSelector.WINDOW) ?
         el.children().scope() : el.parents(os.ui.windowSelector.WINDOW).children().scope();
-    if (scope) {
+    if (scope && scope['windowCtrl']) {
+      // scope for a window directive, so call the close function
       /** @type {os.ui.WindowCtrl} */ (scope['windowCtrl']).close();
+    } else {
+      // check if the element has a close flag on its scope.
+      scope = el.children().first().scope();
+
+      if (scope && scope['closeFlag']) {
+        scope['closeFlag'] = false;
+        os.ui.apply(scope);
+      }
     }
   }
 };
