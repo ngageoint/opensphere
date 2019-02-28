@@ -22,7 +22,6 @@ goog.require('os.ui.ControlType');
 goog.require('os.ui.Icons');
 goog.require('os.ui.ogc.IFeatureTypeDescriptor');
 goog.require('os.ui.query.CombinatorCtrl');
-goog.require('plugin.arc.ArcFeatureType');
 
 
 
@@ -261,13 +260,9 @@ plugin.arc.layer.ArcLayerDescriptor.prototype.configureDescriptor = function(con
     }
   }
 
-  var startField = null;
-  var endField = null;
   var timeInfo = /** @type {Object} */ (config['timeInfo']);
   if (timeInfo) {
     try {
-      startField = /** @type {string} */ (timeInfo['startTimeField']);
-      endField = /** @type {string} */ (timeInfo['endTimeField']);
       this.setMinDate(/** @type {number} */ (timeInfo['timeExtent'][0]));
       this.setMaxDate(/** @type {number} */ (timeInfo['timeExtent'][1]));
     } catch (e) {
@@ -312,36 +307,9 @@ plugin.arc.layer.ArcLayerDescriptor.prototype.configureDescriptor = function(con
     this.setFeaturesEnabled(true);
   }
 
-  var fields = /** @type {Array} */ (config['fields']);
-  if (fields && goog.isArray(fields) && fields.length > 0) {
-    this.featureType_ = new plugin.arc.ArcFeatureType();
-    var columns = [];
-
-    for (var i = 0, ii = fields.length; i < ii; i++) {
-      var field = fields[i];
-      var name = /** @type {string} */ (field['name']);
-      var type = plugin.arc.getColumnType(/** @type {string} */ (field['type']));
-      var c = /** @type {os.ogc.FeatureTypeColumn} */ ({
-        'name': name,
-        'type': type
-      });
-      columns.push(c);
-
-      if (name === startField) {
-        this.featureType_.setStartDateColumnName(startField);
-      } else if (name === endField) {
-        this.featureType_.setEndDateColumnName(endField);
-      } else if (name === 'esriFieldTypeGeometry') {
-        this.featureType_.setGeometryColumnName(name);
-      }
-    }
-
-    columns.sort(function(a, b) {
-      return goog.string.numerateCompare(a.name, b.name);
-    });
-    this.featureType_.setColumns(columns);
-  } else {
-    // if there aren't any fields, assume features aren't supported
+  this.featureType_ = plugin.arc.createFeatureType(config);
+  if (!this.featureType_) {
+    // if a feature type could not be created, assume features aren't supported
     this.setFeaturesEnabled(false);
   }
 
