@@ -36,13 +36,22 @@ os.ui.menu.windows.configs_ = {};
 
 
 /**
+ * Map of window ids to their alias.
+ * @type {!Object<string, string>}
+ * @private
+ */
+os.ui.menu.windows.aliases_ = {};
+
+
+/**
  * @param {string} id The window id
  * @param {Object<string, string>} config The window config to pass to os.ui.window.create
- * @param {boolean=} opt_isMajor
- * @param {Function=} opt_func
+ * @param {boolean=} opt_isMajor If the window should be put in the major group. Defaults to false.
+ * @param {Function=} opt_func Configuration function to create the window.
+ * @param {string=} opt_alias The id of the opened window, if different from `id`.
  * @return {os.ui.menu.MenuItem|undefined}
  */
-os.ui.menu.windows.addWindow = function(id, config, opt_isMajor, opt_func) {
+os.ui.menu.windows.addWindow = function(id, config, opt_isMajor, opt_func, opt_alias) {
   // If theres no menu or this menu is already added
   if (!os.ui.menu.windows.MENU || os.ui.menu.windows.configs_[id]) {
     return;
@@ -65,6 +74,10 @@ os.ui.menu.windows.addWindow = function(id, config, opt_isMajor, opt_func) {
       metricKey: config['metricKey'],
       handler: os.ui.menu.windows.openWindow
     });
+  }
+
+  if (opt_alias) {
+    os.ui.menu.windows.aliases_[id] = opt_alias;
   }
 
   // don't need this any more
@@ -146,6 +159,15 @@ os.ui.menu.windows.openWindow = function(evt) {
  */
 os.ui.menu.windows.toggleWindow = function(id) {
   var win = os.ui.window.getById(id);
+
+  if (!win) {
+    // not found, check if it has an alias
+    var alias = os.ui.menu.windows.aliases_[id];
+    if (alias) {
+      win = os.ui.window.getById(alias);
+    }
+  }
+
   if (win) {
     os.ui.window.close(win);
     return true;

@@ -173,7 +173,7 @@ os.ui.menu.windows.default.setup = function() {
   os.ui.menu.windows.addWindow('servers', {
     'icon': 'fa fa-database',
     'label': 'Servers'
-  }, false, os.ui.menu.windows.default.openServers);
+  }, false, os.ui.menu.windows.default.openServers, 'settings');
 };
 
 
