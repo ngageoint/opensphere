@@ -20,6 +20,12 @@ os.ui.timeline.CurrentTimeMarker = function() {
   this.animationFrameRef_ = null;
 
   /**
+   * @type {boolean}
+   * @private
+   */
+  this.stopped_ = false;
+
+  /**
    * @type {number}
    * @private
    */
@@ -56,7 +62,7 @@ os.ui.timeline.CurrentTimeMarker.prototype.initSVG = function(container, height)
       on(goog.events.EventType.MOUSEOUT, this.styleDragEnd_.bind(this));
   var currentTime = /** @type {d3.Selection} */ (container.append('g')).style('cursor', 'pointer');
   currentTime.attr('id', 'js-svg-timeline__time-background').append('title').text('Click to hide/show current time');
-  currentTime.append('rect').attr('height', '12').attr('width', '100').attr('class', 'js-svg-timeline__bg-time');
+  currentTime.append('rect').attr('class', 'js-svg-timeline__bg-time').attr('height', '16');
   currentTime.append('text').attr('class', 'label c-svg-timeline__current-time js-svg-timeline__current-time');
   this.animationFrameRef_ = window.requestAnimationFrame(this.updateCurrentTimeRAF.bind(this));
 };
@@ -77,7 +83,7 @@ os.ui.timeline.CurrentTimeMarker.prototype.updateCurrentTimeRAF = function(times
  */
 os.ui.timeline.CurrentTimeMarker.prototype.updateCurrentTime = function(opt_immediate) {
   var now = Date.now();
-  if (now - this.lastUpdateTime_ >= 1000 || opt_immediate) { // run once per second
+  if (!this.stopped_ && (now - this.lastUpdateTime_ >= 1000 || opt_immediate)) { // run once per second
     this.lastUpdateTime_ = now;
     var times = this.getExtent();
     var dates = [new Date(times[0]), new Date(times[1])];
@@ -94,17 +100,26 @@ os.ui.timeline.CurrentTimeMarker.prototype.updateCurrentTime = function(opt_imme
       var ratio = currentDiff / (dates[1] - dates[0]);
       var translate = range[1] * ratio;
       this.backgroundElement_.style('display', 'block').attr('transform', 'translate(' + translate + ', 0)');
-      var bTransformString = 'translate(' + (translate + prettyDate.length - 5) + ', -13)';
-      timeBackground.style('display', 'block').attr('transform', bTransformString).attr('width', prettyDate.length * 7);
-      var transformString = 'translate(' + (translate + prettyDate.length - 5) + ', -3)';
-      currentDateText.style('display', 'block').text(prettyDate).attr('transform', transformString);
       placeholder.style('display', 'block');
+
+      var transformString = 'translate(' + (translate + prettyDate.length - 5) + ', -4)';
+      currentDateText.style('display', 'block').text(prettyDate).attr('transform', transformString);
+
+      // fit background to text
+      var currentDateTextEl = currentDateText[0][0];
+      if (currentDateTextEl) {
+        var textRect = currentDateTextEl.getBBox();
+        timeBackground.style('display', 'block').attr('transform', transformString).
+            attr('x', textRect.x).attr('y', textRect.y).attr('width', textRect.width);
+      }
     } else if (today > dates[0]) { // completely in past
       this.backgroundElement_.style('display', 'none');
       currentDateText.style('display', 'none');
       timeBackground.style('display', 'none');
       placeholder.style('display', 'none');
-      this.stopAnimation_();
+      if (this.animationFrameRef_) {
+        window.cancelAnimationFrame(this.animationFrameRef_);
+      }
       return;
     } else { // completely in future
       this.backgroundElement_.style('display', 'block').attr('transform', 'translate(0, 0)');
@@ -145,7 +160,9 @@ os.ui.timeline.CurrentTimeMarker.prototype.styleDragEnd_ = function() {
 os.ui.timeline.CurrentTimeMarker.prototype.stopAnimation_ = function() {
   if (this.animationFrameRef_) {
     window.cancelAnimationFrame(this.animationFrameRef_);
+    this.animationFrameRef_ = null;
   }
+  this.stopped_ = true;
 };
 
 
