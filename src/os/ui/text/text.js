@@ -8,9 +8,11 @@ goog.require('os.ui.window');
 
 
 /**
- * @param {string} text
+ * Copies a string of text into the clipboard.
+ * @param {string} text The string to copy.
+ * @param {string=} opt_msg Optional message to send as an alert.
  */
-os.ui.text.copy = function(text) {
+os.ui.text.copy = function(text, opt_msg) {
   if (text && !goog.string.isEmptyOrWhitespace(goog.string.makeSafe(text))) {
     var textArea = document.createElement('textarea');
     textArea.style.top = '-2000px';
@@ -30,7 +32,7 @@ os.ui.text.copy = function(text) {
     document.body.removeChild(textArea);
 
     if (success) {
-      var msg = (text.length > 20 ? 'Value ' : '"' + text + '" ') + ' copied to clipboard';
+      var msg = opt_msg || (text.length > 20 ? 'Value ' : '"' + text + '" ') + 'copied to clipboard';
       os.alert.AlertManager.getInstance().sendAlert(msg, os.alert.AlertEventSeverity.INFO);
     } else {
       os.ui.window.create({
