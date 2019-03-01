@@ -26,7 +26,6 @@ goog.require('os.net.Request');
 goog.require('os.object');
 goog.require('os.parse.AsyncZipParser');
 goog.require('os.parse.IParser');
-goog.require('os.ui.ScreenOverlayCtrl');
 goog.require('os.ui.file.kml');
 goog.require('os.xml');
 goog.require('plugin.file.kml');
@@ -959,10 +958,10 @@ plugin.file.kml.KMLParser.prototype.examineElement_ = function(el) {
       node.setImage(image);
     }
   } else if (el.localName === 'ScreenOverlay') {
-    var overlay = this.readScreenOverlay_(el);
-    if (overlay) {
+    var overlayOptions = this.readScreenOverlay_(el);
+    if (overlayOptions) {
       node = new plugin.file.kml.ui.KMLNode();
-      node.setOverlay(overlay);
+      node.setOverlayOptions(overlayOptions);
     }
   } else if (el.localName === 'Tour') {
     var tour = plugin.file.kml.tour.parseTour(el);
@@ -1245,9 +1244,9 @@ plugin.file.kml.KMLParser.prototype.readGroundOverlay_ = function(el) {
 
 
 /**
- * Parses a KML ScreenOverlay element into a legend style window
- * @param {Element} el The XML element
- * @return {?string} ID of the overlay window
+ * Parses a KML ScreenOverlay element into a legend style window.
+ * @param {Element} el The XML element.
+ * @return {?osx.window.ScreenOverlayOptions} The screen overlay options.
  * @private
  *
  * @suppress {accessControls}
@@ -1256,38 +1255,27 @@ plugin.file.kml.KMLParser.prototype.readScreenOverlay_ = function(el) {
   goog.asserts.assert(el.nodeType == goog.dom.NodeType.ELEMENT, 'el.nodeType should be ELEMENT');
   goog.asserts.assert(el.localName == 'ScreenOverlay', 'localName should be ScreenOverlay');
 
-  // openlayers does not natively support ScreenOverlay so we need to parse the xml and create an overlay window
-  if (el !== undefined && el.querySelector('name') && el.querySelector('Icon')) {
-    // check if visibility is set to 0, if it is, do not proceed
-    var vis = el.querySelector('visibility');
-    if (vis) {
-      var value = parseInt(vis.textContent, 10);
-      if (value == 0) {
-        return null;
-      }
-    }
+  var obj = ol.xml.pushParseAndPop({}, plugin.file.kml.SCREEN_OVERLAY_PARSERS, el, []);
+  if (obj && obj['name'] && obj['Icon'] && obj['Icon']['href']) {
+    var id = this.id_ + this.screenOverlayCount_++;
+    var name = /** @type {string} */ (obj['name']);
 
-    var name = el.querySelector('name').textContent;
-    var icon = el.querySelector('Icon').querySelector('href').textContent;
+    var icon = /** @type {string} */ (obj['Icon']['href']);
     if (this.assetMap_[icon]) {
       icon = this.assetMap_[icon]; // handle images included in a kmz
     }
 
-    var screenXY = this.parseScreenXY_(el.querySelector('screenXY'));
-    var size = this.parseSizeXY_(el.querySelector('size'));
-
-    var id = this.id_ + this.screenOverlayCount_;
-    this.screenOverlayCount_++;
-
+    var screenXY = this.parseScreenXY_(obj['screenXY']);
+    var size = this.parseSizeXY_(obj['size']);
     if (screenXY && size) {
-      var overlay = {'image': icon,
-        'name': this.rootNode_.getLabel() + ' - ' + name,
-        'id': id,
-        'size': size,
-        'xy': screenXY,
-        'show-hide': true};
-      os.ui.launchScreenOverlay(overlay);
-      return id;
+      return /** @type {!osx.window.ScreenOverlayOptions} */ ({
+        id: id,
+        name: this.rootNode_.getLabel() + ' - ' + name,
+        image: icon,
+        size: size,
+        xy: screenXY,
+        showHide: true
+      });
     }
   }
 
@@ -1297,45 +1285,41 @@ plugin.file.kml.KMLParser.prototype.readScreenOverlay_ = function(el) {
 
 /**
  * Parse XY attributes from a screenXY element and return an object with more useful location coordinates
- * @param {Element} el The XML element
- * @return {?{x: (string|number), y: (string|number)}} an object with an x and y
- * attribute representing location in pixels
+ * @param {Object} obj The XY options.
+ * @return {Array<string|number>} An array with x/y values representing location in pixels.
  * @private
  */
-plugin.file.kml.KMLParser.prototype.parseScreenXY_ = function(el) {
-  if (el) {
-    var attr = el.attributes;
-    if (attr && attr.getNamedItem('x') && attr.getNamedItem('y')) {
-      var xvalue = attr.getNamedItem('x').value;
-      var xunits = attr.getNamedItem('xunits').value;
-      var yvalue = attr.getNamedItem('y').value;
-      var yunits = attr.getNamedItem('yunits').value;
+plugin.file.kml.KMLParser.prototype.parseScreenXY_ = function(obj) {
+  if (obj && obj['x'] != null && obj['y'] != null) {
+    var xvalue = /** @type {number} */ (obj['x']);
+    var yvalue = /** @type {number} */ (obj['y']);
+    var xunits = /** @type {string} */ (obj['xunits']);
+    var yunits = /** @type {string} */ (obj['yunits']);
 
-      var mapSize = os.MapContainer.getInstance().getMap().getSize();
-      var xy = {x: 0, y: 0};
+    var xy = [0, 0];
+    var mapSize = os.MapContainer.getInstance().getMap().getSize();
 
-      if (xunits == 'fraction') {
-        if (xvalue == 0.5) {
-          xy.x = 'center';
-        } else {
-          xy.x = mapSize[0] * xvalue;
-        }
+    if (xunits == 'fraction') {
+      if (xvalue == 0.5) {
+        xy[0] = 'center';
       } else {
-        xy.x = xvalue;
+        xy[0] = mapSize[0] * xvalue;
       }
-
-      if (yunits == 'fraction') {
-        if (yvalue == 0.5) {
-          xy.y = 'center';
-        } else {
-          xy.y = mapSize[1] - (mapSize[1] * yvalue);
-        }
-      } else {
-        xy.y = yvalue;
-      }
-
-      return xy;
+    } else {
+      xy[0] = xvalue;
     }
+
+    if (yunits == 'fraction') {
+      if (yvalue == 0.5) {
+        xy[1] = 'center';
+      } else {
+        xy[1] = mapSize[1] - (mapSize[1] * yvalue);
+      }
+    } else {
+      xy[1] = yvalue;
+    }
+
+    return xy;
   }
 
   return null;
@@ -1344,46 +1328,43 @@ plugin.file.kml.KMLParser.prototype.parseScreenXY_ = function(el) {
 
 /**
  * Parse XY attributes from a size element and return an object with more sizing for our overlay
- * @param {Element} el The XML element
- * @return {?{x: number, y: number}} an object with an x and y attribute representing size in pixels
+ * @param {Object} obj The XY options.
+ * @return {Array<string|number>} An array with x/y values representing size in pixels.
  * @private
  */
-plugin.file.kml.KMLParser.prototype.parseSizeXY_ = function(el) {
-  if (el) {
-    var attr = el.attributes;
-    if (attr && attr.getNamedItem('x') && attr.getNamedItem('y')) {
-      var xvalue = attr.getNamedItem('x').value;
-      var xunits = attr.getNamedItem('xunits').value;
-      var yvalue = attr.getNamedItem('y').value;
-      var yunits = attr.getNamedItem('yunits').value;
+plugin.file.kml.KMLParser.prototype.parseSizeXY_ = function(obj) {
+  if (obj && obj['x'] != null && obj['y'] != null) {
+    var xvalue = /** @type {number} */ (obj['x']);
+    var yvalue = /** @type {number} */ (obj['y']);
+    var xunits = /** @type {string} */ (obj['xunits']);
+    var yunits = /** @type {string} */ (obj['yunits']);
 
-      var xy = {x: 0, y: 0};
-      var mapSize = os.MapContainer.getInstance().getMap().getSize();
+    var xy = [0, 0];
+    var mapSize = os.MapContainer.getInstance().getMap().getSize();
 
-      if (xunits == 'fraction') {
-        // -1 = use native, 0 = maintain aspect, n = relative to screen size
-        if (xvalue == -1 || xvalue == 0) {
-          // TODO: no easy way of knowing what size the image is... don't set a size
-        } else {
-          xy.x = mapSize[0] * xvalue;
-        }
+    if (xunits == 'fraction') {
+      // -1 = use native, 0 = maintain aspect, n = relative to screen size
+      if (xvalue == -1 || xvalue == 0) {
+        // TODO: no easy way of knowing what size the image is... don't set a size
       } else {
-        xy.x = xvalue;
+        xy[0] = mapSize[0] * xvalue;
       }
-
-      if (yunits == 'fraction') {
-        // -1 = use native, 0 = maintain aspect, n = relative to screen size
-        if (yvalue == -1 || yvalue == 0) {
-          // TODO: no easy way of knowing what size the image is... don't set a size
-        } else {
-          xy.y = mapSize[1] * yvalue;
-        }
-      } else {
-        xy.y = yvalue;
-      }
-
-      return xy;
+    } else {
+      xy[0] = xvalue;
     }
+
+    if (yunits == 'fraction') {
+      // -1 = use native, 0 = maintain aspect, n = relative to screen size
+      if (yvalue == -1 || yvalue == 0) {
+        // TODO: no easy way of knowing what size the image is... don't set a size
+      } else {
+        xy[1] = mapSize[1] * yvalue;
+      }
+    } else {
+      xy[1] = yvalue;
+    }
+
+    return xy;
   }
 
   return null;

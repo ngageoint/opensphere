@@ -354,7 +354,7 @@ plugin.file.kml.KMLSource.prototype.addNodes = function(nodes, opt_recurse) {
         images.push(image);
       }
 
-      var overlay = node.getOverlay();
+      var overlay = node.getOverlayId();
       if (overlay) {
         id = /** @type {string} */ (node.getId());
         this.nodeMap_[id] = node;
