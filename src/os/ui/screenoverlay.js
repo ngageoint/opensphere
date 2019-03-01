@@ -31,24 +31,26 @@ os.ui.Module.directive('screenoverlay', [os.ui.screenOverlayDrective]);
 
 
 /**
- * Launch a dialog with the overlay image
- * @param {osx.window.ConfirmOptions} options The window options
+ * Launch a dialog with the overlay image.
+ * @param {!osx.window.ScreenOverlayOptions} options The overlay options.
  */
 os.ui.launchScreenOverlay = function(options) {
   var scopeOptions = {
     'image': options.image
   };
 
-  var height = options['size'] && options['size']['y'] > 75 ? options['size']['y'] : 75;
-  var width = options['size'] && options['size']['x'] > 250 ? options['size']['x'] : 250;
-  var xLoc = options['xy'] ? options['xy']['x'] : 25;
-  var yLoc = options['xy'] ? options['xy']['y'] : 50;
+  var size = options.size || [250, 75];
+  var width = Math.max(size[0], 250);
+  var height = Math.max(size[1], 75);
+
+  var xLoc = options.xy ? options.xy[0] : 25;
+  var yLoc = options.xy ? options.xy[1] : 50;
 
   var mapSize = os.MapContainer.getInstance().getMap().getSize();
 
   var windowOptions = {
     'id': options.id,
-    'label': options.name || 'KML Screen Overlay',
+    'label': options.name || 'Screen Overlay',
     'icon': '',
     'x': xLoc,
     'y': yLoc,
@@ -59,8 +61,8 @@ os.ui.launchScreenOverlay = function(options) {
     'min-height': 75,
     'max-height': mapSize[1],
     'modal': false,
-    'show-hide': options['show-hide'] ? options['show-hide'] : false,
-    'show-close': options['show-close'] ? options['show-close'] : false,
+    'show-hide': options.showHide ? options.showHide : false,
+    'show-close': options.showClose ? options.showClose : false,
     'no-scroll': true,
     'overlay': true
   };

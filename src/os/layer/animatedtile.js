@@ -141,7 +141,7 @@ os.layer.AnimatedTile.prototype.setLayerVisible = function(value) {
     if (value && !this.legendId_) {
       // show the legend
       os.ui.launchScreenOverlay(legendOpts);
-      this.legendId_ = legendOpts['id'];
+      this.legendId_ = legendOpts.id;
     } else if (!value && this.legendId_) {
       // close the legend, you can turn it back on by toggling on/off the descriptor or layer node in add layers
       if (os.ui.window.getById(this.legendId_)) {
@@ -156,19 +156,11 @@ os.layer.AnimatedTile.prototype.setLayerVisible = function(value) {
 /**
  * If the layer contains legend information (supported in WMS - see os.ui.ogc.wms.WMSLayerParserV130)
  * then let's pop-up a screen overlay similar to what is done for KML
- * @return {?{Object}} options
+ * @return {?osx.window.ScreenOverlayOptions} options
  */
 os.layer.AnimatedTile.prototype.getLegendOptions = function() {
   if (this.getLayerOptions() && this.getLayerOptions()['legends'] && this.getLayerOptions()['legends'][0]) {
     var legend = this.getLayerOptions()['legends'][0];
-    var size = null;
-    var xy = null;
-    if (legend['size']) {
-      // add 30 to the height to account for the header
-      size = {x: legend['size'][0], y: legend['size'][1] + 30};
-      var screenSize = os.MapContainer.getInstance().getMap().getSize();
-      xy = {x: screenSize[0] - size['x'] - 250, y: screenSize[1] - size['y'] - 75};
-    }
 
     var imageURL = '';
     if (legend['OnlineResource']) {
@@ -180,16 +172,33 @@ os.layer.AnimatedTile.prototype.getLegendOptions = function() {
       return null;
     }
 
-    var overlay = {'image': imageURL,
-      'name': this.getTitle() + ' - Legend',
-      'id': goog.string.hashCode(imageURL),
-      'show-close': true,
-      'xy': xy,
-      'size': size};
-    return overlay;
-  } else {
-    return null;
+    var size = [250, 75];
+    var xy = [0, 0];
+    if (legend['size']) {
+      // add 30 to the height to account for the header
+      size = [
+        legend['size'][0],
+        legend['size'][1] + 30
+      ];
+
+      var screenSize = os.MapContainer.getInstance().getMap().getSize();
+      xy = [
+        screenSize[0] - size[0] - 250,
+        screenSize[1] - size[1] - 75
+      ];
+    }
+
+    return /** @type {!osx.window.ScreenOverlayOptions} */ ({
+      id: goog.string.hashCode(imageURL),
+      name: this.getTitle() + ' - Legend',
+      image: imageURL,
+      showClose: true,
+      size: size,
+      xy: xy
+    });
   }
+
+  return null;
 };
 
 

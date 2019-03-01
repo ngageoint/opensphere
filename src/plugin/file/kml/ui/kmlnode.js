@@ -14,6 +14,7 @@ goog.require('os.data.ISearchable');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.structs.TriState');
 goog.require('os.ui.ILayerUIProvider');
+goog.require('os.ui.ScreenOverlayCtrl');
 goog.require('os.ui.feature.featureInfoDirective');
 goog.require('os.ui.node.defaultLayerNodeUIDirective');
 goog.require('os.ui.slick.SlickTreeNode');
@@ -102,11 +103,11 @@ plugin.file.kml.ui.KMLNode = function() {
   this.image_ = null;
 
   /**
-   * The kml screen overlay window ID
-   * @type {?string}
+   * The KML screen overlay options.
+   * @type {?osx.window.ScreenOverlayOptions}
    * @private
    */
-  this.overlay_ = null;
+  this.overlayOptions_ = null;
 
   /**
    * The map feature
@@ -380,20 +381,39 @@ plugin.file.kml.ui.KMLNode.prototype.onImagePropertyChange = function(e) {
 
 
 /**
- * Get the overlay window for this node.
- * @return {?string} The overlay window ID
+ * Get the overlay window ID for this node.
+ * @return {?string} The overlay window ID.
  */
-plugin.file.kml.ui.KMLNode.prototype.getOverlay = function() {
-  return this.overlay_;
+plugin.file.kml.ui.KMLNode.prototype.getOverlayId = function() {
+  return this.overlayOptions_ ? this.overlayOptions_.id : null;
 };
 
 
 /**
- * Set the overlay window for this node.
- * @param {string} overlay The overlay window ID
+ * Set the overlay window options for this node.
+ * @param {osx.window.ScreenOverlayOptions} options The overlay options.
  */
-plugin.file.kml.ui.KMLNode.prototype.setOverlay = function(overlay) {
-  this.overlay_ = overlay;
+plugin.file.kml.ui.KMLNode.prototype.setOverlayOptions = function(options) {
+  this.overlayOptions_ = options;
+};
+
+
+/**
+ * Set the visibility of the overlay.
+ * @param {boolean} shown If the overlay should be shown.
+ */
+plugin.file.kml.ui.KMLNode.prototype.setOverlayVisibility = function(shown) {
+  if (this.overlayOptions_) {
+    var overlayWin = os.ui.window.getById(this.overlayOptions_.id);
+    if (!overlayWin && shown) {
+      // window does not exist and we want to show it. launch a new window.
+      os.ui.launchScreenOverlay(this.overlayOptions_);
+    } else if (overlayWin) {
+      // window exists, toggle it.
+      overlayWin.removeClass(shown ? 'd-none' : 'd-flex');
+      overlayWin.addClass(shown ? 'd-flex' : 'd-none');
+    }
+  }
 };
 
 
@@ -432,8 +452,9 @@ plugin.file.kml.ui.KMLNode.prototype.getImages = function(opt_unchecked) {
  * @return {!Array<!string>} The overlay window IDs
  */
 plugin.file.kml.ui.KMLNode.prototype.getOverlays = function(opt_unchecked) {
-  if (this.overlay_) {
-    return [this.overlay_];
+  var overlayId = this.getOverlayId();
+  if (overlayId) {
+    return [overlayId];
   }
 
   var overlays = [];
@@ -505,8 +526,9 @@ plugin.file.kml.ui.KMLNode.prototype.getId = function() {
     }
   }
 
-  if (this.overlay_) {
-    return this.overlay_;
+  var overlayId = this.getOverlayId();
+  if (overlayId) {
+    return overlayId;
   }
 
   return plugin.file.kml.ui.KMLNode.base(this, 'getId');
@@ -670,7 +692,7 @@ plugin.file.kml.ui.KMLNode.prototype.merge = function(child) {
  * @return {boolean}
  */
 plugin.file.kml.ui.KMLNode.prototype.isFolder = function() {
-  return (this.feature_ == null && this.image_ == null && this.overlay_ == null);
+  return (this.feature_ == null && this.image_ == null && this.overlayOptions_ == null);
 };
 
 
@@ -683,7 +705,7 @@ plugin.file.kml.ui.KMLNode.prototype.formatIcons = function() {
     return '<i class="fa fa-folder' + (open ? '-open' : '') + ' fa-fw"></i>';
   } else if (this.image_) {
     return '<i class="fa fa-photo fa-fw compact" title="Ground Overlay"></i>';
-  } else if (this.overlay_) {
+  } else if (this.overlayOptions_) {
     return '<i class="fa fa-photo fa-fw compact" title="Screen Overlay"></i>';
   } else {
     var icons = [];
@@ -803,12 +825,8 @@ plugin.file.kml.ui.KMLNode.prototype.setState = function(value) {
   this.updateAnnotationVisibility_();
 
   var s = this.getState();
-  if (this.getOverlay()) {
-    // hide/show the screen overlay window
-    var toggle = os.ui.window.toggleVisibility(this.getOverlay());
-    if (toggle && s === os.structs.TriState.ON) {
-      toggle();
-    }
+  if (this.overlayOptions_) {
+    this.setOverlayVisibility(s === os.structs.TriState.ON);
   } else if (old != s && this.updateSource_ && this.source) {
     if (s !== os.structs.TriState.BOTH) {
       this.source.scheduleUpdateFromNodes();
