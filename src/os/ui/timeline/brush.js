@@ -452,7 +452,10 @@ os.ui.timeline.Brush.prototype.initSVG = function(container, height) {
   this.render(height);
 
   if (this.drawFlagCheck()) { // draw flags
-    group.selectAll('.resize').append('polygon').attr('points', '0,0 0,-10 10,-10 10,-4');
+    group.selectAll('.resize').
+        append('polygon').
+        attr('points', '0,0 0,-10 10,-10 10,-4').
+        on('mouseout', this.showTimeText_);
     group.select('.resize.w > polygon').attr('transform', 'scale(-1, 1)');
   }
 };
@@ -776,6 +779,15 @@ os.ui.timeline.Brush.prototype.onBrushDeleteButtonOver = function() {
  */
 os.ui.timeline.Brush.prototype.onBrushDeleteButtonOut = function() {
   this.mouseOverDeleteButton = false;
+};
+
+
+/**
+ * Handler for brush mouse leave
+ * This covers an edge case where hovering the current time text then over a brush can cause the text to still be hidden
+ */
+os.ui.timeline.Brush.prototype.showTimeText_ = function() {
+  d3.select('.js-svg-timeline__current-time-placeholder').attr('href', '#js-svg-timeline__current-time');
 };
 
 
