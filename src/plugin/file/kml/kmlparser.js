@@ -1220,56 +1220,14 @@ plugin.file.kml.KMLParser.prototype.readGroundOverlay_ = function(el) {
   goog.asserts.assert(el.nodeType == goog.dom.NodeType.ELEMENT, 'el.nodeType should be ELEMENT');
   goog.asserts.assert(el.localName == 'GroundOverlay', 'localName should be GroundOverlay');
 
-  // openlayers does not natively support GroundOverlay so we need to parse the xml and create an image
-  if (el !== undefined && el.querySelector('name') && el.querySelector('Icon') &&
-      (el.querySelector('LatLonBox') || el.querySelector('LatLonQuad'))) {
-    var icon = el.querySelector('Icon').querySelector('href').textContent;
+  var obj = ol.xml.pushParseAndPop({}, plugin.file.kml.GROUND_OVERLAY_PARSERS, el, []);
+  if (obj && obj['extent'] && obj['Icon'] && obj['Icon']['href']) {
+    var icon = /** @type {string} */ (obj['Icon']['href']);
     if (this.assetMap_[icon]) {
       icon = this.assetMap_[icon]; // handle images included in a kmz
     }
 
-    var north = -180;
-    var south = 180;
-    var east = -360;
-    var west = 360;
-
-    if (el.querySelector('LatLonBox')) {
-      var latlon = el.querySelector('LatLonBox');
-      north = parseFloat(latlon.querySelector('north').textContent);
-      south = parseFloat(latlon.querySelector('south').textContent);
-      east = parseFloat(latlon.querySelector('east').textContent);
-      west = parseFloat(latlon.querySelector('west').textContent);
-    } else {
-      // TODO: how can we properly represent this with openlayers and cesium?
-      // the ImageStatic layer only supports a box but LatLonQuad can be skewed
-      var quad = el.querySelector('LatLonQuad').querySelector('coordinates').textContent;
-      quad = quad.split(' ');
-      for (var i = 0; i < 4; i++) {
-        var x = parseFloat(quad[i].split(',')[0]);
-        var y = parseFloat(quad[i].split(',')[1]);
-
-        if (x < west) {
-          west = x;
-        }
-        if (x > east) {
-          east = x;
-        }
-        if (y < south) {
-          south = y;
-        }
-        if (y > north) {
-          north = y;
-        }
-      }
-    }
-
-    var extent = [
-      Math.min(west, east),
-      Math.min(south, north),
-      Math.max(west, east),
-      Math.max(south, north)];
-
-    extent = ol.proj.transformExtent(extent, os.proj.EPSG4326, os.map.PROJECTION);
+    var extent = ol.proj.transformExtent(/** @type {ol.Extent} */ (obj['extent']), os.proj.EPSG4326, os.map.PROJECTION);
 
     var image = new os.layer.Image({
       source: new ol.source.ImageStatic({
