@@ -275,7 +275,6 @@ os.object.merge(plugin.file.kml.LINK_PARSERS, plugin.file.kml.OL_LINK_PARSERS(),
 /**
  * @type {Object<string, Object<string, ol.XmlParser>>}
  * @const
- * @suppress {accessControls}
  */
 plugin.file.kml.ICON_STYLE_PARSERS = ol.xml.makeStructureNS(
     plugin.file.kml.OL_NAMESPACE_URIS(), {
@@ -510,6 +509,28 @@ plugin.file.kml.LAT_LON_BOX_PARSERS = ol.xml.makeStructureNS(
 plugin.file.kml.LAT_LON_QUAD_PARSERS = ol.xml.makeStructureNS(
     plugin.file.kml.OL_NAMESPACE_URIS(), {
       'coordinates': ol.xml.makeReplacer(ol.format.KML.readFlatCoordinates_)
+    });
+
+
+/**
+ * Property parsers for ScreenOverlay.
+ * @type {Object<string, Object<string, ol.XmlParser>>}
+ * @const
+ */
+plugin.file.kml.SCREEN_OVERLAY_PARSERS = ol.xml.makeStructureNS(
+    plugin.file.kml.OL_NAMESPACE_URIS(), {
+      'name': ol.xml.makeObjectPropertySetter(ol.format.XSD.readString),
+      'visibility': ol.xml.makeObjectPropertySetter(ol.format.XSD.readBoolean),
+      'Icon': ol.xml.makeObjectPropertySetter(ol.format.KML.readIcon_),
+      'color': ol.xml.makeObjectPropertySetter(plugin.file.kml.readColor_),
+      'drawOrder': ol.xml.makeObjectPropertySetter(ol.format.XSD.readDecimal),
+      'overlayXY': ol.xml.makeObjectPropertySetter(ol.format.KML.readVec2_),
+      'screenXY': ol.xml.makeObjectPropertySetter(ol.format.KML.readVec2_),
+      'rotationXY': ol.xml.makeObjectPropertySetter(ol.format.KML.readVec2_),
+      'size': ol.xml.makeObjectPropertySetter(ol.format.KML.readVec2_),
+      'rotation': ol.xml.makeObjectPropertySetter(ol.format.XSD.readDecimal),
+      'TimeStamp': ol.xml.makeObjectPropertySetter(plugin.file.kml.readTime, os.data.RecordField.TIME),
+      'TimeSpan': ol.xml.makeObjectPropertySetter(plugin.file.kml.readTime, os.data.RecordField.TIME)
     });
 
 
