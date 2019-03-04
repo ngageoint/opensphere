@@ -89,6 +89,13 @@ plugin.file.kml.ui.KMLNode = function() {
   this.marked = false;
 
   /**
+   * If the node should be shown during animation.
+   * @type {boolean}
+   * @private
+   */
+  this.animationState_ = true;
+
+  /**
    * The feature annotation.
    * @type {os.annotation.FeatureAnnotation}
    * @protected
@@ -248,19 +255,7 @@ plugin.file.kml.ui.KMLNode.prototype.loadAnnotation = function() {
         this.feature_.get(os.annotation.OPTIONS_FIELD));
     if (annotationOptions && annotationOptions.show) {
       this.annotation_ = new os.annotation.FeatureAnnotation(this.feature_);
-      this.updateAnnotationVisibility_();
     }
-  }
-};
-
-
-/**
- * Update visibility of the map annotation based on the node state.
- * @private
- */
-plugin.file.kml.ui.KMLNode.prototype.updateAnnotationVisibility_ = function() {
-  if (this.annotation_) {
-    this.annotation_.setVisible(this.getState() === os.structs.TriState.ON);
   }
 };
 
@@ -353,30 +348,7 @@ plugin.file.kml.ui.KMLNode.prototype.getImage = function() {
  * @param {os.layer.Image} image The feature
  */
 plugin.file.kml.ui.KMLNode.prototype.setImage = function(image) {
-  if (this.image_) {
-    ol.events.unlisten(this.image_, goog.events.EventType.PROPERTYCHANGE, this.onImagePropertyChange, this);
-  }
-
   this.image_ = image;
-
-  if (this.image_) {
-    ol.events.listen(this.image_, goog.events.EventType.PROPERTYCHANGE, this.onImagePropertyChange, this);
-    this.setState(this.image_.getLayerVisible() ? os.structs.TriState.ON : os.structs.TriState.OFF);
-  }
-};
-
-
-/**
- * @param {os.events.PropertyChangeEvent} e The event
- * @protected
- */
-plugin.file.kml.ui.KMLNode.prototype.onImagePropertyChange = function(e) {
-  if (e instanceof os.events.PropertyChangeEvent) {
-    var p = e.getProperty();
-    if (p === os.layer.PropertyChange.VISIBLE) {
-      this.setState(e.getNewValue() ? os.structs.TriState.ON : os.structs.TriState.OFF);
-    }
-  }
 };
 
 
@@ -399,10 +371,51 @@ plugin.file.kml.ui.KMLNode.prototype.setOverlayOptions = function(options) {
 
 
 /**
+ * Set the timeline animation state of the node.
+ * @param {boolean} value If the node should be shown.
+ */
+plugin.file.kml.ui.KMLNode.prototype.setAnimationState = function(value) {
+  if (this.animationState_ != value) {
+    this.animationState_ = value;
+
+    var state = this.getState();
+    this.setAnnotationVisibility_(state === os.structs.TriState.ON && value);
+    this.setImageVisibility_(state === os.structs.TriState.ON && value);
+    this.setOverlayVisibility_(state === os.structs.TriState.ON && value);
+  }
+};
+
+
+/**
+ * Set the visibility of the annotation.
+ * @param {boolean} shown If the annotation should be shown.
+ * @private
+ */
+plugin.file.kml.ui.KMLNode.prototype.setAnnotationVisibility_ = function(shown) {
+  if (this.annotation_) {
+    this.annotation_.setVisible(shown);
+  }
+};
+
+
+/**
+ * Set the visibility of the image.
+ * @param {boolean} shown If the image should be shown.
+ * @private
+ */
+plugin.file.kml.ui.KMLNode.prototype.setImageVisibility_ = function(shown) {
+  if (this.image_) {
+    this.image_.setLayerVisible(shown);
+  }
+};
+
+
+/**
  * Set the visibility of the overlay.
  * @param {boolean} shown If the overlay should be shown.
+ * @private
  */
-plugin.file.kml.ui.KMLNode.prototype.setOverlayVisibility = function(shown) {
+plugin.file.kml.ui.KMLNode.prototype.setOverlayVisibility_ = function(shown) {
   if (this.overlayOptions_) {
     var overlayWin = os.ui.window.getById(this.overlayOptions_.id);
     if (!overlayWin && shown) {
@@ -507,28 +520,14 @@ plugin.file.kml.ui.KMLNode.prototype.getExtent = function() {
 
 
 /**
- * Returns an appropriate ID based on the type of KML node this is, or the base class version.
  * @inheritDoc
  */
 plugin.file.kml.ui.KMLNode.prototype.getId = function() {
-  var id;
   if (this.feature_) {
-    id = this.feature_.getId();
+    var id = this.feature_.getId();
     if (id) {
       return id.toString();
     }
-  }
-
-  if (this.image_) {
-    id = this.image_.getId();
-    if (id) {
-      return id;
-    }
-  }
-
-  var overlayId = this.getOverlayId();
-  if (overlayId) {
-    return overlayId;
   }
 
   return plugin.file.kml.ui.KMLNode.base(this, 'getId');
@@ -821,13 +820,13 @@ plugin.file.kml.ui.KMLNode.prototype.setState = function(value) {
 
   plugin.file.kml.ui.KMLNode.base(this, 'setState', value);
 
-  // set annotation visibility
-  this.updateAnnotationVisibility_();
-
   var s = this.getState();
-  if (this.overlayOptions_) {
-    this.setOverlayVisibility(s === os.structs.TriState.ON);
-  } else if (old != s && this.updateSource_ && this.source) {
+
+  this.setAnnotationVisibility_(s === os.structs.TriState.ON && this.animationState_);
+  this.setImageVisibility_(s === os.structs.TriState.ON && this.animationState_);
+  this.setOverlayVisibility_(s === os.structs.TriState.ON && this.animationState_);
+
+  if (old != s && this.updateSource_ && this.source) {
     if (s !== os.structs.TriState.BOTH) {
       this.source.scheduleUpdateFromNodes();
 
@@ -893,13 +892,3 @@ plugin.file.kml.ui.KMLNode.prototype.getLayerUI = function(item) {
 
   return null;
 };
-
-
-/**
- * @return {os.annotation.FeatureAnnotation}
- */
-plugin.file.kml.ui.KMLNode.prototype.getAnnotation = function() {
-  return this.annotation_;
-};
-
-

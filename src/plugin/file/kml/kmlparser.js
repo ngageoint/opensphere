@@ -148,13 +148,6 @@ plugin.file.kml.KMLParser = function(options) {
   this.unnamedCount_ = 0;
 
   /**
-   * The number of screen overlays parsed
-   * @type {number}
-   * @private
-   */
-  this.screenOverlayCount_ = 0;
-
-  /**
    * The settings from the network link control for the minRefreshPeriod
    * 0 means to use link refresh defined by the requestor
    * @type {number}
@@ -266,7 +259,6 @@ plugin.file.kml.KMLParser.prototype.cleanup = function() {
   this.styleMap_ = {};
   this.balloonStyleMap = {};
   this.unnamedCount_ = 0;
-  this.screenOverlayCount_ = 0;
   this.minRefreshPeriod_ = 0;
 };
 
@@ -952,17 +944,9 @@ plugin.file.kml.KMLParser.prototype.examineElement_ = function(el) {
   if (el.localName === 'NetworkLink') {
     node = this.readNetworkLink_(el);
   } else if (el.localName === 'GroundOverlay') {
-    var image = this.readGroundOverlay_(el);
-    if (image) {
-      node = new plugin.file.kml.ui.KMLNode();
-      node.setImage(image);
-    }
+    node = this.readGroundOverlay_(el);
   } else if (el.localName === 'ScreenOverlay') {
-    var overlayOptions = this.readScreenOverlay_(el);
-    if (overlayOptions) {
-      node = new plugin.file.kml.ui.KMLNode();
-      node.setOverlayOptions(overlayOptions);
-    }
+    node = this.readScreenOverlay_(el);
   } else if (el.localName === 'Tour') {
     var tour = plugin.file.kml.tour.parseTour(el);
     if (tour) {
@@ -1174,13 +1158,7 @@ plugin.file.kml.KMLParser.prototype.readPlacemark_ = function(el) {
   }
 
   if (feature) {
-    // files containing duplicate network links will create features with duplicate id's. this allows us to merge
-    // features on refresh, while still creating an id that's unique from other network links (which will use a
-    // different parser)
-    var baseId = ol.getUid(feature);
-    var id = this.id_ + '#' + baseId;
-    feature.setId(id);
-    object[os.Fields.ID] = object[os.Fields.ID] || baseId;
+    this.setFeatureId_(feature);
 
     // parse annotation options from JSON
     if (object[os.annotation.OPTIONS_FIELD] && typeof object[os.annotation.OPTIONS_FIELD] === 'string') {
@@ -1207,13 +1185,10 @@ plugin.file.kml.KMLParser.prototype.readPlacemark_ = function(el) {
 
 
 /**
- * Parses a KML GroundOverlay element into a map layer
- * @param {Element} el The XML element
- * @return {os.layer.Image} The map layer
+ * Parses a KML GroundOverlay element into a map layer.
+ * @param {Element} el The XML element.
+ * @return {plugin.file.kml.ui.KMLNode} A KML node for the overlay, or null if one couldn't be created.
  * @private
- *
- * I don't care what you think, compiler.
- * @suppress {accessControls}
  */
 plugin.file.kml.KMLParser.prototype.readGroundOverlay_ = function(el) {
   goog.asserts.assert(el.nodeType == goog.dom.NodeType.ELEMENT, 'el.nodeType should be ELEMENT');
@@ -1228,6 +1203,13 @@ plugin.file.kml.KMLParser.prototype.readGroundOverlay_ = function(el) {
 
     var extent = ol.proj.transformExtent(/** @type {ol.Extent} */ (obj['extent']), os.proj.EPSG4326, os.map.PROJECTION);
 
+    var feature = new ol.Feature();
+    this.setFeatureId_(feature);
+
+    if (obj[os.data.RecordField.TIME]) {
+      feature.set(os.data.RecordField.TIME, obj[os.data.RecordField.TIME], true);
+    }
+
     var image = new os.layer.Image({
       source: new ol.source.ImageStatic({
         url: icon,
@@ -1235,8 +1217,13 @@ plugin.file.kml.KMLParser.prototype.readGroundOverlay_ = function(el) {
       }),
       url: icon
     });
+    image.setId(/** @type {string} */ (feature.getId()));
 
-    return image;
+    var node = new plugin.file.kml.ui.KMLNode();
+    node.setFeature(feature);
+    node.setImage(image);
+
+    return node;
   } else {
     return null;
   }
@@ -1246,10 +1233,8 @@ plugin.file.kml.KMLParser.prototype.readGroundOverlay_ = function(el) {
 /**
  * Parses a KML ScreenOverlay element into a legend style window.
  * @param {Element} el The XML element.
- * @return {?osx.window.ScreenOverlayOptions} The screen overlay options.
+ * @return {plugin.file.kml.ui.KMLNode} A KML node for the overlay, or null if one couldn't be created.
  * @private
- *
- * @suppress {accessControls}
  */
 plugin.file.kml.KMLParser.prototype.readScreenOverlay_ = function(el) {
   goog.asserts.assert(el.nodeType == goog.dom.NodeType.ELEMENT, 'el.nodeType should be ELEMENT');
@@ -1257,7 +1242,6 @@ plugin.file.kml.KMLParser.prototype.readScreenOverlay_ = function(el) {
 
   var obj = ol.xml.pushParseAndPop({}, plugin.file.kml.SCREEN_OVERLAY_PARSERS, el, []);
   if (obj && obj['name'] && obj['Icon'] && obj['Icon']['href']) {
-    var id = this.id_ + this.screenOverlayCount_++;
     var name = /** @type {string} */ (obj['name']);
 
     var icon = /** @type {string} */ (obj['Icon']['href']);
@@ -1268,14 +1252,27 @@ plugin.file.kml.KMLParser.prototype.readScreenOverlay_ = function(el) {
     var screenXY = this.parseScreenXY_(obj['screenXY']);
     var size = this.parseSizeXY_(obj['size']);
     if (screenXY && size) {
-      return /** @type {!osx.window.ScreenOverlayOptions} */ ({
-        id: id,
+      var feature = new ol.Feature();
+      this.setFeatureId_(feature);
+
+      if (obj[os.data.RecordField.TIME]) {
+        feature.set(os.data.RecordField.TIME, obj[os.data.RecordField.TIME], true);
+      }
+
+      var overlayOptions = /** @type {!osx.window.ScreenOverlayOptions} */ ({
+        id: feature.getId(),
         name: this.rootNode_.getLabel() + ' - ' + name,
         image: icon,
         size: size,
         xy: screenXY,
         showHide: true
       });
+
+      var node = new plugin.file.kml.ui.KMLNode();
+      node.setFeature(feature);
+      node.setOverlayOptions(overlayOptions);
+
+      return node;
     }
   }
 
@@ -1676,6 +1673,25 @@ plugin.file.kml.KMLParser.prototype.getStyleId = function(id) {
     id = id.substring(x + 1);
   }
   return id;
+};
+
+
+/**
+ * Set the ID on a KML feature.
+ * @param {!ol.Feature} feature The feature.
+ * @private
+ */
+plugin.file.kml.KMLParser.prototype.setFeatureId_ = function(feature) {
+  // files containing duplicate network links will create features with duplicate id's. this allows us to merge
+  // features on refresh, while still creating an id that's unique from other network links (which will use a
+  // different parser)
+  var baseId = ol.getUid(feature);
+  var id = this.id_ + '#' + baseId;
+  feature.setId(id);
+
+  if (feature.get(os.Fields.ID) == null) {
+    feature.set(os.Fields.ID, baseId, true);
+  }
 };
 
 
