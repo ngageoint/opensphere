@@ -99,6 +99,7 @@ plugin.area.KMLAreaImportUI.prototype.onPreviewReady_ = function(config, event) 
 plugin.area.kmlAreaDirective = function() {
   return {
     restrict: 'E',
+    replace: true,
     templateUrl: os.ROOT + 'views/plugin/kml/kmlarea.html',
     controller: plugin.area.KMLAreaCtrl,
     controllerAs: 'areaFiles'
