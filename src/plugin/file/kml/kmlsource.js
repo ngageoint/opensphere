@@ -354,7 +354,7 @@ plugin.file.kml.KMLSource.prototype.addNodes = function(nodes, opt_recurse) {
         images.push(image);
       }
 
-      var overlay = node.getOverlay();
+      var overlay = node.getOverlayId();
       if (overlay) {
         id = /** @type {string} */ (node.getId());
         this.nodeMap_[id] = node;
@@ -539,6 +539,13 @@ plugin.file.kml.KMLSource.prototype.processImmediate = function(feature) {
 
   plugin.file.kml.KMLSource.base(this, 'processImmediate', feature);
 
+  if (this.animationOverlay) {
+    var node = this.getFeatureNode(feature);
+    if (node) {
+      node.setAnimationState(false);
+    }
+  }
+
   this.scheduleUpdateFromNodes();
 };
 
@@ -573,22 +580,6 @@ plugin.file.kml.KMLSource.prototype.updateVisibilityFromNodes = function() {
       }
     } else {
       goog.log.warning(this.log, 'Feature [' + id + '] is not in the KML tree!');
-    }
-  }
-
-  for (var i = 0, n = this.images.length; i < n; i++) {
-    var image = this.images[i];
-    var id = /** @type {string} */ (image.getId());
-    node = this.nodeMap_[id];
-
-    if (node) {
-      if (node.getState() == os.structs.TriState.ON) {
-        image.setLayerVisible(true);
-      } else if (node.getState() == os.structs.TriState.OFF) {
-        image.setLayerVisible(false);
-      }
-    } else {
-      goog.log.warning(this.log, 'Image [' + id + '] is not in the KML tree!');
     }
   }
 
@@ -768,14 +759,13 @@ plugin.file.kml.KMLSource.prototype.restore = function(config) {
  */
 plugin.file.kml.KMLSource.prototype.createAnimationOverlay = function() {
   plugin.file.kml.KMLSource.base(this, 'createAnimationOverlay');
-  var features = this.getFeatures();
 
-  // Hide all annotations
+  // hide all features
+  var features = this.getFeatures();
   for (var i = 0, n = features.length; i < n; i++) {
-    var feature = features[i];
-    var annotation = this.getFeatureNode(feature).getAnnotation();
-    if (annotation) {
-      annotation.setVisible(false);
+    var node = this.getFeatureNode(features[i]);
+    if (node) {
+      node.setAnimationState(false);
     }
   }
 };
@@ -788,14 +778,12 @@ plugin.file.kml.KMLSource.prototype.createAnimationOverlay = function() {
  */
 plugin.file.kml.KMLSource.prototype.updateAnimationOverlay = function() {
   if (this.animationOverlay) {
+    // hide features from the previous animation frame
     var overlayFeatures = this.animationOverlay.getFeatures();
-
-    // hide annotations in overlay
     for (var i = 0, n = overlayFeatures.length; i < n; i++) {
-      var feature = overlayFeatures[i];
-      var annotation = this.getFeatureNode(feature).getAnnotation();
-      if (annotation) {
-        annotation.setVisible(false);
+      var node = this.getFeatureNode(overlayFeatures[i]);
+      if (node) {
+        node.setAnimationState(false);
       }
     }
   }
@@ -803,14 +791,12 @@ plugin.file.kml.KMLSource.prototype.updateAnimationOverlay = function() {
   plugin.file.kml.KMLSource.base(this, 'updateAnimationOverlay');
 
   if (this.animationOverlay) {
+    // show features in the current animation frame
     var overlayFeatures = this.animationOverlay.getFeatures();
-
-    // show annotations in overlay
     for (var i = 0, n = overlayFeatures.length; i < n; i++) {
-      var feature = overlayFeatures[i];
-      var annotation = this.getFeatureNode(feature).getAnnotation();
-      if (annotation) {
-        annotation.setVisible(true);
+      var node = this.getFeatureNode(overlayFeatures[i]);
+      if (node) {
+        node.setAnimationState(true);
       }
     }
   }
@@ -824,14 +810,13 @@ plugin.file.kml.KMLSource.prototype.updateAnimationOverlay = function() {
  */
 plugin.file.kml.KMLSource.prototype.disposeAnimationOverlay = function() {
   plugin.file.kml.KMLSource.base(this, 'disposeAnimationOverlay');
-  var features = this.getFeatures();
 
-  // Show all annotations
+  // show all features
+  var features = this.getFeatures();
   for (var i = 0, n = features.length; i < n; i++) {
-    var feature = features[i];
-    var annotation = this.getFeatureNode(feature).getAnnotation();
-    if (annotation) {
-      annotation.setVisible(true);
+    var node = this.getFeatureNode(features[i]);
+    if (node) {
+      node.setAnimationState(true);
     }
   }
 };
