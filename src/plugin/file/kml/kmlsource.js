@@ -539,6 +539,13 @@ plugin.file.kml.KMLSource.prototype.processImmediate = function(feature) {
 
   plugin.file.kml.KMLSource.base(this, 'processImmediate', feature);
 
+  if (this.animationOverlay) {
+    var node = this.getFeatureNode(feature);
+    if (node) {
+      node.setAnimationState(false);
+    }
+  }
+
   this.scheduleUpdateFromNodes();
 };
 
