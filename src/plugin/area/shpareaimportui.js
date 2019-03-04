@@ -85,6 +85,7 @@ plugin.area.SHPAreaImportUI.prototype.launchUI = function(file, opt_config) {
 plugin.area.shpAreaDirective = function() {
   return {
     restrict: 'E',
+    replace: true,
     templateUrl: os.ROOT + 'views/plugin/shp/shparea.html',
     controller: plugin.area.SHPAreaCtrl,
     controllerAs: 'areaFiles'

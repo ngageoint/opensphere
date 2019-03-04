@@ -14,6 +14,7 @@ goog.require('os.ui.buffer.bufferFormDirective');
 os.ui.buffer.bufferDialogDirective = function() {
   return {
     restrict: 'E',
+    replace: true,
     templateUrl: os.ROOT + 'views/buffer/bufferdialog.html',
     controller: os.ui.buffer.BufferDialogCtrl,
     controllerAs: 'buffer'
