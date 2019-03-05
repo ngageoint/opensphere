@@ -728,6 +728,49 @@ os.MapContainer.prototype.resetRotation = function() {
 
 
 /**
+ * Reset camera tilt in 3D.
+ */
+os.MapContainer.prototype.resetTilt = function() {
+  if (this.is3DEnabled()) {
+    var camera = this.getWebGLCamera();
+    if (camera) {
+      camera.flyTo({
+        range: camera.getDistanceToCenter(),
+        center: camera.getCenter(),
+        pitch: 0
+      });
+    }
+  }
+
+  os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.RESET_TILT, 1);
+};
+
+
+/**
+ * Reset camera roll in 3D.
+ */
+os.MapContainer.prototype.resetRoll = function() {
+  if (this.is3DEnabled()) {
+    var camera = this.getWebGLCamera();
+    if (camera) {
+      camera.flyTo({
+        range: camera.getDistanceToCenter(),
+        center: camera.getCenter(),
+        heading: 0
+      });
+    }
+  } else {
+    var map = this.getMap();
+    var view = map.getView();
+    goog.asserts.assert(view !== undefined);
+    view.setRotation(0);
+  }
+
+  os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.RESET_ROLL, 1);
+};
+
+
+/**
  * Fix focus. HTML canvas elements are not focusable by default, and can only be made focusable by adding tabindex="0"
  * to the canvas. We don't always control those elements so we manually blur the active element when the map viewport
  * is clicked.
