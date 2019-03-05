@@ -183,7 +183,7 @@ plugin.cesium.Camera.prototype.getTilt = function() {
  * @inheritDoc
  */
 plugin.cesium.Camera.prototype.setTilt = function(tilt) {
-  this.tilt_ = tilt;
+  this.tilt_ = goog.math.clamp(tilt, 0, Math.PI);
   this.updateCamera_();
 };
 
@@ -431,7 +431,7 @@ plugin.cesium.Camera.prototype.updateCamera_ = function() {
   var orientation = {
     pitch: this.tilt_ - Cesium.Math.PI_OVER_TWO,
     heading: -view.getRotation(),
-    roll: undefined
+    roll: this.cam_.roll
   };
   this.cam_.setView({
     destination: destination,
