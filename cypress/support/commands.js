@@ -35,9 +35,7 @@ Cypress.Commands.add('login', function(clearLocalStorage) {
     indexedDB.deleteDatabase(config.IndexedDB.SETTINGS);
   }
   cy.visit(config.HIDE_TIPS);
-
-  // Wait on the map to finish loading before proceeding; this is the slowest part of the application to load
-  cy.get(os.Map.CANVAS_3D, {timeout: 30000});
+  cy.get(os.layersDialog.Layers.Tree.STREET_MAP_TILES, {timeout: 15000}).should('be.visible');
 });
 
 Cypress.Commands.add('upload', function(fileName) {

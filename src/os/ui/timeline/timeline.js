@@ -488,7 +488,7 @@ os.ui.timeline.TimelineCtrl.AXIS_WIDTH = 30;
 /**
  * @type {number}
  */
-os.ui.timeline.TimelineCtrl.HANDLE_HEIGHT = 10;
+os.ui.timeline.TimelineCtrl.HANDLE_HEIGHT = 15;
 
 
 /**
@@ -976,6 +976,10 @@ os.ui.timeline.TimelineCtrl.prototype.initSvg = function() {
 
   // add place holder for hold and skip brushes
   this.skipHoldElement_ = mainGroup.append('g').attr('class', 'skip-hold-brushes');
+  mainGroup.append('use').attr('href', '#js-svg-timeline__time-background').
+      attr('id', 'js-svg-timeline__background-time-placeholder').
+      on(goog.events.EventType.MOUSEUP, this.toggleVisible_.bind(this)).
+      append('title').text('Click to hide/show current time');
 
   this.offArrows_.setXScale(this.xScale_);
   this.offArrows_.setItems(this.items_.filter(
@@ -995,6 +999,27 @@ os.ui.timeline.TimelineCtrl.prototype.initSvg = function() {
   this.initialized_ = true;
   this.scope_.$emit('timeline.Init');
   this.rescale_();
+};
+
+
+/**
+ * Handles click logic for hiding and showing the current time text
+ * In FF the front most element gets the click, in Chrome both elements get the click, so adjust accordingly
+ * @private
+ */
+os.ui.timeline.TimelineCtrl.prototype.toggleVisible_ = function() {
+  var opacity = d3.select('#js-svg-timeline__time-background').style('opacity');
+  if (opacity == '0') {
+    d3.select('#js-svg-timeline__time-background').style('opacity', '1').style('cursor', 'pointer').
+        on(goog.events.EventType.MOUSEUP, function() {});
+    d3.select('#js-svg-timeline__background-time-placeholder').attr('href', '#js-svg-timeline__time-background').
+        on(goog.events.EventType.MOUSEUP, this.toggleVisible_.bind(this));
+  } else {
+    d3.select('#js-svg-timeline__time-background').style('opacity', '0').style('cursor', 'cell').
+        on(goog.events.EventType.MOUSEUP, this.toggleVisible_.bind(this));
+    d3.select('#js-svg-timeline__background-time-placeholder').attr('href', '#js-svg-timeline__time-background-none').
+        on(goog.events.EventType.MOUSEUP, function() {});
+  }
 };
 
 

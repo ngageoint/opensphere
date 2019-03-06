@@ -3,6 +3,7 @@ cache:
   yarn: true
   directories:
   - "node_modules"
+  - ~/.cache
 notifications:
   email: false
 node_js:
@@ -26,7 +27,7 @@ script:
 - set -e
 - yarn run build
 - yarn run test
-- ./cypress/support/execute-tests.sh ci all
+- ./cypress/support/execute-tests.sh ci cli all
 - yarn run apidoc
 - set +e
 after_success:
