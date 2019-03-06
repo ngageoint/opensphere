@@ -1,8 +1,11 @@
 goog.provide('plugin.arc.layer.ArcFeatureLayerConfig');
+
+goog.require('goog.log');
 goog.require('os.im.FeatureImporter');
 goog.require('os.im.mapping.IMapping');
 goog.require('os.layer.config.AbstractDataSourceLayerConfig');
 goog.require('os.net.ParamModifier');
+goog.require('os.net.Request');
 goog.require('os.query.QueryManager');
 goog.require('os.query.TemporalHandler');
 goog.require('os.query.TemporalQueryManager');
@@ -21,6 +24,7 @@ goog.require('plugin.arc.source.ArcRequestSource');
  */
 plugin.arc.layer.ArcFeatureLayerConfig = function() {
   plugin.arc.layer.ArcFeatureLayerConfig.base(this, 'constructor');
+  this.log = plugin.arc.layer.ArcFeatureLayerConfig.LOGGER_;
 };
 goog.inherits(plugin.arc.layer.ArcFeatureLayerConfig, os.layer.config.AbstractDataSourceLayerConfig);
 
@@ -30,6 +34,15 @@ goog.inherits(plugin.arc.layer.ArcFeatureLayerConfig, os.layer.config.AbstractDa
  * @type {string}
  */
 plugin.arc.layer.ArcFeatureLayerConfig.ID = 'arcfeature';
+
+
+/**
+ * Logger
+ * @type {goog.log.Logger}
+ * @private
+ * @const
+ */
+plugin.arc.layer.ArcFeatureLayerConfig.LOGGER_ = goog.log.getLogger('plugin.arc.layer.ArcFeatureLayerConfig');
 
 
 /**
@@ -53,6 +66,8 @@ plugin.arc.layer.ArcFeatureLayerConfig.prototype.createLayer = function(options)
   var featureType = /** @type {plugin.arc.ArcFeatureType} */ (options['featureType']);
   if (featureType) {
     this.fixFeatureTypeColumns(layer, options, featureType);
+  } else {
+    this.loadFeatureType(layer, options);
   }
 
   var useFilter = options['filter'] != null ? options['filter'] : false;
@@ -85,11 +100,50 @@ plugin.arc.layer.ArcFeatureLayerConfig.prototype.createLayer = function(options)
     }
   }
 
-  if (options['load']) {
+  // wait for the feature type to be available to load the source
+  if (featureType && options['load']) {
     source.refresh();
   }
 
   return layer;
+};
+
+
+/**
+ * Load the Arc layer metadata to create a feature type.
+ * @param {os.layer.Vector} layer The layer.
+ * @param {Object} options The layer options.
+ * @protected
+ */
+plugin.arc.layer.ArcFeatureLayerConfig.prototype.loadFeatureType = function(layer, options) {
+  var url = /** @type {string|undefined} */ (options['url']);
+  if (url) {
+    // modify the query URL to retrieve layer metadata
+    url = url.replace(/\/query$/, '?f=json');
+
+    var request = new os.net.Request(url);
+    request.getPromise().then(function(response) {
+      var config = /** @type {Object} */ (JSON.parse(response));
+      var featureType = plugin.arc.createFeatureType(config);
+      if (featureType) {
+        options['featureType'] = featureType;
+        this.fixFeatureTypeColumns(layer, options, featureType);
+      } else {
+        goog.log.error(this.log, 'Failed parsing Arc feature type for layer "' + options['title'] + '".');
+      }
+
+      // even if the feature type couldn't be parsed, the layer may be usable in a limited state. filter edit will not
+      // work, for example.
+      if (options['load']) {
+        var source = layer.getSource();
+        if (source) {
+          source.refresh();
+        }
+      }
+    }, function(errors) {
+      goog.log.error(this.log, 'Failed loading Arc feature type: ' + errors.join(' '));
+    }, this);
+  }
 };
 
 
