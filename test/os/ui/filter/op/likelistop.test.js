@@ -38,8 +38,8 @@ describe('os.ui.filter.op.LikeList', function() {
 
   it('should generate the proper filter function expression', function() {
     // starts with 'a', ends with 'b', contains 'c', d plus two more characters
-    var expr = op.getEvalExpression('testVar', 'a*, *b,   *c*   ,   d..');
-    expect(expr).toBe('/^(a.*|.*b|.*c.*|d..)$/i.test(testVar)');
+    var expr = op.getEvalExpression('testVar', 'a*, *b,   *c-*   ,   d..');
+    expect(expr).toBe('/^(a.*|.*b|.*c\\-.*|d..)$/i.test(testVar)');
 
     var testVar = 'aTest';
 
@@ -57,7 +57,10 @@ describe('os.ui.filter.op.LikeList', function() {
     testVar = 'testB';
     expect(eval(expr)).toBe(true);
 
-    testVar = 'testCtest';
+    testVar = 'testC';
+    expect(eval(expr)).toBe(false);
+
+    testVar = 'testC-test';
     expect(eval(expr)).toBe(true);
 
     testVar = 'do';
