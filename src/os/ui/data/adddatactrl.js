@@ -11,6 +11,7 @@ goog.require('os.metrics.Metrics');
 goog.require('os.metrics.keys');
 goog.require('os.object');
 goog.require('os.structs.ITreeNode');
+goog.require('os.ui.bindDirectiveDirective');
 goog.require('os.ui.slick.TreeSearch');
 
 
@@ -204,7 +205,7 @@ os.ui.data.AddDataCtrl.listFilter_ = function(item, i, arr) {
   if (item.getEnabled()) {
     try {
       // show providers that are in a loading state
-      if (item.isLoading) {
+      if (os.implements(item, os.data.ILoadingProvider.ID)) {
         /** @type {os.data.ILoadingProvider} */ (item).isLoading();
         return true;
       }
@@ -212,9 +213,9 @@ os.ui.data.AddDataCtrl.listFilter_ = function(item, i, arr) {
       // not a loading provider
     }
 
-    // exclude providers without children so users don't think they can do something with them
+    // exclude providers without children so users don't think they can do something with them (unless flagged)
     var children = item.getChildren();
-    return !!children && children.length > 0;
+    return item.getShowWhenEmpty() || (!!children && children.length > 0);
   }
 
   return false;
@@ -284,11 +285,19 @@ os.ui.data.AddDataCtrl.prototype.getInfo = function() {
   if (node instanceof os.ui.slick.SlickTreeNode) {
     var text = '';
     if (node instanceof os.ui.data.DescriptorNode) {
+      // descriptors provide an HTML description
       var d = /** @type {os.ui.data.DescriptorNode} */ (node).getDescriptor();
       if (d) {
         text += d.getHtmlDescription();
       }
-    } else {
+    } else if (node instanceof os.ui.data.BaseProvider) {
+      // providers can provide directives
+      // these strings should be provided entirely by us, and so therefore are NOT sanitized to allow compilation
+      return node.getInfo();
+    }
+
+    if (!text) {
+      // the fallback, just get the tooltip
       text = node.getToolTip();
     }
 
@@ -298,7 +307,7 @@ os.ui.data.AddDataCtrl.prototype.getInfo = function() {
 
     if (text) {
       os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.AddData.GET_INFO, 1);
-      return goog.string.newLineToBr(text);
+      return os.ui.sanitize(goog.string.newLineToBr(text));
     }
   }
 
