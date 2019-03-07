@@ -15,6 +15,7 @@ goog.require('plugin.places');
 plugin.places.ui.savePlacesDirective = function() {
   return {
     restrict: 'E',
+    replace: true,
     scope: {
       'initSources': '&'
     },

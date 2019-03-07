@@ -5,6 +5,7 @@
 goog.provide('plugin.file.kml');
 
 goog.require('goog.asserts');
+goog.require('ol.extent');
 goog.require('ol.format.KML');
 goog.require('ol.format.XSD');
 goog.require('ol.geom.GeometryCollection');
@@ -274,7 +275,6 @@ os.object.merge(plugin.file.kml.LINK_PARSERS, plugin.file.kml.OL_LINK_PARSERS(),
 /**
  * @type {Object<string, Object<string, ol.XmlParser>>}
  * @const
- * @suppress {accessControls}
  */
 plugin.file.kml.ICON_STYLE_PARSERS = ol.xml.makeStructureNS(
     plugin.file.kml.OL_NAMESPACE_URIS(), {
@@ -411,6 +411,127 @@ os.object.merge(plugin.file.kml.GX_TRACK_PARSERS, ol.format.KML.GX_TRACK_PARSERS
  * Add/replace Track/MultiTrack parsers for Placemark nodes.
  */
 os.object.merge(plugin.file.kml.PLACEMARK_TRACK_PARSERS, plugin.file.kml.OL_PLACEMARK_PARSERS(), true);
+
+
+/**
+ * Read a LatLonBox node and add extent/rotation to the last object on the stack.
+ * @param {Node} node Node.
+ * @param {Array<*>} objectStack Object stack.
+ * @private
+ */
+plugin.file.kml.readLatLonBox_ = function(node, objectStack) {
+  var object = ol.xml.pushParseAndPop({}, plugin.file.kml.LAT_LON_BOX_PARSERS, node, objectStack);
+  if (!object) {
+    return;
+  }
+
+  var targetObject = /** @type {Object} */ (objectStack[objectStack.length - 1]);
+  var extent = [
+    parseFloat(object['west']),
+    parseFloat(object['south']),
+    parseFloat(object['east']),
+    parseFloat(object['north'])
+  ];
+  targetObject['extent'] = extent;
+  targetObject['rotation'] = parseFloat(object['rotation'] || 0);
+};
+
+
+/**
+ * Read a LatLonQuad node and add extent to the last object on the stack.
+ * @param {Node} node Node.
+ * @param {Array<*>} objectStack Object stack.
+ * @private
+ */
+plugin.file.kml.readLatLonQuad_ = function(node, objectStack) {
+  var flatCoords = ol.xml.pushParseAndPop([], plugin.file.kml.LAT_LON_QUAD_PARSERS, node, objectStack);
+  if (flatCoords && flatCoords.length) {
+    var coordinates = ol.geom.flat.inflate.coordinates(flatCoords, 0, flatCoords.length, 3);
+    if (coordinates.length === 4) {
+      // TODO: how can we properly represent this with openlayers and cesium?
+      // the ImageStatic layer only supports a box but LatLonQuad can be skewed
+      var extent = ol.extent.createEmpty();
+      coordinates.forEach(function(coordinate) {
+        ol.extent.extendCoordinate(extent, coordinate);
+      });
+
+      var targetObject = /** @type {Object} */ (objectStack[objectStack.length - 1]);
+      targetObject['extent'] = extent;
+    }
+  }
+};
+
+
+/**
+ * Property parsers for GroundOverlay.
+ * @type {Object<string, Object<string, ol.XmlParser>>}
+ * @const
+ */
+plugin.file.kml.GROUND_OVERLAY_PARSERS = ol.xml.makeStructureNS(
+    plugin.file.kml.OL_NAMESPACE_URIS(), {
+      'Icon': ol.xml.makeObjectPropertySetter(ol.format.KML.readIcon_),
+      'color': ol.xml.makeObjectPropertySetter(plugin.file.kml.readColor_),
+      'drawOrder': ol.xml.makeObjectPropertySetter(ol.format.XSD.readDecimal),
+      'altitude': ol.xml.makeObjectPropertySetter(ol.format.XSD.readDecimal),
+      'altitudeMode': ol.xml.makeObjectPropertySetter(ol.format.XSD.readString),
+      'LatLonBox': plugin.file.kml.readLatLonBox_,
+      'LatLonQuad': plugin.file.kml.readLatLonQuad_,
+      'TimeStamp': ol.xml.makeObjectPropertySetter(plugin.file.kml.readTime, os.data.RecordField.TIME),
+      'TimeSpan': ol.xml.makeObjectPropertySetter(plugin.file.kml.readTime, os.data.RecordField.TIME)
+    }, ol.xml.makeStructureNS(
+        plugin.file.kml.OL_GX_NAMESPACE_URIS(), {
+          // also include gx:LatLonQuad to support 2.2 extension values
+          'LatLonQuad': plugin.file.kml.readLatLonQuad_
+        }
+    ));
+
+
+/**
+ * Property parsers for LatLonBox.
+ * @type {Object<string, Object<string, ol.XmlParser>>}
+ * @const
+ */
+plugin.file.kml.LAT_LON_BOX_PARSERS = ol.xml.makeStructureNS(
+    plugin.file.kml.OL_NAMESPACE_URIS(), {
+      'north': ol.xml.makeObjectPropertySetter(ol.format.XSD.readDecimal),
+      'south': ol.xml.makeObjectPropertySetter(ol.format.XSD.readDecimal),
+      'east': ol.xml.makeObjectPropertySetter(ol.format.XSD.readDecimal),
+      'west': ol.xml.makeObjectPropertySetter(ol.format.XSD.readDecimal),
+      'rotation': ol.xml.makeObjectPropertySetter(ol.format.XSD.readDecimal)
+    });
+
+
+/**
+ * Property parsers for LatLonQuad.
+ * @type {Object<string, Object<string, ol.XmlParser>>}
+ * @const
+ */
+plugin.file.kml.LAT_LON_QUAD_PARSERS = ol.xml.makeStructureNS(
+    plugin.file.kml.OL_NAMESPACE_URIS(), {
+      'coordinates': ol.xml.makeReplacer(ol.format.KML.readFlatCoordinates_)
+    });
+
+
+/**
+ * Property parsers for ScreenOverlay.
+ * @type {Object<string, Object<string, ol.XmlParser>>}
+ * @const
+ */
+plugin.file.kml.SCREEN_OVERLAY_PARSERS = ol.xml.makeStructureNS(
+    plugin.file.kml.OL_NAMESPACE_URIS(), {
+      'name': ol.xml.makeObjectPropertySetter(ol.format.XSD.readString),
+      'visibility': ol.xml.makeObjectPropertySetter(ol.format.XSD.readBoolean),
+      'Icon': ol.xml.makeObjectPropertySetter(ol.format.KML.readIcon_),
+      'color': ol.xml.makeObjectPropertySetter(plugin.file.kml.readColor_),
+      'drawOrder': ol.xml.makeObjectPropertySetter(ol.format.XSD.readDecimal),
+      'overlayXY': ol.xml.makeObjectPropertySetter(ol.format.KML.readVec2_),
+      'screenXY': ol.xml.makeObjectPropertySetter(ol.format.KML.readVec2_),
+      'rotationXY': ol.xml.makeObjectPropertySetter(ol.format.KML.readVec2_),
+      'size': ol.xml.makeObjectPropertySetter(ol.format.KML.readVec2_),
+      'rotation': ol.xml.makeObjectPropertySetter(ol.format.XSD.readDecimal),
+      'TimeStamp': ol.xml.makeObjectPropertySetter(plugin.file.kml.readTime, os.data.RecordField.TIME),
+      'TimeSpan': ol.xml.makeObjectPropertySetter(plugin.file.kml.readTime, os.data.RecordField.TIME)
+    });
 
 
 /**

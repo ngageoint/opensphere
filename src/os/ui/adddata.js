@@ -2,9 +2,7 @@ goog.provide('os.ui.AddDataCtrl');
 goog.provide('os.ui.addDataDirective');
 
 goog.require('os.data.groupby.DateGroupBy');
-goog.require('os.data.groupby.FavoriteGroupBy');
 goog.require('os.data.groupby.RecentGroupBy');
-goog.require('os.data.groupby.TagListGroupBy');
 goog.require('os.data.groupby.TypeGroupBy');
 goog.require('os.defines');
 goog.require('os.metrics.Metrics');
@@ -89,8 +87,6 @@ goog.inherits(os.ui.AddDataCtrl, os.ui.data.AddDataCtrl);
  * @type {!Object.<string, ?os.data.groupby.INodeGroupBy>}
  */
 os.ui.AddDataCtrl.VIEWS = {
-  'Favorites': new os.data.groupby.FavoriteGroupBy(),
-  'INT': new os.data.groupby.TagListGroupBy(),
   'Recently Updated': new os.data.groupby.DateGroupBy(),
   'Recently Used': new os.data.groupby.RecentGroupBy(),
   'Tag': new os.ui.data.groupby.TagGroupBy(),
