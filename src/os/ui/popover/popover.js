@@ -121,6 +121,7 @@ os.ui.popover.PopoverCtrl.prototype.update_ = function() {
     // Create the popover
     this.popover_ = this.element_.popover({
       'html': true,
+      'sanitize': false,
       'placement': this.scope_['pos'] ? this.scope_['pos'] : 'bottom',
       'trigger': 'manual',
       'title': this.scope_['title'],
