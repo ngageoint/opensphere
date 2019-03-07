@@ -26,7 +26,6 @@ goog.require('os.net.Request');
 goog.require('os.object');
 goog.require('os.parse.AsyncZipParser');
 goog.require('os.parse.IParser');
-goog.require('os.ui.ScreenOverlayCtrl');
 goog.require('os.ui.file.kml');
 goog.require('os.xml');
 goog.require('plugin.file.kml');
@@ -149,13 +148,6 @@ plugin.file.kml.KMLParser = function(options) {
   this.unnamedCount_ = 0;
 
   /**
-   * The number of screen overlays parsed
-   * @type {number}
-   * @private
-   */
-  this.screenOverlayCount_ = 0;
-
-  /**
    * The settings from the network link control for the minRefreshPeriod
    * 0 means to use link refresh defined by the requestor
    * @type {number}
@@ -267,7 +259,6 @@ plugin.file.kml.KMLParser.prototype.cleanup = function() {
   this.styleMap_ = {};
   this.balloonStyleMap = {};
   this.unnamedCount_ = 0;
-  this.screenOverlayCount_ = 0;
   this.minRefreshPeriod_ = 0;
 };
 
@@ -953,17 +944,9 @@ plugin.file.kml.KMLParser.prototype.examineElement_ = function(el) {
   if (el.localName === 'NetworkLink') {
     node = this.readNetworkLink_(el);
   } else if (el.localName === 'GroundOverlay') {
-    var image = this.readGroundOverlay_(el);
-    if (image) {
-      node = new plugin.file.kml.ui.KMLNode();
-      node.setImage(image);
-    }
+    node = this.readGroundOverlay_(el);
   } else if (el.localName === 'ScreenOverlay') {
-    var overlay = this.readScreenOverlay_(el);
-    if (overlay) {
-      node = new plugin.file.kml.ui.KMLNode();
-      node.setOverlay(overlay);
-    }
+    node = this.readScreenOverlay_(el);
   } else if (el.localName === 'Tour') {
     var tour = plugin.file.kml.tour.parseTour(el);
     if (tour) {
@@ -1175,13 +1158,7 @@ plugin.file.kml.KMLParser.prototype.readPlacemark_ = function(el) {
   }
 
   if (feature) {
-    // files containing duplicate network links will create features with duplicate id's. this allows us to merge
-    // features on refresh, while still creating an id that's unique from other network links (which will use a
-    // different parser)
-    var baseId = ol.getUid(feature);
-    var id = this.id_ + '#' + baseId;
-    feature.setId(id);
-    object[os.Fields.ID] = object[os.Fields.ID] || baseId;
+    this.setFeatureId_(feature);
 
     // parse annotation options from JSON
     if (object[os.annotation.OPTIONS_FIELD] && typeof object[os.annotation.OPTIONS_FIELD] === 'string') {
@@ -1208,68 +1185,30 @@ plugin.file.kml.KMLParser.prototype.readPlacemark_ = function(el) {
 
 
 /**
- * Parses a KML GroundOverlay element into a map layer
- * @param {Element} el The XML element
- * @return {os.layer.Image} The map layer
+ * Parses a KML GroundOverlay element into a map layer.
+ * @param {Element} el The XML element.
+ * @return {plugin.file.kml.ui.KMLNode} A KML node for the overlay, or null if one couldn't be created.
  * @private
- *
- * I don't care what you think, compiler.
- * @suppress {accessControls}
  */
 plugin.file.kml.KMLParser.prototype.readGroundOverlay_ = function(el) {
   goog.asserts.assert(el.nodeType == goog.dom.NodeType.ELEMENT, 'el.nodeType should be ELEMENT');
   goog.asserts.assert(el.localName == 'GroundOverlay', 'localName should be GroundOverlay');
 
-  // openlayers does not natively support GroundOverlay so we need to parse the xml and create an image
-  if (el !== undefined && el.querySelector('name') && el.querySelector('Icon') &&
-      (el.querySelector('LatLonBox') || el.querySelector('LatLonQuad'))) {
-    var icon = el.querySelector('Icon').querySelector('href').textContent;
+  var obj = ol.xml.pushParseAndPop({}, plugin.file.kml.GROUND_OVERLAY_PARSERS, el, []);
+  if (obj && obj['extent'] && obj['Icon'] && obj['Icon']['href']) {
+    var icon = /** @type {string} */ (obj['Icon']['href']);
     if (this.assetMap_[icon]) {
       icon = this.assetMap_[icon]; // handle images included in a kmz
     }
 
-    var north = -180;
-    var south = 180;
-    var east = -360;
-    var west = 360;
+    var extent = ol.proj.transformExtent(/** @type {ol.Extent} */ (obj['extent']), os.proj.EPSG4326, os.map.PROJECTION);
 
-    if (el.querySelector('LatLonBox')) {
-      var latlon = el.querySelector('LatLonBox');
-      north = parseFloat(latlon.querySelector('north').textContent);
-      south = parseFloat(latlon.querySelector('south').textContent);
-      east = parseFloat(latlon.querySelector('east').textContent);
-      west = parseFloat(latlon.querySelector('west').textContent);
-    } else {
-      // TODO: how can we properly represent this with openlayers and cesium?
-      // the ImageStatic layer only supports a box but LatLonQuad can be skewed
-      var quad = el.querySelector('LatLonQuad').querySelector('coordinates').textContent;
-      quad = quad.split(' ');
-      for (var i = 0; i < 4; i++) {
-        var x = parseFloat(quad[i].split(',')[0]);
-        var y = parseFloat(quad[i].split(',')[1]);
+    var feature = new ol.Feature();
+    this.setFeatureId_(feature);
 
-        if (x < west) {
-          west = x;
-        }
-        if (x > east) {
-          east = x;
-        }
-        if (y < south) {
-          south = y;
-        }
-        if (y > north) {
-          north = y;
-        }
-      }
+    if (obj[os.data.RecordField.TIME]) {
+      feature.set(os.data.RecordField.TIME, obj[os.data.RecordField.TIME], true);
     }
-
-    var extent = [
-      Math.min(west, east),
-      Math.min(south, north),
-      Math.max(west, east),
-      Math.max(south, north)];
-
-    extent = ol.proj.transformExtent(extent, os.proj.EPSG4326, os.map.PROJECTION);
 
     var image = new os.layer.Image({
       source: new ol.source.ImageStatic({
@@ -1278,8 +1217,13 @@ plugin.file.kml.KMLParser.prototype.readGroundOverlay_ = function(el) {
       }),
       url: icon
     });
+    image.setId(/** @type {string} */ (feature.getId()));
 
-    return image;
+    var node = new plugin.file.kml.ui.KMLNode();
+    node.setFeature(feature);
+    node.setImage(image);
+
+    return node;
   } else {
     return null;
   }
@@ -1287,49 +1231,48 @@ plugin.file.kml.KMLParser.prototype.readGroundOverlay_ = function(el) {
 
 
 /**
- * Parses a KML ScreenOverlay element into a legend style window
- * @param {Element} el The XML element
- * @return {?string} ID of the overlay window
+ * Parses a KML ScreenOverlay element into a legend style window.
+ * @param {Element} el The XML element.
+ * @return {plugin.file.kml.ui.KMLNode} A KML node for the overlay, or null if one couldn't be created.
  * @private
- *
- * @suppress {accessControls}
  */
 plugin.file.kml.KMLParser.prototype.readScreenOverlay_ = function(el) {
   goog.asserts.assert(el.nodeType == goog.dom.NodeType.ELEMENT, 'el.nodeType should be ELEMENT');
   goog.asserts.assert(el.localName == 'ScreenOverlay', 'localName should be ScreenOverlay');
 
-  // openlayers does not natively support ScreenOverlay so we need to parse the xml and create an overlay window
-  if (el !== undefined && el.querySelector('name') && el.querySelector('Icon')) {
-    // check if visibility is set to 0, if it is, do not proceed
-    var vis = el.querySelector('visibility');
-    if (vis) {
-      var value = parseInt(vis.textContent, 10);
-      if (value == 0) {
-        return null;
-      }
-    }
+  var obj = ol.xml.pushParseAndPop({}, plugin.file.kml.SCREEN_OVERLAY_PARSERS, el, []);
+  if (obj && obj['name'] && obj['Icon'] && obj['Icon']['href']) {
+    var name = /** @type {string} */ (obj['name']);
 
-    var name = el.querySelector('name').textContent;
-    var icon = el.querySelector('Icon').querySelector('href').textContent;
+    var icon = /** @type {string} */ (obj['Icon']['href']);
     if (this.assetMap_[icon]) {
       icon = this.assetMap_[icon]; // handle images included in a kmz
     }
 
-    var screenXY = this.parseScreenXY_(el.querySelector('screenXY'));
-    var size = this.parseSizeXY_(el.querySelector('size'));
-
-    var id = this.id_ + this.screenOverlayCount_;
-    this.screenOverlayCount_++;
-
+    var screenXY = this.parseScreenXY_(obj['screenXY']);
+    var size = this.parseSizeXY_(obj['size']);
     if (screenXY && size) {
-      var overlay = {'image': icon,
-        'name': this.rootNode_.getLabel() + ' - ' + name,
-        'id': id,
-        'size': size,
-        'xy': screenXY,
-        'show-hide': true};
-      os.ui.launchScreenOverlay(overlay);
-      return id;
+      var feature = new ol.Feature();
+      this.setFeatureId_(feature);
+
+      if (obj[os.data.RecordField.TIME]) {
+        feature.set(os.data.RecordField.TIME, obj[os.data.RecordField.TIME], true);
+      }
+
+      var overlayOptions = /** @type {!osx.window.ScreenOverlayOptions} */ ({
+        id: feature.getId(),
+        name: this.rootNode_.getLabel() + ' - ' + name,
+        image: icon,
+        size: size,
+        xy: screenXY,
+        showHide: true
+      });
+
+      var node = new plugin.file.kml.ui.KMLNode();
+      node.setFeature(feature);
+      node.setOverlayOptions(overlayOptions);
+
+      return node;
     }
   }
 
@@ -1339,45 +1282,41 @@ plugin.file.kml.KMLParser.prototype.readScreenOverlay_ = function(el) {
 
 /**
  * Parse XY attributes from a screenXY element and return an object with more useful location coordinates
- * @param {Element} el The XML element
- * @return {?{x: (string|number), y: (string|number)}} an object with an x and y
- * attribute representing location in pixels
+ * @param {Object} obj The XY options.
+ * @return {Array<string|number>} An array with x/y values representing location in pixels.
  * @private
  */
-plugin.file.kml.KMLParser.prototype.parseScreenXY_ = function(el) {
-  if (el) {
-    var attr = el.attributes;
-    if (attr && attr.getNamedItem('x') && attr.getNamedItem('y')) {
-      var xvalue = attr.getNamedItem('x').value;
-      var xunits = attr.getNamedItem('xunits').value;
-      var yvalue = attr.getNamedItem('y').value;
-      var yunits = attr.getNamedItem('yunits').value;
+plugin.file.kml.KMLParser.prototype.parseScreenXY_ = function(obj) {
+  if (obj && obj['x'] != null && obj['y'] != null) {
+    var xvalue = /** @type {number} */ (obj['x']);
+    var yvalue = /** @type {number} */ (obj['y']);
+    var xunits = /** @type {string} */ (obj['xunits']);
+    var yunits = /** @type {string} */ (obj['yunits']);
 
-      var mapSize = os.MapContainer.getInstance().getMap().getSize();
-      var xy = {x: 0, y: 0};
+    var xy = [0, 0];
+    var mapSize = os.MapContainer.getInstance().getMap().getSize();
 
-      if (xunits == 'fraction') {
-        if (xvalue == 0.5) {
-          xy.x = 'center';
-        } else {
-          xy.x = mapSize[0] * xvalue;
-        }
+    if (xunits == 'fraction') {
+      if (xvalue == 0.5) {
+        xy[0] = 'center';
       } else {
-        xy.x = xvalue;
+        xy[0] = mapSize[0] * xvalue;
       }
-
-      if (yunits == 'fraction') {
-        if (yvalue == 0.5) {
-          xy.y = 'center';
-        } else {
-          xy.y = mapSize[1] - (mapSize[1] * yvalue);
-        }
-      } else {
-        xy.y = yvalue;
-      }
-
-      return xy;
+    } else {
+      xy[0] = xvalue;
     }
+
+    if (yunits == 'fraction') {
+      if (yvalue == 0.5) {
+        xy[1] = 'center';
+      } else {
+        xy[1] = mapSize[1] - (mapSize[1] * yvalue);
+      }
+    } else {
+      xy[1] = yvalue;
+    }
+
+    return xy;
   }
 
   return null;
@@ -1386,46 +1325,43 @@ plugin.file.kml.KMLParser.prototype.parseScreenXY_ = function(el) {
 
 /**
  * Parse XY attributes from a size element and return an object with more sizing for our overlay
- * @param {Element} el The XML element
- * @return {?{x: number, y: number}} an object with an x and y attribute representing size in pixels
+ * @param {Object} obj The XY options.
+ * @return {Array<string|number>} An array with x/y values representing size in pixels.
  * @private
  */
-plugin.file.kml.KMLParser.prototype.parseSizeXY_ = function(el) {
-  if (el) {
-    var attr = el.attributes;
-    if (attr && attr.getNamedItem('x') && attr.getNamedItem('y')) {
-      var xvalue = attr.getNamedItem('x').value;
-      var xunits = attr.getNamedItem('xunits').value;
-      var yvalue = attr.getNamedItem('y').value;
-      var yunits = attr.getNamedItem('yunits').value;
+plugin.file.kml.KMLParser.prototype.parseSizeXY_ = function(obj) {
+  if (obj && obj['x'] != null && obj['y'] != null) {
+    var xvalue = /** @type {number} */ (obj['x']);
+    var yvalue = /** @type {number} */ (obj['y']);
+    var xunits = /** @type {string} */ (obj['xunits']);
+    var yunits = /** @type {string} */ (obj['yunits']);
 
-      var xy = {x: 0, y: 0};
-      var mapSize = os.MapContainer.getInstance().getMap().getSize();
+    var xy = [0, 0];
+    var mapSize = os.MapContainer.getInstance().getMap().getSize();
 
-      if (xunits == 'fraction') {
-        // -1 = use native, 0 = maintain aspect, n = relative to screen size
-        if (xvalue == -1 || xvalue == 0) {
-          // TODO: no easy way of knowing what size the image is... don't set a size
-        } else {
-          xy.x = mapSize[0] * xvalue;
-        }
+    if (xunits == 'fraction') {
+      // -1 = use native, 0 = maintain aspect, n = relative to screen size
+      if (xvalue == -1 || xvalue == 0) {
+        // TODO: no easy way of knowing what size the image is... don't set a size
       } else {
-        xy.x = xvalue;
+        xy[0] = mapSize[0] * xvalue;
       }
-
-      if (yunits == 'fraction') {
-        // -1 = use native, 0 = maintain aspect, n = relative to screen size
-        if (yvalue == -1 || yvalue == 0) {
-          // TODO: no easy way of knowing what size the image is... don't set a size
-        } else {
-          xy.y = mapSize[1] * yvalue;
-        }
-      } else {
-        xy.y = yvalue;
-      }
-
-      return xy;
+    } else {
+      xy[0] = xvalue;
     }
+
+    if (yunits == 'fraction') {
+      // -1 = use native, 0 = maintain aspect, n = relative to screen size
+      if (yvalue == -1 || yvalue == 0) {
+        // TODO: no easy way of knowing what size the image is... don't set a size
+      } else {
+        xy[1] = mapSize[1] * yvalue;
+      }
+    } else {
+      xy[1] = yvalue;
+    }
+
+    return xy;
   }
 
   return null;
@@ -1737,6 +1673,25 @@ plugin.file.kml.KMLParser.prototype.getStyleId = function(id) {
     id = id.substring(x + 1);
   }
   return id;
+};
+
+
+/**
+ * Set the ID on a KML feature.
+ * @param {!ol.Feature} feature The feature.
+ * @private
+ */
+plugin.file.kml.KMLParser.prototype.setFeatureId_ = function(feature) {
+  // files containing duplicate network links will create features with duplicate id's. this allows us to merge
+  // features on refresh, while still creating an id that's unique from other network links (which will use a
+  // different parser)
+  var baseId = ol.getUid(feature);
+  var id = this.id_ + '#' + baseId;
+  feature.setId(id);
+
+  if (feature.get(os.Fields.ID) == null) {
+    feature.set(os.Fields.ID, baseId, true);
+  }
 };
 
 

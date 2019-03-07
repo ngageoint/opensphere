@@ -91,10 +91,7 @@ os.ui.menu.MenuButtonCtrl.prototype.disposeInternal = function() {
 os.ui.menu.MenuButtonCtrl.prototype.openMenu = function() {
   if (this.menu) {
     // To be consistent with bs4, if the menu is open and you click it again, close the menu
-    if (this.scope['menu'] ||
-        this.element.hasClass('active') ||
-        this.element.hasClass('active-remove') ||
-        this.element.hasClass('active-remove-active')) {
+    if (this.scope['menu']) {
       this.scope['menu'] = false;
       this.element.blur();
       this.menu.close();
