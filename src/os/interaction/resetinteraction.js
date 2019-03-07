@@ -45,6 +45,10 @@ os.interaction.Reset.handleEvent = function(mapBrowserEvent) {
         os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.RESET_VIEW_KB, 1);
         os.MapContainer.getInstance().resetView();
         break;
+      case goog.events.KeyCodes.R:
+        os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.RESET_ROTATION_KB, 1);
+        os.MapContainer.getInstance().resetRotation();
+        break;
       case goog.events.KeyCodes.N:
         os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.RESET_ROLL_KB, 1);
         os.MapContainer.getInstance().resetRoll();
@@ -52,10 +56,6 @@ os.interaction.Reset.handleEvent = function(mapBrowserEvent) {
       case goog.events.KeyCodes.U:
         os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.RESET_TILT_KB, 1);
         os.MapContainer.getInstance().resetTilt();
-        break;
-      case goog.events.KeyCodes.R:
-        os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.RESET_ROTATION_KB, 1);
-        os.MapContainer.getInstance().resetRotation();
         break;
       default:
         stopEvent = false;

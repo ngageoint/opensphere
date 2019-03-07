@@ -292,7 +292,8 @@ plugin.cesium.Camera.prototype.flyTo = function(options) {
     altitude = Math.min(altitude, maxAltitude);
 
     var heading = options.heading != null ? ol.math.toRadians(options.heading) : this.cam_.heading;
-    var pitch = options.pitch != null ? ol.math.toRadians(options.pitch) : this.cam_.pitch;
+    // KML standard pitch is 0 to look directly at the Earth, Cesium is -90
+    var pitch = options.pitch != null ? ol.math.toRadians(options.pitch - 90) : this.cam_.pitch;
     var roll = options.roll != null ? ol.math.toRadians(options.roll) : this.cam_.roll;
 
     if (options.positionCamera) {
