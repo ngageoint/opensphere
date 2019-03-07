@@ -218,6 +218,19 @@ os.metrics.keys.BROWSER = 'browser';
 
 
 /**
+ * Create a metric key based on the OS version
+ * @enum {string}
+ */
+os.metrics.keys.OS = {
+  WINDOWS: 'os.windows',
+  LINUX: 'os.linux',
+  MAC: 'os.mac',
+  IOS: 'os.ios',
+  ANDROID: 'os.android'
+};
+
+
+/**
  * Layer metrics
  * @enum {string}
  */
