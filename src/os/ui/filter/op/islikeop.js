@@ -26,9 +26,6 @@ os.ui.filter.op.IsLike.prototype.getEvalExpression = function(varName, literal) 
     // make the string safe for use in a RegExp
     var reStr = os.ui.filter.string.escapeRegExp(literal);
 
-    // and don't allow it to terminate the double quoted string
-    reStr = os.ui.filter.string.escapeString(reStr);
-
     // test the expression, case insensitive
     return '/^' + reStr + '$/i.test(' + varName + ')';
   }
