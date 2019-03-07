@@ -6,6 +6,7 @@ goog.require('goog.log.Logger');
 goog.require('goog.object');
 goog.require('ol.array');
 goog.require('os.events.PropertyChangeEvent');
+goog.require('os.layer.AnimationOverlay');
 goog.require('os.layer.Image');
 goog.require('os.object');
 goog.require('os.source.PropertyChange');
@@ -353,7 +354,7 @@ plugin.file.kml.KMLSource.prototype.addNodes = function(nodes, opt_recurse) {
         images.push(image);
       }
 
-      var overlay = node.getOverlay();
+      var overlay = node.getOverlayId();
       if (overlay) {
         id = /** @type {string} */ (node.getId());
         this.nodeMap_[id] = node;
@@ -540,6 +541,13 @@ plugin.file.kml.KMLSource.prototype.processImmediate = function(feature) {
 
   plugin.file.kml.KMLSource.base(this, 'processImmediate', feature);
 
+  if (this.animationOverlay) {
+    var node = this.getFeatureNode(feature);
+    if (node) {
+      node.setAnimationState(false);
+    }
+  }
+
   this.scheduleUpdateFromNodes();
 };
 
@@ -574,22 +582,6 @@ plugin.file.kml.KMLSource.prototype.updateVisibilityFromNodes = function() {
       }
     } else {
       goog.log.warning(this.log, 'Feature [' + id + '] is not in the KML tree!');
-    }
-  }
-
-  for (var i = 0, n = this.images.length; i < n; i++) {
-    var image = this.images[i];
-    var id = /** @type {string} */ (image.getId());
-    node = this.nodeMap_[id];
-
-    if (node) {
-      if (node.getState() == os.structs.TriState.ON) {
-        image.setLayerVisible(true);
-      } else if (node.getState() == os.structs.TriState.OFF) {
-        image.setLayerVisible(false);
-      }
-    } else {
-      goog.log.warning(this.log, 'Image [' + id + '] is not in the KML tree!');
     }
   }
 
@@ -760,3 +752,74 @@ plugin.file.kml.KMLSource.prototype.restore = function(config) {
     this.setMinRefreshPeriod(config['minRefreshPeriod']);
   }
 };
+
+
+/**
+ * Creates a basic feature overlay used to animate features on the map.
+ * @protected
+ * @override
+ */
+plugin.file.kml.KMLSource.prototype.createAnimationOverlay = function() {
+  plugin.file.kml.KMLSource.base(this, 'createAnimationOverlay');
+
+  // hide all features
+  var features = this.getFeatures();
+  for (var i = 0, n = features.length; i < n; i++) {
+    var node = this.getFeatureNode(features[i]);
+    if (node) {
+      node.setAnimationState(false);
+    }
+  }
+};
+
+
+/**
+ * Updates features displayed by the animation overlay if it exists.
+ * @protected
+ * @override
+ */
+plugin.file.kml.KMLSource.prototype.updateAnimationOverlay = function() {
+  if (this.animationOverlay) {
+    // hide features from the previous animation frame
+    var overlayFeatures = this.animationOverlay.getFeatures();
+    for (var i = 0, n = overlayFeatures.length; i < n; i++) {
+      var node = this.getFeatureNode(overlayFeatures[i]);
+      if (node) {
+        node.setAnimationState(false);
+      }
+    }
+  }
+
+  plugin.file.kml.KMLSource.base(this, 'updateAnimationOverlay');
+
+  if (this.animationOverlay) {
+    // show features in the current animation frame
+    var overlayFeatures = this.animationOverlay.getFeatures();
+    for (var i = 0, n = overlayFeatures.length; i < n; i++) {
+      var node = this.getFeatureNode(overlayFeatures[i]);
+      if (node) {
+        node.setAnimationState(true);
+      }
+    }
+  }
+};
+
+
+/**
+ * Disposes of the animation overlay and cached features.
+ * @protected
+ * @override
+ */
+plugin.file.kml.KMLSource.prototype.disposeAnimationOverlay = function() {
+  plugin.file.kml.KMLSource.base(this, 'disposeAnimationOverlay');
+
+  // show all features
+  var features = this.getFeatures();
+  for (var i = 0, n = features.length; i < n; i++) {
+    var node = this.getFeatureNode(features[i]);
+    if (node) {
+      node.setAnimationState(true);
+    }
+  }
+};
+

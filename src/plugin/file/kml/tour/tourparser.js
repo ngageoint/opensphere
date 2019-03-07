@@ -88,7 +88,7 @@ plugin.file.kml.tour.parseFlyTo_ = function(node, objectStack) {
     // translate KML tilt to Cesium pitch:
     //   Cesium pitch: -90 is perpendicular to the globe, 0 is parallel.
     //   KML pitch: 0 is perpendicular to the globe, 90 is parallel.
-    var pitch = /** @type {number|undefined} */ (viewProps['tilt'] || 0) - 90;
+    var pitch = /** @type {number|undefined} */ (viewProps['tilt'] || 0);
 
     // TODO: implement support for altitudeMode in camera fly to
     var options = /** @type {!osx.map.FlyToOptions} */ ({

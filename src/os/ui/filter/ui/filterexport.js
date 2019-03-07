@@ -24,6 +24,7 @@ os.ui.filter.ui.FilterExportChoice = {
 os.ui.filter.ui.filterExportDirective = function() {
   return {
     restrict: 'E',
+    replace: true,
     scope: {
       'confirm': '=',
       'mode': '='
