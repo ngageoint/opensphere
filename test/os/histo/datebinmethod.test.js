@@ -39,7 +39,7 @@ describe('os.histo.DateBinMethod', function() {
     // test.
     var deprecatedItems = [
       {field: '01/30/2014 12:34:56 UTC'},
-      {field: d.toString()},
+      {field: d.toString()}
     ];
 
     for (var i = 0, n = deprecatedItems.length; i < n; i++) {
@@ -54,8 +54,7 @@ describe('os.histo.DateBinMethod', function() {
 
     // Values that are unsupported by moment
     var unsupportedItems = [
-      {field: '30/01/2014 12:34:56 UTC'},
-      {field: d.getTime()}
+      {field: '30/01/2014 12:34:56 UTC'}
     ];
 
     for (var i = 0, n = unsupportedItems.length; i < n; i++) {
