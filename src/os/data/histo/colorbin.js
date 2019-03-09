@@ -9,9 +9,10 @@ goog.require('os.style');
 
 
 /**
- * Histogram bin that tracks the colors of features in the bin.
+ * Histogram bin that tracks the colors of items in the bin.
  * @param {string} baseColor The base color of the layer represented by this bin
- * @extends {os.histo.Bin<!ol.Feature>}
+ * @extends {os.histo.Bin<T>}
+ * @template T
  * @constructor
  */
 os.data.histo.ColorBin = function(baseColor) {
@@ -25,7 +26,7 @@ os.data.histo.ColorBin = function(baseColor) {
   this.baseColor_ = os.color.toHexString(baseColor);
 
   /**
-   * Number of features in the bin with a given color.
+   * Number of items in the bin with a given color.
    * @type {Object<string, number>}
    * @private
    */
@@ -89,15 +90,26 @@ os.data.histo.ColorBin.prototype.removeItem = function(item) {
 
 /**
  * Get the color of an item.
- * @param {!ol.Feature} item The item.
+ * @param {T} item The item.
  * @return {string|undefined} The item color, or null if no custom color is defined.
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
 os.data.histo.ColorBin.prototype.getItemColor = function(item) {
-  // check if the feature has a color override
-  var color = /** @type {string|undefined} */ (os.feature.getColor(item));
-  return color || undefined;
+  // check for a color override
+  if (os.instanceOf(item, ol.Feature.NAME)) {
+    return /** @type {string|undefined} */ (os.feature.getColor(/** @type {!ol.Feature} */ (item)));
+  } else {
+    item = /** @type {Object<string, *>} */ (item);
+    if (item.getColor != null) {
+      return /** @type {string|undefined} */ (item.getColor());
+    } else if (item['color'] != null) {
+      return /** @type {string|undefined} */ (item['color']);
+    } else if (item.color != null) {
+      return /** @type {string|undefined} */ (item.color);
+    }
+  }
+  return undefined;
 };
 
 

@@ -100,6 +100,14 @@ os.histo.UniqueBinMethod.prototype.setField = function(field) {
 /**
  * @inheritDoc
  */
+os.histo.UniqueBinMethod.prototype.getValueFunction = function() {
+  return this.valueFunction;
+};
+
+
+/**
+ * @inheritDoc
+ */
 os.histo.UniqueBinMethod.prototype.setValueFunction = function(func) {
   this.valueFunction = func;
 };
@@ -124,7 +132,13 @@ os.histo.UniqueBinMethod.prototype.getBinLabel = function(item) {
 /**
  * @inheritDoc
  */
-os.histo.UniqueBinMethod.prototype.getLabelForKey = function(key) {
+os.histo.UniqueBinMethod.prototype.getLabelForKey = function(key, opt_secondary, opt_smallLabel) {
+  if (typeof key === 'string' && key.indexOf(os.data.xf.DataModel.SEPARATOR) >= 0) {
+    // this key is in a bin that represents the intersection of two values; split them apart with the separator
+    key = !opt_secondary ? key.split(os.data.xf.DataModel.SEPARATOR)[0] :
+        key.split(os.data.xf.DataModel.SEPARATOR)[1];
+  }
+
   if (Number(key) === os.histo.NumericBinMethod.MAGIC_EMPTY) {
     return 'No ' + this.field;
   }
@@ -162,6 +176,7 @@ os.histo.UniqueBinMethod.prototype.persist = function(opt_to) {
   opt_to['type'] = this.getBinType();
   opt_to['field'] = this.getField();
   opt_to['arrayKeys'] = this.getArrayKeys();
+  opt_to['valueFunction'] = this.getValueFunction();
   return opt_to;
 };
 
@@ -177,6 +192,10 @@ os.histo.UniqueBinMethod.prototype.restore = function(config) {
   var arrayKeys = /** @type {boolean|string|undefined} */ (config['arrayKeys']);
   if (typeof arrayKeys === 'boolean' || typeof arrayKeys === 'string') {
     this.setArrayKeys(arrayKeys);
+  }
+  var valueFunction = /** @type {function(T, string):*|undefined} */ (config['valueFunction']);
+  if (typeof valueFunction === 'function') {
+    this.setValueFunction(valueFunction);
   }
 };
 
