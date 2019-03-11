@@ -23,6 +23,7 @@ goog.require('os.geom.GeometryField');
 goog.require('os.implements');
 goog.require('os.layer.ILayer');
 goog.require('os.map');
+goog.require('os.query');
 goog.require('os.style.label');
 goog.require('os.webgl');
 goog.require('plugin.cesium');
@@ -1651,6 +1652,11 @@ plugin.cesium.sync.FeatureConverter.prototype.olGeometryToCesium = function(feat
 
   if (geometry instanceof os.geom.Ellipse) {
     geomType = 'ellipse';
+  }
+
+  if (os.query.isWorldQuery(geometry)) {
+    // do not show these
+    return;
   }
 
   if (primitive && geomType != ol.geom.GeometryType.GEOMETRY_COLLECTION) {
