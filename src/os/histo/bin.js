@@ -13,15 +13,13 @@ goog.require('os.histo.Result');
 os.histo.Bin = function() {
   /**
    * @type {string|number}
-   * @private
    */
-  this.key_ = '';
+  this.key = '';
 
   /**
    * @type {string}
-   * @private
    */
-  this.label_ = '';
+  this.label = '';
 
   /**
    * @type {?Array.<!os.histo.Result.<T>>}
@@ -31,7 +29,6 @@ os.histo.Bin = function() {
 
   /**
    * @type {Array.<T>}
-   * @protected
    */
   this.items = [];
 
@@ -96,7 +93,7 @@ os.histo.Bin.prototype.getItems = function() {
  * @return {string|number}
  */
 os.histo.Bin.prototype.getKey = function() {
-  return this.key_;
+  return this.key;
 };
 
 
@@ -105,7 +102,7 @@ os.histo.Bin.prototype.getKey = function() {
  * @param {string|number} value
  */
 os.histo.Bin.prototype.setKey = function(value) {
-  this.key_ = value;
+  this.key = value;
 };
 
 
@@ -114,7 +111,7 @@ os.histo.Bin.prototype.setKey = function(value) {
  * @return {string}
  */
 os.histo.Bin.prototype.getLabel = function() {
-  return this.label_;
+  return this.label;
 };
 
 
@@ -123,7 +120,7 @@ os.histo.Bin.prototype.getLabel = function() {
  * @param {string} label
  */
 os.histo.Bin.prototype.setLabel = function(label) {
-  this.label_ = label;
+  this.label = label;
   this['id'] = label;
 };
 

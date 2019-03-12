@@ -19,6 +19,7 @@ goog.require('os.ui.im.basicInfoDirective');
 os.ui.buffer.bufferFormDirective = function() {
   return {
     restrict: 'E',
+    replace: true,
     scope: {
       'config': '=',
       'showSourcePicker': '=',

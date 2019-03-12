@@ -375,6 +375,21 @@ osx.window.ConfirmColumnOptions;
 
 
 /**
+ * @typedef {{
+ *   id: string,
+ *   name: string,
+ *   image: string,
+ *   size: Array<string|number>,
+ *   xy: Array<string|number>,
+ *
+ *   showClose: (boolean|undefined),
+ *   showHide: (boolean|undefined)
+ * }}
+ */
+osx.window.ScreenOverlayOptions;
+
+
+/**
  * Namespace.
  * @type {Object}
  */

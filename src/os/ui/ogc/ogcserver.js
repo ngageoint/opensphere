@@ -906,7 +906,7 @@ os.ui.ogc.OGCServer.prototype.parseWfsCapabilities = function(response, uri) {
 
       if (prefix) {
         var ns = 'xmlns:' + prefix;
-        var nsContent = nameNode.getAttribute(ns);
+        var nsContent = nameNode.lookupNamespaceURI(prefix);
         if (nsContent) {
           nameSpace = ns + '="' + nsContent + '"';
         }

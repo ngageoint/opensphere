@@ -53,7 +53,7 @@
     <div class="d-flex flex-fill mt-1">
       <slicktree class="border col p-0 o-add-data__slicktree" x-data="providers" checkbox-class="c-toggle-switch" checkbox-tooltip="Activates or deactivates the layer"
         selected="selected" disable-folders="true"></slicktree>
-      <div class="border col ml-1 p-2 u-overflow-y-auto" ng-bind-html="addData.getInfo()"></div>
+      <div class="border col ml-1 p-2 u-overflow-y-auto" bind-directive="addData.getInfo()"></div>
     </div>
   </div>
 

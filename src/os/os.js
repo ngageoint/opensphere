@@ -78,6 +78,27 @@ os.browserVersion = function() {
 
 
 /**
+ * Return the browser type/version, more browser checks (Android) if desired
+ * @return {string}
+ */
+os.operatingSystem = function() {
+  var key = 'os.UNKNOWN';
+  if (goog.userAgent.LINUX) {
+    key = os.metrics.keys.OS.LINUX;
+  } else if (goog.userAgent.WINDOWS) {
+    key = os.metrics.keys.OS.WINDOWS;
+  } else if (goog.userAgent.MAC) {
+    key = os.metrics.keys.OS.MAC;
+  } else if (goog.userAgent.IOS) {
+    key = os.metrics.keys.OS.IOS;
+  } else if (goog.userAgent.ANDROID) {
+    key = os.metrics.keys.OS.ANDROID;
+  }
+  return key;
+};
+
+
+/**
  * Debounces the calls of a function by the amount specified in wait.
  * @param {function(...*)} func The function to call
  * @param {number} wait Wait time in ms
