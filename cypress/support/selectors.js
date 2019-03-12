@@ -129,6 +129,8 @@ exports.Timeline = {
   START_DATE_TIME: '.order-0',
   PLAY_BUTTON: '[title=\'Toggle animation of tiles/features on the map\']',
   PAUSE_BUTTON: '[title=\'Toggle animation of tiles/features on the map\']',
+  NEXT_BUTTON: '[title=\'Next frame\']',
+  PREV_BUTTON: '[title=\'Previous frame\']',
   RECORD_BUTTON: '#timeline-record-button',
   END_DATE_TIME: '.order-md-2'
 };
@@ -604,6 +606,22 @@ exports.importGeoJSONDialog = {
   DIALOG: '[label=\'Import GeoJSON\']',
   DIALOG_HEADER: '[title=\'Import GeoJSON\']',
   DIALOG_CLOSE: '[label=\'Import GeoJSON\'] .close',
+  timeTab: {
+    // TODO: Finish adding selectors
+  },
+  optionsTab: {
+    // TODO: Finish adding selectors
+  },
+  PREV_BUTTON: '[title=\'Previous step\']',
+  NEXT_BUTTON: '[title=\'Next step\']',
+  DONE_BUTTON: '[ng-click=\'wiz.accept()\']',
+  CANCEL_BUTTON: '[ng-click=\'wiz.cancel()\']'
+};
+
+exports.importCSVDialog = {
+  DIALOG: '[label=\'CSV Import\']',
+  DIALOG_HEADER: '[title=\'CSV Import\']',
+  DIALOG_CLOSE: '[label=\'CSV Import\'] .close',
   timeTab: {
     // TODO: Finish adding selectors
   },

@@ -57,6 +57,13 @@ os.webgl.IWebGLCamera.prototype.setAltitude;
 
 
 /**
+ * Get the center of the camera view.
+ * @return {ol.Coordinate|undefined} The center, in degrees.
+ */
+os.webgl.IWebGLCamera.prototype.getCenter;
+
+
+/**
  * Get the camera view extent.
  * @return {ol.Extent|undefined} The extent in degrees or undefined if the ellipsoid is not visible.
  */

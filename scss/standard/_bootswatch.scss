@@ -7,7 +7,7 @@
     width: $font-size-base;
   }
 
-  .custom-control-label::after {
+  .custom-control-label::before {
     border: 1px solid $input-border-color;
     border-radius: .125rem;
   }
@@ -25,10 +25,4 @@
 
 .pagination {
   margin: .5rem;
-}
-
-.modal-header {
-  .close {
-    margin: inherit;
-  }
 }

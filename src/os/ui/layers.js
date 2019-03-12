@@ -8,11 +8,9 @@ goog.require('os.config.Settings');
 goog.require('os.data.LayerNode');
 goog.require('os.data.LayerTreeSearch');
 goog.require('os.data.groupby.DateGroupBy');
-goog.require('os.data.groupby.FavoriteGroupBy');
 goog.require('os.data.groupby.LayerProviderGroupBy');
 goog.require('os.data.groupby.LayerTypeGroupBy');
 goog.require('os.data.groupby.LayerZOrderGroupBy');
-goog.require('os.data.groupby.TagListGroupBy');
 goog.require('os.defines');
 goog.require('os.events.LayerEventType');
 goog.require('os.layer.ICustomLayerVisible');
@@ -139,8 +137,6 @@ os.ui.LayersCtrl.SKIP_TOGGLE_FUNCS = [];
  * @type {!Object<string, os.data.groupby.INodeGroupBy>}
  */
 os.ui.LayersCtrl.VIEWS = {
-  'Favorites': new os.data.groupby.FavoriteGroupBy(),
-  'INT': new os.data.groupby.TagListGroupBy(true),
   'Recently Updated': new os.data.groupby.DateGroupBy(true),
   'Source': new os.data.groupby.LayerProviderGroupBy(),
   'Tag': new os.ui.data.groupby.TagGroupBy(true),

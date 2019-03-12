@@ -61,6 +61,14 @@ goog.inherits(os.data.xf.DataModel, goog.events.EventTarget);
 
 
 /**
+ * Separator for multidimensional grouping
+ * @type {string}
+ * @const
+ */
+os.data.xf.DataModel.SEPARATOR = '$%';
+
+
+/**
  * Logger
  * @type {goog.log.Logger}
  * @private

@@ -49,7 +49,9 @@ os.histo.IBinMethod.prototype.getBinLabel;
 
 /**
  * Gets the bin label the given key.
- * @param {string|number} item
+ * @param {string|number} key
+ * @param {boolean=} opt_secondary
+ * @param {boolean=} opt_smallLabel
  * @return {string}
  */
 os.histo.IBinMethod.prototype.getLabelForKey;
@@ -60,6 +62,13 @@ os.histo.IBinMethod.prototype.getLabelForKey;
  * @return {string}
  */
 os.histo.IBinMethod.prototype.getBinType;
+
+
+/**
+ * Gets the value accessor function
+ * @return {?function(T, string):*}
+ */
+os.histo.IBinMethod.prototype.getValueFunction;
 
 
 /**

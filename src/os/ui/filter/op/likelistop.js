@@ -23,13 +23,9 @@ goog.inherits(os.ui.filter.op.LikeList, os.ui.filter.op.InList);
 os.ui.filter.op.LikeList.prototype.getEvalExpression = function(varName, literal) {
   var list = this.getValuesFromLiteral(literal);
   if (list.length > 0) {
-    // escape strings and wrap them in double quotes
+    // escape strings so they can be safely used in a RegExp
     list = list.map(function(str) {
-      // make the string safe for use in a RegExp
-      var reStr = os.ui.filter.string.escapeRegExp(str);
-
-      // and don't allow it to terminate the double quoted string
-      return os.ui.filter.string.escapeString(reStr);
+      return os.ui.filter.string.escapeRegExp(str);
     });
 
     return '/^(' + list.join('|') + ')$/i.test(' + varName + ')';
