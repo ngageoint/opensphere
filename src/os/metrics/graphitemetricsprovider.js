@@ -3,7 +3,6 @@ goog.require('goog.Timer');
 goog.require('goog.events.Event');
 goog.require('goog.events.EventTarget');
 goog.require('goog.log');
-goog.require('os.config.Settings');
 goog.require('os.metrics.IMetricServiceProvider');
 goog.require('os.net.IDataFormatter');
 goog.require('os.net.Request');
@@ -118,6 +117,7 @@ os.metrics.GraphiteMetricsProvider.prototype.onTimer_ = function() {
     request.load();
   }
 };
+
 
 /**
  * Publish metrics to server without waiting for the timer

@@ -50,16 +50,6 @@ os.CameraMode = {
 
 
 /**
- * Modes for flying to positions on the map.
- * @enum {string}
- */
-os.FlightMode = {
-  BOUNCE: 'bounce',
-  SMOOTH: 'smooth'
-};
-
-
-/**
  * Selector for the OpenLayers map canvas.
  * @type {string}
  * @const

@@ -11,7 +11,7 @@ goog.require('ol.color');
 goog.require('os.color');
 goog.require('os.data.RecordField');
 goog.require('os.events.PropertyChangeEvent');
-goog.require('os.feature');
+goog.require('os.math.Units');
 goog.require('os.object');
 goog.require('os.style.StyleField');
 goog.require('os.style.StyleType');

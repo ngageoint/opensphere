@@ -1,7 +1,6 @@
 goog.provide('os.geo');
 goog.provide('os.geo.ParseConf');
 
-goog.require('goog.math');
 goog.require('goog.string');
 goog.require('ol.geom.GeometryType');
 goog.require('ol.geom.LineString');
@@ -10,6 +9,7 @@ goog.require('os.array');
 goog.require('os.extent');
 goog.require('os.geom.GeometryField');
 goog.require('os.mixin.geometry');
+goog.require('os.query.utils');
 
 
 /**
@@ -2016,7 +2016,7 @@ os.geo.normalizePolygons = function(polys, opt_to) {
  */
 os.geo.normalizeGeometryCoordinates = function(geometry, opt_to) {
   if (geometry) {
-    if (geometry.get(os.geom.GeometryField.NORMALIZED) || os.query.isWorldQuery(geometry)) {
+    if (geometry.get(os.geom.GeometryField.NORMALIZED) || os.query.utils.isWorldQuery(geometry)) {
       return false;
     }
 

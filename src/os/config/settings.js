@@ -23,6 +23,7 @@ goog.require('os.config.storage.ISettingsStorage');
 goog.require('os.config.storage.SettingsStorageLoader');
 goog.require('os.config.storage.SettingsStorageRegistry');
 goog.require('os.events.SettingChangeEvent');
+goog.require('os.metrics.Metrics');
 goog.require('os.net.Request');
 goog.require('os.object');
 goog.require('os.storage');
@@ -39,6 +40,7 @@ goog.require('os.xt.Peer');
  * }}
  */
 os.config.SettingsMessage;
+
 
 
 /**
@@ -321,6 +323,7 @@ os.config.Settings.prototype.onReload_ = function(config) {
   }
 
   this.toNotifyInternal_ = [];
+  this.dispatchEvent(new goog.events.Event(os.config.EventType.RELOADED));
 };
 
 

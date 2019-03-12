@@ -125,6 +125,7 @@ os.geo.jsts.convertFromCoordinate = function(coord) {
 };
 
 
+
 /**
  * Utility class to translate between OL3 and JSTS geometries. This was copied from JSTS so the instanceof calls would
  * still work with compiled code.

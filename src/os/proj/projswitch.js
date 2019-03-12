@@ -16,6 +16,7 @@ goog.require('os.command.SequenceCommand');
 goog.require('os.command.SwitchView');
 goog.require('os.command.ToggleWebGL');
 goog.require('os.command.TransformVectors');
+goog.require('os.data.ActivateDescriptor');
 goog.require('os.data.LayerSyncDescriptor');
 goog.require('os.map');
 

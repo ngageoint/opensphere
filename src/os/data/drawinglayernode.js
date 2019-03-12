@@ -7,6 +7,7 @@ goog.require('os.data.DrawingFeatureNode');
 goog.require('os.data.LayerNode');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.fn');
+goog.require('os.query.AreaManager');
 
 
 
