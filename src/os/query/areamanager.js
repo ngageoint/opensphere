@@ -14,6 +14,8 @@ goog.require('os.config.Settings');
 goog.require('os.data.CollectionManager');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.map');
+goog.require('os.mixin.object');
+goog.require('os.query');
 goog.require('os.query.BaseAreaManager');
 goog.require('os.query.utils');
 goog.require('os.ui.window');
