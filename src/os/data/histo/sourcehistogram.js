@@ -748,7 +748,11 @@ os.data.histo.SourceHistogram.prototype.reduceRemove = function(bin, item) {
  * @protected
  */
 os.data.histo.SourceHistogram.prototype.reduceInit = function() {
-  return new os.data.histo.ColorBin(this.source.getColor());
+  var bin = new os.data.histo.ColorBin(this.source.getColor());
+  bin.setColorFunction(function(item) {
+    return /** @type {string|undefined} */ (os.feature.getColor(/** @type {!ol.Feature} */ (item)));
+  });
+  return bin;
 };
 
 
