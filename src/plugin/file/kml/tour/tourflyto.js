@@ -3,8 +3,10 @@ goog.provide('plugin.file.kml.tour.FlyTo');
 goog.require('goog.Promise');
 goog.require('ol.proj');
 goog.require('os.map');
+goog.require('os.map.FlightMode');
 goog.require('os.proj');
 goog.require('plugin.file.kml.tour.Wait');
+
 
 
 /**
@@ -17,8 +19,8 @@ plugin.file.kml.tour.FlyTo = function(options) {
   plugin.file.kml.tour.FlyTo.base(this, 'constructor', options.duration || plugin.file.kml.tour.FlyTo.DEFAULT_DURATION);
 
   // only 'smooth' and 'bounce' are allowed values, so if it isn't set to smooth force the default of bounce
-  if (options.flightMode !== os.FlightMode.SMOOTH) {
-    options.flightMode = os.FlightMode.BOUNCE;
+  if (options.flightMode !== os.map.FlightMode.SMOOTH) {
+    options.flightMode = os.map.FlightMode.BOUNCE;
   }
 
   /**

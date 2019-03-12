@@ -4,10 +4,12 @@ goog.require('os.Fields');
 goog.require('os.feature');
 goog.require('os.geo');
 goog.require('os.im.mapping');
+goog.require('os.im.mapping.AltMappingId');
 goog.require('os.im.mapping.MappingRegistry');
 goog.require('os.im.mapping.RenameMapping');
 goog.require('os.math');
 goog.require('os.math.Units');
+
 
 
 /**
@@ -93,7 +95,7 @@ goog.inherits(os.im.mapping.AltMapping, os.im.mapping.RenameMapping);
  * @type {string}
  * @const
  */
-os.im.mapping.AltMapping.ID = 'Altitude';
+os.im.mapping.AltMapping.ID = os.im.mapping.AltMappingId;
 
 
 // Register the mapping.

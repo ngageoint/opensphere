@@ -10,7 +10,6 @@ goog.require('os.command.SequenceCommand');
 goog.require('os.data.AreaNode');
 goog.require('os.defines');
 goog.require('os.fn');
-goog.require('os.geo');
 goog.require('os.query.BaseAreaManager');
 goog.require('os.query.ui.mergeAreasDirective');
 goog.require('os.query.ui.modifyAreaDirective');

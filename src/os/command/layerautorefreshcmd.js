@@ -1,7 +1,12 @@
 goog.provide('os.command.LayerAutoRefresh');
 
+goog.require('ol.source.Source');
+goog.require('ol.source.UrlTile');
 goog.require('os.command.ICommand');
 goog.require('os.command.State');
+goog.require('os.metrics');
+goog.require('os.metrics.Metrics');
+goog.require('os.source.Vector');
 
 
 
@@ -44,7 +49,7 @@ os.command.LayerAutoRefresh = function(layerId, value) {
 
 /**
  * Get the source from the layer id.
- * @return {os.source.Vector|ol.source.UrlTile}
+ * @return {os.source.Vector|ol.source.Source|ol.source.UrlTile}
  * @protected
  */
 os.command.LayerAutoRefresh.prototype.getSource = function() {
@@ -56,7 +61,8 @@ os.command.LayerAutoRefresh.prototype.getSource = function() {
   }
 
   var source = layer.getSource();
-  if (!(source instanceof os.source.Vector || source instanceof ol.source.UrlTile) || !source.isRefreshEnabled()) {
+  if (!(source instanceof os.source.Vector || source instanceof ol.source.UrlTile) ||
+      !(/** @type {os.source.Vector|ol.source.UrlTile} */ (source).isRefreshEnabled())) {
     this.state = os.command.State.ERROR;
     this.details = 'Source for layer with id "' + this.layerId + '" does not support refresh.';
     return null;
@@ -72,7 +78,7 @@ os.command.LayerAutoRefresh.prototype.getSource = function() {
 os.command.LayerAutoRefresh.prototype.execute = function() {
   this.state = os.command.State.EXECUTING;
 
-  var source = this.getSource();
+  var source = /** @type {os.source.Vector|ol.source.UrlTile} */ (this.getSource());
   if (source) {
     this.oldInterval = source.getRefreshInterval();
 
@@ -92,7 +98,7 @@ os.command.LayerAutoRefresh.prototype.execute = function() {
  */
 os.command.LayerAutoRefresh.prototype.revert = function() {
   this.state = os.command.State.REVERTING;
-  var source = this.getSource();
+  var source = /** @type {os.source.Vector|ol.source.UrlTile} */ (this.getSource());
   if (source) {
     source.setRefreshInterval(this.oldInterval);
 
