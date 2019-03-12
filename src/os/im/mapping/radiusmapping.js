@@ -112,7 +112,7 @@ os.im.mapping.RadiusMapping.prototype.execute = function(item) {
     var current = os.math.parseNumber(os.im.mapping.getItemField(item, this.field));
     if (!isNaN(current)) {
       if (this.units) {
-        current = os.math.convertUnits(current, os.style.DEFAULT_UNITS, this.units);
+        current = os.math.convertUnits(current, os.fields.DEFAULT_RADIUS_UNIT, this.units);
       }
 
       os.im.mapping.setItemField(item, this.toField, current);
