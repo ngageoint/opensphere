@@ -52,21 +52,24 @@ os.ui.Module.directive('checklist', [os.ui.checklistDirective]);
 os.ui.ChecklistCtrl = function($scope, $element, $timeout) {
   /**
    * @type {?angular.Scope}
-   * @private
    */
-  this.scope_ = $scope;
+  this.scope = $scope;
 
   /**
    * @type {?angular.JQLite}
-   * @private
    */
-  this.element_ = $element;
+  this.element = $element;
+
+  /**
+   * @type {?angular.$timeout}
+   */
+  this.timeout = $timeout;
 
   /**
    * @type {boolean}
    */
   this['allCheckbox'] = false;
-  $timeout(function() {
+  this.timeout(function() {
     this.updateAllCheckbox_();
   }.bind(this));
 
@@ -82,8 +85,8 @@ os.ui.ChecklistCtrl = function($scope, $element, $timeout) {
  * @private
  */
 os.ui.ChecklistCtrl.prototype.destroy_ = function() {
-  this.scope_ = null;
-  this.element_ = null;
+  this.scope = null;
+  this.element = null;
 };
 
 
@@ -98,7 +101,7 @@ os.ui.ChecklistCtrl.prototype.onAllowMultipleChange_ = function(newVal, oldVal) 
     // disable all but the first enabled item if multiple items aren't allowed
     var skipFirst = true;
     var changed = false;
-    var items = /** @type {Array<!osx.ChecklistItem>} */ (this.scope_['items']);
+    var items = /** @type {Array<!osx.ChecklistItem>} */ (this.scope['items']);
     for (var i = 0, n = items.length; i < n; i++) {
       if (items[i].enabled && skipFirst) {
         skipFirst = false;
@@ -121,13 +124,13 @@ os.ui.ChecklistCtrl.prototype.onAllowMultipleChange_ = function(newVal, oldVal) 
  * @private
  */
 os.ui.ChecklistCtrl.prototype.emitChangeEvent_ = function() {
-  if (this.scope_) {
+  if (this.scope) {
     var eventType = os.ui.ChecklistEvent.CHANGE;
-    if (this.scope_['name']) {
-      eventType += ':' + this.scope_['name'];
+    if (this.scope['name']) {
+      eventType += ':' + this.scope['name'];
     }
 
-    this.scope_.$emit(eventType);
+    this.scope.$emit(eventType);
   }
 };
 
@@ -137,8 +140,8 @@ os.ui.ChecklistCtrl.prototype.emitChangeEvent_ = function() {
  * @private
  */
 os.ui.ChecklistCtrl.prototype.onItemsChange_ = function() {
-  if (this.scope_['items']) {
-    /** @type {Array<!osx.ChecklistItem>} */ (this.scope_['items']).sort(this.labelCompare_);
+  if (this.scope['items']) {
+    /** @type {Array<!osx.ChecklistItem>} */ (this.scope['items']).sort(this.labelCompare_);
   }
 
   this.updateAllCheckbox_();
@@ -165,8 +168,8 @@ os.ui.ChecklistCtrl.prototype.labelCompare_ = function(a, b) {
  * @export
  */
 os.ui.ChecklistCtrl.prototype.toggleAll = function() {
-  if (this.scope_ && this.scope_['allowMultiple']) {
-    var items = /** @type {Array<!osx.ChecklistItem>} */ (this.scope_['items']);
+  if (this.scope && this.scope['allowMultiple']) {
+    var items = /** @type {Array<!osx.ChecklistItem>} */ (this.scope['items']);
     if (items && items.length > 0) {
       // switch all items to the All state
       for (var i = 0, n = items.length; i < n; i++) {
@@ -185,13 +188,13 @@ os.ui.ChecklistCtrl.prototype.toggleAll = function() {
  * @export
  */
 os.ui.ChecklistCtrl.prototype.onItemChange = function(item) {
-  if (this.scope_) {
-    if (this.scope_['allowMultiple']) {
+  if (this.scope) {
+    if (this.scope['allowMultiple']) {
       // if multiple items are allowed, update the All checkbox state
       this.updateAllCheckbox_();
     } else if (item.enabled) {
       // otherwise if the item was enabled, disable the rest
-      var items = /** @type {Array<!osx.ChecklistItem>} */ (this.scope_['items']);
+      var items = /** @type {Array<!osx.ChecklistItem>} */ (this.scope['items']);
       for (var i = 0, n = items.length; i < n; i++) {
         if (items[i] !== item) {
           items[i].enabled = false;
@@ -209,10 +212,10 @@ os.ui.ChecklistCtrl.prototype.onItemChange = function(item) {
  * @private
  */
 os.ui.ChecklistCtrl.prototype.updateAllCheckbox_ = function() {
-  if (this.scope_) {
+  if (this.scope) {
     var hasChecked = false;
     var hasUnchecked = false;
-    var items = /** @type {Array<!osx.ChecklistItem>} */ (this.scope_['items']);
+    var items = /** @type {Array<!osx.ChecklistItem>} */ (this.scope['items']);
     if (items && items.length > 0) {
       for (var i = 0, n = items.length; i < n; i++) {
         if (!items[i].enabled) {
@@ -223,7 +226,7 @@ os.ui.ChecklistCtrl.prototype.updateAllCheckbox_ = function() {
         }
       }
 
-      var allCheckbox = this.element_.find('.js-checklist__all');
+      var allCheckbox = this.element.find('.js-checklist__all');
       // If at least 1 is checked but not all, make indeterminate
       if (hasChecked && hasUnchecked) {
         allCheckbox.prop('checked', true);
