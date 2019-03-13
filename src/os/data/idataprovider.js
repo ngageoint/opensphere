@@ -30,19 +30,19 @@ os.data.IDataProvider.prototype.load;
 /**
  * @return {boolean} <code>true</code> if the provider is enabled, <code>false</code> otherwise
  */
-os.data.IDataProvider.prototype.getEnabled = goog.abstractMethod;
+os.data.IDataProvider.prototype.getEnabled;
 
 
 /**
  * @param {boolean} value Whether or not the provider is enabled
  */
-os.data.IDataProvider.prototype.setEnabled = goog.abstractMethod;
+os.data.IDataProvider.prototype.setEnabled;
 
 
 /**
  * @return {boolean} <code>true</code> if the provider is editable, <code>false</code> otherwise
  */
-os.data.IDataProvider.prototype.getEditable = goog.abstractMethod;
+os.data.IDataProvider.prototype.getEditable;
 
 
 /**
@@ -54,17 +54,30 @@ os.data.IDataProvider.prototype.setEditable;
 /**
  * @return {boolean} Whether or not this provider should show up in the server manager
  */
-os.data.IDataProvider.prototype.includeInServers = goog.abstractMethod;
+os.data.IDataProvider.prototype.includeInServers;
+
+
+/**
+ * @return {boolean} Whether or not this provider should show when empty
+ */
+os.data.IDataProvider.prototype.getShowWhenEmpty;
+
+
+/**
+ * Gets the info to display for this provider. This can be a directive and will be compiled by Angular.
+ * @return {string} The info string
+ */
+os.data.IDataProvider.prototype.getInfo;
 
 
 /**
  * @return {boolean} <code>true</code> if there were errors loading or setting up the
  * provider, <code>false</code> otherwise.
  */
-os.data.IDataProvider.prototype.getError = goog.abstractMethod;
+os.data.IDataProvider.prototype.getError;
 
 
 /**
  * @return {?string} The error message
  */
-os.data.IDataProvider.prototype.getErrorMessage = goog.abstractMethod;
+os.data.IDataProvider.prototype.getErrorMessage;

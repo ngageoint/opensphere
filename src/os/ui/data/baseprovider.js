@@ -40,6 +40,12 @@ os.ui.data.BaseProvider = function() {
   this.listInServers = true;
 
   /**
+   * @type {boolean}
+   * @protected
+   */
+  this.showWhenEmpty = false;
+
+  /**
    * @type {string}
    * @protected
    */
@@ -133,6 +139,22 @@ os.ui.data.BaseProvider.prototype.setEditable = function(value) {
  */
 os.ui.data.BaseProvider.prototype.includeInServers = function() {
   return this.listInServers;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.ui.data.BaseProvider.prototype.getShowWhenEmpty = function() {
+  return this.showWhenEmpty;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.ui.data.BaseProvider.prototype.getInfo = function() {
+  return '';
 };
 
 

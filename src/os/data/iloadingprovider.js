@@ -13,6 +13,13 @@ os.data.ILoadingProvider = function() {};
 
 
 /**
+ * ID for {@see os.implements}
+ * @const {string}
+ */
+os.data.ILoadingProvider.ID = 'os.data.ILoadingProvider';
+
+
+/**
  * If the provider is currently in a loading state.
  * @return {boolean}
  */

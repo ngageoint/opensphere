@@ -19,10 +19,6 @@
   word-break: break-all;
 }
 
-.u-word-break-break-word {
-  word-break: break-word;
-}
-
 .u-word-wrap-break-word {
   word-wrap: break-word;
 }
@@ -163,13 +159,10 @@
   }
 }
 
+
 // --------------------------------- Font Utilities --------------------------------- //
 .u-font-family-sans-serif {
   font-family: sans-serif;
-}
-
-.u-text-decoration-none {
-  text-decoration: none;
 }
 
 
@@ -500,4 +493,11 @@ $somesizes: map-merge((
 // --------------------------------- Z-Index Utilities --------------------------------- //
 .u-zindex-base {
   z-index: $u-zindex-base;
+}
+
+
+// --------------------------------- Icon Utilities ----------------------------------- //
+.u-icon-display-small {
+  height: 1.5rem;
+  width: 1.5rem;
 }

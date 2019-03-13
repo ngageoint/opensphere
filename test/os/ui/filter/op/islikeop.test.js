@@ -67,6 +67,29 @@ describe('os.ui.filter.op.IsLike', function() {
 
     testVar = 'fruck';
     expect(eval(expr)).toBe(false);
+
+    // special RegExp characters
+    expr = op.getEvalExpression('testVar', 'ABCD-1234');
+    expect(expr).toBe('/^ABCD\\-1234$/i.test(testVar)');
+
+    testVar = 'ABCD-1234';
+    expect(eval(expr)).toBe(true);
+
+    testVar = 'BCD-123';
+    expect(eval(expr)).toBe(false);
+
+    // special RegExp characters with wildcards
+    expr = op.getEvalExpression('testVar', 'ABCD-12*');
+    expect(expr).toBe('/^ABCD\\-12.*$/i.test(testVar)');
+
+    testVar = 'ABCD-1234';
+    expect(eval(expr)).toBe(true);
+
+    testVar = 'ABCD-1243';
+    expect(eval(expr)).toBe(true);
+
+    testVar = 'BCD-1234';
+    expect(eval(expr)).toBe(false);
   });
 
   it('should not generate a filter function expression if the literal is invalid', function() {
