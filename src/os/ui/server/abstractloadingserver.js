@@ -65,6 +65,7 @@ os.ui.server.AbstractLoadingServer = function() {
   this.ping_ = false;
 };
 goog.inherits(os.ui.server.AbstractLoadingServer, os.ui.data.BaseProvider);
+os.implements(os.ui.server.AbstractLoadingServer, os.data.ILoadingProvider.ID);
 
 
 /**
