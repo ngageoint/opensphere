@@ -670,8 +670,8 @@ os.net.Request.prototype.addHandlerListeners = function(handler) {
  * @param {os.net.IRequestHandler} handler The handler
  */
 os.net.Request.prototype.removeHandlerListeners = function(handler) {
-  handler.unlisten(goog.net.EventType.SUCCESS, this.onHandlerComplete_);
-  handler.unlisten(goog.net.EventType.ERROR, this.onHandlerError_);
+  handler.unlisten(goog.net.EventType.SUCCESS, this.onHandlerComplete_, false, this);
+  handler.unlisten(goog.net.EventType.ERROR, this.onHandlerError_, false, this);
 };
 
 
