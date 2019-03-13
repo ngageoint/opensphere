@@ -223,6 +223,7 @@ os.ui.file.method.UrlMethod.prototype.onLoad = function(event) {
   var i = url.lastIndexOf('/') + 1;
   var fileName = decodeURI(url.substring(i == -1 ? 0 : i, q == -1 ? url.length : q));
   var headers = this.request_.getResponseHeaders();
+  var response = /** @type {!(ArrayBuffer|string)} */ (this.request_.getResponse());
 
   // There is a header that can be used if it exists instead of the filename
   if (headers) {
@@ -243,12 +244,17 @@ os.ui.file.method.UrlMethod.prototype.onLoad = function(event) {
     }
   }
 
-  var response = /** @type {!(ArrayBuffer|string)} */ (this.request_.getResponse());
-
   this.request_.dispose();
   this.request_ = null;
 
   this.file_ = os.file.createFromContent(fileName, url, undefined, response);
+
+  if (!this.file_.getContentType()) {
+    // extract the content-type header if possible
+    var contentType = headers && headers['Content-Type'] || headers['content-type'];
+    this.file_.setContentType(contentType);
+  }
+
   this.dispatchEvent(os.events.EventType.COMPLETE);
   os.dispatcher.dispatchEvent(new os.net.RequestEvent(os.net.RequestEventType.USER_URL, url));
 };
