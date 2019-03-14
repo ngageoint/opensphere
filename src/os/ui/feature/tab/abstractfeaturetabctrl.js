@@ -19,10 +19,12 @@ os.ui.feature.tab.AbstractFeatureTabCtrl = function($scope, $element) {
    */
   this.element = $element;
 
-  // Control is constructed after the first broadcast
-  // so the description need to be updated once during construction
+  // Control is constructed after the first broadcast, so update the tab once after all constructors have executed.
   if (this.scope && this.scope['items'] && this.scope['items'].length > 0) {
-    this.updateTab(null, this.scope['items'][0]['data']);
+    var data = this.scope['items'][0]['data'];
+    setTimeout(function() {
+      this.updateTab(null, data);
+    }.bind(this), 0);
   }
 
   this.scope.$on(os.ui.feature.FeatureInfoCtrl.UPDATE_TABS, this.updateTab.bind(this));
