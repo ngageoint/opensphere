@@ -12,7 +12,7 @@ goog.require('os.style');
  * Histogram bin that tracks the colors of items in the bin.
  * @param {string} baseColor The base color of the layer represented by this bin
  * @extends {os.histo.Bin<T>}
- * @template T
+ * @template S,T
  * @constructor
  */
 os.data.histo.ColorBin = function(baseColor) {
@@ -31,6 +31,13 @@ os.data.histo.ColorBin = function(baseColor) {
    * @private
    */
   this.colorCounts_ = {};
+
+  /**
+   * Function to access the color from an item in the color bin
+   * @type {?function(this:S, T):(string|undefined)}
+   * @private
+   */
+  this.colorFunction = null;
 
   /**
    * If the bin is being cascaded to other histograms.
@@ -71,11 +78,30 @@ os.data.histo.ColorBin.prototype.getColorCounts = function() {
 
 
 /**
+ * Get the filter function used by the model.
+ * @return {?function(this:S, T):(string|undefined)}
+ * @template T,S
+ */
+os.data.histo.ColorBin.prototype.getColorFunction = function() {
+  return this.colorFunction;
+};
+
+
+/**
+ * Set the filter function used by the model.
+ * @param {?function(this:S, T):(string|undefined)} fn
+ * @template T,S
+ */
+os.data.histo.ColorBin.prototype.setColorFunction = function(fn) {
+  this.colorFunction = fn;
+};
+
+/**
  * @inheritDoc
  */
 os.data.histo.ColorBin.prototype.addItem = function(item) {
   os.data.histo.ColorBin.base(this, 'addItem', item);
-  this.incrementColor(this.getItemColor(item));
+  this.incrementColor(this.colorFunction(item));
 };
 
 
@@ -84,32 +110,7 @@ os.data.histo.ColorBin.prototype.addItem = function(item) {
  */
 os.data.histo.ColorBin.prototype.removeItem = function(item) {
   os.data.histo.ColorBin.base(this, 'removeItem', item);
-  this.decrementColor(this.getItemColor(item));
-};
-
-
-/**
- * Get the color of an item.
- * @param {T} item The item.
- * @return {string|undefined} The item color, or null if no custom color is defined.
- *
- * @suppress {accessControls} To allow direct access to feature metadata.
- */
-os.data.histo.ColorBin.prototype.getItemColor = function(item) {
-  // check for a color override
-  if (os.instanceOf(item, ol.Feature.NAME)) {
-    return /** @type {string|undefined} */ (os.feature.getColor(/** @type {!ol.Feature} */ (item)));
-  } else {
-    item = /** @type {Object<string, *>} */ (item);
-    if (item.getColor != null) {
-      return /** @type {string|undefined} */ (item.getColor());
-    } else if (item['color'] != null) {
-      return /** @type {string|undefined} */ (item['color']);
-    } else if (item.color != null) {
-      return /** @type {string|undefined} */ (item.color);
-    }
-  }
-  return undefined;
+  this.decrementColor(this.colorFunction(item));
 };
 
 

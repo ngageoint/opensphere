@@ -13,6 +13,13 @@ os.file.mime.csv.TYPE = 'text/csv';
 
 
 /**
+ * @type {string}
+ * @const
+ */
+os.file.mime.csv.APPLICATION_TYPE = 'application/csv';
+
+
+/**
  * @param {ArrayBuffer} buffer
  * @param {os.file.File=} opt_file
  * @return {!goog.Promise<*|undefined>}
@@ -20,7 +27,8 @@ os.file.mime.csv.TYPE = 'text/csv';
 os.file.mime.csv.detect = function(buffer, opt_file) {
   return /** @type {!goog.Promise<*|undefined>} */ (
       goog.Promise.resolve(opt_file && (/\.csv$/.test(opt_file.getFileName()) ||
-      opt_file.getContentType() === os.file.mime.csv.TYPE)));
+      os.file.mime.csv.TYPE == opt_file.getContentType() ||
+      os.file.mime.csv.APPLICATION_TYPE == opt_file.getContentType())));
 };
 
 

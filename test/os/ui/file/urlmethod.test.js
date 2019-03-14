@@ -47,7 +47,7 @@ describe('os.ui.file.method.UrlMethod', function() {
       expect(file.getFileName()).toBe('foo');
       expect(file.getContent()).toBe('bar');
       expect(file.getUrl()).toBe(testUrl);
-      expect(file.getContentType()).toBeNull();
+      expect(file.getContentType()).toBe('text/plain');
     });
   });
 
