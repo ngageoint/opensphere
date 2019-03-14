@@ -114,7 +114,25 @@ plugin.cesium.sync.FeatureConverter.prototype.getTransformFunction = function() 
 
   if (this.lastProjection !== pFrom) {
     var pTo = ol.proj.get(os.proj.EPSG4326);
-    this.transformFunction = !ol.proj.equivalent(pTo, pFrom) ? ol.proj.getTransform(pFrom, pTo) : null;
+    var olTransform = !ol.proj.equivalent(pTo, pFrom) ? ol.proj.getTransform(pFrom, pTo) : null;
+
+    /**
+     * @param {ol.Coordinate} coord
+     * @param {ol.Coordinate=} opt_output
+     * @param {number=} opt_length
+     * @return {ol.Coordinate}
+     */
+    this.transformFunction = olTransform ? function(coord, opt_output, opt_length) {
+      var result = olTransform(coord, opt_output, opt_length);
+      if (opt_output) {
+        var n = opt_length == undefined ? coord.length : opt_length;
+        opt_output.length = n;
+        for (var i = 2; i < n; i++) {
+          result[i] = coord[i];
+        }
+      }
+      return result;
+    } : olTransform;
     this.lastProjection = pFrom;
   }
 
