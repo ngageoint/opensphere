@@ -24,6 +24,7 @@ os.ui.feature.tab.AbstractFeatureTabCtrl = function($scope, $element) {
     var data = this.scope['items'][0]['data'];
     setTimeout(function() {
       this.updateTab(null, data);
+      os.ui.apply(this.scope);
     }.bind(this), 0);
   }
 
