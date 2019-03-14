@@ -13,6 +13,9 @@ describe('os.data.histo.ColorBin', function() {
 
   it('should add items and increment the color counts', function() {
     var bin = new os.data.histo.ColorBin('#ff00ff');
+    bin.setColorFunction(function(item) {
+      return /** @type {string|undefined} */ (os.feature.getColor(/** @type {!ol.Feature} */ (item)));
+    });
 
     bin.addItem(red);
     expect(bin.getColorCounts()['#ff0000']).toBe(1);
@@ -26,6 +29,9 @@ describe('os.data.histo.ColorBin', function() {
 
   it('should add items and decrement the color counts', function() {
     var bin = new os.data.histo.ColorBin('#ff00ff');
+    bin.setColorFunction(function(item) {
+      return /** @type {string|undefined} */ (os.feature.getColor(/** @type {!ol.Feature} */ (item)));
+    });
     bin.addItem(red);
     bin.addItem(green);
     bin.addItem(blue);
@@ -43,6 +49,9 @@ describe('os.data.histo.ColorBin', function() {
 
   it('should return a color if all items are the same color', function() {
     var bin = new os.data.histo.ColorBin('#ff00ff');
+    bin.setColorFunction(function(item) {
+      return /** @type {string|undefined} */ (os.feature.getColor(/** @type {!ol.Feature} */ (item)));
+    });
     bin.addItem(red);
 
     expect(bin.getColor()).toBe('#ff0000');
@@ -50,6 +59,9 @@ describe('os.data.histo.ColorBin', function() {
 
   it('should NOT return a color if not all items are the same color', function() {
     var bin = new os.data.histo.ColorBin('#ff00ff');
+    bin.setColorFunction(function(item) {
+      return /** @type {string|undefined} */ (os.feature.getColor(/** @type {!ol.Feature} */ (item)));
+    });
     bin.addItem(red);
     bin.addItem(green);
 
@@ -58,6 +70,9 @@ describe('os.data.histo.ColorBin', function() {
 
   it('should return the base color if it has no items', function() {
     var bin = new os.data.histo.ColorBin('#ff00ff');
+    bin.setColorFunction(function(item) {
+      return /** @type {string|undefined} */ (os.feature.getColor(/** @type {!ol.Feature} */ (item)));
+    });
     expect(bin.getColor()).toBe('#ff00ff');
   });
 });
