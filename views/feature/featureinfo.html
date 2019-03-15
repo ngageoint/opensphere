@@ -1,5 +1,5 @@
 <div class="d-flex flex-column flex-fill">
-  <div class="font-weight-bold my-1 text-truncate" ng-attr-title="{{info.title}}">{{info.title}}</div>
+  <div class="flex-shrink-0 font-weight-bold my-1 text-truncate" ng-attr-title="{{info.title}}">{{info.title}}</div>
   <div class="flex-shrink-0 mb-1 w-100">
     <simple-location latdeg="lat" londeg="lon" ng-if="lat !== undefined && lon !== undefined"></simple-location>
     <span ng-if="alt">Altitude: {{alt}}</span>
