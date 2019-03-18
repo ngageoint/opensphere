@@ -11,9 +11,9 @@ os.ui.file.dragAndDropIconDirective = function() {
     scope: false,
     replace: true,
     template: ['<span>',
-      '<i class="fa fa-desktop fa-2x"></i>',
+      '<i class="fa fa-desktop fa-2x u-bg-body-text"></i>',
       '<i class="fa fa-share text-muted c-drag-and-drop-icon__share"></i>',
-      '<i class="fa fa-file c-drag-and-drop-icon__file"></i>',
+      '<i class="fa fa-file u-bg-body-text c-drag-and-drop-icon__file"></i>',
       '</span>']
         .join('')
   };

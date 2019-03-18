@@ -57,5 +57,6 @@ plugin.file.kml.SOURCE_FIELDS = [
   os.style.StyleField.SHAPE,
   os.style.StyleField.LABELS,
   os.style.StyleField.LABEL_COLOR,
-  os.style.StyleField.LABEL_SIZE
+  os.style.StyleField.LABEL_SIZE,
+  os.style.StyleField.SHOW_LABELS
 ];
