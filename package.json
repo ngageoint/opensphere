@@ -220,7 +220,7 @@
     "clean-css-cli": "^4.1.11",
     "conventional-changelog-cli": "^1.2.0",
     "conventional-recommended-bump": "^0.3.0",
-    "cypress": "^3.1.5",
+    "cypress": "^3.2.0",
     "cz-conventional-changelog": "^1.2.0",
     "eslint": "^3.19.0",
     "eslint-config-google": "^0.7.0",
