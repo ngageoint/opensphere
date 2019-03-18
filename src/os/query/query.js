@@ -90,10 +90,8 @@ os.query.isWorldQuery = function(geometry) {
     // transform the world extent to the current projection to compute the area
     var worldExtent = ol.proj.transformExtent(os.query.WORLD_EXTENT, os.proj.EPSG4326, os.map.PROJECTION);
     var worldArea = ol.extent.getArea(worldExtent);
-    if (goog.math.nearlyEquals(geometry.getArea(), worldArea) || geometry.getArea() == 0) {
-      geometry.setCoordinates(world.getCoordinates());
-      return true;
-    }
+    var geomArea = geometry.getArea();
+    return goog.math.nearlyEquals(geomArea / worldArea, 1, 1E-4) || geomArea == 0;
   }
 
   return false;
