@@ -152,8 +152,7 @@ describe('os.data.xf.DataModel', function() {
     // NOTE: crossfilter does not handle NaN, null, undefined well so an attribute cannot be missing
     //      for a record.  This can be handled when the dimension is added.
     filter.addDimension('string_lead', function(m) {
-      return m.lead || ''
-;
+      return m.lead || '';
     });
     expect(filter.getTopRecord('string_lead')['lead']).toBe('Russell');
     filter.filterDimension('string_lead', 'Pacino');
@@ -169,8 +168,7 @@ describe('os.data.xf.DataModel', function() {
     // NOTE: crossfilter does not handle NaN, null, undefined well so an attribute cannot be missing
     //      for a record.  This can be handled when the dimension is added.
     filter.addDimension('number_gross', function(m) {
-      return m.gross || -Number.MAX_VALUE
-;
+      return m.gross || -Number.MAX_VALUE;
     });
     expect(filter.getTopRecord('number_gross')['gross']).toBe(1024560);
   });
@@ -188,8 +186,7 @@ describe('os.data.xf.DataModel', function() {
 
     // Example: Min value of number
     filter.addDimension('number_year', function(m) {
-      return m.year
-;
+      return m.year;
     });
     expect(filter.getBottomRecord('number_year')['year']).toBe(1941);
 
@@ -211,8 +208,7 @@ describe('os.data.xf.DataModel', function() {
     // NOTE: crossfilter does not handle NaN, null, undefined well so an attribute cannot be missing
     //      for a record.  This can be handled when the dimension is added.
     filter.addDimension('number_gross', function(m) {
-      return m.gross || Number.MAX_VALUE
-;
+      return m.gross || Number.MAX_VALUE;
     });
     expect(filter.getBottomRecord('number_gross')['gross']).toBe(1024560);
   });
@@ -222,12 +218,10 @@ describe('os.data.xf.DataModel', function() {
     filter.add(MOVIE_DATA);
 
     filter.addDimension('number_year', function(m) {
-      return m.year
-;
+      return m.year;
     });
     filter.addDimension('number_rating', function(m) {
-      return m.rating
-;
+      return m.rating;
     });
 
     expect(filter.getResults().length).toBe(7);
@@ -258,8 +252,7 @@ describe('os.data.xf.DataModel', function() {
 
     // Example: Numeric Range
     filter.addDimension('number_year', function(m) {
-      return m.year
-;
+      return m.year;
     });
     filter.filterDimension('number_year', [1990, 2010]);
     expect(filter.getResults().length).toBe(4);
@@ -271,8 +264,7 @@ describe('os.data.xf.DataModel', function() {
 
     // Example: String Range
     filter.addDimension('string_title', function(m) {
-      return m.title
-;
+      return m.title;
     });
     filter.filterDimension('string_title', ['A', 'Q']);
     expect(filter.getResults().length).toBe(5);
@@ -311,8 +303,7 @@ describe('os.data.xf.DataModel', function() {
     // Example: Some Empties Numeric
     emptyValue = 0;
     filter.addDimension('numeric_gross', function(m) {
-      return m.gross || emptyValue
-;
+      return m.gross || emptyValue;
     });
     expect(filter.isDimensionValueEmptyAll('numeric_gross', emptyValue)).toBe(false);
     expect(filter.isDimensionValueEmptyAny('numeric_gross', emptyValue)).toBe(true);
@@ -324,12 +315,10 @@ describe('os.data.xf.DataModel', function() {
 
     // 2 dimensions
     filter.addDimension('number_year', function(m) {
-      return m.year
-;
+      return m.year;
     });
     filter.addDimension('number_rating', function(m) {
-      return m.rating
-;
+      return m.rating;
     });
     filter.filterDimension('number_year', [1990, 2000]);
     filter.filterDimension('number_rating', function(r) {
@@ -340,20 +329,16 @@ describe('os.data.xf.DataModel', function() {
 
     // 3 dimensions
     filter.addDimension('string_lead', function(m) {
-      return m.lead || ''
-;
+      return m.lead || '';
     });
     filter.addDimension('number_year', function(m) {
-      return m.year
-;
+      return m.year;
     });
     filter.addDimension('number_rating', function(m) {
-      return m.rating
-;
+      return m.rating;
     });
     filter.filterDimension('string_lead', function(l) {
-      return l != ''
-;
+      return l != '';
     });
     filter.filterDimension('number_year', function(y) {
       return y >= 1975;
