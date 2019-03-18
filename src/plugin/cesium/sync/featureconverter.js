@@ -1654,7 +1654,7 @@ plugin.cesium.sync.FeatureConverter.prototype.olGeometryToCesium = function(feat
     geomType = 'ellipse';
   }
 
-  if (os.query.isWorldQuery(geometry)) {
+  if (geometry.getType() === ol.geom.GeometryType.POLYGON && os.query.isWorldQuery(geometry)) {
     // do not show these
     return;
   }
