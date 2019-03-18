@@ -3,6 +3,7 @@ goog.provide('os.net.Request');
 goog.require('goog.Promise');
 goog.require('goog.Uri');
 goog.require('goog.array');
+goog.require('goog.debug.Logger.Level');
 goog.require('goog.events.Event');
 goog.require('goog.events.EventLike');
 goog.require('goog.events.EventTarget');
@@ -147,6 +148,13 @@ os.net.Request = function(opt_uri, opt_method, opt_timeout) {
    * @private
    */
   this.timeout_ = opt_timeout || 0;
+
+  /**
+   * The default log level.
+   * @type {!goog.debug.Logger.Level}
+   * @private
+   */
+  this.logLevel_ = goog.debug.Logger.Level.INFO;
 
   if (opt_uri) {
     this.setUri(opt_uri);
@@ -611,7 +619,7 @@ os.net.Request.prototype.load = function(opt_nocache) {
         this.getMethod(), u, this.timeout_);
 
     if (this.handlers_ && this.handlers_.length) {
-      goog.log.info(os.net.Request.LOGGER_,
+      goog.log.log(os.net.Request.LOGGER_, this.logLevel_,
           (this.nocache_ ? 'NOCACHE ' : '') + this.getMethod() + ' ' + u);
       this.executeHandlers_();
     } else {
@@ -783,4 +791,21 @@ os.net.Request.prototype.getTimeout = function() {
  */
 os.net.Request.prototype.setTimeout = function(timeout) {
   this.timeout_ = timeout;
+};
+
+/**
+ * Gets the default log level for the request.
+ * @return {!goog.debug.Logger.Level}
+ */
+os.net.Request.prototype.getLogLevel = function() {
+  return this.logLevel_;
+};
+
+
+/**
+ * Sets the default log level for the request.
+ * @param {!goog.debug.Logger.Level} level The log level.
+ */
+os.net.Request.prototype.setLogLevel = function(level) {
+  this.logLevel_ = level;
 };
