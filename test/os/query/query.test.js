@@ -22,6 +22,7 @@ describe('os.query', function() {
     projections.forEach(function(code) {
       var proj = ol.proj.get(code);
       os.map.PROJECTION = proj;
+      os.query.initWorldArea();
 
       tests.forEach(function(test) {
         var extent = ol.proj.transformExtent(test.extent, os.proj.EPSG4326, proj);

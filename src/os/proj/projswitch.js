@@ -413,6 +413,8 @@ os.proj.switch.SwitchProjection.prototype.performSwitch = function(layers) {
       cmds.push(new os.command.ToggleWebGL(useWebGL, true));
     }
 
+    os.query.initWorldArea(true);
+
     // Step 9: Let plugins do stuff
     this.dispatchEvent(new os.proj.switch.CommandListEvent(cmds));
 
