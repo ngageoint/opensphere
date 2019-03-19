@@ -4,7 +4,6 @@ goog.require('goog.dom.TagName');
 goog.require('goog.userAgent');
 goog.require('ol.Feature');
 goog.require('ol.Map');
-goog.require('os.geo');
 goog.require('os.map');
 
 

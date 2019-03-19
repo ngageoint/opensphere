@@ -17,9 +17,12 @@ goog.require('os.layer.LayerType');
 goog.require('os.layer.PropertyChange');
 goog.require('os.legend.ILegendRenderer');
 goog.require('os.math');
+goog.require('os.mixin.TileImage');
+goog.require('os.mixin.UrlTileSource');
 goog.require('os.ogc');
 goog.require('os.source.IStyle');
 goog.require('os.style');
+goog.require('os.tile');
 goog.require('os.ui');
 goog.require('os.ui.Icons');
 goog.require('os.ui.layer.tileLayerUIDirective');
@@ -279,6 +282,7 @@ os.layer.Tile.prototype.getColor = function() {
   return null;
 };
 
+
 /**
  * Get the brightness for the tile layer.
  * @return {number}
@@ -291,6 +295,7 @@ os.layer.Tile.prototype.getBrightness = function() {
   return 0;
 };
 
+
 /**
  * Get the brightness for the tile layer.
  * @override
@@ -302,6 +307,7 @@ os.layer.Tile.prototype.getContrast = function() {
   }
   return 1;
 };
+
 
 /**
  * Get the saturation for the tile layer.
@@ -363,6 +369,7 @@ os.layer.Tile.prototype.setColor = function(value, opt_options) {
   }
 };
 
+
 /**
  * Adjust the layer brightness.  A value of -1 will render the layer completely
  * black.  A value of 0 will leave the brightness unchanged.  A value of 1 will
@@ -385,6 +392,7 @@ os.layer.Tile.prototype.setBrightness = function(value, opt_options) {
   }
 };
 
+
 /**
  * Adjust the layer contrast.  A value of 0 will render the layer completely
  * grey.  A value of 1 will leave the contrast unchanged.  Other values are
@@ -405,6 +413,7 @@ os.layer.Tile.prototype.setContrast = function(value, opt_options) {
     os.style.notifyStyleChange(this);
   }
 };
+
 
 /**
  * Adjust layer saturation.  A value of 0 will render the layer completely
@@ -427,7 +436,6 @@ os.layer.Tile.prototype.setSaturation = function(value, opt_options) {
     os.style.notifyStyleChange(this);
   }
 };
-
 
 
 /**
@@ -463,7 +471,7 @@ os.layer.Tile.prototype.applyColors = function(data) {
   var saturation = this.getSaturation();
   var colorize = this.getColorize();
   if (colorize || !os.color.equals(srcColor, tgtColor) ||
-    this.getBrightness() != 0 || this.getContrast() != 1 || this.getSaturation() != 1) {
+      this.getBrightness() != 0 || this.getContrast() != 1 || this.getSaturation() != 1) {
     if (tgtColor) {
       if (colorize) {
         // colorize will set all of the colors to the target

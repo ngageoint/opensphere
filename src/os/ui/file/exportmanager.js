@@ -7,7 +7,6 @@ goog.require('goog.log.Logger');
 goog.require('os.alert.AlertEventSeverity');
 goog.require('os.alert.AlertManager');
 goog.require('os.ex.ExportOptions');
-goog.require('os.ui.file.exportDialogDirective');
 goog.require('os.ui.window');
 goog.require('os.ui.window.confirmDirective');
 

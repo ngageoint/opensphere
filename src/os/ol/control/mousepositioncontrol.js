@@ -7,6 +7,7 @@ goog.require('ol.coordinate');
 goog.require('os.bearing');
 goog.require('os.config.Settings');
 goog.require('os.geo');
+goog.require('os.ui.location');
 goog.require('os.ui.user.settings.LocationSetting');
 
 
@@ -111,6 +112,7 @@ os.ol.control.MousePosition.SEXAGESIMAL_FORMAT = function(coordinate) {
       os.geo.toSexagesimal(os.geo.normalizeLongitude(coordinate[0]), true, false) + ' (DMS)').replace(/°/g, '&deg;');
 };
 
+
 /**
  * @param {ol.Coordinate} coordinate
  * @return {string}
@@ -118,8 +120,10 @@ os.ol.control.MousePosition.SEXAGESIMAL_FORMAT = function(coordinate) {
  */
 os.ol.control.MousePosition.DDM = function(coordinate) {
   return (os.geo.toDegreesDecimalMinutes(coordinate[1], false, false) + ' ' +
-      os.geo.toDegreesDecimalMinutes(os.geo.normalizeLongitude(coordinate[0]), true, false) + ' (DDM)').replace(/°/g, '&deg;');
+      os.geo.toDegreesDecimalMinutes(os.geo.normalizeLongitude(coordinate[0]), true, false) + ' (DDM)')
+      .replace(/°/g, '&deg;');
 };
+
 
 /**
  * @type {!Object<string, ol.CoordinateFormatType>}

@@ -4,6 +4,7 @@ goog.require('ol.geom.Polygon');
 goog.require('os.geo');
 
 
+
 /**
  * Ellipse geometry.
  *

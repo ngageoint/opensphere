@@ -10,7 +10,8 @@ goog.require('os.alert.AlertEventSeverity');
 goog.require('os.alertManager');
 goog.require('os.events.EventType');
 goog.require('os.im.IImporter');
-goog.require('os.im.mapping.AltMapping');
+goog.require('os.im.mapping.AltMappingId');
+goog.require('os.implements');
 goog.require('os.parse.AsyncParser');
 goog.require('os.parse.IParser');
 goog.require('os.thread.EventType');
@@ -553,7 +554,7 @@ os.im.Importer.prototype.addMapping_ = function(mapping) {
     this.mappings = [mapping];
   } else {
     var endIndex = this.mappings.length - 1;
-    if (this.mappings[endIndex] instanceof os.im.mapping.AltMapping) {
+    if (os.implements(this.mappings[endIndex], os.im.mapping.AltMappingId)) {
       // if alt mapping is already at the end, leave it there
       this.mappings.splice(endIndex, 0, mapping);
     } else {

@@ -3,6 +3,7 @@ goog.provide('os.ui.file.exportDialogDirective');
 goog.require('goog.asserts');
 goog.require('os.ex.ExportOptions');
 goog.require('os.ui.Module');
+goog.require('os.ui.exportManager');
 goog.require('os.ui.window');
 
 

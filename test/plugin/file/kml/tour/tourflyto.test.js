@@ -1,3 +1,4 @@
+goog.require('os.map.FlightMode');
 goog.require('os.map');
 goog.require('plugin.file.kml.tour.FlyTo');
 
@@ -74,7 +75,7 @@ describe('plugin.file.kml.tour.FlyTo', function() {
       expect(fakeFlyToOptions.center).toEqual(flyToOptions.center);
       expect(fakeFlyToOptions.altitude).toBe(flyToOptions.altitude);
       expect(fakeFlyToOptions.duration).toBe(duration);
-      expect(fakeFlyToOptions.flightMode).toBe(os.FlightMode.BOUNCE);
+      expect(fakeFlyToOptions.flightMode).toBe(os.map.FlightMode.BOUNCE);
     });
   });
 

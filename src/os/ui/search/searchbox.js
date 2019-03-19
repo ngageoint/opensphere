@@ -194,7 +194,7 @@ os.ui.search.SearchBoxCtrl.prototype.destroy = function() {
   this.searchManager.unlisten(os.search.SearchEventType.AUTOCOMPLETED, this.populateAutocomplete_, false, this);
   this.searchManager.unlisten(os.search.SearchEventType.SUCCESS, this.onSearchSuccess_, false, this);
   os.dispatcher.unlisten(os.search.SearchEventType.REFRESH, this.search, false, this);
-  os.settings.unlisten(os.user.settings.FavoriteManager.KEY, this.onFavoritesUpdate);
+  os.settings.unlisten(os.user.settings.FavoriteManager.KEY, this.onFavoritesUpdate, false, this);
 
   this.element = null;
   this.scope = null;

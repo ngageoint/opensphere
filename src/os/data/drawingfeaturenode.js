@@ -1,5 +1,6 @@
 goog.provide('os.data.DrawingFeatureNode');
 
+goog.require('os.mixin.object');
 goog.require('os.ui.menu.IMenuSupplier');
 goog.require('os.ui.menu.spatial');
 goog.require('os.ui.node.drawingFeatureNodeUIDirective');

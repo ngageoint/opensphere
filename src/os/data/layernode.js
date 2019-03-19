@@ -6,6 +6,7 @@ goog.require('os.data.IExtent');
 goog.require('os.data.ISearchable');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.layer.LayerGroup');
+goog.require('os.layer.Tile');
 goog.require('os.layer.Vector');
 goog.require('os.structs.TriState');
 goog.require('os.ui.ILayerUIProvider');
