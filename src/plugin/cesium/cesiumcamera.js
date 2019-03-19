@@ -12,6 +12,7 @@ goog.require('ol.proj');
 goog.require('olcs.Camera');
 goog.require('olcs.core');
 goog.require('os.map');
+goog.require('os.map.FlightMode');
 goog.require('os.math');
 goog.require('os.webgl.IWebGLCamera');
 
@@ -275,7 +276,8 @@ plugin.cesium.Camera.prototype.cancelFlight = function() {
 plugin.cesium.Camera.prototype.flyTo = function(options) {
   if (this.enabled_) {
     var duration = options.duration != null ? options.duration : os.MapContainer.FLY_ZOOM_DURATION;
-    var easingFunction = options.flightMode === os.FlightMode.SMOOTH ? Cesium.EasingFunction.LINEAR_NONE : undefined;
+    var easingFunction = options.flightMode === os.map.FlightMode.SMOOTH ?
+        Cesium.EasingFunction.LINEAR_NONE : undefined;
 
     var target;
     if (options.center) {

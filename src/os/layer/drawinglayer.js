@@ -4,6 +4,7 @@ goog.require('os.data.AreaNode');
 goog.require('os.data.DrawingLayerNode');
 goog.require('os.layer.ILayer');
 goog.require('os.layer.Vector');
+goog.require('os.mixin.layerbase');
 goog.require('os.structs.ITreeNodeSupplier');
 
 

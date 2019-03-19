@@ -7,6 +7,7 @@ goog.provide('plugin.file.kml.tour.parseTour');
 goog.require('ol.format.KML');
 goog.require('ol.format.XSD');
 goog.require('ol.xml');
+goog.require('os.map.FlightMode');
 goog.require('plugin.file.kml.tour.FlyTo');
 goog.require('plugin.file.kml.tour.SoundCue');
 goog.require('plugin.file.kml.tour.Tour');
@@ -74,7 +75,7 @@ plugin.file.kml.tour.parseFlyTo_ = function(node, objectStack) {
     var duration = /** @type {number} */ (flyToProps['duration'] || 0) * 1000;
 
     // only 'smooth' and 'bounce' are allowed values, default to 'bounce'
-    var flightMode = flyToProps['flyToMode'] === 'smooth' ? os.FlightMode.SMOOTH : os.FlightMode.BOUNCE;
+    var flightMode = flyToProps['flyToMode'] === 'smooth' ? os.map.FlightMode.SMOOTH : os.map.FlightMode.BOUNCE;
 
     // if center isn't defined, the flight should still adjust heading, pitch, etc
     var center;
