@@ -120,7 +120,7 @@ os.search.SearchManager.prototype.registerSearch = function(search) {
 
       // attach listeners
       search.listen(os.search.SearchEventType.SUCCESS, this.handleSearchSuccess_, false, this);
-      search.listen(os.search.SearchEventType.ERROR, this.handleSearchError_, false, this);
+      search.listen(os.search.SearchEventType.ERROR, this.handleSearchError, false, this);
       search.listen(os.search.SearchEventType.AUTOCOMPLETED, this.handleAutocompleteSuccess_, false, this);
       search.listen(os.search.SearchEventType.AUTOCOMPLETEFAIL, this.handleAutocompleteFailure_, false, this);
 
@@ -280,9 +280,9 @@ os.search.SearchManager.prototype.sortResults = function() {
 
 /**
  * @param {os.search.SearchEvent} event
- * @private
+ * @protected
  */
-os.search.SearchManager.prototype.handleSearchError_ = function(event) {
+os.search.SearchManager.prototype.handleSearchError = function(event) {
   var search = /** @type {os.search.ISearch} */ (event.target);
   delete this.loading_[search.getId()];
   this.dispatch();
