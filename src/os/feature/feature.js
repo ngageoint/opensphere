@@ -10,7 +10,9 @@ goog.require('ol.geom.Point');
 goog.require('ol.geom.Polygon');
 goog.require('ol.source.Vector');
 goog.require('ol.source.VectorEventType');
+goog.require('os');
 goog.require('os.Fields');
+goog.require('os.MapContainer');
 goog.require('os.data.RecordField');
 goog.require('os.geo');
 goog.require('os.geom.Ellipse');
@@ -318,7 +320,7 @@ os.feature.createLineOfBearing = function(feature, opt_replace, opt_lobOpts) {
     var center = ol.proj.toLonLat(geom.getFirstCoordinate(), os.map.PROJECTION);
     var bearing = os.feature.getColumnValue(feature, opt_lobOpts.bearingColumn);
     var length = opt_lobOpts.lengthType == 'column' ? // get from column unless manual
-      os.feature.getColumnValue(feature, opt_lobOpts.lengthColumn, 0) : 1;
+        os.feature.getColumnValue(feature, opt_lobOpts.lengthColumn, 0) : 1;
     if (center && bearing != null && !isNaN(bearing) && length) {
       // sanitize
       bearing = bearing % 360;
@@ -394,7 +396,7 @@ os.feature.createLineOfBearing = function(feature, opt_replace, opt_lobOpts) {
           lengthError = 1;
         }
         var cLengthError = os.math.convertUnits(lengthError, os.style.DEFAULT_UNITS, lengthErrorUnits) *
-          lengthErrorMultiplier;
+            lengthErrorMultiplier;
         if (bearingError > 0 && bearingErrorMultiplier > 0) {
           var plusPts = os.geo.interpolateArc(center, effectiveLength + cLengthError,
               Math.min(bearingError * bearingErrorMultiplier * 2, 360), bearing);

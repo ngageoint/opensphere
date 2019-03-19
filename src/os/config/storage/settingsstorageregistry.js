@@ -52,8 +52,11 @@ goog.addSingletonGetter(os.config.storage.SettingsStorageRegistry);
 os.config.storage.SettingsStorageRegistry.prototype.addStorage = function(storage, opt_index) {
   goog.array.insertAt(this.availableReadStorages_, storage,
       opt_index !== undefined ? opt_index : this.availableReadStorages_.length);
-  if (storage.writeType === os.config.storage.SettingsWritableStorageType.REMOTE) {
-    this.hasRemoteStorage = true;
+  if (os.implements(storage, os.config.storage.ISettingsWritableStorage.ID)) {
+    if ((/** @type {os.config.storage.ISettingsWritableStorage} */ (storage)).writeType ===
+        os.config.storage.SettingsWritableStorageType.REMOTE) {
+      this.hasRemoteStorage = true;
+    }
   }
 };
 
@@ -108,7 +111,8 @@ os.config.storage.SettingsStorageRegistry.prototype.updateWriteStorage_ = functi
   for (var i = this.availableReadStorages_.length - 1; i >= 0; i--) {
     var candidate = this.availableReadStorages_[i];
     if (os.implements(candidate, os.config.storage.ISettingsWritableStorage.ID) &&
-        candidate.writeType === this.writeToType_ && candidate.canAccess) {
+        (/** @type {os.config.storage.ISettingsWritableStorage} */ (candidate)).writeType ===
+            this.writeToType_ && candidate.canAccess) {
       writeTo = candidate;
       break;
     }
@@ -151,4 +155,15 @@ os.config.storage.SettingsStorageRegistry.prototype.getStoragesToClear = functio
         /** @type {os.config.storage.ISettingsWritableStorage} */ (storage).needsCleared;
   }, this);
   return /** @type {!Array.<!os.config.storage.ISettingsWritableStorage>} */ (writablesToClear);
+};
+
+
+/**
+ * Reset storage registry
+ */
+os.config.storage.SettingsStorageRegistry.prototype.reset = function() {
+  this.availableReadStorages_.length = 0;
+  this.writeToType_ = os.config.storage.SettingsWritableStorageType.LOCAL;
+  this.writeToStorage_ = null;
+  this.hasRemoteStorage = false;
 };

@@ -25,6 +25,7 @@ goog.require('os.ui.onboarding.contextOnboardingDirective');
  * @enum {string}
  */
 os.ui.windowSelector = {
+  APP: '#ng-app',
   CONTAINER: '#js-window__container',
   CONTENT: '.js-window__content',
   HEADER: '.js-window__header',
