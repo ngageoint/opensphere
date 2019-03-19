@@ -1,6 +1,5 @@
 goog.provide('os.bearing');
 goog.require('os.config.Settings');
-goog.require('os.geo');
 goog.require('os.net.Request');
 
 

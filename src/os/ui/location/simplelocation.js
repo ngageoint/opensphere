@@ -10,11 +10,6 @@ goog.require('goog.async.Delay');
 goog.require('os.config.Settings');
 goog.require('os.ui');
 goog.require('os.ui.Module');
-goog.require('os.ui.location');
-goog.require('os.ui.location.ddmFilter');
-goog.require('os.ui.location.degFilter');
-goog.require('os.ui.location.dmsFilter');
-goog.require('os.ui.location.mgrsFilter');
 
 
 

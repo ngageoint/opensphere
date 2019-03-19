@@ -1,4 +1,5 @@
 goog.require('ol.xml');
+goog.require('os.map.FlightMode');
 goog.require('plugin.file.kml.tour.FlyTo');
 goog.require('plugin.file.kml.tour.Tour');
 goog.require('plugin.file.kml.tour.TourControl');
@@ -61,7 +62,7 @@ describe('plugin.file.kml.tour.parseTour', function() {
         var flyTo = tour.getPlaylist()[0];
         expect(flyTo instanceof plugin.file.kml.tour.FlyTo).toBe(true);
         expect(flyTo.duration_).toBe(plugin.file.kml.tour.FlyTo.DEFAULT_DURATION);
-        expect(flyTo.options_.flightMode).toBe(os.FlightMode.BOUNCE);
+        expect(flyTo.options_.flightMode).toBe(os.map.FlightMode.BOUNCE);
       });
 
       it('parses a ' + namespace + 'FlyTo element with duration', function() {
@@ -97,7 +98,7 @@ describe('plugin.file.kml.tour.parseTour', function() {
         var tour = plugin.file.kml.tour.parseTour(getTourNode(text));
         var flyTo = tour.getPlaylist()[0];
         expect(flyTo instanceof plugin.file.kml.tour.FlyTo).toBe(true);
-        expect(flyTo.options_.flightMode).toBe(os.FlightMode.SMOOTH);
+        expect(flyTo.options_.flightMode).toBe(os.map.FlightMode.SMOOTH);
       });
 
       it('parses a ' + namespace + 'FlyTo element with invalid flyToMode', function() {
@@ -115,7 +116,7 @@ describe('plugin.file.kml.tour.parseTour', function() {
         var tour = plugin.file.kml.tour.parseTour(getTourNode(text));
         var flyTo = tour.getPlaylist()[0];
         expect(flyTo instanceof plugin.file.kml.tour.FlyTo).toBe(true);
-        expect(flyTo.options_.flightMode).toBe(os.FlightMode.BOUNCE);
+        expect(flyTo.options_.flightMode).toBe(os.map.FlightMode.BOUNCE);
       });
 
       it('parses a ' + namespace + 'FlyTo element with a Camera definition', function() {

@@ -1,6 +1,5 @@
 goog.provide('os.im.mapping.RadiusMapping');
 goog.require('os.Fields');
-goog.require('os.geo');
 goog.require('os.im.mapping.MappingRegistry');
 goog.require('os.im.mapping.RenameMapping');
 goog.require('os.math.Units');

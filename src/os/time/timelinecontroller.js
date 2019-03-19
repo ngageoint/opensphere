@@ -7,7 +7,6 @@ goog.require('goog.math.Range');
 goog.require('goog.math.RangeSet');
 goog.require('os.IPersistable');
 goog.require('os.config.Settings');
-goog.require('os.time.Duration');
 goog.require('os.time.TimeRange');
 goog.require('os.time.TimelineControllerEvent');
 goog.require('os.time.TimelineEventType');
@@ -584,8 +583,8 @@ os.time.TimelineController.prototype.setSuppressShowEvents = function(value) {
 os.time.TimelineController.prototype.clamp = function() {
   var animateRange = this.getAnimationRange();
   if ((this.current_ > animateRange.end && this.lastCurrent_ >= animateRange.end) ||
-      (this.lastCurrent_ <= animateRange.start + this.offset_ && this.current_ <= animateRange.start)
-      || (this.lock_ && this.offset_ === 0)) {
+      (this.lastCurrent_ <= animateRange.start + this.offset_ && this.current_ <= animateRange.start) ||
+      (this.lock_ && this.offset_ === 0)) {
     if (this.current_ - this.lastCurrent_ > 0) {
       this.first();
     } else {
@@ -808,7 +807,7 @@ os.time.TimelineController.prototype.adjustCurrent_ = function(dir) {
 
       if (this.lock_) {
         if (this.loadRanges_.getBounds().end === range.end && (this.skip_ + nextPosition -
-          this.getAnimationRange().end) > 0) {
+            this.getAnimationRange().end) > 0) {
           // for last frame only, let it go past end
           this.current_ = lastCurrent;
         } else {

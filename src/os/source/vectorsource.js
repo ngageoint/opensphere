@@ -27,7 +27,6 @@ goog.require('os.data.histo.SourceHistogram');
 goog.require('os.defines');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.events.SelectionType');
-goog.require('os.feature');
 goog.require('os.feature.DynamicPropertyChange');
 goog.require('os.geo');
 goog.require('os.geo.jsts');

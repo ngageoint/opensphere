@@ -10,6 +10,7 @@ goog.require('os.metrics.Metrics');
 goog.require('os.ui.im.ImportEvent');
 goog.require('os.ui.im.ImportProcess');
 goog.require('os.ui.menu.MenuEvent');
+goog.require('os.ui.query.area.chooseAreaDirective');
 goog.require('os.ui.query.area.userAreaDirective');
 goog.require('os.ui.query.cmd.AreaAdd');
 
@@ -98,6 +99,7 @@ os.query.isWorldQuery = function(geometry) {
 
   return false;
 };
+
 
 /**
  * The world extent in EPSG:4326. This is the max precision that a polygon can handle.

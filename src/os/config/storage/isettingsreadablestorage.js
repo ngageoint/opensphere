@@ -25,4 +25,3 @@ os.config.storage.ISettingsReadableStorage.ID = 'os.config.storage.ISettingsRead
  * @template T
  */
 os.config.storage.ISettingsReadableStorage.prototype.getSettings;
-

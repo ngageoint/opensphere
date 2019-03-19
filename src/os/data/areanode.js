@@ -5,7 +5,6 @@ goog.require('ol.events');
 goog.require('os.command.AreaToggle');
 goog.require('os.data.ISearchable');
 goog.require('os.events.PropertyChangeEvent');
-goog.require('os.feature');
 goog.require('os.implements');
 goog.require('os.structs.TriState');
 goog.require('os.ui.menu.IMenuSupplier');

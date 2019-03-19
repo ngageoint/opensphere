@@ -8,15 +8,14 @@ goog.require('ol.Feature');
 goog.require('ol.format.GeoJSON');
 goog.require('ol.source.Vector');
 goog.require('ol.source.VectorEventType');
-goog.require('os.MapContainer');
 goog.require('os.array');
 goog.require('os.command.TransformAreas');
 goog.require('os.config.Settings');
 goog.require('os.data.CollectionManager');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.map');
-goog.require('os.query');
 goog.require('os.query.BaseAreaManager');
+goog.require('os.query.utils');
 goog.require('os.ui.window');
 
 
@@ -340,7 +339,7 @@ os.query.AreaManager.prototype.addInternal = function(feature, opt_bulk) {
       feature.set(os.interpolate.METHOD_FIELD, os.interpolate.getMethod(), true);
     }
 
-    if (os.query.isWorldQuery(geometry)) {
+    if (os.query.utils.isWorldQuery(geometry)) {
       feature.set(os.interpolate.METHOD_FIELD, os.interpolate.Method.NONE);
     }
   }
