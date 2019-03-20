@@ -523,14 +523,15 @@ plugin.track.createTrack = function(options) {
  * Adds a set of features to a track.
  * @param {!ol.Feature} track The track
  * @param {!Array<!ol.Feature>} features The features to add to the track
- *
+ * @return {!Array<!ol.Feature>} return the non-duplicate features
  * @suppress {accessControls} To allow direct access to line coordinates.
  */
 plugin.track.addFeaturesToTrack = function(track, features) {
+  var addedFeatures = /** @type {!Array<!ol.Feature>} */ ([]);
   var sortField = /** @type {string|undefined} */ (track.get(plugin.track.TrackField.SORT_FIELD));
   if (!sortField) {
     goog.log.error(plugin.track.LOGGER_, 'Unable to add features to track: track is missing sorting data.');
-    return;
+    return addedFeatures;
   }
 
   var coordinates = plugin.track.getTrackCoordinates(features, sortField);
@@ -559,6 +560,7 @@ plugin.track.addFeaturesToTrack = function(track, features) {
       if (insertIndex < 0) {
         // insert coordinates in the corresponding location
         goog.array.insertArrayAt(flatCoordinates, coordinate, ~insertIndex);
+        addedFeatures.push(features[i]); // coordinates should be at the same index as the features
       } else {
         skipped++;
       }
@@ -573,6 +575,8 @@ plugin.track.addFeaturesToTrack = function(track, features) {
   if (skipped) {
     goog.log.info(plugin.track.LOGGER_, 'Skipped ' + skipped + ' features due to missing/duplicate sort value.');
   }
+
+  return addedFeatures;
 };
 
 
