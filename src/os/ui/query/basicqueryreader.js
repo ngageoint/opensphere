@@ -42,7 +42,7 @@ os.ui.query.BasicQueryReader.prototype.parseEntries = function() {
   this.excEntries_ = [];
 
   this.parseEntries_(this.filter);
-  if (this.entries_.length > 0) {
+  if (this.entries_.length > 0 || this.excEntries_.length > 0) {
     os.ui.queryManager.addEntries(this.entries_.concat(this.excEntries_));
   }
 };
