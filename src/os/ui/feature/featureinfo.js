@@ -4,6 +4,7 @@ goog.provide('os.ui.feature.featureInfoDirective');
 goog.require('goog.Disposable');
 goog.require('ol.events');
 goog.require('ol.geom.Point');
+goog.require('os.fn');
 goog.require('os.layer');
 goog.require('os.map');
 goog.require('os.plugin.PluginManager');
@@ -68,6 +69,12 @@ os.ui.feature.FeatureInfoCtrl = function($scope, $element) {
    * @type {function(os.ui.tab.FeatureTab):string}
    */
   this['getUi'] = goog.bind(this.getUi_, this);
+
+  /**
+   * The displayed title for the active feature.
+   * @type {string}
+   */
+  this['title'] = '';
 
   /**
    * @type {?angular.JQLite}
@@ -176,6 +183,7 @@ os.ui.feature.FeatureInfoCtrl.prototype.onFeatureChange = function(newVal) {
 
   this.updateGeometry();
   this.updateTabs_();
+  this.updateTitle_();
 
   if (newVal) {
     var feature = newVal[0];
@@ -218,6 +226,27 @@ os.ui.feature.FeatureInfoCtrl.prototype.updateGeometry = function() {
       }
     }
   }
+};
+
+
+/**
+ * Update the title for the active feature.
+ * @private
+ */
+os.ui.feature.FeatureInfoCtrl.prototype.updateTitle_ = function() {
+  var parts = [];
+
+  var feature = /** @type {ol.Feature} */ (this.scope['items'][0]);
+  if (feature) {
+    var sourceId = /** @type {string|undefined} */ (feature.get('sourceId'));
+    if (sourceId) {
+      parts.push(os.layer.getTitle(sourceId, false) || undefined);
+    }
+
+    parts.push(os.feature.getTitle(feature) || undefined);
+  }
+
+  this['title'] = parts.filter(os.fn.filterFalsey).join(': ');
 };
 
 
@@ -290,17 +319,4 @@ os.ui.feature.FeatureInfoCtrl.prototype.showDescription = function(event) {
   if (descTabIndex > -1) {
     this.setActiveTab(this['tabs'][descTabIndex]);
   }
-};
-
-/**
- * Parses feature info for title.
- * @return {string}
- * @export
- */
-os.ui.feature.FeatureInfoCtrl.prototype.showFeatureTitle = function() {
-  var feature = this.scope['items'][0];
-  var sourceId = feature.get('sourceId');
-  var layerTitle = os.layer.getTitle(sourceId, true);
-  var title = '<h5>' + layerTitle + '</h5>';
-  return title;
 };

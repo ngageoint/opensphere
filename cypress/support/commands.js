@@ -48,6 +48,7 @@ Cypress.Commands.add('upload', function(fileName) {
           var dataTransfer = new DataTransfer();
           dataTransfer.items.add(testFile);
           el.files = dataTransfer.files;
+          return cy.wrap(subject).trigger('change', {force: true});
         });
   });
 });
