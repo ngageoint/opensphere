@@ -286,7 +286,9 @@ plugin.cesium.CesiumRenderer.prototype.getPixelFromCoordinate = function(coordin
 
     if (cartesian) {
       var pixelCartesian = scene.cartesianToCanvasCoordinates(cartesian);
-      result = [pixelCartesian.x, pixelCartesian.y];
+      if (pixelCartesian) {
+        result = [pixelCartesian.x, pixelCartesian.y];
+      }
     }
   }
 
