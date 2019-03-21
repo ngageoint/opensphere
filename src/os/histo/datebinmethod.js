@@ -115,6 +115,37 @@ os.histo.DateBinMethod.prototype.setDateBinType = function(value) {
 
 
 /**
+ * Get the maximum key for this date bin type, if there is one
+ * @param {number} opt_timestamp
+ * @return {number}
+ */
+os.histo.DateBinMethod.prototype.getTypeMax = function(opt_timestamp) {
+  opt_timestamp = opt_timestamp || 0;
+  var max = 0;
+  switch (this.getDateBinType()) {
+    case os.histo.DateBinType.HOUR_OF_DAY:
+      max = 23;
+      break;
+    case os.histo.DateBinType.HOUR_OF_WEEK:
+      max = 167;
+      break;
+    case os.histo.DateBinType.DAY_OF_WEEK:
+      max = 6;
+      break;
+    case os.histo.DateBinType.HOUR_OF_MONTH:
+      max = opt_timestamp ? moment.utc(opt_timestamp).daysInMonth() * 24 - 1 : 0;
+      break;
+    case os.histo.DateBinType.HOUR_OF_YEAR:
+      max = opt_timestamp ? moment.utc(opt_timestamp).isLeapYear() ? 24 * 366 - 1 : 24 * 365 - 1 : 0;
+      break;
+    default:
+      break;
+  }
+  return max;
+};
+
+
+/**
  * Return a map of the date bin types
  * @return {Object<string,string>}
  */
