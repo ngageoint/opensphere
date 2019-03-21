@@ -21,6 +21,15 @@ jQuery.prototype.datepicker;
 jQuery.prototype.draggable;
 
 /**
+ * @param {string} effect
+ * @param {Object=} opt_options
+ * @param {(number|string)=} opt_duration
+ * @param {function()=} opt_oncomplete
+ * @return {!jQuery}
+ */
+jQuery.prototype.effect;
+
+/**
  * @param {(string|Object)=} opt_arg1
  * @return {!jQuery}
  */
