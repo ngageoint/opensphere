@@ -302,12 +302,10 @@
       .form-group {
         flex-wrap: wrap;
 
-        // Make all columns 100% and no padding
+        // Make all columns 100%
         %full-columns {
           flex-basis: 100%;
           max-width: 100%;
-          padding-left: 0;
-          padding-right: 0;
         }
 
         %no-margin-left {
