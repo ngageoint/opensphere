@@ -86,18 +86,31 @@ os.query.queryWorld = function() {
  * @return {boolean} true the query matches os.query.WORLD_GEOM
  */
 os.query.isWorldQuery = function(geometry) {
-  var world = os.query.WORLD_GEOM;
-  if (world && geometry && geometry instanceof ol.geom.Polygon) {
+  if (os.query.worldArea_ == null) {
+    os.query.initWorldArea();
+  }
+
+  if (os.query.worldArea_ && geometry && geometry.getType() === ol.geom.GeometryType.POLYGON) {
     // transform the world extent to the current projection to compute the area
-    var worldExtent = ol.proj.transformExtent(os.query.WORLD_EXTENT, os.proj.EPSG4326, os.map.PROJECTION);
-    var worldArea = ol.extent.getArea(worldExtent);
-    if (goog.math.nearlyEquals(geometry.getArea(), worldArea) || geometry.getArea() == 0) {
-      geometry.setCoordinates(world.getCoordinates());
-      return true;
-    }
+    var geomArea = /** @type {ol.geom.Polygon} */ (geometry).getArea();
+    return goog.math.nearlyEquals(geomArea / os.query.worldArea_, 1, 1E-4) || geomArea == 0;
   }
 
   return false;
+};
+
+
+/**
+ * calculates world area
+ * @param {boolean=} opt_reset
+ */
+os.query.initWorldArea = function(opt_reset) {
+  if (opt_reset) {
+    os.query.worldArea_ = undefined;
+  } else {
+    var worldExtent = ol.proj.transformExtent(os.query.WORLD_EXTENT, os.proj.EPSG4326, os.map.PROJECTION);
+    os.query.worldArea_ = ol.extent.getArea(worldExtent);
+  }
 };
 
 
@@ -114,6 +127,13 @@ os.query.WORLD_EXTENT = [-179.9999999999999, -89.99999999999999, 180, 90];
  * @type {ol.geom.Polygon}
  */
 os.query.WORLD_GEOM = ol.geom.Polygon.fromExtent(os.query.WORLD_EXTENT);
+
+
+/**
+ * @type {number|undefined}
+ * @private
+ */
+os.query.worldArea_ = undefined;
 
 
 /**
