@@ -16,11 +16,11 @@ os.ui.datetime.durationDirective = function() {
     replace: true,
     scope: {
       'dur': '=?',
-      'useSeconds': '@',
-      'useMinutes': '@',
-      'useHours': '@',
-      'useDays': '@',
-      'useWeeks': '@',
+      'useSeconds': '<',
+      'useMinutes': '<',
+      'useHours': '<',
+      'useDays': '<',
+      'useWeeks': '<',
       'min': '=?',
       'max': '=?',
       'disabled': '=?',
@@ -92,22 +92,22 @@ os.ui.datetime.DurationCtrl = function($scope) {
   /**
    * @type {number}
    */
-  this['maxdays'] = this.scope_['useWeeks'] === 'true' ? 6 : 1000;
+  this['maxdays'] = this.scope_['useWeeks'] ? 6 : 1000;
 
   /**
    * @type {number}
    */
-  this['maxhours'] = this.scope_['useDays'] === 'true' ? 23 : 1000;
+  this['maxhours'] = this.scope_['useDays'] ? 23 : 1000;
 
   /**
    * @type {number}
    */
-  this['maxminutes'] = this.scope_['useHours'] === 'true' ? 59 : 1000;
+  this['maxminutes'] = this.scope_['useHours'] ? 59 : 1000;
 
   /**
    * @type {number}
    */
-  this['maxseconds'] = this.scope_['useMinutes'] === 'true' ? 59 : 1000;
+  this['maxseconds'] = this.scope_['useMinutes'] ? 59 : 1000;
 
   /**
    * @type {?boolean}
@@ -181,27 +181,27 @@ os.ui.datetime.DurationCtrl.prototype.calculateTime_ = function() {
     this['valid'] = goog.object.isEmpty(this['errors']['duration']['$error']) ||
         this.scope_['disabled'] ? true : null;
 
-    if (this.scope_['useWeeks'] === 'true') {
+    if (this.scope_['useWeeks']) {
       this['weeks'] = Math.floor(r / 604800000);
       r = r % 604800000;
     }
 
-    if (this.scope_['useDays'] === 'true') {
+    if (this.scope_['useDays']) {
       this['days'] = Math.floor(r / 86400000);
       r = r % 86400000;
     }
 
-    if (this.scope_['useHours'] === 'true') {
+    if (this.scope_['useHours']) {
       this['hours'] = Math.floor(r / 3600000);
       r = r % 3600000;
     }
 
-    if (this.scope_['useMinutes'] === 'true') {
+    if (this.scope_['useMinutes']) {
       this['minutes'] = Math.floor(r / 60000);
       r = r % 60000;
     }
 
-    if (this.scope_['useSeconds'] === 'true') {
+    if (this.scope_['useSeconds']) {
       this['seconds'] = Math.floor(r / 1000);
     }
     os.ui.apply(this.scope_);
