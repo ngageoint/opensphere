@@ -46,6 +46,7 @@ describe('plugin.basemap.v4.BaseMapState', function() {
   };
 
   beforeEach(function() {
+    os.stateManager = os.state.StateManager.getInstance();
     stateManager = os.state.StateManager.getInstance();
     stateManager.setVersion('v4');
   });
