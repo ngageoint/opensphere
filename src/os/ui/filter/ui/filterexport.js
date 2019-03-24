@@ -181,7 +181,7 @@ os.ui.filter.ui.export = function(name, filters) {
     if (exportSuccess) {
       os.file.persist.saveFile(name, os.xml.serialize(root), 'text/xml; subtype=FILTER');
     } else {
-      var errorMsg = 'Something went wrong! We were unabled to export your filters.';
+      var errorMsg = 'Something went wrong! We were unable to export your filters.';
       os.alertManager.sendAlert(errorMsg, os.alert.AlertEventSeverity.ERROR);
     }
   } else {
