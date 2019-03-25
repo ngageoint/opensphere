@@ -7,6 +7,7 @@ goog.require('os.data.DrawingFeatureNode');
 goog.require('os.data.LayerNode');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.fn');
+goog.require('os.query.BaseAreaManager');
 
 
 
@@ -58,7 +59,7 @@ os.data.DrawingLayerNode.prototype.getState = function() {
 os.data.DrawingLayerNode.prototype.setLayer = function(value) {
   var currLayer = this.getLayer();
   var source = null;
-  var am = os.query.AreaManager.getInstance();
+  var am = os.query.BaseAreaManager.getInstance();
 
   if (value !== currLayer && currLayer) {
     source = /** @type {os.layer.Vector} */ (currLayer).getSource();
@@ -216,7 +217,7 @@ os.data.DrawingLayerNode.childSort_ = function(a, b) {
  */
 os.data.DrawingLayerNode.createNode_ = function(feature) {
   if (!os.data.DrawingLayerNode.isHidden(feature)) {
-    var node = os.query.AreaManager.getInstance().contains(feature) ?
+    var node = os.query.BaseAreaManager.getInstance().contains(feature) ?
         new os.data.AreaNode(feature) :
         new os.data.DrawingFeatureNode(feature);
 
@@ -253,7 +254,7 @@ os.data.DrawingLayerNode.prototype.getChildByFeature = function(feature) {
  * @protected
  */
 os.data.DrawingLayerNode.prototype.removeFeature = function(feature) {
-  var am = os.query.AreaManager.getInstance();
+  var am = os.query.BaseAreaManager.getInstance();
   if (feature && !os.data.DrawingLayerNode.isHidden(feature) && !am.contains(feature)) {
     var node = this.getChildByFeature(feature);
 

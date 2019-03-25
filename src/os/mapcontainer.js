@@ -48,16 +48,16 @@ goog.require('os.events.LayerEventType');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.fn');
 goog.require('os.geo');
-goog.require('os.im.ImporterEvent');
 goog.require('os.instanceOf');
-goog.require('os.interaction');
 goog.require('os.interpolate');
+goog.require('os.layer.AnimatedTile');
 goog.require('os.layer.Drawing');
 goog.require('os.layer.Group');
 goog.require('os.layer.ILayer');
 goog.require('os.layer.LayerType');
 goog.require('os.layer.Vector');
 goog.require('os.map');
+goog.require('os.map.FlightMode');
 goog.require('os.map.IMapContainer');
 goog.require('os.metrics');
 goog.require('os.metrics.Metrics');
@@ -557,7 +557,7 @@ os.MapContainer.prototype.flyTo = function(options) {
       }
 
       // 'bounce' uses default easing, 'smooth' uses linear.
-      if (options.flightMode === os.FlightMode.SMOOTH) {
+      if (options.flightMode === os.map.FlightMode.SMOOTH) {
         animateOptions.easing = ol.easing.linear;
       }
 
