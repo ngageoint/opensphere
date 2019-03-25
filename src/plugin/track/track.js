@@ -454,6 +454,7 @@ plugin.track.createTrack = function(options) {
 
   // prevent any further normalization of the geometry
   geometry.set(os.geom.GeometryField.NORMALIZED, true);
+  geometry.set(os.interpolate.METHOD_FIELD, os.interpolate.Method.NONE);
 
   // create the track feature
   var track;
@@ -708,17 +709,6 @@ plugin.track.setShowMarker = function(track, show, opt_update) {
  */
 plugin.track.setInterpolateMarker = function(track, doInterpolation) {
   track.set(plugin.track.TrackField.INTERPOLATE_MARKER, doInterpolation);
-  if (!doInterpolation) {
-    track.set(os.interpolate.METHOD_FIELD, os.interpolate.Method.NONE);
-    var geometry = track.get(os.interpolate.ORIGINAL_GEOM_FIELD);
-    if (geometry) {
-      track.set(os.interpolate.ORIGINAL_GEOM_FIELD, undefined);
-      track.setGeometry(/** @type {ol.geom.Geometry} */ (geometry));
-    }
-  } else {
-    track.set(os.interpolate.METHOD_FIELD, undefined);
-    os.interpolate.interpolateFeature(track);
-  }
   var range = os.time.TimelineController.getInstance().getCurrentRange();
   plugin.track.updateDynamic(track, range.start, range.end);
 };
