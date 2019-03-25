@@ -2,6 +2,7 @@ goog.provide('os.time.TimeRangePresets');
 
 goog.require('os.net.VariableReplacer');
 goog.require('os.time.TimeRange');
+goog.require('os.time.TimelineController');
 
 
 /**

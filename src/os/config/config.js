@@ -28,7 +28,8 @@ os.config.EventType = {
   WILL_SAVE: 'willSave',
   CLEARED: 'cleared',
   SAVED: 'saved',
-  UPDATED: 'updated'
+  UPDATED: 'updated',
+  RELOADED: 'reloaded'
 };
 
 

@@ -131,7 +131,7 @@ osx.map.CameraState;
  *   altitude: (number|undefined),
  *   center: (ol.Coordinate|undefined),
  *   duration: (number|undefined),
- *   flightMode: (os.FlightMode|undefined),
+ *   flightMode: (os.map.FlightMode|undefined),
  *   positionCamera: (boolean|undefined),
  *   heading: (number|undefined),
  *   pitch: (number|undefined),

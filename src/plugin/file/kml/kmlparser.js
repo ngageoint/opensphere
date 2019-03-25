@@ -566,7 +566,7 @@ plugin.file.kml.KMLParser.prototype.handleZipEntries = function(entries) {
   var firstEntry = null;
   var mainKml = /(doc|index)\.kml$/i;
   var anyKml = /\.kml$/i;
-  var img = /\.(png|jpg|jpeg|gif|bmp)$/i;
+  var img = /\.(png|jpg|jpeg|gif|bmp|do)$/i;
 
   for (var i = 0, n = entries.length; i < n; i++) {
     // if we have multiple entries, try to find one titled either doc.kml or index.kml as these

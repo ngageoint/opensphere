@@ -4,7 +4,6 @@ goog.provide('os.ui.feature.featureInfoDirective');
 goog.require('goog.Disposable');
 goog.require('ol.events');
 goog.require('ol.geom.Point');
-goog.require('os.feature');
 goog.require('os.fn');
 goog.require('os.layer');
 goog.require('os.map');

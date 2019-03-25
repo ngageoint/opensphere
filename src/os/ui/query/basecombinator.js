@@ -73,9 +73,9 @@ os.ui.query.baseCombinatorDirective = function() {
 os.ui.query.BaseCombinatorCtrl = function($scope, $element) {
   /**
    * @type {?angular.JQLite}
-   * @private
+   * @protected
    */
-  this.element_ = $element;
+  this.element = $element;
 
   /**
    * @type {?angular.Scope}
@@ -219,7 +219,7 @@ os.ui.query.BaseCombinatorCtrl.prototype.apply = function() {
  * @export
  */
 os.ui.query.BaseCombinatorCtrl.prototype.close = function() {
-  os.ui.window.close(this.element_);
+  os.ui.window.close(this.element);
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Filters.ADVANCED_CLOSE, 1);
 };
 
@@ -291,7 +291,7 @@ os.ui.query.BaseCombinatorCtrl.prototype.onDestroy = function() {
 
   this.disposeTree_();
   this.scope = null;
-  this.element_ = null;
+  this.element = null;
 };
 
 
@@ -1252,7 +1252,7 @@ os.ui.query.BaseCombinatorCtrl.prototype.import = function() {
  * @export
  */
 os.ui.query.BaseCombinatorCtrl.prototype.openImportMenu = function() {
-  var target = this.element_.find('.js-import-group');
+  var target = this.element.find('.js-import-group');
   var menu = os.ui.menu.areaImport.MENU;
   if (menu && target && target.length) {
     menu.open(undefined, {

@@ -36,12 +36,12 @@ plugin.file.geojson.GeoJSONLayerConfig.prototype.initializeConfig = function(opt
  */
 plugin.file.geojson.GeoJSONLayerConfig.prototype.getImporter = function(options) {
   var importer = plugin.file.geojson.GeoJSONLayerConfig.base(this, 'getImporter', options);
-  if (this.parserConfig['mappings'] != null) {
-    importer.setAutoMappings(this.parserConfig['mappings']);
-  } else {
+  if (this.parserConfig['mappings'] == null || this.parserConfig['mappings'].length == 0) {
     // there was no user interaction, so default the mappings to a set the importer would have used
     importer.selectAutoMappings([os.im.mapping.AltMapping.ID, os.im.mapping.OrientationMapping.ID,
       os.im.mapping.SemiMajorMapping.ID, os.im.mapping.SemiMinorMapping.ID, os.im.mapping.time.DateTimeMapping.ID]);
+  } else {
+    importer.setAutoMappings(this.parserConfig['mappings']);
   }
   return importer;
 };

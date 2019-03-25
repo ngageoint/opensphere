@@ -27,7 +27,6 @@ goog.require('os.data.histo.SourceHistogram');
 goog.require('os.defines');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.events.SelectionType');
-goog.require('os.feature');
 goog.require('os.feature.DynamicPropertyChange');
 goog.require('os.geo');
 goog.require('os.geo.jsts');
@@ -890,10 +889,10 @@ os.source.Vector.prototype.updateColumns = function(features) {
         if (!this.hasColumn(key) && !os.feature.isInternalField(key)) {
           this.addColumn(key);
           change = true;
-        } else if (key === os.data.RecordField.TIME && !this.hasColumn(os.data.RecordField.TIME) &&
-            !this.hasColumn(os.Fields.TIME)) {
+        } else if (key === os.data.RecordField.TIME && !this.hasColumn(os.data.RecordField.TIME)) {
           // a time column was mapped, so add it to the source if there isn't one
-          this.addColumn(os.data.RecordField.TIME, 'TIME');
+          var column = os.source.column.create(os.data.RecordField.TIME, 'TIME');
+          this.columns.unshift(column); // always keep record time over any other TIME column
           change = true;
         }
       }
