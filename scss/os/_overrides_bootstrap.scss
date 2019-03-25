@@ -29,6 +29,8 @@ $form-control-disabled-border: $gray-600 !default;
 
 // ui-menu-item has some spacer between font awesome icons and dropdown text. Has better readability
 .dropdown-item {
+  cursor: pointer;
+
   i.fa {
     margin-right: ($spacer * .25);
   }
