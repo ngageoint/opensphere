@@ -249,9 +249,9 @@ os.ui.file.method.UrlMethod.prototype.onLoad = function(event) {
 
   this.file_ = os.file.createFromContent(fileName, url, undefined, response);
 
-  if (!this.file_.getContentType()) {
+  if (!this.file_.getContentType() && headers) {
     // extract the content-type header if possible
-    var contentType = headers && headers['Content-Type'] || headers['content-type'];
+    var contentType = headers['Content-Type'] || headers['content-type'];
     this.file_.setContentType(contentType);
   }
 
