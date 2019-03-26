@@ -17,41 +17,41 @@ describe('SHP import', function() {
     cy.get(os.shpImportDialog.DONE_BUTTON).click();
 
     // Load a layer
-    cy.get(os.layersDialog.Layers.Tree.LAYER_4)
+    cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4)
         .should('contain', 'smoke-tests/load-data-file-test-features.zip Features (291)');
-    cy.get(os.layersDialog.Layers.Tree.LAYER_4).rightClick();
-    cy.get(os.layersDialog.Layers.contextMenu.MOST_RECENT).click();
-    cy.get(os.layersDialog.Layers.Tree.LAYER_4).rightClick();
-    cy.get(os.layersDialog.Layers.contextMenu.GO_TO).click();
+    cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4).rightClick();
+    cy.get(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.Local.contextMenu.menuOptions.MOST_RECENT).click();
+    cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4).rightClick();
+    cy.get(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.Local.contextMenu.menuOptions.GO_TO).click();
 
     // Open the timeline and animate the data (view window animates)
-    cy.get(os.Toolbar.TIMELINE_TOGGLE).click();
+    cy.get(os.Toolbar.TIMELINE_TOGGLE_BUTTON).click();
     cy.get(os.Timeline.PANEL).should('be.visible');
     cy.get(os.Timeline.HISTOGRAM_POINTS).should('be.visible');
     cy.get(os.Timeline.VIEW_WINDOW).invoke('position').then(function(elementPosition) {
       cy.get(os.Timeline.PLAY_BUTTON).click();
       cy.get(os.Timeline.VIEW_WINDOW).invoke('position').should('not.equal', elementPosition);
     });
-    cy.get(os.Toolbar.TIMELINE_TOGGLE).click();
+    cy.get(os.Toolbar.TIMELINE_TOGGLE_BUTTON).click();
     cy.get(os.Timeline.PANEL).should('not.exist');
 
     // Open the timeline and animate the data (feature count changes)
-    cy.get(os.Toolbar.TIMELINE_TOGGLE).click();
+    cy.get(os.Toolbar.TIMELINE_TOGGLE_BUTTON).click();
     cy.get(os.Timeline.PANEL).should('be.visible');
     cy.get(os.Timeline.PLAY_BUTTON).click();
     cy.get(os.Timeline.PAUSE_BUTTON).click();
-    cy.get(os.layersDialog.Layers.Tree.LAYER_4)
-        .find(os.layersDialog.Layers.Tree.LAYER_FEATURE_COUNT)
+    cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4)
+        .find(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.FEATURE_COUNT_TEXT_WILDCARD)
         .invoke('text')
         .should('match', new RegExp('\\([0-9]\\d{0,3}\\/' + '291\\)'));
 
     // Clean up
-    cy.get(os.Toolbar.TIMELINE_TOGGLE).click();
+    cy.get(os.Toolbar.TIMELINE_TOGGLE_BUTTON).click();
     cy.get(os.Timeline.PANEL).should('not.exist');
-    cy.get(os.layersDialog.Layers.Tree.LAYER_4)
+    cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4)
         .should('contain', 'smoke-tests/load-data-file-test-features.zip Features (291)');
-    cy.get(os.layersDialog.Layers.Tree.LAYER_4).click();
-    cy.get(os.layersDialog.Layers.Tree.REMOVE_LAYER).click();
+    cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4).click();
+    cy.get(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.REMOVE_LAYER_BUTTON_WILDCARD).click();
     cy.get(os.layersDialog.DIALOG).should('not.contain', 'smoke-tests/load-data-file-test-features.zip Features');
     cy.get(os.Application.PAGE).type('v');
   });
