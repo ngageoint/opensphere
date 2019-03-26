@@ -148,10 +148,12 @@ All of our unit tests for opensphere are written in Jasmine_ and run with karma_
 .. _Jasmine: https://jasmine.github.io/
 .. _karma: https://karma-runner.github.io/1.0/index.html
 
-End to end tests are written in Mocha_ and run with Cypress_.  Tests can be started either from the command line via ``npm run test:cypress``, or interactively via ``npm run start-server``, then ``npx cypress open``.  Test artifacts are available at ``/cypress/screenshots``, and ``/cypress/videos``.
+End to end tests are written in Mocha_ and run with Cypress_.  Tests can be started either from the command line via ``yarn test:cypress-all``, or interactively via ``yarn test:cypress``.  Test artifacts are available at ``/cypress/screenshots``, and ``/cypress/videos``.  The test configuration can be adjusted in Cypress' 'configuration file'_.  Selectors for all elements present in the GUI can be found in selectors.js_.
 
 .. _Mocha: https://github.com/mochajs/mocha
 .. _Cypress: https://github.com/cypress-io/cypress
+.. _configuration file: https://github.com/ngageoint/opensphere/blob/master/cypress.json
+.. _selectors.js: https://github.com/ngageoint/opensphere/blob/master/cypress/support/selectors.js
 
 Any contributions to OpenSphere should avoid breaking current tests and should include new tests that fully cover the changed areas.
 
