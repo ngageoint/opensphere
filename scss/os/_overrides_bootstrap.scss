@@ -99,5 +99,7 @@ body {
 }
 
 .page-link {
-  cursor: pointer;
+  &:not(:disabled):not(.disabled) {
+    cursor: pointer;
+  }
 }
