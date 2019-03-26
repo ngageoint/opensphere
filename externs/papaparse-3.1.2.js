@@ -12,6 +12,12 @@ var Papa = {};
 
 
 /**
+ * @type {string}
+ */
+Papa.SCRIPT_PATH;
+
+
+/**
  * @type {number}
  */
 Papa.LocalChunkSize;
