@@ -107,15 +107,10 @@ Software source code previously released under an open source license and then m
 End to end tests for Opensphere are written using [Cypress](https://github.com/cypress-io/cypress).
 
 ### Setup
-By default the ```baseURL``` is set to the [local compiled build](http://localhost:8282/workspace/opensphere/dist/opensphere), but this can be changed in cypress.json to an alternate  target.
+By default the ```baseURL``` is set to the [local compiled build](http://localhost:8282/workspace/opensphere/dist/opensphere), but this can be changed in [cypress.json](https://github.com/ngageoint/opensphere/blob/master/cypress.json) to an alternate  target.
 
 ### Running Tests
-Run all tests via the command line: ```npm run test:cypress```
-
-...or run tests with the [Test Runner](https://docs.cypress.io/guides/core-concepts/test-runner.html) (interactive gui):
-
-  1. ```npm run start-server```
-  2. ```npx cypress open```
+Run all tests via the command line ```yarn test:cypress-all``` or run tests interactively with the [Test Runner](https://docs.cypress.io/guides/core-concepts/test-runner.html) via ```yarn test:cypress```.
     
 
 ### Adding and modifying tests
