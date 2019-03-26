@@ -74,6 +74,11 @@ $form-control-disabled-border: $gray-600 !default;
   white-space: nowrap;
 }
 
+// This was removed in v4.3.1
+.btn:not(:disabled):not(.disabled) {
+  cursor: pointer;
+}
+
 html {
   // (Part 1) How bootstrap does box-sizing breaks 3rd party libraries box sizing.
   // This technique allows slickgrid to work
@@ -98,6 +103,7 @@ body {
   box-sizing: inherit;
 }
 
+// This was removed in v4.3.1
 .page-link {
   &:not(:disabled):not(.disabled) {
     cursor: pointer;
