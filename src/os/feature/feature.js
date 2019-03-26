@@ -154,7 +154,7 @@ os.feature.getOrientation = function(feature) {
  */
 os.feature.getRadius = function(feature, opt_units) {
   var value = os.feature.getEllipseField_(feature,
-      undefined,
+      os.fields.DEFAULT_RADIUS_COL_NAME,
       os.Fields.RADIUS,
       os.Fields.RADIUS_UNITS,
       opt_units);
