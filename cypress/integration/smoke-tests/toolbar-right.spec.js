@@ -27,7 +27,6 @@ describe('Toolbar right', function() {
       cy.get(os.saveStateDialog.DIALOG).should('not.be.visible');
 
       // Test
-      cy.wait(500); // TODO: Remove wait - https://github.com/ngageoint/opensphere/issues/385
       cy.get(os.Toolbar.Save.Menu.BUTTON).click();
       cy.get(os.Toolbar.Save.Menu.menuOptions.STATE).click();
       cy.get(os.saveStateDialog.DIALOG).should('be.visible');
@@ -71,7 +70,6 @@ describe('Toolbar right', function() {
       cy.get(os.importDataDialog.DIALOG).should('not.exist');
 
       // Test
-      cy.wait(500); // TODO: Remove wait - https://github.com/ngageoint/opensphere/issues/385
       cy.get(os.Toolbar.States.Menu.BUTTON).click();
       cy.get(os.Toolbar.States.Menu.menuOptions.IMPORT_STATE).click();
       cy.get(os.importDataDialog.DIALOG).should('be.visible');
