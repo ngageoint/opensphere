@@ -75,6 +75,12 @@ os.fields.DERIVED_COL_INDICATOR = '*';
 os.fields.DEFAULT_ALT_COL_NAME = os.Fields.ALT + ' (' +
     os.fields.DEFAULT_ALT_UNIT + ')' + os.fields.DERIVED_COL_INDICATOR;
 
+/**
+ * Default field/column name for Radius
+ * @type {string}
+ */
+os.fields.DEFAULT_RADIUS_COL_NAME = os.Fields.RADIUS + ' (' +
+    os.fields.DEFAULT_RADIUS_UNIT + ')' + os.fields.DERIVED_COL_INDICATOR;
 
 /**
  * Default field/column name for Bearing
@@ -115,10 +121,9 @@ os.fields.DESC_REGEXP = /^desc(ription)?$/i;
 os.fields.hideSpecialColumns = function(colDef) {
   var field = colDef['field'];
   // hide units columns and any other columns we are creating derived columns from
-  if (field == os.Fields.ALT_UNITS || field == os.Fields.SEMI_MINOR_UNITS ||
-      field == os.Fields.SEMI_MAJOR_UNITS || field == os.Fields.BEARING ||
-      field == os.Fields.BEARING || field == os.Fields.ALT ||
-      field == os.Fields.SEMI_MINOR || field == os.Fields.SEMI_MAJOR) {
+  if (field == os.Fields.ALT_UNITS || field == os.Fields.RADIUS_UNITS || field == os.Fields.SEMI_MINOR_UNITS ||
+      field == os.Fields.SEMI_MAJOR_UNITS || field == os.Fields.BEARING || field == os.Fields.RADIUS ||
+      field == os.Fields.ALT || field == os.Fields.SEMI_MINOR || field == os.Fields.SEMI_MAJOR) {
     colDef['visible'] = false;
   }
 };
@@ -136,6 +141,9 @@ os.fields.markDerived = function(colDef) {
   } else if (field == os.fields.DEFAULT_SEMI_MIN_COL_NAME) {
     colDef['toolTip'] = 'Derived Column';
     colDef['derivedFrom'] = os.Fields.SEMI_MINOR;
+  } else if (field == os.fields.DEFAULT_RADIUS_COL_NAME) {
+    colDef['toolTip'] = 'Derived Column';
+    colDef['derivedFrom'] = os.Fields.RADIUS;
   } else if (field == os.fields.DEFAULT_ALT_COL_NAME) {
     colDef['toolTip'] = 'Derived Column';
     colDef['derivedFrom'] = os.Fields.ALT;

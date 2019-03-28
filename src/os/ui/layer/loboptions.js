@@ -224,7 +224,7 @@ os.ui.layer.LobOptionsCtrl.prototype.supportsEllipse = function() {
     var source = /** @type {os.layer.Vector} */ (layer).getSource();
     if (source && os.instanceOf(source, os.source.Vector.NAME)) {
       source = /** @type {!os.source.Vector} */ (source);
-      if (!source.hasColumn(os.Fields.RADIUS) &&
+      if (!source.hasColumn(os.Fields.RADIUS) && !source.hasColumn(os.fields.DEFAULT_RADIUS_COL_NAME) &&
           (!source.hasColumn(os.Fields.SEMI_MAJOR) || !source.hasColumn(os.Fields.SEMI_MINOR)) &&
           (!source.hasColumn(os.fields.DEFAULT_SEMI_MAJ_COL_NAME) ||
           !source.hasColumn(os.fields.DEFAULT_SEMI_MIN_COL_NAME))) {
