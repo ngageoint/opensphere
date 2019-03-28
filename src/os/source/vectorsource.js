@@ -1066,7 +1066,8 @@ os.source.Vector.prototype.updateIndex = function(feature) {
  * @return {boolean}
  */
 os.source.Vector.prototype.supportsShape = function(shapeName) {
-  if (os.style.ELLIPSE_REGEXP.test(shapeName) && (!this.hasColumn(os.Fields.RADIUS) &&
+  if (os.style.ELLIPSE_REGEXP.test(shapeName) &&
+      (!this.hasColumn(os.Fields.RADIUS) && !this.hasColumn(os.fields.DEFAULT_RADIUS_COL_NAME) &&
       (!this.hasColumn(os.Fields.SEMI_MAJOR) || !this.hasColumn(os.Fields.SEMI_MINOR)) &&
       (!this.hasColumn(os.fields.DEFAULT_SEMI_MAJ_COL_NAME) || !this.hasColumn(os.fields.DEFAULT_SEMI_MIN_COL_NAME)))) {
     return false;
@@ -1117,16 +1118,15 @@ os.source.Vector.prototype.testShapeFields_ = function(value) {
 
   if (this.columns.length > 0) {
     if (os.style.ELLIPSE_REGEXP.test(value)) {
-      if ((!this.hasColumn(os.fields.DEFAULT_SEMI_MAJ_COL_NAME) ||
-          !this.hasColumn(os.fields.DEFAULT_SEMI_MIN_COL_NAME)) &&
-          !this.hasColumn(os.Fields.RADIUS)) {
+      if ((!this.hasColumn(os.fields.DEFAULT_SEMI_MAJ_COL_NAME) || !this.hasColumn(os.fields.DEFAULT_SEMI_MIN_COL_NAME))
+          && !this.hasColumn(os.fields.DEFAULT_RADIUS_COL_NAME)) {
         var msg = 'The ' + value + ' style assumes that the SEMI_MAJOR & SEMI_MINOR fields or RADIUS/CEP exist. ' +
             'If not, a point will be shown instead.';
         am.sendAlert(msg, os.alert.AlertEventSeverity.WARNING, this.log, 1);
       } else if (this.lastEllipseNotification_ == 0 || (now - this.lastEllipseNotification_ > 300000)) {
         // only show the alert if we don't have either axis unit column and we don't have a radius units column
         if (!(this.hasColumn(os.Fields.SEMI_MAJOR_UNITS) && this.hasColumn(os.Fields.SEMI_MINOR_UNITS)) &&
-            !this.hasColumn(os.Fields.RADIUS)) {
+            !this.hasColumn(os.Fields.RADIUS_UNITS)) {
           var msg = 'The ' + value + ' style assumes that the SEMI_MAJOR, SEMI_MINOR or RADIUS/CEP fields are in ' +
               'nautical miles. If the values are greater than or equal to 250, they are assumed to be in meters.';
           am.sendAlert(msg, os.alert.AlertEventSeverity.INFO, this.log, 1);
