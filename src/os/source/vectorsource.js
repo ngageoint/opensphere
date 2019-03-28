@@ -919,9 +919,10 @@ os.source.Vector.prototype.hasColumn = function(value) {
   }
 
   if (field) {
+    field = field.toUpperCase();
     var i = this.columns.length;
     while (i--) {
-      if (this.columns[i]['field'] == field) {
+      if (this.columns[i]['field'].toUpperCase() == field) {
         return true;
       }
     }
