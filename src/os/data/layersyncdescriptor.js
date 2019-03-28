@@ -143,13 +143,27 @@ os.data.LayerSyncDescriptor.prototype.getOptions = function() {
   var options = this.getLayerOptions();
   if (options) {
     if (!goog.isArray(options)) {
+      options['defaults'] = this.extractConfigDefaults(options);
       options = [options];
     }
-
     return options.map(this.applyLayerConfig, this);
   }
 
   return options;
+};
+
+
+/**
+ * @param {!Object<string, *>} options
+ * @return {!Object<string, *>}
+ */
+os.data.LayerSyncDescriptor.prototype.extractConfigDefaults = function(options) {
+  return {
+    'opacity': options['opacity'],
+    'brightness': options['brightness'],
+    'contrast': options['contrast'],
+    'saturation': options['saturation']
+  };
 };
 
 
