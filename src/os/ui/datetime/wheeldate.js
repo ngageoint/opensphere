@@ -7,6 +7,7 @@ goog.require('goog.events.MouseWheelHandler');
 goog.require('goog.log');
 goog.require('goog.log.Logger');
 goog.require('os.ui.Module');
+goog.require('os.ui.windowSelector');
 
 
 /**
@@ -23,7 +24,8 @@ os.ui.datetime.wheelDateDirective = function() {
       'date': '=',
       'disable': '=',
       'isRequired': '=',
-      'blurOnSelect': '=?'
+      'blurOnSelect': '=?',
+      'eventContainer': '@'
     },
     templateUrl: os.ROOT + 'views/datetime/wheeldate.html',
     controller: os.ui.datetime.WheelDateCtrl,
@@ -145,12 +147,20 @@ os.ui.datetime.WheelDateCtrl = function($scope, $element, $timeout) {
    */
   this['date'] = null;
 
+  //
+  // Some browsers (like Chrome 73+) treat wheel events on document-level elements as passive by default. If a valid
+  // selector is not provided, fall back on the element as the event target. Using the window/document/body will result
+  // in console exceptions and possibly unexpected handler behavior in browsers implementing this behavior.
+  //
+  var eventContainer = this.scope_['eventContainer'] || os.ui.windowSelector.APP;
+  var eventContainerEl = document.querySelector(eventContainer) || this.element_[0];
+
   /**
    * Handler for mouse wheel events.
    * @type {goog.events.MouseWheelHandler}
    * @private
    */
-  this.wheelHandler_ = new goog.events.MouseWheelHandler(goog.dom.getDocument());
+  this.wheelHandler_ = new goog.events.MouseWheelHandler(eventContainerEl);
 
   /**
    * @type {boolean}
