@@ -35,11 +35,11 @@ Cypress.Commands.add('login', function(clearLocalStorage) {
     indexedDB.deleteDatabase(config.IndexedDB.SETTINGS);
   }
   cy.visit(config.HIDE_TIPS);
-  cy.get(os.layersDialog.Layers.Tree.STREET_MAP_TILES, {timeout: 15000}).should('be.visible');
+  cy.get(os.layersDialog.Tabs.Layers.Tree.Type.mapLayer.STREET_MAP_TILES, {timeout: 15000}).should('be.visible');
 });
 
 Cypress.Commands.add('upload', function(fileName) {
-  cy.get(os.Application.FILE_INPUT).then(function(subject) {
+  cy.get(os.Application.HIDDEN_FILE_INPUT).then(function(subject) {
     cy.fixture(fileName, 'base64')
         .then(Cypress.Blob.base64StringToBlob)
         .then(function(blob) {
