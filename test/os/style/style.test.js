@@ -166,4 +166,46 @@ describe('os.style.createFeatureStyle', function() {
     // check all the colors and verify the rgba value
     expect(style.length).toBe(2);
   });
+
+  it('should get values from singleton configs', function() {
+    var config = {
+      'flat': true,
+      'nested': {
+        'value': 3
+      }
+    };
+
+    expect(os.style.getValue(['flat'], config)).toBe(true);
+    expect(os.style.getValue(['nested', 'value'], config)).toBe(3);
+    expect(os.style.getValue(['non-existant'], config)).toBe(undefined);
+  });
+
+  it('should get values from config lists', function() {
+    var config = {
+      'flat': true,
+      'nested': {
+        'value': 3
+      }
+    };
+
+    var config2 = {
+      'flat': false
+    };
+
+    var list = [config, config2];
+
+    expect(os.style.getValue(['flat'], list)).toBe(false);
+    expect(os.style.getValue(['nested', 'value'], list)).toBe(3);
+    expect(os.style.getValue(['non-existant'], config)).toBe(undefined);
+
+    var config3 = {
+      'nested': {
+        'value': 5
+      }
+    };
+
+    list.push(config3);
+
+    expect(os.style.getValue(['nested', 'value'], list)).toBe(5);
+  });
 });

@@ -18,50 +18,80 @@ goog.inherits(os.style.StyleReader, os.style.AbstractReader);
 
 
 /**
+ * @const
+ * @type {Array}
+ * @private
+ */
+os.style.StyleReader.scratchStyleIds_ = [];
+
+
+/**
+ * @const
+ * @type {Array<string>}
+ * @private
+ */
+os.style.StyleReader.scratchKeys_ = [];
+
+
+/**
  * @inheritDoc
  *
  * @suppress {checkTypes} To ignore errors caused by ol.style.Style being a struct.
  */
-os.style.StyleReader.prototype.getOrCreateStyle = function(config) {
+os.style.StyleReader.prototype.getOrCreateStyle = function(configs, opt_keys) {
   var geometry;
   var image;
   var fill;
   var stroke;
   var zIndex;
-  var styleIds = [];
+  var styleIds = os.style.StyleReader.scratchStyleIds_;
+  styleIds.length = 0;
 
-  zIndex = /** @type {number|undefined} */ (config['zIndex']) || 0;
+  var keys = os.style.StyleReader.scratchKeys_;
+  keys.length = 0;
+
+  keys.push('zIndex');
+  zIndex = /** @type {number|undefined} */ (os.style.getValue(keys, configs)) || 0;
   var hash = this.baseHash + zIndex;
+  keys.pop();
 
-  geometry = /** @type {string|undefined} */ (config['geometry']);
+  keys.push('geometry');
+  geometry = /** @type {string|undefined} */ (os.style.getValue(keys, configs));
   if (geometry) {
     hash += goog.string.hashCode(geometry);
   }
   styleIds.push(hash);
+  keys.pop();
 
-  var imageConfig = /** @type {Object.<string, *>|undefined} */ (config['image']);
+  keys.push('image');
+  var imageConfig = /** @type {Object.<string, *>|undefined} */ (os.style.getValue(keys, configs));
   if (imageConfig) {
-    image = this.readers['image'].getOrCreateStyle(imageConfig);
+    image = this.readers['image'].getOrCreateStyle(configs, keys);
     styleIds.push(image['id']);
   } else {
     styleIds.push(0);
   }
+  keys.pop();
 
-  var fillConfig = /** @type {Object.<string, *>|undefined} */ (config['fill']);
+  keys.push('fill');
+  var fillConfig = /** @type {Object.<string, *>|undefined} */ (os.style.getValue(keys, configs));
   if (fillConfig) {
-    fill = this.readers['fill'].getOrCreateStyle(fillConfig);
+    fill = this.readers['fill'].getOrCreateStyle(configs, keys);
     styleIds.push(fill['id']);
   } else {
     styleIds.push(0);
   }
+  keys.pop();
 
-  var strokeConfig = /** @type {Object.<string, *>|undefined} */ (config['stroke']);
+  keys.push('stroke');
+  var strokeConfig = /** @type {Object.<string, *>|undefined} */ (os.style.getValue(keys, configs));
   if (strokeConfig) {
-    stroke = this.readers['stroke'].getOrCreateStyle(strokeConfig);
+    stroke = this.readers['stroke'].getOrCreateStyle(configs, keys);
     styleIds.push(stroke['id']);
   } else {
     styleIds.push(0);
   }
+  keys.pop();
 
   // separate the id's for each style type to avoid collisions in the top-level cache (this one)
   var styleId = styleIds.join('-');

@@ -45,37 +45,44 @@ os.style.ShapeReader.RADIUS_MULTIPLIER = 1.33;
 /**
  * @inheritDoc
  */
-os.style.ShapeReader.prototype.getOrCreateStyle = function(config) {
+os.style.ShapeReader.prototype.getOrCreateStyle = function(configs, opt_keys) {
   var fill;
   var radius;
   var radius2;
   var stroke;
+  opt_keys = opt_keys || [];
 
-  var shapeKey = /** @type {string|undefined} */ (config['subType']) || 'point';
+  opt_keys.push('subType');
+  var shapeKey = /** @type {string|undefined} */ (os.style.getValue(opt_keys, configs)) || 'point';
   var hash = this.baseHash + goog.string.hashCode(shapeKey);
+  opt_keys.pop();
 
-  radius = /** @type {number|undefined} */ (config['radius']);
+  opt_keys.push('radius');
+  radius = /** @type {number|undefined} */ (os.style.getValue(opt_keys, configs));
   if (radius == null) {
     radius = os.style.DEFAULT_FEATURE_SIZE;
   }
-
   // {@link ol.style.RegularShape} draws to a canvas sized by the radius, and results in drawing features smaller than
   // {@link ol.style.Circle} (points) with the same size. this compensates and produces more consistent results.
   radius = Math.round(radius * os.style.ShapeReader.RADIUS_MULTIPLIER);
-
   hash += radius;
+  opt_keys.pop();
 
-  var fillConfig = /** @type {Object<string, *>|undefined} */ (config['fill']);
+  opt_keys.push('fill');
+  var fillConfig = /** @type {Object<string, *>|undefined} */ (os.style.getValue(opt_keys, configs));
   if (fillConfig) {
-    fill = this.readers['fill'].getOrCreateStyle(fillConfig);
+    fill = this.readers['fill'].getOrCreateStyle(configs, opt_keys);
     hash += fill['id'];
   }
+  opt_keys.pop();
 
-  var strokeConfig = /** @type {Object<string, *>|undefined} */ (config['stroke']);
+  opt_keys.push('stroke');
+  var strokeConfig = /** @type {Object<string, *>|undefined} */ (os.style.getValue(opt_keys, configs));
   if (strokeConfig) {
-    stroke = this.readers['stroke'].getOrCreateStyle(strokeConfig);
+    stroke = this.readers['stroke'].getOrCreateStyle(configs, opt_keys);
     hash += stroke['id'];
   }
+  opt_keys.pop();
 
   if (!this.cache[hash]) {
     var shapeConfig = os.style.ShapeDefaults[shapeKey];

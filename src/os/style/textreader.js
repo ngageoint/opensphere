@@ -20,34 +20,61 @@ goog.inherits(os.style.TextReader, os.style.AbstractReader);
 
 
 /**
+ * @const
+ * @type {Array<string>}
+ * @private
+ */
+os.style.TextReader.FIELDS_ = [
+  'text',
+  'textAlign',
+  'textBaseline',
+  'font',
+  'fillColor',
+  'strokeColor',
+  'strokeWidth',
+  'offsetX',
+  'offsetY'
+];
+
+
+/**
+ * @type {Array}
+ * @const
+ * @private
+ */
+os.style.TextReader.VALUES_ = new Array(os.style.TextReader.FIELDS_.length);
+
+
+/**
  * @inheritDoc
  */
-os.style.TextReader.prototype.getOrCreateStyle = function(config) {
-  var text = /** @type {string|undefined} */ (config['text']);
-  var textAlign = /** @type {string|undefined} */ (config['textAlign']) || 'center';
-  var textBaseline = /** @type {string|undefined} */ (config['textBaseline']) || 'middle';
-  var font = /** @type {string|undefined} */ (config['font']) || os.style.label.getFont();
-  var fillColor = /** @type {string|undefined} */ (config['fillColor']) || 'rgba(255,255,255,1)';
-  var strokeColor = /** @type {string|undefined} */ (config['strokeColor']) || 'rgba(0,0,0,1)';
-  var strokeWidth = config['strokeWidth'] !== undefined ? /** @type {number} */ (config['strokeWidth']) : 2;
-  var offsetX = config['offsetX'] !== undefined ? /** @type {number} */ (config['offsetX']) : 0;
-  var offsetY = config['offsetY'] !== undefined ? /** @type {number} */ (config['offsetY']) : 0;
+os.style.TextReader.prototype.getOrCreateStyle = function(configs, opt_keys) {
+  opt_keys = opt_keys || [];
+
+  var fields = os.style.TextReader.FIELDS_;
+  var values = os.style.TextReader.VALUES_;
+
+  for (var i = 0, n = fields.length; i < n; i++) {
+    opt_keys.push(fields[i]);
+    values[i] = os.style.getValue(opt_keys, configs);
+    opt_keys.pop();
+  }
 
   // do not cache text styles so they can be modified directly for text/color changes. these will be cached on each
   // feature instead.
   return new ol.style.Text({
-    text: text,
-    textAlign: textAlign,
-    textBaseline: textBaseline,
-    font: font,
+    text: values[0],
+    textAlign: values[1] || 'center',
+    textBaseline: values[2] || 'middle',
+    font: values[3] || os.style.label.getFont(),
     fill: new ol.style.Fill({
-      color: fillColor
+      color: values[4] || 'rgba(255,255,255,1)'
     }),
     stroke: new ol.style.Stroke({
-      color: strokeColor,
-      width: strokeWidth
+      color: values[5],
+      width: values[6]
     }),
-    offsetX: offsetX,
-    offsetY: offsetY
+    offsetX: values[7],
+    offsetY: values[8]
   });
 };

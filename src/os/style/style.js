@@ -207,13 +207,17 @@ os.style.SHAPES = {
     }
   },
   'Selected Ellipse': {
-    'selectedConfig': {
-      'geometry': os.data.RecordField.ELLIPSE
+    'config': {
+      'selectedConfig': {
+        'geometry': os.data.RecordField.ELLIPSE
+      }
     }
   },
   'Selected Ellipse with Center': {
-    'selectedConfig': {
-      'geometries': [os.data.RecordField.GEOM, os.data.RecordField.ELLIPSE]
+    'config': {
+      'selectedConfig': {
+        'geometries': [os.data.RecordField.GEOM, os.data.RecordField.ELLIPSE]
+      }
     }
   },
   'Line of Bearing': {
@@ -574,41 +578,6 @@ os.style.setConfigIcon = function(config, icon) {
 
 
 /**
- * Sets the rotation of an icon
- * Open Sphere style functions and OL3 rendering functions.
- * @param {Object} config
- * @param {boolean} showRotation
- * @param {number} rotateAmount
- */
-os.style.setConfigIconRotation = function(config, showRotation, rotateAmount) {
-  var rotation = {
-    'image': {
-      'rotation': showRotation ? goog.math.toRadians(rotateAmount) : 0
-    }
-  };
-  os.style.mergeConfig(rotation, config);
-};
-
-
-/**
- * Sets the rotation of an icon from a config object
- * Open Sphere style functions and OL3 rendering functions.
- * @param {Object} config
- * @param {Object} origin
- * @param {!ol.Feature} feature The feature
- * @suppress {accessControls} To allow direct access to feature metadata.
- */
-os.style.setConfigIconRotationFromObject = function(config, origin, feature) {
-  var showRotation = origin[os.style.StyleField.SHOW_ROTATION] || false;
-  var rotationColumn = origin[os.style.StyleField.ROTATION_COLUMN];
-  rotationColumn = typeof rotationColumn === 'string' ? rotationColumn : '';
-  var rotateAmount = Number(feature.values_[rotationColumn]);
-  rotateAmount = typeof rotateAmount === 'number' && !isNaN(rotateAmount) ? rotateAmount : 0;
-  os.style.setConfigIconRotation(config, showRotation, rotateAmount);
-};
-
-
-/**
  * Gets the icon rotation column used in a config.
  * @param {Object|undefined} config The style config.
  * @return {number} The icon or null if none was found.
@@ -761,26 +730,24 @@ os.style.setConfigSize = function(config, size) {
 
 /**
  * Merge sizes from two style configs into the target config.
- * @param {Object} featureConfig The feature config
- * @param {Object} layerConfig The layer config
- * @param {number=} opt_default The default size
+ * @param {Array<number>} sizes
+ * @param {number=} opt_default
  * @return {number}
  */
-os.style.getMergedSize = function(featureConfig, layerConfig, opt_default) {
-  var defaultSize = opt_default || os.style.DEFAULT_FEATURE_SIZE;
-
-  // combine the layer/feature scales to determine the final scale
-  var layerSize = os.style.getConfigSize(layerConfig);
-  var featureSize = os.style.getConfigSize(featureConfig);
-  if (layerSize != null && featureSize != null) {
-    // both available, so multiply the scale to determine final scale
-    var layerScale = os.style.sizeToScale(layerSize);
-    var featureScale = os.style.sizeToScale(featureSize);
-    return os.style.scaleToSize(layerScale * featureScale);
-  } else {
-    // otherwise return the first defined value
-    return layerSize || featureSize || defaultSize;
+os.style.getMergedSize = function(sizes, opt_default) {
+  if (!sizes || !sizes.length) {
+    return opt_default || os.style.DEFAULT_FEATURE_SIZE;
   }
+
+  var scale = 1;
+  var i = sizes.length;
+  while (i--) {
+    if (sizes[i] != null) {
+      scale *= os.style.sizeToScale(sizes[i]);
+    }
+  }
+
+  return os.style.scaleToSize(scale);
 };
 
 
@@ -801,21 +768,6 @@ os.style.sizeToScale = function(size) {
  */
 os.style.scaleToSize = function(scale) {
   return Math.round(scale * os.style.DEFAULT_FEATURE_SIZE);
-};
-
-
-/**
- * Get the base style configuration for a feature.
- * @param {!ol.Feature} feature The feature to update.
- * @param {Object=} opt_layerConfig The layer config.
- * @return {!Object} The base style configuration.
- *
- * @suppress {accessControls} To allow direct access to feature metadata.
- */
-os.style.getBaseFeatureConfig = function(feature, opt_layerConfig) {
-  // priority: feature > layer > default
-  return /** @type {Object|undefined} */ (feature.values_[os.style.StyleType.FEATURE]) || opt_layerConfig ||
-      os.style.DEFAULT_VECTOR_CONFIG;
 };
 
 
@@ -845,6 +797,14 @@ os.style.setFeatureStyle = function(feature, opt_source, opt_style) {
 
 
 /**
+ * @const
+ * @type {Array}
+ * @private
+ */
+os.style.scratchFeatureConfigArray_ = [];
+
+
+/**
  * Update the style on an array of features.
  * @param {Array<!ol.Feature>} features The features to update
  * @param {os.source.Vector=} opt_source The source containing the features
@@ -852,12 +812,41 @@ os.style.setFeatureStyle = function(feature, opt_source, opt_style) {
  */
 os.style.setFeaturesStyle = function(features, opt_source) {
   if (features.length > 0) {
+    var layerConfigs = [];
     var layerConfig = os.style.getLayerConfig(features[0], opt_source);
+    if (layerConfig) {
+      layerConfigs.push(layerConfig);
+    }
 
+    os.style.addShapeConfigsForLayer_(features[0], layerConfigs);
+    var replaceStyle = this.getValue(os.style.StyleField.REPLACE_STYLE, layerConfigs);
+
+    var styleConfigs = [];
     for (var i = 0, n = features.length; i < n; i++) {
       var feature = features[i];
 
-      var baseConfig = os.style.getBaseFeatureConfig(feature, layerConfig);
+      styleConfigs.length = 0;
+      if (replaceStyle || !(feature.get(os.style.StyleField.SKIP_LAYER_STYLE))) {
+        Array.prototype.push.apply(styleConfigs, layerConfigs);
+      }
+
+      var resetLength = styleConfigs.length;
+      var featureConfigs = /** @type {Object|undefined} */ (feature.values_[os.style.StyleType.FEATURE]);
+      if (!replaceStyle && featureConfigs) {
+        if (!Array.isArray(featureConfigs)) {
+          var tmp = os.style.scratchFeatureConfigArray_;
+          tmp.length = 0;
+          tmp[0] = featureConfigs;
+          featureConfigs = tmp;
+        }
+
+        for (var j = 0, m = featureConfigs.length; j < m; j++) {
+          styleConfigs.length = resetLength;
+          styleConfigs.push(featureConfigs[i]);
+          os.style.addTransientConfig_(feature, featureConfigs[i], styleConfigs);
+        }
+      }
+
       var style = os.style.createFeatureStyle(feature, baseConfig, layerConfig);
       os.style.setFeatureStyle(feature, opt_source, style);
     }
@@ -872,58 +861,109 @@ os.style.setFeaturesStyle = function(features, opt_source) {
  * @return {Object|undefined}
  */
 os.style.getLayerConfig = function(feature, opt_source) {
-  var config;
   var id = /** @type {string} */ (feature.get(os.data.RecordField.SOURCE_ID));
-  var skipLayerStyle = /** @type {boolean} */ (feature.get(os.style.StyleField.SKIP_LAYER_STYLE));
-  if (id && !skipLayerStyle) {
-    config = {};
-    // initialize config with the layer configuration or the default vector config
-    var defaultConfig = os.style.StyleManager.getInstance().getLayerConfig(id) || os.style.DEFAULT_VECTOR_CONFIG;
-    os.style.mergeConfig(defaultConfig, config);
+  return id ? os.style.StyleManager.getInstance().getLayerConfig(id) || os.style.DEFAULT_VECTOR_CONFIG : undefined;
+};
 
-    // add shape config from the source if set
-    var source = opt_source || os.feature.getSource(feature);
-    if (source && os.instanceOf(source, os.source.Vector.NAME)) {
-      var sourceShape = source.getGeometryShape();
-      var shape = sourceShape ? os.style.SHAPES[sourceShape] : undefined;
-      if (shape) {
-        if (shape['config']) {
-          var shapeConfig = shape['config'];
-          os.style.mergeConfig(shapeConfig, config);
-        }
 
-        if (shape['selectedConfig']) {
-          config['selectedConfig'] = shape['selectedConfig'];
-        }
+/**
+ * Adds shape configs to the configs array
+ * @param {ol.Feature} feature
+ * @param {Array<Object<string, *>>} configs
+ * @private
+ */
+os.style.addShapeConfigsForLayer_ = function(feature, configs) {
+  if (/** @type {boolean} */ (feature.get(os.style.StyleField.SKIP_LAYER_STYLE))) {
+    return;
+  }
 
-        // if the source shape is an icon, set the scale field from the radius (size)
-        if (sourceShape == os.style.ShapeType.ICON) {
-          var imageConfig = config[os.style.StyleField.IMAGE];
-          if (imageConfig && imageConfig['radius']) {
-            imageConfig['scale'] = os.style.sizeToScale(imageConfig['radius']);
+  // add shape config from the source if set
+  var source = opt_source || os.feature.getSource(feature);
+  if (source && os.instanceOf(source, os.source.Vector.NAME)) {
+    var sourceShape = source.getGeometryShape();
+    var shape = sourceShape ? os.style.SHAPES[sourceShape] : undefined;
+    if (shape) {
+      if (shape['config']) {
+        configs.push(shape['config']);
+      }
+
+      if (os.style.CENTER_LOOKUP[sourceShape]) {
+        var centerSourceShape = source.getCenterGeometryShape();
+        var centerShape = centerSourceShape ? os.style.SHAPES[centerSourceShape] : undefined;
+        if (centerShape) {
+          if (centerShape['config']) {
+            configs.push(centerShape['config']);
           }
-        } else if (os.style.CENTER_LOOKUP[sourceShape]) {
-          var centerSourceShape = source.getCenterGeometryShape();
-          var centerShape = centerSourceShape ? os.style.SHAPES[centerSourceShape] : undefined;
-          if (centerShape) {
-            if (centerShape['config']) {
-              var centerShapeConfig = centerShape['config'];
-              os.style.mergeConfig(centerShapeConfig, config);
-            }
+        }
+      }
 
-            if (centerSourceShape == os.style.ShapeType.ICON) {
-              var centerImageConfig = config[os.style.StyleField.IMAGE];
-              if (centerImageConfig && centerImageConfig['radius']) {
-                centerImageConfig['scale'] = os.style.sizeToScale(centerImageConfig['radius']);
-              }
+      // if the source shape is an icon, set the scale field from the radius (size)
+      if (sourceShape == os.style.ShapeType.ICON || centerShape == os.style.ShapeType.ICON) {
+        var imageRadius = os.style.getValue(configs);
+        if (imageRadius) {
+          configs.push({
+            'image': {
+              'scale': os.style.sizeToScale(imageRadius)
             }
-          }
+          });
         }
       }
     }
   }
+};
 
-  return config;
+
+/**
+ * @const
+ * @type {Array<string>}
+ * @private
+ */
+os.style.getValueScratchKeys_ = [];
+
+
+/**
+ * @const
+ * @type {Array}
+ * @private
+ */
+os.style.getValueScratchConfigs_ = [];
+
+
+/**
+ * @param {string|Array<string>} keys
+ * @param {Object<string, *>|Array<Object<string, *>>} configs
+ * @return {*}
+ */
+os.style.getValue = function(keys, configs) {
+  if (!Array.isArray(keys)) {
+    var tmpKeys = os.style.getValueScratchKeys_;
+    tmpKeys.length = 0;
+    tmpKeys.push(keys);
+    keys = tmpKeys;
+  }
+
+  if (!Array.isArray(configs)) {
+    var tmp = os.style.getValueScratchConfigs_;
+    tmp[0] = configs;
+    configs = tmp;
+  }
+
+  var i = configs.length;
+  while (i--) {
+    var obj = configs[i];
+    for (var j = 0, jj = keys.length; j < jj; j++) {
+      var key = keys[j];
+      if (key in obj) {
+        obj = obj[key];
+      } else {
+        break;
+      }
+    }
+
+    if (j === keys.length) {
+      return obj;
+    }
+  }
 };
 
 
@@ -938,135 +978,207 @@ os.style.isIconConfig = function(config) {
 
 
 /**
- * Combines all applicable style configs for a feature.
- * @param {!ol.Feature} feature The feature
- * @param {Object} baseConfig Base configuration for the feature
- * @param {Object=} opt_layerConfig Layer configuration for the feature
- * @return {Object}
- *
- * @suppress {accessControls} To allow direct access to feature metadata.
+ * @const
+ * @type {Object<string, *>}
+ * @private
  */
-os.style.createFeatureConfig = function(feature, baseConfig, opt_layerConfig) {
-  // color override ALWAYS wins, so apply it whether replacing feature styles or not
-  var colorOverride = /** @type {string|undefined} */ (feature.values_[os.data.RecordField.COLOR]);
+os.style.transientConfig_ = {};
 
-  if (opt_layerConfig && !!opt_layerConfig[os.style.StyleField.REPLACE_STYLE]) {
-    if (colorOverride) {
-      os.style.setConfigColor(opt_layerConfig, colorOverride);
-    }
+/**
+ * @const
+ * @type {Object<string, *>}
+ * @private
+ */
+os.style.transientImageConfig_ = {};
 
-    return opt_layerConfig;
+/**
+ * @const
+ * @type {Object<string, *>}
+ * @private
+ */
+os.style.transientStrokeConfig_ = {};
+
+
+/**
+ * @param {Object} obj
+ * @private
+ */
+os.style.clear_ = function(obj) {
+  for (var key in obj) {
+    obj[key] = undefined;
   }
-
-  // create a clone so we can mess with the config :(
-  var featureConfig = {};
-  os.style.mergeConfig(baseConfig, featureConfig);
-
-  if (!opt_layerConfig && feature) {
-    opt_layerConfig = os.style.getLayerConfig(feature);
-  }
-
-  // if the feature has its own style config, we need to resolve a few things against the layer config
-  var styleOverride = /** @type {Object|undefined} */ (feature.values_[os.style.StyleType.FEATURE]);
-  if (styleOverride && opt_layerConfig) {
-    if (styleOverride.length != undefined) {
-      styleOverride = styleOverride[0];
-    }
-
-    var imageConfig = featureConfig[os.style.StyleField.IMAGE];
-    if (imageConfig) {
-      // merge the layer size into the feature size
-      var mergedSize = os.style.getMergedSize(styleOverride[os.style.StyleField.IMAGE],
-          opt_layerConfig[os.style.StyleField.IMAGE], os.style.DEFAULT_FEATURE_SIZE);
-      imageConfig['radius'] = mergedSize;
-      imageConfig['scale'] = Math.max(os.style.sizeToScale(mergedSize), 0.01);
-    } else if (opt_layerConfig[os.style.StyleField.IMAGE]) {
-      // ensure the feature has an image config
-      featureConfig[os.style.StyleField.IMAGE] = {};
-      os.style.mergeConfig(opt_layerConfig[os.style.StyleField.IMAGE],
-          featureConfig[os.style.StyleField.IMAGE]);
-    }
-
-    // rotate icon as specified
-    if (featureConfig[os.style.StyleField.SHOW_ROTATION] !== undefined &&
-        featureConfig[os.style.StyleField.ROTATION_COLUMN] !== undefined) {
-      os.style.setConfigIconRotationFromObject(featureConfig, featureConfig, feature);
-    } else if (feature.values_[os.style.StyleField.SHOW_ROTATION] !== undefined &&
-        feature.values_[os.style.StyleField.ROTATION_COLUMN] !== undefined) {
-      os.style.setConfigIconRotationFromObject(featureConfig, feature.values_, feature);
-    }
-
-    var strokeConfig = featureConfig[os.style.StyleField.STROKE];
-    if (strokeConfig) {
-      // merge the layer size into the feature size
-      var mergedWidth = os.style.getMergedSize(styleOverride[os.style.StyleField.STROKE],
-          opt_layerConfig[os.style.StyleField.STROKE], os.style.DEFAULT_STROKE_WIDTH);
-      strokeConfig['width'] = Math.max(mergedWidth, 1);
-    } else if (opt_layerConfig[os.style.StyleField.STROKE]) {
-      // ensure the feature has a stroke config
-      featureConfig[os.style.StyleField.STROKE] = {};
-      os.style.mergeConfig(opt_layerConfig[os.style.StyleField.STROKE],
-          featureConfig[os.style.StyleField.STROKE]);
-    }
-  } else if (opt_layerConfig && opt_layerConfig[os.style.StyleField.SHOW_ROTATION] !== undefined && // rotate icon
-      opt_layerConfig[os.style.StyleField.ROTATION_COLUMN] !== undefined) {
-    os.style.setConfigIconRotationFromObject(featureConfig, opt_layerConfig, feature);
-  }
-
-  if (colorOverride) {
-    os.style.setConfigColor(featureConfig, colorOverride);
-  }
-
-  // if the feature has a custom opacity set, override the config opacity
-  var opacity = /** @type {string|number|undefined} */ (feature.get(os.style.StyleField.OPACITY));
-  if (opacity != null && !isNaN(opacity)) {
-    os.style.setConfigOpacityColor(featureConfig, Number(opacity), true);
-  }
-
-  return featureConfig;
 };
 
 
 /**
- * Verify appropriate geometries in a config object exist on a feature.
- * @param {!ol.Feature} feature The feature.
- * @param {!Object} config The config object.
- * @param {Object=} opt_layerConfig The layerConfig object.
+ * @param {!ol.Feature} feature The feature
+ * @param {Object<string, *>} baseConfig Base configuration for the feature
+ * @param {Array<Object<string, *>>} configs
+ * @private
+ *
+ * @suppress {accessControls} To allow direct access to feature metadata.
  */
-os.style.verifyGeometries = function(feature, config, opt_layerConfig) {
-  if (config['geometry'] == os.data.RecordField.LINE_OF_BEARING ||
-      config['geometries'] && config['geometries'].indexOf(os.data.RecordField.LINE_OF_BEARING) != -1) {
+os.style.addTransientConfig_ = function(feature, baseConfig, configs) {
+  var transientConfig = os.style.transientConfig_;
+
+  os.style.clear_(transientConfig);
+
+  var changed = false;
+  if (baseConfig) {
+    var i = configs.length;
+    var mergedScale = 1;
+    while (i--) {
+      var size = os.style.getConfigSize(configs[i]);
+      if (size) {
+        mergedScale *= os.style.sizeToScale(size);
+      }
+    }
+
+    if (os.style.getValue(os.style.StyleField.IMAGE, configs)) {
+      var imageConfig = os.style.transientImageConfig_;
+      os.style.clear_(imageConfig);
+
+      imageConfig['radius'] = os.style.scaleToSize(mergedScale);
+      imageConfig['scale'] = Math.max(mergedScale, 0.01);
+
+      // rotate icon as specified
+      var showRotation = os.style.getValue(os.style.StyleField.SHOW_ROTATION, configs) ||
+          feature.values_[os.style.StyleField.SHOW_ROTATION] || false;
+      var rotationColumn = os.style.getValue(os.style.StyleField.ROTATION_COLUMN, configs) ||
+          feature.values_[os.style.StyleField.ROTATION_COLUMN] || '';
+      var rotateAmount = Number(feature.values_[rotationColumn]);
+      rotateAmount = typeof rotateAmount === 'number' && !isNaN(rotateAmount) ? rotateAmount : 0;
+      imageConfig['rotation'] = showRotation ? goog.math.toRadians(rotateAmount) : 0;
+
+      transientConfig[os.style.StyleField.IMAGE] = imageConfig;
+      changed = true;
+    }
+
+    if (os.style.getValue(os.style.StyleField.STROKE, configs)) {
+      var strokeConfig = os.style.transientStrokeConfig_;
+      os.style.clear_(strokeConfig);
+
+      // merge the layer size into the feature size
+      var mergedWidth = os.style.scaleToSize(mergedScale);
+      strokeConfig['width'] = Math.max(mergedWidth, 1);
+
+      transientConfig[os.style.StyleField.STROKE] = strokeConfig;
+      changed = true;
+    }
+  }
+
+  // color override ALWAYS wins, so apply it whether replacing feature styles or not
+  var colorOverride = /** @type {string|undefined} */ (feature.values_[os.data.RecordField.COLOR]);
+  if (colorOverride) {
+    os.style.setConfigColor(transientConfig, colorOverride);
+  }
+
+    // if the feature has a custom opacity set, override the config opacity
+  var opacity = /** @type {string|number|undefined} */ (feature.get(os.style.StyleField.OPACITY));
+  if (opacity != null && !isNaN(opacity)) {
+    transientConfig['opacity'] = Number(opacity);
+    changed = true;
+  }
+
+  if (changed) {
+    configs.push(transientConfig);
+  }
+};
+
+
+/**
+ * @param {ol.Feature} feature
+ * @param {Array<Object<string, *>>} configs
+ * @private
+ */
+os.style.addColorOverrides_ = function(feature, configs) {
+  var transientConfig = os.style.transientConfig_;
+
+  var found = false;
+  var i = configs.length;
+  while (i--) {
+    if (configs[i] === transientConfig) {
+      found = true;
+      break;
+    }
+  }
+
+  // color override ALWAYS wins, so apply it whether replacing feature styles or not
+  var colorOverride = /** @type {string|undefined} */ (feature.values_[os.data.RecordField.COLOR]);
+  if (colorOverride) {
+    if (os.style.getValue(os.style.StyleField.IMAGE, configs)) {
+      transientConfig[os.style.StyleField.IMAGE] = os.style.transientImageConfig_;
+
+    os.style.setConfigColor(transientConfig, colorOverride);
+  }
+
+    // if the feature has a custom opacity set, override the config opacity
+  var opacity = /** @type {string|number|undefined} */ (feature.get(os.style.StyleField.OPACITY));
+  if (opacity != null && !isNaN(opacity)) {
+    transientConfig['opacity'] = Number(opacity);
+    changed = true;
+  }
+
+  if (!found) {
+    configs.push(transientConfig);
+  }
+};
+
+/**
+ * Verify appropriate geometries in a config object exist on a feature.
+ *
+ * @param {!ol.Feature} feature The feature.
+ * @param {Array<Object<string, *>>} configs
+ * @param {Object=} opt_layerConfig The layerConfig object.
+ * @private
+ */
+os.style.verifyGeometries_ = function(feature, configs) {
+  var geometry = os.style.getValue('geometry', configs);
+  var geometries = os.style.getValue('geometries', configs);
+
+  if (geometry == os.data.RecordField.LINE_OF_BEARING ||
+      (geometries && geometries.indexOf(os.data.RecordField.LINE_OF_BEARING) != -1)) {
     // verify a line of bearing has been created
-    if (opt_layerConfig) {
+    var bearingColumn = os.style.getValue(os.style.StyleField.LOB_BEARING_COLUMN, configs);
+    if (bearingColumn) {
       var lobOptions = /** type {os.feature.LOBOptions} */ {
-        arrowLength: opt_layerConfig[os.style.StyleField.ARROW_SIZE],
-        arrowUnits: opt_layerConfig[os.style.StyleField.ARROW_UNITS],
-        bearingColumn: opt_layerConfig[os.style.StyleField.LOB_BEARING_COLUMN],
-        bearingError: opt_layerConfig[os.style.StyleField.LOB_BEARING_ERROR],
-        bearingErrorColumn: opt_layerConfig[os.style.StyleField.LOB_BEARING_ERROR_COLUMN],
-        columnLength: opt_layerConfig[os.style.StyleField.LOB_COLUMN_LENGTH],
-        length: opt_layerConfig[os.style.StyleField.LOB_LENGTH],
-        lengthType: opt_layerConfig[os.style.StyleField.LOB_LENGTH_TYPE],
-        lengthColumn: opt_layerConfig[os.style.StyleField.LOB_LENGTH_COLUMN],
-        lengthUnits: opt_layerConfig[os.style.StyleField.LOB_LENGTH_UNITS],
-        lengthError: opt_layerConfig[os.style.StyleField.LOB_LENGTH_ERROR],
-        lengthErrorColumn: opt_layerConfig[os.style.StyleField.LOB_LENGTH_ERROR_COLUMN],
-        lengthErrorUnits: opt_layerConfig[os.style.StyleField.LOB_LENGTH_ERROR_UNITS],
-        showArrow: opt_layerConfig[os.style.StyleField.SHOW_ARROW],
-        showEllipse: opt_layerConfig[os.style.StyleField.SHOW_ELLIPSE],
-        showError: opt_layerConfig[os.style.StyleField.SHOW_ERROR]
+        arrowLength: os.style.getValue(os.style.StyleField.ARROW_SIZE, configs),
+        arrowUnits: os.style.getValue(os.style.StyleField.ARROW_UNITS, configs),
+        bearingColumn: bearingColumn,
+        bearingError: os.style.getValue(os.style.StyleField.LOB_BEARING_ERROR, configs),
+        bearingErrorColumn: os.style.getValue(os.style.StyleField.LOB_BEARING_ERROR_COLUMN, configs),
+        columnLength: os.style.getValue(os.style.StyleField.LOB_COLUMN_LENGTH, configs),
+        length: os.style.getValue(os.style.StyleField.LOB_LENGTH, configs),
+        lengthType: os.style.getValue(os.style.StyleField.LOB_LENGTH_TYPE, configs),
+        lengthColumn: os.style.getValue(os.style.StyleField.LOB_LENGTH_COLUMN, configs),
+        lengthUnits: os.style.getValue(os.style.StyleField.LOB_LENGTH_UNITS, configs),
+        lengthError: os.style.getValue(os.style.StyleField.LOB_LENGTH_ERROR, configs),
+        lengthErrorColumn: os.style.getValue(os.style.StyleField.LOB_LENGTH_ERROR_COLUMN, configs),
+        lengthErrorUnits: os.style.getValue(os.style.StyleField.LOB_LENGTH_ERROR_UNITS, configs),
+        showArrow: os.style.getValue(os.style.StyleField.SHOW_ARROW, configs),
+        showEllipse: os.style.getValue(os.style.StyleField.SHOW_ELLIPSE, configs),
+        showError: os.style.getValue(os.style.StyleField.SHOW_ERROR, configs)
       };
       os.feature.createLineOfBearing(feature, true, lobOptions);
     } else {
       os.feature.createLineOfBearing(feature);
     }
-  } else if (config['geometry'] == os.data.RecordField.ELLIPSE ||
-      config['geometries'] && config['geometries'].indexOf(os.data.RecordField.ELLIPSE) != -1) {
+  } else if (geometry == os.data.RecordField.ELLIPSE ||
+      (geometries && geometries.indexOf(os.data.RecordField.ELLIPSE) != -1)) {
     // verify an ellipse has been created
     os.feature.createEllipse(feature);
   }
 };
 
+
+/**
+ * @param {ol.Feature} feature
+ * @param {boolean} replaceFeatureStyle
+ * @param {Array<Object<string, *>>} configs
+ * @private
+ */
+os.style.addShapeConfigsForFeature_ = function(feature, replaceFeatureStyle, configs) {
+};
 
 /**
  * Creates a style from the provided feature.
@@ -1234,33 +1346,6 @@ os.style.createFeatureStyle = function(feature, baseConfig, opt_layerConfig) {
     }
 
     return styles;
-  }
-};
-
-
-/**
- * Creates a deep clone of a config, cloning objects but reusing array references. This makes a few assumptions to
- * speed up the process over {@link os.object.merge}:
- * - Arrays will be replaced and never modified, so the original array reference can be used
- * - Objects will not have a length property, so we can detect arrays using that instead of the expensive goog.typeOf
- * - Always overwrite existing properties
- *
- * @param {Object} from The object to merge
- * @param {Object} to The object to which to merge
- */
-os.style.mergeConfig = function(from, to) {
-  for (var key in from) {
-    var fval = from[key];
-    if (fval && typeof fval == 'object' && !(typeof fval.length == 'number')) {
-      // clone objects into the target
-      if (!(key in to)) {
-        to[key] = {};
-      }
-
-      os.style.mergeConfig(fval, to[key]);
-    } else {
-      to[key] = fval;
-    }
   }
 };
 

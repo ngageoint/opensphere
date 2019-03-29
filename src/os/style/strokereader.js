@@ -21,14 +21,19 @@ goog.inherits(os.style.StrokeReader, os.style.AbstractReader);
 /**
  * @inheritDoc
  */
-os.style.StrokeReader.prototype.getOrCreateStyle = function(config) {
-  var width = /** @type {number|undefined} */ (config['width']) || os.style.DEFAULT_STROKE_WIDTH;
+os.style.StrokeReader.prototype.getOrCreateStyle = function(configs, opt_keys) {
+  opt_keys = opt_keys || [];
+
+  opt_keys.push('width');
+  var width = /** @type {number|undefined} */ (os.style.getValue(opt_keys, configs)) || os.style.DEFAULT_STROKE_WIDTH;
   var hash = this.baseHash + width;
+  opt_keys.pop();
 
-  var color = /** @type {string|undefined} */ (config['color']) || os.style.DEFAULT_LAYER_COLOR;
-  color = ol.color.asString(color);
-
+  opt_keys.push('color');
+  var color = /** @type {string|undefined} */ (os.style.getValue(opt_keys, configs)) || os.style.DEFAULT_LAYER_COLOR;
+  color = this.multiplyColorByOpacity(ol.color.asString(color), configs);
   hash += goog.string.hashCode(color);
+  opt_keys.pop();
 
   if (!this.cache[hash]) {
     this.cache[hash] = new ol.style.Stroke({
