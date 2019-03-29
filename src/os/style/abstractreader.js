@@ -54,25 +54,3 @@ os.style.AbstractReader.prototype.setReaders = function(readers) {
 os.style.AbstractReader.prototype.toConfig = function(style, obj) {
   // intentionally empty
 };
-
-
-/**
- * @param {string} color
- * @param {Array<Object<string, *>>} configs
- * @protected
- */
-os.style.AbstractReader.prototype.multiplyColorByOpacity = function(color, configs) {
-  var opacity = os.style.getValue('opacity', configs);
-
-  if (opacity != null) {
-    var colorArr = os.color.toRgbArray(color);
-    if (colorArr) {
-      colorArr[3] *= opacity;
-    }
-
-    color = os.style.toRgbaString(colorArr);
-  }
-
-  return color;
-};
-

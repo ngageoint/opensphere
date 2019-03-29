@@ -57,8 +57,7 @@ module.exports = function(config) {
 
       // tests and mocks
       'test/**/*.mock.js',
-      // 'test/**/*.test.js',
-      'test/os/style/**/*.test.js',
+      'test/**/*.test.js',
 
       // test resources
       {pattern: 'test/**/*.test.worker.js', included: false},
