@@ -1,6 +1,8 @@
 goog.provide('plugin.file.csv.CSVExporter');
 goog.require('goog.log');
+goog.require('ol.Feature');
 goog.require('ol.format.WKT');
+goog.require('ol.geom.SimpleGeometry');
 goog.require('os.Fields');
 goog.require('os.data.RecordField');
 goog.require('os.geo');
@@ -8,7 +10,7 @@ goog.require('os.object');
 goog.require('os.ol.wkt');
 goog.require('os.style');
 goog.require('os.ui.file.csv.AbstractCSVExporter');
-
+goog.require('plugin.file.csv.ui.csvExportDirective');
 
 
 /**
@@ -39,6 +41,66 @@ plugin.file.csv.CSVExporter.LOGGER_ = goog.log.getLogger('plugin.file.csv.CSVExp
 plugin.file.csv.CSVExporter.FIELDS = {
   START_TIME: 'START_TIME',
   END_TIME: 'END_TIME'
+};
+
+
+/**
+   * Export the ellipses
+   * @type {boolean}
+   * @private
+   */
+this.exportEllipses_ = false;
+
+
+/**
+ * Get if ellipses should be exported.
+ * @return {boolean}
+ */
+plugin.file.csv.CSVExporter.prototype.getExportEllipses = function() {
+  return this.exportEllipses_;
+};
+
+
+/**
+ * Set if ellipses should be exported.
+ * @param {boolean} value
+ */
+plugin.file.csv.CSVExporter.prototype.setExportEllipses = function(value) {
+  this.exportEllipses_ = value;
+};
+
+
+/**
+ * Get the geometry for a feature.
+ * @param {ol.Feature} feature The feature
+ * @return {ol.geom.GeometryCollection|ol.geom.SimpleGeometry|undefined}
+ */
+plugin.file.csv.CSVExporter.prototype.getGeometry_ = function(feature) {
+  var geometry;
+  if (feature) {
+    geometry = /** @type {(ol.geom.SimpleGeometry|undefined)} */ (feature.get(os.data.RecordField.GEOM));
+
+    if (geometry) {
+      geometry = /** @type {(ol.geom.SimpleGeometry|undefined)} */ (geometry.clone().toLonLat());
+
+      if (this.exportEllipses_) {
+        var ellipse = os.feature.createEllipse(feature);
+        if (ellipse && !(ellipse instanceof ol.geom.Point)) {
+          geometry = /** @type {(ol.geom.SimpleGeometry|undefined)} */ (ellipse);
+        }
+      }
+    }
+  }
+
+  return geometry;
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.file.csv.CSVExporter.prototype.getUI = function() {
+  return '<csvexport exporter="exporter"></csvexport>';
 };
 
 
