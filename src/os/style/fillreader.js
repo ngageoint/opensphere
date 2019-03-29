@@ -21,12 +21,9 @@ goog.inherits(os.style.FillReader, os.style.AbstractReader);
 /**
  * @inheritDoc
  */
-os.style.FillReader.prototype.getOrCreateStyle = function(configs, opt_keys) {
-  opt_keys = opt_keys || [];
-  opt_keys.push('color');
-  var color = /** @type {string|undefined} */ (os.style.getValue(opt_keys, configs)) || os.style.DEFAULT_LAYER_COLOR;
-  color = this.multiplyColorByOpacity(ol.color.asString(color), configs);
-  opt_keys.pop();
+os.style.FillReader.prototype.getOrCreateStyle = function(config) {
+  var color = /** @type {string|undefined} */ (config['color']) || os.style.DEFAULT_LAYER_COLOR;
+  color = ol.color.asString(color);
 
   var hash = this.baseHash + goog.string.hashCode(color);
   if (!this.cache[hash]) {

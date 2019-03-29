@@ -24,74 +24,32 @@ goog.inherits(os.style.IconReader, os.style.AbstractReader);
 
 
 /**
- * @const
- * @type {Array<string>}
- * @private
- */
-os.style.IconReader.FIELDS_ = [
-  'anchor',
-  'anchorOrigin',
-  'anchorXUnits',
-  'anchorYUnits',
-  'color',
-  'offset',
-  'offsetOrigin',
-  'rotation',
-  'scale',
-  'size',
-  'src'
-];
-
-
-/**
- * @const
- * @type {Array}
- * @private
- */
-os.style.IconReader.VALUES_ = new Array(os.style.IconReader.FIELDS_.length);
-
-
-/**
  * @inheritDoc
  */
-os.style.IconReader.prototype.getOrCreateStyle = function(configs, opt_keys) {
-  if (Array.isArray(configs)) {
-    configs.forEach(os.style.IconReader.translateIcons);
-  } else {
-    os.style.IconReader.translateIcons(configs);
+os.style.IconReader.prototype.getOrCreateStyle = function(config) {
+  os.style.IconReader.translateIcons(config);
+  if (config['fill'] && config['fill']['color']) {
+    config['color'] = config['fill']['color'];
   }
-
-  opt_keys = opt_keys || [];
-  opt_keys.push('fill');
-  opt_keys.push('color');
-  var color = os.style.getValue(opt_keys, configs);
-  opt_keys.pop();
-  opt_keys.pop();
-
-  var fields = os.style.IconReader.FIELDS_;
-  var values = os.style.IconReader.VALUES_;
-
   var hash = this.baseHash;
-  for (var i = 0, n = fields.length; i < n; i++) {
-    opt_keys.push(fields[i]);
-    values[i] = os.style.getValue(opt_keys, configs);
-    hash += goog.string.hashCode(String(values[i]));
-    opt_keys.pop();
+  for (var key in config) {
+    if (config[key] !== undefined) {
+      hash += goog.string.hashCode(config[key].toString());
+    }
   }
-
   if (!this.cache[hash]) {
     var options = /** @type {olx.style.IconOptions} */ ({
-      anchor: values[0],
-      anchorOrigin: values[1],
-      anchorXUnits: values[2],
-      anchorYUnits: values[3],
-      color: values[4] || color,
-      offset: values[5],
-      offsetOrigin: values[6],
-      rotation: values[7],
-      scale: values[8],
-      size: values[9],
-      src: values[10]
+      anchor: config['anchor'],
+      anchorOrigin: config['anchorOrigin'],
+      anchorXUnits: config['anchorXUnits'],
+      anchorYUnits: config['anchorYUnits'],
+      color: config['color'],
+      offset: config['offset'],
+      offsetOrigin: config['offsetOrigin'],
+      rotation: config['rotation'],
+      scale: config['scale'],
+      size: config['size'],
+      src: config['src']
     });
 
     var remote = new goog.Uri(options.src);

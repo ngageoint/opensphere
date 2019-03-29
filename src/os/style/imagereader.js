@@ -21,12 +21,9 @@ goog.inherits(os.style.ImageReader, os.style.AbstractReader);
 /**
  * @inheritDoc
  */
-os.style.ImageReader.prototype.getOrCreateStyle = function(configs, opt_keys) {
-  opt_keys = opt_keys || [];
-  opt_keys.push('type');
-  var type = /** @type {string|undefined} */ (os.style.getValue(opt_keys, configs)) || 'circle';
-  opt_keys.pop();
-  return this.readers[type].getOrCreateStyle(configs, opt_keys);
+os.style.ImageReader.prototype.getOrCreateStyle = function(config) {
+  var type = /** @type {string|undefined} */ (config['type']) || 'circle';
+  return this.readers[type].getOrCreateStyle(config);
 };
 
 

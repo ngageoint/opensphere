@@ -67,19 +67,11 @@ plugin.places.PlacesPlugin.prototype.init = function() {
   var pim = os.placesImportManager;
   var pfm = os.placesFileManager;
 
-  if (pfm) {
-    // register file import method
-    pfm.registerFileMethod(new os.ui.file.method.ImportMethod(false));
-  } else {
-    goog.log.warning(plugin.places.PlacesPlugin.LOGGER_, 'App did not define os.placesFileManager');
-  }
+  // register file import method
+  pfm.registerFileMethod(new os.ui.file.method.ImportMethod(false));
 
-  if (pim) {
-    // kml
-    pim.registerImportUI(plugin.file.kml.mime.TYPE, new plugin.places.KMLPlacesImportUI());
-    pim.registerImportUI(plugin.file.kml.mime.KMZ_TYPE, new plugin.places.KMLPlacesImportUI());
-    pim.registerImportDetails('KML/KMZ', true);
-  } else {
-    goog.log.warning(plugin.places.PlacesPlugin.LOGGER_, 'App did not define os.placesImportManager');
-  }
+  // kml
+  pim.registerImportUI(plugin.file.kml.mime.TYPE, new plugin.places.KMLPlacesImportUI());
+  pim.registerImportUI(plugin.file.kml.mime.KMZ_TYPE, new plugin.places.KMLPlacesImportUI());
+  pim.registerImportDetails('KML/KMZ', true);
 };
