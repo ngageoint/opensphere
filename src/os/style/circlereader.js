@@ -20,25 +20,32 @@ goog.inherits(os.style.CircleReader, os.style.AbstractReader);
 /**
  * @inheritDoc
  */
-os.style.CircleReader.prototype.getOrCreateStyle = function(config) {
+os.style.CircleReader.prototype.getOrCreateStyle = function(configs, opt_keys) {
+  opt_keys = opt_keys || [];
   var fill;
   var stroke;
 
-  var radius = config['radius'] !== undefined ? /** @type {number} */ (config['radius']) :
-      os.style.DEFAULT_FEATURE_SIZE;
+  opt_keys.push('radius');
+  var radius = /** @type {number} */ (os.style.getValue(opt_keys, configs));
+  radius = radius == null ? os.style.DEFAULT_FEATURE_SIZE : radius;
   var hash = this.baseHash + radius;
+  opt_keys.pop();
 
-  var fillConfig = /** @type {Object.<string, *>|undefined} */ (config['fill']);
+  opt_keys.push('fill');
+  var fillConfig = /** @type {Object.<string, *>|undefined} */ (os.style.getValue(opt_keys, configs));
   if (fillConfig) {
-    fill = this.readers['fill'].getOrCreateStyle(fillConfig);
+    fill = this.readers['fill'].getOrCreateStyle(configs, opt_keys);
     hash += fill['id'];
   }
+  opt_keys.pop();
 
-  var strokeConfig = /** @type {Object.<string, *>|undefined} */ (config['stroke']);
+  opt_keys.push('stroke');
+  var strokeConfig = /** @type {Object.<string, *>|undefined} */ (os.style.getValue(opt_keys, configs));
   if (strokeConfig) {
-    stroke = this.readers['stroke'].getOrCreateStyle(strokeConfig);
+    stroke = this.readers['stroke'].getOrCreateStyle(configs, opt_keys);
     hash += stroke['id'];
   }
+  opt_keys.pop();
 
   if (!this.cache[hash]) {
     this.cache[hash] = new ol.style.Circle({

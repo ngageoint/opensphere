@@ -99,11 +99,11 @@ goog.addSingletonGetter(os.style.StyleManager);
 
 
 /**
- * @param {Object} config
+ * @param {Array<Object<string, *>>} configs
  * @return {?ol.style.Style}
  */
-os.style.StyleManager.prototype.getOrCreateStyle = function(config) {
-  return this.rootReader_.getOrCreateStyle(config);
+os.style.StyleManager.prototype.getOrCreateStyle = function(configs) {
+  return this.rootReader_.getOrCreateStyle(configs);
 };
 
 

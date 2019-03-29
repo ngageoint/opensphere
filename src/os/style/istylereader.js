@@ -11,7 +11,8 @@ os.style.IStyleReader = function() {};
 
 /**
  * Get a style from the cache, or create a new one and add it to the cache.
- * @param {Object<string, *>} config
+ * @param {Object<string, *>|Array<Object<string, *>>} configs
+ * @param {Array<string>=} opt_keys
  * @return {T}
  */
 os.style.IStyleReader.prototype.getOrCreateStyle;
