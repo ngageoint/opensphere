@@ -4,10 +4,6 @@ Getting Started
 Setup
 *****
 
-Start by forking_ the OpenSphere repository.
-
-.. _forking: https://github.com/ngageoint/opensphere/fork
-
 Prerequisites
 =============
 
@@ -35,7 +31,7 @@ Yarn
 
 Clone opensphere-yarn-workspace_, and change directory into ``opensphere-yarn-workspace/workspace``.
 
-Clone your fork of opensphere_, then run ``yarn install``.
+Clone opensphere_, then run ``yarn install``.
 
 .. _opensphere-yarn-workspace: https://github.com/ngageoint/opensphere-yarn-workspace
 .. _opensphere: https://github.com/ngageoint/opensphere
@@ -43,7 +39,9 @@ Clone your fork of opensphere_, then run ``yarn install``.
 NPM
 ---
 
-Clone your fork, then change directory to the clone. Run ``npm install``.
+(Not necessary if you followed the yarn instructions above)
+
+Clone opensphere_, then change directory to the clone. Run ``npm install``.
 
 Linking
 ^^^^^^^
