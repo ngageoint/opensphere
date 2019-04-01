@@ -156,14 +156,26 @@ plugin.places.KMLPlacesCtrl.prototype.onImportComplete_ = function(event) {
       i--;
     }
   }
-  // plugin.places.menu.saveKMLToPlaces_(nodes);
   var rootNode = plugin.places.PlacesManager.getInstance().getPlacesRoot();
   if (rootNode) {
     var cmds = [];
     for (var i = 0; i < nodes.length; i++) {
-      var cmd = new plugin.file.kml.cmd.KMLNodeAdd(nodes[i], rootNode);
-      cmd.title = 'Save ' + nodes[i].getLabel() + ' to Places';
-      cmds.push(cmd);
+      var feature = nodes[i].getFeature();
+      if (feature) {
+        nodes[i] = plugin.file.kml.ui.updatePlacemark({
+          'feature': feature,
+          'node': nodes[i],
+          'parent': nodes[i].getParent()
+        });
+        nodes[i].canAddChildren = false;
+        nodes[i].editable = true;
+        nodes[i].internalDrag = true;
+        nodes[i].removable = true;
+
+        var cmd = new plugin.file.kml.cmd.KMLNodeAdd(nodes[i], rootNode);
+        cmd.title = 'Save ' + nodes[i].getLabel() + ' to Places';
+        cmds.push(cmd);
+      }
     }
     var seq = new os.command.SequenceCommand();
     seq.setCommands(cmds);
