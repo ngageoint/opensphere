@@ -776,6 +776,7 @@ os.net.Request.prototype.handlerCleanup_ = function() {
   this.handlers_ = null;
 };
 
+
 /**
  * Gets the request timeout in milliseconds, 0 for indefinite, default.
  * @return {number}
@@ -793,6 +794,7 @@ os.net.Request.prototype.setTimeout = function(timeout) {
   this.timeout_ = timeout;
 };
 
+
 /**
  * Gets the default log level for the request.
  * @return {!goog.debug.Logger.Level}
@@ -808,4 +810,13 @@ os.net.Request.prototype.getLogLevel = function() {
  */
 os.net.Request.prototype.setLogLevel = function(level) {
   this.logLevel_ = level;
+};
+
+
+/**
+ * Gets the modified URI
+ * @return {goog.Uri}
+ */
+os.net.Request.prototype.getModUri = function() {
+  return this.modUri_;
 };
