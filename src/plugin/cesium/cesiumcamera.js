@@ -140,11 +140,202 @@ plugin.cesium.Camera.prototype.setCenter = function(center) {
  * @inheritDoc
  */
 plugin.cesium.Camera.prototype.getExtent = function() {
-  var rect = this.cam_.computeViewRectangle();
+  if (!this.computeCorrectExtent_) {
+    this.initExtentComputation_();
+  }
+  var rect = this.computeCorrectExtent_();
 
   // the values are returned in radians, so map them to degrees
   return rect ? [rect.west, rect.south, rect.east, rect.north].map(Cesium.Math.toDegrees) : undefined;
 };
+
+
+
+/**
+ * @private
+ */
+plugin.cesium.Camera.prototype.initExtentComputation_ = function() {
+  // avoid needless GC
+  var scratchCartesian1 = new Cesium.Cartesian3();
+  var scratchCartesian2 = new Cesium.Cartesian3();
+  var scratchCartesian3 = new Cesium.Cartesian3();
+  var scratchPixel1 = new Cesium.Cartesian2();
+  var scratchPixel2 = new Cesium.Cartesian2();
+  var scratchCarto1 = new Cesium.Cartographic();
+  var scratchRect = new Cesium.Rectangle();
+  var scratchQuaternion = new Cesium.Quaternion();
+  var scratchRotation = new Cesium.Matrix3();
+
+  /**
+   * Generates points along the canvas edges
+   * @param {number=} opt_segmentsPerSide
+   * @return {Array<ol.Pixel>}
+   * @private
+   */
+  plugin.cesium.Camera.prototype.generateScreenBoundaries_ = function(opt_segmentsPerSide) {
+    opt_segmentsPerSide = opt_segmentsPerSide || 16;
+
+    var size = this.map_.getSize();
+    var width = size[0];
+    var height = size[1];
+    var heightChunk = height / opt_segmentsPerSide;
+    var widthChunk = width / opt_segmentsPerSide;
+
+    var pixels = new Array(4 * opt_segmentsPerSide);
+    for (var i = 0; i < opt_segmentsPerSide; i++) {
+      var offset = i * 4;
+      pixels[offset] = [0, i * heightChunk];
+      pixels[offset + 1] = [width, i * heightChunk];
+      pixels[offset + 2] = [i * widthChunk, height];
+      pixels[offset + 3] = [i * widthChunk, 0];
+    }
+
+    return pixels;
+  };
+
+
+  var onScreenCartesian = new Cesium.Cartesian3();
+  var onScreenBoundingSphere = new Cesium.BoundingSphere();
+
+  /**
+   * @param {Cesium.Cartographic} cartographic
+   * @return {boolean} Whether or not the given coordinate is on screen
+   * @protected
+   */
+  plugin.cesium.Camera.prototype.onScreen = function(cartographic) {
+    var scratchCartesian = onScreenCartesian;
+    var scratchSphere = onScreenBoundingSphere;
+
+    var frustum = this.cam_.frustum;
+    var cullingVolume = frustum.computeCullingVolume(this.cam_.position, this.cam_.direction, this.cam_.up);
+    var occluder = new Cesium.EllipsoidalOccluder(this.scene_.globe.ellipsoid, this.cam_.position);
+    var position = Cesium.Cartographic.toCartesian(cartographic, this.scene_.globe.ellipsoid, scratchCartesian);
+    scratchSphere.center = position;
+
+    return occluder.isPointVisible(position) &&
+        cullingVolume.computeVisibility(scratchSphere) === Cesium.Intersect.INSIDE;
+  };
+
+
+  /**
+   * @return {Cesium.Rectangle}
+   */
+  plugin.cesium.Camera.prototype.computeCorrectExtent_ = function() {
+    var rect = scratchRect;
+
+    // generate 16 segments along each edge of the canvas for a total of 64
+    var screenBoundaries = this.generateScreenBoundaries_();
+
+    var cameraMagnitude = Cesium.Cartesian3.magnitude(this.cam_.position);
+
+    // scale the camera position vector to the surface of the ellipsoid
+    var cameraGroundCartesian = Cesium.Cartesian3.multiplyComponents(this.cam_.positionWC,
+        Cesium.Cartesian3.multiplyByScalar(this.scene_.globe.ellipsoid.radii, 1 / cameraMagnitude, scratchCartesian1),
+        scratchCartesian2);
+
+    // convert that position vector to screen coords
+    var cameraGroundScreen = Cesium.SceneTransforms.wgs84ToWindowCoordinates(
+        this.scene_, cameraGroundCartesian, scratchPixel1);
+
+    //    r
+    //    |   r2
+    //    |  / φ
+    //    | /
+    //    |/ θ
+    //    o-----------------------C
+    //  o = origin
+    //  C = cameraMagnitude
+    //  r = ellipsoid radius
+    //  magnitude(o-r2) = r
+    //  r2-C = line segment tangent to ellipsoid
+    //  φ = right angle in o-r2-C triangle
+    //  θ = angle we are looking for
+    var cameraToHorizonAngle = Math.acos(this.scene_.globe.ellipsoid.radii.x / cameraMagnitude);
+
+    // reset rectangle
+    rect.west = 1000;
+    rect.south = 1000;
+    rect.east = -1000;
+    rect.north = -1000;
+
+    var antimeridianMinLon = 1000;
+    var antimeridianMaxLon = -1000;
+
+    for (var i = 0, n = screenBoundaries.length; i < n; i++) {
+      var coord = null;
+      var pixel = scratchPixel2;
+      pixel.x = screenBoundaries[i][0];
+      pixel.y = screenBoundaries[i][1];
+
+      // ray trace at screen pixel for ellipsoid position
+      var screenWC = this.cam_.pickEllipsoid(pixel, this.scene_.globe.ellipsoid, scratchCartesian3);
+
+      if (screenWC) {
+        // it is on the ellipsoid, so convert to cartographic
+        coord = Cesium.Cartographic.fromCartesian(screenWC, this.scene_.globe.ellipsoid, scratchCarto1);
+      } else {
+        // not on the ellipsoid
+        // get the angle between the camera ground screen coordinate and current point around the edge
+        var pieSliceAngle = Math.atan2(pixel.x - cameraGroundScreen.x, pixel.y - cameraGroundScreen.y);
+        // we want to rotate the camera ground position vector along the line segment pixel-to-cameraGroundScreen,
+        // so now subtract pi/2
+        pieSliceAngle -= Cesium.Math.PI_OVER_TWO;
+
+        // and rotate the up vector by that angle to use as the axis
+        var q = Cesium.Quaternion.fromAxisAngle(cameraGroundCartesian, pieSliceAngle, scratchQuaternion);
+        var rotation = Cesium.Matrix3.fromQuaternion(q, scratchRotation);
+        var axis = Cesium.Matrix3.multiplyByVector(rotation, this.cam_.up, scratchCartesian3);
+
+        // now rotate the camera ground position vector around that axis by the horizon angle
+        q = Cesium.Quaternion.fromAxisAngle(axis, cameraToHorizonAngle, q);
+        rotation = Cesium.Matrix3.fromQuaternion(q, scratchRotation);
+        var pointCartesian = Cesium.Matrix3.multiplyByVector(rotation, cameraGroundCartesian, scratchCartesian3);
+
+        // and convert to cartographic coords
+        coord = Cesium.Cartographic.fromCartesian(pointCartesian, this.scene_.globe.ellipsoid, scratchCarto1);
+      }
+
+      // update the rectangle
+      if (coord) {
+        rect.west = Math.min(rect.west, coord.longitude);
+        rect.east = Math.max(rect.east, coord.longitude);
+        rect.south = Math.min(rect.south, coord.latitude);
+        rect.north = Math.max(rect.north, coord.latitude);
+
+        coord.longitude += coord.longitude < 0 ? Cesium.Math.TWO_PI : 0;
+        antimeridianMinLon = Math.min(antimeridianMinLon, coord.longitude);
+        antimeridianMaxLon = Math.max(antimeridianMaxLon, coord.longitude);
+      }
+    }
+
+    // check if either pole is visible
+    coord.longitude = 0;
+    coord.latitude = -Cesium.Math.PI_OVER_TWO;
+    var south = this.onScreen(coord);
+    coord.latitude = Cesium.Math.PI_OVER_TWO;
+    var north = this.onScreen(coord);
+
+    if (north) {
+      rect.south = coord.latitude;
+      rect.west = -Cesium.Math.PI;
+      rect.east = Cesium.Math.PI;
+    } else if (south) {
+      rect.north = coord.latitude;
+      rect.west = -Cesium.Math.PI;
+      rect.east = Cesium.Math.PI;
+    } else {
+      // handle crossing antimeridian
+      var width = rect.east - rect.west;
+      if (width > Cesium.Math.PI && antimeridianMaxLon - antimeridianMinLon < width) {
+        rect.west = antimeridianMinLon;
+        rect.east = antimeridianMaxLon;
+      }
+    }
+
+    return rect;
+  };
+};
+
 
 
 /**
