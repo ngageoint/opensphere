@@ -13,7 +13,7 @@ goog.require('os.math.Units');
  */
 os.im.mapping.RadiusMapping = function() {
   os.im.mapping.RadiusMapping.base(this, 'constructor');
-  this.toField = os.Fields.RADIUS;
+  this.toField = os.fields.DEFAULT_RADIUS_COL_NAME;
   this.xmlType = os.im.mapping.RadiusMapping.ID;
 
   /**

@@ -224,7 +224,7 @@
     "cz-conventional-changelog": "^1.2.0",
     "eslint": "^3.19.0",
     "eslint-config-google": "^0.7.0",
-    "eslint-config-opensphere": "^1.0.0",
+    "eslint-config-opensphere": "^1.1.1",
     "eslint-plugin-google-camelcase": "^0.0.2",
     "eslint-plugin-opensphere": "^2.0.0",
     "globalify": "^1.1.0",
