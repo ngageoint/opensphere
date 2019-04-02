@@ -94,6 +94,10 @@
   }
 }
 
+.a-add-animation-zindex__base {
+  z-index: $u-zindex-base + 2;
+}
+
 .a-transition-duration__200ms {
   transition-duration: 200ms !important;
 }
@@ -108,3 +112,4 @@
     transition: none;
   }
 }
+
