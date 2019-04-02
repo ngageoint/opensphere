@@ -82,21 +82,23 @@ os.control.ScaleLine.prototype.updateElement_ = function() {
   // However, it is wrong (see issue #7086 for Openlayers) for some projections.
   var map = this.getMap();
 
-  var p2 = map.getPixelFromCoordinate(viewState.center);
-  if (!p2) {
+  var p1 = map.getPixelFromCoordinate(viewState.center);
+  if (!p1) {
     this.hide();
     return;
   }
 
+  var p2 = p1.slice();
   p2[0] += 1;
 
+  var c1 = map.getCoordinateFromPixel(p1);
   var c2 = map.getCoordinateFromPixel(p2);
-  if (!c2) {
+  if (!c1 || !c2) {
     this.hide();
     return;
   }
 
-  var c1 = ol.proj.toLonLat(viewState.center, os.map.PROJECTION);
+  c1 = ol.proj.toLonLat(c1, os.map.PROJECTION);
   c2 = ol.proj.toLonLat(c2, os.map.PROJECTION);
 
   var pointResolution = window.osasm ? osasm.geodesicInverse(c1, c2).distance : NaN;
