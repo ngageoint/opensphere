@@ -234,13 +234,13 @@ os.histo.DateBinMethod.prototype.getValue = function(item) {
         var max = 167;
         return this.generateValues(t1, t2, max);
       case os.histo.DateBinType.HOUR_OF_MONTH:
-        // 1 - [28-31] (end of month) * 24 plus 0-23
-        var t1 = d.getUTCDate() * 24 + d.getUTCHours();
+        // 0 - [27-30] (end of month) * 24 plus 0-23
+        var t1 = (d.getUTCDate() - 1) * 24 + d.getUTCHours();
         if (!d2) {
           return this.arrayKeys ? [t1] : t1;
         }
-        var t2 = d2.getUTCDate() * 24 + d2.getUTCHours();
-        var max = 23 + 24 * (new Date(d.getUTCFullYear(), d.getMonth() + 1, 0).getDate());
+        var t2 = (d2.getUTCDate() - 1) * 24 + d2.getUTCHours();
+        var max = 24 * (new Date(d.getUTCFullYear(), d.getMonth() + 1, 0).getDate()) - 1;
         return this.generateValues(t1, t2, max);
       case os.histo.DateBinType.HOUR_OF_YEAR:
         // 1 - [365,366] (end of year) * 24 plus 0-23
