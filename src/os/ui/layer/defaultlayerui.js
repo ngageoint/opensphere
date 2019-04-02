@@ -433,6 +433,15 @@ os.ui.layer.DefaultLayerUICtrl.prototype.onRefreshChange = function() {
  */
 os.ui.layer.DefaultLayerUICtrl.prototype.reset = function(key) {
   var defaultValue = this.defaults[key];
+  var nodes = this.getLayerNodes();
+  if (nodes && nodes[0].getLayer() != null && nodes[0].getLayer().getLayerOptions() &&
+    nodes[0].getLayer().getLayerOptions()['defaults']) {
+    var value = nodes[0].getLayer().getLayerOptions()['defaults'][key];
+    if (value != null) {
+      defaultValue = /** @type {number} */ (value);
+    }
+  }
+
   if (defaultValue != null) {
     var callback = this.getProperties()[key];
     this.onSliderStop(callback, key, null, defaultValue);
