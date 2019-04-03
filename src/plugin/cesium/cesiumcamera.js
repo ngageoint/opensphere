@@ -316,11 +316,11 @@ plugin.cesium.Camera.prototype.initExtentComputation_ = function() {
     var north = this.onScreen(coord);
 
     if (north) {
-      rect.south = coord.latitude;
+      rect.north = Cesium.Math.PI_OVER_TWO;
       rect.west = -Cesium.Math.PI;
       rect.east = Cesium.Math.PI;
     } else if (south) {
-      rect.north = coord.latitude;
+      rect.south = -Cesium.Math.PI_OVER_TWO;
       rect.west = -Cesium.Math.PI;
       rect.east = Cesium.Math.PI;
     } else {
