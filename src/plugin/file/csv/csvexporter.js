@@ -139,6 +139,7 @@ plugin.file.csv.CSVExporter.prototype.processItem = function(item) {
       result[os.Fields.LON_DDM] = '';
       result[os.Fields.LAT_DMS] = '';
       result[os.Fields.LON_DMS] = '';
+      result[os.Fields.LON_DMS] = '';
       result[os.Fields.MGRS] = '';
     }
 
@@ -155,6 +156,10 @@ plugin.file.csv.CSVExporter.prototype.processItem = function(item) {
       } else {
         result[os.Fields.TIME] = time.toISOString();
       }
+    }
+    if (this.exportEllipses_) {
+      result[os.Fields.SEMI_MAJOR] = item.get(os.Fields.SEMI_MAJOR);
+      result[os.Fields.SEMI_MINOR] = item.get(os.Fields.SEMI_MINOR);
     }
   }
 
