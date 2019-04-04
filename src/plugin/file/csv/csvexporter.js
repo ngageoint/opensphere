@@ -139,7 +139,6 @@ plugin.file.csv.CSVExporter.prototype.processItem = function(item) {
       result[os.Fields.LON_DDM] = '';
       result[os.Fields.LAT_DMS] = '';
       result[os.Fields.LON_DMS] = '';
-      result[os.Fields.LON_DMS] = '';
       result[os.Fields.MGRS] = '';
     }
 
