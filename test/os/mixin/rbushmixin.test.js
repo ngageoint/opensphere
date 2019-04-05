@@ -77,8 +77,8 @@ describe('os.mixin.rbush', function() {
     var right = os.extent.normalizeAntiRight(extent);
 
     return features.filter(function(f) {
-      var geom = f.getGeometry();
-      return geom && (geom.intersectsExtent(left) || geom.intersectsExtent(right));
+      var gExtent = f.getGeometry().getExtent();
+      return ol.extent.intersects(left, gExtent) || ol.extent.intersects(right, gExtent);
     });
   };
 
