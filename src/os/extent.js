@@ -1,4 +1,5 @@
 goog.provide('os.extent');
+goog.require('os.geo2');
 
 
 /**
@@ -19,58 +20,132 @@ os.extent.clamp = function(extent, clampTo, opt_extent) {
 
 
 /**
+ * @param {ol.Extent} extent
+ * @param {ol.proj.Projection=} opt_proj
+ * @return {boolean} Whether or not the extent crosses the antimeridian
+ */
+os.extent.crossesAntimeridian = function(extent, opt_proj) {
+  if (!extent || ol.extent.isEmpty(extent)) {
+    return false;
+  }
+
+  opt_proj = opt_proj || os.map.PROJECTION;
+  if (opt_proj.canWrapX()) {
+    var projExtent = opt_proj.getExtent();
+    var xmin = extent[0];
+    var xmax = extent[2];
+    var epsilon = opt_proj.getUnits() === 'm' ? 1E-6 : 1E-12;
+
+    var projMin = projExtent[0];
+    var projMax = projExtent[2];
+    var width = projMax - projMin;
+
+    if (Math.abs(projMin - xmin) < epsilon || Math.abs(projMax - xmax) < epsilon) {
+      // touches, but does not cross
+      return false;
+    }
+
+    var worldsAwayMin = Math.ceil((projMin - xmin) / width);
+    var worldsAwayMax = Math.ceil((projMin - xmax) / width);
+    return worldsAwayMin !== worldsAwayMax;
+  }
+
+  return false;
+};
+
+
+/**
+ * Normalizes an extent for a projection where the positive antimeridian becomes
+ * the meridian.
+ * @param {ol.Extent} extent
+ * @param {ol.proj.Projection=} opt_proj
+ * @param {ol.Extent=} opt_result
+ * @return {ol.Extent}
+ */
+os.extent.normalizeAnti = function(extent, opt_proj, opt_result) {
+  opt_proj = opt_proj || os.map.PROJECTION;
+  var projExtent = opt_proj.getExtent();
+  var left = projExtent[0];
+  var right = projExtent[2];
+  var width = right - left;
+  var min = left + width / 2;
+  var max = min + width;
+  return os.extent.normalize(extent, min, max, opt_proj, opt_result);
+};
+
+
+/**
+ * @param {ol.Extent} extent
+ * @param {number=} opt_min
+ * @param {number=} opt_max
+ * @param {ol.proj.Projection=} opt_proj
+ * @param {ol.Extent=} opt_result
+ * @return {ol.Extent}
+ */
+os.extent.normalize = function(extent, opt_min, opt_max, opt_proj, opt_result) {
+  opt_result = opt_result || extent.slice();
+  opt_result[1] = extent[1];
+  opt_result[3] = extent[3];
+  var extentWidth = extent[2] - extent[0];
+
+  opt_proj = opt_proj || os.map.PROJECTION;
+  var projExtent = opt_proj.getExtent();
+  opt_min = opt_min != null ? opt_min : projExtent[0];
+  opt_max = opt_max != null ? opt_max : projExtent[2];
+  var projWidth = opt_max - opt_min;
+  var epsilon = opt_proj.getUnits() === 'm' ? 1E-6 : 1E-12;
+
+  if (Math.abs(extentWidth - projWidth) < epsilon) {
+    // the width is full-world
+    opt_result[0] = opt_min;
+    opt_result[2] = opt_max;
+  } else {
+    var lon1 = os.geo2.normalizeLongitude(extent[0], opt_min, opt_max, opt_proj);
+    var lon2 = lon1 + extentWidth;
+
+    if (lon2 > opt_max - epsilon) {
+      lon1 -= projWidth;
+      lon2 -= projWidth;
+    }
+
+    if (lon1 < opt_min - epsilon) {
+      lon1 += projWidth;
+      lon2 += projWidth;
+    }
+
+    opt_result[0] = lon1;
+    opt_result[2] = lon2;
+  }
+
+  return opt_result;
+};
+
+
+/**
  * Gets the "functional" extent of the geometry. Geometries that cross the
  * antimeridian have points that give a default extent like [-179.999, 179.999].
  * This is unhelpful for zooming and other extent aggregations. This function
  * produces an extent from longitudes normalized to [0, 360] instead.
  *
  * @param {?ol.geom.Geometry} geom The geom
- * @param {boolean=} opt_allowLargeWidths Leave false (default) for zooming. Use true if the extent
- *   is to be used in an RBush.
  * @return {?ol.Extent} the extent
  */
-os.extent.getFunctionalExtent = function(geom, opt_allowLargeWidths) {
+os.extent.getFunctionalExtent = function(geom) {
   if (!geom) {
     return null;
   }
 
   var proj = os.map.PROJECTION;
-
-  if (proj.getCode() !== os.proj.EPSG4326) {
-    geom = geom.clone().toLonLat();
-  }
-
   var extent = geom.getExtent();
-  if (geom instanceof ol.geom.SimpleGeometry && os.geo.crossesDateLine(geom)) {
-    var min = 360;
-    var max = 0;
-    var coords = geom.getFlatCoordinates();
-    var stride = geom.getStride();
+  var result = extent;
 
-    for (var i = 0, n = coords.length; i < n; i += stride) {
-      var lon = os.geo.normalizeLongitude(coords[i], 0, 360);
-      min = Math.min(min, lon);
-      max = Math.max(max, lon);
-    }
+  if (proj.canWrapX()) {
+    var extentWidth = ol.extent.getWidth(extent);
+    var antiExtent = geom.getAntiExtent();
+    var antiExtentWidth = ol.extent.getWidth(antiExtent);
 
-    extent[0] = min;
-    extent[2] = max;
+    result = antiExtentWidth < extentWidth ? antiExtent : extent;
   }
 
-  // This case is for zooming to multi-items which occupy a small area around the antimeridian
-  // but don't cross it. Such as a MultiPoint of [[-179, 0], [179, 0]].
-  //
-  // However, this will BREAK the index case if you attempt to put these extents in an R-Tree.
-  if (!opt_allowLargeWidths && extent[2] - extent[0] > 180) {
-    // assume the inverse
-    var tmp = extent[0] + 360;
-    extent[0] = extent[2];
-    extent[2] = tmp;
-  }
-
-  if (proj.getCode() !== os.proj.EPSG4326) {
-    extent = ol.proj.transformExtent(extent, os.proj.EPSG4326, proj);
-  }
-
-  return extent;
+  return result;
 };

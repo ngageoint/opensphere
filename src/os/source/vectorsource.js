@@ -13,6 +13,7 @@ goog.require('goog.string');
 goog.require('ol.color');
 goog.require('ol.geom.Geometry');
 goog.require('ol.source.Vector');
+goog.require('ol.structs.RBush');
 goog.require('os');
 goog.require('os.Fields');
 goog.require('os.alert.AlertEventSeverity');
@@ -385,6 +386,14 @@ os.source.Vector = function(opt_options) {
    */
   this.detectColumnTypes_ = false;
 
+  var useSpatialIndex = options.useSpatialIndex !== undefined ? options.useSpatialIndex : true;
+
+  /**
+   * @private
+   * @type {ol.structs.RBush<?ol.Feature>}
+   */
+  this.featuresAntiRTree_ = useSpatialIndex ? new ol.structs.RBush() : null;
+
   if (!options['disableAreaSelection']) {
     os.dispatcher.listen(os.action.EventType.SELECT, this.onFeatureAction_, false, this);
     os.dispatcher.listen(os.action.EventType.SELECT_EXCLUSIVE, this.onFeatureAction_, false, this);
@@ -535,7 +544,7 @@ os.source.Vector.prototype.clear = function(opt_fast) {
       this.timeModel.clear();
     }
 
-    // clear out all of hte collections/Rtree
+    // clear out all of the collections/Rtree
     if (this.featuresRtree_) {
       this.featuresRtree_.forEach(this.removeFeatureInternal, this);
       for (var id in this.nullGeometryFeatures_) {
@@ -549,6 +558,10 @@ os.source.Vector.prototype.clear = function(opt_fast) {
 
     if (this.featuresRtree_) {
       this.featuresRtree_.clear();
+    }
+
+    if (this.featuresAntiRTree_) {
+      this.featuresAntiRTree_.clear();
     }
 
     this.loadedExtentsRtree_.clear();
@@ -1021,6 +1034,11 @@ os.source.Vector.prototype.setGeometryShape = function(value) {
  */
 os.source.Vector.scratchExtent_ = ol.extent.createEmpty();
 
+/**
+ * @type {ol.Extent}
+ * @private
+ */
+os.source.Vector.scratchExtent2_ = ol.extent.createEmpty();
 
 /**
  * @param {ol.Feature} feature
@@ -1037,13 +1055,28 @@ os.source.Vector.prototype.updateIndex = function(feature) {
     extent[2] = -Infinity;
     extent[3] = -Infinity;
 
+    var antiExtent = os.source.Vector.scratchExtent2_;
+    antiExtent[0] = Infinity;
+    antiExtent[1] = Infinity;
+    antiExtent[2] = -Infinity;
+    antiExtent[3] = -Infinity;
+
+    var canWrap = os.map.PROJECTION.canWrapX();
+
     for (var s = 0, ss = styles.length; s < ss; s++) {
       var geomFunc = styles[s].getGeometryFunction();
       var g = geomFunc(feature);
       if (g) {
-        var e = os.extent.getFunctionalExtent(g, true);
+        var e = g.getExtent();
         if (e) {
           ol.extent.extend(extent, e);
+        }
+
+        if (canWrap) {
+          e = g.getAntiExtent();
+          if (e) {
+            ol.extent.extend(antiExtent, e);
+          }
         }
       }
     }
@@ -1054,6 +1087,14 @@ os.source.Vector.prototype.updateIndex = function(feature) {
         this.featuresRtree_.update(extent, feature);
       } else {
         this.featuresRtree_.insert(extent, feature);
+      }
+
+      if (!ol.extent.isEmpty(antiExtent)) {
+        if (id in this.featuresAntiRTree_.items_) {
+          this.featuresAntiRTree_.update(antiExtent, feature);
+        } else {
+          this.featuresAntiRTree_.insert(antiExtent, feature);
+        }
       }
     }
   }
@@ -2728,7 +2769,24 @@ os.source.Vector.prototype.onFeatureAction_ = function(event) {
  */
 os.source.Vector.prototype.getFeaturesInExtent = function(extent) {
   // if the source is hidden, don't return any features
-  return this.getVisible() ? os.source.Vector.base(this, 'getFeaturesInExtent', extent) : [];
+  if (!this.getVisible()) {
+    return [];
+  }
+
+  var normalizedExtent = os.extent.normalize(extent);
+  var crosses = os.extent.crossesAntimeridian(normalizedExtent);
+  if (crosses) {
+    os.extent.normalizeAnti(normalizedExtent, undefined, normalizedExtent);
+    this.swapRTrees_();
+  }
+
+  var result = os.source.Vector.base(this, 'getFeaturesInExtent', normalizedExtent);
+
+  if (crosses) {
+    this.swapRTrees_();
+  }
+
+  return result;
 };
 
 
@@ -2985,6 +3043,57 @@ os.source.Vector.prototype.forEachFeature = function(callback, opt_this) {
   // The Openlayers default is to run this over the RBush. However, that only iterates over features with geometries.
   // Sources can contain tabular vector data without geometries, so we'll do this instead.
   this.getFeatures().forEach(callback, opt_this);
+};
+
+
+/**
+ * @param {boolean=} opt_swapBack
+ * @private
+ * @suppress {accessControls}
+ */
+os.source.Vector.prototype.swapRTrees_ = function(opt_swapBack) {
+  var tmp = this.featuresAntiRTree_;
+  this.featuresAntiRTree_ = this.featuresRtree_;
+  this.featuresRtree_ = tmp;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.source.Vector.prototype.forEachFeatureInExtent = function(extent, callback, opt_this) {
+  var normalizedExtent = os.extent.normalize(extent);
+  var crosses = os.extent.crossesAntimeridian(normalizedExtent);
+  if (crosses) {
+    os.extent.normalizeAnti(normalizedExtent, undefined, normalizedExtent);
+    this.swapRTrees_();
+  }
+
+  os.source.Vector.base(this, 'forEachFeatureInExtent', normalizedExtent, callback, opt_this);
+
+  if (crosses) {
+    this.swapRTrees_();
+  }
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.source.Vector.prototype.forEachFeatureIntersectingExtent = function(extent, callback, opt_this) {
+  var normalizedExtent = os.extent.normalize(extent);
+  var crosses = os.extent.crossesAntimeridian(normalizedExtent);
+  if (crosses) {
+    os.extent.normalizeAnti(normalizedExtent, undefined, normalizedExtent);
+    this.swapRTrees_();
+  }
+
+  os.source.Vector.base(this, 'forEachFeatureIntersectingExtent',
+      normalizedExtent, callback, opt_this);
+
+  if (crosses) {
+    this.swapRTrees_();
+  }
 };
 
 
