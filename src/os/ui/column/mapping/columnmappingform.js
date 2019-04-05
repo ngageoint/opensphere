@@ -60,7 +60,7 @@ os.ui.column.mapping.ColumnMappingFormCtrl = function($scope, $element, $timeout
   this.timeout_ = $timeout;
 
   /**
-   * @type {!Array<!os.ui.ogc.IOGCDescriptor>}
+   * @type {!Array<!os.data.IDataDescriptor>}
    * @private
    */
   this.cachedDescriptorList_ = [];
@@ -127,14 +127,12 @@ os.ui.column.mapping.ColumnMappingFormCtrl.prototype.init_ = function() {
 
   for (var i = 0, ii = descList.length; i < ii; i++) {
     var desc = descList[i];
-    try {
-      desc = /** @type {os.ui.ogc.IOGCDescriptor} */ (desc);
-      if (desc.isWfsEnabled() === true) {
-        descMap[desc.getUrlKey()] = desc;
+
+    if (desc.getDataProvider().getEnabled()) {
+      if (os.implements(desc, os.ui.ogc.IFeatureTypeDescriptor.ID)) {
+        descMap[desc.getId()] = desc;
         this.cachedDescriptorList_.push(desc);
       }
-    } catch (e) {
-      // not a WFS enabled descriptor
     }
   }
 
@@ -215,7 +213,7 @@ os.ui.column.mapping.ColumnMappingFormCtrl.prototype.validateLayers_ = function(
   }
 
   var incompleteLayer = ol.array.find(columns, function(item) {
-    return (!item.layer || item.layer.length == 0 || !item.column || item.column.length == 0);
+    return (!item['layer'] || item['layer'].length == 0 || !item['column'] || item['column'].length == 0);
   });
 
   this.scope_['cmForm'].$setValidity('duplicateLayer', !duplicates);
@@ -289,7 +287,7 @@ os.ui.column.mapping.ColumnMappingFormCtrl.prototype.cancel = function() {
 
 /**
  * Returns the cached descriptor list. Used by the layer pickers in the form.
- * @return {!Array.<!os.ui.ogc.IOGCDescriptor>}
+ * @return {!Array.<!os.data.IDataDescriptor>}
  * @export
  */
 os.ui.column.mapping.ColumnMappingFormCtrl.prototype.getLayersFunction = function() {
