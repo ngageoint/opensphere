@@ -28,6 +28,73 @@ ol.geom.Geometry.LOGGER_ = goog.log.getLogger('ol.geom.Geometry');
 
 
 /**
+ * @param {ol.Extent=} opt_extent
+ * @return {ol.Extent} The extent normalized from 0 to 360 rather than -180 to 180
+ */
+ol.geom.Geometry.prototype.getAntiExtent = function(opt_extent) {
+  var rev = this.getRevision();
+  if (this.antiExtentRevision_ != rev) {
+    this.antiExtent_ = this.computeAntiExtent(this.antiExtent_ || ol.extent.createEmpty());
+    this.antiExtentRevision_ = rev;
+  }
+  return ol.extent.returnOrUpdate(this.antiExtent_, opt_extent);
+};
+
+
+/**
+ * @param {ol.Extent} extent
+ * @return {ol.Extent}
+ * @protected
+ */
+ol.geom.Geometry.prototype.computeAntiExtent = goog.abstractMethod;
+
+
+/**
+ * @type {ol.Extent}
+ * @private
+ */
+ol.geom.Geometry.prototype.antiExtent_ = null;
+
+
+/**
+ * @type {number}
+ * @private
+ */
+ol.geom.Geometry.prototype.antiExtentRevision_ = NaN;
+
+
+/**
+ * @inheritDoc
+ */
+ol.geom.SimpleGeometry.prototype.computeAntiExtent = function(extent) {
+  var coords = this.getFlatCoordinates();
+  var stride = this.getStride();
+  var proj = os.map.PROJECTION;
+  var projExtent = proj.getExtent();
+  var projWidth = ol.extent.getWidth(projExtent);
+  var projCenter = projExtent[0] + projWidth / 2;
+
+  extent[0] = Infinity;
+  extent[1] = Infinity;
+  extent[2] = -Infinity;
+  extent[3] = -Infinity;
+
+  for (var i = 0, n = coords.length; i < n; i += stride) {
+    var x = coords[i];
+    x += x < projCenter ? projWidth : 0;
+    var y = coords[i + 1];
+
+    extent[0] = Math.min(extent[0], x);
+    extent[1] = Math.min(extent[1], y);
+    extent[2] = Math.max(extent[2], x);
+    extent[3] = Math.max(extent[3], y);
+  }
+
+  return extent;
+};
+
+
+/**
  * Transforms the geometry to the selected application projection.
  *
  * @param {ol.ProjectionLike=} opt_projection The current projection of the geometry. Defaults to EPSG:4326.
