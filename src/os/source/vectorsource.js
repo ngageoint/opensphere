@@ -36,6 +36,7 @@ goog.require('os.implements');
 goog.require('os.interpolate');
 goog.require('os.layer.AnimationOverlay');
 goog.require('os.load.LoadingManager');
+goog.require('os.mixin.rbush');
 goog.require('os.ogc');
 goog.require('os.registerClass');
 goog.require('os.source');
@@ -1041,7 +1042,7 @@ os.source.Vector.prototype.updateIndex = function(feature) {
       var geomFunc = styles[s].getGeometryFunction();
       var g = geomFunc(feature);
       if (g) {
-        var e = os.extent.getFunctionalExtent(g, true);
+        var e = os.extent.getFunctionalExtent(g);
         if (e) {
           ol.extent.extend(extent, e);
         }
