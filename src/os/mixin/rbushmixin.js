@@ -41,14 +41,10 @@ goog.require('os.extent');
     }
 
     // query for features
+    var setsContainingFeatures = 0;
     featureSets.length = 0;
     for (var i = 0, n = extents.length; i < n; i++) {
       featureSets[i] = oldGetInExtent.call(this, extents[i]);
-    }
-
-    // see how many sets (extents) returned results
-    var setsContainingFeatures = 0;
-    for (i = 0, n = featureSets.length; i < n; i++) {
       if (featureSets[i].length) {
         setsContainingFeatures++;
       }
