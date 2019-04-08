@@ -55,18 +55,26 @@ goog.require('os.extent');
     // if more than one returned results, dedupe them
     if (setsContainingFeatures > 1) {
       var seen = {};
+      var currLength = featureSets[0].length;
+
       for (i = 0, n = featureSets.length; i < n; i++) {
+        if (i > 0) {
+          featureSets[0].length += featureSets[i].length;
+        }
+
         for (var j = 0, m = featureSets[i].length; j < m; j++) {
           var feature = featureSets[i][j];
           var id = ol.getUid(feature);
 
-          if (i !== 0 && !seen[id]) {
-            featureSets[0].push(feature);
+          if (i > 0 && !seen[id]) {
+            featureSets[0][currLength++] = feature;
           }
 
           seen[id] = true;
         }
       }
+
+      featureSets[0].length = currLength;
     }
 
     return featureSets[0];
