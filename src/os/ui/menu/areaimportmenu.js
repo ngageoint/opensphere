@@ -32,7 +32,7 @@ os.ui.menu.areaImport.setup = function() {
     children: [{
       label: 'Import File/URL',
       eventType: os.ui.menu.areaImport.EventType.FILE,
-      tooltip: 'Import areas from a file or URL',
+      tooltip: 'Import areas or filters from a file or URL',
       icons: ['<i class="fa fa-fw fa-cloud-download"></i>'],
       handler: os.ui.menu.areaImport.handleQueryEvent_,
       sort: 1
