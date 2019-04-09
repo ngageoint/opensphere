@@ -34,12 +34,17 @@ os.ui.modal.create = function(target, markup, opt_scopeOptions) {
 os.ui.modal.open = function(el, opt_options) {
   // Tabindex -1 is required for the modal to close on the ESC key
   el.attr('tabindex', '-1');
-  el.modal(opt_options).on('hidden.bs.modal', function() {
+  var options = opt_options || {};
+  if (!options['backdrop']) {
+    // By default, dont close the modal if you click outside of it
+    options['backdrop'] = 'static';
+  }
+  el.modal(options).on('hidden.bs.modal', function() {
     // let the animation complete
     setTimeout(function() {
       // and then remove it
       el.scope().$destroy();
       el.remove();
-    }, 1500);
+    }, 100);
   });
 };
