@@ -14,8 +14,8 @@ os.ui.search.basicResultCardDirective = function() {
     restrict: 'E',
     replace: true,
     scope: true,
-    template: '<div class="row"><div class="col text-truncate">{{ctrl.title}}</div>' +
-        '<div class="ml-2 float-right"ng-bind-html="ctrl.getViewLink()"></div></div>',
+    template: '<div class="row"><div class="col text-truncate" ng-bind-html="ctrl.getTitle()"></div>' +
+        '<div class="ml-2 float-right" ng-bind-html="ctrl.getViewIcon()"></div></div>',
     controller: os.ui.search.BasicResultCardCtrl,
     controllerAs: 'ctrl'
   };
@@ -47,17 +47,31 @@ os.ui.search.BasicResultCardCtrl = function($scope, $element, $compile) {
 
 
 /**
- * Get the title with correct action button
+ * Get the title with correct action icon
  * @return {string}
  * @export
  */
-os.ui.search.BasicResultCardCtrl.prototype.getViewLink = function() {
+os.ui.search.BasicResultCardCtrl.prototype.getViewIcon = function() {
   var file = this.isFileDownloadLink();
   var icon = file ? 'download' : 'external-link';
-  var title = file ? 'Download Report' : 'Visit External Report Link';
-  var actionBtn = '<a href="' + this['url'] + '" target="' + this['url'] +
-      '"><i class="fa fa-' + icon + ' px-2" title="' + title + '"></i></a>';
-  return actionBtn;
+  var title = file ? 'Download Report' : this['url'];
+  var icon = file ? '<i class="fa fa-' + icon + ' px-2" title="' + title + '"></i>' : '';
+  var actionIcon = '<a href="' + this['url'] + '" target="' + this['url'] +
+      '">' + icon + '</a>';
+  return actionIcon;
+};
+
+
+/**
+ * To linkify title or not
+ * @return {string}
+ * @export
+ */
+os.ui.search.BasicResultCardCtrl.prototype.getTitle = function() {
+  var file = this.isFileDownloadLink();
+  var linkTitle = '<a href="' + this['url'] + '" target="' + this['url'] + '" title="' +
+      this['url'] + '">' + this['title'] + '</a>';
+  return file ? this['title'] : linkTitle;
 };
 
 
