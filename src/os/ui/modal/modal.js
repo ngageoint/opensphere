@@ -32,6 +32,8 @@ os.ui.modal.create = function(target, markup, opt_scopeOptions) {
  * @param {Object<string, *>=} opt_options
  */
 os.ui.modal.open = function(el, opt_options) {
+  // Tabindex -1 is required for the modal to close on the ESC key
+  el.attr('tabindex', '-1');
   el.modal(opt_options).on('hidden.bs.modal', function() {
     // let the animation complete
     setTimeout(function() {
