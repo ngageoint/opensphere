@@ -24,8 +24,8 @@ describe('os.im.mapping.LatLonMapping', function() {
     expect(m.testField('501545.250 E  103036.750 N')).toBe(true);
     expect(m.testField('001.16N 01.11E')).toBe(false);
     expect(m.testField('N001.16 E01.11')).toBe(false);
-    expect(m.testAndGetField('001.16N 01.11E', 'DMS')).not.toBeNull();
-    expect(m.testAndGetField('N001.16 E01.11', 'DMS')).not.toBeNull();
+    expect(m.testAndGetField('001.16N 01.11E', 'DD')).not.toBeNull();
+    expect(m.testAndGetField('N001.16 E01.11', 'DD')).not.toBeNull();
     expect(m.testField('E01.11 N001.16')).toBe(true);
 
     m.setOrder(os.geo.PREFER_LON_FIRST);

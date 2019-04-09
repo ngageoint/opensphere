@@ -190,19 +190,33 @@ os.geo.END_ = '[^NSEW\\d]*$';
 
 
 /**
+ * Matches the longitude portion of a DMS coordinate.
+ *  - Preceded by optional direction/white space/sign.
+ *  - Degrees required as 1-3 digits. If 3 digits, the first must be a 0 or 1.
+ *  - Minutes required as 2 digits.
+ *  - Seconds required as 2 digits.
+ *  - Optional decimal seconds, or milliarcseconds (3 digits without a decimal).
+ *
  * @type {string}
  * @const
  * @private
  */
-os.geo.DMS_LON_ = '([NSEW]?)[\\s]*([-+]?\\d{1,3})(\\d{2})(\\d{2}(\\.\\d*|\\d{3})?)?[\\s]*';
+os.geo.DMS_LON_ = '([NSEW]?)[\\s]*([-+]?[01]?\\d{1,2})(\\d{2})(\\d{2}(\\.\\d*|\\d{3})?)[\\s]*';
 
 
 /**
+ * Matches the latitude portion of a DMS coordinate.
+ *  - Preceded by optional direction/white space/sign.
+ *  - Degrees required as 1-2 digits.
+ *  - Minutes required as 2 digits.
+ *  - Seconds required as 2 digits.
+ *  - Optional decimal seconds, or milliarcseconds (3 digits without a decimal).
+ *
  * @type {string}
  * @const
  * @private
  */
-os.geo.DMS_LAT_ = '([NSEW]?)[\\s]*([-+]?\\d{1,2})(\\d{2})(\\d{2}(\\.\\d*|\\d{3})?)?[\\s]*';
+os.geo.DMS_LAT_ = '([NSEW]?)[\\s]*([-+]?\\d{1,2})(\\d{2})(\\d{2}(\\.\\d*|\\d{3})?)[\\s]*';
 
 
 /**
@@ -214,19 +228,31 @@ os.geo.DMS_RELAXED_ = '([NSEW]?)[\\s]*([-+]?\\d{1,3}[\\.]?)(\\d{2}[\\.]?)(\\d{2}
 
 
 /**
+ * Matches the longitude portion of a DDM coordinate.
+ *  - Preceded by optional direction/white space/sign.
+ *  - Degrees required as 1-3 digits. If 3 digits, the first must be a 0 or 1.
+ *  - Minutes required as 2 digits.
+ *  - Optional decimal minutes.
+ *
  * @type {string}
  * @const
  * @private
  */
-os.geo.DDM_LON_ = '([NSEW]?)[\\s]*([-+]?\\d{1,3})(\\d{2}\\.\\d*)?[\\s]*';
+os.geo.DDM_LON_ = '([NSEW]?)[\\s]*([-+]?[01]?\\d{1,2})(\\d{2}(?:\\.\\d*)?)[\\s]*';
 
 
 /**
+ * Matches the latitude portion of a DDM coordinate.
+ *  - Preceded by optional direction/white space/sign.
+ *  - Degrees required as 1-2 digits.
+ *  - Minutes required as 2 digits.
+ *  - Optional decimal minutes.
+ *
  * @type {string}
  * @const
  * @private
  */
-os.geo.DDM_LAT_ = '([NSEW]?)[\\s]*([-+]?\\d{1,2})(\\d{2}\\.\\d*)?[\\s]*';
+os.geo.DDM_LAT_ = '([NSEW]?)[\\s]*([-+]?\\d{1,2})(\\d{2}(?:\\.\\d*)?)[\\s]*';
 
 
 /**
