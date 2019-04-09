@@ -14,7 +14,8 @@ os.ui.search.basicResultCardDirective = function() {
     restrict: 'E',
     replace: true,
     scope: true,
-    template: '<div class="text-truncate"><a ng-href="{{ctrl.url}}">{{ctrl.title}}</a></div>',
+    template: '<div class="row"><div class="col text-truncate">{{ctrl.title}}</div>' +
+        '<div class="ml-2 float-right"ng-bind-html="ctrl.getViewLink()"></div></div>',
     controller: os.ui.search.BasicResultCardCtrl,
     controllerAs: 'ctrl'
   };
@@ -42,4 +43,30 @@ os.ui.search.BasicResultCardCtrl = function($scope, $element, $compile) {
     this['url'] = result.getUrl();
     this['title'] = os.ui.text.SimpleMDE.getUnformatedText(result.getTitle());
   }
+};
+
+
+/**
+ * Get the title with correct action button
+ * @return {string}
+ * @export
+ */
+os.ui.search.BasicResultCardCtrl.prototype.getViewLink = function() {
+  var file = this.isFileDownloadLink();
+  var icon = file ? 'download' : 'external-link';
+  var title = file ? 'Download Report' : 'Visit External Report Link';
+  var actionBtn = '<a href="' + this['url'] + '" target="' + this['url'] +
+      '"><i class="fa fa-' + icon + ' px-2" title="' + title + '"></i></a>';
+  return actionBtn;
+};
+
+
+/**
+ * Is the link to an external site
+ * @return {boolean}
+ * @export
+ */
+os.ui.search.BasicResultCardCtrl.prototype.isFileDownloadLink = function() {
+  var fileDownloadUrl = /** @type {string} */ (os.settings.get('tools.fileDownloadUrl'));
+  return goog.string.contains(this['url'], fileDownloadUrl);
 };
