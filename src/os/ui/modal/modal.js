@@ -40,11 +40,10 @@ os.ui.modal.open = function(el, opt_options) {
     options['backdrop'] = 'static';
   }
   el.modal(options).on('hidden.bs.modal', function() {
-    // let the animation complete
-    setTimeout(function() {
-      // and then remove it
+    // Cleanup the scope & element
+    if (el.scope()) {
       el.scope().$destroy();
-      el.remove();
-    }, 100);
+    }
+    el.remove();
   });
 };
