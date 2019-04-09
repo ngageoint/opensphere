@@ -115,6 +115,15 @@ os.histo.DateBinMethod.prototype.setDateBinType = function(value) {
 
 
 /**
+ * Get the supported date bin types for this method.
+ * @return {Array<string>}
+ */
+os.histo.DateBinMethod.prototype.getDateBinTypes = function() {
+  return Object.values(os.histo.DateBinType);
+};
+
+
+/**
  * Get the maximum key for this date bin type, if there is one
  * @param {number} opt_timestamp
  * @return {number}
@@ -142,17 +151,6 @@ os.histo.DateBinMethod.prototype.getTypeMax = function(opt_timestamp) {
       break;
   }
   return max;
-};
-
-
-/**
- * Return a map of the date bin types
- * @return {Object<string,string>}
- */
-os.histo.DateBinMethod.getTypesMap = function() {
-  return Object.keys(os.histo.DateBinType).map(function(v) {
-    return {'key': v, 'value': os.histo.DateBinType[v]};
-  });
 };
 
 
