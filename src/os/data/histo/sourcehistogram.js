@@ -11,6 +11,7 @@ goog.require('os.data.histo');
 goog.require('os.data.histo.ColorBin');
 goog.require('os.data.histo.ColorMethod');
 goog.require('os.data.histo.ColorModel');
+goog.require('os.data.xf.IGroupable');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.histo.BinMethod');
 goog.require('os.histo.bin');
@@ -27,6 +28,7 @@ goog.require('os.source.PropertyChange');
  * @param {os.source.Vector} source The source for the histogram
  * @param {os.data.histo.SourceHistogram=} opt_parent Parent histogram for cascading
  * @extends {goog.events.EventTarget}
+ * @implements {os.data.xf.IGroupable<ol.Feature>}
  * @constructor
  */
 os.data.histo.SourceHistogram = function(source, opt_parent) {
@@ -352,8 +354,7 @@ os.data.histo.SourceHistogram.prototype.setParent = function(value) {
 
 
 /**
- * Get the bin method.
- * @return {os.histo.IBinMethod<ol.Feature>}
+ * @inheritDoc
  */
 os.data.histo.SourceHistogram.prototype.getBinMethod = function() {
   return this.binMethod;
@@ -370,9 +371,7 @@ os.data.histo.SourceHistogram.prototype.getSecondaryBinMethod = function() {
 
 
 /**
- * Sets the bin method.
- * @param {os.histo.IBinMethod<ol.Feature>} method
- *
+ * @inheritDoc
  * @export Prevent the compiler from moving the function off the prototype.
  */
 os.data.histo.SourceHistogram.prototype.setBinMethod = function(method) {
@@ -709,12 +708,7 @@ os.data.histo.SourceHistogram.prototype.onUpdate = function(opt_e) {
 
 
 /**
- * This runs when an item is added to a group
- * @param {!os.data.histo.ColorBin} bin
- * @param {!ol.Feature} item
- * @return {!os.data.histo.ColorBin}
- * @protected
- *
+ * @inheritDoc
  * @suppress {checkTypes} To allow [] access on features.
  */
 os.data.histo.SourceHistogram.prototype.reduceAdd = function(bin, item) {
@@ -726,12 +720,7 @@ os.data.histo.SourceHistogram.prototype.reduceAdd = function(bin, item) {
 
 
 /**
- * This runs when an item is removed from a group
- * @param {!os.data.histo.ColorBin} bin
- * @param {!ol.Feature} item
- * @return {!os.data.histo.ColorBin}
- * @protected
- *
+ * @inheritDoc
  * @suppress {checkTypes} To allow [] access on features.
  */
 os.data.histo.SourceHistogram.prototype.reduceRemove = function(bin, item) {
@@ -743,9 +732,7 @@ os.data.histo.SourceHistogram.prototype.reduceRemove = function(bin, item) {
 
 
 /**
- * Creates a new bin for a group
- * @return {!os.data.histo.ColorBin}
- * @protected
+ * @inheritDoc
  */
 os.data.histo.SourceHistogram.prototype.reduceInit = function() {
   var bin = new os.data.histo.ColorBin(this.source.getColor());
