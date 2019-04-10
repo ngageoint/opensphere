@@ -82,6 +82,14 @@ os.ui.window.openWindows_ = {};
 
 
 /**
+ * Map of currently open windows.
+ * @type {!Object<string, boolean>}
+ * @private
+ */
+os.ui.window.opening_ = {};
+
+
+/**
  * A draggable, resizable window. The directive uses transclusion, meaning that you
  * can place custom content into the window.
  *
@@ -141,6 +149,13 @@ os.ui.Module.directive('window', [os.ui.windowDirective]);
  * @param {Object.<string, *>=} opt_scopeOptions Key/value pairs to add to the scope
  */
 os.ui.window.create = function(options, html, opt_parent, opt_scope, opt_compile, opt_scopeOptions) {
+  if (options['id']) {
+    if (os.ui.window.isOpening(/** @type {string} */ (options['id']))) {
+      return;
+    }
+    os.ui.window.opening_['#' + options['id']] = true;
+  }
+
   if (!opt_parent) {
     opt_parent = os.ui.windowSelector.CONTAINER;
   }
@@ -391,6 +406,17 @@ os.ui.window.exists = function(id) {
 
 
 /**
+ * Checks if a window with the provided id is in the process of being opened.
+ * @param {string} id The id, without the leading `#`.
+ * @return {boolean} If the window exists.
+ */
+os.ui.window.isOpening = function(id) {
+  var wins = os.ui.window.opening_['#' + id];
+  return wins ? true : false;
+};
+
+
+/**
  * Make a window start or stop blinking
  * @param {!string} id window ID
  * @param {boolean=} opt_start Defaults to start (true), stop blinking if false is specified.
@@ -503,6 +529,8 @@ os.ui.window.sortByZIndex = function(a, b) {
  * @param {!Element} el The element.
  */
 os.ui.window.registerWindow = function(id, el) {
+  delete os.ui.window.opening_[id];
+
   if (!os.ui.window.openWindows_[id]) {
     os.ui.window.openWindows_[id] = [el];
   } else {
