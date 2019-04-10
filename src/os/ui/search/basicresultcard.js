@@ -53,8 +53,7 @@ os.ui.search.BasicResultCardCtrl = function($scope, $element, $compile) {
  */
 os.ui.search.BasicResultCardCtrl.prototype.getViewIcon = function() {
   var file = this.isFileDownloadLink();
-  var title = file ? 'Download Report' : this['url'];
-  var icon = file ? '<i class="fa fa-' + icon + ' px-2" title="' + title + '"></i>' : '';
+  var icon = file ? '<i class="fa fa-download px-2" title="Download Report"></i>' : '';
   var actionIcon = '<a href="' + this['url'] + '" target="' + this['url'] +
       '">' + icon + '</a>';
   return actionIcon;
