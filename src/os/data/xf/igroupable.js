@@ -14,6 +14,20 @@ os.data.xf.IGroupable = function() {};
 
 
 /**
+ * Get the name.
+ * @return {?string}
+ */
+os.data.xf.IGroupable.prototype.getName;
+
+
+/**
+ * Set the name.
+ * @param {?string} value
+ */
+os.data.xf.IGroupable.prototype.setName;
+
+
+/**
  * Gets the bin method.
  * @return {os.histo.IBinMethod}
  */

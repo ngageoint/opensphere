@@ -42,6 +42,13 @@ os.data.histo.SourceHistogram = function(source, opt_parent) {
   this.id_ = os.data.histo.SourceHistogram.ID + os.data.histo.SourceHistogram.nextId++;
 
   /**
+   * The user-facing name for the histogram.
+   * @type {?string}
+   * @protected
+   */
+  this.name = null;
+
+  /**
    * Key for xf dimension with multi key string
    * @type {string}
    * @private
@@ -289,6 +296,22 @@ os.data.histo.SourceHistogram.prototype.getId = function() {
  */
 os.data.histo.SourceHistogram.prototype.getMultiId = function() {
   return this.multiId_;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.data.histo.SourceHistogram.prototype.getName = function() {
+  return this.name;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.data.histo.SourceHistogram.prototype.setName = function(value) {
+  this.name = value;
 };
 
 

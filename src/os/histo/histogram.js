@@ -29,6 +29,13 @@ os.histo.Histogram = function() {
   this.binMethod = null;
 
   /**
+   * The user-facing name for the histogram.
+   * @type {?string}
+   * @protected
+   */
+  this.name = null;
+
+  /**
    * @type {?crossfilter.Dimension}
    * @protected
    */
@@ -196,6 +203,22 @@ os.histo.Histogram.prototype.map_ = function(item, i, arr) {
   }
 
   return bin;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.histo.Histogram.prototype.getName = function() {
+  return this.name;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.histo.Histogram.prototype.setName = function(value) {
+  this.name = value;
 };
 
 
