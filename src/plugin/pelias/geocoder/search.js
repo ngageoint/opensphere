@@ -8,6 +8,7 @@ goog.require('ol.geom.Point');
 goog.require('os.alert.AlertEventSeverity');
 goog.require('os.alert.AlertManager');
 goog.require('os.config.Settings');
+goog.require('os.extent');
 goog.require('os.geo');
 goog.require('os.search.AbstractUrlSearch');
 goog.require('plugin.pelias.geocoder.AttrResult');
@@ -67,7 +68,7 @@ plugin.pelias.geocoder.Search.prototype.getSearchUrl = function(term, opt_start,
 
     // translate to lon/lat
     extent = ol.proj.transformExtent(extent, os.map.PROJECTION, os.proj.EPSG4326);
-    extent = plugin.pelias.geocoder.Search.normaliseLongitudeExtent_(extent);
+    extent = os.extent.normalize(extent, undefined, undefined, os.proj.EPSG4326, extent);
     var distance = osasm.geodesicInverse(extent.slice(0, 2), extent.slice(2, 4)).distance;
 
     if (distance <= threshold) {
@@ -94,20 +95,6 @@ plugin.pelias.geocoder.Search.prototype.getSearchUrl = function(term, opt_start,
     }
   }
   return url;
-};
-
-/**
- * Normalise the longitudes in an extent.
- *
- * @param {ol.Extent} extent The extent to be normalised
- * @return {ol.Extent} The extent with longitudes normalised to [-180,180)
- * @private
- */
-plugin.pelias.geocoder.Search.normaliseLongitudeExtent_ = function(extent) {
-  var normalisedExtent = extent;
-  normalisedExtent[0] = os.geo.normalizeLongitude(extent[0]);
-  normalisedExtent[2] = os.geo.normalizeLongitude(extent[2]);
-  return normalisedExtent;
 };
 
 

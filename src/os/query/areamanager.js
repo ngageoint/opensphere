@@ -13,6 +13,8 @@ goog.require('os.command.TransformAreas');
 goog.require('os.config.Settings');
 goog.require('os.data.CollectionManager');
 goog.require('os.events.PropertyChangeEvent');
+goog.require('os.geo');
+goog.require('os.geo2');
 goog.require('os.map');
 goog.require('os.mixin.object');
 goog.require('os.query');
@@ -364,9 +366,7 @@ os.query.AreaManager.prototype.normalizeGeometry = function(feature) {
   var geom = feature.getGeometry();
 
   if (!geom.get(os.geom.GeometryField.NORMALIZED)) {
-    geom.toLonLat();
-    os.geo.normalizeGeometryCoordinates(geom);
-    geom.osTransform();
+    os.geo2.normalizeGeometryCoordinates(geom);
     feature.setGeometry(geom);
   }
 };

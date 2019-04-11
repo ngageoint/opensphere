@@ -23,6 +23,7 @@ goog.require('ol.geom.Polygon');
 goog.require('ol.proj.Projection');
 goog.require('os.fn');
 goog.require('os.geo');
+goog.require('os.geo2');
 goog.require('os.geom.GeometryField');
 goog.require('os.map');
 goog.require('os.mixin.jsts');
@@ -723,7 +724,7 @@ os.geo.jsts.flattenPolygons = function(polygons) {
       var normalizeTo = (normalizeExtent[0] + normalizeExtent[2]) / 2;
       for (var i = 0; i < polygons.length; i++) {
         polygons[i].unset(os.geom.GeometryField.NORMALIZED, true);
-        os.geo.normalizeGeometryCoordinates(polygons[i], normalizeTo);
+        os.geo2.normalizeGeometryCoordinates(polygons[i], normalizeTo, os.proj.EPSG4326);
       }
 
       var merged = os.geo.jsts.merge(polygons);
@@ -773,7 +774,7 @@ os.geo.jsts.buffer = function(geometry, distance, opt_skipTransform) {
       break;
     case ol.geom.GeometryType.LINE_STRING:
     case ol.geom.GeometryType.MULTI_LINE_STRING:
-      os.geo.normalizeGeometryCoordinates(clone);
+      os.geo2.normalizeGeometryCoordinates(clone, undefined, os.proj.EPSG4326);
       buffer = os.geo.jsts.splitAndBuffer_(clone, Math.abs(distance));
       break;
     case ol.geom.GeometryType.POLYGON:
@@ -1107,7 +1108,7 @@ os.geo.jsts.createTMercProjection_ = function(geometry) {
 os.geo.jsts.fromBufferProjection_ = function(geometry, projection, opt_normalizeLon) {
   if (geometry) {
     geometry.transform(projection, os.proj.EPSG4326);
-    os.geo.normalizeGeometryCoordinates(geometry, opt_normalizeLon);
+    os.geo2.normalizeGeometryCoordinates(geometry, opt_normalizeLon, os.proj.EPSG4326);
   }
 };
 
