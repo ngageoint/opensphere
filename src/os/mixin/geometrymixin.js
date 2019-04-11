@@ -2,6 +2,7 @@ goog.provide('os.mixin.geometry');
 
 goog.require('goog.log');
 goog.require('goog.log.Logger');
+goog.require('ol.extent');
 goog.require('ol.geom.Circle');
 goog.require('ol.geom.Geometry');
 goog.require('ol.geom.GeometryCollection');
@@ -67,17 +68,13 @@ ol.geom.Geometry.prototype.antiExtentRevision_ = NaN;
  * @inheritDoc
  */
 ol.geom.SimpleGeometry.prototype.computeAntiExtent = function(extent) {
+  ol.extent.createOrUpdateEmpty(extent);
   var coords = this.getFlatCoordinates();
   var stride = this.getStride();
   var proj = os.map.PROJECTION;
   var projExtent = proj.getExtent();
   var projWidth = ol.extent.getWidth(projExtent);
   var projCenter = projExtent[0] + projWidth / 2;
-
-  extent[0] = Infinity;
-  extent[1] = Infinity;
-  extent[2] = -Infinity;
-  extent[3] = -Infinity;
 
   for (var i = 0, n = coords.length; i < n; i += stride) {
     var x = coords[i];
@@ -88,6 +85,21 @@ ol.geom.SimpleGeometry.prototype.computeAntiExtent = function(extent) {
     extent[1] = Math.min(extent[1], y);
     extent[2] = Math.max(extent[2], x);
     extent[3] = Math.max(extent[3], y);
+  }
+
+  return extent;
+};
+
+
+/**
+ * @inheritDoc
+ * @suppress {accessControls}
+ */
+ol.geom.GeometryCollection.prototype.computeAntiExtent = function(extent) {
+  ol.extent.createOrUpdateEmpty(extent);
+  var geometries = this.geometries_;
+  for (var i = 0, n = geometries.length; i < n; i++) {
+    ol.extent.extend(extent, geometries[i].getAntiExtent());
   }
 
   return extent;
