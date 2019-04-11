@@ -1941,12 +1941,7 @@ os.source.Vector.prototype.processImmediate = function(feature) {
       feature.setGeometry(geom);
     } else if (!geom.get(os.geom.GeometryField.NORMALIZED)) {
       // normalize non-point geometries unless they were normalized elsewhere
-      // convert to EPSG:4326 for calls to geo
-      geom.toLonLat();
-      // normalize
-      os.geo.normalizeGeometryCoordinates(geom);
-      // convert back
-      geom.osTransform();
+      os.geo2.normalizeGeometryCoordinates(geom);
     }
   }
 

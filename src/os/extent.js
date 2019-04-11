@@ -21,7 +21,7 @@ os.extent.clamp = function(extent, clampTo, opt_extent) {
 
 /**
  * @param {ol.Extent} extent
- * @param {ol.proj.Projection=} opt_proj
+ * @param {ol.ProjectionLike=} opt_proj
  * @return {boolean} Whether or not the extent crosses the antimeridian
  */
 os.extent.crossesAntimeridian = function(extent, opt_proj) {
@@ -29,7 +29,7 @@ os.extent.crossesAntimeridian = function(extent, opt_proj) {
     return false;
   }
 
-  opt_proj = opt_proj || os.map.PROJECTION;
+  opt_proj = ol.proj.get(opt_proj || os.map.PROJECTION);
   if (opt_proj.canWrapX()) {
     var projExtent = opt_proj.getExtent();
     var xmin = extent[0];
@@ -58,12 +58,12 @@ os.extent.crossesAntimeridian = function(extent, opt_proj) {
  * Normalizes an extent for a projection where the right antimeridian becomes
  * the meridian.
  * @param {ol.Extent} extent
- * @param {ol.proj.Projection=} opt_proj
+ * @param {ol.ProjectionLike=} opt_proj
  * @param {ol.Extent=} opt_result
  * @return {ol.Extent}
  */
 os.extent.normalizeAntiRight = function(extent, opt_proj, opt_result) {
-  opt_proj = opt_proj || os.map.PROJECTION;
+  opt_proj = ol.proj.get(opt_proj || os.map.PROJECTION);
   var projExtent = opt_proj.getExtent();
   var left = projExtent[0];
   var right = projExtent[2];
@@ -78,12 +78,12 @@ os.extent.normalizeAntiRight = function(extent, opt_proj, opt_result) {
  * Normalizes an extent for a projection where the left antimeridian becomes
  * the meridian.
  * @param {ol.Extent} extent
- * @param {ol.proj.Projection=} opt_proj
+ * @param {ol.ProjectionLike=} opt_proj
  * @param {ol.Extent=} opt_result
  * @return {ol.Extent}
  */
 os.extent.normalizeAntiLeft = function(extent, opt_proj, opt_result) {
-  opt_proj = opt_proj || os.map.PROJECTION;
+  opt_proj = ol.proj.get(opt_proj || os.map.PROJECTION);
   var projExtent = opt_proj.getExtent();
   var left = projExtent[0];
   var right = projExtent[2];
@@ -96,9 +96,26 @@ os.extent.normalizeAntiLeft = function(extent, opt_proj, opt_result) {
 
 /**
  * @param {ol.Extent} extent
+ * @param {number} center
+ * @param {ol.ProjectionLike=} opt_proj
+ * @param {ol.Extent=} opt_result
+ * @return {ol.Extent}
+ */
+os.extent.normalizeToCenter = function(extent, center, opt_proj, opt_result) {
+  opt_proj = ol.proj.get(opt_proj || os.map.PROJECTION);
+
+  var projExtent = opt_proj.getExtent();
+  var halfWidth = (projExtent[2] - projExtent[0]) / 2;
+
+  return os.extent.normalize(extent, center - halfWidth, center + halfWidth, opt_proj, opt_result);
+};
+
+
+/**
+ * @param {ol.Extent} extent
  * @param {number=} opt_min
  * @param {number=} opt_max
- * @param {ol.proj.Projection=} opt_proj
+ * @param {ol.ProjectionLike=} opt_proj
  * @param {ol.Extent=} opt_result
  * @return {ol.Extent}
  */
@@ -109,7 +126,7 @@ os.extent.normalize = function(extent, opt_min, opt_max, opt_proj, opt_result) {
 
   var extentWidth = extent[2] - extent[0];
 
-  opt_proj = opt_proj || os.map.PROJECTION;
+  opt_proj = ol.proj.get(opt_proj || os.map.PROJECTION);
   var projExtent = opt_proj.getExtent();
   opt_min = opt_min != null ? opt_min : projExtent[0];
   opt_max = opt_max != null ? opt_max : projExtent[2];

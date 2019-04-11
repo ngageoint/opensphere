@@ -7,7 +7,7 @@ goog.require('goog.log.Logger');
 goog.require('goog.net.EventType');
 goog.require('ol.Feature');
 goog.require('ol.geom.Point');
-goog.require('os.geo');
+goog.require('os.geo2');
 goog.require('os.search.AbstractSearch');
 goog.require('os.search.SearchEvent');
 goog.require('os.search.SearchEventType');
@@ -75,7 +75,7 @@ os.ui.search.place.CoordinateSearch.prototype.searchTerm = function(term, opt_st
     var location = os.geo.parseLatLon(term);
     if (location) {
       if (location.lat < 90.0 && location.lat > -90.0) {
-        location.lon = os.geo.normalizeLongitude(location.lon);
+        location.lon = os.geo2.normalizeLongitude(location.lon, undefined, undefined, os.proj.EPSG4326);
         var feature = os.ui.search.place.createFeature({
           'geometry': new ol.geom.Point([location.lon, location.lat]).osTransform(),
           'label': term

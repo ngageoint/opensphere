@@ -46,6 +46,7 @@ goog.require('os.events');
 goog.require('os.events.LayerEvent');
 goog.require('os.events.LayerEventType');
 goog.require('os.events.PropertyChangeEvent');
+goog.require('os.extent');
 goog.require('os.fn');
 goog.require('os.geo');
 goog.require('os.instanceOf');
@@ -603,14 +604,7 @@ os.MapContainer.prototype.flyToExtent = function(extent, opt_buffer, opt_maxZoom
       if (!this.is3DEnabled()) {
         // In 2D views, projections supporting wrapping can pan "multiple worlds" over. We want to pan the least
         // amount possible to go to the spot and avoid jumping "multiple worlds" back to the "origin world"
-        var mapCenter = ol.proj.toLonLat(view.getCenter().slice(), os.map.PROJECTION);
-        extent = ol.proj.transformExtent(extent, os.map.PROJECTION, os.proj.EPSG4326);
-        extent[0] = os.geo.normalizeLongitude(extent[0], mapCenter[0] - 180, mapCenter[0] + 180);
-        extent[2] = os.geo.normalizeLongitude(extent[2], mapCenter[0] - 180, mapCenter[0] + 180);
-        if (extent[2] < extent[0]) {
-          extent[2] += 360;
-        }
-        extent = ol.proj.transformExtent(extent, os.proj.EPSG4326, os.map.PROJECTION);
+        extent = os.extent.normalizeToCenter(extent, view.getCenter()[0]);
 
         view.fit(extent, {
           duration: os.MapContainer.FLY_ZOOM_DURATION,
@@ -1133,7 +1127,7 @@ os.MapContainer.prototype.persistCameraState = function() {
   var center = view.getCenter() || os.map.DEFAULT_CENTER;
   if (os.map.PROJECTION != os.proj.EPSG4326) {
     center = ol.proj.toLonLat(center, os.map.PROJECTION);
-    center[0] = os.geo.normalizeLongitude(center[0]);
+    center[0] = os.geo2.normalizeLongitude(center[0], undefined, undefined, os.proj.EPSG4326);
   }
 
   var resolution = view.getResolution();
@@ -1956,9 +1950,7 @@ os.MapContainer.replaceExtentNormalized_ = function(match, submatch, offset, str
   var extent = os.MapContainer.getInstance().getMap().getExtent();
 
   extent = ol.proj.transformExtent(extent, os.map.PROJECTION, os.proj.EPSG4326);
-  extent[0] = os.geo.normalizeLongitude(extent[0]);
-  extent[2] = os.geo.normalizeLongitude(extent[2]);
-
+  extent = os.extent.normalize(extent, undefined, undefined, os.proj.EPSG4326);
   return os.MapContainer.replaceExtentInternal_(extent, match, submatch, offset, str);
 };
 

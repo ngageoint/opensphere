@@ -1,5 +1,6 @@
-
 goog.require('ol.proj');
+goog.require('os.feature.mock');
+goog.require('os.geo');
 goog.require('os.geo2');
 goog.require('os.proj');
 
@@ -14,6 +15,10 @@ describe('os.geo2', function() {
     epsilon: 1E-6
   }];
 
+  var originalProjection = os.map.PROJECTION;
+  afterEach(function() {
+    os.map.PROJECTION = originalProjection;
+  });
 
   it('should normalize longitudes properly', function() {
     projections.forEach(function(config) {
@@ -72,6 +77,40 @@ describe('os.geo2', function() {
 
           expect(result).toBeCloseTo(expected, config.precision);
         }
+      }
+    });
+  });
+
+  it('should clamp latitudes properly', function() {
+    projections.forEach(function(config) {
+      var proj = ol.proj.get(config.code);
+      var projExtent = proj.getExtent();
+      var halfHeight = (projExtent[3] - projExtent[1]) / 2;
+
+      expect(os.geo2.normalizeLatitude(projExtent[1] - halfHeight, undefined, undefined, proj)).toBe(projExtent[1]);
+      expect(os.geo2.normalizeLatitude(projExtent[1], undefined, undefined, proj)).toBe(projExtent[1]);
+      expect(os.geo2.normalizeLatitude(projExtent[1] + halfHeight, undefined, undefined, proj)).
+          toBe(projExtent[1] + halfHeight);
+      expect(os.geo2.normalizeLatitude(projExtent[3], undefined, undefined, proj)).toBe(projExtent[3]);
+      expect(os.geo2.normalizeLatitude(projExtent[3] + halfHeight, undefined, undefined, proj)).toBe(projExtent[3]);
+    });
+  });
+
+
+  it('should normalize geometries', function() {
+    os.map.PROJECTION = ol.proj.get(os.proj.EPSG4326);
+    var features = os.feature.mock.getFeatures(true);
+
+    features.forEach(function(feature) {
+      if (geom2 instanceof ol.geom.SimpleGeometry) {
+        var geom1 = feature.getGeometry().clone();
+        var geom2 = feature.getGeometry().clone();
+
+        var to = os.geo2.normalizeLongitude(geom1.getFlatCoordinates()[0]);
+        os.geo.normalizeGeometryCoordinates(geom1, to);
+        os.geo2.normalizeGeometryCoordinates(geom2);
+
+        expect(geom2.getFlatCoordinates()).toEqual(geom1.getFlatCoordinates());
       }
     });
   });

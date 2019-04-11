@@ -1851,6 +1851,7 @@ os.geo.toDegreesDecimalMinutes = function(coordinate, opt_isLon, opt_symbols) {
  * Normalizes a latitude value to the given range
  * @param {number} lat
  * @return {number}
+ * @deprecated Please use os.geo2.normalizeLatitude instead as it does not require conversion to/from lonlat before/after
  */
 os.geo.normalizeLatitude = function(lat) {
   return lat > 90 ? 90 : lat < -90 ? -90 : lat;
@@ -1877,6 +1878,7 @@ os.geo.extentToCoordinates = function(extent) {
  * @param {number=} opt_min
  * @param {number=} opt_max
  * @return {number}
+ * @deprecated Please use os.geo2.normalizeLongitude instead as it does not require conversion to/from lonlat before/after
  */
 os.geo.normalizeLongitude = function(lon, opt_min, opt_max) {
   if (opt_min !== undefined && opt_max !== undefined) {
@@ -1904,6 +1906,7 @@ os.geo.normalizeLongitude = function(lon, opt_min, opt_max) {
  * anti-meridian. Array format [xmin, ymin, xmax, ymax]
  * @param {Array<number>|ol.geom.Geometry|ol.Feature} target
  * @return {boolean}
+ * @suppress {deprecated}
  */
 os.geo.crossesDateLine = function(target) {
   if (target) {
@@ -1967,6 +1970,8 @@ os.geo.crossesDateLine = function(target) {
  * Normalize a set of coordinates.
  * @param {?Array<Array<number>>} coordinates The coordinates to normalize.
  * @param {number=} opt_to The longitude to normalize to.
+ * @deprecated Please use os.geo2.noralizeCoordinates instead as it does not require conversion to/from lonlat before/after
+ * @suppress {deprecated}
  */
 os.geo.normalizeCoordinates = function(coordinates, opt_to) {
   if (coordinates && coordinates.length > 0) {
@@ -1985,6 +1990,7 @@ os.geo.normalizeCoordinates = function(coordinates, opt_to) {
  * Normalize polygon rings.
  * @param {?Array<?Array<Array<number>>>} rings The rings to normalize.
  * @param {number=} opt_to The longitude to normalize to.
+ * @deprecated Please use os.geo2.normalizeRings instead as it does not require conversion to/from lonlat before/after
  */
 os.geo.normalizeRings = function(rings, opt_to) {
   if (rings) {
@@ -1998,6 +2004,7 @@ os.geo.normalizeRings = function(rings, opt_to) {
 /**
  * @param {?Array<?Array<?Array<Array<number>>>>} polys The polygons to normalize.
  * @param {number=} opt_to The longitude to normalize to.
+ * @deprecated Please use os.geo2.normalizePolygons instead as it does not require conversion to/from lonlat before/after
  */
 os.geo.normalizePolygons = function(polys, opt_to) {
   if (polys) {
@@ -2013,6 +2020,8 @@ os.geo.normalizePolygons = function(polys, opt_to) {
  * @param {ol.geom.Geometry|undefined} geometry The geometry to normalize.
  * @param {number=} opt_to The longitude to normalize to.
  * @return {boolean} If the geometry was normalized.
+ * @deprecated Please use os.geo2.normalizeGeometryCoordinates instead as it does not require conversion to/from lonlat before/after
+ * @suppress {deprecated}
  */
 os.geo.normalizeGeometryCoordinates = function(geometry, opt_to) {
   if (geometry) {
@@ -2181,6 +2190,7 @@ os.geo.isCoordInArea = function(x, y, vertX, vertY, nVert) {
  * @return {Array<Array<number>>} A polygon that circumscribes the pole closest to the input coordinates.
  *
  * @todo currently this only works for polygons which have no holes.
+ * @suppress {deprecated}
  */
 os.geo.createPolarPolygon = function(coordinates) {
   var newCoords = [coordinates.length + 4];
@@ -2243,6 +2253,7 @@ os.geo.isPolarPolygon = function(coordinates) {
  * Does this extent have valid lat lon min/max values?
  * @param {ol.Extent} extent
  * @return {boolean}
+ * @suppress {deprecated}
  */
 os.geo.isValidExtent = function(extent) {
   var invalid = false;
@@ -2452,6 +2463,7 @@ os.geo.createLineFromSegments_ = function(segments, layout) {
  * @param {!ol.geom.LineString} geometry The line geometry.
  * @return {!Array<!Array<!ol.Coordinate>>} The split line coordinates.
  * @private
+ * @suppress {deprecated}
  */
 os.geo.splitLineOnDateLine_ = function(geometry) {
   // normalize longitude to +/- 180
