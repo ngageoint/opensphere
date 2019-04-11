@@ -592,7 +592,7 @@ Cesium.Camera.prototype.direction;
 
 
 /**
- * @type {Cesium.PerspectiveFrustrum}
+ * @type {Cesium.PerspectiveFrustum}
  */
 Cesium.Camera.prototype.frustum;
 
@@ -1037,9 +1037,10 @@ Cesium.Camera.prototype.moveUp = function(amount) {};
 /**
  * @param {!Cesium.Cartesian2} windowPos .
  * @param {Cesium.Ellipsoid=} opt_ellipsoid .
+ * @param {Cesium.Cartesian3=} opt_result
  * @return {!Cesium.Cartesian3} .
  */
-Cesium.Camera.prototype.pickEllipsoid = function(windowPos, opt_ellipsoid) {};
+Cesium.Camera.prototype.pickEllipsoid = function(windowPos, opt_ellipsoid, opt_result) {};
 
 
 /**
@@ -1228,6 +1229,16 @@ Cesium.Cartesian3.magnitude = function(left) {};
  * @return {number}
  */
 Cesium.Cartesian3.magnitudeSquared = function(cartesian) {};
+
+
+
+/**
+ * @param {Cesium.Cartesian3} left
+ * @param {Cesium.Cartesian3} right
+ * @param {Cesium.Cartesian3=} opt_result
+ * @return {Cesium.Cartesian3}
+ */
+Cesium.Cartesian3.multiplyComponents = function(left, right, opt_result) {};
 
 
 /**
@@ -1440,8 +1451,20 @@ Cesium.Cartographic.prototype.height;
 
 /**
  * @param {Cesium.Cartesian3} position
+ * @param {Cesium.Ellipsoid=} opt_ellipsoid
+ * @param {Cesium.Cartographic=} opt_result
+ * @return {!Cesium.Cartographic}
  */
-Cesium.Cartographic.prototype.fromCartesian = function(position) {};
+Cesium.Cartographic.fromCartesian = function(position, opt_ellipsoid, opt_result) {};
+
+
+/**
+ * @param {Cesium.Cartographic} cartographic
+ * @param {Cesium.Ellipsoid=} opt_ellipsoid
+ * @param {Cesium.Cartesian3=} opt_result
+ * @return {!Cesium.Cartesian3}
+ */
+Cesium.Cartographic.toCartesian = function(cartographic, opt_ellipsoid, opt_result) {};
 
 
 /**
@@ -1457,13 +1480,6 @@ Cesium.Cartographic.prototype.clone = function(opt_result) {};
  * @return {!Cesium.Cartographic}
  */
 Cesium.Cartographic.fromDegrees = function(lat, lng) {};
-
-
-/**
- * @param {Cesium.Cartesian3} position
- */
-Cesium.Cartographic.fromCartesian = function(position) {};
-
 
 
 /**
@@ -3224,6 +3240,24 @@ Cesium.Ellipsoid.prototype.geodeticSurfaceNormal = function(cartesian, result) {
 Cesium.Ellipsoid.fromCartesian3 = function(radii, opt_result) {};
 
 
+
+
+/**
+ * @param {Cesium.Ellipsoid} ellipsoid
+ * @param {Cesium.Cartesian3} cameraPosition
+ * @constructor
+ */
+Cesium.EllipsoidalOccluder = function(ellipsoid, cameraPosition) {};
+
+
+/**
+ * @param {Cesium.Cartesian3} occludee
+ * @return {boolean}
+ */
+Cesium.EllipsoidalOccluder.prototype.isPointVisible = function(occludee) {};
+
+
+
 /**
  * @type {Object}
  */
@@ -3672,43 +3706,43 @@ Cesium.Matrix4.toArray = function(matrix) {};
 /**
  * @constructor
  */
-Cesium.PerspectiveFrustrum = function() {};
+Cesium.PerspectiveFrustum = function() {};
 
 
 /**
  * @type {number}
  */
-Cesium.PerspectiveFrustrum.prototype.aspectRatio;
+Cesium.PerspectiveFrustum.prototype.aspectRatio;
 
 
 /**
  * @type {number}
  */
-Cesium.PerspectiveFrustrum.prototype.far;
+Cesium.PerspectiveFrustum.prototype.far;
 
 
 /**
  * @type {number}
  */
-Cesium.PerspectiveFrustrum.prototype.fovy;
+Cesium.PerspectiveFrustum.prototype.fovy;
 
 
 /**
  * @type {number}
  */
-Cesium.PerspectiveFrustrum.prototype.fov;
+Cesium.PerspectiveFrustum.prototype.fov;
 
 
 /**
  * @type {number}
  */
-Cesium.PerspectiveFrustrum.prototype.near;
+Cesium.PerspectiveFrustum.prototype.near;
 
 
 /**
  * @type {!Cesium.Matrix4}
  */
-Cesium.PerspectiveFrustrum.prototype.projectionMatrix;
+Cesium.PerspectiveFrustum.prototype.projectionMatrix;
 
 /**
  * @param {Cesium.Cartesian3} position
@@ -3716,7 +3750,7 @@ Cesium.PerspectiveFrustrum.prototype.projectionMatrix;
  * @param {Cesium.Cartesian3} up
  * @return {Cesium.CullingVolume}
  */
-Cesium.PerspectiveFrustrum.prototype.computeCullingVolume = function(position, direction, up) {};
+Cesium.PerspectiveFrustum.prototype.computeCullingVolume = function(position, direction, up) {};
 
 
 /**
@@ -3726,7 +3760,7 @@ Cesium.PerspectiveFrustrum.prototype.computeCullingVolume = function(position, d
  * @param {!Cesium.Cartesian2} result
  * @return {!Cesium.Cartesian2}
  */
-Cesium.PerspectiveFrustrum.prototype.getPixelDimensions = function(drawingBufferWidth, drawingBufferHeight, dist,
+Cesium.PerspectiveFrustum.prototype.getPixelDimensions = function(drawingBufferWidth, drawingBufferHeight, dist,
     result) {};
 
 
