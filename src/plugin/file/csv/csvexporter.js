@@ -21,6 +21,13 @@ goog.require('plugin.file.csv.ui.csvExportDirective');
 plugin.file.csv.CSVExporter = function() {
   plugin.file.csv.CSVExporter.base(this, 'constructor');
   this.log = plugin.file.csv.CSVExporter.LOGGER_;
+
+  /**
+   * Export the ellipses
+   * @type {boolean}
+   * @private
+   */
+  this.exportEllipses_ = false;
 };
 goog.inherits(plugin.file.csv.CSVExporter, os.ui.file.csv.AbstractCSVExporter);
 
@@ -42,14 +49,6 @@ plugin.file.csv.CSVExporter.FIELDS = {
   START_TIME: 'START_TIME',
   END_TIME: 'END_TIME'
 };
-
-
-/**
-   * Export the ellipses
-   * @type {boolean}
-   * @private
-   */
-this.exportEllipses_ = false;
 
 
 /**
