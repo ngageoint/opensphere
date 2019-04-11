@@ -102,7 +102,7 @@ os.interaction.MouseZoom.handleEvent = function(mapBrowserEvent) {
   if (mapBrowserEvent.pointerEvent &&
       mapBrowserEvent.pointerEvent.buttons == 2 &&
       mapBrowserEvent.dragging &&
-      mapBrowserEvent.originalEvent.ctrlKey) {
+      ol.events.condition.platformModifierKeyOnly(mapBrowserEvent)) {
     this.zoom(mapBrowserEvent);
     stopEvent = true;
   } else {
