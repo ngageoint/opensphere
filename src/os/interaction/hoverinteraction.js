@@ -56,6 +56,13 @@ os.interaction.Hover = function(opt_options) {
   this.lastFeature_ = undefined;
 
   /**
+   * The pixel for the last mouse move event.
+   * @type {Array<number>}
+   * @private
+   */
+  this.lastPixel_ = null;
+
+  /**
    * @type {Element}
    * @private
    */
@@ -135,6 +142,9 @@ os.interaction.Hover.prototype.onMouseMove_ = function(mapBrowserEvent) {
     this.setHighlightFeature_(feature, source);
   }
 
+  // if a feature was detected, save the pixel so the feature can be updated if it moves.
+  this.lastPixel_ = feature ? mapBrowserEvent.pixel.slice() : null;
+
   this.inEvent_ = false;
 
   return true;
@@ -148,6 +158,39 @@ os.interaction.Hover.prototype.onMouseMove_ = function(mapBrowserEvent) {
  */
 os.interaction.Hover.prototype.onMouseOut_ = function(event) {
   this.setHighlightFeature_(undefined);
+};
+
+
+/**
+ * Handle change events on the hovered feature.
+ * @param {ol.events.Event} event The event
+ * @private
+ */
+os.interaction.Hover.prototype.onFeatureChange_ = function(event) {
+  var map = this.getMap();
+  if (map && this.lastFeature_ && this.lastPixel_) {
+    var lastFeature = this.lastFeature_;
+    var layer = os.feature.getLayer(this.lastFeature_);
+    var feature = /** @type {ol.Feature} */ (map.forEachFeatureAtPixel(this.lastPixel_,
+        /**
+         * @param {ol.Feature|ol.render.Feature} feature Feature.
+         * @param {ol.layer.Layer} layer Layer.
+         * @return {ol.Feature|ol.render.Feature|undefined} The feature, or undefined if no feature hit
+         */
+        function(feature, layer) {
+          return feature === lastFeature ? feature : null;
+        }, {
+          layerFilter: function(l) {
+            return l === layer;
+          }
+        }));
+
+    if (feature) {
+      this.highlight_([feature]);
+    } else {
+      this.setHighlightFeature_(undefined);
+    }
+  }
 };
 
 
@@ -167,6 +210,8 @@ os.interaction.Hover.prototype.setHighlightFeature_ = function(feature, opt_sour
 
   if (feature != this.lastFeature_) {
     if (this.lastFeature_) {
+      ol.events.listen(this.lastFeature_, ol.events.EventType.CHANGE, this.onFeatureChange_, this);
+
       if (os.ui.areaManager.get(this.lastFeature_) ||
           (mm.containsFeature(this.lastFeature_) && this.lastFeature_.get(os.data.RecordField.INTERACTIVE))) {
         // handle both areas and interactive features in the drawing layer
@@ -211,6 +256,8 @@ os.interaction.Hover.prototype.setHighlightFeature_ = function(feature, opt_sour
         os.feature.update(feature, drawSource);
         pointerStyle = 'pointer';
       }
+
+      ol.events.listen(feature, ol.events.EventType.CHANGE, this.onFeatureChange_, this);
     }
 
     // update the cursor style

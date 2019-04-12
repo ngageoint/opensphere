@@ -136,7 +136,7 @@ os.source.column.addDefaults = function(source) {
   }
 
   if (hasRadius) {
-    source.addColumn(os.Fields.RADIUS);
+    source.addColumn(os.fields.DEFAULT_RADIUS_COL_NAME);
   }
 
   if (hasSemiMajor) {

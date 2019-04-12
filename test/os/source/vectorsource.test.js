@@ -513,7 +513,7 @@ describe('os.source.Vector', function() {
     });
 
     it('should add a TIME column if time enabled', function() {
-      columns = ['ID', 'LAT', 'LON', 'TEST1', 'TEST2', 'TEST3'];
+      columns = ['ID', 'LAT', 'LON', 'TEST1', 'TEST2', 'TEST3', 'id', 'Id', 'iD'];
       source.setTimeEnabled(true);
       source.setColumns(columns);
       expect(source.columns.length).toBe(columns.length + 6); // +6 for mgrs, latdms, londms, latddm, londdm, time
