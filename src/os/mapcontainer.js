@@ -797,6 +797,7 @@ os.MapContainer.prototype.addHelpControls_ = function() {
   var moveGrp = 'Map Movement Controls';
   var zoomGrp = 'Map Zoom Controls';
   var controls = os.ui.help.Controls.getInstance();
+  var platformModifier = ol.has.MAC ? goog.events.KeyCodes.META : goog.events.KeyCodes.CTRL;
 
   // Map
   controls.addControl(genMapGrp, 1, 'Draw Geometry',
@@ -816,13 +817,13 @@ os.MapContainer.prototype.addHelpControls_ = function() {
 
   // Zoom
   controls.addControl(zoomGrp, 3, 'Zoom to Box',
-      [goog.events.KeyCodes.CTRL, '+'], [os.ui.help.Controls.MOUSE.LEFT_MOUSE, '+', os.ui.help.Controls.FONT.ALL]);
+      [platformModifier, '+'], [os.ui.help.Controls.MOUSE.LEFT_MOUSE, '+', os.ui.help.Controls.FONT.ALL]);
   controls.addControl(zoomGrp, 3, 'Smooth Zoom In/Out',
-      [goog.events.KeyCodes.CTRL, '+'], [os.ui.help.Controls.MOUSE.RIGHT_MOUSE, '+',
+      [platformModifier, '+'], [os.ui.help.Controls.MOUSE.RIGHT_MOUSE, '+',
         os.ui.help.Controls.FONT.VERTICAL]);
   controls.addControl(zoomGrp, 3, 'Zoom About Mouse', null, ['Mouse Wheel']);
   controls.addControl(zoomGrp, 3, 'Zoom In', null, ['Double Left Click']);
-  controls.addControl(zoomGrp, 3, 'Zoom Out', [goog.events.KeyCodes.CTRL, '+'], ['Double Left Click']);
+  controls.addControl(zoomGrp, 3, 'Zoom Out', [platformModifier, '+'], ['Double Left Click']);
 
   controls.addControl(zoomGrp, 3, 'Large Zoom In/Out',
       [goog.events.KeyCodes.PAGE_UP, 'or', goog.events.KeyCodes.PAGE_DOWN]);
