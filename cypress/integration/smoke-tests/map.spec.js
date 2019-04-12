@@ -17,11 +17,11 @@ describe('Map controls', function() {
       cy.get(os.Map.OVERVIEW_MAP).should('be.visible');
 
       // Test
-      cy.get(os.Map.OVERVIEW_MAP_TOGGLE).click();
+      cy.get(os.Map.OVERVIEW_MAP_TOGGLE_BUTTON).click();
       cy.get(os.Map.OVERVIEW_MAP).should('not.be.visible');
 
       // Clean up
-      cy.get(os.Map.OVERVIEW_MAP_TOGGLE).click();
+      cy.get(os.Map.OVERVIEW_MAP_TOGGLE_BUTTON).click();
       cy.get(os.Map.OVERVIEW_MAP).should('be.visible');
     });
 
@@ -41,10 +41,10 @@ describe('Map controls', function() {
     it('Zoom', function() {
       // Setup
       cy.get(os.Application.PAGE).type('v');
-      cy.get(os.statusBar.ZOOM).should('contain', 'Zoom:');
+      cy.get(os.statusBar.ZOOM_TEXT).should('contain', 'Zoom:');
 
       // Test
-      cy.get(os.statusBar.ZOOM).then(function($zoom) {
+      cy.get(os.statusBar.ZOOM_TEXT).then(function($zoom) {
         var INITIAL_ZOOM = $zoom.text();
         cy.get(os.Map.ZOOM_IN_BUTTON)
             .click()
@@ -52,10 +52,10 @@ describe('Map controls', function() {
             .click()
             .click()
             .click();
-        cy.get(os.statusBar.ZOOM).should('not.contain', INITIAL_ZOOM);
+        cy.get(os.statusBar.ZOOM_TEXT).should('not.contain', INITIAL_ZOOM);
       });
 
-      cy.get(os.statusBar.ZOOM).then(function($zoom) {
+      cy.get(os.statusBar.ZOOM_TEXT).then(function($zoom) {
         var INITIAL_ZOOM = $zoom.text();
         cy.get(os.Map.ZOOM_OUT_BUTTON)
             .click()
@@ -63,7 +63,7 @@ describe('Map controls', function() {
             .click()
             .click()
             .click();
-        cy.get(os.statusBar.ZOOM).should('not.contain', INITIAL_ZOOM);
+        cy.get(os.statusBar.ZOOM_TEXT).should('not.contain', INITIAL_ZOOM);
       });
 
       // Clean up

@@ -48,8 +48,9 @@ describe('os.im.mapping.RadiusMapping', function() {
     var rm = m.autoDetect([feature]);
     rm.execute(feature);
 
-    // feature should have RADIUS defaulted to nmi
+    // feature should have radius defaulted to nmi
     expect(os.im.mapping.getItemField(feature, os.Fields.RADIUS)).toBeCloseTo(50, 1);
+    expect(os.im.mapping.getItemField(feature, os.fields.DEFAULT_RADIUS_COL_NAME)).toBeCloseTo(50, 1);
   });
 
   it('should normalize radius column names', function() {
@@ -61,8 +62,8 @@ describe('os.im.mapping.RadiusMapping', function() {
     var rm = m.autoDetect([feature]);
     rm.execute(feature);
 
-    // feature should have RADIUS remain the same and new derived column
-    expect(os.im.mapping.getItemField(feature, os.Fields.RADIUS)).toBeCloseTo(0.024687369519647617, .001);
+    // feature should have original column remain the same and new derived column
+    expect(os.im.mapping.getItemField(feature, os.fields.DEFAULT_RADIUS_COL_NAME)).toBeCloseTo(0.024687369519647, .001);
     expect(os.im.mapping.getItemField(feature, os.Fields.RADIUS_UNITS)).toBe('yd');
     expect(os.im.mapping.getItemField(feature, 'CEP')).toBe('50');
     expect(os.im.mapping.getItemField(feature, 'CEP_UNITS')).toBe('yd');

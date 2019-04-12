@@ -43,6 +43,7 @@ describe('OGC.v4.ArcLayerState', function() {
   };
 
   beforeEach(function() {
+    os.stateManager = os.state.StateManager.getInstance();
     stateManager = os.state.StateManager.getInstance();
     stateManager.setVersion('v4');
   });

@@ -5,6 +5,7 @@ goog.require('os.data.ColumnDefinition');
 goog.require('os.file.mime.text');
 goog.require('os.parse.AsyncParser');
 goog.require('os.parse.BaseParserConfig');
+goog.require('os.ui.file.csv');
 
 
 
@@ -36,11 +37,7 @@ os.ui.file.csv.AbstractCsvParser = function(config) {
    */
   this.results = [];
 
-  if (!Modernizr.webworkers) {
-    // if workers aren't available, reduce Papa's default chunk size to prevent the browser from hanging
-    Papa.LocalChunkSize = 1024 * 1024 * 1;  // 1 MB (default 10MB)
-    Papa.RemoteChunkSize = 1024 * 1024 * 1;  // 1 MB (default 5MB)
-  }
+  os.ui.file.csv.configurePapaParse();
 };
 goog.inherits(os.ui.file.csv.AbstractCsvParser, os.parse.AsyncParser);
 
