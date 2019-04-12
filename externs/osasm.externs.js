@@ -86,7 +86,8 @@ osasm.rhumbInterpolate = function(lonlat1, lonlat2, pointer, numPoints) {};
 
 /**
  * @param {Array<number>} coord The coordinate as [lon, lat] in degrees
- * @return {string} The MGRS string representation of the coordinate
+ * @return {string} The MGRS string representation of the coordinate, or the string `INVALID` if the provided
+ *                  coordinate is not valid.
  */
 osasm.toMGRS = function(coord) {};
 
@@ -94,6 +95,7 @@ osasm.toMGRS = function(coord) {};
 /**
  * @param {string} mgrs The MGRS string representation of the coordinate
  * @return {Array<number>} The coordinate as [lon, lat] in degrees
+ * @throws {Error} If the MGRS string is invalid.
  */
 osasm.toLonLat = function(mgrs) {};
 
