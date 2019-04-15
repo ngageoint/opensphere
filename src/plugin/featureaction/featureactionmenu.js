@@ -54,7 +54,7 @@ plugin.im.action.feature.visibleIfSupported = function(context) {
     var layers = os.ui.menu.layer.getLayersFromContext(context).filter(os.MapContainer.isVectorLayer);
     if (layers && layers.length == 1 && layers[0].getOSType() != os.layer.LayerType.REF) {
       var source = /** @type {ol.layer.Layer} */ (layers[0]).getSource();
-      this.visible = os.implements(source, os.source.IImportSource.ID);
+      this.visible = source != null;
     }
   }
 };
