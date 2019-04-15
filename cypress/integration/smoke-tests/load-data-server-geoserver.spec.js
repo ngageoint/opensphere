@@ -4,6 +4,21 @@ var os = require('../../support/selectors.js');
 describe('Add GeoServer', function() {
   before('Login', function() {
     cy.login();
+    cy.server();
+    cy.route('**/geoserver/ows', 'fx:/smoke-tests/load-data-server-geoserver/ows.stub.xml')
+        .as('getServer');
+    cy.route('**/geoserver/ows?service=WMS**',
+        'fx:/smoke-tests/load-data-server-geoserver/ows?service=wms.stub.xml')
+        .as('getWMSCapabilities');
+    cy.route('**/geoserver/ows?service=WFS**',
+        'fx:/smoke-tests/load-data-server-geoserver/ows?service=wfs.stub.xml')
+        .as('getWFSCapabilities');
+    cy.route('**/geoserver/wfs?SERVICE=WFS**',
+        'fx:/smoke-tests/load-data-server-geoserver/wfs?service=wfs.stub.xml')
+        .as('getLayer');
+    cy.route('POST', '**/geoserver/wfs',
+        'fx:/smoke-tests/load-data-server-geoserver/wfs.stub.xml')
+        .as('getLayerDetails');
   });
 
   it('Load data from GeoServer', function() {
@@ -46,7 +61,7 @@ describe('Add GeoServer', function() {
     cy.get(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.Server.contextMenu.menuOptions.MOST_RECENT).click();
     cy.get(os.layersDialog.Tabs.Areas.TAB).click();
     cy.get(os.layersDialog.Tabs.Areas.Import.BUTTON).click();
-    cy.upload('smoke-tests/load-data-server-geoserver-test-area.geojson');
+    cy.upload('smoke-tests/load-data-server-geoserver/test-area.geojson');
     cy.get(os.importDataDialog.NEXT_BUTTON).click();
     cy.get(os.geoJSONAreaImportDialog.Tabs.areaOptions.TITLE_COLUMN_INPUT).should('be.visible');
     cy.get(os.geoJSONAreaImportDialog.DONE_BUTTON).click();
