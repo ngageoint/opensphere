@@ -140,7 +140,7 @@ os.histo.UniqueBinMethod.prototype.getLabelForKey = function(key, opt_secondary,
   }
 
   if (Number(key) === os.histo.NumericBinMethod.MAGIC_EMPTY) {
-    return 'No ' + this.field;
+    return opt_smallLabel ? '\tNONE' : 'No ' + this.field;
   }
 
   return key.toString();
