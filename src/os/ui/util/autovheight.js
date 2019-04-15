@@ -212,7 +212,7 @@ os.ui.util.AutoVHeightCtrl.prototype.removeResizeListeners_ = function() {
     goog.object.getValues(os.ui.windowCommonElements).forEach(function(sibling) {
       if (this.resizeFn_) {
         try {
-          $(/** @type {string} */ (sibling)).removeResize(this.resizeFn_);
+          $(/** @type {string} */ (sibling)).off(goog.events.EventType.RESIZE, this.resizeFn_);
         } catch (e) {}
       }
     }.bind(this));
@@ -220,7 +220,7 @@ os.ui.util.AutoVHeightCtrl.prototype.removeResizeListeners_ = function() {
     var siblings = /** @type {string} */ (this.scope_['siblings']);
     if (siblings && this.resizeFn_) {
       try {
-        $(siblings).removeResize(this.resizeFn_);
+        $(siblings).off(goog.events.EventType.RESIZE, this.resizeFn_);
       } catch (e) {}
     }
   }
