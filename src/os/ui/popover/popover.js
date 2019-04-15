@@ -142,7 +142,9 @@ os.ui.popover.PopoverCtrl.prototype.update_ = function() {
 
       // If we leave the popover, hide
       $('.popover').on('mouseleave', function() {
-        this.element_.popover('hide');
+        if (this.element_) {
+          this.element_.popover('hide');
+        }
       }.bind(this));
     }.bind(this));
 
