@@ -18,7 +18,6 @@ describe('Toolbar center', function() {
         .should('have.value', Cypress.moment().subtract(1, 'days').format('YYYY[-]MM[-]DD'));
 
     // Clean up
-    cy.wait(500); // TODO: Remove wait - https://github.com/ngageoint/opensphere/issues/385
     cy.get(os.Toolbar.NEXT_DAY_BUTTON).click();
     cy.get(os.Toolbar.Date.INPUT)
         .should('have.value', Cypress.moment().format('YYYY[-]MM[-]DD'));
@@ -52,7 +51,6 @@ describe('Toolbar center', function() {
         .should('have.value', Cypress.moment().add(1, 'days').format('YYYY[-]MM[-]DD'));
 
     // Clean up
-    cy.wait(500); // TODO: Remove wait - https://github.com/ngageoint/opensphere/issues/385
     cy.get(os.Toolbar.PREVIOUS_DAY_BUTTON).click();
     cy.get(os.Toolbar.Date.INPUT)
         .should('have.value', Cypress.moment().format('YYYY[-]MM[-]DD'));

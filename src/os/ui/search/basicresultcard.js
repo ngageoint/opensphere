@@ -14,7 +14,8 @@ os.ui.search.basicResultCardDirective = function() {
     restrict: 'E',
     replace: true,
     scope: true,
-    template: '<div class="text-truncate"><a ng-href="{{ctrl.url}}">{{ctrl.title}}</a></div>',
+    template: '<div class="row"><div class="col text-truncate" ng-bind-html="ctrl.getTitle()"></div>' +
+        '<div class="ml-2 float-right" ng-bind-html="ctrl.getViewIcon()"></div></div>',
     controller: os.ui.search.BasicResultCardCtrl,
     controllerAs: 'ctrl'
   };
@@ -42,4 +43,42 @@ os.ui.search.BasicResultCardCtrl = function($scope, $element, $compile) {
     this['url'] = result.getUrl();
     this['title'] = os.ui.text.SimpleMDE.getUnformatedText(result.getTitle());
   }
+};
+
+
+/**
+ * Get the title with correct action icon
+ * @return {string}
+ * @export
+ */
+os.ui.search.BasicResultCardCtrl.prototype.getViewIcon = function() {
+  var file = this.isFileDownloadLink();
+  var icon = file ? '<i class="fa fa-download px-2" title="Download Report"></i>' : '';
+  var actionIcon = '<a href="' + this['url'] + '" target="' + this['url'] +
+      '">' + icon + '</a>';
+  return actionIcon;
+};
+
+
+/**
+ * To linkify title or not
+ * @return {string}
+ * @export
+ */
+os.ui.search.BasicResultCardCtrl.prototype.getTitle = function() {
+  var file = this.isFileDownloadLink();
+  var linkTitle = '<a href="' + this['url'] + '" target="' + this['url'] + '" title="' +
+      this['url'] + '">' + this['title'] + '</a>';
+  return file ? this['title'] : linkTitle;
+};
+
+
+/**
+ * Is the link to an external site
+ * @return {boolean}
+ * @export
+ */
+os.ui.search.BasicResultCardCtrl.prototype.isFileDownloadLink = function() {
+  var fileDownloadUrl = /** @type {string} */ (os.settings.get('tools.fileDownloadUrl'));
+  return goog.string.contains(this['url'], fileDownloadUrl);
 };
