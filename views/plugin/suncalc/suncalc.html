@@ -10,7 +10,8 @@
         <div ng-repeat="item in times">
           <span class="rounded px-1" ng-style="{color:item.textColor,background:item.color}">{{ctrl.formatTime(item.time)}}</span>
           &mdash;
-          {{item.label}}
+          <span ng-if="item.title == null">{{item.label}}</span>
+          <span title="{{item.title}}" ng-if="item.title" class="u-cursor-help">{{item.label}}</span>
         </div>
       </div>
       <div class="col flex-fill">
