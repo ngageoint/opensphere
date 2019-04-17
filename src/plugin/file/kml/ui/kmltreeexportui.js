@@ -89,6 +89,11 @@ plugin.file.kml.ui.KMLTreeExportCtrl = function($scope, $element) {
   this['title'] = root && root.getLabel() || (os.config.getAppName() + ' KML Tree').trim();
 
   /**
+   * @type {boolean}
+   */
+  this['savedplaces'] = this['title'] == 'Saved Places' ? true : false;
+
+  /**
    * @type {!plugin.file.kml.KMLTreeExporter}
    */
   this['exporter'] = new plugin.file.kml.KMLTreeExporter();
