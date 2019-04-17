@@ -5,6 +5,7 @@ goog.require('goog.Uri');
 goog.require('goog.async.Delay');
 goog.require('goog.events');
 goog.require('goog.events.EventType');
+goog.require('ol.TileCache');
 goog.require('ol.events');
 goog.require('ol.source.TileEventType');
 goog.require('ol.source.UrlTile');
@@ -282,6 +283,17 @@ ol.source.UrlTile.prototype.loadingDelay_ = null;
 /**
  * @inheritDoc
  */
+ol.TileCache.prototype.disposeInternal = function() {
+  this.forEach(function(tile) {
+    tile.dispose();
+  }, this);
+  this.clear();
+};
+
+
+/**
+ * @inheritDoc
+ */
 ol.source.UrlTile.prototype.disposeInternal = function() {
   ol.source.Tile.prototype.disposeInternal.call(this);
 
@@ -298,7 +310,7 @@ ol.source.UrlTile.prototype.disposeInternal = function() {
 
   if (this.tileCache) {
     // flush the image cache
-    this.tileCache.clear();
+    this.tileCache.dispose();
   }
 };
 

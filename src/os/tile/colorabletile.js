@@ -1,8 +1,7 @@
 goog.provide('os.tile.ColorableTile');
 
 goog.require('ol.ImageTile');
-goog.require('ol.TileState');
-goog.require('ol.dom');
+goog.require('os.tile');
 
 
 
@@ -17,7 +16,7 @@ goog.require('ol.dom');
  * @constructor
  */
 os.tile.ColorableTile = function(tileCoord, state, src, crossOrigin, tileLoadFunction) {
-  ol.ImageTile.call(this, tileCoord, state, src, crossOrigin, tileLoadFunction);
+  os.tile.ColorableTile.base(this, 'constructor', tileCoord, state, src, crossOrigin, tileLoadFunction);
 
   /**
    * The filtered copy of the tile canvas.
@@ -33,7 +32,7 @@ os.tile.ColorableTile = function(tileCoord, state, src, crossOrigin, tileLoadFun
    */
   this.olSource_ = null;
 };
-ol.inherits(os.tile.ColorableTile, ol.ImageTile);
+goog.inherits(os.tile.ColorableTile, ol.ImageTile);
 
 
 /**

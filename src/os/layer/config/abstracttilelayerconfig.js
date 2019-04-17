@@ -10,7 +10,7 @@ goog.require('os.mixin.UrlTileSource');
 goog.require('os.net');
 goog.require('os.ol.source.tileimage');
 goog.require('os.proj');
-goog.require('os.tile.ColorableTile');
+goog.require('os.tile.RequestTile');
 
 
 
@@ -49,7 +49,7 @@ os.layer.config.AbstractTileLayerConfig = function() {
    * @type {!os.TileClass}
    * @protected
    */
-  this.tileClass = os.tile.ColorableTile;
+  this.tileClass = os.tile.RequestTile;
 
   /**
    * List of URLs for load balancing.
