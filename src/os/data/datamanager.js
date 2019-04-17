@@ -350,8 +350,9 @@ os.data.DataManager.prototype.updateFromSettings = function(settings) {
  */
 os.data.DataManager.prototype.addProvider = function(dp) {
   if (this.getProvider(dp.getId())) {
-    throw new Error('A provider with the ID "' + dp.getId() +
-        '" already exists! Modify that one rather than replacing it.');
+    var msg = 'A provider with the ID "' + dp.getId() + '" already exists! Modify that one rather than replacing it.';
+    os.alert.AlertManager.getInstance().sendAlert(msg, os.alert.AlertEventSeverity.ERROR);
+    return;
   }
 
   this.providerRoot_.addChild(dp);
