@@ -1,0 +1,111 @@
+<state xmlns="http://www.bit-sys.com/mist/state/v4" source="OpenSphere (Unknown Version)" version="v4">
+  <title>test state fireball</title>
+  <map>
+    <kml:Camera xmlns:kml="http://www.opengis.net/kml/2.2">
+      <kml:longitude>129.52143735948005</kml:longitude>
+      <kml:latitude>-26.47886568334942</kml:latitude>
+      <kml:altitude>21378594.775824346</kml:altitude>
+      <kml:heading>0</kml:heading>
+      <kml:tilt>0</kml:tilt>
+      <kml:roll>0</kml:roll>
+      <kml:altitudeMode>clampToGround</kml:altitudeMode>
+    </kml:Camera>
+    <projection>Equirectangular</projection>
+  </map>
+  <dataLayers type="data">
+    <layer type="CSV">
+      <id>state#xkudt6e419ci-csv#2b68ezsi8hy3</id>
+      <load>true</load>
+      <dataProvider>test state fireball</dataProvider>
+      <title>Fireballs and Bolides</title>
+      <url>https://data.nasa.gov/api/views/mc52-syum/rows.csv?accessType=DOWNLOAD</url>
+      <mappings>
+        <mapping type="Latitude">
+          <field>Latitude (Deg)</field>
+          <customFormat/>
+        </mapping>
+        <mapping type="Longitude">
+          <field>Longitude (Deg)</field>
+          <customFormat/>
+        </mapping>
+        <mapping type="Altitude">
+          <field>Altitude (km)</field>
+          <toField>ALTITUDE (m)*</toField>
+          <keepOriginal>false</keepOriginal>
+        </mapping>
+      </mappings>
+      <detectColumnTypes>true</detectColumnTypes>
+      <comment>#</comment>
+      <quote>"</quote>
+      <quote>"</quote>
+      <dataRow>1</dataRow>
+      <delimiter>,</delimiter>
+      <headerRow>0</headerRow>
+      <defaults></defaults>
+      <visible>true</visible>
+      <minResolution>0</minResolution>
+      <maxResolution>Infinity</maxResolution>
+      <arrowSize>100</arrowSize>
+      <arrowUnits>m</arrowUnits>
+      <lobColumnLength>1000</lobColumnLength>
+      <lobLength>1000</lobLength>
+      <lobLengthType>manual</lobLengthType>
+      <lobLengthColumn></lobLengthColumn>
+      <lobLengthError>1</lobLengthError>
+      <lobLengthErrorColumn></lobLengthErrorColumn>
+      <lobLengthErrorUnits>m</lobLengthErrorUnits>
+      <lobLengthUnits>m</lobLengthUnits>
+      <lobBearingColumn></lobBearingColumn>
+      <lobBearingError>1</lobBearingError>
+      <lobBearingErrorColumn></lobBearingErrorColumn>
+      <rotationColumn></rotationColumn>
+      <showLabels>false</showLabels>
+      <shapeName>Default</shapeName>
+      <centerShapeName>Point</centerShapeName>
+      <animate>true</animate>
+      <altitudeMode>absolute</altitudeMode>
+      <refreshRate>0</refreshRate>
+      <exportEnabled>true</exportEnabled>
+      <basicFeatureStyle>
+        <pointColor>0xCC0000</pointColor>
+        <pointOpacity>255</pointOpacity>
+        <pointSize>6</pointSize>
+        <labelSize>14</labelSize>
+      </basicFeatureStyle>
+    </layer>
+  </dataLayers>
+  <exclusionAreas/>
+  <featureActions xmlns:ogc="http://www.opengis.net/ogc">
+    <featureAction id="j0ruhkbrnueq" active="true" title="high impact energy" description="" type="state#xkudt6e419ci-csv#2b68ezsi8hy3" typeHint="exact" tags="" children="">
+      <filter>
+        <ogc:And namehint="high impact energy">
+          <ogc:PropertyIsGreaterThanOrEqualTo>
+            <ogc:PropertyName>Calculated Total Impact Energy (kt)</ogc:PropertyName>
+            <ogc:Literal><![CDATA[1]]></ogc:Literal>
+          </ogc:PropertyIsGreaterThanOrEqualTo>
+        </ogc:And>
+      </filter>
+      <actions>
+        <featureStyleAction>
+          <color>#ffffff</color>
+          <opacity>1</opacity>
+          <size>3</size>
+          <shape>Icon</shape>
+          <iconSrc>http://maps.google.com/mapfiles/kml/shapes/firedept.png</iconSrc>
+          <centerShape>Point</centerShape>
+          <showRotation>false</showRotation>
+          <rotationColumn>false</rotationColumn>
+        </featureStyleAction>
+      </actions>
+    </featureAction>
+  </featureActions>
+  <filters xmlns:ogc="http://www.opengis.net/ogc"/>
+  <queryAreas/>
+  <queryEntries/>
+  <time>
+    <interval>2019-04-17T00:00:00Z/2019-04-18T00:00:00Z</interval>
+    <current>2019-04-17T00:00:00Z/2019-04-18T00:00:00Z</current>
+    <advance>PT30M</advance>
+    <duration>day</duration>
+  </time>
+</state>
