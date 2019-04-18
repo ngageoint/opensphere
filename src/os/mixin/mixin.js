@@ -19,6 +19,7 @@ goog.require('os.mixin.geometry');
 goog.require('os.mixin.layerbase');
 goog.require('os.mixin.map');
 goog.require('os.mixin.object');
+goog.require('os.mixin.zoomscale');
 goog.require('os.net');
 goog.require('os.ol');
 goog.require('os.registerClass');
