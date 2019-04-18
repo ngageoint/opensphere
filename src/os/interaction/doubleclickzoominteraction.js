@@ -1,6 +1,7 @@
 goog.provide('os.interaction.DoubleClickZoom');
 
 goog.require('ol.MapBrowserEventType');
+goog.require('ol.events.condition');
 goog.require('ol.interaction.DoubleClickZoom');
 goog.require('os.I3DSupport');
 goog.require('os.implements');
@@ -34,13 +35,14 @@ ol.interaction.DoubleClickZoom.handleEvent = function(mapBrowserEvent) {
 
   if (mapBrowserEvent.type == ol.MapBrowserEventType.DBLCLICK) {
     var anchor = mapBrowserEvent.coordinate;
+    var zoomOut = ol.events.condition.platformModifierKeyOnly(mapBrowserEvent);
 
     var mapContainer = os.MapContainer.getInstance();
     if (mapContainer.is3DEnabled()) {
       var camera = mapContainer.getWebGLCamera();
       if (camera) {
         var currentAltitude = camera.getAltitude();
-        var altitude = mapBrowserEvent.originalEvent.ctrlKey ? (currentAltitude * 2) : (currentAltitude / 2);
+        var altitude = zoomOut ? (currentAltitude * 2) : (currentAltitude / 2);
 
         camera.flyTo(/** @type {!osx.map.FlyToOptions} */ ({
           center: anchor,
@@ -49,7 +51,7 @@ ol.interaction.DoubleClickZoom.handleEvent = function(mapBrowserEvent) {
         }));
       }
     } else {
-      var delta = mapBrowserEvent.originalEvent.ctrlKey ? -this.delta_ : this.delta_;
+      var delta = zoomOut ? -this.delta_ : this.delta_;
       var view = mapBrowserEvent.map.getView();
       if (view) {
         ol.interaction.Interaction.zoomByDelta(view, delta, anchor, this.duration_);
