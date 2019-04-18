@@ -1,6 +1,5 @@
 goog.provide('os.ui.ol.interaction.AbstractDraw');
 
-goog.require('goog.async.Delay');
 goog.require('goog.dom');
 goog.require('goog.events.BrowserEvent');
 goog.require('goog.events.KeyCodes');
@@ -81,12 +80,6 @@ os.ui.ol.interaction.AbstractDraw = function(opt_options) {
   this.keyHandler_ = null;
 
   this.setActive(false);
-
-  // The SINGLECLICK and DBLCLICK events are asynchronously delayed in OpenLayers to detect the existence of the
-  // second click. However, all of our interactions work off of AbstractDrag or the Pointer interaction, which
-  // use UP/DOWN/MOVE events in a synchronous manner. Therefore, we need to delay the removal of the
-  // INTERACTING flag until we can be sure that the entire event chain from this interaction is finished.
-  this.interactingFlagDelay_ = new goog.async.Delay(this.cleanupInteracting, 375, this);
 };
 goog.inherits(os.ui.ol.interaction.AbstractDraw, ol.interaction.Pointer);
 
@@ -277,6 +270,9 @@ os.ui.ol.interaction.AbstractDraw.prototype.end = function(mapBrowserEvent) {
     this.cleanup();
     this.dispatchEvent(new os.ui.ol.draw.DrawEvent(os.ui.ol.draw.DrawEventType.DRAWEND,
         mapBrowserEvent.coordinate, geom, mapBrowserEvent.pixel, props || undefined));
+
+    // drawing completed, so prevent the event from propagating to further handlers
+    mapBrowserEvent.preventDefault();
   }
 };
 
@@ -300,22 +296,13 @@ os.ui.ol.interaction.AbstractDraw.prototype.cancel = function() {
  * @protected
  */
 os.ui.ol.interaction.AbstractDraw.prototype.cleanup = function() {
-  goog.log.fine(os.ui.ol.interaction.AbstractDraw.LOGGER_, this.getType() + ' interaction cleanup');
-  this.interactingFlagDelay_.start();
-  this.keyHandler_.unlisten(goog.events.KeyHandler.EventType.KEY, this.onKey, true, this);
-  this.keyHandler_.dispose();
-  this.keyHandler_ = null;
-};
-
-
-/**
- * Cleans up interacting flag asynchronously to clear double/single click events
- * @protected
- */
-os.ui.ol.interaction.AbstractDraw.prototype.cleanupInteracting = function() {
   var map = this.getMap();
   if (map) {
+    goog.log.fine(os.ui.ol.interaction.AbstractDraw.LOGGER_, this.getType() + ' interaction cleanup');
     map.getView().setHint(ol.ViewHint.INTERACTING, -1);
+    this.keyHandler_.unlisten(goog.events.KeyHandler.EventType.KEY, this.onKey, true, this);
+    this.keyHandler_.dispose();
+    this.keyHandler_ = null;
   }
 };
 
