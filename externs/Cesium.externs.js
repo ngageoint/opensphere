@@ -445,6 +445,7 @@ Cesium.BillboardCollection = function(opt_options) {};
  *   pixelOffsetScaleByDistance : (Cesium.NearFarScalar|undefined),
  *   scale: (number|undefined),
  *   scaleByDistance: (Cesium.NearFarScalar|undefined),
+ *   translucencyByDistance: (Cesium.NearFarScalar|undefined),
  *   position: !Cesium.Cartesian3,
  *   geomRevision: (number|undefined)
  * }}
@@ -1997,6 +1998,24 @@ Cesium.optionsLabelCollection.prototype.verticalOrigin;
  * @type {Cesium.HeightReference|undefined}
  */
 Cesium.optionsLabelCollection.prototype.heightReference;
+
+
+/**
+ * @type {Cesium.NearFarScalar|undefined}
+ */
+Cesium.optionsLabelCollection.prototype.pixelOffsetScaleByDistance;
+
+
+/**
+ * @type {Cesium.NearFarScalar|undefined}
+ */
+Cesium.optionsLabelCollection.prototype.scaleByDistance;
+
+
+/**
+ * @type {Cesium.NearFarScalar|undefined}
+ */
+Cesium.optionsLabelCollection.prototype.translucencyByDistance;
 
 
 /**
