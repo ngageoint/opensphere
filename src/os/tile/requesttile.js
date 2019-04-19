@@ -1,6 +1,5 @@
 goog.provide('os.tile.RequestTile');
 
-goog.require('goog.asserts');
 goog.require('goog.net.XhrIo.ResponseType');
 goog.require('os.net.Request');
 goog.require('os.tile.ColorableTile');
@@ -55,15 +54,13 @@ os.tile.RequestTile.prototype.disposeInternal = function() {
  * @private
  */
 os.tile.RequestTile.prototype.requestImage_ = function(tile, url) {
-  goog.asserts.assert(tile instanceof os.tile.RequestTile, 'Tile is not a request tile');
-
-  var image = tile.getImage();
+  var image = this.getImage();
 
   var request = new os.net.Request(url);
   request.setResponseType(goog.net.XhrIo.ResponseType.BLOB);
 
-  tile.requestPromise = request.getPromise().then(function(response) {
-    tile.requestPromise = undefined;
+  this.requestPromise = request.getPromise().then(function(response) {
+    this.requestPromise = undefined;
 
     if (response) {
       image.src = URL.createObjectURL(response);
@@ -71,8 +68,8 @@ os.tile.RequestTile.prototype.requestImage_ = function(tile, url) {
       image.dispatchEvent(new Event(ol.events.EventType.ERROR));
     }
   }, function(error) {
-    tile.requestPromise = undefined;
+    this.requestPromise = undefined;
 
     image.dispatchEvent(new Event(ol.events.EventType.ERROR));
-  });
+  }, this);
 };
