@@ -122,6 +122,7 @@ plugin.cesium.sync.VectorSynchronizer.prototype.createLayerPrimitives_ = functio
     // add the primitive collection to Cesium and initialize all features in the source
     this.initializePrimitives_(this.source.getFeatures());
     this.scene.primitives.add(this.csContext.collection);
+    this.scene.groundPrimitives.add(this.csContext.groundCollection);
 
     // add layer listeners
     ol.events.listen(this.layer, 'change:visible', this.onLayerVisibility_, this);
@@ -168,6 +169,7 @@ plugin.cesium.sync.VectorSynchronizer.prototype.disposeLayerPrimitives_ = functi
     // remove the primitive collection from Cesium. this will cascade the destroy to the layer primitives.
     this.csContext.dispose();
     this.scene.primitives.remove(this.csContext.collection);
+    this.scene.groundPrimitives.remove(this.csContext.groundCollection);
     this.csContext = null;
 
     os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
