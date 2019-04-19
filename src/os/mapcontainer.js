@@ -880,6 +880,7 @@ os.MapContainer.prototype.init = function() {
   this.drawingLayer_.setSticky(true);
   this.drawingLayer_.setSynchronizerType(os.layer.SynchronizerType.DRAW);
   this.drawingLayer_.renderLegend = goog.nullFunction;
+  this.drawingLayer_.set('altitudeMode', 'clampToGround');
 
   var tileGroup = new os.layer.Group();
   tileGroup.setPriority(-2);

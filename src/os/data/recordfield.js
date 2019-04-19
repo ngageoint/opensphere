@@ -8,6 +8,7 @@ goog.require('goog.object');
  */
 os.data.RecordField = {
   ALPHA: 'alpha',
+  ALTITUDE_MODE: 'altitudeMode',
   COLOR: 'color',
   ELLIPSE: 'ellipse',
   GEOM: 'geometry',

@@ -167,11 +167,12 @@ plugin.cesium.sync.FeatureConverter.prototype.createGeometryInstance = function(
  * @param {!Cesium.Color} color The primitive color.
  * @param {number=} opt_lineWidth The line width.
  * @param {Function=} opt_instanceFn The geometry instance function.
+ * @param {Function=} opt_primitiveType
  * @return {!Cesium.Primitive}
  * @protected
  */
 plugin.cesium.sync.FeatureConverter.prototype.createColoredPrimitive = function(geometry, color, opt_lineWidth,
-    opt_instanceFn) {
+    opt_instanceFn, opt_primitiveType) {
   var options = os.object.unsafeClone(plugin.cesium.sync.FeatureConverter.BASE_PRIMITIVE_OPTIONS);
   if (opt_lineWidth != null) {
     options.renderState.lineWidth = goog.math.clamp(opt_lineWidth, Cesium.ContextLimits.minimumAliasedLineWidth,
@@ -183,7 +184,8 @@ plugin.cesium.sync.FeatureConverter.prototype.createColoredPrimitive = function(
   var instances = opt_instanceFn ? opt_instanceFn(id, geometry, color) :
       this.createGeometryInstance(id, geometry, color);
   var appearance = new Cesium.PerInstanceColorAppearance(options);
-  var primitive = new Cesium.Primitive({
+  opt_primitiveType = opt_primitiveType || Cesium.Primitive;
+  var primitive = new opt_primitiveType({
     geometryInstances: instances,
     appearance: appearance
   });
@@ -230,12 +232,15 @@ plugin.cesium.sync.FeatureConverter.prototype.extractLineWidthFromOlStyle = func
  * Only the OpenLayers style colors will be used.
  * @param {Cesium.Geometry} fill The fill geometry
  * @param {Cesium.Geometry} outline The outline geometry
- * @param {!ol.style.Style} style The style
+ * @param {!ol.Feature} feature
+ * @param {!ol.geom.Geometry} geometry
  * @param {!plugin.cesium.VectorContext} context The vector context
+ * @param {!ol.style.Style} style The style
  * @return {!Cesium.PrimitiveCollection}
  * @protected
  */
-plugin.cesium.sync.FeatureConverter.prototype.wrapFillAndOutlineGeometries = function(fill, outline, style, context) {
+plugin.cesium.sync.FeatureConverter.prototype.wrapFillAndOutlineGeometries = function(fill, outline, feature,
+    geometry, context, style) {
   var width = this.extractLineWidthFromOlStyle(style);
   var layerOpacity = context.layer.getOpacity();
 
@@ -243,11 +248,15 @@ plugin.cesium.sync.FeatureConverter.prototype.wrapFillAndOutlineGeometries = fun
   var primitives = new Cesium.PrimitiveCollection();
   primitives['olLineWidth'] = width;
 
+  var heightReference = this.getHeightReference(context.layer, feature, geometry);
+  var primitiveType = heightReference === Cesium.HeightReference.CLAMP_TO_GROUND ?
+    Cesium.GroundPrimitive : undefined;
+
   if (fill) {
     var fillColor = this.extractColorFromOlStyle(style, false);
     fillColor.alpha *= layerOpacity;
 
-    primitives.add(this.createColoredPrimitive(fill, fillColor));
+    primitives.add(this.createColoredPrimitive(fill, fillColor, undefined, undefined, primitiveType));
   }
 
   if (outline) {
@@ -255,7 +264,7 @@ plugin.cesium.sync.FeatureConverter.prototype.wrapFillAndOutlineGeometries = fun
     var outlineColor = this.extractColorFromOlStyle(style, true);
     outlineColor.alpha = style.getStroke() != null ? (outlineColor.alpha * layerOpacity) : 0;
 
-    primitives.add(this.createColoredPrimitive(outline, outlineColor, width));
+    primitives.add(this.createColoredPrimitive(outline, outlineColor, width, undefined, primitiveType));
   }
 
   return primitives;
@@ -495,7 +504,7 @@ plugin.cesium.sync.FeatureConverter.prototype.olCircleGeometryToCesium = functio
     height: height
   });
 
-  return this.wrapFillAndOutlineGeometries(fillGeometry, outlineGeometry, style, context);
+  return this.wrapFillAndOutlineGeometries(fillGeometry, outlineGeometry, feature, geometry, context, style);
 };
 
 
@@ -515,7 +524,9 @@ plugin.cesium.sync.FeatureConverter.prototype.olLineStringGeometryToCesium = fun
   goog.asserts.assert(geometry.getType() == ol.geom.GeometryType.LINE_STRING ||
       geometry.getType() == ol.geom.GeometryType.MULTI_LINE_STRING);
 
-  var lineGeometryToCreate = geometry.get('extrude') ? 'WallGeometry' : 'PolylineGeometry';
+  var heightReference = this.getHeightReference(context.layer, feature, geometry);
+  var lineGeometryToCreate = geometry.get('extrude') ? 'WallGeometry' :
+    heightReference === Cesium.HeightReference.CLAMP_TO_GROUND ? 'GroundPolylineGeometry' : 'PolylineGeometry';
   var positions = this.getLineStringPositions(geometry, opt_flatCoords, opt_offset, opt_end);
   return this.createLinePrimitive(positions, context, style, lineGeometryToCreate);
 };
@@ -545,7 +556,9 @@ plugin.cesium.sync.FeatureConverter.prototype.createLinePrimitive = function(pos
   });
 
   var instance = this.createGeometryInstance(plugin.cesium.GeometryInstanceId.GEOM_OUTLINE, outlineGeometry, color);
-  var primitive = new Cesium.Primitive({
+
+  var primitiveType = opt_type && opt_type.startsWith('Ground') ? Cesium.GroundPolylinePrimitive : Cesium.Primitive;
+  var primitive = new primitiveType({
     geometryInstances: instance,
     appearance: appearance
   });
@@ -1009,7 +1022,7 @@ plugin.cesium.sync.FeatureConverter.prototype.olPolygonGeometryToCesium = functi
     extrudedHeight: extrude ? 0 : undefined
   });
 
-  return this.wrapFillAndOutlineGeometries(fillGeometry, outlineGeometry, style, context);
+  return this.wrapFillAndOutlineGeometries(fillGeometry, outlineGeometry, feature, geometry, context, style);
 };
 
 
@@ -1063,11 +1076,17 @@ plugin.cesium.sync.FeatureConverter.prototype.olPolygonGeometryToCesiumPolyline 
     // save if the outline needs to be displayed, so we know to recreate the primitive if that changes.
     primitives['olLineWidth'] = width;
 
+    var heightReference = this.getHeightReference(context.layer, feature, geometry);
+    var primitiveType = heightReference === Cesium.HeightReference.CLAMP_TO_GROUND ? Cesium.GroundPolylinePrimitive :
+        Cesium.Primitive;
+    var geometryType = heightReference === Cesium.HeightReference.CLAMP_TO_GROUND ? Cesium.GroundPolylineGeometry :
+        Cesium.PolylineGeometry;
+
     // always create outlines even if the style doesn't have a stroke. this allows updating the primitive if a stroke
     // is added without recreating it.
     for (var i = 0; i < csRings.length; ++i) {
       // Handle both color and width
-      var polylineGeometry = new Cesium.PolylineGeometry({
+      var polylineGeometry = new geometryType({
         positions: csRings[i],
         vertexFormat: appearance.vertexFormat,
         width: width
@@ -1075,7 +1094,7 @@ plugin.cesium.sync.FeatureConverter.prototype.olPolygonGeometryToCesiumPolyline 
 
       var instance = this.createGeometryInstance(plugin.cesium.GeometryInstanceId.GEOM_OUTLINE, polylineGeometry,
           outlineColor);
-      var outlinePrimitive = new Cesium.Primitive({
+      var outlinePrimitive = new primitiveType({
         geometryInstances: instance,
         appearance: appearance
       });
@@ -1103,7 +1122,7 @@ plugin.cesium.sync.FeatureConverter.prototype.olPolygonGeometryToCesiumPolyline 
       var fillColor = this.extractColorFromOlStyle(style, false);
       fillColor.alpha *= layerOpacity;
 
-      var p = this.createColoredPrimitive(fillGeometry, fillColor);
+      var p = this.createColoredPrimitive(fillGeometry, fillColor, undefined, undefined, primitiveType);
       primitives.add(p);
     }
 
@@ -1146,34 +1165,19 @@ plugin.cesium.sync.FeatureConverter.prototype.setAltitudeMode = function(altitud
  * @return {!Cesium.HeightReference}
  */
 plugin.cesium.sync.FeatureConverter.prototype.getHeightReference = function(layer, feature, geometry) {
-  // disable height reference because the implementation is fairly slow right now
-  // TODO: Should we remove this since with the function above we are seting it for the whole layer?
+  var altitudeMode = geometry.get('altitudeMode') || feature.get('altitudeMode') || layer.get('altitudeMode');
+
+  if (altitudeMode !== undefined) {
+    var heightReference = Cesium.HeightReference.NONE;
+    if (altitudeMode === os.webgl.AltitudeMode.CLAMP_TO_GROUND) {
+      heightReference = Cesium.HeightReference.CLAMP_TO_GROUND;
+    } else if (altitudeMode === os.webgl.AltitudeMode.RELATIVE_TO_GROUND) {
+      heightReference = Cesium.HeightReference.RELATIVE_TO_GROUND;
+    }
+    return heightReference;
+  }
+
   return this.heightReference_;
-
-  // // Read from the geometry
-  // var altitudeMode = geometry.get('altitudeMode');
-
-  // // Or from the feature
-  // if (altitudeMode === undefined) {
-  //   altitudeMode = feature.get('altitudeMode');
-  // }
-
-  // // Or from the layer
-  // if (altitudeMode === undefined) {
-  //   altitudeMode = layer.get('altitudeMode');
-  // }
-
-  // if (altitudeMode !== undefined) {
-  //   var heightReference = Cesium.HeightReference.NONE;
-  //   if (altitudeMode === 'clampToGround') {
-  //     heightReference = Cesium.HeightReference.CLAMP_TO_GROUND;
-  //   } else if (altitudeMode === 'relativeToGround') {
-  //     heightReference = Cesium.HeightReference.RELATIVE_TO_GROUND;
-  //   }
-  //   return heightReference;
-  // }
-
-  // return this.heightReference_;
 };
 
 

@@ -231,13 +231,17 @@ plugin.cesium.CesiumRenderer.prototype.getCoordinateFromPixel = function(pixel) 
     var cartesian = Cesium.Cartesian2.fromArray(pixel);
     var scene = this.olCesium_.getCesiumScene();
     if (scene && scene.camera && scene.globe) {
-      var pickRay = scene.camera.getPickRay(cartesian);
-      cartesian = scene.globe.pick(pickRay, scene);
+      // The Cesium team recommends different methods here based on whether terrain is enabled
+      // see https://github.com/AnalyticalGraphicsInc/cesium/issues/4368#issuecomment-406639086
+      if (scene.terrainProvider) {
+        var pickRay = scene.camera.getPickRay(cartesian);
+        cartesian = scene.globe.pick(pickRay, scene);
+      } else {
+        cartesian = scene.camera.pickEllipsoid(cartesian);
+      }
 
       if (cartesian) {
         var cartographic = scene.globe.ellipsoid.cartesianToCartographic(cartesian);
-        // The height provided with terrain on is often unreliable; with terrain off it's wrong; default to zero
-        cartographic.height = 0;
         return [
           Cesium.Math.toDegrees(cartographic.longitude),
           Cesium.Math.toDegrees(cartographic.latitude),
