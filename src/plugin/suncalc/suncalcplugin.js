@@ -2,6 +2,7 @@ goog.provide('plugin.suncalc.Plugin');
 
 goog.require('os.plugin.AbstractPlugin');
 goog.require('os.ui.menu.map');
+goog.require('plugin.suncalc.LightStripSettings');
 goog.require('plugin.suncalc.lightStripDirective');
 goog.require('plugin.suncalc.sunCalcDirective');
 
@@ -57,6 +58,10 @@ plugin.suncalc.Plugin.prototype.init = function() {
       });
     }
   }
+
+  // register the new settings 'plugin';
+  var sm = os.ui.config.SettingsManager.getInstance();
+  sm.addSettingPlugin(new plugin.suncalc.LightStripSettings());
 };
 
 
