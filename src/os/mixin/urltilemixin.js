@@ -283,11 +283,13 @@ ol.source.UrlTile.prototype.loadingDelay_ = null;
 /**
  * @inheritDoc
  */
-ol.TileCache.prototype.disposeInternal = function() {
+ol.TileCache.prototype.clear = function() {
+  // dispose all tiles when clearing to ensure resources are freed appropriately
   this.forEach(function(tile) {
     tile.dispose();
   }, this);
-  this.clear();
+
+  ol.structs.LRUCache.prototype.clear.call(this);
 };
 
 
@@ -310,7 +312,7 @@ ol.source.UrlTile.prototype.disposeInternal = function() {
 
   if (this.tileCache) {
     // flush the image cache
-    this.tileCache.dispose();
+    this.tileCache.clear();
   }
 };
 
