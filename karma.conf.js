@@ -42,6 +42,7 @@ module.exports = function(config) {
       {pattern: 'vendor/geomag/WMM.COF', watched: false, included: false, served: true},
       {pattern: 'vendor/geomag/cof2Obj.js', watched: false, included: true, served: true},
       {pattern: 'vendor/geomag/geomag.js', watched: false, included: true, served: true},
+      {pattern: 'vendor/jquery/jquery.resize.js', watched: false, included: true, served: true},
       {pattern: resolver.resolveModulePath('jschardet/dist/jschardet.min.js'), watched: false, included: true, served: true},
       {pattern: resolver.resolveModulePath('oboe/dist/oboe-browser.min.js'), watched: false, included: true, served: true},
       {pattern: resolver.resolveModulePath('lolex/lolex.js', __dirname), watched: false, included: true, served: true},
@@ -50,7 +51,8 @@ module.exports = function(config) {
       {pattern: resolver.resolveModulePath('zip-js/WebContent/deflate.js', __dirname), watched: false, included: false, served: true},
       {pattern: resolver.resolveModulePath('zip-js/WebContent/inflate.js', __dirname), watched: false, included: false, served: true},
       {pattern: resolver.resolveModulePath('zip-js/WebContent/z-worker.js', __dirname), watched: false, included: false, served: true},
-      {pattern: resolver.resolveModulePath('opensphere-state-schema/src/main/**/*.xsd', __dirname), watched: false, included: false, served: true}
+      {pattern: resolver.resolveModulePath('opensphere-state-schema/src/main/**/*.xsd', __dirname), watched: false, included: false, served: true},
+      {pattern: resolver.resolveModulePath('suncalc/suncalc.js', __dirname), watched: false, included: true, served: true}
     ].concat(closureFiles).concat([
       // init
       'test/init.js',
