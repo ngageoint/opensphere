@@ -21,8 +21,16 @@ describe('Geojson import', function() {
         .should('contain', 'smoke-tests/load-data-file-geojson/test-features.geojson Features (291)');
     cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4).rightClick();
     cy.get(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.Local.contextMenu.menuOptions.MOST_RECENT).click();
+    cy.get(os.layersDialog.Tabs.Layers.Tree.Type.mapLayer.STREET_MAP_TILES)
+        .find(os.layersDialog.Tabs.Layers.Tree.LAYER_TOGGLE_CHECKBOX_WILDCARD)
+        .click();
+    cy.get(os.layersDialog.Tabs.Layers.Tree.Type.mapLayer.WORLD_IMAGERY_TILES)
+        .find(os.layersDialog.Tabs.Layers.Tree.LAYER_TOGGLE_CHECKBOX_WILDCARD)
+        .click();
     cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4).rightClick();
     cy.get(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.Local.contextMenu.menuOptions.GO_TO).click();
+    cy.wait(2500);
+    cy.matchImageSnapshot('features loaded');
 
     // Open the timeline and animate the data (view window animates)
     cy.get(os.Toolbar.TIMELINE_TOGGLE_BUTTON).click();
@@ -53,6 +61,14 @@ describe('Geojson import', function() {
     cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4).click();
     cy.get(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.REMOVE_LAYER_BUTTON_WILDCARD).click();
     cy.get(os.layersDialog.DIALOG).should('not.contain', 'smoke-tests/load-data-file-test-features.geojson Features');
+    cy.wait(1500);
+    cy.matchImageSnapshot('features removed');
+    cy.get(os.layersDialog.Tabs.Layers.Tree.Type.mapLayer.STREET_MAP_TILES)
+        .find(os.layersDialog.Tabs.Layers.Tree.LAYER_TOGGLE_CHECKBOX_WILDCARD)
+        .click();
+    cy.get(os.layersDialog.Tabs.Layers.Tree.Type.mapLayer.WORLD_IMAGERY_TILES)
+        .find(os.layersDialog.Tabs.Layers.Tree.LAYER_TOGGLE_CHECKBOX_WILDCARD)
+        .click();
     cy.get(os.Application.PAGE).type('v');
   });
 });
