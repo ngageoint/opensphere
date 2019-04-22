@@ -71,6 +71,12 @@ describe('Add GeoServer', function() {
     cy.get(os.layersDialog.Tabs.Areas.Tree.AREA_1).rightClick();
     cy.get(os.layersDialog.Tabs.Areas.Tree.contextMenu.menuOptions.Query.LOAD).click();
     cy.get(os.layersDialog.Tabs.Layers.TAB).click();
+    cy.get(os.layersDialog.Tabs.Layers.Tree.Type.mapLayer.STREET_MAP_TILES)
+        .find(os.layersDialog.Tabs.Layers.Tree.LAYER_TOGGLE_CHECKBOX_WILDCARD)
+        .click();
+    cy.get(os.layersDialog.Tabs.Layers.Tree.Type.mapLayer.WORLD_IMAGERY_TILES)
+        .find(os.layersDialog.Tabs.Layers.Tree.LAYER_TOGGLE_CHECKBOX_WILDCARD)
+        .click();
     cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4).should('contain', 'VIIRS Detection');
     cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4)
         .find(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.FEATURE_COUNT_TEXT_WILDCARD, {timeout: 8000})
@@ -82,6 +88,11 @@ describe('Add GeoServer', function() {
         .find(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.FEATURE_COUNT_TEXT_WILDCARD, {timeout: 8000})
         .invoke('text')
         .should('match', /\([1-9]\d{0,3}\)/); // Any number 1-9999, surrounded by ()
+    cy.wait(1500);
+    cy.matchImageSnapshot('features loaded', {
+      failureThreshold: 0.01, // Minor rendering variation GUI vs CLI
+      failureThresholdType: 'percent'
+    });
 
     // Open the timeline and animate the data (view window animates)
     cy.get(os.Toolbar.TIMELINE_TOGGLE_BUTTON).click();
@@ -122,6 +133,15 @@ describe('Add GeoServer', function() {
         .click();
     cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4)
         .should('not.contain', 'VIIRS Detection Features');
+    cy.wait(1500);
+    cy.matchImageSnapshot('features removed');
+    cy.get(os.layersDialog.Tabs.Layers.Tree.Type.mapLayer.STREET_MAP_TILES)
+        .find(os.layersDialog.Tabs.Layers.Tree.LAYER_TOGGLE_CHECKBOX_WILDCARD)
+        .click();
+    cy.get(os.layersDialog.Tabs.Layers.Tree.Type.mapLayer.WORLD_IMAGERY_TILES)
+        .find(os.layersDialog.Tabs.Layers.Tree.LAYER_TOGGLE_CHECKBOX_WILDCARD)
+        .click();
+    cy.get(os.Application.PAGE).type('v');
     cy.get(os.layersDialog.Tabs.Areas.TAB).click();
     cy.get(os.layersDialog.Tabs.Areas.Tree.AREA_1).click();
     cy.get(os.layersDialog.Tabs.Areas.Tree.AREA_1)

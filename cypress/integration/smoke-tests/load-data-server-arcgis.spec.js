@@ -66,6 +66,12 @@ describe('Add ARCGIS server', function() {
     cy.route('POST', '**/OpenData/MapServer/5/query', 'fx:/smoke-tests/load-data-server-arcgis/query-2.stub.json')
         .as('getFeatureDetails');
     cy.get(os.layersDialog.Tabs.Layers.TAB).click();
+    cy.get(os.layersDialog.Tabs.Layers.Tree.Type.mapLayer.STREET_MAP_TILES)
+        .find(os.layersDialog.Tabs.Layers.Tree.LAYER_TOGGLE_CHECKBOX_WILDCARD)
+        .click();
+    cy.get(os.layersDialog.Tabs.Layers.Tree.Type.mapLayer.WORLD_IMAGERY_TILES)
+        .find(os.layersDialog.Tabs.Layers.Tree.LAYER_TOGGLE_CHECKBOX_WILDCARD)
+        .click();
     cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4).should('contain', 'Fire Station');
     cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4)
         .find(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.FEATURE_COUNT_TEXT_WILDCARD)
@@ -77,6 +83,11 @@ describe('Add ARCGIS server', function() {
         .find(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.FEATURE_COUNT_TEXT_WILDCARD)
         .invoke('text')
         .should('match', /\([1-9]\d{0,3}\)/); // Any number 1-9999, surrounded by ()
+    cy.wait(1500);
+    cy.matchImageSnapshot('features loaded', {
+      failureThreshold: 0.006, // Minor rendering variation GUI vs CLI
+      failureThresholdType: 'percent'
+    });
 
     // Clean up
     cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4)
@@ -88,6 +99,15 @@ describe('Add ARCGIS server', function() {
         .find(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.REMOVE_LAYER_BUTTON_WILDCARD)
         .click();
     cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4).should('not.contain', 'Fire Stations Features');
+    cy.wait(1500);
+    cy.matchImageSnapshot('features removed');
+    cy.get(os.layersDialog.Tabs.Layers.Tree.Type.mapLayer.STREET_MAP_TILES)
+        .find(os.layersDialog.Tabs.Layers.Tree.LAYER_TOGGLE_CHECKBOX_WILDCARD)
+        .click();
+    cy.get(os.layersDialog.Tabs.Layers.Tree.Type.mapLayer.WORLD_IMAGERY_TILES)
+        .find(os.layersDialog.Tabs.Layers.Tree.LAYER_TOGGLE_CHECKBOX_WILDCARD)
+        .click();
+    cy.get(os.Application.PAGE).type('v');
     cy.get(os.layersDialog.Tabs.Areas.TAB).click();
     cy.get(os.layersDialog.Tabs.Areas.Tree.AREA_1).click();
     cy.get(os.layersDialog.Tabs.Areas.Tree.AREA_1)
