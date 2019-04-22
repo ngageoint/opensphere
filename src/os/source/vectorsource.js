@@ -2907,6 +2907,7 @@ os.source.Vector.prototype.isGeometryInArea_ = function(area, geometry, opt_rect
     case ol.geom.GeometryType.CIRCLE:
     case ol.geom.GeometryType.MULTI_LINE_STRING:
       geometry = geometry.clone();
+      geometry.set(os.geom.GeometryField.NORMALIZED, false);
       os.geo2.normalizeGeometryCoordinates(geometry, area.getCoordinates()[0].x);
       var jstsGeometry = os.geo.jsts.OLParser.getInstance().read(geometry);
       match = jstsGeometry != null &&
