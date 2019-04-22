@@ -211,7 +211,10 @@ os.geo.jsts.OLParser.prototype.convertFromLineString = function(lineString) {
  * @return {jsts.geom.LinearRing}
  */
 os.geo.jsts.OLParser.prototype.convertFromLinearRing = function(linearRing) {
-  return this.geometryFactory.createLinearRing(linearRing.getCoordinates().map(os.geo.jsts.convertFromCoordinate));
+  // ensure closed
+  var coords = linearRing.getCoordinates();
+  coords[coords.length - 1] = coords[0];
+  return this.geometryFactory.createLinearRing(coords.map(os.geo.jsts.convertFromCoordinate));
 };
 
 
