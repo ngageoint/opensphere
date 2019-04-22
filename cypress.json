@@ -1,7 +1,7 @@
 {
   "baseUrl": "http://localhost:8282/workspace/opensphere/dist/opensphere/",
   "viewportWidth": 1920,
-  "viewportHeight": 1200,
+  "viewportHeight": 1094,
   "video": false,
   "numTestsKeptInMemory": 20
 }
