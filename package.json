@@ -221,6 +221,7 @@
     "conventional-changelog-cli": "^1.2.0",
     "conventional-recommended-bump": "^0.3.0",
     "cypress": "^3.1.5",
+    "cypress-image-snapshot": "^3.0.1",
     "cz-conventional-changelog": "^1.2.0",
     "eslint": "^3.19.0",
     "eslint-config-google": "^0.7.0",
