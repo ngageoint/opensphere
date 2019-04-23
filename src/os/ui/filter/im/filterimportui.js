@@ -27,6 +27,14 @@ goog.inherits(os.ui.filter.im.FilterImportUI, os.ui.im.FileImportUI);
 /**
  * @inheritDoc
  */
+os.ui.filter.im.FilterImportUI.prototype.getTitle = function() {
+  return 'Filter Import - XML';
+};
+
+
+/**
+ * @inheritDoc
+ */
 os.ui.filter.im.FilterImportUI.prototype.launchUI = function(file, opt_config) {
   os.ui.filter.im.FilterImportUI.base(this, 'launchUI', file, opt_config);
 
