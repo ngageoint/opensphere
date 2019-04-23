@@ -233,11 +233,12 @@ plugin.cesium.CesiumRenderer.prototype.getCoordinateFromPixel = function(pixel) 
     if (scene && scene.camera && scene.globe) {
       // The Cesium team recommends different methods here based on whether terrain is enabled
       // see https://github.com/AnalyticalGraphicsInc/cesium/issues/4368#issuecomment-406639086
-      if (scene.terrainProvider) {
+      if (!scene.terrainProvider || scene.terrainProvider instanceof Cesium.EllipsoidTerrainProvider) {
+        // this is the "no terrain" case
+        cartesian = scene.camera.pickEllipsoid(cartesian);
+      } else {
         var pickRay = scene.camera.getPickRay(cartesian);
         cartesian = scene.globe.pick(pickRay, scene);
-      } else {
-        cartesian = scene.camera.pickEllipsoid(cartesian);
       }
 
       if (cartesian) {
