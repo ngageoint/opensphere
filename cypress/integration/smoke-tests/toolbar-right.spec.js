@@ -99,7 +99,7 @@ describe('Toolbar right', function() {
       // Setup
       cy.get(os.Toolbar.addData.OPEN_FILE_BUTTON).click();
       cy.get(os.importDataDialog.DIALOG).should('be.visible');
-      cy.upload('smoke-tests/load-state-file-test-state_state.xml');
+      cy.upload('smoke-tests/load-state-file-arcgis/test-state-arcgis_state.xml');
       cy.get(os.importDataDialog.NEXT_BUTTON).click();
       cy.get(os.importStateDialog.DIALOG).should('be.visible');
       cy.get(os.importStateDialog.CLEAR_CHECKBOX).check();

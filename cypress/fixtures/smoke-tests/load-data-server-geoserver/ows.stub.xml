@@ -1,0 +1,5 @@
+<ows:ExceptionReport xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ows="http://www.opengis.net/ows" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.0" xsi:schemaLocation="http://www.opengis.net/ows https://gdp-geoserver.dev.dev.east.paas.geointservices.io/geoserver/schemas/ows/1.0.0/owsExceptionReport.xsd">
+  <ows:Exception exceptionCode="InvalidParameterValue" locator="service">
+    <ows:ExceptionText>No service: ( ows )</ows:ExceptionText>
+  </ows:Exception>
+</ows:ExceptionReport>
