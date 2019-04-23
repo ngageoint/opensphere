@@ -1,0 +1,1020 @@
+<html lang="en">
+<head>
+<title>OpenData (MapServer)</title>
+<link href="/aurora/rest/static/main.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<table width="100%" class="userTable">
+<tr>
+<td class="titlecell">
+ArcGIS REST Services Directory
+</td>
+<td align="right">
+<a href="https://ags.auroragov.org/aurora/rest/login">Login</a>
+| <a href="https://ags.auroragov.org/aurora/tokens/">Get Token</a>
+</td>
+</tr>
+</table>
+<table width="100%" class="navTable">
+<tr valign="top">
+<td class="breadcrumbs">
+<a href="/aurora/rest/services">Home</a>
+&gt; <a href="/aurora/rest/services">services</a>
+&gt; <a href="/aurora/rest/services/OpenData/MapServer">OpenData (MapServer)</a>
+</td>
+<td align="right">
+<a href="https://ags.auroragov.org/aurora/sdk/rest/02ss/02ss00000057000000.htm" target="_blank">Help</a> | <a href="https://ags.auroragov.org/aurora/rest/services/OpenData/MapServer?f=help" target="_blank">API Reference</a>
+</td>
+</tr>
+</table>
+<table>
+<tr>
+<td class="apiref">
+<a href="?f=pjson" target="_blank">JSON</a>
+| <a href="https://ags.auroragov.org/aurora/services/OpenData/MapServer?wsdl" >SOAP</a>
+</td>
+</tr>
+</table>
+<h2>OpenData (MapServer)</h2>
+<div class="rbody">
+<b>View In:</b>
+&nbsp;&nbsp;<a href="/aurora/rest/services/OpenData/MapServer?f=jsapi" target="_blank">ArcGIS JavaScript</a>
+&nbsp;&nbsp;<a href="http://www.arcgis.com/home/webmap/viewer.html?url=https%3A%2F%2Fags.auroragov.org%2Faurora%2Frest%2Fservices%2FOpenData%2FMapServer&source=sd" target="_blank">ArcGIS Online map viewer</a>
+&nbsp;&nbsp;<a href="/aurora/rest/services/OpenData/MapServer/kml/mapImage.kmz">Google Earth</a>
+&nbsp;&nbsp;<a href="/aurora/rest/services/OpenData/MapServer?f=lyr&v=9.3" target="_blank">ArcMap</a>
+&nbsp;&nbsp;<a href="/aurora/rest/services/OpenData/MapServer?f=nmf" target="_blank">ArcGIS Explorer</a>
+<br/><br/>
+<b>View Footprint In:</b>
+&nbsp;&nbsp;<a href="http://www.arcgis.com/home/webmap/viewer.html?featurecollection=https%3A%2F%2Fags.auroragov.org%2Faurora%2Frest%2Fservices%2FOpenData%2FMapServer%3Ff%3Djson%26option%3Dfootprints&supportsProjection=true&supportsJSONP=true" target="_blank">ArcGIS Online map viewer</a>
+<br/><br/>
+<b>Service Description: </b> Aurora Open Data <br/><br/>
+<b>Map Name: </b> Layers <br/><br/>
+<a href="/aurora/rest/services/OpenData/MapServer/legend">Legend</a><br/><br/>
+<a href="/aurora/rest/services/OpenData/MapServer/layers">All Layers and Tables</a><br/><br/>
+<b>Layers: </b>
+<ul>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/0">Public Art And Facilities</a> (0)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/1">Recreation Facilities</a> (1)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/2">Schools</a> (2)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/3">Police Stations</a> (3)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/4">Marijuana Retail Businesses</a> (4)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/5">Fire Stations</a> (5)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/6">Certificate of Occupancy</a> (6)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/7">Benchmark Points</a> (7)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/8">Section Corners</a> (8)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/9">Address Points</a> (9)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/10">Waterways</a> (10)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/11">Quarter Sections</a> (11)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/12">Section Lines</a> (12)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/13">Trails</a> (13)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/14">Railroads</a> (14)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/15">Street Centerlines</a> (15)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/16">Easements</a> (16)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/17">Urban Renewal Areas</a> (17)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/18">Fire Districts</a> (18)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/19">Section Lines Poly</a> (19)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/20">Zoning</a> (20)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/21">City Council Precincts</a> (21)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/22">City Council Wards</a> (22)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/23">County Election Precincts</a> (23)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/24">Master Plans</a> (24)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/25">Airport LDN</a> (25)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/26">Buckley APZ Polygons</a> (26)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/27">HOAs</a> (27)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/28">Parks And Open Space</a> (28)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/29">Lakes</a> (29)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/30">Buildings</a> (30)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/31">Parcels</a> (31)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/32">Subdivisions</a> (32)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/33">Annexations</a> (33)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/34">Liquor Licenses</a> (34)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/35">Business Licenses</a> (35)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/36">Businesses</a> (36)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/37">Hospitals</a> (37)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/38">Police Area Representatives</a> (38)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/39">Intergovernmental Agreements</a> (39)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/40">Right of Way</a> (40)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/41">City Limits</a> (41)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/42">Police Districts</a> (42)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/43">Animal Services - Bites 6 Months</a> (43)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/44">Building Permits</a> (44)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/45">Animal Services - Activities</a> (45)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/46">Animal Services - Adoptions</a> (46)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/47">Animal Services - Bites</a> (47)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/48">Animal Services - Intakes</a> (48)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/49">Animal Services - Licenses</a> (49)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/50">Animal Services - Running at large</a> (50)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/51">Light Rail Stations</a> (51)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/52">Zip Codes</a> (52)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/53">Title 32 Metro Districts</a> (53)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/54">Business Landmarks Labels</a> (54)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/55">Jewelry Stores</a> (55)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/56">Furniture Stores</a> (56)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/57">Department Stores</a> (57)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/58">Shoe Stores</a> (58)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/59">Sporting Goods Stores</a> (59)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/60">Hotels and Motels</a> (60)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/61">Drycleaning and Laundry Services (exc Coin-Op)</a> (61)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/62">Fitness and Recreational Sports Centers</a> (62)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/63">Family, Mens, and Womens Clothing Stores</a> (63)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/64">Used Merchandise Stores</a> (64)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/65">Gasoline Stations with Convenience Stores</a> (65)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/66">Nail Salons</a> (66)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/67">Commercial Banking</a> (67)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/68">Beer, Wine, and Liquor Stores</a> (68)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/69">Convenience Stores</a> (69)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/70">Grocery Stores</a> (70)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/71">Radio, Television, and Other Electronics Stores</a> (71)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/72">General Automotive Repair</a> (72)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/73">Religious Organizations</a> (73)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/74">Limited-Service Restaurants</a> (74)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/75">Beauty Salons and Barber Shops</a> (75)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/76">Full-Service Restaurants</a> (76)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/77">All Non-Home Businesses</a> (77)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/78">Address Points With Units</a> (78)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/79">Intersections</a> (79)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/80">School Districts</a> (80)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/81">High Schools Attendance Areas</a> (81)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/82">Middle School Attendance Areas</a> (82)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/83">Elementary Attendance Areas</a> (83)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/84">Traffic Counts</a> (84)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/85">Trees</a> (85)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/86">State Licensed Preschools and Day Cares</a> (86)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/87">Hospitals and Substance Abuse Centers</a> (87)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/88">1000ft Buffer P-12 School Parcels and 500ft Buffer Hospital Parcels</a> (88)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/89">300ft Buffer Residential and Open Zoning</a> (89)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/90">300ft Buffer Other Jurisdiction Residential and Open Zoning</a> (90)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/91">E470 CACs and PDs</a> (91)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/92">Zoning Commercial Permitted</a> (92)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/93">Zoning Industrial Permitted</a> (93)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/94">Other Jurisdiction Residential and Open Zoning</a> (94)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/95">Open Zoning</a> (95)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/96">Residential Zoning</a> (96)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/97">Enterprise Zones - Special Regulations</a> (97)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/98">98 - Wastewater Manholes</a> (98)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/99">99 - Wastewater Mains</a> (99)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/100">100 - Storm Inlets</a> (100)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/101">101 -Storm Manholes</a> (101)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/102">102 - Ponds</a> (102)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/103">103 - Storm Mains</a> (103)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/104">Buckley Air Force Base Boundary</a> (104)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/105">Motor Vehicle and Parts Dealers</a> (105)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/106">Clothing and Clothing Accessories Stores</a> (106)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/107">Repair and Maintenance</a> (107)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/108">Miscellaneous Store Retailers</a> (108)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/109">Personal and Laundry Services</a> (109)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/110">Food Services and Drinking Places</a> (110)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/111">Rental and Leasing Services</a> (111)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/112">Food and Beverage Stores</a> (112)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/113">Building Material and Garden Equipment and Supply Dealers</a> (113)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/114">Administrative and Support Services</a> (114)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/115">Furniture and Home Furnishings Stores</a> (115)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/116">Gasoline Stations</a> (116)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/117">Credit Intermediation and Related Activities</a> (117)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/118">Insurance Carriers and Related Activities</a> (118)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/119">Ambulatory Health Care Services</a> (119)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/120">Health and Personal Care Stores</a> (120)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/121">Special Trade Contractors</a> (121)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/122">Professional, Scientific and Technical Services</a> (122)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/123">General Merchandise Stores</a> (123)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/124">Real Estate Businesses</a> (124)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/125">Electronics and Appliance Stores</a> (125)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/126">Social Assistance</a> (126)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/127">Sporting Goods, Hobby, Book and Music Stores</a> (127)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/128">Food Manufacturing</a> (128)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/129">Wholesale Trade, Nondurable Goods</a> (129)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/130">Educational Services</a> (130)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/131">Amusement, Gambling and Recreation Industries</a> (131)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/132">Nonstore Retailers</a> (132)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/133">Performance Arts, Spectator Sports and Related Industries</a> (133)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/134">Accomodation</a> (134)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/135">Motion Picture and Sound Recording Industries</a> (135)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/136">Religious, Grantmaking, Professional, Similar Organizations</a> (136)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/137">Neighborhoods</a> (137)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/138">Northwest Alleys</a> (138)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/139">Adjacent Neighborhoods</a> (139)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/140">City Limits Poly</a> (140)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/141">RTD Bus Routes</a> (141)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/142">Access-A-Ride Service Area</a> (142)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/143">RTD Bus Stops</a> (143)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/144">Light Rail Lines</a> (144)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/145">Ramps</a> (145)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/146">Sidewalk Centerlines</a> (146)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/147">Unpaved Trails Centerlines</a> (147)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/148">Edge Of Pavement Lines</a> (148)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/149">Building Roofprints</a> (149)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/150">Edge Of Pavement</a> (150)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/151">Paved Parking</a> (151)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/152">Driveways</a> (152)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/153">Sidewalks</a> (153)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/154">Public WiFi</a> (154)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/155">Tree Planting Spaces</a> (155)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/156">Building Permits 6 Months</a> (156)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/157">Building Permits 1 Month</a> (157)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/158">Walking Analysis Bus Stop</a> (158)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/159">Walking Analysis Lightrail</a> (159)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/160">Code Enforcement Violations 1 Month</a> (160)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/161">Code Enforcement Violations 6 Months</a> (161)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/162">Address No Business</a> (162)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/163">Neighborhood Liaisons</a> (163)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/164">Code Enforcement Areas</a> (164)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/165">ACS Block Groups All 2008-2012</a> (165)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/166">ACS Block Groups Aurora 2008-2012</a> (166)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/167">ACS Tracts All 2008-2012</a> (167)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/168">ACS Tracts Aurora 2008-2012</a> (168)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/169">ACS Block Groups Aurora PCT 2008-2012</a> (169)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/170">ACS Tracts Aurora PCT 2008-2012</a> (170)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/171">ESL Locations</a> (171)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/172">Recycling Locations</a> (172)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/173">Animal Services - Adoptions 6 Months</a> (173)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/174">Animal Services - Intakes 6 Months</a> (174)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/175">Animal Services - Activities 6 Months</a> (175)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/176">Hospital Zoning</a> (176)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/177">Special Events - Points of Interest</a> (177)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/178">Special Events - Site Plan</a> (178)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/179">Special Events - Access Control</a> (179)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/180">Active Development Applications</a> (180)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/181">Building Inspections</a> (181)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/182">Public Improvements Permits</a> (182)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/183">Child Day Care Services (Non-Home Based)</a> (183)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/184">Hobby, Toy, and Game Stores</a> (184)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/185">Pawn Shops and Cash Advance</a> (185)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/186">Pet Care (Non-Veterinary) Services</a> (186)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/187">Pharmacies and Drug Stores</a> (187)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/188">Snack and Nonalcoholic Beverage Bars</a> (188)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/189">Landscaping Services</a> (189)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/190">Home Health Care Services</a> (190)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/191">Offices of Real Estate Agents and Brokers</a> (191)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/192">Golf Cart Paths</a> (192)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/193">Golf Course Polys</a> (193)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/194">Code Enforcement Complaints 1 Month</a> (194)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/195">Code Enforcement Complaints 6 Months</a> (195)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/196">Code Enforcement Complaints 1 Year</a> (196)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/197">Code Enforcement Proactive 1 Month</a> (197)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/198">Code Enforcement Proactive 6 Months</a> (198)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/199">Code Enforcement Proactive 1 Year</a> (199)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/200">Code Enforcement Secondary 1 Month</a> (200)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/201">Code Enforcement Secondary 6 Months</a> (201)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/202">Code Enforcement Secondary 1 Year</a> (202)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/203">CG Violation 1 Month</a> (203)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/204">CG Violation 6 Months</a> (204)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/205">CG Violation 1 Year</a> (205)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/206">Code Enforcement Violations 1 Year</a> (206)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/207">ACS Block Groups All 2010-2014</a> (207)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/208">ACS Block Groups Aurora 2010-2014</a> (208)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/209">ACS BG Aurora PCT 2010-2014</a> (209)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/210">ACS Tracts All 2010-2014</a> (210)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/211">ACS Tracts Aurora 2010-2014</a> (211)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/212">ACS Tracts Aurora PCT 2010-2014</a> (212)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/213">Parks Open Space 300 Foot Buffer</a> (213)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/214">214 - Storm Basins</a> (214)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/215">Code Enforcement - Illegal Dumping (All)</a> (215)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/216">216 - Storm Fittings</a> (216)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/217">Tree Planting Location</a> (217)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/218">Crew Areas</a> (218)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/219">Forestry Area</a> (219)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/220">Work Areas</a> (220)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/221">221 - Rivers and Creeks</a> (221)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/222">222 - Storm Channels</a> (222)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/223">223 - Storm Creek Reach</a> (223)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/224">224 - Storm Valves</a> (224)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/225">225 - Storm Pumps</a> (225)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/226">226 - Storm Trouble Spots</a> (226)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/227">Animal Services - Running at Large 6 Months</a> (227)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/228">228 - Storm Outlets</a> (228)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/229">229 - Storm Grade Control Structure</a> (229)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/230">230 - Storm Stream and Rain Gauges</a> (230)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/231">231 - Wastewater Fittings</a> (231)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/232">232 - Waste Valves</a> (232)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/233">Code Enforcement - Summons</a> (233)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/234">234 - Fire Hydrants</a> (234)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/235">235 - Waste FlowMeters</a> (235)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/236">236 - Wastewater Pumps</a> (236)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/237">237 - Waste Traps</a> (237)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/238">238 - Storm Abandoned Pipes</a> (238)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/239">239 - Storm Point Repair</a> (239)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/240">240 - Waste Abandoned Pipes</a> (240)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/241">Code Enforcement - Summons 6 Months</a> (241)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/242">242 - Storm Drainage Tracts Easements</a> (242)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/243">PROS - Pedestrian Bridges</a> (243)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/244">244 - Waste SubBasins</a> (244)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/245">Restaurant Parcels</a> (245)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/246">Restaurant Parcel Buffer 100ft</a> (246)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/247">Restaurant Parcel Buffer 175ft</a> (247)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/248">Restaurant Parcel Buffer 200ft</a> (248)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/249">Residential Zoning Buffer 50ft</a> (249)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/250">Food Trucks Permitted</a> (250)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/251">CBI Transformers</a> (251)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/252">CBI Utility Poles</a> (252)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/253">AC- RB</a> (253)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/254">Code Enforcement - Summons 1 Month</a> (254)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/255">Filler</a> (255)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/256">Filler</a> (256)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/257">Filler</a> (257)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/258">CBI Utility Poles (Out of City)</a> (258)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/259">Filler</a> (259)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/260">Filler</a> (260)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/261">Filler</a> (261)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/262">Filler</a> (262)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/263">Filler</a> (263)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/264">Consultant Lights Highways</a> (264)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/265">Filler</a> (265)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/266">Filler</a> (266)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/267">CBI Circuit Diagram</a> (267)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/268">County Ownership Parcels</a> (268)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/269">Forestry Areas</a> (269)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/270">Off Street Parking</a> (270)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/271">On Street Parking Program</a> (271)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/272">Parcels 3 Acres Plus</a> (272)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/273">DIA Noise Contours</a> (273)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/274">Survey Control (Horizontal) - Quarter Section Lines</a> (274)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/275">Sex Offenders</a> (275)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/276">State House Districts</a> (276)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/277">State Judicial Districts</a> (277)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/278">State Senate Districts</a> (278)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/279">State Congressional Districts</a> (279)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/280">Utility Patch Locations</a> (280)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/281">RTD Boundary</a> (281)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/282">RTD Districts</a> (282)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/283">RTD Park N Rides</a> (283)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/284">284 - Storm Best Available Proposed Floodplain</a> (284)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/285">285 - Abandoned Wastewater Point</a> (285)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/286">286 - Proposed Wastewater Pipe</a> (286)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/287">287 - Proposed Wastewater Valve</a> (287)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/288">288 - Proposed Wastewater Manhole</a> (288)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/289">289 - Proposed Wastewater Fitting</a> (289)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/290">290 - Wastewater Pipe Events</a> (290)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/291">291 - Storm Pond Outline</a> (291)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/292">292 - Proposed Storm Fittings</a> (292)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/293">293 - Proposed Storm Valves</a> (293)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/294">294 - Proposed Storm Manholes</a> (294)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/295">295 - Proposed Storm Inlets</a> (295)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/296">296 - Proposed Storm Outlets</a> (296)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/297">297 - Proposed Storm Mains</a> (297)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/298">RTD Right of Way</a> (298)
+</li>
+<li>
+<a href="/aurora/rest/services/OpenData/MapServer/299">Utility Patch 30Day Notice</a> (299)
+</li>
+</ul>
+<b>Description: </b> <br/><br/>
+<b>Copyright Text: </b> City of Aurora Colorado <br/> <br/>
+<b>Spatial Reference: </b>
+102654
+&nbsp;(2232)
+<br/>
+<br/><br/>
+<b>Single Fused Map Cache: </b> false
+<br/><br/>
+<b>Initial Extent: </b>
+<ul>
+XMin: 3194271.2555172434<br/>
+YMin: 1667664.8505246327<br/>
+XMax: 3194598.8108557854<br/>
+YMax: 1668130.0740489382<br/>
+Spatial Reference: 102654
+&nbsp;(2232)
+<br/> <br/>
+</ul>
+<b>Full Extent: </b>
+<ul>
+XMin: 3149115.2117335345<br/>
+YMin: 1621962.0039178454<br/>
+XMax: 3271715.9005797664<br/>
+YMax: 1728997.559967441<br/>
+Spatial Reference: 102654
+&nbsp;(2232)
+<br/> <br/>
+</ul>
+<b>Units: </b> esriFeet <br/><br/>
+<b>Supported Image Format Types: </b> PNG32,PNG24,PNG,JPG,DIB,TIFF,EMF,PS,PDF,GIF,SVG,SVGZ,BMP<br/><br/>
+<b>Document Info: </b>
+<ul>
+Title: <br/>
+Author: <br/>
+Comments: Aurora GIS Open Data web service<br/>
+Subject: Aurora GIS Open Data web service<br/>
+Category: <br/>
+Keywords: Aurora Open Data<br/>
+AntialiasingMode: None<br/>
+TextAntialiasingMode: Force<br/>
+</ul>
+<b>Supports Dynamic Layers: </b> false<br/><br/>
+<b>MaxRecordCount: </b> 4000<br/><br/>
+<b>MaxImageHeight: </b> 4096<br/><br/>
+<b>MaxImageWidth: </b> 4096<br/><br/>
+<b>Supported Query Formats: </b> JSON, AMF, geoJSON<br/><br/>
+<b>Min Scale: </b> 0<br/><br/>
+<b>Max Scale: </b> 0<br/><br/>
+<b>Supports Datum Transformation: </b> true<br/><br/>
+<br/><br/>
+<b>Child Resources</b>:
+&nbsp;&nbsp;<a href="/aurora/rest/services/OpenData/MapServer/info">Info</a>
+<br/> <br/>
+<b>Supported Operations</b>:
+&nbsp;&nbsp;<a href="/aurora/rest/services/OpenData/MapServer/export?bbox=3194271.2555172434,1667664.8505246327,3194598.8108557854,1668130.0740489382">Export Map</a>
+&nbsp;&nbsp;<a href="/aurora/rest/services/OpenData/MapServer/identify">Identify</a>
+&nbsp;&nbsp;<a href="/aurora/rest/services/OpenData/MapServer/queryDomains">QueryDomains</a>
+&nbsp;&nbsp;<a href="/aurora/rest/services/OpenData/MapServer/find">Find</a>
+&nbsp;&nbsp;<a href="/aurora/rest/services/OpenData/MapServer?f=pjson&returnUpdates=true&">Return Updates</a>
+&nbsp;&nbsp;<a href="/aurora/rest/services/OpenData/MapServer/generateKml">Generate KML</a> </div>
+<br/><br/>
+</body>
+</html>
