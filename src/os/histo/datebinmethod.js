@@ -129,28 +129,36 @@ os.histo.DateBinMethod.prototype.getDateBinTypes = function() {
  * @return {number}
  */
 os.histo.DateBinMethod.prototype.getTypeMax = function(opt_timestamp) {
-  opt_timestamp = opt_timestamp || 0;
-  var max = 0;
   switch (this.getDateBinType()) {
     case os.histo.DateBinType.HOUR_OF_DAY:
-      max = 23;
-      break;
+      return 23;
     case os.histo.DateBinType.HOUR_OF_WEEK:
-      max = 167;
-      break;
+      return 167;
     case os.histo.DateBinType.DAY_OF_WEEK:
-      max = 6;
-      break;
+      return 6;
     case os.histo.DateBinType.HOUR_OF_MONTH:
-      max = opt_timestamp ? moment.utc(opt_timestamp).daysInMonth() * 24 - 1 : 0;
-      break;
+      var start = new Date();
+      var end = new Date();
+      start.setUTCHours(0, 0, 0, 0);
+      end.setUTCHours(0, 0, 0, 0);
+
+      start.setUTCMonth(new Date(opt_timestamp).getUTCMonth(), 1);
+      end.setUTCMonth(start.getUTCMonth() + 1, 1);
+
+      return Math.floor((end.getTime() - start.getTime()) / (60 * 60 * 1000));
     case os.histo.DateBinType.HOUR_OF_YEAR:
-      max = opt_timestamp ? moment.utc(opt_timestamp).isLeapYear() ? 24 * 366 - 1 : 24 * 365 - 1 : 0;
-      break;
+      var start = new Date();
+      var end = new Date();
+      start.setUTCHours(0, 0, 0, 0);
+      end.setUTCHours(0, 0, 0, 0);
+
+      start.setUTCFullYear(new Date(opt_timestamp).getUTCFullYear(), 0, 1);
+      end.setUTCFullYear(start.getUTCFullYear() + 1, 0, 1);
+
+      return Math.floor((end.getTime() - start.getTime()) / (60 * 60 * 1000));
     default:
-      break;
+      return 0;
   }
-  return max;
 };
 
 
@@ -238,19 +246,16 @@ os.histo.DateBinMethod.prototype.getValue = function(item) {
           return this.arrayKeys ? [t1] : t1;
         }
         var t2 = (d2.getUTCDate() - 1) * 24 + d2.getUTCHours();
-        var max = 24 * (new Date(d.getUTCFullYear(), d.getMonth() + 1, 0).getDate()) - 1;
-        return this.generateValues(t1, t2, max);
+        return this.generateValues(t1, t2, this.getTypeMax(d.valueOf()));
       case os.histo.DateBinType.HOUR_OF_YEAR:
-        // 1 - [365,366] (end of year) * 24 plus 0-23
-        var min = new Date(d.getUTCFullYear(), 0);
-        var t1 = Math.floor((d - min) / 86400000) * 24 + d.getUTCHours();
+        // the date minus the beginning of the year, rounded to hours
+        var min = new Date(Date.UTC(d.getUTCFullYear(), 0));
+        var t1 = Math.floor((d - min) / 1000 / 60 / 60);
         if (!d2) {
           return this.arrayKeys ? [t1] : t1;
         }
-        var t2 = Math.floor((d - min) / 86400000) * 24 + d2.getUTCHours();
-        // get the last hour of the year by getting the next new year and subtracting the previous new year
-        var max = ((new Date(d.getUTCFullYear() + 1, 0) - min) / 86400000) * 24;
-        return this.generateValues(t1, t2, max);
+        var t2 = Math.floor((d2 - min) / 1000 / 60 / 60);
+        return this.generateValues(t1, t2, this.getTypeMax(d.valueOf()));
       case os.histo.DateBinType.DAY_OF_WEEK:
         // 0 (Sunday) - 6 (Saturday)
         var t1 = d.getUTCDay();
