@@ -110,7 +110,8 @@ plugin.cesium.interaction.dragcircle.updateWebGL = function(start, end) {
         geometryInstances: new Cesium.GeometryInstance({
           geometry: new Cesium.GroundPolylineGeometry({
             positions: plugin.cesium.generateCirclePositions(center, this.distance),
-            granularity: 0,
+            arcType: os.interpolate.getMethod() === os.interpolate.Method.RHUMB ?
+              Cesium.ArcType.RHUMB : Cesium.ArcType.GEODESIC,
             width: 2
           }),
           attributes: {
