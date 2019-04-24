@@ -4,7 +4,7 @@ goog.require('ol');
 goog.require('ol.MapBrowserEventType');
 goog.require('ol.coordinate');
 goog.require('ol.geom.LineString');
-goog.require('os.geo');
+goog.require('os.geo2');
 goog.require('os.interaction.DrawPolygon');
 
 
@@ -78,10 +78,7 @@ os.interaction.DrawLine.prototype.getGeometry = function() {
 
   if (this.coords.length > 1) {
     geom = new ol.geom.LineString(this.coords);
-
-    geom.toLonLat();
-    os.geo.normalizeGeometryCoordinates(geom);
-    geom.osTransform();
+    os.geo2.normalizeGeometryCoordinates(geom);
   }
 
   return geom;

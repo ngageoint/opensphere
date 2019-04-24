@@ -439,7 +439,7 @@ os.interpolate.interpolateLine = function(line) {
       var offset = 1;
       for (var j = 2, m = flatCoords.length - 2; j < m; j += 2) {
         var coord = [flatCoords[j], flatCoords[j + 1]];
-        coord[0] = os.geo.normalizeLongitude(coord[0], minLon, maxLon);
+        coord[0] = os.geo2.normalizeLongitude(coord[0], minLon, maxLon, os.proj.EPSG4326);
         coord = transforms.lonLatToCoord(coord);
 
         // use linear interpolation for other values in the coordinates
@@ -455,7 +455,7 @@ os.interpolate.interpolateLine = function(line) {
 
       osasm._free(ptr);
 
-      lonlat2[0] = os.geo.normalizeLongitude(lonlat2[0], minLon, maxLon);
+      lonlat2[0] = os.geo2.normalizeLongitude(lonlat2[0], minLon, maxLon, os.proj.EPSG4326);
       coord = transforms.lonLatToCoord(lonlat2, undefined, lonlat2.length);
 
       if (otherDiffs) {
