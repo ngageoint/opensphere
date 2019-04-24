@@ -505,7 +505,7 @@ os.time.parseMoment = function(value, formats, opt_utc, opt_strict) {
     momentFormats = os.time.DATETIME_FORMATS;
   }
 
-  return opt_utc ? moment.utc(value, momentFormats, strict) : moment(value, momentFormats, strict);
+  return opt_utc ? moment.utc(value.trim(), momentFormats, strict) : moment(value.trim(), momentFormats, strict);
 };
 
 
