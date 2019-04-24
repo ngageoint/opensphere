@@ -20,7 +20,7 @@ addons:
       key_url: "https://dl.yarnpkg.com/debian/pubkey.gpg"
     packages:
     - yarn
-  artifacts: true
+  artifacts:
     paths:
     - $(find ./cypress -name "*diff*" | tr "\n" ":")
     - $(ls -R ./cypress/screenshots/ | tr "\n" ":")
