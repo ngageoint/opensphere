@@ -1102,27 +1102,16 @@ plugin.cesium.sync.FeatureConverter.prototype.olPolygonGeometryToCesiumPolyline 
     }
 
     if (style.getFill()) {
-      // perPositionHeight: true on the fill was causing weird visual artifacts on large polygons, so it's disabled here
-      // Grab the height from the first coordinate of the OL geometry
-      var height = undefined;
-      var stride = geometry.getStride();
-      if (stride > 2) {
-        var flatCoords = geometry.getFlatCoordinates();
-        if (flatCoords && flatCoords.length > 2) {
-          height = flatCoords[2];
-        }
-      }
-
       var fillGeometry = new Cesium.PolygonGeometry({
         polygonHierarchy: hierarchy,
-        perPositionHeight: false,
-        height: height
+        perPositionHeight: true
       });
 
       var fillColor = this.extractColorFromOlStyle(style, false);
       fillColor.alpha *= layerOpacity;
 
-      var p = this.createColoredPrimitive(fillGeometry, fillColor, undefined, undefined, primitiveType);
+      var p = this.createColoredPrimitive(fillGeometry, fillColor, undefined, undefined,
+          heightReference === Cesium.HeightReference.CLAMP_TO_GROUND ? Cesium.GroundPrimitive : Cesium.Primitive);
       primitives.add(p);
     }
 
@@ -1165,7 +1154,9 @@ plugin.cesium.sync.FeatureConverter.prototype.setAltitudeMode = function(altitud
  * @return {!Cesium.HeightReference}
  */
 plugin.cesium.sync.FeatureConverter.prototype.getHeightReference = function(layer, feature, geometry) {
-  var altitudeMode = geometry.get('altitudeMode') || feature.get('altitudeMode') || layer.get('altitudeMode');
+  var altitudeMode = geometry.get(os.data.RecordField.ALTITUDE_MODE) ||
+    feature.get(os.data.RecordField.ALTITUDE_MODE) ||
+    layer.get(os.data.RecordField.ALTITUDE_MODE);
 
   if (altitudeMode !== undefined) {
     var heightReference = Cesium.HeightReference.NONE;
