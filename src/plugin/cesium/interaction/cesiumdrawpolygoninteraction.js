@@ -73,13 +73,15 @@ plugin.cesium.interaction.drawpolygon.updateWebGL = function() {
         scene.groundPrimitives.remove(this.cesiumLine);
       }
 
+
       this.cesiumLine = new Cesium.GroundPolylinePrimitive({
         asynchronous: false,
         appearance: new Cesium.PolylineColorAppearance(),
         geometryInstances: new Cesium.GeometryInstance({
           geometry: new Cesium.GroundPolylineGeometry({
             positions: olcs.core.ol4326CoordinateArrayToCsCartesians(lonlats),
-            granularity: 0,
+            arcType: os.interpolate.getMethod() === os.interpolate.Method.RHUMB ?
+              Cesium.ArcType.RHUMB : Cesium.ArcType.GEODESIC,
             width: 2
           }),
           attributes: {
