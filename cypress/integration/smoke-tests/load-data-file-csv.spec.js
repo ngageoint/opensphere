@@ -10,7 +10,7 @@ describe('CSV import', function() {
     // Upload a file
     cy.get(os.Toolbar.addData.OPEN_FILE_BUTTON).click();
     cy.get(os.importDataDialog.DIALOG).should('be.visible');
-    cy.upload('smoke-tests/load-data-file-test-features.csv');
+    cy.upload('smoke-tests/load-data-file-csv/test-features.csv');
     cy.get(os.importDataDialog.NEXT_BUTTON).click();
     cy.get(os.importCSVDialog.DIALOG).should('be.visible');
     cy.get(os.importCSVDialog.NEXT_BUTTON).click();
@@ -20,7 +20,7 @@ describe('CSV import', function() {
 
     // Load a layer
     cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4)
-        .should('contain', 'smoke-tests/load-data-file-test-features.csv Features (447)');
+        .should('contain', 'smoke-tests/load-data-file-csv/test-features.csv Features (447)');
     cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4).rightClick();
     cy.get(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.Local.contextMenu.menuOptions.MOST_RECENT).click();
     cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4).rightClick();
@@ -51,7 +51,7 @@ describe('CSV import', function() {
     cy.get(os.Toolbar.TIMELINE_TOGGLE_BUTTON).click();
     cy.get(os.Timeline.PANEL).should('not.exist');
     cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4)
-        .should('contain', 'smoke-tests/load-data-file-test-features.csv Features (447)');
+        .should('contain', 'smoke-tests/load-data-file-csv/test-features.csv Features (447)');
     cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4).click();
     cy.get(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.REMOVE_LAYER_BUTTON_WILDCARD).click();
     cy.get(os.layersDialog.DIALOG).should('not.contain', 'smoke-tests/load-data-file-test-features.csv Features');

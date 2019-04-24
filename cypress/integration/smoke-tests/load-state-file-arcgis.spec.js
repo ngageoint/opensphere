@@ -4,6 +4,18 @@ var os = require('../../support/selectors.js');
 describe('Import state file', function() {
   before('Login', function() {
     cy.login();
+
+    cy.server();
+    cy.route('**/OpenData/MapServer/export*', 'fx:/smoke-tests/load-state-file-arcgis/export.stub.png')
+        .as('getPNG');
+    cy.route('**/OpenData/MapServer/3?f=json', 'fx:/smoke-tests/load-state-file-arcgis/3?f=json.stub.json')
+        .as('getLayerDetails-3');
+    cy.route('**/OpenData/MapServer/234?f=json', 'fx:/smoke-tests/load-state-file-arcgis/234?f=json.stub.json')
+        .as('getLayerDetails-234');
+    cy.route('POST', '**/OpenData/MapServer/3/query', 'fx:/smoke-tests/load-state-file-arcgis/query-3-1.stub.json')
+        .as('getFeatureList-3_first');
+    cy.route('POST', '**/OpenData/MapServer/234/query', 'fx:/smoke-tests/load-state-file-arcgis/query-234-1.stub.json')
+        .as('getFeatureList-234_first');
   });
 
   it('Load data from state file', function() {
@@ -25,11 +37,16 @@ describe('Import state file', function() {
     // Test
     cy.get(os.Toolbar.addData.OPEN_FILE_BUTTON).click();
     cy.get(os.importDataDialog.DIALOG).should('be.visible');
-    cy.upload('smoke-tests/load-state-file-test-state_state.xml');
+    cy.upload('smoke-tests/load-state-file-arcgis/test-state-arcgis_state.xml');
     cy.get(os.importDataDialog.NEXT_BUTTON).click();
     cy.get(os.importStateDialog.DIALOG).should('be.visible');
     cy.get(os.importStateDialog.CLEAR_CHECKBOX).check();
     cy.get(os.importStateDialog.OK_BUTTON).click();
+    cy.wait(1400);
+    cy.route('POST', '**/OpenData/MapServer/3/query', 'fx:/smoke-tests/load-state-file-arcgis/query-3-2.stub.json')
+        .as('getFeatureDetails-13_second');
+    cy.route('POST', '**/OpenData/MapServer/234/query', 'fx:/smoke-tests/load-state-file-arcgis/query-234-2.stub.json')
+        .as('getFeatureDetails-234_second');
     cy.get(os.Toolbar.Date.INPUT).should('have.value', '2019-01-07');
     cy.get(os.Map.MAP_MODE_BUTTON).should('contain', '2D');
     cy.get(os.Application.PAGE).trigger('mouseenter').trigger('mousemove');

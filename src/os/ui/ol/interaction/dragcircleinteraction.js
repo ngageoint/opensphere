@@ -3,7 +3,7 @@ goog.provide('os.ui.ol.interaction.DragCircle');
 goog.require('goog.string');
 goog.require('ol');
 goog.require('os.data.RecordField');
-goog.require('os.geo');
+goog.require('os.geo2');
 goog.require('os.math.Units');
 goog.require('os.olm.render.Circle');
 goog.require('os.ui.ol.interaction.AbstractDrag');
@@ -57,9 +57,7 @@ os.ui.ol.interaction.DragCircle.prototype.getGeometry = function() {
   var geom = this.circle2D.getOriginalGeometry();
 
   if (geom) {
-    geom.toLonLat();
-    os.geo.normalizeGeometryCoordinates(geom);
-    geom.osTransform();
+    os.geo2.normalizeGeometryCoordinates(geom);
   }
 
   return geom;

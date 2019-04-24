@@ -1,8 +1,9 @@
 goog.provide('os.ui.ol.interaction.DragBox');
 goog.require('ol.MapBrowserEvent');
 goog.require('os.data.RecordField');
-goog.require('os.geo');
+goog.require('os.geo2');
 goog.require('os.olm.render.Box');
+goog.require('os.proj');
 goog.require('os.ui.ol.interaction.AbstractDrag');
 goog.require('os.webgl');
 
@@ -56,9 +57,7 @@ os.ui.ol.interaction.DragBox.prototype.getGeometry = function() {
   var geom = this.box2D.getOriginalGeometry();
 
   if (geom) {
-    geom.toLonLat();
-    os.geo.normalizeGeometryCoordinates(geom);
-    geom.osTransform();
+    os.geo2.normalizeGeometryCoordinates(geom);
   }
 
   return geom;
@@ -96,14 +95,19 @@ os.ui.ol.interaction.DragBox.prototype.update = function(mapBrowserEvent) {
       this.extent = [];
     }
 
-    var start = ol.proj.toLonLat(this.startCoord, this.getMap().getView().getProjection());
-    var end = ol.proj.toLonLat(this.endCoord, this.getMap().getView().getProjection());
+    if (this.startCoord && this.endCoord) {
+      var proj = this.getMap().getView().getProjection();
+      var start = ol.proj.toLonLat(this.startCoord, proj);
+      var end = ol.proj.toLonLat(this.endCoord, proj);
 
-    if (start && end) {
-      this.extent[0] = os.geo.normalizeLongitude(Math.min(start[0], end[0]), start[0] - 180, start[0] + 180);
+      this.extent[0] = os.geo2.normalizeLongitude(Math.min(start[0], end[0]),
+          start[0] - 180, start[0] + 180, os.proj.EPSG4326);
       this.extent[1] = Math.min(start[1], end[1]);
-      this.extent[2] = os.geo.normalizeLongitude(Math.max(start[0], end[0]), start[0] - 180, start[0] + 180);
+      this.extent[2] = os.geo2.normalizeLongitude(Math.max(start[0], end[0]),
+          start[0] - 180, start[0] + 180, os.proj.EPSG4326);
       this.extent[3] = Math.max(start[1], end[1]);
+
+      this.extent = os.extent.normalize(this.extent, undefined, undefined, undefined, this.extent);
 
       this.update2D(this.startCoord, this.endCoord);
     }
