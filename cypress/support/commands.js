@@ -25,6 +25,20 @@
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 var os = require('./selectors.js');
 var config = require('./index.js');
+var addMatchImageSnapshotCommand = require('cypress-image-snapshot/command')
+  .addMatchImageSnapshotCommand;
+
+addMatchImageSnapshotCommand({
+  blackout: [os.Toolbar.PANEL,
+    os.statusBar.PANEL,
+    os.Map.OVERVIEW_MAP,
+    os.Map.ATTRIBUTION,
+    os.layersDialog.DIALOG,
+    os.Map.ZOOM_IN_BUTTON,
+    os.Map.ZOOM_OUT_BUTTON,
+    os.Map.ROTATION_BUTTON,
+    os.Map.MAP_MODE_BUTTON]
+});
 
 Cypress.Commands.add('login', function(clearLocalStorage) {
   // allows the tester to toggle reload off temporarily
