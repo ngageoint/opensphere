@@ -218,7 +218,7 @@ plugin.cesium.Camera.prototype.initExtentComputation_ = function() {
 
 
   /**
-   * @return {Cesium.Rectangle}
+   * @return {Cesium.Rectangle|undefined}
    */
   plugin.cesium.Camera.prototype.computeCorrectExtent_ = function() {
     var rect = scratchRect;
@@ -236,6 +236,10 @@ plugin.cesium.Camera.prototype.initExtentComputation_ = function() {
     // convert that position vector to screen coords
     var cameraGroundScreen = Cesium.SceneTransforms.wgs84ToWindowCoordinates(
         this.scene_, cameraGroundCartesian, scratchPixel1);
+
+    if (!cameraGroundScreen) {
+      return;
+    }
 
     //    r
     //    |   r2
