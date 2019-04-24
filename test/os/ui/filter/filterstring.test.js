@@ -34,8 +34,8 @@ describe('os.ui.filter.string', function() {
     expect(os.ui.filter.string.escapeRegExp('value')).toBe('value');
 
     // escapes regular expression characters
-    expect(os.ui.filter.string.escapeRegExp('-()[]{}+?$^|,:#<!\\'))
-        .toBe('\\-\\(\\)\\[\\]\\{\\}\\+\\?\\$\\^\\|\\,\\:\\#\\<\\!\\\\');
+    expect(os.ui.filter.string.escapeRegExp('-()/[]{}+?$^|,:#<!\\'))
+        .toBe('\\-\\(\\)\\/\\[\\]\\{\\}\\+\\?\\$\\^\\|\\,\\:\\#\\<\\!\\\\');
 
     // default wildcard is *
     expect(os.ui.filter.string.escapeRegExp('value*')).toBe('value.*');
