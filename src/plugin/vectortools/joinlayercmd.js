@@ -46,7 +46,8 @@ plugin.vectortools.JoinLayer = function(sourceIds, indexFields, indexerType, opt
    */
   this.indexers_ = {
     'unique': this.uniqueIndexer_,
-    'contains': this.containsIndexer_
+    'contains': this.containsIndexer_,
+    'uniqueCaseInsensitive': this.caseIndexer_
   };
 
   this.options_ = opt_options;
@@ -167,6 +168,41 @@ plugin.vectortools.JoinLayer.prototype.containsIndexer_ = function(field) {
       for (var i = 0, ii = this.memoryIndex.length; i < ii; i++) {
         var mem = this.memoryIndex[i];
         if (mem && mem.indexOf(val) != -1 || val.indexOf(mem) != -1) {
+          return mem;
+        }
+      }
+    }
+
+    return val;
+  };
+
+  return indexer.bind(this);
+};
+
+
+/**
+ * @param {string} field
+ * @return {function(Object, boolean):(number|string)} index function
+ * @private
+ */
+plugin.vectortools.JoinLayer.prototype.caseIndexer_ = function(field) {
+  this.memoryIndex = [];
+
+  /**
+   * @param {Object} obj
+   * @param {boolean} crossProduct
+   * @this plugin.vectortools.JoinLayer
+   * @return {number|string} the index value
+   */
+  var indexer = function(obj, crossProduct) {
+    var val = /** @type {string|number} */ (/** @type {ol.Feature} */ (obj).get(field));
+    val = val.toUpperCase();
+    if (crossProduct && this.memoryIndex.indexOf(val) == -1) {
+      this.memoryIndex.push(val);
+    } else if (val) {
+      for (var i = 0, ii = this.memoryIndex.length; i < ii; i++) {
+        var mem = this.memoryIndex[i];
+        if (mem && mem === val) {
           return mem;
         }
       }
