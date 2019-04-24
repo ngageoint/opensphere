@@ -21,10 +21,10 @@ addons:
     packages:
     - yarn
   artifacts: true
-      paths:
-      - $(find ./cypress -name "*diff*" | tr "\n" ":")
-      - $(ls -R ./cypress/screenshots/ | tr "\n" ":")
-      - $(ls -R ./cypress/videos/ | tr "\n" ":")
+    paths:
+    - $(find ./cypress -name "*diff*" | tr "\n" ":")
+    - $(ls -R ./cypress/screenshots/ | tr "\n" ":")
+    - $(ls -R ./cypress/videos/ | tr "\n" ":")
 install:
 - yarn config list
 - yarn
