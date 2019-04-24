@@ -12,6 +12,7 @@ goog.require('goog.asserts');
 goog.require('goog.async.Delay');
 goog.require('goog.dom.ViewportSizeMonitor');
 goog.require('goog.events.EventType');
+goog.require('goog.events.KeyHandler');
 goog.require('goog.log');
 goog.require('ol.array');
 goog.require('os.array');
@@ -725,6 +726,17 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
    */
   this.closing_ = false;
 
+  /**
+   * @type {goog.events.KeyHandler}
+   * @private
+   */
+  this.keyHandler_ = null;
+  // If its a closeable window modal, let ESC close it
+  if ($scope['showClose'] && $scope['modal']) {
+    this.keyHandler_ = new goog.events.KeyHandler(goog.dom.getDocument());
+    this.keyHandler_.listen(goog.events.KeyHandler.EventType.KEY, this.handleKeyEvent_, false, this);
+  }
+
   // listen for mousedown so z-index can be updated
   goog.events.listen($element[0], goog.events.EventType.MOUSEDOWN, this.updateZIndex_, true, this);
 
@@ -747,6 +759,7 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
   if (!($scope['y'] == 'center' && $scope['height'] == 'auto')) {
     this.constrainWindow_();
   }
+
   this.element.focus();
 
   // Stack this new window on top of others
@@ -773,6 +786,12 @@ os.ui.WindowCtrl.prototype.disposeInternal = function() {
   if (!this.closing_) {
     // destroy called by angular, likely by ng-if
     this.close(true);
+  }
+
+  if (this.keyHandler_) {
+    this.keyHandler_.unlisten(goog.events.KeyHandler.EventType.KEY, this.handleKeyEvent_, false, this);
+    this.keyHandler_.dispose();
+    this.keyHandler_ = null;
   }
 
   goog.events.unlisten(window, goog.events.EventType.MOUSEDOWN, this.onBlurOrFocus_, true, this);
@@ -1160,4 +1179,19 @@ os.ui.WindowCtrl.prototype.constrainWindow_ = function() {
 os.ui.WindowCtrl.prototype.onHeaderBtnClick = function(event, headerBtnCfg) {
   var winEl = $(event.target).parents(os.ui.windowSelector.WINDOW);
   headerBtnCfg.onClick(winEl);
+};
+
+
+/**
+ * Use ESC key to cancel if modal and showClose is true
+ * @param {goog.events.KeyEvent} event
+ * @private
+ */
+os.ui.WindowCtrl.prototype.handleKeyEvent_ = function(event) {
+  var ctrlOr = os.isOSX() ? event.metaKey : event.ctrlKey;
+  if (event.keyCode == goog.events.KeyCodes.ESC && !ctrlOr && !event.shiftKey) {
+    event.preventDefault();
+    event.stopPropagation();
+    os.ui.window.close(this.element);
+  }
 };

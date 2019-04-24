@@ -1,13 +1,13 @@
 <div class="d-flex flex-column">
   <div class="modal-body">
     <div class="container-fluid">
-      <div class="row">
+      <div class="row m-1">
         <b class="px-1 u-word-wrap-break-word">{{file.getFileName()}}</b>
       </div>
-      <div class="row">
-        <div ng-if="!isZip"><i class="fa fa-warning text-warning"></i> The file type could not be detected</div>
+      <div class="row m-1">
+        <div ng-if="!isZip"><i class="fa fa-warning text-warning"></i> The file type could not be detected or is not supported.</div>
         <div ng-if="isZip"><i class="fa fa-warning text-warning mr-1"></i> Zip file detected - may need to unzip this file before importing</div>
-        <div>Please choose from the list of supported types:</div>
+        <div>Please select the file's type from the list below, or import a file of a type that is supported.</div>
       </div>
       <div class="row justify-content-center">
         <select class="custom-select w-25" ng-model="anytype.import" ng-options="importer.title for importer in importers"></select>

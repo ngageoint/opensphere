@@ -1,0 +1,95 @@
+<state xmlns="http://www.bit-sys.com/mist/state/v4" source="OpenSphere (1.0.0)" version="v4">
+  <title>test-state-file-nyc</title>
+  <map>
+    <kml:Camera xmlns:kml="http://www.opengis.net/kml/2.2">
+      <kml:longitude>-73.88447912481463</kml:longitude>
+      <kml:latitude>40.7533297734162</kml:latitude>
+      <kml:altitude>124235.46276666755</kml:altitude>
+      <kml:heading>0</kml:heading>
+      <kml:tilt>0</kml:tilt>
+      <kml:roll>0</kml:roll>
+      <kml:altitudeMode>clampToGround</kml:altitudeMode>
+    </kml:Camera>
+    <projection>Equirectangular</projection>
+  </map>
+  <dataLayers type="data">
+    <layer type="KML">
+      <id>kml#ta55zztpa3zo</id>
+      <load>true</load>
+      <dataProvider>KML Files</dataProvider>
+      <title>City of New York Subway Stations</title>
+      <url>https://data.cityofnewyork.us/api/geospatial/arq3-7z49?method=export&amp;format=KMZ</url>
+      <detectColumnTypes>true</detectColumnTypes>
+      <colorControl>colorControl:pickerReset</colorControl>
+      <showForceColor>true</showForceColor>
+      <defaults/>
+      <visible>true</visible>
+      <minResolution>0</minResolution>
+      <maxResolution>Infinity</maxResolution>
+      <arrowSize>100</arrowSize>
+      <arrowUnits>m</arrowUnits>
+      <lobColumnLength>1000</lobColumnLength>
+      <lobLength>1000</lobLength>
+      <lobLengthType>manual</lobLengthType>
+      <lobLengthColumn></lobLengthColumn>
+      <lobLengthError>1</lobLengthError>
+      <lobLengthErrorColumn></lobLengthErrorColumn>
+      <lobLengthErrorUnits>m</lobLengthErrorUnits>
+      <lobLengthUnits>m</lobLengthUnits>
+      <lobBearingColumn></lobBearingColumn>
+      <lobBearingError>1</lobBearingError>
+      <lobBearingErrorColumn></lobBearingErrorColumn>
+      <rotationColumn></rotationColumn>
+      <showLabels>false</showLabels>
+      <shapeName>Default</shapeName>
+      <centerShapeName>Point</centerShapeName>
+      <animate>true</animate>
+      <altitudeMode>absolute</altitudeMode>
+      <refreshRate>0</refreshRate>
+      <minRefreshPeriod>0</minRefreshPeriod>
+      <collapsed>false</collapsed>
+      <editable>false</editable>
+      <showRoot>true</showRoot>
+      <basicFeatureStyle>
+        <pointColor>0xCC0000</pointColor>
+        <pointOpacity>255</pointOpacity>
+        <pointSize>6</pointSize>
+        <labelSize>14</labelSize>
+      </basicFeatureStyle>
+    </layer>
+  </dataLayers>
+  <exclusionAreas/>
+  <featureActions xmlns:ogc="http://www.opengis.net/ogc">
+    <featureAction id="ge66dph4a7eb" active="true" title="line 2-5" description="" type="kml#ta55zztpa3zo" typeHint="exact" tags="" children="">
+      <filter>
+        <ogc:And namehint="line 2-5">
+          <ogc:PropertyIsEqualTo>
+            <ogc:PropertyName>line</ogc:PropertyName>
+            <ogc:Literal><![CDATA[2-5]]></ogc:Literal>
+          </ogc:PropertyIsEqualTo>
+        </ogc:And>
+      </filter>
+      <actions>
+        <featureStyleAction>
+          <color>#33ff33</color>
+          <opacity>1</opacity>
+          <size>3</size>
+          <shape>Icon</shape>
+          <iconSrc>http://maps.google.com/mapfiles/kml/shapes/rail.png</iconSrc>
+          <centerShape>Point</centerShape>
+          <showRotation>false</showRotation>
+          <rotationColumn>false</rotationColumn>
+        </featureStyleAction>
+      </actions>
+    </featureAction>
+  </featureActions>
+  <filters xmlns:ogc="http://www.opengis.net/ogc"/>
+  <queryAreas/>
+  <queryEntries/>
+  <time>
+    <interval>2019-04-17T00:00:00Z/2019-04-18T00:00:00Z</interval>
+    <current>2019-04-17T00:00:00Z/2019-04-18T00:00:00Z</current>
+    <advance>PT30M</advance>
+    <duration>day</duration>
+  </time>
+</state>

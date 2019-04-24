@@ -15,7 +15,7 @@ goog.require('ol.style.Text');
 goog.require('os.bearing');
 goog.require('os.config.Settings');
 goog.require('os.feature.measure');
-goog.require('os.geo');
+goog.require('os.geo2');
 goog.require('os.interaction.DrawPolygon');
 goog.require('os.math');
 
@@ -106,11 +106,7 @@ os.interaction.Measure.prototype.disposeInternal = function() {
 os.interaction.Measure.prototype.getGeometry = function() {
   this.coords.length = this.coords.length - 1;
   var geom = new ol.geom.LineString(this.coords);
-
-  geom.toLonLat();
-  os.geo.normalizeGeometryCoordinates(geom);
-  geom.osTransform();
-
+  os.geo2.normalizeGeometryCoordinates(geom);
   return geom;
 };
 

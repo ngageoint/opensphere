@@ -10,7 +10,7 @@ describe('KML import', function() {
     // Upload a file
     cy.get(os.Toolbar.addData.OPEN_FILE_BUTTON).click();
     cy.get(os.importDataDialog.DIALOG).should('be.visible');
-    cy.upload('smoke-tests/load-data-file-test-features.kmz');
+    cy.upload('smoke-tests/load-data-file-kml/test-features.kmz');
     cy.get(os.importDataDialog.NEXT_BUTTON).click();
     cy.get(os.importKMLDialog.DIALOG).should('be.visible');
     cy.get(os.importKMLDialog.LAYER_TITLE_INPUT).should('be.visible');
@@ -18,7 +18,7 @@ describe('KML import', function() {
 
     // Load a layer
     cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4)
-        .should('contain', 'smoke-tests/load-data-file-test-features.kmz Features (291)');
+        .should('contain', 'smoke-tests/load-data-file-kml/test-features.kmz Features (291)');
     cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4).rightClick();
     cy.get(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.Local.contextMenu.menuOptions.MOST_RECENT).click();
     cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4).rightClick();
@@ -49,10 +49,10 @@ describe('KML import', function() {
     cy.get(os.Toolbar.TIMELINE_TOGGLE_BUTTON).click();
     cy.get(os.Timeline.PANEL).should('not.exist');
     cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4)
-        .should('contain', 'smoke-tests/load-data-file-test-features.kmz Features (291)');
+        .should('contain', 'smoke-tests/load-data-file-kml/test-features.kmz Features (291)');
     cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4).click();
     cy.get(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.REMOVE_LAYER_BUTTON_WILDCARD).click();
-    cy.get(os.layersDialog.DIALOG).should('not.contain', 'smoke-tests/load-data-file-test-features.kmz Features');
+    cy.get(os.layersDialog.DIALOG).should('not.contain', 'smoke-tests/load-data-file-kml/test-features.kmz Features');
     cy.get(os.Application.PAGE).type('v');
   });
 });

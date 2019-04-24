@@ -1,0 +1,26 @@
+<div class="d-flex flex-column flex-fill u-overflow-y-auto container-fluid">
+    <h4>Twilight Calculation</h4>
+    <div class="form-group">Specify the dusk calculation method for the timeline.</div>
+
+    <div class="form-group">
+        <div class="form-check">
+            <input class="form-check-input" id="duskModeAstronomical" type="radio" value="astronomical" ng-model="ctrl.twilightCalculation">
+            <label class="form-check-label" for="duskModeAstronomical">Astronomical</label>
+            <p>Astronomical twilight is the darkest of the 3 twilight phases. It is the earliest stage of dawn in the morning and the last stage of dusk in the evening.</p>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="form-check">
+            <input class="form-check-input" id="duskModeCivilian" type="radio" value="civilian" ng-model="ctrl.twilightCalculation">
+            <label class="form-check-label" for="duskModeCivilian">Civilian</label>
+            <p>Civil twilight is the brightest of the 3 twilight phases. The Sun is just below the horizon, so there is generally enough natural light to carry out most outdoor activities.</p>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="form-check">
+            <input class="form-check-input" id="duskModeNautical" type="radio" value="nautical" ng-model="ctrl.twilightCalculation">
+            <label class="form-check-label" for="duskModeNautical">Nautical</label>
+            <p>Nautical twilight is the second twilight phase. Both the horizon and the brighter stars are usually visible at this time, making it possible to navigate at sea.</p>
+        </div>
+    </div>
+</div>

@@ -217,6 +217,35 @@ plugin.cesium.Camera.prototype.initExtentComputation_ = function() {
   };
 
 
+  // This is a duplication of the method in Cesium.SceneTransforms because it is not exposed
+  var scratchCartesian4 = new Cesium.Cartesian4();
+  var scratchEyeOffset = new Cesium.Cartesian3();
+
+  /**
+   * This is a duplication of the method in Cesium.SceneTransforms because it is not exposed
+   * @param {Cesium.Cartesian3} position
+   * @param {Cesium.Cartesian3} eyeOffset
+   * @param {Cesium.Camera} camera
+   * @param {Cesium.Cartesian4=} opt_result
+   * @return {Cesium.Cartesian4}
+   */
+  var worldToClip = function(position, eyeOffset, camera, opt_result) {
+    var viewMatrix = camera.viewMatrix;
+
+    var positionEC = Cesium.Matrix4.multiplyByVector(viewMatrix,
+        Cesium.Cartesian4.fromElements(position.x, position.y, position.z, 1, scratchCartesian4), scratchCartesian4);
+
+    var zEyeOffset = Cesium.Cartesian3.multiplyComponents(eyeOffset,
+        Cesium.Cartesian3.normalize(positionEC, scratchEyeOffset), scratchEyeOffset);
+    positionEC.x += eyeOffset.x + zEyeOffset.x;
+    positionEC.y += eyeOffset.y + zEyeOffset.y;
+    positionEC.z += zEyeOffset.z;
+
+    return Cesium.Matrix4.multiplyByVector(camera.frustum.projectionMatrix, positionEC, opt_result);
+  };
+
+  var scratchViewport = new Cesium.BoundingRectangle();
+
   /**
    * @return {Cesium.Rectangle|undefined}
    */
@@ -233,9 +262,17 @@ plugin.cesium.Camera.prototype.initExtentComputation_ = function() {
         Cesium.Cartesian3.multiplyByScalar(this.scene_.globe.ellipsoid.radii, 1 / cameraMagnitude, scratchCartesian1),
         scratchCartesian2);
 
-    // convert that position vector to screen coords
-    var cameraGroundScreen = Cesium.SceneTransforms.wgs84ToWindowCoordinates(
-        this.scene_, cameraGroundCartesian, scratchPixel1);
+    // we are specifically avoiding Cesium.SceneTransforms.wgs84ToWindowCoordinates() because it does not return
+    // pixels for coordinates outside of the view window.
+    var clipPosition = worldToClip(cameraGroundCartesian, Cesium.Cartesian3.ZERO, this.cam_, scratchCartesian4);
+    scratchViewport.x = 0;
+    scratchViewport.y = 0;
+    scratchViewport.width = this.scene_.canvas.clientWidth;
+    scratchViewport.height = this.scene_.canvas.clientHeight;
+    var cameraGroundScreen = Cesium.SceneTransforms.clipToGLWindowCoordinates(scratchViewport, clipPosition,
+        scratchPixel1);
+    cameraGroundScreen.y = scratchViewport.height - cameraGroundScreen.y;
+
 
     if (!cameraGroundScreen) {
       return;
