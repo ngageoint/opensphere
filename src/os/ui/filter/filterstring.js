@@ -33,7 +33,7 @@ os.ui.filter.string.escapeString = function(s) {
 os.ui.filter.string.escapeRegExp = function(s, opt_wildcard, opt_singleChar) {
   // escape all RegExp characters that won't be used by the filter
   var result = String(s)
-      .replace(/([-()\[\]{}+?$\^|,:#<!\\])/g, '\\$1')
+      .replace(/([-()/\[\]{}+?$\^|,:#<!\\])/g, '\\$1')
       .replace(/\x08/g, '\\x08');
 
   var singleChar = opt_singleChar || '.';
