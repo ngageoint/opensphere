@@ -21,6 +21,7 @@ addons:
     packages:
     - yarn
   artifacts:
+    debug: true
     paths:
     - $(find ./cypress -name "*diff*" | tr "\n" ":")
     - $(ls -R ./cypress/screenshots/ | tr "\n" ":")
