@@ -36,6 +36,7 @@ goog.require('os.implements');
 goog.require('os.interpolate');
 goog.require('os.layer.AnimationOverlay');
 goog.require('os.load.LoadingManager');
+goog.require('os.mixin.rbush');
 goog.require('os.ogc');
 goog.require('os.registerClass');
 goog.require('os.source');
@@ -1041,7 +1042,7 @@ os.source.Vector.prototype.updateIndex = function(feature) {
       var geomFunc = styles[s].getGeometryFunction();
       var g = geomFunc(feature);
       if (g) {
-        var e = os.extent.getFunctionalExtent(g, true);
+        var e = os.extent.getFunctionalExtent(g);
         if (e) {
           ol.extent.extend(extent, e);
         }
@@ -1940,12 +1941,7 @@ os.source.Vector.prototype.processImmediate = function(feature) {
       feature.setGeometry(geom);
     } else if (!geom.get(os.geom.GeometryField.NORMALIZED)) {
       // normalize non-point geometries unless they were normalized elsewhere
-      // convert to EPSG:4326 for calls to geo
-      geom.toLonLat();
-      // normalize
-      os.geo.normalizeGeometryCoordinates(geom);
-      // convert back
-      geom.osTransform();
+      os.geo2.normalizeGeometryCoordinates(geom);
     }
   }
 
@@ -2856,6 +2852,11 @@ os.source.Vector.prototype.getFeaturesInGeometry = function(geometry, opt_featur
  */
 os.source.Vector.prototype.isGeometryInArea_ = function(area, geometry, opt_rectangular) {
   var match = false;
+  var proj = os.map.PROJECTION;
+  var wrap = proj.canWrapX() && this.getWrapX();
+  var projExtent = proj.getExtent();
+  var halfWidth = (projExtent[2] - projExtent[0]) / 2;
+
   var geomType = geometry.getType();
   switch (geomType) {
     case ol.geom.GeometryType.GEOMETRY_COLLECTION:
@@ -2905,6 +2906,9 @@ os.source.Vector.prototype.isGeometryInArea_ = function(area, geometry, opt_rect
     case ol.geom.GeometryType.POLYGON:
     case ol.geom.GeometryType.CIRCLE:
     case ol.geom.GeometryType.MULTI_LINE_STRING:
+      geometry = geometry.clone();
+      geometry.set(os.geom.GeometryField.NORMALIZED, false);
+      os.geo2.normalizeGeometryCoordinates(geometry, area.getCoordinates()[0].x);
       var jstsGeometry = os.geo.jsts.OLParser.getInstance().read(geometry);
       match = jstsGeometry != null &&
           (area.contains(jstsGeometry) || area.crosses(jstsGeometry) || area.overlaps(jstsGeometry));
@@ -2928,6 +2932,11 @@ os.source.Vector.prototype.isGeometryInArea_ = function(area, geometry, opt_rect
       }
 
       for (i = 0, n = jstsAreas.length; i < n; i++) {
+        if (wrap) {
+          var first = jstsAreas[i].vertX[0];
+          x = os.geo2.normalizeLongitude(x, first - halfWidth, first + halfWidth);
+        }
+
         if (opt_rectangular || os.geo.isCoordInArea(x, y, jstsAreas[i].vertX, jstsAreas[i].vertY, jstsAreas[i].nVert)) {
           match = true;
           break;

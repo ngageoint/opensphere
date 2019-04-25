@@ -1,6 +1,7 @@
 goog.provide('os.interaction.ContextMenu');
 
 goog.require('os.I3DSupport');
+goog.require('os.geo');
 goog.require('os.implements');
 goog.require('os.ui.ol.interaction.ContextMenu');
 
@@ -55,9 +56,7 @@ os.interaction.ContextMenu.prototype.handleEventInternal = function(event) {
       var coord = event.map.getCoordinateFromPixel(pixel);
 
       if (coord) {
-        coord = ol.proj.toLonLat(coord, os.map.PROJECTION);
-        coord[0] = os.geo.normalizeLongitude(coord[0]);
-        coord = ol.proj.fromLonLat(coord, os.map.PROJECTION);
+        coord[0] = os.geo2.normalizeLongitude(coord[0]);
       }
 
       this.openMapContextMenu(coord, pixel);
