@@ -164,6 +164,19 @@ os.map.ZERO_EXTENT = [0, 0, 0, 0];
 
 
 /**
+ * Properties to scale icons/labels by camera distance. Near/far values represent camera altitude in meters.
+ * @type {!Object<string, number>}
+ * @const
+ */
+os.map.ZoomScale = {
+  NEAR: 3e6,
+  NEAR_SCALE: 1,
+  FAR: 3e7,
+  FAR_SCALE: .25
+};
+
+
+/**
  * Gets the zoom level from the given resolution.
  * @param {number} resolution The view resolution.
  * @param {ol.proj.Projection} projection The map projection.
