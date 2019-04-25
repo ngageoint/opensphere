@@ -80,6 +80,24 @@ plugin.cesium.sync.FeatureConverter = function(scene) {
    * @private
    */
   this.listenerMap_ = {};
+
+  /**
+   * Scales billboards/labels based on globe zoom.
+   * @type {Cesium.NearFarScalar}
+   * @private
+   */
+  this.distanceScalar_ = new Cesium.NearFarScalar(
+      os.map.ZoomScale.NEAR, os.map.ZoomScale.NEAR_SCALE,
+      os.map.ZoomScale.FAR, os.map.ZoomScale.FAR_SCALE);
+
+  /**
+   * Adjusts translucency based on globe zoom.
+   * @type {Cesium.NearFarScalar}
+   * @private
+   */
+  this.translucencyScalar_ = new Cesium.NearFarScalar(
+      os.map.ZoomScale.NEAR * 2, 1,
+      os.map.ZoomScale.FAR / 3, 0);
 };
 
 
@@ -274,7 +292,10 @@ plugin.cesium.sync.FeatureConverter.prototype.wrapFillAndOutlineGeometries = fun
 plugin.cesium.sync.FeatureConverter.prototype.createLabel = function(feature, geometry, label, context) {
   if (!goog.string.isEmptyOrWhitespace(goog.string.makeSafe(label.getText()))) {
     var options = /** @type {!Cesium.optionsLabelCollection} */ ({
-      heightReference: this.getHeightReference(context.layer, feature, geometry)
+      heightReference: this.getHeightReference(context.layer, feature, geometry),
+      pixelOffsetScaleByDistance: this.distanceScalar_,
+      scaleByDistance: this.distanceScalar_,
+      translucencyByDistance: this.translucencyScalar_
     });
 
     this.updateLabel(options, geometry, label, context);
@@ -1260,6 +1281,8 @@ plugin.cesium.sync.FeatureConverter.prototype.createBillboard = function(feature
 
   var options = /** @type {!Cesium.optionsBillboardCollectionAdd} */ ({
     heightReference: heightReference,
+    pixelOffsetScaleByDistance: this.distanceScalar_,
+    scaleByDistance: this.distanceScalar_,
     show: show
   });
 

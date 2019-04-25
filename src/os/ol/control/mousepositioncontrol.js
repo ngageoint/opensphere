@@ -77,7 +77,8 @@ os.ol.control.MousePosition.LON_LAT_FORMAT = function(coordinate) {
   }
 
   // fix the number of decimal places
-  var lon = os.geo.padCoordinate(os.geo.normalizeLongitude(coordinate[0]), true, 5);
+  var lon = os.geo.padCoordinate(os.geo2.normalizeLongitude(
+      coordinate[0], undefined, undefined, os.proj.EPSG4326), true, 5);
   var lat = os.geo.padCoordinate(coordinate[1], false, 5);
 
   if (lon.length < 10) {
@@ -109,7 +110,9 @@ os.ol.control.MousePosition.MGRS_FORMAT = function(coordinate) {
  */
 os.ol.control.MousePosition.SEXAGESIMAL_FORMAT = function(coordinate) {
   return (os.geo.toSexagesimal(coordinate[1], false, false) + ' ' +
-      os.geo.toSexagesimal(os.geo.normalizeLongitude(coordinate[0]), true, false) + ' (DMS)').replace(/°/g, '&deg;');
+    os.geo.toSexagesimal(
+        os.geo2.normalizeLongitude(coordinate[0], undefined, undefined, os.proj.EPSG4326),
+        true, false) + ' (DMS)').replace(/°/g, '&deg;');
 };
 
 
@@ -120,7 +123,9 @@ os.ol.control.MousePosition.SEXAGESIMAL_FORMAT = function(coordinate) {
  */
 os.ol.control.MousePosition.DDM = function(coordinate) {
   return (os.geo.toDegreesDecimalMinutes(coordinate[1], false, false) + ' ' +
-      os.geo.toDegreesDecimalMinutes(os.geo.normalizeLongitude(coordinate[0]), true, false) + ' (DDM)')
+    os.geo.toDegreesDecimalMinutes(
+        os.geo2.normalizeLongitude(coordinate[0], undefined, undefined, os.proj.EPSG4326),
+        true, false) + ' (DDM)')
       .replace(/°/g, '&deg;');
 };
 

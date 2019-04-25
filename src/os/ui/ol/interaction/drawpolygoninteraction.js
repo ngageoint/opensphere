@@ -9,8 +9,8 @@ goog.require('ol.geom.LineString');
 goog.require('ol.geom.Polygon');
 goog.require('ol.layer.Vector');
 goog.require('ol.source.Vector');
-goog.require('os.geo');
 goog.require('os.geo.jsts');
+goog.require('os.geo2');
 goog.require('os.ui.ol.draw.DrawEvent');
 goog.require('os.ui.ol.interaction.AbstractDraw');
 
@@ -79,7 +79,7 @@ os.ui.ol.interaction.DrawPolygon.prototype.getGeometry = function() {
   geom.toLonLat();
 
   // normalize coordinates prior to validation, or polygons crossing the date line may be broken
-  os.geo.normalizeGeometryCoordinates(geom);
+  os.geo2.normalizeGeometryCoordinates(geom, undefined, os.proj.EPSG4326);
 
   // then interpolate so the coordinates reflect what was drawn
   os.interpolate.beginTempInterpolation(os.proj.EPSG4326, method);
@@ -286,9 +286,7 @@ os.ui.ol.interaction.DrawPolygon.prototype.update2D = function() {
   }
 
   var geom = this.createGeometry();
-  geom.toLonLat();
-  os.geo.normalizeGeometryCoordinates(geom);
-  geom.osTransform();
+  os.geo2.normalizeGeometryCoordinates(geom);
 
   this.line2D.setGeometry(geom);
   this.line2D.set(os.interpolate.ORIGINAL_GEOM_FIELD, undefined);

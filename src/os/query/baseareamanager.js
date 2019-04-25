@@ -14,6 +14,7 @@ goog.require('os.data.CollectionManager');
 goog.require('os.data.RecordField');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.geo.jsts');
+goog.require('os.geo2');
 goog.require('os.map');
 goog.require('os.map.IMapContainer');
 goog.require('os.mixin.geometry');
@@ -285,7 +286,7 @@ os.query.BaseAreaManager.prototype.isValidFeature = function(feature) {
  * @protected
  */
 os.query.BaseAreaManager.prototype.normalizeGeometry = function(feature) {
-  os.geo.normalizeGeometryCoordinates(feature.getGeometry());
+  os.geo2.normalizeGeometryCoordinates(feature.getGeometry());
 };
 
 
