@@ -22,7 +22,7 @@ plugin.ogc.query.OGCSpatialFormatter.prototype.getGeometry = function(feature) {
 
   if (geom) {
     geom = geom.clone().toLonLat();
-    os.geo.normalizeGeometryCoordinates(geom);
+    os.geo2.normalizeGeometryCoordinates(geom, undefined, os.proj.EPSG4326);
   }
 
   return geom;

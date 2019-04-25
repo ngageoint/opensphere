@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?><xsd:schema xmlns:OSDS="http://mil.nga.osd" xmlns:gml="http://www.opengis.net/gml" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://mil.nga.osd">
+  <xsd:import namespace="http://www.opengis.net/gml" schemaLocation="https://gdp-geoserver.dev.dev.east.paas.geointservices.io/geoserver/schemas/gml/3.1.1/base/gml.xsd"/>
+  <xsd:complexType name="VIIRS_DetectionType">
+    <xsd:complexContent>
+      <xsd:extension base="gml:AbstractFeatureType">
+        <xsd:sequence>
+          <xsd:element maxOccurs="1" minOccurs="0" name="scan_start" nillable="true" type="xsd:dateTime"/>
+          <xsd:element maxOccurs="1" minOccurs="0" name="frp_mw" nillable="true" type="xsd:decimal"/>
+          <xsd:element maxOccurs="1" minOccurs="0" name="confidence" nillable="true" type="xsd:int"/>
+          <xsd:element maxOccurs="1" minOccurs="0" name="geom" nillable="true" type="gml:PointPropertyType"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="VIIRS_Detection" substitutionGroup="gml:_Feature" type="OSDS:VIIRS_DetectionType"/>
+</xsd:schema>

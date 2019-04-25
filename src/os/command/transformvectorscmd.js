@@ -2,6 +2,7 @@ goog.provide('os.command.TransformVectors');
 
 goog.require('os.command.ICommand');
 goog.require('os.command.State');
+goog.require('os.geo2');
 
 
 
@@ -172,9 +173,8 @@ os.command.TransformVectors.prototype.transform = function(sourceProjection, tar
  */
 os.command.TransformVectors.transform_ = function(sourceProjection, targetProjection, geom) {
   if (geom && geom instanceof ol.geom.Geometry) {
-    geom.transform(sourceProjection, os.proj.EPSG4326);
-    os.geo.normalizeGeometryCoordinates(geom);
-    geom.transform(os.proj.EPSG4326, targetProjection);
+    geom.transform(sourceProjection, targetProjection);
+    os.geo2.normalizeGeometryCoordinates(geom, undefined, targetProjection);
   }
 };
 

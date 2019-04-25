@@ -106,9 +106,35 @@ plugin.suncalc.SunCalcCtrl.prototype.update_ = function() {
     // sun times
     var suntimes = SunCalc.getTimes(t, coord[1], coord[0]);
     var sunpos = SunCalc.getPosition(t, coord[1], coord[0]);
+
+    // Determine dawn/dusk based on user preference
+    var calcTitle;
+    var dawnTime;
+    var duskTime;
+
+    switch (os.settings.get(plugin.suncalc.SettingKey.DUSK_MODE)) {
+      case 'nautical':
+        calcTitle = 'Nautical calculation';
+        dawnTime = suntimes.nauticalDawn.getTime();
+        duskTime = suntimes.nauticalDusk.getTime();
+        break;
+      case 'civilian':
+        calcTitle = 'Civilian calculation';
+        dawnTime = suntimes.dawn.getTime();
+        duskTime = suntimes.dusk.getTime();
+        break;
+      case 'astronomical':
+      default:
+        calcTitle = 'Astronomical calculation';
+        dawnTime = suntimes.nightEnd.getTime();
+        duskTime = suntimes.night.getTime();
+        break;
+    }
+
     var times = [{
       'label': 'Dawn',
-      'time': suntimes.dawn.getTime(),
+      'time': dawnTime,
+      'title': calcTitle,
       'color': '#87CEFA'
     }, {
       'label': 'Sunrise',
@@ -124,7 +150,8 @@ plugin.suncalc.SunCalcCtrl.prototype.update_ = function() {
       'color': '#FFA500'
     }, {
       'label': 'Dusk',
-      'time': suntimes.dusk.getTime(),
+      'time': duskTime,
+      'title': calcTitle,
       'color': '#87CEFA'
     }, {
       'label': 'Night',
@@ -206,6 +233,32 @@ plugin.suncalc.SunCalcCtrl.PHASES = [
   {label: 'New Moon', min: 0.97, max: 1}
 ];
 
+/**
+ * The base settings key for the plugin.
+ * @type {string}
+ * @const
+ */
+plugin.suncalc.BASE_SETTING_KEY = 'plugin.suncalc';
+
+
+/**
+ * Settings keys for the plugin.
+ * @enum {string}
+ */
+plugin.suncalc.SettingKey = {
+  DUSK_MODE: plugin.suncalc.BASE_SETTING_KEY + '.duskMode'
+};
+
+/**
+ * Modes for displaying dusk duration in the timeline.
+ * @enum {string}
+ */
+plugin.suncalc.duskMode = {
+  CIVILIAN: 'civilian',
+  NAUTICAL: 'nautical',
+  ASTRONOMICAL: 'astronomical'
+};
+
 
 /**
  * @param {Object} item
@@ -254,4 +307,3 @@ plugin.suncalc.SunCalcCtrl.prototype.formatDate = function(t) {
 
   return '';
 };
-

@@ -14,6 +14,14 @@
 // ***********************************************************
 require('./commands');
 
+Cypress.Server.defaults({
+  delay: 500,
+  force404: false,
+  whitelist: (function(xhr) {
+    return xhr.method === 'GET' && /(workspace|arcgisonline|\.(jsx?|html|css)(\?.*)?$)/.test(xhr.url);
+  })
+});
+
 exports.IndexedDB = {
   FILES: 'opensphere.files',
   SETTINGS: 'opensphere.settings'

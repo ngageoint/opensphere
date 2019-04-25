@@ -4,6 +4,9 @@ goog.provide('plugin.suncalc.lightStripDirective');
 goog.require('goog.async.ConditionalDelay');
 goog.require('os.defines');
 goog.require('os.ui.Module');
+goog.require('plugin.suncalc.LightStripSettings');
+goog.require('plugin.suncalc.LightStripSettingsCtrl');
+goog.require('plugin.suncalc.SunCalcCtrl');
 
 
 /**
@@ -62,6 +65,13 @@ plugin.suncalc.LightStripCtrl = function($scope, $element) {
   this.element_.parent().resize(this.resizeFn_);
 
   /**
+   * Events list
+   * @type {!Array<!{label: string, color: string}>}
+   * @private
+   */
+  this.events_ = [];
+
+  /**
    * Delay to ensure the lightstrip is initialized on creation.
    * @type {goog.async.ConditionalDelay}
    * @private
@@ -70,6 +80,13 @@ plugin.suncalc.LightStripCtrl = function($scope, $element) {
 
   os.dispatcher.listen(os.ui.timeline.TimelineScaleEvent.TYPE, this.update_, false, this);
   $scope.$on('$destroy', this.destroy_.bind(this));
+
+  /**
+   * Determine the dusk calculation method from settings
+   * @private
+   */
+  this.setDuskEventCalculation_();
+  os.settings.listen(plugin.suncalc.SettingKey.DUSK_MODE, this.onDuskModeChange_, false, this);
 
   this.updateDelay_.start(100, 5000);
 };
@@ -95,26 +112,59 @@ plugin.suncalc.LightStripCtrl.prototype.destroy_ = function() {
 
   os.dispatcher.unlisten(os.ui.timeline.TimelineScaleEvent.TYPE, this.update_, false, this);
 
+  os.settings.unlisten(plugin.suncalc.SettingKey.DUSK_MODE, this.onDuskModeChange_, false, this);
+
   this.element_ = null;
 };
 
 
 /**
- * @type {!Array<!{label: string, color: string}>}
+ * Handle changes to the dusk calculation setting.
+ * @private
  */
-plugin.suncalc.LightStripCtrl.EVENTS = [{
-  label: 'nightEnd',
-  color: 'navy'
-}, {
-  label: 'sunrise',
-  color: 'lightskyblue'
-}, {
-  label: 'sunset',
-  color: 'gold'
-}, {
-  label: 'night',
-  color: 'lightskyblue'
-}];
+plugin.suncalc.LightStripCtrl.prototype.onDuskModeChange_ = function() {
+  this.setDuskEventCalculation_();
+  this.update_();
+};
+
+/**
+ * Update the length of events within the light script
+ * @private
+ */
+plugin.suncalc.LightStripCtrl.prototype.setDuskEventCalculation_ = function() {
+  var dawnLabel;
+  var duskLabel;
+
+  switch (os.settings.get(plugin.suncalc.SettingKey.DUSK_MODE)) {
+    case 'nautical':
+      dawnLabel = 'nauticalDawn';
+      duskLabel = 'nauticalDusk';
+      break;
+    case 'civilian':
+      dawnLabel = 'dawn';
+      duskLabel = 'dusk';
+      break;
+    case 'astronomical':
+    default:
+      dawnLabel = 'nightEnd';
+      duskLabel = 'night';
+      break;
+  }
+
+  this.events_ = [{
+    label: dawnLabel,
+    color: 'navy'
+  }, {
+    label: 'sunrise',
+    color: 'lightskyblue'
+  }, {
+    label: 'sunset',
+    color: 'gold'
+  }, {
+    label: duskLabel,
+    color: 'lightskyblue'
+  }];
+};
 
 
 /**
@@ -173,25 +223,24 @@ plugin.suncalc.LightStripCtrl.prototype.update_ = function(opt_evt) {
   var end = this.options_.end;
   var diff = end - start;
   var tLast = start;
-  var events = plugin.suncalc.LightStripCtrl.EVENTS;
 
   for (var t = start; tLast < end; t += 24 * 60 * 60 * 1000) {
     var sun = SunCalc.getTimes(new Date(t), coord[1], coord[0]);
 
-    for (var i = 0, n = events.length; i < n; i++) {
-      var p = sun[events[i].label].getTime();
+    for (var i = 0, n = this.events_.length; i < n; i++) {
+      var p = sun[this.events_[i].label].getTime();
 
       if (p > tLast) {
         // draw from tLast to p in the desired color
         var l = width * (tLast - start) / diff;
         var r = Math.min(width * (p - start) / diff, width);
-        ctx.fillStyle = events[i].color;
+        ctx.fillStyle = this.events_[i].color;
         ctx.fillRect(l, 0, r - l, height);
         tLast = p;
       }
     }
 
-    ctx.fillStyle = events[0].color;
+    ctx.fillStyle = this.events_[0].color;
     ctx.fillRect(r, 0, width - r, height);
   }
 
