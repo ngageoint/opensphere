@@ -537,7 +537,7 @@ os.ui.query.AreaFilterAddCtrl.prototype.launchAddObjectAreas = function() {
     'callback': this.onAreasSelected_.bind(this)
   };
 
-  os.ui.window.create(options, 'areaobjectadd callback="callback"', undefined, this.scope, undefined, scopeOptions);
+  os.ui.window.create(options, 'areaobjectadd callback="callback"', undefined, this.scope_, undefined, scopeOptions);
 };
 
 

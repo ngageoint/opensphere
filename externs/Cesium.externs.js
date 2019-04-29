@@ -1327,6 +1327,15 @@ Cesium.Cartesian3.fromElements = function(x, y, z, result) {};
 
 
 /**
+ * @param {number} lon Longitude in degrees
+ * @param {number} lat latitude in degrees
+ * @param {number=} opt_alt Altitude in meters
+ * @return {!Cesium.Cartesian3}
+ */
+Cesium.Cartesian3.fromDegrees = function(lon, lat, opt_alt) {};
+
+
+/**
  * @param {Cesium.Cartesian3} right
  * @return {boolean}
  */
