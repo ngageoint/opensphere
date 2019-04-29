@@ -230,12 +230,16 @@ plugin.cesium.CesiumRenderer.prototype.getCoordinateFromPixel = function(pixel) 
   if (this.olCesium_ && pixel && pixel.length == 2 && !isNaN(pixel[0]) && !isNaN(pixel[1])) {
     var cartesian = Cesium.Cartesian2.fromArray(pixel);
     var scene = this.olCesium_.getCesiumScene();
+    var removeHeight;
     if (scene && scene.camera && scene.globe) {
       // The Cesium team recommends different methods here based on whether terrain is enabled
       // see https://github.com/AnalyticalGraphicsInc/cesium/issues/4368#issuecomment-406639086
       if (!scene.terrainProvider || scene.terrainProvider instanceof Cesium.EllipsoidTerrainProvider) {
         // this is the "no terrain" case
         cartesian = scene.camera.pickEllipsoid(cartesian);
+        // both the docs and the forums indicate that method should return a height of zero, but
+        // it slightly doesn't
+        removeHeight = true;
       } else {
         var pickRay = scene.camera.getPickRay(cartesian);
         cartesian = scene.globe.pick(pickRay, scene);
@@ -243,6 +247,9 @@ plugin.cesium.CesiumRenderer.prototype.getCoordinateFromPixel = function(pixel) 
 
       if (cartesian) {
         var cartographic = scene.globe.ellipsoid.cartesianToCartographic(cartesian);
+        if (removeHeight) {
+          cartographic.height = 0;
+        }
         return [
           Cesium.Math.toDegrees(cartographic.longitude),
           Cesium.Math.toDegrees(cartographic.latitude),
