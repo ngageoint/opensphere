@@ -6,7 +6,7 @@ describe('Import state file', function() {
     cy.login();
 
     cy.server();
-    cy.route('**/geoserver/wfs?SERVICE=WFS**', 'fx:/smoke-tests/load-state-file-geoserver/wfs?service.stub.xml')
+    cy.route('**/geoserver/wfs?SERVICE=WFS**', 'fx:/smoke-tests/load-state-file-geoserver/wfsservice.stub.xml')
         .as('getLayer');
     cy.route('POST', '**/geoserver/wfs', 'fx:/smoke-tests/load-state-file-geoserver/wfs.stub.json')
         .as('getFeatures');
