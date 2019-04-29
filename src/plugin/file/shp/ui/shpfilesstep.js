@@ -1,6 +1,7 @@
 goog.provide('plugin.file.shp.ui.SHPFilesStep');
 goog.provide('plugin.file.shp.ui.SHPFilesStepCtrl');
 
+goog.require('goog.log');
 goog.require('os.defines');
 goog.require('os.file.File');
 goog.require('os.ui.Module');
@@ -142,6 +143,15 @@ plugin.file.shp.ui.SHPFilesStepCtrl = function($scope) {
   this.updateErrorText_('dbf');
   this.validate_();
 };
+
+
+/**
+ * Logger
+ * @type {goog.log.Logger}
+ * @private
+ * @const
+ */
+plugin.file.shp.ui.SHPFilesStepCtrl.LOGGER_ = goog.log.getLogger('plugin.file.shp.ui.SHPFilesStepCtrl');
 
 
 /**
