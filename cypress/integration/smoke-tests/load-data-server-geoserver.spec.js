@@ -8,13 +8,13 @@ describe('Add GeoServer', function() {
     cy.route('**/geoserver/ows', 'fx:/smoke-tests/load-data-server-geoserver/ows.stub.xml')
         .as('getServer');
     cy.route('**/geoserver/ows?service=WMS**',
-        'fx:/smoke-tests/load-data-server-geoserver/ows?service=wms.stub.xml')
+        'fx:/smoke-tests/load-data-server-geoserver/owsservice=wms.stub.xml')
         .as('getWMSCapabilities');
     cy.route('**/geoserver/ows?service=WFS**',
-        'fx:/smoke-tests/load-data-server-geoserver/ows?service=wfs.stub.xml')
+        'fx:/smoke-tests/load-data-server-geoserver/owsservice=wfs.stub.xml')
         .as('getWFSCapabilities');
     cy.route('**/geoserver/wfs?SERVICE=WFS**',
-        'fx:/smoke-tests/load-data-server-geoserver/wfs?service=wfs.stub.xml')
+        'fx:/smoke-tests/load-data-server-geoserver/wfsservice=wfs.stub.xml')
         .as('getLayer');
     cy.route('POST', '**/geoserver/wfs',
         'fx:/smoke-tests/load-data-server-geoserver/wfs.stub.xml')
