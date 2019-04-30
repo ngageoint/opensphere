@@ -3,6 +3,7 @@ goog.require('goog.asserts');
 goog.require('ol.Feature');
 goog.require('ol.format.GML3');
 goog.require('ol.geom.Polygon');
+goog.require('os.geo2');
 goog.require('os.ui.query.IQueryReader');
 
 
@@ -90,14 +91,7 @@ os.ui.query.AbstractQueryReader.parseArea = function(area) {
         olGeom = new ol.geom.Polygon([coordinates], ol.geom.GeometryLayout.XY);
       }
 
-      if (olGeom instanceof ol.geom.Polygon) {
-        os.ui.query.AbstractQueryReader.normalizePolygon_(olGeom);
-      } else if (olGeom instanceof ol.geom.MultiPolygon) {
-        var polygons = olGeom.getPolygons();
-        for (var i = 0, n = polygons.length; i < n; i++) {
-          os.ui.query.AbstractQueryReader.normalizePolygon_(polygons[i]);
-        }
-      }
+      os.geo2.normalizeGeometryCoordinates(olGeom);
 
       // set the geometry to not be interpolated
       olGeom.set(os.interpolate.METHOD_FIELD, os.interpolate.Method.NONE);
@@ -113,27 +107,5 @@ os.ui.query.AbstractQueryReader.parseArea = function(area) {
     return null;
   } catch (e) {
     goog.log.error(os.ui.query.AbstractQueryReader.LOGGER_, 'Failed to parse area!');
-  }
-};
-
-
-/**
- * Takes a polygon and normalizes its longitudes to [-180, 180] by reference
- * @param {ol.geom.Polygon} polygon
- * @private
- */
-os.ui.query.AbstractQueryReader.normalizePolygon_ = function(polygon) {
-  var allPolygonsNormalization = goog.array.every(polygon.getCoordinates(), function(coordArray) {
-    return os.geo.shouldNormalize(coordArray);
-  });
-
-  if (allPolygonsNormalization) {
-    var flatCoordinates = polygon.getFlatCoordinates();
-    var stride = polygon.getStride();
-    for (var i = 0, n = flatCoordinates.length; i < n; i = i + stride) {
-      var coord = flatCoordinates[i];
-      var normalizedCoord = os.geo.normalizeLongitude(coord);
-      flatCoordinates[i] = normalizedCoord;
-    }
   }
 };

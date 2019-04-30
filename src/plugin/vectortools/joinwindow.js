@@ -82,7 +82,8 @@ plugin.vectortools.JoinCtrl = function($scope, $element) {
    */
   this['joinMethodHelp'] = 'The Join Method determines how we compare values between columns.' +
       '<ul><li> Exact Match: Joins two features when the value is exactly the same on both.</li>' +
-      '<li> Contains: Joins two features when one value contains the other.</li>';
+      '<li> Contains: Joins two features when one value contains the other.</li>' +
+      '<li> Case Insensitive: Joins two features when one value is not the same case.</li>';
 
   /**
    * @type {Array<Object>}
