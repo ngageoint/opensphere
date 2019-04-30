@@ -373,6 +373,18 @@ moment.prototype.isoWeeksInYear = function() {};
 
 
 /**
+ * @return {number} The number of days in the month
+ */
+moment.prototype.daysInMonth = function() {};
+
+
+/**
+ * @return {number} Whether it's a leap year
+ */
+moment.prototype.isLeapYear = function() {};
+
+
+/**
  * Gets values
  * @param {string} part
  * @return {number} The value
