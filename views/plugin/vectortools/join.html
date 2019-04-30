@@ -40,6 +40,11 @@
           <input type="radio" id="contains_{{$id}}" class="form-check-input" name="dateTypeRadios" value="contains" ng-model="ctrl.joinMethod" ng-disabled="disabled" />
           <label class="form-check-label" for="contains_{{$id}}" ng-disabled="disabled">Contains</label>
         </div>
+        <div class="form-check form-check-inline">
+          <input type="radio" id="case_{{$id}}" class="form-check-input" name="dateTypeRadios" value="uniqueCaseInsensitive" ng-model="ctrl.joinMethod"
+            ng-disabled="disabled" />
+          <label class="form-check-label" for="case_{{$id}}" ng-disabled="disabled">Case Insensitive</label>
+        </div>
       </div>
     </div>
   </div>

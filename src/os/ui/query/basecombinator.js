@@ -45,7 +45,7 @@ os.ui.query.baseCombinatorDirective = function() {
     scope: {
       'layerId': '=',
       'updateImmediate': '=?',
-      'hideAdvanced': '@?',
+      'hideAdvanced': '=?',
       'hideLayerChooser': '=?',
       'queryManager': '=?',
       'filterManager': '=?',
