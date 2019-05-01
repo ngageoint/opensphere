@@ -45,7 +45,7 @@ os.ui.clear.ClearCtrl = function($scope, $element, $timeout) {
 
   /**
    * The clear entries to display
-   * @type {!Array<!os.ui.clear.ClearEntry>}
+   * @type {!Array<!osx.ChecklistItem>}
    */
   this['entries'] = goog.object.getValues(os.ui.clearManager.getEntries());
 

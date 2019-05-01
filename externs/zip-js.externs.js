@@ -194,6 +194,11 @@ zip.Reader = function(content) {};
 zip.Reader.prototype.getEntries = function(callback) {};
 
 
+/**
+ * Close the reader
+ */
+zip.Reader.prototype.close = function() {};
+
 
 /**
  * Object used to read entry data from an ArrayBuffer
