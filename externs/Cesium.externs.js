@@ -1261,7 +1261,7 @@ Cesium.Cartesian3.subtract = function(left, right, opt_result) {};
 
 
 /**
- * @param {Cesium.Cartesian3} cartesian
+ * @param {Cesium.Cartesian3|Cesium.Cartesian4} cartesian
  * @param {Cesium.Cartesian3} result
  * @return {!Cesium.Cartesian3}
  */
@@ -1324,6 +1324,15 @@ Cesium.Cartesian3.angleBetween = function(left, right) {};
  * @param {Cesium.Cartesian3} result
  */
 Cesium.Cartesian3.fromElements = function(x, y, z, result) {};
+
+
+/**
+ * @param {number} lon Longitude in degrees
+ * @param {number} lat latitude in degrees
+ * @param {number=} opt_alt Altitude in meters
+ * @return {!Cesium.Cartesian3}
+ */
+Cesium.Cartesian3.fromDegrees = function(lon, lat, opt_alt) {};
 
 
 /**
@@ -1421,6 +1430,16 @@ Cesium.Cartesian4.prototype.w;
  */
 Cesium.Cartesian4.clone = function(result) {};
 
+
+/**
+ * @param {number} x
+ * @param {number} y
+ * @param {number} z
+ * @param {number} w
+ * @param {Cesium.Cartesian4=} opt_result
+ * @return {Cesium.Cartesian4}
+ */
+Cesium.Cartesian4.fromElements = function(x, y, z, w, opt_result) {};
 
 
 /**
@@ -3699,19 +3718,19 @@ Cesium.Matrix4.prototype.clone = function(opt_result) {};
 /**
  * @param {Cesium.Matrix4} matrix .
  * @param {Cesium.Cartesian3} point .
- * @param {Cesium.Cartesian3} result .
+ * @param {Cesium.Cartesian3=} opt_result .
  * @return {Cesium.Cartesian3} .
  */
-Cesium.Matrix4.multiplyByPoint = function(matrix, point, result) {};
+Cesium.Matrix4.multiplyByPoint = function(matrix, point, opt_result) {};
 
 
 /**
  * @param {Cesium.Matrix4} matrix .
  * @param {Cesium.Cartesian4} point .
- * @param {Cesium.Cartesian4} result .
+ * @param {Cesium.Cartesian4=} opt_result .
  * @return {Cesium.Cartesian4} .
  */
-Cesium.Matrix4.multiplyByVector = function(matrix, point, result) {};
+Cesium.Matrix4.multiplyByVector = function(matrix, point, opt_result) {};
 
 
 /**
@@ -4250,6 +4269,14 @@ Cesium.SceneTransforms = function() {};
  */
 Cesium.SceneTransforms.wgs84ToWindowCoordinates = function(scene, position, opt_result) {};
 
+
+/**
+ * @param {Cesium.BoundingRectangle} viewPort
+ * @param {Cesium.Cartesian4} position
+ * @param {Cesium.Cartesian2=} opt_result
+ * @return {Cesium.Cartesian2}
+ */
+Cesium.SceneTransforms.clipToGLWindowCoordinates = function(viewPort, position, opt_result) {};
 
 
 /**

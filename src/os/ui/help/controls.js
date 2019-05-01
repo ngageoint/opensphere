@@ -205,31 +205,31 @@ os.ui.help.Controls.FONT = {
  */
 os.ui.help.Controls.FONT_CLASS = {
   'HORIZONTAL': {
-    'font': 'fa fa-arrows-h',
+    'font': 'fa fa-fw fa-arrows-h',
     'class': 'control-drag'
   },
   'VERTICAL': {
-    'font': 'fa fa-arrows-v',
+    'font': 'fa fa-fw fa-arrows-v',
     'class': 'control-drag'
   },
   'ALL': {
-    'font': 'fa fa-arrows',
+    'font': 'fa fa-fw fa-arrows',
     'class': 'control-drag'
   },
   'LEFT': {
-    'font': 'fa fa-long-arrow-left',
+    'font': 'fa fa-fw fa-long-arrow-left',
     'class': 'control-key'
   },
   'RIGHT': {
-    'font': 'fa fa-long-arrow-right',
+    'font': 'fa fa-fw fa-long-arrow-right',
     'class': 'control-key'
   },
   'UP': {
-    'font': 'fa fa-long-arrow-up',
+    'font': 'fa fa-fw fa-long-arrow-up',
     'class': 'control-key'
   },
   'DOWN': {
-    'font': 'fa fa-long-arrow-down',
+    'font': 'fa fa-fw fa-long-arrow-down',
     'class': 'control-key'
   }
 };

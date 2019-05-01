@@ -12,6 +12,7 @@ goog.require('goog.asserts');
 goog.require('goog.async.Delay');
 goog.require('goog.dom.ViewportSizeMonitor');
 goog.require('goog.events.EventType');
+goog.require('goog.events.KeyHandler');
 goog.require('goog.log');
 goog.require('ol.array');
 goog.require('os.array');
@@ -82,6 +83,14 @@ os.ui.window.openWindows_ = {};
 
 
 /**
+ * Map of currently open windows.
+ * @type {!Object<string, boolean>}
+ * @private
+ */
+os.ui.window.opening_ = {};
+
+
+/**
  * A draggable, resizable window. The directive uses transclusion, meaning that you
  * can place custom content into the window.
  *
@@ -141,6 +150,13 @@ os.ui.Module.directive('window', [os.ui.windowDirective]);
  * @param {Object.<string, *>=} opt_scopeOptions Key/value pairs to add to the scope
  */
 os.ui.window.create = function(options, html, opt_parent, opt_scope, opt_compile, opt_scopeOptions) {
+  if (options['id']) {
+    if (os.ui.window.isOpening(/** @type {string} */ (options['id']))) {
+      return;
+    }
+    os.ui.window.opening_['#' + options['id']] = true;
+  }
+
   if (!opt_parent) {
     opt_parent = os.ui.windowSelector.CONTAINER;
   }
@@ -391,6 +407,17 @@ os.ui.window.exists = function(id) {
 
 
 /**
+ * Checks if a window with the provided id is in the process of being opened.
+ * @param {string} id The id, without the leading `#`.
+ * @return {boolean} If the window exists.
+ */
+os.ui.window.isOpening = function(id) {
+  var wins = os.ui.window.opening_['#' + id];
+  return wins ? true : false;
+};
+
+
+/**
  * Make a window start or stop blinking
  * @param {!string} id window ID
  * @param {boolean=} opt_start Defaults to start (true), stop blinking if false is specified.
@@ -503,6 +530,8 @@ os.ui.window.sortByZIndex = function(a, b) {
  * @param {!Element} el The element.
  */
 os.ui.window.registerWindow = function(id, el) {
+  delete os.ui.window.opening_[id];
+
   if (!os.ui.window.openWindows_[id]) {
     os.ui.window.openWindows_[id] = [el];
   } else {
@@ -725,6 +754,17 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
    */
   this.closing_ = false;
 
+  /**
+   * @type {goog.events.KeyHandler}
+   * @private
+   */
+  this.keyHandler_ = null;
+  // If its a closeable window modal, let ESC close it
+  if ($scope['showClose'] && $scope['modal']) {
+    this.keyHandler_ = new goog.events.KeyHandler(goog.dom.getDocument());
+    this.keyHandler_.listen(goog.events.KeyHandler.EventType.KEY, this.handleKeyEvent_, false, this);
+  }
+
   // listen for mousedown so z-index can be updated
   goog.events.listen($element[0], goog.events.EventType.MOUSEDOWN, this.updateZIndex_, true, this);
 
@@ -747,6 +787,7 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
   if (!($scope['y'] == 'center' && $scope['height'] == 'auto')) {
     this.constrainWindow_();
   }
+
   this.element.focus();
 
   // Stack this new window on top of others
@@ -773,6 +814,12 @@ os.ui.WindowCtrl.prototype.disposeInternal = function() {
   if (!this.closing_) {
     // destroy called by angular, likely by ng-if
     this.close(true);
+  }
+
+  if (this.keyHandler_) {
+    this.keyHandler_.unlisten(goog.events.KeyHandler.EventType.KEY, this.handleKeyEvent_, false, this);
+    this.keyHandler_.dispose();
+    this.keyHandler_ = null;
   }
 
   goog.events.unlisten(window, goog.events.EventType.MOUSEDOWN, this.onBlurOrFocus_, true, this);
@@ -1160,4 +1207,19 @@ os.ui.WindowCtrl.prototype.constrainWindow_ = function() {
 os.ui.WindowCtrl.prototype.onHeaderBtnClick = function(event, headerBtnCfg) {
   var winEl = $(event.target).parents(os.ui.windowSelector.WINDOW);
   headerBtnCfg.onClick(winEl);
+};
+
+
+/**
+ * Use ESC key to cancel if modal and showClose is true
+ * @param {goog.events.KeyEvent} event
+ * @private
+ */
+os.ui.WindowCtrl.prototype.handleKeyEvent_ = function(event) {
+  var ctrlOr = os.isOSX() ? event.metaKey : event.ctrlKey;
+  if (event.keyCode == goog.events.KeyCodes.ESC && !ctrlOr && !event.shiftKey) {
+    event.preventDefault();
+    event.stopPropagation();
+    os.ui.window.close(this.element);
+  }
 };

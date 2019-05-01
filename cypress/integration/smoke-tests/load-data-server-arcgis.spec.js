@@ -4,6 +4,18 @@ var os = require('../../support/selectors.js');
 describe('Add ARCGIS server', function() {
   before('Login', function() {
     cy.login();
+    cy.server();
+
+    cy.route('**/OpenData/MapServer', 'fx:/smoke-tests/load-data-server-arcgis/mapserver.stub.xml')
+        .as('getServer');
+    cy.route('**/OpenData/MapServer?f=json', 'fx:/smoke-tests/load-data-server-arcgis/mapserverf=json.stub.json')
+        .as('getLayers');
+    cy.route('**/OpenData/MapServer/layers?f=json', 'fx:/smoke-tests/load-data-server-arcgis/layersf=json.stub.json')
+        .as('getLayerDetails');
+    cy.route('**/OpenData/MapServer/export?F=image*', 'fx:/smoke-tests/load-data-server-arcgis/export.png')
+        .as('enableLayer');
+    cy.route('POST', '**/OpenData/MapServer/5/query', 'fx:/smoke-tests/load-data-server-arcgis/query-1.stub.json')
+        .as('getFeatureList');
   });
 
   it('Load data from ARCGIS server', function() {
@@ -16,6 +28,7 @@ describe('Add ARCGIS server', function() {
     cy.get(os.addArcServerDialog.TITLE_INPUT).clear();
     cy.get(os.addArcServerDialog.TITLE_INPUT).type('Aurora ArcGIS Server');
     cy.get(os.addArcServerDialog.SAVE_BUTTON).click();
+    cy.wait('@getLayerDetails'); // Large file, times out without a wait
     cy.get(os.settingsDialog.Tabs.dataServers.SERVER_1)
         .should('contain', 'Aurora ArcGIS Server');
     cy.get(os.settingsDialog.Tabs.dataServers.SERVER_1)
@@ -41,7 +54,7 @@ describe('Add ARCGIS server', function() {
     // Import and activate a query area
     cy.get(os.layersDialog.Tabs.Areas.TAB).click();
     cy.get(os.layersDialog.Tabs.Areas.Import.BUTTON).click();
-    cy.upload('smoke-tests/load-data-server-arcgis-test-area.geojson');
+    cy.upload('smoke-tests/load-data-server-arcgis/test-area.geojson');
     cy.get(os.importDataDialog.NEXT_BUTTON).click();
     cy.get(os.geoJSONAreaImportDialog.Tabs.areaOptions.TITLE_COLUMN_INPUT).should('be.visible');
     cy.get(os.geoJSONAreaImportDialog.DONE_BUTTON).click();
@@ -49,7 +62,10 @@ describe('Add ARCGIS server', function() {
     cy.get(os.layersDialog.Tabs.Areas.Tree.AREA_1).rightClick();
     cy.get(os.layersDialog.Tabs.Areas.Tree.contextMenu.menuOptions.ZOOM).click();
     cy.get(os.layersDialog.Tabs.Areas.Tree.AREA_1).rightClick();
-    cy.get(os.layersDialog.Tabs.Areas.Tree.contextMenu.menuOptions.Query.LOAD).click();
+    cy.get(os.layersDialog.Tabs.Areas.Tree.contextMenu.menuOptions.Query.LOAD).click(); // THIS LINE CAUSES TWO REQUESTS TO BE SENT
+    cy.wait(400);
+    cy.route('POST', '**/OpenData/MapServer/5/query', 'fx:/smoke-tests/load-data-server-arcgis/query-2.stub.json')
+        .as('getFeatureDetails');
     cy.get(os.layersDialog.Tabs.Layers.TAB).click();
     cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4).should('contain', 'Fire Station');
     cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4)

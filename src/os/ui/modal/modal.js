@@ -12,7 +12,7 @@ os.ui.modal.create = function(target, markup, opt_scopeOptions) {
   var compile = /** @type {!angular.$compile} */ (os.ui.injector.get('$compile'));
   var scope = /** @type {!angular.Scope} */ (os.ui.injector.get('$rootScope').$new());
 
-  ol.obj.assign(scope, opt_scopeOptions);
+  ol.obj.assign(scope, opt_scopeOptions || null);
 
   var parent = $(target);
   parent.append(/** @type {Element} */ (compile(markup)(scope)[0]));
@@ -32,12 +32,18 @@ os.ui.modal.create = function(target, markup, opt_scopeOptions) {
  * @param {Object<string, *>=} opt_options
  */
 os.ui.modal.open = function(el, opt_options) {
-  el.modal(opt_options).on('hidden.bs.modal', function() {
-    // let the animation complete
-    setTimeout(function() {
-      // and then remove it
+  // Tabindex -1 is required for the modal to close on the ESC key
+  el.attr('tabindex', '-1');
+  var options = opt_options || {};
+  if (!options['backdrop']) {
+    // By default, dont close the modal if you click outside of it
+    options['backdrop'] = 'static';
+  }
+  el.modal(options).on('hidden.bs.modal', function() {
+    // Cleanup the scope & element
+    if (el.scope()) {
       el.scope().$destroy();
-      el.remove();
-    }, 1500);
+    }
+    el.remove();
   });
 };
