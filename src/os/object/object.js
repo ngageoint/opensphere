@@ -247,7 +247,7 @@ os.object.stringifyValues = function(obj) {
 /**
  * Get the first non-empty value from a list of objects.
  * @param {string} key The key
- * @param {...Object} var_args The objects to search
+ * @param {...(Object|null|undefined)} var_args The objects to search
  * @return {*}
  */
 os.object.getFirstValue = function(key, var_args) {
