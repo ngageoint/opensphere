@@ -68,9 +68,10 @@ os.ui.wiz.WizardPreviewCtrl = function($scope, $element, $timeout) {
   this['options'] = {
     'dataItemColumnValueExtractor': this.getValue_,
     'enableColumnReorder': false,
-    'fullWidthRows': true,
+    'fullWidthRows': false,
     'multiSelect': false,
-    'rowHeight': 21
+    'rowHeight': 21,
+    'useRowRenderEvents': true
   };
 
   /**

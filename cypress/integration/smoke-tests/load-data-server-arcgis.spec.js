@@ -8,9 +8,9 @@ describe('Add ARCGIS server', function() {
 
     cy.route('**/OpenData/MapServer', 'fx:/smoke-tests/load-data-server-arcgis/mapserver.stub.xml')
         .as('getServer');
-    cy.route('**/OpenData/MapServer?f=json', 'fx:/smoke-tests/load-data-server-arcgis/mapserver?f=json.stub.json')
+    cy.route('**/OpenData/MapServer?f=json', 'fx:/smoke-tests/load-data-server-arcgis/mapserverf=json.stub.json')
         .as('getLayers');
-    cy.route('**/OpenData/MapServer/layers?f=json', 'fx:/smoke-tests/load-data-server-arcgis/layers?f=json.stub.json')
+    cy.route('**/OpenData/MapServer/layers?f=json', 'fx:/smoke-tests/load-data-server-arcgis/layersf=json.stub.json')
         .as('getLayerDetails');
     cy.route('**/OpenData/MapServer/export?F=image*', 'fx:/smoke-tests/load-data-server-arcgis/export.png')
         .as('enableLayer');

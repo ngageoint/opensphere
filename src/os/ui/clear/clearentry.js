@@ -7,7 +7,6 @@ goog.provide('os.ui.clear.ClearEntry');
  * @param {string} label The label in the clear UI
  * @param {function(new: os.command.ICommand, ...?)} clazz The clear command class
  * @param {string=} opt_tooltip The tooltip to display to the user
- * @extends {osx.ChecklistItem}
  * @constructor
  */
 os.ui.clear.ClearEntry = function(id, label, clazz, opt_tooltip) {
