@@ -227,9 +227,10 @@ os.source.getHoldRecordTime = function(item) {
  * Get the fields to export for features in the source.
  * @param {os.source.Vector} source The source
  * @param {boolean=} opt_internal If internal fields should be included
+ * @param {boolean=} opt_includeTime If the time field should be included
  * @return {Array<string>} The fields to export
  */
-os.source.getExportFields = function(source, opt_internal) {
+os.source.getExportFields = function(source, opt_internal, opt_includeTime) {
   var fields = null;
 
   if (source) {
@@ -251,7 +252,8 @@ os.source.getExportFields = function(source, opt_internal) {
         if (column['visible'] &&
             !goog.string.isEmptyOrWhitespace(goog.string.makeSafe(field)) &&
             !ol.array.includes(fields, field) &&
-            (opt_internal || !os.feature.isInternalField(field))) {
+            (opt_internal || !os.feature.isInternalField(field) ||
+            (opt_includeTime && field == os.data.RecordField.TIME))) {
           fields.push(field);
         }
       }

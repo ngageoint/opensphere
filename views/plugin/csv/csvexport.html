@@ -4,5 +4,10 @@
       <input id="js-csvexport__ellipses" class="custom-control-input" type="checkbox" name="exportEllipses" ng-model="exportEllipses">
       <label for="js-csvexport__ellipses" class="custom-control-label">Export Ellipses</label>
     </div>
+    <div class="custom-control custom-checkbox mx-1"
+      title="This will include geometry data (as WKT) in the export, if any, even if the field is hidden.">
+      <input id="js-csvexport__alwaysIncludeWkt" class="custom-control-input" type="checkbox" name="alwaysIncludeWkt" ng-model="alwaysIncludeWkt">
+      <label for="js-csvexport__alwaysIncludeWkt" class="custom-control-label">Always Include Geometry (WKT)</label>
+    </div>
   </div>
 </ng-form>
