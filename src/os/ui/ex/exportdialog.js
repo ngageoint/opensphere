@@ -57,6 +57,12 @@ os.ui.ex.ExportCtrl = function($scope, $element, $compile) {
   $scope['allowMultiple'] = false;
 
   /**
+   * If time is allowed by the export method.
+   * @type {boolean}
+   */
+  $scope['allowTime'] = false;
+
+  /**
    * If label export is supported by the export method.
    * @type {boolean}
    */
@@ -86,8 +92,8 @@ goog.inherits(os.ui.ex.ExportCtrl, os.ui.file.ExportDialogCtrl);
  */
 os.ui.ex.ExportCtrl.prototype.getCustomOptions = function() {
   return '<h5 class="mt-3 text-center">Sources to Export</h5>' +
-      '<exportoptions init-sources="initSources" allow-multiple="allowMultiple" show-labels="showLabels">' +
-      '</exportoptions>';
+      '<exportoptions init-sources="initSources" allow-multiple="allowMultiple" show-labels="showLabels"' +
+      ' allow-time="allowTime"></exportoptions>';
 };
 
 
@@ -100,6 +106,7 @@ os.ui.ex.ExportCtrl.prototype.onExporterChange = function(opt_new, opt_old) {
   if (opt_new) {
     this.scope['allowMultiple'] = opt_new.supportsMultiple();
     this.scope['showLabels'] = opt_new.supportsLabelExport();
+    this.scope['allowTime'] = opt_new.supportsTime();
   }
 };
 
@@ -125,7 +132,7 @@ os.ui.ex.ExportCtrl.prototype.onExportOptionsChange_ = function(event, items, so
   // update the export columns
   if (sources) {
     for (var i = 0; i < sources.length; i++) {
-      var sourceFields = os.source.getExportFields(sources[i]);
+      var sourceFields = os.source.getExportFields(sources[i], false, this.scope['allowTime']);
       if (sourceFields) {
         for (var j = 0; j < sourceFields.length; j++) {
           if (!ol.array.includes(this.options.fields, sourceFields[j])) {

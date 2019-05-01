@@ -10,6 +10,7 @@ goog.require('plugin.area.CSVAreaImportUI');
 goog.require('plugin.area.GeoJSONAreaImportUI');
 goog.require('plugin.area.KMLAreaImportUI');
 goog.require('plugin.area.SHPAreaImportUI');
+goog.require('plugin.file.geojson.mime');
 goog.require('plugin.file.kml.mime');
 goog.require('plugin.file.shp.mime');
 

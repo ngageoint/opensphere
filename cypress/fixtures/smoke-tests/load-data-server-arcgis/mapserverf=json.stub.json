@@ -1,0 +1,113 @@
+{
+  "currentVersion": 10.51,
+  "serviceDescription": "Aurora Open Data",
+  "mapName": "Layers",
+  "description": "",
+  "copyrightText": "City of Aurora Colorado",
+  "supportsDynamicLayers": false,
+  "layers": [
+    {
+      "id": 0,
+      "name": "Public Art And Facilities",
+      "parentLayerId": -1,
+      "defaultVisibility": true,
+      "subLayerIds": null,
+      "minScale": 0,
+      "maxScale": 0
+    },
+    {
+      "id": 1,
+      "name": "Recreation Facilities",
+      "parentLayerId": -1,
+      "defaultVisibility": true,
+      "subLayerIds": null,
+      "minScale": 0,
+      "maxScale": 0
+    },
+    {
+      "id": 2,
+      "name": "Schools",
+      "parentLayerId": -1,
+      "defaultVisibility": true,
+      "subLayerIds": null,
+      "minScale": 0,
+      "maxScale": 0
+    },
+    {
+      "id": 3,
+      "name": "Police Stations",
+      "parentLayerId": -1,
+      "defaultVisibility": true,
+      "subLayerIds": null,
+      "minScale": 0,
+      "maxScale": 0
+    },
+    {
+      "id": 4,
+      "name": "Marijuana Retail Businesses",
+      "parentLayerId": -1,
+      "defaultVisibility": true,
+      "subLayerIds": null,
+      "minScale": 0,
+      "maxScale": 0
+    },
+    {
+      "id": 5,
+      "name": "Fire Stations",
+      "parentLayerId": -1,
+      "defaultVisibility": true,
+      "subLayerIds": null,
+      "minScale": 0,
+      "maxScale": 0
+    }
+  ],
+  "tables": [],
+  "spatialReference": {
+    "wkid": 102654,
+    "latestWkid": 2232
+  },
+  "singleFusedMapCache": false,
+  "initialExtent": {
+    "xmin": 3194271.2555172434,
+    "ymin": 1667664.8505246327,
+    "xmax": 3194598.8108557854,
+    "ymax": 1668130.0740489382,
+    "spatialReference": {
+      "wkid": 102654,
+      "latestWkid": 2232
+    }
+  },
+  "fullExtent": {
+    "xmin": 3149115.2117335345,
+    "ymin": 1621962.0039178454,
+    "xmax": 3271715.9005797664,
+    "ymax": 1728997.559967441,
+    "spatialReference": {
+      "wkid": 102654,
+      "latestWkid": 2232
+    }
+  },
+  "minScale": 0,
+  "maxScale": 0,
+  "units": "esriFeet",
+  "supportedImageFormatTypes": "PNG32,PNG24,PNG,JPG,DIB,TIFF,EMF,PS,PDF,GIF,SVG,SVGZ,BMP",
+  "documentInfo": {
+    "Title": "",
+    "Author": "",
+    "Comments": "Aurora GIS Open Data web service",
+    "Subject": "Aurora GIS Open Data web service",
+    "Category": "",
+    "AntialiasingMode": "None",
+    "TextAntialiasingMode": "Force",
+    "Keywords": "Aurora Open Data"
+  },
+  "capabilities": "Map,Query,Data",
+  "supportedQueryFormats": "JSON, AMF, geoJSON",
+  "hasVersionedData": true,
+  "exportTilesAllowed": false,
+  "supportsDatumTransformation": true,
+  "maxRecordCount": 4000,
+  "maxImageHeight": 4096,
+  "maxImageWidth": 4096,
+  "supportedExtensions": "KmlServer"
+}

@@ -2,10 +2,15 @@ goog.provide('plugin.file.csv.ui.CSVExportCtrl');
 goog.provide('plugin.file.csv.ui.csvExportDirective');
 goog.require('os.defines');
 goog.require('os.ui.Module');
+goog.require('os.ui.icon.IconPickerCtrl');
+goog.require('os.ui.icon.iconPickerDirective');
+
 
 
 /**
- * The csvexport directive
+ * The csvexport directive for use in exportdialog.js
+ *
+ * This is not a stand alone UI, it's meant to augment exportdialog.js
  * @return {angular.Directive}
  */
 plugin.file.csv.ui.csvExportDirective = function() {
@@ -52,7 +57,13 @@ plugin.file.csv.ui.CSVExportCtrl = function($scope) {
    */
   $scope['exportEllipses'] = this.exporter_.getExportEllipses();
 
+  /**
+   * @type {boolean}
+   */
+  $scope['alwaysIncludeWkt'] = this.exporter_.getAlwaysIncludeWkt();
+
   $scope.$watch('exportEllipses', this.updateExporter_.bind(this));
+  $scope.$watch('alwaysIncludeWkt', this.updateExporter_.bind(this));
   $scope.$on('$destroy', this.destroy_.bind(this));
 
   this.updateExporter_();
@@ -76,5 +87,6 @@ plugin.file.csv.ui.CSVExportCtrl.prototype.destroy_ = function() {
 plugin.file.csv.ui.CSVExportCtrl.prototype.updateExporter_ = function() {
   if (this.exporter_ && this.scope_) {
     this.exporter_.setExportEllipses(this.scope_['exportEllipses']);
+    this.exporter_.setAlwaysIncludeWkt(this.scope_['alwaysIncludeWkt']);
   }
 };
