@@ -191,7 +191,7 @@ os.string.split = function(str, opt_removeSpaces, opt_precedence) {
  * @return {!goog.string.Const}
  */
 os.string.createConstant = function(str) {
-  return goog.string.Const.create__googStringSecurityPrivate_(str);
+  return new goog.string.Const(goog.string.Const.GOOG_STRING_CONSTRUCTOR_TOKEN_PRIVATE_, str);
 };
 
 
