@@ -28,7 +28,6 @@ describe('Add ARCGIS server', function() {
     cy.get(os.addArcServerDialog.TITLE_INPUT).clear();
     cy.get(os.addArcServerDialog.TITLE_INPUT).type('Aurora ArcGIS Server');
     cy.get(os.addArcServerDialog.SAVE_BUTTON).click();
-    cy.wait('@getLayerDetails'); // Large file, times out without a wait
     cy.get(os.settingsDialog.Tabs.dataServers.SERVER_1)
         .should('contain', 'Aurora ArcGIS Server');
     cy.get(os.settingsDialog.Tabs.dataServers.SERVER_1)

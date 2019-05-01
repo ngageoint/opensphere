@@ -1,1 +1,1089 @@
-{"currentVersion":10.51,"id":234,"name":"234 - Fire Hydrants","type":"Feature Layer","description":"","geometryType":"esriGeometryPoint","sourceSpatialReference":{"wkid":102654,"latestWkid":2232},"copyrightText":"","parentLayer":null,"subLayers":[],"minScale":16001,"maxScale":0,"drawingInfo":{"renderer":{"type":"simple","symbol":{"type":"esriPMS","url":"9a872cddfa50155cfdb88dbcc2372e16","imageData":"iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAAXNSR0IB2cksfwAAAAlwSFlzAAAOxAAADsQBlSsOGwAAAWJJREFUOI2t081LVFEcxvGPrxNSC8eopChauGgx6MIyXDWrjNoZBUHroQQ3LULwDxAXbgZm4yJdiBCJy9lLtSsVeqFAiIrIRTemVUOaLbzm9Tr3OiP+Vuc8v+d+z3nOObfVEVVrSq8T8zFtDSONgjK4HtNWD7MjcBMdeIe3NDcKyhaZHMC5UPiD51x8xfAUC/WAjs0xm+dWVGxDnuN9FNtpmeBpEmgFCpy+xpmkCJ109/ME4/iLJYxGQb1wFU0R8Ss+40pk1QE6bpAr71r2RzsZGW/hPj7gGQZDvQU9KCdEA5uRcRPu2D6M8ym+mqBvsfkDFOy9959YTgF1Q4WhH0x3RXrxx/OGFy+5HU5/x0HfYYyZC5nMpVy1+qhr+zj+1xZe83Gduzv+xGhwr1p9XMpmP50IgtLZ0FTBe4JTXB7lV/ybxF/kYRAsohSTv6gBSQWFSeKXs5FkTgOtH9CvG9RQ/QMRakkDJXIOEwAAAABJRU5ErkJggg==","contentType":"image/png","width":13,"height":13,"angle":0,"xoffset":0,"yoffset":0},"label":"","description":""},"transparency":0,"labelingInfo":null},"defaultVisibility":true,"extent":{"xmin":-104.72908629477024,"ymin":39.67521484196186,"xmax":3294757.2763703167,"ymax":1810976.2177606672,"spatialReference":{"wkid":102654,"latestWkid":2232}},"hasAttachments":false,"htmlPopupType":"esriServerHTMLPopupTypeAsHTMLText","displayField":"UNITID","typeIdField":null,"subtypeFieldName":null,"fields":[{"name":"OBJECTID","type":"esriFieldTypeOID","alias":"OBJECTID","domain":null},{"name":"UNITID","type":"esriFieldTypeString","alias":"UNITID","length":20,"domain":null},{"name":"COMPKEY","type":"esriFieldTypeInteger","alias":"COMPKEY","domain":null},{"name":"COMPTYPE","type":"esriFieldTypeSmallInteger","alias":"COMPTYPE","domain":null},{"name":"WATER_TYPE","type":"esriFieldTypeString","alias":"WATER_TYPE","length":15,"domain":{"type":"codedValue","name":"AW_Water_Type","codedValues":[{"name":"Potable","code":"WATR"},{"name":"Raw","code":"RAW"},{"name":"Well","code":"WELL"},{"name":"Reclaimed","code":"REUS"}],"mergePolicy":"esriMPTDefaultValue","splitPolicy":"esriSPTDefaultValue"}},{"name":"UNIT_FUNCTION","type":"esriFieldTypeString","alias":"UNIT_FUNCTION","length":15,"domain":{"type":"codedValue","name":"AW_WaterHyd_Func","codedValues":[{"name":"Fire Protection","code":"Fire"},{"name":"Water Sample","code":"Sample"},{"name":"Other","code":"Other"}],"mergePolicy":"esriMPTDefaultValue","splitPolicy":"esriSPTDefaultValue"}},{"name":"ACTIVESTATE","type":"esriFieldTypeString","alias":"ACTIVESTATE","length":15,"domain":{"type":"codedValue","name":"AW_Active_State","codedValues":[{"name":"Active","code":"Active"},{"name":"Inactive","code":"Inactive"},{"name":"Abandoned","code":"Abandoned"},{"name":"Removed","code":"Removed"},{"name":"Proposed","code":"Future"},{"name":"Unknown","code":"Unknown"}],"mergePolicy":"esriMPTDefaultValue","splitPolicy":"esriSPTDefaultValue"}},{"name":"OWNER","type":"esriFieldTypeString","alias":"OWNER","length":15,"domain":{"type":"codedValue","name":"AW_Owner","codedValues":[{"name":"Aurora","code":"Aurora"},{"name":"Denver","code":"Denver"},{"name":"ECCV","code":"ECCV"},{"name":"CCV","code":"CCV"},{"name":"Private","code":"Private"},{"name":"Other","code":"Other"},{"name":"CDOT","code":"CDOT"},{"name":"Lowry","code":"Lowry"},{"name":"ArapCo","code":"ArapCo"},{"name":"State","code":"State"},{"name":"ACWWA","code":"ACWWA"},{"name":"Metro WW","code":"Metro"},{"name":"RTD","code":"RTD"},{"name":"WISE","code":"WISE"}],"mergePolicy":"esriMPTDefaultValue","splitPolicy":"esriSPTDefaultValue"}},{"name":"MAINTENANCE","type":"esriFieldTypeString","alias":"MAINTENANCE","length":15,"domain":{"type":"codedValue","name":"AW_Maint","codedValues":[{"name":"Other","code":"Other"},{"name":"Stormwater","code":"Stormwater"},{"name":"Wastewater","code":"Wastewater"},{"name":"Water T&D","code":"Water"},{"name":"Parks","code":"Parks"},{"name":"Golf","code":"Golf"}],"mergePolicy":"esriMPTDefaultValue","splitPolicy":"esriSPTDefaultValue"}},{"name":"INSTALL_DATE","type":"esriFieldTypeDate","alias":"INSTALL_DATE","length":8,"domain":null},{"name":"Y_NORTHING","type":"esriFieldTypeDouble","alias":"Y_NORTHING","domain":null},{"name":"X_EASTING","type":"esriFieldTypeDouble","alias":"X_EASTING","domain":null},{"name":"Z_ELEV","type":"esriFieldTypeDouble","alias":"Z_ELEV","domain":null},{"name":"ZONE_PRESS","type":"esriFieldTypeString","alias":"ZONE_PRESS","length":5,"domain":{"type":"codedValue","name":"AW_Zone","codedValues":[{"name":"Zone 0","code":"0"},{"name":"Zone 1","code":"1"},{"name":"Zone 2","code":"2"},{"name":"Zone 2A","code":"2A"},{"name":"Zone 2B","code":"2B"},{"name":"Zone 2C","code":"2C"},{"name":"Zone 3","code":"3"},{"name":"Zone 3A","code":"3A"},{"name":"Zone 3B","code":"3B"},{"name":"Zone 3C","code":"3C"},{"name":"Zone 3D","code":"3D"},{"name":"Zone 4","code":"4"},{"name":"Zone 4A","code":"4A"},{"name":"Zone 4B","code":"4B"},{"name":"Zone 4C","code":"4C"},{"name":"Zone 4D","code":"4D"},{"name":"Zone 5","code":"5"},{"name":"Zone 6","code":"6"},{"name":"Zone 7","code":"7"},{"name":"Zone 7A","code":"7A"},{"name":"Zone 8","code":"8"},{"name":"Zone 8A","code":"8A"},{"name":"Zone AR","code":"AR"},{"name":"Zone AWS","code":"AWS"},{"name":"Zone CCS","code":"CCS"},{"name":"Zone ECCV","code":"ECCV"},{"name":"Zone RV","code":"RV"},{"name":"Zone BUCKLEY","code":"BAFB"},{"name":"Other","code":"Other"},{"name":"Zone HH","code":"HH"},{"name":"Zone CCV","code":"CCV"},{"name":"Zone MH","code":"MH"},{"name":"Zone FGA","code":"FGA"}],"mergePolicy":"esriMPTDefaultValue","splitPolicy":"esriSPTDefaultValue"}},{"name":"X_VALUE_GIS","type":"esriFieldTypeDouble","alias":"X_VALUE_GIS","domain":null},{"name":"Y_VALUE_GIS","type":"esriFieldTypeDouble","alias":"Y_VALUE_GIS","domain":null},{"name":"GROUND_GIS","type":"esriFieldTypeDouble","alias":"GROUND_GIS","domain":null},{"name":"RESTRICTED","type":"esriFieldTypeString","alias":"RESTRICTED","length":5,"domain":{"type":"codedValue","name":"AW_Y_N","codedValues":[{"name":"Yes","code":"Y"},{"name":"No","code":"N"}],"mergePolicy":"esriMPTDefaultValue","splitPolicy":"esriSPTDefaultValue"}},{"name":"ADDRKEY","type":"esriFieldTypeInteger","alias":"ADDRKEY","domain":null},{"name":"MAP_PAGE","type":"esriFieldTypeString","alias":"MAP_PAGE","length":15,"domain":null},{"name":"WARD","type":"esriFieldTypeSmallInteger","alias":"WARD","domain":{"type":"codedValue","name":"AW_Ward","codedValues":[{"name":"Ward 1","code":1},{"name":"Ward 2","code":2},{"name":"Ward 3","code":3},{"name":"Ward 4","code":4},{"name":"Ward 5","code":5},{"name":"Ward 6","code":6},{"name":"0","code":0}],"mergePolicy":"esriMPTDefaultValue","splitPolicy":"esriSPTDefaultValue"}},{"name":"ARVNOTE","type":"esriFieldTypeString","alias":"ARVNOTE","length":25,"domain":null},{"name":"VLVSTAT","type":"esriFieldTypeString","alias":"VLVSTAT","length":25,"domain":null},{"name":"Shape","type":"esriFieldTypeGeometry","alias":"Shape","domain":null},{"name":"DIAMETER","type":"esriFieldTypeDouble","alias":"DIAMETER","domain":{"type":"codedValue","name":"AW_WaterPipe_DIA","codedValues":[{"name":"1/2 inch","code":0.5},{"name":"5/8 inch","code":0.625},{"name":"3/4 inch","code":0.75},{"name":"1 inch","code":1},{"name":"1 1/4 inch","code":1.25},{"name":"1 1/2 inch","code":1.5},{"name":"2 inch","code":2},{"name":"3 inch","code":3},{"name":"4 inch","code":4},{"name":"6 inch","code":6},{"name":"8 inch","code":8},{"name":"10 inch","code":10},{"name":"12 inch","code":12},{"name":"14 inch","code":14},{"name":"15 inch","code":15},{"name":"16 inch","code":16},{"name":"18 inch","code":18},{"name":"20 inch","code":20},{"name":"21 inch","code":21},{"name":"24 inch","code":24},{"name":"27 inch","code":27},{"name":"30 inch","code":30},{"name":"36 inch","code":36},{"name":"40 inch","code":40},{"name":"42 inch","code":42},{"name":"48 inch","code":48},{"name":"54 inch","code":54},{"name":"60 inch","code":60},{"name":"66 inch","code":66},{"name":"72 inch","code":72},{"name":"32 inch","code":32},{"name":"Unknown","code":-1}],"mergePolicy":"esriMPTDefaultValue","splitPolicy":"esriSPTDefaultValue"}},{"name":"UNITTYPE","type":"esriFieldTypeString","alias":"UNITTYPE","length":15,"domain":{"type":"codedValue","name":"AW_WaterHyd_Type","codedValues":[{"name":"Other","code":"Other"},{"name":"Hydrant","code":"HYD"},{"name":"Standard","code":"Standard"}],"mergePolicy":"esriMPTDefaultValue","splitPolicy":"esriSPTDefaultValue"}},{"name":"GlobalID","type":"esriFieldTypeGlobalID","alias":"GlobalID","length":38,"domain":null},{"name":"created_user","type":"esriFieldTypeString","alias":"created_user","length":255,"domain":null},{"name":"created_date","type":"esriFieldTypeDate","alias":"created_date","length":8,"domain":null},{"name":"last_edited_user","type":"esriFieldTypeString","alias":"last_edited_user","length":255,"domain":null},{"name":"last_edited_date","type":"esriFieldTypeDate","alias":"last_edited_date","length":8,"domain":null},{"name":"ACTIONTAKEN","type":"esriFieldTypeString","alias":"ACTIONTAKEN","length":30,"domain":{"type":"codedValue","name":"Action_Taken","codedValues":[{"name":"New asset","code":"Add"},{"name":"Deletion of asset","code":"Del"},{"name":"Updated location","code":"Loc"},{"name":"Updated attributes","code":"Att"},{"name":"Updated location & attributes","code":"Both"},{"name":"Field Verified","code":"Verified"}],"mergePolicy":"esriMPTDefaultValue","splitPolicy":"esriSPTDefaultValue"}},{"name":"Sta_Num","type":"esriFieldTypeString","alias":"Sta_Num","length":16,"domain":null},{"name":"FIELD_EDITOR","type":"esriFieldTypeString","alias":"FIELD_EDITOR","length":50,"domain":null},{"name":"MANUFACTURE","type":"esriFieldTypeString","alias":"MANUFACTURE","length":10,"domain":{"type":"codedValue","name":"AW_WaterHyd_Manu","codedValues":[{"name":"A.D.","code":"A.D."},{"name":"A.D.V.","code":"A.D.V."},{"name":"AMFOUN","code":"AMFOUN"},{"name":"AMVAL","code":"AMVAL"},{"name":"AVK","code":"AVK"},{"name":"CLOW","code":"CLOW"},{"name":"IOWA","code":"IOWA"},{"name":"KENNED","code":"KENNED"},{"name":"KUPFRLFNDR","code":"KUPFRLFNDR"},{"name":"M&H","code":"M&H"},{"name":"MUELLE","code":"MUELLE"},{"name":"PACIFI","code":"PACIFI"},{"name":"PSCIP","code":"PSCIP"},{"name":"SPARK","code":"SPARK"},{"name":"USPIPE","code":"USPIPE"},{"name":"WATERO","code":"WATERO"},{"name":"Other","code":"Other"}],"mergePolicy":"esriMPTDefaultValue","splitPolicy":"esriSPTDefaultValue"}},{"name":"HEIGHT","type":"esriFieldTypeSingle","alias":"HEIGHT","domain":null},{"name":"VALVE","type":"esriFieldTypeSingle","alias":"VALVE","domain":null},{"name":"DRAW_NUM","type":"esriFieldTypeString","alias":"DRAW_NUM","length":50,"domain":null},{"name":"EXT_NUM","type":"esriFieldTypeString","alias":"EXT_NUM","length":50,"domain":null},{"name":"PLAN_LINK","type":"esriFieldTypeString","alias":"PLAN_LINK","length":200,"domain":null},{"name":"DIRECTION","type":"esriFieldTypeString","alias":"DIRECTION","length":2,"domain":{"type":"codedValue","name":"AW_Direction","codedValues":[{"name":"N","code":"N"},{"name":"NE","code":"NE"},{"name":"E","code":"E"},{"name":"SE","code":"SE"},{"name":"S","code":"S"},{"name":"SW","code":"SW"},{"name":"W","code":"W"},{"name":"NW","code":"NW"}],"mergePolicy":"esriMPTDefaultValue","splitPolicy":"esriSPTDefaultValue"}},{"name":"FIELD_COMM","type":"esriFieldTypeString","alias":"FIELD_COMM","length":200,"domain":null},{"name":"MODELID","type":"esriFieldTypeString","alias":"MODELID","length":15,"domain":null},{"name":"LOC_SOURCE","type":"esriFieldTypeString","alias":"LOC_SOURCE","length":20,"domain":{"type":"codedValue","name":"AW_Loc_Source","codedValues":[{"name":"Survey","code":"Survey"},{"name":"GPS","code":"GPS"},{"name":"CCTV","code":"CCTV"},{"name":"Map Change Request","code":"Map_Change_Request"},{"name":"Other","code":"Other"},{"name":"Staff Knowledge","code":"Staff_Knowledge"}],"mergePolicy":"esriMPTDefaultValue","splitPolicy":"esriSPTDefaultValue"}},{"name":"SITEKEY","type":"esriFieldTypeInteger","alias":"SITEKEY","domain":null},{"name":"X_WGS84","type":"esriFieldTypeDouble","alias":"X_WGS84","domain":null},{"name":"Y_WGS84","type":"esriFieldTypeDouble","alias":"Y_WGS84","domain":null}],"indexes":[{"name":"R2324_SDE_ROWID_UK","fields":"OBJECTID","isAscending":true,"isUnique":true,"description":""},{"name":"UUID_OID_2324","fields":"GlobalID,OBJECTID","isAscending":true,"isUnique":true,"description":""},{"name":"UUID_2324","fields":"GlobalID","isAscending":true,"isUnique":false,"description":""},{"name":"a2084_ix1","fields":"Shape","isAscending":true,"isUnique":true,"description":""}],"subtypes":[],"relationships":[],"canModifyLayer":false,"canScaleSymbols":false,"hasLabels":false,"capabilities":"Map,Query,Data","maxRecordCount":4000,"supportsStatistics":true,"supportsAdvancedQueries":true,"hasZ":true,"supportedQueryFormats":"JSON, AMF, geoJSON","isDataVersioned":true,"ownershipBasedAccessControlForFeatures":{"allowOthersToQuery":true},"useStandardizedQueries":true,"advancedQueryCapabilities":{"useStandardizedQueries":true,"supportsStatistics":true,"supportsOrderBy":true,"supportsDistinct":true,"supportsPagination":true,"supportsTrueCurve":true,"supportsReturningQueryExtent":true,"supportsQueryWithDistance":true,"supportsSqlExpression":true},"supportsDatumTransformation":true,"dateFieldsTimeReference":null}
+{
+  "currentVersion": 10.51,
+  "id": 234,
+  "name": "234 - Fire Hydrants",
+  "type": "Feature Layer",
+  "description": "",
+  "geometryType": "esriGeometryPoint",
+  "sourceSpatialReference": {
+    "wkid": 102654,
+    "latestWkid": 2232
+  },
+  "copyrightText": "",
+  "parentLayer": null,
+  "subLayers": [],
+  "minScale": 16001,
+  "maxScale": 0,
+  "drawingInfo": {
+    "renderer": {
+      "type": "simple",
+      "symbol": {
+        "type": "esriPMS",
+        "url": "9a872cddfa50155cfdb88dbcc2372e16",
+        "imageData": "iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAAXNSR0IB2cksfwAAAAlwSFlzAAAOxAAADsQBlSsOGwAAAWJJREFUOI2t081LVFEcxvGPrxNSC8eopChauGgx6MIyXDWrjNoZBUHroQQ3LULwDxAXbgZm4yJdiBCJy9lLtSsVeqFAiIrIRTemVUOaLbzm9Tr3OiP+Vuc8v+d+z3nOObfVEVVrSq8T8zFtDSONgjK4HtNWD7MjcBMdeIe3NDcKyhaZHMC5UPiD51x8xfAUC/WAjs0xm+dWVGxDnuN9FNtpmeBpEmgFCpy+xpmkCJ109/ME4/iLJYxGQb1wFU0R8Ss+40pk1QE6bpAr71r2RzsZGW/hPj7gGQZDvQU9KCdEA5uRcRPu2D6M8ym+mqBvsfkDFOy9959YTgF1Q4WhH0x3RXrxx/OGFy+5HU5/x0HfYYyZC5nMpVy1+qhr+zj+1xZe83Gduzv+xGhwr1p9XMpmP50IgtLZ0FTBe4JTXB7lV/ybxF/kYRAsohSTv6gBSQWFSeKXs5FkTgOtH9CvG9RQ/QMRakkDJXIOEwAAAABJRU5ErkJggg==",
+        "contentType": "image/png",
+        "width": 13,
+        "height": 13,
+        "angle": 0,
+        "xoffset": 0,
+        "yoffset": 0
+      },
+      "label": "",
+      "description": ""
+    },
+    "transparency": 0,
+    "labelingInfo": null
+  },
+  "defaultVisibility": true,
+  "extent": {
+    "xmin": -104.72908629477024,
+    "ymin": 39.67521484196186,
+    "xmax": 3294757.2763703167,
+    "ymax": 1810976.2177606672,
+    "spatialReference": {
+      "wkid": 102654,
+      "latestWkid": 2232
+    }
+  },
+  "hasAttachments": false,
+  "htmlPopupType": "esriServerHTMLPopupTypeAsHTMLText",
+  "displayField": "UNITID",
+  "typeIdField": null,
+  "subtypeFieldName": null,
+  "fields": [
+    {
+      "name": "OBJECTID",
+      "type": "esriFieldTypeOID",
+      "alias": "OBJECTID",
+      "domain": null
+    },
+    {
+      "name": "UNITID",
+      "type": "esriFieldTypeString",
+      "alias": "UNITID",
+      "length": 20,
+      "domain": null
+    },
+    {
+      "name": "COMPKEY",
+      "type": "esriFieldTypeInteger",
+      "alias": "COMPKEY",
+      "domain": null
+    },
+    {
+      "name": "COMPTYPE",
+      "type": "esriFieldTypeSmallInteger",
+      "alias": "COMPTYPE",
+      "domain": null
+    },
+    {
+      "name": "WATER_TYPE",
+      "type": "esriFieldTypeString",
+      "alias": "WATER_TYPE",
+      "length": 15,
+      "domain": {
+        "type": "codedValue",
+        "name": "AW_Water_Type",
+        "codedValues": [
+          {
+            "name": "Potable",
+            "code": "WATR"
+          },
+          {
+            "name": "Raw",
+            "code": "RAW"
+          },
+          {
+            "name": "Well",
+            "code": "WELL"
+          },
+          {
+            "name": "Reclaimed",
+            "code": "REUS"
+          }
+        ],
+        "mergePolicy": "esriMPTDefaultValue",
+        "splitPolicy": "esriSPTDefaultValue"
+      }
+    },
+    {
+      "name": "UNIT_FUNCTION",
+      "type": "esriFieldTypeString",
+      "alias": "UNIT_FUNCTION",
+      "length": 15,
+      "domain": {
+        "type": "codedValue",
+        "name": "AW_WaterHyd_Func",
+        "codedValues": [
+          {
+            "name": "Fire Protection",
+            "code": "Fire"
+          },
+          {
+            "name": "Water Sample",
+            "code": "Sample"
+          },
+          {
+            "name": "Other",
+            "code": "Other"
+          }
+        ],
+        "mergePolicy": "esriMPTDefaultValue",
+        "splitPolicy": "esriSPTDefaultValue"
+      }
+    },
+    {
+      "name": "ACTIVESTATE",
+      "type": "esriFieldTypeString",
+      "alias": "ACTIVESTATE",
+      "length": 15,
+      "domain": {
+        "type": "codedValue",
+        "name": "AW_Active_State",
+        "codedValues": [
+          {
+            "name": "Active",
+            "code": "Active"
+          },
+          {
+            "name": "Inactive",
+            "code": "Inactive"
+          },
+          {
+            "name": "Abandoned",
+            "code": "Abandoned"
+          },
+          {
+            "name": "Removed",
+            "code": "Removed"
+          },
+          {
+            "name": "Proposed",
+            "code": "Future"
+          },
+          {
+            "name": "Unknown",
+            "code": "Unknown"
+          }
+        ],
+        "mergePolicy": "esriMPTDefaultValue",
+        "splitPolicy": "esriSPTDefaultValue"
+      }
+    },
+    {
+      "name": "OWNER",
+      "type": "esriFieldTypeString",
+      "alias": "OWNER",
+      "length": 15,
+      "domain": {
+        "type": "codedValue",
+        "name": "AW_Owner",
+        "codedValues": [
+          {
+            "name": "Aurora",
+            "code": "Aurora"
+          },
+          {
+            "name": "Denver",
+            "code": "Denver"
+          },
+          {
+            "name": "ECCV",
+            "code": "ECCV"
+          },
+          {
+            "name": "CCV",
+            "code": "CCV"
+          },
+          {
+            "name": "Private",
+            "code": "Private"
+          },
+          {
+            "name": "Other",
+            "code": "Other"
+          },
+          {
+            "name": "CDOT",
+            "code": "CDOT"
+          },
+          {
+            "name": "Lowry",
+            "code": "Lowry"
+          },
+          {
+            "name": "ArapCo",
+            "code": "ArapCo"
+          },
+          {
+            "name": "State",
+            "code": "State"
+          },
+          {
+            "name": "ACWWA",
+            "code": "ACWWA"
+          },
+          {
+            "name": "Metro WW",
+            "code": "Metro"
+          },
+          {
+            "name": "RTD",
+            "code": "RTD"
+          },
+          {
+            "name": "WISE",
+            "code": "WISE"
+          }
+        ],
+        "mergePolicy": "esriMPTDefaultValue",
+        "splitPolicy": "esriSPTDefaultValue"
+      }
+    },
+    {
+      "name": "MAINTENANCE",
+      "type": "esriFieldTypeString",
+      "alias": "MAINTENANCE",
+      "length": 15,
+      "domain": {
+        "type": "codedValue",
+        "name": "AW_Maint",
+        "codedValues": [
+          {
+            "name": "Other",
+            "code": "Other"
+          },
+          {
+            "name": "Stormwater",
+            "code": "Stormwater"
+          },
+          {
+            "name": "Wastewater",
+            "code": "Wastewater"
+          },
+          {
+            "name": "Water T&D",
+            "code": "Water"
+          },
+          {
+            "name": "Parks",
+            "code": "Parks"
+          },
+          {
+            "name": "Golf",
+            "code": "Golf"
+          }
+        ],
+        "mergePolicy": "esriMPTDefaultValue",
+        "splitPolicy": "esriSPTDefaultValue"
+      }
+    },
+    {
+      "name": "INSTALL_DATE",
+      "type": "esriFieldTypeDate",
+      "alias": "INSTALL_DATE",
+      "length": 8,
+      "domain": null
+    },
+    {
+      "name": "Y_NORTHING",
+      "type": "esriFieldTypeDouble",
+      "alias": "Y_NORTHING",
+      "domain": null
+    },
+    {
+      "name": "X_EASTING",
+      "type": "esriFieldTypeDouble",
+      "alias": "X_EASTING",
+      "domain": null
+    },
+    {
+      "name": "Z_ELEV",
+      "type": "esriFieldTypeDouble",
+      "alias": "Z_ELEV",
+      "domain": null
+    },
+    {
+      "name": "ZONE_PRESS",
+      "type": "esriFieldTypeString",
+      "alias": "ZONE_PRESS",
+      "length": 5,
+      "domain": {
+        "type": "codedValue",
+        "name": "AW_Zone",
+        "codedValues": [
+          {
+            "name": "Zone 0",
+            "code": "0"
+          },
+          {
+            "name": "Zone 1",
+            "code": "1"
+          },
+          {
+            "name": "Zone 2",
+            "code": "2"
+          },
+          {
+            "name": "Zone 2A",
+            "code": "2A"
+          },
+          {
+            "name": "Zone 2B",
+            "code": "2B"
+          },
+          {
+            "name": "Zone 2C",
+            "code": "2C"
+          },
+          {
+            "name": "Zone 3",
+            "code": "3"
+          },
+          {
+            "name": "Zone 3A",
+            "code": "3A"
+          },
+          {
+            "name": "Zone 3B",
+            "code": "3B"
+          },
+          {
+            "name": "Zone 3C",
+            "code": "3C"
+          },
+          {
+            "name": "Zone 3D",
+            "code": "3D"
+          },
+          {
+            "name": "Zone 4",
+            "code": "4"
+          },
+          {
+            "name": "Zone 4A",
+            "code": "4A"
+          },
+          {
+            "name": "Zone 4B",
+            "code": "4B"
+          },
+          {
+            "name": "Zone 4C",
+            "code": "4C"
+          },
+          {
+            "name": "Zone 4D",
+            "code": "4D"
+          },
+          {
+            "name": "Zone 5",
+            "code": "5"
+          },
+          {
+            "name": "Zone 6",
+            "code": "6"
+          },
+          {
+            "name": "Zone 7",
+            "code": "7"
+          },
+          {
+            "name": "Zone 7A",
+            "code": "7A"
+          },
+          {
+            "name": "Zone 8",
+            "code": "8"
+          },
+          {
+            "name": "Zone 8A",
+            "code": "8A"
+          },
+          {
+            "name": "Zone AR",
+            "code": "AR"
+          },
+          {
+            "name": "Zone AWS",
+            "code": "AWS"
+          },
+          {
+            "name": "Zone CCS",
+            "code": "CCS"
+          },
+          {
+            "name": "Zone ECCV",
+            "code": "ECCV"
+          },
+          {
+            "name": "Zone RV",
+            "code": "RV"
+          },
+          {
+            "name": "Zone BUCKLEY",
+            "code": "BAFB"
+          },
+          {
+            "name": "Other",
+            "code": "Other"
+          },
+          {
+            "name": "Zone HH",
+            "code": "HH"
+          },
+          {
+            "name": "Zone CCV",
+            "code": "CCV"
+          },
+          {
+            "name": "Zone MH",
+            "code": "MH"
+          },
+          {
+            "name": "Zone FGA",
+            "code": "FGA"
+          }
+        ],
+        "mergePolicy": "esriMPTDefaultValue",
+        "splitPolicy": "esriSPTDefaultValue"
+      }
+    },
+    {
+      "name": "X_VALUE_GIS",
+      "type": "esriFieldTypeDouble",
+      "alias": "X_VALUE_GIS",
+      "domain": null
+    },
+    {
+      "name": "Y_VALUE_GIS",
+      "type": "esriFieldTypeDouble",
+      "alias": "Y_VALUE_GIS",
+      "domain": null
+    },
+    {
+      "name": "GROUND_GIS",
+      "type": "esriFieldTypeDouble",
+      "alias": "GROUND_GIS",
+      "domain": null
+    },
+    {
+      "name": "ADDRKEY",
+      "type": "esriFieldTypeInteger",
+      "alias": "ADDRKEY",
+      "domain": null
+    },
+    {
+      "name": "MAP_PAGE",
+      "type": "esriFieldTypeString",
+      "alias": "MAP_PAGE",
+      "length": 15,
+      "domain": null
+    },
+    {
+      "name": "WARD",
+      "type": "esriFieldTypeSmallInteger",
+      "alias": "WARD",
+      "domain": {
+        "type": "codedValue",
+        "name": "AW_Ward",
+        "codedValues": [
+          {
+            "name": "Ward 1",
+            "code": 1
+          },
+          {
+            "name": "Ward 2",
+            "code": 2
+          },
+          {
+            "name": "Ward 3",
+            "code": 3
+          },
+          {
+            "name": "Ward 4",
+            "code": 4
+          },
+          {
+            "name": "Ward 5",
+            "code": 5
+          },
+          {
+            "name": "Ward 6",
+            "code": 6
+          },
+          {
+            "name": "0",
+            "code": 0
+          }
+        ],
+        "mergePolicy": "esriMPTDefaultValue",
+        "splitPolicy": "esriSPTDefaultValue"
+      }
+    },
+    {
+      "name": "ARVNOTE",
+      "type": "esriFieldTypeString",
+      "alias": "ARVNOTE",
+      "length": 25,
+      "domain": null
+    },
+    {
+      "name": "VLVSTAT",
+      "type": "esriFieldTypeString",
+      "alias": "VLVSTAT",
+      "length": 25,
+      "domain": null
+    },
+    {
+      "name": "Shape",
+      "type": "esriFieldTypeGeometry",
+      "alias": "Shape",
+      "domain": null
+    },
+    {
+      "name": "DIAMETER",
+      "type": "esriFieldTypeDouble",
+      "alias": "DIAMETER",
+      "domain": {
+        "type": "codedValue",
+        "name": "AW_WaterPipe_DIA",
+        "codedValues": [
+          {
+            "name": "1/2 inch",
+            "code": 0.5
+          },
+          {
+            "name": "5/8 inch",
+            "code": 0.625
+          },
+          {
+            "name": "3/4 inch",
+            "code": 0.75
+          },
+          {
+            "name": "1 inch",
+            "code": 1
+          },
+          {
+            "name": "1 1/4 inch",
+            "code": 1.25
+          },
+          {
+            "name": "1 1/2 inch",
+            "code": 1.5
+          },
+          {
+            "name": "2 inch",
+            "code": 2
+          },
+          {
+            "name": "3 inch",
+            "code": 3
+          },
+          {
+            "name": "4 inch",
+            "code": 4
+          },
+          {
+            "name": "6 inch",
+            "code": 6
+          },
+          {
+            "name": "8 inch",
+            "code": 8
+          },
+          {
+            "name": "10 inch",
+            "code": 10
+          },
+          {
+            "name": "12 inch",
+            "code": 12
+          },
+          {
+            "name": "14 inch",
+            "code": 14
+          },
+          {
+            "name": "15 inch",
+            "code": 15
+          },
+          {
+            "name": "16 inch",
+            "code": 16
+          },
+          {
+            "name": "18 inch",
+            "code": 18
+          },
+          {
+            "name": "20 inch",
+            "code": 20
+          },
+          {
+            "name": "21 inch",
+            "code": 21
+          },
+          {
+            "name": "24 inch",
+            "code": 24
+          },
+          {
+            "name": "27 inch",
+            "code": 27
+          },
+          {
+            "name": "30 inch",
+            "code": 30
+          },
+          {
+            "name": "36 inch",
+            "code": 36
+          },
+          {
+            "name": "40 inch",
+            "code": 40
+          },
+          {
+            "name": "42 inch",
+            "code": 42
+          },
+          {
+            "name": "48 inch",
+            "code": 48
+          },
+          {
+            "name": "54 inch",
+            "code": 54
+          },
+          {
+            "name": "60 inch",
+            "code": 60
+          },
+          {
+            "name": "66 inch",
+            "code": 66
+          },
+          {
+            "name": "72 inch",
+            "code": 72
+          },
+          {
+            "name": "32 inch",
+            "code": 32
+          },
+          {
+            "name": "Unknown",
+            "code": -1
+          }
+        ],
+        "mergePolicy": "esriMPTDefaultValue",
+        "splitPolicy": "esriSPTDefaultValue"
+      }
+    },
+    {
+      "name": "UNITTYPE",
+      "type": "esriFieldTypeString",
+      "alias": "UNITTYPE",
+      "length": 15,
+      "domain": {
+        "type": "codedValue",
+        "name": "AW_WaterHyd_Type",
+        "codedValues": [
+          {
+            "name": "Other",
+            "code": "Other"
+          },
+          {
+            "name": "Hydrant",
+            "code": "HYD"
+          },
+          {
+            "name": "Standard",
+            "code": "Standard"
+          }
+        ],
+        "mergePolicy": "esriMPTDefaultValue",
+        "splitPolicy": "esriSPTDefaultValue"
+      }
+    },
+    {
+      "name": "GlobalID",
+      "type": "esriFieldTypeGlobalID",
+      "alias": "GlobalID",
+      "length": 38,
+      "domain": null
+    },
+    {
+      "name": "created_user",
+      "type": "esriFieldTypeString",
+      "alias": "created_user",
+      "length": 255,
+      "domain": null
+    },
+    {
+      "name": "created_date",
+      "type": "esriFieldTypeDate",
+      "alias": "created_date",
+      "length": 8,
+      "domain": null
+    },
+    {
+      "name": "last_edited_user",
+      "type": "esriFieldTypeString",
+      "alias": "last_edited_user",
+      "length": 255,
+      "domain": null
+    },
+    {
+      "name": "last_edited_date",
+      "type": "esriFieldTypeDate",
+      "alias": "last_edited_date",
+      "length": 8,
+      "domain": null
+    },
+    {
+      "name": "ACTIONTAKEN",
+      "type": "esriFieldTypeString",
+      "alias": "ACTIONTAKEN",
+      "length": 30,
+      "domain": {
+        "type": "codedValue",
+        "name": "Action_Taken",
+        "codedValues": [
+          {
+            "name": "New asset",
+            "code": "Add"
+          },
+          {
+            "name": "Deletion of asset",
+            "code": "Del"
+          },
+          {
+            "name": "Updated location",
+            "code": "Loc"
+          },
+          {
+            "name": "Updated attributes",
+            "code": "Att"
+          },
+          {
+            "name": "Updated location & attributes",
+            "code": "Both"
+          },
+          {
+            "name": "Field Verified",
+            "code": "Verified"
+          }
+        ],
+        "mergePolicy": "esriMPTDefaultValue",
+        "splitPolicy": "esriSPTDefaultValue"
+      }
+    },
+    {
+      "name": "Sta_Num",
+      "type": "esriFieldTypeString",
+      "alias": "Sta_Num",
+      "length": 16,
+      "domain": null
+    },
+    {
+      "name": "FIELD_EDITOR",
+      "type": "esriFieldTypeString",
+      "alias": "FIELD_EDITOR",
+      "length": 50,
+      "domain": null
+    },
+    {
+      "name": "MANUFACTURE",
+      "type": "esriFieldTypeString",
+      "alias": "MANUFACTURE",
+      "length": 10,
+      "domain": {
+        "type": "codedValue",
+        "name": "AW_WaterHyd_Manu",
+        "codedValues": [
+          {
+            "name": "A.D.",
+            "code": "A.D."
+          },
+          {
+            "name": "A.D.V.",
+            "code": "A.D.V."
+          },
+          {
+            "name": "AMFOUN",
+            "code": "AMFOUN"
+          },
+          {
+            "name": "AMVAL",
+            "code": "AMVAL"
+          },
+          {
+            "name": "AVK",
+            "code": "AVK"
+          },
+          {
+            "name": "CLOW",
+            "code": "CLOW"
+          },
+          {
+            "name": "IOWA",
+            "code": "IOWA"
+          },
+          {
+            "name": "KENNED",
+            "code": "KENNED"
+          },
+          {
+            "name": "KUPFRLFNDR",
+            "code": "KUPFRLFNDR"
+          },
+          {
+            "name": "M&H",
+            "code": "M&H"
+          },
+          {
+            "name": "MUELLE",
+            "code": "MUELLE"
+          },
+          {
+            "name": "PACIFI",
+            "code": "PACIFI"
+          },
+          {
+            "name": "PSCIP",
+            "code": "PSCIP"
+          },
+          {
+            "name": "SPARK",
+            "code": "SPARK"
+          },
+          {
+            "name": "USPIPE",
+            "code": "USPIPE"
+          },
+          {
+            "name": "WATERO",
+            "code": "WATERO"
+          },
+          {
+            "name": "Other",
+            "code": "Other"
+          }
+        ],
+        "mergePolicy": "esriMPTDefaultValue",
+        "splitPolicy": "esriSPTDefaultValue"
+      }
+    },
+    {
+      "name": "HEIGHT",
+      "type": "esriFieldTypeSingle",
+      "alias": "HEIGHT",
+      "domain": null
+    },
+    {
+      "name": "VALVE",
+      "type": "esriFieldTypeSingle",
+      "alias": "VALVE",
+      "domain": null
+    },
+    {
+      "name": "DRAW_NUM",
+      "type": "esriFieldTypeString",
+      "alias": "DRAW_NUM",
+      "length": 50,
+      "domain": null
+    },
+    {
+      "name": "EXT_NUM",
+      "type": "esriFieldTypeString",
+      "alias": "EXT_NUM",
+      "length": 50,
+      "domain": null
+    },
+    {
+      "name": "PLAN_LINK",
+      "type": "esriFieldTypeString",
+      "alias": "PLAN_LINK",
+      "length": 200,
+      "domain": null
+    },
+    {
+      "name": "DIRECTION",
+      "type": "esriFieldTypeString",
+      "alias": "DIRECTION",
+      "length": 2,
+      "domain": {
+        "type": "codedValue",
+        "name": "AW_Direction",
+        "codedValues": [
+          {
+            "name": "N",
+            "code": "N"
+          },
+          {
+            "name": "NE",
+            "code": "NE"
+          },
+          {
+            "name": "E",
+            "code": "E"
+          },
+          {
+            "name": "SE",
+            "code": "SE"
+          },
+          {
+            "name": "S",
+            "code": "S"
+          },
+          {
+            "name": "SW",
+            "code": "SW"
+          },
+          {
+            "name": "W",
+            "code": "W"
+          },
+          {
+            "name": "NW",
+            "code": "NW"
+          }
+        ],
+        "mergePolicy": "esriMPTDefaultValue",
+        "splitPolicy": "esriSPTDefaultValue"
+      }
+    },
+    {
+      "name": "FIELD_COMM",
+      "type": "esriFieldTypeString",
+      "alias": "FIELD_COMM",
+      "length": 200,
+      "domain": null
+    },
+    {
+      "name": "MODELID",
+      "type": "esriFieldTypeString",
+      "alias": "MODELID",
+      "length": 15,
+      "domain": null
+    },
+    {
+      "name": "LOC_SOURCE",
+      "type": "esriFieldTypeString",
+      "alias": "LOC_SOURCE",
+      "length": 20,
+      "domain": {
+        "type": "codedValue",
+        "name": "AW_Loc_Source",
+        "codedValues": [
+          {
+            "name": "Survey",
+            "code": "Survey"
+          },
+          {
+            "name": "GPS",
+            "code": "GPS"
+          },
+          {
+            "name": "CCTV",
+            "code": "CCTV"
+          },
+          {
+            "name": "Map Change Request",
+            "code": "Map_Change_Request"
+          },
+          {
+            "name": "Other",
+            "code": "Other"
+          },
+          {
+            "name": "Staff Knowledge",
+            "code": "Staff_Knowledge"
+          }
+        ],
+        "mergePolicy": "esriMPTDefaultValue",
+        "splitPolicy": "esriSPTDefaultValue"
+      }
+    },
+    {
+      "name": "SITEKEY",
+      "type": "esriFieldTypeInteger",
+      "alias": "SITEKEY",
+      "domain": null
+    },
+    {
+      "name": "X_WGS84",
+      "type": "esriFieldTypeDouble",
+      "alias": "X_WGS84",
+      "domain": null
+    },
+    {
+      "name": "Y_WGS84",
+      "type": "esriFieldTypeDouble",
+      "alias": "Y_WGS84",
+      "domain": null
+    }
+  ],
+  "indexes": [
+    {
+      "name": "R2324_SDE_ROWID_UK",
+      "fields": "OBJECTID",
+      "isAscending": true,
+      "isUnique": true,
+      "description": ""
+    },
+    {
+      "name": "UUID_OID_2324",
+      "fields": "GlobalID,OBJECTID",
+      "isAscending": true,
+      "isUnique": true,
+      "description": ""
+    },
+    {
+      "name": "UUID_2324",
+      "fields": "GlobalID",
+      "isAscending": true,
+      "isUnique": false,
+      "description": ""
+    },
+    {
+      "name": "a2084_ix1",
+      "fields": "Shape",
+      "isAscending": true,
+      "isUnique": true,
+      "description": ""
+    }
+  ],
+  "subtypes": [],
+  "relationships": [],
+  "canModifyLayer": false,
+  "canScaleSymbols": false,
+  "hasLabels": false,
+  "capabilities": "Map,Query,Data",
+  "maxRecordCount": 4000,
+  "supportsStatistics": true,
+  "supportsAdvancedQueries": true,
+  "hasZ": true,
+  "supportedQueryFormats": "JSON, AMF, geoJSON",
+  "isDataVersioned": true,
+  "ownershipBasedAccessControlForFeatures": {
+    "allowOthersToQuery": true
+  },
+  "useStandardizedQueries": true,
+  "advancedQueryCapabilities": {
+    "useStandardizedQueries": true,
+    "supportsStatistics": true,
+    "supportsOrderBy": true,
+    "supportsDistinct": true,
+    "supportsPagination": true,
+    "supportsTrueCurve": true,
+    "supportsReturningQueryExtent": true,
+    "supportsQueryWithDistance": true,
+    "supportsSqlExpression": true
+  },
+  "supportsDatumTransformation": true,
+  "dateFieldsTimeReference": null
+}
