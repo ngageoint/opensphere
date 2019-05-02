@@ -20,6 +20,12 @@ addons:
       key_url: "https://dl.yarnpkg.com/debian/pubkey.gpg"
     packages:
     - yarn
+  artifacts:
+    debug: true
+    paths:
+    - $(find ./cypress -name "*diff*" | tr "\n" ":")
+    - $(ls -R ./cypress/screenshots/ | tr "\n" ":")
+    - $(ls -R ./cypress/videos/ | tr "\n" ":")
 install:
 - yarn config list
 - yarn
