@@ -124,6 +124,11 @@ jQuery.prototype.collapse;
 jQuery.prototype.menu;
 
 /**
+ * @return {!angular.Scope}
+ */
+jQuery.prototype.scope;
+
+/**
  * @typedef {{
  *  my: (string|undefined),
  *  at: (string|undefined),
