@@ -22,6 +22,7 @@ os.histo.DateBinType = {
   DAY_OF_WEEK: 'Day of Week',
   WEEK: 'Week',
   MONTH: 'Month',
+  MONTH_OF_YEAR: 'Month of Year',
   YEAR: 'Year'
 };
 
@@ -36,6 +37,7 @@ os.histo.DateRangeBinType = {
   'Hour of Month': true,
   'Hour of Year': true,
   'Day of Week': true,
+  'Month of Year': true,
   'Unique': false,
   'Hour': false,
   'Day': false,
@@ -51,7 +53,9 @@ os.histo.DateRangeBinType = {
 os.histo.Labels = {
   'Hour of Day': ['0000', '0100', '0200', '0300', '0400', '0500', '0600', '0700', '0800', '0900', '1000', '1100',
     '1200', '1300', '1400', '1500', '1600', '1700', '1800', '1900', '2000', '2100', '2200', '2300'],
-  'Day of Week': ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+  'Day of Week': ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+  'Month of Year': ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September',
+    'October', 'November', 'December']
 };
 
 
@@ -256,6 +260,16 @@ os.histo.DateBinMethod.prototype.getValue = function(item) {
         }
         var t2 = Math.floor((d2 - min) / 1000 / 60 / 60);
         return this.generateValues(t1, t2, this.getTypeMax(d.valueOf()));
+      case os.histo.DateBinType.MONTH_OF_YEAR:
+        // 0-11
+        if (!d2) {
+          var m = d.getUTCMonth();
+          return this.arrayKeys ? [m] : m;
+        }
+        var max = 11;
+        var m1 = d.getUTCMonth();
+        var m2 = d2.getUTCMonth();
+        return this.generateValues(m1, m2, max);
       case os.histo.DateBinType.DAY_OF_WEEK:
         // 0 (Sunday) - 6 (Saturday)
         var t1 = d.getUTCDay();
@@ -375,6 +389,8 @@ os.histo.DateBinMethod.prototype.getLabelForKey = function(key, opt_secondary, o
       case os.histo.DateBinType.HOUR_OF_MONTH:
       case os.histo.DateBinType.HOUR_OF_YEAR:
         return key.toString();
+      case os.histo.DateBinType.MONTH_OF_YEAR:
+        return moment.utc().month(/** @type {number} */ (key)).format('MMMM');
       default:
         return os.time.toOffsetString(/** @type {number} */ (key));
     }

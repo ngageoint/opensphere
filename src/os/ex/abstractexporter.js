@@ -90,6 +90,14 @@ os.ex.AbstractExporter.prototype.supportsMultiple = function() {
 /**
  * @inheritDoc
  */
+os.ex.AbstractExporter.prototype.supportsTime = function() {
+  return false;
+};
+
+
+/**
+ * @inheritDoc
+ */
 os.ex.AbstractExporter.prototype.reset = function() {
   this.fields = null;
   this.items = null;

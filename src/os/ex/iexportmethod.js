@@ -77,6 +77,13 @@ os.ex.IExportMethod.prototype.supportsMultiple;
 
 
 /**
+ * If the export method supports exporting time from the data source.
+ * @return {boolean}
+ */
+os.ex.IExportMethod.prototype.supportsTime;
+
+
+/**
  * Begins the export process.
  */
 os.ex.IExportMethod.prototype.process;

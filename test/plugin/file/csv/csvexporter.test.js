@@ -21,7 +21,7 @@ describe('plugin.file.csv.CSVExporter', function() {
     ex.reset();
   });
 
-  it('does not process null features', function() {
+  it('should not process null features', function() {
     var result = ex.processItem(null);
     expect(result).toBeNull();
   });
@@ -39,40 +39,25 @@ describe('plugin.file.csv.CSVExporter', function() {
     expect(result.numKey).toBe(props.numKey);
   });
 
-  it('converts features with a point geometry to JSON', function() {
+  it('should convert features with a point geometry to JSON', function() {
     var result = ex.processItem(pointFeature);
 
-    expect(result[os.Fields.LAT].length).not.toBe(0);
-    expect(result[os.Fields.LON].length).not.toBe(0);
-    expect(result[os.Fields.LAT_DMS].length).not.toBe(0);
-    expect(result[os.Fields.LON_DMS].length).not.toBe(0);
-    expect(result[os.Fields.MGRS].length).not.toBe(0);
     expect(result[os.Fields.GEOMETRY].length).not.toBe(0);
   });
 
-  it('converts features with a linestring geometry to JSON', function() {
+  it('should convert features with a linestring geometry to JSON', function() {
     var result = ex.processItem(lineFeature);
 
-    expect(result[os.Fields.LAT].length).toBe(0);
-    expect(result[os.Fields.LON].length).toBe(0);
-    expect(result[os.Fields.LAT_DMS].length).toBe(0);
-    expect(result[os.Fields.LON_DMS].length).toBe(0);
-    expect(result[os.Fields.MGRS].length).toBe(0);
     expect(result[os.Fields.GEOMETRY].length).not.toBe(0);
   });
 
-  it('converts features with a polygon geometry to JSON', function() {
+  it('should convert features with a polygon geometry to JSON', function() {
     var result = ex.processItem(polygonFeature);
 
-    expect(result[os.Fields.LAT].length).toBe(0);
-    expect(result[os.Fields.LON].length).toBe(0);
-    expect(result[os.Fields.LAT_DMS].length).toBe(0);
-    expect(result[os.Fields.LON_DMS].length).toBe(0);
-    expect(result[os.Fields.MGRS].length).toBe(0);
     expect(result[os.Fields.GEOMETRY].length).not.toBe(0);
   });
 
-  it('translates fields to JSON', function() {
+  it('should translate fields to JSON', function() {
     var props = {
       strKey: 'a',
       numKey: 5,
@@ -104,7 +89,7 @@ describe('plugin.file.csv.CSVExporter', function() {
     ex.setItems(null);
   });
 
-  it('exports time instants correctly', function() {
+  it('should export time instants correctly', function() {
     var props = {
       recordTime: new os.time.TimeInstant(999999)
     };
@@ -117,7 +102,7 @@ describe('plugin.file.csv.CSVExporter', function() {
     expect(result[os.Fields.TIME]).toBe('1970-01-01 00:16:39Z');
   });
 
-  it('exports time ranges correctly', function() {
+  it('should export time ranges correctly', function() {
     var props = {
       recordTime: new os.time.TimeRange(999999, 9999999)
     };
@@ -129,5 +114,22 @@ describe('plugin.file.csv.CSVExporter', function() {
 
     expect(result[plugin.file.csv.CSVExporter.FIELDS.START_TIME]).toBe('1970-01-01 00:16:39Z');
     expect(result[plugin.file.csv.CSVExporter.FIELDS.END_TIME]).toBe('1970-01-01 02:46:39Z');
+  });
+
+  it('should export GEOMETRY when alwaysIncludeWkt is true', function() {
+    ex.setAlwaysIncludeWkt(true);
+
+    var result = ex.processItem(pointFeature);
+
+    expect(result[os.Fields.GEOMETRY].length).not.toBe(0);
+  });
+
+  it('should not export GEOMETRY when alwaysIncludeWkt is false', function() {
+    // Though there's nothing stopping the user from exporting their own WKT field
+    ex.setAlwaysIncludeWkt(false);
+
+    var result = ex.processItem(pointFeature);
+
+    expect(result[os.Fields.GEOMETRY]).toBeUndefined();
   });
 });
