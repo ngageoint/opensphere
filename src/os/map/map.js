@@ -172,7 +172,7 @@ os.map.ZoomScale = {
   NEAR: 3e6,
   NEAR_SCALE: 1,
   FAR: 3e7,
-  FAR_SCALE: .25
+  FAR_SCALE: .5
 };
 
 
