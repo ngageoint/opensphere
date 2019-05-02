@@ -1587,6 +1587,12 @@ Cesium.Globe.prototype.depthTestAgainstTerrain;
 
 
 /**
+ * @type {boolean}
+ */
+Cesium.Globe.prototype.showGroundAtmosphere;
+
+
+/**
  * @param {!Cesium.Cartographic} cartographic
  * @return {number|undefined}
  */
