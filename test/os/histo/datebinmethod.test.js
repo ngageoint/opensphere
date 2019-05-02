@@ -8,6 +8,12 @@ describe('os.histo.DateBinMethod', function() {
   method.setField('field');
   method.setDateBinType(os.histo.DateBinType.UNIQUE);
 
+  var valueSpy;
+
+  beforeEach(function() {
+    valueSpy = jasmine.createSpyObj('value', ['getStart', 'getEnd']);
+  });
+
   it('should convert all manner of time values to millis since epoch', function() {
     // here's a bunch of different ways of saying the same thing
     var d = new Date();
@@ -215,6 +221,53 @@ describe('os.histo.DateBinMethod', function() {
     }
   });
 
+  it('should bin by month of year', function() {
+    method.setDateBinType(os.histo.DateBinType.MONTH_OF_YEAR);
+
+    var items = [
+      {field: '2014-01-31T12:34:56Z'},
+      {field: '2014-02-01T01:00:00Z'},
+      {field: '2014-01-31T13:35:30+0000'},
+      {field: 'gibberish'}];
+
+    var values = items.map(method.getValue, method);
+    var expected = ['0', 1, '0', os.histo.DateBinMethod.MAGIC];
+    var expectedLabels = ['January', 'February', 'January', 'Invalid Date'];
+
+    for (var i = 0, n = values.length; i < n; i++) {
+      expect(method.getBinKey(values[i])).toEqual(expected[i]);
+      expect(method.getBinLabel(items[i])).toBe(expectedLabels[i]);
+    }
+  });
+
+  it('should bin by month of year with keys', function() {
+    method.setDateBinType(os.histo.DateBinType.MONTH_OF_YEAR);
+    var item = {field: '2014-01-31T12:34:56Z'};
+    var expected = [0];
+    method.arrayKeys = true;
+
+    var value = method.getValue(item);
+    expect(value).toEqual(expected);
+  });
+
+  it('shold bin by month of year across a range', function() {
+    method.setDateBinType(os.histo.DateBinType.MONTH_OF_YEAR);
+    var d1 = '2014-01-11T12:34:56Z';
+    var d2 = '2014-02-11T12:34:56Z';
+    
+    valueSpy.getStart.andReturn(d1);
+    valueSpy.getEnd.andReturn(d2);
+    os.time.timeOffset = '';
+    spyOn(method, 'valueFunction').andReturn(valueSpy);
+    method.arrayKeys = true;
+
+    var result = method.getValue(true);
+
+    expect(result.length).toBe(2);
+    expect(result[0]).toBe(0);
+    expect(result[1]).toBe(1);
+  });
+
   it('should restore correctly', function() {
     var method = new os.histo.DateBinMethod();
     method.setDateBinType(os.histo.DateBinType.UNIQUE);
@@ -244,5 +297,61 @@ describe('os.histo.DateBinMethod', function() {
       binType: os.histo.DateBinType.HOUR
     });
     expect(method.getDateBinType()).toBe(os.histo.DateBinType.HOUR);
+  });
+
+  it('should map types to bins', function() {
+    var expected_length = Object.keys(os.histo.DateBinType).length;
+    var result = os.histo.DateBinMethod.getTypesMap();
+
+    expect(result.length).toBe(expected_length);
+  });
+
+  it('should provide sort label by key ascending', function() {
+    var method = new os.histo.DateBinMethod();
+    os.histo.bin.sortByKey = 1;
+
+    var result = method.getSortLabelFnAsc();
+
+    expect(result).toBe(1);
+  });
+
+  it('should provide sort label by key descending', function() {
+    var method = new os.histo.DateBinMethod();
+    os.histo.bin.sortByKeyDesc = 1;
+
+    var result = method.getSortLabelFnDesc();
+
+    expect(result).toBe(1);
+  });
+
+  it('should return simple values for simple input when calling generateValues()', function() {
+    var method = new os.histo.DateBinMethod();
+    var result;
+
+    method.arrayKeys = true;
+    result = method.generateValues(1, 1, 1);
+    expect(result).toEqual([1]);
+
+    method.arrayKeys = false;
+    result = method.generateValues(1, 1, 1);
+    expect(result).toEqual(1);
+  });
+
+  it('should return the value passed to getBinKey() if the input value is an array', function() {
+    var method = new os.histo.DateBinMethod();
+    var result = method.getBinKey([1]);
+
+    expect(result).toEqual([1]);
+  });
+
+  it('should return the value passed to getBinKey() if the input value is not an array', function() {
+    var method = new os.histo.DateBinMethod();
+    var result;
+
+    result = method.getBinKey('123123');
+    expect(result).toEqual(123123);
+
+    result = method.getBinKey('123abc');
+    expect(result).toEqual('123abc');
   });
 });

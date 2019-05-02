@@ -591,9 +591,7 @@ d3.ScaleFn;
 
 
 /**
- * @typedef {{
- *   x: function(d3.Scale):d3.zoom
- *   }}
+ * @constructor
  */
 d3.zoom;
 
@@ -602,7 +600,14 @@ d3.zoom;
  * @param {d3.Scale} scale
  * @return {d3.zoom}
  */
-d3.zoom.x = function(scale) {};
+d3.zoom.prototype.x;
+
+
+/**
+ * @param {string} type
+ * @param {function():*} listener
+ */
+d3.zoom.prototype.on;
 
 
 /**
@@ -738,3 +743,19 @@ d3.transition.ease = function(value) {};
  * @return {Object} [SI prefix]
  */
 d3.formatPrefix = function(value, opt_precision) {};
+
+/**
+ * @constructor
+ */
+d3.SIPrefix;
+
+/**
+ * @param {number} n
+ * @return {number}
+ */
+d3.SIPrefix.prototype.scale;
+
+/**
+ * @type {string}
+ */
+d3.SIPrefix.prototype.symbol;

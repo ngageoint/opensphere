@@ -109,7 +109,6 @@ os.ui.TimelinePanelCtrl.prototype.assumeControl = function() {
     // remove control from the date control
     angular.element('.js-date-control').scope()['dateControl'].releaseControl();
   } catch (e) {
-    // GV don't care about your problems
   }
 
   // flip all layers to use the animation overlay

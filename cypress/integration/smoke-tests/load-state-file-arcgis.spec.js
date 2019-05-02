@@ -8,9 +8,9 @@ describe('Import state file', function() {
     cy.server();
     cy.route('**/OpenData/MapServer/export*', 'fx:/smoke-tests/load-state-file-arcgis/export.stub.png')
         .as('getPNG');
-    cy.route('**/OpenData/MapServer/3?f=json', 'fx:/smoke-tests/load-state-file-arcgis/3?f=json.stub.json')
+    cy.route('**/OpenData/MapServer/3?f=json', 'fx:/smoke-tests/load-state-file-arcgis/3f=json.stub.json')
         .as('getLayerDetails-3');
-    cy.route('**/OpenData/MapServer/234?f=json', 'fx:/smoke-tests/load-state-file-arcgis/234?f=json.stub.json')
+    cy.route('**/OpenData/MapServer/234?f=json', 'fx:/smoke-tests/load-state-file-arcgis/234f=json.stub.json')
         .as('getLayerDetails-234');
     cy.route('POST', '**/OpenData/MapServer/3/query', 'fx:/smoke-tests/load-state-file-arcgis/query-3-1.stub.json')
         .as('getFeatureList-3_first');
