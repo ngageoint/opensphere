@@ -99,5 +99,5 @@ os.ui.icon.IconPaletteCtrl.prototype.getIconSrc = function(src) {
  */
 os.ui.icon.IconPaletteCtrl.prototype.pick = function(iconPath) {
   this.scope_['selected']['path'] = iconPath;
-  os.ui.apply(this.scope);
+  os.ui.apply(this.scope_);
 };
