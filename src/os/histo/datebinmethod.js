@@ -39,6 +39,7 @@ os.histo.DateRangeBinType = {
   'Day of Week': true,
   'Month of Year': true,
   'Unique': false,
+  'Minute': false,
   'Hour': false,
   'Day': false,
   'Week': false,
