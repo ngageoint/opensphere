@@ -16,6 +16,9 @@ function setVariables() {
   key_id=$S3KEY
   key_secret=$S3SECRET
   date="$(LC_ALL=C date -u +"%a, %d %b %Y %X %z")"
+  screenshotFolder="./cypress/screenshots"
+  snapshotFolder="./cypress/snapshots"
+  videoFolder="./cypress/videos"
 }
 
 function s3Upload {
@@ -29,30 +32,11 @@ function s3Upload {
       -H "Authorization: AWS $key_id:$sig"
 }
 
-function uploadSnapshots() {
-  if $S3SNAPSHOT; then
-    echo "INFO: Snapshot upload enabled, checking for snapshots to upload"
-    snapshots=$(find ./cypress/snapshots -name "*diff.png")
-    if ! [ -z "$snapshots" ]; then
-      echo "INFO: Snapshots found"
-      for result in $snapshots; do
-        file=$(echo $result | sed 's?\./??g')
-        s3Upload "$file"
-      done
-      echo "INFO: Finished uploading snapshots"
-    else
-      echo "INFO: No snapshots found for upload"
-    fi
-  else
-    echo "INFO: Snapshot upload disabled, skipping"
-  fi
-}
-
 function uploadScreenshots() {
   if $S3SCREENSHOT; then
     echo "INFO: Screenshot upload enabled, checking for screenshots to upload"
     IFS=$'\n'
-    screenshots=$(find ./cypress/screenshots -name "*.png")
+    screenshots=$(find $screenshotFolder -name "*.png")
     if ! [ -z "$screenshots" ]; then
       echo "INFO: Screenshots found"
       for result in $screenshots; do
@@ -68,10 +52,29 @@ function uploadScreenshots() {
   fi
 }
 
+function uploadSnapshots() {
+  if $S3SNAPSHOT; then
+    echo "INFO: Snapshot upload enabled, checking for snapshots to upload"
+    snapshots=$(find $snapshotFolder -name "*diff.png")
+    if ! [ -z "$snapshots" ]; then
+      echo "INFO: Snapshots found"
+      for result in $snapshots; do
+        file=$(echo $result | sed 's?\./??g')
+        s3Upload "$file"
+      done
+      echo "INFO: Finished uploading snapshots"
+    else
+      echo "INFO: No snapshots found for upload"
+    fi
+  else
+    echo "INFO: Snapshot upload disabled, skipping"
+  fi
+}
+
 function uploadVideos() {
   if $S3VIDEO; then
     echo "INFO: Video upload enabled, checking for videos to upload"
-    videos=$(find ./cypress/videos -name "*.mp4")
+    videos=$(find $videoFolder -name "*.mp4")
     if ! [ -z "$videos" ]; then
       echo "INFO: Videos found"
       for result in $videos; do

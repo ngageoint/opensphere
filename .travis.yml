@@ -24,17 +24,12 @@ install:
 - yarn config list
 - yarn
 script:
-- set -e
-- yarn run build
-- yarn run test
-- set +e
-- ./cypress/support/execute-tests.sh ci cli all
-- yarn run apidoc
+- ./ci-script.sh
 after_success:
 - chmod ugo+x ./deploy.sh
 - "./deploy.sh"
 after_failure:
-- ./cypress/support/s3-artifact-upload.sh
+- 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; ./cypress/support/s3-artifact-upload.sh; fi'
 branches:
   except:
   - "/^v\\d+\\.\\d+\\.\\d+$/"
