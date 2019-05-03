@@ -29,7 +29,7 @@ after_success:
 - chmod ugo+x ./deploy.sh
 - "./deploy.sh"
 after_failure:
-- 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; ./cypress/support/s3-artifact-upload.sh; fi'
+- 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then ./cypress/support/s3-artifact-upload.sh; fi'
 branches:
   except:
   - "/^v\\d+\\.\\d+\\.\\d+$/"
