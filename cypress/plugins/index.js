@@ -20,6 +20,7 @@ var addMatchImageSnapshotPlugin = require('cypress-image-snapshot/plugin').addMa
 module.exports = function(on, config) {
   addMatchImageSnapshotPlugin(on, config);
   on('before:browser:launch', function(browser, args) {
+    console.log(browser.name); // TODO: Remove when done debugging
     if (browser.name === 'chrome') {
       args.push('--window-size=1920,1200');
       return args;

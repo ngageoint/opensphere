@@ -29,6 +29,8 @@ var addMatchImageSnapshotCommand = require('cypress-image-snapshot/command')
   .addMatchImageSnapshotCommand;
 
 addMatchImageSnapshotCommand({
+  failureThreshold: 0.01,
+  failureThresholdType: 'percent',
   blackout: [os.Toolbar.PANEL,
     os.statusBar.PANEL,
     os.Map.OVERVIEW_MAP,
