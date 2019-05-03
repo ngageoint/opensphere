@@ -30,6 +30,8 @@ describe('Generate heatmap from CSV', function() {
     cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4).rightClick();
     cy.get(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.Local.contextMenu.menuOptions.GO_TO).click();
     cy.wait(10000); // Need to wait for the canvas to stabilize
+    cy.get(os.Map.ZOOM_IN_BUTTON).click(); // TODO: Remove workaround for #510
+    cy.wait(1000);
     cy.matchImageSnapshot('features loaded');
     cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4).rightClick();
     cy.get(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.Local.contextMenu.menuOptions.GENERATE_HEATMAP).click();
