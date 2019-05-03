@@ -27,6 +27,7 @@ module.exports = function(on, config) {
     }
 
     if (browser.name === 'electron') {
+      console.log('running electron'); // TODO: Remove when done debugging
       args['width'] = 1920;
       args['height'] = 1200;
       args['resizable'] = false;
