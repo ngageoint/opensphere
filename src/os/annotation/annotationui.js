@@ -64,10 +64,12 @@ os.annotation.UI_TEMPLATE_ =
     '<div class="js-annotation card h-100">' +
       '<div class="card-header flex-shrink-0 text-truncate px-1 py-0" title="{{ctrl.name}}"' +
           'ng-show="ctrl.options.showName"' +
-          'ng-class="!ctrl.options.showDescription && \'h-100 border-0\'">' +
+          'ng-class="!ctrl.options.showDescription && \'h-100 border-0\'"' +
+          'ng-style="{\'background\': ctrl.options.nameBG }">' +
         '{{ctrl.name}}' +
       '</div>' +
-      '<div class="card-body p-1 u-overflow-y-auto" ng-show="ctrl.options.showDescription">' +
+      '<div class="card-body p-1 u-overflow-y-auto" ng-show="ctrl.options.showDescription" ' +
+          'ng-style="{\'background\': ctrl.options.descBG }">' +
         '<simplemde text="ctrl.description" edit="false" is-required="false" maxlength="4000"></simplemde>' +
       '</div>' +
     '</div>' +
@@ -153,6 +155,14 @@ os.annotation.AnnotationCtrl = function($scope, $element, $timeout) {
    * @type {!osx.annotation.Options}
    */
   this['options'] = /** @type {!osx.annotation.Options} */ (this.feature.get(os.annotation.OPTIONS_FIELD));
+
+  if (!this['options'].descBG){
+    this['options'].descBG = os.annotation.DEFAULT_ANNOTATION_DESCRIPTION_BACKGROUND_COLOR;
+  }
+  if (!this['options'].nameBG){
+    this['options'].nameBG = os.annotation.DEFAULT_ANNOTATION_HEADER_BACKGROUND_COLOR;
+  }
+
 
   ol.events.listen(this.feature, ol.events.EventType.CHANGE, this.onFeatureChange_, this);
   ol.events.listen(this.overlay, 'change:visible', this.onOverlayVisibleChange_, this);
@@ -480,6 +490,7 @@ os.annotation.AnnotationCtrl.prototype.updateTailAbsolute_ = function() {
     svg.attr('width', svgWidth);
     svg.attr('height', svgHeight);
     svg.find('path').attr('d', linePath);
+    svg.find('path').css('fill', this['options'].descBG);
 
     if (this.userChanged_) {
       // after dragging/resizing the overlay, the internal offset will be incorrect. update it to prevent OpenLayers
