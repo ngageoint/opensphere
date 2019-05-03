@@ -2277,7 +2277,7 @@ exports.Map = {
   CONTAINER: '#map-container',
   CANVAS_3D: '.webgl-canvas',
   CANVAS_2D: '.canvas:eq(0)',
-  OVERVIEW_MAP: '.ol-overviewmap',
+  OVERVIEW_MAP: '.ol-overviewmap-map',
   OVERVIEW_MAP_TOGGLE_BUTTON: '[title=\'Overview map\']',
   ZOOM_IN_BUTTON: '.ol-zoom-in',
   ZOOM_OUT_BUTTON: '.ol-zoom-out',
