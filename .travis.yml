@@ -27,9 +27,9 @@ script:
 - set -e
 - yarn run build
 - yarn run test
+- set +e
 - ./cypress/support/execute-tests.sh ci cli all
 - yarn run apidoc
-- set +e
 after_success:
 - chmod ugo+x ./deploy.sh
 - "./deploy.sh"
