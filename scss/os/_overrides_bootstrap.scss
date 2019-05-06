@@ -66,6 +66,12 @@ $form-control-disabled-border: $gray-600 !default;
   cursor: pointer;
 }
 
+// Fixes a check custom-control that is also disabled
+// TODO keep checking bootstrap to see if this gets fixed
+.custom-control-input:disabled ~ .custom-control-label::before {
+  background: $custom-control-indicator-disabled-bg;
+}
+
 .carousel-control-prev,
 .carousel-control-next {
   cursor: pointer;
