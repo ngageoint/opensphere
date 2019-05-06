@@ -293,7 +293,8 @@ os.source.Request.prototype.onRequestComplete = function(event) {
  */
 os.source.Request.prototype.onRequestError = function(event) {
   // there was an error loading the request
-  var msg = 'There was an error loading the data source: ' + this.request.getErrors().join(' ');
+  var error = this.request.getErrors() ? this.request.getErrors().join(' ') : 'unknown error.';
+  var msg = 'There was an error loading the data source: ' + error;
   this.handleError(msg);
 };
 
