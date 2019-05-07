@@ -139,3 +139,15 @@ os.histo.IBinMethod.prototype.getArrayKeys;
  * @param {boolean|string} value
  */
 os.histo.IBinMethod.prototype.setArrayKeys;
+
+
+/**
+ * @return {boolean}
+ */
+os.histo.IBinMethod.prototype.getIsDate;
+
+
+/**
+ * @param {boolean} value
+ */
+os.histo.IBinMethod.prototype.setIsDate;

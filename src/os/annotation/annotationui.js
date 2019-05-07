@@ -156,12 +156,9 @@ os.annotation.AnnotationCtrl = function($scope, $element, $timeout) {
    */
   this['options'] = /** @type {!osx.annotation.Options} */ (this.feature.get(os.annotation.OPTIONS_FIELD));
 
-  if (!this['options'].descBG){
-    this['options'].descBG = os.annotation.DEFAULT_ANNOTATION_DESCRIPTION_BACKGROUND_COLOR;
-  }
-  if (!this['options'].nameBG){
-    this['options'].nameBG = os.annotation.DEFAULT_ANNOTATION_HEADER_BACKGROUND_COLOR;
-  }
+  // if background color isnt set, set it to default
+  this['options'].descBG = this['options'].descBG || os.annotation.DEFAULT_ANNOTATION_DESCRIPTION_BACKGROUND_COLOR;
+  this['options'].nameBG = this['options'].nameBG || os.annotation.DEFAULT_ANNOTATION_HEADER_BACKGROUND_COLOR;
 
 
   ol.events.listen(this.feature, ol.events.EventType.CHANGE, this.onFeatureChange_, this);
@@ -200,6 +197,7 @@ os.annotation.AnnotationCtrl.prototype.initialize = function() {
   if (this.element && this.feature && this.overlay) {
     this.element.width(this['options'].size[0]);
     this.element.height(this['options'].size[1]);
+    this.element.find('path').css('fill', this['options'].descBG);
 
     this.setTailType_(os.annotation.TailType.ABSOLUTE);
     this.onFeatureChange_();
@@ -490,7 +488,6 @@ os.annotation.AnnotationCtrl.prototype.updateTailAbsolute_ = function() {
     svg.attr('width', svgWidth);
     svg.attr('height', svgHeight);
     svg.find('path').attr('d', linePath);
-    svg.find('path').css('fill', this['options'].descBG);
 
     if (this.userChanged_) {
       // after dragging/resizing the overlay, the internal offset will be incorrect. update it to prevent OpenLayers
