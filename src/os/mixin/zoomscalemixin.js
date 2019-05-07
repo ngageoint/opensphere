@@ -16,8 +16,10 @@ goog.require('os.map');
 (function() {
   // cache the zoom scale to reduce how often it's computed, resetting on map view change.
   var zoomScale;
-  os.MapContainer.getInstance().listen(os.MapEvent.VIEW_CHANGE, function() {
+  var mapContainer = os.MapContainer.getInstance();
+  mapContainer.listen(os.MapEvent.VIEW_CHANGE, function() {
     zoomScale = undefined;
+    mapContainer.render();
   });
 
   /**
@@ -25,7 +27,7 @@ goog.require('os.map');
    * @return {number|undefined} The scale value, or undefined when the current zoom is not rescaled.
    */
   var getZoomScale = function() {
-    var altitude = os.MapContainer.getInstance().getAltitude();
+    var altitude = mapContainer.getAltitude();
     if (altitude > os.map.ZoomScale.NEAR) {
       // don't scale beyond the far altitude value
       altitude = Math.min(altitude, os.map.ZoomScale.FAR);
@@ -45,35 +47,14 @@ goog.require('os.map');
   ol.render.canvas.ImageReplay.prototype.setImageStyle = function(imageStyle, declutterGroup) {
     oldSetImageStyle.call(this, imageStyle, declutterGroup);
 
+    // only scale icon styles. this uses duck typing for performance reasons.
+    if (typeof /** @type {ol.style.Icon} */ (imageStyle).getSrc !== 'function') {
+      return;
+    }
+
     var zoomScale = getZoomScale();
     if (zoomScale != null) {
       this.scale_ *= zoomScale;
-    }
-  };
-
-  var oldSetTextStyle = ol.render.canvas.TextReplay.prototype.setTextStyle;
-
-  /**
-   * @override
-   */
-  ol.render.canvas.TextReplay.prototype.setTextStyle = function(textStyle, declutterGroup) {
-    oldSetTextStyle.call(this, textStyle, declutterGroup);
-
-    var zoomScale = getZoomScale();
-    if (zoomScale != null) {
-      var textState = this.textState_;
-
-      // hide text once it's scaled below 50% original size. it would be preferable to scale opacity, but in OpenLayers
-      // that requires manipulating the color string which would not be performant here.
-      zoomScale = zoomScale >= .5 ? zoomScale : 0;
-
-      // this.textKey_ is a map index, so limit the scale adjustment to 1/10 increments
-      textState.scale = Math.round(textState.scale * zoomScale * 10) / 10;
-      this.textKey_ = textState.font + textState.scale + (textState.textAlign || '?');
-
-      // adjust the offset to account for the scale change
-      this.textOffsetX_ *= zoomScale;
-      this.textOffsetY_ *= zoomScale;
     }
   };
 })();

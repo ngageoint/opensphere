@@ -2972,7 +2972,7 @@ os.source.Vector.prototype.isSelected = function(feature) {
  */
 os.source.Vector.prototype.isSelectedArray = function(features) {
   var l = features.length;
-  if (!(Object.keys(this.selectedById_).length) || !l) {
+  if (!l || !(Object.keys(this.selectedById_).length)) {
     // nothing selected, don't bother
     return false;
   }
