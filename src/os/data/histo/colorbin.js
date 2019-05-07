@@ -44,6 +44,12 @@ os.data.histo.ColorBin = function(baseColor) {
    * @type {boolean}
    */
   this.isCascaded = false;
+
+  /**
+   * The bin's color; accessible for export
+   * @type {boolean}
+   */
+  this['color'] = false;
 };
 goog.inherits(os.data.histo.ColorBin, os.histo.Bin);
 

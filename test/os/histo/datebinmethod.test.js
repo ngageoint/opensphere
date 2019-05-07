@@ -254,7 +254,7 @@ describe('os.histo.DateBinMethod', function() {
     method.setDateBinType(os.histo.DateBinType.MONTH_OF_YEAR);
     var d1 = '2014-01-11T12:34:56Z';
     var d2 = '2014-02-11T12:34:56Z';
-    
+
     valueSpy.getStart.andReturn(d1);
     valueSpy.getEnd.andReturn(d2);
     os.time.timeOffset = '';
@@ -299,11 +299,11 @@ describe('os.histo.DateBinMethod', function() {
     expect(method.getDateBinType()).toBe(os.histo.DateBinType.HOUR);
   });
 
-  it('should map types to bins', function() {
-    var expected_length = Object.keys(os.histo.DateBinType).length;
-    var result = os.histo.DateBinMethod.getTypesMap();
+  it('should map types to range types', function() {
+    var expectedLength = Object.keys(os.histo.DateBinType).length;
+    var resultLength = Object.keys(os.histo.DateRangeBinType).length;
 
-    expect(result.length).toBe(expected_length);
+    expect(resultLength).toBe(expectedLength);
   });
 
   it('should provide sort label by key ascending', function() {

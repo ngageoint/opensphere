@@ -17,7 +17,7 @@ node(getLabel()) {
         } catch (NoSuchMethodError e) {
         }
 
-        installPlugins('master', env.YARN_WORKSPACE_REPO)
+        installPlugins(env.YARN_WORKSPACE_REPO)
 
         dir('workspace') {
           dir('opensphere') {
@@ -37,7 +37,7 @@ node(getLabel()) {
           }
 
           try {
-            installConfigs('master', 'opensphere')
+            installConfigs('opensphere')
           } catch (NoSuchMethodError e) {
           }
         }
