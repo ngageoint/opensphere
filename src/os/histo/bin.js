@@ -33,6 +33,24 @@ os.histo.Bin = function() {
   this.items = [];
 
   /**
+   * The count of things in the bin; accessible for export
+   * @type {number}
+   */
+  this['count'] = 0;
+
+  /**
+   * If the bin is considered selected; accessible for export
+   * @type {boolean}
+   */
+  this['sel'] = false;
+
+  /**
+   * If the bin is considered highlighted; accessible for export
+   * @type {boolean}
+   */
+  this['highlight'] = false;
+
+  /**
    * This is just so we can show bins in a slickgrid instance. It will be set by the label so when a bin is recreated
    * slickgrid will identify it as the same item for selection purposes.
    * @type {string}
