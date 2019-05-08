@@ -187,6 +187,8 @@ plugin.vectortools.JoinLayer.prototype.getUniqueIndexer = function(accessorFunct
  * @protected
  */
 plugin.vectortools.JoinLayer.prototype.getContainsIndexer = function(accessorFunction) {
+  var memoryIndex = [];
+
   return (
     /**
      * @param {string} field
@@ -194,8 +196,6 @@ plugin.vectortools.JoinLayer.prototype.getContainsIndexer = function(accessorFun
      * @private
      */
     function(field) {
-      var memoryIndex = [];
-
       /**
        * @param {Object} obj
        * @param {boolean} crossProduct
