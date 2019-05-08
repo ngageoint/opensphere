@@ -10,7 +10,7 @@
           title="Show an interactive map annotation for this feature">
         <input type="checkbox" class="custom-control-input" name="showAnnotation"
             ng-attr-id="showAnnotation{{ctrl.uid}}"
-            ng-change="ctrl.updateAnnotation()"
+            ng-change="ctrl.updatePreview()"
             ng-model="ctrl.annotationOptions.show"/>
         <label class="custom-control-label" ng-attr-for="showAnnotation{{ctrl.uid}}">
           Show Annotation
@@ -22,7 +22,7 @@
           title="Show the Name field as the annotation header">
         <input type="checkbox" class="custom-control-input" name="showAnnotationName"
             ng-attr-id="showAnnotationName{{ctrl.uid}}"
-            ng-change="ctrl.updateAnnotation()"
+            ng-change="ctrl.updatePreview()"
             ng-disabled="!ctrl.annotationOptions.show"
             ng-model="ctrl.annotationOptions.showName"/>
         <label class="custom-control-label" ng-attr-for="showAnnotationName{{ctrl.uid}}">
@@ -35,7 +35,7 @@
           title="Show the Description field in the annotation">
         <input type="checkbox" class="custom-control-input" name="showAnnotationDescription"
             ng-attr-id="showAnnotationDescription{{ctrl.uid}}"
-            ng-change="ctrl.updateAnnotation()"
+            ng-change="ctrl.updatePreview()"
             ng-disabled="!ctrl.annotationOptions.show"
             ng-model="ctrl.annotationOptions.showDescription"/>
         <label class="custom-control-label" ng-attr-for="showAnnotationDescription{{ctrl.uid}}">
@@ -44,12 +44,31 @@
       </div>
     </div>
     <div class="form-row">
-      <colorpicker name="headerColor" color="ctrl.annotationOptions.nameBG" show-reset="true" title="Sets the bg color for name"></colorpicker>
-      Name Background Color
+      <div class="d-inline-block"
+          title="Change the background color of the header">
+        <colorpicker name="headerColor"
+            color="ctrl.annotationOptions.nameBG"
+            show-reset="true"
+            title="Sets the bg color for name"
+            disabled="!ctrl.annotationOptions.show"></colorpicker>
+        <label>
+          Header Background
+        </label>
+      </div>
     </div>
     <div class="form-row">
-      <colorpicker name="bodyColor" color="ctrl.annotationOptions.descBG" show-reset="true" title="Sets the bg color for Description"></colorpicker>
-      Description Background Color
+      <div class="d-inline-block"
+          title="Change the background color of the description">
+        <colorpicker name="bodyColor"
+          color="ctrl.annotationOptions.descBG"
+          show-reset="true"
+          title="Sets the bg color for Description"
+          disabled="!ctrl.annotationOptions.show"
+          change="ctrl.updatePreview()"></colorpicker>
+        <label disabled="!ctrl.annotationOptions.show">
+          Description Background
+        </label>
+      </div>
     </div>
   </div>
 </div>
