@@ -156,6 +156,10 @@ plugin.vectortools.JoinCtrl.prototype.onSourcePropertyChange = function(event) {
  * @inheritDoc
  */
 plugin.vectortools.JoinCtrl.prototype.onUpdateDelay = function() {
+  if (!this.scope_) {
+    return;
+  }
+
   this.scope_['joinForm'].$setValidity('featureCount', true);
   this['count'] = 0;
 
