@@ -53,7 +53,7 @@ os.ui.Module.directive('annotation', [os.annotation.annotationDirective]);
  */
 os.annotation.UI_TEMPLATE_ =
   '<div class="c-annotation u-hover-container">' +
-    '<svg class="c-annotation__svg"><path/></svg>' +
+    '<svg class="c-annotation__svg"><path ng-style="{\'fill\': ctrl.options.descBG }"/></svg>' +
     '<div class="c-annotation__controls position-absolute text-right w-100" ng-if="ctrl.options.editable">' +
       '<button class="btn btn-sm btn-outline-secondary border-0 bg-transparent animate-fade u-hover-show"' +
           'title="Edit annotation"' +
@@ -197,7 +197,7 @@ os.annotation.AnnotationCtrl.prototype.initialize = function() {
   if (this.element && this.feature && this.overlay) {
     this.element.width(this['options'].size[0]);
     this.element.height(this['options'].size[1]);
-    this.element.find('path').css('fill', this['options'].descBG);
+    // this.element.find('path').css('fill', this['options'].descBG);
 
     this.setTailType_(os.annotation.TailType.ABSOLUTE);
     this.onFeatureChange_();
