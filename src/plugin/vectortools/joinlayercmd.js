@@ -40,14 +40,18 @@ plugin.vectortools.JoinLayer = function(sourceIds, indexFields, indexerType, opt
    */
   this.indexerType_ = indexerType;
 
+  var exact = plugin.vectortools.JoinLayer.exactAccessor_;
+  var caseInsensitive = plugin.vectortools.JoinLayer.caseInsensitiveAccessor_;
+
   /**
    * @type {Object<string, function(string):function(Object):(number|string)>}
    * @private
    */
   this.indexers_ = {
-    'unique': this.uniqueIndexer_,
-    'contains': this.containsIndexer_,
-    'uniqueCaseInsensitive': this.caseIndexer_
+    'unique': this.getUniqueIndexer(exact),
+    'contains': this.getContainsIndexer(exact),
+    'uniqueCaseInsensitive': this.getUniqueIndexer(caseInsensitive),
+    'containsCaseInsensitive': this.getContainsIndexer(caseInsensitive)
   };
 
   this.options_ = opt_options;
@@ -129,90 +133,94 @@ plugin.vectortools.JoinLayer.prototype.getIndexer_ = function() {
 
 
 /**
+ * @param {Object} obj
  * @param {string} field
- * @return {function(Object, boolean):(number|string)} index function
+ * @return {string|number}
  * @private
  */
-plugin.vectortools.JoinLayer.prototype.uniqueIndexer_ = function(field) {
-  /**
-   * @param {Object} obj
-   * @return {number|string} the index value
-   */
-  var indexer = function(obj) {
-    return /** @type {string|number} */ (/** @type {ol.Feature} */ (obj).get(field));
-  };
-
-  return indexer;
+plugin.vectortools.JoinLayer.exactAccessor_ = function(obj, field) {
+  return /** @type {string|number} */ (/** @type {ol.Feature} */ (obj).get(field));
 };
 
 
 /**
+ * @param {Object} obj
  * @param {string} field
- * @return {function(Object, boolean):(number|string)} index function
+ * @return {string|number}
  * @private
  */
-plugin.vectortools.JoinLayer.prototype.containsIndexer_ = function(field) {
-  this.memoryIndex = [];
-
-  /**
-   * @param {Object} obj
-   * @param {boolean} crossProduct
-   * @this plugin.vectortools.JoinLayer
-   * @return {number|string} the index value
-   */
-  var indexer = function(obj, crossProduct) {
-    var val = /** @type {string|number} */ (/** @type {ol.Feature} */ (obj).get(field));
-    if (crossProduct && this.memoryIndex.indexOf(val) == -1) {
-      this.memoryIndex.push(val);
-    } else if (val) {
-      for (var i = 0, ii = this.memoryIndex.length; i < ii; i++) {
-        var mem = this.memoryIndex[i];
-        if (mem && mem.indexOf(val) != -1 || val.indexOf(mem) != -1) {
-          return mem;
-        }
-      }
-    }
-
-    return val;
-  };
-
-  return indexer.bind(this);
+plugin.vectortools.JoinLayer.caseInsensitiveAccessor_ = function(obj, field) {
+  var val = /** @type {string|number} */ (/** @type {ol.Feature} */ (obj).get(field));
+  return val ? val.toString().toLowerCase() : val;
 };
 
 
 /**
- * @param {string} field
- * @return {function(Object, boolean):(number|string)} index function
- * @private
+ * @param {function(Object, string):(number|string)} accessorFunction
+ * @return {function(string):function(Object):(number|string)}
+ * @protected
  */
-plugin.vectortools.JoinLayer.prototype.caseIndexer_ = function(field) {
-  this.memoryIndex = [];
+plugin.vectortools.JoinLayer.prototype.getUniqueIndexer = function(accessorFunction) {
+  return (
+    /**
+     * @param {string} field
+     * @return {function(Object):(number|string)} index function
+     * @private
+     */
+    function(field) {
+      /**
+       * @param {Object} obj
+       * @return {number|string} the index value
+       */
+      var indexer = function(obj) {
+        return accessorFunction(obj, field);
+      };
 
-  /**
-   * @param {Object} obj
-   * @param {boolean} crossProduct
-   * @this plugin.vectortools.JoinLayer
-   * @return {number|string} the index value
-   */
-  var indexer = function(obj, crossProduct) {
-    var val = /** @type {string|number} */ (/** @type {ol.Feature} */ (obj).get(field));
-    val = val.toUpperCase();
-    if (crossProduct && this.memoryIndex.indexOf(val) == -1) {
-      this.memoryIndex.push(val);
-    } else if (val) {
-      for (var i = 0, ii = this.memoryIndex.length; i < ii; i++) {
-        var mem = this.memoryIndex[i];
-        if (mem && mem === val) {
-          return mem;
-        }
-      }
-    }
-
-    return val;
-  };
-
-  return indexer.bind(this);
+      return indexer;
+    });
 };
+
+
+/**
+ * @param {function(Object, string):(number|string)} accessorFunction
+ * @return {function(string):function(Object, boolean):(number|string)}
+ * @protected
+ */
+plugin.vectortools.JoinLayer.prototype.getContainsIndexer = function(accessorFunction) {
+  return (
+    /**
+     * @param {string} field
+     * @return {function(Object, boolean):(number|string)} index function
+     * @private
+     */
+    function(field) {
+      var memoryIndex = [];
+
+      /**
+       * @param {Object} obj
+       * @param {boolean} crossProduct
+       * @return {number|string} the index value
+       */
+      var indexer = function(obj, crossProduct) {
+        var val = accessorFunction(obj, field);
+        if (crossProduct && memoryIndex.indexOf(val) == -1) {
+          memoryIndex.push(val);
+        } else if (val) {
+          for (var i = 0, ii = memoryIndex.length; i < ii; i++) {
+            var mem = memoryIndex[i];
+            if (mem && mem.indexOf(val) != -1 || val.indexOf(mem) != -1) {
+              return mem;
+            }
+          }
+        }
+
+        return val;
+      };
+
+      return indexer;
+    });
+};
+
 
 
 /**
