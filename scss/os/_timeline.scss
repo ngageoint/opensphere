@@ -277,13 +277,14 @@
 
 .c-histogram-tooltip {
   background: $body-bg;
-  border-radius: 3;
+  border: 1px solid $border-color;
+  border-radius: $tooltip-border-radius;
   color: $body-color;
-  font-size: 12px;
+  font-size: $tooltip-font-size;
   font-weight: bold;
   line-height: 1;
-  padding: 5px;
-  z-index: 2000;
+  padding: $tooltip-padding-y $tooltip-padding-x;
+  z-index: $zindex-tooltip;
 
   &:after {
     color: $body-color;
