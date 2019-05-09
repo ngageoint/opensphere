@@ -138,7 +138,7 @@ plugin.vectortools.getColumnMappings = function(sourceIds) {
   /**
    * Filter mappings to only those which apply to at least two of the sources
    * @param {number} count
-   * @param {os.column.ColumnModel} col
+   * @param {osx.column.ColumnModel} col
    * @return {number}
    */
   var countValidKeys = function(count, col) {
@@ -147,7 +147,7 @@ plugin.vectortools.getColumnMappings = function(sourceIds) {
 
   /**
    * Filter out column models that reference layers not in filterKeys
-   * @param {os.column.ColumnModel} col
+   * @param {osx.column.ColumnModel} col
    * @return {boolean}
    */
   var filterColumns = function(col) {
@@ -156,8 +156,8 @@ plugin.vectortools.getColumnMappings = function(sourceIds) {
 
   /**
    * Sort by the layer/source id order we were given
-   * @param {os.column.ColumnModel} a
-   * @param {os.column.ColumnModel} b
+   * @param {osx.column.ColumnModel} a
+   * @param {osx.column.ColumnModel} b
    * @return {number}
    */
   var sortColumns = function(a, b) {
@@ -168,8 +168,8 @@ plugin.vectortools.getColumnMappings = function(sourceIds) {
 
   /**
    * Replace filterKeys with sourceIds
-   * @param {os.column.ColumnModel} col
-   * @return {os.column.ColumnModel}
+   * @param {osx.column.ColumnModel} col
+   * @return {osx.column.ColumnModel}
    */
   var replaceKey = function(col) {
     var i = filterKeys.indexOf(col['layer']);
@@ -186,7 +186,7 @@ plugin.vectortools.getColumnMappings = function(sourceIds) {
 
   /**
    * @param {Object<string, Object<string, string>>} map
-   * @param {os.column.ColumnModel} col
+   * @param {osx.column.ColumnModel} col
    * @return {Object<string, Object<string, string>>}
    */
   var reduceMap = function(map, col) {

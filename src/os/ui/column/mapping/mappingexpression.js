@@ -59,7 +59,7 @@ os.ui.column.mapping.MappingExpressionCtrl = function($scope, $element, $timeout
   var node = /** @type {os.ui.column.mapping.ColumnModelNode} */ ($scope['node']);
 
   /**
-   * @type {?os.column.ColumnModel}
+   * @type {?osx.column.ColumnModel}
    * @private
    */
   this.model_ = node['model'];

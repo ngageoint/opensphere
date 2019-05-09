@@ -142,7 +142,7 @@ os.ui.column.mapping.ColumnMappingFormCtrl.prototype.init_ = function() {
       var node = this.getModelNode_(columnModel);
 
       // put the initial layer on the node so we can default the picker to it
-      node.setInitialLayer(descMap[columnModel['layer']]);
+      node.setInitialLayer(descMap[columnModel.layer]);
       this['tree'].push(node);
     }
   } else {
@@ -198,7 +198,7 @@ os.ui.column.mapping.ColumnMappingFormCtrl.prototype.validateLayers_ = function(
 
   var found = os.array.findDuplicates(columns, function(item) {
     // find duplicate layers and for empty strings (i.e. user hasn't picker yet) just return a random
-    return item['layer'] || goog.string.getRandomString();
+    return item.layer || goog.string.getRandomString();
   });
 
   var duplicates = columns.length > 1 && found.length > 0;
@@ -206,14 +206,14 @@ os.ui.column.mapping.ColumnMappingFormCtrl.prototype.validateLayers_ = function(
 
   if (duplicates) {
     var node = ol.array.find(this['tree'], function(item) {
-      return item.getInitialLayer().getUrlKey() === found[0]['layer'];
+      return item.getInitialLayer().getUrlKey() === found[0].layer;
     });
     this['duplicateLayerText'] =
         'Duplicate layers are not supported (<b>' + node.getInitialLayer().getTitle() + '</b>)';
   }
 
   var incompleteLayer = ol.array.find(columns, function(item) {
-    return (!item['layer'] || item['layer'].length == 0 || !item['column'] || item['column'].length == 0);
+    return (!item.layer || item.layer.length == 0 || !item.column || item.column.length == 0);
   });
 
   this.scope_['cmForm'].$setValidity('duplicateLayer', !duplicates);
@@ -224,7 +224,7 @@ os.ui.column.mapping.ColumnMappingFormCtrl.prototype.validateLayers_ = function(
 
 /**
  * Creates a model node from a column model.
- * @param {os.column.ColumnModel} columnModel
+ * @param {osx.column.ColumnModel} columnModel
  * @return {os.ui.column.mapping.ColumnModelNode}
  * @private
  */
@@ -254,7 +254,7 @@ os.ui.column.mapping.ColumnMappingFormCtrl.prototype.validate = function() {
     var ownerMapping = os.column.ColumnMappingManager.getInstance().getOwnerMapping(hash);
     if (ownerMapping && ownerMapping.getId() !== id) {
       columnsValid = false;
-      this['otherCMText'] = 'One of your columns (<b>' + c['column'] + '</b>) is currently in use on the <b>' +
+      this['otherCMText'] = 'One of your columns (<b>' + c.column + '</b>) is currently in use on the <b>' +
           ownerMapping.getName() + '</b> column association.';
       break;
     }
