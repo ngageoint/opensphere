@@ -54,7 +54,7 @@ os.ui.Module.directive('annotation', [os.annotation.annotationDirective]);
 os.annotation.UI_TEMPLATE_ =
   '<div class="c-annotation u-hover-container">' +
     '<svg class="c-annotation__svg">' +
-      '<path ng-style="{ \'fill\': ctrl.options.showDescription ? ctrl.options.bodyBG : ctrl.options.headerBG}" />' +
+      '<path ng-style="{ fill: ctrl.options.showDescription ? ctrl.options.bodyBG : ctrl.options.headerBG}" />' +
     '</svg>' +
     '<div class="c-annotation__controls position-absolute text-right w-100" ng-if="ctrl.options.editable">' +
       '<button class="btn btn-sm btn-outline-secondary border-0 bg-transparent animate-fade u-hover-show"' +
@@ -67,11 +67,11 @@ os.annotation.UI_TEMPLATE_ =
       '<div class="card-header flex-shrink-0 text-truncate px-1 py-0" title="{{ctrl.name}}"' +
           'ng-show="ctrl.options.showName"' +
           'ng-class="!ctrl.options.showDescription && \'h-100 border-0\'"' +
-          'ng-style="{\'background\': ctrl.options.headerBG }">' +
+          'ng-style="{background: ctrl.options.headerBG }">' +
         '{{ctrl.name}}' +
       '</div>' +
       '<div class="card-body p-1 u-overflow-y-auto" ng-show="ctrl.options.showDescription" ' +
-          'ng-style="{\'background\': ctrl.options.bodyBG }">' +
+          'ng-style="{background: ctrl.options.bodyBG }">' +
         '<simplemde text="ctrl.description" edit="false" is-required="false" maxlength="4000"></simplemde>' +
       '</div>' +
     '</div>' +

@@ -2,6 +2,7 @@ goog.provide('os.annotation');
 
 goog.require('ol.geom.GeometryType');
 goog.require('os.ui');
+goog.require('os.ui.color.colorPickerDirective');
 
 
 /**
@@ -16,8 +17,8 @@ os.annotation.DEFAULT_OPTIONS = {
   showDescription: true,
   size: [200, 100],
   offset: [0, -75],
-  nameBG: '#52575c',
-  descBG: '#3a3f44'
+  headerBG: os.annotation.DEFAULT_ANNOTATION_HEADER_BACKGROUND_COLOR,
+  bodyBG: os.annotation.DEFAULT_ANNOTATION_DESCRIPTION_BACKGROUND_COLOR
 
 };
 
