@@ -47,11 +47,12 @@
       <div class="d-inline-block"
           title="Change the background color of the header">
         <colorpicker name="headerColor"
-            color="ctrl.annotationOptions.nameBG"
+            ng-attr-id="headerColor{{ctrl.uid}}"
+            color="ctrl.annotationOptions.headerBG"
             show-reset="true"
-            title="Sets the bg color for name"
-            disabled="!ctrl.annotationOptions.show"></colorpicker>
-        <label>
+            title="Sets the bg color for header"
+            disabled="!ctrl.annotationOptions.show || !ctrl.annotationOptions.showName"></colorpicker>
+        <label ng-attr-for="headerColor{{ctrl.uid}}">
           Header Background
         </label>
       </div>
@@ -60,12 +61,12 @@
       <div class="d-inline-block"
           title="Change the background color of the description">
         <colorpicker name="bodyColor"
-          color="ctrl.annotationOptions.descBG"
+          ng-attr-id="bodyColor{{ctrl.uid}}"
+          color="ctrl.annotationOptions.bodyBG"
           show-reset="true"
-          title="Sets the bg color for Description"
-          disabled="!ctrl.annotationOptions.show"
-          change="ctrl.updatePreview()"></colorpicker>
-        <label disabled="!ctrl.annotationOptions.show">
+          title="Sets the bg color for body"
+          disabled="!ctrl.annotationOptions.show || !ctrl.annotationOptions.showDescription"></colorpicker>
+        <label ng-attr-for="bodyColor{{ctrl.uid}}">
           Description Background
         </label>
       </div>
