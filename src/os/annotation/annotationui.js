@@ -53,7 +53,9 @@ os.ui.Module.directive('annotation', [os.annotation.annotationDirective]);
  */
 os.annotation.UI_TEMPLATE_ =
   '<div class="c-annotation u-hover-container">' +
-    '<svg class="c-annotation__svg"><path ng-style="{\'fill\': ctrl.options.descBG }"/></svg>' +
+    '<svg class="c-annotation__svg">' +
+      '<path ng-style="{ \'fill\': ctrl.options.showDescription ? ctrl.options.bodyBG : ctrl.options.headerBG}" />' +
+    '</svg>' +
     '<div class="c-annotation__controls position-absolute text-right w-100" ng-if="ctrl.options.editable">' +
       '<button class="btn btn-sm btn-outline-secondary border-0 bg-transparent animate-fade u-hover-show"' +
           'title="Edit annotation"' +
@@ -65,11 +67,11 @@ os.annotation.UI_TEMPLATE_ =
       '<div class="card-header flex-shrink-0 text-truncate px-1 py-0" title="{{ctrl.name}}"' +
           'ng-show="ctrl.options.showName"' +
           'ng-class="!ctrl.options.showDescription && \'h-100 border-0\'"' +
-          'ng-style="{\'background\': ctrl.options.nameBG }">' +
+          'ng-style="{\'background\': ctrl.options.headerBG }">' +
         '{{ctrl.name}}' +
       '</div>' +
       '<div class="card-body p-1 u-overflow-y-auto" ng-show="ctrl.options.showDescription" ' +
-          'ng-style="{\'background\': ctrl.options.descBG }">' +
+          'ng-style="{\'background\': ctrl.options.bodyBG }">' +
         '<simplemde text="ctrl.description" edit="false" is-required="false" maxlength="4000"></simplemde>' +
       '</div>' +
     '</div>' +
@@ -157,9 +159,8 @@ os.annotation.AnnotationCtrl = function($scope, $element, $timeout) {
   this['options'] = /** @type {!osx.annotation.Options} */ (this.feature.get(os.annotation.OPTIONS_FIELD));
 
   // if background color isnt set, set it to default
-  this['options'].descBG = this['options'].descBG || os.annotation.DEFAULT_ANNOTATION_DESCRIPTION_BACKGROUND_COLOR;
-  this['options'].nameBG = this['options'].nameBG || os.annotation.DEFAULT_ANNOTATION_HEADER_BACKGROUND_COLOR;
-
+  this['options'].bodyBG = this['options'].bodyBG || os.annotation.DEFAULT_ANNOTATION_DESCRIPTION_BACKGROUND_COLOR;
+  this['options'].headerBG = this['options'].headerBG || os.annotation.DEFAULT_ANNOTATION_HEADER_BACKGROUND_COLOR;
 
   ol.events.listen(this.feature, ol.events.EventType.CHANGE, this.onFeatureChange_, this);
   ol.events.listen(this.overlay, 'change:visible', this.onOverlayVisibleChange_, this);
@@ -197,7 +198,6 @@ os.annotation.AnnotationCtrl.prototype.initialize = function() {
   if (this.element && this.feature && this.overlay) {
     this.element.width(this['options'].size[0]);
     this.element.height(this['options'].size[1]);
-    // this.element.find('path').css('fill', this['options'].descBG);
 
     this.setTailType_(os.annotation.TailType.ABSOLUTE);
     this.onFeatureChange_();
@@ -267,6 +267,7 @@ os.annotation.AnnotationCtrl.prototype.onFeatureChange_ = function() {
   if (this.feature && this.scope) {
     this['name'] = os.annotation.getNameText(this.feature);
     this['description'] = os.annotation.getDescriptionText(this.feature);
+    this['options'] = /** @type {!osx.annotation.Options} */ (this.feature.get(os.annotation.OPTIONS_FIELD));
 
     os.ui.apply(this.scope);
   }
