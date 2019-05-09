@@ -566,7 +566,7 @@ plugin.arc.layer.ArcLayerDescriptor.prototype.getFilterableTypes = function() {
  * @inheritDoc
  */
 plugin.arc.layer.ArcLayerDescriptor.prototype.getUrlKey = function() {
-  return this.url_ + '!!' + this.getTitle();
+  return this.getFilterKey();
 };
 
 /**
