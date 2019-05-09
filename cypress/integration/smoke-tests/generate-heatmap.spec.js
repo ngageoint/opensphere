@@ -35,7 +35,7 @@ describe('Generate heatmap from CSV', function() {
         .click();
     cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4).rightClick();
     cy.get(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.Local.contextMenu.menuOptions.GO_TO).click();
-    cy.wait(1000); // Wait for the go to operation to complete
+    cy.wait(1500); // Wait for the go to operation to complete
     cy.matchImageSnapshot('features loaded');
     cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4)
         .find(os.layersDialog.Tabs.Layers.Tree.LAYER_TOGGLE_CHECKBOX_WILDCARD)

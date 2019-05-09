@@ -51,7 +51,7 @@ describe('Import state file', function() {
     cy.get(os.Map.MAP_MODE_BUTTON).should('contain', '2D');
     cy.get(os.Application.PAGE).trigger('mouseenter').trigger('mousemove');
     cy.get(os.statusBar.COORDINATES_TEXT).should('contain', '+39');
-    cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4).should('contain', 'Police Stations Features (3)');
+    cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4).should('contain', 'Police Stations Features (3)', {timeout: 8000});
     cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_5).should('contain', 'Fire Hydrants Features (747)');
     cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_5).rightClick();
     cy.get(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.Server.contextMenu.menuOptions.FEATURE_ACTIONS).click();
