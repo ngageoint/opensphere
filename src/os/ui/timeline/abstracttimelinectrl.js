@@ -355,7 +355,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.onWindow = function(event, range) 
       if (this.tlc.getAnimationRange().start != range[0]) {
         this.tlc.setLock(false);
         os.alertManager.sendAlert('Moving the currently displayed window turns off the timeline lock. ' +
-        'Relock at the new location if desired.');
+          'Relock at the new location if desired.', os.alert.AlertEventSeverity.INFO);
       }
     }
 
