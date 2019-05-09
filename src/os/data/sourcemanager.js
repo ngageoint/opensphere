@@ -93,6 +93,7 @@ os.data.SourceManager.prototype.disposeInternal = function() {
     ol.events.unlistenByKey(this.sourceListeners_[key]);
   }
 
+  goog.dispose(this.updateDelay);
   this.sourceListeners_ = {};
   this.sources.length = 0;
 };
