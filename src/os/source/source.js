@@ -76,7 +76,7 @@ os.source.getFilterColumns = function(source, opt_local, opt_includeTime) {
 
   if (source) {
     if (opt_local) {
-      columns = source.getColumns();
+      columns = source.getColumnsArray();
 
       if (columns && columns.length > 0) {
         // do not include the TIME column or any column with a datetime type by default for filtering
@@ -234,7 +234,7 @@ os.source.getExportFields = function(source, opt_internal, opt_includeTime) {
   var fields = null;
 
   if (source) {
-    var columns = source.getColumns();
+    var columns = source.getColumnsArray();
     if (columns && columns.length > 0) {
       fields = [];
 
