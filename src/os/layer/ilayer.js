@@ -251,7 +251,7 @@ os.layer.ILayer.prototype.setLayerOptions;
  * Gets the layer tree node UI displayed on hover/selection.
  * @return {!string}
  */
-os.layer.ILayer.prototype.getNodeUI = goog.abstractMethod;
+os.layer.ILayer.prototype.getNodeUI;
 
 
 /**
@@ -265,14 +265,14 @@ os.layer.ILayer.prototype.setNodeUI;
  * Gets the group node UI for this layer
  * @return {?string}
  */
-os.layer.ILayer.prototype.getGroupUI = goog.abstractMethod;
+os.layer.ILayer.prototype.getGroupUI;
 
 
 /**
  * Gets the layer controls UI.
  * @return {!string}
  */
-os.layer.ILayer.prototype.getLayerUI = goog.abstractMethod;
+os.layer.ILayer.prototype.getLayerUI;
 
 
 /**

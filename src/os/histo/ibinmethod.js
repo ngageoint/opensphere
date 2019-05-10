@@ -22,7 +22,7 @@ os.histo.IBinMethod.prototype.getValue;
 /**
  * @return {string}
  */
-os.histo.IBinMethod.prototype.getField = goog.abstractMethod;
+os.histo.IBinMethod.prototype.getField;
 
 
 /**

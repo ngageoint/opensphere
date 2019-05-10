@@ -11,10 +11,10 @@ os.data.IReimport = function() {};
 /**
  * @return {boolean}
  */
-os.data.IReimport.prototype.canReimport = goog.abstractMethod;
+os.data.IReimport.prototype.canReimport;
 
 
 /**
  * Reimports this item
  */
-os.data.IReimport.prototype.reimport = goog.abstractMethod;
+os.data.IReimport.prototype.reimport;

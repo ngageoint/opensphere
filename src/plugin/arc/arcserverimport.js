@@ -73,7 +73,7 @@ plugin.arc.ArcImportCtrl.prototype.getUrl = function() {
 
 
 /**
- * @inheritDoc
+ * @return {string}
  */
 plugin.arc.ArcImportCtrl.prototype.getLabel = function() {
   if (this.dp) {

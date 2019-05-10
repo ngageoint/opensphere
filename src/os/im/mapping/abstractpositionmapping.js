@@ -6,6 +6,7 @@ goog.require('os.xml');
 
 
 /**
+ * @abstract
  * @extends {os.im.mapping.AbstractMapping}
  * @constructor
  */

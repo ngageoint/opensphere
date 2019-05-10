@@ -8,7 +8,7 @@ goog.require('os.command.State');
 
 /**
  * Abstract command for adding/removing KML nodes.
- *
+ * @abstract
  * @param {!plugin.file.kml.ui.KMLNode} node The KML node
  * @param {plugin.file.kml.ui.KMLNode} parent The parent node
  *
@@ -44,15 +44,17 @@ goog.inherits(plugin.file.kml.cmd.AbstractKMLNode, goog.Disposable);
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-plugin.file.kml.cmd.AbstractKMLNode.prototype.execute = goog.abstractMethod;
+plugin.file.kml.cmd.AbstractKMLNode.prototype.execute = function() {};
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-plugin.file.kml.cmd.AbstractKMLNode.prototype.revert = goog.abstractMethod;
+plugin.file.kml.cmd.AbstractKMLNode.prototype.revert = function() {};
 
 
 /**
