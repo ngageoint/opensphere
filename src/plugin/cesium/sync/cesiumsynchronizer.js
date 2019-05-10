@@ -6,6 +6,7 @@ goog.require('os.webgl.AbstractWebGLSynchronizer');
 
 /**
  * Abstract class to synchronize an OpenLayers layer to Cesium.
+ * @abstract
  * @param {!T} layer The OpenLayers layer.
  * @param {!ol.PluggableMap} map The OpenLayers map.
  * @param {!Cesium.Scene} scene The Cesium scene.

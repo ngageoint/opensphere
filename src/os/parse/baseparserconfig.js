@@ -55,4 +55,4 @@ os.parse.BaseParserConfig = function() {
  * Updates the preview data and columns from the source.
  * @param {Array.<os.im.mapping.IMapping>=} opt_mappings Mappings to apply to preview items.
  */
-os.parse.BaseParserConfig.prototype.updatePreview = goog.abstractMethod;
+os.parse.BaseParserConfig.prototype.updatePreview = function(opt_mappings) {};

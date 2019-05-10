@@ -25,6 +25,7 @@ goog.require('os.ui.slick.slickGridDirective');
  * back to the import process to be called on accept. The mapping is modified by reference
  * by user interaction with the mapper UI.
  *
+ * @abstract
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$timeout} $timeout
@@ -264,18 +265,21 @@ os.ui.im.AbstractMapperCtrl.prototype.update = function() {
 
 /**
  * Gets the rules appropriate to the implementation. Should be overridden to get the right ones.
+ * @abstract
  */
-os.ui.im.AbstractMapperCtrl.prototype.createRules = goog.abstractMethod;
+os.ui.im.AbstractMapperCtrl.prototype.createRules = function() {};
 
 
 /**
+ * @abstract
  * Validates the state of the form. Should be implemented to check the validity of the mapping in
  * extensions of this class.
  */
-os.ui.im.AbstractMapperCtrl.prototype.validate = goog.abstractMethod;
+os.ui.im.AbstractMapperCtrl.prototype.validate = function() {};
 
 
 /**
  * Validates the rules on the form. Should be implemented for each subclass.
+ * @abstract
  */
-os.ui.im.AbstractMapperCtrl.prototype.validateRules = goog.abstractMethod;
+os.ui.im.AbstractMapperCtrl.prototype.validateRules = function() {};

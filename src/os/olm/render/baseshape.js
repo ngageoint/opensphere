@@ -11,10 +11,10 @@ goog.require('ol.source.Vector');
 
 
 /**
+ * @abstract
  * @constructor
  * @extends {goog.Disposable}
  * @param {ol.style.Style|Array<ol.style.Style>} style Style.
- * @abstract
  */
 os.olm.render.BaseShape = function(style) {
   /**
@@ -100,9 +100,10 @@ os.olm.render.BaseShape.prototype.setMap = function(map) {
 
 
 /**
+ * @abstract
  * @return {ol.geom.Geometry} The geometry to draw
  */
-os.olm.render.BaseShape.prototype.getGeometry = goog.abstractMethod;
+os.olm.render.BaseShape.prototype.getGeometry = function() {};
 
 
 /**

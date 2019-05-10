@@ -10,6 +10,7 @@ goog.require('os.ui.query.IQueryReader');
 
 /**
  * Abstract implementation of IQueryReader.
+ * @abstract
  * @implements {os.ui.query.IQueryReader}
  * @constructor
  */
@@ -68,9 +69,10 @@ os.ui.query.AbstractQueryReader.prototype.setLayerId = function(layerId) {
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.ui.query.AbstractQueryReader.prototype.parseEntries = goog.abstractMethod;
+os.ui.query.AbstractQueryReader.prototype.parseEntries = function() {};
 
 
 /**
