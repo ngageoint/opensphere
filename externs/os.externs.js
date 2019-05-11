@@ -25,6 +25,7 @@ osx.annotation;
  *   show: boolean,
  *   showName: boolean,
  *   showDescription: boolean,
+ *   showTail: string,
  *   size: !Array<number>,
  *   offset: !Array<number>
  * }}
