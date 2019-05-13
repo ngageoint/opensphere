@@ -88,7 +88,7 @@ os.source.ISource.prototype.getColumns;
 
 
 /**
- * Get the origial array of columns for the data source.
+ * Get the original array of columns for the data source.
  * @return {!Array<!os.data.ColumnDefinition>}
  */
 os.source.ISource.prototype.getColumnsArray;
