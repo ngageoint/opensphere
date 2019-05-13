@@ -58,7 +58,8 @@ os.fn.reduceExtentFromLayers = function(extent, layer) {
  */
 os.fn.reduceExtentFromGeometries = function(extent, geometry) {
   if (geometry) {
-    var geom = geometry instanceof ol.geom.Geometry ? geometry : geometry.geometry;
+    var geom = /** @type {ol.geom.Geometry} */ (
+      /** @type {ol.geom.Geometry} */ (geometry).getType ? geometry : geometry.geometry);
 
     if (geom) {
       ol.extent.extend(extent, os.extent.getFunctionalExtent(geom));
