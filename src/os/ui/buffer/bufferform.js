@@ -170,7 +170,7 @@ os.ui.buffer.BufferFormCtrl.prototype.onOptionsChange_ = function(event, items, 
       }
     }
 
-    this['columns'] = sources && sources.length > 0 ? sources[0].getColumns().slice() : [];
+    this['columns'] = sources && sources.length > 0 ? sources[0].getColumns() : [];
     this['columns'].sort(os.ui.slick.column.nameCompare);
 
     this.updateLivePreview();

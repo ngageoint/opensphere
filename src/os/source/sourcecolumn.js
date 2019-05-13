@@ -82,7 +82,7 @@ os.source.column.addDefaults = function(source) {
   var hasSemiMinor = false;
 
   // test for each column type
-  source.getColumns().forEach(function(column) {
+  source.getColumnsArray().forEach(function(column) {
     var name = column['name'];
     if (name) {
       hasID |= goog.string.caseInsensitiveEquals(name, os.Fields.ID);
