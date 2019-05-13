@@ -275,7 +275,7 @@ plugin.vectortools.getCombinedColumns = function(sources, mappings) {
       return true;
     };
 
-    return columns.concat(source.getColumns().filter(filter));
+    return columns.concat(source.getColumnsArray().filter(filter));
   }, []).filter(function(column) {
     var field = typeof column === 'string' ? column : column['field'];
 

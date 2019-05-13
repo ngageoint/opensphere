@@ -90,7 +90,7 @@ os.ui.data.AddColumnFormCtrl.prototype.addValidators_ = function() {
  * @return {boolean}
  */
 os.ui.data.AddColumnFormCtrl.isDuplicate = function(source, modelVal, viewVal) {
-  var columns = source.getColumns();
+  var columns = source.getColumnsArray();
   var value = modelVal || viewVal;
   if (value) {
     for (var i = 0, ii = columns.length; i < ii; i++) {

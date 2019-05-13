@@ -413,7 +413,7 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
     // grab available columns off the feature source if available, and don't show internal columns
     var source = os.feature.getSource(feature);
     if (source) {
-      this['labelColumns'] = source.getColumns().filter(function(column) {
+      this['labelColumns'] = source.getColumnsArray().filter(function(column) {
         return !os.feature.isInternalField(column['field']);
       });
 
