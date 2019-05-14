@@ -367,7 +367,10 @@ os.ui.ServersCtrl.prototype.remove = function(provider, opt_prompt) {
       return;
     }
   }
-
+  var descList = os.dataManager.getDescriptors(provider.getId() + os.ui.data.BaseProvider.ID_DELIMITER);
+  for (var i = 0, ii = descList.length; i < ii; i++) {
+    os.dataManager.removeDescriptor(descList[i]);
+  }
   os.settings.delete(['userProviders', provider.getId()]);
 
   os.dataManager.removeProvider(provider.getId());

@@ -22,11 +22,6 @@ os.ui.arc.IARCDescriptor = function() {};
 os.ui.arc.IARCDescriptor.ID = 'os.ui.arc.IARCDescriptor';
 
 /**
- * @return {?string}
- */
-os.ui.arc.IARCDescriptor.prototype.getUrlKey;
-
-/**
  * Set the url
  * @param {?string} value
  */

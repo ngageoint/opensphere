@@ -206,7 +206,7 @@ os.ui.column.mapping.ColumnMappingFormCtrl.prototype.validateLayers_ = function(
 
   if (duplicates) {
     var node = ol.array.find(this['tree'], function(item) {
-      return item.getInitialLayer().getUrlKey() === found[0].layer;
+      return item.getInitialLayer().getFilterKey() === found[0]['layer'];
     });
     this['duplicateLayerText'] =
         'Duplicate layers are not supported (<b>' + node.getInitialLayer().getTitle() + '</b>)';
