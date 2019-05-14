@@ -6,6 +6,7 @@ goog.require('os.command.AreaToggle');
 goog.require('os.data.ISearchable');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.implements');
+goog.require('os.query');
 goog.require('os.structs.TriState');
 goog.require('os.ui.menu.IMenuSupplier');
 goog.require('os.ui.node.areaNodeUIDirective');
@@ -135,18 +136,25 @@ os.data.AreaNode.prototype.formatIcons = function() {
 
   var icon;
   var tooltip;
-  if (result == 1) {
-    icon = 'fa-ban text-danger';
-    tooltip = 'This area is an exclusion';
-  } else if (result == 2) {
-    icon = 'fa-circle u-text-yellow';
-    tooltip = 'This area is querying features';
-  } else if (result == 3) {
-    icon = 'fa-times-circle text-warning';
-    tooltip = 'This area is being used for queries and exclusions';
-  } else {
-    icon = 'fa-circle-o';
-    tooltip = 'This area is being displayed on the map';
+
+  switch (result) {
+    case os.query.AreaState.EXCLUSION:
+      icon = 'fa-ban text-danger';
+      tooltip = 'This area is an exclusion';
+      break;
+    case os.query.AreaState.INCLUSION:
+      icon = 'fa-circle u-text-yellow';
+      tooltip = 'This area is querying features';
+      break;
+    case os.query.AreaState.BOTH:
+      icon = 'fa-times-circle text-warning';
+      tooltip = 'This area is being used for queries and exclusions';
+      break;
+    case os.query.AreaState.NONE:
+    default:
+      icon = 'fa-circle-o';
+      tooltip = 'This area is being displayed on the map';
+      break;
   }
 
   if (icon) {
