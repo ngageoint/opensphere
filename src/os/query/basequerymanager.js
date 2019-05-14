@@ -430,6 +430,20 @@ os.query.BaseQueryManager.prototype.getHandlerById = function(layerId) {
 
 
 /**
+ * Get the states of areas in the query manager.
+ * @return {!Object<string, number>}
+ */
+os.query.BaseQueryManager.prototype.getAreaStates = function() {
+  return this.am ? this.am.getAll().reduce(function(result, area, index) {
+    var val = this.hasArea(area);
+    result[val] = result[val] || 0;
+    result[val]++;
+    return result;
+  }.bind(this), {}) : {};
+};
+
+
+/**
  * If an area is being used in a query entry.
  * @param {!(string|ol.Feature)} areaOrId The area feature or idea.
  * @return {os.query.AreaState} The area usage by query entries.
