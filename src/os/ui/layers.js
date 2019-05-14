@@ -374,14 +374,22 @@ os.ui.LayersWindowCtrl.prototype.disposeInternal = function() {
  */
 os.ui.LayersWindowCtrl.prototype.onQueriesChanged_ = function() {
   if (this.scope_) {
+    var qm = os.ui.queryManager;
+    var fm = os.ui.filterManager;
+
     this.scope_['areaCount'] = 0;
 
-    var states = os.ui.queryManager.getAreaStates();
+    var states = qm.getAreaStates();
     for (var key in states) {
       if (key != os.query.AreaState.NONE) {
         this.scope_['areaCount'] += states[key];
       }
     }
+
+    var filters = fm.getFilters() || [];
+    this.scope_['filterCount'] = filters.reduce(function(result, filter, index) {
+      return filter && qm.hasFilter(filter) ? result + 1 : result;
+    }, 0);
   }
 
   os.ui.apply(this.scope_);

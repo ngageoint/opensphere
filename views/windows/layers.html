@@ -10,7 +10,14 @@
           </span>
         </a>
       </li>
-      <li class="nav-item"><a href class="nav-link" ng-click="tab = 'filters'" ng-class="{active: tab == 'filters'}">Filters</a></li>
+      <li class="nav-item">
+        <a href class="nav-link" ng-click="tab = 'filters'" ng-class="{active: tab == 'filters'}">
+          Filters
+          <span class="badge badge-primary" ng-class="!filterCount && 'd-none'" title="Active filters">
+            {{filterCount}}
+          </span>
+        </a>
+      </li>
       <li class="nav-item"><a href class="nav-link" ng-click="tab = 'places'" ng-class="{active: tab == 'places'}">Places</a></li>
     </ul>
 
