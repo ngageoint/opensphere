@@ -2,7 +2,14 @@
   <div class="modal-body d-flex flex-column flex-fill">
     <ul class="nav nav-tabs flex-shrink-0">
       <li class="nav-item"><a href class="nav-link" ng-click="tab = 'layers'" ng-class="{active: tab == 'layers'}">Layers</a></li>
-      <li class="nav-item"><a href class="nav-link" ng-click="tab = 'areas'" ng-class="{active: tab == 'areas'}">Areas</a></li>
+      <li class="nav-item">
+        <a href class="nav-link" ng-click="tab = 'areas'" ng-class="{active: tab == 'areas'}">
+          Areas
+          <span class="badge badge-primary" ng-class="!areaCount && 'd-none'" title="Active query/exclusion areas">
+            {{areaCount}}
+          </span>
+        </a>
+      </li>
       <li class="nav-item"><a href class="nav-link" ng-click="tab = 'filters'" ng-class="{active: tab == 'filters'}">Filters</a></li>
       <li class="nav-item"><a href class="nav-link" ng-click="tab = 'places'" ng-class="{active: tab == 'places'}">Places</a></li>
     </ul>
