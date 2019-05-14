@@ -135,7 +135,7 @@ os.ui.column.mapping.MappingExpressionCtrl.prototype.onColumnChange_ = function(
  */
 os.ui.column.mapping.MappingExpressionCtrl.prototype.setLayer_ = function(layer) {
   var featureType = layer.getFeatureType();
-  this.model_['layer'] = layer.getUrlKey();
+  this.model_['layer'] = layer.getFilterKey();
   this.scope_['node'].setInitialLayer(layer);
 
   if (!featureType) {
