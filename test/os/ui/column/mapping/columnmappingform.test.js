@@ -14,13 +14,12 @@ describe('os.ui.column.mapping.ColumnMappingFormCtrl', function() {
   var providerMock = new plugin.ogc.GeoServer;
   var ogclayerMock2 = new plugin.ogc.OGCLayerDescriptor;
   var providerMock2 = new plugin.ogc.GeoServer;
-  // var dataManager = new os.dataManager;
   var descriptorList = [];
 
 
   // eslint-disable-next-line require-jsdoc
   function timeout(fn, delay, invokeApply) {
-    // $window.setTimeout(fn,delay);
+
   }
 
   beforeEach(function() {
@@ -31,8 +30,6 @@ describe('os.ui.column.mapping.ColumnMappingFormCtrl', function() {
     spyOn(ogclayerMock2, 'getDataProvider').andReturn(providerMock2);
     inject(function($compile, $rootScope) {
       $scope = $rootScope;
-      // windowScope = $rootScope.$new();
-      // ctrlScope = windowScope.$new();
       parent = $('<div></div>');
       element = angular.element(
           '<form name="cmForm">' +
@@ -138,7 +135,7 @@ describe('os.ui.column.mapping.ColumnMappingFormCtrl', function() {
     expect(actuallist.length).toBe(2);
   });
 
-  it('should not add a decriptor type not feature type', function() {
+  it('should not add a descriptor type not feature type', function() {
     descriptorList.push(ogclayerMock);
     descriptorList.push(ogclayerMock);
 
