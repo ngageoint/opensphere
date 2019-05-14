@@ -60,6 +60,7 @@ $form-control-disabled-border: $gray-600 !default;
 
 // Add a pointer to the custom checkbox
 .list-group-item:not([disabled]),
+.list-group-item-action:not([disabled]),
 .custom-select:not([disabled]),
 .custom-control.custom-radio .custom-control-label:not([disabled]),
 .custom-control.custom-checkbox .custom-control-label:not([disabled]) {
