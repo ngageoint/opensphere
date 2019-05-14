@@ -702,7 +702,7 @@ plugin.ogc.OGCLayerDescriptor.prototype.setUsePost = function(value) {
  * @inheritDoc
  */
 plugin.ogc.OGCLayerDescriptor.prototype.getUrlKey = function() {
-  return this.wfsUrl_ + '!!' + this.wfsName_;
+  return this.getFilterKey();
 };
 
 
@@ -1111,7 +1111,7 @@ plugin.ogc.OGCLayerDescriptor.prototype.launchFilterManager = function() {
  * @inheritDoc
  */
 plugin.ogc.OGCLayerDescriptor.prototype.getFilterKey = function() {
-  return this.getUrlKey();
+  return this.wfsUrl_ + '!!' + this.wfsName_;
 };
 
 
