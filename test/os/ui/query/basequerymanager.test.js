@@ -1,5 +1,6 @@
 goog.require('ol.Feature');
 goog.require('ol.geom.Polygon');
+goog.require('os.query');
 
 
 
@@ -29,7 +30,8 @@ os.ui.query.Handler.prototype.getLayerName = function() {
 };
 
 describe('os.query.BaseQueryManager', function() {
-  var am, qm;
+  var am;
+  var qm;
   var testPolygon;
   beforeEach(function() {
     testPolygon = new ol.geom.Polygon([[[0, 0], [0, 1], [1, 1], [1, 0], [0, 0]]], ol.geom.GeometryLayout.XY);
@@ -288,12 +290,12 @@ describe('os.query.BaseQueryManager', function() {
     qm.removeEntries();
 
     var result = qm.hasArea('bogus');
-    expect(result).toBe(0);
+    expect(result).toBe(os.query.AreaState.NONE);
 
     qm.addEntry('*', 'box', '*', true);
     // since it isn't in the area manager, we still expect 0
     result = qm.hasArea('box');
-    expect(result).toBe(0);
+    expect(result).toBe(os.query.AreaState.NONE);
 
     // now put it in the area manager
     var area = new ol.Feature();
@@ -305,23 +307,23 @@ describe('os.query.BaseQueryManager', function() {
 
     // The area is in the area manager but it isn't shown
     result = qm.hasArea('box');
-    expect(result).toBe(0);
+    expect(result).toBe(os.query.AreaState.NONE);
 
     // now it is shown
     area.set('shown', true);
     result = qm.hasArea('box');
-    expect(result).toBe(2);
+    expect(result).toBe(os.query.AreaState.INCLUSION);
 
     // make another entry that uses box for exclude
     qm.addEntry('A', 'box', '*', false);
 
     result = qm.hasArea('box');
-    expect(result).toBe(3);
+    expect(result).toBe(os.query.AreaState.BOTH);
 
     qm.removeEntries('*', 'box');
 
     result = qm.hasArea('box');
-    expect(result).toBe(1);
+    expect(result).toBe(os.query.AreaState.EXCLUSION);
 
     qm.removeEntries();
 
