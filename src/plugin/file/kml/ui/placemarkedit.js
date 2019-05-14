@@ -165,8 +165,21 @@ plugin.file.kml.ui.PlacemarkEditCtrl.prototype.cancel = function() {
 plugin.file.kml.ui.PlacemarkEditCtrl.prototype.createPreviewFeature = function() {
   plugin.file.kml.ui.PlacemarkEditCtrl.base(this, 'createPreviewFeature');
 
+  // get the current theme colors
+  var defaultHeaderColor =
+      window.getComputedStyle(document.getElementsByClassName('js-window__header')[0]).backgroundColor;
+    var fubar = document.getElementsByClassName('u-table');
+    var fubar2 = window.getComputedStyle(fubar[0]);
+
+  var defaultBodyColor =
+      window.getComputedStyle(document.getElementsByClassName('ui-menu')[0]);
+
   // set the default options for the annotation
   this['annotationOptions'] = os.object.unsafeClone(os.annotation.DEFAULT_OPTIONS);
+
+  // set the header/body color to theme defaults
+  this['annotationOptions'].headerBG = defaultHeaderColor;
+  this['annotationOptions'].bodyBG = defaultBodyColor;
 
   // disable annotation edit when creating an annotation
   this['annotationOptions'].editable = false;

@@ -158,9 +158,15 @@ os.annotation.AnnotationCtrl = function($scope, $element, $timeout) {
    */
   this['options'] = /** @type {!osx.annotation.Options} */ (this.feature.get(os.annotation.OPTIONS_FIELD));
 
-  // if background color isnt set, set it to default
-  this['options'].bodyBG = this['options'].bodyBG || os.annotation.DEFAULT_ANNOTATION_DESCRIPTION_BACKGROUND_COLOR;
-  this['options'].headerBG = this['options'].headerBG || os.annotation.DEFAULT_ANNOTATION_HEADER_BACKGROUND_COLOR;
+  // get the current theme colors
+  var defaultHeaderColor =
+      window.getComputedStyle(document.getElementsByClassName('js-window__header')[0]).backgroundColor;
+  var defaultBodyColor =
+      window.getComputedStyle(document.getElementsByClassName('ui-menu')[0]).backgroundColor;
+
+  // if background color isnt set, set it to current default themes
+  this['options'].bodyBG = this['options'].bodyBG || defaultBodyColor;
+  this['options'].headerBG = this['options'].headerBG || defaultHeaderColor;
 
   ol.events.listen(this.feature, ol.events.EventType.CHANGE, this.onFeatureChange_, this);
   ol.events.listen(this.overlay, 'change:visible', this.onOverlayVisibleChange_, this);
