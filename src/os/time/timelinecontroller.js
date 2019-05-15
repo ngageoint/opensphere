@@ -957,7 +957,6 @@ os.time.TimelineController.prototype.restore = function(config) {
   this.setLoadRanges(config['loadRanges']);
   this.setAnimateRanges(config['animateRanges']);
   this.setHoldRanges(config['holdRanges']);
-  this.updateOffetsAndCurrent_();
 
   if (config['playing']) {
     this.play();
@@ -974,6 +973,16 @@ os.time.TimelineController.prototype.restore = function(config) {
  */
 os.time.TimelineController.prototype.updateOffetsAndCurrent_ = function() {
   os.time.timeline.setDefaultOffsetForRange(this, this.getSmallestAnimateRangeLength());
+};
+
+
+/**
+ * Reset the timeline to config state
+ * @param {Object} config The state
+ */
+os.time.TimelineController.prototype.reset = function(config) {
+  this.restore(config);
+  this.updateOffetsAndCurrent_();
 };
 
 
