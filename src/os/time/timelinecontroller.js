@@ -1119,7 +1119,7 @@ os.time.TimelineController.prototype.removeSliceRange = function(timerange) {
  * @param {?goog.math.RangeSet} ranges
  */
 os.time.TimelineController.prototype.setSliceRanges = function(ranges) {
-  if (ranges) {
+  if (ranges && ranges instanceof goog.math.RangeSet) {
     var tr = this.sliceRanges_.clone();
     this.sliceRanges_ = ranges.clone();
     this.calcRangeCache_.clear();
@@ -1336,7 +1336,7 @@ os.time.TimelineController.prototype.removeLoadRange = function(timerange) {
  * @param {?goog.math.RangeSet} ranges
  */
 os.time.TimelineController.prototype.setLoadRanges = function(ranges) {
-  if (ranges) {
+  if (ranges && ranges instanceof goog.math.RangeSet) {
     var numPrev = this.getLoadRanges().length;
     var numNow = goog.iter.toArray(ranges).length;
     if ((numPrev === 1 && numNow != 1) || (numPrev > 1 && numNow === 1)) {
@@ -1435,7 +1435,7 @@ os.time.TimelineController.prototype.removeAnimateRange = function(timerange) {
  * @param {?goog.math.RangeSet} ranges
  */
 os.time.TimelineController.prototype.setAnimateRanges = function(ranges) {
-  if (ranges) {
+  if (ranges && ranges instanceof goog.math.RangeSet) {
     this.animateRanges_ = ranges.clone();
     this.dispatchEvent(os.time.TimelineEventType.ANIMATE_RANGE_CHANGED);
     this.dispatchShowEvent_();
@@ -1482,7 +1482,7 @@ os.time.TimelineController.prototype.getHoldRanges = function() {
  * @param {?goog.math.RangeSet} ranges
  */
 os.time.TimelineController.prototype.setHoldRanges = function(ranges) {
-  if (ranges) {
+  if (ranges && ranges instanceof goog.math.RangeSet) {
     this.holdRanges_ = ranges.clone();
     this.dispatchEvent(os.time.TimelineEventType.HOLD_RANGE_CHANGED);
     this.dispatchShowEvent_();
