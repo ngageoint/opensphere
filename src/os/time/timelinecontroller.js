@@ -968,7 +968,7 @@ os.time.TimelineController.prototype.restore = function(config) {
 
 /**
  * Updates the current position to the beginning of the anmation sequence, and
- * re-computes the step size and offests based on the current animation range.
+ * re-computes the step size and offsets based on the current animation range.
  * @private
  */
 os.time.TimelineController.prototype.updateOffetsAndCurrent_ = function() {
