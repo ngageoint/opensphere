@@ -1,15 +1,16 @@
-goog.require('os.time.TimeInstant');
-goog.require('os.time.TimeRange');
+goog.require('ol.Feature');
+goog.require('ol.layer.Vector');
 goog.require('os.data.BaseDescriptor');
-goog.require('os.ui.ogc.OGCDescriptor');
 goog.require('os.data.RecordField');
 goog.require('os.layer.Vector');
 goog.require('os.mock');
 goog.require('os.source');
+goog.require('os.source.MockSource');
 goog.require('os.source.Vector');
 goog.require('os.style.StyleType');
-goog.require('ol.Feature');
-goog.require('ol.layer.Vector');
+goog.require('os.time.TimeInstant');
+goog.require('os.time.TimeRange');
+goog.require('os.ui.ogc.OGCDescriptor');
 
 describe('os.source', function() {
   it('checks if a source is filterable', function() {
@@ -154,11 +155,8 @@ describe('os.source', function() {
     expect(os.source.getExportFields(null)).toBeNull();
 
     var columns = [];
-    var source = {
-      getColumns: function() {
-        return columns;
-      }
-    };
+    var source = new os.source.MockSource();
+    source.setColumns(columns);
 
     var fields = os.source.getExportFields(source);
     expect(fields).toBeNull();
@@ -184,32 +182,26 @@ describe('os.source', function() {
     expect(fields.length).toBe(0);
 
     // internal fields are not exported
-    columns.push(
-      {
-        field: os.data.RecordField.TIME,
-        visible: true
-      },
-      {
-        field: os.style.StyleType.FEATURE,
-        visible: true
-      }
-    );
+    columns.push({
+      field: os.data.RecordField.TIME,
+      visible: true
+    }, {
+      field: os.style.StyleType.FEATURE,
+      visible: true
+    });
 
     fields = os.source.getExportFields(source);
     expect(fields).toBeDefined();
     expect(fields.length).toBe(0);
 
     // other fields are exported
-    columns.push(
-      {
-        field: 'TEST 1',
-        visible: true
-      },
-      {
-        field: 'TEST 2',
-        visible: true
-      }
-    );
+    columns.push({
+      field: 'TEST 1',
+      visible: true
+    }, {
+      field: 'TEST 2',
+      visible: true
+    });
 
     fields = os.source.getExportFields(source);
     expect(fields).toBeDefined();
@@ -218,16 +210,13 @@ describe('os.source', function() {
     expect(fields).toContain('TEST 2');
 
     // but are not duplicated
-    columns.push(
-      {
-        field: 'TEST 1',
-        visible: true
-      },
-      {
-        field: 'TEST 2',
-        visible: true
-      }
-    );
+    columns.push({
+      field: 'TEST 1',
+      visible: true
+    }, {
+      field: 'TEST 2',
+      visible: true
+    });
 
     fields = os.source.getExportFields(source);
     expect(fields).toBeDefined();

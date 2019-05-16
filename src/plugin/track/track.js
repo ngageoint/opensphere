@@ -1092,7 +1092,7 @@ plugin.track.getSortField = function(feature, opt_sortField) {
     if (value == null || value == '') {
       var source = os.feature.getSource(feature);
       if (source) {
-        var columns = source.getColumns().slice();
+        var columns = source.getColumns();
         columns.sort(os.ui.slick.column.sortByField.bind(null, 'name'));
 
         var prompt;
