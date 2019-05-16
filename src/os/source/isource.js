@@ -81,10 +81,17 @@ os.source.ISource.prototype.getColor;
 
 
 /**
- * Get the array of data grid columns for the data source.
+ * Get a copy of the columns for the data source.
  * @return {!Array<!os.data.ColumnDefinition>}
  */
 os.source.ISource.prototype.getColumns;
+
+
+/**
+ * Get the original array of columns for the data source.
+ * @return {!Array<!os.data.ColumnDefinition>}
+ */
+os.source.ISource.prototype.getColumnsArray;
 
 
 /**

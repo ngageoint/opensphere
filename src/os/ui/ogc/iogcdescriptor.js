@@ -234,6 +234,7 @@ os.ui.ogc.IOGCDescriptor.prototype.getLayerName;
 
 /**
  * @return {?string}
+ * @deprecated Use IFilterable.getFilterKey()
  */
 os.ui.ogc.IOGCDescriptor.prototype.getUrlKey;
 
