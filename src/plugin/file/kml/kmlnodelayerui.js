@@ -343,7 +343,7 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.getColumns = function() {
   if (items) {
     for (var i = 0, n = items.length; i < n; i++) {
       var source = items[i].getSource();
-      labelColumns = labelColumns.concat(source.getColumns().filter(function(column) {
+      labelColumns = labelColumns.concat(source.getColumnsArray().filter(function(column) {
         return !os.feature.isInternalField(column['field']);
       }));
     }

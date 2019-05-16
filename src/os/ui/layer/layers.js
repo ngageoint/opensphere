@@ -90,9 +90,7 @@ os.ui.layer.getColumns = function(layer) {
  * @return {Array<os.data.ColumnDefinition>}
  */
 os.ui.layer.getColumnsFromSource = function(source) {
-  var columns = source.getColumns().slice();
-  columns.sort(os.ui.slick.column.nameCompare);
-  return columns;
+  return source ? source.getColumns().sort(os.ui.slick.column.nameCompare) : [];
 };
 
 

@@ -31,19 +31,24 @@
         <div class="col pl-0">Join Method</div>
         <popover x-title="'Join Method'" x-content="ctrl.joinMethodHelp" x-pos="'right'"></popover>
       </div>
-      <div class="form-group row">
-        <div class="form-check form-check-inline">
-          <input type="radio" id="exactMatch_{{$id}}" class="form-check-input" name="dateTypeRadios" value="unique" ng-model="ctrl.joinMethod" ng-disabled="disabled" />
-          <label class="form-check-label" for="exactMatch_{{$id}}" ng-disabled="disabled">Exact Match</label>
+      <div class="form-group">
+        <div class="form-check">
+          <input type="radio" id="unique_{{$id}}" class="form-check-input" name="dateTypeRadios" value="unique" ng-model="ctrl.joinMethod" ng-disabled="disabled" />
+          <label class="form-check-label" for="unique_{{$id}}" ng-disabled="disabled">Exact Match</label>
         </div>
-        <div class="form-check form-check-inline">
+        <div class="form-check">
           <input type="radio" id="contains_{{$id}}" class="form-check-input" name="dateTypeRadios" value="contains" ng-model="ctrl.joinMethod" ng-disabled="disabled" />
           <label class="form-check-label" for="contains_{{$id}}" ng-disabled="disabled">Contains</label>
         </div>
-        <div class="form-check form-check-inline">
-          <input type="radio" id="case_{{$id}}" class="form-check-input" name="dateTypeRadios" value="uniqueCaseInsensitive" ng-model="ctrl.joinMethod"
+        <div class="form-check">
+          <input type="radio" id="uniqueCase_{{$id}}" class="form-check-input" name="dateTypeRadios" value="uniqueCaseInsensitive" ng-model="ctrl.joinMethod"
             ng-disabled="disabled" />
-          <label class="form-check-label" for="case_{{$id}}" ng-disabled="disabled">Case Insensitive</label>
+          <label class="form-check-label" for="uniqueCase_{{$id}}" ng-disabled="disabled">Match (Case-Insensitive)</label>
+        </div>
+        <div class="form-check">
+          <input type="radio" id="containsCase_{{$id}}" class="form-check-input" name="dateTypeRadios" value="containsCaseInsensitive" ng-model="ctrl.joinMethod"
+            ng-disabled="disabled" />
+          <label class="form-check-label" for="containsCase_{{$id}}" ng-disabled="disabled">Contains (Case-Insensitive)</label>
         </div>
       </div>
     </div>
