@@ -36,6 +36,8 @@ os.ui.im.AbstractImportUI.prototype.launchUI = goog.abstractMethod;
  */
 os.ui.im.AbstractImportUI.prototype.mergeConfig = function(from, to) {
   to['color'] = from['color'];
+  to['icon'] = from['icon'];
+  to['shapeName'] = from['shapeName'];
   to['description'] = from['description'];
   to['mappings'] = from['mappings'];
   to['tags'] = from['tags'];

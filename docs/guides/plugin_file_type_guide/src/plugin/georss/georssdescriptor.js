@@ -47,29 +47,6 @@ plugin.georss.GeoRSSDescriptor.prototype.getLayerOptions = function() {
  * @return {!plugin.georss.GeoRSSDescriptor}
  */
 plugin.georss.GeoRSSDescriptor.createFromConfig = function(config) {
-  var file = config['file'];
-  var provider = plugin.georss.GeoRSSProvider.getInstance();
-  var descriptor = new plugin.georss.GeoRSSDescriptor();
-  descriptor.setId(provider.getUniqueId());
-  descriptor.setProvider(provider.getLabel());
-  descriptor.setUrl(file.getUrl());
-  descriptor.setColor(os.style.DEFAULT_LAYER_COLOR);
-
-  plugin.georss.GeoRSSDescriptor.updateFromConfig(descriptor, config);
-
-  return descriptor;
-};
-
-
-/**
- * Updates an existing descriptor from a parser configuration.
- * @param {!plugin.georss.GeoRSSDescriptor} descriptor
- * @param {!os.parse.FileParserConfig} config
- */
-plugin.georss.GeoRSSDescriptor.updateFromConfig = function(descriptor, config) {
-  descriptor.setColor(config['color']);
-  descriptor.setDescription(config['description']);
-  descriptor.setTitle(config['title']);
-  descriptor.setTags(config['tags'] ? config['tags'].split(/\s*,\s*/) : null);
-  descriptor.setParserConfig(config);
+  return os.data.FileDescriptor.createFromConfig(new plugin.georss.GeoRSSDescriptor(config),
+    plugin.georss.GeoRSSProvider.getInstance(), config, true);
 };

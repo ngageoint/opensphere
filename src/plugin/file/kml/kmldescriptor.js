@@ -52,29 +52,8 @@ plugin.file.kml.KMLDescriptor.prototype.getLayerOptions = function() {
  * @return {!plugin.file.kml.KMLDescriptor}
  */
 plugin.file.kml.KMLDescriptor.createFromConfig = function(config) {
-  var file = config['file'];
   var provider = plugin.file.kml.KMLProvider.getInstance();
   var descriptor = new plugin.file.kml.KMLDescriptor();
-  descriptor.setId(provider.getUniqueId());
-  descriptor.setProvider(provider.getLabel());
-  descriptor.setUrl(file.getUrl());
-  descriptor.setColor(os.style.DEFAULT_LAYER_COLOR);
-
-  plugin.file.kml.KMLDescriptor.updateFromConfig(descriptor, config);
-
+  os.data.FileDescriptor.createFromConfig(descriptor, provider, config);
   return descriptor;
-};
-
-
-/**
- * Updates an existing descriptor from a parser configuration.
- * @param {!plugin.file.kml.KMLDescriptor} descriptor
- * @param {!os.parse.FileParserConfig} config
- */
-plugin.file.kml.KMLDescriptor.updateFromConfig = function(descriptor, config) {
-  descriptor.setColor(config['color']);
-  descriptor.setDescription(config['description']);
-  descriptor.setTitle(config['title']);
-  descriptor.setTags(config['tags'] ? config['tags'].split(/\s*,\s*/) : null);
-  descriptor.setParserConfig(config);
 };
