@@ -102,6 +102,14 @@ os.source.MockSource.prototype.getColor = function() {
  * @inheritDoc
  */
 os.source.MockSource.prototype.getColumns = function() {
+  return this.columns.slice();
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.source.MockSource.prototype.getColumnsArray = function() {
   return this.columns;
 };
 

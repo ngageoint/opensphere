@@ -781,8 +781,8 @@ os.layer.Vector.prototype.callAction = function(type) {
         os.ui.timeline.TimelineCtrl.setView();
         break;
       case os.action.EventType.REFRESH:
-        if (source instanceof os.source.Request) {
-          /** @type {os.source.Request} */ (source).refresh();
+        if (source instanceof os.source.Vector && source.isRefreshEnabled()) {
+          source.refresh();
         }
         break;
       case os.action.EventType.LOCK:
