@@ -340,8 +340,8 @@ os.data.BaseDescriptor.prototype.getColumns = function() {
 
 
 /**
- * Sets the color of the descriptor
- * @param {?Array<os.data.ColumnDefinition>} value The color
+ * Sets the column definitions of the descriptor
+ * @param {?Array<os.data.ColumnDefinition>} value The column definitions
  */
 os.data.BaseDescriptor.prototype.setColumns = function(value) {
   this.columns_ = value;
