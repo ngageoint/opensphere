@@ -132,9 +132,6 @@ os.histo.NumericBinMethod.prototype.getMin = function() {
  */
 os.histo.NumericBinMethod.prototype.setMin = function(min) {
   this.min = min;
-  this.precision = Math.max(
-      os.histo.NumericBinMethod.getPrecision(this.min),
-      os.histo.NumericBinMethod.getPrecision(this.offset));
 };
 
 
@@ -151,9 +148,6 @@ os.histo.NumericBinMethod.prototype.getMax = function() {
  */
 os.histo.NumericBinMethod.prototype.setMax = function(max) {
   this.max = max;
-  this.precision = Math.max(
-      os.histo.NumericBinMethod.getPrecision(this.max),
-      os.histo.NumericBinMethod.getPrecision(this.offset));
 };
 
 
