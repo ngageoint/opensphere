@@ -445,6 +445,7 @@ plugin.arc.layer.ArcLayerDescriptor.prototype.getFeatureOptions = function() {
   params.set('geometryType', 'esriGeometryPolygon');
   params.set('geometry', '{geom}');
   params.set('returnIdsOnly', true);
+  params.set('spatialRel', 'esriSpatialRelIntersects');
 
   if (this.hasTimeExtent()) {
     params.set('time', '{time}');
