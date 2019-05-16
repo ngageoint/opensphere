@@ -293,7 +293,8 @@ os.metrics.Layer = {
   RENAME: 'layers.contextMenu.rename',
   EXPORT: 'layers.contextMenu.export',
   CREATE_BUFFER: 'layers.contextMenu.createBuffer',
-  SHOW_DESCRIPTION: 'layers.contextMenu.showDescription'
+  SHOW_DESCRIPTION: 'layers.contextMenu.showDescription',
+  FEATURE_LIST: 'layers.contextMenu.featureList'
 };
 
 
