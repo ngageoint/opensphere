@@ -328,6 +328,11 @@ os.metrics.LayersMetrics = function() {
     key: os.metrics.Layer.EXPORT
   });
   this.addChild(contextFeatureLayersMenuLeaf, {
+    label: 'Feature List',
+    description: 'Display a list of features in the layer.',
+    key: os.metrics.Layer.FEATURE_LIST
+  });
+  this.addChild(contextFeatureLayersMenuLeaf, {
     label: 'Create Buffer Region',
     description: 'Creates buffered region from data in this layer.',
     key: os.metrics.Layer.CREATE_BUFFER

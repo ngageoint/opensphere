@@ -20,6 +20,7 @@ os.action.EventType = {
   DISABLE_TIME: 'layer:disableTime',
   ENABLE_TIME: 'layer:enableTime',
   SHOW_DESCRIPTION: 'showDescription',
+  FEATURE_LIST: 'layer:featureList',
 
   // map
   COPY: goog.events.EventType.COPY,

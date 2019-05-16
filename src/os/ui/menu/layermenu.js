@@ -9,6 +9,7 @@ goog.require('os.fn');
 goog.require('os.layer.ILayer');
 goog.require('os.metrics.keys');
 goog.require('os.ui.ex.ExportDirective');
+goog.require('os.ui.featureListDirective');
 goog.require('os.ui.menu.Menu');
 goog.require('os.ui.menu.MenuItem');
 goog.require('os.ui.menu.MenuItemType');
@@ -205,6 +206,15 @@ os.ui.menu.layer.setup = function() {
         handler: os.ui.menu.layer.onExport_,
         metricKey: os.metrics.Layer.EXPORT,
         sort: -1000 // commonly used, so prioritize above other items
+      },
+      {
+        label: 'Feature List',
+        eventType: os.action.EventType.FEATURE_LIST,
+        tooltip: 'Display a list of features in the layer',
+        icons: ['<i class="fa fa-fw fa-list-alt"></i>'],
+        beforeRender: os.ui.menu.layer.visibleIfSupported,
+        handler: os.ui.menu.layer.onFeatureList_,
+        metricKey: os.metrics.Layer.FEATURE_LIST
       }]
     }]
   }));
@@ -321,6 +331,22 @@ os.ui.menu.layer.onExport_ = function(event) {
   var context = event.getContext();
   if (context) {
     os.ui.ex.startExport(os.ui.menu.common.getSourcesFromContext(context));
+  }
+};
+
+
+/**
+ * Handle the "Feature List" menu event.
+ * @param {!os.ui.menu.MenuEvent<os.ui.menu.layer.Context>} event The menu event.
+ * @private
+ */
+os.ui.menu.layer.onFeatureList_ = function(event) {
+  var layers = os.ui.menu.layer.getLayersFromContext(event.getContext());
+  if (layers && layers.length === 1) {
+    var source = layers[0].getSource();
+    if (source instanceof os.source.Vector) {
+      os.ui.launchFeatureList(source);
+    }
   }
 };
 
