@@ -20,11 +20,11 @@
 
       <h5 class="mt-3 text-center">KML Options</h5>
       <div class="js-export-ui__container col-10 offset-2">
-        <kmlexport exporter="treeExport.exporter"></kmlexport>
+        <kmlexport simple="true" exporter="treeExport.exporter" ></kmlexport>
       </div>
     </form>
   </div>
-  
+
   <div class="modal-footer">
     <button class="btn btn-primary" ng-click="treeExport.confirm()" ng-disabled="exportForm.$invalid">
       <i class="fa fa-check"></i>
