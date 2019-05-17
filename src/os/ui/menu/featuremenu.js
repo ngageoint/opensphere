@@ -128,7 +128,7 @@ os.ui.menu.feature.addRemoveItems = function(menu, opt_prefix, opt_handler) {
   var group = menuRoot.findOrCreate({
     label: os.ui.menu.feature.GroupLabel.REMOVE,
     type: os.ui.menu.MenuItemType.GROUP,
-    sort: 1
+    sort: 2
   });
 
   group.addChild({
