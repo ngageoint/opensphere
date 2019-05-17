@@ -79,6 +79,10 @@ os.ui.window.launchConfirm = function(opt_options, opt_scopeOptions) {
     'no-scroll': windowOverrides.noScroll != null ? windowOverrides.noScroll : true
   };
 
+  if (windowOverrides.id) {
+    windowOptions['id'] = windowOverrides.id;
+  }
+
   var text = options.prompt || 'Are you sure?';
   var template = '<confirm>' + text + '</confirm>';
   os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
