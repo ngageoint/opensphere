@@ -7,6 +7,7 @@ goog.require('goog.events.EventType');
 goog.require('os.source.PropertyChange');
 goog.require('os.ui');
 goog.require('os.ui.Module');
+goog.require('os.ui.menu.list');
 goog.require('os.ui.sliderDirective');
 goog.require('os.ui.sourceGridDirective');
 goog.require('os.ui.window');
@@ -69,9 +70,14 @@ os.ui.FeatureListCtrl = function($scope, $element) {
   this.source_ = /** @type {os.source.Vector} */ ($scope['source']);
 
   /**
+   * The context menu for the source grid.
+   * @type {os.ui.menu.Menu}
+   */
+  this['contextMenu'] = os.ui.menu.list.MENU;
+
+  /**
    * If data should be filtered to selected only.
    * @type {boolean}
-   * @private
    */
   this['selectedOnly'] = false;
 

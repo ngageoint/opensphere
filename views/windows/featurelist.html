@@ -10,7 +10,12 @@
       <slider class="col-3" min="1" max="50" step="1" value="ctrl.rowStep" live="false" name="rowHeight" title="Row height"></slider>
     </div>
     <div class="d-flex flex-fill" ng-class="{'c-slick-grid__pre-wrap': ctrl.rowStep > 1}">
-      <sourcegrid source="source" selected-only="ctrl.selectedOnly" row-height="ctrl.rowHeight"></sourcegrid>
+      <sourcegrid
+          context-menu="ctrl.contextMenu"
+          source="source"
+          selected-only="ctrl.selectedOnly"
+          row-height="ctrl.rowHeight">
+      </sourcegrid>
     </div>
   </div>
   <div class="modal-footer">

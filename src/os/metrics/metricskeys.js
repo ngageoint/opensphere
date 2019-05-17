@@ -299,10 +299,24 @@ os.metrics.Layer = {
 
 
 /**
- * Layer metrics
+ * Feature metrics
  * @enum {string}
  */
 os.metrics.Feature = {
+};
+
+
+/**
+ * Feature list metrics
+ * @enum {string}
+ */
+os.metrics.FeatureList = {
+  EXPORT: 'featureList.export',
+  GOTO: 'featureList.goTo',
+  SORT_SELECTED: 'featureList.sortSelected',
+  SELECT_ALL: 'featureList.selectAll',
+  DESELECT_ALL: 'featureList.deselectAll',
+  INVERT_SELECTION: 'featureList.invertSelection'
 };
 
 
