@@ -342,11 +342,13 @@ os.ui.menu.layer.onExport_ = function(event) {
  */
 os.ui.menu.layer.onFeatureList_ = function(event) {
   var layers = os.ui.menu.layer.getLayersFromContext(event.getContext());
-  if (layers && layers.length === 1) {
-    var source = layers[0].getSource();
-    if (source instanceof os.source.Vector) {
-      os.ui.launchFeatureList(source);
-    }
+  if (layers) {
+    layers.forEach(function(layer) {
+      var source = layer.getSource();
+      if (source instanceof os.source.Vector) {
+        os.ui.launchFeatureList(source);
+      }
+    });
   }
 };
 
