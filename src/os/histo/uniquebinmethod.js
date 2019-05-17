@@ -191,7 +191,7 @@ os.histo.UniqueBinMethod.prototype.persist = function(opt_to) {
   opt_to['field'] = this.getField();
   opt_to['isDate'] = this.getIsDate();
   opt_to['arrayKeys'] = this.getArrayKeys();
-  opt_to['valueFunction'] = this.getValueFunction();
+
   return opt_to;
 };
 
@@ -210,10 +210,6 @@ os.histo.UniqueBinMethod.prototype.restore = function(config) {
   var arrayKeys = /** @type {boolean|string|undefined} */ (config['arrayKeys']);
   if (typeof arrayKeys === 'boolean' || typeof arrayKeys === 'string') {
     this.setArrayKeys(arrayKeys);
-  }
-  var valueFunction = /** @type {function(T, string):*|undefined} */ (config['valueFunction']);
-  if (typeof valueFunction === 'function') {
-    this.setValueFunction(valueFunction);
   }
 };
 
