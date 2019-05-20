@@ -1951,12 +1951,13 @@ os.source.Vector.prototype.processImmediate = function(feature) {
       geom = os.geo.splitOnDateLine(/** @type {!(ol.geom.LineString|ol.geom.MultiLineString)} */ (geom));
       geom.osTransform();
       feature.setGeometry(geom);
-    } else if (!geom.get(os.geom.GeometryField.NORMALIZED)) {
-      // normalize non-point geometries unless they were normalized elsewhere
-      os.geo2.normalizeGeometryCoordinates(geom);
+    } else if (geomType === ol.geom.GeometryType.POLYGON || geomType === ol.geom.GeometryType.MULTI_POLYGON) {
+      geom = os.geo.jsts.splitPolarPolygon(
+        /** @type {ol.geom.Polygon|ol.geom.MultiPolygon} */ (geom));
     }
   }
 
+  os.geo2.normalizeGeometryCoordinates(geom);
   os.interpolate.interpolateFeature(feature);
 
   // make sure the internal feature ID field is set

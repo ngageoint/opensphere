@@ -358,21 +358,6 @@ os.query.AreaManager.prototype.addInternal = function(feature, opt_bulk) {
 
 
 /**
- * @inheritDoc
- */
-os.query.AreaManager.prototype.normalizeGeometry = function(feature) {
-  // TODO: I'd prefer to have the normalizeGeometryCoordinate method take an optional projection
-  // rather than converting to/from EPSG:4326
-  var geom = feature.getGeometry();
-
-  if (!geom.get(os.geom.GeometryField.NORMALIZED)) {
-    os.geo2.normalizeGeometryCoordinates(geom);
-    feature.setGeometry(geom);
-  }
-};
-
-
-/**
  * Converts all color types to a standard rgba string.
  *
  * @param {ol.Color|string} color
