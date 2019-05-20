@@ -6,7 +6,7 @@
       <label for="js-kmlexport__compress" class="custom-control-label">Compress as KMZ</label>
     </div>
 
-    <div class="custom-control custom-checkbox mx-1" title="If selected, icons will be colored with the current feature color. If unselected, icons will be unchanged.">
+    <div ng-if="!simple" class="custom-control custom-checkbox mx-1" title="If selected, icons will be colored with the current feature color. If unselected, icons will be unchanged.">
       <input id="js-kmlexport__useItemColor" class="custom-control-input" type="checkbox" name="useItemColor" ng-model="kmlexport.useItemColor">
       <label for="js-kmlexport__useItemColor" class="custom-control-label">Use Feature Colors</label>
     </div>

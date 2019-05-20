@@ -1,6 +1,8 @@
 goog.provide('os.ui.LayersCtrl');
+goog.provide('os.ui.LayersWindowCtrl');
 goog.provide('os.ui.layersDirective');
 
+goog.require('goog.Disposable');
 goog.require('goog.async.Delay');
 goog.require('goog.object');
 goog.require('os.MapContainer');
@@ -17,6 +19,7 @@ goog.require('os.layer.ICustomLayerVisible');
 goog.require('os.metrics.Metrics');
 goog.require('os.metrics.keys');
 goog.require('os.object');
+goog.require('os.query');
 goog.require('os.ui');
 goog.require('os.ui.Module');
 goog.require('os.ui.data.groupby.TagGroupBy');
@@ -60,6 +63,7 @@ os.ui.layersWindowDirective = function() {
     scope: {
       'tab': '@'
     },
+    controller: os.ui.LayersWindowCtrl,
     templateUrl: os.ROOT + 'views/windows/layers.html'
   };
 };
@@ -324,4 +328,69 @@ os.ui.LayersCtrl.prototype.toggleFeatureLayers = function() {
  */
 os.ui.LayersCtrl.prototype.showFeatures = function() {
   return this.scope['showFeatures'];
+};
+
+
+/**
+ * Controller for area count directive.
+ * @param {!angular.Scope} $scope The Angular scope.
+ * @extends {goog.Disposable}
+ * @constructor
+ * @ngInject
+ */
+os.ui.LayersWindowCtrl = function($scope) {
+  os.ui.LayersWindowCtrl.base(this, 'constructor');
+
+  /**
+   * The Angular scope.
+   * @type {?angular.Scope}
+   * @private
+   */
+  this.scope_ = $scope;
+
+  os.ui.queryManager.listen(goog.events.EventType.PROPERTYCHANGE, this.onQueriesChanged_, false, this);
+  this.onQueriesChanged_();
+
+  $scope.$on('$destroy', this.dispose.bind(this));
+};
+goog.inherits(os.ui.LayersWindowCtrl, goog.Disposable);
+
+
+/**
+ * @inheritDoc
+ */
+os.ui.LayersWindowCtrl.prototype.disposeInternal = function() {
+  os.ui.LayersWindowCtrl.base(this, 'disposeInternal');
+
+  os.ui.queryManager.unlisten(goog.events.EventType.PROPERTYCHANGE, this.onQueriesChanged_, false, this);
+
+  this.scope_ = null;
+};
+
+
+/**
+ * Handle changes to the query manager.
+ * @private
+ */
+os.ui.LayersWindowCtrl.prototype.onQueriesChanged_ = function() {
+  if (this.scope_) {
+    var qm = os.ui.queryManager;
+    var fm = os.ui.filterManager;
+
+    this.scope_['areaCount'] = 0;
+
+    var states = qm.getAreaStates();
+    for (var key in states) {
+      if (key != os.query.AreaState.NONE) {
+        this.scope_['areaCount'] += states[key];
+      }
+    }
+
+    var filters = fm.getFilters() || [];
+    this.scope_['filterCount'] = filters.reduce(function(result, filter, index) {
+      return filter && qm.hasFilter(filter) ? result + 1 : result;
+    }, 0);
+  }
+
+  os.ui.apply(this.scope_);
 };
