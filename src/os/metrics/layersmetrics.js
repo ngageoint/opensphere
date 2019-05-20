@@ -328,8 +328,8 @@ os.metrics.LayersMetrics = function() {
     key: os.metrics.Layer.EXPORT
   });
   this.addChild(contextFeatureLayersMenuLeaf, {
-    label: 'Feature List',
-    description: 'Display a list of features in the layer.',
+    label: 'Show Features',
+    description: 'Displays metadata for features in the layer.',
     key: os.metrics.Layer.FEATURE_LIST
   });
   this.addChild(contextFeatureLayersMenuLeaf, {
