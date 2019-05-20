@@ -17,9 +17,8 @@ os.annotation.DEFAULT_OPTIONS = {
   showDescription: true,
   size: [200, 100],
   offset: [0, -75],
-  headerBG: os.annotation.DEFAULT_ANNOTATION_HEADER_BACKGROUND_COLOR,
-  bodyBG: os.annotation.DEFAULT_ANNOTATION_DESCRIPTION_BACKGROUND_COLOR
-
+  headerBG: null,
+  bodyBG: null
 };
 
 
@@ -58,21 +57,6 @@ os.annotation.EventType = {
  * @const
  */
 os.annotation.OPTIONS_FIELD = '_annotationOptions';
-
-
-/**
- * Default color for the backgound of annotation headers layers.
- * @type {string}
- * @const
- */
-os.annotation.DEFAULT_ANNOTATION_HEADER_BACKGROUND_COLOR = '#52575c';
-
-/**
- * Default color for the backgound of annotation description layers.
- * @type {string}
- * @const
- */
-os.annotation.DEFAULT_ANNOTATION_DESCRIPTION_BACKGROUND_COLOR = '#3a3f44';
 
 
 /**

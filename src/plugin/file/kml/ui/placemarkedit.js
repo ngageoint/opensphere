@@ -168,8 +168,6 @@ plugin.file.kml.ui.PlacemarkEditCtrl.prototype.createPreviewFeature = function()
   // get the current theme colors
   var defaultHeaderColor =
       window.getComputedStyle(document.getElementsByClassName('js-window__header')[0]).backgroundColor;
-    var fubar = document.getElementsByClassName('u-table');
-    var fubar2 = window.getComputedStyle(fubar[0]);
 
   var defaultBodyColor =
       window.getComputedStyle(document.getElementsByClassName('ui-menu')[0]);
