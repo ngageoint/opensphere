@@ -59,17 +59,14 @@
         </div>
         </div>
         <div class="col">
-            <div class="d-inline-block"
-            title="Change the background color of the description">
-          <colorpicker name="bodyColor"
-            ng-attr-id="bodyColor{{ctrl.uid}}"
-            color="ctrl.annotationOptions.bodyBG"
-            show-reset="true"
-            title="Sets the bg color for body"
-            disabled="!ctrl.annotationOptions.show || !ctrl.annotationOptions.showDescription"></colorpicker>
-          <label ng-attr-for="bodyColor{{ctrl.uid}}">
-            Description Background
-          </label>
+          <div class="d-inline-block" title="Change the background color of the description">
+            <colorpicker name="bodyColor"
+                ng-attr-id="bodyColor{{ctrl.uid}}"
+                color="ctrl.annotationOptions.bodyBG"
+                show-reset="true"
+                title="Sets the bg color for body"
+                disabled="!ctrl.annotationOptions.show || !ctrl.annotationOptions.showDescription"></colorpicker>
+            <label ng-attr-for="bodyColor{{ctrl.uid}}">Description Background</label>
         </div>
         </div>
       </div>
