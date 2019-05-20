@@ -128,10 +128,12 @@ os.ui.column.mapping.ColumnMappingFormCtrl.prototype.init_ = function() {
   for (var i = 0, ii = descList.length; i < ii; i++) {
     var desc = descList[i];
 
-    if (desc.getDataProvider().getEnabled()) {
-      if (os.implements(desc, os.ui.ogc.IFeatureTypeDescriptor.ID)) {
-        descMap[desc.getId()] = desc;
-        this.cachedDescriptorList_.push(desc);
+    if (desc.getDataProvider()) {
+      if (desc.getDataProvider().getEnabled()) {
+        if (os.implements(desc, os.ui.ogc.IFeatureTypeDescriptor.ID)) {
+          descMap[desc.getFilterKey()] = desc;
+          this.cachedDescriptorList_.push(desc);
+        }
       }
     }
   }
