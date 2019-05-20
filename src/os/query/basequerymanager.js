@@ -8,6 +8,7 @@ goog.require('goog.string');
 goog.require('ol.array');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.filter.BaseFilterManager');
+goog.require('os.query');
 goog.require('os.query.BaseAreaManager');
 goog.require('os.ui.query');
 goog.require('os.ui.query.ComboNode');
@@ -429,8 +430,23 @@ os.query.BaseQueryManager.prototype.getHandlerById = function(layerId) {
 
 
 /**
- * @param {!(string|ol.Feature)} areaOrId
- * @return {number} 0 for none, 1 for exclusion, 2 for inclusion, 3 for both
+ * Get the states of areas in the query manager.
+ * @return {!Object<string, number>}
+ */
+os.query.BaseQueryManager.prototype.getAreaStates = function() {
+  return this.am ? this.am.getAll().reduce(function(result, area, index) {
+    var val = this.hasArea(area);
+    result[val] = result[val] || 0;
+    result[val]++;
+    return result;
+  }.bind(this), {}) : {};
+};
+
+
+/**
+ * If an area is being used in a query entry.
+ * @param {!(string|ol.Feature)} areaOrId The area feature or idea.
+ * @return {os.query.AreaState} The area usage by query entries.
  */
 os.query.BaseQueryManager.prototype.hasArea = function(areaOrId) {
   var type = typeof areaOrId;
@@ -457,7 +473,9 @@ os.query.BaseQueryManager.prototype.hasArea = function(areaOrId) {
     }
   }
 
-  return incl && excl ? 3 : incl ? 2 : excl ? 1 : 0;
+  return incl && excl ? os.query.AreaState.BOTH :
+      incl ? os.query.AreaState.INCLUSION :
+      excl ? os.query.AreaState.EXCLUSION : os.query.AreaState.NONE;
 };
 
 
@@ -537,7 +555,7 @@ os.query.BaseQueryManager.prototype.onRefreshTimer_ = function() {
  * @return {boolean} Whether the area is registered as an inclusion or exclusion area
  */
 os.query.BaseQueryManager.prototype.isActive = function(areaOrId) {
-  return this.hasArea(areaOrId) > 0;
+  return this.hasArea(areaOrId) !== os.query.AreaState.NONE;
 };
 
 
@@ -546,7 +564,8 @@ os.query.BaseQueryManager.prototype.isActive = function(areaOrId) {
  * @return {boolean} Whether the area is registered as an inclusion area
  */
 os.query.BaseQueryManager.prototype.isInclusion = function(areaOrId) {
-  return this.hasArea(areaOrId) > 1;
+  var val = this.hasArea(areaOrId);
+  return val === os.query.AreaState.INCLUSION || val === os.query.AreaState.BOTH;
 };
 
 
@@ -555,7 +574,8 @@ os.query.BaseQueryManager.prototype.isInclusion = function(areaOrId) {
  * @return {boolean} Whether the area is registered as an exclusion area
  */
 os.query.BaseQueryManager.prototype.isExclusion = function(areaOrId) {
-  return this.hasArea(areaOrId) % 2 !== 0;
+  var val = this.hasArea(areaOrId);
+  return val === os.query.AreaState.EXCLUSION || val === os.query.AreaState.BOTH;
 };
 
 
