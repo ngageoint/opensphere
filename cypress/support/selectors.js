@@ -2886,7 +2886,7 @@ exports.statusBar = {
   LEGEND_BUTTON: '[title=\'View Legend\']',
   SERVERS_BUTTON: '[title=Servers]',
   ALERTS_BUTTON: '[title=Alerts]',
-  ALERTS_UNREAD_BADGE: '.badge',
+  ALERTS_UNREAD_BADGE: '[title=Alerts] .badge',
   HISTORY_BUTTON: '[title=History]',
   Mute: {
     BUTTON: '.fa-volume-off, .fa-volume-up',

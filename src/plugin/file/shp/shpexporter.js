@@ -291,7 +291,7 @@ plugin.file.shp.SHPExporter.prototype.parseColumns = function() {
   if (this.items && this.items.length > 0) {
     var item = this.items[0];
     var source = this.getSource_(item);
-    var columns = source && source.getColumns() || goog.object.getKeys(item.getProperties());
+    var columns = source && source.getColumnsArray() || goog.object.getKeys(item.getProperties());
 
     for (var i = 0; i < this.items.length; i++) {
       item = this.items[i];

@@ -1,5 +1,6 @@
 goog.require('ol.Feature');
 goog.require('ol.geom.Polygon');
+goog.require('os.query');
 
 
 
@@ -29,7 +30,8 @@ os.ui.query.Handler.prototype.getLayerName = function() {
 };
 
 describe('os.query.BaseQueryManager', function() {
-  var am, qm;
+  var am;
+  var qm;
   var testPolygon;
   beforeEach(function() {
     testPolygon = new ol.geom.Polygon([[[0, 0], [0, 1], [1, 1], [1, 0], [0, 0]]], ol.geom.GeometryLayout.XY);
@@ -281,19 +283,29 @@ describe('os.query.BaseQueryManager', function() {
     expect(qm.hasActiveExplicitEntries()).toBe(false);
   });
 
-  it('should return whether an area exists', function() {
+  it('should report area states', function() {
     var am = os.query.BaseAreaManager.getInstance();
     // don't do map stuff
     am.mapReady_ = false;
     qm.removeEntries();
 
+    var verifyStates = function(actual, expected) {
+      expect(actual[os.query.AreaState.NONE]).toBe(expected[os.query.AreaState.NONE] || undefined);
+      expect(actual[os.query.AreaState.EXCLUSION]).toBe(expected[os.query.AreaState.EXCLUSION] || undefined);
+      expect(actual[os.query.AreaState.INCLUSION]).toBe(expected[os.query.AreaState.INCLUSION] || undefined);
+      expect(actual[os.query.AreaState.BOTH]).toBe(expected[os.query.AreaState.BOTH] || undefined);
+    };
+
     var result = qm.hasArea('bogus');
-    expect(result).toBe(0);
+    expect(result).toBe(os.query.AreaState.NONE);
+
+    verifyStates(qm.getAreaStates(), [0, 0, 0, 0]);
 
     qm.addEntry('*', 'box', '*', true);
     // since it isn't in the area manager, we still expect 0
     result = qm.hasArea('box');
-    expect(result).toBe(0);
+    expect(result).toBe(os.query.AreaState.NONE);
+    verifyStates(qm.getAreaStates(), [0, 0, 0, 0]);
 
     // now put it in the area manager
     var area = new ol.Feature();
@@ -305,23 +317,27 @@ describe('os.query.BaseQueryManager', function() {
 
     // The area is in the area manager but it isn't shown
     result = qm.hasArea('box');
-    expect(result).toBe(0);
+    expect(result).toBe(os.query.AreaState.NONE);
+    verifyStates(qm.getAreaStates(), [1, 0, 0, 0]);
 
     // now it is shown
     area.set('shown', true);
     result = qm.hasArea('box');
-    expect(result).toBe(2);
+    expect(result).toBe(os.query.AreaState.INCLUSION);
+    verifyStates(qm.getAreaStates(), [0, 0, 1, 0]);
 
     // make another entry that uses box for exclude
     qm.addEntry('A', 'box', '*', false);
 
     result = qm.hasArea('box');
-    expect(result).toBe(3);
+    expect(result).toBe(os.query.AreaState.BOTH);
+    verifyStates(qm.getAreaStates(), [0, 0, 0, 1]);
 
     qm.removeEntries('*', 'box');
 
     result = qm.hasArea('box');
-    expect(result).toBe(1);
+    expect(result).toBe(os.query.AreaState.EXCLUSION);
+    verifyStates(qm.getAreaStates(), [0, 1, 0, 0]);
 
     qm.removeEntries();
 

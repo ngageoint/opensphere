@@ -565,7 +565,7 @@ os.ui.timeline.TimelineCtrl.prototype.destroy_ = function() {
   }
 
   if (this.tooltip_) {
-    d3.selectAll('.c-histogram-tooltip').remove();
+    d3.selectAll('.js-timeline-tooltip').remove();
     this.tooltip_ = null;
   }
 
@@ -943,7 +943,8 @@ os.ui.timeline.TimelineCtrl.prototype.initSvg = function() {
   // initialize the histogram tooltip if the tip function is available
   if (this.scope_['histTip']) {
     this.tooltip_ = d3.tip();
-    this.tooltip_.attr('class', 'c-histogram-tooltip').offset([-10, 0]).html(this.scope_['histTip']);
+    this.tooltip_.attr('class', 'js-timeline-tooltip c-histogram-tooltip')
+        .offset([-10, 0]).html(this.scope_['histTip']);
     this.tooltip_(this.baseElement_);
   }
 

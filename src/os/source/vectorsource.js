@@ -699,6 +699,14 @@ os.source.Vector.prototype.onRefreshTimer = function() {
  * @inheritDoc
  */
 os.source.Vector.prototype.getColumns = function() {
+  return this.columns.slice();
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.source.Vector.prototype.getColumnsArray = function() {
   return this.columns;
 };
 
@@ -710,14 +718,16 @@ os.source.Vector.prototype.getColumns = function() {
  * @suppress {accessControls}
  */
 os.source.Vector.prototype.getEmptyColumns = function() {
-  var empty = this.columns ? this.columns.slice() : [];
+  if (!this.getFeatureCount()) {
+    return [];
+  }
+
+  // make sure columns are all non-null and have a field
+  var empty = this.getColumnsArray().filter(function(col) {
+    return !!col && !!col['field'];
+  });
 
   if (empty.length > 0) {
-    // make sure columns are all non-null and have a field
-    empty = empty.filter(function(col) {
-      return !!col && !!col['field'];
-    });
-
     var features = this.getFeatures();
     for (var i = 0; i < features.length && empty.length > 0; i++) {
       var j = empty.length;
@@ -740,19 +750,21 @@ os.source.Vector.prototype.getEmptyColumns = function() {
  * @export Prevent the compiler from moving the function off the prototype.
  */
 os.source.Vector.prototype.setColumns = function(columns) {
-  this.externalColumns = true;
+  if (columns) {
+    this.externalColumns = true;
 
-  // ensure all columns are column definition objects
-  this.columns = columns.map(os.source.column.mapStringOrDef);
+    // ensure all columns are column definition objects
+    this.columns = columns.map(os.source.column.mapStringOrDef);
 
-  // add defaults columns
-  os.source.column.addDefaults(this);
+    // add defaults columns
+    os.source.column.addDefaults(this);
 
-  // test for shape support
-  this.testShapeFields_(this.geometryShape_);
+    // test for shape support
+    this.testShapeFields_(this.geometryShape_);
 
-  // clean up the columns
-  this.processColumns();
+    // clean up the columns
+    this.processColumns();
+  }
 };
 
 
