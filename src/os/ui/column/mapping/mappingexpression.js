@@ -130,7 +130,7 @@ os.ui.column.mapping.MappingExpressionCtrl.prototype.onColumnChange_ = function(
 
 /**
  * Sets the layer and gets the columns for it.
- * @param {os.ui.ogc.IFeatureTypeDescriptor} layer
+ * @param {os.filter.IFilterable} layer
  * @private
  */
 os.ui.column.mapping.MappingExpressionCtrl.prototype.setLayer_ = function(layer) {
