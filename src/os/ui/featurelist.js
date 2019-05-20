@@ -255,8 +255,8 @@ os.ui.launchFeatureList = function(source) {
 
     var windowOptions = {
       'id': windowId,
-      'label': 'Feature List: ' + source.getTitle(true),
-      'icon': 'fa fa-list-alt',
+      'label': source.getTitle(true),
+      'icon': 'fa fa-table',
       'x': 'center',
       'y': 'center',
       'width': 800,

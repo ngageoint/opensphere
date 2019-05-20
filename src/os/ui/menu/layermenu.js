@@ -192,6 +192,16 @@ os.ui.menu.layer.setup = function() {
         handler: os.ui.menu.layer.onDescription_,
         metricKey: os.metrics.Layer.SHOW_DESCRIPTION,
         sort: os.ui.menu.layer.GroupSort.LAYER++
+      },
+      {
+        label: 'Show Features',
+        eventType: os.action.EventType.FEATURE_LIST,
+        tooltip: 'Displays metadata for features in the layer',
+        icons: ['<i class="fa fa-fw fa-table"></i>'],
+        beforeRender: os.ui.menu.layer.visibleIfSupported,
+        handler: os.ui.menu.layer.onFeatureList_,
+        metricKey: os.metrics.Layer.FEATURE_LIST,
+        sort: os.ui.menu.layer.GroupSort.LAYER++
       }]
     }, {
       label: os.ui.menu.layer.GroupLabel.TOOLS,
@@ -206,15 +216,6 @@ os.ui.menu.layer.setup = function() {
         handler: os.ui.menu.layer.onExport_,
         metricKey: os.metrics.Layer.EXPORT,
         sort: -1000 // commonly used, so prioritize above other items
-      },
-      {
-        label: 'Feature List',
-        eventType: os.action.EventType.FEATURE_LIST,
-        tooltip: 'Display a list of features in the layer',
-        icons: ['<i class="fa fa-fw fa-list-alt"></i>'],
-        beforeRender: os.ui.menu.layer.visibleIfSupported,
-        handler: os.ui.menu.layer.onFeatureList_,
-        metricKey: os.metrics.Layer.FEATURE_LIST
       }]
     }]
   }));
