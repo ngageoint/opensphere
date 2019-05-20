@@ -198,7 +198,7 @@ plugin.places.ui.SavePlacesCtrl.prototype.onOptionsChange_ = function(event, ite
     }
 
     // update the displayed columns
-    this['columns'] = sources && sources.length > 0 ? sources[0].getColumns().slice() : [];
+    this['columns'] = sources && sources.length > 0 ? sources[0].getColumns() : [];
     this['columns'].sort(os.ui.slick.column.nameCompare);
   }
 };
