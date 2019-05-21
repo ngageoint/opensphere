@@ -1,5 +1,6 @@
 goog.provide('os.ui.color.ColorPaletteCtrl');
 goog.provide('os.ui.color.colorPaletteDirective');
+goog.require('goog.dom');
 goog.require('goog.ui.ColorPicker');
 goog.require('os.color');
 goog.require('os.ui.Module');
@@ -47,10 +48,12 @@ os.ui.color.ColorPaletteEventType = {
 /**
  * Controller function for the colorpalette directive
  * @param {!angular.Scope} $scope
+ * @param {!angular.JQLite} $element
+ * @param {!angular.$timeout} $timeout
  * @constructor
  * @ngInject
  */
-os.ui.color.ColorPaletteCtrl = function($scope) {
+os.ui.color.ColorPaletteCtrl = function($scope, $element, $timeout) {
   /**
    * @type {?angular.Scope}
    * @private
@@ -82,6 +85,15 @@ os.ui.color.ColorPaletteCtrl = function($scope) {
 
   $scope['rows'] = rows;
 
+  // If this has a top associated with it, make sure it stays within the bounds of the viewport
+  $timeout(function() {
+    var top = $element.offset().top;
+    var height = $element.height();
+    // If theres a top, make sure the element fits in the viewport. Otherwise adjust it
+    if (top && top + height > goog.dom.getViewportSize().height) {
+      $element.css('top', goog.dom.getViewportSize().height - height + 'px');
+    }
+  });
   $scope.$on('$destroy', this.destroy_.bind(this));
 };
 
