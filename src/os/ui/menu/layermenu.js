@@ -196,7 +196,7 @@ os.ui.menu.layer.setup = function() {
       {
         label: 'Show Features',
         eventType: os.action.EventType.FEATURE_LIST,
-        tooltip: 'Displays metadata for features in the layer',
+        tooltip: 'Displays features in the layer',
         icons: ['<i class="fa fa-fw fa-table"></i>'],
         beforeRender: os.ui.menu.layer.visibleIfSupported,
         handler: os.ui.menu.layer.onFeatureList_,
