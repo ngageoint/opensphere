@@ -6,14 +6,17 @@ goog.require('ol.geom.GeometryType');
 goog.require('ol.geom.LineString');
 goog.require('ol.geom.MultiLineString');
 goog.require('os.array');
+goog.require('os.easing');
 goog.require('os.extent');
 goog.require('os.geom.GeometryField');
 goog.require('os.mixin.geometry');
 goog.require('os.query.utils');
 
 
+
 /**
  * @typedef {function(number, number, number, number)}
+ * @deprecated Please use os.easing.EasingFunction instead
  */
 os.geo.EasingFunction;
 
@@ -1499,17 +1502,17 @@ os.geo.vincentyInitialBearing = function(c1, c2, opt_ellipsoid, opt_minDeltaLamb
  * Gets the appropriate easing function for the provided ellipse axes.
  * @param {number} a Semi-major axis of the ellipse.
  * @param {number} b Semi-minor axis of the ellipse.
- * @return {os.geo.EasingFunction} The easing function to use.
+ * @return {os.easing.EasingFunction} The easing function to use.
  * @private
  */
 os.geo.getEllipseEasingFunction_ = function(a, b) {
   var f = Math.max(a, b) / Math.min(a, b);
 
   if (f < 1.2) {
-    return os.geo.easeLinear;
+    return os.easing.easeLinear;
   }
 
-  return os.geo.easeExpo;
+  return os.easing.easeExpo;
 };
 
 
@@ -2113,10 +2116,10 @@ os.geo.normalizeGeometryCoordinates = function(geometry, opt_to) {
  * @param {number} c The amount to change the start value
  * @param {number} d The duration or total number of steps
  * @return {number}
+ * @deprecated Please use os.easing.easeLinear instead
  */
 os.geo.easeLinear = function(t, b, c, d) {
-  t /= d;
-  return c * t + b;
+  return os.easing.easeLinear(t, b, c, d);
 };
 
 
@@ -2127,11 +2130,10 @@ os.geo.easeLinear = function(t, b, c, d) {
  * @param {number} c The amount to change the start value
  * @param {number} d The duration or total number of steps
  * @return {number}
+ * @deprecated Please use os.easing.easeQuintic instead
  */
 os.geo.easeQuintic = function(t, b, c, d) {
-  t /= d;
-  t--;
-  return c * (t * t * t * t * t + 1) + b;
+  return os.easing.easeQuintic(t, b, c, d);
 };
 
 
@@ -2142,14 +2144,10 @@ os.geo.easeQuintic = function(t, b, c, d) {
  * @param {number} c The amount to change the start value
  * @param {number} d The duration or total number of steps
  * @return {number}
+ * @deprecated Please use os.easing.easeQuartic instead
  */
 os.geo.easeQuartic = function(t, b, c, d) {
-  t = t / (d / 2);
-  if (t < 1) {
-    return c * t * t * t * t / 2 + b;
-  }
-  t -= 2;
-  return -c * (t * t * t * t - 2) / 2 + b;
+  return os.easing.easeQuartic(t, b, c, d);
 };
 
 
@@ -2160,31 +2158,25 @@ os.geo.easeQuartic = function(t, b, c, d) {
  * @param {number} c The amount to change the start value
  * @param {number} d The duration or total number of steps
  * @return {number}
+ * @deprecated Please use os.easing.easeExpo instead
  */
 os.geo.easeExpo = function(t, b, c, d) {
-  t = t / (d / 2);
-  if (t < 1) {
-    return c * Math.pow(2, 10 * (t - 1)) / 2 + b;
-  }
-  t--;
-  return c * (-Math.pow(2, -10 * t) + 2) / 2 + b;
+  return os.easing.easeExpo(t, b, c, d);
 };
 
 
 /**
- * Circular easing function
+ * Circular easing function (this is CircleIn, not CircleOut)
  * @param {number} t The current step (out of the total duration)
  * @param {number} b The start value or offset
  * @param {number} c The amount to change the start value
  * @param {number} d The duration or total number of steps
  * @return {number}
+ * @deprecated Please use os.easing.easeCircular instead
  */
 os.geo.easeCircular = function(t, b, c, d) {
-  t /= d;
-  return -c * (Math.sqrt(1 - t * t) - 1) + b;
+  return os.easing.easeCircular(t, b, c, d);
 };
-
-// TODO: implement the cubic and sinusoidal easing functions
 
 
 /**
