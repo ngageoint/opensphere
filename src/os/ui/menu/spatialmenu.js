@@ -720,14 +720,12 @@ os.ui.menu.spatial.onMenuEvent = function(event, opt_layerIds) {
         area = areas[i];
 
         if (area && area.get('shown')) {
-          var val = qm.hasArea(area);
-
           // Dont hide the feature we are trying to load
-          if (event.type === os.action.EventType.LOAD && val > 1 && features.indexOf(area) === -1) {
+          if (event.type === os.action.EventType.LOAD && qm.isInclusion(area) && features.indexOf(area) === -1) {
             cmds.push(new os.command.AreaToggle(area, false));
           }
 
-          if (event.type === os.action.EventType.EXCLUDE && (val === 1 || val === 3) && area != feature) {
+          if (event.type === os.action.EventType.EXCLUDE && qm.isExclusion(area) && area != feature) {
             cmds.push(new os.command.AreaToggle(area, false));
           }
         }

@@ -16,6 +16,18 @@ goog.require('os.ui.query.cmd.AreaAdd');
 
 
 /**
+ * How an area is being used by the application.
+ * @enum {number}
+ */
+os.query.AreaState = {
+  NONE: 0,
+  EXCLUSION: 1,
+  INCLUSION: 2,
+  BOTH: 3
+};
+
+
+/**
  * Adds an area via a command and zooms to it.
  * @param {!ol.Feature} area
  * @param {boolean=} opt_active
