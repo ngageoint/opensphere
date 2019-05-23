@@ -133,7 +133,7 @@ os.style.label.MIN_SIZE = 8;
  * @type {number}
  * @const
  */
-os.style.label.MAX_SIZE = 24;
+os.style.label.MAX_SIZE = 48;
 
 
 /**
