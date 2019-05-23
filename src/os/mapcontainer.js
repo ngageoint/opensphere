@@ -1598,7 +1598,7 @@ os.MapContainer.prototype.addFeature = function(feature, opt_style) {
     os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.ADD_FEATURE, 1);
     if (!(feature instanceof ol.Feature)) {
       // created in another context
-      feature = os.ol.feature.clone(feature);
+      feature = os.ol.feature.clone(feature, [os.data.RecordField.DRAWING_LAYER_NODE]);
     }
 
     if (typeof opt_style === 'object') {
