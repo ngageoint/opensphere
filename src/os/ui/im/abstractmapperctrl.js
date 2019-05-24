@@ -266,16 +266,10 @@ os.ui.im.AbstractMapperCtrl.prototype.update = function() {
 /**
  * Gets the rules appropriate to the implementation. Should be overridden to get the right ones.
  * @abstract
+ * @param {Array} uniqueKeys
+ * @return {?Array<!os.im.mapping.Rule>}
  */
-os.ui.im.AbstractMapperCtrl.prototype.createRules = function() {};
-
-
-/**
- * @abstract
- * Validates the state of the form. Should be implemented to check the validity of the mapping in
- * extensions of this class.
- */
-os.ui.im.AbstractMapperCtrl.prototype.validate = function() {};
+os.ui.im.AbstractMapperCtrl.prototype.createRules = function(uniqueKeys) {};
 
 
 /**
