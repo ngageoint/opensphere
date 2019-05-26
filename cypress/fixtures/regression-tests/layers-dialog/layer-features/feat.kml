@@ -1,0 +1,156 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<kml xmlns:kml="http://earth.google.com/kml/2.2">
+  <Document id="featureCollection">
+    <Style id="defaultStyle">
+      <LineStyle>
+        <width>1.5</width>
+      </LineStyle>
+      <PolyStyle>
+        <color>7d8a30c4</color>
+      </PolyStyle>
+    </Style>
+    <Folder>
+      <Placemark>
+        <styleUrl>#defaultStyle</styleUrl>
+        <name>Astor Pl</name>
+        <ExtendedData>
+          <Data name="line">
+            <value>4-6-6 Express</value>
+          </Data>
+          <Data name="notes">
+            <value>4 nights, 6-all times, 6 Express-weekdays AM southbound, PM northbound</value>
+          </Data>
+          <Data name="objectid">
+            <value>1</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+      -73.99106999861966,40.73005400028978
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <styleUrl>#defaultStyle</styleUrl>
+        <name>Canal St</name>
+        <ExtendedData>
+          <Data name="line">
+            <value>4-6-6 Express</value>
+          </Data>
+          <Data name="notes">
+            <value>4 nights, 6-all times, 6 Express-weekdays AM southbound, PM northbound</value>
+          </Data>
+          <Data name="objectid">
+            <value>2</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+      -74.00019299927328,40.71880300107709
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <styleUrl>#defaultStyle</styleUrl>
+        <name>50th St</name>
+        <ExtendedData>
+          <Data name="line">
+            <value>1-2</value>
+          </Data>
+          <Data name="notes">
+            <value>1-all times, 2-nights</value>
+          </Data>
+          <Data name="objectid">
+            <value>3</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+      -73.98384899986625,40.76172799961419
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <styleUrl>#defaultStyle</styleUrl>
+        <name>Bergen St</name>
+        <ExtendedData>
+          <Data name="line">
+            <value>2-3-4</value>
+          </Data>
+          <Data name="notes">
+            <value>4-nights, 3-all other times, 2-all times</value>
+          </Data>
+          <Data name="objectid">
+            <value>4</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+      -73.97499915116808,40.68086213682956
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <styleUrl>#defaultStyle</styleUrl>
+        <name>Pennsylvania Ave</name>
+        <ExtendedData>
+          <Data name="line">
+            <value>3-4</value>
+          </Data>
+          <Data name="notes">
+            <value>4-nights, 3-all other times</value>
+          </Data>
+          <Data name="objectid">
+            <value>5</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+      -73.89488591154061,40.66471445143568
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <styleUrl>#defaultStyle</styleUrl>
+        <name>Morrison Av - Soundview</name>
+        <ExtendedData>
+          <Data name="line">
+            <value>6</value>
+          </Data>
+          <Data name="notes">
+            <value>6-all times</value>
+          </Data>
+          <Data name="objectid">
+            <value>51</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+      -73.87451599929486,40.82952100156747
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <styleUrl>#defaultStyle</styleUrl>
+        <name>96th St</name>
+        <ExtendedData>
+          <Data name="line">
+            <value>Q</value>
+          </Data>
+          <Data name="notes">
+            <value>Q-all times</value>
+          </Data>
+          <Data name="objectid">
+            <value>643</value>
+          </Data>
+        </ExtendedData>
+        <description>This is the description text.</description>
+        <Point>
+          <coordinates>
+      -73.9470660219183,40.784236650177654
+          </coordinates>
+        </Point>
+      </Placemark>
+    </Folder>
+  </Document>
+</kml>
