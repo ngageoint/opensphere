@@ -377,7 +377,7 @@ plugin.cesium.CesiumRenderer.prototype.toggleMovement = function(value) {
   if (this.olCesium_) {
     var scene = this.olCesium_.getCesiumScene();
     if (scene && scene.screenSpaceCameraController) {
-      scene.screenSpaceCameraController.enableInputs = !!value;
+      scene.screenSpaceCameraController.enableInputs = value;
     }
   }
 };

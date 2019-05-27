@@ -183,7 +183,7 @@ os.webgl.AbstractWebGLRenderer.prototype.forEachFeatureAtPixel = function(pixel,
  * @abstract
  * @inheritDoc
  */
-os.webgl.AbstractWebGLRenderer.prototype.toggleMovement = function() {};
+os.webgl.AbstractWebGLRenderer.prototype.toggleMovement = function(value) {};
 
 
 /**
