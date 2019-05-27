@@ -11,6 +11,7 @@ goog.require('goog.Uri');
  *
  * Everything after the # in the fragment is grabbed and initially checked, then any change is listened for. When
  * a change occurs, the parameters are checked for anything added or removed.
+ * @abstract
  * @extends {goog.Disposable}
  * @constructor
  */
@@ -106,10 +107,11 @@ os.url.AbstractUrlHandler.prototype.handles = function(key) {
 
 /**
  * Handles a key value pair. Should be implemented by extending classes.
+ * @abstract
  * @param {string} key
  * @param {string} value
  */
-os.url.AbstractUrlHandler.prototype.handleInternal = goog.abstractMethod;
+os.url.AbstractUrlHandler.prototype.handleInternal = function(key, value) {};
 
 
 /**

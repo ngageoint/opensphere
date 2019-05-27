@@ -4,6 +4,7 @@ goog.require('os.net.IModifier');
 
 
 /**
+ * @abstract
  * @param {string} id Identifier for the modifier
  * @param {number=} opt_priority Priority of the modifier
  * @implements {os.net.IModifier}
@@ -57,6 +58,7 @@ os.net.AbstractModifier.prototype.setPriority = function(priority) {
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.net.AbstractModifier.prototype.modify = goog.abstractMethod;
+os.net.AbstractModifier.prototype.modify = function(uri) {};

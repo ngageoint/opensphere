@@ -9,6 +9,7 @@ goog.require('os.command.State');
 
 /**
  * Abstract asynchronous command implementation.
+ * @abstract
  * @implements {os.command.ICommand}
  * @extends {goog.events.EventTarget}
  * @constructor
@@ -24,9 +25,10 @@ goog.inherits(os.command.AbstractAsyncCommand, goog.events.EventTarget);
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.command.AbstractAsyncCommand.prototype.execute = goog.abstractMethod;
+os.command.AbstractAsyncCommand.prototype.execute = function() {};
 
 
 /**

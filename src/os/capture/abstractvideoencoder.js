@@ -11,6 +11,7 @@ goog.require('os.capture.IVideoEncoder');
 
 /**
  * Abstract class for exporting a video.
+ * @abstract
  * @extends {goog.events.EventTarget}
  * @implements {os.capture.IVideoEncoder}
  * @constructor
@@ -122,9 +123,10 @@ os.capture.AbstractVideoEncoder.prototype.process = function() {
 
 /**
  * Process the video frames once the encoder has been loaded.
+ * @abstract
  * @protected
  */
-os.capture.AbstractVideoEncoder.prototype.processInternal = goog.abstractMethod;
+os.capture.AbstractVideoEncoder.prototype.processInternal = function() {};
 
 
 /**

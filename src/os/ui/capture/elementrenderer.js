@@ -7,6 +7,7 @@ goog.require('os.capture');
 
 /**
  * Renders an element to the canvas.
+ * @abstract
  * @param {Object=} opt_options Options to configure the renderer
  * @constructor
  * @template T
@@ -56,9 +57,10 @@ os.ui.capture.ElementRenderer.prototype.drawToCanvas = function(canvas) {
 
 /**
  * Get the canvas for this renderer.
+ * @abstract
  * @return {!goog.Promise<HTMLCanvasElement>}
  */
-os.ui.capture.ElementRenderer.prototype.getCanvas = goog.abstractMethod;
+os.ui.capture.ElementRenderer.prototype.getCanvas = function() {};
 
 
 /**
