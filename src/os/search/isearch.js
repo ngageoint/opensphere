@@ -30,7 +30,7 @@ os.search.ISearch.prototype.search;
 /**
  * Cancels any pending requests
  */
-os.search.ISearch.prototype.cancel = goog.abstractMethod;
+os.search.ISearch.prototype.cancel;
 
 
 /**

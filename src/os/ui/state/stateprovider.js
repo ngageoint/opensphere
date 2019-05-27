@@ -57,3 +57,11 @@ os.ui.state.StateProvider.prototype.getToolTip = function() {
   var appName = os.config.getAppName('the application');
   return 'Contains all state files that have been imported into ' + appName;
 };
+
+
+/**
+ * @inheritDoc
+ */
+os.ui.state.StateProvider.prototype.getErrorMessage = function() {
+  return null;
+};

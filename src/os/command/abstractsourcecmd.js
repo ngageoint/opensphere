@@ -8,6 +8,7 @@ goog.require('os.source.ISource');
 
 /**
  * Abstract command for interaction with sources
+ * @abstract
  * @constructor
  * @implements {os.command.ICommand}
  * @param {!string} sourceId
@@ -41,15 +42,17 @@ os.command.AbstractSource.prototype.isAsync = false;
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.command.AbstractSource.prototype.execute = goog.abstractMethod;
+os.command.AbstractSource.prototype.execute = function() {};
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.command.AbstractSource.prototype.revert = goog.abstractMethod;
+os.command.AbstractSource.prototype.revert = function() {};
 
 
 /**

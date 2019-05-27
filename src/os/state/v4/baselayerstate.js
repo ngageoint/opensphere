@@ -1172,3 +1172,9 @@ os.state.v4.BaseLayerState.prototype.colorModeOptionsToXml_ = function(colorMode
   }
   return element;
 };
+
+
+/**
+ * @inheritDoc
+ */
+os.state.v4.BaseLayerState.prototype.remove = function(id) {};

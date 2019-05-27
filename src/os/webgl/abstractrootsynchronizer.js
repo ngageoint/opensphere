@@ -186,7 +186,8 @@ os.webgl.AbstractRootSynchronizer.prototype.synchronizeLayer_ = function(layer) 
 os.webgl.AbstractRootSynchronizer.prototype.createSynchronizer = function(constructor, layer) {
   goog.asserts.assert(!!this.map);
 
-  return new constructor(layer, this.map);
+  return /** @type {!os.webgl.AbstractWebGLSynchronizer} */ (new
+      /** @type {function(new: Object, ol.layer.Layer, ol.PluggableMap)} */ (constructor)(layer, this.map));
 };
 
 

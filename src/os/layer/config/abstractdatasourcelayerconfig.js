@@ -21,6 +21,7 @@ goog.require('os.ui.slick.column');
 
 
 /**
+ * @abstract
  * @extends {os.layer.config.AbstractLayerConfig}
  * @constructor
  * @template T
@@ -184,11 +185,12 @@ os.layer.config.AbstractDataSourceLayerConfig.prototype.getImporter = function(o
 
 
 /**
+ * @abstract
  * @param {Object<string, *>} options Layer configuration options.
  * @return {os.parse.IParser<T>}
  * @protected
  */
-os.layer.config.AbstractDataSourceLayerConfig.prototype.getParser = goog.abstractMethod;
+os.layer.config.AbstractDataSourceLayerConfig.prototype.getParser = function(options) {};
 
 
 /**

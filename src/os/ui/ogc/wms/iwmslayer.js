@@ -185,7 +185,7 @@ os.ui.ogc.wms.IWMSLayer.prototype.parseBBox;
 /**
  * @return {?Array<!string>}
  */
-os.ui.ogc.wms.IWMSLayer.prototype.getSupportedCRS = goog.abstractMethod;
+os.ui.ogc.wms.IWMSLayer.prototype.getSupportedCRS;
 
 
 /**

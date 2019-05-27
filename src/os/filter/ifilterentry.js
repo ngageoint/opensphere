@@ -11,7 +11,7 @@ os.filter.IFilterEntry = function() {};
 /**
  * @return {string}
  */
-os.filter.IFilterEntry.prototype.getTitle = goog.abstractMethod;
+os.filter.IFilterEntry.prototype.getTitle;
 
 
 /**
@@ -23,7 +23,7 @@ os.filter.IFilterEntry.prototype.setTitle;
 /**
  * @return {?string}
  */
-os.filter.IFilterEntry.prototype.getDescription = goog.abstractMethod;
+os.filter.IFilterEntry.prototype.getDescription;
 
 
 /**
@@ -35,7 +35,7 @@ os.filter.IFilterEntry.prototype.setDescription;
 /**
  * @return {?string} The filter
  */
-os.filter.IFilterEntry.prototype.getFilter = goog.abstractMethod;
+os.filter.IFilterEntry.prototype.getFilter;
 
 
 /**
