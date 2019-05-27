@@ -55,7 +55,7 @@ If your plugin has all items known in advance, its possible to use the :code:`ch
               label: 'Item 2',
               sort: 30,
               handler: plugin.cookbook_submenu.handleItem,
-              beforeRender: plugin.cookbook_submenu.visibileIfIsPointInSouthernHemisphere_
+              beforeRender: plugin.cookbook_submenu.visibleIfIsPointInSouthernHemisphere_
             }, {
               type: os.ui.menu.MenuItemType.ITEM,
               eventType: plugin.cookbook_submenu.EventType.DO_ANOTHER_THING,
@@ -70,7 +70,7 @@ If your plugin has all items known in advance, its possible to use the :code:`ch
 
 This is equivalent - you can mix and match the :code:`addChild` function calls and nested :code:`children` array as needed.
 
-Note that items will be enabled and visible by default, which might not make sense for your use. Instead, you may want to selectively enable, or not display, some menu items, depending on the menu context. The usual way to do this is to set a :code:`beforeRender`, as in :code:`plugin.cookbook_submenu.visibileIfIsPointInSouthernHemisphere_` which is implemented as:
+Note that items will be enabled and visible by default, which might not make sense for your use. Instead, you may want to selectively enable, or not display, some menu items, depending on the menu context. The usual way to do this is to set a :code:`beforeRender`, as in :code:`plugin.cookbook_submenu.visibleIfIsPointInSouthernHemisphere_` which is implemented as:
 
 .. literalinclude:: src/cookbook-submenu.js
   :caption: SubMenu Cookbook example - selectable visibility 
