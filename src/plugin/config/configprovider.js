@@ -41,6 +41,7 @@ plugin.config.Provider = function() {
   this.layers_;
 };
 goog.inherits(plugin.config.Provider, os.ui.data.DescriptorProvider);
+os.implements(plugin.config.Provider, os.data.IDataProvider.ID);
 
 
 /**
