@@ -293,15 +293,30 @@ os.metrics.Layer = {
   RENAME: 'layers.contextMenu.rename',
   EXPORT: 'layers.contextMenu.export',
   CREATE_BUFFER: 'layers.contextMenu.createBuffer',
-  SHOW_DESCRIPTION: 'layers.contextMenu.showDescription'
+  SHOW_DESCRIPTION: 'layers.contextMenu.showDescription',
+  FEATURE_LIST: 'layers.contextMenu.featureList'
 };
 
 
 /**
- * Layer metrics
+ * Feature metrics
  * @enum {string}
  */
 os.metrics.Feature = {
+};
+
+
+/**
+ * Feature list metrics
+ * @enum {string}
+ */
+os.metrics.FeatureList = {
+  EXPORT: 'featureList.export',
+  GOTO: 'featureList.goTo',
+  SORT_SELECTED: 'featureList.sortSelected',
+  SELECT_ALL: 'featureList.selectAll',
+  DESELECT_ALL: 'featureList.deselectAll',
+  INVERT_SELECTION: 'featureList.invertSelection'
 };
 
 

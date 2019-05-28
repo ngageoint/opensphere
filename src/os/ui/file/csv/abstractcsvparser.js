@@ -11,6 +11,7 @@ goog.require('os.ui.file.csv');
 
 /**
  * A CSV parser driven by PapaParse.
+ * @abstract
  * @param {os.parse.BaseParserConfig} config
  * @extends {os.parse.AsyncParser}
  * @template T
@@ -113,12 +114,13 @@ os.ui.file.csv.AbstractCsvParser.prototype.handleComplete_ = function(results) {
 
 /**
  * Processes a single PapaParse result.
+ * @abstract
  * @protected
  * @param {Object.<string, *>} result The result to process
  * @param {Array.<os.im.mapping.IMapping>=} opt_mappings The set of mappings to apply to parsed features.
  * @return {!T}
  */
-os.ui.file.csv.AbstractCsvParser.prototype.processResult = goog.abstractMethod;
+os.ui.file.csv.AbstractCsvParser.prototype.processResult = function(result, opt_mappings) {};
 
 
 /**
@@ -187,11 +189,12 @@ os.ui.file.csv.AbstractCsvParser.prototype.prepareSource = function(source) {
 
 /**
  * Synchronously parse a limited set of results from a source.
+ * @abstract
  * @param {string} source The CSV source.
  * @param {Array.<os.im.mapping.IMapping>=} opt_mappings The set of mappings to apply to parsed features.
  * @return {Array.<!T>}
  */
-os.ui.file.csv.AbstractCsvParser.prototype.parsePreview = goog.abstractMethod;
+os.ui.file.csv.AbstractCsvParser.prototype.parsePreview = function(source, opt_mappings) {};
 
 
 /**

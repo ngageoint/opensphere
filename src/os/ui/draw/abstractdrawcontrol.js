@@ -10,6 +10,7 @@ goog.require('os.ui.draw.IDrawControl');
 
 /**
  * Box drawing control.
+ * @abstract
  * @param {!SVGSVGElement} owner Owner DOM element.
  * @extends {goog.events.EventTarget}
  * @implements {os.ui.draw.IDrawControl}
@@ -112,12 +113,14 @@ os.ui.draw.AbstractDrawControl.prototype.setMarker = function(marker) {
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.ui.draw.AbstractDrawControl.prototype.getElementType = goog.abstractMethod;
+os.ui.draw.AbstractDrawControl.prototype.getElementType = function() {};
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.ui.draw.AbstractDrawControl.prototype.contains = goog.abstractMethod;
+os.ui.draw.AbstractDrawControl.prototype.contains = function(coord) {};

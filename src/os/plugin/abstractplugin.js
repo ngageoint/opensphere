@@ -46,6 +46,7 @@ os.plugin.AbstractPlugin.prototype.getError = function() {
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.plugin.AbstractPlugin.prototype.init = goog.abstractMethod;
+os.plugin.AbstractPlugin.prototype.init = function() {};

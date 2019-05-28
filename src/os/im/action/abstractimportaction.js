@@ -9,6 +9,7 @@ goog.require('os.xml');
 
 /**
  * Abstract import action.
+ * @abstract
  * @implements {os.im.action.IImportAction<T>}
  * @constructor
  * @template T
@@ -66,9 +67,10 @@ os.im.action.AbstractImportAction.XML_TYPE = 'AbstractImportAction';
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.im.action.AbstractImportAction.prototype.execute = goog.abstractMethod;
+os.im.action.AbstractImportAction.prototype.execute = function() {};
 
 
 /**
@@ -131,9 +133,10 @@ os.im.action.AbstractImportAction.prototype.persist = function(opt_to) {
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.im.action.AbstractImportAction.prototype.restore = goog.abstractMethod;
+os.im.action.AbstractImportAction.prototype.restore = function(config) {};
 
 
 /**
@@ -145,12 +148,14 @@ os.im.action.AbstractImportAction.prototype.toXml = function() {
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.im.action.AbstractImportAction.prototype.fromXml = goog.abstractMethod;
+os.im.action.AbstractImportAction.prototype.fromXml = function(xml) {};
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.im.action.AbstractImportAction.prototype.reset = goog.abstractMethod;
+os.im.action.AbstractImportAction.prototype.reset = function(items) {};

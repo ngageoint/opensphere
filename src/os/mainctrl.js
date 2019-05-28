@@ -114,6 +114,7 @@ goog.require('os.ui.menu.draw');
 goog.require('os.ui.menu.filter');
 goog.require('os.ui.menu.import');
 goog.require('os.ui.menu.layer');
+goog.require('os.ui.menu.list');
 goog.require('os.ui.menu.map');
 goog.require('os.ui.menu.save');
 goog.require('os.ui.menu.spatial');
@@ -290,6 +291,7 @@ os.MainCtrl = function($scope, $element, $compile, $timeout, $injector) {
   os.ui.menu.import.setup();
   os.ui.menu.map.setup();
   os.ui.menu.layer.setup();
+  os.ui.menu.list.setup();
   os.ui.menu.save.setup();
   os.ui.menu.spatial.setup();
   os.ui.menu.unit.setup();

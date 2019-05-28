@@ -22,6 +22,7 @@ goog.require('os.ui.ol.draw.DrawEventType');
  * An abstract class that serves as the base class for pointer drawing
  * interactions.
  *
+ * @abstract
  * @constructor
  * @extends {ol.interaction.Pointer}
  * @param {olx.interaction.PointerOptions=} opt_options
@@ -152,9 +153,10 @@ os.ui.ol.interaction.AbstractDraw.prototype.setStyle = function(style) {
 
 
 /**
+ * @abstract
  * @return {ol.geom.Geometry} the drawn geometry
  */
-os.ui.ol.interaction.AbstractDraw.prototype.getGeometry = goog.abstractMethod;
+os.ui.ol.interaction.AbstractDraw.prototype.getGeometry = function() {};
 
 
 /**
@@ -320,9 +322,10 @@ os.ui.ol.interaction.AbstractDraw.prototype.onKey = function(event) {
 
 
 /**
+ * @abstract
  * @return {string}
  */
-os.ui.ol.interaction.AbstractDraw.prototype.getResultString = goog.abstractMethod;
+os.ui.ol.interaction.AbstractDraw.prototype.getResultString = function() {};
 
 
 /**

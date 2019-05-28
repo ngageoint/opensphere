@@ -9,6 +9,7 @@ goog.require('os.thread.Thread');
 
 /**
  * Base class for exporting content
+ * @abstract
  * @extends {goog.events.EventTarget}
  * @implements {os.ex.IExportMethod}
  * @constructor
@@ -106,9 +107,10 @@ os.ex.AbstractExporter.prototype.reset = function() {
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.ex.AbstractExporter.prototype.getExtension = goog.abstractMethod;
+os.ex.AbstractExporter.prototype.getExtension = function() {};
 
 
 /**
@@ -128,9 +130,10 @@ os.ex.AbstractExporter.prototype.setItems = function(items) {
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.ex.AbstractExporter.prototype.getLabel = goog.abstractMethod;
+os.ex.AbstractExporter.prototype.getLabel = function() {};
 
 
 /**

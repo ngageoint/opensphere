@@ -193,13 +193,24 @@ os.ui.ol.OLMap.prototype.init = function(opt_container) {
  */
 os.ui.ol.OLMap.prototype.addFeature = function(feature, opt_style) {
   if (feature) {
-    if (opt_style && opt_style instanceof ol.style.Style) {
+    if (typeof opt_style === 'object') {
+      // if created externally, clone the style config
+      var style = opt_style instanceof Object ? opt_style : os.object.unsafeClone(opt_style);
+      feature.set(os.style.StyleType.FEATURE, style);
+      os.style.setFeatureStyle(feature);
+    } else if (opt_style && opt_style instanceof ol.style.Style) {
       feature.setStyle(opt_style);
+    }
+
+    if (!feature.getId()) {
+      feature.setId(ol.getUid(feature));
     }
 
     var source = this.drawingLayer_.getSource();
     source.addFeature(feature);
+    return feature;
   }
+  return undefined;
 };
 
 
