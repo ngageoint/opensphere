@@ -43,11 +43,12 @@ ol.geom.Geometry.prototype.getAntiExtent = function(opt_extent) {
 
 
 /**
+ * @abstract
  * @param {ol.Extent} extent
  * @return {ol.Extent}
  * @protected
  */
-ol.geom.Geometry.prototype.computeAntiExtent = goog.abstractMethod;
+ol.geom.Geometry.prototype.computeAntiExtent = function(extent) {};
 
 
 /**

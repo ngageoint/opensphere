@@ -150,7 +150,7 @@ os.ui.query.BaseCombinatorCtrl = function($scope, $element) {
   $scope['hasCountrySupport'] = false;
 
   $scope.$on('$destroy', this.onDestroy.bind(this));
-  $scope.$on('dirty', this.onDirty_.bind(this));
+  $scope.$on('dirty', this.onDirty.bind(this));
   $scope.$on('edit', this.onEdit_.bind(this));
   $scope.$on('view', this.onView_.bind(this));
   $scope.$on('copy', this.onCopy_.bind(this));
@@ -235,7 +235,7 @@ os.ui.query.BaseCombinatorCtrl.prototype.clear = function() {
     root.setState(os.structs.TriState.OFF);
   }
 
-  this.onDirty_();
+  this.onDirty();
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Filters.ADVANCED_RESET, 1);
 };
 
@@ -706,9 +706,9 @@ os.ui.query.BaseCombinatorCtrl.prototype.applyEntries = function(opt_restoreStat
 
 
 /**
- * @private
+ *@protected
  */
-os.ui.query.BaseCombinatorCtrl.prototype.onDirty_ = function() {
+os.ui.query.BaseCombinatorCtrl.prototype.onDirty = function() {
   var layerId = this.getLayerId_(os.ui.query.ALL_ID);
   if (layerId) {
     this.dirty_[layerId] = true;

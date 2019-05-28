@@ -8,6 +8,7 @@ goog.require('os.ui.ol.interaction.AbstractDraw');
 
 
 /**
+ * @abstract
  * @constructor
  * @extends {os.ui.ol.interaction.AbstractDraw}
  * @param {olx.interaction.PointerOptions=} opt_options

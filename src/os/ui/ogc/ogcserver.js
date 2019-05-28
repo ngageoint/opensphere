@@ -926,7 +926,9 @@ os.ui.ogc.OGCServer.prototype.parseWfsCapabilities = function(response, uri) {
 
       if (!descriptor) {
         descriptor = this.createDescriptor();
-        descriptor.setId(idPrefix + name);
+
+        // use the existing ID if it has one already
+        descriptor.setId(descriptor.getId() || idPrefix + name);
         descriptor.setWfsEnabled(true);
         descriptor.setColor(os.ui.ogc.OGCServer.DEFAULT_COLOR);
         descriptor.setTitle(nodeTitle);
@@ -1149,6 +1151,10 @@ os.ui.ogc.OGCServer.prototype.parseLayer = function(node, version, crsList, opt_
           // }
         }
 
+        // use the existing ID if it exists
+        var id = layerDescriptor.getId() ||
+            this.getId() + os.ui.data.BaseProvider.ID_DELIMITER + layerDescriptor.getWmsName();
+
         layerDescriptor.setWmsEnabled(true);
         layerDescriptor.setWmsParams(this.getWmsParams());
         layerDescriptor.setWmsVersion(version);
@@ -1156,7 +1162,7 @@ os.ui.ogc.OGCServer.prototype.parseLayer = function(node, version, crsList, opt_
         layerDescriptor.setWmsDateFormat(this.getWmsDateFormat());
         layerDescriptor.setWmsTimeFormat(this.getWmsTimeFormat());
         layerDescriptor.setProvider(this.getLabel());
-        layerDescriptor.setId(this.getId() + os.ui.data.BaseProvider.ID_DELIMITER + layerDescriptor.getWmsName());
+        layerDescriptor.setId(id);
 
         this.addDescriptor(layerDescriptor);
 

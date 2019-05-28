@@ -53,13 +53,6 @@ os.search.ISearchResult.prototype.getSearchUI;
 
 
 /**
- * Set the interface used to render the search result.
- * @param {string} value
- */
-os.search.ISearchResult.prototype.setSearchUI;
-
-
-/**
  * Perform an application action for the result. Should return if action was taken, otherwise the result will be
  * displayed in the search results.
  * @return {boolean} If the action was performed.

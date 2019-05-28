@@ -75,7 +75,7 @@ plugin.cookbook_submenu.CookbookSubmenu.prototype.init = function() {
         label: 'Item 2',
         sort: 30,
         handler: plugin.cookbook_submenu.handleItem,
-        beforeRender: plugin.cookbook_submenu.visibileIfIsPointInSouthernHemisphere_
+        beforeRender: plugin.cookbook_submenu.visibleIfIsPointInSouthernHemisphere_
       }]
     });
 
@@ -109,7 +109,7 @@ plugin.cookbook_submenu.shouldShowGroup_ = function(context) {
  * @this {os.ui.menu.MenuItem}
  * @private
  */
-plugin.cookbook_submenu.visibileIfIsPointInSouthernHemisphere_ = function(context) {
+plugin.cookbook_submenu.visibleIfIsPointInSouthernHemisphere_ = function(context) {
   this.visible = plugin.cookbook_submenu.ifIsPointInSouthernHemisphere_(context);
 };
 

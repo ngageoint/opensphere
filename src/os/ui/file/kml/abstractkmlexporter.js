@@ -22,6 +22,7 @@ goog.require('os.xml');
 
 /**
  * Abstract KML exporter
+ * @abstract
  * @extends {os.ex.ZipExporter<T>}
  * @constructor
  * @template T
@@ -742,11 +743,12 @@ os.ui.file.kml.AbstractKMLExporter.prototype.getChildren = function(item) {
 
 /**
  * Get the color of an item. This should return an ABGR string that can be dropped directly into the KML.
+ * @abstract
  * @param {T} item The item
  * @return {string} The item's color as an ABGR string
  * @protected
  */
-os.ui.file.kml.AbstractKMLExporter.prototype.getColor = goog.abstractMethod;
+os.ui.file.kml.AbstractKMLExporter.prototype.getColor = function(item) {};
 
 
 /**
@@ -780,20 +782,22 @@ os.ui.file.kml.AbstractKMLExporter.prototype.setFields = function(value) {
 
 /**
  * Get the geometry for an item.
+ * @abstract
  * @param {T} item The item
  * @return {(ol.geom.Geometry|undefined)}
  * @protected
  */
-os.ui.file.kml.AbstractKMLExporter.prototype.getGeometry = goog.abstractMethod;
+os.ui.file.kml.AbstractKMLExporter.prototype.getGeometry = function(item) {};
 
 
 /**
  * Get the icon rotation column.
+ * @abstract
  * @param {T} item The item
  * @return {string|null|undefined}
  * @protected
  */
-os.ui.file.kml.AbstractKMLExporter.prototype.getRotationColumn = goog.abstractMethod;
+os.ui.file.kml.AbstractKMLExporter.prototype.getRotationColumn = function(item) {};
 
 
 /**
@@ -818,21 +822,23 @@ os.ui.file.kml.AbstractKMLExporter.prototype.setIcon = function(icon) {
 
 /**
  * Get the id of an item.
+ * @abstract
  * @param {T} item The item
  * @return {string} The item's id
  * @protected
  */
-os.ui.file.kml.AbstractKMLExporter.prototype.getId = goog.abstractMethod;
+os.ui.file.kml.AbstractKMLExporter.prototype.getId = function(item) {};
 
 
 /**
  * Get the field value from an item.
+ * @abstract
  * @param {T} item The item
  * @param {string} field The field
  * @return {*} The value
  * @protected
  */
-os.ui.file.kml.AbstractKMLExporter.prototype.getField = goog.abstractMethod;
+os.ui.file.kml.AbstractKMLExporter.prototype.getField = function(item, field) {};
 
 
 /**
@@ -884,11 +890,12 @@ os.ui.file.kml.AbstractKMLExporter.prototype.getParent = function(item) {
 
 /**
  * Get all properties from an item.
+ * @abstract
  * @param {T} item The item
  * @return {Object<string, *>} The item's properties
  * @protected
  */
-os.ui.file.kml.AbstractKMLExporter.prototype.getProperties = goog.abstractMethod;
+os.ui.file.kml.AbstractKMLExporter.prototype.getProperties = function(item) {};
 
 
 /**
@@ -934,20 +941,22 @@ os.ui.file.kml.AbstractKMLExporter.prototype.getStyleId = function(item) {
 
 /**
  * Gets the style type for an item.
+ * @abstract
  * @param {T} item The item
  * @return {string} The style type for the item
  * @protected
  */
-os.ui.file.kml.AbstractKMLExporter.prototype.getStyleType = goog.abstractMethod;
+os.ui.file.kml.AbstractKMLExporter.prototype.getStyleType = function(item) {};
 
 
 /**
  * Gets the time associated with the provided item.
+ * @abstract
  * @param {T} item The item
  * @return {os.time.ITime} The item's time
  * @protected
  */
-os.ui.file.kml.AbstractKMLExporter.prototype.getTime = goog.abstractMethod;
+os.ui.file.kml.AbstractKMLExporter.prototype.getTime = function(item) {};
 
 
 /**

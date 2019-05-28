@@ -37,6 +37,13 @@ os.interaction.Hover = function(opt_options) {
   this.featureOverlay_ = new os.layer.AnimationOverlay();
   this.featureOverlay_.setZIndex(os.layer.AnimationVector.Z_OFFSET * 2);
 
+  /**
+   * Currently highlighted features.
+   * @type {Array<!ol.Feature>}
+   * @private
+   */
+  this.highlightedItems_ = null;
+
   // hook up to the data manager so that we can get highlight events from sources
   var dm = os.dataManager;
   dm.listen(os.data.event.DataEventType.SOURCE_ADDED, this.onSourceAdded_, false, this);
@@ -167,28 +174,36 @@ os.interaction.Hover.prototype.onMouseOut_ = function(event) {
  * @private
  */
 os.interaction.Hover.prototype.onFeatureChange_ = function(event) {
-  var map = this.getMap();
-  if (map && this.lastFeature_ && this.lastPixel_) {
-    var lastFeature = this.lastFeature_;
-    var layer = os.feature.getLayer(this.lastFeature_);
-    var feature = /** @type {ol.Feature} */ (map.forEachFeatureAtPixel(this.lastPixel_,
-        /**
-         * @param {ol.Feature|ol.render.Feature} feature Feature.
-         * @param {ol.layer.Layer} layer Layer.
-         * @return {ol.Feature|ol.render.Feature|undefined} The feature, or undefined if no feature hit
-         */
-        function(feature, layer) {
-          return feature === lastFeature ? feature : null;
-        }, {
-          layerFilter: function(l) {
-            return l === layer;
-          }
-        }));
+  if (this.highlightedItems_) {
+    if (this.lastPixel_) {
+      // highlight is coming from the hover interaction, so determine if the feature is still under the mouse
+      var map = this.getMap();
+      if (map) {
+        var targetFeature = this.highlightedItems_[0];
+        var layer = os.feature.getLayer(targetFeature);
+        var feature = /** @type {ol.Feature} */ (map.forEachFeatureAtPixel(this.lastPixel_,
+            /**
+             * @param {ol.Feature|ol.render.Feature} feature Feature.
+             * @param {ol.layer.Layer} layer Layer.
+             * @return {ol.Feature|ol.render.Feature|undefined} The feature, or undefined if no feature hit
+             */
+            function(feature, layer) {
+              return feature === targetFeature ? feature : null;
+            }, {
+              layerFilter: function(l) {
+                return l === layer;
+              }
+            }));
 
-    if (feature) {
-      this.highlight_([feature]);
+        if (feature) {
+          this.highlight_(this.highlightedItems_);
+        } else {
+          this.setHighlightFeature_(undefined);
+        }
+      }
     } else {
-      this.setHighlightFeature_(undefined);
+      // highlight is coming from the source, so just update the overlay
+      this.highlight_(this.highlightedItems_);
     }
   }
 };
@@ -210,8 +225,6 @@ os.interaction.Hover.prototype.setHighlightFeature_ = function(feature, opt_sour
 
   if (feature != this.lastFeature_) {
     if (this.lastFeature_) {
-      ol.events.listen(this.lastFeature_, ol.events.EventType.CHANGE, this.onFeatureChange_, this);
-
       if (os.ui.areaManager.get(this.lastFeature_) ||
           (mm.containsFeature(this.lastFeature_) && this.lastFeature_.get(os.data.RecordField.INTERACTIVE))) {
         // handle both areas and interactive features in the drawing layer
@@ -256,8 +269,6 @@ os.interaction.Hover.prototype.setHighlightFeature_ = function(feature, opt_sour
         os.feature.update(feature, drawSource);
         pointerStyle = 'pointer';
       }
-
-      ol.events.listen(feature, ol.events.EventType.CHANGE, this.onFeatureChange_, this);
     }
 
     // update the cursor style
@@ -296,7 +307,25 @@ os.interaction.Hover.prototype.setMap = function(map) {
  * @private
  */
 os.interaction.Hover.prototype.highlight_ = function(items) {
+  if (this.highlightedItems_ && this.highlightedItems_ !== items) {
+    // highlighted items are changing, remove old feature listeners
+    this.highlightedItems_.forEach(function(feature) {
+      ol.events.unlisten(feature, ol.events.EventType.CHANGE, this.onFeatureChange_, this);
+    }, this);
+  }
+
   this.featureOverlay_.setFeatures(items);
+
+  if (this.highlightedItems_ !== items) {
+    // new items - update them and attach feature listeners
+    this.highlightedItems_ = items;
+
+    if (this.highlightedItems_) {
+      this.highlightedItems_.forEach(function(feature) {
+        ol.events.listen(feature, ol.events.EventType.CHANGE, this.onFeatureChange_, this);
+      }, this);
+    }
+  }
 };
 
 

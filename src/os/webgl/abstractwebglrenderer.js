@@ -9,6 +9,7 @@ goog.require('os.webgl.IWebGLRenderer');
 
 /**
  * Abstract WebGL renderer implementation.
+ * @abstract
  * @implements {os.webgl.IWebGLRenderer}
  * @extends {goog.Disposable}
  * @constructor
@@ -158,27 +159,31 @@ os.webgl.AbstractWebGLRenderer.prototype.resetSync = function() {
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.webgl.AbstractWebGLRenderer.prototype.getCoordinateFromPixel = goog.abstractMethod;
+os.webgl.AbstractWebGLRenderer.prototype.getCoordinateFromPixel = function(pixel) {};
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.webgl.AbstractWebGLRenderer.prototype.getPixelFromCoordinate = goog.abstractMethod;
+os.webgl.AbstractWebGLRenderer.prototype.getPixelFromCoordinate = function(coord) {};
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.webgl.AbstractWebGLRenderer.prototype.forEachFeatureAtPixel = goog.abstractMethod;
+os.webgl.AbstractWebGLRenderer.prototype.forEachFeatureAtPixel = function(pixel, callback) {};
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.webgl.AbstractWebGLRenderer.prototype.toggleMovement = goog.abstractMethod;
+os.webgl.AbstractWebGLRenderer.prototype.toggleMovement = function(value) {};
 
 
 /**
@@ -202,9 +207,10 @@ os.webgl.AbstractWebGLRenderer.prototype.setEnabled = function(value) {
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.webgl.AbstractWebGLRenderer.prototype.getCamera = goog.abstractMethod;
+os.webgl.AbstractWebGLRenderer.prototype.getCamera = function() {};
 
 
 /**

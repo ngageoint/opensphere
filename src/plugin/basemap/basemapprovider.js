@@ -290,3 +290,11 @@ plugin.basemap.BaseMapProvider.prototype.onTerrainDisabled = function(event) {
     goog.dispose(descriptor);
   }
 };
+
+
+/**
+ * @inheritDoc
+ */
+plugin.basemap.BaseMapProvider.prototype.getErrorMessage = function() {
+  return null;
+};
