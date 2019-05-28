@@ -110,7 +110,7 @@ os.ui.state.AbstractStateDescriptor.prototype.activateState = function(opt_file)
         } else {
           var method = new os.ui.file.method.UrlMethod();
           method.setUrl(url);
-          method.listen(os.events.EventType.COMPLETE, this.onUrlComplete_, false, this);
+          method.listen(os.events.EventType.COMPLETE, this.onUrlComplete, false, this);
           method.listen(os.events.EventType.CANCEL, this.onUrlError_, false, this);
           method.listen(os.events.EventType.ERROR, this.onUrlError_, false, this);
           method.loadUrl();
@@ -179,9 +179,8 @@ os.ui.state.AbstractStateDescriptor.prototype.onFileError_ = function(error) {
 /**
  * Handler for URL load success.
  * @param {goog.events.Event} event
- * @private
  */
-os.ui.state.AbstractStateDescriptor.prototype.onUrlComplete_ = function(event) {
+os.ui.state.AbstractStateDescriptor.prototype.onUrlComplete = function(event) {
   var method = /** @type {os.ui.file.method.UrlMethod} */ (event.target);
   var file = method.getFile();
   method.dispose();

@@ -32,6 +32,12 @@ os.query.BaseAreaManager = function() {
   os.query.BaseAreaManager.base(this, 'constructor');
 
   /**
+   * @type {ol.Feature|undefined}
+   * @protected
+   */
+  this.highlightFeature = undefined;
+
+  /**
    * @type {goog.log.Logger}
    * @protected
    */
@@ -634,18 +640,9 @@ os.query.BaseAreaManager.prototype.redraw = function(area) {
  * @param {string|ol.Feature} idOrFeature
  */
 os.query.BaseAreaManager.prototype.unhighlight = function(idOrFeature) {
-  var area = this.get(idOrFeature);
-
-  if (area && this.getMap().containsFeature(area)) {
-    var entries = os.ui.queryManager.getEntries(undefined, /** @type {string} */ (area.getId()));
-
-    if (!entries.length > 0) {
-      area.setStyle(os.style.area.DEFAULT_STYLE);
-    } else if (entries[0]['includeArea']) {
-      area.setStyle(os.style.area.INCLUSION_STYLE);
-    } else {
-      area.setStyle(os.style.area.EXCLUSION_STYLE);
-    }
+  if (this.highlightFeature) {
+    this.getMap().removeFeature(this.highlightFeature);
+    this.highlightFeature = undefined;
   }
 };
 
@@ -654,14 +651,20 @@ os.query.BaseAreaManager.prototype.unhighlight = function(idOrFeature) {
  * @param {string|ol.Feature} idOrFeature
  */
 os.query.BaseAreaManager.prototype.highlight = function(idOrFeature) {
+  if (this.highlightFeature) {
+    this.getMap().removeFeature(this.highlightFeature);
+    this.highlightFeature = undefined;
+  }
+
   var area = this.get(idOrFeature);
 
   if (area && this.getMap().containsFeature(area)) {
-    var container = $('#map-container');
-
-    if (area) {
-      area.setStyle(os.style.area.HOVER_STYLE);
-      container.css('cursor', 'pointer');
+    var geometry = area.getGeometry();
+    if (geometry) {
+      var feature = new ol.Feature(geometry.clone());
+      // do not show a drawing layer node for this feature
+      feature.set(os.data.RecordField.DRAWING_LAYER_NODE, false);
+      this.highlightFeature = this.getMap().addFeature(feature, os.style.area.HIGHLIGHT_STYLE);
     }
   }
 };

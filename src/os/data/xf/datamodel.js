@@ -228,15 +228,33 @@ os.data.xf.DataModel.prototype.filterDimension = function(id, opt_value) {
 
 
 /**
+ * Apply a set of filters
+ * @param {!Object<string, *>} filters
+ */
+os.data.xf.DataModel.prototype.applyFilters = function(filters) {
+  if (!this.isDisposed()) {
+    var temp = goog.object.clone(filters);
+    for (var key in temp) {
+      this.filterDimension(key, temp[key]);
+    }
+  }
+};
+
+
+/**
  * Clears all dimension filters and the filterFunction
+ * Return the filters that were cleared
+ * @return {!Object<string, *>}
  */
 os.data.xf.DataModel.prototype.clearAllFilters = function() {
   if (!this.isDisposed()) {
+    var temp = goog.object.clone(this.filterValues);
     for (var key in this.filterValues) {
       this.filterDimension(key);
     }
-    this.setFilterFunction(null);
+    return temp;
   }
+  return {};
 };
 
 
