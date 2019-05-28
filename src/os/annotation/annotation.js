@@ -17,8 +17,8 @@ os.annotation.DEFAULT_OPTIONS = {
   showDescription: true,
   size: [200, 100],
   offset: [0, -75],
-  headerBG: null,
-  bodyBG: null
+  headerBG: undefined,
+  bodyBG: undefined
 };
 
 

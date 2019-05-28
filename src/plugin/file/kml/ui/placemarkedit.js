@@ -95,6 +95,9 @@ plugin.file.kml.ui.PlacemarkEditCtrl = function($scope, $element, $timeout) {
       // if creating a new annotation, expand the Annotation Options section by default
       this.defaultExpandedOptionsId = 'featureAnnotation' + this['uid'];
     }
+
+    $scope.$on('headerColor.reset', this.resetHeaderBackgroundColor_.bind(this));
+    $scope.$on('bodyColor.reset', this.resetBodyBackgroundColor_.bind(this));
   }
 };
 goog.inherits(plugin.file.kml.ui.PlacemarkEditCtrl, os.ui.FeatureEditCtrl);
@@ -165,12 +168,12 @@ plugin.file.kml.ui.PlacemarkEditCtrl.prototype.cancel = function() {
 plugin.file.kml.ui.PlacemarkEditCtrl.prototype.createPreviewFeature = function() {
   plugin.file.kml.ui.PlacemarkEditCtrl.base(this, 'createPreviewFeature');
 
-  // get the current theme colors
+  // get the current theme colors when creating preview feature
   var defaultHeaderColor =
       window.getComputedStyle(document.getElementsByClassName('js-window__header')[0]).backgroundColor;
 
   var defaultBodyColor =
-      window.getComputedStyle(document.getElementsByClassName('ui-menu')[0]);
+      window.getComputedStyle(document.getElementsByClassName('ui-menu')[0]).backgroundColor;
 
   // set the default options for the annotation
   this['annotationOptions'] = os.object.unsafeClone(os.annotation.DEFAULT_OPTIONS);
@@ -255,4 +258,24 @@ plugin.file.kml.ui.PlacemarkEditCtrl.prototype.updateAnnotation = function() {
     // fire a change event on the feature to trigger an overlay update (if present)
     this.previewFeature.changed();
   }
+};
+
+
+/**
+ * Resets the header background to the current default theme color
+ * @private
+ */
+plugin.file.kml.ui.PlacemarkEditCtrl.prototype.resetHeaderBackgroundColor_ = function() {
+  this['annotationOptions'].headerBG =
+    window.getComputedStyle(document.getElementsByClassName('js-window__header')[0]).backgroundColor;
+};
+
+
+/**
+ * Resets the body background to the current default theme color
+ * @private
+ */
+plugin.file.kml.ui.PlacemarkEditCtrl.prototype.resetBodyBackgroundColor_ = function() {
+  this['annotationOptions'].bodyBG =
+    window.getComputedStyle(document.getElementsByClassName('ui-menu')[0]).backgroundColor;
 };
