@@ -5,6 +5,7 @@ goog.require('os.search.ISearchResult');
 
 /**
  * Base class for a search result.
+ * @abstract
  * @param {T} result The result.
  * @param {number=} opt_score The result's score.
  * @param {number|string=} opt_id The result's id.
@@ -85,15 +86,10 @@ os.search.AbstractSearchResult.prototype.setScore = function(value) {
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.search.AbstractSearchResult.prototype.getSearchUI = goog.abstractMethod;
-
-
-/**
- * @inheritDoc
- */
-os.search.AbstractSearchResult.prototype.setSearchUI = goog.abstractMethod;
+os.search.AbstractSearchResult.prototype.getSearchUI = function() {};
 
 
 /**

@@ -52,7 +52,7 @@ os.test.xsd.loadStateXsdFiles = function() {
   var stateFileRoot = '/opensphere-state-schema/src/main/xsd/';
   var p = goog.Promise.withResolver();
 
-  // retun the cached result, if it exists.
+  // return the cached result, if it exists.
   if (os.test.xsd.stateCache_) {
     p.resolve(os.test.xsd.stateCache_);
     return p.promise;

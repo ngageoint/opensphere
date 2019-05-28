@@ -6,6 +6,7 @@ goog.require('os.hist.IHistogramData');
 /**
  * Abstract class that should be extended by all histogram data classes. It deliberately
  * does not implement the count data structure in order to allow subclasses to do so.
+ * @abstract
  * @implements {os.hist.IHistogramData}
  * @constructor
  */
@@ -49,15 +50,17 @@ os.hist.AbstractHistogramData = function() {
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.hist.AbstractHistogramData.prototype.getCounts = goog.abstractMethod;
+os.hist.AbstractHistogramData.prototype.getCounts = function() {};
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.hist.AbstractHistogramData.prototype.setCounts = goog.abstractMethod;
+os.hist.AbstractHistogramData.prototype.setCounts = function(value) {};
 
 
 /**

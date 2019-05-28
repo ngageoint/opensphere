@@ -27,6 +27,7 @@ os.stateManager = null;
 
 /**
  * Base state manager. Applications should extend this to fill in the abstract methods.
+ * @abstract
  * @extends {goog.events.EventTarget}
  * @constructor
  * @template T,S
@@ -420,14 +421,16 @@ os.state.BaseStateManager.prototype.onFileError_ = function(error) {
 
 /**
  * Determine which parts of a state are supported by the application.
+ * @abstract
  * @param {T|string} obj The state
  * @return {!Array.<!os.state.IState>} Supported states
  */
-os.state.BaseStateManager.prototype.analyze = goog.abstractMethod;
+os.state.BaseStateManager.prototype.analyze = function(obj) {};
 
 
 /**
  * Creates the root state object.
+ * @abstract
  * @param {os.ex.IPersistenceMethod} method The persistence method
  * @param {string} title The title
  * @param {string=} opt_desc The description
@@ -435,11 +438,12 @@ os.state.BaseStateManager.prototype.analyze = goog.abstractMethod;
  * @return {T} The save options
  * @protected
  */
-os.state.BaseStateManager.prototype.createStateObject = goog.abstractMethod;
+os.state.BaseStateManager.prototype.createStateObject = function(method, title, opt_desc, opt_tags) {};
 
 
 /**
  * Creates state save options.
+ * @abstract
  * @param {os.ex.IPersistenceMethod} method The persistence method
  * @param {string} title The title
  * @param {T} obj The root state object
@@ -448,30 +452,33 @@ os.state.BaseStateManager.prototype.createStateObject = goog.abstractMethod;
  * @return {S} The save options
  * @protected
  */
-os.state.BaseStateManager.prototype.createStateOptions = goog.abstractMethod;
+os.state.BaseStateManager.prototype.createStateOptions = function(method, title, obj, opt_desc, opt_tags) {};
 
 
 /**
  * Gets the state file name.
+ * @abstract
  * @param {S} options The state options
  * @return {?string} The file name
  */
-os.state.BaseStateManager.prototype.getStateFileName = goog.abstractMethod;
+os.state.BaseStateManager.prototype.getStateFileName = function(options) {};
 
 
 /**
  * Load a state from a document.
+ * @abstract
  * @param {T|string} obj The state
  * @param {Array.<!os.state.IState>} states The states to load
  * @param {string} stateId The state's identifier
  * @param {?string=} opt_title The state's title
  */
-os.state.BaseStateManager.prototype.loadState = goog.abstractMethod;
+os.state.BaseStateManager.prototype.loadState = function(obj, states, stateId, opt_title) {};
 
 
 /**
  * Serializes the state file content to a string.
+ * @abstract
  * @param {S} options The state options
  * @return {?string} The serialized content
  */
-os.state.BaseStateManager.prototype.serializeContent = goog.abstractMethod;
+os.state.BaseStateManager.prototype.serializeContent = function(options) {};
