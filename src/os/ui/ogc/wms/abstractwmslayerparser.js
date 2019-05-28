@@ -7,6 +7,7 @@ goog.require('os.ui.ogc.wms.IWMSLayerParser');
 
 
 /**
+ * @abstract
  * @implements {os.ui.ogc.wms.IWMSLayerParser}
  * @constructor
  */
@@ -30,9 +31,10 @@ os.ui.ogc.wms.AbstractWMSLayerParser.prototype.parseLayerTitle = function(node) 
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.ui.ogc.wms.AbstractWMSLayerParser.prototype.parseLayer = goog.abstractMethod;
+os.ui.ogc.wms.AbstractWMSLayerParser.prototype.parseLayer = function(node, layer) {};
 
 
 /**

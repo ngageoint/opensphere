@@ -558,6 +558,7 @@ os.data.histo.SourceHistogram.prototype.updateResults = function() {
       this.source.getFilteredFeatures();
     }
 
+    var tempFilters = {};
     var filters = this.getParentFilters();
     if (filters) {
       for (var id in filters) {
@@ -571,9 +572,9 @@ os.data.histo.SourceHistogram.prototype.updateResults = function() {
       }
     }
 
-    // clear the filters to get all of the data
+    // clear the filters to get all of the data, reapply them a little farther down
     if (this.forceAllData_ == true) {
-      this.timeModel_.clearAllFilters();
+      tempFilters = this.timeModel_.clearAllFilters();
     }
 
     if (this.secondaryBinMethod) {
@@ -586,9 +587,9 @@ os.data.histo.SourceHistogram.prototype.updateResults = function() {
           this.reduceRemove.bind(this), this.reduceInit.bind(this)));
     }
 
-    // reapply the time ranges
+    // reapply the filters
     if (this.source && this.forceAllData_ == true) {
-      this.source.getFilteredFeatures();
+      this.timeModel_.applyFilters(tempFilters);
     }
 
     if (filters) {

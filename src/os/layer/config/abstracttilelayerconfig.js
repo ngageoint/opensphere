@@ -15,6 +15,7 @@ goog.require('os.tile.ColorableTile');
 
 
 /**
+ * @abstract
  * @extends {os.layer.config.AbstractLayerConfig}
  * @constructor
  */
@@ -210,11 +211,12 @@ os.layer.config.AbstractTileLayerConfig.prototype.configureLayer = function(laye
 
 
 /**
+ * @abstract
  * @param {Object<string, *>} options
  * @return {ol.source.TileImage}
  * @protected
  */
-os.layer.config.AbstractTileLayerConfig.prototype.getSource = goog.abstractMethod;
+os.layer.config.AbstractTileLayerConfig.prototype.getSource = function(options) {};
 
 
 /**

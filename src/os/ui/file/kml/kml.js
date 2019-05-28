@@ -174,6 +174,7 @@ os.ui.file.kml.GoogleEarthIcons = {
   YLW_SQUARE: 'paddle/ylw-square.png',
   YLW_STARS: 'paddle/ylw-stars.png',
   AIRPORTS: 'shapes/airports.png',
+  AIRPORTS_WHITE: 'shapes/airports_white.png',
   ARROW_REVERSE: 'shapes/arrow-reverse.png',
   ARROW: 'shapes/arrow.png',
   ARTS: 'shapes/arts.png',
@@ -706,6 +707,10 @@ os.ui.file.kml.GOOGLE_EARTH_ICON_SET = [
   {
     title: 'Shaded Dot',
     path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.SHADED_DOT
+  },
+  {
+    title: 'Airports White',
+    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.AIRPORTS_WHITE
   },
 
   // light blue icons

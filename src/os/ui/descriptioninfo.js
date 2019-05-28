@@ -162,16 +162,13 @@ os.ui.formatter.DescriptionFormatter = function(row, cell, value, columnDef, nod
  * @param {Object} colDef
  */
 os.ui.SlickDescriptionAsyncRenderer = function(elem, row, dataContext, colDef) {
-  if (dataContext) {
-    // this is used for a DOM element id, so replace all non-word characters with underscores
-    var id = String(dataContext.getId()).replace(/[\W]/g, '_');
+  if (dataContext && colDef && colDef['field']) {
+    var feature = /** @type {ol.Feature} */ (dataContext);
 
-    // match the description case
-    var desc = /** @type {!string} */ (dataContext.get(os.Fields.DESCRIPTION));
-    if (!desc) {
-      desc = /** @type {!string} */ (dataContext.get(os.Fields.DESCRIPTION.toLowerCase()));
-    }
-    if (desc != null && typeof id === 'string') {
+    // this is used for a DOM element id, so replace all non-word characters with underscores
+    var id = os.ui.sanitizeId(String(feature.getId()));
+    var desc = /** @type {string} */ (feature.get(colDef['field']));
+    if (id && desc) {
       var $elem = $(elem);
       var doc = elem.ownerDocument;
       var myWin = doc.defaultView || doc.parentWindow;

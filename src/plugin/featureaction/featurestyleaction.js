@@ -235,11 +235,15 @@ plugin.im.action.feature.StyleAction.prototype.toXml = function() {
     os.xml.appendElement(plugin.im.action.feature.StyleActionTagName.ICON_SRC, element, icon.path);
   }
 
-  var showRotation = this.styleConfig[os.style.StyleField.SHOW_ROTATION] || false;
-  os.xml.appendElement(plugin.im.action.feature.StyleActionTagName.SHOW_ROTATION, element, String(showRotation));
+  var showRotation = this.styleConfig[os.style.StyleField.SHOW_ROTATION];
+  if (showRotation != null) {
+    os.xml.appendElement(plugin.im.action.feature.StyleActionTagName.SHOW_ROTATION, element, String(showRotation));
+  }
 
-  var rotationColumn = this.styleConfig[os.style.StyleField.ROTATION_COLUMN] || false;
-  os.xml.appendElement(plugin.im.action.feature.StyleActionTagName.ROTATION_COLUMN, element, String(rotationColumn));
+  var rotationColumn = this.styleConfig[os.style.StyleField.ROTATION_COLUMN];
+  if (rotationColumn != null) {
+    os.xml.appendElement(plugin.im.action.feature.StyleActionTagName.ROTATION_COLUMN, element, String(rotationColumn));
+  }
 
   return element;
 };
@@ -288,10 +292,15 @@ plugin.im.action.feature.StyleAction.prototype.fromXml = function(xml) {
       }
     }
 
-    styleConfig[os.style.StyleField.SHOW_ROTATION] = Boolean(os.xml.getChildValue(xml,
-        plugin.im.action.feature.StyleActionTagName.SHOW_ROTATION));
-    styleConfig[os.style.StyleField.ROTATION_COLUMN] = os.xml.getChildValue(xml,
-        plugin.im.action.feature.StyleActionTagName.ROTATION_COLUMN);
+    var showRotation = os.xml.getChildValue(xml, plugin.im.action.feature.StyleActionTagName.SHOW_ROTATION);
+    if (showRotation != null) {
+      styleConfig[os.style.StyleField.SHOW_ROTATION] = Boolean(showRotation);
+    }
+
+    var rotationColumn = os.xml.getChildValue(xml, plugin.im.action.feature.StyleActionTagName.ROTATION_COLUMN);
+    if (rotationColumn != null) {
+      styleConfig[os.style.StyleField.ROTATION_COLUMN] = rotationColumn;
+    }
   }
 
   this.styleConfig = styleConfig;
