@@ -101,6 +101,18 @@ os.ui.menu.import.dispose = function() {
 
 
 /**
+ * Take in a descriptor and the enabled state and determine which icon to display
+ * @param {os.data.IDataDescriptor} descriptor
+ * @param {boolean} enabled
+ * @return {string}
+ * @private
+ */
+os.ui.menu.import.getDescriptorToggleIcon_ = function(descriptor, enabled) {
+  return enabled ? 'fa-check-square-o' : 'fa-square-o';
+};
+
+
+/**
  * Update the "Recent" menu group.
  * @private
  */
@@ -135,7 +147,7 @@ os.ui.menu.import.refreshRecent_ = function() {
     var enabled = descriptor.isActive();
     var title = descriptor.getTitle() || '';
     var type = descriptor.getType();
-    var icon = enabled ? 'fa-check-square-o' : 'fa-square-o';
+    var icon = os.ui.menu.import.getDescriptorToggleIcon_(descriptor, enabled);
 
     if (type) {
       if (type === os.layer.LayerType.GROUPS) {

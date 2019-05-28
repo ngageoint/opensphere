@@ -8,6 +8,7 @@ goog.require('os.user.settings.FavoriteManager');
 
 /**
  * Responsible for executing search terms against the registered search managers
+ * @abstract
  * @param {string=} opt_id
  * @param {string=} opt_name
  * @extends {goog.events.EventTarget}
@@ -208,6 +209,7 @@ os.search.AbstractSearchManager.prototype.isContainer = function() {
 
 /**
  * Execute search using registered searches.
+ * @abstract
  * @param {string} term The keyword search term
  * @param {number=} opt_start The index of the search results page
  * @param {number=} opt_pageSize The number of results to include per page
@@ -216,73 +218,80 @@ os.search.AbstractSearchManager.prototype.isContainer = function() {
  * @param {boolean=} opt_noFacets flag for indicating facet search is not needed
  * @param {string=} opt_sortOrder The sort order
  */
-os.search.AbstractSearchManager.prototype.search = goog.abstractMethod;
+os.search.AbstractSearchManager.prototype.search = function(term, opt_start, opt_pageSize, opt_sortBy, opt_force,
+    opt_noFacets, opt_sortOrder) {};
 
 
 /**
  * Requests autocomplete results from a search term.
+ * @abstract
  * @param {string} term The keyword to use in the search
  * @param {number=} opt_maxResults The maximum number of autocomplete results.
  */
-os.search.AbstractSearchManager.prototype.autocomplete = goog.abstractMethod;
+os.search.AbstractSearchManager.prototype.autocomplete = function(term, opt_maxResults) {};
 
 
 /**
  * Clear the search results.
+ * @abstract
  * @param {string=} opt_term A default search term. If not provided, the term will be cleared.
  */
-os.search.AbstractSearchManager.prototype.clear = goog.abstractMethod;
+os.search.AbstractSearchManager.prototype.clear = function(opt_term) {};
 
 
 /**
  * Retrieve the total number of search results
+ * @abstract
  * @return {number}
  */
-os.search.AbstractSearchManager.prototype.getTotal = goog.abstractMethod;
+os.search.AbstractSearchManager.prototype.getTotal = function() {};
 
 
 /**
  * Retrieve the identifying names of all the registered searches.
+ * @abstract
  * @param {boolean=} opt_excludeExternal
  * @return {!Array<!os.search.ISearch>}
  */
-os.search.AbstractSearchManager.prototype.getRegisteredSearches = goog.abstractMethod;
+os.search.AbstractSearchManager.prototype.getRegisteredSearches = function(opt_excludeExternal) {};
 
 
 /**
  * Get the search providers that are currently enabled, and
  * optionally support the search term.
+ * @abstract
  * @param {string=} opt_term
  * @return {!Array<!os.search.ISearch>}
  */
-os.search.AbstractSearchManager.prototype.getEnabledSearches = goog.abstractMethod;
+os.search.AbstractSearchManager.prototype.getEnabledSearches = function(opt_term) {};
 
 
 /**
  * Retrieve search results as they have been captured be all searches or for a specitic search
+ * @abstract
  * @param {number=} opt_limit
  * @return {Array} A shallow copy of the search results
  */
-os.search.AbstractSearchManager.prototype.getResults = goog.abstractMethod;
+os.search.AbstractSearchManager.prototype.getResults = function(opt_limit) {};
 
 
 /**
  * Force events to fire indicating whether there is a search in progress.
+ * @abstract
  */
-os.search.AbstractSearchManager.prototype.checkProgress = goog.abstractMethod;
+os.search.AbstractSearchManager.prototype.checkProgress = function() {};
 
 
 /**
  * Gets the providers still loading.
+ * @abstract
  * @return {!Object<string, boolean>} object of loading providers
  */
-os.search.AbstractSearchManager.prototype.getLoading = goog.abstractMethod;
+os.search.AbstractSearchManager.prototype.getLoading = function() {};
 
 
 /**
+ * @abstract
  * @return {boolean} whether providers are still loading
  */
-os.search.AbstractSearchManager.prototype.isLoading = goog.abstractMethod;
-
-
-
+os.search.AbstractSearchManager.prototype.isLoading = function() {};

@@ -201,3 +201,9 @@ os.state.v2.BaseFilter.prototype.processFilters = function(rootObj, opt_sourceId
     }
   }
 };
+
+
+/**
+ * @inheritDoc
+ */
+os.state.v2.BaseFilter.prototype.remove = function(id) {};

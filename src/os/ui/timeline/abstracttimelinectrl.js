@@ -786,7 +786,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.previousFrame = function() {
  */
 os.ui.timeline.AbstractTimelineCtrl.prototype.reset = function() {
   if (this.tlcState_) {
-    this.tlc.restore(this.tlcState_);
+    this.tlc.reset(this.tlcState_);
     this.updateTimeline(true);
     os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Timeline.RESET, 1);
     var refreshTimer = new goog.async.Delay(this.refreshLoadBrushes_, 10, this);
