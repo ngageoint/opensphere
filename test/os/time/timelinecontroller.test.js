@@ -137,6 +137,34 @@ describe('os.time.TimelineController', function() {
     expect(getDispatchEventCallCount(os.time.TimelineEventType.SHOW)).toBeGreaterThan((fps * runtime / 1000) - 2);
   });
 
+  it('setting ranges must be a range set', function() {
+    controller.clearLoadRanges();
+    controller.setHoldRanges({'g': []});
+
+    // we should have zero range
+    target = controller.getLoadRanges();
+    expect(target.length).toBe(0);
+
+    controller.clearSliceRanges();
+    controller.setSliceRanges({'g': []});
+
+    // we should have zero range
+    target = controller.getSliceRanges();
+    expect(target.length).toBe(0);
+
+    controller.clearHoldRanges();
+    controller.setHoldRanges({'g': []});
+
+    target = controller.getHoldRanges();
+    expect(target.length).toBe(0);
+
+    controller.clearAnimateRanges();
+    controller.setAnimateRanges({'g': []});
+
+    target = controller.getAnimationRanges();
+    expect(target.length).toBe(0);
+  });
+
   it('adding range should fire range changed event', function() {
     var fullRange = controller.getRange();
     controller.addAnimateRange(fullRange);

@@ -183,7 +183,7 @@ os.histo.bin.SortFn;
  * @return {number}
  */
 os.histo.bin.sortByCount = function(a, b) {
-  return goog.array.defaultCompare(a.getCount(), b.getCount());
+  return a.items.length > b.items.length ? 1 : a.items.length < b.items.length ? -1 : 0;
 };
 
 
@@ -194,7 +194,7 @@ os.histo.bin.sortByCount = function(a, b) {
  * @return {number}
  */
 os.histo.bin.sortByCountDesc = function(a, b) {
-  return os.histo.bin.sortByCount(b, a);
+  return a.items.length > b.items.length ? -1 : a.items.length < b.items.length ? 1 : 0;
 };
 
 
@@ -205,7 +205,7 @@ os.histo.bin.sortByCountDesc = function(a, b) {
  * @return {number}
  */
 os.histo.bin.sortByKey = function(a, b) {
-  return goog.array.defaultCompare(a.getKey(), b.getKey());
+  return a.key > b.key ? 1 : a.key < b.key ? -1 : 0;
 };
 
 
@@ -216,7 +216,7 @@ os.histo.bin.sortByKey = function(a, b) {
  * @return {number}
  */
 os.histo.bin.sortByKeyDesc = function(a, b) {
-  return os.histo.bin.sortByKey(b, a);
+  return a.key > b.key ? -1 : a.key < b.key ? 1 : 0;
 };
 
 
@@ -227,15 +227,15 @@ os.histo.bin.sortByKeyDesc = function(a, b) {
  * @return {number}
  */
 os.histo.bin.sortByLabel = function(a, b) {
-  var as = a.getLabel();
-  var bs = b.getLabel();
+  var al = a.getLabel();
+  var bl = b.getLabel();
 
-  if (os.string.FLOAT.test(as) && os.string.FLOAT.test(bs)) {
-    as = parseFloat(as);
-    bs = parseFloat(bs);
+  if (os.string.FLOAT.test(al) && os.string.FLOAT.test(bl)) {
+    al = parseFloat(al);
+    bl = parseFloat(bl);
   }
 
-  return goog.array.defaultCompare(as, bs);
+  return al > bl ? 1 : al < bl ? -1 : 0;
 };
 
 
