@@ -1407,6 +1407,8 @@ os.MapContainer.prototype.setBGColor = function(color) {
 /**
  * Adds a layer to the map
  * @param {!(os.layer.ILayer|ol.layer.Layer)} layer The layer to add
+ *
+ * @export Prevent the compiler from moving the function off the prototype.
  */
 os.MapContainer.prototype.addLayer = function(layer) {
   if (this.map_ && layer instanceof ol.layer.Layer) {
@@ -1501,6 +1503,8 @@ os.MapContainer.prototype.addGroup = function(group) {
  * Removes a layer from the map
  * @param {!(os.layer.ILayer|ol.layer.Layer|string)} layer
  * @param {boolean=} opt_dispose If the layer should be disposed. Defaults to true.
+ *
+ * @export Prevent the compiler from moving the function off the prototype.
  */
 os.MapContainer.prototype.removeLayer = function(layer, opt_dispose) {
   var dispose = opt_dispose != null ? opt_dispose : true;
