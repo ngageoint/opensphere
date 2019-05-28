@@ -83,3 +83,19 @@ os.style.area.HOVER_STYLE = new ol.style.Style({
     })
   })
 });
+
+
+/**
+ * @type {Object}
+ * @const
+ */
+os.style.area.HIGHLIGHT_STYLE = {
+  'fill': {
+    'color': 'rgba(0,255,255,0.15)'
+  },
+  'stroke': {
+    'color': 'rgba(0,255,255,1)',
+    'lineCap': 'square',
+    'width': 2
+  }
+};

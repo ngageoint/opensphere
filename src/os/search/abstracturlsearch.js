@@ -10,6 +10,7 @@ goog.require('os.search.SearchEventType');
 
 
 /**
+ * @abstract
  * @param {string} id The unique identifier for the search provider.
  * @param {string} name The user-facing name of the search provider.
  * @extends {os.search.AbstractSearch}
@@ -46,14 +47,13 @@ goog.inherits(os.search.AbstractUrlSearch, os.search.AbstractSearch);
 
 
 /**
+ * @abstract
  * @param {string} term
  * @param {number=} opt_start
  * @param {number=} opt_pageSize
  * @return {?string} The search URL
  */
-os.search.AbstractUrlSearch.prototype.getSearchUrl = function(term, opt_start, opt_pageSize) {
-  return null;
-};
+os.search.AbstractUrlSearch.prototype.getSearchUrl = function(term, opt_start, opt_pageSize) {};
 
 
 /**

@@ -20,6 +20,7 @@ os.action.EventType = {
   DISABLE_TIME: 'layer:disableTime',
   ENABLE_TIME: 'layer:enableTime',
   SHOW_DESCRIPTION: 'showDescription',
+  FEATURE_LIST: 'layer:featureList',
 
   // map
   COPY: goog.events.EventType.COPY,
@@ -76,5 +77,13 @@ os.action.EventType = {
   IMPORT_URL: 'importUrl',
 
   // export
-  EXPORT: 'export'
+  EXPORT: 'export',
+
+  // feature list
+  INVERT: 'invert',
+  HIDE_SELECTED: 'hideSelected',
+  HIDE_UNSELECTED: 'hideUnselected',
+  DISPLAY_ALL: 'displayAll',
+  REMOVE_UNSELECTED: 'removeUnselected',
+  SORT_SELECTED: 'sortSelected'
 };

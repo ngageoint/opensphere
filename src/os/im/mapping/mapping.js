@@ -55,17 +55,19 @@ os.im.mapping.getTimeTypeForString = function(input) {
 
 /**
  * Convenience function to get a mapping field from an item, or null if the field doesn't exist.
- * @param {Object} item
+ * @param {?Object|undefined} item
  * @param {string} field
  * @return {*}
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
 os.im.mapping.getItemField = function(item, field) {
-  if (os.instanceOf(item, ol.Feature.NAME)) {
-    return /** @type {!ol.Feature} */ (item).values_[field];
-  } else {
-    return item[field];
+  if (item) {
+    if (os.instanceOf(item, ol.Feature.NAME)) {
+      return /** @type {!ol.Feature} */ (item).values_[field];
+    } else {
+      return item[field];
+    }
   }
 };
 

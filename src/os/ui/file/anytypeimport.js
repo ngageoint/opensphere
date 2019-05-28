@@ -71,7 +71,7 @@ os.ui.file.AnyTypeImportCtrl = function($scope, $element) {
  */
 os.ui.file.AnyTypeImportCtrl.prototype.accept = function() {
   try {
-    this['import'].launchUI(this.scope_['file'], this.scope_['config']);
+    this['import'].launchUI(/** @type {os.file.File} */ (this.scope_['file']), this.scope_['config']);
   } catch (e) {
     os.alert.AlertManager.getInstance().sendAlert(
         'Error loading file: <b>' + this.scope_['file'].getFileName() + '</b>', os.alert.AlertEventSeverity.ERROR);
