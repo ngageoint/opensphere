@@ -8,7 +8,7 @@ goog.require('plugin.file.kml.ui.placemarkEditDirective');
 describe('plugin.file.kml.ui.placemarkededit', function() {
   var scope, element;
 
-  var dummy
+
   // eslint-disable-next-line require-jsdoc
   function timeout(fn, delay, invokeApply) {
     // $window.setTimeout(fn,delay);
