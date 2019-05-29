@@ -110,7 +110,7 @@ End to end tests for Opensphere are written using [Cypress](https://github.com/c
 By default the ```baseURL``` is set to the local compiled build: http://localhost:8282/workspace/opensphere/dist/opensphere.  This can be changed in [cypress.json](https://github.com/ngageoint/opensphere/blob/master/cypress.json) to an alternate  target.
 
 ### Running Tests
-Run all tests via the command line ```yarn test:cypress-all``` or run tests interactively with the [Test Runner](https://docs.cypress.io/guides/core-concepts/test-runner.html) via ```yarn test:cypress```.
+Run all tests via the command line ```yarn test:cypress-all```, individual specs via the command line ```yarn test:cypress-spec folder/test.spec.js```, or run tests interactively with the [Test Runner](https://docs.cypress.io/guides/core-concepts/test-runner.html) via ```yarn test:cypress```.
     
 
 ### Adding and modifying tests
