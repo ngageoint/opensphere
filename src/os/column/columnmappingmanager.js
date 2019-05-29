@@ -211,7 +211,7 @@ os.column.ColumnMappingManager.prototype.onColumnRemoved_ = function(event) {
 
 /**
  * Deregisters a managed column.
- * @param {os.column.ColumnModel} column
+ * @param {osx.column.ColumnModel} column
  * @param {string} id
  * @private
  */
@@ -224,7 +224,7 @@ os.column.ColumnMappingManager.prototype.addManagedColumn_ = function(column, id
 
 /**
  * Deregisters a managed column.
- * @param {os.column.ColumnModel} column
+ * @param {osx.column.ColumnModel} column
  * @private
  */
 os.column.ColumnMappingManager.prototype.removeManagedColumn_ = function(column) {
@@ -237,7 +237,7 @@ os.column.ColumnMappingManager.prototype.removeManagedColumn_ = function(column)
 /**
  * Takes a hashed column/layer ID and attempts to get the owner ID from the layerColumnMap_. Returns the mapping
  * that owns that column/layer pair if there is one, and null if not.
- * @param {string|os.column.ColumnModel} hashOrModel
+ * @param {string|osx.column.ColumnModel} hashOrModel
  * @return {?os.column.IColumnMapping}
  */
 os.column.ColumnMappingManager.prototype.getOwnerMapping = function(hashOrModel) {
@@ -291,7 +291,7 @@ os.column.ColumnMappingManager.prototype.clear = function() {
 
 /**
  * Constructs a column hash, used to keep track of which column/layer pairs are in use.
- * @param {os.column.ColumnModel} column
+ * @param {osx.column.ColumnModel} column
  * @return {string}
  */
 os.column.ColumnMappingManager.hashColumn = function(column) {
