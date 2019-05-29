@@ -34,7 +34,7 @@
           <div title="Change the background color of the header">
             <colorpicker name="headerColor"
                 ng-attr-id="headerColor{{ctrl.uid}}"
-                color="ctrl.annotationOptions.headerBG"
+                color="ctrl.tempHeaderBG"
                 show-reset="true"
                 title="Sets the bg color for header"
                 disabled="!ctrl.annotationOptions.show || !ctrl.annotationOptions.showName"></colorpicker>
@@ -62,7 +62,7 @@
           <div class="d-inline-block" title="Change the background color of the description">
             <colorpicker name="bodyColor"
                 ng-attr-id="bodyColor{{ctrl.uid}}"
-                color="ctrl.annotationOptions.bodyBG"
+                color="ctrl.tempBodyBG"
                 show-reset="true"
                 title="Sets the bg color for body"
                 disabled="!ctrl.annotationOptions.show || !ctrl.annotationOptions.showDescription"></colorpicker>
