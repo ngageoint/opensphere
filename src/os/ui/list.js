@@ -118,15 +118,15 @@ os.ui.list.removeList = function(id) {
 
 /**
  * Copy a list under a new ID.
- * @param {string} id The new list ID.
- * @param {string} listId The original list ID.
+ * @param {string} sourceId The original list ID.
+ * @param {string} targetId The new list ID.
  */
-os.ui.list.copy = function(id, listId) {
-  if (id !== listId) {
-    var items = os.ui.list.get(listId);
+os.ui.list.copy = function(sourceId, targetId) {
+  if (sourceId !== targetId) {
+    var items = os.ui.list.get(sourceId);
     if (items) {
       items.forEach(function(item) {
-        os.ui.list.add(id, item.markup, item.priority);
+        os.ui.list.add(targetId, item.markup, item.priority);
       });
     }
   }
