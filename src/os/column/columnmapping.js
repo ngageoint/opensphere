@@ -71,7 +71,7 @@ os.column.ColumnMapping = function() {
 
   /**
    * Array of column models.
-   * @type {Array<os.column.ColumnModel>}
+   * @type {Array<osx.column.ColumnModel>}
    * @private
    */
   this.columns_ = [];
