@@ -52,13 +52,9 @@ os.style.Icon.prototype.getScale = function() {
     if (size) {
       this.normalizedScale_ = scale = 32 * scale / Math.min(size[0], size[1]);
     }
-
-    if (scale < 1) {
-      this.normalizedScale_ = 1;
-    }
   }
 
-  return this.normalizedScale_;
+  return scale;
 };
 
 
