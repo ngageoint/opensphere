@@ -88,7 +88,7 @@ describe('Add GeoServer', function() {
         .find(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.FEATURE_COUNT_TEXT_WILDCARD, {timeout: 8000})
         .invoke('text')
         .should('match', /\([1-9]\d{0,3}\)/); // Any number 1-9999, surrounded by ()
-    cy.wait(1500);
+    cy.wait(2000);
     cy.matchImageSnapshot('features loaded', {
       failureThreshold: 0.01, // Minor rendering variation GUI vs CLI
       failureThresholdType: 'percent'
