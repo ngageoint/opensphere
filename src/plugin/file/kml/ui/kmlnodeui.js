@@ -24,9 +24,9 @@ plugin.file.kml.ui.kmlNodeUIDirective = function() {
             '<i class="fa fa-pencil fa-fw c-glyph" ' +
                 'title="Edit the {{nodeUi.isFolder() ? \'folder\' : \'place\'}}"></i></span>' +
         '<span ng-if="!nodeUi.isFolder() && nodeUi.hasAnnotation()" ng-click="nodeUi.removeAnnotation()">' +
-            '<i class="fa fa-comment-o fa-fw c-glyph" title="Remove Annotation"></i></span>' +
+            '<i class="fa fa-comment fa-fw c-glyph" title="Remove Annotation"></i></span>' +
         '<span ng-if="!nodeUi.isFolder() && !nodeUi.hasAnnotation()" ng-click="nodeUi.showAnnotation()">' +
-            '<i class="fa fa-comment fa-fw c-glyph" title="Show Annotation"></i></span>' +
+            '<i class="fa fa-comment-o fa-fw c-glyph" title="Show Annotation"></i></span>' +
 
         '<span ng-if="nodeUi.canRemove()" ng-click="nodeUi.tryRemove()">' +
         '<i class="fa fa-times fa-fw c-glyph" ' +
@@ -196,6 +196,7 @@ plugin.file.kml.ui.KMLNodeUICtrl.prototype.edit = function() {
 /**
  * If there is an annotation or not
  * @return {boolean}
+ * @export
  */
 plugin.file.kml.ui.KMLNodeUICtrl.prototype.hasAnnotation = function() {
   var node = /** @type {plugin.file.kml.ui.KMLNode} */ (this.scope['item']);
@@ -211,6 +212,7 @@ plugin.file.kml.ui.KMLNodeUICtrl.prototype.hasAnnotation = function() {
 
 /**
  * Removes annotation
+ * @export
  */
 plugin.file.kml.ui.KMLNodeUICtrl.prototype.removeAnnotation = function() {
   var node = /** @type {plugin.file.kml.ui.KMLNode} */ (this.scope['item']);
@@ -218,25 +220,33 @@ plugin.file.kml.ui.KMLNodeUICtrl.prototype.removeAnnotation = function() {
     var feature = node.getFeature();
     if (feature) {
       node.clearAnnotations();
-      var annotationOptions = feature.get(os.annotation.OPTIONS_FIELD);
-      annotationOptions.show = false;
-      feature.set(os.annotation.OPTIONS_FIELD, annotationOptions);
-      node.dispatchEvent(new os.events.PropertyChangeEvent('icons'));
+
+      var options = /** @type {osx.annotation.Options|undefined} */ (feature.get(os.annotation.OPTIONS_FIELD));
+      if (options) {
+        options.show = false;
+        node.dispatchEvent(new os.events.PropertyChangeEvent('icons'));
+      }
     }
   }
 };
 
 /**
  * Shows annotation
+ * @export
  */
 plugin.file.kml.ui.KMLNodeUICtrl.prototype.showAnnotation = function() {
   var node = /** @type {plugin.file.kml.ui.KMLNode} */ (this.scope['item']);
   if (node) {
     var feature = node.getFeature();
     if (feature) {
-      var annotationOptions = feature.get(os.annotation.OPTIONS_FIELD);
-      annotationOptions.show = true;
-      feature.set(os.annotation.OPTIONS_FIELD, annotationOptions);
+      var options = /** @type {osx.annotation.Options|undefined} */ (feature.get(os.annotation.OPTIONS_FIELD));
+      if (!options) {
+        options = os.object.unsafeClone(os.annotation.DEFAULT_OPTIONS);
+        feature.set(os.annotation.OPTIONS_FIELD, options);
+      }
+
+      options.show = true;
+
       node.loadAnnotation();
       node.dispatchEvent(new os.events.PropertyChangeEvent('icons'));
     }
