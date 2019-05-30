@@ -105,7 +105,7 @@ plugin.file.kml.ui.updateFolder = function(options) {
  */
 plugin.file.kml.ui.createOrEditPlace = function(options) {
   var windowId = 'placemarkEdit';
-  windowId +=  options['feature'] ? ol.getUid(options['feature']) : goog.string.getRandomString();
+  windowId += options['feature'] ? ol.getUid(options['feature']) : goog.string.getRandomString();
   var scopeOptions = {
     'options': options
   };
