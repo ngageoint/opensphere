@@ -272,6 +272,7 @@ plugin.file.kml.ui.PlacemarkEditCtrl.prototype.updateAnnotation = function() {
  */
 plugin.file.kml.ui.PlacemarkEditCtrl.prototype.resetHeaderBackgroundColor_ = function() {
   this['annotationOptions'].headerBG = undefined;
+  this.tempHeaderBG = undefined;
 };
 
 
@@ -281,6 +282,7 @@ plugin.file.kml.ui.PlacemarkEditCtrl.prototype.resetHeaderBackgroundColor_ = fun
  */
 plugin.file.kml.ui.PlacemarkEditCtrl.prototype.resetBodyBackgroundColor_ = function() {
   this['annotationOptions'].bodyBG = undefined;
+  this.tempBodyBG = undefined;
 };
 
 

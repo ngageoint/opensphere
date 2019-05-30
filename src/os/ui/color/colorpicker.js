@@ -17,10 +17,11 @@ os.ui.color.COLOR_PICKER_SELECTOR = 'js-color-picker';
 /**
  * @type {string}
  */
-os.ui.color.COLOR_PICKER_TEMPLATE = '<button type="button" class="rounded bg-transparent border flex-shrink-0 ' +
-    os.ui.color.COLOR_PICKER_SELECTOR +
+os.ui.color.COLOR_PICKER_TEMPLATE = '<button type="button" class="btn btn-sm bg-transparent border rounded ' +
+    'flex-shrink-0 c-colorpicker ' + os.ui.color.COLOR_PICKER_SELECTOR +
     '" ng-click="colorPicker.togglePopup()" ng-disabled=disabled>' +
-    '<i class="fa fa-square" ng-style="{\'color\': color}"></i></button>';
+      '<i class="fa" ng-class="color && \'fa-square\' || \'fa-ban\'" ng-style="{\'color\': color}"></i>' +
+    '</button>';
 
 
 /**
@@ -100,13 +101,14 @@ os.ui.color.ColorPickerCtrl = function($scope, $element, $compile) {
 
   // default color is white if one was not set
   if (!color) {
-    color = '#ffffff';
+    color = undefined;
   }
 
-  // if color was set to something other than a hex string (rgb() or rgba()), then fix it
-  if (color.indexOf('#') !== 0) {
+  if ((color !== undefined) && (color.indexOf('#') !== 0)) {
+    // if color was set to something other than a hex string (rgb() or rgba()), then fix it
     color = (color.indexOf('a(') > -1 ? goog.color.alpha.parse(color) : goog.color.parse(color)).hex.substring(0, 7);
   }
+
 
   this.scope['color'] = color;
 
