@@ -76,13 +76,13 @@ plugin.file.kml.ui.PlacemarkEditCtrl = function($scope, $element, $timeout) {
    * tempHeaderColor
    * @type {string|undefined}
    */
-  this.tempHeaderBG = this['annotationOptions'].headerBG || undefined;
+  this['tempHeaderBG'] = this['annotationOptions'].headerBG || undefined;
 
   /**
    * tempBodyColor
    * @type {string|undefined}
    */
-  this.tempBodyBG = this['annotationOptions'].bodyBG || undefined;
+  this['tempBodyBG'] = this['annotationOptions'].bodyBG || undefined;
 
 
   var time = this.options['time'];
@@ -272,7 +272,7 @@ plugin.file.kml.ui.PlacemarkEditCtrl.prototype.updateAnnotation = function() {
  */
 plugin.file.kml.ui.PlacemarkEditCtrl.prototype.resetHeaderBackgroundColor_ = function() {
   this['annotationOptions'].headerBG = undefined;
-  this.tempHeaderBG = undefined;
+  this['tempHeaderBG'] = undefined;
 };
 
 
@@ -282,7 +282,7 @@ plugin.file.kml.ui.PlacemarkEditCtrl.prototype.resetHeaderBackgroundColor_ = fun
  */
 plugin.file.kml.ui.PlacemarkEditCtrl.prototype.resetBodyBackgroundColor_ = function() {
   this['annotationOptions'].bodyBG = undefined;
-  this.tempBodyBG = undefined;
+  this['tempBodyBG'] = undefined;
 };
 
 
