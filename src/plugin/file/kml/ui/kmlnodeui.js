@@ -23,9 +23,9 @@ plugin.file.kml.ui.kmlNodeUIDirective = function() {
         '<span ng-if="nodeUi.canEdit()" ng-click="nodeUi.edit()">' +
             '<i class="fa fa-pencil fa-fw c-glyph" ' +
                 'title="Edit the {{nodeUi.isFolder() ? \'folder\' : \'place\'}}"></i></span>' +
-        '<span ng-if="nodeUi.hasAnnotation()" ng-click="nodeUi.removeAnnotation()">' +
+        '<span ng-if="!nodeUi.isFolder() && nodeUi.hasAnnotation()" ng-click="nodeUi.removeAnnotation()">' +
             '<i class="fa fa-comment-o fa-fw c-glyph" title="Remove Annotation"></i></span>' +
-        '<span ng-if="!nodeUi.hasAnnotation()" ng-click="nodeUi.showAnnotation()">' +
+        '<span ng-if="!nodeUi.isFolder() && !nodeUi.hasAnnotation()" ng-click="nodeUi.showAnnotation()">' +
             '<i class="fa fa-comment fa-fw c-glyph" title="Show Annotation"></i></span>' +
 
         '<span ng-if="nodeUi.canRemove()" ng-click="nodeUi.tryRemove()">' +
@@ -192,6 +192,7 @@ plugin.file.kml.ui.KMLNodeUICtrl.prototype.edit = function() {
   }
 };
 
+
 /**
  * If there is an annotation or not
  * @return {boolean}
@@ -201,13 +202,11 @@ plugin.file.kml.ui.KMLNodeUICtrl.prototype.hasAnnotation = function() {
   if (node) {
     var feature = node.getFeature();
     if (feature) {
-      return feature.get(os.annotation.OPTIONS_FIELD).show;
-    } else {
-      return false;
+      var options = /** @type {osx.annotation.Options|undefined} */ (feature.get(os.annotation.OPTIONS_FIELD));
+      return options != null && options.show;
     }
-  } else {
-    return false;
   }
+  return false;
 };
 
 /**
