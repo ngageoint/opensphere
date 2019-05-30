@@ -35,8 +35,7 @@ describe('Generate heatmap from CSV', function() {
         .click();
     cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4).rightClick();
     cy.get(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.Local.contextMenu.menuOptions.GO_TO).click();
-    cy.wait(1500);
-    cy.matchImageSnapshot('features loaded');
+    cy.imageComparison('features loaded');
     cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4)
         .find(os.layersDialog.Tabs.Layers.Tree.LAYER_TOGGLE_CHECKBOX_WILDCARD)
         .click();
@@ -44,11 +43,7 @@ describe('Generate heatmap from CSV', function() {
     cy.get(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.Local.contextMenu.menuOptions.GENERATE_HEATMAP).click();
     cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_1).should('contain', 'Image (1)');
     cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_2).should('contain', 'Heatmap - Chicago Traffic Counts');
-    cy.wait(1500);
-    cy.matchImageSnapshot('heatmap loaded', {
-      failureThreshold: 0.017, // Minor rendering variation GUI vs CLI
-      failureThresholdType: 'percent'
-    });
+    cy.imageComparison('heatmap loaded');
 
     // Clean up
     cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_2).click();
@@ -57,8 +52,7 @@ describe('Generate heatmap from CSV', function() {
     cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4).click();
     cy.get(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.REMOVE_LAYER_BUTTON_WILDCARD).click();
     cy.get(os.layersDialog.DIALOG).should('not.contain', 'Chicago Traffic Counts Features (1279)');
-    cy.wait(1500);
-    cy.matchImageSnapshot('features and heatmap removed');
+    cy.imageComparison('features and heatmap removed');
     cy.get(os.layersDialog.Tabs.Layers.Tree.Type.mapLayer.STREET_MAP_TILES)
         .find(os.layersDialog.Tabs.Layers.Tree.LAYER_TOGGLE_CHECKBOX_WILDCARD)
         .click();

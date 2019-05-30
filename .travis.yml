@@ -36,5 +36,5 @@ branches:
 env:
   global:
   - S3SCREENSHOT=true
-  - S3SNAPSHOT=true
+  - S3COMPARISON=true
   - S3VIDEO=true

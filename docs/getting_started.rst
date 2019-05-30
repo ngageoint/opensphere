@@ -146,7 +146,7 @@ All of our unit tests for opensphere are written in Jasmine_ and run with karma_
 .. _Jasmine: https://jasmine.github.io/
 .. _karma: https://karma-runner.github.io/1.0/index.html
 
-End to end tests are written in Mocha_ and run with Cypress_.  Tests can be started either from the command line via ``yarn test:cypress-all``, or interactively via ``yarn test:cypress``.  To run a single spec from the command line, use ``yarn test:cypress-spec folder/test.spec.js``. Test artifacts are available at ``/cypress/screenshots``, ``/cypress/snapshots`` and ``/cypress/videos``.  The test configuration can be adjusted in Cypress' 'configuration file'_.  Selectors for all elements present in the GUI can be found in selectors.js_.
+End to end tests are written in Mocha_ and run with Cypress_.  Tests can be started either from the command line via ``yarn test:cypress-all``, or interactively via ``yarn test:cypress``.  To run a single spec from the command line, use ``yarn test:cypress-spec folder/test.spec.js``. Test artifacts are available at ``/cypress/screenshots``, ``/cypress/comparisons`` and ``/cypress/videos``.  The test configuration can be adjusted in Cypress' 'configuration file'_.  Selectors for all elements present in the GUI can be found in selectors.js_.
 
 .. _Mocha: https://github.com/mochajs/mocha
 .. _Cypress: https://github.com/cypress-io/cypress
