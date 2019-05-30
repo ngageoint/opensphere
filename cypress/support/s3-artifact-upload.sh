@@ -6,7 +6,7 @@ function main() {
   if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then
     setVariables
     uploadScreenshots
-    uploadSnapshots
+    uploadComparisons
     uploadVideos
   else
     echo 'INFO: PRs do not have access to S3 keys, skipping artifact upload.'
@@ -33,22 +33,22 @@ function s3Upload {
       -H "Authorization: AWS $key_id:$sig"
 }
 
-function uploadSnapshots() {
-  if $S3SNAPSHOT; then
-    echo "INFO: Snapshot upload enabled, checking for snapshots to upload"
-    snapshots=$(find ./cypress/snapshots -name "*diff.png")
-    if ! [ -z "$snapshots" ]; then
-      echo "INFO: Snapshots found"
-      for result in $snapshots; do
+function uploadComparisons() {
+  if $S3COMPARISON; then
+    echo "INFO: Comparison upload enabled, checking for comparisons to upload"
+    comparisons=$(find ./cypress/comparisons -name "*diff.png")
+    if ! [ -z "$comparisons" ]; then
+      echo "INFO: Comparisons found"
+      for result in $comparisons; do
         file=$(echo $result | sed 's?\./??g')
         s3Upload "$file"
       done
-      echo "INFO: Finished uploading snapshots"
+      echo "INFO: Finished uploading comparisons"
     else
-      echo "INFO: No snapshots found for upload"
+      echo "INFO: No comparisons found for upload"
     fi
   else
-    echo "INFO: Snapshot upload disabled, skipping"
+    echo "INFO: Comparison upload disabled, skipping"
   fi
 }
 
