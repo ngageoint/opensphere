@@ -37,7 +37,12 @@ os.state.v4.TimeTag = {
   HOLDS: 'heldIntervals',
   HOLD_ITEM: 'held',
   SEQ_INTERVAL: 'interval',
-  TIME: 'time'
+  TIME: 'time',
+  SLICES: 'slices',
+  SLICE: 'slice',
+  SLICE_INTERVAL: 'sliceInterval',
+  INTERVAL_START: 'intervalStart',
+  INTERVAL_END: 'intervalEnd'
 };
 
 
@@ -170,6 +175,7 @@ os.state.v4.TimeState.prototype.loadInternal = function(obj, id) {
       }
 
       tlc.setHoldRanges(this.readIntervalsAsRangeSet_(obj, os.state.v4.TimeTag.HOLDS));
+      tlc.setSliceRanges(this.readSlicesAsRangeSet_(obj));
     }
 
     // set the active window position. this needs to be called after auto configure, or these values will be overridden.
@@ -255,7 +261,7 @@ os.state.v4.TimeState.prototype.saveInternal = function(options, rootObj) {
       // NOTE: v4 heldIntervals can include an optional key element
       // which should be associated with a specific layer. Currently,
       // we do not support this feature, so the following
-      // just reaads all the interval elements.
+      // just reads all the interval elements.
       rootObj.appendChild(this.holdRangeToXml_(tlc.getHoldRanges()));
     }
 
@@ -266,6 +272,10 @@ os.state.v4.TimeState.prototype.saveInternal = function(options, rootObj) {
       var animation = os.xml.appendElement(os.state.v4.TimeTag.ANIMATION, rootObj);
       os.xml.appendElement(os.state.v4.TimeTag.MS_PER_FRAME, animation, millisPerFrame);
       os.xml.appendElement(os.state.v4.TimeTag.PLAY_STATE, animation, playState);
+    }
+
+    if (tlc.hasSliceRanges()) {
+      rootObj.appendChild(this.sliceRangesToXml_(tlc.getSliceRanges()));
     }
 
     os.xml.appendElement(os.state.v4.TimeTag.DURATION, rootObj, tlc.getDuration());
@@ -405,7 +415,7 @@ os.state.v4.TimeState.prototype.readDuration_ = function(element, range) {
 
 
 /**
- * Reads a collection of intervals and retruns a RangeSet
+ * Reads a collection of intervals and returns a RangeSet
  * @param {!Element} element
  * @param {string} tag
  * @return {goog.math.RangeSet}
@@ -519,4 +529,58 @@ os.state.v4.TimeState.prototype.parsePeriod = function(period) {
   }
 
   return null;
+};
+
+/**
+ * Returns slice intervals element for timeranges.
+ * @param {Array<goog.math.Range>} sliceRanges
+ * @return {!Element}
+ * @private
+ */
+os.state.v4.TimeState.prototype.sliceRangesToXml_ = function(sliceRanges) {
+  var slices = os.xml.createElement(os.state.v4.TimeTag.SLICES);
+
+  for (var i = 0; i < sliceRanges.length; i++) {
+    var slice = os.xml.createElement(os.state.v4.TimeTag.SLICE);
+    slices.appendChild(slice);
+    var interval = os.xml.createElement(os.state.v4.TimeTag.SLICE_INTERVAL);
+    slice.appendChild(interval);
+    var range = sliceRanges[i];
+    os.xml.appendElement(os.state.v4.TimeTag.INTERVAL_START, interval, range.start);
+    os.xml.appendElement(os.state.v4.TimeTag.INTERVAL_END, interval, range.end);
+  }
+  return slices;
+};
+
+/**
+ * Reads a collection of slices and returns a RangeSet
+ * @param {!Element} element
+ * @return {goog.math.RangeSet}
+ * @private
+ */
+os.state.v4.TimeState.prototype.readSlicesAsRangeSet_ = function(element) {
+  var rangeSet = new goog.math.RangeSet();
+  if (element) {
+    var slicesElement = element.querySelector(os.state.v4.TimeTag.SLICES);
+    if (slicesElement) {
+      var intervals = slicesElement.querySelectorAll(os.state.v4.TimeTag.SLICE_INTERVAL);
+      for (var i = 0; i < intervals.length; i = i + 1) {
+        var interval = intervals[i];
+        rangeSet.add(this.sliceIntervalToRange_(interval));
+      }
+    }
+  }
+  return rangeSet;
+};
+
+/**
+ * Returns a range for a given slice interval
+ * @param {!Element} interval
+ * @return {goog.math.Range}
+ * @private
+ */
+os.state.v4.TimeState.prototype.sliceIntervalToRange_ = function(interval) {
+  var intervalStart = +interval.querySelector(os.state.v4.TimeTag.INTERVAL_START).textContent;
+  var intervalEnd = +interval.querySelector(os.state.v4.TimeTag.INTERVAL_END).textContent;
+  return new goog.math.Range(intervalStart, intervalEnd);
 };

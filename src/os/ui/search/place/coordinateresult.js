@@ -114,14 +114,6 @@ os.ui.search.place.CoordinateResult.prototype.getSearchUI = function() {
 
 
 /**
- * @inheritDoc
- */
-os.ui.search.place.CoordinateResult.prototype.setSearchUI = function(value) {
-  // does nothing until the search UI is implemented as a directive
-};
-
-
-/**
  * Creates a feature representing a coordinate result.
  * @param {Object.<string, *>=} opt_options Feature options.
  * @return {!ol.Feature}

@@ -99,7 +99,7 @@ goog.addSingletonGetter(os.style.StyleManager);
 
 
 /**
- * @param {Object} config
+ * @param {!Object<string, *>} config
  * @return {?ol.style.Style}
  */
 os.style.StyleManager.prototype.getOrCreateStyle = function(config) {

@@ -30,36 +30,36 @@ os.filter.IFilterable.ID = 'os.filter.IFilterable';
 /**
  * @return {?string} The title of the filterable.
  */
-os.filter.IFilterable.prototype.getTitle = goog.abstractMethod;
+os.filter.IFilterable.prototype.getTitle;
 
 
 /**
  * @return {boolean} Whether or not this class is filterable
  */
-os.filter.IFilterable.prototype.isFilterable = goog.abstractMethod;
+os.filter.IFilterable.prototype.isFilterable;
 
 
 /**
  * @return {?string} The filter key to uniquely identify this filterable
  */
-os.filter.IFilterable.prototype.getFilterKey = goog.abstractMethod;
+os.filter.IFilterable.prototype.getFilterKey;
 
 
 /**
  * Launches the filter manager for this class
  */
-os.filter.IFilterable.prototype.launchFilterManager = goog.abstractMethod;
+os.filter.IFilterable.prototype.launchFilterManager;
 
 
 /**
  * Get filter columns
  * @return {?Array<os.ogc.FeatureTypeColumn>} the columns
  */
-os.filter.IFilterable.prototype.getFilterColumns = goog.abstractMethod;
+os.filter.IFilterable.prototype.getFilterColumns;
 
 
 /**
  * Get filterable types
  * @return {!Array<!string>} the list of filterable types
  */
-os.filter.IFilterable.prototype.getFilterableTypes = goog.abstractMethod;
+os.filter.IFilterable.prototype.getFilterableTypes;

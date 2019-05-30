@@ -9,6 +9,7 @@ goog.require('os.xml');
 
 
 /**
+ * @abstract
  * @implements {os.im.mapping.IMapping.<T, S>}
  * @implements {os.IXmlPersistable}
  * @template T,S
@@ -96,9 +97,10 @@ os.im.mapping.AbstractMapping.prototype.getFieldsChanged = function() {
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.im.mapping.AbstractMapping.prototype.execute = goog.abstractMethod;
+os.im.mapping.AbstractMapping.prototype.execute = function(item, opt_targetItem) {};
 
 
 /**

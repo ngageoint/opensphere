@@ -8,6 +8,7 @@ goog.require('os.layer.PropertyChange');
 
 /**
  * Commands for style changes should extend this class
+ * @abstract
  * @implements {os.command.ICommand}
  * @param {string} layerId
  * @param {T} value
@@ -106,18 +107,20 @@ os.command.AbstractStyle.prototype.canExecute = function() {
 
 /**
  * Gets the old value
+ * @abstract
  * @return {T} the old value
  * @protected
  */
-os.command.AbstractStyle.prototype.getOldValue = goog.abstractMethod;
+os.command.AbstractStyle.prototype.getOldValue = function() {};
 
 
 /**
  * Applies a value to the style config
+ * @abstract
  * @param {Object} config The style config
  * @param {T} value The value to apply
  */
-os.command.AbstractStyle.prototype.applyValue = goog.abstractMethod;
+os.command.AbstractStyle.prototype.applyValue = function(config, value) {};
 
 
 /**
