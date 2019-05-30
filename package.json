@@ -241,7 +241,7 @@
     "karma-junit-reporter": "^1.1.0",
     "lolex": "=2.3.2",
     "mkdirp": "^0.5.1",
-    "node-sass": "=4.7.2",
+    "node-sass": "^4.12.0",
     "opensphere-build-closure-helper": "^2.0.0",
     "opensphere-build-docs": "^1.0.0",
     "opensphere-build-index": "^1.0.0",
