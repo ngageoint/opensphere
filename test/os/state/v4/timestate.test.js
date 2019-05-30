@@ -40,9 +40,15 @@ describe('os.state.v4.TimeState', function() {
     var holdEndDate = os.time.parseMoment('1971-06-12T01:15:11Z',
         [os.state.v4.TimeState.DATE_FORMAT], true);
     var holdRange = new goog.math.Range(holdStartDate.valueOf(), holdEndDate.valueOf());
-    // make sure this is empty bfeore the test.
+    // make sure this is empty before the test.
     tlc.clearHoldRanges();
     tlc.addHoldRange(holdRange);
+
+    // Slice ranges
+    var sliceRange1 = new goog.math.Range(20, 50);
+    var sliceRange2 = new goog.math.Range(20000, 5000000);
+    tlc.addSliceRange(sliceRange1);
+    tlc.addSliceRange(sliceRange2);
 
     tlc.setCurrent(animateEndDate.valueOf());
     tlc.setFps(1);
@@ -53,6 +59,7 @@ describe('os.state.v4.TimeState', function() {
     spyOn(tlc, 'setDuration').andCallThrough();
     spyOn(tlc, 'setAnimateRanges').andCallThrough();
     spyOn(tlc, 'setHoldRanges').andCallThrough();
+    spyOn(tlc, 'setSliceRanges').andCallThrough();
     spyOn(tlc, 'setCurrent').andCallThrough();
     spyOn(tlc, 'setSkip').andCallThrough();
     spyOn(tlc, 'setFps').andCallThrough();
@@ -76,7 +83,7 @@ describe('os.state.v4.TimeState', function() {
     // waiting for the xsd files to load
     waitsFor(function() {
       return (resultSchemas !== null);
-    }, 'Wait for XSD(s) to laod', 2 * jasmine.DEFAULT_TIMEOUT_INTERVAL);
+    }, 'Wait for XSD(s) to load', 2 * jasmine.DEFAULT_TIMEOUT_INTERVAL);
 
     // Runs the tests.
     runs(function() {
@@ -89,6 +96,7 @@ describe('os.state.v4.TimeState', function() {
       var duration = tlc.getDuration();
       var aRanges = tlc.animateRanges_.clone();
       var hRanges = tlc.holdRanges_.clone();
+      var sRanges = tlc.sliceRanges_.clone();
       var current = tlc.getCurrent();
       var skip = tlc.getSkip();
       var fps = tlc.getFps();
@@ -111,7 +119,7 @@ describe('os.state.v4.TimeState', function() {
       expect(tlc.setDuration).toHaveBeenCalled();
       // When the timeline controler is loaded from a state, it goes
       // through an auto-configuration step that computes a
-      // good duration, I believe that a ticket was written againt
+      // good duration, I believe that a ticket was written against
       // using the stored value...?
       expect(tlc.setDuration.mostRecentCall.args[0]).not.toBe(duration);
 
@@ -122,6 +130,10 @@ describe('os.state.v4.TimeState', function() {
       expect(tlc.setHoldRanges).toHaveBeenCalled();
       expect(goog.math.RangeSet.equals(hRanges,
           tlc.setHoldRanges.mostRecentCall.args[0])).toBe(true);
+
+      expect(tlc.setSliceRanges).toHaveBeenCalled();
+      expect(goog.math.RangeSet.equals(sRanges,
+        tlc.setSliceRanges.mostRecentCall.args[0])).toBe(true);
 
       expect(tlc.setCurrent).toHaveBeenCalled();
       expect(tlc.setCurrent.mostRecentCall.args[0]).toBe(current);

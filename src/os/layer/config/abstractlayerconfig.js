@@ -8,6 +8,7 @@ goog.require('os.style');
 
 
 /**
+ * @abstract
  * @implements {os.layer.config.ILayerConfig}
  * @constructor
  */
@@ -90,9 +91,10 @@ os.layer.config.AbstractLayerConfig.LOGGER_ = goog.log.getLogger('os.layer.confi
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.layer.config.AbstractLayerConfig.prototype.createLayer = goog.abstractMethod;
+os.layer.config.AbstractLayerConfig.prototype.createLayer = function(options) {};
 
 
 /**

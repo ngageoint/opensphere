@@ -8,6 +8,7 @@ goog.require('os.parse.IParser');
 /**
  * A generic asynchronous parser. This should be used when setSource involves asynchronous calls. When the parser
  * is ready, call onReady to fire the ready event.
+ * @abstract
  * @extends {goog.events.EventTarget}
  * @implements {os.parse.IParser<T>}
  * @constructor
@@ -38,24 +39,28 @@ os.parse.AsyncParser.prototype.onReady = function() {
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.parse.AsyncParser.prototype.hasNext = goog.abstractMethod;
+os.parse.AsyncParser.prototype.hasNext = function() {};
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.parse.AsyncParser.prototype.parseNext = goog.abstractMethod;
+os.parse.AsyncParser.prototype.parseNext = function() {};
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.parse.AsyncParser.prototype.setSource = goog.abstractMethod;
+os.parse.AsyncParser.prototype.setSource = function(source) {};
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.parse.AsyncParser.prototype.cleanup = goog.abstractMethod;
+os.parse.AsyncParser.prototype.cleanup = function() {};

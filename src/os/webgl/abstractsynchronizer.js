@@ -5,6 +5,7 @@ goog.require('goog.Disposable');
 
 /**
  * Abstract class to synchronize an OpenLayers layer to a WebGL renderer.
+ * @abstract
  * @param {!T} layer The OpenLayers layer.
  * @param {!ol.PluggableMap} map The OpenLayers map.
  * @extends {goog.Disposable}
@@ -54,14 +55,16 @@ goog.inherits(os.webgl.AbstractWebGLSynchronizer, goog.Disposable);
 
 /**
  * Performs complete synchronization of the layer.
+ * @abstract
  */
-os.webgl.AbstractWebGLSynchronizer.prototype.synchronize = goog.abstractMethod;
+os.webgl.AbstractWebGLSynchronizer.prototype.synchronize = function() {};
 
 
 /**
  * Resets the synchronizer to a clean state.
+ * @abstract
  */
-os.webgl.AbstractWebGLSynchronizer.prototype.reset = goog.abstractMethod;
+os.webgl.AbstractWebGLSynchronizer.prototype.reset = function() {};
 
 
 /**
