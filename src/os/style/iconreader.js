@@ -19,6 +19,7 @@ goog.require('os.ui.file.kml');
  */
 os.style.IconReader = function() {
   os.style.IconReader.base(this, 'constructor');
+  this.baseHash = 31 * this.baseHash + goog.string.hashCode('icon') >>> 0;
 };
 goog.inherits(os.style.IconReader, os.style.AbstractReader);
 
@@ -31,12 +32,7 @@ os.style.IconReader.prototype.getOrCreateStyle = function(config) {
   if (config['fill'] && config['fill']['color']) {
     config['color'] = config['fill']['color'];
   }
-  var hash = this.baseHash;
-  for (var key in config) {
-    if (config[key] !== undefined) {
-      hash += goog.string.hashCode(config[key].toString());
-    }
-  }
+  var hash = 31 * this.baseHash + goog.string.hashCode(JSON.stringify(config)) >>> 0;
   if (!this.cache[hash]) {
     var options = /** @type {olx.style.IconOptions} */ ({
       anchor: config['anchor'],
