@@ -2,10 +2,12 @@ goog.provide('plugin.file.kml.ui');
 
 goog.require('goog.asserts');
 goog.require('goog.events.Event');
+goog.require('os.command.SequenceCommand');
 goog.require('os.object');
 goog.require('os.style');
 goog.require('plugin.file.kml.KMLField');
 goog.require('plugin.file.kml.cmd.KMLNodeAdd');
+goog.require('plugin.file.kml.cmd.KMLNodeRemove');
 goog.require('plugin.file.kml.kmlNodeLayerUIDirective');
 goog.require('plugin.file.kml.ui.KMLNode');
 
@@ -163,8 +165,14 @@ plugin.file.kml.ui.updatePlacemark = function(options) {
   // add the placemark to a parent if provided
   if (options['parent']) {
     var parent = plugin.file.kml.ui.verifyNodeInTree_(/** @type {!plugin.file.kml.ui.KMLNode} */ (options['parent']));
-    var cmd = new plugin.file.kml.cmd.KMLNodeAdd(placemark, parent);
-    os.commandStack.addCommand(cmd);
+    var currentParent = placemark.getParent();
+    var cmds = [new plugin.file.kml.cmd.KMLNodeAdd(placemark, parent)];
+    if (currentParent) {
+      cmds.push(new plugin.file.kml.cmd.KMLNodeRemove(placemark));
+    }
+    var sequence = new os.command.SequenceCommand();
+    sequence.setCommands(cmds);
+    os.commandStack.addCommand(sequence);
   }
 
   return placemark;
