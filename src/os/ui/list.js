@@ -91,6 +91,49 @@ os.ui.list.remove = function(id, markup) {
 
 
 /**
+ * Remove a list by ID.
+ * @param {string} id The list ID to remove
+ */
+os.ui.list.removeList = function(id) {
+  var map = os.ui.list.map_[id];
+  if (map) {
+    map.forEach(function(item) {
+      if (item) {
+        if (item.scope) {
+          item.scope.$destroy();
+          item.scope = undefined;
+        }
+
+        if (item.element) {
+          item.element.remove();
+          item.element = undefined;
+        }
+      }
+    });
+
+    delete os.ui.list.map_[id];
+  }
+};
+
+
+/**
+ * Copy a list under a new ID.
+ * @param {string} sourceId The original list ID.
+ * @param {string} targetId The new list ID.
+ */
+os.ui.list.copy = function(sourceId, targetId) {
+  if (sourceId !== targetId) {
+    var items = os.ui.list.get(sourceId);
+    if (items) {
+      items.forEach(function(item) {
+        os.ui.list.add(targetId, item.markup, item.priority);
+      });
+    }
+  }
+};
+
+
+/**
  * @param {os.ui.list.ListEntry} a list entry 1
  * @param {os.ui.list.ListEntry} b list entry 2
  * @return {number} per typical compare function
