@@ -6,11 +6,13 @@ goog.require('os.annotation');
 goog.require('os.annotation.FeatureAnnotation');
 goog.require('os.annotation.annotationOptionsDirective');
 goog.require('os.data.ColumnDefinition');
+goog.require('os.structs');
 goog.require('os.ui.FeatureEditCtrl');
 goog.require('os.ui.Module');
 goog.require('os.ui.list');
 goog.require('plugin.file.kml.KMLField');
 goog.require('plugin.file.kml.ui');
+goog.require('plugin.places.PlacesManager');
 
 
 /**
@@ -45,6 +47,8 @@ plugin.file.kml.ui.PlacemarkEditCtrl = function($scope, $element, $timeout) {
 
   // if the name wasn't set in the base class, set it to New Place
   this['name'] = this['name'] || 'New Place';
+
+  this['customFoldersEnabled'] = false;
 
   // by default, show column choices for the default KML source. remove internal columns because they're not generally
   // useful to a user.
@@ -108,6 +112,21 @@ plugin.file.kml.ui.PlacemarkEditCtrl = function($scope, $element, $timeout) {
       // if creating a new annotation, expand the Annotation Options section by default
       this.defaultExpandedOptionsId = 'featureAnnotation' + this['uid'];
     }
+
+    this['customFoldersEnabled'] = true;
+
+    var folders = [];
+    var rootFolder = plugin.places.PlacesManager.getInstance().getPlacesRoot();
+    os.structs.flattenTree(rootFolder, folders, function(node) {
+      return /** @type {plugin.file.kml.ui.KMLNode} */ (node).isFolder();
+    });
+    this['folderOptions'] = folders;
+
+    var parentFolder = this.options['parent'];
+    if (!parentFolder && this.options['node']) {
+      parentFolder = this.options['node'].getParent();
+    }
+    this['folder'] = parentFolder || rootFolder;
 
     $scope.$on('headerColor.reset', this.resetHeaderBackgroundColor_.bind(this));
     $scope.$on('bodyColor.reset', this.resetBodyBackgroundColor_.bind(this));
@@ -239,6 +258,17 @@ plugin.file.kml.ui.PlacemarkEditCtrl.prototype.saveToFeature = function(feature)
 plugin.file.kml.ui.PlacemarkEditCtrl.prototype.updatePreview = function() {
   plugin.file.kml.ui.PlacemarkEditCtrl.base(this, 'updatePreview');
   this.updateAnnotation();
+};
+
+
+/**
+ * Updates the option for the placemark's parent folder
+ * @export
+ */
+plugin.file.kml.ui.PlacemarkEditCtrl.prototype.updateFolder = function() {
+  if (this['folder']) {
+    this.options['parent'] = this['folder'];
+  }
 };
 
 
