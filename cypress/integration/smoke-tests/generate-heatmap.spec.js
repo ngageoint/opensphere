@@ -1,28 +1,32 @@
 /// <reference types="Cypress" />
 var os = require('../../support/selectors.js');
 
-describe('CSV import', function() {
+describe('Generate heatmap from CSV', function() {
   before('Login', function() {
     cy.login();
   });
 
-  it('Load data from CSV', function() {
+  it('Load data, then generate heatmap', function() {
+    // Setup
+    cy.get(os.layersDialog.DIALOG).should('not.contain', '(Image');
+    cy.get(os.layersDialog.DIALOG).should('not.contain', 'Heatmap');
+
     // Upload a file
     cy.get(os.Toolbar.addData.OPEN_FILE_BUTTON).click();
     cy.get(os.importDataDialog.DIALOG).should('be.visible');
-    cy.upload('smoke-tests/load-data-file-csv/test-features.csv');
+    cy.upload('smoke-tests/generate-heatmap/chicago-traffic-counts.csv');
     cy.get(os.importDataDialog.NEXT_BUTTON).click();
     cy.get(os.importCSVDialog.DIALOG).should('be.visible');
     cy.get(os.importCSVDialog.NEXT_BUTTON).click();
     cy.get(os.importCSVDialog.NEXT_BUTTON).click();
     cy.get(os.importCSVDialog.NEXT_BUTTON).click();
+    cy.get(os.importCSVDialog.Tabs.Options.LAYER_TITLE_INPUT).clear();
+    cy.get(os.importCSVDialog.Tabs.Options.LAYER_TITLE_INPUT).type('Chicago Traffic Counts');
     cy.get(os.importCSVDialog.DONE_BUTTON).click();
 
     // Load a layer
     cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4)
-        .should('contain', 'smoke-tests/load-data-file-csv/test-features.csv Features (447)');
-    cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4).rightClick();
-    cy.get(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.Local.contextMenu.menuOptions.MOST_RECENT).click();
+        .should('contain', 'Chicago Traffic Counts Features (1279)');
     cy.get(os.layersDialog.Tabs.Layers.Tree.Type.mapLayer.STREET_MAP_TILES)
         .find(os.layersDialog.Tabs.Layers.Tree.LAYER_TOGGLE_CHECKBOX_WILDCARD)
         .click();
@@ -32,37 +36,23 @@ describe('CSV import', function() {
     cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4).rightClick();
     cy.get(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.Local.contextMenu.menuOptions.GO_TO).click();
     cy.imageComparison('features loaded');
-
-    // Open the timeline and animate the data (view window animates)
-    cy.get(os.Toolbar.TIMELINE_TOGGLE_BUTTON).click();
-    cy.get(os.Timeline.PANEL).should('be.visible');
-    cy.get(os.Timeline.HISTOGRAM_POINTS).should('be.visible');
-    cy.get(os.Timeline.VIEW_WINDOW).invoke('position').then(function(elementPosition) {
-      cy.get(os.Timeline.PLAY_BUTTON).click();
-      cy.get(os.Timeline.VIEW_WINDOW).invoke('position').should('not.equal', elementPosition);
-    });
-    cy.get(os.Toolbar.TIMELINE_TOGGLE_BUTTON).click();
-    cy.get(os.Timeline.PANEL).should('not.exist');
-
-    // Open the timeline and animate the data (feature count changes)
-    cy.get(os.Toolbar.TIMELINE_TOGGLE_BUTTON).click();
-    cy.get(os.Timeline.PANEL).should('be.visible');
-    cy.get(os.Timeline.NEXT_BUTTON).click();
-    cy.get(os.Timeline.NEXT_BUTTON).click();
     cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4)
-        .find(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.FEATURE_COUNT_TEXT_WILDCARD)
-        .invoke('text')
-        .should('match', new RegExp('\\(0/447\\)'));
+        .find(os.layersDialog.Tabs.Layers.Tree.LAYER_TOGGLE_CHECKBOX_WILDCARD)
+        .click();
+    cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4).rightClick();
+    cy.get(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.Local.contextMenu.menuOptions.GENERATE_HEATMAP).click();
+    cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_1).should('contain', 'Image (1)');
+    cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_2).should('contain', 'Heatmap - Chicago Traffic Counts');
+    cy.imageComparison('heatmap loaded');
 
     // Clean up
-    cy.get(os.Toolbar.TIMELINE_TOGGLE_BUTTON).click();
-    cy.get(os.Timeline.PANEL).should('not.exist');
-    cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4)
-        .should('contain', 'smoke-tests/load-data-file-csv/test-features.csv Features (447)');
+    cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_2).click();
+    cy.get(os.layersDialog.Tabs.Layers.Tree.Type.imageLayer.REMOVE_LAYER_BUTTON_WILDCARD).click();
+    cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_2).should('not.contain', 'Heatmap - Chicago Traffic Counts');
     cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4).click();
     cy.get(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.REMOVE_LAYER_BUTTON_WILDCARD).click();
-    cy.get(os.layersDialog.DIALOG).should('not.contain', 'smoke-tests/load-data-file-test-features.csv Features');
-    cy.imageComparison('features removed');
+    cy.get(os.layersDialog.DIALOG).should('not.contain', 'Chicago Traffic Counts Features (1279)');
+    cy.imageComparison('features and heatmap removed');
     cy.get(os.layersDialog.Tabs.Layers.Tree.Type.mapLayer.STREET_MAP_TILES)
         .find(os.layersDialog.Tabs.Layers.Tree.LAYER_TOGGLE_CHECKBOX_WILDCARD)
         .click();
