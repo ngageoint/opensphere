@@ -170,14 +170,14 @@ ol.geom.Geometry.prototype.toLonLat = function() {
 
   classes.forEach(function(cls) {
     if (cls && cls.prototype && cls.prototype.clone) {
-      cls.prototype.cloneSuper_ = cls.prototype.clone;
+      var origClone = cls.prototype.clone;
 
       /**
        * Overridden to clone values in addition to coordinates
        * @override
        */
       cls.prototype.clone = function() {
-        var geom = this.cloneSuper_();
+        var geom = origClone.call(this);
         os.object.merge(this.values_, geom.values_);
         return geom;
       };
