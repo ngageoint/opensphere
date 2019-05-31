@@ -46,7 +46,8 @@ function setVariables() {
   
   export ALL_TESTS=cypress/integration/**
   export SMOKE_TESTS=cypress/integration/smoke-tests/**
-
+  export SINGLE_TEST=cypress/integration/
+  
   export TEST_RESULT
 }
 
@@ -61,19 +62,28 @@ function checkArguments() {
     exit 1
   fi
 
-  if [ "$TESTS" == "all" ]; then
+  case "$TESTS" in
+	"all")
     TEST_SPEC=$ALL_TESTS
-  elif [ "$TESTS" == "smoke" ]; then
+		;;
+	"smoke")
     TEST_SPEC=$SMOKE_TESTS
-  elif [ -z "$TESTS" ]; then
-    if ! [ "$MODE" == "gui" ]; then
-      echo 'ERROR: tests argument must be supplied unless mode is gui'
+		;;
+  "spec")
+    TEST_SPEC=$SINGLE_TEST$SPEC
+		;;
+	*)
+		if [ -z "$TESTS" ]; then
+      if ! [ "$MODE" == "gui" ]; then
+        echo 'ERROR: tests argument must be supplied unless mode is gui'
+        exit 1
+      fi
+    else
+      echo "ERROR: only all, smoke, or spec accepted as a valid tests argument; '$TESTS' is not valid"
       exit 1
     fi
-  else
-    echo "ERROR: only all and smoke accepted as a valid tests argument; '$TESTS' is not valid"
-    exit 1
-  fi
+		;;
+  esac
 }
 
 function backupSettings(){
@@ -190,4 +200,8 @@ MODE=$2
 
 #all or smoke
 TESTS=$3
+
+#spec
+SPEC=$4
+
 main

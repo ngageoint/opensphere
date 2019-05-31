@@ -31,6 +31,13 @@ describe('Import state file', function() {
     cy.get(os.statusBar.COORDINATES_TEXT).should('contain', '+40');
     cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4, {timeout: 8000})
         .should('contain', 'City of New York Subway Stations Features (473)');
+    cy.get(os.layersDialog.Tabs.Layers.Tree.Type.mapLayer.STREET_MAP_TILES)
+        .find(os.layersDialog.Tabs.Layers.Tree.LAYER_TOGGLE_CHECKBOX_WILDCARD)
+        .click();
+    cy.get(os.layersDialog.Tabs.Layers.Tree.Type.mapLayer.WORLD_IMAGERY_TILES)
+        .find(os.layersDialog.Tabs.Layers.Tree.LAYER_TOGGLE_CHECKBOX_WILDCARD)
+        .click();
+    cy.imageComparison('features loaded');
     cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4).rightClick();
     cy.get(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.Server.contextMenu.menuOptions.FEATURE_ACTIONS).click();
     cy.get(os.featureActionsDialog.DIALOG).should('be.visible');
@@ -44,6 +51,13 @@ describe('Import state file', function() {
         .find(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.REMOVE_LAYER_BUTTON_WILDCARD)
         .click();
     cy.get(os.layersDialog.DIALOG).should('not.contain', 'City of New York Subway Stations Features (473)');
+    cy.imageComparison('features removed');
+    cy.get(os.layersDialog.Tabs.Layers.Tree.Type.mapLayer.STREET_MAP_TILES)
+        .find(os.layersDialog.Tabs.Layers.Tree.LAYER_TOGGLE_CHECKBOX_WILDCARD)
+        .click();
+    cy.get(os.layersDialog.Tabs.Layers.Tree.Type.mapLayer.WORLD_IMAGERY_TILES)
+        .find(os.layersDialog.Tabs.Layers.Tree.LAYER_TOGGLE_CHECKBOX_WILDCARD)
+        .click();
     cy.get(os.layersDialog.Tabs.Areas.TAB).click();
     cy.get(os.layersDialog.DIALOG).should('contain', 'No results');
     cy.get(os.layersDialog.Tabs.Filters.TAB).click();
