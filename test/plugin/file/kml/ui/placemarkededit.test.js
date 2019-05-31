@@ -2,11 +2,12 @@ goog.require('os.feature.DynamicFeature');
 goog.require('plugin.file.kml.ui');
 goog.require('plugin.file.kml.ui.PlacemarkEditCtrl');
 goog.require('plugin.file.kml.ui.placemarkEditDirective');
+goog.require('plugin.places.PlacesManager');
 
 
 
 describe('plugin.file.kml.ui.placemarkededit', function() {
-  var scope, element;
+  var scope, element, rootFolder, folder1;
 
 
   // eslint-disable-next-line require-jsdoc
@@ -20,15 +21,32 @@ describe('plugin.file.kml.ui.placemarkededit', function() {
 
       parent = $('<div></div>');
       element = angular.element(
-          '<form name="testForm">' +
-          '<input ng-model="model.somenum" name="somenum" integer />' |
-          '</form>'
+        '<form name="testForm">' +
+        '<input ng-model="model.somenum" name="somenum" integer />' |
+        '</form>'
       ).appendTo(parent);
 
       $compile(element)(scope);
     });
     spyOn(window, 'getComputedStyle').andReturn('<div></div>');
+
+    rootFolder = new plugin.file.kml.ui.KMLNode();
+    rootFolder.canAddChildren = true;
+    rootFolder.setLabel('Root folder');
+
+    folder1 = new plugin.file.kml.ui.KMLNode();
+    folder1.canAddChildren = true;
+    folder1.setLabel('Folder 1');
+    folder1.setParent(rootFolder);
+
+    spyOn(plugin.places.PlacesManager.prototype, 'getPlacesRoot').andCallFake(function() {
+      return rootFolder;
+    });
+    spyOn(plugin.places.PlacesManager.prototype, 'reindexTimeModel_').andCallFake(function() {
+      return;
+    });
   });
+
   afterEach(function() {
 
   });
@@ -41,6 +59,9 @@ describe('plugin.file.kml.ui.placemarkededit', function() {
     expect(formCtrl.isFeatureDynamic()).toBe(false);
     expect(formCtrl['defaultExpandedOptionsId']).toBe('featureStyle' + formCtrl['uid']);
     expect(formCtrl['previewAnnotation']).toBeUndefined();
+    expect(formCtrl['customFoldersEnabled']).toBeTruthy();
+    expect(formCtrl['folderOptions']).toEqual([rootFolder, folder1]);
+    expect(formCtrl['folder']).toBe(rootFolder);
   });
 
   it('should init with some options', function() {
@@ -59,7 +80,7 @@ describe('plugin.file.kml.ui.placemarkededit', function() {
   });
 
   it('should init with as dynamic feature', function() {
-    var feature = new os.feature.DynamicFeature;
+    var feature = new os.feature.DynamicFeature();
     var options = {
       'feature': feature
     };
@@ -70,6 +91,9 @@ describe('plugin.file.kml.ui.placemarkededit', function() {
 
     expect(formCtrl['name']).toBe('New Place');
     expect(formCtrl['defaultExpandedOptionsId']).toBe('featureStyle' + formCtrl['uid']);
+    expect(formCtrl['customFoldersEnabled']).toBeFalsy();
+    expect(formCtrl['folderOptions']).toBeUndefined();
+    expect(formCtrl['folder']).toBeUndefined();
   });
 
   it('should init with time options', function() {
@@ -129,6 +153,15 @@ describe('plugin.file.kml.ui.placemarkededit', function() {
     expect(formCtrl['startTimeISO']).toBe(endDate.toISOString());
     expect(formCtrl['endTimeISO']).toBe(startDate.toISOString());
     expect(formCtrl['dateType']).toBe(os.ui.datetime.AnyDateType.INSTANT);
+  });
+
+  it('should update a folder', function() {
+    var formCtrl = new plugin.file.kml.ui.PlacemarkEditCtrl(scope, element, timeout);
+
+    formCtrl['folder'] = folder1;
+    formCtrl.updateFolder();
+
+    expect(formCtrl.options['parent']).toBe(folder1);
   });
 
   it('should update a preview annotation', function() {

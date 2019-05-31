@@ -68,12 +68,6 @@ os.style.Icon.prototype.onImageChange = function(event) {
   if (state >= ol.ImageState.LOADED) {
     this.unlistenImageChange(this.onImageChange, this);
   }
-
-  if (state === ol.ImageState.LOADED && this.iconImage_.getSrc() == os.style.IconReader.DEFAULT_ICON) {
-    // reset these values for the default icon
-    this.setScale(1);
-    this.setRotation(0);
-  }
 };
 
 
