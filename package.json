@@ -250,7 +250,7 @@
     "opensphere-build-resolver": "^5.0.0",
     "opensphere-state-schema": "^2.3.0",
     "postcss-cli": "^5.0.0",
-    "replace": "^0.3.0",
+    "replace": "^1.1.0",
     "rimraf": "^2.5.4",
     "sass-lint": "^1.12.1",
     "semantic-release": "^11.0.2",
