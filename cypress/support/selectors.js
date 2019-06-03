@@ -220,7 +220,10 @@ exports.addPlaceDialog = {
     annotationOptions: {
       SHOW_ANNOTATION_CHECKBOX: '[ng-attr-for=\'showAnnotation{{ctrl.uid}}\']',
       SHOW_NAME_CHECKBOX: '[ng-attr-for=\'showAnnotationName{{ctrl.uid}}\']',
-      SHOW_DESCRIPTION_CHECKBOX: '[ng-attr-for=\'showAnnotationDescription{{ctrl.uid}}\']'
+      SHOW_DESCRIPTION_CHECKBOX: '[ng-attr-for=\'showAnnotationDescription{{ctrl.uid}}\']',
+      SHOW_DEFAULTTAILTYPE_RADIOBUTTON: '[ng-attr-for=\'showAnnotationDefaultTail{{ctrl.uid}}\']',
+      SHOW_NOTAILTYPE_RADIOBUTTON: '[ng-attr-for=\'showAnnotationNoTail{{ctrl.uid}}\']',
+      SHOW_LINETAILTYPE_RADIOBUTTON: '[ng-attr-for=\'showAnnotationLineTail{{ctrl.uid}}\']'
     }
   },
   OK_BUTTON: '[ng-class=\'yesButtonClass\']',
@@ -688,7 +691,10 @@ exports.editPlaceDialog = {
     annotationOptions: {
       SHOW_ANNOTATION_CHECKBOX: '[ng-attr-for=\'showAnnotation{{ctrl.uid}}\']',
       SHOW_NAME_CHECKBOX: '[ng-attr-for=\'showAnnotationName{{ctrl.uid}}\']',
-      SHOW_DESCRIPTION_CHECKBOX: '[ng-attr-for=\'showAnnotationDescription{{ctrl.uid}}\']'
+      SHOW_DESCRIPTION_CHECKBOX: '[ng-attr-for=\'showAnnotationDescription{{ctrl.uid}}\']',
+      SHOW_DEFAULTTAILTYPE_RADIOBUTTON: '[ng-attr-for=\'showAnnotationDefaultTail{{ctrl.uid}}\']',
+      SHOW_NOTAILTYPE_RADIOBUTTON: '[ng-attr-for=\'showAnnotationNoTail{{ctrl.uid}}\']',
+      SHOW_LINETAILTYPE_RADIOBUTTON: '[ng-attr-for=\'showAnnotationLineTail{{ctrl.uid}}\']'
     }
   },
   OK_BUTTON: '[ng-class=\'yesButtonClass\']',
@@ -2281,8 +2287,9 @@ exports.Map = {
   OVERVIEW_MAP_TOGGLE_BUTTON: '[title=\'Overview map\']',
   ZOOM_IN_BUTTON: '.ol-zoom-in',
   ZOOM_OUT_BUTTON: '.ol-zoom-out',
-  ROTATION_BUTTON: '.ol-compass',
-  MAP_MODE_BUTTON: '.ol-mapmode-toggle',
+  ROTATION_BUTTON: '.ol-rotate',
+  MAP_MODE_BUTTON: '.ol-mapmode',
+  ATTRIBUTION: '.ol-attribution',
   contextMenu: {
     PANEL: '#menu',
     menuOptions: {

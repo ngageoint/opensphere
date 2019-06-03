@@ -1,9 +1,14 @@
 goog.provide('plugin.places');
 
+goog.require('ol.Feature');
 goog.require('os.annotation');
 goog.require('os.command.SequenceCommand');
 goog.require('os.data.RecordField');
+goog.require('os.ol.feature');
 goog.require('os.style');
+goog.require('os.style.StyleType');
+goog.require('os.time.TimeInstant');
+goog.require('os.time.TimeRange');
 goog.require('plugin.file.kml.KMLField');
 goog.require('plugin.file.kml.KMLTreeExporter');
 goog.require('plugin.file.kml.cmd.KMLNodeAdd');
@@ -72,6 +77,31 @@ plugin.places.EXPORT_FIELDS_ = [
   os.Fields.ORIENTATION,
   os.Fields.BEARING
 ];
+
+
+/**
+ * @typedef {{
+ *   name: (string|undefined),
+ *   parent: (plugin.file.kml.ui.KMLNode|undefined)
+ * }}
+ */
+plugin.places.FolderOptions;
+
+
+/**
+ * @typedef {{
+ *   description: (string|undefined),
+ *   endTime: (number|undefined),
+ *   geometry: (ol.geom.Geometry|undefined),
+ *   id: (number|string|undefined),
+ *   name: (string|undefined),
+ *   parent: (plugin.file.kml.ui.KMLNode|undefined),
+ *   shape: (os.style.ShapeType|undefined),
+ *   startTime: (number|undefined),
+ *   styleConfig: (Object|undefined)
+ * }}
+ */
+plugin.places.PlaceOptions;
 
 
 /**
@@ -257,15 +287,81 @@ plugin.places.saveFromSource = function(config) {
 
 /**
  * Gets the root node for places. Places are assumed to have only 1 document.
- * @param {!plugin.file.kml.ui.KMLLayerNode} layerNode The layer node
+ * @param {plugin.file.kml.ui.KMLLayerNode=} opt_layerNode The layer node. Searches the map for the layer if not
+ *                                                         provided.
  * @return {plugin.file.kml.ui.KMLNode}
  */
-plugin.places.getPlacesRoot = function(layerNode) {
-  var root = plugin.file.kml.ui.getKMLRoot(layerNode);
+plugin.places.getPlacesRoot = function(opt_layerNode) {
+  var root;
+
+  if (opt_layerNode) {
+    root = plugin.file.kml.ui.getKMLRoot(opt_layerNode);
+  }
+
+  if (!root) {
+    var layer = os.MapContainer.getInstance().getLayer(plugin.places.ID);
+    if (layer) {
+      var source = layer ? /** @type {plugin.file.kml.KMLSource} */ (layer.getSource()) : null;
+      root = source ? source.getRootNode() : null;
+    }
+  }
+
   if (root) {
     var children = root.getChildren();
     return children && children.length ? /** @type {plugin.file.kml.ui.KMLNode} */ (children[0]) : null;
   }
 
   return null;
+};
+
+
+/**
+ * Add a new folder to places.
+ * @param {!plugin.places.FolderOptions} options The folder options.
+ * @return {plugin.file.kml.ui.KMLNode} The folder node, or null if one could not be created.
+ */
+plugin.places.addFolder = function(options) {
+  var name = options.name || 'New Folder';
+  var parent = options.parent || plugin.places.getPlacesRoot();
+  return parent ? plugin.file.kml.ui.updateFolder({
+    'name': name,
+    'parent': parent
+  }) : null;
+};
+
+
+/**
+ * Add a new place.
+ * @param {!plugin.places.PlaceOptions} options The save options.
+ * @return {plugin.file.kml.ui.KMLNode} The place node, or null if one could not be created.
+ */
+plugin.places.addPlace = function(options) {
+  var parent = options.parent || plugin.places.getPlacesRoot();
+
+  var geometry = options.geometry;
+  if (geometry && !(geometry instanceof ol.geom.Geometry)) {
+    // geometry created in another window context, clone it so the reference is in this context
+    geometry = os.ol.feature.cloneGeometry(geometry);
+  }
+
+  var feature = new ol.Feature(geometry);
+
+  feature.setId(options.id != null ? options.id : ol.getUid(feature));
+  feature.set(plugin.file.kml.KMLField.NAME, options.name || 'New Place');
+  feature.set(plugin.file.kml.KMLField.DESCRIPTION, options.description || undefined);
+
+  var time = options.startTime != null ?
+      options.endTime != null ? new os.time.TimeRange(options.startTime, options.endTime) :
+      new os.time.TimeInstant(options.startTime) : undefined;
+  feature.set(os.data.RecordField.TIME, time);
+
+  var styleConfig = options.styleConfig || os.object.unsafeClone(os.style.DEFAULT_VECTOR_CONFIG);
+  feature.set(os.style.StyleType.FEATURE, [styleConfig]);
+  feature.set(os.style.StyleField.SHAPE, options.shape || os.style.ShapeType.POINT);
+  os.style.setFeatureStyle(feature);
+
+  return parent ? plugin.file.kml.ui.updatePlacemark({
+    'feature': feature,
+    'parent': parent
+  }) : null;
 };
