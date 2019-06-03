@@ -43,10 +43,6 @@ os.debug.FancierWindow.STYLE_RULES_ = goog.string.Const.from(
 os.debug.FancierWindow.prototype.writeInitialDocument = function() {
   os.debug.FancierWindow.superClass_.writeInitialDocument.call(this);
 
-  // close button should set the debug window to disabled
-  if (this.win) {
-    goog.events.listenOnce(this.win, goog.events.EventType.BEFOREUNLOAD, this.onBeforeUnload_, false, this);
-  }
 };
 
 
