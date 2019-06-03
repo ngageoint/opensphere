@@ -205,7 +205,6 @@ plugin.file.kml.ui.PlacemarkEditCtrl.prototype.createPreviewFeature = function()
   // set the default options for the annotation
   this['annotationOptions'] = os.object.unsafeClone(os.annotation.DEFAULT_OPTIONS);
 
-
   // disable annotation edit when creating an annotation
   this['annotationOptions'].editable = false;
 

@@ -9,11 +9,10 @@ goog.require('plugin.places.PlacesManager');
 describe('plugin.file.kml.ui.placemarkededit', function() {
   var scope, element, rootFolder, folder1;
 
-
   // eslint-disable-next-line require-jsdoc
   function timeout(fn, delay, invokeApply) {
     // $window.setTimeout(fn,delay);
-  };
+  }
 
   beforeEach(function() {
     inject(function($compile, $rootScope) {
@@ -28,7 +27,6 @@ describe('plugin.file.kml.ui.placemarkededit', function() {
 
       $compile(element)(scope);
     });
-    spyOn(window, 'getComputedStyle').andReturn('<div></div>');
 
     rootFolder = new plugin.file.kml.ui.KMLNode();
     rootFolder.canAddChildren = true;
