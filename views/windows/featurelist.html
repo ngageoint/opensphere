@@ -1,0 +1,27 @@
+<div class="d-flex flex-column flex-fill">
+  <div class="d-flex flex-column flex-fill modal-body">
+    <div class="d-flex flex-row align-items-center mb-2">
+      <div class="custom-control custom-checkbox mr-4"
+          title="If checked, only selected data will be displayed in the list.">
+        <input class="custom-control-input" type="checkbox" name="selectedOnly"
+            ng-attr-id="showSelected{{ctrl.uid}}" ng-model="ctrl.selectedOnly">
+        <label class="custom-control-label" ng-attr-for="showSelected{{ctrl.uid}}">Show Selected Only</label>
+      </div>
+      <slider class="col-3" min="1" max="50" step="1" value="ctrl.rowStep" live="false" name="rowHeight" title="Row height"></slider>
+    </div>
+    <div class="d-flex flex-fill" ng-class="{'c-slick-grid__pre-wrap': ctrl.rowStep > 1}">
+      <sourcegrid
+          context-menu="ctrl.contextMenu"
+          source="source"
+          selected-only="ctrl.selectedOnly"
+          row-height="ctrl.rowHeight">
+      </sourcegrid>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <div class="col" ng-if="ctrl.status">{{ctrl.status}}</div>
+    <button class="btn btn-secondary" ng-click="ctrl.close()">
+      <i class="fa fa-times"></i> Close
+    </button>
+  </div>
+</div>

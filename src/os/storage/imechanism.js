@@ -23,7 +23,7 @@ os.storage.IMechanism.ID = 'os.storage.IMechanism';
  * @param {string} key The key to get.
  * @return {?string} The corresponding value, null if not found.
  */
-os.storage.IMechanism.prototype.get = goog.abstractMethod;
+os.storage.IMechanism.prototype.get;
 
 
 /**
@@ -59,7 +59,7 @@ os.storage.IMechanism.prototype.clear;
  * @param {string} key The key to set.
  * @param {string} value The string to save.
  */
-os.storage.IMechanism.prototype.set = goog.abstractMethod;
+os.storage.IMechanism.prototype.set;
 
 
 /**
@@ -67,4 +67,4 @@ os.storage.IMechanism.prototype.set = goog.abstractMethod;
  *
  * @param {string} key The key to remove.
  */
-os.storage.IMechanism.prototype.remove = goog.abstractMethod;
+os.storage.IMechanism.prototype.remove;

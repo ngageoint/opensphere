@@ -417,3 +417,18 @@ osx.cesium.WMSTerrainLayerOptions;
  * }}
  */
 osx.cesium.WMSTerrainProviderOptions;
+
+/**
+ * Namespace
+ * @type {Object}
+ */
+osx.column;
+
+/**
+ * @typedef {{
+ *   column: string,
+ *   layer: string,
+ *   units: (string|undefined)
+ * }}
+ */
+osx.column.ColumnModel;

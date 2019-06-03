@@ -4,6 +4,7 @@ goog.require('os.parse.AsyncParser');
 
 
 /**
+ * @abstract
  * @extends {os.parse.AsyncParser<T>}
  * @template T
  * @constructor
@@ -104,8 +105,9 @@ os.parse.AsyncZipParser.prototype.onError = function() {
 
 
 /**
+ * @abstract
  * @param {Array<!zip.Entry>} entries
  * @protected
  */
-os.parse.AsyncParser.prototype.handleZipEntries = goog.abstractMethod;
+os.parse.AsyncZipParser.prototype.handleZipEntries = function(entries) {};
 

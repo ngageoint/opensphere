@@ -24,13 +24,13 @@ os.search.IFacetedSearch.ID = 'os.search.IFacetedSearch';
  *
  * When facets are loaded, SearchEventType.FACETLOAD should be dispatched
  */
-os.search.IFacetedSearch.prototype.loadFacets = goog.abstractMethod;
+os.search.IFacetedSearch.prototype.loadFacets;
 
 
 /**
  * @return {?os.search.FacetSet}
  */
-os.search.IFacetedSearch.prototype.getFacets = goog.abstractMethod;
+os.search.IFacetedSearch.prototype.getFacets;
 
 
 /**
