@@ -76,9 +76,8 @@ plugin.tileserver.TileserverImportCtrl.prototype.getUrl = function() {
   return '';
 };
 
-
 /**
- * @inheritDoc
+ * @return {string}
  */
 /* istanbul ignore next */
 plugin.tileserver.TileserverImportCtrl.prototype.getLabel = function() {
