@@ -53,6 +53,7 @@ os.ui.data.BaseProvider = function() {
   this.providerType = os.ui.data.BaseProvider.TYPE;
 };
 goog.inherits(os.ui.data.BaseProvider, os.ui.slick.SlickTreeNode);
+os.implements(os.ui.data.BaseProvider, os.data.IDataProvider.ID);
 
 
 /**

@@ -165,6 +165,7 @@ os.ui.ogc.OGCServer = function() {
   this.wpsUrl_ = '';
 };
 goog.inherits(os.ui.ogc.OGCServer, os.ui.server.AbstractLoadingServer);
+os.implements(os.ui.ogc.OGCServer, os.data.IDataProvider.ID);
 
 
 /**
