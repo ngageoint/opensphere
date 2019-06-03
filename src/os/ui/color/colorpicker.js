@@ -99,7 +99,7 @@ os.ui.color.ColorPickerCtrl = function($scope, $element, $compile) {
 
   var color = /** @type {string} */ (this.scope['color']);
 
-  // default color is white if one was not set
+  // default color is undefine if one was not set, it will use default theme setting
   if (!color) {
     color = undefined;
   }
