@@ -948,6 +948,8 @@ os.layer.Vector.prototype.supportsAction = function(type, opt_actionArgs) {
       case os.action.EventType.IDENTIFY:
       case os.action.EventType.SHOW_DESCRIPTION:
         return true;
+      case os.action.EventType.FEATURE_LIST:
+        return isVector;
       case os.action.EventType.RENAME:
         return !!opt_actionArgs && goog.isArrayLike(opt_actionArgs) && opt_actionArgs.length === 1;
       case os.action.EventType.BUFFER:

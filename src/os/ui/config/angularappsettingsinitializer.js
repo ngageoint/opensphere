@@ -5,6 +5,7 @@ goog.require('os.config.ThemeSettings');
 
 
 /**
+ * @abstract
  * @extends {os.config.AbstractSettingsInitializer}
  * @constructor
  */

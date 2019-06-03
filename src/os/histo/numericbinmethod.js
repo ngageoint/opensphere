@@ -93,6 +93,15 @@ os.histo.NumericBinMethod.NAN_LABEL = 'Not a Number';
 
 
 /**
+ * String the separates in range based labels
+ *
+ * @type {string}
+ * @const
+ */
+os.histo.NumericBinMethod.LABEL_RANGE_SEP = ' to ';
+
+
+/**
  * @inheritDoc
  */
 os.histo.NumericBinMethod.prototype.getValue = function(item) {
@@ -132,9 +141,6 @@ os.histo.NumericBinMethod.prototype.getMin = function() {
  */
 os.histo.NumericBinMethod.prototype.setMin = function(min) {
   this.min = min;
-  this.precision = Math.max(
-      os.histo.NumericBinMethod.getPrecision(this.min),
-      os.histo.NumericBinMethod.getPrecision(this.offset));
 };
 
 
@@ -151,9 +157,6 @@ os.histo.NumericBinMethod.prototype.getMax = function() {
  */
 os.histo.NumericBinMethod.prototype.setMax = function(max) {
   this.max = max;
-  this.precision = Math.max(
-      os.histo.NumericBinMethod.getPrecision(this.max),
-      os.histo.NumericBinMethod.getPrecision(this.offset));
 };
 
 
@@ -263,7 +266,7 @@ os.histo.NumericBinMethod.prototype.getLabelForKey = function(key, opt_secondary
     return os.histo.NumericBinMethod.NAN_LABEL;
   } else {
     // the key should be a number, so if it's not a magic value return the bin range
-    return !opt_smallLabel ? key.toFixed(precision) + ' to ' +
+    return !opt_smallLabel ? key.toFixed(precision) + os.histo.NumericBinMethod.LABEL_RANGE_SEP +
     (key + width).toFixed(precision) : key.toFixed(precision);
   }
 };

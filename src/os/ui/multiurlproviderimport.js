@@ -7,6 +7,7 @@ goog.require('os.ui.uniqueServerUrl');
 
 /**
  * Base controller for server import UIs that use a single URL configuration
+ * @abstract
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @extends {os.ui.SingleUrlProviderImportCtrl}

@@ -137,3 +137,11 @@ plugin.config.Provider.prototype.addIcons = function(conf) {
     conf['icons'] = icons;
   }
 };
+
+
+/**
+ * @inheritDoc
+ */
+plugin.config.Provider.prototype.getErrorMessage = function() {
+  return null;
+};

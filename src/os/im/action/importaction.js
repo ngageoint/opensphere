@@ -19,7 +19,7 @@ os.im.action.ICON = 'fa-magic';
 
 
 /**
- * Timeline metrics tracked by MIST.
+ * Timeline metrics tracked by OpenSphere.
  * @enum {string}
  */
 os.im.action.Metrics = {

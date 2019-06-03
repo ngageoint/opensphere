@@ -32,12 +32,6 @@ goog.require('os.ui.window');
 os.query.AreaManager = function() {
   os.query.AreaManager.base(this, 'constructor');
 
-  /**
-   * @type {ol.Feature|undefined}
-   * @protected
-   */
-  this.highlightFeature = undefined;
-
   os.query.AreaManager.FULL_INCLUSION_STYLE.stroke.color =
       os.settings.get(os.query.AreaManager.KEYS.IN_COLOR,
           os.query.AreaManager.DEFAULT.IN_COLOR);
@@ -136,22 +130,6 @@ os.query.AreaManager.FULL_INCLUSION_STYLE = {
 os.query.AreaManager.FULL_EXCLUSION_STYLE = {
   'stroke': {
     'color': 'rgba(255,0,0,1)',
-    'lineCap': 'square',
-    'width': 2
-  }
-};
-
-
-/**
- * @type {Object}
- * @const
- */
-os.query.AreaManager.HIGHLIGHT_STYLE = {
-  'fill': {
-    'color': 'rgba(0,255,255,0.15)'
-  },
-  'stroke': {
-    'color': 'rgba(0,255,255,1)',
     'lineCap': 'square',
     'width': 2
   }
@@ -281,41 +259,6 @@ os.query.AreaManager.prototype.redraw = function(area) {
     source.dispatchEvent(new ol.source.Vector.Event(ol.source.VectorEventType.CHANGEFEATURE, area));
   }
   source.changed();
-};
-
-
-/**
- * @inheritDoc
- */
-os.query.AreaManager.prototype.unhighlight = function(idOrFeature) {
-  if (this.highlightFeature) {
-    os.MapContainer.getInstance().removeFeature(this.highlightFeature);
-    this.highlightFeature = undefined;
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-os.query.AreaManager.prototype.highlight = function(idOrFeature) {
-  if (this.highlightFeature) {
-    os.MapContainer.getInstance().removeFeature(this.highlightFeature);
-    this.highlightFeature = undefined;
-  }
-
-  var area = this.get(idOrFeature);
-  var map = os.MapContainer.getInstance();
-  if (area && map.containsFeature(area)) {
-    // this is an unfortunate workaround to the Cesium synchronizer not supporting removing/adding fill
-    var geometry = area.getGeometry();
-    if (geometry) {
-      var feature = new ol.Feature(geometry.clone());
-      // do not show a drawing layer node for this feature
-      feature.set(os.data.RecordField.DRAWING_LAYER_NODE, false);
-      this.highlightFeature = map.addFeature(feature, os.query.AreaManager.HIGHLIGHT_STYLE);
-    }
-  }
 };
 
 

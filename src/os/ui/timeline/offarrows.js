@@ -159,6 +159,25 @@ os.ui.timeline.OffArrows.prototype.onClick_ = function() {
 
 
 /**
+ * @inheritDoc
+ */
+os.ui.timeline.OffArrows.prototype.getExtent = function() {
+  return this.items_.reduce(function(extent, item) {
+    return ol.extent.extend(extent, item.getExtent());
+  }, ol.extent.createEmpty());
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.ui.timeline.OffArrows.prototype.getAvg = function() {
+  var extent = this.getExtent();
+  return (extent[1] - extent[0]) / 2;
+};
+
+
+/**
  * Filters items down to what is off the left edge
  * @param {os.ui.timeline.ITimelineItem} item
  * @return {boolean} Whether or not the item belongs in the left list

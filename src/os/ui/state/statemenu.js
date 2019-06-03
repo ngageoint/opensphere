@@ -242,7 +242,7 @@ os.ui.state.menu.getStateOptions_ = function(descriptor, index) {
       eventType: os.ui.state.menu.PREFIX + descriptor.getId(),
       tooltip: tooltip,
       icons: ['<i class="fa fa-fw ' + icon + '"></i>'],
-      handler: os.ui.state.menu.toggleState_.bind(undefined, descriptor),
+      handler: os.ui.state.menu.toggleState.bind(undefined, descriptor),
       sort: index
     };
   }
@@ -255,9 +255,8 @@ os.ui.state.menu.getStateOptions_ = function(descriptor, index) {
  * Handle state menu click.
  * @param {!os.ui.state.IStateDescriptor} descriptor The clicked descriptor
  * @param {os.ui.menu.MenuEvent} event The menu event.
- * @private
  */
-os.ui.state.menu.toggleState_ = function(descriptor, event) {
+os.ui.state.menu.toggleState = function(descriptor, event) {
   descriptor.setActive(!descriptor.isActive());
 };
 
