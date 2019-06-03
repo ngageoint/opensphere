@@ -18,6 +18,7 @@ describe('Toolbar center', function() {
         .should('have.value', Cypress.moment().subtract(1, 'days').format('YYYY[-]MM[-]DD'));
 
     // Clean up
+    cy.wait(500); // Wait to avoid rapidly changing dates
     cy.get(os.Toolbar.NEXT_DAY_BUTTON).click();
     cy.get(os.Toolbar.Date.INPUT)
         .should('have.value', Cypress.moment().format('YYYY[-]MM[-]DD'));
@@ -35,6 +36,7 @@ describe('Toolbar center', function() {
     cy.get(os.Toolbar.Date.Calendar.CURRENT_DAY).should('contain', Cypress.moment().format('D'));
 
     // Clean up
+    cy.wait(500);
     cy.get(os.Toolbar.Date.Calendar.CLOSE_BUTTON).click();
     cy.get(os.Toolbar.Date.Calendar.PANEL).should('not.be.visible');
   });
@@ -51,6 +53,7 @@ describe('Toolbar center', function() {
         .should('have.value', Cypress.moment().add(1, 'days').format('YYYY[-]MM[-]DD'));
 
     // Clean up
+    cy.wait(500); // Wait to avoid rapidly changing dates
     cy.get(os.Toolbar.PREVIOUS_DAY_BUTTON).click();
     cy.get(os.Toolbar.Date.INPUT)
         .should('have.value', Cypress.moment().format('YYYY[-]MM[-]DD'));

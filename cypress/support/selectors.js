@@ -220,7 +220,10 @@ exports.addPlaceDialog = {
     annotationOptions: {
       SHOW_ANNOTATION_CHECKBOX: '[ng-attr-for=\'showAnnotation{{ctrl.uid}}\']',
       SHOW_NAME_CHECKBOX: '[ng-attr-for=\'showAnnotationName{{ctrl.uid}}\']',
-      SHOW_DESCRIPTION_CHECKBOX: '[ng-attr-for=\'showAnnotationDescription{{ctrl.uid}}\']'
+      SHOW_DESCRIPTION_CHECKBOX: '[ng-attr-for=\'showAnnotationDescription{{ctrl.uid}}\']',
+      SHOW_DEFAULTTAILTYPE_RADIOBUTTON: '[ng-attr-for=\'showAnnotationDefaultTail{{ctrl.uid}}\']',
+      SHOW_NOTAILTYPE_RADIOBUTTON: '[ng-attr-for=\'showAnnotationNoTail{{ctrl.uid}}\']',
+      SHOW_LINETAILTYPE_RADIOBUTTON: '[ng-attr-for=\'showAnnotationLineTail{{ctrl.uid}}\']'
     }
   },
   OK_BUTTON: '[ng-class=\'yesButtonClass\']',
@@ -688,7 +691,10 @@ exports.editPlaceDialog = {
     annotationOptions: {
       SHOW_ANNOTATION_CHECKBOX: '[ng-attr-for=\'showAnnotation{{ctrl.uid}}\']',
       SHOW_NAME_CHECKBOX: '[ng-attr-for=\'showAnnotationName{{ctrl.uid}}\']',
-      SHOW_DESCRIPTION_CHECKBOX: '[ng-attr-for=\'showAnnotationDescription{{ctrl.uid}}\']'
+      SHOW_DESCRIPTION_CHECKBOX: '[ng-attr-for=\'showAnnotationDescription{{ctrl.uid}}\']',
+      SHOW_DEFAULTTAILTYPE_RADIOBUTTON: '[ng-attr-for=\'showAnnotationDefaultTail{{ctrl.uid}}\']',
+      SHOW_NOTAILTYPE_RADIOBUTTON: '[ng-attr-for=\'showAnnotationNoTail{{ctrl.uid}}\']',
+      SHOW_LINETAILTYPE_RADIOBUTTON: '[ng-attr-for=\'showAnnotationLineTail{{ctrl.uid}}\']'
     }
   },
   OK_BUTTON: '[ng-class=\'yesButtonClass\']',
