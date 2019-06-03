@@ -22,7 +22,9 @@ describe('os.geo.jsts', function() {
     });
   });
 
-  it('should split polygons with a z-coord properly', function() {
+  // This test is deactivated because JSTS does not linearly interpolate the Z
+  // coordinate when splitting/polygonizing
+  xit('should split polygons with a z-coord properly', function() {
     var polygon = new ol.geom.Polygon([[
       [-2, -2, 2],
       [2, -2, 4],
