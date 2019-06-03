@@ -44,7 +44,7 @@ addMatchImageSnapshotCommand({
 });
 
 Cypress.Commands.add('imageComparison', function(name) {
-  cy.wait(2000);
+  cy.wait(2500);
   cy.matchImageSnapshot(name);
 });
 
