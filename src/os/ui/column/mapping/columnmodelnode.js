@@ -1,5 +1,4 @@
 goog.provide('os.ui.column.mapping.ColumnModelNode');
-goog.require('os.column.ColumnModel');
 goog.require('os.ui.slick.SlickTreeNode');
 
 
@@ -13,7 +12,7 @@ os.ui.column.mapping.ColumnModelNode = function() {
   os.ui.column.mapping.ColumnModelNode.base(this, 'constructor');
 
   /**
-   * @type {?os.column.ColumnModel}
+   * @type {?osx.column.ColumnModel}
    * @private
    */
   this['model'] = null;
@@ -43,7 +42,7 @@ goog.inherits(os.ui.column.mapping.ColumnModelNode, os.ui.slick.SlickTreeNode);
 
 /**
  * Gets the column mapping associated with this node.
- * @return {?os.column.ColumnModel}
+ * @return {?osx.column.ColumnModel}
  */
 os.ui.column.mapping.ColumnModelNode.prototype.getColumnModel = function() {
   return this['model'];
@@ -52,7 +51,7 @@ os.ui.column.mapping.ColumnModelNode.prototype.getColumnModel = function() {
 
 /**
  * Sets the column mapping on this node. This also creates
- * @param {?os.column.ColumnModel} value
+ * @param {?osx.column.ColumnModel} value
  */
 os.ui.column.mapping.ColumnModelNode.prototype.setColumnModel = function(value) {
   this['model'] = value;

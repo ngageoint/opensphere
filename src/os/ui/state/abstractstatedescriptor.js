@@ -16,6 +16,7 @@ goog.require('os.ui.state.IStateDescriptor');
 
 /**
  * Base descriptor for state files.
+ * @abstract
  * @extends {os.data.BaseDescriptor}
  * @implements {os.ui.state.IStateDescriptor}
  * @constructor
@@ -228,9 +229,10 @@ os.ui.state.AbstractStateDescriptor.prototype.deactivateState = function() {
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.ui.state.AbstractStateDescriptor.prototype.getIcons = goog.abstractMethod;
+os.ui.state.AbstractStateDescriptor.prototype.getIcons = function() {};
 
 
 /**

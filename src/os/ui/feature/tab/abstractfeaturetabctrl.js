@@ -4,6 +4,7 @@ goog.provide('os.ui.feature.tab.AbstractFeatureTabCtrl');
 
 /**
  * Abstract controller for feature tabs.
+ * @abstract
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @constructor
@@ -45,8 +46,9 @@ os.ui.feature.tab.AbstractFeatureTabCtrl.prototype.destroy = function() {
 
 /**
  * Update the tab content
+ * @abstract
  * @param {?angular.Scope.Event} event The broadcast event
  * @param {*} data The event data
  * @protected
  */
-os.ui.feature.tab.AbstractFeatureTabCtrl.prototype.updateTab = goog.abstractMethod;
+os.ui.feature.tab.AbstractFeatureTabCtrl.prototype.updateTab = function(event, data) {};

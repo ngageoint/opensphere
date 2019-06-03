@@ -9,6 +9,7 @@ goog.require('os.ui.uniqueServerUrl');
 
 /**
  * Base controller for server import UIs that use a single URL configuration
+ * @abstract
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @extends {os.ui.ProviderImportCtrl}
@@ -64,12 +65,6 @@ os.ui.SingleUrlProviderImportCtrl.prototype.getUrl = function() {
 
   return '';
 };
-
-
-/**
- * @return {!string} url
- */
-os.ui.SingleUrlProviderImportCtrl.prototype.getLabel = goog.abstractMethod;
 
 
 /**
