@@ -398,3 +398,72 @@ plugin.cesium.createWorldTerrain = function(options) {
 plugin.cesium.createWMSTerrain = function(options) {
   return new plugin.cesium.WMSTerrainProvider(options);
 };
+
+
+
+/**
+ * @type {?Cesium.Cartesian3}
+ * @private
+ */
+plugin.cesium.scratchCartesian_ = null;
+
+
+/**
+ * @type {?Cesium.BoundingSphere}
+ * @private
+ */
+plugin.cesium.scratchSphere_ = null;
+
+
+/**
+ * @type {ol.Coordinate}
+ * @private
+ */
+plugin.cesium.scratchCoord_ = [];
+
+
+/**
+ * @param {Cesium.BoundingSphere} sphere
+ * @param {?ol.geom.Geometry|undefined} geom
+ * @return {Cesium.BoundingSphere}
+ */
+plugin.cesium.reduceBoundingSphere = function(sphere, geom) {
+  if (geom) {
+    var type = geom.getType();
+
+    if (type === ol.geom.GeometryType.GEOMETRY_COLLECTION) {
+      var geoms = /** @type {ol.geom.GeometryCollection} */ (geom).getGeometriesArray();
+      sphere = geoms.reduce(plugin.cesium.reduceBoundingSphere, sphere);
+    } else {
+      geom = /** @type {ol.geom.SimpleGeometry} */ (geom);
+      var flats = geom.getFlatCoordinates();
+      var stride = geom.getStride();
+      var scratchCartesian = plugin.cesium.scratchCartesian_ || new Cesium.Cartesian3();
+      var scratchCoord = plugin.cesium.scratchCoord_;
+      var scratchSphere = plugin.cesium.scratchSphere_;
+
+      for (var i = 0, n = flats.length; i < n; i += stride) {
+        scratchCoord[0] = flats[i];
+        scratchCoord[1] = flats[i + 1];
+        scratchCoord[2] = flats[i + 2] || 0;
+
+        if (!ol.proj.equivalent(os.map.PROJECTION, ol.proj.get(os.proj.EPSG4326))) {
+          scratchCoord = ol.proj.toLonLat(scratchCoord, os.map.PROJECTION);
+        }
+
+        scratchCartesian = Cesium.Cartesian3.fromDegrees(
+            scratchCoord[0], scratchCoord[1], scratchCoord[2], undefined, scratchCartesian);
+
+        if (!scratchSphere) {
+          scratchSphere = new Cesium.BoundingSphere(scratchCartesian);
+        } else {
+          scratchSphere.center = scratchCartesian;
+        }
+
+        sphere = !sphere ? scratchSphere.clone() : Cesium.BoundingSphere.union(scratchSphere, sphere, sphere);
+      }
+    }
+  }
+
+  return sphere;
+};

@@ -53,7 +53,7 @@ os.fn.reduceExtentFromLayers = function(extent, layer) {
 
 /**
  * @param {!ol.Extent} extent The extent
- * @param {?(ol.geom.Geometry|{geometry: ol.geom.Geometry})} geometry The geometry
+ * @param {?(ol.geom.Geometry|{geometry: ol.geom.Geometry})|undefined} geometry The geometry
  * @return {!ol.Extent} The combined extent
  */
 os.fn.reduceExtentFromGeometries = function(extent, geometry) {

@@ -1,7 +1,6 @@
 goog.provide('os.ui.menu.timeline');
 
 goog.require('os.action.EventType');
-goog.require('os.command.FlyToExtent');
 goog.require('os.metrics.keys');
 goog.require('os.time.TimeRange');
 goog.require('os.time.TimelineActionEventType');
@@ -224,15 +223,7 @@ os.ui.menu.timeline.onFeatureCollection = function(event) {
         os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Timeline.FEATURE_INFO, 1);
         break;
       case os.time.TimelineActionEventType.GO_TO:
-        var geometries = features.map(function(f) {
-          return f.getGeometry();
-        }).filter(os.fn.filterFalsey);
-
-        if (geometries.length > 0) {
-          var zoomExtent = geometries.reduce(os.fn.reduceExtentFromGeometries, ol.extent.createEmpty());
-          var cmd = new os.command.FlyToExtent(zoomExtent);
-          os.command.CommandProcessor.getInstance().addCommand(cmd);
-        }
+        os.feature.flyTo(features);
         os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Timeline.GO_TO, 1);
         break;
       default:
