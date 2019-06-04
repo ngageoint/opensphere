@@ -13,7 +13,9 @@ goog.require('ol.source.VectorEventType');
 goog.require('os');
 goog.require('os.Fields');
 goog.require('os.MapContainer');
+goog.require('os.command.FlyToExtent');
 goog.require('os.data.RecordField');
+goog.require('os.fn');
 goog.require('os.geo');
 goog.require('os.geom.Ellipse');
 goog.require('os.im.mapping.MappingManager');
@@ -61,6 +63,29 @@ os.feature.LOBOptions;
  * @const
  */
 os.feature.TITLE_REGEX = /^(name|title)$/i;
+
+
+/**
+ * @param {null|undefined|ol.Feature|Array<ol.Feature>} features
+ */
+os.feature.flyTo = function(features) {
+  if (!features) {
+    return;
+  }
+
+  if (!Array.isArray(features)) {
+    features = [features];
+  }
+
+  if (os.map.mapContainer.is3DEnabled()) {
+    os.map.mapContainer.getWebGLRenderer().flyToFeatures(features);
+  } else {
+    var extent = features.map(os.fn.mapFeatureToGeometry).
+        reduce(os.fn.reduceExtentFromGeometries, ol.extent.createEmpty());
+    var cmd = new os.command.FlyToExtent(extent);
+    os.commandStack.addCommand(cmd);
+  }
+};
 
 
 /**
