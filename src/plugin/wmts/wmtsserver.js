@@ -81,6 +81,7 @@ plugin.wmts.Server = function() {
   this.timeFormat_ = '';
 };
 goog.inherits(plugin.wmts.Server, os.ui.server.AbstractLoadingServer);
+os.implements(plugin.wmts.Server, os.data.IDataProvider.ID);
 
 
 /**

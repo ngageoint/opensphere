@@ -12,7 +12,7 @@ describe('plugin.file.kml.ui.placemarkededit', function() {
   // eslint-disable-next-line require-jsdoc
   function timeout(fn, delay, invokeApply) {
     // $window.setTimeout(fn,delay);
-  };
+  }
 
   beforeEach(function() {
     inject(function($compile, $rootScope) {
