@@ -76,6 +76,19 @@ plugin.file.kml.ui.PlacemarkEditCtrl = function($scope, $element, $timeout) {
    */
   this.options = /** @type {!plugin.file.kml.ui.PlacemarkOptions} */ ($scope['options'] || {});
 
+  /**
+   * tempHeaderColor
+   * @type {string|undefined}
+   */
+  this['tempHeaderBG'] = this['annotationOptions'].headerBG || undefined;
+
+  /**
+   * tempBodyColor
+   * @type {string|undefined}
+   */
+  this['tempBodyBG'] = this['annotationOptions'].bodyBG || undefined;
+
+
   var time = this.options['time'];
 
   if (time) {
@@ -114,6 +127,11 @@ plugin.file.kml.ui.PlacemarkEditCtrl = function($scope, $element, $timeout) {
       parentFolder = this.options['node'].getParent();
     }
     this['folder'] = parentFolder || rootFolder;
+
+    $scope.$on('headerColor.reset', this.resetHeaderBackgroundColor_.bind(this));
+    $scope.$on('bodyColor.reset', this.resetBodyBackgroundColor_.bind(this));
+    $scope.$on('headerColor.change', this.saveHeaderBackgroundColor_.bind(this));
+    $scope.$on('bodyColor.change', this.saveBodyBackgroundColor_.bind(this));
   }
 };
 goog.inherits(plugin.file.kml.ui.PlacemarkEditCtrl, os.ui.FeatureEditCtrl);
@@ -274,4 +292,43 @@ plugin.file.kml.ui.PlacemarkEditCtrl.prototype.updateAnnotation = function() {
     // fire a change event on the feature to trigger an overlay update (if present)
     this.previewFeature.changed();
   }
+};
+
+
+/**
+ * Resets the header background to the current default theme color
+ * @private
+ */
+plugin.file.kml.ui.PlacemarkEditCtrl.prototype.resetHeaderBackgroundColor_ = function() {
+  this['annotationOptions'].headerBG = undefined;
+  this['tempHeaderBG'] = undefined;
+};
+
+
+/**
+ * Resets the body background to the current default theme color
+ * @private
+ */
+plugin.file.kml.ui.PlacemarkEditCtrl.prototype.resetBodyBackgroundColor_ = function() {
+  this['annotationOptions'].bodyBG = undefined;
+  this['tempBodyBG'] = undefined;
+};
+
+
+/**
+ * Save color to feature
+ * @param {angular.Scope.Event} event
+ * @param {string} color The new color
+ */
+plugin.file.kml.ui.PlacemarkEditCtrl.prototype.saveHeaderBackgroundColor_ = function(event, color) {
+  this['annotationOptions'].headerBG = color;
+};
+
+/**
+ * Save color to feature
+ * @param {angular.Scope.Event} event
+ * @param {string} color The new color
+ */
+plugin.file.kml.ui.PlacemarkEditCtrl.prototype.saveBodyBackgroundColor_ = function(event, color) {
+  this['annotationOptions'].bodyBG = color;
 };
