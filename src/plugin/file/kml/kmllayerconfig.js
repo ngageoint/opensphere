@@ -30,7 +30,10 @@ plugin.file.kml.KMLLayerConfig.prototype.getImporter = function(options) {
   importer.setTrustHTML(os.net.isTrustedUri(/** @type {string|undefined} */ (options['url'])));
 
   // select the mappings we want to perform autodetection
-  importer.selectAutoMappings([os.im.mapping.AltMapping.ID, os.im.mapping.SemiMajorMapping.ID,
+  importer.selectAutoMappings([
+    os.im.mapping.AltMapping.ID,
+    os.im.mapping.OrientationMapping.ID,
+    os.im.mapping.SemiMajorMapping.ID,
     os.im.mapping.SemiMinorMapping.ID]);
 
   return importer;
