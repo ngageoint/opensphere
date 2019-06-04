@@ -97,18 +97,12 @@ os.ui.color.ColorPickerCtrl = function($scope, $element, $compile) {
    */
   this['showPopup'] = false;
 
-  var color = /** @type {string} */ (this.scope['color']);
-
-  // default color is undefine if one was not set, it will use default theme setting
-  if (!color) {
-    color = undefined;
-  }
-
-  if ((color !== undefined) && (color.indexOf('#') !== 0)) {
+  // the control's color value should be undefined when the picker is set to the default color
+  var color = /** @type {string} */ (this.scope['color']) || undefined;
+  if (color && color.indexOf('#') !== 0) {
     // if color was set to something other than a hex string (rgb() or rgba()), then fix it
     color = (color.indexOf('a(') > -1 ? goog.color.alpha.parse(color) : goog.color.parse(color)).hex.substring(0, 7);
   }
-
 
   this.scope['color'] = color;
 
