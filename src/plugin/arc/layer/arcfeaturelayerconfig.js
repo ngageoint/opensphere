@@ -189,7 +189,10 @@ plugin.arc.layer.ArcFeatureLayerConfig.prototype.getImporter = function(options)
   }
 
   // set the mappings that will use autodetection
-  importer.selectAutoMappings([os.im.mapping.RadiusMapping.ID, os.im.mapping.SemiMajorMapping.ID,
+  importer.selectAutoMappings([
+    os.im.mapping.RadiusMapping.ID,
+    os.im.mapping.OrientationMapping.ID,
+    os.im.mapping.SemiMajorMapping.ID,
     os.im.mapping.SemiMinorMapping .ID]);
 
   return importer;

@@ -40,8 +40,12 @@ plugin.file.gml.GMLLayerConfig.prototype.getImporter = function(options) {
     importer.setAutoMappings(this.parserConfig['mappings']);
   } else {
     // there was no user interaction, so default the mappings to a set the importer would have used
-    importer.selectAutoMappings([os.im.mapping.AltMapping.ID, os.im.mapping.OrientationMapping.ID,
-      os.im.mapping.SemiMajorMapping.ID, os.im.mapping.SemiMinorMapping.ID, os.im.mapping.time.DateTimeMapping.ID]);
+    importer.selectAutoMappings([
+      os.im.mapping.AltMapping.ID,
+      os.im.mapping.OrientationMapping.ID,
+      os.im.mapping.SemiMajorMapping.ID,
+      os.im.mapping.SemiMinorMapping.ID,
+      os.im.mapping.time.DateTimeMapping.ID]);
   }
   return importer;
 };
