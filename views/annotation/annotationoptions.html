@@ -6,18 +6,20 @@
   <div class="card-body collapse"
       data-parent="#featureControls{{ctrl.uid}}" ng-attr-id="featureAnnotation{{ctrl.uid}}">
     <div class="form-row">
-      <div class="custom-control custom-checkbox d-inline-block"
-          title="Show an interactive map annotation for this feature">
-        <input type="checkbox" class="custom-control-input" name="showAnnotation"
-            ng-attr-id="showAnnotation{{ctrl.uid}}"
-            ng-change="ctrl.updateAnnotation()"
-            ng-model="ctrl.annotationOptions.show" />
-        <label class="custom-control-label" ng-attr-for="showAnnotation{{ctrl.uid}}">
-          Show Annotation
-        </label>
+      <div class="col">
+        <div class="custom-control custom-checkbox d-inline-block"
+            title="Show an interactive map annotation for this feature">
+          <input type="checkbox" class="custom-control-input" name="showAnnotation"
+              ng-attr-id="showAnnotation{{ctrl.uid}}"
+              ng-change="ctrl.updateAnnotation()"
+              ng-model="ctrl.annotationOptions.show" />
+          <label class="custom-control-label" ng-attr-for="showAnnotation{{ctrl.uid}}">
+            Show Annotation
+          </label>
+        </div>
       </div>
     </div>
-    <div class="form-row">
+    <div class="form-row align-items-center">
       <div class="col">
         <div class="custom-control custom-checkbox d-inline-block"
             title="Show the Name field as the annotation header">
@@ -38,13 +40,13 @@
                 show-reset="true"
                 title="Sets the background color for header"
                 disabled="!ctrl.annotationOptions.show || !ctrl.annotationOptions.showName"></colorpicker>
-            <label ng-attr-for="headerColor{{ctrl.uid}}">
+            <label class="col-form-label" ng-attr-for="headerColor{{ctrl.uid}}">
               Header Background
             </label>
           </div>
         </div>
       </div>
-      <div class="form-row">
+      <div class="form-row align-items-center">
         <div class="col">
           <div class="custom-control custom-checkbox d-inline-block"
               title="Show the Description field in the annotation">
@@ -66,28 +68,30 @@
                   show-reset="true"
                   title="Sets the background color for body"
                   disabled="!ctrl.annotationOptions.show || !ctrl.annotationOptions.showDescription"></colorpicker>
-              <label ng-attr-for="bodyColor{{ctrl.uid}}">Description Background</label>
+              <label class="col-form-label" ng-attr-for="bodyColor{{ctrl.uid}}">Description Background</label>
             </div>
         </div>
       </div>
       <div class="form-group">
-        <div class="col form-label">Tail Style</div>
-        <div class="custom-control custom-checkbox d-inline-block">
-          <input ng-checked="true" type="radio" ng-attr-id="showAnnotationDefaultTail{{ctrl.uid}}" class="form-check-input" name="showAnnotationTail"
-            ng-change="ctrl.updateAnnotation()" value="default" ng-model="ctrl.annotationOptions.showTail" ng-disabled="!ctrl.annotationOptions.show"
-          />
-          <label class="form-check-label" ng-attr-for="showAnnotationDefaultTail{{ctrl.uid}}" ng-disabled="disabled">Default</label>
-        </div>
-        <div class="custom-control custom-checkbox d-inline-block">
-          <input type="radio" ng-attr-id="showAnnotationLineTail{{ctrl.uid}}" class="form-check-input" name="showAnnotationTail" value="line"
-            ng-change="ctrl.updateAnnotation()" ng-model="ctrl.annotationOptions.showTail" ng-disabled="!ctrl.annotationOptions.show"
-          />
-          <label class="form-check-label" ng-attr-for="showAnnotationLineTail{{ctrl.uid}}" ng-disabled="disabled">Line</label>
-        </div>
-        <div class="custom-control custom-checkbox d-inline-block">
-          <input type="radio" ng-attr-id="showAnnotationNoTail{{ctrl.uid}}" class="form-check-input" name="showAnnotationTail" ng-change="ctrl.updateAnnotation()"
-            value="none" ng-model="ctrl.annotationOptions.showTail" ng-disabled="!ctrl.annotationOptions.show" />
-          <label class="form-check-label" ng-attr-for="showAnnotationNoTail{{ctrl.uid}}" ng-disabled="disabled">None</label>
+        <div class="col">
+          <label class="col-form-label mr-2">Tail Style</label>
+          <div class="custom-control custom-checkbox d-inline-block">
+            <input ng-checked="true" type="radio" ng-attr-id="showAnnotationDefaultTail{{ctrl.uid}}" class="form-check-input" name="showAnnotationTail"
+              ng-change="ctrl.updateAnnotation()" value="default" ng-model="ctrl.annotationOptions.showTail" ng-disabled="!ctrl.annotationOptions.show"
+            />
+            <label class="form-check-label" ng-attr-for="showAnnotationDefaultTail{{ctrl.uid}}" ng-disabled="disabled">Default</label>
+          </div>
+          <div class="custom-control custom-checkbox d-inline-block">
+            <input type="radio" ng-attr-id="showAnnotationLineTail{{ctrl.uid}}" class="form-check-input" name="showAnnotationTail" value="line"
+              ng-change="ctrl.updateAnnotation()" ng-model="ctrl.annotationOptions.showTail" ng-disabled="!ctrl.annotationOptions.show"
+            />
+            <label class="form-check-label" ng-attr-for="showAnnotationLineTail{{ctrl.uid}}" ng-disabled="disabled">Line</label>
+          </div>
+          <div class="custom-control custom-checkbox d-inline-block">
+            <input type="radio" ng-attr-id="showAnnotationNoTail{{ctrl.uid}}" class="form-check-input" name="showAnnotationTail" ng-change="ctrl.updateAnnotation()"
+              value="none" ng-model="ctrl.annotationOptions.showTail" ng-disabled="!ctrl.annotationOptions.show" />
+            <label class="form-check-label" ng-attr-for="showAnnotationNoTail{{ctrl.uid}}" ng-disabled="disabled">None</label>
+          </div>
         </div>
       </div>
     </div>
