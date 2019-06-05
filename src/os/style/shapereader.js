@@ -30,6 +30,7 @@ os.style.ShapeDefaults = {
  */
 os.style.ShapeReader = function() {
   os.style.ShapeReader.base(this, 'constructor');
+  this.baseHash = 31 * this.baseHash + goog.string.hashCode('shape') >>> 0;
 };
 goog.inherits(os.style.ShapeReader, os.style.AbstractReader);
 
@@ -52,7 +53,7 @@ os.style.ShapeReader.prototype.getOrCreateStyle = function(config) {
   var stroke;
 
   var shapeKey = /** @type {string|undefined} */ (config['subType']) || 'point';
-  var hash = this.baseHash + goog.string.hashCode(shapeKey);
+  var hash = 31 * this.baseHash + goog.string.hashCode(shapeKey) >>> 0;
 
   radius = /** @type {number|undefined} */ (config['radius']);
   if (radius == null) {
@@ -63,18 +64,18 @@ os.style.ShapeReader.prototype.getOrCreateStyle = function(config) {
   // {@link ol.style.Circle} (points) with the same size. this compensates and produces more consistent results.
   radius = Math.round(radius * os.style.ShapeReader.RADIUS_MULTIPLIER);
 
-  hash += radius;
+  hash = 31 * hash + radius >>> 0;
 
   var fillConfig = /** @type {Object<string, *>|undefined} */ (config['fill']);
   if (fillConfig) {
     fill = this.readers['fill'].getOrCreateStyle(fillConfig);
-    hash += fill['id'];
+    hash = 31 * hash + fill['id'] >>> 0;
   }
 
   var strokeConfig = /** @type {Object<string, *>|undefined} */ (config['stroke']);
   if (strokeConfig) {
     stroke = this.readers['stroke'].getOrCreateStyle(strokeConfig);
-    hash += stroke['id'];
+    hash = 31 * hash + stroke['id'] >>> 0;
   }
 
   if (!this.cache[hash]) {
