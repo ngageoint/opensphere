@@ -1,0 +1,16 @@
+<div class="c-tui-editor form-group mb-0">
+  <ng-form name="tuiEditorForm">
+    <div ng-if="edit">
+      <div>
+        <div class="js-tui-editor__editor"></div>
+        <input class="ng-hide" type="text" name="empty" ng-model="text" ng-model-options="{allowInvalid: true}" ng-maxlength="{{maxlength}}" ng-required="isRequired"/>
+        <div class="small mt-1">
+          <span class="text-danger" ng-if="text.length > maxlength">Content is too long!</span>
+          <span class="text-danger" ng-if="isRequired && text.length == 0">Required!</span>
+          <span class="text-muted float-right c-tui-editor__word-count">{{ctrl.getWordCount()}}</span>
+        </div>
+      </div>
+    </div>
+  </ng-form>
+  <div ng-if="!edit" class="js-tui-editor__viewer"></div>
+</div>
