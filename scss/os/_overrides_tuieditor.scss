@@ -1,0 +1,379 @@
+// Set min and max heights inside of windows and modals
+.c-window,
+.modal {
+  .CodeMirror:not(.CodeMirror-fullscreen) .CodeMirror-scroll,
+  .te-ww-container .te-editor .tui-editor-contents {
+    max-height: 25rem;
+    min-height: 10rem;
+  }
+
+  // Not the same height as the codemirror side
+  .te-md-container .te-preview {
+    max-height: 26.25rem;
+    min-height: 10rem;
+  }
+}
+
+// Editor Overrides
+.c-tui-editor {
+  // We dont want to show the tab section OR the block overlay
+  .te-markdown-tab-section,
+  .te-ww-block-overlay {
+    display: none !important;
+  }
+
+  .ng-invalid.ng-dirty {
+    .te-editor-section {
+      outline: 1px solid $danger;
+    }
+
+    .c-tui-editor__word-count {
+      color: $danger !important;
+    }
+  }
+
+  .tui-editor-defaultUI {
+    border-color: $border-color;
+
+    .te-markdown-tab-section {
+      background: $input-bg;
+
+      .te-tab {
+        margin: inherit;
+      }
+    }
+
+    .te-toolbar-section {
+      background: $input-bg;
+      border-color: transparent;
+    }
+
+    .te-mode-switch-section {
+      background: $input-bg;
+      border-color: $border-color;
+      color: $input-color;
+    }
+
+    .te-tab button,
+    .te-switch-button {
+      background: $input-bg;
+      border-color: transparent;
+      color: $text-muted;
+    }
+
+    .te-tab button:hover,
+    .te-tab .te-tab-active,
+    .te-switch-button.active,
+    .te-switch-button:hover {
+      background: $u-theme-variables--bg-offset;
+      border-color: transparent;
+      color: $input-color;
+      outline: 1px solid $border-color;
+    }
+  }
+
+  .tui-editor-contents {
+    // Each one has different colors
+    border-color: darken($input-color, 8%);
+    color: $input-color;
+
+    img {
+      @include img-fluid;
+    }
+
+    // * {
+    //   color: inherit;
+    // }
+
+    a {
+      color: $link-color;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4
+    h5,
+    h6,
+    p,
+    ul {
+      color: $input-color;
+    }
+
+    pre,
+    table th {
+      background-color: $u-theme-variables--bg-offset;
+      border-color: darken($input-color, 8%);
+      border-top: 1px solid darken($input-color, 8%);
+      color: color-yiq($u-theme-variables--bg-offset);
+    }
+
+    pre,
+    code {
+      color: $danger;
+    }
+
+    blockquote {
+      color: $text-muted;
+    }
+  }
+
+  .tui-editor {
+    .te-ww-block-overlay,
+    .te-ww-container,
+    .te-preview,
+    .tui-editor-contents,
+    .CodeMirror {
+      background-color: $input-bg;
+      border: 0;
+      border-radius: 0;
+      color: $input-color;
+    }
+
+    .CodeMirror {
+      .CodeMirror-selected {
+        background: $primary !important;
+        opacity: .5;
+      }
+
+      .CodeMirror-cursor {
+        border-left-color: $body-color;
+
+        // Sometimes the cursor doesnt show up (windows?) this fixes that issue
+        width: 1px !important;
+      }
+
+      // Code mirror theme
+      .cm-def,
+      .cm-attribute,
+      .cm-builtin {
+        color: $primary;
+      }
+
+      .cm-link {
+        color: $link-color;
+      }
+
+      .cm-variable-2,
+      .cm-variable-3,
+      .cm-string {
+        color: $body-color;
+      }
+
+      .cm-quote,
+      .cm-positive,
+      .cm-number,
+      .cm-type,
+      .cm-tag {
+        color: $success;
+      }
+
+      .cm-string2,
+      .cm-comment {
+        color: $warning;
+      }
+
+      .cm-negative,
+      .cm-error
+      .cm-invalidchar {
+        color: $danger;
+      }
+
+      .cm-meta,
+      .cm-atom,
+      .cm-keyword {
+        color: $info;
+      }
+
+      .cm-header,
+      .cm-qualifier,
+      .cm-bracket,
+      .cm-hr {
+        color: $text-muted;
+      }
+    }
+  }
+
+  .tui-editor-popup {
+    .tui-popup-wrapper,
+    .tui-popup-body {
+      background-color: $u-theme-variables--bg-offset;
+      border-color: $border-color;
+      color: color-yiq($u-theme-variables--bg-offset);
+
+      label {
+        color: color-yiq($u-theme-variables--bg-offset);
+      }
+
+      .te-tab {
+        border-color: $border-color;
+      }
+
+      .te-heading-add ul li:hover {
+        @include gradient-bg($dropdown-link-hover-bg);
+      }
+
+      .te-tab button:hover,
+      .te-tab .te-tab-active,
+      .te-switch-button.active {
+        background: darken($modal-content-bg, 8%);
+        border-color: $border-color;
+        color: color-yiq($u-theme-variables--bg-offset);
+      }
+
+      // sass-lint:disable extends-before-declarations, extends-before-mixins, no-extends, placeholder-in-extend
+      .te-link-text-input,
+      .te-url-input,
+      .te-image-url-input,
+      .te-alt-text-input {
+        @extend .form-control;
+      }
+    }
+
+    .tui-popup-title,
+    .tui-popup-header {
+      background: darken($modal-content-bg, 8%);
+      border-color: $border-color;
+      color: color-yiq(darken($modal-content-bg, 8%));
+    }
+
+    .te-ok-button {
+      @extend .btn;
+      @extend .btn-primary;
+    }
+
+    .te-close-button {
+      @extend .btn;
+      @extend .btn-secondary;
+    }
+  }
+
+  .tui-editor-defaultUI .te-tab button {
+    // This is hardcoded in the library for the toolbar height
+    height: 31px;
+  }
+
+  .tui-editor-defaultUI-toolbar {
+    background-color: $u-theme-variables--bg-offset;
+    border-bottom: 1px solid $border-color;
+    color: color-yiq($u-theme-variables--bg-offset);
+
+    .te-popup-add-table {
+      background-color: $u-theme-variables--bg-offset;
+      border-color: $border-color;
+      color: color-yiq($u-theme-variables--bg-offset);
+    }
+
+    .tui-scrollsync {
+      @extend .btn;
+      @extend .btn-secondary;
+
+      &:after {
+        font-size: $font-size-sm;
+        font-weight: normal;
+        vertical-align: top;
+      }
+    }
+
+    .tui-toolbar-icons {
+      background: $u-theme-variables--bg-offset;
+      border-color: transparent;
+      color: color-yiq($u-theme-variables--bg-offset);
+      display: flex;
+      justify-content: center;
+
+      &.active,
+      &:active,
+      &:hover {
+        background: $u-theme-variables--bg-offset;
+        border-color: $border-color;
+        color: color-yiq($u-theme-variables--bg-offset);
+      }
+
+      &::before {
+        @include font-awesome();
+
+        // font awesome standard size
+        font-size: 14px;
+      }
+
+      .tui-toolbar-divider {
+        border-color: $secondary;
+      }
+
+      &.tui-heading::before {
+        content: '\f1dc';
+      }
+
+      &.tui-bold::before {
+        content: '\f032';
+      }
+
+      &.tui-italic::before {
+        content: '\f033';
+      }
+
+      &.tui-strike::before {
+        content: '\f0cc';
+      }
+
+      &.tui-hrline::before {
+        content: '\f068';
+      }
+
+      &.tui-quote::before {
+        content: '\f10d';
+      }
+
+      &.tui-ul::before {
+        content: '\f0ca';
+      }
+
+      &.tui-ol::before {
+        content: '\f0cb';
+      }
+
+      &.tui-task::before {
+        content: '\f046';
+      }
+
+      &.tui-indent::before {
+        content: '\f03c';
+      }
+
+      &.tui-outdent::before {
+        content: '\f03b';
+      }
+
+      &.tui-table::before {
+        content: '\f0ce';
+      }
+
+      &.tui-image::before {
+        content: '\f03e';
+      }
+
+      &.tui-link::before {
+        content: '\f0c1';
+      }
+
+      &.tui-code::before {
+        content: '\f121';
+      }
+
+      &.tui-codeblock::before {
+        content: 'CB';
+        font-family: monospace;
+      }
+
+      &.tui-more::before {
+        content: '\f141';
+      }
+
+      &.tui-color::before {
+        color: $danger;
+        content: '\f031';
+      }
+    }
+  }
+}
