@@ -173,8 +173,7 @@ const sharedResources = [
     source: resolver.resolveModulePath('tui-editor/dist', __dirname),
     target: 'vendor/tui-editor',
     css: [
-      'tui-editor.min.css',
-      'tui-editor-contents.min.css'
+      'tui-editor.min.css'
     ],
     scripts: [
       'tui-editor-Viewer.min.js',

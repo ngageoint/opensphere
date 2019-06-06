@@ -105,7 +105,9 @@ os.ui.text.TuiEditorCtrl = function($scope, $element, $timeout) {
   $scope['text'] = $scope['text'] || '';
 
   $timeout(function() {
-    this.init();
+    if (this.scope) {
+      this.init();
+    }
   }.bind(this));
 
   $scope.$on('$destroy', this.destroy.bind(this));
