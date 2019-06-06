@@ -151,7 +151,7 @@ os.ui.text.TuiEditorCtrl.prototype.getOptions = function() {
     'linkAttribute': {
       'target': 'blank'
     },
-    'initialValue': this.scope['text'],
+    'initialValue': this.scope['text'] || '',
     'initialEditType': os.settings.get(os.ui.text.TuiEditor.MODE_KEY, 'wysiwyg'),
     'toolbarItems': this.getToolbar(),
     'events': {
@@ -179,13 +179,15 @@ os.ui.text.TuiEditorCtrl.prototype.init = function() {
     // HACK. There are no hooks to change the button text. So change it after the editor renders
     // Opened issue #524 on github
     this.timeout_(function() {
-      var markdownButtonElement = this.element_.find('button.te-switch-button.markdown');
-      if (markdownButtonElement.length) {
-        markdownButtonElement.text('Text');
-      }
-      var wysiwygButtonElement = this.element_.find('button.te-switch-button.wysiwyg');
-      if (wysiwygButtonElement.length) {
-        wysiwygButtonElement.text('Visual');
+      if (this.element_) {
+        var markdownButtonElement = this.element_.find('button.te-switch-button.markdown');
+        if (markdownButtonElement.length) {
+          markdownButtonElement.text('Text');
+        }
+        var wysiwygButtonElement = this.element_.find('button.te-switch-button.wysiwyg');
+        if (wysiwygButtonElement.length) {
+          wysiwygButtonElement.text('Visual');
+        }
       }
     }.bind(this));
   } else {
