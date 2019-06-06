@@ -118,3 +118,9 @@ body {
     cursor: pointer;
   }
 }
+
+// We prefer cleaner lines rather that indentations
+ol,
+ul {
+  padding-left: 1rem;
+}

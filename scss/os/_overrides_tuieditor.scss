@@ -72,49 +72,33 @@
     }
   }
 
+  // Instead of adding the contents and overriding them, just use the ones we want
   .tui-editor-contents {
-    // Each one has different colors
-    border-color: darken($input-color, 8%);
-    color: $input-color;
+    *:not(table) {
+      line-height: $line-height-base;
+    }
 
     img {
       @include img-fluid;
     }
 
-    // * {
-    //   color: inherit;
-    // }
-
-    a {
-      color: $link-color;
-    }
-
-    h1,
-    h2,
-    h3,
-    h4
-    h5,
-    h6,
-    p,
-    ul {
-      color: $input-color;
-    }
-
-    pre,
-    table th {
-      background-color: $u-theme-variables--bg-offset;
-      border-color: darken($input-color, 8%);
-      border-top: 1px solid darken($input-color, 8%);
-      color: color-yiq($u-theme-variables--bg-offset);
-    }
-
-    pre,
     code {
+      background-color: $u-theme-variables--bg-offset;
       color: $danger;
+      font-family: $font-family-monospace;
     }
 
-    blockquote {
-      color: $text-muted;
+    table {
+      th {
+        background-color: $u-theme-variables--bg-offset;
+        color: color-yiq($u-theme-variables--bg-offset);
+      }
+
+      th,
+      td {
+        border: 1px solid darken($input-color, 8%);
+        padding: .25rem .75rem;
+      }
     }
   }
 
