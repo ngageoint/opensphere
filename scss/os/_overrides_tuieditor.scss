@@ -61,6 +61,7 @@
       color: $text-muted;
     }
 
+    .te-heading-add,
     .te-tab button:hover,
     .te-tab .te-tab-active,
     .te-switch-button.active,
@@ -178,9 +179,10 @@
     }
   }
 
+  .tui-popup-wrapper,
   .tui-editor-popup {
-    .tui-popup-wrapper,
-    .tui-popup-body {
+    .tui-popup-body,
+    button:not(.tui-popup-close-button) {
       background-color: $u-theme-variables--bg-offset;
       border-color: $border-color;
       color: color-yiq($u-theme-variables--bg-offset);
@@ -197,6 +199,8 @@
         @include gradient-bg($dropdown-link-hover-bg);
       }
 
+      ul li:hover,
+      button:hover,
       .te-tab button:hover,
       .te-tab .te-tab-active,
       .te-switch-button.active {
