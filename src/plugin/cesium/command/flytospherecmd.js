@@ -26,10 +26,17 @@ plugin.cesium.command.FlyToSphere = function(sphere, opt_options) {
    */
   this.oldPosition_ = os.map.mapContainer.persistCameraState();
 
+  var cam = /** @type {plugin.cesium.Camera} */ (os.map.mapContainer.getWebGLCamera());
+  var minRange = cam.calcDistanceForResolution(
+      os.map.zoomToResolution(os.map.MAX_AUTO_ZOOM, os.map.PROJECTION),
+      Cesium.Cartographic.fromCartesian(sphere.center).latitude);
+
   // gets the default offset
   var camera = /** @type {plugin.cesium.Camera} */ (os.map.mapContainer.getWebGLCamera());
   var offset = new Cesium.HeadingPitchRange(camera.cam_.heading, camera.cam_.pitch,
-    os.command.FlyToExtent.DEFAULT_BUFFER * 2 * sphere.radius || 10000);
+    os.command.FlyToExtent.DEFAULT_BUFFER * 2 * sphere.radius);
+
+  offset.range = Math.max(offset.range, minRange);
 
   /**
    * @type {Cesium.optionsCameraFlyToBoundingSphere}
