@@ -1,6 +1,7 @@
 goog.provide('os.data.groupby.BaseGroupBy');
 goog.require('goog.Disposable');
 goog.require('goog.array');
+goog.require('goog.log');
 goog.require('os.data.groupby.INodeGroupBy');
 goog.require('os.structs.ITreeNode');
 goog.require('os.structs.TreeNode');
@@ -16,6 +17,13 @@ os.data.groupby.BaseGroupBy = function() {
   os.data.groupby.BaseGroupBy.base(this, 'constructor');
 
   /**
+   * Logger
+   * @type {goog.log.Logger}
+   * @protected
+   */
+  this.log = os.data.groupby.BaseGroupBy.LOGGER_;
+
+  /**
    * @type {Object.<!string, !os.structs.ITreeNode>}
    * @private
    */
@@ -28,6 +36,15 @@ os.data.groupby.BaseGroupBy = function() {
   this.countsById_ = null;
 };
 goog.inherits(os.data.groupby.BaseGroupBy, goog.Disposable);
+
+
+/**
+ * Logger
+ * @type {goog.log.Logger}
+ * @private
+ * @const
+ */
+os.data.groupby.BaseGroupBy.LOGGER_ = goog.log.getLogger('os.data.groupby.BaseGroupBy');
 
 
 /**
