@@ -462,6 +462,9 @@ plugin.cesium.reduceBoundingSphere = function(sphere, geom) {
 
         sphere = !sphere ? scratchSphere.clone() : Cesium.BoundingSphere.union(scratchSphere, sphere, sphere);
       }
+
+      plugin.cesium.scratchCoord_ = scratchCoord;
+      plugin.cesium.scratchSphere = scratchSphere;
     }
   }
 

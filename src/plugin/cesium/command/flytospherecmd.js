@@ -29,10 +29,7 @@ plugin.cesium.command.FlyToSphere = function(sphere, opt_options) {
   // gets the default offset
   var camera = /** @type {plugin.cesium.Camera} */ (os.map.mapContainer.getWebGLCamera());
   var offset = new Cesium.HeadingPitchRange(camera.cam_.heading, camera.cam_.pitch,
-    os.command.FlyToExtent.DEFAULT_BUFFER *
-      (Cesium.Cartesian3.magnitude(sphere.center) + sphere.radius - Cesium.Ellipsoid.WGS84.maximumRadius));
-
-  offset.range = Math.max(offset.range, 10000);
+    os.command.FlyToExtent.DEFAULT_BUFFER * 2 * sphere.radius || 10000);
 
   /**
    * @type {Cesium.optionsCameraFlyToBoundingSphere}
