@@ -31,12 +31,19 @@ plugin.cesium.command.FlyToSphere = function(sphere, opt_options) {
       os.map.zoomToResolution(os.map.MAX_AUTO_ZOOM, os.map.PROJECTION),
       Cesium.Cartographic.fromCartesian(sphere.center).latitude);
 
+  sphere.radius = sphere.radius || 10;
+
   // gets the default offset
   var camera = /** @type {plugin.cesium.Camera} */ (os.map.mapContainer.getWebGLCamera());
   var offset = new Cesium.HeadingPitchRange(camera.cam_.heading, camera.cam_.pitch,
     os.command.FlyToExtent.DEFAULT_BUFFER * 2 * sphere.radius);
 
   offset.range = Math.max(offset.range, minRange);
+
+  // the min range needs to include the furthest eye offset for the given sphere altitude
+  // @see plugin.cesium.sync.VectorSynchronizer.updateLabelOffsets
+  var distance = Cesium.Cartographic.fromCartesian(sphere.center).height + offset.range;
+  offset.range += os.command.FlyToExtent.DEFAULT_BUFFER * distance / 10;
 
   /**
    * @type {Cesium.optionsCameraFlyToBoundingSphere}
