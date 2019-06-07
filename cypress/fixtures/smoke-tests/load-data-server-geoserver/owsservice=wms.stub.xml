@@ -5975,18 +5975,10 @@
         <Style>
           <Name>ACLED_Event:ACLED Event</Name>
           <Title>ACLED Event</Title>
-          <LegendURL width="20" height="20">
-            <Format>image/png</Format>
-            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://gdp-geoserver.dev.dev.east.paas.geointservices.io/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=OSDS%3AACLED_Event"/>
-          </LegendURL>
         </Style>
         <Style>
           <Name>ACLED_Event:ACLED Event</Name>
           <Title>ACLED Event</Title>
-          <LegendURL width="20" height="20">
-            <Format>image/png</Format>
-            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://gdp-geoserver.dev.dev.east.paas.geointservices.io/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=OSDS%3AACLED_Event&amp;style=ACLED%20Event"/>
-          </LegendURL>
         </Style>
       </Layer>
       <Layer queryable="1" opaque="0">
@@ -6011,18 +6003,10 @@
         <Style>
           <Name>VIIRS_Detection:VIIRS Detection</Name>
           <Title>VIIRS Detection Event</Title>
-          <LegendURL width="20" height="20">
-            <Format>image/png</Format>
-            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://gdp-geoserver.dev.dev.east.paas.geointservices.io/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=OSDS%3AVIIRS_Detection"/>
-          </LegendURL>
         </Style>
         <Style>
           <Name>VIIRS_Detection:VIIRS Detection</Name>
           <Title>VIIRS Detection Event</Title>
-          <LegendURL width="20" height="20">
-            <Format>image/png</Format>
-            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://gdp-geoserver.dev.dev.east.paas.geointservices.io/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=OSDS%3AVIIRS_Detection&amp;style=VIIRS%20Detection"/>
-          </LegendURL>
         </Style>
       </Layer>
     </Layer>

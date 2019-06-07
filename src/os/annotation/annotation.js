@@ -3,6 +3,7 @@ goog.provide('os.annotation');
 goog.require('ol.geom.GeometryType');
 goog.require('os.annotation.TailStyle');
 goog.require('os.ui');
+goog.require('os.ui.color.colorPickerDirective');
 
 
 /**
@@ -17,7 +18,9 @@ os.annotation.DEFAULT_OPTIONS = {
   showDescription: true,
   showTail: os.annotation.TailStyle.DEFAULT,
   size: [200, 100],
-  offset: [0, -75]
+  offset: [0, -75],
+  headerBG: undefined,
+  bodyBG: undefined
 };
 
 

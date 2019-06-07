@@ -53,6 +53,13 @@ describe('Import state file', function() {
     cy.get(os.statusBar.COORDINATES_TEXT).should('contain', '+39');
     cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4).should('contain', 'Police Stations Features (3)');
     cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_5).should('contain', 'Fire Hydrants Features (747)');
+    cy.get(os.layersDialog.Tabs.Layers.Tree.Type.mapLayer.STREET_MAP_TILES)
+        .find(os.layersDialog.Tabs.Layers.Tree.LAYER_TOGGLE_CHECKBOX_WILDCARD)
+        .click();
+    cy.get(os.layersDialog.Tabs.Layers.Tree.Type.mapLayer.WORLD_IMAGERY_TILES)
+        .find(os.layersDialog.Tabs.Layers.Tree.LAYER_TOGGLE_CHECKBOX_WILDCARD)
+        .click();
+    cy.imageComparison('features loaded');
     cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_5).rightClick();
     cy.get(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.Server.contextMenu.menuOptions.FEATURE_ACTIONS).click();
     cy.get(os.featureActionsDialog.DIALOG).should('be.visible');
@@ -92,6 +99,13 @@ describe('Import state file', function() {
         .find(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.REMOVE_LAYER_BUTTON_WILDCARD)
         .click();
     cy.get(os.layersDialog.DIALOG).should('not.contain', 'Police Stations Features');
+    cy.imageComparison('features removed');
+    cy.get(os.layersDialog.Tabs.Layers.Tree.Type.mapLayer.STREET_MAP_TILES)
+        .find(os.layersDialog.Tabs.Layers.Tree.LAYER_TOGGLE_CHECKBOX_WILDCARD)
+        .click();
+    cy.get(os.layersDialog.Tabs.Layers.Tree.Type.mapLayer.WORLD_IMAGERY_TILES)
+        .find(os.layersDialog.Tabs.Layers.Tree.LAYER_TOGGLE_CHECKBOX_WILDCARD)
+        .click();
     cy.get(os.layersDialog.Tabs.Areas.TAB).click();
     cy.get(os.layersDialog.Tabs.Areas.Tree.AREA_4).click();
     cy.get(os.layersDialog.Tabs.Areas.Tree.AREA_4)

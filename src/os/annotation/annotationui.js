@@ -54,7 +54,9 @@ os.ui.Module.directive('annotation', [os.annotation.annotationDirective]);
  */
 os.annotation.UI_TEMPLATE_ =
   '<div class="c-annotation u-hover-container">' +
-    '<svg class="c-annotation__svg"><path/></svg>' +
+    '<svg class="c-annotation__svg">' +
+      '<path ng-style="{ fill: ctrl.options.showDescription ? ctrl.options.bodyBG : ctrl.options.headerBG}" />' +
+    '</svg>' +
     '<div class="c-annotation__controls position-absolute text-right w-100" ng-if="ctrl.options.editable">' +
         '<button class="btn btn-sm btn-outline-secondary border-0 bg-transparent animate-fade u-hover-show"' +
           'title="Edit annotation"' +
@@ -65,10 +67,12 @@ os.annotation.UI_TEMPLATE_ =
       '<div class="js-annotation card h-100">' +
         '<div class="card-header flex-shrink-0 text-truncate px-1 py-0" title="{{ctrl.name}}"' +
           'ng-show="ctrl.options.showName"' +
-          'ng-class="!ctrl.options.showDescription && \'h-100 border-0\'">' +
+          'ng-class="!ctrl.options.showDescription && \'h-100 border-0\'"' +
+          'ng-style="{background: ctrl.options.headerBG }">' +
           '{{ctrl.name}}' +
         '</div>' +
-        '<div class="card-body p-1 u-overflow-y-auto" ng-show="ctrl.options.showDescription">' +
+        '<div class="card-body p-1 u-overflow-y-auto" ng-show="ctrl.options.showDescription"' +
+        'ng-style="{background: ctrl.options.bodyBG }">' +
         ' <simplemde text="ctrl.description" edit="false" is-required="false" maxlength="4000"></simplemde>' +
         '</div>' +
       '</div>' +
@@ -154,6 +158,10 @@ os.annotation.AnnotationCtrl = function($scope, $element, $timeout) {
    * @type {!osx.annotation.Options}
    */
   this['options'] = /** @type {!osx.annotation.Options} */ (this.feature.get(os.annotation.OPTIONS_FIELD));
+
+  // if background color isnt set, set it to current default themes
+  this['options'].bodyBG = this['options'].bodyBG || undefined;
+  this['options'].headerBG = this['options'].headerBG || undefined;
 
   ol.events.listen(this.feature, ol.events.EventType.CHANGE, this.onFeatureChange_, this);
   ol.events.listen(this.overlay, 'change:visible', this.onOverlayVisibleChange_, this);
@@ -260,6 +268,7 @@ os.annotation.AnnotationCtrl.prototype.onFeatureChange_ = function() {
   if (this.feature && this.scope) {
     this['name'] = os.annotation.getNameText(this.feature);
     this['description'] = os.annotation.getDescriptionText(this.feature);
+    this['options'] = /** @type {!osx.annotation.Options} */ (this.feature.get(os.annotation.OPTIONS_FIELD));
 
     if (this['options'].show) {
       this.updateTail_();

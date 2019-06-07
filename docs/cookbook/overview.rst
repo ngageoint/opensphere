@@ -15,3 +15,4 @@ For extended examples, see the Guides.
   osm/index
   audionotification/index
   pelias/index
+  metrics/index
