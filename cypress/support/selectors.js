@@ -2287,8 +2287,9 @@ exports.Map = {
   OVERVIEW_MAP_TOGGLE_BUTTON: '[title=\'Overview map\']',
   ZOOM_IN_BUTTON: '.ol-zoom-in',
   ZOOM_OUT_BUTTON: '.ol-zoom-out',
-  ROTATION_BUTTON: '.ol-compass',
-  MAP_MODE_BUTTON: '.ol-mapmode-toggle',
+  ROTATION_BUTTON: '.ol-rotate',
+  MAP_MODE_BUTTON: '.ol-mapmode',
+  ATTRIBUTION: '.ol-attribution',
   contextMenu: {
     PANEL: '#menu',
     menuOptions: {
