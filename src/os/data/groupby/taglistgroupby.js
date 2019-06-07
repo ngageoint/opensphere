@@ -60,10 +60,12 @@ os.data.groupby.TagListGroupBy.prototype.getGroupIds = function(node) {
 
   if (tags && this.list_) {
     for (var i = 0, n = tags.length; i < n; i++) {
-      var t = tags[i].toUpperCase();
+      if (tags[i]) {
+        var t = tags[i].toUpperCase();
 
-      if (this.list_.indexOf(t) > -1) {
-        goog.array.insert(ids, 'a' + t);
+        if (this.list_.indexOf(t) > -1) {
+          goog.array.insert(ids, 'a' + t);
+        }
       }
     }
   }
