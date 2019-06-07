@@ -186,7 +186,7 @@ os.ui.data.AddDataCtrl.prototype.onChildrenChanged = function(e) {
 os.ui.data.AddDataCtrl.prototype.search = function() {
   if (this.root && this.treeSearch && this.searchDelay_) {
     var list = this.root.getChildren() || [];
-    this.treeSearch.setSearch(/** @type {!Array.<!os.structs.ITreeNode>} */ (list.filter(
+    this.treeSearch.setSearch(/** @type {!Array.<!os.ui.slick.SlickTreeNode>} */ (list.filter(
         os.ui.data.AddDataCtrl.listFilter_)));
     this.searchDelay_.start();
 
@@ -196,7 +196,7 @@ os.ui.data.AddDataCtrl.prototype.search = function() {
 
 
 /**
- * @param {os.data.IDataProvider} item
+ * @param {os.ui.slick.SlickTreeNode} item
  * @param {number} i
  * @param {Array} arr
  * @return {boolean}
@@ -214,13 +214,40 @@ os.ui.data.AddDataCtrl.listFilter_ = function(item, i, arr) {
     }
 
     // exclude providers without children so users don't think they can do something with them (unless flagged)
-    var children = item.getChildren();
-    return item.getShowWhenEmpty() || (!!children && children.length > 0);
+    if (os.ui.data.AddDataCtrl.itemHasChildren_(item)) {
+      return true;
+    } else {
+      return os.ui.data.AddDataCtrl.showWhenEmpty_(item);
+    }
   }
 
   return false;
 };
 
+/**
+ * Check if the item should be shown even if empty.
+ *
+ * @param {os.ui.slick.SlickTreeNode} item
+ * @return {boolean} if should be shown even when empty
+ */
+os.ui.data.AddDataCtrl.showWhenEmpty_ = function(item) {
+  if (os.implements(item, os.data.IDataProvider.ID)) {
+    var dataProviderItem = /** @type {os.data.IDataProvider} */ (item);
+    return dataProviderItem.getShowWhenEmpty();
+  }
+  return false;
+};
+
+/**
+ * Check if a tree node has child nodes.
+ *
+ * @param {os.ui.slick.SlickTreeNode} item
+ * @return {boolean}
+ */
+os.ui.data.AddDataCtrl.itemHasChildren_ = function(item) {
+  var children = item.getChildren();
+  return (!!children && children.length > 0);
+};
 
 /**
  * Handles group by selection change

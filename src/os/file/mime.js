@@ -52,10 +52,27 @@ os.file.mime.root_ = {
  * @return {boolean} True if successful, false otherwise
  */
 os.file.mime.register = function(mimeType, detectFunc, opt_priority, opt_parentType) {
+  var msg;
+  if (!mimeType) {
+    msg = 'Cannot register an undefined type!';
+    goog.log.error(os.file.mime.LOGGER_, msg);
+    console.error(msg);
+    return false;
+  }
+
+  if (!detectFunc) {
+    msg = 'Cannot register an undefined detect function!';
+    goog.log.error(os.file.mime.LOGGER_, msg);
+    console.error(msg);
+    return false;
+  }
+
   var parent = opt_parentType ? os.file.mime.find_(opt_parentType) : os.file.mime.root_;
 
   if (!parent) {
-    goog.log.error(os.file.mime.LOGGER_, 'The parent type "' + opt_parentType + '" could not be found.');
+    msg = 'The parent type "' + opt_parentType + '" could not be found.';
+    goog.log.error(os.file.mime.LOGGER_, msg);
+    console.error(msg);
     return false;
   }
 
