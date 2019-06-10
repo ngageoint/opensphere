@@ -72,14 +72,14 @@ tui.Editor.prototype.isMarkdownMode = function() {};
 /**
  * @type {Object}
  */
-tui.Editor.markdownitHighlight = {};
+tui.Editor.markdownit = {};
 
 
 /**
  * @param {string} markdown
  * @return {string}
  */
-tui.Editor.markdownitHighlight.render = function(markdown) {};
+tui.Editor.markdownit.render = function(markdown) {};
 
 
 /**

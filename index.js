@@ -137,50 +137,19 @@ const sharedResources = [
     files: ['images']
   },
   {
-    source: resolver.resolveModulePath('markdown-it/dist', __dirname),
-    target: 'vendor/tui-editor',
-    scripts: ['markdown-it.min.js']
-  },
-  {
-    source: resolver.resolveModulePath('to-mark/dist', __dirname),
-    target: 'vendor/tui-editor',
-    scripts: ['to-mark.min.js']
-  },
-  {
-    source: resolver.resolveModulePath('highlight.js/lib', __dirname),
-    target: 'vendor/tui-editor',
-    scripts: ['highlight.js']
-  },
-  {
-    source: resolver.resolveModulePath('squire-rte/build', __dirname),
-    target: 'vendor/tui-editor',
-    scripts: ['squire.js']
-  },
-  {
     source: resolver.resolveModulePath('codemirror/lib', __dirname),
     target: 'vendor/tui-editor',
-    css: [
-      'codemirror.css'
-    ],
-    scripts: ['codemirror.js']
-  },
-  {
-    source: resolver.resolveModulePath('tui-code-snippet/dist', __dirname),
-    target: 'vendor/tui-editor',
-    scripts: ['tui-code-snippet.min.js']
+    css: ['codemirror.css']
   },
   {
     source: resolver.resolveModulePath('tui-editor/dist', __dirname),
     target: 'vendor/tui-editor',
-    css: [
-      'tui-editor.min.css'
-    ],
-    scripts: [
-      'tui-editor-Viewer.min.js',
-      'tui-editor-Editor.min.js',
-      'tui-editor-extTable.min.js',
-      'tui-editor-extScrollSync.min.js'
-    ]
+    css: ['tui-editor.min.css']
+  },
+  {
+    source: 'vendor/os-minified/',
+    target: 'vendor/os-minified/tui-editor',
+    scripts: ['os-tui-editor.min.js']
   },
   {
     source: resolver.resolveModulePath('crossfilter2', __dirname),
