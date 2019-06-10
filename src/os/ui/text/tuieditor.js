@@ -7,31 +7,6 @@ goog.require('os.ui.Module');
 
 
 /**
- * Toolbar buttons
- * @type {Array}
- */
-os.ui.text.TuiEditor.TOOLBAR = [
-  'heading',
-  'bold',
-  'italic',
-  'strike',
-  'divider',
-  'hr',
-  'quote',
-  'ul',
-  'ol',
-  'task',
-  'indent',
-  'outdent',
-  'divider',
-  'table',
-  'image',
-  'link',
-  'code'
-];
-
-
-/**
  * @type {string}
  */
 os.ui.text.TuiEditor.MODE_KEY = 'tuieditor.mode';
@@ -158,7 +133,7 @@ os.ui.text.TuiEditorCtrl.prototype.getOptions = function() {
       'change': this.onChange_.bind(this)
     },
     'codeBlockLanguages': ['markdown'],
-    'usedefaultHTMLSanitizer': false,
+    'usedefaultHTMLSanitizer': true,
     'useCommandShortcut': false,
     'usageStatistics': false,
     'exts': this.getExtensions(),
@@ -270,7 +245,6 @@ os.ui.text.TuiEditorCtrl.prototype.getExtensions = function() {
     // 'colorSyntax', This is a really cool extension, however it addes invalid markdown that we sanitize out
     // After we fix the sanitizer, we can re-enable it. Leaving this code comment in for people to know why
     // it was excluded
-    'scrollSync',
     'table'
   ];
 };
@@ -300,10 +274,10 @@ os.ui.text.TuiEditorCtrl.prototype.setTargetBlankPropertyInLinks = function() {
 
 /**
  * @param {string=} opt_markdown
- * @return {Node|jQuery} - markdown parsed to html
+ * @return {string} - markdown parsed to html
  */
 os.ui.text.TuiEditor.render = function(opt_markdown) {
-  return $(opt_markdown ? tui.Editor.markdownitHighlight.render(opt_markdown) : '');
+  return opt_markdown ? tui.Editor.markdownit.render(opt_markdown) : '';
 };
 
 
@@ -313,7 +287,7 @@ os.ui.text.TuiEditor.render = function(opt_markdown) {
  * @return {string}
  */
 os.ui.text.TuiEditor.getUnformatedText = function(opt_markdown) {
-  var html = /** @type {jQuery} */ (os.ui.text.TuiEditor.render(opt_markdown));
+  var html = $(os.ui.text.TuiEditor.render(opt_markdown));
   if (html && html.length) {
     return goog.string.normalizeSpaces(goog.string.normalizeWhitespace(/** @type {string} */ (html.text())));
   } else {
