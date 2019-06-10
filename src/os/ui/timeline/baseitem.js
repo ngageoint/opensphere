@@ -6,6 +6,7 @@ goog.require('os.ui.timeline.ITimelineItem');
 
 /**
  * Base timeline item
+ * @abstract
  * @constructor
  * @extends {goog.events.EventTarget}
  * @implements {os.ui.timeline.ITimelineItem}
@@ -140,21 +141,24 @@ os.ui.timeline.BaseItem.prototype.setActions = function(value) {
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.ui.timeline.BaseItem.prototype.getExtent = goog.abstractMethod;
+os.ui.timeline.BaseItem.prototype.getExtent = function() {};
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.ui.timeline.BaseItem.prototype.getAvg = goog.abstractMethod;
+os.ui.timeline.BaseItem.prototype.getAvg = function() {};
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.ui.timeline.BaseItem.prototype.render = goog.abstractMethod;
+os.ui.timeline.BaseItem.prototype.render = function() {};
 
 
 /**

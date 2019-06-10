@@ -5,6 +5,7 @@ goog.require('os.search.FacetSet');
 
 
 /**
+ * @abstract
  * @constructor
  */
 plugin.descriptor.facet.BaseFacet = function() {};
@@ -12,21 +13,23 @@ plugin.descriptor.facet.BaseFacet = function() {};
 
 /**
  * Loads available facets from the descriptor
+ * @abstract
  * @param {!os.data.IDataDescriptor} descriptor
  * @param {!os.search.FacetSet} facets
  * @return {goog.Promise|undefined} undefined for synchronous or promise that resolves when the facet counts load
  */
-plugin.descriptor.facet.BaseFacet.prototype.load = goog.abstractMethod;
+plugin.descriptor.facet.BaseFacet.prototype.load = function(descriptor, facets) {};
 
 
 /**
  * Tests applied facets against the descriptor
+ * @abstract
  * @param {!os.data.IDataDescriptor} descriptor
  * @param {os.search.AppliedFacets} facets
  * @param {Object<string, number>} results
  * @return {goog.Promise|undefined} undefined for synchronous or promise that resolves when the test finishes
  */
-plugin.descriptor.facet.BaseFacet.prototype.test = goog.abstractMethod;
+plugin.descriptor.facet.BaseFacet.prototype.test = function(descriptor, facets, results) {};
 
 
 /**

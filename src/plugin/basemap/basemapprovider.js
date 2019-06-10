@@ -58,6 +58,7 @@ plugin.basemap.BaseMapProvider = function() {
   os.dispatcher.listen('basemapAddFailover', this.activateFailSet, false, this);
 };
 goog.inherits(plugin.basemap.BaseMapProvider, os.ui.data.DescriptorProvider);
+os.implements(plugin.basemap.BaseMapProvider, os.data.IDataProvider.ID);
 
 
 /**
@@ -289,4 +290,12 @@ plugin.basemap.BaseMapProvider.prototype.onTerrainDisabled = function(event) {
     this.removeDescriptor(descriptor);
     goog.dispose(descriptor);
   }
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.basemap.BaseMapProvider.prototype.getErrorMessage = function() {
+  return null;
 };

@@ -38,7 +38,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'OpenSphere'
-copyright = u'2016'
+copyright = u'2019'
 author = u'William Wall, Kevin Schmidt & contributors'
 version = u'latest'
 release = u'latest'

@@ -10,6 +10,7 @@ goog.require('os.ui.window');
 
 /**
  * Abstract controller for a file import UI.
+ * @abstract
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @constructor
@@ -110,10 +111,11 @@ os.ui.file.ui.AbstractFileImportCtrl.prototype.onTitleChange = function(newVal) 
 
 /**
  * Create a descriptor for the import.
+ * @abstract
  * @return {DESCRIPTOR}
  * @protected
  */
-os.ui.file.ui.AbstractFileImportCtrl.prototype.createDescriptor = goog.abstractMethod;
+os.ui.file.ui.AbstractFileImportCtrl.prototype.createDescriptor = function() {};
 
 
 /**

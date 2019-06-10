@@ -17,4 +17,4 @@ os.data.IExtent.ID = 'os.data.IExtent';
 /**
  * @return {?ol.Extent} The extent or null
  */
-os.data.IExtent.prototype.getExtent = goog.abstractMethod;
+os.data.IExtent.prototype.getExtent;

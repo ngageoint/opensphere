@@ -4,6 +4,7 @@ goog.provide('os.annotation.annotationDirective');
 goog.require('goog.Disposable');
 goog.require('goog.async.ConditionalDelay');
 goog.require('os.annotation');
+goog.require('os.annotation.TailStyle');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.ui.Module');
 goog.require('os.ui.text.simpleMDEDirective');
@@ -53,25 +54,29 @@ os.ui.Module.directive('annotation', [os.annotation.annotationDirective]);
  */
 os.annotation.UI_TEMPLATE_ =
   '<div class="c-annotation u-hover-container">' +
-    '<svg class="c-annotation__svg"><path/></svg>' +
+    '<svg class="c-annotation__svg">' +
+      '<path ng-style="{ fill: ctrl.options.showDescription ? ctrl.options.bodyBG : ctrl.options.headerBG}" />' +
+    '</svg>' +
     '<div class="c-annotation__controls position-absolute text-right w-100" ng-if="ctrl.options.editable">' +
-      '<button class="btn btn-sm btn-outline-secondary border-0 bg-transparent animate-fade u-hover-show"' +
+        '<button class="btn btn-sm btn-outline-secondary border-0 bg-transparent animate-fade u-hover-show"' +
           'title="Edit annotation"' +
           'ng-click="ctrl.editAnnotation()">' +
-        '<i class="fa fa-pencil"></i>' +
-      '</button>' +
-    '</div>' +
-    '<div class="js-annotation card h-100">' +
-      '<div class="card-header flex-shrink-0 text-truncate px-1 py-0" title="{{ctrl.name}}"' +
+          '<i class="fa fa-pencil"></i>' +
+        '</button>' +
+      '</div>' +
+      '<div class="js-annotation card h-100">' +
+        '<div class="card-header flex-shrink-0 text-truncate px-1 py-0" title="{{ctrl.name}}"' +
           'ng-show="ctrl.options.showName"' +
-          'ng-class="!ctrl.options.showDescription && \'h-100 border-0\'">' +
-        '{{ctrl.name}}' +
+          'ng-class="!ctrl.options.showDescription && \'h-100 border-0\'"' +
+          'ng-style="{background: ctrl.options.headerBG }">' +
+          '{{ctrl.name}}' +
+        '</div>' +
+        '<div class="card-body p-1 u-overflow-y-auto" ng-show="ctrl.options.showDescription"' +
+        'ng-style="{background: ctrl.options.bodyBG }">' +
+        ' <simplemde text="ctrl.description" edit="false" is-required="false" maxlength="4000"></simplemde>' +
+        '</div>' +
       '</div>' +
-      '<div class="card-body p-1 u-overflow-y-auto" ng-show="ctrl.options.showDescription">' +
-        '<simplemde text="ctrl.description" edit="false" is-required="false" maxlength="4000"></simplemde>' +
-      '</div>' +
-    '</div>' +
-  '</div>';
+    '</div>';
 
 
 
@@ -153,6 +158,10 @@ os.annotation.AnnotationCtrl = function($scope, $element, $timeout) {
    * @type {!osx.annotation.Options}
    */
   this['options'] = /** @type {!osx.annotation.Options} */ (this.feature.get(os.annotation.OPTIONS_FIELD));
+
+  // if background color isnt set, set it to current default themes
+  this['options'].bodyBG = this['options'].bodyBG || undefined;
+  this['options'].headerBG = this['options'].headerBG || undefined;
 
   ol.events.listen(this.feature, ol.events.EventType.CHANGE, this.onFeatureChange_, this);
   ol.events.listen(this.overlay, 'change:visible', this.onOverlayVisibleChange_, this);
@@ -259,6 +268,11 @@ os.annotation.AnnotationCtrl.prototype.onFeatureChange_ = function() {
   if (this.feature && this.scope) {
     this['name'] = os.annotation.getNameText(this.feature);
     this['description'] = os.annotation.getDescriptionText(this.feature);
+    this['options'] = /** @type {!osx.annotation.Options} */ (this.feature.get(os.annotation.OPTIONS_FIELD));
+
+    if (this['options'].show) {
+      this.updateTail_();
+    }
 
     os.ui.apply(this.scope);
   }
@@ -322,7 +336,7 @@ os.annotation.AnnotationCtrl.prototype.setTailType_ = function(type) {
     var svg = this.element.find('svg');
     svg.css('position', type);
 
-    // for fixed positioning, resize the SVG to fill the map bounds. absolute positioning will resize the SVG on each
+    // for fixed positioning, resize the SVG to fill the map bounds. Absolute positioning will resize the SVG on each
     // tail update.
     if (type === os.annotation.TailType.FIXED) {
       var mapRect = this.getMapRect_();
@@ -474,7 +488,14 @@ os.annotation.AnnotationCtrl.prototype.updateTailAbsolute_ = function() {
     }
 
     var cardCenter = [cardOffsetX + cardRect.width / 2, cardOffsetY + cardRect.height / 2];
+    // Changes the annotation tail style
     var anchorWidth = Math.min(cardRect.height, cardRect.width) * .33;
+    if (this['options'].showTail === os.annotation.TailStyle.NOTAIL) {
+      anchorWidth = 0;
+    }
+    if (this['options'].showTail === os.annotation.TailStyle.LINETAIL) {
+      anchorWidth = 1;
+    }
     var linePath = os.annotation.AnnotationCtrl.createTailPath_(cardCenter, pathTarget, anchorWidth);
 
     svg.attr('width', svgWidth);
@@ -537,7 +558,14 @@ os.annotation.AnnotationCtrl.prototype.updateTailFixed_ = function() {
     cardRect.y -= mapRect.y;
 
     var cardCenter = [cardRect.x + cardRect.width / 2, cardRect.y + cardRect.height / 2];
+    // Changes the annotation tail style
     var anchorWidth = Math.min(cardRect.height, cardRect.width) * .33;
+    if (this['options'].showTail === os.annotation.TailStyle.NOTAIL) {
+      anchorWidth = 0;
+    }
+    if (this['options'].showTail === os.annotation.TailStyle.LINETAIL) {
+      anchorWidth = 1;
+    }
     var linePath = os.annotation.AnnotationCtrl.createTailPath_(cardCenter, targetPixel, anchorWidth);
 
     this.element.find('path').attr('d', linePath);
