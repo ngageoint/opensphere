@@ -92,7 +92,7 @@
     "init": "npm run init:base && npm run init:debug && npm run init:version && npm run init:vfolder",
     "lint:css": "sass-lint -v -s scss -i 'scss/nolint/**/*.scss' 'scss/**/*.scss'",
     "lint:js": "eslint --cache 'src/**/*.js' 'cypress/**/*.js'",
-    "lint": "npm run lint:css",
+    "lint": "npm run lint:js && npm run lint:css",
     "compile:dossier": "npm run init:apidoc && os-docs-gen-config dossier.conf.json .build/dossier.conf.json && os-docs -c .build/dossier.conf.json",
     "precompile:resolve": "cp addlayer.js .build",
     "compile:resolve": "os-resolve --outputDir .build --defineRoots $(cat .build/version)",
