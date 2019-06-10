@@ -53,7 +53,7 @@ plugin.cesium.tiles.TilesetImportCtrl.prototype.createDescriptor = function() {
   if (this.config['descriptor']) {
     // existing descriptor, update it
     descriptor = /** @type {!plugin.cesium.tiles.Descriptor} */ (this.config['descriptor']);
-    plugin.cesium.tiles.Descriptor.updateFromConfig(descriptor, this.config);
+    descriptor.updateFromConfig(/** @type {!os.parse.FileParserConfig} */ (this.config));
   } else {
     // this is a new import
     descriptor = plugin.cesium.tiles.Descriptor.createFromConfig(this.config);
