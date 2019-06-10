@@ -59,7 +59,7 @@ os.ui.column.mapping.MappingExpressionCtrl = function($scope, $element, $timeout
   var node = /** @type {os.ui.column.mapping.ColumnModelNode} */ ($scope['node']);
 
   /**
-   * @type {?os.column.ColumnModel}
+   * @type {?osx.column.ColumnModel}
    * @private
    */
   this.model_ = node['model'];
@@ -130,7 +130,7 @@ os.ui.column.mapping.MappingExpressionCtrl.prototype.onColumnChange_ = function(
 
 /**
  * Sets the layer and gets the columns for it.
- * @param {os.ui.ogc.IOGCDescriptor} layer
+ * @param {os.filter.IFilterable} layer
  * @private
  */
 os.ui.column.mapping.MappingExpressionCtrl.prototype.setLayer_ = function(layer) {

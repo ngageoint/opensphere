@@ -12,6 +12,11 @@ goog.require('os.structs.ITreeNode');
  */
 os.data.IDataProvider = function() {};
 
+/**
+ * ID for {@see os.implements}
+ * @const {string}
+ */
+os.data.IDataProvider.ID = 'os.data.IDataProvider';
 
 /**
  * Configures the data provider from the given config object.

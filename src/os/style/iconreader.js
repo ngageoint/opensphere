@@ -154,7 +154,7 @@ os.style.IconReader.prototype.toConfig = function(style, obj) {
  *   1. Those URLs will be inaccessible on other networks
  *   2. To avoid cross-origin security restrictions that result in a tainted canvas
  *
- * @param {Object<string, *>} config
+ * @param {!Object<string, *>} config
  */
 os.style.IconReader.translateIcons = function(config) {
   // fall back to the default icon if none provided

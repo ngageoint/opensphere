@@ -311,8 +311,12 @@ plugin.ogc.wfs.WFSLayerConfig.prototype.addMappings = function(layer, options) {
   }
 
   // tell the importer we want to run a different set of autodetection mappers
-  importer.selectAutoMappings([os.im.mapping.AltMapping.ID, os.im.mapping.RadiusMapping.ID,
-    os.im.mapping.SemiMajorMapping.ID, os.im.mapping.SemiMinorMapping.ID]);
+  importer.selectAutoMappings([
+    os.im.mapping.AltMapping.ID,
+    os.im.mapping.RadiusMapping.ID,
+    os.im.mapping.OrientationMapping.ID,
+    os.im.mapping.SemiMajorMapping.ID,
+    os.im.mapping.SemiMinorMapping.ID]);
 };
 
 

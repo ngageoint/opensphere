@@ -4,6 +4,7 @@ goog.require('os.ui.im.IImportUI');
 
 
 /**
+ * @abstract
  * @implements {os.ui.im.IImportUI<T>}
  * @constructor
  * @template T
@@ -26,9 +27,10 @@ os.ui.im.AbstractImportUI.prototype.getTitle = function() {
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.ui.im.AbstractImportUI.prototype.launchUI = goog.abstractMethod;
+os.ui.im.AbstractImportUI.prototype.launchUI = function(file, config) {};
 
 
 /**

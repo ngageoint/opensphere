@@ -20,11 +20,3 @@ goog.inherits(os.ui.search.NoResult, os.search.AbstractSearchResult);
 os.ui.search.NoResult.prototype.getSearchUI = function() {
   return '<div class="coord-result-card"><div class="result-card-header">No results found</div></div>';
 };
-
-
-/**
- * @inheritDoc
- */
-os.ui.search.NoResult.prototype.setSearchUI = function(value) {
-  // does nothing until the search UI is implemented as a directive
-};

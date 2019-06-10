@@ -163,6 +163,10 @@
   }
 }
 
+.u-text-stroke {
+  text-shadow: -1px -1px 0 color-yiq($body-color), 1px -1px 0 color-yiq($body-color), -1px 1px 0 color-yiq($body-color), 1px 1px 0 color-yiq($body-color);
+}
+
 
 // --------------------------------- Font Utilities --------------------------------- //
 .u-font-family-sans-serif {

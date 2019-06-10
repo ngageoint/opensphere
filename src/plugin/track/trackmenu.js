@@ -26,8 +26,8 @@ plugin.track.menu.layerSetup = function() {
       tooltip: 'Creates a new track by linking selected features (or all features if none are selected) in time order.',
       icons: ['<i class="fa fa-fw fa-share-alt"></i>'],
       metricKey: plugin.track.Metrics.Keys.CREATE_LAYER,
-      beforeRender: plugin.track.menu.visibleIfLayerHasFeatures,
-      handler: plugin.track.menu.handleLayerEvent_
+      beforeRender: plugin.track.menu.visibleIfHasFeatures,
+      handler: plugin.track.menu.handleAddCreateTrackEvent_
     });
 
     group.addChild({
@@ -37,7 +37,7 @@ plugin.track.menu.layerSetup = function() {
       icons: ['<i class="fa fa-fw fa-share-alt"></i>'],
       metricKey: plugin.track.Metrics.Keys.ADD_TO_LAYER,
       beforeRender: plugin.track.menu.visibleIfTracksExist,
-      handler: plugin.track.menu.handleLayerEvent_
+      handler: plugin.track.menu.handleAddCreateTrackEvent_
     });
 
     group.addChild({
@@ -110,15 +110,20 @@ plugin.track.menu.layerSetup = function() {
  * @param {os.ui.menu.layer.Context} context The menu context.
  * @return {boolean} If the context has a single layer containing one or more features.
  */
-plugin.track.menu.layerHasFeatures = function(context) {
-  if (context && context.length == 1 && context[0] instanceof os.data.LayerNode) {
-    var layerNode = /** @type {os.data.LayerNode} */ (context[0]);
-    var layer = layerNode.getLayer();
-    if (layer instanceof os.layer.Vector && layer.getId() !== plugin.track.ID) {
-      var source = layer.getSource();
-      if (source instanceof os.source.Vector) {
-        return source.getFeatureCount() > 0;
+plugin.track.menu.hasFeatures = function(context) {
+  if (context && context.length == 1) {
+    var node = context[0];
+    if (node instanceof os.data.LayerNode) {
+      var layer = node.getLayer();
+      if (layer instanceof os.layer.Vector && layer.getId() !== plugin.track.ID) {
+        var source = layer.getSource();
+        if (source instanceof os.source.Vector) {
+          return source.getFeatureCount() > 0;
+        }
       }
+    } else if (node instanceof plugin.file.kml.ui.KMLNode) {
+      var features = node.getFeatures();
+      return features != null && features.length > 0;
     }
   }
 
@@ -131,8 +136,8 @@ plugin.track.menu.layerHasFeatures = function(context) {
  * @param {os.ui.menu.layer.Context} context The menu context.
  * @this {os.ui.menu.MenuItem}
  */
-plugin.track.menu.visibleIfLayerHasFeatures = function(context) {
-  this.visible = plugin.track.menu.layerHasFeatures(context);
+plugin.track.menu.visibleIfHasFeatures = function(context) {
+  this.visible = plugin.track.menu.hasFeatures(context);
 };
 
 
@@ -143,7 +148,7 @@ plugin.track.menu.visibleIfLayerHasFeatures = function(context) {
  */
 plugin.track.menu.visibleIfTracksExist = function(context) {
   var trackNode = plugin.track.getTrackNode();
-  this.visible = trackNode != null && trackNode.hasFeatures() && plugin.track.menu.layerHasFeatures(context);
+  this.visible = trackNode != null && trackNode.hasFeatures() && plugin.track.menu.hasFeatures(context);
 };
 
 
@@ -523,48 +528,55 @@ plugin.track.menu.getTracks = function(context) {
 
 
 /**
- * Handle track menu events from the layer menu.
+ * Handle add/create events from the layer menu.
  * @param {!os.ui.menu.MenuEvent<os.ui.menu.layer.Context>} event The menu event.
  * @private
  */
-plugin.track.menu.handleLayerEvent_ = function(event) {
-  var layers = os.ui.menu.layer.getLayersFromContext(event.getContext());
-  var layer = layers.length === 1 ? layers[0] : undefined;
-  if (layer instanceof ol.layer.Vector) {
-    var source = layer.getSource();
-    if (source) {
-      // slice the array, because sorting the original will break binary insert/remove
-      var features = source.getSelectedItems();
-      if (features.length == 0) {
-        features = source.getFeatures();
-      }
+plugin.track.menu.handleAddCreateTrackEvent_ = function(event) {
+  var context = event.getContext();
+  if (context && context.length == 1) {
+    var node = context[0];
+    var features;
+    var title;
 
-      if (features.length > 0) {
-        switch (event.type) {
-          case plugin.track.EventType.CREATE_TRACK:
-            var trackTitle = layer.getTitle() + ' Track';
-            plugin.track.promptForTitle(trackTitle).then(function(title) {
-              plugin.track.getSortField(features[0]).then(function(sortField) {
-                var options = /** @type {!plugin.track.CreateOptions} */ ({
-                  features: features,
-                  name: title,
-                  sortField: sortField
-                });
+    if (node instanceof os.data.LayerNode) {
+      var layer = node.getLayer();
+      if (layer instanceof ol.layer.Vector) {
+        title = layer.getTitle() + ' Track';
 
-                plugin.track.createAndAdd(options);
-              });
-            });
-            break;
-          case plugin.track.EventType.ADD_TO:
-            plugin.track.promptForTrack().then(function(track) {
-              if (track) {
-                plugin.track.addFeaturesToTrack(track, features);
-              }
-            });
-            break;
-          default:
-            break;
+        var source = layer.getSource();
+        if (source) {
+          features = source.getSelectedItems();
+
+          if (features.length == 0) {
+            features = source.getFeatures();
+          }
         }
+      }
+    } else if (node instanceof plugin.file.kml.ui.KMLNode) {
+      features = node.getFeatures();
+      title = node.getLabel() + ' Track';
+    }
+
+    if (features && features.length) {
+      if (event.type === plugin.track.EventType.CREATE_TRACK) {
+        plugin.track.promptForTitle(title).then(function(title) {
+          plugin.track.getSortField(features[0]).then(function(sortField) {
+            var options = /** @type {!plugin.track.CreateOptions} */ ({
+              features: features,
+              name: title,
+              sortField: sortField
+            });
+
+            plugin.track.createAndAdd(options);
+          });
+        });
+      } else if (event.type === plugin.track.EventType.ADD_TO) {
+        plugin.track.promptForTrack().then(function(track) {
+          if (track) {
+            plugin.track.addFeaturesToTrack(track, features);
+          }
+        });
       }
     }
   }

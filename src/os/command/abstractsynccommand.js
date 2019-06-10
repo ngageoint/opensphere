@@ -8,6 +8,7 @@ goog.require('os.command.State');
 
 /**
  * Abstract synchronous command implementation.
+ * @abstract
  * @implements {os.command.ICommand}
  * @extends {goog.Disposable}
  * @constructor
@@ -23,9 +24,10 @@ goog.inherits(os.command.AbstractSyncCommand, goog.Disposable);
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.command.AbstractSyncCommand.prototype.execute = goog.abstractMethod;
+os.command.AbstractSyncCommand.prototype.execute = function() {};
 
 
 /**
