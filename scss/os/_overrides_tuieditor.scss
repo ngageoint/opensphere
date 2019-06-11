@@ -3,19 +3,20 @@
 .modal {
   .CodeMirror:not(.CodeMirror-fullscreen) .CodeMirror-scroll,
   .te-ww-container .te-editor .tui-editor-contents {
-    max-height: 25rem;
-    min-height: 10rem;
-  }
-
-  // Not the same height as the codemirror side
-  .te-md-container .te-preview {
-    max-height: 26.25rem;
-    min-height: 10rem !important; // wysiwyg sets a height also
+    max-height: 25rem !important;
   }
 }
 
 // Editor Overrides
 .c-tui-editor {
+  .CodeMirror:not(.CodeMirror-fullscreen) .CodeMirror-scroll,
+  .te-ww-container .te-editor .tui-editor-contents,
+  .te-md-container .te-preview {
+    max-height: 75vh; // the toolbar doesnt scroll with the editor. So its annoying to have to scroll up just to use it
+    min-height: 10rem;
+  }
+
+
   // We dont want to show the tab section OR the block overlay.
   // Merge / Unmerge is not GFM. So dont allow that feature
   .te-table-merge,
@@ -87,10 +88,21 @@
       @include img-fluid;
     }
 
-    code {
+    pre {
       background-color: $u-theme-variables--bg-offset;
+    }
+
+    code {
       color: $danger;
       font-family: $font-family-monospace;
+    }
+
+    blockquote {
+      @extend .blockquote;
+    }
+
+    attr {
+      @extend .initialism;
     }
 
     table {
