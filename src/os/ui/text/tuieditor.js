@@ -79,6 +79,9 @@ os.ui.text.TuiEditorCtrl = function($scope, $element, $timeout) {
    */
   $scope['text'] = $scope['text'] || '';
 
+  this.element_.on('keydown', this.onKeyboardEvent_);
+  this.element_.on('keypress', this.onKeyboardEvent_);
+
   $timeout(function() {
     if (this.scope) {
       this.init();
@@ -89,15 +92,31 @@ os.ui.text.TuiEditorCtrl = function($scope, $element, $timeout) {
 };
 
 
-
 /**
  * Cleanup
  */
 os.ui.text.TuiEditorCtrl.prototype.destroy = function() {
   this['tuiEditor'] = null;
+  this.element_.off('keydown');
+  this.element_.off('keypress');
   this.element_ = null;
   this.scope = null;
   this.timeout_ = null;
+};
+
+
+/**
+ * Consume keydown events so they are not passed to the map.
+ * Without this event listener the following characters
+ * will not be received by editor in WYSIWYG mode:
+ *  'r', 'u', 'v', 'n', '>', '.', and arrow keys.
+ * We had a discussion to add this to ol.events.condition.targetNotEditable but
+ * decided since its an isolated case to do it here
+ * @param {Object} event
+ * @private
+ */
+os.ui.text.TuiEditorCtrl.prototype.onKeyboardEvent_ = function(event) {
+  event.stopPropagation();
 };
 
 

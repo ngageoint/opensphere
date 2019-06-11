@@ -10,7 +10,7 @@
   // Not the same height as the codemirror side
   .te-md-container .te-preview {
     max-height: 26.25rem;
-    min-height: 10rem;
+    min-height: 10rem !important; // wysiwyg sets a height also
   }
 }
 
