@@ -39,19 +39,6 @@ os.annotation.FeatureAnnotation = function(feature) {
   this.scope = null;
 
   /**
-   * The annotation options.
-   * @type {osx.annotation.Options|undefined}
-   */
-  this.options = /** @type {osx.annotation.Options|undefined} */ (
-      this.feature.get(os.annotation.OPTIONS_FIELD));
-
-  // if the feature doesn't already have annotation options, create options from the default values
-  if (!this.options) {
-    this.options = os.object.unsafeClone(os.annotation.DEFAULT_OPTIONS);
-    this.feature.set(os.annotation.OPTIONS_FIELD, this.options);
-  }
-
-  /**
    * The overlay.
    * @type {os.webgl.WebGLOverlay}
    * @protected
@@ -109,10 +96,13 @@ os.annotation.FeatureAnnotation.prototype.setVisible = function(value) {
  */
 os.annotation.FeatureAnnotation.prototype.setVisibleInternal = function() {
   if (this.overlay && this.feature) {
+    var options = /** @type {osx.annotation.Options|undefined} */ (this.feature.get(os.annotation.OPTIONS_FIELD));
     // show the overlay when internal flag is set and configured to be displayed. this allows for separate states
     // between config and the feature.
-    var showOverlay = this.visible && this.options.show;
-    os.annotation.setPosition(this.overlay, showOverlay ? this.feature : null);
+    if (options) {
+      var showOverlay = this.visible && options.show;
+      os.annotation.setPosition(this.overlay, showOverlay ? this.feature : null);
+    }
   }
 };
 
@@ -122,14 +112,17 @@ os.annotation.FeatureAnnotation.prototype.setVisibleInternal = function() {
  * @protected
  */
 os.annotation.FeatureAnnotation.prototype.createUI = function() {
-  if (this.overlay || !this.options) {
+  var options = this.feature ?
+      /** @type {osx.annotation.Options|undefined} */ (this.feature.get(os.annotation.OPTIONS_FIELD)) : undefined;
+
+  if (this.overlay || !options) {
     // don't create the overlay if it already exists or options are missing
     return;
   }
 
   this.overlay = new os.webgl.WebGLOverlay({
     id: ol.getUid(this.feature),
-    offset: this.options.offset,
+    offset: options.offset,
     positioning: ol.OverlayPositioning.CENTER_CENTER
   });
 
