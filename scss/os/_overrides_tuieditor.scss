@@ -16,7 +16,11 @@
 
 // Editor Overrides
 .c-tui-editor {
-  // We dont want to show the tab section OR the block overlay
+  // We dont want to show the tab section OR the block overlay.
+  // Merge / Unmerge is not GFM. So dont allow that feature
+  .te-table-merge,
+  .te-table-unmerge,
+  .te-table-unmerge + hr,
   .te-markdown-tab-section,
   .te-ww-block-overlay {
     display: none !important;
