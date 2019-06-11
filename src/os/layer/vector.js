@@ -135,7 +135,7 @@ os.layer.Vector = function(options) {
    * @type {Function}
    * @private
    */
-  this.doubleClickHandler_ = os.layer.Vector.defaultDoubleClickHandler.bind(this);
+  this.doubleClickHandler_ = null;
 
   /**
    * Function to launch the filter manager for this layer
@@ -1021,6 +1021,15 @@ os.layer.Vector.prototype.setDoubleClickHandler = function(handler) {
 
 
 /**
+ * Layer has a double click handler
+ * @return {boolean}
+ */
+os.layer.Vector.prototype.hasDoubleClickHandler = function() {
+  return this.doubleClickHandler_ != null;
+};
+
+
+/**
  * @inheritDoc
  */
 os.layer.Vector.prototype.getSynchronizerType = function() {
@@ -1237,19 +1246,5 @@ os.layer.Vector.prototype.restore = function(config) {
   var source =  /** @type {os.IPersistable} */ (this.getSource());
   if (source && os.implements(source, os.source.ISource.ID)) {
     /** @type {os.source.ISource} */ (source).restore(config);
-  }
-};
-
-
-/**
- * Handles double clicks on features by popping up a window to display feature metadata.
- * @param {ol.Feature} feature *
- * @this os.layer.Vector
- */
-os.layer.Vector.defaultDoubleClickHandler = function(feature) {
-  if (feature) {
-    // look for a title on the feature, otherwise use the layer title
-    var title = os.feature.getTitle(feature) || this.getTitle();
-    os.ui.feature.launchMultiFeatureInfo(feature, title);
   }
 };
