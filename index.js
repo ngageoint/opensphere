@@ -151,6 +151,11 @@ const sharedResources = [
     scripts: ['markdown-it.min.js']
   },
   {
+    source: 'vendor/os-minified/',
+    target: 'vendor/os-minified/',
+    files: ['os-tui-editor.min.js']
+  },
+  {
     source: resolver.resolveModulePath('crossfilter2', __dirname),
     target: 'vendor/crossfilter',
     scripts: ['crossfilter.min.js']
