@@ -58,6 +58,60 @@ os.style.DEFAULT_STROKE_WIDTH = 3;
 
 
 /**
+ * The default style fields to check for line dashes.
+ * @type {!Array<string>}
+ * @const
+ */
+os.style.DEFAULT_LINE_DASH_STYLE_FIELDS = [
+  os.style.StyleField.STROKE
+];
+
+
+/**
+ * Default line style for geometries. Specifically for lines/polygons.
+ * @type {!Array<number>}
+ */
+os.style.DEFAULT_LINE_STYLE = [];
+
+
+/**
+ * @typedef {{
+ *   name: string,
+ *   pattern: !Array<number>,
+ *   csPattern: number
+ * }}
+ */
+os.style.styleLineDashOption;
+
+
+/**
+ * Line dash configurations
+ * Patterns based on 16 bit number to make it look consistent between Open Layers and Cesium
+ * @type {!Array<!os.style.styleLineDashOption>}
+ * @const
+ */
+os.style.LINE_STYLE_OPTIONS = [
+  {
+    name: '\u2501\u2501\u2501\u2501\u2501\u2501',
+    pattern: [],
+    csPattern: parseInt('1111111111111111', 2)
+  }, {
+    name: '\u2501\u2009\u2501\u2009\u2501\u2009\u2501\u2009\u2501',
+    pattern: [12, 4],
+    csPattern: parseInt('1111111111110000', 2)
+  }, {
+    name: '\u2501\u2002\u2501\u2002\u2501\u2002\u2501',
+    pattern: [8, 8],
+    csPattern: parseInt('1111111100000000', 2)
+  }, {
+    name: '\u2501\u2003\u2501\u2003\u2501',
+    pattern: [4, 12],
+    csPattern: parseInt('1111000000000000', 2)
+  }
+];
+
+
+/**
  * @type {number}
  * @const
  */
@@ -302,7 +356,8 @@ os.style.DEFAULT_VECTOR_CONFIG = {
   // this will only be applied to line and polygon types
   'stroke': {
     'width': os.style.DEFAULT_STROKE_WIDTH,
-    'color': os.style.DEFAULT_LAYER_COLOR
+    'color': os.style.DEFAULT_LAYER_COLOR,
+    'lineDash': os.style.DEFAULT_LINE_STYLE
   }
 };
 
@@ -336,7 +391,8 @@ os.style.DEFAULT_SELECT_CONFIG = {
     }
   },
   'stroke': {
-    'color': 'rgba(255,0,0,1)'
+    'color': 'rgba(255,0,0,1)',
+    'lineDash': os.style.DEFAULT_LINE_STYLE
   },
   'zIndex': os.style.SELECTED_Z
 };
@@ -359,7 +415,8 @@ os.style.INVERSE_SELECT_CONFIG = {
     }
   },
   'stroke': {
-    'color': 'rgba(255,255,255,1)'
+    'color': 'rgba(255,255,255,1)',
+    'lineDash': os.style.DEFAULT_LINE_STYLE
   },
   'zIndex': os.style.SELECTED_Z + 1
 };
@@ -382,7 +439,8 @@ os.style.DEFAULT_HIGHLIGHT_CONFIG = {
     }
   },
   'stroke': {
-    'color': 'rgba(255,0,0,1)'
+    'color': 'rgba(255,0,0,1)',
+    'lineDash': os.style.DEFAULT_LINE_STYLE
   },
   'zIndex': os.style.HIGHLIGHT_Z
 };
@@ -399,7 +457,8 @@ os.style.PREVIEW_CONFIG = {
   },
   'stroke': {
     'width': os.style.DEFAULT_STROKE_WIDTH,
-    'color': 'rgba(0,255,255,1)'
+    'color': 'rgba(0,255,255,1)',
+    'lineDash': os.style.DEFAULT_LINE_STYLE
   }
 };
 
@@ -780,6 +839,73 @@ os.style.getMergedSize = function(featureConfig, layerConfig, opt_default) {
   } else {
     // otherwise return the first defined value
     return layerSize || featureSize || defaultSize;
+  }
+};
+
+
+/**
+ * Looks up a line style from a dash pattern
+ * @param {Array<number>} pattern
+ * @return {os.style.styleLineDashOption}
+ */
+os.style.dashPatternToName = function(pattern) {
+  for (var i = 0; i < os.style.LINE_STYLE_OPTIONS.length; i++) {
+    var styleLineDashOption = /** @type {os.style.styleLineDashOption} */ (os.style.LINE_STYLE_OPTIONS[i]);
+    if (goog.array.equals(styleLineDashOption.pattern, pattern)) {
+      return styleLineDashOption;
+    }
+  }
+  return /** @type {os.style.styleLineDashOption} */ (os.style.LINE_STYLE_OPTIONS[0]);
+};
+
+
+/**
+ * @param {Object} config
+ * @param {(os.style.StyleField|string)=} opt_lineDashFieldHint A hint to where to find the dash to use.
+ * @return {?Array<number>} The line dash or null if none was found
+ */
+os.style.getConfigLineDash = function(config, opt_lineDashFieldHint) {
+  if (config) {
+    if (opt_lineDashFieldHint &&
+        config[opt_lineDashFieldHint] &&
+        config[opt_lineDashFieldHint][os.style.StyleField.LINE_DASH] != null) {
+      return config[opt_lineDashFieldHint][os.style.StyleField.LINE_DASH];
+    } else if (config[os.style.StyleField.LINE_DASH] != null) {
+      return config[os.style.StyleField.LINE_DASH];
+    } else {
+      var key = os.style.StyleField.STROKE;
+      if (!os.object.isPrimitive(config[key])) {
+        var result = os.style.getConfigLineDash(config[key]);
+        if (result) {
+          return result;
+        }
+      }
+    }
+  }
+
+  return null;
+};
+
+
+/**
+ * Sets all line dash values on the config.
+ * @param {Object} config
+ * @param {Array<number>} lineDash
+ * @param {Array<string>=} opt_includeLineDashFields optional array of style fields to line dash,
+ *                                                e.g. os.style.StyleField.IMAGE.
+ */
+os.style.setConfigLineDash = function(config, lineDash, opt_includeLineDashFields) {
+  if (config) {
+    var lineDashFields = opt_includeLineDashFields || os.style.DEFAULT_LINE_DASH_STYLE_FIELDS;
+    for (var key in config) {
+      if (lineDashFields.indexOf(key) !== -1) {
+        config[key][os.style.StyleField.LINE_DASH] = lineDash;
+      }
+
+      if (!os.object.isPrimitive(config[key])) {
+        os.style.setConfigLineDash(config[key], lineDash, opt_includeLineDashFields);
+      }
+    }
   }
 };
 

@@ -11,6 +11,7 @@ goog.require('os.command.VectorLayerIcon');
 goog.require('os.command.VectorLayerLabel');
 goog.require('os.command.VectorLayerLabelColor');
 goog.require('os.command.VectorLayerLabelSize');
+goog.require('os.command.VectorLayerLineDash');
 goog.require('os.command.VectorLayerReplaceStyle');
 goog.require('os.command.VectorLayerRotation');
 goog.require('os.command.VectorLayerShape');
@@ -139,6 +140,7 @@ os.ui.layer.VectorLayerUICtrl = function($scope, $element, $timeout) {
   $scope.$on(os.ui.icon.IconPickerEventType.CHANGE, this.onIconChange.bind(this));
   $scope.$on(os.ui.layer.VectorStyleControlsEventType.SHAPE_CHANGE, this.onShapeChange.bind(this));
   $scope.$on(os.ui.layer.VectorStyleControlsEventType.CENTER_SHAPE_CHANGE, this.onCenterShapeChange.bind(this));
+  $scope.$on(os.ui.layer.VectorStyleControlsEventType.LINE_DASH_CHANGE, this.onLineDashChange.bind(this));
 
   // label change handlers
   $scope.$on('labelColor.change', this.onLabelColorChange.bind(this));
@@ -162,6 +164,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.initUI = function() {
   if (this.scope) {
     this.scope['color'] = this.getColor();
     this.scope['size'] = this.getSize();
+    this.scope['lineDash'] = this.getLineDash();
     this.scope['icon'] = this.getIcon();
     this.scope['centerIcon'] = this.getCenterIcon();
     this.scope['shape'] = this.getShape();
@@ -333,6 +336,28 @@ os.ui.layer.VectorLayerUICtrl.prototype.onSizeChange = function(event, value) {
 
 
 /**
+ * Handles changes to line dash
+ * @param {angular.Scope.Event} event
+ * @param {Array<number>} value
+ * @protected
+ */
+os.ui.layer.VectorLayerUICtrl.prototype.onLineDashChange = function(event, value) {
+  event.stopPropagation();
+
+  var fn =
+      /**
+       * @param {os.layer.ILayer} layer
+       * @return {os.command.ICommand}
+       */
+      function(layer) {
+        return new os.command.VectorLayerLineDash(layer.getId(), value);
+      };
+
+  this.createCommand(fn);
+};
+
+
+/**
  * Handles changes to the icon.
  * @param {angular.Scope.Event} event The Angular event.
  * @param {osx.icon.Icon} value The new value.
@@ -439,7 +464,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.onLabelColorReset = function(event) {
 
 
 /**
- * Handles changes to size
+ * Handles changes to label size
  * @param {angular.Scope.Event} event
  * @param {number} value
  * @protected
@@ -559,6 +584,32 @@ os.ui.layer.VectorLayerUICtrl.prototype.getSize = function() {
   }
 
   return size || os.style.DEFAULT_FEATURE_SIZE;
+};
+
+
+/**
+ * Gets the line dash from the item(s)
+ * @return {?Array<number>} The line
+ */
+os.ui.layer.VectorLayerUICtrl.prototype.getLineDash = function() {
+  var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
+  var lineDash;
+
+  if (items) {
+    for (var i = 0, n = items.length; i < n; i++) {
+      var layer = items[i].getLayer();
+
+      if (layer) {
+        var config = os.style.StyleManager.getInstance().getLayerConfig(items[0].getId());
+
+        if (config) {
+          lineDash = os.style.getConfigLineDash(config);
+        }
+      }
+    }
+  }
+
+  return lineDash || os.style.DEFAULT_LINE_STYLE;
 };
 
 
