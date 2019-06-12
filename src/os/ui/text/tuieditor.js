@@ -34,8 +34,7 @@ os.ui.text.tuiEditorDirective = function() {
       'text': '=',
       'edit': '<',
       'maxlength': '=',
-      'isRequired': '=',
-      'toolbar': '=?'
+      'isRequired': '='
     },
     templateUrl: os.ROOT + 'views/text/tuieditor.html',
     controller: os.ui.text.TuiEditorCtrl,
