@@ -52,7 +52,8 @@ module.exports = function(config) {
       {pattern: resolver.resolveModulePath('zip-js/WebContent/inflate.js', __dirname), watched: false, included: false, served: true},
       {pattern: resolver.resolveModulePath('zip-js/WebContent/z-worker.js', __dirname), watched: false, included: false, served: true},
       {pattern: resolver.resolveModulePath('opensphere-state-schema/src/main/**/*.xsd', __dirname), watched: false, included: false, served: true},
-      {pattern: resolver.resolveModulePath('suncalc/suncalc.js', __dirname), watched: false, included: true, served: true}
+      {pattern: resolver.resolveModulePath('suncalc/suncalc.js', __dirname), watched: false, included: true, served: true},
+      {pattern: resolver.resolveModulePath('markdown-it/dist/markdown-it.min.js', __dirname), watched: false, included: true, served: true}
     ].concat(closureFiles).concat([
       // init
       'test/init.js',
