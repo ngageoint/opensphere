@@ -147,9 +147,8 @@ const sharedResources = [
     css: ['tui-editor.min.css']
   },
   {
-    source: 'vendor/os-minified/',
-    target: 'vendor/os-minified/tui-editor',
-    scripts: ['os-tui-editor.min.js']
+    source: resolver.resolveModulePath('markdown-it/dist', __dirname),
+    scripts: ['markdown-it.min.js']
   },
   {
     source: resolver.resolveModulePath('crossfilter2', __dirname),
