@@ -6,6 +6,7 @@ goog.require('os.command.SequenceCommand');
 goog.require('os.object');
 goog.require('os.style');
 goog.require('plugin.file.kml.KMLField');
+goog.require('plugin.file.kml.KMLNodeLayerUICtrl.UIEventType');
 goog.require('plugin.file.kml.cmd.KMLNodeAdd');
 goog.require('plugin.file.kml.cmd.KMLNodeRemove');
 goog.require('plugin.file.kml.kmlNodeLayerUIDirective');

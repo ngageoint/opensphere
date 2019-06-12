@@ -1087,6 +1087,7 @@ os.layer.Vector.prototype.persist = function(opt_to) {
     opt_to[os.style.StyleField.LABELS] = config[os.style.StyleField.LABELS];
     opt_to[os.style.StyleField.LABEL_COLOR] = config[os.style.StyleField.LABEL_COLOR];
     opt_to[os.style.StyleField.LABEL_SIZE] = config[os.style.StyleField.LABEL_SIZE];
+    opt_to[os.style.StyleField.LINE_DASH] = os.style.getConfigLineDash(config);
     opt_to[os.style.StyleField.LOB_COLUMN_LENGTH] = config[os.style.StyleField.LOB_COLUMN_LENGTH];
     opt_to[os.style.StyleField.LOB_LENGTH] = config[os.style.StyleField.LOB_LENGTH];
     opt_to[os.style.StyleField.LOB_LENGTH_TYPE] = config[os.style.StyleField.LOB_LENGTH_TYPE];
@@ -1181,6 +1182,10 @@ os.layer.Vector.prototype.restore = function(config) {
 
   if (config[os.style.StyleField.SIZE] != null) {
     os.style.setConfigSize(styleConf, config[os.style.StyleField.SIZE]);
+  }
+
+  if (config[os.style.StyleField.LINE_DASH] != null) {
+    os.style.setConfigLineDash(styleConf, config[os.style.StyleField.LINE_DASH]);
   }
 
   if (config[os.style.StyleField.ICON] != null) {
