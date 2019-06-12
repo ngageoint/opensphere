@@ -85,6 +85,12 @@ os.ui.text.TuiEditorCtrl = function($scope, $element, $timeout) {
   this['tuiEditor'] = null;
 
   /**
+   * The display only mode HTML (parsed markdown)
+   * @type {string}
+   */
+  this['displayHtml'] = '';
+
+  /**
    * @type {boolean}
    */
   this['loading'] = false;
@@ -220,12 +226,6 @@ os.ui.text.TuiEditorCtrl.prototype.init = function() {
     }.bind(this));
   } else {
     this['displayHtml'] = os.ui.text.TuiEditor.render(this.scope['text']);
-    // this['tuiEditor'] = tui.Editor.factory({
-    //   'el': this.element_.find('.js-tui-editor__viewer'),
-    //   'viewer': true,
-    //   'height': 'auto',
-    //   'initialValue': this.scope['text']
-    // });
   }
 
   // Watch to see if something changes the text and update the value
