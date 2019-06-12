@@ -25,8 +25,8 @@ os.ui.text.TuiEditorMarkdownIt = markdownit();
   var removeMarkdownTaskFormatText = function(token) {
     // '[X] ' length is 4
     // FIXED: we don't need first space
-    token.content = token.content.slice(4);
-    token.children[0].content = token.children[0].content.slice(4);
+    token['content'] = token['content'].slice(4);
+    token['children'][0]['content'] = token['children'][0]['content'].slice(4);
   };
 
 
@@ -37,9 +37,9 @@ os.ui.text.TuiEditorMarkdownIt = markdownit();
    * @return {boolean}
    */
   var isTaskListItemToken = function(tokens, index) {
-    return tokens[index].type === 'inline' && tokens[index - 1].type === 'paragraph_open' && tokens[index - 2].type
-          === 'list_item_open' && (tokens[index].content.indexOf('[ ]') === 0 || tokens[index].content.indexOf('[x]')
-          === 0 || tokens[index].content.indexOf('[X]') === 0);
+    return tokens[index]['type'] === 'inline' && tokens[index - 1]['type'] === 'paragraph_open' &&
+          tokens[index - 2]['type'] === 'list_item_open' && (tokens[index]['content'].indexOf('[ ]') === 0 ||
+          tokens[index]['content'].indexOf('[x]') === 0 || tokens[index]['content'].indexOf('[X]') === 0);
   };
 
 
@@ -51,7 +51,7 @@ os.ui.text.TuiEditorMarkdownIt = markdownit();
   var isChecked = function(token) {
     var checked = false;
 
-    if (token.content.indexOf('[x]') === 0 || token.content.indexOf('[X]') === 0) {
+    if (token['content'].indexOf('[x]') === 0 || token['content'].indexOf('[X]') === 0) {
       checked = true;
     }
 
@@ -85,7 +85,7 @@ os.ui.text.TuiEditorMarkdownIt = markdownit();
   var tasklistrule = function(state) {
     var TASK_LIST_ITEM_CLASS_NAME = 'task-list-item';
     var CHECKED_CLASS_NAME = 'checked';
-    var tokens = state.tokens;
+    var tokens = state['tokens'];
     var className;
     var tokenIndex;
 

@@ -124,3 +124,17 @@ ol,
 ul {
   padding-left: 1.125rem;
 }
+
+.blockquote {
+  border-left: 4px solid $secondary;
+  color: $text-muted;
+  padding: 0 1rem;
+
+  &> :first-child {
+    margin-top: 0;
+  }
+
+  &> :last-child {
+    margin-bottom: 0;
+  }
+}
