@@ -43,31 +43,5 @@ describe('Import state file', function() {
     cy.get(os.featureActionsDialog.DIALOG).should('be.visible');
     cy.get(os.featureActionsDialog.DIALOG).should('contain', 'line 2-5');
     cy.get(os.featureActionsDialog.DIALOG_CLOSE).click();
-
-    // Clean up
-    cy.get(os.layersDialog.Tabs.Layers.TAB).click();
-    cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4).click();
-    cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4)
-        .find(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.REMOVE_LAYER_BUTTON_WILDCARD)
-        .click();
-    cy.get(os.layersDialog.DIALOG).should('not.contain', 'City of New York Subway Stations Features (473)');
-    cy.imageComparison('features removed');
-    cy.get(os.layersDialog.Tabs.Layers.Tree.Type.mapLayer.STREET_MAP_TILES)
-        .find(os.layersDialog.Tabs.Layers.Tree.LAYER_TOGGLE_CHECKBOX_WILDCARD)
-        .click();
-    cy.get(os.layersDialog.Tabs.Layers.Tree.Type.mapLayer.WORLD_IMAGERY_TILES)
-        .find(os.layersDialog.Tabs.Layers.Tree.LAYER_TOGGLE_CHECKBOX_WILDCARD)
-        .click();
-    cy.get(os.layersDialog.Tabs.Areas.TAB).click();
-    cy.get(os.layersDialog.DIALOG).should('contain', 'No results');
-    cy.get(os.layersDialog.Tabs.Filters.TAB).click();
-    cy.get(os.layersDialog.DIALOG).should('contain', 'No results');
-    cy.get(os.layersDialog.Tabs.Layers.TAB).click();
-    cy.get(os.Application.PAGE).type('v');
-    cy.get(os.Toolbar.Date.INPUT).clear();
-    cy.get(os.Toolbar.Date.INPUT).type(Cypress.moment().format('YYYY[-]MM[-]DD'));
-    cy.get(os.Toolbar.Date.INPUT).type('{esc}');
-    cy.get(os.Toolbar.States.Menu.BUTTON).click();
-    cy.get(os.Toolbar.States.Menu.menuOptions.DISABLE_STATES).click();
   });
 });
