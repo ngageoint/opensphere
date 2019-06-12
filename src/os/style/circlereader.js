@@ -13,6 +13,7 @@ goog.require('os.style.AbstractReader');
  */
 os.style.CircleReader = function() {
   os.style.CircleReader.base(this, 'constructor');
+  this.baseHash = 31 * this.baseHash + goog.string.hashCode('circle') >>> 0;
 };
 goog.inherits(os.style.CircleReader, os.style.AbstractReader);
 
@@ -26,18 +27,18 @@ os.style.CircleReader.prototype.getOrCreateStyle = function(config) {
 
   var radius = config['radius'] !== undefined ? /** @type {number} */ (config['radius']) :
       os.style.DEFAULT_FEATURE_SIZE;
-  var hash = this.baseHash + radius;
+  var hash = 31 * this.baseHash + goog.string.hashCode(radius.toString()) >>> 0;
 
   var fillConfig = /** @type {Object.<string, *>|undefined} */ (config['fill']);
   if (fillConfig) {
     fill = this.readers['fill'].getOrCreateStyle(fillConfig);
-    hash += fill['id'];
+    hash = 31 * hash + fill['id'] >>> 0;
   }
 
   var strokeConfig = /** @type {Object.<string, *>|undefined} */ (config['stroke']);
   if (strokeConfig) {
     stroke = this.readers['stroke'].getOrCreateStyle(strokeConfig);
-    hash += stroke['id'];
+    hash = 31 * hash + stroke['id'] >>> 0;
   }
 
   if (!this.cache[hash]) {

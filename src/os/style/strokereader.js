@@ -14,6 +14,7 @@ goog.require('os.style.AbstractReader');
  */
 os.style.StrokeReader = function() {
   os.style.StrokeReader.base(this, 'constructor');
+  this.baseHash = 31 * this.baseHash + goog.string.hashCode('stroke') >>> 0;
 };
 goog.inherits(os.style.StrokeReader, os.style.AbstractReader);
 
@@ -23,12 +24,12 @@ goog.inherits(os.style.StrokeReader, os.style.AbstractReader);
  */
 os.style.StrokeReader.prototype.getOrCreateStyle = function(config) {
   var width = /** @type {number|undefined} */ (config['width']) || os.style.DEFAULT_STROKE_WIDTH;
-  var hash = this.baseHash + width;
+  var hash = 31 * this.baseHash + width >>> 0;
 
   var color = /** @type {string|undefined} */ (config['color']) || os.style.DEFAULT_LAYER_COLOR;
   color = ol.color.asString(color);
 
-  hash += goog.string.hashCode(color);
+  hash = 31 * hash + goog.string.hashCode(color) >>> 0;
 
   if (!this.cache[hash]) {
     this.cache[hash] = new ol.style.Stroke({
