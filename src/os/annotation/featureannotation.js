@@ -1,9 +1,9 @@
 goog.provide('os.annotation.FeatureAnnotation');
 
-goog.require('goog.Disposable');
 goog.require('ol.OverlayPositioning');
 goog.require('os.annotation');
-goog.require('os.annotation.annotationDirective');
+goog.require('os.annotation.AbstractAnnotation');
+goog.require('os.annotation.featureAnnotationDirective');
 goog.require('os.webgl.WebGLOverlay');
 goog.require('os.xml');
 
@@ -11,33 +11,10 @@ goog.require('os.xml');
 /**
  * An annotation tied to an OpenLayers feature.
  * @param {!ol.Feature} feature The OpenLayers feature.
- * @extends {goog.Disposable}
+ * @extends {os.annotation.AbstractAnnotation}
  * @constructor
  */
 os.annotation.FeatureAnnotation = function(feature) {
-  os.annotation.FeatureAnnotation.base(this, 'constructor');
-
-  /**
-   * The OpenLayers feature.
-   * @type {!ol.Feature}
-   * @protected
-   */
-  this.feature = feature;
-
-  /**
-   * The annotation element.
-   * @type {?Element}
-   * @protected
-   */
-  this.element = null;
-
-  /**
-   * The annotation Angular scope.
-   * @type {?angular.Scope}
-   * @protected
-   */
-  this.scope = null;
-
   /**
    * The overlay.
    * @type {os.webgl.WebGLOverlay}
@@ -46,16 +23,18 @@ os.annotation.FeatureAnnotation = function(feature) {
   this.overlay = null;
 
   /**
-   * If the annotation is visible.
-   * @type {boolean}
+   * The OpenLayers feature.
+   * @type {!ol.Feature}
    * @protected
    */
-  this.visible = true;
+  this.feature = feature;
 
-  this.createUI();
+  // call the base constructor after we've set up the feature
+  os.annotation.FeatureAnnotation.base(this, 'constructor');
+
   ol.events.listen(this.feature, ol.events.EventType.CHANGE, this.handleFeatureChange, this);
 };
-goog.inherits(os.annotation.FeatureAnnotation, goog.Disposable);
+goog.inherits(os.annotation.FeatureAnnotation, os.annotation.AbstractAnnotation);
 
 
 /**
@@ -65,55 +44,45 @@ os.annotation.FeatureAnnotation.prototype.disposeInternal = function() {
   os.annotation.FeatureAnnotation.base(this, 'disposeInternal');
 
   ol.events.unlisten(this.feature, ol.events.EventType.CHANGE, this.handleFeatureChange, this);
-  this.disposeUI();
 };
 
 
 /**
- * Update the annotation when the feature changes.
- * @protected
+ * @inheritDoc
  */
-os.annotation.FeatureAnnotation.prototype.handleFeatureChange = function() {
-  this.setVisibleInternal();
+os.annotation.FeatureAnnotation.prototype.getOptions = function() {
+  return /** @type {osx.annotation.Options|undefined} */ (this.feature.get(os.annotation.OPTIONS_FIELD));
 };
 
 
 /**
- * Set if the annotation is visible.
- * @param {boolean} value If the annotation is visible.
+ * @inheritDoc
  */
-os.annotation.FeatureAnnotation.prototype.setVisible = function(value) {
-  if (this.visible !== value) {
-    this.visible = value;
-    this.setVisibleInternal();
-  }
+os.annotation.FeatureAnnotation.prototype.setOptions = function(options) {
+  this.feature.set(os.annotation.OPTIONS_FIELD, options);
 };
 
 
 /**
- * Set if the annotation is visible.
- * @protected
+ * @inheritDoc
  */
 os.annotation.FeatureAnnotation.prototype.setVisibleInternal = function() {
   if (this.overlay && this.feature) {
-    var options = /** @type {osx.annotation.Options|undefined} */ (this.feature.get(os.annotation.OPTIONS_FIELD));
+    var options = this.getOptions();
+
     // show the overlay when internal flag is set and configured to be displayed. this allows for separate states
     // between config and the feature.
-    if (options) {
-      var showOverlay = this.visible && options.show;
-      os.annotation.setPosition(this.overlay, showOverlay ? this.feature : null);
-    }
+    var showOverlay = this.visible && options.show;
+    os.annotation.setPosition(this.overlay, showOverlay ? this.feature : null);
   }
 };
 
 
 /**
- * Create the annotation UI.
- * @protected
+ * @inheritDoc
  */
 os.annotation.FeatureAnnotation.prototype.createUI = function() {
-  var options = this.feature ?
-      /** @type {osx.annotation.Options|undefined} */ (this.feature.get(os.annotation.OPTIONS_FIELD)) : undefined;
+  var options = this.getOptions();
 
   if (this.overlay || !options) {
     // don't create the overlay if it already exists or options are missing
@@ -126,8 +95,6 @@ os.annotation.FeatureAnnotation.prototype.createUI = function() {
     positioning: ol.OverlayPositioning.CENTER_CENTER
   });
 
-  this.setVisibleInternal();
-
   // create an Angular scope for the annotation UI
   var compile = /** @type {!angular.$compile} */ (os.ui.injector.get('$compile'));
   this.scope = /** @type {!angular.Scope} */ (os.ui.injector.get('$rootScope').$new());
@@ -138,7 +105,7 @@ os.annotation.FeatureAnnotation.prototype.createUI = function() {
   });
 
   // compile the template and assign the element to the overlay
-  var template = '<annotation feature="feature" overlay="overlay"></annotation>';
+  var template = '<featureannotation feature="feature" overlay="overlay"></featureannotation>';
   this.element = /** @type {Element} */ (compile(template)(this.scope)[0]);
   this.overlay.setElement(this.element);
 
@@ -147,12 +114,18 @@ os.annotation.FeatureAnnotation.prototype.createUI = function() {
   if (map) {
     map.addOverlay(this.overlay);
   }
+
+  if (this.visible && options.show) {
+    // setting an initial position causes the overlay to render
+    this.overlay.setPosition([0, 0]);
+  }
+
+  this.setVisibleInternal();
 };
 
 
 /**
- * Dispose the annotation UI.
- * @protected
+ * @inheritDoc
  */
 os.annotation.FeatureAnnotation.prototype.disposeUI = function() {
   if (this.overlay) {
@@ -174,4 +147,13 @@ os.annotation.FeatureAnnotation.prototype.disposeUI = function() {
   }
 
   this.element = null;
+};
+
+
+/**
+ * Update the annotation when the feature changes.
+ * @protected
+ */
+os.annotation.FeatureAnnotation.prototype.handleFeatureChange = function() {
+  this.setVisibleInternal();
 };

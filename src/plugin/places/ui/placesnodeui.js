@@ -16,7 +16,7 @@ plugin.places.ui.PlacesNodeUITemplate = '<span ng-if="nodeUi.show()" class="d-fl
       '<span ng-if="nodeUi.canEdit()" ng-click="nodeUi.addPlace()">' +
         '<i class="fa ' + plugin.places.Icon.PLACEMARK + ' fa-fw c-glyph" title="Create a new place"></i>' +
       '</span>' +
-      '<span ng-if="nodeUi.canEdit()" ng-click="nodeUi.addAnnotation()">' +
+      '<span ng-if="nodeUi.canEdit()" ng-click="nodeUi.addPlace(true)">' +
         '<i class="fa ' + plugin.places.Icon.ANNOTATION + ' fa-fw c-glyph" title="Create a new annotation"></i>' +
       '</span>' +
 
@@ -65,24 +65,6 @@ goog.inherits(plugin.places.ui.PlacesNodeUICtrl, os.ui.node.DefaultLayerNodeUICt
  * Add a new folder.
  * @export
  */
-plugin.places.ui.PlacesNodeUICtrl.prototype.addAnnotation = function() {
-  var node = /** @type {plugin.file.kml.ui.KMLLayerNode} */ (this.scope['item']);
-  if (node) {
-    var rootNode = plugin.places.getPlacesRoot(node);
-    if (rootNode) {
-      plugin.file.kml.ui.createOrEditPlace(/** @type {!plugin.file.kml.ui.FolderOptions} */ ({
-        'annotation': true,
-        'parent': rootNode
-      }));
-    }
-  }
-};
-
-
-/**
- * Add a new folder.
- * @export
- */
 plugin.places.ui.PlacesNodeUICtrl.prototype.addFolder = function() {
   var node = /** @type {plugin.file.kml.ui.KMLLayerNode} */ (this.scope['item']);
   if (node) {
@@ -98,15 +80,19 @@ plugin.places.ui.PlacesNodeUICtrl.prototype.addFolder = function() {
 
 /**
  * Add a new place.
+ * @param {boolean=} opt_annotation Whether the place is an annotation.
  * @export
  */
-plugin.places.ui.PlacesNodeUICtrl.prototype.addPlace = function() {
+plugin.places.ui.PlacesNodeUICtrl.prototype.addPlace = function(opt_annotation) {
   var node = /** @type {plugin.file.kml.ui.KMLLayerNode} */ (this.scope['item']);
   if (node) {
-    var rootNode = plugin.places.getPlacesRoot(node);
+    var rootNode = opt_annotation ?
+        plugin.places.PlacesManager.getInstance().getAnnotationsFolder() : plugin.places.getPlacesRoot(node);
+
     if (rootNode) {
       plugin.file.kml.ui.createOrEditPlace(/** @type {!plugin.file.kml.ui.PlacemarkOptions} */ ({
-        'parent': rootNode
+        'parent': rootNode,
+        'annotation': opt_annotation
       }));
     }
   }

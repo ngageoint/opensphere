@@ -276,7 +276,17 @@ plugin.file.kml.ui.KMLNode.prototype.onFeatureChange = function(event) {
       case 'loading':
         this.setLoading(!!event.getNewValue());
         break;
+      case os.annotation.EventType.UPDATE_PLACEMARK:
+        // this event needs to update the placemark (tree node) in addition to dispatching the event
+        plugin.file.kml.ui.updatePlacemark(/** @type {!plugin.file.kml.ui.PlacemarkOptions} */ ({
+          'feature': this.feature_,
+          'node': this
+        }));
+
+        this.dispatchEvent(new os.events.PropertyChangeEvent(os.annotation.EventType.CHANGE));
+        break;
       case os.annotation.EventType.CHANGE:
+        // this event just needs to resave the tree
         this.dispatchEvent(new os.events.PropertyChangeEvent(os.annotation.EventType.CHANGE));
         break;
       case os.annotation.EventType.EDIT:
@@ -284,6 +294,10 @@ plugin.file.kml.ui.KMLNode.prototype.onFeatureChange = function(event) {
           'feature': this.feature_,
           'node': this
         }));
+        break;
+      case os.annotation.EventType.HIDE:
+        this.clearAnnotations();
+        this.dispatchEvent(new os.events.PropertyChangeEvent('icons'));
         break;
       default:
         break;

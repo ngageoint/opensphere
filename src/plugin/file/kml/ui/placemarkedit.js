@@ -71,12 +71,6 @@ plugin.file.kml.ui.PlacemarkEditCtrl = function($scope, $element, $timeout) {
   this['labelColumns'] = defaultColumns;
 
   /**
-   * @type {!plugin.file.kml.ui.PlacemarkOptions}
-   * @protected
-   */
-  this.options = /** @type {!plugin.file.kml.ui.PlacemarkOptions} */ ($scope['options'] || {});
-
-  /**
    * tempHeaderColor
    * @type {string|undefined}
    */
@@ -87,7 +81,6 @@ plugin.file.kml.ui.PlacemarkEditCtrl = function($scope, $element, $timeout) {
    * @type {string|undefined}
    */
   this['tempBodyBG'] = this['annotationOptions'].bodyBG || undefined;
-
 
   var time = this.options['time'];
 
@@ -102,6 +95,7 @@ plugin.file.kml.ui.PlacemarkEditCtrl = function($scope, $element, $timeout) {
       this['dateType'] = os.ui.datetime.AnyDateType.INSTANT;
     }
   }
+
   if (!this.isFeatureDynamic()) {
     var optionsListId = 'optionsList' + this['uid'];
 
@@ -126,13 +120,14 @@ plugin.file.kml.ui.PlacemarkEditCtrl = function($scope, $element, $timeout) {
     if (!parentFolder && this.options['node']) {
       parentFolder = this.options['node'].getParent();
     }
-    this['folder'] = parentFolder || rootFolder;
 
-    $scope.$on('headerColor.reset', this.resetHeaderBackgroundColor_.bind(this));
-    $scope.$on('bodyColor.reset', this.resetBodyBackgroundColor_.bind(this));
-    $scope.$on('headerColor.change', this.saveHeaderBackgroundColor_.bind(this));
-    $scope.$on('bodyColor.change', this.saveBodyBackgroundColor_.bind(this));
+    this['folder'] = parentFolder || rootFolder;
   }
+
+  $scope.$on('headerColor.reset', this.resetHeaderBackgroundColor_.bind(this));
+  $scope.$on('bodyColor.reset', this.resetBodyBackgroundColor_.bind(this));
+  $scope.$on('headerColor.change', this.saveHeaderBackgroundColor_.bind(this));
+  $scope.$on('bodyColor.change', this.saveBodyBackgroundColor_.bind(this));
 };
 goog.inherits(plugin.file.kml.ui.PlacemarkEditCtrl, os.ui.FeatureEditCtrl);
 
@@ -198,9 +193,6 @@ plugin.file.kml.ui.PlacemarkEditCtrl.prototype.createPreviewFeature = function()
 
   if (this.options['annotation']) {
     this.previewFeature.set(os.annotation.OPTIONS_FIELD, this['annotationOptions']);
-
-    // default to hiding the center shape
-    this['shape'] = os.style.ShapeType.NONE;
 
     // don't display a label, but leave the config present to populate the UI
     this['labels'][0]['column'] = '';
