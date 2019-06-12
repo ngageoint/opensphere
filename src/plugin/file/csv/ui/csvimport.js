@@ -56,7 +56,7 @@ plugin.file.csv.ui.CSVImportCtrl.prototype.createFromConfig = function(config) {
  * @override
  */
 plugin.file.csv.ui.CSVImportCtrl.prototype.updateFromConfig = function(descriptor, config) {
-  plugin.file.csv.CSVDescriptor.updateFromConfig(descriptor, config);
+  descriptor.updateFromConfig(config);
 };
 
 

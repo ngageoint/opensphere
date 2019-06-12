@@ -4,6 +4,8 @@ goog.provide('os.ui.wiz.OptionsStepCtrl');
 goog.require('os.defines');
 goog.require('os.ui.Module');
 goog.require('os.ui.color.colorPickerDirective');
+goog.require('os.ui.icon.iconPickerDirective');
+goog.require('os.ui.layer.vectorStyleControlsDirective');
 goog.require('os.ui.util.validationMessageDirective');
 goog.require('os.ui.wiz.step.AbstractWizardStep');
 goog.require('os.ui.wiz.step.WizardStepEvent');
@@ -72,6 +74,51 @@ os.ui.wiz.OptionsStepCtrl = function($scope) {
    */
   this.originalTitle_ = $scope['config']['title'];
 
+  /**
+   * Whether to set a custom icon
+   * @type {boolean}
+   */
+  this['showIcon'] = $scope['config']['icon'];
+
+  /**
+   * Icons available to the icon picker.
+   * @type {!Array<!osx.icon.Icon>}
+   */
+  this['iconSet'] = os.ui.file.kml.GOOGLE_EARTH_ICON_SET;
+
+  /**
+   * Function to translate image sources from the icon set.
+   * @type {function(string):string}
+   */
+  this['iconSrc'] = os.ui.file.kml.replaceGoogleUri;
+
+  /**
+   * Supported shapes.
+   * @type {Array}
+   */
+  this['shapes'] = [
+    os.style.ShapeType.DEFAULT,
+    os.style.ShapeType.POINT,
+    os.style.ShapeType.SQUARE,
+    os.style.ShapeType.TRIANGLE,
+    os.style.ShapeType.ICON
+  ];
+
+  /**
+   * When to show the icon picker
+   * @type {boolean}
+   */
+  this['showIcon'] = false;
+
+  if (this.scope_['config']) {
+    if (!this.scope_['config']['shapeName']) {
+      this.scope_['config']['shapeName'] = os.style.ShapeType.DEFAULT;
+    }
+    if (!this.scope_['config']['icon']) {
+      this.scope_['config']['icon'] = os.ui.file.kml.getDefaultIcon();
+    }
+  }
+
   $scope.$watch('config.title', this.onTitleChange_.bind(this));
   $scope.$watch('optionsForm.$valid', this.onValidationChange_.bind(this));
   $scope.$on('$destroy', this.destroy_.bind(this));
@@ -108,4 +155,13 @@ os.ui.wiz.OptionsStepCtrl.prototype.onTitleChange_ = function(newVal) {
  */
 os.ui.wiz.OptionsStepCtrl.prototype.onValidationChange_ = function(valid) {
   this.scope_.$emit(os.ui.wiz.step.WizardStepEvent.VALIDATE, valid);
+};
+
+
+/**
+ * Fire a scope event when the shape is changed by the user.
+ * @export
+ */
+os.ui.wiz.OptionsStepCtrl.prototype.onShapeChange = function() {
+  this['showIcon'] = this.scope_['config']['shapeName'] == os.style.ShapeType.ICON;
 };
