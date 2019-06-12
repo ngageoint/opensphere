@@ -65,9 +65,6 @@ describe('Map controls', function() {
             .click();
         cy.get(os.statusBar.ZOOM_TEXT).should('not.contain', INITIAL_ZOOM);
       });
-
-      // Clean up
-      cy.get(os.Application.PAGE).type('v');
     });
   });
 });
