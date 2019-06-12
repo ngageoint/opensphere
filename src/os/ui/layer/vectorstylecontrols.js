@@ -11,6 +11,7 @@ goog.require('os.ui.sliderDirective');
  * @enum {string}
  */
 os.ui.layer.VectorStyleControlsEventType = {
+  LINE_DASH_CHANGE: 'vector:lineDashChange',
   SHAPE_CHANGE: 'vector:shapeChange',
   CENTER_SHAPE_CHANGE: 'vector:centerShapeChange',
   SHOW_ROTATION_CHANGE: 'vector:showRotationChange',
@@ -40,6 +41,7 @@ os.ui.layer.vectorStyleControlsDirective = function() {
       'shapes': '=',
       'centerShape': '=?',
       'centerShapes': '=?',
+      'lineDash': '=?',
       'showColorReset': '=?'
     },
     templateUrl: os.ROOT + 'views/layer/vectorstylecontrols.html',
@@ -79,6 +81,10 @@ os.ui.layer.VectorStyleControlsCtrl = function($scope) {
   if (this.scope['showCenterIcon'] == null) {
     this.scope['showCenterIcon'] = true;
   }
+
+  this.scope['lineDashOptions'] = os.style.LINE_STYLE_OPTIONS;
+  var name = os.style.dashPatternToName(this.scope['lineDash']);
+  this.scope['lineDashName'] = name ? name : this.scope['lineDashOptions'][0];
 
   $scope.$on('$destroy', goog.bind(this.dispose, this));
 };
@@ -126,5 +132,17 @@ os.ui.layer.VectorStyleControlsCtrl.prototype.onCenterShapeChange = function(sha
   if (this.scope) {
     this.scope.$emit(os.ui.layer.VectorStyleControlsEventType.CENTER_SHAPE_CHANGE, shape);
     this.scope['centerShape'] = shape;
+  }
+};
+
+
+/**
+ * Fire a scope event when the line dash is changed by the user.
+ * @export
+ */
+os.ui.layer.VectorStyleControlsCtrl.prototype.onLineDashChange = function() {
+  if (this.scope && this.scope['lineDashName']) {
+    this.scope['lineDash'] = /** @type {os.style.styleLineDashOption} */ (this.scope['lineDashName']).pattern;
+    this.scope.$emit(os.ui.layer.VectorStyleControlsEventType.LINE_DASH_CHANGE, this.scope['lineDash']);
   }
 };

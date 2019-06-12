@@ -250,6 +250,11 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
   ];
 
   /**
+   * Selected line dash style
+   */
+  this['lineDash'] = os.style.DEFAULT_LINE_STYLE;
+
+  /**
    * Selected shape.
    * @type {string}
    */
@@ -460,6 +465,7 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
 
   $scope.$watch('ctrl.description', this.updatePreview.bind(this));
   $scope.$watch('ctrl.color', this.onIconColorChange.bind(this));
+  $scope.$watch('ctrl.lineDash', this.onLineDashChange.bind(this));
   $scope.$watch('ctrl.opacity', this.updatePreview.bind(this));
   $scope.$watch('ctrl.size', this.updatePreview.bind(this));
   $scope.$watch('ctrl.shape', this.updatePreview.bind(this));
@@ -700,6 +706,21 @@ os.ui.FeatureEditCtrl.prototype.isEllipse = function() {
 
 
 /**
+ * If a line or polygon is selected.
+ * @return {boolean}
+ * @export
+ */
+os.ui.FeatureEditCtrl.prototype.isPolygonOrLine = function() {
+  var geometry = this.previewFeature.getGeometry();
+
+  return (
+    geometry instanceof ol.geom.Polygon || geometry instanceof ol.geom.MultiPolygon ||
+    geometry instanceof ol.geom.LineString || geometry instanceof ol.geom.MultiLineString
+  );
+};
+
+
+/**
  * If the icon picker should be displayed.
  * @return {boolean}
  * @export
@@ -930,6 +951,11 @@ os.ui.FeatureEditCtrl.prototype.loadFromFeature = function(feature) {
       this['icon'] = icon;
       this['centerIcon'] = icon;
     }
+
+    var lineDash = os.style.getConfigLineDash(config);
+    if (lineDash) {
+      this['lineDash'] = lineDash;
+    }
   }
 
   var labelColor = /** @type {Array<number>|string|undefined} */ (feature.get(os.style.StyleField.LABEL_COLOR));
@@ -1117,9 +1143,10 @@ os.ui.FeatureEditCtrl.prototype.setFeatureConfig_ = function(config) {
   color[3] = opacity;
   color = os.style.toRgbaString(color);
 
-  // set color/size
+  // set color/size/line dash
   os.style.setConfigColor(config, color);
   os.style.setConfigSize(config, this['size']);
+  os.style.setConfigLineDash(config, this['lineDash']);
 
   // drop opacity to 0 if the shape style is set to 'None'
   if (this['shape'] === os.style.ShapeType.NONE) {
@@ -1227,6 +1254,21 @@ os.ui.FeatureEditCtrl.prototype.onColumnChange = function(event) {
 os.ui.FeatureEditCtrl.prototype.onIconColorChange = function(opt_new, opt_old) {
   if (opt_new != opt_old && this['labelColor'] == opt_old) {
     this['labelColor'] = opt_new;
+  }
+
+  this.updatePreview();
+};
+
+
+/**
+ * Handle changes to the line dash style.
+ * @param {string=} opt_new The new value
+ * @param {string=} opt_old The old value
+ * @export
+ */
+os.ui.FeatureEditCtrl.prototype.onLineDashChange = function(opt_new, opt_old) {
+  if (opt_new != opt_old && this['lineDash'] == opt_old) {
+    this['lineDash'] = opt_new;
   }
 
   this.updatePreview();
@@ -1485,6 +1527,7 @@ os.ui.FeatureEditCtrl.updateFeatureStyle = function(feature) {
           // grab the color/size from the icon configuration
           var color = os.style.toRgbaString(image['color'] || os.style.DEFAULT_LAYER_COLOR);
           var size = image['scale'] ? os.style.scaleToSize(image['scale']) : os.style.DEFAULT_FEATURE_SIZE;
+          var lineDash = config['stroke']['lineDash'] || os.style.DEFAULT_LINE_STYLE;
           delete image['scale'];
 
           // set radius for points on the image config
@@ -1498,6 +1541,7 @@ os.ui.FeatureEditCtrl.updateFeatureStyle = function(feature) {
           config['stroke'] = config['stroke'] || {};
           config['stroke']['color'] = color;
           config['stroke']['width'] = config['stroke']['width'] || size;
+          config['stroke']['lineDash'] = lineDash;
 
           // drop opacity to 0 if the shape style is set to 'None'
           if (shape === os.style.ShapeType.NONE) {
