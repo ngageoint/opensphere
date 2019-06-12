@@ -494,6 +494,9 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
 
   $scope.$on('$destroy', this.dispose.bind(this));
 
+  // fire an event to inform other UIs that an edit has launched.
+  os.dispatcher.dispatchEvent(os.annotation.EventType.LAUNCH_EDIT);
+
   $timeout(function() {
     // expand the default section if set
     if (this.defaultExpandedOptionsId) {

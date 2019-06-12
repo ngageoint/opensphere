@@ -264,6 +264,7 @@ plugin.places.menu.mapSetup = function() {
           eventType: plugin.places.menu.EventType.SAVE_TO,
           tooltip: 'Creates a new saved place from this location',
           icons: ['<i class="fa fa-fw ' + plugin.places.Icon.PLACEMARK + '"></i>'],
+          beforeRender: os.ui.menu.map.showIfHasCoordinate,
           handler: plugin.places.menu.saveCoordinateToPlaces,
           sort: 0
         }, {
@@ -271,6 +272,7 @@ plugin.places.menu.mapSetup = function() {
           eventType: plugin.places.menu.EventType.SAVE_TO_ANNOTATION,
           tooltip: 'Creates a new annotation at this location',
           icons: ['<i class="fa fa-fw ' + plugin.places.Icon.ANNOTATION + '"></i>'],
+          beforeRender: os.ui.menu.map.showIfHasCoordinate,
           handler: plugin.places.menu.createAnnotationFromCoordinate,
           sort: 1
         }
@@ -306,21 +308,33 @@ plugin.places.menu.spatialSetup = function() {
 
     if (!group.find(plugin.places.menu.EventType.SAVE_TO)) {
       group.addChild({
-        eventType: plugin.places.menu.EventType.SAVE_TO,
         label: 'Save to Places...',
-        tooltip: 'Creates a new saved place from the area',
+        eventType: plugin.places.menu.EventType.SAVE_TO,
+        tooltip: 'Creates a new place from the feature',
         icons: ['<i class="fa fa-fw ' + plugin.places.Icon.PLACEMARK + '"></i>'],
         beforeRender: plugin.places.menu.visibleIfCanSaveSpatial,
-        handler: plugin.places.menu.saveSpatialToPlaces
+        handler: plugin.places.menu.saveSpatialToPlaces,
+        sort: 100
       });
 
       group.addChild({
-        eventType: plugin.places.menu.EventType.EDIT_PLACEMARK,
         label: 'Edit Place',
+        eventType: plugin.places.menu.EventType.EDIT_PLACEMARK,
         tooltip: 'Edit the saved place',
         icons: ['<i class="fa fa-fw fa-pencil"></i>'],
         beforeRender: plugin.places.menu.visibleIfIsPlace,
-        handler: plugin.places.menu.onSpatialEdit_
+        handler: plugin.places.menu.onSpatialEdit_,
+        sort: 110
+      });
+
+      group.addChild({
+        label: 'Create Annotation...',
+        eventType: plugin.places.menu.EventType.SAVE_TO_ANNOTATION,
+        tooltip: 'Creates a new annotation from the feature',
+        icons: ['<i class="fa fa-fw ' + plugin.places.Icon.ANNOTATION + '"></i>'],
+        beforeRender: plugin.places.menu.visibleIfCanSaveSpatial,
+        handler: plugin.places.menu.saveSpatialToAnnotation,
+        sort: 120
       });
     }
   }
@@ -599,7 +613,7 @@ plugin.places.menu.createAnnotationFromCoordinate = function(event) {
     event.preventDefault();
     event.stopPropagation();
 
-    var rootNode = plugin.places.PlacesManager.getInstance().getPlacesRoot();
+    var rootNode = plugin.places.PlacesManager.getInstance().getAnnotationsFolder();
     plugin.file.kml.ui.createOrEditPlace(/** @type {!plugin.file.kml.ui.PlacemarkOptions} */ ({
       'annotation': true,
       'geometry': new ol.geom.Point(context),
@@ -610,10 +624,20 @@ plugin.places.menu.createAnnotationFromCoordinate = function(event) {
 
 
 /**
- * Save the spatial menu context to places.
+ * Save the spatial menu context to an annotation.
  * @param {os.ui.menu.MenuEvent} event The menu event.
  */
-plugin.places.menu.saveSpatialToPlaces = function(event) {
+plugin.places.menu.saveSpatialToAnnotation = function(event) {
+  plugin.places.menu.saveSpatialToPlaces(event, true);
+};
+
+
+/**
+ * Save the spatial menu context to places.
+ * @param {os.ui.menu.MenuEvent} event The menu event.
+ * @param {boolean=} opt_annotation Whether the spatial save is an annotation.
+ */
+plugin.places.menu.saveSpatialToPlaces = function(event, opt_annotation) {
   var context = event.getContext();
   if (context && event instanceof goog.events.Event && !os.inIframe()) {
     // Here's a fun exploitation of the whole window context and instanceof problem.
@@ -651,6 +675,7 @@ plugin.places.menu.saveSpatialToPlaces = function(event) {
     if (geometry) {
       // if found, save away
       plugin.file.kml.ui.createOrEditPlace(/** @type {!plugin.file.kml.ui.PlacemarkOptions} */ ({
+        'annotation': opt_annotation,
         'geometry': geometry,
         'parent': rootNode,
         'name': name,
