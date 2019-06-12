@@ -54,7 +54,7 @@ plugin.file.gpx.ui.GPXImportCtrl.prototype.createDescriptor = function() {
     // existing descriptor. deactivate the descriptor, then update it
     descriptor = this.config['descriptor'];
     descriptor.setActive(false);
-    plugin.file.gpx.GPXDescriptor.updateFromConfig(descriptor, this.config);
+    descriptor.updateFromConfig(this.config);
   } else {
     // this is a new import
     descriptor = plugin.file.gpx.GPXDescriptor.createFromConfig(this.config);

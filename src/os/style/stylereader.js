@@ -31,11 +31,11 @@ os.style.StyleReader.prototype.getOrCreateStyle = function(config) {
   var styleIds = [];
 
   zIndex = /** @type {number|undefined} */ (config['zIndex']) || 0;
-  var hash = this.baseHash + zIndex;
+  var hash = 31 * this.baseHash + zIndex >>> 0;
 
   geometry = /** @type {string|undefined} */ (config['geometry']);
   if (geometry) {
-    hash += goog.string.hashCode(geometry);
+    hash = 31 * hash + goog.string.hashCode(geometry) >>> 0;
   }
   styleIds.push(hash);
 
