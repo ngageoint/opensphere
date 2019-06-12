@@ -3,7 +3,7 @@
 'use strict';
 
 const resolver = require('opensphere-build-resolver/utils');
-const shell = require('shelljs');
+const Compiler = require('google-closure-compiler').compiler;
 
 
 /**
@@ -54,10 +54,20 @@ var vendorMinify = function(resources, output, opt_optimzationLevel) {
     });
   });
 
-  var opLevel = opt_optimzationLevel || 'SIMPLE_OPTIMIZATIONS';
-  var args = '--compilation_level ' + opLevel + ' ' + fileList.join(' ') + ' --js_output_file ' + output;
-  console.log(args);
-  shell.exec(resolver.resolveModulePath('opensphere-build-closure-helper') + '/os-compile.js ' + args);
+  var compiler = new Compiler({
+    js: fileList,
+    compilation_level: opt_optimzationLevel || 'SIMPLE_OPTIMIZATIONS',
+    js_output_file: output
+  });
+
+  compiler.run((exit, out, err) => {
+    if (exit) {
+      process.stderr.write(err, () => process.exit(1))
+    } else {
+      process.stderr.write(err);
+      process.stdout.write(out);
+    }
+  })
 };
 
 vendorMinify(tuiEditorResources, 'vendor/os-minified/os-tui-editor.min.js');
