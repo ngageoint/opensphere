@@ -59,6 +59,7 @@ describe('Import state file', function() {
     cy.get(os.layersDialog.Tabs.Layers.Tree.Type.mapLayer.WORLD_IMAGERY_TILES)
         .find(os.layersDialog.Tabs.Layers.Tree.LAYER_TOGGLE_CHECKBOX_WILDCARD)
         .click();
+    cy.wait(1000);
     cy.imageComparison('features loaded');
     cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_5).rightClick();
     cy.get(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.Server.contextMenu.menuOptions.FEATURE_ACTIONS).click();
