@@ -367,7 +367,7 @@ plugin.places.PlacesManager.prototype.saveInternal_ = function() {
 
 
 /**
- * Success callback for importing data. Adds the areas to Area Manager
+ * Success callback for exporting data. Adds the areas to Area Manager
  * @param {goog.events.Event} event
  * @private
  */
@@ -386,7 +386,7 @@ plugin.places.PlacesManager.prototype.onExportComplete_ = function(event) {
 
 
 /**
- * Success callback for importing data. Adds the areas to Area Manager
+ * Error callback for exporting data.
  * @param {goog.events.Event} event
  * @private
  */
