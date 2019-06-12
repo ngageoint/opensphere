@@ -12,10 +12,6 @@ const shell = require('shelljs');
  */
 const tuiEditorResources = [
   {
-    source: resolver.resolveModulePath('markdown-it/dist', __dirname),
-    scripts: ['markdown-it.min.js']
-  },
-  {
     source: resolver.resolveModulePath('to-mark/dist', __dirname),
     scripts: ['to-mark.min.js']
   },
@@ -38,7 +34,6 @@ const tuiEditorResources = [
   {
     source: resolver.resolveModulePath('tui-editor/dist', __dirname),
     scripts: [
-      'tui-editor-Viewer.min.js',
       'tui-editor-Editor.min.js',
       'tui-editor-extTable.min.js'
     ]

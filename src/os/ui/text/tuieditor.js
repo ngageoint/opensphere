@@ -3,6 +3,7 @@ goog.provide('os.ui.text.TuiEditorCtrl');
 goog.provide('os.ui.text.tuiEditorDirective');
 goog.require('goog.dom.safe');
 goog.require('ol.xml');
+goog.require('os.text.tuieditormarkdownit');
 goog.require('os.ui.Module');
 
 
@@ -10,6 +11,15 @@ goog.require('os.ui.Module');
  * @type {string}
  */
 os.ui.text.TuiEditor.MODE_KEY = 'tuieditor.mode';
+
+
+
+/**
+ * The URL to the GIF Javascript library.
+ * @type {string}
+ * @const
+ */
+os.ui.text.TuiEditor.SCRIPT_URL = os.ROOT + 'vendor/os-minified/os-tui-editor.min.js';
 
 
 /**
@@ -75,6 +85,11 @@ os.ui.text.TuiEditorCtrl = function($scope, $element, $timeout) {
   this['tuiEditor'] = null;
 
   /**
+   * @type {boolean}
+   */
+  this['loading'] = false;
+
+  /**
    * @type {string}
    */
   $scope['text'] = $scope['text'] || '';
@@ -84,7 +99,14 @@ os.ui.text.TuiEditorCtrl = function($scope, $element, $timeout) {
 
   $timeout(function() {
     if (this.scope) {
-      this.init();
+      if (this.scope['edit'] && !window['tui']) {
+        this['loading'] = true;
+        var trustedUrl =
+            goog.html.TrustedResourceUrl.fromConstant(os.string.createConstant(os.ui.text.TuiEditor.SCRIPT_URL));
+        goog.net.jsloader.safeLoad(trustedUrl).addCallbacks(this.init, this.onScriptLoadError, this);
+      } else {
+        this.init();
+      }
     }
   }.bind(this));
 
@@ -102,6 +124,17 @@ os.ui.text.TuiEditorCtrl.prototype.destroy = function() {
   this.element_ = null;
   this.scope = null;
   this.timeout_ = null;
+};
+
+
+/**
+ * Since we couldnt load the js, just display the content
+ */
+os.ui.text.TuiEditorCtrl.prototype.onScriptLoadError = function() {
+  os.alertManager.sendAlert('Failed to load editor');
+  this.scope['edit'] = false;
+  this['loading'] = false;
+  os.ui.apply(this.scope);
 };
 
 
@@ -168,6 +201,7 @@ os.ui.text.TuiEditorCtrl.prototype.getOptions = function() {
  */
 os.ui.text.TuiEditorCtrl.prototype.init = function() {
   if (this.scope['edit']) {
+    this['loading'] = false;
     this['tuiEditor'] = new tui.Editor(this.getOptions());
 
     // HACK. There are no hooks to change the button text. So change it after the editor renders
@@ -185,21 +219,25 @@ os.ui.text.TuiEditorCtrl.prototype.init = function() {
       }
     }.bind(this));
   } else {
-    this['tuiEditor'] = tui.Editor.factory({
-      'el': this.element_.find('.js-tui-editor__viewer'),
-      'viewer': true,
-      'height': 'auto',
-      'initialValue': this.scope['text']
-    });
+    this['displayHtml'] = os.ui.text.TuiEditor.render(this.scope['text']);
+    // this['tuiEditor'] = tui.Editor.factory({
+    //   'el': this.element_.find('.js-tui-editor__viewer'),
+    //   'viewer': true,
+    //   'height': 'auto',
+    //   'initialValue': this.scope['text']
+    // });
   }
 
   // Watch to see if something changes the text and update the value
   this.scope.$watch('text', function(val) {
-    if (val != (this.scope['edit'] ? this['tuiEditor'].getValue() : this['tuiEditor']['markdownValue'])) {
+    if (this.scope['edit'] && val != this['tuiEditor'].getValue()) {
       this['tuiEditor'].setValue(val);
-      os.ui.apply(this.scope);
+    } else {
+      this['displayHtml'] = os.ui.text.TuiEditor.render(this.scope['text']);
       this.setTargetBlankPropertyInLinks();
     }
+
+    os.ui.apply(this.scope);
   }.bind(this));
 };
 
@@ -296,7 +334,7 @@ os.ui.text.TuiEditorCtrl.prototype.setTargetBlankPropertyInLinks = function() {
  * @return {string} - markdown parsed to html
  */
 os.ui.text.TuiEditor.render = function(opt_markdown) {
-  return opt_markdown ? tui.Editor.markdownit.render(opt_markdown) : '';
+  return opt_markdown ? os.ui.text.TuiEditorMarkdownIt.render(opt_markdown) : '';
 };
 
 
