@@ -8,6 +8,7 @@ goog.require('os.defines');
 goog.require('os.metrics.Metrics');
 goog.require('os.style.label');
 goog.require('os.ui.Module');
+goog.require('os.ui.geo.positionDirective');
 
 
 /**
@@ -61,6 +62,12 @@ os.ui.Module.directive('labelcontrols', [os.ui.layer.labelControlsDirective]);
  */
 os.ui.layer.LabelControlsCtrl = function($scope, $element, $timeout) {
   os.ui.layer.LabelControlsCtrl.base(this, 'constructor');
+
+  this['pointGeometry'] = {
+    'lat': NaN,
+    'lon': NaN,
+    'alt': NaN
+  };
 
   /**
    * The Angular scope.

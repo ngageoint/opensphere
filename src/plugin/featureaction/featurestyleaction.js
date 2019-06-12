@@ -20,6 +20,7 @@ plugin.im.action.feature.StyleActionTagName = {
   CENTER_SHAPE: 'centerShape',
   COLOR: 'color',
   ICON_SRC: 'iconSrc',
+  LINE_DASH: 'lineDash',
   OPACITY: 'opacity',
   ROTATION_COLUMN: 'rotationColumn',
   SHOW_ROTATION: 'showRotation',
@@ -219,6 +220,11 @@ plugin.im.action.feature.StyleAction.prototype.toXml = function() {
     os.xml.appendElement(plugin.im.action.feature.StyleActionTagName.SIZE, element, String(size));
   }
 
+  var lineDash = os.style.getConfigLineDash(this.styleConfig);
+  if (lineDash != null) {
+    os.xml.appendElement(plugin.im.action.feature.StyleActionTagName.LINE_DASH, element, JSON.stringify(lineDash));
+  }
+
   var shape = this.styleConfig[os.style.StyleField.SHAPE] || os.style.DEFAULT_SHAPE;
   os.xml.appendElement(plugin.im.action.feature.StyleActionTagName.SHAPE, element, String(shape));
 
@@ -273,6 +279,14 @@ plugin.im.action.feature.StyleAction.prototype.fromXml = function(xml) {
     var size = parseFloat(os.xml.getChildValue(xml, plugin.im.action.feature.StyleActionTagName.SIZE));
     if (!isNaN(size)) {
       os.style.setConfigSize(styleConfig, size);
+    }
+
+    var lineData = os.xml.getChildValue(xml, plugin.im.action.feature.StyleActionTagName.LINE_DASH);
+    if (lineData) {
+      var lineDash = JSON.parse(lineData);
+      if (lineDash && goog.isArray(lineDash)) {
+        os.style.setConfigLineDash(styleConfig, /** @type {Array<number>} */ (lineDash));
+      }
     }
 
     var shape = os.xml.getChildValue(xml, plugin.im.action.feature.StyleActionTagName.SHAPE);

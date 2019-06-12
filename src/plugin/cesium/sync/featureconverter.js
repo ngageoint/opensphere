@@ -540,11 +540,22 @@ plugin.cesium.sync.FeatureConverter.prototype.olLineStringGeometryToCesium = fun
  */
 plugin.cesium.sync.FeatureConverter.prototype.createLinePrimitive = function(positions, context, style, opt_type) {
   var type = opt_type || 'PolylineGeometry';
-  var appearance = new Cesium.PolylineColorAppearance();
 
   var width = this.extractLineWidthFromOlStyle(style);
   var color = this.extractColorFromOlStyle(style, true);
   color.alpha *= context.layer.getOpacity();
+
+  // convert the line dash to 16 bit int
+  var stroke = style.getStroke();
+  var dashPattern = stroke != null ? stroke.getLineDash() : os.style.DEFAULT_LINE_STYLE;
+  var lineDash = /** @type {os.style.styleLineDashOption} */ (os.style.dashPatternToName(dashPattern)).csPattern;
+
+  var appearance = new Cesium.PolylineMaterialAppearance({
+    material: Cesium.Material.fromType(Cesium.Material.PolylineDashType, {
+      color: color,
+      dashPattern: lineDash
+    })
+  });
 
   // Handle both color and width
   var outlineGeometry = new Cesium[type]({
@@ -635,8 +646,14 @@ plugin.cesium.sync.FeatureConverter.prototype.updatePolyline = function(feature,
   var color = this.extractColorFromOlStyle(style, true);
   color.alpha *= context.layer.getOpacity();
 
-  polyline.material = Cesium.Material.fromType(Cesium.Material.ColorType, {
-    color: color
+  // convert the line dash to 16 bit int
+  var stroke = style.getStroke();
+  var dashPattern = stroke != null ? stroke.getLineDash() : os.style.DEFAULT_LINE_STYLE;
+  var lineDash = /** @type {os.style.styleLineDashOption} */ (os.style.dashPatternToName(dashPattern)).csPattern;
+
+  polyline.material = Cesium.Material.fromType(Cesium.Material.PolylineDashType, {
+    color: color,
+    dashPattern: lineDash
   });
   polyline.width = width;
 
@@ -1057,14 +1074,24 @@ plugin.cesium.sync.FeatureConverter.prototype.olPolygonGeometryToCesiumPolyline 
 
     goog.asserts.assert(csRings.length > 0);
 
-    var appearance = new Cesium.PolylineColorAppearance();
-
     var width = this.extractLineWidthFromOlStyle(style);
     var layerOpacity = context.layer.getOpacity();
 
+    // convert the line dash to 16 bit int
+    var stroke = style.getStroke();
+    var dashPattern = stroke != null ? stroke.getLineDash() : os.style.DEFAULT_LINE_STYLE;
+    var lineDash = /** @type {os.style.styleLineDashOption} */ (os.style.dashPatternToName(dashPattern)).csPattern;
+
     // combine the layer/style opacity if there is a stroke style, otherwise set it to 0 to hide the outline
     var outlineColor = this.extractColorFromOlStyle(style, true);
-    outlineColor.alpha = style.getStroke() != null ? (outlineColor.alpha * layerOpacity) : 0;
+    outlineColor.alpha = stroke != null ? (outlineColor.alpha * layerOpacity) : 0;
+
+    var appearance = new Cesium.PolylineMaterialAppearance({
+      material: Cesium.Material.fromType(Cesium.Material.PolylineDashType, {
+        color: outlineColor,
+        dashPattern: lineDash
+      })
+    });
 
     var primitives = new Cesium.PrimitiveCollection();
 
@@ -1665,12 +1692,15 @@ plugin.cesium.sync.FeatureConverter.prototype.olGeometryToCesium = function(feat
   // check if we have a primitive for the geometry already
   var primitive = context.getPrimitiveForGeometry(geometry);
 
-  // if the outline width changed, we need to recreate the primitive since Cesium can't change the width on a geometry
-  // instance
+  // if the outline width or line dash changed, we need to recreate the primitive since Cesium can't change the width
+  // or line dash on a geometry instance
   if (primitive && primitive['olLineWidth'] != null) {
     var dirty = geometry.get(os.geom.GeometryField.DIRTY);
     var width = this.extractLineWidthFromOlStyle(style);
-    if (dirty || primitive['olLineWidth'] != width) {
+    var stroke = style.getStroke();
+    var dashPattern = stroke != null ? stroke.getLineDash() : os.style.DEFAULT_LINE_STYLE;
+    var lineDash = /** @type {os.style.styleLineDashOption} */ (os.style.dashPatternToName(dashPattern)).csPattern;
+    if (dirty || primitive['olLineWidth'] != width || primitive.appearance.material.uniforms.dashPattern != lineDash) {
       wasPrimitiveShown = plugin.cesium.VectorContext.isShown(primitive);
       context.removePrimitive(primitive);
       geometry.set(os.geom.GeometryField.DIRTY, false);

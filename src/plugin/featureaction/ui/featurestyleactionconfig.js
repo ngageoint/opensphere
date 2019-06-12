@@ -24,7 +24,7 @@ plugin.im.action.feature.ui.styleConfigDirective = function() {
   return {
     restrict: 'E',
     replace: true,
-    template: '<div><vectorstylecontrols color="color" opacity="opacity" size="size" ' +
+    template: '<div><vectorstylecontrols color="color" opacity="opacity" size="size" line-dash="lineDash"' +
         'icon="icon" center-icon="centerIcon" icon-set="ctrl.iconSet" icon-src="ctrl.iconSrc" ' +
         'shape="shape" shapes="shapes" center-shape="centerShape" center-shapes="centerShapes" ' +
         'show-color-reset="true"></vectorstylecontrols>' +
@@ -89,6 +89,7 @@ plugin.im.action.feature.ui.StyleConfigCtrl = function($scope, $element) {
   $scope.$on('color.reset', this.onColorReset.bind(this));
   $scope.$on('opacity.slidestop', this.onOpacityChange.bind(this));
   $scope.$on('size.slidestop', this.onSizeChange.bind(this));
+  $scope.$on(os.ui.layer.VectorStyleControlsEventType.LINE_DASH_CHANGE, this.onLineDashChange.bind(this));
   $scope.$on(os.ui.icon.IconPickerEventType.CHANGE, this.onIconChange.bind(this));
   $scope.$on(os.ui.layer.VectorStyleControlsEventType.SHAPE_CHANGE, this.onShapeChange.bind(this));
   $scope.$on(os.ui.layer.VectorStyleControlsEventType.CENTER_SHAPE_CHANGE, this.onCenterShapeChange.bind(this));
@@ -116,6 +117,7 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.initialize = function() {
     os.style.setConfigColor(this.styleConfig, os.style.getConfigColor(this.styleConfig));
 
     this.scope['size'] = os.style.getConfigSize(this.styleConfig);
+    this.scope['lineDash'] = os.style.getConfigLineDash(this.styleConfig);
 
     this.scope['shape'] = this.styleConfig[os.style.StyleField.SHAPE] || os.style.DEFAULT_SHAPE;
     this.updateIcon_();
@@ -251,6 +253,23 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onSizeChange = function(ev
 
   if (this.styleConfig && value != null) {
     os.style.setConfigSize(this.styleConfig, value);
+  }
+};
+
+
+/**
+ * Handle changes to line dash.
+ * @param {?angular.Scope.Event} event The Angular event.
+ * @param {Array<number>} value
+ * @protected
+ */
+plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onLineDashChange = function(event, value) {
+  if (event) {
+    event.stopPropagation();
+  }
+
+  if (this.styleConfig && value != null) {
+    os.style.setConfigLineDash(this.styleConfig, value);
   }
 };
 
