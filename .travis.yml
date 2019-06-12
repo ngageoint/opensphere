@@ -28,8 +28,8 @@ script:
 after_success:
 - chmod ugo+x ./deploy.sh
 - "./deploy.sh"
-after_failure:
-- "./cypress/support/s3-artifact-upload.sh"
+# after_failure:
+# - "./cypress/support/s3-artifact-upload.sh"
 branches:
   except:
   - "/^v\\d+\\.\\d+\\.\\d+$/"
