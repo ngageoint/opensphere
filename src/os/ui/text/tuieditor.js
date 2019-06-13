@@ -3,8 +3,8 @@ goog.provide('os.ui.text.TuiEditorCtrl');
 goog.provide('os.ui.text.tuiEditorDirective');
 goog.require('goog.dom.safe');
 goog.require('ol.xml');
-goog.require('os.text.tuieditormarkdownit');
 goog.require('os.ui.Module');
+goog.require('os.ui.text.TuiEditorMarkdownIt');
 
 
 /**
@@ -19,7 +19,7 @@ os.ui.text.TuiEditor.MODE_KEY = 'tuieditor.mode';
  * @type {string}
  * @const
  */
-os.ui.text.TuiEditor.SCRIPT_URL = os.ROOT + 'vendor/os-minified/os-tui-editor.min.js';
+os.ui.text.TuiEditor.SCRIPT_URL = ROOT + 'vendor/os-minified/os-tui-editor.min.js';
 
 
 /**
@@ -95,6 +95,12 @@ os.ui.text.TuiEditorCtrl = function($scope, $element, $timeout) {
   this['loading'] = false;
 
   /**
+   * If for some reason the editor doesnt load, just give them a text area
+   * @type {boolean}
+   */
+  this['textAreaBackup'] = false;
+
+  /**
    * @type {string}
    */
   $scope['text'] = $scope['text'] || '';
@@ -137,7 +143,7 @@ os.ui.text.TuiEditorCtrl.prototype.destroy = function() {
  */
 os.ui.text.TuiEditorCtrl.prototype.onScriptLoadError = function() {
   os.alertManager.sendAlert('Failed to load editor');
-  this.scope['edit'] = false;
+  this['textAreaBackup'] = true;
   this['loading'] = false;
   os.ui.apply(this.scope);
 };

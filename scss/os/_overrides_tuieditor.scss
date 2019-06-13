@@ -9,11 +9,12 @@
 
 // Editor Overrides
 .c-tui-editor {
+  .CodeMirror,
   .CodeMirror:not(.CodeMirror-fullscreen) .CodeMirror-scroll,
   .te-ww-container .te-editor .tui-editor-contents,
   .te-md-container .te-preview {
     max-height: 75vh; // the toolbar doesnt scroll with the editor. So its annoying to have to scroll up just to use it
-    min-height: 10rem;
+    min-height: 10rem !important; // wysiwyg mode sets a min height also. Ours is more important
   }
 
 
@@ -62,7 +63,7 @@
     .te-tab button,
     .te-switch-button {
       background: $input-bg;
-      border-color: transparent;
+      border: 0;
       color: $text-muted;
     }
 
@@ -72,9 +73,9 @@
     .te-switch-button.active,
     .te-switch-button:hover {
       background: $u-theme-variables--bg-offset;
-      border-color: transparent;
+      border-left: 1px solid $border-color;
+      border-right: 1px solid $border-color;
       color: $input-color;
-      outline: 1px solid $border-color;
     }
   }
 

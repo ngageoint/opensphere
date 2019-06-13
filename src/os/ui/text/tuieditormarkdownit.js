@@ -1,4 +1,4 @@
-goog.provide('os.text.tuieditormarkdownit');
+goog.provide('os.ui.text.TuiEditorMarkdownIt');
 
 
 /**
