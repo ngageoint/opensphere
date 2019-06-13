@@ -54,10 +54,7 @@ os.ui.window.launchConfirm = function(opt_options, opt_scopeOptions) {
 
   var windowOverrides = /** @type {!osx.window.WindowOptions} */ (options.windowOptions || {});
 
-  var height = windowOverrides.height || 140;
-  var minHeight = windowOverrides.minHeight || height;
-  var maxHeight = windowOverrides.maxHeight || height;
-
+  var height = windowOverrides.height || 'auto';
   var width = windowOverrides.width || 325;
   var minWidth = windowOverrides.minWidth || width;
   var maxWidth = windowOverrides.maxWidth || width;
@@ -72,12 +69,16 @@ os.ui.window.launchConfirm = function(opt_options, opt_scopeOptions) {
     'min-width': minWidth,
     'max-width': maxWidth,
     'height': height,
-    'min-height': minHeight,
-    'max-height': maxHeight,
+    'min-height': windowOverrides.minHeight,
+    'max-height': windowOverrides.maxHeight,
     'modal': windowOverrides.modal != null ? windowOverrides.modal : true,
     'show-close': windowOverrides.showClose != null ? windowOverrides.showClose : false,
     'no-scroll': windowOverrides.noScroll != null ? windowOverrides.noScroll : true
   };
+
+  if (windowOverrides.id) {
+    windowOptions['id'] = windowOverrides.id;
+  }
 
   var text = options.prompt || 'Are you sure?';
   var template = '<confirm>' + text + '</confirm>';

@@ -10,7 +10,7 @@ goog.require('os.capture.IRecorder');
 
 /**
  * Abstract class for creating a recording.
- *
+ * @abstract
  * @implements {os.capture.IRecorder}
  * @extends {goog.events.EventTarget}
  * @constructor
@@ -133,9 +133,10 @@ os.capture.AbstractRecorder.prototype.abort = function(opt_msg) {
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.capture.AbstractRecorder.prototype.record = goog.abstractMethod;
+os.capture.AbstractRecorder.prototype.record = function() {};
 
 
 /**

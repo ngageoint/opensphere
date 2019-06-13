@@ -550,7 +550,6 @@ os.ui.slick.SlickGridCtrl.prototype.getSelectedViewData = function() {
 /**
  * Gets selected data in the grid, sorted by the Slickgrid data view.
  * @param {(function(*):string)=} opt_mapFn Function to map grid items to text.
- * @protected
  */
 os.ui.slick.SlickGridCtrl.prototype.copyRows = function(opt_mapFn) {
   var data = this.getSelectedViewData();
@@ -1339,7 +1338,6 @@ os.ui.slick.SlickGridCtrl.prototype.multiColumnSort = function(cols, a, b) {
  * Handles changes to the sort
  * @param {*=} opt_e The Event
  * @param {Object=} opt_args The args
- * @protected
  * @suppress {checkTypes}
  */
 os.ui.slick.SlickGridCtrl.prototype.onSortBySelectionChange = function(opt_e, opt_args) {

@@ -10,6 +10,7 @@ goog.require('os.ui.data.DescriptorNode');
 
 /**
  * Generic descriptor-based provider
+ * @abstract
  * @extends {os.ui.data.BaseProvider}
  * @constructor
  * @template T

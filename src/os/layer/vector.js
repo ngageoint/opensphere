@@ -847,20 +847,22 @@ os.layer.Vector.prototype.isFilterable = function() {
  */
 os.layer.Vector.prototype.getFilterKey = function() {
   var options = this.getLayerOptions();
-  var id = /** @type {string} */ (options['id']);
+  if (options) {
+    var id = /** @type {string} */ (options['id']);
 
-  // try to get it from the descriptor
-  var d = os.dataManager.getDescriptor(id);
-  if (os.implements(d, os.filter.IFilterable.ID)) {
-    return /** @type {!os.filter.IFilterable} */ (d).getFilterKey();
-  }
+    // try to get it from the descriptor
+    var d = os.dataManager.getDescriptor(id);
+    if (os.implements(d, os.filter.IFilterable.ID)) {
+      return /** @type {!os.filter.IFilterable} */ (d).getFilterKey();
+    }
 
-  // try to derive it from the layer options
-  var url = /** @type {string} */ (options['url']);
-  var params = /** @type {string} */ (options['params']);
-  var typeName = params ? /** @type {string} */ (params.get('typename')) : null;
-  if (url && typeName) {
-    return url + '!!' + typeName;
+    // try to derive it from the layer options
+    var url = /** @type {string} */ (options['url']);
+    var params = /** @type {string} */ (options['params']);
+    var typeName = params ? /** @type {string} */ (params.get('typename')) : null;
+    if (url && typeName) {
+      return url + '!!' + typeName;
+    }
   }
 
   // dang
@@ -948,6 +950,8 @@ os.layer.Vector.prototype.supportsAction = function(type, opt_actionArgs) {
       case os.action.EventType.IDENTIFY:
       case os.action.EventType.SHOW_DESCRIPTION:
         return true;
+      case os.action.EventType.FEATURE_LIST:
+        return isVector;
       case os.action.EventType.RENAME:
         return !!opt_actionArgs && goog.isArrayLike(opt_actionArgs) && opt_actionArgs.length === 1;
       case os.action.EventType.BUFFER:

@@ -38,6 +38,7 @@ plugin.arc.ArcServer = function() {
   this.log = plugin.arc.ArcServer.LOGGER_;
 };
 goog.inherits(plugin.arc.ArcServer, os.ui.server.AbstractLoadingServer);
+os.implements(plugin.arc.ArcServer, os.data.IDataProvider.ID);
 
 
 /**

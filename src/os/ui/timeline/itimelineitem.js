@@ -15,7 +15,7 @@ os.ui.timeline.ITimelineItem = function() {};
 /**
  * @return {string}
  */
-os.ui.timeline.ITimelineItem.prototype.getId = goog.abstractMethod;
+os.ui.timeline.ITimelineItem.prototype.getId;
 
 
 /**
@@ -27,7 +27,7 @@ os.ui.timeline.ITimelineItem.prototype.setId;
 /**
  * @return {boolean}
  */
-os.ui.timeline.ITimelineItem.prototype.isInteractive = goog.abstractMethod;
+os.ui.timeline.ITimelineItem.prototype.isInteractive;
 
 
 /**
@@ -39,7 +39,7 @@ os.ui.timeline.ITimelineItem.prototype.setInteractive;
 /**
  * @return {?d3.Scale}
  */
-os.ui.timeline.ITimelineItem.prototype.getXScale = goog.abstractMethod;
+os.ui.timeline.ITimelineItem.prototype.getXScale;
 
 
 /**
@@ -51,7 +51,7 @@ os.ui.timeline.ITimelineItem.prototype.setXScale;
 /**
  * @return {Array<os.ui.action.Action>}
  */
-os.ui.timeline.ITimelineItem.prototype.getActions = goog.abstractMethod;
+os.ui.timeline.ITimelineItem.prototype.getActions;
 
 
 /**
@@ -70,14 +70,14 @@ os.ui.timeline.ITimelineItem.prototype.setSnap;
  * Gets the time extent of the item
  * @return {Array.<number>}
  */
-os.ui.timeline.ITimelineItem.prototype.getExtent = goog.abstractMethod;
+os.ui.timeline.ITimelineItem.prototype.getExtent;
 
 
 /**
  * Gets the average time for this item
  * @return {number}
  */
-os.ui.timeline.ITimelineItem.prototype.getAvg = goog.abstractMethod;
+os.ui.timeline.ITimelineItem.prototype.getAvg;
 
 
 /**

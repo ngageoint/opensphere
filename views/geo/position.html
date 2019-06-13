@@ -1,8 +1,8 @@
-<div class="d-flex flex-column flex-lg-row">
+<div class="d-col flex-fill flex-lg-row">
   <label class="col-{{posCtrl.col}} col-form-label" ng-class="{'text-right': !bulk, 'u-required': !bulk && required}" for="pos" ng-if="posCtrl.showLabel">{{posCtrl.label}}</label>
-  <div class="col d-flex flex-column">
+    <div class="col d-flex flex-column flex-fill">
     <div class="d-flex flex-column">
-      <div class="d-flex">
+      <div class="d-flex align-items-center">
         <input type="text"
             class="form-control"
             name="pos"
