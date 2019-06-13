@@ -515,7 +515,7 @@ plugin.places.PlacesManager.prototype.reindexTimeModel_ = function() {
  * @private
  */
 plugin.places.PlacesManager.prototype.initializeAnnotationsFolder_ = function() {
-  if (this.placesRoot_) {
+  if (this.placesRoot_ && this.placesSource_) {
     var children = this.placesRoot_.getChildren();
     var folder;
 
@@ -533,6 +533,7 @@ plugin.places.PlacesManager.prototype.initializeAnnotationsFolder_ = function() 
       folder.setLabel('Annotations');
 
       this.placesRoot_.addChild(folder);
+      this.placesSource_.addNodes([folder]);
     }
 
     folder.collapsed = false;

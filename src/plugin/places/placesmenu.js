@@ -646,7 +646,8 @@ plugin.places.menu.saveSpatialToPlaces = function(event, opt_annotation) {
     event.preventDefault();
     event.stopPropagation();
 
-    var rootNode = plugin.places.PlacesManager.getInstance().getPlacesRoot();
+    var rootNode = opt_annotation ? plugin.places.PlacesManager.getInstance().getAnnotationsFolder() :
+        plugin.places.PlacesManager.getInstance().getPlacesRoot();
     var geometry;
     var name;
     var time;
