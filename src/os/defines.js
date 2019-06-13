@@ -15,6 +15,12 @@ goog.define('os.ROOT', '../opensphere/');
 
 
 /**
+ * @define {string} The path to this project
+ */
+goog.define('ROOT', '../opensphere/');
+
+
+/**
  * @define {string} The settings file
  */
 goog.define('os.SETTINGS', '.build/settings-debug.json');
