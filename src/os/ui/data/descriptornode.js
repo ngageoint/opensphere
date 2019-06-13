@@ -114,8 +114,7 @@ os.ui.data.DescriptorNode.prototype.getId = function() {
  */
 os.ui.data.DescriptorNode.prototype.getLabel = function() {
   if (this.descriptor_) {
-    // var explicitTitle = this.descriptor_.getExplicitTitle() || '';
-    return this.descriptor_.getTitle(); // + (explicitTitle ? ' ' + explicitTitle : '');
+    return this.descriptor_.getTitle();
   }
 
   return os.ui.data.DescriptorNode.superClass_.getId.call(this);

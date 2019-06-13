@@ -1,6 +1,7 @@
 goog.provide('plugin.file.kml.ui.KMLNodeUICtrl');
 goog.provide('plugin.file.kml.ui.kmlNodeUIDirective');
 
+goog.require('os.events');
 goog.require('os.ui.Module');
 goog.require('os.ui.slick.AbstractNodeUICtrl');
 goog.require('plugin.file.kml.cmd.KMLNodeRemove');
@@ -22,6 +23,10 @@ plugin.file.kml.ui.kmlNodeUIDirective = function() {
         '<span ng-if="nodeUi.canEdit()" ng-click="nodeUi.edit()">' +
             '<i class="fa fa-pencil fa-fw c-glyph" ' +
                 'title="Edit the {{nodeUi.isFolder() ? \'folder\' : \'place\'}}"></i></span>' +
+        '<span ng-if="!nodeUi.isFolder() && nodeUi.hasAnnotation()" ng-click="nodeUi.removeAnnotation()">' +
+            '<i class="fa fa-comment fa-fw c-glyph" title="Remove Annotation"></i></span>' +
+        '<span ng-if="!nodeUi.isFolder() && !nodeUi.hasAnnotation()" ng-click="nodeUi.showAnnotation()">' +
+            '<i class="fa fa-comment-o fa-fw c-glyph" title="Show Annotation"></i></span>' +
 
         '<span ng-if="nodeUi.canRemove()" ng-click="nodeUi.tryRemove()">' +
         '<i class="fa fa-times fa-fw c-glyph" ' +
@@ -186,3 +191,65 @@ plugin.file.kml.ui.KMLNodeUICtrl.prototype.edit = function() {
     }
   }
 };
+
+
+/**
+ * If there is an annotation or not
+ * @return {boolean}
+ * @export
+ */
+plugin.file.kml.ui.KMLNodeUICtrl.prototype.hasAnnotation = function() {
+  var node = /** @type {plugin.file.kml.ui.KMLNode} */ (this.scope['item']);
+  if (node) {
+    var feature = node.getFeature();
+    if (feature) {
+      var options = /** @type {osx.annotation.Options|undefined} */ (feature.get(os.annotation.OPTIONS_FIELD));
+      return options != null && options.show;
+    }
+  }
+  return false;
+};
+
+/**
+ * Removes annotation
+ * @export
+ */
+plugin.file.kml.ui.KMLNodeUICtrl.prototype.removeAnnotation = function() {
+  var node = /** @type {plugin.file.kml.ui.KMLNode} */ (this.scope['item']);
+  if (node) {
+    var feature = node.getFeature();
+    if (feature) {
+      node.clearAnnotations();
+
+      var options = /** @type {osx.annotation.Options|undefined} */ (feature.get(os.annotation.OPTIONS_FIELD));
+      if (options) {
+        options.show = false;
+        node.dispatchEvent(new os.events.PropertyChangeEvent('icons'));
+      }
+    }
+  }
+};
+
+/**
+ * Shows annotation
+ * @export
+ */
+plugin.file.kml.ui.KMLNodeUICtrl.prototype.showAnnotation = function() {
+  var node = /** @type {plugin.file.kml.ui.KMLNode} */ (this.scope['item']);
+  if (node) {
+    var feature = node.getFeature();
+    if (feature) {
+      var options = /** @type {osx.annotation.Options|undefined} */ (feature.get(os.annotation.OPTIONS_FIELD));
+      if (!options) {
+        options = os.object.unsafeClone(os.annotation.DEFAULT_OPTIONS);
+        feature.set(os.annotation.OPTIONS_FIELD, options);
+      }
+
+      options.show = true;
+
+      node.loadAnnotation();
+      node.dispatchEvent(new os.events.PropertyChangeEvent('icons'));
+    }
+  }
+};
+
