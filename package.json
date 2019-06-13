@@ -28,6 +28,9 @@
       "overrides_slate_compact_cb_rg",
       "overrides_slate_compact_cb_b"
     ],
+    "defineRoots": {
+      "ROOT": "./"
+    },
     "gcc": {
       "language_in": "ECMASCRIPT_2015",
       "conformance_configs": "conformance_config.textproto",

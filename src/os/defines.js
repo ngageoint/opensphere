@@ -17,7 +17,7 @@ goog.define('os.ROOT', '../opensphere/');
 /**
  * @define {string} The path to this project
  */
-goog.define('ROOT', '../opensphere/');
+goog.define('ROOT', './');
 
 
 /**
