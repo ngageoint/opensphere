@@ -5,29 +5,30 @@
  */
 
 
+
 /**
- * @type {function(): Object}
+ * @param {Object=} opt_options
+ * @constructor
  */
-var markdownit = function() {};
+var Markdownit = function(opt_options) {};
+
+/**
+ * @type {Object}
+ */
+Markdownit.prototype.core = {};
 
 
 /**
  * @type {Object}
  */
-markdownit.prototype.core = {};
+Markdownit.prototype.core.ruler = {};
 
 
 /**
- * @type {Object}
+ * @param {Object=} opt_options
+ * @return {Markdownit}
  */
-markdownit.prototype.core.ruler = {};
-
-
-/**
- * @type {Object}
- * @const
- */
-var Markdownit = {};
+var markdownit = function(opt_options) {};
 
 
 /**
