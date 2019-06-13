@@ -44,21 +44,5 @@ describe('Generate heatmap from CSV', function() {
     cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_1).should('contain', 'Image (1)');
     cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_2).should('contain', 'Heatmap - Chicago Traffic Counts');
     cy.imageComparison('heatmap loaded');
-
-    // Clean up
-    cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_2).click();
-    cy.get(os.layersDialog.Tabs.Layers.Tree.Type.imageLayer.REMOVE_LAYER_BUTTON_WILDCARD).click();
-    cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_2).should('not.contain', 'Heatmap - Chicago Traffic Counts');
-    cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4).click();
-    cy.get(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.REMOVE_LAYER_BUTTON_WILDCARD).click();
-    cy.get(os.layersDialog.DIALOG).should('not.contain', 'Chicago Traffic Counts Features (1279)');
-    cy.imageComparison('features and heatmap removed');
-    cy.get(os.layersDialog.Tabs.Layers.Tree.Type.mapLayer.STREET_MAP_TILES)
-        .find(os.layersDialog.Tabs.Layers.Tree.LAYER_TOGGLE_CHECKBOX_WILDCARD)
-        .click();
-    cy.get(os.layersDialog.Tabs.Layers.Tree.Type.mapLayer.WORLD_IMAGERY_TILES)
-        .find(os.layersDialog.Tabs.Layers.Tree.LAYER_TOGGLE_CHECKBOX_WILDCARD)
-        .click();
-    cy.get(os.Application.PAGE).type('v');
   });
 });

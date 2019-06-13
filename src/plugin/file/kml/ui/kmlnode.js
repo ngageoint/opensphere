@@ -256,6 +256,9 @@ plugin.file.kml.ui.KMLNode.prototype.loadAnnotation = function() {
         this.feature_.get(os.annotation.OPTIONS_FIELD));
     if (annotationOptions && annotationOptions.show) {
       this.annotation_ = new os.annotation.FeatureAnnotation(this.feature_);
+
+      // set initial visibility based on the tree/animation state
+      this.setAnnotationVisibility_(this.getState() === os.structs.TriState.ON && this.animationState_);
     }
   }
 };
