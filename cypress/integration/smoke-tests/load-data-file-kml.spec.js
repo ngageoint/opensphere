@@ -1,5 +1,8 @@
 /// <reference types="Cypress" />
-var os = require('../../support/selectors.js');
+var core = require('../../support/selectors/core.js');
+var imports = require('../../support/selectors/imports.js');
+var layers = require('../../support/selectors/layers.js');
+var shared = require('../../support/selectors/shared.js');
 
 describe('KML import', function() {
   before('Login', function() {
@@ -8,47 +11,47 @@ describe('KML import', function() {
 
   it('Load data from KML', function() {
     // Upload a file
-    cy.get(os.Toolbar.addData.OPEN_FILE_BUTTON).click();
-    cy.get(os.importDataDialog.DIALOG).should('be.visible');
+    cy.get(core.Toolbar.addData.OPEN_FILE_BUTTON).click();
+    cy.get(imports.importDataDialog.DIALOG).should('be.visible');
     cy.upload('smoke-tests/load-data-file-kml/test-features.kmz');
-    cy.get(os.importDataDialog.NEXT_BUTTON).click();
-    cy.get(os.importKMLDialog.DIALOG).should('be.visible');
-    cy.get(os.importKMLDialog.LAYER_TITLE_INPUT).should('be.visible');
-    cy.get(os.importKMLDialog.OK_BUTTON).click();
+    cy.get(imports.importDataDialog.NEXT_BUTTON).click();
+    cy.get(imports.importKMLDialog.DIALOG).should('be.visible');
+    cy.get(imports.importKMLDialog.LAYER_TITLE_INPUT).should('be.visible');
+    cy.get(imports.importKMLDialog.OK_BUTTON).click();
 
     // Load a layer
-    cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4)
+    cy.get(shared.Tree.ROW_4)
         .should('contain', 'smoke-tests/load-data-file-kml/test-features.kmz Features (291)');
-    cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4).rightClick();
-    cy.get(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.Local.contextMenu.menuOptions.MOST_RECENT).click();
-    cy.get(os.layersDialog.Tabs.Layers.Tree.Type.mapLayer.STREET_MAP_TILES)
-        .find(os.layersDialog.Tabs.Layers.Tree.LAYER_TOGGLE_CHECKBOX_WILDCARD)
+    cy.get(shared.Tree.ROW_4).rightClick();
+    cy.get(layers.layersTab.Tree.contextMenu.MOST_RECENT).click();
+    cy.get(layers.layersTab.Tree.STREET_MAP_TILES)
+        .find(shared.Tree.ROW_CHECKBOX)
         .click();
-    cy.get(os.layersDialog.Tabs.Layers.Tree.Type.mapLayer.WORLD_IMAGERY_TILES)
-        .find(os.layersDialog.Tabs.Layers.Tree.LAYER_TOGGLE_CHECKBOX_WILDCARD)
+    cy.get(layers.layersTab.Tree.WORLD_IMAGERY_TILES)
+        .find(shared.Tree.ROW_CHECKBOX)
         .click();
-    cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4).rightClick();
-    cy.get(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.Local.contextMenu.menuOptions.GO_TO).click();
+    cy.get(shared.Tree.ROW_4).rightClick();
+    cy.get(layers.layersTab.Tree.contextMenu.GO_TO).click();
     cy.imageComparison('features loaded');
 
     // Open the timeline and animate the data (view window animates)
-    cy.get(os.Toolbar.TIMELINE_TOGGLE_BUTTON).click();
-    cy.get(os.Timeline.PANEL).should('be.visible');
-    cy.get(os.Timeline.HISTOGRAM_POINTS).should('be.visible');
-    cy.get(os.Timeline.VIEW_WINDOW).invoke('position').then(function(elementPosition) {
-      cy.get(os.Timeline.PLAY_BUTTON).click();
-      cy.get(os.Timeline.VIEW_WINDOW).invoke('position').should('not.equal', elementPosition);
+    cy.get(core.Toolbar.TIMELINE_TOGGLE_BUTTON).click();
+    cy.get(core.Timeline.PANEL).should('be.visible');
+    cy.get(core.Timeline.HISTOGRAM_POINTS).should('be.visible');
+    cy.get(core.Timeline.VIEW_WINDOW).invoke('position').then(function(elementPosition) {
+      cy.get(core.Timeline.PLAY_BUTTON).click();
+      cy.get(core.Timeline.VIEW_WINDOW).invoke('position').should('not.equal', elementPosition);
     });
-    cy.get(os.Toolbar.TIMELINE_TOGGLE_BUTTON).click();
-    cy.get(os.Timeline.PANEL).should('not.exist');
+    cy.get(core.Toolbar.TIMELINE_TOGGLE_BUTTON).click();
+    cy.get(core.Timeline.PANEL).should('not.exist');
 
     // Open the timeline and animate the data (feature count changes)
-    cy.get(os.Toolbar.TIMELINE_TOGGLE_BUTTON).click();
-    cy.get(os.Timeline.PANEL).should('be.visible');
-    cy.get(os.Timeline.PLAY_BUTTON).click();
-    cy.get(os.Timeline.PAUSE_BUTTON).click();
-    cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4)
-        .find(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.FEATURE_COUNT_TEXT_WILDCARD)
+    cy.get(core.Toolbar.TIMELINE_TOGGLE_BUTTON).click();
+    cy.get(core.Timeline.PANEL).should('be.visible');
+    cy.get(core.Timeline.PLAY_BUTTON).click();
+    cy.get(core.Timeline.PAUSE_BUTTON).click();
+    cy.get(shared.Tree.ROW_4)
+        .find(layers.layersTab.Tree.FEATURE_COUNT_TEXT)
         .invoke('text')
         .should('match', new RegExp('\\([0-9]\\d{0,3}\\/' + '291\\)'));
   });

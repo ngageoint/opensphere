@@ -28,3 +28,12 @@ exports.IndexedDB = {
 };
 
 exports.HIDE_TIPS = '?tips=false';
+
+// Catch console error we don't care about
+Cypress.on('uncaught:exception', function(err) {
+  if (err.message.includes('outerWidth')) {
+    expect(err.message).to.include('outerWidth');
+    return false;
+  }
+  return true;
+});
