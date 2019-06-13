@@ -44,9 +44,9 @@ function setVariables() {
   export SETTINGS_OS_SOURCE=config/settings.json
   export SETTINGS_OS_TARGET=dist/opensphere/config/settings_os.json
   
-  export ALL_TESTS=cypress/integration/**
-  export SMOKE_TESTS=cypress/integration/smoke-tests/**
-  export SINGLE_TEST=cypress/integration/
+  export ALL_TESTS=**
+  export SMOKE_TESTS=smoke-tests/**
+  export TEST_PATH=cypress/integration/
   
   export TEST_RESULT
 }
@@ -64,14 +64,22 @@ function checkArguments() {
 
   case "$TESTS" in
 	"all")
-    TEST_SPEC=$ALL_TESTS
+    TEST_SPECS=$TEST_PATH$ALL_TESTS
 		;;
 	"smoke")
-    TEST_SPEC=$SMOKE_TESTS
+    TEST_SPECS=$TEST_PATH$SMOKE_TESTS
 		;;
   "spec")
-    TEST_SPEC=$SINGLE_TEST$SPEC
+    TEST_SPECS=$TEST_PATH$SPEC
 		;;
+  "loop")
+    if [ -z "$SPEC" ]; then
+      echo 'WARNING: Spec pattern not passed, selecting ALL tests'
+      TEST_SPECS=$TEST_PATH$ALL_TESTS
+    else
+      TEST_SPECS=$TEST_PATH$SPEC
+    fi
+    ;;
 	*)
 		if [ -z "$TESTS" ]; then
       if ! [ "$MODE" == "gui" ]; then
@@ -79,7 +87,7 @@ function checkArguments() {
         exit 1
       fi
     else
-      echo "ERROR: only all, smoke, or spec accepted as a valid tests argument; '$TESTS' is not valid"
+      echo "ERROR: only all, smoke, spec, or loop accepted as a valid tests argument; '$TESTS' is not valid"
       exit 1
     fi
 		;;
@@ -141,14 +149,40 @@ function startWebServer() {
 function runTests() {
   if [ "$MODE" == "cli" ]; then
     if [ "$ENVIRONMENT" == "ci" ]; then
-        echo 'INFO: starting Cypress in continuous integration environment'
-        $(npm bin)/cypress run --config baseUrl=http://localhost:8282/dist/opensphere --spec "$TEST_SPEC"
+      echo 'INFO: starting Cypress in continuous integration environment'
+      $(npm bin)/cypress run --config baseUrl=http://localhost:8282/dist/opensphere --spec "$TEST_SPECS"
+      TEST_RESULT=$?
     else
       echo 'INFO: starting Cypress in local development environment via the command line'
-      $(npm bin)/cypress run --spec "$TEST_SPEC"
+      if [ "$TESTS" == "loop" ]; then
+        result_counter=0
+        echo 'INFO: starting test loop to check for flaky tests'
+        for i in 1 2 3 4 5
+        do
+          echo "INFO: test run $i/5 starting..."
+          $(npm bin)/cypress run --spec "$TEST_SPECS"
+          last_result=$?
+          echo "INFO: test run $i/5 finished with code: $last_result"
+          result_counter=$(($result_counter + $last_result))
+        done
+        TEST_RESULT=$result_counter
+        if (( $TEST_RESULT > 0)); then
+          if (( $TEST_RESULT == 5)); then
+            echo "WARNING: each test loop finished with code: 1. Tests appear to consisently FAIL."
+          else
+            echo 'WARNING: *******************'
+            echo "WARNING: FLAKY TESTS!! There were $TEST_RESULT failed loops out of 5 loops completed."
+            echo 'WARNING: *******************'
+          fi
+        else
+          echo 'INFO: test loop finished, all loops passed'
+        fi
+      else
+        $(npm bin)/cypress run --spec "$TEST_SPECS"
+        TEST_RESULT=$?
+        echo "INFO: Cypress tests finished with code: $TEST_RESULT"
+      fi
     fi
-    TEST_RESULT=$?
-    echo "INFO: Cypress tests finished with code: $TEST_RESULT"
   else
     echo 'INFO: starting Cypress in local development environment via interactive mode'
     $(npm bin)/cypress open
@@ -198,7 +232,7 @@ ENVIRONMENT=$1
 #cli or gui
 MODE=$2
 
-#all or smoke
+#all, smoke, spec, loop
 TESTS=$3
 
 #spec
