@@ -20,6 +20,7 @@ addons:
       key_url: "https://dl.yarnpkg.com/debian/pubkey.gpg"
     packages:
     - yarn
+    - libgconf-2-4
 install:
 - yarn config list
 - yarn
