@@ -186,18 +186,6 @@ plugin.file.kml.ui.PlacemarkEditCtrl.prototype.accept = function() {
 
 /**
  * @inheritDoc
- * @export
- */
-plugin.file.kml.ui.PlacemarkEditCtrl.prototype.cancel = function() {
-  plugin.file.kml.ui.PlacemarkEditCtrl.base(this, 'cancel');
-
-  // enable editing the annotation when the edit is cancelled
-  this['annotationOptions'].editable = true;
-};
-
-
-/**
- * @inheritDoc
  */
 plugin.file.kml.ui.PlacemarkEditCtrl.prototype.createPreviewFeature = function() {
   plugin.file.kml.ui.PlacemarkEditCtrl.base(this, 'createPreviewFeature');
@@ -228,10 +216,10 @@ plugin.file.kml.ui.PlacemarkEditCtrl.prototype.createPreviewFeature = function()
 plugin.file.kml.ui.PlacemarkEditCtrl.prototype.loadFromFeature = function(feature) {
   plugin.file.kml.ui.PlacemarkEditCtrl.base(this, 'loadFromFeature', feature);
 
-  this['annotationOptions'] = feature.get(os.annotation.OPTIONS_FIELD);
+  var currentOptions = feature.get(os.annotation.OPTIONS_FIELD);
+  this['annotationOptions'] = os.object.unsafeClone(currentOptions || os.annotation.DEFAULT_OPTIONS);
 
-  if (!this['annotationOptions']) {
-    this['annotationOptions'] = os.object.unsafeClone(os.annotation.DEFAULT_OPTIONS);
+  if (!currentOptions) {
     this['annotationOptions'].show = false;
   }
 
