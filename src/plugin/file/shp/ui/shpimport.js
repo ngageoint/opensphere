@@ -106,7 +106,7 @@ plugin.file.shp.ui.SHPImportCtrl.prototype.createFromConfig = function(config) {
  * @override
  */
 plugin.file.shp.ui.SHPImportCtrl.prototype.updateFromConfig = function(descriptor, config) {
-  plugin.file.shp.SHPDescriptor.updateFromConfig(descriptor, config);
+  descriptor.updateFromConfig(config);
 };
 
 

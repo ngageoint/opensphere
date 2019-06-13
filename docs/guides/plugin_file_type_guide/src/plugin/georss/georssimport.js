@@ -60,12 +60,10 @@ goog.inherits(plugin.georss.GeoRSSImportCtrl, os.ui.file.ui.AbstractFileImportCt
 /* istanbul ignore next */
 plugin.georss.GeoRSSImportCtrl.prototype.createDescriptor = function() {
   var descriptor = null;
-  if (this.config['descriptor']) {
-    // existing descriptor, update it
+  if (this.config['descriptor']) { // existing descriptor, update it
     descriptor = /** @type {!plugin.georss.GeoRSSDescriptor} */ (this.config['descriptor']);
-    plugin.georss.GeoRSSDescriptor.updateFromConfig(descriptor, this.config);
-  } else {
-    // this is a new import
+    descriptor.updateFromConfig(this.config);
+  } else { // this is a new import
     descriptor = plugin.georss.GeoRSSDescriptor.createFromConfig(this.config);
   }
 

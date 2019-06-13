@@ -42,29 +42,8 @@ plugin.file.gpx.GPXDescriptor.prototype.getLayerOptions = function() {
  * @return {!plugin.file.gpx.GPXDescriptor}
  */
 plugin.file.gpx.GPXDescriptor.createFromConfig = function(config) {
-  var file = config['file'];
   var provider = plugin.file.gpx.GPXProvider.getInstance();
   var descriptor = new plugin.file.gpx.GPXDescriptor();
-  descriptor.setId(provider.getUniqueId());
-  descriptor.setProvider(provider.getLabel());
-  descriptor.setUrl(file.getUrl());
-  descriptor.setColor(os.style.DEFAULT_LAYER_COLOR);
-
-  plugin.file.gpx.GPXDescriptor.updateFromConfig(descriptor, config);
-
+  os.data.FileDescriptor.createFromConfig(descriptor, provider, config);
   return descriptor;
-};
-
-
-/**
- * Updates an existing descriptor from a parser configuration.
- * @param {!plugin.file.gpx.GPXDescriptor} descriptor
- * @param {!os.parse.FileParserConfig} config
- */
-plugin.file.gpx.GPXDescriptor.updateFromConfig = function(descriptor, config) {
-  descriptor.setColor(config['color']);
-  descriptor.setDescription(config['description']);
-  descriptor.setTitle(config['title']);
-  descriptor.setTags(config['tags'] ? config['tags'].split(/\s*,\s*/) : null);
-  descriptor.setParserConfig(config);
 };

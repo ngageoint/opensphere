@@ -145,33 +145,19 @@ plugin.file.shp.SHPDescriptor.prototype.restore = function(conf) {
 plugin.file.shp.SHPDescriptor.createFromConfig = function(config) {
   // use the ZIP file first, SHP second. the import UI uses the extracted files for easier (synchronous) processing
   // but the ZIP should be used for parsing data with the importer. ignore the DBF if we have a zip file.
-  var file = config['zipFile'] || config['file'];
-  var file2 = config['zipFile'] ? null : config['file2'];
   var provider = plugin.file.shp.SHPProvider.getInstance();
   var descriptor = new plugin.file.shp.SHPDescriptor(config);
-  descriptor.setId(provider.getUniqueId());
-  descriptor.setProvider(provider.getLabel());
+  os.data.FileDescriptor.createFromConfig(descriptor, provider, config);
+
+  var file = config['zipFile'] || config['file'];
   descriptor.setUrl(file.getUrl());
 
+  var file2 = config['zipFile'] ? null : config['file2'];
   if (file2) {
     descriptor.setUrl2(file2.getUrl());
   }
 
-  plugin.file.shp.SHPDescriptor.updateFromConfig(descriptor, config);
+  descriptor.updateFromConfig(config);
 
   return descriptor;
-};
-
-
-/**
- * Updates an existing descriptor from a parser configuration.
- * @param {!plugin.file.shp.SHPDescriptor} descriptor
- * @param {!plugin.file.shp.SHPParserConfig} config
- */
-plugin.file.shp.SHPDescriptor.updateFromConfig = function(descriptor, config) {
-  descriptor.setColor(config['color']);
-  descriptor.setDescription(config['description']);
-  descriptor.setTitle(config['title']);
-  descriptor.setTags(config['tags'] ? config['tags'].split(/\s*,\s*/) : null);
-  descriptor.setParserConfig(config);
 };

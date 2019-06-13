@@ -44,28 +44,8 @@ plugin.file.geojson.GeoJSONDescriptor.prototype.getLayerOptions = function() {
  * @return {!plugin.file.geojson.GeoJSONDescriptor}
  */
 plugin.file.geojson.GeoJSONDescriptor.createFromConfig = function(config) {
-  var file = config['file'];
   var provider = plugin.file.geojson.GeoJSONProvider.getInstance();
   var descriptor = new plugin.file.geojson.GeoJSONDescriptor(config);
-  descriptor.setId(provider.getUniqueId());
-  descriptor.setProvider(provider.getLabel());
-  descriptor.setUrl(file.getUrl());
-
-  plugin.file.geojson.GeoJSONDescriptor.updateFromConfig(descriptor, config);
-
+  os.data.FileDescriptor.createFromConfig(descriptor, provider, config);
   return descriptor;
-};
-
-
-/**
- * Updates an existing descriptor from a parser configuration.
- * @param {!plugin.file.geojson.GeoJSONDescriptor} descriptor
- * @param {!plugin.file.geojson.GeoJSONParserConfig} config
- */
-plugin.file.geojson.GeoJSONDescriptor.updateFromConfig = function(descriptor, config) {
-  descriptor.setColor(config['color']);
-  descriptor.setDescription(config['description']);
-  descriptor.setTitle(config['title']);
-  descriptor.setTags(config['tags'] ? config['tags'].split(/\s*,\s*/) : null);
-  descriptor.setParserConfig(config);
 };
