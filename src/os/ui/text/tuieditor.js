@@ -21,7 +21,7 @@ os.ui.text.TuiEditor.READY = 'tui.editor.ready';
 
 
 /**
- * The URL to the GIF Javascript library.
+ * The URL to the Javascript library.
  * @type {string}
  * @const
  */
@@ -29,7 +29,6 @@ os.ui.text.TuiEditor.SCRIPT_URL = ROOT + 'vendor/os-minified/os-tui-editor.min.j
 
 
 /**
- * The count by directive
  * @return {angular.Directive}
  */
 os.ui.text.tuiEditorDirective = function() {
@@ -57,7 +56,6 @@ os.ui.Module.directive('tuieditor', [os.ui.text.tuiEditorDirective]);
 
 
 /**
- * Controller class for the source switcher
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$timeout} $timeout
@@ -218,6 +216,7 @@ os.ui.text.TuiEditorCtrl.prototype.getOptions = function() {
  */
 os.ui.text.TuiEditorCtrl.prototype.init = function() {
   if (this.scope['edit']) {
+    this['textAreaBackup'] = false;
     this['loading'] = false;
     this['tuiEditor'] = new tui.Editor(this.getOptions());
 
