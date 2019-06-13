@@ -1,4 +1,5 @@
 goog.provide('os.ui.text.TuiEditor');
+goog.provide('os.ui.text.TuiEditor.READY');
 goog.provide('os.ui.text.TuiEditorCtrl');
 goog.provide('os.ui.text.tuiEditorDirective');
 goog.require('goog.dom.safe');
@@ -12,6 +13,11 @@ goog.require('os.ui.text.TuiEditorMarkdownIt');
  */
 os.ui.text.TuiEditor.MODE_KEY = 'tuieditor.mode';
 
+
+/**
+ * @type {string}
+ */
+os.ui.text.TuiEditor.READY = 'tui.editor.ready';
 
 
 /**
@@ -244,6 +250,8 @@ os.ui.text.TuiEditorCtrl.prototype.init = function() {
 
     os.ui.apply(this.scope);
   }.bind(this));
+
+  this.scope.$emit(os.ui.text.TuiEditor.READY);
 };
 
 

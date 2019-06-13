@@ -311,6 +311,10 @@
       }
     }
 
+    .tui-toolbar-divider {
+      background-color: $border-color;
+    }
+
     .tui-toolbar-icons {
       background: $u-theme-variables--bg-offset;
       border-color: transparent;
@@ -331,10 +335,6 @@
 
         // font awesome standard size
         font-size: 14px;
-      }
-
-      .tui-toolbar-divider {
-        border-color: $secondary;
       }
 
       &.tui-heading::before {

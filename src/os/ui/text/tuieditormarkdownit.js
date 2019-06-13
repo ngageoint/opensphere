@@ -2,9 +2,14 @@ goog.provide('os.ui.text.TuiEditorMarkdownIt');
 
 
 /**
- * @type {Object}
+ * @type {Markdownit}
  */
-os.ui.text.TuiEditorMarkdownIt = markdownit();
+os.ui.text.TuiEditorMarkdownIt = markdownit({
+  'html': true,
+  'breaks': true,
+  'quotes': '“”‘’',
+  'langPrefix': 'lang-'
+});
 
 
 /**
