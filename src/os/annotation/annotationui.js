@@ -58,7 +58,12 @@ os.annotation.UI_TEMPLATE_ =
       '<path ng-style="{ fill: ctrl.options.showDescription ? ctrl.options.bodyBG : ctrl.options.headerBG}" />' +
     '</svg>' +
     '<div class="c-annotation__controls position-absolute text-right w-100" ng-if="ctrl.options.editable">' +
-        '<button class="btn btn-sm btn-outline-secondary border-0 bg-transparent animate-fade u-hover-show"' +
+      '<button class="btn btn-sm btn-outline-secondary border-0 bg-transparent animate-fade u-hover-show"' +
+          'title="Hide Annotation"' +
+          'ng-click="ctrl.hideAnnotation()">' +
+        '<i class="fa fa-eye-slash"></i>' +
+      '</button>' +
+      '<button class="btn btn-sm btn-outline-secondary border-0 bg-transparent animate-fade u-hover-show"' +
           'title="Edit annotation"' +
           'ng-click="ctrl.editAnnotation()">' +
           '<i class="fa fa-pencil"></i>' +
@@ -253,6 +258,20 @@ os.annotation.AnnotationCtrl.prototype.initDragResize = function() {
 os.annotation.AnnotationCtrl.prototype.editAnnotation = function() {
   if (this.feature) {
     this.feature.dispatchEvent(new os.events.PropertyChangeEvent(os.annotation.EventType.EDIT));
+  }
+};
+
+/**
+ * Edit the annotation.
+ * @export
+ */
+os.annotation.AnnotationCtrl.prototype.hideAnnotation = function() {
+  if (this.feature) {
+    this['options'].show = false;
+    var source = /** @type {plugin.file.kml.KMLSource} */ (os.dataManager.getSource(plugin.places.ID));
+    var node = source.getFeatureNode(this.feature);
+    node.clearAnnotations();
+    node.dispatchEvent(new os.events.PropertyChangeEvent('icons'));
   }
 };
 

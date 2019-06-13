@@ -53,7 +53,7 @@ plugin.file.kml.ui.KMLImportCtrl.prototype.createDescriptor = function() {
   if (this.config['descriptor']) {
     // existing descriptor, update it
     descriptor = /** @type {!plugin.file.kml.KMLDescriptor} */ (this.config['descriptor']);
-    plugin.file.kml.KMLDescriptor.updateFromConfig(descriptor, this.config);
+    descriptor.updateFromConfig(this.config);
   } else {
     // this is a new import
     descriptor = plugin.file.kml.KMLDescriptor.createFromConfig(this.config);

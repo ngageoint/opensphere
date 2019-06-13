@@ -55,46 +55,5 @@ describe('Import state file', function() {
     cy.get(os.layersDialog.Tabs.Areas.TAB).click();
     cy.get(os.layersDialog.Tabs.Areas.Tree.AREA_1).should('contain', 'test exclude area');
     cy.get(os.layersDialog.Tabs.Areas.Tree.AREA_2).should('contain', 'test include area');
-
-    // Clean up
-    cy.get(os.layersDialog.Tabs.Layers.TAB).click();
-    cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4).click();
-    cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4)
-        .find(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.REMOVE_LAYER_BUTTON_WILDCARD)
-        .click();
-    cy.get(os.layersDialog.DIALOG).should('not.contain', 'VIIRS Detection Features (19)');
-    cy.imageComparison('features removed');
-    cy.get(os.layersDialog.Tabs.Layers.Tree.Type.mapLayer.STREET_MAP_TILES)
-        .find(os.layersDialog.Tabs.Layers.Tree.LAYER_TOGGLE_CHECKBOX_WILDCARD)
-        .click();
-    cy.get(os.layersDialog.Tabs.Layers.Tree.Type.mapLayer.WORLD_IMAGERY_TILES)
-        .find(os.layersDialog.Tabs.Layers.Tree.LAYER_TOGGLE_CHECKBOX_WILDCARD)
-        .click();
-    cy.get(os.layersDialog.Tabs.Areas.TAB).click();
-    cy.get(os.layersDialog.Tabs.Areas.Tree.AREA_2).click();
-    cy.get(os.layersDialog.Tabs.Areas.Tree.AREA_2)
-        .find(os.layersDialog.Tabs.Areas.Tree.REMOVE_AREA_BUTTON_WILDCARD)
-        .click();
-    cy.get(os.layersDialog.DIALOG).should('not.contain', 'test include area');
-    cy.get(os.layersDialog.Tabs.Areas.Tree.AREA_1).click();
-    cy.get(os.layersDialog.Tabs.Areas.Tree.AREA_1)
-        .find(os.layersDialog.Tabs.Areas.Tree.REMOVE_AREA_BUTTON_WILDCARD)
-        .click();
-    cy.get(os.layersDialog.DIALOG).should('not.contain', 'test exclude area');
-    cy.get(os.layersDialog.DIALOG).should('contain', 'No results');
-    cy.get(os.layersDialog.Tabs.Filters.TAB).click();
-    cy.get(os.layersDialog.Tabs.Filters.Tree.FILTER_2).click();
-    cy.get(os.layersDialog.Tabs.Filters.Tree.FILTER_2)
-        .find(os.layersDialog.Tabs.Filters.Tree.REMOVE_FILTER_BUTTON_WILDCARD)
-        .click();
-    cy.get(os.layersDialog.DIALOG).should('not.contain', 'moderate confidence');
-    cy.get(os.layersDialog.DIALOG).should('contain', 'No results');
-    cy.get(os.layersDialog.Tabs.Layers.TAB).click();
-    cy.get(os.Application.PAGE).type('v');
-    cy.get(os.Toolbar.Date.INPUT).clear();
-    cy.get(os.Toolbar.Date.INPUT).type(Cypress.moment().format('YYYY[-]MM[-]DD'));
-    cy.get(os.Toolbar.Date.INPUT).type('{esc}');
-    cy.get(os.Toolbar.States.Menu.BUTTON).click();
-    cy.get(os.Toolbar.States.Menu.menuOptions.DISABLE_STATES).click();
   });
 });
