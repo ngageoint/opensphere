@@ -117,7 +117,10 @@ os.annotation.FeatureAnnotation.prototype.createUI = function() {
 
   if (this.visible && options.show) {
     // setting an initial position causes the overlay to render
-    this.overlay.setPosition([0, 0]);
+    var geometry = this.feature.getGeometry();
+    var coordinate = geometry instanceof ol.geom.SimpleGeometry ? geometry.getFirstCoordinate() : [0, 0];
+
+    this.overlay.setPosition(coordinate);
   }
 
   this.setVisibleInternal();

@@ -341,6 +341,7 @@ os.annotation.AbstractAnnotationCtrl.prototype.saveAnnotation = function() {
   // reset the values to the old ones
   this.element.height(this.currentHeight_);
   this.element.width(this.currentWidth_);
+  this['options'].size = [this.currentWidth_, this.currentHeight_];
 
   this['editingName'] = false;
   this['editingDescription'] = false;
@@ -358,6 +359,8 @@ os.annotation.AbstractAnnotationCtrl.prototype.cancelEdit = function() {
     // reset the values to the old ones
     this.element.height(this.currentHeight_);
     this.element.width(this.currentWidth_);
+    this['options'].size = [this.currentWidth_, this.currentHeight_];
+
     this['name'] = this.currentName_;
     this['description'] = this.currentDescription_;
 

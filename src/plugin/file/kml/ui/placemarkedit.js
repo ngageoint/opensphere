@@ -194,6 +194,11 @@ plugin.file.kml.ui.PlacemarkEditCtrl.prototype.createPreviewFeature = function()
   if (this.options['annotation']) {
     this.previewFeature.set(os.annotation.OPTIONS_FIELD, this['annotationOptions']);
 
+    if (!this.originalGeometry) {
+      // default to hiding the geometry for points as it tends to visually obscure what you're annotating
+      this['shape'] = os.style.ShapeType.NONE;
+    }
+
     // don't display a label, but leave the config present to populate the UI
     this['labels'][0]['column'] = '';
   } else {
