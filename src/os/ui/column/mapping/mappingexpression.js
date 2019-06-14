@@ -171,7 +171,8 @@ os.ui.column.mapping.MappingExpressionCtrl.prototype.setColumns_ = function(colu
   var columnName = this.model_['column'];
   this['column'] = null;
   columns = columns.filter(function(column) {
-    if (column['type'] !== 'string' && column['type'] !== 'decimal' && column['type'] !== 'integer') {
+    if (column['type'] !== os.xsd.DataType.STRING && column['type'] !== os.xsd.DataType.DECIMAL &&
+        column['type'] !== os.xsd.DataType.INTEGER) {
       // only include string and numeric type columns. this is based on the limited set of types we convert to in
       // os.ogc.wfs.DescribeFeatureTypeParser, and intended to avoid displaying geometry/time columns.
       return false;

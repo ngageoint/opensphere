@@ -16,7 +16,7 @@ os.ui.im.mapping.time.TimeMappingModel = function(opt_type) {
   /**
    * @type {string}
    */
-  this['dateType'] = 'combined';
+  this['dateType'] = os.ui.mapping.time.TimeMappingModel.COMBINED;
 
   /**
    * @type {string}
@@ -55,6 +55,17 @@ os.ui.im.mapping.time.TimeMappingModel = function(opt_type) {
    * @private
    */
   this.type_ = opt_type || os.im.mapping.TimeType.START;
+};
+
+
+/**
+ * @enum {string}
+ * @const
+ */
+os.ui.im.mapping.time.TimeMappingModel = {
+  COMBINED: 'combined',
+  SEPARATE: 'separate',
+  DATE_ONLY: 'dateonly'
 };
 
 
@@ -107,14 +118,14 @@ os.ui.im.mapping.time.TimeMappingModel.prototype.generateMappings = function() {
   var mappings = [];
 
   switch (this['dateType']) {
-    case 'combined':
+    case os.ui.mapping.time.TimeMappingModel.COMBINED:
       var dtm = new os.im.mapping.time.DateTimeMapping(this.type_);
       dtm.field = this['dateColumn'];
       dtm.setFormat(this['dateFormat']);
 
       mappings.push(dtm);
       break;
-    case 'separate':
+    case os.ui.mapping.time.TimeMappingModel.SEPARATE:
       var dm = new os.im.mapping.time.DateMapping(this.type_);
       dm.field = this['dateColumn'];
       dm.setFormat(this['dateFormat']);
@@ -125,7 +136,7 @@ os.ui.im.mapping.time.TimeMappingModel.prototype.generateMappings = function() {
       tm.setFormat(this['timeFormat']);
       mappings.push(tm);
       break;
-    case 'dateonly':
+    case os.ui.mapping.time.TimeMappingModel.DATE_ONLY:
       var dm = new os.im.mapping.time.DateMapping(this.type_);
       dm.field = this['dateColumn'];
       dm.setFormat(this['dateFormat']);
@@ -145,7 +156,7 @@ os.ui.im.mapping.time.TimeMappingModel.prototype.generateMappings = function() {
  */
 os.ui.im.mapping.time.TimeMappingModel.prototype.validate = function() {
   var valid = this['dateColumn'] && this['dateFormat'];
-  if (this['dateType'] == 'separate') {
+  if (this['dateType'] == os.ui.mapping.time.TimeMappingModel.SEPARATE) {
     valid = valid && this['timeColumn'] && this['timeFormat'];
   }
 
@@ -159,12 +170,12 @@ os.ui.im.mapping.time.TimeMappingModel.prototype.validate = function() {
 os.ui.im.mapping.time.TimeMappingModel.prototype.updateTypeCombo_ = function() {
   if (this.timeMapping_) {
     // use separate fields if a time mapping exists even without a date mapping (may have been auto detected)
-    this['dateType'] = 'separate';
+    this['dateType'] = os.ui.mapping.time.TimeMappingModel.SEPARATE;
   } else if (this.dateMapping_ instanceof os.im.mapping.time.DateMapping) {
     // date but no time
-    this['dateType'] = 'dateonly';
+    this['dateType'] = os.ui.mapping.time.TimeMappingModel.DATE_ONLY;
   } else {
     // default to combined
-    this['dateType'] = 'combined';
+    this['dateType'] = os.ui.mapping.time.TimeMappingModel.COMBINED;
   }
 };

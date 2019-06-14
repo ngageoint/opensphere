@@ -1,5 +1,6 @@
 goog.provide('os.ui.filter.op.Op');
 goog.require('os.ui.filter.textDirective');
+goog.require('os.xsd.DataType');
 
 
 
@@ -39,7 +40,7 @@ os.ui.filter.op.Op = function(localName, title, opt_shortTitle, opt_supportedTyp
    * @type {?Array<string>}
    * @protected
    */
-  this.supportedTypes = opt_supportedTypes || null;
+  this.supportedTypes = os.xsd.DataType || null;
 
   /**
    * @type {string}
