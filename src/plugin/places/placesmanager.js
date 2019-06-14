@@ -51,13 +51,6 @@ plugin.places.PlacesManager = function() {
   this.placesRoot_ = null;
 
   /**
-   * Default folder for annotations.
-   * @type {plugin.file.kml.ui.KMLNode}
-   * @private
-   */
-  this.annotationsFolder_ = null;
-
-  /**
    * If the manager has finished loading places.
    * @type {boolean}
    * @private
@@ -474,9 +467,6 @@ plugin.places.PlacesManager.prototype.onSourceLoaded_ = function() {
     if (this.placesRoot_) {
       this.initializeNode_(this.placesRoot_);
       this.placesRoot_.collapsed = false;
-
-      this.initializeAnnotationsFolder_();
-
       this.placesRoot_.listen(goog.events.EventType.PROPERTYCHANGE, this.onRootChange_, false, this);
 
       this.addLayer();
@@ -511,46 +501,9 @@ plugin.places.PlacesManager.prototype.reindexTimeModel_ = function() {
 
 
 /**
- * Checks if the annotations folder is present, and adds it if not.
- * @private
- */
-plugin.places.PlacesManager.prototype.initializeAnnotationsFolder_ = function() {
-  if (this.placesRoot_ && this.placesSource_) {
-    var children = this.placesRoot_.getChildren();
-    var folder;
-
-    if (children) {
-      for (var i = 0, ii = children.length; i < ii; i++) {
-        if (children[i].getLabel() == 'Annotations') {
-          folder = children[i];
-          break;
-        }
-      }
-    }
-
-    if (!folder) {
-      folder = new plugin.file.kml.ui.KMLNode();
-      folder.setLabel('Annotations');
-
-      this.placesRoot_.addChild(folder);
-      this.placesSource_.addNodes([folder]);
-    }
-
-    folder.collapsed = false;
-    folder.canAddChildren = true;
-    folder.editable = false;
-    folder.internalDrag = false;
-    folder.removable = false;
-
-    this.annotationsFolder_ = /** @type {plugin.file.kml.ui.KMLNode} */ (folder);
-  }
-};
-
-
-/**
- * Get the annotations folder.
+ * Get the root annotations folder. Currently, this is just the overall root.
  * @return {plugin.file.kml.ui.KMLNode}
  */
 plugin.places.PlacesManager.prototype.getAnnotationsFolder = function() {
-  return this.annotationsFolder_;
+  return this.placesRoot_;
 };
