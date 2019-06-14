@@ -5,6 +5,7 @@
 goog.provide('os.fn');
 
 goog.require('ol.extent');
+goog.require('ol.geom.GeometryType');
 goog.require('ol.layer.Layer');
 goog.require('os.extent');
 
@@ -63,6 +64,35 @@ os.fn.reduceExtentFromGeometries = function(extent, geometry) {
 
     if (geom) {
       ol.extent.extend(extent, os.extent.getFunctionalExtent(geom));
+    }
+  }
+
+  return extent;
+};
+
+
+/**
+ * @param {!Array<number>} extent
+ * @param {?ol.geom.Geometry|undefined} geometry
+ * @return {!Array<number>}
+ */
+os.fn.reduceAltitudeExtentFromGeometries = function(extent, geometry) {
+  if (geometry) {
+    var type = geometry.getType();
+
+    if (type === ol.geom.GeometryType.GEOMETRY_COLLECTION) {
+      var geoms = /** @type {ol.geom.GeometryCollection} */ (geometry).getGeometriesArray();
+      extent = geoms.reduce(os.fn.reduceAltitudeExtentFromGeometries, extent);
+    } else {
+      geometry = /** @type {ol.geom.SimpleGeometry} */ (geometry);
+      var flats = geometry.getFlatCoordinates();
+      var stride = geometry.getStride();
+
+      for (var i = 0, n = flats.length; i < n; i += stride) {
+        var alt = flats[i + 2] || 0;
+        extent[0] = Math.min(extent[0], alt);
+        extent[1] = Math.max(extent[1], alt);
+      }
     }
   }
 
