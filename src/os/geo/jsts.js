@@ -1256,3 +1256,32 @@ os.geo.jsts.toPolygonGeometry = function(polygons, factory) {
       return ret;
   }
 };
+
+
+/**
+ * Finds the two nearest points between two geometries and returns them in an ordered array.
+ *
+ * @param {ol.geom.Geometry} geom1 The first geometry.
+ * @param {ol.geom.Geometry} geom2 The second geometry.
+ * @return {Array<ol.Coordinate>} The ordered list of point coordinates, the first one being the nearest point
+ *                                on geom1, the second the nearest point on geom2.
+ */
+os.geo.jsts.nearestPoints = function(geom1, geom2) {
+  var jstsParser = os.geo.jsts.OLParser.getInstance();
+  var jstsGeom1 = jstsParser.read(geom1);
+  var jsts2Geom2 = jstsParser.read(geom2);
+  var jstsCoords = jsts.operation.distance.DistanceOp.nearestPoints(jstsGeom1, jsts2Geom2);
+
+  return jstsCoords.map(os.geo.jsts.jstsCoordToOlCoord);
+};
+
+
+/**
+ * Maps a JSTS coordinate to an OL coordinate.
+ *
+ * @param {jsts.geom.Coordinate} jstsCoord The JSTS coordinate.
+ * @return {ol.Coordinate} The OL coordinate.
+ */
+os.geo.jsts.jstsCoordToOlCoord = function(jstsCoord) {
+  return [jstsCoord.x, jstsCoord.y, jstsCoord.z];
+};

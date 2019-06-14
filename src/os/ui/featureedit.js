@@ -404,9 +404,9 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
   /**
    * The original geometry when editing a feature.
    * @type {ol.geom.Geometry}
-   * @private
+   * @protected
    */
-  this.originalGeometry_ = null;
+  this.originalGeometry = null;
 
   var feature = /** @type {ol.Feature|undefined} */ (this.options['feature']);
   if (feature) {
@@ -493,6 +493,9 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
   }.bind(this));
 
   $scope.$on('$destroy', this.dispose.bind(this));
+
+  // fire an event to inform other UIs that an edit has launched.
+  os.dispatcher.dispatchEvent(os.annotation.EventType.LAUNCH_EDIT);
 
   $timeout(function() {
     // expand the default section if set
@@ -852,7 +855,7 @@ os.ui.FeatureEditCtrl.prototype.createPreviewFeature = function() {
     }
   } else {
     // not a point, so disable geometry edit
-    this.originalGeometry_ = geometry;
+    this.originalGeometry = geometry;
   }
 
   // default feature to show the name field
@@ -959,7 +962,7 @@ os.ui.FeatureEditCtrl.prototype.loadFromFeature = function(feature) {
 
   var geometry = feature.getGeometry();
   if (geometry) {
-    this.originalGeometry_ = geometry;
+    this.originalGeometry = geometry;
 
     if (geometry instanceof ol.geom.Point) {
       var clone = /** @type {!ol.geom.Point} */ (geometry.clone());
@@ -1199,8 +1202,8 @@ os.ui.FeatureEditCtrl.prototype.saveGeometry_ = function(feature) {
         feature.set(os.style.StyleField.ROTATION_COLUMN, '');
       }
     }
-  } else if (this.originalGeometry_) {
-    feature.setGeometry(this.originalGeometry_.clone());
+  } else if (this.originalGeometry) {
+    feature.setGeometry(this.originalGeometry.clone());
   }
 };
 
