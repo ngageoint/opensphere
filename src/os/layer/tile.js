@@ -599,8 +599,22 @@ os.layer.Tile.prototype.getIcons = function() {
     color = os.color.toRgbArray(layerColor);
   }
 
-  html += color ? os.ui.createIconSet(this.getId(), this.getSVGIconsInternal(), null, color) : this.getIconsInternal();
+  html += color ? os.ui.createIconSet(this.getId(), this.getSVGIconsInternal(), this.getStateBadge(), color)
+  : this.getIconsInternal();
   return html;
+};
+
+
+/**
+ * @return {Array<string>}
+ * @protected
+ */
+os.layer.Tile.prototype.getStateBadge = function() {
+  if (os.state.isStateFile(this.getId())) {
+    return [os.ui.Icons.STATE];
+  } else {
+    return null;
+  }
 };
 
 
