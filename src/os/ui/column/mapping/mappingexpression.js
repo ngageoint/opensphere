@@ -2,6 +2,7 @@ goog.provide('os.ui.column.mapping.MappingExpressionCtrl');
 goog.provide('os.ui.column.mapping.mappingExpressionDirective');
 goog.require('os.ui.Module');
 goog.require('os.ui.layer.layerPickerDirective');
+goog.require('os.xsd.DataType');
 
 
 /**
