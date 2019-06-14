@@ -40,7 +40,7 @@ os.ui.filter.op.Op = function(localName, title, opt_shortTitle, opt_supportedTyp
    * @type {?Array<string>}
    * @protected
    */
-  this.supportedTypes = os.xsd.DataType || null;
+  this.supportedTypes = opt_supportedTypes || null;
 
   /**
    * @type {string}
