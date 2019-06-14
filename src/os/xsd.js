@@ -10,7 +10,6 @@ os.xsd.DataType = {
   FLOAT: 'float',
   INTEGER: 'integer',
   STRING: 'string',
-  BOOLEAN: 'boolean'
-  DATE: 'date',
-  TIME: 'time'
+  BOOLEAN: 'boolean',
+  DATE: 'dateTime'
 };
