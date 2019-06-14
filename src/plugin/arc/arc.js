@@ -2,6 +2,7 @@ goog.provide('plugin.arc');
 goog.provide('plugin.arc.ESRIType');
 
 goog.require('os.ui.query.CombinatorCtrl');
+goog.require('os.xsd.DataType');
 goog.require('plugin.arc.ArcFeatureType');
 goog.require('plugin.arc.ArcLoader');
 
