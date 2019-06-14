@@ -28,8 +28,7 @@ plugin.cesium.command.FlyToSphere = function(sphere, opt_options) {
 
   var cam = /** @type {plugin.cesium.Camera} */ (os.map.mapContainer.getWebGLCamera());
   var minRange = cam.calcDistanceForResolution(
-      os.map.zoomToResolution(os.map.MAX_AUTO_ZOOM, os.map.PROJECTION),
-      Cesium.Cartographic.fromCartesian(sphere.center).latitude);
+      os.map.zoomToResolution(os.map.MAX_AUTO_ZOOM, os.map.PROJECTION), 0);
 
   sphere.radius = sphere.radius || 10;
 
