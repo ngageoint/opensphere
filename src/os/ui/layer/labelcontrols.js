@@ -63,12 +63,6 @@ os.ui.Module.directive('labelcontrols', [os.ui.layer.labelControlsDirective]);
 os.ui.layer.LabelControlsCtrl = function($scope, $element, $timeout) {
   os.ui.layer.LabelControlsCtrl.base(this, 'constructor');
 
-  this['pointGeometry'] = {
-    'lat': NaN,
-    'lon': NaN,
-    'alt': NaN
-  };
-
   /**
    * The Angular scope.
    * @type {?angular.Scope}
