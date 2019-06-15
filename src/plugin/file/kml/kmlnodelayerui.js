@@ -203,13 +203,13 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.getLineDash = function() {
           if (goog.isArray(config)) {
             config = config[0];
           }
-          lineDash = os.style.getConfigLineDash(config) || os.style.DEFAULT_LINE_STYLE;
+          lineDash = os.style.getConfigLineDash(config);
         }
       }
     }
   }
 
-  return lineDash || os.style.DEFAULT_LINE_STYLE;
+  return lineDash;
 };
 
 
