@@ -544,11 +544,7 @@ plugin.cesium.sync.FeatureConverter.prototype.createLinePrimitive = function(pos
   var width = this.extractLineWidthFromOlStyle(style);
   var color = this.extractColorFromOlStyle(style, true);
   color.alpha *= context.layer.getOpacity();
-
-  // convert the line dash to 16 bit int
-  var stroke = style.getStroke();
-  var dashPattern = stroke != null ? stroke.getLineDash() : os.style.DEFAULT_LINE_STYLE;
-  var lineDash = /** @type {os.style.styleLineDashOption} */ (os.style.dashPatternToName(dashPattern)).csPattern;
+  var lineDash = this.getDashPattern(style);
 
   var appearance = new Cesium.PolylineMaterialAppearance({
     material: Cesium.Material.fromType(Cesium.Material.PolylineDashType, {
@@ -645,11 +641,7 @@ plugin.cesium.sync.FeatureConverter.prototype.updatePolyline = function(feature,
   var width = this.extractLineWidthFromOlStyle(style);
   var color = this.extractColorFromOlStyle(style, true);
   color.alpha *= context.layer.getOpacity();
-
-  // convert the line dash to 16 bit int
-  var stroke = style.getStroke();
-  var dashPattern = stroke != null ? stroke.getLineDash() : os.style.DEFAULT_LINE_STYLE;
-  var lineDash = /** @type {os.style.styleLineDashOption} */ (os.style.dashPatternToName(dashPattern)).csPattern;
+  var lineDash = this.getDashPattern(style);
 
   polyline.material = Cesium.Material.fromType(Cesium.Material.PolylineDashType, {
     color: color,
@@ -1076,15 +1068,11 @@ plugin.cesium.sync.FeatureConverter.prototype.olPolygonGeometryToCesiumPolyline 
 
     var width = this.extractLineWidthFromOlStyle(style);
     var layerOpacity = context.layer.getOpacity();
-
-    // convert the line dash to 16 bit int
-    var stroke = style.getStroke();
-    var dashPattern = stroke != null ? stroke.getLineDash() : os.style.DEFAULT_LINE_STYLE;
-    var lineDash = /** @type {os.style.styleLineDashOption} */ (os.style.dashPatternToName(dashPattern)).csPattern;
+    var lineDash = this.getDashPattern(style);
 
     // combine the layer/style opacity if there is a stroke style, otherwise set it to 0 to hide the outline
     var outlineColor = this.extractColorFromOlStyle(style, true);
-    outlineColor.alpha = stroke != null ? (outlineColor.alpha * layerOpacity) : 0;
+    outlineColor.alpha = style.getStroke() != null ? (outlineColor.alpha * layerOpacity) : 0;
 
     var appearance = new Cesium.PolylineMaterialAppearance({
       material: Cesium.Material.fromType(Cesium.Material.PolylineDashType, {
@@ -1697,9 +1685,7 @@ plugin.cesium.sync.FeatureConverter.prototype.olGeometryToCesium = function(feat
   if (primitive && primitive['olLineWidth'] != null) {
     var dirty = geometry.get(os.geom.GeometryField.DIRTY);
     var width = this.extractLineWidthFromOlStyle(style);
-    var stroke = style.getStroke();
-    var dashPattern = stroke != null ? stroke.getLineDash() : os.style.DEFAULT_LINE_STYLE;
-    var lineDash = /** @type {os.style.styleLineDashOption} */ (os.style.dashPatternToName(dashPattern)).csPattern;
+    var lineDash = this.getDashPattern(style);
     if (dirty || primitive['olLineWidth'] != width || primitive.appearance.material.uniforms.dashPattern != lineDash) {
       wasPrimitiveShown = plugin.cesium.VectorContext.isShown(primitive);
       context.removePrimitive(primitive);
@@ -1921,4 +1907,17 @@ plugin.cesium.sync.FeatureConverter.prototype.setEyeOffset = function(primOffset
  */
 plugin.cesium.sync.FeatureConverter.prototype.getEyeOffset = function() {
   return this.eyeOffset_;
+};
+
+
+/**
+ * Convert a style's line dash to 16 bit int
+ * @param {!ol.style.Style} style
+ * @return {number}
+ */
+plugin.cesium.sync.FeatureConverter.prototype.getDashPattern = function(style) {
+  var stroke = style.getStroke();
+  var dashPattern = stroke != null ? stroke.getLineDash() : undefined;
+  var id = /** @type {os.style.styleLineDashOption} */ (os.style.dashPatternToOptions(dashPattern)).id;
+  return plugin.cesium.LINE_STYLE_OPTIONS[id].csPattern;
 };
