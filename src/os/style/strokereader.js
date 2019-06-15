@@ -31,9 +31,10 @@ os.style.StrokeReader.prototype.getOrCreateStyle = function(config) {
 
   hash = 31 * hash + goog.string.hashCode(color) >>> 0;
 
-  var dash = /** @type {!Array<number>} */ (config['lineDash']) || os.style.DEFAULT_LINE_STYLE;
-
-  hash += goog.string.hashCode(dash.join());
+  var dash = /** @type {!Array<number>} */ (config['lineDash']);
+  if (dash) {
+    hash = 31 * hash + goog.string.hashCode(dash.join()) >>> 0;
+  }
 
   if (!this.cache[hash]) {
     this.cache[hash] = new ol.style.Stroke({

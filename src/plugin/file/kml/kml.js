@@ -61,7 +61,6 @@ plugin.file.kml.DEFAULT_STYLE = {
   },
   'stroke': {
     'color': os.style.DEFAULT_LAYER_COLOR,
-    'lineDash': os.style.DEFAULT_LINE_STYLE,
     'width': os.style.DEFAULT_STROKE_WIDTH
   }
 };

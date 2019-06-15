@@ -68,17 +68,10 @@ os.style.DEFAULT_LINE_DASH_STYLE_FIELDS = [
 
 
 /**
- * Default line style for geometries. Specifically for lines/polygons.
- * @type {!Array<number>}
- */
-os.style.DEFAULT_LINE_STYLE = [];
-
-
-/**
  * @typedef {{
+ *   id: number,
  *   name: string,
- *   pattern: !Array<number>,
- *   csPattern: number
+ *   pattern: !Array<number>
  * }}
  */
 os.style.styleLineDashOption;
@@ -86,27 +79,47 @@ os.style.styleLineDashOption;
 
 /**
  * Line dash configurations
- * Patterns based on 16 bit number to make it look consistent between Open Layers and Cesium
+ * Patterns based on 16 bit number to make it look consistent between map engines
  * @type {!Array<!os.style.styleLineDashOption>}
  * @const
  */
 os.style.LINE_STYLE_OPTIONS = [
   {
-    name: '\u2501\u2501\u2501\u2501\u2501\u2501',
-    pattern: [],
-    csPattern: parseInt('1111111111111111', 2)
+    id: 0,
+    name: '\u2501\u2501\u2501\u2501\u2501\u2501\u2578',
+    pattern: []
   }, {
+    id: 1,
     name: '\u2501\u2009\u2501\u2009\u2501\u2009\u2501\u2009\u2501',
-    pattern: [12, 4],
-    csPattern: parseInt('1111111111110000', 2)
+    pattern: [12, 4]
   }, {
+    id: 2,
     name: '\u2501\u2002\u2501\u2002\u2501\u2002\u2501',
-    pattern: [8, 8],
-    csPattern: parseInt('1111111100000000', 2)
+    pattern: [8, 8]
   }, {
+    id: 3,
+    name: '\u254D\u254D\u254D\u254D\u254D\u254D\u2578',
+    pattern: [4, 4, 4, 4]
+  }, {
+    id: 4,
     name: '\u2501\u2003\u2501\u2003\u2501',
-    pattern: [4, 12],
-    csPattern: parseInt('1111000000000000', 2)
+    pattern: [4, 12]
+  }, {
+    id: 5,
+    name: '\u2578\u2578\u2578\u2578\u2578\u2578\u2578',
+    pattern: [2, 6, 2, 6]
+  }, {
+    id: 6,
+    name: '\u2501\u257A\u2008\u2501\u257A\u2008\u2501\u257A',
+    pattern: [5, 5, 1, 5]
+  }, {
+    id: 7,
+    name: '\u2501\u2505\u2501\u2505\u2501\u2505\u2578',
+    pattern: [7, 4, 1, 4]
+  }, {
+    id: 8,
+    name: '\u2501\u2009\u254D\u2009\u2501\u2009\u254D\u2009\u2501',
+    pattern: [3, 4, 1, 3, 1, 4]
   }
 ];
 
@@ -356,8 +369,7 @@ os.style.DEFAULT_VECTOR_CONFIG = {
   // this will only be applied to line and polygon types
   'stroke': {
     'width': os.style.DEFAULT_STROKE_WIDTH,
-    'color': os.style.DEFAULT_LAYER_COLOR,
-    'lineDash': os.style.DEFAULT_LINE_STYLE
+    'color': os.style.DEFAULT_LAYER_COLOR
   }
 };
 
@@ -391,8 +403,7 @@ os.style.DEFAULT_SELECT_CONFIG = {
     }
   },
   'stroke': {
-    'color': 'rgba(255,0,0,1)',
-    'lineDash': os.style.DEFAULT_LINE_STYLE
+    'color': 'rgba(255,0,0,1)'
   },
   'zIndex': os.style.SELECTED_Z
 };
@@ -415,8 +426,7 @@ os.style.INVERSE_SELECT_CONFIG = {
     }
   },
   'stroke': {
-    'color': 'rgba(255,255,255,1)',
-    'lineDash': os.style.DEFAULT_LINE_STYLE
+    'color': 'rgba(255,255,255,1)'
   },
   'zIndex': os.style.SELECTED_Z + 1
 };
@@ -439,8 +449,7 @@ os.style.DEFAULT_HIGHLIGHT_CONFIG = {
     }
   },
   'stroke': {
-    'color': 'rgba(255,0,0,1)',
-    'lineDash': os.style.DEFAULT_LINE_STYLE
+    'color': 'rgba(255,0,0,1)'
   },
   'zIndex': os.style.HIGHLIGHT_Z
 };
@@ -457,8 +466,7 @@ os.style.PREVIEW_CONFIG = {
   },
   'stroke': {
     'width': os.style.DEFAULT_STROKE_WIDTH,
-    'color': 'rgba(0,255,255,1)',
-    'lineDash': os.style.DEFAULT_LINE_STYLE
+    'color': 'rgba(0,255,255,1)'
   }
 };
 
@@ -845,14 +853,16 @@ os.style.getMergedSize = function(featureConfig, layerConfig, opt_default) {
 
 /**
  * Looks up a line style from a dash pattern
- * @param {Array<number>} pattern
+ * @param {Array<number>|undefined} pattern
  * @return {os.style.styleLineDashOption}
  */
-os.style.dashPatternToName = function(pattern) {
-  for (var i = 0; i < os.style.LINE_STYLE_OPTIONS.length; i++) {
-    var styleLineDashOption = /** @type {os.style.styleLineDashOption} */ (os.style.LINE_STYLE_OPTIONS[i]);
-    if (goog.array.equals(styleLineDashOption.pattern, pattern)) {
-      return styleLineDashOption;
+os.style.dashPatternToOptions = function(pattern) {
+  if (Array.isArray(pattern)) {
+    for (var i = 0; i < os.style.LINE_STYLE_OPTIONS.length; i++) {
+      var styleLineDashOption = /** @type {os.style.styleLineDashOption} */ (os.style.LINE_STYLE_OPTIONS[i]);
+      if (goog.array.equals(styleLineDashOption.pattern, pattern)) {
+        return styleLineDashOption;
+      }
     }
   }
   return /** @type {os.style.styleLineDashOption} */ (os.style.LINE_STYLE_OPTIONS[0]);
@@ -862,7 +872,7 @@ os.style.dashPatternToName = function(pattern) {
 /**
  * @param {Object} config
  * @param {(os.style.StyleField|string)=} opt_lineDashFieldHint A hint to where to find the dash to use.
- * @return {?Array<number>} The line dash or null if none was found
+ * @return {Array<number>|undefined} The line dash or null if none was found
  */
 os.style.getConfigLineDash = function(config, opt_lineDashFieldHint) {
   if (config) {
@@ -883,7 +893,7 @@ os.style.getConfigLineDash = function(config, opt_lineDashFieldHint) {
     }
   }
 
-  return null;
+  return undefined;
 };
 
 
