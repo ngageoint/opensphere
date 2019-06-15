@@ -239,13 +239,6 @@ os.ui.menu.spatial.setup = function() {
           sort: 40,
           beforeRender: os.ui.menu.spatial.visibleIfShown
         }, {
-          label: 'Export...',
-          eventType: os.action.EventType.EXPORT,
-          tooltip: 'Export the area',
-          icons: ['<i class="fa fa-fw fa-download"></i>'],
-          sort: 50,
-          beforeRender: os.ui.menu.spatial.visibleIfInAreaManager
-        }, {
           label: 'Merge...',
           eventType: os.action.EventType.MERGE_AREAS,
           tooltip: 'Merge selected areas into a new area',
@@ -258,6 +251,13 @@ os.ui.menu.spatial.setup = function() {
           tooltip: 'Remove the area',
           icons: ['<i class="fa fa-fw fa-times"></i>'],
           sort: 70,
+          beforeRender: os.ui.menu.spatial.visibleIfInAreaManager
+        }, {
+          label: 'Export...',
+          eventType: os.action.EventType.EXPORT,
+          tooltip: 'Export the area',
+          icons: ['<i class="fa fa-fw fa-download"></i>'],
+          sort: 80,
           beforeRender: os.ui.menu.spatial.visibleIfInAreaManager
         }]
       }]
