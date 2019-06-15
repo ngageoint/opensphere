@@ -20,13 +20,16 @@ plugin.file.kml.ui.kmlNodeUIDirective = function() {
             '<i class="fa fa-folder fa-fw c-glyph" title="Create a new folder"></i></span>' +
         '<span ng-if="nodeUi.canAddChildren()" ng-click="nodeUi.addPlace()">' +
             '<i class="fa fa-map-marker fa-fw c-glyph" title="Create a new place"></i></span>' +
+        '<span ng-if="nodeUi.canAddChildren()" ng-click="nodeUi.addPlace(true)">' +
+          '<i class="fa fa-comment fa-fw c-glyph" title="Create a new annotation"></i>' +
+        '</span>' +
         '<span ng-if="nodeUi.canEdit()" ng-click="nodeUi.edit()">' +
             '<i class="fa fa-pencil fa-fw c-glyph" ' +
                 'title="Edit the {{nodeUi.isFolder() ? \'folder\' : \'place\'}}"></i></span>' +
         '<span ng-if="!nodeUi.isFolder() && nodeUi.hasAnnotation()" ng-click="nodeUi.removeAnnotation()">' +
-            '<i class="fa fa-comment fa-fw c-glyph" title="Remove Annotation"></i></span>' +
+            '<i class="fa fa-comment fa-fw c-glyph" title="Hide annotation"></i></span>' +
         '<span ng-if="!nodeUi.isFolder() && !nodeUi.hasAnnotation()" ng-click="nodeUi.showAnnotation()">' +
-            '<i class="fa fa-comment-o fa-fw c-glyph" title="Show Annotation"></i></span>' +
+            '<i class="fa fa-comment-o fa-fw c-glyph" title="Show annotation"></i></span>' +
 
         '<span ng-if="nodeUi.canRemove()" ng-click="nodeUi.tryRemove()">' +
         '<i class="fa fa-times fa-fw c-glyph" ' +
@@ -87,13 +90,15 @@ plugin.file.kml.ui.KMLNodeUICtrl.prototype.addFolder = function() {
 
 /**
  * Add a new place.
+ * @param {boolean=} opt_annotation Whether the place is an annotation.
  * @export
  */
-plugin.file.kml.ui.KMLNodeUICtrl.prototype.addPlace = function() {
+plugin.file.kml.ui.KMLNodeUICtrl.prototype.addPlace = function(opt_annotation) {
   var node = /** @type {plugin.file.kml.ui.KMLNode} */ (this.scope['item']);
   if (node) {
     plugin.file.kml.ui.createOrEditPlace(/** @type {!plugin.file.kml.ui.FolderOptions} */ ({
-      'parent': node
+      'parent': node,
+      'annotation': opt_annotation
     }));
   }
 };
@@ -210,6 +215,7 @@ plugin.file.kml.ui.KMLNodeUICtrl.prototype.hasAnnotation = function() {
   return false;
 };
 
+
 /**
  * Removes annotation
  * @export
@@ -229,6 +235,7 @@ plugin.file.kml.ui.KMLNodeUICtrl.prototype.removeAnnotation = function() {
     }
   }
 };
+
 
 /**
  * Shows annotation
@@ -252,4 +259,3 @@ plugin.file.kml.ui.KMLNodeUICtrl.prototype.showAnnotation = function() {
     }
   }
 };
-
