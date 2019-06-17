@@ -205,6 +205,7 @@ os.query.BaseAreaManager.prototype.bulkAdd = function(features, opt_show) {
     feature.set('shown', show);
     this.addInternal(feature, true);
   }, this);
+
   this.dispatchEvent(new os.events.PropertyChangeEvent('areas'));
 };
 
@@ -234,6 +235,7 @@ os.query.BaseAreaManager.prototype.add = function(feature) {
   // every incoming item.
   this.dispatchEvent(new os.events.PropertyChangeEvent('add/edit', feature));
   this.saveDelay_.start();
+
   return added;
 };
 
