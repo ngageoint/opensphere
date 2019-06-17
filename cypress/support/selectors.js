@@ -492,6 +492,12 @@ exports.customDateTimeFormatsDialog = {
   CLOSE_BUTTON: '[ng-click=\'th.close()\']'
 };
 
+exports.descriptionInfoDialog = {
+  DIALOG: '[data-testid=\'descriptioninfo\']',
+  CONTENT: '[data-testid=\'descriptioninfocontent\']',
+  CLOSE_BUTTON: '[ng-click=\'windowCtrl.close(true)\']'
+};
+
 exports.editArcServerDialog = {
   DIALOG: '[label=\'Edit Arc Server\']',
   DIALOG_HEADER: '[title=\'Edit Arc Server\']',
@@ -1420,6 +1426,7 @@ exports.layersDialog = {
                   REMOVE: '[title=\'Removes the layer\']',
                   RENAME: '[title=\'Rename the layer\']',
                   SHOW_DESCRIPTION: '[title=\'Gives details about the layer\']',
+                  SHOW_FEATURES: '[title=\'Displays features in the layer\']',
                   EXPORT: '[title=\'Exports data from this layer\']',
                   ADD_TO_TRACK: '[title=\'Adds selected features (or all features if none are selected) ' +
                   'to an existing track.\']',
