@@ -1305,10 +1305,12 @@ os.MapContainer.prototype.setWebGLEnabled = function(enabled, opt_silent) {
       // renderer to go down a less performant code path.
       // @see {@link ol.renderer.canvas.Layer#composeFrame}
       this.resetRotation();
+      os.feature.flyToOverride = undefined;
     } else {
       // reset all synchronizers to a clean state. this needs to be called after WebGL is enabled/rendering to ensure
       // synchronized objects are reset in the correct state.
       this.webGLRenderer_.resetSync();
+      os.feature.flyToOverride = this.webGLRenderer_.flyToFeatures.bind(this.webGLRenderer_);
     }
 
     this.dispatchEvent(os.events.EventType.MAP_MODE);
