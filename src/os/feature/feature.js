@@ -66,6 +66,12 @@ os.feature.TITLE_REGEX = /^(name|title)$/i;
 
 
 /**
+ * @type {undefined|function(Array<ol.Feature>)}
+ */
+os.feature.flyToOverride;
+
+
+/**
  * @param {null|undefined|ol.Feature|Array<ol.Feature>} features
  */
 os.feature.flyTo = function(features) {
@@ -77,8 +83,8 @@ os.feature.flyTo = function(features) {
     features = [features];
   }
 
-  if (os.map.mapContainer.is3DEnabled()) {
-    os.map.mapContainer.getWebGLRenderer().flyToFeatures(features);
+  if (os.feature.flyToOverride) {
+    os.feature.flyToOverride(/** @type {Array<ol.Feature>} */ (features));
   } else {
     var extent = features.map(os.fn.mapFeatureToGeometry).
         reduce(os.fn.reduceExtentFromGeometries, ol.extent.createEmpty());
