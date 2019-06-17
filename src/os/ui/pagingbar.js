@@ -17,7 +17,8 @@ os.ui.pagingBarDirective = function() {
       'activePage': '=',
       'pageClickFunction': '=',
       'pageButtons': '=',
-      'disabled': '='
+      'disabled': '=',
+      'sequentialPaging': '=?'
     },
     templateUrl: os.ROOT + 'views/pagingbar.html',
     controller: os.ui.PagingBarCtrl,
@@ -49,6 +50,8 @@ os.ui.PagingBarCtrl = function($scope, $element) {
 
   $scope.$watch('activePage', this.updatePaging_.bind(this));
   $scope.$watch('totalElements', this.updatePaging_.bind(this));
+  $scope.$watch('pageButtons', this.updatePaging_.bind(this));
+  $scope.$watch('sequentialPaging', this.updatePaging_.bind(this));
   $scope.$watch('pageSize', this.updatePaging_.bind(this));
   $scope.$on('$destroy', this.destroy_.bind(this));
 };
@@ -92,6 +95,7 @@ os.ui.PagingBarCtrl.prototype.updatePaging_ = function() {
       // we are in the middle, always show the 1 page
       var initialPage = {
         'text': 1,
+        'target': 1,
         'active': activePage == 1,
         'disabled': false
       };
@@ -111,13 +115,14 @@ os.ui.PagingBarCtrl.prototype.updatePaging_ = function() {
     for (var i = start; i < start + total; i++) {
       var page = {
         'text': i + 1,
+        'target': i + 1,
         'active': activePage == i + 1,
         'disabled': false
       };
       pageObjects.push(page);
     }
 
-    if (start + total + 1 < pages) {
+    if (start + total + 1 < pages || (start + total < pages && this.scope_['sequentialPaging'])) {
       // add a second ellipsis at the end
       var secondEllipsis = {
         'text': '...',
@@ -127,10 +132,11 @@ os.ui.PagingBarCtrl.prototype.updatePaging_ = function() {
       pageObjects.push(secondEllipsis);
     }
 
-    if (start + total < pages) {
+    if (start + total < pages && !this.scope_['sequentialPaging']) {
       // always show the final page
       var finalPage = {
         'text': pages,
+        'target': pages,
         'active': activePage == pages,
         'disabled': false
       };
@@ -155,8 +161,8 @@ os.ui.PagingBarCtrl.prototype.updatePaging_ = function() {
  */
 os.ui.PagingBarCtrl.prototype.onPageClick = function(page) {
   if (!this.scope_['disabled'] && page && !page['disabled'] &&
-      this.scope_['pageClickFunction'] && this.scope_['activePage'] != page['text']) {
-    var pageNumber = Number(page['text']);
+      this.scope_['pageClickFunction'] && this.scope_['activePage'] != page['target']) {
+    var pageNumber = Number(page['target']);
     this.scope_['activePage'] = pageNumber;
     this.scope_['pageClickFunction'](pageNumber);
   }
