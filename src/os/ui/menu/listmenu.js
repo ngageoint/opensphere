@@ -1,7 +1,6 @@
 goog.provide('os.ui.menu.list');
 
 goog.require('os.command.FeaturesVisibility');
-goog.require('os.command.FlyToExtent');
 goog.require('os.command.InvertSelect');
 goog.require('os.command.SelectAll');
 goog.require('os.command.SelectNone');
@@ -152,14 +151,7 @@ os.ui.menu.list.handleListEvent = function(event) {
       case os.action.EventType.GOTO:
         var selected = source.getSelectedItems();
         if (selected.length > 0) {
-          var geometries = selected.map(function(f) {
-            return f.getGeometry();
-          }).filter(os.fn.filterFalsey);
-
-          if (geometries.length > 0) {
-            var extent = geometries.reduce(os.fn.reduceExtentFromGeometries, ol.extent.createEmpty());
-            cmd = new os.command.FlyToExtent(extent);
-          }
+          os.feature.flyTo(selected);
         }
         break;
       default:
