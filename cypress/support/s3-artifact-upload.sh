@@ -16,7 +16,7 @@ function main() {
 }
 
 function setVariables() {
-  bucket="opensphere-travis-artifacts"
+  bucket=$S3BUCKET
   key_id=$S3KEY
   key_secret=$S3SECRET
   date="$(LC_ALL=C date -u +"%a, %d %b %Y %X %z")"
