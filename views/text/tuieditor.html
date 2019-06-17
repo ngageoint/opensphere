@@ -1,9 +1,9 @@
-<div class="c-tui-editor form-group mb-0">
-  <ng-form name="tuiEditorForm">
-    <div ng-if="edit">
+<div class="c-tui-editor form-group mb-0 d-flex flex-fill flex-column">
+  <ng-form name="tuiEditorForm" class="d-flex flex-fill flex-column">
+    <div ng-if="edit" class="d-flex flex-fill flex-column">
       <h1 ng-if="ctrl.loading" class="d-flex justify-content-center align-items-center"><i class="fa fa-spin fa-spinner"></i></h1>
-      <div ng-show="!ctrl.loading">
-        <div class="js-tui-editor__editor"></div>
+      <div ng-show="!ctrl.loading" class="d-flex flex-fill flex-column">
+        <div class="js-tui-editor__editor d-flex flex-fill flex-column"></div>
         <textarea class="ng-hide" ng-show="ctrl.textAreaBackup" type="text" name="empty" ng-model="text" ng-model-options="{allowInvalid: true}" ng-maxlength="{{maxlength}}" ng-required="isRequired"></textarea>
         <div class="small mt-1 d-flex justify-content-between">
           <div class="text-danger" ng-if="text.length > maxlength">Content is too long!</div>
