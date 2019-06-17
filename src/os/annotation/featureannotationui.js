@@ -7,7 +7,7 @@ goog.require('os.annotation.AbstractAnnotationCtrl');
 goog.require('os.annotation.TailStyle');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.ui.Module');
-goog.require('os.ui.text.simpleMDEDirective');
+goog.require('os.ui.text.tuiEditorDirective');
 
 
 /**
@@ -158,7 +158,7 @@ os.annotation.FeatureAnnotationCtrl.prototype.saveAnnotation = function() {
 
   this.feature.set(os.ui.FeatureEditCtrl.Field.NAME, this['name']);
   this.feature.set(os.ui.FeatureEditCtrl.Field.DESCRIPTION,
-      os.ui.text.SimpleMDE.removeMarkdown(this['description'], true));
+      os.ui.text.TuiEditor.render(this['description']));
   this.feature.set(os.ui.FeatureEditCtrl.Field.MD_DESCRIPTION, this['description']);
 
   this.feature.dispatchEvent(new os.events.PropertyChangeEvent(os.annotation.EventType.UPDATE_PLACEMARK));
