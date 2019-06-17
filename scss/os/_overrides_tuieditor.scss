@@ -17,6 +17,12 @@
     min-height: 10rem !important; // wysiwyg mode sets a min height also. Ours is more important
   }
 
+  .te-editor-section {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    overflow-y: auto;
+  }
 
   // We dont want to show the tab section OR the block overlay.
   // Merge / Unmerge is not GFM. So dont allow that feature
@@ -40,6 +46,9 @@
 
   .tui-editor-defaultUI {
     border-color: $border-color;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
 
     .te-markdown-tab-section {
       background: $input-bg;
@@ -64,6 +73,7 @@
     .te-switch-button {
       background: $input-bg;
       border: 0;
+      border-left: 1px solid $border-color;
       color: $text-muted;
     }
 
@@ -73,8 +83,6 @@
     .te-switch-button.active,
     .te-switch-button:hover {
       background: $u-theme-variables--bg-offset;
-      border-left: 1px solid $border-color;
-      border-right: 1px solid $border-color;
       color: $input-color;
     }
   }
