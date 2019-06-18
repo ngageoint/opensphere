@@ -1,0 +1,423 @@
+// Set min and max heights inside of windows and modals
+.c-window,
+.modal {
+  .CodeMirror:not(.CodeMirror-fullscreen) .CodeMirror-scroll,
+  .te-ww-container .te-editor .tui-editor-contents {
+    max-height: 25rem !important;
+  }
+}
+
+// Editor Overrides
+.c-tui-editor {
+  .CodeMirror,
+  .CodeMirror:not(.CodeMirror-fullscreen) .CodeMirror-scroll,
+  .te-ww-container .te-editor .tui-editor-contents,
+  .te-md-container .te-preview {
+    max-height: 75vh; // the toolbar doesnt scroll with the editor. So its annoying to have to scroll up just to use it
+    min-height: 10rem !important; // wysiwyg mode sets a min height also. Ours is more important
+  }
+
+  .te-editor-section {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+
+  // We dont want to show the tab section OR the block overlay.
+  // Merge / Unmerge is not GFM. So dont allow that feature
+  .te-table-merge,
+  .te-table-unmerge,
+  .te-table-unmerge + hr,
+  .te-markdown-tab-section,
+  .te-ww-block-overlay {
+    display: none !important;
+  }
+
+  .ng-invalid.ng-dirty {
+    .te-editor-section {
+      outline: 1px solid $danger;
+    }
+
+    .c-tui-editor__word-count {
+      color: $danger !important;
+    }
+  }
+
+  .tui-editor-defaultUI {
+    border-color: $border-color;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+
+    .te-markdown-tab-section {
+      background: $input-bg;
+
+      .te-tab {
+        margin: inherit;
+      }
+    }
+
+    .te-toolbar-section {
+      background: $input-bg;
+      border-color: transparent;
+    }
+
+    .te-mode-switch-section {
+      background: $input-bg;
+      border-color: $border-color;
+      color: $input-color;
+    }
+
+    .te-tab button,
+    .te-switch-button {
+      background: $input-bg;
+      border: 0;
+      border-left: 1px solid $border-color;
+      color: $text-muted;
+    }
+
+    .te-heading-add,
+    .te-tab button:hover,
+    .te-tab .te-tab-active,
+    .te-switch-button.active,
+    .te-switch-button:hover {
+      background: $u-theme-variables--bg-offset;
+      color: $input-color;
+    }
+  }
+
+  // Only show the cursor if we are in edit mode
+  .tui-editor .tui-editor-contents .task-list-item:before {
+    cursor: pointer;
+  }
+
+  // Instead of adding the contents and overriding them, just use the ones we want
+  .tui-editor-contents {
+    *:not(table) {
+      line-height: $line-height-base;
+    }
+
+    img {
+      @include img-fluid;
+    }
+
+    pre {
+      background-color: $u-theme-variables--bg-offset;
+    }
+
+    code {
+      color: $danger;
+      font-family: $font-family-monospace;
+    }
+
+    // sass-lint:disable extends-before-declarations, extends-before-mixins, no-extends, placeholder-in-extend
+    blockquote {
+      @extend .blockquote;
+    }
+
+    // sass-lint:disable extends-before-declarations, extends-before-mixins, no-extends, placeholder-in-extend
+    attr {
+      @extend .initialism;
+    }
+
+    table {
+      th {
+        background-color: $u-theme-variables--bg-offset;
+        color: color-yiq($u-theme-variables--bg-offset);
+      }
+
+      th,
+      td {
+        border: 1px solid darken($input-color, 8%);
+        padding: .25rem .75rem;
+      }
+    }
+
+    .task-list-item {
+      list-style: none;
+      margin-left: -1rem;
+      padding-left: 1.5rem;
+      position: relative;
+
+      &:before {
+        background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAAXNSR0IArs4c6QAAADdJREFUKBVjvHv37n8GMgALSI+SkhJJWu/du8fARJIOJMWjGpECA505GjjoIYLEB6dVUNojFQAA/1MJUFWet/4AAAAASUVORK5CYII=');
+        background-position: center;
+        background-repeat: no-repeat;
+        content: '';
+        height: 1rem;
+        left: 0;
+        position: absolute;
+        top: .1875rem;
+        width: 1rem;
+      }
+
+      &.checked:before {
+        background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAAXNSR0IArs4c6QAAAMpJREFUKBVjjJ/64D8DGYCJDD1gLbTVyM3OxJDiJMzAxcYIdyALnIWDAdJU7i/OICfCxsDMxMgwc88bwk5F1vTs/W+GFUffwY2H+1FBlI2hLliCQYCbGSyJrqlzwwuGj9//YWoMtRBgUBJnZ6gMEGeQFWaFOw9kE7omkG5GWDyCPF7mJ86gIMbO8P//fwZGRkYGXJpAGuFO/fbrP0PXppcMD179JKgJRSOIA9N8/NZXrM4DqYEBjOgAaYYFOUwRNhruVGyS+MTI1ggAx8NTGcUtFVQAAAAASUVORK5CYII=');
+      }
+    }
+  }
+
+  .tui-editor {
+    .te-ww-block-overlay,
+    .te-ww-container,
+    .te-preview,
+    .tui-editor-contents,
+    .CodeMirror {
+      background-color: $input-bg;
+      border: 0;
+      border-radius: 0;
+      color: $input-color;
+    }
+
+    .CodeMirror {
+      .CodeMirror-selected {
+        background: $primary !important;
+        opacity: .5;
+      }
+
+      .CodeMirror-cursor {
+        border-left-color: $body-color;
+
+        // Sometimes the cursor doesnt show up (windows?) this fixes that issue
+        width: 1px !important;
+      }
+
+      // Code mirror theme
+      .cm-def,
+      .cm-attribute,
+      .cm-builtin {
+        color: $primary;
+      }
+
+      .cm-link {
+        color: $link-color;
+        text-decoration: none;
+      }
+
+      .cm-variable-2,
+      .cm-variable-3,
+      .cm-string {
+        color: $body-color;
+      }
+
+      .cm-quote,
+      .cm-positive,
+      .cm-number,
+      .cm-type,
+      .cm-tag {
+        color: $success;
+      }
+
+      .cm-string2,
+      .cm-comment {
+        color: $warning;
+      }
+
+      .cm-negative,
+      .cm-error
+      .cm-invalidchar {
+        color: $danger;
+      }
+
+      .cm-meta,
+      .cm-atom,
+      .cm-keyword {
+        color: $info;
+      }
+
+      .cm-header,
+      .cm-qualifier,
+      .cm-bracket,
+      .cm-hr {
+        color: $text-muted;
+      }
+    }
+  }
+
+  .tui-popup-wrapper,
+  .tui-editor-popup {
+    .tui-popup-body,
+    button:not(.tui-popup-close-button) {
+      background-color: $u-theme-variables--bg-offset;
+      border-color: $border-color;
+      color: color-yiq($u-theme-variables--bg-offset);
+
+      label {
+        color: color-yiq($u-theme-variables--bg-offset);
+      }
+
+      .te-tab {
+        border-color: $border-color;
+      }
+
+      .te-heading-add ul li:hover {
+        @include gradient-bg($dropdown-link-hover-bg);
+      }
+
+      ul li:hover,
+      button:hover,
+      .te-tab button:hover,
+      .te-tab .te-tab-active,
+      .te-switch-button.active {
+        background: darken($modal-content-bg, 8%);
+        border-color: $border-color;
+        color: color-yiq($u-theme-variables--bg-offset);
+      }
+
+      // sass-lint:disable extends-before-declarations, extends-before-mixins, no-extends, placeholder-in-extend
+      .te-link-text-input,
+      .te-url-input,
+      .te-image-url-input,
+      .te-alt-text-input {
+        @extend .form-control;
+      }
+    }
+
+    .tui-popup-title,
+    .tui-popup-header {
+      background: darken($modal-content-bg, 8%);
+      border-color: $border-color;
+      color: color-yiq(darken($modal-content-bg, 8%));
+    }
+
+    .te-ok-button {
+      @extend .btn;
+      @extend .btn-primary;
+    }
+
+    .te-close-button {
+      @extend .btn;
+      @extend .btn-secondary;
+    }
+  }
+
+  .tui-editor-defaultUI .te-tab button {
+    // This is hardcoded in the library for the toolbar height
+    height: 31px;
+  }
+
+  .tui-editor-defaultUI-toolbar {
+    background-color: $u-theme-variables--bg-offset;
+    border-bottom: 1px solid $border-color;
+    color: color-yiq($u-theme-variables--bg-offset);
+
+    .te-popup-add-table {
+      background-color: $u-theme-variables--bg-offset;
+      border-color: $border-color;
+      color: color-yiq($u-theme-variables--bg-offset);
+    }
+
+    .tui-scrollsync {
+      @extend .btn;
+      @extend .btn-secondary;
+
+      &:after {
+        font-size: $font-size-sm;
+        font-weight: normal;
+        vertical-align: top;
+      }
+    }
+
+    .tui-toolbar-divider {
+      background-color: $border-color;
+    }
+
+    .tui-toolbar-icons {
+      background: $u-theme-variables--bg-offset;
+      border-color: transparent;
+      color: color-yiq($u-theme-variables--bg-offset);
+      display: flex;
+      justify-content: center;
+
+      &.active,
+      &:active,
+      &:hover {
+        background: $u-theme-variables--bg-offset;
+        border-color: $border-color;
+        color: color-yiq($u-theme-variables--bg-offset);
+      }
+
+      &::before {
+        @include font-awesome();
+
+        // font awesome standard size
+        font-size: 14px;
+      }
+
+      &.tui-heading::before {
+        content: '\f1dc';
+      }
+
+      &.tui-bold::before {
+        content: '\f032';
+      }
+
+      &.tui-italic::before {
+        content: '\f033';
+      }
+
+      &.tui-strike::before {
+        content: '\f0cc';
+      }
+
+      &.tui-hrline::before {
+        content: '\f068';
+      }
+
+      &.tui-quote::before {
+        content: '\f10d';
+      }
+
+      &.tui-ul::before {
+        content: '\f0ca';
+      }
+
+      &.tui-ol::before {
+        content: '\f0cb';
+      }
+
+      &.tui-task::before {
+        content: '\f046';
+      }
+
+      &.tui-indent::before {
+        content: '\f03c';
+      }
+
+      &.tui-outdent::before {
+        content: '\f03b';
+      }
+
+      &.tui-table::before {
+        content: '\f0ce';
+      }
+
+      &.tui-image::before {
+        content: '\f03e';
+      }
+
+      &.tui-link::before {
+        content: '\f0c1';
+      }
+
+      &.tui-code::before {
+        content: '\f121';
+      }
+
+      &.tui-codeblock::before {
+        content: 'CB';
+        font-family: monospace;
+      }
+
+      &.tui-more::before {
+        content: '\f141';
+      }
+
+      &.tui-color::before {
+        color: $danger;
+        content: '\f031';
+      }
+    }
+  }
+}

@@ -7,7 +7,7 @@ goog.require('os.annotation.TailStyle');
 goog.require('os.annotation.TailType');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.ui.Module');
-goog.require('os.ui.text.simpleMDEDirective');
+goog.require('os.ui.text.tuiEditorDirective');
 
 
 /**
@@ -59,8 +59,8 @@ os.annotation.UI_TEMPLATE =
       '<div class="card-body p-1 u-overflow-y-auto" ng-show="ctrl.options.showDescription" ' +
           'ng-style="{background: ctrl.options.bodyBG }" ' +
           'ng-dblclick="ctrl.editDescription()">' +
-        '<simplemde text="ctrl.description" edit="ctrl.editingDescription" is-required="false" maxlength="4000">' +
-        '</simplemde>' +
+        '<tuieditor text="ctrl.description" edit="ctrl.editingDescription" is-required="false" maxlength="4000">' +
+        '</tuieditor>' +
         '<div class="float-right" ng-if="ctrl.editingDescription">' +
           '<button class="btn btn-success mr-1" title="Save the annotation" ng-click="ctrl.saveAnnotation()">' +
             '<i class="fa fa-check"/> OK' +
