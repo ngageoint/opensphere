@@ -31,7 +31,7 @@ goog.require('os.ui.geo.positionDirective');
 goog.require('os.ui.layer.labelControlsDirective');
 goog.require('os.ui.layer.vectorStyleControlsDirective');
 goog.require('os.ui.list');
-goog.require('os.ui.text.simpleMDEDirective');
+goog.require('os.ui.text.tuiEditorDirective');
 goog.require('os.ui.util.validationMessageDirective');
 goog.require('os.ui.window');
 
@@ -1036,8 +1036,7 @@ os.ui.FeatureEditCtrl.prototype.saveToFeature = function(feature) {
     this.saveGeometry_(feature);
 
     feature.set(os.ui.FeatureEditCtrl.Field.NAME, this['name']);
-    feature.set(os.ui.FeatureEditCtrl.Field.DESCRIPTION,
-        os.ui.text.SimpleMDE.removeMarkdown(this['description'], true));
+    feature.set(os.ui.FeatureEditCtrl.Field.DESCRIPTION, os.ui.text.TuiEditor.render(this['description']));
     feature.set(os.ui.FeatureEditCtrl.Field.MD_DESCRIPTION, this['description']);
 
     switch (this['dateType']) {

@@ -15,7 +15,7 @@ goog.require('os.time');
 goog.require('os.time.TimeInstant');
 goog.require('os.time.TimeRange');
 goog.require('os.ui.file.kml');
-goog.require('os.ui.text.SimpleMDE');
+goog.require('os.ui.text.TuiEditor');
 goog.require('os.xml');
 
 
