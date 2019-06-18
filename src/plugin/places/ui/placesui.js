@@ -7,6 +7,7 @@ goog.require('os.metrics.Metrics');
 goog.require('os.metrics.keys');
 goog.require('os.ui.Module');
 goog.require('os.ui.menu.layer');
+goog.require('os.ui.uiSwitchDirective');
 goog.require('os.ui.window.confirmDirective');
 goog.require('os.ui.window.confirmTextDirective');
 goog.require('plugin.file.kml.ui');
@@ -172,9 +173,10 @@ plugin.places.ui.PlacesCtrl.prototype.addFolder = function() {
 
 /**
  * Create a new place and add it to the tree.
+ * @param {boolean=} opt_annotation Whether the place is an annotation.
  * @export
  */
-plugin.places.ui.PlacesCtrl.prototype.addPlace = function() {
+plugin.places.ui.PlacesCtrl.prototype.addPlace = function(opt_annotation) {
   var parent = this['selected'] && this['selected'].length == 1 ? this['selected'][0] : this.placesRoot_;
   while (parent && !parent.isFolder()) {
     parent = parent.getParent();
@@ -182,6 +184,7 @@ plugin.places.ui.PlacesCtrl.prototype.addPlace = function() {
 
   if (parent) {
     plugin.file.kml.ui.createOrEditPlace(/** @type {!plugin.file.kml.ui.PlacemarkOptions} */ ({
+      'annotation': opt_annotation,
       'parent': parent
     }));
   }
@@ -214,4 +217,19 @@ plugin.places.ui.PlacesCtrl.prototype.collapseAll = function() {
     this.scope_.$broadcast(os.ui.slick.SlickGridEvent.INVALIDATE_ROWS);
   }
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.Places.COLLAPSE_ALL, 1);
+};
+
+
+/**
+ * Gets the accordion UI associated with the selected item.
+ * @param {*} item
+ * @return {?string}
+ * @export
+ */
+plugin.places.ui.PlacesCtrl.prototype.getUi = function(item) {
+  if (item && os.implements(item, os.ui.ILayerUIProvider.ID)) {
+    return item.getLayerUI(item);
+  }
+
+  return null;
 };

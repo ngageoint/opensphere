@@ -28,6 +28,9 @@
       "overrides_slate_compact_cb_rg",
       "overrides_slate_compact_cb_b"
     ],
+    "defineRoots": {
+      "ROOT": "./"
+    },
     "gcc": {
       "language_in": "ECMASCRIPT_2015",
       "conformance_configs": "conformance_config.textproto",
@@ -102,8 +105,9 @@
     "minify:css": "for i in $(ls .build/themes -1 | grep combined.css | grep -v combined.css.map); do cleancss --output .build/themes/$(echo $i | sed 's/combined/min/') .build/themes/$i & pids=\"$pids $!\"; done; wait $pids",
     "compile:css": "npm run compile:debugcss; npm run minify:css;",
     "compile:gcc": "os-compile $(cat .build/gcc-java-args)",
+    "compile:vendor-min": "node vendor-min",
     "postcompile:gcc": "echo \"//# sourceMappingURL=$(pwd)/.build/opensphere.min.map\" >> .build/opensphere.min.js",
-    "compile": "npm run compile:resolve && npm run compile:gcc &&  npm run compile:css",
+    "compile": "npm run compile:vendor-min && npm run compile:resolve && npm run compile:gcc && npm run compile:css",
     "precopy:files": "mkdirp $(cat .build/version)/styles && mkdirp $(cat .build/version)/styles/themes && mkdirp dist/opensphere/test",
     "precopy:views": "mkdirp $(cat .build/version)/views",
     "precopy:config": "mkdirp dist/opensphere/config",
@@ -274,7 +278,7 @@
     "font-awesome": "^4.6.3",
     "google-closure-library": "^20190415.0.0",
     "html2canvas": "^1.0.0-alpha.12",
-    "jquery": "3.3.1",
+    "jquery": "^3.4.1",
     "js-polyfills": "^0.1.42",
     "jschardet": "^1.6.0",
     "jsts": "^1.5.0",
@@ -290,9 +294,9 @@
     "proj4": "^2.3.17",
     "save-svg-as-png": "=1.3.2",
     "select2": "^3.5.1",
-    "simplemde": "^1.11.2",
     "suncalc": "^1.8.0",
     "text-encoding": "^0.6.4",
+    "tui-editor": "=1.4.1",
     "zip-js": "^0.0.2"
   },
   "husky": {

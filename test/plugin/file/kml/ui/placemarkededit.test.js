@@ -240,15 +240,6 @@ describe('plugin.file.kml.ui.placemarkededit', function() {
     expect(formCtrl['annotationOptions']).toBe(os.annotation.OPTIONS_FIELD);
   });
 
-  it('should set annotationOptions to true', function() {
-
-    var formCtrl = new plugin.file.kml.ui.PlacemarkEditCtrl(scope, element, timeout);
-
-    formCtrl.cancel();
-
-    expect(formCtrl['annotationOptions'].editable).toBe(true);
-  });
-
   it('should accept new feature', function() {
     spyOn(plugin.file.kml.ui, 'updatePlacemark');
     var formCtrl = new plugin.file.kml.ui.PlacemarkEditCtrl(scope, element, timeout);
