@@ -980,7 +980,7 @@ os.style.createFeatureConfig = function(feature, baseConfig, opt_layerConfig) {
           opt_layerConfig[os.style.StyleField.IMAGE], os.style.DEFAULT_FEATURE_SIZE);
       imageConfig['radius'] = mergedSize;
       imageConfig['scale'] = Math.max(os.style.sizeToScale(mergedSize), 0.01);
-    } else if (opt_layerConfig[os.style.StyleField.IMAGE]) {
+    } else if (imageConfig != null && opt_layerConfig[os.style.StyleField.IMAGE]) {
       // ensure the feature has an image config
       featureConfig[os.style.StyleField.IMAGE] = {};
       os.style.mergeConfig(opt_layerConfig[os.style.StyleField.IMAGE],
@@ -1002,7 +1002,7 @@ os.style.createFeatureConfig = function(feature, baseConfig, opt_layerConfig) {
       var mergedWidth = os.style.getMergedSize(styleOverride[os.style.StyleField.STROKE],
           opt_layerConfig[os.style.StyleField.STROKE], os.style.DEFAULT_STROKE_WIDTH);
       strokeConfig['width'] = Math.max(mergedWidth, 1);
-    } else if (opt_layerConfig[os.style.StyleField.STROKE]) {
+    } else if (strokeConfig != null && opt_layerConfig[os.style.StyleField.STROKE]) {
       // ensure the feature has a stroke config
       featureConfig[os.style.StyleField.STROKE] = {};
       os.style.mergeConfig(opt_layerConfig[os.style.StyleField.STROKE],
@@ -1251,6 +1251,10 @@ os.style.createFeatureStyle = function(feature, baseConfig, opt_layerConfig) {
 os.style.mergeConfig = function(from, to) {
   for (var key in from) {
     var fval = from[key];
+    if (fval === os.object.IGNORE_VAL) {
+      continue;
+    }
+
     if (fval && typeof fval == 'object' && !(typeof fval.length == 'number')) {
       // clone objects into the target
       if (!(key in to)) {
