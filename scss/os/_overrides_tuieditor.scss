@@ -17,15 +17,15 @@
     min-height: 10rem !important; // wysiwyg mode sets a min height also. Ours is more important
   }
 
-  .te-ww-container > .te-editor {
-    overflow-y: hidden;
-  }
-
   .te-editor-section {
     display: flex;
     flex: 1;
     flex-direction: column;
     overflow-y: auto;
+
+    .te-editor {
+      overflow: hidden;
+    }
   }
 
   // We dont want to show the tab section OR the block overlay.
