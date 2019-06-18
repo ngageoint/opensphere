@@ -51,7 +51,7 @@ describe('Import state file', function() {
     cy.get(os.Map.MAP_MODE_BUTTON).should('contain', '2D');
     cy.get(os.Application.PAGE).trigger('mouseenter').trigger('mousemove');
     cy.get(os.statusBar.COORDINATES_TEXT).should('contain', '+39');
-    cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4).should('contain', 'Police Stations Features (3)', {timeout: 4000});
+    cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4).should('contain', 'Police Stations Features (3)', {timeout: 8000});
     cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_5).should('contain', 'Fire Hydrants Features (747)');
     cy.get(os.layersDialog.Tabs.Layers.Tree.Type.mapLayer.STREET_MAP_TILES)
         .find(os.layersDialog.Tabs.Layers.Tree.LAYER_TOGGLE_CHECKBOX_WILDCARD)
