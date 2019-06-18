@@ -2603,6 +2603,14 @@ Cesium.PolylineMaterialAppearance.prototype.vertexFormat;
 
 /**
  * @constructor
+ * @param {Object} object
+ * @extends {Cesium.Appearance}
+ */
+Cesium.MaterialAppearance = function(object) {};
+
+
+/**
+ * @constructor
  */
 Cesium.Transforms = function() {};
 

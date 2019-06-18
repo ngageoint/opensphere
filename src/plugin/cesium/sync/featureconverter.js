@@ -188,7 +188,7 @@ plugin.cesium.sync.FeatureConverter.prototype.createColoredPrimitive = function(
       plugin.cesium.GeometryInstanceId.GEOM;
   var instances = opt_instanceFn ? opt_instanceFn(id, geometry, color) :
       this.createGeometryInstance(id, geometry);
-  var appearance = new Cesium.PolylineMaterialAppearance(options);
+  var appearance = new Cesium.MaterialAppearance(options);
   var primitive = new Cesium.Primitive({
     geometryInstances: instances,
     appearance: appearance
