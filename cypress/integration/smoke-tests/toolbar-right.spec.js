@@ -104,7 +104,8 @@ describe('Toolbar right', function() {
       cy.get(os.importStateDialog.DIALOG).should('be.visible');
       cy.get(os.importStateDialog.CLEAR_CHECKBOX).check();
       cy.get(os.importStateDialog.OK_BUTTON).click();
-      cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4).should('contain', 'Police Stations Features (3)', {timeout: 8000});
+      cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4).should('contain', 'Police Stations Features (3)',
+       {timeout: 8000});
       cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_5).should('contain', 'Fire Hydrants Features (747)');
       cy.get(os.layersDialog.Tabs.Areas.TAB).click();
       cy.get(os.layersDialog.Tabs.Areas.Tree.AREA_2).should('contain', 'Aurora Hydrant Include');
