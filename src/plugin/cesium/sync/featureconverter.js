@@ -154,17 +154,13 @@ plugin.cesium.sync.FeatureConverter.prototype.getTransformFunction = function() 
  * Create a Cesium geometry instance
  * @param {string} id The instance identifier
  * @param {!Cesium.Geometry} geometry The geometry
- * @param {!Cesium.Color} color The color
  * @return {!Cesium.GeometryInstance}
  * @protected
  */
-plugin.cesium.sync.FeatureConverter.prototype.createGeometryInstance = function(id, geometry, color) {
+plugin.cesium.sync.FeatureConverter.prototype.createGeometryInstance = function(id, geometry) {
   return new Cesium.GeometryInstance({
     id: id,
-    geometry: geometry,
-    attributes: {
-      color: Cesium.ColorGeometryInstanceAttribute.fromColor(color)
-    }
+    geometry: geometry
   });
 };
 
@@ -182,6 +178,7 @@ plugin.cesium.sync.FeatureConverter.prototype.createGeometryInstance = function(
 plugin.cesium.sync.FeatureConverter.prototype.createColoredPrimitive = function(geometry, color, opt_lineWidth,
     opt_instanceFn) {
   var options = os.object.unsafeClone(plugin.cesium.sync.FeatureConverter.BASE_PRIMITIVE_OPTIONS);
+  options.material = Cesium.Material.fromType(Cesium.Material.ColorType, {color: color});
   if (opt_lineWidth != null) {
     options.renderState.lineWidth = goog.math.clamp(opt_lineWidth, Cesium.ContextLimits.minimumAliasedLineWidth,
         Cesium.ContextLimits.maximumAliasedLineWidth);
@@ -190,8 +187,8 @@ plugin.cesium.sync.FeatureConverter.prototype.createColoredPrimitive = function(
   var id = opt_lineWidth != null ? plugin.cesium.GeometryInstanceId.GEOM_OUTLINE :
       plugin.cesium.GeometryInstanceId.GEOM;
   var instances = opt_instanceFn ? opt_instanceFn(id, geometry, color) :
-      this.createGeometryInstance(id, geometry, color);
-  var appearance = new Cesium.PerInstanceColorAppearance(options);
+      this.createGeometryInstance(id, geometry);
+  var appearance = new Cesium.PolylineMaterialAppearance(options);
   var primitive = new Cesium.Primitive({
     geometryInstances: instances,
     appearance: appearance
@@ -532,6 +529,25 @@ plugin.cesium.sync.FeatureConverter.prototype.olLineStringGeometryToCesium = fun
 
 /**
  * Create a Cesium line primitive.
+ * @param {!plugin.cesium.materialOptions} options
+ * @return {Cesium.Material}
+ */
+plugin.cesium.sync.FeatureConverter.prototype.getLineMaterial = function(options) {
+  if (options.lineDash) {
+    return Cesium.Material.fromType(Cesium.Material.PolylineDashType, {
+      color: options.color,
+      dashPattern: options.lineDash
+    });
+  } else {
+    return Cesium.Material.fromType(Cesium.Material.ColorType, {
+      color: options.color
+    });
+  }
+};
+
+
+/**
+ * Create a Cesium line primitive.
  * @param {!Array<!Cesium.Cartesian3>} positions The geometry positions.
  * @param {!plugin.cesium.VectorContext} context The vector context.
  * @param {!ol.style.Style} style The feature style.
@@ -545,12 +561,8 @@ plugin.cesium.sync.FeatureConverter.prototype.createLinePrimitive = function(pos
   var color = this.extractColorFromOlStyle(style, true);
   color.alpha *= context.layer.getOpacity();
   var lineDash = this.getDashPattern(style);
-
   var appearance = new Cesium.PolylineMaterialAppearance({
-    material: Cesium.Material.fromType(Cesium.Material.PolylineDashType, {
-      color: color,
-      dashPattern: lineDash
-    })
+    material: this.getLineMaterial(/** @type {plugin.cesium.materialOptions} */ ({color: color, lineDash: lineDash}))
   });
 
   // Handle both color and width
@@ -560,7 +572,7 @@ plugin.cesium.sync.FeatureConverter.prototype.createLinePrimitive = function(pos
     width: width
   });
 
-  var instance = this.createGeometryInstance(plugin.cesium.GeometryInstanceId.GEOM_OUTLINE, outlineGeometry, color);
+  var instance = this.createGeometryInstance(plugin.cesium.GeometryInstanceId.GEOM_OUTLINE, outlineGeometry);
   var primitive = new Cesium.Primitive({
     geometryInstances: instance,
     appearance: appearance
@@ -643,10 +655,8 @@ plugin.cesium.sync.FeatureConverter.prototype.updatePolyline = function(feature,
   color.alpha *= context.layer.getOpacity();
   var lineDash = this.getDashPattern(style);
 
-  polyline.material = Cesium.Material.fromType(Cesium.Material.PolylineDashType, {
-    color: color,
-    dashPattern: lineDash
-  });
+  polyline.material = this.getLineMaterial(/** @type {plugin.cesium.materialOptions} */ ({color: color,
+    lineDash: lineDash}));
   polyline.width = width;
 
   if (polyline instanceof Cesium.Polyline) {
@@ -1075,10 +1085,8 @@ plugin.cesium.sync.FeatureConverter.prototype.olPolygonGeometryToCesiumPolyline 
     outlineColor.alpha = style.getStroke() != null ? (outlineColor.alpha * layerOpacity) : 0;
 
     var appearance = new Cesium.PolylineMaterialAppearance({
-      material: Cesium.Material.fromType(Cesium.Material.PolylineDashType, {
-        color: outlineColor,
-        dashPattern: lineDash
-      })
+      material: this.getLineMaterial(/** @type {plugin.cesium.materialOptions} */ ({color: outlineColor,
+        lineDash: lineDash}))
     });
 
     var primitives = new Cesium.PrimitiveCollection();
@@ -1097,8 +1105,7 @@ plugin.cesium.sync.FeatureConverter.prototype.olPolygonGeometryToCesiumPolyline 
         width: width
       });
 
-      var instance = this.createGeometryInstance(plugin.cesium.GeometryInstanceId.GEOM_OUTLINE, polylineGeometry,
-          outlineColor);
+      var instance = this.createGeometryInstance(plugin.cesium.GeometryInstanceId.GEOM_OUTLINE, polylineGeometry);
       var outlinePrimitive = new Cesium.Primitive({
         geometryInstances: instance,
         appearance: appearance
@@ -1465,6 +1472,7 @@ plugin.cesium.sync.FeatureConverter.prototype.updatePrimitive = function(feature
       try {
         var field = plugin.cesium.GeometryInstanceId[key];
         var attributes = primitive.getGeometryInstanceAttributes(field);
+        var material = primitive.appearance.material;
         if (attributes) {
           var color;
 
@@ -1489,7 +1497,7 @@ plugin.cesium.sync.FeatureConverter.prototype.updatePrimitive = function(feature
           }
 
           if (color) {
-            attributes.color = Cesium.ColorGeometryInstanceAttribute.toValue(color, attributes.color);
+            material.uniforms.color = color;
           }
         }
       } catch (e) {
