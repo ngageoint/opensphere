@@ -36,7 +36,7 @@ describe('Feature grid', function() {
     cy.login();
   });
 
-  it('Shows data', function() {
+  it.skip('Shows data', function() {
     // Upload a file
     cy.get(os.Toolbar.addData.OPEN_FILE_BUTTON).click();
     cy.get(os.importDataDialog.DIALOG).should('be.visible');
