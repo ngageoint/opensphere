@@ -91,10 +91,12 @@ describe('Feature grid', function() {
       });
     });
 
-    cy.get(os.layerFeaturesDialog.DESCRIPTION_CELL).should('be.visible');
-    cy.get(os.layerFeaturesDialog.DESCRIPTION_CELL).contains('Show');
-    cy.get(os.layerFeaturesDialog.DESCRIPTION_CELL).contains('Show').click();
-    cy.get(os.descriptionInfoDialog.DIALOG, {timeout: 5000}).should('be.visible');
+    cy.wait(100); // Link not immediately ready when dialog loads
+    cy.get(os.layerFeaturesDialog.DESCRIPTION_CELL)
+        .should('be.visible')
+        .contains('Show')
+        .click();
+    cy.get(os.descriptionInfoDialog.DIALOG).should('be.visible');
     cy.get(os.descriptionInfoDialog.DIALOG).within(function() {
       // Check description content
       cy.get(os.descriptionInfoDialog.CONTENT).should('be.visible');
