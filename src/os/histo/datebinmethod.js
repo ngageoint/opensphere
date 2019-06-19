@@ -74,6 +74,13 @@ os.histo.DateBinMethod = function() {
    * @private
    */
   this.binType_ = os.histo.DateBinType.HOUR_OF_DAY;
+
+  /**
+   * The supported date bin types for this method
+   * @type {Array<string>}
+   * @private
+   */
+  this.binTypes_ = Object.values(os.histo.DateBinType);
 };
 goog.inherits(os.histo.DateBinMethod, os.histo.UniqueBinMethod);
 
@@ -120,11 +127,20 @@ os.histo.DateBinMethod.prototype.setDateBinType = function(value) {
 
 
 /**
+ * Set the supported date bin types for this method.
+ * @param {Array<string>} values
+ */
+os.histo.DateBinMethod.prototype.setDateBinTypes = function(values) {
+  this.binTypes_ = values;
+};
+
+
+/**
  * Get the supported date bin types for this method.
  * @return {Array<string>}
  */
 os.histo.DateBinMethod.prototype.getDateBinTypes = function() {
-  return Object.values(os.histo.DateBinType);
+  return this.binTypes_;
 };
 
 
