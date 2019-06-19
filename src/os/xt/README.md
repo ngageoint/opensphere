@@ -6,7 +6,14 @@ across tabs and windows without having explicit references to each other.
 
 ## Building
 
-Run `npm run build:xt` and then pull up `dist/opensphere/xt-example.html` in your browser.
+Install dependencies and build the library:
+
+```
+npm install
+npm run build:xt
+```
+
+Then pull up `dist/opensphere/xt-example.html` in your browser.
 
 ## Usage
 

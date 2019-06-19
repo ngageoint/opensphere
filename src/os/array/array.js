@@ -1,6 +1,7 @@
 goog.provide('os.array');
 
 goog.require('goog.array');
+goog.require('goog.math');
 
 
 /**
