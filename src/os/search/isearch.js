@@ -101,7 +101,7 @@ os.search.ISearch.prototype.shouldNormalize;
 
 /**
  * Whether the search is sent to external search providers.
- * @return {boolean} [description]
+ * @return {boolean}
  */
 os.search.ISearch.prototype.isExternal;
 

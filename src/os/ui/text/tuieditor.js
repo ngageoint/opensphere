@@ -29,6 +29,13 @@ os.ui.text.TuiEditor.SCRIPT_URL = ROOT + 'vendor/os-minified/os-tui-editor.min.j
 
 
 /**
+ * If the editor script loadeded, but failed, then stop trying (probably old browser)
+ * @type {boolean}
+ */
+os.ui.text.TuiEditor.STOP_LOADING = false;
+
+
+/**
  * @return {angular.Directive}
  */
 os.ui.text.tuiEditorDirective = function() {
@@ -107,14 +114,14 @@ os.ui.text.TuiEditorCtrl = function($scope, $element, $timeout) {
   /**
    * @type {string}
    */
-  $scope['text'] = $scope['text'] || '';
+  this['text'] = $scope['text'] || '';
 
   this.element_.on('keydown', this.onKeyboardEvent_);
   this.element_.on('keypress', this.onKeyboardEvent_);
 
   $timeout(function() {
     if (this.scope) {
-      if (this.scope['edit'] && !window['tui']) {
+      if (this.scope['edit'] && !window['tui'] && !os.ui.text.TuiEditor.STOP_LOADING) {
         this['loading'] = true;
         var trustedUrl =
             goog.html.TrustedResourceUrl.fromConstant(os.string.createConstant(os.ui.text.TuiEditor.SCRIPT_URL));
@@ -144,9 +151,13 @@ os.ui.text.TuiEditorCtrl.prototype.destroy = function() {
 
 /**
  * Since we couldnt load the js, just display the content
+ * @param {boolean=} opt_suppressAlert
  */
-os.ui.text.TuiEditorCtrl.prototype.onScriptLoadError = function() {
-  os.alertManager.sendAlert('Failed to load editor');
+os.ui.text.TuiEditorCtrl.prototype.onScriptLoadError = function(opt_suppressAlert) {
+  if (!opt_suppressAlert) {
+    os.alertManager.sendAlert('Failed to load editor');
+  }
+
   this['textAreaBackup'] = true;
   this['loading'] = false;
   os.ui.apply(this.scope);
@@ -173,7 +184,7 @@ os.ui.text.TuiEditorCtrl.prototype.onKeyboardEvent_ = function(event) {
  * @export
  */
 os.ui.text.TuiEditorCtrl.prototype.getWordCount = function() {
-  var len = this.scope['text'] ? this.scope['text'].length : 0;
+  var len = this['text'] ? this['text'].length : 0;
   var value = len;
   if (this.scope['maxlength']) {
     value += ' / ' + this.scope['maxlength'];
@@ -193,7 +204,7 @@ os.ui.text.TuiEditorCtrl.prototype.getOptions = function() {
     'linkAttribute': {
       'target': 'blank'
     },
-    'initialValue': this.scope['text'] || '',
+    'initialValue': this['text'] || '',
     'initialEditType': os.settings.get(os.ui.text.TuiEditor.MODE_KEY, 'wysiwyg'),
     'toolbarItems': this.getToolbar(),
     'events': {
@@ -216,34 +227,43 @@ os.ui.text.TuiEditorCtrl.prototype.getOptions = function() {
  */
 os.ui.text.TuiEditorCtrl.prototype.init = function() {
   if (this.scope['edit']) {
-    this['textAreaBackup'] = false;
-    this['loading'] = false;
-    this['tuiEditor'] = new tui.Editor(this.getOptions());
+    if (tui.Editor) {
+      this['textAreaBackup'] = false;
+      this['loading'] = false;
+      this['tuiEditor'] = new tui.Editor(this.getOptions());
 
-    // HACK. There are no hooks to change the button text. So change it after the editor renders
-    // Opened issue #524 on github
-    this.timeout_(function() {
-      if (this.element_) {
-        var markdownButtonElement = this.element_.find('button.te-switch-button.markdown');
-        if (markdownButtonElement.length) {
-          markdownButtonElement.text('Text');
+      // HACK. There are no hooks to change the button text. So change it after the editor renders
+      // Opened issue #524 on github
+      this.timeout_(function() {
+        if (this.element_) {
+          var markdownButtonElement = this.element_.find('button.te-switch-button.markdown');
+          if (markdownButtonElement.length) {
+            markdownButtonElement.text('Text');
+          }
+          var wysiwygButtonElement = this.element_.find('button.te-switch-button.wysiwyg');
+          if (wysiwygButtonElement.length) {
+            wysiwygButtonElement.text('Visual');
+          }
         }
-        var wysiwygButtonElement = this.element_.find('button.te-switch-button.wysiwyg');
-        if (wysiwygButtonElement.length) {
-          wysiwygButtonElement.text('Visual');
-        }
-      }
-    }.bind(this));
+      }.bind(this));
+    } else {
+      // If after we've loaded the editor script and it doesnt run correctly
+      // (happened in chrome 36. Just default to text area)
+      os.ui.text.TuiEditor.STOP_LOADING = true;
+      this.onScriptLoadError(true);
+    }
   } else {
-    this['displayHtml'] = os.ui.text.TuiEditor.render(this.scope['text']);
+    this['displayHtml'] = os.ui.text.TuiEditor.render(this['text']);
   }
 
   // Watch to see if something changes the text and update the value
   this.scope.$watch('text', function(val) {
-    if (this.scope['edit'] && val != this['tuiEditor'].getValue()) {
+    this['text'] = this.scope['text'];
+
+    if (this.scope['edit'] && this['tuiEditor'] && val != this['tuiEditor'].getValue()) {
       this['tuiEditor'].setValue(val);
-    } else {
-      this['displayHtml'] = os.ui.text.TuiEditor.render(this.scope['text']);
+    } else if (!this.scope['edit']) {
+      this['displayHtml'] = os.ui.text.TuiEditor.render(this['text']);
       this.setTargetBlankPropertyInLinks();
     }
 
@@ -264,6 +284,14 @@ os.ui.text.TuiEditorCtrl.prototype.onChange_ = function() {
 
   this.scope['text'] = this['tuiEditor'].getValue();
   os.ui.apply(this.scope);
+};
+
+
+/**
+ * @export
+ */
+os.ui.text.TuiEditorCtrl.prototype.onTextEditChange = function() {
+  this.scope['text'] = this['text'];
 };
 
 
