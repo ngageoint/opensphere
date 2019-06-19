@@ -185,7 +185,8 @@ os.ui.slick.formatter.urlFormatter = function(row, cell, value, columnDef, node)
 os.ui.slick.formatter.columnActionFormatter = function(row, cell, value, columnDef, node, opt_asDecorator) {
   var formatted = '';
   if (opt_asDecorator !== true) {
-    formatted = value;
+    // escape the value or Slickgrid will attempt to render any valid HTML characters (and it will fail)
+    formatted = goog.string.htmlEscape(value);
   }
   var cam = os.ui.columnactions.ColumnActionManager.getInstance();
 
