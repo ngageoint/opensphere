@@ -519,3 +519,67 @@ os.time.xf.TimeModel.prototype.endFilter_ = function(accessorFn, item) {
   }
   return result;
 };
+
+
+/**
+ * @inheritDoc
+ */
+os.time.xf.TimeModel.prototype.getResults = function(opt_value, opt_dim, opt_bottom) {
+  var val = os.time.xf.TimeModel.base(this, 'getResults', opt_value, opt_dim, opt_bottom);
+  if (!(Array.isArray(val) && val.length) && !this.isDisposed()) {
+    var dim = opt_dim && this.hasDimension(opt_dim) ?
+          this.timelessDimensions[opt_dim] : goog.object.getAnyValue(this.timelessDimensions);
+    opt_value = opt_value || Infinity;
+
+    if (dim) {
+      var results = /** @type {!Array<S>} */ (opt_bottom ? dim.bottom(opt_value) : dim.top(opt_value));
+
+      if (this.filterFunction) {
+        results = goog.array.filter(results, this.filterFunction, this);
+      }
+
+      return results;
+    }
+  }
+  return val;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.time.xf.TimeModel.prototype.getDimensionKeys = function(id) {
+  var val = os.time.xf.TimeModel.base(this, 'getDimensionKeys', id);
+  if (!(Array.isArray(val) && val.length) && !this.isDisposed() && this.hasDimension(id)) {
+    return this.timelessDimensions[id].group().all().map(function(v) {
+      return v.key;
+    });
+  }
+  return val;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.time.xf.TimeModel.prototype.getTopRecord = function(id) {
+  var val = os.time.xf.TimeModel.base(this, 'getTopRecord', id);
+  if (!val && !this.isDisposed() && this.hasDimension(id)) {
+    var topRecord = this.timelessDimensions[id].top(1);
+    return topRecord.length == 1 ? topRecord[0] : undefined;
+  }
+  return val;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.time.xf.TimeModel.prototype.getBottomRecord = function(id) {
+  var val = os.time.xf.TimeModel.base(this, 'getBottomRecord', id);
+  if (!val && !this.isDisposed() && this.hasDimension(id)) {
+    var bottomRecord = this.timelessDimensions[id].bottom(1);
+    return bottomRecord.length == 1 ? bottomRecord[0] : undefined;
+  }
+  return val;
+};
