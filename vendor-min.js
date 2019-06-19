@@ -64,8 +64,7 @@ var vendorMinify = function(resources, output, opt_optimzationLevel) {
     if (exit) {
       process.stderr.write(err, () => process.exit(1))
     } else {
-      process.stderr.write(err);
-      process.stdout.write(out);
+      process.stdout.write('Yay it worked\n');
     }
   })
 };
