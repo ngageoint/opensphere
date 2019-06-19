@@ -3,6 +3,7 @@ goog.provide('os.layer.Image');
 goog.require('goog.string');
 goog.require('ol.events');
 goog.require('ol.layer.Image');
+goog.require('os.IGroupable');
 goog.require('os.MapChange');
 goog.require('os.events.LayerEvent');
 goog.require('os.events.PropertyChangeEvent');
@@ -25,6 +26,7 @@ goog.require('os.ui.window');
 /**
  * @extends {ol.layer.Image}
  * @implements {os.layer.ILayer}
+ * @implements {os.IGroupable}
  * @param {olx.layer.ImageOptions} options image layer options
  * @constructor
  */
@@ -124,6 +126,7 @@ os.layer.Image = function(options) {
 };
 goog.inherits(os.layer.Image, ol.layer.Image);
 os.implements(os.layer.Image, os.layer.ILayer.ID);
+os.implements(os.layer.Image, os.IGroupable.ID);
 
 
 /**
@@ -194,6 +197,22 @@ os.layer.Image.prototype.getId = function() {
  */
 os.layer.Image.prototype.setId = function(value) {
   this.id_ = value;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.layer.Image.prototype.getGroupId = function() {
+  return this.getId();
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.layer.Image.prototype.getGroupLabel = function() {
+  return this.getTitle();
 };
 
 

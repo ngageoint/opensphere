@@ -1,6 +1,8 @@
 goog.provide('os.layer.MockLayer');
-goog.require('os.implements');
+
 goog.require('goog.string');
+goog.require('os.IGroupable');
+goog.require('os.implements');
 goog.require('os.layer.ILayer');
 
 
@@ -8,6 +10,7 @@ goog.require('os.layer.ILayer');
 /**
  * Mock layer for testing.
  * @implements {os.layer.ILayer}
+ * @implements {os.IGroupable}
  * @constructor
  */
 os.layer.MockLayer = function() {
@@ -31,6 +34,22 @@ os.layer.MockLayer.prototype.getId = function() {
  */
 os.layer.MockLayer.prototype.setId = function(value) {
   this.id = value;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.layer.MockLayer.prototype.getGroupId = function() {
+  return this.getId();
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.layer.MockLayer.prototype.getGroupLabel = function() {
+  return this.getTitle();
 };
 
 
