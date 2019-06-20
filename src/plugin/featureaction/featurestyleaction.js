@@ -20,6 +20,7 @@ plugin.im.action.feature.StyleActionTagName = {
   CENTER_SHAPE: 'centerShape',
   COLOR: 'color',
   ICON_SRC: 'iconSrc',
+  ICON_OPTIONS: 'iconOptions',
   LINE_DASH: 'lineDash',
   OPACITY: 'opacity',
   ROTATION_COLUMN: 'rotationColumn',
@@ -252,6 +253,12 @@ plugin.im.action.feature.StyleAction.prototype.toXml = function() {
     os.xml.appendElement(plugin.im.action.feature.StyleActionTagName.ROTATION_COLUMN, element, String(rotationColumn));
   }
 
+  if (shape == os.style.ShapeType.ICON || centerShape == os.style.ShapeType.ICON) {
+    var icon = os.style.getConfigIcon(this.styleConfig) || os.ui.file.kml.getDefaultIcon();
+    os.xml.appendElement(plugin.im.action.feature.StyleActionTagName.ICON_OPTIONS, element,
+        JSON.stringify(icon.options));
+  }
+
   return element;
 };
 
@@ -301,8 +308,11 @@ plugin.im.action.feature.StyleAction.prototype.fromXml = function(xml) {
       if (shape == os.style.ShapeType.ICON ||
           (os.style.CENTER_LOOKUP[shape] && centerShape === os.style.ShapeType.ICON)) {
         var iconSrc = os.xml.getChildValue(xml, plugin.im.action.feature.StyleActionTagName.ICON_SRC);
+        var iconOptions = os.xml.getChildValue(xml, plugin.im.action.feature.StyleActionTagName.ICON_OPTIONS) || '{}';
+        iconOptions = typeof JSON.parse(iconOptions) === 'object' ? JSON.parse(iconOptions) : {};
         os.style.setConfigIcon(styleConfig, /** @type {!osx.icon.Icon} */ ({
-          path: iconSrc
+          path: iconSrc,
+          options: iconOptions
         }));
       }
     }

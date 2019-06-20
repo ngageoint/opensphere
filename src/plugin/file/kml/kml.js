@@ -46,6 +46,14 @@ plugin.file.kml.GX_NS = 'http://www.google.com/kml/ext/2.2';
 
 
 /**
+ * Namespace URI used for gx nodes.
+ * @type {string}
+ * @const
+ */
+plugin.file.kml.OS_NS = 'http://opensphere.io/kml/ext/1.0';
+
+
+/**
  * The default KML style
  * @type {Object<string, *>}
  */
@@ -305,6 +313,10 @@ plugin.file.kml.readStyle = function(node, objectStack) {
     config['fill'] = null;
   }
 
+  if (imageStyle['options'] !== undefined) {
+    config['image']['options'] = imageStyle['options'];
+  }
+
   if (outline !== undefined && !outline) {
     config['stroke'] = null;
   }
@@ -393,6 +405,11 @@ plugin.file.kml.LINK_PARSERS = ol.xml.makeStructureNS(
 os.object.merge(plugin.file.kml.LINK_PARSERS, plugin.file.kml.OL_LINK_PARSERS(), false);
 
 
+plugin.file.kml.OS_NAMESPACE_URIS_ = [
+  plugin.file.kml.OS_NS
+];
+
+
 /**
  * @type {Object<string, Object<string, ol.XmlParser>>}
  * @const
@@ -400,7 +417,11 @@ os.object.merge(plugin.file.kml.LINK_PARSERS, plugin.file.kml.OL_LINK_PARSERS(),
 plugin.file.kml.ICON_STYLE_PARSERS = ol.xml.makeStructureNS(
     plugin.file.kml.OL_NAMESPACE_URIS(), {
       'color': ol.xml.makeObjectPropertySetter(plugin.file.kml.readColor_)
-    });
+    }, ol.xml.makeStructureNS(
+        plugin.file.kml.OS_NAMESPACE_URIS_, {
+          'iconOptions': plugin.file.kml.readJson_
+        }
+    ));
 
 
 /**
@@ -901,6 +922,24 @@ plugin.file.kml.replaceParsers_(ol.format.KML.LABEL_STYLE_PARSERS_, 'scale',
 
 
 /**
+ * Parse JSON data from the node.
+ *
+ * @param {Node} node Node.
+ * @return {Object|null}
+ * @private
+ */
+plugin.file.kml.readJson_ = function(node) {
+  var str = ol.format.XSD.readString(node);
+  if (str) {
+    return /** @type {Object} */ (JSON.parse(str));
+  }
+  return null;
+};
+plugin.file.kml.replaceParsers_(ol.format.KML.ICON_STYLE_PARSERS_, 'iconOptions',
+    ol.xml.makeObjectPropertySetter(plugin.file.kml.readJson_));
+
+
+/**
  * KML 2.0 support, yay!!!
  *
  * @param {Node} node Node.
@@ -979,6 +1018,8 @@ plugin.file.kml.IconStyleParser_ = function(node, objectStack) {
 
   var scale = /** @type {number|undefined} */ (object['scale']);
 
+  var options = /** @type {Object|undefined} */ (object['iconOptions']);
+
   // determine the crossOrigin from the provided URL. if 'none', use undefined so the attribute isn't set on the image.
   var crossOrigin = src ? os.net.getCrossOrigin(src) : undefined;
   if (crossOrigin == os.net.CrossOrigin.NONE) {
@@ -1001,6 +1042,8 @@ plugin.file.kml.IconStyleParser_ = function(node, objectStack) {
     size: size,
     src: src
   });
+  imageStyle['options'] = options;
+
   styleObject['imageStyle'] = imageStyle;
 };
 plugin.file.kml.replaceParsers_(plugin.file.kml.OL_STYLE_PARSERS(), 'IconStyle', plugin.file.kml.IconStyleParser_);
