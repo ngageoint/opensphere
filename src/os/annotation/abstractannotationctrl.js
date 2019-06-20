@@ -62,7 +62,7 @@ os.annotation.UI_TEMPLATE =
           'ng-dblclick="ctrl.editDescription()">' +
         '<tuieditor text="ctrl.description" edit="ctrl.editingDescription" is-required="false" maxlength="4000">' +
         '</tuieditor>' +
-        '<div class="text-right" ng-if="ctrl.editingDescription">' +
+        '<div class="text-right mt-1" ng-if="ctrl.editingDescription">' +
           '<button class="btn btn-success mr-1" title="Save the annotation" ng-click="ctrl.saveAnnotation()">' +
             '<i class="fa fa-check"/> OK' +
           '</button>' +
@@ -186,6 +186,8 @@ goog.inherits(os.annotation.AbstractAnnotationCtrl, goog.Disposable);
  */
 os.annotation.AbstractAnnotationCtrl.prototype.disposeInternal = function() {
   os.annotation.AbstractAnnotationCtrl.base(this, 'disposeInternal');
+  this.element.parent().draggable('destroy');
+  this.element.resizable('destroy');
 
   this.scope = null;
   this.element = null;
@@ -228,18 +230,8 @@ os.annotation.AbstractAnnotationCtrl.prototype.initialize = function() {
  * @protected
  */
 os.annotation.AbstractAnnotationCtrl.prototype.initDragResize = function() {
-  if (this.element && this.element.parent().length) {
-    // OpenLayers absolutely positions the parent container, so attach the draggable handler to that and use the
-    // annotation container as the drag target.
-    this.element.parent().draggable({
-      'containment': this.getContainerSelector(),
-      'handle': '.js-annotation',
-      'start': this.onDragStart_.bind(this),
-      'drag': this.updateTail.bind(this),
-      'stop': this.onDragStop_.bind(this),
-      'scroll': false
-    });
-
+  if (this.element) {
+    this.makeDraggable_();
     this.element.resizable({
       'containment': this.getContainerSelector(),
       'minWidth': 50,
@@ -250,6 +242,26 @@ os.annotation.AbstractAnnotationCtrl.prototype.initDragResize = function() {
       'start': this.onDragStart_.bind(this),
       'resize': this.updateTail.bind(this),
       'stop': this.onDragStop_.bind(this)
+    });
+  }
+};
+
+
+/**
+ * Setup the drag handler
+ * @private
+ */
+os.annotation.AbstractAnnotationCtrl.prototype.makeDraggable_ = function() {
+  if (this.element && this.element.parent().length) {
+    // OpenLayers absolutely positions the parent container, so attach the draggable handler to that and use the
+    // annotation container as the drag target.
+    this.element.parent().draggable({
+      'containment': this.getContainerSelector(),
+      'handle': '.js-annotation',
+      'start': this.onDragStart_.bind(this),
+      'drag': this.updateTail.bind(this),
+      'stop': this.onDragStop_.bind(this),
+      'scroll': false
     });
   }
 };
@@ -288,6 +300,7 @@ os.annotation.AbstractAnnotationCtrl.prototype.hideAnnotation = function() {};
 os.annotation.AbstractAnnotationCtrl.prototype.editDescription = function() {
   if (this['options'].editable && !this['editingDescription']) {
     this['editingDescription'] = true;
+    this.element.parent().draggable('destroy');
 
     this.recordCurrents_();
 
@@ -344,9 +357,14 @@ os.annotation.AbstractAnnotationCtrl.prototype.saveAnnotation = function() {
   this.element.width(this.currentWidth_);
   this['options'].size = [this.currentWidth_, this.currentHeight_];
 
+  if (this['editingDescription']) {
+    this.makeDraggable_();
+  }
+
   this['editingName'] = false;
   this['editingDescription'] = false;
 
+  this.makeDraggable_();
   this.updateTail();
 };
 
@@ -366,6 +384,10 @@ os.annotation.AbstractAnnotationCtrl.prototype.cancelEdit = function() {
     this['description'] = this.currentDescription_;
 
     this.updateTail();
+
+    if (this['editingDescription']) {
+      this.makeDraggable_();
+    }
   }
 
   this['editingName'] = false;
