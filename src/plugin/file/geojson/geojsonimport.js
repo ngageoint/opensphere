@@ -53,7 +53,7 @@ plugin.file.geojson.GeoJSONImportCtrl.prototype.createFromConfig = function(conf
  * @override
  */
 plugin.file.geojson.GeoJSONImportCtrl.prototype.updateFromConfig = function(descriptor, config) {
-  plugin.file.geojson.GeoJSONDescriptor.updateFromConfig(descriptor, config);
+  descriptor.updateFromConfig(config);
 };
 
 

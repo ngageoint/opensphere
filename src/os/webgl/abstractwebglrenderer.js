@@ -350,3 +350,10 @@ os.webgl.AbstractWebGLRenderer.prototype.getAltitudeModes = function() {
 os.webgl.AbstractWebGLRenderer.prototype.onPostRender = function(callback) {
   return undefined;
 };
+
+
+/**
+ * @inheritDoc
+ * @abstract
+ */
+os.webgl.AbstractWebGLRenderer.prototype.flyToFeatures = function(features) {};

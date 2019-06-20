@@ -256,6 +256,9 @@ plugin.file.kml.ui.KMLNode.prototype.loadAnnotation = function() {
         this.feature_.get(os.annotation.OPTIONS_FIELD));
     if (annotationOptions && annotationOptions.show) {
       this.annotation_ = new os.annotation.FeatureAnnotation(this.feature_);
+
+      // set initial visibility based on the tree/animation state
+      this.setAnnotationVisibility_(this.getState() === os.structs.TriState.ON && this.animationState_);
     }
   }
 };
@@ -273,7 +276,17 @@ plugin.file.kml.ui.KMLNode.prototype.onFeatureChange = function(event) {
       case 'loading':
         this.setLoading(!!event.getNewValue());
         break;
+      case os.annotation.EventType.UPDATE_PLACEMARK:
+        // this event needs to update the placemark (tree node) in addition to dispatching the event
+        plugin.file.kml.ui.updatePlacemark(/** @type {!plugin.file.kml.ui.PlacemarkOptions} */ ({
+          'feature': this.feature_,
+          'node': this
+        }));
+
+        this.dispatchEvent(new os.events.PropertyChangeEvent(os.annotation.EventType.CHANGE));
+        break;
       case os.annotation.EventType.CHANGE:
+        // this event just needs to resave the tree
         this.dispatchEvent(new os.events.PropertyChangeEvent(os.annotation.EventType.CHANGE));
         break;
       case os.annotation.EventType.EDIT:
@@ -281,6 +294,10 @@ plugin.file.kml.ui.KMLNode.prototype.onFeatureChange = function(event) {
           'feature': this.feature_,
           'node': this
         }));
+        break;
+      case os.annotation.EventType.HIDE:
+        this.clearAnnotations();
+        this.dispatchEvent(new os.events.PropertyChangeEvent('icons'));
         break;
       default:
         break;

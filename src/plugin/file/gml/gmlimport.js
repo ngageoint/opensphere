@@ -54,7 +54,7 @@ plugin.file.gml.GMLImportCtrl.prototype.createDescriptor = function() {
   if (this.config['descriptor']) {
     // existing descriptor, update it
     descriptor = /** @type {!plugin.file.gml.GMLDescriptor} */ (this.config['descriptor']);
-    plugin.file.gml.GMLDescriptor.updateFromConfig(descriptor, this.config);
+    descriptor.updateFromConfig(this.config);
   } else {
     // this is a new import
     descriptor = plugin.file.gml.GMLDescriptor.createFromConfig(this.config);

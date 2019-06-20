@@ -24,9 +24,12 @@
       </div>
     </div>
     <div class="form-row form-group col">
-      <label class="col-form-label col-3 text-right">Color</label>
-      <div class="col">
-        <colorpicker name="color" color="config.color"></colorpicker>
+      <label class="col-form-label col-3 text-right">Style</label>
+      <div class="col row">
+        <colorpicker class="col-auto mx-2" name="color" color="config.color"></colorpicker>
+        <select class="custom-select col-5" ng-if="optionsStep.shapes && optionsStep.shapes.length > 0" ng-model="config.shapeName" ng-options="val for val in optionsStep.shapes" ng-change="optionsStep.onShapeChange()">
+        </select>
+        <iconpicker class="ml-2" ng-if="optionsStep.showIcon" ng-model="config.icon" icon-set="optionsStep.iconSet" icon-src="optionsStep.iconSrc"></iconpicker>
       </div>
     </div>
   </form>

@@ -335,6 +335,13 @@ os.ui.filter.ui.EditFiltersCtrl.prototype.finish = function() {
   var filter = this['root'].writeFilter(this['title'], this['description']);
   this.entry.setFilter(filter);
 
+  var dm = os.data.OSDataManager.getInstance();
+  if (dm) {
+    if (dm.getDescriptor(this.entry.getType()) == null) {
+      this.entry.setTemporary(true);
+    }
+  }
+
   // tell the thing that launched us that we're done
   if (this.scope['callback']) {
     this.scope['callback'](this.entry);
