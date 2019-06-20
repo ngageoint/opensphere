@@ -166,7 +166,9 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
    * @type {!osx.icon.Icon}
    */
   this['icon'] = /** @type {!osx.icon.Icon} */ ({// os.ui.file.kml.Icon to osx.icon.Icon
-    path: os.ui.file.kml.getDefaultIcon().path
+    title: os.ui.file.kml.getDefaultIcon().title,
+    path: os.ui.file.kml.getDefaultIcon().path,
+    options: os.ui.file.kml.getDefaultIcon().options
   });
 
   /**
