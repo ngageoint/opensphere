@@ -36,6 +36,15 @@ os.ui.text.TuiEditor.STOP_LOADING = false;
 
 
 /**
+ * @enum {string}
+ */
+os.ui.text.TuiEditor.Mode = {
+  WYSIWYG: 'wysiwyg',
+  MARKDOWN: 'markdown'
+};
+
+
+/**
  * @return {angular.Directive}
  */
 os.ui.text.tuiEditorDirective = function() {
@@ -115,23 +124,13 @@ os.ui.text.TuiEditorCtrl = function($scope, $element, $timeout) {
    * @type {string}
    */
   this['text'] = $scope['text'] || '';
+  $scope['edit'] = goog.isDef($scope['edit']) ? $scope['edit'] : false;
 
   this.element_.on('keydown', this.onKeyboardEvent_);
   this.element_.on('keypress', this.onKeyboardEvent_);
 
-  $timeout(function() {
-    if (this.scope) {
-      if (this.scope['edit'] && !window['tui'] && !os.ui.text.TuiEditor.STOP_LOADING) {
-        this['loading'] = true;
-        var trustedUrl =
-            goog.html.TrustedResourceUrl.fromConstant(os.string.createConstant(os.ui.text.TuiEditor.SCRIPT_URL));
-        goog.net.jsloader.safeLoad(trustedUrl).addCallbacks(this.init, this.onScriptLoadError, this);
-      } else {
-        this.init();
-      }
-    }
-  }.bind(this));
-
+  $scope.$watch('text', this.onScopeChange_.bind(this));
+  $scope.$watch('edit', this.switchModes_.bind(this));
   $scope.$on('$destroy', this.destroy.bind(this));
 };
 
@@ -140,12 +139,39 @@ os.ui.text.TuiEditorCtrl = function($scope, $element, $timeout) {
  * Cleanup
  */
 os.ui.text.TuiEditorCtrl.prototype.destroy = function() {
-  this['tuiEditor'] = null;
+  if (this['tuiEditor']) {
+    this['tuiEditor'].remove();
+    this['tuiEditor'] = null;
+  }
+
   this.element_.off('keydown');
   this.element_.off('keypress');
   this.element_ = null;
-  this.scope = null;
   this.timeout_ = null;
+  this.scope = null;
+};
+
+
+/**
+ * Change between edit and view mode
+ * @private
+ */
+os.ui.text.TuiEditorCtrl.prototype.switchModes_ = function() {
+  // Since we put it behind a ng-if, we need to wait for the dom element to be back
+  this.timeout_(function() {
+    if (this.scope) {
+      if (this.scope['edit'] && !window['tui'] && !os.ui.text.TuiEditor.STOP_LOADING) {
+        this['loading'] = true;
+        var trustedUrl =
+            goog.html.TrustedResourceUrl.fromConstant(os.string.createConstant(os.ui.text.TuiEditor.SCRIPT_URL));
+        goog.net.jsloader.safeLoad(trustedUrl, {
+          'timeout': 30000
+        }).addCallbacks(this.init, this.onScriptLoadError, this);
+      } else {
+        this.init();
+      }
+    }
+  }.bind(this));
 };
 
 
@@ -201,14 +227,15 @@ os.ui.text.TuiEditorCtrl.prototype.getOptions = function() {
   var options = {
     'el': this.element_.find('.js-tui-editor__editor')[0],
     'height': 'auto',
+    'min-height': '10rem',
     'linkAttribute': {
       'target': 'blank'
     },
-    'initialValue': this['text'] || '',
-    'initialEditType': os.settings.get(os.ui.text.TuiEditor.MODE_KEY, 'wysiwyg'),
+    'initialValue': this['text'],
+    'initialEditType': os.settings.get(os.ui.text.TuiEditor.MODE_KEY, os.ui.text.TuiEditor.Mode.WYSIWYG),
     'toolbarItems': this.getToolbar(),
     'events': {
-      'change': this.onChange_.bind(this)
+      'change': this.onEditorChange_.bind(this)
     },
     'codeBlockLanguages': ['markdown'],
     'usedefaultHTMLSanitizer': true,
@@ -226,6 +253,12 @@ os.ui.text.TuiEditorCtrl.prototype.getOptions = function() {
  * Initialize tuieditor
  */
 os.ui.text.TuiEditorCtrl.prototype.init = function() {
+  // If we are toggling between edit and view mode. Cleanup the editor
+  if (this['tuiEditor']) {
+    this['tuiEditor'].remove();
+    this['tuiEditor'] = null;
+  }
+
   if (this.scope['edit']) {
     if (tui.Editor) {
       this['textAreaBackup'] = false;
@@ -244,6 +277,10 @@ os.ui.text.TuiEditorCtrl.prototype.init = function() {
           if (wysiwygButtonElement.length) {
             wysiwygButtonElement.text('Visual');
           }
+
+          if (os.settings.get(os.ui.text.TuiEditor.MODE_KEY) == os.ui.text.TuiEditor.Mode.MARKDOWN) {
+            this.fixCodemirrorInit_();
+          }
         }
       }.bind(this));
     } else {
@@ -256,20 +293,6 @@ os.ui.text.TuiEditorCtrl.prototype.init = function() {
     this['displayHtml'] = os.ui.text.TuiEditor.render(this['text']);
   }
 
-  // Watch to see if something changes the text and update the value
-  this.scope.$watch('text', function(val) {
-    this['text'] = this.scope['text'];
-
-    if (this.scope['edit'] && this['tuiEditor'] && val != this['tuiEditor'].getValue()) {
-      this['tuiEditor'].setValue(val);
-    } else if (!this.scope['edit']) {
-      this['displayHtml'] = os.ui.text.TuiEditor.render(this['text']);
-      this.setTargetBlankPropertyInLinks();
-    }
-
-    os.ui.apply(this.scope);
-  }.bind(this));
-
   this.scope.$emit(os.ui.text.TuiEditor.READY);
 };
 
@@ -277,12 +300,29 @@ os.ui.text.TuiEditorCtrl.prototype.init = function() {
 /**
  * @private
  */
-os.ui.text.TuiEditorCtrl.prototype.onChange_ = function() {
-  if (this.scope && this.scope['tuiEditorForm']) {
+os.ui.text.TuiEditorCtrl.prototype.onScopeChange_ = function() {
+  this['text'] = this.scope['text'];
+
+  if (this.scope['edit'] && this['tuiEditor'] && this['text'] != this['tuiEditor'].getValue()) {
+    this['tuiEditor'].setValue(this['text']);
+  } else if (!this.scope['edit']) {
+    this['displayHtml'] = os.ui.text.TuiEditor.render(this['text']);
+    this.setTargetBlankPropertyInLinks();
+  }
+
+  os.ui.apply(this.scope);
+};
+
+
+/**
+ * @private
+ */
+os.ui.text.TuiEditorCtrl.prototype.onEditorChange_ = function() {
+  if (this.scope && this.scope['tuiEditorForm'] && this['tuiEditor'].getValue()) {
     this.scope['tuiEditorForm'].$setDirty();
   }
 
-  this.scope['text'] = this['tuiEditor'].getValue();
+  this['text'] = this.scope['text'] = this['tuiEditor'].getValue();
   os.ui.apply(this.scope);
 };
 
@@ -364,6 +404,28 @@ os.ui.text.TuiEditorCtrl.prototype.setTargetBlankPropertyInLinks = function() {
     var links = this.element_.find('.js-tui-editor__viewer a');
     if (links.length) {
       links.prop('target', '_blank');
+    }
+  }
+};
+
+
+/**
+ * Codemirror has the same issues that it did in simpleMDE with initalization.
+ * Codemirror issue #798. when its put in a textarea with display none it needs a refresh
+ * After Codemirror is added, call refresh on it
+ * Commented on tuieditor issue #191
+ * @private
+ */
+os.ui.text.TuiEditorCtrl.prototype.fixCodemirrorInit_ = function() {
+  if (this.element_) {
+    this.cmFixAttempt_ = this.cmFixAttempt_ ? this.cmFixAttempt_ + 1 : 1;
+    var codeMirror = this.element_.find('.te-md-container .CodeMirror');
+    if (this['tuiEditor'] && codeMirror.length) {
+      this.timeout_(function() {
+        this['tuiEditor'].mdEditor.cm.refresh();
+      }.bind(this));
+    } else if (this.cmFixAttempt_ < 50) {
+      goog.Timer.callOnce(this.fixCodemirrorInit_, 250, this);
     }
   }
 };
