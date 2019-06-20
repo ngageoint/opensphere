@@ -132,3 +132,10 @@ os.webgl.IWebGLRenderer.prototype.getAltitudeModes;
  * @return {function()|undefined} A deregistration function, or undefined if unsupported by the renderer.
  */
 os.webgl.IWebGLRenderer.prototype.onPostRender;
+
+
+/**
+ * Adds a command to fly to the features
+ * @param {Array<ol.Feature>} features
+ */
+os.webgl.IWebGLRenderer.prototype.flyToFeatures;

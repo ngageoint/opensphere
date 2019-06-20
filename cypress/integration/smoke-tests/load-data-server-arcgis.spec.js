@@ -84,38 +84,5 @@ describe('Add ARCGIS server', function() {
         .invoke('text')
         .should('match', /\([1-9]\d{0,3}\)/); // Any number 1-9999, surrounded by ()
     cy.imageComparison('features loaded');
-
-    // Clean up
-    cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4)
-        .find(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.FEATURE_COUNT_TEXT_WILDCARD)
-        .invoke('text')
-        .should('match', /\([1-9]\d{0,3}\)/); // Any number 1-9999, surrounded by ()
-    cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4).click();
-    cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4)
-        .find(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.REMOVE_LAYER_BUTTON_WILDCARD)
-        .click();
-    cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4).should('not.contain', 'Fire Stations Features');
-    cy.imageComparison('features removed');
-    cy.get(os.layersDialog.Tabs.Layers.Tree.Type.mapLayer.STREET_MAP_TILES)
-        .find(os.layersDialog.Tabs.Layers.Tree.LAYER_TOGGLE_CHECKBOX_WILDCARD)
-        .click();
-    cy.get(os.layersDialog.Tabs.Layers.Tree.Type.mapLayer.WORLD_IMAGERY_TILES)
-        .find(os.layersDialog.Tabs.Layers.Tree.LAYER_TOGGLE_CHECKBOX_WILDCARD)
-        .click();
-    cy.get(os.Application.PAGE).type('v');
-    cy.get(os.layersDialog.Tabs.Areas.TAB).click();
-    cy.get(os.layersDialog.Tabs.Areas.Tree.AREA_1).click();
-    cy.get(os.layersDialog.Tabs.Areas.Tree.AREA_1)
-        .find(os.layersDialog.Tabs.Areas.Tree.REMOVE_AREA_BUTTON_WILDCARD)
-        .click();
-    cy.get(os.layersDialog.Tabs.Areas.Tree.AREA_1).should('not.contain', 'temp area 5');
-    cy.get(os.layersDialog.Tabs.Layers.TAB).click();
-    cy.get(os.statusBar.SERVERS_BUTTON).click();
-    cy.get(os.settingsDialog.Tabs.dataServers.SERVER_1)
-        .find(os.settingsDialog.Tabs.dataServers.DELETE_SERVER_BUTTON_WILDCARD)
-        .click();
-    cy.get(os.settingsDialog.Tabs.dataServers.SERVER_1)
-        .should('not.contain', 'Aurora ArcGIS Server');
-    cy.get(os.settingsDialog.CLOSE_BUTTON).click();
   });
 });
