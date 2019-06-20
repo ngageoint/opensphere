@@ -120,6 +120,6 @@ body {
 }
 
 // Blocks cursor select outside of input field
-* label {
+div {
   user-select: none;
 }
