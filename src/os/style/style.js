@@ -116,10 +116,6 @@ os.style.LINE_STYLE_OPTIONS = [
     id: 7,
     name: '\u2501\u2505\u2501\u2505\u2501\u2505\u2578',
     pattern: [7, 4, 1, 4]
-  }, {
-    id: 8,
-    name: '\u2501\u2009\u254D\u2009\u2501\u2009\u254D\u2009\u2501',
-    pattern: [3, 4, 1, 3, 1, 4]
   }
 ];
 

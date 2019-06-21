@@ -1465,6 +1465,7 @@ plugin.cesium.sync.FeatureConverter.prototype.updatePrimitive = function(feature
       try {
         var field = plugin.cesium.GeometryInstanceId[key];
         var attributes = primitive.getGeometryInstanceAttributes(field);
+        var material = primitive.appearance.material;
         if (attributes) {
           var color;
 
@@ -1489,7 +1490,11 @@ plugin.cesium.sync.FeatureConverter.prototype.updatePrimitive = function(feature
           }
 
           if (color) {
-            attributes.color = Cesium.ColorGeometryInstanceAttribute.toValue(color, attributes.color);
+            if (material && material.uniforms) {
+              material.uniforms.color = color;
+            } else {
+              attributes.color = Cesium.ColorGeometryInstanceAttribute.toValue(color, attributes.color);
+            }
           }
         }
       } catch (e) {
@@ -1667,6 +1672,31 @@ plugin.cesium.sync.FeatureConverter.prototype.getFeatureStyles = function(featur
 
 
 /**
+ * Checks a primitive or primitive collection for a matching dash pattern
+ * @param {Cesium.Billboard|Cesium.Cesium3DTileset|Cesium.Label|Cesium.Polygon|Cesium.Polyline|
+ * Cesium.PolylineCollection|Cesium.Primitive} primitive The primitive
+ * @param {number} lineDash The line dash pattern
+ * @return {boolean}
+ */
+plugin.cesium.sync.FeatureConverter.prototype.matchDashPattern = function(primitive, lineDash) {
+  if (primitive instanceof Cesium.PrimitiveCollection) {
+    for (var i = 0; i < primitive.length; i++) {
+      if (!this.matchDashPattern(primitive.get(i), lineDash)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  if (primitive && primitive.appearance && primitive.appearance.material && primitive.appearance.material.uniforms) {
+    return primitive.appearance.material.uniforms.dashPattern != lineDash;
+  }
+
+  return true; // don't change the dashPattern for extruded polygons
+};
+
+
+/**
  * Convert an OL3 geometry to Cesium.
  * @param {!ol.Feature} feature The OL3 feature
  * @param {!ol.geom.Geometry} geometry The geometry to be converted
@@ -1686,7 +1716,7 @@ plugin.cesium.sync.FeatureConverter.prototype.olGeometryToCesium = function(feat
     var dirty = geometry.get(os.geom.GeometryField.DIRTY);
     var width = this.extractLineWidthFromOlStyle(style);
     var lineDash = this.getDashPattern(style);
-    if (dirty || primitive['olLineWidth'] != width || primitive.appearance.material.uniforms.dashPattern != lineDash) {
+    if (dirty || primitive['olLineWidth'] != width || this.matchDashPattern(primitive, lineDash)) {
       wasPrimitiveShown = plugin.cesium.VectorContext.isShown(primitive);
       context.removePrimitive(primitive);
       geometry.set(os.geom.GeometryField.DIRTY, false);
