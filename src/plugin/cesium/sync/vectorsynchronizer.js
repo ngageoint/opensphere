@@ -726,6 +726,7 @@ plugin.cesium.sync.VectorSynchronizer.prototype.updateBillboardOffsets = functio
 plugin.cesium.sync.VectorSynchronizer.prototype.updateFromCamera = function() {
   this.updateLabelOffsets();
   this.updateBillboardOffsets();
+  os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
 };
 
 
