@@ -268,6 +268,13 @@ const sharedResources = [
     source: 'vendor/fonts/typeface-open-sans',
     target: 'vendor/fonts/typeface-open-sans',
     files: ['files', 'index.css']
+  },
+  {
+    source: resolver.resolveModulePath('lightgallery/dist', __dirname),
+    target: 'vendor/lightgallery',
+    css: ['css/lightgallery.min.css'],
+    scripts: ['js/lightgallery.min.js'],
+    files: ['fonts']
   }
 ];
 
