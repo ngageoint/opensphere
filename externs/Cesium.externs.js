@@ -2588,7 +2588,7 @@ Cesium.PolylineColorAppearance.prototype.vertexFormat;
 
 /**
  * @constructor
- * @param {{material: Cesium.Material}} object
+ * @param {Object} object
  * @extends {Cesium.Appearance}
  */
 Cesium.PolylineMaterialAppearance = function(object) {};
@@ -2599,6 +2599,14 @@ Cesium.PolylineMaterialAppearance = function(object) {};
  */
 Cesium.PolylineMaterialAppearance.prototype.vertexFormat;
 
+
+
+/**
+ * @constructor
+ * @param {Object} object
+ * @extends {Cesium.Appearance}
+ */
+Cesium.MaterialAppearance = function(object) {};
 
 
 /**
