@@ -589,7 +589,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.getSize = function() {
 
 /**
  * Gets the line dash from the item(s)
- * @return {?Array<number>} The line
+ * @return {Array<number>|undefined} The line
  */
 os.ui.layer.VectorLayerUICtrl.prototype.getLineDash = function() {
   var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
@@ -609,7 +609,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.getLineDash = function() {
     }
   }
 
-  return lineDash || os.style.DEFAULT_LINE_STYLE;
+  return lineDash;
 };
 
 

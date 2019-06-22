@@ -163,6 +163,15 @@ plugin.places.PlacesManager.prototype.getPlacesRoot = function() {
 
 
 /**
+ * Get the places KML layer.
+ * @return {plugin.file.kml.KMLLayer}
+ */
+plugin.places.PlacesManager.prototype.getPlacesLayer = function() {
+  return this.placesLayer_;
+};
+
+
+/**
  * Add the Places layer to the map.
  */
 plugin.places.PlacesManager.prototype.addLayer = function() {
@@ -458,7 +467,6 @@ plugin.places.PlacesManager.prototype.onSourceLoaded_ = function() {
     if (this.placesRoot_) {
       this.initializeNode_(this.placesRoot_);
       this.placesRoot_.collapsed = false;
-
       this.placesRoot_.listen(goog.events.EventType.PROPERTYCHANGE, this.onRootChange_, false, this);
 
       this.addLayer();
@@ -491,3 +499,11 @@ plugin.places.PlacesManager.prototype.reindexTimeModel_ = function() {
   this.placesSource_.reindexTimeModel();
 };
 
+
+/**
+ * Get the root annotations folder. Currently, this is just the overall root.
+ * @return {plugin.file.kml.ui.KMLNode}
+ */
+plugin.places.PlacesManager.prototype.getAnnotationsFolder = function() {
+  return this.placesRoot_;
+};

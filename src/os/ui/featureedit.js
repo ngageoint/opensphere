@@ -252,7 +252,7 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
   /**
    * Selected line dash style
    */
-  this['lineDash'] = os.style.DEFAULT_LINE_STYLE;
+  this['lineDash'] = undefined;
 
   /**
    * Selected shape.
@@ -409,9 +409,9 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
   /**
    * The original geometry when editing a feature.
    * @type {ol.geom.Geometry}
-   * @private
+   * @protected
    */
-  this.originalGeometry_ = null;
+  this.originalGeometry = null;
 
   var feature = /** @type {ol.Feature|undefined} */ (this.options['feature']);
   if (feature) {
@@ -499,6 +499,9 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
   }.bind(this));
 
   $scope.$on('$destroy', this.dispose.bind(this));
+
+  // fire an event to inform other UIs that an edit has launched.
+  os.dispatcher.dispatchEvent(os.annotation.EventType.LAUNCH_EDIT);
 
   $timeout(function() {
     // expand the default section if set
@@ -709,11 +712,10 @@ os.ui.FeatureEditCtrl.prototype.isEllipse = function() {
  */
 os.ui.FeatureEditCtrl.prototype.isPolygonOrLine = function() {
   var geometry = this.previewFeature.getGeometry();
+  var type = geometry.getType();
 
-  return (
-    geometry instanceof ol.geom.Polygon || geometry instanceof ol.geom.MultiPolygon ||
-    geometry instanceof ol.geom.LineString || geometry instanceof ol.geom.MultiLineString
-  );
+  return type == ol.geom.GeometryType.POLYGON || type == ol.geom.GeometryType.MULTI_POLYGON ||
+    type == ol.geom.GeometryType.LINE_STRING || type == ol.geom.GeometryType.MULTI_LINE_STRING;
 };
 
 
@@ -873,7 +875,7 @@ os.ui.FeatureEditCtrl.prototype.createPreviewFeature = function() {
     }
   } else {
     // not a point, so disable geometry edit
-    this.originalGeometry_ = geometry;
+    this.originalGeometry = geometry;
   }
 
   // default feature to show the name field
@@ -985,7 +987,7 @@ os.ui.FeatureEditCtrl.prototype.loadFromFeature = function(feature) {
 
   var geometry = feature.getGeometry();
   if (geometry) {
-    this.originalGeometry_ = geometry;
+    this.originalGeometry = geometry;
 
     if (geometry instanceof ol.geom.Point) {
       var clone = /** @type {!ol.geom.Point} */ (geometry.clone());
@@ -1226,8 +1228,8 @@ os.ui.FeatureEditCtrl.prototype.saveGeometry_ = function(feature) {
         feature.set(os.style.StyleField.ROTATION_COLUMN, '');
       }
     }
-  } else if (this.originalGeometry_) {
-    feature.setGeometry(this.originalGeometry_.clone());
+  } else if (this.originalGeometry) {
+    feature.setGeometry(this.originalGeometry.clone());
   }
 };
 
@@ -1525,7 +1527,7 @@ os.ui.FeatureEditCtrl.updateFeatureStyle = function(feature) {
           // grab the color/size from the icon configuration
           var color = os.style.toRgbaString(image['color'] || os.style.DEFAULT_LAYER_COLOR);
           var size = image['scale'] ? os.style.scaleToSize(image['scale']) : os.style.DEFAULT_FEATURE_SIZE;
-          var lineDash = config['stroke']['lineDash'] || os.style.DEFAULT_LINE_STYLE;
+          var lineDash = config['stroke']['lineDash'];
           delete image['scale'];
 
           // set radius for points on the image config

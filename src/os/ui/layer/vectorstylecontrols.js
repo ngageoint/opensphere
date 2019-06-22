@@ -83,7 +83,7 @@ os.ui.layer.VectorStyleControlsCtrl = function($scope) {
   }
 
   this.scope['lineDashOptions'] = os.style.LINE_STYLE_OPTIONS;
-  var name = os.style.dashPatternToName(this.scope['lineDash']);
+  var name = os.style.dashPatternToOptions(this.scope['lineDash']);
   this.scope['lineDashName'] = name ? name : this.scope['lineDashOptions'][0];
 
   $scope.$on('$destroy', goog.bind(this.dispose, this));
