@@ -574,7 +574,10 @@ plugin.track.menu.handleAddCreateTrackEvent_ = function(event) {
       } else if (event.type === plugin.track.EventType.ADD_TO) {
         plugin.track.promptForTrack().then(function(track) {
           if (track) {
-            plugin.track.addFeaturesToTrack(track, features);
+            plugin.track.addToTrack({
+              track: track,
+              features: features
+            });
           }
         });
       }
