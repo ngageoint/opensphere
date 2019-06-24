@@ -1,4 +1,5 @@
 goog.provide('os.im.mapping');
+goog.provide('os.im.mapping.DateType');
 goog.provide('os.im.mapping.TimeFormat');
 goog.provide('os.im.mapping.TimeType');
 
@@ -32,6 +33,16 @@ os.im.mapping.TimeType = {
   START: 'start',
   END: 'end',
   PUBLICATION: 'publication'
+};
+
+
+/**
+ * @enum {string}
+ */
+os.im.mapping.DateType = {
+  COMBINED: 'combined',
+  SEPARATE: 'separate',
+  DATE_ONLY: 'dateonly'
 };
 
 
