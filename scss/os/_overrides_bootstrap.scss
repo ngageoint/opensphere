@@ -118,8 +118,3 @@ body {
     cursor: pointer;
   }
 }
-
-// Blocks cursor select outside of input field
-div {
-  user-select: none;
-}
