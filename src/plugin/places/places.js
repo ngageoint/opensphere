@@ -54,10 +54,8 @@ plugin.places.ICON = plugin.places.Icon.PLACEMARK;
  * included here, or features will revert to using an icon on import.
  *
  * @type {!Array<string>}
- * @private
- * @const
  */
-plugin.places.EXPORT_FIELDS_ = [
+plugin.places.ExportFields = [
   plugin.file.kml.KMLField.DESCRIPTION,
   plugin.file.kml.KMLField.MD_DESCRIPTION,
   os.annotation.OPTIONS_FIELD,
@@ -77,6 +75,14 @@ plugin.places.EXPORT_FIELDS_ = [
   os.Fields.ORIENTATION,
   os.Fields.BEARING
 ];
+
+
+/**
+ * Fields that should be displayed on the Places source.
+ *
+ * @type {!Array<string>}
+ */
+plugin.places.SourceFields = plugin.file.kml.SOURCE_FIELDS.slice();
 
 
 /**
@@ -111,7 +117,7 @@ plugin.places.PlaceOptions;
  */
 plugin.places.createExporter = function(root) {
   var exporter = new plugin.file.kml.KMLTreeExporter();
-  exporter.setFields(plugin.places.EXPORT_FIELDS_);
+  exporter.setFields(plugin.places.ExportFields);
   exporter.setName(plugin.places.TITLE);
 
   // don't include the root node to avoid the superfluous folder
