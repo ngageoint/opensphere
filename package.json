@@ -267,7 +267,7 @@
     "opensphere-build-docs": "^1.0.0",
     "opensphere-build-index": "^2.1.0",
     "opensphere-build-resolver": "^5.2.0",
-    "opensphere-state-schema": "^2.3.0",
+    "opensphere-state-schema": "^2.4.0",
     "postcss-cli": "^5.0.0",
     "rimraf": "^2.5.4",
     "sass-lint": "^1.12.1",
