@@ -260,5 +260,10 @@ describe('os.style.mergeConfig', function() {
     var from = {'value': 1};
     os.style.mergeConfig(from, to);
     expect(to).toEqual(from);
+
+    var to = {'stroke': undefined};
+    var from = {'stroke': {'color': 'red'}};
+    os.style.mergeConfig(from, to);
+    expect(to).toEqual(from);
   });
 });
