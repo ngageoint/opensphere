@@ -1,17 +1,17 @@
-const compile = require('opensphere-build-closure-helper').compile;
-const resolver = require('opensphere-build-resolver/utils');
-const options = require('./gcc-args.json');
+var compile = require('opensphere-build-closure-helper').compile;
+var resolver = require('opensphere-build-resolver/utils');
+var options = require('./gcc-args.json');
 
-const resolvePath = function(path) {
-  const isNegation = path[0] === '!';
-  const resolved = resolver.resolveModulePath(isNegation ? path.substr(1) : path, __dirname);
+var resolvePath = function(path) {
+  var isNegation = path[0] === '!';
+  var resolved = resolver.resolveModulePath(isNegation ? path.substr(1) : path, __dirname);
   if (resolved) {
     return (isNegation ? '!' : '') + resolved;
   }
   return path;
 };
 
-const resolveAndUpdate = function(key) {
+var resolveAndUpdate = function(key) {
   if (Array.isArray(options[key])) {
     options[key] = options[key].map(resolvePath);
   } else if (typeof options[key] === 'string') {
@@ -19,7 +19,7 @@ const resolveAndUpdate = function(key) {
   }
 };
 
-const pathKeys = ['js'];
+var pathKeys = ['js'];
 pathKeys.forEach(resolveAndUpdate);
 
 compile(options);
