@@ -140,7 +140,7 @@ plugin.file.kml.KMLParser = function(options) {
 
   /**
    * The KML style config map for highlight styles from StyleMap tags
-   * @type {!Object<string, !Array<Object>>}
+   * @type {!Object<string, !Object>}
    * @private
    */
   this.highlightStyleMap_ = {};
