@@ -1257,7 +1257,7 @@ os.style.mergeConfig = function(from, to) {
 
     if (fval && typeof fval == 'object' && !(typeof fval.length == 'number')) {
       // clone objects into the target
-      if (!(key in to) || to[key] === null) {
+      if (!(key in to) || to[key] == null) {
         to[key] = {};
       }
 
