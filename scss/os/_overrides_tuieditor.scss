@@ -1,4 +1,4 @@
-// Set min and max heights inside of windows and modals
+//////////// SPECIAL WINDOW / MODAL STYLES //////////
 .c-window,
 .modal {
   .CodeMirror:not(.CodeMirror-fullscreen) .CodeMirror-scroll,
@@ -7,20 +7,41 @@
   }
 }
 
-// Editor Overrides
+
 .c-tui-editor {
+  //////////// Contstrain the editor //////////
   .CodeMirror,
   .CodeMirror:not(.CodeMirror-fullscreen) .CodeMirror-scroll,
   .te-ww-container .te-editor .tui-editor-contents,
   .te-md-container .te-preview {
     max-height: 75vh; // the toolbar doesnt scroll with the editor. So its annoying to have to scroll up just to use it
-    min-height: 10rem !important; // wysiwyg mode sets a min height also. Ours is more important
   }
 
+  // BUG (#191) the editor has min height but its buggy
+  .CodeMirror,
+  .CodeMirror:not(.CodeMirror-fullscreen) .CodeMirror-scroll {
+    min-height: 12rem;
+  }
+
+
+
+  //////////// Flex layout //////////
+  // the editor section grows on the page if the parent is flex
+  .tui-editor,
+  .te-ww-mode .te-ww-container,
   .te-editor-section {
     display: flex;
     flex: 1;
     flex-direction: column;
+  }
+
+
+  // Scroll the editor over the parent
+  .te-ww-container .te-editor .tui-editor-contents {
+    overflow-y: auto;
+  }
+
+  .te-editor-section {
     overflow-y: auto;
 
     .te-editor {
@@ -28,6 +49,7 @@
     }
   }
 
+  ////////// DISABLED FEATURES VIA CSS //////////
   // We dont want to show the tab section OR the block overlay.
   // Merge / Unmerge is not GFM. So dont allow that feature
   .te-table-merge,
@@ -38,6 +60,9 @@
     display: none !important;
   }
 
+
+
+  //////////// ERROR STYLING //////////
   .ng-invalid.ng-dirty {
     .te-editor-section {
       outline: 1px solid $danger;
@@ -48,54 +73,8 @@
     }
   }
 
-  .tui-editor-defaultUI {
-    border-color: $border-color;
-    display: flex;
-    flex: 1;
-    flex-direction: column;
 
-    .te-markdown-tab-section {
-      background: $input-bg;
-
-      .te-tab {
-        margin: inherit;
-      }
-    }
-
-    .te-toolbar-section {
-      background: $input-bg;
-      border-color: transparent;
-    }
-
-    .te-mode-switch-section {
-      background: $input-bg;
-      border-color: $border-color;
-      color: $input-color;
-    }
-
-    .te-tab button,
-    .te-switch-button {
-      background: $input-bg;
-      border: 0;
-      border-left: 1px solid $border-color;
-      color: $text-muted;
-    }
-
-    .te-heading-add,
-    .te-tab button:hover,
-    .te-tab .te-tab-active,
-    .te-switch-button.active,
-    .te-switch-button:hover {
-      background: $u-theme-variables--bg-offset;
-      color: $input-color;
-    }
-  }
-
-  // Only show the cursor if we are in edit mode
-  .tui-editor .tui-editor-contents .task-list-item:before {
-    cursor: pointer;
-  }
-
+  //////////// WYSIWYG / DISPLAY STYLES //////////
   // Instead of adding the contents and overriding them, just use the ones we want
   .tui-editor-contents {
     *:not(table) {
@@ -162,6 +141,14 @@
     }
   }
 
+
+
+  //////////// EDITOR STYLES //////////
+  // Only show the cursor if we are in edit mode
+  .tui-editor .tui-editor-contents .task-list-item:before {
+    cursor: pointer;
+  }
+
   .tui-editor {
     .te-ww-block-overlay,
     .te-ww-container,
@@ -187,7 +174,7 @@
         width: 1px !important;
       }
 
-      // Code mirror theme
+      //////////// CODEMIRROR THEME //////////
       .cm-def,
       .cm-attribute,
       .cm-builtin {
@@ -239,6 +226,8 @@
     }
   }
 
+
+  //////////// EDITOR POPUP WINDOWS //////////
   .tui-popup-wrapper,
   .tui-editor-popup {
     .tui-popup-body,
@@ -296,11 +285,58 @@
     }
   }
 
-  .tui-editor-defaultUI .te-tab button {
-    // This is hardcoded in the library for the toolbar height
-    height: 31px;
+
+  //////////// EDITOR BUTTONS //////////
+  .tui-editor-defaultUI {
+    border-color: $border-color;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+
+    .te-markdown-tab-section {
+      background: $input-bg;
+
+      .te-tab {
+        margin: inherit;
+      }
+    }
+
+    .te-toolbar-section {
+      background: $input-bg;
+      border-color: transparent;
+    }
+
+    .te-mode-switch-section {
+      background: $input-bg;
+      border-color: $border-color;
+      color: $input-color;
+    }
+
+    .te-tab button {
+      // This is hardcoded in the library for the toolbar height
+      height: 31px;
+    }
+
+    .te-tab button,
+    .te-switch-button {
+      background: $input-bg;
+      border: 0;
+      border-left: 1px solid $border-color;
+      color: $text-muted;
+    }
+
+    .te-heading-add,
+    .te-tab button:hover,
+    .te-tab .te-tab-active,
+    .te-switch-button.active,
+    .te-switch-button:hover {
+      background: $u-theme-variables--bg-offset;
+      color: $input-color;
+    }
   }
 
+
+  //////////// TOOLBAR //////////
   .tui-editor-defaultUI-toolbar {
     background-color: $u-theme-variables--bg-offset;
     border-bottom: 1px solid $border-color;
@@ -327,6 +363,8 @@
       background-color: $border-color;
     }
 
+
+    //////////// FONT AWESOME ICONS (default is an image) //////////
     .tui-toolbar-icons {
       background: $u-theme-variables--bg-offset;
       border-color: transparent;
@@ -342,11 +380,10 @@
         color: color-yiq($u-theme-variables--bg-offset);
       }
 
+
       &::before {
         @include font-awesome();
-
-        // font awesome standard size
-        font-size: 14px;
+        font-size: 14px; // font awesome standard size
       }
 
       &.tui-heading::before {
