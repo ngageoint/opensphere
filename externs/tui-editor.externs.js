@@ -87,3 +87,20 @@ tui.Editor.markdownit.render = function(markdown) {};
  * @return {Object}
  */
 tui.Editor.factory = function(options) {};
+
+
+/**
+ * @type {Object}
+ */
+tui.Editor.mdEditor = {};
+
+/**
+ * @type {Object}
+ */
+tui.Editor.mdEditor.cm = {};
+
+
+/**
+ * kicks codemirror to update
+ */
+tui.Editor.mdEditor.cm.refresh = function() {};

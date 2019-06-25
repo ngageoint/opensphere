@@ -10,6 +10,7 @@ goog.require('plugin.cesium');
 goog.require('plugin.cesium.Camera');
 goog.require('plugin.cesium.TerrainLayer');
 goog.require('plugin.cesium.TileGridTilingScheme');
+goog.require('plugin.cesium.command.FlyToSphere');
 goog.require('plugin.cesium.interaction');
 goog.require('plugin.cesium.mixin');
 goog.require('plugin.cesium.sync.RootSynchronizer');
@@ -616,3 +617,18 @@ plugin.cesium.CesiumRenderer.prototype.getAltitudeModes = function() {
     os.webgl.AltitudeMode.RELATIVE_TO_GROUND
   ];
 };
+
+
+/**
+ * @inheritDoc
+ */
+plugin.cesium.CesiumRenderer.prototype.flyToFeatures = function(features) {
+  var sphere = features.map(os.fn.mapFeatureToGeometry).reduce(plugin.cesium.reduceBoundingSphere, null);
+
+  if (sphere) {
+    var cmd = new plugin.cesium.command.FlyToSphere(sphere);
+    os.commandStack.addCommand(cmd);
+  }
+};
+
+

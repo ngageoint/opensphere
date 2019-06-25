@@ -1,5 +1,6 @@
 goog.provide('os.ui.filter.op.Op');
 goog.require('os.ui.filter.textDirective');
+goog.require('os.xsd.DataType');
 
 
 
@@ -8,7 +9,7 @@ goog.require('os.ui.filter.textDirective');
  * @param {string} localName Element name for the expression it creates
  * @param {string} title Human readable name for the op
  * @param {string=} opt_shortTitle Abbreviated human readable name for the op
- * @param {?Array<string>=} opt_supportedTypes Supported input types (number, string, integer)
+ * @param {?Array<os.xsd.DataType>=} opt_supportedTypes Supported input types (number, string, integer)
  * @param {string=} opt_attributes
  * @param {string=} opt_hint Hint text for the UI
  * @param {string=} opt_ui The UI rendered next to the op select
@@ -36,7 +37,7 @@ os.ui.filter.op.Op = function(localName, title, opt_shortTitle, opt_supportedTyp
   this.shortTitle_ = opt_shortTitle || title;
 
   /**
-   * @type {?Array<string>}
+   * @type {?Array<os.xsd.DataType>}
    * @protected
    */
   this.supportedTypes = opt_supportedTypes || null;
@@ -221,7 +222,7 @@ os.ui.filter.op.Op.prototype.matches = function(el) {
 
 
 /**
- * @param {string} type
+ * @param {os.xsd.DataType} type
  * @return {boolean} Whether or not the column type is supported
  */
 os.ui.filter.op.Op.prototype.isSupported = function(type) {

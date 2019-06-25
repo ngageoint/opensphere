@@ -126,7 +126,8 @@ os.ui.launchDescriptionInfo = function(id, description, opt_titleDetail) {
       'height': '600',
       'min-height': '600',
       'max-height': '600',
-      'show-close': 'true'
+      'show-close': 'true',
+      'data-testid': 'descriptioninfo'
     };
 
     var template = '<descriptioninfo description="description"></descriptioninfo>';

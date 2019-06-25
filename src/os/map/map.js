@@ -110,7 +110,7 @@ os.map.MAX_ZOOM = 25;
  * @type {number}
  * @const
  */
-os.map.MAX_AUTO_ZOOM = 15;
+os.map.MAX_AUTO_ZOOM = 18;
 
 
 /**

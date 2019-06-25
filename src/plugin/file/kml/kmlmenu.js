@@ -1,7 +1,6 @@
 goog.provide('plugin.file.kml.menu');
 
 goog.require('os.buffer');
-goog.require('os.command.FlyToExtent');
 goog.require('os.ui.feature.featureInfoDirective');
 goog.require('os.ui.menu.layer');
 goog.require('plugin.file.kml.ui.KMLNetworkLinkNode');
@@ -185,11 +184,7 @@ plugin.file.kml.menu.onLayerEvent_ = function(event) {
             }
             break;
           case plugin.file.kml.menu.EventType.GOTO:
-            var extent = node.getExtent();
-
-            if (extent && !ol.extent.isEmpty(extent)) {
-              os.commandStack.addCommand(new os.command.FlyToExtent(extent));
-            }
+            os.feature.flyTo(node.getFeatures());
             break;
           case plugin.file.kml.menu.EventType.SELECT:
             source.addToSelected(node.getFeatures());
