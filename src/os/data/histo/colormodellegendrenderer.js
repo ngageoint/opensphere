@@ -63,7 +63,7 @@ os.data.histo.legend.addVectorColorModel = function(layer, options) {
         if (keys.length > 0) {
           // TODO: should we use goog.string.caseInsensitiveCompare for the default case?
           var sortFn = binMethod instanceof os.histo.NumericBinMethod ? os.legend.numericCompare :
-              goog.array.defaultCompare;
+            goog.array.defaultCompare;
           keys.sort(sortFn);
 
           for (var i = 0; i < keys.length; i++) {

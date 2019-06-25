@@ -25,7 +25,7 @@ os.interaction.DragBox.prototype.cesiumColor = undefined;
  */
 plugin.cesium.interaction.dragbox.cleanupWebGL = function() {
   var webgl = /** @type {plugin.cesium.CesiumRenderer|undefined} */ (
-      os.MapContainer.getInstance().getWebGLRenderer());
+    os.MapContainer.getInstance().getWebGLRenderer());
   var scene = webgl ? webgl.getCesiumScene() : undefined;
   if (scene && this.cesiumBox) {
     scene.primitives.remove(this.cesiumBox);

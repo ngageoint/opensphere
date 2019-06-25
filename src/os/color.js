@@ -476,7 +476,7 @@ os.color.changeColor = function(from, to) {
 
   var srcMax = Math.max(from[0], from[1], from[2]);
   var srcMaxPos = srcMax == from[0] ? 0 :
-      srcMax == from[1] ? 1 : 2;
+    srcMax == from[1] ? 1 : 2;
 
   var dstMax = Math.max(to[0], to[1], to[2]);
   var dstRatios = [

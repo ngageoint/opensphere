@@ -482,7 +482,7 @@ os.ui.search.SearchBoxCtrl.prototype.setUpGroups = function() {
     this['searchOptionsGroups'][groupName] = currentGroup;
   }, this);
 
-  var order =  /** @type {Array} */ (os.settings.get('providerGroupOrder', []));
+  var order = /** @type {Array} */ (os.settings.get('providerGroupOrder', []));
   order.forEach(function(value, index) {
     var currentIndex = this['providerGroups'].indexOf(value);
     if (currentIndex > 0) {

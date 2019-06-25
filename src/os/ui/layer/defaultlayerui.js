@@ -232,7 +232,7 @@ os.ui.layer.DefaultLayerUICtrl.prototype.initColorControls_ = function() {
 
   var nodes = this.getLayerNodes();
   if (nodes && nodes.length > 0) {
-      // make sure all selected layers have the same color control type
+    // make sure all selected layers have the same color control type
     var baseType;
     for (var i = 0, n = nodes.length; i < n; i++) {
       var layer = nodes[i].getLayer();

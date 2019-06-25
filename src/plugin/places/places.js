@@ -351,7 +351,7 @@ plugin.places.addPlace = function(options) {
   feature.set(plugin.file.kml.KMLField.DESCRIPTION, options.description || undefined);
 
   var time = options.startTime != null ?
-      options.endTime != null ? new os.time.TimeRange(options.startTime, options.endTime) :
+    options.endTime != null ? new os.time.TimeRange(options.startTime, options.endTime) :
       new os.time.TimeInstant(options.startTime) : undefined;
   feature.set(os.data.RecordField.TIME, time);
 

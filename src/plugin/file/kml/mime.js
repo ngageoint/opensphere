@@ -20,7 +20,7 @@ plugin.file.kml.mime.TYPE = 'application/vnd.google-earth.kml+xml';
 plugin.file.kml.detect = function(buffer, opt_file, opt_context) {
   var retVal;
   if (opt_context && (
-      (/^(document|folder|kml)$/i.test(opt_context.rootTag)) ||
+    (/^(document|folder|kml)$/i.test(opt_context.rootTag)) ||
       (/\/kml\//i.test(opt_context.rootNS)))) {
     retVal = opt_context;
   }

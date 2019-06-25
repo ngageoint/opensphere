@@ -45,8 +45,8 @@ plugin.cesium.sync.RootSynchronizer.prototype.createSynchronizer = function(cons
   goog.asserts.assert(!!layer);
 
   return /** @type {!os.webgl.AbstractWebGLSynchronizer} */ (new
-    /** @type {function(new: Object, ol.layer.Layer, ol.PluggableMap, (Cesium.Scene|undefined))} */ (
-      constructor)(layer, this.map, this.scene_));
+  /** @type {function(new: Object, ol.layer.Layer, ol.PluggableMap, (Cesium.Scene|undefined))} */ (
+    constructor)(layer, this.map, this.scene_));
 };
 
 

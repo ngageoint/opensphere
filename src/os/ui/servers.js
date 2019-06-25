@@ -104,7 +104,7 @@ os.ui.ServersCtrl.prototype.updateData_ = function() {
   }
 
   var list = /** @type {Array.<os.data.IDataProvider>} */ (
-      os.dataManager.getProviderRoot().getChildren());
+    os.dataManager.getProviderRoot().getChildren());
 
   this.scope_['all'] = true;
   var data = [];

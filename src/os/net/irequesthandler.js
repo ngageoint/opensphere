@@ -52,7 +52,7 @@ os.net.IRequestHandler.prototype.abort;
  * @param {?goog.net.XhrIo.ResponseType=} opt_responseType The expected response type
  */
 os.net.IRequestHandler.prototype.execute = function(method, uri, opt_headers, opt_formatter, opt_nocache,
-    opt_responseType) {};
+  opt_responseType) {};
 
 
 /**

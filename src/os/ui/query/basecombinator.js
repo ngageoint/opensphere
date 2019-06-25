@@ -510,7 +510,7 @@ os.ui.query.BaseCombinatorCtrl.prototype.updateLayers = function() {
   var layers = [];
   // if the chooser is hidden, always use the layerId on the scope
   var layer = this.scope['hideLayerChooser'] ?
-      this.scope['layerId'] : (this.scope['layer'] || this.scope['layerId']);
+    this.scope['layerId'] : (this.scope['layer'] || this.scope['layerId']);
 
   for (var key in set) {
     var filterable = /** @type {os.filter.IFilterable} */ (this.fm.getFilterable(key));

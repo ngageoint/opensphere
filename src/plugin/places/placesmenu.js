@@ -488,7 +488,7 @@ plugin.places.menu.onLayerEvent_ = function(event) {
             break;
           case plugin.places.menu.EventType.EXPORT:
             plugin.file.kml.ui.launchTreeExport(/** @type {!plugin.file.kml.ui.KMLNode} */
-              (rootNode), 'Export Places');
+                (rootNode), 'Export Places');
             break;
           case plugin.places.menu.EventType.REMOVE_ALL:
             var children = /** @type {Array<!plugin.file.kml.ui.KMLNode>} */ (node.getChildren());
@@ -647,7 +647,7 @@ plugin.places.menu.saveSpatialToPlaces = function(event, opt_annotation) {
     event.stopPropagation();
 
     var rootNode = opt_annotation ? plugin.places.PlacesManager.getInstance().getAnnotationsFolder() :
-        plugin.places.PlacesManager.getInstance().getPlacesRoot();
+      plugin.places.PlacesManager.getInstance().getPlacesRoot();
     var geometry;
     var name;
     var time;

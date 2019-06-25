@@ -34,8 +34,8 @@ os.ui.feature.FeatureInfoTabManager.PROPERTIES_TAB =
  * @type {os.ui.tab.FeatureTab}
  */
 os.ui.feature.FeatureInfoTabManager.DESCRIPTION_TAB = new
-    os.ui.tab.FeatureTab('desc', 'Description', 'fa-newspaper-o', 'descriptiontab',
-        null, os.ui.feature.tab.descriptionEnableFunction);
+os.ui.tab.FeatureTab('desc', 'Description', 'fa-newspaper-o', 'descriptiontab',
+    null, os.ui.feature.tab.descriptionEnableFunction);
 
 
 /**

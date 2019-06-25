@@ -26,7 +26,7 @@ os.style.CircleReader.prototype.getOrCreateStyle = function(config) {
   var stroke;
 
   var radius = config['radius'] !== undefined ? /** @type {number} */ (config['radius']) :
-      os.style.DEFAULT_FEATURE_SIZE;
+    os.style.DEFAULT_FEATURE_SIZE;
   var hash = 31 * this.baseHash + goog.string.hashCode(radius.toString()) >>> 0;
 
   var fillConfig = /** @type {Object.<string, *>|undefined} */ (config['fill']);

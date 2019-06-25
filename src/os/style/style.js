@@ -551,10 +551,10 @@ os.style.getConfigColor = function(config, opt_array, opt_colorFieldHint) {
         config[opt_colorFieldHint] &&
         config[opt_colorFieldHint][os.style.StyleField.COLOR] != null) {
       return opt_array ? os.color.toRgbArray(config[opt_colorFieldHint][os.style.StyleField.COLOR]) :
-          config[opt_colorFieldHint][os.style.StyleField.COLOR];
+        config[opt_colorFieldHint][os.style.StyleField.COLOR];
     } else if (config[os.style.StyleField.COLOR] != null) {
       return opt_array ? os.color.toRgbArray(config[os.style.StyleField.COLOR]) :
-          config[os.style.StyleField.COLOR];
+        config[os.style.StyleField.COLOR];
     } else {
       for (var i = 0; i < os.style.STYLE_COLOR_FIELDS_.length; i++) {
         var key = os.style.STYLE_COLOR_FIELDS_[i];
@@ -1262,7 +1262,7 @@ os.style.createFeatureStyle = function(feature, baseConfig, opt_layerConfig) {
 
           var color = os.style.toRgbaString(os.style.getConfigColor(featureConfig) || os.style.DEFAULT_LAYER_COLOR);
           var size = iconConfig['scale'] != null ? os.style.scaleToSize(iconConfig['scale']) :
-              os.style.DEFAULT_FEATURE_SIZE;
+            os.style.DEFAULT_FEATURE_SIZE;
 
           var newImageConfig = {
             'radius': size,

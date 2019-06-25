@@ -104,7 +104,7 @@ plugin.file.kml.KMLImporter.prototype.onParsingComplete = function(opt_event) {
     var msg = this.invalidCount_ === 1 ? 'An area was' : (this.invalidCount_ + ' areas were');
     os.alertManager.sendAlert(msg + ' removed from the original due to invalid topology. One possible ' +
         ' reason is a repeating or invalid coordinate.',
-        os.alert.AlertEventSeverity.WARNING);
+    os.alert.AlertEventSeverity.WARNING);
   }
 
   plugin.file.kml.KMLImporter.base(this, 'onParsingComplete', opt_event);

@@ -229,7 +229,7 @@ plugin.cesium.julianDate_ = undefined;
  */
 plugin.cesium.getJulianDate = function() {
   plugin.cesium.julianDate_ = Cesium.JulianDate.fromDate(new Date(
-    os.time.TimelineController.getInstance().getCurrent()
+      os.time.TimelineController.getInstance().getCurrent()
   ), plugin.cesium.julianDate_);
   return plugin.cesium.julianDate_;
 };

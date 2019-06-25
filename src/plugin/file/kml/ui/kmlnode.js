@@ -253,7 +253,7 @@ plugin.file.kml.ui.KMLNode.prototype.clearAnnotations = function() {
 plugin.file.kml.ui.KMLNode.prototype.loadAnnotation = function() {
   if (this.feature_ && !this.annotation_) {
     var annotationOptions = /** @type {osx.annotation.Options|undefined} */ (
-        this.feature_.get(os.annotation.OPTIONS_FIELD));
+      this.feature_.get(os.annotation.OPTIONS_FIELD));
     if (annotationOptions && annotationOptions.show) {
       this.annotation_ = new os.annotation.FeatureAnnotation(this.feature_);
 
@@ -651,7 +651,7 @@ plugin.file.kml.ui.KMLNode.prototype.hasChild = function(child) {
   var label = child.getLabel() || '';
   if (label in this.childLabelMap) {
     return /** @type {Array<plugin.file.kml.ui.KMLNode>} */ (
-        this.childLabelMap[label]).indexOf(/** @type {plugin.file.kml.ui.KMLNode} */ (child)) !== -1;
+      this.childLabelMap[label]).indexOf(/** @type {plugin.file.kml.ui.KMLNode} */ (child)) !== -1;
   }
 
   return false;

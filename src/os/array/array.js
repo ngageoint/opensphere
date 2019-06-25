@@ -148,7 +148,7 @@ os.array.findDuplicates = function(arr, opt_hashFn) {
   var returnArray = [];
   var defaultHashFn = function(item) {
     return goog.isObject(current) ? 'o' + goog.getUid(current) :
-        (typeof current).slice(0, 2) + current;
+      (typeof current).slice(0, 2) + current;
   };
   var hashFn = opt_hashFn || defaultHashFn;
 
@@ -345,7 +345,7 @@ os.array.binaryStrideSearch = function(arr, target, stride, offset, opt_compareF
   // ensure the offset is within the group bounds
   offset = goog.math.clamp(offset, 0, stride - 1);
 
-  var left = 0;           // inclusive
+  var left = 0; // inclusive
   var right = arr.length; // exclusive
   var found;
   while (left < right) {

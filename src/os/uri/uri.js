@@ -12,7 +12,7 @@ os.uri.addBase = function(uri) {
   if (window && window.location) {
     if (!window.location.origin) {
       window.location.origin = window.location.protocol + '//' + window.location.hostname + (window.location.port ?
-          ':' + window.location.port : '');
+        ':' + window.location.port : '');
     }
     var paramUri = new goog.Uri(uri);
     var resultUri = paramUri.hasDomain() ? paramUri : goog.Uri.resolve(window.location.origin, paramUri);

@@ -55,7 +55,7 @@ plugin.file.kml.ui.KMLExportCtrl = function($scope) {
   /**
    * @type {!osx.icon.Icon}
    */
-  this['icon'] = /** @type {!osx.icon.Icon} */ ({ // os.ui.file.kml.Icon to osx.icon.Icon
+  this['icon'] = /** @type {!osx.icon.Icon} */ ({// os.ui.file.kml.Icon to osx.icon.Icon
     path: this.exporter_.getDefaultIcon() ? this.exporter_.getDefaultIcon().href : os.ui.file.kml.getDefaultIcon().path
   });
 
@@ -130,7 +130,7 @@ plugin.file.kml.ui.KMLExportCtrl.prototype.updateExporter_ = function() {
     this.exporter_.setExportEllipses(this['exportEllipses']);
     this.exporter_.setUseCenterPoint(this['useCenterPoint']);
     if (this['icon']) {
-      var kmlIcon = { // osx.icon.Icon to os.ui.file.kml.Icon
+      var kmlIcon = {// osx.icon.Icon to os.ui.file.kml.Icon
         'href': this['icon']['path']
       };
       this.exporter_.setIcon(kmlIcon);

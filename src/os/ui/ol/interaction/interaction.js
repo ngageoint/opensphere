@@ -19,7 +19,7 @@ os.ui.ol.interaction.USES_KEYDOWN = goog.userAgent.IE ||
  * @const
  */
 os.ui.ol.interaction.KEY_TYPE = os.ui.ol.interaction.USES_KEYDOWN ? ol.events.EventType.KEYDOWN :
-    ol.events.EventType.KEYPRESS;
+  ol.events.EventType.KEYPRESS;
 
 
 /**

@@ -203,7 +203,7 @@ os.ui.metrics.MetricNode.prototype.formatIcons = function() {
 os.ui.metrics.MetricNode.prototype.getNodeIcon = function() {
   if (this.icon) {
     return /^<.*>/.test(this.icon) ?
-        this.icon : '<i class="' + this.icon + '"></i>';
+      this.icon : '<i class="' + this.icon + '"></i>';
   }
   return '';
 };

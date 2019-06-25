@@ -187,7 +187,7 @@ os.webgl.AbstractRootSynchronizer.prototype.createSynchronizer = function(constr
   goog.asserts.assert(!!this.map);
 
   return /** @type {!os.webgl.AbstractWebGLSynchronizer} */ (new
-      /** @type {function(new: Object, ol.layer.Layer, ol.PluggableMap)} */ (constructor)(layer, this.map));
+  /** @type {function(new: Object, ol.layer.Layer, ol.PluggableMap)} */ (constructor)(layer, this.map));
 };
 
 
@@ -237,7 +237,7 @@ os.webgl.AbstractRootSynchronizer.prototype.updateGroupZ = function(group) {
 os.webgl.AbstractRootSynchronizer.prototype.onLayerAdd_ = function(event) {
   if (event && event.layer) {
     var layer = /** @type {os.layer.ILayer} */ (typeof event.layer === 'string' ?
-        os.MapContainer.getInstance().getLayer(event.layer) : event.layer);
+      os.MapContainer.getInstance().getLayer(event.layer) : event.layer);
 
     if (layer instanceof ol.layer.Layer) {
       this.synchronizeLayer_(layer);
@@ -258,7 +258,7 @@ os.webgl.AbstractRootSynchronizer.prototype.onLayerAdd_ = function(event) {
 os.webgl.AbstractRootSynchronizer.prototype.onLayerRemove_ = function(event) {
   if (event && event.layer) {
     var layer = /** @type {os.layer.ILayer} */ (typeof event.layer === 'string' ?
-        os.MapContainer.getInstance().getLayer(event.layer) : event.layer);
+      os.MapContainer.getInstance().getLayer(event.layer) : event.layer);
 
     if (layer) {
       var id = layer.getId();

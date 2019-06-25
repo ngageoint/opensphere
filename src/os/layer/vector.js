@@ -1109,7 +1109,7 @@ os.layer.Vector.prototype.persist = function(opt_to) {
     opt_to[os.style.StyleField.SHOW_GROUND_REF] = config[os.style.StyleField.SHOW_GROUND_REF];
   }
 
-  var source =  /** @type {os.IPersistable} */ (this.getSource());
+  var source = /** @type {os.IPersistable} */ (this.getSource());
   if (source && os.implements(source, os.source.ISource.ID)) {
     opt_to = /** @type {os.source.ISource} */ (source).persist(opt_to);
   }
@@ -1241,7 +1241,7 @@ os.layer.Vector.prototype.restore = function(config) {
   styleConf[os.style.StyleField.LABEL_SIZE] = config[os.style.StyleField.LABEL_SIZE] || os.style.label.DEFAULT_SIZE;
   styleConf[os.style.StyleField.SHOW_LABELS] = config[os.style.StyleField.SHOW_LABELS] || false;
 
-  var source =  /** @type {os.IPersistable} */ (this.getSource());
+  var source = /** @type {os.IPersistable} */ (this.getSource());
   if (source && os.implements(source, os.source.ISource.ID)) {
     /** @type {os.source.ISource} */ (source).restore(config);
   }

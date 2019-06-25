@@ -152,7 +152,7 @@ os.config.storage.SettingsStorageRegistry.prototype.getWriteStorage = function()
 os.config.storage.SettingsStorageRegistry.prototype.getStoragesToClear = function() {
   var writablesToClear = goog.array.filter(this.availableReadStorages_, function(storage) {
     return os.implements(storage, os.config.storage.ISettingsWritableStorage.ID) &&
-        /** @type {os.config.storage.ISettingsWritableStorage} */ (storage).needsCleared;
+    /** @type {os.config.storage.ISettingsWritableStorage} */ (storage).needsCleared;
   }, this);
   return /** @type {!Array.<!os.config.storage.ISettingsWritableStorage>} */ (writablesToClear);
 };

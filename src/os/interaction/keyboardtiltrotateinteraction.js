@@ -40,8 +40,8 @@ os.interaction.KeyboardTiltRotate = function(opt_options) {
    * @private
    */
   this.condition_ = options.condition != null ? options.condition :
-      goog.functions.and(ol.events.condition.noModifierKeys,
-          ol.events.condition.targetNotEditable);
+    goog.functions.and(ol.events.condition.noModifierKeys,
+        ol.events.condition.targetNotEditable);
 };
 goog.inherits(os.interaction.KeyboardTiltRotate, ol.interaction.Interaction);
 os.implements(os.interaction.KeyboardTiltRotate, os.I3DSupport.ID);

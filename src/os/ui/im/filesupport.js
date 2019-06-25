@@ -113,7 +113,7 @@ os.ui.im.FileSupportCtrl = function($scope, $element) {
    * @type {string}
    */
   this['supportContact'] = os.string.linkify(/** @type {string} */ (
-      os.config.getSupportContact('your system administrator')));
+    os.config.getSupportContact('your system administrator')));
 
   /**
    * User selection.

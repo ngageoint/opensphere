@@ -341,7 +341,7 @@ os.query.BaseAreaManager.prototype.addInternal = function(feature, opt_bulk) {
   } else {
     os.alertManager.sendAlert('Area is invalid and cannot be used. Common problems include polygons that ' +
         'cross themselves and multipolygons with overlapping elements.',
-        os.alert.AlertEventSeverity.WARNING);
+    os.alert.AlertEventSeverity.WARNING);
   }
 
   return false;

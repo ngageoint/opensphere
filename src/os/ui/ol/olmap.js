@@ -289,7 +289,7 @@ os.ui.ol.OLMap.prototype.containsFeature = function(feature) {
       var source = /** @type {ol.source.Vector} */ (layer.getSource());
 
       return !!(typeof feature === 'string' || typeof feature === 'number' ? source.getFeatureById(feature) :
-          source.getFeatureById(feature.getId() + ''));
+        source.getFeatureById(feature.getId() + ''));
     }
   }
 

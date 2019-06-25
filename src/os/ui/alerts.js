@@ -50,7 +50,7 @@ os.ui.alert.AlertsCtrl = function($scope, $timeout, $element) {
    * If alert popups should be displayed.
    * @type {boolean}
    */
-  this['showAlertPopups'] =  /** @type {string} */ (os.settings.get(['showAlertPopups'], true));
+  this['showAlertPopups'] = /** @type {string} */ (os.settings.get(['showAlertPopups'], true));
 
   if (!os.alertManager) {
     // has not been initialized yet

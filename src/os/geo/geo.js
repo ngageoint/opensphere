@@ -115,8 +115,7 @@ os.geo.COORD_CLEANER = /[^NEWSnews\d\s.\-,]/g;
  * The parse config for os.geoUtils
  * @constructor
  * @param {RegExp} regex The regular expression for parsing
- * @param {Array<{deg: number, min: number, sec: number, dir: number}>}
- * coords The coords array
+ * @param {Array<{deg: number, min: number, sec: number, dir: number}>} coords The coords array
  */
 os.geo.ParseConf = function(regex, coords) {
   this.regex = regex;
@@ -1924,7 +1923,7 @@ os.geo.normalizeLongitude = function(lon, opt_min, opt_max) {
     return lon;
   } else {
     return lon > 180 ? ((lon + 180) % 360) - 180 :
-        lon < -180 ? ((lon - 180) % 360) + 180 :
+      lon < -180 ? ((lon - 180) % 360) + 180 :
         lon;
   }
 };
@@ -2087,7 +2086,7 @@ os.geo.normalizeGeometryCoordinates = function(geometry, opt_to) {
       case ol.geom.GeometryType.MULTI_POLYGON:
         var multiPolygon = /** @type {ol.geom.MultiPolygon } */ (geometry);
         var polygons = /** @type {?Array<?Array<?Array<Array<number>>>>} */ (
-            multiPolygon.getCoordinates());
+          multiPolygon.getCoordinates());
 
         os.geo.normalizePolygons(polygons, opt_to);
         multiPolygon.setCoordinates(polygons);
@@ -2471,8 +2470,8 @@ os.geo.splitOnDateLine = function(geometry) {
  */
 os.geo.createLineFromSegments_ = function(segments, layout) {
   return segments.length > 1 ?
-      new ol.geom.MultiLineString(segments, layout) :
-      new ol.geom.LineString(segments[0], layout);
+    new ol.geom.MultiLineString(segments, layout) :
+    new ol.geom.LineString(segments[0], layout);
 };
 
 

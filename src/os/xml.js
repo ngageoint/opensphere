@@ -212,8 +212,8 @@ os.xml.clone = function(node, parent, opt_ns, opt_nsUri) {
     }
 
     var newEl = opt_ns && opt_nsUri ?
-        os.xml.appendElementNS(opt_ns + ':' + el.localName, opt_nsUri, parent, undefined, attrMap) :
-        os.xml.appendElement(el.localName, parent, undefined, attrMap);
+      os.xml.appendElementNS(opt_ns + ':' + el.localName, opt_nsUri, parent, undefined, attrMap) :
+      os.xml.appendElement(el.localName, parent, undefined, attrMap);
     var children = el.childNodes;
     if (children && children.length > 0) {
       for (var i = 0, n = children.length; i < n; i++) {

@@ -156,7 +156,7 @@ os.ui.filter.ui.export = function(name, filters) {
     os.array.forEach(filters, function(filter) {
       var queryEntry = filter.getEntry();
       var filterEntry = queryEntry instanceof os.filter.FilterEntry ?
-          queryEntry : os.ui.filterManager.getFilter(queryEntry['filterId']);
+        queryEntry : os.ui.filterManager.getFilter(queryEntry['filterId']);
       var parsedFilter = filterEntry.getFilterNode();
       if (parsedFilter) {
         // Get the filter key from the filterable. This should almost always work, but in the event that it doesn't

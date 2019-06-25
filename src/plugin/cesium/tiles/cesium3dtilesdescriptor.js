@@ -123,7 +123,7 @@ plugin.cesium.tiles.Descriptor.createFromConfig = function(config) {
  */
 plugin.cesium.tiles.Descriptor.prototype.updateFromConfig = function(config, opt_useConfigForParser) {
   plugin.cesium.tiles.Descriptor.base(this, 'updateFromConfig',
-    /** @type {!os.parse.FileParserConfig} */ (config), true);
+      /** @type {!os.parse.FileParserConfig} */ (config), true);
 
   if (typeof config['assetId'] == 'number') {
     this.setIonConfig(

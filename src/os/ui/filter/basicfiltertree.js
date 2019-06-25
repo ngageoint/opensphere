@@ -42,7 +42,7 @@ goog.inherits(os.ui.filter.BasicFilterTreeCtrl, os.ui.slick.SlickTreeCtrl);
  */
 os.ui.filter.BasicFilterTreeCtrl.prototype.treeFormatter = function(row, cell, value, columnDef, node) {
   return row % 2 == 1 ? '<div ng-bind="root.grouping"></div>' :
-      '<expression expr="item.getExpression()" columns="columns"></expression>' +
+    '<expression expr="item.getExpression()" columns="columns"></expression>' +
       ('<span ng-if="hasMultipleFilters()">' +
           '<button class="btn btn-danger btn-sm" tabindex="-1" ng-click="$emit(\'filterbuilder.remove\', item)" ' +
           'title="Remove this expression"><i class="fa fa-times"></i></button></span>');

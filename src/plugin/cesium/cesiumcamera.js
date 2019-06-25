@@ -505,7 +505,7 @@ plugin.cesium.Camera.prototype.flyTo = function(options) {
   if (this.enabled_) {
     var duration = options.duration != null ? options.duration : os.MapContainer.FLY_ZOOM_DURATION;
     var easingFunction = options.flightMode === os.map.FlightMode.SMOOTH ?
-        Cesium.EasingFunction.LINEAR_NONE : undefined;
+      Cesium.EasingFunction.LINEAR_NONE : undefined;
 
     var target;
     if (options.center) {
@@ -649,7 +649,7 @@ plugin.cesium.Camera.prototype.updateCamera_ = function() {
   goog.asserts.assert(ll != null);
 
   var carto = new Cesium.Cartographic(ol.math.toRadians(ll[0]),
-                                      ol.math.toRadians(ll[1]));
+      ol.math.toRadians(ll[1]));
   if (this.scene_.globe) {
     var height = this.scene_.globe.getHeight(carto);
     carto.height = height != null ? height : 0;

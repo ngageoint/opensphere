@@ -153,7 +153,7 @@ os.geo2.normalizeGeometryCoordinates = function(geometry, opt_to, opt_proj) {
       case ol.geom.GeometryType.MULTI_POLYGON:
         var multiPolygon = /** @type {ol.geom.MultiPolygon } */ (geometry);
         var polygons = /** @type {?Array<?Array<?Array<Array<number>>>>} */ (
-            multiPolygon.getCoordinates());
+          multiPolygon.getCoordinates());
         os.geo2.normalizePolygons(polygons, opt_to, opt_proj);
         multiPolygon.setCoordinates(polygons);
         return true;

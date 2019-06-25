@@ -173,8 +173,8 @@ os.file.mime.detect = function(buffer, file, opt_node, opt_context) {
                 return val ? val : os.file.mime.detect(buffer, file, n, opt_context);
               });
             }, goog.Promise.resolve()).then(function(val) {
-              return val ? val : opt_node.type;
-            });
+          return val ? val : opt_node.type;
+        });
       }
 
       return opt_node.type;

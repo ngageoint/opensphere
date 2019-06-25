@@ -58,7 +58,7 @@ ol.color.normalize = function(color, opt_color) {
  * @suppress {accessControls|duplicate}
  */
 ol.renderer.canvas.VectorLayer.prototype.forEachFeatureAtCoordinate = function(coordinate, frameState, hitTolerance,
-    callback, thisArg) {
+  callback, thisArg) {
   if (!this.replayGroup_) {
     return undefined;
   } else {

@@ -628,7 +628,7 @@ os.MainCtrl.prototype.addControlsToHelp_ = function() {
   controls.addControl(gen, 0, 'Undo', [ctrlOr, '+', goog.events.KeyCodes.Z]);
 
   var redoKeys = os.isOSX() ? [ctrlOr, '+', goog.events.KeyCodes.SHIFT, '+', goog.events.KeyCodes.Z] :
-      [ctrlOr, '+', goog.events.KeyCodes.Y];
+    [ctrlOr, '+', goog.events.KeyCodes.Y];
   controls.addControl(gen, 0, 'Redo', redoKeys);
 };
 
@@ -910,7 +910,7 @@ os.MainCtrl.prototype.onToggleUI_ = function(event) {
     } else {
       // Use event value if available.  Keep open if event contains parameters. Lastly just toggle the value.
       var open = typeof event.value === 'boolean' ? event.value :
-          (event.params != null ? true : !this[event.id]);
+        (event.params != null ? true : !this[event.id]);
       this[event.id] = open;
       os.ui.apply(this.scope);
     }

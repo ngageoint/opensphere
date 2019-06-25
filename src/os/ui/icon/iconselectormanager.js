@@ -10,7 +10,8 @@ goog.require('os.data.CollectionManager');
  */
 os.ui.icon.IconSelectorManager = function() {
   os.ui.icon.IconSelectorManager.base(this, 'constructor');
-  this.add({ // default icon selector
+  this.add({
+    // default icon selector
     'id': 'google_icons',
     'name': 'Google Icons',
     'html': '<iconpalette accept-callback="acceptCallback" selected="selected" icon-set="iconSet" ' +

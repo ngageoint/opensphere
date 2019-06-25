@@ -239,7 +239,7 @@ os.legend.getOptionsFromSettings = function() {
  */
 os.legend.layerFilter = function(layer, idx, layers) {
   return os.implements(layer, os.legend.ILegendRenderer.ID) &&
-      /** @type {!os.legend.ILegendRenderer} */ (layer).renderLegend !== goog.nullFunction;
+  /** @type {!os.legend.ILegendRenderer} */ (layer).renderLegend !== goog.nullFunction;
 };
 
 

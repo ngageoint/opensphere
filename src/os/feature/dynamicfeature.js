@@ -92,7 +92,7 @@ os.feature.DynamicFeature.prototype.updateDynamic = function(startTime, endTime)
  */
 os.feature.DynamicFeature.prototype.clone = function() {
   var clone = new os.feature.DynamicFeature(undefined, this.initFn, this.disposeFn, this.updateFn,
-    this.isDynamicEnabled);
+      this.isDynamicEnabled);
   clone.setProperties(this.values_, true);
   clone.setGeometryName(this.getGeometryName());
   var geometry = this.getGeometry();

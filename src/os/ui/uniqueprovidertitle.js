@@ -27,7 +27,7 @@ os.ui.uniqueProviderTitle = function() {
 os.ui.uniqueProviderTitle_ = function($scope, $element, $attrs, $ctrl) {
   var check = function(viewValue) {
     var list = /** @type {Array.<os.data.IDataProvider>} */ (
-        os.dataManager.getProviderRoot().getChildren());
+      os.dataManager.getProviderRoot().getChildren());
 
     var provider = /** @type {?os.data.IDataProvider} */ ($scope['config']['provider'] || null);
 

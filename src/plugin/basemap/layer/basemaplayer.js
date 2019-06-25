@@ -43,7 +43,7 @@ plugin.basemap.layer.BaseMap.prototype.setLoading = function(value) {
   if (this.getError() && !plugin.basemap.layer.BaseMap.warningShown_) {
     os.alertManager.sendAlert('One or more Map Layers are having issues reaching the remote server. Please try ' +
         'adding another Map Layer or [click here to add a working one|basemapAddFailover].',
-        os.alert.AlertEventSeverity.WARNING);
+    os.alert.AlertEventSeverity.WARNING);
     plugin.basemap.layer.BaseMap.warningShown_ = true;
   }
 };

@@ -79,14 +79,14 @@ os.time.xf.TimeModel = function(getTimeFn, opt_getHoldTimeFn) {
    * @protected
    */
   this.holdStartDimension = this.getHoldTimeFn ?
-      this.holdsXf.dimension(this.startFilter_.bind(this, this.getHoldTimeFn)) : null;
+    this.holdsXf.dimension(this.startFilter_.bind(this, this.getHoldTimeFn)) : null;
 
   /**
    * @type {?crossfilter.Dimension}
    * @protected
    */
   this.holdEndDimension = this.getHoldTimeFn ?
-      this.holdsXf.dimension(this.endFilter_.bind(this, this.getHoldTimeFn)) : null;
+    this.holdsXf.dimension(this.endFilter_.bind(this, this.getHoldTimeFn)) : null;
 
   /**
    * @type {Object<string, crossfilter.Dimension>}

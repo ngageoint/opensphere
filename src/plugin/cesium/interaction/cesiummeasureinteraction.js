@@ -41,7 +41,7 @@ plugin.cesium.interaction.measure.updateWebGL = function() {
 
   if (os.MapContainer.getInstance().is3DEnabled()) {
     var webgl = /** @type {plugin.cesium.CesiumRenderer|undefined} */ (
-          os.MapContainer.getInstance().getWebGLRenderer());
+      os.MapContainer.getInstance().getWebGLRenderer());
     var scene = webgl ? webgl.getCesiumScene() : undefined;
 
     var lonlats = this.coords.map(os.interaction.DrawPolygon.coordToLonLat);
