@@ -247,6 +247,9 @@ os.data.LayerNode.prototype.onPropertyChange = function(e) {
         this.setLabel(this.layer_.getTitle());
         this.dispatchEvent(new os.events.PropertyChangeEvent('label'));
         break;
+      case os.layer.PropertyChange.GROUP_ID:
+        os.map.mapContainer.dispatchEvent(os.events.LayerEventType.CHANGE);
+        break;
       case os.layer.PropertyChange.COLOR_MODEL:
       case os.layer.PropertyChange.ERROR:
       case os.layer.PropertyChange.ICONS:
