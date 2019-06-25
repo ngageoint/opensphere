@@ -11,7 +11,7 @@
       <!-- action item -->
       <div class="d-flex">
         <div class="text-truncate flex-fill d-inline">
-          <a class="unselectable" ng-if="!(isSeparator || isSeparatorHeader)">
+          <a class="ol-unselectable" ng-if="!(isSeparator || isSeparatorHeader)">
             <span><i class="fa fa-fw" ng-class="menuItem.getAction().getIcon() || 'fa-indent'"></i></span>
             <span>{{menuItem.getName()}}</span>
           </a>
@@ -37,7 +37,7 @@
 
   <div class="dropdown-item" ng-if="isSubmenu && isMoreButton" title="See more results..." ng-click="actionMenu.handleMoreResults()">
     <div class="text-truncate d-inline">
-      <a class="unselectable">
+      <a class="ol-unselectable">
         <span><i class="fa fa-fw" ng-class="fa-indent"></i></span>
         <span class="text-truncate">MORE...</span>
       </a>
