@@ -42,17 +42,8 @@ plugin.cesium.Plugin.ID = 'cesium';
 
 /**
  * @typedef {{
- *   color: !Cesium.Color,
- *   csPattern: ?number
- * }}
- */
-plugin.cesium.materialOptions;
-
-
-/**
- * @typedef {{
  *   id: number,
- *   csPattern: number
+ *   csPattern: (number|undefined)
  * }}
  */
 plugin.cesium.styleLineDashOption;

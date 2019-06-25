@@ -82,9 +82,23 @@ os.ui.layer.VectorStyleControlsCtrl = function($scope) {
     this.scope['showCenterIcon'] = true;
   }
 
+  /**
+   * Options for line dash styles
+   * @type {!Array<!os.style.styleLineDashOption>}
+   */
   this.scope['lineDashOptions'] = os.style.LINE_STYLE_OPTIONS;
+
+  /**
+   * The line dash style option for the stored pattern
+   * @type {os.style.styleLineDashOption}
+   */
   var name = os.style.dashPatternToOptions(this.scope['lineDash']);
-  this.scope['lineDashName'] = name ? name : this.scope['lineDashOptions'][0];
+
+  /**
+   * The selected line dash option
+   * @type {os.style.styleLineDashOption}
+   */
+  this.scope['lineDashOption'] = name ? name : this.scope['lineDashOptions'][0];
 
   $scope.$on('$destroy', goog.bind(this.dispose, this));
 };
@@ -141,8 +155,8 @@ os.ui.layer.VectorStyleControlsCtrl.prototype.onCenterShapeChange = function(sha
  * @export
  */
 os.ui.layer.VectorStyleControlsCtrl.prototype.onLineDashChange = function() {
-  if (this.scope && this.scope['lineDashName']) {
-    this.scope['lineDash'] = /** @type {os.style.styleLineDashOption} */ (this.scope['lineDashName']).pattern;
+  if (this.scope && this.scope['lineDashOption']) {
+    this.scope['lineDash'] = /** @type {os.style.styleLineDashOption} */ (this.scope['lineDashOption']).pattern;
     this.scope.$emit(os.ui.layer.VectorStyleControlsEventType.LINE_DASH_CHANGE, this.scope['lineDash']);
   }
 };
