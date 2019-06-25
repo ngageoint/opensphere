@@ -644,21 +644,24 @@ os.MapContainer.prototype.flyToExtent = function(extent, opt_buffer, opt_maxZoom
 os.MapContainer.prototype.onZoom_ = function(event) {
   try {
     var context = event.getContext();
-
-    // if zooming to a single feature, use the default fly to zoom limit to avoid zooming too far. otherwise this is
-    // from a temporary (drawn) geometry and zoom should be unconstrained.
-    var maxZoom = context['feature'] != null ? undefined : -1;
-
     if (!goog.isArray(context)) {
       context = [context];
     }
 
-    var extent = /** @type {!Array<?{geometry: ol.geom.Geometry}>} */ (context).reduce(
-        os.fn.reduceExtentFromGeometries,
-        ol.extent.createEmpty());
+    var features = context.map(function(c) {
+      return c['feature'];
+    }).filter(os.fn.filterFalsey);
 
-    if (!ol.extent.isEmpty(extent)) {
-      os.commandStack.addCommand(new os.command.FlyToExtent(extent, undefined, maxZoom));
+    if (features.length) {
+      os.feature.flyTo(/** @type {Array<ol.Feature>} */ (features));
+    } else {
+      var extent = /** @type {!Array<?{geometry: ol.geom.Geometry}>} */ (context).reduce(
+          os.fn.reduceExtentFromGeometries,
+          ol.extent.createEmpty());
+
+      if (!ol.extent.isEmpty(extent)) {
+        os.commandStack.addCommand(new os.command.FlyToExtent(extent, undefined, -1));
+      }
     }
   } catch (e) {
     goog.log.error(os.MapContainer.LOGGER_, 'Zoom action failed:', e);
@@ -1302,10 +1305,12 @@ os.MapContainer.prototype.setWebGLEnabled = function(enabled, opt_silent) {
       // renderer to go down a less performant code path.
       // @see {@link ol.renderer.canvas.Layer#composeFrame}
       this.resetRotation();
+      os.feature.flyToOverride = undefined;
     } else {
       // reset all synchronizers to a clean state. this needs to be called after WebGL is enabled/rendering to ensure
       // synchronized objects are reset in the correct state.
       this.webGLRenderer_.resetSync();
+      os.feature.flyToOverride = this.webGLRenderer_.flyToFeatures.bind(this.webGLRenderer_);
     }
 
     this.dispatchEvent(os.events.EventType.MAP_MODE);

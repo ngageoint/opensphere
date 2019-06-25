@@ -1,5 +1,6 @@
 goog.provide('os.ui.filter.op.Rule');
 goog.require('os.ui.filter.op.Op');
+goog.require('os.xsd.DataType');
 
 
 
@@ -18,7 +19,7 @@ os.ui.filter.op.Rule = function(localName, title, opt_shortTitle, opt_supportedT
   os.ui.filter.op.Rule.base(this, 'constructor',
       localName, title, opt_shortTitle, opt_supportedTypes, opt_attrs, opt_hint, opt_ui);
 
-  this.supportedTypes = ['integer'];
+  this.supportedTypes = [os.xsd.DataType.INTEGER];
 };
 goog.inherits(os.ui.filter.op.Rule, os.ui.filter.op.Op);
 
