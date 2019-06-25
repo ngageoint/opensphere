@@ -64,7 +64,7 @@ os.proj.LOGGER_ = goog.log.getLogger('os.proj');
 os.proj.getProjections = function(opt_all) {
   var projections = /** @type {Array<Object<string, *>>} */ (os.settings.get('projections', []));
   projections = projections.concat(/** @type {Array<Object<string, *>>} */ (
-      os.settings.get('userProjections', [])));
+    os.settings.get('userProjections', [])));
 
   if (opt_all) {
     var toAdd = [ol.proj.get(os.proj.EPSG3857), ol.proj.get(os.proj.EPSG4326)];

@@ -365,7 +365,7 @@ os.style.label.createOrUpdate = function(feature, config, opt_layerConfig) {
   if (feature.values_[os.style.StyleType.HIGHLIGHT] || feature.values_[os.style.StyleField.SHOW_LABELS] !== false) {
     var featureLabels = config[os.style.StyleField.LABELS];
     var layerLabels = opt_layerConfig ?
-        opt_layerConfig[os.style.StyleField.LABELS] : [os.style.label.cloneConfig()];
+      opt_layerConfig[os.style.StyleField.LABELS] : [os.style.label.cloneConfig()];
     var labelConfigs = os.style.label.getLabels(featureLabels, layerLabels);
 
     if (labelConfigs) {

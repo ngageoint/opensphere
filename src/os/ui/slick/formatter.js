@@ -64,7 +64,7 @@ os.ui.slick.formatter.depthfulFormatter = function(row, cell, value, columnDef, 
  */
 os.ui.slick.formatter.color = function(row, cell, value, columnDef, item) {
   return value ? '<i class="fa fa-circle" style="color:' + value + '"></i>' :
-      '<i class="fa fa-adjust c-formatter__adjust" title="Multiple Colors Present"></i>';
+    '<i class="fa fa-adjust c-formatter__adjust" title="Multiple Colors Present"></i>';
 };
 
 

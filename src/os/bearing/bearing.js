@@ -104,7 +104,7 @@ os.bearing.getBearing = function(coord1, coord2, date, opt_method) {
   opt_method = opt_method || os.interpolate.Method.GEODESIC;
 
   var bearing = opt_method === os.interpolate.Method.GEODESIC ? osasm.geodesicInverse(coord1, coord2).initialBearing :
-      osasm.rhumbInverse(coord1, coord2).bearing;
+    osasm.rhumbInverse(coord1, coord2).bearing;
   return os.bearing.modifyBearing(bearing, coord1, date);
 };
 

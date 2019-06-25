@@ -42,8 +42,8 @@ os.file.mime.zip.detectZip = function(buffer, opt_file) {
       return new goog.Promise(function(resolve, reject) {
         // if we have a file reference, use that
         var reader = opt_file && opt_file.getFile() ?
-            new zip.BlobReader(opt_file.getFile()) :
-            new zip.ArrayBufferReader(buffer);
+          new zip.BlobReader(opt_file.getFile()) :
+          new zip.ArrayBufferReader(buffer);
 
         try {
           zip.createReader(reader, function(reader) {

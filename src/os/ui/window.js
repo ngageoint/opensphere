@@ -323,7 +323,7 @@ os.ui.window.disableModality = function(id) {
 os.ui.window.close = function(el) {
   if (el) {
     var scope = el.is(os.ui.windowSelector.WINDOW) ?
-        el.children().scope() : el.parents(os.ui.windowSelector.WINDOW).children().scope();
+      el.children().scope() : el.parents(os.ui.windowSelector.WINDOW).children().scope();
     if (scope && scope['windowCtrl']) {
       // scope for a window directive, so call the close function
       /** @type {os.ui.WindowCtrl} */ (scope['windowCtrl']).close();
@@ -685,7 +685,7 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
   // make the element draggable
   if (!$scope['disableDrag']) {
     var handler = $scope['overlay'] ?
-        (os.ui.windowSelector.HEADER + ', .js-window-overlay-content') : os.ui.windowSelector.HEADER;
+      (os.ui.windowSelector.HEADER + ', .js-window-overlay-content') : os.ui.windowSelector.HEADER;
     var dragConfig = {
       'containment': $scope['windowContainer'],
       'handle': handler,

@@ -532,7 +532,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.onHistogramChange = function(event
 os.ui.timeline.AbstractTimelineCtrl.prototype.updateHistograms_ = function() {
   if (this.lastScaleOptions) { // draw scale even when histograms not presented
     var histograms = os.ui.timeline.AbstractTimelineCtrl.collapsed ?
-        [] : this.histManager.getHistograms(this.lastScaleOptions);
+      [] : this.histManager.getHistograms(this.lastScaleOptions);
     this['histData'] = histograms;
     if (this.moveWindowOnHistUpdate) {
       this.moveWindowToData();
@@ -1167,7 +1167,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.addHoldBrush = function(range) {
  * @private
  */
 os.ui.timeline.AbstractTimelineCtrl.prototype.processTimelineRangeChanged_ = function(brushCollection,
-    ranges, getBrushFunction) {
+  ranges, getBrushFunction) {
   var brush;
   var range;
   var supressBrushEvents = true;

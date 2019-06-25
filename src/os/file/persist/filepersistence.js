@@ -41,7 +41,7 @@ os.file.persist.FilePersistence.prototype.requiresUserAction = function() {
  * @inheritDoc
  */
 os.file.persist.FilePersistence.prototype.save = function(fileName, content, opt_mimeType,
-    opt_title, opt_description, opt_tags) {
+  opt_title, opt_description, opt_tags) {
   return os.file.persist.saveFile(fileName, content, opt_mimeType);
 };
 

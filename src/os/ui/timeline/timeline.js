@@ -80,26 +80,26 @@ os.ui.Module.directive('timeline', [os.ui.timeline.timelineDirective]);
  * @const
  */
 os.ui.timeline.SNAP_SCALE = [
-  1,      // 1 ms
-  5,      // 5 ms
-  10,     // 10 ms
-  25,     // 25 ms
-  50,     // 50 ms
-  1e2,    // 100 ms
-  5e2,    // 500 ms
-  1e3,    // 1-second
-  5e3,    // 5-second
-  15e3,   // 15-second
-  3e4,    // 30-second
-  6e4,    // 1-minute
-  3e5,    // 5-minute
-  9e5,    // 15-minute
-  18e5,   // 30-minute
-  36e5,   // 1-hour
-  108e5,  // 3-hour
-  216e5,  // 6-hour
-  432e5,  // 12-hour
-  864e5,  // 1-day
+  1, // 1 ms
+  5, // 5 ms
+  10, // 10 ms
+  25, // 25 ms
+  50, // 50 ms
+  1e2, // 100 ms
+  5e2, // 500 ms
+  1e3, // 1-second
+  5e3, // 5-second
+  15e3, // 15-second
+  3e4, // 30-second
+  6e4, // 1-minute
+  3e5, // 5-minute
+  9e5, // 15-minute
+  18e5, // 30-minute
+  36e5, // 1-hour
+  108e5, // 3-hour
+  216e5, // 6-hour
+  432e5, // 12-hour
+  864e5, // 1-day
   1728e5, // 2-day
   6048e5, // 1-week
   12096e5, // 2-week

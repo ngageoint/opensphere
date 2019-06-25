@@ -77,7 +77,7 @@ os.ui.MeasureButtonCtrl = function($scope, $element) {
    */
   this.key_ = 'measureMethod';
   os.interaction.Measure.method = /** @type {os.interpolate.Method} */ (
-      os.settings.get(this.key_, os.interaction.Measure.method));
+    os.settings.get(this.key_, os.interaction.Measure.method));
 };
 goog.inherits(os.ui.MeasureButtonCtrl, os.ui.menu.MenuButtonCtrl);
 

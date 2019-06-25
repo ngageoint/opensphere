@@ -144,14 +144,14 @@ os.ui.wiz.step.TimeInstantUICtrl.prototype.destroy_ = function() {
 os.ui.wiz.step.TimeInstantUICtrl.prototype.initialize_ = function() {
   if (this.model_['dateType'] == 'combined') {
     this['dateFormat'] = ol.array.includes(this['dtFormats'], this.model_['dateFormat']) ?
-        this.model_['dateFormat'] : 'Custom';
+      this.model_['dateFormat'] : 'Custom';
   } else {
     this['dateFormat'] = ol.array.includes(this['dFormats'], this.model_['dateFormat']) ?
-        this.model_['dateFormat'] : 'Custom';
+      this.model_['dateFormat'] : 'Custom';
 
     if (this.model_['dateType'] == 'separate') {
       this['timeFormat'] = ol.array.includes(this['tFormats'], this.model_['timeFormat']) ?
-          this.model_['timeFormat'] : 'Custom';
+        this.model_['timeFormat'] : 'Custom';
     }
   }
 
@@ -185,7 +185,7 @@ os.ui.wiz.step.TimeInstantUICtrl.prototype.updateSample_ = function() {
     if (this['sample'] == null) {
       // couldn't find either column
       this['sample'] = this.model_['dateType'] == 'separate' ? os.ui.wiz.step.TimeInstantUICtrl.NO_DATETIME :
-          os.ui.wiz.step.TimeInstantUICtrl.NO_DATE;
+        os.ui.wiz.step.TimeInstantUICtrl.NO_DATE;
     } else {
       this.updateResult_();
     }

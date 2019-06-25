@@ -150,7 +150,7 @@ plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.buildStylePreview = 
         // include the center point if it was selected
         if (includeCenter) {
           var centerConfig = config['centerShape'] ? os.style.SHAPES[config['centerShape']] :
-              os.style.SHAPES[os.style.DEFAULT_CENTER_SHAPE];
+            os.style.SHAPES[os.style.DEFAULT_CENTER_SHAPE];
           // have to clone this since we are modifying things in it - otherwise, it interferes
           // with the actual action
           var c = /** @type {!Object} */ (os.object.unsafeClone(centerConfig));

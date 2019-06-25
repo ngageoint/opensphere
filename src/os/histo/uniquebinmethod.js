@@ -150,7 +150,7 @@ os.histo.UniqueBinMethod.prototype.getLabelForKey = function(key, opt_secondary,
   if (typeof key === 'string' && key.indexOf(os.data.xf.DataModel.SEPARATOR) >= 0) {
     // this key is in a bin that represents the intersection of two values; split them apart with the separator
     key = !opt_secondary ? key.split(os.data.xf.DataModel.SEPARATOR)[0] :
-        key.split(os.data.xf.DataModel.SEPARATOR)[1];
+      key.split(os.data.xf.DataModel.SEPARATOR)[1];
   }
 
   if (Number(key) === os.histo.NumericBinMethod.MAGIC_EMPTY) {

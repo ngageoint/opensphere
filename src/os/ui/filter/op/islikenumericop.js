@@ -17,7 +17,7 @@ goog.require('os.ui.filter.textNoColCheckDirective');
  * @extends {os.ui.filter.op.Op}
  */
 os.ui.filter.op.IsLikeNumeric = function(opt_title, opt_shortTitle, opt_supportedTypes,
-        opt_attributes, opt_hint, opt_ui) {
+  opt_attributes, opt_hint, opt_ui) {
   opt_title = opt_title || 'is like';
   opt_shortTitle = opt_shortTitle || 'like';
   opt_supportedTypes = opt_supportedTypes || ['integer', 'decimal'];

@@ -392,8 +392,8 @@ os.query.AreaManager.prototype.redrawQueryAreas_ = function() {
       var entries = os.query.BaseQueryManager.getInstance().getEntries(null, /** @type {string} */ (area.getId()));
       if (entries && entries.length > 0) {
         var expectedStyle = /** @type {boolean} */ (entries[0]['includeArea']) ?
-            goog.object.unsafeClone(os.query.AreaManager.FULL_INCLUSION_STYLE) :
-            goog.object.unsafeClone(os.query.AreaManager.FULL_EXCLUSION_STYLE);
+          goog.object.unsafeClone(os.query.AreaManager.FULL_INCLUSION_STYLE) :
+          goog.object.unsafeClone(os.query.AreaManager.FULL_EXCLUSION_STYLE);
         area.set(os.style.StyleType.SELECT, expectedStyle);
         os.style.setFeatureStyle(area);
         this.redraw(area);

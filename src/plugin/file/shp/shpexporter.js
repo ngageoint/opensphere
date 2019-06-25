@@ -777,56 +777,56 @@ plugin.file.shp.SHPExporter.prototype.appendItemForGeom_ = function(item, geom) 
     if (shapeType == plugin.file.shp.TYPE.POINTZ) {
       this.dvShp_.setFloat64(recordStart + 20, coord[2], true);
     }
-  // } else if (geom.getType() == ol.geom.GeometryType.MULTI_POINT) {
-  //   /**
-  //    * MultiPoint
-  //    *                                                  Byte
-  //    * Position   Field       Value     Type    Number    Order
-  //    * Byte 0     Shape Type  8         Integer 1         Little
-  //    * Byte 4     Box         Box       Double  4         Little
-  //    * Byte 36    NumPoints   NumPoints Integer 1         Little
-  //    * Byte 40    Points      Points    Point   NumPoints Little
-  //    *
-  //    * Byte X     Zmin        Zmin      Double  1         Little
-  //    * Byte X+8   Zmax        Zmax      Double  1         Little
-  //    * Byte X+16  Zarray      Zarray    Double  NumPoints Little
-  //    * Byte Y*    Mmin        Mmin      Double  1         Little
-  //    * Byte Y+8*  Mmax        Mmax      Double  1         Little
-  //    * Byte Y+16* Marray      Marray    Double  NumPoints Little
-  //    * Note: X = 40 + (16 * NumPoints); Y = X + 16 + (8 * NumPoints)
-  //    */
-  //   shapeType = plugin.file.shp.TYPE.MULTIPOINT;
-  //   var coords = geom.getCoordinates();
-  //   var numPoints = coords.length;
-  //   var pointsLen = numPoints * 16;
+    // } else if (geom.getType() == ol.geom.GeometryType.MULTI_POINT) {
+    //   /**
+    //    * MultiPoint
+    //    *                                                  Byte
+    //    * Position   Field       Value     Type    Number    Order
+    //    * Byte 0     Shape Type  8         Integer 1         Little
+    //    * Byte 4     Box         Box       Double  4         Little
+    //    * Byte 36    NumPoints   NumPoints Integer 1         Little
+    //    * Byte 40    Points      Points    Point   NumPoints Little
+    //    *
+    //    * Byte X     Zmin        Zmin      Double  1         Little
+    //    * Byte X+8   Zmax        Zmax      Double  1         Little
+    //    * Byte X+16  Zarray      Zarray    Double  NumPoints Little
+    //    * Byte Y*    Mmin        Mmin      Double  1         Little
+    //    * Byte Y+8*  Mmax        Mmax      Double  1         Little
+    //    * Byte Y+16* Marray      Marray    Double  NumPoints Little
+    //    * Note: X = 40 + (16 * NumPoints); Y = X + 16 + (8 * NumPoints)
+    //    */
+    //   shapeType = plugin.file.shp.TYPE.MULTIPOINT;
+    //   var coords = geom.getCoordinates();
+    //   var numPoints = coords.length;
+    //   var pointsLen = numPoints * 16;
 
-  //   recLength = 40 + pointsLen;
-  //   if (geom.getLayout() == 'XYZ') {
-  //     for (var i = 0; i < coords.length; i++) {
-  //       if (coords[i][2] != 0) {
-  //         shapeType = plugin.file.shp.TYPE.MULTIPOINTZ;
-  //         recLength += 16 + (16 * numPoints);
-  //         break;
-  //       }
-  //     }
-  //   }
+    //   recLength = 40 + pointsLen;
+    //   if (geom.getLayout() == 'XYZ') {
+    //     for (var i = 0; i < coords.length; i++) {
+    //       if (coords[i][2] != 0) {
+    //         shapeType = plugin.file.shp.TYPE.MULTIPOINTZ;
+    //         recLength += 16 + (16 * numPoints);
+    //         break;
+    //       }
+    //     }
+    //   }
 
-  //   // Box
-  //   this.dvShp_.setFloat64(recordStart + 4, extent[0], true);
-  //   this.dvShp_.setFloat64(recordStart + 12, extent[1], true);
-  //   this.dvShp_.setFloat64(recordStart + 20, extent[2], true);
-  //   this.dvShp_.setFloat64(recordStart + 28, extent[3], true);
+    //   // Box
+    //   this.dvShp_.setFloat64(recordStart + 4, extent[0], true);
+    //   this.dvShp_.setFloat64(recordStart + 12, extent[1], true);
+    //   this.dvShp_.setFloat64(recordStart + 20, extent[2], true);
+    //   this.dvShp_.setFloat64(recordStart + 28, extent[3], true);
 
-  //   // Num points
-  //   this.dvShp_.setInt32(recordStart + 40, numPoints, true);
+    //   // Num points
+    //   this.dvShp_.setInt32(recordStart + 40, numPoints, true);
 
-  //   // Points
-  //   var pointsStart = recordStart + 40;
-  //   var zpointsStart = pointsStart + pointsLen;
-  //   os.array.forEach(coords, function(coord, index) {
-  //     var offset = index * 16;
-  //     this.dvShp_.setFloat64(pointsStart + offset, coord[0], true);
-  //     this.dvShp_.setFloat64(pointsStart + offset + 8, coord[1], true);
+    //   // Points
+    //   var pointsStart = recordStart + 40;
+    //   var zpointsStart = pointsStart + pointsLen;
+    //   os.array.forEach(coords, function(coord, index) {
+    //     var offset = index * 16;
+    //     this.dvShp_.setFloat64(pointsStart + offset, coord[0], true);
+    //     this.dvShp_.setFloat64(pointsStart + offset + 8, coord[1], true);
 
   //     if (shapeType == plugin.file.shp.TYPE.MULTIPOINTZ) {
   //       this.dvShp_.setFloat64(zpointsStart + (8 * index), coord[2], true);

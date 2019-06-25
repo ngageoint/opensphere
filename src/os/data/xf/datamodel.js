@@ -398,7 +398,7 @@ os.data.xf.DataModel.prototype.groupDataInternal = function(dim, accessorFn, add
 os.data.xf.DataModel.prototype.getResults = function(opt_value, opt_dim, opt_bottom) {
   if (!this.isDisposed()) {
     var dim = opt_dim && this.hasDimension(opt_dim) ?
-          this.dimensions[opt_dim] : goog.object.getAnyValue(this.dimensions);
+      this.dimensions[opt_dim] : goog.object.getAnyValue(this.dimensions);
     opt_value = opt_value || Infinity;
 
     if (dim) {

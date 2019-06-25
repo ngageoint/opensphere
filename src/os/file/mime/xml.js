@@ -156,7 +156,7 @@ os.file.mime.xml.createDetect = function(rootTagRegex, rootNSRegex) {
     function(buffer, opt_file, opt_context) {
       var retVal;
       if (opt_context && (
-          (!rootNSRegex || rootNSRegex.test(opt_context.rootNS)) &&
+        (!rootNSRegex || rootNSRegex.test(opt_context.rootNS)) &&
           (!rootTagRegex || rootTagRegex.test(opt_context.rootTag)))) {
         retVal = opt_context;
       }

@@ -1171,7 +1171,7 @@ os.geo.jsts.validate = function(geometry, opt_quiet, opt_undefinedIfInvalid) {
         if (!opt_quiet && diff / oldLength > 0.005) {
           os.alertManager.sendAlert('Area was modified from the original due to invalid topology. Common reasons ' +
               'include polygons that cross or overlap themselves.',
-              os.alert.AlertEventSeverity.WARNING);
+          os.alert.AlertEventSeverity.WARNING);
         }
 
         // return the validated geometry with properties copied from the original

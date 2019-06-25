@@ -282,7 +282,7 @@ os.state.v2.LayerState.prototype.layerToXML = function(layer, options, opt_exclu
         case 'params':
           var paramsEl = os.xml.appendElement(os.state.v2.LayerTag.PARAMS, layerEl);
           var qd = typeof value === 'string' ? new goog.Uri.QueryData(value) :
-              /** @type {goog.Uri.QueryData} */ (value);
+          /** @type {goog.Uri.QueryData} */ (value);
           var qdKeys = qd.getKeys();
           for (var i = 0, n = qdKeys.length; i < n; i++) {
             var qdKey = qdKeys[i];
@@ -646,11 +646,11 @@ os.state.v2.LayerState.prototype.xmlToOptions = function(node) {
                   break;
                 case os.state.v2.LayerTag.PT_OPACITY:
                   options['opacity'] = goog.string.isNumeric(styleVal) ? Number(styleVal) / 255 :
-                      os.style.DEFAULT_ALPHA;
+                    os.style.DEFAULT_ALPHA;
                   break;
                 case os.state.v2.LayerTag.PT_SIZE:
                   options['size'] = goog.string.isNumeric(styleVal) ? Number(styleVal) / 2 :
-                      os.style.DEFAULT_FEATURE_SIZE;
+                    os.style.DEFAULT_FEATURE_SIZE;
                   break;
                 case os.state.v2.LayerTag.LABEL_COLUMN:
                   var column = typeof styleVal === 'string' ? goog.string.trim(styleVal) : '';
@@ -689,8 +689,8 @@ os.state.v2.LayerState.prototype.xmlToOptions = function(node) {
                   // make sure the label size is between allowed values, and use the default value if none specified
                   var styleSize = goog.string.isNumeric(styleVal) ? Number(styleVal) : 0;
                   var size = styleSize > 0 ?
-                      goog.math.clamp(styleSize, os.style.label.MIN_SIZE, os.style.label.MAX_SIZE) :
-                      os.style.label.DEFAULT_SIZE;
+                    goog.math.clamp(styleSize, os.style.label.MIN_SIZE, os.style.label.MAX_SIZE) :
+                    os.style.label.DEFAULT_SIZE;
                   options[os.style.StyleField.LABEL_SIZE] = size;
                   break;
                 default:

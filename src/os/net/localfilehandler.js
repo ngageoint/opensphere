@@ -113,7 +113,7 @@ os.net.LocalFileHandler.prototype.abort = function() {
  * @inheritDoc
  */
 os.net.LocalFileHandler.prototype.execute = function(method, uri, opt_headers, opt_formatter, opt_nocache,
-    opt_responseType) {
+  opt_responseType) {
   this.errors = null;
   this.file_ = null;
 
@@ -201,5 +201,5 @@ os.net.LocalFileHandler.prototype.getTimeout = function() {
  * @inheritDoc
  */
 os.net.LocalFileHandler.prototype.setTimeout = function(timeout) {
- // timeout not supported
+  // timeout not supported
 };

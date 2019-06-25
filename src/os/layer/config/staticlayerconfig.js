@@ -61,7 +61,7 @@ os.layer.config.StaticLayerConfig.prototype.initializeConfig = function(options)
   if (goog.isArray(options['data'])) {
     // make sure the array was created in this context
     this.data = options['data'] = options['data'] instanceof Array ? options['data'] :
-        goog.array.clone(options['data']);
+      goog.array.clone(options['data']);
   } else {
     this.data = null;
   }

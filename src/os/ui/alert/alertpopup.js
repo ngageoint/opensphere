@@ -169,7 +169,7 @@ os.ui.alert.AlertPopupCtrl.prototype.popupsEnabled_ = function() {
   // this may cause popups to be displayed before settings are loaded even when the setting should be false,
   // but better than a null exception
   return os.settings.isLoaded() ? /** @type {boolean} */ (os.settings.get(['showAlertPopups'], true)) :
-      true;
+    true;
 };
 
 

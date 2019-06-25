@@ -169,8 +169,8 @@ os.net.LongPoll.prototype.open = function(url, opt_protocol) {
 os.net.LongPoll.isExternal_ = function(uri, opt_localUri) {
   uri = typeof uri === 'string' ? new goog.Uri(uri) : uri;
   opt_localUri = opt_localUri ?
-      typeof opt_localUri === 'string' ? new goog.Uri(opt_localUri) : opt_localUri :
-      new goog.Uri(window.location);
+    typeof opt_localUri === 'string' ? new goog.Uri(opt_localUri) : opt_localUri :
+    new goog.Uri(window.location);
 
   return !uri.hasSameDomainAs(opt_localUri);
 };

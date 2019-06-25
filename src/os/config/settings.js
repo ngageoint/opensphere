@@ -624,36 +624,36 @@ os.config.Settings.prototype.reset = function(opt_namespace) {
     if (storage) {
       goog.Promise.all([storage.deleteSettings(os.config.coreNs),
         storage.deleteSettings(namespace)]).then(function() {
-          goog.log.fine(os.config.Settings.LOGGER_, 'Reset settings success');
+        goog.log.fine(os.config.Settings.LOGGER_, 'Reset settings success');
 
-          // clear the user config section then save the storage type back to it
-          this.actualConfig_[os.config.ConfigType.PREFERENCE] = {};
-          if (type === os.config.storage.SettingsWritableStorageType.REMOTE &&
+        // clear the user config section then save the storage type back to it
+        this.actualConfig_[os.config.ConfigType.PREFERENCE] = {};
+        if (type === os.config.storage.SettingsWritableStorageType.REMOTE &&
             !this.storageRegistry_.hasRemoteStorage) {
-            this.set('storage.writeType', os.config.storage.SettingsWritableStorageType.LOCAL, true);
-          } else {
-            this.set('storage.writeType', type, true);
-          }
+          this.set('storage.writeType', os.config.storage.SettingsWritableStorageType.LOCAL, true);
+        } else {
+          this.set('storage.writeType', type, true);
+        }
 
-          // set a metric for settings.reset
-          os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Settings.RESET_SETTINGS, 1);
-          // publish all metrics immediately
-          os.metrics.Metrics.getInstance().publish();
+        // set a metric for settings.reset
+        os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Settings.RESET_SETTINGS, 1);
+        // publish all metrics immediately
+        os.metrics.Metrics.getInstance().publish();
 
-          // save the most recent reset date and time in local storage
-          var currentApp = namespace;
-          localStorage.setItem('resetDate', currentApp + ' ' + new Date().toISOString());
-          // save current date time in settings
-          this.set('reset.last', Date());
+        // save the most recent reset date and time in local storage
+        var currentApp = namespace;
+        localStorage.setItem('resetDate', currentApp + ' ' + new Date().toISOString());
+        // save current date time in settings
+        this.set('reset.last', Date());
 
-          // save settings before resolving or rejecting the promise
-          this.save().then(resolve, reject);
-        }, function(opt_reason) {
-          // delete failed, so log the error and reject the promise
-          var errorMsg = 'Reset settings failed' + (opt_reason ? (': ' + opt_reason) : '');
-          goog.log.error(os.config.Settings.LOGGER_, errorMsg);
-          reject(errorMsg);
-        }, this);
+        // save settings before resolving or rejecting the promise
+        this.save().then(resolve, reject);
+      }, function(opt_reason) {
+        // delete failed, so log the error and reject the promise
+        var errorMsg = 'Reset settings failed' + (opt_reason ? (': ' + opt_reason) : '');
+        goog.log.error(os.config.Settings.LOGGER_, errorMsg);
+        reject(errorMsg);
+      }, this);
     } else {
       reject('Write storage not available.');
     }
@@ -885,7 +885,7 @@ os.config.Settings.prototype.alertFailure_ = function(opt_delay) {
     var alertMgr = os.alert.AlertManager.getInstance();
     alertMgr.sendAlert('<strong>Settings are unavailable!</strong> This session will continue to run without any ' +
         'previously saved options, and any changes you make will not be remembered for the next session.',
-        os.alert.AlertEventSeverity.ERROR, undefined, 1, dismissAlertEventTarget);
+    os.alert.AlertEventSeverity.ERROR, undefined, 1, dismissAlertEventTarget);
   }, this), opt_delay || 2500);
 };
 
@@ -898,7 +898,7 @@ os.config.Settings.prototype.alertOneFailed_ = function(opt_delay) {
   var alertMgr = os.alert.AlertManager.getInstance();
   alertMgr.sendAlert('Settings failed to load from one or more sources.  This session will continue to run, but ' +
       'you may notice some of your previously saved preferences are not available.',
-      os.alert.AlertEventSeverity.WARNING);
+  os.alert.AlertEventSeverity.WARNING);
 };
 
 

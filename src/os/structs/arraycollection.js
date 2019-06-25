@@ -201,7 +201,7 @@ os.structs.ArrayCollection.prototype.setSort = function(sort) {
 os.structs.ArrayCollection.prototype.refresh = function() {
   if (this.filterChanged_) {
     this.view_ = this.filter_ ?
-        this.source_.filter(this.filter_, this.filterScope_) : null;
+      this.source_.filter(this.filter_, this.filterScope_) : null;
     this.filterChanged_ = false;
   }
 
@@ -462,7 +462,7 @@ os.structs.ArrayCollection.prototype.getItemIndex_ = function(item, arr) {
   }
 
   var i = this.sort_ ?
-      goog.array.binarySearch(arr, item, this.sort_) : arr.indexOf(item);
+    goog.array.binarySearch(arr, item, this.sort_) : arr.indexOf(item);
 
   // the binary search method can return -2, which we're going to ignore
   return Math.max(i, -1);

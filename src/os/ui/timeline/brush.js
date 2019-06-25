@@ -388,13 +388,13 @@ os.ui.timeline.Brush.prototype.initSVG = function(container, height) {
 
   if (!baseSVG.select('#right-gradient')[0][0]) {
     var gradient = baseSVG.append('svg:defs')
-          .append('svg:linearGradient')
-      .attr('id', 'right-gradient')
-      .attr('x1', '0%')
-      .attr('y1', '0%')
-      .attr('x2', '100%')
-      .attr('y2', '0%')
-      .attr('spreadMethod', 'pad');
+        .append('svg:linearGradient')
+        .attr('id', 'right-gradient')
+        .attr('x1', '0%')
+        .attr('y1', '0%')
+        .attr('x2', '100%')
+        .attr('y2', '0%')
+        .attr('spreadMethod', 'pad');
 
     // Define the gradient colors
     gradient.append('svg:stop')
@@ -408,13 +408,13 @@ os.ui.timeline.Brush.prototype.initSVG = function(container, height) {
         .attr('stop-opacity', 0);
 
     var gradient2 = baseSVG.append('svg:defs')
-      .append('svg:linearGradient')
-      .attr('id', 'left-gradient')
-      .attr('x1', '100%')
-      .attr('y1', '0%')
-      .attr('x2', '0%')
-      .attr('y2', '0%')
-      .attr('spreadMethod', 'pad');
+        .append('svg:linearGradient')
+        .attr('id', 'left-gradient')
+        .attr('x1', '100%')
+        .attr('y1', '0%')
+        .attr('x2', '0%')
+        .attr('y2', '0%')
+        .attr('spreadMethod', 'pad');
 
     // Define the gradient colors
     gradient2.append('svg:stop')

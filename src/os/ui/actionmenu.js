@@ -292,8 +292,8 @@ os.ui.ActionMenuCtrl.prototype.sortByDivisionThenOrder_ = function(a, b) {
     return (aOrder === bOrder) ? 1 : ((aOrder > bOrder) ? 1 : -1);
   } else {
     return aDiv != null ?
-        (bDiv != null ?
-            ((aDiv === bDiv) ? 1 : ((aDiv > bDiv) ? 1 : -1)) : -1) : 1;
+      (bDiv != null ?
+        ((aDiv === bDiv) ? 1 : ((aDiv > bDiv) ? 1 : -1)) : -1) : 1;
   }
 };
 

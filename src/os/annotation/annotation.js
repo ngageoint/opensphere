@@ -136,7 +136,7 @@ os.annotation.getNameText = function(feature) {
 os.annotation.getDescriptionText = function(feature) {
   if (feature) {
     return /** @type {string|undefined} */ (feature.get(os.ui.FeatureEditCtrl.Field.MD_DESCRIPTION)) ||
-        /** @type {string|undefined} */ (feature.get(os.ui.FeatureEditCtrl.Field.DESCRIPTION)) || '';
+    /** @type {string|undefined} */ (feature.get(os.ui.FeatureEditCtrl.Field.DESCRIPTION)) || '';
   }
 
   return '';

@@ -337,8 +337,8 @@ os.ui.onboarding.NgOnboardingCtrl.prototype.setupPositioning_ = function() {
           top = attachTo.offset().top + attachTo.outerHeight() + yMargin;
           var popoverHeight = $('.js-onboarding__popover').outerHeight();
           if (
-              /* check if popover overflows bottom of window */
-              (top + popoverHeight > windowHeight) &&
+          /* check if popover overflows bottom of window */
+            (top + popoverHeight > windowHeight) &&
               /* check if popover on top would overflow top of window */
               (popoverHeight - attachTo.offset().top + yMargin <= 0)) {
             // switch to top

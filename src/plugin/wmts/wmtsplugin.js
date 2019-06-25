@@ -32,8 +32,8 @@ plugin.wmts.Plugin.prototype.init = function() {
   var dm = os.dataManager;
 
   dm.registerProviderType(new os.data.ProviderEntry(
-    plugin.wmts.ID, plugin.wmts.Server, 'WMTS Server',
-    'WMTS servers provide map tiles through the Web Map Tile Service specification'));
+      plugin.wmts.ID, plugin.wmts.Server, 'WMTS Server',
+      'WMTS servers provide map tiles through the Web Map Tile Service specification'));
 
   // register the layer configurations
   var lcm = os.layer.config.LayerConfigManager.getInstance();

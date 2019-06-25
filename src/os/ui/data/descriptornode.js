@@ -41,7 +41,7 @@ os.ui.data.DescriptorNode.prototype.setState = function(value) {
     var active = s === os.structs.TriState.ON;
     if (active !== this.descriptor_.isActive()) {
       var cmd = active ? new os.data.ActivateDescriptor(this.descriptor_) :
-          new os.data.DeactivateDescriptor(this.descriptor_);
+        new os.data.DeactivateDescriptor(this.descriptor_);
 
       if (!os.commandStack.addCommand(cmd)) {
         os.ui.data.DescriptorNode.superClass_.setState.call(this, os.structs.TriState.OFF);

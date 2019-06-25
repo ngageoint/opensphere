@@ -82,7 +82,7 @@ os.geo.conv.MGRS = function(mgrs) {
  * @private
  */
 os.geo.conv.MGRS.prototype.initialize_ = function(mgrs) {
-  mgrs = mgrs.replace(/\s+/, '');  // mgrs.replaceAll("\\s", "");
+  mgrs = mgrs.replace(/\s+/, ''); // mgrs.replaceAll("\\s", "");
   mgrs = mgrs.toUpperCase(); // mgrs.trim().toUpperCase();
 
   // check that the string is a valid MGRS string

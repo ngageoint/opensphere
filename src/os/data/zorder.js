@@ -73,7 +73,7 @@ os.data.ZOrder.prototype.clear = function() {
 os.data.ZOrder.prototype.init_ = function() {
   if (!this.groups_) {
     this.groups_ = /** @type {Object.<string, Array.<os.data.ZOrderEntry>>} */ (
-        os.settings.get(['map', 'z-order']) || {});
+      os.settings.get(['map', 'z-order']) || {});
 
     this.expire_();
   }

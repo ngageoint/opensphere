@@ -194,7 +194,7 @@ os.buffer.createFromConfig = function(config, opt_preview) {
       var featGeom = feature.getGeometry();
       if (featGeom) {
         var geoms = (featGeom.getType() == ol.geom.GeometryType.GEOMETRY_COLLECTION) ?
-            /** @type {!ol.geom.GeometryCollection} */ (featGeom).getGeometriesArray() : [featGeom];
+        /** @type {!ol.geom.GeometryCollection} */ (featGeom).getGeometriesArray() : [featGeom];
 
         for (var j = 0, n = geoms.length; j < n; j++) {
           var absDistance = Math.abs(distance);
@@ -225,9 +225,9 @@ os.buffer.createFromConfig = function(config, opt_preview) {
             area.setId(i);
             area.set('title', '' + featureTitle);
             area.set('description', config['descColumn'] ? feature.get(config['descColumn']['field']) :
-                config['description']);
+              config['description']);
             area.set('tags', config['tagsColumn'] ? feature.get(config['tagsColumn']['field']) :
-                config['tags']);
+              config['tags']);
             area.set(os.data.RecordField.DRAWING_LAYER_NODE, false);
 
             var source = os.feature.getSource(feature);

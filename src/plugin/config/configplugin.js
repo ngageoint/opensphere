@@ -28,8 +28,8 @@ plugin.config.Plugin.prototype.init = function() {
   var dm = os.dataManager;
 
   dm.registerProviderType(new os.data.ProviderEntry(
-    plugin.config.ID, plugin.config.Provider, 'config Provider',
-    'config servers provide layers through layer configs'));
+      plugin.config.ID, plugin.config.Provider, 'config Provider',
+      'config servers provide layers through layer configs'));
 
   dm.registerDescriptorType(os.data.ConfigDescriptor.ID, os.data.ConfigDescriptor);
 };

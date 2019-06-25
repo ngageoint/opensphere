@@ -63,7 +63,7 @@ plugin.pelias.geocoder.Search.prototype.getSearchUrl = function(term, opt_start,
     // if the view is small enough, we'll apply a bounding rectangle to the search
     // defaults to 200km
     var threshold =
-        /** @type {number} */ (os.settings.get(['plugin', 'pelias', 'geocoder', 'extentThreshold'], 200000));
+    /** @type {number} */ (os.settings.get(['plugin', 'pelias', 'geocoder', 'extentThreshold'], 200000));
     var extent = os.MapContainer.getInstance().getMap().getExtent();
 
     // translate to lon/lat

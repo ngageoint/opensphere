@@ -351,7 +351,7 @@ os.feature.createLineOfBearing = function(feature, opt_replace, opt_lobOpts) {
     var center = ol.proj.toLonLat(geom.getFirstCoordinate(), os.map.PROJECTION);
     var bearing = os.feature.getColumnValue(feature, opt_lobOpts.bearingColumn);
     var length = opt_lobOpts.lengthType == 'column' ? // get from column unless manual
-        os.feature.getColumnValue(feature, opt_lobOpts.lengthColumn, 0) : 1;
+      os.feature.getColumnValue(feature, opt_lobOpts.lengthColumn, 0) : 1;
     if (center && bearing != null && !isNaN(bearing) && length) {
       // sanitize
       bearing = bearing % 360;
@@ -416,10 +416,10 @@ os.feature.createLineOfBearing = function(feature, opt_replace, opt_lobOpts) {
         var lengthErrorUnits = opt_lobOpts.lengthErrorUnits || os.style.DEFAULT_UNITS;
         var lengthError = Math.abs(os.feature.getColumnValue(feature, opt_lobOpts.lengthErrorColumn));
         var lengthErrorMultiplier = opt_lobOpts.lengthError !== undefined ?
-            opt_lobOpts.lengthError : os.style.DEFAULT_LOB_LENGTH_ERROR;
+          opt_lobOpts.lengthError : os.style.DEFAULT_LOB_LENGTH_ERROR;
         var bearingError = Math.abs(os.feature.getColumnValue(feature, opt_lobOpts.bearingErrorColumn));
         var bearingErrorMultiplier = opt_lobOpts.bearingError !== undefined ?
-            opt_lobOpts.bearingError : os.style.DEFAULT_LOB_BEARING_ERROR;
+          opt_lobOpts.bearingError : os.style.DEFAULT_LOB_BEARING_ERROR;
         if (bearingError === null || isNaN(bearingError)) {
           bearingError = 1;
         }

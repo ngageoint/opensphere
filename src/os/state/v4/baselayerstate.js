@@ -260,7 +260,7 @@ os.state.v4.BaseLayerState.prototype.getLayerType_ = function(layer) {
   if (layer.getLayerOptions()) {
     var type = layer.getLayerOptions()['type'];
     return goog.string.isEmptyOrWhitespace(goog.string.makeSafe(type)) ?
-        '' : /** @type {string} */ (layer.getLayerOptions()['type']);
+      '' : /** @type {string} */ (layer.getLayerOptions()['type']);
   }
   return '';
 };
@@ -897,11 +897,11 @@ os.state.v4.BaseLayerState.prototype.xmlToConfigKey = function(node, child, name
             break;
           case os.state.v4.LayerTag.PT_OPACITY:
             options['opacity'] = goog.string.isNumeric(styleVal) ? Number(styleVal) / 255 :
-                os.style.DEFAULT_ALPHA;
+              os.style.DEFAULT_ALPHA;
             break;
           case os.state.v4.LayerTag.PT_SIZE:
             options['size'] = goog.string.isNumeric(styleVal) ? Number(styleVal) / 2 :
-                os.style.DEFAULT_FEATURE_SIZE;
+              os.style.DEFAULT_FEATURE_SIZE;
             break;
           case os.state.v4.LayerTag.LABEL_COLUMN:
             var column = typeof styleVal === 'string' ? goog.string.trim(styleVal) : '';
@@ -939,8 +939,8 @@ os.state.v4.BaseLayerState.prototype.xmlToConfigKey = function(node, child, name
             // make sure the label size is between allowed values, and use the default value if none specified
             var styleSize = goog.string.isNumeric(styleVal) ? Number(styleVal) : 0;
             var size = styleSize > 0 ?
-                goog.math.clamp(styleSize, os.style.label.MIN_SIZE, os.style.label.MAX_SIZE) :
-                os.style.label.DEFAULT_SIZE;
+              goog.math.clamp(styleSize, os.style.label.MIN_SIZE, os.style.label.MAX_SIZE) :
+              os.style.label.DEFAULT_SIZE;
             options[os.style.StyleField.LABEL_SIZE] = size;
             break;
           default:

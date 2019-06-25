@@ -154,7 +154,7 @@ os.storage.IDBStorage.prototype.init = function() {
     deferred = this.initDeferred = goog.db.openDatabase(this.dbName_, this.dbVersion_,
         this.onUpgradeNeeded_.bind(this),
         this.onBlocked_.bind(this))
-    .addCallbacks(this.onDbReady_, this.onDbOpenError_, this);
+        .addCallbacks(this.onDbReady_, this.onDbOpenError_, this);
   } else {
     deferred = new goog.async.Deferred();
     deferred.errback(this.getErrorMessage(os.storage.IDBStorage.ErrorType.UNSUPPORTED));

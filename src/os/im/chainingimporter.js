@@ -49,13 +49,13 @@ goog.inherits(os.im.ChainingImporter, goog.events.EventTarget);
 /**
  * @inheritDoc
  */
-os.im.ChainingImporter.prototype.getMappings = function() { /* NO-OP */ };
+os.im.ChainingImporter.prototype.getMappings = function() {/* NO-OP */};
 
 
 /**
  * @inheritDoc
  */
-os.im.ChainingImporter.prototype.setMappings = function(value) { /* NO-OP */ };
+os.im.ChainingImporter.prototype.setMappings = function(value) {/* NO-OP */};
 
 
 /**

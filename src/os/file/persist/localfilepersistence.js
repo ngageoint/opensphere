@@ -51,7 +51,7 @@ os.file.persist.LocalFilePersistence.prototype.getLabel = function() {
  * @inheritDoc
  */
 os.file.persist.LocalFilePersistence.prototype.save = function(name, content, opt_mimeType, opt_title, opt_descr,
-    opt_tags) {
+  opt_tags) {
   return os.file.persist.saveLocal(name, content, opt_mimeType, this.dbstore);
 };
 

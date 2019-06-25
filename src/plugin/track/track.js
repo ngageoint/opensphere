@@ -361,7 +361,7 @@ plugin.track.sortCoordinatesByValue = function(a, b) {
  */
 plugin.track.getTrackCoordinates = function(features, sortField) {
   var getValueFn = sortField == os.data.RecordField.TIME ? plugin.track.getStartTime :
-      plugin.track.getFeatureValue.bind(null, sortField);
+    plugin.track.getFeatureValue.bind(null, sortField);
 
   var coordinates = features.map(function(feature) {
     var pointCoord;
@@ -1091,7 +1091,7 @@ plugin.track.getSortField = function(feature, opt_sortField) {
   return new goog.Promise(function(resolve, reject) {
     var sortField = opt_sortField || os.data.RecordField.TIME;
     var getValueFn = sortField == os.data.RecordField.TIME ? plugin.track.getStartTime :
-        plugin.track.getFeatureValue.bind(null, sortField);
+      plugin.track.getFeatureValue.bind(null, sortField);
 
     var value = getValueFn(feature);
     if (value == null || value == '') {
@@ -1351,7 +1351,7 @@ plugin.track.getTrackPositionAt = function(track, timestamp, index, coordinates,
  * @suppress {accessControls} To allow direct access to line string coordinates.
  */
 plugin.track.updateCurrentLine = function(track, startTime, startIndex, endTime, endIndex, coordinates, stride,
-    opt_ends) {
+  opt_ends) {
   var currentLine = /** @type {plugin.track.TrackLike|undefined} */ (track.get(plugin.track.TrackField.CURRENT_LINE));
   var layout = stride === 4 ? ol.geom.GeometryLayout.XYZM : ol.geom.GeometryLayout.XYM;
   if (!currentLine) {

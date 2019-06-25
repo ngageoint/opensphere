@@ -473,7 +473,7 @@ os.data.histo.SourceHistogram.prototype.reindex = function() {
       var valueFn = this.binMethod.getValue.bind(this.binMethod);
       // add dimension that will handle an array of keys
       var isArray = this.binMethod.getBinType() == 'Date' ?
-          os.histo.DateRangeBinType[this.binMethod.getDateBinType()] : false;
+        os.histo.DateRangeBinType[this.binMethod.getDateBinType()] : false;
       isArray = this.binRanges_ ? isArray : false;
       this.timeModel_.addDimension(this.id_, valueFn, isArray);
 

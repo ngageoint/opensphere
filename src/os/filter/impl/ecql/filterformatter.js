@@ -177,9 +177,9 @@ os.filter.impl.ecql.FilterFormatter.writeLiteral_ = function(literal) {
   // and then set them back at the end (in QueryHandler.createFilter)
   return '\'' + literal.replace(os.filter.impl.ecql.FilterFormatter.QUOTE_, '\'\'').
       replace(os.filter.impl.ecql.FilterFormatter.OPEN_PAREN_,
-      os.filter.impl.ecql.FilterFormatter.OPEN_PAREN_REPLACEMENT_).
+          os.filter.impl.ecql.FilterFormatter.OPEN_PAREN_REPLACEMENT_).
       replace(os.filter.impl.ecql.FilterFormatter.CLOSE_PAREN_,
-      os.filter.impl.ecql.FilterFormatter.CLOSE_PAREN_REPLACEMENT_) + '\'';
+          os.filter.impl.ecql.FilterFormatter.CLOSE_PAREN_REPLACEMENT_) + '\'';
 };
 
 

@@ -373,7 +373,7 @@ plugin.wmts.Server.prototype.parseCapabilities = function(response, uri) {
         var fullId = this.getId() + os.ui.data.BaseProvider.ID_DELIMITER + id;
 
         var hasTimeExtent = 'Dimension' in layer ?
-            ol.array.find(layer['Dimension'], plugin.wmts.Server.hasTimeExtent_) : false;
+          ol.array.find(layer['Dimension'], plugin.wmts.Server.hasTimeExtent_) : false;
 
         var overrides = {};
         if (!this.getDateFormat() && !this.getTimeFormat()) {

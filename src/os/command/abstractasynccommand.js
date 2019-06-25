@@ -53,7 +53,7 @@ os.command.AbstractAsyncCommand.prototype.finish = function(opt_detail) {
  */
 os.command.AbstractAsyncCommand.prototype.handleError = function(msg) {
   var eventType = this.state == os.command.State.REVERTING ? os.command.EventType.REVERTED :
-      os.command.EventType.EXECUTED;
+    os.command.EventType.EXECUTED;
 
   this.state = os.command.State.ERROR;
   this.details = msg;

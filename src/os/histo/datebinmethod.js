@@ -363,7 +363,7 @@ os.histo.DateBinMethod.prototype.getLabelForKey = function(key, opt_secondary, o
   if (typeof key === 'string' && key.indexOf(os.data.xf.DataModel.SEPARATOR) >= 0) {
     // this key is in a bin that represents the intersection of two keys; split them apart with the separator
     key = !opt_secondary ? Number(key.split(os.data.xf.DataModel.SEPARATOR)[0]) :
-        Number(key.split(os.data.xf.DataModel.SEPARATOR)[1]);
+      Number(key.split(os.data.xf.DataModel.SEPARATOR)[1]);
   }
 
   if (key !== undefined && key != os.histo.DateBinMethod.MAGIC) {

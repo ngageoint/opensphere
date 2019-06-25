@@ -41,7 +41,7 @@ os.ui.ol.interaction.AbstractDraw = function(opt_options) {
    * @protected
    */
   this.condition = opt_options !== undefined && opt_options.condition !== undefined ?
-      opt_options.condition : ol.events.condition.shiftKeyOnly;
+    opt_options.condition : ol.events.condition.shiftKeyOnly;
 
   /**
    * @type {string}

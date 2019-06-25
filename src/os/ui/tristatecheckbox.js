@@ -78,7 +78,7 @@ os.ui.TriStateCheckboxCtrl.prototype.toggle = function(e) {
     if (!this.getDisabled_(item)) {
       // on/both should toggle to the off state
       item.setState(item.getState() == os.structs.TriState.OFF ?
-          os.structs.TriState.ON : os.structs.TriState.OFF);
+        os.structs.TriState.ON : os.structs.TriState.OFF);
 
       this.notifyDirty_();
     }

@@ -814,7 +814,7 @@ os.source.Vector.prototype.processColumns = function(opt_silent) {
   if (this.columns) {
     // remove any duplicates
     var colByName = /** @type {function((os.data.ColumnDefinition|string)):string} */ (
-        os.object.getValueExtractor('name'));
+      os.object.getValueExtractor('name'));
     goog.array.removeDuplicates(this.columns, this.columns, colByName);
 
     var descriptor = os.dataManager.getDescriptor(this.getId());

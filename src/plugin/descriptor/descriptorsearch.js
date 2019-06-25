@@ -175,11 +175,11 @@ plugin.descriptor.DescriptorSearch.prototype.searchTerm = function(term, opt_sta
     var self = this;
     goog.Promise.all(promises).then(function(value) {
       self.dispatchEvent(new os.search.SearchEvent(os.search.SearchEventType.SUCCESS,
-           self.term, os.search.pageResults(results, opt_start, opt_pageSize), results.length));
+          self.term, os.search.pageResults(results, opt_start, opt_pageSize), results.length));
     });
   } else {
     this.dispatchEvent(new os.search.SearchEvent(os.search.SearchEventType.SUCCESS,
-         this.term, os.search.pageResults(results, opt_start, opt_pageSize), results.length));
+        this.term, os.search.pageResults(results, opt_start, opt_pageSize), results.length));
   }
 
   return true;

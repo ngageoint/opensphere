@@ -163,7 +163,7 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
    * The feature icon.
    * @type {!osx.icon.Icon}
    */
-  this['icon'] = /** @type {!osx.icon.Icon} */ ({ // os.ui.file.kml.Icon to osx.icon.Icon
+  this['icon'] = /** @type {!osx.icon.Icon} */ ({// os.ui.file.kml.Icon to osx.icon.Icon
     path: os.ui.file.kml.getDefaultIcon().path
   });
 
@@ -171,7 +171,7 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
    * The feature center icon.
    * @type {!osx.icon.Icon}
    */
-  this['centerIcon'] = /** @type {!osx.icon.Icon} */ ({ // os.ui.file.kml.Icon to osx.icon.Icon
+  this['centerIcon'] = /** @type {!osx.icon.Icon} */ ({// os.ui.file.kml.Icon to osx.icon.Icon
     path: os.ui.file.kml.getDefaultIcon().path
   });
 
@@ -383,7 +383,7 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
    * @type {boolean}
    */
   this['timeEditEnabled'] = this.options['timeEditEnabled'] !== undefined ?
-      this.options['timeEditEnabled'] : true;
+    this.options['timeEditEnabled'] : true;
 
   /**
    * Callback to fire when the dialog is closed.
@@ -1423,7 +1423,7 @@ os.ui.FeatureEditCtrl.restoreFeatureLabels = function(feature) {
     }
 
     var configs = /** @type {(Array<Object<string, *>>|Object<string, *>)} */ (
-        feature.get(os.style.StyleType.FEATURE));
+      feature.get(os.style.StyleType.FEATURE));
 
     if (configs) {
       if (goog.isArray(configs)) {

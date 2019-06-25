@@ -192,7 +192,7 @@ os.ui.slick.SlickGridCtrl = function($scope, $element, $compile) {
    * @protected
    */
   this.columnMenu = ($scope['columnMenuEnabled'] && $scope['columnMenuEnabled'] !== 'false') ?
-      os.ui.slick.createColumnActions() : null;
+    os.ui.slick.createColumnActions() : null;
 
   /**
    * @type {Slick.Data.DataView}
@@ -1076,7 +1076,7 @@ os.ui.slick.SlickGridCtrl.prototype.onHeaderContextMenu_ = function(event, opt_p
 
     var contextTarget = /** @type {Element} */ (event.target);
     headerColumn = goog.dom.classlist.contains(contextTarget, 'slick-header-column') ?
-        event.target : goog.dom.getAncestorByClass(contextTarget, 'slick-header-column');
+      event.target : goog.dom.getAncestorByClass(contextTarget, 'slick-header-column');
 
     position = {
       my: 'left top',

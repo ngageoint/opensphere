@@ -37,7 +37,7 @@ plugin.ogc.OGCPlugin.prototype.init = function() {
   var dm = os.dataManager;
 
   var ogc = new os.data.ProviderEntry(os.ogc.ID, os.ui.ogc.OGCServer, 'OGC Server',
-    'OGC Servers provide raster imagery through WMS (Web Map Service) and vector features through WFS'
+      'OGC Servers provide raster imagery through WMS (Web Map Service) and vector features through WFS'
     + ' (Web Feature Service) servers');
 
   var geo = new os.data.ProviderEntry(plugin.ogc.mime.GEOSERVER_TYPE, plugin.ogc.GeoServer, 'GeoServer', '');

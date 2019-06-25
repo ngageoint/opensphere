@@ -252,8 +252,8 @@ os.annotation.FeatureAnnotationCtrl.prototype.getTargetPixel = function(coordina
  */
 os.annotation.FeatureAnnotationCtrl.prototype.updateTail = function() {
   return this.tailType === os.annotation.TailType.ABSOLUTE ?
-      this.updateTailAbsolute() :
-      this.updateTailFixed();
+    this.updateTailAbsolute() :
+    this.updateTailFixed();
 };
 
 

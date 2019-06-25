@@ -175,9 +175,9 @@ os.ui.datetime.DurationCtrl.prototype.calculateTime_ = function() {
 
     var r = goog.string.toNumber(this.scope_['dur']);
     r < minDuration ? this['errors']['duration']['$error']['minlength'] = true :
-        delete this['errors']['duration']['$error']['minlength'];
+      delete this['errors']['duration']['$error']['minlength'];
     r > maxDuration ? this['errors']['duration']['$error']['maxlength'] = true :
-        delete this['errors']['duration']['$error']['maxlength'];
+      delete this['errors']['duration']['$error']['maxlength'];
     this['valid'] = goog.object.isEmpty(this['errors']['duration']['$error']) ||
         this.scope_['disabled'] ? true : null;
 

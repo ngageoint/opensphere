@@ -900,7 +900,7 @@ os.MapContainer.prototype.init = function() {
   referenceGroup.setOSType(os.layer.LayerType.REF);
 
   os.map.PROJECTION = ol.proj.get(/** @type {string} */ (
-      os.settings.get(os.map.PROJECTION_KEY, os.map.PROJECTION.getCode())));
+    os.settings.get(os.map.PROJECTION_KEY, os.map.PROJECTION.getCode())));
 
   os.map.TILEGRID = ol.tilegrid.createForProjection(
       os.map.PROJECTION, ol.DEFAULT_MAX_ZOOM, [512, 512]);
@@ -1388,7 +1388,7 @@ os.MapContainer.prototype.failPerformanceCaveat = function() {
       var failIfMajorPerformanceCaveat_ =
         /** @type {boolean} */ (os.settings.get('webgl.performanceCaveat.failIf', false));
       this.hasPerformanceCaveat_ = failIfMajorPerformanceCaveat_ ?
-          os.webgl.hasPerformanceCaveat() : false;
+        os.webgl.hasPerformanceCaveat() : false;
       if (this.hasPerformanceCaveat_) {
         os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.WEBGL_PERFORMANCE_CAVEAT, 1);
       }
@@ -1697,7 +1697,7 @@ os.MapContainer.prototype.containsFeature = function(feature) {
       var source = /** @type {ol.source.Vector} */ (layer.getSource());
 
       return !!(typeof feature === 'string' || typeof feature === 'number' ? source.getFeatureById(feature) :
-          source.getFeatureById(feature.getId() + ''));
+        source.getFeatureById(feature.getId() + ''));
     }
   }
 

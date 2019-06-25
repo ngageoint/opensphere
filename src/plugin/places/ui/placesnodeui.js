@@ -87,7 +87,7 @@ plugin.places.ui.PlacesNodeUICtrl.prototype.addPlace = function(opt_annotation) 
   var node = /** @type {plugin.file.kml.ui.KMLLayerNode} */ (this.scope['item']);
   if (node) {
     var rootNode = opt_annotation ?
-        plugin.places.PlacesManager.getInstance().getAnnotationsFolder() : plugin.places.getPlacesRoot(node);
+      plugin.places.PlacesManager.getInstance().getAnnotationsFolder() : plugin.places.getPlacesRoot(node);
 
     if (rootNode) {
       plugin.file.kml.ui.createOrEditPlace(/** @type {!plugin.file.kml.ui.PlacemarkOptions} */ ({
