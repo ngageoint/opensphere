@@ -4,6 +4,7 @@ goog.require('goog.string');
 goog.require('ol.events');
 goog.require('ol.layer.Property');
 goog.require('ol.layer.Vector');
+goog.require('os.IGroupable');
 goog.require('os.MapChange');
 goog.require('os.events.LayerConfigEvent');
 goog.require('os.events.LayerEvent');
@@ -37,6 +38,7 @@ goog.require('os.ui.window');
 /**
  * @extends {ol.layer.Vector}
  * @implements {os.layer.ILayer}
+ * @implements {os.IGroupable}
  * @implements {os.filter.IFilterable}
  * @implements {os.legend.ILegendRenderer}
  * @param {olx.layer.VectorOptions} options Vector layer options
@@ -181,6 +183,7 @@ os.layer.Vector = function(options) {
 };
 goog.inherits(os.layer.Vector, ol.layer.Vector);
 os.implements(os.layer.Vector, os.layer.ILayer.ID);
+os.implements(os.layer.Vector, os.IGroupable.ID);
 os.implements(os.layer.Vector, os.filter.IFilterable.ID);
 os.implements(os.layer.Vector, os.legend.ILegendRenderer.ID);
 
@@ -350,6 +353,22 @@ os.layer.Vector.prototype.getId = function() {
  */
 os.layer.Vector.prototype.setId = function(value) {
   this.id_ = value;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.layer.Vector.prototype.getGroupId = function() {
+  return this.getId();
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.layer.Vector.prototype.getGroupLabel = function() {
+  return this.getTitle();
 };
 
 

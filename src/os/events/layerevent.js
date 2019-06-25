@@ -8,6 +8,7 @@ goog.require('goog.events.Event');
  */
 os.events.LayerEventType = {
   ADD: 'addLayer',
+  CHANGE: 'layer:change',
   REMOVE: 'removeLayer',
   RENAME: 'renameLayer',
   MOVE: 'moveLayer',

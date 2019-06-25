@@ -240,11 +240,9 @@ plugin.ogc.wfs.WFSLayerConfig.prototype.addMappings = function(layer, options) {
   var animate = options['animate'] != null ? options['animate'] : false;
   var source = /** @type {os.source.Request} */ (layer.getSource());
   var importer = /** @type {os.im.Importer} */ (source.getImporter());
-
   var execMappings = [];
-
-
   var timeFields = options['timeFields'];
+
   if (timeFields) {
     if (!Array.isArray(timeFields)) {
       timeFields = [timeFields];
