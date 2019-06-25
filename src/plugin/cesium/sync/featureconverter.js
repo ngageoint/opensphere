@@ -1675,7 +1675,7 @@ plugin.cesium.sync.FeatureConverter.prototype.getFeatureStyles = function(featur
  * Checks a primitive or primitive collection for a matching dash pattern
  * @param {Cesium.Billboard|Cesium.Cesium3DTileset|Cesium.Label|Cesium.Polygon|Cesium.Polyline|
  * Cesium.PolylineCollection|Cesium.Primitive} primitive The primitive
- * @param {number} lineDash The line dash pattern
+ * @param {number|undefined} lineDash The line dash pattern
  * @return {boolean}
  */
 plugin.cesium.sync.FeatureConverter.prototype.matchDashPattern = function(primitive, lineDash) {
@@ -1943,11 +1943,11 @@ plugin.cesium.sync.FeatureConverter.prototype.getEyeOffset = function() {
 /**
  * Convert a style's line dash to 16 bit int
  * @param {!ol.style.Style} style
- * @return {number}
+ * @return {number|undefined}
  */
 plugin.cesium.sync.FeatureConverter.prototype.getDashPattern = function(style) {
   var stroke = style.getStroke();
   var dashPattern = stroke != null ? stroke.getLineDash() : undefined;
   var id = /** @type {os.style.styleLineDashOption} */ (os.style.dashPatternToOptions(dashPattern)).id;
-  return plugin.cesium.LINE_STYLE_OPTIONS[id].csPattern;
+  return plugin.cesium.LINE_STYLE_OPTIONS[id] ? plugin.cesium.LINE_STYLE_OPTIONS[id].csPattern : undefined;
 };
