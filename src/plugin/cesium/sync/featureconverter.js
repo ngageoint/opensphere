@@ -540,11 +540,18 @@ plugin.cesium.sync.FeatureConverter.prototype.olLineStringGeometryToCesium = fun
  */
 plugin.cesium.sync.FeatureConverter.prototype.createLinePrimitive = function(positions, context, style, opt_type) {
   var type = opt_type || 'PolylineGeometry';
-  var appearance = new Cesium.PolylineColorAppearance();
 
   var width = this.extractLineWidthFromOlStyle(style);
   var color = this.extractColorFromOlStyle(style, true);
   color.alpha *= context.layer.getOpacity();
+  var lineDash = this.getDashPattern(style);
+
+  var appearance = new Cesium.PolylineMaterialAppearance({
+    material: Cesium.Material.fromType(Cesium.Material.PolylineDashType, {
+      color: color,
+      dashPattern: lineDash
+    })
+  });
 
   // Handle both color and width
   var outlineGeometry = new Cesium[type]({
@@ -634,9 +641,11 @@ plugin.cesium.sync.FeatureConverter.prototype.updatePolyline = function(feature,
   var width = this.extractLineWidthFromOlStyle(style);
   var color = this.extractColorFromOlStyle(style, true);
   color.alpha *= context.layer.getOpacity();
+  var lineDash = this.getDashPattern(style);
 
-  polyline.material = Cesium.Material.fromType(Cesium.Material.ColorType, {
-    color: color
+  polyline.material = Cesium.Material.fromType(Cesium.Material.PolylineDashType, {
+    color: color,
+    dashPattern: lineDash
   });
   polyline.width = width;
 
@@ -1057,14 +1066,20 @@ plugin.cesium.sync.FeatureConverter.prototype.olPolygonGeometryToCesiumPolyline 
 
     goog.asserts.assert(csRings.length > 0);
 
-    var appearance = new Cesium.PolylineColorAppearance();
-
     var width = this.extractLineWidthFromOlStyle(style);
     var layerOpacity = context.layer.getOpacity();
+    var lineDash = this.getDashPattern(style);
 
     // combine the layer/style opacity if there is a stroke style, otherwise set it to 0 to hide the outline
     var outlineColor = this.extractColorFromOlStyle(style, true);
     outlineColor.alpha = style.getStroke() != null ? (outlineColor.alpha * layerOpacity) : 0;
+
+    var appearance = new Cesium.PolylineMaterialAppearance({
+      material: Cesium.Material.fromType(Cesium.Material.PolylineDashType, {
+        color: outlineColor,
+        dashPattern: lineDash
+      })
+    });
 
     var primitives = new Cesium.PrimitiveCollection();
 
@@ -1450,6 +1465,7 @@ plugin.cesium.sync.FeatureConverter.prototype.updatePrimitive = function(feature
       try {
         var field = plugin.cesium.GeometryInstanceId[key];
         var attributes = primitive.getGeometryInstanceAttributes(field);
+        var material = primitive.appearance.material;
         if (attributes) {
           var color;
 
@@ -1474,7 +1490,11 @@ plugin.cesium.sync.FeatureConverter.prototype.updatePrimitive = function(feature
           }
 
           if (color) {
-            attributes.color = Cesium.ColorGeometryInstanceAttribute.toValue(color, attributes.color);
+            if (material && material.uniforms) {
+              material.uniforms.color = color;
+            } else {
+              attributes.color = Cesium.ColorGeometryInstanceAttribute.toValue(color, attributes.color);
+            }
           }
         }
       } catch (e) {
@@ -1652,6 +1672,31 @@ plugin.cesium.sync.FeatureConverter.prototype.getFeatureStyles = function(featur
 
 
 /**
+ * Checks a primitive or primitive collection for a matching dash pattern
+ * @param {Cesium.Billboard|Cesium.Cesium3DTileset|Cesium.Label|Cesium.Polygon|Cesium.Polyline|
+ * Cesium.PolylineCollection|Cesium.Primitive} primitive The primitive
+ * @param {number|undefined} lineDash The line dash pattern
+ * @return {boolean}
+ */
+plugin.cesium.sync.FeatureConverter.prototype.matchDashPattern = function(primitive, lineDash) {
+  if (primitive instanceof Cesium.PrimitiveCollection) {
+    for (var i = 0; i < primitive.length; i++) {
+      if (!this.matchDashPattern(primitive.get(i), lineDash)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  if (primitive && primitive.appearance && primitive.appearance.material && primitive.appearance.material.uniforms) {
+    return primitive.appearance.material.uniforms.dashPattern != lineDash;
+  }
+
+  return true; // don't change the dashPattern for extruded polygons
+};
+
+
+/**
  * Convert an OL3 geometry to Cesium.
  * @param {!ol.Feature} feature The OL3 feature
  * @param {!ol.geom.Geometry} geometry The geometry to be converted
@@ -1665,12 +1710,13 @@ plugin.cesium.sync.FeatureConverter.prototype.olGeometryToCesium = function(feat
   // check if we have a primitive for the geometry already
   var primitive = context.getPrimitiveForGeometry(geometry);
 
-  // if the outline width changed, we need to recreate the primitive since Cesium can't change the width on a geometry
-  // instance
+  // if the outline width or line dash changed, we need to recreate the primitive since Cesium can't change the width
+  // or line dash on a geometry instance
   if (primitive && primitive['olLineWidth'] != null) {
     var dirty = geometry.get(os.geom.GeometryField.DIRTY);
     var width = this.extractLineWidthFromOlStyle(style);
-    if (dirty || primitive['olLineWidth'] != width) {
+    var lineDash = this.getDashPattern(style);
+    if (dirty || primitive['olLineWidth'] != width || this.matchDashPattern(primitive, lineDash)) {
       wasPrimitiveShown = plugin.cesium.VectorContext.isShown(primitive);
       context.removePrimitive(primitive);
       geometry.set(os.geom.GeometryField.DIRTY, false);
@@ -1891,4 +1937,17 @@ plugin.cesium.sync.FeatureConverter.prototype.setEyeOffset = function(primOffset
  */
 plugin.cesium.sync.FeatureConverter.prototype.getEyeOffset = function() {
   return this.eyeOffset_;
+};
+
+
+/**
+ * Convert a style's line dash to 16 bit int
+ * @param {!ol.style.Style} style
+ * @return {number|undefined}
+ */
+plugin.cesium.sync.FeatureConverter.prototype.getDashPattern = function(style) {
+  var stroke = style.getStroke();
+  var dashPattern = stroke != null ? stroke.getLineDash() : undefined;
+  var id = /** @type {os.style.styleLineDashOption} */ (os.style.dashPatternToOptions(dashPattern)).id;
+  return plugin.cesium.LINE_STYLE_OPTIONS[id] ? plugin.cesium.LINE_STYLE_OPTIONS[id].csPattern : undefined;
 };

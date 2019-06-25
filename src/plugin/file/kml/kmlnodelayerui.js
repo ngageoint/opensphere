@@ -1,4 +1,5 @@
 goog.provide('plugin.file.kml.KMLNodeLayerUICtrl');
+goog.provide('plugin.file.kml.KMLNodeLayerUICtrl.UIEventType');
 goog.provide('plugin.file.kml.kmlNodeLayerUIDirective');
 goog.require('os.command.FeatureCenterShape');
 goog.require('os.command.FeatureColor');
@@ -6,6 +7,7 @@ goog.require('os.command.FeatureIcon');
 goog.require('os.command.FeatureLabel');
 goog.require('os.command.FeatureLabelColor');
 goog.require('os.command.FeatureLabelSize');
+goog.require('os.command.FeatureLineDash');
 goog.require('os.command.FeatureOpacity');
 goog.require('os.command.FeatureShape');
 goog.require('os.command.FeatureShowLabel');
@@ -181,6 +183,33 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.getSize = function() {
   }
 
   return size || os.style.DEFAULT_FEATURE_SIZE;
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.file.kml.KMLNodeLayerUICtrl.prototype.getLineDash = function() {
+  var items = /** @type {Array<!plugin.file.kml.ui.KMLNode>} */ (this.scope['items']);
+  var lineDash;
+
+  if (items) {
+    for (var i = 0, n = items.length; i < n; i++) {
+      var feature = items[i].getFeature();
+      if (feature) {
+        var config = /** @type {Object|undefined} */ (feature.get(os.style.StyleType.FEATURE));
+
+        if (config) {
+          if (goog.isArray(config)) {
+            config = config[0];
+          }
+          lineDash = os.style.getConfigLineDash(config);
+        }
+      }
+    }
+  }
+
+  return lineDash;
 };
 
 
@@ -476,6 +505,26 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.onSizeChange = function(event, valu
        */
       function(layerId, featureId) {
         return new os.command.FeatureSize(layerId, featureId, value);
+      };
+
+  this.createFeatureCommand(fn);
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.file.kml.KMLNodeLayerUICtrl.prototype.onLineDashChange = function(event, value) {
+  event.stopPropagation();
+
+  var fn =
+      /**
+       * @param {string} layerId
+       * @param {string} featureId
+       * @return {os.command.ICommand}
+       */
+      function(layerId, featureId) {
+        return new os.command.FeatureLineDash(layerId, featureId, value);
       };
 
   this.createFeatureCommand(fn);

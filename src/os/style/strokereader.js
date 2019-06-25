@@ -31,8 +31,14 @@ os.style.StrokeReader.prototype.getOrCreateStyle = function(config) {
 
   hash = 31 * hash + goog.string.hashCode(color) >>> 0;
 
+  var dash = /** @type {!Array<number>} */ (config['lineDash']);
+  if (dash) {
+    hash = 31 * hash + goog.string.hashCode(dash.join()) >>> 0;
+  }
+
   if (!this.cache[hash]) {
     this.cache[hash] = new ol.style.Stroke({
+      lineDash: dash,
       width: width,
       color: color
     });
@@ -61,6 +67,11 @@ os.style.StrokeReader.prototype.toConfig = function(style, obj) {
     var width = style.getWidth();
     if (width !== null && width !== undefined) {
       child['width'] = width;
+    }
+
+    var dash = style.getLineDash();
+    if (dash !== null && dash !== undefined) {
+      child['lineDash'] = dash;
     }
   }
 };
