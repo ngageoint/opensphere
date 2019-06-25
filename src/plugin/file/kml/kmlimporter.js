@@ -138,5 +138,14 @@ plugin.file.kml.KMLImporter.prototype.performMappings = function(item) {
 
   if (feature && (this.mappings || this.autoMappings)) {
     plugin.file.kml.KMLImporter.base(this, 'performMappings', feature);
+
+    // line dash isn't part of kml spec, translate it here
+    var lineDash = /** @type {string} */ (feature.get(os.style.StyleField.LINE_DASH));
+    if (lineDash) {
+      var dash = /** @type {Array<number>} */ (JSON.parse(lineDash));
+      var config = os.style.getBaseFeatureConfig(feature);
+      os.style.setConfigLineDash(config, dash);
+      feature.set(os.style.StyleType.FEATURE, config);
+    }
   }
 };

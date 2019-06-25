@@ -61,3 +61,16 @@ plugin.file.kml.export.getRotationColumn = function(feature) {
   }
   return undefined;
 };
+
+/**
+ * Get the line dash for an OpenLayers feature.
+ * @param {ol.Feature} feature The feature.
+ * @return {Array<number>|null|undefined} The line dash.
+ */
+plugin.file.kml.export.getLineDash = function(feature) {
+  if (feature) {
+    var layerConfig = os.style.getBaseFeatureConfig(feature);
+    return os.style.getConfigLineDash(goog.isArray(layerConfig) ? layerConfig[0] : layerConfig);
+  }
+  return undefined;
+};
