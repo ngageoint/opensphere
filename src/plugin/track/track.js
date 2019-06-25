@@ -768,6 +768,7 @@ plugin.track.setGeometry = function(track, geometry) {
 /**
  * Creates a track and adds it to the tracks layer.
  * @param {!plugin.track.CreateOptions} options The options object for the track.
+ * @return {os.feature.DynamicFeature|ol.Feature|undefined} The track feature.
  */
 plugin.track.createAndAdd = function(options) {
   var track = plugin.track.createTrack(options);
@@ -787,9 +788,13 @@ plugin.track.createAndAdd = function(options) {
     var cmd = new plugin.file.kml.cmd.KMLNodeAdd(trackNode, rootNode);
     cmd.title = 'Create track from ' + options.features.length + ' features';
     os.command.CommandProcessor.getInstance().addCommand(cmd);
+
+    return track;
   } else {
     goog.log.error(plugin.track.LOGGER_, 'Unable to create track: track layer missing');
   }
+
+  return;
 };
 
 
