@@ -65,7 +65,7 @@ os.ui.launchScreenOverlay = function(options) {
     'show-close': !!options.showClose,
     'no-scroll': true,
     'overlay': true,
-    'border': '0'
+    'border': false
   };
 
   var template = '<screenoverlay></screenoverlay>';
