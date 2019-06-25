@@ -17,7 +17,8 @@ goog.require('os.ui.text.tuiEditorDirective');
  * @const
  */
 os.annotation.UI_TEMPLATE =
-  '<div class="c-annotation u-hover-container">' +
+  '<div class="c-annotation u-hover-container" ' +
+    'ng-class="{\'c-annotation__editing\': ctrl.editingDescription || ctrl.editingName}">' +
     '<svg class="c-annotation__svg">' +
       '<path ng-style="{ fill: ctrl.options.showDescription ? ctrl.options.bodyBG : ctrl.options.headerBG}" />' +
     '</svg>' +
@@ -34,7 +35,7 @@ os.annotation.UI_TEMPLATE =
       '</button>' +
     '</div>' +
     '<div class="js-annotation c-window card h-100">' +
-      '<div class="card-header flex-shrink-0 text-truncate px-1 py-0" title="{{ctrl.name}}"' +
+      '<div class="card-header flex-shrink-0 text-truncate px-1 py-0 js-annotation__header" title="{{ctrl.name}}"' +
           'ng-show="ctrl.options.showName" ' +
           'ng-class="!ctrl.options.showDescription && \'h-100 border-0\'" ' +
           'ng-style="{background: ctrl.options.headerBG }" ' +
@@ -72,6 +73,15 @@ os.annotation.UI_TEMPLATE =
         '</div>' +
       '</div>' +
     '</div>';
+
+
+/**
+ * @enum {string}
+ */
+os.annotation.selectors = {
+  HEADER: '.js-annotation__header',
+  ALL: '.js-annotation'
+};
 
 
 
@@ -231,7 +241,19 @@ os.annotation.AbstractAnnotationCtrl.prototype.initialize = function() {
  */
 os.annotation.AbstractAnnotationCtrl.prototype.initDragResize = function() {
   if (this.element) {
-    this.makeDraggable_();
+    if (this.element.parent().length) {
+      // OpenLayers absolutely positions the parent container, so attach the draggable handler to that and use the
+      // annotation container as the drag target.
+      this.element.parent().draggable({
+        'containment': this.getContainerSelector(),
+        'handle': os.annotation.selectors.ALL,
+        'start': this.onDragStart_.bind(this),
+        'drag': this.updateTail.bind(this),
+        'stop': this.onDragStop_.bind(this),
+        'scroll': false
+      });
+    }
+
     this.element.resizable({
       'containment': this.getContainerSelector(),
       'minWidth': 50,
@@ -242,26 +264,6 @@ os.annotation.AbstractAnnotationCtrl.prototype.initDragResize = function() {
       'start': this.onDragStart_.bind(this),
       'resize': this.updateTail.bind(this),
       'stop': this.onDragStop_.bind(this)
-    });
-  }
-};
-
-
-/**
- * Setup the drag handler
- * @private
- */
-os.annotation.AbstractAnnotationCtrl.prototype.makeDraggable_ = function() {
-  if (this.element && this.element.parent().length) {
-    // OpenLayers absolutely positions the parent container, so attach the draggable handler to that and use the
-    // annotation container as the drag target.
-    this.element.parent().draggable({
-      'containment': this.getContainerSelector(),
-      'handle': '.js-annotation',
-      'start': this.onDragStart_.bind(this),
-      'drag': this.updateTail.bind(this),
-      'stop': this.onDragStop_.bind(this),
-      'scroll': false
     });
   }
 };
@@ -300,7 +302,7 @@ os.annotation.AbstractAnnotationCtrl.prototype.hideAnnotation = function() {};
 os.annotation.AbstractAnnotationCtrl.prototype.editDescription = function() {
   if (this['options'].editable && !this['editingDescription']) {
     this['editingDescription'] = true;
-    this.element.parent().draggable('destroy');
+    this.element.parent().draggable('option', 'handle', os.annotation.selectors.HEADER);
 
     this.recordCurrents_();
 
@@ -358,13 +360,13 @@ os.annotation.AbstractAnnotationCtrl.prototype.saveAnnotation = function() {
   this['options'].size = [this.currentWidth_, this.currentHeight_];
 
   if (this['editingDescription']) {
-    this.makeDraggable_();
+    this.element.parent().draggable('option', 'handle', os.annotation.selectors.ALL);
   }
 
   this['editingName'] = false;
   this['editingDescription'] = false;
 
-  this.makeDraggable_();
+  this.element.parent().draggable('option', 'handle', os.annotation.selectors.ALL);
   this.updateTail();
 };
 
@@ -386,7 +388,7 @@ os.annotation.AbstractAnnotationCtrl.prototype.cancelEdit = function() {
     this.updateTail();
 
     if (this['editingDescription']) {
-      this.makeDraggable_();
+      this.element.parent().draggable('option', 'handle', os.annotation.selectors.ALL);
     }
   }
 
