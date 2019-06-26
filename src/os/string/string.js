@@ -42,7 +42,7 @@ os.string.EMAIL = /^\s*[^@,; ]+@[^@,; ]+\.[^@,; ]+\s*(\s*,\s*[^@,; ]+@[^@,; ]+\.
  * @type {RegExp}
  * @const
  */
-os.string.EMAILS = /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi;
+os.string.EMAILS = /([a-zA-Z0-9._!#\$%\&'\*\+/=\?\^`{}\|~-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi;
 
 
 /**
