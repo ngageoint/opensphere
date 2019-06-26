@@ -126,21 +126,21 @@ plugin.file.kml.KMLParser = function(options) {
 
   /**
    * The KML style config map
-   * @type {!Object<string, Object>}
+   * @type {!Object<string, Object<string, *>>}
    * @private
    */
   this.styleMap_ = {};
 
   /**
    * The KML balloon style config map.
-   * @type {!Object<string, !Object>}
+   * @type {!Object<string, !Object<string, *>>}
    * @private
    */
   this.balloonStyleMap = {};
 
   /**
    * The KML style config map for highlight styles from StyleMap tags
-   * @type {!Object<string, !Object>}
+   * @type {!Object<string, !Object<string, *>>}
    * @private
    */
   this.highlightStyleMap_ = {};
@@ -1444,8 +1444,8 @@ plugin.file.kml.KMLParser.prototype.applyStyles_ = function(el, feature) {
       feature.set(os.style.StyleType.FEATURE, mergedStyle, true);
     }
 
-    if (highlightStyle && highlightStyle.length) {
-      feature.set(os.style.StyleType.CUSTOM_HIGHLIGHT, highlightStyle[0], true);
+    if (highlightStyle) {
+      feature.set(os.style.StyleType.CUSTOM_HIGHLIGHT, highlightStyle, true);
     }
 
     // set the feature shape if it wasn't defined in the file and an icon style is present

@@ -522,15 +522,17 @@ os.style.setConfigColor = function(config, color, opt_includeStyleFields) {
   if (config) {
     var styleFields = opt_includeStyleFields || os.style.DEFAULT_COLOR_STYLE_FIELDS;
     for (var key in config) {
-      // color can exist in the image, fill, or stroke styles. in the case of icons, there may not be a color property
-      // but we still need to ensure the color is set correctly. set the color if a key that may contain a color is
-      // encountered.
-      if (styleFields.indexOf(key) !== -1) {
-        config[key][os.style.StyleField.COLOR] = color;
-      }
+      if (config[key]) {
+        // color can exist in the image, fill, or stroke styles. in the case of icons, there may not be a color property
+        // but we still need to ensure the color is set correctly. set the color if a key that may contain a color is
+        // encountered.
+        if (styleFields.indexOf(key) !== -1) {
+          config[key][os.style.StyleField.COLOR] = color;
+        }
 
-      if (!os.object.isPrimitive(config[key])) {
-        os.style.setConfigColor(config[key], color, opt_includeStyleFields);
+        if (!os.object.isPrimitive(config[key])) {
+          os.style.setConfigColor(config[key], color, opt_includeStyleFields);
+        }
       }
     }
   }
@@ -637,24 +639,26 @@ os.style.setConfigOpacityColor = function(config, opacity, opt_multiply) {
     var styleFields = os.style.DEFAULT_COLOR_STYLE_FIELDS;
     var colorArr;
     for (var key in config) {
-      // color can exist in the image, fill, or stroke styles. in the case of icons, there may not be a color property
-      // but we still need to ensure the color is set correctly. set the color if a key that may contain a color is
-      // encountered.
-      if (styleFields.indexOf(key) !== -1) {
-        colorArr = os.color.toRgbArray(config[key][os.style.StyleField.COLOR]);
-        if (colorArr) {
-          if (opt_multiply) {
-            colorArr[3] *= opacity;
-          } else {
-            colorArr[3] = opacity;
+      if (config[key]) {
+        // color can exist in the image, fill, or stroke styles. in the case of icons, there may not be a color property
+        // but we still need to ensure the color is set correctly. set the color if a key that may contain a color is
+        // encountered.
+        if (styleFields.indexOf(key) !== -1) {
+          colorArr = os.color.toRgbArray(config[key][os.style.StyleField.COLOR]);
+          if (colorArr) {
+            if (opt_multiply) {
+              colorArr[3] *= opacity;
+            } else {
+              colorArr[3] = opacity;
+            }
+
+            config[key][os.style.StyleField.COLOR] = os.style.toRgbaString(colorArr);
           }
-
-          config[key][os.style.StyleField.COLOR] = os.style.toRgbaString(colorArr);
         }
-      }
 
-      if (!os.object.isPrimitive(config[key])) {
-        os.style.setConfigOpacityColor(config[key], opacity, opt_multiply);
+        if (!os.object.isPrimitive(config[key])) {
+          os.style.setConfigOpacityColor(config[key], opacity, opt_multiply);
+        }
       }
     }
   }
@@ -672,18 +676,20 @@ os.style.getConfigOpacityColor = function(config) {
     var styleFields = os.style.DEFAULT_COLOR_STYLE_FIELDS;
     var colorArr;
     for (var key in config) {
-      // color can exist in the image, fill, or stroke styles. in the case of icons, there may not be a color property
-      // but we still need to ensure the color is set correctly. set the color if a key that may contain a color is
-      // encountered.
-      if (styleFields.indexOf(key) !== -1) {
-        colorArr = os.color.toRgbArray(config[key][os.style.StyleField.COLOR]);
-        if (colorArr) {
-          return colorArr[3];
+      if (config[key]) {
+        // color can exist in the image, fill, or stroke styles. in the case of icons, there may not be a color property
+        // but we still need to ensure the color is set correctly. set the color if a key that may contain a color is
+        // encountered.
+        if (styleFields.indexOf(key) !== -1) {
+          colorArr = os.color.toRgbArray(config[key][os.style.StyleField.COLOR]);
+          if (colorArr) {
+            return colorArr[3];
+          }
         }
-      }
 
-      if (!os.object.isPrimitive(config[key])) {
-        return os.style.getConfigOpacityColor(config[key]);
+        if (!os.object.isPrimitive(config[key])) {
+          return os.style.getConfigOpacityColor(config[key]);
+        }
       }
     }
   }
