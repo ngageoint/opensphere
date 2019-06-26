@@ -56,9 +56,8 @@ plugin.file.kml.export.getBalloonOptions = function(feature) {
  */
 plugin.file.kml.export.getRotationColumn = function(feature) {
   if (feature) {
-    var layerConfig = os.style.getLayerConfig(feature);
-    if (layerConfig && layerConfig[os.style.StyleField.SHOW_ROTATION]) {
-      return layerConfig[os.style.StyleField.ROTATION_COLUMN];
+    if (feature.get(os.style.StyleField.SHOW_ROTATION)) {
+      return /** @type {string} */ (feature.get(os.style.StyleField.ROTATION_COLUMN));
     }
   }
   return undefined;
