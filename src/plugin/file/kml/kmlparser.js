@@ -1160,9 +1160,13 @@ plugin.file.kml.KMLParser.prototype.readPlacemark_ = function(el) {
   if (feature) {
     this.setFeatureId_(feature);
 
-    // parse annotation options from JSON
-    if (object[os.annotation.OPTIONS_FIELD] && typeof object[os.annotation.OPTIONS_FIELD] === 'string') {
-      object[os.annotation.OPTIONS_FIELD] = JSON.parse(object[os.annotation.OPTIONS_FIELD]);
+    // parse any fields that are known to contain JSON data into objects
+    for (var i = 0, ii = plugin.file.kml.JsonField.length; i < ii; i++) {
+      var field = plugin.file.kml.JsonField[i];
+
+      if (object[field] && typeof object[field] === 'string') {
+        object[field] = JSON.parse(object[field]);
+      }
     }
 
     feature.setProperties(object);

@@ -60,3 +60,12 @@ plugin.file.kml.SOURCE_FIELDS = [
   os.style.StyleField.LABEL_SIZE,
   os.style.StyleField.SHOW_LABELS
 ];
+
+
+/**
+ * Fields that are known to contain specialized JSON data.
+ * @type {!Array<string>}
+ */
+plugin.file.kml.JsonField = [
+  os.annotation.OPTIONS_FIELD
+];

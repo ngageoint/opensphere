@@ -8,11 +8,11 @@ goog.require('os.im.Importer');
 goog.require('os.object');
 goog.require('os.ui.im.ImportEvent');
 goog.require('os.ui.im.ImportProcess');
-goog.require('plugin.file.kml.KMLLayerConfig');
 goog.require('plugin.file.kml.KMLParser');
 goog.require('plugin.file.kml.ui');
 goog.require('plugin.file.kml.ui.KMLNode');
 goog.require('plugin.places');
+goog.require('plugin.places.PlacesLayerConfig');
 goog.require('plugin.places.ui.placesNodeUIDirective');
 
 
@@ -172,6 +172,15 @@ plugin.places.PlacesManager.prototype.getPlacesLayer = function() {
 
 
 /**
+ * Get the places KML source.
+ * @return {plugin.file.kml.KMLSource}
+ */
+plugin.places.PlacesManager.prototype.getPlacesSource = function() {
+  return this.placesSource_;
+};
+
+
+/**
  * Add the Places layer to the map.
  */
 plugin.places.PlacesManager.prototype.addLayer = function() {
@@ -226,7 +235,7 @@ plugin.places.PlacesManager.prototype.startImport = function(opt_file) {
  */
 plugin.places.PlacesManager.prototype.onFileReady_ = function(file) {
   if (file) {
-    var config = new plugin.file.kml.KMLLayerConfig();
+    var config = new plugin.places.PlacesLayerConfig();
 
     var options = this.getOptions();
     this.placesLayer_ = /** @type {!plugin.file.kml.KMLLayer} */ (config.createLayer(options));
@@ -275,7 +284,7 @@ plugin.places.PlacesManager.prototype.getOptions = function() {
     'animate': true,
     'color': os.style.DEFAULT_LAYER_COLOR,
     'collapsed': true,
-    'columns': plugin.file.kml.SOURCE_FIELDS,
+    'columns': plugin.places.SourceFields,
     'editable': true,
     'id': plugin.places.ID,
     'layerType': os.layer.LayerType.REF,
@@ -284,7 +293,7 @@ plugin.places.PlacesManager.prototype.getOptions = function() {
     'showLabels': false,
     'showRoot': false,
     'title': plugin.places.TITLE,
-    'type': 'kml',
+    'type': plugin.places.PlacesLayerConfig.ID,
     'url': plugin.places.PlacesManager.STORAGE_URL
   };
 
