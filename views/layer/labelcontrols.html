@@ -13,8 +13,8 @@
 
   <div ng-show="alwaysShowLabels != 'false'">
     <div class="custom-control custom-checkbox d-inline-block" title="Always show labels for this layer. If unchecked, labels will only be shown on hover.">
-      <input type="checkbox" class="custom-control-input" id="showLabels" name="showLabels" ng-model="showLabels" ng-change="labelCtrl.onShowLabelsChange()"/>
-      <label class="custom-control-label" for="showLabels"> Always Show Labels</label>
+      <input type="checkbox" class="custom-control-input" id="showLabels_{{$id}}" name="showLabels" ng-model="showLabels" ng-change="labelCtrl.onShowLabelsChange()"/>
+      <label class="custom-control-label" for="showLabels_{{$id}}"> Always Show Labels</label>
     </div>
   </div>
 
