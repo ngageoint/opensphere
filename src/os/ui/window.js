@@ -125,7 +125,8 @@ os.ui.windowDirective = function() {
       'disableDrag': '@',
       'windowContainer': '@',
       /* Array.<os.ui.window.HeaderBtnConfig> */
-      'headerBtns': '=?'
+      'headerBtns': '=?',
+      'border': '='
     },
     templateUrl: os.ROOT + 'views/window/window.html',
     controller: os.ui.WindowCtrl,
