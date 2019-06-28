@@ -13,6 +13,7 @@ goog.require('os.ui.slick.SlickTreeNode');
 
 /**
  * Displays a data descriptor in a tree node
+ *
  * @implements {os.data.ISearchable}
  * @extends {os.ui.slick.SlickTreeNode}
  * @constructor
@@ -53,6 +54,7 @@ os.ui.data.DescriptorNode.prototype.setState = function(value) {
 
 /**
  * Gets the data descriptor
+ *
  * @return {?os.data.IDataDescriptor} The descriptor
  */
 os.ui.data.DescriptorNode.prototype.getDescriptor = function() {
@@ -62,6 +64,7 @@ os.ui.data.DescriptorNode.prototype.getDescriptor = function() {
 
 /**
  * Sets the data descriptor
+ *
  * @param {!os.data.IDataDescriptor} value The descriptor
  */
 os.ui.data.DescriptorNode.prototype.setDescriptor = function(value) {
@@ -157,6 +160,7 @@ os.ui.data.DescriptorNode.prototype.formatIcons = function() {
 
 /**
  * Whether or not the descriptor (or the items the descriptor has added) is loading
+ *
  * @return {boolean}
  * @export
  */
@@ -171,6 +175,7 @@ os.ui.data.DescriptorNode.prototype.isLoading = function() {
 
 /**
  * Handles changes on the desriptor
+ *
  * @param {os.events.PropertyChangeEvent} e The event
  * @private
  */

@@ -14,6 +14,7 @@
 var addMatchImageSnapshotPlugin = require('cypress-image-snapshot/plugin').addMatchImageSnapshotPlugin;
 
 /** This is a description of the foo function.
+ *
 * @param {string} on - used to hook into various events Cypress emits
 * @param {string} config - is the resolved Cypress config
 */

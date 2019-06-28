@@ -5,6 +5,7 @@ goog.require('os.IPersistable');
 
 /**
  * Base interface representing a column mapping.
+ *
  * @extends {os.IPersistable}
  * @extends {goog.events.Listenable}
  * @interface

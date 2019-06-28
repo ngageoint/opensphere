@@ -110,6 +110,7 @@ os.ui.menu.filter.setup = function() {
 
 /**
  * Creates a function which modifies the menu item visibility before render
+ *
  * @param {function(Array<!os.structs.TreeNode>):boolean} func The visibility function
  * @return {function(this:os.ui.menu.MenuItem, Array<!os.structs.TreeNode>)}
  */
@@ -162,6 +163,7 @@ os.ui.menu.filter.getFilters = function(nodes) {
 
 /**
  * Determin if the layer is on
+ *
  * @param {string} layerId
  * @return {boolean}
  * @private
@@ -255,6 +257,7 @@ os.ui.menu.filter.isFilter_ = function(context) {
 
 /**
  * Remove all entries for these filters
+ *
  * @param {Array<!os.filter.FilterEntry>} filters
  * @return {os.ui.query.cmd.QueryEntries}
  */

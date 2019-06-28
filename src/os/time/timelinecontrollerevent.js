@@ -54,6 +54,7 @@ os.time.TimelineActionEventType = {
 
 /**
  * Event for os.time.TimelineController.
+ *
  * @param {string} type
  * @extends {goog.events.Event}
  * @constructor

@@ -14,6 +14,7 @@ goog.require('os.time.ITime');
 
 /**
  * Importer that prepares {@link ol.Feature} objects for spatial/temporal display.
+ *
  * @param {os.parse.IParser<T>} parser The parser
  * @extends {os.im.Importer}
  * @constructor
@@ -54,6 +55,7 @@ os.im.FeatureImporter.prototype.disposeInternal = function() {
 
 /**
  * Get if imported HTML content should be trusted.
+ *
  * @return {boolean} If imported HTML content should be trusted.
  */
 os.im.FeatureImporter.prototype.getTrustHTML = function() {
@@ -63,6 +65,7 @@ os.im.FeatureImporter.prototype.getTrustHTML = function() {
 
 /**
  * Set if imported HTML content should be trusted.
+ *
  * @param {boolean} value If imported HTML content should be trusted.
  */
 os.im.FeatureImporter.prototype.setTrustHTML = function(value) {
@@ -160,6 +163,7 @@ os.im.FeatureImporter.prototype.sanitize = function(item) {
 
 /**
  * Listens for the max features reached event and stops all further processing
+ *
  * @param {goog.events.Event} event
  * @private
  */

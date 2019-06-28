@@ -5,6 +5,7 @@ goog.require('goog.Uri.QueryData');
 
 /**
  * Resolve a URI to a fully qualified URI if it's relative, otherwise leave it as is.
+ *
  * @param {!string} uri
  * @return {string}
  */
@@ -25,6 +26,7 @@ os.uri.addBase = function(uri) {
 
 /**
  * Get the browser's current URI with the provided query params.
+ *
  * @param {goog.Uri.QueryData} queryData The query params
  * @return {string}
  */

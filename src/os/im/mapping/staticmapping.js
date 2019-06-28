@@ -6,6 +6,7 @@ goog.require('os.im.mapping.AbstractMapping');
 
 /**
  * Maps a field to a static value.
+ *
  * @extends {os.im.mapping.AbstractMapping<Object>}
  * @constructor
  */

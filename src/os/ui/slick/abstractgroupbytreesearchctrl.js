@@ -9,6 +9,7 @@ goog.require('os.ui');
 
 /**
  * Controller for Layers window
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {number} searchDelay how long to delay the search
@@ -140,6 +141,7 @@ os.ui.slick.AbstractGroupByTreeSearchCtrl.prototype.init = function() {
 
 /**
  * Starts a search
+ *
  * @export
  */
 os.ui.slick.AbstractGroupByTreeSearchCtrl.prototype.search = function() {
@@ -149,6 +151,7 @@ os.ui.slick.AbstractGroupByTreeSearchCtrl.prototype.search = function() {
 
 /**
  * Clears the search
+ *
  * @export
  */
 os.ui.slick.AbstractGroupByTreeSearchCtrl.prototype.clearSearch = function() {
@@ -160,6 +163,7 @@ os.ui.slick.AbstractGroupByTreeSearchCtrl.prototype.clearSearch = function() {
 
 /**
  * On search
+ *
  * @protected
  */
 os.ui.slick.AbstractGroupByTreeSearchCtrl.prototype.onSearch = function() {

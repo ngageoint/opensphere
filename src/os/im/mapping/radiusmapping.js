@@ -8,6 +8,7 @@ goog.require('os.math.Units');
 
 /**
  * Ellipse radius mapping.
+ *
  * @extends {os.im.mapping.RenameMapping.<ol.Feature>}
  * @constructor
  */
@@ -71,6 +72,7 @@ os.im.mapping.RadiusMapping.UNITS_REGEX = /(^|[^A-Za-z0-9]+)(cep|radius)(_units)
 
 /**
  * Get the units used by the mapping.
+ *
  * @return {?string}
  */
 os.im.mapping.RadiusMapping.prototype.getUnits = function() {
@@ -80,6 +82,7 @@ os.im.mapping.RadiusMapping.prototype.getUnits = function() {
 
 /**
  * Set the units used by the mapping.
+ *
  * @param {?string} units
  */
 os.im.mapping.RadiusMapping.prototype.setUnits = function(units) {

@@ -7,6 +7,7 @@ goog.require('os.ui.Module');
 
 /**
  * The icon options directive.
+ *
  * @return {angular.Directive}
  */
 os.ui.layer.iconStyleControlsDirective = function() {
@@ -34,6 +35,7 @@ os.ui.Module.directive('iconstylecontrols', [os.ui.layer.iconStyleControlsDirect
 
 /**
  * Controller function for the iconstyleoptions directive.
+ *
  * @param {!angular.Scope} $scope The Angular scope.
  * @extends {goog.Disposable}
  * @constructor
@@ -71,6 +73,7 @@ os.ui.layer.IconStyleControlsCtrl.prototype.disposeInternal = function() {
 
 /**
  * Toggle the Show Rotation.
+ *
  * @export
  */
 os.ui.layer.IconStyleControlsCtrl.prototype.toggleShowRotation = function() {
@@ -82,6 +85,7 @@ os.ui.layer.IconStyleControlsCtrl.prototype.toggleShowRotation = function() {
 
 /**
  * Handles column changes to the rotation
+ *
  * @export
  */
 os.ui.layer.IconStyleControlsCtrl.prototype.onRotationColumnChange = function() {

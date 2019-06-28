@@ -15,6 +15,7 @@ os.interaction.Measure.prototype.cesiumLabels = undefined;
 
 /**
  * Clean up the draw polygon interaction in Cesium.
+ *
  * @this {os.interaction.Measure}
  */
 plugin.cesium.interaction.measure.cleanupWebGL = function() {
@@ -33,6 +34,7 @@ plugin.cesium.interaction.measure.cleanupWebGL = function() {
 
 /**
  * Draw the measure line in Cesium.
+ *
  * @this {os.interaction.Measure}
  * @suppress {accessControls}
  */

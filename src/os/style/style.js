@@ -481,6 +481,7 @@ os.style.DEFAULT_COLOR_STYLE_FIELDS = [
 
 /**
  * Creates an override config for stroke/fill color.
+ *
  * @param {string} color The color
  * @return {Object<string, *>} The style config
  */
@@ -540,6 +541,7 @@ os.style.STYLE_COLOR_FIELDS_ = ['image', 'fill', 'stroke'];
 
 /**
  * Gets the first color value defined on the config
+ *
  * @param {Object} config The configuration to search for a color
  * @param {boolean=} opt_array If the color should be returned as an rgb array
  * @param {(os.style.StyleField|string)=} opt_colorFieldHint A hint to where to find the color to use.
@@ -576,6 +578,7 @@ os.style.getConfigColor = function(config, opt_array, opt_colorFieldHint) {
 /**
  * Sets all color values on the config. Colors are always set as an rgba string to minimize conversion both in
  * opensphere style functions and OL3 rendering functions.
+ *
  * @param {Object} config
  * @param {Array<number>|string} color
  * @param {Array<string>=} opt_includeStyleFields optional array of style fields to color,
@@ -602,6 +605,7 @@ os.style.setConfigColor = function(config, color, opt_includeStyleFields) {
 
 /**
  * Gets the icon used in a config.
+ *
  * @param {Object|undefined} config The style config.
  * @return {?osx.icon.Icon} The icon or null if none was found.
  */
@@ -623,6 +627,7 @@ os.style.getConfigIcon = function(config) {
 /**
  * Sets all color values on the config. Colors are always set as an rgba string to minimize conversion both in
  * Open Sphere style functions and OL3 rendering functions.
+ *
  * @param {Object} config
  * @param {?osx.icon.Icon} icon
  */
@@ -639,6 +644,7 @@ os.style.setConfigIcon = function(config, icon) {
 /**
  * Sets the rotation of an icon
  * Open Sphere style functions and OL3 rendering functions.
+ *
  * @param {Object} config
  * @param {boolean} showRotation
  * @param {number} rotateAmount
@@ -656,6 +662,7 @@ os.style.setConfigIconRotation = function(config, showRotation, rotateAmount) {
 /**
  * Sets the rotation of an icon from a config object
  * Open Sphere style functions and OL3 rendering functions.
+ *
  * @param {Object} config
  * @param {Object} origin
  * @param {!ol.Feature} feature The feature
@@ -673,6 +680,7 @@ os.style.setConfigIconRotationFromObject = function(config, origin, feature) {
 
 /**
  * Gets the icon rotation column used in a config.
+ *
  * @param {Object|undefined} config The style config.
  * @return {number} The icon or null if none was found.
  */
@@ -691,6 +699,7 @@ os.style.getConfigIconRotation = function(config) {
 /**
  * Sets all color opacity values on the config. Colors are always set as an rgba string to minimize conversion both in
  * opensphere style functions and OL3 rendering functions.
+ *
  * @param {Object} config The style config.
  * @param {number} opacity The opacity value, from 0 to 1.
  * @param {boolean=} opt_multiply If the opacity should be multiplied with the original.
@@ -727,6 +736,7 @@ os.style.setConfigOpacityColor = function(config, opacity, opt_multiply) {
 /**
  * Gets first color opacity values on the config. Colors are always set as an rgba string to minimize conversion both in
  * opensphere style functions and OL3 rendering functions.
+ *
  * @param {Object} config The style config.
  * @return {number} The opacity value, from 0 to 1.
  */
@@ -756,6 +766,7 @@ os.style.getConfigOpacityColor = function(config) {
 
 /**
  * Gets the first size value defined on the config
+ *
  * @param {Object} config
  * @return {number|undefined} The size
  */
@@ -824,6 +835,7 @@ os.style.setConfigSize = function(config, size) {
 
 /**
  * Merge sizes from two style configs into the target config.
+ *
  * @param {Object} featureConfig The feature config
  * @param {Object} layerConfig The layer config
  * @param {number=} opt_default The default size
@@ -849,6 +861,7 @@ os.style.getMergedSize = function(featureConfig, layerConfig, opt_default) {
 
 /**
  * Looks up a line style from a dash pattern
+ *
  * @param {Array<number>|undefined} pattern
  * @return {os.style.styleLineDashOption}
  */
@@ -895,6 +908,7 @@ os.style.getConfigLineDash = function(config, opt_lineDashFieldHint) {
 
 /**
  * Sets all line dash values on the config.
+ *
  * @param {Object} config
  * @param {Array<number>} lineDash
  * @param {Array<string>=} opt_includeLineDashFields optional array of style fields to line dash,
@@ -918,6 +932,7 @@ os.style.setConfigLineDash = function(config, lineDash, opt_includeLineDashField
 
 /**
  * Convert a vector size to an icon scale.
+ *
  * @param {number} size The vector size value
  * @return {number} The icon scale value
  */
@@ -928,6 +943,7 @@ os.style.sizeToScale = function(size) {
 
 /**
  * Convert an icon scale value to a vector size.
+ *
  * @param {number} scale The icon scale value
  * @return {number} The vector size value
  */
@@ -938,6 +954,7 @@ os.style.scaleToSize = function(scale) {
 
 /**
  * Get the base style configuration for a feature.
+ *
  * @param {!ol.Feature} feature The feature to update.
  * @param {Object=} opt_layerConfig The layer config.
  * @return {!Object} The base style configuration.
@@ -953,6 +970,7 @@ os.style.getBaseFeatureConfig = function(feature, opt_layerConfig) {
 
 /**
  * Update the style on a feature.
+ *
  * @param {!ol.Feature} feature The feature to update
  * @param {os.source.Vector=} opt_source The source containing the feature
  * @param {(Array<ol.style.Style>|ol.style.Style)=} opt_style The style to use
@@ -978,6 +996,7 @@ os.style.setFeatureStyle = function(feature, opt_source, opt_style) {
 
 /**
  * Update the style on an array of features.
+ *
  * @param {Array<!ol.Feature>} features The features to update
  * @param {os.source.Vector=} opt_source The source containing the features
  * @suppress {accessControls} To allow direct access to feature metadata.
@@ -999,6 +1018,7 @@ os.style.setFeaturesStyle = function(features, opt_source) {
 
 /**
  * Gets the layer config for a feature.
+ *
  * @param {!ol.Feature} feature The feature
  * @param {os.source.Vector=} opt_source The source containing the feature
  * @return {Object|undefined}
@@ -1061,6 +1081,7 @@ os.style.getLayerConfig = function(feature, opt_source) {
 
 /**
  * Check if a config contains an icon style
+ *
  * @param {Object} config The config object
  * @return {boolean}
  */
@@ -1071,6 +1092,7 @@ os.style.isIconConfig = function(config) {
 
 /**
  * Combines all applicable style configs for a feature.
+ *
  * @param {!ol.Feature} feature The feature
  * @param {Object} baseConfig Base configuration for the feature
  * @param {Object=} opt_layerConfig Layer configuration for the feature
@@ -1161,6 +1183,7 @@ os.style.createFeatureConfig = function(feature, baseConfig, opt_layerConfig) {
 
 /**
  * Verify appropriate geometries in a config object exist on a feature.
+ *
  * @param {!ol.Feature} feature The feature.
  * @param {!Object} config The config object.
  * @param {Object=} opt_layerConfig The layerConfig object.
@@ -1202,6 +1225,7 @@ os.style.verifyGeometries = function(feature, config, opt_layerConfig) {
 
 /**
  * Creates a style from the provided feature.
+ *
  * @param {ol.Feature} feature The feature
  * @param {Object} baseConfig Base configuration for the feature
  * @param {Object=} opt_layerConfig Layer configuration for the feature
@@ -1399,6 +1423,7 @@ os.style.mergeConfig = function(from, to) {
 
 /**
  * Notify that the layer style changed and should be updated.
+ *
  * @param {ol.layer.Layer} layer The layer
  * @param {Array<ol.Feature>=} opt_features The features that changed
  * @param {string=} opt_type The style event type
@@ -1418,6 +1443,7 @@ os.style.notifyStyleChange = function(layer, opt_features, opt_type) {
 
 /**
  * Check whether this style config object has the labels config in it.
+ *
  * @param {Object} configEntry Style config object to query
  * @return {boolean} True if the config object contains the labels
  */

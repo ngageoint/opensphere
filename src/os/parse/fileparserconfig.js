@@ -6,6 +6,7 @@ goog.require('os.parse.BaseParserConfig');
 
 /**
  * Configuration for a file parser.
+ *
  * @extends {os.parse.BaseParserConfig.<T>}
  * @param {os.file.File=} opt_file
  * @constructor

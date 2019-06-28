@@ -54,6 +54,7 @@ plugin.file.gpx.GPXLayerConfig.prototype.getImporter = function(options) {
 
 /**
  * Up the default column autodetect limit for GPX source.
+ *
  * @inheritDoc
  */
 plugin.file.gpx.GPXLayerConfig.prototype.getSource = function(options) {

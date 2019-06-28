@@ -67,6 +67,7 @@ plugin.heatmap.menu.setup = function() {
 
 /**
  * Show the heatmap menu item if layers in the context support it.
+ *
  * @param {os.ui.menu.layer.Context} context The menu context.
  * @private
  * @this {os.ui.menu.MenuItem}
@@ -86,6 +87,7 @@ plugin.heatmap.menu.visibleIfSupported_ = function(context) {
 
 /**
  * Handle heatmap layer export event.
+ *
  * @param {!os.ui.menu.MenuEvent<os.ui.menu.layer.Context>} event The menu event.
  * @private
  */
@@ -103,6 +105,7 @@ plugin.heatmap.menu.exportLayer_ = function(event) {
 
 /**
  * Handle generate heatmap event. Adds a heatmap layer to the map.
+ *
  * @param {!os.ui.menu.MenuEvent<os.ui.menu.layer.Context>} event The menu event.
  * @private
  */

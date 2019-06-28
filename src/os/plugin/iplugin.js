@@ -7,6 +7,7 @@ goog.require('goog.disposable.IDisposable');
 
 /**
  * The interface which describes a plugin.
+ *
  * @extends {goog.disposable.IDisposable}
  * @interface
  */

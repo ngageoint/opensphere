@@ -10,6 +10,7 @@ goog.require('os.ui.feature.tab.AbstractFeatureTabCtrl');
 
 /**
  * The descriptionTabDirective
+ *
  * @return {angular.Directive}
  */
 os.ui.feature.tab.descriptionTabDirective = function() {
@@ -33,6 +34,7 @@ os.ui.Module.directive('descriptiontab', [os.ui.feature.tab.descriptionTabDirect
 
 /**
  * Controller function for the descriptionTabDirective directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @extends {os.ui.feature.tab.AbstractFeatureTabCtrl}
@@ -78,6 +80,7 @@ os.ui.feature.tab.DescriptionTabCtrl.prototype.updateTab = function(event, data)
 
 /**
  * The tab enable function for the description tab.
+ *
  * @param {?Object} tabData The data represented in tab
  * @return {!boolean} true if tab should be shown
  */

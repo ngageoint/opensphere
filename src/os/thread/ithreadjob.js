@@ -4,6 +4,7 @@ goog.provide('os.thread.IThreadJob');
 
 /**
  * An interface that describes a job run by a thread
+ *
  * @interface
  */
 os.thread.IThreadJob = function() {};

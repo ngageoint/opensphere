@@ -7,6 +7,7 @@ goog.require('os.ui.Module');
 
 /**
  * The columnmappingexport directive
+ *
  * @return {angular.Directive}
  */
 os.ui.column.mapping.columnMappingExportDirective = function() {
@@ -30,6 +31,7 @@ os.ui.Module.directive('columnmappingexport', [os.ui.column.mapping.columnMappin
 
 /**
  * Controller function for the columnmappingexport directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @constructor
@@ -101,6 +103,7 @@ os.ui.column.mapping.ColumnMappingExportCtrl.persisters = {
 
 /**
  * Clean up.
+ *
  * @private
  */
 os.ui.column.mapping.ColumnMappingExportCtrl.prototype.onDestroy_ = function() {
@@ -111,6 +114,7 @@ os.ui.column.mapping.ColumnMappingExportCtrl.prototype.onDestroy_ = function() {
 
 /**
  * Exports the mappings.
+ *
  * @export
  */
 os.ui.column.mapping.ColumnMappingExportCtrl.prototype.accept = function() {
@@ -131,6 +135,7 @@ os.ui.column.mapping.ColumnMappingExportCtrl.prototype.accept = function() {
 
 /**
  * Close the window
+ *
  * @export
  */
 os.ui.column.mapping.ColumnMappingExportCtrl.prototype.close = function() {

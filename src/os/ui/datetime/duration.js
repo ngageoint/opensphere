@@ -8,6 +8,7 @@ goog.require('os.ui.util.validationMessageDirective');
 
 /**
  * The duration directive
+ *
  * @return {angular.Directive}
  */
 os.ui.datetime.durationDirective = function() {
@@ -43,6 +44,7 @@ os.ui.Module.directive('duration', [os.ui.datetime.durationDirective]);
 
 /**
  * Controller function for the duration directive
+ *
  * @param {!angular.Scope} $scope
  * @constructor
  * @ngInject
@@ -138,6 +140,7 @@ os.ui.datetime.DurationCtrl = function($scope) {
 
 /**
  * Clean up.
+ *
  * @private
  */
 os.ui.datetime.DurationCtrl.prototype.destroy_ = function() {
@@ -148,6 +151,7 @@ os.ui.datetime.DurationCtrl.prototype.destroy_ = function() {
 
 /**
  * Initialize
+ *
  * @private
  */
 os.ui.datetime.DurationCtrl.prototype.init_ = function() {
@@ -157,6 +161,7 @@ os.ui.datetime.DurationCtrl.prototype.init_ = function() {
 
 /**
  * Calculates the time values for each spinner element.
+ *
  * @private
  */
 os.ui.datetime.DurationCtrl.prototype.calculateTime_ = function() {
@@ -229,6 +234,7 @@ os.ui.datetime.DurationCtrl.prototype.onDurationUpdate_ = function(newVal, oldVa
  * which breaks the duration down into new segments. Doing it this way allows the user to type in, say,
  * 100 minutes without us interfering, and then once they unfocus that spinner, we calculate that it should
  * become 1 hour 40 minutes.
+ *
  * @private
  */
 os.ui.datetime.DurationCtrl.prototype.updateDuration_ = function() {
@@ -247,6 +253,7 @@ os.ui.datetime.DurationCtrl.prototype.updateDuration_ = function() {
 
 /**
  * Handler for week changes.
+ *
  * @param {number} value
  * @private
  */
@@ -258,6 +265,7 @@ os.ui.datetime.DurationCtrl.prototype.onWeeksChange_ = function(value) {
 
 /**
  * Handler for day changes.
+ *
  * @param {number} value
  * @private
  */
@@ -269,6 +277,7 @@ os.ui.datetime.DurationCtrl.prototype.onDaysChange_ = function(value) {
 
 /**
  * Handler for hour changes.
+ *
  * @param {number} value
  * @private
  */
@@ -280,6 +289,7 @@ os.ui.datetime.DurationCtrl.prototype.onHoursChange_ = function(value) {
 
 /**
  * Handler for minute changes.
+ *
  * @param {number} value
  * @private
  */
@@ -291,6 +301,7 @@ os.ui.datetime.DurationCtrl.prototype.onMinutesChange_ = function(value) {
 
 /**
  * Handler for second changes.
+ *
  * @param {number} value
  * @private
  */
@@ -302,6 +313,7 @@ os.ui.datetime.DurationCtrl.prototype.onSecondsChange_ = function(value) {
 
 /**
  * Handler for required changes.
+ *
  * @param {boolean} value
  * @private
  */

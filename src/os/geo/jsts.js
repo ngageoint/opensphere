@@ -108,6 +108,7 @@ os.geo.jsts.TMERC_BUFFER_LIMIT = 663469.9375;
 
 /**
  * Convert a {@link jsts.geom.Coordinate} coordinate to an {@link ol.Coordinate}.
+ *
  * @param {jsts.geom.Coordinate} coord The JSTS coordinate
  * @return {ol.Coordinate} An OL3 coordinate
  */
@@ -118,6 +119,7 @@ os.geo.jsts.convertToCoordinate = function(coord) {
 
 /**
  * Convert an {@link ol.Coordinate} to a {@link jsts.geom.Coordinate}.
+ *
  * @param {ol.Coordinate} coord The OL3 coordinate
  * @return {jsts.geom.Coordinate} A JSTS coordinate
  */
@@ -130,6 +132,7 @@ os.geo.jsts.convertFromCoordinate = function(coord) {
 /**
  * Utility class to translate between OL3 and JSTS geometries. This was copied from JSTS so the instanceof calls would
  * still work with compiled code.
+ *
  * @param {jsts.geom.GeometryFactory=} opt_geometryFactory
  * @constructor
  */
@@ -440,6 +443,7 @@ os.geo.jsts.OLParser.prototype.convertToCollection = function(geometryCollection
 
 /**
  * Converts an ol.geom.Geometry to an ol.geom.Polygon or ol.geom.MultiPolygon, if possible.
+ *
  * @param {ol.geom.Geometry} geometry The geometry to convert
  * @return {ol.geom.Geometry}
  */
@@ -663,6 +667,7 @@ os.geo.jsts.intersect = function(source, target, opt_replace) {
 
 /**
  * Merges a list of geometries into a single geometry.
+ *
  * @param {Array<ol.geom.Geometry>} geometries The geometries.
  * @return {ol.geom.Geometry} The merged geometry.
  */
@@ -708,6 +713,7 @@ os.geo.jsts.merge = function(geometries) {
 /**
  * Normalizes a set of polygons and merges the result to avoid overlaps. Normalization is done within +/-
  * 180 degrees of the widest polygon in the set. Assumes polygon coordinates are currently in EPSG:4326.
+ *
  * @param {Array<ol.geom.Polygon>} polygons The polygons.
  * @return {Array<ol.geom.Polygon>} The flattened polygon/multi-polygon.
  */
@@ -745,6 +751,7 @@ os.geo.jsts.flattenPolygons = function(polygons) {
 
 /**
  * Buffer a geometry. Uses different strategies depending on the geometry type and buffer distance.
+ *
  * @param {ol.geom.Geometry} geometry The geometry.
  * @param {number} distance The buffer distance in meters.
  * @param {boolean=} opt_skipTransform If the lon/lat transform should be skipped.
@@ -864,6 +871,7 @@ os.geo.jsts.buffer = function(geometry, distance, opt_skipTransform) {
 
 /**
  * Buffer a point geometry.
+ *
  * @param {!ol.geom.Point} point The point.
  * @param {number} distance The buffer distance in meters.
  * @return {ol.geom.Geometry} The buffered point.
@@ -878,6 +886,7 @@ os.geo.jsts.bufferPoint_ = function(point, distance) {
 
 /**
  * Get the offset to use when splitting a geometry for buffering.
+ *
  * @param {ol.Extent} extent The geometry's extent.
  * @param {number} distance The buffer distance.
  * @return {number} The offset between boxes to accurately buffer the geometry.
@@ -916,6 +925,7 @@ os.geo.jsts.getSplitOffset = function(extent, distance) {
 
 /**
  * Create boxes to split a geometry.
+ *
  * @param {ol.geom.Geometry} geometry The geometry to split.
  * @param {number} distance The buffer distance.
  * @return {Array<!jsts.geom.Polygon>|undefined}
@@ -945,6 +955,7 @@ os.geo.jsts.getBoxesForExtent_ = function(geometry, distance) {
 
 /**
  * Split a geometry by UTM zone, buffer, and join.
+ *
  * @param {ol.geom.Geometry} geometry The geometry.
  * @param {number} distance The buffer distance in meters.
  * @return {ol.geom.Geometry} The buffered geometry.
@@ -999,6 +1010,7 @@ os.geo.jsts.splitAndBuffer_ = function(geometry, distance) {
 
 /**
  * Transform a geometry to transverse mercator, then create a buffer.
+ *
  * @param {ol.geom.Geometry} geometry The geometry.
  * @param {number} distance The buffer distance in meters.
  * @param {number=} opt_normalizeLon Longitude to use for normalization.
@@ -1024,6 +1036,7 @@ os.geo.jsts.tmercBuffer_ = function(geometry, distance, opt_normalizeLon) {
 
 /**
  * Transform a geometry to a polar projection, then create a buffer.
+ *
  * @param {ol.geom.Geometry} geometry The geometry.
  * @param {number} distance The buffer distance in meters.
  * @return {ol.geom.Geometry} The buffered geometry.
@@ -1055,6 +1068,7 @@ os.geo.jsts.polarBuffer_ = function(geometry, distance) {
 
 /**
  * Transform a geometry to transverse mercator, then create a buffer.
+ *
  * @param {!ol.geom.Geometry} geometry The geometry.
  * @param {number} distance The buffer distance in meters.
  * @param {!ol.proj.Projection} projection The projection.
@@ -1084,6 +1098,7 @@ os.geo.jsts.projectionBuffer_ = function(geometry, distance, projection, opt_nor
 
 /**
  * Transform the geometry to a projection for buffering.
+ *
  * @param {!ol.geom.Geometry} geometry The geometry.
  * @return {!ol.proj.Projection} The projection.
  * @private
@@ -1103,6 +1118,7 @@ os.geo.jsts.createTMercProjection_ = function(geometry) {
 
 /**
  * Transform the geometry from a projection for buffering.
+ *
  * @param {ol.geom.Geometry} geometry The geometry.
  * @param {!ol.proj.Projection} projection The projection.
  * @param {number=} opt_normalizeLon Longitude to use for normalization.

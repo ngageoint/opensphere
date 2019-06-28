@@ -10,6 +10,7 @@ goog.require('goog.log.Logger');
  * synchronous and asynchronous commands are supported, however, synchronous
  * commands that kick off jobs are recommended over asynchronous commands
  * unless the asynchronous processing is quick enough to make that overkill.
+ *
  * @constructor
  */
 os.im.mapping.MappingRegistry = function() {
@@ -36,6 +37,7 @@ os.im.mapping.MappingRegistry.LOGGER_ =
 /**
  * Adds a mapping to the registry. Only the first mapping will be written.
  * Others will fail to overwrite and an error will be logged.
+ *
  * @param {!string} mapKey The mapping key.
  * @param {!function(new: os.im.mapping.IMapping, ...?)} mapping A constructor for an IMapping.
  * @return {boolean} True on success, false otherwise.
@@ -56,6 +58,7 @@ os.im.mapping.MappingRegistry.prototype.registerMapping = function(mapKey, mappi
 /**
  * Returns a new mapping based on the key.
  * Others will fail to overwrite and an error will be logged.
+ *
  * @param {!string} mapKey The mapping key.
  * @return {?os.im.mapping.IMapping} A new class otherwise null.
  */
@@ -76,6 +79,7 @@ os.im.mapping.MappingRegistry.prototype.getMapping = function(mapKey) {
 
 /**
  * Restore
+ *
  * @param {!Object} config A configuration, usually extracted from the persist method.
  * @return {os.im.mapping.IMapping} A newly constructed class with the values restored from config.
  */

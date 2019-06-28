@@ -8,6 +8,7 @@ goog.require('plugin.file.geojson.GeoJSONProvider');
 
 /**
  * GeoJSON file descriptor.
+ *
  * @param {plugin.file.geojson.GeoJSONParserConfig=} opt_config
  * @extends {os.data.FileDescriptor}
  * @constructor
@@ -40,6 +41,7 @@ plugin.file.geojson.GeoJSONDescriptor.prototype.getLayerOptions = function() {
 
 /**
  * Creates a new descriptor from a parser configuration.
+ *
  * @param {!plugin.file.geojson.GeoJSONParserConfig} config
  * @return {!plugin.file.geojson.GeoJSONDescriptor}
  */

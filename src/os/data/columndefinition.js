@@ -4,6 +4,7 @@ goog.require('os.IPersistable');
 
 /**
  * All the properties that can define a column definition for SlickGrid
+ *
  * @param {string=} opt_name
  * @param {string=} opt_field
  * @implements {os.IPersistable}
@@ -247,6 +248,7 @@ os.data.ColumnDefinition.prototype.restore = function(config) {
 
 /**
  * Creates a copy of the column definition.
+ *
  * @return {os.data.ColumnDefinition}
  */
 os.data.ColumnDefinition.prototype.clone = function() {

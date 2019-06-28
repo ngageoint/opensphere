@@ -7,6 +7,7 @@ goog.require('os.ui.Module');
 
 /**
  * The iconpalette directive
+ *
  * @return {angular.Directive}
  */
 os.ui.icon.iconPaletteDirective = function() {
@@ -44,6 +45,7 @@ os.ui.icon.IconPaletteEventType = {
 
 /**
  * Controller function for the iconpalette directive
+ *
  * @param {!angular.Scope} $scope
  * @constructor
  * @ngInject
@@ -74,6 +76,7 @@ os.ui.icon.IconPaletteCtrl = function($scope) {
 
 /**
  * Clean up.
+ *
  * @private
  */
 os.ui.icon.IconPaletteCtrl.prototype.destroy_ = function() {
@@ -83,6 +86,7 @@ os.ui.icon.IconPaletteCtrl.prototype.destroy_ = function() {
 
 /**
  * Get the icon src to use in the Image element.
+ *
  * @param {string} src The icon src.
  * @return {string} The adjusted icon source.
  * @export
@@ -94,6 +98,7 @@ os.ui.icon.IconPaletteCtrl.prototype.getIconSrc = function(src) {
 
 /**
  * Notify parent scope that a icon was chosen.
+ *
  * @param {string} iconPath The selected iconPath
  * @export
  */

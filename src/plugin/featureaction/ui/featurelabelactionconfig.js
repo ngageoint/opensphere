@@ -20,6 +20,7 @@ goog.require('plugin.im.action.feature.ui.ActionConfigCtrl');
 
 /**
  * Directive to configure a feature label action.
+ *
  * @return {angular.Directive}
  */
 plugin.im.action.feature.ui.labelConfigDirective = function() {
@@ -43,6 +44,7 @@ os.ui.Module.directive(plugin.im.action.feature.LabelAction.CONFIG_UI,
 
 /**
  * Controller for setting a feature label.
+ *
  * @param {!angular.Scope} $scope The Angular scope.
  * @param {!angular.JQLite} $element The root DOM element.
  * @extends {plugin.im.action.feature.ui.ActionConfigCtrl<plugin.im.action.feature.LabelAction>}
@@ -188,6 +190,7 @@ plugin.im.action.feature.ui.LabelConfigCtrl.prototype.saveAction = function() {
 
 /**
  * Validate the form.
+ *
  * @protected
  */
 plugin.im.action.feature.ui.LabelConfigCtrl.prototype.validate = function() {
@@ -204,6 +207,7 @@ plugin.im.action.feature.ui.LabelConfigCtrl.prototype.validate = function() {
 
 /**
  * Handle changes to the custom column name.
+ *
  * @param {string=} opt_new The new value.
  * @param {string=} opt_old The old value.
  * @protected
@@ -217,6 +221,7 @@ plugin.im.action.feature.ui.LabelConfigCtrl.prototype.onCustomNameChange = funct
 
 /**
  * Update the custom column and add it to the column list if necessary.
+ *
  * @export
  */
 plugin.im.action.feature.ui.LabelConfigCtrl.prototype.updateCustomColumn = function() {
@@ -246,6 +251,7 @@ plugin.im.action.feature.ui.LabelConfigCtrl.prototype.updateCustomColumn = funct
 
 /**
  * Handle color change.
+ *
  * @param {angular.Scope.Event} event The Angular event.
  * @param {string|undefined} value The new color value.
  * @protected
@@ -263,6 +269,7 @@ plugin.im.action.feature.ui.LabelConfigCtrl.prototype.onColorChange = function(e
 
 /**
  * Handle color reset.
+ *
  * @param {angular.Scope.Event} event
  * @protected
  */
@@ -276,6 +283,7 @@ plugin.im.action.feature.ui.LabelConfigCtrl.prototype.onColorReset = function(ev
 
 /**
  * Handle changes to size.
+ *
  * @param {angular.Scope.Event} event
  * @param {number} value
  * @protected

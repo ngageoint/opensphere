@@ -25,6 +25,7 @@ goog.require('plugin.file.shp.data.SHPHeader');
 
 /**
  * A Shapefile parser
+ *
  * @param {plugin.file.shp.SHPParserConfig} config
  * @extends {os.parse.AsyncZipParser<ol.Feature>}
  * @constructor
@@ -325,6 +326,7 @@ plugin.file.shp.SHPParser.prototype.parseNext = function() {
 
 /**
  * Adds metadata fields to a feature from the DBF file.
+ *
  * @param {ol.Feature} feature
  * @private
  */
@@ -362,6 +364,7 @@ plugin.file.shp.SHPParser.prototype.addFields_ = function(feature) {
 
 /**
  * Parses columns from the shapefile.
+ *
  * @return {Array.<ol.Feature>}
  */
 plugin.file.shp.SHPParser.prototype.parsePreview = function() {
@@ -417,6 +420,7 @@ plugin.file.shp.SHPParser.prototype.setSource = function(source) {
 
 /**
  * Configures the parser using the provided file(s).
+ *
  * @private
  */
 plugin.file.shp.SHPParser.prototype.initialize_ = function() {

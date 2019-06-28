@@ -27,6 +27,7 @@ os.stateManager = null;
 
 /**
  * Base state manager. Applications should extend this to fill in the abstract methods.
+ *
  * @abstract
  * @extends {goog.events.EventTarget}
  * @constructor
@@ -104,6 +105,7 @@ os.state.BaseStateManager.EventType = {
 
 /**
  * Sets the state export version used by the application.
+ *
  * @param {string} version The state version string
  */
 os.state.BaseStateManager.prototype.setVersion = function(version) {
@@ -113,6 +115,7 @@ os.state.BaseStateManager.prototype.setVersion = function(version) {
 
 /**
  * Gets the version of the state manager.
+ *
  * @return {string}
  * @protected
  */
@@ -123,6 +126,7 @@ os.state.BaseStateManager.prototype.getVersion = function() {
 
 /**
  * Registers a persistable object for use by states.
+ *
  * @param {string} key The object key
  * @param {!function(new:os.IPersistable)} clazz The persistable class
  */
@@ -137,6 +141,7 @@ os.state.BaseStateManager.prototype.registerPersistable = function(key, clazz) {
 
 /**
  * Gets a registered {@link os.IPersistable} class.
+ *
  * @param {string} key The object key
  * @return {os.IPersistable}
  */
@@ -151,6 +156,7 @@ os.state.BaseStateManager.prototype.getPersistable = function(key) {
 
 /**
  * Adds a state implementation to the manager.
+ *
  * @param {string} version The state version
  * @param {function(new:os.state.IState)} clazz The state class
  * @param {string=} opt_type The state type
@@ -203,6 +209,7 @@ os.state.BaseStateManager.prototype.deleteStates = function() {
 
 /**
  * Get all available states.
+ *
  * @param {boolean=} opt_allVersions Whether to get all versions.
  * @return {!Array.<!os.state.IState>} The states
  */
@@ -234,6 +241,7 @@ os.state.BaseStateManager.prototype.getAvailable = function(opt_allVersions) {
 
 /**
  * Adds an imported state to the application and loads it.
+ *
  * @param {!os.file.File} file The state file
  * @param {S} options The state save options
  */
@@ -251,6 +259,7 @@ os.state.BaseStateManager.prototype.addImportedState = function(file, options) {
 
 /**
  * Checks if the provided state title is in use by the application.
+ *
  * @param {string} title The title
  * @return {boolean} If the title has been used
  */
@@ -261,6 +270,7 @@ os.state.BaseStateManager.prototype.hasState = function(title) {
 
 /**
  * Finish importing a state to the application.
+ *
  * @param {!os.file.File} file The stored file
  * @param {S} options The save options
  */
@@ -271,6 +281,7 @@ os.state.BaseStateManager.prototype.finishImport = function(file, options) {
 
 /**
  * Initiate the state export process.
+ *
  * @param {string=} opt_method Optional string label for the persistence method to default to.
  */
 os.state.BaseStateManager.prototype.startExport = function(opt_method) {
@@ -297,6 +308,7 @@ os.state.BaseStateManager.prototype.startExport = function(opt_method) {
 
 /**
  * Saves the application state.
+ *
  * @param {os.ex.IPersistenceMethod} method The persistence method
  * @param {string} title The title
  * @param {string=} opt_desc The description
@@ -329,6 +341,7 @@ os.state.BaseStateManager.prototype.saveStates = function(method, title, opt_des
 
 /**
  * Handle state save success.
+ *
  * @param {S} options The state save options
  * @protected
  */
@@ -365,6 +378,7 @@ os.state.BaseStateManager.prototype.onSaveSuccess = function(options) {
 
 /**
  * Handle state save failure.
+ *
  * @param {string} errorMsg The error message
  * @protected
  */
@@ -375,6 +389,7 @@ os.state.BaseStateManager.prototype.onSaveError = function(errorMsg) {
 
 /**
  * Removes components of a state file from the application.
+ *
  * @param {string} id The base state id
  */
 os.state.BaseStateManager.prototype.removeState = function(id) {
@@ -392,6 +407,7 @@ os.state.BaseStateManager.prototype.removeState = function(id) {
 
 /**
  * Saves the state file locally in the application. Extending classes should implement this if supported.
+ *
  * @param {!os.file.File} file The file to save
  * @param {S} options The save options
  * @return {boolean} If the operation is supported and succeeded
@@ -407,6 +423,7 @@ os.state.BaseStateManager.prototype.saveLocal = function(file, options) {
 
 /**
  * Handler for file storage error.
+ *
  * @param {*} error
  * @private
  */
@@ -421,6 +438,7 @@ os.state.BaseStateManager.prototype.onFileError_ = function(error) {
 
 /**
  * Determine which parts of a state are supported by the application.
+ *
  * @abstract
  * @param {T|string} obj The state
  * @return {!Array.<!os.state.IState>} Supported states
@@ -430,6 +448,7 @@ os.state.BaseStateManager.prototype.analyze = function(obj) {};
 
 /**
  * Creates the root state object.
+ *
  * @abstract
  * @param {os.ex.IPersistenceMethod} method The persistence method
  * @param {string} title The title
@@ -443,6 +462,7 @@ os.state.BaseStateManager.prototype.createStateObject = function(method, title, 
 
 /**
  * Creates state save options.
+ *
  * @abstract
  * @param {os.ex.IPersistenceMethod} method The persistence method
  * @param {string} title The title
@@ -457,6 +477,7 @@ os.state.BaseStateManager.prototype.createStateOptions = function(method, title,
 
 /**
  * Gets the state file name.
+ *
  * @abstract
  * @param {S} options The state options
  * @return {?string} The file name
@@ -466,6 +487,7 @@ os.state.BaseStateManager.prototype.getStateFileName = function(options) {};
 
 /**
  * Load a state from a document.
+ *
  * @abstract
  * @param {T|string} obj The state
  * @param {Array.<!os.state.IState>} states The states to load
@@ -477,6 +499,7 @@ os.state.BaseStateManager.prototype.loadState = function(obj, states, stateId, o
 
 /**
  * Serializes the state file content to a string.
+ *
  * @abstract
  * @param {S} options The state options
  * @return {?string} The serialized content

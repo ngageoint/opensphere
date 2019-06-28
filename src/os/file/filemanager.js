@@ -10,6 +10,7 @@ goog.require('os.file.mime.text');
 
 /**
  * Keeps a registry of methods for reading a file ({@link os.file.IFileMethod})
+ *
  * @constructor
  */
 os.file.FileManager = function() {
@@ -25,6 +26,7 @@ goog.addSingletonGetter(os.file.FileManager);
 
 /**
  * Gets the highest-priority file method that is supported.
+ *
  * @return {?os.file.IFileMethod} The highest priority supported method.
  */
 os.file.FileManager.prototype.getFileMethod = function() {
@@ -35,6 +37,7 @@ os.file.FileManager.prototype.getFileMethod = function() {
 
 /**
  * Given a content type or layer type hint, return the corresponding layer type.
+ *
  * @param {!os.file.File} file The file reference.
  * @param {function(?string)} callback Callback when the type is available.
  */
@@ -107,6 +110,7 @@ os.file.FileManager.prototype.getLayerType = os.file.FileManager.prototype.getCo
 
 /**
  * Whether or not there are any registered file methods that are supported.
+ *
  * @return {boolean} If at least one file method is supported, false otherwise.
  */
 os.file.FileManager.prototype.hasSupportedMethod = function() {
@@ -116,6 +120,7 @@ os.file.FileManager.prototype.hasSupportedMethod = function() {
 
 /**
  * Convenience function for array searching/filtering.
+ *
  * @param {!(os.file.IFileMethod)} method The method.
  * @return {boolean}
  * @private
@@ -127,6 +132,7 @@ os.file.FileManager.prototype.isMethodSupported_ = function(method) {
 
 /**
  * Register a method for importing a file.
+ *
  * @param {!os.file.IFileMethod} fileMethod The file import method.
  */
 os.file.FileManager.prototype.registerFileMethod = function(fileMethod) {
@@ -139,6 +145,7 @@ os.file.FileManager.prototype.registerFileMethod = function(fileMethod) {
 
 /**
  * Sort file/content type method by descending priority.
+ *
  * @param {!os.file.IFileMethod} a First method.
  * @param {!os.file.IFileMethod} b Second method.
  * @return {number}

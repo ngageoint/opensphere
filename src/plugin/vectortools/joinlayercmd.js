@@ -9,6 +9,7 @@ goog.require('os.command.State');
 
 /**
  * Command for copying a vector layer
+ *
  * @constructor
  * @implements {os.command.ICommand}
  * @extends {os.command.AbstractSource}

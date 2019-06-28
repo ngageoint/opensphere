@@ -5,6 +5,7 @@ goog.require('os.ui.capture.HtmlRenderer');
 
 /**
  * Renders a map overlay to a canvas.
+ *
  * @param {!ol.Overlay} overlay The overlay to render.
  * @extends {os.ui.capture.HtmlRenderer}
  * @constructor

@@ -19,6 +19,7 @@ goog.require('plugin.file.geojson.mixin');
 
 /**
  * Provides GeoJSON support
+ *
  * @extends {os.plugin.AbstractPlugin}
  * @constructor
  */

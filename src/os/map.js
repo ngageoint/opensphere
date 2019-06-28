@@ -79,6 +79,7 @@ os.Map.prototype.getPixelFromCoordinate = function(coordinate) {
 /**
  * Get the 2D pixel from a coordinate. This is the same as getPixelFromCoordinate except that it only returns
  * the 2D map's pixel.
+ *
  * @param {ol.Coordinate} coordinate A map coordinate.
  * @return {ol.Pixel} A pixel position in the map viewport.
  */
@@ -113,6 +114,7 @@ os.Map.prototype.forEachFeatureAtPixel = function(pixel, callback, opt_options) 
 
 /**
  * Toggles user movement of the 3D globe
+ *
  * @param {boolean} value
  */
 os.Map.prototype.toggleMovement = function(value) {
@@ -128,6 +130,7 @@ os.Map.prototype.toggleMovement = function(value) {
 
 /**
  * override so we can ignore events if there is an input box as the target
+ *
  * @inheritDoc
  */
 os.Map.prototype.handleBrowserEvent = function(browserEvent, opt_type) {

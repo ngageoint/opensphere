@@ -12,6 +12,7 @@ goog.require('os.ui.ol.interaction');
 
 /**
  * Handles hover/highlight of areas
+ *
  * @constructor
  * @extends {ol.interaction.Select}
  * @param {olx.interaction.SelectOptions=} opt_options Options.

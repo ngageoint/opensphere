@@ -13,6 +13,7 @@ goog.require('os.ui.legendDirective');
 
 /**
  * Screen capture legend settings.
+ *
  * @extends {os.ui.config.SettingPlugin}
  * @constructor
  */
@@ -60,6 +61,7 @@ os.config.LegendSetting = {
 
 /**
  * The legendsettings directive
+ *
  * @return {angular.Directive}
  */
 os.config.legendSettingsDirective = function() {
@@ -83,6 +85,7 @@ os.ui.Module.directive('legendsettings', [os.config.legendSettingsDirective]);
 
 /**
  * Controller function for the legendsettings directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$compile} $compile
@@ -153,6 +156,7 @@ os.config.LegendSettingsCtrl.prototype.disposeInternal = function() {
 
 /**
  * Compile settings UI's for legend plugins.
+ *
  * @protected
  */
 os.config.LegendSettingsCtrl.prototype.compilePlugins = function() {
@@ -181,6 +185,7 @@ os.config.LegendSettingsCtrl.prototype.compilePlugins = function() {
 
 /**
  * Open the legend.
+ *
  * @export
  */
 os.config.LegendSettingsCtrl.prototype.openLegend = function() {
@@ -191,6 +196,7 @@ os.config.LegendSettingsCtrl.prototype.openLegend = function() {
 
 /**
  * Handle changes to legend background color.
+ *
  * @param {string} newVal
  * @param {string} oldVal
  * @private
@@ -205,6 +211,7 @@ os.config.LegendSettingsCtrl.prototype.onBgChange_ = function(newVal, oldVal) {
 
 /**
  * Handle changes to legend background color.
+ *
  * @param {string} newVal
  * @param {string} oldVal
  * @private
@@ -219,6 +226,7 @@ os.config.LegendSettingsCtrl.prototype.onShowBgChange_ = function(newVal, oldVal
 
 /**
  * Handle changes to legend background color.
+ *
  * @param {string} newVal
  * @param {string} oldVal
  * @private
@@ -233,6 +241,7 @@ os.config.LegendSettingsCtrl.prototype.onOpacityChange_ = function(newVal, oldVa
 
 /**
  * If the font size can be increased.
+ *
  * @return {boolean}
  * @export
  */
@@ -244,6 +253,7 @@ os.config.LegendSettingsCtrl.prototype.canIncreaseFontSize = function() {
 
 /**
  * If the font size can be increased.
+ *
  * @return {boolean}
  * @export
  */
@@ -254,6 +264,7 @@ os.config.LegendSettingsCtrl.prototype.canDecreaseFontSize = function() {
 
 /**
  * Increases the font size used in the legend.
+ *
  * @export
  */
 os.config.LegendSettingsCtrl.prototype.increaseFontSize = function() {
@@ -268,6 +279,7 @@ os.config.LegendSettingsCtrl.prototype.increaseFontSize = function() {
 
 /**
  * Decreases the font size used in the legend.
+ *
  * @export
  */
 os.config.LegendSettingsCtrl.prototype.decreaseFontSize = function() {
@@ -282,6 +294,7 @@ os.config.LegendSettingsCtrl.prototype.decreaseFontSize = function() {
 
 /**
  * Toggles a boolean value and updates the value in settings.
+ *
  * @param {string} type
  * @export
  */
@@ -294,6 +307,7 @@ os.config.LegendSettingsCtrl.prototype.toggle = function(type) {
 
 /**
  * Toggle the font bold setting.
+ *
  * @export
  */
 os.config.LegendSettingsCtrl.prototype.toggleBold = function() {

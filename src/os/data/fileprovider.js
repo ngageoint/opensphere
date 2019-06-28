@@ -6,6 +6,7 @@ goog.require('os.ui.data.DescriptorProvider');
 
 /**
  * Generic file-based provider
+ *
  * @abstract
  * @extends {os.ui.data.DescriptorProvider<!T>}
  * @template T

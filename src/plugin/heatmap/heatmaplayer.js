@@ -29,6 +29,7 @@ goog.require('plugin.heatmap.heatmapLayerUIDirective');
  * images to represent each feature in the original layer. These are drawn as alpha < 1 monochrome images that are
  * then composited together and colored with a gradient (in the heatmap source). The more features that overlap in
  * a given area, the higher the alpha in that area and the more intense the color in the final image.
+ *
  * @extends {os.layer.Vector}
  * @param {olx.layer.VectorOptions} options
  * @constructor
@@ -204,6 +205,7 @@ plugin.heatmap.Heatmap.prototype.onPreCompose_ = function(event) {
 
 /**
  * Creates the heatmap styles for each feature to draw to the canvas.
+ *
  * @param {ol.Feature} feature
  * @param {number} resolution
  * @return {Array<ol.style.Style>}
@@ -279,6 +281,7 @@ plugin.heatmap.Heatmap.prototype.createImage = function(feature) {
 
 /**
  * Draws a circle for the passed in feature.
+ *
  * @param {ol.geom.Geometry} geom
  * @return {CanvasRenderingContext2D} Data URL for a circle.
  */
@@ -303,6 +306,7 @@ plugin.heatmap.Heatmap.prototype.drawPoint = function(geom) {
 
 /**
  * Draws a circle for the passed in feature.
+ *
  * @param {ol.geom.Geometry} geom
  * @return {CanvasRenderingContext2D} Data URL for a circle.
  */
@@ -341,6 +345,7 @@ plugin.heatmap.Heatmap.prototype.drawMultiPoint = function(geom) {
 
 /**
  * Draws a polygon for the passed in feature.
+ *
  * @param {ol.geom.Geometry} geom
  * @return {CanvasRenderingContext2D}
  */
@@ -377,6 +382,7 @@ plugin.heatmap.Heatmap.prototype.drawPolygon = function(geom) {
 
 /**
  * Draws a polygon for the passed in feature.
+ *
  * @param {ol.geom.Geometry} geom
  * @return {CanvasRenderingContext2D}
  */
@@ -417,6 +423,7 @@ plugin.heatmap.Heatmap.prototype.drawMultiPolygon = function(geom) {
 
 /**
  * Draws a linestring for the passed in feature.
+ *
  * @param {ol.geom.Geometry} geom
  * @return {CanvasRenderingContext2D}
  */
@@ -455,6 +462,7 @@ plugin.heatmap.Heatmap.prototype.drawLineString = function(geom) {
 
 /**
  * Gets the last rendered image canvas.
+ *
  * @return {?ol.ImageCanvas} The image canvas, or null.
  */
 plugin.heatmap.Heatmap.prototype.getLastImage = function() {
@@ -486,6 +494,7 @@ plugin.heatmap.Heatmap.prototype.getExtent = function() {
 
 /**
  * Get the intensity
+ *
  * @return {number}
  */
 plugin.heatmap.Heatmap.prototype.getIntensity = function() {
@@ -495,6 +504,7 @@ plugin.heatmap.Heatmap.prototype.getIntensity = function() {
 
 /**
  * Set the intensity
+ *
  * @param {number} value
  */
 plugin.heatmap.Heatmap.prototype.setIntensity = function(value) {
@@ -505,6 +515,7 @@ plugin.heatmap.Heatmap.prototype.setIntensity = function(value) {
 
 /**
  * Get the size
+ *
  * @return {number}
  */
 plugin.heatmap.Heatmap.prototype.getSize = function() {
@@ -514,6 +525,7 @@ plugin.heatmap.Heatmap.prototype.getSize = function() {
 
 /**
  * Set the size
+ *
  * @param {number} value
  */
 plugin.heatmap.Heatmap.prototype.setSize = function(value) {
@@ -524,6 +536,7 @@ plugin.heatmap.Heatmap.prototype.setSize = function(value) {
 
 /**
  * Get the gradient. This value is kept on the source.
+ *
  * @return {Array<string>}
  */
 plugin.heatmap.Heatmap.prototype.getGradient = function() {
@@ -533,6 +546,7 @@ plugin.heatmap.Heatmap.prototype.getGradient = function() {
 
 /**
  * Set the gradient. This value is kept on the source.
+ *
  * @param {Array<string>} value
  */
 plugin.heatmap.Heatmap.prototype.setGradient = function(value) {
@@ -545,6 +559,7 @@ plugin.heatmap.Heatmap.prototype.setGradient = function(value) {
 /**
  * Trigger a render on the source. Necessary because the heatmap source deliberately avoids rerendering the heatmap as
  * much as possible.
+ *
  * @param {string=} opt_eventType Optional type for the style event.
  */
 plugin.heatmap.Heatmap.prototype.updateSource = function(opt_eventType) {
@@ -613,6 +628,7 @@ plugin.heatmap.Heatmap.getPixelExtent = function(geom) {
 
 /**
  * Draws the blurred shadow in the appropriate position.
+ *
  * @param {CanvasRenderingContext2D} context
  * @param {number} sizeY
  * @param {number} blur

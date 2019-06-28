@@ -27,6 +27,7 @@ goog.inherits(plugin.suncalc.LightStripSettings, os.ui.config.SettingPlugin);
 
 /**
  * The lightstrip settings UI directive
+ *
  * @return {angular.Directive}
  */
 plugin.suncalc.LightStripSettingsDirective = function() {
@@ -48,6 +49,7 @@ os.ui.Module.directive('lightstripsettings', [plugin.suncalc.LightStripSettingsD
 
 /**
  * Controller for Light Strip Controller settings
+ *
  * @param {!angular.Scope} $scope
  * @constructor
  * @ngInject

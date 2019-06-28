@@ -5,6 +5,7 @@ goog.require('os.ui.Module');
 
 /**
  * A spinner directive
+ *
  * @return {angular.Directive}
  */
 os.ui.spinnerDirective = function() {
@@ -36,6 +37,7 @@ os.ui.Module.directive('spinner', [os.ui.spinnerDirective]);
 
 /**
  * Controller for spinner directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @constructor
@@ -101,6 +103,7 @@ os.ui.SpinnerCtrl = function($scope, $element) {
 
 /**
  * Clean up
+ *
  * @private
  */
 os.ui.SpinnerCtrl.prototype.onDestroy_ = function() {
@@ -111,6 +114,7 @@ os.ui.SpinnerCtrl.prototype.onDestroy_ = function() {
 
 /**
  * Default event handler to prevent mouse wheel events from leaving the spinner.
+ *
  * @param {*} e The mouse event to stop
  * @private
  */
@@ -121,6 +125,7 @@ os.ui.SpinnerCtrl.prototype.killEvent_ = function(e) {
 
 /**
  * Handles external changes to other values
+ *
  * @param {number} newVal
  * @param {number} oldVal
  * @private
@@ -150,6 +155,7 @@ os.ui.SpinnerCtrl.prototype.onChange_ = function(newVal, oldVal) {
 
 /**
  * Handles changes to the disabled scope value.
+ *
  * @param {boolean=} opt_new
  * @param {boolean=} opt_old
  * @private
@@ -163,6 +169,7 @@ os.ui.SpinnerCtrl.prototype.onDisabledChange_ = function(opt_new, opt_old) {
 
 /**
  * Handles the spin event
+ *
  * @param {*} e The event
  * @param {*} spinner The spinner
  * @private
@@ -180,6 +187,7 @@ os.ui.SpinnerCtrl.prototype.onSpin_ = function(e, spinner) {
 
 /**
  * Handles the spinner change event
+ *
  * @param {*} e The event
  * @param {*} spinner The spinner
  * @private

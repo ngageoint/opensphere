@@ -8,6 +8,7 @@ goog.require('plugin.capture.MapRenderer');
 
 /**
  * Renders the legend to a canvas.
+ *
  * @extends {os.ui.capture.CanvasRenderer}
  * @constructor
  */

@@ -17,6 +17,7 @@ goog.require('os.ui.uiSwitchDirective');
 
 /**
  * The featureinfo directive
+ *
  * @return {angular.Directive}
  */
 os.ui.feature.featureInfoDirective = function() {
@@ -39,6 +40,7 @@ os.ui.Module.directive('featureinfo', [os.ui.feature.featureInfoDirective]);
 
 /**
  * Controller function for the featureinfo directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @extends {goog.Disposable}
@@ -135,6 +137,7 @@ os.ui.feature.FeatureInfoCtrl.prototype.disposeInternal = function() {
 
 /**
  * Handle value change events by updating the table.
+ *
  * @param {os.data.FeatureEvent} event
  * @suppress {checkTypes} To allow access to feature['id'].
  */
@@ -153,6 +156,7 @@ os.ui.feature.FeatureInfoCtrl.prototype.onValueChange = function(event) {
 
 /**
  * Handle change events fired by the feature.
+ *
  * @param {ol.events.Event} event
  */
 os.ui.feature.FeatureInfoCtrl.prototype.onFeatureChangeEvent = function(event) {
@@ -165,6 +169,7 @@ os.ui.feature.FeatureInfoCtrl.prototype.onFeatureChangeEvent = function(event) {
 
 /**
  * Handle feature changes on the scope.
+ *
  * @param {Array<ol.Feature>} newVal The new value
  *
  * @todo Should polygons display the center point? See {@link ol.geom.Polygon#getInteriorPoint}. What about line
@@ -199,6 +204,7 @@ os.ui.feature.FeatureInfoCtrl.prototype.onFeatureChange = function(newVal) {
 
 /**
  * Update the geometry information displayed for the feature.
+ *
  * @protected
  */
 os.ui.feature.FeatureInfoCtrl.prototype.updateGeometry = function() {
@@ -231,6 +237,7 @@ os.ui.feature.FeatureInfoCtrl.prototype.updateGeometry = function() {
 
 /**
  * Update the title for the active feature.
+ *
  * @private
  */
 os.ui.feature.FeatureInfoCtrl.prototype.updateTitle_ = function() {
@@ -252,6 +259,7 @@ os.ui.feature.FeatureInfoCtrl.prototype.updateTitle_ = function() {
 
 /**
  * Save active tab
+ *
  * @param {os.ui.tab.FeatureTab} tab
  * @export
  */
@@ -262,6 +270,7 @@ os.ui.feature.FeatureInfoCtrl.prototype.setActiveTab = function(tab) {
 
 /**
  * Sets the intial active tab.  Defaults to properties tab.
+ *
  * @private
  */
 os.ui.feature.FeatureInfoCtrl.prototype.setInitialActiveTab_ = function() {
@@ -273,6 +282,7 @@ os.ui.feature.FeatureInfoCtrl.prototype.setInitialActiveTab_ = function() {
 
 /**
  * Gets the UI for the currently active tab.
+ *
  * @param {os.ui.tab.FeatureTab} item
  * @return {string}
  * @private
@@ -285,6 +295,7 @@ os.ui.feature.FeatureInfoCtrl.prototype.getUi_ = function(item) {
 
 /**
  * Update the visibility of the tabs and broadcast update event
+ *
  * @private
  */
 os.ui.feature.FeatureInfoCtrl.prototype.updateTabs_ = function() {
@@ -309,6 +320,7 @@ os.ui.feature.FeatureInfoCtrl.prototype.updateTabs_ = function() {
 
 /**
  * Switches to the description tab.
+ *
  * @param {angular.Scope.Event} event
  */
 os.ui.feature.FeatureInfoCtrl.prototype.showDescription = function(event) {

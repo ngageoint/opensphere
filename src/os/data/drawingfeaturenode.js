@@ -97,6 +97,7 @@ os.data.DrawingFeatureNode.prototype.getFeature = function() {
 
 /**
  * Set the feature for the node.
+ *
  * @param {!ol.Feature} feature The feature.
  */
 os.data.DrawingFeatureNode.prototype.setFeature = function(feature) {
@@ -124,6 +125,7 @@ os.data.DrawingFeatureNode.prototype.setFeature = function(feature) {
 
 /**
  * Update the node from the current feature.
+ *
  * @protected
  */
 os.data.DrawingFeatureNode.prototype.updateFromFeature = function() {
@@ -184,6 +186,7 @@ os.data.DrawingFeatureNode.prototype.onMouseEnter = function() {
 
 /**
  * Maps a style to a highlight style
+ *
  * @param {ol.style.Style} s The style to highlight
  * @return {ol.style.Style} The highlighted style
  * @private

@@ -5,6 +5,7 @@ goog.provide('os.unit.IMultiplier');
 /**
  * Defines information required to convert values within a certain unit.
  * E.g: English distance units have mulipliers: 'inches', 'yards', 'feet', 'miles', etc.
+ *
  * @interface
  */
 os.unit.IMultiplier = function() {};

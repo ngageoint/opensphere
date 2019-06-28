@@ -5,6 +5,7 @@ goog.require('os.net.IDataFormatter');
 
 /**
  * Creates an application/json payload
+ *
  * @implements {os.net.IDataFormatter}
  * @param {Object=} opt_content The JSON object to format.
  * @param {?function(string, *)=} opt_replacer The JSON object to format.
@@ -53,6 +54,7 @@ os.net.JsonEncFormatter.prototype.getContentType = function() {
 /**
  * Sets the replacer function called for each (key, value) pair that determines how
  * the value should be serialized.
+ *
  * @param {?function(string, *)} replacer
  */
 os.net.JsonEncFormatter.prototype.setReplacer = function(replacer) {

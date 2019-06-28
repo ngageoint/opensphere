@@ -104,6 +104,7 @@ os.file.mime.register = function(mimeType, detectFunc, opt_priority, opt_parentT
 
 /**
  * Sort ascending
+ *
  * @param {os.file.mime.Node} a
  * @param {os.file.mime.Node} b
  * @return {number} per typical compare functions

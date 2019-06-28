@@ -89,6 +89,7 @@ os.control.MapMode.prototype.disposeInternal = function() {
 
 /**
  * Handle click events on the control.
+ *
  * @param {Event} event The event.
  * @private
  */
@@ -100,6 +101,7 @@ os.control.MapMode.prototype.handleClick_ = function(event) {
 
 /**
  * Handle property change events from the map container.
+ *
  * @param {os.events.PropertyChangeEvent} event The event.
  * @private
  */
@@ -113,6 +115,7 @@ os.control.MapMode.prototype.onMapChange_ = function(event) {
 
 /**
  * Update HTML content in the control.
+ *
  * @private
  */
 os.control.MapMode.prototype.updateContent_ = function() {

@@ -6,6 +6,7 @@ goog.require('goog.events.Listenable');
 
 /**
  * Interface representing a wrapper class for an Openlayers map.
+ *
  * @extends {goog.events.Listenable}
  * @interface
  */

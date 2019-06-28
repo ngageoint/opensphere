@@ -5,6 +5,7 @@ goog.require('goog.events.Listenable');
 
 /**
  * Interface for the histogram managers
+ *
  * @interface
  */
 os.ui.hist.IHistogramManager = function() {};

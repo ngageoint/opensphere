@@ -86,6 +86,7 @@ os.search.SearchEvent.prototype.getResults = function() {
 
 /**
  * Retrieve the total number of search results, regardless of page size
+ *
  * @return {number} The total number of search results.
  */
 os.search.SearchEvent.prototype.getTotal = function() {

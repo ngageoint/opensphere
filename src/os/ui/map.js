@@ -9,6 +9,7 @@ goog.require('os.ui');
 
 /**
  * The map directive
+ *
  * @return {angular.Directive}
  */
 os.ui.mapDirective = function() {
@@ -32,6 +33,7 @@ os.ui.Module.directive('map', [os.ui.mapDirective]);
 
 /**
  * Controller function for the map directive
+ *
  * @param {!angular.Scope} $scope
  * @constructor
  * @ngInject
@@ -62,6 +64,7 @@ os.ui.MapCtrl.LOGGER_ = goog.log.getLogger('os.ui.MapCtrl');
 
 /**
  * Clean up!
+ *
  * @private
  */
 os.ui.MapCtrl.prototype.destroy_ = function() {
@@ -72,6 +75,7 @@ os.ui.MapCtrl.prototype.destroy_ = function() {
 
 /**
  * Initialize the map when Angular has finished loading the DOM.
+ *
  * @param {string=} opt_err Error message if a failure occurred
  * @private
  */

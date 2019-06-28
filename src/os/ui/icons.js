@@ -99,6 +99,7 @@ os.ui.createIconSet = function(id, svgIcons, faIcons, color) {
 
 /**
  * Hashes an icon ID. This prevents us from putting invalid special characters in an ID selector.
+ *
  * @param {string} id
  * @return {string}
  */

@@ -6,6 +6,7 @@ goog.require('os.ui.timeline.ITimelineItem');
 
 /**
  * Base timeline item
+ *
  * @abstract
  * @constructor
  * @extends {goog.events.EventTarget}
@@ -92,6 +93,7 @@ os.ui.timeline.BaseItem.prototype.setInteractive = function(value) {
 
 /**
  * Gets the tool tip
+ *
  * @return {?string} The tool tip
  */
 os.ui.timeline.BaseItem.prototype.getToolTip = function() {
@@ -101,6 +103,7 @@ os.ui.timeline.BaseItem.prototype.getToolTip = function() {
 
 /**
  * Set the tool tip
+ *
  * @param {?string} tip
  */
 os.ui.timeline.BaseItem.prototype.setToolTip = function(tip) {

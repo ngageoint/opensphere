@@ -3,6 +3,7 @@ goog.provide('os.ui.util.filters.ellipsisFilter');
 
 /**
  * Take decimal degress
+ *
  * @return {angular.Filter}
  */
 os.ui.util.filters.ellipsisFilter = function() {

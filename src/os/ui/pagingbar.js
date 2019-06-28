@@ -5,6 +5,7 @@ goog.require('os.ui.Module');
 
 /**
  * The pagingbar directive
+ *
  * @return {angular.Directive}
  */
 os.ui.pagingBarDirective = function() {
@@ -35,6 +36,7 @@ os.ui.Module.directive('pagingbar', [os.ui.pagingBarDirective]);
 
 /**
  * Controller function for the pagingbar directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @constructor
@@ -56,6 +58,7 @@ os.ui.PagingBarCtrl = function($scope, $element) {
 
 /**
  * Clean up.
+ *
  * @private
  */
 os.ui.PagingBarCtrl.prototype.destroy_ = function() {
@@ -65,6 +68,7 @@ os.ui.PagingBarCtrl.prototype.destroy_ = function() {
 
 /**
  * Updates the paging state.
+ *
  * @private
  */
 os.ui.PagingBarCtrl.prototype.updatePaging_ = function() {
@@ -150,6 +154,7 @@ os.ui.PagingBarCtrl.prototype.updatePaging_ = function() {
 /**
  * Page click handler. Checks to see if the clicked page is enabled and if it's not the same page as is currently
  * active.
+ *
  * @param {Object} page
  * @export
  */

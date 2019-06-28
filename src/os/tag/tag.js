@@ -24,6 +24,7 @@ os.tag.DEFAULT_XML_TAG = 'tag';
 
 /**
  * Converts a string to an array of tags.
+ *
  * @param {?string} str The string
  * @return {Array.<string>} The tag array
  */
@@ -36,6 +37,7 @@ os.tag.tagsFromString = function(str) {
 
 /**
  * Converts an array of tags to a string.
+ *
  * @param {Array.<string>} tags The tag array
  * @return {string} The tag string
  */
@@ -50,6 +52,7 @@ os.tag.stringFromTags = function(tags) {
 
 /**
  * Converts a DOM element to a tag string
+ *
  * @param {Element} node The element
  * @return {string} The tag string
  */
@@ -60,6 +63,7 @@ os.tag.stringFromXML = function(node) {
 
 /**
  * Converts a DOM element to an array of tags.
+ *
  * @param {Element} node The element
  * @return {Array.<string>} The tag array
  */
@@ -81,6 +85,7 @@ os.tag.tagsFromXML = function(node) {
 
 /**
  * Converts an array of tags to a DOM element.
+ *
  * @param {Array.<string>|string} tags The tag array
  * @param {string=} opt_tagName The tag name (defaults to 'tags')
  * @param {Document=} opt_doc The root document

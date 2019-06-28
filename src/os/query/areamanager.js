@@ -26,6 +26,7 @@ goog.require('os.ui.window');
 
 /**
  * Manages spatial areas
+ *
  * @extends {os.query.BaseAreaManager}
  * @constructor
  */
@@ -328,6 +329,7 @@ os.query.AreaManager.prototype.toRgbaString = function(color) {
 
 /**
  * Handle Include Color changes.
+ *
  * @param {os.events.SettingChangeEvent} event
  * @private
  */
@@ -342,6 +344,7 @@ os.query.AreaManager.prototype.updateInColor_ = function(event) {
 
 /**
  * Handle Include Width changes.
+ *
  * @param {os.events.SettingChangeEvent} event
  * @private
  */
@@ -355,6 +358,7 @@ os.query.AreaManager.prototype.updateInWidth_ = function(event) {
 
 /**
  * Handle Exclude Color changes.
+ *
  * @param {os.events.SettingChangeEvent} event
  * @private
  */
@@ -369,6 +373,7 @@ os.query.AreaManager.prototype.updateExColor_ = function(event) {
 
 /**
  * Handle Exclude Width changes.
+ *
  * @param {os.events.SettingChangeEvent} event
  * @private
  */

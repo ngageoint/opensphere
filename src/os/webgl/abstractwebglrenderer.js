@@ -9,6 +9,7 @@ goog.require('os.webgl.IWebGLRenderer');
 
 /**
  * Abstract WebGL renderer implementation.
+ *
  * @abstract
  * @implements {os.webgl.IWebGLRenderer}
  * @extends {goog.Disposable}
@@ -215,6 +216,7 @@ os.webgl.AbstractWebGLRenderer.prototype.getCamera = function() {};
 
 /**
  * Handle settings changes that affect the renderer.
+ *
  * @param {!os.events.SettingChangeEvent} event The event.
  * @protected
  */
@@ -256,6 +258,7 @@ os.webgl.AbstractWebGLRenderer.prototype.onSettingChange = function(event) {
 
 /**
  * Set the background color.
+ *
  * @param {string} value The new color.
  */
 os.webgl.AbstractWebGLRenderer.prototype.setBGColor = function(value) {
@@ -265,6 +268,7 @@ os.webgl.AbstractWebGLRenderer.prototype.setBGColor = function(value) {
 
 /**
  * Toggle if fog is displayed.
+ *
  * @param {boolean} value If fog should be displayed.
  * @protected
  */
@@ -275,6 +279,7 @@ os.webgl.AbstractWebGLRenderer.prototype.showFog = function(value) {
 
 /**
  * Set the fog density.
+ *
  * @param {number} value The fog density as a percentage, from 0 to 1.
  * @protected
  */
@@ -285,6 +290,7 @@ os.webgl.AbstractWebGLRenderer.prototype.setFogDensity = function(value) {
 
 /**
  * Toggle if the sky is displayed.
+ *
  * @param {boolean} value If the sky should be displayed.
  * @protected
  */
@@ -295,6 +301,7 @@ os.webgl.AbstractWebGLRenderer.prototype.showSky = function(value) {
 
 /**
  * Toggle if sunlight is displayed.
+ *
  * @param {boolean} value If sunlight should be displayed.
  * @protected
  */
@@ -305,6 +312,7 @@ os.webgl.AbstractWebGLRenderer.prototype.showSunlight = function(value) {
 
 /**
  * Disable the terrain provider.
+ *
  * @protected
  */
 os.webgl.AbstractWebGLRenderer.prototype.disableTerrain = function() {
@@ -318,6 +326,7 @@ os.webgl.AbstractWebGLRenderer.prototype.disableTerrain = function() {
 
 /**
  * Toggle if terrain is displayed.
+ *
  * @param {boolean} value If terrain should be displayed.
  * @protected
  */
@@ -328,6 +337,7 @@ os.webgl.AbstractWebGLRenderer.prototype.showTerrain = function(value) {
 
 /**
  * Update the terrain provider.
+ *
  * @protected
  */
 os.webgl.AbstractWebGLRenderer.prototype.updateTerrainProvider = function() {

@@ -6,6 +6,7 @@ goog.require('os.IComparable');
 
 /**
  * An interface that handles time instants, time ranges, and unbounded times.
+ *
  * @extends {os.IComparable<os.time.ITime>}
  * @interface
  */

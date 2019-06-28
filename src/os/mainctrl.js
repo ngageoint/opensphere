@@ -172,6 +172,7 @@ goog.require('plugin.xyz.XYZPlugin');
 
 /**
  * Controller function for the Main directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$compile} $compile
@@ -388,6 +389,7 @@ os.MainCtrl.prototype.destroy = function() {
 
 /**
  * Handle removal of iframes in windows
+ *
  * @param {*} e
  * @param {angular.JQLite} element
  * @private
@@ -587,6 +589,7 @@ os.MainCtrl.prototype.onPluginsLoaded = function(opt_e) {
 
 /**
  * Handle window drag events, setting the map interacting hint appropriately.
+ *
  * @param {angular.Scope.Event} event
  * @private
  */
@@ -605,6 +608,7 @@ os.MainCtrl.prototype.onWindowDrag_ = function(event) {
 /**
  * Prevents default behavior on middle mouse clicks. This is used to prevent browsers on Linux from loading a URL from
  * the clipboard.
+ *
  * @param {goog.events.BrowserEvent} event
  * @private
  */
@@ -617,6 +621,7 @@ os.MainCtrl.prototype.preventMiddleMouse_ = function(event) {
 
 /**
  * Setup help menu controls
+ *
  * @private
  */
 os.MainCtrl.prototype.addControlsToHelp_ = function() {
@@ -663,6 +668,7 @@ os.MainCtrl.prototype.initializeSettings_ = function() {
 
 /**
  * Tasks that should run after the map has been initialized.
+ *
  * @param {goog.events.Event} event The loaded event
  * @private
  */
@@ -674,6 +680,7 @@ os.MainCtrl.prototype.onMapReady_ = function(event) {
 
 /**
  * Waits for Angular to finish doing things then resizes the map.
+ *
  * @private
  */
 os.MainCtrl.prototype.resizeMap_ = function() {
@@ -684,6 +691,7 @@ os.MainCtrl.prototype.resizeMap_ = function() {
 /**
  * Return a function that will execute in an angular timeout and whose context will be
  * this MainCtrl.
+ *
  * @param {Function} update a function that will update the model
  * @return {function()}
  */
@@ -695,6 +703,7 @@ os.MainCtrl.prototype.modelUpdate = function(update) {
 
 /**
  * Execute the given model update immediately.
+ *
  * @param {Function} update
  */
 os.MainCtrl.prototype.updateModelNow = function(update) {
@@ -704,6 +713,7 @@ os.MainCtrl.prototype.updateModelNow = function(update) {
 
 /**
  * Handle keyboard events.
+ *
  * @param {goog.events.KeyEvent} event
  * @private
  */
@@ -772,6 +782,7 @@ os.MainCtrl.prototype.handleKeyEvent_ = function(event) {
 
 /**
  * Registers mappings with the mapping manager.
+ *
  * @private
  */
 os.MainCtrl.prototype.registerMappings_ = function() {
@@ -806,6 +817,7 @@ os.MainCtrl.prototype.registerMappings_ = function() {
 
 /**
  * Registers drag/drop handlers with the UrlManager
+ *
  * @private
  */
 os.MainCtrl.prototype.registerDragDrop_ = function() {
@@ -817,6 +829,7 @@ os.MainCtrl.prototype.registerDragDrop_ = function() {
 
 /**
  * Handle settings reset event.
+ *
  * @param {goog.events.Event} event
  * @private
  */
@@ -849,6 +862,7 @@ os.MainCtrl.prototype.onSettingsReset_ = function(event) {
 
 /**
  * Handle file/url import events.
+ *
  * @param {os.ui.im.ImportEvent=} opt_event
  * @private
  */
@@ -899,6 +913,7 @@ os.MainCtrl.prototype.onLayerConfigEvent_ = function(event) {
 
 /**
  * Toggles a UI component
+ *
  * @param {os.ui.events.UIEvent} event The event
  * @private
  */
@@ -934,6 +949,7 @@ os.MainCtrl.prototype.onToggleUI_ = function(event) {
 
 /**
  * Handles a file drop by
+ *
  * @param {Array.<!File>} files
  * @private
  */
@@ -988,6 +1004,7 @@ os.MainCtrl.prototype.handleURLDrop_ = function(url) {
 
 /**
  * Undo the last command.
+ *
  * @export
  */
 os.MainCtrl.prototype.undoCommand = function() {
@@ -998,6 +1015,7 @@ os.MainCtrl.prototype.undoCommand = function() {
 
 /**
  * Redo the last undone command.
+ *
  * @export
  */
 os.MainCtrl.prototype.redoCommand = function() {
@@ -1008,6 +1026,7 @@ os.MainCtrl.prototype.redoCommand = function() {
 
 /**
  * Launch a popup that recommends that the user install a modern browser
+ *
  * @protected
  */
 os.MainCtrl.prototype.suggestOtherBrowser = function() {

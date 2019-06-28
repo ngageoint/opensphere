@@ -8,6 +8,7 @@ goog.require('os.command.State');
 
 /**
  * Changes whether a layer is colorized.
+ *
  * @param {string} layerId
  * @param {boolean} value
  * @param {boolean=} opt_oldValue

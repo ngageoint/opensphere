@@ -8,6 +8,7 @@ goog.require('os.ui.Module');
  * A directive that allows for filtering on a numeric column but including a wildcard.
  * The normal directive restricts the filter to be the same type as the column (i.e. decimal).
  * But in this case, we need to allow for a numeric along with a '*'
+ *
  * @return {angular.Directive}
  */
 os.ui.filter.textNoColCheckDirective = function() {
@@ -30,6 +31,7 @@ os.ui.Module.directive('fbTextNoColCheck', [os.ui.filter.textNoColCheckDirective
 
 /**
  * Controller for the between UI
+ *
  * @param {!angular.Scope} $scope
  * @constructor
  * @ngInject
@@ -54,6 +56,7 @@ os.ui.filter.TextNoColCheckCtrl = function($scope) {
 
 /**
  * clean up
+ *
  * @private
  */
 os.ui.filter.TextNoColCheckCtrl.prototype.onDestroy_ = function() {
@@ -63,6 +66,7 @@ os.ui.filter.TextNoColCheckCtrl.prototype.onDestroy_ = function() {
 
 /**
  * Run when the user changes the value
+ *
  * @export
  */
 os.ui.filter.TextNoColCheckCtrl.prototype.onChange = function() {

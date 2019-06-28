@@ -5,6 +5,7 @@ goog.require('os.data.CollectionManager');
 
 /**
  * IconSelectorManager manages all of the selectors used for picking icons
+ *
  * @extends {os.data.CollectionManager<osx.icon.iconSelector>}
  * @constructor
  */

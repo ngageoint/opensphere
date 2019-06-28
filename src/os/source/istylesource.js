@@ -3,6 +3,7 @@ goog.provide('os.source.IStyle');
 
 /**
  * Interface for marking sources which support style changes
+ *
  * @interface
  */
 os.source.IStyle = function() {};

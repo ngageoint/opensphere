@@ -8,6 +8,7 @@ goog.require('os.ui.query.cmd.AbstractArea');
 
 /**
  * Command for adding an area
+ *
  * @param {!ol.Feature} area
  * @param {boolean=} opt_include
  * @param {boolean=} opt_exclude

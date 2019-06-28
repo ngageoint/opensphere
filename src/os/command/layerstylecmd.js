@@ -7,6 +7,7 @@ goog.require('os.style.StyleManager');
 
 /**
  * Changes the style of either a vector or tile layer. Requires a setter callback as well as the new value.
+ *
  * @param {string} layerId
  * @param {function(os.layer.ILayer, ?)} callback Callback to actually do the set on the layer.
  * @param {number} value The new value to set.
@@ -68,6 +69,7 @@ os.command.LayerStyle.prototype.finish = function(config) {
  * This method is similar to the one on the parent class, but since opacity changes apply to the drawing layer,
  * it doesn't bother to check whether the layer config is defined. The layer config isn't needed at all and the
  * drawing layer doesn't have one.
+ *
  * @override
  */
 os.command.LayerStyle.prototype.setValue = function(value) {

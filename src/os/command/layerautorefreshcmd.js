@@ -12,6 +12,7 @@ goog.require('os.source.Vector');
 
 /**
  * Command to change the automatic refresh for a source.
+ *
  * @param {string} layerId
  * @param {number} value
  *
@@ -49,6 +50,7 @@ os.command.LayerAutoRefresh = function(layerId, value) {
 
 /**
  * Get the source from the layer id.
+ *
  * @return {os.source.Vector|ol.source.Source|ol.source.UrlTile}
  * @protected
  */

@@ -19,6 +19,7 @@ goog.require('os.ui.slick.SlickTreeNode');
 
 /**
  * Tree nodes for areas
+ *
  * @extends {os.ui.filter.ui.FilterNode}
  * @implements {os.data.ISearchable}
  * @param {os.filter.FilterEntry=} opt_filter

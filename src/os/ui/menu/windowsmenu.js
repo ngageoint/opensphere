@@ -122,6 +122,7 @@ os.ui.menu.windows.dispose = function() {
 
 /**
  * Open a window.
+ *
  * @param {string|os.ui.menu.MenuEvent} evt The menu event.
  * @return {boolean} If the open was successful.
  */
@@ -154,6 +155,7 @@ os.ui.menu.windows.openWindow = function(evt) {
 
 /**
  * Toggle a window.
+ *
  * @param {string} id The window id.
  * @return {boolean} If the toggle was successful.
  */
@@ -179,6 +181,7 @@ os.ui.menu.windows.toggleWindow = function(id) {
 
 /**
  * Opens settings with a specific plugin selected
+ *
  * @param {string} id
  */
 os.ui.menu.windows.openSettingsTo = function(id) {

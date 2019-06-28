@@ -12,6 +12,7 @@ goog.require('ol.layer.Group');
 /**
  * OpenLayers 3 Layer Switcher Control.
  * See [the examples](./examples) for usage.
+ *
  * @constructor
  * @extends {ol.control.Control}
  * @param {Object=} opt_options Control options, extends olx.control.ControlOptions adding:
@@ -45,6 +46,7 @@ os.ui.ol.control.LayerSwitcher = function(opt_options) {
 
   /**
    * Show the layer panel.
+   *
    * @param {Event} e
    */
   element.onmouseover = function(e) {
@@ -55,6 +57,7 @@ os.ui.ol.control.LayerSwitcher = function(opt_options) {
 
   /**
    * Hide the layer panel.
+   *
    * @param {Event} e
    */
   element.onmouseout = function(e) {
@@ -109,6 +112,7 @@ os.ui.ol.control.LayerSwitcher.prototype.renderPanel = function() {
 
 /**
  * Set the map instance the control is associated with.
+ *
  * @param {ol.PluggableMap} map The map instance.
  * @override
  */
@@ -131,6 +135,7 @@ os.ui.ol.control.LayerSwitcher.prototype.setMap = function(map) {
 
 /**
  * Ensure only the top-most base layer is visible if more than one is visible.
+ *
  * @private
  */
 os.ui.ol.control.LayerSwitcher.prototype.ensureTopVisibleBaseLayerShown_ = function() {
@@ -150,6 +155,7 @@ os.ui.ol.control.LayerSwitcher.prototype.ensureTopVisibleBaseLayerShown_ = funct
  * Toggle the visible state of a layer.
  * Takes care of hiding other layers in the same exclusive group if the layer
  * is toggle to visible.
+ *
  * @param {ol.layer.Base} lyr The layer whos visibility will be toggled.
  * @param {boolean} visible
  * @private
@@ -170,6 +176,7 @@ os.ui.ol.control.LayerSwitcher.prototype.setVisible_ = function(lyr, visible) {
 
 /**
  * Render all layers that are children of a group.
+ *
  * @param {ol.layer.Base} lyr Layer to be rendered (should have a title property).
  * @param {number} idx Position in parent group list.
  * @return {Element} [description]
@@ -218,6 +225,7 @@ os.ui.ol.control.LayerSwitcher.prototype.renderLayer_ = function(lyr, idx) {
 
 /**
  * Render all layers that are children of a group.
+ *
  * @private
  * @param {(ol.layer.Group|ol.PluggableMap)} lyr Group layer whos children will be rendered.
  * @param {Element} elm DOM element that children will be appended to.
@@ -236,6 +244,7 @@ os.ui.ol.control.LayerSwitcher.prototype.renderLayers_ = function(lyr, elm) {
 /**
  * **Static** Call the supplied function for each layer in the passed layer group
  * recursing nested groups.
+ *
  * @param {(ol.layer.Group|ol.PluggableMap)} lyr The layer group to start iterating from.
  * @param {Function} fn Callback which will be called for each `ol.layer.Base`
  * found under `lyr`. The signature for `fn` is the same as `ol.Collection#forEach`
@@ -252,6 +261,7 @@ os.ui.ol.control.LayerSwitcher.forEachRecursive = function(lyr, fn) {
 
 /**
  * Get the element
+ *
  * @return {Element}
  */
 os.ui.ol.control.LayerSwitcher.prototype.getElement = function() {

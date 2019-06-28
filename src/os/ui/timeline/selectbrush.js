@@ -9,6 +9,7 @@ goog.require('os.ui.timeline.Brush');
 
 /**
  * Implements shift+click to draw a brush selection
+ *
  * @constructor
  * @extends {os.ui.timeline.Brush}
  */
@@ -92,6 +93,7 @@ os.ui.timeline.SelectBrush.prototype.initSVG = function(container, height) {
 
 /**
  * Begins drawing the selection
+ *
  * @return {boolean|undefined}
  * @private
  */
@@ -203,6 +205,7 @@ os.ui.timeline.SelectBrush.prototype.updateBrush = function(opt_silent) {
 
 /**
  * Handles menu close
+ *
  * @private
  */
 os.ui.timeline.SelectBrush.prototype.onMenuEnd_ = function() {

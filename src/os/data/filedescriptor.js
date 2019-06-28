@@ -105,6 +105,7 @@ os.data.FileDescriptor.prototype.getShapeName = function() {
 
 /**
  * Get the Date for this descriptor.
+ *
  * @return {?Date}
  */
 os.data.FileDescriptor.prototype.getDate = function() {
@@ -114,6 +115,7 @@ os.data.FileDescriptor.prototype.getDate = function() {
 
 /**
  * Set the Date for this descriptor.
+ *
  * @param {?Date} value
  */
 os.data.FileDescriptor.prototype.setDate = function(value) {
@@ -156,6 +158,7 @@ os.data.FileDescriptor.prototype.getLayerOptions = function() {
 
 /**
  * Get the column mappings to apply to imported data.
+ *
  * @return {Array.<os.im.mapping.IMapping>}
  */
 os.data.FileDescriptor.prototype.getMappings = function() {
@@ -165,6 +168,7 @@ os.data.FileDescriptor.prototype.getMappings = function() {
 
 /**
  * Set the column mappings to apply to imported data.
+ *
  * @param {Array.<os.im.mapping.IMapping>} value
  */
 os.data.FileDescriptor.prototype.setMappings = function(value) {
@@ -174,6 +178,7 @@ os.data.FileDescriptor.prototype.setMappings = function(value) {
 
 /**
  * Get the original URL for this file.
+ *
  * @return {?string}
  */
 os.data.FileDescriptor.prototype.getOriginalUrl = function() {
@@ -183,6 +188,7 @@ os.data.FileDescriptor.prototype.getOriginalUrl = function() {
 
 /**
  * Set the original URL for this file.
+ *
  * @param {?string} value
  */
 os.data.FileDescriptor.prototype.setOriginalUrl = function(value) {
@@ -366,6 +372,7 @@ os.data.FileDescriptor.prototype.restore = function(conf) {
 
 /**
  * Updates an existing descriptor from a parser configuration.
+ *
  * @param {!os.parse.FileParserConfig} config
  * @param {boolean=} opt_isNotParserConfig Set to true to not use the the config as the parser config
  */
@@ -385,6 +392,7 @@ os.data.FileDescriptor.prototype.updateFromConfig = function(config, opt_isNotPa
 
 /**
  * Creates a new descriptor from a parser configuration.
+ *
  * @param {!os.data.FileDescriptor} descriptor
  * @param {!os.data.FileProvider} provider
  * @param {!os.parse.FileParserConfig} config

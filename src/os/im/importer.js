@@ -31,6 +31,7 @@ os.im.ImporterEvent = {
 
 /**
  * Imports a set of items via a parser
+ *
  * @constructor
  * @extends {goog.events.EventTarget}
  * @param {os.parse.IParser<T>} parser The parser
@@ -148,6 +149,7 @@ os.im.Importer.prototype.getMappings = function() {
 
 /**
  * get the current list of autodetection mappings
+ *
  * @return {Object}
  */
 os.im.Importer.prototype.getAutoMappings = function() {
@@ -157,6 +159,7 @@ os.im.Importer.prototype.getAutoMappings = function() {
 
 /**
  * Sets the column limit used to determine how many features to check for unique column keys
+ *
  * @param {number} value
  */
 os.im.Importer.prototype.setAutoDetectLimit = function(value) {
@@ -166,6 +169,7 @@ os.im.Importer.prototype.setAutoDetectLimit = function(value) {
 
 /**
  * Sets the column limit used to determine how many features to check for unique column keys
+ *
  * @return {number}
  */
 os.im.Importer.prototype.getAutoDetectLimit = function() {
@@ -175,6 +179,7 @@ os.im.Importer.prototype.getAutoDetectLimit = function() {
 
 /**
  * specify a subset of existing mappings to use for autodetection
+ *
  * @param {Array<string>} mappingIds
  */
 os.im.Importer.prototype.selectAutoMappings = function(mappingIds) {
@@ -196,6 +201,7 @@ os.im.Importer.prototype.selectAutoMappings = function(mappingIds) {
 
 /**
  * define a different set of mappings to use for autodetection
+ *
  * @param {?Array<os.im.mapping.IMapping>} mapList
  */
 os.im.Importer.prototype.setAutoMappings = function(mapList) {
@@ -212,6 +218,7 @@ os.im.Importer.prototype.setAutoMappings = function(mapList) {
 
 /**
  * indicate a list of mappings that will only be executed (no autodetection)
+ *
  * @param {Array<os.im.mapping.IMapping>} mapList
  */
 os.im.Importer.prototype.setExecMappings = function(mapList) {
@@ -257,6 +264,7 @@ os.im.Importer.prototype.startImport = function(source) {
 
 /**
  * Initiates parsing of individual results once the parser is ready.
+ *
  * @param {goog.events.Event=} opt_event
  * @protected
  */
@@ -283,6 +291,7 @@ os.im.Importer.prototype.onParserReady = function(opt_event) {
 
 /**
  * Initiates parsing of individual results once the parser is ready.
+ *
  * @param {goog.events.Event=} opt_event
  * @protected
  */
@@ -300,6 +309,7 @@ os.im.Importer.prototype.onParserError = function(opt_event) {
 
 /**
  * Handles parser completion
+ *
  * @param {goog.events.Event=} opt_event
  * @protected
  */
@@ -324,6 +334,7 @@ os.im.Importer.prototype.onParsingComplete = function(opt_event) {
 
 /**
  * Checks whether the parser has another record
+ *
  * @return {boolean}
  * @protected
  */
@@ -340,6 +351,7 @@ os.im.Importer.prototype.parserHasNext = function() {
 
 /**
  * Parses a single record and adds it to the list
+ *
  * @protected
  */
 os.im.Importer.prototype.parseOne = function() {
@@ -354,6 +366,7 @@ os.im.Importer.prototype.parseOne = function() {
 
 /**
  * Adds a single record to the list
+ *
  * @param {T|Array<T>} item
  */
 os.im.Importer.prototype.addItem = function(item) {
@@ -433,6 +446,7 @@ os.im.Importer.prototype.executeNext = function() {
 /**
  * Enable/disable autodetection.  When enabled, this will default to all
  * of the mappings unless a different set is specified.
+ *
  * @param {boolean} value
  */
 os.im.Importer.prototype.setAutoDetect = function(value) {
@@ -450,6 +464,7 @@ os.im.Importer.prototype.getAutoDetect = function() {
 
 /**
  * autodetect and/or execute mappings that have been chosen
+ *
  * @param {T} item
  * @protected
  */
@@ -490,6 +505,7 @@ os.im.Importer.prototype.performMappings = function(item) {
 
 /**
  * Execute the mapping on the item
+ *
  * @param {T} item
  * @protected
  */
@@ -546,6 +562,7 @@ os.im.Importer.prototype.getTotal = function() {
 /**
  * Build up our overall mapping array.  Items in this array
  * have already been through autodetection or have been directly configured.
+ *
  * @param {os.im.mapping.IMapping} mapping
  * @private
  */

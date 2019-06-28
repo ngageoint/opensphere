@@ -56,6 +56,7 @@ os.ui.Module.directive('uiswitch', [os.ui.uiSwitchDirective]);
 
 /**
  * Controller for the UI switch directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$compile} $compile
@@ -146,6 +147,7 @@ os.ui.UISwitchCtrl.LOGGER_ = goog.log.getLogger('os.ui.UISwitchCtrl');
 
 /**
  * Handles changes to $scope.items
+ *
  * @param {*} newVal
  * @param {*} oldVal
  * @private
@@ -157,6 +159,7 @@ os.ui.UISwitchCtrl.prototype.onDataChange_ = function(newVal, oldVal) {
 
 /**
  * Updates the displayed UI
+ *
  * @private
  */
 os.ui.UISwitchCtrl.prototype.update_ = function() {
@@ -226,6 +229,7 @@ os.ui.UISwitchCtrl.prototype.update_ = function() {
 
 /**
  * Adds stuff onto the scope if necessary
+ *
  * @param {!angular.Scope} scope
  * @protected
  */
@@ -236,6 +240,7 @@ os.ui.UISwitchCtrl.prototype.addToScope = function(scope) {
 
 /**
  * Handles resizing on the inner directive
+ *
  * @private
  */
 os.ui.UISwitchCtrl.prototype.onChange_ = function() {
@@ -245,6 +250,7 @@ os.ui.UISwitchCtrl.prototype.onChange_ = function() {
 
 /**
  * Removes the current UI
+ *
  * @private
  */
 os.ui.UISwitchCtrl.prototype.remove_ = function() {
@@ -265,6 +271,7 @@ os.ui.UISwitchCtrl.prototype.remove_ = function() {
 
 /**
  * Cleans up the property change listener
+ *
  * @private
  */
 os.ui.UISwitchCtrl.prototype.onDestroy_ = function() {

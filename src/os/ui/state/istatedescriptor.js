@@ -7,6 +7,7 @@ goog.require('os.data.IUrlDescriptor');
 
 /**
  * Interface for descriptors that act on states
+ *
  * @extends {os.data.IDataDescriptor}
  * @extends {os.data.IUrlDescriptor}
  * @interface

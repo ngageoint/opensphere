@@ -345,6 +345,7 @@ os.geo.conv.MGRS.prototype.toLowerLeft = function() {
 
 /**
  * Calculates the center point of this MGRS grid/cell
+ *
  * @return {goog.math.Coordinate} Coordinate representing the center point of this MGRS grid/cell
  */
 os.geo.conv.MGRS.prototype.getCenterPoint = function() {
@@ -367,6 +368,7 @@ os.geo.conv.MGRS.prototype.getCenterPoint = function() {
 
 /**
  * Converts this MGRS to UTM.
+ *
  * @return {os.geo.conv.UTM}
  * @throws {Error} If the MGRS instance can't be converted
  */
@@ -493,6 +495,7 @@ os.geo.conv.MGRS.prototype.toString = function() {
 
 /**
  * Utility function to get the center point of an MGRS location
+ *
  * @param {string} mgrsValue The MGRS string
  * @return {goog.math.Coordinate} Coordinate representing the lon/lat center point
  */
@@ -570,6 +573,7 @@ os.geo.conv.MGRS.createString = function(latitude, longitude) {
 
 /**
  * Construct an MGRS string from the given parameters.
+ *
  * @param {number} zone The int zone.
  * @param {string} latBand The latitude band.
  * @param {string} square1 The square1 label.
@@ -649,6 +653,7 @@ os.geo.conv.MGRS.roundNumber_ = function(value) {
 
 /**
  * Find the grid easting value.
+ *
  * @param {number} index The index of the second MGRS letter.
  * @param {number} lowValueIndex The index of the lower range letter.
  * @return {number} The grid easting value.
@@ -666,6 +671,7 @@ os.geo.conv.MGRS.findGridEasting_ = function(index, lowValueIndex) {
 
 /**
  * Find the grid northing value.
+ *
  * @param {number} index The third MGRS letter index.
  * @param {number} falseNorthing The false northing.
  * @param {number} minNorthing The minimum northing.
@@ -703,6 +709,7 @@ os.geo.conv.MGRS.findGridNorthing_ = function(index, falseNorthing, minNorthing)
 
 /**
  * Find the lower letter range index for 2nd mgrs grid letter.
+ *
  * @param {number} zone The utm zone.
  * @return {number} Index value of letter.
  * @private
@@ -724,6 +731,7 @@ os.geo.conv.MGRS.findLowValueIndex_ = function(zone) {
 
 /**
  * Determine the second MGRS letter (Useful when converting from utm to mgrs).
+ *
  * @param {number} easting The easting value.
  * @param {number} latBandIndex The letter index (int) of latitude band.
  * @param {number} zone The zone.
@@ -748,6 +756,7 @@ os.geo.conv.MGRS.find2ndMGRSLetter_ = function(easting, latBandIndex, zone, lowV
 
 /**
  * Determine the third mgrs letter (Useful when converting from utm to mgrs).
+ *
  * @param {number} northing The northing value.
  * @param {number} falseNorthing The false northing value.
  * @return {number} The index of the third mgrs letter.

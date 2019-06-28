@@ -285,6 +285,7 @@ os.histo.NumericBinMethod.prototype.filterDimension = function(dimension, item) 
 
 /**
  * Gets the floored value of a number
+ *
  * @param {number} value
  * @return {number}
  */
@@ -297,6 +298,7 @@ os.histo.NumericBinMethod.prototype.getFloor = function(value) {
 
 /**
  * Gets the precision of a number
+ *
  * @param {number} num
  * @return {number} precision
  */
@@ -450,6 +452,7 @@ os.histo.NumericBinMethod.prototype.getFilterForRange_ = function(range) {
 
 /**
  * Test if a value is between or equal to the bin method's range for a set of minimum values.
+ *
  * @param {!Array<number>} values The values to check
  * @param {number} value The value to test
  * @return {boolean}

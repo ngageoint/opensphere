@@ -13,6 +13,7 @@ goog.require('os.ui.window');
 
 /**
  * The featureinfo directive
+ *
  * @return {angular.Directive}
  */
 os.ui.feature.multiFeatureInfoDirective = function() {
@@ -38,6 +39,7 @@ os.ui.Module.directive('multifeatureinfo', [os.ui.feature.multiFeatureInfoDirect
 
 /**
  * Controller function for the featureinfo directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @extends {goog.Disposable}
@@ -123,6 +125,7 @@ os.ui.feature.MultiFeatureInfoCtrl.prototype.disposeInternal = function() {
 
 /**
  * Getter for the directive on the selected feature.
+ *
  * @return {string} The directive.
  */
 os.ui.feature.MultiFeatureInfoCtrl.prototype.getUiInternal = function() {
@@ -142,6 +145,7 @@ os.ui.feature.MultiFeatureInfoCtrl.prototype.getUiInternal = function() {
 
 /**
  * Starts the search delay.
+ *
  * @export
  */
 os.ui.feature.MultiFeatureInfoCtrl.prototype.search = function() {
@@ -182,6 +186,7 @@ os.ui.feature.MultiFeatureInfoCtrl.prototype.onSearchDelay_ = function() {
 
 /**
  * Gets a value from a feature.
+ *
  * @param {ol.Feature} feature
  * @param {(os.data.ColumnDefinition|string)} col
  * @return {*} The value
@@ -206,6 +211,7 @@ os.ui.feature.MultiFeatureInfoCtrl.prototype.getValueFromFeature_ = function(fea
 
 /**
  * Launches a feature info window for the provided feature(s).
+ *
  * @param {Array<ol.Feature>|ol.Feature} features The feature or array of features to show.
  * @param {string=} opt_titleDetail Title of the containing layer
  */

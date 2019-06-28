@@ -14,6 +14,7 @@ goog.require('os.ui.alert.alertLinkFilter');
 
 /**
  * The alert-popup directive
+ *
  * @return {angular.Directive}
  */
 os.ui.alert.alertPopupDirective = function() {
@@ -37,6 +38,7 @@ os.ui.Module.directive('alertPopup', [os.ui.alert.alertPopupDirective]);
 
 /**
  * Controller function for the alert-popup directive.
+ *
  * @param {!angular.Scope} $scope The scope
  * @constructor
  * @ngInject
@@ -97,6 +99,7 @@ os.ui.alert.AlertPopupCtrl = function($scope) {
 
 /**
  * Remove listeners and references.
+ *
  * @private
  */
 os.ui.alert.AlertPopupCtrl.prototype.destroy_ = function() {
@@ -122,6 +125,7 @@ os.ui.alert.AlertPopupCtrl.ALERT_TIMER = 10000;
 
 /**
  * Pops up an error message for 5 seconds
+ *
  * @param {os.alert.AlertEvent} event The alert event to display.
  * @private
  */
@@ -162,6 +166,7 @@ os.ui.alert.AlertPopupCtrl.prototype.handleAlertEvent_ = function(event) {
 
 /**
  * If the alert popup should be displayed.
+ *
  * @return {boolean}
  * @private
  */
@@ -175,6 +180,7 @@ os.ui.alert.AlertPopupCtrl.prototype.popupsEnabled_ = function() {
 
 /**
  * Resets the dupe counter
+ *
  * @private
  */
 os.ui.alert.AlertPopupCtrl.prototype.resetDupes_ = function() {
@@ -191,6 +197,7 @@ os.ui.alert.AlertPopupCtrl.prototype.resetDupes_ = function() {
 
 /**
  * Pops up an error message for 5 seconds
+ *
  * @param {os.alert.AlertEvent} event The message we want to pop up
  * @private
  */
@@ -254,6 +261,7 @@ os.ui.alert.AlertPopupCtrl.prototype.displayAlert_ = function(event) {
 
 /**
  * Clear all open alerts.
+ *
  * @export
  */
 os.ui.alert.AlertPopupCtrl.prototype.clearAlerts = function() {
@@ -274,6 +282,7 @@ os.ui.alert.AlertPopupCtrl.prototype.clearAlerts = function() {
 
 /**
  * Dismisses a popup and clears its timeout
+ *
  * @param {number} $index The index of the message to dismiss
  * @param {Object} popup The popup to dismiss
  * @export

@@ -14,6 +14,7 @@ goog.require('os.ui.user.settings.LocationSetting');
 
 /**
  * Extends the OpenLayers 3 MousePosition control to allow switching between different coordinate formats.
+ *
  * @param {olx.control.MousePositionOptions=} opt_options Mouse position options.
  * @extends {ol.control.MousePosition}
  * @constructor
@@ -172,6 +173,7 @@ os.ol.control.MousePosition.prototype.onFormatChange_ = function(event) {
 
 /**
  * Updates the UI to reflect the new unit system.
+ *
  * @param {os.events.PropertyChangeEvent} event
  * @private
  */
@@ -182,6 +184,7 @@ os.ol.control.MousePosition.prototype.onUnitChange_ = function(event) {
 
 /**
  * Set the format for the control.
+ *
  * @param {string} format
  * @private
  */
@@ -261,6 +264,7 @@ os.ol.control.MousePosition.prototype.onMouseClick_ = function(event) {
 
 /**
  * Return the position of the mouse pointer
+ *
  * @param {ol.Coordinate=} opt_coord The coordinate
  * @return {string}
  * @suppress {accessControls} to allow access to the map and last pixel
@@ -286,6 +290,7 @@ os.ol.control.MousePosition.prototype.getPositionString = function(opt_coord) {
 
 /**
  * Forces an update of the displayed text to show the new bearing.
+ *
  * @private
  */
 os.ol.control.MousePosition.prototype.onBearingChange_ = function() {
@@ -297,6 +302,7 @@ os.ol.control.MousePosition.prototype.onBearingChange_ = function() {
 
 /**
  * Get the element
+ *
  * @return {Element}
  */
 os.ol.control.MousePosition.prototype.getElement = function() {

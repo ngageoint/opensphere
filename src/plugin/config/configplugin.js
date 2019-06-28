@@ -10,6 +10,7 @@ goog.require('plugin.config.Provider');
 
 /**
  * Provides config support
+ *
  * @extends {os.plugin.AbstractPlugin}
  * @constructor
  */

@@ -18,6 +18,7 @@ goog.require('plugin.pelias.geocoder.Result');
 
 /**
  * Searches via the Pelias Geocoder API
+ *
  * @param {string} name
  * @extends {os.search.AbstractUrlSearch}
  * @constructor

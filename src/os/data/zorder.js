@@ -23,6 +23,7 @@ os.data.ZOrderEntry;
 
 /**
  * Maintains Z-Order for layers between sessions
+ *
  * @constructor
  */
 os.data.ZOrder = function() {
@@ -68,6 +69,7 @@ os.data.ZOrder.prototype.clear = function() {
 
 /**
  * Initializes the Z-Order structure
+ *
  * @private
  */
 os.data.ZOrder.prototype.init_ = function() {
@@ -105,6 +107,7 @@ os.data.ZOrder.prototype.getZType = function(id) {
 
 /**
  * Merges the current z-order structure from the map
+ *
  * @private
  */
 os.data.ZOrder.prototype.mergeFromMap_ = function() {
@@ -203,6 +206,7 @@ os.data.ZOrder.prototype.update = function() {
 
 /**
  * Move an item after another item
+ *
  * @param {string} id
  * @param {string} target
  * @return {boolean}
@@ -214,6 +218,7 @@ os.data.ZOrder.prototype.moveAfter = function(id, target) {
 
 /**
  * Move an item before another item
+ *
  * @param {string} id
  * @param {string} target
  * @return {boolean}
@@ -225,6 +230,7 @@ os.data.ZOrder.prototype.moveBefore = function(id, target) {
 
 /**
  * Move an item as high as possible, giving precedence to 'sticky' items
+ *
  * @param {string} id
  * @return {boolean}
  */
@@ -320,6 +326,7 @@ os.data.ZOrder.prototype.moveHighestAndUpdate = function(id) {
 
 /**
  * Move an item
+ *
  * @param {string} id
  * @param {string} otherId
  * @param {boolean=} opt_after True if id comes after otherId, False for id before otherId. Defaults to false
@@ -384,6 +391,7 @@ os.data.ZOrder.prototype.save = function() {
 
 /**
  * Ditch old data
+ *
  * @private
  */
 os.data.ZOrder.prototype.expire_ = function() {

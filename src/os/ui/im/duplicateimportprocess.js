@@ -13,6 +13,7 @@ goog.require('os.ui.im.urlExistsDirective');
 
 /**
  * Import process that detects and handles duplicate files by asking the user what to do.
+ *
  * @extends {os.ui.im.ImportProcess}
  * @constructor
  */
@@ -102,6 +103,7 @@ os.ui.im.DuplicateImportProcess.prototype.onDuplicateFileChoice_ = function(choi
 
 /**
  * Handler for file persist when the user chooses to replace an existing file.
+ *
  * @protected
  */
 os.ui.im.DuplicateImportProcess.prototype.onPersistComplete = function() {
@@ -154,6 +156,7 @@ os.ui.im.DuplicateImportProcess.prototype.onDuplicateUrlChoice_ = function(choic
 
 /**
  * Launches the import dialog using the previous import configuration.
+ *
  * @protected
  */
 os.ui.im.DuplicateImportProcess.prototype.reimport = function() {
@@ -163,6 +166,7 @@ os.ui.im.DuplicateImportProcess.prototype.reimport = function() {
 
 /**
  * Gets a data descriptor matching the provided URL.
+ *
  * @param {string} url The URL to match against
  * @return {?os.data.IDataDescriptor}
  */

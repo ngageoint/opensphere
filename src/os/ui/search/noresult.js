@@ -5,6 +5,7 @@ goog.require('os.search.AbstractSearchResult');
 
 /**
  * Search results containing a coordinate to display on the map.
+ *
  * @extends {os.search.AbstractSearchResult<number>}
  * @constructor
  */

@@ -6,6 +6,7 @@ goog.require('os.ui.query.cmd.QueryEntries');
 
 /**
  * Command to clear all query entries
+ *
  * @extends {os.ui.query.cmd.QueryEntries}
  * @constructor
  */

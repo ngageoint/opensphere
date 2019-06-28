@@ -8,6 +8,7 @@ goog.require('plugin.file.gml.GMLProvider');
 
 /**
  * GML file descriptor.
+ *
  * @param {plugin.file.gml.GMLParserConfig=} opt_config
  * @extends {os.data.FileDescriptor}
  * @constructor
@@ -43,6 +44,7 @@ plugin.file.gml.GMLDescriptor.prototype.getLayerOptions = function() {
 
 /**
  * Creates a new descriptor from a parser configuration.
+ *
  * @param {!plugin.file.gml.GMLParserConfig} config
  * @return {!plugin.file.gml.GMLDescriptor}
  */

@@ -18,6 +18,7 @@ goog.require('os.ui.events.UIEvent');
 
 /**
  * Controller function for the ActionMenu directive
+ *
  * @constructor
  * @param {angular.Scope} $scope
  * @param {angular.JQLite} $element
@@ -87,6 +88,7 @@ os.ui.ActionMenuCtrl = function($scope, $element, $timeout) {
 
 /**
  * Clean up
+ *
  * @protected
  */
 os.ui.ActionMenuCtrl.prototype.destroy = function() {
@@ -121,6 +123,7 @@ os.ui.ActionMenuCtrl.prototype.killRightClick_ = function(event) {
 
 /**
  * Invokes a menu action on the provider
+ *
  * @param {os.ui.action.Action} action
  * @return {boolean} True if an action was invoked, false otherwise
  * @export
@@ -140,6 +143,7 @@ os.ui.ActionMenuCtrl.prototype.invoke = function(action) {
 
 /**
  * Handler for changes to position on the $scope.
+ *
  * @param {Object.<string, number>|undefined} newVal
  * @param {Object.<string, number>|undefined} oldVal
  * @private
@@ -153,6 +157,7 @@ os.ui.ActionMenuCtrl.prototype.onPositionChange_ = function(newVal, oldVal) {
 
 /**
  * Handles changes to the provider
+ *
  * @param {os.ui.action.ActionManager} newVal
  * @param {os.ui.action.ActionManager} oldVal
  * @private
@@ -173,6 +178,7 @@ os.ui.ActionMenuCtrl.prototype.onProviderChange_ = function(newVal, oldVal) {
  * Arrange actions with structure based on their groupings and order.  Pulls all enabled actions, which may have been
  * contributed from multiple providers, and combines common sub-menus.  The return value is an array of
  * {os.ui.action.MenuItem} with nested {os.ui.action.MenuItemAction} and/or {os.ui.action.MenuItemList} entries.
+ *
  * @param {!Array.<!os.ui.action.Action>} actions List of enabled actions in any arbitrary order
  * @return {Array.<os.ui.action.MenuItem>}
  * @private
@@ -217,6 +223,7 @@ os.ui.ActionMenuCtrl.prototype.constructMenu_ = function(actions) {
 /**
  * Convenience function for converting a JSON object definition of menu items into an appropriate array of
  * {os.ui.action.MenuItem} with nested {os.ui.action.MenuItemAction} and/or {os.ui.action.MenuItemList} entries.
+ *
  * @param {Object} menuStructure JSON object structure which declares the depth and placement of the menu items
  * @param {Array} menuItems The list of menu items to which the converted menuStructure actions are placed.
  * @private
@@ -275,6 +282,7 @@ os.ui.ActionMenuCtrl.prototype.insertMenuItems_ = function(menuStructure, menuIt
 
 /**
  * Sorting function for actions based on their menu option settings
+ *
  * @param {!os.ui.action.MenuItem} a
  * @param {!os.ui.action.MenuItem} b
  * @return {number} A positive number if a is greater than or equal to b; a negative number otherwise.
@@ -300,6 +308,7 @@ os.ui.ActionMenuCtrl.prototype.sortByDivisionThenOrder_ = function(a, b) {
 
 /**
  * Checks the position and ensures that the menu doesn't run off the screen
+ *
  * @protected
  */
 os.ui.ActionMenuCtrl.prototype.position = function() {
@@ -345,6 +354,7 @@ os.ui.ActionMenuCtrl.prototype.position = function() {
  * Called when a submenu is initialized. At initialization, the submenu DOM element does not exist yet,
  * so the DOM manipulation is done inside of a timeout which gives sufficient time for the element to
  * be added and its height/position to be read and set based on the viewport boundaries.
+ *
  * @export
  */
 os.ui.ActionMenuCtrl.prototype.positionSubmenu = function() {
@@ -394,6 +404,7 @@ os.ui.ActionMenuCtrl.prototype.positionSubmenu = function() {
 
 /**
  * Calculate the number of items to show on the screen.
+ *
  * @param {Object} submenu Submenu element
  * @return {number} Number of menu/submenu items to display
  * @private
@@ -418,6 +429,7 @@ os.ui.ActionMenuCtrl.prototype.calcNumItemsToDisplay_ = function(submenu) {
 
 /**
  * Handle changes to the list of available actions
+ *
  * @private
  */
 os.ui.ActionMenuCtrl.prototype.onActionsChanged_ = function() {
@@ -431,6 +443,7 @@ os.ui.ActionMenuCtrl.prototype.onActionsChanged_ = function() {
 
 /**
  * Add title to menu
+ *
  * @param {string} selector
  * @param {string} title
  */
@@ -440,6 +453,7 @@ os.ui.ActionMenuCtrl.prototype.addTitle = function(selector, title) {
 
 /**
  * Get the limit of actions to show in the menu.
+ *
  * @return {number} Action item menu limit
  */
 os.ui.ActionMenuCtrl.prototype.getLimit = function() {
@@ -459,6 +473,7 @@ os.ui.ActionMenuCtrl.prototype.clearMoreButton = function() {
 
 /**
  * Take action since there are more reults in the submenu than what will fit on the screen.
+ *
  * @export
  */
 os.ui.ActionMenuCtrl.prototype.handleMoreResults = function() {
@@ -472,6 +487,7 @@ os.ui.ActionMenuCtrl.prototype.handleMoreResults = function() {
  * Provider passed into scope is of type {os.ui.action.ActionManager}
  * Position passed into scope is either and object with x, y attributes or a string indicating placement, like 'right'
  * Scope variables need surrounded in '' to work when compiled
+ *
  * @return {angular.Directive} the directive definition
  */
 os.ui.actionMenuDirective = function() {

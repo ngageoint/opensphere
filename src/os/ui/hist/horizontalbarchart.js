@@ -20,6 +20,7 @@ os.ui.hist.BarChartOptions;
 
 /**
  * Draws the histogram as horizontal bars.
+ *
  * @param {!Element} parent The parent SVG container for the chart.
  * @implements {os.ui.hist.IHistogramChart}
  * @extends {goog.Disposable}
@@ -176,6 +177,7 @@ os.ui.hist.HorizontalBarChart.prototype.tooltip = function(tooltip) {
 
 /**
  * Draws total numbers on the end of each bar.
+ *
  * @param {d3.ScaleFn} xFn The xFn for calculating the x position of the totals.
  * @param {d3.ScaleFn} yFn The yFn for calculating the y postitions of each count.
  * @param {Array.<Object>} ticks The ticks and their totals to draw.

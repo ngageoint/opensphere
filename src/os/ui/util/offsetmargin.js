@@ -8,6 +8,7 @@ goog.require('os.ui.Module');
 
 /**
  * Offset this element the height of the offsetEl
+ *
  * @return {angular.Directive}
  */
 os.ui.util.offsetMarginDirective = function() {
@@ -88,6 +89,7 @@ os.ui.util.OffsetMarginCtrl = function($scope, $element, $timeout) {
 
 /**
  * Clean up listeners/references.
+ *
  * @private
  */
 os.ui.util.OffsetMarginCtrl.prototype.onDestroy_ = function() {

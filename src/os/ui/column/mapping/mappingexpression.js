@@ -6,6 +6,7 @@ goog.require('os.ui.layer.layerPickerDirective');
 
 /**
  * The mappingexpression directive
+ *
  * @return {angular.Directive}
  */
 os.ui.column.mapping.mappingExpressionDirective = function() {
@@ -31,6 +32,7 @@ os.ui.Module.directive('mappingexpression', [os.ui.column.mapping.mappingExpress
 
 /**
  * Controller for the mappingexpression directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$timeout} $timeout
@@ -103,6 +105,7 @@ os.ui.column.mapping.MappingExpressionCtrl = function($scope, $element, $timeout
 
 /**
  * Handles changes to the layer.
+ *
  * @param {angular.Scope.Event} event
  * @param {os.ui.ogc.IOGCDescriptor} layer
  * @private
@@ -116,6 +119,7 @@ os.ui.column.mapping.MappingExpressionCtrl.prototype.onLayerChange_ = function(e
 
 /**
  * Handles changes to the column.
+ *
  * @param {?os.ogc.FeatureTypeColumn} newValue
  * @param {?os.ogc.FeatureTypeColumn} oldValue
  * @private
@@ -130,6 +134,7 @@ os.ui.column.mapping.MappingExpressionCtrl.prototype.onColumnChange_ = function(
 
 /**
  * Sets the layer and gets the columns for it.
+ *
  * @param {os.filter.IFilterable} layer
  * @private
  */
@@ -150,6 +155,7 @@ os.ui.column.mapping.MappingExpressionCtrl.prototype.setLayer_ = function(layer)
 
 /**
  * Handles describefeaturetype completion.
+ *
  * @private
  */
 os.ui.column.mapping.MappingExpressionCtrl.prototype.describeCallback_ = function() {
@@ -164,6 +170,7 @@ os.ui.column.mapping.MappingExpressionCtrl.prototype.describeCallback_ = functio
 
 /**
  * Sets the columns for the select2 column picker.
+ *
  * @param {Array} columns
  * @private
  */
@@ -197,6 +204,7 @@ os.ui.column.mapping.MappingExpressionCtrl.prototype.setColumns_ = function(colu
 
 /**
  * Formatter for the layerpicker on each row.
+ *
  * @param {Object} item
  * @param {angular.JQLite} ele
  * @return {string|angular.JQLite}

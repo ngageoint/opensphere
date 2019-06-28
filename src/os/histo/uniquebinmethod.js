@@ -216,6 +216,7 @@ os.histo.UniqueBinMethod.prototype.restore = function(config) {
 
 /**
  * Clones the bin method.
+ *
  * @return {os.histo.UniqueBinMethod}
  */
 os.histo.UniqueBinMethod.prototype.clone = function() {
@@ -331,6 +332,7 @@ os.histo.UniqueBinMethod.prototype.setIsDate = function(value) {
 
 /**
  * Get the filter for an individual bin.
+ *
  * @param {!os.histo.Bin} bin The bin
  * @return {string} The filter
  * @protected
@@ -348,6 +350,7 @@ os.histo.UniqueBinMethod.prototype.getFilterForBin = function(bin) {
 
 /**
  * Test if a value is contained within a set of values. Avoided ol.array.includes to prevent an extra function call.
+ *
  * @param {!Array<string>} values
  * @param {string} value
  * @return {boolean}

@@ -6,6 +6,7 @@ goog.require('os.ui.filter.string');
 
 /**
  * A 'PropertyIsEqualTo' operation class.
+ *
  * @extends {os.ui.filter.op.Op}
  * @constructor
  */

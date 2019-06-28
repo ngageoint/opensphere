@@ -16,6 +16,7 @@ goog.require('os.storage.IDBStorage');
 
 /**
  * Asynchronous storage used for persisting settings to IndexedDb
+ *
  * @implements {os.config.storage.ISettingsStorage}
  * @implements {os.config.storage.ISettingsReadableStorage}
  * @implements {os.config.storage.ISettingsWritableStorage}

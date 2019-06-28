@@ -10,6 +10,7 @@ goog.require('plugin.ogc.GeoServer');
 
 /**
  * The geoserver import directive
+ *
  * @return {angular.Directive}
  */
 plugin.ogc.ui.geoserverDirective = function() {
@@ -32,6 +33,7 @@ os.ui.Module.directive('geoserver', [plugin.ogc.ui.geoserverDirective]);
 
 /**
  * Controller for the geoserver import dialog
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @extends {os.ui.SingleUrlProviderImportCtrl}

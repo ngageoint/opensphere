@@ -5,6 +5,7 @@ goog.require('goog.async.Deferred');
 
 /**
  * Basic interface for settings storage
+ *
  * @interface
  */
 os.config.storage.ISettingsStorage = function() {};

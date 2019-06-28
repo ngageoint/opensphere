@@ -9,6 +9,7 @@ goog.require('os.file.persist.FilePersistence');
 
 /**
  * Persistence method to save local files.
+ *
  * @implements {os.ex.IPersistenceMethod}
  * @extends {os.file.persist.FilePersistence}
  * @param {string=} opt_dbStore
@@ -68,6 +69,7 @@ os.file.persist.LocalFilePersistence.finishImport_ = function(file) {
 
 /**
  * Handler for file storage error.
+ *
  * @param {*} error
  * @private
  */
@@ -82,6 +84,7 @@ os.file.persist.LocalFilePersistence.onFileError_ = function(error) {
 
 /**
  * Static function to save a file, so it can be used without the persistence
+ *
  * @param {string} fileName The file name
  * @param {Object|null|string} content The content to save
  * @param {string=} opt_mimeType The mime type of the content

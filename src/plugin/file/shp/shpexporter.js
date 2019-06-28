@@ -16,6 +16,7 @@ goog.require('plugin.file.shp.ui.shpExportDirective');
 
 /**
  * A SHP exporter
+ *
  * @extends {os.ex.ZipExporter.<T>}
  * @constructor
  * @template T
@@ -162,6 +163,7 @@ plugin.file.shp.SHPExporter.prototype.cancel = function() {};
 
 /**
  * Get the feature's source.
+ *
  * @param {ol.Feature} feature The feature
  * @return {os.source.Vector} The source
  * @private
@@ -181,6 +183,7 @@ plugin.file.shp.SHPExporter.prototype.getSource_ = function(feature) {
 
 /**
  * Parse the column
+ *
  * @param {T} item
  * @param {Object} col
  * @private
@@ -278,6 +281,7 @@ plugin.file.shp.SHPExporter.prototype.setItems = function(items) {
 
 /**
  * Parse the columns to include in the shapefile.
+ *
  * @protected
  */
 plugin.file.shp.SHPExporter.prototype.parseColumns = function() {
@@ -350,6 +354,7 @@ plugin.file.shp.SHPExporter.prototype.appendHeader = function() {
 
 /**
  * Allocate space for headers
+ *
  * @private
  */
 plugin.file.shp.SHPExporter.prototype.allocateArrays_ = function() {
@@ -382,6 +387,7 @@ plugin.file.shp.SHPExporter.prototype.allocateArrays_ = function() {
 
 /**
  * Allocate space for this item
+ *
  * @param {T} item The item
  * @param {ol.geom.SimpleGeometry} geom
  * @private
@@ -407,6 +413,7 @@ plugin.file.shp.SHPExporter.prototype.allocateItem_ = function(item, geom) {
 
 /**
  * Allocate space for this item
+ *
  * @param {T} item The item
  * @param {ol.geom.SimpleGeometry} geom
  * @private
@@ -596,6 +603,7 @@ plugin.file.shp.SHPExporter.prototype.appendSHXHeader = function() {
 
 /**
  * Convert string to byte
+ *
  * @param {DataView} dv
  * @param {number} pos - the position
  * @param {string} str - the string to conver to bytes
@@ -636,6 +644,7 @@ plugin.file.shp.SHPExporter.prototype.processItems = function() {
 
 /**
  * Process a single item, returning a Placemark element to add to the SHP.
+ *
  * @param {T} item The item
  * @return {boolean} If the item was added
  * @protected
@@ -661,6 +670,7 @@ plugin.file.shp.SHPExporter.prototype.processItem = function(item) {
 
 /**
  * Get the geometry for a feature.
+ *
  * @param {ol.Feature} feature The feature
  * @return {ol.geom.GeometryCollection|ol.geom.SimpleGeometry|undefined}
  * @private
@@ -688,6 +698,7 @@ plugin.file.shp.SHPExporter.prototype.getGeometry_ = function(feature) {
 
 /**
  * Only put entries in if they are supported
+ *
  * @param {ol.geom.GeometryType} type
  * @private
  */
@@ -705,6 +716,7 @@ plugin.file.shp.SHPExporter.prototype.isSupportedType_ = function(type) {
 
 /**
  * Add this geometry to the shape file
+ *
  * @param {T} item The item
  * @param {ol.geom.SimpleGeometry} geom
  * @private
@@ -973,6 +985,7 @@ plugin.file.shp.SHPExporter.prototype.appendItemForGeom_ = function(item, geom) 
 
 /**
  * First check to see if this is a multipolygon and break it up
+ *
  * @param {T} item The item
  * @param {ol.geom.SimpleGeometry} geom
  * @private
@@ -999,6 +1012,7 @@ plugin.file.shp.SHPExporter.prototype.appendItem_ = function(item, geom) {
 /**
  * Process a single item adding the metadata to the DBF file.
  * Do this for each geometry added even if its a duplicate
+ *
  * @param {T} item The item
  * @private
  * @template T
@@ -1089,6 +1103,7 @@ plugin.file.shp.SHPExporter.prototype.getUI = function() {
 
 /**
  * Get if ellipses should be exported.
+ *
  * @return {boolean}
  */
 plugin.file.shp.SHPExporter.prototype.getExportEllipses = function() {
@@ -1098,6 +1113,7 @@ plugin.file.shp.SHPExporter.prototype.getExportEllipses = function() {
 
 /**
  * Set if ellipses should be exported.
+ *
  * @param {boolean} value
  */
 plugin.file.shp.SHPExporter.prototype.setExportEllipses = function(value) {

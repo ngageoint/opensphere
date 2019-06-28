@@ -12,6 +12,7 @@ goog.require('os.ui.sliderDirective');
 
 /**
  * Layer controls UI for Cesium 3D tile layers.
+ *
  * @return {angular.Directive}
  */
 plugin.cesium.tiles.cesium3DTileLayerUIDirective = function() {
@@ -34,6 +35,7 @@ os.ui.Module.directive('cesium3dtilelayerui', [plugin.cesium.tiles.cesium3DTileL
 
 /**
  * Controller for the Cesium 3D tile layer UI.
+ *
  * @param {!angular.Scope} $scope The Angular scope.
  * @param {!angular.JQLite} $element The root DOM element.
  * @param {!angular.$timeout} $timeout The Angular $timeout service.
@@ -64,6 +66,7 @@ plugin.cesium.tiles.Cesium3DTileLayerUICtrl.prototype.initUI = function() {
 
 /**
  * Gets the color from the item(s)
+ *
  * @return {?string} a hex color string
  * @private
  */
@@ -89,6 +92,7 @@ plugin.cesium.tiles.Cesium3DTileLayerUICtrl.prototype.getColor_ = function() {
 
 /**
  * Handles changes to color
+ *
  * @param {angular.Scope.Event} event
  * @param {string} value
  * @protected
@@ -109,6 +113,7 @@ plugin.cesium.tiles.Cesium3DTileLayerUICtrl.prototype.onColorChange = function(e
 
 /**
  * Handles color reset
+ *
  * @param {angular.Scope.Event} event
  * @protected
  */

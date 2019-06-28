@@ -7,6 +7,7 @@ goog.require('plugin.file.kml.tour.AbstractTourPrimitive');
 
 /**
  * Enables the tour to be paused until a user takes action to continue the tour.
+ *
  * @param {!plugin.file.kml.tour.Tour} tour The tour object.
  * @extends {plugin.file.kml.tour.AbstractTourPrimitive}
  * @constructor

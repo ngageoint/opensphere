@@ -10,6 +10,7 @@ goog.require('plugin.file.gpx.GPXProvider');
 
 /**
  * The GPX import directive.
+ *
  * @return {angular.Directive}
  */
 plugin.file.gpx.ui.gpxImportDirective = function() {
@@ -33,6 +34,7 @@ os.ui.Module.directive('gpximport', [plugin.file.gpx.ui.gpxImportDirective]);
 
 /**
  * Controller for the GPX import dialog.
+ *
  * @param {!angular.Scope} $scope The Angular scope.
  * @param {!angular.JQLite} $element The root DOM element.
  * @extends {os.ui.file.ui.AbstractFileImportCtrl<!os.parse.FileParserConfig, !plugin.file.gpx.GPXDescriptor>}

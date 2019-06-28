@@ -253,6 +253,7 @@ os.ogc.wfs.FeatureType.prototype.getNeedsTimeColumns = function() {
 
 /**
  * Initialize the feature type.
+ *
  * @param {string} typeName
  * @param {Array<!os.ogc.FeatureTypeColumn>} columns
  * @param {boolean} isDynamic
@@ -382,6 +383,7 @@ os.ogc.wfs.FeatureType.prototype.restore = function(config) {
 
 /**
  * Tests for the existence of columnName in columns.
+ *
  * @param {string} columnName
  * @return {boolean} true if columnName exists.
  */

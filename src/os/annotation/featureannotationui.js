@@ -12,6 +12,7 @@ goog.require('os.ui.text.simpleMDEDirective');
 
 /**
  * An feature-based annotation to attach to the map.
+ *
  * @return {angular.Directive}
  */
 os.annotation.featureAnnotationDirective = function() {
@@ -38,6 +39,7 @@ os.ui.Module.directive('featureannotation', [os.annotation.featureAnnotationDire
 
 /**
  * Controller for the featureannotation directive.
+ *
  * @param {!angular.Scope} $scope The Angular scope.
  * @param {!angular.JQLite} $element The root DOM element.
  * @param {!angular.$timeout} $timeout The Angular $timeout service.
@@ -167,6 +169,7 @@ os.annotation.FeatureAnnotationCtrl.prototype.saveAnnotation = function() {
 
 /**
  * Update the title from the feature.
+ *
  * @private
  */
 os.annotation.FeatureAnnotationCtrl.prototype.onFeatureChange_ = function() {
@@ -189,6 +192,7 @@ os.annotation.FeatureAnnotationCtrl.prototype.onFeatureChange_ = function() {
 
 /**
  * Handle changes to overlay visibility.
+ *
  * @private
  */
 os.annotation.FeatureAnnotationCtrl.prototype.onOverlayVisibleChange_ = function() {

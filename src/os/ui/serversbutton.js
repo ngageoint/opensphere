@@ -7,6 +7,7 @@ goog.require('os.ui.Module');
 
 /**
  * The add data button bar directive
+ *
  * @return {angular.Directive}
  */
 os.ui.serversButtonDirective = function() {
@@ -34,6 +35,7 @@ os.ui.Module.directive('serversButton', [os.ui.serversButtonDirective]);
 
 /**
  * Controller function for the nav-top directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element The element
  * @extends {os.ui.MenuButtonCtrl}
@@ -66,6 +68,7 @@ os.ui.ServersButtonCtrl.prototype.onDestroy = function() {
 /**
  * Check if any enabled providers encountered an error while loading and display a message to the user if it hasn't
  * already been seen.
+ *
  * @private
  */
 os.ui.ServersButtonCtrl.prototype.checkServerError_ = function() {

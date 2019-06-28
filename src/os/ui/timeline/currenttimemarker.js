@@ -64,6 +64,7 @@ os.ui.timeline.CurrentTimeMarker.prototype.initSVG = function(container, height)
 
 /**
  * Updates the current time clock and background.
+ *
  * @private
  */
 os.ui.timeline.CurrentTimeMarker.prototype.updateCurrentTime_ = function() {
@@ -122,6 +123,7 @@ os.ui.timeline.CurrentTimeMarker.prototype.updateCurrentTime_ = function() {
 
 /**
  * Append dragging classes to the timeline background element
+ *
  * @private
  */
 os.ui.timeline.CurrentTimeMarker.prototype.styleDragStart_ = function() {
@@ -131,6 +133,7 @@ os.ui.timeline.CurrentTimeMarker.prototype.styleDragStart_ = function() {
 
 /**
  * Remove dragging classes from the timeline background element
+ *
  * @private
  */
 os.ui.timeline.CurrentTimeMarker.prototype.styleDragEnd_ = function() {

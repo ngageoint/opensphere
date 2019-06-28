@@ -6,6 +6,7 @@ goog.require('os.ui.Module');
 
 /**
  * If this elements width is less than all of its children. Apply puny state
+ *
  * @return {angular.Directive}
  */
 os.ui.util.punyParentDirective = function() {

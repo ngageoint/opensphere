@@ -186,6 +186,7 @@ os.proj.getBestSupportedProjection = function(options) {
 
 /**
  * Given a projection, returns the equivalent projection with the shortest code.
+ *
  * @param {ol.ProjectionLike} proj
  * @return {ol.proj.Projection}
  * @suppress {accessControls}

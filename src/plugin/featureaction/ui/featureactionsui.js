@@ -10,6 +10,7 @@ goog.require('plugin.im.action.feature.node');
 
 /**
  * The featureactions directive
+ *
  * @return {angular.Directive}
  */
 plugin.im.action.feature.ui.featureActionsDirective = function() {
@@ -32,6 +33,7 @@ os.ui.Module.directive('featureactions', [plugin.im.action.feature.ui.featureAct
 
 /**
  * Controller function for the featureactions directive.
+ *
  * @param {!angular.Scope} $scope The Angular scope.
  * @param {!angular.JQLite} $element The root DOM element.
  * @extends {os.ui.im.action.FilterActionsCtrl<ol.Feature>}
@@ -53,6 +55,7 @@ goog.inherits(plugin.im.action.feature.ui.FeatureActionsCtrl, os.ui.im.action.Fi
 
 /**
  * Close the feature action window if the source was removed
+ *
  * @param {os.data.event.DataEvent} event
  * @private
  */

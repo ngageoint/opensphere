@@ -54,6 +54,7 @@ os.ui.column.mapping.ColumnMappingSettings.prototype.getId = function() {
 
 /**
  * The column mapping settings UI directive
+ *
  * @return {angular.Directive}
  */
 os.ui.column.mapping.ColumnMappingSettingsDirective = function() {
@@ -73,6 +74,7 @@ os.ui.Module.directive('columnmappingsettings', [os.ui.column.mapping.ColumnMapp
 
 /**
  * Controller for location settings
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.$timeout} $timeout
  * @constructor
@@ -123,6 +125,7 @@ os.ui.column.mapping.ColumnMappingSettingsCtrl.prototype.destroy_ = function() {
 
 /**
  * Handler for mapping changes. Updates the mappings tree to reflect the new state.
+ *
  * @param {goog.events.Event=} opt_event
  * @private
  */
@@ -140,6 +143,7 @@ os.ui.column.mapping.ColumnMappingSettingsCtrl.prototype.onMappingsChange_ = fun
 
 /**
  * Launches the create column mapping form.
+ *
  * @export
  */
 os.ui.column.mapping.ColumnMappingSettingsCtrl.prototype.create = function() {
@@ -149,6 +153,7 @@ os.ui.column.mapping.ColumnMappingSettingsCtrl.prototype.create = function() {
 
 /**
  * Launches the export column mappings form.
+ *
  * @export
  */
 os.ui.column.mapping.ColumnMappingSettingsCtrl.prototype.export = function() {
@@ -194,6 +199,7 @@ os.ui.column.mapping.ColumnMappingSettingsCtrl.prototype.export = function() {
 
 /**
  * Launches the import column mappings form.
+ *
  * @export
  */
 os.ui.column.mapping.ColumnMappingSettingsCtrl.prototype.import = function() {
@@ -205,6 +211,7 @@ os.ui.column.mapping.ColumnMappingSettingsCtrl.prototype.import = function() {
 
 /**
  * Launches the column mapping window with the provided column mapping
+ *
  * @param {os.column.IColumnMapping=} opt_cm
  */
 os.ui.column.mapping.ColumnMappingSettings.launchColumnMappingWindow = function(opt_cm) {
@@ -239,6 +246,7 @@ os.ui.column.mapping.ColumnMappingSettings.launchColumnMappingWindow = function(
 
 /**
  * Mapping function for column mappings to nodes.
+ *
  * @param {os.column.IColumnMapping} mapping
  * @return {os.ui.column.mapping.ColumnMappingNode}
  * @private
@@ -252,6 +260,7 @@ os.ui.column.mapping.ColumnMappingSettings.mapFn_ = function(mapping) {
 
 /**
  * Sorting function for column mappings.
+ *
  * @param {os.column.IColumnMapping} a
  * @param {os.column.IColumnMapping} b
  * @return {number}

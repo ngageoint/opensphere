@@ -5,6 +5,7 @@ goog.require('os.implements');
 
 /**
  * The interface for layers with custom layer visibility requirements
+ *
  * @interface
  *
  */

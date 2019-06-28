@@ -9,6 +9,7 @@ goog.require('os.style.AbstractReader');
 
 /**
  * Stroke style reader
+ *
  * @extends {os.style.AbstractReader<!ol.style.Stroke>}
  * @constructor
  */

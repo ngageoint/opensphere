@@ -6,6 +6,7 @@ goog.require('os.time.ITime');
 
 /**
  * A simple interface for describing a record
+ *
  * @interface
  */
 os.record.IRecord = function() {};

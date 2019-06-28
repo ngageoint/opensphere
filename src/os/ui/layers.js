@@ -38,6 +38,7 @@ goog.require('plugin.places.ui.placesDirective');
 
 /**
  * The layers directive
+ *
  * @return {angular.Directive}
  */
 os.ui.layersDirective = function() {
@@ -54,6 +55,7 @@ os.ui.layersDirective = function() {
 
 /**
  * The layers window directive
+ *
  * @return {angular.Directive}
  */
 os.ui.layersWindowDirective = function() {
@@ -79,6 +81,7 @@ os.ui.Module.directive('layerswin', [os.ui.layersWindowDirective]);
 
 /**
  * Controller for Layers window
+ *
  * @param {!angular.Scope} $scope The Angular scope.
  * @param {!angular.JQLite} $element The root DOM element.
  * @extends {os.ui.slick.AbstractGroupByTreeSearchCtrl}
@@ -173,6 +176,7 @@ os.ui.LayersCtrl.prototype.close = function() {
 
 /**
  * Change event handler for the groupBy control
+ *
  * @export
  */
 os.ui.LayersCtrl.prototype.onGroupByChanged = function() {
@@ -197,6 +201,7 @@ os.ui.LayersCtrl.prototype.getUi = function(item) {
 
 /**
  * Checks if a window is open in the application
+ *
  * @param {string} flag The window id
  * @return {boolean}
  * @export
@@ -215,6 +220,7 @@ os.ui.LayersCtrl.prototype.isWindowActive = function(flag) {
 
 /**
  * Opens the specified menu.
+ *
  * @param {string} selector The menu target selector.
  * @export
  */
@@ -238,6 +244,7 @@ os.ui.LayersCtrl.prototype.openMenu = function(selector) {
 
 /**
  * Handle menu close event.
+ *
  * @param {goog.events.Event} evt The event.
  * @protected
  */
@@ -248,6 +255,7 @@ os.ui.LayersCtrl.prototype.onMenuClose = function(evt) {
 
 /**
  * Toggles a flag on mainCtrl
+ *
  * @param {string} flagName The name of the flag to toggle
  * @export
  */
@@ -261,6 +269,7 @@ os.ui.LayersCtrl.prototype.toggle = function(flagName) {
 
 /**
  * Toggles the Tile layers on/off
+ *
  * @export
  */
 os.ui.LayersCtrl.prototype.toggleTileLayers = function() {
@@ -286,6 +295,7 @@ os.ui.LayersCtrl.prototype.toggleTileLayers = function() {
 
 /**
  * Checks if the Tiles should be displayed
+ *
  * @return {boolean}
  * @export
  */
@@ -296,6 +306,7 @@ os.ui.LayersCtrl.prototype.showTiles = function() {
 
 /**
  * Toggles the Feature layers on/off
+ *
  * @export
  */
 os.ui.LayersCtrl.prototype.toggleFeatureLayers = function() {
@@ -323,6 +334,7 @@ os.ui.LayersCtrl.prototype.toggleFeatureLayers = function() {
 
 /**
  * Checks if the Features should be displayed
+ *
  * @return {boolean}
  * @export
  */
@@ -333,6 +345,7 @@ os.ui.LayersCtrl.prototype.showFeatures = function() {
 
 /**
  * Controller for area count directive.
+ *
  * @param {!angular.Scope} $scope The Angular scope.
  * @extends {goog.Disposable}
  * @constructor
@@ -370,6 +383,7 @@ os.ui.LayersWindowCtrl.prototype.disposeInternal = function() {
 
 /**
  * Handle changes to the query manager.
+ *
  * @private
  */
 os.ui.LayersWindowCtrl.prototype.onQueriesChanged_ = function() {

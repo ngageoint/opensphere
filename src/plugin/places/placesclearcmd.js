@@ -7,6 +7,7 @@ goog.require('plugin.places');
 
 /**
  * Command for clearing saved places.
+ *
  * @implements {os.command.ICommand}
  * @constructor
  */

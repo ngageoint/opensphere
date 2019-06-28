@@ -7,6 +7,7 @@ goog.require('os.ui.EventType');
 
 /**
  * Configuration for user onboarding.
+ *
  * @param {string} title Onboarding set title.
  * @param {Array.<Object>} steps The onboarding steps.
  * @param {Object=} opt_config ngOnboarding configuration.

@@ -91,6 +91,7 @@ os.buffer.VERTEX_LIMIT = goog.userAgent.WEBKIT ? 5000 : 2000;
 
 /**
  * Create a default configuration object for a buffer region.
+ *
  * @return {!os.buffer.BufferConfig}
  */
 os.buffer.getBaseConfig = function() {
@@ -110,6 +111,7 @@ os.buffer.getBaseConfig = function() {
 
 /**
  * Save a buffer region configuration to settings.
+ *
  * @param {!os.buffer.BufferConfig} config
  */
 os.buffer.saveConfig = function(config) {
@@ -120,6 +122,7 @@ os.buffer.saveConfig = function(config) {
 
 /**
  * Creates buffer regions from a buffer config and adds them to the area manager.
+ *
  * @param {os.buffer.BufferConfig} config The buffer config
  * @return {boolean}
  */
@@ -130,6 +133,7 @@ os.buffer.isConfigValid = function(config) {
 
 /**
  * If live preview mode should be allowed in the buffer form.
+ *
  * @param {os.buffer.BufferConfig} config The buffer config
  * @return {boolean}
  */
@@ -159,6 +163,7 @@ os.buffer.allowLivePreview = function(config) {
 
 /**
  * Creates buffer regions from a buffer config and adds them to the area manager.
+ *
  * @param {os.buffer.BufferConfig} config The buffer config
  * @param {boolean=} opt_preview If the features should only be returned for preview
  * @return {Array<!ol.Feature>} The new areas
@@ -265,6 +270,7 @@ os.buffer.createFromConfig = function(config, opt_preview) {
 
 /**
  * Launch a dialog to create buffer regions around features.
+ *
  * @param {Object} options
  */
 os.buffer.launchDialog = function(options) {

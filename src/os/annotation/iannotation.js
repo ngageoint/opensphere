@@ -4,6 +4,7 @@ goog.provide('os.annotation.IAnnotation');
 
 /**
  * Interface representing an annotation.
+ *
  * @interface
  * @template T
  */

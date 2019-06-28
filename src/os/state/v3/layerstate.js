@@ -102,6 +102,7 @@ os.state.v3.LayerState.LOGGER_ = goog.log.getLogger('os.state.v3.LayerState');
 
 /**
  * Checks if a layer was loaded from local data
+ *
  * @param {Object.<string, *>} layerOptions The layer options
  * @return {boolean} If the layer contains local data
  * @protected
@@ -114,6 +115,7 @@ os.state.v3.LayerState.prototype.hasLocalData = function(layerOptions) {
 
 /**
  * Checks if the provided layer is valid for addition to the state file
+ *
  * @param {os.layer.ILayer} layer The layer
  * @return {boolean} If the layer should be added
  * @protected
@@ -243,6 +245,7 @@ os.state.v3.LayerState.prototype.saveInternal = function(options, rootObj) {
 /**
  * Converts a {@link os.layer.ILayer} to an XML element
  * Default tag exclusions: locked, featureType, type
+ *
  * @param {os.layer.ILayer} layer The layer
  * @param {os.state.XMLStateOptions} options The save options
  * @param {string|Array.<string>=} opt_exclusions exclude these additional tags from the output.
@@ -490,6 +493,7 @@ os.state.v3.LayerState.prototype.layerToXML = function(layer, options, opt_exclu
 
 /**
  * Default handler for unknown layer configuration keys.
+ *
  * @param {string} key The key
  * @param {*} value The value
  * @param {!Element} layerEl The layer element
@@ -547,6 +551,7 @@ os.state.v3.LayerState.prototype.defaultConfigToXML = function(key, value, layer
 
 /**
  * Default handler for unknown XML nodes.
+ *
  * @param {string} key The key
  * @param {Element} el The element
  * @return {*} The config value
@@ -603,6 +608,7 @@ os.state.v3.LayerState.prototype.defaultXmlToConfig = function(key, el) {
 
 /**
  * Analyzes all layer options objects in the state file
+ *
  * @param {Array.<Object.<string, *>>} options The array of layer options objects
  * @param {string} id The state file id
  * @protected
@@ -669,6 +675,7 @@ os.state.v3.LayerState.prototype.analyzeOptions = function(options, id) {
 
 /**
  * Converts an XML node into layer options
+ *
  * @param {Element} node The XML element representing the layer
  * @return {Object.<string, *>} The layer options
  * @protected

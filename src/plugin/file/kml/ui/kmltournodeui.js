@@ -8,6 +8,7 @@ goog.require('plugin.file.kml.tour.EventType');
 
 /**
  * The node UI for KML tour nodes.
+ *
  * @return {angular.Directive}
  */
 plugin.file.kml.ui.kmlTourNodeUIDirective = function() {
@@ -37,6 +38,7 @@ os.ui.Module.directive('kmltournodeui', [plugin.file.kml.ui.kmlTourNodeUIDirecti
 
 /**
  * Controller for KML tour node UI.
+ *
  * @param {!angular.Scope} $scope The Angular scope.
  * @param {!angular.JQLite} $element The root DOM element.
  * @extends {os.ui.slick.AbstractNodeUICtrl}
@@ -75,6 +77,7 @@ plugin.file.kml.ui.KMLTourNodeUICtrl.prototype.destroy = function() {
 
 /**
  * Get the KML tour object.
+ *
  * @return {plugin.file.kml.tour.Tour|undefined}
  * @protected
  */
@@ -90,6 +93,7 @@ plugin.file.kml.ui.KMLTourNodeUICtrl.prototype.getTour = function() {
 
 /**
  * Handle events from the KML tour.
+ *
  * @param {!goog.events.Event} event The event.
  * @protected
  */
@@ -100,6 +104,7 @@ plugin.file.kml.ui.KMLTourNodeUICtrl.prototype.onTourEvent = function(event) {
 
 /**
  * If the tour is playing.
+ *
  * @return {boolean}
  * @export
  */
@@ -119,6 +124,7 @@ plugin.file.kml.ui.KMLTourNodeUICtrl.prototype.show = function() {
 
 /**
  * Play the tour.
+ *
  * @export
  */
 plugin.file.kml.ui.KMLTourNodeUICtrl.prototype.play = function() {
@@ -130,6 +136,7 @@ plugin.file.kml.ui.KMLTourNodeUICtrl.prototype.play = function() {
 
 /**
  * Pause the tour.
+ *
  * @export
  */
 plugin.file.kml.ui.KMLTourNodeUICtrl.prototype.pause = function() {
@@ -141,6 +148,7 @@ plugin.file.kml.ui.KMLTourNodeUICtrl.prototype.pause = function() {
 
 /**
  * Reset the tour.
+ *
  * @export
  */
 plugin.file.kml.ui.KMLTourNodeUICtrl.prototype.reset = function() {

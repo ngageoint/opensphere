@@ -5,6 +5,7 @@ goog.require('os.ui.capture.SvgRenderer');
 
 /**
  * Renders the SVG tail for a map annotation to a canvas.
+ *
  * @param {!ol.Overlay} overlay The annotation overlay.
  * @extends {os.ui.capture.SvgRenderer}
  * @constructor

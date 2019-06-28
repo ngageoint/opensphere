@@ -7,6 +7,7 @@ goog.require('os.ui.window.confirmTextDirective');
 
 /**
  * Launches a rename layer dialog for the provided layer
+ *
  * @param {os.layer.ILayer} layer
  */
 os.ui.renamelayer.launchRenameDialog = function(layer) {
@@ -27,6 +28,7 @@ os.ui.renamelayer.launchRenameDialog = function(layer) {
 
 /**
  * Add a command to the command processor to rename a layer
+ *
  * @param {!os.layer.ILayer} layer
  * @param {string} newName
  */

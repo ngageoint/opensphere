@@ -7,6 +7,7 @@ goog.require('os.data.histo.ColorBin');
 
 /**
  * Histogram bin that only manages a count.
+ *
  * @param {string} baseColor The base color of the layer represented by this bin
  * @extends {os.data.histo.ColorBin}
  * @constructor

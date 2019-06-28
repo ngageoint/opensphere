@@ -10,6 +10,7 @@ goog.require('os.ui.file.csv.AbstractCsvParser');
 
 /**
  * A CSV parser driven by PapaParse.
+ *
  * @param {plugin.file.csv.CSVParserConfig} config
  * @extends {os.ui.file.csv.AbstractCsvParser.<ol.Feature>}
  * @constructor
@@ -105,6 +106,7 @@ plugin.file.csv.CSVParser.prototype.processResult = function(result, opt_mapping
 
 /**
  * Determines columns from a feature. Useful when mappings are applied that change the feature properties.
+ *
  * @param {ol.Feature} feature
  * @private
  */

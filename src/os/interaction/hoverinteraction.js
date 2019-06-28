@@ -18,6 +18,7 @@ goog.require('os.style');
 
 /**
  * Handles hover/highlight of vector features
+ *
  * @constructor
  * @extends {os.interaction.Select}
  * @param {olx.interaction.SelectOptions=} opt_options Options.
@@ -160,6 +161,7 @@ os.interaction.Hover.prototype.onMouseMove_ = function(mapBrowserEvent) {
 
 /**
  * Handle mouseout on the map viewport.
+ *
  * @param {MouseEvent} event The event
  * @private
  */
@@ -170,6 +172,7 @@ os.interaction.Hover.prototype.onMouseOut_ = function(event) {
 
 /**
  * Handle change events on the hovered feature.
+ *
  * @param {ol.events.Event} event The event
  * @private
  */
@@ -211,6 +214,7 @@ os.interaction.Hover.prototype.onFeatureChange_ = function(event) {
 
 /**
  * Set the highlighted feature.
+ *
  * @param {ol.Feature|undefined} feature The feature
  * @param {ol.source.Vector=} opt_source The source
  * @private
@@ -303,6 +307,7 @@ os.interaction.Hover.prototype.setMap = function(map) {
 
 /**
  * Set features in the highlight overlay.
+ *
  * @param {Array<!ol.Feature>} items Features to highlight
  * @private
  */
@@ -331,6 +336,7 @@ os.interaction.Hover.prototype.highlight_ = function(items) {
 
 /**
  * Handles source add events
+ *
  * @param {os.data.event.DataEvent} e The event
  * @private
  */
@@ -342,6 +348,7 @@ os.interaction.Hover.prototype.onSourceAdded_ = function(e) {
 
 /**
  * Handles source remove events
+ *
  * @param {os.data.event.DataEvent} e The event
  * @private
  */
@@ -353,6 +360,7 @@ os.interaction.Hover.prototype.onSourceRemoved_ = function(e) {
 
 /**
  * Handles source change events
+ *
  * @param {os.events.PropertyChangeEvent} e
  * @private
  */

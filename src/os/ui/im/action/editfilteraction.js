@@ -22,6 +22,7 @@ os.ui.im.action.EventType = {
 
 /**
  * Controller for the edit filter action window.
+ *
  * @param {!angular.Scope} $scope The Angular scope.
  * @param {!angular.JQLite} $element The root DOM element.
  * @extends {os.ui.filter.ui.EditFiltersCtrl}
@@ -98,6 +99,7 @@ goog.inherits(os.ui.im.action.EditFilterActionCtrl, os.ui.filter.ui.EditFiltersC
 
 /**
  * Add a new filter action.
+ *
  * @export
  */
 os.ui.im.action.EditFilterActionCtrl.prototype.addAction = function() {
@@ -119,6 +121,7 @@ os.ui.im.action.EditFilterActionCtrl.prototype.addAction = function() {
 
 /**
  * Remove an action.
+ *
  * @param {number} index The import action index.
  * @export
  */
@@ -133,6 +136,7 @@ os.ui.im.action.EditFilterActionCtrl.prototype.removeAction = function(index) {
 
 /**
  * Update an action type.
+ *
  * @param {number} index The action index.
  * @export
  */
@@ -152,6 +156,7 @@ os.ui.im.action.EditFilterActionCtrl.prototype.updateAction = function(index) {
 
 /**
  * Update the list of actions that can be added.
+ *
  * @protected
  */
 os.ui.im.action.EditFilterActionCtrl.prototype.updateAvailableActions = function() {
@@ -173,6 +178,7 @@ os.ui.im.action.EditFilterActionCtrl.prototype.updateAvailableActions = function
 
 /**
  * Configure an action.
+ *
  * @param {os.im.action.IImportAction<T>} action The import action.
  * @export
  */
@@ -185,6 +191,7 @@ os.ui.im.action.EditFilterActionCtrl.prototype.configAction = function(action) {
 
 /**
  * Close the edit filter action window if the source was removed
+ *
  * @param {os.data.event.DataEvent} event
  * @private
  */
@@ -247,6 +254,7 @@ os.ui.im.action.EditFilterActionCtrl.prototype.isInvalid = function() {
 
 /**
  * Get the tooltip to display over the Add Action button.
+ *
  * @return {string}
  * @export
  */
@@ -261,6 +269,7 @@ os.ui.im.action.EditFilterActionCtrl.prototype.getAddActionTooltip = function() 
 
 /**
  * Handle label drag start.
+ *
  * @param {!jQuery.Event} event
  * @param {!{item: jQuery, placeholder: jQuery}} ui
  * @private
@@ -289,6 +298,7 @@ os.ui.im.action.EditFilterActionCtrl.prototype.onDragStart_ = function(event, ui
 
 /**
  * Handle label drag end.
+ *
  * @param {!jQuery.Event} event
  * @param {!{item: Element}} ui
  * @private
@@ -326,6 +336,7 @@ os.ui.im.action.closeActionConfigWindow = function() {
 
 /**
  * Launch a dialog to configure an import action.
+ *
  * @param {!os.im.action.IImportAction} action The action.
  * @param {string} type The action entry type.
  */

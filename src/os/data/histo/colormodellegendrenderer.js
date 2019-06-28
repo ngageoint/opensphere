@@ -8,6 +8,7 @@ goog.require('os.ui.Module');
 
 /**
  * Add a vector layer's color model to the legend.
+ *
  * @param {!os.layer.Vector} layer The vector layer.
  * @param {!osx.legend.LegendOptions} options The legend options.
  */
@@ -96,6 +97,7 @@ os.data.histo.legend.addVectorColorModel = function(layer, options) {
 
 /**
  * The colormodellegendsettings directive.
+ *
  * @return {angular.Directive}
  */
 os.data.histo.legend.legendSettingsDirective = function() {

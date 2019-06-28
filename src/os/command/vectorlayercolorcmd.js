@@ -11,6 +11,7 @@ goog.require('os.ui');
 
 /**
  * Changes the color of a layer
+ *
  * @extends {os.command.AbstractVectorStyle}
  * @param {string} layerId
  * @param {Array<number>|string} color

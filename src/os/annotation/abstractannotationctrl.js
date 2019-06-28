@@ -76,6 +76,7 @@ os.annotation.UI_TEMPLATE =
 
 /**
  * Controller for the annotation directive.
+ *
  * @abstract
  * @param {!angular.Scope} $scope The Angular scope.
  * @param {!angular.JQLite} $element The root DOM element.
@@ -193,6 +194,7 @@ os.annotation.AbstractAnnotationCtrl.prototype.disposeInternal = function() {
 
 /**
  * Get the annotation options.
+ *
  * @abstract
  * @return {osx.annotation.Options} The options.
  * @protected
@@ -202,6 +204,7 @@ os.annotation.AbstractAnnotationCtrl.prototype.getOptions = function() {};
 
 /**
  * Initialize the annotation.
+ *
  * @protected
  */
 os.annotation.AbstractAnnotationCtrl.prototype.initialize = function() {
@@ -224,6 +227,7 @@ os.annotation.AbstractAnnotationCtrl.prototype.initialize = function() {
 
 /**
  * Initialize the drag/resize handlers.
+ *
  * @protected
  */
 os.annotation.AbstractAnnotationCtrl.prototype.initDragResize = function() {
@@ -256,6 +260,7 @@ os.annotation.AbstractAnnotationCtrl.prototype.initDragResize = function() {
 
 /**
  * Get the selector for the annotation container.
+ *
  * @return {string} The selector.
  * @protected
  */
@@ -266,6 +271,7 @@ os.annotation.AbstractAnnotationCtrl.prototype.getContainerSelector = function()
 
 /**
  * Launches the full annotation edit window.
+ *
  * @abstract
  * @export
  */
@@ -274,6 +280,7 @@ os.annotation.AbstractAnnotationCtrl.prototype.launchEditWindow = function() {};
 
 /**
  * Hide the annotation.
+ *
  * @abstract
  * @export
  */
@@ -282,6 +289,7 @@ os.annotation.AbstractAnnotationCtrl.prototype.hideAnnotation = function() {};
 
 /**
  * Edit the annotation description inline.
+ *
  * @export
  */
 os.annotation.AbstractAnnotationCtrl.prototype.editDescription = function() {
@@ -303,6 +311,7 @@ os.annotation.AbstractAnnotationCtrl.prototype.editDescription = function() {
 
 /**
  * Edit the annotation name inline.
+ *
  * @export
  */
 os.annotation.AbstractAnnotationCtrl.prototype.editName = function() {
@@ -323,6 +332,7 @@ os.annotation.AbstractAnnotationCtrl.prototype.editName = function() {
 
 /**
  * Records the current values during inline edit. These are restored if the user cancels the edit.
+ *
  * @export
  */
 os.annotation.AbstractAnnotationCtrl.prototype.recordCurrents_ = function() {
@@ -335,6 +345,7 @@ os.annotation.AbstractAnnotationCtrl.prototype.recordCurrents_ = function() {
 
 /**
  * Save the changes to the annotation.
+ *
  * @export
  */
 os.annotation.AbstractAnnotationCtrl.prototype.saveAnnotation = function() {
@@ -352,6 +363,7 @@ os.annotation.AbstractAnnotationCtrl.prototype.saveAnnotation = function() {
 
 /**
  * Cancel editing the annotation.
+ *
  * @export
  */
 os.annotation.AbstractAnnotationCtrl.prototype.cancelEdit = function() {
@@ -374,6 +386,7 @@ os.annotation.AbstractAnnotationCtrl.prototype.cancelEdit = function() {
 
 /**
  * Handle drag start event.
+ *
  * @param {Object} event The drag event.
  * @param {Object} ui The draggable UI object.
  * @private
@@ -387,6 +400,7 @@ os.annotation.AbstractAnnotationCtrl.prototype.onDragStart_ = function(event, ui
 
 /**
  * Handle drag stop event.
+ *
  * @param {Object} event The drag event.
  * @param {Object} ui The draggable UI object.
  * @private
@@ -401,6 +415,7 @@ os.annotation.AbstractAnnotationCtrl.prototype.onDragStop_ = function(event, ui)
 
 /**
  * Set the SVG tail type.
+ *
  * @param {os.annotation.TailType} type The type.
  * @protected
  */
@@ -411,6 +426,7 @@ os.annotation.AbstractAnnotationCtrl.prototype.setTailType = function(type) {
 
 /**
  * Get the pixel for the provided coordinate.
+ *
  * @abstract
  * @param {Array<number>} coordinate The coordinate.
  * @return {Array<number>|undefined} The pixel for the provided coordinate.
@@ -421,6 +437,7 @@ os.annotation.AbstractAnnotationCtrl.prototype.getTargetPixel = function(coordin
 
 /**
  * Update the SVG tail for the annotation.
+ *
  * @return {boolean}
  * @protected
  */
@@ -433,6 +450,7 @@ os.annotation.AbstractAnnotationCtrl.prototype.updateTail = function() {
 
 /**
  * Update the SVG tail for the annotation using an absolute position.
+ *
  * @abstract
  * @return {boolean} If the update was successful.
  * @protected
@@ -442,6 +460,7 @@ os.annotation.AbstractAnnotationCtrl.prototype.updateTailAbsolute = function() {
 
 /**
  * Update the SVG tail for the annotation using fixed position.
+ *
  * @abstract
  * @return {boolean} If the update was successful.
  * @protected
@@ -451,6 +470,7 @@ os.annotation.AbstractAnnotationCtrl.prototype.updateTailFixed = function() {};
 
 /**
  * Generate the SVG tail path for an annotation.
+ *
  * @param {!Array<number>} center The annotation center coordinate, in pixels.
  * @param {!Array<number>} target The annotation target coordinate, in pixels.
  * @param {number} radius The anchor line radius, in pixels.
@@ -470,6 +490,7 @@ os.annotation.AbstractAnnotationCtrl.createTailPath = function(center, target, r
 /**
  * Rotate a tail anchor position around the annotation center. This is used to create an anchor line that is
  * perpendicular to the line from center to target.
+ *
  * @param {!Array<number>} center The annotation center coordinate, in pixels.
  * @param {!Array<number>} target The annotation target coordinate, in pixels.
  * @param {number} x The x offset from center.

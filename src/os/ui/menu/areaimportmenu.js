@@ -66,6 +66,7 @@ os.ui.menu.areaImport.dispose = function() {
 
 /**
  * Handle query area import menu events.
+ *
  * @param {!os.ui.menu.MenuEvent} event The menu event.
  * @private
  */

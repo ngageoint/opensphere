@@ -16,6 +16,7 @@ os.ui.icon.ICON_SELECTORS = 'js-nav-icon__selectors';
 
 /**
  * The iconselector directive
+ *
  * @return {angular.Directive}
  */
 os.ui.icon.iconSelectorDirective = function() {
@@ -44,6 +45,7 @@ os.ui.Module.directive('iconselector', [os.ui.icon.iconSelectorDirective]);
 
 /**
  * Controller function for the iconselector directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @extends {goog.events.EventTarget}
@@ -83,6 +85,7 @@ goog.inherits(os.ui.icon.IconSelectorCtrl, goog.events.EventTarget);
 
 /**
  * Clean up.
+ *
  * @private
  */
 os.ui.icon.IconSelectorCtrl.prototype.destroy_ = function() {
@@ -93,6 +96,7 @@ os.ui.icon.IconSelectorCtrl.prototype.destroy_ = function() {
 
 /**
  * Is valid if the user has picked something
+ *
  * @return {boolean}
  * @export
  */
@@ -103,6 +107,7 @@ os.ui.icon.IconSelectorCtrl.prototype.isValid = function() {
 
 /**
  * Notify parent scope that no icon was selected
+ *
  * @export
  */
 os.ui.icon.IconSelectorCtrl.prototype.cancel = function() {
@@ -112,6 +117,7 @@ os.ui.icon.IconSelectorCtrl.prototype.cancel = function() {
 
 /**
  * Close the window.
+ *
  * @private
  */
 os.ui.icon.IconSelectorCtrl.prototype.close_ = function() {
@@ -121,6 +127,7 @@ os.ui.icon.IconSelectorCtrl.prototype.close_ = function() {
 
 /**
  * Notify parent scope which icon the user picked
+ *
  * @export
  */
 os.ui.icon.IconSelectorCtrl.prototype.okay = function() {
@@ -133,6 +140,7 @@ os.ui.icon.IconSelectorCtrl.prototype.okay = function() {
 
 /**
  * Notify parent scope which icon the user picked
+ *
  * @param {string} name
  * @export
  */
@@ -143,6 +151,7 @@ os.ui.icon.IconSelectorCtrl.prototype.setTab = function(name) {
 
 /**
  * Translates from google uri if needed
+ *
  * @param {string} path
  * @return {string}
  * @export

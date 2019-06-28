@@ -20,6 +20,7 @@ goog.require('plugin.ogc.wms.WMSLayerConfig');
 
 /**
  * Provides WMS/WFS layer support, both separately and as a grouped layer combination.
+ *
  * @extends {os.plugin.AbstractPlugin}
  * @constructor
  */
@@ -65,6 +66,7 @@ plugin.ogc.OGCPlugin.prototype.init = function() {
 
 /**
  * Get the default opensphere WFS layer options
+ *
  * @return {!Object<string, *>}
  */
 plugin.ogc.getDefaultWfsOptions = function() {
@@ -81,6 +83,7 @@ plugin.ogc.getDefaultWfsOptions = function() {
 
 /**
  * Get the maxiumum number of features supported by the application, accounting for 2D/3D modes.
+ *
  * @param {string=} opt_key
  * @return {number}
  */

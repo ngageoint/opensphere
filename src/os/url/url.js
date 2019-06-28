@@ -29,6 +29,7 @@ os.url.URL_REGEXP_LINKY = /((ftp|https?):\/\/|(mailto:)?[A-Za-z0-9._%+-]+@)[^\s'
 
 /**
  * Convert a {@link goog.Uri.QueryData} to an object.
+ *
  * @param {goog.Uri.QueryData} qd The query data.
  * @param {Object=} opt_obj The target object.
  * @return {!Object} An object.

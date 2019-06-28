@@ -36,6 +36,7 @@ os.ui.Module.directive('aboutModal', [os.ui.modal.aboutModalDirective]);
 
 /**
  * Controller function for the about-modal directive.
+ *
  * @param {!angular.Scope} $scope The scope
  * @param {!angular.JQLite} $element The element
  * @constructor
