@@ -58,6 +58,15 @@ goog.inherits(os.feature.DynamicFeature, ol.Feature);
 
 
 /**
+ * Class name.
+ * @type {string}
+ * @const
+ */
+os.feature.DynamicFeature.NAME = 'os.feature.DynamicFeature';
+os.registerClass(os.feature.DynamicFeature.NAME, os.feature.DynamicFeature);
+
+
+/**
  * Initialize the feature into the animating state.
  */
 os.feature.DynamicFeature.prototype.initDynamic = function() {
