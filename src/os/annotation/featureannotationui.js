@@ -152,7 +152,7 @@ os.annotation.FeatureAnnotationCtrl.prototype.hideAnnotation = function() {
 
 
 /**
- * @inheritDoc.
+ * @inheritDoc
  * @export
  */
 os.annotation.FeatureAnnotationCtrl.prototype.saveAnnotation = function() {
