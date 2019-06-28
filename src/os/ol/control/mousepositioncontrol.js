@@ -70,7 +70,6 @@ goog.inherits(os.ol.control.MousePosition, ol.control.MousePosition);
 /**
  * @param {ol.Coordinate|undefined} coordinate
  * @return {string}
- * @const
  */
 os.ol.control.MousePosition.LON_LAT_FORMAT = function(coordinate) {
   if (!coordinate) {
@@ -97,7 +96,6 @@ os.ol.control.MousePosition.LON_LAT_FORMAT = function(coordinate) {
 /**
  * @param {ol.Coordinate} coordinate
  * @return {string}
- * @const
  */
 os.ol.control.MousePosition.MGRS_FORMAT = function(coordinate) {
   return osasm.toMGRS(coordinate) + ' (MGRS)';
@@ -107,7 +105,6 @@ os.ol.control.MousePosition.MGRS_FORMAT = function(coordinate) {
 /**
  * @param {ol.Coordinate} coordinate
  * @return {string}
- * @const
  */
 os.ol.control.MousePosition.SEXAGESIMAL_FORMAT = function(coordinate) {
   return (os.geo.toSexagesimal(coordinate[1], false, false) + ' ' +
@@ -120,7 +117,6 @@ os.ol.control.MousePosition.SEXAGESIMAL_FORMAT = function(coordinate) {
 /**
  * @param {ol.Coordinate} coordinate
  * @return {string}
- * @const
  */
 os.ol.control.MousePosition.DDM = function(coordinate) {
   return (os.geo.toDegreesDecimalMinutes(coordinate[1], false, false) + ' ' +
