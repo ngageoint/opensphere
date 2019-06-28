@@ -118,21 +118,6 @@
               "IGN",
               "the GIS User Community"
             ]
-          },
-          "ogcapi": {
-            "title": "ESRI OGC API Demo",
-            "type": "BaseMap",
-            "baseType": "XYZ",
-            "provider": "ESRI",
-            "url": "https://ogc-tiles-esri-server.azurewebsites.net/tiles/WebMercatorQuad/{z}/{y}/{x}?collections=World_Topo_Map&f=pgn",
-            "minZoom": 2,
-            "maxZoom": 19,
-            "projection": "EPSG:3857",
-            "tileSize": 256,
-            "description": "ESRI OGC API demo server",
-            "attributions": [
-              "To be done"
-            ]
           }
         }
       },
