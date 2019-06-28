@@ -57,7 +57,7 @@ os.ui.text.SimpleMDEViewerCtrl = function($scope, $timeout) {
  * Cleanup
  *
  * @private
-*/
+ */
 os.ui.text.SimpleMDEViewerCtrl.prototype.onDestroy_ = function() {
   this.scope_ = null;
 };

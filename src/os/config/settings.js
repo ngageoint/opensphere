@@ -400,11 +400,11 @@ os.config.Settings.prototype.finalizeLoadSettings_ = function() {
 
 
 /**
-* Get the settings
+ * Get the settings
  *
-* @param {boolean=} opt_onlyPrefs get only user prefs
-* @return {Object}
-*/
+ * @param {boolean=} opt_onlyPrefs get only user prefs
+ * @return {Object}
+ */
 os.config.Settings.prototype.getSettingsConfig = function(opt_onlyPrefs) {
   return opt_onlyPrefs ? this.actualConfig_[os.config.ConfigType.PREFERENCE] : this.mergedConfig_;
 };

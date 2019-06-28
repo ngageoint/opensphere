@@ -194,18 +194,18 @@ os.unit.UnitManager.prototype.getBaseUnits = function(unitType) {
 
 
 /**
-* Convert the provided value into its best suitable unit multiplier (e.g.:feet vs. miles) in the current
-* selected system.
-* Return a human-readable string of the conversion.  If no suitable unit multiplier can be established, the
-* default multiplier for that unit is used.
+ * Convert the provided value into its best suitable unit multiplier (e.g.:feet vs. miles) in the current
+ * selected system.
+ * Return a human-readable string of the conversion.  If no suitable unit multiplier can be established, the
+ * default multiplier for that unit is used.
  *
-* @param {?string} unitType - the type of measurement ('distance', etc)
-* @param {number} value - the value to be converted and formatted
-* @param {?string} multFromKey - the key of the multiplier that <code>value</code> is currently specified in ('Km')
-* @param {?string} fromSystem - the system that <code>multiplierFromKey</code> belongs to
-* @param {number=} opt_fixed - optional, the number of decimal digits to use when formatting <code>value</code>
-* @return {string}
-*/
+ * @param {?string} unitType - the type of measurement ('distance', etc)
+ * @param {number} value - the value to be converted and formatted
+ * @param {?string} multFromKey - the key of the multiplier that <code>value</code> is currently specified in ('Km')
+ * @param {?string} fromSystem - the system that <code>multiplierFromKey</code> belongs to
+ * @param {number=} opt_fixed - optional, the number of decimal digits to use when formatting <code>value</code>
+ * @return {string}
+ */
 os.unit.UnitManager.prototype.formatToBestFit = function(unitType, value, multFromKey, fromSystem, opt_fixed) {
   // convert incoming value to application's base
   var baseMultiplKey = this.getBaseUnits(unitType).getDefaultMultiplier().getName();
