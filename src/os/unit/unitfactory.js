@@ -32,17 +32,17 @@ os.unit.UNIT_TYPE_DISTANCE = 'distance';
 
 
 /**
-* Responsible for defining and organizing application units.  Provide easy lookup for units based on a provided
-* system or by their name.
-*
-* A 'system' is a series of units (english, metric, nautical, etc).
-* A 'type' is what it being measured (distance, liquid, digital, etc).
-* A 'unit' is a series of multipliers for a given system and type, also contains a conversion rate from the
-* application's default
-* A 'multiplier' defines how to convert values within a unit (milli, kilo, mega, tera, etc)
+ * Responsible for defining and organizing application units.  Provide easy lookup for units based on a provided
+ * system or by their name.
  *
-* @constructor
-*/
+ * A 'system' is a series of units (english, metric, nautical, etc).
+ * A 'type' is what it being measured (distance, liquid, digital, etc).
+ * A 'unit' is a series of multipliers for a given system and type, also contains a conversion rate from the
+ * application's default
+ * A 'multiplier' defines how to convert values within a unit (milli, kilo, mega, tera, etc)
+ *
+ * @constructor
+ */
 os.unit.UnitFactory = function() {
   /**
    * @type {Object}
