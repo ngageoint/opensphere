@@ -17,6 +17,7 @@ goog.require('plugin.file.gml.mime');
 
 /**
  * Provides GML support
+ *
  * @extends {os.plugin.AbstractPlugin}
  * @constructor
  */

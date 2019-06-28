@@ -24,6 +24,7 @@ os.ui.ol.interaction.KEY_TYPE = os.ui.ol.interaction.USES_KEYDOWN ? ol.events.Ev
 
 /**
  * Get the first feature under the pixel in a map browser event.
+ *
  * @param {ol.MapBrowserEvent} event Map browser event.
  * @param {function((ol.Feature|ol.render.Feature), ol.layer.Layer):T=} opt_callback Feature hit detection callback
  * @return {ol.Feature} The first feature under the event pixel, or null if none was found.
@@ -41,6 +42,7 @@ os.ui.ol.interaction.getEventFeature = function(event, opt_callback) {
 
 /**
  * Feature callback to return the first feature with a polygon geometry.
+ *
  * @param {ol.Feature|ol.render.Feature} feature
  * @param {ol.layer.Layer} layer Layer
  * @return {ol.Feature|ol.render.Feature}
@@ -52,6 +54,7 @@ os.ui.ol.interaction.getFirstFeature = function(feature, layer) {
 
 /**
  * Feature callback to return the first feature with a polygon geometry.
+ *
  * @param {ol.Feature|ol.render.Feature} feature
  * @param {ol.layer.Layer} layer Layer
  * @return {ol.Feature|ol.render.Feature}

@@ -28,6 +28,7 @@ goog.inherits(os.config.AreaSettings, os.ui.config.SettingPlugin);
 
 /**
  * The area settings UI directive
+ *
  * @return {angular.Directive}
  */
 os.config.areaSettingsDirective = function() {
@@ -50,6 +51,7 @@ os.ui.Module.directive('areasettings', [os.config.areaSettingsDirective]);
 
 /**
  * Controller function for the areasettingss directive
+ *
  * @param {!angular.Scope} $scope
  * @constructor
  * @ngInject
@@ -99,6 +101,7 @@ os.config.AreaSettingsCtrl.prototype.destroy_ = function() {
 
 /**
  * Handle Include Color changes via gui.
+ *
  * @param {os.events.SettingChangeEvent} event
  * @private
  */
@@ -113,6 +116,7 @@ os.config.AreaSettingsCtrl.prototype.onInColorChange_ = function(event) {
 
 /**
  * Handle Include Width changes via gui.
+ *
  * @param {os.events.SettingChangeEvent} event
  * @private
  */
@@ -127,6 +131,7 @@ os.config.AreaSettingsCtrl.prototype.onInWidthChange_ = function(event) {
 
 /**
  * Handle Exclude Color changes via gui.
+ *
  * @param {os.events.SettingChangeEvent} event
  * @private
  */
@@ -141,6 +146,7 @@ os.config.AreaSettingsCtrl.prototype.onExColorChange_ = function(event) {
 
 /**
  * Handle Exclude Width changes via gui.
+ *
  * @param {os.events.SettingChangeEvent} event
  * @private
  */
@@ -155,6 +161,7 @@ os.config.AreaSettingsCtrl.prototype.onExWidthChange_ = function(event) {
 
 /**
  * Handle Include Color changes via settings.
+ *
  * @param {os.events.SettingChangeEvent} event
  * @private
  */
@@ -169,6 +176,7 @@ os.config.AreaSettingsCtrl.prototype.settingsInColorChange_ = function(event) {
 
 /**
  * Handle Include Width changes via settings.
+ *
  * @param {os.events.SettingChangeEvent} event
  * @private
  */
@@ -183,6 +191,7 @@ os.config.AreaSettingsCtrl.prototype.settingsInWidthChange_ = function(event) {
 
 /**
  * Handle Exclude Color changes via settings.
+ *
  * @param {os.events.SettingChangeEvent} event
  * @private
  */
@@ -197,6 +206,7 @@ os.config.AreaSettingsCtrl.prototype.settingsExColorChange_ = function(event) {
 
 /**
  * Handle Exclude Width changes via settings.
+ *
  * @param {os.events.SettingChangeEvent} event
  * @private
  */
@@ -211,6 +221,7 @@ os.config.AreaSettingsCtrl.prototype.settingsExWidthChange_ = function(event) {
 
 /**
  * Fire the confirmation callback and close the window.
+ *
  * @private
  */
 os.config.AreaSettingsCtrl.prototype.confirm_ = function() {
@@ -241,6 +252,7 @@ os.config.AreaSettingsCtrl.prototype.confirm_ = function() {
 
 /**
  * Resets to the default colors
+ *
  * @export
  */
 os.config.AreaSettingsCtrl.prototype.reset = function() {

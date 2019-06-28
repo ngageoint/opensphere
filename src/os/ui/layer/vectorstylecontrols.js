@@ -21,6 +21,7 @@ os.ui.layer.VectorStyleControlsEventType = {
 
 /**
  * Directive to style vector layers, features, etc.
+ *
  * @return {angular.Directive}
  */
 os.ui.layer.vectorStyleControlsDirective = function() {
@@ -60,6 +61,7 @@ os.ui.Module.directive('vectorstylecontrols', [os.ui.layer.vectorStyleControlsDi
 
 /**
  * Controller function for the vectorstylecontrols directive.
+ *
  * @param {!angular.Scope} $scope The Angular scope.
  * @extends {goog.Disposable}
  * @constructor
@@ -115,6 +117,7 @@ os.ui.layer.VectorStyleControlsCtrl.prototype.disposeInternal = function() {
 
 /**
  * Fire a scope event when the shape is changed by the user.
+ *
  * @export
  */
 os.ui.layer.VectorStyleControlsCtrl.prototype.onShapeChange = function() {
@@ -126,6 +129,7 @@ os.ui.layer.VectorStyleControlsCtrl.prototype.onShapeChange = function() {
 
 /**
  * Check for ellipse with center
+ *
  * @return {boolean}
  * @export
  */
@@ -139,6 +143,7 @@ os.ui.layer.VectorStyleControlsCtrl.prototype.hasCenter = function() {
 
 /**
  * Fire a scope event when the ellipse center shape is changed by the user.
+ *
  * @param {string} shape
  * @export
  */
@@ -152,6 +157,7 @@ os.ui.layer.VectorStyleControlsCtrl.prototype.onCenterShapeChange = function(sha
 
 /**
  * Fire a scope event when the line dash is changed by the user.
+ *
  * @export
  */
 os.ui.layer.VectorStyleControlsCtrl.prototype.onLineDashChange = function() {

@@ -5,6 +5,7 @@ goog.require('os.data.FileProvider');
 
 /**
  * SHP file provider
+ *
  * @extends {os.data.FileProvider}
  * @constructor
  */

@@ -66,6 +66,7 @@ os.ui.MenuButtonCtrl = function($scope, $element) {
 
 /**
  * Clean up
+ *
  * @protected
  */
 os.ui.MenuButtonCtrl.prototype.onDestroy = function() {
@@ -76,6 +77,7 @@ os.ui.MenuButtonCtrl.prototype.onDestroy = function() {
 
 /**
  * Open the menu
+ *
  * @export
  */
 os.ui.MenuButtonCtrl.prototype.openMenu = function() {
@@ -100,6 +102,7 @@ os.ui.MenuButtonCtrl.prototype.openMenu = function() {
 
 /**
  * Handle menu close
+ *
  * @protected
  */
 os.ui.MenuButtonCtrl.prototype.onMenuClose = function() {
@@ -110,6 +113,7 @@ os.ui.MenuButtonCtrl.prototype.onMenuClose = function() {
 
 /**
  * Toggles a window
+ *
  * @export
  */
 os.ui.MenuButtonCtrl.prototype.toggle = function() {
@@ -122,6 +126,7 @@ os.ui.MenuButtonCtrl.prototype.toggle = function() {
 
 /**
  * Checks if a window is open in the application
+ *
  * @param {string=} opt_flag The ID of the window to check
  * @return {boolean}
  * @export

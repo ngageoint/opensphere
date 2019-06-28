@@ -22,6 +22,7 @@ os.ui.im.FileSupportChoice = {
 
 /**
  * Dialog to prompt the user that IndexedDB is not supported.
+ *
  * @return {angular.Directive}
  */
 os.ui.im.fileSupportDirective = function() {
@@ -44,6 +45,7 @@ os.ui.Module.directive('filesupport', [os.ui.im.fileSupportDirective]);
 
 /**
  * Controller for the file support directive.
+ *
  * @param {!angular.Scope} $scope The Angular scope.
  * @param {!angular.JQLite} $element The root DOM element.
  * @extends {goog.Disposable}
@@ -152,6 +154,7 @@ os.ui.im.FileSupportCtrl.prototype.disposeInternal = function() {
 
 /**
  * Fire the cancel callback and close the window.
+ *
  * @export
  */
 os.ui.im.FileSupportCtrl.prototype.cancel = function() {
@@ -165,6 +168,7 @@ os.ui.im.FileSupportCtrl.prototype.cancel = function() {
 
 /**
  * Fire the confirmation callback and close the window.
+ *
  * @export
  */
 os.ui.im.FileSupportCtrl.prototype.confirm = function() {
@@ -180,6 +184,7 @@ os.ui.im.FileSupportCtrl.prototype.confirm = function() {
 
 /**
  * Close the window.
+ *
  * @private
  */
 os.ui.im.FileSupportCtrl.prototype.close_ = function() {
@@ -189,6 +194,7 @@ os.ui.im.FileSupportCtrl.prototype.close_ = function() {
 
 /**
  * Handles key events
+ *
  * @param {goog.events.KeyEvent} event
  * @private
  */
@@ -201,6 +207,7 @@ os.ui.im.FileSupportCtrl.prototype.handleKeyEvent_ = function(event) {
 
 /**
  * Launch a dialog prompting the user the file they're importing already exists and requesting action.
+ *
  * @param {!os.file.File} file The file
  * @return {!goog.Promise<string>}
  */

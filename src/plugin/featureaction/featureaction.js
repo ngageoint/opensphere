@@ -87,6 +87,7 @@ plugin.im.action.feature.TagName = {
 
 /**
  * Launch the feature action window for a layer.
+ *
  * @param {string} layerId The layer id.
  */
 plugin.im.action.feature.launchForLayer = function(layerId) {
@@ -155,6 +156,7 @@ plugin.im.action.feature.getExportName = function(opt_entryType) {
 
 /**
  * Get the list of filter columns.
+ *
  * @param {string=} opt_entryType The filter action entry type.
  * @return {!Array} The columns.
  */
@@ -175,6 +177,7 @@ plugin.im.action.feature.getColumns = function(opt_entryType) {
 
 /**
  * Edit an action entry. If no entry is provided, a new one will be created.
+ *
  * @param {string} entryType The filter action entry type.
  * @param {os.im.action.FilterActionEntry=} opt_entry The import action entry.
  */

@@ -61,6 +61,7 @@ os.config.DisplaySetting = {
 
 /**
  * If terrain has been configured in the application.
+ *
  * @return {boolean}
  */
 os.config.isTerrainConfigured = function() {
@@ -72,6 +73,7 @@ os.config.isTerrainConfigured = function() {
 
 /**
  * The display settings UI directive
+ *
  * @return {angular.Directive}
  */
 os.config.displaySettingsDirective = function() {
@@ -94,6 +96,7 @@ os.ui.Module.directive('displaysettings', [os.config.displaySettingsDirective]);
 
 /**
  * Controller for location settings
+ *
  * @param {!angular.Scope} $scope
  * @constructor
  * @ngInject
@@ -226,6 +229,7 @@ os.config.DisplaySettingsCtrl.prototype.destroy_ = function() {
 
 /**
  * Update a value in settings. Sets a flag so the settings event is not handled by the controller.
+ *
  * @param {string} key The settings key to update.
  * @param {*} value The new value.
  * @private
@@ -263,6 +267,7 @@ os.config.DisplaySettingsCtrl.prototype.getDefaultCameraState_ = function() {
 
 /**
  * Update the 3D support scope options.
+ *
  * @private
  */
 os.config.DisplaySettingsCtrl.prototype.update3DSupport_ = function() {
@@ -285,6 +290,7 @@ os.config.DisplaySettingsCtrl.prototype.update3DSupport_ = function() {
 
 /**
  * Handle map mode changes via settings.
+ *
  * @param {os.events.SettingChangeEvent} event
  * @private
  */
@@ -300,6 +306,7 @@ os.config.DisplaySettingsCtrl.prototype.onCameraStateChange_ = function(event) {
 
 /**
  * Handle map mode changes via settings.
+ *
  * @param {os.events.SettingChangeEvent} event
  * @private
  */
@@ -315,6 +322,7 @@ os.config.DisplaySettingsCtrl.prototype.onMapModeChange_ = function(event) {
 
 /**
  * Handle map mode changes via the UI.
+ *
  * @param {string=} opt_new
  * @param {string=} opt_old
  * @private
@@ -328,6 +336,7 @@ os.config.DisplaySettingsCtrl.prototype.updateMapMode_ = function(opt_new, opt_o
 
 /**
  * Handle camera mode changes via the UI.
+ *
  * @param {string=} opt_new
  * @param {string=} opt_old
  * @private
@@ -357,6 +366,7 @@ os.config.DisplaySettingsCtrl.prototype.updateCameraMode_ = function(opt_new, op
 
 /**
  * Set OpenSphere to use the current map position on reset.
+ *
  * @export
  */
 os.config.DisplaySettingsCtrl.prototype.useCurrentPosition = function() {
@@ -370,6 +380,7 @@ os.config.DisplaySettingsCtrl.prototype.useCurrentPosition = function() {
 
 /**
  * Set OpenSphere to use the default map position on reset.
+ *
  * @private
  */
 os.config.DisplaySettingsCtrl.prototype.useDefaultPosition_ = function() {
@@ -383,6 +394,7 @@ os.config.DisplaySettingsCtrl.prototype.useDefaultPosition_ = function() {
 
 /**
  * Set OpenSphere to use the current map position on reset.
+ *
  * @return {string}
  * @export
  */
@@ -400,6 +412,7 @@ os.config.DisplaySettingsCtrl.prototype.getZoom = function() {
 
 /**
  * Update the fog display.
+ *
  * @export
  */
 os.config.DisplaySettingsCtrl.prototype.updateFog = function() {
@@ -410,6 +423,7 @@ os.config.DisplaySettingsCtrl.prototype.updateFog = function() {
 
 /**
  * Handle changes to the sky enabled setting.
+ *
  * @param {os.events.SettingChangeEvent} event
  * @private
  */
@@ -423,6 +437,7 @@ os.config.DisplaySettingsCtrl.prototype.onSkyChange_ = function(event) {
 
 /**
  * Handle changes to the sunlight enabled setting.
+ *
  * @param {os.events.SettingChangeEvent} event
  * @private
  */
@@ -436,6 +451,7 @@ os.config.DisplaySettingsCtrl.prototype.onSunlightChange_ = function(event) {
 
 /**
  * Handle changes to the terrain enabled setting.
+ *
  * @param {os.events.SettingChangeEvent} event
  * @private
  */
@@ -449,6 +465,7 @@ os.config.DisplaySettingsCtrl.prototype.onTerrainChange_ = function(event) {
 
 /**
  * If terrain is available in the application.
+ *
  * @return {boolean}
  * @export
  */
@@ -459,6 +476,7 @@ os.config.DisplaySettingsCtrl.prototype.supportsTerrain = function() {
 
 /**
  * Update the globe sky display.
+ *
  * @export
  */
 os.config.DisplaySettingsCtrl.prototype.updateSky = function() {
@@ -468,6 +486,7 @@ os.config.DisplaySettingsCtrl.prototype.updateSky = function() {
 
 /**
  * Update the globe sunlight display.
+ *
  * @export
  */
 os.config.DisplaySettingsCtrl.prototype.updateSunlight = function() {
@@ -477,6 +496,7 @@ os.config.DisplaySettingsCtrl.prototype.updateSunlight = function() {
 
 /**
  * Update the globe terrain display.
+ *
  * @export
  */
 os.config.DisplaySettingsCtrl.prototype.updateTerrain = function() {

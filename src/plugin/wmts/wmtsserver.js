@@ -243,6 +243,7 @@ plugin.wmts.Server.prototype.load = function(opt_ping) {
 
 /**
  * Builds query data from the WMS params.
+ *
  * @return {goog.Uri.QueryData}
  * @private
  */
@@ -264,6 +265,7 @@ plugin.wmts.Server.prototype.getQueryData_ = function() {
 
 /**
  * Loads WMS GetCapabilities from the configured server.
+ *
  * @protected
  */
 plugin.wmts.Server.prototype.loadCapabilities = function() {
@@ -279,6 +281,7 @@ plugin.wmts.Server.prototype.loadCapabilities = function() {
 
 /**
  * Test a WMS URL to check if its GetCapabilities is valid.
+ *
  * @param {string} url The WMS URL
  * @param {function(goog.events.Event)=} opt_success The success handler
  * @param {function(goog.events.Event)=} opt_error The error handler
@@ -515,6 +518,7 @@ plugin.wmts.Server.prototype.detectFormats_ = function(dimensions, config) {
 
 /**
  * Adds the descriptor.
+ *
  * @param {!os.data.IDataDescriptor} descriptor
  */
 plugin.wmts.Server.prototype.addDescriptor = function(descriptor) {
@@ -590,6 +594,7 @@ plugin.wmts.Server.prototype.markAllDescriptors = function(opt_node) {
 
 /**
  * Finds and removes the descriptor.
+ *
  * @param {os.ui.ogc.IOGCDescriptor} descriptor
  */
 plugin.wmts.Server.prototype.removeDescriptor = function(descriptor) {

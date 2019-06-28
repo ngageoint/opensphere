@@ -13,6 +13,7 @@ goog.require('os.ui.util.autoVHeightDirective');
 
 /**
  * The searchresults directive
+ *
  * @return {angular.Directive}
  */
 os.ui.search.searchResultsDirective = function() {
@@ -39,6 +40,7 @@ os.ui.Module.directive('searchresults', [os.ui.search.searchResultsDirective]);
 
 /**
  * Controller function for the searchresults directive.
+ *
  * @param {!angular.Scope} $scope
  * @constructor
  * @ngInject
@@ -92,6 +94,7 @@ os.ui.search.SearchResultsCtrl.prototype.destroy_ = function() {
 
 /**
  * Clears the search results.
+ *
  * @private
  */
 os.ui.search.SearchResultsCtrl.prototype.clear_ = function() {
@@ -125,6 +128,7 @@ os.ui.search.SearchResultsCtrl.prototype.handleSearchSuccess_ = function(event) 
 
 /**
  * Gets the results from the search manager
+ *
  * @protected
  */
 os.ui.search.SearchResultsCtrl.prototype.updateResults = function() {

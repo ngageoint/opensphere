@@ -10,6 +10,7 @@ goog.require('os.source.Vector');
 
 /**
  * Config for a layer containing static data.
+ *
  * @extends {os.layer.config.AbstractLayerConfig}
  * @constructor
  * @template T
@@ -96,6 +97,7 @@ os.layer.config.StaticLayerConfig.prototype.createLayer = function(options) {
 
 /**
  * Restores the layer from the options
+ *
  * @param {os.layer.Vector} layer
  * @param {Object.<string, *>} options
  * @protected

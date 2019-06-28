@@ -7,6 +7,7 @@ goog.require('os.ui.text.SimpleMDE');
 
 /**
  * The resultcard directive for displaying search results.
+ *
  * @return {angular.Directive}
  */
 os.ui.search.basicResultCardDirective = function() {
@@ -31,6 +32,7 @@ os.ui.Module.directive('basicresultcard', [os.ui.search.basicResultCardDirective
 
 /**
  * Controller for the resultcard directive.
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$compile} $compile
@@ -48,6 +50,7 @@ os.ui.search.BasicResultCardCtrl = function($scope, $element, $compile) {
 
 /**
  * Get the title with correct action icon
+ *
  * @return {string}
  * @export
  */
@@ -62,6 +65,7 @@ os.ui.search.BasicResultCardCtrl.prototype.getViewIcon = function() {
 
 /**
  * To linkify title or not
+ *
  * @return {string}
  * @export
  */
@@ -75,6 +79,7 @@ os.ui.search.BasicResultCardCtrl.prototype.getTitle = function() {
 
 /**
  * Is the link to an external site
+ *
  * @return {boolean}
  * @export
  */

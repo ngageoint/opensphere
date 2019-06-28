@@ -19,6 +19,7 @@ os.ui.GlobalMenuEventType = {
 
 /**
  * Controller function for the ActionMenu directive
+ *
  * @constructor
  * @param {angular.Scope} $scope
  * @param {angular.JQLite} $element
@@ -64,6 +65,7 @@ os.ui.GlobalMenuCtrl.prototype.destroy = function() {
 
 /**
  * Closes an already-open menu and dispatches a menu close event
+ *
  * @param {boolean=} opt_dispatch
  */
 os.ui.GlobalMenuCtrl.prototype.close = function(opt_dispatch) {
@@ -116,6 +118,7 @@ os.ui.GlobalMenuCtrl.prototype.onAddOutsideListener_ = function() {
 
 /**
  * Click handler
+ *
  * @param {Event} e
  * @private
  */
@@ -143,6 +146,7 @@ os.ui.GlobalMenuCtrl.prototype.invoke = function(action) {
 
 /**
  * Checks the position and ensures that the menu doesn't run off the screen
+ *
  * @override
  * @protected
  */
@@ -193,6 +197,7 @@ os.ui.GlobalMenuCtrl.prototype.position = function() {
 
 /**
  * Set target
+ *
  * @param {angular.JQLite|string} target
  */
 os.ui.GlobalMenuCtrl.prototype.setTarget = function(target) {
@@ -203,6 +208,7 @@ os.ui.GlobalMenuCtrl.prototype.setTarget = function(target) {
 
 /**
  * Close window if target position changed
+ *
  * @private
  */
 os.ui.GlobalMenuCtrl.prototype.onScroll_ = function() {
@@ -217,6 +223,7 @@ os.ui.GlobalMenuCtrl.prototype.onScroll_ = function() {
 
 /**
  * Opens a menu
+ *
  * @param {os.ui.action.ActionManager} provider The action menu manager that supplies the menu
  * @param {{
  *  x: (number|undefined),
@@ -273,6 +280,7 @@ os.ui.GlobalMenuCtrl.closeMenu = function() {
 
 /**
  * Opens a menu
+ *
  * @param {{
  *  x: (number|undefined),
  *  y: (number|undefined),
@@ -340,6 +348,7 @@ os.ui.positionMenu_ = function(position, opt_target, opt_root) {
 
 /**
  * Defines a global menu directive. You should only need one of these. See os.ui.openMenu().
+ *
  * @return {angular.Directive} the directive definition
  */
 os.ui.globalMenuDirective = function() {

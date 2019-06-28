@@ -17,6 +17,7 @@ goog.require('os.ui.wiz.wizardPreviewDirective');
 
 /**
  * Import wizard time step
+ *
  * @extends {os.ui.wiz.step.AbstractWizardStep}
  * @constructor
  */
@@ -141,6 +142,7 @@ os.ui.wiz.step.TimeStep.prototype.isValid = function(config) {
 
 /**
  * The import wizard time step directive
+ *
  * @return {angular.Directive}
  */
 os.ui.wiz.step.timeStepDirective = function() {
@@ -163,6 +165,7 @@ os.ui.Module.directive('timestep', [os.ui.wiz.step.timeStepDirective]);
 
 /**
  * Controller for the import wizard time step
+ *
  * @param {!angular.Scope} $scope
  * @constructor
  * @ngInject
@@ -195,6 +198,7 @@ os.ui.wiz.step.TimeStepCtrl = function($scope) {
 
 /**
  * Clean up references/listeners.
+ *
  * @private
  */
 os.ui.wiz.step.TimeStepCtrl.prototype.destroy_ = function() {
@@ -204,6 +208,7 @@ os.ui.wiz.step.TimeStepCtrl.prototype.destroy_ = function() {
 
 /**
  * Fires an event to make the preview resize itself.
+ *
  * @private
  */
 os.ui.wiz.step.TimeStepCtrl.prototype.resizePreview_ = function() {
@@ -213,6 +218,7 @@ os.ui.wiz.step.TimeStepCtrl.prototype.resizePreview_ = function() {
 
 /**
  * Emits a validation event.
+ *
  * @private
  */
 os.ui.wiz.step.TimeStepCtrl.prototype.validate_ = function() {
@@ -231,6 +237,7 @@ os.ui.wiz.step.TimeStepCtrl.prototype.validate_ = function() {
 
 /**
  * Launches the date/time formatting help dialog.
+ *
  * @export
  */
 os.ui.wiz.step.TimeStepCtrl.prototype.launchHelp = function() {

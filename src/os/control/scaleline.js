@@ -54,6 +54,7 @@ os.control.ScaleLine.prototype.onUnitsChange = function(event) {
 
 /**
  * Hide the control.
+ *
  * @protected
  * @suppress {accessControls}
  */
@@ -67,6 +68,7 @@ os.control.ScaleLine.prototype.hide = function() {
 
 /**
  * This is a copy of the original OpenLayers code, with additional bits for showing a single unit
+ *
  * @inheritDoc
  * @suppress {accessControls}
  */
@@ -206,6 +208,7 @@ os.control.ScaleLine.prototype.updateElement_ = function() {
 
 /**
  * Get the element
+ *
  * @suppress {accessControls}
  * @return {Element}
  */

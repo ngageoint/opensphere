@@ -9,6 +9,7 @@ goog.require('os.ui.window');
 
 /**
  * The exportdialog directive
+ *
  * @return {angular.Directive}
  */
 os.ui.file.exportDialogDirective = function() {
@@ -31,6 +32,7 @@ os.ui.Module.directive('exportdialog', [os.ui.file.exportDialogDirective]);
 
 /**
  * Controller function for the exportdialog directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$compile} $compile
@@ -122,6 +124,7 @@ os.ui.file.ExportDialogCtrl = function($scope, $element, $compile) {
 
 /**
  * Clean up.
+ *
  * @protected
  */
 os.ui.file.ExportDialogCtrl.prototype.destroy = function() {
@@ -133,6 +136,7 @@ os.ui.file.ExportDialogCtrl.prototype.destroy = function() {
 
 /**
  * Get the label for the exporter.
+ *
  * @return {?string}
  * @export
  */
@@ -147,6 +151,7 @@ os.ui.file.ExportDialogCtrl.prototype.getExporterLabel = function() {
 
 /**
  * Get the options UI for the exporter.
+ *
  * @return {?string}
  * @export
  */
@@ -161,6 +166,7 @@ os.ui.file.ExportDialogCtrl.prototype.getExporterUI = function() {
 
 /**
  * Extending classes can use this to provide their own options in the form.
+ *
  * @return {?string} The custom options UI as HTML
  * @protected
  */
@@ -171,6 +177,7 @@ os.ui.file.ExportDialogCtrl.prototype.getCustomOptions = function() {
 
 /**
  * Get the keys
+ *
  * @param {Object} obj
  * @return {Array} The custom options UI as HTML
  * @export
@@ -181,6 +188,7 @@ os.ui.file.ExportDialogCtrl.prototype.getKeys = function(obj) {
 
 /**
  * Handle exporter change.
+ *
  * @param {os.ex.IExportMethod=} opt_new The new value
  * @param {os.ex.IExportMethod=} opt_old The old value
  * @protected
@@ -205,6 +213,7 @@ os.ui.file.ExportDialogCtrl.prototype.onExporterChange = function(opt_new, opt_o
 
 /**
  * Handle exporter change.
+ *
  * @param {os.ex.IPersistenceMethod=} opt_new The new value
  * @param {os.ex.IPersistenceMethod=} opt_old The old value
  * @protected
@@ -218,6 +227,7 @@ os.ui.file.ExportDialogCtrl.prototype.onPersisterChange = function(opt_new, opt_
 
 /**
  * Fire the cancel callback and close the window.
+ *
  * @export
  */
 os.ui.file.ExportDialogCtrl.prototype.cancel = function() {
@@ -227,6 +237,7 @@ os.ui.file.ExportDialogCtrl.prototype.cancel = function() {
 
 /**
  * Fire the confirmation callback and close the window.
+ *
  * @export
  */
 os.ui.file.ExportDialogCtrl.prototype.confirm = function() {
@@ -244,6 +255,7 @@ os.ui.file.ExportDialogCtrl.prototype.confirm = function() {
 
 /**
  * Close the window.
+ *
  * @private
  */
 os.ui.file.ExportDialogCtrl.prototype.close_ = function() {

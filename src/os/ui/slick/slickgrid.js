@@ -48,6 +48,7 @@ os.ui.slick.SlickGridEvent = {
 
 /**
  * The slick grid directive.
+ *
  * @return {angular.Directive}
  */
 os.ui.slickGridDirective = function() {
@@ -91,6 +92,7 @@ os.ui.Module.directive('slickgrid', [os.ui.slickGridDirective]);
 
 /**
  * Controller for SlickGrid directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$compile} $compile
@@ -439,6 +441,7 @@ os.ui.slick.SlickGridCtrl.prototype.disposeInternal = function() {
 
 /**
  * Gets the options for the grid
+ *
  * @return {Object<string, *>} the options
  * @protected
  */
@@ -457,6 +460,7 @@ os.ui.slick.SlickGridCtrl.prototype.getOptions = function() {
 
 /**
  * Gets the columns for the grid, trimming out any that have been hidden.
+ *
  * @return {!Array}
  * @protected
  */
@@ -477,6 +481,7 @@ os.ui.slick.SlickGridCtrl.prototype.getColumns = function() {
 
 /**
  * Get columns for the base slick grid.
+ *
  * @return {!Array<os.data.ColumnDefinition>}
  * @protected
  */
@@ -487,6 +492,7 @@ os.ui.slick.SlickGridCtrl.prototype.getColumnsInternal = function() {
 
 /**
  * Get the column menu for this grid.
+ *
  * @return {os.ui.menu.Menu<os.ui.slick.ColumnContext>}
  */
 os.ui.slick.SlickGridCtrl.prototype.getColumnMenu = function() {
@@ -496,6 +502,7 @@ os.ui.slick.SlickGridCtrl.prototype.getColumnMenu = function() {
 
 /**
  * Tests if the column is visible. Visibility defaults to false if the 'visible' field is not on the column.
+ *
  * @param {os.data.ColumnDefinition} column
  * @return {boolean} If the provided column is visible
  * @protected
@@ -507,6 +514,7 @@ os.ui.slick.SlickGridCtrl.prototype.isColumnVisible = function(column) {
 
 /**
  * Gets the data for the grid
+ *
  * @return {!Array}
  * @protected
  */
@@ -517,6 +525,7 @@ os.ui.slick.SlickGridCtrl.prototype.getData = function() {
 
 /**
  * Gets the data in the grid, sorted by the Slickgrid data view.
+ *
  * @return {!Array}
  * @protected
  */
@@ -527,6 +536,7 @@ os.ui.slick.SlickGridCtrl.prototype.getViewData = function() {
 
 /**
  * Gets selected data in the grid, sorted by the Slickgrid data view.
+ *
  * @return {!Array}
  * @protected
  */
@@ -549,6 +559,7 @@ os.ui.slick.SlickGridCtrl.prototype.getSelectedViewData = function() {
 
 /**
  * Gets selected data in the grid, sorted by the Slickgrid data view.
+ *
  * @param {(function(*):string)=} opt_mapFn Function to map grid items to text.
  */
 os.ui.slick.SlickGridCtrl.prototype.copyRows = function(opt_mapFn) {
@@ -577,6 +588,7 @@ os.ui.slick.SlickGridCtrl.prototype.copyRows = function(opt_mapFn) {
 
 /**
  * Handles row changes
+ *
  * @param {*} e The event
  * @param {Object} args The args
  * @private
@@ -591,6 +603,7 @@ os.ui.slick.SlickGridCtrl.prototype.onRowsChanged_ = function(e, args) {
 
 /**
  * Handles row count changes
+ *
  * @param {*} e The event
  * @param {Object} args The args
  * @protected
@@ -620,6 +633,7 @@ os.ui.slick.SlickGridCtrl.prototype.resize = function() {
 
 /**
  * Resizes the grid
+ *
  * @protected
  */
 os.ui.slick.SlickGridCtrl.prototype.doResize = function() {
@@ -634,6 +648,7 @@ os.ui.slick.SlickGridCtrl.prototype.doResize = function() {
 
 /**
  * Copys rows in the grid.
+ *
  * @param {angular.Scope.Event} event
  * @param {function(*):string} mapFn Function to map grid items to text.
  * @protected
@@ -647,6 +662,7 @@ os.ui.slick.SlickGridCtrl.prototype.onCopyRows = function(event, mapFn) {
 
 /**
  * Scrolls the grid to an item.
+ *
  * @param {angular.Scope.Event} event
  * @param {*} item
  * @param {boolean=} opt_top If the item should be positioned at the top of the view
@@ -666,6 +682,7 @@ os.ui.slick.SlickGridCtrl.prototype.onScrollToItem = function(event, item, opt_t
 
 /**
  * Handle scroll to cell events.
+ *
  * @param {angular.Scope.Event} event
  * @param {number} row
  * @param {number} column
@@ -678,6 +695,7 @@ os.ui.slick.SlickGridCtrl.prototype.onScrollToCell = function(event, row, column
 
 /**
  * Scrolls the grid to a cell
+ *
  * @param {number} row
  * @param {number} column
  */
@@ -694,6 +712,7 @@ os.ui.slick.SlickGridCtrl.prototype.scrollToCell = function(row, column) {
 
 /**
  * Handle mouse click events from Slickgrid.
+ *
  * @param {MouseEvent} e The event
  * @param {Object} args The args
  * @protected
@@ -705,6 +724,7 @@ os.ui.slick.SlickGridCtrl.prototype.onItemClick = function(e, args) {
 
 /**
  * Handle user interaction (click/key press) events from Slickgrid.
+ *
  * @param {Event} e The event
  * @param {Object} args The args
  * @protected
@@ -729,6 +749,7 @@ os.ui.slick.SlickGridCtrl.prototype.onUserInteraction = function(e, args) {
 
 /**
  * Updates the data
+ *
  * @param {Array} data
  */
 os.ui.slick.SlickGridCtrl.prototype.updateData = function(data) {
@@ -743,6 +764,7 @@ os.ui.slick.SlickGridCtrl.prototype.updateData = function(data) {
 
 /**
  * Handles data changes
+ *
  * @param {Array=} opt_newVal
  * @param {Array=} opt_oldVal
  * @protected
@@ -754,6 +776,7 @@ os.ui.slick.SlickGridCtrl.prototype.onDataChange = function(opt_newVal, opt_oldV
 
 /**
  * Handles column changes
+ *
  * @param {Array<os.data.ColumnDefinition>=} opt_newVal
  * @param {Array<os.data.ColumnDefinition>=} opt_oldVal
  * @protected
@@ -770,6 +793,7 @@ os.ui.slick.SlickGridCtrl.prototype.onColumnsChange = function(opt_newVal, opt_o
 
 /**
  * Called after user-driven changes to columns.
+ *
  * @param {Array<os.data.ColumnDefinition>=} opt_changed The changed columns.
  * @protected
  */
@@ -786,6 +810,7 @@ os.ui.slick.SlickGridCtrl.prototype.onUserColumnsChange = function(opt_changed) 
 
 /**
  * Respond to column reorder events from slickgrid. These fire when the user moves columns via drag/drop.
+ *
  * @param {*} e The event
  * @param {Object} args The args
  * @private
@@ -833,6 +858,7 @@ os.ui.slick.SlickGridCtrl.prototype.onColumnsReordered_ = function(e, args) {
 
 /**
  * Respond to column resize events from slickgrid.
+ *
  * @param {*} e The event
  * @param {Object} args The args
  * @private
@@ -868,6 +894,7 @@ os.ui.slick.SlickGridCtrl.prototype.onColumnsResized_ = function(e, args) {
 
 /**
  * Handle the column reset event.
+ *
  * @param {os.ui.menu.MenuEvent<os.ui.slick.ColumnContext>} event The column menu event.
  * @protected
  */
@@ -888,6 +915,7 @@ os.ui.slick.SlickGridCtrl.prototype.onColumnReset = function(event) {
 
 /**
  * Handle a column being removed from the grid.
+ *
  * @param {os.ui.menu.MenuEvent<os.ui.slick.ColumnContext>} event The column menu event.
  * @protected
  */
@@ -906,6 +934,7 @@ os.ui.slick.SlickGridCtrl.prototype.onColumnRemove = function(event) {
 
 /**
  * Handler to move a column to the front of the array.
+ *
  * @param {os.ui.menu.MenuEvent<os.ui.slick.ColumnContext>} event The column menu event.
  * @protected
  */
@@ -924,6 +953,7 @@ os.ui.slick.SlickGridCtrl.prototype.onColumnFirst = function(event) {
 
 /**
  * Handler to move a column to the back of the array.
+ *
  * @param {os.ui.menu.MenuEvent<os.ui.slick.ColumnContext>} event The column menu event.
  * @protected
  */
@@ -942,6 +972,7 @@ os.ui.slick.SlickGridCtrl.prototype.onColumnLast = function(event) {
 
 /**
  * Handler to launch the column manager window
+ *
  * @param {os.ui.menu.MenuEvent<os.ui.slick.ColumnContext>|angular.Scope.Event} event The column menu event.
  * @protected
  */
@@ -956,6 +987,7 @@ os.ui.slick.SlickGridCtrl.prototype.onColumnManager = function(event) {
 
 /**
  * Get the context menu action args for a context event.
+ *
  * @param {goog.events.Event=} opt_event
  * @return {*}
  * @protected
@@ -967,6 +999,7 @@ os.ui.slick.SlickGridCtrl.prototype.getContextArgs = function(opt_event) {
 
 /**
  * Set the context menu used by the grid.
+ *
  * @param {os.ui.action.ActionManager|os.ui.menu.Menu|undefined} menu The context menu.
  * @protected
  */
@@ -977,6 +1010,7 @@ os.ui.slick.SlickGridCtrl.prototype.setContextMenu = function(menu) {
 
 /**
  * Get the menu to use for selected items in the grid.
+ *
  * @return {os.ui.action.ActionManager|os.ui.menu.Menu|undefined} The menu.
  * @protected
  */
@@ -1010,6 +1044,7 @@ os.ui.slick.SlickGridCtrl.prototype.getContextMenuFromSelected = function() {
 
 /**
  * Handle a context menu event.
+ *
  * @param {(angular.Scope.Event|goog.events.BrowserEvent)} event
  * @param {Array<number>=} opt_position The menu position
  * @private
@@ -1060,6 +1095,7 @@ os.ui.slick.SlickGridCtrl.prototype.onContextMenu_ = function(event, opt_positio
 
 /**
  * Handle a header context menu open event.
+ *
  * @param {(angular.Scope.Event|goog.events.BrowserEvent)} event The menu open event.
  * @param {jQuery.PositionOptions=} opt_position The menu position options.
  * @private
@@ -1103,6 +1139,7 @@ os.ui.slick.SlickGridCtrl.prototype.onHeaderContextMenu_ = function(event, opt_p
 
 /**
  * Handles options changes
+ *
  * @param {Array} newOptions
  * @param {Array} oldOptions
  * @protected
@@ -1114,6 +1151,7 @@ os.ui.slick.SlickGridCtrl.prototype.onOptionsChange = function(newOptions, oldOp
 
 /**
  * Handles external selection changes
+ *
  * @param {*} newVal
  * @param {*=} opt_oldVal
  * @protected
@@ -1144,6 +1182,7 @@ os.ui.slick.SlickGridCtrl.prototype.onSelectedChange = function(newVal, opt_oldV
 
 /**
  * Maps row numbers to items
+ *
  * @param {number} row The row number
  * @param {number} i The index
  * @param {Array} arr
@@ -1157,6 +1196,7 @@ os.ui.slick.SlickGridCtrl.prototype.mapRowsToItems = function(row, i, arr) {
 
 /**
  * Maps items to row numbers
+ *
  * @param {*} item
  * @param {number=} opt_idx The index
  * @param {Array=} opt_arr
@@ -1170,6 +1210,7 @@ os.ui.slick.SlickGridCtrl.prototype.mapItemsToRows = function(item, opt_idx, opt
 
 /**
  * Handles grid selection changes
+ *
  * @param {*} e The event
  * @param {Object} args The args
  * @protected
@@ -1197,6 +1238,7 @@ os.ui.slick.SlickGridCtrl.prototype.onGridSelectedChange = function(e, args) {
 
 /**
  * Run apply on the scope
+ *
  * @protected
  */
 os.ui.slick.SlickGridCtrl.prototype.apply = function() {
@@ -1206,6 +1248,7 @@ os.ui.slick.SlickGridCtrl.prototype.apply = function() {
 
 /**
  * Handles changes to the sort
+ *
  * @param {*=} opt_e The Event
  * @param {Object=} opt_args The args
  * @protected
@@ -1241,6 +1284,7 @@ os.ui.slick.SlickGridCtrl.prototype.onSortChange = function(opt_e, opt_args) {
 
 /**
  * Compare function over multiple columns
+ *
  * @param {!Array<string>} cols The sort columns
  * @param {*} a
  * @param {*} b
@@ -1336,6 +1380,7 @@ os.ui.slick.SlickGridCtrl.prototype.multiColumnSort = function(cols, a, b) {
 
 /**
  * Handles changes to the sort
+ *
  * @param {*=} opt_e The Event
  * @param {Object=} opt_args The args
  * @suppress {checkTypes}
@@ -1373,6 +1418,7 @@ os.ui.slick.SlickGridCtrl.prototype.onSortBySelectionChange = function(opt_e, op
 
 /**
  * Compare function over multiple columns bringing selected items to the top
+ *
  * @param {!Object<string,boolean>} sel The selected features
  * @param {!Array<string>} cols The sort columns
  * @param {Object} a
@@ -1394,6 +1440,7 @@ os.ui.slick.SlickGridCtrl.prototype.selectColumnSort = function(sel, cols, a, b)
 
 /**
  * Compiles any angular directives in the cell HTML
+ *
  * @param {*} e The event
  * @param {{row: number, node: Element, item: Object}} args The event data
  * @protected
@@ -1416,6 +1463,7 @@ os.ui.slick.SlickGridCtrl.prototype.onRowRender = function(e, args) {
 
 /**
  * Destroys the scope and any angular directives for removed rows
+ *
  * @param {*} e The event
  * @param {{node: Element}} args The event data
  * @protected
@@ -1440,6 +1488,7 @@ os.ui.slick.SlickGridCtrl.prototype.onRowRemove = function(e, args) {
 
 /**
  * Set selected rows on the grid if selection model applied, otherwise do nothing.
+ *
  * @param {*} rows
  */
 os.ui.slick.SlickGridCtrl.prototype.setSelectedRows = function(rows) {
@@ -1451,6 +1500,7 @@ os.ui.slick.SlickGridCtrl.prototype.setSelectedRows = function(rows) {
 
 /**
  * Get selected rows on the grid if selection model applied, otherwise get empty array.
+ *
  * @return {*} rows
  * @protected
  */
@@ -1461,6 +1511,7 @@ os.ui.slick.SlickGridCtrl.prototype.getSelectedRows = function() {
 
 /**
  * Invalidates the selected rows to force them to render.
+ *
  * @protected
  */
 os.ui.slick.SlickGridCtrl.prototype.invalidateRows = function() {
@@ -1474,6 +1525,7 @@ os.ui.slick.SlickGridCtrl.prototype.invalidateRows = function() {
 
 /**
  * Invalidates the columns to force them to render.
+ *
  * @protected
  */
 os.ui.slick.SlickGridCtrl.prototype.invalidateColumns = function() {
@@ -1778,6 +1830,7 @@ os.ui.slick.SlickGridCtrl.prototype.onMouseLeave = function(e, args) {
 
 /**
  * Commits the current edit if one is active.
+ *
  * @param {angular.Scope.Event} event The event.
  * @protected
  */
@@ -1801,6 +1854,7 @@ os.ui.slick.SlickGridCtrl.rowSort = function(a, b) {
 
 /**
  * Calculate the height of a table based on its comprised elements.
+ *
  * @param {!jQuery} tableEl
  * @return {number} Height in pixels
  */

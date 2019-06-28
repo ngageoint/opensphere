@@ -7,6 +7,7 @@ goog.require('os.state.JSONStateOptions');
 
 /**
  * Base class for JSON states.
+ *
  * @extends {os.state.AbstractState.<!Object.<string, *>, os.state.JSONStateOptions>}
  * @constructor
  */

@@ -24,6 +24,7 @@ goog.require('os.map');
 
   /**
    * Get the scale value for the current map zoom.
+   *
    * @return {number|undefined} The scale value, or undefined when the current zoom is not rescaled.
    */
   var getZoomScale = function() {

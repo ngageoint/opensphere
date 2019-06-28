@@ -7,6 +7,7 @@ goog.require('os.ui.Module');
 
 /**
  * The metricdetails directive
+ *
  * @return {angular.Directive}
  */
 os.ui.metrics.metricDetailsDirective = function() {
@@ -32,6 +33,7 @@ os.ui.Module.directive('metricdetails', [os.ui.metrics.metricDetailsDirective]);
 
 /**
  * Controller function for the metricdetails directive
+ *
  * @param {!angular.Scope} $scope
  * @extends {goog.Disposable}
  * @constructor
@@ -63,6 +65,7 @@ os.ui.metrics.MetricDetailsCtrl.prototype.disposeInternal = function() {
 
 /**
  * Get the metric label.
+ *
  * @return {string}
  * @export
  */
@@ -92,6 +95,7 @@ os.ui.metrics.MetricDetailsCtrl.prototype.getLabel = function() {
 
 /**
  * Get the metric description.
+ *
  * @return {string}
  * @export
  */

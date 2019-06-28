@@ -7,6 +7,7 @@ goog.require('os.ui.onboarding.OnboardingManager');
 
 /**
  * The context-onboarding directive
+ *
  * @return {angular.Directive}
  */
 os.ui.onboarding.contextOnboardingDirective = function() {
@@ -33,6 +34,7 @@ os.ui.Module.directive('contextOnboarding', [os.ui.onboarding.contextOnboardingD
 
 /**
  * Controller function for the context-onboarding directive.
+ *
  * @param {!angular.Scope} $scope
  * @constructor
  * @ngInject
@@ -49,6 +51,7 @@ os.ui.onboarding.ContextOnboardingCtrl = function($scope) {
 
 /**
  * Clean up listeners/references.
+ *
  * @private
  */
 os.ui.onboarding.ContextOnboardingCtrl.prototype.destroy_ = function() {
@@ -58,6 +61,7 @@ os.ui.onboarding.ContextOnboardingCtrl.prototype.destroy_ = function() {
 
 /**
  * Called on clicking the button to display the onboarding for the element this directive is attached to.
+ *
  * @export
  */
 os.ui.onboarding.ContextOnboardingCtrl.prototype.show = function() {

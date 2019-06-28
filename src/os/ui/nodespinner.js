@@ -7,6 +7,7 @@ goog.require('os.ui.Module');
 
 /**
  * A spinner directive for a node that loads items
+ *
  * @return {angular.Directive}
  */
 os.ui.nodeSpinnerDirective = function() {
@@ -30,6 +31,7 @@ os.ui.Module.directive('nodespinner', [os.ui.nodeSpinnerDirective]);
 
 /**
  * Controller for the node spinner directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @constructor
@@ -67,6 +69,7 @@ os.ui.NodeSpinnerCtrl.DEFAULT_CLASS = 'fa-spin fa-spinner';
 
 /**
  * Cleans up the property change listener
+ *
  * @private
  */
 os.ui.NodeSpinnerCtrl.prototype.onDestroy_ = function() {
@@ -81,6 +84,7 @@ os.ui.NodeSpinnerCtrl.prototype.onDestroy_ = function() {
 
 /**
  * Handles the loading property change
+ *
  * @param {os.events.PropertyChangeEvent} e The change event
  * @private
  */

@@ -5,6 +5,7 @@ goog.require('os.ILayerData');
 
 /**
  * A data set of nodes and links
+ *
  * @implements {os.ILayerData}
  * @constructor
  */

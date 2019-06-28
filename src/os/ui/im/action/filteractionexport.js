@@ -21,6 +21,7 @@ os.ui.im.action.FilterActionExportType = {
 
 /**
  * The filteractionexport directive.
+ *
  * @return {angular.Directive}
  */
 os.ui.im.action.filterActionExportDirective = function() {
@@ -42,6 +43,7 @@ os.ui.Module.directive('filteractionexport', [os.ui.im.action.filterActionExport
 
 /**
  * Controller function for the filteractionexport directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @extends {goog.Disposable}
@@ -102,6 +104,7 @@ os.ui.im.action.FilterActionExportCtrl.prototype.disposeInternal = function() {
 
 /**
  * Fire the cancel callback and close the window.
+ *
  * @export
  */
 os.ui.im.action.FilterActionExportCtrl.prototype.cancel = function() {
@@ -111,6 +114,7 @@ os.ui.im.action.FilterActionExportCtrl.prototype.cancel = function() {
 
 /**
  * Validate the export selection.
+ *
  * @export
  */
 os.ui.im.action.FilterActionExportCtrl.prototype.validate = function() {
@@ -140,6 +144,7 @@ os.ui.im.action.FilterActionExportCtrl.prototype.validate = function() {
 
 /**
  * Fire the confirmation callback and close the window.
+ *
  * @export
  */
 os.ui.im.action.FilterActionExportCtrl.prototype.save = function() {
@@ -170,6 +175,7 @@ os.ui.im.action.FilterActionExportCtrl.prototype.save = function() {
 
 /**
  * Close the window.
+ *
  * @private
  */
 os.ui.im.action.FilterActionExportCtrl.prototype.close_ = function() {
@@ -179,6 +185,7 @@ os.ui.im.action.FilterActionExportCtrl.prototype.close_ = function() {
 
 /**
  * Launch a dialog prompting the user to choose how to export filter actions.
+ *
  * @param {!Array<!os.im.action.FilterActionEntry>} entries The filter action entries.
  * @param {Array<!os.im.action.FilterActionEntry>=} opt_selected The selected filter action entries.
  * @param {string=} opt_fileName The export file name.
@@ -212,6 +219,7 @@ os.ui.im.action.launchFilterActionExport = function(entries, opt_selected, opt_f
 
 /**
  * Export the provided filter actions.
+ *
  * @param {string} fileName The name of the exported file.
  * @param {!Array<!os.im.action.FilterActionEntry>} entries
  */

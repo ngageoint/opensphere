@@ -6,6 +6,7 @@ goog.require('os.parse.IParser');
 
 /**
  * Imports a set of items via a parser
+ *
  * @extends {goog.events.Listenable}
  * @interface
  * @template T

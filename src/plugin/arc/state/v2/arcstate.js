@@ -16,6 +16,7 @@ goog.require('os.xml');
  * opensphere uses the `<layer type="arctile">` to directly fetch a layer config for LayerConfigManager. The load
  * function performs this alteration by looking at all `<layer type="wms">` elements, checking if they have a
  * `<provider>ArcMap</provider>` element under them, and changing the type on the layer element to arctile.
+ *
  * @param {!Element} el
  */
 plugin.arc.state.v2.arcstate.load = function(el) {
@@ -57,6 +58,7 @@ plugin.arc.state.v2.arcstate.load = function(el) {
  * determines what the actual type is (i.e. Arc vs. OGC WMS). The save function facilities this by changing
  * the `<layer type="arctile">` that opensphere writes natively to `<layer type="wms">` and placing a
  * `<provider>ArcMap</provider>` tag inside.
+ *
  * @param {!Element} el
  */
 plugin.arc.state.v2.arcstate.save = function(el) {

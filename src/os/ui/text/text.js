@@ -9,6 +9,7 @@ goog.require('os.ui.window');
 
 /**
  * Copies a string of text into the clipboard.
+ *
  * @param {string} text The string to copy.
  * @param {string=} opt_msg Optional message to send as an alert.
  */

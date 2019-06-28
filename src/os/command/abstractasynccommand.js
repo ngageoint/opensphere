@@ -9,6 +9,7 @@ goog.require('os.command.State');
 
 /**
  * Abstract asynchronous command implementation.
+ *
  * @abstract
  * @implements {os.command.ICommand}
  * @extends {goog.events.EventTarget}
@@ -33,6 +34,7 @@ os.command.AbstractAsyncCommand.prototype.execute = function() {};
 
 /**
  * Mark the command as completed.
+ *
  * @param {string=} opt_detail Optional detail message
  * @return {boolean}
  * @protected
@@ -47,6 +49,7 @@ os.command.AbstractAsyncCommand.prototype.finish = function(opt_detail) {
 
 /**
  * Set the error state.
+ *
  * @param {string} msg The error message.
  * @return {boolean}
  * @protected

@@ -7,6 +7,7 @@ goog.require('os.ui.Module');
 
 /**
  * The clear directive
+ *
  * @return {angular.Directive}
  */
 os.ui.clear.clearButtonDirective = function() {
@@ -29,6 +30,7 @@ os.ui.Module.directive('clearButton', [os.ui.clear.clearButtonDirective]);
 
 /**
  * Controller function for the nav-top directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element The element
  * @extends {os.ui.MenuButtonCtrl}

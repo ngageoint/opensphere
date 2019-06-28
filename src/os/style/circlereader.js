@@ -8,6 +8,7 @@ goog.require('os.style.AbstractReader');
 
 /**
  * Circle style reader
+ *
  * @extends {os.style.AbstractReader<!ol.style.Circle>}
  * @constructor
  */

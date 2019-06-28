@@ -163,6 +163,7 @@ plugin.track.SOURCE_FIELDS = [
 
 /**
  * Default options for the track layer.
+ *
  * @return {!Object<string,*>}
  */
 plugin.track.getDefaultLayerOptions = function() {
@@ -222,6 +223,7 @@ plugin.track.HIDE_GEOMETRY = '__hidden__';
 
 /**
  * Test if a feature is a track.
+ *
  * @param {ol.Feature} feature The feature.
  * @return {boolean} If the feature is a track.
  */
@@ -236,6 +238,7 @@ plugin.track.isTrackFeature = function(feature) {
 
 /**
  * Get the track layer, creating it if one doesn't exist.
+ *
  * @param {boolean=} opt_create If the track layer should be created if it doesn't exist
  * @return {plugin.file.kml.KMLLayer}
  */
@@ -257,6 +260,7 @@ plugin.track.getTrackLayer = function(opt_create) {
 
 /**
  * Get the root track node.
+ *
  * @param {boolean=} opt_create If the track layer/node should be created if it doesn't exist
  * @return {plugin.file.kml.ui.KMLNode}
  */
@@ -275,6 +279,7 @@ plugin.track.getTrackNode = function(opt_create) {
 
 /**
  * Gets a field value from a feature.
+ *
  * @param {string} field
  * @param {ol.Feature} feature
  * @return {*} The value
@@ -286,6 +291,7 @@ plugin.track.getFeatureValue = function(field, feature) {
 
 /**
  * Get the start time for a feature.
+ *
  * @param {ol.Feature} feature
  * @return {number|undefined} The value
  */
@@ -301,6 +307,7 @@ plugin.track.getStartTime = function(feature) {
 
 /**
  * Get a track feature by id.
+ *
  * @param {string} id The track id.
  * @return {ol.Feature} The track, or null if not found.
  */
@@ -319,6 +326,7 @@ plugin.track.getTrackById = function(id) {
 
 /**
  * Remove a track feature by id.
+ *
  * @param {string} id The track id.
  * @return {ol.Feature} The track, or null if not found.
  */
@@ -340,6 +348,7 @@ plugin.track.removeTrackById = function(id) {
 
 /**
  * Sort track coordinates by their sort field.
+ *
  * @param {!ol.Coordinate} a The first coordinate to be compared.
  * @param {!ol.Coordinate} b The second coordinate to be compared.
  * @return {number} The sort value.
@@ -355,6 +364,7 @@ plugin.track.sortCoordinatesByValue = function(a, b) {
  * Get a list of coordinates to include in a track from a set of features. The features must have a common field with
  * values that can be naturally sorted. Any features lacking a point geometry or a value in the sort field will be
  * ignored. If sorted by `os.data.RecordField.TIME`, the track may be animated over time.
+ *
  * @param {!Array<!ol.Feature>} features The features.
  * @param {string} sortField The track sort field.
  * @return {!Array<!ol.Coordinate>|undefined} The coordinates, or undefined if no coordinates were found.
@@ -420,6 +430,7 @@ plugin.track.getTrackCoordinates = function(features, sortField) {
 
 /**
  * Creates a track from the provided options.
+ *
  * @param {!plugin.track.CreateOptions} options The track creation options.
  * @return {os.feature.DynamicFeature|ol.Feature|undefined} The track feature.
  */
@@ -522,6 +533,7 @@ plugin.track.createTrack = function(options) {
 
 /**
  * Adds a set of features to a track.
+ *
  * @param {!ol.Feature} track The track
  * @param {!Array<!ol.Feature>} features The features to add to the track
  * @return {!Array<!ol.Feature>} return the non-duplicate features
@@ -583,6 +595,7 @@ plugin.track.addFeaturesToTrack = function(track, features) {
 
 /**
  * Clamp track points within the provided sort range.
+ *
  * @param {!ol.Feature} track The track.
  * @param {string|number} start The start value.
  * @param {string|number} end The end value.
@@ -632,6 +645,7 @@ plugin.track.clamp = function(track, start, end) {
 
 /**
  * Dispose of the current position/line geometries and remove them from the feature.
+ *
  * @param {!ol.Feature} track The track
  */
 plugin.track.disposeAnimationGeometries = function(track) {
@@ -649,6 +663,7 @@ plugin.track.disposeAnimationGeometries = function(track) {
 
 /**
  * Shows or hides the track line
+ *
  * @param {!ol.Feature} track The track
  * @param {boolean} show
  * @param {boolean=} opt_update
@@ -670,6 +685,7 @@ plugin.track.setShowLine = function(track, show, opt_update) {
 
 /**
  * Shows or hides the track line
+ *
  * @param {!ol.Feature} track The track
  * @return {boolean}
  */
@@ -681,6 +697,7 @@ plugin.track.getShowLine = function(track) {
 
 /**
  * Shows or hides the track marker
+ *
  * @param {!ol.Feature} track The track
  * @param {boolean} show
  * @param {boolean=} opt_update
@@ -704,6 +721,7 @@ plugin.track.setShowMarker = function(track, show, opt_update) {
 
 /**
  * Turn interpolation of track marker on or off
+ *
  * @param {!ol.Feature} track The track
  * @param {boolean} doInterpolation
  */
@@ -716,6 +734,7 @@ plugin.track.setInterpolateMarker = function(track, doInterpolation) {
 
 /**
  * Get if interpolation of track marker is on or off
+ *
  * @param {!ol.Feature} track The track
  * @return {boolean}
  */
@@ -726,6 +745,7 @@ plugin.track.getInterpolateMarker = function(track) {
 
 /**
  * Update the geometry for a track.
+ *
  * @param {!ol.Feature} track The track
  * @param {!ol.geom.Geometry} geometry The track geometry.
  */
@@ -767,6 +787,7 @@ plugin.track.setGeometry = function(track, geometry) {
 
 /**
  * Creates a track and adds it to the tracks layer.
+ *
  * @param {!plugin.track.CreateOptions} options The options object for the track.
  * @return {os.feature.DynamicFeature|ol.Feature|undefined} The track feature.
  */
@@ -800,6 +821,7 @@ plugin.track.createAndAdd = function(options) {
 
 /**
  * Update the current position displayed on a track.
+ *
  * @param {!ol.Feature} track The track
  *
  * @suppress {accessControls} To allow direct access to line coordinates.
@@ -834,6 +856,7 @@ plugin.track.updateCurrentPosition = function(track) {
 
 /**
  * Update the distance column(s) on a track.
+ *
  * @param {!ol.Feature} track The track to update.
  * @param {boolean=} opt_updateTotal If the total distance should be updated.
  * @return {number} applied distance
@@ -880,6 +903,7 @@ plugin.track.updateDistance = function(track, opt_updateTotal) {
 
 /**
  * Update the duration column on a track.
+ *
  * @param {!ol.Feature} track The track to update
  * @return {number} the elapsed duration
  */
@@ -921,6 +945,7 @@ plugin.track.updateDuration = function(track) {
 
 /**
  * Update the average speed on a track
+ *
  * @param {!ol.Feature} track The track to update
  * @param {number} distance
  * @param {number} duration
@@ -937,6 +962,7 @@ plugin.track.updateAverageSpeed = function(track, distance, duration) {
 
 /**
  * Update the time range on a track.
+ *
  * @param {!ol.Feature} track The track to update
  */
 plugin.track.updateTime = function(track) {
@@ -971,6 +997,7 @@ plugin.track.updateTime = function(track) {
 
 /**
  * Get the distance for a line geometry.
+ *
  * @param {ol.geom.Geometry|undefined} geometry The geometry.
  * @return {number} The distance.
  */
@@ -993,6 +1020,7 @@ plugin.track.getGeometryDistance = function(geometry) {
 
 /**
  * Get the distance (in meters) covered by a set of coordinates.
+ *
  * @param {Array<ol.Coordinate>} coords The line coordinates
  * @return {number} The distance in meters
  */
@@ -1010,6 +1038,7 @@ plugin.track.getLineDistance = function(coords) {
 
 /**
  * Get the distance (in meters) covered by a set of coordinates for a multi-line.
+ *
  * @param {Array<Array<ol.Coordinate>>} coords The multi-line coordinates
  * @return {number} The distance in meters
  */
@@ -1027,6 +1056,7 @@ plugin.track.getMultiLineDistance = function(coords) {
 
 /**
  * Get the time for a line geometry.
+ *
  * @param {ol.geom.Geometry|undefined} geometry The geometry.
  * @return {number} The time
  */
@@ -1049,6 +1079,7 @@ plugin.track.getGeometryTime = function(geometry) {
 
 /**
  * Get the time (in seconds) covered by a set of coordinates.
+ *
  * @param {Array<ol.Coordinate>} coords The line coordinates
  * @return {number} The time
  */
@@ -1066,6 +1097,7 @@ plugin.track.getLineTime = function(coords) {
 
 /**
  * Get the time (in meters) covered by a set of coordinates for a multi-line.
+ *
  * @param {Array<Array<ol.Coordinate>>} coords The multi-line coordinates
  * @return {number} The time
  */
@@ -1083,6 +1115,7 @@ plugin.track.getMultiLineTime = function(coords) {
 
 /**
  * Test a feature to check if it has a value in the sort field.
+ *
  * @param {!ol.Feature} feature The feature
  * @param {string=} opt_sortField The sort field
  * @return {!goog.Promise}
@@ -1129,6 +1162,7 @@ plugin.track.getSortField = function(feature, opt_sortField) {
 
 /**
  * Prompt the user to choose a track title.
+ *
  * @param {string=} opt_default The default value
  * @return {!goog.Promise}
  */
@@ -1152,6 +1186,7 @@ plugin.track.promptForTitle = function(opt_default) {
 
 /**
  * Prompt the user to choose a track.
+ *
  * @param {Array<os.data.ColumnDefinition>} columns The columns
  * @param {string} prompt The dialog prompt
  * @return {!goog.Promise}
@@ -1176,6 +1211,7 @@ plugin.track.promptForField = function(columns, prompt) {
 
 /**
  * Switch the track to its animating state.
+ *
  * @param {!ol.Feature} track The track feature.
  */
 plugin.track.initDynamic = function(track) {
@@ -1195,6 +1231,7 @@ plugin.track.initDynamic = function(track) {
 
 /**
  * Switch the track to its non-animating state.
+ *
  * @param {!ol.Feature} track The track feature.
  * @param {boolean=} opt_disposing If the feature is being disposed.
  */
@@ -1225,6 +1262,7 @@ plugin.track.disposeDynamic = function(track, opt_disposing) {
 
 /**
  * Update a track feature to represent the track at a provided timestamp.
+ *
  * @param {!ol.Feature} track The track.
  * @param {number} startTime The start timestamp.
  * @param {number} endTime The end timestamp.
@@ -1264,6 +1302,7 @@ plugin.track.updateDynamic = function(track, startTime, endTime) {
 
 /**
  * Get the closest index in the timestamp array for a time value.
+ *
  * @param {!Array<number>} coordinates The timestamp array
  * @param {number} value The time value to find
  * @param {number} stride The coordinate array stride.
@@ -1284,6 +1323,7 @@ plugin.track.getTimeIndex = function(coordinates, value, stride) {
 /**
  * Get the position of a track at a given time. If the time falls between known points on the track, the position will
  * be linearly interpolated between the known points.
+ *
  * @param {!ol.Feature} track The track.
  * @param {number} timestamp The timestamp.
  * @param {number} index The index of the most recent known coordinate.
@@ -1339,6 +1379,7 @@ plugin.track.getTrackPositionAt = function(track, timestamp, index, coordinates,
 
 /**
  * Update the track's line geometry to display its position up to the provided timestamp.
+ *
  * @param {!ol.Feature} track The track.
  * @param {number} startTime The start timestamp.
  * @param {number} startIndex The start index of the starting coordinate.
@@ -1469,6 +1510,7 @@ plugin.track.updateCurrentLine = function(track, startTime, startIndex, endTime,
 /**
  * Update the z-index for a list of tracks. Ensures the current position icon for all tracks will be displayed on top
  * of the line string for every other track passed to the function.
+ *
  * @param {!Array<!ol.Feature>} tracks The track features.
  */
 plugin.track.updateTrackZIndex = function(tracks) {

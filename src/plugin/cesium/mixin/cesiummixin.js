@@ -11,6 +11,7 @@ goog.require('os.net.Request');
 /**
  * This "fixes" Cesium's lackluster crossOrigin support by setting crossOrigin on the image to an actual value.
  * Firefox will not be able to load tiles without this change.
+ *
  * @param {string} url
  * @param {boolean} crossOrigin
  * @param {*} deferred
@@ -42,6 +43,7 @@ plugin.cesium.mixin.createImage = function(url, crossOrigin, deferred) {
 
 /**
  * Load Cesium mixins.
+ *
  * @throws {Error} If Cesium has not been loaded.
  */
 plugin.cesium.mixin.loadCesiumMixins = function() {
@@ -56,6 +58,7 @@ plugin.cesium.mixin.loadCesiumMixins = function() {
 
   /**
    * Hook Cesium into our request stack
+   *
    * @param {Cesium.ResourceFetchOptions} options
    * @return {Cesium.Promise<*>}
    */
@@ -154,6 +157,7 @@ plugin.cesium.mixin.loadCesiumMixins = function() {
 
   /**
    * Gets pick objects reference.
+   *
    * @return {Object} [description]
    */
   Cesium.Context.prototype.getPickObjects = function() {

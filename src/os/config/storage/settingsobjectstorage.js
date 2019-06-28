@@ -12,6 +12,7 @@ goog.require('os.config.storage.SettingsWritableStorageType');
 /**
  * A storage for settings which reads/writes to an in-memory JSON object.  This is not used in production,
  * but is useful for transient settings for things like unit tests.
+ *
  * @implements {os.config.storage.ISettingsStorage<*>}
  * @implements {os.config.storage.ISettingsReadableStorage<*>}
  * @implements {os.config.storage.ISettingsWritableStorage<*>}
@@ -112,6 +113,7 @@ os.config.storage.SettingsObjectStorage.prototype.setSettings = function(map, op
 
 /**
  * Apply the keys/values of the given map to settings
+ *
  * @param {Object.<string, *>} map
  * @private
  */

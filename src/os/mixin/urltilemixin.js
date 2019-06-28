@@ -91,6 +91,7 @@ ol.source.UrlTile.prototype.setExtent = function(extent) {
 /**
  * Get the user-provided params, i.e. those passed to the constructor through
  * the "params" option, and possibly updated using the updateParams method.
+ *
  * @return {Object} Params.
  */
 ol.source.UrlTile.prototype.getParams = function() {
@@ -101,6 +102,7 @@ ol.source.UrlTile.prototype.getParams = function() {
 
 /**
  * Update the user-provided params.
+ *
  * @param {Object} params Params.
  */
 ol.source.UrlTile.prototype.updateParams = function(params) {
@@ -110,6 +112,7 @@ ol.source.UrlTile.prototype.updateParams = function(params) {
 
 /**
  * If the source can be refreshed.
+ *
  * @return {boolean}
  */
 ol.source.UrlTile.prototype.isRefreshEnabled = function() {
@@ -119,6 +122,7 @@ ol.source.UrlTile.prototype.isRefreshEnabled = function() {
 
 /**
  * Get the automatic refresh interval for the source.
+ *
  * @return {number}
  */
 ol.source.UrlTile.prototype.getRefreshInterval = function() {
@@ -128,6 +132,7 @@ ol.source.UrlTile.prototype.getRefreshInterval = function() {
 
 /**
  * Set the automatic refresh interval for the source.
+ *
  * @param {number} value The new refresh interval, in seconds.
  */
 ol.source.UrlTile.prototype.setRefreshInterval = function(value) {
@@ -164,6 +169,7 @@ ol.source.UrlTile.prototype.setRefreshInterval = function(value) {
 
 /**
  * Refresh the source when the auto refresh delay fires.
+ *
  * @protected
  */
 ol.source.UrlTile.prototype.onRefreshTimer = function() {
@@ -357,6 +363,7 @@ ol.source.UrlTile.prototype.hasError = function() {
 
 /**
  * Fires an event to indicate a loading change.
+ *
  * @private
  */
 ol.source.UrlTile.prototype.fireLoadingEvent_ = function() {

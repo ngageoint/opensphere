@@ -10,6 +10,7 @@ goog.require('os.ui.icon.iconPickerDirective');
 
 /**
  * The kmlexport directive
+ *
  * @return {angular.Directive}
  */
 plugin.file.kml.ui.kmlExportDirective = function() {
@@ -35,6 +36,7 @@ os.ui.Module.directive('kmlexport', [plugin.file.kml.ui.kmlExportDirective]);
 
 /**
  * Controller function for the kmlexport directive
+ *
  * @param {!angular.Scope} $scope
  * @constructor
  * @ngInject
@@ -110,6 +112,7 @@ plugin.file.kml.ui.KMLExportCtrl = function($scope) {
 
 /**
  * Clean up.
+ *
  * @private
  */
 plugin.file.kml.ui.KMLExportCtrl.prototype.destroy_ = function() {
@@ -120,6 +123,7 @@ plugin.file.kml.ui.KMLExportCtrl.prototype.destroy_ = function() {
 
 /**
  * Updates the KML exporter with the current UI configuration.
+ *
  * @private
  */
 plugin.file.kml.ui.KMLExportCtrl.prototype.updateExporter_ = function() {

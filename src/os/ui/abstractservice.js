@@ -10,6 +10,7 @@ goog.require('os.xt.Peer');
 
 /**
  * Provides functions available to all services.
+ *
  * @constructor
  * @ngInject
  */
@@ -38,6 +39,7 @@ os.ui.AbstractService.LOGGER_ = goog.log.getLogger('os.ui.AbstractService');
 
 /**
  * Request callback on success
+ *
  * @param {goog.events.Event} event The request event
  * @param {function(*): ?} resolve The goog.Promise resolve function
  * @protected
@@ -58,6 +60,7 @@ os.ui.AbstractService.prototype.onSuccess = function(event, resolve) {
 
 /**
  * A default error handler to display messages
+ *
  * @param {goog.events.Event} event The request event
  * @param {string} message The base error message to display
  * @param {boolean} silent If error popups should be suppressed. Errors will still be logged.
@@ -85,6 +88,7 @@ os.ui.AbstractService.prototype.onError = function(event, message, silent, opt_r
 
 /**
  * Fires an error alert with support information attached.
+ *
  * @param {string} message The base error message.
  * @param {boolean} silent If error popups should be suppressed. Errors will still be logged.
  * @param {function(?):?=} opt_reject The goog.Promise reject function

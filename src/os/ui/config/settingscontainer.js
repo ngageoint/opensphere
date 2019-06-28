@@ -6,6 +6,7 @@ goog.require('os.ui.config.settingsWindowDirective');
 
 /**
  * The settings container directive
+ *
  * @return {angular.Directive}
  */
 os.ui.config.settingsContainerDirective = function() {
@@ -24,6 +25,7 @@ os.ui.Module.directive('settingscontainer', [os.ui.config.settingsContainerDirec
 
 /**
  * Controller for the save export window
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.$timeout} $timeout
  * @param {!angular.$routeParams} $routeParams

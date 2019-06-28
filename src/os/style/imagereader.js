@@ -8,6 +8,7 @@ goog.require('os.style.IStyleReader');
 
 /**
  * Image style reader
+ *
  * @extends {os.style.AbstractReader.<T>}
  * @constructor
  * @template T

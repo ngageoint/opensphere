@@ -32,6 +32,7 @@ plugin.im.action.feature.StyleActionTagName = {
 
 /**
  * Import action that sets the style for a {@link ol.Feature}.
+ *
  * @extends {os.im.action.AbstractImportAction<ol.Feature>}
  * @implements {os.legend.ILegendRenderer}
  * @constructor
@@ -355,6 +356,7 @@ plugin.im.action.feature.StyleAction.prototype.renderLegend = function(options, 
 
 /**
  * If a feature is styled by the action.
+ *
  * @param {!ol.Feature} feature The feature.
  * @return {boolean} If the feature is using this style action.
  *

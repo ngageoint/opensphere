@@ -10,6 +10,7 @@ goog.require('os.data.CollectionManager');
 
 /**
  * Manages column mappings.
+ *
  * @extends {os.data.CollectionManager<os.column.IColumnMapping>}
  * @constructor
  */
@@ -65,6 +66,7 @@ os.column.ColumnMappingManager.prototype.getId = function(item) {
 
 /**
  * Saves the mappings.
+ *
  * @return {!goog.async.Deferred}
  */
 os.column.ColumnMappingManager.prototype.save = function() {
@@ -82,6 +84,7 @@ os.column.ColumnMappingManager.prototype.save = function() {
 
 /**
  * Loads the mappings.
+ *
  * @return {!goog.async.Deferred<Array<os.column.IColumnMapping>>}
  */
 os.column.ColumnMappingManager.prototype.load = function() {
@@ -93,6 +96,7 @@ os.column.ColumnMappingManager.prototype.load = function() {
 
 /**
  * Parses and adds mappings loaded from storage.
+ *
  * @param {Object} data
  * @return {Array<!os.column.IColumnMapping>}
  * @private
@@ -108,6 +112,7 @@ os.column.ColumnMappingManager.prototype.onMappingsLoaded_ = function(data) {
 
 /**
  * Parses and creates a set of mappings from a persisted list.
+ *
  * @param {string|Object} data
  * @return {Array<!os.column.IColumnMapping>}
  * @private
@@ -131,6 +136,7 @@ os.column.ColumnMappingManager.prototype.parseMappings_ = function(data) {
 
 /**
  * Adds an array of mappings.
+ *
  * @param {Array<os.column.IColumnMapping>} mappings
  */
 os.column.ColumnMappingManager.prototype.bulkAdd = function(mappings) {
@@ -183,6 +189,7 @@ os.column.ColumnMappingManager.prototype.remove = function(itemOrId) {
 
 /**
  * Handler for when a column is added to a managed column mapping.
+ *
  * @param {os.column.ColumnMappingEvent} event
  * @private
  */
@@ -198,6 +205,7 @@ os.column.ColumnMappingManager.prototype.onColumnAdded_ = function(event) {
 
 /**
  * Handler for when a column is removed from a managed column mapping.
+ *
  * @param {os.column.ColumnMappingEvent} event
  * @private
  */
@@ -211,6 +219,7 @@ os.column.ColumnMappingManager.prototype.onColumnRemoved_ = function(event) {
 
 /**
  * Deregisters a managed column.
+ *
  * @param {osx.column.ColumnModel} column
  * @param {string} id
  * @private
@@ -224,6 +233,7 @@ os.column.ColumnMappingManager.prototype.addManagedColumn_ = function(column, id
 
 /**
  * Deregisters a managed column.
+ *
  * @param {osx.column.ColumnModel} column
  * @private
  */
@@ -237,6 +247,7 @@ os.column.ColumnMappingManager.prototype.removeManagedColumn_ = function(column)
 /**
  * Takes a hashed column/layer ID and attempts to get the owner ID from the layerColumnMap_. Returns the mapping
  * that owns that column/layer pair if there is one, and null if not.
+ *
  * @param {string|osx.column.ColumnModel} hashOrModel
  * @return {?os.column.IColumnMapping}
  */
@@ -264,6 +275,7 @@ os.column.ColumnMappingManager.prototype.onChange = function() {
 
 /**
  * Handles change delay. Saves the mappings and fires a change event to notify external clients.
+ *
  * @private
  */
 os.column.ColumnMappingManager.prototype.onChangeDelay_ = function() {
@@ -274,6 +286,7 @@ os.column.ColumnMappingManager.prototype.onChangeDelay_ = function() {
 
 /**
  * Clears the mapping manager and returns the remove mappings
+ *
  * @return {Array<os.column.IColumnMapping>} The removed mappings
  */
 os.column.ColumnMappingManager.prototype.clear = function() {
@@ -291,6 +304,7 @@ os.column.ColumnMappingManager.prototype.clear = function() {
 
 /**
  * Constructs a column hash, used to keep track of which column/layer pairs are in use.
+ *
  * @param {osx.column.ColumnModel} column
  * @return {string}
  */
@@ -301,6 +315,7 @@ os.column.ColumnMappingManager.hashColumn = function(column) {
 
 /**
  * Hashes a layer name and a column name.
+ *
  * @param {string} layerName
  * @param {string} columnName
  * @return {string}

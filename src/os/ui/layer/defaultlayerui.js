@@ -16,6 +16,7 @@ goog.require('os.ui.layer.AbstractLayerUICtrl');
 
 /**
  * Default layer controls.
+ *
  * @return {angular.Directive}
  */
 os.ui.layer.defaultLayerUIDirective = function() {
@@ -38,6 +39,7 @@ os.ui.Module.directive('defaultlayerui', [os.ui.layer.defaultLayerUIDirective]);
 
 /**
  * Controller for the default layer UI.
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$timeout} $timeout
@@ -147,6 +149,7 @@ goog.inherits(os.ui.layer.DefaultLayerUICtrl, os.ui.layer.AbstractLayerUICtrl);
 
 /**
  * The basic layer properties controlled by this UI.
+ *
  * @return {Object}
  */
 os.ui.layer.DefaultLayerUICtrl.prototype.getProperties = function() {
@@ -221,6 +224,7 @@ os.ui.layer.DefaultLayerUICtrl.prototype.updateRefresh = function() {
 
 /**
  * Initialize which color controls should be displayed.
+ *
  * @private
  */
 os.ui.layer.DefaultLayerUICtrl.prototype.initColorControls_ = function() {
@@ -287,6 +291,7 @@ os.ui.layer.DefaultLayerUICtrl.prototype.initColorControls_ = function() {
 
 /**
  * Get the color control type for the provided layer.
+ *
  * @param {os.layer.ILayer} layer
  * @return {!os.ui.ColorControlType}
  * @protected
@@ -305,6 +310,7 @@ os.ui.layer.DefaultLayerUICtrl.prototype.getColorControlType = function(layer) {
 
 /**
  * Gets the opacity from the item(s)
+ *
  * @return {number} The opacity
  */
 os.ui.layer.DefaultLayerUICtrl.prototype.getOpacity = function() {
@@ -314,6 +320,7 @@ os.ui.layer.DefaultLayerUICtrl.prototype.getOpacity = function() {
 
 /**
  * Builds the current set of initial values and places them in the map.
+ *
  * @private
  */
 os.ui.layer.DefaultLayerUICtrl.prototype.setInitialValues_ = function() {
@@ -344,6 +351,7 @@ os.ui.layer.DefaultLayerUICtrl.prototype.setInitialValues_ = function() {
 
 /**
  * Handle changes to form controls
+ *
  * @param {function(os.layer.ILayer, ?)} callback
  * @param {?angular.Scope.Event} event
  * @param {?} value
@@ -359,6 +367,7 @@ os.ui.layer.DefaultLayerUICtrl.prototype.onValueChange = function(callback, even
 
 /**
  * Handles color change slides.
+ *
  * @param {angular.Scope.Event} event
  * @param {number} value
  * @protected
@@ -370,6 +379,7 @@ os.ui.layer.DefaultLayerUICtrl.prototype.onSliderStart = function(event, value) 
 
 /**
  * Handles color change slides.
+ *
  * @param {function(os.layer.ILayer, ?)} callback The callback for setting the value
  * @param {string} key The key representing the value
  * @param {?angular.Scope.Event} event
@@ -405,6 +415,7 @@ os.ui.layer.DefaultLayerUICtrl.prototype.onSliderStop = function(callback, key, 
 
 /**
  * Set the refresh state of the source.
+ *
  * @export
  */
 os.ui.layer.DefaultLayerUICtrl.prototype.onRefreshChange = function() {
@@ -428,6 +439,7 @@ os.ui.layer.DefaultLayerUICtrl.prototype.onRefreshChange = function() {
 
 /**
  * Resets the value of the chosen key to the default.
+ *
  * @param {string} key
  * @export
  */
@@ -451,6 +463,7 @@ os.ui.layer.DefaultLayerUICtrl.prototype.reset = function(key) {
 
 /**
  * Handle accordion toggle.
+ *
  * @param {string} selector The toggled selector.
  * @export
  */

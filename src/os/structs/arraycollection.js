@@ -117,6 +117,7 @@ os.structs.ArrayCollection.prototype.filterChanged_ = false;
  * reset on every add, remove, and refresh. The
  * {@link os.structs.EventType} event will fire when the
  * timer completes
+ *
  * @param {number} value The interval in ms
  */
 os.structs.ArrayCollection.prototype.setChangeDelay = function(value) {
@@ -139,6 +140,7 @@ os.structs.ArrayCollection.prototype.setChangeDelay = function(value) {
 
 /**
  * Gets the source array which contains all items without filters
+ *
  * @return {Array.<T>}
  */
 os.structs.ArrayCollection.prototype.getSourceValues = function() {
@@ -148,6 +150,7 @@ os.structs.ArrayCollection.prototype.getSourceValues = function() {
 
 /**
  * Gets the filter for the collection.
+ *
  * @return {?function(*, number, Array): boolean}
  */
 os.structs.ArrayCollection.prototype.getFilter = function() {
@@ -158,6 +161,7 @@ os.structs.ArrayCollection.prototype.getFilter = function() {
 /**
  * Sets the filter for the collection. Use <code>refresh()</code> to apply the
  * changes.
+ *
  * @param {?function(*, number, Array): boolean} filter The filter
  * @param {*=} opt_this The scope in which to run the filter
  * @see {@link os.structs.ArrayCollection.prototype.refresh}
@@ -174,6 +178,7 @@ os.structs.ArrayCollection.prototype.setFilter = function(filter, opt_this) {
 
 /**
  * Gets the sort for the collection
+ *
  * @return {?function(?, ?):!number|undefined} The sort function for the
  * collection
  */
@@ -185,6 +190,7 @@ os.structs.ArrayCollection.prototype.getSort = function() {
 /**
  * Sets the sort for the collection. Use <code>refresh()</code> to apply the
  * changes.
+ *
  * @param {?function(?, ?):!number|undefined} sort The sort function
  * @see {@link os.structs.ArrayCollection.prototype.refresh}
  */
@@ -248,6 +254,7 @@ os.structs.ArrayCollection.prototype.add = function(item) {
 
 /**
  * Adds items to the filtered view
+ *
  * @param {T} item The item to add
  * @return {boolean} True if the item was added to the view, false otherwise.
  * @private
@@ -299,6 +306,7 @@ os.structs.ArrayCollection.prototype.remove = function(item) {
 
 /**
  * Removes the item at the specified index
+ *
  * @param {number} index The index to remove
  * @param {boolean=} opt_source Whether or not the index references the source
  * @return {?T} The removed element, or null if not found
@@ -319,6 +327,7 @@ os.structs.ArrayCollection.prototype.removeAt = function(index, opt_source) {
 
 /**
  * Removes an item from the filtered view
+ *
  * @param {T} item The item to remove
  * @return {boolean} True if the item was removed from the view, false
  * otherwise.
@@ -362,6 +371,7 @@ os.structs.ArrayCollection.prototype.getCount = function() {
 
 /**
  * Adds all the items from the given collection
+ *
  * @param {Array.<T>|goog.structs.Collection.<T>} col The collection of things
  * to add
  */
@@ -376,6 +386,7 @@ os.structs.ArrayCollection.prototype.addAll = function(col) {
 
 /**
  * Removes all the items from the given collection
+ *
  * @param {Array.<T>|goog.structs.Collection.<T>} col The collection of things
  * to remove
  */
@@ -392,6 +403,7 @@ os.structs.ArrayCollection.prototype.removeAll = function(col) {
  * Tests whether this collection contains all the values in the given
  * collection. Repeated elements in the collection are ignored, e.g. new
  * os.structs.ArrayCollection([1, 2]).containsAll([1, 1]) is true.
+ *
  * @param {Array.<T>|goog.structs.Collection.<T>} col The collection of things
  * to test
  * @return {boolean} True if the collection contains all the elements. False
@@ -404,6 +416,7 @@ os.structs.ArrayCollection.prototype.containsAll = function(col) {
 
 /**
  * Gets the index in the array for the given item
+ *
  * @param {T} item The item
  * @return {number} The index of the item, or -1 if it could not be found
  */
@@ -414,6 +427,7 @@ os.structs.ArrayCollection.prototype.getItemIndex = function(item) {
 
 /**
  * Replace an item
+ *
  * @param {T} a The old item
  * @param {T} b The new item
  */
@@ -471,6 +485,7 @@ os.structs.ArrayCollection.prototype.getItemIndex_ = function(item, arr) {
 
 /**
  * Schedules a data changed event
+ *
  * @protected
  */
 os.structs.ArrayCollection.prototype.scheduleDataChanged = function() {
@@ -484,6 +499,7 @@ os.structs.ArrayCollection.prototype.scheduleDataChanged = function() {
 
 /**
  * Handles the data change timer
+ *
  * @param {?goog.events.Event=} opt_e The optional event
  * @private
  */
@@ -517,6 +533,7 @@ os.structs.ArrayCollection.prototype.onTimer_ = function(opt_e) {
 
 /**
  * This doesn't make any sense for array-based collections
+ *
  * @return {undefined}
  */
 os.structs.ArrayCollection.prototype.getKeys = function() {
@@ -526,6 +543,7 @@ os.structs.ArrayCollection.prototype.getKeys = function() {
 
 /**
  * Gets all the items in the collection.  This will not include filtered items.
+ *
  * @return {!Array.<T>}
  */
 os.structs.ArrayCollection.prototype.getValues = function() {
@@ -547,6 +565,7 @@ os.structs.ArrayCollection.prototype.clear = function() {
 
 /**
  * Whether or not the collection is empty
+ *
  * @return {boolean} True if the collection is emtpy, false otherwise.
  */
 os.structs.ArrayCollection.prototype.isEmpty = function() {

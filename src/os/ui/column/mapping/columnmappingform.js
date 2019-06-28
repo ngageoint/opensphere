@@ -9,6 +9,7 @@ goog.require('os.ui.column.mapping.columnModelTreeDirective');
 
 /**
  * The columnmappingform directive
+ *
  * @return {angular.Directive}
  */
 os.ui.column.mapping.columnMappingFormDirective = function() {
@@ -34,6 +35,7 @@ os.ui.Module.directive('columnmappingform', [os.ui.column.mapping.columnMappingF
 
 /**
  * Controller function for the columnmappingform directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$timeout} $timeout
@@ -106,6 +108,7 @@ os.ui.column.mapping.ColumnMappingFormCtrl = function($scope, $element, $timeout
 
 /**
  * Clean up.
+ *
  * @private
  */
 os.ui.column.mapping.ColumnMappingFormCtrl.prototype.destroy_ = function() {
@@ -118,6 +121,7 @@ os.ui.column.mapping.ColumnMappingFormCtrl.prototype.destroy_ = function() {
 /**
  * Initializes the form. This creates the cached descriptor list, reads the existing mapping to construct a UI
  * model for it, and adds a fresh row if the existing mapping is empty.
+ *
  * @private
  */
 os.ui.column.mapping.ColumnMappingFormCtrl.prototype.init_ = function() {
@@ -156,6 +160,7 @@ os.ui.column.mapping.ColumnMappingFormCtrl.prototype.init_ = function() {
 
 /**
  * Adds a new column model to the mapping.
+ *
  * @export
  */
 os.ui.column.mapping.ColumnMappingFormCtrl.prototype.add = function() {
@@ -170,6 +175,7 @@ os.ui.column.mapping.ColumnMappingFormCtrl.prototype.add = function() {
 
 /**
  * Listener for removing column models.
+ *
  * @param {angular.Scope.Event} event
  * @param {os.ui.column.mapping.ColumnModelNode} node
  * @private
@@ -189,6 +195,7 @@ os.ui.column.mapping.ColumnMappingFormCtrl.prototype.removeColumnModel_ = functi
 
 /**
  * Listener for layer selection. Checks if there are any duplicate layers and sets the form validity.
+ *
  * @private
  */
 os.ui.column.mapping.ColumnMappingFormCtrl.prototype.validateLayers_ = function() {
@@ -223,6 +230,7 @@ os.ui.column.mapping.ColumnMappingFormCtrl.prototype.validateLayers_ = function(
 
 /**
  * Creates a model node from a column model.
+ *
  * @param {osx.column.ColumnModel} columnModel
  * @return {os.ui.column.mapping.ColumnModelNode}
  * @private
@@ -239,6 +247,7 @@ os.ui.column.mapping.ColumnMappingFormCtrl.prototype.getModelNode_ = function(co
 /**
  * Validates the column mapping against all other existing mappings to verify that no duplicate layer/column pairs
  * have been chosen.
+ *
  * @export
  */
 os.ui.column.mapping.ColumnMappingFormCtrl.prototype.validate = function() {
@@ -265,6 +274,7 @@ os.ui.column.mapping.ColumnMappingFormCtrl.prototype.validate = function() {
 
 /**
  * Confirms the add/edit of the mapping.
+ *
  * @export
  */
 os.ui.column.mapping.ColumnMappingFormCtrl.prototype.confirm = function() {
@@ -277,6 +287,7 @@ os.ui.column.mapping.ColumnMappingFormCtrl.prototype.confirm = function() {
 
 /**
  * Cancels the add/edit of the mapping.
+ *
  * @export
  */
 os.ui.column.mapping.ColumnMappingFormCtrl.prototype.cancel = function() {
@@ -286,6 +297,7 @@ os.ui.column.mapping.ColumnMappingFormCtrl.prototype.cancel = function() {
 
 /**
  * Returns the cached descriptor list. Used by the layer pickers in the form.
+ *
  * @return {!Array.<!os.data.IDataDescriptor>}
  * @export
  */

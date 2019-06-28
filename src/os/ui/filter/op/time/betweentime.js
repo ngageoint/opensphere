@@ -9,6 +9,7 @@ goog.require('os.ui.popover.popoverDirective');
 
 /**
  * The between time directive
+ *
  * @return {angular.Directive}
  */
 os.ui.filter.op.time.betweenTimeDirective = function() {
@@ -31,6 +32,7 @@ os.ui.Module.directive('betweentime', [os.ui.filter.op.time.betweenTimeDirective
 
 /**
  * Controller for the betweentime directive
+ *
  * @param {!angular.Scope} $scope
  * @constructor
  * @ngInject
@@ -79,6 +81,7 @@ os.ui.filter.op.time.BetweenTimeCtrl.prototype.onDestroy_ = function() {
 
 /**
  * Watcher for minimum value changes.
+ *
  * @param {number} newVal The new minimum value.
  * @param {number} oldVal The old minimum value.
  * @export
@@ -90,6 +93,7 @@ os.ui.filter.op.time.BetweenTimeCtrl.prototype.onMinChange = function(newVal, ol
 
 /**
  * Watcher for maximum value changes.
+ *
  * @param {number} newVal The new maximum value.
  * @param {number} oldVal The old maximum value.
  * @export
@@ -101,6 +105,7 @@ os.ui.filter.op.time.BetweenTimeCtrl.prototype.onMaxChange = function(newVal, ol
 
 /**
  * Update the literal value.
+ *
  * @param {number} min The maximum value to set.
  * @param {number} max The minimum value to set.
  */

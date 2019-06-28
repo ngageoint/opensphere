@@ -28,6 +28,7 @@ goog.inherits(os.ui.user.settings.LocationSettings, os.ui.config.SettingPlugin);
 
 /**
  * The layers window directive
+ *
  * @return {angular.Directive}
  */
 os.ui.user.settings.LocationSettingsDirective = function() {
@@ -50,6 +51,7 @@ os.ui.Module.directive('locationSetting', [os.ui.user.settings.LocationSettingsD
 
 /**
  * Controller for location settings
+ *
  * @param {angular.Scope} $scope
  * @constructor
  * @ngInject
@@ -76,6 +78,7 @@ os.ui.user.settings.LocationSettingsCtrl = function($scope) {
 
 /**
  * Destroy
+ *
  * @private
  */
 os.ui.user.settings.LocationSettingsCtrl.prototype.destroy_ = function() {
@@ -85,6 +88,7 @@ os.ui.user.settings.LocationSettingsCtrl.prototype.destroy_ = function() {
 
 /**
  * Listen for changes from the system and update the setting display
+ *
  * @param {os.events.SettingChangeEvent} event
  * @private
  */
@@ -98,6 +102,7 @@ os.ui.user.settings.LocationSettingsCtrl.prototype.onFormatChange_ = function(ev
 
 /**
  * Update and store setting.
+ *
  * @param {os.ui.location.Format=} opt_new
  * @param {os.ui.location.Format=} opt_old
  * @export

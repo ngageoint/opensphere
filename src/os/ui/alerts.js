@@ -6,6 +6,7 @@ goog.require('os.ui.Module');
 
 /**
  * The alerts directive
+ *
  * @return {angular.Directive}
  */
 os.ui.alertsDirective = function() {
@@ -28,6 +29,7 @@ os.ui.Module.directive('alerts', [os.ui.alertsDirective]);
 
 /**
  * Controller function for the AlertViewer directive.  Will be instantiated by angular upon directive creation.
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.$timeout} $timeout
  * @param {!angular.JQLite} $element
@@ -66,6 +68,7 @@ os.ui.alert.AlertsCtrl = function($scope, $timeout, $element) {
 
 /**
  * Remove listeners and references.
+ *
  * @private
  */
 os.ui.alert.AlertsCtrl.prototype.destroy_ = function() {
@@ -76,6 +79,7 @@ os.ui.alert.AlertsCtrl.prototype.destroy_ = function() {
 
 /**
  * Registers received alerts and tests to see if we have received a flood
+ *
  * @param {os.alert.AlertEvent} event The event to register
  * @private
  */
@@ -91,6 +95,7 @@ os.ui.alert.AlertsCtrl.prototype.registerAlert_ = function(event) {
 
 /**
  * Clears the alerts being displayed
+ *
  * @export
  */
 os.ui.alert.AlertsCtrl.prototype.clearAlerts = function() {
@@ -101,6 +106,7 @@ os.ui.alert.AlertsCtrl.prototype.clearAlerts = function() {
 
 /**
  * Toggles the alert popups
+ *
  * @export
  */
 os.ui.alert.AlertsCtrl.prototype.toggleAlertPopups = function() {

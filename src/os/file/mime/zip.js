@@ -18,6 +18,7 @@ os.file.mime.zip.MAGIC_BYTES_BIG_ENDIAN = 0x504B0304;
 
 /**
  * Tests if an ArrayBuffer holds zip content by looking for the magic number.
+ *
  * @param {ArrayBuffer} buffer
  * @return {boolean}
  */

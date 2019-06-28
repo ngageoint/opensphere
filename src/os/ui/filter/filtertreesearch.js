@@ -6,6 +6,7 @@ goog.require('os.ui.slick.AbstractGroupByTreeSearch');
 
 /**
  * Extends AbstractGroupByTreeSearch to search through saved areas
+ *
  * @extends {os.ui.slick.AbstractGroupByTreeSearch}
  * @param {!Array.<!os.structs.ITreeNode>} search The original tree to search
  * @param {!string} setAs The field to set on ...
@@ -21,6 +22,7 @@ goog.inherits(os.ui.filter.FilterTreeSearch, os.ui.slick.AbstractGroupByTreeSear
 
 /**
  * Overridden in inheriting class
+ *
  * @return {!Array}
  * @override
  */
@@ -38,6 +40,7 @@ os.ui.filter.FilterTreeSearch.prototype.getSearchItems = function() {
 
 /**
  * Overridden in inheriting class
+ *
  * @param {Object} item - search item to setup as a node
  * @return {!os.structs.ITreeNode}
  * @override

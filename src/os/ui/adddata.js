@@ -15,6 +15,7 @@ goog.require('os.ui.menu.windows.default');
 
 /**
  * The Add Data window directive
+ *
  * @return {angular.Directive}
  */
 os.ui.addDataDirective = function() {
@@ -38,6 +39,7 @@ os.ui.Module.directive('adddata', [os.ui.addDataDirective]);
 
 /**
  * Controller for Add Data Window
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @extends {os.ui.data.AddDataCtrl}
@@ -120,6 +122,7 @@ os.ui.AddDataCtrl.prototype.getGroupBys = function() {
 /**
  * Check if any enabled providers encountered an error while loading and display a message to the user if it hasn't
  * already been seen.
+ *
  * @param {os.data.DataProviderEvent=} opt_event The data provider event
  * @private
  */
@@ -139,6 +142,7 @@ os.ui.AddDataCtrl.prototype.checkServerError_ = function(opt_event) {
 
 /**
  * Dismiss the server alert and do not show it again.
+ *
  * @export
  */
 os.ui.AddDataCtrl.prototype.dismissServerAlert = function() {
@@ -148,6 +152,7 @@ os.ui.AddDataCtrl.prototype.dismissServerAlert = function() {
 
 /**
  * Toggles the add data drop-down menu.
+ *
  * @export
  */
 os.ui.AddDataCtrl.prototype.launchFileImport = function() {
@@ -158,6 +163,7 @@ os.ui.AddDataCtrl.prototype.launchFileImport = function() {
 
 /**
  * Handle params change event
+ *
  * @param {!angular.Scope.Event} event
  * @param {Object} params
  * @private
@@ -173,6 +179,7 @@ os.ui.AddDataCtrl.prototype.onParamsChange_ = function(event, params) {
 
 /**
  * Clear the filter function
+ *
  * @export
  */
 os.ui.AddDataCtrl.prototype.clearFilter = function() {

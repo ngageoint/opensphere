@@ -14,6 +14,7 @@ goog.require('os.ui.filter');
 
 /**
  * Manager for import actions.
+ *
  * @extends {goog.events.EventTarget}
  * @constructor
  * @template T
@@ -105,6 +106,7 @@ os.im.action.ImportActionManager.prototype.disposeInternal = function() {
 
 /**
  * Create a new import action by identifier.
+ *
  * @param {string} id The action identifier.
  * @param {Object=} opt_config Configuration to restore.
  * @return {os.im.action.IImportAction<T>}
@@ -126,6 +128,7 @@ os.im.action.ImportActionManager.prototype.createAction = function(id, opt_confi
 
 /**
  * Create a new import action from an XML element.
+ *
  * @param {Element} xml The XML element.
  * @return {os.im.action.IImportAction<T>}
  */
@@ -150,6 +153,7 @@ os.im.action.ImportActionManager.prototype.createActionFromXml = function(xml) {
 
 /**
  * Get the import actions registered with the application.
+ *
  * @return {!Array<!os.im.action.IImportAction<T>>}
  */
 os.im.action.ImportActionManager.prototype.getActions = function() {
@@ -159,6 +163,7 @@ os.im.action.ImportActionManager.prototype.getActions = function() {
 
 /**
  * If there are import actions registered with the application.
+ *
  * @return {boolean}
  */
 os.im.action.ImportActionManager.prototype.hasActions = function() {
@@ -168,6 +173,7 @@ os.im.action.ImportActionManager.prototype.hasActions = function() {
 
 /**
  * Register an import action with the application.
+ *
  * @param {!os.im.action.IImportAction} action The import action.
  */
 os.im.action.ImportActionManager.prototype.registerAction = function(action) {
@@ -195,6 +201,7 @@ os.im.action.ImportActionManager.prototype.clearActionEntries = function() {
 
 /**
  * Create a new import action entry.
+ *
  * @return {!os.im.action.FilterActionEntry<T>}
  */
 os.im.action.ImportActionManager.prototype.createActionEntry = function() {
@@ -204,6 +211,7 @@ os.im.action.ImportActionManager.prototype.createActionEntry = function() {
 
 /**
  * Get an import action entry by id.
+ *
  * @param {string|undefined} id The id.
  * @param {string=} opt_type The entry type.
  * @return {os.im.action.FilterActionEntry<T>} The import action entry, or null if not found.
@@ -236,6 +244,7 @@ os.im.action.ImportActionManager.prototype.getActionEntry = function(id, opt_typ
 
 /**
  * Get the import action entries.
+ *
  * @param {string=} opt_type The entry type, or undefined to get all entries.
  * @return {!Array<!os.im.action.FilterActionEntry<T>>}
  */
@@ -260,6 +269,7 @@ os.im.action.ImportActionManager.prototype.getActionEntries = function(opt_type)
 
 /**
  * Set the import action entries for a type.
+ *
  * @param {string|undefined} type The entry type.
  * @param {!Array<!os.im.action.FilterActionEntry<T>>} entries The action entries.
  */
@@ -273,6 +283,7 @@ os.im.action.ImportActionManager.prototype.setActionEntries = function(type, ent
 
 /**
  * Add an import action entry.
+ *
  * @param {os.im.action.FilterActionEntry<T>} entry The import action entry.
  * @param {number=} opt_index The index in the entry list.
  * @param {string=} opt_parentId The parent node ID.
@@ -317,6 +328,7 @@ os.im.action.ImportActionManager.prototype.addActionEntry = function(entry, opt_
 
 /**
  * Get all items to process for an entry type.
+ *
  * @param {string} type The import action entry type.
  * @return {Array<T>} The items to process.
  * @protected
@@ -328,6 +340,7 @@ os.im.action.ImportActionManager.prototype.getEntryItems = function(type) {
 
 /**
  * Executes enabled import action entries of a type against a set of items.
+ *
  * @param {string} entryType The entry type.
  * @param {Array<T>=} opt_items The items to process.
  * @param {boolean=} opt_unprocess Reset existing items
@@ -351,6 +364,7 @@ os.im.action.ImportActionManager.prototype.processItems = function(entryType, op
 
 /**
  * Explicit call to unprocess items - used when an action is removed
+ *
  * @param {string} entryType The entry type.
  * @param {Array<T>} items The items to process.
  */
@@ -369,6 +383,7 @@ os.im.action.ImportActionManager.prototype.unprocessItems = function(entryType, 
 /**
  * Reapplies all actions on applicable data types. This acts to both apply the actions to new features as well
  * as to unapply them from old features.
+ *
  * @param {string} entryType The entry type.
  * @param {Array<T>=} opt_items The items to process.
  */
@@ -391,6 +406,7 @@ os.im.action.ImportActionManager.prototype.updateItems = function(entryType, opt
 
 /**
  * Remove an import action entry.
+ *
  * @param {os.im.action.FilterActionEntry<T>} entry The import action entry.
  * @param {string=} opt_parentId The parent node ID.
  */
@@ -485,6 +501,7 @@ os.im.action.ImportActionManager.prototype.save = function() {
 
 /**
  * Handle an add action entry event fired on the global dispatcher.
+ *
  * @param {os.im.action.ImportActionEvent} event The event.
  * @private
  */

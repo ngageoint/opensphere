@@ -16,6 +16,7 @@ goog.require('plugin.ogc.OGCLayerDescriptor');
 
 /**
  * A spinner directive for a node that loads items
+ *
  * @return {angular.Directive}
  */
 plugin.ogc.ui.chooseTimeColumnDirective = function() {
@@ -42,6 +43,7 @@ os.ui.Module.directive('chooseTimeColumn', [plugin.ogc.ui.chooseTimeColumnDirect
 
 /**
  * Allow the user to choose time columns and save it to the descriptor
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @extends {goog.Disposable}
@@ -103,6 +105,7 @@ plugin.ogc.ui.ChooseTimeColumnCtrl.prototype.disposeInternal = function() {
 
 /**
  * Save the time columns to the descriptor
+ *
  * @export
  */
 plugin.ogc.ui.ChooseTimeColumnCtrl.prototype.save = function() {
@@ -118,6 +121,7 @@ plugin.ogc.ui.ChooseTimeColumnCtrl.prototype.save = function() {
 
 /**
  * Close the window
+ *
  * @export
  */
 plugin.ogc.ui.ChooseTimeColumnCtrl.prototype.close = function() {
@@ -128,6 +132,7 @@ plugin.ogc.ui.ChooseTimeColumnCtrl.prototype.close = function() {
 
 /**
  * Launch the choose time column directive
+ *
  * @param {string} layerId
  * @param {goog.async.Deferred=} opt_deferred - call the deferred on save/cancel if provided
  */

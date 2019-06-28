@@ -120,6 +120,7 @@ os.data.SourceManager.prototype.init = function() {
 
 /**
  * Handle remove add events from the data manager.
+ *
  * @param {!os.source.ISource} source The source.
  * @protected
  */
@@ -132,6 +133,7 @@ os.data.SourceManager.prototype.addSource = function(source) {
 
 /**
  * Handle remove source events from the data manager.
+ *
  * @param {!os.source.ISource} source The source.
  * @protected
  */
@@ -142,6 +144,7 @@ os.data.SourceManager.prototype.removeSource = function(source) {
 
 /**
  * Registers change listener on a source.
+ *
  * @param {!os.source.ISource} source The source.
  * @private
  */
@@ -156,6 +159,7 @@ os.data.SourceManager.prototype.addSourceListener_ = function(source) {
 
 /**
  * Removes change listener on a source.
+ *
  * @param {!os.source.ISource} source The source.
  * @private
  */
@@ -170,6 +174,7 @@ os.data.SourceManager.prototype.removeSourceListener_ = function(source) {
 
 /**
  * Handle source added event from the data manager.
+ *
  * @param {os.data.event.DataEvent} event The data event.
  * @private
  */
@@ -183,6 +188,7 @@ os.data.SourceManager.prototype.onSourceAdded_ = function(event) {
 
 /**
  * Handle source added removed from the data manager.
+ *
  * @param {os.data.event.DataEvent} event The data event.
  * @private
  */
@@ -229,6 +235,7 @@ os.data.SourceManager.prototype.validate_ = function(source) {
 
 /**
  * Handle property change events from a source.
+ *
  * @param {os.events.PropertyChangeEvent|ol.Object.Event} event
  * @protected
  */
@@ -251,6 +258,7 @@ os.data.SourceManager.prototype.onSourcePropertyChange = function(event) {
 
 /**
  * Handler for the update delay.
+ *
  * @protected
  */
 os.data.SourceManager.prototype.onUpdateDelay = function() {

@@ -12,6 +12,7 @@ goog.require('plugin.osm.nom.SearchResult');
 
 /**
  * Search provider for the OSM Nominatim API.
+ *
  * @param {string} name The search provider name.
  * @extends {os.search.AbstractUrlSearch}
  * @implements {os.search.IGeoSearch}
@@ -141,6 +142,7 @@ plugin.osm.nom.NominatimSearch.prototype.setGeoShape = function(shape, opt_cente
 
 /**
  * Get the top result from Nominatim.
+ *
  * @param {string} term The search term.
  * @return {!goog.Promise<(ol.Feature|undefined)>} A promise that resolves to the resulting feature, or is rejected with
  *                                                 any errors.
@@ -163,6 +165,7 @@ plugin.osm.nom.feelingLucky = function(term) {
 
 /**
  * Parse the first object in a Nominatim response.
+ *
  * @param {*} response The server response.
  * @return {ol.Feature|undefined} The parsed feature, or undefined if none could be parsed.
  */

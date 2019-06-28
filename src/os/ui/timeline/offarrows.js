@@ -120,6 +120,7 @@ os.ui.timeline.OffArrows.prototype.render = function(opt_height) {
 
 /**
  * Renders a group
+ *
  * @param {d3.Selection} group
  * @param {Array.<os.ui.timeline.ITimelineItem>} data
  * @private
@@ -141,6 +142,7 @@ os.ui.timeline.OffArrows.prototype.renderGroup_ = function(group, data) {
 
 /**
  * Click handler
+ *
  * @private
  */
 os.ui.timeline.OffArrows.prototype.onClick_ = function() {
@@ -179,6 +181,7 @@ os.ui.timeline.OffArrows.prototype.getAvg = function() {
 
 /**
  * Filters items down to what is off the left edge
+ *
  * @param {os.ui.timeline.ITimelineItem} item
  * @return {boolean} Whether or not the item belongs in the left list
  * @private
@@ -196,6 +199,7 @@ os.ui.timeline.OffArrows.prototype.filterLeft_ = function(item) {
 
 /**
  * Filters items down to what is off the right edge
+ *
  * @param {os.ui.timeline.ITimelineItem} item
  * @return {boolean} Whether or not the item belongs in the right list
  * @private
@@ -213,6 +217,7 @@ os.ui.timeline.OffArrows.prototype.filterRight_ = function(item) {
 
 /**
  * Gets the tip
+ *
  * @param {os.ui.timeline.ITimelineItem} item
  * @return {string}
  * @private
@@ -226,6 +231,7 @@ os.ui.timeline.OffArrows.getTip_ = function(item) {
 
 /**
  * Compares the left side of the extents
+ *
  * @param {os.ui.timeline.ITimelineItem} a
  * @param {os.ui.timeline.ITimelineItem} b
  * @return {number} -1, 0, or 1 per normal compare functions
@@ -238,6 +244,7 @@ os.ui.timeline.OffArrows.compareLeft_ = function(a, b) {
 
 /**
  * Compares the right side of the extents
+ *
  * @param {os.ui.timeline.ITimelineItem} a
  * @param {os.ui.timeline.ITimelineItem} b
  * @return {number} -1, 0, or 1 per normal compare functions

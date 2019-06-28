@@ -20,6 +20,7 @@ goog.require('os.metrics.keys');
 
 /**
  * Abstract command for activating/deactivating descriptors.
+ *
  * @abstract
  * @param {!os.data.IDataDescriptor} descriptor The descriptor
  * @implements {os.command.ICommand}
@@ -83,6 +84,7 @@ os.data.AbstractDescriptor.prototype.disposeInternal = function() {
 
 /**
  * Get the descriptor by id.
+ *
  * @return {os.data.IDataDescriptor}
  */
 os.data.AbstractDescriptor.prototype.getDescriptor = function() {
@@ -92,6 +94,7 @@ os.data.AbstractDescriptor.prototype.getDescriptor = function() {
 
 /**
  * Checks if the command is ready to execute.
+ *
  * @return {boolean}
  */
 os.data.AbstractDescriptor.prototype.canExecute = function() {
@@ -112,6 +115,7 @@ os.data.AbstractDescriptor.prototype.canExecute = function() {
 
 /**
  * Activates the descriptor.
+ *
  * @return {boolean} If the operation was successful
  * @protected
  */
@@ -140,6 +144,7 @@ os.data.AbstractDescriptor.prototype.activateDescriptor = function() {
 
 /**
  * Deactivates the descriptor.
+ *
  * @return {boolean} If the operation was successful
  * @protected
  */
@@ -159,6 +164,7 @@ os.data.AbstractDescriptor.prototype.deactivateDescriptor = function() {
 
 /**
  * Callback for the descriptor's activation event.
+ *
  * @abstract
  * @param {goog.events.Event=} opt_event
  * @protected
@@ -168,6 +174,7 @@ os.data.AbstractDescriptor.prototype.onActivated = function(opt_event) {};
 
 /**
  * Callback for the descriptor's deactivation event.
+ *
  * @abstract
  * @param {goog.events.Event=} opt_event
  * @protected
@@ -177,6 +184,7 @@ os.data.AbstractDescriptor.prototype.onDeactivated = function(opt_event) {};
 
 /**
  * Removes the listeners created by this command
+ *
  * @protected
  */
 os.data.AbstractDescriptor.prototype.removeListeners = function() {
@@ -191,6 +199,7 @@ os.data.AbstractDescriptor.prototype.removeListeners = function() {
 
 /**
  * Handles errors in activating the descriptor.
+ *
  * @protected
  */
 os.data.AbstractDescriptor.prototype.onActivationError = function() {

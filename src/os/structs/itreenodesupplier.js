@@ -4,6 +4,7 @@ goog.provide('os.structs.ITreeNodeSupplier');
 
 /**
  * Interface for classes that provide their own tree node.
+ *
  * @interface
  */
 os.structs.ITreeNodeSupplier = function() {};

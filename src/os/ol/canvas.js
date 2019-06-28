@@ -8,6 +8,7 @@ goog.require('ol.geom.Polygon');
 
 /**
  * Create an ellipse geometry.
+ *
  * @param {!ol.Coordinate} center The center of the ellipse.
  * @param {number} size The ellipse size, in pixels.
  * @param {boolean=} opt_showCenter If the center point should be displayed.

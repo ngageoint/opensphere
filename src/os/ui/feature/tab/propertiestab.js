@@ -12,6 +12,7 @@ goog.require('os.ui.feature.tab.AbstractFeatureTabCtrl');
 
 /**
  * The PropertiesTabDirective
+ *
  * @return {angular.Directive}
  */
 os.ui.feature.tab.propertiesTabDirective = function() {
@@ -35,6 +36,7 @@ os.ui.Module.directive('propertiestab', [os.ui.feature.tab.propertiesTabDirectiv
 
 /**
  * Controller function for the propertiesTabDirective directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @extends {os.ui.feature.tab.AbstractFeatureTabCtrl}
@@ -107,6 +109,7 @@ os.ui.feature.tab.PropertiesTabCtrl.prototype.updateTab = function(event, data) 
 
 /**
  * Allow ordering
+ *
  * @param {string=} opt_key
  * @export
  */
@@ -132,6 +135,7 @@ os.ui.feature.tab.PropertiesTabCtrl.prototype.order = function(opt_key) {
 
 /**
  * Select this property
+ *
  * @param {Event} event
  * @param {Object} property
  * @export

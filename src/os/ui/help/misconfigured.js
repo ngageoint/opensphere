@@ -7,6 +7,7 @@ goog.require('os.ui.list');
 
 /**
  * The login directive
+ *
  * @return {angular.Directive}
  */
 os.ui.help.misconfiguredDirective = function() {
@@ -32,6 +33,7 @@ os.ui.Module.directive('misconfigured', [os.ui.help.misconfiguredDirective]);
 
 /**
  * Controller function for the login directive
+ *
  * @param {!angular.Scope} $scope
  * @constructor
  * @ngInject

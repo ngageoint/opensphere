@@ -165,6 +165,7 @@ os.proj.switch.ReprojectionWarning.prototype.addTitle = function(title) {
 
 /**
  * Handles warning
+ *
  * @private
  */
 os.proj.switch.ReprojectionWarning.prototype.onWarn_ = function() {
@@ -265,6 +266,7 @@ os.proj.switch.SwitchProjection.prototype.addConfig = function(config) {
 
 /**
  * Starts a projection change
+ *
  * @param {ol.ProjectionLike} projection
  */
 os.proj.switch.SwitchProjection.prototype.start = function(projection) {
@@ -288,6 +290,7 @@ os.proj.switch.SwitchProjection.prototype.start = function(projection) {
 
 /**
  * Prompt the user with the items that will change
+ *
  * @private
  */
 os.proj.switch.SwitchProjection.prototype.prompt_ = function() {
@@ -355,6 +358,7 @@ os.proj.switch.SwitchProjection.prototype.prompt_ = function() {
 
 /**
  * Cancels the projection switch
+ *
  * @protected
  */
 os.proj.switch.SwitchProjection.prototype.cancelSwitch = function() {
@@ -377,6 +381,7 @@ os.proj.switch.SwitchProjection.prototype.cancelSwitch = function() {
 
 /**
  * Performs the projection switch
+ *
  * @param {os.proj.switch.BinnedLayersType} layers
  * @protected
  */
@@ -460,6 +465,7 @@ os.proj.switch.SwitchProjection.prototype.addLayerSequence = function(layers, re
 
 /**
  * Clears the cache of stuff
+ *
  * @protected
  */
 os.proj.switch.SwitchProjection.prototype.clear = function() {

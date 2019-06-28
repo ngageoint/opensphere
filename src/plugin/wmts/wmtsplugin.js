@@ -15,6 +15,7 @@ goog.require('plugin.wmts.mime');
 
 /**
  * Provides WMTS support
+ *
  * @extends {os.plugin.AbstractPlugin}
  * @constructor
  */

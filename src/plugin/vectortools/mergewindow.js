@@ -160,6 +160,7 @@ plugin.vectortools.MergeCtrl.prototype.onUpdateDelay = function() {
 
 /**
  * Close dialog
+ *
  * @export
  */
 plugin.vectortools.MergeCtrl.prototype.close = function() {
@@ -169,6 +170,7 @@ plugin.vectortools.MergeCtrl.prototype.close = function() {
 
 /**
  * Adds the command to perform the merge.
+ *
  * @export
  */
 plugin.vectortools.MergeCtrl.prototype.accept = function() {

@@ -5,6 +5,7 @@ goog.require('os.ui.slick.SlickTreeNode');
 
 /**
  * Tree node representing a column model.
+ *
  * @extends {os.ui.slick.SlickTreeNode}
  * @constructor
  */
@@ -42,6 +43,7 @@ goog.inherits(os.ui.column.mapping.ColumnModelNode, os.ui.slick.SlickTreeNode);
 
 /**
  * Gets the column mapping associated with this node.
+ *
  * @return {?osx.column.ColumnModel}
  */
 os.ui.column.mapping.ColumnModelNode.prototype.getColumnModel = function() {
@@ -51,6 +53,7 @@ os.ui.column.mapping.ColumnModelNode.prototype.getColumnModel = function() {
 
 /**
  * Sets the column mapping on this node. This also creates
+ *
  * @param {?osx.column.ColumnModel} value
  */
 os.ui.column.mapping.ColumnModelNode.prototype.setColumnModel = function(value) {
@@ -60,6 +63,7 @@ os.ui.column.mapping.ColumnModelNode.prototype.setColumnModel = function(value) 
 
 /**
  * Get the mapping
+ *
  * @return {?os.column.IColumnMapping}
  */
 os.ui.column.mapping.ColumnModelNode.prototype.getMapping = function() {
@@ -69,6 +73,7 @@ os.ui.column.mapping.ColumnModelNode.prototype.getMapping = function() {
 
 /**
  * Set the mapping
+ *
  * @param {?os.column.IColumnMapping} value
  */
 os.ui.column.mapping.ColumnModelNode.prototype.setMapping = function(value) {
@@ -78,6 +83,7 @@ os.ui.column.mapping.ColumnModelNode.prototype.setMapping = function(value) {
 
 /**
  * Get the layer getter function
+ *
  * @return {function(): !Array.<!os.data.IDataDescriptor>}
  */
 os.ui.column.mapping.ColumnModelNode.prototype.getGetFn = function() {
@@ -87,6 +93,7 @@ os.ui.column.mapping.ColumnModelNode.prototype.getGetFn = function() {
 
 /**
  * Set the layer getter function
+ *
  * @param {function(): !Array.<!os.data.IDataDescriptor>} value
  */
 os.ui.column.mapping.ColumnModelNode.prototype.setGetFn = function(value) {
@@ -96,6 +103,7 @@ os.ui.column.mapping.ColumnModelNode.prototype.setGetFn = function(value) {
 
 /**
  * Get the initial layer
+ *
  * @return {?os.ui.ogc.IOGCDescriptor}
  */
 os.ui.column.mapping.ColumnModelNode.prototype.getInitialLayer = function() {
@@ -105,6 +113,7 @@ os.ui.column.mapping.ColumnModelNode.prototype.getInitialLayer = function() {
 
 /**
  * Set the initial layer
+ *
  * @param {?os.ui.ogc.IOGCDescriptor} value
  */
 os.ui.column.mapping.ColumnModelNode.prototype.setInitialLayer = function(value) {

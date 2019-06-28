@@ -9,6 +9,7 @@ goog.require('os.ui.tab.FeatureTab');
 
 /**
  * Tab manager for the feature info
+ *
  * @constructor
  */
 os.ui.feature.FeatureInfoTabManager = function() {
@@ -50,6 +51,7 @@ os.ui.feature.FeatureInfoTabManager.TABS = [
 
 /**
  * Retrieve a copy of the registered tabs
+ *
  * @return {Array.<os.ui.tab.FeatureTab>} clone of the registered tabs
  */
 os.ui.feature.FeatureInfoTabManager.prototype.getTabs = function() {
@@ -59,6 +61,7 @@ os.ui.feature.FeatureInfoTabManager.prototype.getTabs = function() {
 
 /**
  * Register a tab with the tab manager
+ *
  * @param {os.ui.tab.FeatureTab} tab The tab to register
  */
 os.ui.feature.FeatureInfoTabManager.prototype.registerTab = function(tab) {

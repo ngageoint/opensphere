@@ -6,6 +6,7 @@ goog.require('goog.events.Listenable');
 
 /**
  * Interface for drawing controls.
+ *
  * @extends {goog.events.Listenable}
  * @interface
  */

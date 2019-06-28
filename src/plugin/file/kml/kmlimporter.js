@@ -6,6 +6,7 @@ goog.require('os.im.FeatureImporter');
 
 /**
  * Imports a set of KML items
+ *
  * @param {plugin.file.kml.KMLParser} parser The parser
  * @extends {os.im.FeatureImporter.<plugin.file.kml.ui.KMLNode>}
  * @constructor
@@ -55,6 +56,7 @@ plugin.file.kml.KMLImporter.prototype.disposeInternal = function() {
 
 /**
  * Get the root KML tree node.
+ *
  * @return {plugin.file.kml.ui.KMLNode}
  */
 plugin.file.kml.KMLImporter.prototype.getRootNode = function() {
@@ -64,6 +66,7 @@ plugin.file.kml.KMLImporter.prototype.getRootNode = function() {
 
 /**
  * Get columns detected in the KML.
+ *
  * @return {Array<!os.data.ColumnDefinition>}
  */
 plugin.file.kml.KMLImporter.prototype.getColumns = function() {
@@ -73,6 +76,7 @@ plugin.file.kml.KMLImporter.prototype.getColumns = function() {
 
 /**
  * Get columns detected in the KML.
+ *
  * @return {number}
  */
 plugin.file.kml.KMLImporter.prototype.getMinRefreshPeriod = function() {

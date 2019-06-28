@@ -20,6 +20,7 @@ goog.require('plugin.descriptor.facet.Type');
 
 /**
  * Searches descriptors
+ *
  * @param {string} name
  * @extends {os.search.AbstractSearch}
  * @implements {os.search.IFacetedSearch}

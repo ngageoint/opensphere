@@ -9,6 +9,7 @@ goog.require('plugin.file.kml.cmd.KMLNodeRemove');
 
 /**
  * The node UI for KML tree nodes
+ *
  * @return {angular.Directive}
  */
 plugin.file.kml.ui.kmlNodeUIDirective = function() {
@@ -51,6 +52,7 @@ os.ui.Module.directive('kmlnodeui', [plugin.file.kml.ui.kmlNodeUIDirective]);
 
 /**
  * Controller for KML tree node UI
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @extends {os.ui.slick.AbstractNodeUICtrl}
@@ -65,6 +67,7 @@ goog.inherits(plugin.file.kml.ui.KMLNodeUICtrl, os.ui.slick.AbstractNodeUICtrl);
 
 /**
  * If the node is a folder.
+ *
  * @return {boolean}
  * @export
  */
@@ -76,6 +79,7 @@ plugin.file.kml.ui.KMLNodeUICtrl.prototype.isFolder = function() {
 
 /**
  * Add a new folder.
+ *
  * @export
  */
 plugin.file.kml.ui.KMLNodeUICtrl.prototype.addFolder = function() {
@@ -90,6 +94,7 @@ plugin.file.kml.ui.KMLNodeUICtrl.prototype.addFolder = function() {
 
 /**
  * Add a new place.
+ *
  * @param {boolean=} opt_annotation Whether the place is an annotation.
  * @export
  */
@@ -106,6 +111,7 @@ plugin.file.kml.ui.KMLNodeUICtrl.prototype.addPlace = function(opt_annotation) {
 
 /**
  * If the node can be edited.
+ *
  * @return {boolean}
  * @export
  */
@@ -117,6 +123,7 @@ plugin.file.kml.ui.KMLNodeUICtrl.prototype.canAddChildren = function() {
 
 /**
  * If the node can be edited.
+ *
  * @return {boolean}
  * @export
  */
@@ -128,6 +135,7 @@ plugin.file.kml.ui.KMLNodeUICtrl.prototype.canEdit = function() {
 
 /**
  * If the node can be removed from the tree.
+ *
  * @return {boolean}
  * @export
  */
@@ -139,6 +147,7 @@ plugin.file.kml.ui.KMLNodeUICtrl.prototype.canRemove = function() {
 
 /**
  * Prompt the user to remove the node from the tree.
+ *
  * @export
  */
 plugin.file.kml.ui.KMLNodeUICtrl.prototype.tryRemove = function() {
@@ -167,6 +176,7 @@ plugin.file.kml.ui.KMLNodeUICtrl.prototype.tryRemove = function() {
 
 /**
  * Removes the node from the tree.
+ *
  * @param {!plugin.file.kml.ui.KMLNode} node The node
  * @protected
  */
@@ -178,6 +188,7 @@ plugin.file.kml.ui.KMLNodeUICtrl.prototype.removeNodeInternal = function(node) {
 
 /**
  * Edits the node title.
+ *
  * @export
  */
 plugin.file.kml.ui.KMLNodeUICtrl.prototype.edit = function() {
@@ -200,6 +211,7 @@ plugin.file.kml.ui.KMLNodeUICtrl.prototype.edit = function() {
 
 /**
  * If there is an annotation or not
+ *
  * @return {boolean}
  * @export
  */
@@ -218,6 +230,7 @@ plugin.file.kml.ui.KMLNodeUICtrl.prototype.hasAnnotation = function() {
 
 /**
  * Removes annotation
+ *
  * @export
  */
 plugin.file.kml.ui.KMLNodeUICtrl.prototype.removeAnnotation = function() {
@@ -239,6 +252,7 @@ plugin.file.kml.ui.KMLNodeUICtrl.prototype.removeAnnotation = function() {
 
 /**
  * Shows annotation
+ *
  * @export
  */
 plugin.file.kml.ui.KMLNodeUICtrl.prototype.showAnnotation = function() {

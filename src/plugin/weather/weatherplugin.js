@@ -68,6 +68,7 @@ plugin.weather.getUrl_ = function() {
 
 /**
  * Forecast menu option listener
+ *
  * @param {os.ui.menu.MenuEvent<ol.Coordinate>} evt The menu event
  * @private
  */
@@ -78,6 +79,7 @@ plugin.weather.onLookup_ = function(evt) {
 
 /**
  * Opens a weather forecast for the given location
+ *
  * @param {ol.Coordinate} coord
  */
 plugin.weather.launchForecast = function(coord) {

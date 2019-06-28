@@ -7,6 +7,7 @@ goog.require('os.ui.text.simpleMDEDirective');
 
 /**
  * The count by directive
+ *
  * @return {angular.Directive}
  */
 os.ui.text.simpleMDEViewerDirective = function() {
@@ -31,6 +32,7 @@ os.ui.Module.directive('simplemdeviewer', [os.ui.text.simpleMDEViewerDirective])
 
 /**
  * Controller class for the source switcher
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.$timeout} $timeout
  * @constructor
@@ -53,6 +55,7 @@ os.ui.text.SimpleMDEViewerCtrl = function($scope, $timeout) {
 
 /**
  * Cleanup
+ *
  * @private
 */
 os.ui.text.SimpleMDEViewerCtrl.prototype.onDestroy_ = function() {
@@ -62,6 +65,7 @@ os.ui.text.SimpleMDEViewerCtrl.prototype.onDestroy_ = function() {
 
 /**
  * Open the report viewer with a simpleMDE
+ *
  * @param {string} text
  * @param {string} title
  */

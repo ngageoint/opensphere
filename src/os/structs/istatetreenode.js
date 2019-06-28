@@ -5,6 +5,7 @@ goog.require('os.structs.ITreeNode');
 
 /**
  * Extends the base tree node interface to include states (e.g. for tri-state checkbox trees)
+ *
  * @interface
  * @extends {os.structs.ITreeNode}
  */

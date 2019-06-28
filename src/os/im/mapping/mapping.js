@@ -37,6 +37,7 @@ os.im.mapping.TimeType = {
 
 /**
  * Returns the enum for the string
+ *
  * @param {string} input A string that matches an enum value from os.im.mapping.TimeType
  * @return {os.im.mapping.TimeType} A TimeType
  */
@@ -55,6 +56,7 @@ os.im.mapping.getTimeTypeForString = function(input) {
 
 /**
  * Convenience function to get a mapping field from an item, or null if the field doesn't exist.
+ *
  * @param {?Object|undefined} item
  * @param {string} field
  * @return {*}
@@ -89,6 +91,7 @@ os.im.mapping.getItemFields = function(item) {
 
 /**
  * Convenience function to set a mapping field on an item.. Setting the field to undefined will remove it.
+ *
  * @param {Object} item
  * @param {string} field
  * @param {*} value
@@ -150,6 +153,7 @@ os.im.mapping.getBestFieldMatch = function(item, regex, opt_currentField) {
 
 /**
  * Compares mappings and only returns the highest scored within each score type.
+ *
  * @param {Array.<os.im.mapping.IMapping.<T>>} mappings
  * @return {Array.<os.im.mapping.IMapping.<T>>}
  * @template T
@@ -179,6 +183,7 @@ os.im.mapping.reduceMappings = function(mappings) {
 
 /**
  * Convert a moment time format to a java time format
+ *
  * @param {?string} input moment time format
  * @return {?string} java time format.
  */
@@ -198,6 +203,7 @@ os.im.mapping.momentFormatToJavaFormat = function(input) {
 
 /**
  * Convert a moment time format to a java time format
+ *
  * @param {?string} input moment time format
  * @return {?string} java time format.
  */
@@ -217,6 +223,7 @@ os.im.mapping.javaFormatToMomentFormat = function(input) {
 /**
  * Convert a local field to the common XML field format.
  * This only applies for columns that do not have a header.
+ *
  * @param {?string} input moment time format
  * @return {?string} java time format.
  */
@@ -240,6 +247,7 @@ os.im.mapping.localFieldToXmlField = function(input) {
 /**
  * Convert the common XML field to a local field format.
  * This only applies for columns that do not have a header.
+ *
  * @param {?string} input moment time format
  * @return {?string} java time format.
  */

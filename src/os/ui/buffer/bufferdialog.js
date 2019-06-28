@@ -9,6 +9,7 @@ goog.require('os.ui.buffer.bufferFormDirective');
 
 /**
  * The bufferdialog directive
+ *
  * @return {angular.Directive}
  */
 os.ui.buffer.bufferDialogDirective = function() {
@@ -31,6 +32,7 @@ os.ui.Module.directive('bufferdialog', [os.ui.buffer.bufferDialogDirective]);
 
 /**
  * Controller function for the bufferdialog directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @constructor
@@ -89,6 +91,7 @@ os.ui.buffer.BufferDialogCtrl = function($scope, $element) {
 
 /**
  * Clean up.
+ *
  * @private
  */
 os.ui.buffer.BufferDialogCtrl.prototype.destroy_ = function() {
@@ -98,6 +101,7 @@ os.ui.buffer.BufferDialogCtrl.prototype.destroy_ = function() {
 
 /**
  * Close the window.
+ *
  * @export
  */
 os.ui.buffer.BufferDialogCtrl.prototype.cancel = function() {
@@ -107,6 +111,7 @@ os.ui.buffer.BufferDialogCtrl.prototype.cancel = function() {
 
 /**
  * Create buffer regions and close the window.
+ *
  * @export
  */
 os.ui.buffer.BufferDialogCtrl.prototype.confirm = function() {
@@ -117,6 +122,7 @@ os.ui.buffer.BufferDialogCtrl.prototype.confirm = function() {
 
 /**
  * Get the status text to display at the bottom of the dialog.
+ *
  * @return {string}
  * @export
  */
@@ -136,6 +142,7 @@ os.ui.buffer.BufferDialogCtrl.prototype.getStatus = function() {
 
 /**
  * If the status display is valid.
+ *
  * @return {string}
  * @export
  */

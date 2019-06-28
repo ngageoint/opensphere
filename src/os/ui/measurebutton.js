@@ -12,6 +12,7 @@ goog.require('os.ui.ol.interaction.AbstractDraw');
 
 /**
  * The add data button bar directive
+ *
  * @return {angular.Directive}
  */
 os.ui.measureButtonDirective = function() {
@@ -44,6 +45,7 @@ os.ui.Module.directive('measureButton', [os.ui.measureButtonDirective]);
 
 /**
  * Controller function for the nav-top directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element The element
  * @extends {os.ui.menu.MenuButtonCtrl}
@@ -186,6 +188,7 @@ os.ui.MeasureButtonCtrl.prototype.onMeasureTypeChange_ = function(evt) {
 
 /**
  * Helper function for changing icons.
+ *
  * @this {os.ui.menu.MenuItem}
  */
 os.ui.MeasureButtonCtrl.updateIcons = function() {

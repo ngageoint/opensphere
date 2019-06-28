@@ -4,6 +4,7 @@ goog.provide('os.hist.IHistogramData');
 
 /**
  * Interface that should be implemented by all histogram data classes.
+ *
  * @interface
  */
 os.hist.IHistogramData = function() {};

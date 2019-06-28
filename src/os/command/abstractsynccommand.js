@@ -8,6 +8,7 @@ goog.require('os.command.State');
 
 /**
  * Abstract synchronous command implementation.
+ *
  * @abstract
  * @implements {os.command.ICommand}
  * @extends {goog.Disposable}
@@ -32,6 +33,7 @@ os.command.AbstractSyncCommand.prototype.execute = function() {};
 
 /**
  * Mark the command as completed.
+ *
  * @param {string=} opt_detail Optional detail message
  * @return {boolean}
  * @protected
@@ -45,6 +47,7 @@ os.command.AbstractSyncCommand.prototype.finish = function(opt_detail) {
 
 /**
  * Set the error state.
+ *
  * @param {string} msg The error message.
  * @return {boolean}
  * @protected

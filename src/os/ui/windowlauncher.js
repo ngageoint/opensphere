@@ -15,6 +15,7 @@ os.ui.WINDOW_LAUNCHER_TEMPLATE = '<small><button ng-click="launchCtrl.click($eve
 
 /**
  * The slick tree directive
+ *
  * @return {angular.Directive}
  */
 os.ui.windowLauncherDirective = function() {
@@ -37,6 +38,7 @@ os.ui.Module.directive('windowlauncher', [os.ui.windowLauncherDirective]);
 
 /**
  * Controller for window launcher
+ *
  * @param {!angular.Scope} $scope
  * @constructor
  * @ngInject
@@ -54,6 +56,7 @@ os.ui.WindowLauncherCtrl = function($scope) {
 
 /**
  * Clean up references
+ *
  * @private
  */
 os.ui.WindowLauncherCtrl.prototype.destroy_ = function() {
@@ -63,6 +66,7 @@ os.ui.WindowLauncherCtrl.prototype.destroy_ = function() {
 
 /**
  * Sets the descriptor as active.
+ *
  * @param {MouseEvent} e The event
  * @export
  */

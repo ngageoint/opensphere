@@ -44,6 +44,7 @@ os.ui.MODAL_SELECTOR = '.modal-backdrop,.window-modal-bg';
 /**
  * Sanitizes a string to remove potentally malicious HTML content. Note that if the entire string is disallowed by the
  * $sanitize service, you'll get an empty string back.
+ *
  * @param {string} value The value to sanitize
  * @return {string} The sanitized value, or the original value if angular.$sanitize is unavailable
  */
@@ -69,6 +70,7 @@ os.ui.sanitize = function(value) {
 
 /**
  * Escape a string that contains < or > to prevent html injection
+ *
  * @param {string} value The value to escape
  * @return {string} The escaped value, may be the same as the original value
  */
@@ -90,6 +92,7 @@ os.ui.escapeHtmlOpenCloseTags = function(value) {
 
 /**
  * Unescape a string previously escaped by escapeHtmlTags
+ *
  * @param {string} value The value to unescape
  * @return {string} The unescaped value, may be the same as the original value
  */
@@ -111,6 +114,7 @@ os.ui.unescapeHtmlOpenCloseTags = function(value) {
 
 /**
  * Sanitize a string for use as a DOM element id.
+ *
  * @param {string} value The string to sanitize
  * @return {string}
  */
@@ -122,6 +126,7 @@ os.ui.sanitizeId = function(value) {
 
 /**
  * Strip HTML from text
+ *
  * @param {string} html string to sanitize
  * @return {string}
  */
@@ -133,6 +138,7 @@ os.ui.getUnformattedText = function(html) {
 
 /**
  * Escape HTML in text
+ *
  * @param {string} html
  * @return {string}
  */
@@ -151,6 +157,7 @@ os.ui.Module = angular.module('os.ui', ['ui.directives', 'ngAnimate', 'ngSanitiz
  * Measures the given string of text. Note that this function adds a node to the DOM completely
  * off the screen. This can affect flow and document size and is intended for single-page
  * applications which use <code>overflow: hidden;</code> on the <code>body</code> tag.
+ *
  * @param {string} text The text to measure
  * @param {string=} opt_classes The classes to use when measuring the string
  * @param {string=} opt_font The font style to use when measuring the string
@@ -183,6 +190,7 @@ os.ui.measureText = function(text, opt_classes, opt_font) {
 
 /**
  * Applies the scope
+ *
  * @param {?angular.Scope} scope
  * @param {number=} opt_delay Timeout interval to wait before applying the scope, in milliseconds
  */
@@ -224,6 +232,7 @@ os.ui.waitForAngular = function(callback) {
 
 /**
  * Get the highest priority directive in a list.
+ *
  * @param {!Array<!angular.Directive>} $delegate The directives.
  * @return {!Array<!angular.Directive>} The highest priority directive.
  * @ngInject
@@ -237,6 +246,7 @@ os.ui.getPriorityDirective_ = function($delegate) {
 
 /**
  * Sort directives by descending priority.
+ *
  * @param {!angular.Directive} a The first directive.
  * @param {!angular.Directive} b The second directive.
  * @return {number} The sort order.

@@ -5,6 +5,7 @@ goog.require('os.ui.filter.ui.FilterGroupBy');
 
 /**
  * Groups nodes by type
+ *
  * @extends {os.ui.filter.ui.FilterGroupBy}
  * @constructor
  */

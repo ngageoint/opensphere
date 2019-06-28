@@ -9,6 +9,7 @@ goog.require('os.ui.slick.slickTreeDirective');
 
 /**
  * Modifies the base slicktree directive with a new controller.
+ *
  * @return {angular.Directive}
  */
 os.ui.column.mapping.columnModelTreeDirective = function() {
@@ -24,6 +25,7 @@ os.ui.Module.directive('columnmodeltree', [os.ui.column.mapping.columnModelTreeD
 
 /**
  * Controller for the column mapping tree
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$compile} $compile

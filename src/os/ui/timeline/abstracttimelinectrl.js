@@ -35,6 +35,7 @@ goog.require('os.ui.window');
 
 /**
  * Controller function for the timeline-panel directive.
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$timeout} $timeout
@@ -335,6 +336,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.destroy = function() {
 
 /**
  * Handle timeline window change
+ *
  * @param {angular.Scope.Event | null} event
  * @param {Array.<number>} range
  * @protected
@@ -367,6 +369,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.onWindow = function(event, range) 
 
 /**
  * Handle timeline load range change
+ *
  * @param {angular.Scope.Event | null} event
  * @param {Array.<number>} range
  * @protected
@@ -382,6 +385,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.onLoad = function(event, range) {
 
 /**
  * Handle timeline load range change
+ *
  * @param {angular.Scope.Event | null} event
  * @param {Array.<number>} range
  * @protected
@@ -420,6 +424,7 @@ os.ui.timeline.AbstractTimelineCtrl.LABEL_FORMATS = [{
 
 /**
  * Handle timeline scale change event.
+ *
  * @param {angular.Scope.Event} event
  * @param {os.ui.timeline.TimelineScaleOptions} scaleOptions Options for the timeline scale.
  */
@@ -458,6 +463,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.onScaleEvent = function(event, sca
 
 /**
  * Handle fps changes.
+ *
  * @param {number=} opt_new
  * @param {number=} opt_old
  * @private
@@ -475,6 +481,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.onFpsChange_ = function(opt_new, o
 
 /**
  * Initialize the framerate from the timeline controller.
+ *
  * @private
  */
 os.ui.timeline.AbstractTimelineCtrl.prototype.initFps_ = function() {
@@ -505,6 +512,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.initFps_ = function() {
 
 /**
  * Sets the framerate on the timeline controller.
+ *
  * @param {number} value The desired framerate
  * @protected
  */
@@ -518,6 +526,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.setTimelineFps = function(value) {
 
 /**
  * Handle histogram change event.
+ *
  * @param {goog.events.Event} event
  */
 os.ui.timeline.AbstractTimelineCtrl.prototype.onHistogramChange = function(event) {
@@ -527,6 +536,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.onHistogramChange = function(event
 
 /**
  * Update timeline histograms.
+ *
  * @private
  */
 os.ui.timeline.AbstractTimelineCtrl.prototype.updateHistograms_ = function() {
@@ -544,6 +554,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.updateHistograms_ = function() {
 
 /**
  * Get the tooltip for histogram bins.
+ *
  * @param {os.hist.HistogramData} histogram
  * @param {Object.<string, *>} item
  * @return {string}
@@ -561,6 +572,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.getHistogramTooltip = function(his
 
 /**
  * Ensures that brushes match the current timeline state.
+ *
  * @private
  */
 os.ui.timeline.AbstractTimelineCtrl.prototype.ensureBrushState_ = function() {
@@ -632,6 +644,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.savestate = function() {
 
 /**
  * Handle events from the timeline controller.
+ *
  * @param {os.time.TimelineControllerEvent} event The event
  */
 os.ui.timeline.AbstractTimelineCtrl.prototype.onTimelineEvent = function(event) {
@@ -665,6 +678,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.onTimelineEvent = function(event) 
 
 /**
  * Updates the timeline UI state.
+ *
  * @param {boolean=} opt_force Force a full update
  */
 os.ui.timeline.AbstractTimelineCtrl.prototype.updateTimeline = function(opt_force) {
@@ -722,6 +736,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.updateBrushes = function() {
 
 /**
  * Gets a timeline item by ID
+ *
  * @param {string} id The ID
  * @return {?os.ui.timeline.ITimelineItem} The item or null if it could not be found
  */
@@ -740,6 +755,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.getItem = function(id) {
 
 /**
  * Skip to the first frame.
+ *
  * @export
  */
 os.ui.timeline.AbstractTimelineCtrl.prototype.firstFrame = function() {
@@ -750,6 +766,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.firstFrame = function() {
 
 /**
  * Skip to the last frame.
+ *
  * @export
  */
 os.ui.timeline.AbstractTimelineCtrl.prototype.lastFrame = function() {
@@ -760,6 +777,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.lastFrame = function() {
 
 /**
  * Step ahead one frame.
+ *
  * @export
  */
 os.ui.timeline.AbstractTimelineCtrl.prototype.nextFrame = function() {
@@ -771,6 +789,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.nextFrame = function() {
 
 /**
  * Step back one frame.
+ *
  * @export
  */
 os.ui.timeline.AbstractTimelineCtrl.prototype.previousFrame = function() {
@@ -782,6 +801,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.previousFrame = function() {
 
 /**
  * Resets the timeline controller back to the last saved state.
+ *
  * @export
  */
 os.ui.timeline.AbstractTimelineCtrl.prototype.reset = function() {
@@ -797,6 +817,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.reset = function() {
 
 /**
  * Start/stop timeline animation.
+ *
  * @export
  */
 os.ui.timeline.AbstractTimelineCtrl.prototype.togglePlay = function() {
@@ -813,6 +834,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.togglePlay = function() {
 
 /**
  * Zoom in
+ *
  * @export
  */
 os.ui.timeline.AbstractTimelineCtrl.prototype.zoomIn = function() {
@@ -823,6 +845,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.zoomIn = function() {
 
 /**
  * Zoom out
+ *
  * @export
  */
 os.ui.timeline.AbstractTimelineCtrl.prototype.zoomOut = function() {
@@ -833,6 +856,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.zoomOut = function() {
 
 /**
  * Gets a reference to the timeline controller.
+ *
  * @return {os.ui.timeline.TimelineCtrl} The timeline controller
  */
 os.ui.timeline.AbstractTimelineCtrl.prototype.getTimelineCtrl = function() {
@@ -843,6 +867,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.getTimelineCtrl = function() {
 
 /**
  * Switch chart type between points and histogram
+ *
  * @export
  */
 os.ui.timeline.AbstractTimelineCtrl.prototype.toggleChartType = function() {
@@ -918,6 +943,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.onMenuClose = function(evt) {
 
 /**
  * Begins selection on the timeline
+ *
  * @export
  */
 os.ui.timeline.AbstractTimelineCtrl.prototype.select = function() {
@@ -928,6 +954,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.select = function() {
 
 /**
  * Handles select brush active/inactive
+ *
  * @param {goog.events.Event} e
  * @protected
  */
@@ -939,6 +966,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.onSelectChange = function(e) {
 
 /**
  * Handles removing a disposed animation brush
+ *
  * @param {goog.events.Event} e
  * @private
  */
@@ -950,6 +978,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.animateBrushDeleted_ = function(e)
 
 /**
  * Handler for brush property changes.
+ *
  * @param {os.events.PropertyChangeEvent} e
  * @private
  */
@@ -964,6 +993,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.animateBrushPropertyChanged_ = fun
 
 /**
  * Handles removing a disposed slice brush
+ *
  * @param {goog.events.Event} e
  * @private
  */
@@ -975,6 +1005,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.sliceBrushDeleted_ = function(e) {
 
 /**
  * Handler for brush property changes.
+ *
  * @param {os.events.PropertyChangeEvent} e
  * @private
  */
@@ -991,6 +1022,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.sliceBrushPropertyChanged_ = funct
 
 /**
  * Handles removing a disposed load brush
+ *
  * @param {goog.events.Event} e
  * @private
  */
@@ -1002,6 +1034,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.loadBrushDeleted_ = function(e) {
 
 /**
  * Handler for brush property changes.
+ *
  * @param {os.events.PropertyChangeEvent} e
  * @private
  */
@@ -1016,6 +1049,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.loadBrushPropertyChanged_ = functi
 
 /**
  * Creates a timeline slice brush.
+ *
  * @param {goog.math.Range} range
  * @return {os.ui.timeline.Brush}
  */
@@ -1037,6 +1071,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.getSliceBrush = function(range) {
 
 /**
  * Creates a timeline load brush.
+ *
  * @param {goog.math.Range} range
  * @return {os.ui.timeline.Brush}
  */
@@ -1063,6 +1098,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.getLoadBrush = function(range) {
 
 /**
  * Creates a timeline animate brush.
+ *
  * @param {goog.math.Range} range
  * @return {os.ui.timeline.Brush}
  */
@@ -1083,6 +1119,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.getAnimateBrush = function(range) 
 
 /**
  * Creates a timeline hold brush.
+ *
  * @param {goog.math.Range} range
  * @return {os.ui.timeline.Brush}
  */
@@ -1104,6 +1141,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.getHoldBrush = function(range) {
 
 /**
  * Adds a slice brush from range
+ *
  * @param {goog.math.Range} range
  */
 os.ui.timeline.AbstractTimelineCtrl.prototype.addSliceBrush = function(range) {
@@ -1118,6 +1156,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.addSliceBrush = function(range) {
 
 /**
  * Adds a load brush from range
+ *
  * @param {goog.math.Range} range
  */
 os.ui.timeline.AbstractTimelineCtrl.prototype.addLoadBrush = function(range) {
@@ -1132,6 +1171,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.addLoadBrush = function(range) {
 
 /**
  * Adds a animation brush from range
+ *
  * @param {goog.math.Range} range
  */
 os.ui.timeline.AbstractTimelineCtrl.prototype.addAnimateBrush = function(range) {
@@ -1146,6 +1186,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.addAnimateBrush = function(range) 
 
 /**
  * Adds a hold brush from range
+ *
  * @param {goog.math.Range} range
  */
 os.ui.timeline.AbstractTimelineCtrl.prototype.addHoldBrush = function(range) {
@@ -1160,6 +1201,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.addHoldBrush = function(range) {
 
 /**
  * Consoldated method for handling timeline brush changes.
+ *
  * @param {Array.<!os.ui.timeline.ITimelineItem>} brushCollection
  * @param {Array.<!goog.math.Range>} ranges
  * @param {function(goog.math.Range): os.ui.timeline.Brush} getBrushFunction
@@ -1194,6 +1236,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.processTimelineRangeChanged_ = fun
 
 /**
  * Quietly deletes all of the brushes and reloads them
+ *
  * @private
  */
 os.ui.timeline.AbstractTimelineCtrl.prototype.refreshLoadBrushes_ = function() {
@@ -1203,6 +1246,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.refreshLoadBrushes_ = function() {
 
 /**
  * Quietly deletes all of the brushes and reloads them
+ *
  * @protected
  */
 os.ui.timeline.AbstractTimelineCtrl.prototype.refreshAllBrushes = function() {
@@ -1215,6 +1259,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.refreshAllBrushes = function() {
 
 /**
  * Quietly deletes all of the brushes and reloads them
+ *
  * @param {?Array.<!os.ui.timeline.ITimelineItem>} brushes
  * @param {function(goog.events.Event)} brushChangedCallback
  * @private
@@ -1230,6 +1275,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.refreshBrushSet_ = function(brushe
 /**
  * Handler for changes to the timeline controllers load range change events
  * which are fired when animation ranges change.
+ *
  * @param {goog.events.Event} e
  * @private
  */
@@ -1242,6 +1288,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.onSliceRangeChanged_ = function(e)
 /**
  * Handler for changes to the timeline controllers load range change events
  * which are fired when animation ranges change.
+ *
  * @param {goog.events.Event} e
  * @private
  */
@@ -1254,6 +1301,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.onLoadRangeChanged_ = function(e) 
 /**
  * Handler for changes to the timeline controllers animation range change events
  * which are fired when animation ranges change.
+ *
  * @param {goog.events.Event} e
  * @private
  */
@@ -1266,6 +1314,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.onAnimationRangeChanged_ = functio
 /**
  * Handler for changes to the timeline controllers hold range change events
  * which are fired when animation ranges change.
+ *
  * @param {goog.events.Event} e
  * @private
  */
@@ -1277,6 +1326,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.onHoldRangeChanged_ = function(e) 
 
 /**
  * Handles removing a disposed hold brush
+ *
  * @param {goog.events.Event} e
  * @private
  */
@@ -1288,6 +1338,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.holdBrushDeleted_ = function(e) {
 
 /**
  * Handler for hold brush property changes.
+ *
  * @param {os.events.PropertyChangeEvent} e
  * @private
  */
@@ -1330,6 +1381,7 @@ os.ui.timeline.AbstractTimelineCtrl.isSafeRange = function(range) {
 
 /**
  * Creates the timeline menus.
+ *
  * @protected
  */
 os.ui.timeline.AbstractTimelineCtrl.prototype.initMenus = function() {
@@ -1442,6 +1494,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.initMenu = function(menu, prefix, 
 
 /**
  * Handle menu events.
+ *
  * @param {os.ui.menu.MenuEvent} event The menu event.
  * @protected
  */
@@ -1583,6 +1636,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.onMenuEvent = function(event) {
 
 /**
  * Handle keyboard events
+ *
  * @param {goog.events.KeyEvent} event
  * @protected
  */
@@ -1669,6 +1723,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.moveWindowToData = function() {
 /**
  * Closes the timeline by sending a UI toggle event. This event must be listened for by the timeline's container
  * which should hide/destroy the timeline.
+ *
  * @export
  */
 os.ui.timeline.AbstractTimelineCtrl.prototype.close = function() {
@@ -1681,6 +1736,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.close = function() {
 
 /**
  * Toggles the expanded/collapsed (normal vs. ribbon) view of the timeline
+ *
  * @export
  */
 os.ui.timeline.AbstractTimelineCtrl.prototype.toggleCollapse = function() {
@@ -1720,6 +1776,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.adjust = function() {
 
 /**
  * Record animation
+ *
  * @export
  */
 os.ui.timeline.AbstractTimelineCtrl.prototype.record = function() {

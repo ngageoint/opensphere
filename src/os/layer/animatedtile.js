@@ -156,6 +156,7 @@ os.layer.AnimatedTile.prototype.setLayerVisible = function(value) {
 /**
  * If the layer contains legend information (supported in WMS - see os.ui.ogc.wms.WMSLayerParserV130)
  * then let's pop-up a screen overlay similar to what is done for KML
+ *
  * @return {?osx.window.ScreenOverlayOptions} options
  */
 os.layer.AnimatedTile.prototype.getLegendOptions = function() {
@@ -204,6 +205,7 @@ os.layer.AnimatedTile.prototype.getLegendOptions = function() {
 
 /**
  * Schedule a reset of the layer.
+ *
  * @private
  */
 os.layer.AnimatedTile.prototype.scheduleReset_ = function() {
@@ -215,6 +217,7 @@ os.layer.AnimatedTile.prototype.scheduleReset_ = function() {
 
 /**
  * Refresh the layer if visible, otherwise flag the layer so it refreshes upon becoming visible.
+ *
  * @private
  */
 os.layer.AnimatedTile.prototype.onResetTimer_ = function() {
@@ -262,6 +265,7 @@ os.layer.AnimatedTile.prototype.setTimeFormat = function(format) {
 
 /**
  * If the layer has been enabled for animation.
+ *
  * @return {boolean}
  */
 os.layer.AnimatedTile.prototype.getAnimationEnabled = function() {
@@ -271,6 +275,7 @@ os.layer.AnimatedTile.prototype.getAnimationEnabled = function() {
 
 /**
  * Marks the source as being in the animating state.
+ *
  * @param {boolean} value
  */
 os.layer.AnimatedTile.prototype.setAnimationEnabled = function(value) {
@@ -283,6 +288,7 @@ os.layer.AnimatedTile.prototype.setAnimationEnabled = function(value) {
 
 /**
  * Updates the time param on the layer
+ *
  * @private
  */
 os.layer.AnimatedTile.prototype.computeTime_ = function() {
@@ -314,6 +320,7 @@ os.layer.AnimatedTile.updateParams = function(timeValue) {
 /**
  * Uses the dateFormat_ set on the layer (if there is one) and the current timeline state to format and return an
  * appropriately formatted date for tile requests.
+ *
  * @return {string}
  * @protected
  */
@@ -359,6 +366,7 @@ os.layer.AnimatedTile.prototype.restore = function(config) {
 
 /**
  * Creates an appropriately formatted date for tile requests.
+ *
  * @param {string} dateFormat The date format string
  * @param {string} timeFormat The full TIME value format string (e.g. '{start}/{end}')
  * @param {number} start

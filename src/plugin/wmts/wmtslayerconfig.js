@@ -7,6 +7,7 @@ goog.require('os.layer.config.AbstractTileLayerConfig');
 
 /**
  * Creates a WMTS layer.
+ *
  * @extends {os.layer.config.AbstractTileLayerConfig}
  * @constructor
  */

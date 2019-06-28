@@ -22,6 +22,7 @@ os.interaction.DrawPolygon.prototype.cesiumLines = undefined;
 
 /**
  * Clean up the draw polygon interaction in Cesium.
+ *
  * @this {os.interaction.DrawPolygon}
  */
 plugin.cesium.interaction.drawpolygon.cleanupWebGL = function() {
@@ -41,6 +42,7 @@ plugin.cesium.interaction.drawpolygon.cleanupWebGL = function() {
 
 /**
  * Draw the polygon in Cesium.
+ *
  * @this {os.interaction.DrawPolygon}
  * @suppress {accessControls}
  */

@@ -3,6 +3,7 @@ goog.provide('os.ui.file.dragAndDropIconDirective');
 
 /**
  * The dragAndDropIcon directive
+ *
  * @return {angular.Directive}
  */
 os.ui.file.dragAndDropIconDirective = function() {

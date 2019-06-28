@@ -8,6 +8,7 @@ goog.require('os.xml');
 
 /**
  * Cleans OGC filter XML before sending the request
+ *
  * @implements {os.net.IModifier}
  * @extends {os.net.AbstractModifier}
  * @constructor
@@ -34,6 +35,7 @@ os.ogc.filter.OGCFilterCleaner.prototype.modify = function(uri) {
 
 /**
  * Cleans an OGC filter
+ *
  * @param {?string} filterStr
  * @return {?string} The cleaned filter string
  */
@@ -58,6 +60,7 @@ os.ogc.filter.OGCFilterCleaner.cleanFilter = function(filterStr) {
 
 /**
  * Prunes single groups from an OGC filter
+ *
  * @param {Node} node
  * @protected
  */

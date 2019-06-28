@@ -12,6 +12,7 @@ goog.require('os.ui.state.AbstractStateDescriptor');
 
 /**
  * Descriptor for state files.
+ *
  * @extends {os.ui.state.AbstractStateDescriptor}
  * @constructor
  */
@@ -42,6 +43,7 @@ os.state.StateDescriptor.prototype.getIcons = function() {
 
 /**
  * Creates a state descriptor from a file.
+ *
  * @param {!os.file.File} file The file
  * @return {!os.state.StateDescriptor} The descriptor
  */
@@ -56,6 +58,7 @@ os.state.StateDescriptor.createFromFile = function(file) {
 
 /**
  * Updates an existing descriptor from a parser configuration.
+ *
  * @param {!os.state.StateDescriptor} descriptor
  * @param {!os.state.XMLStateOptions} options The save options
  */

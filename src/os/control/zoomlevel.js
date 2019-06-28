@@ -25,6 +25,7 @@ os.control.ZoomLevelOptions;
 
 /**
  * Displays the current zoom level and altitude.
+ *
  * @param {os.control.ZoomLevelOptions=} opt_options Scale line options.
  * @extends {ol.control.Control}
  * @constructor
@@ -112,6 +113,7 @@ os.control.ZoomLevel.prototype.disposeInternal = function() {
 
 /**
  * Toggle showing zoom/altitude on mouse click.
+ *
  * @protected
  */
 os.control.ZoomLevel.prototype.reset = function() {
@@ -126,6 +128,7 @@ os.control.ZoomLevel.prototype.reset = function() {
 
 /**
  * Return the units to use in the zoom level when displaying altitude.
+ *
  * @return {ol.control.ScaleLineUnits|undefined}
  */
 os.control.ZoomLevel.prototype.getAltitudeUnits = function() {
@@ -135,6 +138,7 @@ os.control.ZoomLevel.prototype.getAltitudeUnits = function() {
 
 /**
  * Set the units to use in the zoom level when displaying altitude.
+ *
  * @param {ol.control.ScaleLineUnits} units The units to use
  */
 os.control.ZoomLevel.prototype.setAltitudeUnits = function(units) {
@@ -173,6 +177,7 @@ os.control.ZoomLevel.render_ = function(mapEvent) {
 
 /**
  * Hide the altitude control.
+ *
  * @protected
  */
 os.control.ZoomLevel.prototype.hideAltitude = function() {
@@ -183,6 +188,7 @@ os.control.ZoomLevel.prototype.hideAltitude = function() {
 
 /**
  * Hide the zoom level control.
+ *
  * @protected
  */
 os.control.ZoomLevel.prototype.hideZoom = function() {
@@ -193,6 +199,7 @@ os.control.ZoomLevel.prototype.hideZoom = function() {
 
 /**
  * Update the control text.
+ *
  * @protected
  */
 os.control.ZoomLevel.prototype.updateElement = function() {
@@ -203,6 +210,7 @@ os.control.ZoomLevel.prototype.updateElement = function() {
 
 /**
  * Update the control text for altitude.
+ *
  * @protected
  */
 os.control.ZoomLevel.prototype.updateAltitudeText = function() {
@@ -256,6 +264,7 @@ os.control.ZoomLevel.prototype.updateAltitudeText = function() {
 
 /**
  * Update the control text for zoom level.
+ *
  * @protected
  */
 os.control.ZoomLevel.prototype.updateZoomText = function() {
@@ -314,6 +323,7 @@ os.control.ZoomLevel.Property_ = {
 
 /**
  * Get the element
+ *
  * @return {Element}
  */
 os.control.ZoomLevel.prototype.getElement = function() {

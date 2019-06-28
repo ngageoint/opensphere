@@ -55,6 +55,7 @@ os.ui.file.ExportManager.LOGGER_ = goog.log.getLogger('os.ui.file.ExportManager'
 
 /**
  * Adds an export method to the manager
+ *
  * @param {!(Array.<!os.ex.IExportMethod>|os.ex.IExportMethod)} method The method or array of methods
  */
 os.ui.file.ExportManager.prototype.registerExportMethod = function(method) {
@@ -75,6 +76,7 @@ os.ui.file.ExportManager.prototype.registerExportMethod = function(method) {
 /**
  * Get the export methods available to the application. Creates new instances of the methods so multiple consumers
  * don't step on one another.
+ *
  * @return {!Array.<!os.ex.IExportMethod>} The methods
  */
 os.ui.file.ExportManager.prototype.getExportMethods = function() {
@@ -89,6 +91,7 @@ os.ui.file.ExportManager.prototype.getExportMethods = function() {
 
 /**
  * Adds a persistence method to the manager
+ *
  * @param {!(Array.<!os.ex.IPersistenceMethod>|os.ex.IPersistenceMethod)} method The method or array of methods
  */
 os.ui.file.ExportManager.prototype.registerPersistenceMethod = function(method) {
@@ -108,6 +111,7 @@ os.ui.file.ExportManager.prototype.registerPersistenceMethod = function(method) 
 
 /**
  * Get the supported persistence methods available to the application.
+ *
  * @param {boolean=} opt_getAll Whether to get all methods, whether supported or not
  * @return {!Array.<!os.ex.IPersistenceMethod>} The methods
  */
@@ -125,6 +129,7 @@ os.ui.file.ExportManager.prototype.getPersistenceMethods = function(opt_getAll) 
 
 /**
  * Launches a dialog to export items from the application
+ *
  * @param {Array.<*>} items The items to export
  * @param {Array.<string>} fields The fields to export from each item
  * @param {string} title The title of the export source, or the file name when the methods are provided
@@ -153,6 +158,7 @@ os.ui.file.ExportManager.prototype.exportItems = function(items, fields, title, 
 
 /**
  * Exports the data.
+ *
  * @param {Array.<*>} items The items to export
  * @param {Array.<string>} fields The fields to export from each item
  * @param {string} title The title of the export source, or the file name when the methods are provided
@@ -187,6 +193,7 @@ os.ui.file.ExportManager.prototype.doExport_ = function(items, fields, title, ex
 
 /**
  * Finishes the export when the exporter output is ready.
+ *
  * @param {os.ex.IExportMethod} exporter The export method
  * @param {os.ex.IPersistenceMethod} persister The persistence method
  * @param {goog.events.Event=} opt_event The complete event
@@ -215,6 +222,7 @@ os.ui.file.ExportManager.prototype.onExportComplete_ = function(exporter, persis
 
 /**
  * Handle exporter error.
+ *
  * @param {goog.events.Event} event The event
  * @private
  */
@@ -227,6 +235,7 @@ os.ui.file.ExportManager.prototype.onExportError_ = function(event) {
 /**
  * Launches a dialog that allows the user to choose which export/persistence method to use. If the persister/exporter
  * is provided, the picker will not be present on the export dialog.
+ *
  * @param {Array.<*>} items The items to export
  * @param {Array.<string>} fields The fields to export from each item
  * @param {string} title The title of the export source
@@ -277,6 +286,7 @@ os.ui.file.ExportManager.prototype.launchExportDialog_ = function(items, fields,
 
 /**
  * Sorts exporters/persisters by label.
+ *
  * @param {!(os.ex.IExportMethod|os.ex.IPersistenceMethod)} a
  * @param {!(os.ex.IExportMethod|os.ex.IPersistenceMethod)} b
  * @return {number}

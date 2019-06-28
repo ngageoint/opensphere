@@ -20,6 +20,7 @@ goog.require('os.storage.PrefixedMechanism');
 
 /**
  * Asynchronous storage used for persisting settings to IndexedDb
+ *
  * @implements {os.config.storage.ISettingsStorage}
  * @implements {os.config.storage.ISettingsReadableStorage}
  * @implements {os.config.storage.ISettingsWritableStorage}
@@ -57,6 +58,7 @@ os.config.storage.SettingsLocalStorage.LEGACY_STORE_NAME = 'settings';
 
 /**
  * Migrate old settings storage to new paradigm with namespaces
+ *
  * @return {goog.async.Deferred|undefined}
  * @override
  */

@@ -31,6 +31,7 @@ os.geo2.normalizeLongitude = function(lon, opt_min, opt_max, opt_proj) {
 
 /**
  * Clamps latitude to the projection bounds
+ *
  * @param {number} lat
  * @param {number=} opt_min
  * @param {number=} opt_max
@@ -64,6 +65,7 @@ os.geo2.normalizeCoordinate = function(coordinate, opt_to, opt_proj) {
 
 /**
  * Normalize a set of coordinates
+ *
  * @param {?Array<Array<number>>} coordinates The coordinates to normalize
  * @param {number=} opt_to The longitude to normalize to
  * @param {ol.ProjectionLike=} opt_proj
@@ -116,6 +118,7 @@ os.geo2.normalizePolygons = function(polys, opt_to, opt_proj) {
 
 /**
  * Returns true if geometry coordinates are normlized.
+ *
  * @param {ol.geom.Geometry|undefined} geometry The geometry to normalize.
  * @param {number=} opt_to The longitude to normalize to.
  * @param {ol.ProjectionLike=} opt_proj

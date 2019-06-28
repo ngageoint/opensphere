@@ -6,6 +6,7 @@ goog.require('os.data.IDataProvider');
 
 /**
  * An entry for the provider registry in the data manager
+ *
  * @param {!string} type The type
  * @param {!function()} clazz The class
  * @param {!string} title The title

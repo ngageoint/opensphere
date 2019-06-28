@@ -10,6 +10,7 @@ goog.require('os.time.Duration');
 
 /**
  * Mapping for fields representing date but not time.
+ *
  * @param {os.im.mapping.TimeType} type The type of time mapping.
  * @extends {os.im.mapping.time.DateTimeMapping.<T>}
  * @constructor

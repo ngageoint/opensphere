@@ -131,6 +131,7 @@ os.data.DrawingLayerNode.prototype.onAreasChanged_ = function(evt) {
 
 /**
  * Adds a child node for each feature added to the source
+ *
  * @param {ol.source.Vector.Event} evt The feature add event
  * @protected
  */
@@ -176,6 +177,7 @@ os.data.DrawingLayerNode.prototype.addFeature = function(feature) {
 
 /**
  * On sort delay handler
+ *
  * @protected
  */
 os.data.DrawingLayerNode.prototype.onSortDelay = function() {
@@ -211,6 +213,7 @@ os.data.DrawingLayerNode.childSort_ = function(a, b) {
 
 /**
  * Creates a node from a feature
+ *
  * @param {!ol.Feature} feature The feature
  * @return {?os.ui.slick.SlickTreeNode} The node
  * @private
@@ -231,6 +234,7 @@ os.data.DrawingLayerNode.createNode_ = function(feature) {
 
 /**
  * Removes a child node for each feature removed from the source
+ *
  * @param {ol.source.Vector.Event} evt The feature remove event
  * @protected
  */

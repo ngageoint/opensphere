@@ -7,6 +7,7 @@ goog.require('os.ui.tab.Tab');
 
 /**
  * Model class representing a pluggable feature tab.
+ *
  * @param {string} id The ID to track the element by
  * @param {string} label The user facing label of the tab
  * @param {string} icon The icon to display
@@ -35,6 +36,7 @@ goog.inherits(os.ui.tab.FeatureTab, os.ui.tab.Tab);
 
 /**
  * Execute the tab's enable function and return if the tab is shown given the feature
+ *
  * @param {ol.Feature} feature The feature represented in the tab
  * @return {boolean} true if the tab is shown
  */

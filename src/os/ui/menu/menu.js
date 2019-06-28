@@ -14,6 +14,7 @@ goog.require('os.ui.windowSelector');
 
 /**
  * Wrapper for a jQuery UI menu.
+ *
  * @param {!os.ui.menu.MenuItem<T>} root The menu item data
  * @constructor
  * @extends {goog.events.EventTarget}
@@ -77,6 +78,7 @@ os.ui.menu.Menu.prototype.disposeInternal = function() {
 
 /**
  * Get the root menu item.
+ *
  * @return {!os.ui.menu.MenuItem<T>} The menu data
  */
 os.ui.menu.Menu.prototype.getRoot = function() {
@@ -86,6 +88,7 @@ os.ui.menu.Menu.prototype.getRoot = function() {
 
 /**
  * Set the root menu item.
+ *
  * @param {!os.ui.menu.MenuItem<T>} root The menu data
  */
 os.ui.menu.Menu.prototype.setRoot = function(root) {
@@ -95,6 +98,7 @@ os.ui.menu.Menu.prototype.setRoot = function(root) {
 
 /**
  * If the menu is currently open.
+ *
  * @return {boolean}
  */
 os.ui.menu.Menu.prototype.isOpen = function() {
@@ -104,6 +108,7 @@ os.ui.menu.Menu.prototype.isOpen = function() {
 
 /**
  * Handle click event.
+ *
  * @param {Event} e The event.
  * @private
  */
@@ -135,6 +140,7 @@ os.ui.menu.Menu.prototype.onClick_ = function(e) {
 
 /**
  * Open the menu.
+ *
  * @param {T} context The menu context.
  * @param {jQuery.PositionOptions} position The position options.
  * @param {Object=} opt_target The menu event target.
@@ -211,6 +217,7 @@ os.ui.menu.Menu.prototype.reopen = function() {
 
 /**
  * Add listeners for mouse events outside the menu.
+ *
  * @private
  */
 os.ui.menu.Menu.prototype.onAddOutsideListener_ = function() {
@@ -225,6 +232,7 @@ os.ui.menu.Menu.prototype.onAddOutsideListener_ = function() {
 
 /**
  * Remove listeners for mouse events outside the menu.
+ *
  * @private
  */
 os.ui.menu.Menu.prototype.onRemoveOutsideListener_ = function() {
@@ -236,6 +244,7 @@ os.ui.menu.Menu.prototype.onRemoveOutsideListener_ = function() {
 
 /**
  * Handle menu item selection.
+ *
  * @param {Object} evt The jquery event
  * @param {angular.JQLite} ui The selected jquery element
  * @protected
@@ -269,6 +278,7 @@ os.ui.menu.Menu.prototype.onSelect = function(evt, ui) {
 
 /**
  * Close the menu.
+ *
  * @param {boolean=} opt_dispatch Whether or not to dispatch an event. Defaults to true.
  * @param {boolean=} opt_leaveOpen Whether or not to leave isOpen_ alone (i.e. not set to false)
  */

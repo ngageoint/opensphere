@@ -5,6 +5,7 @@ goog.require('os.ogc.IFeatureType');
 
 /**
  * Feature type representing Arc features.
+ *
  * @param {string=} opt_typeName
  * @param {Array<!os.ogc.FeatureTypeColumn>=} opt_columns
  * @implements {os.ogc.IFeatureType}

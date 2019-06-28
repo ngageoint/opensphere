@@ -17,6 +17,7 @@ goog.require('plugin.file.kml.tour.Wait');
 
 /**
  * Parses a KML Tour element into a tour object.
+ *
  * @param {Element} el The XML element.
  * @return {plugin.file.kml.tour.Tour|undefined} The tour.
  */
@@ -40,6 +41,7 @@ plugin.file.kml.tour.NAMESPACE_URIS_ = ol.format.KML.NAMESPACE_URIS_.concat(ol.f
 
 /**
  * Parses a tour playlist.
+ *
  * @param {Node} node Node.
  * @param {Array<*>} objectStack Object stack.
  * @private
@@ -57,6 +59,7 @@ plugin.file.kml.tour.parsePlaylist_ = function(node, objectStack) {
 
 /**
  * Parses a tour FlyTo element.
+ *
  * @param {Node} node Node.
  * @param {Array<*>} objectStack Object stack.
  * @return {plugin.file.kml.tour.FlyTo|undefined}
@@ -113,6 +116,7 @@ plugin.file.kml.tour.parseFlyTo_ = function(node, objectStack) {
 
 /**
  * Parses a tour Camera element.
+ *
  * @param {Node} node Node.
  * @param {Array<*>} objectStack Object stack.
  * @return {Object|undefined}
@@ -125,6 +129,7 @@ plugin.file.kml.tour.parseCamera_ = function(node, objectStack) {
 
 /**
  * Parses a tour LookAt element.
+ *
  * @param {Node} node Node.
  * @param {Array<*>} objectStack Object stack.
  * @return {Object|undefined}
@@ -137,6 +142,7 @@ plugin.file.kml.tour.parseLookAt_ = function(node, objectStack) {
 
 /**
  * Parses a tour SoundCue element.
+ *
  * @param {Node} node Node.
  * @param {Array<*>} objectStack Object stack.
  * @return {plugin.file.kml.tour.SoundCue|undefined}
@@ -156,6 +162,7 @@ plugin.file.kml.tour.parseSoundCue_ = function(node, objectStack) {
 
 /**
  * Parses a tour TourControl element.
+ *
  * @param {Node} node Node.
  * @param {Array<*>} objectStack Object stack.
  * @return {plugin.file.kml.tour.TourControl|undefined}
@@ -173,6 +180,7 @@ plugin.file.kml.tour.parseTourControl_ = function(node, objectStack) {
 
 /**
  * Parses a tour Wait element.
+ *
  * @param {Node} node Node.
  * @param {Array<*>} objectStack Object stack.
  * @return {plugin.file.kml.tour.Wait|undefined}

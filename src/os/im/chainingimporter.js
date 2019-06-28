@@ -10,6 +10,7 @@ goog.require('os.im.IImporter');
 
 /**
  * Imports a set of items via multiple importers
+ *
  * @param {!Array<!os.im.IImporter>} chain The chain of importers to execute
  * @implements {os.im.IImporter}
  * @extends {goog.events.EventTarget}
@@ -69,6 +70,7 @@ os.im.ChainingImporter.prototype.disposeInternal = function() {
 
 /**
  * Executes the next importer in the chain.
+ *
  * @param {Object|Array|string|Node|Document} source Source
  * @private
  */
@@ -96,6 +98,7 @@ os.im.ChainingImporter.prototype.executeNext_ = function(source) {
 
 /**
  * Handle importer completion.
+ *
  * @param {goog.events.Event} event
  * @private
  */

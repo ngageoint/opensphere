@@ -80,6 +80,7 @@ os.ui.filter.op.IsLikeNumeric.prototype.getFilter = function(column, literal) {
 
 /**
  * Get the numeric range from the literal value.
+ *
  * @param {?string} literal The filter literal.
  * @return {Array<number>} The range, in the form [start, end].
  * @protected

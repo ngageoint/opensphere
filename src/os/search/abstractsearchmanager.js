@@ -8,6 +8,7 @@ goog.require('os.user.settings.FavoriteManager');
 
 /**
  * Responsible for executing search terms against the registered search managers
+ *
  * @abstract
  * @param {string=} opt_id
  * @param {string=} opt_name
@@ -58,6 +59,7 @@ goog.inherits(os.search.AbstractSearchManager, goog.events.EventTarget);
 
 /**
  * Get the search manager id
+ *
  * @return {string}
  * @export
  */
@@ -68,6 +70,7 @@ os.search.AbstractSearchManager.prototype.getId = function() {
 
 /**
  * Get the search manager id hash code
+ *
  * @return {number}
  * @export
  */
@@ -78,6 +81,7 @@ os.search.AbstractSearchManager.prototype.getIdHashCode = function() {
 
 /**
  * Get the search manager name
+ *
  * @return {string}
  * @export
  */
@@ -88,6 +92,7 @@ os.search.AbstractSearchManager.prototype.getName = function() {
 
 /**
  * Get the function to determine no result class.
+ *
  * @return {Function}
  */
 os.search.AbstractSearchManager.prototype.getNoResultClass = function() {
@@ -105,6 +110,7 @@ os.search.AbstractSearchManager.prototype.setNoResultClass = function(noResultCl
 
 /**
  * Sets the last term.
+ *
  * @param {string} term
  */
 os.search.AbstractSearchManager.prototype.setTerm = function(term) {
@@ -114,6 +120,7 @@ os.search.AbstractSearchManager.prototype.setTerm = function(term) {
 
 /**
  * Gets the last term.
+ *
  * @return {string}
  */
 os.search.AbstractSearchManager.prototype.getTerm = function() {
@@ -123,6 +130,7 @@ os.search.AbstractSearchManager.prototype.getTerm = function() {
 
 /**
  * Sets the sort term.
+ *
  * @param {string} sortBy
  */
 os.search.AbstractSearchManager.prototype.setSort = function(sortBy) {
@@ -132,6 +140,7 @@ os.search.AbstractSearchManager.prototype.setSort = function(sortBy) {
 
 /**
  * Gets the sort term.
+ *
  * @return {string}
  */
 os.search.AbstractSearchManager.prototype.getSort = function() {
@@ -141,6 +150,7 @@ os.search.AbstractSearchManager.prototype.getSort = function() {
 
 /**
  * Gets favorite searches
+ *
  * @param {number=} opt_max max number of reusltes to return.
  * @return {Array<os.search.Favorite>} array of favorite items
  */
@@ -157,6 +167,7 @@ os.search.AbstractSearchManager.prototype.getFavorites = function(opt_max) {
 
 /**
  * register the filter favorites function
+ *
  * @param {function (Array<os.user.settings.favorite>): Array<os.search.Favorite>} fn
  */
 os.search.AbstractSearchManager.prototype.registerFilterFavoritesFn = function(fn) {
@@ -166,6 +177,7 @@ os.search.AbstractSearchManager.prototype.registerFilterFavoritesFn = function(f
 
 /**
  * Handle autocomplete failure event for a single search provider.
+ *
  * @param {os.search.SearchEvent} event
  * @protected
  */
@@ -176,6 +188,7 @@ os.search.AbstractSearchManager.prototype.handleAutocompleteFailure = function(e
 
 /**
  * Compares two search results by their score, for sorting in descending order.
+ *
  * @param {os.search.ISearchResult} a First result
  * @param {os.search.ISearchResult} b Second result
  * @return {number}
@@ -189,6 +202,7 @@ os.search.AbstractSearchManager.prototype.scoreCompare = function(a, b) {
 
 /**
  * Filter favorites to only enabled providers
+ *
  * @param {Array<os.user.settings.favorite>} favorites
  * @return {Array<os.search.Favorite>}
  * @private
@@ -200,6 +214,7 @@ os.search.AbstractSearchManager.prototype.defaultFilterFavorites_ = function(fav
 
 /**
  * Is the search manager a container for other search managers
+ *
  * @return {boolean}
  */
 os.search.AbstractSearchManager.prototype.isContainer = function() {
@@ -209,6 +224,7 @@ os.search.AbstractSearchManager.prototype.isContainer = function() {
 
 /**
  * Execute search using registered searches.
+ *
  * @abstract
  * @param {string} term The keyword search term
  * @param {number=} opt_start The index of the search results page
@@ -224,6 +240,7 @@ os.search.AbstractSearchManager.prototype.search = function(term, opt_start, opt
 
 /**
  * Requests autocomplete results from a search term.
+ *
  * @abstract
  * @param {string} term The keyword to use in the search
  * @param {number=} opt_maxResults The maximum number of autocomplete results.
@@ -233,6 +250,7 @@ os.search.AbstractSearchManager.prototype.autocomplete = function(term, opt_maxR
 
 /**
  * Clear the search results.
+ *
  * @abstract
  * @param {string=} opt_term A default search term. If not provided, the term will be cleared.
  */
@@ -241,6 +259,7 @@ os.search.AbstractSearchManager.prototype.clear = function(opt_term) {};
 
 /**
  * Retrieve the total number of search results
+ *
  * @abstract
  * @return {number}
  */
@@ -249,6 +268,7 @@ os.search.AbstractSearchManager.prototype.getTotal = function() {};
 
 /**
  * Retrieve the identifying names of all the registered searches.
+ *
  * @abstract
  * @param {boolean=} opt_excludeExternal
  * @return {!Array<!os.search.ISearch>}
@@ -259,6 +279,7 @@ os.search.AbstractSearchManager.prototype.getRegisteredSearches = function(opt_e
 /**
  * Get the search providers that are currently enabled, and
  * optionally support the search term.
+ *
  * @abstract
  * @param {string=} opt_term
  * @return {!Array<!os.search.ISearch>}
@@ -268,6 +289,7 @@ os.search.AbstractSearchManager.prototype.getEnabledSearches = function(opt_term
 
 /**
  * Retrieve search results as they have been captured be all searches or for a specitic search
+ *
  * @abstract
  * @param {number=} opt_limit
  * @return {Array} A shallow copy of the search results
@@ -277,6 +299,7 @@ os.search.AbstractSearchManager.prototype.getResults = function(opt_limit) {};
 
 /**
  * Force events to fire indicating whether there is a search in progress.
+ *
  * @abstract
  */
 os.search.AbstractSearchManager.prototype.checkProgress = function() {};
@@ -284,6 +307,7 @@ os.search.AbstractSearchManager.prototype.checkProgress = function() {};
 
 /**
  * Gets the providers still loading.
+ *
  * @abstract
  * @return {!Object<string, boolean>} object of loading providers
  */

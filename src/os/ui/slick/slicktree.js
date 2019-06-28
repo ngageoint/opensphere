@@ -14,6 +14,7 @@ goog.require('os.ui.slick.SlickTreeNode');
 
 /**
  * The slick tree directive.
+ *
  * @return {angular.Directive}
  */
 os.ui.slick.slickTreeDirective = function() {
@@ -115,6 +116,7 @@ os.ui.Module.directive('slicktree', [os.ui.slick.slickTreeDirective]);
 
 /**
  * Controller for SlickGrid Tree
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$compile} $compile
@@ -222,6 +224,7 @@ os.ui.slick.SlickTreeCtrl.prototype.disposeInternal = function() {
 
 /**
  * Cleans up the root node, removing listeners and disposing it if this tree instance created the node.
+ *
  * @private
  */
 os.ui.slick.SlickTreeCtrl.prototype.disposeRoot_ = function() {
@@ -279,6 +282,7 @@ os.ui.slick.SlickTreeCtrl.prototype.getColumns = function() {
 
 /**
  * Get the context menu action args for layer tree.
+ *
  * @param {goog.events.Event=} opt_event
  * @return {*}
  * @override
@@ -311,6 +315,7 @@ os.ui.slick.SlickTreeCtrl.prototype.getContextArgs = function(opt_event) {
 
 /**
  * Tests if a DOM node contains a scope with a tree node.
+ *
  * @param {Node} node
  * @return {boolean}
  * @private
@@ -338,6 +343,7 @@ os.ui.slick.SlickTreeCtrl.prototype.onDataChange = function(newVal, oldVal) {
 
 /**
  * Changes the data on the tree
+ *
  * @param {*} newVal The new value
  * @private
  */
@@ -393,6 +399,7 @@ os.ui.slick.SlickTreeCtrl.prototype.changeData_ = function(newVal) {
 
 /**
  * Handles changes on the root node
+ *
  * @param {os.events.PropertyChangeEvent} e The event
  * @private
  */
@@ -415,6 +422,7 @@ os.ui.slick.SlickTreeCtrl.prototype.onRootChange_ = function(e) {
 /**
  * This is the handler for rootChangeDelay. After the tree children
  * have finished changing, this will fire to flatten the tree
+ *
  * @private
  */
 os.ui.slick.SlickTreeCtrl.prototype.flattenRoot_ = function() {
@@ -431,6 +439,7 @@ os.ui.slick.SlickTreeCtrl.flattenId_ = 0;
 
 /**
  * Converts an actual tree to a slick tree
+ *
  * @param {Array} arr The array of items
  * @param {Array} result The resulting flat array
  * @param {number=} opt_depth The depth
@@ -461,6 +470,7 @@ os.ui.slick.SlickTreeCtrl.flatten_ = function(arr, result, opt_depth) {
 
 /**
  * Return the list of visible nodes. This is needed because slickgrid returns relative row numbers for whats visible
+ *
  * @param {Array} arr The array of items
  * @param {Array} result The resulting flat array
  * @private
@@ -566,6 +576,7 @@ os.ui.slick.SlickTreeCtrl.prototype.onMouseLeave = function(e, args) {
 
 /**
  * The filter for the slickgrid tree
+ *
  * @param {os.ui.slick.SlickTreeNode} item The item
  * @return {boolean}
  * @private
@@ -587,6 +598,7 @@ os.ui.slick.SlickTreeCtrl.prototype.treeFilter_ = function(item) {
 
 /**
  * Formats a tree row
+ *
  * @param {number} row The row number
  * @param {number} cell The cell number in the row
  * @param {string} value The value
@@ -606,6 +618,7 @@ os.ui.slick.SlickTreeCtrl.prototype.treeFormatter = function(row, cell, value, c
 
 /**
  * Compiles any angular directives in the cell HTML
+ *
  * @param {*} e The event
  * @param {{row: number, node: Element, item: Object}} args The event data
  * @protected
@@ -652,6 +665,7 @@ os.ui.slick.SlickTreeCtrl.prototype.initRowScope = function(s, row, node, item) 
 
 /**
  * Performs an action on a tree item.
+ *
  * @param {*} item The tree item
  * @param {string} type The action type
  * @private
@@ -677,6 +691,7 @@ os.ui.slick.SlickTreeCtrl.prototype.getData = function() {
 
 /**
  * Fix the sibling order.
+ *
  * @param {Array} data
  * @param {os.ui.slick.SlickTreeNode} parent
  * @param {Array} rows
@@ -721,6 +736,7 @@ os.ui.slick.SlickTreeCtrl.prototype.updateSiblings_ = function(data, parent, row
 
 /**
  * Fix the parent and child links. Remove things not moved together.
+ *
  * @param {Array} data
  * @param {Array} rows
  * @param {os.ui.slick.SlickTreeNode|number} insertBefore - the new parent to insert the rows under

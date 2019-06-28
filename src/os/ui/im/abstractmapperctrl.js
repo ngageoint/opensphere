@@ -125,6 +125,7 @@ os.ui.im.AbstractMapperCtrl.prototype.destroy = function() {
 
 /**
  * Adds the mapping rules/static value to the mapping then closes the window.
+ *
  * @export
  */
 os.ui.im.AbstractMapperCtrl.prototype.accept = function() {
@@ -151,6 +152,7 @@ os.ui.im.AbstractMapperCtrl.prototype.accept = function() {
 
 /**
  * Closes the window. Does not save changes to the mapping.
+ *
  * @export
  */
 os.ui.im.AbstractMapperCtrl.prototype.close = function() {
@@ -163,6 +165,7 @@ os.ui.im.AbstractMapperCtrl.prototype.close = function() {
 
 /**
  * Gets a column value
+ *
  * @param {Object} item
  * @param {os.data.ColumnDefinition|string} col
  * @return {*} The value
@@ -184,6 +187,7 @@ os.ui.im.AbstractMapperCtrl.prototype.getValue = function(item, col) {
 
 /**
  * Formats the mapped value row for angular directives
+ *
  * @param {number} row The row number
  * @param {number} cell The cell number in the row
  * @param {string} value The value
@@ -199,6 +203,7 @@ os.ui.im.AbstractMapperCtrl.prototype.mappedValueFormatter = function(row, cell,
 
 /**
  * Gets the template for the mapping value fields.
+ *
  * @return {string}
  * @protected
  */
@@ -210,6 +215,7 @@ os.ui.im.AbstractMapperCtrl.prototype.getHtml = function() {
 
 /**
  * Gets the column being operated on. Should be overridden to get the correct column
+ *
  * @return {string}
  */
 os.ui.im.AbstractMapperCtrl.prototype.getColumn = function() {
@@ -220,6 +226,7 @@ os.ui.im.AbstractMapperCtrl.prototype.getColumn = function() {
 /**
  * Updates the mapping rules from a change in the selected column. This should be implemented
  * to test the mappings for the extensions of this class.
+ *
  * @export
  */
 os.ui.im.AbstractMapperCtrl.prototype.update = function() {
@@ -265,6 +272,7 @@ os.ui.im.AbstractMapperCtrl.prototype.update = function() {
 
 /**
  * Gets the rules appropriate to the implementation. Should be overridden to get the right ones.
+ *
  * @abstract
  * @param {Array} uniqueKeys
  * @return {?Array<!os.im.mapping.Rule>}
@@ -274,6 +282,7 @@ os.ui.im.AbstractMapperCtrl.prototype.createRules = function(uniqueKeys) {};
 
 /**
  * Validates the rules on the form. Should be implemented for each subclass.
+ *
  * @abstract
  */
 os.ui.im.AbstractMapperCtrl.prototype.validateRules = function() {};

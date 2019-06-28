@@ -18,6 +18,7 @@ os.ui.im.FileExistsChoice = {
 
 /**
  * Dialog used when a user tries importing a duplicate file.
+ *
  * @return {angular.Directive}
  */
 os.ui.im.fileExistsDirective = function() {
@@ -39,6 +40,7 @@ os.ui.Module.directive('fileexists', [os.ui.im.fileExistsDirective]);
 
 /**
  * Controller for the File Exists! window
+ *
  * @param {!angular.Scope} $scope
  * @constructor
  * @ngInject
@@ -57,6 +59,7 @@ os.ui.im.FileExistsCtrl = function($scope) {
 
 /**
  * Launch a dialog prompting the user the file they're importing already exists and requesting action.
+ *
  * @param {!os.file.File} file
  * @param {function(os.ui.im.FileExistsChoice)} confirm
  */

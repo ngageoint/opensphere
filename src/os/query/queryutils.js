@@ -11,6 +11,7 @@ goog.require('os.proj');
 
 /**
  * Checks if an existing geometry is of type "world query"
+ *
  * @param {ol.geom.Geometry|undefined} geometry The geometry to verify.
  * @return {boolean} true the query matches os.query.WORLD_GEOM
  */

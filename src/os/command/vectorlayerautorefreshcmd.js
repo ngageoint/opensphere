@@ -7,6 +7,7 @@ goog.require('os.metrics');
 
 /**
  * Command to change the automatic refresh for a vector source.
+ *
  * @param {string} layerId
  * @param {number} value
  *
@@ -44,6 +45,7 @@ os.command.VectorLayerAutoRefresh = function(layerId, value) {
 
 /**
  * Get the source from the layer id.
+ *
  * @return {os.source.Vector}
  * @protected
  */

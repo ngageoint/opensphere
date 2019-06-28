@@ -7,6 +7,7 @@ goog.require('os.ui.uiSwitchDirective');
 
 /**
  * A directive which takes a list of items and creates a common directive that controls them
+ *
  * @return {angular.Directive}
  */
 os.ui.filter.op.opUISwitchDirective = function() {

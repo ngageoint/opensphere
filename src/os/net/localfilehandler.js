@@ -11,6 +11,7 @@ goog.require('os.net.IRequestHandler');
 
 /**
  * Handler for files in local storage.
+ *
  * @implements {os.net.IRequestHandler}
  * @extends {goog.events.EventTarget}
  * @constructor

@@ -21,6 +21,7 @@ os.interaction.DragBox.prototype.cesiumColor = undefined;
 
 /**
  * Clean up the drag box interaction in Cesium.
+ *
  * @this {os.interaction.DragBox}
  */
 plugin.cesium.interaction.dragbox.cleanupWebGL = function() {
@@ -36,6 +37,7 @@ plugin.cesium.interaction.dragbox.cleanupWebGL = function() {
 
 /**
  * Draw the box in Cesium.
+ *
  * @param {ol.Coordinate} start The start coordinate.
  * @param {ol.Coordinate} end The end coordinate.
  * @this {os.interaction.DragBox}

@@ -5,6 +5,7 @@ goog.require('os.ui.Module');
 
 /**
  * The columnrow directive
+ *
  * @return {angular.Directive}
  */
 os.ui.column.columnRowDirective = function() {

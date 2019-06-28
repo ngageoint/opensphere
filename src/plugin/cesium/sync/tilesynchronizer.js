@@ -21,6 +21,7 @@ goog.require('plugin.cesium.sync.CesiumSynchronizer');
 
 /**
  * Synchronizes a single OpenLayers tile layer to Cesium.
+ *
  * @param {!os.layer.Tile} layer The OpenLayers tile layer.
  * @param {!ol.PluggableMap} map The OpenLayers map.
  * @param {!Cesium.Scene} scene The Cesium scene.
@@ -131,6 +132,7 @@ plugin.cesium.sync.TileSynchronizer.prototype.synchronize = function() {
 
 /**
  * Synchronize the tile layer.
+ *
  * @protected
  */
 plugin.cesium.sync.TileSynchronizer.prototype.synchronizeInternal = function() {
@@ -158,6 +160,7 @@ plugin.cesium.sync.TileSynchronizer.prototype.reset = function() {
 
 /**
  * Handles min/max zoom
+ *
  * @param {goog.events.Event=} opt_evt
  * @private
  */
@@ -208,6 +211,7 @@ plugin.cesium.sync.TileSynchronizer.prototype.reposition = function(start, end) 
 
 /**
  * Get the first index of this synchronizer's layers in the Cesium imagery layer array.
+ *
  * @return {number}
  */
 plugin.cesium.sync.TileSynchronizer.prototype.getFirstIndex = function() {
@@ -217,6 +221,7 @@ plugin.cesium.sync.TileSynchronizer.prototype.getFirstIndex = function() {
 
 /**
  * Get the last index of this synchronizer's layers in the Cesium imagery layer array.
+ *
  * @return {number}
  */
 plugin.cesium.sync.TileSynchronizer.prototype.getLastIndex = function() {
@@ -231,6 +236,7 @@ plugin.cesium.sync.TileSynchronizer.prototype.getLastIndex = function() {
 
 /**
  * Creates a single Cesium layer to represent the OpenLayers tile layer.
+ *
  * @private
  */
 plugin.cesium.sync.TileSynchronizer.prototype.createSingle_ = function() {
@@ -257,6 +263,7 @@ plugin.cesium.sync.TileSynchronizer.prototype.createSingle_ = function() {
 
 /**
  * Disposes of the single Cesium layer if it exists.
+ *
  * @private
  */
 plugin.cesium.sync.TileSynchronizer.prototype.disposeSingle_ = function() {
@@ -285,6 +292,7 @@ plugin.cesium.sync.TileSynchronizer.prototype.disposeSingle_ = function() {
 
 /**
  * Creates Cesium layer cache based on a single OpenLayers tile layer to facilitate tile animation.
+ *
  * @private
  */
 plugin.cesium.sync.TileSynchronizer.prototype.createCache_ = function() {
@@ -309,6 +317,7 @@ plugin.cesium.sync.TileSynchronizer.prototype.createCache_ = function() {
 
 /**
  * Disposes of the Cesium tile layer cache.
+ *
  * @private
  */
 plugin.cesium.sync.TileSynchronizer.prototype.disposeCache_ = function() {
@@ -345,6 +354,7 @@ plugin.cesium.sync.TileSynchronizer.prototype.disposeCache_ = function() {
  * Caches tile layers for the current timeline window and the tile boundary on either side of the window. Preloading
  * tiles makes them available to the GPU immediately so seamless transition between tiles is possible. While animating,
  * tile layers are cached for each tile boundary within the animation loop.
+ *
  * @private
  */
 plugin.cesium.sync.TileSynchronizer.prototype.updateAnimationCache_ = function() {
@@ -372,6 +382,7 @@ plugin.cesium.sync.TileSynchronizer.prototype.updateAnimationCache_ = function()
  * Creates a WMS TIME parameter based on the timeline controller's current start/end, offset by the provided number
  * of timeline durations (ie, day week month). This is a convenience function for creating tile boundaries around
  * the current time window.
+ *
  * @param {number} offset The number of timeline durations (day, week, month, etc) to offset this range.
  * @return {string} WMS TIME parameter for the requested offset.
  * @private
@@ -394,6 +405,7 @@ plugin.cesium.sync.TileSynchronizer.prototype.getTimeParameter_ = function(offse
 
 /**
  * Caches a layer for the given time and sets the visibility.
+ *
  * @param {string} timeParam The TIME param for the layer.
  * @param {boolean} show If the layer should be shown.
  * @return {Cesium.ImageryLayer}
@@ -422,6 +434,7 @@ plugin.cesium.sync.TileSynchronizer.prototype.getCacheLayer_ = function(timePara
 /**
  * Creates a Cesium layer representing this synchronizer's layer with a custom time range. This is used when caching
  * multiple time ranges for animation.
+ *
  * @param {string} timeParam Time to use for the WMS TIME parameter
  * @return {!Cesium.ImageryLayer} The Cesium imagery layer
  * @private
@@ -457,6 +470,7 @@ plugin.cesium.sync.TileSynchronizer.prototype.getLayerByTime_ = function(timePar
 
 /**
  * Update Cesium layer properties when the style changes.
+ *
  * @param {ol.Object.Event} event
  * @private
  */
@@ -470,6 +484,7 @@ plugin.cesium.sync.TileSynchronizer.prototype.onStyleChange_ = function(event) {
 
 /**
  * Handle generic 'change' events on the tile layer.
+ *
  * @param {ol.Object.Event} event
  * @private
  */
@@ -490,6 +505,7 @@ plugin.cesium.sync.TileSynchronizer.prototype.onChange_ = function(event) {
 
 /**
  * Handle property change events on the layer.
+ *
  * @param {os.events.PropertyChangeEvent} event
  * @private
  */

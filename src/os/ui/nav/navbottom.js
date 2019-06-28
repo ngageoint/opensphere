@@ -6,6 +6,7 @@ goog.require('os.ui.NavBarCtrl');
 
 /**
  * The nav-bottom directive
+ *
  * @return {angular.Directive}
  */
 os.ui.navBottomDirective = function() {

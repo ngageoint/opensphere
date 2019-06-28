@@ -4,6 +4,7 @@ goog.provide('os.state.StateOptions');
 
 /**
  * Options for saving and loading state files.
+ *
  * @param {string} title The state title
  * @constructor
  */

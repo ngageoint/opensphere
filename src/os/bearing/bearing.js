@@ -58,6 +58,7 @@ os.bearing.loadGeomag = function() {
 
 /**
  * Handles geomagnetic model load.
+ *
  * @param {goog.events.Event} event
  */
 os.bearing.onGeomag = function(event) {
@@ -94,6 +95,7 @@ os.bearing.geomag = function(coord, date) {
 /**
  * Gets the bearing between two points. Based on the current application setting, it will be the true north or magnetic
  * north version.
+ *
  * @param {!ol.Coordinate} coord1 The starting coordinate
  * @param {!ol.Coordinate} coord2 The ending coordinate
  * @param {!Date} date The date, only useful for magnetic bearing calculation
@@ -111,6 +113,7 @@ os.bearing.getBearing = function(coord1, coord2, date, opt_method) {
 
 /**
  * Modifies a bearing by converting it to magnetic north (if applicable) and normalizing it.
+ *
  * @param {!number} bearing The bearing to format
  * @param {!ol.Coordinate} coord The coordinate at which the bearing is being calculated
  * @param {!Date} date Optional date, only useful for magnetic bearing calculation
@@ -129,6 +132,7 @@ os.bearing.modifyBearing = function(bearing, coord, date) {
 
 /**
  * Gets a formatted bearing between two points. This appends a T (true) or M (magnetic) and the degree symbol.
+ *
  * @param {!number} bearing The bearing to format
  * @param {number=} opt_precision The precision to round to, defaults to 5
  * @return {string} String formatted version of the bearing.

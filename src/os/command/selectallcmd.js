@@ -5,6 +5,7 @@ goog.require('os.command.AbstractSelect');
 
 /**
  * Command for selecting all features in a source
+ *
  * @extends {os.command.AbstractSelect}
  * @param {!string} sourceId
  * @constructor

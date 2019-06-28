@@ -102,6 +102,7 @@ plugin.file.kml.KMLLayer.prototype.getLayerVisible = function() {
  * A custom method to control the visibility of the KML layers via
  * the node because using plugin.file.kml.KMLLayer.prototype.setLayerVisible
  * causes race conditions
+ *
  * @inheritDoc
  */
 plugin.file.kml.KMLLayer.prototype.setCustomLayerVisible = function(value) {

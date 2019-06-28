@@ -9,6 +9,7 @@ goog.require('plugin.cesium');
 
 /**
  * Renders the map to a canvas.
+ *
  * @extends {os.ui.capture.CanvasRenderer}
  * @constructor
  */
@@ -67,6 +68,7 @@ plugin.capture.MapRenderer.prototype.getFill = function() {
 
 /**
  * Get the map canvas element.
+ *
  * @return {HTMLCanvasElement} The map canvas element
  */
 plugin.capture.getMapCanvas = function() {
@@ -83,6 +85,7 @@ plugin.capture.getMapCanvas = function() {
 
 /**
  * Get the map canvas pixel ratio.
+ *
  * @return {number} The map canvas pixel ratio.
  */
 plugin.capture.getMapPixelRatio = function() {

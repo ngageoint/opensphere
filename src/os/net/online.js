@@ -20,6 +20,7 @@ os.net.OnlineEventType = {
  * Check for online status
  * If status is false, there is no network connection (good to know)
  * If status is true, the browser is reporting that the OS is connected to a local network (not the same as internet)
+ *
  * @extends {goog.events.EventTarget}
  * @constructor
  */
@@ -72,6 +73,7 @@ os.net.Online.prototype.getStatus = function() {
 
 /**
  * Get the most up to date status
+ *
  * @return {boolean}
  */
 os.net.Online.prototype.refreshStatus = function() {

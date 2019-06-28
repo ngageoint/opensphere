@@ -8,6 +8,7 @@ goog.require('os.ogc');
 
 /**
  * Create a WFS request payload.
+ *
  * @implements {os.net.IDataFormatter}
  * @constructor
  */

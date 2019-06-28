@@ -7,6 +7,7 @@ goog.require('os.ui.slick.column');
 
 /**
  * Configuration for a GeoJSON parser.
+ *
  * @extends {os.parse.FileParserConfig}
  * @constructor
  */

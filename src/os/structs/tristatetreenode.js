@@ -10,6 +10,7 @@ goog.require('os.structs.TriState');
 
 /**
  * Adds tri-state functionality to the tree nodes
+ *
  * @extends {os.structs.TreeNode}
  * @implements {os.structs.IStateTreeNode}
  * @constructor
@@ -61,6 +62,7 @@ goog.inherits(os.structs.TriStateTreeNode, os.structs.TreeNode);
 
 /**
  * Whether or not state bubbles up from children
+ *
  * @return {boolean}
  */
 os.structs.TriStateTreeNode.prototype.getBubbleState = function() {
@@ -70,6 +72,7 @@ os.structs.TriStateTreeNode.prototype.getBubbleState = function() {
 
 /**
  * Whether or not state bubbles up from children
+ *
  * @param {boolean} value
  */
 os.structs.TriStateTreeNode.prototype.setBubbleState = function(value) {
@@ -112,6 +115,7 @@ os.structs.TriStateTreeNode.prototype.setState = function(value) {
 
 /**
  * Overridden to add state changes in child nodes and update the counts
+ *
  * @override
  */
 os.structs.TriStateTreeNode.prototype.initChild = function(child) {
@@ -126,6 +130,7 @@ os.structs.TriStateTreeNode.prototype.initChild = function(child) {
 
 /**
  * Overridden to remove state listeners on child nodes and update the counts
+ *
  * @override
  */
 os.structs.TriStateTreeNode.prototype.destroyChild = function(child) {
@@ -154,6 +159,7 @@ os.structs.TriStateTreeNode.prototype.onChildChange = function(e) {
 
 /**
  * Updates the state from the child state counts
+ *
  * @private
  */
 os.structs.TriStateTreeNode.prototype.updateFromCounts_ = function() {
@@ -178,6 +184,7 @@ os.structs.TriStateTreeNode.prototype.updateFromCounts_ = function() {
 
 /**
  * Updates the children to the current state
+ *
  * @protected
  */
 os.structs.TriStateTreeNode.prototype.updateChildren = function() {
@@ -210,6 +217,7 @@ os.structs.TriStateTreeNode.prototype.updateChildren = function() {
 
 /**
  * Updates the children to the current state
+ *
  * @param {!os.structs.IStateTreeNode} child
  * @param {string} state
  * @protected
@@ -221,6 +229,7 @@ os.structs.TriStateTreeNode.prototype.updateChild = function(child, state) {
 
 /**
  * Gets whether the checkbox should be disabled for this treenode.
+ *
  * @return {boolean}
  */
 os.structs.TriStateTreeNode.prototype.getCheckboxDisabled = function() {
@@ -230,6 +239,7 @@ os.structs.TriStateTreeNode.prototype.getCheckboxDisabled = function() {
 
 /**
  * Sets whether the checkbox should be disabled for this treenode.
+ *
  * @param {boolean} disabled
  */
 os.structs.TriStateTreeNode.prototype.setCheckboxDisabled = function(disabled) {

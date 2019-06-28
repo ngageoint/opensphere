@@ -8,6 +8,7 @@ goog.require('os.style.AbstractReader');
 
 /**
  * Root style reader
+ *
  * @extends {os.style.AbstractReader<!ol.style.Style>}
  * @constructor
  */

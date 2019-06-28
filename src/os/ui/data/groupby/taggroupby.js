@@ -8,6 +8,7 @@ goog.require('os.ui.slick.SlickTreeNode');
 
 /**
  * Groups nodes by tag
+ *
  * @extends {os.data.groupby.BaseGroupBy}
  * @param {boolean=} opt_open Keeps groups open by default
  * @constructor

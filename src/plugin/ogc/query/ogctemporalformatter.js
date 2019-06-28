@@ -39,6 +39,7 @@ plugin.ogc.query.OGCTemporalFormatter.DEFAULT_COLUMN_ = 'validTime';
 
 /**
  * Set the start column.
+ *
  * @param {?string} value
  */
 plugin.ogc.query.OGCTemporalFormatter.prototype.setStartColumn = function(value) {
@@ -48,6 +49,7 @@ plugin.ogc.query.OGCTemporalFormatter.prototype.setStartColumn = function(value)
 
 /**
  * Set the end column.
+ *
  * @param {?string} value
  */
 plugin.ogc.query.OGCTemporalFormatter.prototype.setEndColumn = function(value) {

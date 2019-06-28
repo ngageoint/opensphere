@@ -96,6 +96,7 @@ os.feature.flyTo = function(features) {
 
 /**
  * Auto detect and apply column mappings to features.
+ *
  * @param {!Array<!ol.Feature>} features The features
  * @param {number=} opt_count Optional count of features for the automap to check, defaulting to 1.
  */
@@ -115,6 +116,7 @@ os.feature.autoMap = function(features, opt_count) {
 
 /**
  * Simplify the geometry on a feature. Intended to reduce memory footprint and simplify geometry operations.
+ *
  * @param {ol.Feature} feature The feature.
  */
 os.feature.simplifyGeometry = function(feature) {
@@ -132,6 +134,7 @@ os.feature.simplifyGeometry = function(feature) {
 
 /**
  * Get the semi-major axis for a feature.
+ *
  * @param {ol.Feature} feature The feature.
  * @param {os.math.Units=} opt_units The desired units. Defaults to nautical miles.
  * @return {number|undefined} The semi-major axis value, or undefined if not found.
@@ -150,6 +153,7 @@ os.feature.getSemiMajor = function(feature, opt_units) {
 
 /**
  * Get the semi-minor axis for a feature.
+ *
  * @param {ol.Feature} feature The feature.
  * @param {os.math.Units=} opt_units The desired units. Defaults to nautical miles.
  * @return {number|undefined} The semi-minor axis value, or undefined if not found.
@@ -168,6 +172,7 @@ os.feature.getSemiMinor = function(feature, opt_units) {
 
 /**
  * Get the orientation for a feature, in degrees.
+ *
  * @param {ol.Feature} feature The feature.
  * @return {number|undefined} The orientation value, or undefined if not found.
  */
@@ -179,6 +184,7 @@ os.feature.getOrientation = function(feature) {
 
 /**
  * Get the radius for a feature.
+ *
  * @param {ol.Feature} feature The feature.
  * @param {os.math.Units=} opt_units The desired units. Defaults to nautical miles.
  * @return {number|undefined} The radius axis value, or undefined if not found.
@@ -197,6 +203,7 @@ os.feature.getRadius = function(feature, opt_units) {
 
 /**
  * Get the bearing for a feature, in degrees.
+ *
  * @param {ol.Feature} feature The feature.
  * @return {number|undefined} The orientation value, or undefined if not found.
  */
@@ -208,6 +215,7 @@ os.feature.getBearing = function(feature) {
 
 /**
  * Get the semi-major axis for a feature.
+ *
  * @param {ol.Feature} feature The feature.
  * @param {string|undefined} nmiField The application mapped field containing the value in nautical miles.
  * @param {string|undefined} defaultField The default field.
@@ -259,6 +267,7 @@ os.feature.getEllipseField_ = function(feature, nmiField, defaultField, defaultU
 
 /**
  * Creates an ellipse from a feature if it has the necessary data.
+ *
  * @param {ol.Feature} feature The feature
  * @param {boolean=} opt_replace If an existing ellipse should be replaced
  * @return {os.geom.Ellipse|undefined} The ellipse, if one could be generated
@@ -306,6 +315,7 @@ os.feature.createEllipse = function(feature, opt_replace) {
  * Returns a column value from a feature.
  * If the column is not provided or doesn't exist it will return a default value or NaN
  * If the column exists but is not a number it will return a NaN
+ *
  * @param {ol.Feature} feature The feature
  * @param {string=} opt_column column on feature to use
  * @param {number=} opt_default fallback value if column doesn't exist
@@ -328,6 +338,7 @@ os.feature.getColumnValue = function(feature, opt_column, opt_default) {
 
 /**
  * Creates a line of bearing from a feature if it has the necessary data.
+ *
  * @param {ol.Feature} feature The feature
  * @param {boolean=} opt_replace If an existing lob should be replaced
  * @param {os.feature.LOBOptions=} opt_lobOpts the options for rendering line of bearing
@@ -487,6 +498,7 @@ os.feature.createLineOfBearing = function(feature, opt_replace, opt_lobOpts) {
 
 /**
  * Set the altitude component on a feature if it has a point geometry.
+ *
  * @param {ol.Feature} feature The feature
  * @param {string=} opt_field The altitude field
  */
@@ -510,6 +522,7 @@ os.feature.setAltitude = function(feature, opt_field) {
 
 /**
  * Automatically populate coordinate fields on a feature. Requires a point geometry to set fields.
+ *
  * @param {ol.Feature} feature The feature
  * @param {boolean=} opt_replace If existing values should be replaced
  * @param {ol.geom.Geometry=} opt_geometry Alternate geometry to populate the fields
@@ -577,6 +590,7 @@ os.feature.populateCoordFields = function(feature, opt_replace, opt_geometry) {
 
 /**
  * Gets a field value from an {@link ol.Feature}.
+ *
  * @param {ol.Feature} item
  * @param {string} field
  * @return {*} The value
@@ -588,6 +602,7 @@ os.feature.getField = function(item, field) {
 
 /**
  * Get the title from a feature, matching a property (case insensitive) called 'name' or 'title'.
+ *
  * @param {ol.Feature} feature The feature.
  * @return {string|undefined} The feature title, or undefined if not found.
  *
@@ -623,6 +638,7 @@ os.feature.VALUES_FIELD_ = goog.reflect.objectProperty('values_', new ol.Feature
 
 /**
  * Create a filter function expression to get a value from a feature.
+ *
  * @param {string} itemVar The feature variable name.
  * @param {string} field The field to get.
  * @return {string} The get expression.
@@ -636,6 +652,7 @@ os.feature.filterFnGetter = function(itemVar, field) {
 
 /**
  * If a field is internal to the application and should be skipped by user-facing features.
+ *
  * @param {string} field The metadata field
  * @return {boolean}
  */
@@ -647,6 +664,7 @@ os.feature.isInternalField = function(field) {
 
 /**
  * Get the layer id of a feature
+ *
  * @param {ol.Feature} feature The feature
  * @return {string|undefined}
  */
@@ -663,6 +681,7 @@ os.feature.getLayerId = function(feature) {
  * Get the layer containing a feature. This accounts for features that may be rendered in a
  * {@link os.layer.AnimationOverlay}, which uses an OL layer/source with hit detection disabled. In that case, find
  * the original layer from the map.
+ *
  * @param {ol.Feature} feature The feature
  * @return {ol.layer.Layer}
  */
@@ -684,6 +703,7 @@ os.feature.getLayer = function(feature) {
  * Get the source containing a feature. This accounts for features that may be rendered in a
  * {@link os.layer.AnimationOverlay}, which uses an OL layer/source with hit detection disabled. In that case, find
  * the original source from the data manager.
+ *
  * @param {ol.Feature} feature The feature
  * @param {ol.layer.Layer=} opt_layer The layer containing the feature
  * @return {os.source.Vector} The source, if it can be found
@@ -713,6 +733,7 @@ os.feature.getSource = function(feature, opt_layer) {
 
 /**
  * Get the color of a feature.
+ *
  * @param {ol.Feature} feature The feature.
  * @param {os.source.ISource=} opt_source The source containing the feature, or null to ignore source color.
  * @param {*=} opt_default The default color.
@@ -763,6 +784,7 @@ os.feature.getColor = function(feature, opt_source, opt_default) {
 
 /**
  * Gets the shape name for a feature.
+ *
  * @param {!ol.Feature} feature The feature
  * @param {os.source.Vector=} opt_source The source containing the feature
  * @param {boolean=} opt_preferSource If the source shape should be preferred over the feature shape.
@@ -790,6 +812,7 @@ os.feature.getShapeName = function(feature, opt_source, opt_preferSource) {
 
 /**
  * Gets the center shape name for a feature.
+ *
  * @param {!ol.Feature} feature The feature
  * @param {os.source.Vector=} opt_source The source containing the feature
  * @param {boolean=} opt_preferSource If the source shape should be preferred over the feature shape.
@@ -817,6 +840,7 @@ os.feature.getCenterShapeName = function(feature, opt_source, opt_preferSource) 
 
 /**
  * Hides the label for a feature.
+ *
  * @param {ol.Feature} feature The feature
  * @return {boolean} If the label was hidden, or false if it was hidden already.
  *
@@ -834,6 +858,7 @@ os.feature.hideLabel = function(feature) {
 
 /**
  * Shows the label for a feature.
+ *
  * @param {ol.Feature} feature The feature
  * @return {boolean} If the label was hidden, or false if it was hidden already.
  *
@@ -851,6 +876,7 @@ os.feature.showLabel = function(feature) {
 
 /**
  * Updates the feature (typically after style changes)
+ *
  * @param {ol.Feature} feature The feature
  * @param {ol.source.Source=} opt_source The source containing the feature
  */
@@ -875,6 +901,7 @@ os.feature.update = function(feature, opt_source) {
 
 /**
  * Remove features from application
+ *
  * @param {!string} sourceId
  * @param {Array<ol.Feature>} features
  */
@@ -888,6 +915,7 @@ os.feature.removeFeatures = function(sourceId, features) {
 
 /**
  * Copy a feature, saving its current style as a local feature style.
+ *
  * @param {!ol.Feature} feature The feature to copy
  * @param {Object=} opt_layerConfig The feature's layer config
  * @return {!ol.Feature}
@@ -935,6 +963,7 @@ os.feature.copyFeature = function(feature, opt_layerConfig) {
 
 /**
  * Sets an opacity multiplier on every feature in a set.
+ *
  * @param {Array<!ol.Feature>} features
  * @param {number} opacity
  * @param {os.source.Vector=} opt_source
@@ -967,6 +996,7 @@ os.feature.updateFeaturesFadeStyle = function(features, opacity, opt_source) {
 
 /**
  * Test if a feature's source id matches the provided source id.
+ *
  * @param {string} sourceId The source id to match
  * @param {!ol.Feature} feature The feature to test
  * @return {boolean}
@@ -980,6 +1010,7 @@ os.feature.sourceIdEquals = function(sourceId, feature) {
 
 /**
  * Sorts two features by a field.
+ *
  * @param {string} field The sort field
  * @param {!ol.Feature} a The first feature
  * @param {!ol.Feature} b The second feature
@@ -1009,6 +1040,7 @@ os.feature.sortByField = function(field, a, b) {
 
 /**
  * Sorts two features by their start time, in ascending order.
+ *
  * @param {!ol.Feature} a The first feature.
  * @param {!ol.Feature} b The second feature.
  * @return {number}
@@ -1035,6 +1067,7 @@ os.feature.sortByTime = function(a, b) {
 
 /**
  * Sorts two features by their start time, in descending order.
+ *
  * @param {!ol.Feature} a The first feature.
  * @param {!ol.Feature} b The second feature.
  * @return {number}
@@ -1046,6 +1079,7 @@ os.feature.sortByTimeDesc = function(a, b) {
 
 /**
  * Compares two features by their id.
+ *
  * @param {!ol.Feature} a First feature
  * @param {!ol.Feature} b Second feature
  * @return {number}
@@ -1060,6 +1094,7 @@ os.feature.idCompare = function(a, b) {
 
 /**
  * Validates a features geometries, attempting to repair invalid polygons and removing them if they are beyond fixing
+ *
  * @param {!ol.Feature} feature thing to validate geometries on
  * @param {boolean=} opt_quiet If alerts should be suppressed
  * @return {number} number of invalid polygons removed

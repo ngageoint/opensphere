@@ -20,6 +20,7 @@ os.job.JobEventType = {
 
 /**
  * Job event
+ *
  * @param {string} type The event type
  * @param {*=} opt_data Data from the worker
  * @extends {goog.events.Event}

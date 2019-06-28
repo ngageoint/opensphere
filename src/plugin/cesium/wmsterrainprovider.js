@@ -9,6 +9,7 @@ goog.require('plugin.cesium.AbstractTerrainProvider');
 
 /**
  * WMS Cesium terrain provider.
+ *
  * @param {!osx.cesium.WMSTerrainProviderOptions} options
  * @extends {plugin.cesium.AbstractTerrainProvider}
  * @constructor
@@ -107,6 +108,7 @@ plugin.cesium.WMSTerrainProvider.prototype.getLayerForLevel_ = function(level) {
 
 /**
  * Get the URL for an elevation tile
+ *
  * @param {number} x
  * @param {number} y
  * @param {number} level

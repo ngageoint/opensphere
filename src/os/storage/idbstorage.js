@@ -166,6 +166,7 @@ os.storage.IDBStorage.prototype.init = function() {
 
 /**
  * Handle database successfully opening.
+ *
  * @param {goog.db.IndexedDb} db
  * @private
  */
@@ -178,6 +179,7 @@ os.storage.IDBStorage.prototype.onDbReady_ = function(db) {
 
 /**
  * Handle database open error.
+ *
  * @param {goog.db.Error} error
  * @return {goog.db.Error}
  * @private
@@ -200,6 +202,7 @@ os.storage.IDBStorage.prototype.onBlocked_ = function(event) {
 
 /**
  * Creates the object store.
+ *
  * @param {!goog.db.IndexedDb.VersionChangeEvent} event The event
  * @param {!goog.db.IndexedDb} db The IndexedDB instance
  * @param {!goog.db.Transaction} tx The transaction object
@@ -234,6 +237,7 @@ os.storage.IDBStorage.prototype.get = function(key) {
 
 /**
  * Retrieves an item from the database.
+ *
  * @param {string} key Database key to retrieve.
  * @return {!goog.async.Deferred} The deferred get request.
  * @private
@@ -269,6 +273,7 @@ os.storage.IDBStorage.prototype.getAll = function() {
 
 /**
  * Retrieves all items from the database.
+ *
  * @return {!goog.async.Deferred} The deferred get request.
  * @private
  */
@@ -303,6 +308,7 @@ os.storage.IDBStorage.prototype.set = function(key, item, opt_replace) {
 
 /**
  * Stores an item in the database.
+ *
  * @param {string} key The item key
  * @param {T} item The item to insert into the database
  * @param {boolean=} opt_replace If the item should be replaced in the store.
@@ -362,6 +368,7 @@ os.storage.IDBStorage.prototype.remove = function(key) {
 
 /**
  * Deletes an item from storage.
+ *
  * @param {string} key The key to remove
  * @return {!goog.async.Deferred} The deferred delete request.
  * @private
@@ -379,6 +386,7 @@ os.storage.IDBStorage.prototype.removeInternal_ = function(key) {
 
 /**
  * Deserializes an item from the database.
+ *
  * @param {*} data
  * @return {T}
  *
@@ -392,6 +400,7 @@ os.storage.IDBStorage.prototype.deserializeItem = function(data) {
 
 /**
  * Deserializes an item from the database.
+ *
  * @param {Array<*>} data
  * @return {T}
  * @protected
@@ -415,6 +424,7 @@ os.storage.IDBStorage.prototype.deserializeItems = function(data) {
 
 /**
  * Serializes an item to store in the database.
+ *
  * @param {T} item
  * @return {*}
  *
@@ -428,6 +438,7 @@ os.storage.IDBStorage.prototype.serializeItem = function(item) {
 
 /**
  * Handle successful clear of the object store.
+ *
  * @protected
  */
 os.storage.IDBStorage.prototype.onObjectStoreCleared = function() {
@@ -437,6 +448,7 @@ os.storage.IDBStorage.prototype.onObjectStoreCleared = function() {
 
 /**
  * Handle successful insertion of an item into the database.
+ *
  * @param {string} key Key of the inserted item.
  * @protected
  */
@@ -447,6 +459,7 @@ os.storage.IDBStorage.prototype.onItemAdded = function(key) {
 
 /**
  * Handle successful deletion of an item from the database.
+ *
  * @param {string} key Key of the deleted item.
  * @protected
  */
@@ -473,6 +486,7 @@ os.storage.IDBStorage.prototype.clear = function() {
 
 /**
  * Clears the object store.
+ *
  * @return {!goog.async.Deferred} The deferred clear request.
  * @private
  */
@@ -501,6 +515,7 @@ os.storage.IDBStorage.prototype.deleteDatabase = function() {
 
 /**
  * Callback for successful database deletion.
+ *
  * @private
  */
 os.storage.IDBStorage.prototype.onDeleteDb_ = function() {
@@ -510,6 +525,7 @@ os.storage.IDBStorage.prototype.onDeleteDb_ = function() {
 
 /**
  * Callback for failed database deletion.
+ *
  * @param {Error} e
  * @private
  */
@@ -520,6 +536,7 @@ os.storage.IDBStorage.prototype.onDeleteDbFail_ = function(e) {
 
 /**
  * Callback for deleting database is blocked with open connections.
+ *
  * @private
  */
 os.storage.IDBStorage.prototype.onDeleteDbBlocked_ = function() {
@@ -529,6 +546,7 @@ os.storage.IDBStorage.prototype.onDeleteDbBlocked_ = function() {
 
 /**
  * Determine if database is in an error state.
+ *
  * @return {boolean}
  */
 os.storage.IDBStorage.prototype.isError = function() {
@@ -538,6 +556,7 @@ os.storage.IDBStorage.prototype.isError = function() {
 
 /**
  * Send an error alert
+ *
  * @param {string} msg The error message
  * @protected
  */
@@ -548,6 +567,7 @@ os.storage.IDBStorage.prototype.alertError = function(msg) {
 
 /**
  * Returns a deferred indicating IDB is not supported by the browser.
+ *
  * @param {string} type The error type.
  * @return {!goog.async.Deferred}
  * @protected
@@ -567,6 +587,7 @@ os.storage.IDBStorage.prototype.getErrorDeferred = function(type) {
 
 /**
  * Get the error message to display for a particular error type.
+ *
  * @param {string} type The error type.
  * @return {string}
  * @protected

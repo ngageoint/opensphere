@@ -10,6 +10,7 @@ os.math.DEFAULT_DECIMAL_PRECISION = 3;
 
 /**
  * Rounds a number to opt_fixed decimal points
+ *
  * @param {number} num The number to round
  * @param {number=} opt_fixed Optional precision, defaults to 3
  * @return {string}
@@ -22,6 +23,7 @@ os.math.toFixed = function(num, opt_fixed) {
 
 /**
  * Rounds a number to opt_precision decimal points
+ *
  * @param {number} num The number to round
  * @param {number=} opt_precision Optional precision, defaults to 6
  * @return {string}
@@ -34,6 +36,7 @@ os.math.toPrecision = function(num, opt_precision) {
 
 /**
  * Round the decimals to the precision
+ *
  * @param {number} num
  * @param {number} precision
  * @return {number}
@@ -46,6 +49,7 @@ os.math.roundWithPrecision = function(num, precision) {
 
 /**
  * Determine the max of many numbers
+ *
  * @param {!Array.<!number>} values
  * @return {?number} the max value, or null if the array is empty
  */
@@ -60,6 +64,7 @@ os.math.max = function(values) {
 
 /**
  * Determine the min of many numbers
+ *
  * @param {!Array.<!number>} values
  * @return {?number} the min value, or null if the array is empty
  */
@@ -74,6 +79,7 @@ os.math.min = function(values) {
 
 /**
  * Determine the precision of a number.
+ *
  * @param {number} value The number
  * @return {number} The precision. Returns 0 for integer, NaN, and infinite values.
  */
@@ -96,6 +102,7 @@ os.math.precision = function(value) {
 /**
  * Determine the range of many numbers.  To keep it light, the result is a array of size 2, which clients
  * may use to construct a {@link goog.math.Range}
+ *
  * @param {!Array.<!number>} values
  * @return {?Array.<!number>} An array of size 2 in the form of [min, max], or null if the input is an empty array.
  */
@@ -110,6 +117,7 @@ os.math.range = function(values) {
 
 /**
  * Parses a value to a number, returning NaN for null values and empty strings.
+ *
  * @param {*} value The value.
  * @return {number} The numeric value, or NaN.
  */
@@ -131,6 +139,7 @@ os.math.parseNumber = function(value) {
 
 /**
  * Returns the integer part of a number by removing any fractional digits.
+ *
  * @param {(string|number)} val The number to truncate
  * @return {number}
  */

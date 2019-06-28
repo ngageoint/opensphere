@@ -78,6 +78,7 @@ os.net.CertNazi.POST_ERROR = 'postError';
 
 /**
  * The URLs to check
+ *
  * @param {Array.<!string>} urls
  */
 os.net.CertNazi.prototype.setUrls = function(urls) {
@@ -88,6 +89,7 @@ os.net.CertNazi.prototype.setUrls = function(urls) {
 
 /**
  * The URLs to check
+ *
  * @param {string} url
  */
 os.net.CertNazi.prototype.setPostUrl = function(url) {
@@ -99,6 +101,7 @@ os.net.CertNazi.prototype.setPostUrl = function(url) {
 
 /**
  * The URLs to check
+ *
  * @param {Array.<!string>} urls
  * @private
  */
@@ -154,6 +157,7 @@ os.net.CertNazi.prototype.inspect = function() {
 
 /**
  * Determine if the URL checks pass beyond the assigned threshold
+ *
  * @return {boolean}
  */
 os.net.CertNazi.prototype.passed = function() {
@@ -163,6 +167,7 @@ os.net.CertNazi.prototype.passed = function() {
 
 /**
  * Handles events
+ *
  * @param {goog.events.Event} event
  * @private
  */
@@ -187,6 +192,7 @@ os.net.CertNazi.prototype.onAnything_ = function(event) {
 
 /**
  * Handles the initial GET request and then sends a POST to the same URL
+ *
  * @param {goog.events.Event} event
  * @private
  */
@@ -214,6 +220,7 @@ os.net.CertNazi.prototype.onGet_ = function(event) {
 
 /**
  * Handles the POST event
+ *
  * @param {goog.events.Event} event
  * @private
  */

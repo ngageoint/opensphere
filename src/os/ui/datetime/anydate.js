@@ -65,6 +65,7 @@ os.ui.datetime.AnyDateType = {
 
 /**
  * Controller for the anydate directive.
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$compile} $compile
@@ -197,6 +198,7 @@ os.ui.datetime.AnyDateCtrl.CHANGE = 'anydate:change';
 
 /**
  * Clean up references/listeners.
+ *
  * @private
  */
 os.ui.datetime.AnyDateCtrl.prototype.destroy_ = function() {
@@ -206,6 +208,7 @@ os.ui.datetime.AnyDateCtrl.prototype.destroy_ = function() {
 
 /**
  * Fire an event notifying the parent of a date change.
+ *
  * @private
  */
 os.ui.datetime.AnyDateCtrl.prototype.fireDateChange_ = function() {
@@ -237,6 +240,7 @@ os.ui.datetime.AnyDateCtrl.prototype.fireDateChange_ = function() {
 
 /**
  * Make sure the provided times are valid.
+ *
  * @private
  */
 os.ui.datetime.AnyDateCtrl.prototype.validateTimes_ = function() {

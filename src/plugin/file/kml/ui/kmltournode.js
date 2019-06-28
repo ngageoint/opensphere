@@ -6,6 +6,7 @@ goog.require('plugin.file.kml.ui.kmlTourNodeUIDirective');
 
 /**
  * Tree node for a KML tour.
+ *
  * @param {!plugin.file.kml.tour.Tour} tour The KML tour.
  * @extends {plugin.file.kml.ui.KMLNode}
  * @constructor
@@ -38,6 +39,7 @@ plugin.file.kml.ui.KMLTourNode.prototype.disposeInternal = function() {
 
 /**
  * Get the KML tour object for the node.
+ *
  * @return {plugin.file.kml.tour.Tour|undefined}
  */
 plugin.file.kml.ui.KMLTourNode.prototype.getTour = function() {

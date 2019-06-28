@@ -41,6 +41,7 @@ os.Module = angular.module('os', [
 
 /**
  * Configuration function for <code>os.Module</code>. Used to configure the angular module.
+ *
  * @param {!angular.$routeProvider} $routeProvider
  * @ngInject
  * @export
@@ -94,6 +95,7 @@ os.Module.config(os.Module.configureModule);
 
 /**
  * The main directive
+ *
  * @return {angular.Directive}
  */
 os.uiMainDirective = function() {

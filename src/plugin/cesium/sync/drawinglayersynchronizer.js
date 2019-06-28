@@ -7,6 +7,7 @@ goog.require('plugin.cesium.sync.VectorSynchronizer');
 
 /**
  * Synchronizes the OpenSphere drawing layer to Cesium.
+ *
  * @param {!ol.layer.Vector} layer The drawing layer.
  * @param {!ol.PluggableMap} map The OpenLayers map.
  * @param {!Cesium.Scene} scene The Cesium scene.

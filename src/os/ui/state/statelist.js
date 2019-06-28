@@ -21,6 +21,7 @@ os.ui.state.StateListEvent = {
 
 /**
  * The statelist directive
+ *
  * @return {angular.Directive}
  */
 os.ui.state.stateListDirective = function() {
@@ -46,6 +47,7 @@ os.ui.Module.directive('statelist', [os.ui.state.stateListDirective]);
 
 /**
  * Controller function for the statelist directive
+ *
  * @param {!angular.Scope} $scope
  * @constructor
  * @ngInject
@@ -80,6 +82,7 @@ os.ui.state.StateListCtrl = function($scope) {
 
 /**
  * Clean up
+ *
  * @private
  */
 os.ui.state.StateListCtrl.prototype.destroy_ = function() {
@@ -92,6 +95,7 @@ os.ui.state.StateListCtrl.prototype.destroy_ = function() {
 
 /**
  * Create a checklist item from a state descriptor.
+ *
  * @param {!os.ui.state.IStateDescriptor} descriptor The state descriptor
  * @param {boolean=} opt_enabled If the item should be enabled
  * @return {!osx.ChecklistItem}
@@ -108,6 +112,7 @@ os.ui.state.StateListCtrl.prototype.createChecklistItem_ = function(descriptor, 
 
 /**
  * Initialize the states available for export.
+ *
  * @private
  */
 os.ui.state.StateListCtrl.prototype.initStates_ = function() {
@@ -127,6 +132,7 @@ os.ui.state.StateListCtrl.prototype.initStates_ = function() {
 
 /**
  * Handle checklist change event.
+ *
  * @param {angular.Scope.Event} event
  * @private
  */
@@ -138,6 +144,7 @@ os.ui.state.StateListCtrl.prototype.onStateListChanged_ = function(event) {
 
 /**
  * Handle a source being added to the data manager.
+ *
  * @param {os.data.DescriptorEvent} event The event
  * @private
  */
@@ -153,6 +160,7 @@ os.ui.state.StateListCtrl.prototype.onDescriptorAdd_ = function(event) {
 
 /**
  * Handle a source being removed from the data manager.
+ *
  * @param {os.data.DescriptorEvent} event The event
  * @private
  */
@@ -179,6 +187,7 @@ os.ui.state.StateListCtrl.prototype.onDescriptorRemove_ = function(event) {
 
 /**
  * Update the items being exported.
+ *
  * @private
  */
 os.ui.state.StateListCtrl.prototype.updateItems_ = function() {

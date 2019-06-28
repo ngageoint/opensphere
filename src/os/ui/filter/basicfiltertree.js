@@ -24,6 +24,7 @@ os.ui.Module.directive('basicfiltertree', [os.ui.filter.basicFilterTreeDirective
 
 /**
  * Controller for basic filter tree
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$compile} $compile
@@ -73,6 +74,7 @@ os.ui.filter.BasicFilterTreeCtrl.prototype.initRowScope = function(s, row, node,
 
 /**
  * Check if there are multiple filter components. This is used to determine if the remove button should be displayed.
+ *
  * @return {boolean}
  * @protected
  */

@@ -5,6 +5,7 @@ goog.require('os.file.File');
 
 /**
  * Interface for file/url import UI's.
+ *
  * @interface
  * @template T
  */
