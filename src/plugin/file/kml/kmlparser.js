@@ -1223,39 +1223,46 @@ plugin.file.kml.KMLParser.prototype.readGroundOverlay_ = function(el) {
   goog.asserts.assert(el.localName == 'GroundOverlay', 'localName should be GroundOverlay');
 
   var obj = ol.xml.pushParseAndPop({}, plugin.file.kml.GROUND_OVERLAY_PARSERS, el, []);
-  if (obj && obj['extent'] && obj['Icon'] && obj['Icon']['href']) {
-    var icon = /** @type {string} */ (obj['Icon']['href']);
-    if (this.assetMap_[icon]) {
-      icon = this.assetMap_[icon]; // handle images included in a kmz
+  if (obj) {
+    if (obj['extent'] && obj['Icon'] && obj['Icon']['href']) {
+      var icon = /** @type {string} */ (obj['Icon']['href']);
+      if (this.assetMap_[icon]) {
+        icon = this.assetMap_[icon]; // handle images included in a kmz
+      }
+
+      var extent = ol.proj.transformExtent(/** @type {ol.Extent} */ (obj['extent']), os.proj.EPSG4326,
+          os.map.PROJECTION);
+
+      var feature = new ol.Feature();
+      this.setFeatureId_(feature);
+
+      if (obj[os.data.RecordField.TIME]) {
+        feature.set(os.data.RecordField.TIME, obj[os.data.RecordField.TIME], true);
+      }
+
+      var image = new os.layer.Image({
+        source: new os.source.ImageStatic({
+          crossOrigin: os.net.getCrossOrigin(icon),
+          url: icon,
+          imageExtent: extent,
+          projection: os.map.PROJECTION
+        }, -(obj['rotation'] || 0))
+      });
+      image.setId(/** @type {string} */ (feature.getId()));
+
+      var node = new plugin.file.kml.ui.KMLNode();
+      node.setFeature(feature);
+      node.setImage(image);
+
+      return node;
+    } else if (obj['error']) {
+      var msg = obj['error'].toString();
+      goog.log.warning(plugin.file.kml.KMLParser.LOGGER_, msg);
+      os.alertManager.sendAlert(msg, os.alert.AlertEventSeverity.WARNING);
     }
-
-    var extent = ol.proj.transformExtent(/** @type {ol.Extent} */ (obj['extent']), os.proj.EPSG4326, os.map.PROJECTION);
-
-    var feature = new ol.Feature();
-    this.setFeatureId_(feature);
-
-    if (obj[os.data.RecordField.TIME]) {
-      feature.set(os.data.RecordField.TIME, obj[os.data.RecordField.TIME], true);
-    }
-
-    var image = new os.layer.Image({
-      source: new os.source.ImageStatic({
-        crossOrigin: os.net.getCrossOrigin(icon),
-        url: icon,
-        imageExtent: extent,
-        projection: os.map.PROJECTION
-      }, -(obj['rotation'] || 0))
-    });
-    image.setId(/** @type {string} */ (feature.getId()));
-
-    var node = new plugin.file.kml.ui.KMLNode();
-    node.setFeature(feature);
-    node.setImage(image);
-
-    return node;
-  } else {
-    return null;
   }
+
+  return null;
 };
 
 

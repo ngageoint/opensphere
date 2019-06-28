@@ -15,6 +15,7 @@ goog.require('ol.style.IconOrigin');
 goog.require('ol.style.Style');
 goog.require('ol.xml');
 goog.require('os.data.RecordField');
+goog.require('os.geo');
 goog.require('os.mixin');
 goog.require('os.mixin.polygon');
 goog.require('os.object');
@@ -602,17 +603,26 @@ plugin.file.kml.readLatLonBox_ = function(node, objectStack) {
 plugin.file.kml.readLatLonQuad_ = function(node, objectStack) {
   var flatCoords = ol.xml.pushParseAndPop([], plugin.file.kml.LAT_LON_QUAD_PARSERS, node, objectStack);
   if (flatCoords && flatCoords.length) {
+    // LatLonQuad is not (necessarily) a bounding box. We will only support rectangular LatLonQuads
+    // (aka they should've used LatLonBox).
+    //
+    // I believe you need non-affine transforms (which the canvas 2d context does not support) in
+    // order to draw the image properly. This is something that we could opt to do ourselves since
+    // the image would only need to be redrawn once.
     var coordinates = ol.geom.flat.inflate.coordinates(flatCoords, 0, flatCoords.length, 3);
     if (coordinates.length === 4) {
-      // TODO: how can we properly represent this with openlayers and cesium?
-      // the ImageStatic layer only supports a box but LatLonQuad can be skewed
-      var extent = ol.extent.createEmpty();
-      coordinates.forEach(function(coordinate) {
-        ol.extent.extendCoordinate(extent, coordinate);
-      });
+      var extent = coordinates.reduce(function(extent, coord) {
+        ol.extent.extendCoordinate(extent, coord);
+        return extent;
+      }, ol.extent.createEmpty());
 
       var targetObject = /** @type {Object} */ (objectStack[objectStack.length - 1]);
-      targetObject['extent'] = extent;
+      if (os.geo.isRectangular(coordinates, extent)) {
+        targetObject['extent'] = extent;
+      } else {
+        targetObject['error'] = 'Non-rectangular gx:LatLonQuad values are not supported! ' +
+          'The GroundOverlay will not be shown.';
+      }
     }
   }
 };
