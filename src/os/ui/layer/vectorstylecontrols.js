@@ -63,11 +63,13 @@ os.ui.Module.directive('vectorstylecontrols', [os.ui.layer.vectorStyleControlsDi
  * Controller function for the vectorstylecontrols directive.
  *
  * @param {!angular.Scope} $scope The Angular scope.
+ * @param {!angular.JQLite} $element
+ * @param {!angular.$timeout} $timeout
  * @extends {goog.Disposable}
  * @constructor
  * @ngInject
  */
-os.ui.layer.VectorStyleControlsCtrl = function($scope) {
+os.ui.layer.VectorStyleControlsCtrl = function($scope, $element, $timeout) {
   os.ui.layer.VectorStyleControlsCtrl.base(this, 'constructor');
 
   /**
@@ -100,7 +102,18 @@ os.ui.layer.VectorStyleControlsCtrl = function($scope) {
    * The selected line dash option
    * @type {os.style.styleLineDashOption}
    */
-  this.scope['lineDashOption'] = name ? name : this.scope['lineDashOptions'][0];
+  this.scope['lineDashOption'] = name ? name : this.scope['lineDashOptions'][1];
+
+  var formatter = this.select2Formatter_;
+
+  $timeout(function() {
+    this.select2_ = $element.find('.js-line-dash');
+    this.select2_.select2({
+      'placeholder': 'Line Dash Select',
+      'formatSelection': formatter,
+      'formatResult': formatter
+    });
+  }.bind(this));
 
   $scope.$on('$destroy', goog.bind(this.dispose, this));
 };
@@ -166,3 +179,23 @@ os.ui.layer.VectorStyleControlsCtrl.prototype.onLineDashChange = function() {
     this.scope.$emit(os.ui.layer.VectorStyleControlsEventType.LINE_DASH_CHANGE, this.scope['lineDash']);
   }
 };
+
+
+/**
+ * Search result formatter. The select is actually storing the ID of each
+ * descriptor. This function allows us to display the actual layer title.
+ * @param {Object} item
+ * @param {angular.JQLite} ele
+ * @return {string|angular.JQLite}
+ * @private
+ */
+os.ui.layer.VectorStyleControlsCtrl.prototype.select2Formatter_ = function(item, ele) {
+  if (item) {
+    var val = '<svg height="2" width="80"><g fill="none" stroke="white" stroke-width="3"><path ';
+    val = val + 'stroke-dasharray ="' + item['id'] + '" d= "M5 1 l215 0" /></g></svg>';
+    return val;
+  } else {
+    return '';
+  }
+};
+
