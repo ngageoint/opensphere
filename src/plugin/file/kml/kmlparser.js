@@ -15,7 +15,6 @@ goog.require('ol.format.XSD');
 goog.require('ol.geom.LineString');
 goog.require('ol.geom.flat.inflate');
 goog.require('ol.layer.Image');
-goog.require('ol.source.ImageStatic');
 goog.require('ol.xml');
 goog.require('os.annotation');
 goog.require('os.data.ColumnDefinition');
@@ -26,6 +25,7 @@ goog.require('os.net.Request');
 goog.require('os.object');
 goog.require('os.parse.AsyncZipParser');
 goog.require('os.parse.IParser');
+goog.require('os.source.ImageStatic');
 goog.require('os.ui.file.kml');
 goog.require('os.xml');
 goog.require('plugin.file.kml');
@@ -1239,11 +1239,12 @@ plugin.file.kml.KMLParser.prototype.readGroundOverlay_ = function(el) {
     }
 
     var image = new os.layer.Image({
-      source: new ol.source.ImageStatic({
+      source: new os.source.ImageStatic({
+        crossOrigin: os.net.getCrossOrigin(icon),
         url: icon,
-        imageExtent: extent
-      }),
-      url: icon
+        imageExtent: extent,
+        projection: os.map.PROJECTION
+      }, -(obj['rotation'] || 0))
     });
     image.setId(/** @type {string} */ (feature.getId()));
 
