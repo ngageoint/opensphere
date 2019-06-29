@@ -402,6 +402,10 @@ os.layer.Vector.prototype.getFASet = function() {
     }
   }
 
+  if (os.state.isStateFile(this.getId())) {
+    icons.push(os.ui.Icons.STATE);
+  }
+
   return icons;
 };
 
@@ -447,6 +451,10 @@ os.layer.Vector.prototype.getIconSet = function() {
 
     if (source.getColorModel()) {
       icons.push(os.ui.Icons.COLOR_MODEL);
+    }
+
+    if (os.state.isStateFile(this.getId())) {
+      icons.push(os.ui.Icons.STATE);
     }
   }
 
