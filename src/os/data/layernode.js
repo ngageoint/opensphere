@@ -5,6 +5,8 @@ goog.require('os.data.DataManager');
 goog.require('os.data.IExtent');
 goog.require('os.data.ISearchable');
 goog.require('os.events.PropertyChangeEvent');
+goog.require('os.filter.BaseFilterManager');
+goog.require('os.filter.IFilterable');
 goog.require('os.layer.LayerGroup');
 goog.require('os.layer.Tile');
 goog.require('os.layer.Vector');
@@ -34,6 +36,8 @@ os.data.LayerNode = function() {
    * @private
    */
   this.layer_ = null;
+  var qm = os.ui.queryManager;
+  qm.listen(goog.events.EventType.PROPERTYCHANGE, this.onNodeChanged_, false, this);
 };
 goog.inherits(os.data.LayerNode, os.ui.slick.SlickTreeNode);
 os.implements(os.data.LayerNode, os.ui.ILayerUIProvider.ID);
@@ -98,6 +102,8 @@ os.data.LayerNode.prototype.setLayer = function(value) {
     if (this.layer_) {
       ol.events.unlisten(/** @type {ol.events.EventTarget} */ (this.layer_), goog.events.EventType.PROPERTYCHANGE,
           this.onPropertyChange, this);
+      var qm = os.ui.queryManager;
+      qm.unlisten(goog.events.EventType.PROPERTYCHANGE, this.onNodeChanged_, false, this);
     }
 
     var old = this.layer_;
@@ -310,4 +316,13 @@ os.data.LayerNode.prototype.getLayerUI = function(item) {
   }
 
   return null;
+};
+
+
+/**
+ * @param {os.events.PropertyChangeEvent} event
+ * @private
+ */
+os.data.LayerNode.prototype.onNodeChanged_ = function(event) {
+  this.dispatchEvent(new os.events.PropertyChangeEvent('icons'));
 };
