@@ -491,6 +491,14 @@ $somesizes: map-merge((
   }
 }
 
+.u-card-popup {
+  @include border-radius($card-inner-border-radius $card-inner-border-radius 0 0);
+  background: rgba($card-cap-bg, .6);
+  margin-bottom: 0;
+  right: .2rem;
+  top: -1.3rem;
+}
+
 
 // --------------------------------- Z-Index Utilities --------------------------------- //
 .u-zindex-base {
