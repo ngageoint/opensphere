@@ -406,7 +406,27 @@ os.layer.Vector.prototype.getFASet = function() {
     icons.push(os.ui.Icons.STATE);
   }
 
+  if (this.showActiveFilter()) {
+    icons.push(os.ui.Icons.FILTER);
+  }
+
   return icons;
+};
+
+
+/**
+ * Check for active filters on layer
+ * @return {boolean}
+ * @protected
+ */
+os.layer.Vector.prototype.showActiveFilter = function() {
+  var fm = os.filter.BaseFilterManager.getInstance();
+  var filtered = fm.hasEnabledFilters(this.getId());
+  var isActive = false;
+  if (filtered) {
+    isActive = true;
+  }
+  return isActive;
 };
 
 
@@ -455,6 +475,10 @@ os.layer.Vector.prototype.getIconSet = function() {
 
     if (os.state.isStateFile(this.getId())) {
       icons.push(os.ui.Icons.STATE);
+    }
+
+    if (this.showActiveFilter()) {
+      icons.push(os.ui.Icons.FILTER);
     }
   }
 
