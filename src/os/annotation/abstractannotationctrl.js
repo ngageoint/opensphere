@@ -25,12 +25,12 @@ os.annotation.UI_TEMPLATE =
     '<div class="u-card-popup position-absolute text-right animate-fade u-hover-show"' +
         ' ng-show="ctrl.options.editable">' +
       '<button class="btn btn-sm btn-outline-primary border-0 bg-transparent"' +
-          'title="Hide Annotation"' +
+          'title="Hide text box"' +
           'ng-click="ctrl.hideAnnotation()">' +
         '<i class="c-glyph fa fa-fw fa-comment"></i>' +
       '</button>' +
       '<button class="btn btn-sm btn-outline-primary border-0 bg-transparent"' +
-          'title="Edit annotation"' +
+          'title="Edit text box"' +
           'ng-click="ctrl.launchEditWindow()">' +
         '<i class="c-glyph fa fa-fw fa-pencil"></i>' +
       '</button>' +
@@ -52,7 +52,7 @@ os.annotation.UI_TEMPLATE =
                 'ng-disabled="!ctrl.name">' +
               '<i class="fa fa-check"/> OK' +
             '</button>' +
-            '<button class="btn btn-secondary" title="Cancel editing the annotation" ng-click="ctrl.cancelEdit()">' +
+            '<button class="btn btn-secondary" title="Cancel editing the text box" ng-click="ctrl.cancelEdit()">' +
               '<i class="fa fa-ban"/> Cancel' +
             '</button>' +
           '</div>' +
@@ -65,10 +65,10 @@ os.annotation.UI_TEMPLATE =
         '<tuieditor text="ctrl.description" edit="ctrl.editingDescription" is-required="false" maxlength="4000">' +
         '</tuieditor>' +
         '<div class="text-right mt-1" ng-if="ctrl.editingDescription">' +
-          '<button class="btn btn-success mr-1" title="Save the annotation" ng-click="ctrl.saveAnnotation()">' +
+          '<button class="btn btn-success mr-1" title="Save the text box" ng-click="ctrl.saveAnnotation()">' +
             '<i class="fa fa-check"/> OK' +
           '</button>' +
-          '<button class="btn btn-secondary" title="Cancel editing the annotation" ng-click="ctrl.cancelEdit()">' +
+          '<button class="btn btn-secondary" title="Cancel editing the text box" ng-click="ctrl.cancelEdit()">' +
             '<i class="fa fa-ban"/> Cancel' +
           '</button>' +
         '</div>' +
