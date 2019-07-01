@@ -1,5 +1,6 @@
 goog.provide('plugin.track.menu');
 
+goog.require('os.feature.DynamicFeature');
 goog.require('os.instanceOf');
 goog.require('os.source');
 goog.require('os.ui.menu.layer');
@@ -27,7 +28,8 @@ plugin.track.menu.layerSetup = function() {
       icons: ['<i class="fa fa-fw fa-share-alt"></i>'],
       metricKey: plugin.track.Metrics.Keys.CREATE_LAYER,
       beforeRender: plugin.track.menu.visibleIfHasFeatures,
-      handler: plugin.track.menu.handleAddCreateTrackEvent_
+      handler: plugin.track.menu.handleAddCreateTrackEvent_,
+      sort: 200
     });
 
     group.addChild({
@@ -37,7 +39,8 @@ plugin.track.menu.layerSetup = function() {
       icons: ['<i class="fa fa-fw fa-share-alt"></i>'],
       metricKey: plugin.track.Metrics.Keys.ADD_TO_LAYER,
       beforeRender: plugin.track.menu.visibleIfTracksExist,
-      handler: plugin.track.menu.handleAddCreateTrackEvent_
+      handler: plugin.track.menu.handleAddCreateTrackEvent_,
+      sort: 210
     });
 
     group.addChild({
@@ -47,7 +50,8 @@ plugin.track.menu.layerSetup = function() {
       icons: ['<i class="fa fa-fw fa-globe"></i>'],
       metricKey: plugin.track.Metrics.Keys.FOLLOW_TRACK,
       beforeRender: plugin.track.menu.visibleIfIsNotFollowed,
-      handler: plugin.track.menu.handleFollowTrackEvent
+      handler: plugin.track.menu.handleFollowTrackEvent,
+      sort: 220
     });
 
     group.addChild({
@@ -57,7 +61,8 @@ plugin.track.menu.layerSetup = function() {
       icons: ['<i class="fa fa-fw fa-globe"></i>'],
       metricKey: plugin.track.Metrics.Keys.UNFOLLOW_TRACK,
       beforeRender: plugin.track.menu.visibleIfIsFollowed,
-      handler: plugin.track.menu.handleUnfollowTrackEvent
+      handler: plugin.track.menu.handleUnfollowTrackEvent,
+      sort: 220
     });
 
     group.addChild({
@@ -66,9 +71,9 @@ plugin.track.menu.layerSetup = function() {
       tooltip: 'Do not show the track line.',
       icons: ['<i class="fa fa-fw fa-level-up"></i>'],
       metricKey: plugin.track.Metrics.Keys.HIDE_TRACK_LINE,
-      sort: 100,
       beforeRender: plugin.track.menu.visibleIfLineIsShown,
-      handler: goog.partial(plugin.track.menu.setShowTrackLine, false)
+      handler: goog.partial(plugin.track.menu.setShowTrackLine, false),
+      sort: 230
     });
 
     group.addChild({
@@ -77,9 +82,9 @@ plugin.track.menu.layerSetup = function() {
       tooltip: 'Show the track line.',
       icons: ['<i class="fa fa-fw fa-level-up"></i>'],
       metricKey: plugin.track.Metrics.Keys.SHOW_TRACK_LINE,
-      sort: 100,
       beforeRender: plugin.track.menu.visibleIfLineIsHidden,
-      handler: goog.partial(plugin.track.menu.setShowTrackLine, true)
+      handler: goog.partial(plugin.track.menu.setShowTrackLine, true),
+      sort: 230
     });
 
     group.addChild({
@@ -89,7 +94,8 @@ plugin.track.menu.layerSetup = function() {
       icons: ['<i class="fa fa-fw fa-star-half-o fa-rotate-270"></i>'],
       metricKey: plugin.track.Metrics.Keys.ENABLE_INTERPOLATE_MARKER,
       beforeRender: plugin.track.menu.visibleIfMarkerInterpolationEnabled,
-      handler: goog.partial(plugin.track.menu.setMarkerInterpolationEnabled, false)
+      handler: goog.partial(plugin.track.menu.setMarkerInterpolationEnabled, false),
+      sort: 240
     });
 
     group.addChild({
@@ -99,7 +105,8 @@ plugin.track.menu.layerSetup = function() {
       icons: ['<i class="fa fa-fw fa-star-half-o fa-rotate-270"></i>'],
       metricKey: plugin.track.Metrics.Keys.DISABLE_INTERPOLATE_MARKER,
       beforeRender: plugin.track.menu.visibleIfMarkerInterpolationDisabled,
-      handler: goog.partial(plugin.track.menu.setMarkerInterpolationEnabled, true)
+      handler: goog.partial(plugin.track.menu.setMarkerInterpolationEnabled, true),
+      sort: 250
     });
   }
 };
@@ -425,7 +432,7 @@ plugin.track.menu.getTrackNodes = function(opt_context) {
   if (opt_context && opt_context.length > 0) {
     return /** @type {!Array<!plugin.file.kml.ui.KMLNode>} */ (opt_context.filter(function(arg) {
       return arg instanceof plugin.file.kml.ui.KMLNode && arg.getFeature() != null &&
-          arg.getRoot() === plugin.track.getTrackNode();
+          os.instanceOf(arg.getFeature(), os.feature.DynamicFeature.NAME);
     }));
   }
 

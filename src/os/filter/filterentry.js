@@ -79,6 +79,12 @@ os.filter.FilterEntry = function() {
    * @protected
    */
   this.tags = '';
+
+  /**
+   * @type {string}
+   * @protected
+   */
+  this.source = '';
 };
 goog.inherits(os.filter.FilterEntry, goog.events.EventTarget);
 
@@ -249,6 +255,24 @@ os.filter.FilterEntry.prototype.getTags = function() {
  */
 os.filter.FilterEntry.prototype.setTags = function(value) {
   this.tags = value;
+};
+
+
+/**
+ * Get the source name of the filter.
+ * @return {string}
+ */
+os.filter.FilterEntry.prototype.getSource = function() {
+  return this.source;
+};
+
+
+/**
+ * Set if filter source name.
+ * @param {string} value
+ */
+os.filter.FilterEntry.prototype.setSource = function(value) {
+  this.source = value;
 };
 
 

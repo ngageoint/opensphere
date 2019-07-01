@@ -227,7 +227,7 @@ plugin.track.TrackManager.prototype.showActiveTracks_ = function() {
 plugin.track.TrackManager.prototype.setActiveTracks_ = function() {
   // get the current animation range and determine which tracks are "active"
   var range = this.tlc_.getAnimationRange();
-  var trackSource = os.osDataManager.getSource('track');
+  var trackSource = plugin.track.getTrackSource();
 
   if (trackSource) {
     // find any tracks that overlap the timerange

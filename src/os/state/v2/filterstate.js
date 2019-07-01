@@ -37,7 +37,7 @@ os.state.v2.Filter.ADDED_ = {};
 /**
  * @inheritDoc
  */
-os.state.v2.Filter.prototype.load = function(obj, id) {
+os.state.v2.Filter.prototype.load = function(obj, id, opt_title) {
   obj = os.state.XMLState.ensureXML(obj);
 
   if (!(obj instanceof Element)) {
@@ -66,6 +66,9 @@ os.state.v2.Filter.prototype.load = function(obj, id) {
           entry.type = layerId;
           entry.setTemporary(true);
           entry.setEnabled(true);
+          if (opt_title) {
+            entry.setSource(opt_title);
+          }
 
           os.filter.BaseFilterManager.getInstance().addFilter(entry);
           os.filter.BaseFilterManager.getInstance().setGrouping(layerId, group);

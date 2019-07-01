@@ -115,6 +115,7 @@ os.ui.LayersCtrl = function($scope, $element) {
   var map = os.MapContainer.getInstance();
   map.listen(os.events.LayerEventType.ADD, this.search, false, this);
   map.listen(os.events.LayerEventType.REMOVE, this.search, false, this);
+  map.listen(os.events.LayerEventType.CHANGE, this.search, false, this);
 
   // refresh on changed favorites
   os.settings.listen(os.user.settings.FavoriteManager.KEY, this.search, false, this);
