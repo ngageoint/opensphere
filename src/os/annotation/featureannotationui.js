@@ -346,7 +346,7 @@ os.annotation.FeatureAnnotationCtrl.prototype.updateTailAbsolute = function() {
       anchorWidth = 0;
     }
     if (this['options'].showTail === os.annotation.TailStyle.LINETAIL) {
-      anchorWidth = 1;
+      anchorWidth = 4;
     }
     var linePath = os.annotation.AbstractAnnotationCtrl.createTailPath(cardCenter, pathTarget, anchorWidth);
 
@@ -414,7 +414,7 @@ os.annotation.FeatureAnnotationCtrl.prototype.updateTailFixed = function() {
       anchorWidth = 0;
     }
     if (this['options'].showTail === os.annotation.TailStyle.LINETAIL) {
-      anchorWidth = 1;
+      anchorWidth = 4;
     }
     var linePath = os.annotation.AbstractAnnotationCtrl.createTailPath(cardCenter, targetPixel, anchorWidth);
 
