@@ -57,7 +57,7 @@ plugin.track.ICON = 'fa-share-alt';
  * @type {string}
  * @const
  */
-plugin.track.LAYER_TITLE = 'Tracks';
+plugin.track.LAYER_TITLE = 'Places';
 
 
 /**
