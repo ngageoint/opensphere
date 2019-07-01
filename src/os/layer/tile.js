@@ -5,6 +5,7 @@ goog.require('ol.array');
 goog.require('ol.events');
 goog.require('ol.layer.Property');
 goog.require('ol.layer.Tile');
+goog.require('os.IGroupable');
 goog.require('os.color');
 goog.require('os.events.LayerEvent');
 goog.require('os.events.PropertyChangeEvent');
@@ -34,6 +35,7 @@ goog.require('os.ui.renamelayer');
  * @extends {ol.layer.Tile}
  * @implements {os.layer.ILayer}
  * @implements {os.layer.IColorableLayer}
+ * @implements {os.IGroupable}
  * @implements {os.legend.ILegendRenderer}
  * @param {olx.layer.TileOptions} options Tile layer options
  * @constructor
@@ -152,6 +154,7 @@ os.layer.Tile = function(options) {
 goog.inherits(os.layer.Tile, ol.layer.Tile);
 os.implements(os.layer.Tile, os.layer.ILayer.ID);
 os.implements(os.layer.Tile, os.layer.IColorableLayer.ID);
+os.implements(os.layer.Tile, os.IGroupable.ID);
 os.implements(os.layer.Tile, os.legend.ILegendRenderer.ID);
 
 
@@ -255,6 +258,22 @@ os.layer.Tile.prototype.getId = function() {
  */
 os.layer.Tile.prototype.setId = function(value) {
   this.id_ = value;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.layer.Tile.prototype.getGroupId = function() {
+  return this.getId();
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.layer.Tile.prototype.getGroupLabel = function() {
+  return this.getTitle();
 };
 
 
@@ -580,8 +599,22 @@ os.layer.Tile.prototype.getIcons = function() {
     color = os.color.toRgbArray(layerColor);
   }
 
-  html += color ? os.ui.createIconSet(this.getId(), this.getSVGIconsInternal(), null, color) : this.getIconsInternal();
+  html += color ? os.ui.createIconSet(this.getId(), this.getSVGIconsInternal(), this.getStateBadge(), color)
+  : this.getIconsInternal();
   return html;
+};
+
+
+/**
+ * @return {Array<string>}
+ * @protected
+ */
+os.layer.Tile.prototype.getStateBadge = function() {
+  if (os.state.isStateFile(this.getId())) {
+    return [os.ui.Icons.STATE];
+  } else {
+    return null;
+  }
 };
 
 
