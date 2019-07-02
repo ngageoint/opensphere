@@ -137,7 +137,7 @@ os.layer.Vector = function(options) {
    * @type {Function}
    * @private
    */
-  this.doubleClickHandler_ = null;
+  this.doubleClickHandler_ = os.layer.Vector.defaultDoubleClickHandler.bind(this);
 
   /**
    * Function to launch the filter manager for this layer
@@ -1074,15 +1074,6 @@ os.layer.Vector.prototype.setDoubleClickHandler = function(handler) {
 
 
 /**
- * Layer has a double click handler
- * @return {boolean}
- */
-os.layer.Vector.prototype.hasDoubleClickHandler = function() {
-  return this.doubleClickHandler_ != null;
-};
-
-
-/**
  * @inheritDoc
  */
 os.layer.Vector.prototype.getSynchronizerType = function() {
@@ -1274,21 +1265,21 @@ os.layer.Vector.prototype.restore = function(config) {
   styleConf[os.style.StyleField.ARROW_SIZE] = config[os.style.StyleField.ARROW_SIZE] || os.style.DEFAULT_ARROW_SIZE;
   styleConf[os.style.StyleField.ARROW_UNITS] = config[os.style.StyleField.ARROW_UNITS] || os.style.DEFAULT_UNITS;
   styleConf[os.style.StyleField.LOB_COLUMN_LENGTH] = config[os.style.StyleField.LOB_COLUMN_LENGTH] ||
-    os.style.DEFAULT_LOB_LENGTH;
+      os.style.DEFAULT_LOB_LENGTH;
   styleConf[os.style.StyleField.LOB_LENGTH] = config[os.style.StyleField.LOB_LENGTH] || os.style.DEFAULT_LOB_LENGTH;
   styleConf[os.style.StyleField.LOB_LENGTH_ERROR] = config[os.style.StyleField.LOB_LENGTH_ERROR] ||
-    os.style.DEFAULT_LOB_LENGTH_ERROR;
+      os.style.DEFAULT_LOB_LENGTH_ERROR;
   styleConf[os.style.StyleField.LOB_LENGTH_TYPE] = config[os.style.StyleField.LOB_LENGTH_TYPE] ||
-    os.style.DEFAULT_LOB_LENGTH_TYPE;
+      os.style.DEFAULT_LOB_LENGTH_TYPE;
   styleConf[os.style.StyleField.LOB_LENGTH_COLUMN] = config[os.style.StyleField.LOB_LENGTH_COLUMN] || '';
   styleConf[os.style.StyleField.LOB_LENGTH_ERROR_COLUMN] = config[os.style.StyleField.LOB_LENGTH_ERROR_COLUMN] || '';
   styleConf[os.style.StyleField.LOB_BEARING_COLUMN] = config[os.style.StyleField.LOB_BEARING_COLUMN] || '';
   styleConf[os.style.StyleField.LOB_LENGTH_ERROR_UNITS] = config[os.style.StyleField.LOB_LENGTH_ERROR_UNITS] ||
-    os.style.DEFAULT_UNITS;
+      os.style.DEFAULT_UNITS;
   styleConf[os.style.StyleField.LOB_LENGTH_UNITS] = config[os.style.StyleField.LOB_LENGTH_UNITS] ||
-    os.style.DEFAULT_UNITS;
+      os.style.DEFAULT_UNITS;
   styleConf[os.style.StyleField.LOB_BEARING_ERROR] = config[os.style.StyleField.LOB_BEARING_ERROR] ||
-    os.style.DEFAULT_LOB_BEARING_ERROR;
+      os.style.DEFAULT_LOB_BEARING_ERROR;
   styleConf[os.style.StyleField.LOB_BEARING_ERROR_COLUMN] = config[os.style.StyleField.LOB_BEARING_ERROR_COLUMN] || '';
   styleConf[os.style.StyleField.ROTATION_COLUMN] = config[os.style.StyleField.ROTATION_COLUMN] || '';
   styleConf[os.style.StyleField.LABELS] = config[os.style.StyleField.LABELS] || [os.style.label.cloneConfig()];
@@ -1299,5 +1290,19 @@ os.layer.Vector.prototype.restore = function(config) {
   var source =  /** @type {os.IPersistable} */ (this.getSource());
   if (source && os.implements(source, os.source.ISource.ID)) {
     /** @type {os.source.ISource} */ (source).restore(config);
+  }
+};
+
+
+/**
+ * Handles double clicks on features by popping up a window to display feature metadata.
+ * @param {ol.Feature} feature *
+ * @this os.layer.Vector
+ */
+os.layer.Vector.defaultDoubleClickHandler = function(feature) {
+  if (feature) {
+    // look for a title on the feature, otherwise use the layer title
+    var title = os.feature.getTitle(feature) || this.getTitle();
+    os.ui.feature.launchMultiFeatureInfo(feature, title);
   }
 };
