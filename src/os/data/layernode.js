@@ -36,8 +36,8 @@ os.data.LayerNode = function() {
    * @private
    */
   this.layer_ = null;
-  var qm = os.ui.queryManager;
-  qm.listen(goog.events.EventType.PROPERTYCHANGE, this.onNodeChanged_, false, this);
+
+  os.ui.queryManager.listen(goog.events.EventType.PROPERTYCHANGE, this.onNodeChanged_, false, this);
 };
 goog.inherits(os.data.LayerNode, os.ui.slick.SlickTreeNode);
 os.implements(os.data.LayerNode, os.ui.ILayerUIProvider.ID);
@@ -48,6 +48,9 @@ os.implements(os.data.LayerNode, os.ui.ILayerUIProvider.ID);
  */
 os.data.LayerNode.prototype.disposeInternal = function() {
   os.data.LayerNode.superClass_.disposeInternal.call(this);
+
+  os.ui.queryManager.unlisten(goog.events.EventType.PROPERTYCHANGE, this.onNodeChanged_, false, this);
+
   this.onMouseLeave();
   this.setLayer(null);
 };
@@ -102,8 +105,6 @@ os.data.LayerNode.prototype.setLayer = function(value) {
     if (this.layer_) {
       ol.events.unlisten(/** @type {ol.events.EventTarget} */ (this.layer_), goog.events.EventType.PROPERTYCHANGE,
           this.onPropertyChange, this);
-      var qm = os.ui.queryManager;
-      qm.unlisten(goog.events.EventType.PROPERTYCHANGE, this.onNodeChanged_, false, this);
     }
 
     var old = this.layer_;

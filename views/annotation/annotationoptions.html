@@ -1,20 +1,20 @@
 <div>
-  <div class="btn btn-secondary btn-block" title="Annotation controls for the feature" data-toggle="collapse"
+  <div class="btn btn-secondary btn-block" title="Text Box controls for the feature" data-toggle="collapse"
       data-target="#featureAnnotation{{ctrl.uid}}">
-    Annotation Options
+    Text Box Options
   </div>
   <div class="card-body collapse"
       data-parent="#featureControls{{ctrl.uid}}" ng-attr-id="featureAnnotation{{ctrl.uid}}">
     <div class="form-row">
       <div class="col">
         <div class="custom-control custom-checkbox d-inline-block"
-            title="Show an interactive map annotation for this feature">
+            title="Show an interactive map text box for this feature">
           <input type="checkbox" class="custom-control-input" name="showAnnotation"
               ng-attr-id="showAnnotation{{ctrl.uid}}"
               ng-change="ctrl.updateAnnotation()"
               ng-model="ctrl.annotationOptions.show" />
           <label class="custom-control-label" ng-attr-for="showAnnotation{{ctrl.uid}}">
-            Show Annotation
+            Show Text Box
           </label>
         </div>
       </div>
@@ -22,7 +22,7 @@
     <div class="form-row align-items-center">
       <div class="col">
         <div class="custom-control custom-checkbox d-inline-block"
-            title="Show the Name field as the annotation header">
+            title="Show the Name field as the text box header">
           <input type="checkbox" class="custom-control-input" name="showAnnotationName"
             ng-attr-id="showAnnotationName{{ctrl.uid}}"
             ng-change="ctrl.updateAnnotation()" ng-disabled="!ctrl.annotationOptions.show"
@@ -49,7 +49,7 @@
       <div class="form-row align-items-center">
         <div class="col">
           <div class="custom-control custom-checkbox d-inline-block"
-              title="Show the Description field in the annotation">
+              title="Show the Description field in the text box">
             <input type="checkbox" class="custom-control-input" name="showAnnotationDescription"
               ng-attr-id="showAnnotationDescription{{ctrl.uid}}"
               ng-change="ctrl.updateAnnotation()" ng-disabled="!ctrl.annotationOptions.show"

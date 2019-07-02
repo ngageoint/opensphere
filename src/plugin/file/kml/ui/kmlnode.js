@@ -745,7 +745,7 @@ plugin.file.kml.ui.KMLNode.prototype.formatIcons = function() {
 
     // if an annotation is displayed, add an icon for it
     if (this.annotation_) {
-      icons.push('<i class="fa fa-comment fa-fw" title="Annotation"></i>');
+      icons.push('<i class="fa fa-comment fa-fw" title="Text box"></i>');
     }
 
     // add an info icon to launch feature info
