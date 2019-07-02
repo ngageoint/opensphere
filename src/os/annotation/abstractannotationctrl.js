@@ -22,16 +22,17 @@ os.annotation.UI_TEMPLATE =
     '<svg class="c-annotation__svg">' +
       '<path ng-style="{ fill: ctrl.options.showDescription ? ctrl.options.bodyBG : ctrl.options.headerBG}" />' +
     '</svg>' +
-    '<div class="c-annotation__controls position-absolute text-right w-100" ng-show="ctrl.options.editable">' +
-      '<button class="btn btn-sm btn-outline-secondary border-0 bg-transparent animate-fade u-hover-show"' +
-          'title="Hide Annotation"' +
+    '<div class="u-card-popup position-absolute text-right animate-fade u-hover-show"' +
+        ' ng-show="ctrl.options.editable">' +
+      '<button class="btn btn-sm btn-outline-primary border-0 bg-transparent"' +
+          'title="Hide text box"' +
           'ng-click="ctrl.hideAnnotation()">' +
-        '<i class="fa fa-eye-slash"></i>' +
+        '<i class="c-glyph fa fa-fw fa-comment"></i>' +
       '</button>' +
-      '<button class="btn btn-sm btn-outline-secondary border-0 bg-transparent animate-fade u-hover-show"' +
-          'title="Edit annotation"' +
+      '<button class="btn btn-sm btn-outline-primary border-0 bg-transparent"' +
+          'title="Edit text box"' +
           'ng-click="ctrl.launchEditWindow()">' +
-        '<i class="fa fa-pencil"></i>' +
+        '<i class="c-glyph fa fa-fw fa-pencil"></i>' +
       '</button>' +
     '</div>' +
     '<div class="js-annotation c-window card h-100">' +
@@ -46,12 +47,12 @@ os.annotation.UI_TEMPLATE =
             '<input class="form-control" type="text" ng-model="ctrl.name"/>' +
           '</div>' +
           '<div class="col-auto">' +
-            '<button class="btn btn-success mr-1" title="Save the annotation" ' +
+            '<button class="btn btn-success mr-1" title="Save the name" ' +
                 'ng-click="ctrl.saveAnnotation()" ' +
                 'ng-disabled="!ctrl.name">' +
               '<i class="fa fa-check"/> OK' +
             '</button>' +
-            '<button class="btn btn-secondary" title="Cancel editing the annotation" ng-click="ctrl.cancelEdit()">' +
+            '<button class="btn btn-secondary" title="Cancel editing the text box" ng-click="ctrl.cancelEdit()">' +
               '<i class="fa fa-ban"/> Cancel' +
             '</button>' +
           '</div>' +
@@ -64,10 +65,10 @@ os.annotation.UI_TEMPLATE =
         '<tuieditor text="ctrl.description" edit="ctrl.editingDescription" is-required="false" maxlength="4000">' +
         '</tuieditor>' +
         '<div class="text-right mt-1" ng-if="ctrl.editingDescription">' +
-          '<button class="btn btn-success mr-1" title="Save the annotation" ng-click="ctrl.saveAnnotation()">' +
+          '<button class="btn btn-success mr-1" title="Save the text box" ng-click="ctrl.saveAnnotation()">' +
             '<i class="fa fa-check"/> OK' +
           '</button>' +
-          '<button class="btn btn-secondary" title="Cancel editing the annotation" ng-click="ctrl.cancelEdit()">' +
+          '<button class="btn btn-secondary" title="Cancel editing the text box" ng-click="ctrl.cancelEdit()">' +
             '<i class="fa fa-ban"/> Cancel' +
           '</button>' +
         '</div>' +
