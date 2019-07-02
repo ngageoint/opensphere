@@ -34,7 +34,6 @@ os.interaction.DoubleClick = function() {
 goog.inherits(os.interaction.DoubleClick, ol.interaction.Interaction);
 os.implements(os.interaction.DoubleClick, os.I3DSupport.ID);
 
-
 /**
  * @inheritDoc
  */
@@ -79,12 +78,7 @@ os.interaction.DoubleClick.handleEvent_ = function(mapBrowserEvent) {
       }, options);
 
       if (features.length > 0) {
-        var layer = os.feature.getLayer(features[0]);
-        if (layer instanceof os.layer.Vector && layer.hasDoubleClickHandler() && features.length == 1) {
-          layer.getDoubleClickHandler().call(layer, features[0]);
-        } else {
-          os.ui.feature.launchMultiFeatureInfo(features);
-        }
+        os.ui.feature.launchMultiFeatureInfo(features);
       }
     } catch (e) {
     }
