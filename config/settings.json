@@ -64,8 +64,7 @@
           "EPSG:4326": [],
           "EPSG:3857": [
             "worldimagery",
-            "streetmap",
-            "ogcapi"
+            "streetmap"
           ]
         },
         "failSet": {
