@@ -30,6 +30,7 @@ os.ui.Module.directive('datePanel', [os.ui.datePanelDirective]);
 
 /**
  * Controller for the date panel
+ *
  * @param {!angular.Scope} $scope
  * @constructor
  * @ngInject
@@ -87,6 +88,7 @@ os.ui.DatePanelCtrl = function($scope) {
 
 /**
  * Shows the time slicer or not
+ *
  * @export
  */
 os.ui.DatePanelCtrl.prototype.toggleExtend = function() {
@@ -100,6 +102,7 @@ os.ui.DatePanelCtrl.prototype.toggleExtend = function() {
 
 /**
  * Opens timeline
+ *
  * @export
  */
 os.ui.DatePanelCtrl.prototype.expand = function() {
@@ -109,6 +112,7 @@ os.ui.DatePanelCtrl.prototype.expand = function() {
 
 /**
  * Update the offset if it changes
+ *
  * @return {string}
  * @export
  */
@@ -119,6 +123,7 @@ os.ui.DatePanelCtrl.prototype.getOffset = function() {
 
 /**
  * Enable the apply button when a spinner value changes
+ *
  * @param {string} varName
  * @param {number} min
  * @param {number} max
@@ -141,6 +146,7 @@ os.ui.DatePanelCtrl.prototype.onChange = function(varName, min, max, oldVal) {
 
 /**
  * Turns on/off time slice requests
+ *
  * @export
  */
 os.ui.DatePanelCtrl.prototype.applySlice = function() {
@@ -162,6 +168,7 @@ os.ui.DatePanelCtrl.prototype.applySlice = function() {
 
 /**
  * Turns on time slice requests if they are in use
+ *
  * @export
  */
 os.ui.DatePanelCtrl.prototype.applySliceIfActive = function() {
@@ -173,6 +180,7 @@ os.ui.DatePanelCtrl.prototype.applySliceIfActive = function() {
 
 /**
  * Turns off slicing
+ *
  * @export
  */
 os.ui.DatePanelCtrl.prototype.cancelSlice = function() {
@@ -182,6 +190,7 @@ os.ui.DatePanelCtrl.prototype.cancelSlice = function() {
 
 /**
  * Validates slice
+ *
  * @return {boolean}
  * @export
  */

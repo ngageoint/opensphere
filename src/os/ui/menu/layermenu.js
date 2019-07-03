@@ -233,6 +233,7 @@ os.ui.menu.layer.dispose = function() {
 
 /**
  * Get the layer from an action event context.
+ *
  * @param {os.ui.menu.layer.Context} context The event context.
  * @return {!Array<!os.layer.ILayer>}
  */
@@ -243,6 +244,7 @@ os.ui.menu.layer.getLayersFromContext = function(context) {
 
 /**
  * Show a menu item if layers in the context support it.
+ *
  * @param {os.ui.menu.layer.Context} context The menu context.
  * @this {os.ui.menu.MenuItem}
  */
@@ -262,6 +264,7 @@ os.ui.menu.layer.visibleIfSupported = function(context) {
 
 /**
  * Handle layer menu events.
+ *
  * @param {!os.ui.menu.MenuEvent<os.ui.menu.layer.Context>} event The menu event.
  */
 os.ui.menu.layer.onLayerMenuEvent = function(event) {
@@ -278,6 +281,7 @@ os.ui.menu.layer.onLayerMenuEvent = function(event) {
 
 /**
  * Handle the "Show Description" menu event.
+ *
  * @param {!os.ui.menu.MenuEvent<os.ui.menu.layer.Context>} event The menu event.
  * @private
  */
@@ -325,6 +329,7 @@ os.ui.menu.layer.onDescription_ = function(event) {
 
 /**
  * Handle the "Export" menu event.
+ *
  * @param {!os.ui.menu.MenuEvent<os.ui.menu.layer.Context>} event The menu event.
  * @private
  */
@@ -338,6 +343,7 @@ os.ui.menu.layer.onExport_ = function(event) {
 
 /**
  * Handle the "Feature List" menu event.
+ *
  * @param {!os.ui.menu.MenuEvent<os.ui.menu.layer.Context>} event The menu event.
  * @private
  */
@@ -356,6 +362,7 @@ os.ui.menu.layer.onFeatureList_ = function(event) {
 
 /**
  * Handle the "Go To" menu event.
+ *
  * @param {!os.ui.menu.MenuEvent<os.ui.menu.layer.Context>} event The menu event.
  * @private
  */
@@ -371,6 +378,7 @@ os.ui.menu.layer.onGoTo_ = function(event) {
 
 /**
  * Handle the "Identify" menu event.
+ *
  * @param {!os.ui.menu.MenuEvent<os.ui.menu.layer.Context>} event The menu event.
  * @private
  */

@@ -9,6 +9,7 @@ goog.require('os.ui.query.cmd.AreaAdd');
 
 /**
  * The draw-menu directive
+ *
  * @return {angular.Directive}
  */
 os.ui.ol.draw.drawMenuDirective = function() {
@@ -31,6 +32,7 @@ os.ui.Module.directive('drawMenu', [os.ui.ol.draw.drawMenuDirective]);
 
 /**
  * Controller for the draw-menu directive.
+ *
  * @constructor
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
@@ -60,6 +62,7 @@ os.ui.ol.draw.DrawMenuCtrl = function($scope, $element) {
 
 /**
  * Clean up references/listeners.
+ *
  * @private
  */
 os.ui.ol.draw.DrawMenuCtrl.prototype.destroy_ = function() {
@@ -80,6 +83,7 @@ os.ui.ol.draw.DrawMenuCtrl.prototype.isCountryEnabled = function() {
 
 /**
  * Launched adding areas by coordinates
+ *
  * @export
  */
 os.ui.ol.draw.DrawMenuCtrl.prototype.launchAreaByCoordinates = function() {
@@ -90,6 +94,7 @@ os.ui.ol.draw.DrawMenuCtrl.prototype.launchAreaByCoordinates = function() {
 
 /**
  * Launched adding areas by coordinates
+ *
  * @export
  */
 os.ui.ol.draw.DrawMenuCtrl.prototype.launchChooseArea = function() {
@@ -100,6 +105,7 @@ os.ui.ol.draw.DrawMenuCtrl.prototype.launchChooseArea = function() {
 
 /**
  * Adds an area querying the whole world.
+ *
  * @export
  */
 os.ui.ol.draw.DrawMenuCtrl.prototype.queryWorld = function() {

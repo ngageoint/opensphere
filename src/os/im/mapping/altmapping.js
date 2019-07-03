@@ -14,6 +14,7 @@ goog.require('os.math.Units');
 
 /**
  * Altitude mapping.
+ *
  * @extends {os.im.mapping.RenameMapping<ol.Feature>}
  * @constructor
  */
@@ -105,6 +106,7 @@ os.im.mapping.MappingRegistry.getInstance().registerMapping(
 
 /**
  * Get the units used by the mapping.
+ *
  * @return {string}
  */
 os.im.mapping.AltMapping.prototype.getUnits = function() {
@@ -115,6 +117,7 @@ os.im.mapping.AltMapping.prototype.getUnits = function() {
 /**
  * Override any units columns that may have been detected with an externally defined value
  * This is currently only used by CSV import when the user chooses a different starting unit
+ *
  * @param {string} units
  */
 os.im.mapping.AltMapping.prototype.setUnits = function(units) {
@@ -127,6 +130,7 @@ os.im.mapping.AltMapping.prototype.setUnits = function(units) {
 
 /**
  * Get if the mapping is for inverse altitude.
+ *
  * @return {boolean}
  */
 os.im.mapping.AltMapping.prototype.getInverse = function() {
@@ -136,6 +140,7 @@ os.im.mapping.AltMapping.prototype.getInverse = function() {
 
 /**
  * Set if parsed altitude values should be inverted.
+ *
  * @param {boolean} isInverse If parsed altitude values should be inverted.
  */
 os.im.mapping.AltMapping.prototype.setInverse = function(isInverse) {
@@ -145,6 +150,7 @@ os.im.mapping.AltMapping.prototype.setInverse = function(isInverse) {
 
 /**
  * Get the altitude units regular expression.
+ *
  * @return {!RegExp}
  * @protected
  */
@@ -283,6 +289,7 @@ os.im.mapping.AltMapping.prototype.autoDetect = function(items) {
 
 /**
  * Determine if the provided string is a recognized units value in os.math.Units
+ *
  * @param {string} units the string representing units
  * @return {?string} A recognizable unit value from os.math.Units or null if one was not found
  */

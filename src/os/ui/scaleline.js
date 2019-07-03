@@ -8,6 +8,7 @@ goog.require('os.ui.menu.unit');
 
 /**
  * The scale line directive
+ *
  * @return {angular.Directive}
  */
 os.ui.scaleLineDirective = function() {
@@ -32,6 +33,7 @@ os.ui.Module.directive('scaleLine', [os.ui.scaleLineDirective]);
 
 /**
  * Controller function for the scale line directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @extends {os.ui.menu.MenuButtonCtrl}

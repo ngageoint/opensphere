@@ -4,6 +4,7 @@ goog.provide('os.ui.tab.Tab');
 
 /**
  * Simple model class representing a pluggable tab.
+ *
  * @param {string} id The ID to track the element by
  * @param {string} label The user facing label of the tab
  * @param {string} icon The icon to display

@@ -18,6 +18,7 @@ os.file.mime.zip.MAGIC_BYTES_BIG_ENDIAN = 0x504B0304;
 
 /**
  * Tests if an ArrayBuffer holds zip content by looking for the magic number.
+ *
  * @param {ArrayBuffer} buffer
  * @return {boolean}
  */
@@ -42,8 +43,8 @@ os.file.mime.zip.detectZip = function(buffer, opt_file) {
       return new goog.Promise(function(resolve, reject) {
         // if we have a file reference, use that
         var reader = opt_file && opt_file.getFile() ?
-            new zip.BlobReader(opt_file.getFile()) :
-            new zip.ArrayBufferReader(buffer);
+          new zip.BlobReader(opt_file.getFile()) :
+          new zip.ArrayBufferReader(buffer);
 
         try {
           zip.createReader(reader, function(reader) {

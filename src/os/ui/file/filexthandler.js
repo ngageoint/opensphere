@@ -11,6 +11,7 @@ goog.require('os.xt.IMessageHandler');
 
 /**
  * Handles file load messages from other applications
+ *
  * @implements {os.xt.IMessageHandler}
  * @constructor
  */

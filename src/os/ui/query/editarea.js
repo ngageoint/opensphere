@@ -12,6 +12,7 @@ goog.require('os.ui.query.cmd.AreaAdd');
 
 /**
  * The edit area directive
+ *
  * @return {angular.Directive}
  */
 os.ui.query.editAreaDirective = function() {
@@ -35,6 +36,7 @@ os.ui.Module.directive('editarea', [os.ui.query.editAreaDirective]);
 
 /**
  * Controller for edit area window
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$timeout} $timeout The Angular $timeout service.
@@ -75,6 +77,7 @@ goog.inherits(os.ui.query.EditAreaCtrl, os.ui.query.AreaImportCtrl);
 
 /**
  * Finish the dialog
+ *
  * @export
  */
 os.ui.query.EditAreaCtrl.prototype.accept = function() {

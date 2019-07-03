@@ -5,6 +5,7 @@ goog.require('os.implements');
 
 /**
  * An interface for layer ui
+ *
  * @interface
  */
 os.ui.ILayerUIProvider = function() {};

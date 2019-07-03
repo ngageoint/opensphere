@@ -103,6 +103,7 @@ os.ui.wiz.step.AbstractWizardStep.LOGGER_ = goog.log.getLogger('os.ui.wiz.step.A
 
 /**
  * Handles validity changes on the step scope.
+ *
  * @param {angular.Scope.Event} event
  * @param {boolean=} opt_valid
  * @private
@@ -162,6 +163,7 @@ os.ui.wiz.step.AbstractWizardStep.prototype.deactivate = function(config) {
 
 /**
  * Initializes the wizard step from the provided configuration.
+ *
  * @param {T} config The wizard configuration.
  */
 os.ui.wiz.step.AbstractWizardStep.prototype.initialize = function(config) {
@@ -171,6 +173,7 @@ os.ui.wiz.step.AbstractWizardStep.prototype.initialize = function(config) {
 
 /**
  * Perform actions against the wizard configuration before the next step.
+ *
  * @param {T} config The wizard configuration.
  */
 os.ui.wiz.step.AbstractWizardStep.prototype.finalize = function(config) {
@@ -222,6 +225,7 @@ os.ui.wiz.step.AbstractWizardStep.prototype.isValid = function(config) {
 
 /**
  * Abstract wizard step controller.
+ *
  * @param {!angular.Scope} $scope
  * @constructor
  * @ngInject
@@ -256,6 +260,7 @@ os.ui.wiz.step.AbstractWizardStepCtrl = function($scope) {
 
 /**
  * Clean up everything!
+ *
  * @protected
  */
 os.ui.wiz.step.AbstractWizardStepCtrl.prototype.destroy = function() {
@@ -267,6 +272,7 @@ os.ui.wiz.step.AbstractWizardStepCtrl.prototype.destroy = function() {
 
 /**
  * Fire a step validity change/update event. If a validity is provided, the step's valid flag will be updated.
+ *
  * @protected
  */
 os.ui.wiz.step.AbstractWizardStepCtrl.prototype.fireValidity = function() {
@@ -276,6 +282,7 @@ os.ui.wiz.step.AbstractWizardStepCtrl.prototype.fireValidity = function() {
 
 /**
  * Test if the step is valid.
+ *
  * @return {boolean}
  * @protected
  */

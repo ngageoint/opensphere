@@ -9,6 +9,7 @@ goog.require('os.config.storage.SettingsWritableStorageType');
 
 /**
  * Registry for which storage types are supported for settings
+ *
  * @constructor
  */
 os.config.storage.SettingsStorageRegistry = function() {
@@ -46,6 +47,7 @@ goog.addSingletonGetter(os.config.storage.SettingsStorageRegistry);
 /**
  * Add a readable storage to the registry.  All the registered storages will be read, merged and used to initialize
  * the application.
+ *
  * @param {!os.config.storage.ISettingsReadableStorage} storage
  * @param {number=} opt_index
  */
@@ -71,6 +73,7 @@ os.config.storage.SettingsStorageRegistry.prototype.getNumberOfStorages = functi
 
 /**
  * Retrieve storage from a specific index
+ *
  * @param {!number} index
  * @return {?os.config.storage.ISettingsReadableStorage}
  */
@@ -90,6 +93,7 @@ os.config.storage.SettingsStorageRegistry.prototype.getWriteStorageType = functi
 /**
  * Assign the preferred storage type for saving settings.  The highest priority, registered, writable storage
  * will be used.  If none of that type are found, it will become null and saving settings will not be supported.
+ *
  * @param {os.config.storage.SettingsWritableStorageType} type
  * @return {boolean} Whether a storage of that type has been assigned
  */
@@ -104,6 +108,7 @@ os.config.storage.SettingsStorageRegistry.prototype.setWriteStorageType = functi
  * Use the assigned write storage type to identify the appropriate registered storage.  If a registered storage is
  * marked as failing, attempt to find another of that type (gracefully rollover).  If no other storage is registered
  * as that type, assign the writeStorage to null.
+ *
  * @private
  */
 os.config.storage.SettingsStorageRegistry.prototype.updateWriteStorage_ = function() {
@@ -134,6 +139,7 @@ os.config.storage.SettingsStorageRegistry.prototype.updateWriteStorage_ = functi
 
 /**
  * Retrieve the preferred storage to which settings will be written.
+ *
  * @return {?os.config.storage.ISettingsWritableStorage}
  */
 os.config.storage.SettingsStorageRegistry.prototype.getWriteStorage = function() {
@@ -147,12 +153,13 @@ os.config.storage.SettingsStorageRegistry.prototype.getWriteStorage = function()
 /**
  * Retrieve all registered storages that are writable and need to be cleared out.  This occurs after the designated
  * write storage
+ *
  * @return {!Array.<!os.config.storage.ISettingsWritableStorage>}
  */
 os.config.storage.SettingsStorageRegistry.prototype.getStoragesToClear = function() {
   var writablesToClear = goog.array.filter(this.availableReadStorages_, function(storage) {
     return os.implements(storage, os.config.storage.ISettingsWritableStorage.ID) &&
-        /** @type {os.config.storage.ISettingsWritableStorage} */ (storage).needsCleared;
+    /** @type {os.config.storage.ISettingsWritableStorage} */ (storage).needsCleared;
   }, this);
   return /** @type {!Array.<!os.config.storage.ISettingsWritableStorage>} */ (writablesToClear);
 };

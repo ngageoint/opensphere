@@ -189,6 +189,7 @@ plugin.vectortools.JoinCtrl.prototype.onUpdateDelay = function() {
 
 /**
  * Close the window.
+ *
  * @export
  */
 plugin.vectortools.JoinCtrl.prototype.close = function() {
@@ -198,6 +199,7 @@ plugin.vectortools.JoinCtrl.prototype.close = function() {
 
 /**
  * Builds and executes the command to perform the join then closes the window.
+ *
  * @export
  */
 plugin.vectortools.JoinCtrl.prototype.accept = function() {

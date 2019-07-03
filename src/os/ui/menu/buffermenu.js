@@ -138,6 +138,7 @@ os.ui.menu.buffer.spatialDispose = function() {
 
 /**
  * Enables the option when a feature exists in the args.
+ *
  * @param {Object|undefined} context The menu context.
  * @this {os.ui.menu.MenuItem}
  */
@@ -161,6 +162,7 @@ os.ui.menu.buffer.visibleIfCanBuffer = function(context) {
 
 /**
  * Handle buffer event from the map menu.
+ *
  * @param {!os.ui.menu.MenuEvent<ol.Coordinate>} event
  */
 os.ui.menu.buffer.handleCoordinateBufferEvent = function(event) {
@@ -174,6 +176,7 @@ os.ui.menu.buffer.handleCoordinateBufferEvent = function(event) {
 
 /**
  * Handle buffer event from the layer menu.
+ *
  * @param {!os.ui.menu.MenuEvent<os.ui.menu.layer.Context>} event The menu event.
  */
 os.ui.menu.buffer.handleLayerBufferEvent = function(event) {
@@ -196,6 +199,7 @@ os.ui.menu.buffer.handleLayerBufferEvent = function(event) {
 
 /**
  * Handle buffer event from the spatial menu.
+ *
  * @param {!os.ui.menu.MenuEvent} event The event.
  */
 os.ui.menu.buffer.handleSpatialBufferEvent = function(event) {

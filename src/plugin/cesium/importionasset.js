@@ -9,6 +9,7 @@ goog.require('os.ui.window');
 
 /**
  * All purpose file/url import directive
+ *
  * @return {angular.Directive}
  */
 plugin.cesium.importIonAssetDirective = function() {
@@ -32,6 +33,7 @@ os.ui.Module.directive('importionasset', [plugin.cesium.importIonAssetDirective]
 
 /**
  * Controller for the Ion asset import dialog.
+ *
  * @param {!angular.Scope} $scope The Angular scope.
  * @param {!angular.JQLite} $element The root DOM element.
  * @extends {goog.Disposable}
@@ -90,6 +92,7 @@ plugin.cesium.ImportIonAssetCtrl.prototype.disposeInternal = function() {
 
 /**
  * Import the asset and close the window.
+ *
  * @export
  */
 plugin.cesium.ImportIonAssetCtrl.prototype.accept = function() {
@@ -111,6 +114,7 @@ plugin.cesium.ImportIonAssetCtrl.prototype.accept = function() {
 
 /**
  * Close the window.
+ *
  * @export
  */
 plugin.cesium.ImportIonAssetCtrl.prototype.close = function() {

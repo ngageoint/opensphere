@@ -62,6 +62,7 @@ olcs.OLCesium.prototype.handleResize_ = function() {
 
 /**
  * Changed to allow some interactions to be disabled rather than removed entirely
+ *
  * @param {boolean} enable
  * @suppress {accessControls|duplicate}
  */

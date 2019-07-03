@@ -118,6 +118,7 @@ plugin.file.kml.menu.treeSetup = function() {
 
 /**
  * Show a KML menu item if the context supports it.
+ *
  * @param {os.ui.menu.layer.Context} context The menu context.
  * @private
  * @this {os.ui.menu.MenuItem}
@@ -161,6 +162,7 @@ plugin.file.kml.menu.visibleIfSupported_ = function(context) {
 
 /**
  * Handle KML layer menu events.
+ *
  * @param {!os.ui.menu.MenuEvent<os.ui.menu.layer.Context>} event The menu event.
  * @private
  */

@@ -6,6 +6,7 @@ goog.require('os.ui.Module');
 
 /**
  * A toggle directive for a node that expands/collapses the children
+ *
  * @return {angular.Directive}
  */
 os.ui.nodeToggleDirective = function() {
@@ -29,6 +30,7 @@ os.ui.Module.directive('nodetoggle', [os.ui.nodeToggleDirective]);
 
 /**
  * Controller for the node spinner directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @constructor
@@ -60,6 +62,7 @@ os.ui.NodeToggleCtrl = function($scope, $element) {
 
 /**
  * Cleans up the property change listener
+ *
  * @private
  */
 os.ui.NodeToggleCtrl.prototype.onDestroy_ = function() {
@@ -76,6 +79,7 @@ os.ui.NodeToggleCtrl.prototype.onDestroy_ = function() {
 
 /**
  * Handles the loading property change
+ *
  * @param {os.events.PropertyChangeEvent} e The change event
  * @protected
  */

@@ -23,6 +23,7 @@ os.ui.help.metricsOption.addToNav = function() {
 
 /**
  * Show the metrics window.
+ *
  * @private
  */
 os.ui.help.showMetricsWindow_ = function() {

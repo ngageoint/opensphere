@@ -30,6 +30,7 @@ os.ui.location.LocationSetting = {
 
 /**
  * Get the currently selected location format
+ *
  * @return {string}
  */
 os.ui.location.getCurrentFormat = function() {
@@ -41,6 +42,7 @@ os.ui.location.getCurrentFormat = function() {
 /**
  * Helper function to format a lat lon in the current format.  Good
  * for text only fields.
+ *
  * @param {number|string} lat
  * @param {number|string} lon
  * @return {string}

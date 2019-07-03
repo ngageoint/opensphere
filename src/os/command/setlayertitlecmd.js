@@ -5,6 +5,7 @@ goog.require('os.command.AbstractSyncCommand');
 
 /**
  * Set the title of a layer retrieved from the passed ID.
+ *
  * @extends {os.command.AbstractSyncCommand}
  * @constructor
  * @param {string} overlayId

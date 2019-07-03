@@ -32,6 +32,7 @@ os.array.binaryInsert = function(array, value, opt_compareFn) {
 
 /**
  * Clear an array.
+ *
  * @param {IArrayLike<?>} arr The array or array-like object.
  */
 os.array.clear = function(arr) {
@@ -63,6 +64,7 @@ os.array.forEach = function(arr, f, opt_obj) {
 
 /**
  * Sort items by the specified field in ascending order. Inject the field using goog.bind or goog.partial.
+ *
  * @param {string} field
  * @param {VALUE} a
  * @param {VALUE} b
@@ -76,6 +78,7 @@ os.array.sortByField = function(field, a, b) {
 
 /**
  * Sort items by the specified field in descending order. Inject the field using goog.bind or goog.partial.
+ *
  * @param {string} field
  * @param {VALUE} a
  * @param {VALUE} b
@@ -102,6 +105,7 @@ os.array.forEachSafe = os.array.forEach;
 
 /**
  * Copies array elements from a source array to a destination array.
+ *
  * @param {Array} src Source array
  * @param {number} srcPos Source start index
  * @param {Array} dest Destination array
@@ -119,6 +123,7 @@ os.array.arrayCopy = function(src, srcPos, dest, destPos, length) {
 
 /**
  * Copies array elements from a source array to a destination array.
+ *
  * @param {Array} arr1 first array to check interesection
  * @param {Array} arr2 first array to check interesection
  * @return {Array} an array with only the items present that are in both arrays
@@ -140,6 +145,7 @@ os.array.intersection = function(arr1, arr2) {
 /**
  * Based on the goog.array.removeDuplicates method. This function discovers all the duplicate entries in an array
  * and returns them.
+ *
  * @param {Array<T>} arr The array to search for duplicates
  * @param {function(T):string=} opt_hashFn Optional function for determining uniqueness
  * @return {Array<T>}
@@ -149,7 +155,7 @@ os.array.findDuplicates = function(arr, opt_hashFn) {
   var returnArray = [];
   var defaultHashFn = function(item) {
     return goog.isObject(current) ? 'o' + goog.getUid(current) :
-        (typeof current).slice(0, 2) + current;
+      (typeof current).slice(0, 2) + current;
   };
   var hashFn = opt_hashFn || defaultHashFn;
 
@@ -174,6 +180,7 @@ os.array.findDuplicates = function(arr, opt_hashFn) {
 /**
  * Based on the goog.array.removeDuplicates method but will also work when the items you are comparing are arrays,
  * which is really common in our code. Also returns true if duplicate was found, for convenience
+ *
  * @param {Array<T>} arr The array to search for duplicates
  * @param {Array<T>=} opt_rv The array to copy the deduped array into. If provided, the original array remains intact
  * @param {function(T):string=} opt_hashFn Optional function for determining uniqueness
@@ -241,6 +248,7 @@ os.array.JoinIndex;
 
 /**
  * Sorts {@link os.array.JoinSet}'s by their crossProduct.
+ *
  * @param {os.array.JoinSet} a
  * @param {os.array.JoinSet} b
  * @return {number}
@@ -346,7 +354,7 @@ os.array.binaryStrideSearch = function(arr, target, stride, offset, opt_compareF
   // ensure the offset is within the group bounds
   offset = goog.math.clamp(offset, 0, stride - 1);
 
-  var left = 0;           // inclusive
+  var left = 0; // inclusive
   var right = arr.length; // exclusive
   var found;
   while (left < right) {

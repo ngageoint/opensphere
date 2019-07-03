@@ -4,6 +4,7 @@ goog.require('os.style.FallbackIconImage');
 
 /**
  * Overridden to return our own type for the image
+ *
  * @param {Image|HTMLCanvasElement} image Image.
  * @param {string} src Src.
  * @param {ol.Size} size Size.

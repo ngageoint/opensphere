@@ -6,6 +6,7 @@ goog.require('os.unit.Multiplier');
 
 /**
  * Responsible for receiving, logging and reporting alerts
+ *
  * @extends {os.unit.BaseUnit}
  * @constructor
  */

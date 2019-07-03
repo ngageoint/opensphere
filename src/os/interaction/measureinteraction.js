@@ -23,6 +23,7 @@ goog.require('os.math');
 
 /**
  * Interaction to measure the distance between drawn points on the map.
+ *
  * @param {olx.interaction.PointerOptions=} opt_options
  * @extends {os.interaction.DrawPolygon}
  * @constructor
@@ -213,6 +214,7 @@ os.interaction.Measure.getTextStyle_ = function(opt_text) {
 
 /**
  * Creates waypoints to act as anchors for labels in OL3.
+ *
  * @inheritDoc
  */
 os.interaction.Measure.prototype.update2D = function() {
@@ -285,6 +287,7 @@ os.interaction.Measure.prototype.saveLast = goog.nullFunction;
 
 /**
  * Gets the text for the ith distance label.
+ *
  * @param {number} i The index of the distance to use.
  * @param {boolean=} opt_noBearing Whether to exclude the bearing (for the last point)
  * @return {string}
@@ -311,6 +314,7 @@ os.interaction.Measure.prototype.getDistanceText_ = function(i, opt_noBearing) {
 
 /**
  * Gets the total distance for the measurement
+ *
  * @return {number}
  * @private
  */
@@ -325,6 +329,7 @@ os.interaction.Measure.prototype.getTotalDistance_ = function() {
 
 /**
  * Listener for map unit changes. Updates the features on the map (if present) to reflect the new units.
+ *
  * @param {os.events.PropertyChangeEvent} event
  * @private
  */
@@ -338,6 +343,7 @@ os.interaction.Measure.prototype.onUnitsChange_ = function(event) {
 
 /**
  * Updates the displayed measure text.
+ *
  * @private
  */
 os.interaction.Measure.prototype.onChange_ = function() {

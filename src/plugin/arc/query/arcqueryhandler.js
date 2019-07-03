@@ -52,6 +52,7 @@ plugin.arc.query.ArcQueryHandler.LOGGER_ = goog.log.getLogger('plugin.arc.query.
 
 /**
  * Get the active query entries for this layer.
+ *
  * @return {!Array<!Object<string, string|boolean>>}
  * @protected
  */
@@ -117,6 +118,7 @@ plugin.arc.query.ArcQueryHandler.prototype.createFilter = function() {
 /**
  * Creates the multipolygon with holes geometry. This accounts for exclusion areas by either adding them as holes
  * to the inclusions or by full wiping out inclusions if necessary.
+ *
  * @return {string}
  */
 plugin.arc.query.ArcQueryHandler.prototype.createGeometry = function() {

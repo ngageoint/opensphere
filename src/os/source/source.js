@@ -30,6 +30,7 @@ os.source.RefreshTimers = {};
 /**
  * Identifies a vector source by flashing it on and off. This takes into account an animation overlay
  * if the source is using one to render features.
+ *
  * @param {os.source.Vector} source
  */
 os.source.identifySource = function(source) {
@@ -66,6 +67,7 @@ os.source.identifySource = function(source) {
 
 /**
  * Get the filterable columns on a source.
+ *
  * @param {os.source.ISource} source The source.
  * @param {boolean=} opt_local If local columns should be included.
  * @param {boolean=} opt_includeTime If the time column should be included.
@@ -153,6 +155,7 @@ os.source.isVisible = function(source) {
 
 /**
  * Compares sources by title.
+ *
  * @param {os.source.ISource} a A source
  * @param {os.source.ISource} b Another source
  * @return {number} The comparison
@@ -164,6 +167,7 @@ os.source.titleCompare = function(a, b) {
 
 /**
  * Compares sources by z-index in descending order.
+ *
  * @param {os.source.ISource} a A source
  * @param {os.source.ISource} b Another source
  * @return {number} The comparison
@@ -177,6 +181,7 @@ os.source.zIndexCompare = function(a, b) {
 
 /**
  * Retrieve the time field from a feature.
+ *
  * @param {Object} item The feature
  * @return {?os.time.ITime} The record time, or null if held or not defined
  */
@@ -201,6 +206,7 @@ os.source.getRecordTime = function(item) {
 
 /**
  * Retrieve the hold records time field from a feature.
+ *
  * @param {Object} item The feature
  * @return {?os.time.ITime} The record time, or null if not within the held range
  */
@@ -225,6 +231,7 @@ os.source.getHoldRecordTime = function(item) {
 
 /**
  * Get the fields to export for features in the source.
+ *
  * @param {os.source.Vector} source The source
  * @param {boolean=} opt_internal If internal fields should be included
  * @param {boolean=} opt_includeTime If the time field should be included

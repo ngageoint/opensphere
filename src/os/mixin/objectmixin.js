@@ -11,6 +11,7 @@ goog.require('ol.obj');
 /**
  * Angular uses $$hashKey to identify objects used in ngOptions, but we want the key to be created in a consistent
  * window context. This ensures all OL objects create a hashKey in their local context.
+ *
  * @return {string|number}
  */
 ol.Object.prototype.getHashKey = function() {
@@ -47,6 +48,7 @@ ol.Object.prototype.suppressEvents = function() {
 
 /**
  * Modified to prevent events from firing when disabled.
+ *
  * @inheritDoc
  */
 ol.Object.prototype.dispatchEvent = function(e) {
@@ -58,6 +60,7 @@ ol.Object.prototype.dispatchEvent = function(e) {
 
 /**
  * Modified to prevent a lot of constructor/GC overhead with ol.Object.Event's if events are disabled.
+ *
  * @param {string} key Key name.
  * @param {*} oldValue Old value.
  * @suppress {duplicate}

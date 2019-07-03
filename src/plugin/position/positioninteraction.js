@@ -11,6 +11,7 @@ goog.require('os.metrics.keys');
 
 /**
  * Handles the behavior of clicking the PERIOD button or Copy Coordinates from the context menu.
+ *
  * @constructor
  * @extends {ol.interaction.Interaction}
  * @implements {os.I3DSupport}
@@ -28,6 +29,7 @@ os.implements(plugin.position.PositionInteraction, os.I3DSupport.ID);
 
 /**
  * Whether or not this interaction is supported in 3D mode
+ *
  * @return {boolean}
  * @override
  */

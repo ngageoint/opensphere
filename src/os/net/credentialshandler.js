@@ -7,6 +7,7 @@ goog.require('os.net.ExtDomainHandler');
 
 /**
  * Handles requests to an external domain with a simple XHR and no credentials
+ *
  * @constructor
  * @extends {os.net.ExtDomainHandler}
  */

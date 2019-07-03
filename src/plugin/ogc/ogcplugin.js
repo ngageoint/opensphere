@@ -20,6 +20,7 @@ goog.require('plugin.ogc.wms.WMSLayerConfig');
 
 /**
  * Provides WMS/WFS layer support, both separately and as a grouped layer combination.
+ *
  * @extends {os.plugin.AbstractPlugin}
  * @constructor
  */
@@ -37,7 +38,7 @@ plugin.ogc.OGCPlugin.prototype.init = function() {
   var dm = os.dataManager;
 
   var ogc = new os.data.ProviderEntry(os.ogc.ID, os.ui.ogc.OGCServer, 'OGC Server',
-    'OGC Servers provide raster imagery through WMS (Web Map Service) and vector features through WFS'
+      'OGC Servers provide raster imagery through WMS (Web Map Service) and vector features through WFS'
     + ' (Web Feature Service) servers');
 
   var geo = new os.data.ProviderEntry(plugin.ogc.mime.GEOSERVER_TYPE, plugin.ogc.GeoServer, 'GeoServer', '');
@@ -65,6 +66,7 @@ plugin.ogc.OGCPlugin.prototype.init = function() {
 
 /**
  * Get the default opensphere WFS layer options
+ *
  * @return {!Object<string, *>}
  */
 plugin.ogc.getDefaultWfsOptions = function() {
@@ -81,6 +83,7 @@ plugin.ogc.getDefaultWfsOptions = function() {
 
 /**
  * Get the maxiumum number of features supported by the application, accounting for 2D/3D modes.
+ *
  * @param {string=} opt_key
  * @return {number}
  */

@@ -7,6 +7,7 @@ goog.require('os.time.TimeInstant');
 
 /**
  * Formats the data to be a link if it passes the regex
+ *
  * @param {string} value The value
  * @return {string} The HTML for the cell
  */

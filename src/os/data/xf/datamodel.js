@@ -80,6 +80,7 @@ os.data.xf.DataModel.LOGGER_ = goog.log.getLogger('os.data.xf.DataModel');
 /**
  * Add items to the model. While items can be added individually, it is <b>highly</b> recommended to add them in bulk.
  * Bulk adds are significantly faster in crossfilter.
+ *
  * @param {S|Array<S>} items
  */
 os.data.xf.DataModel.prototype.add = function(items) {
@@ -143,6 +144,7 @@ os.data.xf.DataModel.prototype.disposeInternal = function() {
 
 /**
  * Get the filter function used by the model.
+ *
  * @return {?function(this:S, T, number, !Array<T>):boolean}
  * @template T,S
  */
@@ -153,6 +155,7 @@ os.data.xf.DataModel.prototype.getFilterFunction = function() {
 
 /**
  * Set the filter function used by the model.
+ *
  * @param {?function(this:S, T, number, !Array<T>):boolean} fn
  * @template T,S
  */
@@ -183,6 +186,7 @@ os.data.xf.DataModel.prototype.addDimension = function(id, accessorFn, opt_isArr
 
 /**
  * If the data model has the specified dimension.
+ *
  * @param {string} id Unique id of the dimension
  * @return {boolean}
  */
@@ -193,6 +197,7 @@ os.data.xf.DataModel.prototype.hasDimension = function(id) {
 
 /**
  * Removes a dimension from the model.
+ *
  * @param {string} id Unique id of the dimension
  */
 os.data.xf.DataModel.prototype.removeDimension = function(id) {
@@ -209,6 +214,7 @@ os.data.xf.DataModel.prototype.removeDimension = function(id) {
 
 /**
  * Filters the specified dimension based on a value, range, function, or undefined to filter all values.
+ *
  * @param {string} id Unique id of the dimension
  * @param {*=} opt_value The value to filter against. See the crossfilter documentation for dimension#filter details.
  */
@@ -229,6 +235,7 @@ os.data.xf.DataModel.prototype.filterDimension = function(id, opt_value) {
 
 /**
  * Apply a set of filters
+ *
  * @param {!Object<string, *>} filters
  */
 os.data.xf.DataModel.prototype.applyFilters = function(filters) {
@@ -244,6 +251,7 @@ os.data.xf.DataModel.prototype.applyFilters = function(filters) {
 /**
  * Clears all dimension filters and the filterFunction
  * Return the filters that were cleared
+ *
  * @return {!Object<string, *>}
  */
 os.data.xf.DataModel.prototype.clearAllFilters = function() {
@@ -260,6 +268,7 @@ os.data.xf.DataModel.prototype.clearAllFilters = function() {
 
 /**
  * Gets the top record of the dimension
+ *
  * @param {string} id Unique id of the dimension
  * @return {*} the value | null if dimension does not exist | undefined if attr not found or dimension is empty
  */
@@ -274,6 +283,7 @@ os.data.xf.DataModel.prototype.getTopRecord = function(id) {
 
 /**
  * Gets the bottom record of the dimension
+ *
  * @param {string} id Unique id of the dimension
  * @return {*} the value | null if dimension does not exist | undefined attr not found or dimension is empty
  */
@@ -288,6 +298,7 @@ os.data.xf.DataModel.prototype.getBottomRecord = function(id) {
 
 /**
  * Determines if all records in dimension <i>id</i> are empty for its value function
+ *
  * @param {!string} id The dimension id
  * @param {!*} emptyIdentifier The representation of what empty means for the attribute
  * @return {?boolean} true if the dimension value is empty for all records of the dimension
@@ -306,6 +317,7 @@ os.data.xf.DataModel.prototype.isDimensionValueEmptyAll = function(id, emptyIden
 
 /**
  * Determines if any records in dimension <i>id</i> are empty for its value function
+ *
  * @param {!string} id The dimension id
  * @param {!*} emptyIdentifier The representation of what is empty for the attribute
  * @return {?boolean} true if the dimension value is empty for any records of the dimension
@@ -330,6 +342,7 @@ os.data.xf.DataModel.prototype.isDimensionValueEmptyAny = function(id, emptyIden
 
 /**
  * Get all of the keys for a given dimension
+ *
  * @param {!string} id The dimension id
  * @return {Array} All of the dimension's keys, naturally sorted
  */
@@ -345,6 +358,7 @@ os.data.xf.DataModel.prototype.getDimensionKeys = function(id) {
 
 /**
  * Groups data by a dimension in the crossfilter instance.
+ *
  * @param {string} id The dimension id
  * @param {function(S):T} accessorFn The group key accessor function
  * @param {function(BIN<S>, S):BIN<S>} addFn The group reduce add function
@@ -368,6 +382,7 @@ os.data.xf.DataModel.prototype.groupData = function(id, accessorFn, addFn, remov
 
 /**
  * Internal function to create a group, get the results, and destroy the group.
+ *
  * @param {!crossfilter.Dimension} dim The XF dimension
  * @param {function(S):T} accessorFn The group key accessor function
  * @param {function(BIN<S>, S):BIN<S>} addFn The group reduce add function
@@ -390,6 +405,7 @@ os.data.xf.DataModel.prototype.groupDataInternal = function(dim, accessorFn, add
 
 /**
  * Gets the top opt_value results from Crossfilter.
+ *
  * @param {number=} opt_value The number of results to get, defaults to all of them (Infinity)
  * @param {string=} opt_dim dimension to get results from
  * @param {boolean=} opt_bottom get bottom records (as opposed to top)
@@ -398,7 +414,7 @@ os.data.xf.DataModel.prototype.groupDataInternal = function(dim, accessorFn, add
 os.data.xf.DataModel.prototype.getResults = function(opt_value, opt_dim, opt_bottom) {
   if (!this.isDisposed()) {
     var dim = opt_dim && this.hasDimension(opt_dim) ?
-          this.dimensions[opt_dim] : goog.object.getAnyValue(this.dimensions);
+      this.dimensions[opt_dim] : goog.object.getAnyValue(this.dimensions);
     opt_value = opt_value || Infinity;
 
     if (dim) {
@@ -419,6 +435,7 @@ os.data.xf.DataModel.prototype.getResults = function(opt_value, opt_dim, opt_bot
 
 /**
  * Get the number of records in the model before filters.
+ *
  * @return {number}
  */
 os.data.xf.DataModel.prototype.getSize = function() {
@@ -428,6 +445,7 @@ os.data.xf.DataModel.prototype.getSize = function() {
 
 /**
  * Check if there are any items in the model.
+ *
  * @return {boolean}
  */
 os.data.xf.DataModel.prototype.isEmpty = function() {
@@ -437,6 +455,7 @@ os.data.xf.DataModel.prototype.isEmpty = function() {
 
 /**
  * Sets the items in the model, clearing any previous items.
+ *
  * @param {Object|Array<Object>} items
  */
 os.data.xf.DataModel.prototype.setData = function(items) {

@@ -6,6 +6,7 @@ goog.require('os.ui.Module');
 
 /**
  * Displays a bootstrap spinner bar.  Users may update the 'complete' variable to update the percentage of the bar.
+ *
  * @return {angular.Directive}
  */
 os.ui.loadingBarDirective = function() {
@@ -35,6 +36,7 @@ os.ui.Module.directive('loadingBar', [os.ui.loadingBarDirective]);
 
 /**
  * Controller function
+ *
  * @constructor
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
@@ -116,6 +118,7 @@ os.ui.LoadingBarCtrl = function($scope, $element, $timeout) {
 
 /**
  * Sets the amount of time before showing the bar
+ *
  * @param {number=} opt_delay Amount of time to delay the showing of the bar, defaults to zero
  */
 os.ui.LoadingBarCtrl.prototype.showDelay = function(opt_delay) {
@@ -134,6 +137,7 @@ os.ui.LoadingBarCtrl.prototype.showDelay = function(opt_delay) {
 
 /**
  * Clean up references/listeners.
+ *
  * @private
  */
 os.ui.LoadingBarCtrl.prototype.destroy_ = function() {

@@ -10,6 +10,7 @@ goog.require('plugin.arc.layer.ArcLayerDescriptor');
 
 /**
  * Loads the capabilities from an Arc server and constructs the tree.
+ *
  * @param {plugin.arc.ArcServer} server
  * @extends {os.ui.slick.LoadingNode}
  * @constructor
@@ -52,6 +53,7 @@ plugin.arc.node.ArcServiceNode.LOGGER_ = goog.log.getLogger('plugin.arc.node.Arc
 /**
  * Sets the URL to load. This keeps the URL only to the folder/service level and strips off anything after that
  * as these URLs are often provided out further than we expect.
+ *
  * @param {string} url
  */
 plugin.arc.node.ArcServiceNode.prototype.setUrl = function(url) {
@@ -69,6 +71,7 @@ plugin.arc.node.ArcServiceNode.prototype.setUrl = function(url) {
 
 /**
  * Loads Arc node capabilities.
+ *
  * @param {string} url
  */
 plugin.arc.node.ArcServiceNode.prototype.load = function(url) {
@@ -91,6 +94,7 @@ plugin.arc.node.ArcServiceNode.prototype.load = function(url) {
 
 /**
  * Success callback for loading the Arc service data.
+ *
  * @param {goog.events.Event} event
  * @private
  */
@@ -124,6 +128,7 @@ plugin.arc.node.ArcServiceNode.prototype.onLoad_ = function(event) {
 
 /**
  * Creates and adds layer descriptors for each Arc service.
+ *
  * @param {Object} layer
  * @param {plugin.arc.ArcServer} server
  * @private
@@ -159,6 +164,7 @@ plugin.arc.node.ArcServiceNode.prototype.addLayer_ = function(layer, server) {
 
 /**
  * Handler for Arc load errors.
+ *
  * @param {goog.events.Event} event
  * @private
  */

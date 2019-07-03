@@ -19,6 +19,7 @@ os.im.action.ImportActionEventType = {
 
 /**
  * Import action event.
+ *
  * @param {string} type The event type.
  * @param {os.im.action.FilterActionEntry<T>=} opt_entry The import action entry.
  * @param {boolean=} opt_execute If the entry should be executed immediately.

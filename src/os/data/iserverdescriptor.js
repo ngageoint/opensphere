@@ -4,6 +4,7 @@ goog.provide('os.data.IServerDescriptor');
 
 /**
  * Interface for descriptors loaded from a server.
+ *
  * @interface
  */
 os.data.IServerDescriptor = function() {};

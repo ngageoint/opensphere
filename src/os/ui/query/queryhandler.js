@@ -12,6 +12,7 @@ goog.require('os.filter.ISpatialFormatter');
 /**
  * Class for representing a query consisting of areas and filters. Contains no actual handling logic, just
  * area/filter writing.
+ *
  * @constructor
  * @extends {goog.Disposable}
  */
@@ -63,6 +64,7 @@ goog.inherits(os.ui.query.QueryHandler, goog.Disposable);
 
 /**
  * Get the layer ID associated to this handler
+ *
  * @return {?string}
  */
 os.ui.query.QueryHandler.prototype.getLayerId = function() {
@@ -72,6 +74,7 @@ os.ui.query.QueryHandler.prototype.getLayerId = function() {
 
 /**
  * Set the layer ID associated to this handler
+ *
  * @param {?string} value
  */
 os.ui.query.QueryHandler.prototype.setLayerId = function(value) {
@@ -81,6 +84,7 @@ os.ui.query.QueryHandler.prototype.setLayerId = function(value) {
 
 /**
  * Get the layer name associated to this handler
+ *
  * @return {?string}
  */
 os.ui.query.QueryHandler.prototype.getLayerName = function() {
@@ -90,6 +94,7 @@ os.ui.query.QueryHandler.prototype.getLayerName = function() {
 
 /**
  * Set the layer name associated to this handler
+ *
  * @param {?string} value
  */
 os.ui.query.QueryHandler.prototype.setLayerName = function(value) {
@@ -99,6 +104,7 @@ os.ui.query.QueryHandler.prototype.setLayerName = function(value) {
 
 /**
  * Get the parameter modifier.
+ *
  * @return {?os.net.ParamModifier}
  */
 os.ui.query.QueryHandler.prototype.getModifier = function() {
@@ -108,6 +114,7 @@ os.ui.query.QueryHandler.prototype.getModifier = function() {
 
 /**
  * Set the parameter modifier.
+ *
  * @param {?os.net.ParamModifier} modifier
  */
 os.ui.query.QueryHandler.prototype.setModifier = function(modifier) {
@@ -117,6 +124,7 @@ os.ui.query.QueryHandler.prototype.setModifier = function(modifier) {
 
 /**
  * Get the area formatter.
+ *
  * @return {?os.filter.ISpatialFormatter}
  */
 os.ui.query.QueryHandler.prototype.getAreaFormatter = function() {
@@ -126,6 +134,7 @@ os.ui.query.QueryHandler.prototype.getAreaFormatter = function() {
 
 /**
  * Set the area formatter.
+ *
  * @param {?os.filter.ISpatialFormatter} formatter
  */
 os.ui.query.QueryHandler.prototype.setAreaFormatter = function(formatter) {
@@ -135,6 +144,7 @@ os.ui.query.QueryHandler.prototype.setAreaFormatter = function(formatter) {
 
 /**
  * Get the exclusion formatter.
+ *
  * @return {?os.filter.ISpatialFormatter}
  */
 os.ui.query.QueryHandler.prototype.getExclusionFormatter = function() {
@@ -144,6 +154,7 @@ os.ui.query.QueryHandler.prototype.getExclusionFormatter = function() {
 
 /**
  * Set the exclusion formatter.
+ *
  * @param {?os.filter.ISpatialFormatter} formatter
  */
 os.ui.query.QueryHandler.prototype.setExclusionFormatter = function(formatter) {
@@ -153,6 +164,7 @@ os.ui.query.QueryHandler.prototype.setExclusionFormatter = function(formatter) {
 
 /**
  * Get the filter formatter.
+ *
  * @return {?os.filter.IFilterFormatter}
  */
 os.ui.query.QueryHandler.prototype.getFilterFormatter = function() {
@@ -162,6 +174,7 @@ os.ui.query.QueryHandler.prototype.getFilterFormatter = function() {
 
 /**
  * Set the filter formatter.
+ *
  * @param {?os.filter.IFilterFormatter} formatter
  */
 os.ui.query.QueryHandler.prototype.setFilterFormatter = function(formatter) {
@@ -171,6 +184,7 @@ os.ui.query.QueryHandler.prototype.setFilterFormatter = function(formatter) {
 
 /**
  * Get the Spatial Required on this handler
+ *
  * @return {boolean}
  */
 os.ui.query.QueryHandler.prototype.getSpatialRequired = function() {
@@ -180,6 +194,7 @@ os.ui.query.QueryHandler.prototype.getSpatialRequired = function() {
 
 /**
  * Set the Spatial Required on this handler
+ *
  * @param {boolean} value
  */
 os.ui.query.QueryHandler.prototype.setSpatialRequired = function(value) {
@@ -261,6 +276,7 @@ os.ui.query.QueryHandler.toExclude = function(item) {
 
 /**
  * Creates the filter
+ *
  * @return {string}
  */
 os.ui.query.QueryHandler.prototype.createFilter = function() {
@@ -358,6 +374,7 @@ os.ui.query.QueryHandler.prototype.createFilter = function() {
 
 /**
  * Writes an item
+ *
  * @param {os.filter.FilterEntry|ol.Feature} item
  * @return {!string}
  * @protected
@@ -373,6 +390,7 @@ os.ui.query.QueryHandler.prototype.write = function(item) {
 
 /**
  * Writes an area
+ *
  * @param {!ol.Feature} area
  * @return {!string}
  * @protected
@@ -384,6 +402,7 @@ os.ui.query.QueryHandler.prototype.writeArea = function(area) {
 
 /**
  * Writes a filter
+ *
  * @param {!os.filter.FilterEntry} filter
  * @return {!string}
  * @protected

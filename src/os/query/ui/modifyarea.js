@@ -9,6 +9,7 @@ goog.require('os.ui.util.validationMessageDirective');
 
 /**
  * The modifyarea directive
+ *
  * @return {angular.Directive}
  */
 os.query.ui.modifyAreaDirective = function() {

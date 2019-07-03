@@ -12,6 +12,7 @@ goog.require('os.xt.Peer');
 
 /**
  * Controller function for the Consent directive
+ *
  * @implements {os.xt.IMessageHandler}
  * @constructor
  * @param {angular.Scope} $scope
@@ -96,6 +97,7 @@ os.ui.Consent.prototype.process = function(data, type, sender, time) {
 
 /**
  * update the cookie timer
+ *
  * @private
  */
 os.ui.Consent.prototype.update_ = function() {
@@ -119,6 +121,7 @@ os.ui.Consent.launch = function() {
 
 /**
  * Save the cookie so it wont popup again
+ *
  * @export
  */
 os.ui.Consent.prototype.saveCookie = function() {
@@ -131,6 +134,7 @@ os.ui.Consent.prototype.saveCookie = function() {
 
 /**
  * The Consent popup directive
+ *
  * @return {angular.Directive} the directive definition
  */
 os.ui.consentDirective = function() {

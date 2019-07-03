@@ -59,6 +59,7 @@ os.ui.query.featureKeys = ['title', 'name', 'description', 'tags', 'geometry', o
 
 /**
  * Apply query mappings to a feature and make sure a title is set.
+ *
  * @param {!ol.Feature} feature The feature
  * @param {!Array<!os.im.mapping.IMapping>} mappings The mappings
  */
@@ -81,6 +82,7 @@ os.ui.query.applyMappings = function(feature, mappings) {
 
 /**
  * Create mappings from an area config.
+ *
  * @param {Object} config
  * @return {!Array<!os.im.mapping.IMapping>}
  */

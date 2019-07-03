@@ -33,6 +33,7 @@ goog.inherits(os.ui.filter.op.InList, os.ui.filter.op.Op);
 
 /**
  * Parses trimmed, non-empty values from a comma-separated list.
+ *
  * @param {?string} literal The literal.
  * @return {!Array<string>} Parsed non-empty list values.
  * @protected

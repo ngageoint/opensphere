@@ -7,6 +7,7 @@ goog.require('os.metrics');
 
 /**
  * Changes the line dash of a feature
+ *
  * @extends {os.command.AbstractFeatureStyle}
  * @param {string} layerId
  * @param {string} featureId

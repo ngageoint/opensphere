@@ -13,6 +13,7 @@ goog.require('os.ui.query.QueryHandler');
 
 /**
  * Query handler implementation. Adds source, refresh and request functionality to the base handler class.
+ *
  * @constructor
  * @extends {os.ui.query.QueryHandler}
  */
@@ -62,6 +63,7 @@ os.query.QueryHandler.prototype.disposeInternal = function() {
 
 /**
  * Get the source.
+ *
  * @return {?os.source.Request}
  */
 os.query.QueryHandler.prototype.getSource = function() {
@@ -79,6 +81,7 @@ os.query.QueryHandler.prototype.getLayerName = function() {
 
 /**
  * Set the source.
+ *
  * @param {?os.source.Request} source
  */
 os.query.QueryHandler.prototype.setSource = function(source) {
@@ -126,6 +129,7 @@ os.query.QueryHandler.prototype.onSourcePropertyChange = function(event) {
 
 /**
  * On queries changed
+ *
  * @param {os.events.PropertyChangeEvent} event
  */
 os.query.QueryHandler.prototype.onQueryChange = function(event) {
@@ -143,6 +147,7 @@ os.query.QueryHandler.prototype.onQueryChange = function(event) {
 
 /**
  * Refresh timer
+ *
  * @protected
  */
 os.query.QueryHandler.prototype.onRefreshTimer = function() {
@@ -173,6 +178,7 @@ os.query.QueryHandler.prototype.localRefresh = function() {
 
 /**
  * Actually refresh
+ *
  * @protected
  */
 os.query.QueryHandler.prototype.doRefresh = function() {
@@ -184,6 +190,7 @@ os.query.QueryHandler.prototype.doRefresh = function() {
 
 /**
  * Refresh
+ *
  * @param {boolean=} opt_now Does the refresh now rather than on a timer
  */
 os.query.QueryHandler.prototype.refresh = function(opt_now) {
@@ -206,6 +213,7 @@ os.query.QueryHandler.prototype.refresh = function(opt_now) {
 
 /**
  * Schedules a refresh
+ *
  * @param {boolean=} opt_now
  * @protected
  */

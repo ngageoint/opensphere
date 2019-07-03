@@ -14,6 +14,7 @@ goog.require('os.ui.query.cmd.AreaRemove');
 
 /**
  * The mergeareas directive
+ *
  * @return {angular.Directive}
  */
 os.query.ui.mergeAreasDirective = function() {

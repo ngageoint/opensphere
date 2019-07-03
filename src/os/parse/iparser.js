@@ -4,6 +4,7 @@ goog.provide('os.parse.IParser');
 
 /**
  * A simple interface for describing a parser.
+ *
  * @template T
  * @interface
  */

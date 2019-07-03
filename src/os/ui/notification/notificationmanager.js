@@ -99,6 +99,7 @@ goog.addSingletonGetter(os.ui.notification.NotificationManager);
 
 /**
  * Get the title for the notification manager.
+ *
  * @return {string}
  */
 os.ui.notification.NotificationManager.prototype.getAppTitle = function() {
@@ -108,6 +109,7 @@ os.ui.notification.NotificationManager.prototype.getAppTitle = function() {
 
 /**
  * Set the title for the notification manager.
+ *
  * @param {string} value The new title
  */
 os.ui.notification.NotificationManager.prototype.setAppTitle = function(value) {
@@ -118,6 +120,7 @@ os.ui.notification.NotificationManager.prototype.setAppTitle = function(value) {
 
 /**
  * Use browser visibility API to determine if the document is currently hidden.
+ *
  * @return {?boolean} If hidden is supported by browser, return true of false; otherwise null
  */
 os.ui.notification.NotificationManager.prototype.getHidden = function() {
@@ -131,6 +134,7 @@ os.ui.notification.NotificationManager.prototype.getHidden = function() {
 
 /**
  * Show a notification using the browser notification API, if available.
+ *
  * @param {!string} title
  * @param {NotificationOptions=} opt_options The same options as indicated by <code>Notification</code> API.
  * @return {!goog.Promise} Promise which will resolve with the <code>Notification</code>.  Clients can manipulate the
@@ -153,6 +157,7 @@ os.ui.notification.NotificationManager.prototype.notify = function(title, opt_op
 
 /**
  * Create a notification and provide the result via the resolve function in a {@link goog.Promise}
+ *
  * @param {!string} title
  * @param {NotificationOptions=} opt_options
  * @return {!goog.Promise}
@@ -175,6 +180,7 @@ os.ui.notification.NotificationManager.prototype.createNotification_ = function(
 
 /**
  * Request permission from the browser to create a notification.
+ *
  * @param {!string} title
  * @param {function(*)} resolve
  * @param {function()} reject
@@ -199,6 +205,7 @@ os.ui.notification.NotificationManager.prototype.requestPermissionAndCreateNotif
 /**
  * Bring the user's attention to this tab by blinking its title.  Registers listeners to stop blinking when the user
  * starts interacting. Use this sparingly as it's intended to interrupt their workflow.
+ *
  * @param {number=} opt_duration How long to continue the blinking before we give up and return to normal.  A number
  *  less than one means forever, which is the default.
  * @param {string=} opt_message Message to display as it blinks.  Defaults to a generic updating message.
@@ -230,6 +237,7 @@ os.ui.notification.NotificationManager.prototype.blink = function(opt_duration, 
 
 /**
  * Determine if blink is happening.
+ *
  * @return {boolean}
  */
 os.ui.notification.NotificationManager.prototype.isBlinking = function() {
@@ -239,6 +247,7 @@ os.ui.notification.NotificationManager.prototype.isBlinking = function() {
 
 /**
  * Do one iteration of blinking.  Adjust the title and schedule the next iteration.
+ *
  * @private
  */
 os.ui.notification.NotificationManager.prototype.blinkTick_ = function() {
@@ -266,6 +275,7 @@ os.ui.notification.NotificationManager.prototype.increment = function() {
 
 /**
  * Change the document title.
+ *
  * @param {string} title The title to display
  * @private
  */
@@ -276,6 +286,7 @@ os.ui.notification.NotificationManager.prototype.applyTitle_ = function(title) {
 
 /**
  * Reset notifications and reset the tab to a normal state.
+ *
  * @private
  */
 os.ui.notification.NotificationManager.prototype.reset_ = function() {
@@ -300,6 +311,7 @@ os.ui.notification.NotificationManager.prototype.reset_ = function() {
 
 /**
  * Engage the document to listen for user interaction if it is not already.
+ *
  * @private
  */
 os.ui.notification.NotificationManager.prototype.startOrContinueListeningForUserAction_ = function() {

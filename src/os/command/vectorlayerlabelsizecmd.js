@@ -7,6 +7,7 @@ goog.require('os.metrics');
 
 /**
  * Changes the label size for a layer
+ *
  * @param {string} layerId
  * @param {number} value
  * @param {number=} opt_oldValue

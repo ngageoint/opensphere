@@ -7,6 +7,7 @@ goog.require('os.command.State');
 
 /**
  * Resets the map's center/zoom to the default values.
+ *
  * @implements {os.command.ICommand}
  * @constructor
  */

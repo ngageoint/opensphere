@@ -101,10 +101,10 @@ os.data.DrawingLayerNode.prototype.setLayer = function(value) {
 
     var areas = am.getAll().map(os.data.DrawingLayerNode.createNode_);
     var others = /** @type {!Array<!ol.Feature>} */ (source.getFeatures()).
-      filter(function(feature) {
-        return !am.contains(feature) && !os.data.DrawingLayerNode.isHidden(feature);
-      }).
-      map(os.data.DrawingLayerNode.createNode_);
+        filter(function(feature) {
+          return !am.contains(feature) && !os.data.DrawingLayerNode.isHidden(feature);
+        }).
+        map(os.data.DrawingLayerNode.createNode_);
 
     var children = areas.concat(others).filter(os.fn.filterFalsey);
     children.sort(os.data.DrawingLayerNode.childSort_);
@@ -131,6 +131,7 @@ os.data.DrawingLayerNode.prototype.onAreasChanged_ = function(evt) {
 
 /**
  * Adds a child node for each feature added to the source
+ *
  * @param {ol.source.Vector.Event} evt The feature add event
  * @protected
  */
@@ -176,6 +177,7 @@ os.data.DrawingLayerNode.prototype.addFeature = function(feature) {
 
 /**
  * On sort delay handler
+ *
  * @protected
  */
 os.data.DrawingLayerNode.prototype.onSortDelay = function() {
@@ -211,6 +213,7 @@ os.data.DrawingLayerNode.childSort_ = function(a, b) {
 
 /**
  * Creates a node from a feature
+ *
  * @param {!ol.Feature} feature The feature
  * @return {?os.ui.slick.SlickTreeNode} The node
  * @private
@@ -218,8 +221,8 @@ os.data.DrawingLayerNode.childSort_ = function(a, b) {
 os.data.DrawingLayerNode.createNode_ = function(feature) {
   if (!os.data.DrawingLayerNode.isHidden(feature)) {
     var node = os.query.BaseAreaManager.getInstance().contains(feature) ?
-        new os.data.AreaNode(feature) :
-        new os.data.DrawingFeatureNode(feature);
+      new os.data.AreaNode(feature) :
+      new os.data.DrawingFeatureNode(feature);
 
     node.setId('' + feature.getId());
     return node;
@@ -231,6 +234,7 @@ os.data.DrawingLayerNode.createNode_ = function(feature) {
 
 /**
  * Removes a child node for each feature removed from the source
+ *
  * @param {ol.source.Vector.Event} evt The feature remove event
  * @protected
  */

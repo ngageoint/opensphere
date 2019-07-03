@@ -30,6 +30,7 @@ plugin.im.action.feature.LabelActionTagName = {
 
 /**
  * Import action that sets the label for a {@link ol.Feature}.
+ *
  * @extends {os.im.action.AbstractImportAction<ol.Feature>}
  * @constructor
  */
@@ -99,6 +100,7 @@ plugin.im.action.feature.LabelAction.DEFAULT_CONFIG = {
 
 /**
  * Undo all feature action label changes, resetting to the user/default layer settings.
+ *
  * @override
  */
 plugin.im.action.feature.LabelAction.prototype.reset = function(items) {
@@ -322,6 +324,7 @@ plugin.im.action.feature.LabelAction.prototype.fromXml = function(xml) {
 
 /**
  * If a feature is styled by the action.
+ *
  * @param {!ol.Feature} feature The feature.
  * @return {boolean} If the feature is using this style action.
  *

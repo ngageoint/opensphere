@@ -100,6 +100,7 @@ os.ui.metrics.MetricsPlugin.prototype.disposeInternal = function() {
 /**
  * Get the plugin identifier used by the metrics manager. The default behavior is intended to prevent adding metrics
  * nodes with a duplicate tree path.
+ *
  * @return {string}
  */
 os.ui.metrics.MetricsPlugin.prototype.getId = function() {
@@ -110,6 +111,7 @@ os.ui.metrics.MetricsPlugin.prototype.getId = function() {
 
 /**
  * Get the tree node for this model.
+ *
  * @return {!os.ui.metrics.MetricNode}
  */
 os.ui.metrics.MetricsPlugin.prototype.getLeafNode = function() {
@@ -128,6 +130,7 @@ os.ui.metrics.MetricsPlugin.prototype.getLeafNode = function() {
 
 /**
  * Get the categories for the node. Categories define the parent node names in the metrics tree.
+ *
  * @return {!Array<string>}
  */
 os.ui.metrics.MetricsPlugin.prototype.getCategories = function() {
@@ -137,6 +140,7 @@ os.ui.metrics.MetricsPlugin.prototype.getCategories = function() {
 
 /**
  * Set the categories for the node.
+ *
  * @param {!Array<string>} categories
  */
 os.ui.metrics.MetricsPlugin.prototype.setCategories = function(categories) {
@@ -146,6 +150,7 @@ os.ui.metrics.MetricsPlugin.prototype.setCategories = function(categories) {
 
 /**
  * Get the description for this model;
+ *
  * @return {string}
  */
 os.ui.metrics.MetricsPlugin.prototype.getDescription = function() {
@@ -155,6 +160,7 @@ os.ui.metrics.MetricsPlugin.prototype.getDescription = function() {
 
 /**
  * Set a basic description for the metrics, will be use as a tool tip and possible as a search string.
+ *
  * @param {string} description
  */
 os.ui.metrics.MetricsPlugin.prototype.setDescription = function(description) {
@@ -164,6 +170,7 @@ os.ui.metrics.MetricsPlugin.prototype.setDescription = function(description) {
 
 /**
  * Set collapsed state of node.
+ *
  * @param {boolean} collapsed
  */
 os.ui.metrics.MetricsPlugin.prototype.setCollapsed = function(collapsed) {
@@ -203,6 +210,7 @@ os.ui.metrics.MetricsPlugin.prototype.setIcon = function(iconData, opt_isHtml) {
 
 /**
  * Get the user-facing label to be used in the metrics tree.
+ *
  * @return {string}
  */
 os.ui.metrics.MetricsPlugin.prototype.getLabel = function() {
@@ -212,6 +220,7 @@ os.ui.metrics.MetricsPlugin.prototype.getLabel = function() {
 
 /**
  * Set the user-facing label to be used in the metrics tree.
+ *
  * @param {string} label
  */
 os.ui.metrics.MetricsPlugin.prototype.setLabel = function(label) {
@@ -221,6 +230,7 @@ os.ui.metrics.MetricsPlugin.prototype.setLabel = function(label) {
 
 /**
  * Return the set of tags for search
+ *
  * @return {!Array<string>}
  */
 os.ui.metrics.MetricsPlugin.prototype.getTags = function() {
@@ -230,6 +240,7 @@ os.ui.metrics.MetricsPlugin.prototype.getTags = function() {
 
 /**
  * Set the search tags so that this metrics can be singled out using search-- not used at this time
+ *
  * @param {!Array<string>} tags
  */
 os.ui.metrics.MetricsPlugin.prototype.setTags = function(tags) {
@@ -239,6 +250,7 @@ os.ui.metrics.MetricsPlugin.prototype.setTags = function(tags) {
 
 /**
  * Get the html to be used for the ui for this metrics.
+ *
  * @return {?string}
  */
 os.ui.metrics.MetricsPlugin.prototype.getUI = function() {
@@ -249,6 +261,7 @@ os.ui.metrics.MetricsPlugin.prototype.getUI = function() {
 /**
  * Set the ui for the left side of the metrics window.
  * This the user control ui.
+ *
  * @param {string} ui
  */
 os.ui.metrics.MetricsPlugin.prototype.setUI = function(ui) {
@@ -258,6 +271,7 @@ os.ui.metrics.MetricsPlugin.prototype.setUI = function(ui) {
 
 /**
  * Select the first leaf node in the tree.
+ *
  * @param {!os.ui.slick.SlickTreeNode} parent
  * @param {!os.ui.metrics.MetricNodeOptions} options
  * @return {!os.ui.slick.SlickTreeNode} returns new node that was created
@@ -276,6 +290,7 @@ os.ui.metrics.MetricsPlugin.prototype.addChild = function(parent, options) {
 
 /**
  * Configure/add metrics nodes.
+ *
  * @param {!os.ui.slick.SlickTreeNode} parent
  * @param {!Array<!os.ui.metrics.MetricNodeOptions>} options
  */

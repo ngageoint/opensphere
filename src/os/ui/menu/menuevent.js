@@ -35,6 +35,7 @@ goog.inherits(os.ui.menu.MenuEvent, goog.events.Event);
 
 /**
  * Gets the context associated with this event
+ *
  * @return {T} The context
  */
 os.ui.menu.MenuEvent.prototype.getContext = function() {

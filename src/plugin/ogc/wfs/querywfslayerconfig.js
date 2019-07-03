@@ -37,7 +37,7 @@ plugin.ogc.wfs.QueryWFSLayerConfig.prototype.addMappings = function(layer, optio
   var useFilter = options['filter'] != null ? options['filter'] : false;
   var useSpatial = options['spatial'] != null ? options['spatial'] : false;
   var useTemporal = options['temporal'] != null ? options['temporal'] :
-      !!this.featureType.getStartDateColumnName();
+    !!this.featureType.getStartDateColumnName();
   var featureIDs = options['featureIDs'] != null ? options['featureIDs'] : null;
   var relatedLayer = options['relatedLayer'] != null ? options['relatedLayer'] : null;
 
@@ -109,6 +109,7 @@ plugin.ogc.wfs.QueryWFSLayerConfig.prototype.addMappings = function(layer, optio
 
 /**
  * Launch the filter manager
+ *
  * @param {!os.layer.Vector} layer The layer
  */
 plugin.ogc.wfs.launchFilterManager = function(layer) {
@@ -118,6 +119,7 @@ plugin.ogc.wfs.launchFilterManager = function(layer) {
 
 /**
  * Get the filterable columns
+ *
  * @param {!os.layer.Vector} layer The layer
  * @return {?Array<os.ogc.FeatureTypeColumn>} the columns
  */

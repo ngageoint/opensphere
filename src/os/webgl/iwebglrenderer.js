@@ -6,6 +6,7 @@ goog.require('os.webgl.IWebGLCamera');
 
 /**
  * Interface for a WebGL map/globe renderer.
+ *
  * @extends {goog.disposable.IDisposable}
  * @interface
  */

@@ -11,6 +11,7 @@ goog.require('os.ui.popover.popoverDirective');
 /**
  * Settings plugin for controlling bearing settings. When it is instantiated, it lazy loads the geomagnetic
  * data needed for calculating magnetic north bearings.
+ *
  * @extends {os.ui.config.SettingPlugin}
  * @constructor
  */
@@ -31,6 +32,7 @@ goog.inherits(os.bearing.BearingSettings, os.ui.config.SettingPlugin);
 
 /**
  * The bearing settings directive
+ *
  * @return {angular.Directive}
  */
 os.bearing.BearingSettingsDirective = function() {
@@ -53,6 +55,7 @@ os.ui.Module.directive('bearingSetting', [os.bearing.BearingSettingsDirective]);
 
 /**
  * Controller for bearing settings
+ *
  * @param {angular.Scope} $scope
  * @constructor
  * @ngInject
@@ -85,6 +88,7 @@ os.bearing.BearingSettingsCtrl = function($scope) {
 
 /**
  * Destroy
+ *
  * @private
  */
 os.bearing.BearingSettingsCtrl.prototype.destroy_ = function() {
@@ -94,6 +98,7 @@ os.bearing.BearingSettingsCtrl.prototype.destroy_ = function() {
 
 /**
  * Listen for changes from the system and update the setting display
+ *
  * @param {os.events.SettingChangeEvent} event
  * @private
  */
@@ -107,6 +112,7 @@ os.bearing.BearingSettingsCtrl.prototype.onBearingChange_ = function(event) {
 
 /**
  * Update and store setting.
+ *
  * @param {os.ui.location.Format=} opt_new
  * @param {os.ui.location.Format=} opt_old
  * @export

@@ -10,6 +10,7 @@ goog.require('plugin.file.kml.KMLSource');
 
 /**
  * Tree node for KML layers
+ *
  * @param {!os.layer.Vector} layer The KML layer
  * @extends {os.data.LayerNode}
  * @constructor
@@ -97,6 +98,7 @@ plugin.file.kml.ui.KMLLayerNode.prototype.isLoading = function() {
 
 /**
  * If the KML can be edited.
+ *
  * @return {boolean}
  */
 plugin.file.kml.ui.KMLLayerNode.prototype.isEditable = function() {
@@ -111,6 +113,7 @@ plugin.file.kml.ui.KMLLayerNode.prototype.isEditable = function() {
 
 /**
  * Set the KML data source
+ *
  * @param {plugin.file.kml.KMLSource} source The source
  * @private
  */
@@ -150,6 +153,7 @@ plugin.file.kml.ui.KMLLayerNode.prototype.setLayer = function(value) {
 
 /**
  * Handles changes on the source
+ *
  * @param {os.events.PropertyChangeEvent} e The event
  * @private
  */
@@ -165,6 +169,7 @@ plugin.file.kml.ui.KMLLayerNode.prototype.onSourceChange_ = function(e) {
 
 /**
  * Updates the tree from the KML source
+ *
  * @private
  */
 plugin.file.kml.ui.KMLLayerNode.prototype.updateFromSource_ = function() {
@@ -208,6 +213,7 @@ plugin.file.kml.ui.KMLLayerNode.prototype.updateFromSource_ = function() {
 
 /**
  * Handle changes to the KML root node when it isn't being displayed in the tree.
+ *
  * @param {os.events.PropertyChangeEvent} event
  * @private
  */
@@ -221,6 +227,7 @@ plugin.file.kml.ui.KMLLayerNode.prototype.onRootChange_ = function(event) {
 
 /**
  * Updates the tree from the root node.
+ *
  * @private
  */
 plugin.file.kml.ui.KMLLayerNode.prototype.updateFromRoot_ = function() {

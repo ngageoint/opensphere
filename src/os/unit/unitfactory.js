@@ -32,16 +32,17 @@ os.unit.UNIT_TYPE_DISTANCE = 'distance';
 
 
 /**
-* Responsible for defining and organizing application units.  Provide easy lookup for units based on a provided
-* system or by their name.
-*
-* A 'system' is a series of units (english, metric, nautical, etc).
-* A 'type' is what it being measured (distance, liquid, digital, etc).
-* A 'unit' is a series of multipliers for a given system and type, also contains a conversion rate from the
-* application's default
-* A 'multiplier' defines how to convert values within a unit (milli, kilo, mega, tera, etc)
-* @constructor
-*/
+ * Responsible for defining and organizing application units.  Provide easy lookup for units based on a provided
+ * system or by their name.
+ *
+ * A 'system' is a series of units (english, metric, nautical, etc).
+ * A 'type' is what it being measured (distance, liquid, digital, etc).
+ * A 'unit' is a series of multipliers for a given system and type, also contains a conversion rate from the
+ * application's default
+ * A 'multiplier' defines how to convert values within a unit (milli, kilo, mega, tera, etc)
+ *
+ * @constructor
+ */
 os.unit.UnitFactory = function() {
   /**
    * @type {Object}
@@ -56,6 +57,7 @@ os.unit.UnitFactory = function() {
 /**
  * Instantiate and organize unit multiplier by their system and type.  Create a dictionary where 'system' is
  * the key and dictionaries are the value, of which 'type' is the key and 'unit' is the value.
+ *
  * @private
  */
 os.unit.UnitFactory.prototype.initialize_ = function() {
@@ -92,6 +94,7 @@ os.unit.UnitFactory.prototype.initialize_ = function() {
 /**
  * Retrieve a unit definition for the provided system and type.
  * For example: getUnit('english', 'distance') returns the unit that contains inches, yards, feet, miles, etc.
+ *
  * @param {?string} system
  * @param {?string} type
  * @return {?os.unit.IUnit}
@@ -104,6 +107,7 @@ os.unit.UnitFactory.prototype.getUnit = function(system, type) {
 
 /**
  * Retrieve all of the defined systems in the application ('english', 'metric', 'nautical', etc)
+ *
  * @return {Array}
  */
 os.unit.UnitFactory.prototype.getSystems = function() {
@@ -113,6 +117,7 @@ os.unit.UnitFactory.prototype.getSystems = function() {
 
 /**
  * Retrieve all of the fully defined systems in the application ('english', 'metric', 'nautical', etc)
+ *
  * @return {Object}
  */
 os.unit.UnitFactory.prototype.getFullSystems = function() {

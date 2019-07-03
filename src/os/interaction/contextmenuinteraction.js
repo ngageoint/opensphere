@@ -9,6 +9,7 @@ goog.require('os.ui.ol.interaction.ContextMenu');
 
 /**
  * Context menu interactions for map clicks.
+ *
  * @param {os.ui.ol.interaction.ContextMenuOptions=} opt_options Options.
  * @implements {os.I3DSupport}
  * @extends {os.ui.ol.interaction.ContextMenu}

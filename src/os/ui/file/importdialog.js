@@ -20,6 +20,7 @@ goog.require('os.ui.window');
 
 /**
  * All purpose file/url import directive
+ *
  * @return {angular.Directive}
  */
 os.ui.file.importDialogDirective = function() {
@@ -49,6 +50,7 @@ os.ui.Module.directive('importdialog', [os.ui.file.importDialogDirective]);
 
 /**
  * Controller for the file/url import dialog
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @constructor
@@ -131,6 +133,7 @@ os.ui.file.ImportDialogCtrl.LOGGER_ = goog.log.getLogger('os.ui.file.ImportDialo
 
 /**
  * Clean up references/listeners.
+ *
  * @private
  */
 os.ui.file.ImportDialogCtrl.prototype.onDestroy_ = function() {
@@ -151,6 +154,7 @@ os.ui.file.ImportDialogCtrl.prototype.onDestroy_ = function() {
 
 /**
  * Create import command and close the window
+ *
  * @export
  */
 os.ui.file.ImportDialogCtrl.prototype.accept = function() {
@@ -189,6 +193,7 @@ os.ui.file.ImportDialogCtrl.prototype.accept = function() {
 
 /**
  * Close the window.
+ *
  * @export
  */
 os.ui.file.ImportDialogCtrl.prototype.close = function() {
@@ -202,6 +207,7 @@ os.ui.file.ImportDialogCtrl.prototype.close = function() {
 
 /**
  * Launch the system file browser.
+ *
  * @export
  */
 os.ui.file.ImportDialogCtrl.prototype.clearFile = function() {
@@ -221,6 +227,7 @@ os.ui.file.ImportDialogCtrl.prototype.clearFile = function() {
 
 /**
  * Get the import types supported by the application.
+ *
  * @return {string}
  * @export
  */
@@ -245,6 +252,7 @@ os.ui.file.ImportDialogCtrl.prototype.getImportDetails = function() {
 
 /**
  * Launch the system file browser.
+ *
  * @export
  */
 os.ui.file.ImportDialogCtrl.prototype.openFileBrowser = function() {
@@ -254,6 +262,7 @@ os.ui.file.ImportDialogCtrl.prototype.openFileBrowser = function() {
 
 /**
  * Grabs the file from the hidden input element and sets the name on the text element.
+ *
  * @param {goog.events.BrowserEvent} event
  * @private
  */
@@ -272,6 +281,7 @@ os.ui.file.ImportDialogCtrl.prototype.onFileChange_ = function(event) {
 
 /**
  * Handler for successful file read.
+ *
  * @param {os.file.File} file The file.
  * @private
  */
@@ -292,6 +302,7 @@ os.ui.file.ImportDialogCtrl.prototype.onFileReady_ = function(file) {
 
 /**
  * Handler for failed file read. Display an error message and close the window.
+ *
  * @param {string} errorMsg The error message.
  * @private
  */
@@ -310,6 +321,7 @@ os.ui.file.ImportDialogCtrl.prototype.onFileError_ = function(errorMsg) {
 
 /**
  * Handle URL method load complete.
+ *
  * @param {goog.events.Event} event The event
  * @private
  */
@@ -327,6 +339,7 @@ os.ui.file.ImportDialogCtrl.prototype.onLoadComplete_ = function(event) {
 
 /**
  * Handle URL method load error. This should not close the form so the user can correct the error.
+ *
  * @param {goog.events.Event} event The event
  * @private
  */
@@ -342,6 +355,7 @@ os.ui.file.ImportDialogCtrl.prototype.onLoadError_ = function(event) {
 
 /**
  * Fires a cancel event on the method so listeners can respond appropriately.
+ *
  * @private
  */
 os.ui.file.ImportDialogCtrl.prototype.cancelMethod_ = function() {
@@ -354,6 +368,7 @@ os.ui.file.ImportDialogCtrl.prototype.cancelMethod_ = function() {
 
 /**
  * Detect the file extension
+ *
  * @param {Object} file The file Object
  * @return {string} The file extension
  * @private

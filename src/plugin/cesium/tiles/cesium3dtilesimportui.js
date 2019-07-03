@@ -9,6 +9,7 @@ goog.require('plugin.cesium.tiles.tilesetImportDirective');
 
 /**
  * Import UI for 3D tiles.
+ *
  * @extends {os.ui.im.FileImportUI<Object>}
  * @constructor
  */

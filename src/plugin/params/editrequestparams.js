@@ -11,6 +11,7 @@ goog.require('os.ui.slick.slickGridDirective');
 
 /**
  * The editrequestparams directive
+ *
  * @return {angular.Directive}
  */
 plugin.params.editRequestParamsDirective = function() {
@@ -37,6 +38,7 @@ os.ui.Module.directive('editrequestparams', [plugin.params.editRequestParamsDire
 
 /**
  * Controller function for the editrequestparams directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @extends {goog.Disposable}
@@ -159,6 +161,7 @@ plugin.params.EditRequestParamsCtrl.prototype.disposeInternal = function() {
 
 /**
  * Discard changes and close the window.
+ *
  * @export
  */
 plugin.params.EditRequestParamsCtrl.prototype.cancel = function() {
@@ -168,6 +171,7 @@ plugin.params.EditRequestParamsCtrl.prototype.cancel = function() {
 
 /**
  * Save the parameter changes and close the window.
+ *
  * @export
  */
 plugin.params.EditRequestParamsCtrl.prototype.confirm = function() {
@@ -217,6 +221,7 @@ plugin.params.EditRequestParamsCtrl.prototype.confirm = function() {
 
 /**
  * Close the window.
+ *
  * @protected
  */
 plugin.params.EditRequestParamsCtrl.prototype.close = function() {
@@ -226,6 +231,7 @@ plugin.params.EditRequestParamsCtrl.prototype.close = function() {
 
 /**
  * Add a new parameter row.
+ *
  * @export
  */
 plugin.params.EditRequestParamsCtrl.prototype.addRow = function() {
@@ -241,6 +247,7 @@ plugin.params.EditRequestParamsCtrl.prototype.addRow = function() {
 
 /**
  * Remove the selected parameter row.
+ *
  * @export
  */
 plugin.params.EditRequestParamsCtrl.prototype.removeRow = function() {
@@ -253,6 +260,7 @@ plugin.params.EditRequestParamsCtrl.prototype.removeRow = function() {
 
 /**
  * Add a URL.
+ *
  * @export
  */
 plugin.params.EditRequestParamsCtrl.prototype.addUrl = function() {
@@ -264,6 +272,7 @@ plugin.params.EditRequestParamsCtrl.prototype.addUrl = function() {
 
 /**
  * Remove a URL.
+ *
  * @param {number} index The URL index.
  * @export
  */
@@ -276,6 +285,7 @@ plugin.params.EditRequestParamsCtrl.prototype.removeUrl = function(index) {
 
 /**
  * Get the label to display for a URL control.
+ *
  * @param {number} index The URL index.
  * @return {string} The URL control label.
  * @export
@@ -291,6 +301,7 @@ plugin.params.EditRequestParamsCtrl.prototype.getUrlLabel = function(index) {
 
 /**
  * Test if the parameters are valid.
+ *
  * @return {boolean} If all parameters are valid.
  * @export
  */
@@ -320,6 +331,7 @@ plugin.params.EditRequestParamsCtrl.prototype.testValid = function() {
 
 /**
  * Launches a layer params edit window.
+ *
  * @param {!ol.layer.Layer} layer The layer.
  * @param {Object} params The current layer params.
  */

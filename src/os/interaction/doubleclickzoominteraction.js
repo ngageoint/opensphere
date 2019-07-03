@@ -10,6 +10,7 @@ goog.require('os.implements');
 
 /**
  * Extends the OpenLayers double click zoom interaction to support WebGL.
+ *
  * @param {olx.interaction.DoubleClickZoomOptions=} opt_options Options.
  * @extends {ol.interaction.DoubleClickZoom}
  * @implements {os.I3DSupport}
@@ -25,6 +26,7 @@ os.implements(os.interaction.DoubleClickZoom, os.I3DSupport.ID);
 /**
  * Handles the {@link ol.MapBrowserEvent map browser event} (if it was a
  * doubleclick) and eventually zooms the map.
+ *
  * @param {ol.MapBrowserEvent} mapBrowserEvent Map browser event.
  * @return {boolean} `false` to stop event propagation.
  * @this os.interaction.DoubleClickZoom

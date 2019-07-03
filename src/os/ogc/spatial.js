@@ -21,6 +21,7 @@ os.ogc.spatial.Format = {
 
 /**
  * Convert an element containing a KML geometry to an ol.Feature.
+ *
  * @param {Element} element The element containing a KML geometry
  * @return {ol.geom.Geometry} The geometry
  *
@@ -40,6 +41,7 @@ os.ogc.spatial.readKMLGeometry = function(element) {
 
 /**
  * Convert a GML geometry node to an ol.geom.Geometry.
+ *
  * @param {Element} element The element containing a geometry
  * @return {ol.geom.Geometry} The geometry
  *
@@ -58,6 +60,7 @@ os.ogc.spatial.readGMLGeometry = function(element) {
 
 /**
  * Serializes a set of coordinates to a string.
+ *
  * @param {Array.<ol.Coordinate>} coords The coordinates
  * @param {string=} opt_separator The separator
  * @return {string} Serialized coordinates
@@ -91,6 +94,7 @@ os.ogc.spatial.formatCoords = function(coords, opt_separator) {
 
 /**
  * Formats an {@link ol.Extent} to a GML string. KML is currently unsupported.
+ *
  * @param {ol.Extent} extent The extent to format
  * @param {string} column The BBOX column
  * @param {string=} opt_name The namehint for the BBOX
@@ -117,6 +121,7 @@ os.ogc.spatial.formatExtent = function(extent, column, opt_name, opt_description
 
 /**
  * Serializes a polygon or linestring geometry to GML or KML.
+ *
  * @param {ol.geom.Geometry} geom The geometry to format
  * @param {string=} opt_column The column name
  * @param {string=} opt_name The namehint
@@ -147,6 +152,7 @@ os.ogc.spatial.formatGMLIntersection = function(geom, opt_column, opt_name, opt_
 
 /**
  * Serializes a polygon or linestring geometry to GML or KML.
+ *
  * @param {ol.geom.Geometry} geom The geometry to format
  * @param {string=} opt_format The output format, defaults to GML
  * @return {?string} The serialized polygon, or null if the geometry is not supported
@@ -184,29 +190,29 @@ os.ogc.spatial.formatPolygon = function(geom, opt_format) {
     var format = opt_format || os.ogc.spatial.Format.GML;
     var separator = format == os.ogc.spatial.Format.GML ? ' ' : ',';
     parts.push(format == os.ogc.spatial.Format.GML ?
-        '<gml:Polygon xmlns:gml="http://www.opengis.net/gml"><gml:exterior><gml:LinearRing>' +
+      '<gml:Polygon xmlns:gml="http://www.opengis.net/gml"><gml:exterior><gml:LinearRing>' +
         '<gml:posList srsDimension="2" srsName="CRS:84">' :
-        '<kml:Polygon xmlns:kml="http://www.opengis.net/kml/2.2">' +
+      '<kml:Polygon xmlns:kml="http://www.opengis.net/kml/2.2">' +
         '<kml:outerBoundaryIs><kml:LinearRing><kml:coordinates>');
 
     // format outer ring
     parts.push(os.ogc.spatial.formatCoords(polyCoords[0], separator));
 
     parts.push(format == os.ogc.spatial.Format.GML ?
-        '</gml:posList></gml:LinearRing></gml:exterior>' :
-        '</kml:coordinates></kml:LinearRing></kml:outerBoundaryIs>');
+      '</gml:posList></gml:LinearRing></gml:exterior>' :
+      '</kml:coordinates></kml:LinearRing></kml:outerBoundaryIs>');
 
     // format interior rings
     for (var i = 1, n = polyCoords.length; i < n; i++) {
       parts.push(format == os.ogc.spatial.Format.GML ?
-          '<gml:interior><gml:LinearRing><gml:posList srsDimension="2" srsName="CRS:84">' :
-          '<kml:innerBoundaryIs><kml:LinearRing><kml:coordinates>');
+        '<gml:interior><gml:LinearRing><gml:posList srsDimension="2" srsName="CRS:84">' :
+        '<kml:innerBoundaryIs><kml:LinearRing><kml:coordinates>');
 
       parts.push(os.ogc.spatial.formatCoords(polyCoords[i], separator));
 
       parts.push(format == os.ogc.spatial.Format.GML ?
-          '</gml:posList></gml:LinearRing></gml:interior>' :
-          '</kml:coordinates></kml:LinearRing></kml:innerBoundaryIs>');
+        '</gml:posList></gml:LinearRing></gml:interior>' :
+        '</kml:coordinates></kml:LinearRing></kml:innerBoundaryIs>');
     }
 
     parts.push(format == os.ogc.spatial.Format.GML ? '</gml:Polygon>' : '</kml:Polygon>');
@@ -218,6 +224,7 @@ os.ogc.spatial.formatPolygon = function(geom, opt_format) {
 
 /**
  * Serializes a polygon or linestring geometry to GML or KML.
+ *
  * @param {ol.geom.Geometry} geom The geometry to format
  * @param {string=} opt_format The output format, defaults to GML
  * @return {?string} The serialized polygon, or null if the geometry is not supported

@@ -7,6 +7,7 @@ goog.require('os.command.State');
 
 /**
  * Abstract command for performing selections on a source
+ *
  * @implements {os.command.ICommand}
  * @constructor
  */
@@ -40,6 +41,7 @@ os.command.InterpolateFeatures.prototype.details = null;
 
 /**
  * Checks if the command is ready to execute
+ *
  * @return {boolean}
  */
 os.command.InterpolateFeatures.prototype.canExecute = function() {

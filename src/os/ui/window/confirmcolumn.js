@@ -8,6 +8,7 @@ goog.require('os.ui.window.confirmDirective');
 
 /**
  * Color confirmation dialog.
+ *
  * @return {angular.Directive}
  */
 os.ui.window.confirmColumnDirective = function() {
@@ -30,6 +31,7 @@ os.ui.Module.directive('confirmcolumn', [os.ui.window.confirmColumnDirective]);
 
 /**
  * Controller for the color confirmation window.
+ *
  * @param {!angular.Scope} $scope
  * @constructor
  * @ngInject
@@ -52,6 +54,7 @@ os.ui.window.ConfirmColumnCtrl = function($scope) {
 
 /**
  * Launch a dialog prompting the user to pick a column.
+ *
  * @param {!osx.window.ConfirmColumnOptions} options
  */
 os.ui.window.launchConfirmColumn = function(options) {

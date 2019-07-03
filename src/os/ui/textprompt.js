@@ -60,6 +60,7 @@ os.ui.TextPromptCtrl = function($scope, $element) {
 
 /**
  * clean up
+ *
  * @private
  */
 os.ui.TextPromptCtrl.prototype.onDestroy_ = function() {
@@ -71,6 +72,7 @@ os.ui.TextPromptCtrl.prototype.onDestroy_ = function() {
 
 /**
  * Handles value change
+ *
  * @param {string} newValue
  * @private
  */
@@ -84,6 +86,7 @@ os.ui.TextPromptCtrl.prototype.onValueChange_ = function(newValue) {
 
 /**
  * Selects the text field
+ *
  * @private
  */
 os.ui.TextPromptCtrl.prototype.select_ = function() {
@@ -94,6 +97,7 @@ os.ui.TextPromptCtrl.prototype.select_ = function() {
 
 /**
  * Handles key events
+ *
  * @param {goog.events.KeyEvent} event
  * @private
  */
@@ -106,6 +110,7 @@ os.ui.TextPromptCtrl.prototype.handleKeyEvent_ = function(event) {
 
 /**
  * Close the window
+ *
  * @export
  */
 os.ui.TextPromptCtrl.prototype.close = function() {
@@ -115,6 +120,7 @@ os.ui.TextPromptCtrl.prototype.close = function() {
 
 /**
  * Launch a dialog prompting the user with some text.
+ *
  * @param {osx.window.TextPromptOptions=} opt_options The window options
  */
 os.ui.launchTextPrompt = function(opt_options) {

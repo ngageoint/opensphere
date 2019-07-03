@@ -20,6 +20,7 @@ goog.require('os.ui.window');
 
 /**
  * The featureinfo directive
+ *
  * @return {angular.Directive}
  */
 os.ui.propertyInfoDirective = function() {
@@ -45,6 +46,7 @@ os.ui.Module.directive('propertyinfo', [os.ui.propertyInfoDirective]);
 
 /**
  * Controller function for the featureinfo directive
+ *
  * @param {!angular.Scope} $scope
  * @constructor
  * @ngInject
@@ -85,6 +87,7 @@ os.ui.PropertyInfoCtrl.GRID_COLUMNS_ = [
 
 /**
  * Clean up.
+ *
  * @private
  */
 os.ui.PropertyInfoCtrl.prototype.destroy_ = function() {
@@ -94,6 +97,7 @@ os.ui.PropertyInfoCtrl.prototype.destroy_ = function() {
 
 /**
  * Handle feature changes on the scope.
+ *
  * @param {ol.Feature} newVal The new value
  * @param {ol.Feature} oldVal The old value
  * @private
@@ -119,6 +123,7 @@ os.ui.PropertyInfoCtrl.prototype.onPropertyChange_ = function(newVal, oldVal) {
 
 /**
  * Launches a feature info window for the provided feature.
+ *
  * @param {!string} id The id to use for the window.
  * @param {!Object} object The object to display.
  * @param {string=} opt_titleDetail Title of the containing layer
@@ -164,6 +169,7 @@ goog.exportSymbol('os.ui.launchPropertyInfo', os.ui.launchPropertyInfo);
 
 /**
  * Formats the source column
+ *
  * @param {number} row The row number
  * @param {number} cell The cell number in the row
  * @param {*} value The value

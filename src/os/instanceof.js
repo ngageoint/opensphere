@@ -19,6 +19,7 @@ os.classRegistry_ = {};
 
 /**
  * Registers a class by name.
+ *
  * @param {string} name The class name
  * @param {!function(new: Object, ...?)} clazz The constructor
  * @template T

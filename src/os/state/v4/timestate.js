@@ -115,6 +115,7 @@ os.state.v4.TimeState.prototype.load = function(obj, id) {
 
 /**
  * Test if the timeline UI state is correct for the state object.
+ *
  * @param {!Element} obj The state element.
  * @return {boolean} If the UI state is correct.
  */
@@ -128,6 +129,7 @@ os.state.v4.TimeState.testUIState = function(obj) {
 
 /**
  * Load the timeline state.
+ *
  * @param {!Element} obj The state element.
  * @param {string} id The state ID.
  * @protected
@@ -289,6 +291,7 @@ os.state.v4.TimeState.prototype.saveInternal = function(options, rootObj) {
 
 /**
  * Returns true if the timeline is currently visible in the ui.
+ *
  * @return {boolean}
  */
 os.state.v4.TimeState.prototype.isTimeLineVisible = function() {
@@ -302,6 +305,7 @@ os.state.v4.TimeState.prototype.isTimeLineVisible = function() {
  * NOTE: v4 heldIntervals can include an optional key element
  * which should be associated with a specific layer. Currently,
  * we do not support this feature, so it is not included.
+ *
  * @param {Array<goog.math.Range>} timeranges
  * @return {!Element}
  * @private
@@ -326,6 +330,7 @@ os.state.v4.TimeState.prototype.holdRangeToXml_ = function(timeranges) {
 
 /**
  * Adds interval elements to the container for each range in timeranges
+ *
  * @param {Array<goog.math.Range>} timeranges
  * @param {!Element} container
  * @private
@@ -344,6 +349,7 @@ os.state.v4.TimeState.prototype.addRanges_ = function(timeranges, container) {
 
 /**
  * Returns formatted date string for a range.
+ *
  * @param {goog.math.Range} range [description]
  * @return {string}
  * @private
@@ -358,6 +364,7 @@ os.state.v4.TimeState.prototype.rangeToDateFormatString_ = function(range) {
 
 /**
  * Returns a range for a given interval string value
+ *
  * @param {string} interval
  * @return {goog.math.Range}
  * @private
@@ -372,6 +379,7 @@ os.state.v4.TimeState.prototype.intervalStringToRange_ = function(interval) {
 
 /**
  * Reads the full time line range from the element
+ *
  * @param {!Element} element
  * @return {goog.math.Range}
  * @private
@@ -399,6 +407,7 @@ os.state.v4.TimeState.prototype.readRangeFromIntervals_ = function(element) {
 /**
  * Reads the duration from the element, or computes on
  * using the range.
+ *
  * @param {!Element} element
  * @param {!goog.math.Range} range
  * @return {string}
@@ -416,6 +425,7 @@ os.state.v4.TimeState.prototype.readDuration_ = function(element, range) {
 
 /**
  * Reads a collection of intervals and returns a RangeSet
+ *
  * @param {!Element} element
  * @param {string} tag
  * @return {goog.math.RangeSet}
@@ -438,6 +448,7 @@ os.state.v4.TimeState.prototype.readIntervalsAsRangeSet_ = function(element, tag
 
 /**
  * Get the duration represented by a time difference and optional number of intervals.
+ *
  * @param {number} diff The time difference
  * @param {number=} opt_numIntervals The number of time intervals
  * @return {string} The duration
@@ -465,6 +476,7 @@ os.state.v4.TimeState.prototype.getDurationFromDiff = function(diff, opt_numInte
 
 /**
  * Reads the fps element.
+ *
  * @param {!Element} element
  * @return {?number}
  * @private
@@ -485,6 +497,7 @@ os.state.v4.TimeState.prototype.readFps_ = function(element) {
 
 /**
  * Reads the current element.
+ *
  * @param {!Element} element
  * @return {goog.math.Range}
  * @private
@@ -501,6 +514,7 @@ os.state.v4.TimeState.prototype.readCurrent_ = function(element) {
 
 /**
  * Reards the skip element.
+ *
  * @param {!Element} element
  * @return {?number}
  * @private
@@ -516,6 +530,7 @@ os.state.v4.TimeState.prototype.readSkip_ = function(element) {
 
 /**
  * Parse a time period into its component times.
+ *
  * @param {string} period The period as "start/end"
  * @return {Array.<number>} The times represented by the period
  * @protected
@@ -533,6 +548,7 @@ os.state.v4.TimeState.prototype.parsePeriod = function(period) {
 
 /**
  * Returns slice intervals element for timeranges.
+ *
  * @param {Array<goog.math.Range>} sliceRanges
  * @return {!Element}
  * @private
@@ -554,6 +570,7 @@ os.state.v4.TimeState.prototype.sliceRangesToXml_ = function(sliceRanges) {
 
 /**
  * Reads a collection of slices and returns a RangeSet
+ *
  * @param {!Element} element
  * @return {goog.math.RangeSet}
  * @private
@@ -575,6 +592,7 @@ os.state.v4.TimeState.prototype.readSlicesAsRangeSet_ = function(element) {
 
 /**
  * Returns a range for a given slice interval
+ *
  * @param {!Element} interval
  * @return {goog.math.Range}
  * @private

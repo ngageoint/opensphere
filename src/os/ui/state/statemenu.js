@@ -116,6 +116,7 @@ os.ui.state.menu.dispose = function() {
 
 /**
  * Refresh menu items when a state descriptor changes.
+ *
  * @param {os.data.DescriptorEvent} event Looking for IStateDescriptor events
  * @private
  */
@@ -128,6 +129,7 @@ os.ui.state.menu.onDescriptorChange_ = function(event) {
 
 /**
  * Handle state menu event.
+ *
  * @param {os.ui.menu.MenuEvent<undefined>} event The menu event.
  * @private
  */
@@ -225,6 +227,7 @@ os.ui.state.menu.refreshMenu = function() {
 
 /**
  * Create menu item options to toggle a state descriptor.
+ *
  * @param {os.ui.state.IStateDescriptor} descriptor A state descriptor.
  * @param {number} index The menu item index.
  * @return {os.ui.menu.MenuItemOptions|undefined} Options to create the menu item.
@@ -253,6 +256,7 @@ os.ui.state.menu.getStateOptions_ = function(descriptor, index) {
 
 /**
  * Handle state menu click.
+ *
  * @param {!os.ui.state.IStateDescriptor} descriptor The clicked descriptor
  * @param {os.ui.menu.MenuEvent} event The menu event.
  */
@@ -263,6 +267,7 @@ os.ui.state.menu.toggleState = function(descriptor, event) {
 
 /**
  * Create menu item options for a "View More" item.
+ *
  * @param {!os.data.BaseDescriptor} descriptor A descriptor to provide input on the how the menu item should be built.
  * @return {os.ui.menu.MenuItemOptions|undefined} Options to create the menu item.
  * @private
@@ -287,6 +292,7 @@ os.ui.state.menu.getViewMoreOptions_ = function(descriptor) {
 
 /**
  * Sends the event to launch the 'Add Data' window.
+ *
  * @param {string} typeName The descriptor type name.
  * @param {string} descriptorType The descriptor type.
  */
@@ -304,6 +310,7 @@ os.ui.state.menu.viewMoreEventEmitter = function(typeName, descriptorType) {
 
 /**
  * Filter state descriptors.
+ *
  * @param {string} typeName The descriptor type name.
  * @param {string} descriptorType The descriptor type.
  * @param {os.structs.ITreeNode} node The tree node.

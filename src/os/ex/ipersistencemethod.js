@@ -4,6 +4,7 @@ goog.provide('os.ex.IPersistenceMethod');
 
 /**
  * Interface for a method that persists data to a file, url, etc.
+ *
  * @interface
  */
 os.ex.IPersistenceMethod = function() {};

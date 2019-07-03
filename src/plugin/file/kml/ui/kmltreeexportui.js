@@ -11,6 +11,7 @@ goog.require('plugin.file.kml.ui.kmlExportDirective');
 
 /**
  * The kmltreeexport directive
+ *
  * @return {angular.Directive}
  */
 plugin.file.kml.ui.kmlTreeExportDirective = function() {
@@ -34,6 +35,7 @@ os.ui.Module.directive('kmltreeexport', [plugin.file.kml.ui.kmlTreeExportDirecti
 
 /**
  * Launch a KML tree export dialog.
+ *
  * @param {!plugin.file.kml.ui.KMLNode} rootNode The root node to export.
  * @param {string=} opt_winLabel The window label
  */
@@ -62,6 +64,7 @@ plugin.file.kml.ui.launchTreeExport = function(rootNode, opt_winLabel) {
 
 /**
  * Controller function for the kmltreeexport directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @constructor
@@ -123,6 +126,7 @@ plugin.file.kml.ui.KMLTreeExportCtrl = function($scope, $element) {
 
 /**
  * Clean up.
+ *
  * @protected
  */
 plugin.file.kml.ui.KMLTreeExportCtrl.prototype.destroy = function() {
@@ -133,6 +137,7 @@ plugin.file.kml.ui.KMLTreeExportCtrl.prototype.destroy = function() {
 
 /**
  * Fire the cancel callback and close the window.
+ *
  * @export
  */
 plugin.file.kml.ui.KMLTreeExportCtrl.prototype.cancel = function() {
@@ -142,6 +147,7 @@ plugin.file.kml.ui.KMLTreeExportCtrl.prototype.cancel = function() {
 
 /**
  * Fire the confirmation callback and close the window.
+ *
  * @export
  */
 plugin.file.kml.ui.KMLTreeExportCtrl.prototype.confirm = function() {
@@ -162,6 +168,7 @@ plugin.file.kml.ui.KMLTreeExportCtrl.prototype.confirm = function() {
 
 /**
  * Close the window.
+ *
  * @private
  */
 plugin.file.kml.ui.KMLTreeExportCtrl.prototype.close_ = function() {

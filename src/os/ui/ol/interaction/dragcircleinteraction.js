@@ -103,6 +103,7 @@ os.ui.ol.interaction.DragCircle.prototype.update = function(mapBrowserEvent) {
 
 /**
  * Updates the 2D version
+ *
  * @param {ol.Coordinate} start
  * @param {ol.Coordinate} end
  * @protected

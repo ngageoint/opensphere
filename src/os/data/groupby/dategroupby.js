@@ -11,6 +11,7 @@ goog.require('os.ui.slick.SlickTreeNode');
 
 /**
  * Groups nodes by their max date
+ *
  * @extends {os.data.groupby.BaseGroupBy}
  * @param {boolean=} opt_open Whether or not to keep the category open by default
  * @constructor

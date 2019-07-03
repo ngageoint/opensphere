@@ -5,6 +5,7 @@ goog.require('os.state.StateOptions');
 
 /**
  * Options for saving and loading state files as JSON.
+ *
  * @param {string} title The state title
  * @param {Object.<string, *>=} opt_obj The state JSON object
  * @extends {os.state.StateOptions}

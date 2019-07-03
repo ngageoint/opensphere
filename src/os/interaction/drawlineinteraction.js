@@ -20,6 +20,7 @@ os.interaction.DrawLineClick;
 
 /**
  * Interaction to draw a line on the map/globe.
+ *
  * @param {olx.interaction.PointerOptions=} opt_options
  * @extends {os.interaction.DrawPolygon}
  * @constructor
@@ -121,6 +122,7 @@ os.interaction.DrawLine.prototype.update = function(mapBrowserEvent) {
 
 /**
  * Handles map browser events while the control is active.
+ *
  * @param {ol.MapBrowserEvent} mapBrowserEvent Map browser event.
  * @return {boolean} `false` to stop event propagation.
  * @this os.interaction.DrawLine

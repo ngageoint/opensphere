@@ -10,6 +10,7 @@ goog.require('os.search.ISearch');
 
 /**
  * Abstract implementation of a search provider.
+ *
  * @abstract
  * @param {string} id The unique identifier for the search provider.
  * @param {string} name The user-facing name of the search provider.
@@ -186,6 +187,7 @@ os.search.AbstractSearch.prototype.autocomplete = function(term, opt_maxResults)
 
 /**
  * Search for a term.
+ *
  * @abstract
  * @param {string} term The keyword to use in the search
  * @param {number=} opt_start The start index of the page of results to return.
@@ -215,6 +217,7 @@ os.search.AbstractSearch.prototype.setExternal = function(external) {
 
 /**
  * DEPRECATED
+ *
  * @param {string} term
  * @param {number=} opt_start
  * @param {number=} opt_pageSize
@@ -228,6 +231,7 @@ os.search.AbstractSearch.prototype.searchFavorite = function(term, opt_start, op
 /**
  * DEPRECATED
  * Returns search favorites
+ *
  * @param {number} max max number of favorites to return
  * @return {Array<os.search.Favorite>}
  */

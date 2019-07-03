@@ -5,6 +5,7 @@ goog.require('os.ui.Module');
 
 /**
  * The selected/highlighted node UI directive for filter groups
+ *
  * @return {angular.Directive}
  */
 os.ui.config.settingDefaultTreeUIDirective = function() {
@@ -27,6 +28,7 @@ os.ui.Module.directive('defaultsettingui', [os.ui.config.settingDefaultTreeUIDir
 
 /**
  * Controller for selected/highlighted node UI
+ *
  * @constructor
  * @ngInject
  */

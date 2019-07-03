@@ -68,6 +68,7 @@ os.query.TemporalQueryManager.prototype.onTimelineReset_ = function(event) {
 
 /**
  * Gets a handler if a matching one is registered with the manager.
+ *
  * @param {string} id Id of the handler
  * @return {?os.query.TemporalHandler} The handler, if it has been registered
  */
@@ -78,6 +79,7 @@ os.query.TemporalQueryManager.prototype.getHandler = function(id) {
 
 /**
  * Checks if a handler is registered with the manager.
+ *
  * @param {string} id Id of the handler
  * @return {boolean} If the handler is registered
  */
@@ -88,6 +90,7 @@ os.query.TemporalQueryManager.prototype.hasHandler = function(id) {
 
 /**
  * Registers a handler with the manager.
+ *
  * @param {string} id Id of the handler
  * @param {os.query.TemporalHandler} handler The handler
  */
@@ -103,6 +106,7 @@ os.query.TemporalQueryManager.prototype.registerHandler = function(id, handler) 
 
 /**
  * Unregisters a handler with the manager.
+ *
  * @param {string} id Id of the handler
  */
 os.query.TemporalQueryManager.prototype.unregisterHandler = function(id) {

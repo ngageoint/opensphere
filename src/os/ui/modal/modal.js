@@ -28,6 +28,7 @@ os.ui.modal.create = function(target, markup, opt_scopeOptions) {
 
 /**
  * Opens a modal
+ *
  * @param {!angular.JQLite} el
  * @param {Object<string, *>=} opt_options
  */

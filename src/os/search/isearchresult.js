@@ -4,6 +4,7 @@ goog.provide('os.search.ISearchResult');
 
 /**
  * Interface representing a ranked search result. Results with higher rankings will appear first in search results.
+ *
  * @interface
  * @template T
  */

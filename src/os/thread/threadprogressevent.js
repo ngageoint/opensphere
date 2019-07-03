@@ -6,6 +6,7 @@ goog.require('os.thread.EventType');
 
 /**
  * A thread event
+ *
  * @param {number} loaded
  * @param {number} total
  * @extends {goog.events.Event}

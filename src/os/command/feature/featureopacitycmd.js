@@ -8,6 +8,7 @@ goog.require('os.ui');
 
 /**
  * Changes the opacity of a feature
+ *
  * @extends {os.command.AbstractFeatureStyle}
  * @param {string} layerId
  * @param {string} featureId

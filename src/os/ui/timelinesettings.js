@@ -16,6 +16,7 @@ goog.require('os.ui.time.timeDirective');
 
 /**
  * The timeline settings window directive
+ *
  * @return {angular.Directive}
  */
 os.ui.timeSettingsDirective = function() {
@@ -39,6 +40,7 @@ os.ui.Module.directive('timesettings', [os.ui.timeSettingsDirective]);
 
 /**
  * Controller for the timeline settings dialog
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @constructor
@@ -81,6 +83,7 @@ os.ui.TimeSettingsCtrl = function($scope, $element) {
 
 /**
  * Clean up
+ *
  * @protected
  */
 os.ui.TimeSettingsCtrl.prototype.onDestroy = function() {
@@ -92,6 +95,7 @@ os.ui.TimeSettingsCtrl.prototype.onDestroy = function() {
 
 /**
  * Populates the inital form values from the timeline controller
+ *
  * @protected
  */
 os.ui.TimeSettingsCtrl.prototype.populate = function() {
@@ -105,6 +109,7 @@ os.ui.TimeSettingsCtrl.prototype.populate = function() {
 
 /**
  * Apply the settings
+ *
  * @export
  */
 os.ui.TimeSettingsCtrl.prototype.accept = function() {
@@ -155,6 +160,7 @@ os.ui.TimeSettingsCtrl.prototype.accept = function() {
 
 /**
  * Cancel/Close
+ *
  * @export
  */
 os.ui.TimeSettingsCtrl.prototype.cancel = function() {
@@ -164,6 +170,7 @@ os.ui.TimeSettingsCtrl.prototype.cancel = function() {
 
 /**
  * Handles key events
+ *
  * @param {goog.events.KeyEvent} event
  * @private
  */
@@ -178,6 +185,7 @@ os.ui.TimeSettingsCtrl.prototype.handleKeyEvent_ = function(event) {
 
 /**
  * Add a slice
+ *
  * @export
  */
 os.ui.TimeSettingsCtrl.prototype.addSlice = function() {
@@ -203,6 +211,7 @@ os.ui.TimeSettingsCtrl.prototype.addSlice = function() {
 
 /**
  * Remove a slice
+ *
  * @param {number} index
  * @export
  */
@@ -213,6 +222,7 @@ os.ui.TimeSettingsCtrl.prototype.removeSlice = function(index) {
 
 /**
  * Add a load range
+ *
  * @export
  */
 os.ui.TimeSettingsCtrl.prototype.addRange = function() {
@@ -223,6 +233,7 @@ os.ui.TimeSettingsCtrl.prototype.addRange = function() {
 
 /**
  * Remove a load range
+ *
  * @param {number} index
  * @export
  */
@@ -278,6 +289,7 @@ os.ui.TimeSettingsCtrl.prototype.fromSlicesToHMS = function(ranges) {
 
 /**
  * translates timestring into time number
+ *
  * @param {string|Date} field
  * @return {number}
  * @protected
@@ -289,6 +301,7 @@ os.ui.TimeSettingsCtrl.prototype.timeFromField = function(field) {
 
 /**
  * Checks for valid
+ *
  * @return {boolean}
  * @export
  */
@@ -308,6 +321,7 @@ os.ui.TimeSettingsCtrl.prototype.valid = function() {
 
 /**
  * Checks for valid time range
+ *
  * @param {string} start
  * @param {string} end
  * @return {boolean}
@@ -320,6 +334,7 @@ os.ui.TimeSettingsCtrl.prototype.isValid = function(start, end) {
 
 /**
  * Checks for valid slice
+ *
  * @param {Object} start
  * @param {Object} end
  * @param {boolean=} opt_ignore

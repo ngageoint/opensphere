@@ -15,6 +15,7 @@ goog.require('os.config.Settings');
  * truncated or just not work. Non windows boxes seem to have
  * a higher limit, not sure of the exact value so using an
  * arbitrary 3096 default.
+ *
  * @constructor
  * @param {Object=} opt_options optional default overrides
  */
@@ -31,6 +32,7 @@ os.ui.help.supportMsg = function(opt_options) {
 /**
  * Returns a parametered string for email, e.g.
  * subject=[this.subject]&body=...
+ *
  * @return {string}
  */
 os.ui.help.supportMsg.prototype.getMailToParameters = function() {
@@ -53,6 +55,7 @@ os.ui.help.supportMsg.prototype.getMailToParameters = function() {
 
 /**
  * Use settings, if possible, to build a default subject line.
+ *
  * @return {string}
  * @private
  */
@@ -68,6 +71,7 @@ os.ui.help.supportMsg.prototype.getDefaultSubjectLine_ = function() {
 
 /**
  * Returns formatted mailto href string.
+ *
  * @param {string|undefined|null} emailAddress
  * @return {string}
  */
@@ -79,6 +83,7 @@ os.ui.help.supportMsg.prototype.getMailTo = function(emailAddress) {
 
 /**
  * Reads most values from modernizer as a string
+ *
  * @return {string}
  */
 os.ui.help.supportMsg.prototype.getModernizrValues = function() {

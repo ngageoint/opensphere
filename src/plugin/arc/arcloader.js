@@ -10,6 +10,7 @@ goog.require('plugin.arc.node.ArcServiceNode');
 
 /**
  * Loads the capabilities from an Arc server and constructs the tree.
+ *
  * @param {os.ui.slick.SlickTreeNode} node
  * @param {string} url
  * @param {plugin.arc.ArcServer} server
@@ -90,6 +91,7 @@ plugin.arc.ArcLoader.prototype.disposeInternal = function() {
 
 /**
  * Get the URL
+ *
  * @return {string}
  */
 plugin.arc.ArcLoader.prototype.getUrl = function() {
@@ -99,6 +101,7 @@ plugin.arc.ArcLoader.prototype.getUrl = function() {
 
 /**
  * Set the URL
+ *
  * @param {string} value
  */
 plugin.arc.ArcLoader.prototype.setUrl = function(value) {
@@ -108,6 +111,7 @@ plugin.arc.ArcLoader.prototype.setUrl = function(value) {
 
 /**
  * Get the node
+ *
  * @return {?os.ui.slick.SlickTreeNode}
  */
 plugin.arc.ArcLoader.prototype.getNode = function() {
@@ -117,6 +121,7 @@ plugin.arc.ArcLoader.prototype.getNode = function() {
 
 /**
  * Set the node
+ *
  * @param {os.ui.slick.SlickTreeNode} value
  */
 plugin.arc.ArcLoader.prototype.setNode = function(value) {
@@ -126,6 +131,7 @@ plugin.arc.ArcLoader.prototype.setNode = function(value) {
 
 /**
  * Get the server
+ *
  * @return {?plugin.arc.ArcServer}
  */
 plugin.arc.ArcLoader.prototype.getServer = function() {
@@ -135,6 +141,7 @@ plugin.arc.ArcLoader.prototype.getServer = function() {
 
 /**
  * Set the server
+ *
  * @param {?plugin.arc.ArcServer} value
  */
 plugin.arc.ArcLoader.prototype.setServer = function(value) {
@@ -163,6 +170,7 @@ plugin.arc.ArcLoader.prototype.load = function() {
 
 /**
  * Handler for successful load of the Arc node capabilities.
+ *
  * @param {goog.events.Event} event
  * @protected
  */
@@ -286,6 +294,7 @@ plugin.arc.ArcLoader.prototype.shouldAddNode = function(node) {
 
 /**
  * Handler for Arc load errors. Fires an error event.
+ *
  * @param {goog.events.Event} event
  * @protected
  */

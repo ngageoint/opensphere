@@ -3,6 +3,7 @@ goog.provide('os.ui.menu.IMenuSupplier');
 
 /**
  * Interface for classes that provide their own context menu
+ *
  * @interface
  */
 os.ui.menu.IMenuSupplier = function() {};

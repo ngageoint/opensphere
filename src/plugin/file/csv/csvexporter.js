@@ -16,6 +16,7 @@ goog.require('plugin.file.csv.ui.csvExportDirective');
 
 /**
  * The CSV exporter.
+ *
  * @extends {os.ui.file.csv.AbstractCSVExporter.<ol.Feature>}
  * @constructor
  */
@@ -61,6 +62,7 @@ plugin.file.csv.CSVExporter.FIELDS = {
 
 /**
  * Get if ellipses should be exported.
+ *
  * @return {boolean}
  */
 plugin.file.csv.CSVExporter.prototype.getExportEllipses = function() {
@@ -70,6 +72,7 @@ plugin.file.csv.CSVExporter.prototype.getExportEllipses = function() {
 
 /**
  * Set if ellipses should be exported.
+ *
  * @param {boolean} value
  */
 plugin.file.csv.CSVExporter.prototype.setExportEllipses = function(value) {
@@ -79,6 +82,7 @@ plugin.file.csv.CSVExporter.prototype.setExportEllipses = function(value) {
 
 /**
  * Get the geometry for a feature.
+ *
  * @param {ol.Feature} feature The feature
  * @return {ol.geom.GeometryCollection|ol.geom.SimpleGeometry|undefined}
  */
@@ -143,6 +147,7 @@ plugin.file.csv.CSVExporter.prototype.processItem = function(item) {
 
 /**
  * Get whether to always include WKT geometry in the export
+ *
  * @return {boolean} If true, WKT geometry will always be included in the export
  */
 plugin.file.csv.CSVExporter.prototype.getAlwaysIncludeWkt = function() {
@@ -152,6 +157,7 @@ plugin.file.csv.CSVExporter.prototype.getAlwaysIncludeWkt = function() {
 
 /**
  * Set wheather to always include WKT geometry in the export
+ *
  * @param {boolean} newValue Set to true if WKT geometry should always be included in the export
  */
 plugin.file.csv.CSVExporter.prototype.setAlwaysIncludeWkt = function(newValue) {
@@ -169,6 +175,7 @@ plugin.file.csv.CSVExporter.prototype.supportsTime = function() {
 
 /**
  * Conditionally writes the time field(s) to the result object
+ *
  * @param {T} item The items
  * @param {Object.<string, string>} result The Papa item
  * @protected
@@ -190,6 +197,7 @@ plugin.file.csv.CSVExporter.prototype.writeTime = function(item, result) {
 
 /**
  * Conditionally writes the geometry field to the result object
+ *
  * @param {T} item The items
  * @param {Object.<string, string>} result The Papa item
  * @protected

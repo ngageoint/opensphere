@@ -7,6 +7,7 @@ goog.require('plugin.track.ui.trackNodeUIDirective');
 
 /**
  * Layer used to maintain saved tracks.
+ *
  * @param {olx.layer.VectorOptions} options Vector layer options
  * @extends {plugin.file.kml.KMLLayer}
  * @constructor

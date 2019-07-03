@@ -27,6 +27,7 @@ os.layer.AnimationOverlayOptions;
  * Renders features in a source that has spatial indexing disabled and avoids firing events when the features change.
  * This dramatically increases animation performance by reducing the overhead involved in changing which features are
  * rendered.
+ *
  * @param {os.layer.AnimationOverlayOptions=} opt_options Options.
  * @extends {goog.Disposable}
  * @constructor
@@ -110,6 +111,7 @@ os.layer.AnimationOverlay.prototype.changed = function() {
 
 /**
  * Get the features in the overlay.
+ *
  * @return {!Array<!ol.Feature>} Features collection.
  */
 os.layer.AnimationOverlay.prototype.getFeatures = function() {
@@ -119,6 +121,7 @@ os.layer.AnimationOverlay.prototype.getFeatures = function() {
 
 /**
  * Set the features rendered on the map.
+ *
  * @param {Array<!ol.Feature>|undefined} features Features collection.
  */
 os.layer.AnimationOverlay.prototype.setFeatures = function(features) {
@@ -139,6 +142,7 @@ os.layer.AnimationOverlay.prototype.setFeatures = function(features) {
 
 /**
  * Set the map reference on the layer.
+ *
  * @param {ol.PluggableMap} map Map.
  */
 os.layer.AnimationOverlay.prototype.setMap = function(map) {
@@ -151,6 +155,7 @@ os.layer.AnimationOverlay.prototype.setMap = function(map) {
 /**
  * Set the style for features.  This can be a single style object, an array of styles, or a function that takes a
  * feature and resolution and returns an array of styles.
+ *
  * @param {ol.style.Style|Array<ol.style.Style>|ol.StyleFunction} style Overlay style.
  */
 os.layer.AnimationOverlay.prototype.setStyle = function(style) {
@@ -162,6 +167,7 @@ os.layer.AnimationOverlay.prototype.setStyle = function(style) {
 
 /**
  * Sets the overall opacity on the overlay layer.
+ *
  * @param {number} value
  */
 os.layer.AnimationOverlay.prototype.setOpacity = function(value) {
@@ -173,6 +179,7 @@ os.layer.AnimationOverlay.prototype.setOpacity = function(value) {
 
 /**
  * Sets the z-index on the overlay layer.
+ *
  * @param {number} value
  */
 os.layer.AnimationOverlay.prototype.setZIndex = function(value) {
@@ -185,6 +192,7 @@ os.layer.AnimationOverlay.prototype.setZIndex = function(value) {
 
 /**
  * Vector layer extension created solely for the purpose of z-indexing unmanaged animation layers against each other.
+ *
  * @extends {ol.layer.Vector}
  * @param {olx.layer.VectorOptions} options Vector layer options
  * @constructor
@@ -206,6 +214,7 @@ os.layer.AnimationVector.Z_OFFSET = 100000;
 /**
  * This function is replaced because the OL3 version sets the zIndex to Infinity, making all unmanaged layers the same.
  * We still want them to appear on top, but be ordered against one another.
+ *
  * @inheritDoc
  * @suppress {accessControls}
  */

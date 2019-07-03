@@ -143,6 +143,7 @@ os.ui.Module.directive('window', [os.ui.windowDirective]);
 
 /**
  * Creates a window by wrapping a window around the given html
+ *
  * @param {Object.<string, *>} options The attibute/value pairs for the window
  * @param {!string} html The HTML or directive name
  * @param {string=} opt_parent The selector for the parent defaults to <code>#js-window__container</code>
@@ -184,6 +185,7 @@ os.ui.window.create = function(options, html, opt_parent, opt_scope, opt_compile
 
 /**
  * Convenience function for adding a new window to the application
+ *
  * @param {!string} html The HTML to launch
  * @param {string=} opt_parent The selector for the parent. Defaults to <code>#js-window__container</code>.
  * @param {angular.Scope=} opt_scope The scope that will become the parent scope of the window
@@ -214,6 +216,7 @@ os.ui.window.launch = function(html, opt_parent, opt_scope, opt_compile, opt_sco
 
 /**
  * Internal convenience function that handles scope and compile injection.
+ *
  * @param {!string} html
  * @param {!string} parent The selector for the parent
  * @param {!angular.Scope} $scope
@@ -235,6 +238,7 @@ os.ui.window.launchInternal = function(html, parent, $scope, $compile, opt_scope
 
 /**
  * Brings a window to the front of all other windows
+ *
  * @param {string} id The window's id (without the #)
  */
 os.ui.window.bringToFront = function(id) {
@@ -250,6 +254,7 @@ os.ui.window.bringToFront = function(id) {
 
 /**
  * Temporary toggle windows off with callback
+ *
  * @param {?string=} opt_id The window's id (without the #)
  * @return {?Function} callback to toggle windows that got turn off back on
  */
@@ -282,6 +287,7 @@ os.ui.window.toggleVisibility = function(opt_id) {
 
 /**
  * Turns on modality
+ *
  * @param {string} id The window's id (without the #)
  */
 os.ui.window.enableModality = function(id) {
@@ -300,6 +306,7 @@ os.ui.window.enableModality = function(id) {
 
 /**
  * Turns off modality
+ *
  * @param {string} id The window's id (without the #)
  */
 os.ui.window.disableModality = function(id) {
@@ -318,12 +325,13 @@ os.ui.window.disableModality = function(id) {
 
 /**
  * Closes the window that contains the given element
+ *
  * @param {?angular.JQLite} el An element within the window
  */
 os.ui.window.close = function(el) {
   if (el) {
     var scope = el.is(os.ui.windowSelector.WINDOW) ?
-        el.children().scope() : el.parents(os.ui.windowSelector.WINDOW).children().scope();
+      el.children().scope() : el.parents(os.ui.windowSelector.WINDOW).children().scope();
     if (scope && scope['windowCtrl']) {
       // scope for a window directive, so call the close function
       /** @type {os.ui.WindowCtrl} */ (scope['windowCtrl']).close();
@@ -342,6 +350,7 @@ os.ui.window.close = function(el) {
 
 /**
  * Closes all windows
+ *
  * @param {string=} opt_parent
  */
 os.ui.window.closeAll = function(opt_parent) {
@@ -365,6 +374,7 @@ os.ui.window.closeAll = function(opt_parent) {
 
 /**
  * Gets a reference to all windows with the provided id, if open in the application.
+ *
  * @param {string} id The id, without the leading `#`.
  * @return {?angular.JQLite} The window(s), if found.
  */
@@ -383,6 +393,7 @@ os.ui.window.getById = function(id) {
 
 /**
  * Look up a window by ID and call setParams on it's controller
+ *
  * @param {string} id
  * @param {Object} params
  */
@@ -399,6 +410,7 @@ os.ui.window.setParams = function(id, params) {
 
 /**
  * Checks if a window with the provided id exists in the application.
+ *
  * @param {string} id The id, without the leading `#`.
  * @return {boolean} If the window exists.
  */
@@ -409,6 +421,7 @@ os.ui.window.exists = function(id) {
 
 /**
  * Checks if a window with the provided id is in the process of being opened.
+ *
  * @param {string} id The id, without the leading `#`.
  * @return {boolean} If the window exists.
  */
@@ -420,6 +433,7 @@ os.ui.window.isOpening = function(id) {
 
 /**
  * Make a window start or stop blinking
+ *
  * @param {!string} id window ID
  * @param {boolean=} opt_start Defaults to start (true), stop blinking if false is specified.
  */
@@ -439,6 +453,7 @@ os.ui.window.blink = function(id, opt_start) {
 
 /**
  * Cascade a window against another.
+ *
  * @param {!Element} win The window to cascade.
  * @param {!Element} from The window to cascade against.
  * @param {Element=} opt_container The window container.
@@ -474,6 +489,7 @@ os.ui.window.cascade = function(win, from, opt_container) {
 
 /**
  * Stack all the windows under this window
+ *
  * @param {!Element} topWin The top window.
  */
 os.ui.window.stack = function(topWin) {
@@ -514,6 +530,7 @@ os.ui.window.stack = function(topWin) {
 
 /**
  * Sort window elements by descending CSS `zIndex`.
+ *
  * @param {Element} a A window.
  * @param {Element} b Another window.
  * @return {number} The sort value.
@@ -527,6 +544,7 @@ os.ui.window.sortByZIndex = function(a, b) {
 
 /**
  * Register an open window.
+ *
  * @param {string} id The window id.
  * @param {!Element} el The element.
  */
@@ -543,6 +561,7 @@ os.ui.window.registerWindow = function(id, el) {
 
 /**
  * Remove a window from the open window map.
+ *
  * @param {string} id The window id.
  * @param {!Element} el The element.
  */
@@ -588,6 +607,7 @@ os.ui.WindowEventType = {
 /**
  * Controller for the draggable window directive. You must have mark the window container
  * with <code>id="js-window__container"</code>.
+ *
  * @param {!angular.Scope} $scope The Angular scope.
  * @param {!angular.JQLite} $element The root DOM element.
  * @param {!angular.$timeout} $timeout The Angular $timeout service.
@@ -685,7 +705,7 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
   // make the element draggable
   if (!$scope['disableDrag']) {
     var handler = $scope['overlay'] ?
-        (os.ui.windowSelector.HEADER + ', .js-window-overlay-content') : os.ui.windowSelector.HEADER;
+      (os.ui.windowSelector.HEADER + ', .js-window-overlay-content') : os.ui.windowSelector.HEADER;
     var dragConfig = {
       'containment': $scope['windowContainer'],
       'handle': handler,
@@ -848,6 +868,7 @@ os.ui.WindowCtrl.prototype.disposeInternal = function() {
 
 /**
  * Get all keys used to identify the open window.
+ *
  * @return {!Array<string>}
  * @protected
  */
@@ -889,6 +910,7 @@ os.ui.WindowCtrl.prototype.removeModalBg = function() {
 
 /**
  * Moves the window on top of other windows in the application.
+ *
  * @export
  */
 os.ui.WindowCtrl.prototype.bringToFront = function() {
@@ -900,6 +922,7 @@ os.ui.WindowCtrl.prototype.bringToFront = function() {
 
 /**
  * Cascade the window against the top-most window with a matching id.
+ *
  * @return {boolean} If the window was cascaded.
  * @protected
  */
@@ -931,6 +954,7 @@ os.ui.WindowCtrl.prototype.cascade = function() {
 
 /**
  * Broadcast a params update event down the scope of the window controller for transcluded contents to handle.
+ *
  * @param {Object} params
  */
 os.ui.WindowCtrl.prototype.setParams = function(params) {
@@ -978,6 +1002,7 @@ os.ui.WindowCtrl.prototype.hideOverlayWindow_ = function() {
 
 /**
  * Closes the window
+ *
  * @param {boolean=} opt_cancel If the cancel event should be fired
  * @export
  */
@@ -1010,6 +1035,7 @@ os.ui.WindowCtrl.prototype.close = function(opt_cancel) {
 
 /**
  * Toggles the window content
+ *
  * @export
  */
 os.ui.WindowCtrl.prototype.toggle = function() {
@@ -1039,6 +1065,7 @@ os.ui.WindowCtrl.prototype.toggle = function() {
 
 /**
  * Hide (not close) the window and raise an event
+ *
  * @export
  */
 os.ui.WindowCtrl.prototype.hide = function() {
@@ -1052,6 +1079,7 @@ os.ui.WindowCtrl.prototype.hide = function() {
 
 /**
  * Updates on change
+ *
  * @param {?Object} event
  * @param {?Object} ui
  * @protected
@@ -1063,6 +1091,7 @@ os.ui.WindowCtrl.prototype.onChange = function(event, ui) {
 
 /**
  * Drag start handler. Fires a start event in case the parent needs to take action.
+ *
  * @param {?Object} event
  * @param {?Object} ui
  * @private
@@ -1077,6 +1106,7 @@ os.ui.WindowCtrl.prototype.onDragStart_ = function(event, ui) {
 
 /**
  * Drag end handler. Fires an end event in case the parent needs to take action.
+ *
  * @param {?Object} event
  * @param {?Object} ui
  * @private
@@ -1100,6 +1130,7 @@ os.ui.WindowCtrl.prototype.onDragStop_ = function(event, ui) {
 
 /**
  * Handle modal flag change.
+ *
  * @param {boolean=} opt_new
  * @param {boolean=} opt_old
  * @private
@@ -1118,6 +1149,7 @@ os.ui.WindowCtrl.prototype.onToggleModal_ = function(opt_new, opt_old) {
 /**
  * If the window isn't a modal and didn't override its z-index, put it on top of other windows by incrementing the
  * global z-index and applying it to the window.
+ *
  * @private
  */
 os.ui.WindowCtrl.prototype.updateZIndex_ = function() {
@@ -1134,6 +1166,7 @@ os.ui.WindowCtrl.prototype.updateZIndex_ = function() {
 
 /**
  * Handle viewport resize event.
+ *
  * @param {goog.events.Event=} opt_e The resize event.
  * @private
  */
@@ -1144,6 +1177,7 @@ os.ui.WindowCtrl.prototype.onViewportResize_ = function(opt_e) {
 
 /**
  * Constrain the window element within the boundaries of the browser window.
+ *
  * @private
  */
 os.ui.WindowCtrl.prototype.constrainWindow_ = function() {
@@ -1201,6 +1235,7 @@ os.ui.WindowCtrl.prototype.constrainWindow_ = function() {
 
 /**
  * Handle header button click
+ *
  * @param {!Event} event
  * @param {!os.ui.window.HeaderBtnConfig} headerBtnCfg
  * @export
@@ -1213,6 +1248,7 @@ os.ui.WindowCtrl.prototype.onHeaderBtnClick = function(event, headerBtnCfg) {
 
 /**
  * Use ESC key to cancel if modal and showClose is true
+ *
  * @param {goog.events.KeyEvent} event
  * @private
  */

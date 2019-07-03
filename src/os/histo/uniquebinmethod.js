@@ -150,7 +150,7 @@ os.histo.UniqueBinMethod.prototype.getLabelForKey = function(key, opt_secondary,
   if (typeof key === 'string' && key.indexOf(os.data.xf.DataModel.SEPARATOR) >= 0) {
     // this key is in a bin that represents the intersection of two values; split them apart with the separator
     key = !opt_secondary ? key.split(os.data.xf.DataModel.SEPARATOR)[0] :
-        key.split(os.data.xf.DataModel.SEPARATOR)[1];
+      key.split(os.data.xf.DataModel.SEPARATOR)[1];
   }
 
   if (Number(key) === os.histo.NumericBinMethod.MAGIC_EMPTY) {
@@ -216,6 +216,7 @@ os.histo.UniqueBinMethod.prototype.restore = function(config) {
 
 /**
  * Clones the bin method.
+ *
  * @return {os.histo.UniqueBinMethod}
  */
 os.histo.UniqueBinMethod.prototype.clone = function() {
@@ -331,6 +332,7 @@ os.histo.UniqueBinMethod.prototype.setIsDate = function(value) {
 
 /**
  * Get the filter for an individual bin.
+ *
  * @param {!os.histo.Bin} bin The bin
  * @return {string} The filter
  * @protected
@@ -348,6 +350,7 @@ os.histo.UniqueBinMethod.prototype.getFilterForBin = function(bin) {
 
 /**
  * Test if a value is contained within a set of values. Avoided ol.array.includes to prevent an extra function call.
+ *
  * @param {!Array<string>} values
  * @param {string} value
  * @return {boolean}

@@ -9,6 +9,7 @@ goog.require('os.ui.slick.SlickTreeNode');
 
 /**
  * Groups nodes by how recently they have been activated
+ *
  * @extends {os.data.groupby.BaseGroupBy}
  * @constructor
  */

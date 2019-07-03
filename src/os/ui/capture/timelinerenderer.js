@@ -61,6 +61,7 @@ os.ui.capture.TimelineRenderer.prototype.getHeight = function() {
 
 /**
  * Get the height of the timeline element.
+ *
  * @return {number}
  * @protected
  */

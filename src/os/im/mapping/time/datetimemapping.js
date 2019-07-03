@@ -16,6 +16,7 @@ goog.require('os.time.TimeRange');
 
 /**
  * Base class for date/time mappings. Handles single fields for both date and time.
+ *
  * @param {os.im.mapping.TimeType} type The type of time mapping.
  * @param {string=} opt_id Identifier for the time mapping.
  * @extends {os.im.mapping.AbstractMapping.<T>}
@@ -159,6 +160,7 @@ os.im.mapping.time.DateTimeMapping.prototype.execute = function(item) {
 
 /**
  * Get the UNIX timestamp from a value.
+ *
  * @param {*} value The time value to parse
  * @return {?number}
  *
@@ -234,6 +236,7 @@ os.im.mapping.time.DateTimeMapping.prototype.autoDetect = function(items) {
 
 /**
  * Whether or not the time will be applied to <code>item.recordTime</code>
+ *
  * @return {boolean} Whether or not the time will be applied to <code>item.recordTime</code>.
  */
 os.im.mapping.time.DateTimeMapping.prototype.getApplyTime = function() {
@@ -243,6 +246,7 @@ os.im.mapping.time.DateTimeMapping.prototype.getApplyTime = function() {
 
 /**
  * Sets whether or not the time will be applied to <code>item.recordTime</code>
+ *
  * @param {boolean} value True to apply, false otherwise
  */
 os.im.mapping.time.DateTimeMapping.prototype.setApplyTime = function(value) {
@@ -252,6 +256,7 @@ os.im.mapping.time.DateTimeMapping.prototype.setApplyTime = function(value) {
 
 /**
  * Gets the format for parsing the date/time from the field
+ *
  * @return {?string} The format
  */
 os.im.mapping.time.DateTimeMapping.prototype.getFormat = function() {
@@ -261,6 +266,7 @@ os.im.mapping.time.DateTimeMapping.prototype.getFormat = function() {
 
 /**
  * Sets the format for parsing the date/time from the field
+ *
  * @param {?string} value The format
  */
 os.im.mapping.time.DateTimeMapping.prototype.setFormat = function(value) {
@@ -270,6 +276,7 @@ os.im.mapping.time.DateTimeMapping.prototype.setFormat = function(value) {
 
 /**
  * Gets the type of time mapping (instant, start, or end).
+ *
  * @return {os.im.mapping.TimeType} The type
  */
 os.im.mapping.time.DateTimeMapping.prototype.getType = function() {
@@ -279,6 +286,7 @@ os.im.mapping.time.DateTimeMapping.prototype.getType = function() {
 
 /**
  * Sets the type of time mapping (instant, start, or end).
+ *
  * @param {os.im.mapping.TimeType} type The type
  */
 os.im.mapping.time.DateTimeMapping.prototype.setType = function(type) {
@@ -288,6 +296,7 @@ os.im.mapping.time.DateTimeMapping.prototype.setType = function(type) {
 
 /**
  * Get the regular expression used to auto detect the date/time mapping.
+ *
  * @return {RegExp}
  * @protected
  */
@@ -298,6 +307,7 @@ os.im.mapping.time.DateTimeMapping.prototype.getRegex = function() {
 
 /**
  * Updates the record with the given time
+ *
  * @param {number} t The time in ms UTC
  * @param {T} item The item to update
  */
@@ -310,6 +320,7 @@ os.im.mapping.time.DateTimeMapping.prototype.updateItem = function(t, item) {
 
 /**
  * Gets a new time instance based on the mapping type.
+ *
  * @param {number} t The time in ms UTC
  * @return {os.time.ITime}
  * @protected
@@ -328,6 +339,7 @@ os.im.mapping.time.DateTimeMapping.prototype.getNewTime = function(t) {
 
 /**
  * Updates components of a time based on the mapping.
+ *
  * @param {number} to The destination time in ms UTC
  * @param {number} from The source time in ms UTC
  * @return {Date} The updated time.
@@ -339,6 +351,7 @@ os.im.mapping.time.DateTimeMapping.prototype.updateTime = function(to, from) {
 
 /**
  * Updates the time instance
+ *
  * @param {?number} t The time in ms UTC
  * @param {*} time The time instance - an IItime, string, or null if none
  * @return {os.time.ITime} The time instance

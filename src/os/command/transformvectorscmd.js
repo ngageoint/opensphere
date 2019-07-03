@@ -8,6 +8,7 @@ goog.require('os.geo2');
 
 /**
  * Abstract command for performing selections on a source
+ *
  * @implements {os.command.ICommand}
  * @param {!ol.ProjectionLike} source
  * @param {!ol.ProjectionLike} target
@@ -54,6 +55,7 @@ os.command.TransformVectors.prototype.details = null;
 
 /**
  * Checks if the command is ready to execute
+ *
  * @return {boolean}
  */
 os.command.TransformVectors.prototype.canExecute = function() {

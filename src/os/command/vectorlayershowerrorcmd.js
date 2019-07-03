@@ -7,6 +7,7 @@ goog.require('os.metrics');
 
 /**
  * Changes if lob errors are shown.
+ *
  * @param {string} layerId
  * @param {boolean} value
  * @param {boolean=} opt_oldValue

@@ -8,6 +8,7 @@ goog.require('os.ui.Module');
 
 /**
  * The colorpalette directive
+ *
  * @return {angular.Directive}
  */
 os.ui.color.colorPaletteDirective = function() {
@@ -47,6 +48,7 @@ os.ui.color.ColorPaletteEventType = {
 
 /**
  * Controller function for the colorpalette directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$timeout} $timeout
@@ -100,6 +102,7 @@ os.ui.color.ColorPaletteCtrl = function($scope, $element, $timeout) {
 
 /**
  * Clean up.
+ *
  * @private
  */
 os.ui.color.ColorPaletteCtrl.prototype.destroy_ = function() {
@@ -109,6 +112,7 @@ os.ui.color.ColorPaletteCtrl.prototype.destroy_ = function() {
 
 /**
  * Notify parent scope that a color was chosen.
+ *
  * @param {string} color The selected color
  * @export
  */
@@ -122,6 +126,7 @@ os.ui.color.ColorPaletteCtrl.prototype.pick = function(color) {
 
 /**
  * Notify parent scope that the color should be reset.
+ *
  * @param {string} color The selected color
  * @export
  */
@@ -135,6 +140,7 @@ os.ui.color.ColorPaletteCtrl.prototype.reset = function(color) {
 
 /**
  * Get the tooltip to display for a color.
+ *
  * @param {string} color The selected color
  * @return {string}
  * @export
@@ -146,6 +152,7 @@ os.ui.color.ColorPaletteCtrl.prototype.getTitle = function(color) {
 
 /**
  * Get the event type fired by a color palette directive.
+ *
  * @param {string} baseType The base event type
  * @param {?string=} opt_name Optional name
  * @return {string} The event type

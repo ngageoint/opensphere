@@ -7,6 +7,7 @@ goog.require('os.ui.slick.AbstractNodeUICtrl');
 
 /**
  * The selected/highlighted node UI directive for filters
+ *
  * @return {angular.Directive}
  */
 os.ui.filter.ui.filterableDescriptorNodeUIDirective = function() {
@@ -40,6 +41,7 @@ os.ui.Module.directive('filterabledescriptornodeui', [os.ui.filter.ui.filterable
 
 /**
  * Controller for selected/highlighted node UI
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @extends {os.ui.slick.AbstractNodeUICtrl}
@@ -76,6 +78,7 @@ os.ui.filter.ui.FilterableDescriptorNodeUICtrl.prototype.destroy = function() {
 
 /**
  * Update filters
+ *
  * @param {os.events.PropertyChangeEvent=} opt_event
  * @private
  */
@@ -100,6 +103,7 @@ os.ui.filter.ui.FilterableDescriptorNodeUICtrl.prototype.updateFilters_ = functi
 
 /**
  * Launch the filter manager for the layer
+ *
  * @export
  */
 os.ui.filter.ui.FilterableDescriptorNodeUICtrl.prototype.filter = function() {

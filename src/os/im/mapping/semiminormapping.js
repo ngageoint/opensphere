@@ -6,6 +6,7 @@ goog.require('os.im.mapping.RadiusMapping');
 
 /**
  * Ellipse semi-minor mapping.
+ *
  * @extends {os.im.mapping.RadiusMapping}
  * @constructor
  */

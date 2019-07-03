@@ -29,6 +29,7 @@ goog.require('os.ui.state.StateProvider');
 
 /**
  * State manager.
+ *
  * @extends {os.state.XMLStateManager}
  * @constructor
  */
@@ -218,6 +219,7 @@ os.state.StateManager.prototype.finishImport = function(file, options) {
 
 /**
  * This override attempts to populate some data into the state form based on the most recently activated state.
+ *
  * @override
  */
 os.state.StateManager.prototype.startExport = function(opt_method) {
@@ -342,6 +344,7 @@ os.state.StateManager.prototype.addLoadFunction = function(loadFunction, opt_ver
 
 /**
  * Removes a load function
+ *
  * @param {function(!Element)} loadFunction
  * @param {string=} opt_versionKey The version of the states that the function supports.
  */

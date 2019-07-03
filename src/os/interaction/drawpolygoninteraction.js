@@ -22,6 +22,7 @@ goog.require('os.ui.ol.interaction.DrawPolygon');
 
 /**
  * Interaction to draw a polygon on the map.
+ *
  * @extends {os.ui.ol.interaction.DrawPolygon}
  * @implements {os.I3DSupport}
  * @constructor

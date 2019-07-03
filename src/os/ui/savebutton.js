@@ -7,6 +7,7 @@ goog.require('os.ui.menu.save');
 
 /**
  * The save button directive
+ *
  * @return {angular.Directive}
  */
 os.ui.saveButtonDirective = function() {
@@ -32,6 +33,7 @@ os.ui.Module.directive('saveButton', [os.ui.saveButtonDirective]);
 
 /**
  * Controller function for the nav-top directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element The element
  * @extends {os.ui.menu.MenuButtonCtrl}

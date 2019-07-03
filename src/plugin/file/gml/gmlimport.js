@@ -11,6 +11,7 @@ goog.require('plugin.file.gml.GMLProvider');
 
 /**
  * The GML import directive
+ *
  * @return {angular.Directive}
  */
 plugin.file.gml.gmlImportDirective = function() {
@@ -34,6 +35,7 @@ os.ui.Module.directive('gmlimport', [plugin.file.gml.gmlImportDirective]);
 
 /**
  * Controller for the GML import dialog
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @extends {os.ui.file.ui.AbstractFileImportCtrl<!plugin.file.gml.GMLParserConfig,!plugin.file.gml.GMLDescriptor>}

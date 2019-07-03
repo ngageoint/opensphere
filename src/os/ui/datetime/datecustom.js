@@ -12,6 +12,7 @@ goog.require('os.ui.datetime.wheelDateDirective');
 
 /**
  * The date-custom directive.
+ *
  * @return {angular.Directive}
  */
 os.ui.datetime.dateCustomDirective = function() {
@@ -40,6 +41,7 @@ os.ui.Module.directive('dateCustom', [os.ui.datetime.dateCustomDirective]);
 /**
  * Controller for the date-custom directive.
  * Start date will have time set to 00:00:00z, and end date will have a time of 23:59:59z.
+ *
  * @param {!angular.Scope} $scope The Angular scope.
  * @extends {goog.Disposable}
  * @constructor
@@ -112,6 +114,7 @@ os.ui.datetime.DateCustomCtrl.prototype.disposeInternal = function() {
 
 /**
  * Change handler for the start date.
+ *
  * @param {?Date} newVal The new value.
  * @param {?Date} oldVal The old value.
  * @private
@@ -138,6 +141,7 @@ os.ui.datetime.DateCustomCtrl.prototype.onStartDateChanged_ = function(newVal, o
 
 /**
  * Change handler for the end date.
+ *
  * @param {?Date} newVal The new value.
  * @param {?Date} oldVal The old value.
  * @private
@@ -159,6 +163,7 @@ os.ui.datetime.DateCustomCtrl.prototype.onEndDateChanged_ = function(newVal, old
 
 /**
  * Returns offset date with the time set to 00:00:00z.
+ *
  * @param {Date} date The date to set the time for.
  * @param {string=} opt_duration The duration to offset the date.  Defaults to os.time.Duration.DAY.
  * @return {Date} Offset date with a time of 00:00:00z.
@@ -172,6 +177,7 @@ os.ui.datetime.DateCustomCtrl.prototype.getStartTime_ = function(date, opt_durat
 
 /**
  * Returns offset date with the time set to 23:59:59z.
+ *
  * @param {Date} date The date to set the time for.
  * @param {string=} opt_duration The duration to offset the date.  Defaults to os.time.Duration.DAY.
  * @return {Date} Offset date with a time of 23:59:59z.
@@ -188,6 +194,7 @@ os.ui.datetime.DateCustomCtrl.prototype.getEndTime_ = function(date, opt_duratio
 
 /**
  * Change handler for duration chooser.
+ *
  * @export
  */
 os.ui.datetime.DateCustomCtrl.prototype.onDurationChanged = function() {
@@ -203,6 +210,7 @@ os.ui.datetime.DateCustomCtrl.prototype.onDurationChanged = function() {
 
 /**
  * Change handler for duration chooser.
+ *
  * @param {number} direction
  * @export
  */

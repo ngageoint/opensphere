@@ -13,6 +13,7 @@ goog.require('os.ui.window');
 
 /**
  * The Browse Data window directive
+ *
  * @return {angular.Directive}
  */
 os.ui.browseDataDirective = function() {
@@ -36,6 +37,7 @@ os.ui.Module.directive('browsedata', [os.ui.browseDataDirective]);
 
 /**
  * Controller for Browse Data window
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @extends {os.ui.search.FacetedSearchCtrl}
@@ -79,6 +81,7 @@ os.ui.BrowseDataCtrl.prototype.destroy = function() {
 
 /**
  * Launches the window
+ *
  * @param {os.search.AppliedFacets} facets
  */
 os.ui.BrowseDataCtrl.launch = function(facets) {
@@ -116,6 +119,7 @@ os.ui.BrowseDataCtrl.launch = function(facets) {
 
 /**
  * Closes the window
+ *
  * @export
  */
 os.ui.BrowseDataCtrl.prototype.close = function() {
@@ -125,6 +129,7 @@ os.ui.BrowseDataCtrl.prototype.close = function() {
 
 /**
  * Loads a file/URL
+ *
  * @export
  */
 os.ui.BrowseDataCtrl.prototype.launchFileImport = function() {

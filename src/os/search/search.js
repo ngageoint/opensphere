@@ -50,6 +50,7 @@ os.search.SortOrder = {
 
 /**
  * Get the setting key for a search provider.
+ *
  * @param {!os.search.ISearch} search The search provider
  * @param {string} key The setting
  * @return {string}
@@ -61,6 +62,7 @@ os.search.getSettingKey = function(search, key) {
 
 /**
  * Get the identifier for a search provider. Convenience for Array functions.
+ *
  * @param {!os.search.ISearch} search The search provider
  * @return {string}
  */
@@ -71,6 +73,7 @@ os.search.getSearchId = function(search) {
 
 /**
  * Get the name for a search provider. Convenience for Array functions.
+ *
  * @param {!os.search.ISearch} search The search provider
  * @return {string}
  */
@@ -81,6 +84,7 @@ os.search.getSearchName = function(search) {
 
 /**
  * Get the name for a search provider. Convenience for Array functions.
+ *
  * @param {string} name The name to test
  * @param {!os.search.ISearch} search The search provider
  * @return {boolean}
@@ -92,6 +96,7 @@ os.search.isNameEqual = function(name, search) {
 
 /**
  * Do local paging of results
+ *
  * @param {!Array} results
  * @param {number=} opt_start
  * @param {number=} opt_pageSize
@@ -117,6 +122,7 @@ os.search.pageResults = function(results, opt_start, opt_pageSize) {
 
 /**
  * Create a score for date sorting by sort order
+ *
  * @param {number} time
  * @param {string} order
  * @return {number}

@@ -116,6 +116,7 @@ os.ui.search.FeatureResultCardCtrl.prototype.disposeInternal = function() {
 
 /**
  * Setup the search layer
+ *
  * @return {os.layer.Vector}
  * @protected
  */
@@ -152,6 +153,7 @@ os.ui.search.FeatureResultCardCtrl.prototype.addSearchLayer = function() {
 
 /**
  * Handles property changes on the source
+ *
  * @param {os.events.PropertyChangeEvent} event
  * @param {os.source.Vector} item
  * @private
@@ -192,6 +194,7 @@ os.ui.search.FeatureResultCardCtrl.prototype.onSourceChange_ = function(event, i
 
 /**
  * Get a field from the result.
+ *
  * @param {string} field
  * @return {string}
  * @export
@@ -203,6 +206,7 @@ os.ui.search.FeatureResultCardCtrl.prototype.getField = function(field) {
 
 /**
  * Fly to the location on the map.
+ *
  * @export
  */
 os.ui.search.FeatureResultCardCtrl.prototype.goTo = function() {
@@ -212,6 +216,7 @@ os.ui.search.FeatureResultCardCtrl.prototype.goTo = function() {
 
 /**
  * Highlights the feature on mouse over
+ *
  * @export
  */
 os.ui.search.FeatureResultCardCtrl.prototype.over = function() {
@@ -223,6 +228,7 @@ os.ui.search.FeatureResultCardCtrl.prototype.over = function() {
 
 /**
  * Removes the highlight on mouse out
+ *
  * @export
  */
 os.ui.search.FeatureResultCardCtrl.prototype.out = function() {

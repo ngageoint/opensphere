@@ -7,6 +7,7 @@ goog.require('os.ui.util.validationMessageDirective');
 
 /**
  * The URL import directive
+ *
  * @return {angular.Directive}
  */
 os.ui.file.urlImportDirective = function() {
@@ -30,6 +31,7 @@ os.ui.Module.directive('urlimport', [os.ui.file.urlImportDirective]);
 
 /**
  * Controller for the URL import dialog
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @constructor
@@ -74,6 +76,7 @@ os.ui.file.UrlImportCtrl = function($scope, $element) {
 
 /**
  * Clean up references/listeners.
+ *
  * @private
  */
 os.ui.file.UrlImportCtrl.prototype.onDestroy_ = function() {
@@ -88,6 +91,7 @@ os.ui.file.UrlImportCtrl.prototype.onDestroy_ = function() {
 
 /**
  * Create import command and close the window
+ *
  * @export
  */
 os.ui.file.UrlImportCtrl.prototype.accept = function() {
@@ -109,6 +113,7 @@ os.ui.file.UrlImportCtrl.prototype.accept = function() {
 
 /**
  * Close the window.
+ *
  * @export
  */
 os.ui.file.UrlImportCtrl.prototype.close = function() {
@@ -120,6 +125,7 @@ os.ui.file.UrlImportCtrl.prototype.close = function() {
 
 /**
  * Fires a cancel event on the method so listeners can respond appropriately.
+ *
  * @private
  */
 os.ui.file.UrlImportCtrl.prototype.cancelMethod_ = function() {
@@ -136,6 +142,7 @@ os.ui.file.UrlImportCtrl.prototype.cancelMethod_ = function() {
 
 /**
  * Handle URL method load complete.
+ *
  * @param {goog.events.Event} event The event
  * @private
  */
@@ -153,6 +160,7 @@ os.ui.file.UrlImportCtrl.prototype.onLoadComplete_ = function(event) {
 
 /**
  * Handle URL method load error. This should not close the form so the user can correct the error.
+ *
  * @param {goog.events.Event} event The event
  * @private
  */

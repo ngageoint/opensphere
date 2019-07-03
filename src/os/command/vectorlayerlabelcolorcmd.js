@@ -7,6 +7,7 @@ goog.require('os.metrics');
 
 /**
  * Changes the label color for a layer
+ *
  * @param {string} layerId
  * @param {string} value
  * @param {string=} opt_oldValue

@@ -28,6 +28,7 @@ goog.require('os.ui.query.CombinatorCtrl');
 
 /**
  * Descriptor representing an Arc layer.
+ *
  * @extends {os.data.LayerSyncDescriptor}
  * @implements {os.ui.arc.IARCDescriptor}
  * @implements {os.filter.IFilterable}
@@ -114,6 +115,7 @@ plugin.arc.layer.ArcLayerDescriptor.prototype.setUrl = function(value) {
 
 /**
  * Get the layerId
+ *
  * @return {?string}
  */
 plugin.arc.layer.ArcLayerDescriptor.prototype.getLayerId = function() {
@@ -123,6 +125,7 @@ plugin.arc.layer.ArcLayerDescriptor.prototype.getLayerId = function() {
 
 /**
  * Set the layerId
+ *
  * @param {?string} value
  */
 plugin.arc.layer.ArcLayerDescriptor.prototype.setLayerId = function(value) {
@@ -132,6 +135,7 @@ plugin.arc.layer.ArcLayerDescriptor.prototype.setLayerId = function(value) {
 
 /**
  * Get the layer extent
+ *
  * @return {?ol.Extent}
  */
 plugin.arc.layer.ArcLayerDescriptor.prototype.getExtent = function() {
@@ -141,6 +145,7 @@ plugin.arc.layer.ArcLayerDescriptor.prototype.getExtent = function() {
 
 /**
  * Set the layer extent
+ *
  * @param {?ol.Extent} value
  */
 plugin.arc.layer.ArcLayerDescriptor.prototype.setExtent = function(value) {
@@ -196,6 +201,7 @@ plugin.arc.layer.ArcLayerDescriptor.prototype.getIcons = function() {
 
 /**
  * Whether the layer has a time extent.
+ *
  * @return {boolean}
  */
 plugin.arc.layer.ArcLayerDescriptor.prototype.hasTimeExtent = function() {
@@ -237,6 +243,7 @@ plugin.arc.layer.ArcLayerDescriptor.prototype.getAliases = function() {
 
 /**
  * Configures the descriptor from an Arc layer object.
+ *
  * @param {Object} config
  * @param {string} id
  * @param {string} url
@@ -342,6 +349,7 @@ plugin.arc.layer.ArcLayerDescriptor.prototype.isFeatureTypeReady = function() {
 
 /**
  * Get whether features are enabled.
+ *
  * @return {boolean}
  */
 plugin.arc.layer.ArcLayerDescriptor.prototype.getFeaturesEnabled = function() {
@@ -351,6 +359,7 @@ plugin.arc.layer.ArcLayerDescriptor.prototype.getFeaturesEnabled = function() {
 
 /**
  * Set whether features are enabled.
+ *
  * @param {boolean} value
  */
 plugin.arc.layer.ArcLayerDescriptor.prototype.setFeaturesEnabled = function(value) {
@@ -360,6 +369,7 @@ plugin.arc.layer.ArcLayerDescriptor.prototype.setFeaturesEnabled = function(valu
 
 /**
  * Get whether tiles are enabled.
+ *
  * @return {boolean}
  */
 plugin.arc.layer.ArcLayerDescriptor.prototype.getTilesEnabled = function() {
@@ -369,6 +379,7 @@ plugin.arc.layer.ArcLayerDescriptor.prototype.getTilesEnabled = function() {
 
 /**
  * Set whether tiles are enabled.
+ *
  * @param {boolean} value
  */
 plugin.arc.layer.ArcLayerDescriptor.prototype.setTilesEnabled = function(value) {
@@ -396,6 +407,7 @@ plugin.arc.layer.ArcLayerDescriptor.prototype.getLayerOptions = function() {
 
 /**
  * Gets the tile options object.
+ *
  * @return {Object.<string, *>}
  * @protected
  */
@@ -437,6 +449,7 @@ plugin.arc.layer.ArcLayerDescriptor.prototype.getTileOptions = function() {
 
 /**
  * Gets the feature options object.
+ *
  * @return {Object<string, *>}
  * @protected
  */

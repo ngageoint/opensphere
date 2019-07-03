@@ -93,6 +93,7 @@ plugin.cesium.tiles.Layer.prototype.synchronize = function() {
 
 /**
  * Get the color for a 3D tile feature.
+ *
  * @param {Cesium.Cesium3DTileFeature} feature The feature.
  * @param {Cesium.Color} result The object to store the result.
  * @return {Cesium.Color} The color.

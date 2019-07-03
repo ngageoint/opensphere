@@ -100,6 +100,7 @@ var configure = function(input) {
 
 /**
  * Handle messages sent to the worker
+ *
  * @param {Object} msg The message
  * @this Worker
  */
@@ -176,6 +177,7 @@ start = function() {
  * Override to set up the inputs. Note that typically you would just
  * add to the configure function in the boilerplate code above, but I wanted that
  * to be pasteable without the extra stuff for this example.
+ *
  * @param {Object} input The input
  */
 configure = function(input) {

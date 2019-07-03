@@ -9,6 +9,7 @@ goog.require('os.ui.Module');
 
 /**
  * The modal-auto-size directive
+ *
  * @return {angular.Directive}
  */
 os.ui.modal.modalAutoSizeDirective = function() {
@@ -27,6 +28,7 @@ os.ui.Module.directive('modalAutoSize', [os.ui.modal.modalAutoSizeDirective]);
 
 /**
  * Link function for modal-auto-size directive
+ *
  * @param {!angular.Scope} $scope angular scope
  * @param {!angular.JQLite} $element to which this directive is applied
  */
@@ -38,6 +40,7 @@ os.ui.modal.modalAutoSizeLink = function($scope, $element) {
 
 /**
  * Object containing the link function used by the directive.
+ *
  * @param {!angular.Scope} $scope angular scope
  * @param {!angular.JQLite} $element to which this directive is applied
  * @constructor
@@ -70,6 +73,7 @@ os.ui.modal.ModalAutoSize = function($scope, $element) {
 
 /**
  * Autoresizes the modal element when the window is resized.
+ *
  * @private
  */
 os.ui.modal.ModalAutoSize.prototype.updateSizeConstraints_ = function() {
@@ -95,6 +99,7 @@ os.ui.modal.ModalAutoSize.prototype.updateSizeConstraints_ = function() {
 
 /**
  * Clean up
+ *
  * @private
  */
 os.ui.modal.ModalAutoSize.prototype.onDestroy_ = function() {

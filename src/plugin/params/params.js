@@ -38,6 +38,7 @@ plugin.params.Metrics = {
 
 /**
  * If a URI supports parameter modification.
+ *
  * @param {!goog.Uri} uri The URI.
  * @return {boolean}
  */
@@ -48,6 +49,7 @@ plugin.params.isUriSupported = function(uri) {
 
 /**
  * Check if a layer supports request parameter overrides.
+ *
  * @param {ol.layer.Layer} layer The layer.
  * @return {boolean} If the layer supports request parameter overrides.
  */
@@ -69,6 +71,7 @@ plugin.params.supportsParamOverrides = function(layer) {
 
 /**
  * Get the request parameters for a layer.
+ *
  * @param {ol.layer.Layer} layer The layer.
  * @return {Object} The request parameters.
  */
@@ -100,6 +103,7 @@ plugin.params.getParamsFromLayer = function(layer) {
 
 /**
  * Set the request parameters for a layer.
+ *
  * @param {ol.layer.Layer} layer The layer.
  * @param {!Object} params The new parameters.
  * @param {Array<string>=} opt_remove Keys to remove.
@@ -151,6 +155,7 @@ plugin.params.setParamsForLayer = function(layer, params, opt_remove) {
 
 /**
  * Get the request URL(s) for a layer.
+ *
  * @param {ol.layer.Layer} layer The layer.
  * @return {Array<string>|string|null} An array if multiple URL's are supported, string for single-URL sources,
  *                                     null if the URL could not be resolved.
@@ -184,6 +189,7 @@ plugin.params.getUrlsForLayer = function(layer) {
 
 /**
  * Set the request URL(s) for a layer.
+ *
  * @param {ol.layer.Layer} layer The layer.
  * @param {!(Array<string>|string)} urls The URL's.
  */

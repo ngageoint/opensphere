@@ -203,6 +203,7 @@ os.ui.action.ActionManager.prototype.addAction = function(action, opt_handler, o
  * Bulk add actions.  Adds all of the actions before firing the change event.
  * Uses the handler on the action, with no option to provide optional handler.  Use the quiet flag on addAction if
  * you must provide an optional handler.
+ *
  * @param {!Array.<os.ui.action.Action>} actions
  */
 os.ui.action.ActionManager.prototype.addActions = function(actions) {
@@ -216,6 +217,7 @@ os.ui.action.ActionManager.prototype.addActions = function(actions) {
 /**
  * Removes an action from the Action Manager. If it was enabled when it gets removed, it is
  * removed from the enabledActions_ map as well. The action object is also disposed.
+ *
  * @param {os.ui.action.Action|string} action
  * @param {boolean=} opt_quiet optionally suppress firing change event upon remove
  */
@@ -244,6 +246,7 @@ os.ui.action.ActionManager.prototype.removeAction = function(action, opt_quiet) 
 
 /**
  * Bulk remove actions.  Removes all actions before firing the change event.
+ *
  * @param {Array<string>=} opt_types
  */
 os.ui.action.ActionManager.prototype.removeActions = function(opt_types) {
@@ -370,6 +373,7 @@ os.ui.action.ActionManager.prototype.fireEnabledActionsChanged_ = function() {
 
 /**
  * Registers temp actions.
+ *
  * @param {Function} func
  */
 os.ui.action.ActionManager.prototype.registerTempActionFunc = function(func) {
@@ -379,6 +383,7 @@ os.ui.action.ActionManager.prototype.registerTempActionFunc = function(func) {
 /**
  * Register the action to take if there are more actions than what will fit on
  * the screen.
+ *
  * @param {function(angular.JQLite)} func Function to call when the user clicks for more menu items
  */
 os.ui.action.ActionManager.prototype.registerMoreResultsAction = function(func) {
@@ -388,6 +393,7 @@ os.ui.action.ActionManager.prototype.registerMoreResultsAction = function(func) 
 /**
  * Invoke the action to take if there are more actions than what will fit on
  * the screen.
+ *
  * @param {angular.JQLite} menu Action menu that requires the more results action
  */
 os.ui.action.ActionManager.prototype.invokeMoreResultsAction = function(menu) {

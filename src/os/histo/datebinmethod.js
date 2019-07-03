@@ -121,6 +121,7 @@ os.histo.DateBinMethod.prototype.setDateBinType = function(value) {
 
 /**
  * Get the supported date bin types for this method.
+ *
  * @return {Array<string>}
  */
 os.histo.DateBinMethod.prototype.getDateBinTypes = function() {
@@ -130,6 +131,7 @@ os.histo.DateBinMethod.prototype.getDateBinTypes = function() {
 
 /**
  * Get the maximum key for this date bin type, if there is one
+ *
  * @param {number} opt_timestamp
  * @return {number}
  */
@@ -304,6 +306,7 @@ os.histo.DateBinMethod.prototype.getValue = function(item) {
 
 /**
  * Get values for overlapping time bins, only gets called if start and end would be in different bins
+ *
  * @param {number} start
  * @param {number} end
  * @param {number} max
@@ -363,7 +366,7 @@ os.histo.DateBinMethod.prototype.getLabelForKey = function(key, opt_secondary, o
   if (typeof key === 'string' && key.indexOf(os.data.xf.DataModel.SEPARATOR) >= 0) {
     // this key is in a bin that represents the intersection of two keys; split them apart with the separator
     key = !opt_secondary ? Number(key.split(os.data.xf.DataModel.SEPARATOR)[0]) :
-        Number(key.split(os.data.xf.DataModel.SEPARATOR)[1]);
+      Number(key.split(os.data.xf.DataModel.SEPARATOR)[1]);
   }
 
   if (key !== undefined && key != os.histo.DateBinMethod.MAGIC) {
@@ -405,6 +408,7 @@ os.histo.DateBinMethod.prototype.getLabelForKey = function(key, opt_secondary, o
  * TODO: Implement this if pivot tables are ever needed
  * For this basic implementation types like DAY_OF_WEEK and HOUR_OF_DAY are assumed to be DAY and HOUR respectively
  * MONTH and YEAR are handled by momentjs
+ *
  * @inheritDoc
  */
 os.histo.DateBinMethod.prototype.filterDimension = function(dimension, item) {

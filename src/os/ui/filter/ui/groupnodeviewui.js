@@ -5,6 +5,7 @@ goog.require('os.ui.Module');
 
 /**
  * The view node UI for expression nodes.
+ *
  * @return {angular.Directive}
  */
 os.ui.filter.ui.GroupNodeViewUIDirective = function() {
@@ -29,6 +30,7 @@ os.ui.Module.directive('groupnodeviewui', [os.ui.filter.ui.GroupNodeViewUIDirect
 
 /**
  * Controller for selected/highlighted node UI
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @constructor

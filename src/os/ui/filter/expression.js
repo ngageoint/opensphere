@@ -11,6 +11,7 @@ goog.require('os.ui.slick.column');
 
 /**
  * The expression directive
+ *
  * @return {angular.Directive}
  */
 os.ui.filter.expressionDirective = function() {
@@ -37,6 +38,7 @@ os.ui.Module.directive('expression', [os.ui.filter.expressionDirective]);
 
 /**
  * Expression object
+ *
  * @constructor
  */
 os.ui.filter.Expression = function() {
@@ -114,6 +116,7 @@ os.ui.filter.Expression.prototype.validate = function(value) {
 
 /**
  * Clones the expression.
+ *
  * @return {os.ui.filter.Expression} The literal
  */
 os.ui.filter.Expression.prototype.clone = function() {
@@ -136,6 +139,7 @@ os.ui.filter.Expression.prototype.clone = function() {
 
 /**
  * Controller for the expression directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @constructor
@@ -173,6 +177,7 @@ os.ui.filter.ExpressionCtrl = function($scope, $element) {
 
 /**
  * Filters columns that cannot be handled by the filter builder
+ *
  * @param {*} col
  * @param {number} c
  * @param {Array} arr
@@ -198,6 +203,7 @@ os.ui.filter.ExpressionCtrl.prototype.filterColumns_ = function(col, c, arr) {
 
 /**
  * Handles changes to column
+ *
  * @param {*} newValue
  * @param {*} oldValue
  * @private
@@ -219,6 +225,7 @@ os.ui.filter.ExpressionCtrl.prototype.onColChange_ = function(newValue, oldValue
 
 /**
  * Re-runs the form validation
+ *
  * @protected
  */
 os.ui.filter.ExpressionCtrl.prototype.runValidation = function() {
@@ -235,6 +242,7 @@ os.ui.filter.ExpressionCtrl.prototype.runValidation = function() {
 
 /**
  * Filters ops by type
+ *
  * @param {os.ui.filter.op.Op} op
  * @return {boolean}
  * @private
@@ -250,6 +258,7 @@ os.ui.filter.ExpressionCtrl.prototype.filterOps_ = function(op) {
 
 /**
  * Gets the UI for the given item
+ *
  * @param {os.ui.filter.op.Op} op
  * @return {?string}
  * @export

@@ -72,6 +72,7 @@ plugin.overview.OverviewMap.prototype.handleMapPropertyChange_ = function(evt) {
 
 /**
  * Updates the view with the current projection
+ *
  * @private
  * @suppress {accessControls}
  */

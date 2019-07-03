@@ -7,6 +7,7 @@ goog.require('os.ui.slick.SlickTreeNode');
 
 /**
  * Tree node implementing loading behavior.
+ *
  * @extends {os.ui.slick.SlickTreeNode}
  * @constructor
  */
@@ -24,6 +25,7 @@ goog.inherits(os.ui.slick.LoadingNode, os.ui.slick.SlickTreeNode);
 
 /**
  * Whether or not the node is loading
+ *
  * @return {boolean}
  * @export
  */
@@ -34,6 +36,7 @@ os.ui.slick.LoadingNode.prototype.isLoading = function() {
 
 /**
  * Set whether or not the node is loading
+ *
  * @param {boolean} value
  * @export
  */

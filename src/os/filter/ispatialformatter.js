@@ -4,6 +4,7 @@ goog.provide('os.filter.ISpatialFormatter');
 
 /**
  * Interface for formatting spatial regions for a data source.
+ *
  * @interface
  */
 os.filter.ISpatialFormatter = function() {};

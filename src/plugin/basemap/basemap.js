@@ -43,5 +43,5 @@ plugin.basemap.TERRAIN_TYPE = 'terrain';
  */
 plugin.basemap.isBaseMap = function(layer) {
   return layer instanceof os.layer.Tile &&
-      /** @type {os.layer.Tile} */ (layer).getOSType() == plugin.basemap.LAYER_TYPE;
+  /** @type {os.layer.Tile} */ (layer).getOSType() == plugin.basemap.LAYER_TYPE;
 };

@@ -7,6 +7,7 @@ goog.require('goog.string.Const');
 
 /**
  * Makes FancyWindow fancier by making the window close button do the same thing as clicking the exit button
+ *
  * @param {string=} opt_identifier Identifier for this logging class
  * @param {string=} opt_prefix Prefix pre-pended to the messages
  * @extends {goog.debug.FancyWindow}
