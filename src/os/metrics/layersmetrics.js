@@ -54,6 +54,11 @@ os.metrics.LayersMetrics = function() {
     key: os.metrics.Layer.VECTOR_SIZE
   });
   this.addChild(styleLeaf, {
+    label: 'Change Feature Layer Line Dash',
+    description: 'The line dash for polygons and lines on this layer.',
+    key: os.metrics.Layer.VECTOR_LINE_DASH
+  });
+  this.addChild(styleLeaf, {
     label: 'Toggle Ellipsoid',
     description: 'Whether or not ellipses are rendered as ellipsoids.',
     key: os.metrics.Layer.VECTOR_ELLIPSOID
@@ -177,6 +182,11 @@ os.metrics.LayersMetrics = function() {
     label: 'Change Feature Layer Size',
     description: 'The icon size used for data points on this feature.',
     key: os.metrics.Layer.FEATURE_SIZE
+  });
+  this.addChild(styleLeaf, {
+    label: 'Change Feature Line Dash',
+    description: 'The line dash for polygons and lines on this feature.',
+    key: os.metrics.Layer.FEATURE_LINE_DASH
   });
   this.addChild(styleLeaf, {
     label: 'Change Feature Shape',

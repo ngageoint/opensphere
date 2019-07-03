@@ -273,6 +273,14 @@ plugin.file.kml.KMLExporter.prototype.getRotationColumn = function(item) {
 
 
 /**
+ * @inheritDoc
+ */
+plugin.file.kml.KMLExporter.prototype.getLineDash = function(item) {
+  return plugin.file.kml.export.getLineDash(item);
+};
+
+
+/**
  * Get the feature's source.
  * @param {ol.Feature} feature The feature
  * @return {os.source.Vector} The source

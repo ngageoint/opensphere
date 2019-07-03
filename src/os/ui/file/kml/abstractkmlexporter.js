@@ -616,6 +616,15 @@ os.ui.file.kml.AbstractKMLExporter.prototype.processPlacemark = function(element
       });
       os.xml.appendElementNS('value', this.kmlNS, rotDataEl, String(this.getField(item, rotationColumn)));
     }
+
+    // Add line dash info as custom element since kml doesn't support it
+    var lineDash = this.getLineDash(item);
+    if (lineDash && Array.isArray(lineDash) && lineDash.length) {
+      var lineDashDataEl = os.xml.appendElementNS('Data', this.kmlNS, ed, undefined, {
+        'name': 'lineDash'
+      });
+      os.xml.appendElementNS('value', this.kmlNS, lineDashDataEl, JSON.stringify(lineDash));
+    }
   }
 
   if (ed.childElementCount > 0) {
@@ -798,6 +807,16 @@ os.ui.file.kml.AbstractKMLExporter.prototype.getGeometry = function(item) {};
  * @protected
  */
 os.ui.file.kml.AbstractKMLExporter.prototype.getRotationColumn = function(item) {};
+
+
+/**
+ * Get the line dash.
+ * @abstract
+ * @param {T} item The item
+ * @return {Array<number>|null|undefined}
+ * @protected
+ */
+os.ui.file.kml.AbstractKMLExporter.prototype.getLineDash = function(item) {};
 
 
 /**
