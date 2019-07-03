@@ -1611,7 +1611,8 @@ Cesium.Polygon.prototype.material;
  *   horizontal: (boolean|undefined),
  *   repeat: (number|undefined),
  *   evenColor: (Cesium.Color|undefined),
- *   oddColor: (Cesium.Color|undefined)
+ *   oddColor: (Cesium.Color|undefined),
+ *   dashPattern: (number|undefined)
  * }}
  */
 Cesium.optionsMaterialFromTypeAny;
@@ -1697,9 +1698,21 @@ Cesium.Material.prototype.uniforms;
 
 
 /**
+ * @type {!number} .
+ */
+Cesium.Material.prototype.uniforms.dashPattern;
+
+
+/**
  * @type {string} .
  */
 Cesium.Material.ColorType;
+
+
+/**
+ * @type {string} .
+ */
+Cesium.Material.PolylineDashType;
 
 
 /**
@@ -1762,6 +1775,12 @@ Cesium.Polyline.prototype.width;
  * @constructor
  */
 Cesium.Appearance = function() {};
+
+
+/**
+ * @type {Cesium.Material} .
+ */
+Cesium.Appearance.prototype.material;
 
 
 /**
@@ -1832,6 +1851,12 @@ Cesium.Primitive.prototype.ready;
  * @return {Cesium.GeometryInstanceAttribute|undefined}
  */
 Cesium.Primitive.prototype.getGeometryInstanceAttributes = function(opt_id) {};
+
+
+/**
+ * @type {Cesium.Appearance} .
+ */
+Cesium.Primitive.prototype.appearance;
 
 
 /**
@@ -2563,7 +2588,7 @@ Cesium.PolylineColorAppearance.prototype.vertexFormat;
 
 /**
  * @constructor
- * @param {{material: Cesium.Material}} object
+ * @param {Object} object
  * @extends {Cesium.Appearance}
  */
 Cesium.PolylineMaterialAppearance = function(object) {};
@@ -2574,6 +2599,14 @@ Cesium.PolylineMaterialAppearance = function(object) {};
  */
 Cesium.PolylineMaterialAppearance.prototype.vertexFormat;
 
+
+
+/**
+ * @constructor
+ * @param {Object} object
+ * @extends {Cesium.Appearance}
+ */
+Cesium.MaterialAppearance = function(object) {};
 
 
 /**
