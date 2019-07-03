@@ -20,6 +20,7 @@ os.audio.AudioSetting = {
 
 /**
  * Manages audio sound effects for applications
+ *
  * @constructor
  */
 os.audio.AudioManager = function() {
@@ -73,6 +74,7 @@ os.audio.AudioManager.LOGGER_ = goog.log.getLogger('os.audio.AudioManager');
 
 /**
  * Gets the mute value
+ *
  * @return {boolean} mute
  */
 os.audio.AudioManager.prototype.getMute = function() {
@@ -82,6 +84,7 @@ os.audio.AudioManager.prototype.getMute = function() {
 
 /**
  * Sets the mute value
+ *
  * @param {boolean} mute
  */
 os.audio.AudioManager.prototype.setMute = function(mute) {
@@ -92,6 +95,7 @@ os.audio.AudioManager.prototype.setMute = function(mute) {
 
 /**
  * Gets the sounds list
+ *
  * @return {!Array<!string>} The list of sounds that can be played
  */
 os.audio.AudioManager.prototype.getSounds = function() {
@@ -101,6 +105,7 @@ os.audio.AudioManager.prototype.getSounds = function() {
 
 /**
  * Loads sounds from settings
+ *
  * @protected
  */
 os.audio.AudioManager.prototype.load = function() {
@@ -132,6 +137,7 @@ os.audio.AudioManager.prototype.load = function() {
 
 /**
  * Plays a given sound by label
+ *
  * @param {string} label The sound to play
  * @param {number=} opt_timeBetweenPlays An optional time which must ellapse between the last play and another
  */
@@ -174,6 +180,7 @@ os.audio.AudioManager.prototype.play = function(label, opt_timeBetweenPlays) {
 
 /**
  * Adds a sound to the audio manager
+ *
  * @param {!string} url
  * @param {string=} opt_label
  * @return {!string} The label that was used to add the sound

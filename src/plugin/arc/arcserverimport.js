@@ -9,6 +9,7 @@ goog.require('plugin.arc.ArcServer');
 
 /**
  * The Arc server import directive
+ *
  * @return {angular.Directive}
  */
 plugin.arc.arcImportDirective = function() {
@@ -31,6 +32,7 @@ os.ui.Module.directive('arcserver', [plugin.arc.arcImportDirective]);
 
 /**
  * Controller for the Arc server import dialog
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @extends {os.ui.SingleUrlProviderImportCtrl}

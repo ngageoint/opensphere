@@ -4,6 +4,7 @@ goog.provide('os.IXmlPersistable');
 
 /**
  * An interface for XML persistable/restorable objects.
+ *
  * @interface
  */
 os.IXmlPersistable = function() {};

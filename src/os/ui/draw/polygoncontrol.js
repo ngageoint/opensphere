@@ -8,6 +8,7 @@ goog.require('os.ui.draw.AbstractDrawControl');
 
 /**
  * Box drawing control.
+ *
  * @param {!SVGSVGElement} owner Owner DOM element.
  * @extends {os.ui.draw.AbstractDrawControl}
  * @constructor
@@ -163,6 +164,7 @@ os.ui.draw.PolygonControl.prototype.addCoordinate_ = function(coord) {
 
 /**
  * Redraws the polygon using the current mouse position.
+ *
  * @param {goog.events.BrowserEvent} e The mouse event
  * @private
  */

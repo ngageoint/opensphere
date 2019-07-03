@@ -5,6 +5,7 @@ goog.require('goog.Disposable');
 
 /**
  * Abstract class to synchronize an OpenLayers layer to a WebGL renderer.
+ *
  * @abstract
  * @param {!T} layer The OpenLayers layer.
  * @param {!ol.PluggableMap} map The OpenLayers map.
@@ -55,6 +56,7 @@ goog.inherits(os.webgl.AbstractWebGLSynchronizer, goog.Disposable);
 
 /**
  * Performs complete synchronization of the layer.
+ *
  * @abstract
  */
 os.webgl.AbstractWebGLSynchronizer.prototype.synchronize = function() {};
@@ -62,6 +64,7 @@ os.webgl.AbstractWebGLSynchronizer.prototype.synchronize = function() {};
 
 /**
  * Resets the synchronizer to a clean state.
+ *
  * @abstract
  */
 os.webgl.AbstractWebGLSynchronizer.prototype.reset = function() {};
@@ -69,6 +72,7 @@ os.webgl.AbstractWebGLSynchronizer.prototype.reset = function() {};
 
 /**
  * Set if the synchronizer should be actively used.
+ *
  * @param {boolean} value If the synchronizer is active.
  */
 os.webgl.AbstractWebGLSynchronizer.prototype.setActive = function(value) {
@@ -78,6 +82,7 @@ os.webgl.AbstractWebGLSynchronizer.prototype.setActive = function(value) {
 
 /**
  * Repositions all layers, starting from the provided position.
+ *
  * @param {number} start The start index in the layers array.
  * @param {number} end The last index in the layers array.
  * @return {number} The next available index in the layers array.

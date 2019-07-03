@@ -5,6 +5,7 @@ goog.require('os.load.ILoadingTask');
 
 /**
  * Base implementation of a loading task.
+ *
  * @param {string} id
  * @param {string=} opt_title
  * @param {boolean=} opt_cpuIntensive

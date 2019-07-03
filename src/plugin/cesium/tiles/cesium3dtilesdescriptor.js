@@ -8,6 +8,7 @@ goog.require('plugin.cesium.tiles.Provider');
 
 /**
  * Cesium 3D tiles descriptor.
+ *
  * @extends {os.data.FileDescriptor}
  * @constructor
  */
@@ -62,6 +63,7 @@ plugin.cesium.tiles.Descriptor.prototype.getLayerOptions = function() {
 
 /**
  * Set the Ion asset configuration.
+ *
  * @param {number} assetId The asset id.
  * @param {string=} opt_accessToken The access token.
  */
@@ -107,6 +109,7 @@ plugin.cesium.tiles.Descriptor.prototype.restore = function(conf) {
 
 /**
  * Creates a new descriptor from a parser configuration.
+ *
  * @param {!Object} config
  * @return {!plugin.cesium.tiles.Descriptor}
  */
@@ -123,7 +126,7 @@ plugin.cesium.tiles.Descriptor.createFromConfig = function(config) {
  */
 plugin.cesium.tiles.Descriptor.prototype.updateFromConfig = function(config, opt_useConfigForParser) {
   plugin.cesium.tiles.Descriptor.base(this, 'updateFromConfig',
-    /** @type {!os.parse.FileParserConfig} */ (config), true);
+      /** @type {!os.parse.FileParserConfig} */ (config), true);
 
   if (typeof config['assetId'] == 'number') {
     this.setIonConfig(

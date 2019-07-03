@@ -10,6 +10,7 @@ goog.require('os.ui.search.FeatureResultCardCtrl');
 
 /**
  * The Pelias geocoder result card directive for displaying search results.
+ *
  * @return {angular.Directive}
  */
 plugin.pelias.geocoder.resultCardDirective = function() {
@@ -30,6 +31,7 @@ os.ui.Module.directive('peliasgeocoderresultcard', [plugin.pelias.geocoder.resul
 
 /**
  * Controller for the resultcard directive.
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @constructor

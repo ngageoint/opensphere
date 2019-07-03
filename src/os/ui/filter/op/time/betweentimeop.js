@@ -7,6 +7,7 @@ goog.require('os.ui.filter.op.time.betweenTimeDirective');
 
 /**
  * Operator for times between a start and an end.
+ *
  * @extends {os.ui.filter.op.Op}
  * @constructor
  */
@@ -63,6 +64,7 @@ os.ui.filter.op.time.Between.prototype.getFilter = function(column, literal) {
 
 /**
  * Get the numeric range from the literal value.
+ *
  * @param {?string} literal The filter literal.
  * @return {Array<number>} The range, in the form [min, max].
  * @protected

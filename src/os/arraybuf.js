@@ -97,6 +97,7 @@ os.arraybuf.isText = function(ab) {
 /**
  * Checks if a byte is a text character. Text characters are defined as \n, \r, \t, \b, or within the ASCII
  * printable range.
+ *
  * @param {number} b The byte
  * @return {boolean}
  * @deprecated Please see the os.file.mime.text package instead
@@ -108,6 +109,7 @@ os.arraybuf.isTextCharacter = function(b) {
 
 /**
  * Converts an ArrayBuffer into a UTF-8 string.
+ *
  * @param {ArrayBuffer} ab The buffer
  * @return {string} The string
  * @deprecated Please use os.file.mime.text.getText() instead

@@ -10,6 +10,7 @@ goog.require('os.ui.slick.SlickTreeNode');
 
 /**
  * Tree search allows you to filter a tree and group the results
+ *
  * @param {!Array.<!os.structs.ITreeNode>} search The original tree to search
  * @param {!string} setAs The field to set on...
  * @param {Object} onObj this object
@@ -103,6 +104,7 @@ os.ui.slick.TreeSearch.prototype.disposeInternal = function() {
 
 /**
  * Gets the search tree
+ *
  * @return {!Array.<!os.structs.ITreeNode>}
  */
 os.ui.slick.TreeSearch.prototype.getSearch = function() {
@@ -112,6 +114,7 @@ os.ui.slick.TreeSearch.prototype.getSearch = function() {
 
 /**
  * Sets the search tree
+ *
  * @param {!Array.<!os.structs.ITreeNode>} value
  */
 os.ui.slick.TreeSearch.prototype.setSearch = function(value) {
@@ -148,6 +151,7 @@ os.ui.slick.TreeSearch.prototype.setOpenIds = function(value) {
 
 /**
  * Gets the filter function
+ *
  * @return {?function(os.structs.ITreeNode):boolean}
  */
 os.ui.slick.TreeSearch.prototype.getFilterFunction = function() {
@@ -157,6 +161,7 @@ os.ui.slick.TreeSearch.prototype.getFilterFunction = function() {
 
 /**
  * Sets the filter function
+ *
  * @param {?function(os.structs.ITreeNode):boolean} value
  */
 os.ui.slick.TreeSearch.prototype.setFilterFunction = function(value) {
@@ -166,6 +171,7 @@ os.ui.slick.TreeSearch.prototype.setFilterFunction = function(value) {
 
 /**
  * Gets the current group by
+ *
  * @return {?os.data.groupby.INodeGroupBy}
  */
 os.ui.slick.TreeSearch.prototype.getGroupBy = function() {
@@ -175,6 +181,7 @@ os.ui.slick.TreeSearch.prototype.getGroupBy = function() {
 
 /**
  * Performs a search on the tree
+ *
  * @param {!string} term The search term
  * @param {?os.data.groupby.INodeGroupBy} groupBy
  */
@@ -243,6 +250,7 @@ os.ui.slick.TreeSearch.prototype.beginSearch = function(term, groupBy) {
 
 /**
  * Compares two tree nodes by ID
+ *
  * @param {!os.structs.ITreeNode} a
  * @param {!os.structs.ITreeNode} b
  * @return {number}
@@ -289,6 +297,7 @@ os.ui.slick.TreeSearch.getPattern = function(term) {
 
 /**
  * Compares two tree nodes by label
+ *
  * @param {!os.structs.ITreeNode} a
  * @param {!os.structs.ITreeNode} b
  * @return {number}
@@ -307,6 +316,7 @@ os.ui.slick.TreeSearch.labelCompare = function(a, b) {
 
 /**
  * Sets up the sort on the results
+ *
  * @param {!Array.<!os.structs.ITreeNode>} list
  */
 os.ui.slick.TreeSearch.prototype.setSort = function(list) {
@@ -329,6 +339,7 @@ os.ui.slick.TreeSearch.prototype.setSort = function(list) {
 
 /**
  * Fills the list from the initial search
+ *
  * @param {!Array.<!os.structs.ITreeNode>} list
  * @protected
  */
@@ -346,6 +357,7 @@ os.ui.slick.TreeSearch.prototype.fillListFromSearch = function(list) {
 
 /**
  * Adds the no result node
+ *
  * @param {!Array.<!os.structs.ITreeNode>} list
  * @protected
  */
@@ -360,6 +372,7 @@ os.ui.slick.TreeSearch.prototype.addNoResult = function(list) {
 
 /**
  * Searches the tree
+ *
  * @param {RegExp} exp
  * @param {!Array.<!os.structs.ITreeNode>} results
  * @param {Array.<!os.structs.ITreeNode>} nodes
@@ -425,6 +438,7 @@ os.ui.slick.TreeSearch.prototype.searchNodes = function(exp, results, nodes) {
 
 /**
  * Gets the search text for a node
+ *
  * @param {?os.structs.ITreeNode} node
  * @return {!string}
  */
@@ -446,6 +460,7 @@ os.ui.slick.TreeSearch.prototype.getNodeSearchText = function(node) {
 
 /**
  * Override in inheriting class
+ *
  * @param {os.data.groupby.INodeGroupBy} groupBy
  * @param {!Array} results
  */
@@ -454,6 +469,7 @@ os.ui.slick.TreeSearch.prototype.finalizeSearch = function(groupBy, results) {};
 
 /**
  * Gets all the open IDs
+ *
  * @param {!Object.<string, boolean>} ids
  * @param {!Array.<!os.structs.ITreeNode>} list
  * @protected
@@ -475,6 +491,7 @@ os.ui.slick.TreeSearch.getOpenIds = function(ids, list) {
 
 /**
  * Sets the open nodes
+ *
  * @param {!Object<string, boolean>} ids The IDs
  * @param {!Array<!os.structs.ITreeNode>} list The node list
  * @param {Object<string, boolean>} toDo
@@ -500,6 +517,7 @@ os.ui.slick.TreeSearch.setOpenIds = function(ids, list, toDo) {
 
 /**
  * Gets search terms from a single string. Parses tokens wrapped in quotes as a single term.
+ *
  * @param {string} s The string
  * @return {!Array.<!string>} The terms
  */

@@ -4,6 +4,7 @@ goog.provide('os.ui.action.IMenuItem');
 
 /**
  * Represents an entry in a menu.
+ *
  * @interface
  * @deprecated Please use {@link os.ui.menu.Menu} and {@link os.ui.menu.MenuItem} instead
  */

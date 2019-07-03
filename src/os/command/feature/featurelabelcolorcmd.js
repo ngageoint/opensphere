@@ -7,6 +7,7 @@ goog.require('os.metrics');
 
 /**
  * Changes the label color for a feature
+ *
  * @param {string} layerId
  * @param {string} featureId
  * @param {string} value

@@ -131,6 +131,7 @@ plugin.file.shp.SHPLayerConfig.prototype.getRequest = function(options) {
 
 /**
  * Assembles an array of requests for the SHP/DBF files.
+ *
  * @param {Object.<string, *>} options Layer configuration options.
  * @return {!Array.<!os.net.Request>}
  */

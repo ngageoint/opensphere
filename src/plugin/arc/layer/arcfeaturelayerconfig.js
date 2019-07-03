@@ -19,6 +19,7 @@ goog.require('plugin.arc.source.ArcRequestSource');
 
 /**
  * Layer config for creating a new Arc request feature layer.
+ *
  * @extends {os.layer.config.AbstractDataSourceLayerConfig}
  * @constructor
  */
@@ -111,6 +112,7 @@ plugin.arc.layer.ArcFeatureLayerConfig.prototype.createLayer = function(options)
 
 /**
  * Load the Arc layer metadata to create a feature type.
+ *
  * @param {os.layer.Vector} layer The layer.
  * @param {Object} options The layer options.
  * @protected

@@ -8,6 +8,7 @@ goog.require('os.command.State');
 /**
  * Fits the map to the layer that is specified by the passeed id. If the layer
  * is not yet created listeners will be set up to fit once the layer is loaded.
+ *
  * @extends {os.command.AbstractSyncCommand}
  * @param {!string} id
  * @constructor
@@ -49,6 +50,7 @@ goog.inherits(os.command.FitLayerByID, os.command.AbstractSyncCommand);
 
 /**
  * Clean up listeners.
+ *
  * @private
  */
 os.command.FitLayerByID.prototype.cleanup_ = function() {
@@ -111,6 +113,7 @@ os.command.FitLayerByID.prototype.revert = function() {
 
 /**
  * Method that will be registered to the layer add event
+ *
  * @param {os.events.LayerEvent} e
  * @private
  */
@@ -134,6 +137,7 @@ os.command.FitLayerByID.prototype.onAdd_ = function(e) {
 
 /**
  * Method that will be registered to the layer property change event
+ *
  * @param {os.events.PropertyChangeEvent} e
  * @private
  */
@@ -148,6 +152,7 @@ os.command.FitLayerByID.prototype.onPropChange_ = function(e) {
 
 /**
  * Saves position and fits layer to map
+ *
  * @param {ol.layer.Layer|ol.Feature} layer
  * @private
  */

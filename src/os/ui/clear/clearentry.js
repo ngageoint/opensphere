@@ -45,6 +45,7 @@ os.ui.clear.ClearEntry = function(id, label, clazz, opt_tooltip) {
 
 /**
  * Create a new instance of this entry's command.
+ *
  * @return {!os.command.ICommand}
  */
 os.ui.clear.ClearEntry.prototype.createCommand = function() {

@@ -13,6 +13,7 @@ goog.require('plugin.im.action.feature.ui.ActionConfigCtrl');
 
 /**
  * Directive to configure a feature style action.
+ *
  * @return {angular.Directive}
  *
  */
@@ -37,6 +38,7 @@ os.ui.Module.directive(plugin.im.action.feature.SoundAction.CONFIG_UI,
 
 /**
  * Controller for setting a feature sound.
+ *
  * @param {!angular.Scope} $scope The Angular scope.
  * @param {!angular.JQLite} $element The root DOM element.
  * @extends {plugin.im.action.feature.ui.ActionConfigCtrl<plugin.im.action.feature.SoundAction>}
@@ -87,6 +89,7 @@ plugin.im.action.feature.ui.SoundConfigCtrl.prototype.saveAction = function() {
 
 /**
  * Play selected sound on change and save.
+ *
  * @export
  */
 plugin.im.action.feature.ui.SoundConfigCtrl.prototype.onSoundChange = function() {
@@ -98,6 +101,7 @@ plugin.im.action.feature.ui.SoundConfigCtrl.prototype.onSoundChange = function()
 
 /**
  * Set the time between sound notifications.
+ *
  * @param {angular.Scope.Event} event
  * @param {number} value
  * @protected

@@ -14,6 +14,7 @@ os.net.RequestHandlerFactory.list_ = null;
 
 /**
  * Adds a handler type to the factory
+ *
  * @param {Function} clazz The constructor for the class
  */
 os.net.RequestHandlerFactory.addHandler = function(clazz) {
@@ -40,6 +41,7 @@ os.net.RequestHandlerFactory.removeHandler = function(clazz) {
 
 /**
  * Gets an array of handlers that support the given method and uri.
+ *
  * @param {string} method The request method
  * @param {goog.Uri} uri The URI
  * @param {number=} opt_timeout The timeout

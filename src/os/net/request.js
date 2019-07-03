@@ -27,6 +27,7 @@ goog.require('os.net.VariableReplacer');
  * the request. Multiple <code>RequestHandler</code> implementations can
  * be registered with the <code>RequestHandlerFactory</code> to determine
  * how the requests are retrieved.
+ *
  * @extends {goog.events.EventTarget}
  * @param {goog.Uri|string=} opt_uri The uri
  * @param {string=} opt_method The request method
@@ -232,6 +233,7 @@ os.net.Request.prototype.disposeInternal = function() {
 
 /**
  * Gets the URI
+ *
  * @return {goog.Uri} The URI
  */
 os.net.Request.prototype.getUri = function() {
@@ -241,6 +243,7 @@ os.net.Request.prototype.getUri = function() {
 
 /**
  * Sets the URI
+ *
  * @param {goog.Uri|string} uri The URI
  */
 os.net.Request.prototype.setUri = function(uri) {
@@ -255,6 +258,7 @@ os.net.Request.prototype.setUri = function(uri) {
 /**
  * Gets the value for the given header, or <code>null</code> if it could not be
  * found.
+ *
  * @param {string} header The header to find
  * @return {?string} The value for the given header, or <code>null</code> if it
  * could not be found
@@ -277,6 +281,7 @@ os.net.Request.prototype.getHeader = function(header) {
 
 /**
  * Sets the value for the given header
+ *
  * @param {string} header The header
  * @param {string} value The value
  */
@@ -291,6 +296,7 @@ os.net.Request.prototype.setHeader = function(header, value) {
 
 /**
  * Gets the map of headers
+ *
  * @return {?Object.<string, string>} The header map
  */
 os.net.Request.prototype.getHeaders = function() {
@@ -300,6 +306,7 @@ os.net.Request.prototype.getHeaders = function() {
 
 /**
  * Sets the map of headers
+ *
  * @param {?Object.<string, string>} headers The header map
  */
 os.net.Request.prototype.setHeaders = function(headers) {
@@ -311,6 +318,7 @@ os.net.Request.prototype.setHeaders = function(headers) {
  * Adds a modifier to the list. Modifiers are executed in the order of their
  * priority (highest to lowest). Modifiers with the same priority are sorted
  * by ID.
+ *
  * @param {os.net.IModifier} modifier The modifier to add
  * @throws {Error} If a modifier with the same ID already exists in the list
  */
@@ -335,6 +343,7 @@ os.net.Request.prototype.addModifier = function(modifier) {
 
 /**
  * Removes a modifier from the list.
+ *
  * @param {os.net.IModifier|string} modifier The modifier or modifier ID to
  * remove.
  */
@@ -361,6 +370,7 @@ os.net.Request.prototype.removeModifier = function(modifier) {
 
 /**
  * Static compare function for sorting the modifiers list.
+ *
  * @param {os.net.IModifier} a
  * @param {os.net.IModifier} b
  * @return {number} The compare result
@@ -381,6 +391,7 @@ os.net.Request.modifierCompare_ = function(a, b) {
  * Gets the data formatter. If the request sends a payload, the data formatter
  * will format the supplied data into the desired payload structure (XML
  * , JSON, ... etc.).
+ *
  * @return {os.net.IDataFormatter}
  */
 os.net.Request.prototype.getDataFormatter = function() {
@@ -392,6 +403,7 @@ os.net.Request.prototype.getDataFormatter = function() {
  * Sets the data formatter. If the request sends a payload, the data formatter
  * will format the supplied data into the desired payload structure (XML
  * , JSON, ... etc.).
+ *
  * @param {os.net.IDataFormatter} value The data formatter to use for the
  * request
  */
@@ -410,6 +422,7 @@ os.net.Request.prototype.method_ = os.net.Request.METHOD_GET;
 
 /**
  * Gets the reqeuest method.
+ *
  * @return {string} The request method
  */
 os.net.Request.prototype.getMethod = function() {
@@ -419,6 +432,7 @@ os.net.Request.prototype.getMethod = function() {
 
 /**
  * Sets the request method.
+ *
  * @param {string} value The request method
  */
 os.net.Request.prototype.setMethod = function(value) {
@@ -428,6 +442,7 @@ os.net.Request.prototype.setMethod = function(value) {
 
 /**
  * Gets the response
+ *
  * @return {*} The response
  */
 os.net.Request.prototype.getResponse = function() {
@@ -437,6 +452,7 @@ os.net.Request.prototype.getResponse = function() {
 
 /**
  * Gets the response headers
+ *
  * @return {?Object.<string, string>}
  */
 os.net.Request.prototype.getResponseHeaders = function() {
@@ -455,6 +471,7 @@ os.net.Request.prototype.clearResponse = function() {
 
 /**
  * Gets the response type
+ *
  * @return {?goog.net.XhrIo.ResponseType} The response type
  */
 os.net.Request.prototype.getResponseType = function() {
@@ -464,6 +481,7 @@ os.net.Request.prototype.getResponseType = function() {
 
 /**
  * Sets the response type
+ *
  * @param {?goog.net.XhrIo.ResponseType} responseType The response type
  */
 os.net.Request.prototype.setResponseType = function(responseType) {
@@ -481,6 +499,7 @@ os.net.Request.prototype.getValidator = function() {
 
 /**
  * Sets the response validator function
+ *
  * @param {?function((ArrayBuffer|string)):?string} value The function
  */
 os.net.Request.prototype.setValidator = function(value) {
@@ -490,6 +509,7 @@ os.net.Request.prototype.setValidator = function(value) {
 
 /**
  * The sets of errors from the handlers
+ *
  * @return {Array.<string>}
  */
 os.net.Request.prototype.getErrors = function() {
@@ -499,6 +519,7 @@ os.net.Request.prototype.getErrors = function() {
 
 /**
  * The array of status codes from the handlers
+ *
  * @return {Array.<number>}
  */
 os.net.Request.prototype.getStatusCodes = function() {
@@ -508,6 +529,7 @@ os.net.Request.prototype.getStatusCodes = function() {
 
 /**
  * Returns the successful handler type.
+ *
  * @return {?string}
  */
 os.net.Request.prototype.getSuccessfulHandlerType = function() {
@@ -543,6 +565,7 @@ os.net.Request.prototype.getPromise = function() {
   return new goog.Promise(function(resolve, reject) {
     /**
      * request listener to finish promise
+     *
      * @param {goog.events.Event} evt
      */
     listener = function(evt) {
@@ -581,6 +604,7 @@ os.net.Request.prototype.getPromise = function() {
 
 /**
  * Retrieves the request
+ *
  * @param {boolean=} opt_nocache Tells the handlers not to use the cache
  * @throws An error if URI isn't set or trying to run modifiers on a read-only URI or if no handlers could be found
  *     to handle the URI.
@@ -637,6 +661,7 @@ os.net.Request.prototype.load = function(opt_nocache) {
 
 /**
  * Tries the next handler
+ *
  * @private
  */
 os.net.Request.prototype.executeHandlers_ = function() {
@@ -665,6 +690,7 @@ os.net.Request.prototype.executeHandlers_ = function() {
 
 /**
  * Adds event listeners to the request handler
+ *
  * @param {os.net.IRequestHandler} handler The handler
  */
 os.net.Request.prototype.addHandlerListeners = function(handler) {
@@ -675,6 +701,7 @@ os.net.Request.prototype.addHandlerListeners = function(handler) {
 
 /**
  * Removes event listeners from the request handler
+ *
  * @param {os.net.IRequestHandler} handler The handler
  */
 os.net.Request.prototype.removeHandlerListeners = function(handler) {
@@ -685,6 +712,7 @@ os.net.Request.prototype.removeHandlerListeners = function(handler) {
 
 /**
  * Handles handler completion
+ *
  * @param {goog.events.EventLike=} opt_event The event
  * @private
  */
@@ -733,6 +761,7 @@ os.net.Request.prototype.addError_ = function(err) {
 
 /**
  * Handles handler errors
+ *
  * @param {goog.events.EventLike=} opt_event The event
  * @private
  */
@@ -764,6 +793,7 @@ os.net.Request.prototype.onHandlerError_ = function(opt_event) {
 
 /**
  * Cleanup handlers
+ *
  * @private
  */
 os.net.Request.prototype.handlerCleanup_ = function() {
@@ -779,6 +809,7 @@ os.net.Request.prototype.handlerCleanup_ = function() {
 
 /**
  * Gets the request timeout in milliseconds, 0 for indefinite, default.
+ *
  * @return {number}
  */
 os.net.Request.prototype.getTimeout = function() {
@@ -788,6 +819,7 @@ os.net.Request.prototype.getTimeout = function() {
 
 /**
  * Sets the request timeout in milliseconds, 0 for indefinite, default.
+ *
  * @param {number} timeout
  */
 os.net.Request.prototype.setTimeout = function(timeout) {
@@ -797,6 +829,7 @@ os.net.Request.prototype.setTimeout = function(timeout) {
 
 /**
  * Gets the default log level for the request.
+ *
  * @return {!goog.debug.Logger.Level}
  */
 os.net.Request.prototype.getLogLevel = function() {
@@ -806,6 +839,7 @@ os.net.Request.prototype.getLogLevel = function() {
 
 /**
  * Sets the default log level for the request.
+ *
  * @param {!goog.debug.Logger.Level} level The log level.
  */
 os.net.Request.prototype.setLogLevel = function(level) {
@@ -815,6 +849,7 @@ os.net.Request.prototype.setLogLevel = function(level) {
 
 /**
  * Gets the modified URI
+ *
  * @return {goog.Uri}
  */
 os.net.Request.prototype.getModUri = function() {

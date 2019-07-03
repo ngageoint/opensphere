@@ -95,6 +95,7 @@ os.ui.config.SettingPlugin.prototype.disposeInternal = function() {
 /**
  * Get the plugin identifier used by the settings manager. The default behavior is intended to prevent adding settings
  * nodes with a duplicate tree path.
+ *
  * @return {string}
  */
 os.ui.config.SettingPlugin.prototype.getId = function() {
@@ -105,6 +106,7 @@ os.ui.config.SettingPlugin.prototype.getId = function() {
 
 /**
  * Get the tree node for this model.
+ *
  * @return {!os.ui.config.SettingNode}
  */
 os.ui.config.SettingPlugin.prototype.getLeafNode = function() {
@@ -120,6 +122,7 @@ os.ui.config.SettingPlugin.prototype.getLeafNode = function() {
 
 /**
  * Get the categories for the node. Categories define the parent node names in the settings tree.
+ *
  * @return {!Array<string>}
  */
 os.ui.config.SettingPlugin.prototype.getCategories = function() {
@@ -129,6 +132,7 @@ os.ui.config.SettingPlugin.prototype.getCategories = function() {
 
 /**
  * Set the categories for the node.
+ *
  * @param {!Array<string>} categories
  */
 os.ui.config.SettingPlugin.prototype.setCategories = function(categories) {
@@ -138,6 +142,7 @@ os.ui.config.SettingPlugin.prototype.setCategories = function(categories) {
 
 /**
  * Get the description for this model;
+ *
  * @return {string}
  */
 os.ui.config.SettingPlugin.prototype.getDescription = function() {
@@ -147,6 +152,7 @@ os.ui.config.SettingPlugin.prototype.getDescription = function() {
 
 /**
  * Set a basic description for the setting, will be use as a tool tip and possible as a search string.
+ *
  * @param {string} description
  */
 os.ui.config.SettingPlugin.prototype.setDescription = function(description) {
@@ -179,6 +185,7 @@ os.ui.config.SettingPlugin.prototype.setIcon = function(iconData, opt_isHtml) {
 
 /**
  * Get the user-facing label to be used in the settings tree.
+ *
  * @return {string}
  */
 os.ui.config.SettingPlugin.prototype.getLabel = function() {
@@ -188,6 +195,7 @@ os.ui.config.SettingPlugin.prototype.getLabel = function() {
 
 /**
  * Set the user-facing label to be used in the settings tree.
+ *
  * @param {string} label
  */
 os.ui.config.SettingPlugin.prototype.setLabel = function(label) {
@@ -197,6 +205,7 @@ os.ui.config.SettingPlugin.prototype.setLabel = function(label) {
 
 /**
  * Return the set of tags for search
+ *
  * @return {!Array<string>}
  */
 os.ui.config.SettingPlugin.prototype.getTags = function() {
@@ -206,6 +215,7 @@ os.ui.config.SettingPlugin.prototype.getTags = function() {
 
 /**
  * Set the search tags so that this setting can be singled out using search-- not used at this time
+ *
  * @param {!Array<string>} tags
  */
 os.ui.config.SettingPlugin.prototype.setTags = function(tags) {
@@ -215,6 +225,7 @@ os.ui.config.SettingPlugin.prototype.setTags = function(tags) {
 
 /**
  * Get the html to be used for the ui for this setting.
+ *
  * @return {?string}
  */
 os.ui.config.SettingPlugin.prototype.getUI = function() {
@@ -225,6 +236,7 @@ os.ui.config.SettingPlugin.prototype.getUI = function() {
 /**
  * Set the ui for the left side of the settings window.
  * This the user control ui.
+ *
  * @param {string} ui
  */
 os.ui.config.SettingPlugin.prototype.setUI = function(ui) {

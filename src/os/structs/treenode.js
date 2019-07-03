@@ -10,6 +10,7 @@ goog.require('os.structs.ITreeNode');
 
 /**
  * The base implementation of a tree node
+ *
  * @extends {goog.events.EventTarget}
  * @implements {os.structs.ITreeNode}
  * @constructor
@@ -112,6 +113,7 @@ os.structs.TreeNode.prototype.getLabel = function() {
 
 /**
  * Sets the label
+ *
  * @param {?string} value The new label
  */
 os.structs.TreeNode.prototype.setLabel = function(value) {
@@ -302,6 +304,7 @@ os.structs.TreeNode.prototype.removeChildAt = function(index) {
 
 /**
  * Removes a child from the node.
+ *
  * @param {number} index The child index to remove
  * @return {!os.structs.ITreeNode} The removed child
  * @protected
@@ -348,6 +351,7 @@ os.structs.TreeNode.prototype.find = function(field, value) {
 
 /**
  * Provides a hook for setup on a child node that is being added.
+ *
  * @param {!os.structs.ITreeNode} child The child node
  * @protected
  */
@@ -359,6 +363,7 @@ os.structs.TreeNode.prototype.initChild = function(child) {
 
 /**
  * Provides a hook for a child node that is being removed
+ *
  * @param {!os.structs.ITreeNode} child The child node
  * @protected
  */
@@ -370,6 +375,7 @@ os.structs.TreeNode.prototype.destroyChild = function(child) {
 
 /**
  * Handles changes to children
+ *
  * @param {!os.events.PropertyChangeEvent} e The change event
  * @protected
  */
@@ -411,6 +417,7 @@ os.structs.TreeNode.prototype.clone = function() {
 
 /**
  * Updates this node from the set of properties in the other
+ *
  * @param {!os.structs.ITreeNode} other
  * @protected
  */
@@ -422,6 +429,7 @@ os.structs.TreeNode.prototype.updateFrom = function(other) {
 
 /**
  * Does this node have the passed in elder (parent, or parent's parent's parent's, etc)
+ *
  * @param {!os.structs.ITreeNode} elder
  * @return {boolean} if node has elder
  */
@@ -440,6 +448,7 @@ os.structs.TreeNode.prototype.hasElder = function(elder) {
 
 /**
  * Get the leaf nodes from a root node.
+ *
  * @param {T} root The root node to search
  * @return {!(Array<T>|T)}
  * @template T
@@ -464,6 +473,7 @@ os.structs.getLeafNodes = function(root) {
 
 /**
  * Gets the branch of the tree as an array of nodes starting from the root to this node.
+ *
  * @param {os.structs.ITreeNode} node The current node.
  * @param {Array<!os.structs.ITreeNode>=} opt_array Optional array to push to.
  * @return {!Array<!os.structs.ITreeNode>} The branch of the tree.
@@ -484,6 +494,7 @@ os.structs.getBranch = function(node, opt_array) {
 
 /**
  * Gets the index that the node occupies in the parent's children array, or -1 if it's a root node.
+ *
  * @param {os.structs.ITreeNode} node The node.
  * @return {number} The index in the parent's children array.
  */

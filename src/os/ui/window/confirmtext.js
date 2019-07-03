@@ -9,6 +9,7 @@ goog.require('os.ui.window.confirmDirective');
 
 /**
  * Text confirmation dialog.
+ *
  * @return {angular.Directive}
  */
 os.ui.window.confirmTextDirective = function() {
@@ -30,6 +31,7 @@ os.ui.Module.directive('confirmtext', [os.ui.window.confirmTextDirective]);
 
 /**
  * Controller for the text confirmation window.
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @constructor
@@ -54,6 +56,7 @@ os.ui.window.ConfirmTextCtrl = function($scope, $element) {
 
 /**
  * Launch a dialog prompting the user to enter some text.
+ *
  * @param {osx.window.ConfirmTextOptions=} opt_options The window options
  */
 os.ui.window.launchConfirmText = function(opt_options) {

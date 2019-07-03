@@ -31,6 +31,7 @@ goog.inherits(os.ui.config.AngularAppSettingsInitializer, os.config.AbstractSett
 
 /**
  * Check if the browser has required features to run the application.
+ *
  * @return {boolean}
  * @protected
  */

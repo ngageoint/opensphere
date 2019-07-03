@@ -21,6 +21,7 @@ os.ui.ex.ExportOptionsEvent = {
 
 /**
  * The exportoptions directive
+ *
  * @return {angular.Directive}
  */
 os.ui.ex.exportOptionsDirective = function() {
@@ -48,6 +49,7 @@ os.ui.Module.directive('exportoptions', [os.ui.ex.exportOptionsDirective]);
 
 /**
  * Controller function for the exportoptions directive
+ *
  * @param {!angular.Scope} $scope
  * @extends {goog.Disposable}
  * @constructor
@@ -139,6 +141,7 @@ os.ui.ex.ExportOptionsCtrl.prototype.disposeInternal = function() {
 
 /**
  * Create a checklist item from a source.
+ *
  * @param {!os.source.ISource} source The source
  * @param {boolean=} opt_enabled If the item should be enabled
  * @return {!osx.ChecklistItem}
@@ -155,6 +158,7 @@ os.ui.ex.ExportOptionsCtrl.prototype.createChecklistItem_ = function(source, opt
 
 /**
  * If the provided source should be displayed in the list.
+ *
  * @param {!os.source.ISource} source
  * @return {boolean}
  * @protected
@@ -166,6 +170,7 @@ os.ui.ex.ExportOptionsCtrl.prototype.includeSource = function(source) {
 
 /**
  * Initialize the data sources available for export. Applications should extend this to provide their data sources.
+ *
  * @private
  */
 os.ui.ex.ExportOptionsCtrl.prototype.initSources_ = function() {
@@ -189,6 +194,7 @@ os.ui.ex.ExportOptionsCtrl.prototype.initSources_ = function() {
 
 /**
  * Handle checklist change event.
+ *
  * @param {angular.Scope.Event} event
  * @private
  */
@@ -200,6 +206,7 @@ os.ui.ex.ExportOptionsCtrl.prototype.onSourceListChanged_ = function(event) {
 
 /**
  * Handle source change event.
+ *
  * @param {os.events.PropertyChangeEvent} event The event
  * @private
  */
@@ -235,6 +242,7 @@ os.ui.ex.ExportOptionsCtrl.prototype.onSourceChange_ = function(event) {
 
 /**
  * Handle a source being added to the data manager.
+ *
  * @param {os.data.event.DataEvent} event The event
  * @private
  */
@@ -258,6 +266,7 @@ os.ui.ex.ExportOptionsCtrl.prototype.onSourceAdded_ = function(event) {
 
 /**
  * Handle a source being removed from the data manager.
+ *
  * @param {os.data.event.DataEvent} event The event
  * @private
  */
@@ -273,6 +282,7 @@ os.ui.ex.ExportOptionsCtrl.prototype.onSourceRemoved_ = function(event) {
 
 /**
  * Get the checklist item for a source.
+ *
  * @param {os.source.ISource} source The source
  * @param {boolean=} opt_remove If the item should be removed
  * @return {osx.ChecklistItem|undefined}
@@ -305,6 +315,7 @@ os.ui.ex.ExportOptionsCtrl.prototype.getSourceItem_ = function(source, opt_remov
 
 /**
  * Update the items being exported. Applications should extend this to handle how export items are determined.
+ *
  * @export
  */
 os.ui.ex.ExportOptionsCtrl.prototype.updateItems = function() {
@@ -380,6 +391,7 @@ os.ui.ex.ExportOptionsCtrl.prototype.updateItems = function() {
 
 /**
  * Check the array to see if any items have a feature level style.
+ *
  * @param {Array<*>} items Array of items to check
  * @return {boolean} True if any of the items in the array have a feature level style
  * @private

@@ -55,6 +55,7 @@ goog.inherits(os.geom.Ellipse, ol.geom.Polygon);
 
 /**
  * Return a copy of the ellipse as its base type, ol.geom.Polygon
+ *
  * @param {os.geom.Ellipse} ellipse The ellipse to translate.
  * @return {!ol.geom.Polygon} polygon The ellipse as a polygon.
  */
@@ -83,6 +84,7 @@ os.geom.Ellipse.prototype.interpolateEllipse = function() {
 
 /**
  * Get the center point.
+ *
  * @return {!ol.Coordinate}
  */
 os.geom.Ellipse.prototype.getCenter = function() {
@@ -92,6 +94,7 @@ os.geom.Ellipse.prototype.getCenter = function() {
 
 /**
  * Set the center point.
+ *
  * @param {!ol.Coordinate} value The new value.
  */
 os.geom.Ellipse.prototype.setCenter = function(value) {
@@ -101,6 +104,7 @@ os.geom.Ellipse.prototype.setCenter = function(value) {
 
 /**
  * Get the semi-major axis.
+ *
  * @return {number}
  */
 os.geom.Ellipse.prototype.getSemiMajor = function() {
@@ -110,6 +114,7 @@ os.geom.Ellipse.prototype.getSemiMajor = function() {
 
 /**
  * Set the semi-major axis.
+ *
  * @param {number} value The new value.
  */
 os.geom.Ellipse.prototype.setSemiMajor = function(value) {
@@ -119,6 +124,7 @@ os.geom.Ellipse.prototype.setSemiMajor = function(value) {
 
 /**
  * Get the semi-minor axis.
+ *
  * @return {number}
  */
 os.geom.Ellipse.prototype.getSemiMinor = function() {
@@ -128,6 +134,7 @@ os.geom.Ellipse.prototype.getSemiMinor = function() {
 
 /**
  * Set the semi-minor axis.
+ *
  * @param {number} value The new value.
  */
 os.geom.Ellipse.prototype.setSemiMinor = function(value) {
@@ -137,6 +144,7 @@ os.geom.Ellipse.prototype.setSemiMinor = function(value) {
 
 /**
  * Get the orientation.
+ *
  * @return {number} orientation in degrees from true north.
  */
 os.geom.Ellipse.prototype.getOrientation = function() {
@@ -146,6 +154,7 @@ os.geom.Ellipse.prototype.getOrientation = function() {
 
 /**
  * Set the orientation.
+ *
  * @param {number} value The new value in degrees from true north.
  */
 os.geom.Ellipse.prototype.setOrientation = function(value) {

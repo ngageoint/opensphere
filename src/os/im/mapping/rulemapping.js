@@ -11,6 +11,7 @@ goog.require('os.im.mapping.MappingRegistry');
 
 /**
  * Represents a rule for mapping a string field value to a target value.
+ *
  * @param {string=} opt_initialValue The initial field value
  * @param {T=} opt_mappedValue The value to map to
  * @implements {os.IPersistable}
@@ -55,6 +56,7 @@ os.im.mapping.Rule.prototype.restore = function(config) {
 
 /**
  * This mapping uses a set of rules or a static value to map values.
+ *
  * @extends {os.im.mapping.AbstractMapping<Object>}
  * @constructor
  * @template S
@@ -219,6 +221,7 @@ os.im.mapping.RuleMapping.prototype.autoDetect = function(items) {
 /**
  * Sets the rules object that the mapping uses to map individual fieldValues to finalValues.
  * Nulls the static value when set.
+ *
  * @param {Array<os.im.mapping.Rule>} rules
  */
 os.im.mapping.RuleMapping.prototype.setRules = function(rules) {
@@ -229,6 +232,7 @@ os.im.mapping.RuleMapping.prototype.setRules = function(rules) {
 
 /**
  * Sets the rules object that the mapping uses to map individual fieldValues to finalValues.
+ *
  * @return {Array<os.im.mapping.Rule>}
  */
 os.im.mapping.RuleMapping.prototype.getRules = function() {
@@ -238,6 +242,7 @@ os.im.mapping.RuleMapping.prototype.getRules = function() {
 
 /**
  * Sets the static value for all items. Nulls the mapping rules when set.
+ *
  * @param {?S} value
  */
 os.im.mapping.RuleMapping.prototype.setStaticValue = function(value) {
@@ -249,6 +254,7 @@ os.im.mapping.RuleMapping.prototype.setStaticValue = function(value) {
 
 /**
  * Sets the rules object that the mapping uses to map individual fieldValues to finalValues.
+ *
  * @return {?S}
  */
 os.im.mapping.RuleMapping.prototype.getStaticValue = function() {
@@ -258,6 +264,7 @@ os.im.mapping.RuleMapping.prototype.getStaticValue = function() {
 
 /**
  * Return the display
+ *
  * @return {string}
  * @export
  */
@@ -298,6 +305,7 @@ os.im.mapping.RuleMapping.prototype.restore = function(config) {
 
 /**
  * Persister for values. They can contain complex items that need special persistence calls in subclasses.
+ *
  * @param {Object} to The object to persist to.
  */
 os.im.mapping.RuleMapping.prototype.persistValues = function(to) {
@@ -317,6 +325,7 @@ os.im.mapping.RuleMapping.prototype.persistValues = function(to) {
 
 /**
  * Restorer for values. They can contain complex items that need special restoration calls.
+ *
  * @param {Object} config The config to restore from.
  */
 os.im.mapping.RuleMapping.prototype.restoreValues = function(config) {

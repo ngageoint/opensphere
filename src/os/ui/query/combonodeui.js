@@ -46,6 +46,7 @@ os.ui.Module.directive('combonodeui', [os.ui.query.comboNodeUIDirective]);
 
 /**
  * Controller for above directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @constructor
@@ -94,6 +95,7 @@ os.ui.query.ComboNodeUICtrl.GROUPS = [
 
 /**
  * Clean up
+ *
  * @private
  */
 os.ui.query.ComboNodeUICtrl.prototype.onDestroy_ = function() {
@@ -103,6 +105,7 @@ os.ui.query.ComboNodeUICtrl.prototype.onDestroy_ = function() {
 
 /**
  * Gets the filter group value
+ *
  * @return {boolean}
  * @protected
  */
@@ -129,6 +132,7 @@ os.ui.query.ComboNodeUICtrl.prototype.getFilterGroup = function() {
 
 /**
  * Gets include value
+ *
  * @return {boolean}
  * @protected
  */
@@ -146,6 +150,7 @@ os.ui.query.ComboNodeUICtrl.prototype.getInclude = function() {
 
 /**
  * Toggles the filter group value
+ *
  * @export
  */
 os.ui.query.ComboNodeUICtrl.prototype.toggleGroup = function() {
@@ -197,6 +202,7 @@ os.ui.query.ComboNodeUICtrl.prototype.getEntry = function() {
 
 /**
  * Toggles area query/exclude
+ *
  * @export
  */
 os.ui.query.ComboNodeUICtrl.prototype.toggleQuery = function() {
@@ -242,6 +248,7 @@ os.ui.query.ComboNodeUICtrl.prototype.isFilter = function() {
 
 /**
  * Edit a thing
+ *
  * @export
  */
 os.ui.query.ComboNodeUICtrl.prototype.edit = function() {
@@ -252,6 +259,7 @@ os.ui.query.ComboNodeUICtrl.prototype.edit = function() {
 
 /**
  * View a thing
+ *
  * @export
  */
 os.ui.query.ComboNodeUICtrl.prototype.view = function() {
@@ -261,6 +269,7 @@ os.ui.query.ComboNodeUICtrl.prototype.view = function() {
 
 /**
  * Whether to show the filter copy glyph.
+ *
  * @return {boolean}
  * @export
  */
@@ -275,6 +284,7 @@ os.ui.query.ComboNodeUICtrl.prototype.showCopy = function() {
 
 /**
  * Copy a thing
+ *
  * @export
  */
 os.ui.query.ComboNodeUICtrl.prototype.copy = function() {
@@ -285,6 +295,7 @@ os.ui.query.ComboNodeUICtrl.prototype.copy = function() {
 
 /**
  * Remove a thing
+ *
  * @export
  */
 os.ui.query.ComboNodeUICtrl.prototype.remove = function() {

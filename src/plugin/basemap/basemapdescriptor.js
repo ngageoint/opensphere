@@ -13,6 +13,7 @@ goog.require('plugin.basemap');
 
 /**
  * A descriptor for a base map (or "Map Layer")
+ *
  * @extends {os.data.LayerSyncDescriptor}
  * @constructor
  * @see {@link plugin.basemap.BaseMapPlugin} for configuration instructions
@@ -57,6 +58,7 @@ plugin.basemap.BaseMapDescriptor.prototype.getIcons = function() {
 
 /**
  * Whether or not this map layer descriptor can be deleted by the user
+ *
  * @return {boolean}
  */
 plugin.basemap.BaseMapDescriptor.prototype.canDelete = function() {
@@ -66,6 +68,7 @@ plugin.basemap.BaseMapDescriptor.prototype.canDelete = function() {
 
 /**
  * Sets whether the user can delete this map layer or not
+ *
  * @param {boolean} value The value
  */
 plugin.basemap.BaseMapDescriptor.prototype.setCanDelete = function(value) {

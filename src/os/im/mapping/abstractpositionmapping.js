@@ -74,6 +74,7 @@ os.im.mapping.AbstractPositionMapping.prototype.fromXml = function(xml) {
 
 /**
  * Tests if the mapping can be performed on the provided value
+ *
  * @param {string} value The field value to test
  * @param {string=} opt_format optional parsing format string
  * @return {?string} if a value can be parsed correctly return that value, otherwise null

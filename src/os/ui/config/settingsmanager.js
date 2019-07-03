@@ -18,6 +18,7 @@ goog.require('os.ui.window');
 
 /**
  * Base settings manager. Applications should extend this to fill in the abstract methods.
+ *
  * @extends {goog.events.EventTarget}
  * @constructor
  */
@@ -64,6 +65,7 @@ os.ui.config.SettingsManager.LOGGER_ = goog.log.getLogger('os.ui.config.Settings
 
 /**
  * Add a setting control to the system.
+ *
  * @param {!os.ui.config.SettingPlugin} plugin
  */
 os.ui.config.SettingsManager.prototype.addSettingPlugin = function(plugin) {
@@ -83,6 +85,7 @@ os.ui.config.SettingsManager.prototype.addSettingPlugin = function(plugin) {
 
 /**
  * Get the settings tree.
+ *
  * @return {!Array<!os.structs.ITreeNode>}
  */
 os.ui.config.SettingsManager.prototype.getChildren = function() {
@@ -101,6 +104,7 @@ os.ui.config.SettingsManager.prototype.getChildren = function() {
 
 /**
  * Get the currently selected item.
+ *
  * @return {?os.structs.ITreeNode}
  */
 os.ui.config.SettingsManager.prototype.getSelected = function() {
@@ -110,6 +114,7 @@ os.ui.config.SettingsManager.prototype.getSelected = function() {
 
 /**
  * Store the last selected item
+ *
  * @param {os.structs.ITreeNode} selected
  */
 os.ui.config.SettingsManager.prototype.setSelected = function(selected) {
@@ -119,6 +124,7 @@ os.ui.config.SettingsManager.prototype.setSelected = function(selected) {
 
 /**
  * Select a settings plugin in the tree.
+ *
  * @param {string} id The plugin identifier.
  */
 os.ui.config.SettingsManager.prototype.setSelectedPlugin = function(id) {
@@ -139,6 +145,7 @@ os.ui.config.SettingsManager.prototype.setSelectedPlugin = function(id) {
 
 /**
  * Select the first leaf node in the tree.
+ *
  * @return {?os.structs.ITreeNode}
  */
 os.ui.config.SettingsManager.prototype.initSelection = function() {
@@ -172,6 +179,7 @@ os.ui.config.SettingsManager.prototype.importSettings = function() {
 
 /**
  * Add a settings plugin to the tree.
+ *
  * @param {!os.ui.config.SettingPlugin} plugin
  * @private
  */

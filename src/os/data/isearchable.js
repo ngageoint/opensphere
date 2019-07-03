@@ -4,6 +4,7 @@ goog.provide('os.data.ISearchable');
 
 /**
  * An interface for searchable objects
+ *
  * @interface
  */
 os.data.ISearchable = function() {};

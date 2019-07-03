@@ -10,6 +10,7 @@ goog.require('os.source.Vector');
 
 /**
  * Config for a layer containing static data.
+ *
  * @extends {os.layer.config.AbstractLayerConfig}
  * @constructor
  * @template T
@@ -61,7 +62,7 @@ os.layer.config.StaticLayerConfig.prototype.initializeConfig = function(options)
   if (goog.isArray(options['data'])) {
     // make sure the array was created in this context
     this.data = options['data'] = options['data'] instanceof Array ? options['data'] :
-        goog.array.clone(options['data']);
+      goog.array.clone(options['data']);
   } else {
     this.data = null;
   }
@@ -96,6 +97,7 @@ os.layer.config.StaticLayerConfig.prototype.createLayer = function(options) {
 
 /**
  * Restores the layer from the options
+ *
  * @param {os.layer.Vector} layer
  * @param {Object.<string, *>} options
  * @protected

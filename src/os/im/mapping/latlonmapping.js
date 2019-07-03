@@ -9,6 +9,7 @@ goog.require('os.im.mapping.location.BaseLatLonMapping');
 
 /**
  * Mapping to translate a coordinate string to a point geometry.
+ *
  * @param {number=} opt_order
  * @extends {os.im.mapping.location.BaseLatLonMapping.<ol.Feature>}
  * @constructor
@@ -33,6 +34,7 @@ os.im.mapping.MappingRegistry.getInstance().registerMapping(
 
 /**
  * Maps a coordinate string to a geometry.
+ *
  * @param {ol.Feature} item The feature to modify
  * @throws {Error} If the location field cannot be parsed.
  * @override

@@ -6,6 +6,7 @@ goog.require('os.column.ColumnMappingEventType');
 
 /**
  * Event representing changes to column mappings.
+ *
  * @param {os.column.ColumnMappingEventType} type
  * @param {?osx.column.ColumnModel} column
  * @extends {goog.events.Event}

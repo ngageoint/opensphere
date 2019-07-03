@@ -7,6 +7,7 @@ goog.require('plugin.pelias.geocoder.attrCardDirective');
 
 /**
  * HTML Attribution result for Google Places API
+ *
  * @param {Array<!string>} attributions
  * @extends {os.search.AbstractSearchResult<Array<!string>>}
  * @constructor

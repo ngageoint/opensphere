@@ -100,6 +100,7 @@ os.math.METERS_TO_YARDS = 1.09361;
 
 /**
  * function to simplify unit conversion
+ *
  * @param {number} value
  * @param {string} newUnit
  * @param {string=} opt_oldUnit
@@ -165,6 +166,7 @@ os.math.convertUnits = function(value, newUnit, opt_oldUnit) {
 
 /**
  * function to simplify unit conversion
+ *
  * @param {number} value
  * @param {string} newUnit
  * @param {string=} opt_oldUnit
@@ -199,6 +201,7 @@ os.math.stringifyUnits = function(value, newUnit, opt_oldUnit) {
 
 /**
  * get the next key based on your current key
+ *
  * @param {string} current
  * @return {string} next key
  */
@@ -219,6 +222,7 @@ os.math.getNextUnit = function(current) {
 
 /**
  * Convert a numeric value to a human readable string
+ *
  * @param {number} num
  * @return {string}
  */

@@ -17,6 +17,7 @@ goog.require('plugin.places.PlacesManager');
 
 /**
  * Directive for editing a KML placemark.
+ *
  * @return {angular.Directive}
  */
 plugin.file.kml.ui.placemarkEditDirective = function() {
@@ -35,6 +36,7 @@ os.ui.Module.directive('placemarkedit', [plugin.file.kml.ui.placemarkEditDirecti
 
 /**
  * Controller function for the placemarkedit directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$timeout} $timeout
@@ -247,6 +249,7 @@ plugin.file.kml.ui.PlacemarkEditCtrl.prototype.updatePreview = function() {
 
 /**
  * Updates the option for the placemark's parent folder
+ *
  * @export
  */
 plugin.file.kml.ui.PlacemarkEditCtrl.prototype.updateFolder = function() {
@@ -258,6 +261,7 @@ plugin.file.kml.ui.PlacemarkEditCtrl.prototype.updateFolder = function() {
 
 /**
  * Updates the temporary annotation.
+ *
  * @export
  */
 plugin.file.kml.ui.PlacemarkEditCtrl.prototype.updateAnnotation = function() {
@@ -282,6 +286,7 @@ plugin.file.kml.ui.PlacemarkEditCtrl.prototype.updateAnnotation = function() {
 
 /**
  * Resets the header background to the current default theme color
+ *
  * @private
  */
 plugin.file.kml.ui.PlacemarkEditCtrl.prototype.resetHeaderBackgroundColor_ = function() {
@@ -292,6 +297,7 @@ plugin.file.kml.ui.PlacemarkEditCtrl.prototype.resetHeaderBackgroundColor_ = fun
 
 /**
  * Resets the body background to the current default theme color
+ *
  * @private
  */
 plugin.file.kml.ui.PlacemarkEditCtrl.prototype.resetBodyBackgroundColor_ = function() {
@@ -302,6 +308,7 @@ plugin.file.kml.ui.PlacemarkEditCtrl.prototype.resetBodyBackgroundColor_ = funct
 
 /**
  * Save color to feature
+ *
  * @param {angular.Scope.Event} event
  * @param {string} color The new color
  */
@@ -311,6 +318,7 @@ plugin.file.kml.ui.PlacemarkEditCtrl.prototype.saveHeaderBackgroundColor_ = func
 
 /**
  * Save color to feature
+ *
  * @param {angular.Scope.Event} event
  * @param {string} color The new color
  */

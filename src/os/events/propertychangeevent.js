@@ -6,6 +6,7 @@ goog.require('goog.events.EventType');
 
 /**
  * A property change event.
+ *
  * @param {string=} opt_property The property that changed
  * @param {*=} opt_newVal The new value
  * @param {*=} opt_oldVal The old value
@@ -53,6 +54,7 @@ os.events.PropertyChangeEvent.prototype.target;
 
 /**
  * Gets the property that changed
+ *
  * @return {?string}
  */
 os.events.PropertyChangeEvent.prototype.getProperty = function() {
@@ -62,6 +64,7 @@ os.events.PropertyChangeEvent.prototype.getProperty = function() {
 
 /**
  * Gets the new value of the property
+ *
  * @return {?*}
  */
 os.events.PropertyChangeEvent.prototype.getNewValue = function() {
@@ -71,6 +74,7 @@ os.events.PropertyChangeEvent.prototype.getNewValue = function() {
 
 /**
  * Gets the old value of the property
+ *
  * @return {?*}
  */
 os.events.PropertyChangeEvent.prototype.getOldValue = function() {

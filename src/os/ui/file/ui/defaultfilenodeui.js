@@ -11,6 +11,7 @@ goog.require('os.ui.window.confirmDirective');
 
 /**
  * The selected/highlighted file node UI directive
+ *
  * @return {angular.Directive}
  */
 os.ui.file.ui.defaultFileNodeUIDirective = function() {
@@ -33,6 +34,7 @@ os.ui.Module.directive('defaultfilenodeui', [os.ui.file.ui.defaultFileNodeUIDire
 
 /**
  * Controller for selected/highlighted file node UI
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @extends {os.ui.slick.AbstractNodeUICtrl}
@@ -52,6 +54,7 @@ goog.inherits(os.ui.file.ui.DefaultFileNodeUICtrl, os.ui.slick.AbstractNodeUICtr
 
 /**
  * Prompt the user to remove the file from the application
+ *
  * @export
  */
 os.ui.file.ui.DefaultFileNodeUICtrl.prototype.tryRemove = function() {
@@ -109,6 +112,7 @@ os.ui.file.ui.DefaultFileNodeUICtrl.prototype.getDescriptor = function() {
 
 /**
  * Permanently remove the file layer and associated data from the application.
+ *
  * @protected
  */
 os.ui.file.ui.DefaultFileNodeUICtrl.prototype.remove = function() {

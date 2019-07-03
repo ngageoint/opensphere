@@ -74,6 +74,7 @@ plugin.file.kml.DEFAULT_STYLE_ARRAY = [plugin.file.kml.DEFAULT_STYLE];
 
 /**
  * Replaces parsers in an Openlayers KML parser map.
+ *
  * @param {Object<string, Object<string, ol.XmlParser>>} obj The parser object with namespace keys
  * @param {string} field The field to replace
  * @param {ol.XmlParser} parser The new parser
@@ -90,6 +91,7 @@ plugin.file.kml.replaceParsers_ = function(obj, field, parser) {
 
 /**
  * Accessor for private Openlayers code.
+ *
  * @return {function(this: T, *, Array<*>, (string|undefined)): (Node|undefined)}
  * @template T
  */
@@ -100,6 +102,7 @@ plugin.file.kml.OL_GEOMETRY_NODE_FACTORY = function() {
 
 /**
  * Accessor for private Openlayers code.
+ *
  * @return {Object<string, Object<string, ol.XmlParser>>}
  * @template T
  */
@@ -110,6 +113,7 @@ plugin.file.kml.OL_ICON_STYLE_PARSERS = function() {
 
 /**
  * Accessor for private Openlayers code.
+ *
  * @return {Object<string, Object<string, ol.XmlParser>>}
  */
 plugin.file.kml.OL_LINK_PARSERS = function() {
@@ -119,6 +123,7 @@ plugin.file.kml.OL_LINK_PARSERS = function() {
 
 /**
  * Accessor for private Openlayers code.
+ *
  * @return {Array<string>}
  */
 plugin.file.kml.OL_NAMESPACE_URIS = function() {
@@ -128,6 +133,7 @@ plugin.file.kml.OL_NAMESPACE_URIS = function() {
 
 /**
  * Accessor for private Openlayers code.
+ *
  * @return {Array<string>}
  */
 plugin.file.kml.OL_GX_NAMESPACE_URIS = function() {
@@ -137,6 +143,7 @@ plugin.file.kml.OL_GX_NAMESPACE_URIS = function() {
 
 /**
  * Accessor for private Openlayers code.
+ *
  * @return {Object<string, Object<string, ol.XmlParser>>}
  */
 plugin.file.kml.OL_NETWORK_LINK_PARSERS = function() {
@@ -146,6 +153,7 @@ plugin.file.kml.OL_NETWORK_LINK_PARSERS = function() {
 
 /**
  * Accessor for private Openlayers code.
+ *
  * @return {Object<string, Object<string, ol.XmlParser>>}
  */
 plugin.file.kml.OL_PLACEMARK_PARSERS = function() {
@@ -155,6 +163,7 @@ plugin.file.kml.OL_PLACEMARK_PARSERS = function() {
 
 /**
  * Access for private Openlayers code.
+ *
  * @return {Object<string, Object<string, ol.XmlSerializer>>}
  */
 plugin.file.kml.OL_PLACEMARK_SERIALIZERS = function() {
@@ -164,6 +173,7 @@ plugin.file.kml.OL_PLACEMARK_SERIALIZERS = function() {
 
 /**
  * Access for private Openlayers code.
+ *
  * @return {Object<string, Object<string, ol.XmlParser>>}
  */
 plugin.file.kml.OL_STYLE_PARSERS = function() {
@@ -208,6 +218,7 @@ plugin.file.kml.replaceParsers_(ol.format.KML.POLY_STYLE_PARSERS_, 'color',
 
 /**
  * Accessor for private Openlayers code.
+ *
  * @param {Node} node Node.
  * @param {Array<*>} objectStack Object stack.
  * @return {Array<ol.style.Style>} Style.
@@ -233,6 +244,7 @@ plugin.file.kml.BALLOON_PROPERTY_PARSERS = ol.xml.makeStructureNS(
 
 /**
  * Parses a time node.
+ *
  * @param {Node} node Node.
  * @param {Array<*>} objectStack Object stack.
  * @return {os.time.ITime} The parsed time, or null if none could be parsed
@@ -322,6 +334,7 @@ os.object.merge(plugin.file.kml.TIME_PARSERS, plugin.file.kml.OL_PLACEMARK_PARSE
 
 /**
  * Read a MultiTrack node.
+ *
  * @param {Node} node Node.
  * @param {Array<*>} objectStack Object stack.
  * @return {ol.geom.MultiLineString|undefined} MultiLineString.
@@ -415,6 +428,7 @@ os.object.merge(plugin.file.kml.PLACEMARK_TRACK_PARSERS, plugin.file.kml.OL_PLAC
 
 /**
  * Read a LatLonBox node and add extent/rotation to the last object on the stack.
+ *
  * @param {Node} node Node.
  * @param {Array<*>} objectStack Object stack.
  * @private
@@ -439,6 +453,7 @@ plugin.file.kml.readLatLonBox_ = function(node, objectStack) {
 
 /**
  * Read a LatLonQuad node and add extent to the last object on the stack.
+ *
  * @param {Node} node Node.
  * @param {Array<*>} objectStack Object stack.
  * @private
@@ -536,6 +551,7 @@ plugin.file.kml.SCREEN_OVERLAY_PARSERS = ol.xml.makeStructureNS(
 
 /**
  * Override the Openlayers function to support exporting Track and MultiTrack nodes.
+ *
  * @param {*} value Value.
  * @param {Array<*>} objectStack Object stack.
  * @param {string=} opt_nodeName Node name.
@@ -623,6 +639,7 @@ plugin.file.kml.olWriteMultiGeometry_ = ol.format.KML.writeMultiGeometry_;
 
 /**
  * Adds support for writing geometries in a {@link ol.geom.GeometryCollection} to a kml:MultiGeometry node.
+ *
  * @param {Node} node Node.
  * @param {ol.geom.Geometry} geometry Geometry.
  * @param {Array<*>} objectStack Object stack.
@@ -646,6 +663,7 @@ plugin.file.kml.writeMultiGeometry_ = function(node, geometry, objectStack) {
 
 /**
  * Adds support for writing Track nodes.
+ *
  * @param {Node} node Node.
  * @param {ol.geom.Geometry} geometry Geometry.
  * @param {Array<*>} objectStack Object stack.
@@ -666,6 +684,7 @@ plugin.file.kml.writeMultiTrack_ = function(node, geometry, objectStack) {
 
 /**
  * Adds support for writing Track nodes.
+ *
  * @param {Node} node Node.
  * @param {ol.geom.Geometry} geometry Geometry.
  * @param {Array<*>} objectStack Object stack.

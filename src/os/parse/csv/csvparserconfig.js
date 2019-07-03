@@ -7,6 +7,7 @@ goog.require('os.parse.csv');
 
 /**
  * Parser config for CSV
+ *
  * @extends {os.parse.FileParserConfig.<T>}
  * @template T
  * @param {os.file.File=} opt_file

@@ -28,6 +28,7 @@ goog.require('os.ui.uiSwitchDirective');
 
 /**
  * The lob options directive.
+ *
  * @return {angular.Directive}
  */
 os.ui.layer.lobOptionsDirective = function() {
@@ -50,6 +51,7 @@ os.ui.Module.directive('loboptions', [os.ui.layer.lobOptionsDirective]);
 
 /**
  * Controller function for the loboptions directive.
+ *
  * @param {!angular.Scope} $scope The Angular scope.
  * @param {!angular.JQLite} $element The root DOM element.
  * @extends {os.ui.layer.AbstractLayerUICtrl}
@@ -214,6 +216,7 @@ os.ui.layer.LobOptionsCtrl.prototype.initUI = function() {
 
 /**
  * Checks for ellipse support
+ *
  * @return {boolean}
  * @protected
  */
@@ -239,6 +242,7 @@ os.ui.layer.LobOptionsCtrl.prototype.supportsEllipse = function() {
 
 /**
  * The lob arrow size
+ *
  * @return {number}
  * @private
  */
@@ -257,6 +261,7 @@ os.ui.layer.LobOptionsCtrl.prototype.getSize_ = function() {
 
 /**
  * The lob length
+ *
  * @return {number}
  * @private
  */
@@ -275,6 +280,7 @@ os.ui.layer.LobOptionsCtrl.prototype.getLOBLength_ = function() {
 
 /**
  * The lob column length
+ *
  * @return {number}
  * @private
  */
@@ -293,6 +299,7 @@ os.ui.layer.LobOptionsCtrl.prototype.getLOBColumnLength_ = function() {
 
 /**
  * The lob length error multipler
+ *
  * @return {number}
  * @private
  */
@@ -311,6 +318,7 @@ os.ui.layer.LobOptionsCtrl.prototype.getLengthErrorMultiplier_ = function() {
 
 /**
  * The lob length error units
+ *
  * @return {string}
  * @private
  */
@@ -329,6 +337,7 @@ os.ui.layer.LobOptionsCtrl.prototype.getLengthErrorUnits_ = function() {
 
 /**
  * The lob bearing error multipler
+ *
  * @return {number}
  * @private
  */
@@ -347,6 +356,7 @@ os.ui.layer.LobOptionsCtrl.prototype.getBearingErrorMultiplier_ = function() {
 
 /**
  * The type for the lob length
+ *
  * @return {string}
  * @private
  */
@@ -365,6 +375,7 @@ os.ui.layer.LobOptionsCtrl.prototype.getLengthType_ = function() {
 
 /**
  * The column for the lob length multiplier
+ *
  * @return {string}
  * @private
  */
@@ -383,6 +394,7 @@ os.ui.layer.LobOptionsCtrl.prototype.getLengthColumn_ = function() {
 
 /**
  * The column for the lob length units
+ *
  * @return {string}
  * @private
  */
@@ -401,6 +413,7 @@ os.ui.layer.LobOptionsCtrl.prototype.getLengthUnits_ = function() {
 
 /**
  * The column for the lob length error
+ *
  * @return {string}
  * @private
  */
@@ -419,6 +432,7 @@ os.ui.layer.LobOptionsCtrl.prototype.getLengthErrorColumn_ = function() {
 
 /**
  * The column for the lob bearing
+ *
  * @return {string}
  * @private
  */
@@ -437,6 +451,7 @@ os.ui.layer.LobOptionsCtrl.prototype.getBearingColumn_ = function() {
 
 /**
  * The column for the lob bearing error
+ *
  * @return {string}
  * @private
  */
@@ -455,6 +470,7 @@ os.ui.layer.LobOptionsCtrl.prototype.getBearingErrorColumn_ = function() {
 
 /**
  * If arrow should be displayed for the layer(s).
+ *
  * @return {boolean}
  * @private
  */
@@ -473,6 +489,7 @@ os.ui.layer.LobOptionsCtrl.prototype.getShowArrow_ = function() {
 
 /**
  * The column for the lob length units
+ *
  * @return {string}
  * @private
  */
@@ -491,6 +508,7 @@ os.ui.layer.LobOptionsCtrl.prototype.getArrowUnits_ = function() {
 
 /**
  * If error should be displayed for the layer(s).
+ *
  * @return {boolean}
  * @private
  */
@@ -509,6 +527,7 @@ os.ui.layer.LobOptionsCtrl.prototype.getShowError_ = function() {
 
 /**
  * If ellipse should be displayed for the layer(s).
+ *
  * @return {boolean}
  * @private
  */
@@ -527,6 +546,7 @@ os.ui.layer.LobOptionsCtrl.prototype.getShowEllipse_ = function() {
 
 /**
  * Handle changes to the Show Arrow option.
+ *
  * @export
  */
 os.ui.layer.LobOptionsCtrl.prototype.onShowArrowChange = function() {
@@ -549,6 +569,7 @@ os.ui.layer.LobOptionsCtrl.prototype.onShowArrowChange = function() {
 
 /**
  * Handle changes to the Show error option.
+ *
  * @export
  */
 os.ui.layer.LobOptionsCtrl.prototype.onShowErrorChange = function() {
@@ -571,6 +592,7 @@ os.ui.layer.LobOptionsCtrl.prototype.onShowErrorChange = function() {
 
 /**
  * Handle changes to the Show Arrow option.
+ *
  * @export
  */
 os.ui.layer.LobOptionsCtrl.prototype.onShowEllipseChange = function() {
@@ -593,6 +615,7 @@ os.ui.layer.LobOptionsCtrl.prototype.onShowEllipseChange = function() {
 
 /**
  * Handles changes to arrow size
+ *
  * @param {angular.Scope.Event} event
  * @param {number} value
  * @export
@@ -606,6 +629,7 @@ os.ui.layer.LobOptionsCtrl.prototype.onSizeChange = function(event, value) {
 
 /**
  * Actually creates the command after the arrow size delay fires
+ *
  * @private
  */
 os.ui.layer.LobOptionsCtrl.prototype.onSizeDelay_ = function() {
@@ -624,6 +648,7 @@ os.ui.layer.LobOptionsCtrl.prototype.onSizeDelay_ = function() {
 
 /**
  * Handles changes to lob length
+ *
  * @param {angular.Scope.Event} event
  * @param {number} value
  * @export
@@ -649,6 +674,7 @@ os.ui.layer.LobOptionsCtrl.prototype.onLengthChange = function(event, value) {
 
 /**
  * Handles changes to lob column length
+ *
  * @param {angular.Scope.Event} event
  * @param {number} value
  * @export
@@ -662,6 +688,7 @@ os.ui.layer.LobOptionsCtrl.prototype.onColumnLengthChange = function(event, valu
 
 /**
  * Actually creates the command after the lob length delay fires
+ *
  * @private
  */
 os.ui.layer.LobOptionsCtrl.prototype.onColumnLengthDelay_ = function() {
@@ -680,6 +707,7 @@ os.ui.layer.LobOptionsCtrl.prototype.onColumnLengthDelay_ = function() {
 
 /**
  * Handles changes to bearing error multiplier
+ *
  * @param {angular.Scope.Event} event
  * @param {number} value
  * @export
@@ -693,6 +721,7 @@ os.ui.layer.LobOptionsCtrl.prototype.onBearingErrorChange = function(event, valu
 
 /**
  * Actually creates the command after the bearing error multiplier delay fires
+ *
  * @private
  */
 os.ui.layer.LobOptionsCtrl.prototype.onBearingErrorDelay_ = function() {
@@ -711,6 +740,7 @@ os.ui.layer.LobOptionsCtrl.prototype.onBearingErrorDelay_ = function() {
 
 /**
  * Handles changes to bearing error multiplier
+ *
  * @param {angular.Scope.Event} event
  * @param {number} value
  * @export
@@ -724,6 +754,7 @@ os.ui.layer.LobOptionsCtrl.prototype.onLengthErrorChange = function(event, value
 
 /**
  * Actually creates the command after the bearing error multiplier delay fires
+ *
  * @private
  */
 os.ui.layer.LobOptionsCtrl.prototype.onLengthErrorDelay_ = function() {
@@ -742,6 +773,7 @@ os.ui.layer.LobOptionsCtrl.prototype.onLengthErrorDelay_ = function() {
 
 /**
  * Handles column changes to the lob length multiplier
+ *
  * @export
  */
 os.ui.layer.LobOptionsCtrl.prototype.onLengthColumnChange = function() {
@@ -760,6 +792,7 @@ os.ui.layer.LobOptionsCtrl.prototype.onLengthColumnChange = function() {
 
 /**
  * Handles column changes to the lob length error
+ *
  * @export
  */
 os.ui.layer.LobOptionsCtrl.prototype.onLengthErrorColumnChange = function() {
@@ -778,6 +811,7 @@ os.ui.layer.LobOptionsCtrl.prototype.onLengthErrorColumnChange = function() {
 
 /**
  * Handles changes to the length type
+ *
  * @export
  */
 os.ui.layer.LobOptionsCtrl.prototype.onLengthTypeChange = function() {
@@ -796,6 +830,7 @@ os.ui.layer.LobOptionsCtrl.prototype.onLengthTypeChange = function() {
 
 /**
  * Handles column changes to the bearing
+ *
  * @export
  */
 os.ui.layer.LobOptionsCtrl.prototype.onBearingColumnChange = function() {
@@ -814,6 +849,7 @@ os.ui.layer.LobOptionsCtrl.prototype.onBearingColumnChange = function() {
 
 /**
  * Handles column changes to the bearing error
+ *
  * @export
  */
 os.ui.layer.LobOptionsCtrl.prototype.onBearingErrorColumnChange = function() {
@@ -832,6 +868,7 @@ os.ui.layer.LobOptionsCtrl.prototype.onBearingErrorColumnChange = function() {
 
 /**
  * Handles length unit changes
+ *
  * @export
  */
 os.ui.layer.LobOptionsCtrl.prototype.onLengthUnitChange = function() {
@@ -850,6 +887,7 @@ os.ui.layer.LobOptionsCtrl.prototype.onLengthUnitChange = function() {
 
 /**
  * Handles arrow unit changes
+ *
  * @export
  */
 os.ui.layer.LobOptionsCtrl.prototype.onArrowUnitChange = function() {
@@ -868,6 +906,7 @@ os.ui.layer.LobOptionsCtrl.prototype.onArrowUnitChange = function() {
 
 /**
  * Handles length error unit changes
+ *
  * @export
  */
 os.ui.layer.LobOptionsCtrl.prototype.onLengthErrorUnitChange = function() {
@@ -886,6 +925,7 @@ os.ui.layer.LobOptionsCtrl.prototype.onLengthErrorUnitChange = function() {
 
 /**
  * Adds ellipse options when rendering ellispe
+ *
  * @return {string}
  * @export
  */

@@ -14,6 +14,7 @@ os.events.SelectionType = {
 
 /**
  * Test if an event type is a selection type.
+ *
  * @param {?string} type The event type
  * @return {boolean}
  */

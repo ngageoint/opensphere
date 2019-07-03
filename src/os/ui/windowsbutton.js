@@ -7,6 +7,7 @@ goog.require('os.ui.menu.windows');
 
 /**
  * The windows button directive
+ *
  * @return {angular.Directive}
  */
 os.ui.windowsButtonDirective = function() {
@@ -32,6 +33,7 @@ os.ui.Module.directive('windowsButton', [os.ui.windowsButtonDirective]);
 
 /**
  * Controller function for the nav-top directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element The element
  * @extends {os.ui.menu.MenuButtonCtrl}

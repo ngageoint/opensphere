@@ -9,6 +9,7 @@ goog.require('os.ui.menu.windows');
 
 /**
  * The mappingcounter directive
+ *
  * @return {angular.Directive}
  */
 plugin.vectortools.mappingCounterDirective = function() {
@@ -34,6 +35,7 @@ os.ui.Module.directive('mappingcounter', [plugin.vectortools.mappingCounterDirec
 
 /**
  * Controller function for the mappingcounter directive
+ *
  * @param {!angular.Scope} $scope
  * @constructor
  * @ngInject
@@ -66,6 +68,7 @@ plugin.vectortools.MappingCounterCtrl = function($scope) {
 
 /**
  * Clean up.
+ *
  * @private
  */
 plugin.vectortools.MappingCounterCtrl.prototype.destroy_ = function() {
@@ -80,6 +83,7 @@ plugin.vectortools.MappingCounterCtrl.prototype.destroy_ = function() {
 /**
  * Listener for changes to ColumnMappingManager. Recalculates the number of applicable column mappings to the current
  * layers.
+ *
  * @private
  */
 plugin.vectortools.MappingCounterCtrl.prototype.onColumnMappingsChange_ = function() {
@@ -97,6 +101,7 @@ plugin.vectortools.MappingCounterCtrl.prototype.onColumnMappingsChange_ = functi
 
 /**
  * Launches the settings window for managing column mappings.
+ *
  * @export
  */
 plugin.vectortools.MappingCounterCtrl.prototype.launchColumnMappings = function() {

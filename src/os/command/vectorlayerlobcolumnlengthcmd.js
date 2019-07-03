@@ -7,6 +7,7 @@ goog.require('os.metrics');
 
 /**
  * Changes the lob column length
+ *
  * @param {string} layerId
  * @param {number} value
  * @param {number=} opt_oldValue

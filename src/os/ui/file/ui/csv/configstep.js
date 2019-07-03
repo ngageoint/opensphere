@@ -17,6 +17,7 @@ goog.require('os.ui.wiz.wizardPreviewDirective');
 
 /**
  * CSV import data step
+ *
  * @extends {os.ui.wiz.step.AbstractWizardStep.<os.parse.csv.CsvParserConfig>}
  * @param {angular.$compile=} opt_compile Angular compile function
  * @constructor
@@ -52,6 +53,7 @@ os.ui.file.ui.csv.ConfigStep.prototype.finalize = function(config) {
 
 /**
  * The CSV import data step directive
+ *
  * @return {angular.Directive}
  */
 os.ui.file.ui.csv.configStepDirective = function() {
@@ -74,6 +76,7 @@ os.ui.Module.directive('csvconfigstep', [os.ui.file.ui.csv.configStepDirective])
 
 /**
  * Controller for the CSV import data step
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.$timeout} $timeout
  * @constructor
@@ -171,6 +174,7 @@ os.ui.file.ui.csv.ConfigStepCtrl.prototype.destroy_ = function() {
 
 /**
  * Updates the preview after the next $apply to allow the configuration to update.
+ *
  * @private
  */
 os.ui.file.ui.csv.ConfigStepCtrl.prototype.scheduleUpdate_ = function() {
@@ -180,6 +184,7 @@ os.ui.file.ui.csv.ConfigStepCtrl.prototype.scheduleUpdate_ = function() {
 
 /**
  * Creates a preview using a subset of the source content.
+ *
  * @export
  */
 os.ui.file.ui.csv.ConfigStepCtrl.prototype.updatePreview = function() {

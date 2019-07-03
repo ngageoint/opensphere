@@ -43,6 +43,7 @@ goog.require('os.ui.ol.interaction.MouseWheelZoom');
 /**
  * A basic implementation of an Openlayers map. Attaches itself in the DOM to the passed in selector. Creates a
  * basic vector layer for drawings/shapes. Adds a base set of maps from localStorage layer configs.
+ *
  * @implements {os.map.IMapContainer}
  * @extends {goog.events.EventTarget}
  * @constructor
@@ -146,6 +147,7 @@ os.ui.ol.OLMap.prototype.disposeInternal = function() {
 
 /**
  * Initializes the map and layers.
+ *
  * @param {(string|Element)=} opt_container The optional container, defaults to map-container.
  */
 os.ui.ol.OLMap.prototype.init = function(opt_container) {
@@ -289,7 +291,7 @@ os.ui.ol.OLMap.prototype.containsFeature = function(feature) {
       var source = /** @type {ol.source.Vector} */ (layer.getSource());
 
       return !!(typeof feature === 'string' || typeof feature === 'number' ? source.getFeatureById(feature) :
-          source.getFeatureById(feature.getId() + ''));
+        source.getFeatureById(feature.getId() + ''));
     }
   }
 
@@ -299,6 +301,7 @@ os.ui.ol.OLMap.prototype.containsFeature = function(feature) {
 
 /**
  * Fits the view to an extent.
+ *
  * @param {ol.Extent} extent The extent to fit
  * @param {number=} opt_buffer Scale factor for the extent to provide a buffer around the displayed area
  * @param {number=} opt_maxZoom The maximum zoom level for the updated view
@@ -386,6 +389,7 @@ os.ui.ol.OLMap.prototype.getInteractions_ = function() {
 
 /**
  * Gets the map layers.
+ *
  * @return {Array<ol.layer.Base>}
  * @private
  */
@@ -516,6 +520,7 @@ os.ui.ol.OLMap.prototype.getLayer = function(layerOrFeature, opt_search, opt_rem
 
 /**
  * Set if the map is focused or not
+ *
  * @param {boolean} focused
  */
 os.ui.ol.OLMap.prototype.setFocused = function(focused) {
@@ -525,6 +530,7 @@ os.ui.ol.OLMap.prototype.setFocused = function(focused) {
 
 /**
  * Get if the map is focused or not
+ *
  * @return {boolean}
  */
 os.ui.ol.OLMap.prototype.getFocused = function() {
@@ -534,6 +540,7 @@ os.ui.ol.OLMap.prototype.getFocused = function() {
 
 /**
  * Handle zoom action events. Flies to an extent containing all geometries in the extent.
+ *
  * @param {os.ui.action.ActionEvent} event The action event.
  * @private
  */

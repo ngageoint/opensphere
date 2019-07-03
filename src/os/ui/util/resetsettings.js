@@ -10,6 +10,7 @@ goog.require('os.ui.window.confirmDirective');
 
 /**
  * Launches the clear local storage window
+ *
  * @param {string=} opt_parent Optional parent selector.
  */
 os.ui.util.resetSettings = function(opt_parent) {

@@ -7,6 +7,7 @@ goog.require('os.metrics');
 
 /**
  * Changes the line dash of a layer
+ *
  * @extends {os.command.AbstractVectorStyle}
  * @param {string} layerId
  * @param {Array<number>} lineDash

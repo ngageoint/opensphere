@@ -96,6 +96,7 @@ plugin.places.KMLPlacesImportUI.prototype.onPreviewReady_ = function(config, eve
 
 /**
  * The KML places import directive
+ *
  * @return {angular.Directive}
  */
 plugin.places.kmlPlacesDirective = function() {
@@ -117,6 +118,7 @@ os.ui.Module.directive('kmlplaces', [plugin.places.kmlPlacesDirective]);
 
 /**
  * Controller for the SHP import file selection step
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$timeout} $timeout The Angular $timeout service.
@@ -144,6 +146,7 @@ plugin.places.KMLPlacesCtrl.prototype.finish = function() {
 
 /**
  * Success callback for importing data.
+ *
  * @param {goog.events.Event} event
  * @private
  */

@@ -14,6 +14,7 @@ goog.require('os.ui.sliderDirective');
 
 /**
  * A spinner directive for a node that loads items
+ *
  * @return {angular.Directive}
  */
 os.ui.layer.tileLayerUIDirective = function() {
@@ -36,6 +37,7 @@ os.ui.Module.directive('tilelayerui', [os.ui.layer.tileLayerUIDirective]);
 
 /**
  * Controller for the tile layer UI
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$timeout} $timeout
@@ -69,6 +71,7 @@ os.ui.layer.TileLayerUICtrl.prototype.initUI = function() {
 
 /**
  * Gets the color from the item(s)
+ *
  * @return {?string} a hex color string
  * @private
  */
@@ -94,6 +97,7 @@ os.ui.layer.TileLayerUICtrl.prototype.getColor_ = function() {
 
 /**
  * Handles changes to color
+ *
  * @param {angular.Scope.Event} event
  * @param {string} value
  * @protected
@@ -114,6 +118,7 @@ os.ui.layer.TileLayerUICtrl.prototype.onColorChange = function(event, value) {
 
 /**
  * Handles color reset
+ *
  * @param {angular.Scope.Event} event
  * @protected
  */
@@ -128,6 +133,7 @@ os.ui.layer.TileLayerUICtrl.prototype.onColorReset = function(event) {
 
 /**
  * Handles style changes.
+ *
  * @export
  */
 os.ui.layer.TileLayerUICtrl.prototype.onStyleChange = function() {
@@ -150,6 +156,7 @@ os.ui.layer.TileLayerUICtrl.prototype.onStyleChange = function() {
 
 /**
  * Handles colorize changes.
+ *
  * @export
  */
 os.ui.layer.TileLayerUICtrl.prototype.onColorizeChange = function() {

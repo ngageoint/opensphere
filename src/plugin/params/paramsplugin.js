@@ -8,6 +8,7 @@ goog.require('plugin.params.menu');
 
 /**
  * Allow changing request parameters for layers in opensphere
+ *
  * @extends {os.plugin.AbstractPlugin}
  * @constructor
  */

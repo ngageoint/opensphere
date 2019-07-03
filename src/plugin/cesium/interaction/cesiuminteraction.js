@@ -9,6 +9,7 @@ goog.require('plugin.cesium.interaction.measure');
 
 /**
  * Configure Cesium interactions.
+ *
  * @param {!plugin.cesium.Camera} camera The camera.
  * @param {Cesium.ScreenSpaceCameraController} sscc The camera controller.
  */

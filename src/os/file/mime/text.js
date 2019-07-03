@@ -107,6 +107,7 @@ os.file.mime.text.getText = function(buffer, opt_file) {
 
 /**
  * Gets an ArrayBuffer from a string of text.
+ *
  * @param {string} text
  * @return {ArrayBuffer|undefined}
  */

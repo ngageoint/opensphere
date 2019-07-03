@@ -7,6 +7,7 @@ goog.require('os.ui.filter.colTypeCheckValidation');
 
 /**
  * The default between literal directive
+ *
  * @return {angular.Directive}
  */
 os.ui.filter.betweenDirective = function() {
@@ -29,6 +30,7 @@ os.ui.Module.directive('fbBetween', [os.ui.filter.betweenDirective]);
 
 /**
  * Controller for the between UI
+ *
  * @param {!angular.Scope} $scope
  * @constructor
  * @ngInject
@@ -59,6 +61,7 @@ os.ui.filter.BetweenCtrl = function($scope) {
 
 /**
  * clean up
+ *
  * @private
  */
 os.ui.filter.BetweenCtrl.prototype.onDestroy_ = function() {
@@ -68,6 +71,7 @@ os.ui.filter.BetweenCtrl.prototype.onDestroy_ = function() {
 
 /**
  * Run when the user changes the value
+ *
  * @export
  */
 os.ui.filter.BetweenCtrl.prototype.onChange = function() {

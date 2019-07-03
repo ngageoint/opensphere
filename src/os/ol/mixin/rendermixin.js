@@ -101,6 +101,7 @@ ol.render.canvas.PolygonReplay.prototype.drawMultiPolygon = function(multiPolygo
 /**
  * THIN-4636: The saga continues. We are now entirely replacing drawCircle because the other hack
  * sucked worse.
+ *
  * @param {ol.geom.Circle} circleGeometry
  * @param {ol.Feature} feature
  * @suppress {duplicate|accessControls}

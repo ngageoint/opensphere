@@ -5,6 +5,7 @@ goog.require('os.ui.Module');
 
 /**
  * The selected/highlighted node UI directive for column mappings
+ *
  * @return {angular.Directive}
  */
 os.ui.column.mapping.columnMappingNodeUIDirective = function() {
@@ -32,6 +33,7 @@ os.ui.Module.directive('columnmappingnodeui', [os.ui.column.mapping.columnMappin
 
 /**
  * Controller for selected/highlighted node UI for column mappings
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @constructor
@@ -48,6 +50,7 @@ os.ui.column.mapping.ColumnMappingNodeUICtrl = function($scope, $element) {
 
 /**
  * Prompt the user to remove the analytic from the application
+ *
  * @export
  */
 os.ui.column.mapping.ColumnMappingNodeUICtrl.prototype.tryRemove = function() {
@@ -78,6 +81,7 @@ os.ui.column.mapping.ColumnMappingNodeUICtrl.prototype.tryRemove = function() {
 
 /**
  * Removes the column mapping
+ *
  * @private
  */
 os.ui.column.mapping.ColumnMappingNodeUICtrl.prototype.remove_ = function() {
@@ -88,6 +92,7 @@ os.ui.column.mapping.ColumnMappingNodeUICtrl.prototype.remove_ = function() {
 
 /**
  * Edits the column mapping
+ *
  * @export
  */
 os.ui.column.mapping.ColumnMappingNodeUICtrl.prototype.edit = function() {

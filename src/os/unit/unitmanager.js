@@ -25,6 +25,7 @@ os.unit.UNITS = 'os.map.units';
 /**
  * Handles conversion between unit systems (metric, imperial, etc)
  * Provides formatting convenience functions
+ *
  * @extends {goog.events.EventTarget}
  * @constructor
  */
@@ -95,6 +96,7 @@ os.unit.UnitManager.prototype.getFullSystems = function() {
 
 /**
  * Retrieve the system currently applied in the application ('english', 'nautical, 'metric', etc)
+ *
  * @return {string}
  */
 os.unit.UnitManager.prototype.getSelectedSystem = function() {
@@ -115,6 +117,7 @@ os.unit.UnitManager.prototype.setSelectedSystem = function(system) {
 
 /**
  * Retrieve the application's default system ('metric')
+ *
  * @return {string}
  */
 os.unit.UnitManager.prototype.getBaseSystem = function() {
@@ -138,6 +141,7 @@ os.unit.UnitManager.prototype.getBaseSystem = function() {
  * 2. convert miles to meters
  * 3. convert meters to nautical miles
  * 4. convert nautical miles to nautical feet
+ *
  * @param {?string} unitType
  * @param {number} valueToConvert
  * @param {?string} multFromKey
@@ -180,6 +184,7 @@ os.unit.UnitManager.prototype.convert = function(unitType, valueToConvert, multF
 
 /**
  * Retrieve the application's base unit - the unit definition that acts as common ground for all conversions.
+ *
  * @param {?string} unitType - the type of measurement being taken ('distance', etc)
  * @return {?os.unit.IUnit}
  */
@@ -189,17 +194,18 @@ os.unit.UnitManager.prototype.getBaseUnits = function(unitType) {
 
 
 /**
-* Convert the provided value into its best suitable unit multiplier (e.g.:feet vs. miles) in the current
-* selected system.
-* Return a human-readable string of the conversion.  If no suitable unit multiplier can be established, the
-* default multiplier for that unit is used.
-* @param {?string} unitType - the type of measurement ('distance', etc)
-* @param {number} value - the value to be converted and formatted
-* @param {?string} multFromKey - the key of the multiplier that <code>value</code> is currently specified in ('Km')
-* @param {?string} fromSystem - the system that <code>multiplierFromKey</code> belongs to
-* @param {number=} opt_fixed - optional, the number of decimal digits to use when formatting <code>value</code>
-* @return {string}
-*/
+ * Convert the provided value into its best suitable unit multiplier (e.g.:feet vs. miles) in the current
+ * selected system.
+ * Return a human-readable string of the conversion.  If no suitable unit multiplier can be established, the
+ * default multiplier for that unit is used.
+ *
+ * @param {?string} unitType - the type of measurement ('distance', etc)
+ * @param {number} value - the value to be converted and formatted
+ * @param {?string} multFromKey - the key of the multiplier that <code>value</code> is currently specified in ('Km')
+ * @param {?string} fromSystem - the system that <code>multiplierFromKey</code> belongs to
+ * @param {number=} opt_fixed - optional, the number of decimal digits to use when formatting <code>value</code>
+ * @return {string}
+ */
 os.unit.UnitManager.prototype.formatToBestFit = function(unitType, value, multFromKey, fromSystem, opt_fixed) {
   // convert incoming value to application's base
   var baseMultiplKey = this.getBaseUnits(unitType).getDefaultMultiplier().getName();
@@ -218,6 +224,7 @@ os.unit.UnitManager.prototype.formatToBestFit = function(unitType, value, multFr
 
 /**
  * Handle units setting change.
+ *
  * @param {os.events.SettingChangeEvent} event
  * @private
  */

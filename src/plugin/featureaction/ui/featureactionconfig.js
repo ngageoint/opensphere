@@ -8,6 +8,7 @@ goog.require('os.ui.window.confirmDirective');
 
 /**
  * Base controller for configuring a feature action.
+ *
  * @param {!angular.Scope} $scope The Angular scope.
  * @param {!angular.JQLite} $element The root DOM element.
  * @extends {goog.Disposable}
@@ -69,6 +70,7 @@ plugin.im.action.feature.ui.ActionConfigCtrl.prototype.disposeInternal = functio
 
 /**
  * Initialize the UI from the action.
+ *
  * @protected
  */
 plugin.im.action.feature.ui.ActionConfigCtrl.prototype.initialize = function() {

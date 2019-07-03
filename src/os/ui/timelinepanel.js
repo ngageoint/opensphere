@@ -13,6 +13,7 @@ goog.require('os.ui.timeline.AbstractTimelineCtrl');
 
 /**
  * The timeline-panel directive
+ *
  * @return {angular.Directive}
  */
 os.ui.timelinePanelDirective = function() {
@@ -42,6 +43,7 @@ os.ui.resizeMap = 'resizeMap';
 
 /**
  * Controller function for the timeline-panel directive.
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$timeout} $timeout
@@ -86,6 +88,7 @@ os.ui.TimelinePanelCtrl.prototype.destroy = function() {
 
 /**
  * Toggle new layers into the animation state.
+ *
  * @param {os.events.LayerEvent} event
  * @private
  */
@@ -141,6 +144,7 @@ os.ui.TimelinePanelCtrl.prototype.releaseControl = function() {
 
 /**
  * Toggles all vector sources into the specified animation state, or a specific source if provided.
+ *
  * @param {boolean} value
  * @param {(os.source.Vector|os.layer.AnimatedTile)=} opt_target
  * @private
@@ -176,6 +180,7 @@ os.ui.TimelinePanelCtrl.prototype.getSettingsTemplate = function() {
 
 /**
  * Launches the timeline settings dialog
+ *
  * @export
  */
 os.ui.TimelinePanelCtrl.prototype.settings = function() {
@@ -209,6 +214,7 @@ os.ui.TimelinePanelCtrl.prototype.getAnimationSettingsTemplate = function() {
 
 /**
  * Launches the animation settings dialog
+ *
  * @export
  */
 os.ui.TimelinePanelCtrl.prototype.animationSettings = function() {
@@ -244,6 +250,7 @@ os.ui.TimelinePanelCtrl.prototype.adjust = function() {
 
 /**
  * Panel lock button click.
+ *
  * @export
  */
 os.ui.TimelinePanelCtrl.prototype.lock = function() {

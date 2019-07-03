@@ -19,6 +19,7 @@ goog.require('os.ui.window');
 
 /**
  * The edit feature action directive.
+ *
  * @return {angular.Directive}
  */
 plugin.im.action.feature.ui.editFeatureActionDirective = function() {
@@ -36,6 +37,7 @@ os.ui.Module.directive('editfeatureaction', [plugin.im.action.feature.ui.editFea
 
 /**
  * Controller for the edit feature action window.
+ *
  * @param {!angular.Scope} $scope The Angular scope.
  * @param {!angular.JQLite} $element The root DOM element.
  * @extends {os.ui.im.action.EditFilterActionCtrl}
@@ -67,6 +69,7 @@ plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.onDestroy = function
 
 /**
  * Show a preview of the actions selected
+ *
  * @export
  */
 plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.showActionPreview = function() {
@@ -91,6 +94,7 @@ plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.showActionPreview = 
 
 /**
  * Create the preview for a selected sound
+ *
  * @param {plugin.im.action.feature.SoundAction} soundAction
  */
 plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.buildSoundPreview = function(soundAction) {
@@ -105,6 +109,7 @@ plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.buildSoundPreview = 
 
 /**
  * Create the preview for a style action
+ *
  * @param {plugin.im.action.feature.StyleAction} styleAction
  */
 plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.buildStylePreview = function(styleAction) {
@@ -150,7 +155,7 @@ plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.buildStylePreview = 
         // include the center point if it was selected
         if (includeCenter) {
           var centerConfig = config['centerShape'] ? os.style.SHAPES[config['centerShape']] :
-              os.style.SHAPES[os.style.DEFAULT_CENTER_SHAPE];
+            os.style.SHAPES[os.style.DEFAULT_CENTER_SHAPE];
           // have to clone this since we are modifying things in it - otherwise, it interferes
           // with the actual action
           var c = /** @type {!Object} */ (os.object.unsafeClone(centerConfig));
@@ -204,6 +209,7 @@ plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.buildStylePreview = 
 
 /**
  * Create the preview for a label action
+ *
  * @param {plugin.im.action.feature.LabelAction} labelAction
  */
 plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.buildLabelPreview = function(labelAction) {
@@ -270,6 +276,7 @@ plugin.im.action.feature.ui.EditFeatureActionCtrl.prototype.buildLabelPreview = 
 
 /**
  * Handler for when we receive notice that an image loaded
+ *
  * @this ol.style.Image
  * @private
  */
@@ -284,6 +291,7 @@ plugin.im.action.feature.ui.onImageChange_ = function() {
 
 /**
  * Create/edit a feature action entry. If no entry is provided, a new one will be created.
+ *
  * @param {string} type The entry type.
  * @param {Array} columns The filter columns.
  * @param {function(os.im.action.FilterActionEntry<T>)} callback The callback to fire when the entry is ready.

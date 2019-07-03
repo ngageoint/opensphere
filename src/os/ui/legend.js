@@ -12,6 +12,7 @@ goog.require('os.ui.events.UIEvent');
 
 /**
  * The legend directive
+ *
  * @return {angular.Directive}
  */
 os.ui.legendDirective = function() {
@@ -37,6 +38,7 @@ os.ui.Module.directive('legendguide', [os.ui.legendDirective]);
 
 /**
  * Controller function for the legend directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @extends {os.data.SourceManager}
@@ -225,6 +227,7 @@ os.ui.LegendCtrl.prototype.onUpdateDelay = function() {
 
 /**
  * Draws the legend.
+ *
  * @private
  */
 os.ui.LegendCtrl.prototype.drawLegend_ = function() {
@@ -242,6 +245,7 @@ os.ui.LegendCtrl.prototype.drawLegend_ = function() {
 
 /**
  * Handle a layer being added to the map.
+ *
  * @param {os.events.LayerEvent} event The layer event
  * @private
  */
@@ -256,6 +260,7 @@ os.ui.LegendCtrl.prototype.onLayerAdded_ = function(event) {
 
 /**
  * Handle a layer being remove from the map.
+ *
  * @param {os.events.LayerEvent} event The layer event
  * @private
  */
@@ -270,6 +275,7 @@ os.ui.LegendCtrl.prototype.onLayerRemoved_ = function(event) {
 
 /**
  * Registers change listener on a layer.
+ *
  * @param {os.layer.ILayer} layer
  * @private
  */
@@ -284,6 +290,7 @@ os.ui.LegendCtrl.prototype.addLayerListener_ = function(layer) {
 
 /**
  * Removes change listener on a layer.
+ *
  * @param {os.layer.ILayer} layer
  * @private
  */
@@ -298,6 +305,7 @@ os.ui.LegendCtrl.prototype.removeLayerListener_ = function(layer) {
 
 /**
  * Handle property change events from a source.
+ *
  * @param {os.events.PropertyChangeEvent|ol.Object.Event} event
  * @protected
  */
@@ -320,6 +328,7 @@ os.ui.LegendCtrl.prototype.onTilePropertyChange = function(event) {
 
 /**
  * Drag start handler. Fires a start event in case the parent needs to take action.
+ *
  * @param {?Object} event
  * @param {?Object} ui
  * @private
@@ -333,6 +342,7 @@ os.ui.LegendCtrl.prototype.onDragStart_ = function(event, ui) {
 
 /**
  * Drag end handler. Fires an end event in case the parent needs to take action.
+ *
  * @param {?Object} event
  * @param {?Object} ui
  * @private
@@ -358,6 +368,7 @@ os.ui.LegendCtrl.prototype.onDragStop_ = function(event, ui) {
 
 /**
  * Saves the legend position to settings.
+ *
  * @private
  */
 os.ui.LegendCtrl.prototype.savePosition_ = function() {
@@ -377,6 +388,7 @@ os.ui.LegendCtrl.prototype.savePosition_ = function() {
 
 /**
  * Handles viewport/legend resize
+ *
  * @param {goog.events.Event=} opt_e
  * @private
  */
@@ -433,6 +445,7 @@ os.ui.LegendCtrl.prototype.positionLegend_ = function(opt_e) {
 
 /**
  * Open legend settings.
+ *
  * @export
  */
 os.ui.LegendCtrl.prototype.openSettings = function() {
@@ -445,6 +458,7 @@ os.ui.LegendCtrl.prototype.openSettings = function() {
 
 /**
  * Open legend settings.
+ *
  * @export
  */
 os.ui.LegendCtrl.prototype.close = function() {

@@ -11,6 +11,7 @@ goog.require('plugin.track.menu');
 
 /**
  * Provides the ability to create tracks that can be animated over time.
+ *
  * @extends {os.plugin.AbstractPlugin}
  * @constructor
  */

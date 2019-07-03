@@ -5,6 +5,7 @@ goog.require('os.ui.Module');
 
 /**
  * The geo directive, for position input validation.
+ *
  * @return {angular.Directive}
  */
 os.ui.geo.geoDirective = function() {
@@ -17,6 +18,7 @@ os.ui.geo.geoDirective = function() {
 
 /**
  * Link function for the geo directive.
+ *
  * @param {!angular.Scope} scope The scope
  * @param {!angular.JQLite} elm The element
  * @param {Object} attrs Directive attributes

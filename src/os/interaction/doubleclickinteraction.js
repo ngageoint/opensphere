@@ -16,6 +16,7 @@ goog.require('os.ui.feature.multiFeatureInfoDirective');
 
 /**
  * Handles the behavior of double clicking on a feature.
+ *
  * @constructor
  * @extends {ol.interaction.Interaction}
  * @implements {os.I3DSupport}

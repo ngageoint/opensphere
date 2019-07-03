@@ -37,6 +37,7 @@ os.events.PayloadEvent.prototype.target;
 
 /**
  * Gets the payload.
+ *
  * @return {?string}
  */
 os.events.PayloadEvent.prototype.getPayload = function() {
@@ -46,6 +47,7 @@ os.events.PayloadEvent.prototype.getPayload = function() {
 
 /**
  * Sets the payload.
+ *
  * @param {T} value The payload to set.
  */
 os.events.PayloadEvent.prototype.setPayload = function(value) {

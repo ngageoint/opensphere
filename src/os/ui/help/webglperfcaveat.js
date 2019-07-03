@@ -8,6 +8,7 @@ goog.require('os.ui.window');
 
 /**
  * The webglsupport directive
+ *
  * @return {angular.Directive}
  */
 os.ui.help.webGLPerfCaveatDirective = function() {
@@ -26,6 +27,7 @@ os.ui.Module.directive('webglperfcaveat', [os.ui.help.webGLPerfCaveatDirective])
 
 /**
  * Launches a dialog telling the user their browser is terrible.
+ *
  * @param {string=} opt_title The window title
  * @param {function()=} opt_overrideCallback The function to call if user decides to override
  */

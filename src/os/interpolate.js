@@ -319,6 +319,7 @@ os.interpolate.tmpTransforms_ = null;
 
 /**
  * Updates the transform cache
+ *
  * @suppress {accessControls}
  */
 os.interpolate.updateTransforms = function() {

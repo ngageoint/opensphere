@@ -7,6 +7,7 @@ goog.require('os.ui.state.menu');
 
 /**
  * The window button directive
+ *
  * @return {angular.Directive}
  */
 os.ui.stateButtonDirective = function() {
@@ -32,6 +33,7 @@ os.ui.Module.directive('stateButton', [os.ui.stateButtonDirective]);
 
 /**
  * Controller function for the nav-top directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element The element
  * @extends {os.ui.menu.MenuButtonCtrl}

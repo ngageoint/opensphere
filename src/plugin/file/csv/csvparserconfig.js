@@ -8,6 +8,7 @@ goog.require('plugin.file.csv.CSVParser');
 
 /**
  * Configuration for a CSV parser.
+ *
  * @extends {os.parse.csv.CsvParserConfig.<ol.Feature>}
  * @constructor
  */

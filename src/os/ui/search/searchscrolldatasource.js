@@ -50,6 +50,7 @@ goog.inherits(os.ui.search.SearchScrollDataSource, goog.events.EventTarget);
 
 /**
  * Set the data source which will execute the search
+ *
  * @param {os.search.SearchManager} dataSource
  */
 os.ui.search.SearchScrollDataSource.prototype.setDataSource = function(dataSource) {
@@ -93,6 +94,7 @@ os.ui.search.SearchScrollDataSource.prototype.setDataSource = function(dataSourc
 
 /**
  * The search term used to update results
+ *
  * @param {string} term
  */
 os.ui.search.SearchScrollDataSource.prototype.setTerm = function(term) {
@@ -153,6 +155,7 @@ os.ui.search.SearchScrollDataSource.prototype.isLoading = function() {
 
 /**
  * Handle search success by extracting results and making them available to clients
+ *
  * @param {os.search.SearchEvent} event
  */
 os.ui.search.SearchScrollDataSource.prototype.handleSearchStart = function(event) {
@@ -162,6 +165,7 @@ os.ui.search.SearchScrollDataSource.prototype.handleSearchStart = function(event
 
 /**
  * Handle search success by extracting results and making them available to clients
+ *
  * @param {os.search.SearchEvent} event
  */
 os.ui.search.SearchScrollDataSource.prototype.handleSearchSuccess = function(event) {
@@ -186,6 +190,7 @@ os.ui.search.SearchScrollDataSource.prototype.handleSearchSuccess = function(eve
 
 /**
  * Handle search failure by extracting results and making them available to clients
+ *
  * @param {os.search.SearchEvent} event
  */
 os.ui.search.SearchScrollDataSource.prototype.handleSearchFailure = function(event) {

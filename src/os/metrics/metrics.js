@@ -33,6 +33,7 @@ os.metrics.MetricsEventType = {
 
 /**
  * Maintains all application metrics for a user.
+ *
  * @extends {goog.events.EventTarget}
  * @constructor
  */
@@ -123,6 +124,7 @@ os.metrics.Metrics.prototype.disposeInternal = function() {
 
 /**
  * If metrics are enabled in the application.
+ *
  * @return {boolean}
  */
 os.metrics.Metrics.prototype.isEnabled = function() {
@@ -132,6 +134,7 @@ os.metrics.Metrics.prototype.isEnabled = function() {
 
 /**
  * Returns the metric provider, if configured. Defaults to graphite.
+ *
  * @private
  * @return {?os.metrics.IMetricServiceProvider}
  */
@@ -146,6 +149,7 @@ os.metrics.Metrics.prototype.getMetricProvider_ = function() {
 
 /**
  * Returns the logging provider, if configured.
+ *
  * @param {?os.metrics.IMetricServiceProvider} provider
  */
 os.metrics.Metrics.prototype.setMetricProvider = function(provider) {
@@ -155,6 +159,7 @@ os.metrics.Metrics.prototype.setMetricProvider = function(provider) {
 
 /**
  * Persists metrics before the application unloads.
+ *
  * @private
  */
 os.metrics.Metrics.prototype.onBeforeUnload_ = function() {
@@ -174,6 +179,7 @@ os.metrics.Metrics.prototype.onBeforeUnload_ = function() {
  * necessary  to call save after changes to the same object. However,
  * if the object reference is reset, it will need to be
  * re-saved.
+ *
  * @param {*=} opt_e The optional event parameter
  */
 os.metrics.Metrics.prototype.save = function(opt_e) {
@@ -217,6 +223,7 @@ os.metrics.Metrics.prototype.reset = function() {
 
 /**
  * Get the current value for a metric.
+ *
  * @param {string} key A period-delimited metric key (ie, one.two.three)
  * @return {number} A deferred that resolves to the value
  */
@@ -235,6 +242,7 @@ os.metrics.Metrics.prototype.getMetric = function(key) {
 
 /**
  * Get the current value for a metric.
+ *
  * @param {string} key A period-delimited metric key (ie, one.two.three)
  * @return {boolean} If the metric exists
  */
@@ -249,6 +257,7 @@ os.metrics.Metrics.prototype.hasMetric = function(key) {
 
 /**
  * Get the current value for a metric.
+ *
  * @param {string} key A period-delimited metric key (ie, one.two.three)
  * @param {Object} obj The metrics object to test
  * @return {boolean} If the metric exists
@@ -279,6 +288,7 @@ os.metrics.Metrics.prototype.hasMetric_ = function(key, obj) {
 
 /**
  * Update a metric value.
+ *
  * @param {?string} key A period-delimited metric key (ie, one.two.three)
  * @param {number} value
  */
@@ -327,6 +337,7 @@ os.metrics.Metrics.prototype.updateMetric = function(key, value) {
 
 /**
  * Records click events for elements with a metric attribute.
+ *
  * @param {Object} args event arguments
  */
 os.metrics.Metrics.prototype.recordClickEvent = function(args) {
@@ -421,6 +432,7 @@ os.metrics.MIN_REGEXP = /^min-/;
 
 /**
  * Merges metrics objects, taking min/max values into account.
+ *
  * @param {Object} from The metrics object to merge
  * @param {Object} to The metrics object to merge into
  */

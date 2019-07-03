@@ -10,6 +10,7 @@ goog.require('plugin.heatmap.Heatmap');
 
 /**
  * Config for a layer containing heatmap data.
+ *
  * @extends {os.layer.config.AbstractLayerConfig}
  * @constructor
  * @template T

@@ -10,6 +10,7 @@ goog.require('os.ui.data.DescriptorNode');
 
 /**
  * Generic descriptor-based provider
+ *
  * @abstract
  * @extends {os.ui.data.BaseProvider}
  * @constructor
@@ -23,6 +24,7 @@ goog.inherits(os.ui.data.DescriptorProvider, os.ui.data.BaseProvider);
 
 /**
  * Adds a descriptor to the provider.
+ *
  * @param {T} descriptor
  * @param {boolean=} opt_enable If the descriptor should be activated.
  * @param {boolean=} opt_dedup Whether to check if the descriptor already exists.
@@ -56,6 +58,7 @@ os.ui.data.DescriptorProvider.prototype.addDescriptor = function(descriptor, opt
 
 /**
  * Remove the descriptor from the provider.
+ *
  * @param {T} descriptor The descriptor
  * @param {boolean=} opt_clear If data should be cleared on the descriptor
  * @template T
@@ -79,6 +82,7 @@ os.ui.data.DescriptorProvider.prototype.removeDescriptor = function(descriptor, 
 
 /**
  * Get the descriptors registered to this provider.
+ *
  * @return {!Array.<T>} The descriptors
  */
 os.ui.data.DescriptorProvider.prototype.getDescriptors = function() {

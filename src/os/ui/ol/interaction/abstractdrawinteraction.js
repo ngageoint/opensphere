@@ -41,7 +41,7 @@ os.ui.ol.interaction.AbstractDraw = function(opt_options) {
    * @protected
    */
   this.condition = opt_options !== undefined && opt_options.condition !== undefined ?
-      opt_options.condition : ol.events.condition.shiftKeyOnly;
+    opt_options.condition : ol.events.condition.shiftKeyOnly;
 
   /**
    * @type {string}
@@ -120,6 +120,7 @@ os.ui.ol.interaction.AbstractDraw.prototype.getType = function() {
 
 /**
  * Create a easy way to override type checking (for dragzoominteraction)
+ *
  * @param {string} type
  * @return {boolean}
  */
@@ -230,6 +231,7 @@ os.ui.ol.interaction.AbstractDraw.prototype.handleEvent = function(mapBrowserEve
 
 /**
  * Begins drawing
+ *
  * @param {ol.MapBrowserEvent} mapBrowserEvent
  * @protected
  */
@@ -250,6 +252,7 @@ os.ui.ol.interaction.AbstractDraw.prototype.begin = function(mapBrowserEvent) {
 
 /**
  * Updates the drawn feature
+ *
  * @param {ol.MapBrowserEvent} mapBrowserEvent
  * @protected
  */
@@ -259,6 +262,7 @@ os.ui.ol.interaction.AbstractDraw.prototype.update = function(mapBrowserEvent) {
 
 /**
  * Ends drawing
+ *
  * @param {ol.MapBrowserEvent} mapBrowserEvent
  * @protected
  */
@@ -281,6 +285,7 @@ os.ui.ol.interaction.AbstractDraw.prototype.end = function(mapBrowserEvent) {
 
 /**
  * Cancels a drawing
+ *
  * @protected
  */
 os.ui.ol.interaction.AbstractDraw.prototype.cancel = function() {
@@ -295,6 +300,7 @@ os.ui.ol.interaction.AbstractDraw.prototype.cancel = function() {
 
 /**
  * Cleanup
+ *
  * @protected
  */
 os.ui.ol.interaction.AbstractDraw.prototype.cleanup = function() {
@@ -311,6 +317,7 @@ os.ui.ol.interaction.AbstractDraw.prototype.cleanup = function() {
 
 /**
  * Handles key events while drawing
+ *
  * @param {goog.events.KeyEvent} event
  * @protected
  */

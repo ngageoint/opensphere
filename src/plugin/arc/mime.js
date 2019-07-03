@@ -14,7 +14,7 @@ goog.require('plugin.arc');
  */
 plugin.arc.mime.detectArc = function(buffer, file, opt_context) {
   var content = typeof opt_context === 'string' ? opt_context :
-      /** @type {os.file.mime.xml.Context} */ (opt_context.content);
+  /** @type {os.file.mime.xml.Context} */ (opt_context.content);
   return /** @type {!goog.Promise<*|undefined>} */ (goog.Promise.resolve((content &&
     plugin.arc.CONTENT_REGEXP.test(content)) ||
     (file && file.getUrl() && plugin.arc.URI_REGEXP.test(file.getUrl()))));

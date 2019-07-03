@@ -12,6 +12,7 @@ goog.require('os.ui.window');
 
 /**
  * A directive to display the help menu
+ *
  * @return {angular.Directive}
  */
 os.ui.help.controlsDirective = function() {
@@ -35,6 +36,7 @@ os.ui.Module.directive('controlshelp', [os.ui.help.controlsDirective]);
 
 /**
  * Display the controls for this application
+ *
  * @param {!angular.Scope} $scope
  * @constructor
  * @ngInject
@@ -88,6 +90,7 @@ os.ui.help.ControlsCtrl.launch = function() {
 
 /**
  * Get the key text
+ *
  * @param {goog.events.KeyCodes} key
  * @return {string}
  * @export
@@ -103,6 +106,7 @@ os.ui.help.ControlsCtrl.prototype.getKey = function(key) {
 
 /**
  * Get the key text
+ *
  * @param {string} other
  * @return {?string}
  * @export
@@ -118,6 +122,7 @@ os.ui.help.ControlsCtrl.prototype.getMouse = function(other) {
 
 /**
  * Get the key text
+ *
  * @param {string} other
  * @return {?string}
  * @export
@@ -133,6 +138,7 @@ os.ui.help.ControlsCtrl.prototype.getFont = function(other) {
 
 /**
  * Get the key text
+ *
  * @param {string} other
  * @return {?string}
  * @export
@@ -149,6 +155,7 @@ os.ui.help.ControlsCtrl.prototype.getFontClass = function(other) {
 
 /**
  * Singleton for application to add controls
+ *
  * @constructor
  */
 os.ui.help.Controls = function() {
@@ -245,6 +252,7 @@ os.ui.help.Controls.prototype.getControls = function() {
 
 /**
  * Allow application to add controls
+ *
  * @param {string} section
  * @param {number} order
  * @param {string} text

@@ -66,6 +66,7 @@ goog.inherits(plugin.ogc.ui.OGCLayerNodeUICtrl, os.ui.node.DefaultLayerNodeUICtr
 
 /**
  * Launch the time column chooser for the layer
+ *
  * @export
  */
 plugin.ogc.ui.OGCLayerNodeUICtrl.prototype.chooseTime = function() {

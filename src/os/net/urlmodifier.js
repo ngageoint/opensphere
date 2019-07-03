@@ -6,6 +6,7 @@ goog.require('os.net.AbstractModifier');
 
 /**
  * URI parameter replacement modifier.
+ *
  * @extends {os.net.AbstractModifier}
  * @constructor
  */

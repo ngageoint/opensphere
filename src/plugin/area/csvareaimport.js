@@ -13,6 +13,7 @@ goog.require('plugin.file.csv.CSVParser');
 
 /**
  * Controller for the CSV import wizard window
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$timeout} $timeout
@@ -44,6 +45,7 @@ plugin.area.CSVAreaImportCtrl.prototype.finish = function() {
 
 /**
  * Success callback for importing data. Adds the areas to Area Manager
+ *
  * @param {goog.events.Event} event
  * @private
  */
@@ -63,6 +65,7 @@ plugin.area.CSVAreaImportCtrl.prototype.onImportComplete_ = function(event) {
 
 /**
  * The CSV import wizard directive.
+ *
  * @return {angular.Directive}
  */
 plugin.area.csvAreaImportDirective = function() {

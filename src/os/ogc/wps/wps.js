@@ -29,6 +29,7 @@ os.ogc.wps.WPSParams = {
 /**
  * This method preserves the parameter capitalization since some OGC servers do not implement the OGC spec and use
  * case-sensitive parameters.
+ *
  * @param {!goog.Uri.QueryData} params The params object
  * @param {string} key The key
  * @param {*} value The value

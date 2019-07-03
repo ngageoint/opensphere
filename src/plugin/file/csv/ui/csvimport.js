@@ -14,6 +14,7 @@ goog.require('plugin.file.csv.CSVProvider');
 
 /**
  * Controller for the CSV import wizard window
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$timeout} $timeout
@@ -62,6 +63,7 @@ plugin.file.csv.ui.CSVImportCtrl.prototype.updateFromConfig = function(descripto
 
 /**
  * The CSV import wizard directive.
+ *
  * @return {angular.Directive}
  */
 plugin.file.csv.ui.csvImportDirective = function() {

@@ -8,6 +8,7 @@ goog.require('os.ui.slick.SlickTreeNode');
 
 /**
  * Groups layers by provider
+ *
  * @extends {os.data.groupby.BaseGroupBy}
  * @constructor
  */

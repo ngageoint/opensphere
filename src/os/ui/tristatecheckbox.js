@@ -6,6 +6,7 @@ goog.require('os.ui.Module');
 
 /**
  * The slick tree directive
+ *
  * @return {angular.Directive}
  */
 os.ui.triStateCheckboxDirective = function() {
@@ -30,6 +31,7 @@ os.ui.Module.directive('tristatecheckbox', [os.ui.triStateCheckboxDirective]);
 
 /**
  * Controller for tri-state checkbox
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @constructor
@@ -59,6 +61,7 @@ os.ui.TriStateCheckboxCtrl = function($scope, $element) {
 
 /**
  * Clean up references
+ *
  * @private
  */
 os.ui.TriStateCheckboxCtrl.prototype.destroy_ = function() {
@@ -69,6 +72,7 @@ os.ui.TriStateCheckboxCtrl.prototype.destroy_ = function() {
 
 /**
  * Toggles the state on the scope
+ *
  * @param {MouseEvent} e The event
  * @export
  */
@@ -78,7 +82,7 @@ os.ui.TriStateCheckboxCtrl.prototype.toggle = function(e) {
     if (!this.getDisabled_(item)) {
       // on/both should toggle to the off state
       item.setState(item.getState() == os.structs.TriState.OFF ?
-          os.structs.TriState.ON : os.structs.TriState.OFF);
+        os.structs.TriState.ON : os.structs.TriState.OFF);
 
       this.notifyDirty_();
     }
@@ -90,6 +94,7 @@ os.ui.TriStateCheckboxCtrl.prototype.toggle = function(e) {
 
 /**
  * Toggles the state on the scope
+ *
  * @param {MouseEvent} e The event
  * @export
  */
@@ -103,6 +108,7 @@ os.ui.TriStateCheckboxCtrl.prototype.onDblClick = function(e) {
 
 /**
  * Gets whether the checkbox is enabled.
+ *
  * @param {?os.structs.TriStateTreeNode} item
  * @return {boolean}
  * @private
@@ -114,6 +120,7 @@ os.ui.TriStateCheckboxCtrl.prototype.getDisabled_ = function(item) {
 
 /**
  * Fire a dirty event on the scope to update parents.
+ *
  * @private
  */
 os.ui.TriStateCheckboxCtrl.prototype.notifyDirty_ = function() {

@@ -92,6 +92,7 @@ os.ui.list.remove = function(id, markup) {
 
 /**
  * Remove a list by ID.
+ *
  * @param {string} id The list ID to remove
  */
 os.ui.list.removeList = function(id) {
@@ -118,6 +119,7 @@ os.ui.list.removeList = function(id) {
 
 /**
  * Copy a list under a new ID.
+ *
  * @param {string} sourceId The original list ID.
  * @param {string} targetId The new list ID.
  */
@@ -155,6 +157,7 @@ os.ui.list.get = function(id) {
 
 /**
  * Checks to see if the markup already exists in the list
+ *
  * @param {string} id The list ID to which to check
  * @param {string} markup The directive or markup to check
  * @return {boolean} if the markup was found or not
@@ -224,6 +227,7 @@ os.ui.listLink = function(scope, element, attr, ctrl) {
 
 /**
  * Controller for the list directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$compile} $compile
@@ -280,6 +284,7 @@ os.ui.ListCtrl = function($scope, $element, $compile) {
 
 /**
  * Cleanup
+ *
  * @private
  */
 os.ui.ListCtrl.prototype.onDestroy_ = function() {
@@ -298,6 +303,7 @@ os.ui.ListCtrl.prototype.onDestroy_ = function() {
 
 /**
  * Handles list change
+ *
  * @param {os.events.PropertyChangeEvent} evt The list change event
  * @protected
  */
@@ -317,6 +323,7 @@ os.ui.ListCtrl.prototype.onChange = function(evt) {
 
 /**
  * Updates the displayed UI
+ *
  * @private
  */
 os.ui.ListCtrl.prototype.update_ = function() {

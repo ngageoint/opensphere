@@ -11,6 +11,7 @@ goog.require('plugin.suncalc.SunCalcCtrl');
 
 /**
  * The LightStrip directive
+ *
  * @return {angular.Directive}
  */
 plugin.suncalc.lightStripDirective = function() {
@@ -32,6 +33,7 @@ os.ui.Module.directive('lightstrip', [plugin.suncalc.lightStripDirective]);
 
 /**
  * Controller function for the LightStrip directive
+ *
  * @param {!angular.Scope} $scope The scope
  * @param {!angular.JQLite} $element The element
  * @constructor
@@ -94,6 +96,7 @@ plugin.suncalc.LightStripCtrl = function($scope, $element) {
 
 /**
  * Clean up
+ *
  * @private
  */
 plugin.suncalc.LightStripCtrl.prototype.destroy_ = function() {
@@ -120,6 +123,7 @@ plugin.suncalc.LightStripCtrl.prototype.destroy_ = function() {
 
 /**
  * Handle changes to the dusk calculation setting.
+ *
  * @private
  */
 plugin.suncalc.LightStripCtrl.prototype.onDuskModeChange_ = function() {
@@ -129,6 +133,7 @@ plugin.suncalc.LightStripCtrl.prototype.onDuskModeChange_ = function() {
 
 /**
  * Update the length of events within the light script
+ *
  * @private
  */
 plugin.suncalc.LightStripCtrl.prototype.setDuskEventCalculation_ = function() {
@@ -169,6 +174,7 @@ plugin.suncalc.LightStripCtrl.prototype.setDuskEventCalculation_ = function() {
 
 /**
  * Update the light strip.
+ *
  * @param {goog.events.Event=} opt_evt The event
  * @return {boolean} If the update succeeded.
  * @private

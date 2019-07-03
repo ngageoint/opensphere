@@ -14,6 +14,7 @@ goog.require('os.ui.ogc.IOGCDescriptor');
 
 /**
  * The filterimport directive
+ *
  * @return {angular.Directive}
  */
 os.ui.filter.im.filterImportDirective = function() {
@@ -48,6 +49,7 @@ os.ui.Module.directive('filterimport', [os.ui.filter.im.filterImportDirective]);
 
 /**
  * Controller function for the filterimport directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$sce} $sce
@@ -161,6 +163,7 @@ os.ui.filter.im.FilterImportCtrl = function($scope, $element, $sce) {
 
 /**
  * Clean up.
+ *
  * @private
  */
 os.ui.filter.im.FilterImportCtrl.prototype.destroy_ = function() {
@@ -172,6 +175,7 @@ os.ui.filter.im.FilterImportCtrl.prototype.destroy_ = function() {
 
 /**
  * Get the parser.
+ *
  * @return {!os.parse.IParser} The parser.
  * @protected
  */
@@ -182,6 +186,7 @@ os.ui.filter.im.FilterImportCtrl.prototype.getParser = function() {
 
 /**
  * Creates the parser and starts the import.
+ *
  * @private
  */
 os.ui.filter.im.FilterImportCtrl.prototype.init_ = function() {
@@ -195,6 +200,7 @@ os.ui.filter.im.FilterImportCtrl.prototype.init_ = function() {
 
 /**
  * Handles parse/import completion.
+ *
  * @param {goog.events.Event} event
  * @protected
  */
@@ -292,6 +298,7 @@ os.ui.filter.im.FilterImportCtrl.prototype.onImportComplete = function(event) {
 
 /**
  * Gets a filter model for the UI.
+ *
  * @param {string} title
  * @param {os.filter.IFilterEntry} filter
  * @param {string} tooltip
@@ -312,6 +319,7 @@ os.ui.filter.im.FilterImportCtrl.prototype.getFilterModel = function(title, filt
 
 /**
  * Get the tooltip to display for a filter entry.
+ *
  * @param {!os.filter.IFilterEntry} entry The filter entry.
  * @return {string}
  * @protected
@@ -323,6 +331,7 @@ os.ui.filter.im.FilterImportCtrl.prototype.getFilterTooltip = function(entry) {
 
 /**
  * Gets a layer model for the UI.
+ *
  * @param {?string} layerTitle
  * @param {string} icons
  * @param {boolean} match
@@ -341,6 +350,7 @@ os.ui.filter.im.FilterImportCtrl.prototype.getLayerModel = function(layerTitle, 
 
 /**
  * Watcher for layer changes. Either requests the columns for the layer or moves forward with validation.
+ *
  * @param {os.ui.ogc.IOGCDescriptor} descriptor The layer descriptor.
  * @private
  */
@@ -371,6 +381,7 @@ os.ui.filter.im.FilterImportCtrl.prototype.onLayerChange_ = function(descriptor)
 
 /**
  * Handles feature type loading success.
+ *
  * @param {os.ui.ogc.IOGCDescriptor} descriptor The layer descriptor.
  * @private
  */
@@ -385,6 +396,7 @@ os.ui.filter.im.FilterImportCtrl.prototype.handleFeatureType_ = function(descrip
 
 /**
  * Tests the set of columns against each filter to determine if they match.
+ *
  * @private
  */
 os.ui.filter.im.FilterImportCtrl.prototype.testColumns_ = function() {
@@ -426,6 +438,7 @@ os.ui.filter.im.FilterImportCtrl.prototype.testColumns_ = function() {
 
 /**
  * Gets the list of filterable layer descriptors.
+ *
  * @return {!Array<!os.data.IDataDescriptor>}
  * @export
  */
@@ -436,6 +449,7 @@ os.ui.filter.im.FilterImportCtrl.prototype.getLayersFunction = function() {
 
 /**
  * Remove a layer from the import list.
+ *
  * @param {string} layerId The layer id.
  * @export
  */
@@ -453,6 +467,7 @@ os.ui.filter.im.FilterImportCtrl.prototype.removeLayer = function(layerId) {
 
 /**
  * Adds the set of not-matched filters that match the presently selected layer to the list of matched filters.
+ *
  * @export
  */
 os.ui.filter.im.FilterImportCtrl.prototype.addNotFound = function() {
@@ -503,6 +518,7 @@ os.ui.filter.im.FilterImportCtrl.prototype.addNotFound = function() {
 
 /**
  * Add the filters to the detected/chosen layers and close the window.
+ *
  * @export
  */
 os.ui.filter.im.FilterImportCtrl.prototype.finish = function() {
@@ -562,6 +578,7 @@ os.ui.filter.im.FilterImportCtrl.prototype.finish = function() {
 
 /**
  * Close the window and cancel the import.
+ *
  * @export
  */
 os.ui.filter.im.FilterImportCtrl.prototype.cancel = function() {
@@ -571,6 +588,7 @@ os.ui.filter.im.FilterImportCtrl.prototype.cancel = function() {
 
 /**
  * Get the filter icon class.
+ *
  * @return {string}
  * @export
  */
@@ -581,6 +599,7 @@ os.ui.filter.im.FilterImportCtrl.prototype.getFilterIcon = function() {
 
 /**
  * Get the text to display for the imported filter count.
+ *
  * @param {number=} opt_count The count, for determining the plurality.
  * @return {string}
  * @export
@@ -593,6 +612,7 @@ os.ui.filter.im.FilterImportCtrl.prototype.getFilterTitle = function(opt_count) 
 
 /**
  * Get the parent provider of a filterable, if available.
+ *
  * @param {!os.filter.IFilterable} filterable The filterable object.
  * @return {?string} The provider name, or null if not available.
  */
@@ -609,6 +629,7 @@ os.ui.filter.im.FilterImportCtrl.prototype.getProviderFromFilterable = function(
 
 /**
  * Gets as descriptive a title as possible from a filterable item.
+ *
  * @param {!os.filter.IFilterable} filterable
  * @param {string} type
  * @return {?string}
@@ -634,6 +655,7 @@ os.ui.filter.im.FilterImportCtrl.prototype.getTitleFromFilterable = function(fil
 
 /**
  * Gets icons from a filterable item.
+ *
  * @param {!os.filter.IFilterable} filterable
  * @return {string}
  */
@@ -657,6 +679,7 @@ os.ui.filter.im.FilterImportCtrl.prototype.getIconsFromFilterable = function(fil
 
 /**
  * Gets the total count of filters from a filter model or array of filter models
+ *
  * @param {(Object|Array<Object>)} filters The filters.
  * @param {number=} opt_count The current count.
  * @return {number} The total count.

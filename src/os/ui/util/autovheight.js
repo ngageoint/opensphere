@@ -112,6 +112,7 @@ os.ui.util.AutoVHeightCtrl = function($scope, $element) {
 
 /**
  * Clean up listeners/references.
+ *
  * @private
  */
 os.ui.util.AutoVHeightCtrl.prototype.onDestroy_ = function() {
@@ -150,6 +151,7 @@ os.ui.util.AutoVHeightCtrl.prototype.onDisable_ = function() {
 
 /**
  * Handle resize events from the parent or children.
+ *
  * @private
  */
 os.ui.util.AutoVHeightCtrl.prototype.onResize_ = function() {
@@ -179,6 +181,7 @@ os.ui.util.AutoVHeightCtrl.prototype.onResize_ = function() {
 
 /**
  * Add resize handlers to siblings
+ *
  * @private
  */
 os.ui.util.AutoVHeightCtrl.prototype.addResizeListeners_ = function() {
@@ -201,6 +204,7 @@ os.ui.util.AutoVHeightCtrl.prototype.addResizeListeners_ = function() {
 
 /**
  * Add resize handlers to siblings
+ *
  * @private
  */
 os.ui.util.AutoVHeightCtrl.prototype.removeResizeListeners_ = function() {

@@ -10,6 +10,7 @@ os.easing.EasingFunction;
 
 /**
  * Linear easing function
+ *
  * @param {number} t The current step (out of the total duration)
  * @param {number} b The start value or offset
  * @param {number} c The amount to change the start value
@@ -24,6 +25,7 @@ os.easing.easeLinear = function(t, b, c, d) {
 
 /**
  * Quintic easing function
+ *
  * @param {number} t The current step (out of the total duration)
  * @param {number} b The start value or offset
  * @param {number} c The amount to change the start value
@@ -39,6 +41,7 @@ os.easing.easeQuintic = function(t, b, c, d) {
 
 /**
  * Quartic easing function
+ *
  * @param {number} t The current step (out of the total duration)
  * @param {number} b The start value or offset
  * @param {number} c The amount to change the start value
@@ -57,6 +60,7 @@ os.easing.easeQuartic = function(t, b, c, d) {
 
 /**
  * Quartic easing function
+ *
  * @param {number} t The current step (out of the total duration)
  * @param {number} b The start value or offset
  * @param {number} c The amount to change the start value
@@ -75,6 +79,7 @@ os.easing.easeCubic = function(t, b, c, d) {
 
 /**
  * Exponential easing function
+ *
  * @param {number} t The current step (out of the total duration)
  * @param {number} b The start value or offset
  * @param {number} c The amount to change the start value
@@ -93,6 +98,7 @@ os.easing.easeExpo = function(t, b, c, d) {
 
 /**
  * Circular easing function (this is CircleIn, not CircleOut)
+ *
  * @param {number} t The current step (out of the total duration)
  * @param {number} b The start value or offset
  * @param {number} c The amount to change the start value
@@ -107,6 +113,7 @@ os.easing.easeCircular = function(t, b, c, d) {
 
 /**
  * Sinusoidal easing function
+ *
  * @param {number} t The current step (out of the total duration)
  * @param {number} b The start value or offset
  * @param {number} c The amount to change the start value

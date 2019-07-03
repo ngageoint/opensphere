@@ -32,6 +32,7 @@ os.search.ProviderResults;
 
 /**
  * Responsible for executing search terms against the registered searches
+ *
  * @extends {os.search.AbstractSearchManager}
  * @param {string=} opt_id
  * @constructor
@@ -98,6 +99,7 @@ os.search.SearchManager.SEARCH_ALL = 'Search All Sources';
 
 /**
  * Gets a search by its identifier.
+ *
  * @param {string} id The search identifier
  * @return {?os.search.ISearch}
  */
@@ -109,6 +111,7 @@ os.search.SearchManager.prototype.getSearch = function(id) {
 /**
  * Register a search implementation.
  * If no search is selected yet, assigns this search as selected.
+ *
  * @param {os.search.ISearch} search The search implementation
  */
 os.search.SearchManager.prototype.registerSearch = function(search) {
@@ -165,7 +168,7 @@ os.search.SearchManager.prototype.getEnabledSearches = function(opt_term) {
  * @inheritDoc
  */
 os.search.SearchManager.prototype.search = function(term, opt_start, opt_pageSize,
-    opt_sortBy, opt_force, opt_noFacets, opt_sortOrder) {
+  opt_sortBy, opt_force, opt_noFacets, opt_sortOrder) {
   this.setTerm(term);
   this.providerResults = {};
   this.results = [];
@@ -224,6 +227,7 @@ os.search.SearchManager.prototype.search = function(term, opt_start, opt_pageSiz
 
 /**
  * Generate a search key for search results
+ *
  * @param {os.search.ISearch} search
  * @return {string}
  */
@@ -234,6 +238,7 @@ os.search.SearchManager.prototype.getSearchKey = function(search) {
 
 /**
  * Handle search success event for a single search provider.
+ *
  * @param {os.search.SearchEvent} event
  * @private
  */
@@ -270,6 +275,7 @@ os.search.SearchManager.prototype.handleSearchSuccess_ = function(event) {
 
 /**
  * Sort results
+ *
  * @protected
  */
 os.search.SearchManager.prototype.sortResults = function() {
@@ -353,6 +359,7 @@ os.search.SearchManager.prototype.autocomplete = function(term, opt_maxResults) 
 
 /**
  * Handle autocomplete success event for a single search provider.
+ *
  * @param {os.search.SearchEvent} event
  * @private
  */
@@ -369,6 +376,7 @@ os.search.SearchManager.prototype.handleAutocompleteSuccess_ = function(event) {
 
 /**
  * Handle autocomplete failure event for a single search provider.
+ *
  * @param {os.search.SearchEvent} event
  * @private
  */
@@ -409,6 +417,7 @@ os.search.SearchManager.prototype.getResults = function(opt_limit) {
 
 /**
  * Get count of results
+ *
  * @param {number=} opt_limit
  * @return {number}
  * @export
@@ -438,6 +447,7 @@ os.search.SearchManager.prototype.isFederated = function() {
 
 /**
  * Normalizes the scores within the results
+ *
  * @param {Array<os.search.ISearchResult>} results
  * @protected
  */
