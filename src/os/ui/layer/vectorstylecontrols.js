@@ -107,9 +107,14 @@ os.ui.layer.VectorStyleControlsCtrl = function($scope, $element, $timeout) {
   $timeout(function() {
     this.select2_ = $element.find('.js-line-dash');
     this.select2_.select2({
+      'minimumResultsForSearch': -1,
       'placeholder': 'Line Dash Select',
       'formatSelection': formatter,
       'formatResult': formatter
+    }).on('select2-open', function(e) {
+      $('body').addClass('c-select2__no-padding');
+    }).on('select2-close', function(e) {
+      $('body').removeClass('c-select2__no-padding');
     });
   }.bind(this));
 
@@ -185,7 +190,7 @@ os.ui.layer.VectorStyleControlsCtrl.prototype.onLineDashChange = function() {
  */
 os.ui.layer.VectorStyleControlsCtrl.prototype.select2Formatter_ = function(item, ele) {
   if (item) {
-    var val = '<svg height="2" width="80"><g fill="none" stroke="white" stroke-width="3"><path ';
+    var val = '<svg height="2" width="80"><g class="c-vectorstylecontrol__borderdash"><path ';
     val = val + 'stroke-dasharray ="' + item['id'] + '" d= "M5 1 l215 0" /></g></svg>';
     return val;
   } else {
