@@ -64,12 +64,11 @@ os.ui.Module.directive('vectorstylecontrols', [os.ui.layer.vectorStyleControlsDi
  *
  * @param {!angular.Scope} $scope The Angular scope.
  * @param {!angular.JQLite} $element
- * @param {!angular.$timeout} $timeout
  * @extends {goog.Disposable}
  * @constructor
  * @ngInject
  */
-os.ui.layer.VectorStyleControlsCtrl = function($scope, $element, $timeout) {
+os.ui.layer.VectorStyleControlsCtrl = function($scope, $element) {
   os.ui.layer.VectorStyleControlsCtrl.base(this, 'constructor');
 
   /**
@@ -77,6 +76,13 @@ os.ui.layer.VectorStyleControlsCtrl = function($scope, $element, $timeout) {
    * @protected
    */
   this.scope = $scope;
+
+  /**
+   * The root DOM element.
+   * @type {?angular.JQLite}
+   * @protected
+   */
+  this.element = $element;
 
   if (this.scope['showIcon'] == null) {
     this.scope['showIcon'] = true;
@@ -104,25 +110,31 @@ os.ui.layer.VectorStyleControlsCtrl = function($scope, $element, $timeout) {
    */
   this.scope['lineDashOption'] = name ? name : this.scope['lineDashOptions'][1];
 
-  var formatter = this.select2Formatter_;
+  $scope.$on('$destroy', goog.bind(this.dispose, this));
+};
+goog.inherits(os.ui.layer.VectorStyleControlsCtrl, goog.Disposable);
 
-  $timeout(function() {
-    this.select2_ = $element.find('.js-line-dash');
+
+/**
+ * Initialize the controller after it has been linked.
+ *
+ * @export
+ */
+os.ui.layer.VectorStyleControlsCtrl.prototype.$postLink = function() {
+  if (this.element) {
+    this.select2_ = this.element.find('.js-line-dash');
     this.select2_.select2({
       'minimumResultsForSearch': -1,
       'placeholder': 'Line Dash Select',
-      'formatSelection': formatter,
-      'formatResult': formatter
-    }).on('select2-open', function(e) {
+      'formatSelection': this.select2Formatter_,
+      'formatResult': this.select2Formatter_
+    }).on('select2-open', function(e) { // toggle the padding for the select2
       $('body').addClass('c-select2__no-padding');
     }).on('select2-close', function(e) {
       $('body').removeClass('c-select2__no-padding');
     });
-  }.bind(this));
-
-  $scope.$on('$destroy', goog.bind(this.dispose, this));
+  }
 };
-goog.inherits(os.ui.layer.VectorStyleControlsCtrl, goog.Disposable);
 
 
 /**
@@ -130,6 +142,7 @@ goog.inherits(os.ui.layer.VectorStyleControlsCtrl, goog.Disposable);
  */
 os.ui.layer.VectorStyleControlsCtrl.prototype.disposeInternal = function() {
   this.scope = null;
+  this.element = null;
 };
 
 
