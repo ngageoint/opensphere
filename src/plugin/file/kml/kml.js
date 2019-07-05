@@ -166,6 +166,7 @@ plugin.file.kml.OL_PAIR_PARSERS = function() {
 
 /**
  * Accessor for private Openlayers code.
+ *
  * @return {Object<string, Object<string, ol.XmlParser>>}
  */
 plugin.file.kml.OL_PLACEMARK_PARSERS = function() {
