@@ -8,6 +8,7 @@ goog.require('os.ui.action.IActionTarget');
 
 /**
  * The interface for layers
+ *
  * @interface
  *
  * @extends {os.IPersistable}

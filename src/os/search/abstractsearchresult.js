@@ -5,6 +5,7 @@ goog.require('os.search.ISearchResult');
 
 /**
  * Base class for a search result.
+ *
  * @abstract
  * @param {T} result The result.
  * @param {number=} opt_score The result's score.

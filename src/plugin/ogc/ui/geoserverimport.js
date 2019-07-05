@@ -10,6 +10,7 @@ goog.require('plugin.ogc.GeoServer');
 
 /**
  * The geoserver import directive
+ *
  * @return {angular.Directive}
  */
 plugin.ogc.ui.geoserverDirective = function() {
@@ -32,6 +33,7 @@ os.ui.Module.directive('geoserver', [plugin.ogc.ui.geoserverDirective]);
 
 /**
  * Controller for the geoserver import dialog
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @extends {os.ui.SingleUrlProviderImportCtrl}
@@ -45,7 +47,7 @@ plugin.ogc.ui.GeoserverImportCtrl = function($scope, $element) {
   // regex handles URLs of the sort /geoserver(/stuff)/ows(/otherstuff), where it keeps (/stuff) intact, but removes
   // (/otherstuff) at the end of the URL
   $scope['config']['url'] = file ? file.getUrl().replace(/(\/geoserver|\/.*?gs)(\/.*)(web|ows)[#?\/].*$/, '/geoserver$1ows') :
-      this.getUrl();
+    this.getUrl();
   $scope['config']['type'] = 'geoserver';
 
   $scope['urlExample'] = 'http://www.example.com/geoserver/ows';

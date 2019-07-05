@@ -7,6 +7,7 @@ goog.require('os.ui.window');
 
 /**
  * A dialog with information about custom date/time formats, as implemented by Moment.js.
+ *
  * @return {angular.Directive}
  */
 os.ui.window.timeHelpDirective = function() {
@@ -52,6 +53,7 @@ os.ui.window.launchTimeHelp = function() {
 
 /**
  * Controller for date/time format help.
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @constructor
@@ -69,6 +71,7 @@ os.ui.window.TimeHelpCtrl = function($scope, $element) {
 
 /**
  * Clean up references.
+ *
  * @private
  */
 os.ui.window.TimeHelpCtrl.prototype.destroy_ = function() {
@@ -78,6 +81,7 @@ os.ui.window.TimeHelpCtrl.prototype.destroy_ = function() {
 
 /**
  * Close the window
+ *
  * @export
  */
 os.ui.window.TimeHelpCtrl.prototype.close = function() {

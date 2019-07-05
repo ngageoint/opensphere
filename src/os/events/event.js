@@ -5,6 +5,7 @@ goog.require('goog.events.Event');
 
 /**
  * Simple event extension designed to carry anything as a payload.
+ *
  * @param {string} type
  * @param {*=} opt_data
  * @extends {goog.events.Event}
@@ -24,6 +25,7 @@ goog.inherits(os.events.Event, goog.events.Event);
 
 /**
  * Get the event data.
+ *
  * @return {*}
  */
 os.events.Event.prototype.getData = function() {
@@ -33,6 +35,7 @@ os.events.Event.prototype.getData = function() {
 
 /**
  * Set the event data.
+ *
  * @param {*} value
  */
 os.events.Event.prototype.setData = function(value) {

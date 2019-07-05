@@ -8,6 +8,7 @@ goog.require('os.metrics');
 
 /**
  * Changes the color of a feature
+ *
  * @extends {os.command.AbstractFeatureStyle}
  * @param {string} layerId
  * @param {string} featureId
@@ -64,6 +65,7 @@ os.command.FeatureColor.prototype.getOldValue = function() {
 
 /**
  * Gets the old label color
+ *
  * @return {Array<number>|string|undefined}
  */
 os.command.FeatureColor.prototype.getLabelValue = function() {
@@ -91,6 +93,7 @@ os.command.FeatureColor.prototype.applyValue = function(configs, value) {
 
 /**
  * Set the label color
+ *
  * @param {Object} configs The style config
  * @param {string} value The value to apply
  */

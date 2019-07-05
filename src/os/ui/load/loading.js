@@ -7,6 +7,7 @@ goog.require('os.ui.Module');
 
 /**
  * The loading directive
+ *
  * @return {angular.Directive}
  */
 os.ui.load.loadingDirective = function() {
@@ -30,6 +31,7 @@ os.ui.Module.directive('loading', [os.ui.load.loadingDirective]);
 
 /**
  * Controller function for the loading directive.
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @constructor
@@ -56,6 +58,7 @@ os.ui.load.LoadingCtrl = function($scope, $element) {
 
 /**
  * Clean up.
+ *
  * @private
  */
 os.ui.load.LoadingCtrl.prototype.destroy_ = function() {
@@ -66,6 +69,7 @@ os.ui.load.LoadingCtrl.prototype.destroy_ = function() {
 
 /**
  * Handler for loading change events.
+ *
  * @param {os.events.PropertyChangeEvent} event
  * @private
  */

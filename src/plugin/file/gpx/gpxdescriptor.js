@@ -8,6 +8,7 @@ goog.require('plugin.file.gpx.GPXProvider');
 
 /**
  * GPX file descriptor.
+ *
  * @extends {os.data.FileDescriptor}
  * @constructor
  */
@@ -38,6 +39,7 @@ plugin.file.gpx.GPXDescriptor.prototype.getLayerOptions = function() {
 
 /**
  * Creates a new descriptor from a parser configuration.
+ *
  * @param {!os.parse.FileParserConfig} config
  * @return {!plugin.file.gpx.GPXDescriptor}
  */

@@ -8,6 +8,7 @@ goog.require('os.style.label');
 
 /**
  * Changes the label size for a feature
+ *
  * @param {string} layerId
  * @param {string} featureId
  * @param {number} value

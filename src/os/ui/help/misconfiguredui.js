@@ -7,6 +7,7 @@ goog.require('os.ui.help.misconfiguredDirective');
 
 /**
  * The misconfiguredUi directive
+ *
  * @return {angular.Directive}
  */
 os.ui.help.misconfiguredUiDirective = function() {
@@ -40,6 +41,7 @@ os.ui.Module.directive('misconfiguredUi', [os.ui.help.misconfiguredUiDirective])
 
 /**
  * Controller function for the misconfiguredUi directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @constructor

@@ -85,6 +85,7 @@ goog.require('plugin.position.copyPositionDirective');
 
 /**
  * Wrapper for the Openlayers map.
+ *
  * @implements {os.map.IMapContainer}
  * @extends {goog.events.EventTarget}
  * @constructor
@@ -273,6 +274,7 @@ os.MapContainer.prototype.disposeInternal = function() {
 
 /**
  * Get the WebGL renderer.
+ *
  * @return {os.webgl.IWebGLRenderer|undefined}
  */
 os.MapContainer.prototype.getWebGLRenderer = function() {
@@ -282,6 +284,7 @@ os.MapContainer.prototype.getWebGLRenderer = function() {
 
 /**
  * Set the WebGL renderer.
+ *
  * @param {os.webgl.IWebGLRenderer|undefined} value The new renderer.
  */
 os.MapContainer.prototype.setWebGLRenderer = function(value) {
@@ -306,6 +309,7 @@ os.MapContainer.prototype.setWebGLRenderer = function(value) {
 
 /**
  * Get the WebGL camera.
+ *
  * @return {os.webgl.IWebGLCamera|undefined}
  */
 os.MapContainer.prototype.getWebGLCamera = function() {
@@ -315,6 +319,7 @@ os.MapContainer.prototype.getWebGLCamera = function() {
 
 /**
  * Handle changes to map settings.
+ *
  * @param {!os.events.SettingChangeEvent} event
  * @private
  */
@@ -334,6 +339,7 @@ os.MapContainer.prototype.onSettingChange_ = function(event) {
 
 /**
  * Get the extent of the current view.
+ *
  * @return {ol.Extent}
  */
 os.MapContainer.prototype.getViewExtent = function() {
@@ -344,6 +350,7 @@ os.MapContainer.prototype.getViewExtent = function() {
 /**
  * Handle changes to the view resolution. This happens a lot during user interaction, so defer handling until the view
  * settles.
+ *
  * @param {ol.Object.Event} event
  * @private
  */
@@ -398,6 +405,7 @@ os.MapContainer.prototype.renderSync = function() {
 
 /**
  * Adds/removes a feature to the skip list based on its visibility.
+ *
  * @param {ol.Feature} feature
  * @param {boolean} visible
  */
@@ -444,6 +452,7 @@ os.MapContainer.prototype.getMap = function() {
 
 /**
  * Set the map view.
+ *
  * @param {ol.View} view The view
  */
 os.MapContainer.prototype.setView = function(view) {
@@ -464,6 +473,7 @@ os.MapContainer.prototype.setView = function(view) {
 
 /**
  * Whether or not the given value is a tile layer.
+ *
  * @param {*} layer The value to test.
  * @return {boolean}
  */
@@ -474,6 +484,7 @@ os.MapContainer.isTileLayer = function(layer) {
 
 /**
  * Whether or not the given value is a vector layer.
+ *
  * @param {*} layer The value to test.
  * @return {boolean}
  */
@@ -484,6 +495,7 @@ os.MapContainer.isVectorLayer = function(layer) {
 
 /**
  * Whether or not the given value is an image layer.
+ *
  * @param {*} layer The value to test.
  * @return {boolean}
  */
@@ -514,6 +526,7 @@ os.MapContainer.prototype.cancelFlight = function() {
 
 /**
  * Flies to the provided coordinate/zoom level.
+ *
  * @param {!osx.map.FlyToOptions} options The fly to options.
  */
 os.MapContainer.prototype.flyTo = function(options) {
@@ -570,6 +583,7 @@ os.MapContainer.prototype.flyTo = function(options) {
 
 /**
  * Fits the view to an extent.
+ *
  * @param {ol.Extent} extent The extent to fit
  * @param {number=} opt_buffer Scale factor for the extent to provide a buffer around the displayed area
  * @param {number=} opt_maxZoom The maximum zoom level for the updated view
@@ -638,6 +652,7 @@ os.MapContainer.prototype.flyToExtent = function(extent, opt_buffer, opt_maxZoom
 
 /**
  * Handle zoom action events. Flies to an extent containing all geometries in the extent.
+ *
  * @param {os.ui.action.ActionEvent} event The action event.
  * @private
  */
@@ -787,6 +802,7 @@ os.MapContainer.prototype.fixFocus_ = function() {
 
 /**
  * Setup the control help menu
+ *
  * @private
  */
 os.MapContainer.prototype.addHelpControls_ = function() {
@@ -900,7 +916,7 @@ os.MapContainer.prototype.init = function() {
   referenceGroup.setOSType(os.layer.LayerType.REF);
 
   os.map.PROJECTION = ol.proj.get(/** @type {string} */ (
-      os.settings.get(os.map.PROJECTION_KEY, os.map.PROJECTION.getCode())));
+    os.settings.get(os.map.PROJECTION_KEY, os.map.PROJECTION.getCode())));
 
   os.map.TILEGRID = ol.tilegrid.createForProjection(
       os.map.PROJECTION, ol.DEFAULT_MAX_ZOOM, [512, 512]);
@@ -982,6 +998,7 @@ os.MapContainer.prototype.init = function() {
 
 /**
  * Toggle if the Openlayers canvas is displayed.
+ *
  * @param {boolean} shown If the canvas should be displayed.
  * @protected
  */
@@ -996,6 +1013,7 @@ os.MapContainer.prototype.toggle2DCanvas = function(shown) {
 
 /**
  * Initializes settings and adds listeners for settings changes.
+ *
  * @protected
  */
 os.MapContainer.prototype.initSettings = function() {
@@ -1024,6 +1042,7 @@ os.MapContainer.prototype.initSettings = function() {
 
 /**
  * Initializes camera settings.
+ *
  * @protected
  */
 os.MapContainer.prototype.initCameraSettings = function() {
@@ -1046,6 +1065,7 @@ os.MapContainer.prototype.initCameraSettings = function() {
 
 /**
  * Handle view toggle from a settings change.
+ *
  * @param {os.events.SettingChangeEvent} event
  * @private
  */
@@ -1064,6 +1084,7 @@ os.MapContainer.prototype.onMapModeChange_ = function(event) {
 
 /**
  * Handle view toggle from the context menu.
+ *
  * @private
  */
 os.MapContainer.prototype.onToggleView_ = function() {
@@ -1103,6 +1124,7 @@ os.MapContainer.prototype.overrideFailIfPerformanceCaveat = function() {
 
 /**
  * Save the map mode to settings.
+ *
  * @private
  */
 os.MapContainer.prototype.saveMapMode_ = function() {
@@ -1113,6 +1135,7 @@ os.MapContainer.prototype.saveMapMode_ = function() {
 
 /**
  * Persist the camera state to an object.
+ *
  * @return {!osx.map.CameraState}
  */
 os.MapContainer.prototype.persistCameraState = function() {
@@ -1154,6 +1177,7 @@ os.MapContainer.prototype.persistCameraState = function() {
 
 /**
  * Restore the camera state.
+ *
  * @param {!osx.map.CameraState} cameraState
  */
 os.MapContainer.prototype.restoreCameraState = function(cameraState) {
@@ -1168,6 +1192,7 @@ os.MapContainer.prototype.restoreCameraState = function(cameraState) {
 
 /**
  * Restore the camera state.
+ *
  * @param {!osx.map.CameraState} cameraState
  * @return {boolean}
  * @private
@@ -1219,6 +1244,7 @@ os.MapContainer.prototype.restoreCameraStateInternal_ = function(cameraState) {
 
 /**
  * Gets the altitude of the current map view in meters.
+ *
  * @return {number} The altitude in meters.
  */
 os.MapContainer.prototype.getAltitude = function() {
@@ -1249,6 +1275,7 @@ os.MapContainer.prototype.getAltitude = function() {
 
 /**
  * If the map container is initializing the WebGL renderer.
+ *
  * @return {boolean}
  */
 os.MapContainer.prototype.isInitializingWebGL = function() {
@@ -1258,6 +1285,7 @@ os.MapContainer.prototype.isInitializingWebGL = function() {
 
 /**
  * Set if the map container is initializing the WebGL renderer.
+ *
  * @param {boolean} value If WebGL is being initialized.
  * @protected
  */
@@ -1271,6 +1299,7 @@ os.MapContainer.prototype.setInitializingWebGL = function(value) {
 
 /**
  * Enable/disable the WebGL renderer.
+ *
  * @param {boolean} enabled If the WebGL renderer should be enabled.
  * @param {boolean=} opt_silent If errors should be ignored.
  * @return {!goog.Thenable}
@@ -1334,6 +1363,7 @@ os.MapContainer.prototype.setWebGLEnabled = function(enabled, opt_silent) {
 
 /**
  * Internal call to enable/disable the WebGL renderer, once it has been initialized.
+ *
  * @param {boolean} value If the WebGL renderer should be enabled.
  * @private
  */
@@ -1351,6 +1381,7 @@ os.MapContainer.prototype.setWebGLEnabled_ = function(value) {
 
 /**
  * If the WebGL renderer is the active view.
+ *
  * @return {boolean}
  */
 os.MapContainer.prototype.is3DEnabled = function() {
@@ -1360,6 +1391,7 @@ os.MapContainer.prototype.is3DEnabled = function() {
 
 /**
  * Checks if WebGL is supported by the browser.
+ *
  * @return {boolean}
  */
 os.MapContainer.prototype.is3DSupported = function() {
@@ -1378,6 +1410,7 @@ os.MapContainer.prototype.is3DSupported = function() {
 
 /**
  * Checks if WebGL will be rendered with degraded performance
+ *
  * @return {boolean|undefined|null}
  */
 os.MapContainer.prototype.failPerformanceCaveat = function() {
@@ -1388,7 +1421,7 @@ os.MapContainer.prototype.failPerformanceCaveat = function() {
       var failIfMajorPerformanceCaveat_ =
         /** @type {boolean} */ (os.settings.get('webgl.performanceCaveat.failIf', false));
       this.hasPerformanceCaveat_ = failIfMajorPerformanceCaveat_ ?
-          os.webgl.hasPerformanceCaveat() : false;
+        os.webgl.hasPerformanceCaveat() : false;
       if (this.hasPerformanceCaveat_) {
         os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.WEBGL_PERFORMANCE_CAVEAT, 1);
       }
@@ -1401,6 +1434,7 @@ os.MapContainer.prototype.failPerformanceCaveat = function() {
 
 /**
  * Set the background color for the map.
+ *
  * @param {string} color The new color.
  * @protected
  */
@@ -1411,6 +1445,7 @@ os.MapContainer.prototype.setBGColor = function(color) {
 
 /**
  * Adds a layer to the map
+ *
  * @param {!(os.layer.ILayer|ol.layer.Layer)} layer The layer to add
  *
  * @export Prevent the compiler from moving the function off the prototype.
@@ -1466,6 +1501,7 @@ os.MapContainer.prototype.addLayer = function(layer) {
 
 /**
  * Records metrics for layer add/remove.
+ *
  * @param {!(os.layer.ILayer|ol.layer.Layer)} layer The layer being added/removed
  * @param {boolean} add ture if adding, otherwise false.
  * @private
@@ -1483,6 +1519,7 @@ os.MapContainer.prototype.recordLayerMetric_ = function(layer, add) {
 
 /**
  * Adds a layer group to the map
+ *
  * @param {!os.layer.Group} group
  */
 os.MapContainer.prototype.addGroup = function(group) {
@@ -1506,6 +1543,7 @@ os.MapContainer.prototype.addGroup = function(group) {
 
 /**
  * Removes a layer from the map
+ *
  * @param {!(os.layer.ILayer|ol.layer.Layer|string)} layer
  * @param {boolean=} opt_dispose If the layer should be disposed. Defaults to true.
  *
@@ -1543,6 +1581,7 @@ os.MapContainer.prototype.removeLayer = function(layer, opt_dispose) {
 
 /**
  * Handle remove layer events fired in the application.
+ *
  * @param {os.events.LayerEvent} event
  * @private
  */
@@ -1697,7 +1736,7 @@ os.MapContainer.prototype.containsFeature = function(feature) {
       var source = /** @type {ol.source.Vector} */ (layer.getSource());
 
       return !!(typeof feature === 'string' || typeof feature === 'number' ? source.getFeatureById(feature) :
-          source.getFeatureById(feature.getId() + ''));
+        source.getFeatureById(feature.getId() + ''));
     }
   }
 
@@ -1719,6 +1758,7 @@ os.MapContainer.prototype.removeFeatures = function(features, opt_dispose) {
 
 /**
  * Gets the array of features in the drawing layer.
+ *
  * @return {Array<ol.Feature>}
  */
 os.MapContainer.prototype.getFeatures = function() {
@@ -1728,6 +1768,7 @@ os.MapContainer.prototype.getFeatures = function() {
 
 /**
  * Gets the reference to the drawing layer.
+ *
  * @return {ol.layer.Layer}
  */
 os.MapContainer.prototype.getDrawingLayer = function() {
@@ -1737,6 +1778,7 @@ os.MapContainer.prototype.getDrawingLayer = function() {
 
 /**
  * Gets an array of layers ordered from top to bottom
+ *
  * @return {!Array<!ol.layer.Layer>}
  */
 os.MapContainer.prototype.getLayers = function() {
@@ -1761,6 +1803,7 @@ os.MapContainer.prototype.getLayers = function() {
 
 /**
  * Count the number of active map layers matching a class.
+ *
  * @param {!Object} clazz The layer class
  * @return {number} The layer count
  */
@@ -1838,6 +1881,7 @@ os.MapContainer.prototype.getLayer = function(layerOrFeature, opt_search, opt_re
 
 /**
  * Compares groups by priority
+ *
  * @param {os.layer.Group} a
  * @param {os.layer.Group} b
  * @return {number}
@@ -1866,6 +1910,7 @@ os.MapContainer.prototype.setInteractionFunction = function(interactionFunction)
 
 /**
  * Gets the resolution for the given zoom level
+ *
  * @param {number} zoom
  * @return {number} resolution (degrees per pixel)
  */
@@ -1877,6 +1922,7 @@ os.MapContainer.prototype.zoomToResolution = function(zoom) {
 
 /**
  * Gets the zoom level from the given resolution
+ *
  * @param {number} resolution
  * @param {number=} opt_precision The decimal precision
  * @return {number} zoom
@@ -1967,6 +2013,7 @@ os.MapContainer.replaceExtentNormalized_ = function(match, submatch, offset, str
 
 /**
  * Launch a dialog warning users of the risks in using 2D with lots of data.
+ *
  * @return {!goog.Promise}
  */
 os.MapContainer.launch2DPerformanceDialog = function() {

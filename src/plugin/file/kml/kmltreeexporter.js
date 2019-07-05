@@ -17,6 +17,7 @@ goog.require('plugin.file.kml.export');
 
 /**
  * KML tree exporter
+ *
  * @extends {os.ui.file.kml.AbstractKMLExporter<!plugin.file.kml.ui.KMLNode>}
  * @constructor
  */

@@ -7,6 +7,7 @@ goog.require('os.histo.Result');
 
 /**
  * Represents a single bin in a histogram
+ *
  * @constructor
  * @template T
  */
@@ -61,6 +62,7 @@ os.histo.Bin = function() {
 
 /**
  * Adds an item to the bin
+ *
  * @param {T} item
  */
 os.histo.Bin.prototype.addItem = function(item) {
@@ -70,6 +72,7 @@ os.histo.Bin.prototype.addItem = function(item) {
 
 /**
  * Remove an item from the bin
+ *
  * @param {T} item
  */
 os.histo.Bin.prototype.removeItem = function(item) {
@@ -90,6 +93,7 @@ os.histo.Bin.prototype.clear = function() {
 
 /**
  * Gets the count for the bin
+ *
  * @return {number}
  */
 os.histo.Bin.prototype.getCount = function() {
@@ -99,6 +103,7 @@ os.histo.Bin.prototype.getCount = function() {
 
 /**
  * Gets the items in the bin
+ *
  * @return {Array.<T>}
  */
 os.histo.Bin.prototype.getItems = function() {
@@ -108,6 +113,7 @@ os.histo.Bin.prototype.getItems = function() {
 
 /**
  * Gets the key
+ *
  * @return {string|number}
  */
 os.histo.Bin.prototype.getKey = function() {
@@ -117,6 +123,7 @@ os.histo.Bin.prototype.getKey = function() {
 
 /**
  * Sets the key
+ *
  * @param {string|number} value
  */
 os.histo.Bin.prototype.setKey = function(value) {
@@ -126,6 +133,7 @@ os.histo.Bin.prototype.setKey = function(value) {
 
 /**
  * Gets the label
+ *
  * @return {string}
  */
 os.histo.Bin.prototype.getLabel = function() {
@@ -135,6 +143,7 @@ os.histo.Bin.prototype.getLabel = function() {
 
 /**
  * Sets the label
+ *
  * @param {string} label
  */
 os.histo.Bin.prototype.setLabel = function(label) {
@@ -145,6 +154,7 @@ os.histo.Bin.prototype.setLabel = function(label) {
 
 /**
  * Gets the child bins
+ *
  * @return {?Array.<os.histo.Result.<T>>}
  */
 os.histo.Bin.prototype.getChildren = function() {
@@ -154,6 +164,7 @@ os.histo.Bin.prototype.getChildren = function() {
 
 /**
  * Sets the child bins
+ *
  * @param {?Array.<!os.histo.Result.<T>>} children
  */
 os.histo.Bin.prototype.setChildren = function(children) {
@@ -163,6 +174,7 @@ os.histo.Bin.prototype.setChildren = function(children) {
 
 /**
  * Returns the id
+ *
  * @return {number} true if the bins have the same id's
  */
 os.histo.Bin.prototype.getId = function() {
@@ -178,6 +190,7 @@ os.histo.bin.SortFn;
 
 /**
  * Sorts bins by the number of items in the bin, in ascending order
+ *
  * @param {os.histo.Bin} a A bin
  * @param {os.histo.Bin} b Another bin
  * @return {number}
@@ -189,6 +202,7 @@ os.histo.bin.sortByCount = function(a, b) {
 
 /**
  * Sorts bins by the number of items in the bin, in descending order
+ *
  * @param {os.histo.Bin} a A bin
  * @param {os.histo.Bin} b Another bin
  * @return {number}
@@ -200,6 +214,7 @@ os.histo.bin.sortByCountDesc = function(a, b) {
 
 /**
  * Sorts bins by key
+ *
  * @param {os.histo.Bin} a A bin
  * @param {os.histo.Bin} b Another bin
  * @return {number}
@@ -211,6 +226,7 @@ os.histo.bin.sortByKey = function(a, b) {
 
 /**
  * Sorts bins by key in descending order
+ *
  * @param {os.histo.Bin} a A bin
  * @param {os.histo.Bin} b Another bin
  * @return {number}
@@ -222,6 +238,7 @@ os.histo.bin.sortByKeyDesc = function(a, b) {
 
 /**
  * Sorts bins by label in ascending order
+ *
  * @param {os.histo.Bin} a A bin
  * @param {os.histo.Bin} b Another bin
  * @return {number}
@@ -241,6 +258,7 @@ os.histo.bin.sortByLabel = function(a, b) {
 
 /**
  * Sorts bins by label in descending order
+ *
  * @param {os.histo.Bin} a A bin
  * @param {os.histo.Bin} b Another bin
  * @return {number}

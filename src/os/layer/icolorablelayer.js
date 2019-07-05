@@ -3,6 +3,7 @@ goog.provide('os.layer.IColorableLayer');
 
 /**
  * Interface for layers that support coloring.
+ *
  * @interface
  */
 os.layer.IColorableLayer = function() {};

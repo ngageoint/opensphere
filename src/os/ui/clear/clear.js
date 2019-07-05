@@ -7,6 +7,7 @@ goog.require('os.ui.window');
 
 /**
  * The clear window directive
+ *
  * @return {angular.Directive}
  */
 os.ui.clear.clearDirective = function() {
@@ -30,6 +31,7 @@ os.ui.Module.directive('clear', [os.ui.clear.clearDirective]);
 
 /**
  * Controller for the Clear Window
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$timeout} $timeout
@@ -61,6 +63,7 @@ os.ui.clear.ClearCtrl = function($scope, $element, $timeout) {
 
 /**
  * Clean up references/listeners.
+ *
  * @private
  */
 os.ui.clear.ClearCtrl.prototype.onDestroy_ = function() {
@@ -70,6 +73,7 @@ os.ui.clear.ClearCtrl.prototype.onDestroy_ = function() {
 
 /**
  * Close the window
+ *
  * @private
  */
 os.ui.clear.ClearCtrl.prototype.close_ = function() {
@@ -81,6 +85,7 @@ os.ui.clear.ClearCtrl.prototype.close_ = function() {
 
 /**
  * Handle user hitting the window 'x' button
+ *
  * @private
  */
 os.ui.clear.ClearCtrl.prototype.cancelInternal_ = function() {
@@ -91,6 +96,7 @@ os.ui.clear.ClearCtrl.prototype.cancelInternal_ = function() {
 
 /**
  * Handle user clicking the Cancel button
+ *
  * @export
  */
 os.ui.clear.ClearCtrl.prototype.cancel = function() {
@@ -102,6 +108,7 @@ os.ui.clear.ClearCtrl.prototype.cancel = function() {
 
 /**
  * Handle user clicking the OK button
+ *
  * @export
  */
 os.ui.clear.ClearCtrl.prototype.accept = function() {

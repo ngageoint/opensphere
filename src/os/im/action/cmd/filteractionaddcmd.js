@@ -7,6 +7,7 @@ goog.require('os.im.action.cmd.AbstractFilterAction');
 
 /**
  * Command for adding filter actions.
+ *
  * @param {!os.im.action.FilterActionEntry} entry The filter action.
  * @param {number=} opt_index The index in the entry list.
  * @param {string=} opt_parentId The parent node ID.

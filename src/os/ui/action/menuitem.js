@@ -6,6 +6,7 @@ goog.require('os.ui.action.MenuOptions');
 
 /**
  * Represents a menu item
+ *
  * @implements {os.ui.action.IMenuItem}
  * @constructor
  * @param {!string} name

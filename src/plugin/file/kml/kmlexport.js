@@ -7,6 +7,7 @@ goog.require('os.style.StyleField');
 
 /**
  * Get the KML balloon style options for an OpenLayers feature.
+ *
  * @param {ol.Feature} feature The feature.
  * @return {?osx.annotation.KMLBalloon} The balloon options.
  */
@@ -49,6 +50,7 @@ plugin.file.kml.export.getBalloonOptions = function(feature) {
 
 /**
  * Get the icon rotation column for an OpenLayers feature.
+ *
  * @param {ol.Feature} feature The feature.
  * @return {string|null|undefined} The column.
  */
@@ -64,6 +66,7 @@ plugin.file.kml.export.getRotationColumn = function(feature) {
 
 /**
  * Get the line dash for an OpenLayers feature.
+ *
  * @param {ol.Feature} feature The feature.
  * @return {Array<number>|null|undefined} The line dash.
  */

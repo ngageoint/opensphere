@@ -13,6 +13,7 @@ goog.require('os.url');
 
 /**
  * Generic formatter
+ *
  * @param {number} row The row number
  * @param {number} cell The cell number in the row
  * @param {string} value The value
@@ -30,6 +31,7 @@ os.ui.slick.formatter.columnFormatter = function(row, cell, value, columnDef, no
 
 /**
  * Generic formatter for reading a string field separated by dots, i.e: "a.b.c" will read row[a][b][c];
+ *
  * @param {number} row The row number
  * @param {number} cell The cell number in the row
  * @param {string} value The value
@@ -55,6 +57,7 @@ os.ui.slick.formatter.depthfulFormatter = function(row, cell, value, columnDef, 
 
 /**
  * Formats a column to display a dot colored by the cell's value. Cell value should either be a hex or rgba string.
+ *
  * @param {number} row Row in the grid
  * @param {number} cell Cell in the row
  * @param {string} value Data value (color as hex or rgba)
@@ -64,12 +67,13 @@ os.ui.slick.formatter.depthfulFormatter = function(row, cell, value, columnDef, 
  */
 os.ui.slick.formatter.color = function(row, cell, value, columnDef, item) {
   return value ? '<i class="fa fa-circle" style="color:' + value + '"></i>' :
-      '<i class="fa fa-adjust c-formatter__adjust" title="Multiple Colors Present"></i>';
+    '<i class="fa fa-adjust c-formatter__adjust" title="Multiple Colors Present"></i>';
 };
 
 
 /**
  * Formats a column with fixed row numbers
+ *
  * @param {number} row The row number
  * @param {number} cell The cell number in the row
  * @param {string} value The value
@@ -90,6 +94,7 @@ os.ui.slick.formatter.ANCHOR = /<a /;
 
 /**
  * Formats the data to be a link if it passes the regex
+ *
  * @param {number} row The row number
  * @param {number} cell The cell number in the row
  * @param {string} value The value
@@ -111,6 +116,7 @@ os.ui.slick.formatter.urlNewTabFormatter = function(row, cell, value, columnDef,
 
 /**
  * Formats the source column
+ *
  * @param {number} row The row number
  * @param {number} cell The cell number in the row
  * @param {string} value The value
@@ -144,6 +150,7 @@ os.ui.slick.formatter.shortUrlFormatter = function(row, cell, value, columnDef, 
 
 /**
  * Formats the source column
+ *
  * @param {number} row The row number
  * @param {number} cell The cell number in the row
  * @param {string} value The value
@@ -212,6 +219,7 @@ os.ui.slick.formatter.columnActionFormatter = function(row, cell, value, columnD
 
 /**
  * Formats the source column
+ *
  * @param {number} row The row number
  * @param {number} cell The cell number in the row
  * @param {string} value The value

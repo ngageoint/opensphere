@@ -4,6 +4,7 @@ goog.provide('os.xt.IMessageHandler');
 
 /**
  * The message handler interface
+ *
  * @interface
  * @export
  */

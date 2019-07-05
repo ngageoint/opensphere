@@ -10,6 +10,7 @@ goog.require('plugin.cesium.tiles.Provider');
 
 /**
  * The 3D tiles import directive
+ *
  * @return {angular.Directive}
  */
 plugin.cesium.tiles.tilesetImportDirective = function() {
@@ -33,6 +34,7 @@ os.ui.Module.directive('tilesetimport', [plugin.cesium.tiles.tilesetImportDirect
 
 /**
  * Controller for the 3D tiles import dialog
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @extends {os.ui.file.ui.AbstractFileImportCtrl<!Object,!plugin.cesium.tiles.Descriptor>}

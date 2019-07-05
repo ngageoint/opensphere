@@ -8,6 +8,7 @@ goog.require('os.ui.window');
 
 /**
  * Dialog that prompts the user to pick a track.
+ *
  * @return {angular.Directive}
  */
 plugin.track.confirmTrackDirective = function() {
@@ -29,6 +30,7 @@ os.ui.Module.directive('confirmtrack', [plugin.track.confirmTrackDirective]);
 
 /**
  * Controller for the color confirmation window.
+ *
  * @param {!angular.Scope} $scope
  * @constructor
  * @ngInject
@@ -58,6 +60,7 @@ plugin.track.ConfirmTrackCtrl = function($scope) {
 
 /**
  * Get the name of a track.
+ *
  * @param {!ol.Feature} track The track
  * @return {string} The name
  * @export
@@ -74,6 +77,7 @@ plugin.track.ConfirmTrackCtrl.prototype.getTrackName = function(track) {
 
 /**
  * Prompt the user to choose a track.
+ *
  * @return {!goog.Promise}
  */
 plugin.track.promptForTrack = function() {
@@ -85,6 +89,7 @@ plugin.track.promptForTrack = function() {
 
 /**
  * Launch a dialog prompting the user to pick a color.
+ *
  * @param {function(!ol.Feature)} confirm The confirm callback
  * @param {function(*)} cancel The cancel callback
  */

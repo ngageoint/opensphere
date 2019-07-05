@@ -17,6 +17,7 @@ goog.require('os.command.State');
  * synchronous and asynchronous commands are supported, however, synchronous
  * commands that kick off jobs are recommended over asynchronous commands
  * unless the asynchronous processing is quick enough to make that overkill.
+ *
  * @extends {goog.events.EventTarget}
  * @constructor
  */
@@ -82,6 +83,7 @@ os.command.CommandProcessor.LOGGER_ =
 
 /**
  * Gets the current history index
+ *
  * @return {number}
  */
 os.command.CommandProcessor.prototype.getCurrent = function() {
@@ -92,6 +94,7 @@ os.command.CommandProcessor.prototype.getCurrent = function() {
 /**
  * Checks if the current index is not equal to the target or if any of the commands in the stack are currently
  * in the executing state. It's possible for the current and target to be equal while still having a command processing.
+ *
  * @return {boolean}
  */
 os.command.CommandProcessor.prototype.isProcessing = function() {
@@ -103,6 +106,7 @@ os.command.CommandProcessor.prototype.isProcessing = function() {
 
 /**
  * Returns the max queue size
+ *
  * @return {number} The max queue size
  */
 os.command.CommandProcessor.prototype.getHistoryLimit = function() {
@@ -112,6 +116,7 @@ os.command.CommandProcessor.prototype.getHistoryLimit = function() {
 
 /**
  * Sets the max queue size.
+ *
  * @param {number} value The maximum size of the command queue
  * @throws {Error} If you try to set the max queue size while asynchronous
  *  commands are running
@@ -131,6 +136,7 @@ os.command.CommandProcessor.prototype.setHistoryLimit = function(value) {
 
 /**
  * Returns the entire command history
+ *
  * @return {Array.<os.command.ICommand>} The command history
  */
 os.command.CommandProcessor.prototype.getHistory = function() {
@@ -150,6 +156,7 @@ os.command.CommandProcessor.prototype.clearHistory = function() {
 
 /**
  * Adds a command to the command queue.
+ *
  * @param {os.command.ICommand} command The command to add.
  * @return {boolean} whether or not the command was successfully added
  */
@@ -218,6 +225,7 @@ os.command.CommandProcessor.prototype.checkCommand = function(command) {
 
 /**
  * Resize the history to the history limit, dumping the earliest commands if necessary.
+ *
  * @private
  */
 os.command.CommandProcessor.prototype.resizeHistory_ = function() {
@@ -235,6 +243,7 @@ os.command.CommandProcessor.prototype.resizeHistory_ = function() {
 
 /**
  * Calls dispose on a command if the function exists.
+ *
  * @param {os.command.ICommand} command
  * @private
  */
@@ -273,6 +282,7 @@ os.command.CommandProcessor.prototype.redo = function() {
 /**
  * Executes or reverts commands until the current pointer equals the
  * given index.
+ *
  * @param {number} index The index to execute or revert to.
  * @todo There is a problem with setIndex calls after calling setMaxQueueSize.
  * If you are on the earliest element in the queue (one that gets kicked off by
@@ -298,6 +308,7 @@ os.command.CommandProcessor.prototype.setIndex = function(index) {
 
 /**
  * Executes a command.
+ *
  * @private
  * @param {os.command.ICommand} command The command to execute
  * @return {boolean} the result of the command execution
@@ -340,6 +351,7 @@ os.command.CommandProcessor.prototype.execute_ = function(command) {
 
 /**
  * Reverts a command.
+ *
  * @private
  * @param {os.command.ICommand} command The command to execute
  *
@@ -382,6 +394,7 @@ os.command.CommandProcessor.prototype.revert_ = function(command) {
 /**
  * Merges in the temporary queue (which contains commands added while
  * processing asnchronous commands) and begins to process it.
+ *
  * @private
  */
 os.command.CommandProcessor.prototype.processQueue_ = function() {
@@ -395,6 +408,7 @@ os.command.CommandProcessor.prototype.processQueue_ = function() {
 
 /**
  * Handles the completion of commands
+ *
  * @param {goog.events.Event} e The event
  * @param {os.command.ICommand=} opt_command
  * @private
@@ -447,6 +461,7 @@ os.command.CommandProcessor.prototype.onCommandComplete_ = function(e, opt_comma
 
 /**
  * Handles commands that have been reverted
+ *
  * @param {goog.events.Event} e the event
  * @param {os.command.ICommand=} opt_command the command that was reverted
  * @private

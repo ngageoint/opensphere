@@ -6,6 +6,7 @@ goog.require('os.ui.window');
 
 /**
  * Checks if a layer name is in the deprecated layers list.
+ *
  * @param {?string} name
  * @return {boolean}
  */
@@ -19,6 +20,7 @@ os.ui.util.deprecated.isLayerDeprecated = function(name) {
  * Adds a layer name to the queue of deprecated layer names that will be shown in the popup. This is done
  * asynchronously so that if several deprecated layers are loaded in quick succession (i.e. on application load)
  * they will all be grouped into a single window.
+ *
  * @param {?string} name
  */
 os.ui.util.deprecated.showDeprecatedWarning = function(name) {
@@ -38,6 +40,7 @@ os.ui.util.deprecated.showDeprecatedWarning = function(name) {
 
 /**
  * Shows a modal dialog explaining that a set of layers is deprecated and should not be used going forward.
+ *
  * @private
  */
 os.ui.util.deprecated.launchDeprecatedLayersWindow_ = function() {

@@ -10,6 +10,7 @@ goog.require('os.ui.ogc.wms.IWMSLayer');
 
 /**
  * Interface for OGC data descriptors.
+ *
  * @interface
  * @extends {os.data.IDataDescriptor}
  * @extends {os.data.IServerDescriptor}

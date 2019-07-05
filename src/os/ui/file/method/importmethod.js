@@ -14,6 +14,7 @@ goog.require('os.ui.window');
 
 /**
  * Import method handling both local files and URL's.
+ *
  * @param {boolean=} opt_keepFile Whether the file method will keep the original File reference around
  * @extends {os.ui.file.method.UrlMethod}
  * @constructor
@@ -61,6 +62,7 @@ os.ui.file.method.ImportMethod.prototype.clone = function() {
 
 /**
  * If the File reference should be saved on the {@link os.file.File} instance.
+ *
  * @return {boolean}
  */
 os.ui.file.method.ImportMethod.prototype.getKeepFile = function() {
@@ -70,6 +72,7 @@ os.ui.file.method.ImportMethod.prototype.getKeepFile = function() {
 
 /**
  * Set if the File reference should be saved on the {@link os.file.File} instance.
+ *
  * @param {boolean} val
  */
 os.ui.file.method.ImportMethod.prototype.setKeepFile = function(val) {

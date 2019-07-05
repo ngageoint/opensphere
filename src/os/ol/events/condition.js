@@ -5,6 +5,7 @@ goog.require('ol.MapBrowserEventType');
 
 /**
  * If a map browser event is for a right click.
+ *
  * @param {ol.MapBrowserEvent} mapBrowserEvent The map browser event
  * @return {boolean} If the event represents a right click
  */

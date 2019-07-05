@@ -4,6 +4,7 @@ goog.require('os.ui.Module');
 
 /**
  * The statetitle directive, for validating state titles.
+ *
  * @return {angular.Directive}
  */
 os.ui.state.stateTitleDirective = function() {
@@ -16,6 +17,7 @@ os.ui.state.stateTitleDirective = function() {
 
 /**
  * Link function for the statetitle directive.
+ *
  * @param {!angular.Scope} scope The scope
  * @param {!angular.JQLite} element The element
  * @param {Object} attrs Directive attributes

@@ -46,6 +46,7 @@ os.ui.Module.directive('dateTime', [os.ui.datetime.dateTimeDirective]);
 
 /**
  * Controller function for the date-time directive.
+ *
  * @constructor
  * @param {!angular.Scope} $scope
  * @ngInject
@@ -127,6 +128,7 @@ os.ui.datetime.DateTimeCtrl.LOGGER_ = goog.log.getLogger('os.ui.datetime.DateTim
 
 /**
  * Clear references to Angular/DOM elements.
+ *
  * @private
  */
 os.ui.datetime.DateTimeCtrl.prototype.destroy_ = function() {
@@ -137,6 +139,7 @@ os.ui.datetime.DateTimeCtrl.prototype.destroy_ = function() {
 
 /**
  * Change handler for date picker.
+ *
  * @private
  */
 os.ui.datetime.DateTimeCtrl.prototype.watchDate_ = function() {
@@ -161,6 +164,7 @@ os.ui.datetime.DateTimeCtrl.prototype.watchDate_ = function() {
 
 /**
  * Change handler for date picker.
+ *
  * @param {?Date} newVal
  * @param {?Date} oldVal
  * @private
@@ -174,6 +178,7 @@ os.ui.datetime.DateTimeCtrl.prototype.onDateChanged_ = function(newVal, oldVal) 
 
 /**
  * Updates the scope value or reports an error.
+ *
  * @param {string=} opt_type
  * @export
  */
@@ -228,6 +233,7 @@ os.ui.datetime.DateTimeCtrl.prototype.updateValue = function(opt_type) {
 
 /**
  * Sets this field to the current time.
+ *
  * @export
  */
 os.ui.datetime.DateTimeCtrl.prototype.setNow = function() {
@@ -251,6 +257,7 @@ os.ui.datetime.DateTimeCtrl.prototype.setNow = function() {
 
 /**
  * Sets this field to the current time.
+ *
  * @export
  */
 os.ui.datetime.DateTimeCtrl.prototype.reset = function() {

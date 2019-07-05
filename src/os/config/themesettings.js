@@ -76,6 +76,7 @@ os.config.ThemeSettings.LOADED_THEME_HTML =
 
 /**
  * The unit settings UI directive
+ *
  * @return {angular.Directive}
  */
 os.config.ThemeSettingsDirective = function() {
@@ -97,6 +98,7 @@ os.ui.Module.directive('themesettings', [os.config.ThemeSettingsDirective]);
 
 /**
  * Controller for unit settings
+ *
  * @param {!angular.Scope} $scope
  * @constructor
  * @ngInject
@@ -156,6 +158,7 @@ os.config.ThemeSettingsCtrl.prototype.destroy_ = function() {
 
 /**
  * Handle units change via settings.
+ *
  * @param {os.events.PropertyChangeEvent} event
  * @private
  */
@@ -169,6 +172,7 @@ os.config.ThemeSettingsCtrl.prototype.onSettingsChange_ = function(event) {
 
 /**
  * Handle units change via settings.
+ *
  * @param {os.events.PropertyChangeEvent} event
  * @private
  */
@@ -182,6 +186,7 @@ os.config.ThemeSettingsCtrl.prototype.onAccessibilitySettingsChange_ = function(
 
 /**
  * Save to settings.
+ *
  * @param {string} newVal
  * @param {string} oldVal
  * @export
@@ -195,6 +200,7 @@ os.config.ThemeSettingsCtrl.prototype.onThemeChange = function(newVal, oldVal) {
 
 /**
  * Save to settings.
+ *
  * @param {string} newVal
  * @param {string} oldVal
  * @export
@@ -213,6 +219,7 @@ os.config.ThemeSettings.loadingPromise = null;
 
 /**
  * Set Theme
+ *
  * @return {goog.Promise}
  */
 os.config.ThemeSettings.setTheme = function() {
@@ -310,6 +317,7 @@ os.config.ThemeSettings.updateTheme = function() {
 
 /**
  * Change the stylesheet
+ *
  * @param {string} cssFile The stylesheet URL.
  * @param {string} theme The stylesheet theme name.
  * @return {goog.Promise}
@@ -352,6 +360,7 @@ os.config.ThemeSettingsChangeEventTheme = function(cssFile, theme) {
 
 /**
  * Check if a theme has been loaded.
+ *
  * @param {string} theme The theme name.
  * @return {boolean} If the theme is currently loaded.
  */
@@ -369,6 +378,7 @@ os.config.ThemeSettings.isThemeLoaded = function(theme) {
 
 /**
  * Adds an element to the DOM that can be used to detect which theme is currently loaded.
+ *
  * @return {jQuery} The detection element.
  */
 os.config.ThemeSettings.getDetectionElement = function() {

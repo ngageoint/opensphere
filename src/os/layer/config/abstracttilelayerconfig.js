@@ -260,6 +260,7 @@ os.layer.config.AbstractTileLayerConfig.prototype.getUrlPattern = function(url) 
 
 /**
  * Expand URLs that contain ranges for rotating tile servers.
+ *
  * @protected
  */
 os.layer.config.AbstractTileLayerConfig.prototype.expandUrls = function() {

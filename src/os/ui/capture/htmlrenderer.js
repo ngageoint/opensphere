@@ -7,6 +7,7 @@ goog.require('os.ui.capture.ElementRenderer');
 
 /**
  * Renders an HTML element to a canvas.
+ *
  * @param {Object=} opt_options Options to configure the renderer
  * @extends {os.ui.capture.ElementRenderer<Element>}
  * @constructor

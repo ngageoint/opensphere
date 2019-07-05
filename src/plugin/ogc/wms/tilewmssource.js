@@ -12,6 +12,7 @@ goog.require('os.tile.ColorableTile');
 /**
  * Layer source for tile data from WMS servers. This source fires a property change event when its
  * loading state changes based on how many tiles are currently in a loading state.
+ *
  * @param {olx.source.TileWMSOptions=} opt_options Tile WMS options.
  * @implements {os.ol.source.ILoadingSource}
  * @implements {os.source.IStyle}

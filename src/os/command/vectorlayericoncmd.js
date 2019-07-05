@@ -10,6 +10,7 @@ goog.require('os.ui.file.kml');
 
 /**
  * Configure a vector layer to display an icon.
+ *
  * @param {string} layerId The layer id.
  * @param {osx.icon.Icon} icon The new icon.
  * @param {osx.icon.Icon=} opt_oldIcon The old icon.

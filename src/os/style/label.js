@@ -36,6 +36,7 @@ os.style.label.DEFAULT_LABEL = {
 
 /**
  * Checks whether a set of labels has any non-default labels.
+ *
  * @param {Array<os.style.label.LabelConfig>} labels
  * @return {boolean}
  */
@@ -52,6 +53,7 @@ os.style.label.hasNonDefaultLabels = function(labels) {
 
 /**
  * Gets the first non-default set of labels between the feature and layer configs.
+ *
  * @param {?Array<os.style.label.LabelConfig>} featureLabels
  * @param {?Array<os.style.label.LabelConfig>} layerLabels
  * @return {!Array<os.style.label.LabelConfig>}
@@ -90,6 +92,7 @@ os.style.label.cloneConfig = function(opt_config) {
 
 /**
  * Filter label configs, returning those that are defined and have a column set.
+ *
  * @param {Array<os.style.label.LabelConfig>} configs The label configs.
  * @return {!Array<!os.style.label.LabelConfig>}
  */
@@ -154,6 +157,7 @@ os.style.label.TRUNCATE_LENGTH = 50;
 
 /**
  * Update which features should have their labels shown.
+ *
  * @return {boolean}
  * @private
  *
@@ -365,7 +369,7 @@ os.style.label.createOrUpdate = function(feature, config, opt_layerConfig) {
   if (feature.values_[os.style.StyleType.HIGHLIGHT] || feature.values_[os.style.StyleField.SHOW_LABELS] !== false) {
     var featureLabels = config[os.style.StyleField.LABELS];
     var layerLabels = opt_layerConfig ?
-        opt_layerConfig[os.style.StyleField.LABELS] : [os.style.label.cloneConfig()];
+      opt_layerConfig[os.style.StyleField.LABELS] : [os.style.label.cloneConfig()];
     var labelConfigs = os.style.label.getLabels(featureLabels, layerLabels);
 
     if (labelConfigs) {
@@ -503,6 +507,7 @@ os.style.label.getText = function(feature, field) {
 
 /**
  * Gets the text string from all the label fields
+ *
  * @param {ol.Feature} feature The feature
  * @param {os.style.label.LabelConfig} label
  * @return {string} the label text
@@ -519,6 +524,7 @@ os.style.label.getLabelText = function(feature, label) {
 
 /**
  * Gets the text string from all the label fields
+ *
  * @param {ol.Feature} feature The feature
  * @param {Array<os.style.label.LabelConfig>} labels
  * @return {string} the label text
@@ -532,6 +538,7 @@ os.style.label.getLabelsText = function(feature, labels) {
 
 /**
  * Get the label color for a feature.
+ *
  * @param {ol.Feature} feature The feature
  * @param {Object} config Base configuration for the feature
  * @param {Object=} opt_layerConfig Layer configuration for the feature
@@ -553,6 +560,7 @@ os.style.label.getColor = function(feature, config, opt_layerConfig) {
 
 /**
  * Generate a CSS font style for labels. Assume bold because non-bold fonts are generally hard to read.
+ *
  * @param {number=} opt_size The font size.
  * @return {string} The CSS font style.
  */
@@ -568,6 +576,7 @@ os.style.label.getFont = function(opt_size) {
  * Get the default geometry for a feature. If the default geometry is a collection, only use the first geometry in the
  * collection. I intentionally didn't handle collections of collections until we actually encounter it for the sake of
  * simplicity.
+ *
  * @param {ol.Feature} feature Feature to get the geometry for.
  * @return {ol.geom.Geometry|undefined} Geometry to render.
  */

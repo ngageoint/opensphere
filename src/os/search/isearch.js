@@ -5,6 +5,7 @@ goog.require('goog.events.Listenable');
 
 /**
  *  The base interface for executing a search.
+ *
  *  @extends {goog.events.Listenable}
  *  @interface
  */

@@ -16,6 +16,7 @@ goog.require('os.ui.window.confirmDirective');
 
 /**
  * The advanced filter builder directive
+ *
  * @return {angular.Directive}
  */
 os.ui.filter.advancedFilterBuilderDirective = function() {
@@ -43,6 +44,7 @@ os.ui.Module.directive('advancedfilterbuilder', [os.ui.filter.advancedFilterBuil
 
 /**
  * Controller for the advanced filter builder
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @constructor
@@ -108,6 +110,7 @@ os.ui.filter.AdvancedFilterBuilderCtrl.LOGGER_ = goog.log.getLogger('os.ui.filte
 
 /**
  * Cleanup
+ *
  * @private
  */
 os.ui.filter.AdvancedFilterBuilderCtrl.prototype.onDestroy_ = function() {
@@ -127,6 +130,7 @@ os.ui.filter.AdvancedFilterBuilderCtrl.EXPR_WINDOW_ID = 'editExpr';
 
 /**
  * Handles tab change events.
+ *
  * @private
  */
 os.ui.filter.AdvancedFilterBuilderCtrl.prototype.onTabChange_ = function() {
@@ -138,6 +142,7 @@ os.ui.filter.AdvancedFilterBuilderCtrl.prototype.onTabChange_ = function() {
 
 /**
  * Resets the tree array reference to force a tree update.
+ *
  * @private
  */
 os.ui.filter.AdvancedFilterBuilderCtrl.prototype.updateTree_ = function() {
@@ -149,6 +154,7 @@ os.ui.filter.AdvancedFilterBuilderCtrl.prototype.updateTree_ = function() {
 
 /**
  * Handles edit expression events
+ *
  * @param {angular.Scope.Event} event
  * @param {os.ui.filter.ui.ExpressionNode} node
  * @private
@@ -160,6 +166,7 @@ os.ui.filter.AdvancedFilterBuilderCtrl.prototype.onExprEdit_ = function(event, n
 
 /**
  * Updates the passed in treeNode with the new expr
+ *
  * @param {os.ui.filter.Expression} expr
  * @param {os.ui.filter.ui.ExpressionNode} treeNode
  * @private
@@ -202,6 +209,7 @@ os.ui.filter.AdvancedFilterBuilderCtrl.prototype.getAddParent_ = function() {
 
 /**
  * Callback for actually creating and adding the expression node
+ *
  * @param {os.ui.filter.Expression} expr
  * @private
  */
@@ -230,6 +238,7 @@ os.ui.filter.AdvancedFilterBuilderCtrl.prototype.doAddExpr_ = function(expr) {
 
 /**
  * Adds a new grouping node
+ *
  * @export
  */
 os.ui.filter.AdvancedFilterBuilderCtrl.prototype.addGrouping = function() {
@@ -256,6 +265,7 @@ os.ui.filter.AdvancedFilterBuilderCtrl.prototype.addGrouping = function() {
 
 /**
  * Adds a new expression node
+ *
  * @export
  */
 os.ui.filter.AdvancedFilterBuilderCtrl.prototype.addExpr = function() {
@@ -265,6 +275,7 @@ os.ui.filter.AdvancedFilterBuilderCtrl.prototype.addExpr = function() {
 
 /**
  * Adds or edits an expression
+ *
  * @param {os.ui.filter.Expression=} opt_expr
  * @param {os.ui.filter.ui.ExpressionNode=} opt_node
  * @export
@@ -313,6 +324,7 @@ os.ui.filter.AdvancedFilterBuilderCtrl.prototype.edit = function(opt_expr, opt_n
 
 /**
  * Returns whether the currently selected node is removable
+ *
  * @return {boolean}
  * @export
  */
@@ -323,6 +335,7 @@ os.ui.filter.AdvancedFilterBuilderCtrl.prototype.canRemove = function() {
 
 /**
  * Removes the currently selected node.
+ *
  * @export
  */
 os.ui.filter.AdvancedFilterBuilderCtrl.prototype.remove = function() {
@@ -334,6 +347,7 @@ os.ui.filter.AdvancedFilterBuilderCtrl.prototype.remove = function() {
 
 /**
  * Callback for edit completion. Reenables the buttons on the form.
+ *
  * @private
  */
 os.ui.filter.AdvancedFilterBuilderCtrl.prototype.onEditComplete_ = function() {
@@ -343,6 +357,7 @@ os.ui.filter.AdvancedFilterBuilderCtrl.prototype.onEditComplete_ = function() {
 
 /**
  * Scrolls to the last node
+ *
  * @private
  */
 os.ui.filter.AdvancedFilterBuilderCtrl.prototype.onScrollDelay_ = function() {
@@ -367,6 +382,7 @@ os.ui.filter.AdvancedFilterBuilderCtrl.sortColumns = function(a, b) {
 
 /**
  * Closes the expression edit window.
+ *
  * @private
  */
 os.ui.filter.AdvancedFilterBuilderCtrl.closeExprWindow_ = function() {

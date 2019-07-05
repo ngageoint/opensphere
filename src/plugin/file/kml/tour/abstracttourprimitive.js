@@ -3,6 +3,7 @@ goog.provide('plugin.file.kml.tour.AbstractTourPrimitive');
 
 /**
  * Abstract KML tour primitive.
+ *
  * @abstract
  * @constructor
  */
@@ -17,6 +18,7 @@ plugin.file.kml.tour.AbstractTourPrimitive = function() {
 
 /**
  * Execute the tour instruction.
+ *
  * @abstract
  * @return {!goog.Promise} A promise that resolves when execution completes.
  */

@@ -39,6 +39,7 @@ goog.require('os.webgl');
 
 /**
  * The directive for vector layer controls
+ *
  * @return {angular.Directive}
  */
 os.ui.layer.vectorLayerUIDirective = function() {
@@ -61,6 +62,7 @@ os.ui.Module.directive('vectorlayerui', [os.ui.layer.vectorLayerUIDirective]);
 
 /**
  * Controller for the vector layer UI
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$timeout} $timeout
@@ -220,6 +222,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.initUI = function() {
 
 /**
  * Get the shape-specific configuration UI.
+ *
  * @return {string|undefined}
  */
 os.ui.layer.VectorLayerUICtrl.prototype.getShapeUIInternal = function() {
@@ -238,6 +241,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.getShapeUIInternal = function() {
 
 /**
  * Decide when to show the rotation option
+ *
  * @return {boolean}
  * @export
  */
@@ -254,6 +258,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.showRotationOption = function() {
 
 /**
  * Synchronizes the scope labels.
+ *
  * @private
  */
 os.ui.layer.VectorLayerUICtrl.prototype.reconcileLabelsState_ = function() {
@@ -277,6 +282,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.reconcileLabelsState_ = function() {
 
 /**
  * Handles changes to color
+ *
  * @param {angular.Scope.Event} event
  * @param {string} value
  * @protected
@@ -299,6 +305,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.onColorChange = function(event, value) {
 
 /**
  * Handles color reset
+ *
  * @param {angular.Scope.Event} event
  * @protected
  */
@@ -315,6 +322,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.onColorReset = function(event) {
 
 /**
  * Handles changes to size
+ *
  * @param {angular.Scope.Event} event
  * @param {number} value
  * @protected
@@ -337,6 +345,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.onSizeChange = function(event, value) {
 
 /**
  * Handles changes to line dash
+ *
  * @param {angular.Scope.Event} event
  * @param {Array<number>} value
  * @protected
@@ -359,6 +368,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.onLineDashChange = function(event, value
 
 /**
  * Handles changes to the icon.
+ *
  * @param {angular.Scope.Event} event The Angular event.
  * @param {osx.icon.Icon} value The new value.
  * @export
@@ -383,6 +393,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.onIconChange = function(event, value) {
 
 /**
  * Handles changes to the shape.
+ *
  * @param {angular.Scope.Event} event The Angular event.
  * @param {string} value The new value.
  * @export
@@ -406,6 +417,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.onShapeChange = function(event, value) {
 
 /**
  * Handles changes to the center shape.
+ *
  * @param {angular.Scope.Event} event The Angular event.
  * @param {string} value The new value.
  * @export
@@ -429,6 +441,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.onCenterShapeChange = function(event, va
 
 /**
  * Handles changes to label color
+ *
  * @param {angular.Scope.Event} event
  * @param {string} value
  * @protected
@@ -451,6 +464,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.onLabelColorChange = function(event, val
 
 /**
  * Handles label color reset
+ *
  * @param {angular.Scope.Event} event
  * @protected
  */
@@ -465,6 +479,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.onLabelColorReset = function(event) {
 
 /**
  * Handles changes to label size
+ *
  * @param {angular.Scope.Event} event
  * @param {number} value
  * @protected
@@ -487,6 +502,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.onLabelSizeChange = function(event, valu
 
 /**
  * Handles column changes
+ *
  * @param {angular.Scope.Event} event
  * @protected
  */
@@ -511,6 +527,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.onLabelColumnChange = function(event) {
 
 /**
  * Handles changes to the show labels checkbox.
+ *
  * @param {angular.Scope.Event} event
  * @param {boolean} value
  * @protected
@@ -536,6 +553,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.onShowLabelsChange = function(event, val
 
 /**
  * Gets the color from the item(s)
+ *
  * @return {?string} a hex color string
  * @protected
  */
@@ -563,6 +581,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.getColor = function() {
 
 /**
  * Gets the size from the item(s)
+ *
  * @return {number} The size
  */
 os.ui.layer.VectorLayerUICtrl.prototype.getSize = function() {
@@ -589,6 +608,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.getSize = function() {
 
 /**
  * Gets the line dash from the item(s)
+ *
  * @return {Array<number>|undefined} The line
  */
 os.ui.layer.VectorLayerUICtrl.prototype.getLineDash = function() {
@@ -615,6 +635,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.getLineDash = function() {
 
 /**
  * Gets the icon from the item(s)
+ *
  * @return {?osx.icon.Icon} The icon
  */
 os.ui.layer.VectorLayerUICtrl.prototype.getIcon = function() {
@@ -635,6 +656,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.getIcon = function() {
 
 /**
  * Gets the icon from the item(s).
+ *
  * @return {?osx.icon.Icon} The icon.
  */
 os.ui.layer.VectorLayerUICtrl.prototype.getCenterIcon = function() {
@@ -655,6 +677,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.getCenterIcon = function() {
 
 /**
  * Gets the shape from the item(s)
+ *
  * @return {string} The shape
  */
 os.ui.layer.VectorLayerUICtrl.prototype.getShape = function() {
@@ -674,6 +697,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.getShape = function() {
 
 /**
  * Gets the shape options that apply to the item(s)
+ *
  * @return {Array<string>} The available shape options
  */
 os.ui.layer.VectorLayerUICtrl.prototype.getShapes = function() {
@@ -695,6 +719,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.getShapes = function() {
 
 /**
  * Gets the shape from the item(s)
+ *
  * @return {string} The shape
  */
 os.ui.layer.VectorLayerUICtrl.prototype.getCenterShape = function() {
@@ -717,6 +742,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.getCenterShape = function() {
 
 /**
  * Gets the shape options that apply to the item(s)
+ *
  * @return {Array<string>} The available shape options
  */
 os.ui.layer.VectorLayerUICtrl.prototype.getCenterShapes = function() {
@@ -738,6 +764,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.getCenterShapes = function() {
 
 /**
  * Updates the locked state on the UI.
+ *
  * @return {boolean} are all the items locable
  */
 os.ui.layer.VectorLayerUICtrl.prototype.getLockable = function() {
@@ -764,6 +791,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.getLockable = function() {
 
 /**
  * Gets the label size
+ *
  * @return {number} The size
  */
 os.ui.layer.VectorLayerUICtrl.prototype.getLabelSize = function() {
@@ -773,6 +801,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.getLabelSize = function() {
 
 /**
  * Gets the label color
+ *
  * @return {string} The color
  */
 os.ui.layer.VectorLayerUICtrl.prototype.getLabelColor = function() {
@@ -782,6 +811,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.getLabelColor = function() {
 
 /**
  * Gets the columns to use for the label
+ *
  * @return {Array<os.data.ColumnDefinition>} The columns
  */
 os.ui.layer.VectorLayerUICtrl.prototype.getColumns = function() {
@@ -791,6 +821,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.getColumns = function() {
 
 /**
  * Gets the selected columns to use for the label
+ *
  * @return {Array<!os.style.label.LabelConfig>} The columns
  */
 os.ui.layer.VectorLayerUICtrl.prototype.getColumn = function() {
@@ -800,6 +831,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.getColumn = function() {
 
 /**
  * Gets the show label value
+ *
  * @return {boolean} The show label
  */
 os.ui.layer.VectorLayerUICtrl.prototype.getShowLabel = function() {
@@ -809,6 +841,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.getShowLabel = function() {
 
 /**
  * Gets the unique id
+ *
  * @return {boolean} The show label
  */
 os.ui.layer.VectorLayerUICtrl.prototype.getUniqueId = function() {
@@ -818,6 +851,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.getUniqueId = function() {
 
 /**
  * Set the locked state of the source
+ *
  * @export
  */
 os.ui.layer.VectorLayerUICtrl.prototype.onLockChange = function() {
@@ -835,6 +869,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.onLockChange = function() {
 
 /**
  * Updates the Replace Feature Style state on the UI.
+ *
  * @private
  */
 os.ui.layer.VectorLayerUICtrl.prototype.updateReplaceStyle_ = function() {
@@ -874,6 +909,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.updateReplaceStyle_ = function() {
 
 /**
  * Handle changes to the Replace Feature Style option.
+ *
  * @export
  */
 os.ui.layer.VectorLayerUICtrl.prototype.onReplaceStyleChange = function() {
@@ -915,6 +951,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.getAltitudeMode = function() {
 
 /**
  * Set the altitude mode of the source
+ *
  * @export
  */
 os.ui.layer.VectorLayerUICtrl.prototype.onAltitudeModeChange = function() {
@@ -932,6 +969,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.onAltitudeModeChange = function() {
 
 /**
  * Set the unique ID field of the source.
+ *
  * @export
  */
 os.ui.layer.VectorLayerUICtrl.prototype.onUniqueIdChange = function() {
@@ -954,6 +992,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.onUniqueIdChange = function() {
 
 /**
  * The column for the icon rotation
+ *
  * @return {string}
  */
 os.ui.layer.VectorLayerUICtrl.prototype.getRotationColumn = function() {
@@ -971,6 +1010,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.getRotationColumn = function() {
 
 /**
  * If arrow should be displayed for the layer(s).
+ *
  * @return {boolean}
  */
 os.ui.layer.VectorLayerUICtrl.prototype.getShowRotation = function() {
@@ -988,6 +1028,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.getShowRotation = function() {
 
 /**
  * Handle changes to the Show Rotation option.
+ *
  * @param {angular.Scope.Event} event
  * @param {boolean} value
  */
@@ -1010,6 +1051,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.onShowRotationChange = function(event, v
 
 /**
  * Handles column changes to the rotation
+ *
  * @param {angular.Scope.Event} event
  * @param {string} value
  */
@@ -1032,6 +1074,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.onRotationColumnChange = function(event,
 
 /**
  * Handle map property changes.
+ *
  * @param {os.events.PropertyChangeEvent} event The change event.
  * @private
  */

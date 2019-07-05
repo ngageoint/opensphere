@@ -6,6 +6,7 @@ goog.require('os.ui.Module');
 
 /**
  * The filterimportmodel directive
+ *
  * @return {angular.Directive}
  */
 os.ui.filter.im.filterImportModelDirective = function() {

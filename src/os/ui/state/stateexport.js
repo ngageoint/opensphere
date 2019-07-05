@@ -10,6 +10,7 @@ goog.require('os.ui.state.AbstractStateFormCtrl');
 
 /**
  * The stateexport window directive
+ *
  * @return {angular.Directive}
  */
 os.ui.state.stateExportDirective = function() {
@@ -33,6 +34,7 @@ os.ui.Module.directive('stateexport', [os.ui.state.stateExportDirective]);
 
 /**
  * Controller for the save export window
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$timeout} $timeout

@@ -5,6 +5,7 @@ goog.require('goog.async.Deferred');
 
 /**
  * Interface for asynchronous storage mechanisms
+ *
  * @interface
  * @template T
  */

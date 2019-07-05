@@ -185,6 +185,7 @@ os.geo.conv.UTM.prototype.toString = function() {
 
 /**
  * Converts a UTM coordinate to longitude/latitude.
+ *
  * @return {goog.math.Coordinate}
  */
 os.geo.conv.UTM.prototype.convertToLonLat = function() {
@@ -254,6 +255,7 @@ os.geo.conv.UTM.prototype.convertToLonLat = function() {
 
 /**
  * Converts lon/lat coordinates to UTM.
+ *
  * @param {number} longitude
  * @param {number} latitude
  * @return {os.geo.conv.UTM}

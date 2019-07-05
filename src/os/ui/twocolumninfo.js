@@ -11,6 +11,7 @@ goog.require('os.ui.slick.slickGridDirective');
 
 /**
  * The featureinfo directive
+ *
  * @return {angular.Directive}
  */
 os.ui.twoColumnInfoDirective = function() {
@@ -37,6 +38,7 @@ os.ui.Module.directive('twocolumninfo', [os.ui.twoColumnInfoDirective]);
 
 /**
  * Controller function for the featureinfo directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.$timeout} $timeout
  * @constructor
@@ -97,6 +99,7 @@ os.ui.TwoColumnInfoCtrl = function($scope, $timeout) {
 
 /**
  * Clean up.
+ *
  * @private
  */
 os.ui.TwoColumnInfoCtrl.prototype.destroy_ = function() {
@@ -107,6 +110,7 @@ os.ui.TwoColumnInfoCtrl.prototype.destroy_ = function() {
 
 /**
  * Handle feature changes on the scope.
+ *
  * @param {Object} newVal
  * @param {Object} oldVal
  * @private

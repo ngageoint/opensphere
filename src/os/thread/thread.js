@@ -12,6 +12,7 @@ goog.require('os.thread.ThreadProgressEvent');
 
 /**
  * A "pseudo-thread" that facilitates chunked processing
+ *
  * @extends {goog.events.EventTarget}
  * @constructor
  * @param {os.thread.IThreadJob} job The job to run
@@ -91,6 +92,7 @@ os.thread.Thread.prototype.isDeterminate = function() {
 
 /**
  * Handles timer tick
+ *
  * @private
  */
 os.thread.Thread.prototype.onDelay_ = function() {

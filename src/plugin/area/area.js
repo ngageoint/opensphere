@@ -9,6 +9,7 @@ goog.require('os.geo.jsts');
 
 /**
  * Process imported features.
+ *
  * @param {Array<ol.Feature>} features
  * @param {Object} config
  */
@@ -46,6 +47,7 @@ plugin.area.processFeatures = function(features, config) {
 
 /**
  * Process an imported feature.
+ *
  * @param {!ol.Feature} feature
  * @param {Object} config
  * @param {!Array<!os.im.mapping.IMapping>} mappings

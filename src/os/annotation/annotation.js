@@ -96,6 +96,7 @@ os.annotation.OPTIONS_FIELD = '_annotationOptions';
 
 /**
  * Generate annotation options to display the given text.
+ *
  * @param {osx.annotation.Options} options The options.
  * @param {string} text The annotation text.
  */
@@ -116,6 +117,7 @@ os.annotation.scaleToText = function(options, text) {
 
 /**
  * Get the name text for an annotation balloon.
+ *
  * @param {ol.Feature} feature The feature.
  * @return {string} The text.
  */
@@ -130,13 +132,14 @@ os.annotation.getNameText = function(feature) {
 
 /**
  * Get the description text for an annotation balloon.
+ *
  * @param {ol.Feature} feature The feature.
  * @return {string} The text.
  */
 os.annotation.getDescriptionText = function(feature) {
   if (feature) {
     return /** @type {string|undefined} */ (feature.get(os.ui.FeatureEditCtrl.Field.MD_DESCRIPTION)) ||
-        /** @type {string|undefined} */ (feature.get(os.ui.FeatureEditCtrl.Field.DESCRIPTION)) || '';
+    /** @type {string|undefined} */ (feature.get(os.ui.FeatureEditCtrl.Field.DESCRIPTION)) || '';
   }
 
   return '';
@@ -145,6 +148,7 @@ os.annotation.getDescriptionText = function(feature) {
 
 /**
  * If a feature has a map overlay present.
+ *
  * @param {ol.Feature} feature The feature.
  * @return {boolean}
  */
@@ -162,6 +166,7 @@ os.annotation.hasOverlay = function(feature) {
 
 /**
  * Set the target map position for an overlay.
+ *
  * @param {!ol.Overlay} overlay The overlay.
  * @param {ol.Feature} feature The feature. Use null to hide the overlay.
  *
@@ -215,6 +220,7 @@ os.annotation.setPosition = function(overlay, feature) {
 
 /**
  * Get the OpenLayers map bounding rectangle.
+ *
  * @param {ol.Overlay} overlay The overlay to get the map rectangle from.
  * @return {ClientRect|undefined} The map bounding rectangle, or undefined if the map/overlay are not defined.
  */

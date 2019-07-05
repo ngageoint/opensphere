@@ -45,6 +45,7 @@ os.im.action.TagName = {
 
 /**
  * Sort import actions by label.
+ *
  * @param {os.im.action.IImportAction} a First action.
  * @param {os.im.action.IImportAction} b Second action.
  * @return {number} Sort order of the actions, by label.

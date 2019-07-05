@@ -10,7 +10,6 @@ goog.require('ol.format.GeoJSON');
    * @param {olx.format.WriteOptions=} opt_options Write options.
    * @return {GeoJSONFeature} Object.
    * @override
-   * @api
    * @suppress {accessControls,duplicate}
    */
   ol.format.GeoJSON.prototype.writeFeatureObject = function(feature, opt_options) {

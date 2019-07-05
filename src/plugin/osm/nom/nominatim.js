@@ -122,6 +122,7 @@ plugin.osm.nom.VECTOR_CONFIG = {
 
 /**
  * Get the search score for an OSM Nominatim result.
+ *
  * @param {ol.Feature} feature The feature result.
  * @return {number} The search score.
  */

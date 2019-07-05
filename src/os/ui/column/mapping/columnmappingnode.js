@@ -6,6 +6,7 @@ goog.require('os.ui.slick.SlickTreeNode');
 
 /**
  * Tree node representing a column mapping.
+ *
  * @extends {os.ui.slick.SlickTreeNode}
  * @constructor
  */
@@ -25,6 +26,7 @@ goog.inherits(os.ui.column.mapping.ColumnMappingNode, os.ui.slick.SlickTreeNode)
 
 /**
  * Gets the column mapping associated with this node.
+ *
  * @return {?os.column.IColumnMapping}
  */
 os.ui.column.mapping.ColumnMappingNode.prototype.getColumnMapping = function() {
@@ -34,6 +36,7 @@ os.ui.column.mapping.ColumnMappingNode.prototype.getColumnMapping = function() {
 
 /**
  * Sets the column mapping on this node. This also creates
+ *
  * @param {?os.column.IColumnMapping} value
  */
 os.ui.column.mapping.ColumnMappingNode.prototype.setColumnMapping = function(value) {

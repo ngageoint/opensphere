@@ -14,6 +14,7 @@ goog.require('os.ui.datetime.wheelDateDirective');
 
 /**
  * The date-control directive.
+ *
  * @return {angular.Directive}
  */
 os.ui.datetime.dateControlDirective = function() {
@@ -36,6 +37,7 @@ os.ui.Module.directive('dateControl', [os.ui.datetime.dateControlDirective]);
 
 /**
  * Controller for the date-control directive.
+ *
  * @param {!angular.Scope} $scope The Angular scope.
  * @extends {goog.Disposable}
  * @constructor
@@ -138,6 +140,7 @@ os.ui.datetime.DateControlCtrl.prototype.disposeInternal = function() {
 
 /**
  * Change handler for the start date control.
+ *
  * @param {?Date} newVal The new value.
  * @param {?Date} oldVal The old value.
  * @private
@@ -168,6 +171,7 @@ os.ui.datetime.DateControlCtrl.prototype.onStartDateChanged_ = function(newVal, 
 
 /**
  * Change handler for the end date control.
+ *
  * @param {?Date} newVal The new value.
  * @param {?Date} oldVal The old value.
  * @private
@@ -194,6 +198,7 @@ os.ui.datetime.DateControlCtrl.prototype.onEndDateChanged_ = function(newVal, ol
 
 /**
  * Change handler for duration chooser.
+ *
  * @export
  */
 os.ui.datetime.DateControlCtrl.prototype.onDurationChanged = function() {
@@ -217,6 +222,7 @@ os.ui.datetime.DateControlCtrl.prototype.onDurationChanged = function() {
 
 /**
  * Start the delay to update the timeline controller.
+ *
  * @private
  */
 os.ui.datetime.DateControlCtrl.prototype.startControllerUpdate_ = function() {
@@ -228,6 +234,7 @@ os.ui.datetime.DateControlCtrl.prototype.startControllerUpdate_ = function() {
 
 /**
  * Updates the start/end date on the timeline controller.
+ *
  * @private
  */
 os.ui.datetime.DateControlCtrl.prototype.updateController_ = function() {
@@ -250,6 +257,7 @@ os.ui.datetime.DateControlCtrl.prototype.updateController_ = function() {
 
 /**
  * Change handler for duration chooser.
+ *
  * @param {number} direction
  * @export
  */
@@ -299,6 +307,7 @@ os.ui.datetime.DateControlCtrl.prototype.update = function() {
 
 /**
  * Get the duration from the timeline controller.
+ *
  * @return {string} The duration, or `os.time.Duration.DAY` if the timeline controller is not available.
  * @protected
  */
@@ -309,6 +318,7 @@ os.ui.datetime.DateControlCtrl.prototype.getDuration = function() {
 
 /**
  * Get the end date from the UI to set in the timeline controller.
+ *
  * @return {Date} The end date.
  * @protected
  */
@@ -324,6 +334,7 @@ os.ui.datetime.DateControlCtrl.prototype.getControllerEndDate = function() {
 
 /**
  * Get the end date from the timeline controller to display in the UI.
+ *
  * @return {Date} The end date.
  * @protected
  */
@@ -344,6 +355,7 @@ os.ui.datetime.DateControlCtrl.prototype.getUIEndDate = function() {
 
 /**
  * Handler for timeline reset.
+ *
  * @param {os.time.TimelineControllerEvent} event
  * @private
  */

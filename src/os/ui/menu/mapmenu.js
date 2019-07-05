@@ -142,6 +142,7 @@ os.ui.menu.map.dispose = function() {
 
 /**
  * Show a menu item if the context is a valid coordinate.
+ *
  * @param {ol.Coordinate} coord The coordinate.
  * @this {os.ui.menu.MenuItem}
  */
@@ -152,6 +153,7 @@ os.ui.menu.map.showIfHasCoordinate = function(coord) {
 
 /**
  * Color the icon for the Background Color menu item.
+ *
  * @this {os.ui.menu.MenuItem}
  */
 os.ui.menu.map.updateBGIcon = function() {
@@ -172,6 +174,7 @@ os.ui.menu.map.showLegend = function() {
 
 /**
  * Clears selection on all vector sources.
+ *
  * @private
  */
 os.ui.menu.map.clearSelection_ = function() {
@@ -196,6 +199,7 @@ os.ui.menu.map.changeColor_ = function() {
 
 /**
  * Handle user selection of the map background color.
+ *
  * @param {string} color
  * @private
  */
@@ -206,6 +210,7 @@ os.ui.menu.map.onColorChosen_ = function(color) {
 
 /**
  * Update the Sky menu item.
+ *
  * @this {os.ui.menu.MenuItem}
  */
 os.ui.menu.map.updateSkyItem = function() {
@@ -216,6 +221,7 @@ os.ui.menu.map.updateSkyItem = function() {
 
 /**
  * Enable terrain menu option listener.
+ *
  * @param {os.ui.menu.MenuEvent<ol.Coordinate>} event The event.
  * @this {os.ui.menu.MenuItem}
  */
@@ -226,6 +232,7 @@ os.ui.menu.map.onSky = function(event) {
 
 /**
  * Update the Terrain menu item.
+ *
  * @this {os.ui.menu.MenuItem}
  */
 os.ui.menu.map.updateTerrainItem = function() {
@@ -236,6 +243,7 @@ os.ui.menu.map.updateTerrainItem = function() {
 
 /**
  * Enable terrain menu option listener.
+ *
  * @param {os.ui.menu.MenuEvent<ol.Coordinate>} event The event.
  * @this {os.ui.menu.MenuItem}
  */

@@ -20,6 +20,7 @@ os.ui.filter.ui.CopyFilterPickerModel;
 
 /**
  * The copyfilterpicker directive
+ *
  * @return {angular.Directive}
  */
 os.ui.filter.ui.copyFilterPickerDirective = function() {
@@ -56,6 +57,7 @@ os.ui.Module.directive('copyfilterpicker', [os.ui.filter.ui.copyFilterPickerDire
 
 /**
  * Controller function for the copyfilterpicker directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.$timeout} $timeout
  * @constructor
@@ -86,6 +88,7 @@ os.ui.filter.ui.CopyFilterPickerCtrl = function($scope, $timeout) {
 
 /**
  * Clean up.
+ *
  * @private
  */
 os.ui.filter.ui.CopyFilterPickerCtrl.prototype.destroy_ = function() {
@@ -101,6 +104,7 @@ os.ui.filter.ui.CopyFilterPickerCtrl.prototype.destroy_ = function() {
 
 /**
  * Validates the picker section.
+ *
  * @export
  */
 os.ui.filter.ui.CopyFilterPickerCtrl.prototype.validate = function() {

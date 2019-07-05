@@ -11,6 +11,7 @@ goog.require('os.style.label');
 
 /**
  * Changes the label field for a layer
+ *
  * @param {string} layerId
  * @param {Array<os.style.label.LabelConfig>} value
  * @param {Array<os.style.label.LabelConfig>=} opt_oldValue

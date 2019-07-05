@@ -172,6 +172,7 @@ plugin.cesium.Layer.prototype.disposeInternal = function() {
 
 /**
  * Handle map change events.
+ *
  * @param {os.events.PropertyChangeEvent} event The event.
  * @protected
  */
@@ -184,6 +185,7 @@ plugin.cesium.Layer.prototype.onMapChange = function(event) {
 
 /**
  * Test if Cesium is enabled and synchronize with Cesium.
+ *
  * @protected
  */
 plugin.cesium.Layer.prototype.synchronize = function() {
@@ -198,6 +200,7 @@ plugin.cesium.Layer.prototype.synchronize = function() {
 
 /**
  * Get the error message to display on the layer.
+ *
  * @return {string} The message.
  * @protected
  */
@@ -252,6 +255,7 @@ plugin.cesium.Layer.prototype.getGroupLabel = function() {
 
 /**
  * Get the default color for the layer.
+ *
  * @return {?string}
  */
 plugin.cesium.Layer.prototype.getDefaultColor = function() {
@@ -294,6 +298,7 @@ plugin.cesium.Layer.prototype.setColor = function(value, opt_options) {
 
 /**
  * Update icons to use the current layer color.
+ *
  * @private
  */
 plugin.cesium.Layer.prototype.updateIcons_ = function() {
@@ -394,6 +399,7 @@ plugin.cesium.Layer.prototype.getLoadingDelay = function() {
 
 /**
  * Fires an event to indicate a loading change.
+ *
  * @private
  */
 plugin.cesium.Layer.prototype.fireLoadingEvent_ = function() {

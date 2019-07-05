@@ -12,6 +12,7 @@ goog.require('os.ui.wiz.step.WizardStepEvent');
 
 /**
  * Area import wizard options step
+ *
  * @extends {os.ui.wiz.step.AbstractWizardStep}
  * @constructor
  */
@@ -36,6 +37,7 @@ os.query.ui.AreaOptionsStep.prototype.initialize = function(config) {
 
 /**
  * The area import wizard options step directive
+ *
  * @return {angular.Directive}
  */
 os.query.ui.areaOptionsStepDirective = function() {
@@ -58,6 +60,7 @@ os.ui.Module.directive('areaoptionsstep', [os.query.ui.areaOptionsStepDirective]
 
 /**
  * Controller for the import wizard options step
+ *
  * @param {!angular.Scope} $scope
  * @constructor
  * @ngInject
@@ -89,6 +92,7 @@ os.query.ui.AreaOptionsStepCtrl.prototype.destroy_ = function() {
 
 /**
  * Handles validation changes in the options form.
+ *
  * @param {boolean} valid If the form is valid.
  * @private
  */

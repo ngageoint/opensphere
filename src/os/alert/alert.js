@@ -5,6 +5,7 @@ goog.require('os.alert.AlertEventSeverity');
 
 /**
  * Object to carry around alert details
+ *
  * @param {string} message The alert to send and add to the window
  * @param {os.alert.AlertEventSeverity=} opt_severity Severity of the event, defaults to error
  * @constructor

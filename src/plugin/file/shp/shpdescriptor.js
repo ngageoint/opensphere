@@ -9,6 +9,7 @@ goog.require('plugin.file.shp.SHPProvider');
 
 /**
  * SHP file descriptor.
+ *
  * @param {plugin.file.shp.SHPParserConfig=} opt_config
  * @extends {os.data.FileDescriptor}
  * @constructor
@@ -55,6 +56,7 @@ plugin.file.shp.SHPDescriptor.prototype.getLayerOptions = function() {
 
 /**
  * Get the original URL for this file.
+ *
  * @return {?string}
  */
 plugin.file.shp.SHPDescriptor.prototype.getOriginalUrl2 = function() {
@@ -64,6 +66,7 @@ plugin.file.shp.SHPDescriptor.prototype.getOriginalUrl2 = function() {
 
 /**
  * Set the original URL for this file.
+ *
  * @param {?string} value
  */
 plugin.file.shp.SHPDescriptor.prototype.setOriginalUrl2 = function(value) {
@@ -73,6 +76,7 @@ plugin.file.shp.SHPDescriptor.prototype.setOriginalUrl2 = function(value) {
 
 /**
  * Get the URL for this descriptor.
+ *
  * @return {?string}
  */
 plugin.file.shp.SHPDescriptor.prototype.getUrl2 = function() {
@@ -82,6 +86,7 @@ plugin.file.shp.SHPDescriptor.prototype.getUrl2 = function() {
 
 /**
  * Set the URL for this descriptor.
+ *
  * @param {?string} value
  */
 plugin.file.shp.SHPDescriptor.prototype.setUrl2 = function(value) {
@@ -139,6 +144,7 @@ plugin.file.shp.SHPDescriptor.prototype.restore = function(conf) {
 
 /**
  * Creates a new descriptor from a parser configuration.
+ *
  * @param {!plugin.file.shp.SHPParserConfig} config
  * @return {!plugin.file.shp.SHPDescriptor}
  */

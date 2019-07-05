@@ -28,6 +28,7 @@ os.ui.file.gml.DEFAULT_STYLE = {
 
 /**
  * Parses a GML source
+ *
  * @implements {os.parse.IParser<ol.Feature>}
  * @constructor
  */
@@ -137,6 +138,7 @@ os.ui.file.gml.GMLParser.prototype.setSource = function(source) {
 /**
  * Some GML sources omit the gml:_Feature tag under a gml:featureMember node. This cannot be parsed by OL3, so check
  * for this case and create the node if necessary.
+ *
  * @protected
  */
 os.ui.file.gml.GMLParser.prototype.validateFeatures = function() {

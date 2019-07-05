@@ -19,6 +19,7 @@ goog.require('os.time.TimelineEventType');
  * The Arc request source requests the IDs of all of the features in an area. ArcGIS servers will
  * not return more than 1000 features in a single request, so instead, this source chunks its requests
  * out in packs of 1000 by ID in order to complete a single request.
+ *
  * @extends {os.source.Request}
  * @param {olx.source.VectorOptions=} opt_options OpenLayers vector source options.
  * @constructor
@@ -142,6 +143,7 @@ plugin.arc.source.ArcRequestSource.prototype.onRequestComplete = function(event)
 
 /**
  * Disposes all of the ID requests and clears the list.
+ *
  * @private
  */
 plugin.arc.source.ArcRequestSource.prototype.disposeIdRequests_ = function() {
@@ -156,6 +158,7 @@ plugin.arc.source.ArcRequestSource.prototype.disposeIdRequests_ = function() {
 
 /**
  * Success handler for ID loads.
+ *
  * @param {goog.events.Event} event
  * @private
  */
@@ -177,6 +180,7 @@ plugin.arc.source.ArcRequestSource.prototype.onIdLoad_ = function(event) {
 
 /**
  * Error handler for ID loads.
+ *
  * @param {goog.events.Event} event
  * @private
  */

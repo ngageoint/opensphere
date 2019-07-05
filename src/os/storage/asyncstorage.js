@@ -10,6 +10,7 @@ goog.require('os.storage.IAsyncStorage');
 
 /**
  * Basic interface for all asynchronous storage mechanisms.
+ *
  * @abstract
  * @implements {os.storage.IAsyncStorage}
  * @extends {goog.Disposable}
@@ -40,6 +41,7 @@ os.storage.AsyncStorage.prototype.get = function(key) {};
 
 /**
  * Get all values from storage.
+ *
  * @abstract
  * @return {!goog.async.Deferred<!Array<T>>} A deferred that resolves with all values in storage.
  * @template T

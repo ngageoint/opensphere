@@ -5,6 +5,7 @@ goog.require('goog.events.Event');
 
 /**
  * Event that carries a selector to tell a section to scroll.
+ *
  * @param {string} selector The selector to scroll to
  * @param {string=} opt_focus Optional element to focus
  * @extends {goog.events.Event}

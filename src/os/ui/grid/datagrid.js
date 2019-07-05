@@ -8,6 +8,7 @@ goog.require('os.ui.Module');
 
 /**
  * The datagrid directive
+ *
  * @return {angular.Directive}
  *
  * @deprecated Please use `os.ui.slickGridDirective` instead.
@@ -126,6 +127,7 @@ os.ui.grid.DataGridCtrl.prototype.destroy_ = function() {
 
 /**
  * Create the SlickGrid instance.
+ *
  * @param {angular.JQLite} el
  */
 os.ui.grid.DataGridCtrl.prototype.createGrid = function(el) {
@@ -201,6 +203,7 @@ os.ui.grid.DataGridCtrl.prototype.createGrid = function(el) {
 
 /**
  * Sets the items displayed by the data view.
+ *
  * @param {Array.<Object>} data
  * @private
  */
@@ -219,6 +222,7 @@ os.ui.grid.DataGridCtrl.prototype.updateData_ = function(data) {
 
 /**
  * Resets and refreshes the grid and data view.
+ *
  * @private
  */
 os.ui.grid.DataGridCtrl.prototype.resetGrid_ = function() {
@@ -232,6 +236,7 @@ os.ui.grid.DataGridCtrl.prototype.resetGrid_ = function() {
 
 /**
  * Updates the grid size to fit its container.
+ *
  * @private
  */
 os.ui.grid.DataGridCtrl.prototype.resizeGrid_ = function() {

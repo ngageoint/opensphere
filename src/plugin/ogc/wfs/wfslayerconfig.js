@@ -232,6 +232,7 @@ plugin.ogc.wfs.WFSLayerConfig.prototype.featureTypeAvailable = function(layer, o
 
 /**
  * Adds mappings
+ *
  * @param {os.layer.Vector} layer
  * @param {Object.<string, *>} options
  * @protected
@@ -428,6 +429,7 @@ plugin.ogc.wfs.WFSLayerConfig.prototype.getLayer = function(source, options) {
 
 /**
  * CSV sources are not lockable.
+ *
  * @inheritDoc
  */
 plugin.ogc.wfs.WFSLayerConfig.prototype.getSource = function(options) {

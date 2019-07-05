@@ -6,6 +6,7 @@ goog.require('os.ui.slick.SlickGridCtrl');
 
 /**
  * The slickheaderbutton directive.
+ *
  * @return {angular.Directive}
  */
 os.ui.slick.slickHeaderButtonDirective = function() {
@@ -25,6 +26,7 @@ os.ui.Module.directive('slickheaderbutton', [os.ui.slick.slickHeaderButtonDirect
 
 /**
  * Controller class for SlickGrid with header buttons
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$compile} $compile

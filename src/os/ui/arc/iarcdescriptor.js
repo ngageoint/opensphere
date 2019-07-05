@@ -7,6 +7,7 @@ goog.require('os.ui.ogc.IFeatureTypeDescriptor');
 
 /**
  * Interface for ARC data descriptors
+ *
  * @interface
  * @extends {os.data.IDataDescriptor}
  * @extends {os.data.IServerDescriptor}

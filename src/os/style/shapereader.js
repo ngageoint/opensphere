@@ -25,6 +25,7 @@ os.style.ShapeDefaults = {
 
 /**
  * Shape style reader
+ *
  * @extends {os.style.AbstractReader<!ol.style.RegularShape>}
  * @constructor
  */

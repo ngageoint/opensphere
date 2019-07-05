@@ -19,6 +19,7 @@ goog.require('os.ui.query.cmd.FilterAdd');
 
 /**
  * Class representing all of the filters that apply to a particular layer type.
+ *
  * @constructor
  * @implements {os.IPersistable}
  */
@@ -78,6 +79,7 @@ os.filter.FilterType.prototype.restore = function(config) {
 
 /**
  * Manager class for keeping track of filter types registered currently in an application
+ *
  * @extends {goog.events.EventTarget}
  * @constructor
  */
@@ -113,6 +115,7 @@ os.filter.BaseFilterManager.prototype.disposeInternal = function() {
 
 /**
  * Saves the filter data
+ *
  * @protected
  */
 os.filter.BaseFilterManager.prototype.save = function() {};
@@ -128,6 +131,7 @@ os.filter.BaseFilterManager.prototype.load = function() {
 
 /**
  * Gets the stored filters
+ *
  * @param {string=} opt_layerId
  * @return {?Array<os.filter.FilterEntry>}
  */
@@ -185,6 +189,7 @@ os.filter.BaseFilterManager.prototype.clearTemp = function() {
 
 /**
  * Gets the filters for the given type
+ *
  * @param {string} type
  * @return {?Array.<os.filter.FilterEntry>}
  */
@@ -199,6 +204,7 @@ os.filter.BaseFilterManager.prototype.getFiltersByType = function(type) {
 
 /**
  * Gets the filters for the given type
+ *
  * @param {?string=} opt_layerId
  * @return {?Array.<os.filter.FilterEntry>}
  */
@@ -228,6 +234,7 @@ os.filter.BaseFilterManager.prototype.getFilterable = function(layerId) {
 
 /**
  * Matches filters against a descriptor
+ *
  * @param {string} layerId
  * @param {Array<os.filter.FilterEntry>} filters
  * @return {?Array<os.filter.FilterEntry>}
@@ -263,6 +270,7 @@ os.filter.BaseFilterManager.prototype.matchFilters = function(layerId, filters) 
 
 /**
  * Gets a filter by ID
+ *
  * @param {string} id The ID
  * @return {?os.filter.FilterEntry} The filter or null if none was found
  */
@@ -283,6 +291,7 @@ os.filter.BaseFilterManager.prototype.getFilter = function(id) {
 
 /**
  * Whether or not the given type has a filter
+ *
  * @param {string=} opt_type
  * @return {boolean} True if filters exist, false otherwise
  */
@@ -294,6 +303,7 @@ os.filter.BaseFilterManager.prototype.hasFilters = function(opt_type) {
 
 /**
  * Whether or not the given type has enabled filters
+ *
  * @param {string=} opt_type
  * @return {boolean} True if enabled filters exist, false otherwise
  */
@@ -314,6 +324,7 @@ os.filter.BaseFilterManager.prototype.hasEnabledFilters = function(opt_type) {
 
 /**
  * Determine the number of enabled filters
+ *
  * @param {string=} opt_type
  * @return {number} The number of enabled filters
  */
@@ -331,6 +342,7 @@ os.filter.BaseFilterManager.prototype.getNumEnabledFilters = function(opt_type) 
 
 /**
  * Checks whether the filter is active against the opt_type layer.
+ *
  * @param {os.filter.FilterEntry} filter
  * @param {string=} opt_type
  * @return {boolean}
@@ -349,6 +361,7 @@ os.filter.BaseFilterManager.prototype.isEnabled = function(filter, opt_type) {
 
 /**
  * Adds a filter
+ *
  * @param {os.filter.FilterEntry} filter
  */
 os.filter.BaseFilterManager.prototype.addFilter = function(filter) {
@@ -366,6 +379,7 @@ os.filter.BaseFilterManager.prototype.addFilter = function(filter) {
 
 /**
  * Removes a filter
+ *
  * @param {os.filter.FilterEntry} filter
  */
 os.filter.BaseFilterManager.prototype.removeFilter = function(filter) {
@@ -381,6 +395,7 @@ os.filter.BaseFilterManager.prototype.removeFilter = function(filter) {
 
 /**
  * Removes a filter
+ *
  * @param {Array<os.filter.FilterEntry>} filters
  */
 os.filter.BaseFilterManager.prototype.removeFilters = function(filters) {
@@ -399,6 +414,7 @@ os.filter.BaseFilterManager.prototype.removeFilters = function(filters) {
 
 /**
  * Removes a type
+ *
  * @param {!string} type
  */
 os.filter.BaseFilterManager.prototype.removeType = function(type) {
@@ -412,6 +428,7 @@ os.filter.BaseFilterManager.prototype.removeType = function(type) {
 
 /**
  * Gets the grouping for a type
+ *
  * @param {string} type
  * @return {boolean} True for AND, false for OR
  */
@@ -427,6 +444,7 @@ os.filter.BaseFilterManager.prototype.getGrouping = function(type) {
 
 /**
  * Sets the grouping for a type
+ *
  * @param {!string} type
  * @param {boolean} and
  */
@@ -449,6 +467,7 @@ os.filter.BaseFilterManager.prototype.setGrouping = function(type, and) {
 
 /**
  * Toggles the feature on the map
+ *
  * @param {string|os.filter.FilterEntry} filterOrId
  * @param {boolean=} opt_toggle Optional toggle value. If not set, the value will flip.
  */
@@ -471,6 +490,7 @@ os.filter.BaseFilterManager.prototype.toggle = function(filterOrId, opt_toggle) 
 
 /**
  * Handle an add filter event fired on the global dispatcher.
+ *
  * @param {goog.events.Event} event
  * @private
  */
@@ -488,6 +508,7 @@ os.filter.BaseFilterManager.prototype.onAddFilterEvent_ = function(event) {
 
 /**
  * Add / Edit the filter
+ *
  * @param {string} layerId - the layer id
  * @param {Array} layerColumns - the layer columns
  * @param {function(os.filter.FilterEntry)} callback The callback to fire when the filter is ready
@@ -541,6 +562,7 @@ os.filter.BaseFilterManager.edit = function(layerId, layerColumns, callback, opt
 
 /**
  * View the filter
+ *
  * @param {string} layerId - the layer id
  * @param {Array} layerColumns - the layer columns
  * @param {function(os.filter.FilterEntry)} callback The callback to fire when the filter is ready
@@ -583,6 +605,7 @@ os.filter.BaseFilterManager.view = function(layerId, layerColumns, callback, opt
 
 /**
  * Launch the copier for a filter
+ *
  * @param {os.filter.FilterEntry} entry
  * @param {string} layerId
  */
@@ -612,6 +635,7 @@ os.filter.BaseFilterManager.copy = function(entry, layerId) {
 
 /**
  * Get a nice name from the filter type
+ *
  * @param {string} val
  * @param {boolean=} opt_useType
  * @return {string}

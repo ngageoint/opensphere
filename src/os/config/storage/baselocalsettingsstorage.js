@@ -13,6 +13,7 @@ goog.require('os.storage.AsyncStorage');
 
 /**
  * Base class for implementing locally accessible settings storages.
+ *
  * @constructor
  * @implements {os.config.storage.ISettingsStorage}
  * @implements {os.config.storage.ISettingsReadableStorage}
@@ -48,6 +49,7 @@ os.config.storage.BaseLocalSettingsStorage.prototype.init = function() {
 
 /**
  * Handle successfuly init.  Does nothing, subclasses may override.
+ *
  * @return {goog.async.Deferred|null|undefined}
  * @protected
  */
@@ -76,6 +78,7 @@ os.config.storage.BaseLocalSettingsStorage.prototype.getSettings = function() {
 
 /**
  * Callback for the deferred list for retrieving all settings namespaces
+ *
  * @param {!Array.<!Array.<boolean, *>>} deferredListResults
  * @return {goog.async.Deferred|Object}
  * @private
@@ -107,6 +110,7 @@ os.config.storage.BaseLocalSettingsStorage.prototype.onGet_ = function(deferredL
 
 /**
  * Handle failure get for an individual key.
+ *
  * @private
  */
 os.config.storage.BaseLocalSettingsStorage.prototype.onFail_ = function() {
@@ -136,6 +140,7 @@ os.config.storage.BaseLocalSettingsStorage.prototype.setSettings = function(map)
 
 /**
  * Handle settings set
+ *
  * @param {!Array.<!Array.<boolean, *>>} deferredListResults
  * @return {goog.async.Deferred|null|undefined}
  * @private

@@ -8,6 +8,7 @@ goog.require('os.ui.Module');
 
 /**
  * A popover directive to generate a popover for tooltips
+ *
  * @return {angular.Directive}
  */
 os.ui.popover.popoverDirective = function() {
@@ -37,6 +38,7 @@ os.ui.Module.directive('popover', [os.ui.popover.popoverDirective]);
 
 /**
  * Controller for the popover directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$timeout} $timeout
@@ -84,6 +86,7 @@ os.ui.popover.PopoverCtrl = function($scope, $element, $timeout) {
 
 /**
  * Cleans up the property change listener
+ *
  * @private
  */
 os.ui.popover.PopoverCtrl.prototype.onDestroy_ = function() {
@@ -101,6 +104,7 @@ os.ui.popover.PopoverCtrl.prototype.onDestroy_ = function() {
 
 /**
  * Update the popover
+ *
  * @private
  */
 os.ui.popover.PopoverCtrl.prototype.update_ = function() {

@@ -11,6 +11,7 @@ goog.require('os.net.Request');
 
 /**
  * Settings which are read in from a file (like an overrides).
+ *
  * @implements {os.config.storage.ISettingsStorage}
  * @implements {os.config.storage.ISettingsReadableStorage}
  * @constructor
@@ -68,6 +69,7 @@ os.config.storage.SettingsFile.prototype.getSettings = function() {
 
 /**
  * Handle get settings success
+ *
  * @param {!goog.async.Deferred} deferred
  * @param {!goog.events.Event} event
  * @private
@@ -92,6 +94,7 @@ os.config.storage.SettingsFile.prototype.onGetSuccess_ = function(deferred, even
 
 /**
  * Handle get settings fail
+ *
  * @param {!goog.async.Deferred} deferred
  * @param {string=} opt_msg
  * @private

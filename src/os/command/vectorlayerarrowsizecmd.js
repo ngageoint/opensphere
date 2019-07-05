@@ -7,6 +7,7 @@ goog.require('os.metrics');
 
 /**
  * Changes the arrow size for a lob
+ *
  * @param {string} layerId
  * @param {number} value
  * @param {number=} opt_oldValue

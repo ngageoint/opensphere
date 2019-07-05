@@ -17,6 +17,7 @@ os.dataManager = null;
 
 /**
  * The data manager provides methods for tracking and registering providers and descriptors.
+ *
  * @extends {goog.events.Listenable}
  * @interface
  */

@@ -14,6 +14,7 @@ goog.require('os.ui.windowSelector');
  * The wheel-date directive. This directive creates a date field that will adjust the date based on the mouse
  * cursor position when the mouse is scrolled. The date passed via the scope will be updated when the Enter key
  * is pressed or the date field loses focus.
+ *
  * @return {angular.Directive}
  */
 os.ui.datetime.wheelDateDirective = function() {
@@ -42,6 +43,7 @@ os.ui.Module.directive('wheelDate', [os.ui.datetime.wheelDateDirective]);
 
 /**
  * Today button should set the date rather than just bring it into view
+ *
  * @param {string} id
  * @this os.ui.datetime.WheelDateCtrl
  * @private
@@ -62,6 +64,7 @@ os.ui.datetime.oldToday_ = null;
 
 /**
  * THIN-6229 - Today button should set the date rather than just bring it into view
+ *
  * @suppress {checkTypes}
  * @private
  */
@@ -76,6 +79,7 @@ os.ui.datetime.fixToday_ = function() {
 
 /**
  * Controller function for the wheel-date directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$timeout} $timeout
@@ -211,6 +215,7 @@ os.ui.datetime.WheelDateCtrl.LOGGER_ = goog.log.getLogger('os.ui.datetime.WheelD
 
 /**
  * Clear references to Angular/DOM elements.
+ *
  * @private
  */
 os.ui.datetime.WheelDateCtrl.prototype.destroy_ = function() {
@@ -227,6 +232,7 @@ os.ui.datetime.WheelDateCtrl.prototype.destroy_ = function() {
 
 /**
  * Change handler for date control.
+ *
  * @param {?Date} newVal
  * @param {?Date} oldVal
  * @private
@@ -248,6 +254,7 @@ os.ui.datetime.WheelDateCtrl.prototype.onDateChanged_ = function(newVal, oldVal)
 
 /**
  * Registers mouse wheel listener on focus, unregisters it on blur.
+ *
  * @param {goog.events.BrowserEvent} event
  * @private
  */
@@ -272,6 +279,7 @@ os.ui.datetime.WheelDateCtrl.prototype.onDateFocus_ = function(event) {
 
 /**
  * Registers mouse wheel listener on focus, unregisters it on blur.
+ *
  * @param {goog.events.BrowserEvent} event
  * @private
  */
@@ -291,6 +299,7 @@ os.ui.datetime.WheelDateCtrl.prototype.onDateBlur_ = function(event) {
 
 /**
  * Update the scope if a mousewheel event changed the date.
+ *
  * @private
  */
 os.ui.datetime.WheelDateCtrl.prototype.handleBlur_ = function() {
@@ -307,6 +316,7 @@ os.ui.datetime.WheelDateCtrl.prototype.handleBlur_ = function() {
 /**
  * Handle mouse wheel events. This callback is registered on focus and removed on blur and will update the date
  * based on the cursor start position in the date field.
+ *
  * @param {goog.events.MouseWheelEvent} event
  * @private
  */
@@ -342,6 +352,7 @@ os.ui.datetime.WheelDateCtrl.prototype.handleWheelEvent_ = function(event) {
 /**
  * Updates Angular scope's date so the parent can react. This should only fire when the user chooses a date
  * from the calendar, hits enter, or the field loses focus. Mouse wheel changes should be suppressed.
+ *
  * @export
  */
 os.ui.datetime.WheelDateCtrl.prototype.updateScopeDate = function() {

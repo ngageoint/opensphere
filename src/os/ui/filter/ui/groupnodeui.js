@@ -5,6 +5,7 @@ goog.require('os.ui.Module');
 
 /**
  * The edit/delete node UI for expression nodes.
+ *
  * @return {angular.Directive}
  */
 os.ui.filter.ui.GroupNodeUIDirective = function() {
@@ -37,6 +38,7 @@ os.ui.Module.directive('groupnodeui', [os.ui.filter.ui.GroupNodeUIDirective]);
 
 /**
  * Controller for selected/highlighted node UI
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @constructor
@@ -69,6 +71,7 @@ os.ui.filter.ui.GroupNodeUICtrl.GROUPS = {
 
 /**
  * Removes the expression
+ *
  * @export
  */
 os.ui.filter.ui.GroupNodeUICtrl.prototype.remove = function() {

@@ -12,6 +12,7 @@ goog.require('os.ui.ol.interaction');
 
 /**
  * Extends the OpenLayers keyboard zoom interaction to support WebGL.
+ *
  * @param {olx.interaction.KeyboardZoomOptions=} opt_options Options.
  * @extends {ol.interaction.KeyboardZoom}
  * @implements {os.I3DSupport}
@@ -42,6 +43,7 @@ os.interaction.KeyboardZoom.prototype.is3DSupported = function() {
  * Handles the {@link ol.MapBrowserEvent map browser event} if it was a
  * `KeyEvent`, and decides whether to zoom in or out (depending on whether the
  * key pressed was '+' or '-').
+ *
  * @param {ol.MapBrowserEvent} mapBrowserEvent Map browser event.
  * @return {boolean} `false` to stop event propagation.
  * @this os.interaction.KeyboardZoom

@@ -19,6 +19,7 @@ os.ui.filter.ui.FilterExportChoice = {
 
 /**
  * The filterexport directive
+ *
  * @return {angular.Directive}
  */
 os.ui.filter.ui.filterExportDirective = function() {
@@ -45,6 +46,7 @@ os.ui.Module.directive('filterexport', [os.ui.filter.ui.filterExportDirective]);
 
 /**
  * Controller function for the filterexport directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$timeout} $timeout The Angular $timeout service.
@@ -88,6 +90,7 @@ os.ui.filter.ui.FilterExportCtrl = function($scope, $element, $timeout) {
 
 /**
  * Launch a dialog prompting the user the file they're importing already exists and requesting action.
+ *
  * @param {function(string, os.ui.filter.ui.FilterExportChoice)} confirm
  * @param {number=} opt_mode
  */
@@ -116,6 +119,7 @@ os.ui.filter.ui.launchFilterExport = function(confirm, opt_mode) {
 
 /**
  * Fire the cancel callback and close the window.
+ *
  * @export
  */
 os.ui.filter.ui.FilterExportCtrl.prototype.cancel = function() {
@@ -125,6 +129,7 @@ os.ui.filter.ui.FilterExportCtrl.prototype.cancel = function() {
 
 /**
  * Fire the confirmation callback and close the window.
+ *
  * @export
  */
 os.ui.filter.ui.FilterExportCtrl.prototype.save = function() {
@@ -136,6 +141,7 @@ os.ui.filter.ui.FilterExportCtrl.prototype.save = function() {
 
 /**
  * Close the window.
+ *
  * @private
  */
 os.ui.filter.ui.FilterExportCtrl.prototype.close_ = function() {
@@ -145,6 +151,7 @@ os.ui.filter.ui.FilterExportCtrl.prototype.close_ = function() {
 
 /**
  * Export the passed in filters
+ *
  * @param {string} name of the file
  * @param {Array} filters
  */
@@ -156,7 +163,7 @@ os.ui.filter.ui.export = function(name, filters) {
     os.array.forEach(filters, function(filter) {
       var queryEntry = filter.getEntry();
       var filterEntry = queryEntry instanceof os.filter.FilterEntry ?
-          queryEntry : os.ui.filterManager.getFilter(queryEntry['filterId']);
+        queryEntry : os.ui.filterManager.getFilter(queryEntry['filterId']);
       var parsedFilter = filterEntry.getFilterNode();
       if (parsedFilter) {
         // Get the filter key from the filterable. This should almost always work, but in the event that it doesn't

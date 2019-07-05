@@ -7,6 +7,7 @@ goog.require('os.user.settings.FavoriteManager');
 
 /**
  * Groups nodes by those tagged as a favorite
+ *
  * @extends {os.data.groupby.BaseGroupBy}
  * @constructor
  */

@@ -70,6 +70,7 @@ os.ui.filter.im.FilterImportUI.prototype.launchUI = function(file, opt_config) {
 
 /**
  * Gets the template for this UI.
+ *
  * @return {!string}
  * @protected
  */

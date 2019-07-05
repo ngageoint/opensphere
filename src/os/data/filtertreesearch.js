@@ -7,6 +7,7 @@ goog.require('os.ui.slick.AbstractGroupByTreeSearch');
 
 /**
  * Extends AbstractGroupByTreeSearch to search through saved areas
+ *
  * @extends {os.ui.slick.AbstractGroupByTreeSearch}
  * @param {!string} setAs The field to set on ...
  * @param {Object} onObj this object

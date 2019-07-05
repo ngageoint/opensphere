@@ -9,6 +9,7 @@ goog.require('os.ui.filter.fn');
 
 /**
  * Filter entry that performs actions on matched data.
+ *
  * @extends {os.filter.FilterEntry}
  * @implements {os.IComparable<os.im.action.FilterActionEntry>}
  * @constructor
@@ -67,6 +68,7 @@ os.im.action.FilterActionEntry.prototype.setFilter = function(filter) {
 
 /**
  * Reset the features passed in
+ *
  * @param {Array<T>} items The items.
  */
 os.im.action.FilterActionEntry.prototype.unprocessItems = function(items) {
@@ -88,6 +90,7 @@ os.im.action.FilterActionEntry.prototype.unprocessItems = function(items) {
 
 /**
  * Execute actions on items that match the filter.
+ *
  * @param {Array<T>} items The items.
  */
 os.im.action.FilterActionEntry.prototype.processItems = function(items) {
@@ -116,6 +119,7 @@ os.im.action.FilterActionEntry.prototype.processItems = function(items) {
 
 /**
  * Update all of the items. This will execute actions on items that now pass and reset items that don't.
+ *
  * @param {Array<T>} items The items.
  */
 os.im.action.FilterActionEntry.prototype.updateItems = function(items) {
@@ -165,6 +169,7 @@ os.im.action.FilterActionEntry.prototype.setType = function(value) {
 
 /**
  * Adds a child to the entry if it isn't already a child.
+ *
  * @param {!os.im.action.FilterActionEntry} child The child entry to add
  * @param {number=} opt_index Position to insert the child into. If -1 the child will be added
  *    to the end of the children.
@@ -192,6 +197,7 @@ os.im.action.FilterActionEntry.prototype.addChild = function(child, opt_index) {
 
 /**
  * Removes a child from the entry.
+ *
  * @param {!os.im.action.FilterActionEntry} child The child to remove.
  * @return {?os.im.action.FilterActionEntry} The entry that was removed or null if it was not found.
  */
@@ -219,6 +225,7 @@ os.im.action.FilterActionEntry.prototype.removeChild = function(child) {
 
 /**
  * Gets the parent entry.
+ *
  * @return {?os.im.action.FilterActionEntry} The parent entry, or null if there is no parent.
  */
 os.im.action.FilterActionEntry.prototype.getParent = function() {
@@ -228,6 +235,7 @@ os.im.action.FilterActionEntry.prototype.getParent = function() {
 
 /**
  * Sets the parent entry.
+ *
  * @param {os.im.action.FilterActionEntry} value The parent to set.
  */
 os.im.action.FilterActionEntry.prototype.setParent = function(value) {
@@ -243,6 +251,7 @@ os.im.action.FilterActionEntry.prototype.setParent = function(value) {
 
 /**
  * Gets the children of the entry.
+ *
  * @return {?Array<!os.im.action.FilterActionEntry>} The children.
  */
 os.im.action.FilterActionEntry.prototype.getChildren = function() {
@@ -252,6 +261,7 @@ os.im.action.FilterActionEntry.prototype.getChildren = function() {
 
 /**
  * Sets the children of the entry.
+ *
  * @param {?Array<!os.im.action.FilterActionEntry>} value The children to set.
  */
 os.im.action.FilterActionEntry.prototype.setChildren = function(value) {
@@ -327,6 +337,7 @@ os.im.action.FilterActionEntry.prototype.restore = function(config) {
 
 /**
  * Compare two filter actions by name, actions length, actions, and filter
+ *
  * @inheritDoc
  */
 os.im.action.FilterActionEntry.prototype.compare = function(other) {
@@ -367,6 +378,7 @@ os.im.action.FilterActionEntry.prototype.compare = function(other) {
 
 /**
  * Static function to test for enabled filter action entries.
+ *
  * @param {os.im.action.FilterActionEntry} entry The entry.
  * @return {boolean} If the entry is enabled.
  */

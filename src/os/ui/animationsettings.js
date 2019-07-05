@@ -14,6 +14,7 @@ goog.require('os.ui.popover.popoverDirective');
 
 /**
  * The animation settings window directive
+ *
  * @return {angular.Directive}
  */
 os.ui.animationSettingsDirective = function() {
@@ -37,6 +38,7 @@ os.ui.Module.directive('animationsettings', [os.ui.animationSettingsDirective]);
 
 /**
  * Controller for the animation settings dialog
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @constructor
@@ -105,6 +107,7 @@ os.ui.AnimationSettingsCtrl = function($scope, $element) {
 
 /**
  * Clean up
+ *
  * @protected
  */
 os.ui.AnimationSettingsCtrl.prototype.onDestroy = function() {
@@ -154,6 +157,7 @@ os.ui.AnimationSettingsCtrl.UNITS = [{
 
 /**
  * Populates the inital form values from the animation controller
+ *
  * @protected
  */
 os.ui.AnimationSettingsCtrl.prototype.populate = function() {
@@ -187,6 +191,7 @@ os.ui.AnimationSettingsCtrl.prototype.populate = function() {
 
 /**
  * If there is a conflict that will change manually defined animation ranges.
+ *
  * @return {boolean}
  * @export
  */
@@ -198,6 +203,7 @@ os.ui.AnimationSettingsCtrl.prototype.hasMultipleRanges = function() {
 
 /**
  * Handles changes to loop dates
+ *
  * @param {Date} newValue
  * @param {Date} oldValue
  * @protected
@@ -217,6 +223,7 @@ os.ui.AnimationSettingsCtrl.prototype.onLoopDatesChange = function(newValue, old
 
 /**
  * Sets the auto configuration
+ *
  * @export
  */
 os.ui.AnimationSettingsCtrl.prototype.autoConfigure = function() {
@@ -320,6 +327,7 @@ os.ui.AnimationSettingsCtrl.prototype.getLoopEnd = function() {
 
 /**
  * Apply the settings
+ *
  * @export
  */
 os.ui.AnimationSettingsCtrl.prototype.accept = function() {
@@ -367,6 +375,7 @@ os.ui.AnimationSettingsCtrl.prototype.accept = function() {
 
 /**
  * Cancel/Close
+ *
  * @export
  */
 os.ui.AnimationSettingsCtrl.prototype.cancel = function() {
@@ -376,6 +385,7 @@ os.ui.AnimationSettingsCtrl.prototype.cancel = function() {
 
 /**
  * Handles the ui fade checkbox toggle
+ *
  * @export
  */
 os.ui.AnimationSettingsCtrl.prototype.onFadeChange = function() {
@@ -385,6 +395,7 @@ os.ui.AnimationSettingsCtrl.prototype.onFadeChange = function() {
 
 /**
  * Handles key events
+ *
  * @param {goog.events.KeyEvent} event
  * @private
  */

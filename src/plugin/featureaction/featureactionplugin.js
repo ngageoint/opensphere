@@ -25,6 +25,7 @@ goog.require('plugin.im.action.feature.ui.styleConfigDirective');
 
 /**
  * Plugin to create actions that apply to imported features.
+ *
  * @extends {os.plugin.AbstractPlugin}
  * @constructor
  */

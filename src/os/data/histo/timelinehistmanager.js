@@ -22,6 +22,7 @@ goog.require('os.ui.timeline.TimelineScaleOptions');
 /**
  * Watches all sources in the data manager for changes that affect the timeline. Fires events on changes to alert the
  * timeline to update itself.
+ *
  * @implements {os.ui.hist.IHistogramManager}
  * @extends {goog.events.EventTarget}
  * @constructor
@@ -77,6 +78,7 @@ os.data.histo.TimelineHistManager.prototype.disposeInternal = function() {
 
 /**
  * Initiates the change event throttle to rate limit the events.
+ *
  * @private
  */
 os.data.histo.TimelineHistManager.prototype.fireChangeEvent_ = function() {
@@ -86,6 +88,7 @@ os.data.histo.TimelineHistManager.prototype.fireChangeEvent_ = function() {
 
 /**
  * Fires a histogram change event.
+ *
  * @private
  */
 os.data.histo.TimelineHistManager.prototype.onChangeThrottle_ = function() {
@@ -121,6 +124,7 @@ os.data.histo.TimelineHistManager.prototype.onSourceRemoved_ = function(event) {
 
 /**
  * Handles source property change events. Fires a histogram change event when the property affects the histogram.
+ *
  * @param {os.events.PropertyChangeEvent} event
  * @private
  */

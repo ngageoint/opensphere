@@ -7,6 +7,7 @@ goog.require('os.ui.query.cmd.AbstractArea');
 
 /**
  * Command for toggling an area
+ *
  * @param {!ol.Feature} area
  * @param {boolean} show
  * @implements {os.command.ICommand}

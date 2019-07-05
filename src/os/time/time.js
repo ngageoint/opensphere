@@ -379,6 +379,7 @@ os.time.format = function(date, opt_duration, opt_limitToDays, opt_serverFormat)
 
 /**
  * Formats a date to a string using a specified pattern.
+ *
  * @param {Date} date The date (in local time).
  * @param {string} pattern The date format (see goog.i18n.DateTimeFormat).
  * @param {boolean=} opt_utc If true, return the date in the UTC timezone.
@@ -400,6 +401,7 @@ os.time.formatDate = function(date, pattern, opt_utc) {
 
 /**
  * Formats a date to a string using a specified pattern.
+ *
  * @param {Date} date The date (in local time).
  * @param {string=} opt_pattern The date format (see goog.i18n.DateTimeFormat).
  * @param {boolean=} opt_utc If true, return the date in the UTC timezone.
@@ -414,6 +416,7 @@ os.time.momentFormat = function(date, opt_pattern, opt_utc) {
 
 /**
  * Offsets a date based on the current duration.
+ *
  * @param {Date} date The date to offset
  * @param {string} duration The duration of the offset
  * @param {number} offset Multiplier for the duration
@@ -451,6 +454,7 @@ os.time.offset = function(date, duration, offset, opt_local) {
 
 /**
  * Tries detecting the date/time format for the provided value.
+ *
  * @param {string} value The date/time value.
  * @param {Array<string>} formats The formats to try.
  * @param {boolean=} opt_utc If the date should be parsed in the UTC zone. Defaults to false.
@@ -468,6 +472,7 @@ os.time.detectFormat = function(value, formats, opt_utc, opt_strict) {
 
 /**
  * Parses a date/time value with the provided format.
+ *
  * @param {string} value The date/time value.
  * @param {?string} format The date/time format.
  * @param {boolean=} opt_utc If the date should be parsed in the UTC zone. Defaults to false.
@@ -485,6 +490,7 @@ os.time.parse = function(value, format, opt_utc, opt_strict) {
 
 /**
  * Parses a date/time value with the provided format into a moment object.
+ *
  * @param {string} value The date/time value.
  * @param {?(Array<string>|string)} formats The date/time format(s).
  * @param {boolean=} opt_utc If the date should be parsed in the UTC zone. Defaults to false.
@@ -512,6 +518,7 @@ os.time.parseMoment = function(value, formats, opt_utc, opt_strict) {
 /**
  * Parses an ISO-8601 duration string or a number time into a moment.duration. ISO-8601 durations look like:
  * 'P[n]Y[n]M[n]DT[n]H[n]M[n]S'
+ *
  * @param {(number|string|Object)} value The duration value.
  * @param {string=} opt_units The optional units string for number durations.
  * @return {!moment.duration} The parsed moment object.
@@ -524,6 +531,7 @@ os.time.parseDuration = function(value, opt_units) {
 /**
  * Normalizes the format for moment. MM, DD, etc will not match a single digit month/day, but single chars will match
  * double digit values.
+ *
  * @param {string} format The format string to normalize.
  * @return {string} Normalized format.
  * @private
@@ -537,6 +545,7 @@ os.time.normalizeFormat_ = function(format) {
 
 /**
  * Normalizes the format for display to users, replacing single 'M' and 'D' instances with 'MM' and 'DD'.
+ *
  * @param {string} format The format string to normalize.
  * @return {string} Normalized format.
  * @private
@@ -551,6 +560,7 @@ os.time.userizeFormat_ = function(format) {
 /**
  * Rounds a date to the specified duration, rounding to the UTC time zone. Rounds down by default.
  * Example, rounding down from 2008-06-15 to month is 2008-06-01
+ *
  * @param {Date} date The date to round
  * @param {string} duration The rounding threshold. 'year', 'month', 'week', 'day', 'hour', 'min', or 'sec'
  * @param {boolean=} opt_roundDown Whether to round up or round down
@@ -628,6 +638,7 @@ os.time.round = function(date, duration, opt_roundDown) {
 /**
  * Rounds a date to the specified duration, rounding to the local time zone. Rounds down by default.
  * Example, rounding down from 2008-06-15 to month is 2008-06-01
+ *
  * @param {Date} date The date to round
  * @param {string} duration The rounding threshold. 'year', 'month', 'week', 'day', 'hour', 'min', or 'sec'
  * @param {boolean=} opt_roundDown Whether to round up or round down
@@ -640,6 +651,7 @@ os.time.roundLocal = function(date, duration, opt_roundDown) {
 
 /**
  * Takes a date that was made in GMT and converts it to the same time in local time.
+ *
  * @param {Date} date
  * @return {Date}
  */
@@ -650,6 +662,7 @@ os.time.toLocalDate = function(date) {
 
 /**
  * Takes a date that was made in local time and returns a date with the same time in GMT.
+ *
  * @param {Date} date
  * @return {Date}
  */
@@ -660,6 +673,7 @@ os.time.toUTCDate = function(date) {
 
 /**
  * Takes a date or a time string and trims thousands of a decimal place.
+ *
  * @param {(Date|string)} date
  * @return {string}
  */
@@ -677,6 +691,7 @@ os.time.trim = function(date) {
 
 /**
  * Applies the time offset
+ *
  * @param {number} time The time in ms
  * @param {goog.date.UtcDateTime=} opt_date
  * @param {boolean=} opt_forceUtc force UTC timezone
@@ -726,6 +741,7 @@ os.time.disposeOffset = function() {
 
 /**
  * Updates offset from settings
+ *
  * @private
  */
 os.time.updateOffset_ = function() {
@@ -767,6 +783,7 @@ os.time.applyOffset = function(offset) {
 
 /**
  * Compare function for two separate Date objects.
+ *
  * @param {Date} a
  * @param {Date} b
  * @return {number}
@@ -781,6 +798,7 @@ os.time.dateCompare = function(a, b) {
  * 1 day, 12 hours becomes "2 days".  This returns duration in days, hours, minutes
  * without rounding and returns "0" or an optional zero duration value when the
  * duration is zero.
+ *
  * @param {moment.duration} duration
  * @param {string=} opt_zeroDurationValue String to output when duration is 0
  * @return {string}

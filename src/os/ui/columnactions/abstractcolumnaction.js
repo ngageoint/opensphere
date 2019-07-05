@@ -26,6 +26,7 @@ os.ui.columnactions.AbstractColumnAction = function() {
 
 /**
  * Set the description
+ *
  * @param {string} description
  */
 os.ui.columnactions.AbstractColumnAction.prototype.setDescription = function(description) {
@@ -35,6 +36,7 @@ os.ui.columnactions.AbstractColumnAction.prototype.setDescription = function(des
 
 /**
  * Get the description
+ *
  * @return {string} the string text of the description
  */
 os.ui.columnactions.AbstractColumnAction.prototype.getDescription = function() {
@@ -44,6 +46,7 @@ os.ui.columnactions.AbstractColumnAction.prototype.getDescription = function() {
 
 /**
  * Get a represntation of the action for display.
+ *
  * @abstract
  * @param {*} value the value to be manipulated for display.
  * @return {*}
@@ -53,6 +56,7 @@ os.ui.columnactions.AbstractColumnAction.prototype.toDisplay = function(value) {
 
 /**
  * Set the regexps necessary to run this action
+ *
  * @param {Object.<string, string>} regexps
  */
 os.ui.columnactions.AbstractColumnAction.prototype.setRegExps = function(regexps) {
@@ -69,6 +73,7 @@ os.ui.columnactions.AbstractColumnAction.prototype.setRegExps = function(regexps
 /**
  * Set the action to be performed
  * Can come from a config, or be passed in.
+ *
  * @abstract
  * @param {*} action
  */
@@ -77,6 +82,7 @@ os.ui.columnactions.AbstractColumnAction.prototype.setAction = function(action) 
 
 /**
  * Run the action
+ *
  * @abstract
  * @param {*} value
  */

@@ -46,6 +46,7 @@ os.ui.Module.directive('urlDragDrop', [os.ui.urlDragDropDirective]);
 
 /**
  * Link function for draggable directive
+ *
  * @param {!angular.Scope} $scope angular scope
  * @param {!angular.JQLite} $element to which this directive is applied
  */
@@ -58,6 +59,7 @@ os.ui.urlDragDropLink = function($scope, $element) {
 
 /**
  * Object containing the link function used by the URL drag drop directive.
+ *
  * @constructor
  * @param {!angular.Scope} $scope angular scope
  * @param {!angular.JQLite} $element to which this directive is applied
@@ -114,6 +116,7 @@ os.ui.UrlDragDrop.prototype.onClear_ = function(event) {
 
 /**
  * Handles an item being dragged over the element
+ *
  * @param {goog.events.BrowserEvent} event The drop event
  * @private
  */
@@ -141,6 +144,7 @@ os.ui.UrlDragDrop.prototype.handleDrag_ = function(event) {
 
 /**
  * Handles an item being dropped in the element.
+ *
  * @param {goog.events.BrowserEvent} event The drop event
  * @private
  */

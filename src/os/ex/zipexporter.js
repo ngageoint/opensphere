@@ -9,6 +9,7 @@ goog.require('os.ex.AbstractExporter');
 
 /**
  * Base exporter for content supporting compression
+ *
  * @extends {os.ex.AbstractExporter.<T>}
  * @constructor
  * @template T
@@ -52,6 +53,7 @@ os.ex.ZipExporter.LOGGER_ = goog.log.getLogger('os.ex.ZipExporter');
 
 /**
  * Get if output should be compressed.
+ *
  * @return {boolean}
  */
 os.ex.ZipExporter.prototype.getCompress = function() {
@@ -61,6 +63,7 @@ os.ex.ZipExporter.prototype.getCompress = function() {
 
 /**
  * Set if output should be compressed.
+ *
  * @param {boolean} value
  */
 os.ex.ZipExporter.prototype.setCompress = function(value) {
@@ -92,6 +95,7 @@ os.ex.ZipExporter.prototype.getLabel = function() {
 
 /**
  * Handle error creating the zip writer.
+ *
  * @param {string} errorMsg The error message
  * @protected
  */
@@ -151,6 +155,7 @@ os.ex.ZipExporter.prototype.processItems = function() {};
 
 /**
  * Adds a file to the files array.
+ *
  * @param {!os.file.File} file The file to add
  */
 os.ex.ZipExporter.prototype.addFile = function(file) {
@@ -160,6 +165,7 @@ os.ex.ZipExporter.prototype.addFile = function(file) {
 
 /**
  * Compresses files and creates the output archive.
+ *
  * @private
  */
 os.ex.ZipExporter.prototype.compressFiles_ = function() {
@@ -170,6 +176,7 @@ os.ex.ZipExporter.prototype.compressFiles_ = function() {
 
 /**
  * Handle successful zip writer creation.
+ *
  * @param {!zip.Writer} writer The zip writer
  * @private
  */
@@ -202,6 +209,7 @@ os.ex.ZipExporter.prototype.writeNextFile_ = function(writer) {
 
 /**
  * Handle zip process completion.
+ *
  * @param {Blob} zip The zip file
  * @private
  */

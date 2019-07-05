@@ -7,6 +7,7 @@ goog.require('os.capture');
 
 /**
  * Renders an element to the canvas.
+ *
  * @abstract
  * @param {Object=} opt_options Options to configure the renderer
  * @constructor
@@ -36,6 +37,7 @@ os.ui.capture.ElementRenderer = function(opt_options) {
 
 /**
  * Draws content to a canvas.
+ *
  * @param {!HTMLCanvasElement} canvas The target canvas
  * @return {!goog.Promise<HTMLCanvasElement>}
  */
@@ -57,6 +59,7 @@ os.ui.capture.ElementRenderer.prototype.drawToCanvas = function(canvas) {
 
 /**
  * Get the canvas for this renderer.
+ *
  * @abstract
  * @return {!goog.Promise<HTMLCanvasElement>}
  */
@@ -65,6 +68,7 @@ os.ui.capture.ElementRenderer.prototype.getCanvas = function() {};
 
 /**
  * Perform any necessary actions before overlaying the element on the capture canvas.
+ *
  * @protected
  */
 os.ui.capture.ElementRenderer.prototype.beforeOverlay = function() {};
@@ -72,6 +76,7 @@ os.ui.capture.ElementRenderer.prototype.beforeOverlay = function() {};
 
 /**
  * Get the element to be rendered to the canvas.
+ *
  * @return {T}
  * @protected
  */
@@ -88,6 +93,7 @@ os.ui.capture.ElementRenderer.prototype.getRenderElement = function() {
 
 /**
  * Fill a canvas.
+ *
  * @param {!HTMLCanvasElement} canvas The canvas to fill
  * @param {number} x The starting x position
  * @param {number} y The starting y position
@@ -109,6 +115,7 @@ os.ui.capture.ElementRenderer.prototype.fillCanvas = function(canvas, x, y, widt
 
 /**
  * Get the fill color to use when drawing the canvas.
+ *
  * @return {?(Image|string)}
  * @protected
  */
@@ -119,6 +126,7 @@ os.ui.capture.ElementRenderer.prototype.getFill = function() {
 
 /**
  * Get the starting draw position of the canvas as [x, y].
+ *
  * @param {!HTMLCanvasElement} canvas The canvas
  * @return {!Array<number>}
  * @protected
@@ -130,6 +138,7 @@ os.ui.capture.ElementRenderer.prototype.getPosition = function(canvas) {
 
 /**
  * Get the contributing height of the canvas to render, or 0 if this is an overlay.
+ *
  * @return {number}
  */
 os.ui.capture.ElementRenderer.prototype.getHeight = function() {
@@ -139,6 +148,7 @@ os.ui.capture.ElementRenderer.prototype.getHeight = function() {
 
 /**
  * Get the contributing width of the canvas to render, or 0 if this is an overlay.
+ *
  * @return {number}
  */
 os.ui.capture.ElementRenderer.prototype.getWidth = function() {
