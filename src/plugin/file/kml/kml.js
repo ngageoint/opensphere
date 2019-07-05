@@ -617,6 +617,11 @@ plugin.file.kml.readLatLonQuad_ = function(node, objectStack) {
       }, ol.extent.createEmpty());
 
       var targetObject = /** @type {Object} */ (objectStack[objectStack.length - 1]);
+
+      if (!os.geo.isClosed(coordinates)) {
+        coordinates.push(coordinates[0].slice());
+      }
+
       if (os.geo.isRectangular(coordinates, extent)) {
         targetObject['extent'] = extent;
       } else {
