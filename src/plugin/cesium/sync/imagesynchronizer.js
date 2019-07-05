@@ -2,11 +2,15 @@ goog.provide('plugin.cesium.sync.ImageSynchronizer');
 
 goog.require('goog.asserts');
 goog.require('goog.events.EventType');
+goog.require('ol.events');
+goog.require('ol.events.EventType');
 goog.require('ol.layer.Tile');
+goog.require('os.Map');
+goog.require('os.MapContainer');
 goog.require('os.MapEvent');
 goog.require('os.events.SelectionType');
 goog.require('os.layer.PropertyChange');
-goog.require('os.source.Vector');
+goog.require('os.source.ImageStatic');
 goog.require('plugin.cesium.sync.CesiumSynchronizer');
 
 
@@ -24,19 +28,47 @@ plugin.cesium.sync.ImageSynchronizer = function(layer, map, scene) {
   plugin.cesium.sync.ImageSynchronizer.base(this, 'constructor', layer, map, scene);
 
   /**
-   * @type {Cesium.ImageryLayer}
+   * @type {Cesium.Primitive}
    * @private
    */
-  this.activeLayer_ = null;
+  this.activePrimitive_ = null;
 
   /**
    * If the layer is turned on or off
    * @type {boolean}
    * @private
    */
-  this.visible_ = true;
+  this.visible_ = this.layer.getVisible();
+
+  /**
+   * @type {ol.source.Image}
+   * @private
+   */
+  this.source_ = this.layer.getSource();
+
+  /**
+   * @type {number}
+   * @private
+   */
+  this.lastRevision_ = -1;
+
+  /**
+   * @type {!Cesium.PrimitiveCollection}
+   * @private
+   */
+  this.collection_ = new Cesium.PrimitiveCollection();
+
+  /**
+   * @type {number}
+   * @private
+   */
+  this.nextId_ = 0;
+
+  this.onPrimitiveReady_ = this.onPrimitiveReadyInternal_.bind(this);
+  this.scene.primitives.add(this.collection_);
 
   ol.events.listen(this.layer, goog.events.EventType.PROPERTYCHANGE, this.onLayerPropertyChange_, this);
+  ol.events.listen(this.source_, ol.events.EventType.CHANGE, this.syncInternal, this);
 };
 goog.inherits(plugin.cesium.sync.ImageSynchronizer, plugin.cesium.sync.CesiumSynchronizer);
 
@@ -46,11 +78,12 @@ goog.inherits(plugin.cesium.sync.ImageSynchronizer, plugin.cesium.sync.CesiumSyn
  */
 plugin.cesium.sync.ImageSynchronizer.prototype.disposeInternal = function() {
   ol.events.unlisten(this.layer, goog.events.EventType.PROPERTYCHANGE, this.onLayerPropertyChange_, this);
+  ol.events.unlisten(this.source_, ol.events.EventType.CHANGE, this.syncInternal, this);
 
-  var layers = this.scene.imageryLayers;
-  layers.remove(this.activeLayer_);
-  this.activeLayer_ = null;
+  this.activePrimitive_ = null;
+  this.source_ = null;
 
+  this.scene.primitives.remove(this.collection_);
   plugin.cesium.sync.ImageSynchronizer.base(this, 'disposeInternal');
 };
 
@@ -60,55 +93,116 @@ plugin.cesium.sync.ImageSynchronizer.prototype.disposeInternal = function() {
  * @suppress {accessControls}
  */
 plugin.cesium.sync.ImageSynchronizer.prototype.synchronize = function() {
-  // remove the old KML image
-  var layers = this.scene.imageryLayers;
-  if (this.activeLayer_) {
-    layers.remove(this.activeLayer_);
-    this.activeLayer_ = null;
-  }
+  this.syncInternal();
+};
 
-  if (!this.visible_) {
-    return;
-  }
+/**
+ * @param {boolean=} opt_force Force an update regardless of the current source revision
+ * @protected
+ */
+plugin.cesium.sync.ImageSynchronizer.prototype.syncInternal = function(opt_force) {
+  if (this.lastRevision_ !== this.source_.getRevision() || opt_force) {
+    this.lastRevision_ = this.source_.getRevision();
 
-  var img = /** @type {string} */ (this.layer.get('url'));
-
-  if (img) {
-    var source = this.layer.getSource();
-    var extent;
-
-    if (source instanceof ol.source.ImageStatic) {
-      extent = /** @type {ol.source.ImageStatic} */ (source).image_.getExtent();
+    if (!this.visible_) {
+      this.removeImmediate_();
+      return;
     }
 
-    if (extent && extent.length === 4 && !ol.extent.isEmpty(extent)) {
-      layers.addImageryProvider(new Cesium.SingleTileImageryProvider({
-        url: img,
-        rectangle: Cesium.Rectangle.fromDegrees(extent[0], extent[1], extent[2], extent[3])
-      }));
-      this.activeLayer_ = layers.get(layers.length - 1);
+    var map = /** @type {os.Map} */ (os.map.mapContainer.getMap());
+    var viewExtent = map.getExtent();
 
-      this.activeLayer_.imageryProvider.errorEvent.addEventListener(this.providerError.bind(this));
+    if (!viewExtent) {
+      this.removeImmediate_();
+      return;
+    }
+
+    var pixelExtent = map.getPixelFromCoordinate(ol.extent.getBottomLeft(viewExtent)).concat(
+        map.getPixelFromCoordinate(ol.extent.getTopRight(viewExtent)));
+
+    var resolution = ol.extent.getWidth(viewExtent) / Math.abs(ol.extent.getWidth(pixelExtent));
+    if (isNaN(resolution)) {
+      return;
+    }
+
+    var img = this.source_.getImage(viewExtent, resolution, window.devicePixelRatio, os.map.PROJECTION);
+
+    if (!img) {
+      this.removeImmediate_();
+      return;
+    }
+
+    if (this.source_ instanceof os.source.ImageStatic) {
+      // This source supports rotation and must be loaded first. Other source types such as ol.source.ImageStatic
+      // can pass the img.src parameter through to the Cesium material.
+      if (img.getState() === ol.ImageState.IDLE) {
+        img.load();
+      }
+
+      if (img.getState() !== ol.ImageState.LOADED) {
+        this.removeImmediate_();
+        return;
+      }
+    }
+
+    var url;
+    var el = img.getImage();
+
+    if (el instanceof HTMLVideoElement || el instanceof Image) {
+      url = el.src;
+    } else if (el instanceof HTMLCanvasElement) {
+      url = el.toDataURL();
+    }
+
+    var extent = img.getExtent();
+
+    if (url && extent) {
+      var primitive = new Cesium.Primitive({
+        geometryInstances: new Cesium.GeometryInstance({
+          geometry: new Cesium.RectangleGeometry({
+            rectangle: Cesium.Rectangle.fromDegrees(extent[0], extent[1], extent[2], extent[3])
+          }),
+          id: this.layer.getId() + '.' + (this.nextId_++)
+        }),
+        appearance: new Cesium.MaterialAppearance({
+          material: Cesium.Material.fromType('Image', {
+            image: url
+          })
+        })
+      });
+
+      primitive.readyPromise.then(this.onPrimitiveReady_);
+      this.collection_.add(primitive);
+    } else {
+      this.removeImmediate_();
     }
   }
 };
 
 
 /**
- * @param {Cesium.Event} error
+ * @param {!Cesium.Primitive} primitive
+ * @private
  */
-plugin.cesium.sync.ImageSynchronizer.prototype.providerError = function(error) {
-  // error has already been logged, remove the bad image layer so other tiles load properly
-  var layers = this.scene.imageryLayers;
-  layers.remove(this.activeLayer_);
+plugin.cesium.sync.ImageSynchronizer.prototype.onPrimitiveReadyInternal_ = function(primitive) {
+  this.activePrimitive_ = primitive;
+  for (var i = this.collection_.length - 1; i; i--) {
+    var item = this.collection_.get(i);
+
+    if (item !== this.activePrimitive_) {
+      this.collection_.remove(item);
+    }
+  }
 };
 
+
 /**
- * @inheritDoc
+ * Immediately remove the primitive
+ * @private
  */
-plugin.cesium.sync.ImageSynchronizer.prototype.reposition = function(start) {
-  this.synchronize();
-  return ++start;
+plugin.cesium.sync.ImageSynchronizer.prototype.removeImmediate_ = function() {
+  this.activePrimitive_ = null;
+  this.collection_.removeAll();
 };
 
 
@@ -116,7 +210,7 @@ plugin.cesium.sync.ImageSynchronizer.prototype.reposition = function(start) {
  * @inheritDoc
  */
 plugin.cesium.sync.ImageSynchronizer.prototype.reset = function() {
-  this.synchronize();
+  this.syncInternal(true);
 };
 
 
@@ -127,13 +221,8 @@ plugin.cesium.sync.ImageSynchronizer.prototype.reset = function() {
  * @private
  */
 plugin.cesium.sync.ImageSynchronizer.prototype.onLayerPropertyChange_ = function(event) {
-  // ol3 also fires 'propertychange' events, so ignore those
-  if (event instanceof os.events.PropertyChangeEvent) {
-    var p = event.getProperty();
-    if (p == os.layer.PropertyChange.VISIBLE) {
-      this.visible_ = /** @type {boolean} */ (event.getNewValue());
-      this.synchronize();
-      os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
-    }
+  if (event instanceof ol.Object.Event && event.key == os.layer.PropertyChange.VISIBLE) {
+    this.visible_ = this.layer.getVisible();
+    this.syncInternal(true);
   }
 };
