@@ -50,5 +50,6 @@ os.source.ImageStatic.prototype.handleImageChange = function(evt) {
   var image = /** @type {ol.Image} */ (evt.target);
   if (image.getState() == ol.ImageState.LOADED) {
     this.rotatedImage = this.rotation ? os.ol.image.rotate(image, this.rotation) : image;
+    this.changed();
   }
 };

@@ -1635,6 +1635,7 @@ Cesium.Polygon.prototype.material;
  * @typedef {{
  *   color: (Cesium.Color|undefined),
  *   horizontal: (boolean|undefined),
+ *   image: (string|undefined),
  *   repeat: (number|undefined),
  *   evenColor: (Cesium.Color|undefined),
  *   oddColor: (Cesium.Color|undefined),
@@ -1798,9 +1799,20 @@ Cesium.Polyline.prototype.width;
 
 
 /**
+ * @param {Cesium.AppearanceOptions=} opt_options
  * @constructor
  */
-Cesium.Appearance = function() {};
+Cesium.Appearance = function(opt_options) {};
+
+
+/**
+ * @typedef {{
+ *  translucent: (boolean|undefined),
+ *  closed: (boolean|undefined),
+ *  material: (Cesium.Material|undefined)
+ * }}
+ */
+Cesium.AppearanceOptions;
 
 
 /**
@@ -1810,10 +1822,17 @@ Cesium.Appearance.prototype.material;
 
 
 /**
+ * @type {boolean}
+ */
+Cesium.Appearance.prototype.translucent;
+
+
+/**
  * @typedef {{
  *   asynchronous: (boolean|undefined),
  *   releaseGeometryInstances: (boolean|undefined),
  *   geometryInstances: !Cesium.GeometryInstance,
+ *   show: (boolean|undefined),
  *   appearance: !Cesium.Appearance
  * }}
  */
@@ -1883,6 +1902,18 @@ Cesium.Primitive.prototype.getGeometryInstanceAttributes = function(opt_id) {};
  * @type {Cesium.Appearance} .
  */
 Cesium.Primitive.prototype.appearance;
+
+
+/**
+ * @type {Promise<!Cesium.Primitive>}
+ */
+Cesium.Primitive.prototype.readyPromise;
+
+
+/**
+ * @type {boolean}
+ */
+Cesium.Primitive.prototype.show;
 
 
 /**
@@ -2615,10 +2646,25 @@ Cesium.PolylineMaterialAppearance.prototype.vertexFormat;
 
 /**
  * @constructor
- * @param {Object} object
+ * @param {Cesium.MaterialAppearanceOptions=} options
  * @extends {Cesium.Appearance}
  */
-Cesium.MaterialAppearance = function(object) {};
+Cesium.MaterialAppearance = function(options) {};
+
+
+/**
+ * @typedef {{
+ *  flat: (boolean|undefined),
+ *  faceForward: (boolean|undefined),
+ *  translucent: (boolean|undefined),
+ *  closed: (boolean|undefined),
+ *  material: (Cesium.Material|HTMLCanvasElement|HTMLVideoElement|Image|undefined),
+ *  vertexShaderSource: (string|undefined),
+ *  fragmentShaderSource: (string|undefined),
+ *  renderState: (Cesium.optionsRenderState|undefined)
+ * }}
+ */
+Cesium.MaterialAppearanceOptions;
 
 
 /**
