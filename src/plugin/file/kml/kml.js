@@ -59,6 +59,9 @@ plugin.file.kml.DEFAULT_STYLE = {
     'rotation': 0,
     'src': os.ui.file.kml.DEFAULT_ICON_PATH
   },
+  'fill': {
+    'color': os.style.DEFAULT_LAYER_COLOR
+  },
   'stroke': {
     'color': os.style.DEFAULT_LAYER_COLOR,
     'width': os.style.DEFAULT_STROKE_WIDTH
@@ -156,6 +159,15 @@ plugin.file.kml.OL_NETWORK_LINK_PARSERS = function() {
  *
  * @return {Object<string, Object<string, ol.XmlParser>>}
  */
+plugin.file.kml.OL_PAIR_PARSERS = function() {
+  return ol.format.KML.PAIR_PARSERS_;
+};
+
+
+/**
+ * Accessor for private Openlayers code.
+ * @return {Object<string, Object<string, ol.XmlParser>>}
+ */
 plugin.file.kml.OL_PLACEMARK_PARSERS = function() {
   return ol.format.KML.PLACEMARK_PARSERS_;
 };
@@ -221,11 +233,75 @@ plugin.file.kml.replaceParsers_(ol.format.KML.POLY_STYLE_PARSERS_, 'color',
  *
  * @param {Node} node Node.
  * @param {Array<*>} objectStack Object stack.
- * @return {Array<ol.style.Style>} Style.
+ * @return {Object} style config
  */
 plugin.file.kml.readStyle = function(node, objectStack) {
-  return ol.format.KML.readStyle_(node, objectStack);
+  var styleObject = ol.xml.pushParseAndPop(
+      {}, ol.format.KML.STYLE_PARSERS_, node, objectStack);
+  if (!styleObject) {
+    return null;
+  }
+  var fillStyle = /** @type {ol.style.Fill} */
+      ('fillStyle' in styleObject ?
+        styleObject['fillStyle'] : ol.format.KML.DEFAULT_FILL_STYLE_);
+  var fill = /** @type {boolean|undefined} */ (styleObject['fill']);
+  var imageStyle = /** @type {ol.style.Image} */
+      ('imageStyle' in styleObject ?
+        styleObject['imageStyle'] : ol.format.KML.DEFAULT_IMAGE_STYLE_);
+  if (imageStyle == ol.format.KML.DEFAULT_NO_IMAGE_STYLE_) {
+    imageStyle = undefined;
+  }
+  var textStyle = /** @type {ol.style.Text} */
+      ('textStyle' in styleObject ?
+        styleObject['textStyle'] : ol.format.KML.DEFAULT_TEXT_STYLE_);
+  var strokeStyle = /** @type {ol.style.Stroke} */
+      ('strokeStyle' in styleObject ?
+        styleObject['strokeStyle'] : ol.format.KML.DEFAULT_STROKE_STYLE_);
+  var outline = /** @type {boolean|undefined} */
+      (styleObject['outline']);
+
+  var config = os.style.StyleManager.getInstance().toConfig(new ol.style.Style({
+    fill: fillStyle,
+    image: imageStyle,
+    stroke: strokeStyle,
+    text: textStyle,
+    zIndex: undefined // FIXME
+  }));
+
+  if (fill !== undefined && !fill) {
+    config['fill'] = null;
+  }
+
+  if (outline !== undefined && !outline) {
+    config['stroke'] = null;
+  }
+
+  return config;
 };
+
+
+/**
+ * @type {Object<string, Object<string, ol.XmlParser>>}
+ * @const
+ */
+plugin.file.kml.PAIR_PARSERS = ol.xml.makeStructureNS(
+    plugin.file.kml.OL_NAMESPACE_URIS(), {
+      'Style': ol.xml.makeObjectPropertySetter(plugin.file.kml.readStyle)
+    });
+
+os.object.merge(plugin.file.kml.PAIR_PARSERS, plugin.file.kml.OL_PAIR_PARSERS(), true);
+
+
+/**
+ * @type {Object<string, Object<string, ol.XmlParser>>}
+ * @const
+ */
+plugin.file.kml.PLACEMARK_PARSERS = ol.xml.makeStructureNS(
+    plugin.file.kml.OL_NAMESPACE_URIS(), {
+      'Style': ol.xml.makeObjectPropertySetter(plugin.file.kml.readStyle)
+    });
+
+os.object.merge(plugin.file.kml.PLACEMARK_PARSERS, plugin.file.kml.OL_PLACEMARK_PARSERS(), true);
 
 
 /**
