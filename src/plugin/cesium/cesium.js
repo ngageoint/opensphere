@@ -469,7 +469,7 @@ plugin.cesium.reduceBoundingSphere = function(sphere, geom) {
       for (var i = 0, n = flats.length; i < n; i += stride) {
         scratchCoord[0] = flats[i];
         scratchCoord[1] = flats[i + 1];
-        scratchCoord[2] = flats[i + 2] || 0;
+        scratchCoord[2] = stride > 2 ? flats[i + 2] || 0 : 0;
 
         if (!ol.proj.equivalent(os.map.PROJECTION, ol.proj.get(os.proj.EPSG4326))) {
           scratchCoord = ol.proj.toLonLat(scratchCoord, os.map.PROJECTION);
