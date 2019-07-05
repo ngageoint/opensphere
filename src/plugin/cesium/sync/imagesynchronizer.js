@@ -154,7 +154,7 @@ plugin.cesium.sync.ImageSynchronizer.prototype.syncInternal = function(opt_force
       url = el.toDataURL();
     }
 
-    var extent = img.getExtent();
+    var extent = ol.proj.transformExtent(img.getExtent(), os.map.PROJECTION, os.proj.EPSG4326);
 
     if (url && extent) {
       var primitive = new Cesium.Primitive({
