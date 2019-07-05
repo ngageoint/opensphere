@@ -17,6 +17,7 @@ os.ui.icon.IconPickerEventType = {
 
 /**
  * A icon picker directive
+ *
  * @return {angular.Directive}
  */
 os.ui.icon.iconPickerDirective = function() {
@@ -45,6 +46,7 @@ os.ui.Module.directive('iconpicker', [os.ui.icon.iconPickerDirective]);
 
 /**
  * Controller for the icon picker directive
+ *
  * @param {!angular.Scope} $scope
  * @constructor
  * @ngInject
@@ -65,6 +67,7 @@ os.ui.icon.IconPickerCtrl = function($scope) {
 
 /**
  * Handles icon pick events.
+ *
  * @param {osx.icon.Icon} icon The new icon
  * @private
  */
@@ -94,6 +97,7 @@ os.ui.icon.IconPickerCtrl.prototype.show = function() {
 
 /**
  * Translates from google uri if needed
+ *
  * @param {string} path
  * @return {string}
  * @export
@@ -105,6 +109,7 @@ os.ui.icon.IconPickerCtrl.prototype.getPath = function(path) {
 
 /**
  * Starts the dedupe process for the provided source
+ *
  * @param {string} template
  * @param {Object} scopeOptions
  */

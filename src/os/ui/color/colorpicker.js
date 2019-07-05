@@ -26,6 +26,7 @@ os.ui.color.COLOR_PICKER_TEMPLATE = '<button type="button" class="btn btn-sm bg-
 
 /**
  * A color picker directive
+ *
  * @return {angular.Directive}
  */
 os.ui.color.colorPickerDirective = function() {
@@ -55,6 +56,7 @@ os.ui.Module.directive('colorpicker', [os.ui.color.colorPickerDirective]);
 
 /**
  * Controller for the color picker directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$compile} $compile
@@ -128,6 +130,7 @@ os.ui.color.ColorPickerCtrl = function($scope, $element, $compile) {
 
 /**
  * Clean up
+ *
  * @private
  */
 os.ui.color.ColorPickerCtrl.prototype.onDestroy_ = function() {
@@ -141,6 +144,7 @@ os.ui.color.ColorPickerCtrl.prototype.onDestroy_ = function() {
 
 /**
  * Clean up the draw control menu.
+ *
  * @private
  */
 os.ui.color.ColorPickerCtrl.prototype.destroyControlMenu_ = function() {
@@ -160,6 +164,7 @@ os.ui.color.ColorPickerCtrl.prototype.destroyControlMenu_ = function() {
 
 /**
  * Handles color pick events.
+ *
  * @param {angular.Scope.Event} event
  * @param {string} color The new color
  * @private
@@ -183,6 +188,7 @@ os.ui.color.ColorPickerCtrl.prototype.onChange_ = function(event, color) {
 
 /**
  * Handles color pick events.
+ *
  * @param {angular.Scope.Event} event
  * @private
  */
@@ -212,6 +218,7 @@ os.ui.color.ColorPickerCtrl.prototype.onMouseDown_ = function(e) {
 
 /**
  * Toggle the color picker on/off.
+ *
  * @param {boolean=} opt_value
  * @export
  */
@@ -242,6 +249,7 @@ os.ui.color.ColorPickerCtrl.prototype.togglePopup = function(opt_value) {
 
 /**
  * Get the template for the color picker popup.
+ *
  * @return {string}
  * @protected
  */

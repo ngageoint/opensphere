@@ -11,6 +11,7 @@ goog.require('os.proj');
 
 /**
  * Abstract command for performing selections on a source
+ *
  * @implements {os.command.ICommand}
  * @param {!ol.ProjectionLike} projection
  * @constructor
@@ -56,6 +57,7 @@ os.command.SwitchView.prototype.details = null;
 
 /**
  * Checks if the command is ready to execute
+ *
  * @return {boolean}
  */
 os.command.SwitchView.prototype.canExecute = function() {

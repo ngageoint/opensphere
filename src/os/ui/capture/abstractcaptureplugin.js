@@ -14,6 +14,7 @@ goog.require('os.ui.capture.recordingUIDirective');
 
 /**
  * Abstract plugin to manage screen capture.
+ *
  * @extends {os.plugin.AbstractPlugin}
  * @constructor
  */
@@ -72,6 +73,7 @@ os.ui.capture.AbstractCapturePlugin.prototype.init = function() {
 
 /**
  * Initialize the renderers that will be used to compose each frame.
+ *
  * @return {!Array<!os.ui.capture.ElementRenderer>}
  * @protected
  */
@@ -82,6 +84,7 @@ os.ui.capture.AbstractCapturePlugin.prototype.initRenderers = function() {
 
 /**
  * Add a renderer to the plugin.
+ *
  * @param {!os.ui.capture.ElementRenderer} renderer The renderer.
  */
 os.ui.capture.AbstractCapturePlugin.prototype.addRenderer = function(renderer) {
@@ -92,6 +95,7 @@ os.ui.capture.AbstractCapturePlugin.prototype.addRenderer = function(renderer) {
 
 /**
  * Get dynamic renderers for the current frame.
+ *
  * @return {!Array<!os.ui.capture.ElementRenderer>}
  * @protected
  */
@@ -102,6 +106,7 @@ os.ui.capture.AbstractCapturePlugin.prototype.getDynamicRenderers = function() {
 
 /**
  * Update renderers that change by frame.
+ *
  * @private
  */
 os.ui.capture.AbstractCapturePlugin.prototype.updateRenderers_ = function() {
@@ -112,6 +117,7 @@ os.ui.capture.AbstractCapturePlugin.prototype.updateRenderers_ = function() {
 /**
  * Check browser support and alert the user if necessary. This should only happen the first time the user tries to
  * capture something.
+ *
  * @private
  */
 os.ui.capture.AbstractCapturePlugin.prototype.checkSupport_ = function() {
@@ -133,6 +139,7 @@ os.ui.capture.AbstractCapturePlugin.prototype.checkSupport_ = function() {
 
 /**
  * Takes and saves a PNG screenshot of the canvas.
+ *
  * @private
  */
 os.ui.capture.AbstractCapturePlugin.prototype.capture_ = function() {
@@ -150,6 +157,7 @@ os.ui.capture.AbstractCapturePlugin.prototype.capture_ = function() {
 
 /**
  * Handle rejected promise in processNextFrame_.
+ *
  * @param {*} e
  * @private
  */
@@ -170,6 +178,7 @@ os.ui.capture.AbstractCapturePlugin.prototype.onCaptureError_ = function(e) {
 
 /**
  * Create a new instance of the recorder class to use.
+ *
  * @return {!os.capture.AbstractRecorder}
  * @protected
  */
@@ -180,6 +189,7 @@ os.ui.capture.AbstractCapturePlugin.prototype.getRecorder = function() {
 
 /**
  * Launches the recording UI to create a timeline recording.
+ *
  * @private
  */
 os.ui.capture.AbstractCapturePlugin.prototype.record_ = function() {
@@ -192,6 +202,7 @@ os.ui.capture.AbstractCapturePlugin.prototype.record_ = function() {
 
 /**
  * Get the canvas to use for capture.
+ *
  * @return {!goog.Promise<HTMLCanvasElement>}
  * @protected
  */
@@ -223,6 +234,7 @@ os.ui.capture.AbstractCapturePlugin.prototype.getCanvas = function() {
 
 /**
  * Draw the next item to the canvas.
+ *
  * @param {function(!HTMLCanvasElement)} resolve The resolution function to call when drawing is complete
  * @param {function(*)} reject The rejection function to call if drawing fails
  * @param {!HTMLCanvasElement} canvas The canvas to draw to
@@ -245,6 +257,7 @@ os.ui.capture.AbstractCapturePlugin.prototype.drawNext = function(resolve, rejec
 
 /**
  * Render the next canvas frame, resolving the returned promise when rendering completes.
+ *
  * @param {boolean=} opt_waitForLoad - optionally wait for a load function to finish before rendering
  * @return {!goog.Promise}
  * @protected
@@ -256,6 +269,7 @@ os.ui.capture.AbstractCapturePlugin.prototype.renderFrame = function(opt_waitFor
 
 /**
  * Sort renderers by priority.
+ *
  * @param {!os.ui.capture.ElementRenderer} a First renderer.
  * @param {!os.ui.capture.ElementRenderer} b S`econd renderer.
  * @return {number} The sort order.

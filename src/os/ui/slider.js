@@ -5,6 +5,7 @@ goog.require('os.ui.Module');
 
 /**
  * A slider directive
+ *
  * @return {angular.Directive}
  */
 os.ui.sliderDirective = function() {
@@ -35,6 +36,7 @@ os.ui.Module.directive('slider', [os.ui.sliderDirective]);
 
 /**
  * Controller for the slider directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @constructor
@@ -94,6 +96,7 @@ os.ui.SliderCtrl = function($scope, $element) {
 
 /**
  * Clean up
+ *
  * @private
  */
 os.ui.SliderCtrl.prototype.onDestroy_ = function() {
@@ -104,6 +107,7 @@ os.ui.SliderCtrl.prototype.onDestroy_ = function() {
 
 /**
  * Handles external changes to value
+ *
  * @param {number|Array.<number>} newVal
  * @param {number|Array.<number>} oldVal
  * @private
@@ -125,6 +129,7 @@ os.ui.SliderCtrl.prototype.onChange_ = function(newVal, oldVal) {
 
 /**
  * Handles slide event
+ *
  * @param {*} e The event
  * @param {*} slider The slider
  * @private
@@ -144,6 +149,7 @@ os.ui.SliderCtrl.prototype.onSlide_ = function(e, slider) {
 
 /**
  * Handles slidestart/stop when in live update mode.
+ *
  * @param {*} e The event
  * @param {*} slider The slider
  * @protected
@@ -156,6 +162,7 @@ os.ui.SliderCtrl.prototype.onSlideStartStop = function(e, slider) {
 
 /**
  * Gets the bounds for the given slider
+ *
  * @param {*} slider
  * @return {!Array.<number>} The slider values as [lower, upper]
  * @private

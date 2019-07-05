@@ -19,6 +19,7 @@ goog.require('os.ui.slick.slickGridDirective');
 
 /**
  * The `sourcegrid` directive, for displaying a tabular list of features from a vector source.
+ *
  * @return {angular.Directive}
  */
 os.ui.sourceGridDirective = function() {
@@ -47,6 +48,7 @@ os.ui.Module.directive('sourcegrid', [os.ui.sourceGridDirective]);
 
 /**
  * Controller class for the `sourcegrid` directive.
+ *
  * @param {!angular.Scope} $scope The Angular scope.
  * @param {!angular.JQLite} $element The root DOM element.
  * @param {!angular.$compile} $compile The Angular $compile service.
@@ -194,6 +196,7 @@ os.ui.SourceGridCtrl.prototype.multiColumnSort = function(cols, a, b) {
 
 /**
  * Start the data update delay if it isn't already started.
+ *
  * @param {boolean=} opt_force If the delay restart should be forced.
  * @private
  */
@@ -206,6 +209,7 @@ os.ui.SourceGridCtrl.prototype.queueUpdate_ = function(opt_force) {
 
 /**
  * Finds empty columns on the current source and hides them from view.
+ *
  * @param {os.ui.menu.MenuEvent<os.ui.slick.ColumnContext>} event The column menu event.
  * @protected
  */
@@ -227,6 +231,7 @@ os.ui.SourceGridCtrl.prototype.onHideEmptyColumns = function(event) {
 
 /**
  * Finds empty columns on the current source and adds them to the view.
+ *
  * @param {os.ui.menu.MenuEvent<os.ui.slick.ColumnContext>} event The column menu event.
  * @protected
  */
@@ -265,6 +270,7 @@ os.ui.SourceGridCtrl.prototype.onUserColumnsChange = function(opt_changed) {
 
 /**
  * Set the visible flag on columns.
+ *
  * @param {!Array<!os.data.ColumnDefinition>} columns The columns.
  * @param {boolean} visible If the columns should be visible.
  * @return {number} The number of columns with changed visibility.
@@ -284,6 +290,7 @@ os.ui.SourceGridCtrl.prototype.setColumnsVisible = function(columns, visible) {
 
 /**
  * Handle changes to time offset.
+ *
  * @param {os.events.PropertyChangeEvent} e The change event.
  * @private
  */
@@ -314,6 +321,7 @@ os.ui.SourceGridCtrl.prototype.onColumnReset = function(event) {
 
 /**
  * Handle changes to the selected only flag.
+ *
  * @param {boolean=} opt_new The new value.
  * @param {boolean=} opt_old The old value.
  * @private
@@ -327,6 +335,7 @@ os.ui.SourceGridCtrl.prototype.onSelectedOnlyChange_ = function(opt_new, opt_old
 
 /**
  * Handle changes to the source.
+ *
  * @param {os.source.Vector} newVal The new source.
  * @param {os.source.Vector} oldVal The old source.
  */
@@ -401,6 +410,7 @@ os.ui.SourceGridCtrl.prototype.getColumns = function() {
 /**
  * Get column definitions from the vector source. This gets the *original* array, so care must be taken in modifying
  * the result.
+ *
  * @return {!Array.<os.data.ColumnDefinition>} The column definitions.
  * @override
  * @protected
@@ -412,6 +422,7 @@ os.ui.SourceGridCtrl.prototype.getColumnsInternal = function() {
 
 /**
  * Gets a value from a feature.
+ *
  * @param {ol.Feature} feature The feature.
  * @param {(os.data.ColumnDefinition|string)} col The column.
  * @return {*} The value.
@@ -436,6 +447,7 @@ os.ui.SourceGridCtrl.prototype.getValueFromFeature_ = function(feature, col) {
 
 /**
  * Handle features added to the source.
+ *
  * @param {ol.source.Vector.Event} e The vector event.
  * @private
  */
@@ -447,6 +459,7 @@ os.ui.SourceGridCtrl.prototype.onFeaturesAdded_ = function(e) {
 
 /**
  * Handle features removed from the source.
+ *
  * @param {ol.source.Vector.Event} e The vector event.
  * @private
  */
@@ -458,6 +471,7 @@ os.ui.SourceGridCtrl.prototype.onFeaturesRemoved_ = function(e) {
 
 /**
  * Handle property changes on the source.
+ *
  * @param {os.events.PropertyChangeEvent} e The change event.
  * @private
  */
@@ -553,6 +567,7 @@ os.ui.SourceGridCtrl.prototype.onGridSelectedChange = function(e, args) {
 
 /**
  * Update selected items.
+ *
  * @param {goog.events.Event=} opt_e The event.
  * @private
  */
@@ -565,6 +580,7 @@ os.ui.SourceGridCtrl.prototype.onSelectChangeDelay_ = function(opt_e) {
 
 /**
  * Update data displayed in the grid.
+ *
  * @param {goog.events.Event=} opt_e The event.
  * @private
  */
@@ -575,6 +591,7 @@ os.ui.SourceGridCtrl.prototype.onUpdateDelay_ = function(opt_e) {
 
 /**
  * Convenience function to update displayed features and the grid selection.
+ *
  * @protected
  */
 os.ui.SourceGridCtrl.prototype.updateFeatures = function() {

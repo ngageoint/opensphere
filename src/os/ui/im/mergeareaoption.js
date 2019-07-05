@@ -8,6 +8,7 @@ goog.require('os.ui.util.validationMessageDirective');
 
 /**
  * Directive for requesting title, description, and tags for an import configuration.
+ *
  * @return {angular.Directive}
  */
 os.ui.im.mergeAreaOptionDirective = function() {

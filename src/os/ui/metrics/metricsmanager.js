@@ -20,6 +20,7 @@ goog.require('os.ui.window');
 
 /**
  * Base metrics manager. Applications should extend this to fill in the abstract methods.
+ *
  * @extends {goog.events.EventTarget}
  * @constructor
  */
@@ -73,6 +74,7 @@ os.ui.metrics.MetricsManager.LOGGER_ = goog.log.getLogger('os.ui.metrics.Metrics
 
 /**
  * Add a metrics control to the system.
+ *
  * @param {!os.ui.metrics.MetricsPlugin} plugin
  */
 os.ui.metrics.MetricsManager.prototype.addMetricsPlugin = function(plugin) {
@@ -89,6 +91,7 @@ os.ui.metrics.MetricsManager.prototype.addMetricsPlugin = function(plugin) {
 
 /**
  * Get the metrics tree.
+ *
  * @return {!os.structs.ITreeNode}
  */
 os.ui.metrics.MetricsManager.prototype.getRootNode = function() {
@@ -98,6 +101,7 @@ os.ui.metrics.MetricsManager.prototype.getRootNode = function() {
 
 /**
  * Get the currently selected item.
+ *
  * @return {?os.structs.ITreeNode}
  */
 os.ui.metrics.MetricsManager.prototype.getSelected = function() {
@@ -107,6 +111,7 @@ os.ui.metrics.MetricsManager.prototype.getSelected = function() {
 
 /**
  * Store the last selected item
+ *
  * @param {os.structs.ITreeNode} selected
  */
 os.ui.metrics.MetricsManager.prototype.setSelected = function(selected) {
@@ -116,6 +121,7 @@ os.ui.metrics.MetricsManager.prototype.setSelected = function(selected) {
 
 /**
  * Select a metrics plugin in the tree.
+ *
  * @param {string} id The plugin identifier.
  */
 os.ui.metrics.MetricsManager.prototype.setSelectedPlugin = function(id) {
@@ -135,6 +141,7 @@ os.ui.metrics.MetricsManager.prototype.setSelectedPlugin = function(id) {
 
 /**
  * Select the first leaf node in the tree.
+ *
  * @return {?os.structs.ITreeNode}
  */
 os.ui.metrics.MetricsManager.prototype.initSelection = function() {
@@ -161,6 +168,7 @@ os.ui.metrics.MetricsManager.prototype.importSettings = function() {
 
 /**
  * Add a metrics plugin to the tree.
+ *
  * @param {!os.ui.metrics.MetricsPlugin} plugin
  * @private
  */
@@ -179,6 +187,7 @@ os.ui.metrics.MetricsManager.prototype.addPluginToTree_ = function(plugin) {
 
 /**
  * Add a metrics plugin to the tree.
+ *
  * @param {!string} label
  * @param {!string} description
  */

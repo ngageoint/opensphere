@@ -6,6 +6,7 @@ goog.require('os.ui.filter.op.Not');
 
 /**
  * An inverse 'PropertyIsNull' operation class.
+ *
  * @extends {os.ui.filter.op.Not}
  * @constructor
  */

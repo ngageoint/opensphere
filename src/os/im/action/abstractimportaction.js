@@ -9,6 +9,7 @@ goog.require('os.xml');
 
 /**
  * Abstract import action.
+ *
  * @abstract
  * @implements {os.im.action.IImportAction<T>}
  * @constructor

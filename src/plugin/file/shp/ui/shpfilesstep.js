@@ -15,6 +15,7 @@ goog.require('plugin.file.shp.SHPParserConfig');
 
 /**
  * SHP import file selection step
+ *
  * @extends {os.ui.wiz.step.AbstractWizardStep.<plugin.file.shp.SHPParserConfig>}
  * @constructor
  */
@@ -49,6 +50,7 @@ plugin.file.shp.ui.SHPFilesStep.prototype.finalize = function(config) {
 
 /**
  * The SHP import file selection step directive
+ *
  * @return {angular.Directive}
  */
 plugin.file.shp.ui.configStepDirective = function() {
@@ -71,6 +73,7 @@ os.ui.Module.directive('shpfilesstep', [plugin.file.shp.ui.configStepDirective])
 
 /**
  * Controller for the SHP import file selection step
+ *
  * @param {!angular.Scope} $scope
  * @constructor
  * @ngInject
@@ -169,6 +172,7 @@ plugin.file.shp.ui.SHPFilesStepCtrl.prototype.destroy_ = function() {
 
 /**
  * Checks if both files have been chosen/validated.
+ *
  * @private
  */
 plugin.file.shp.ui.SHPFilesStepCtrl.prototype.validate_ = function() {
@@ -179,6 +183,7 @@ plugin.file.shp.ui.SHPFilesStepCtrl.prototype.validate_ = function() {
 
 /**
  * Launches a file browser for the specified file type.
+ *
  * @param {string} type The file type
  * @export
  */
@@ -193,6 +198,7 @@ plugin.file.shp.ui.SHPFilesStepCtrl.prototype.onBrowse = function(type) {
 
 /**
  * Handles changes to the hidden file inputs, validating the chosen file.
+ *
  * @param {goog.events.BrowserEvent} event
  * @private
  */
@@ -212,6 +218,7 @@ plugin.file.shp.ui.SHPFilesStepCtrl.prototype.onFileChange_ = function(event) {
 
 /**
  * Handler for successful file read.
+ *
  * @param {string} type The file type
  * @param {os.file.File} file The file.
  * @private
@@ -249,6 +256,7 @@ plugin.file.shp.ui.SHPFilesStepCtrl.prototype.handleResult_ = function(type, fil
 
 /**
  * Updates the error text displayed for the SHP/DBF file based on the UI state.
+ *
  * @param {string} type The file type
  * @param {string=} opt_text Custom error text
  * @private
@@ -271,6 +279,7 @@ plugin.file.shp.ui.SHPFilesStepCtrl.prototype.updateErrorText_ = function(type, 
 /**
  * Gets the user-facing name for the provided file. Remote files will return the URL, while local files will return
  * the file name.
+ *
  * @param {?os.file.File} file The file
  * @return {string}
  * @private
@@ -291,6 +300,7 @@ plugin.file.shp.ui.SHPFilesStepCtrl.prototype.getDisplayName_ = function(file) {
 
 /**
  * Handler for failed file read. Display an error message and close the window.
+ *
  * @param {string} type The file type
  * @param {string} errorMsg The error message.
  * @private
@@ -314,6 +324,7 @@ plugin.file.shp.ui.SHPFilesStepCtrl.prototype.handleError_ = function(type, erro
 
 /**
  * Clears the file associated with the specified type.
+ *
  * @param {string} type The file type
  * @export
  */
@@ -337,6 +348,7 @@ plugin.file.shp.ui.SHPFilesStepCtrl.prototype.onClear = function(type) {
 /**
  * Convenience function for returning 'a DBF file' or 'an SHP file' for error messages. I know, it's best
  * not to ask.
+ *
  * @param {string} type
  * @return {string}
  * @private
@@ -348,6 +360,7 @@ plugin.file.shp.ui.SHPFilesStepCtrl.prototype.getTypeString_ = function(type) {
 
 /**
  * Loads the provided URL to see if it's a valid SHP/DBF file.
+ *
  * @param {string} type The file type
  * @export
  */
@@ -363,6 +376,7 @@ plugin.file.shp.ui.SHPFilesStepCtrl.prototype.loadUrl = function(type) {
 
 /**
  * Handles URL import completion.
+ *
  * @param {string} type
  * @param {goog.events.Event} event
  * @private
@@ -382,6 +396,7 @@ plugin.file.shp.ui.SHPFilesStepCtrl.prototype.onUrlComplete_ = function(type, ev
 
 /**
  * Handles URL import error.
+ *
  * @param {string} type
  * @param {goog.events.Event} event
  * @private

@@ -92,6 +92,7 @@ ol.source.TileImage.prototype.applyTileFilters = function() {
 
 /**
  * Sets the tileClass.
+ *
  * @param {!os.TileClass} clazz The tile class
  */
 ol.source.TileImage.prototype.setTileClass = function(clazz) {

@@ -8,6 +8,7 @@ goog.require('os.ui.alert.alertBadgeDirective');
 
 /**
  * The alert button directive
+ *
  * @return {angular.Directive}
  */
 os.ui.alert.alertButtonDirective = function() {
@@ -34,6 +35,7 @@ os.ui.Module.directive('alertButton', [os.ui.alert.alertButtonDirective]);
 
 /**
  * Controller function for the nav-top directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element The element
  * @extends {os.ui.MenuButtonCtrl}

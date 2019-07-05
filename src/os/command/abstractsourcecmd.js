@@ -8,6 +8,7 @@ goog.require('os.source.ISource');
 
 /**
  * Abstract command for interaction with sources
+ *
  * @abstract
  * @constructor
  * @implements {os.command.ICommand}
@@ -69,6 +70,7 @@ os.command.AbstractSource.prototype.details = null;
 
 /**
  * Checks if the command is ready to execute.
+ *
  * @return {boolean}
  */
 os.command.AbstractSource.prototype.canExecute = function() {

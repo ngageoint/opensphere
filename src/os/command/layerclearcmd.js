@@ -9,6 +9,7 @@ goog.require('os.data.DeactivateDescriptor');
 
 /**
  * Command for clearing layers on the map.
+ *
  * @extends {os.command.SequenceCommand}
  * @constructor
  */

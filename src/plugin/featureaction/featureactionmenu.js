@@ -43,6 +43,7 @@ plugin.im.action.feature.layerDispose = function() {
 
 /**
  * If the action arguments support feature actions.
+ *
  * @param {os.ui.menu.layer.Context} context The menu context.
  * @this {os.ui.menu.MenuItem}
  */
@@ -62,6 +63,7 @@ plugin.im.action.feature.visibleIfSupported = function(context) {
 
 /**
  * Handle import action event from the layer menu.
+ *
  * @param {!os.ui.menu.MenuEvent<os.ui.menu.layer.Context>} event The menu event.
  * @private
  */

@@ -29,6 +29,7 @@ goog.inherits(os.config.UnitSettings, os.ui.config.SettingPlugin);
 
 /**
  * The unit settings UI directive
+ *
  * @return {angular.Directive}
  */
 os.config.unitSettingsDirective = function() {
@@ -51,6 +52,7 @@ os.ui.Module.directive('unitsettings', [os.config.unitSettingsDirective]);
 
 /**
  * Controller for unit settings
+ *
  * @param {!angular.Scope} $scope
  * @constructor
  * @ngInject
@@ -99,6 +101,7 @@ os.config.UnitSettingsCtrl.prototype.destroy_ = function() {
 
 /**
  * Handle units change via settings.
+ *
  * @param {os.events.PropertyChangeEvent} event
  * @private
  */
@@ -113,6 +116,7 @@ os.config.UnitSettingsCtrl.prototype.onUnitsChange_ = function(event) {
 
 /**
  * Save the new units settings.
+ *
  * @param {string=} opt_new
  * @param {string=} opt_old
  * @private

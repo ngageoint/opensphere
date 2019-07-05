@@ -6,6 +6,7 @@ goog.require('goog.events.Listenable');
 
 /**
  * Interface for saving video frames to a file.
+ *
  * @interface
  * @extends {goog.events.Listenable}
  */

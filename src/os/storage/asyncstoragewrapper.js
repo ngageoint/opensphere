@@ -186,6 +186,7 @@ os.storage.AsyncStorageWrapper.prototype.clear = function() {
 
 /**
  * Create a new deferred object to return a result.
+ *
  * @param {T=} opt_result
  * @return {!goog.async.Deferred}
  * @protected

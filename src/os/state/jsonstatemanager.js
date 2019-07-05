@@ -16,6 +16,7 @@ goog.require('os.ui.im.ImportManager');
 
 /**
  * Base JSON state manager.
+ *
  * @extends {os.state.BaseStateManager.<!Object.<string, *>, !os.state.JSONStateOptions>}
  * @constructor
  */

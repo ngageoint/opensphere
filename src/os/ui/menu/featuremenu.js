@@ -18,6 +18,7 @@ os.ui.menu.feature.GroupLabel = {
 
 /**
  * Add generic feature menu items.
+ *
  * @param {os.ui.menu.Menu} menu The menu.
  * @param {string=} opt_prefix The menu event prefix.
  * @param {function(os.ui.menu.MenuEvent)=} opt_handler The menu handler.
@@ -31,6 +32,7 @@ os.ui.menu.feature.addFeatureItems = function(menu, opt_prefix, opt_handler) {
 
 /**
  * Add menu items to change feature selection.
+ *
  * @param {os.ui.menu.Menu} menu The menu.
  * @param {string=} opt_prefix The menu event prefix.
  * @param {function(os.ui.menu.MenuEvent)=} opt_handler The menu handler.
@@ -74,6 +76,7 @@ os.ui.menu.feature.addSelectItems = function(menu, opt_prefix, opt_handler) {
 
 /**
  * Add menu items to show/hide features.
+ *
  * @param {os.ui.menu.Menu} menu The menu.
  * @param {string=} opt_prefix The menu event prefix.
  * @param {function(os.ui.menu.MenuEvent)=} opt_handler The menu handler.
@@ -117,6 +120,7 @@ os.ui.menu.feature.addShowHideItems = function(menu, opt_prefix, opt_handler) {
 
 /**
  * Add menu items to remove features.
+ *
  * @param {os.ui.menu.Menu} menu The menu.
  * @param {string=} opt_prefix The menu event prefix.
  * @param {function(os.ui.menu.MenuEvent)=} opt_handler The menu handler.

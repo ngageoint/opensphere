@@ -18,6 +18,7 @@ goog.require('plugin.im.action.feature.ui.ActionConfigCtrl');
 
 /**
  * Directive to configure a feature style action.
+ *
  * @return {angular.Directive}
  */
 plugin.im.action.feature.ui.styleConfigDirective = function() {
@@ -46,6 +47,7 @@ os.ui.Module.directive(plugin.im.action.feature.StyleAction.CONFIG_UI,
 
 /**
  * Controller for setting a feature style.
+ *
  * @param {!angular.Scope} $scope The Angular scope.
  * @param {!angular.JQLite} $element The root DOM element.
  * @extends {plugin.im.action.feature.ui.ActionConfigCtrl<plugin.im.action.feature.StyleAction>}
@@ -164,6 +166,7 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.saveAction = function() {
 
 /**
  * Handle color change.
+ *
  * @param {?angular.Scope.Event} event The Angular event.
  * @param {string|undefined} value The new color value.
  * @protected
@@ -193,6 +196,7 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onColorChange = function(e
 
 /**
  * Handle color reset.
+ *
  * @param {?angular.Scope.Event} event The Angular event.
  * @protected
  */
@@ -208,6 +212,7 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onColorReset = function(ev
 
 /**
  * Handle icon change.
+ *
  * @param {?angular.Scope.Event} event The Angular event.
  * @param {osx.icon.Icon} value The new value.
  * @protected
@@ -225,6 +230,7 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onIconChange = function(ev
 
 /**
  * Handle changes to opacity.
+ *
  * @param {?angular.Scope.Event} event The Angular event.
  * @param {number} value
  * @protected
@@ -242,6 +248,7 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onOpacityChange = function
 
 /**
  * Handle changes to size.
+ *
  * @param {?angular.Scope.Event} event The Angular event.
  * @param {number} value
  * @protected
@@ -259,6 +266,7 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onSizeChange = function(ev
 
 /**
  * Handle changes to line dash.
+ *
  * @param {?angular.Scope.Event} event The Angular event.
  * @param {Array<number>} value
  * @protected
@@ -276,6 +284,7 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onLineDashChange = functio
 
 /**
  * Handle changes to the shape.
+ *
  * @param {?angular.Scope.Event} event The Angular event.
  * @param {string} value The new value.
  * @protected
@@ -295,6 +304,7 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onShapeChange = function(e
 
 /**
  * Handle changes to the shape.
+ *
  * @param {?angular.Scope.Event} event The Angular event.
  * @param {string} value The new value.
  * @protected
@@ -314,6 +324,7 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onCenterShapeChange = func
 
 /**
  * Update the displayed icon.
+ *
  * @private
  */
 plugin.im.action.feature.ui.StyleConfigCtrl.prototype.updateIcon_ = function() {
@@ -329,6 +340,7 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.updateIcon_ = function() {
 
 /**
  * Update the displayed icon.
+ *
  * @private
  */
 plugin.im.action.feature.ui.StyleConfigCtrl.prototype.updateCenterIcon_ = function() {
@@ -344,6 +356,7 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.updateCenterIcon_ = functi
 
 /**
  * When to show the icon rotation option
+ *
  * @return {boolean}
  * @export
  */
@@ -361,6 +374,7 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.showRotationOption = funct
 
 /**
  * Handle changes to the Show Rotation option.
+ *
  * @param {angular.Scope.Event} event
  * @param {boolean} value
  * @private
@@ -378,6 +392,7 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onShowRotationChange_ = fu
 
 /**
  * Handles column changes to the rotation
+ *
  * @param {angular.Scope.Event=} opt_event
  * @param {string=} opt_value
  * @private

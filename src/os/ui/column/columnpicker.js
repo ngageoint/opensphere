@@ -12,6 +12,7 @@ goog.require('os.ui.Module');
 
 /**
  * Select2 to pick from all avaliable columns.
+ *
  * @return {angular.Directive}
  */
 os.ui.column.columnPickerDirective = function() {
@@ -43,6 +44,7 @@ os.ui.Module.directive('columnpicker', [os.ui.column.columnPickerDirective]);
 /**
  * Controller for the column picker
  * The selected column will be saved in 'column'. If multiple is allowed it will be stored in 'columns' as an array.
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$timeout} $timeout
@@ -93,6 +95,7 @@ os.ui.column.ColumnPickerCtrl = function($scope, $element, $timeout) {
 
 /**
  * Clean up.
+ *
  * @private
  */
 os.ui.column.ColumnPickerCtrl.prototype.destroy_ = function() {
@@ -103,6 +106,7 @@ os.ui.column.ColumnPickerCtrl.prototype.destroy_ = function() {
 
 /**
  * Column selection is triggered, use the correct one
+ *
  * @private
  */
 os.ui.column.ColumnPickerCtrl.prototype.columnSelected_ = function() {
@@ -116,6 +120,7 @@ os.ui.column.ColumnPickerCtrl.prototype.columnSelected_ = function() {
 
 /**
  * Select the columns based off the model
+ *
  * @private
  */
 os.ui.column.ColumnPickerCtrl.prototype.selectColumns_ = function() {
@@ -138,6 +143,7 @@ os.ui.column.ColumnPickerCtrl.prototype.selectColumns_ = function() {
 
 /**
  * Select the columns based off the model
+ *
  * @private
  */
 os.ui.column.ColumnPickerCtrl.prototype.selectColumn_ = function() {

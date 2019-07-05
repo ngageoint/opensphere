@@ -119,7 +119,7 @@ os.state.v2.ViewState.prototype.saveInternal = function(options, rootObj) {
 
     // append the view projection (2d or 3d mode)
     var projection = mapContainer.is3DEnabled() ? os.state.v2.ViewProjection.VIEW_3D :
-        os.state.v2.ViewProjection.VIEW_2D;
+      os.state.v2.ViewProjection.VIEW_2D;
     os.xml.appendElement('projection', rootObj, projection);
 
     // append the camera state

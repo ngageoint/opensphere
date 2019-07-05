@@ -5,6 +5,7 @@ goog.require('os.tile');
 
 /**
  * Interface for tile layers that support applying filters to their image tiles.
+ *
  * @interface
  */
 os.source.IFilterableTileSource = function() {};

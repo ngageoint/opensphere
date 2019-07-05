@@ -7,6 +7,7 @@ goog.require('os.ui.search.FeatureResultCardCtrl');
 
 /**
  * Result card UI for Nominatim search results.
+ *
  * @return {angular.Directive}
  */
 plugin.osm.nom.resultCardDirective = function() {
@@ -28,6 +29,7 @@ os.ui.Module.directive('nominatimresultcard', [plugin.osm.nom.resultCardDirectiv
 
 /**
  * Controller for the nominatimresultcard directive.
+ *
  * @param {!angular.Scope} $scope The Angular scope.
  * @param {!angular.JQLite} $element The root DOM element.
  * @constructor
@@ -79,6 +81,7 @@ goog.inherits(plugin.osm.nom.ResultCardCtrl, os.ui.search.FeatureResultCardCtrl)
 
 /**
  * Get the title to display on the card.
+ *
  * @return {string} The title.
  * @export
  */

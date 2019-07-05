@@ -10,6 +10,7 @@ goog.require('os.ui.slick.slickHeaderButtonDirective');
 
 /**
  * The import wizard preview directive
+ *
  * @return {angular.Directive}
  */
 os.ui.wiz.wizardPreviewDirective = function() {
@@ -36,6 +37,7 @@ os.ui.Module.directive('wizardpreview', [os.ui.wiz.wizardPreviewDirective]);
 
 /**
  * Controller for the wizard preview directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$timeout} $timeout
@@ -100,6 +102,7 @@ os.ui.wiz.WizardPreviewCtrl = function($scope, $element, $timeout) {
 
 /**
  * Clean up references/listeners.
+ *
  * @private
  */
 os.ui.wiz.WizardPreviewCtrl.prototype.destroy_ = function() {
@@ -120,6 +123,7 @@ os.ui.wiz.WizardPreviewCtrl.prototype.destroy_ = function() {
 
 /**
  * Handle resize events received on the scope.
+ *
  * @param {angular.Scope.Event} event
  * @param {number=} opt_delay Timeout delay for the resize.
  * @private
@@ -131,6 +135,7 @@ os.ui.wiz.WizardPreviewCtrl.prototype.onResize_ = function(event, opt_delay) {
 
 /**
  * Resizes the preview pane to use available space.
+ *
  * @param {number=} opt_delay Timeout delay for the resize.
  * @private
  */
@@ -156,6 +161,7 @@ os.ui.wiz.WizardPreviewCtrl.prototype.resizePreview_ = function(opt_delay) {
 
 /**
  * Gets a value from an object
+ *
  * @param {Object} item
  * @param {(os.data.ColumnDefinition|string)} col
  * @return {*} The value
@@ -170,6 +176,7 @@ os.ui.wiz.WizardPreviewCtrl.prototype.getValue_ = function(item, col) {
 /**
  * Updates whether to include the column or not
  * There must be a minimum of two columns
+ *
  * @param {os.data.ColumnDefinition} column
  * @param {Object} button
  * @param {string} command

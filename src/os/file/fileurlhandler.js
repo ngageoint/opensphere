@@ -7,6 +7,7 @@ goog.require('os.url.AbstractUrlHandler');
 
 /**
  * Handles URL parameters for files.
+ *
  * @extends {os.url.AbstractUrlHandler}
  * @constructor
  */
@@ -27,6 +28,7 @@ os.file.FileUrlHandler.KEY = 'file';
 
 /**
  * Handles a file by kicking off the import process.
+ *
  * @inheritDoc
  */
 os.file.FileUrlHandler.prototype.handleInternal = function(key, value) {
@@ -51,6 +53,7 @@ os.file.FileUrlHandler.prototype.handleInternal = function(key, value) {
 
 /**
  * Unhandles a file by removing the descriptor.
+ *
  * @inheritDoc
  */
 os.file.FileUrlHandler.prototype.unhandleInternal = function(key, value) {

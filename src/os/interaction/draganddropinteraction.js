@@ -20,6 +20,7 @@ goog.require('os.ui.im.ImportEventType');
 
 /**
  * Handles input of vector data by drag and drop.
+ *
  * @extends {ol.interaction.Interaction}
  * @constructor
  */

@@ -9,6 +9,7 @@ goog.require('os.ui.wiz.wizardDirective');
 
 /**
  * Generic controller for a file import wizard window
+ *
  * @abstract
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
@@ -42,6 +43,7 @@ os.ui.im.FileImportWizard.prototype.cancelInternal = function() {
 
 /**
  * Clean up the parser configuration, removing any references it doesn't need.
+ *
  * @protected
  */
 os.ui.im.FileImportWizard.prototype.cleanConfig = function() {
@@ -74,6 +76,7 @@ os.ui.im.FileImportWizard.prototype.finish = function() {
 
 /**
  * Identify files that need to be stored and finish the import.
+ *
  * @param {!S} descriptor
  * @protected
  */
@@ -93,6 +96,7 @@ os.ui.im.FileImportWizard.prototype.storeAndFinish = function(descriptor) {
 
 /**
  * Import complete, so add the descriptor to the data manager and provider.
+ *
  * @param {!S} descriptor
  * @protected
  */

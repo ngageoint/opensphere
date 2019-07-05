@@ -11,6 +11,7 @@ goog.require('os.ui.state.AbstractStateDescriptor');
 
 /**
  * State file provider
+ *
  * @extends {os.ui.data.DescriptorProvider<!os.ui.state.AbstractStateDescriptor>}
  * @constructor
  */

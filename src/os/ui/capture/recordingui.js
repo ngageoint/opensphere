@@ -13,6 +13,7 @@ goog.require('os.ui.loadingBarDirective');
 
 /**
  * The recordingui directive
+ *
  * @return {angular.Directive}
  */
 os.ui.capture.recordingUIDirective = function() {
@@ -45,6 +46,7 @@ os.ui.capture.RECORDING_ID = 'recordUi';
 
 /**
  * Controller function for the recordingui directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @constructor
@@ -131,6 +133,7 @@ os.ui.capture.RecordingUI = function($scope, $element) {
 
 /**
  * Clean up.
+ *
  * @private
  */
 os.ui.capture.RecordingUI.prototype.destroy_ = function() {
@@ -144,6 +147,7 @@ os.ui.capture.RecordingUI.prototype.destroy_ = function() {
 
 /**
  * Close the window.
+ *
  * @private
  */
 os.ui.capture.RecordingUI.prototype.close_ = function() {
@@ -155,6 +159,7 @@ os.ui.capture.RecordingUI.prototype.close_ = function() {
 
 /**
  * Cancel the recording and close the window.
+ *
  * @export
  */
 os.ui.capture.RecordingUI.prototype.cancel = function() {
@@ -168,6 +173,7 @@ os.ui.capture.RecordingUI.prototype.cancel = function() {
 
 /**
  * Start the recording.
+ *
  * @export
  */
 os.ui.capture.RecordingUI.prototype.record = function() {
@@ -194,6 +200,7 @@ os.ui.capture.RecordingUI.prototype.record = function() {
 
 /**
  * Get the title for a video encoder.
+ *
  * @param {os.capture.IVideoEncoder} encoder The encoder
  * @return {string}
  * @export
@@ -205,6 +212,7 @@ os.ui.capture.RecordingUI.prototype.getEncoderTitle = function(encoder) {
 
 /**
  * Get the description for the encoder.
+ *
  * @param {os.capture.IVideoEncoder} encoder The encoder
  * @return {string}
  * @export
@@ -221,6 +229,7 @@ os.ui.capture.RecordingUI.prototype.getEncoderDescription = function(encoder) {
 
 /**
  * Handle recording progress event.
+ *
  * @param {goog.events.Event} event
  * @private
  */
@@ -234,6 +243,7 @@ os.ui.capture.RecordingUI.prototype.onRecordingProgress_ = function(event) {
 
 /**
  * Handle recording unblocked event.
+ *
  * @param {goog.events.Event} event
  * @private
  */
@@ -248,6 +258,7 @@ os.ui.capture.RecordingUI.prototype.onUnblock_ = function(event) {
 
 /**
  * Handle recording status event.
+ *
  * @param {goog.events.Event} event
  * @private
  */
@@ -261,6 +272,7 @@ os.ui.capture.RecordingUI.prototype.onRecordingStatus_ = function(event) {
 
 /**
  * Handle recording complete.
+ *
  * @param {goog.events.Event} event
  * @private
  */
@@ -279,6 +291,7 @@ os.ui.capture.RecordingUI.prototype.onRecordingComplete_ = function(event) {
 
 /**
  * Handle recording error.
+ *
  * @param {goog.events.Event} event
  * @private
  */
@@ -309,6 +322,7 @@ os.ui.capture.RecordingUI.prototype.toggleRecordButton = function() {
 
 /**
  * Launch the recording UI.
+ *
  * @param {!os.capture.IRecorder} recorder The recorder
  */
 os.ui.capture.launchRecordingUI = function(recorder) {

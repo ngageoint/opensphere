@@ -14,6 +14,7 @@ goog.require('os.storage.IMechanism');
 
 /**
  * Basic interface for all asynchronous storage mechanisms.
+ *
  * @extends {goog.storage.mechanism.IterableMechanism}
  * @implements {os.storage.IMechanism<T>}
  * @constructor
@@ -92,6 +93,7 @@ os.storage.ObjectMechanism.prototype.__iterator__ = function(opt_keys) {
 
   /**
    * Next implementation for iterator
+   *
    * @return {*}
    */
   newIter.next = function() {

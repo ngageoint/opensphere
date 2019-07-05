@@ -7,6 +7,7 @@ goog.require('os.ui.data.groupby.TagGroupBy');
 
 /**
  * Groups nodes by a given list of tags
+ *
  * @extends {os.ui.data.groupby.TagGroupBy}
  * @param {boolean=} opt_open Keeps groups open by default
  * @constructor

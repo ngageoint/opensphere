@@ -9,6 +9,7 @@ goog.require('os.ui.nav.EventType');
 
 /**
  * Controller for NavBars
+ *
  * @param {!angular.Scope} $scope The Angular scope.
  * @param {!angular.JQLite} $element The root DOM element.
  * @extends {goog.Disposable}
@@ -58,6 +59,7 @@ os.ui.NavBarCtrl.prototype.disposeInternal = function() {
 
 /**
  * Get the width of the items in the navbar
+ *
  * @return {number}
  * @export
  */
@@ -73,6 +75,7 @@ os.ui.NavBarCtrl.prototype.getNavContentSize = function() {
 
 /**
  * Get footer ng-class string based on loaded navbar lists
+ *
  * @param {string=} opt_leftListId The optional left list id
  * @param {string=} opt_middleListId The optional middle list id
  * @param {string=} opt_rightListId The optional right list id
@@ -106,6 +109,7 @@ os.ui.NavBarCtrl.prototype.getFooterDynamicClasses = function(opt_leftListId, op
 
 /**
  * Returns true if navbar only contains elements from one list
+ *
  * @param {Array.<string>} listIds Array containing the list ids of the navbar lists
  * @return {boolean} true if NavBar elements come from a single list
  * @private
@@ -125,6 +129,7 @@ os.ui.NavBarCtrl.prototype.navItemsFromSingleList_ = function(listIds) {
 
 /**
  * Number of navItems within the given list id
+ *
  * @param {string=} opt_listId The list id
  * @return {number} the number of navItems in the list
  * @private
@@ -136,6 +141,7 @@ os.ui.NavBarCtrl.prototype.numNavItems_ = function(opt_listId) {
 
 /**
  * Handle nav resize events.
+ *
  * @private
  */
 os.ui.NavBarCtrl.prototype.onResize_ = function() {

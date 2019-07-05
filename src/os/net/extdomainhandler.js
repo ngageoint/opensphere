@@ -11,6 +11,7 @@ goog.require('os.net.SameDomainHandler');
 
 /**
  * Handles requests to an external domain with a simple XHR.
+ *
  * @constructor
  * @extends {os.net.SameDomainHandler}
  */

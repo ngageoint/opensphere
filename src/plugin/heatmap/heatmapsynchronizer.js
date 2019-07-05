@@ -13,6 +13,7 @@ goog.require('plugin.cesium.sync.CesiumSynchronizer');
 
 /**
  * Synchronizes a single OpenLayers image layer to Cesium.
+ *
  * @param {!plugin.heatmap.Heatmap} layer The OpenLayers heatmap layer.
  * @param {!ol.PluggableMap} map The OpenLayers map.
  * @param {!Cesium.Scene} scene The Cesium scene.
@@ -142,6 +143,7 @@ plugin.heatmap.HeatmapSynchronizer.prototype.synchronizeInternal = function() {
 
 /**
  * Handle visibility
+ *
  * @param {os.events.PropertyChangeEvent} event
  * @private
  */
@@ -165,6 +167,7 @@ plugin.heatmap.HeatmapSynchronizer.prototype.onLayerPropertyChange_ = function(e
 
 /**
  * Update Cesium layer properties when the style changes.
+ *
  * @param {ol.Object.Event} event
  * @private
  */
@@ -178,6 +181,7 @@ plugin.heatmap.HeatmapSynchronizer.prototype.onStyleChange_ = function(event) {
 
 /**
  * Re-create the heatmap by forcing a call to OpenLayers.
+ *
  * @param {goog.events.Event=} opt_event
  * @suppress {accessControls}
  */
@@ -215,6 +219,7 @@ plugin.heatmap.HeatmapSynchronizer.prototype.createHeatmap = function(opt_event)
 
 /**
  * Regenerates the heatmap once the Cesium camera finishes changing.
+ *
  * @inheritDoc
  */
 plugin.heatmap.HeatmapSynchronizer.prototype.updateFromCamera = function() {
@@ -252,6 +257,7 @@ plugin.heatmap.HeatmapSynchronizer.prototype.reset = function() {
 
 /**
  * Get the first index of this synchronizer's layers in the Cesium imagery layer array.
+ *
  * @return {number}
  */
 plugin.heatmap.HeatmapSynchronizer.prototype.getFirstIndex = function() {

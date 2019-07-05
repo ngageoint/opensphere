@@ -8,6 +8,7 @@ goog.require('plugin.osm.nom.NominatimSearch');
 
 /**
  * Provides an interface to the OSM Nominatim API.
+ *
  * @extends {os.plugin.AbstractPlugin}
  * @constructor
  */

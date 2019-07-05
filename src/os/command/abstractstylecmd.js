@@ -8,6 +8,7 @@ goog.require('os.layer.PropertyChange');
 
 /**
  * Commands for style changes should extend this class
+ *
  * @abstract
  * @implements {os.command.ICommand}
  * @param {string} layerId
@@ -81,6 +82,7 @@ os.command.AbstractStyle.prototype.revert = function() {
 
 /**
  * Checks if the command is ready to execute.
+ *
  * @return {boolean}
  */
 os.command.AbstractStyle.prototype.canExecute = function() {
@@ -107,6 +109,7 @@ os.command.AbstractStyle.prototype.canExecute = function() {
 
 /**
  * Gets the old value
+ *
  * @abstract
  * @return {T} the old value
  * @protected
@@ -116,6 +119,7 @@ os.command.AbstractStyle.prototype.getOldValue = function() {};
 
 /**
  * Applies a value to the style config
+ *
  * @abstract
  * @param {Object} config The style config
  * @param {T} value The value to apply
@@ -125,6 +129,7 @@ os.command.AbstractStyle.prototype.applyValue = function(config, value) {};
 
 /**
  * Fire events, cleanup, etc.
+ *
  * @param {Object} config
  * @protected
  */
@@ -135,6 +140,7 @@ os.command.AbstractStyle.prototype.finish = function(config) {
 
 /**
  * Get the layer configuration.
+ *
  * @param {os.layer.ILayer} layer
  * @return {Object}
  * @protected
@@ -154,6 +160,7 @@ os.command.AbstractStyle.prototype.getLayerConfig = function(layer) {
 
 /**
  * Sets the value
+ *
  * @param {T} value
  */
 os.command.AbstractStyle.prototype.setValue = function(value) {
@@ -172,6 +179,7 @@ os.command.AbstractStyle.prototype.setValue = function(value) {
 
 /**
  * Gets the layer by ID.
+ *
  * @return {os.layer.ILayer}
  */
 os.command.AbstractStyle.prototype.getLayer = function() {

@@ -19,6 +19,7 @@ goog.require('os.ui.slick.TreeSearch');
 
 /**
  * The areafilteradd directive
+ *
  * @return {angular.Directive}
  */
 os.ui.query.areaFilterAddDirective = function() {
@@ -45,6 +46,7 @@ os.ui.Module.directive('areafilteradd', [os.ui.query.areaFilterAddDirective]);
 
 /**
  * Controller function for the areafilteradd directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$timeout} $timeout The Angular $timeout service.
@@ -133,6 +135,7 @@ goog.inherits(os.ui.query.AreaFilterAddCtrl, goog.events.EventTarget);
 
 /**
  * Clean up.
+ *
  * @private
  */
 os.ui.query.AreaFilterAddCtrl.prototype.destroy_ = function() {
@@ -167,6 +170,7 @@ os.ui.query.AreaFilterAddCtrl.prototype.destroy_ = function() {
 
 /**
  * Handle areas loaded from storage.
+ *
  * @param {Array<ol.Feature>} areas
  * @private
  */
@@ -229,6 +233,7 @@ os.ui.query.AreaFilterAddCtrl.TYPE_GROUP_BY_ = new os.ui.filter.ui.FilterGroupBy
 
 /**
  * Update the tree on a crosstalk event
+ *
  * @param {os.events.PropertyChangeEvent} event
  * @private
  */
@@ -241,6 +246,7 @@ os.ui.query.AreaFilterAddCtrl.prototype.onSettingsUpdate_ = function(event) {
 
 /**
  * Handle async area storage call
+ *
  * @param {Array<ol.Feature>=} opt_areas
  * @private
  */
@@ -296,6 +302,7 @@ os.ui.query.AreaFilterAddCtrl.prototype.updateFilters_ = function() {
 
 /**
  * Starts the area search delay
+ *
  * @export
  */
 os.ui.query.AreaFilterAddCtrl.prototype.searchAreas = function() {
@@ -307,6 +314,7 @@ os.ui.query.AreaFilterAddCtrl.prototype.searchAreas = function() {
 
 /**
  * Performs the area search
+ *
  * @private
  */
 os.ui.query.AreaFilterAddCtrl.prototype.onAreaSearch_ = function() {
@@ -329,6 +337,7 @@ os.ui.query.AreaFilterAddCtrl.prototype.onAreaSearch_ = function() {
 
 /**
  * Starts the filter search delay
+ *
  * @export
  */
 os.ui.query.AreaFilterAddCtrl.prototype.searchFilters = function() {
@@ -340,6 +349,7 @@ os.ui.query.AreaFilterAddCtrl.prototype.searchFilters = function() {
 
 /**
  * Performs the filter search
+ *
  * @private
  */
 os.ui.query.AreaFilterAddCtrl.prototype.onFilterSearch_ = function() {
@@ -356,6 +366,7 @@ os.ui.query.AreaFilterAddCtrl.prototype.onFilterSearch_ = function() {
 
 /**
  * Adds the toggled on filters and areas to their managers.
+ *
  * @export
  */
 os.ui.query.AreaFilterAddCtrl.prototype.add = function() {
@@ -375,6 +386,7 @@ os.ui.query.AreaFilterAddCtrl.prototype.add = function() {
 
 /**
  * Adds toggled nodes to filter and area manager.
+ *
  * @param {Array<os.ui.slick.SlickTreeNode>|os.ui.slick.SlickTreeNode} nodes
  * @private
  */
@@ -426,6 +438,7 @@ os.ui.query.AreaFilterAddCtrl.prototype.addFromNodes_ = function(nodes) {
 
 /**
  * Get all the descriptors for this layer name
+ *
  * @param {string} layer
  * @return {!Array<!os.data.IDataDescriptor>}
  */
@@ -443,6 +456,7 @@ os.ui.query.AreaFilterAddCtrl.prototype.getDescriptors = function(layer) {
 
 /**
  * Closes the window without doing anything.
+ *
  * @export
  */
 os.ui.query.AreaFilterAddCtrl.prototype.close = function() {
@@ -452,6 +466,7 @@ os.ui.query.AreaFilterAddCtrl.prototype.close = function() {
 
 /**
  * Fires an event telling the form to scroll the map into the view.
+ *
  * @export
  */
 os.ui.query.AreaFilterAddCtrl.prototype.scrollToMap = function() {
@@ -461,6 +476,7 @@ os.ui.query.AreaFilterAddCtrl.prototype.scrollToMap = function() {
 
 /**
  * Handler for dirty checkbox events. Counts the active areas/filters and updates the value on the UI.
+ *
  * @param {angular.Scope.Event=} opt_event
  * @private
  */
@@ -512,6 +528,7 @@ os.ui.query.AreaFilterAddCtrl.prototype.count_ = function(opt_event) {
 
 /**
  * Launches a window to choose objects to add areas from.
+ *
  * @export
  */
 os.ui.query.AreaFilterAddCtrl.prototype.launchAddObjectAreas = function() {
@@ -543,6 +560,7 @@ os.ui.query.AreaFilterAddCtrl.prototype.launchAddObjectAreas = function() {
 
 /**
  * Callback for area selection from objects.
+ *
  * @param {Array<ol.Feature>} features
  * @private
  */
@@ -554,6 +572,7 @@ os.ui.query.AreaFilterAddCtrl.prototype.onAreasSelected_ = function(features) {
 
 /**
  * Launch the area/filter adder.
+ *
  * @param {string} label
  * @param {boolean=} opt_hideArea
  * @param {boolean=} opt_hideFilter

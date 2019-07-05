@@ -8,6 +8,7 @@ goog.require('plugin.file.csv.CSVProvider');
 
 /**
  * CSV file descriptor.
+ *
  * @param {plugin.file.csv.CSVParserConfig=} opt_config
  * @extends {os.data.FileDescriptor}
  * @constructor
@@ -157,6 +158,7 @@ plugin.file.csv.CSVDescriptor.prototype.restore = function(conf) {
 
 /**
  * Creates a new descriptor from a parser configuration.
+ *
  * @param {!plugin.file.csv.CSVParserConfig} config
  * @return {!plugin.file.csv.CSVDescriptor}
  */

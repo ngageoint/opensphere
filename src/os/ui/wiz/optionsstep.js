@@ -14,6 +14,7 @@ goog.require('os.ui.wiz.step.WizardStepEvent');
 
 /**
  * Import wizard miscellaneous options step
+ *
  * @extends {os.ui.wiz.step.AbstractWizardStep}
  * @constructor
  */
@@ -35,6 +36,7 @@ os.ui.wiz.OptionsStep.prototype.isValid = function(config) {
 
 /**
  * The import wizard options step directive
+ *
  * @return {angular.Directive}
  */
 os.ui.wiz.optionsStepDirective = function() {
@@ -57,6 +59,7 @@ os.ui.Module.directive('optionsstep', [os.ui.wiz.optionsStepDirective]);
 
 /**
  * Controller for the import wizard options step
+ *
  * @param {!angular.Scope} $scope
  * @constructor
  * @ngInject
@@ -135,6 +138,7 @@ os.ui.wiz.OptionsStepCtrl.prototype.destroy_ = function() {
 
 /**
  * Handles changes to the title field, checking if the title already exists.
+ *
  * @param {string} newVal The new title value
  * @private
  */
@@ -150,6 +154,7 @@ os.ui.wiz.OptionsStepCtrl.prototype.onTitleChange_ = function(newVal) {
 
 /**
  * Handles validation changes in the options form.
+ *
  * @param {boolean} valid If the form is valid.
  * @private
  */
@@ -160,6 +165,7 @@ os.ui.wiz.OptionsStepCtrl.prototype.onValidationChange_ = function(valid) {
 
 /**
  * Fire a scope event when the shape is changed by the user.
+ *
  * @export
  */
 os.ui.wiz.OptionsStepCtrl.prototype.onShapeChange = function() {

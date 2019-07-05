@@ -26,6 +26,7 @@ os.ui.onboarding.OnboardingConfig;
 
 /**
  * Manager for user onboarding display.
+ *
  * @extends {goog.events.EventTarget}
  * @constructor
  */
@@ -75,6 +76,7 @@ os.ui.onboarding.OnboardingManager.PATH = os.ROOT;
 
 /**
  * Displays onboarding if the user hasn't seen it yet, or if forced.
+ *
  * @param {string} uri Path to the onboarding configuration.
  * @param {boolean=} opt_force Force onboarding to display.
  */
@@ -87,6 +89,7 @@ os.ui.onboarding.OnboardingManager.prototype.displayOnboarding = function(uri, o
 
 /**
  * If onboarding is enabled in the application.
+ *
  * @return {boolean}
  */
 os.ui.onboarding.OnboardingManager.prototype.isEnabled = function() {
@@ -96,6 +99,7 @@ os.ui.onboarding.OnboardingManager.prototype.isEnabled = function() {
 
 /**
  * Asks whether a particular set of onboarding has been displayed yet or not.
+ *
  * @param {string} uri Path to the onboarding configuration.
  * @return {boolean}
  */
@@ -108,6 +112,7 @@ os.ui.onboarding.OnboardingManager.prototype.hasDisplayed = function(uri) {
 /**
  * Gets onboarding to add to the map. Called when onboarding is not needed to be displayed,
  * but still needed for context-specific onboarding.
+ *
  * @param {string} uri Path to the onboarding configuration
  * @param {boolean} show If the onboarding should also be displayed
  * @private
@@ -144,6 +149,7 @@ os.ui.onboarding.OnboardingManager.prototype.launchOnboarding_ = function(uri, o
 
 /**
  * Handles request completion
+ *
  * @param {boolean} show If the onboarding should also be displayed
  * @param {goog.events.Event} event The event
  * @private
@@ -179,6 +185,7 @@ os.ui.onboarding.OnboardingManager.prototype.onLoad_ = function(show, event) {
 
 /**
  * Handles request errors
+ *
  * @param {goog.events.Event} event The event
  * @private
  */
@@ -193,6 +200,7 @@ os.ui.onboarding.OnboardingManager.prototype.onError_ = function(event) {
 
 /**
  * Adds all contextual onboarding steps to the map.
+ *
  * @param {Array<Object>} steps
  * @private
  */
@@ -213,6 +221,7 @@ os.ui.onboarding.OnboardingManager.prototype.processContext_ = function(steps) {
 
 /**
  * Show contextual onboarding
+ *
  * @param {string} context The context for the onboarding
  */
 os.ui.onboarding.OnboardingManager.prototype.showContextOnboarding = function(context) {

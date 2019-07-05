@@ -7,6 +7,7 @@ goog.require('os.ui.action.MenuItem');
 
 /**
  * Represents a menu divider.
+ *
  * @implements {os.ui.action.IMenuItem}
  * @extends {os.ui.action.MenuItem}
  * @deprecated Please use {@link os.ui.menu.Menu} and {@link os.ui.menu.MenuItem} instead
@@ -30,6 +31,7 @@ os.ui.action.MenuItemSeparator.prototype.isSeparator = true;
 
 /**
  * Represents a menu divider with a name
+ *
  * @implements {os.ui.action.IMenuItem}
  * @extends {os.ui.action.MenuItem}
  * @constructor

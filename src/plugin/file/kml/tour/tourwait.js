@@ -6,6 +6,7 @@ goog.require('plugin.file.kml.tour.AbstractTourPrimitive');
 
 /**
  * Holds the camera still for a specified amount of time.
+ *
  * @param {number} duration How long to wait, in milliseconds.
  * @extends {plugin.file.kml.tour.AbstractTourPrimitive}
  * @constructor
@@ -94,6 +95,7 @@ plugin.file.kml.tour.Wait.prototype.reset = function() {
 
 /**
  * Get the remaining time on the wait operation.
+ *
  * @return {number} The remaining wait interval, in milliseconds.
  * @protected
  */
@@ -104,6 +106,7 @@ plugin.file.kml.tour.Wait.prototype.getInterval = function() {
 
 /**
  * Handle wait completion.
+ *
  * @param {function()=} opt_resolve The promise resolve function to call when done.
  * @param {function()=} opt_reject The promise reject function to call on failure.
  * @protected
@@ -123,6 +126,7 @@ plugin.file.kml.tour.Wait.prototype.executeWait = function(opt_resolve, opt_reje
 
 /**
  * If the wait is currently active.
+ *
  * @return {boolean}
  * @protected
  */
@@ -133,6 +137,7 @@ plugin.file.kml.tour.Wait.prototype.isWaitActive = function() {
 
 /**
  * Handle wait completion.
+ *
  * @param {function()=} opt_resolve The promise resolve function to call when done.
  * @param {function()=} opt_reject The promise reject function to call on failure.
  * @protected

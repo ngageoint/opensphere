@@ -66,6 +66,7 @@ os.ui.filter.op.Between.prototype.getFilter = function(column, literal) {
 
 /**
  * Get the numeric range from the literal value.
+ *
  * @param {?string} literal The filter literal.
  * @return {Array<number>} The range, in the form [min, max].
  * @protected

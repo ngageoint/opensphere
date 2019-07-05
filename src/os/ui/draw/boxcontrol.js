@@ -8,6 +8,7 @@ goog.require('os.ui.draw.AbstractDrawControl');
 
 /**
  * Box drawing control.
+ *
  * @param {!SVGSVGElement} owner Owner DOM element.
  * @extends {os.ui.draw.AbstractDrawControl}
  * @constructor
@@ -81,6 +82,7 @@ os.ui.draw.BoxControl.prototype.deactivate = function(opt_event) {
 
 /**
  * Activates the control when the mouse is depressed.
+ *
  * @param {goog.events.BrowserEvent} e The mouse event
  * @private
  */
@@ -91,6 +93,7 @@ os.ui.draw.BoxControl.prototype.onMouseDown_ = function(e) {
 
 /**
  * Redraws the box using the current mouse position.
+ *
  * @param {goog.events.BrowserEvent} e The mouse event
  * @private
  */

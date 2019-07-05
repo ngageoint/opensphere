@@ -9,6 +9,7 @@ goog.require('os.ui.window.confirmDirective');
 
 /**
  * Color confirmation dialog.
+ *
  * @return {angular.Directive}
  */
 os.ui.window.confirmColorDirective = function() {
@@ -30,6 +31,7 @@ os.ui.Module.directive('confirmcolor', [os.ui.window.confirmColorDirective]);
 
 /**
  * Controller for the color confirmation window.
+ *
  * @param {!angular.Scope} $scope
  * @constructor
  * @ngInject
@@ -44,6 +46,7 @@ os.ui.window.ConfirmColorCtrl = function($scope) {
 
 /**
  * Launch a dialog prompting the user to pick a color.
+ *
  * @param {Function} confirm
  * @param {string=} opt_default The default color to use
  */

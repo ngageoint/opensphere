@@ -94,6 +94,7 @@ plugin.area.KMLAreaImportUI.prototype.onPreviewReady_ = function(config, event) 
 
 /**
  * The KML area import directive
+ *
  * @return {angular.Directive}
  */
 plugin.area.kmlAreaDirective = function() {
@@ -116,6 +117,7 @@ os.ui.Module.directive('kmlarea', [plugin.area.kmlAreaDirective]);
 
 /**
  * Controller for the SHP import file selection step
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$timeout} $timeout The Angular $timeout service.
@@ -153,6 +155,7 @@ plugin.area.KMLAreaCtrl.prototype.getFileName = function() {
 
 /**
  * Success callback for importing data. Adds the areas to Area Manager
+ *
  * @param {goog.events.Event} event
  * @private
  */

@@ -36,6 +36,7 @@ os.data.histo.GradientFn;
 
 /**
  * The default gradient function, returning an HSL gradient that excludes red from the scheme.
+ *
  * @param {number} size The number of colors to return in the gradient
  * @return {!Array<string>} The color gradient
  * @private
@@ -120,6 +121,7 @@ os.data.histo.ColorModel.prototype.disposeInternal = function() {
 
 /**
  * Get the histogram driving the color model.
+ *
  * @return {os.data.histo.SourceHistogram}
  */
 os.data.histo.ColorModel.prototype.getHistogram = function() {
@@ -129,6 +131,7 @@ os.data.histo.ColorModel.prototype.getHistogram = function() {
 
 /**
  * Get the histogram driving the color model.
+ *
  * @param {os.data.histo.SourceHistogram} histogram
  */
 os.data.histo.ColorModel.prototype.setHistogram = function(histogram) {
@@ -152,6 +155,7 @@ os.data.histo.ColorModel.prototype.setHistogram = function(histogram) {
 
 /**
  * Handle a bin change on the histogram.
+ *
  * @param {goog.events.Event} event
  * @private
  */
@@ -163,6 +167,7 @@ os.data.histo.ColorModel.prototype.onBinChange_ = function(event) {
 
 /**
  * Get the results
+ *
  * @return {!Array<!os.data.histo.ColorBin>}
  * @protected
  */
@@ -173,6 +178,7 @@ os.data.histo.ColorModel.prototype.getResults = function() {
 
 /**
  * Get the bin/color pairs currently applied by this color model.
+ *
  * @return {Object<string, string>}
  */
 os.data.histo.ColorModel.prototype.getBinColors = function() {
@@ -182,6 +188,7 @@ os.data.histo.ColorModel.prototype.getBinColors = function() {
 
 /**
  * Return the current manual color object
+ *
  * @return {Object<string, string>}
  */
 os.data.histo.ColorModel.prototype.getManualBinColors = function() {
@@ -191,6 +198,7 @@ os.data.histo.ColorModel.prototype.getManualBinColors = function() {
 
 /**
  * Apply the old bin color scheme when swapping between sources
+ *
  * @param {Object<string, string>} colors
  */
 os.data.histo.ColorModel.prototype.setManualBinColors = function(colors) {
@@ -205,6 +213,7 @@ os.data.histo.ColorModel.prototype.setManualBinColors = function(colors) {
 
 /**
  * Get the histogram bin method.
+ *
  * @return {os.histo.IBinMethod<ol.Feature>}
  */
 os.data.histo.ColorModel.prototype.getBinMethod = function() {
@@ -214,6 +223,7 @@ os.data.histo.ColorModel.prototype.getBinMethod = function() {
 
 /**
  * Get the data color method.
+ *
  * @return {os.data.histo.ColorMethod}
  */
 os.data.histo.ColorModel.prototype.getColorMethod = function() {
@@ -223,6 +233,7 @@ os.data.histo.ColorModel.prototype.getColorMethod = function() {
 
 /**
  * Returns whether there are manual colors applied to the model.
+ *
  * @return {boolean}
  */
 os.data.histo.ColorModel.prototype.hasManualColors = function() {
@@ -270,6 +281,7 @@ os.data.histo.ColorModel.prototype.setColorMethod = function(value, opt_bins, op
 
 /**
  * Applies the current color method.
+ *
  * @protected
  */
 os.data.histo.ColorModel.prototype.applyColorMethod = function() {
@@ -306,6 +318,7 @@ os.data.histo.ColorModel.prototype.applyColorMethod = function() {
 
 /**
  * Auto colors all features in the histogram.
+ *
  * @private
  */
 os.data.histo.ColorModel.prototype.autoColor_ = function() {
@@ -333,6 +346,7 @@ os.data.histo.ColorModel.prototype.autoColor_ = function() {
 
 /**
  * Auto colors all features in the histogram by bin count.
+ *
  * @private
  */
 os.data.histo.ColorModel.prototype.autoColorByCount_ = function() {
@@ -360,6 +374,7 @@ os.data.histo.ColorModel.prototype.autoColorByCount_ = function() {
 /**
  * Manually colors all bins with a custom color defined. Does not reset the color map as these colors should be
  * applied after the autocolorings are done.
+ *
  * @private
  */
 os.data.histo.ColorModel.prototype.manualColor_ = function() {
@@ -379,6 +394,7 @@ os.data.histo.ColorModel.prototype.manualColor_ = function() {
 
 /**
  * Clears bin colors and resets feature colors to the layer default.
+ *
  * @private
  */
 os.data.histo.ColorModel.prototype.resetColor_ = function() {
@@ -404,6 +420,7 @@ os.data.histo.ColorModel.prototype.resetColor_ = function() {
 
 /**
  * Reset the color for features that were previously colored, but are no longer.
+ *
  * @param {!Object<string, ol.Feature>} oldColors Map of previously colored features
  * @private
  */
@@ -421,6 +438,7 @@ os.data.histo.ColorModel.prototype.cleanupOldColors_ = function(oldColors) {
 
 /**
  * Sets the color on a set of features.
+ *
  * @param {Array<ol.Feature>} features The features to update
  * @param {string=} opt_color The new feature color
  * @private

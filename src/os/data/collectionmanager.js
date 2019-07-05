@@ -64,6 +64,7 @@ os.data.CollectionManager.prototype.addInternal = function(item) {
 
 /**
  * Gets the ID of an item
+ *
  * @param {T} item
  * @return {!string}
  */

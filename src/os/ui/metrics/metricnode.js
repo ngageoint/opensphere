@@ -21,6 +21,7 @@ os.ui.metrics.MetricNodeOptions;
 
 /**
  * Tree nodes for layers
+ *
  * @extends {os.ui.slick.SlickTreeNode}
  * @implements {os.data.ISearchable}
  * @param {string=} opt_key
@@ -198,12 +199,13 @@ os.ui.metrics.MetricNode.prototype.formatIcons = function() {
 
 /**
  * Returns this nodes icon, or empty string.
+ *
  * @return {string}
  */
 os.ui.metrics.MetricNode.prototype.getNodeIcon = function() {
   if (this.icon) {
     return /^<.*>/.test(this.icon) ?
-        this.icon : '<i class="' + this.icon + '"></i>';
+      this.icon : '<i class="' + this.icon + '"></i>';
   }
   return '';
 };

@@ -14,6 +14,7 @@ goog.require('os.xml');
 
 /**
  * State implementation to save filter actions.
+ *
  * @extends {os.state.XMLState}
  * @constructor
  */
@@ -77,6 +78,7 @@ os.state.v4.FilterAction.prototype.load = function(obj, id) {
 
         /**
          * Sets the proper state IDs on an entry and its children.
+         *
          * @param {os.im.action.FilterActionEntry} entry The entry to set IDs on.
          */
         var setIds = function(entry) {

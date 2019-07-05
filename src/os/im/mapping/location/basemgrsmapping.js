@@ -7,6 +7,7 @@ goog.require('os.im.mapping.AbstractPositionMapping');
 
 /**
  * Mapping to translate an MGRS coordinate string to a point geometry.
+ *
  * @extends {os.im.mapping.AbstractPositionMapping.<T, S>}
  * @constructor
  * @template T, S
@@ -19,6 +20,7 @@ goog.inherits(os.im.mapping.location.BaseMGRSMapping, os.im.mapping.AbstractPosi
 
 /**
  * Maps an MGRS coordinate string to a geometry.
+ *
  * @param {T} item The feature to modify
  * @param {S=} opt_targetItem The optional target item
  * @throws {Error} If the location field cannot be parsed.

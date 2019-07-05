@@ -117,6 +117,7 @@ os.capture.GifEncoder.prototype.processInternal = function() {
 
 /**
  * Converts canvas frames to diff frames for GIF generation.
+ *
  * @private
  */
 os.capture.GifEncoder.prototype.generateDiffFrames_ = function() {
@@ -170,6 +171,7 @@ os.capture.GifEncoder.prototype.doDiff_ = function(frame1, frame2) {
 
 /**
  * Translates a canvas frame to ImageData.
+ *
  * @param {!HTMLCanvasElement} canvas
  * @return {ImageData}
  * @private
@@ -187,6 +189,7 @@ os.capture.GifEncoder.prototype.getFrame_ = function(canvas) {
 
 /**
  * Handle GIF library progress event.
+ *
  * @param {number} progress The progress value as a decimal from 0-1.
  * @private
  */
@@ -197,6 +200,7 @@ os.capture.GifEncoder.prototype.onGifProgress_ = function(progress) {
 
 /**
  * Handle GIF library finished event.
+ *
  * @param {Uint8Array} data The GIF data
  * @private
  */

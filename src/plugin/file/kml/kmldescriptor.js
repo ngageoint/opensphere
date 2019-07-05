@@ -11,6 +11,7 @@ goog.require('plugin.file.kml.KMLProvider');
 
 /**
  * KML file descriptor.
+ *
  * @extends {os.data.FileDescriptor}
  * @constructor
  */
@@ -48,6 +49,7 @@ plugin.file.kml.KMLDescriptor.prototype.getLayerOptions = function() {
 
 /**
  * Creates a new descriptor from a parser configuration.
+ *
  * @param {!os.parse.FileParserConfig} config
  * @return {!plugin.file.kml.KMLDescriptor}
  */

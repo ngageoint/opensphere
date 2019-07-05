@@ -8,6 +8,7 @@ goog.require('os.ui.slick.AbstractGroupByTreeSearch');
 
 /**
  * Tree search for filter actions.
+ *
  * @extends {os.ui.slick.AbstractGroupByTreeSearch}
  * @param {!string} property The property the search exists at.
  * @param {Object} onObj The object that the search exists on.
@@ -71,6 +72,7 @@ os.ui.im.action.FilterActionTreeSearch.prototype.setupNode = function(item) {
 
 /**
  * Overridden to get parents and children as results
+ *
  * @override
  */
 os.ui.im.action.FilterActionTreeSearch.prototype.searchNodes = function(exp, results, nodes) {

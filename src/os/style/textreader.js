@@ -10,6 +10,7 @@ goog.require('os.style.label');
 
 /**
  * Label style reader
+ *
  * @extends {os.style.AbstractReader<!ol.style.Text>}
  * @constructor
  */

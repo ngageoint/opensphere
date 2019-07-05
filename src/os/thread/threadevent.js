@@ -5,6 +5,7 @@ goog.require('goog.events.Event');
 
 /**
  * A thread event
+ *
  * @param {string} type The event type
  * @param {os.thread.IThreadJob} job The job
  * @extends {goog.events.Event}
@@ -24,6 +25,7 @@ goog.inherits(os.thread.ThreadEvent, goog.events.Event);
 
 /**
  * Gets the job
+ *
  * @return {os.thread.IThreadJob} The job that caused the event
  */
 os.thread.ThreadEvent.prototype.getJob = function() {

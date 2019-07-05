@@ -6,6 +6,7 @@ goog.require('os.hist.IHistogramData');
 
 /**
  * Data representing a histogram for a single source.
+ *
  * @extends {os.hist.AbstractHistogramData}
  * @implements {os.hist.IHistogramData}
  * @constructor

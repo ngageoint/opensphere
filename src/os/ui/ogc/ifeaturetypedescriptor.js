@@ -4,6 +4,7 @@ goog.provide('os.ui.ogc.IFeatureTypeDescriptor');
 
 /**
  * Interface for descriptors providing an `os.ogc.IFeatureType`.
+ *
  * @interface
  */
 os.ui.ogc.IFeatureTypeDescriptor = function() {};

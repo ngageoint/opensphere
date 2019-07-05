@@ -120,6 +120,7 @@ os.fn.mapFeatureToGeometry = function(feature) {
 
 /**
  * Map a tree node to a layer.
+ *
  * @param {undefined|null|os.structs.ITreeNode} node The tree node.
  * @return {os.layer.ILayer|undefined} layer The layer, or undefined if not a layer node.
  */
@@ -130,6 +131,7 @@ os.fn.mapNodeToLayer = function(node) {
 
 /**
  * Map tree node(s) to layers.
+ *
  * @param {Array<os.structs.ITreeNode>|os.structs.ITreeNode|undefined} nodes The tree nodes.
  * @return {!Array<!os.layer.ILayer>} layers The layers.
  */

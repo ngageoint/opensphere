@@ -90,6 +90,7 @@ os.ui.slick.column.fix = {
 
 /**
  * Automatically sizes a column based on fixed widths or the column name.
+ *
  * @param {os.data.ColumnDefinition} column
  */
 os.ui.slick.column.autoSizeColumn = function(column) {
@@ -107,6 +108,7 @@ os.ui.slick.column.autoSizeColumn = function(column) {
 
 /**
  * Sorts columns
+ *
  * @param {os.data.ColumnDefinition} a
  * @param {os.data.ColumnDefinition} b
  * @return {number}
@@ -165,6 +167,7 @@ os.ui.slick.column.COLOR_ID = '_color';
 
 /**
  * Creates a column to display color. The column's value should be a hex or rgba color string.
+ *
  * @return {os.data.ColumnDefinition} The color column
  */
 os.ui.slick.column.color = function() {
@@ -189,6 +192,7 @@ os.ui.slick.column.color = function() {
 
 /**
  * Creates a new column menu instance.
+ *
  * @return {!os.ui.menu.Menu<os.ui.slick.ColumnContext>} The column menu.
  */
 os.ui.slick.createColumnActions = function() {
@@ -289,6 +293,7 @@ os.ui.slick.ColumnEventType = {
 
 /**
  * Show a menu item if the context has a column.
+ *
  * @param {os.ui.slick.ColumnContext} context The column menu context.
  * @this {os.ui.menu.MenuItem}
  * @private
@@ -300,6 +305,7 @@ os.ui.slick.column.visibleIfHasColumn_ = function(context) {
 
 /**
  * Show a menu item if the context contains more than one visible column.
+ *
  * @param {os.ui.slick.ColumnContext} context The column menu context.
  * @this {os.ui.menu.MenuItem}
  * @private
@@ -325,6 +331,7 @@ os.ui.slick.column.visibleIfCanRemove_ = function(context) {
 
 /**
  * Find a column by field/name.
+ *
  * @param {Array<!os.data.ColumnDefinition>} columns
  * @param {string} fieldOrName The column field or name value.
  * @return {os.data.ColumnDefinition}
@@ -344,6 +351,7 @@ os.ui.slick.column.findColumn = function(columns, fieldOrName) {
 
 /**
  * Find a column by the specified key/value. Inject the field using goog.bind.
+ *
  * @param {string} key
  * @param {*} value
  * @param {os.data.ColumnDefinition} column
@@ -358,6 +366,7 @@ os.ui.slick.column.findByField = function(key, value, column, index, array) {
 
 /**
  * Sort columns by the specified field. Inject the field using goog.bind.
+ *
  * @param {string} field
  * @param {os.data.ColumnDefinition} a
  * @param {os.data.ColumnDefinition} b
@@ -370,6 +379,7 @@ os.ui.slick.column.sortByField = function(field, a, b) {
 
 /**
  * If a column has been modified by the user.
+ *
  * @param {os.data.ColumnDefinition} column The column.
  * @return {number}
  */
@@ -380,6 +390,7 @@ os.ui.slick.column.isUserModified = function(column) {
 
 /**
  * Restore a set of columns from another set.
+ *
  * @param {!Array<!os.data.ColumnDefinition>} from The source columns.
  * @param {!Array<!os.data.ColumnDefinition>} to The destination columns.
  */
@@ -424,6 +435,7 @@ os.ui.slick.column.restore = function(from, to) {
 
 /**
  * Mapper function for columns to their fields.
+ *
  * @param {os.data.ColumnDefinition} column The column.
  * @return {string}
  */

@@ -16,6 +16,7 @@ goog.require('plugin.file.gpx.ui.GPXImportUI');
 
 /**
  * Provides GPX support
+ *
  * @extends {os.plugin.AbstractPlugin}
  * @constructor
  */

@@ -9,6 +9,7 @@ goog.require('os.ui.window');
 
 /**
  * A confirmation window. Create a window using os.ui.window.create, supplying the necessary scope/window options.
+ *
  * @return {angular.Directive}
  */
 os.ui.window.confirmDirective = function() {
@@ -32,6 +33,7 @@ os.ui.Module.directive('confirm', [os.ui.window.confirmDirective]);
 
 /**
  * Launch a dialog prompting the user to enter some text.
+ *
  * @param {osx.window.ConfirmOptions=} opt_options The window options
  * @param {Object=} opt_scopeOptions
  */
@@ -133,6 +135,7 @@ os.ui.window.ConfirmCtrl = function($scope, $element, $timeout) {
 
 /**
  * Clean up
+ *
  * @private
  */
 os.ui.window.ConfirmCtrl.prototype.onDestroy_ = function() {
@@ -145,6 +148,7 @@ os.ui.window.ConfirmCtrl.prototype.onDestroy_ = function() {
 
 /**
  * Fire the cancel callback and close the window.
+ *
  * @export
  */
 os.ui.window.ConfirmCtrl.prototype.cancel = function() {
@@ -158,6 +162,7 @@ os.ui.window.ConfirmCtrl.prototype.cancel = function() {
 
 /**
  * Fire the confirmation callback and close the window.
+ *
  * @export
  */
 os.ui.window.ConfirmCtrl.prototype.confirm = function() {
@@ -178,6 +183,7 @@ os.ui.window.ConfirmCtrl.prototype.confirm = function() {
 
 /**
  * Close the window.
+ *
  * @private
  */
 os.ui.window.ConfirmCtrl.prototype.close_ = function() {
@@ -187,6 +193,7 @@ os.ui.window.ConfirmCtrl.prototype.close_ = function() {
 
 /**
  * Handles key events
+ *
  * @param {goog.events.KeyEvent} event
  * @private
  */

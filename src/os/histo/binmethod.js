@@ -20,6 +20,7 @@ os.histo.BinMethod = {
 
 /**
  * Clones a bin method.
+ *
  * @param {os.histo.IBinMethod} method The method
  * @return {os.histo.IBinMethod}
  */
@@ -37,6 +38,7 @@ os.histo.cloneMethod = function(method) {
 
 /**
  * Restore a bin method from config.
+ *
  * @param {Object} config The bin method config
  * @return {os.histo.IBinMethod|undefined} The bin method if the type was registered, or undefined if not
  */

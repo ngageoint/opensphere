@@ -78,7 +78,7 @@ os.data.DrawingFeatureNode.prototype.setState = function(state) {
         os.style.setFeatureStyle(this.feature_);
       } else {
         this.feature_.setStyle(/** @type {Array<ol.style.Style>} */ (
-            this.feature_.get(os.data.DrawingFeatureNode.ORIGINAL_STYLE)));
+          this.feature_.get(os.data.DrawingFeatureNode.ORIGINAL_STYLE)));
       }
     }
 
@@ -97,6 +97,7 @@ os.data.DrawingFeatureNode.prototype.getFeature = function() {
 
 /**
  * Set the feature for the node.
+ *
  * @param {!ol.Feature} feature The feature.
  */
 os.data.DrawingFeatureNode.prototype.setFeature = function(feature) {
@@ -124,6 +125,7 @@ os.data.DrawingFeatureNode.prototype.setFeature = function(feature) {
 
 /**
  * Update the node from the current feature.
+ *
  * @protected
  */
 os.data.DrawingFeatureNode.prototype.updateFromFeature = function() {
@@ -132,7 +134,7 @@ os.data.DrawingFeatureNode.prototype.updateFromFeature = function() {
     this.hasFeatureConfig_ = !!feature.get(os.style.StyleType.FEATURE);
 
     this.setLabel(/** @type {!string} */ (
-        feature.get('title') || feature.get('label') || feature.get('name') || String(feature.getId())));
+      feature.get('title') || feature.get('label') || feature.get('name') || String(feature.getId())));
 
     var opacity = /** @type {number|undefined} */ (feature.get(os.style.StyleField.OPACITY));
     this.setState(opacity === 0 ? os.structs.TriState.OFF : os.structs.TriState.ON);
@@ -169,7 +171,7 @@ os.data.DrawingFeatureNode.prototype.onMouseEnter = function() {
     } else {
       // modify the Openlayers style to highlight the feature
       var originalStyle = /** @type {Array<ol.style.Style>} */ (
-          this.feature_.get(os.data.DrawingFeatureNode.ORIGINAL_STYLE));
+        this.feature_.get(os.data.DrawingFeatureNode.ORIGINAL_STYLE));
       var style = originalStyle.map(os.data.DrawingFeatureNode.mapStyles_);
       this.feature_.setStyle(style);
     }
@@ -184,6 +186,7 @@ os.data.DrawingFeatureNode.prototype.onMouseEnter = function() {
 
 /**
  * Maps a style to a highlight style
+ *
  * @param {ol.style.Style} s The style to highlight
  * @return {ol.style.Style} The highlighted style
  * @private
@@ -246,7 +249,7 @@ os.data.DrawingFeatureNode.prototype.onMouseLeave = function() {
     } else {
       // replace the style with the original
       this.feature_.setStyle(/** @type {Array<ol.style.Style>} */ (
-          this.feature_.get(os.data.DrawingFeatureNode.ORIGINAL_STYLE)));
+        this.feature_.get(os.data.DrawingFeatureNode.ORIGINAL_STYLE)));
     }
 
     var layer = os.feature.getLayer(this.feature_);

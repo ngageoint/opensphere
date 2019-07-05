@@ -13,6 +13,7 @@ goog.require('os.ui.slick.TreeSearch');
 
 /**
  * Extends AbstractGroupByTreeSearch to search through layers on the map
+ *
  * @extends {os.ui.slick.AbstractGroupByTreeSearch}
  * @param {!string} setAs The field to set on...
  * @param {Object} onObj this object
@@ -27,6 +28,7 @@ goog.inherits(os.data.LayerTreeSearch, os.ui.slick.AbstractGroupByTreeSearch);
 
 /**
  * Overridden in inheriting class
+ *
  * @return {!Array}
  * @override
  */
@@ -42,6 +44,7 @@ os.data.LayerTreeSearch.prototype.getSearchItems = function() {
 
 /**
  * Overridden in inheriting class
+ *
  * @param {Object} item - search item to setup as a node
  * @return {!os.structs.ITreeNode}
  * @override
@@ -65,6 +68,7 @@ os.data.LayerTreeSearch.prototype.setupNode = function(item) {
 
 /**
  * Overridden for post result processing
+ *
  * @param {os.data.groupby.INodeGroupBy} groupBy
  * @param {!Array} results
  * @override
@@ -91,6 +95,7 @@ os.data.LayerTreeSearch.prototype.setSort = function(list) {
 
 /**
  * Overridden to fill the list from the map
+ *
  * @override
  */
 os.data.LayerTreeSearch.prototype.fillListFromSearch = function(list) {
@@ -111,6 +116,7 @@ os.data.LayerTreeSearch.prototype.fillListFromSearch = function(list) {
 
 /**
  * Creates groupings from layer id which have the same prefix: <providerId>#<sourceId>#
+ *
  * @param {?Array<!os.structs.ITreeNode>} results
  * @param {!os.ui.slick.SlickTreeNode} parent
  * @private

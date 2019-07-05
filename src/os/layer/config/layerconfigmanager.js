@@ -41,6 +41,7 @@ os.layer.config.LayerConfigManager.LOGGER_ = goog.log.getLogger('os.layer.config
 
 /**
  * Gets a new layer config instance by type (not case sensitive).
+ *
  * @param {string} type
  * @return {!Object<string, *>}
  */
@@ -57,6 +58,7 @@ os.layer.config.LayerConfigManager.prototype.getDefaultLayerConfig = function(ty
 
 /**
  * Gets a new layer config instance by type (not case sensitive).
+ *
  * @param {string} type
  * @return {?os.layer.config.ILayerConfig}
  */
@@ -73,6 +75,7 @@ os.layer.config.LayerConfigManager.prototype.getLayerConfig = function(type) {
 
 /**
  * Registers a default layer config function with the manager. Registered types are not case sensitive.
+ *
  * @param {string} type
  * @param {!os.layer.config.DefaultFn} defaultFn
  */
@@ -90,6 +93,7 @@ os.layer.config.LayerConfigManager.prototype.registerDefaultLayerConfig = functi
 
 /**
  * Registers a layer config class with the manager. Registered types are not case sensitive.
+ *
  * @param {string} type
  * @param {function(new:os.layer.config.ILayerConfig)} layerConfig
  */

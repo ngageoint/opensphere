@@ -5,6 +5,7 @@ goog.require('goog.Uri');
 
 /**
  * Modifiers modify portions of a URI before the URI is retrieved.
+ *
  * @interface
  */
 os.net.IModifier = function() {};

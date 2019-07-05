@@ -10,6 +10,7 @@ goog.require('os.ui.slick.SlickTreeNode');
 
 /**
  * Tree nodes for layers
+ *
  * @extends {os.ui.slick.SlickTreeNode}
  * @implements {os.data.ISearchable}
  * @constructor

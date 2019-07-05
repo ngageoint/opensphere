@@ -34,6 +34,7 @@ plugin.arc.ID = 'arc';
 
 /**
  * Returns a more recognizable type from an ESRI Type.
+ *
  * @param {string} esriType
  * @return {?string}
  */
@@ -52,6 +53,7 @@ plugin.arc.getColumnType = function(esriType) {
 
 /**
  * Launch the filter manager
+ *
  * @param {!os.layer.Vector} layer The layer
  */
 plugin.arc.launchFilterManager = function(layer) {
@@ -61,6 +63,7 @@ plugin.arc.launchFilterManager = function(layer) {
 
 /**
  * Get the filterable columns
+ *
  * @param {!os.layer.Vector} layer The layer
  * @return {?Array<os.ogc.FeatureTypeColumn>} the columns
  */
@@ -93,6 +96,7 @@ plugin.arc.CONTENT_REGEXP = /ArcGIS REST Services Directory/i;
 
 /**
  * Instantiates and returns a new Arc loader. This
+ *
  * @param {os.ui.slick.SlickTreeNode} node
  * @param {string} url
  * @param {plugin.arc.ArcServer} server
@@ -106,6 +110,7 @@ plugin.arc.getArcLoader = function(node, url, server) {
 
 /**
  * Create an Arc feature type from the layer metadata.
+ *
  * @param {Object} config The layer metadata.
  * @return {plugin.arc.ArcFeatureType} The feature type.
  */

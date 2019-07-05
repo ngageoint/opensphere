@@ -29,6 +29,7 @@ os.query.AreaState = {
 
 /**
  * Adds an area via a command and zooms to it.
+ *
  * @param {!ol.Feature} area
  * @param {boolean=} opt_active
  */
@@ -47,6 +48,7 @@ os.query.addArea = function(area, opt_active) {
 
 /**
  * Launches the import process for filters/areas.
+ *
  * @param {Object<string, *>=} opt_config Optional config to pass to the import process.
  * @param {os.file.File=} opt_file Optional file to pass to the import process.
  */
@@ -94,6 +96,7 @@ os.query.queryWorld = function() {
 
 /**
  * Checks if an existing geometry is of type "world query"
+ *
  * @param {ol.geom.Geometry|undefined} geometry The geometry to verify.
  * @return {boolean} true the query matches os.query.WORLD_GEOM
  */
@@ -114,6 +117,7 @@ os.query.isWorldQuery = function(geometry) {
 
 /**
  * calculates world area
+ *
  * @param {boolean=} opt_reset
  */
 os.query.initWorldArea = function(opt_reset) {

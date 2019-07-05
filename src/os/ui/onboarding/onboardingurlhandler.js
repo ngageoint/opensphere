@@ -7,6 +7,7 @@ goog.require('os.url.AbstractUrlHandler');
 
 /**
  * Handles URL parameters for onboarding.
+ *
  * @param {string=} opt_omarId The ID of the OMAR server this handler handles.
  * @extends {os.url.AbstractUrlHandler}
  * @constructor
@@ -27,6 +28,7 @@ os.ui.onboarding.OnboardingUrlHandler.KEY = 'tips';
 
 /**
  * Handles the 'tips' key to either force onboarding on or off.
+ *
  * @inheritDoc
  */
 os.ui.onboarding.OnboardingUrlHandler.prototype.handleInternal = function(key, value) {

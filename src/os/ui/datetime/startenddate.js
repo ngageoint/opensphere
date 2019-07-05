@@ -8,6 +8,7 @@ goog.require('os.ui.datetime.dateTimeDirective');
 
 /**
  * The start-end-date directive
+ *
  * @return {angular.Directive}
  */
 os.ui.datetime.startEndDateDirective = function() {
@@ -45,6 +46,7 @@ os.ui.Module.directive('startEndDate', [os.ui.datetime.startEndDateDirective]);
 
 /**
  * Controller function for the date-time directive.
+ *
  * @constructor
  * @param {angular.Scope} $scope
  * @ngInject
@@ -202,6 +204,7 @@ os.ui.datetime.StartEndDateCtrl.LOGGER_ = goog.log.getLogger('os.ui.datetime.Sta
 
 /**
  * Clean up references/listeners.
+ *
  * @private
  */
 os.ui.datetime.StartEndDateCtrl.prototype.destroy_ = function() {
@@ -212,6 +215,7 @@ os.ui.datetime.StartEndDateCtrl.prototype.destroy_ = function() {
 
 /**
  * Validate start/end times.
+ *
  * @private
  */
 os.ui.datetime.StartEndDateCtrl.prototype.validate_ = function() {
@@ -234,6 +238,7 @@ os.ui.datetime.StartEndDateCtrl.prototype.validate_ = function() {
 
 /**
  * Compare dates since some can be numbers or date vars
+ *
  * @param {string|Date} a
  * @param {string|Date} b
  * @return {boolean}
@@ -250,6 +255,7 @@ os.ui.datetime.StartEndDateCtrl.prototype.equals = function(a, b) {
 
 /**
  * Make getting a date or null helper
+ *
  * @param {string} date
  * @return {Date}
  */
@@ -260,6 +266,7 @@ os.ui.datetime.StartEndDateCtrl.getDate = function(date) {
 
 /**
  * Checks if the start date is in an error state.
+ *
  * @return {boolean}
  * @export
  */
@@ -287,6 +294,7 @@ os.ui.datetime.StartEndDateCtrl.prototype.checkStartForError = function() {
 
 /**
  * Checks if the end date is in an error state.
+ *
  * @return {boolean}
  * @export
  */

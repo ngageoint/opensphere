@@ -6,6 +6,7 @@ goog.require('os.style.IStyleReader');
 
 /**
  * Base implementation of a style configuration reader.
+ *
  * @abstract
  * @implements {os.style.IStyleReader<T>}
  * @constructor

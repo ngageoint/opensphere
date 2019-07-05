@@ -11,6 +11,7 @@ goog.require('os.ui.filter.im.FilterImportCtrl');
 
 /**
  * The osfilterimport directive
+ *
  * @return {angular.Directive}
  */
 os.filter.im.osFilterImportDirective = function() {
@@ -29,6 +30,7 @@ os.ui.Module.directive('osfilterimport', [os.filter.im.osFilterImportDirective])
 
 /**
  * Controller function for the filter import directive
+ *
  * @param {!angular.Scope} $scope The Angular scope.
  * @param {!angular.JQLite} $element The root DOM element.
  * @param {!angular.$sce} $sce Angular SCE service.

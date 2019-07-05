@@ -16,6 +16,7 @@ goog.require('plugin.im.action.feature.Entry');
 
 /**
  * Manager for {@link ol.Feature} import actions.
+ *
  * @extends {os.im.action.ImportActionManager<ol.Feature>}
  * @constructor
  */
@@ -119,6 +120,7 @@ plugin.im.action.feature.Manager.prototype.initialize = function() {
 
 /**
  * Add a source to manager if it supports import actions.
+ *
  * @param {os.source.ISource} source The source.
  * @private
  */
@@ -137,6 +139,7 @@ plugin.im.action.feature.Manager.prototype.addSource_ = function(source) {
 
 /**
  * Handle source added event from the data manager.
+ *
  * @param {os.data.event.DataEvent} event The data manager event.
  * @private
  */
@@ -149,6 +152,7 @@ plugin.im.action.feature.Manager.prototype.onSourceAdded_ = function(event) {
 
 /**
  * Handle source removed event from the data manager.
+ *
  * @param {os.data.event.DataEvent} event
  * @private
  */
@@ -165,6 +169,7 @@ plugin.im.action.feature.Manager.prototype.onSourceRemoved_ = function(event) {
 
 /**
  * Handle property change events from a source.
+ *
  * @param {os.events.PropertyChangeEvent|ol.Object.Event} event
  * @private
  */
@@ -190,6 +195,7 @@ plugin.im.action.feature.Manager.prototype.onSourcePropertyChange_ = function(ev
 
 /**
  * Refreshes the time-based feature actions.
+ *
  * @protected
  */
 plugin.im.action.feature.Manager.prototype.refreshTimeEntries = function() {

@@ -77,6 +77,7 @@ os.command.AbstractFeatureStyle.prototype.finish = function(configs) {
 
 /**
  * Get the layer configuration.
+ *
  * @param {ol.Feature} feature
  * @return {Array<Object>}
  * @protected
@@ -110,6 +111,7 @@ os.command.AbstractFeatureStyle.prototype.setValue = function(value) {
 
 /**
  * Gets the feature
+ *
  * @return {ol.Feature}
  */
 os.command.AbstractFeatureStyle.prototype.getFeature = function() {

@@ -85,6 +85,7 @@ plugin.descriptor.facet.Area.prototype.test = function(descriptor, facets, resul
 
 /**
  * This is where the magic happens.
+ *
  * @param {os.data.IDataDescriptor} descriptor
  * @param {Array<!ol.Feature>} areas
  * @param {Function} updateFunc

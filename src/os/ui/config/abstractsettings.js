@@ -17,6 +17,7 @@ goog.require('os.ui.util.ResetSettings');
 
 /**
  * Controller for the save export window
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.$timeout} $timeout
  * @constructor
@@ -105,6 +106,7 @@ os.ui.config.AbstractSettingsCtrl.prototype.getUi = function(item) {
 
 /**
  * Close the window
+ *
  * @export
  */
 os.ui.config.AbstractSettingsCtrl.prototype.reset = function() {

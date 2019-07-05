@@ -114,6 +114,7 @@ plugin.track.menu.layerSetup = function() {
 
 /**
  * Test if a layer menu context has features.
+ *
  * @param {os.ui.menu.layer.Context} context The menu context.
  * @return {boolean} If the context has a single layer containing one or more features.
  */
@@ -140,6 +141,7 @@ plugin.track.menu.hasFeatures = function(context) {
 
 /**
  * Show a menu item if one or more tracks exist and the layer has features.
+ *
  * @param {os.ui.menu.layer.Context} context The menu context.
  * @this {os.ui.menu.MenuItem}
  */
@@ -150,6 +152,7 @@ plugin.track.menu.visibleIfHasFeatures = function(context) {
 
 /**
  * Show a menu item if one or more tracks exist and the layer has features.
+ *
  * @param {os.ui.menu.layer.Context} context The menu context.
  * @this {os.ui.menu.MenuItem}
  */
@@ -161,6 +164,7 @@ plugin.track.menu.visibleIfTracksExist = function(context) {
 
 /**
  * Show a menu item if one or more tracks exist and the layer has features.
+ *
  * @param {os.ui.menu.layer.Context} context The menu context.
  * @this {os.ui.menu.MenuItem}
  */
@@ -255,6 +259,7 @@ plugin.track.menu.spatialSetup = function() {
 
 /**
  * Shows a menu item if the menu context contains tracks where their line is shown.
+ *
  * @param {Object|undefined} context The menu context.
  * @this {os.ui.menu.MenuItem}
  */
@@ -265,6 +270,7 @@ plugin.track.menu.visibleIfMarkerInterpolationEnabled = function(context) {
 
 /**
  * Shows a menu item if the menu context contains tracks where their line is hidden.
+ *
  * @param {Object|undefined} context The menu context.
  * @this {os.ui.menu.MenuItem}
  */
@@ -276,6 +282,7 @@ plugin.track.menu.visibleIfMarkerInterpolationDisabled = function(context) {
 
 /**
  * Check if a track's line is currently visible.
+ *
  * @param {*=} opt_context The menu event context.
  * @return {boolean} If the track is followed.
  */
@@ -293,6 +300,7 @@ plugin.track.menu.isMarkerInterpolationOn = function(opt_context) {
 
 /**
  * Check if a track's line is hidden.
+ *
  * @param {*=} opt_context The menu event context.
  * @return {boolean} If the track is not followed.
  */
@@ -308,6 +316,7 @@ plugin.track.menu.isMarkerInterpolationOff = function(opt_context) {
 
 /**
  * Shows a menu item if the menu context contains tracks where their line is shown.
+ *
  * @param {Object|undefined} context The menu context.
  * @this {os.ui.menu.MenuItem}
  */
@@ -318,6 +327,7 @@ plugin.track.menu.visibleIfLineIsShown = function(context) {
 
 /**
  * Shows a menu item if the menu context contains tracks where their line is hidden.
+ *
  * @param {Object|undefined} context The menu context.
  * @this {os.ui.menu.MenuItem}
  */
@@ -329,6 +339,7 @@ plugin.track.menu.visibleIfLineIsHidden = function(context) {
 
 /**
  * Check if a track's line is currently visible.
+ *
  * @param {*=} opt_context The menu event context.
  * @return {boolean} If the track is followed.
  */
@@ -346,6 +357,7 @@ plugin.track.menu.isLineShown = function(opt_context) {
 
 /**
  * Check if a track's line is hidden.
+ *
  * @param {*=} opt_context The menu event context.
  * @return {boolean} If the track is not followed.
  */
@@ -361,6 +373,7 @@ plugin.track.menu.isLineHidden = function(opt_context) {
 
 /**
  * Shows a menu item if the menu context contains a single track feature.
+ *
  * @param {Object|undefined} context The menu context.
  * @this {os.ui.menu.MenuItem}
  */
@@ -371,6 +384,7 @@ plugin.track.menu.visibleIfTrackFeature = function(context) {
 
 /**
  * Shows a menu item if the menu context contains tracks that are not followed.
+ *
  * @param {Object|undefined} context The menu context.
  * @this {os.ui.menu.MenuItem}
  */
@@ -381,6 +395,7 @@ plugin.track.menu.visibleIfIsNotFollowed = function(context) {
 
 /**
  * Shows a menu item if the menu context contains tracks that are are followed.
+ *
  * @param {Object|undefined} context The menu context.
  * @this {os.ui.menu.MenuItem}
  */
@@ -392,6 +407,7 @@ plugin.track.menu.visibleIfIsFollowed = function(context) {
 
 /**
  * Check if a track is currently being followed.
+ *
  * @param {*=} opt_context The menu event context.
  * @return {boolean} If the track is followed.
  */
@@ -410,6 +426,7 @@ plugin.track.menu.isFollowed = function(opt_context) {
 
 /**
  * Check if a track is not being followed.
+ *
  * @param {*=} opt_context The menu event context.
  * @return {boolean} If the track is not followed.
  */
@@ -425,6 +442,7 @@ plugin.track.menu.isNotFollowed = function(opt_context) {
 
 /**
  * Get track nodes from menu event context.
+ *
  * @param {*=} opt_context The menu event context.
  * @return {Array<!plugin.file.kml.ui.KMLNode>}
  */
@@ -442,6 +460,7 @@ plugin.track.menu.getTrackNodes = function(opt_context) {
 
 /**
  * Handle the follow track menu event.
+ *
  * @param {!(os.ui.action.ActionEvent|os.ui.menu.MenuEvent)} event The menu event.
  */
 plugin.track.menu.handleFollowTrackEvent = function(event) {
@@ -457,6 +476,7 @@ plugin.track.menu.handleFollowTrackEvent = function(event) {
 
 /**
  * Handle the unfollow track menu event.
+ *
  * @param {!(os.ui.action.ActionEvent|os.ui.menu.MenuEvent)} event The menu event.
  */
 plugin.track.menu.handleUnfollowTrackEvent = function(event) {
@@ -472,6 +492,7 @@ plugin.track.menu.handleUnfollowTrackEvent = function(event) {
 
 /**
  * Handle the show track line menu event.
+ *
  * @param {boolean} show
  * @param {!(os.ui.action.ActionEvent|os.ui.menu.MenuEvent)} event The menu event.
  */
@@ -488,6 +509,7 @@ plugin.track.menu.setShowTrackLine = function(show, event) {
 
 /**
  * Handle the show track line menu event.
+ *
  * @param {boolean} show
  * @param {!(os.ui.action.ActionEvent|os.ui.menu.MenuEvent)} event The menu event.
  */
@@ -504,6 +526,7 @@ plugin.track.menu.setMarkerInterpolationEnabled = function(show, event) {
 
 /**
  * Determine the track based on the received event
+ *
  * @param {Array<Object>|Object|undefined} context The menu context.
  * @return {Array<ol.Feature>}
  */
@@ -536,6 +559,7 @@ plugin.track.menu.getTracks = function(context) {
 
 /**
  * Handle add/create events from the layer menu.
+ *
  * @param {!os.ui.menu.MenuEvent<os.ui.menu.layer.Context>} event The menu event.
  * @private
  */
