@@ -65,7 +65,7 @@ plugin.file.kml.kmlNodeLayerUIDirective = function() {
 
 
 /**
- * Add the directive to the mist module
+ * Add the directive to the module
  */
 os.ui.Module.directive('kmlnodelayerui', [plugin.file.kml.kmlNodeLayerUIDirective]);
 
