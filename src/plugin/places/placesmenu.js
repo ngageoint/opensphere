@@ -308,7 +308,7 @@ plugin.places.menu.spatialSetup = function() {
 
     if (!group.find(plugin.places.menu.EventType.SAVE_TO)) {
       group.addChild({
-        label: 'Save to Places...',
+        label: 'Create Place...',
         eventType: plugin.places.menu.EventType.SAVE_TO,
         tooltip: 'Creates a new place from the feature',
         icons: ['<i class="fa fa-fw ' + plugin.places.Icon.PLACEMARK + '"></i>'],
@@ -328,7 +328,7 @@ plugin.places.menu.spatialSetup = function() {
       });
 
       group.addChild({
-        label: 'Create Annotation...',
+        label: 'Create Place (Text Box)...',
         eventType: plugin.places.menu.EventType.SAVE_TO_ANNOTATION,
         tooltip: 'Creates a new annotation from the feature',
         icons: ['<i class="fa fa-fw ' + plugin.places.Icon.ANNOTATION + '"></i>'],
