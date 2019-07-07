@@ -588,15 +588,17 @@ os.style.setConfigColor = function(config, color, opt_includeStyleFields) {
   if (config) {
     var styleFields = opt_includeStyleFields || os.style.DEFAULT_COLOR_STYLE_FIELDS;
     for (var key in config) {
-      // color can exist in the image, fill, or stroke styles. in the case of icons, there may not be a color property
-      // but we still need to ensure the color is set correctly. set the color if a key that may contain a color is
-      // encountered.
-      if (styleFields.indexOf(key) !== -1) {
-        config[key][os.style.StyleField.COLOR] = color;
-      }
+      if (config[key]) {
+        // color can exist in the image, fill, or stroke styles. in the case of icons, there may not be a color property
+        // but we still need to ensure the color is set correctly. set the color if a key that may contain a color is
+        // encountered.
+        if (styleFields.indexOf(key) !== -1) {
+          config[key][os.style.StyleField.COLOR] = color;
+        }
 
-      if (!os.object.isPrimitive(config[key])) {
-        os.style.setConfigColor(config[key], color, opt_includeStyleFields);
+        if (!os.object.isPrimitive(config[key])) {
+          os.style.setConfigColor(config[key], color, opt_includeStyleFields);
+        }
       }
     }
   }
@@ -709,24 +711,26 @@ os.style.setConfigOpacityColor = function(config, opacity, opt_multiply) {
     var styleFields = os.style.DEFAULT_COLOR_STYLE_FIELDS;
     var colorArr;
     for (var key in config) {
-      // color can exist in the image, fill, or stroke styles. in the case of icons, there may not be a color property
-      // but we still need to ensure the color is set correctly. set the color if a key that may contain a color is
-      // encountered.
-      if (styleFields.indexOf(key) !== -1) {
-        colorArr = os.color.toRgbArray(config[key][os.style.StyleField.COLOR]);
-        if (colorArr) {
-          if (opt_multiply) {
-            colorArr[3] *= opacity;
-          } else {
-            colorArr[3] = opacity;
+      if (config[key]) {
+        // color can exist in the image, fill, or stroke styles. in the case of icons, there may not be a color property
+        // but we still need to ensure the color is set correctly. set the color if a key that may contain a color is
+        // encountered.
+        if (styleFields.indexOf(key) !== -1) {
+          colorArr = os.color.toRgbArray(config[key][os.style.StyleField.COLOR]);
+          if (colorArr) {
+            if (opt_multiply) {
+              colorArr[3] *= opacity;
+            } else {
+              colorArr[3] = opacity;
+            }
+
+            config[key][os.style.StyleField.COLOR] = os.style.toRgbaString(colorArr);
           }
-
-          config[key][os.style.StyleField.COLOR] = os.style.toRgbaString(colorArr);
         }
-      }
 
-      if (!os.object.isPrimitive(config[key])) {
-        os.style.setConfigOpacityColor(config[key], opacity, opt_multiply);
+        if (!os.object.isPrimitive(config[key])) {
+          os.style.setConfigOpacityColor(config[key], opacity, opt_multiply);
+        }
       }
     }
   }
@@ -745,18 +749,20 @@ os.style.getConfigOpacityColor = function(config) {
     var styleFields = os.style.DEFAULT_COLOR_STYLE_FIELDS;
     var colorArr;
     for (var key in config) {
-      // color can exist in the image, fill, or stroke styles. in the case of icons, there may not be a color property
-      // but we still need to ensure the color is set correctly. set the color if a key that may contain a color is
-      // encountered.
-      if (styleFields.indexOf(key) !== -1) {
-        colorArr = os.color.toRgbArray(config[key][os.style.StyleField.COLOR]);
-        if (colorArr) {
-          return colorArr[3];
+      if (config[key]) {
+        // color can exist in the image, fill, or stroke styles. in the case of icons, there may not be a color property
+        // but we still need to ensure the color is set correctly. set the color if a key that may contain a color is
+        // encountered.
+        if (styleFields.indexOf(key) !== -1) {
+          colorArr = os.color.toRgbArray(config[key][os.style.StyleField.COLOR]);
+          if (colorArr) {
+            return colorArr[3];
+          }
         }
-      }
 
-      if (!os.object.isPrimitive(config[key])) {
-        return os.style.getConfigOpacityColor(config[key]);
+        if (!os.object.isPrimitive(config[key])) {
+          return os.style.getConfigOpacityColor(config[key]);
+        }
       }
     }
   }
@@ -1134,7 +1140,7 @@ os.style.createFeatureConfig = function(feature, baseConfig, opt_layerConfig) {
           opt_layerConfig[os.style.StyleField.IMAGE], os.style.DEFAULT_FEATURE_SIZE);
       imageConfig['radius'] = mergedSize;
       imageConfig['scale'] = Math.max(os.style.sizeToScale(mergedSize), 0.01);
-    } else if (opt_layerConfig[os.style.StyleField.IMAGE]) {
+    } else if (imageConfig !== null && opt_layerConfig[os.style.StyleField.IMAGE]) {
       // ensure the feature has an image config
       featureConfig[os.style.StyleField.IMAGE] = {};
       os.style.mergeConfig(opt_layerConfig[os.style.StyleField.IMAGE],
@@ -1156,7 +1162,7 @@ os.style.createFeatureConfig = function(feature, baseConfig, opt_layerConfig) {
       var mergedWidth = os.style.getMergedSize(styleOverride[os.style.StyleField.STROKE],
           opt_layerConfig[os.style.StyleField.STROKE], os.style.DEFAULT_STROKE_WIDTH);
       strokeConfig['width'] = Math.max(mergedWidth, 1);
-    } else if (opt_layerConfig[os.style.StyleField.STROKE]) {
+    } else if (strokeConfig !== null && opt_layerConfig[os.style.StyleField.STROKE]) {
       // ensure the feature has a stroke config
       featureConfig[os.style.StyleField.STROKE] = {};
       os.style.mergeConfig(opt_layerConfig[os.style.StyleField.STROKE],
@@ -1407,9 +1413,13 @@ os.style.createFeatureStyle = function(feature, baseConfig, opt_layerConfig) {
 os.style.mergeConfig = function(from, to) {
   for (var key in from) {
     var fval = from[key];
+    if (fval === os.object.IGNORE_VAL) {
+      continue;
+    }
+
     if (fval && typeof fval == 'object' && !(typeof fval.length == 'number')) {
       // clone objects into the target
-      if (!(key in to)) {
+      if (!(key in to) || to[key] == null) {
         to[key] = {};
       }
 
