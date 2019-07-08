@@ -91,6 +91,14 @@ plugin.track.TrackLike;
 
 
 /**
+ * A type representing a track feature. Tracks will use `os.feature.DynamicFeature` if they have a time component and
+ * can be animated, `ol.Feature` otherwise.
+ * @typedef {os.feature.DynamicFeature|ol.Feature}
+ */
+plugin.track.TrackFeatureLike;
+
+
+/**
  * @typedef {{
  *   entry: !os.filter.FilterEntry,
  *   mappings: !Array<!Object>,
@@ -104,6 +112,17 @@ plugin.track.QueryOptions;
 
 /**
  * @typedef {{
+ *   coordinates: (Array<!ol.Coordinate>|undefined),
+ *   features: (Array<!ol.Feature>|undefined),
+ *   track: !ol.Feature
+ * }}
+ */
+plugin.track.AddOptions;
+
+
+/**
+ * @typedef {{
+ *   coordinates: (Array<!ol.Coordinate>|undefined),
  *   features: (Array<!ol.Feature>|undefined),
  *   geometry: (plugin.track.TrackLike|undefined),
  *   id: (string|undefined),
@@ -432,24 +451,36 @@ plugin.track.getTrackCoordinates = function(features, sortField) {
  * Creates a track from the provided options.
  *
  * @param {!plugin.track.CreateOptions} options The track creation options.
- * @return {os.feature.DynamicFeature|ol.Feature|undefined} The track feature.
+ * @return {plugin.track.TrackFeatureLike|undefined} The track feature.
  */
 plugin.track.createTrack = function(options) {
   var sortField = options.sortField || os.data.RecordField.TIME;
-  var featureColor;
-  var sourceColor;
-
+  var trackColor = options.color;
+  var coordinates = options.coordinates;
+  var features = options.features;
   var geometry = options.geometry;
-  if (!geometry && options.features && options.features.length) {
-    var coordinates = plugin.track.getTrackCoordinates(options.features, sortField);
-    if (coordinates.length) {
-      geometry = new ol.geom.LineString(coordinates, ol.geom.GeometryLayout.XYZM);
-      featureColor = /** @type {string|undefined} */ (options.features[0].get(os.data.RecordField.COLOR));
 
-      var source = os.feature.getSource(options.features[0]);
-      if (source) {
-        sourceColor = source ? source.getColor() : undefined;
+  if (!geometry) {
+    if (coordinates) {
+      coordinates.sort(plugin.track.sortCoordinatesByValue);
+    } else if (features && features.length) {
+      coordinates = plugin.track.getTrackCoordinates(features, sortField);
+
+      // if the color wasn't provided via options, determine the color from the features/source
+      if (!trackColor && features.length) {
+        trackColor = /** @type {string|undefined} */ (features[0].get(os.data.RecordField.COLOR));
+
+        if (!trackColor) {
+          var source = os.feature.getSource(features[0]);
+          if (source) {
+            trackColor = source ? source.getColor() : undefined;
+          }
+        }
       }
+    }
+
+    if (coordinates && coordinates.length) {
+      geometry = new ol.geom.LineString(coordinates, ol.geom.GeometryLayout.XYZM);
     }
   }
 
@@ -488,7 +519,7 @@ plugin.track.createTrack = function(options) {
   // set the track name, defaulting to the id if one isn't provided
   track.set(plugin.file.kml.KMLField.NAME, options.name || trackId);
 
-  // keep a copy of the features used to assemble the track
+  // save the field used to sort coordinates in the track
   track.set(plugin.track.TrackField.SORT_FIELD, sortField);
 
   var distance = plugin.track.updateDistance(track, true);
@@ -496,21 +527,12 @@ plugin.track.createTrack = function(options) {
   plugin.track.updateAverageSpeed(track, distance, duration);
   plugin.track.updateTime(track);
 
-  // create the track and current position styles. color is the first defined value in:
-  //  - color override parameter
-  //  - feature color
-  //  - source color
-  //  - default feature color
-  //
+  // set the style config for the track
   var trackStyle = /** @type {!Object<string, *>} */ (os.object.unsafeClone(plugin.track.TRACK_CONFIG));
   var currentStyle = /** @type {!Object<string, *>} */ (os.object.unsafeClone(plugin.track.CURRENT_CONFIG));
-  var trackColor = options.color || featureColor || sourceColor || os.style.DEFAULT_LAYER_COLOR;
-  if (trackColor) {
-    os.style.setConfigColor(trackStyle, trackColor, [os.style.StyleField.STROKE]);
-    os.style.setConfigColor(currentStyle, trackColor, [os.style.StyleField.IMAGE]);
-  }
-
-  // set the style config for the track
+  trackColor = trackColor || os.style.DEFAULT_LAYER_COLOR;
+  os.style.setConfigColor(trackStyle, trackColor, [os.style.StyleField.STROKE]);
+  os.style.setConfigColor(currentStyle, trackColor, [os.style.StyleField.IMAGE]);
   track.set(os.style.StyleType.FEATURE, [trackStyle, currentStyle]);
 
   // configure default label for the track
@@ -532,12 +554,102 @@ plugin.track.createTrack = function(options) {
 
 
 /**
+ * Adds coordinates or features to an existing track.
+ * @param {!plugin.track.AddOptions} options The options.
+ * @return {!Array<!(ol.Coordinate|ol.Feature)>} The added coordinates or features, depending on the options.
+ * @suppress {accessControls} To allow direct access to line coordinates.
+ */
+plugin.track.addToTrack = function(options) {
+  var added = [];
+
+  var track = options.track;
+  if (!track) {
+    goog.log.error(plugin.track.LOGGER_, 'Unable to add to track: track not provided.');
+    return added;
+  }
+
+  var sortField = /** @type {string|undefined} */ (track.get(plugin.track.TrackField.SORT_FIELD));
+  if (!sortField) {
+    goog.log.error(plugin.track.LOGGER_, 'Unable to add coordinates to track: track is missing sorting data.');
+    return added;
+  }
+
+  var features = options.features;
+  var coordinates = options.coordinates;
+  if (!coordinates && !features) {
+    goog.log.error(plugin.track.LOGGER_, 'Unable to add to track: coordinates/features not provided.');
+    return added;
+  }
+
+  if (!coordinates && features) {
+    coordinates = plugin.track.getTrackCoordinates(features, sortField);
+
+    var skippedFeatures = features.length - coordinates.length;
+    if (skippedFeatures) {
+      goog.log.info(plugin.track.LOGGER_, 'Skipped ' + skippedFeatures + ' features due to unknown coordinate.');
+    }
+  } else if (coordinates) {
+    coordinates.sort(plugin.track.sortCoordinatesByValue);
+  }
+
+  var skippedCoords = 0;
+  if (coordinates.length) {
+    // add point(s) to the original geometry, in case the track was interpolated
+    var geometry = /** @type {!plugin.track.TrackLike} */ (track.get(os.interpolate.ORIGINAL_GEOM_FIELD) ||
+        track.getGeometry());
+
+    // merge the split line so coordinates can be added in the correct location
+    geometry.toLonLat();
+    geometry = os.geo.mergeLineGeometry(geometry);
+    geometry.osTransform();
+
+    var flatCoordinates = geometry.flatCoordinates;
+    var stride = geometry.stride;
+
+    for (var i = 0; i < coordinates.length; i++) {
+      var coordinate = coordinates[i];
+      if (coordinate.length != stride) {
+        // if the coordinate length doesn't match the track geometry stride, it can't be inserted
+        skippedCoords++;
+        continue;
+      }
+
+      // figure out where the value fits in the array. if the value value already exists, just skip the feature to
+      // avoid duplicate values.
+      var value = /** @type {number|undefined} */ (coordinate[coordinate.length - 1]);
+      var insertIndex = os.array.binaryStrideSearch(flatCoordinates, value, stride, stride - 1);
+      if (insertIndex < 0) {
+        // insert coordinates in the corresponding location
+        goog.array.insertArrayAt(flatCoordinates, coordinate, ~insertIndex);
+        added.push(features ? features[i] : coordinate);
+      } else {
+        skippedCoords++;
+      }
+    }
+  }
+
+  // update the geometry on the track if coordinates were added
+  if (skippedCoords < coordinates.length) {
+    plugin.track.setGeometry(track, /** @type {!plugin.track.TrackLike} */ (geometry));
+  }
+
+  if (skippedCoords) {
+    goog.log.info(plugin.track.LOGGER_, 'Skipped ' + skippedCoords +
+        ' coordinates due to missing/duplicate sort value.');
+  }
+
+  return added;
+};
+
+
+/**
  * Adds a set of features to a track.
  *
  * @param {!ol.Feature} track The track
  * @param {!Array<!ol.Feature>} features The features to add to the track
  * @return {!Array<!ol.Feature>} return the non-duplicate features
  * @suppress {accessControls} To allow direct access to line coordinates.
+ * @deprecated Please use `plugin.track.addToTrack` instead.
  */
 plugin.track.addFeaturesToTrack = function(track, features) {
   var addedFeatures = /** @type {!Array<!ol.Feature>} */ ([]);
@@ -789,13 +901,13 @@ plugin.track.setGeometry = function(track, geometry) {
  * Creates a track and adds it to the tracks layer.
  *
  * @param {!plugin.track.CreateOptions} options The options object for the track.
- * @return {os.feature.DynamicFeature|ol.Feature|undefined} The track feature.
+ * @return {plugin.track.TrackFeatureLike|undefined} The track feature.
  */
 plugin.track.createAndAdd = function(options) {
   var track = plugin.track.createTrack(options);
 
   if (!track) {
-    var msg = 'Track creation failed. There were no valid features to create a track from.';
+    var msg = 'Track creation failed. There were no valid features/coordinates to create a track.';
     os.alertManager.sendAlert(msg, os.alert.AlertEventSeverity.WARNING);
     return;
   }
@@ -807,7 +919,7 @@ plugin.track.createAndAdd = function(options) {
   var rootNode = plugin.track.getTrackNode(true);
   if (rootNode) {
     var cmd = new plugin.file.kml.cmd.KMLNodeAdd(trackNode, rootNode);
-    cmd.title = 'Create track from ' + options.features.length + ' features';
+    cmd.title = 'Create Track';
     os.command.CommandProcessor.getInstance().addCommand(cmd);
 
     return track;
