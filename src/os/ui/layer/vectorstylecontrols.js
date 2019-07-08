@@ -63,11 +63,12 @@ os.ui.Module.directive('vectorstylecontrols', [os.ui.layer.vectorStyleControlsDi
  * Controller function for the vectorstylecontrols directive.
  *
  * @param {!angular.Scope} $scope The Angular scope.
+ * @param {!angular.JQLite} $element
  * @extends {goog.Disposable}
  * @constructor
  * @ngInject
  */
-os.ui.layer.VectorStyleControlsCtrl = function($scope) {
+os.ui.layer.VectorStyleControlsCtrl = function($scope, $element) {
   os.ui.layer.VectorStyleControlsCtrl.base(this, 'constructor');
 
   /**
@@ -75,6 +76,13 @@ os.ui.layer.VectorStyleControlsCtrl = function($scope) {
    * @protected
    */
   this.scope = $scope;
+
+  /**
+   * The root DOM element.
+   * @type {?angular.JQLite}
+   * @protected
+   */
+  this.element = $element;
 
   if (this.scope['showIcon'] == null) {
     this.scope['showIcon'] = true;
@@ -100,7 +108,7 @@ os.ui.layer.VectorStyleControlsCtrl = function($scope) {
    * The selected line dash option
    * @type {os.style.styleLineDashOption}
    */
-  this.scope['lineDashOption'] = name ? name : this.scope['lineDashOptions'][0];
+  this.scope['lineDashOption'] = name ? name : this.scope['lineDashOptions'][1];
 
   $scope.$on('$destroy', goog.bind(this.dispose, this));
 };
@@ -108,10 +116,33 @@ goog.inherits(os.ui.layer.VectorStyleControlsCtrl, goog.Disposable);
 
 
 /**
+ * Initialize the controller after it has been linked.
+ *
+ * @export
+ */
+os.ui.layer.VectorStyleControlsCtrl.prototype.$postLink = function() {
+  if (this.element) {
+    this.select2_ = this.element.find('.js-line-dash');
+    this.select2_.select2({
+      'minimumResultsForSearch': -1,
+      'placeholder': 'Line Dash Select',
+      'formatSelection': this.select2Formatter_,
+      'formatResult': this.select2Formatter_
+    }).on('select2-open', function(e) { // toggle the padding for the select2
+      $('body').addClass('c-select2__no-padding');
+    }).on('select2-close', function(e) {
+      $('body').removeClass('c-select2__no-padding');
+    });
+  }
+};
+
+
+/**
  * @inheritDoc
  */
 os.ui.layer.VectorStyleControlsCtrl.prototype.disposeInternal = function() {
   this.scope = null;
+  this.element = null;
 };
 
 
@@ -166,3 +197,23 @@ os.ui.layer.VectorStyleControlsCtrl.prototype.onLineDashChange = function() {
     this.scope.$emit(os.ui.layer.VectorStyleControlsEventType.LINE_DASH_CHANGE, this.scope['lineDash']);
   }
 };
+
+
+/**
+ * Search result formatter. The select is actually storing the ID of each
+ * descriptor. This function allows us to display the actual layer title.
+ * @param {Object} item
+ * @param {angular.JQLite} ele
+ * @return {string|angular.JQLite}
+ * @private
+ */
+os.ui.layer.VectorStyleControlsCtrl.prototype.select2Formatter_ = function(item, ele) {
+  if (item) {
+    var val = '<svg height="2" width="80"><g class="c-vectorstylecontrol__borderdash"><path ';
+    val = val + 'stroke-dasharray ="' + item['id'] + '" d= "M5 1 l215 0" /></g></svg>';
+    return val;
+  } else {
+    return '';
+  }
+};
+
