@@ -9,6 +9,7 @@ goog.require('os.ui.window');
 
 /**
  * The SunCalc directive
+ *
  * @return {angular.Directive}
  */
 plugin.suncalc.sunCalcDirective = function() {
@@ -30,6 +31,7 @@ os.ui.Module.directive('suncalc', [plugin.suncalc.sunCalcDirective]);
 
 /**
  * Controller function for the SunCalc directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @constructor
@@ -68,6 +70,7 @@ plugin.suncalc.SunCalcCtrl = function($scope, $element) {
 
 /**
  * Clean up
+ *
  * @private
  */
 plugin.suncalc.SunCalcCtrl.prototype.destroy_ = function() {
@@ -79,6 +82,7 @@ plugin.suncalc.SunCalcCtrl.prototype.destroy_ = function() {
 
 /**
  * Close
+ *
  * @export
  */
 plugin.suncalc.SunCalcCtrl.prototype.close = function() {
@@ -88,6 +92,7 @@ plugin.suncalc.SunCalcCtrl.prototype.close = function() {
 
 /**
  * Updates the scope with the new values
+ *
  * @private
  */
 plugin.suncalc.SunCalcCtrl.prototype.update_ = function() {

@@ -8,6 +8,7 @@ goog.require('plugin.osm.nom.resultCardDirective');
 
 /**
  * Search result card for Nominatim results.
+ *
  * @param {ol.Feature} result The result feature.
  * @extends {os.ui.search.place.CoordinateResult}
  * @constructor

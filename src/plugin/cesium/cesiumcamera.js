@@ -62,6 +62,7 @@ goog.inherits(plugin.cesium.Camera, olcs.Camera);
 
 /**
  * Replace the olcs camera with ours.
+ *
  * @suppress {checkTypes} Because hacks.
  */
 plugin.cesium.replaceCamera = function() {
@@ -72,6 +73,7 @@ plugin.cesium.replaceCamera();
 
 /**
  * If the camera is enabled.
+ *
  * @return {boolean}
  */
 plugin.cesium.Camera.prototype.getEnabled = function() {
@@ -81,6 +83,7 @@ plugin.cesium.Camera.prototype.getEnabled = function() {
 
 /**
  * Set if the camera is enabled.
+ *
  * @param {boolean} value If the camera should be enabled.
  */
 plugin.cesium.Camera.prototype.setEnabled = function(value) {
@@ -168,6 +171,7 @@ plugin.cesium.Camera.prototype.initExtentComputation_ = function() {
 
   /**
    * Generates points along the canvas edges
+   *
    * @param {number=} opt_segmentsPerSide
    * @return {Array<ol.Pixel>}
    * @private
@@ -223,6 +227,7 @@ plugin.cesium.Camera.prototype.initExtentComputation_ = function() {
 
   /**
    * This is a duplication of the method in Cesium.SceneTransforms because it is not exposed
+   *
    * @param {Cesium.Cartesian3} position
    * @param {Cesium.Cartesian3} eyeOffset
    * @param {Cesium.Camera} camera
@@ -509,7 +514,7 @@ plugin.cesium.Camera.prototype.flyTo = function(options) {
   if (this.enabled_) {
     var duration = options.duration != null ? options.duration : os.MapContainer.FLY_ZOOM_DURATION;
     var easingFunction = options.flightMode === os.map.FlightMode.SMOOTH ?
-        Cesium.EasingFunction.LINEAR_NONE : undefined;
+      Cesium.EasingFunction.LINEAR_NONE : undefined;
 
     var target;
     if (options.center) {
@@ -581,6 +586,7 @@ plugin.cesium.Camera.prototype.getDistanceToCenter = function() {
 /**
  * Get the distance from the camera to a world coordinate. Returns undefined if the coordinate is obscured by the
  * ellipsoid.
+ *
  * @param {!Cesium.Cartesian3} position The position
  * @return {number|undefined}
  */
@@ -637,6 +643,7 @@ plugin.cesium.Camera.prototype.zoomByDelta = function(delta) {
 /**
  * Updates the state of the underlying Cesium.Camera
  * according to the current values of the properties.
+ *
  * @private
  * @override
  */
@@ -653,7 +660,7 @@ plugin.cesium.Camera.prototype.updateCamera_ = function() {
   goog.asserts.assert(ll != null);
 
   var carto = new Cesium.Cartographic(ol.math.toRadians(ll[0]),
-                                      ol.math.toRadians(ll[1]));
+      ol.math.toRadians(ll[1]));
   if (this.scene_.globe) {
     var height = this.scene_.globe.getHeight(carto);
     carto.height = height != null ? height : 0;

@@ -78,6 +78,7 @@ os.job.JobManager.prototype.removeJob_ = function(job) {
 
 /**
  * Event handler for {@link os.job.JobEventType.COMPLETE} events.
+ *
  * @param {os.job.JobEvent} event The event.
  * @private
  */
@@ -92,6 +93,7 @@ os.job.JobManager.prototype.handleJobComplete_ = function(event) {
 
 /**
  * Event handler for {@link os.job.JobEventType.ERROR} events.
+ *
  * @param {os.job.JobEvent} event The event.
  * @private
  */

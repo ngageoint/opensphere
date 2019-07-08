@@ -6,6 +6,7 @@ goog.require('os.command.State');
 
 /**
  * Command for clearing (deactivating) states loaded in the application.
+ *
  * @implements {os.command.ICommand}
  * @constructor
  */

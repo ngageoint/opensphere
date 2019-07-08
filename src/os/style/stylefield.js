@@ -18,6 +18,7 @@ os.style.StyleField = {
   LABEL_GEOMETRY: '_labelGeometry',
   LABEL_SIZE: 'labelSize',
   LAST_SHOW_LABELS: '_lastShowLabels',
+  LINE_DASH: 'lineDash',
   LOB_BEARING_COLUMN: 'lobBearingColumn',
   LOB_BEARING_ERROR: 'lobBearingError',
   LOB_BEARING_ERROR_COLUMN: 'lobBearingErrorColumn',

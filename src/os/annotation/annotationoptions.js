@@ -5,6 +5,7 @@ goog.require('os.ui.Module');
 
 /**
  * An annotation to attach to the map.
+ *
  * @return {angular.Directive}
  */
 os.annotation.annotationOptionsDirective = function() {

@@ -14,11 +14,13 @@ goog.require('os.ui.file.kml');
 
 /**
  * Icon style reader
+ *
  * @extends {os.style.AbstractReader<!ol.style.Icon>}
  * @constructor
  */
 os.style.IconReader = function() {
   os.style.IconReader.base(this, 'constructor');
+  this.baseHash = 31 * this.baseHash + goog.string.hashCode('icon') >>> 0;
 };
 goog.inherits(os.style.IconReader, os.style.AbstractReader);
 
@@ -31,12 +33,7 @@ os.style.IconReader.prototype.getOrCreateStyle = function(config) {
   if (config['fill'] && config['fill']['color']) {
     config['color'] = config['fill']['color'];
   }
-  var hash = this.baseHash;
-  for (var key in config) {
-    if (config[key] !== undefined) {
-      hash += goog.string.hashCode(config[key].toString());
-    }
-  }
+  var hash = 31 * this.baseHash + goog.string.hashCode(JSON.stringify(config)) >>> 0;
   if (!this.cache[hash]) {
     var options = /** @type {olx.style.IconOptions} */ ({
       anchor: config['anchor'],
@@ -154,7 +151,7 @@ os.style.IconReader.prototype.toConfig = function(style, obj) {
  *   1. Those URLs will be inaccessible on other networks
  *   2. To avoid cross-origin security restrictions that result in a tainted canvas
  *
- * @param {Object<string, *>} config
+ * @param {!Object<string, *>} config
  */
 os.style.IconReader.translateIcons = function(config) {
   // fall back to the default icon if none provided

@@ -8,6 +8,7 @@ goog.require('os.ui.slick.SlickTreeNode');
 
 /**
  * Tree node representing a grouping in an advanced filter.
+ *
  * @param {boolean=} opt_viewonly
  * @extends {os.ui.slick.SlickTreeNode}
  * @constructor
@@ -49,6 +50,7 @@ os.ui.filter.ui.GroupNode.prototype.setGrouping = function(value) {
 /**
  * Depth-first traversal of the filter tree. Writes out this node's grouping around any child nodes.
  * If this group has no children, it will return an empty string.
+ *
  * @param {string=} opt_title Optional title to include
  * @param {string=} opt_desc Optional description to include
  * @return {string}

@@ -11,6 +11,7 @@ goog.require('os.ui.slick.SlickTreeNode');
 
 /**
  * Tree nodes for filters
+ *
  * @param {os.filter.FilterEntry=} opt_entry
  * @extends {os.ui.slick.SlickTreeNode}
  * @implements {os.data.ISearchable}
@@ -161,6 +162,7 @@ os.ui.filter.ui.FilterNode.prototype.formatIcons = function() {
 
 /**
  * Generate a tooltip to display when the node is hovered.
+ *
  * @return {string} The new tooltip.
  * @protected
  */

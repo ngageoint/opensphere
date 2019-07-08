@@ -45,6 +45,7 @@ plugin.params.menu.layerDispose = function() {
 
 /**
  * Test if an event context supports editing layer request parameters.
+ *
  * @param {os.ui.menu.layer.Context} context The menu context.
  * @this {os.ui.menu.MenuItem}
  */
@@ -63,6 +64,7 @@ plugin.params.menu.visibleIfSupported_ = function(context) {
 
 /**
  * Handle params event from the layer menu.
+ *
  * @param {!os.ui.menu.MenuEvent<os.ui.menu.layer.Context>} event The menu event.
  * @private
  */

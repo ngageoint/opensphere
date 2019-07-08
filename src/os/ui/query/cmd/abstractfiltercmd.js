@@ -9,6 +9,8 @@ goog.require('os.ui.query.cmd.QueryEntries');
 
 /**
  * Abstract command for adding/removing filters
+ *
+ * @abstract
  * @implements {os.command.ICommand}
  * @constructor
  * @param {os.filter.FilterEntry} filter
@@ -48,19 +50,22 @@ os.ui.query.cmd.AbstractFilter = function(filter) {
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.ui.query.cmd.AbstractFilter.prototype.execute = goog.abstractMethod;
+os.ui.query.cmd.AbstractFilter.prototype.execute = function() {};
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.ui.query.cmd.AbstractFilter.prototype.revert = goog.abstractMethod;
+os.ui.query.cmd.AbstractFilter.prototype.revert = function() {};
 
 
 /**
  * Tests whether or not the command is ready and able to execute
+ *
  * @return {boolean} True if ready, false otherwise
  */
 os.ui.query.cmd.AbstractFilter.prototype.canExecute = function() {

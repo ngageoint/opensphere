@@ -41,6 +41,7 @@ plugin.config.Provider = function() {
   this.layers_;
 };
 goog.inherits(plugin.config.Provider, os.ui.data.DescriptorProvider);
+os.implements(plugin.config.Provider, os.data.IDataProvider.ID);
 
 
 /**
@@ -136,4 +137,12 @@ plugin.config.Provider.prototype.addIcons = function(conf) {
 
     conf['icons'] = icons;
   }
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.config.Provider.prototype.getErrorMessage = function() {
+  return null;
 };

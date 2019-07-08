@@ -6,6 +6,7 @@ goog.require('os.ui.Module');
 
 /**
  * The resultcard directive for displaying search results.
+ *
  * @return {angular.Directive}
  */
 os.ui.search.resultCardDirective = function() {
@@ -29,6 +30,7 @@ os.ui.Module.directive('resultcard', [os.ui.search.resultCardDirective]);
 
 /**
  * Controller for the resultcard directive.
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$compile} $compile
@@ -53,6 +55,7 @@ os.ui.search.ResultCardCtrl = function($scope, $element, $compile) {
 
 /**
  * Clean up the controller.
+ *
  * @private
  */
 os.ui.search.ResultCardCtrl.prototype.destroy_ = function() {

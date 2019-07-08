@@ -11,6 +11,7 @@ goog.require('os.ui.onboarding.ngOnboardingDirective');
 
 /**
  * The onboarding directive
+ *
  * @return {angular.Directive}
  */
 os.ui.onboarding.onboardingDirective = function() {
@@ -33,6 +34,7 @@ os.ui.Module.directive('onboarding', [os.ui.onboarding.onboardingDirective]);
 
 /**
  * Controller function for the onboarding directive.
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$compile} $compile
@@ -130,6 +132,7 @@ os.ui.onboarding.OnboardingCtrl.prototype.destroy_ = function() {
 
 /**
  * Handler for onboarding events. Will display the onboarding if there isn't one active, or queue it otherwise.
+ *
  * @param {os.ui.onboarding.OnboardingEvent} event
  * @private
  */
@@ -145,6 +148,7 @@ os.ui.onboarding.OnboardingCtrl.prototype.onDisplayOnboarding_ = function(event)
 
 /**
  * Displays an onboarding set.
+ *
  * @param {os.ui.onboarding.OnboardingEvent} event
  * @private
  */

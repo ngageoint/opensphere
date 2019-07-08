@@ -52,6 +52,7 @@ os.ogc.COLOR_STYLE_REGEX = /(density)|(foreground color)/i;
 
 /**
  * A validator function for requests which checks for OGC exceptions
+ *
  * @param {ArrayBuffer|string} response
  * @param {?string=} opt_contentType
  * @return {?string} An error message if one was found, or null if the response is OK
@@ -79,6 +80,7 @@ os.ogc.getException = function(response, opt_contentType) {
 
 /**
  * Get the default WFS layer options
+ *
  * @return {!Object<string, *>}
  */
 os.ogc.getDefaultWfsOptions = function() {
@@ -96,6 +98,7 @@ os.ogc.getDefaultWfsOptions = function() {
 
 /**
  * Get a default set of WFS parameters
+ *
  * @return {!goog.Uri.QueryData}
  */
 os.ogc.getDefaultWfsParams = function() {
@@ -112,6 +115,7 @@ os.ogc.getDefaultWfsParams = function() {
 
 /**
  * Get the maxiumum number of features supported by the application.
+ *
  * @param {string=} opt_key Optional settings key
  * @return {number}
  */

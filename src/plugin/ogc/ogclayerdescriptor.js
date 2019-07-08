@@ -260,6 +260,7 @@ plugin.ogc.OGCLayerDescriptor.prototype.getIcons = function() {
 
 /**
  * Gets the set of appropriate layer icons as SVG.
+ *
  * @return {Array<string>}
  */
 plugin.ogc.OGCLayerDescriptor.prototype.getSVGSet = function() {
@@ -702,12 +703,13 @@ plugin.ogc.OGCLayerDescriptor.prototype.setUsePost = function(value) {
  * @inheritDoc
  */
 plugin.ogc.OGCLayerDescriptor.prototype.getUrlKey = function() {
-  return this.wfsUrl_ + '!!' + this.wfsName_;
+  return this.getFilterKey();
 };
 
 
 /**
  * If the provider is available and has alternate URLs, replaces the URL with the next available URL from the server.
+ *
  * @param {?string} url The URL to replace
  * @return {?string}
  * @protected
@@ -1056,6 +1058,7 @@ plugin.ogc.OGCLayerDescriptor.prototype.onDescribeComplete_ = function(event) {
 
 /**
  * Handle failure to load the feature type.
+ *
  * @protected
  */
 plugin.ogc.OGCLayerDescriptor.prototype.onDescribeError = function() {
@@ -1082,6 +1085,7 @@ plugin.ogc.OGCLayerDescriptor.prototype.setDescribeCallback = function(fn) {
 
 /**
  * Gets the error message to show when the DFT fails to load.
+ *
  * @return {string}
  */
 plugin.ogc.OGCLayerDescriptor.prototype.getFeatureTypeErrorMsg = function() {
@@ -1111,7 +1115,7 @@ plugin.ogc.OGCLayerDescriptor.prototype.launchFilterManager = function() {
  * @inheritDoc
  */
 plugin.ogc.OGCLayerDescriptor.prototype.getFilterKey = function() {
-  return this.getUrlKey();
+  return this.wfsUrl_ + '!!' + this.wfsName_;
 };
 
 

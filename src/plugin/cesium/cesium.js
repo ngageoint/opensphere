@@ -115,6 +115,7 @@ goog.define('plugin.cesium.LIBRARY_BASE_PATH', 'vendor/cesium');
 
 /**
  * Add a trusted server to Cesium.
+ *
  * @param {string|undefined} url The server URL.
  */
 plugin.cesium.addTrustedServer = function(url) {
@@ -141,6 +142,7 @@ plugin.cesium.addTrustedServer = function(url) {
 
 /**
  * If Cesium Ion services should be enabled.
+ *
  * @return {boolean}
  */
 plugin.cesium.isIonEnabled = function() {
@@ -150,6 +152,7 @@ plugin.cesium.isIonEnabled = function() {
 
 /**
  * Load the Cesium library.
+ *
  * @return {!(goog.Promise|goog.async.Deferred)} A promise that resolves when Cesium has been loaded.
  */
 plugin.cesium.loadCesium = function() {
@@ -184,6 +187,7 @@ plugin.cesium.defaultTerrainProvider_ = undefined;
 
 /**
  * Get the default Cesium terrain provider.
+ *
  * @return {Cesium.EllipsoidTerrainProvider|undefined}
  */
 plugin.cesium.getDefaultTerrainProvider = function() {
@@ -198,6 +202,7 @@ plugin.cesium.getDefaultTerrainProvider = function() {
 
 /**
  * Get the default SkyBox using Cesium's assets.
+ *
  * @return {!Cesium.SkyBoxOptions}
  */
 plugin.cesium.getDefaultSkyBoxOptions = function() {
@@ -225,11 +230,12 @@ plugin.cesium.julianDate_ = undefined;
 
 /**
  * Gets the Julian date from the timeline current date.
+ *
  * @return {Cesium.JulianDate} The Julian date of the application.
  */
 plugin.cesium.getJulianDate = function() {
   plugin.cesium.julianDate_ = Cesium.JulianDate.fromDate(new Date(
-    os.time.TimelineController.getInstance().getCurrent()
+      os.time.TimelineController.getInstance().getCurrent()
   ), plugin.cesium.julianDate_);
   return plugin.cesium.julianDate_;
 };
@@ -238,6 +244,7 @@ plugin.cesium.getJulianDate = function() {
 /**
  * Stolen from cesiums EllipseOutlineGeometry. Build our own polygon to display in polylines instead of a polygon
  * This was done to support more than 1px line width in windows
+ *
  * @param {!Cesium.Cartesian3} center
  * @param {number} radius
  * @return {Array<Cesium.Cartesian3>}
@@ -278,6 +285,7 @@ plugin.cesium.generateCirclePositions = function(center, radius) {
 
 /**
  * Convert a Cesium rectangle to an OpenLayers extent, in degrees.
+ *
  * @param {Cesium.Rectangle} rectangle The rectangle.
  * @return {ol.Extent|undefined}
  */
@@ -294,6 +302,7 @@ plugin.cesium.rectangleToExtent = function(rectangle) {
 /**
  * Creates Cesium.ImageryLayer best corresponding to the given ol.layer.Layer. Only supports raster layers.
  * This replaces {@link olcs.core.tileLayerToImageryLayer} to use our custom provider supporting tile load counts.
+ *
  * @param {!ol.layer.Layer} olLayer
  * @param {?ol.proj.Projection} viewProj Projection of the view.
  * @return {?Cesium.ImageryLayer} null if not possible (or supported)
@@ -342,6 +351,7 @@ plugin.cesium.tileLayerToImageryLayer = function(olLayer, viewProj) {
 
 /**
  * Synchronizes the layer rendering properties (opacity, visible) to the given Cesium ImageryLayer.
+ *
  * @param {!ol.layer.Base} olLayer
  * @param {!Cesium.ImageryLayer} csLayer
  */
@@ -367,6 +377,7 @@ plugin.cesium.updateCesiumLayerProperties = function(olLayer, csLayer) {
 
 /**
  * Create a Cesium terrain provider instance.
+ *
  * @param {Cesium.CesiumTerrainProviderOptions} options The Cesium terrain options.
  * @return {!Cesium.CesiumTerrainProvider}
  */
@@ -377,6 +388,7 @@ plugin.cesium.createCesiumTerrain = function(options) {
 
 /**
  * Create a Cesium World Terrain instance.
+ *
  * @param {Cesium.WorldTerrainOptions} options The Cesium World Terrain options.
  * @return {!Cesium.CesiumTerrainProvider}
  */
@@ -392,9 +404,82 @@ plugin.cesium.createWorldTerrain = function(options) {
 
 /**
  * Create a Cesium WMS terrain provider instance.
+ *
  * @param {!osx.cesium.WMSTerrainProviderOptions} options The WMS terrain options.
  * @return {!plugin.cesium.WMSTerrainProvider}
  */
 plugin.cesium.createWMSTerrain = function(options) {
   return new plugin.cesium.WMSTerrainProvider(options);
+};
+
+
+
+/**
+ * @type {?Cesium.Cartesian3}
+ * @private
+ */
+plugin.cesium.scratchCartesian_ = null;
+
+
+/**
+ * @type {?Cesium.BoundingSphere}
+ * @private
+ */
+plugin.cesium.scratchSphere_ = null;
+
+
+/**
+ * @type {ol.Coordinate}
+ * @private
+ */
+plugin.cesium.scratchCoord_ = [];
+
+
+/**
+ * @param {Cesium.BoundingSphere} sphere
+ * @param {?ol.geom.Geometry|undefined} geom
+ * @return {Cesium.BoundingSphere}
+ */
+plugin.cesium.reduceBoundingSphere = function(sphere, geom) {
+  if (geom) {
+    var type = geom.getType();
+
+    if (type === ol.geom.GeometryType.GEOMETRY_COLLECTION) {
+      var geoms = /** @type {ol.geom.GeometryCollection} */ (geom).getGeometriesArray();
+      sphere = geoms.reduce(plugin.cesium.reduceBoundingSphere, sphere);
+    } else {
+      geom = /** @type {ol.geom.SimpleGeometry} */ (geom);
+      var flats = geom.getFlatCoordinates();
+      var stride = geom.getStride();
+      var scratchCartesian = plugin.cesium.scratchCartesian_ || new Cesium.Cartesian3();
+      var scratchCoord = plugin.cesium.scratchCoord_;
+      var scratchSphere = plugin.cesium.scratchSphere_;
+
+      for (var i = 0, n = flats.length; i < n; i += stride) {
+        scratchCoord[0] = flats[i];
+        scratchCoord[1] = flats[i + 1];
+        scratchCoord[2] = flats[i + 2] || 0;
+
+        if (!ol.proj.equivalent(os.map.PROJECTION, ol.proj.get(os.proj.EPSG4326))) {
+          scratchCoord = ol.proj.toLonLat(scratchCoord, os.map.PROJECTION);
+        }
+
+        scratchCartesian = Cesium.Cartesian3.fromDegrees(
+            scratchCoord[0], scratchCoord[1], scratchCoord[2], undefined, scratchCartesian);
+
+        if (!scratchSphere) {
+          scratchSphere = new Cesium.BoundingSphere(scratchCartesian);
+        } else {
+          scratchSphere.center = scratchCartesian;
+        }
+
+        sphere = !sphere ? scratchSphere.clone() : Cesium.BoundingSphere.union(scratchSphere, sphere, sphere);
+      }
+
+      plugin.cesium.scratchCoord_ = scratchCoord;
+      plugin.cesium.scratchSphere = scratchSphere;
+    }
+  }
+
+  return sphere;
 };

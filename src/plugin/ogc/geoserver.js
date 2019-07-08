@@ -21,6 +21,7 @@ plugin.ogc.GeoServer = function() {
   this.providerType = plugin.ogc.GeoServer.TYPE;
 };
 goog.inherits(plugin.ogc.GeoServer, os.ui.ogc.OGCServer);
+os.implements(plugin.ogc.GeoServer, os.data.IDataProvider.ID);
 
 
 /**

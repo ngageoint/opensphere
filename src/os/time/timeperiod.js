@@ -4,6 +4,7 @@ goog.require('goog.string');
 
 /**
  * Takes an ISO-8601 period and converts it to milliseconds.
+ *
  * @param {string} period The period to convert
  * @return {number} The number of milliseconds represented by the period
  */
@@ -63,6 +64,7 @@ os.time.period.toMillis = function(period) {
 
 /**
  * Takes milliseconds and converts it to an ISO-8601 time period string.
+ *
  * @param {number} ms The range in milliseconds
  * @return {string} An ISO-8601 formatted period string
  */

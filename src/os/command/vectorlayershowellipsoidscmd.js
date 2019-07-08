@@ -10,6 +10,7 @@ goog.require('os.source.PropertyChange');
 
 /**
  * Changes if ellipsoids are shown in 3D mode.
+ *
  * @param {string} layerId
  * @param {boolean} value
  * @param {boolean=} opt_oldValue

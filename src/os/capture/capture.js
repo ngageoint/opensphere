@@ -290,6 +290,7 @@ os.capture.saveDataUrl = function(dataUrl, opt_fileName) {
     job.listenOnce(os.job.JobEventType.COMPLETE,
         /**
          * Handle job completion
+         *
          * @param {os.job.JobEvent} event
          */
         function(event) {
@@ -308,6 +309,7 @@ os.capture.saveDataUrl = function(dataUrl, opt_fileName) {
     job.listenOnce(os.job.JobEventType.ERROR,
         /**
          * Handle job failure
+         *
          * @param {os.job.JobEvent} event
          */
         function(event) {
@@ -326,6 +328,7 @@ os.capture.saveDataUrl = function(dataUrl, opt_fileName) {
 
 /**
  * Get the first canvas element encountered in the document.
+ *
  * @return {!goog.Promise<HTMLCanvasElement>}
  */
 os.capture.getDefaultCanvas = function() {
@@ -375,6 +378,7 @@ os.capture.isTainted = function(canvas) {
 /**
  * Get the pixel ratio for the canvas created by capture. Override this function in capture plugins to replace the
  * default behavior.
+ *
  * @return {number} The pixel ratio for the output canvas.
  */
 os.capture.getPixelRatio = function() {

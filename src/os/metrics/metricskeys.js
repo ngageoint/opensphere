@@ -241,6 +241,7 @@ os.metrics.Layer = {
   VECTOR_SHAPE: 'layers.features.changeVectorShape',
   VECTOR_CENTER_SHAPE: 'layers.features.changeVectorCenterShape',
   VECTOR_SIZE: 'layers.features.changeVectorSize',
+  VECTOR_LINE_DASH: 'layers.features.changeVectorLineDash',
   VECTOR_AUTO_REFRESH: 'layers.features.changeVectorAutoRefresh',
   VECTOR_ELLIPSOID: 'layers.features.changeVectorEllipsoid',
   VECTOR_GROUND_REF: 'layers.features.changeVectorGroundReference',
@@ -266,6 +267,7 @@ os.metrics.Layer = {
   FEATURE_ICON: 'layers.features.changeFeatureIcon',
   FEATURE_OPACITY: 'layers.features.changeFeatureOpacity',
   FEATURE_SIZE: 'layers.features.changeFeatureSize',
+  FEATURE_LINE_DASH: 'layers.features.changeFeatureLineDash',
   FEATURE_LABEL_COLOR: 'layers.features.changeFeatureLabelColor',
   FEATURE_LABEL_SIZE: 'layers.features.changeFeatureLabelSize',
   FEATURE_LABEL_TOGGLE: 'layers.features.changeFeatureLabelToggle',
@@ -293,15 +295,30 @@ os.metrics.Layer = {
   RENAME: 'layers.contextMenu.rename',
   EXPORT: 'layers.contextMenu.export',
   CREATE_BUFFER: 'layers.contextMenu.createBuffer',
-  SHOW_DESCRIPTION: 'layers.contextMenu.showDescription'
+  SHOW_DESCRIPTION: 'layers.contextMenu.showDescription',
+  FEATURE_LIST: 'layers.contextMenu.featureList'
 };
 
 
 /**
- * Layer metrics
+ * Feature metrics
  * @enum {string}
  */
 os.metrics.Feature = {
+};
+
+
+/**
+ * Feature list metrics
+ * @enum {string}
+ */
+os.metrics.FeatureList = {
+  EXPORT: 'featureList.export',
+  GOTO: 'featureList.goTo',
+  SORT_SELECTED: 'featureList.sortSelected',
+  SELECT_ALL: 'featureList.selectAll',
+  DESELECT_ALL: 'featureList.deselectAll',
+  INVERT_SELECTION: 'featureList.invertSelection'
 };
 
 

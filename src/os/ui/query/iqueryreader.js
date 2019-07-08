@@ -5,6 +5,7 @@ goog.provide('os.ui.query.IQueryReader');
 /**
  * Interface for classes capable of reading queries we have written out and parsing them into areas, filters and
  * query entries.
+ *
  * @interface
  */
 os.ui.query.IQueryReader = function() {};

@@ -11,6 +11,7 @@ goog.require('os.im.mapping.location.BaseMGRSMapping');
 
 /**
  * Mapping to translate an MGRS coordinate string to a point geometry.
+ *
  * @extends {os.im.mapping.location.BaseMGRSMapping.<ol.Feature>}
  * @constructor
  */
@@ -34,6 +35,7 @@ os.im.mapping.MappingRegistry.getInstance().registerMapping(
 
 /**
  * Maps an MGRS coordinate string to a geometry.
+ *
  * @param {ol.Feature} item The feature to modify
  * @throws {Error} If the location field cannot be parsed.
  * @override

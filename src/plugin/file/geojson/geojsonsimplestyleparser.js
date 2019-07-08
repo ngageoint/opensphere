@@ -60,7 +60,7 @@ plugin.file.geojson.GeoJSONSimpleStyleParser.prototype.process = function(featur
     // An icon id from the Maki project http://mapbox.com/maki/
     var markersymbol = feature.get('marker-symbol');
     // colors can be short #ace or long #aaccee
-    var markercolor =  /** @type {string} */ (feature.get('marker-color'));
+    var markercolor = /** @type {string} */ (feature.get('marker-color'));
     var stroke = /** @type {string} */ (feature.get('stroke'));
     var strokeopacity = /** @type {number} */ (feature.get('stroke-opacity'));
     var strokewidth = /** @type {number} */ (feature.get('stroke-width'));

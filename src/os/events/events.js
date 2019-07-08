@@ -65,6 +65,7 @@ os.events.exemptionFunctions_ = [];
 
 /**
  * Adds an exemption to right-click prevention
+ *
  * @param {function((Document|Element), string):boolean} checker The exemption check function
  */
 os.events.addExemption = function(checker) {
@@ -74,6 +75,7 @@ os.events.addExemption = function(checker) {
 
 /**
  * Stops the event dead in its tracks.
+ *
  * @param {goog.events.EventLike} evt
  */
 os.events.killEvent = function(evt) {
@@ -84,6 +86,7 @@ os.events.killEvent = function(evt) {
 
 /**
  * Stops right click events
+ *
  * @param {goog.events.EventLike} evt
  */
 os.events.killRightButton = function(evt) {

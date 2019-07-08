@@ -6,6 +6,7 @@ goog.require('os.ui.Module');
 
 /**
  * The featureactionlegendsettings directive.
+ *
  * @return {angular.Directive}
  */
 plugin.im.action.feature.ui.legendSettingsDirective = function() {

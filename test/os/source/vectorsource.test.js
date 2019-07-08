@@ -456,6 +456,37 @@ describe('os.source.Vector', function() {
   describe('columns', function() {
     var columns;
 
+    var createColumn = function(name, field) {
+      var columnDefinition = new os.data.ColumnDefinition();
+      columnDefinition['id'] = name;
+      columnDefinition['name'] = name;
+      columnDefinition['field'] = field || name;
+      columnDefinition['sortable'] = true;
+
+      return columnDefinition;
+    };
+
+    var createColumns = function() {
+      return [
+        createColumn('ID'),
+        createColumn('LAT'),
+        createColumn('LON'),
+        createColumn('TEST1'),
+        createColumn('TEST2'),
+        createColumn('TEST3')
+      ];
+    };
+
+    it('should support getting the original columns or a copy', function() {
+      var columns = createColumns();
+      source.setColumns(columns);
+      expect(source.getColumnsArray()).toBe(source.columns);
+
+      var copy = source.getColumns();
+      expect(copy).not.toBe(source.columns);
+      expect(goog.array.equals(copy, source.columns)).toBe(true);
+    });
+
     it('should always add an ID column to the source', function() {
       source.setColumns([]);
       expect(source.columns.length).toBe(1);
@@ -480,23 +511,7 @@ describe('os.source.Vector', function() {
     });
 
     it('should set columns on the source from an array of columns', function() {
-      var createColumn = function(name, field) {
-        var columnDefinition = new os.data.ColumnDefinition();
-        columnDefinition['id'] = name;
-        columnDefinition['name'] = name;
-        columnDefinition['field'] = field || name;
-        columnDefinition['sortable'] = true;
-
-        return columnDefinition;
-      };
-
-      columns = [];
-      columns.push(createColumn('ID'));
-      columns.push(createColumn('LAT'));
-      columns.push(createColumn('LON'));
-      columns.push(createColumn('TEST1'));
-      columns.push(createColumn('TEST2'));
-      columns.push(createColumn('TEST3'));
+      columns = createColumns();
 
       source.setColumns(columns);
       expect(source.columns.length).toBe(columns.length + 5); // +5 for mgrs, latdms, londms, latddm, londdm
@@ -637,7 +652,7 @@ describe('os.source.Vector', function() {
       expect(source.hasColumn('DESCRIPTION')).toBe(true);
 
       // expect the formatter on that column to be the DescriptionFormatter
-      expect(source.getColumns()[1]['formatter']).toBe(os.ui.formatter.DescriptionFormatter);
+      expect(source.columns[1]['formatter']).toBe(os.ui.formatter.DescriptionFormatter);
     });
 
     it('should add a formatter to a "PROPERTIES" column', function() {
@@ -648,7 +663,7 @@ describe('os.source.Vector', function() {
       expect(source.hasColumn('PROPERTIES')).toBe(true);
 
       // expect the formatter on that column to be the PropertiesFormatter
-      expect(source.getColumns()[1]['formatter']).toBe(os.ui.formatter.PropertiesFormatter);
+      expect(source.columns[1]['formatter']).toBe(os.ui.formatter.PropertiesFormatter);
     });
 
     it('should detect an icon rotation column', function() {

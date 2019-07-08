@@ -16,6 +16,7 @@ goog.require('os.time.timeline');
 
 /**
  * Controls time state within os.js.
+ *
  * @extends {goog.events.EventTarget}
  * @implements {os.IPersistable}
  * @constructor
@@ -174,6 +175,7 @@ goog.addSingletonGetter(os.time.TimelineController);
 
 /**
  * Initialize the timeline controller.
+ *
  * @private
  * @todo This is temporary until we have user options to set the default time on startup.
  */
@@ -206,6 +208,7 @@ os.time.TimelineController.prototype.isPlaying = function() {
 
 /**
  * Getter for current time.
+ *
  * @return {number}
  */
 os.time.TimelineController.prototype.getCurrent = function() {
@@ -215,6 +218,7 @@ os.time.TimelineController.prototype.getCurrent = function() {
 
 /**
  * Setter for current time.
+ *
  * @param {number} value
  */
 os.time.TimelineController.prototype.setCurrent = function(value) {
@@ -228,6 +232,7 @@ os.time.TimelineController.prototype.setCurrent = function(value) {
 
 /**
  * Gets the current range of the controller.
+ *
  * @return {os.time.TimeRange}
  */
 os.time.TimelineController.prototype.getCurrentTimeRange = function() {
@@ -237,6 +242,7 @@ os.time.TimelineController.prototype.getCurrentTimeRange = function() {
 
 /**
  * Gets the current range of the controller.
+ *
  * @return {goog.math.Range}
  */
 os.time.TimelineController.prototype.getCurrentRange = function() {
@@ -267,6 +273,7 @@ os.time.TimelineController.prototype.setDuration = function(value) {
 
 /**
  * Get the end value of the timeline range.
+ *
  * @return {number} The end value
  */
 os.time.TimelineController.prototype.getEnd = function() {
@@ -329,6 +336,7 @@ os.time.TimelineController.prototype.setLock = function(value) {
 
 /**
  * Getter for framerate.
+ *
  * @return {number}
  */
 os.time.TimelineController.prototype.getFps = function() {
@@ -338,6 +346,7 @@ os.time.TimelineController.prototype.getFps = function() {
 
 /**
  * Setter for framerate.
+ *
  * @param {number} fps
  */
 os.time.TimelineController.prototype.setFps = function(fps) {
@@ -436,6 +445,7 @@ os.time.TimelineController.prototype.setOffset = function(value) {
 
 /**
  * Sets the current range using a start value and the duration.
+ *
  * @param {number} value
  */
 os.time.TimelineController.prototype.setRangeStart = function(value) {
@@ -450,6 +460,7 @@ os.time.TimelineController.prototype.setRangeStart = function(value) {
 
 /**
  * Creates a range from a start/end time
+ *
  * @param {number} start
  * @param {number} end
  * @return {!goog.math.Range}
@@ -461,6 +472,7 @@ os.time.TimelineController.prototype.buildRange = function(start, end) {
 
 /**
  * Sets the full timeline range
+ *
  * @param {!goog.math.Range} range
  */
 os.time.TimelineController.prototype.setRange = function(range) {
@@ -483,6 +495,7 @@ os.time.TimelineController.prototype.getSkip = function() {
 /**
  * Gets the next frame on the timeline irrespective of any
  * animation or timeline range constraints.
+ *
  * @param {number} current current frame value.
  * @param {number} dir < 0 backward, otherwise forward.
  * @return {goog.math.Range}
@@ -499,6 +512,7 @@ os.time.TimelineController.prototype.getNextFrame = function(current, dir) {
 
 /**
  * Gets the curret frame on the timeline as a range
+ *
  * @return {goog.math.Range}
  */
 os.time.TimelineController.prototype.getCurrentFrame = function() {
@@ -520,6 +534,7 @@ os.time.TimelineController.prototype.setSkip = function(value) {
 
 /**
  * Get the start value of the timeline range.
+ *
  * @return {number} The start value
  */
 os.time.TimelineController.prototype.getStart = function() {
@@ -529,6 +544,7 @@ os.time.TimelineController.prototype.getStart = function() {
 
 /**
  * The full timeline range
+ *
  * @return {goog.math.Range}
  */
 os.time.TimelineController.prototype.getRange = function() {
@@ -538,6 +554,7 @@ os.time.TimelineController.prototype.getRange = function() {
 
 /**
  * Gets the animation range
+ *
  * @return {goog.math.Range}
  */
 os.time.TimelineController.prototype.getLoadRange = function() {
@@ -547,6 +564,7 @@ os.time.TimelineController.prototype.getLoadRange = function() {
 
 /**
  * Gets the animation range
+ *
  * @return {goog.math.Range}
  */
 os.time.TimelineController.prototype.getAnimationRange = function() {
@@ -642,6 +660,7 @@ os.time.TimelineController.prototype.last = function() {
 
 /**
  * If there is another frame to play before the loop resets.
+ *
  * @return {boolean}
  */
 os.time.TimelineController.prototype.hasNext = function() {
@@ -713,6 +732,7 @@ os.time.TimelineController.prototype.reconcileRanges = function() {
  * Ensures that the rangeSet items are all
  * within the full range of the timeline. Any that
  * are not, get removed.
+ *
  * @param {goog.math.RangeSet} rangeSet
  * @return {boolean} true if rangeSet was changed.
  * @private
@@ -766,6 +786,7 @@ os.time.TimelineController.prototype.dispatchShowEvent_ = function() {
  * Use scheduleReset to ensure that the TimelineControllerEvent.RESET event is only fired once. This way each member
  * of the class that should send a reset when it is changed will still only send a single RESET event if a bunch of them
  * are modified together.
+ *
  * @private
  */
 os.time.TimelineController.prototype.scheduleReset_ = function() {
@@ -775,6 +796,7 @@ os.time.TimelineController.prototype.scheduleReset_ = function() {
 
 /**
  * Updates the current position accounting for any animateRanges_
+ *
  * @param {number} dir
  * @private
  */
@@ -854,6 +876,7 @@ os.time.TimelineController.prototype.adjustCurrent_ = function(dir) {
 
 /**
  * Returns the next position
+ *
  * @param {number} current
  * @param {number} dir
  * @return {number}
@@ -866,6 +889,7 @@ os.time.TimelineController.prototype.getNextPosition_ = function(current, dir) {
 
 /**
  * Finds the next or previous nearest range in the rangeSet to position
+ *
  * @param {goog.math.RangeSet} rangeSet source range set
  * @param {number} dir if < 0 looks backwards, otherwise forward.
  * @param {number} position
@@ -957,7 +981,6 @@ os.time.TimelineController.prototype.restore = function(config) {
   this.setLoadRanges(config['loadRanges']);
   this.setAnimateRanges(config['animateRanges']);
   this.setHoldRanges(config['holdRanges']);
-  this.updateOffetsAndCurrent_();
 
   if (config['playing']) {
     this.play();
@@ -968,12 +991,24 @@ os.time.TimelineController.prototype.restore = function(config) {
 
 
 /**
- * Updates the current position to the beginning of the anmation sequence, and
- * re-computes the step size and offests based on the current animation range.
+ * Updates the current position to the beginning of the animation sequence, and
+ * re-computes the step size and offsets based on the current animation range.
+ *
  * @private
  */
 os.time.TimelineController.prototype.updateOffetsAndCurrent_ = function() {
   os.time.timeline.setDefaultOffsetForRange(this, this.getSmallestAnimateRangeLength());
+};
+
+
+/**
+ * Reset the timeline to config state
+ *
+ * @param {Object} config The state
+ */
+os.time.TimelineController.prototype.reset = function(config) {
+  this.restore(config);
+  this.updateOffetsAndCurrent_();
 };
 
 
@@ -1011,6 +1046,7 @@ os.time.TimelineController.prototype.clearSliceRanges = function() {
 
 /**
  * Adds a slice from a timerange
+ *
  * @param {goog.math.Range} timerange
  */
 os.time.TimelineController.prototype.addSliceRange = function(timerange) {
@@ -1045,6 +1081,7 @@ os.time.TimelineController.prototype.addSliceRange = function(timerange) {
 
 /**
  * Adds a slice from a timerange
+ *
  * @param {goog.math.Range} timerange
  * @return {goog.math.Range} timerange
  */
@@ -1070,6 +1107,7 @@ os.time.TimelineController.prototype.cleanSliceRange = function(timerange) {
 
 /**
  * Updates an existing slice timerange
+ *
  * @param {goog.math.Range} newTimerange
  * @param {goog.math.Range} oldTimerange
  * @return {boolean}
@@ -1090,6 +1128,7 @@ os.time.TimelineController.prototype.updateSliceRange = function(newTimerange, o
 
 /**
  * Removes a slice timerange
+ *
  * @param {goog.math.Range} timerange
  */
 os.time.TimelineController.prototype.removeSliceRange = function(timerange) {
@@ -1116,10 +1155,11 @@ os.time.TimelineController.prototype.removeSliceRange = function(timerange) {
 
 /**
  * Sets the slice ranges.
+ *
  * @param {?goog.math.RangeSet} ranges
  */
 os.time.TimelineController.prototype.setSliceRanges = function(ranges) {
-  if (ranges) {
+  if (ranges && ranges instanceof goog.math.RangeSet) {
     var tr = this.sliceRanges_.clone();
     this.sliceRanges_ = ranges.clone();
     this.calcRangeCache_.clear();
@@ -1137,6 +1177,7 @@ os.time.TimelineController.prototype.setSliceRanges = function(ranges) {
 
 /**
  * Returns all slice ranges.
+ *
  * @return {!Array<goog.math.Range>}
  */
 os.time.TimelineController.prototype.getSliceRanges = function() {
@@ -1146,6 +1187,7 @@ os.time.TimelineController.prototype.getSliceRanges = function() {
 
 /**
  * Returns all load ranges with slices.
+ *
  * @return {goog.math.RangeSet}
  */
 os.time.TimelineController.prototype.getSliceRangeSet = function() {
@@ -1163,6 +1205,7 @@ os.time.TimelineController.prototype.hasSliceRanges = function() {
 
 /**
  * Returns all load ranges.
+ *
  * @return {!Array<goog.math.Range>}
  */
 os.time.TimelineController.prototype.getEffectiveSliceRanges = function() {
@@ -1172,6 +1215,7 @@ os.time.TimelineController.prototype.getEffectiveSliceRanges = function() {
 
 /**
  * Returns all load ranges.
+ *
  * @return {goog.math.RangeSet}
  */
 os.time.TimelineController.prototype.getEffectiveLoadRangeSet = function() {
@@ -1210,6 +1254,7 @@ os.time.TimelineController.prototype.getEffectiveLoadRangeSet = function() {
 
 /**
  * Returns all load ranges.
+ *
  * @return {!Array<goog.math.Range>}
  */
 os.time.TimelineController.prototype.getEffectiveLoadRanges = function() {
@@ -1219,6 +1264,7 @@ os.time.TimelineController.prototype.getEffectiveLoadRanges = function() {
 
 /**
  * Clears all load ranges
+ *
  * @param {boolean=} opt_loud
  */
 os.time.TimelineController.prototype.clearLoadRanges = function(opt_loud) {
@@ -1236,6 +1282,7 @@ os.time.TimelineController.prototype.clearLoadRanges = function(opt_loud) {
 
 /**
  * Adds a load timerange
+ *
  * @param {goog.math.Range} timerange
  */
 os.time.TimelineController.prototype.addLoadRange = function(timerange) {
@@ -1260,6 +1307,7 @@ os.time.TimelineController.prototype.addLoadRange = function(timerange) {
 
 /**
  * Updates an existing load timerange
+ *
  * @param {goog.math.Range} newTimerange
  * @param {goog.math.Range} oldTimerange
  */
@@ -1273,6 +1321,7 @@ os.time.TimelineController.prototype.updateLoadRange = function(newTimerange, ol
 
 /**
  * Checks for an existing timerange with a start or end match
+ *
  * @param {goog.math.RangeSet} rangeSet
  * @param {goog.math.Range} timerange
  * @return {?goog.math.Range}
@@ -1286,6 +1335,7 @@ os.time.TimelineController.prototype.hasRange = function(rangeSet, timerange) {
 
 /**
  * Checks for an existing timerange with an exact start and end match
+ *
  * @param {goog.math.RangeSet} rangeSet
  * @param {goog.math.Range} timerange
  * @return {?goog.math.Range}
@@ -1299,6 +1349,7 @@ os.time.TimelineController.prototype.hasExactRange = function(rangeSet, timerang
 
 /**
  * Removes a load timerange
+ *
  * @param {goog.math.Range} timerange
  */
 os.time.TimelineController.prototype.removeLoadRange = function(timerange) {
@@ -1333,10 +1384,11 @@ os.time.TimelineController.prototype.removeLoadRange = function(timerange) {
 
 /**
  * Sets the load ranges.
+ *
  * @param {?goog.math.RangeSet} ranges
  */
 os.time.TimelineController.prototype.setLoadRanges = function(ranges) {
-  if (ranges) {
+  if (ranges && ranges instanceof goog.math.RangeSet) {
     var numPrev = this.getLoadRanges().length;
     var numNow = goog.iter.toArray(ranges).length;
     if ((numPrev === 1 && numNow != 1) || (numPrev > 1 && numNow === 1)) {
@@ -1354,6 +1406,7 @@ os.time.TimelineController.prototype.setLoadRanges = function(ranges) {
 
 /**
  * Returns all load ranges.
+ *
  * @return {!Array<goog.math.Range>}
  */
 os.time.TimelineController.prototype.getLoadRanges = function() {
@@ -1363,6 +1416,7 @@ os.time.TimelineController.prototype.getLoadRanges = function() {
 
 /**
  * Returns all load ranges.
+ *
  * @return {goog.math.RangeSet}
  */
 os.time.TimelineController.prototype.getLoadRangeSet = function() {
@@ -1384,6 +1438,7 @@ os.time.TimelineController.prototype.clearAnimateRanges = function() {
 
 /**
  * Adds a timerange
+ *
  * @param {goog.math.Range} timerange
  */
 os.time.TimelineController.prototype.addAnimateRange = function(timerange) {
@@ -1400,6 +1455,7 @@ os.time.TimelineController.prototype.addAnimateRange = function(timerange) {
 
 /**
  * Updates an existing timerange
+ *
  * @param {goog.math.Range} newTimerange
  * @param {goog.math.Range} oldTimerange
  */
@@ -1416,6 +1472,7 @@ os.time.TimelineController.prototype.updateAnimateRange = function(newTimerange,
 
 /**
  * Removes a timerange
+ *
  * @param {goog.math.Range} timerange
  */
 os.time.TimelineController.prototype.removeAnimateRange = function(timerange) {
@@ -1432,10 +1489,11 @@ os.time.TimelineController.prototype.removeAnimateRange = function(timerange) {
 
 /**
  * Sets the animation ranges.
+ *
  * @param {?goog.math.RangeSet} ranges
  */
 os.time.TimelineController.prototype.setAnimateRanges = function(ranges) {
-  if (ranges) {
+  if (ranges && ranges instanceof goog.math.RangeSet) {
     this.animateRanges_ = ranges.clone();
     this.dispatchEvent(os.time.TimelineEventType.ANIMATE_RANGE_CHANGED);
     this.dispatchShowEvent_();
@@ -1445,6 +1503,7 @@ os.time.TimelineController.prototype.setAnimateRanges = function(ranges) {
 
 /**
  * Returns all animation ranges.
+ *
  * @return {!Array<goog.math.Range>}
  */
 os.time.TimelineController.prototype.getAnimationRanges = function() {
@@ -1470,6 +1529,7 @@ os.time.TimelineController.prototype.hasHoldRanges = function() {
 
 /**
  * Returns all hold ranges.
+ *
  * @return {!Array<goog.math.Range>}
  */
 os.time.TimelineController.prototype.getHoldRanges = function() {
@@ -1479,10 +1539,11 @@ os.time.TimelineController.prototype.getHoldRanges = function() {
 
 /**
  * Sets the hold ranges.
+ *
  * @param {?goog.math.RangeSet} ranges
  */
 os.time.TimelineController.prototype.setHoldRanges = function(ranges) {
-  if (ranges) {
+  if (ranges && ranges instanceof goog.math.RangeSet) {
     this.holdRanges_ = ranges.clone();
     this.dispatchEvent(os.time.TimelineEventType.HOLD_RANGE_CHANGED);
     this.dispatchShowEvent_();
@@ -1492,6 +1553,7 @@ os.time.TimelineController.prototype.setHoldRanges = function(ranges) {
 
 /**
  * Removes a hold range
+ *
  * @param {goog.math.Range} timerange
  */
 os.time.TimelineController.prototype.removeHoldRange = function(timerange) {
@@ -1521,6 +1583,7 @@ os.time.TimelineController.prototype.clearHoldRanges = function() {
 
 /**
  * Adds a hold timerange
+ *
  * @param {goog.math.Range} timerange
  */
 os.time.TimelineController.prototype.addHoldRange = function(timerange) {
@@ -1537,6 +1600,7 @@ os.time.TimelineController.prototype.addHoldRange = function(timerange) {
 
 /**
  * Updates an existing hold timerange
+ *
  * @param {goog.math.Range} newTimerange
  * @param {goog.math.Range} oldTimerange
  */
@@ -1550,6 +1614,7 @@ os.time.TimelineController.prototype.updateHoldRange = function(newTimerange, ol
 
 /**
  * Returns true if the hold ranges contain the range
+ *
  * @param {goog.math.Range} timerange
  * @return {boolean}
  */
@@ -1560,6 +1625,7 @@ os.time.TimelineController.prototype.holdRangeContains = function(timerange) {
 
 /**
  * Returns true if the hold ranges contain the time
+ *
  * @param {?os.time.ITime} time
  * @return {boolean}
  */

@@ -9,6 +9,7 @@ goog.require('plugin.wmts.Server');
 
 /**
  * The WMTS Server import directive
+ *
  * @return {angular.Directive}
  */
 plugin.wmts.importDirective = function() {
@@ -31,6 +32,7 @@ os.ui.Module.directive('wmtsserver', [plugin.wmts.importDirective]);
 
 /**
  * Controller for the WMTS import dialog
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @extends {os.ui.SingleUrlProviderImportCtrl}

@@ -18,6 +18,7 @@ os.ui.im.URLExistsChoice = {
 
 /**
  * Dialog used when a user tries importing a duplicate url.
+ *
  * @return {angular.Directive}
  */
 os.ui.im.urlExistsDirective = function() {
@@ -39,6 +40,7 @@ os.ui.Module.directive('urlexists', [os.ui.im.urlExistsDirective]);
 
 /**
  * Controller for the URL Exists! window
+ *
  * @param {!angular.Scope} $scope
  * @constructor
  * @ngInject
@@ -56,6 +58,7 @@ os.ui.im.URLExistsCtrl = function($scope) {
 
 /**
  * Launch a dialog prompting the user the url they're importing already exists and requesting action.
+ *
  * @param {string} url
  * @param {string} current
  * @param {function(os.ui.im.URLExistsChoice)} confirm

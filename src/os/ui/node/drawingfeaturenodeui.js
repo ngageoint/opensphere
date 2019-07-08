@@ -15,6 +15,7 @@ os.ui.node.DrawingFeatureNodeUITemplate = '<span ng-if="nodeUi.show()">' +
 
 /**
  * The selected/highlighted node UI directive
+ *
  * @return {angular.Directive}
  */
 os.ui.node.drawingFeatureNodeUIDirective = function() {
@@ -37,6 +38,7 @@ os.ui.Module.directive('drawingfeaturenodeui', [os.ui.node.drawingFeatureNodeUID
 
 /**
  * Controller for selected/highlighted node UI
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @extends {os.ui.slick.AbstractNodeUICtrl}
@@ -51,6 +53,7 @@ goog.inherits(os.ui.node.DrawingFeatureNodeUICtrl, os.ui.slick.AbstractNodeUICtr
 
 /**
  * Remove the feature
+ *
  * @export
  */
 os.ui.node.DrawingFeatureNodeUICtrl.prototype.remove = function() {

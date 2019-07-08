@@ -7,6 +7,7 @@ goog.require('os.ui.Module');
 
 /**
  * The alertbadge directive
+ *
  * @return {angular.Directive}
  */
 os.ui.alert.alertBadgeDirective = function() {
@@ -32,6 +33,7 @@ os.ui.Module.directive('alertbadge', [os.ui.alert.alertBadgeDirective]);
 
 /**
  * Controller function for the alertbadge directive.
+ *
  * @param {!angular.Scope} $scope
  * @constructor
  * @ngInject
@@ -77,6 +79,7 @@ os.ui.alert.AlertBadgeCtrl.CLASSES = {
 
 /**
  * Destroy the directive, cleaning up references/listeners.
+ *
  * @protected
  */
 os.ui.alert.AlertBadgeCtrl.prototype.destroy = function() {
@@ -88,6 +91,7 @@ os.ui.alert.AlertBadgeCtrl.prototype.destroy = function() {
 
 /**
  * Reset the badge.
+ *
  * @protected
  */
 os.ui.alert.AlertBadgeCtrl.prototype.reset = function() {
@@ -109,6 +113,7 @@ os.ui.alert.AlertBadgeCtrl.prototype.getClass = function() {
 
 /**
  * Updates the alert badge when the alert tab is not active.
+ *
  * @param {os.alert.AlertEvent} event The event to register
  * @private
  */

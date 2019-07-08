@@ -14,6 +14,7 @@ goog.require('os.webgl.SynchronizerManager');
 
 /**
  * An abstract root synchronizer for a WebGL renderer.
+ *
  * @param {!ol.PluggableMap} map The OpenLayers map.
  * @extends {goog.Disposable}
  * @constructor
@@ -118,6 +119,7 @@ os.webgl.AbstractRootSynchronizer.prototype.reset = function() {
 
 /**
  * Set if the synchronizer should be actively used.
+ *
  * @param {boolean} value
  */
 os.webgl.AbstractRootSynchronizer.prototype.setActive = function(value) {
@@ -131,6 +133,7 @@ os.webgl.AbstractRootSynchronizer.prototype.setActive = function(value) {
 
 /**
  * Synchronizes a single layer on the map to WebGL.
+ *
  * @param {!os.layer.Group} group
  * @private
  */
@@ -147,6 +150,7 @@ os.webgl.AbstractRootSynchronizer.prototype.synchronizeGroup_ = function(group) 
 
 /**
  * Synchronizes a single layer on the map to WebGL.
+ *
  * @param {!ol.layer.Layer} layer
  * @private
  */
@@ -179,6 +183,7 @@ os.webgl.AbstractRootSynchronizer.prototype.synchronizeLayer_ = function(layer) 
 
 /**
  * Create an instance of a synchronizer.
+ *
  * @param {function(new:os.webgl.AbstractWebGLSynchronizer, ...?)} constructor The synchronizer constructor.
  * @param {!ol.layer.Layer} layer The layer to synchronize.
  * @return {!os.webgl.AbstractWebGLSynchronizer} The synchronizer instance.
@@ -186,12 +191,14 @@ os.webgl.AbstractRootSynchronizer.prototype.synchronizeLayer_ = function(layer) 
 os.webgl.AbstractRootSynchronizer.prototype.createSynchronizer = function(constructor, layer) {
   goog.asserts.assert(!!this.map);
 
-  return new constructor(layer, this.map);
+  return /** @type {!os.webgl.AbstractWebGLSynchronizer} */ (new
+  /** @type {function(new: Object, ol.layer.Layer, ol.PluggableMap)} */ (constructor)(layer, this.map));
 };
 
 
 /**
  * Handle changes to a group's z-order.
+ *
  * @param {goog.events.Event} event
  * @private
  */
@@ -205,6 +212,7 @@ os.webgl.AbstractRootSynchronizer.prototype.onGroupZOrder_ = function(event) {
 
 /**
  * Update the z-order of all groups.
+ *
  * @private
  */
 os.webgl.AbstractRootSynchronizer.prototype.updateZOrder_ = function() {
@@ -220,6 +228,7 @@ os.webgl.AbstractRootSynchronizer.prototype.updateZOrder_ = function() {
 
 /**
  * Update the z-order of a group.
+ *
  * @param {!os.layer.Group} group The group to update.
  * @protected
  */
@@ -230,13 +239,14 @@ os.webgl.AbstractRootSynchronizer.prototype.updateGroupZ = function(group) {
 
 /**
  * Handles a layer being added to a group, synchronizing the group to ensure proper z-index.
+ *
  * @param {os.events.LayerEvent} event
  * @private
  */
 os.webgl.AbstractRootSynchronizer.prototype.onLayerAdd_ = function(event) {
   if (event && event.layer) {
     var layer = /** @type {os.layer.ILayer} */ (typeof event.layer === 'string' ?
-        os.MapContainer.getInstance().getLayer(event.layer) : event.layer);
+      os.MapContainer.getInstance().getLayer(event.layer) : event.layer);
 
     if (layer instanceof ol.layer.Layer) {
       this.synchronizeLayer_(layer);
@@ -251,13 +261,14 @@ os.webgl.AbstractRootSynchronizer.prototype.onLayerAdd_ = function(event) {
 
 /**
  * Handles a layer being removed from a group, destroying its WebGL counterpart.
+ *
  * @param {os.events.LayerEvent} event
  * @private
  */
 os.webgl.AbstractRootSynchronizer.prototype.onLayerRemove_ = function(event) {
   if (event && event.layer) {
     var layer = /** @type {os.layer.ILayer} */ (typeof event.layer === 'string' ?
-        os.MapContainer.getInstance().getLayer(event.layer) : event.layer);
+      os.MapContainer.getInstance().getLayer(event.layer) : event.layer);
 
     if (layer) {
       var id = layer.getId();

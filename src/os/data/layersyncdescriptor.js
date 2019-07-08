@@ -24,6 +24,7 @@ goog.require('os.ui.node.defaultLayerNodeUIDirective');
  * getLayerOptions function, which should produce the options object(s) to be used in creating the layers synchronized
  * to this descriptor.
  *
+ * @abstract
  * @extends {os.data.BaseDescriptor}
  * @constructor
  */
@@ -108,6 +109,7 @@ os.data.LayerSyncDescriptor.prototype.disposeInternal = function() {
 
 /**
  * Get the layers currently being synchronized by this descriptor.
+ *
  * @return {!Array<!os.layer.ILayer>} layers
  */
 os.data.LayerSyncDescriptor.prototype.getLayers = function() {
@@ -128,12 +130,13 @@ os.data.LayerSyncDescriptor.prototype.populateLayerIds = function(opt_options) {
  * layer config applied to it, then will be passed to {@link os.layer.createFromOptions} to create the layer prior to
  * adding it to the map.
  *
+ * @abstract
  * @return {(Array<!Object<string, *>>|Object<string, *>)} An options object that can be used to create a layer, or an
  *                                                         array of options objects.
  *
  * @protected
  */
-os.data.LayerSyncDescriptor.prototype.getLayerOptions = goog.abstractMethod;
+os.data.LayerSyncDescriptor.prototype.getLayerOptions = function() {};
 
 
 /**
@@ -169,6 +172,7 @@ os.data.LayerSyncDescriptor.prototype.extractConfigDefaults = function(options) 
 
 /**
  * If the layer is being synchronized by this descriptor.
+ *
  * @param {!os.layer.ILayer} layer The layer
  * @return {boolean}
  */
@@ -276,6 +280,7 @@ os.data.LayerSyncDescriptor.prototype.onLayerRemoved = function(evt) {
 
 /**
  * Create layers to be synchronized by this descriptor and add them to the map.
+ *
  * @private
  */
 os.data.LayerSyncDescriptor.prototype.createLayers_ = function() {
@@ -307,6 +312,7 @@ os.data.LayerSyncDescriptor.prototype.createLayers_ = function() {
 
 /**
  * Remove layers synchronized by this descriptor.
+ *
  * @private
  */
 os.data.LayerSyncDescriptor.prototype.removeLayers_ = function() {
@@ -327,6 +333,7 @@ os.data.LayerSyncDescriptor.prototype.removeLayers_ = function() {
 
 /**
  * Merge the layer configuration into the options used to create a layer.
+ *
  * @param {!Object<string, *>} options
  * @return {!Object<string, *>} The merged options
  * @protected
@@ -359,6 +366,7 @@ os.data.LayerSyncDescriptor.STYLE_CHANGE_EVENTS = [
 
 /**
  * Handles layer property change
+ *
  * @param {(os.events.PropertyChangeEvent|ol.Object.Event)} e
  * @protected
  */
@@ -387,6 +395,7 @@ os.data.LayerSyncDescriptor.prototype.onLayerChange = function(e) {
 
 /**
  * Handle changes to the loading state on a synchronized layer.
+ *
  * @param {os.events.PropertyChangeEvent=} opt_event
  * @protected
  */
@@ -407,6 +416,7 @@ os.data.LayerSyncDescriptor.prototype.onLoadingChange = function(opt_event) {
 
 /**
  * Handles layer style change.
+ *
  * @protected
  */
 os.data.LayerSyncDescriptor.prototype.onStyleChange = function() {
@@ -417,6 +427,7 @@ os.data.LayerSyncDescriptor.prototype.onStyleChange = function() {
 
 /**
  * Save the descriptor to storage.
+ *
  * @protected
  */
 os.data.LayerSyncDescriptor.prototype.saveDescriptor = function() {
@@ -449,6 +460,7 @@ os.data.LayerSyncDescriptor.prototype.restore = function(conf) {
 
 /**
  * Persist each synchronized layer to an object keyed by layer id.
+ *
  * @return {!Object<string, *>} config
  */
 os.data.LayerSyncDescriptor.prototype.persistLayerConfig = function() {

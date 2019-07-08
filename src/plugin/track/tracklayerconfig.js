@@ -8,6 +8,7 @@ goog.require('plugin.track.TrackSource');
 
 /**
  * Creates a KML layer to organize tracks generated from other data sources.
+ *
  * @extends {plugin.file.kml.KMLLayerConfig}
  * @constructor
  */

@@ -133,6 +133,7 @@ os.filter.FilterEntry.prototype.setDescription = function(value) {
 
 /**
  * Get the filter type
+ *
  * @return {string}
  */
 os.filter.FilterEntry.prototype.getType = function() {
@@ -142,6 +143,7 @@ os.filter.FilterEntry.prototype.getType = function() {
 
 /**
  * Set the filter type
+ *
  * @param {string} value
  */
 os.filter.FilterEntry.prototype.setType = function(value) {
@@ -151,6 +153,7 @@ os.filter.FilterEntry.prototype.setType = function(value) {
 
 /**
  * Whether or not the filter is enabled
+ *
  * @return {boolean}
  */
 os.filter.FilterEntry.prototype.isEnabled = function() {
@@ -169,6 +172,7 @@ os.filter.FilterEntry.prototype.setEnabled = function(value) {
 
 /**
  * Whether or not the filter is temporary. Temporary filters are not persisted across sessions.
+ *
  * @return {boolean}
  */
 os.filter.FilterEntry.prototype.isTemporary = function() {
@@ -178,6 +182,7 @@ os.filter.FilterEntry.prototype.isTemporary = function() {
 
 /**
  * Set if the filter is temporary.
+ *
  * @param {boolean} value
  */
 os.filter.FilterEntry.prototype.setTemporary = function(value) {
@@ -211,6 +216,7 @@ os.filter.FilterEntry.prototype.setFilter = function(filter) {
 
 /**
  * Gets the filter node
+ *
  * @return {?Node}
  */
 os.filter.FilterEntry.prototype.getFilterNode = function() {
@@ -236,6 +242,7 @@ os.filter.FilterEntry.prototype.setMatch = function(match) {
 
 /**
  * Gets the tags for the filter entry.
+ *
  * @return {string}
  */
 os.filter.FilterEntry.prototype.getTags = function() {
@@ -245,6 +252,7 @@ os.filter.FilterEntry.prototype.getTags = function() {
 
 /**
  * Sets the tags for the filter entry.
+ *
  * @param {string} value The tags to set.
  */
 os.filter.FilterEntry.prototype.setTags = function(value) {
@@ -311,6 +319,7 @@ os.filter.FilterEntry.prototype.matches = function(columns) {
 
 /**
  * Clones the entry
+ *
  * @return {os.filter.FilterEntry} The new entry
  */
 os.filter.FilterEntry.prototype.clone = function() {
@@ -359,6 +368,7 @@ os.filter.FilterEntry.prototype.restore = function(config) {
 
 /**
  * Clone a filter entry to the current window context.
+ *
  * @param {os.filter.FilterEntry} entry The alleged filter entry.
  * @return {os.filter.FilterEntry} A filter entry created in the current window context.
  */

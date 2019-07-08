@@ -80,6 +80,7 @@ var getFrameDiff = function(frame1, frame2) {
 
 /**
  * Handle an error in the worker.
+ *
  * @param {string} msg The error message
  */
 var handleError = function(msg) {
@@ -90,6 +91,7 @@ var handleError = function(msg) {
 
 /**
  * Handle messages sent to the worker
+ *
  * @param {Object} msg The message
  * @this Worker
  */

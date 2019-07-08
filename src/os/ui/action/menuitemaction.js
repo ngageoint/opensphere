@@ -7,6 +7,7 @@ goog.require('os.ui.action.MenuItem');
 
 /**
  * Represents a menu item which triggers an action when selected.
+ *
  * @implements {os.ui.action.IMenuItem}
  * @extends {os.ui.action.MenuItem}
  * @param {!os.ui.action.Action} action The action to be applied when this menu item is selected
@@ -29,6 +30,7 @@ goog.inherits(os.ui.action.MenuItemAction, os.ui.action.MenuItem);
 
 /**
  * Retrieve the action
+ *
  * @return {!os.ui.action.Action}
  * @export
  */

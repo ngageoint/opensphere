@@ -83,7 +83,8 @@ plugin.vectortools.JoinCtrl = function($scope, $element) {
   this['joinMethodHelp'] = 'The Join Method determines how we compare values between columns.' +
       '<ul><li> Exact Match: Joins two features when the value is exactly the same on both.</li>' +
       '<li> Contains: Joins two features when one value contains the other.</li>' +
-      '<li> Case Insensitive: Joins two features when one value is not the same case.</li>';
+      '<li> Match (Case-Insensitive): Same as "Exact Match" but case-insensitive</li>' +
+      '<li> Contains (Case-Insensitive): Same as "Contains" but case-insensitive</li>';
 
   /**
    * @type {Array<Object>}
@@ -155,6 +156,10 @@ plugin.vectortools.JoinCtrl.prototype.onSourcePropertyChange = function(event) {
  * @inheritDoc
  */
 plugin.vectortools.JoinCtrl.prototype.onUpdateDelay = function() {
+  if (!this.scope_) {
+    return;
+  }
+
   this.scope_['joinForm'].$setValidity('featureCount', true);
   this['count'] = 0;
 
@@ -184,6 +189,7 @@ plugin.vectortools.JoinCtrl.prototype.onUpdateDelay = function() {
 
 /**
  * Close the window.
+ *
  * @export
  */
 plugin.vectortools.JoinCtrl.prototype.close = function() {
@@ -193,6 +199,7 @@ plugin.vectortools.JoinCtrl.prototype.close = function() {
 
 /**
  * Builds and executes the command to perform the join then closes the window.
+ *
  * @export
  */
 plugin.vectortools.JoinCtrl.prototype.accept = function() {

@@ -103,6 +103,7 @@ os.config.namespace.removeObsoleteKeys = function(obj) {
 /**
  * Migrate old settings structure, where each config object was unique to an application, and migrate it
  * to the new structure, where keys are namespaced appropriately to reflect os and application specific settings.
+ *
  * @param {Object.<string, *>} config
  * @return {Object.<string, *>}
  */
@@ -121,6 +122,7 @@ os.config.namespace.addNamespaces = function(config) {
 
 /**
  * Remove the namespacing from configuration
+ *
  * @param {Object.<string, *>} config
  * @return {Object.<string, *>}
  */
@@ -140,6 +142,7 @@ os.config.namespace.removeNamespaces = function(config) {
 
 /**
  * Returns the given key prefixed with the appropriate namespace for migration, whether it be the app or os
+ *
  * @param {string} key
  * @return {string}
  */
@@ -150,6 +153,7 @@ os.config.namespace.getPrefixedKey = function(key) {
 
 /**
  * Returns the given key prefixed with the appropriate namespace for migration, whether it be the app or os
+ *
  * @param {Array.<string|number>} keys
  * @return {!Array.<string>}
  */
@@ -168,6 +172,7 @@ os.config.namespace.getPrefixedKeys = function(keys) {
 
 /**
  * Determine if the given key should be migrated to os namespace
+ *
  * @param {!string} key
  * @return {boolean}
  */

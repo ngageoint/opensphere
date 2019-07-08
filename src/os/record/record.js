@@ -5,6 +5,7 @@ goog.require('os.record.IRecord');
 
 /**
  * The most basic implementation of a record.
+ *
  * @constructor
  * @implements {os.record.IRecord}
  */

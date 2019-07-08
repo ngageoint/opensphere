@@ -31,6 +31,7 @@ os.interaction.DragCircle.prototype.cesiumColor = undefined;
 
 /**
  * Clean up the drag circle interaction in Cesium.
+ *
  * @this {os.interaction.DragCircle}
  */
 plugin.cesium.interaction.dragcircle.cleanupWebGL = function() {
@@ -54,6 +55,7 @@ plugin.cesium.interaction.dragcircle.cleanupWebGL = function() {
 
 /**
  * Draw the circle in Cesium.
+ *
  * @param {ol.Coordinate} start The start coordinate.
  * @param {ol.Coordinate} end The end coordinate.
  * @this {os.interaction.DragCircle}

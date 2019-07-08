@@ -10,6 +10,7 @@ goog.require('plugin.places');
 
 /**
  * Save places directive.
+ *
  * @return {angular.Directive}
  */
 plugin.places.ui.savePlacesDirective = function() {
@@ -34,6 +35,7 @@ os.ui.Module.directive('saveplaces', [plugin.places.ui.savePlacesDirective]);
 
 /**
  * Launch a dialog to save places from a source.
+ *
  * @param {os.source.Vector} source The source
  */
 plugin.places.ui.launchSavePlaces = function(source) {
@@ -67,6 +69,7 @@ plugin.places.ui.launchSavePlaces = function(source) {
 
 /**
  * Controller for the save places dialog.
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @extends {os.ui.ex.ExportOptionsCtrl}
@@ -146,6 +149,7 @@ plugin.places.ui.SavePlacesCtrl.prototype.disposeInternal = function() {
 
 /**
  * Close the window.
+ *
  * @export
  */
 plugin.places.ui.SavePlacesCtrl.prototype.cancel = function() {
@@ -155,6 +159,7 @@ plugin.places.ui.SavePlacesCtrl.prototype.cancel = function() {
 
 /**
  * Save selection to places and close the window.
+ *
  * @export
  */
 plugin.places.ui.SavePlacesCtrl.prototype.confirm = function() {
@@ -179,6 +184,7 @@ plugin.places.ui.SavePlacesCtrl.prototype.includeSource = function(source) {
 
 /**
  * Handle changes to the selected sources.
+ *
  * @param {angular.Scope.Event} event
  * @param {Array<!ol.Feature>} items
  * @param {Array<!os.source.Vector>} sources
@@ -198,7 +204,7 @@ plugin.places.ui.SavePlacesCtrl.prototype.onOptionsChange_ = function(event, ite
     }
 
     // update the displayed columns
-    this['columns'] = sources && sources.length > 0 ? sources[0].getColumns().slice() : [];
+    this['columns'] = sources && sources.length > 0 ? sources[0].getColumns() : [];
     this['columns'].sort(os.ui.slick.column.nameCompare);
   }
 };

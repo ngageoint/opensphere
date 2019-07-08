@@ -10,6 +10,7 @@ goog.require('plugin.file.kml.KMLProvider');
 
 /**
  * The KML import directive
+ *
  * @return {angular.Directive}
  */
 plugin.file.kml.ui.kmlImportDirective = function() {
@@ -33,6 +34,7 @@ os.ui.Module.directive('kmlimport', [plugin.file.kml.ui.kmlImportDirective]);
 
 /**
  * Controller for the KML import dialog
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @extends {os.ui.file.ui.AbstractFileImportCtrl<!os.parse.FileParserConfig,!plugin.file.kml.KMLDescriptor>}
@@ -53,7 +55,7 @@ plugin.file.kml.ui.KMLImportCtrl.prototype.createDescriptor = function() {
   if (this.config['descriptor']) {
     // existing descriptor, update it
     descriptor = /** @type {!plugin.file.kml.KMLDescriptor} */ (this.config['descriptor']);
-    plugin.file.kml.KMLDescriptor.updateFromConfig(descriptor, this.config);
+    descriptor.updateFromConfig(this.config);
   } else {
     // this is a new import
     descriptor = plugin.file.kml.KMLDescriptor.createFromConfig(this.config);

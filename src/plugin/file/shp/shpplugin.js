@@ -18,6 +18,7 @@ goog.require('plugin.file.shp.ui.ZipSHPImportUI');
 
 /**
  * Provides SHP support
+ *
  * @extends {os.plugin.AbstractPlugin}
  * @constructor
  */

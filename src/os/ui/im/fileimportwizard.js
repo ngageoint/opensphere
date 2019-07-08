@@ -9,6 +9,8 @@ goog.require('os.ui.wiz.wizardDirective');
 
 /**
  * Generic controller for a file import wizard window
+ *
+ * @abstract
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$timeout} $timeout
@@ -41,6 +43,7 @@ os.ui.im.FileImportWizard.prototype.cancelInternal = function() {
 
 /**
  * Clean up the parser configuration, removing any references it doesn't need.
+ *
  * @protected
  */
 os.ui.im.FileImportWizard.prototype.cleanConfig = function() {
@@ -73,6 +76,7 @@ os.ui.im.FileImportWizard.prototype.finish = function() {
 
 /**
  * Identify files that need to be stored and finish the import.
+ *
  * @param {!S} descriptor
  * @protected
  */
@@ -92,6 +96,7 @@ os.ui.im.FileImportWizard.prototype.storeAndFinish = function(descriptor) {
 
 /**
  * Import complete, so add the descriptor to the data manager and provider.
+ *
  * @param {!S} descriptor
  * @protected
  */
@@ -119,23 +124,26 @@ os.ui.im.FileImportWizard.prototype.onPersistError = function(error) {
 
 
 /**
+ * @abstract
  * @param {!S} descriptor
  * @protected
  */
-os.ui.im.FileImportWizard.prototype.addDescriptorToProvider = goog.abstractMethod;
+os.ui.im.FileImportWizard.prototype.addDescriptorToProvider = function(descriptor) {};
 
 
 /**
+ * @abstract
  * @param {!T} config
  * @return {!S}
  * @protected
  */
-os.ui.im.FileImportWizard.prototype.createFromConfig = goog.abstractMethod;
+os.ui.im.FileImportWizard.prototype.createFromConfig = function(config) {};
 
 
 /**
+ * @abstract
  * @param {!S} descriptor
  * @param {!T} config
  * @protected
  */
-os.ui.im.FileImportWizard.prototype.updateFromConfig = goog.abstractMethod;
+os.ui.im.FileImportWizard.prototype.updateFromConfig = function(descriptor, config) {};

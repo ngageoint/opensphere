@@ -326,6 +326,7 @@ os.layer.Vector.prototype.onSourceChange = function(event) {
 
 /**
  * Updates map visibility based on the animation/view (2d/3d) state.
+ *
  * @private
  */
 os.layer.Vector.prototype.updateMapVisibility_ = function() {
@@ -370,6 +371,7 @@ os.layer.Vector.prototype.getIcons = function() {
 
 /**
  * Get the FontAwesome icons for the layer.
+ *
  * @return {!Array<string>}
  * @protected
  */
@@ -389,6 +391,7 @@ os.layer.Vector.prototype.getFASet = function() {
 
 /**
  * Get the SVG icons for the layer.
+ *
  * @return {Array<string>}
  * @protected
  */
@@ -506,6 +509,7 @@ os.layer.Vector.prototype.setRemovable = function(value) {
 
 /**
  * Tells whether the vector should stick
+ *
  * @return {boolean}
  */
 os.layer.Vector.prototype.isSticky = function() {
@@ -515,6 +519,7 @@ os.layer.Vector.prototype.isSticky = function() {
 
 /**
  * Set whether the vector should stick
+ *
  * @param {boolean} value
  */
 os.layer.Vector.prototype.setSticky = function(value) {
@@ -701,6 +706,7 @@ os.layer.Vector.prototype.setFeatureDirective = function(value) {
 /**
  * Locks map visibility for this layer to the specified value. This is useful when rendering features with an
  * overlay instead of the rbush for things like animation.
+ *
  * @param {boolean} value
  */
 os.layer.Vector.prototype.lockMapVisibility = function(value) {
@@ -726,6 +732,7 @@ os.layer.Vector.prototype.unlockMapVisibility = function() {
 
 /**
  * Identify the layer on the map.
+ *
  * @protected
  */
 os.layer.Vector.prototype.identify = function() {
@@ -781,8 +788,8 @@ os.layer.Vector.prototype.callAction = function(type) {
         os.ui.timeline.TimelineCtrl.setView();
         break;
       case os.action.EventType.REFRESH:
-        if (source instanceof os.source.Request) {
-          /** @type {os.source.Request} */ (source).refresh();
+        if (source instanceof os.source.Vector && source.isRefreshEnabled()) {
+          source.refresh();
         }
         break;
       case os.action.EventType.LOCK:
@@ -847,20 +854,22 @@ os.layer.Vector.prototype.isFilterable = function() {
  */
 os.layer.Vector.prototype.getFilterKey = function() {
   var options = this.getLayerOptions();
-  var id = /** @type {string} */ (options['id']);
+  if (options) {
+    var id = /** @type {string} */ (options['id']);
 
-  // try to get it from the descriptor
-  var d = os.dataManager.getDescriptor(id);
-  if (os.implements(d, os.filter.IFilterable.ID)) {
-    return /** @type {!os.filter.IFilterable} */ (d).getFilterKey();
-  }
+    // try to get it from the descriptor
+    var d = os.dataManager.getDescriptor(id);
+    if (os.implements(d, os.filter.IFilterable.ID)) {
+      return /** @type {!os.filter.IFilterable} */ (d).getFilterKey();
+    }
 
-  // try to derive it from the layer options
-  var url = /** @type {string} */ (options['url']);
-  var params = /** @type {string} */ (options['params']);
-  var typeName = params ? /** @type {string} */ (params.get('typename')) : null;
-  if (url && typeName) {
-    return url + '!!' + typeName;
+    // try to derive it from the layer options
+    var url = /** @type {string} */ (options['url']);
+    var params = /** @type {string} */ (options['params']);
+    var typeName = params ? /** @type {string} */ (params.get('typename')) : null;
+    if (url && typeName) {
+      return url + '!!' + typeName;
+    }
   }
 
   // dang
@@ -900,6 +909,7 @@ os.layer.Vector.prototype.getFilterColumns = function() {
 
 /**
  * Get the filter manager launcher for this layer
+ *
  * @return {?os.filter.FilterLauncherFn}
  */
 os.layer.Vector.prototype.getFilterLauncher = function() {
@@ -909,6 +919,7 @@ os.layer.Vector.prototype.getFilterLauncher = function() {
 
 /**
  * Set the filter manager launcher for this layer
+ *
  * @param {?os.filter.FilterLauncherFn} value
  */
 os.layer.Vector.prototype.setFilterLauncher = function(value) {
@@ -918,6 +929,7 @@ os.layer.Vector.prototype.setFilterLauncher = function(value) {
 
 /**
  * Gets the function that returns the filter columns
+ *
  * @return {?os.filter.FilterColumnsFn}
  */
 os.layer.Vector.prototype.getFilterColumnsFn = function() {
@@ -927,6 +939,7 @@ os.layer.Vector.prototype.getFilterColumnsFn = function() {
 
 /**
  * Sets the function that returns the filter columns
+ *
  * @param {?os.filter.FilterColumnsFn} value
  */
 os.layer.Vector.prototype.setFilterColumnsFn = function(value) {
@@ -948,6 +961,8 @@ os.layer.Vector.prototype.supportsAction = function(type, opt_actionArgs) {
       case os.action.EventType.IDENTIFY:
       case os.action.EventType.SHOW_DESCRIPTION:
         return true;
+      case os.action.EventType.FEATURE_LIST:
+        return isVector;
       case os.action.EventType.RENAME:
         return !!opt_actionArgs && goog.isArrayLike(opt_actionArgs) && opt_actionArgs.length === 1;
       case os.action.EventType.BUFFER:
@@ -1001,6 +1016,7 @@ os.layer.Vector.prototype.supportsAction = function(type, opt_actionArgs) {
 
 /**
  * Gets the double click handler for the layer.
+ *
  * @return {Function}
  */
 os.layer.Vector.prototype.getDoubleClickHandler = function() {
@@ -1011,6 +1027,7 @@ os.layer.Vector.prototype.getDoubleClickHandler = function() {
 /**
  * Sets the double click handler for the layer. This can be a function that operates on either a single feature
  * or an array of features.
+ *
  * @param {Function} handler
  */
 os.layer.Vector.prototype.setDoubleClickHandler = function(handler) {
@@ -1083,6 +1100,7 @@ os.layer.Vector.prototype.persist = function(opt_to) {
     opt_to[os.style.StyleField.LABELS] = config[os.style.StyleField.LABELS];
     opt_to[os.style.StyleField.LABEL_COLOR] = config[os.style.StyleField.LABEL_COLOR];
     opt_to[os.style.StyleField.LABEL_SIZE] = config[os.style.StyleField.LABEL_SIZE];
+    opt_to[os.style.StyleField.LINE_DASH] = os.style.getConfigLineDash(config);
     opt_to[os.style.StyleField.LOB_COLUMN_LENGTH] = config[os.style.StyleField.LOB_COLUMN_LENGTH];
     opt_to[os.style.StyleField.LOB_LENGTH] = config[os.style.StyleField.LOB_LENGTH];
     opt_to[os.style.StyleField.LOB_LENGTH_TYPE] = config[os.style.StyleField.LOB_LENGTH_TYPE];
@@ -1104,7 +1122,7 @@ os.layer.Vector.prototype.persist = function(opt_to) {
     opt_to[os.style.StyleField.SHOW_GROUND_REF] = config[os.style.StyleField.SHOW_GROUND_REF];
   }
 
-  var source =  /** @type {os.IPersistable} */ (this.getSource());
+  var source = /** @type {os.IPersistable} */ (this.getSource());
   if (source && os.implements(source, os.source.ISource.ID)) {
     opt_to = /** @type {os.source.ISource} */ (source).persist(opt_to);
   }
@@ -1179,6 +1197,10 @@ os.layer.Vector.prototype.restore = function(config) {
     os.style.setConfigSize(styleConf, config[os.style.StyleField.SIZE]);
   }
 
+  if (config[os.style.StyleField.LINE_DASH] != null) {
+    os.style.setConfigLineDash(styleConf, config[os.style.StyleField.LINE_DASH]);
+  }
+
   if (config[os.style.StyleField.ICON] != null) {
     os.style.setConfigIcon(styleConf, config[os.style.StyleField.ICON]);
   }
@@ -1232,7 +1254,7 @@ os.layer.Vector.prototype.restore = function(config) {
   styleConf[os.style.StyleField.LABEL_SIZE] = config[os.style.StyleField.LABEL_SIZE] || os.style.label.DEFAULT_SIZE;
   styleConf[os.style.StyleField.SHOW_LABELS] = config[os.style.StyleField.SHOW_LABELS] || false;
 
-  var source =  /** @type {os.IPersistable} */ (this.getSource());
+  var source = /** @type {os.IPersistable} */ (this.getSource());
   if (source && os.implements(source, os.source.ISource.ID)) {
     /** @type {os.source.ISource} */ (source).restore(config);
   }
@@ -1241,6 +1263,7 @@ os.layer.Vector.prototype.restore = function(config) {
 
 /**
  * Handles double clicks on features by popping up a window to display feature metadata.
+ *
  * @param {ol.Feature} feature *
  * @this os.layer.Vector
  */

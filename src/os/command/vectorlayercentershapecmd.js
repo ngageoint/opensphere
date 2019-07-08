@@ -11,6 +11,7 @@ goog.require('os.ui.file.kml');
 
 /**
  * Changes the center style of a layer
+ *
  * @extends {os.command.AbstractVectorStyle<string>}
  * @param {string} layerId
  * @param {string} style

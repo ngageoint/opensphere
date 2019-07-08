@@ -11,6 +11,7 @@ goog.require('os.ui.window');
 
 /**
  * Controller function for the history-view directive.
+ *
  * @param {angular.Scope} $scope
  * @param {!angular.$timeout} $timeout
  * @constructor
@@ -78,6 +79,7 @@ os.ui.history.HistoryViewCtrl = function($scope, $timeout) {
 
 /**
  * Clear references to Angular/DOM elements.
+ *
  * @private
  */
 os.ui.history.HistoryViewCtrl.prototype.destroy_ = function() {
@@ -95,6 +97,7 @@ os.ui.history.HistoryViewCtrl.prototype.destroy_ = function() {
 
 /**
  * Prompts the user to clear the application history.
+ *
  * @export
  */
 os.ui.history.HistoryViewCtrl.prototype.clearHistory = function() {
@@ -121,6 +124,7 @@ os.ui.history.HistoryViewCtrl.prototype.clearHistory = function() {
 
 /**
  * Clears application history.
+ *
  * @private
  */
 os.ui.history.HistoryViewCtrl.prototype.clearHistoryInternal_ = function() {
@@ -132,6 +136,7 @@ os.ui.history.HistoryViewCtrl.prototype.clearHistoryInternal_ = function() {
 
 /**
  * Toggles the history view
+ *
  * @export
  */
 os.ui.history.HistoryViewCtrl.prototype.toggleHistoryView = function() {
@@ -143,6 +148,7 @@ os.ui.history.HistoryViewCtrl.prototype.toggleHistoryView = function() {
  * Called on clicking an element in the history view. Takes the index of the
  * clicked item and calls os.command.CommandProcessor.setIndex() with the
  * index as the argument.  Also manipulates the DOM to highlight that item.
+ *
  * @param {number} index
  * @export
  */
@@ -159,6 +165,7 @@ os.ui.history.HistoryViewCtrl.prototype.setIndex = function(index) {
  * Called when a command is added to the Command Processor.  This adds the command
  * to the historyview and handles whether or not to slice off elements at the top
  * of the queue if the queue is currently not at the most recent command
+ *
  * @param {os.command.CommandEvent} e
  * @private
  */
@@ -176,6 +183,7 @@ os.ui.history.HistoryViewCtrl.prototype.commandAdded_ = function(e) {
  * Fires when the command processor begins executing an event. Sets processing
  * to true which starts the spinner icons if the command is asynchronous. Also
  * sets the current index.
+ *
  * @param {os.command.CommandEvent} e The event
  * @private
  */
@@ -195,6 +203,7 @@ os.ui.history.HistoryViewCtrl.prototype.commandExecuting_ = function(e) {
  * Fires when the command processor begins reverting an event. Sets processing
  * to true which starts the spinner icons if the command is asynchronous. Also
  * sets the current index
+ *
  * @param {os.command.CommandEvent} e The event
  * @private
  */
@@ -210,6 +219,7 @@ os.ui.history.HistoryViewCtrl.prototype.commandReverting_ = function(e) {
  * Fires when the command processor finishes executing an event. Sets processing
  * to false which stops the spinner icons if the command is asynchronous. Also
  * sets the current index.
+ *
  * @param {goog.events.Event} e The event
  * @private
  */
@@ -227,6 +237,7 @@ os.ui.history.HistoryViewCtrl.prototype.commandExecuted_ = function(e) {
  * Fires when the command processor finishes reverting an event. Sets processing
  * to false which stops the spinner icons if the command is asynchronous. Also
  * sets the current index.
+ *
  * @param {goog.events.Event} e The event
  * @private
  */
@@ -241,6 +252,7 @@ os.ui.history.HistoryViewCtrl.prototype.commandReverted_ = function(e) {
 
 /**
  * Fires when the command processor changes the history size limit.
+ *
  * @param {goog.events.Event} e The event
  * @private
  */

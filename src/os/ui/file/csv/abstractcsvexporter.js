@@ -6,6 +6,8 @@ goog.require('os.ex.AbstractExporter');
 
 /**
  * A CSV exporter driven by PapaParse.
+ *
+ * @abstract
  * @extends {os.ex.AbstractExporter.<T>}
  * @constructor
  * @template T
@@ -89,12 +91,14 @@ os.ui.file.csv.AbstractCSVExporter.prototype.process = function() {
 
 /**
  * Process a single item, returning a JSON object for PapaParse.
+ *
+ * @abstract
  * @param {T} item The item
  * @return {Object.<string, string>} The Papa item
  * @protected
  * @template T
  */
-os.ui.file.csv.AbstractCSVExporter.prototype.processItem = goog.abstractMethod;
+os.ui.file.csv.AbstractCSVExporter.prototype.processItem = function(item) {};
 
 
 /**

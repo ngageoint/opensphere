@@ -7,6 +7,7 @@ goog.require('os.ui.Module');
 
 /**
  * The scrollHeader directive
+ *
  * @return {angular.Directive}
  */
 os.ui.header.scrollHeaderDirective = function() {
@@ -36,6 +37,7 @@ os.ui.header.ScrollHeaderEvents = {
 
 /**
  * Controller function for the scrollHeader directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!jQuery} $element
  * @param {!angular.$timeout} $timeout
@@ -92,11 +94,7 @@ os.ui.header.ScrollHeaderCtrl = function($scope, $element, $timeout, $attrs) {
    * @type {boolean}
    * @private
    */
-  // Turning off position: sticky as there are some issues with z-index
-  // and creating new stacking contexts. Return this line once those
-  // issues are addressed.
-  // this.supportsSticky_ = Modernizr.csspositionsticky || false;
-  this.supportsSticky_ = false;
+  this.supportsSticky_ = Modernizr.csspositionsticky || false;
   if (this.supportsSticky_) {
     this.timeout_(function() {
       this.element_.css('position', 'sticky');
@@ -121,6 +119,7 @@ os.ui.header.ScrollHeaderCtrl = function($scope, $element, $timeout, $attrs) {
 
 /**
  * Update this element's based on window scroll position.
+ *
  * @private
  */
 os.ui.header.ScrollHeaderCtrl.prototype.updatePositions_ = function() {
@@ -162,6 +161,7 @@ os.ui.header.ScrollHeaderCtrl.prototype.updatePositions_ = function() {
 
 /**
  * Update the height of the filler.
+ *
  * @private
  */
 os.ui.header.ScrollHeaderCtrl.prototype.updateHeight_ = function() {
@@ -173,6 +173,7 @@ os.ui.header.ScrollHeaderCtrl.prototype.updateHeight_ = function() {
 
 /**
  * Clean up element
+ *
  * @private
  */
 os.ui.header.ScrollHeaderCtrl.prototype.destroyElement_ = function() {

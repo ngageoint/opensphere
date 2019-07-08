@@ -46,6 +46,7 @@ os.config.ConfigType = {
 
 /**
  * Get the application name from settings.
+ *
  * @param {string=} opt_default The default value
  * @return {(string|undefined)}
  */
@@ -57,6 +58,7 @@ os.config.getAppName = function(opt_default) {
 
 /**
  * Get the application version from settings.
+ *
  * @param {string=} opt_default The default value
  * @return {(string|undefined)}
  */
@@ -68,6 +70,7 @@ os.config.getAppVersion = function(opt_default) {
 
 /**
  * Get the designated support contact for application issues.
+ *
  * @param {string=} opt_default The default value
  * @return {(string|undefined)}
  */

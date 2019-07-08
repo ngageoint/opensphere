@@ -56,6 +56,7 @@ os.net.CertNaziHelper = function(urls, opt_iePostUrl) {
 
 /**
  * Test the connection and expose the results via deferred
+ *
  * @return {goog.async.Deferred}
  */
 os.net.CertNaziHelper.prototype.testConnection = function() {
@@ -66,6 +67,7 @@ os.net.CertNaziHelper.prototype.testConnection = function() {
 
 /**
  * Run standard cert nazi checks
+ *
  * @private
  */
 os.net.CertNaziHelper.prototype.testStandardConnection_ = function() {
@@ -79,6 +81,7 @@ os.net.CertNaziHelper.prototype.testStandardConnection_ = function() {
 
 /**
  * IE disappoints, so we must run a GET before we can try a POST
+ *
  * @private
  */
 os.net.CertNaziHelper.prototype.testIeConnection_ = function() {
@@ -95,6 +98,7 @@ os.net.CertNaziHelper.prototype.testIeConnection_ = function() {
 
 /**
  * Handle standard connection test passed.  Either resolve the deferred or continue testing in IE.
+ *
  * @private
  */
 os.net.CertNaziHelper.prototype.onStandardTestSuccess_ = function() {
@@ -105,6 +109,7 @@ os.net.CertNaziHelper.prototype.onStandardTestSuccess_ = function() {
 
 /**
  * Handle successful IE tests
+ *
  * @private
  */
 os.net.CertNaziHelper.prototype.onIeTestSuccess_ = function() {
@@ -115,6 +120,7 @@ os.net.CertNaziHelper.prototype.onIeTestSuccess_ = function() {
 
 /**
  * Handle cert nazi failure
+ *
  * @param {string} reason
  * @param {goog.events.Event} event
  * @private
@@ -130,6 +136,7 @@ os.net.CertNaziHelper.prototype.onFail_ = function(reason, event) {
 
 /**
  * Resolve the deferred with a successful result
+ *
  * @private
  */
 os.net.CertNaziHelper.prototype.succeed_ = function() {

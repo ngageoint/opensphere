@@ -66,6 +66,7 @@ os.ui.server.AbstractLoadingServer = function() {
 };
 goog.inherits(os.ui.server.AbstractLoadingServer, os.ui.data.BaseProvider);
 os.implements(os.ui.server.AbstractLoadingServer, os.data.ILoadingProvider.ID);
+os.implements(os.ui.server.AbstractLoadingServer, os.data.IDataProvider.ID);
 
 
 /**
@@ -99,6 +100,7 @@ os.ui.server.AbstractLoadingServer.prototype.load = function(opt_ping) {
 
 /**
  * If the server has finished loading.
+ *
  * @return {boolean}
  */
 os.ui.server.AbstractLoadingServer.prototype.isLoaded = function() {
@@ -108,6 +110,7 @@ os.ui.server.AbstractLoadingServer.prototype.isLoaded = function() {
 
 /**
  * Called when loading is complete.
+ *
  * @protected
  */
 os.ui.server.AbstractLoadingServer.prototype.finish = function() {
@@ -132,6 +135,7 @@ os.ui.server.AbstractLoadingServer.prototype.formatIcons = function() {
 
 /**
  * Get the server URL.
+ *
  * @return {string}
  */
 os.ui.server.AbstractLoadingServer.prototype.getUrl = function() {
@@ -141,6 +145,7 @@ os.ui.server.AbstractLoadingServer.prototype.getUrl = function() {
 
 /**
  * Set the server URL.
+ *
  * @param {string} value
  */
 os.ui.server.AbstractLoadingServer.prototype.setUrl = function(value) {
@@ -150,6 +155,7 @@ os.ui.server.AbstractLoadingServer.prototype.setUrl = function(value) {
 
 /**
  * Get alternate URLs that may be used to load balance server requests.
+ *
  * @return {Array<string>}
  */
 os.ui.server.AbstractLoadingServer.prototype.getAlternateUrls = function() {
@@ -159,6 +165,7 @@ os.ui.server.AbstractLoadingServer.prototype.getAlternateUrls = function() {
 
 /**
  * Set alternate URLs that may be used to load balance server requests.
+ *
  * @param {Array<string>} value
  */
 os.ui.server.AbstractLoadingServer.prototype.setAlternateUrls = function(value) {
@@ -168,6 +175,7 @@ os.ui.server.AbstractLoadingServer.prototype.setAlternateUrls = function(value) 
 
 /**
  * Add an alternate URL to the server.
+ *
  * @param {string} value
  */
 os.ui.server.AbstractLoadingServer.prototype.addAlternateUrl = function(value) {
@@ -181,6 +189,7 @@ os.ui.server.AbstractLoadingServer.prototype.addAlternateUrl = function(value) {
 
 /**
  * Remove an alternate URL from the server.
+ *
  * @param {string} value
  */
 os.ui.server.AbstractLoadingServer.prototype.removeAlternateUrl = function(value) {
@@ -196,6 +205,7 @@ os.ui.server.AbstractLoadingServer.prototype.removeAlternateUrl = function(value
 
 /**
  * Gets a rotating URL for the server using the base URL and alternate URLs.
+ *
  * @return {string}
  */
 os.ui.server.AbstractLoadingServer.prototype.getNextUrl = function() {

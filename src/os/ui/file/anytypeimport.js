@@ -8,6 +8,7 @@ goog.require('os.ui.window');
 
 /**
  * The KML import directive
+ *
  * @return {angular.Directive}
  */
 os.ui.file.anyTypeImportDirective = function() {
@@ -31,6 +32,7 @@ os.ui.Module.directive('anytypeimport', [os.ui.file.anyTypeImportDirective]);
 
 /**
  * Controller for the KML import dialog
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @constructor
@@ -67,11 +69,12 @@ os.ui.file.AnyTypeImportCtrl = function($scope, $element) {
 
 /**
  * Open the correct importer
+ *
  * @export
  */
 os.ui.file.AnyTypeImportCtrl.prototype.accept = function() {
   try {
-    this['import'].launchUI(this.scope_['file'], this.scope_['config']);
+    this['import'].launchUI(/** @type {os.file.File} */ (this.scope_['file']), this.scope_['config']);
   } catch (e) {
     os.alert.AlertManager.getInstance().sendAlert(
         'Error loading file: <b>' + this.scope_['file'].getFileName() + '</b>', os.alert.AlertEventSeverity.ERROR);
@@ -83,6 +86,7 @@ os.ui.file.AnyTypeImportCtrl.prototype.accept = function() {
 
 /**
  * Open the correct importer
+ *
  * @export
  */
 os.ui.file.AnyTypeImportCtrl.prototype.close = function() {

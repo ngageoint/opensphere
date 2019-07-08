@@ -16,6 +16,7 @@ os.ui.ChecklistEvent = {
 
 /**
  * The checklist directive
+ *
  * @return {angular.Directive}
  */
 os.ui.checklistDirective = function() {
@@ -43,6 +44,7 @@ os.ui.Module.directive('checklist', [os.ui.checklistDirective]);
 
 /**
  * Controller function for the checklist directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$timeout} $timeout
@@ -82,6 +84,7 @@ os.ui.ChecklistCtrl = function($scope, $element, $timeout) {
 
 /**
  * Clean up.
+ *
  * @private
  */
 os.ui.ChecklistCtrl.prototype.destroy_ = function() {
@@ -92,6 +95,7 @@ os.ui.ChecklistCtrl.prototype.destroy_ = function() {
 
 /**
  * Handle changes to the allow multiple flag.
+ *
  * @param {boolean} newVal The new value
  * @param {boolean} oldVal The old value
  * @private
@@ -121,6 +125,7 @@ os.ui.ChecklistCtrl.prototype.onAllowMultipleChange_ = function(newVal, oldVal) 
 
 /**
  * Emit an Angular change event, using the scope name if available.
+ *
  * @private
  */
 os.ui.ChecklistCtrl.prototype.emitChangeEvent_ = function() {
@@ -137,6 +142,7 @@ os.ui.ChecklistCtrl.prototype.emitChangeEvent_ = function() {
 
 /**
  * Handle changes to the items array.
+ *
  * @private
  */
 os.ui.ChecklistCtrl.prototype.onItemsChange_ = function() {
@@ -150,6 +156,7 @@ os.ui.ChecklistCtrl.prototype.onItemsChange_ = function() {
 
 /**
  * Sort checklist items by label.
+ *
  * @param {!osx.ChecklistItem} a A checklist item
  * @param {!osx.ChecklistItem} b Another checklist item
  * @return {number}
@@ -165,6 +172,7 @@ os.ui.ChecklistCtrl.prototype.labelCompare_ = function(a, b) {
 
 /**
  * Toggles all items on or off.
+ *
  * @export
  */
 os.ui.ChecklistCtrl.prototype.toggleAll = function() {
@@ -184,6 +192,7 @@ os.ui.ChecklistCtrl.prototype.toggleAll = function() {
 
 /**
  * Handle an item being checked on/off.
+ *
  * @param {!osx.ChecklistItem} item The changed item
  * @export
  */
@@ -209,6 +218,7 @@ os.ui.ChecklistCtrl.prototype.onItemChange = function(item) {
 
 /**
  * Updates the enable/disable all checkbox.
+ *
  * @private
  */
 os.ui.ChecklistCtrl.prototype.updateAllCheckbox_ = function() {
@@ -245,6 +255,7 @@ os.ui.ChecklistCtrl.prototype.updateAllCheckbox_ = function() {
 /**
  * Launches a floating menu-like element wrapping a checklist directive. Uses the passed in parameters and positioning
  * information to populate/position it.
+ *
  * @param {angular.JQLite|string} target The target element/string
  * @param {Array<Object>} items The checklist items
  * @param {boolean=} opt_allowMultiple The directive allow-multiple value
@@ -307,6 +318,7 @@ os.ui.ChecklistCtrl.CHECKLIST_CLOSE = 'checklistclose';
 
 /**
  * Click handler
+ *
  * @param {Event} e
  * @private
  */

@@ -12,6 +12,7 @@ goog.require('os.ui.windowLauncherDirective');
 
 /**
  * Extends the tri-state tree node to provide items that SlickGrid needs to render the tree
+ *
  * @extends {os.structs.TriStateTreeNode}
  * @constructor
  */
@@ -152,6 +153,7 @@ os.ui.slick.SlickTreeNode.prototype.setState = function(value) {
 
 /**
  * Sets the state of the node.
+ *
  * @param {string} value
  * @protected
  */
@@ -163,6 +165,7 @@ os.ui.slick.SlickTreeNode.prototype.setStateInternal = function(value) {
 
 /**
  * Gets the tooltip for the node
+ *
  * @return {!string} The tooltip
  */
 os.ui.slick.SlickTreeNode.prototype.getToolTip = function() {
@@ -172,6 +175,7 @@ os.ui.slick.SlickTreeNode.prototype.getToolTip = function() {
 
 /**
  * Sets the tooltip for the node
+ *
  * @param {?string} value The tooltip
  */
 os.ui.slick.SlickTreeNode.prototype.setToolTip = function(value) {
@@ -181,6 +185,7 @@ os.ui.slick.SlickTreeNode.prototype.setToolTip = function(value) {
 
 /**
  * Gets the checkbox visibility
+ *
  * @return {boolean}
  */
 os.ui.slick.SlickTreeNode.prototype.getCheckboxVisible = function() {
@@ -190,6 +195,7 @@ os.ui.slick.SlickTreeNode.prototype.getCheckboxVisible = function() {
 
 /**
  * Gets the nodetoggle visibility
+ *
  * @return {boolean}
  */
 os.ui.slick.SlickTreeNode.prototype.getNodetoggleVisible = function() {
@@ -199,6 +205,7 @@ os.ui.slick.SlickTreeNode.prototype.getNodetoggleVisible = function() {
 
 /**
  * Gets the node UI
+ *
  * @return {string}
  */
 os.ui.slick.SlickTreeNode.prototype.getNodeUI = function() {
@@ -208,6 +215,7 @@ os.ui.slick.SlickTreeNode.prototype.getNodeUI = function() {
 
 /**
  * Sets the node UI
+ *
  * @param {string} value
  */
 os.ui.slick.SlickTreeNode.prototype.setNodeUI = function(value) {
@@ -217,6 +225,7 @@ os.ui.slick.SlickTreeNode.prototype.setNodeUI = function(value) {
 
 /**
  * Sets the visibility of the checkbox for the node
+ *
  * @param {boolean} value True to show the checkbox, false otherwise
  */
 os.ui.slick.SlickTreeNode.prototype.setCheckboxVisible = function(value) {
@@ -230,6 +239,7 @@ os.ui.slick.SlickTreeNode.prototype.setCheckboxVisible = function(value) {
 
 /**
  * Sets the visibility of the nodetoggle for the node
+ *
  * @param {boolean} value True to show the checkbox, false otherwise
  */
 os.ui.slick.SlickTreeNode.prototype.setNodetoggleVisible = function(value) {
@@ -243,6 +253,7 @@ os.ui.slick.SlickTreeNode.prototype.setNodetoggleVisible = function(value) {
 
 /**
  * Formats the node
+ *
  * @param {number} row The row number
  * @param {number} cell The cell number
  * @param {string} value The value of the cell
@@ -283,6 +294,7 @@ os.ui.slick.SlickTreeNode.prototype.format = function(row, cell, value) {
 /**
  * Gets the HTML that supplies the checkbox. The data item/node is
  * supplied on the scope as <code>item</code>.
+ *
  * @return {!string} The checkbox HTML
  * @protected
  */
@@ -294,6 +306,7 @@ os.ui.slick.SlickTreeNode.prototype.formatCheckbox = function() {
 /**
  * Gets the HTML that supplies the window launcher box. The data item/node is
  * supplied on the scope as <code>item</code>.
+ *
  * @return {!string} The launcher box HTML
  * @protected
  */
@@ -322,6 +335,7 @@ os.ui.slick.SlickTreeNode.prototype.getSpacer = function(opt_width, opt_unit) {
 
 /**
  * Gets the HTML for the value or label
+ *
  * @param {string} value The value
  * @return {!string} The label HTML
  * @protected
@@ -351,6 +365,7 @@ os.ui.slick.SlickTreeNode.prototype.formatValue = function(value) {
 
 /**
  * API call to get the HTML for the icons
+ *
  * @return {!string} The icon HTML
  * @export
  */
@@ -361,6 +376,7 @@ os.ui.slick.SlickTreeNode.prototype.getIcons = function() {
 
 /**
  * Create the HTML for the icons
+ *
  * @return {!string} The icon HTML
  * @protected
  */
@@ -371,6 +387,7 @@ os.ui.slick.SlickTreeNode.prototype.formatIcons = function() {
 
 /**
  * Gets the HTML for the node UI
+ *
  * @return {!string} The node UI HTML
  * @protected
  */
@@ -397,6 +414,7 @@ os.ui.slick.SlickTreeNode.prototype.onMouseLeave = function() {
 
 /**
  * Performs a node action.
+ *
  * @param {string} type The action type
  */
 os.ui.slick.SlickTreeNode.prototype.performAction = function(type) {
@@ -438,6 +456,7 @@ os.ui.slick.SlickTreeNode.prototype.getDepth = function() {
 
 /**
  * If the node allows dragging within its own tree.
+ *
  * @return {boolean}
  */
 os.ui.slick.SlickTreeNode.prototype.supportsInternalDrag = function() {
@@ -447,6 +466,7 @@ os.ui.slick.SlickTreeNode.prototype.supportsInternalDrag = function() {
 
 /**
  * If the node can be dropped on the provided item.
+ *
  * @param {os.ui.slick.SlickTreeNode} dropItem The drop target
  * @param {os.ui.slick.SlickTreeNode.MOVE_MODE} moveMode The drag/drop move mode
  * @return {boolean}
@@ -493,6 +513,7 @@ os.ui.slick.SlickTreeNode.prototype.getParentIndex = function() {
 
 /**
  * Get whether to override the folder disable on the tree.
+ *
  * @return {boolean}
  */
 os.ui.slick.SlickTreeNode.prototype.getDisableFolder = function() {
@@ -502,6 +523,7 @@ os.ui.slick.SlickTreeNode.prototype.getDisableFolder = function() {
 
 /**
  * Set whether to override the folder disable on the tree.
+ *
  * @param {boolean} value
  */
 os.ui.slick.SlickTreeNode.prototype.setDisableFolder = function(value) {

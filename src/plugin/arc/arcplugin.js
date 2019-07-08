@@ -17,6 +17,7 @@ goog.require('plugin.arc.state.v2.arcstate');
 
 /**
  * Plugin for arc server support in opensphere.
+ *
  * @extends {os.plugin.AbstractPlugin}
  * @constructor
  */

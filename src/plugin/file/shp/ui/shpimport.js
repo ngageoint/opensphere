@@ -14,6 +14,7 @@ goog.require('plugin.file.shp.SHPProvider');
 
 /**
  * Controller for the SHP import wizard window
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$timeout} $timeout
@@ -106,12 +107,13 @@ plugin.file.shp.ui.SHPImportCtrl.prototype.createFromConfig = function(config) {
  * @override
  */
 plugin.file.shp.ui.SHPImportCtrl.prototype.updateFromConfig = function(descriptor, config) {
-  plugin.file.shp.SHPDescriptor.updateFromConfig(descriptor, config);
+  descriptor.updateFromConfig(config);
 };
 
 
 /**
  * The SHP import wizard directive.
+ *
  * @return {angular.Directive}
  */
 plugin.file.shp.ui.shpImportDirective = function() {

@@ -1,7 +1,21 @@
 goog.provide('os.annotation');
+goog.provide('os.annotation.TailType');
 
 goog.require('ol.geom.GeometryType');
+goog.require('ol.geom.Point');
+goog.require('os.annotation.TailStyle');
 goog.require('os.ui');
+goog.require('os.ui.color.colorPickerDirective');
+
+
+/**
+ * The SVG tail CSS position.
+ * @enum {string}
+ */
+os.annotation.TailType = {
+  FIXED: 'fixed',
+  ABSOLUTE: 'absolute'
+};
 
 
 /**
@@ -14,8 +28,11 @@ os.annotation.DEFAULT_OPTIONS = {
   show: true,
   showName: true,
   showDescription: true,
+  showTail: os.annotation.TailStyle.DEFAULT,
   size: [200, 100],
-  offset: [0, -75]
+  offset: [0, -75],
+  headerBG: undefined,
+  bodyBG: undefined
 };
 
 
@@ -39,12 +56,33 @@ os.annotation.MAX_DEFAULT_WIDTH = 350;
 
 
 /**
+ * Height of an annotation being edited inline.
+ *
+ * @type {number}
+ * @const
+ */
+os.annotation.EDIT_HEIGHT = 270;
+
+
+/**
+ * Width of an annotation being edited inline.
+ *
+ * @type {number}
+ * @const
+ */
+os.annotation.EDIT_WIDTH = 570;
+
+
+/**
  * Annotation event types.
  * @enum {string}
  */
 os.annotation.EventType = {
   CHANGE: 'annotation:change',
-  EDIT: 'annotation:edit'
+  EDIT: 'annotation:edit',
+  HIDE: 'annotation:hide',
+  LAUNCH_EDIT: 'annotation:launchEdit',
+  UPDATE_PLACEMARK: 'annotation:updatePlacemark'
 };
 
 
@@ -58,6 +96,7 @@ os.annotation.OPTIONS_FIELD = '_annotationOptions';
 
 /**
  * Generate annotation options to display the given text.
+ *
  * @param {osx.annotation.Options} options The options.
  * @param {string} text The annotation text.
  */
@@ -78,6 +117,7 @@ os.annotation.scaleToText = function(options, text) {
 
 /**
  * Get the name text for an annotation balloon.
+ *
  * @param {ol.Feature} feature The feature.
  * @return {string} The text.
  */
@@ -92,13 +132,14 @@ os.annotation.getNameText = function(feature) {
 
 /**
  * Get the description text for an annotation balloon.
+ *
  * @param {ol.Feature} feature The feature.
  * @return {string} The text.
  */
 os.annotation.getDescriptionText = function(feature) {
   if (feature) {
     return /** @type {string|undefined} */ (feature.get(os.ui.FeatureEditCtrl.Field.MD_DESCRIPTION)) ||
-        /** @type {string|undefined} */ (feature.get(os.ui.FeatureEditCtrl.Field.DESCRIPTION)) || '';
+    /** @type {string|undefined} */ (feature.get(os.ui.FeatureEditCtrl.Field.DESCRIPTION)) || '';
   }
 
   return '';
@@ -107,6 +148,7 @@ os.annotation.getDescriptionText = function(feature) {
 
 /**
  * If a feature has a map overlay present.
+ *
  * @param {ol.Feature} feature The feature.
  * @return {boolean}
  */
@@ -124,8 +166,12 @@ os.annotation.hasOverlay = function(feature) {
 
 /**
  * Set the target map position for an overlay.
+ *
  * @param {!ol.Overlay} overlay The overlay.
  * @param {ol.Feature} feature The feature. Use null to hide the overlay.
+ *
+ * @suppress {accessControls} To allow access to overlay.setVisible(), which is needed to fix an initial
+ *                            positioning edge case.
  */
 os.annotation.setPosition = function(overlay, feature) {
   var position;
@@ -133,9 +179,61 @@ os.annotation.setPosition = function(overlay, feature) {
   if (feature) {
     var geometry = feature.getGeometry();
     if (geometry && geometry.getType() === ol.geom.GeometryType.POINT) {
+      // nothing fancy for points, just use the coordinate
       position = /** @type {ol.geom.Point} */ (geometry).getFirstCoordinate();
+    } else {
+      // for non-point geometries, calculate the nearest point to the overlay
+      overlay.setVisible(true);
+
+      var map = overlay.getMap();
+      var element = overlay.getElement();
+
+      if (map && element) {
+        var mapRect = os.annotation.getMapRect(overlay);
+        var cardRect = element.getBoundingClientRect();
+        cardRect.x -= mapRect.x;
+        cardRect.y -= mapRect.y;
+
+        var cardCenter = [cardRect.x + cardRect.width / 2, cardRect.y + cardRect.height / 2];
+        var coordinate = map.getCoordinateFromPixel(cardCenter);
+
+        if (!coordinate) {
+          // TODO: when the card is off the edge of the map/globe, the nearestPoints method from JSTS blows up.
+          // Fixing this correctly will require reimplementing the method to work in screen space. Instead, just
+          // stop updating the anchor point until the annotation is back over the map.
+          return;
+        }
+
+        var cardGeometry = new ol.geom.Point(coordinate);
+
+        if (cardGeometry && geometry) {
+          var coords = os.geo.jsts.nearestPoints(cardGeometry, geometry);
+          position = coords[1];
+        }
+      }
     }
   }
 
   overlay.setPosition(position);
+};
+
+
+/**
+ * Get the OpenLayers map bounding rectangle.
+ *
+ * @param {ol.Overlay} overlay The overlay to get the map rectangle from.
+ * @return {ClientRect|undefined} The map bounding rectangle, or undefined if the map/overlay are not defined.
+ */
+os.annotation.getMapRect = function(overlay) {
+  if (overlay) {
+    var map = overlay.getMap();
+    if (map) {
+      var mapEl = map.getTargetElement();
+      if (mapEl) {
+        return mapEl.getBoundingClientRect();
+      }
+    }
+  }
+
+  return undefined;
 };

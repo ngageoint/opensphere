@@ -25,7 +25,7 @@ os.histo.UniqueBinMethod = function() {
    * @type {string}
    * @protected
    */
-  this.type = 'Unique';
+  this.type = os.histo.UniqueBinMethod.TYPE;
 
   /**
    * @type {?function(T, string):*}
@@ -38,7 +38,21 @@ os.histo.UniqueBinMethod = function() {
    * @protected
    */
   this.arrayKeys = false;
+
+  /**
+   * The items processed by this bin method should be considered dates
+   * @type {boolean}
+   * @protected
+   */
+  this.isDate = false;
 };
+
+
+/**
+ * @type {string}
+ * @const
+ */
+os.histo.UniqueBinMethod.TYPE = 'Unique';
 
 
 /**
@@ -136,11 +150,11 @@ os.histo.UniqueBinMethod.prototype.getLabelForKey = function(key, opt_secondary,
   if (typeof key === 'string' && key.indexOf(os.data.xf.DataModel.SEPARATOR) >= 0) {
     // this key is in a bin that represents the intersection of two values; split them apart with the separator
     key = !opt_secondary ? key.split(os.data.xf.DataModel.SEPARATOR)[0] :
-        key.split(os.data.xf.DataModel.SEPARATOR)[1];
+      key.split(os.data.xf.DataModel.SEPARATOR)[1];
   }
 
   if (Number(key) === os.histo.NumericBinMethod.MAGIC_EMPTY) {
-    return 'No ' + this.field;
+    return opt_smallLabel ? '-NONE-' : 'No ' + this.field;
   }
 
   return key.toString();
@@ -175,8 +189,9 @@ os.histo.UniqueBinMethod.prototype.persist = function(opt_to) {
 
   opt_to['type'] = this.getBinType();
   opt_to['field'] = this.getField();
+  opt_to['isDate'] = this.getIsDate();
   opt_to['arrayKeys'] = this.getArrayKeys();
-  opt_to['valueFunction'] = this.getValueFunction();
+
   return opt_to;
 };
 
@@ -189,19 +204,19 @@ os.histo.UniqueBinMethod.prototype.restore = function(config) {
   if (typeof field === 'string') {
     this.setField(field);
   }
+  var isDate = /** @type {boolean} */ (config['isDate']);
+  this.setIsDate(isDate);
+
   var arrayKeys = /** @type {boolean|string|undefined} */ (config['arrayKeys']);
   if (typeof arrayKeys === 'boolean' || typeof arrayKeys === 'string') {
     this.setArrayKeys(arrayKeys);
-  }
-  var valueFunction = /** @type {function(T, string):*|undefined} */ (config['valueFunction']);
-  if (typeof valueFunction === 'function') {
-    this.setValueFunction(valueFunction);
   }
 };
 
 
 /**
  * Clones the bin method.
+ *
  * @return {os.histo.UniqueBinMethod}
  */
 os.histo.UniqueBinMethod.prototype.clone = function() {
@@ -300,7 +315,24 @@ os.histo.UniqueBinMethod.prototype.setArrayKeys = function(value) {
 
 
 /**
+ * @inheritDoc
+ */
+os.histo.UniqueBinMethod.prototype.getIsDate = function() {
+  return this.isDate;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.histo.UniqueBinMethod.prototype.setIsDate = function(value) {
+  this.isDate = value;
+};
+
+
+/**
  * Get the filter for an individual bin.
+ *
  * @param {!os.histo.Bin} bin The bin
  * @return {string} The filter
  * @protected
@@ -318,6 +350,7 @@ os.histo.UniqueBinMethod.prototype.getFilterForBin = function(bin) {
 
 /**
  * Test if a value is contained within a set of values. Avoided ol.array.includes to prevent an extra function call.
+ *
  * @param {!Array<string>} values
  * @param {string} value
  * @return {boolean}

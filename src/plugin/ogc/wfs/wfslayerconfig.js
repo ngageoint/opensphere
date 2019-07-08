@@ -232,6 +232,7 @@ plugin.ogc.wfs.WFSLayerConfig.prototype.featureTypeAvailable = function(layer, o
 
 /**
  * Adds mappings
+ *
  * @param {os.layer.Vector} layer
  * @param {Object.<string, *>} options
  * @protected
@@ -311,8 +312,12 @@ plugin.ogc.wfs.WFSLayerConfig.prototype.addMappings = function(layer, options) {
   }
 
   // tell the importer we want to run a different set of autodetection mappers
-  importer.selectAutoMappings([os.im.mapping.AltMapping.ID, os.im.mapping.RadiusMapping.ID,
-    os.im.mapping.SemiMajorMapping.ID, os.im.mapping.SemiMinorMapping.ID]);
+  importer.selectAutoMappings([
+    os.im.mapping.AltMapping.ID,
+    os.im.mapping.RadiusMapping.ID,
+    os.im.mapping.OrientationMapping.ID,
+    os.im.mapping.SemiMajorMapping.ID,
+    os.im.mapping.SemiMinorMapping.ID]);
 };
 
 
@@ -426,6 +431,7 @@ plugin.ogc.wfs.WFSLayerConfig.prototype.getLayer = function(source, options) {
 
 /**
  * CSV sources are not lockable.
+ *
  * @inheritDoc
  */
 plugin.ogc.wfs.WFSLayerConfig.prototype.getSource = function(options) {

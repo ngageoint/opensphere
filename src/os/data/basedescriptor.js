@@ -18,6 +18,7 @@ goog.require('os.metrics.keys');
 
 /**
  * The base implementation of a data descriptor
+ *
  * @extends {goog.events.EventTarget}
  * @implements {os.data.IDataDescriptor}
  * @implements {os.data.ISearchable}
@@ -324,6 +325,7 @@ os.data.BaseDescriptor.prototype.getType = function() {
 
 /**
  * Sets the type of the descriptor
+ *
  * @param {?string} value The type
  */
 os.data.BaseDescriptor.prototype.setType = function(value) {
@@ -340,8 +342,9 @@ os.data.BaseDescriptor.prototype.getColumns = function() {
 
 
 /**
- * Sets the color of the descriptor
- * @param {?Array<os.data.ColumnDefinition>} value The color
+ * Sets the column definitions of the descriptor
+ *
+ * @param {?Array<os.data.ColumnDefinition>} value The column definitions
  */
 os.data.BaseDescriptor.prototype.setColumns = function(value) {
   this.columns_ = value;
@@ -358,6 +361,7 @@ os.data.BaseDescriptor.prototype.getColor = function() {
 
 /**
  * Sets the color of the descriptor
+ *
  * @param {?string} value The color
  */
 os.data.BaseDescriptor.prototype.setColor = function(value) {
@@ -400,6 +404,7 @@ os.data.BaseDescriptor.prototype.getMaxDate = function() {
 
 /**
  * Sets the maximum date
+ *
  * @param {number} value The maximum date
  */
 os.data.BaseDescriptor.prototype.setMaxDate = function(value) {
@@ -417,6 +422,7 @@ os.data.BaseDescriptor.prototype.getMinDate = function() {
 
 /**
  * Sets the minimum date
+ *
  * @param {number} value The minimum date
  */
 os.data.BaseDescriptor.prototype.setMinDate = function(value) {
@@ -434,6 +440,7 @@ os.data.BaseDescriptor.prototype.getDeleteTime = function() {
 
 /**
  * Sets the delete time
+ *
  * @param {number} value The delete time
  */
 os.data.BaseDescriptor.prototype.setDeleteTime = function(value) {
@@ -496,6 +503,7 @@ os.data.BaseDescriptor.prototype.setActive = function(value) {
  * {@link os.data.BaseDescriptor#onDescriptorReady} when all tasks complete, whether they succeed or fail.
  *
  * If these tasks are asynchronous, this function should return false
+ *
  * @return {boolean} If the descriptor state has been finalized
  * @protected
  */
@@ -506,6 +514,7 @@ os.data.BaseDescriptor.prototype.setActiveInternal = function() {
 
 /**
  * Fire events when all activation/deactivation tasks have completed.
+ *
  * @protected
  */
 os.data.BaseDescriptor.prototype.onDescriptorReady = function() {
@@ -524,6 +533,7 @@ os.data.BaseDescriptor.prototype.onDescriptorReady = function() {
 
 /**
  * Records descriptor activate/deactivate metrics.
+ *
  * @protected
  */
 os.data.BaseDescriptor.prototype.recordActivationMetric = function() {
@@ -566,6 +576,7 @@ os.data.BaseDescriptor.prototype.isLoading = function() {
 
 /**
  * Sets the loading state
+ *
  * @param {boolean} value
  */
 os.data.BaseDescriptor.prototype.setLoading = function(value) {
@@ -746,6 +757,7 @@ os.data.BaseDescriptor.prototype.updateActiveFromTemp = function() {
 
 /**
  * Compares descriptors by title.
+ *
  * @param {os.data.IDataDescriptor} a A descriptor
  * @param {os.data.IDataDescriptor} b Another descriptor
  * @return {number} The comparison
@@ -757,6 +769,7 @@ os.data.BaseDescriptor.titleCompare = function(a, b) {
 
 /**
  * Compares descriptors by title.
+ *
  * @param {os.data.IDataDescriptor} a A descriptor
  * @param {os.data.IDataDescriptor} b Another descriptor
  * @return {number} The comparison
@@ -776,6 +789,7 @@ os.data.BaseDescriptor.lastActive = function(a, b) {
 
 /**
  * Compares descriptors by title.
+ *
  * @param {os.data.IDataDescriptor} a A descriptor
  * @param {os.data.IDataDescriptor} b Another descriptor
  * @return {number} The comparison

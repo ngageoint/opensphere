@@ -8,6 +8,7 @@ goog.require('os.style.label');
 
 /**
  * Changes the label field for a feature
+ *
  * @param {string} layerId
  * @param {string} featureId
  * @param {Array<os.style.label.LabelConfig>} value

@@ -17,6 +17,7 @@ goog.require('os.ui.window');
 
 /**
  * Base controller for viewing/editing filter action entries.
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @extends {os.ui.slick.AbstractGroupByTreeSearchCtrl}
@@ -111,6 +112,7 @@ os.ui.im.action.FilterActionsCtrl.prototype.disposeInternal = function() {
 
 /**
  * Apply changes.
+ *
  * @export
  */
 os.ui.im.action.FilterActionsCtrl.prototype.apply = function() {
@@ -120,6 +122,7 @@ os.ui.im.action.FilterActionsCtrl.prototype.apply = function() {
 
 /**
  * Close the window, discarding any pending changes.
+ *
  * @export
  */
 os.ui.im.action.FilterActionsCtrl.prototype.close = function() {
@@ -129,6 +132,7 @@ os.ui.im.action.FilterActionsCtrl.prototype.close = function() {
 
 /**
  * Save the filter action entries to the manager.
+ *
  * @protected
  */
 os.ui.im.action.FilterActionsCtrl.prototype.saveEntries = function() {
@@ -149,6 +153,7 @@ os.ui.im.action.FilterActionsCtrl.prototype.saveEntries = function() {
 
 /**
  * Get the list of filter columns.
+ *
  * @return {!Array} The columns.
  * @protected
  */
@@ -159,6 +164,7 @@ os.ui.im.action.FilterActionsCtrl.prototype.getColumns = function() {
 
 /**
  * Get the initial file name to use for export.
+ *
  * @return {string} The file name.
  * @protected
  */
@@ -169,6 +175,7 @@ os.ui.im.action.FilterActionsCtrl.prototype.getExportName = function() {
 
 /**
  * Edit an action entry. If no entry is provided, a new one will be created.
+ *
  * @param {os.im.action.FilterActionEntry<T>=} opt_entry The import action entry.
  * @abstract
  * @export
@@ -178,6 +185,7 @@ os.ui.im.action.FilterActionsCtrl.prototype.editEntry = function(opt_entry) {};
 
 /**
  * Handle node event to copy an entry.
+ *
  * @param {angular.Scope.Event} event The Angular event.
  * @param {os.im.action.FilterActionEntry<T>} entry The import action entry.
  * @param {number} parentIndex The parent index.
@@ -194,6 +202,7 @@ os.ui.im.action.FilterActionsCtrl.prototype.onCopyEvent = function(event, entry,
 
 /**
  * Handle node event to edit an entry.
+ *
  * @param {angular.Scope.Event} event The Angular event.
  * @param {os.im.action.FilterActionEntry<T>} entry The import action entry.
  */
@@ -208,6 +217,7 @@ os.ui.im.action.FilterActionsCtrl.prototype.onEditEvent = function(event, entry)
 
 /**
  * Handle tree order change event.
+ *
  * @param {angular.Scope.Event} event The Angular event.
  * @protected
  */
@@ -219,6 +229,7 @@ os.ui.im.action.FilterActionsCtrl.prototype.onOrderChange = function(event) {
 
 /**
  * Handle node event to remove an entry.
+ *
  * @param {angular.Scope.Event} event The Angular event.
  * @param {os.im.action.FilterActionEntry<T>} entry The import action entry.
  */
@@ -234,6 +245,7 @@ os.ui.im.action.FilterActionsCtrl.prototype.onRemoveEvent = function(event, entr
 
 /**
  * If there is at least one selected entry.
+ *
  * @return {boolean} If one or more selected entries are available.
  * @export
  */
@@ -244,6 +256,7 @@ os.ui.im.action.FilterActionsCtrl.prototype.hasSelected = function() {
 
 /**
  * Launch the export dialog.
+ *
  * @export
  */
 os.ui.im.action.FilterActionsCtrl.prototype.launchExport = function() {
@@ -264,6 +277,7 @@ os.ui.im.action.FilterActionsCtrl.prototype.launchExport = function() {
 
 /**
  * Launch the import dialog.
+ *
  * @export
  */
 os.ui.im.action.FilterActionsCtrl.prototype.launchImport = function() {

@@ -25,8 +25,11 @@ osx.annotation;
  *   show: boolean,
  *   showName: boolean,
  *   showDescription: boolean,
+ *   showTail: string,
  *   size: !Array<number>,
- *   offset: !Array<number>
+ *   offset: !Array<number>,
+ *   headerBG: (string|undefined),
+ *   bodyBG: (string|undefined)
  * }}
  */
 osx.annotation.Options;
@@ -416,3 +419,18 @@ osx.cesium.WMSTerrainLayerOptions;
  * }}
  */
 osx.cesium.WMSTerrainProviderOptions;
+
+/**
+ * Namespace
+ * @type {Object}
+ */
+osx.column;
+
+/**
+ * @typedef {{
+ *   column: string,
+ *   layer: string,
+ *   units: (string|undefined)
+ * }}
+ */
+osx.column.ColumnModel;

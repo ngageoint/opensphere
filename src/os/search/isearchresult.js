@@ -4,6 +4,7 @@ goog.provide('os.search.ISearchResult');
 
 /**
  * Interface representing a ranked search result. Results with higher rankings will appear first in search results.
+ *
  * @interface
  * @template T
  */
@@ -50,13 +51,6 @@ os.search.ISearchResult.prototype.setScore;
  * @return {string}
  */
 os.search.ISearchResult.prototype.getSearchUI;
-
-
-/**
- * Set the interface used to render the search result.
- * @param {string} value
- */
-os.search.ISearchResult.prototype.setSearchUI;
 
 
 /**

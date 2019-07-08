@@ -5,6 +5,7 @@ goog.require('os.defines');
 
 /**
  * The OpenSphere top nav bar.
+ *
  * @return {angular.Directive}
  */
 os.ui.osNavTopDirective = function() {

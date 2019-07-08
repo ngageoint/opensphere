@@ -15,6 +15,7 @@ goog.require('os.metrics.Metrics');
  * This should only be used for layers that do not have a descriptor. Layers will a synchronized descriptor should use
  * {@link os.data.AbstractDescriptor} instead.
  *
+ * @abstract
  * @param {(Object<string, *>)=} opt_options The configuration for the map layer.
  * @implements {os.command.ICommand}
  * @extends {goog.Disposable}
@@ -46,19 +47,22 @@ os.command.AbstractLayer.prototype.disposeInternal = function() {
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.command.AbstractLayer.prototype.execute = goog.abstractMethod;
+os.command.AbstractLayer.prototype.execute = function() {};
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.command.AbstractLayer.prototype.revert = goog.abstractMethod;
+os.command.AbstractLayer.prototype.revert = function() {};
 
 
 /**
  * Checks if the command is ready to execute.
+ *
  * @return {boolean}
  */
 os.command.AbstractLayer.prototype.canExecute = function() {
@@ -91,6 +95,7 @@ os.command.AbstractLayer.prototype.canExecute = function() {
 
 /**
  * Adds the layer to the map.
+ *
  * @param {Object<string, *>} options
  * @return {boolean} If the add succeeded or not.
  */
@@ -124,6 +129,7 @@ os.command.AbstractLayer.prototype.add = function(options) {
 
 /**
  * Removes the layer from the map.
+ *
  * @param {Object<string, *>} options
  * @return {boolean} If the remove succeeded or not.
  */

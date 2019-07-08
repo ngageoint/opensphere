@@ -7,6 +7,7 @@ goog.require('os.ui.Module');
 
 /**
  * Shows if a tile layer is loading
+ *
  * @return {angular.Directive}
  */
 os.ui.node.tileLoadingDirective = function() {
@@ -29,6 +30,7 @@ os.ui.Module.directive('tileloading', [os.ui.node.tileLoadingDirective]);
 
 /**
  * Controller for tile loading UI
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @constructor
@@ -64,6 +66,7 @@ os.ui.node.TileLoadingCtrl = function($scope, $element) {
 
 /**
  * Clean up
+ *
  * @private
  */
 os.ui.node.TileLoadingCtrl.prototype.onDestroy_ = function() {
@@ -77,6 +80,7 @@ os.ui.node.TileLoadingCtrl.prototype.onDestroy_ = function() {
 
 /**
  * Handles the loading property change
+ *
  * @param {os.events.PropertyChangeEvent} e The change event
  * @private
  */
@@ -92,6 +96,7 @@ os.ui.node.TileLoadingCtrl.prototype.onPropertyChange_ = function(e) {
 
 /**
  * Gets the text to show for the tile layer.
+ *
  * @return {string}
  */
 os.ui.node.TileLoadingCtrl.prototype.getText = function() {

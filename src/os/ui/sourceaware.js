@@ -13,6 +13,7 @@ goog.require('os.data.event.DataEventType');
  * Abstract class for UI's that need to be aware of what sources are available and visible in the application.
  * Extending classes must call init to load/monitor sources.
  *
+ * @abstract
  * @deprecated Please use `os.data.SourceManager` instead.
  * @extends {goog.Disposable}
  * @constructor
@@ -98,6 +99,7 @@ os.ui.SourceAware.prototype.disposeInternal = function() {
 
 /**
  * Initialize the sources
+ *
  * @protected
  */
 os.ui.SourceAware.prototype.init = function() {
@@ -136,6 +138,7 @@ os.ui.SourceAware.prototype.removeSource = function(source) {
 
 /**
  * Registers change listener on a source.
+ *
  * @param {os.source.ISource} source
  * @private
  */
@@ -150,6 +153,7 @@ os.ui.SourceAware.prototype.addSourceListener_ = function(source) {
 
 /**
  * Removes change listener on a source.
+ *
  * @param {os.source.ISource} source
  * @private
  */
@@ -188,6 +192,7 @@ os.ui.SourceAware.prototype.onSourceRemoved_ = function(event) {
 
 /**
  * Handle property change events from a source.
+ *
  * @param {os.events.PropertyChangeEvent|ol.Object.Event} event
  * @protected
  *
@@ -245,6 +250,8 @@ os.ui.SourceAware.prototype.validate_ = function(source) {
 
 /**
  * Update the UI after a source was added/removed/changed.
+ *
+ * @abstract
  * @protected
  */
-os.ui.SourceAware.prototype.updateUI = goog.abstractMethod;
+os.ui.SourceAware.prototype.updateUI = function() {};

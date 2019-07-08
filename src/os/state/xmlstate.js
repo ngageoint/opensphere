@@ -10,6 +10,8 @@ goog.require('os.xml');
 
 /**
  * Base class for XML states.
+ *
+ * @abstract
  * @extends {os.state.AbstractState.<!Element, os.state.XMLStateOptions>}
  * @constructor
  */

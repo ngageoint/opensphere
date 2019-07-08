@@ -43,6 +43,7 @@ os.ui.timeline.TimelineScaleOptions;
 /**
  * The timeline directive. The start-end parameter should be passed in as
  * os.time.TimeRange types for the desired initial behavior of the timeline.
+ *
  * @return {angular.Directive}
  */
 os.ui.timeline.timelineDirective = function() {
@@ -80,26 +81,26 @@ os.ui.Module.directive('timeline', [os.ui.timeline.timelineDirective]);
  * @const
  */
 os.ui.timeline.SNAP_SCALE = [
-  1,      // 1 ms
-  5,      // 5 ms
-  10,     // 10 ms
-  25,     // 25 ms
-  50,     // 50 ms
-  1e2,    // 100 ms
-  5e2,    // 500 ms
-  1e3,    // 1-second
-  5e3,    // 5-second
-  15e3,   // 15-second
-  3e4,    // 30-second
-  6e4,    // 1-minute
-  3e5,    // 5-minute
-  9e5,    // 15-minute
-  18e5,   // 30-minute
-  36e5,   // 1-hour
-  108e5,  // 3-hour
-  216e5,  // 6-hour
-  432e5,  // 12-hour
-  864e5,  // 1-day
+  1, // 1 ms
+  5, // 5 ms
+  10, // 10 ms
+  25, // 25 ms
+  50, // 50 ms
+  1e2, // 100 ms
+  5e2, // 500 ms
+  1e3, // 1-second
+  5e3, // 5-second
+  15e3, // 15-second
+  3e4, // 30-second
+  6e4, // 1-minute
+  3e5, // 5-minute
+  9e5, // 15-minute
+  18e5, // 30-minute
+  36e5, // 1-hour
+  108e5, // 3-hour
+  216e5, // 6-hour
+  432e5, // 12-hour
+  864e5, // 1-day
   1728e5, // 2-day
   6048e5, // 1-week
   12096e5, // 2-week
@@ -113,6 +114,7 @@ os.ui.timeline.SNAP_SCALE = [
 /**
  * Normalizes extents that could contain either `Array<number>` or `Array<Date>`
  * to `Array<number>`.
+ *
  * @param {Array<number|Date>} extent
  * @return {Array<number>} The normalized extent
  */
@@ -155,6 +157,7 @@ os.ui.timeline.FormatFn;
 
 /**
  * The format function
+ *
  * @param {Date} d The date
  * @return {number} The value
  */
@@ -165,6 +168,7 @@ os.ui.timeline.formatMillis = function(d) {
 
 /**
  * The format function
+ *
  * @param {Date} d The date
  * @return {number} The value
  */
@@ -175,6 +179,7 @@ os.ui.timeline.formatSeconds = function(d) {
 
 /**
  * The format function
+ *
  * @param {Date} d The date
  * @return {number} The value
  */
@@ -185,6 +190,7 @@ os.ui.timeline.formatMinutes = function(d) {
 
 /**
  * The format function
+ *
  * @param {Date} d The date
  * @return {number} The value
  */
@@ -195,6 +201,7 @@ os.ui.timeline.formatHours = function(d) {
 
 /**
  * The format function
+ *
  * @param {Date} d The date
  * @return {boolean} The value
  */
@@ -205,6 +212,7 @@ os.ui.timeline.formatDate = function(d) {
 
 /**
  * The format function
+ *
  * @param {Date} d The date
  * @return {number} The value
  */
@@ -215,6 +223,7 @@ os.ui.timeline.formatMonth = function(d) {
 
 /**
  * The format function
+ *
  * @return {boolean} The value
  */
 os.ui.timeline.trueFunction = function() {
@@ -250,6 +259,7 @@ os.ui.timeline.DragPan = {
 
 /**
  * Controller function for the timeline directive.
+ *
  * @constructor
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
@@ -493,6 +503,7 @@ os.ui.timeline.TimelineCtrl.HANDLE_HEIGHT = 15;
 
 /**
  * Initiates watches and calls the render loop
+ *
  * @private
  */
 os.ui.timeline.TimelineCtrl.prototype.init_ = function() {
@@ -510,6 +521,7 @@ os.ui.timeline.TimelineCtrl.prototype.init_ = function() {
 
 /**
  * Destroys a brush collection
+ *
  * @param {Object} brushCollection
  * @private
  */
@@ -528,6 +540,7 @@ os.ui.timeline.TimelineCtrl.prototype.destroyBrushCollection_ = function(brushCo
 
 /**
  * Destroy the directive.
+ *
  * @private
  */
 os.ui.timeline.TimelineCtrl.prototype.destroy_ = function() {
@@ -565,7 +578,7 @@ os.ui.timeline.TimelineCtrl.prototype.destroy_ = function() {
   }
 
   if (this.tooltip_) {
-    d3.selectAll('.c-histogram-tooltip').remove();
+    d3.selectAll('.js-timeline-tooltip').remove();
     this.tooltip_ = null;
   }
 
@@ -586,6 +599,7 @@ os.ui.timeline.TimelineCtrl.prototype.destroy_ = function() {
 
 /**
  * Extract input parameters from scope to initialize the timeline
+ *
  * @private
  */
 os.ui.timeline.TimelineCtrl.prototype.initTime_ = function() {
@@ -604,6 +618,7 @@ os.ui.timeline.TimelineCtrl.prototype.initTime_ = function() {
 
 /**
  * Handle changes to scope.histData.
+ *
  * @param {?function(new: os.ui.hist.IHistogramChart, !Element)=} opt_new
  * @param {?function(new: os.ui.hist.IHistogramChart, !Element)=} opt_old
  * @private
@@ -623,6 +638,7 @@ os.ui.timeline.TimelineCtrl.prototype.onHistClassChange_ = function(opt_new, opt
 
 /**
  * Handle changes to scope.histData.
+ *
  * @param {?Array<!os.hist.HistogramData>=} opt_new
  * @param {?Array<!os.hist.HistogramData>=} opt_old
  * @private
@@ -637,6 +653,7 @@ os.ui.timeline.TimelineCtrl.prototype.onHistDataChange_ = function(opt_new, opt_
 
 /**
  * Handle changes to scope.startEnd. This will update the displayed start/end date on the timeline.
+ *
  * @param {os.time.TimeRange=} opt_new
  * @param {os.time.TimeRange=} opt_old
  * @private
@@ -659,6 +676,7 @@ os.ui.timeline.TimelineCtrl.prototype.onStartEndChange_ = function(opt_new, opt_
 
 /**
  * Handles changes to the time offset
+ *
  * @param {os.events.PropertyChangeEvent} e
  * @private
  */
@@ -669,6 +687,7 @@ os.ui.timeline.TimelineCtrl.prototype.onOffsetChange_ = function(e) {
 
 /**
  * Update the timeline from the DOM element size.
+ *
  * @private
  */
 os.ui.timeline.TimelineCtrl.prototype.updateSize_ = function() {
@@ -692,6 +711,7 @@ os.ui.timeline.TimelineCtrl.prototype.updateSize_ = function() {
 
 /**
  * Sets the starting times to default values when they can't be extracted from settings.
+ *
  * @private
  */
 os.ui.timeline.TimelineCtrl.prototype.setTime_ = function() {
@@ -708,6 +728,7 @@ os.ui.timeline.TimelineCtrl.prototype.setTime_ = function() {
 
 /**
  * Gets the closest snap interval to the given target
+ *
  * @param {number} target
  * @return {number} snap
  */
@@ -726,6 +747,7 @@ os.ui.timeline.TimelineCtrl.getSnap = function(target) {
 
 /**
  * Gets the ticks
+ *
  * @return {Array<Date>}
  */
 os.ui.timeline.TimelineCtrl.prototype.getTicks = function() {
@@ -793,6 +815,7 @@ os.ui.timeline.TimelineCtrl.prototype.getTicks = function() {
 
 /**
  * Calculates the correct element height - sometimes it is larger due to a race condition with rendering the dom
+ *
  * @return {number}
  * @private
  */
@@ -943,7 +966,8 @@ os.ui.timeline.TimelineCtrl.prototype.initSvg = function() {
   // initialize the histogram tooltip if the tip function is available
   if (this.scope_['histTip']) {
     this.tooltip_ = d3.tip();
-    this.tooltip_.attr('class', 'c-histogram-tooltip').offset([-10, 0]).html(this.scope_['histTip']);
+    this.tooltip_.attr('class', 'js-timeline-tooltip c-histogram-tooltip')
+        .offset([-10, 0]).html(this.scope_['histTip']);
     this.tooltip_(this.baseElement_);
   }
 
@@ -1005,6 +1029,7 @@ os.ui.timeline.TimelineCtrl.prototype.initSvg = function() {
 /**
  * Handles click logic for hiding and showing the current time text
  * In FF the front most element gets the click, in Chrome both elements get the click, so adjust accordingly
+ *
  * @private
  */
 os.ui.timeline.TimelineCtrl.prototype.toggleVisible_ = function() {
@@ -1025,6 +1050,7 @@ os.ui.timeline.TimelineCtrl.prototype.toggleVisible_ = function() {
 
 /**
  * Handles drag-to-pan start for items on edges
+ *
  * @param {os.ui.timeline.DragPanEvent} event
  * @private
  */
@@ -1037,6 +1063,7 @@ os.ui.timeline.TimelineCtrl.prototype.onDragPanStart_ = function(event) {
 
 /**
  * Handles drag-to-pan stop for items on edges
+ *
  * @private
  */
 os.ui.timeline.TimelineCtrl.prototype.onDragPanStop_ = function() {
@@ -1047,6 +1074,7 @@ os.ui.timeline.TimelineCtrl.prototype.onDragPanStop_ = function() {
 
 /**
  * Handles the drag-to-pan timer tick
+ *
  * @private
  */
 os.ui.timeline.TimelineCtrl.prototype.onDragPanTick_ = function() {
@@ -1069,6 +1097,7 @@ os.ui.timeline.TimelineCtrl.prototype.onDragPanTick_ = function() {
 
 /**
  * Gets the points for a polygon backing the x and y axis.
+ *
  * @param {number} height
  * @param {number} width
  * @return {string}
@@ -1092,6 +1121,7 @@ os.ui.timeline.TimelineCtrl.prototype.getAxisBgPoints_ = function(height, width)
 
 /**
  * Fires a timeline.Scale event with the necessary options.
+ *
  * @private
  */
 os.ui.timeline.TimelineCtrl.prototype.fireScaleEvent_ = function() {
@@ -1131,6 +1161,7 @@ os.ui.timeline.TimelineCtrl.prototype.drawHistogram_ = function() {
 
 /**
  * Zooms a bit about the center
+ *
  * @param {number} dir The direction (1 or -1)
  * @param {number=} opt_focus The x value to focus (keep still) while zooming
  * @private
@@ -1183,6 +1214,7 @@ os.ui.timeline.TimelineCtrl.prototype.zoomOut = function() {
 
 /**
  * Pan a bit
+ *
  * @param {number} pixels The number of pixels to pan
  * @private
  */
@@ -1212,6 +1244,7 @@ os.ui.timeline.TimelineCtrl.prototype.panRight = function() {
 
 /**
  * Handles mouse wheel zoom
+ *
  * @param {goog.events.MouseWheelEvent} event
  * @private
  */
@@ -1226,6 +1259,7 @@ os.ui.timeline.TimelineCtrl.prototype.onZoom_ = function(event) {
 
 /**
  * Jumps the window to the spot
+ *
  * @private
  */
 os.ui.timeline.TimelineCtrl.prototype.onJump_ = function() {
@@ -1242,6 +1276,7 @@ os.ui.timeline.TimelineCtrl.prototype.onJump_ = function() {
 
 /**
  * Rescales the start/end parameters for the timeline. Called when panning and zooming the timeline.
+ *
  * @private
  */
 os.ui.timeline.TimelineCtrl.prototype.rescale_ = function() {
@@ -1258,6 +1293,7 @@ os.ui.timeline.TimelineCtrl.prototype.rescale_ = function() {
 
 /**
  * Handles item change
+ *
  * @param {os.events.PropertyChangeEvent} e
  * @private
  */
@@ -1270,6 +1306,7 @@ os.ui.timeline.TimelineCtrl.prototype.onItemChange_ = function(e) {
 
 /**
  * Updates the x and y axes and removes the first (bottom) element from the y axis. Because it's dumb.
+ *
  * @private
  */
 os.ui.timeline.TimelineCtrl.prototype.updateAxes_ = function() {
@@ -1284,6 +1321,7 @@ os.ui.timeline.TimelineCtrl.prototype.updateAxes_ = function() {
 
 /**
  * Calculates the snap and histogram intervals
+ *
  * @private
  */
 os.ui.timeline.TimelineCtrl.prototype.calculateIntervals_ = function() {
@@ -1314,6 +1352,7 @@ os.ui.timeline.TimelineCtrl.prototype.calculateIntervals_ = function() {
 
 /**
  * Updates the timeline items
+ *
  * @private
  */
 os.ui.timeline.TimelineCtrl.prototype.updateItems_ = function() {
@@ -1355,6 +1394,7 @@ os.ui.timeline.TimelineCtrl.prototype.updateItems_ = function() {
 
 /**
  * Rounds a time (in milliseconds) to the skip value.
+ *
  * @param {number} time
  * @return {number}
  * @private
@@ -1367,6 +1407,7 @@ os.ui.timeline.TimelineCtrl.prototype.roundExtent_ = function(time) {
 
 /**
  * Set the start time and refresh the timeline to reflect the new value.
+ *
  * @param {os.time.ITime|goog.date.DateLike|string|number} value
  */
 os.ui.timeline.TimelineCtrl.prototype.setStart = function(value) {
@@ -1377,6 +1418,7 @@ os.ui.timeline.TimelineCtrl.prototype.setStart = function(value) {
 
 /**
  * Set the end time and refresh the timeline to reflect the new value.
+ *
  * @param {os.time.ITime|goog.date.DateLike|string|number} value
  */
 os.ui.timeline.TimelineCtrl.prototype.setEnd = function(value) {
@@ -1387,6 +1429,7 @@ os.ui.timeline.TimelineCtrl.prototype.setEnd = function(value) {
 
 /**
  * Zooms the timeline to the extent of the given item
+ *
  * @param {os.ui.timeline.ITimelineItem|string} item The item or item ID to jump to
  */
 os.ui.timeline.TimelineCtrl.prototype.zoomToItem = function(item) {
@@ -1402,6 +1445,7 @@ os.ui.timeline.TimelineCtrl.prototype.zoomToItem = function(item) {
 
 /**
  * Zooms to an extent
+ *
  * @param {Array<number>} extent
  */
 os.ui.timeline.TimelineCtrl.prototype.zoomToExtent = function(extent) {
@@ -1422,6 +1466,7 @@ os.ui.timeline.TimelineCtrl.prototype.zoomToExtent = function(extent) {
 
 /**
  * Pans the timeline center to the center of the item
+ *
  * @param {os.ui.timeline.ITimelineItem|string} item The item or item ID to pan to
  */
 os.ui.timeline.TimelineCtrl.prototype.panToItem = function(item) {
@@ -1437,6 +1482,7 @@ os.ui.timeline.TimelineCtrl.prototype.panToItem = function(item) {
 
 /**
  * Pans to an extent
+ *
  * @param {Array<number>} extent
  */
 os.ui.timeline.TimelineCtrl.prototype.panToExtent = function(extent) {
@@ -1496,6 +1542,7 @@ os.ui.timeline.TimelineCtrl.prototype.setDomain_ = function(targetDomain, opt_cl
 
 /**
  * Gets an item by ID from the list of items
+ *
  * @param {string} id The ID to search for
  * @return {?os.ui.timeline.ITimelineItem} The item or null if it cannot be found
  */
@@ -1512,6 +1559,7 @@ os.ui.timeline.TimelineCtrl.prototype.getItem = function(id) {
 
 /**
  * Append dragging classes to the timeline background element
+ *
  * @private
  */
 os.ui.timeline.TimelineCtrl.prototype.styleDragStart_ = function() {
@@ -1521,6 +1569,7 @@ os.ui.timeline.TimelineCtrl.prototype.styleDragStart_ = function() {
 
 /**
  * Remove dragging classes from the timeline background element
+ *
  * @private
  */
 os.ui.timeline.TimelineCtrl.prototype.styleDragEnd_ = function() {
@@ -1545,6 +1594,7 @@ os.ui.timeline.TimelineCtrl.prototype.onArrowsChange_ = function(e) {
 
 /**
  * Handler for animation brush collection changes
+ *
  * @private
  */
 os.ui.timeline.TimelineCtrl.prototype.sliceBrushCollectionChanged_ = function() {
@@ -1554,6 +1604,7 @@ os.ui.timeline.TimelineCtrl.prototype.sliceBrushCollectionChanged_ = function() 
 
 /**
  * Handler for animation brush collection changes
+ *
  * @private
  */
 os.ui.timeline.TimelineCtrl.prototype.loadBrushCollectionChanged_ = function() {
@@ -1563,6 +1614,7 @@ os.ui.timeline.TimelineCtrl.prototype.loadBrushCollectionChanged_ = function() {
 
 /**
  * Handler for animation brush collection changes
+ *
  * @private
  */
 os.ui.timeline.TimelineCtrl.prototype.animationBrushCollectionChanged_ = function() {
@@ -1572,6 +1624,7 @@ os.ui.timeline.TimelineCtrl.prototype.animationBrushCollectionChanged_ = functio
 
 /**
  * Handler for hold brush collection changes
+ *
  * @private
  */
 os.ui.timeline.TimelineCtrl.prototype.holdBrushCollectionChanged_ = function() {
@@ -1581,6 +1634,7 @@ os.ui.timeline.TimelineCtrl.prototype.holdBrushCollectionChanged_ = function() {
 
 /**
  * Handles changes to to timeline brushes.
+ *
  * @param {Array<os.ui.timeline.Brush>} brushes
  * @private
  */

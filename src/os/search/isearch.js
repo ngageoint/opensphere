@@ -5,6 +5,7 @@ goog.require('goog.events.Listenable');
 
 /**
  *  The base interface for executing a search.
+ *
  *  @extends {goog.events.Listenable}
  *  @interface
  */
@@ -30,7 +31,7 @@ os.search.ISearch.prototype.search;
 /**
  * Cancels any pending requests
  */
-os.search.ISearch.prototype.cancel = goog.abstractMethod;
+os.search.ISearch.prototype.cancel;
 
 
 /**

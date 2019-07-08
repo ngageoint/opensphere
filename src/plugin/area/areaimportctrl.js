@@ -7,6 +7,7 @@ goog.require('plugin.area');
 
 /**
  * Abstract controller for importing areas from a file.
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$timeout} $timeout The Angular $timeout service.
@@ -23,6 +24,7 @@ goog.inherits(plugin.area.AreaImportCtrl, os.ui.query.AreaImportCtrl);
 
 /**
  * Get the filename for the source file.
+ *
  * @return {string|undefined}
  * @protected
  */
@@ -33,6 +35,7 @@ plugin.area.AreaImportCtrl.prototype.getFileName = function() {
 
 /**
  * Process imported features.
+ *
  * @param {Array<ol.Feature>} features
  * @protected
  */

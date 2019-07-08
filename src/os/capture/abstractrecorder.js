@@ -11,6 +11,7 @@ goog.require('os.capture.IRecorder');
 /**
  * Abstract class for creating a recording.
  *
+ * @abstract
  * @implements {os.capture.IRecorder}
  * @extends {goog.events.EventTarget}
  * @constructor
@@ -133,9 +134,10 @@ os.capture.AbstractRecorder.prototype.abort = function(opt_msg) {
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.capture.AbstractRecorder.prototype.record = goog.abstractMethod;
+os.capture.AbstractRecorder.prototype.record = function() {};
 
 
 /**
@@ -148,6 +150,7 @@ os.capture.AbstractRecorder.prototype.setEncoder = function(value) {
 
 /**
  * Set the error message and dispatch the error event.
+ *
  * @param {string} msg The error message
  * @param {Error=} opt_error The caught error
  * @protected
@@ -166,6 +169,7 @@ os.capture.AbstractRecorder.prototype.handleError = function(msg, opt_error) {
 
 /**
  * Set the progress for the recorder and fire an event.
+ *
  * @param {number} value The new progress value.
  * @protected
  */
@@ -177,6 +181,7 @@ os.capture.AbstractRecorder.prototype.setProgress = function(value) {
 
 /**
  * Set the status for the recorder and fire an event.
+ *
  * @param {string} value The new status value.
  * @protected
  */
@@ -188,6 +193,7 @@ os.capture.AbstractRecorder.prototype.setStatus = function(value) {
 
 /**
  * Handle viewport resize.
+ *
  * @param {goog.events.Event} event
  * @protected
  */

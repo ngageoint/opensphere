@@ -9,6 +9,7 @@ goog.require('os.command.State');
 /**
  * Abstract command for adding/removing KML nodes.
  *
+ * @abstract
  * @param {!plugin.file.kml.ui.KMLNode} node The KML node
  * @param {plugin.file.kml.ui.KMLNode} parent The parent node
  *
@@ -44,15 +45,17 @@ goog.inherits(plugin.file.kml.cmd.AbstractKMLNode, goog.Disposable);
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-plugin.file.kml.cmd.AbstractKMLNode.prototype.execute = goog.abstractMethod;
+plugin.file.kml.cmd.AbstractKMLNode.prototype.execute = function() {};
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-plugin.file.kml.cmd.AbstractKMLNode.prototype.revert = goog.abstractMethod;
+plugin.file.kml.cmd.AbstractKMLNode.prototype.revert = function() {};
 
 
 /**
@@ -75,6 +78,7 @@ plugin.file.kml.cmd.AbstractKMLNode.prototype.disposeInternal = function() {
 
 /**
  * Checks if the command is ready to execute.
+ *
  * @return {boolean}
  */
 plugin.file.kml.cmd.AbstractKMLNode.prototype.canExecute = function() {
@@ -113,6 +117,7 @@ plugin.file.kml.cmd.AbstractKMLNode.prototype.canExecute = function() {
 
 /**
  * Adds the node to the parent.
+ *
  * @return {boolean} If the add succeeded or not.
  */
 plugin.file.kml.cmd.AbstractKMLNode.prototype.add = function() {
@@ -138,6 +143,7 @@ plugin.file.kml.cmd.AbstractKMLNode.prototype.add = function() {
 
 /**
  * Removes the node from its parent.
+ *
  * @return {boolean} If the remove succeeded or not.
  */
 plugin.file.kml.cmd.AbstractKMLNode.prototype.remove = function() {

@@ -8,6 +8,7 @@ goog.require('plugin.cesium.tiles.Provider');
 
 /**
  * Cesium 3D tiles descriptor.
+ *
  * @extends {os.data.FileDescriptor}
  * @constructor
  */
@@ -62,6 +63,7 @@ plugin.cesium.tiles.Descriptor.prototype.getLayerOptions = function() {
 
 /**
  * Set the Ion asset configuration.
+ *
  * @param {number} assetId The asset id.
  * @param {string=} opt_accessToken The access token.
  */
@@ -107,39 +109,27 @@ plugin.cesium.tiles.Descriptor.prototype.restore = function(conf) {
 
 /**
  * Creates a new descriptor from a parser configuration.
+ *
  * @param {!Object} config
  * @return {!plugin.cesium.tiles.Descriptor}
  */
 plugin.cesium.tiles.Descriptor.createFromConfig = function(config) {
-  var file = /** @type {os.file.File|undefined} */ (config['file']);
-  var provider = plugin.cesium.tiles.Provider.getInstance();
   var descriptor = new plugin.cesium.tiles.Descriptor();
-  descriptor.setId(provider.getUniqueId());
-  descriptor.setProvider(provider.getLabel());
-
-  if (file) {
-    descriptor.setUrl(file.getUrl());
-  }
-
-  plugin.cesium.tiles.Descriptor.updateFromConfig(descriptor, config);
-
+  var provider = plugin.cesium.tiles.Provider.getInstance();
+  os.data.FileDescriptor.createFromConfig(descriptor, provider, /** @type {!os.parse.FileParserConfig} */ (config));
   return descriptor;
 };
 
 
 /**
- * Updates an existing descriptor from a parser configuration.
- * @param {!plugin.cesium.tiles.Descriptor} descriptor
- * @param {!Object} config
+ * @inheritDoc
  */
-plugin.cesium.tiles.Descriptor.updateFromConfig = function(descriptor, config) {
-  descriptor.setColor(config['color']);
-  descriptor.setDescription(config['description']);
-  descriptor.setTitle(config['title']);
-  descriptor.setTags(config['tags'] ? config['tags'].split(/\s*,\s*/) : null);
+plugin.cesium.tiles.Descriptor.prototype.updateFromConfig = function(config, opt_useConfigForParser) {
+  plugin.cesium.tiles.Descriptor.base(this, 'updateFromConfig',
+      /** @type {!os.parse.FileParserConfig} */ (config), true);
 
   if (typeof config['assetId'] == 'number') {
-    descriptor.setIonConfig(
+    this.setIonConfig(
         /** @type {number} */ (config['assetId']),
         /** @type {string|undefined} */ (config['accessToken']));
   }

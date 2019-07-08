@@ -99,7 +99,7 @@ goog.addSingletonGetter(os.style.StyleManager);
 
 
 /**
- * @param {Object} config
+ * @param {!Object<string, *>} config
  * @return {?ol.style.Style}
  */
 os.style.StyleManager.prototype.getOrCreateStyle = function(config) {
@@ -120,6 +120,7 @@ os.style.StyleManager.prototype.toConfig = function(style) {
 
 /**
  * Get a style reader by id
+ *
  * @param {string} id The reader id
  * @return {os.style.IStyleReader|undefined} The reader, if registered
  */

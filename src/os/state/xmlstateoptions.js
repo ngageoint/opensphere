@@ -5,6 +5,7 @@ goog.require('os.state.StateOptions');
 
 /**
  * Options for saving and loading state files as XML.
+ *
  * @param {string} title The state title
  * @param {Document=} opt_doc The state XML document
  * @extends {os.state.StateOptions}

@@ -6,14 +6,17 @@ goog.require('ol.geom.GeometryType');
 goog.require('ol.geom.LineString');
 goog.require('ol.geom.MultiLineString');
 goog.require('os.array');
+goog.require('os.easing');
 goog.require('os.extent');
 goog.require('os.geom.GeometryField');
 goog.require('os.mixin.geometry');
 goog.require('os.query.utils');
 
 
+
 /**
  * @typedef {function(number, number, number, number)}
+ * @deprecated Please use os.easing.EasingFunction instead
  */
 os.geo.EasingFunction;
 
@@ -110,10 +113,10 @@ os.geo.COORD_CLEANER = /[^NEWSnews\d\s.\-,]/g;
 
 /**
  * The parse config for os.geoUtils
+ *
  * @constructor
  * @param {RegExp} regex The regular expression for parsing
- * @param {Array<{deg: number, min: number, sec: number, dir: number}>}
- * coords The coords array
+ * @param {Array<{deg: number, min: number, sec: number, dir: number}>} coords The coords array
  */
 os.geo.ParseConf = function(regex, coords) {
   this.regex = regex;
@@ -848,6 +851,7 @@ os.geo.parseLatLon = function(str, opt_order, opt_format) {
 
 /**
  * Returns a specific config, with the relaxed standard
+ *
  * @param {number} order
  * @param {string=} opt_format Custom format string
  * @return {Array<os.geo.ParseConf>}
@@ -1069,6 +1073,7 @@ os.geo.parseLat = function(str, opt_format) {
 
 /**
  * Parses a deg, min, sec, and direction string into a proper decimal coordinate
+ *
  * @param {string} deg The degrees
  * @param {string} min The minutes
  * @param {string} sec The seconds
@@ -1165,6 +1170,7 @@ os.geo.parse_ = function(deg, min, sec, dir) {
 
 /**
  * Interpolates an arc defined by center point, radius, and angleRange with a defined number of points.
+ *
  * @param {Array<number>} center Center coordinates in [lon, lat] format
  * @param {number} radius Radius of the arc in meters
  * @param {number} angleRange range of angle to draw arc in degrees (clockwise from north)
@@ -1190,6 +1196,7 @@ os.geo.interpolateArc = function(center, radius, angleRange, opt_startAngle, opt
 
 /**
  * Interpolates a circle defined by center point and radius as a polygon with a defined number of points per quadrant.
+ *
  * @param {Array<number>} center Center coordinates in [lon, lat] format
  * @param {number} radius Radius of the circle.
  * @param {number=} opt_pointsPerQuad Number of points per quadrant, defaulting to 10.
@@ -1288,6 +1295,7 @@ os.geo.convertEllipseValue = function(value) {
 
 /**
  * Calculates an ending location from a location, distance, and bearing using Vincenty's algorithm.
+ *
  * @param {Array<number>} location The start location
  * @param {number} distance The distance from the start location in kilometers
  * @param {number} bearing The bearing (in degrees) where north is 0
@@ -1347,6 +1355,7 @@ os.geo.calculateEndLocation = function(location, distance, bearing, opt_ellipsoi
 
 /**
  * Borrowed this from OL3 since they removed it. :(
+ *
  * @param {Array<number>} c1 Coordinate 1.
  * @param {Array<number>} c2 Coordinate 2.
  * @param {os.geo.Ellipsoid=} opt_ellipsoid The ellipsoid
@@ -1497,24 +1506,26 @@ os.geo.vincentyInitialBearing = function(c1, c2, opt_ellipsoid, opt_minDeltaLamb
 
 /**
  * Gets the appropriate easing function for the provided ellipse axes.
+ *
  * @param {number} a Semi-major axis of the ellipse.
  * @param {number} b Semi-minor axis of the ellipse.
- * @return {os.geo.EasingFunction} The easing function to use.
+ * @return {os.easing.EasingFunction} The easing function to use.
  * @private
  */
 os.geo.getEllipseEasingFunction_ = function(a, b) {
   var f = Math.max(a, b) / Math.min(a, b);
 
   if (f < 1.2) {
-    return os.geo.easeLinear;
+    return os.easing.easeLinear;
   }
 
-  return os.geo.easeExpo;
+  return os.easing.easeExpo;
 };
 
 
 /**
  * Tests to see if the coordinate array is closed (the first coordinate is the same as the last).
+ *
  * @param {Array<Array<number>>} coords The coordinate array
  * @return {boolean} If the first coordinate is the same as the last
  */
@@ -1534,6 +1545,7 @@ os.geo.isClosed = function(coords) {
 
 /**
  * Tests to see if a set of coordinates represent a polygon.
+ *
  * @param {Array<Array<number>>} coords The coordinate array
  * @return {boolean} If the set of coordinates represent a polygon
  */
@@ -1545,6 +1557,7 @@ os.geo.isPolygon = function(coords) {
 
 /**
  * Calculates the center point of a set of polygonal coordinates.
+ *
  * @param {Array<Array<number>>} coords The coordinate array
  * @return {Array<number>} If the set of coordinates represent a polygon
  */
@@ -1568,6 +1581,7 @@ os.geo.calculateCenter = function(coords) {
 
 /**
  * Tests to see if a set of coordinates represent a rectangle.
+ *
  * @param {Array<Array<number>>} coords The coordinate array of the os.geometry
  * @param {Array<number>} extent The extent of the os.geometry as [minx, miny, maxx, maxy]
  * @return {boolean} If the set of coordinates is rectangular
@@ -1606,6 +1620,7 @@ os.geo.isRectangular = function(coords, extent) {
 
 /**
  * Tests if a geometry is rectangular.
+ *
  * @param {ol.geom.Geometry|undefined} geometry The geometry to test
  * @return {boolean} If the geometry is rectangular.
  */
@@ -1624,6 +1639,7 @@ os.geo.isGeometryRectangular = function(geometry) {
 
 /**
  * Tests if a geometry is polygonal.
+ *
  * @param {ol.geom.Geometry|undefined} geometry The geometry to test
  * @return {boolean} If the feature/geometry is a polygon or multipolygon.
  */
@@ -1639,6 +1655,7 @@ os.geo.isGeometryPolygonal = function(geometry) {
 
 /**
  * Tests to see if any coordinate in coords has an altitude value.
+ *
  * @param {Array<Array<number>>} coords The coordinate array of the os.geometry
  * @param {boolean=} opt_quick if true, only the 1st coordinate is checked.
  * @return {boolean} If coords has an element with altitude.
@@ -1662,6 +1679,7 @@ os.geo.hasAltitude = function(coords, opt_quick) {
 
 /**
  * Tests to see if the geometry has altitude.
+ *
  * @param {ol.geom.Geometry|undefined} geometry
  * @param {boolean=} opt_quick if true, only the 1st coordinate is checked.
  * @return {boolean} If geometry has coordinates with altitude.
@@ -1775,6 +1793,7 @@ os.geo.hasAltitudeGeometry = function(geometry, opt_quick) {
 
 /**
  * Returns the average of the altitude component for all coordinates in coords.
+ *
  * @param {Array<Array<number>>} coords The coordinate array of the geometry
  * @return {number} Average of altitude compoments.
  */
@@ -1799,6 +1818,7 @@ os.geo.getAverageAltitude = function(coords) {
 
 /**
  * Tests to see if two coordinates are in the same spot.
+ *
  * @param {Array<number>} c1 The first coordinate
  * @param {Array<number>} c2 The second coordinate
  * @return {boolean} If the coordinates are the same
@@ -1814,6 +1834,7 @@ os.geo.isSameCoordinate = function(c1, c2) {
 
 /**
  * Pads a coordinate value to 2 or 3 digits with an optional precision for decimal values.
+ *
  * @param {number} n The coordinate value
  * @param {boolean=} opt_isLon If n is a longitudinal value (pads to 3 digits if true, 2 if false)
  * @param {number=} opt_precision Decimal precision
@@ -1831,6 +1852,7 @@ os.geo.padCoordinate = function(n, opt_isLon, opt_precision) {
 
 /**
  * Parses a coordinate value into sexagesimal format.
+ *
  * @param {number} coordinate The coordinate
  * @param {boolean=} opt_isLon If the coordinate is a longitudinal value
  * @param {boolean=} opt_symbols If symbols should be displayed
@@ -1855,6 +1877,7 @@ os.geo.toSexagesimal = function(coordinate, opt_isLon, opt_symbols, opt_decimalS
 
 /**
  * Parses a coordinate value into Degrees Decimal Minutes (DDM) format.
+ *
  * @param {number} coordinate The coordinate
  * @param {boolean=} opt_isLon If the coordinate is a longitudinal value
  * @param {boolean=} opt_symbols If symbols should be displayed
@@ -1875,6 +1898,7 @@ os.geo.toDegreesDecimalMinutes = function(coordinate, opt_isLon, opt_symbols) {
 
 /**
  * Normalizes a latitude value to the given range
+ *
  * @param {number} lat
  * @return {number}
  * @deprecated Please use os.geo2.normalizeLatitude instead as it does not require conversion to/from lonlat before/after
@@ -1886,6 +1910,7 @@ os.geo.normalizeLatitude = function(lat) {
 
 /**
  * Takes a length 4 array of numbers (extent) and converts it to polygon coordinates
+ *
  * @param {!Array<number>} extent
  * @return {!Array<!Array<number>>}
  */
@@ -1900,6 +1925,7 @@ os.geo.extentToCoordinates = function(extent) {
 
 /**
  * Normalizes a longitude value to the given range
+ *
  * @param {number} lon
  * @param {number=} opt_min
  * @param {number=} opt_max
@@ -1921,7 +1947,7 @@ os.geo.normalizeLongitude = function(lon, opt_min, opt_max) {
     return lon;
   } else {
     return lon > 180 ? ((lon + 180) % 360) - 180 :
-        lon < -180 ? ((lon - 180) % 360) + 180 :
+      lon < -180 ? ((lon - 180) % 360) + 180 :
         lon;
   }
 };
@@ -1930,6 +1956,7 @@ os.geo.normalizeLongitude = function(lon, opt_min, opt_max) {
 /**
  * Determines if target crosses the dateline/
  * anti-meridian. Array format [xmin, ymin, xmax, ymax]
+ *
  * @param {Array<number>|ol.geom.Geometry|ol.Feature} target
  * @return {boolean}
  * @suppress {deprecated}
@@ -1994,6 +2021,7 @@ os.geo.crossesDateLine = function(target) {
 
 /**
  * Normalize a set of coordinates.
+ *
  * @param {?Array<Array<number>>} coordinates The coordinates to normalize.
  * @param {number=} opt_to The longitude to normalize to.
  * @deprecated Please use os.geo2.noralizeCoordinates instead as it does not require conversion to/from lonlat before/after
@@ -2014,6 +2042,7 @@ os.geo.normalizeCoordinates = function(coordinates, opt_to) {
 
 /**
  * Normalize polygon rings.
+ *
  * @param {?Array<?Array<Array<number>>>} rings The rings to normalize.
  * @param {number=} opt_to The longitude to normalize to.
  * @deprecated Please use os.geo2.normalizeRings instead as it does not require conversion to/from lonlat before/after
@@ -2043,6 +2072,7 @@ os.geo.normalizePolygons = function(polys, opt_to) {
 
 /**
  * Returns true if geometry coordinates are normlized.
+ *
  * @param {ol.geom.Geometry|undefined} geometry The geometry to normalize.
  * @param {number=} opt_to The longitude to normalize to.
  * @return {boolean} If the geometry was normalized.
@@ -2084,7 +2114,7 @@ os.geo.normalizeGeometryCoordinates = function(geometry, opt_to) {
       case ol.geom.GeometryType.MULTI_POLYGON:
         var multiPolygon = /** @type {ol.geom.MultiPolygon } */ (geometry);
         var polygons = /** @type {?Array<?Array<?Array<Array<number>>>>} */ (
-            multiPolygon.getCoordinates());
+          multiPolygon.getCoordinates());
 
         os.geo.normalizePolygons(polygons, opt_to);
         multiPolygon.setCoordinates(polygons);
@@ -2108,87 +2138,82 @@ os.geo.normalizeGeometryCoordinates = function(geometry, opt_to) {
 
 /**
  * Linear easing function
+ *
  * @param {number} t The current step (out of the total duration)
  * @param {number} b The start value or offset
  * @param {number} c The amount to change the start value
  * @param {number} d The duration or total number of steps
  * @return {number}
+ * @deprecated Please use os.easing.easeLinear instead
  */
 os.geo.easeLinear = function(t, b, c, d) {
-  t /= d;
-  return c * t + b;
+  return os.easing.easeLinear(t, b, c, d);
 };
 
 
 /**
  * Quintic easing function
+ *
  * @param {number} t The current step (out of the total duration)
  * @param {number} b The start value or offset
  * @param {number} c The amount to change the start value
  * @param {number} d The duration or total number of steps
  * @return {number}
+ * @deprecated Please use os.easing.easeQuintic instead
  */
 os.geo.easeQuintic = function(t, b, c, d) {
-  t /= d;
-  t--;
-  return c * (t * t * t * t * t + 1) + b;
+  return os.easing.easeQuintic(t, b, c, d);
 };
 
 
 /**
  * Quartic easing function
+ *
  * @param {number} t The current step (out of the total duration)
  * @param {number} b The start value or offset
  * @param {number} c The amount to change the start value
  * @param {number} d The duration or total number of steps
  * @return {number}
+ * @deprecated Please use os.easing.easeQuartic instead
  */
 os.geo.easeQuartic = function(t, b, c, d) {
-  t = t / (d / 2);
-  if (t < 1) {
-    return c * t * t * t * t / 2 + b;
-  }
-  t -= 2;
-  return -c * (t * t * t * t - 2) / 2 + b;
+  return os.easing.easeQuartic(t, b, c, d);
 };
 
 
 /**
  * Exponential easing function
+ *
  * @param {number} t The current step (out of the total duration)
  * @param {number} b The start value or offset
  * @param {number} c The amount to change the start value
  * @param {number} d The duration or total number of steps
  * @return {number}
+ * @deprecated Please use os.easing.easeExpo instead
  */
 os.geo.easeExpo = function(t, b, c, d) {
-  t = t / (d / 2);
-  if (t < 1) {
-    return c * Math.pow(2, 10 * (t - 1)) / 2 + b;
-  }
-  t--;
-  return c * (-Math.pow(2, -10 * t) + 2) / 2 + b;
+  return os.easing.easeExpo(t, b, c, d);
 };
 
 
 /**
- * Circular easing function
+ * Circular easing function (this is CircleIn, not CircleOut)
+ *
  * @param {number} t The current step (out of the total duration)
  * @param {number} b The start value or offset
  * @param {number} c The amount to change the start value
  * @param {number} d The duration or total number of steps
  * @return {number}
+ * @deprecated Please use os.easing.easeCircular instead
  */
 os.geo.easeCircular = function(t, b, c, d) {
-  t /= d;
-  return -c * (Math.sqrt(1 - t * t) - 1) + b;
+  return os.easing.easeCircular(t, b, c, d);
 };
-
-// TODO: implement the cubic and sinusoidal easing functions
 
 
 /**
  * Test if a coordinate is inside an area bound by the provided vertices.
+ *
  * @param {number} x Coordinate x value.
  * @param {number} y Coordinate y value.
  * @param {Array<number>} vertX The x values for vertices in the area.
@@ -2277,6 +2302,7 @@ os.geo.isPolarPolygon = function(coordinates) {
 
 /**
  * Does this extent have valid lat lon min/max values?
+ *
  * @param {ol.Extent} extent
  * @return {boolean}
  * @suppress {deprecated}
@@ -2295,6 +2321,7 @@ os.geo.isValidExtent = function(extent) {
 
 /**
  * Stringifies an extent with the format `<minY>, <minX>, <maxY>, <maxX>`
+ *
  * @param {ol.Extent} extent
  * @param {number=} opt_precision
  * @return {string}
@@ -2339,6 +2366,7 @@ os.geo.isCCW = function(coords) {
  * Determine if we should normalize these Coordinates
  * If the set of coordinates are fully outside of -180 to 180, then normalize it
  * If its a mixture, don't so it shows across the dateline correctly
+ *
  * @param {Array<Array<number>>} coords
  * @return {boolean} - if true, normalize the polygon
  */
@@ -2381,6 +2409,7 @@ os.geo.D2R = Math.PI / 180;
 
 /**
  * Flatten geometry collections containing a single geometry.
+ *
  * @param {ol.geom.Geometry} geometry The original geometry.
  * @return {ol.geom.Geometry} The flattened geometry.
  */
@@ -2399,6 +2428,7 @@ os.geo.flattenGeometry = function(geometry) {
 /**
  * Merges a `ol.geom.MultiLineString` geometry across the date line. Assumes the geometry was created by
  * `os.geo.splitOnDateLine`.
+ *
  * @param {!(ol.geom.LineString|ol.geom.MultiLineString)} geometry The line geometry.
  * @return {!ol.geom.LineString} The merged line.
  */
@@ -2435,6 +2465,7 @@ os.geo.mergeLineGeometry = function(geometry) {
 
 /**
  * Splits a geometry across the date line.
+ *
  * @param {!ol.geom.Geometry} geometry The geometry.
  * @return {!ol.geom.Geometry} The split geometry, or the original if it couldn't be split.
  */
@@ -2472,6 +2503,7 @@ os.geo.splitOnDateLine = function(geometry) {
 
 /**
  * Create a line or multiline, depending on how many segments are provided.
+ *
  * @param {!Array<!Array<!ol.Coordinate>>} segments The line segments.
  * @param {ol.geom.GeometryLayout} layout The geometry layout.
  * @return {!(ol.geom.LineString|ol.geom.MultiLineString)} The line or multiline.
@@ -2479,13 +2511,14 @@ os.geo.splitOnDateLine = function(geometry) {
  */
 os.geo.createLineFromSegments_ = function(segments, layout) {
   return segments.length > 1 ?
-      new ol.geom.MultiLineString(segments, layout) :
-      new ol.geom.LineString(segments[0], layout);
+    new ol.geom.MultiLineString(segments, layout) :
+    new ol.geom.LineString(segments[0], layout);
 };
 
 
 /**
  * Splits a line geometry across the date line, returning the split coordinates.
+ *
  * @param {!ol.geom.LineString} geometry The line geometry.
  * @return {!Array<!Array<!ol.Coordinate>>} The split line coordinates.
  * @private
@@ -2533,6 +2566,7 @@ os.geo.splitLineOnDateLine_ = function(geometry) {
 
 /**
  * Splits a multiline geometry across the date line, returning the split coordinates.
+ *
  * @param {!ol.geom.MultiLineString} geometry The multiline geometry.
  * @return {!Array<!Array<!ol.Coordinate>>} The split line coordinates.
  * @private

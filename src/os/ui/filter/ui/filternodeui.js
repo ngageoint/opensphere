@@ -10,6 +10,7 @@ goog.require('os.ui.slick.AbstractNodeUICtrl');
 
 /**
  * The selected/highlighted node UI directive for filters
+ *
  * @return {angular.Directive}
  */
 os.ui.filter.ui.filterNodeUIDirective = function() {
@@ -40,6 +41,7 @@ os.ui.Module.directive('filternodeui', [os.ui.filter.ui.filterNodeUIDirective]);
 
 /**
  * Controller for selected/highlighted node UI
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @extends {os.ui.slick.AbstractNodeUICtrl}
@@ -54,6 +56,7 @@ goog.inherits(os.ui.filter.ui.FilterNodeUICtrl, os.ui.slick.AbstractNodeUICtrl);
 
 /**
  * Removes the filter
+ *
  * @export
  */
 os.ui.filter.ui.FilterNodeUICtrl.prototype.remove = function() {
@@ -66,6 +69,7 @@ os.ui.filter.ui.FilterNodeUICtrl.prototype.remove = function() {
 
 /**
  * Is this filter able to be editted
+ *
  * @return {boolean}
  * @export
  */
@@ -77,6 +81,7 @@ os.ui.filter.ui.FilterNodeUICtrl.prototype.canEdit = function() {
 
 /**
  * Edits the filter
+ *
  * @export
  */
 os.ui.filter.ui.FilterNodeUICtrl.prototype.edit = function() {
@@ -88,6 +93,7 @@ os.ui.filter.ui.FilterNodeUICtrl.prototype.edit = function() {
 
 /**
  * Whether to show the filter copy glyph
+ *
  * @return {boolean}
  * @export
  */
@@ -102,6 +108,7 @@ os.ui.filter.ui.FilterNodeUICtrl.prototype.canCopy = function() {
 
 /**
  * Copy a thing
+ *
  * @export
  */
 os.ui.filter.ui.FilterNodeUICtrl.prototype.copy = function() {

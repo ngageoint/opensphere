@@ -113,6 +113,7 @@ os.ui.im.ImportProcess.prototype.setConfig = function(value) {
 
 /**
  * Begin the import process.
+ *
  * @return {!goog.async.Deferred} Callback fires when file is imported; errback fires when file fails to import
  */
 os.ui.im.ImportProcess.prototype.begin = function() {
@@ -132,6 +133,7 @@ os.ui.im.ImportProcess.prototype.begin = function() {
 
 /**
  * Configures the import process based on event parameters.
+ *
  * @param {os.ui.im.ImportEvent} event
  */
 os.ui.im.ImportProcess.prototype.setEvent = function(event) {
@@ -161,6 +163,7 @@ os.ui.im.ImportProcess.prototype.setEvent = function(event) {
 
 /**
  * Create URL method.  May be overridden by sub-classes.
+ *
  * @return {!os.file.IFileMethod}
  * @protected
  */
@@ -171,6 +174,7 @@ os.ui.im.ImportProcess.prototype.createUrlMethod = function() {
 
 /**
  * Removes listeners and clears the file reference on the method.
+ *
  * @param {boolean=} opt_dispose If the method should be disposed
  * @private
  */
@@ -190,6 +194,7 @@ os.ui.im.ImportProcess.prototype.methodCleanup_ = function(opt_dispose) {
 
 /**
  * Process the loaded file.
+ *
  * @protected
  */
 os.ui.im.ImportProcess.prototype.processFile = function() {
@@ -201,6 +206,7 @@ os.ui.im.ImportProcess.prototype.processFile = function() {
 
 /**
  * Handle file type available.
+ *
  * @param {?string} type
  * @protected
  */
@@ -235,6 +241,7 @@ os.ui.im.ImportProcess.prototype.invalidFiletype = function() {
 
 /**
  * Look up and launch the import UI for the provided file type.
+ *
  * @param {T=} opt_config Configuration to pass to the UI for re-import cases
  * @return {null} Returning undefined results in causing errors in Deferreds
  * @protected
@@ -289,6 +296,7 @@ os.ui.im.ImportProcess.prototype.importFile = function(opt_config) {
 
 /**
  * Handle file support dialog success.
+ *
  * @param {string=} opt_url The URL if the file was uploaded
  * @private
  */
@@ -313,6 +321,7 @@ os.ui.im.ImportProcess.prototype.onFileSupportSuccess_ = function(opt_url) {
 
 /**
  * Handle file support dialog failure/cancel.
+ *
  * @param {*} errorMsg The failure/cancel message
  * @private
  */
@@ -329,6 +338,7 @@ os.ui.im.ImportProcess.prototype.onFileSupportFailure_ = function(errorMsg) {
 
 /**
  * Aborts the import process and alerts the user to what happened.
+ *
  * @param {string=} opt_msg Optional detailed error message
  * @return {null} Returning undefined results in causing errors in Deferreds
  * @protected
@@ -361,6 +371,7 @@ os.ui.im.ImportProcess.prototype.abortImport = function(opt_msg) {
 
 /**
  * Check if the file is being loaded locally or remotely
+ *
  * @return {boolean} If file the file is being loaded locally
  * @protected
  */
@@ -371,6 +382,7 @@ os.ui.im.ImportProcess.prototype.isLocalImport = function() {
 
 /**
  * Handle the file being ready for import.
+ *
  * @param {goog.events.Event} event
  * @private
  */
@@ -390,6 +402,7 @@ os.ui.im.ImportProcess.prototype.onFileReady_ = function(event) {
 
 /**
  * Handle the user canceling import from the import method.
+ *
  * @param {goog.events.Event=} opt_event
  * @private
  */
@@ -401,6 +414,7 @@ os.ui.im.ImportProcess.prototype.onFileCancel_ = function(opt_event) {
 
 /**
  * Check if a local file is already loaded in the application.
+ *
  * @return {boolean}
  * @protected
  */
@@ -415,6 +429,7 @@ os.ui.im.ImportProcess.prototype.fileExists = function() {
 
 /**
  * Check if a remote file is already loaded in the application.
+ *
  * @return {boolean}
  * @protected
  */
@@ -425,6 +440,7 @@ os.ui.im.ImportProcess.prototype.urlExists = function() {
 
 /**
  * Alerts the user that a matching local file is already loaded in the application.
+ *
  * @protected
  */
 os.ui.im.ImportProcess.prototype.onFileExists = function() {
@@ -434,6 +450,7 @@ os.ui.im.ImportProcess.prototype.onFileExists = function() {
 
 /**
  * Alerts the user that a matching remote file is already loaded in the application.
+ *
  * @protected
  */
 os.ui.im.ImportProcess.prototype.onUrlExists = function() {

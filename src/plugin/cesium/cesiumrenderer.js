@@ -10,6 +10,7 @@ goog.require('plugin.cesium');
 goog.require('plugin.cesium.Camera');
 goog.require('plugin.cesium.TerrainLayer');
 goog.require('plugin.cesium.TileGridTilingScheme');
+goog.require('plugin.cesium.command.FlyToSphere');
 goog.require('plugin.cesium.interaction');
 goog.require('plugin.cesium.mixin');
 goog.require('plugin.cesium.sync.RootSynchronizer');
@@ -17,6 +18,7 @@ goog.require('plugin.cesium.sync.RootSynchronizer');
 
 /**
  * A WebGL renderer powered by Cesium.
+ *
  * @extends {os.webgl.AbstractWebGLRenderer}
  * @constructor
  */
@@ -80,6 +82,7 @@ plugin.cesium.CesiumRenderer.LOGGER_ = goog.log.getLogger('plugin.cesium.CesiumR
 
 /**
  * Get the Cesium scene object.
+ *
  * @return {Cesium.Scene|undefined}
  */
 plugin.cesium.CesiumRenderer.prototype.getCesiumScene = function() {
@@ -502,6 +505,7 @@ plugin.cesium.CesiumRenderer.prototype.showTerrain = function(value) {
 
 /**
  * Register a new Cesium terrain provider type.
+ *
  * @param {string} type The type id.
  * @param {!plugin.cesium.TerrainProviderFn} factory Factory function to create a terrain provider instance.
  * @protected
@@ -562,6 +566,7 @@ plugin.cesium.CesiumRenderer.prototype.updateTerrainProvider = function() {
 
 /**
  * Clean up the terrain layer.
+ *
  * @private
  */
 plugin.cesium.CesiumRenderer.prototype.removeTerrainLayer_ = function() {
@@ -584,6 +589,7 @@ plugin.cesium.CesiumRenderer.prototype.removeTerrainLayer_ = function() {
 
 /**
  * Create the layer synchronizers for olcs.OLCesium instance.
+ *
  * @param {!ol.Map} map
  * @param {!Cesium.Scene} scene
  * @return {Array<olcs.AbstractSynchronizer>}
@@ -600,6 +606,7 @@ plugin.cesium.CesiumRenderer.prototype.createCesiumSynchronizers_ = function(map
 
 /**
  * Handles Cesium camera move start/end events.
+ *
  * @param {boolean} isMoving If the camera is moving.
  * @private
  */
@@ -632,3 +639,18 @@ plugin.cesium.CesiumRenderer.prototype.getAltitudeModes = function() {
     os.webgl.AltitudeMode.RELATIVE_TO_GROUND
   ];
 };
+
+
+/**
+ * @inheritDoc
+ */
+plugin.cesium.CesiumRenderer.prototype.flyToFeatures = function(features) {
+  var sphere = features.map(os.fn.mapFeatureToGeometry).reduce(plugin.cesium.reduceBoundingSphere, null);
+
+  if (sphere) {
+    var cmd = new plugin.cesium.command.FlyToSphere(sphere);
+    os.commandStack.addCommand(cmd);
+  }
+};
+
+

@@ -5,6 +5,7 @@ goog.require('os.data.FileProvider');
 
 /**
  * GeoJSON file provider
+ *
  * @extends {os.data.FileProvider}
  * @constructor
  */

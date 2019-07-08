@@ -35,6 +35,7 @@ os.GeoMapTestRes;
 
 /**
  * Import wizard geometry step
+ *
  * @extends {os.ui.wiz.step.AbstractWizardStep}
  * @constructor
  */
@@ -244,6 +245,7 @@ os.ui.wiz.GeometryStep.prototype.finalize = function(config) {
 
 /**
  * Creates new mappings from the current step configuration.
+ *
  * @return {Array<os.im.mapping.IMapping>}
  */
 os.ui.wiz.GeometryStep.prototype.createMappings = function() {
@@ -322,6 +324,7 @@ os.ui.wiz.GeometryStep.prototype.createMappings = function() {
 
 /**
  * Update an existing altitude mapping with user selected overrides
+ *
  * @param {os.im.mapping.AltMapping} mapping
  */
 os.ui.wiz.GeometryStep.prototype.updateAltMapping = function(mapping) {
@@ -353,6 +356,7 @@ os.ui.wiz.GeometryStep.prototype.isValid = function(config) {
 
 /**
  * The import wizard geometry step directive
+ *
  * @return {angular.Directive}
  */
 os.ui.wiz.geometryStepDirective = function() {
@@ -375,6 +379,7 @@ os.ui.Module.directive('geometrystep', [os.ui.wiz.geometryStepDirective]);
 
 /**
  * Controller for the import wizard geometry step
+ *
  * @param {!angular.Scope} $scope
  * @constructor
  * @ngInject
@@ -437,6 +442,7 @@ os.ui.wiz.GeometryStepCtrl.prototype.destroy_ = function() {
 
 /**
  * Verifies the provided form data is valid and complete.
+ *
  * @export
  */
 os.ui.wiz.GeometryStepCtrl.prototype.validate = function() {
@@ -543,6 +549,7 @@ os.ui.wiz.GeometryStepCtrl.prototype.validate = function() {
 
 /**
  * Tests a field in preview features against a mapping. Also checks if the field is empty.
+ *
  * @param {os.im.mapping.IMapping} mapping
  * @param {string} field
  * @param {string=} opt_format Custom format string
@@ -569,6 +576,7 @@ os.ui.wiz.GeometryStepCtrl.prototype.testMappingAndEmpty_ = function(mapping, fi
 
 /**
  * Launches the geo formatting help dialog.
+ *
  * @export
  */
 os.ui.wiz.GeometryStepCtrl.prototype.launchHelp = function() {

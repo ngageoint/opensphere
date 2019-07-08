@@ -19,6 +19,7 @@ goog.require('os.ui.uiSwitchDirective');
 
 /**
  * The stateexport window directive
+ *
  * @return {angular.Directive}
  */
 os.ui.metrics.metricsContainerDirective = function() {
@@ -41,6 +42,7 @@ os.ui.Module.directive('metrics', [os.ui.metrics.metricsContainerDirective]);
 
 /**
  * Controller for the save export window
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$timeout} $timeout
@@ -121,6 +123,7 @@ os.ui.metrics.MetricsContainerCtrl.prototype.initRoot = function() {
 
 /**
  * Save the metrics
+ *
  * @export
  */
 os.ui.metrics.MetricsContainerCtrl.prototype.save = function() {

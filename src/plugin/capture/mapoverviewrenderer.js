@@ -8,6 +8,7 @@ goog.require('plugin.capture.MapRenderer');
 
 /**
  * Renders the map overview to a canvas.
+ *
  * @extends {os.ui.capture.CanvasRenderer}
  * @constructor
  */

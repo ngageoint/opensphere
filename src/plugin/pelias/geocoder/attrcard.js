@@ -7,6 +7,7 @@ goog.require('os.ui.Module');
 
 /**
  * The geonames result card directive for displaying search results.
+ *
  * @return {angular.Directive}
  */
 plugin.pelias.geocoder.attrCardDirective = function() {

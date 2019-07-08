@@ -18,6 +18,7 @@ goog.require('os.ui.slick.TreeSearch');
 
 /**
  * Controller for Add Data Window
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @constructor
@@ -88,6 +89,7 @@ os.ui.data.AddDataCtrl = function($scope, $element) {
 
 /**
  * Initializes the tree search.
+ *
  * @return {!os.ui.slick.TreeSearch}
  * @protected
  */
@@ -98,6 +100,7 @@ os.ui.data.AddDataCtrl.prototype.initTreeSearch = function() {
 
 /**
  * Initializes the tree root node.
+ *
  * @return {!os.structs.ITreeNode}
  * @protected
  */
@@ -111,6 +114,7 @@ os.ui.data.AddDataCtrl.prototype.initRoot = function() {
 
 /**
  * Apply a filter function and re-run search
+ *
  * @param {?function(os.structs.ITreeNode):boolean} filterFunc
  */
 os.ui.data.AddDataCtrl.prototype.setFilterFunction = function(filterFunc) {
@@ -121,6 +125,7 @@ os.ui.data.AddDataCtrl.prototype.setFilterFunction = function(filterFunc) {
 
 /**
  * The view options for choosing layers
+ *
  * @return {!Object.<string, ?os.data.groupby.INodeGroupBy>}
  */
 os.ui.data.AddDataCtrl.prototype.getGroupBys = function() {
@@ -130,6 +135,7 @@ os.ui.data.AddDataCtrl.prototype.getGroupBys = function() {
 
 /**
  * on kaput
+ *
  * @protected
  */
 os.ui.data.AddDataCtrl.prototype.onDestroy = function() {
@@ -148,6 +154,7 @@ os.ui.data.AddDataCtrl.prototype.onDestroy = function() {
 
 /**
  * Close the window
+ *
  * @export
  */
 os.ui.data.AddDataCtrl.prototype.close = function() {
@@ -157,6 +164,7 @@ os.ui.data.AddDataCtrl.prototype.close = function() {
 
 /**
  * Check if the base tree is empty (no providers are present).
+ *
  * @return {boolean}
  * @export
  */
@@ -167,6 +175,7 @@ os.ui.data.AddDataCtrl.prototype.isTreeEmpty = function() {
 
 /**
  * Handles updates to the tree
+ *
  * @param {os.events.PropertyChangeEvent} e
  * @protected
  */
@@ -181,12 +190,13 @@ os.ui.data.AddDataCtrl.prototype.onChildrenChanged = function(e) {
 
 /**
  * Starts a search
+ *
  * @export
  */
 os.ui.data.AddDataCtrl.prototype.search = function() {
   if (this.root && this.treeSearch && this.searchDelay_) {
     var list = this.root.getChildren() || [];
-    this.treeSearch.setSearch(/** @type {!Array.<!os.structs.ITreeNode>} */ (list.filter(
+    this.treeSearch.setSearch(/** @type {!Array.<!os.ui.slick.SlickTreeNode>} */ (list.filter(
         os.ui.data.AddDataCtrl.listFilter_)));
     this.searchDelay_.start();
 
@@ -196,7 +206,7 @@ os.ui.data.AddDataCtrl.prototype.search = function() {
 
 
 /**
- * @param {os.data.IDataProvider} item
+ * @param {os.ui.slick.SlickTreeNode} item
  * @param {number} i
  * @param {Array} arr
  * @return {boolean}
@@ -214,16 +224,44 @@ os.ui.data.AddDataCtrl.listFilter_ = function(item, i, arr) {
     }
 
     // exclude providers without children so users don't think they can do something with them (unless flagged)
-    var children = item.getChildren();
-    return item.getShowWhenEmpty() || (!!children && children.length > 0);
+    if (os.ui.data.AddDataCtrl.itemHasChildren_(item)) {
+      return true;
+    } else {
+      return os.ui.data.AddDataCtrl.showWhenEmpty_(item);
+    }
   }
 
   return false;
 };
 
+/**
+ * Check if the item should be shown even if empty.
+ *
+ * @param {os.ui.slick.SlickTreeNode} item
+ * @return {boolean} if should be shown even when empty
+ */
+os.ui.data.AddDataCtrl.showWhenEmpty_ = function(item) {
+  if (os.implements(item, os.data.IDataProvider.ID)) {
+    var dataProviderItem = /** @type {os.data.IDataProvider} */ (item);
+    return dataProviderItem.getShowWhenEmpty();
+  }
+  return false;
+};
+
+/**
+ * Check if a tree node has child nodes.
+ *
+ * @param {os.ui.slick.SlickTreeNode} item
+ * @return {boolean}
+ */
+os.ui.data.AddDataCtrl.itemHasChildren_ = function(item) {
+  var children = item.getChildren();
+  return (!!children && children.length > 0);
+};
 
 /**
  * Handles group by selection change
+ *
  * @export
  */
 os.ui.data.AddDataCtrl.prototype.onGroupByChanged = function() {
@@ -234,6 +272,7 @@ os.ui.data.AddDataCtrl.prototype.onGroupByChanged = function() {
 
 /**
  * Clears the search
+ *
  * @export
  */
 os.ui.data.AddDataCtrl.prototype.clearSearch = function() {
@@ -245,6 +284,7 @@ os.ui.data.AddDataCtrl.prototype.clearSearch = function() {
 
 /**
  * Handles the search timer
+ *
  * @private
  */
 os.ui.data.AddDataCtrl.prototype.onSearch_ = function() {
@@ -269,6 +309,7 @@ os.ui.data.AddDataCtrl.prototype.onSearch_ = function() {
 
 /**
  * Get the content for the info panel
+ *
  * @return {string}
  * @export
  */

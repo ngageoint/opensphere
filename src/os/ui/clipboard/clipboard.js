@@ -3,6 +3,7 @@ goog.provide('os.ui.clipboard');
 
 /**
  * Retrieve data from the clipboard.  Different browsers do it differently, so make it convenient.
+ *
  * @param {Event} event Clipboard is (in good browsers) only accessible within clipboard events
  * @param {string=} opt_type The type of data to retrieve, defaults to 'text'
  * @return {?string} The data or null if not available

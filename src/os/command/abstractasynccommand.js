@@ -9,6 +9,8 @@ goog.require('os.command.State');
 
 /**
  * Abstract asynchronous command implementation.
+ *
+ * @abstract
  * @implements {os.command.ICommand}
  * @extends {goog.events.EventTarget}
  * @constructor
@@ -24,13 +26,15 @@ goog.inherits(os.command.AbstractAsyncCommand, goog.events.EventTarget);
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.command.AbstractAsyncCommand.prototype.execute = goog.abstractMethod;
+os.command.AbstractAsyncCommand.prototype.execute = function() {};
 
 
 /**
  * Mark the command as completed.
+ *
  * @param {string=} opt_detail Optional detail message
  * @return {boolean}
  * @protected
@@ -45,13 +49,14 @@ os.command.AbstractAsyncCommand.prototype.finish = function(opt_detail) {
 
 /**
  * Set the error state.
+ *
  * @param {string} msg The error message.
  * @return {boolean}
  * @protected
  */
 os.command.AbstractAsyncCommand.prototype.handleError = function(msg) {
   var eventType = this.state == os.command.State.REVERTING ? os.command.EventType.REVERTED :
-      os.command.EventType.EXECUTED;
+    os.command.EventType.EXECUTED;
 
   this.state = os.command.State.ERROR;
   this.details = msg;

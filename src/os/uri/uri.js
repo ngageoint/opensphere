@@ -5,6 +5,7 @@ goog.require('goog.Uri.QueryData');
 
 /**
  * Resolve a URI to a fully qualified URI if it's relative, otherwise leave it as is.
+ *
  * @param {!string} uri
  * @return {string}
  */
@@ -12,7 +13,7 @@ os.uri.addBase = function(uri) {
   if (window && window.location) {
     if (!window.location.origin) {
       window.location.origin = window.location.protocol + '//' + window.location.hostname + (window.location.port ?
-          ':' + window.location.port : '');
+        ':' + window.location.port : '');
     }
     var paramUri = new goog.Uri(uri);
     var resultUri = paramUri.hasDomain() ? paramUri : goog.Uri.resolve(window.location.origin, paramUri);
@@ -25,6 +26,7 @@ os.uri.addBase = function(uri) {
 
 /**
  * Get the browser's current URI with the provided query params.
+ *
  * @param {goog.Uri.QueryData} queryData The query params
  * @return {string}
  */

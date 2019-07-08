@@ -6,6 +6,7 @@ goog.require('os.ui.window');
 
 /**
  * Abstract controller for state forms.
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @constructor
@@ -64,6 +65,7 @@ os.ui.state.AbstractStateFormCtrl = function($scope, $element) {
 
 /**
  * Clean up references/listeners.
+ *
  * @protected
  */
 os.ui.state.AbstractStateFormCtrl.prototype.onDestroy = function() {
@@ -74,6 +76,7 @@ os.ui.state.AbstractStateFormCtrl.prototype.onDestroy = function() {
 
 /**
  * Save the state
+ *
  * @export
  */
 os.ui.state.AbstractStateFormCtrl.prototype.accept = function() {
@@ -83,6 +86,7 @@ os.ui.state.AbstractStateFormCtrl.prototype.accept = function() {
 
 /**
  * Close the window
+ *
  * @export
  */
 os.ui.state.AbstractStateFormCtrl.prototype.close = function() {
@@ -92,6 +96,7 @@ os.ui.state.AbstractStateFormCtrl.prototype.close = function() {
 
 /**
  * Toggle all options
+ *
  * @export
  */
 os.ui.state.AbstractStateFormCtrl.prototype.toggleAll = function() {
@@ -103,6 +108,7 @@ os.ui.state.AbstractStateFormCtrl.prototype.toggleAll = function() {
 
 /**
  * Get the state's description.
+ *
  * @param {os.state.IState} state The state
  * @return {string} The description
  * @export
@@ -119,6 +125,7 @@ os.ui.state.AbstractStateFormCtrl.prototype.getDescription = function(state) {
 
 /**
  * Get the state's title.
+ *
  * @param {os.state.IState} state The state
  * @return {string} The title
  * @export

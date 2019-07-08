@@ -10,6 +10,7 @@ goog.require('os.command.State');
 
 /**
  * Runs a set of commands in parallel
+ *
  * @implements {os.command.ICommand}
  * @extends {os.command.AbstractCommandSet}
  * @constructor
@@ -56,6 +57,7 @@ os.command.ParallelCommand.prototype.revert = function() {
 
 /**
  * Runs or reverts the command
+ *
  * @return {boolean} true if all sub-commands return true and do not throw errors, false otherwise
  * @private
  */
@@ -107,6 +109,7 @@ os.command.ParallelCommand.prototype.run_ = function() {
 
 /**
  * Handles command completion
+ *
  * @param {?goog.events.Event} e The event
  * @private
  */

@@ -21,6 +21,7 @@ goog.require('os.ui.urlDragDropDirective');
 
 /**
  * The areas window directive
+ *
  * @return {angular.Directive}
  */
 os.ui.areasDirective = function() {
@@ -44,6 +45,7 @@ os.ui.Module.directive('areas', [os.ui.areasDirective]);
 
 /**
  * Controller for Areas window
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @extends {os.ui.slick.AbstractGroupByTreeSearchCtrl}
@@ -101,6 +103,7 @@ os.ui.AreasCtrl.prototype.disposeInternal = function() {
 
 /**
  * Launches the advanced combination window
+ *
  * @export
  */
 os.ui.AreasCtrl.prototype.launch = function() {
@@ -110,6 +113,7 @@ os.ui.AreasCtrl.prototype.launch = function() {
 
 /**
  * Opens the area import menu.
+ *
  * @export
  */
 os.ui.AreasCtrl.prototype.openImportMenu = function() {
@@ -127,6 +131,7 @@ os.ui.AreasCtrl.prototype.openImportMenu = function() {
 
 /**
  * Disables export button
+ *
  * @return {boolean}
  * @export
  */
@@ -141,6 +146,7 @@ os.ui.AreasCtrl.prototype.exportDisabled = function() {
 
 /**
  * Pop up area export gui
+ *
  * @export
  */
 os.ui.AreasCtrl.prototype.export = function() {
@@ -167,6 +173,7 @@ os.ui.AreasCtrl.prototype.export = function() {
 
 /**
  * Launches the area import window
+ *
  * @param {os.file.File=} opt_file Optional file to use in the import.
  * @export
  */
@@ -177,6 +184,7 @@ os.ui.AreasCtrl.prototype.import = function(opt_file) {
 
 /**
  * Preform a search only if a node is added, updated, or removed
+ *
  * @param {os.events.PropertyChangeEvent} e The event
  * @private
  */
@@ -189,6 +197,7 @@ os.ui.AreasCtrl.prototype.searchIfAddedOrRemoved_ = function(e) {
 
 /**
  * Handles file drops over the areas tab.
+ *
  * @param {Event} event The drop event.
  */
 os.ui.AreasCtrl.prototype.onDrop_ = function(event) {
@@ -201,6 +210,7 @@ os.ui.AreasCtrl.prototype.onDrop_ = function(event) {
 
 /**
  * Handle file drag-drop.
+ *
  * @param {!goog.events.Event|os.file.File} event
  * @private
  */

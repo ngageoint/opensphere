@@ -11,6 +11,7 @@ goog.require('os.parse.IParser');
 
 /**
  * Parses JSON results from the OSM Nominatim API.
+ *
  * @implements {os.parse.IParser<ol.Feature|undefined>}
  * @constructor
  */

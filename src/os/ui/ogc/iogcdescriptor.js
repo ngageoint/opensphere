@@ -10,6 +10,7 @@ goog.require('os.ui.ogc.wms.IWMSLayer');
 
 /**
  * Interface for OGC data descriptors.
+ *
  * @interface
  * @extends {os.data.IDataDescriptor}
  * @extends {os.data.IServerDescriptor}
@@ -234,6 +235,7 @@ os.ui.ogc.IOGCDescriptor.prototype.getLayerName;
 
 /**
  * @return {?string}
+ * @deprecated Use IFilterable.getFilterKey()
  */
 os.ui.ogc.IOGCDescriptor.prototype.getUrlKey;
 

@@ -15,6 +15,7 @@ goog.require('plugin.heatmap.menu');
 
 /**
  * Adds the ability to generate a heatmap layer from any vector layer.
+ *
  * @extends {os.plugin.AbstractPlugin}
  * @constructor
  */

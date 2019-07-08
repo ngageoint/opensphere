@@ -8,6 +8,7 @@ goog.require('os.ui.ol.interaction.AbstractDraw');
 
 
 /**
+ * @abstract
  * @constructor
  * @extends {os.ui.ol.interaction.AbstractDraw}
  * @param {olx.interaction.PointerOptions=} opt_options
@@ -39,6 +40,7 @@ os.ui.ol.interaction.AbstractDrag.MIN_AREA = 64;
 
 /**
  * Handle down event
+ *
  * @param {ol.MapBrowserPointerEvent} mapBrowserEvent
  * @return {boolean} Whether or not to start the drag sequence
  * @protected

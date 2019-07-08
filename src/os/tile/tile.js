@@ -9,6 +9,7 @@ os.tile.TileFilterFn;
 
 /**
  * Applies a set of filter functions to an image and returns a new, filtered copy.
+ *
  * @param {HTMLCanvasElement|Image} image The image to filter
  * @param {Array<Function>} filterFns The filter functions to apply
  * @return {HTMLCanvasElement} A new, filtered copy of the image canvas

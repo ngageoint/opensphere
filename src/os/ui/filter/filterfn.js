@@ -22,6 +22,7 @@ os.ui.filter.fn.ValueGetter;
 
 /**
  * Default value getter for objects.
+ *
  * @param {string} itemVar The item variable name.
  * @param {string} field The field to get from the item.
  * @return {string} The get expression.
@@ -35,6 +36,7 @@ os.ui.filter.fn.defaultGetter = function(itemVar, field) {
 
 /**
  * Create a variable to use in a filter function.
+ *
  * @param {string} varName The variable name.
  * @param {string} getExpr The value get expression.
  * @return {string} The variable expression.
@@ -46,6 +48,7 @@ os.ui.filter.fn.varDeclaration = function(varName, getExpr) {
 
 /**
  * Create a function to evaluate a filter from a filter entry.
+ *
  * @param {!os.filter.FilterEntry} entry The filter entry.
  * @param {os.ui.filter.fn.ValueGetter=} opt_getter Function to get field values.
  * @return {!os.ui.filter.fn.FilterFn} The filter function.
@@ -63,6 +66,7 @@ os.ui.filter.fn.createFromEntry = function(entry, opt_getter) {
 
 /**
  * Create a function to evaluate a filter from an XML node.
+ *
  * @param {!Node} node The filter node.
  * @param {os.ui.filter.fn.ValueGetter=} opt_getter Function to get field values.
  * @return {!os.ui.filter.fn.FilterFn} The filter function.
@@ -102,6 +106,7 @@ os.ui.filter.fn.createFromNode = function(node, opt_getter) {
 
 /**
  * Create a variable map from all PropertyName elements under a node.
+ *
  * @param {!Node} node The node.
  * @return {!Object<string, string>} Map of property names to variable names.
  */
@@ -131,6 +136,7 @@ os.ui.filter.fn.createVarMap = function(node) {
 
 /**
  * Create a filter function string from an XML node.
+ *
  * @param {!Node} node The filter node.
  * @param {!Object<string, string>} vars Map of property names to variable names.
  * @return {string} The filter function expression for the node.
@@ -155,6 +161,7 @@ os.ui.filter.fn.getNodeExpression = function(node, vars) {
 
 /**
  * Create a filter function string from an XML condition node.
+ *
  * @param {!Node} node The filter node.
  * @param {!Object<string, string>} vars Map of property names to variable names.
  * @param {string} condition The condition value.
@@ -193,6 +200,7 @@ os.ui.filter.fn.createFromConditionNode = function(node, vars, condition) {
 
 /**
  * Create a filter function string from an XML expression node.
+ *
  * @param {!Node} node The filter node.
  * @param {!Object<string, string>} vars Map of property names to variable names.
  * @return {string} The filter function expression for the node.

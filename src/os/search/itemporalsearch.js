@@ -3,6 +3,7 @@ goog.provide('os.search.ITemporalSearch');
 
 /**
  * Interface for a search provider that supports filtering by date range.
+ *
  * @interface
  */
 os.search.ITemporalSearch = function() {};

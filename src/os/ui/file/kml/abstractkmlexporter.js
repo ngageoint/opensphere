@@ -22,6 +22,8 @@ goog.require('os.xml');
 
 /**
  * Abstract KML exporter
+ *
+ * @abstract
  * @extends {os.ex.ZipExporter<T>}
  * @constructor
  * @template T
@@ -222,6 +224,7 @@ os.ui.file.kml.AbstractKMLExporter.prototype.getMimeType = function() {
 
 /**
  * Get the default icon to use for placemarks.
+ *
  * @return {os.ui.file.kml.Icon}
  */
 os.ui.file.kml.AbstractKMLExporter.prototype.getDefaultIcon = function() {
@@ -231,6 +234,7 @@ os.ui.file.kml.AbstractKMLExporter.prototype.getDefaultIcon = function() {
 
 /**
  * Set the default icon to use for placemarks.
+ *
  * @param {string} href The icon URI
  * @param {number=} opt_scale The icon scale
  */
@@ -245,6 +249,7 @@ os.ui.file.kml.AbstractKMLExporter.prototype.setDefaultIcon = function(href, opt
 
 /**
  * Get the name attribute for the Document element.
+ *
  * @return {string}
  */
 os.ui.file.kml.AbstractKMLExporter.prototype.getDocName = function() {
@@ -254,6 +259,7 @@ os.ui.file.kml.AbstractKMLExporter.prototype.getDocName = function() {
 
 /**
  * Set the name attribute for the Document element.
+ *
  * @param {string} name
  */
 os.ui.file.kml.AbstractKMLExporter.prototype.setDocName = function(name) {
@@ -263,6 +269,7 @@ os.ui.file.kml.AbstractKMLExporter.prototype.setDocName = function(name) {
 
 /**
  * Get the default field(s) used for the Placemark name.
+ *
  * @return {Array<*>}
  */
 os.ui.file.kml.AbstractKMLExporter.prototype.getDefaultLabelFields = function() {
@@ -272,6 +279,7 @@ os.ui.file.kml.AbstractKMLExporter.prototype.getDefaultLabelFields = function() 
 
 /**
  * Set the default field(s) used for the Placemark name.
+ *
  * @param {Array<*>} value
  */
 os.ui.file.kml.AbstractKMLExporter.prototype.setDefaultLabelFields = function(value) {
@@ -281,6 +289,7 @@ os.ui.file.kml.AbstractKMLExporter.prototype.setDefaultLabelFields = function(va
 
 /**
  * Get the delimiter used to separate multiple labels.
+ *
  * @return {string}
  */
 os.ui.file.kml.AbstractKMLExporter.prototype.getLabelDelimiter = function() {
@@ -290,6 +299,7 @@ os.ui.file.kml.AbstractKMLExporter.prototype.getLabelDelimiter = function() {
 
 /**
  * Set the delimiter used to separate multiple labels.
+ *
  * @param {string} value
  */
 os.ui.file.kml.AbstractKMLExporter.prototype.setLabelDelimiter = function(value) {
@@ -299,6 +309,7 @@ os.ui.file.kml.AbstractKMLExporter.prototype.setLabelDelimiter = function(value)
 
 /**
  * Get if the item color should be used for icons.
+ *
  * @return {boolean}
  */
 os.ui.file.kml.AbstractKMLExporter.prototype.getUseItemColor = function() {
@@ -308,6 +319,7 @@ os.ui.file.kml.AbstractKMLExporter.prototype.getUseItemColor = function() {
 
 /**
  * Set if the item color should be used for icons.
+ *
  * @param {boolean} value
  */
 os.ui.file.kml.AbstractKMLExporter.prototype.setUseItemColor = function(value) {
@@ -317,6 +329,7 @@ os.ui.file.kml.AbstractKMLExporter.prototype.setUseItemColor = function(value) {
 
 /**
  * Get if the item icon should be used instead of the default.
+ *
  * @return {boolean}
  */
 os.ui.file.kml.AbstractKMLExporter.prototype.getUseItemIcon = function() {
@@ -326,6 +339,7 @@ os.ui.file.kml.AbstractKMLExporter.prototype.getUseItemIcon = function() {
 
 /**
  * Set if the item icon should be used instead of the default.
+ *
  * @param {boolean} value
  */
 os.ui.file.kml.AbstractKMLExporter.prototype.setUseItemIcon = function(value) {
@@ -335,6 +349,7 @@ os.ui.file.kml.AbstractKMLExporter.prototype.setUseItemIcon = function(value) {
 
 /**
  * Get if ellipses should be exported.
+ *
  * @return {boolean}
  */
 os.ui.file.kml.AbstractKMLExporter.prototype.getExportEllipses = function() {
@@ -344,6 +359,7 @@ os.ui.file.kml.AbstractKMLExporter.prototype.getExportEllipses = function() {
 
 /**
  * Set if ellipses should be exported.
+ *
  * @param {boolean} value
  */
 os.ui.file.kml.AbstractKMLExporter.prototype.setExportEllipses = function(value) {
@@ -353,6 +369,7 @@ os.ui.file.kml.AbstractKMLExporter.prototype.setExportEllipses = function(value)
 
 /**
  * Get if center points should be included in ellipses.
+ *
  * @return {boolean}
  */
 os.ui.file.kml.AbstractKMLExporter.prototype.getUseCenterPoint = function() {
@@ -362,6 +379,7 @@ os.ui.file.kml.AbstractKMLExporter.prototype.getUseCenterPoint = function() {
 
 /**
  * Set if center points should be included in ellipses.
+ *
  * @param {boolean} value
  */
 os.ui.file.kml.AbstractKMLExporter.prototype.setUseCenterPoint = function(value) {
@@ -414,6 +432,7 @@ os.ui.file.kml.AbstractKMLExporter.prototype.processItems = function() {
 
 /**
  * Create the full label for an item from configured fields.
+ *
  * @param {T} item The item
  * @return {?string}
  * @protected
@@ -438,6 +457,7 @@ os.ui.file.kml.AbstractKMLExporter.prototype.createLabel = function(item) {
 
 /**
  * Create the full label for an item from configured fields.
+ *
  * @param {T} item The item
  * @param {Array<*>} labelFields The label fields
  * @return {?string}
@@ -467,6 +487,7 @@ os.ui.file.kml.AbstractKMLExporter.prototype.extractLabelFromFields_ = function(
 
 /**
  * Process a single item, returning a KML element to add to the document.
+ *
  * @param {T} item The item
  * @protected
  * @template T
@@ -498,6 +519,7 @@ os.ui.file.kml.AbstractKMLExporter.prototype.processItem = function(item) {
 
 /**
  * Process a Folder element to add to the KML.
+ *
  * @param {!Element} element The Placemark element
  * @param {T} item The item
  * @protected
@@ -518,6 +540,7 @@ os.ui.file.kml.AbstractKMLExporter.prototype.processFolder = function(element, i
 
 /**
  * Process a Placemark element to add to the KML.
+ *
  * @param {!Element} element The Placemark element
  * @param {T} item The item
  * @protected
@@ -615,6 +638,15 @@ os.ui.file.kml.AbstractKMLExporter.prototype.processPlacemark = function(element
       });
       os.xml.appendElementNS('value', this.kmlNS, rotDataEl, String(this.getField(item, rotationColumn)));
     }
+
+    // Add line dash info as custom element since kml doesn't support it
+    var lineDash = this.getLineDash(item);
+    if (lineDash && Array.isArray(lineDash) && lineDash.length) {
+      var lineDashDataEl = os.xml.appendElementNS('Data', this.kmlNS, ed, undefined, {
+        'name': 'lineDash'
+      });
+      os.xml.appendElementNS('value', this.kmlNS, lineDashDataEl, JSON.stringify(lineDash));
+    }
   }
 
   if (ed.childElementCount > 0) {
@@ -625,6 +657,7 @@ os.ui.file.kml.AbstractKMLExporter.prototype.processPlacemark = function(element
 
 /**
  * Create placemark specific merged style.
+ *
  * @param {!Element} placemarkEl The placemark element
  * @param {T} item The item
  * @return {?Element} The merged style element
@@ -656,6 +689,7 @@ os.ui.file.kml.AbstractKMLExporter.prototype.createPlacemarkMergedStyle = functi
 
 /**
  * Adds an item's geometry to its Placemark.
+ *
  * @param {T} item The item
  * @param {!Node} node The kml:Placemark node
  * @protected
@@ -674,6 +708,7 @@ os.ui.file.kml.AbstractKMLExporter.prototype.addGeometryNode = function(item, no
 
 /**
  * Gets the style id for an item, creating a style if necessary.
+ *
  * @param {T} item The item
  * @param {string} styleId The style id
  * @param {string} color The item color
@@ -731,6 +766,7 @@ os.ui.file.kml.AbstractKMLExporter.prototype.createStyle = function(item, styleI
 
 /**
  * Get the children of an item.
+ *
  * @param {T} item The item
  * @return {Array<T>} The item's children
  * @protected
@@ -742,15 +778,18 @@ os.ui.file.kml.AbstractKMLExporter.prototype.getChildren = function(item) {
 
 /**
  * Get the color of an item. This should return an ABGR string that can be dropped directly into the KML.
+ *
+ * @abstract
  * @param {T} item The item
  * @return {string} The item's color as an ABGR string
  * @protected
  */
-os.ui.file.kml.AbstractKMLExporter.prototype.getColor = goog.abstractMethod;
+os.ui.file.kml.AbstractKMLExporter.prototype.getColor = function(item) {};
 
 
 /**
  * Get the type of KML element represented by the item.
+ *
  * @param {T} item The item
  * @return {os.ui.file.kml.ElementType}
  * @protected
@@ -762,6 +801,7 @@ os.ui.file.kml.AbstractKMLExporter.prototype.getElementType = function(item) {
 
 /**
  * Get the fields to export for an item.
+ *
  * @param {T} item The item
  * @return {Array<string>} The fields to export
  */
@@ -780,24 +820,40 @@ os.ui.file.kml.AbstractKMLExporter.prototype.setFields = function(value) {
 
 /**
  * Get the geometry for an item.
+ *
+ * @abstract
  * @param {T} item The item
  * @return {(ol.geom.Geometry|undefined)}
  * @protected
  */
-os.ui.file.kml.AbstractKMLExporter.prototype.getGeometry = goog.abstractMethod;
+os.ui.file.kml.AbstractKMLExporter.prototype.getGeometry = function(item) {};
 
 
 /**
  * Get the icon rotation column.
+ *
+ * @abstract
  * @param {T} item The item
  * @return {string|null|undefined}
  * @protected
  */
-os.ui.file.kml.AbstractKMLExporter.prototype.getRotationColumn = goog.abstractMethod;
+os.ui.file.kml.AbstractKMLExporter.prototype.getRotationColumn = function(item) {};
+
+
+/**
+ * Get the line dash.
+ *
+ * @abstract
+ * @param {T} item The item
+ * @return {Array<number>|null|undefined}
+ * @protected
+ */
+os.ui.file.kml.AbstractKMLExporter.prototype.getLineDash = function(item) {};
 
 
 /**
  * Get the id of an item.
+ *
  * @param {T} item The item
  * @return {os.ui.file.kml.Icon} The icon representing the item
  * @protected
@@ -809,6 +865,7 @@ os.ui.file.kml.AbstractKMLExporter.prototype.getIcon = function(item) {
 
 /**
  * set the icon
+ *
  * @param {os.ui.file.kml.Icon} icon The icon
  */
 os.ui.file.kml.AbstractKMLExporter.prototype.setIcon = function(icon) {
@@ -818,25 +875,30 @@ os.ui.file.kml.AbstractKMLExporter.prototype.setIcon = function(icon) {
 
 /**
  * Get the id of an item.
+ *
+ * @abstract
  * @param {T} item The item
  * @return {string} The item's id
  * @protected
  */
-os.ui.file.kml.AbstractKMLExporter.prototype.getId = goog.abstractMethod;
+os.ui.file.kml.AbstractKMLExporter.prototype.getId = function(item) {};
 
 
 /**
  * Get the field value from an item.
+ *
+ * @abstract
  * @param {T} item The item
  * @param {string} field The field
  * @return {*} The value
  * @protected
  */
-os.ui.file.kml.AbstractKMLExporter.prototype.getField = goog.abstractMethod;
+os.ui.file.kml.AbstractKMLExporter.prototype.getField = function(item, field) {};
 
 
 /**
  * Gets the label fields to use in the Placemark name.
+ *
  * @param {T} item The item
  * @param {*} labelField
  * @return {?string} null if no label
@@ -852,6 +914,7 @@ os.ui.file.kml.AbstractKMLExporter.prototype.getItemLabel = function(item, label
 
 /**
  * If the item is visible.
+ *
  * @param {T} item The item
  * @return {boolean}
  */
@@ -862,6 +925,7 @@ os.ui.file.kml.AbstractKMLExporter.prototype.isItemVisible = function(item) {
 
 /**
  * If the item is one of the root items being exported.
+ *
  * @param {T} item The item
  * @return {boolean}
  */
@@ -872,6 +936,7 @@ os.ui.file.kml.AbstractKMLExporter.prototype.isRootItem = function(item) {
 
 /**
  * Gets the parent element for the provided item.
+ *
  * @param {T} item The item
  * @return {Element} The parent element.
  * @protected
@@ -884,15 +949,18 @@ os.ui.file.kml.AbstractKMLExporter.prototype.getParent = function(item) {
 
 /**
  * Get all properties from an item.
+ *
+ * @abstract
  * @param {T} item The item
  * @return {Object<string, *>} The item's properties
  * @protected
  */
-os.ui.file.kml.AbstractKMLExporter.prototype.getProperties = goog.abstractMethod;
+os.ui.file.kml.AbstractKMLExporter.prototype.getProperties = function(item) {};
 
 
 /**
  * Gets the style id for an item, creating a style if necessary.
+ *
  * @param {T} item The item
  * @return {string} The style id for the item
  * @protected
@@ -934,24 +1002,29 @@ os.ui.file.kml.AbstractKMLExporter.prototype.getStyleId = function(item) {
 
 /**
  * Gets the style type for an item.
+ *
+ * @abstract
  * @param {T} item The item
  * @return {string} The style type for the item
  * @protected
  */
-os.ui.file.kml.AbstractKMLExporter.prototype.getStyleType = goog.abstractMethod;
+os.ui.file.kml.AbstractKMLExporter.prototype.getStyleType = function(item) {};
 
 
 /**
  * Gets the time associated with the provided item.
+ *
+ * @abstract
  * @param {T} item The item
  * @return {os.time.ITime} The item's time
  * @protected
  */
-os.ui.file.kml.AbstractKMLExporter.prototype.getTime = goog.abstractMethod;
+os.ui.file.kml.AbstractKMLExporter.prototype.getTime = function(item) {};
 
 
 /**
  * Gets the label fields to use in the Placemark name.
+ *
  * @param {T} item The item
  * @return {Array<*>} null if no label fields
  */
@@ -962,6 +1035,7 @@ os.ui.file.kml.AbstractKMLExporter.prototype.getGroupLabels = function(item) {
 
 /**
  * Get the KML balloon style options for the item.
+ *
  * @param {T} item The item.
  * @return {?osx.annotation.KMLBalloon} The balloon options.
  * @protected
@@ -974,6 +1048,7 @@ os.ui.file.kml.AbstractKMLExporter.prototype.getBalloonOptions = function(item) 
 
 /**
  * Add a BalloonStyle to a Style element.
+ *
  * @param {!Element} styleEl The Style element.
  * @param {!osx.annotation.KMLBalloon} options The balloon options.
  * @protected

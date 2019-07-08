@@ -29,6 +29,7 @@ os.time.TimeRangePresets.RANGES = {
 
 /**
  * Gets the current date based off the timestring
+ *
  * @param {!string} range
  * @return {os.time.TimeRange}
  */

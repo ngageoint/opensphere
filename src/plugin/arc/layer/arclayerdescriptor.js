@@ -12,6 +12,7 @@ goog.require('os.events.LayerConfigEvent');
 goog.require('os.events.LayerConfigEventType');
 goog.require('os.events.LayerEvent');
 goog.require('os.events.LayerEventType');
+goog.require('os.events.PropertyChangeEvent');
 goog.require('os.filter.IFilterable');
 goog.require('os.im.mapping.RadiusMapping');
 goog.require('os.im.mapping.SemiMajorMapping');
@@ -20,16 +21,17 @@ goog.require('os.im.mapping.time.DateTimeMapping');
 goog.require('os.layer.LayerType');
 goog.require('os.ui.ControlType');
 goog.require('os.ui.Icons');
-goog.require('os.ui.ogc.IFeatureTypeDescriptor');
+goog.require('os.ui.arc.IARCDescriptor');
 goog.require('os.ui.query.CombinatorCtrl');
 
 
 
 /**
  * Descriptor representing an Arc layer.
+ *
  * @extends {os.data.LayerSyncDescriptor}
+ * @implements {os.ui.arc.IARCDescriptor}
  * @implements {os.filter.IFilterable}
- * @implements {os.ui.ogc.IFeatureTypeDescriptor}
  * @constructor
  */
 plugin.arc.layer.ArcLayerDescriptor = function() {
@@ -71,6 +73,14 @@ plugin.arc.layer.ArcLayerDescriptor = function() {
    */
   this.featureType_ = null;
 
+  /**
+   * Marker for whether the layer is deprecated. If a layer is deprecated, it will pop up a notification to the user
+   * to stop using it when the descriptor is activated.
+   * @type {boolean}
+   * @private
+   */
+  this.deprecated_ = false;
+
   this.descriptorType = plugin.arc.ID;
 };
 goog.inherits(plugin.arc.layer.ArcLayerDescriptor, os.data.LayerSyncDescriptor);
@@ -85,11 +95,10 @@ plugin.arc.layer.ArcLayerDescriptor.NAME = 'plugin.arc.layer.ArcLayerDescriptor'
 os.registerClass(plugin.arc.layer.ArcLayerDescriptor.NAME, plugin.arc.layer.ArcLayerDescriptor);
 os.implements(plugin.arc.layer.ArcLayerDescriptor, os.ui.ogc.IFeatureTypeDescriptor.ID);
 os.implements(plugin.arc.layer.ArcLayerDescriptor, os.filter.IFilterable.ID);
-
+os.implements(plugin.arc.layer.ArcLayerDescriptor, os.ui.arc.IARCDescriptor.ID);
 
 /**
- * Get the URL
- * @return {?string}
+ * @inheritDoc
  */
 plugin.arc.layer.ArcLayerDescriptor.prototype.getUrl = function() {
   return this.url_;
@@ -97,8 +106,7 @@ plugin.arc.layer.ArcLayerDescriptor.prototype.getUrl = function() {
 
 
 /**
- * Set the URL
- * @param {?string} value
+ * @inheritDoc
  */
 plugin.arc.layer.ArcLayerDescriptor.prototype.setUrl = function(value) {
   this.url_ = value;
@@ -107,6 +115,7 @@ plugin.arc.layer.ArcLayerDescriptor.prototype.setUrl = function(value) {
 
 /**
  * Get the layerId
+ *
  * @return {?string}
  */
 plugin.arc.layer.ArcLayerDescriptor.prototype.getLayerId = function() {
@@ -116,6 +125,7 @@ plugin.arc.layer.ArcLayerDescriptor.prototype.getLayerId = function() {
 
 /**
  * Set the layerId
+ *
  * @param {?string} value
  */
 plugin.arc.layer.ArcLayerDescriptor.prototype.setLayerId = function(value) {
@@ -125,6 +135,7 @@ plugin.arc.layer.ArcLayerDescriptor.prototype.setLayerId = function(value) {
 
 /**
  * Get the layer extent
+ *
  * @return {?ol.Extent}
  */
 plugin.arc.layer.ArcLayerDescriptor.prototype.getExtent = function() {
@@ -134,6 +145,7 @@ plugin.arc.layer.ArcLayerDescriptor.prototype.getExtent = function() {
 
 /**
  * Set the layer extent
+ *
  * @param {?ol.Extent} value
  */
 plugin.arc.layer.ArcLayerDescriptor.prototype.setExtent = function(value) {
@@ -189,6 +201,7 @@ plugin.arc.layer.ArcLayerDescriptor.prototype.getIcons = function() {
 
 /**
  * Whether the layer has a time extent.
+ *
  * @return {boolean}
  */
 plugin.arc.layer.ArcLayerDescriptor.prototype.hasTimeExtent = function() {
@@ -230,6 +243,7 @@ plugin.arc.layer.ArcLayerDescriptor.prototype.getAliases = function() {
 
 /**
  * Configures the descriptor from an Arc layer object.
+ *
  * @param {Object} config
  * @param {string} id
  * @param {string} url
@@ -335,6 +349,7 @@ plugin.arc.layer.ArcLayerDescriptor.prototype.isFeatureTypeReady = function() {
 
 /**
  * Get whether features are enabled.
+ *
  * @return {boolean}
  */
 plugin.arc.layer.ArcLayerDescriptor.prototype.getFeaturesEnabled = function() {
@@ -344,6 +359,7 @@ plugin.arc.layer.ArcLayerDescriptor.prototype.getFeaturesEnabled = function() {
 
 /**
  * Set whether features are enabled.
+ *
  * @param {boolean} value
  */
 plugin.arc.layer.ArcLayerDescriptor.prototype.setFeaturesEnabled = function(value) {
@@ -353,6 +369,7 @@ plugin.arc.layer.ArcLayerDescriptor.prototype.setFeaturesEnabled = function(valu
 
 /**
  * Get whether tiles are enabled.
+ *
  * @return {boolean}
  */
 plugin.arc.layer.ArcLayerDescriptor.prototype.getTilesEnabled = function() {
@@ -362,6 +379,7 @@ plugin.arc.layer.ArcLayerDescriptor.prototype.getTilesEnabled = function() {
 
 /**
  * Set whether tiles are enabled.
+ *
  * @param {boolean} value
  */
 plugin.arc.layer.ArcLayerDescriptor.prototype.setTilesEnabled = function(value) {
@@ -389,6 +407,7 @@ plugin.arc.layer.ArcLayerDescriptor.prototype.getLayerOptions = function() {
 
 /**
  * Gets the tile options object.
+ *
  * @return {Object.<string, *>}
  * @protected
  */
@@ -430,6 +449,7 @@ plugin.arc.layer.ArcLayerDescriptor.prototype.getTileOptions = function() {
 
 /**
  * Gets the feature options object.
+ *
  * @return {Object<string, *>}
  * @protected
  */
@@ -445,6 +465,7 @@ plugin.arc.layer.ArcLayerDescriptor.prototype.getFeatureOptions = function() {
   params.set('geometryType', 'esriGeometryPolygon');
   params.set('geometry', '{geom}');
   params.set('returnIdsOnly', true);
+  params.set('spatialRel', 'esriSpatialRelIntersects');
 
   if (this.hasTimeExtent()) {
     params.set('time', '{time}');
@@ -553,4 +574,32 @@ plugin.arc.layer.ArcLayerDescriptor.prototype.getNodeUI = function() {
  */
 plugin.arc.layer.ArcLayerDescriptor.prototype.getFilterableTypes = function() {
   return [this.getId() + os.ui.data.BaseProvider.ID_DELIMITER + 'features'];
+};
+
+/**
+ * @inheritDoc
+ */
+plugin.arc.layer.ArcLayerDescriptor.prototype.updatedFromServer = function() {
+  this.updateTags();
+};
+
+/**
+ * @inheritDoc
+ */
+plugin.arc.layer.ArcLayerDescriptor.prototype.setDeprecated = function(value) {
+  this.deprecated_ = value;
+};
+
+/**
+ * @inheritDoc
+ */
+plugin.arc.layer.ArcLayerDescriptor.prototype.getDeprecated = function() {
+  return this.deprecated_;
+};
+
+/**
+ * @protected
+ */
+plugin.arc.layer.ArcLayerDescriptor.prototype.updateTags = function() {
+  this.dispatchEvent(new os.events.PropertyChangeEvent('title'));
 };

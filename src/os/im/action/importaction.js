@@ -19,7 +19,7 @@ os.im.action.ICON = 'fa-magic';
 
 
 /**
- * Timeline metrics tracked by MIST.
+ * Timeline metrics tracked by OpenSphere.
  * @enum {string}
  */
 os.im.action.Metrics = {
@@ -45,6 +45,7 @@ os.im.action.TagName = {
 
 /**
  * Sort import actions by label.
+ *
  * @param {os.im.action.IImportAction} a First action.
  * @param {os.im.action.IImportAction} b Second action.
  * @return {number} Sort order of the actions, by label.

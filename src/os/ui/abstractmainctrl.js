@@ -40,6 +40,7 @@ os.ui.AbstractMainContent = 'main-content';
 
 /**
  * Controller function for the Main directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.$injector} $injector
  * @param {string} rootPath
@@ -105,6 +106,7 @@ os.ui.AbstractMainCtrl = function($scope, $injector, rootPath, defaultAppName) {
 
 /**
  * Clean up references to Angular/DOM elements and listeners.
+ *
  * @protected
  */
 os.ui.AbstractMainCtrl.prototype.destroy = function() {
@@ -116,6 +118,7 @@ os.ui.AbstractMainCtrl.prototype.destroy = function() {
 
 /**
  * Executes the certNazi check.
+ *
  * @protected
  */
 os.ui.AbstractMainCtrl.prototype.doCertNazi = function() {
@@ -217,6 +220,7 @@ os.ui.AbstractMainCtrl.prototype.initInstances = function() {
 
 /**
  * Initializes the application.
+ *
  * @protected
  */
 os.ui.AbstractMainCtrl.prototype.initialize = function() {
@@ -271,6 +275,7 @@ os.ui.AbstractMainCtrl.prototype.initialize = function() {
   /**
    * Expose the ability to get a unique string.
    * This is useful for custom-check where you need a unqiueID to the whole DOM
+   *
    * @return {string}
    */
   os.ui.injector.get('$rootScope')['getUniqueString'] = function() {
@@ -281,6 +286,7 @@ os.ui.AbstractMainCtrl.prototype.initialize = function() {
 
 /**
  * Init plugins
+ *
  * @protected
  */
 os.ui.AbstractMainCtrl.prototype.initPlugins = function() {
@@ -292,6 +298,7 @@ os.ui.AbstractMainCtrl.prototype.initPlugins = function() {
 
 /**
  * Tasks that should run after plugins have finished loading.
+ *
  * @param {?goog.events.Event=} opt_e The optional event
  * @protected
  */

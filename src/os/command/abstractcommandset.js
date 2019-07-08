@@ -41,6 +41,7 @@ os.command.AbstractCommandSet.prototype.cmds_ = null;
 
 /**
  * Gets the set of commands
+ *
  * @return {Array.<os.command.ICommand>} The set of commands
  */
 os.command.AbstractCommandSet.prototype.getCommands = function() {
@@ -50,6 +51,7 @@ os.command.AbstractCommandSet.prototype.getCommands = function() {
 
 /**
  * Sets the set of commands
+ *
  * @param {Array.<os.command.ICommand>} set The set of commands
  */
 os.command.AbstractCommandSet.prototype.setCommands = function(set) {

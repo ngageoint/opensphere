@@ -9,6 +9,7 @@ goog.require('os.ui.window');
 
 /**
  * Abstract controller for importing areas from a file.
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$timeout} $timeout The Angular $timeout service.
@@ -69,6 +70,7 @@ os.ui.query.AreaImportCtrl.prototype.disposeInternal = function() {
 
 /**
  * Close the window
+ *
  * @export
  */
 os.ui.query.AreaImportCtrl.prototype.close = function() {
@@ -78,6 +80,7 @@ os.ui.query.AreaImportCtrl.prototype.close = function() {
 
 /**
  * Load areas from the selected file(s).
+ *
  * @export
  */
 os.ui.query.AreaImportCtrl.prototype.finish = function() {

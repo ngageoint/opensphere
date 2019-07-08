@@ -16,6 +16,7 @@ goog.require('os.ui.text');
 
 /**
  * The featureinfo directive
+ *
  * @return {angular.Directive}
  */
 os.ui.feature.featureInfoCellDirective = function() {
@@ -41,6 +42,7 @@ os.ui.Module.directive('featureinfocell', [os.ui.feature.featureInfoCellDirectiv
 
 /**
  * Controller function for the featureinfo directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$sce} $sce
@@ -79,6 +81,7 @@ os.ui.feature.FeatureInfoCellCtrl = function($scope, $element, $sce) {
 
 /**
  * Clean up.
+ *
  * @private
  */
 os.ui.feature.FeatureInfoCellCtrl.prototype.destroy_ = function() {
@@ -90,6 +93,7 @@ os.ui.feature.FeatureInfoCellCtrl.prototype.destroy_ = function() {
 
 /**
  * Setup the cell by the type
+ *
  * @private
  */
 os.ui.feature.FeatureInfoCellCtrl.prototype.init_ = function() {
@@ -129,6 +133,7 @@ os.ui.feature.FeatureInfoCellCtrl.prototype.init_ = function() {
 
 /**
  * Show the description tab
+ *
  * @export
  */
 os.ui.feature.FeatureInfoCellCtrl.prototype.showDescription = function() {
@@ -138,6 +143,7 @@ os.ui.feature.FeatureInfoCellCtrl.prototype.showDescription = function() {
 
 /**
  * View properties
+ *
  * @export
  */
 os.ui.feature.FeatureInfoCellCtrl.prototype.viewProperties = function() {
@@ -152,6 +158,7 @@ os.ui.feature.FeatureInfoCellCtrl.prototype.viewProperties = function() {
 
 /**
  * Pick column action
+ *
  * @export
  */
 os.ui.feature.FeatureInfoCellCtrl.prototype.pickColumnAction = function() {

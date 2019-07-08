@@ -17,7 +17,7 @@ goog.require('os.time.TimeInstant');
  */
 os.histo.NumericBinMethod = function() {
   os.histo.NumericBinMethod.base(this, 'constructor');
-  this.type = 'Numeric';
+  this.type = os.histo.NumericBinMethod.TYPE;
 
   /**
    * @type {number}
@@ -36,8 +36,29 @@ os.histo.NumericBinMethod = function() {
    * @protected
    */
   this.precision = 0;
+
+  /**
+   * The minimum value, everything below this value will be grouped to the same bin
+   * @type {number}
+   * @protected
+   */
+  this.min = -os.histo.NumericBinMethod.MAGIC_EMPTY;
+
+  /**
+   * The maximum value, everything above this value will be grouped to the same bin
+   * @type {number}
+   * @protected
+   */
+  this.max = os.histo.NumericBinMethod.MAGIC_EMPTY;
 };
 goog.inherits(os.histo.NumericBinMethod, os.histo.UniqueBinMethod);
+
+
+/**
+* @type {string}
+* @const
+*/
+os.histo.NumericBinMethod.TYPE = 'Numeric';
 
 
 /**
@@ -72,6 +93,15 @@ os.histo.NumericBinMethod.NAN_LABEL = 'Not a Number';
 
 
 /**
+ * String the separates in range based labels
+ *
+ * @type {string}
+ * @const
+ */
+os.histo.NumericBinMethod.LABEL_RANGE_SEP = ' to ';
+
+
+/**
  * @inheritDoc
  */
 os.histo.NumericBinMethod.prototype.getValue = function(item) {
@@ -95,6 +125,38 @@ os.histo.NumericBinMethod.prototype.getValue = function(item) {
 
   // this should *always* return a number or crossfilter will have issues
   return !isNaN(num) ? num : os.histo.NumericBinMethod.MAGIC_NAN;
+};
+
+
+/**
+ * @return {number} The min
+ */
+os.histo.NumericBinMethod.prototype.getMin = function() {
+  return this.min;
+};
+
+
+/**
+ * @param {number} min
+ */
+os.histo.NumericBinMethod.prototype.setMin = function(min) {
+  this.min = min;
+};
+
+
+/**
+ * @return {number} The max
+ */
+os.histo.NumericBinMethod.prototype.getMax = function() {
+  return this.max;
+};
+
+
+/**
+ * @param {number} max
+ */
+os.histo.NumericBinMethod.prototype.setMax = function(max) {
+  this.max = max;
 };
 
 
@@ -160,6 +222,10 @@ os.histo.NumericBinMethod.prototype.getBinKey = function(value) {
     return os.histo.NumericBinMethod.MAGIC_EMPTY;
   } else if (value === this.getFloor(os.histo.NumericBinMethod.MAGIC_NAN)) {
     return os.histo.NumericBinMethod.MAGIC_NAN;
+  } else if (/** @type {number} */ (value) <= this.getFloor(this.min)) {
+    return this.min;
+  } else if (/** @type {number} */ (value) >= this.getFloor(this.max)) {
+    return this.max;
   } else if (typeof value === 'number') {
     // not our magic number, so go ahead and floor it based on the method settings
     return this.getFloor(value);
@@ -186,7 +252,7 @@ os.histo.NumericBinMethod.prototype.getLabelForKey = function(key, opt_secondary
   if (typeof key === 'string' && key.indexOf(os.data.xf.DataModel.SEPARATOR) >= 0) {
     // this key is in a bin that represents the intersection of two values; split them apart with the separator
     key = !opt_secondary ? Number(key.split(os.data.xf.DataModel.SEPARATOR)[0]) :
-        Number(key.split(os.data.xf.DataModel.SEPARATOR)[1]);
+      Number(key.split(os.data.xf.DataModel.SEPARATOR)[1]);
   }
 
   var width = this.width;
@@ -200,7 +266,7 @@ os.histo.NumericBinMethod.prototype.getLabelForKey = function(key, opt_secondary
     return os.histo.NumericBinMethod.NAN_LABEL;
   } else {
     // the key should be a number, so if it's not a magic value return the bin range
-    return !opt_smallLabel ? key.toFixed(precision) + ' to ' +
+    return !opt_smallLabel ? key.toFixed(precision) + os.histo.NumericBinMethod.LABEL_RANGE_SEP +
     (key + width).toFixed(precision) : key.toFixed(precision);
   }
 };
@@ -219,6 +285,7 @@ os.histo.NumericBinMethod.prototype.filterDimension = function(dimension, item) 
 
 /**
  * Gets the floored value of a number
+ *
  * @param {number} value
  * @return {number}
  */
@@ -231,6 +298,7 @@ os.histo.NumericBinMethod.prototype.getFloor = function(value) {
 
 /**
  * Gets the precision of a number
+ *
  * @param {number} num
  * @return {number} precision
  */
@@ -258,6 +326,8 @@ os.histo.NumericBinMethod.prototype.persist = function(opt_to) {
 
   opt_to['width'] = this.width;
   opt_to['offset'] = this.offset;
+  opt_to['min'] = this.min;
+  opt_to['max'] = this.max;
 
   return opt_to;
 };
@@ -277,6 +347,16 @@ os.histo.NumericBinMethod.prototype.restore = function(config) {
   var offset = /** @type {string|number|undefined} */ (config['offset']);
   if (offset != null && !isNaN(offset)) {
     this.setOffset(Number(offset));
+  }
+
+  var min = /** @type {string|number|undefined} */ (config['min']);
+  if (min != null && !isNaN(min)) {
+    this.setMin(Number(min));
+  }
+
+  var max = /** @type {string|number|undefined} */ (config['max']);
+  if (max != null && !isNaN(max)) {
+    this.setMax(Number(max));
   }
 };
 
@@ -372,6 +452,7 @@ os.histo.NumericBinMethod.prototype.getFilterForRange_ = function(range) {
 
 /**
  * Test if a value is between or equal to the bin method's range for a set of minimum values.
+ *
  * @param {!Array<number>} values The values to check
  * @param {number} value The value to test
  * @return {boolean}

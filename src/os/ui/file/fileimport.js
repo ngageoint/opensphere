@@ -16,6 +16,7 @@ goog.require('os.ui.window');
 
 /**
  * The file import directive
+ *
  * @return {angular.Directive}
  */
 os.ui.file.fileImportDirective = function() {
@@ -39,6 +40,7 @@ os.ui.Module.directive('fileimport', [os.ui.file.fileImportDirective]);
 
 /**
  * Controller for the file import dialog
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$timeout} $timeout
@@ -113,6 +115,7 @@ os.ui.file.FileImportCtrl.LOGGER_ = goog.log.getLogger('os.ui.file.FileImportCtr
 
 /**
  * Clean up references/listeners.
+ *
  * @private
  */
 os.ui.file.FileImportCtrl.prototype.onDestroy_ = function() {
@@ -134,6 +137,7 @@ os.ui.file.FileImportCtrl.prototype.onDestroy_ = function() {
 
 /**
  * Create import command and close the window
+ *
  * @export
  */
 os.ui.file.FileImportCtrl.prototype.accept = function() {
@@ -151,6 +155,7 @@ os.ui.file.FileImportCtrl.prototype.accept = function() {
 
 /**
  * Handler for successful file read.
+ *
  * @param {os.file.File} file The file.
  * @private
  */
@@ -169,6 +174,7 @@ os.ui.file.FileImportCtrl.prototype.handleResult_ = function(file) {
 
 /**
  * Handler for failed file read. Display an error message and close the window.
+ *
  * @param {string} errorMsg The error message.
  * @private
  */
@@ -188,6 +194,7 @@ os.ui.file.FileImportCtrl.prototype.handleError_ = function(errorMsg) {
 
 /**
  * Close the window.
+ *
  * @export
  */
 os.ui.file.FileImportCtrl.prototype.close = function() {
@@ -197,6 +204,7 @@ os.ui.file.FileImportCtrl.prototype.close = function() {
 
 /**
  * Launch the system file browser.
+ *
  * @export
  */
 os.ui.file.FileImportCtrl.prototype.openFileBrowser = function() {
@@ -206,6 +214,7 @@ os.ui.file.FileImportCtrl.prototype.openFileBrowser = function() {
 
 /**
  * Grabs the file from the hidden input element and sets the name on the text element.
+ *
  * @param {goog.events.BrowserEvent} event
  * @private
  */
@@ -222,6 +231,7 @@ os.ui.file.FileImportCtrl.prototype.onFileChange_ = function(event) {
 
 /**
  * Fires a cancel event on the method so listeners can respond appropriately.
+ *
  * @private
  */
 os.ui.file.FileImportCtrl.prototype.cancelMethod_ = function() {

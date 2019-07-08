@@ -7,6 +7,7 @@ goog.require('os.ui.util.punyParentDirective');
 
 /**
  * The nav-top directive
+ *
  * @return {angular.Directive}
  */
 os.ui.navTopDirective = function() {

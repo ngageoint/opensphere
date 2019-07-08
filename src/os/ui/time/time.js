@@ -5,6 +5,7 @@ goog.require('os.ui.Module');
 
 /**
  * The time directive
+ *
  * @return {angular.Directive}
  */
 os.ui.time.timeDirective = function() {

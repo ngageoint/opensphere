@@ -10,6 +10,8 @@ goog.require('os.ui.window');
 
 /**
  * Abstract controller for a file import UI.
+ *
+ * @abstract
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @constructor
@@ -72,6 +74,7 @@ os.ui.file.ui.AbstractFileImportCtrl.LOGGER_ = goog.log.getLogger('os.ui.file.ui
 
 /**
  * Clean up.
+ *
  * @protected
  */
 os.ui.file.ui.AbstractFileImportCtrl.prototype.destroy = function() {
@@ -83,6 +86,7 @@ os.ui.file.ui.AbstractFileImportCtrl.prototype.destroy = function() {
 
 /**
  * Clean up the parser configuration, removing any references it doesn't need.
+ *
  * @protected
  */
 os.ui.file.ui.AbstractFileImportCtrl.prototype.cleanConfig = function() {
@@ -95,6 +99,7 @@ os.ui.file.ui.AbstractFileImportCtrl.prototype.cleanConfig = function() {
 
 /**
  * Handles changes to the title field, checking if the title already exists.
+ *
  * @param {string} newVal The new title value
  * @protected
  */
@@ -110,14 +115,17 @@ os.ui.file.ui.AbstractFileImportCtrl.prototype.onTitleChange = function(newVal) 
 
 /**
  * Create a descriptor for the import.
+ *
+ * @abstract
  * @return {DESCRIPTOR}
  * @protected
  */
-os.ui.file.ui.AbstractFileImportCtrl.prototype.createDescriptor = goog.abstractMethod;
+os.ui.file.ui.AbstractFileImportCtrl.prototype.createDescriptor = function() {};
 
 
 /**
  * Create import command and close the window
+ *
  * @export
  */
 os.ui.file.ui.AbstractFileImportCtrl.prototype.accept = function() {
@@ -137,6 +145,7 @@ os.ui.file.ui.AbstractFileImportCtrl.prototype.accept = function() {
 
 /**
  * Cancel file import
+ *
  * @export
  */
 os.ui.file.ui.AbstractFileImportCtrl.prototype.cancel = function() {
@@ -147,6 +156,7 @@ os.ui.file.ui.AbstractFileImportCtrl.prototype.cancel = function() {
 
 /**
  * Store the local file being imported.
+ *
  * @param {DESCRIPTOR} descriptor
  * @protected
  */
@@ -159,6 +169,7 @@ os.ui.file.ui.AbstractFileImportCtrl.prototype.storeLocal = function(descriptor)
 
 /**
  * Get the provider for the file.
+ *
  * @return {os.ui.data.DescriptorProvider}
  */
 os.ui.file.ui.AbstractFileImportCtrl.prototype.getProvider = function() {
@@ -168,6 +179,7 @@ os.ui.file.ui.AbstractFileImportCtrl.prototype.getProvider = function() {
 
 /**
  * Import complete, so add the descriptor to the data manager and provider.
+ *
  * @param {DESCRIPTOR} descriptor
  * @protected
  */

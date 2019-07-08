@@ -11,6 +11,7 @@ goog.require('plugin.file.kml.tour.Wait');
 
 /**
  * Flies to the specified location on the map/globe.
+ *
  * @param {!osx.map.FlyToOptions} options Fly to options.
  * @extends {plugin.file.kml.tour.Wait}
  * @constructor

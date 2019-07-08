@@ -14,6 +14,7 @@ goog.require('os.file.mime.zip');
 
 /**
  * Representation of a file.
+ *
  * @implements {os.IPersistable}
  * @constructor
  */
@@ -305,6 +306,7 @@ os.file.isZipFile = os.file.mime.zip.isZip;
 /**
  * Creates a new os.file.File instance from a system file. The content will be read as a string if it's determined
  * to be text, or an ArrayBuffer if not.
+ *
  * @param {!File} file The system file
  * @return {!goog.async.Deferred} A promise passing the new file instance to the success callback, or the error message
  *   on failure.
@@ -331,6 +333,7 @@ os.file.createFromFile = function(file) {
 /**
  * Creates a new os.file.File instance from the provided parameters, converting ArrayBuffer content to a string
  * if the content is determined to be text.
+ *
  * @param {string} fileName The name of the file
  * @param {string} url The URL to the file content
  * @param {File|undefined} originalFile Original file. If included, will be set on the os.file.File
@@ -354,6 +357,7 @@ os.file.createFromContent = function(fileName, url, originalFile, content) {
 
 /**
  * Creates a `file://` url to reference files on the file system.
+ *
  * @param {string} path The path to the file.
  * @return {string}
  */
@@ -368,6 +372,7 @@ os.file.getFileUrl = function(path) {
 
 /**
  * Creates a `local://` url used by file storage.
+ *
  * @param {string} fileName The file name to use in generating the url.
  * @return {string}
  */
@@ -378,6 +383,7 @@ os.file.getLocalUrl = function(fileName) {
 
 /**
  * Checks if a file was loaded from the file system (URL prefixed with `file://`).
+ *
  * @param {os.file.File|string|undefined} file The file or file's url
  * @return {boolean}
  */
@@ -393,6 +399,7 @@ os.file.isFileSystem = function(file) {
 
 /**
  * Checks if a file was loaded from file storage (URL prefixed with `local://`).
+ *
  * @param {os.file.File|string|undefined} file The file or file's url.
  * @return {boolean}
  */
@@ -408,6 +415,7 @@ os.file.isLocal = function(file) {
 
 /**
  * Deserializes a file from a JSON object.
+ *
  * @param {*} data The serialized file
  * @return {os.file.File}
  */
@@ -424,6 +432,7 @@ os.file.deserializeFile = function(data) {
 
 /**
  * Serializes a file to a JSON object.
+ *
  * @param {os.file.File} file The file to serialize
  * @return {*} The persisted file
  */

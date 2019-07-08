@@ -12,6 +12,7 @@ goog.require('os.parse.IParser');
 
 /**
  * Parses a GeoJSON source
+ *
  * @extends {goog.Disposable}
  * @implements {os.parse.IParser<ol.Feature>}
  * @constructor
@@ -62,6 +63,7 @@ plugin.file.geojson.GeoJSONParser.prototype.disposeInternal = function() {
 
 /**
  * Get the source ID.
+ *
  * @return {?string}
  */
 plugin.file.geojson.GeoJSONParser.prototype.getSourceId = function() {
@@ -71,6 +73,7 @@ plugin.file.geojson.GeoJSONParser.prototype.getSourceId = function() {
 
 /**
  * Set the source ID.
+ *
  * @param {?string} value
  */
 plugin.file.geojson.GeoJSONParser.prototype.setSourceId = function(value) {
@@ -167,6 +170,7 @@ plugin.file.geojson.GeoJSONParser.prototype.process = goog.nullFunction;
 
 /**
  * Parse a limited set of results from the source
+ *
  * @param {Object|null|string} source
  * @param {Array<os.im.mapping.IMapping>=} opt_mappings The set of mappings to apply to parsed features
  * @return {!Array<!ol.Feature>}

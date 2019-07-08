@@ -4,7 +4,7 @@ goog.require('goog.structs.Map');
 
 
 /**
- *
+ * @abstract
  * @constructor
  */
 os.ui.columnactions.AbstractColumnAction = function() {
@@ -26,6 +26,7 @@ os.ui.columnactions.AbstractColumnAction = function() {
 
 /**
  * Set the description
+ *
  * @param {string} description
  */
 os.ui.columnactions.AbstractColumnAction.prototype.setDescription = function(description) {
@@ -35,6 +36,7 @@ os.ui.columnactions.AbstractColumnAction.prototype.setDescription = function(des
 
 /**
  * Get the description
+ *
  * @return {string} the string text of the description
  */
 os.ui.columnactions.AbstractColumnAction.prototype.getDescription = function() {
@@ -44,14 +46,17 @@ os.ui.columnactions.AbstractColumnAction.prototype.getDescription = function() {
 
 /**
  * Get a represntation of the action for display.
+ *
+ * @abstract
  * @param {*} value the value to be manipulated for display.
  * @return {*}
  */
-os.ui.columnactions.AbstractColumnAction.prototype.toDisplay = goog.abstractMethod;
+os.ui.columnactions.AbstractColumnAction.prototype.toDisplay = function(value) {};
 
 
 /**
  * Set the regexps necessary to run this action
+ *
  * @param {Object.<string, string>} regexps
  */
 os.ui.columnactions.AbstractColumnAction.prototype.setRegExps = function(regexps) {
@@ -68,16 +73,20 @@ os.ui.columnactions.AbstractColumnAction.prototype.setRegExps = function(regexps
 /**
  * Set the action to be performed
  * Can come from a config, or be passed in.
+ *
+ * @abstract
  * @param {*} action
  */
-os.ui.columnactions.AbstractColumnAction.prototype.setAction = goog.abstractMethod;
+os.ui.columnactions.AbstractColumnAction.prototype.setAction = function(action) {};
 
 
 /**
  * Run the action
+ *
+ * @abstract
  * @param {*} value
  */
-os.ui.columnactions.AbstractColumnAction.prototype.execute = goog.abstractMethod;
+os.ui.columnactions.AbstractColumnAction.prototype.execute = function(value) {};
 
 
 /**
@@ -86,6 +95,7 @@ os.ui.columnactions.AbstractColumnAction.prototype.execute = goog.abstractMethod
  * exist and the <code>sourceId</code> or <code>sourceUrl</code> parameter is supplied, then
  * they are given higher priority than the column match and will fail first.
  *
+ * @abstract
  * @param {Object.<string, *>} context  The items to be matched.  They are meaningful to the concrete column
  *                                          action class.
  * @param {os.ui.columnactions.IColumnActionModel} a technology agnostic model that describes the table column.
@@ -93,4 +103,4 @@ os.ui.columnactions.AbstractColumnAction.prototype.execute = goog.abstractMethod
  * @return {boolean} True if the column action applies, false otherwise.
  *
  */
-os.ui.columnactions.AbstractColumnAction.prototype.matches = goog.abstractMethod;
+os.ui.columnactions.AbstractColumnAction.prototype.matches = function(context, a, value) {};

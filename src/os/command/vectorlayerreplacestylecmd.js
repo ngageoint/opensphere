@@ -9,6 +9,7 @@ goog.require('os.source.PropertyChange');
 
 /**
  * Set if a layer style should override feature style.
+ *
  * @param {string} layerId The layer id.
  * @param {boolean} value The value.
  * @extends {os.command.AbstractVectorStyle}

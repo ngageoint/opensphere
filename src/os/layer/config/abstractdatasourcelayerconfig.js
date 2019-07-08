@@ -21,6 +21,7 @@ goog.require('os.ui.slick.column');
 
 
 /**
+ * @abstract
  * @extends {os.layer.config.AbstractLayerConfig}
  * @constructor
  * @template T
@@ -102,6 +103,7 @@ os.layer.config.AbstractDataSourceLayerConfig.prototype.createLayer = function(o
 
 /**
  * Restores the layer from the options
+ *
  * @param {os.layer.Vector} layer
  * @param {Object<string, *>} options
  * @protected
@@ -122,6 +124,7 @@ os.layer.config.AbstractDataSourceLayerConfig.prototype.addMappings = goog.nullF
 
 /**
  * Convert feature type columns to column definitions.
+ *
  * @param {os.layer.Vector} layer The layer.
  * @param {Object<string, *>} options The layer config options.
  * @param {!os.ogc.IFeatureType} featureType The feature type.
@@ -184,11 +187,12 @@ os.layer.config.AbstractDataSourceLayerConfig.prototype.getImporter = function(o
 
 
 /**
+ * @abstract
  * @param {Object<string, *>} options Layer configuration options.
  * @return {os.parse.IParser<T>}
  * @protected
  */
-os.layer.config.AbstractDataSourceLayerConfig.prototype.getParser = goog.abstractMethod;
+os.layer.config.AbstractDataSourceLayerConfig.prototype.getParser = function(options) {};
 
 
 /**
@@ -245,6 +249,7 @@ os.layer.config.AbstractDataSourceLayerConfig.prototype.getSource = function(opt
 
 /**
  * Map a feature type column to a column definition.
+ *
  * @param {!os.ogc.FeatureTypeColumn} ftColumn The feature type column.
  * @return {!os.data.ColumnDefinition} The column definition.
  */

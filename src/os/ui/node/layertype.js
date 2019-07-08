@@ -6,6 +6,7 @@ goog.require('os.ui.Module');
 
 /**
  * Shows the feature count out of the total for feature layers
+ *
  * @return {angular.Directive}
  */
 os.ui.node.layerTypeDirective = function() {
@@ -28,6 +29,7 @@ os.ui.Module.directive('layertype', [os.ui.node.layerTypeDirective]);
 
 /**
  * Controller for selected/highlighted node UI
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @constructor
