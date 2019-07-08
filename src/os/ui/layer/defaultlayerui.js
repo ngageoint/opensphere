@@ -456,5 +456,6 @@ os.ui.layer.DefaultLayerUICtrl.prototype.reset = function(key) {
  */
 os.ui.layer.DefaultLayerUICtrl.prototype.setOpenSection = function(selector) {
   // save the open section to settings
-  os.settings.set('layercontrols', selector);
+  var current = os.settings.get('layercontrols');
+  os.settings.set('layercontrols', current != selector ? selector : '');
 };
