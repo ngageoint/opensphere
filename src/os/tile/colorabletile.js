@@ -8,6 +8,7 @@ goog.require('ol.dom');
 
 /**
  * Implementation of a tile that is colorable.
+ *
  * @param {ol.TileCoord} tileCoord Tile coordinate.
  * @param {ol.TileState} state State.
  * @param {string} src Image source URI.
@@ -38,6 +39,7 @@ ol.inherits(os.tile.ColorableTile, ol.ImageTile);
 
 /**
  * Get the image element for this tile.
+ *
  * @inheritDoc
  * @suppress {accessControls}
  */
@@ -68,6 +70,7 @@ os.tile.ColorableTile.prototype.reset = function() {
 
 /**
  * Get the OL source.
+ *
  * @return {ol.source.TileImage}
  */
 os.tile.ColorableTile.prototype.getOLSource = function() {
@@ -77,6 +80,7 @@ os.tile.ColorableTile.prototype.getOLSource = function() {
 
 /**
  * Set the OL source.
+ *
  * @param {ol.source.TileImage} value
  */
 os.tile.ColorableTile.prototype.setOLSource = function(value) {

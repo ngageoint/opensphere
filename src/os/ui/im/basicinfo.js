@@ -8,6 +8,7 @@ goog.require('os.ui.util.validationMessageDirective');
 
 /**
  * Directive for requesting title, description, and tags for an import configuration.
+ *
  * @return {angular.Directive}
  */
 os.ui.im.basicInfoDirective = function() {
@@ -104,6 +105,7 @@ os.ui.im.BasicInfoCtrl.DESC_REGEXP = /^desc(r(i(p(t(i(o(n)?)?)?)?)?)?)$/i;
 
 /**
  * Handle changes to columns on the scope.
+ *
  * @param {Array<os.data.ColumnDefinition>=} opt_new The new columns
  * @param {Array<os.data.ColumnDefinition>=} opt_old The old columns
  * @protected
@@ -127,6 +129,7 @@ os.ui.im.BasicInfoCtrl.prototype.onColumnsChange = function(opt_new, opt_old) {
 
 /**
  * Update a column in the configuration from a set of columns.
+ *
  * @param {string} columnField The config column field
  * @param {Array<os.data.ColumnDefinition>} columns The columns
  * @param {RegExp=} opt_regexp Auto detection regular expression.
@@ -160,6 +163,7 @@ os.ui.im.BasicInfoCtrl.prototype.updateColumn = function(columnField, columns, o
 
 /**
  * Updates sample text used to display column values.
+ *
  * @export
  */
 os.ui.im.BasicInfoCtrl.prototype.updateSampleText = function() {
@@ -173,6 +177,7 @@ os.ui.im.BasicInfoCtrl.prototype.updateSampleText = function() {
 
 /**
  * Gets sample text from the data.
+ *
  * @param {os.data.ColumnDefinition=} opt_column
  * @return {string}
  * @protected

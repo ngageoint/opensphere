@@ -13,6 +13,7 @@ goog.require('plugin.heatmap.cmd.Size');
 
 /**
  * The directive for heatmap layer controls
+ *
  * @return {angular.Directive}
  */
 plugin.heatmap.heatmapLayerUIDirective = function() {
@@ -35,6 +36,7 @@ os.ui.Module.directive('heatmaplayerui', [plugin.heatmap.heatmapLayerUIDirective
 
 /**
  * Controller for the vector layer UI
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$timeout} $timeout
@@ -79,6 +81,7 @@ plugin.heatmap.HeatmapLayerUICtrl.prototype.initUI = function() {
 
 /**
  * Handles changes to the gradient
+ *
  * @export
  */
 plugin.heatmap.HeatmapLayerUICtrl.prototype.onGradientChange = function() {
@@ -98,6 +101,7 @@ plugin.heatmap.HeatmapLayerUICtrl.prototype.onGradientChange = function() {
 
 /**
  * Handles changes to the gradient
+ *
  * @return {Array}
  * @private
  */
@@ -120,6 +124,7 @@ plugin.heatmap.HeatmapLayerUICtrl.prototype.getGradient_ = function() {
 
 /**
  * Handles changes to size
+ *
  * @param {angular.Scope.Event} event
  * @param {number} value
  * @protected
@@ -140,6 +145,7 @@ plugin.heatmap.HeatmapLayerUICtrl.prototype.onSizeChange = function(event, value
 
 /**
  * Gets the size from the layer
+ *
  * @return {number}
  * @private
  */
@@ -163,6 +169,7 @@ plugin.heatmap.HeatmapLayerUICtrl.prototype.getSize_ = function() {
 
 /**
  * Handles changes to intensity
+ *
  * @param {angular.Scope.Event} event
  * @param {number} value
  * @protected
@@ -175,6 +182,7 @@ plugin.heatmap.HeatmapLayerUICtrl.prototype.onIntensityChange = function(event, 
 
 /**
  * Implements changes to intensity
+ *
  * @private
  */
 plugin.heatmap.HeatmapLayerUICtrl.prototype.changeIntensity_ = function() {
@@ -194,6 +202,7 @@ plugin.heatmap.HeatmapLayerUICtrl.prototype.changeIntensity_ = function() {
 
 /**
  * Gets the intensity from the layer
+ *
  * @return {number}
  * @private
  */

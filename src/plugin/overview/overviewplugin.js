@@ -8,6 +8,7 @@ goog.require('plugin.overview.OverviewMap');
 
 /**
  * Adds an overview map to the map controls that syncs with the current base maps
+ *
  * @extends {os.plugin.AbstractPlugin}
  * @constructor
  */

@@ -55,7 +55,7 @@ plugin.cesium.TileGridTilingScheme.init = function() {
      * @type {!(Cesium.GeographicProjection|Cesium.WebMercatorProjection)}
      */
     this.cesiumProjection_ = isGeographic ? new Cesium.GeographicProjection(this.ellipsoid_) :
-        new Cesium.WebMercatorProjection(this.ellipsoid_);
+      new Cesium.WebMercatorProjection(this.ellipsoid_);
 
     /**
      * @type {!ol.proj.Projection}

@@ -6,6 +6,7 @@ goog.require('ol.interaction.MouseWheelZoom');
 
 /**
  * Adjusts the OpenLayers mouse wheel zoom interaction for OpenSphere.
+ *
  * @param {olx.interaction.MouseWheelZoomOptions=} opt_options Options.
  * @extends {ol.interaction.MouseWheelZoom}
  * @constructor

@@ -22,6 +22,7 @@ os.im.action.filter.ExportTypeHint = {
 
 /**
  * Export the provided filter action entries to XML elements.
+ *
  * @param {!Array<!os.im.action.FilterActionEntry>} entries The entries to export.
  * @param {boolean=} opt_exactType If true, use the type from the entry. If false, use the filterable key.
  * @return {!Array<!Element>} The entry XML elements.
@@ -32,6 +33,7 @@ os.im.action.filter.exportEntries = function(entries, opt_exactType) {
 
   /**
    * Parses entries out of the passed in entry. Recurses if it has children.
+   *
    * @param {os.im.action.FilterActionEntry} entry The entry.
    */
   var parseEntries = function(entry) {
@@ -95,6 +97,7 @@ os.im.action.filter.exportEntries = function(entries, opt_exactType) {
 
 /**
  * Create command to copy an entry.
+ *
  * @param {!os.im.action.FilterActionEntry} entry The import action entry.
  * @param {number=} opt_parentIndex Optional parent index to add the entry to.
  * @return {os.command.ICommand} The copy entry command.
@@ -102,6 +105,7 @@ os.im.action.filter.exportEntries = function(entries, opt_exactType) {
 os.im.action.filter.copyEntryCmd = function(entry, opt_parentIndex) {
   /**
    * Sets up the new titles and IDs on copies recursively.
+   *
    * @param {os.im.action.FilterActionEntry} e The filter action to set up.
    */
   var setupCopy = function(e) {
@@ -131,6 +135,7 @@ os.im.action.filter.copyEntryCmd = function(entry, opt_parentIndex) {
 
 /**
  * Get the initial file name to use for export.
+ *
  * @return {string} The file name.
  */
 os.im.action.filter.getExportName = function() {
@@ -140,6 +145,7 @@ os.im.action.filter.getExportName = function() {
 
 /**
  * Get the list of filter columns.
+ *
  * @param {string=} opt_entryType The filter action entry type.
  * @return {!Array} The columns.
  */
@@ -159,6 +165,7 @@ os.im.action.filter.getColumns = function(opt_entryType) {
 
 /**
  * Callback for filter action entry create/edit.
+ *
  * @param {os.im.action.FilterActionEntry|undefined} original The orignial filter entry, for edits.
  * @param {os.im.action.FilterActionEntry} entry The edited filter entry.
  */
@@ -207,6 +214,7 @@ os.im.action.filter.onEditComplete = function(original, entry) {
 
 /**
  * Create command to remove an entry.
+ *
  * @param {!os.im.action.FilterActionEntry} entry The import action entry to remove.
  * @return {os.command.ICommand} The remove entry command.
  */
@@ -235,6 +243,7 @@ os.im.action.filter.removeEntryCmd = function(entry) {
 
 /**
  * Recursive mapping function for pulling all of the feature actions out of a tree.
+ *
  * @param {Array<os.ui.im.action.FilterActionNode>} targetArr The target array.
  * @param {os.structs.ITreeNode} node The current node.
  */

@@ -6,6 +6,7 @@ goog.require('os.hist.HistogramData');
 
 /**
  * Interface for a chart driven by a histogram.
+ *
  * @extends {goog.disposable.IDisposable}
  * @interface
  */

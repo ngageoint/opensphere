@@ -4,6 +4,7 @@ goog.provide('os.IPersistable');
 
 /**
  * An interface for persistable/restorable objects
+ *
  * @interface
  * @template T
  */

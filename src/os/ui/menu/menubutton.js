@@ -86,6 +86,7 @@ os.ui.menu.MenuButtonCtrl.prototype.disposeInternal = function() {
 
 /**
  * Open the menu
+ *
  * @export
  */
 os.ui.menu.MenuButtonCtrl.prototype.openMenu = function() {
@@ -113,6 +114,7 @@ os.ui.menu.MenuButtonCtrl.prototype.openMenu = function() {
 
 /**
  * Handle menu close
+ *
  * @protected
  */
 os.ui.menu.MenuButtonCtrl.prototype.onMenuClose = function() {
@@ -123,6 +125,7 @@ os.ui.menu.MenuButtonCtrl.prototype.onMenuClose = function() {
 
 /**
  * Toggles a window
+ *
  * @export
  */
 os.ui.menu.MenuButtonCtrl.prototype.toggle = function() {
@@ -135,6 +138,7 @@ os.ui.menu.MenuButtonCtrl.prototype.toggle = function() {
 
 /**
  * Checks if a window is open in the application
+ *
  * @param {string=} opt_flag The ID of the window to check
  * @return {boolean}
  * @export

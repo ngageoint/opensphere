@@ -38,6 +38,7 @@ goog.require('os.ui.window');
 
 /**
  * Directive for editing a feature.
+ *
  * @return {angular.Directive}
  */
 os.ui.featureEditDirective = function() {
@@ -72,6 +73,7 @@ os.ui.FeatureEditOptions;
 
 /**
  * Controller function for the featureedit directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$timeout} $timeout
@@ -163,7 +165,7 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
    * The feature icon.
    * @type {!osx.icon.Icon}
    */
-  this['icon'] = /** @type {!osx.icon.Icon} */ ({ // os.ui.file.kml.Icon to osx.icon.Icon
+  this['icon'] = /** @type {!osx.icon.Icon} */ ({// os.ui.file.kml.Icon to osx.icon.Icon
     path: os.ui.file.kml.getDefaultIcon().path
   });
 
@@ -171,7 +173,7 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
    * The feature center icon.
    * @type {!osx.icon.Icon}
    */
-  this['centerIcon'] = /** @type {!osx.icon.Icon} */ ({ // os.ui.file.kml.Icon to osx.icon.Icon
+  this['centerIcon'] = /** @type {!osx.icon.Icon} */ ({// os.ui.file.kml.Icon to osx.icon.Icon
     path: os.ui.file.kml.getDefaultIcon().path
   });
 
@@ -383,7 +385,7 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
    * @type {boolean}
    */
   this['timeEditEnabled'] = this.options['timeEditEnabled'] !== undefined ?
-      this.options['timeEditEnabled'] : true;
+    this.options['timeEditEnabled'] : true;
 
   /**
    * Callback to fire when the dialog is closed.
@@ -618,6 +620,7 @@ os.ui.FeatureEditCtrl.prototype.disposeInternal = function() {
 
 /**
  * Accept changes, saving the feature.
+ *
  * @export
  */
 os.ui.FeatureEditCtrl.prototype.accept = function() {
@@ -648,6 +651,7 @@ os.ui.FeatureEditCtrl.prototype.accept = function() {
 
 /**
  * Cancel edit and close the window.
+ *
  * @export
  */
 os.ui.FeatureEditCtrl.prototype.cancel = function() {
@@ -669,6 +673,7 @@ os.ui.FeatureEditCtrl.prototype.cancel = function() {
 
 /**
  * Close the window.
+ *
  * @protected
  */
 os.ui.FeatureEditCtrl.prototype.close = function() {
@@ -678,6 +683,7 @@ os.ui.FeatureEditCtrl.prototype.close = function() {
 
 /**
  * Handles key events.
+ *
  * @param {goog.events.KeyEvent} event
  * @protected
  */
@@ -697,6 +703,7 @@ os.ui.FeatureEditCtrl.prototype.handleKeyEvent = function(event) {
 
 /**
  * If an ellipse shape is selected.
+ *
  * @return {boolean}
  * @export
  */
@@ -707,6 +714,7 @@ os.ui.FeatureEditCtrl.prototype.isEllipse = function() {
 
 /**
  * If a line or polygon is selected.
+ *
  * @return {boolean}
  * @export
  */
@@ -721,6 +729,7 @@ os.ui.FeatureEditCtrl.prototype.isPolygonOrLine = function() {
 
 /**
  * If the icon picker should be displayed.
+ *
  * @return {boolean}
  * @export
  */
@@ -731,6 +740,7 @@ os.ui.FeatureEditCtrl.prototype.showIcon = function() {
 
 /**
  * If the icon picker should be displayed.
+ *
  * @return {boolean}
  * @export
  */
@@ -741,6 +751,7 @@ os.ui.FeatureEditCtrl.prototype.showCenterIcon = function() {
 
 /**
  * If the feature is dynamic, which means it is a time based track
+ *
  * @return {boolean}
  * @export
  */
@@ -752,6 +763,7 @@ os.ui.FeatureEditCtrl.prototype.isFeatureDynamic = function() {
 
 /**
  * Handles if map clicks are propagated down to the location form.
+ *
  * @param {angular.Scope.Event} event The Angular event
  * @param {boolean} isEnabled If the map should be used for location clicks.
  * @private
@@ -796,6 +808,7 @@ os.ui.FeatureEditCtrl.prototype.onMapEnabled_ = function(event, isEnabled) {
 
 /**
  * Handle map browser events.
+ *
  * @param {ol.MapBrowserEvent} mapBrowserEvent Map browser event.
  * @return {boolean} 'false' to stop event propagation
  * @private
@@ -815,6 +828,7 @@ os.ui.FeatureEditCtrl.prototype.onMapClick_ = function(mapBrowserEvent) {
 
 /**
  * Updates the temporary feature style.
+ *
  * @export
  */
 os.ui.FeatureEditCtrl.prototype.updatePreview = function() {
@@ -837,6 +851,7 @@ os.ui.FeatureEditCtrl.prototype.updatePreview = function() {
 
 /**
  * Create a default preview feature.
+ *
  * @protected
  */
 os.ui.FeatureEditCtrl.prototype.createPreviewFeature = function() {
@@ -885,6 +900,7 @@ os.ui.FeatureEditCtrl.prototype.createPreviewFeature = function() {
 
 /**
  * Restore the UI from a feature.
+ *
  * @param {!ol.Feature} feature The feature
  * @protected
  */
@@ -1038,6 +1054,7 @@ os.ui.FeatureEditCtrl.prototype.loadFromFeature = function(feature) {
 
 /**
  * Get a numeric field from a feature, returning undefined if the value is not a number.
+ *
  * @param {ol.Feature} feature The feature to update
  * @param {string} field The field to retrieve
  * @param {number=} opt_default The default value
@@ -1053,6 +1070,7 @@ os.ui.FeatureEditCtrl.prototype.getNumericField_ = function(feature, field, opt_
 
 /**
  * Save the feature configuration to a feature.
+ *
  * @param {ol.Feature} feature The feature to update
  * @protected
  */
@@ -1173,6 +1191,7 @@ os.ui.FeatureEditCtrl.prototype.setFeatureConfig_ = function(config) {
 
 /**
  * Save the geometry to a feature.
+ *
  * @param {ol.Feature} feature The feature to update
  * @private
  */
@@ -1235,6 +1254,7 @@ os.ui.FeatureEditCtrl.prototype.saveGeometry_ = function(feature) {
 
 /**
  * Handles column changes
+ *
  * @param {angular.Scope.Event} event
  * @protected
  */
@@ -1246,6 +1266,7 @@ os.ui.FeatureEditCtrl.prototype.onColumnChange = function(event) {
 
 /**
  * Handle changes to the icon color.
+ *
  * @param {string=} opt_new The new color value
  * @param {string=} opt_old The old color value
  * @export
@@ -1261,6 +1282,7 @@ os.ui.FeatureEditCtrl.prototype.onIconColorChange = function(opt_new, opt_old) {
 
 /**
  * Handle changes to the line dash style.
+ *
  * @param {string=} opt_new The new value
  * @param {string=} opt_old The old value
  * @export
@@ -1276,6 +1298,7 @@ os.ui.FeatureEditCtrl.prototype.onLineDashChange = function(opt_new, opt_old) {
 
 /**
  * Handle icon change.
+ *
  * @param {angular.Scope.Event} event The Angular event.
  * @param {osx.icon.Icon} value The new value.
  * @export
@@ -1291,6 +1314,7 @@ os.ui.FeatureEditCtrl.prototype.onIconChange = function(event, value) {
 
 /**
  * Handles label color reset
+ *
  * @param {angular.Scope.Event} event
  * @protected
  */
@@ -1304,6 +1328,7 @@ os.ui.FeatureEditCtrl.prototype.onLabelColorReset = function(event) {
 
 /**
  * Get the minimum value for the semi-major ellipse axis by converting semi-minor to the semi-major units.
+ *
  * @return {number}
  * @export
  */
@@ -1321,6 +1346,7 @@ os.ui.FeatureEditCtrl.prototype.getSemiMajorMin = function() {
 /**
  * Handle changes to the semi-major or semi-minor axis. This corrects the initial arrow key/scroll value caused by
  * using "1e-16" as the min value to invalidate the form when 0 is used.
+ *
  * @export
  */
 os.ui.FeatureEditCtrl.prototype.onAxisChange = function() {
@@ -1338,6 +1364,7 @@ os.ui.FeatureEditCtrl.prototype.onAxisChange = function() {
 
 /**
  * Launch a window to create or edit a feature.
+ *
  * @param {!os.ui.FeatureEditOptions} options
  */
 os.ui.launchFeatureEdit = function(options) {
@@ -1375,6 +1402,7 @@ os.ui.launchFeatureEdit = function(options) {
 
 /**
  * Initialize labels on a place.
+ *
  * @param {ol.Feature} feature The feature
  */
 os.ui.FeatureEditCtrl.persistFeatureLabels = function(feature) {
@@ -1412,6 +1440,7 @@ os.ui.FeatureEditCtrl.persistFeatureLabels = function(feature) {
 
 /**
  * Initialize labels on a feature.
+ *
  * @param {ol.Feature} feature The feature
  */
 os.ui.FeatureEditCtrl.restoreFeatureLabels = function(feature) {
@@ -1422,7 +1451,7 @@ os.ui.FeatureEditCtrl.restoreFeatureLabels = function(feature) {
     }
 
     var configs = /** @type {(Array<Object<string, *>>|Object<string, *>)} */ (
-        feature.get(os.style.StyleType.FEATURE));
+      feature.get(os.style.StyleType.FEATURE));
 
     if (configs) {
       if (goog.isArray(configs)) {
@@ -1439,6 +1468,7 @@ os.ui.FeatureEditCtrl.restoreFeatureLabels = function(feature) {
 
 /**
  * Initialize labels on a feature config.
+ *
  * @param {ol.Feature} feature The feature
  * @param {Object<string, *>} config The config
  */

@@ -180,6 +180,7 @@ os.ui.timeline.Brush.EventType = {
 
 /**
  * Whether events should be dispatched during drag-to-pan
+ *
  * @param {boolean} value
  */
 os.ui.timeline.Brush.prototype.setSilentDrag = function(value) {
@@ -229,6 +230,7 @@ os.ui.timeline.Brush.prototype.setClass = function(brushClass) {
 
 /**
  * css class for this brush
+ *
  * @return {string}
  */
 os.ui.timeline.Brush.prototype.getClass = function() {
@@ -287,6 +289,7 @@ os.ui.timeline.Brush.prototype.setExtent = function(extent, opt_silent, opt_snap
 
 /**
  * Sets the extent of this using a range,
+ *
  * @param {goog.math.Range} range
  * @param {boolean=} opt_silent Whether or not to fire the brush change event
  * @param {boolean=} opt_snap Whether or not the given extent should be snapped. Defaults to false.
@@ -308,6 +311,7 @@ os.ui.timeline.Brush.prototype.getAvg = function() {
 
 /**
  * Jumps the brush to the given time
+ *
  * @param {number} time
  * @param {boolean=} opt_silent
  */
@@ -388,13 +392,13 @@ os.ui.timeline.Brush.prototype.initSVG = function(container, height) {
 
   if (!baseSVG.select('#right-gradient')[0][0]) {
     var gradient = baseSVG.append('svg:defs')
-          .append('svg:linearGradient')
-      .attr('id', 'right-gradient')
-      .attr('x1', '0%')
-      .attr('y1', '0%')
-      .attr('x2', '100%')
-      .attr('y2', '0%')
-      .attr('spreadMethod', 'pad');
+        .append('svg:linearGradient')
+        .attr('id', 'right-gradient')
+        .attr('x1', '0%')
+        .attr('y1', '0%')
+        .attr('x2', '100%')
+        .attr('y2', '0%')
+        .attr('spreadMethod', 'pad');
 
     // Define the gradient colors
     gradient.append('svg:stop')
@@ -408,13 +412,13 @@ os.ui.timeline.Brush.prototype.initSVG = function(container, height) {
         .attr('stop-opacity', 0);
 
     var gradient2 = baseSVG.append('svg:defs')
-      .append('svg:linearGradient')
-      .attr('id', 'left-gradient')
-      .attr('x1', '100%')
-      .attr('y1', '0%')
-      .attr('x2', '0%')
-      .attr('y2', '0%')
-      .attr('spreadMethod', 'pad');
+        .append('svg:linearGradient')
+        .attr('id', 'left-gradient')
+        .attr('x1', '100%')
+        .attr('y1', '0%')
+        .attr('x2', '0%')
+        .attr('y2', '0%')
+        .attr('spreadMethod', 'pad');
 
     // Define the gradient colors
     gradient2.append('svg:stop')
@@ -485,6 +489,7 @@ os.ui.timeline.Brush.prototype.render = function(opt_height) {
 
 /**
  * Snaps the extent via the snap function
+ *
  * @param {Array.<number>} extent
  * @return {Array.<number>}
  * @private
@@ -500,6 +505,7 @@ os.ui.timeline.Brush.prototype.snap_ = function(extent) {
 
 /**
  * Updates the SVG brush. Called when dragging/resizing the brush.
+ *
  * @param {boolean=} opt_silent If true, a brush event will not be fired.
  * @protected
  */
@@ -515,6 +521,7 @@ os.ui.timeline.Brush.prototype.updateBrush = function(opt_silent) {
 
 /**
  * Fires a change event for this brush
+ *
  * @private
  */
 os.ui.timeline.Brush.prototype.fireChangeEvent_ = function() {
@@ -528,6 +535,7 @@ os.ui.timeline.Brush.prototype.fireChangeEvent_ = function() {
 
 /**
  * Brush start handler
+ *
  * @protected
  */
 os.ui.timeline.Brush.prototype.onBrushStart = function() {
@@ -538,6 +546,7 @@ os.ui.timeline.Brush.prototype.onBrushStart = function() {
 
 /**
  * Mouse enter handler
+ *
  * @private
  */
 os.ui.timeline.Brush.prototype.onMouseEnter_ = function() {
@@ -548,6 +557,7 @@ os.ui.timeline.Brush.prototype.onMouseEnter_ = function() {
 
 /**
  * Mouse leave handler
+ *
  * @private
  */
 os.ui.timeline.Brush.prototype.onMouseLeave_ = function() {
@@ -558,6 +568,7 @@ os.ui.timeline.Brush.prototype.onMouseLeave_ = function() {
 
 /**
  * Mouse down handler
+ *
  * @private
  */
 os.ui.timeline.Brush.prototype.onMouseDown_ = function() {
@@ -582,6 +593,7 @@ os.ui.timeline.Brush.prototype.onMouseDown_ = function() {
 
 /**
  * Mouse up handler
+ *
  * @private
  */
 os.ui.timeline.Brush.prototype.onMouseUp_ = function() {
@@ -596,6 +608,7 @@ os.ui.timeline.Brush.prototype.onMouseUp_ = function() {
 
 /**
  * Handles brush events
+ *
  * @protected
  */
 os.ui.timeline.Brush.prototype.onBrush = function() {
@@ -626,6 +639,7 @@ os.ui.timeline.Brush.prototype.onBrushEnd = function() {
 
 /**
  * Handles drag events
+ *
  * @param {goog.events.BrowserEvent} event
  * @private
  */
@@ -663,6 +677,7 @@ os.ui.timeline.Brush.prototype.checkDragPan_ = function(event) {
 
 /**
  * Stops drag-to-pan
+ *
  * @private
  */
 os.ui.timeline.Brush.prototype.stopDragPan_ = function() {
@@ -674,6 +689,7 @@ os.ui.timeline.Brush.prototype.stopDragPan_ = function() {
 
 /**
  * Updates the labels and fade gradients
+ *
  * @protected
  */
 os.ui.timeline.Brush.prototype.updateLabels = function() {
@@ -807,6 +823,7 @@ os.ui.timeline.Brush.prototype.updateButtons = function() {
 
 /**
  * Addes a brush delete button
+ *
  * @param {d3.Selection} container
  */
 os.ui.timeline.Brush.prototype.addBrushDeleteButton = function(container) {
@@ -828,6 +845,7 @@ os.ui.timeline.Brush.prototype.addBrushDeleteButton = function(container) {
 
 /**
  * Retruns the current or last range.
+ *
  * @return {?goog.math.Range} The current range or null
  */
 os.ui.timeline.Brush.prototype.getRange = function() {
@@ -843,6 +861,7 @@ os.ui.timeline.Brush.prototype.getRange = function() {
 
 /**
  * deletes and destroys this brush instance
+ *
  * @param {boolean=} opt_silent if true, the delete event will not be fired.
  */
 os.ui.timeline.Brush.prototype.deleteBrush = function(opt_silent) {

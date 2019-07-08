@@ -7,6 +7,7 @@ goog.require('os.ui.filter.string');
 
 /**
  * A 'PropertyIsLessThanOrEqualTo' operation class.
+ *
  * @extends {os.ui.filter.op.Op}
  * @constructor
  */

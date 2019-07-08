@@ -15,6 +15,7 @@ goog.require('os.ui.ol.interaction');
 
 /**
  * Interaction to tilt/rotate/spin the 3D globe with the keyboard.
+ *
  * @param {olx.interaction.MouseWheelZoomOptions=} opt_options Options.
  * @extends {ol.interaction.Interaction}
  * @implements {os.I3DSupport}
@@ -40,8 +41,8 @@ os.interaction.KeyboardTiltRotate = function(opt_options) {
    * @private
    */
   this.condition_ = options.condition != null ? options.condition :
-      goog.functions.and(ol.events.condition.noModifierKeys,
-          ol.events.condition.targetNotEditable);
+    goog.functions.and(ol.events.condition.noModifierKeys,
+        ol.events.condition.targetNotEditable);
 };
 goog.inherits(os.interaction.KeyboardTiltRotate, ol.interaction.Interaction);
 os.implements(os.interaction.KeyboardTiltRotate, os.I3DSupport.ID);
@@ -57,6 +58,7 @@ os.interaction.KeyboardTiltRotate.SPIN_DELTA = 100;
 
 /**
  * Handle the map browser event.
+ *
  * @param {ol.MapBrowserEvent} mapBrowserEvent Map browser event.
  * @return {boolean} `false` to stop event propagation.
  * @this os.interaction.KeyboardTiltRotate
@@ -103,6 +105,7 @@ os.interaction.KeyboardTiltRotate.handleEvent = function(mapBrowserEvent) {
 
 /**
  * Tilt the globe.
+ *
  * @param {ol.MapBrowserEvent} mapBrowserEvent Map browser event
  * @return {boolean}
  */
@@ -130,6 +133,7 @@ os.interaction.KeyboardTiltRotate.prototype.tilt = function(mapBrowserEvent) {
 
 /**
  * Rotate the globe.
+ *
  * @param {ol.MapBrowserEvent} mapBrowserEvent Map browser event.
  * @return {boolean}
  */
@@ -155,6 +159,7 @@ os.interaction.KeyboardTiltRotate.prototype.rotate = function(mapBrowserEvent) {
 
 /**
  * Spin the globe.
+ *
  * @param {ol.MapBrowserEvent} mapBrowserEvent Map browser event.
  * @return {boolean}
  */

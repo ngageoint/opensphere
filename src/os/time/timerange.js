@@ -10,6 +10,7 @@ goog.require('os.time.TimeInstant');
 
 /**
  * A time range
+ *
  * @param {os.time.ITime|goog.date.DateLike|string|number=} opt_start The start time
  * @param {os.time.ITime|goog.date.DateLike|string|number=} opt_end The end time
  * @extends {os.time.TimeInstant}
@@ -124,6 +125,7 @@ os.time.TimeRange.prototype.toISOString = function(opt_separator) {
 
 /**
  * Gets an ISO-8601 representation of the start time.
+ *
  * @param {goog.date.UtcDateTime=} opt_dateTime Optional datetime parameter for obtaining the time offset.
  * @return {string} The ISO-8601 string representation
  */
@@ -141,6 +143,7 @@ os.time.TimeRange.prototype.getStartISOString = function(opt_dateTime) {
 
 /**
  * Gets an ISO-8601 representation of the end time.
+ *
  * @param {goog.date.UtcDateTime=} opt_dateTime Optional datetime parameter for obtaining the time offset.
  * @return {string} The ISO-8601 string representation
  */

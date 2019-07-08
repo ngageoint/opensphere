@@ -79,14 +79,14 @@ os.time.xf.TimeModel = function(getTimeFn, opt_getHoldTimeFn) {
    * @protected
    */
   this.holdStartDimension = this.getHoldTimeFn ?
-      this.holdsXf.dimension(this.startFilter_.bind(this, this.getHoldTimeFn)) : null;
+    this.holdsXf.dimension(this.startFilter_.bind(this, this.getHoldTimeFn)) : null;
 
   /**
    * @type {?crossfilter.Dimension}
    * @protected
    */
   this.holdEndDimension = this.getHoldTimeFn ?
-      this.holdsXf.dimension(this.endFilter_.bind(this, this.getHoldTimeFn)) : null;
+    this.holdsXf.dimension(this.endFilter_.bind(this, this.getHoldTimeFn)) : null;
 
   /**
    * @type {Object<string, crossfilter.Dimension>}
@@ -330,6 +330,7 @@ os.time.xf.TimeModel.prototype.hasDimension = function(id) {
 /**
  * Removes a dimension from the model. If all custom dimensions have been removed, the timeless crossfilter will
  * be given a default dimension that can be used to access all timeless data.
+ *
  * @param {string} id Unique id of the dimension
  * @param {boolean=} opt_skipDefault If true, skips adding the default dimension to the timeless crossfilter. This
  *    should only be used internally from addDimension or timeless records won't be returned.
@@ -370,6 +371,7 @@ os.time.xf.TimeModel.prototype.filterDimension = function(id, opt_value) {
 
 /**
  * Gets the time range of loaded data.
+ *
  * @return {!os.time.TimeRange}
  */
 os.time.xf.TimeModel.prototype.getRange = function() {
@@ -379,6 +381,7 @@ os.time.xf.TimeModel.prototype.getRange = function() {
 
 /**
  * Gets the last time range used to filter data.
+ *
  * @return {os.time.TimeRange}
  */
 os.time.xf.TimeModel.prototype.getLastRange = function() {
@@ -388,6 +391,7 @@ os.time.xf.TimeModel.prototype.getLastRange = function() {
 
 /**
  * Updates the time range of loaded data.
+ *
  * @protected
  */
 os.time.xf.TimeModel.prototype.updateRange = function() {
@@ -422,6 +426,7 @@ os.time.xf.TimeModel.prototype.getSize = function() {
 
 /**
  * Get items intersecting the provided time range.
+ *
  * @param {os.time.TimeRange} range
  * @param {boolean=} opt_includeTimeless If timeless records should be included in the intersection. Defaults to false.
  * @param {boolean=} opt_includeHolds If hold records should be included in the intersection. Defaults to false.
@@ -485,6 +490,7 @@ os.time.xf.TimeModel.prototype.isEmpty = function() {
 
 /**
  * Function to retrieve the start time for an object.
+ *
  * @param {os.time.xf.GetTimeFn} accessorFn
  * @param {Object} item
  * @return {number}
@@ -504,6 +510,7 @@ os.time.xf.TimeModel.prototype.startFilter_ = function(accessorFn, item) {
 
 /**
  * Function to retrieve the end time for an object.
+ *
  * @param {os.time.xf.GetTimeFn} accessorFn
  * @param {Object} item
  * @return {number}

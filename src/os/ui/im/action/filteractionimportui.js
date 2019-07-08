@@ -7,6 +7,7 @@ goog.require('os.ui.im.action.filterActionImportDirective');
 
 /**
  * Filter action import UI.
+ *
  * @extends {os.ui.filter.im.FilterImportUI}
  * @constructor
  */

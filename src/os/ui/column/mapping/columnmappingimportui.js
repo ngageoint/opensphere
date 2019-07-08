@@ -68,6 +68,7 @@ os.ui.column.mapping.ColumnMappingImportUI.prototype.launchUI = function(file, o
 
 /**
  * Confirmation callback for proceeding to import the column mappings.
+ *
  * @param {os.file.File} file
  * @private
  */

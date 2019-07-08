@@ -7,6 +7,7 @@ goog.require('os.ui.slick.SlickTreeNode');
 
 /**
  * Tree nodes for layers
+ *
  * @param {string=} opt_nodeUI
  * @extends {os.ui.slick.SlickTreeNode}
  * @constructor

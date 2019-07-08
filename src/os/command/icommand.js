@@ -4,6 +4,7 @@ goog.provide('os.command.ICommand');
 
 /**
  * The interface that should be implemented by all commands.
+ *
  * @interface
  */
 os.command.ICommand = function() {};

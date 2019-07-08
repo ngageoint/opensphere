@@ -10,6 +10,7 @@ goog.require('os.xml');
 
 /**
  * An annotation tied to an OpenLayers feature.
+ *
  * @param {!ol.Feature} feature The OpenLayers feature.
  * @extends {os.annotation.AbstractAnnotation}
  * @constructor
@@ -155,6 +156,7 @@ os.annotation.FeatureAnnotation.prototype.disposeUI = function() {
 
 /**
  * Update the annotation when the feature changes.
+ *
  * @protected
  */
 os.annotation.FeatureAnnotation.prototype.handleFeatureChange = function() {

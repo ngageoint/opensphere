@@ -7,6 +7,7 @@ goog.require('plugin.xyz.XYZLayerConfig');
 
 /**
  * Provides map layer support
+ *
  * @extends {os.plugin.AbstractPlugin}
  * @constructor
  */

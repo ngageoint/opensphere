@@ -6,6 +6,7 @@ goog.require('os.ui.config.AbstractSettingsCtrl');
 
 /**
  * The settings window directive
+ *
  * @return {angular.Directive}
  */
 os.ui.config.settingsWindowDirective = function() {
@@ -38,6 +39,7 @@ os.ui.config.SettingsWindowList = 'settings-window-button';
 
 /**
  * Controller for the save export window
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.$timeout} $timeout
  * @param {!angular.JQLite} $element
@@ -69,6 +71,7 @@ os.ui.config.SettingsWindowCtrl.prototype.destroy = function() {
 
 /**
  * Handle params change event
+ *
  * @param {!angular.Scope.Event} event
  * @param {Object} params
  * @private
@@ -88,6 +91,7 @@ os.ui.config.SettingsWindowCtrl.prototype.onParamsChange_ = function(event, para
 
 /**
  * Close the window
+ *
  * @export
  */
 os.ui.config.SettingsWindowCtrl.prototype.close = function() {

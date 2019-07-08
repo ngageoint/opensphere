@@ -19,6 +19,7 @@ goog.require('os.ui.state.StateImportUI');
 
 /**
  * XML state manager.
+ *
  * @extends {os.state.BaseStateManager.<!Document, !os.state.XMLStateOptions>}
  * @constructor
  */

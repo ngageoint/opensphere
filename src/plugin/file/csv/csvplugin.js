@@ -17,6 +17,7 @@ goog.require('plugin.file.csv.ui.CSVImportUI');
 
 /**
  * Provides CSV support
+ *
  * @extends {os.plugin.AbstractPlugin}
  * @constructor
  */

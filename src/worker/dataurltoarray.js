@@ -31,6 +31,7 @@ var dispose = function() {
 
 /**
  * Converts a data URL to a Uint8Array.
+ *
  * @param {string} dataUrl The data URL to convert to a Uint8Array
  * @return {Uint8Array} The Uint8Array
  *
@@ -61,6 +62,7 @@ var toUint8Array = function(dataUrl) {
 
 /**
  * Handle an error in the worker.
+ *
  * @param {string} msg The error message
  */
 var handleError = function(msg) {
@@ -71,6 +73,7 @@ var handleError = function(msg) {
 
 /**
  * Handle messages sent to the worker
+ *
  * @param {Object} msg The message
  * @this Worker
  */

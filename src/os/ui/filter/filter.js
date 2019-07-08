@@ -108,6 +108,7 @@ os.ui.filter.SPATIAL = ['Intersects', 'Disjoint', 'BBOX'];
 /**
  * Takes an individual element in a filter string and creates an SQL-like string to represent it. If the optional
  * parameter is true, it creates a true SQL expression.
+ *
  * @param {Node} node The element to stringify
  * @param {boolean=} opt_sql Whether to format as SQL-like rather than simple pretty print
  * @return {string}
@@ -148,6 +149,7 @@ os.ui.filter.toElementString = function(node, opt_sql) {
 
 /**
  * Convert a filter node to a string.
+ *
  * @param {Node} node The filter node
  * @param {number=} opt_maxlen Maximum output length
  * @param {boolean=} opt_sql Whether to format as SQL-like rather than simple pretty print
@@ -199,6 +201,7 @@ os.ui.filter.toFilterString = function(node, opt_maxlen, opt_sql) {
 
 /**
  * Converts an array of filters to a pretty-printed string.
+ *
  * @param {Array<!os.filter.FilterEntry>|os.filter.FilterEntry} filters The filters
  * @param {boolean=} opt_and If the filters are ANDed together
  * @param {boolean=} opt_noNewline Whether to use a newline or a space
@@ -247,6 +250,7 @@ os.ui.filter.prettyPrint = function(filters, opt_and, opt_noNewline, opt_sql) {
 
 /**
  * Checks for an 'is like' filter and makes it case insensitive
+ *
  * @param {Node} node the filter node
  * @return {Node} the modified filter node
  */
@@ -283,6 +287,7 @@ os.ui.filter.makeCaseInsensitive = function(node) {
 
 /**
  * Gets the column name from a list of children.
+ *
  * @param {NodeList} children
  * @return {string}
  */
@@ -299,6 +304,7 @@ os.ui.filter.getColumnName = function(children) {
 
 /**
  * Gets the property name from the children of a condition node.
+ *
  * @param {NodeList} children
  * @param {boolean=} opt_sql
  * @return {string}
@@ -322,6 +328,7 @@ os.ui.filter.getPropertyName = function(children, opt_sql) {
 
 /**
  * Check if something is a filter condition.
+ *
  * @param {Node} node The filter node
  * @return {boolean}
  */
@@ -332,6 +339,7 @@ os.ui.filter.isCondition = function(node) {
 
 /**
  * Check if something is a filter expression.
+ *
  * @param {Node} node The filter node
  * @return {boolean}
  */
@@ -347,6 +355,7 @@ os.ui.filter.isExpression = function(node) {
 
 /**
  * Check if something is a filter operation (equals, is like, is empty, etc).
+ *
  * @param {Node} node The thing to check
  * @return {boolean}
  */
@@ -357,6 +366,7 @@ os.ui.filter.isOperation = function(node) {
 
 /**
  * Get the filter And, Or or Not grouping condition represented by a node.
+ *
  * @param {Node} node The filter node
  * @return {?string} The condition, or null if none found
  */
@@ -377,6 +387,7 @@ os.ui.filter.conditionFromNode = function(node) {
 
 /**
  * Get the filter operation represented by a node.
+ *
  * @param {Node} node The node
  * @return {os.ui.filter.op.Op}
  */
@@ -394,6 +405,7 @@ os.ui.filter.operationFromNode = function(node) {
 
 /**
  * Get the filter operation title (equals, is like, is empty, etc) represented by a node.
+ *
  * @param {Node} node The node
  * @return {?string}
  */
@@ -412,6 +424,7 @@ os.ui.filter.operationTitleFromNode = function(node) {
 
 /**
  * Get the string value of a filter component, usuall the And, Or or Not groping.
+ *
  * @param {?(Node|Object|string)} something The component
  * @return {?string}
  * @private
@@ -431,6 +444,7 @@ os.ui.filter.getString_ = function(something) {
 
 /**
  * Gets a filterable item by its type ID.
+ *
  * @param {string} type
  * @return {?os.filter.IFilterable}
  */
@@ -442,6 +456,7 @@ os.ui.filter.getFilterableByType = function(type) {
 
 /**
  * Gets a filterable item by its filter key.
+ *
  * @param {string} key
  * @return {?os.filter.IFilterable}
  */
@@ -468,6 +483,7 @@ os.ui.filter.getFilterableByFilterKey = function(key) {
 
 /**
  * Gets a filter key for a filterable by its type ID.
+ *
  * @param {string} type
  * @return {?string}
  */
@@ -482,6 +498,7 @@ os.ui.filter.getFilterKeyFromType = function(type) {
 
 /**
  * Filters columns that cannot be handled by the filter builder.
+ *
  * @param {Object} col
  * @param {number} c
  * @param {Array} arr
@@ -502,6 +519,7 @@ os.ui.filter.filterColumns = function(col, c, arr) {
 
 /**
  * Gets the filterable types from a filterable descriptor.
+ *
  * @param {string} type The type.
  * @return {!Array<string>}
  */

@@ -28,6 +28,7 @@ goog.inherits(os.config.InterpolationSettings, os.ui.config.SettingPlugin);
 
 /**
  * The interpolation settings UI directive
+ *
  * @return {angular.Directive}
  */
 os.config.interpolationSettingsDirective = function() {
@@ -50,6 +51,7 @@ os.ui.Module.directive('interpolationsettings', [os.config.interpolationSettings
 
 /**
  * Controller for interpolation settings
+ *
  * @param {!angular.Scope} $scope
  * @constructor
  * @ngInject
@@ -102,6 +104,7 @@ os.config.InterpolationSettingsCtrl.prototype.onSettingsChanged = function(evt) 
 
 /**
  * Updates the scope from the interpolation package
+ *
  * @protected
  */
 os.config.InterpolationSettingsCtrl.prototype.update = function() {
@@ -114,6 +117,7 @@ os.config.InterpolationSettingsCtrl.prototype.update = function() {
 
 /**
  * Applies the selected settings
+ *
  * @protected
  */
 os.config.InterpolationSettingsCtrl.prototype.apply = function() {

@@ -28,6 +28,7 @@ os.data.histo.HistoEventType = {
 
 /**
  * Create a filter from an array of histogram controllers.
+ *
  * @param {!Array<!os.ui.IHistogramUI>} controllers The histogram controllers
  * @param {!Array<!os.data.ColumnDefinition>} columns The filter columns.
  * @param {boolean=} opt_allowAll If all bins should be used in absence of a cascade/selection.
@@ -72,6 +73,7 @@ os.data.histo.createFilter = function(controllers, columns, opt_allowAll) {
 
 /**
  * Create a filter from an array of histogram controllers.
+ *
  * @param {!Array<!os.ui.IHistogramUI>} controllers The histogram controllers
  * @param {!Array<!os.data.ColumnDefinition>} columns The filter columns.
  * @param {boolean=} opt_allowAll If all bins should be used in absence of a cascade/selection.

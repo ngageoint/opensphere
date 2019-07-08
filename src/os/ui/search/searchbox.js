@@ -18,6 +18,7 @@ goog.require('os.ui.dragDropDirective');
 
 /**
  * The search-box directive
+ *
  * @return {angular.Directive}
  */
 os.ui.search.searchBoxDirective = function() {
@@ -49,6 +50,7 @@ os.ui.Module.directive('searchBox', [os.ui.search.searchBoxDirective]);
 
 /**
  * Controller function for the search-box directive.
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @constructor
@@ -179,6 +181,7 @@ os.ui.search.SearchBoxCtrl.MAX_RECENT_ = 5;
 
 /**
  * Clean up the controller.
+ *
  * @protected
  */
 os.ui.search.SearchBoxCtrl.prototype.destroy = function() {
@@ -204,6 +207,7 @@ os.ui.search.SearchBoxCtrl.prototype.destroy = function() {
 /**
  * Validate recent searches. This both migrates the old format to the new, and verifies the search ids are registered.
  * This must be called after all search types have been registered with the application.
+ *
  * @private
  */
 os.ui.search.SearchBoxCtrl.prototype.validateRecents_ = function() {
@@ -281,6 +285,7 @@ os.ui.search.SearchBoxCtrl.prototype.validateRecents_ = function() {
 
 /**
  * Handles click events, and if they came from the typeahead, execute a search.
+ *
  * @param {goog.events.BrowserEvent} event
  * @private
  */
@@ -293,6 +298,7 @@ os.ui.search.SearchBoxCtrl.prototype.onClick_ = function(event) {
 
 /**
  * Clear the search.
+ *
  * @export
  */
 os.ui.search.SearchBoxCtrl.prototype.clear = function() {
@@ -303,6 +309,7 @@ os.ui.search.SearchBoxCtrl.prototype.clear = function() {
 
 /**
  * Perform a search.
+ *
  * @export
  */
 os.ui.search.SearchBoxCtrl.prototype.search = function() {
@@ -321,6 +328,7 @@ os.ui.search.SearchBoxCtrl.prototype.search = function() {
 
 /**
  * Gets the search term
+ *
  * @return {string}
  * @private
  */
@@ -331,6 +339,7 @@ os.ui.search.SearchBoxCtrl.prototype.getSearchTerm_ = function() {
 
 /**
  * Handles changes to the search manager.
+ *
  * @param {goog.events.Event=} opt_event
  * @protected
  */
@@ -366,6 +375,7 @@ os.ui.search.SearchBoxCtrl.prototype.onSearchManagerChange = function(opt_event)
 
 /**
  * Handle search start event.  Assign term to its most current value, keeps multiple searchbox instances in sync.
+ *
  * @param {os.search.SearchEvent} event
  * @private
  */
@@ -380,6 +390,7 @@ os.ui.search.SearchBoxCtrl.prototype.onSearchStart_ = function(event) {
 
 /**
  * Make sure our search term stays in sync with the search manager
+ *
  * @param {os.search.SearchEvent} event
  * @private
  */
@@ -392,6 +403,7 @@ os.ui.search.SearchBoxCtrl.prototype.onSearchSuccess_ = function(event) {
 
 /**
  * Toggles a search on/off.
+ *
  * @param {!os.search.ISearch} search The search provider
  * @export
  */
@@ -414,6 +426,7 @@ os.ui.search.SearchBoxCtrl.prototype.toggleSearch = function(search) {
 
 /**
  * Toggles all searches on/off.
+ *
  * @param {boolean} value The new enabled value
  * @export
  */
@@ -426,6 +439,7 @@ os.ui.search.SearchBoxCtrl.prototype.toggleAll = function(value) {
 
 /**
  * Get the name of a search.
+ *
  * @param {!os.search.ISearch} search The search provider
  * @return {string}
  * @export
@@ -437,6 +451,7 @@ os.ui.search.SearchBoxCtrl.prototype.getSearchName = function(search) {
 
 /**
  * Get the name of a search.
+ *
  * @param {!os.search.ISearch} search The search provider
  * @return {string}
  * @export
@@ -482,7 +497,7 @@ os.ui.search.SearchBoxCtrl.prototype.setUpGroups = function() {
     this['searchOptionsGroups'][groupName] = currentGroup;
   }, this);
 
-  var order =  /** @type {Array} */ (os.settings.get('providerGroupOrder', []));
+  var order = /** @type {Array} */ (os.settings.get('providerGroupOrder', []));
   order.forEach(function(value, index) {
     var currentIndex = this['providerGroups'].indexOf(value);
     if (currentIndex > 0) {
@@ -496,6 +511,7 @@ os.ui.search.SearchBoxCtrl.prototype.setUpGroups = function() {
 
 /**
  * Get the group icon
+ *
  * @param {string} group The group
  * @return {string}
  * @export
@@ -512,6 +528,7 @@ os.ui.search.SearchBoxCtrl.prototype.getGroupIcon = function(group) {
 
 /**
  * Get whether all searches in a group are enabled
+ *
  * @param {string} group The group
  * @return {boolean}
  */
@@ -530,6 +547,7 @@ os.ui.search.SearchBoxCtrl.prototype.allSearchesEnabled = function(group) {
 
 /**
  * Get whether all searches in a group are disabled
+ *
  * @param {string} group The group
  * @return {boolean}
  */
@@ -548,6 +566,7 @@ os.ui.search.SearchBoxCtrl.prototype.allSearchesDisabled = function(group) {
 
 /**
  * Enable/disable all the searches in a group
+ *
  * @param {string} group The group
  * @export
  */
@@ -562,6 +581,7 @@ os.ui.search.SearchBoxCtrl.prototype.toggleGroup = function(group) {
 
 /**
  * Get a searchOptionsGroup
+ *
  * @param {string} groupName The group name
  * @return {Array<os.search.ISearch>} The searches associated with groupName
  * @export
@@ -577,6 +597,7 @@ os.ui.search.SearchBoxCtrl.prototype.getSearchOptionsGroup = function(groupName)
 
 /**
  * The name of the group that is completely and solely selected, otherwise an empty string
+ *
  * @return {?string} The name of the group that is completely selected, false otherwise
  */
 os.ui.search.SearchBoxCtrl.prototype.singleGroupSelected = function() {
@@ -606,6 +627,7 @@ os.ui.search.SearchBoxCtrl.prototype.singleGroupSelected = function() {
 
 /**
  * If a search provider is enabled.
+ *
  * @param {!os.search.ISearch} search The search provider
  * @return {boolean}
  * @export
@@ -617,6 +639,7 @@ os.ui.search.SearchBoxCtrl.prototype.isSearchEnabled = function(search) {
 
 /**
  * If at least one search provider is disabled.
+ *
  * @return {boolean}
  * @export
  */
@@ -629,6 +652,7 @@ os.ui.search.SearchBoxCtrl.prototype.hasDisabledSearch = function() {
 
 /**
  * Get the placeholder text to display in the search box.
+ *
  * @param {Array<string>=} opt_ids The search ids to consider in the text
  * @return {string}
  * @export
@@ -660,6 +684,7 @@ os.ui.search.SearchBoxCtrl.prototype.getPlaceholderText = function(opt_ids) {
 
 /**
  * Get the detail text to display for a recent search.
+ *
  * @param {!osx.search.RecentSearch} recent The recent search object
  * @return {string}
  * @export
@@ -694,6 +719,7 @@ os.ui.search.SearchBoxCtrl.prototype.getRecentDetails = function(recent) {
 
 /**
  * Get the tooltip text to display for a recent search.
+ *
  * @param {!osx.search.RecentSearch} recent The recent search object
  * @return {string}
  * @export
@@ -736,6 +762,7 @@ os.ui.search.SearchBoxCtrl.prototype.getRecentTitle = function(recent) {
 
 /**
  * Sets the search term/type to a recent one.
+ *
  * @param {!osx.search.RecentSearch} recent
  * @export
  */
@@ -768,6 +795,7 @@ os.ui.search.SearchBoxCtrl.prototype.setFromRecent = function(recent) {
 
 /**
  * Update autocomplete results.
+ *
  * @export
  */
 os.ui.search.SearchBoxCtrl.prototype.refreshAutocomplete = function() {
@@ -781,6 +809,7 @@ os.ui.search.SearchBoxCtrl.prototype.refreshAutocomplete = function() {
 
 /**
  * Toggle search options on/off.
+ *
  * @param {angular.Scope.Event} event
  * @export
  */
@@ -833,6 +862,7 @@ os.ui.search.SearchBoxCtrl.prototype.toggleSearchOptions = function(event) {
 
 /**
  * Handle search success event.
+ *
  * @param {os.search.SearchEvent} event
  * @private
  */
@@ -850,6 +880,7 @@ os.ui.search.SearchBoxCtrl.prototype.populateAutocomplete_ = function(event) {
 
 /**
  * Maintain a list of recent search term/type pairs
+ *
  * @protected
  */
 os.ui.search.SearchBoxCtrl.prototype.updateRecents = function() {
@@ -883,6 +914,7 @@ os.ui.search.SearchBoxCtrl.prototype.updateRecents = function() {
 
 /**
  * Save recent searches to config.
+ *
  * @private
  */
 os.ui.search.SearchBoxCtrl.prototype.saveRecent_ = function() {
@@ -904,6 +936,7 @@ os.ui.search.SearchBoxCtrl.prototype.saveRecent_ = function() {
 
 /**
  * Run a favorite search
+ *
  * @param {os.search.Favorite} favorite
  * @export
  */
@@ -916,6 +949,7 @@ os.ui.search.SearchBoxCtrl.prototype.favoriteSearch = function(favorite) {
 
 /**
  * Update the favorites
+ *
  * @protected
  */
 os.ui.search.SearchBoxCtrl.prototype.onFavoritesUpdate = function() {

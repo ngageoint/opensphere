@@ -6,6 +6,7 @@ goog.require('goog.events.Event');
 
 /**
  * Adds an optional "context" object for action events
+ *
  * @constructor
  * @param {!(string|goog.events.EventId)} type Event type.
  * @param {*=} opt_context Optional context
@@ -27,6 +28,7 @@ goog.inherits(os.ui.action.ActionEvent, goog.events.Event);
 
 /**
  * Gets the context associated with this event
+ *
  * @return {?*} The context
  */
 os.ui.action.ActionEvent.prototype.getContext = function() {

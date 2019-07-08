@@ -46,6 +46,7 @@ os.net.VariableReplacer.REPLACERS_ = {};
 
 /**
  * Adds a variable replacer for the given key. Note that the key is case-sensitive
+ *
  * @param {!string} key
  * @param {function(string, string, number, string):string} replaceFn A function matching the definition for
  *  string.replace(needle, replaceFn)
@@ -105,6 +106,7 @@ os.net.VariableReplacer.prototype.modify = function(uri) {
 
 /**
  * Splits the submatch by commas and trims each value.
+ *
  * @param {undefined|string} submatch
  * @return {Array<string>} parts
  */

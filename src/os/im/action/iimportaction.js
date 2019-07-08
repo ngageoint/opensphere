@@ -7,6 +7,7 @@ goog.require('os.IXmlPersistable');
 
 /**
  * Interface for performing actions on imported data.
+ *
  * @extends {os.IPersistable}
  * @extends {os.IXmlPersistable}
  * @interface

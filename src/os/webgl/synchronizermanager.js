@@ -8,6 +8,7 @@ goog.require('os.layer.SynchronizerType');
  * The synchronizer manager keeps reference to the available types of synchronizers in the app. In addition to the
  * synchronizers, it allows plugins to register their own via {@code registerSynchronizer}. The root
  * synchronizer then gets synchronizers for layers via the {@code getSynchronizer} method.
+ *
  * @constructor
  */
 os.webgl.SynchronizerManager = function() {
@@ -30,6 +31,7 @@ os.webgl.SynchronizerManager.LOGGER_ = goog.log.getLogger('os.webgl.Synchronizer
 
 /**
  * Registers a synchronizer constructor by type.
+ *
  * @param {string} type The synchronizer type. Should match the types provided by layers that need to be synced.
  * @param {function(new:os.webgl.AbstractWebGLSynchronizer, ...?)} synchronizer The synchronizer constructor
  */
@@ -45,6 +47,7 @@ os.webgl.SynchronizerManager.prototype.registerSynchronizer = function(type, syn
 
 /**
  * Gets a synchronizer for a layer.
+ *
  * @param {os.layer.ILayer} layer
  * @return {?function(new:os.webgl.AbstractWebGLSynchronizer, ...?)}
  */

@@ -77,6 +77,7 @@ os.command.EditLayerFeatures.prototype.revert = function() {
 
 /**
  * Adds features to the layer
+ *
  * @private
  * @return {boolean}
  */
@@ -93,6 +94,7 @@ os.command.EditLayerFeatures.prototype.add_ = function() {
 
 /**
  * Removes features from the layer.
+ *
  * @private
  * @return {boolean}
  */
@@ -116,6 +118,7 @@ os.command.EditLayerFeatures.prototype.remove_ = function() {
 
 /**
  * Can this command execute
+ *
  * @private
  * @return {boolean}
  */

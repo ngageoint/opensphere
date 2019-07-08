@@ -12,6 +12,7 @@ goog.require('os.ui.filter.basicFilterTreeDirective');
 
 /**
  * The filter builder directive
+ *
  * @return {angular.Directive}
  */
 os.ui.filter.basicFilterBuilderDirective = function() {
@@ -39,6 +40,7 @@ os.ui.Module.directive('basicfilterbuilder', [os.ui.filter.basicFilterBuilderDir
 
 /**
  * Controller for the filter builder
+ *
  * @param {!angular.Scope} $scope
  * @constructor
  * @ngInject
@@ -72,6 +74,7 @@ os.ui.filter.BasicFilterBuilderCtrl = function($scope) {
 
 /**
  * Cleanup
+ *
  * @private
  */
 os.ui.filter.BasicFilterBuilderCtrl.prototype.onDestroy_ = function() {
@@ -93,6 +96,7 @@ os.ui.filter.BasicFilterBuilderCtrl.prototype.onDestroy_ = function() {
 
 /**
  * Adds an expression
+ *
  * @param {Node=} opt_node
  * @export
  */
@@ -105,6 +109,7 @@ os.ui.filter.BasicFilterBuilderCtrl.prototype.add = function(opt_node) {
 
 /**
  * Scrolls to the last node
+ *
  * @private
  */
 os.ui.filter.BasicFilterBuilderCtrl.prototype.onScrollDelay_ = function() {

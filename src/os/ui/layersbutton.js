@@ -7,6 +7,7 @@ goog.require('os.ui.menu.MenuButtonCtrl');
 
 /**
  * The add data button bar directive
+ *
  * @return {angular.Directive}
  */
 os.ui.layersButtonDirective = function() {

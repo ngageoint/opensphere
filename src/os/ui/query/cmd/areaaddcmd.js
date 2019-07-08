@@ -8,6 +8,7 @@ goog.require('os.ui.query.cmd.AbstractArea');
 
 /**
  * Command for adding an area
+ *
  * @param {!ol.Feature} area
  * @param {boolean=} opt_include
  * @param {boolean=} opt_exclude
@@ -28,7 +29,7 @@ os.ui.query.cmd.AreaAdd = function(area, opt_include, opt_exclude, opt_append, o
 
   // Override the entries array to include negations. These must be removed, see THIN-7751.
   this.entries = area.getId() ?
-      os.ui.queryManager.getEntries(null, /** @type {string} */ (area.getId()), null, null, true) : [];
+    os.ui.queryManager.getEntries(null, /** @type {string} */ (area.getId()), null, null, true) : [];
 
   this.include = opt_include !== undefined ? opt_include : this.include;
   this.exclude = opt_exclude !== undefined ? opt_exclude : this.exclude;

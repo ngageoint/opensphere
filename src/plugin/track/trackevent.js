@@ -23,6 +23,7 @@ plugin.track.EventType = {
 
 /**
  * Event for the track plugin.
+ *
  * @param {string} type The event type
  *
  * @extends {goog.events.Event}

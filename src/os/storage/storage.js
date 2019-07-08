@@ -43,6 +43,7 @@ window['cls'] = os.storage.clearStorage;
 
 /**
  * Fires application reset handlers if present, otherwise reloads the page.
+ *
  * @param {boolean=} opt_manualReload If the page will be manually reloaded. This is intended for use by Protractor.
  * @private
  */
@@ -99,6 +100,7 @@ os.storage.pendingResetTasks_ = 0;
 
 /**
  * Check if all pending reset tasks have completed.
+ *
  * @return {boolean}
  * @private
  */
@@ -109,6 +111,7 @@ os.storage.canReset_ = function() {
 
 /**
  * Save final settings and reload the page.
+ *
  * @private
  */
 os.storage.saveAndReload_ = function() {
@@ -118,6 +121,7 @@ os.storage.saveAndReload_ = function() {
 
 /**
  * Disable any further modification of settings and reload the page.
+ *
  * @private
  */
 os.storage.reloadPage_ = function() {

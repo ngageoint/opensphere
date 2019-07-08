@@ -9,6 +9,7 @@ goog.require('os.time');
 
 /**
  * Mapping for fields representing time but not date.
+ *
  * @param {os.im.mapping.TimeType} type The type of time mapping.
  * @extends {os.im.mapping.time.DateTimeMapping.<T>}
  * @constructor

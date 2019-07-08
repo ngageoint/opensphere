@@ -3,6 +3,7 @@ goog.provide('os.events.EventFactory');
 
 /**
  * Create an Event with browser compatibility logic
+ *
  * @param {!string} type The type of event to create
  * @return {!Event}
  */

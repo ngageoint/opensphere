@@ -13,6 +13,7 @@ goog.require('os.ui.state.AbstractStateFormCtrl');
 
 /**
  * The stateimport window directive
+ *
  * @return {angular.Directive}
  */
 os.ui.state.stateImportDirective = function() {
@@ -36,6 +37,7 @@ os.ui.Module.directive('stateimport', [os.ui.state.stateImportDirective]);
 
 /**
  * Controller for the save state window
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @extends {os.ui.state.AbstractStateFormCtrl}

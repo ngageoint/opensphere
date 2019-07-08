@@ -499,6 +499,7 @@ os.ui.ogc.OGCServer.prototype.isLoaded = function() {
 
 /**
  * Called after finishing the load of the OGC layers. Used by extending classes.
+ *
  * @protected
  */
 os.ui.ogc.OGCServer.prototype.finalizeFinish = function() {};
@@ -506,6 +507,7 @@ os.ui.ogc.OGCServer.prototype.finalizeFinish = function() {};
 
 /**
  * Builds query data from the WFS params.
+ *
  * @return {goog.Uri.QueryData}
  * @private
  */
@@ -523,6 +525,7 @@ os.ui.ogc.OGCServer.prototype.getWfsQueryData_ = function() {
 
 /**
  * Builds query data from the WMS params.
+ *
  * @return {goog.Uri.QueryData}
  * @private
  */
@@ -547,6 +550,7 @@ os.ui.ogc.OGCServer.prototype.getWmsQueryData_ = function() {
 
 /**
  * Loads WMS GetCapabilities from the configured server.
+ *
  * @protected
  */
 os.ui.ogc.OGCServer.prototype.loadWmsCapabilities = function() {
@@ -574,6 +578,7 @@ os.ui.ogc.OGCServer.prototype.loadWmsCapabilities = function() {
 
 /**
  * Handle successful load of alternate URL.
+ *
  * @param {goog.events.Event} event The error event
  * @protected
  */
@@ -586,6 +591,7 @@ os.ui.ogc.OGCServer.prototype.onAlternateSuccess = function(event) {
 
 /**
  * Handle failure to load alternate URL.
+ *
  * @param {string} value The alternate URL
  * @param {goog.events.Event} event The error event
  * @protected
@@ -605,6 +611,7 @@ os.ui.ogc.OGCServer.prototype.onAlternateError = function(value, event) {
 
 /**
  * Test a WMS URL to check if its GetCapabilities is valid.
+ *
  * @param {string} url The WMS URL
  * @param {function(goog.events.Event)=} opt_success The success handler
  * @param {function(goog.events.Event)=} opt_error The error handler
@@ -632,6 +639,7 @@ os.ui.ogc.OGCServer.prototype.testWmsUrl = function(url, opt_success, opt_error)
 
 /**
  * Loads WFS GetCapabilities from the configured server.
+ *
  * @protected
  */
 os.ui.ogc.OGCServer.prototype.loadWfsCapabilities = function() {
@@ -992,6 +1000,7 @@ os.ui.ogc.OGCServer.prototype.parseWfsCapabilities = function(response, uri) {
 
 /**
  * Adds the descriptor.
+ *
  * @param {!os.data.IDataDescriptor} descriptor
  */
 os.ui.ogc.OGCServer.prototype.addDescriptor = function(descriptor) {
@@ -1002,6 +1011,7 @@ os.ui.ogc.OGCServer.prototype.addDescriptor = function(descriptor) {
 
 /**
  * Gets a descriptor that matches the given title
+ *
  * @param {!string} title
  * @return {?os.ui.ogc.IOGCDescriptor} the descriptor or null
  * @protected
@@ -1027,6 +1037,7 @@ os.ui.ogc.OGCServer.prototype.getDescriptorByTitle = function(title) {
 
 /**
  * Creates a new layer descriptor
+ *
  * @return {!os.ui.ogc.IOGCDescriptor} the descriptor
  * @protected
  */
@@ -1317,6 +1328,7 @@ os.ui.ogc.OGCServer.prototype.markAllDescriptors = function(opt_node) {
 
 /**
  * Finds and removes the descriptor.
+ *
  * @param {os.ui.ogc.IOGCDescriptor} descriptor
  */
 os.ui.ogc.OGCServer.prototype.removeDescriptor = function(descriptor) {

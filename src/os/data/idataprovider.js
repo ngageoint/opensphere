@@ -7,6 +7,7 @@ goog.require('os.structs.ITreeNode');
 /**
  * The interface for all data providers. Data providers can be servers, file types, mock data streams, etc.
  * The purpose of data providers is to provide a tree or list of data descriptors.
+ *
  * @extends {os.structs.ITreeNode}
  * @interface
  */

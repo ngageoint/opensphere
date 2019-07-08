@@ -7,6 +7,7 @@ goog.require('os.command.State');
 
 /**
  * Command for adding query entries.
+ *
  * @param {!Array<!Object<string, string|boolean>>} entries
  * @param {boolean=} opt_merge
  * @param {string=} opt_layerHint
@@ -73,6 +74,7 @@ os.ui.query.cmd.QueryEntries.prototype.state = os.command.State.READY;
 
 /**
  * Checks if the command is ready to execute
+ *
  * @return {boolean}
  */
 os.ui.query.cmd.QueryEntries.prototype.canExecute = function() {

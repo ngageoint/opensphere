@@ -16,6 +16,7 @@ plugin.file.kml.tour.EventType = {
 
 /**
  * Represents a KML tour, from a `gx:Tour` (KML 2.2) or `Tour` (KML 2.3) element.
+ *
  * @param {string=} opt_name The name of the tour.
  * @param {string=} opt_description The tour description.
  * @param {Array<!plugin.file.kml.tour.AbstractTourPrimitive>=} opt_playlist The tour playlist.
@@ -75,6 +76,7 @@ goog.inherits(plugin.file.kml.tour.Tour, goog.events.EventTarget);
 
 /**
  * Get the tour playlist.
+ *
  * @return {!Array<!plugin.file.kml.tour.AbstractTourPrimitive>}
  */
 plugin.file.kml.tour.Tour.prototype.getPlaylist = function() {
@@ -84,6 +86,7 @@ plugin.file.kml.tour.Tour.prototype.getPlaylist = function() {
 
 /**
  * Set the tour playlist.
+ *
  * @param {!Array<!plugin.file.kml.tour.AbstractTourPrimitive>} value The tour playlist.
  */
 plugin.file.kml.tour.Tour.prototype.setPlaylist = function(value) {
@@ -94,6 +97,7 @@ plugin.file.kml.tour.Tour.prototype.setPlaylist = function(value) {
 
 /**
  * Add a tour primitive to the playlist.
+ *
  * @param {!plugin.file.kml.tour.AbstractTourPrimitive} value The tour playlist.
  */
 plugin.file.kml.tour.Tour.prototype.addToPlaylist = function(value) {
@@ -104,6 +108,7 @@ plugin.file.kml.tour.Tour.prototype.addToPlaylist = function(value) {
 
 /**
  * Set if the tour is playing.
+ *
  * @param {boolean} value If the tour is playing.
  */
 plugin.file.kml.tour.Tour.prototype.setPlaying = function(value) {
@@ -179,6 +184,7 @@ plugin.file.kml.tour.Tour.prototype.reset = function() {
 
 /**
  * Play the next primitive in the tour.
+ *
  * @private
  */
 plugin.file.kml.tour.Tour.prototype.playNext_ = function() {
@@ -219,6 +225,7 @@ plugin.file.kml.tour.Tour.prototype.onExecuteResolved_ = function() {
 
 /**
  * Handle rejection of a playlist item.
+ *
  * @param {*} opt_reason The rejection reason.
  */
 plugin.file.kml.tour.Tour.prototype.onExecuteRejected_ = function(opt_reason) {

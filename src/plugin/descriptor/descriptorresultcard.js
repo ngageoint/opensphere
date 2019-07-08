@@ -29,6 +29,7 @@ os.ui.Module.directive('descriptorresultcard', [plugin.descriptor.descriptorResu
 
 /**
  * Controller for the beresultcard directive.
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @constructor
@@ -75,6 +76,7 @@ plugin.descriptor.ResultCardCtrl.SNIPPET_LENGTH = 125;
 
 /**
  * Clean up the controller.
+ *
  * @private
  */
 plugin.descriptor.ResultCardCtrl.prototype.destroy_ = function() {
@@ -106,6 +108,7 @@ plugin.descriptor.ResultCardCtrl.prototype.getDescriptor = function() {
 
 /**
  * Get a field from the result.
+ *
  * @param {string} field
  * @return {*}
  * @export
@@ -161,6 +164,7 @@ plugin.descriptor.ResultCardCtrl.prototype.getField = function(field) {
 
 /**
  * Toggles the descriptor
+ *
  * @export
  */
 plugin.descriptor.ResultCardCtrl.prototype.toggle = function() {
@@ -178,6 +182,7 @@ plugin.descriptor.ResultCardCtrl.prototype.toggle = function() {
 
 /**
  * Toggles the description text length
+ *
  * @param {boolean} full
  * @export
  */

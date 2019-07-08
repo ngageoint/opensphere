@@ -10,6 +10,7 @@ goog.require('os.load.LoadingTask');
 
 /**
  * Manages loading tasks within an application.
+ *
  * @extends {goog.events.EventTarget}
  * @constructor
  */
@@ -49,6 +50,7 @@ os.load.LoadingManager.LOADING = 'loadingManager:loading';
 
 /**
  * Gets the overall loading state.
+ *
  * @return {boolean}
  */
 os.load.LoadingManager.prototype.getLoading = function() {
@@ -58,6 +60,7 @@ os.load.LoadingManager.prototype.getLoading = function() {
 
 /**
  * Gets the count of loading things.
+ *
  * @return {number}
  */
 os.load.LoadingManager.prototype.getLoadingCount = function() {

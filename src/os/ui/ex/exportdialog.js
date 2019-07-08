@@ -19,6 +19,7 @@ goog.require('os.ui.window');
 
 /**
  * The export directive
+ *
  * @return {angular.Directive}
  */
 os.ui.ex.ExportDirective = function() {
@@ -37,6 +38,7 @@ os.ui.Module.directive('export', [os.ui.ex.ExportDirective]);
 
 /**
  * Controller function for the export directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$compile} $compile
@@ -113,6 +115,7 @@ os.ui.ex.ExportCtrl.prototype.onExporterChange = function(opt_new, opt_old) {
 
 /**
  * Handle changes to the export options.
+ *
  * @param {angular.Scope.Event} event The change event
  * @param {Array<!ol.Feature>} items The features to export
  * @param {Array<!os.source.Vector>} sources The sources to export
@@ -147,6 +150,7 @@ os.ui.ex.ExportCtrl.prototype.onExportOptionsChange_ = function(event, items, so
 
 /**
  * Starts the export process for the provided sources.
+ *
  * @param {Array<!os.source.Vector>=} opt_sources The sources.
  */
 os.ui.ex.startExport = function(opt_sources) {

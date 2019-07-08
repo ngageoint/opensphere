@@ -59,6 +59,7 @@ os.ui.columnactions.ColumnActionManager.PERFORM_COLUMN_ACTION = 'PERFORM_COLUMN_
 
 /**
  * Get includes from settings
+ *
  * @private
  */
 os.ui.columnactions.ColumnActionManager.prototype.init_ = function() {

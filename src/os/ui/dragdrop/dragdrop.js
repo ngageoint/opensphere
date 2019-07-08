@@ -74,6 +74,7 @@ os.ui.DragDropStyle = {
 
 /**
  * Link function for draggable directive
+ *
  * @param {!angular.Scope} $scope angular scope
  * @param {!angular.JQLite} $element to which this directive is applied
  */
@@ -86,6 +87,7 @@ os.ui.dragDropLink = function($scope, $element) {
 
 /**
  * Object containing the link function used by the directive.
+ *
  * @constructor
  * @param {!angular.Scope} $scope angular scope
  * @param {!angular.JQLite} $element to which this directive is applied
@@ -168,6 +170,7 @@ os.ui.DragDrop.prototype.destroy = function() {
 
 /**
  * Handle event when dragging starts.
+ *
  * @param {goog.fx.DragDropEvent} event
  */
 os.ui.DragDrop.prototype.onDragStart = function(event) {
@@ -191,6 +194,7 @@ os.ui.DragDrop.prototype.onDragStart = function(event) {
 
 /**
  * Handle event when a dragging ends
+ *
  * @param {goog.fx.DragDropEvent} event
  */
 os.ui.DragDrop.prototype.onDragEnd = function(event) {
@@ -208,6 +212,7 @@ os.ui.DragDrop.prototype.onDragEnd = function(event) {
 
 /**
  * Remove any highlighting that happened due to dragging
+ *
  * @private
  */
 os.ui.DragDrop.prototype.clearTextSelection_ = function() {
@@ -227,6 +232,7 @@ os.ui.DragDrop.prototype.clearTextSelection_ = function() {
 
 /**
  * Handle event when a dragged source is over a drag target.
+ *
  * @param {goog.fx.DragDropEvent} event
  */
 os.ui.DragDrop.prototype.onDragOver = function(event) {
@@ -236,6 +242,7 @@ os.ui.DragDrop.prototype.onDragOver = function(event) {
 
 /**
  * Handle event when a dragged source leaves a drag target.
+ *
  * @param {goog.fx.DragDropEvent} event
  */
 os.ui.DragDrop.prototype.onDragOut = function(event) {
@@ -247,6 +254,7 @@ os.ui.DragDrop.prototype.onDragOut = function(event) {
  * Handle event when a dragged source is dropped on a drag target.
  * If the target has not moved more than ['ddMin'] number of pixels,
  * the event handler will not be called.
+ *
  * @param {goog.fx.DragDropEvent} event
  */
 os.ui.DragDrop.prototype.onDrop = function(event) {
@@ -263,6 +271,7 @@ os.ui.DragDrop.prototype.onDrop = function(event) {
 
 /**
  * Respond to drag enter event by adding appropriate css to the elements.
+ *
  * @param {goog.fx.DragDropEvent} event
  */
 os.ui.DragDrop.prototype.addOverClass = function(event) {
@@ -272,6 +281,7 @@ os.ui.DragDrop.prototype.addOverClass = function(event) {
 
 /**
  * Respond to drag out event by removing appropriate css from the elements.
+ *
  * @param {goog.fx.DragDropEvent} event
  */
 os.ui.DragDrop.prototype.removeOverClass = function(event) {

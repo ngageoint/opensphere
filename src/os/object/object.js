@@ -31,6 +31,7 @@ os.object.STRING_VAL = String({});
 
 /**
  * Create a new object, removing all keys with an undefined value.
+ *
  * @param {T} obj The original object
  * @return {T} The trimmed object
  * @template T
@@ -54,6 +55,7 @@ os.object.prune = function(obj) {
 
 /**
  * Merges two objects
+ *
  * @param {Object} from The object to merge
  * @param {Object} to The object to which to merge
  * @param {boolean=} opt_overwrite Whether or not to overwrite existing values.
@@ -103,6 +105,7 @@ os.object.merge = function(from, to, opt_overwrite, opt_nullOverwrite) {
 
 /**
  * Determines if the provided value is a primitive.
+ *
  * @param {?} value The value to check.
  * @param {string=} opt_type The type from `goog.typeOf`, to avoid multiple calls.
  * @return {boolean} Whether or not the value is a primitive.
@@ -144,6 +147,7 @@ os.object.set = function(obj, keys, value) {
  * Reduce a deep hieractical JSON into a shallow object, where the depth is represented in the key as
  * a delimited string.  Arrays and primitives remain intact, while nested objects are reduced further.
  * E.g.: {a: {b: 'c', d: 'f'}} becomes {'a.b': 'c', 'a.d': 'f'}
+ *
  * @param {*|undefined} obj
  * @param {string=} opt_prefix The delimited prefix to append the keys to
  * @param {string=} opt_delim
@@ -179,6 +183,7 @@ os.object.reduce = function(obj, opt_prefix, opt_delim) {
 
 /**
  * The counterpart to {@see os.object.reduce}.  Expands delimited keys to a deep hierarctical JSON object.
+ *
  * @param {!Object.<string, *>} obj
  * @param {string=} opt_delim
  * @return {!Object}
@@ -197,6 +202,7 @@ os.object.expand = function(obj, opt_delim) {
  * Delete a value by it's keys.  Will also delete all the keys in the specified path, so long as there aren't sibling
  * values that need to remain.  For example, deleting 'a.b' from {a: {b: 'b'}} will yield {};
  * deleting 'a.b' from {a: {b: 'b', c: 'c'}} will yield {a: {c: 'c'}}
+ *
  * @param {!Object.<string, *>} obj
  * @param {!Array.<!string|!number>|!string} keys
  */
@@ -222,6 +228,7 @@ os.object.delete = function(obj, keys) {
 
 /**
  * Parse only the values of an object using JSON.os.parse.  Operation occurs inline on the object.
+ *
  * @param {Object.<string, *>} obj
  */
 os.object.parseValues = function(obj) {
@@ -235,6 +242,7 @@ os.object.parseValues = function(obj) {
 
 /**
  * Stringify only the values of an object using JSON.os.parse.  Operation occurs inline on the object.
+ *
  * @param {Object} obj
  */
 os.object.stringifyValues = function(obj) {
@@ -246,6 +254,7 @@ os.object.stringifyValues = function(obj) {
 
 /**
  * Get the first non-empty value from a list of objects.
+ *
  * @param {string} key The key
  * @param {...(Object|null|undefined)} var_args The objects to search
  * @return {*}
@@ -283,6 +292,7 @@ os.object.getValueExtractor = function(attribute) {
 
 /**
  * Compare two objects by their respective values of the provided field
+ *
  * @param {!string} field The name of the field.  If it's a publicly accessible member then it will be used.  If its the
  *  name of a function then it will be invoked.  Otherwise we'll try to turn it into a "getter".  If all these cases
  *  fail, the return value will indicate the two objects are equivalent.
@@ -301,6 +311,7 @@ os.object.compareByField = function(field, o1, o2, opt_comparitor) {
 
 /**
  * Get an object's field value
+ *
  * @param {!string} field
  * @param {Object} o
  * @return {*}

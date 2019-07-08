@@ -8,6 +8,7 @@ goog.require('os.ui.filter.string');
 
 /**
  * Operator for times newer than a set value.
+ *
  * @extends {os.ui.filter.op.Op}
  * @constructor
  */

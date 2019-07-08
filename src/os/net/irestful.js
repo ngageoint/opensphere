@@ -4,6 +4,7 @@ goog.provide('os.net.IRestful');
 
 /**
  * Interface which enables an object to declare its REST URLs.
+ *
  * @interface
  */
 os.net.IRestful = function() {};

@@ -12,6 +12,7 @@ goog.require('os.im.mapping.MappingRegistry');
 
 /**
  * Manager for data mappings.
+ *
  * @constructor
  * @template T
  */
@@ -42,6 +43,7 @@ os.im.mapping.MappingManager.LOGGER_ = goog.log.getLogger('os.im.mapping.Mapping
 
 /**
  * Gets all registered mappings.
+ *
  * @return {Object<string, os.im.mapping.IMapping<T>>}
  */
 os.im.mapping.MappingManager.prototype.getMappings = function() {
@@ -51,6 +53,7 @@ os.im.mapping.MappingManager.prototype.getMappings = function() {
 
 /**
  * Get a mapping by id.
+ *
  * @param {string} id
  * @return {?os.im.mapping.IMapping<T>}
  */
@@ -75,6 +78,7 @@ os.im.mapping.MappingManager.prototype.registerMapping = function(mapping) {
 
 /**
  * Tries to determine which mappings apply to the provided set of items.
+ *
  * @param {Array<T>} items
  * @return {!Array<os.im.mapping.IMapping<T>>}
  */
@@ -95,6 +99,7 @@ os.im.mapping.MappingManager.prototype.autoDetect = function(items) {
 
 /**
  * Compares mappings and only returns the highest scored within each score type.
+ *
  * @param {Array<os.im.mapping.IMapping<T>>} mappings
  * @return {!Array<os.im.mapping.IMapping<T>>}
  * @protected
@@ -122,6 +127,7 @@ os.im.mapping.MappingManager.prototype.retainHighestScoreMappings = function(map
 
 /**
  * Persists mappings as a JSON object
+ *
  * @param {Array<os.im.mapping.IMapping<T>>} mappings The mappings to persist
  * @return {Object<string, *>} Mappings persisted as an object
  */
@@ -138,6 +144,7 @@ os.im.mapping.MappingManager.prototype.persistMappings = function(mappings) {
 
 /**
  * Restores a mapping from a JSON object.
+ *
  * @param {Object<string, *>} json The persisted mapping to restore.
  * @return {os.im.mapping.IMapping<T>} The restored mapping.
  */
@@ -170,6 +177,7 @@ os.im.mapping.MappingManager.prototype.restoreMapping = function(json) {
 
 /**
  * Restores mappings from a JSON object.
+ *
  * @param {Object<string, Object<string, *>>} json The persisted mappings to restore.
  * @return {Array<os.im.mapping.IMapping<T>>} The restored mappings.
  */
@@ -189,6 +197,7 @@ os.im.mapping.MappingManager.prototype.restoreMappings = function(json) {
 
 /**
  * Persist mappings to an XML Element.
+ *
  * @param {!Array<!os.im.mapping.IMapping<T>>} mappings The mappings to persist
  * @return {!Element} Mappings persisted as an XML Element
  */
@@ -210,6 +219,7 @@ os.im.mapping.MappingManager.prototype.toXml = function(mappings) {
 
 /**
  * Restore a mapping from an XML element.
+ *
  * @param {!Element} xml The XML element for a mapping.
  * @return {os.im.mapping.IMapping} A newly constructed class with the values restored from config.
  */

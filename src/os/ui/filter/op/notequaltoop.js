@@ -5,6 +5,7 @@ goog.require('os.ui.filter.op.Op');
 
 /**
  * A 'PropertyIsNotEqualTo' operation class.
+ *
  * @extends {os.ui.filter.op.Op}
  * @constructor
  */

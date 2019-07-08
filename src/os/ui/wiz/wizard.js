@@ -21,6 +21,7 @@ os.ui.wiz.StepState = {
 
 /**
  * The wizard directive
+ *
  * @return {angular.Directive}
  */
 os.ui.wiz.wizardDirective = function() {
@@ -44,6 +45,7 @@ os.ui.Module.directive('wizard', [os.ui.wiz.wizardDirective]);
 
 /**
  * Controller for the wizard directive
+ *
  * @param {angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$timeout} $timeout
@@ -117,6 +119,7 @@ os.ui.wiz.WizardCtrl = function($scope, $element, $timeout, $attrs) {
 
 /**
  * Clean up references/listeners
+ *
  * @private
  */
 os.ui.wiz.WizardCtrl.prototype.destroy_ = function() {
@@ -135,6 +138,7 @@ os.ui.wiz.WizardCtrl.prototype.destroy_ = function() {
  * Handle step validity change. The dispatcher (step controller) can specify a validity value that will override
  * the step isValid call if false. This allows form validation errors to prevent moving on in the wizard even if
  * the model/config is technically valid.
+ *
  * @param {angular.Scope.Event} event
  * @param {boolean=} opt_valid
  * @private
@@ -155,6 +159,7 @@ os.ui.wiz.WizardCtrl.prototype.onStepValidityChange_ = function(event, opt_valid
 
 /**
  * Handles save events.
+ *
  * @param {angular.Scope.Event} event
  * @param {os.parse.FileParserConfig=} opt_config Optional parser config.
  * @private
@@ -182,6 +187,7 @@ os.ui.wiz.WizardCtrl.prototype.activateStep_ = function(step, opt_skipCompile) {
 
 /**
  * Check if all steps are complete and finish the wizard, or display an error.
+ *
  * @export
  */
 os.ui.wiz.WizardCtrl.prototype.accept = function() {
@@ -196,6 +202,7 @@ os.ui.wiz.WizardCtrl.prototype.accept = function() {
 
 /**
  * If the accept button should be enabled.
+ *
  * @return {boolean}
  * @export
  */
@@ -207,6 +214,7 @@ os.ui.wiz.WizardCtrl.prototype.canAccept = function() {
 
 /**
  * If the next button should be enabled.
+ *
  * @return {boolean}
  * @export
  */
@@ -218,6 +226,7 @@ os.ui.wiz.WizardCtrl.prototype.canContinue = function() {
 
 /**
  * If the accept button should be enabled.
+ *
  * @return {boolean}
  * @export
  */
@@ -228,6 +237,7 @@ os.ui.wiz.WizardCtrl.prototype.isLastStep = function() {
 
 /**
  * Performs wizard cancellation actions and closes the window.
+ *
  * @export
  */
 os.ui.wiz.WizardCtrl.prototype.cancel = function() {
@@ -238,6 +248,7 @@ os.ui.wiz.WizardCtrl.prototype.cancel = function() {
 
 /**
  * Performs wizard cancellation/cleanup actions.
+ *
  * @protected
  */
 os.ui.wiz.WizardCtrl.prototype.cancelInternal = function() {
@@ -247,6 +258,7 @@ os.ui.wiz.WizardCtrl.prototype.cancelInternal = function() {
 
 /**
  * Perform wizard completion actions.
+ *
  * @protected
  */
 os.ui.wiz.WizardCtrl.prototype.finish = function() {
@@ -256,6 +268,7 @@ os.ui.wiz.WizardCtrl.prototype.finish = function() {
 
 /**
  * Move to the next step in the wizard.
+ *
  * @param {boolean=} opt_skipCompile If true, compilation of the next step will be skipped. Use this when moving
  *   multiple steps at a time.
  * @export
@@ -287,6 +300,7 @@ os.ui.wiz.WizardCtrl.prototype.next = function(opt_skipCompile) {
 
 /**
  * Move to the previous step in the wizard.
+ *
  * @param {boolean=} opt_skipCompile If true, compilation of the next step will be skipped. Use this when moving
  *   multiple steps at a time.
  * @export
@@ -306,6 +320,7 @@ os.ui.wiz.WizardCtrl.prototype.prev = function(opt_skipCompile) {
 
 /**
  * Update step states.
+ *
  * @private
  */
 os.ui.wiz.WizardCtrl.prototype.afterStepping_ = function() {
@@ -326,6 +341,7 @@ os.ui.wiz.WizardCtrl.prototype.afterStepping_ = function() {
 
 /**
  * Move to a specific step in the wizard.
+ *
  * @param {number} index
  * @export
  */
@@ -352,6 +368,7 @@ os.ui.wiz.WizardCtrl.prototype.setStepIndex = function(index) {
 
 /**
  * Determine if the provided step is set as the active step.
+ *
  * @param {os.ui.wiz.step.IWizardStep|number} step The step or the index in the steps array
  * @return {boolean}
  * @export
@@ -367,6 +384,7 @@ os.ui.wiz.WizardCtrl.prototype.isActive = function(step) {
 
 /**
  * Get the icon to display next to the step in the wizard.
+ *
  * @param {os.ui.wiz.step.IWizardStep|number} step The step or the index in the steps array
  * @return {!string}
  * @export
@@ -396,6 +414,7 @@ os.ui.wiz.WizardCtrl.prototype.getStepIcon = function(step) {
 
 /**
  * Get the state of the provided step
+ *
  * @param {os.ui.wiz.step.IWizardStep|number} step The step or the index in the steps array
  * @return {!string}
  * @export
@@ -411,6 +430,7 @@ os.ui.wiz.WizardCtrl.prototype.getStepState = function(step) {
 
 /**
  * Set the state of the provided step
+ *
  * @param {os.ui.wiz.step.IWizardStep|number} step The step or the index in the steps array
  * @param {os.ui.wiz.StepState} state The new state
  * @protected

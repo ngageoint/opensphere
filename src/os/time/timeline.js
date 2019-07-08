@@ -48,6 +48,7 @@ os.time.timeline.YEAR = 12 * os.time.timeline.MONTH;
 
 /**
  * Automatically configures the timeline controller for animation.
+ *
  * @param {os.time.TimelineController} controller
  * @param {string=} opt_durationHint
  */
@@ -78,6 +79,7 @@ os.time.timeline.autoConfigureFromTimeRange = function(controller, opt_durationH
 
 /**
  * Set the default offset/skip to use for a time range.
+ *
  * @param {os.time.TimelineController} controller
  * @param {number} range The timeline range
  */
@@ -113,6 +115,7 @@ os.time.timeline.setTileAnimation = function(controller, offset, duration) {
 /**
  * Creates a date string formatted to represent the current time of the timeline controller, using the provided
  * duration. Defaults to 'day' if no duration is provided.
+ *
  * @param {os.time.TimelineController} controller
  * @param {string=} opt_durationHint
  * @return {string}

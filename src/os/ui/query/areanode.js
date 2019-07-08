@@ -10,6 +10,7 @@ goog.require('os.ui.slick.SlickTreeNode');
 
 /**
  * Tree nodes for areas
+ *
  * @extends {os.ui.slick.SlickTreeNode}
  * @implements {os.data.ISearchable}
  * @param {ol.Feature=} opt_area
@@ -50,6 +51,7 @@ os.ui.query.AreaNode.prototype.getArea = function() {
 
 /**
  * Sets the area
+ *
  * @param {?ol.Feature} area the area
  */
 os.ui.query.AreaNode.prototype.setArea = function(area) {
@@ -68,6 +70,7 @@ os.ui.query.AreaNode.prototype.setArea = function(area) {
 
 /**
  * Update the node from the current area.
+ *
  * @protected
  */
 os.ui.query.AreaNode.prototype.updateFromArea = function() {
@@ -195,6 +198,7 @@ os.ui.query.AreaNode.prototype.onMouseLeave = function() {
 
 /**
  * Whether or not the layer is loading
+ *
  * @return {boolean}
  * @export
  */

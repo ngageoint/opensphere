@@ -7,6 +7,7 @@ goog.require('os.im.mapping.AbstractPositionMapping');
 
 /**
  * Mapping to translate a coordinate string to a point geometry.
+ *
  * @param {number=} opt_order
  * @extends {os.im.mapping.AbstractPositionMapping.<T, S>}
  * @constructor
@@ -26,6 +27,7 @@ goog.inherits(os.im.mapping.location.BaseLatLonMapping, os.im.mapping.AbstractPo
 
 /**
  * Maps a coordinate string to a geometry.
+ *
  * @param {T} item The item to modify
  * @param {S=} opt_targetItem The optional target item
  * @throws {Error} If the location field cannot be parsed.
@@ -94,6 +96,7 @@ os.im.mapping.location.BaseLatLonMapping.prototype.testAndGetField = function(va
 
 /**
  * Parses a coordinate string into a lat/lon pair.
+ *
  * @param {string} value
  * @param {string=} opt_format Custom format string
  * @return {?osx.geo.Location}

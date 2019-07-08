@@ -26,6 +26,7 @@ os.ui.file.method.UrlNoFailMethod.TYPE = 'unkown';
 
 /**
  * Handle the file request failure.  Create file with name and URL but no contents.
+ *
  * @override
  * @param {goog.events.Event} event
  * @protected

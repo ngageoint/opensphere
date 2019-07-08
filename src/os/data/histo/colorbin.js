@@ -10,6 +10,7 @@ goog.require('os.style');
 
 /**
  * Histogram bin that tracks the colors of items in the bin.
+ *
  * @param {string} baseColor The base color of the layer represented by this bin
  * @extends {os.histo.Bin<T>}
  * @template S,T
@@ -56,6 +57,7 @@ goog.inherits(os.data.histo.ColorBin, os.histo.Bin);
 
 /**
  * Get the color of this bin.
+ *
  * @return {string}
  */
 os.data.histo.ColorBin.prototype.getColor = function() {
@@ -76,6 +78,7 @@ os.data.histo.ColorBin.prototype.getColor = function() {
 
 /**
  * Get the color counts for this bin.
+ *
  * @return {Object<string, number>}
  */
 os.data.histo.ColorBin.prototype.getColorCounts = function() {
@@ -85,6 +88,7 @@ os.data.histo.ColorBin.prototype.getColorCounts = function() {
 
 /**
  * Get the filter function used by the model.
+ *
  * @return {?function(this:S, T):(string|undefined)}
  * @template T,S
  */
@@ -95,6 +99,7 @@ os.data.histo.ColorBin.prototype.getColorFunction = function() {
 
 /**
  * Set the filter function used by the model.
+ *
  * @param {?function(this:S, T):(string|undefined)} fn
  * @template T,S
  */
@@ -122,6 +127,7 @@ os.data.histo.ColorBin.prototype.removeItem = function(item) {
 
 /**
  * Increment the count for a color.
+ *
  * @param {string|undefined} color The color
  */
 os.data.histo.ColorBin.prototype.decrementColor = function(color) {
@@ -140,6 +146,7 @@ os.data.histo.ColorBin.prototype.decrementColor = function(color) {
 
 /**
  * Increment the count for a color.
+ *
  * @param {string|undefined} color The color
  */
 os.data.histo.ColorBin.prototype.incrementColor = function(color) {

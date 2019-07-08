@@ -6,6 +6,7 @@ goog.require('os.ui.Module');
 
 /**
  * The default text literal directive
+ *
  * @return {angular.Directive}
  */
 os.ui.filter.textDirective = function() {
@@ -25,6 +26,7 @@ os.ui.Module.directive('fbText', [os.ui.filter.textDirective]);
 
 /**
  * The column type check validation
+ *
  * @return {angular.Directive}
  */
 os.ui.filter.colTypeCheckValidation = function() {
@@ -50,6 +52,7 @@ os.ui.filter.PATTERNS = {
 
 /**
  * The link for type check validation
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {*} $attrs

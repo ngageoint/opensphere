@@ -4,6 +4,7 @@ goog.provide('os.ui.slick.AbstractNodeUICtrl');
 
 /**
  * Abstract UI controller for tree nodes.
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @constructor
@@ -29,6 +30,7 @@ os.ui.slick.AbstractNodeUICtrl = function($scope, $element) {
 
 /**
  * Clean up.
+ *
  * @protected
  */
 os.ui.slick.AbstractNodeUICtrl.prototype.destroy = function() {
@@ -39,6 +41,7 @@ os.ui.slick.AbstractNodeUICtrl.prototype.destroy = function() {
 
 /**
  * Whether or not to show the element
+ *
  * @return {boolean}
  * @export
  */

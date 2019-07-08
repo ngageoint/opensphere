@@ -10,6 +10,7 @@ goog.require('plugin.file.kml.KMLProvider');
 
 /**
  * The KML import directive
+ *
  * @return {angular.Directive}
  */
 plugin.file.kml.ui.kmlImportDirective = function() {
@@ -33,6 +34,7 @@ os.ui.Module.directive('kmlimport', [plugin.file.kml.ui.kmlImportDirective]);
 
 /**
  * Controller for the KML import dialog
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @extends {os.ui.file.ui.AbstractFileImportCtrl<!os.parse.FileParserConfig,!plugin.file.kml.KMLDescriptor>}

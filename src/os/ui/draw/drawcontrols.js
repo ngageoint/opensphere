@@ -13,6 +13,7 @@ goog.require('os.ui.ol.draw.drawMenuDirective');
 
 /**
  * The draw-controls directive
+ *
  * @return {angular.Directive}
  */
 os.ui.draw.drawControlsDirective = function() {
@@ -36,6 +37,7 @@ os.ui.Module.directive('osDrawControls', [os.ui.draw.drawControlsDirective]);
 
 /**
  * Controller for the draw-controls directive.
+ *
  * @constructor
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element

@@ -47,6 +47,7 @@ os.config.SettingsMessage;
  * Maintains application settings which are retrieved from different storage sources,
  * (see {os.config.storage.SettingsStorageRegistry}), and merged to be accessible to the client.  Also handles
  * keeping the application current based on settings updates externally via crosstalk (xt).
+ *
  * @extends {goog.events.EventTarget}
  * @implements {os.xt.IMessageHandler}
  * @constructor
@@ -208,6 +209,7 @@ os.config.Settings.WRITE_STORAGE_BACKUP_KEY = 'opensphere.config.storage.writeTy
 
 /**
  * Retrieve a reference to the registry of storage mechanisms to be manipulated directly
+ *
  * @return {!os.config.storage.SettingsStorageRegistry}
  */
 os.config.Settings.prototype.getStorageRegistry = function() {
@@ -237,6 +239,7 @@ os.config.Settings.prototype.init = function() {
 
 /**
  * Handle registered storages initialization success
+ *
  * @private
  */
 os.config.Settings.prototype.onInit_ = function() {
@@ -248,6 +251,7 @@ os.config.Settings.prototype.onInit_ = function() {
 
 /**
  * Check if settings has been initialized.
+ *
  * @return {boolean} If settings has been initialized.
  */
 os.config.Settings.prototype.isInitialized = function() {
@@ -257,6 +261,7 @@ os.config.Settings.prototype.isInitialized = function() {
 
 /**
  * Check if settings has finished loading.
+ *
  * @return {boolean} If settings has finished loading.
  */
 os.config.Settings.prototype.isLoaded = function() {
@@ -266,6 +271,7 @@ os.config.Settings.prototype.isLoaded = function() {
 
 /**
  * Get whether saving is enabled.
+ *
  * @return {boolean}
  */
 os.config.Settings.prototype.getPersistenceEnabled = function() {
@@ -275,6 +281,7 @@ os.config.Settings.prototype.getPersistenceEnabled = function() {
 
 /**
  * Sets whether saving is enabled.
+ *
  * @param {boolean} val
  */
 os.config.Settings.prototype.setPersistenceEnabled = function(val) {
@@ -305,6 +312,7 @@ os.config.Settings.prototype.reload = function() {
 /**
  * Handler for settings reload. Purges the current settings, reloads the new ones, and fires internal notification
  * events to update anything in the app that might care.
+ *
  * @param {Object} config
  * @private
  */
@@ -329,6 +337,7 @@ os.config.Settings.prototype.onReload_ = function(config) {
 
 /**
  * Handles successful load of all settings
+ *
  * @param {Object} loadedConfig
  * @private
  */
@@ -356,6 +365,7 @@ os.config.Settings.prototype.onLoad_ = function(loadedConfig) {
 
 /**
  * Finish the settings load
+ *
  * @private
  */
 os.config.Settings.prototype.finalizeLoadSettings_ = function() {
@@ -390,10 +400,11 @@ os.config.Settings.prototype.finalizeLoadSettings_ = function() {
 
 
 /**
-* Get the settings
-* @param {boolean=} opt_onlyPrefs get only user prefs
-* @return {Object}
-*/
+ * Get the settings
+ *
+ * @param {boolean=} opt_onlyPrefs get only user prefs
+ * @return {Object}
+ */
 os.config.Settings.prototype.getSettingsConfig = function(opt_onlyPrefs) {
   return opt_onlyPrefs ? this.actualConfig_[os.config.ConfigType.PREFERENCE] : this.mergedConfig_;
 };
@@ -401,6 +412,7 @@ os.config.Settings.prototype.getSettingsConfig = function(opt_onlyPrefs) {
 
 /**
  * Change the type of storage to use to save settings.
+ *
  * @param {os.config.storage.SettingsWritableStorageType} type
  * @param {boolean=} opt_alert Send a notification on the UI to confirm the update successfully occurred.
  */
@@ -432,6 +444,7 @@ os.config.Settings.prototype.setWriteStorageType = function(type, opt_alert) {
 
 /**
  * Saves the settings if saving is enabled.
+ *
  * @param {Object=} opt_settingsToOverwrite
  * @return {!goog.Promise}
  */
@@ -495,6 +508,7 @@ os.config.Settings.prototype.save = function(opt_settingsToOverwrite) {
 
 /**
  * Handle settings successfully saved to async service
+ *
  * @private
  */
 os.config.Settings.prototype.onSaveSuccess_ = function() {
@@ -540,6 +554,7 @@ os.config.Settings.prototype.onSaveError_ = function(opt_error) {
 
 /**
  * Increments the storage failure count for type.
+ *
  * @param {string} type
  * @param {boolean=} opt_restart reset the storgage fail counter for type.
  * @private
@@ -555,6 +570,7 @@ os.config.Settings.prototype.incrementStorageFail_ = function(type, opt_restart)
 
 /**
  * Clear all the writable settings that are not currently in use.
+ *
  * @private
  */
 os.config.Settings.prototype.clearOthers_ = function() {
@@ -576,6 +592,7 @@ os.config.Settings.prototype.clearOthers_ = function() {
 
 /**
  * Handle all other settings deleted
+ *
  * @param {!Array<!Array>} deferredListResults
  * @private
  */
@@ -607,6 +624,7 @@ os.config.Settings.prototype.update = function() {
 /**
  * Remove all keys and values from the storage.  Calling this function will wipe out settings for this application in
  * the settings service as well.  Use wisely.
+ *
  * @param {string=} opt_namespace
  * @return {!goog.Promise}
  */
@@ -624,36 +642,36 @@ os.config.Settings.prototype.reset = function(opt_namespace) {
     if (storage) {
       goog.Promise.all([storage.deleteSettings(os.config.coreNs),
         storage.deleteSettings(namespace)]).then(function() {
-          goog.log.fine(os.config.Settings.LOGGER_, 'Reset settings success');
+        goog.log.fine(os.config.Settings.LOGGER_, 'Reset settings success');
 
-          // clear the user config section then save the storage type back to it
-          this.actualConfig_[os.config.ConfigType.PREFERENCE] = {};
-          if (type === os.config.storage.SettingsWritableStorageType.REMOTE &&
+        // clear the user config section then save the storage type back to it
+        this.actualConfig_[os.config.ConfigType.PREFERENCE] = {};
+        if (type === os.config.storage.SettingsWritableStorageType.REMOTE &&
             !this.storageRegistry_.hasRemoteStorage) {
-            this.set('storage.writeType', os.config.storage.SettingsWritableStorageType.LOCAL, true);
-          } else {
-            this.set('storage.writeType', type, true);
-          }
+          this.set('storage.writeType', os.config.storage.SettingsWritableStorageType.LOCAL, true);
+        } else {
+          this.set('storage.writeType', type, true);
+        }
 
-          // set a metric for settings.reset
-          os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Settings.RESET_SETTINGS, 1);
-          // publish all metrics immediately
-          os.metrics.Metrics.getInstance().publish();
+        // set a metric for settings.reset
+        os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Settings.RESET_SETTINGS, 1);
+        // publish all metrics immediately
+        os.metrics.Metrics.getInstance().publish();
 
-          // save the most recent reset date and time in local storage
-          var currentApp = namespace;
-          localStorage.setItem('resetDate', currentApp + ' ' + new Date().toISOString());
-          // save current date time in settings
-          this.set('reset.last', Date());
+        // save the most recent reset date and time in local storage
+        var currentApp = namespace;
+        localStorage.setItem('resetDate', currentApp + ' ' + new Date().toISOString());
+        // save current date time in settings
+        this.set('reset.last', Date());
 
-          // save settings before resolving or rejecting the promise
-          this.save().then(resolve, reject);
-        }, function(opt_reason) {
-          // delete failed, so log the error and reject the promise
-          var errorMsg = 'Reset settings failed' + (opt_reason ? (': ' + opt_reason) : '');
-          goog.log.error(os.config.Settings.LOGGER_, errorMsg);
-          reject(errorMsg);
-        }, this);
+        // save settings before resolving or rejecting the promise
+        this.save().then(resolve, reject);
+      }, function(opt_reason) {
+        // delete failed, so log the error and reject the promise
+        var errorMsg = 'Reset settings failed' + (opt_reason ? (': ' + opt_reason) : '');
+        goog.log.error(os.config.Settings.LOGGER_, errorMsg);
+        reject(errorMsg);
+      }, this);
     } else {
       reject('Write storage not available.');
     }
@@ -662,6 +680,7 @@ os.config.Settings.prototype.reset = function(opt_namespace) {
 
 /**
  * Retrieve the last reset date for the current application if defined
+ *
  * @return {string}
  */
 os.config.Settings.prototype.getLastReset = function() {
@@ -678,6 +697,7 @@ os.config.Settings.prototype.getLastReset = function() {
 
 /**
  * Get a COPY of a config value multiple levels deep.
+ *
  * @param {!(Array<number|string>|string)} keys A period-delimited string of keys (ie, one.two.three), or an array of
  *                                              keys (as strings, or numbers, for array-like objects).
  * @param {*=} opt_default Default value
@@ -705,6 +725,7 @@ os.config.Settings.prototype.get = function(keys, opt_default) {
 
 /**
  * Set a config value multiple levels deep.
+ *
  * @param {!(Array<number|string>|string)} keys A period-delimited string of keys (ie, one.two.three), or an array of
  *   keys (as strings, or numbers, for array-like objects).
  * @param {?} value
@@ -754,6 +775,7 @@ os.config.Settings.prototype.set = function(keys, value, opt_localOnly) {
 /**
  * We have to explicitly delete keys instead of simply removing the value from config.  This function handles
  * making that change so clients don't have to handle the details.
+ *
  * @param {!Array<!string>|!string} keys
  */
 os.config.Settings.prototype.delete = function(keys) {
@@ -782,6 +804,7 @@ os.config.Settings.prototype.delete = function(keys) {
 
 /**
  * Dispatch change event, optionally also send notification over XT
+ *
  * @param {!Array<!string|!number>} keys
  * @param {*} newVal
  * @param {*} oldVal
@@ -811,6 +834,7 @@ os.config.Settings.prototype.dispatchChange_ = function(keys, newVal, oldVal, op
 
 /**
  * Determine if the keys are admin keys
+ *
  * @param {!Array<!string|!number>} keys
  * @return {boolean}
  * @private
@@ -824,6 +848,7 @@ os.config.Settings.prototype.isAdmin_ = function(keys) {
  * Compare a new value to an old value to determine if any keys need to be deleted.  Some storage solutions need to
  * delete keys directly (they can only insert new values, not overwite), so we must be aware of what the deltas are
  * and explicitly delete the missing keys.
+ *
  * @param {!Array<number|string>} keys array of keys (as strings, or numbers, for array-like objects).
  * @param {*} newVal
  * @param {*} oldVal
@@ -847,6 +872,7 @@ os.config.Settings.prototype.markKeysForDelete_ = function(keys, newVal, oldVal)
 /**
  * Test if a value was created in an external window context. This only matters for objects and arrays, which will cause
  * a leak if we keep a reference and the external window is closed.
+ *
  * @param {?} value The value
  * @return {boolean} If the value should be cloned.
  * @private
@@ -859,6 +885,7 @@ os.config.Settings.prototype.isExternal_ = function(value) {
 /**
  * Handle failed communication with user settings.  Disable persistence. This should place the
  * application in an "offline" mode, where any settings from this session are not remembered.
+ *
  * @param {string=} opt_error Error or message
  * @private
  */
@@ -871,6 +898,7 @@ os.config.Settings.prototype.fail_ = function(opt_error) {
 
 /**
  * Send an applicaiton alert that settings failed
+ *
  * @param {number=} opt_delay
  * @private
  */
@@ -885,7 +913,7 @@ os.config.Settings.prototype.alertFailure_ = function(opt_delay) {
     var alertMgr = os.alert.AlertManager.getInstance();
     alertMgr.sendAlert('<strong>Settings are unavailable!</strong> This session will continue to run without any ' +
         'previously saved options, and any changes you make will not be remembered for the next session.',
-        os.alert.AlertEventSeverity.ERROR, undefined, 1, dismissAlertEventTarget);
+    os.alert.AlertEventSeverity.ERROR, undefined, 1, dismissAlertEventTarget);
   }, this), opt_delay || 2500);
 };
 
@@ -898,12 +926,13 @@ os.config.Settings.prototype.alertOneFailed_ = function(opt_delay) {
   var alertMgr = os.alert.AlertManager.getInstance();
   alertMgr.sendAlert('Settings failed to load from one or more sources.  This session will continue to run, but ' +
       'you may notice some of your previously saved preferences are not available.',
-      os.alert.AlertEventSeverity.WARNING);
+  os.alert.AlertEventSeverity.WARNING);
 };
 
 
 /**
  * Send an application alert to confirm that the settings storage has been updated.
+ *
  * @private
  */
 os.config.Settings.prototype.alertTypeChange_ = function() {

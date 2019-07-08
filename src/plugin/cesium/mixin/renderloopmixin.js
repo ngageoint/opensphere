@@ -15,6 +15,7 @@ goog.require('os.time.TimelineEventType');
   /**
    * Overridden to listen to <code>os.MapEvent.GL_REPAINT</code> events in addition
    * to timeline show events for rendering the scene.
+   *
    * @override
    */
   olcs.AutoRenderLoop.prototype.enable = function() {
@@ -31,6 +32,7 @@ goog.require('os.time.TimelineEventType');
   /**
    * Overridden to unlisten to <code>os.MapEvent.GL_REPAINT</code> events in addition
    * to timeline show events for rendering the scene.
+   *
    * @override
    */
   olcs.AutoRenderLoop.prototype.disable = function() {
@@ -58,6 +60,7 @@ goog.require('os.time.TimelineEventType');
 
   /**
    * Overridden because we only care about mouse events if a button is down
+   *
    * @override
    */
   olcs.AutoRenderLoop.prototype.notifyRepaintRequired = function(opt_evt) {

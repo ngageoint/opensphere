@@ -5,6 +5,7 @@ goog.require('os.data.FileProvider');
 
 /**
  * CSV file provider
+ *
  * @extends {os.data.FileProvider}
  * @constructor
  */

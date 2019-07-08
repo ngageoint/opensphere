@@ -79,6 +79,7 @@ os.ui.search.FacetedSearchCtrl.provider = null;
 
 /**
  * Clean up on destroy
+ *
  * @protected
  */
 os.ui.search.FacetedSearchCtrl.prototype.destroy = function() {
@@ -280,6 +281,7 @@ os.ui.search.FacetedSearchCtrl.prototype.sortCategories = function(a, b) {
 
 /**
  * Kicks off the search timer
+ *
  * @export
  */
 os.ui.search.FacetedSearchCtrl.prototype.search = function() {
@@ -301,6 +303,7 @@ os.ui.search.FacetedSearchCtrl.prototype.update = function() {
 
 /**
  * Kicks off a more delayed search timer
+ *
  * @export
  */
 os.ui.search.FacetedSearchCtrl.prototype.delaySearch = function() {
@@ -310,6 +313,7 @@ os.ui.search.FacetedSearchCtrl.prototype.delaySearch = function() {
 
 /**
  * Clears the search term
+ *
  * @export
  */
 os.ui.search.FacetedSearchCtrl.prototype.clearTerm = function() {
@@ -334,6 +338,7 @@ os.ui.search.FacetedSearchCtrl.prototype.clearFacets = function() {
 
 /**
  * Clears (turns off) a node
+ *
  * @param {!os.ui.slick.SlickTreeNode} node
  */
 os.ui.search.FacetedSearchCtrl.prototype.clearNode = function(node) {
@@ -350,6 +355,7 @@ os.ui.search.FacetedSearchCtrl.prototype.clearNode = function(node) {
 
 /**
  * Clear all
+ *
  * @export
  */
 os.ui.search.FacetedSearchCtrl.prototype.clearAll = function() {
@@ -385,6 +391,7 @@ os.ui.search.FacetedSearchCtrl.prototype.onSuccess = function(evt) {
 
 /**
  * Slices a new page of results from the allResults list
+ *
  * @protected
  */
 os.ui.search.FacetedSearchCtrl.prototype.showPage = function() {

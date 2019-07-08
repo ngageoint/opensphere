@@ -139,6 +139,7 @@ os.data.groupby.BaseGroupBy.prototype.count = function(node) {
 
 /**
  * Updates the text on the node for the given ID
+ *
  * @param {!string} id
  * @protected
  */
@@ -157,6 +158,7 @@ os.data.groupby.BaseGroupBy.prototype.updateText = function(id) {
 
 /**
  * Get the set of group IDs for the given node
+ *
  * @param {!os.structs.ITreeNode} node
  * @return {Array.<!string>} The IDs
  * @protected
@@ -169,6 +171,7 @@ os.data.groupby.BaseGroupBy.prototype.getGroupIds = function(node) {
 
 /**
  * Creates a group from the given node and ID
+ *
  * @param {!os.structs.ITreeNode} node
  * @param {!string} id The ID
  * @return {!os.structs.ITreeNode} The group

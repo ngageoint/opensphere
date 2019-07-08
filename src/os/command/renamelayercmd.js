@@ -93,6 +93,7 @@ os.command.RenameLayer.prototype.revert = function() {
 
 /**
  * Apply the name change
+ *
  * @param {string} name
  * @private
  */

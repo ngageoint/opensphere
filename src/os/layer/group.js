@@ -11,6 +11,7 @@ goog.require('os.events.LayerEventType');
 
 /**
  * Adds priority support and a function that checks if a layer belongs in this group
+ *
  * @param {olx.layer.GroupOptions=} opt_options
  * @extends {ol.layer.Group}
  * @constructor
@@ -80,6 +81,7 @@ os.layer.Group.prototype.setLayers = function(layers) {
 
 /**
  * Gets the priority of the group
+ *
  * @return {number}
  */
 os.layer.Group.prototype.getPriority = function() {
@@ -89,6 +91,7 @@ os.layer.Group.prototype.getPriority = function() {
 
 /**
  * Sets the priority of the group. Lower values are lower in the layer stack.
+ *
  * @param {number} value
  */
 os.layer.Group.prototype.setPriority = function(value) {
@@ -98,6 +101,7 @@ os.layer.Group.prototype.setPriority = function(value) {
 
 /**
  * Gets the check function
+ *
  * @return {?function(!ol.layer.Layer):boolean}
  */
 os.layer.Group.prototype.getCheckFunc = function() {
@@ -107,6 +111,7 @@ os.layer.Group.prototype.getCheckFunc = function() {
 
 /**
  * Sets the check function
+ *
  * @param {?function(!ol.layer.Layer):boolean} value
  */
 os.layer.Group.prototype.setCheckFunc = function(value) {
@@ -116,6 +121,7 @@ os.layer.Group.prototype.setCheckFunc = function(value) {
 
 /**
  * Gets the type
+ *
  * @return {?string}
  */
 os.layer.Group.prototype.getOSType = function() {
@@ -125,6 +131,7 @@ os.layer.Group.prototype.getOSType = function() {
 
 /**
  * Sets the group type
+ *
  * @param {string} value
  */
 os.layer.Group.prototype.setOSType = function(value) {
@@ -134,6 +141,7 @@ os.layer.Group.prototype.setOSType = function(value) {
 
 /**
  * Handle a layer being added to the group.
+ *
  * @param {ol.Collection.Event} event
  * @protected
  */
@@ -147,6 +155,7 @@ os.layer.Group.prototype.onLayerAdded = function(event) {
 
 /**
  * Handle a layer being removed from the group.
+ *
  * @param {ol.Collection.Event} event
  * @protected
  */

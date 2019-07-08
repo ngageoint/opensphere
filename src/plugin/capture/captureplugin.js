@@ -20,6 +20,7 @@ goog.require('plugin.capture.TimelineRecorder');
 
 /**
  * Plugin to manage screen capture for opensphere
+ *
  * @extends {os.ui.capture.AbstractCapturePlugin}
  * @constructor
  */
@@ -83,6 +84,7 @@ plugin.capture.CapturePlugin.prototype.init = function() {
 
 /**
  * Runs before the Recording menu item is rendered to update visibility.
+ *
  * @this {os.ui.menu.MenuItem}
  * @private
  */
@@ -179,6 +181,7 @@ plugin.capture.CapturePlugin.prototype.renderFrame = function(opt_waitForLoad) {
 
 /**
  * Check if the application is ready to capture the screen.
+ *
  * @param {Function} callback The function to call when ready to capture
  * @private
  */

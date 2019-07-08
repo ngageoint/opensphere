@@ -67,6 +67,7 @@ plugin.suncalc.Plugin.prototype.init = function() {
 
 /**
  * Update the Sunlight menu item.
+ *
  * @this {os.ui.menu.MenuItem}
  */
 plugin.suncalc.updateSunlightItem = function() {
@@ -77,6 +78,7 @@ plugin.suncalc.updateSunlightItem = function() {
 
 /**
  * Enable lighting menu option listener
+ *
  * @param {os.ui.menu.MenuEvent<ol.Coordinate>} evt The event
  * @this {os.ui.menu.MenuItem}
  */
@@ -87,6 +89,7 @@ plugin.suncalc.onEnableLighting = function(evt) {
 
 /**
  * Suncalc menu option listener
+ *
  * @param {os.ui.menu.MenuEvent<ol.Coordinate>} evt The menu event
  * @private
  */
@@ -97,6 +100,7 @@ plugin.suncalc.onMenuItem_ = function(evt) {
 
 /**
  * Opens a sun calc window for the given location
+ *
  * @param {ol.Coordinate} coord
  */
 plugin.suncalc.launch = function(coord) {

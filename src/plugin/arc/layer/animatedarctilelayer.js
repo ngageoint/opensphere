@@ -7,6 +7,7 @@ goog.require('os.time.TimelineController');
 
 /**
  * Extension of AnimatedTile for slightly different date formatting purposes.
+ *
  * @extends {os.layer.AnimatedTile}
  * @param {olx.layer.TileOptions} options Tile layer options
  * @constructor

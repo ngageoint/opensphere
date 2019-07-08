@@ -12,6 +12,7 @@ goog.require('os.ui.Module');
 
 /**
  * Select2 to pick from all avaliable layers.
+ *
  * @return {angular.Directive}
  */
 os.ui.layer.layerPickerDirective = function() {
@@ -46,6 +47,7 @@ os.ui.Module.directive('layerpicker', [os.ui.layer.layerPickerDirective]);
 /**
  * Controller for the layer picker
  * The selected layer will be saved in 'layer'. If multiple is allowed it will be stored in 'layers' as an array.
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$timeout} $timeout
@@ -123,6 +125,7 @@ os.ui.layer.LayerPickerCtrl = function($scope, $element, $timeout) {
 
 /**
  * Clean up.
+ *
  * @private
  */
 os.ui.layer.LayerPickerCtrl.prototype.destroy_ = function() {
@@ -133,6 +136,7 @@ os.ui.layer.LayerPickerCtrl.prototype.destroy_ = function() {
 
 /**
  * Layer selection is triggered, use the correct one
+ *
  * @private
  */
 os.ui.layer.LayerPickerCtrl.prototype.layerSelected_ = function() {
@@ -146,6 +150,7 @@ os.ui.layer.LayerPickerCtrl.prototype.layerSelected_ = function() {
 
 /**
  * Select the layers based off the model
+ *
  * @private
  */
 os.ui.layer.LayerPickerCtrl.prototype.selectLayers_ = function() {
@@ -168,6 +173,7 @@ os.ui.layer.LayerPickerCtrl.prototype.selectLayers_ = function() {
 
 /**
  * Select the layers based off the model
+ *
  * @private
  */
 os.ui.layer.LayerPickerCtrl.prototype.selectLayer_ = function() {
@@ -189,6 +195,7 @@ os.ui.layer.LayerPickerCtrl.prototype.selectLayer_ = function() {
 /**
  * Get all the layers
  * TODO update this to auto add new descriptors when they are added (is this even necessary?)
+ *
  * @return {!Array.<!os.data.IDataDescriptor>}
  */
 os.ui.layer.LayerPickerCtrl.prototype.getLayersList = function() {
@@ -220,6 +227,7 @@ os.ui.layer.LayerPickerCtrl.prototype.layersChanged = function(layers) {
 
 /**
  * Returns if this allows multiple selection.
+ *
  * @return {boolean}
  * @export
  */
@@ -231,6 +239,7 @@ os.ui.layer.LayerPickerCtrl.prototype.multiple = function() {
 /**
  * Search result formatter. The select is actually storing the ID of each
  * descriptor. This function allows us to display the actual layer title.
+ *
  * @param {Object} item
  * @param {angular.JQLite} ele
  * @return {string|angular.JQLite}
@@ -265,6 +274,7 @@ os.ui.layer.LayerPickerCtrl.prototype.select2Formatter_ = function(item, ele) {
 /**
  * Search term matcher for the select2. This is necessary because the select stores the id of each descriptor.
  * The ID is used in select2Formatter_ above to determine the correct name to display.
+ *
  * @param {string} term
  * @param {string} text
  * @param {angular.JQLite} option

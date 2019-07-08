@@ -9,6 +9,7 @@ goog.require('os.parse.IParser');
 
 /**
  * Simple KML parser that extracts features from a KML.
+ *
  * @implements {os.parse.IParser<ol.Feature>}
  * @constructor
  */

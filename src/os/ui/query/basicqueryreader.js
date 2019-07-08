@@ -9,6 +9,7 @@ goog.require('os.ui.query.AbstractQueryReader');
 
 /**
  * Reader for queries written out by the pre-combinator filter/area handlers.
+ *
  * @extends {os.ui.query.AbstractQueryReader}
  * @constructor
  */
@@ -50,6 +51,7 @@ os.ui.query.BasicQueryReader.prototype.parseEntries = function() {
 
 /**
  * Traverses the tree to parse entries from a combinator-written filter.
+ *
  * @param {Element} ele
  * @private
  */

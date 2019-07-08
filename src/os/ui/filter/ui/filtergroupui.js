@@ -10,6 +10,7 @@ goog.require('os.ui.filter.ui.FilterNode');
 
 /**
  * The selected/highlighted node UI directive for filter groups
+ *
  * @return {angular.Directive}
  */
 os.ui.filter.ui.filterGroupUIDirective = function() {
@@ -36,6 +37,7 @@ os.ui.Module.directive('filtergroupui', [os.ui.filter.ui.filterGroupUIDirective]
 
 /**
  * Controller for selected/highlighted node UI
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @constructor
@@ -72,6 +74,7 @@ os.ui.filter.ui.FilterGroupUICtrl.GROUPS = {
 
 /**
  * Clean up
+ *
  * @private
  */
 os.ui.filter.ui.FilterGroupUICtrl.prototype.onDestroy_ = function() {
@@ -82,6 +85,7 @@ os.ui.filter.ui.FilterGroupUICtrl.prototype.onDestroy_ = function() {
 
 /**
  * Handles group changes outside of this UI
+ *
  * @param {os.ui.filter.FilterEvent} event
  * @private
  */
@@ -97,6 +101,7 @@ os.ui.filter.ui.FilterGroupUICtrl.prototype.onGroupChanged_ = function(event) {
 
 /**
  * Update the grouping
+ *
  * @export
  */
 os.ui.filter.ui.FilterGroupUICtrl.prototype.onGroup = function() {

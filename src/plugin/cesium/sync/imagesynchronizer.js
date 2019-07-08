@@ -13,6 +13,7 @@ goog.require('plugin.cesium.sync.CesiumSynchronizer');
 
 /**
  * Synchronizes a single OpenLayers image layer to Cesium.
+ *
  * @param {!os.layer.Image} layer The OpenLayers image layer.
  * @param {!ol.PluggableMap} map The OpenLayers map.
  * @param {!Cesium.Scene} scene The Cesium scene.
@@ -121,6 +122,7 @@ plugin.cesium.sync.ImageSynchronizer.prototype.reset = function() {
 
 /**
  * Handle visibility
+ *
  * @param {os.events.PropertyChangeEvent} event
  * @private
  */

@@ -4,6 +4,7 @@ goog.provide('os.filter.IFilter');
 
 /**
  * An interface for describing an array filter.
+ *
  * @template T
  * @interface
  */

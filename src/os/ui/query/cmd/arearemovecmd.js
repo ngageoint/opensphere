@@ -7,6 +7,7 @@ goog.require('os.ui.query.cmd.AbstractArea');
 
 /**
  * Command for removing an area
+ *
  * @param {!ol.Feature} area
  * @implements {os.command.ICommand}
  * @extends {os.ui.query.cmd.AbstractArea}

@@ -16,6 +16,7 @@ goog.require('os.ui.state.IStateDescriptor');
 
 /**
  * Base descriptor for state files.
+ *
  * @abstract
  * @extends {os.data.BaseDescriptor}
  * @implements {os.ui.state.IStateDescriptor}
@@ -94,6 +95,7 @@ os.ui.state.AbstractStateDescriptor.prototype.setActiveInternal = function() {
 
 /**
  * Activates the state.
+ *
  * @param {os.file.File=} opt_file The state file to load
  * @protected
  */
@@ -147,6 +149,7 @@ os.ui.state.AbstractStateDescriptor.prototype.activateState = function(opt_file)
 
 /**
  * Handler for file storage file load success.
+ *
  * @param {?os.file.File} file
  * @private
  */
@@ -161,6 +164,7 @@ os.ui.state.AbstractStateDescriptor.prototype.onFileReady_ = function(file) {
 
 /**
  * Handler for file storage file load error.
+ *
  * @param {*} error
  * @private
  */
@@ -178,6 +182,7 @@ os.ui.state.AbstractStateDescriptor.prototype.onFileError_ = function(error) {
 
 /**
  * Handler for URL load success.
+ *
  * @param {goog.events.Event} event
  */
 os.ui.state.AbstractStateDescriptor.prototype.onUrlComplete = function(event) {
@@ -196,6 +201,7 @@ os.ui.state.AbstractStateDescriptor.prototype.onUrlComplete = function(event) {
 
 /**
  * Handler for URL load error.
+ *
  * @param {goog.events.Event} event
  * @private
  */
@@ -221,6 +227,7 @@ os.ui.state.AbstractStateDescriptor.prototype.logError = function(msg, opt_e) {
 
 /**
  * Deactivates the state.
+ *
  * @protected
  */
 os.ui.state.AbstractStateDescriptor.prototype.deactivateState = function() {

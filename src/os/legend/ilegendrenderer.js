@@ -4,6 +4,7 @@ goog.provide('os.legend.ILegendRenderer');
 
 /**
  * Interface for layers that contribute to the legend.
+ *
  * @interface
  */
 os.legend.ILegendRenderer = function() {};

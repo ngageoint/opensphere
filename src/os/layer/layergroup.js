@@ -11,6 +11,7 @@ goog.require('os.ui.node.defaultLayerNodeUIDirective');
 
 /**
  * Logical grouping of layers
+ *
  * @extends {goog.events.EventTarget}
  * @implements {os.layer.ILayer}
  * @implements {os.IGroupable}
@@ -561,6 +562,7 @@ os.layer.LayerGroup.prototype.getGroupUI = function() {
 
 /**
  * Adds a layer to the group.
+ *
  * @param {!os.layer.ILayer} layer
  */
 os.layer.LayerGroup.prototype.addLayer = function(layer) {
@@ -570,6 +572,7 @@ os.layer.LayerGroup.prototype.addLayer = function(layer) {
 
 /**
  * Get the layers in the group.
+ *
  * @return {!Array.<!os.layer.ILayer>}
  */
 os.layer.LayerGroup.prototype.getLayers = function() {
@@ -579,6 +582,7 @@ os.layer.LayerGroup.prototype.getLayers = function() {
 
 /**
  * Removes a layer from the group.
+ *
  * @param {!os.layer.ILayer} layer
  */
 os.layer.LayerGroup.prototype.removeLayer = function(layer) {

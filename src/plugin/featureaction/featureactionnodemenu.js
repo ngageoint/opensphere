@@ -118,6 +118,7 @@ plugin.im.action.feature.node.dispose = function() {
 
 /**
  * Gets the filter action nodes out of an array of nodes.
+ *
  * @param {Array<os.structs.ITreeNode>} context The array of nodes.
  * @return {!Array<os.ui.im.action.FilterActionNode>} The array of filter action nodes.
  */
@@ -133,6 +134,7 @@ plugin.im.action.feature.node.getFeatureActionNodes = function(context) {
 
 /**
  * Show the feature action node menu item.
+ *
  * @param {os.ui.menu.layer.Context} context The menu context.
  * @private
  * @this {os.ui.menu.MenuItem}
@@ -145,6 +147,7 @@ plugin.im.action.feature.node.visibleIfSelected_ = function(context) {
 
 /**
  * Show the feature action node menu item if a single item is selected.
+ *
  * @param {os.ui.menu.layer.Context} context The menu context.
  * @private
  * @this {os.ui.menu.MenuItem}
@@ -157,6 +160,7 @@ plugin.im.action.feature.node.visibleIfOneSelected_ = function(context) {
 
 /**
  * Show the feature action node menu item if multiple items are selected.
+ *
  * @param {os.ui.menu.layer.Context} context The menu context.
  * @private
  * @this {os.ui.menu.MenuItem}
@@ -169,6 +173,7 @@ plugin.im.action.feature.node.visibleIfMultiSelected_ = function(context) {
 
 /**
  * Show the feature action node menu item if can toggle it on.
+ *
  * @param {os.ui.menu.layer.Context} context The menu context.
  * @private
  * @this {os.ui.menu.MenuItem}
@@ -196,6 +201,7 @@ plugin.im.action.feature.node.visibleIfCanToggleOn_ = function(context) {
 
 /**
  * Show the feature action node menu item if can toggle it off.
+ *
  * @param {os.ui.menu.layer.Context} context The menu context.
  * @private
  * @this {os.ui.menu.MenuItem}
@@ -223,6 +229,7 @@ plugin.im.action.feature.node.visibleIfCanToggleOff_ = function(context) {
 
 /**
  * Handle the Copy menu event from the feature action node menu.
+ *
  * @param {!os.ui.menu.MenuEvent<os.ui.menu.layer.Context>} event The menu event.
  * @private
  */
@@ -258,6 +265,7 @@ plugin.im.action.feature.node.onCopyEvent_ = function(event) {
 
 /**
  * Handle the Edit menu event from the feature action node menu.
+ *
  * @param {!os.ui.menu.MenuEvent<os.ui.menu.layer.Context>} event The menu event.
  * @private
  */
@@ -275,6 +283,7 @@ plugin.im.action.feature.node.onEditEvent_ = function(event) {
 
 /**
  * Handle the Export menu event from the feature action node menu.
+ *
  * @param {!os.ui.menu.MenuEvent<os.ui.menu.layer.Context>} event The menu event.
  * @private
  */
@@ -303,6 +312,7 @@ plugin.im.action.feature.node.onExportEvent_ = function(event) {
 
 /**
  * Handle the Remove menu event from the feature action node menu.
+ *
  * @param {!os.ui.menu.MenuEvent<os.ui.menu.layer.Context>} event The menu event.
  * @private
  */
@@ -321,6 +331,7 @@ plugin.im.action.feature.node.onRemoveEvent_ = function(event) {
 
 /**
  * Handle the Remove Selected menu event from the feature action node menu.
+ *
  * @param {!os.ui.menu.MenuEvent<os.ui.menu.layer.Context>} event The menu event.
  * @private
  */
@@ -357,6 +368,7 @@ plugin.im.action.feature.node.onRemoveSelectedEvent_ = function(event) {
 
 /**
  * Handle the Toggle On menu event from the feature action node menu.
+ *
  * @param {!os.ui.menu.MenuEvent<os.ui.menu.layer.Context>} event The menu event.
  * @private
  */
@@ -373,6 +385,7 @@ plugin.im.action.feature.node.onToggleOnEvent_ = function(event) {
 
 /**
  * Handle the Toggle Off menu event from the feature action node menu.
+ *
  * @param {!os.ui.menu.MenuEvent<os.ui.menu.layer.Context>} event The menu event.
  * @private
  */

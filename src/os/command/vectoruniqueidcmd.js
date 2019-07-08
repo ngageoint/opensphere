@@ -10,6 +10,7 @@ goog.require('os.source.PropertyChange');
 
 /**
  * Changes the unique ID for a vector source.
+ *
  * @param {string} layerId
  * @param {os.data.ColumnDefinition} value
  * @param {os.data.ColumnDefinition=} opt_oldValue

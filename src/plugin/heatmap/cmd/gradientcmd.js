@@ -5,6 +5,7 @@ goog.require('os.command.AbstractStyle');
 
 /**
  * Changes the gradient of a heatmap.
+ *
  * @extends {os.command.AbstractStyle}
  * @param {string} layerId
  * @param {number} value
@@ -45,6 +46,7 @@ plugin.heatmap.cmd.Gradient.prototype.applyValue = function(config, value) {
 
 /**
  * I'm just here so I don't throw an error.
+ *
  * @inheritDoc
  */
 plugin.heatmap.cmd.Gradient.prototype.getLayerConfig = function() {

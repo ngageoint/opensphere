@@ -40,6 +40,7 @@ os.ui.ol.interaction.AbstractDrag.MIN_AREA = 64;
 
 /**
  * Handle down event
+ *
  * @param {ol.MapBrowserPointerEvent} mapBrowserEvent
  * @return {boolean} Whether or not to start the drag sequence
  * @protected

@@ -5,6 +5,7 @@ goog.require('os.ui.Module');
 
 /**
  * The view node UI for expression nodes.
+ *
  * @return {angular.Directive}
  */
 os.ui.filter.ui.expressionNodeViewUIDirective = function() {
@@ -27,6 +28,7 @@ os.ui.Module.directive('expressionnodeviewui', [os.ui.filter.ui.expressionNodeVi
 
 /**
  * Controller for selected/highlighted node UI
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @constructor

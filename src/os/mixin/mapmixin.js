@@ -8,6 +8,7 @@ goog.require('ol.PluggableMap');
 
 /**
  * Modified to only render if the feature wasn't skipped already.
+ *
  * @param {ol.Feature} feature Feature.
  * @suppress {accessControls|duplicate|checkTypes}
  */
@@ -23,6 +24,7 @@ ol.PluggableMap.prototype.skipFeature = function(feature) {
 
 /**
  * Modified to only render if the feature was previously skipped.
+ *
  * @param {ol.Feature} feature Feature.
  * @suppress {accessControls|duplicate|checkTypes}
  */
