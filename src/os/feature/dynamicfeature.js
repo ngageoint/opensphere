@@ -28,7 +28,7 @@ os.feature.DynamicPropertyChange = {
  * @constructor
  */
 os.feature.DynamicFeature = function(opt_geometryOrProperties, opt_initFn, opt_disposeFn, opt_updateFn,
-  opt_dynamicEnabled) {
+    opt_dynamicEnabled) {
   os.feature.DynamicFeature.base(this, 'constructor', opt_geometryOrProperties);
 
   /**

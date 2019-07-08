@@ -142,7 +142,7 @@ os.ui.im.action.FilterActionImportCtrl.prototype.getFilterIcon = function() {
  * @inheritDoc
  */
 os.ui.im.action.FilterActionImportCtrl.prototype.getFilterModel = function(
-  title, filter, tooltip, opt_type, opt_match) {
+    title, filter, tooltip, opt_type, opt_match) {
   var children = filter.getChildren();
   var childModels;
   if (children) {
