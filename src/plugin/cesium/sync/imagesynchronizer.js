@@ -34,13 +34,6 @@ plugin.cesium.sync.ImageSynchronizer = function(layer, map, scene) {
   this.activePrimitive_ = null;
 
   /**
-   * If the layer is turned on or off
-   * @type {boolean}
-   * @private
-   */
-  this.visible_ = this.layer.getVisible();
-
-  /**
    * @type {ol.source.Image}
    * @private
    */
@@ -64,11 +57,30 @@ plugin.cesium.sync.ImageSynchronizer = function(layer, map, scene) {
    */
   this.nextId_ = 0;
 
-  this.onPrimitiveReady_ = this.onPrimitiveReadyInternal_.bind(this);
+  /**
+   * @type {ol.ImageBase|undefined}
+   * @private
+   */
+  this.image_;
+
+  /**
+   * @type {ol.Extent|undefined}
+   * @private
+   */
+  this.lastExtent_;
+
+  /**
+   * @type {string|undefined}
+   * @private
+   */
+  this.lastUrl_;
+
+  this.onPrimitiveReady_ = this.onPrimitiveReadyInternal.bind(this);
   this.scene.primitives.add(this.collection_);
 
-  ol.events.listen(this.layer, goog.events.EventType.PROPERTYCHANGE, this.onLayerPropertyChange_, this);
+  ol.events.listen(this.layer, goog.events.EventType.PROPERTYCHANGE, this.onLayerPropertyChange, this);
   ol.events.listen(this.source_, ol.events.EventType.CHANGE, this.syncInternal, this);
+  os.map.mapContainer.listen(os.MapEvent.VIEW_CHANGE, this.onSyncChange, false, this);
 };
 goog.inherits(plugin.cesium.sync.ImageSynchronizer, plugin.cesium.sync.CesiumSynchronizer);
 
@@ -77,8 +89,9 @@ goog.inherits(plugin.cesium.sync.ImageSynchronizer, plugin.cesium.sync.CesiumSyn
  * @inheritDoc
  */
 plugin.cesium.sync.ImageSynchronizer.prototype.disposeInternal = function() {
-  ol.events.unlisten(this.layer, goog.events.EventType.PROPERTYCHANGE, this.onLayerPropertyChange_, this);
+  ol.events.unlisten(this.layer, goog.events.EventType.PROPERTYCHANGE, this.onLayerPropertyChange, this);
   ol.events.unlisten(this.source_, ol.events.EventType.CHANGE, this.syncInternal, this);
+  os.map.mapContainer.unlisten(os.MapEvent.VIEW_CHANGE, this.onSyncChange, false, this);
 
   this.activePrimitive_ = null;
   this.source_ = null;
@@ -90,7 +103,6 @@ plugin.cesium.sync.ImageSynchronizer.prototype.disposeInternal = function() {
 
 /**
  * @inheritDoc
- * @suppress {accessControls}
  */
 plugin.cesium.sync.ImageSynchronizer.prototype.synchronize = function() {
   this.syncInternal();
@@ -104,9 +116,8 @@ plugin.cesium.sync.ImageSynchronizer.prototype.syncInternal = function(opt_force
   if (this.lastRevision_ !== this.source_.getRevision() || opt_force) {
     this.lastRevision_ = this.source_.getRevision();
 
-    if (!this.visible_) {
-      this.removeImmediate_();
-      return;
+    if (this.activePrimitive_) {
+      this.activePrimitive_.show = this.layer.getVisible();
     }
 
     var map = /** @type {os.Map} */ (os.map.mapContainer.getMap());
@@ -126,23 +137,18 @@ plugin.cesium.sync.ImageSynchronizer.prototype.syncInternal = function(opt_force
     }
 
     var img = this.source_.getImage(viewExtent, resolution, window.devicePixelRatio, os.map.PROJECTION);
+    if (img) {
+      if (img !== this.image_) {
+        if (this.image_) {
+          ol.events.unlisten(this.image_, ol.events.EventType.CHANGE, this.onSyncChange, this);
+        }
 
-    if (!img) {
+        this.image_ = img;
+        ol.events.listen(this.image_, ol.events.EventType.CHANGE, this.onSyncChange, this);
+      }
+    } else {
       this.removeImmediate_();
       return;
-    }
-
-    if (this.source_ instanceof os.source.ImageStatic) {
-      // This source supports rotation and must be loaded first. Other source types such as ol.source.ImageStatic
-      // can pass the img.src parameter through to the Cesium material.
-      if (img.getState() === ol.ImageState.IDLE) {
-        img.load();
-      }
-
-      if (img.getState() !== ol.ImageState.LOADED) {
-        this.removeImmediate_();
-        return;
-      }
     }
 
     var url;
@@ -154,25 +160,42 @@ plugin.cesium.sync.ImageSynchronizer.prototype.syncInternal = function(opt_force
       url = el.toDataURL();
     }
 
+    var changed = this.lastUrl_ !== url;
+    this.lastUrl_ = url;
     var extent = ol.proj.transformExtent(img.getExtent(), os.map.PROJECTION, os.proj.EPSG4326);
+    if (this.lastExtent_) {
+      for (var i = 0, n = extent.length; i < n; i++) {
+        if (Math.abs(extent[i] - this.lastExtent_[i]) > 1E-12) {
+          changed = true;
+          break;
+        }
+      }
+    } else {
+      changed = true;
+    }
+    this.lastExtent_ = extent.slice();
+
 
     if (url && extent) {
-      var primitive = new Cesium.Primitive({
-        geometryInstances: new Cesium.GeometryInstance({
-          geometry: new Cesium.RectangleGeometry({
-            rectangle: Cesium.Rectangle.fromDegrees(extent[0], extent[1], extent[2], extent[3])
+      if (changed) {
+        var primitive = new Cesium.Primitive({
+          geometryInstances: new Cesium.GeometryInstance({
+            geometry: new Cesium.RectangleGeometry({
+              rectangle: Cesium.Rectangle.fromDegrees(extent[0], extent[1], extent[2], extent[3])
+            }),
+            id: this.layer.getId() + '.' + (this.nextId_++)
           }),
-          id: this.layer.getId() + '.' + (this.nextId_++)
-        }),
-        appearance: new Cesium.MaterialAppearance({
-          material: Cesium.Material.fromType('Image', {
-            image: url
-          })
-        })
-      });
+          appearance: new Cesium.MaterialAppearance({
+            material: Cesium.Material.fromType('Image', {
+              image: url
+            })
+          }),
+          show: this.layer.getVisible()
+        });
 
-      primitive.readyPromise.then(this.onPrimitiveReady_);
-      this.collection_.add(primitive);
+        primitive.readyPromise.then(this.onPrimitiveReady_);
+        this.collection_.add(primitive);
+      }
     } else {
       this.removeImmediate_();
     }
@@ -182,9 +205,9 @@ plugin.cesium.sync.ImageSynchronizer.prototype.syncInternal = function(opt_force
 
 /**
  * @param {!Cesium.Primitive} primitive
- * @private
+ * @protected
  */
-plugin.cesium.sync.ImageSynchronizer.prototype.onPrimitiveReadyInternal_ = function(primitive) {
+plugin.cesium.sync.ImageSynchronizer.prototype.onPrimitiveReadyInternal = function(primitive) {
   this.activePrimitive_ = primitive;
   for (var i = this.collection_.length - 1; i; i--) {
     var item = this.collection_.get(i);
@@ -197,11 +220,21 @@ plugin.cesium.sync.ImageSynchronizer.prototype.onPrimitiveReadyInternal_ = funct
 
 
 /**
+ * @protected
+ */
+plugin.cesium.sync.ImageSynchronizer.prototype.onSyncChange = function() {
+  this.syncInternal(true);
+};
+
+
+/**
  * Immediately remove the primitive
  * @private
  */
 plugin.cesium.sync.ImageSynchronizer.prototype.removeImmediate_ = function() {
   this.activePrimitive_ = null;
+  this.lastExtent_ = undefined;
+  this.lastUrl_ = undefined;
   this.collection_.removeAll();
 };
 
@@ -218,11 +251,10 @@ plugin.cesium.sync.ImageSynchronizer.prototype.reset = function() {
  * Handle visibility
  *
  * @param {os.events.PropertyChangeEvent} event
- * @private
+ * @protected
  */
-plugin.cesium.sync.ImageSynchronizer.prototype.onLayerPropertyChange_ = function(event) {
+plugin.cesium.sync.ImageSynchronizer.prototype.onLayerPropertyChange = function(event) {
   if (event instanceof ol.Object.Event && event.key == os.layer.PropertyChange.VISIBLE) {
-    this.visible_ = this.layer.getVisible();
     this.syncInternal(true);
   }
 };
