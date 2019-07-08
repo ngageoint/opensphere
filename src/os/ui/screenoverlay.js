@@ -9,6 +9,7 @@ goog.require('os.ui.window');
 
 /**
  * A confirmation window. Create a window using os.ui.window.create, supplying the necessary scope/window options.
+ *
  * @return {angular.Directive}
  */
 os.ui.screenOverlayDrective = function() {
@@ -32,6 +33,7 @@ os.ui.Module.directive('screenoverlay', [os.ui.screenOverlayDrective]);
 
 /**
  * Launch a dialog with the overlay image.
+ *
  * @param {!osx.window.ScreenOverlayOptions} options The overlay options.
  */
 os.ui.launchScreenOverlay = function(options) {

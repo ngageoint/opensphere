@@ -14,6 +14,7 @@ os.load.LoadingEventType = {
 
 /**
  * Event representing a loading task change.
+ *
  * @param {string} type
  * @param {os.load.ILoadingTask=} opt_task
  * @extends {goog.events.Event}
@@ -32,6 +33,7 @@ goog.inherits(os.load.LoadingEvent, goog.events.Event);
 
 /**
  * Get the task
+ *
  * @return {os.load.ILoadingTask}
  */
 os.load.LoadingEvent.prototype.getTask = function() {
@@ -41,6 +43,7 @@ os.load.LoadingEvent.prototype.getTask = function() {
 
 /**
  * Set the task
+ *
  * @param {os.load.ILoadingTask} value
  */
 os.load.LoadingEvent.prototype.setTask = function(value) {

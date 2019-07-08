@@ -10,6 +10,7 @@ goog.require('os.config.storage.SettingsFile');
 
 /**
  * Class used to manage loading  settings from each of the registered storage
+ *
  * @param {!os.config.storage.SettingsStorageRegistry} registry
  * @constructor
  */
@@ -46,6 +47,7 @@ os.config.storage.SettingsStorageLoader.LOGGER_ = goog.log.getLogger('os.config.
 
 /**
  * Initialize all of the registered storage
+ *
  * @return {!goog.async.Deferred}
  */
 os.config.storage.SettingsStorageLoader.prototype.init = function() {
@@ -65,6 +67,7 @@ os.config.storage.SettingsStorageLoader.prototype.init = function() {
 
 /**
  * Handle results of deferred list, marking any storages that failed to load as such
+ *
  * @param {!Array.<!Array.<boolean, *>>} deferredListResults
  * @private
  */
@@ -79,6 +82,7 @@ os.config.storage.SettingsStorageLoader.prototype.onInit_ = function(deferredLis
 
 /**
  * Load all of the settings as defined in the registry
+ *
  * @return {!goog.async.Deferred}
  */
 os.config.storage.SettingsStorageLoader.prototype.loadAll = function() {
@@ -92,6 +96,7 @@ os.config.storage.SettingsStorageLoader.prototype.loadAll = function() {
 
 /**
  * Load the next set of settings based on the maintained current index
+ *
  * @return {!goog.async.Deferred}
  * @private
  */
@@ -108,6 +113,7 @@ os.config.storage.SettingsStorageLoader.prototype.getNext_ = function() {
 
 /**
  * Handle single storage load success
+ *
  * @param {Object} loadedConfig
  * @return {!goog.async.Deferred}
  * @private
@@ -173,6 +179,7 @@ os.config.storage.SettingsStorageLoader.prototype.onGet_ = function(loadedConfig
 
 /**
  * Handle failure to get settings from an individual storage
+ *
  * @return {!goog.async.Deferred}
  * @private
  */

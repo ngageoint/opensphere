@@ -16,6 +16,7 @@ os.ui.im.ImportEventType = {
 
 /**
  * File/URL import event.
+ *
  * @param {string} type
  * @param {(os.file.File|string)=} opt_fileOrUrl
  * @param {string=} opt_contentHint

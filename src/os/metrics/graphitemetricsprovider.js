@@ -12,6 +12,7 @@ goog.require('os.plugin.IPlugin');
 
 /**
  * Metric service provider for graphite/grafana
+ *
  * @implements {os.metrics.IMetricServiceProvider}
  * @implements {os.net.IDataFormatter}
  * @constructor
@@ -103,6 +104,7 @@ os.metrics.GraphiteMetricsProvider.prototype.format = function(uri) {
 
 /**
  * Publish metrics to the server - viewable in graphite
+ *
  * @private
  */
 os.metrics.GraphiteMetricsProvider.prototype.onTimer_ = function() {
@@ -129,6 +131,7 @@ os.metrics.GraphiteMetricsProvider.prototype.publish = function() {
 
 /**
  * Handles request complete
+ *
  * @param {goog.events.Event} e
  * @private
  */
@@ -141,6 +144,7 @@ os.metrics.GraphiteMetricsProvider.prototype.onSuccess_ = function(e) {
 
 /**
  * Handles request error
+ *
  * @param {goog.events.Event} e
  * @private
  */

@@ -4,6 +4,7 @@ goog.provide('os.filter.IFilterFormatter');
 
 /**
  * Interface for formatting filters
+ *
  * @interface
  */
 os.filter.IFilterFormatter = function() {};

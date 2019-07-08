@@ -6,6 +6,7 @@ goog.require('os.structs.ITreeNode');
 
 /**
  * An interface used to group tree search results
+ *
  * @interface
  * @extends {goog.disposable.IDisposable}
  */

@@ -4,6 +4,7 @@ goog.provide('os.storage.IMechanism');
 
 /**
  * Interface for a storage mechanism that expands on {@link goog.storage.mechanism.IterableMechanism}.
+ *
  * @interface
  * @template T
  */

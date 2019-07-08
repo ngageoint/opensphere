@@ -11,6 +11,7 @@ goog.require('os.ui.icon.iconPickerDirective');
  * The csvexport directive for use in exportdialog.js
  *
  * This is not a stand alone UI, it's meant to augment exportdialog.js
+ *
  * @return {angular.Directive}
  */
 plugin.file.csv.ui.csvExportDirective = function() {
@@ -35,6 +36,7 @@ os.ui.Module.directive('csvexport', [plugin.file.csv.ui.csvExportDirective]);
 
 /**
  * Controller function for the csvexport directive
+ *
  * @param {!angular.Scope} $scope
  * @constructor
  * @ngInject
@@ -72,6 +74,7 @@ plugin.file.csv.ui.CSVExportCtrl = function($scope) {
 
 /**
  * Clean up.
+ *
  * @private
  */
 plugin.file.csv.ui.CSVExportCtrl.prototype.destroy_ = function() {
@@ -82,6 +85,7 @@ plugin.file.csv.ui.CSVExportCtrl.prototype.destroy_ = function() {
 
 /**
  * Updates the CSV exporter with the current UI configuration.
+ *
  * @private
  */
 plugin.file.csv.ui.CSVExportCtrl.prototype.updateExporter_ = function() {

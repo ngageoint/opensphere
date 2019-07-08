@@ -290,6 +290,7 @@ os.ui.file.kml.GMAPS_SEARCH = /https?:\/\/maps\.google\.com\/mapfiles\/kml\//i;
 
 /**
  * Get the default icon object.
+ *
  * @return {!osx.icon.Icon} The default icon.
  */
 os.ui.file.kml.getDefaultIcon = function() {
@@ -301,6 +302,7 @@ os.ui.file.kml.getDefaultIcon = function() {
 
 /**
  * Replace the Google icon URI with the application image path.
+ *
  * @param {string|null|undefined} src The image source URL.
  * @return {string} The icon src.
  */

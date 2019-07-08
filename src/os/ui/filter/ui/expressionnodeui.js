@@ -5,6 +5,7 @@ goog.require('os.ui.Module');
 
 /**
  * The edit/delete node UI for expression nodes.
+ *
  * @return {angular.Directive}
  */
 os.ui.filter.ui.expressionNodeUIDirective = function() {
@@ -32,6 +33,7 @@ os.ui.Module.directive('expressionnodeui', [os.ui.filter.ui.expressionNodeUIDire
 
 /**
  * Controller for selected/highlighted node UI
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @constructor
@@ -48,6 +50,7 @@ os.ui.filter.ui.ExpressionNodeUI = function($scope, $element) {
 
 /**
  * Removes the expression
+ *
  * @export
  */
 os.ui.filter.ui.ExpressionNodeUI.prototype.remove = function() {
@@ -58,6 +61,7 @@ os.ui.filter.ui.ExpressionNodeUI.prototype.remove = function() {
 
 /**
  * Edits the expression
+ *
  * @export
  */
 os.ui.filter.ui.ExpressionNodeUI.prototype.edit = function() {

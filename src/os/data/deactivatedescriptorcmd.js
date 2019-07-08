@@ -10,6 +10,7 @@ goog.require('os.data.AbstractDescriptor');
 
 /**
  * Command to deactivate a descriptor.
+ *
  * @param {!os.data.IDataDescriptor} descriptor The descriptor
  * @extends {os.data.AbstractDescriptor}
  * @constructor

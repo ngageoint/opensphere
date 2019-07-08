@@ -10,6 +10,7 @@ goog.require('os.xml');
 
 /**
  * Formats a spatial query for use in an OGC Filter.
+ *
  * @param {string=} opt_column
  * @implements {os.filter.ISpatialFormatter}
  * @constructor
@@ -89,6 +90,7 @@ os.ogc.filter.OGCSpatialFormatter.prototype.getGeometry = function(feature) {
 
 /**
  * Sets the column for the spatial region.
+ *
  * @param {?string} value
  */
 os.ogc.filter.OGCSpatialFormatter.prototype.setColumn = function(value) {

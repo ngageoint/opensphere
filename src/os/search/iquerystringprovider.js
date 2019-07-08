@@ -4,6 +4,7 @@ goog.provide('os.search.IQueryStringProvider');
 
 /**
  *  The base interface for query providers
+ *
  *  @interface
  */
 os.search.IQueryStringProvider = function() {};

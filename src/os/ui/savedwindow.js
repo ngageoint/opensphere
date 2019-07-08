@@ -38,6 +38,7 @@ os.ui.Module.directive('savedwindow', [os.ui.savedWindowDirective]);
 
 /**
  * Controller for the saved window directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$timeout} $timeout
@@ -96,6 +97,7 @@ os.ui.SavedWindowCtrl.prototype.getWindowKeys = function() {
 
 /**
  * Gets the window config
+ *
  * @param {string} key The window key
  * @return {Object}
  * @private
@@ -108,6 +110,7 @@ os.ui.SavedWindowCtrl.getConf_ = function(key) {
 
 /**
  * Sets and saves the window config
+ *
  * @param {string} key The window key
  * @param {Object} value
  * @private

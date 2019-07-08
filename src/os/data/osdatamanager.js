@@ -28,6 +28,7 @@ os.data.PropertyChange = {
 /**
  * The data manager provides methods for tracking and registering providers and descriptors in addition
  * to managing individual data sources within the application.
+ *
  * @extends {os.data.DataManager}
  * @constructor
  */
@@ -105,6 +106,7 @@ os.data.OSDataManager.prototype.disposeInternal = function() {
 
 /**
  * Settings initialize
+ *
  * @private
  */
 os.data.OSDataManager.prototype.init_ = function() {
@@ -116,6 +118,7 @@ os.data.OSDataManager.prototype.init_ = function() {
 
 /**
  * Gets a source by id
+ *
  * @param {string} id
  * @return {?os.source.Vector}
  */
@@ -126,6 +129,7 @@ os.data.OSDataManager.prototype.getSource = function(id) {
 
 /**
  * Gets the sources
+ *
  * @return {!Array.<!os.source.Vector>}
  */
 os.data.OSDataManager.prototype.getSources = function() {
@@ -140,6 +144,7 @@ os.data.OSDataManager.prototype.getSources = function() {
 
 /**
  * Gets the total count of all the features currently loaded
+ *
  * @return {!number}
  */
 os.data.OSDataManager.prototype.getTotalFeatureCount = function() {
@@ -162,6 +167,7 @@ os.data.OSDataManager.prototype.getTotalFeatureCount = function() {
 
 /**
  * Adds a source to the data manager if it doesn't already exist.
+ *
  * @param {os.source.Vector} source The source to add
  * @return {boolean} If the source was added
  */
@@ -179,6 +185,7 @@ os.data.OSDataManager.prototype.addSource = function(source) {
 
 /**
  * Removes a source from the data manager if it exists.
+ *
  * @param {os.source.Vector} source The source to remove
  * @return {boolean} If the source was added
  */
@@ -195,6 +202,7 @@ os.data.OSDataManager.prototype.removeSource = function(source) {
 
 /**
  * If time filters should be enabled on sources.
+ *
  * @return {boolean}
  */
 os.data.OSDataManager.prototype.getTimeFilterEnabled = function() {
@@ -204,6 +212,7 @@ os.data.OSDataManager.prototype.getTimeFilterEnabled = function() {
 
 /**
  * Updates time filter usage on sources.
+ *
  * @param {boolean} value
  */
 os.data.OSDataManager.prototype.setTimeFilterEnabled = function(value) {
@@ -252,6 +261,7 @@ os.data.OSDataManager.prototype.onLayerRemoved_ = function(event) {
 
 /**
  * Set the application time from a descriptor.
+ *
  * @param {string} id The descriptor id
  * @return {boolean} If the time was changed
  */

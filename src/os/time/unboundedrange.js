@@ -5,6 +5,7 @@ goog.require('os.time.TimeInstant');
 
 /**
  * A time range for all time
+ *
  * @constructor
  * @extends {os.time.TimeInstant}
  */
@@ -16,6 +17,7 @@ goog.inherits(os.time.UnboundedRange, os.time.TimeInstant);
 
 /**
  * Always returns the minimum time
+ *
  * @return {number} the minimum time
  * @override
  */
@@ -26,6 +28,7 @@ os.time.UnboundedRange.prototype.getStart = function() {
 
 /**
  * Always returns the maximum time
+ *
  * @return {number} the maximum time
  * @override
  */

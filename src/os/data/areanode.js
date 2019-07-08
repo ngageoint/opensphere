@@ -17,6 +17,7 @@ goog.require('os.ui.slick.SlickTreeNode');
 
 /**
  * Tree nodes for areas
+ *
  * @extends {os.ui.query.AreaNode}
  * @implements {os.data.ISearchable}
  * @implements {os.ui.menu.IMenuSupplier}

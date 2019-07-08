@@ -124,6 +124,7 @@ os.capture.TimelineRecorder.prototype.record = function() {
 
 /**
  * Render the next frame to record.
+ *
  * @return {!goog.Promise}
  * @private
  */
@@ -134,6 +135,7 @@ os.capture.TimelineRecorder.prototype.renderFrame_ = function() {
 
 /**
  * Handle the next frame in the recording.
+ *
  * @private
  */
 os.capture.TimelineRecorder.prototype.processNextFrame_ = function() {
@@ -170,6 +172,7 @@ os.capture.TimelineRecorder.prototype.processNextFrame_ = function() {
 
 /**
  * Handle rejected promise while generating a canvas frame.
+ *
  * @param {*} e
  * @private
  */
@@ -192,6 +195,7 @@ os.capture.TimelineRecorder.prototype.onCaptureError_ = function(e) {
 
 /**
  * Process the generated canvas frames.
+ *
  * @private
  */
 os.capture.TimelineRecorder.prototype.process_ = function() {
@@ -216,6 +220,7 @@ os.capture.TimelineRecorder.prototype.process_ = function() {
 
 /**
  * Handle video exporter progress event.
+ *
  * @param {goog.events.Event} event
  * @private
  */
@@ -229,6 +234,7 @@ os.capture.TimelineRecorder.prototype.onExportProgress_ = function(event) {
 
 /**
  * Handle video exporter status event.
+ *
  * @param {goog.events.Event} event
  * @private
  */
@@ -242,6 +248,7 @@ os.capture.TimelineRecorder.prototype.onExportStatus_ = function(event) {
 
 /**
  * Handle video exporter complete.
+ *
  * @param {goog.events.Event} event
  * @private
  */
@@ -257,6 +264,7 @@ os.capture.TimelineRecorder.prototype.onExportComplete_ = function(event) {
 
 /**
  * Handle video exporter error.
+ *
  * @param {goog.events.Event} event
  * @private
  */

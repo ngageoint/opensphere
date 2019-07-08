@@ -19,6 +19,7 @@ goog.require('plugin.file.kml.ui.placemarkEditDirective');
 
 /**
  * Provides KML support
+ *
  * @extends {os.plugin.AbstractPlugin}
  * @constructor
  */

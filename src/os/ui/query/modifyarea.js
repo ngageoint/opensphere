@@ -12,6 +12,7 @@ goog.require('os.ui.query.cmd.AreaModify');
 
 /**
  * The modifyarea directive
+ *
  * @return {angular.Directive}
  */
 os.ui.query.modifyAreaDirective = function() {
@@ -39,6 +40,7 @@ os.ui.Module.directive('modifyarea', [os.ui.query.modifyAreaDirective]);
 
 /**
  * Controller function for the modifyarea directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @extends {goog.Disposable}
@@ -144,6 +146,7 @@ os.ui.query.ModifyAreaCtrl.prototype.disposeInternal = function() {
 
 /**
  * Make sure everything is kosher.
+ *
  * @protected
  */
 os.ui.query.ModifyAreaCtrl.prototype.validate = function() {
@@ -191,6 +194,7 @@ os.ui.query.ModifyAreaCtrl.prototype.validate = function() {
 
 /**
  * Handle change to the source area.
+ *
  * @param {ol.Feature=} opt_new
  * @param {ol.Feature=} opt_old
  * @protected
@@ -205,6 +209,7 @@ os.ui.query.ModifyAreaCtrl.prototype.onAreaChange = function(opt_new, opt_old) {
 
 /**
  * Handle change to the target area.
+ *
  * @param {ol.Feature=} opt_new
  * @param {ol.Feature=} opt_old
  * @protected
@@ -237,6 +242,7 @@ os.ui.query.ModifyAreaCtrl.prototype.setPreviewFeature = function(feature) {
 
 /**
  * Merge the two selected areas, returning the result.
+ *
  * @return {ol.Feature|undefined}
  * @private
  */
@@ -275,6 +281,7 @@ os.ui.query.ModifyAreaCtrl.prototype.getMergedArea_ = function() {
 
 /**
  * Fire the cancel callback and close the window.
+ *
  * @export
  */
 os.ui.query.ModifyAreaCtrl.prototype.cancel = function() {
@@ -284,6 +291,7 @@ os.ui.query.ModifyAreaCtrl.prototype.cancel = function() {
 
 /**
  * Performs the area modification.
+ *
  * @export
  */
 os.ui.query.ModifyAreaCtrl.prototype.confirm = function() {
@@ -314,6 +322,7 @@ os.ui.query.ModifyAreaCtrl.prototype.confirm = function() {
 
 /**
  * Get the help popover title for an operation.
+ *
  * @param {string} op The operation
  * @return {string}
  * @export
@@ -336,6 +345,7 @@ os.ui.query.ModifyAreaCtrl.prototype.getPopoverTitle = function(op) {
 
 /**
  * Get the help popover content for an operation.
+ *
  * @param {string} op The operation
  * @return {string}
  * @export
@@ -358,6 +368,7 @@ os.ui.query.ModifyAreaCtrl.prototype.getPopoverContent = function(op) {
 
 /**
  * Close the window.
+ *
  * @private
  */
 os.ui.query.ModifyAreaCtrl.prototype.close_ = function() {
@@ -388,6 +399,7 @@ os.ui.query.ModifyOp = {
 
 /**
  * Launch a dialog to modify an area.
+ *
  * @param {!os.ui.query.ModifyAreaConfig} config
  */
 os.ui.query.launchModifyArea = function(config) {

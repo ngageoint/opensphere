@@ -7,6 +7,7 @@ goog.require('os.ui.uniqueServerUrl');
 
 /**
  * Base controller for server import UIs that use a single URL configuration
+ *
  * @abstract
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
@@ -113,6 +114,7 @@ os.ui.MultiUrlProviderImportCtrl.prototype.getConfigFields = function() {
 
 /**
  * Add a new alternate URL to the list.
+ *
  * @export
  */
 os.ui.MultiUrlProviderImportCtrl.prototype.addAlternateUrl = function() {
@@ -126,6 +128,7 @@ os.ui.MultiUrlProviderImportCtrl.prototype.addAlternateUrl = function() {
 
 /**
  * Remove an alternate URL from the list at the provided index.
+ *
  * @param {number} index The alternate URL index to remove
  * @export
  */

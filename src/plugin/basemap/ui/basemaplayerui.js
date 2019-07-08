@@ -11,6 +11,7 @@ goog.require('os.ui.spinnerDirective');
 
 /**
  * The directive for the base map layer UI
+ *
  * @return {!angular.Directive}
  */
 plugin.basemap.ui.baseMapLayerUIDirective = function() {
@@ -33,6 +34,7 @@ os.ui.Module.directive('basemaplayerui', [plugin.basemap.ui.baseMapLayerUIDirect
 
 /**
  * Controller for the base map layer UI
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$timeout} $timeout
@@ -71,6 +73,7 @@ plugin.basemap.ui.BaseMapLayerUICtrl.prototype.initUI = function() {
 
 /**
  * Handles changes to min zoom
+ *
  * @param {?angular.Scope.Event} event
  * @param {number} value
  * @protected
@@ -94,6 +97,7 @@ plugin.basemap.ui.BaseMapLayerUICtrl.prototype.onMinZoomChange = function(event,
 
 /**
  * Handles changes to max zoom
+ *
  * @param {?angular.Scope.Event} event
  * @param {number} value
  * @protected
@@ -138,6 +142,7 @@ plugin.basemap.ui.BaseMapLayerUICtrl.prototype.onRefresh = function() {
 
 /**
  * Gets the min zoom
+ *
  * @return {number} zoom
  * @private
  */
@@ -163,6 +168,7 @@ plugin.basemap.ui.BaseMapLayerUICtrl.prototype.getMinZoom_ = function() {
 
 /**
  * Gets the max zoom
+ *
  * @return {number}
  * @private
  */

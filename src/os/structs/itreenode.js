@@ -8,6 +8,7 @@ goog.require('os.data.ISearchable');
 
 /**
  * An interface that describes tree nodes.
+ *
  * @interface
  * @extends {goog.disposable.IDisposable}
  * @extends {goog.events.Listenable}

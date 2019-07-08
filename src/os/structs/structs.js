@@ -3,6 +3,7 @@ goog.provide('os.structs');
 
 /**
  * Flattens a tree into a specified array - optionally filtering.
+ *
  * @param {os.structs.ITreeNode} node
  * @param {Array<os.structs.ITreeNode>} results
  * @param {function(os.structs.ITreeNode): boolean=} opt_filter

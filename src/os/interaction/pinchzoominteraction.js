@@ -7,6 +7,7 @@ goog.require('os.implements');
 
 /**
  * Handles the behavior of pinch zooming.
+ *
  * @constructor
  * @extends {ol.interaction.PinchZoom}
  * @implements {os.I3DSupport}

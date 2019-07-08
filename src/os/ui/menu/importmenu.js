@@ -102,6 +102,7 @@ os.ui.menu.import.dispose = function() {
 
 /**
  * Take in a descriptor and the enabled state and determine which icon to display
+ *
  * @param {os.data.IDataDescriptor} descriptor
  * @param {boolean} enabled
  * @return {string}
@@ -114,6 +115,7 @@ os.ui.menu.import.getDescriptorToggleIcon_ = function(descriptor, enabled) {
 
 /**
  * Update the "Recent" menu group.
+ *
  * @private
  */
 os.ui.menu.import.refreshRecent_ = function() {

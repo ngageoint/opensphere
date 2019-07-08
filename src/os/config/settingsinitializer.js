@@ -11,6 +11,7 @@ goog.require('os.ui.config.AngularAppSettingsInitializer');
 
 /**
  * Initialize settings for OpenSphere.
+ *
  * @extends {os.ui.config.AngularAppSettingsInitializer}
  * @constructor
  */

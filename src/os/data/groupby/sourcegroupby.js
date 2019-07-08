@@ -14,6 +14,7 @@ goog.array.insert(os.ui.query.featureKeys, os.data.RecordField.SOURCE_NAME);
 
 /**
  * Groups nodes by their source when available.
+ *
  * @param {boolean=} opt_open Keeps groups open by default
  * @extends {os.data.groupby.BaseGroupBy}
  * @constructor

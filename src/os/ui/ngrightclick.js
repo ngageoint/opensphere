@@ -56,6 +56,7 @@ os.ui.RightClickCtrl = function($scope, $element, $parse, $attrs) {
 
 /**
  * Clean up.
+ *
  * @private
  */
 os.ui.RightClickCtrl.prototype.destroy_ = function() {
@@ -71,6 +72,7 @@ os.ui.RightClickCtrl.prototype.destroy_ = function() {
 
 /**
  * Handle context menu event on the element.
+ *
  * @param {angular.Scope.Event} evt The event.
  * @private
  */

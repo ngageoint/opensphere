@@ -35,6 +35,7 @@ ol.layer.Property.SATURATION = 'saturation';
 
 /**
  * Return the brightness of the layer.
+ *
  * @return {number} The brightness of the layer.
  */
 ol.layer.Base.prototype.getBrightness = function() {
@@ -44,6 +45,7 @@ ol.layer.Base.prototype.getBrightness = function() {
 
 /**
  * Return the contrast of the layer.
+ *
  * @return {number} The contrast of the layer.
  */
 ol.layer.Base.prototype.getContrast = function() {
@@ -53,6 +55,7 @@ ol.layer.Base.prototype.getContrast = function() {
 
 /**
  * Return the hue of the layer.
+ *
  * @return {number} The hue of the layer.
  */
 ol.layer.Base.prototype.getHue = function() {
@@ -62,6 +65,7 @@ ol.layer.Base.prototype.getHue = function() {
 
 /**
  * Return the saturation of the layer.
+ *
  * @return {number} The saturation of the layer.
  */
 ol.layer.Base.prototype.getSaturation = function() {

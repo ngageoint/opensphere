@@ -429,6 +429,7 @@ os.layer.Image.prototype.getFASet = function() {
 
 /**
  * Identify the layer on the map.
+ *
  * @protected
  */
 os.layer.Image.prototype.identify = function() {

@@ -20,6 +20,7 @@ goog.require('os.ui.slick.SlickTreeNode');
 
 /**
  * The data manager provides methods for tracking and registering providers and descriptors.
+ *
  * @extends {goog.events.EventTarget}
  * @implements {os.data.IDataManager}
  * @constructor
@@ -255,6 +256,7 @@ os.data.DataManager.prototype.getDescriptor = function(id) {
 
 /**
  * Gets a data descriptor by URL.
+ *
  * @param {string} url The descriptor URL to match
  * @return {?os.data.IDataDescriptor} The descriptor or <code>null</code> if none was found
  */
@@ -379,6 +381,7 @@ os.data.DataManager.prototype.removeProvider = function(id) {
 
 /**
  * Handle property change events fired by data providers.
+ *
  * @param {!os.events.PropertyChangeEvent} event
  * @protected
  */
@@ -451,6 +454,7 @@ os.data.DataManager.prototype.getProviderByLabel = function(label) {
 
 /**
  * Migrate descriptors from direct reference of local storage to settings, which may be server or local persistence
+ *
  * @private
  */
 os.data.DataManager.prototype.migrateDescriptors_ = function() {
@@ -465,6 +469,7 @@ os.data.DataManager.prototype.migrateDescriptors_ = function() {
 
 /**
  * If any enabled provider is in the error state.
+ *
  * @return {boolean}
  */
 os.data.DataManager.prototype.hasError = function() {

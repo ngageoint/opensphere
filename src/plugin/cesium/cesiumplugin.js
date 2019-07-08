@@ -22,6 +22,7 @@ goog.require('plugin.cesium.tiles.mime');
 
 /**
  * Provides a WebGL renderer for the map, powered by Cesium.
+ *
  * @extends {os.plugin.AbstractPlugin}
  * @constructor
  */

@@ -8,6 +8,7 @@ goog.require('os.ui.slick.SlickTreeNode');
 
 /**
  * Groups nodes by type
+ *
  * @param {boolean=} opt_useUi
  * @extends {os.data.groupby.BaseGroupBy}
  * @constructor

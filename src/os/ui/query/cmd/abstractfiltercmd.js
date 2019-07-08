@@ -9,6 +9,7 @@ goog.require('os.ui.query.cmd.QueryEntries');
 
 /**
  * Abstract command for adding/removing filters
+ *
  * @abstract
  * @implements {os.command.ICommand}
  * @constructor
@@ -64,6 +65,7 @@ os.ui.query.cmd.AbstractFilter.prototype.revert = function() {};
 
 /**
  * Tests whether or not the command is ready and able to execute
+ *
  * @return {boolean} True if ready, false otherwise
  */
 os.ui.query.cmd.AbstractFilter.prototype.canExecute = function() {

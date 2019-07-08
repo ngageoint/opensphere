@@ -26,7 +26,7 @@
 var os = require('./selectors.js');
 var config = require('./index.js');
 var addMatchImageSnapshotCommand = require('cypress-image-snapshot/command')
-  .addMatchImageSnapshotCommand;
+    .addMatchImageSnapshotCommand;
 
 addMatchImageSnapshotCommand({
   customDiffConfig: {threshold: 0.2},

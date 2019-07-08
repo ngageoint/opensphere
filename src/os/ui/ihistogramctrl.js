@@ -4,6 +4,7 @@ goog.provide('os.ui.IHistogramUI');
 
 /**
  * A UI driven by a {@link os.data.histo.SourceHistogram}.
+ *
  * @interface
  */
 os.ui.IHistogramUI = function() {};

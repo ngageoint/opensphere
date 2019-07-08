@@ -34,6 +34,7 @@ os.xml.XMLNS = 'http://www.w3.org/2000/xmlns/';
 
 /**
  * Escape invalid xml chars
+ *
  * @param {string} text
  * @return {string} The escaped string
  */
@@ -52,6 +53,7 @@ os.xml.escape = function(text) {
 
 /**
  * Unescape invalid xml chars
+ *
  * @param {string} text
  * @return {string} The escaped string
  */
@@ -71,6 +73,7 @@ os.xml.unescape = function(text) {
 /**
  * Creates and appends an element to the provided parent. The parent's ownerDocument will be used to create the element.
  * Optionally add text content to the element.
+ *
  * @param {string} tag The tag name for the new element
  * @param {!Element} parent The parent element
  * @param {*=} opt_content Text content to add to the element
@@ -87,6 +90,7 @@ os.xml.appendElement = function(tag, parent, opt_content, opt_attr) {
 /**
  * Creates and appends a namespaced element to the provided parent. The parent's ownerDocument will be used to create
  * the element. Optionally add text content to the element.
+ *
  * @param {string} tag The tag name for the new element
  * @param {string} nsUri The namespace uri
  * @param {!Element} parent The parent element
@@ -103,6 +107,7 @@ os.xml.appendElementNS = function(tag, nsUri, parent, opt_content, opt_attr) {
 
 /**
  * Create an element from the provided document. Optionally add text content to the element.
+ *
  * @param {string} tag The tag name for the new element
  * @param {Document=} opt_doc The root document
  * @param {*=} opt_content Text content to add to the element
@@ -127,6 +132,7 @@ os.xml.createElement = function(tag, opt_doc, opt_content, opt_attr) {
 
 /**
  * Create a namespaced element from the provided document. Optionally add text content to the element.
+ *
  * @param {string} tag The tag name for the new element
  * @param {string} nsUri The namespace uri
  * @param {Document=} opt_doc The root document
@@ -152,6 +158,7 @@ os.xml.createElementNS = function(tag, nsUri, opt_doc, opt_content, opt_attr) {
 
 /**
  * Gets all child elements with a given tag name.
+ *
  * @param {Element} element The parent element
  * @param {string} tag The tag name to match
  * @return {!Array} The matched children
@@ -166,6 +173,7 @@ os.xml.getChildrenByTagName = function(element, tag) {
 
 /**
  * Reads a date/time from a node's content.
+ *
  * @param {Node} node Node.
  * @return {Date} The parsed Date object, or null if the value could not be parsed.
  */
@@ -182,6 +190,7 @@ os.xml.readDateTime = function(node) {
 /**
  * Clones an element and all descendants under a new node, adding a namespace to the new nodes. The namespaceURI on
  * Nodes is frozen on creation, so the namespace cannot be changed on existing nodes.
+ *
  * @param {!Node} node The element to clone
  * @param {!Element} parent The parent element
  * @param {string=} opt_ns The namespace
@@ -212,8 +221,8 @@ os.xml.clone = function(node, parent, opt_ns, opt_nsUri) {
     }
 
     var newEl = opt_ns && opt_nsUri ?
-        os.xml.appendElementNS(opt_ns + ':' + el.localName, opt_nsUri, parent, undefined, attrMap) :
-        os.xml.appendElement(el.localName, parent, undefined, attrMap);
+      os.xml.appendElementNS(opt_ns + ':' + el.localName, opt_nsUri, parent, undefined, attrMap) :
+      os.xml.appendElement(el.localName, parent, undefined, attrMap);
     var children = el.childNodes;
     if (children && children.length > 0) {
       for (var i = 0, n = children.length; i < n; i++) {
@@ -230,6 +239,7 @@ os.xml.clone = function(node, parent, opt_ns, opt_nsUri) {
 
 /**
  * Serializes an XML document or subtree to string.
+ *
  * @param {!(Document|Element)} xml The document or the root node of the subtree.
  * @return {string} The serialized document.
  */
@@ -241,6 +251,7 @@ os.xml.serialize = function(xml) {
 
 /**
  * Retunrs the element.textContent if it's not null and not empty, otherwise defaultValue.
+ *
  * @param {Element} element
  * @param {*} defaultValue
  * @return {*}
@@ -255,6 +266,7 @@ os.xml.getElementValueOrDefault = function(element, defaultValue) {
 
 /**
  * Get the `textContent` value for the first child matching a selector.
+ *
  * @param {!Element} element The root element.
  * @param {string} selector The child selector.
  * @return {?string} The value.
@@ -283,6 +295,7 @@ os.xml.XSI_REGEX = /xsi:.*?=".*?"/gm;
  * Wrapper for parsing XML documents for strings. This is needed for Firefox's overly anal interpretation of the
  * XML spec. It fails to parse documents if they fail to declare XML namespaces. For now, it only removes elements
  * with an xsi: namespace.
+ *
  * @param {string} xml The text.
  * @return {Document} XML document from the text.
  */

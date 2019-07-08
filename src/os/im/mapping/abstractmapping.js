@@ -167,6 +167,7 @@ os.im.mapping.AbstractMapping.prototype.fromXml = function(xml) {
 
 /**
  * Convert a string to a boolean
+ *
  * @param {string} input  An input string
  * @return {boolean} true if the string is 'true', false otherwise.
  */
@@ -180,6 +181,7 @@ os.im.mapping.AbstractMapping.prototype.toBoolean = function(input) {
 
 /**
  * Safely extract from an xml Element the first value of the first tag
+ *
  * @param {!Element} xml The xml element
  * @param {string}  tagName The tag to look for.
  * @return {?string} The value if available. Null otherwise.

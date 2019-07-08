@@ -13,6 +13,7 @@ goog.provide('os.ui.util.scrollFocusDirective');
  * You will be prevented from scrolling out the element back onto the main scroll.
  *    WARNING: - this behavior may be an issue if your scroll element is in the middle of the
  *    page and taking the entire width and height of the browser.  You cant loose focus
+ *
  * @return {angular.Directive}
  */
 os.ui.util.scrollFocusDirective = function() {
@@ -53,6 +54,7 @@ os.ui.util.scrollFocusDirective.linker_ = function(scope, element, attrs, scroll
 
 /**
  * Controller for the scroll-focus directive.
+ *
  * @param {!angular.JQLite} $element
  * @constructor
  * @ngInject
@@ -151,6 +153,7 @@ os.ui.util.ScrollFocusCtrl.prototype.scrollHandler_ = function(e) {
 
 /**
  * Initializes the scroll event handler.
+ *
  * @private
  */
 os.ui.util.ScrollFocusCtrl.prototype.initScrollHandler_ = function() {
@@ -174,6 +177,7 @@ os.ui.util.ScrollFocusCtrl.prototype.hasScrollBar_ = function() {
 
 /**
  * Listener for focus and blur events to activate and deactivate scrolling.
+ *
  * @param {goog.events.Event} e The event
  * @export
  */

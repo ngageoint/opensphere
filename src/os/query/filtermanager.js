@@ -14,6 +14,7 @@ goog.require('os.ui.filter.FilterEvent');
 
 /**
  * OS implementation of the filter manager.
+ *
  * @constructor
  * @extends {os.filter.BaseFilterManager}
  */
@@ -97,6 +98,7 @@ os.query.FilterManager.prototype.getFilterable = function(layerId) {
 
 /**
  * Whether or not a filter window is up for the given type
+ *
  * @param {?string=} opt_type
  * @return {boolean} True if a window exists, false otherwise
  */
@@ -107,6 +109,7 @@ os.query.FilterManager.prototype.isOpen = function(opt_type) {
 
 /**
  * Opens the filter manager UI
+ *
  * @param {string=} opt_type
  * @param {Array.<os.ogc.FeatureTypeColumn>=} opt_columns
  */

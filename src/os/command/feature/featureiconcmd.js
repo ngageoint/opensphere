@@ -8,6 +8,7 @@ goog.require('os.ui.file.kml');
 
 /**
  * Configure a feature to display an icon.
+ *
  * @param {string} layerId The layer id.
  * @param {string} featureId The feature id.
  * @param {osx.icon.Icon} icon The new icon.

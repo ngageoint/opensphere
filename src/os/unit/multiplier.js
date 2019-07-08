@@ -5,6 +5,7 @@ goog.require('os.unit.IMultiplier');
 
 /**
  * Responsible for receiving, logging and reporting alerts
+ *
  * @implements {os.unit.IMultiplier}
  * @param {string} name
  * @param {number} multiplier

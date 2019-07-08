@@ -9,6 +9,7 @@ goog.require('os.ui.window');
 
 /**
  * The webglsupport directive
+ *
  * @return {angular.Directive}
  */
 os.ui.help.webGLSupportDirective = function() {
@@ -29,6 +30,7 @@ os.ui.Module.directive('webglsupport', [os.ui.help.webGLSupportDirective]);
 
 /**
  * Fire the window ready event for auto height.
+ *
  * @param {!angular.Scope} $scope The Angular scope.
  * @private
  */
@@ -39,6 +41,7 @@ os.ui.help.webGLSupportLink_ = function($scope) {
 
 /**
  * Launches a dialog telling the user their browser is terrible.
+ *
  * @param {string=} opt_title The window title
  */
 os.ui.help.launchWebGLSupportDialog = function(opt_title) {

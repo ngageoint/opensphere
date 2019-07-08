@@ -61,6 +61,7 @@ os.im.mapping.location.BasePositionMapping.prototype.getId = function() {
 
 /**
  * Get the chosen type for this mapping.
+ *
  * @return {?string}
  */
 os.im.mapping.location.BasePositionMapping.prototype.getType = function() {
@@ -70,6 +71,7 @@ os.im.mapping.location.BasePositionMapping.prototype.getType = function() {
 
 /**
  * Get the chosen type for this mapping.
+ *
  * @param {?string} type
  */
 os.im.mapping.location.BasePositionMapping.prototype.setType = function(type) {

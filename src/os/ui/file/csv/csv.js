@@ -17,7 +17,7 @@ os.ui.file.csv.configurePapaParse = function() {
 
   // if workers aren't available, reduce Papa's default chunk size to prevent the browser from hanging
   if (!Modernizr.webworkers) {
-    Papa.LocalChunkSize = 1024 * 1024 * 1;  // 1 MB (default 10MB)
-    Papa.RemoteChunkSize = 1024 * 1024 * 1;  // 1 MB (default 5MB)
+    Papa.LocalChunkSize = 1024 * 1024 * 1; // 1 MB (default 10MB)
+    Papa.RemoteChunkSize = 1024 * 1024 * 1; // 1 MB (default 5MB)
   }
 };

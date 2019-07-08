@@ -7,6 +7,7 @@ goog.require('os.metrics');
 
 /**
  * Changes if ellipse ground reference is shown in 3D mode.
+ *
  * @param {string} layerId
  * @param {boolean} value
  * @param {boolean=} opt_oldValue

@@ -7,6 +7,7 @@ goog.require('os.net.AbstractModifier');
 
 /**
  * URI parameter replacement modifier.
+ *
  * @param {string} id Identifier for the modifier
  * @param {string} param Parameter to modify
  * @param {string|RegExp} replaceTerm The term to replace

@@ -17,6 +17,7 @@ goog.require('os.parse.IParser');
 
 /**
  * Simple GPX parser that extracts features from a GPX file.
+ *
  * @param {Object<string, *>} options Layer configuration options.
  * @implements {os.parse.IParser<ol.Feature>}
  * @template T
@@ -137,6 +138,7 @@ plugin.file.gpx.GPXParser.prototype.parseNext = function() {
 
 /**
  * Extracts metadata from a features' coordinates and sets them as properties.
+ *
  * @param {ol.Feature} feature
  * @param {ol.Coordinate} coordinate
  */
@@ -200,6 +202,7 @@ ol.format.GPX.TRKPT_PARSERS_ = ol.xml.makeStructureNS(
  * This overrides the OL3 parsing to utilize the M part of the XYZM coordinate format they use. The 4th coordinate in
  * each set is replaced with an object that has our time and metadata information on it. This is then parsed out later
  * to be put on each feature from a track.
+ *
  * @param {Array} flatCoordinates Flat coordinates.
  * @param {ol.LayoutOptions} layoutOptions Layout options.
  * @param {Node} node Node.

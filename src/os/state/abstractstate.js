@@ -144,6 +144,7 @@ os.state.AbstractState.prototype.save = function(options) {
 
 /**
  * Create the root object for the saved state.
+ *
  * @abstract
  * @param {S} options The save options
  * @return {T}
@@ -155,6 +156,7 @@ os.state.AbstractState.prototype.createRoot = function(options) {};
 /**
  * Subclasses can call this method to set the savedState to the given value and fire the deferred callback to notify
  * consumers. Passing a null value is valid if the state could not be saved.
+ *
  * @param {S} options The save options
  * @param {?T} rootObj The root XML node for this state.
  * @protected
@@ -170,6 +172,7 @@ os.state.AbstractState.prototype.saveComplete = function(options, rootObj) {
 
 /**
  * Subclasses can call this method if the state save failed.
+ *
  * @param {string} errorMsg The failure message
  * @protected
  */
@@ -182,6 +185,7 @@ os.state.AbstractState.prototype.saveFailed = function(errorMsg) {
 
 /**
  * Subclasses should implement this method to perform the save operation.
+ *
  * @abstract
  * @param {S} options The save options
  * @param {!T} rootObj The root XML node for this state.
@@ -192,6 +196,7 @@ os.state.AbstractState.prototype.saveInternal = function(options, rootObj) {};
 
 /**
  * Get the source for the provided node
+ *
  * @abstract
  * @param {T} node The node
  * @return {?string} The source
@@ -227,6 +232,7 @@ os.state.AbstractState.prototype.remove = function(id) {};
 
 /**
  * Create a layer id for a state file
+ *
  * @param {string} stateId The state id
  * @param {string} layerId The base layer id
  * @return {string} The id for the loaded layer

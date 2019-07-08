@@ -6,6 +6,7 @@ goog.require('os.ui.action.MenuItem');
 
 /**
  * Represents a menu item which is an entry point to a menu items as a sub-menu.
+ *
  * @implements {os.ui.action.IMenuItem}
  * @extends {os.ui.action.MenuItem}
  * @param {!string} name
@@ -29,6 +30,7 @@ goog.inherits(os.ui.action.MenuItemList, os.ui.action.MenuItem);
 
 /**
  * Add an item to the list (sub-menu)
+ *
  * @param {!os.ui.action.MenuItem} menuItem
  */
 os.ui.action.MenuItemList.prototype.addItem = function(menuItem) {
@@ -38,6 +40,7 @@ os.ui.action.MenuItemList.prototype.addItem = function(menuItem) {
 
 /**
  * Retrieve the list of menu items (sub-menu)
+ *
  * @return {!Array.<os.ui.action.MenuItem>}
  * @export
  */

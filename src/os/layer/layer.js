@@ -43,6 +43,7 @@ os.layer.LOGGER_ = goog.log.getLogger('os.layer');
 
 /**
  * Creates a layer from an options object.
+ *
  * @param {!Object<string, *>} options The layer options
  * @return {os.layer.ILayer}
  */
@@ -75,6 +76,7 @@ os.layer.createFromOptions = function(options) {
 
 /**
  * Identifies a layer by flashing it on and off.
+ *
  * @param {os.layer.ILayer} layer
  */
 os.layer.identifyLayer = function(layer) {
@@ -106,6 +108,7 @@ os.layer.identifyLayer = function(layer) {
 
 /**
  * Get the layer title from an id.
+ *
  * @param {string} layerId The layer id.
  * @param {boolean=} opt_explicit If the explicit title should be included.
  * @return {string}
@@ -133,6 +136,7 @@ os.layer.getTitle = function(layerId, opt_explicit) {
 
 /**
  * Get a unique layer title. Adds an incrementing counter until a unique title is found.
+ *
  * @param {string} baseTitle The base layer title
  * @return {string}
  */
@@ -150,6 +154,7 @@ os.layer.getUniqueTitle = function(baseTitle) {
 
 /**
  * Check if a layer exists by title.
+ *
  * @param {string} title The layer title
  * @return {boolean}
  */
@@ -168,6 +173,7 @@ os.layer.hasLayer = function(title) {
 
 /**
  * Get the brightness of the provided layer.
+ *
  * @param {os.layer.ILayer} layer
  * @return {number|undefined} The brightness
  */
@@ -178,6 +184,7 @@ os.layer.getBrightness = function(layer) {
 
 /**
  * Get the contrast of the provided layer.
+ *
  * @param {os.layer.ILayer} layer
  * @return {number|undefined} The contrast
  */
@@ -188,6 +195,7 @@ os.layer.getContrast = function(layer) {
 
 /**
  * Get the hue of the provided layer.
+ *
  * @param {os.layer.ILayer} layer
  * @return {number|undefined} The hue
  */
@@ -198,6 +206,7 @@ os.layer.getHue = function(layer) {
 
 /**
  * Get the opacity of the provided layer.
+ *
  * @param {os.layer.ILayer} layer
  * @return {number|undefined} The opacity
  */
@@ -208,6 +217,7 @@ os.layer.getOpacity = function(layer) {
 
 /**
  * Get the saturation of the provided layer.
+ *
  * @param {os.layer.ILayer} layer
  * @return {number|undefined} The saturation
  */
@@ -218,6 +228,7 @@ os.layer.getSaturation = function(layer) {
 
 /**
  * Set the brightness of the provided layer.
+ *
  * @param {os.layer.ILayer} layer
  * @param {number} value
  */
@@ -228,6 +239,7 @@ os.layer.setBrightness = function(layer, value) {
 
 /**
  * Set the contrast of the provided layer.
+ *
  * @param {os.layer.ILayer} layer
  * @param {number} value
  */
@@ -238,6 +250,7 @@ os.layer.setContrast = function(layer, value) {
 
 /**
  * Set the hue of the provided layer.
+ *
  * @param {os.layer.ILayer} layer
  * @param {number} value
  */
@@ -248,6 +261,7 @@ os.layer.setHue = function(layer, value) {
 
 /**
  * Set the opacity of the provided layer.
+ *
  * @param {os.layer.ILayer} layer
  * @param {number} value
  */
@@ -258,6 +272,7 @@ os.layer.setOpacity = function(layer, value) {
 
 /**
  * Set the saturation of the provided layer.
+ *
  * @param {os.layer.ILayer} layer
  * @param {number} value
  */

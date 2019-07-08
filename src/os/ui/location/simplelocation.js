@@ -15,6 +15,7 @@ goog.require('os.ui.Module');
 
 /**
  * The directive controller
+ *
  * @constructor
  * @param {!angular.Scope} $scope
  * @param {!angular.$filter} $filter
@@ -62,6 +63,7 @@ os.ui.location.SimpleLocationCtrl = function($scope, $filter) {
 
 /**
  * Clean up
+ *
  * @private
  */
 os.ui.location.SimpleLocationCtrl.prototype.destroy_ = function() {
@@ -75,6 +77,7 @@ os.ui.location.SimpleLocationCtrl.prototype.destroy_ = function() {
 
 /**
  * Callback when lat or lon changes
+ *
  * @private
  */
 os.ui.location.SimpleLocationCtrl.prototype.onLatLonChange_ = function() {
@@ -88,6 +91,7 @@ os.ui.location.SimpleLocationCtrl.prototype.onLatLonChange_ = function() {
 
 /**
  * Change the display model
+ *
  * @param {os.ui.location.Format=} opt_format
  * @export
  */
@@ -114,6 +118,7 @@ os.ui.location.SimpleLocationCtrl.prototype.format = function(opt_format) {
 
 /**
  * Change the display model
+ *
  * @param {os.events.SettingChangeEvent} event
  * @export
  */
@@ -220,6 +225,7 @@ os.ui.location.SimpleLocationControlsCtrl = function($scope) {
 
 /**
  * Change the display model
+ *
  * @param {os.ui.location.Format} formatType
  * @param {angular.Scope.Event=} opt_event
  * @export
@@ -236,6 +242,7 @@ os.ui.location.SimpleLocationControlsCtrl.prototype.formatChanged = function(for
 
 /**
  * Change the display model
+ *
  * @param {os.events.SettingChangeEvent} event
  * @export
  */
@@ -248,6 +255,7 @@ os.ui.location.SimpleLocationControlsCtrl.prototype.locationControlChanged = fun
 
 /**
  * Clean up
+ *
  * @private
  */
 os.ui.location.SimpleLocationControlsCtrl.prototype.destroy_ = function() {

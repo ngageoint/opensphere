@@ -5,6 +5,7 @@ goog.require('os.command.QueryClear');
 
 /**
  * Command to add a exclusion query to the map.
+ *
  * @extends {os.command.QueryClear}
  * @constructor
  */

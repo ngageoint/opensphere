@@ -11,6 +11,7 @@ goog.require('os.time.ITime');
 
 /**
  * A time instant
+ *
  * @param {os.time.ITime|goog.date.DateLike|string|number=} opt_time A date, string, or number with the time
  * @constructor
  * @implements {os.time.ITime}
@@ -159,6 +160,7 @@ os.time.TimeInstant.prototype.toString = function() {
 
 /**
  * Parses a value to time in ms UTC
+ *
  * @param {*} value The value
  * @return {number} Parsed milliseconds, or 0 if the value could not be parsed
  */

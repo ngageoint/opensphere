@@ -6,6 +6,7 @@ goog.require('os.data.IDataProvider');
 
 /**
  * Data provider with a loading state.
+ *
  * @interface
  * @extends {os.data.IDataProvider}
  */

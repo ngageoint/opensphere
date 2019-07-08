@@ -9,6 +9,7 @@ goog.require('ol.array');
 
 /**
  * Maintains references to all Cesium primitives
+ *
  * @param {!Cesium.Scene} scene The Cesium scene
  * @param {!ol.layer.Vector} layer The OL3 layer
  * @param {!(ol.proj.Projection|string)} projection The map projection
@@ -170,6 +171,7 @@ plugin.cesium.VectorContext.prototype.isDisposed = function() {
 
 /**
  * Clean unused keys from maps.
+ *
  * @suppress {checkTypes}
  */
 plugin.cesium.VectorContext.prototype.pruneMaps = function() {
@@ -184,6 +186,7 @@ plugin.cesium.VectorContext.prototype.pruneMaps = function() {
 
 /**
  * Sets references to OpenLayers objects on a Cesium primitive.
+ *
  * @param {Cesium.PrimitiveLike} primitive
  * @param {!ol.Feature} feature The OL3 feature
  * @param {!ol.geom.Geometry} geometry The OL3 geometry
@@ -211,6 +214,7 @@ plugin.cesium.VectorContext.prototype.addOLReferences = function(primitive, feat
 
 /**
  * Removes references to OpenLayers objects from a Cesium primitive.
+ *
  * @param {Cesium.PrimitiveLike} primitive
  * @protected
  */
@@ -236,6 +240,7 @@ plugin.cesium.VectorContext.prototype.removeOLReferences = function(primitive) {
 
 /**
  * Marks all primitives for a feature as dirty.
+ *
  * @param {!ol.Feature} feature The OL3 feature
  * @suppress {checkTypes}
  */
@@ -252,6 +257,7 @@ plugin.cesium.VectorContext.prototype.markDirty = function(feature) {
 
 /**
  * Removes all dirty primitives for a feature as dirty.
+ *
  * @param {!ol.Feature} feature The OL3 feature
  * @suppress {checkTypes}
  */
@@ -271,6 +277,7 @@ plugin.cesium.VectorContext.prototype.removeDirty = function(feature) {
 
 /**
  * Cleans up Cesium objects created for a feature.
+ *
  * @param {!ol.Feature} feature the OL3 feature
  * @suppress {checkTypes}
  */
@@ -300,6 +307,7 @@ plugin.cesium.VectorContext.prototype.onBillboardCleanup = function() {
 
 /**
  * Adds a billboard to the collection.
+ *
  * @param {!Cesium.optionsBillboardCollectionAdd} options The billboard configuration
  * @param {!ol.Feature} feature The OL3 feature tied to the billboard
  * @param {!ol.geom.Geometry} geometry The billboard's geometry
@@ -322,6 +330,7 @@ plugin.cesium.VectorContext.prototype.addBillboard = function(options, feature, 
 
 /**
  * Adds a polyline to the collection.
+ *
  * @param {!Cesium.PolylineOptions} options The polyline options.
  * @param {!ol.Feature} feature The OL3 feature tied to the primitive
  * @param {!ol.geom.Geometry} geometry The primitive's geometry
@@ -344,6 +353,7 @@ plugin.cesium.VectorContext.prototype.addPolyline = function(options, feature, g
 
 /**
  * Adds a primitive to the collection.
+ *
  * @param {!Cesium.PrimitiveLike} primitive The Cesium primitive
  * @param {!ol.Feature} feature The OL3 feature tied to the primitive
  * @param {!ol.geom.Geometry} geometry The primitive's geometry
@@ -366,6 +376,7 @@ plugin.cesium.VectorContext.prototype.addPrimitive = function(primitive, feature
 
 /**
  * Adds a label to the collection.
+ *
  * @param {!Cesium.optionsLabelCollection} options The label configuration
  * @param {!ol.Feature} feature The feature tied to the label
  * @param {!ol.geom.Geometry} geometry The billboard's geometry
@@ -391,6 +402,7 @@ plugin.cesium.VectorContext.prototype.addLabel = function(options, feature, geom
 
 /**
  * Remove a primitive from the collection.
+ *
  * @param {!Cesium.PrimitiveLike} primitive The primitive
  */
 plugin.cesium.VectorContext.prototype.removePrimitive = function(primitive) {
@@ -420,6 +432,7 @@ plugin.cesium.VectorContext.prototype.removePrimitive = function(primitive) {
 
 /**
  * Adds a primitive to the map for a feature.
+ *
  * @param {!ol.Feature} feature The OL3 feature
  * @param {!Cesium.PrimitiveLike} primitive The Cesium primitive
  * @protected
@@ -440,6 +453,7 @@ plugin.cesium.VectorContext.prototype.addFeaturePrimitive = function(feature, pr
 
 /**
  * Removes a primitive from the map for a feature.
+ *
  * @param {!ol.Feature} feature The OL3 feature
  * @param {!Cesium.PrimitiveLike} primitive
  * @protected
@@ -456,6 +470,7 @@ plugin.cesium.VectorContext.prototype.removeFeaturePrimitive = function(feature,
 
 /**
  * Get the Cesium label for the provided geometry, if it exists.
+ *
  * @param {!ol.geom.Geometry} geometry The geometry.
  * @return {?Cesium.Label}
  */
@@ -466,6 +481,7 @@ plugin.cesium.VectorContext.prototype.getLabelForGeometry = function(geometry) {
 
 /**
  * Get the Cesium primitive/billboard for the provided geometry, if it exists.
+ *
  * @param {!ol.geom.Geometry} geometry The geometry.
  * @return {?Cesium.PrimitiveLike}
  */

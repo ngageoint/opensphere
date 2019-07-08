@@ -9,6 +9,7 @@ goog.require('os.map');
 
 /**
  * The GeoJSON exporter.
+ *
  * @extends {os.ex.AbstractExporter.<ol.Feature>}
  * @constructor
  */

@@ -7,6 +7,7 @@ goog.require('os.annotation.IAnnotation');
 
 /**
  * Abstract annotation implementation.
+ *
  * @abstract
  * @implements {os.annotation.IAnnotation}
  * @extends {goog.Disposable}
@@ -78,6 +79,7 @@ os.annotation.AbstractAnnotation.prototype.setVisible = function(value) {
 
 /**
  * Set if the annotation is visible.
+ *
  * @abstract
  * @protected
  */

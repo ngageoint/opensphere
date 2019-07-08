@@ -6,6 +6,7 @@ goog.require('os.search.SearchEventType');
 
 /**
  * Favorite
+ *
  * @param {string} name
  * @param {string} uri
  * @param {string} title
@@ -22,6 +23,7 @@ os.search.Favorite = function(name, uri, title, opt_type) {
 
 /**
  * Creates a favorite from a bookmark.
+ *
  * @param {Object} bookmark
  * @param {string=} opt_type
  * @return {?os.search.Favorite}
@@ -29,7 +31,7 @@ os.search.Favorite = function(name, uri, title, opt_type) {
 os.search.Favorite.fromBookmark = function(bookmark, opt_type) {
   if (bookmark) {
     var uri = goog.string.isEmptyOrWhitespace(goog.string.makeSafe(bookmark['key'])) ?
-        bookmark['key2'] : bookmark['key'];
+      bookmark['key2'] : bookmark['key'];
     return new os.search.Favorite(bookmark['value'], uri, uri, opt_type);
   }
   return null;
@@ -38,6 +40,7 @@ os.search.Favorite.fromBookmark = function(bookmark, opt_type) {
 
 /**
  * Helper to just get the URl to favorite
+ *
  * @return {string}
  */
 os.search.Favorite.getFavUrl = function() {

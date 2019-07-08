@@ -12,6 +12,7 @@ goog.require('os.ui.slick.slickTreeDirective');
 
 /**
  * The layer tree directive.
+ *
  * @return {angular.Directive}
  */
 os.ui.layerTreeDirective = function() {
@@ -30,6 +31,7 @@ os.ui.Module.directive('layertree', [os.ui.layerTreeDirective]);
 
 /**
  * Controller for layers tree
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$compile} $compile

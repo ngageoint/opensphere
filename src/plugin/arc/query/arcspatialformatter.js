@@ -12,6 +12,7 @@ goog.require('os.xml');
 
 /**
  * Formats a spatial query for use in an Arc Filter.
+ *
  * @implements {os.filter.ISpatialFormatter}
  * @constructor
  */

@@ -19,6 +19,7 @@ goog.require('os.ui.ol.interaction.DragBox');
 
 /**
  * The draw-controls directive
+ *
  * @return {angular.Directive}
  */
 os.ui.ol.draw.drawControlsDirective = function() {
@@ -48,6 +49,7 @@ os.ui.Module.directive('drawControls', [os.ui.ol.draw.drawControlsDirective]);
 /**
  * Controller for the draw-controls directive. This version of the draw controls is designed to work with
  * the os.ui version of the OL map.
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @extends {goog.Disposable}
@@ -176,6 +178,7 @@ os.ui.ol.draw.DrawControlsCtrl.prototype.getMap = function() {
 
 /**
  * Get the menu to display when drawing completes.
+ *
  * @return {os.ui.menu.Menu|undefined}
  */
 os.ui.ol.draw.DrawControlsCtrl.prototype.getMenu = function() {
@@ -185,6 +188,7 @@ os.ui.ol.draw.DrawControlsCtrl.prototype.getMenu = function() {
 
 /**
  * Set the active drawing feature.
+ *
  * @param {ol.Feature|undefined} f The feature.
  * @protected
  */
@@ -233,6 +237,7 @@ os.ui.ol.draw.DrawControlsCtrl.prototype.setSelectedControl = function(type) {
 
 /**
  * Register a listener that will be called when the map is ready.
+ *
  * @protected
  */
 os.ui.ol.draw.DrawControlsCtrl.prototype.listenForMapReady = function() {
@@ -242,6 +247,7 @@ os.ui.ol.draw.DrawControlsCtrl.prototype.listenForMapReady = function() {
 
 /**
  * Handle map ready event.
+ *
  * @param {goog.events.Event} event The ready event.
  * @protected
  */
@@ -335,6 +341,7 @@ os.ui.ol.draw.DrawControlsCtrl.prototype.onDrawEnd = function(event) {
 
 /**
  * Handles menu finish
+ *
  * @param {goog.events.Event=} opt_e
  * @protected
  */
@@ -410,6 +417,7 @@ os.ui.ol.draw.DrawControlsCtrl.prototype.isActive = function() {
 
 /**
  * override via mixin if opensphere has access to country borders
+ *
  * @return {boolean}
  * @export
  */

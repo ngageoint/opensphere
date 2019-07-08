@@ -20,6 +20,7 @@ os.registerClass(ol.Feature.NAME, ol.Feature);
 
 /**
  * The accessors provided on ol.Object are never used, so skip that code path entirely.
+ *
  * @override
  * @suppress {accessControls}
  */
@@ -34,6 +35,7 @@ ol.Feature.prototype.set = function(key, value, opt_silent) {
 
 /**
  * The accessors provided on ol.Object are never used, so skip that code path entirely.
+ *
  * @override
  * @suppress {accessControls}
  */
@@ -44,6 +46,7 @@ ol.Feature.prototype.unset = function(key, opt_silent) {
 
 /**
  * For the love of god, don't clone the style!!
+ *
  * @return {!ol.Feature} The clone.
  * @suppress {duplicate|accessControls}
  */
@@ -63,6 +66,7 @@ ol.Feature.prototype.clone = function() {
 /**
  * We don't use style functions, and creating a new one every time the style changes is expensive. This is a much
  * simpler version that still does its job.
+ *
  * @param {ol.style.Style|Array.<ol.style.Style>|
  *     ol.FeatureStyleFunction} style Style for this feature.
  * @suppress {accessControls|duplicate}
@@ -76,6 +80,7 @@ ol.Feature.prototype.setStyle = function(style) {
 /**
  * Returns a style array for the feature. This is used by the above replacement for setStyle instead of creating a new
  * function every time setStyle is called.
+ *
  * @param {number} resolution
  * @return {Array<ol.style.Style>}
  * @suppress {accessControls}
@@ -130,6 +135,7 @@ ol.Feature.prototype.setId = function(id) {
 /**
  * Fire feature event that won't be handled by OL3. This is added so the event will be created in the same application
  * context as the feature, allowing instanceof to work in Closure's internal event dispatcher.
+ *
  * @param {string} type The event type to fire
  * @param {*} newVal The new value
  * @param {*} oldVal The old value

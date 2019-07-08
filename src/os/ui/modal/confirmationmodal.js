@@ -54,6 +54,7 @@ os.ui.Module.directive('confirmationModal', [os.ui.modal.confirmationModalDirect
 
 /**
  * Controller function for the confirmation-modal directive.
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$timeout} $timeout
@@ -106,6 +107,7 @@ os.ui.modal.ConfirmationModalCtrl.ID = 'confirmModal';
 
 /**
  * Clean up references/listeners.
+ *
  * @private
  */
 os.ui.modal.ConfirmationModalCtrl.prototype.destroy_ = function() {
@@ -117,6 +119,7 @@ os.ui.modal.ConfirmationModalCtrl.prototype.destroy_ = function() {
 
 /**
  * Grabs the parameters from the message.
+ *
  * @param {os.ui.modal.ConfirmationModalOptions} options
  */
 os.ui.modal.ConfirmationModalCtrl.prototype.setMessage = function(options) {
@@ -132,6 +135,7 @@ os.ui.modal.ConfirmationModalCtrl.prototype.setMessage = function(options) {
 
 /**
  * Hides the modal after a button click
+ *
  * @export
  */
 os.ui.modal.ConfirmationModalCtrl.prototype.cancelClick = function() {
@@ -149,6 +153,7 @@ os.ui.modal.ConfirmationModalCtrl.prototype.cancelClick = function() {
 /**
  * Confirm/Yes was clicked.  Set the display to lock while we call the success callback and wait for a new event to come
  * in before closing the dialog.
+ *
  * @export
  */
 os.ui.modal.ConfirmationModalCtrl.prototype.confirmClick = function() {
@@ -165,6 +170,7 @@ os.ui.modal.ConfirmationModalCtrl.prototype.confirmClick = function() {
 
 /**
  * launches confirmation modal
+ *
  * @param {os.ui.modal.ConfirmationModalOptions} params
  */
 os.ui.modal.ConfirmationModalCtrl.launch = function(params) {

@@ -9,6 +9,7 @@ goog.require('os.xsd.DataType');
 
 /**
  * A 'PropertyIsLike' operation class.
+ *
  * @extends {os.ui.filter.op.Op}
  * @constructor
  */

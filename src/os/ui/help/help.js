@@ -50,6 +50,7 @@ os.ui.help.MENU = new os.ui.menu.Menu(new os.ui.menu.MenuItem({
 
 /**
  * A directive to display the help menu
+ *
  * @return {angular.Directive}
  */
 os.ui.help.helpDirective = function() {
@@ -76,6 +77,7 @@ os.ui.Module.directive('help', [os.ui.help.helpDirective]);
 
 /**
  * Controller for the help directive.
+ *
  * @param {!angular.Scope} $scope The Angular scope.
  * @param {!angular.JQLite} $element The root DOM element.
  * @extends {os.ui.menu.MenuButtonCtrl}
@@ -120,6 +122,7 @@ os.ui.help.HelpCtrl.prototype.disposeInternal = function() {
 
 /**
  * Initialize the help menu.
+ *
  * @protected
  */
 os.ui.help.HelpCtrl.prototype.initialize = function() {
@@ -218,6 +221,7 @@ os.ui.help.HelpCtrl.prototype.initialize = function() {
 
 /**
  * Handle help events.
+ *
  * @param {os.ui.action.ActionEvent} event
  * @private
  */
@@ -268,6 +272,7 @@ os.ui.help.showWindow = function(flag) {
 
 /**
  * Show the Alerts window.
+ *
  * @private
  */
 os.ui.help.showAlertsWindow_ = function() {
@@ -277,6 +282,7 @@ os.ui.help.showAlertsWindow_ = function() {
 
 /**
  * Retrieve the URL for video card help
+ *
  * @return {string}
  * @private
  */

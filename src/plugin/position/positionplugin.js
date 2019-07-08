@@ -12,6 +12,7 @@ goog.require('plugin.position.copyPositionDirective');
 
 /**
  * Provides map layer support
+ *
  * @extends {os.plugin.AbstractPlugin}
  * @constructor
  */

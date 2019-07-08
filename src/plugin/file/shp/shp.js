@@ -33,6 +33,7 @@ plugin.file.shp.DBFData;
 
 /**
  * Tests if the supplied content is for a DBF file.
+ *
  * @param {ArrayBuffer} content
  * @return {boolean}
  */
@@ -59,6 +60,7 @@ plugin.file.shp.isDBFFileType = function(content) {
 
 /**
  * Tests if the supplied content is for a SHP file.
+ *
  * @param {ArrayBuffer} content
  * @return {boolean}
  */

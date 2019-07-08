@@ -7,6 +7,7 @@ goog.require('plugin.pelias.geocoder.Search');
 
 /**
  * Provides Pelias Geocoder (text -> coordinates) search
+ *
  * @extends {os.plugin.AbstractPlugin}
  * @constructor
  */

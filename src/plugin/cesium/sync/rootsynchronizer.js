@@ -6,6 +6,7 @@ goog.require('os.webgl.AbstractRootSynchronizer');
 
 /**
  * The root synchronizer for the Cesium renderer.
+ *
  * @param {!ol.PluggableMap} map The OpenLayers map.
  * @param {!Cesium.Scene} scene The Cesium scene.
  * @extends {os.webgl.AbstractRootSynchronizer}
@@ -45,8 +46,8 @@ plugin.cesium.sync.RootSynchronizer.prototype.createSynchronizer = function(cons
   goog.asserts.assert(!!layer);
 
   return /** @type {!os.webgl.AbstractWebGLSynchronizer} */ (new
-    /** @type {function(new: Object, ol.layer.Layer, ol.PluggableMap, (Cesium.Scene|undefined))} */ (
-      constructor)(layer, this.map, this.scene_));
+  /** @type {function(new: Object, ol.layer.Layer, ol.PluggableMap, (Cesium.Scene|undefined))} */ (
+    constructor)(layer, this.map, this.scene_));
 };
 
 
@@ -89,6 +90,7 @@ plugin.cesium.sync.RootSynchronizer.prototype.updateGroupZ = function(group) {
 /**
  * Gets the start index of the provided tile or image group by looking up the last index of the previous group,
  * or 0 if passed the first group on the map.
+ *
  * @param {!os.layer.Group} group The group to look up
  * @return {number} The first index in the layers array
  * @private
@@ -122,6 +124,7 @@ plugin.cesium.sync.RootSynchronizer.prototype.getGroupStartIndex_ = function(gro
 
 /**
  * Gets the start index of the provided vector group by counting the number of previous vector layers.
+ *
  * @param {!os.layer.Group} group The group to look up
  * @return {number} The first index in the layers array
  * @private

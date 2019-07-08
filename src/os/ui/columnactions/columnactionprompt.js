@@ -10,6 +10,7 @@ goog.require('os.ui.columnactions.IColumnActionModel');
 
 /**
  * Dialog used when a user tries importing a duplicate file.
+ *
  * @return {angular.Directive}
  */
 os.ui.columnactions.columnActionPromptDirective = function() {
@@ -32,6 +33,7 @@ os.ui.Module.directive('columnactions', [os.ui.columnactions.columnActionPromptD
 
 /**
  * Controller for the File Exists! window
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @constructor
@@ -60,6 +62,7 @@ os.ui.columnactions.ColumnActionsCtrl = function($scope, $element) {
 
 /**
  * Clean up
+ *
  * @private
  */
 os.ui.columnactions.ColumnActionsCtrl.prototype.onDestroy_ = function() {
@@ -92,6 +95,7 @@ os.ui.columnactions.ColumnActionsCtrl.prototype.getDescription = function(match)
 
 /**
  * Close the window.
+ *
  * @export
  */
 os.ui.columnactions.ColumnActionsCtrl.prototype.close = function() {
@@ -101,6 +105,7 @@ os.ui.columnactions.ColumnActionsCtrl.prototype.close = function() {
 
 /**
  * Launch a dialog prompting the user the file they're importing already exists and requesting action.
+ *
  * @param {Array.<os.ui.columnactions.AbstractColumnAction>} matched
  * @param {*} value from the column
  * @param {os.ui.columnactions.IColumnActionModel} colDef

@@ -77,6 +77,7 @@ os.ui.state.StateImportUI.prototype.mergeConfig = function(from, to) {
 
 /**
  * Pulls information off of an XML state file and uses it to populate the import directive.
+ *
  * @param {os.file.File} file
  * @param {Document} stateDoc
  * @param {Object} config
@@ -105,6 +106,7 @@ os.ui.state.StateImportUI.prototype.handleXML = function(file, stateDoc, config)
 
 /**
  * Pulls information off of an XML state file and uses it to populate the import directive.
+ *
  * @param {os.file.File} file
  * @param {Object} stateObject
  * @param {Object} config
@@ -122,6 +124,7 @@ os.ui.state.StateImportUI.prototype.handleJSON = function(file, stateObject, con
 
 /**
  * Takes the completed config and displays the UI for it.
+ *
  * @param {os.file.File} file
  * @param {Object} config
  */

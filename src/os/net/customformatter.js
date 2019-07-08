@@ -5,6 +5,7 @@ goog.require('os.net.IDataFormatter');
 
 /**
  * Create a text payload.
+ *
  * @implements {os.net.IDataFormatter}
  * @constructor
  * @param {string=} opt_contentType the MIME type of the string data; default is 'text'

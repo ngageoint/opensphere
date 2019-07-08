@@ -48,6 +48,7 @@ plugin.heatmap.EXTENT_SCALE_FACTOR = 1.5;
 
 /**
  * Clones a feature. This avoids copying style information since we handle styles very differently than base OL3.
+ *
  * @param {!ol.Feature} feature The feature to clone
  * @return {?ol.Feature} The cloned feature
  */
@@ -86,6 +87,7 @@ plugin.heatmap.cloneFeature = function(feature) {
 
 /**
  * Get features to use for a heatmap from a source.
+ *
  * @param {string|undefined} sourceId The source id.
  * @return {Array<!ol.Feature>|undefined} The features.
  */
@@ -107,6 +109,7 @@ plugin.heatmap.getSourceFeatures = function(sourceId) {
 
 /**
  * Takes a list of color strings and constructs a gradient image data array.
+ *
  * @param {Array<string>} colors
  * @return {Uint8ClampedArray} An array.
  */
@@ -130,6 +133,7 @@ plugin.heatmap.createGradient = function(colors) {
 
 /**
  * Create a heatmap based on the passed layer.
+ *
  * @param {os.layer.ILayer} layer
  */
 plugin.heatmap.createHeatmap = function(layer) {
@@ -151,6 +155,7 @@ plugin.heatmap.createHeatmap = function(layer) {
 
 /**
  * Exports a heatmap to a KMZ as a GroundOverlay.
+ *
  * @param {plugin.heatmap.Heatmap} layer
  */
 plugin.heatmap.exportHeatmap = function(layer) {
@@ -170,6 +175,7 @@ plugin.heatmap.exportHeatmap = function(layer) {
 
 /**
  * Handle image job completion
+ *
  * @param {plugin.heatmap.Heatmap} layer
  * @param {os.job.JobEvent} event
  */
@@ -222,6 +228,7 @@ plugin.heatmap.onImageComplete = function(layer, event) {
 
 /**
  * Handle job failure
+ *
  * @param {os.job.JobEvent} event
  */
 plugin.heatmap.onImageError = function(event) {

@@ -9,6 +9,7 @@ goog.require('os.ui.menu.import');
 
 /**
  * The add data button bar directive
+ *
  * @return {angular.Directive}
  */
 os.ui.addDataButtonDirective = function() {
@@ -57,6 +58,7 @@ goog.inherits(os.ui.AddDataButtonCtrl, os.ui.menu.MenuButtonCtrl);
 
 /**
  * Opens a file or URL
+ *
  * @export
  */
 os.ui.AddDataButtonCtrl.prototype.open = function() {

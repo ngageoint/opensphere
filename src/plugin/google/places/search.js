@@ -13,6 +13,7 @@ goog.require('plugin.google.places.Result');
 
 /**
  * Searches Google Places API
+ *
  * @param {string} name
  * @extends {os.search.AbstractUrlSearch}
  * @constructor

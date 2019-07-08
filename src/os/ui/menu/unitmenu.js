@@ -72,6 +72,7 @@ os.ui.menu.unit.dispose = function() {
 
 /**
  * Toggle active unit system.
+ *
  * @param {os.ui.action.ActionEvent} event
  */
 os.ui.menu.unit.toggleUnit = function(event) {
@@ -81,6 +82,7 @@ os.ui.menu.unit.toggleUnit = function(event) {
 
 /**
  * Helper function for changing icons.
+ *
  * @this {os.ui.menu.MenuItem}
  */
 os.ui.menu.unit.updateIcons = function() {

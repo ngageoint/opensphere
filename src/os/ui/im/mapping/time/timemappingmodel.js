@@ -10,6 +10,7 @@ goog.require('os.time');
 
 /**
  * Model for describing a time mapping.
+ *
  * @param {os.im.mapping.TimeType=} opt_type The type of time mapping (instant, start, end).
  * @constructor
  */
@@ -77,6 +78,7 @@ os.ui.im.mapping.time.TimeMappingModel.prototype.getType = function() {
 
 /**
  * Configure the model from a set of mappings.
+ *
  * @param {Array.<os.im.mapping.time.DateTimeMapping>} mappings
  */
 os.ui.im.mapping.time.TimeMappingModel.prototype.updateFromMappings = function(mappings) {
@@ -102,6 +104,7 @@ os.ui.im.mapping.time.TimeMappingModel.prototype.updateFromMappings = function(m
 
 /**
  * Generate mappings from the model configuration.
+ *
  * @return {Array.<os.im.mapping.time.DateTimeMapping>}
  */
 os.ui.im.mapping.time.TimeMappingModel.prototype.generateMappings = function() {
@@ -142,6 +145,7 @@ os.ui.im.mapping.time.TimeMappingModel.prototype.generateMappings = function() {
 
 /**
  * Check if mappings can be generated from this model.
+ *
  * @return {boolean}
  */
 os.ui.im.mapping.time.TimeMappingModel.prototype.validate = function() {

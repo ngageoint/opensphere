@@ -5,6 +5,7 @@ goog.require('goog.events.Event');
 
 /**
  * Event object which contains error message
+ *
  * @constructor
  * @extends {goog.events.Event}
  * @param {?string} message

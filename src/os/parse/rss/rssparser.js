@@ -10,6 +10,7 @@ goog.require('os.xml');
 
 /**
  * Generic RSS parser that translates items from the RSS feed to JSON objects.
+ *
  * @extends {os.parse.AsyncParser}
  * @implements {os.parse.IParser<T>}
  * @constructor
@@ -91,6 +92,7 @@ os.parse.RssParser.prototype.parseNext = function() {
 
 /**
  * Parses an RSS `item` element.
+ *
  * @param {!Element} item The RSS item element.
  * @return {T} The parsed item.
  * @protected

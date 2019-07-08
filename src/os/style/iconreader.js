@@ -14,6 +14,7 @@ goog.require('os.ui.file.kml');
 
 /**
  * Icon style reader
+ *
  * @extends {os.style.AbstractReader<!ol.style.Icon>}
  * @constructor
  */

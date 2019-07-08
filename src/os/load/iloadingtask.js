@@ -4,6 +4,7 @@ goog.provide('os.load.ILoadingTask');
 
 /**
  * Interface representing loading tasks.
+ *
  * @interface
  */
 os.load.ILoadingTask = function() {};

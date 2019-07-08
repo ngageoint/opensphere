@@ -9,6 +9,7 @@ goog.require('os.time');
 
 /**
  * Replaces OGC filter to load data matching specific property values.
+ *
  * @param {(Object<string, !Array<string>>|string)} filter Filter string, or a map of data fields/values to match
  * @param {string=} opt_startColumn The start date column
  * @param {string=} opt_endColumn The end date column

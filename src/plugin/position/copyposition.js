@@ -9,6 +9,7 @@ goog.require('os.ui.Module');
 
 /**
  * A directive to launch the copy coordinates GUI
+ *
  * @return {angular.Directive}
  */
 plugin.position.copyPositionDirective = function() {
@@ -34,6 +35,7 @@ os.ui.Module.directive('copyPosition', [plugin.position.copyPositionDirective]);
 
 /**
  * Create a popup with the current map (mouse) location information to be copied
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @extends {goog.Disposable}
@@ -65,6 +67,7 @@ goog.inherits(plugin.position.CopyPositionCtrl, goog.Disposable);
 
 /**
  * Clean up
+ *
  * @private
  */
 plugin.position.CopyPositionCtrl.prototype.onDestroy_ = function() {
@@ -84,6 +87,7 @@ plugin.position.CopyPositionCtrl.prototype.close = function() {
 
 /**
  * Close the window if the user hits ENTER
+ *
  * @param {goog.events.KeyEvent} event
  * @private
  */
@@ -96,6 +100,7 @@ plugin.position.CopyPositionCtrl.prototype.handleKeyEvent_ = function(event) {
 
 /**
  * Launch the copy coordinates window
+ *
  * @param {string} value
  */
 plugin.position.CopyPositionCtrl.launch = function(value) {

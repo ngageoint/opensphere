@@ -9,6 +9,7 @@ goog.require('os.ui.data.addColumnFormDirective');
 
 /**
  * The addcolumn directive
+ *
  * @return {angular.Directive}
  */
 os.ui.data.addColumnDirective = function() {
@@ -34,6 +35,7 @@ os.ui.Module.directive('addcolumn', [os.ui.data.addColumnDirective]);
 
 /**
  * Controller function for the addcolumn directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$timeout} $timeout
@@ -100,6 +102,7 @@ os.ui.data.AddColumnCtrl = function($scope, $element, $timeout) {
 
 /**
  * Clean up.
+ *
  * @private
  */
 os.ui.data.AddColumnCtrl.prototype.destroy_ = function() {
@@ -110,6 +113,7 @@ os.ui.data.AddColumnCtrl.prototype.destroy_ = function() {
 
 /**
  * Closes the window.
+ *
  * @export
  */
 os.ui.data.AddColumnCtrl.prototype.cancel = function() {
@@ -119,6 +123,7 @@ os.ui.data.AddColumnCtrl.prototype.cancel = function() {
 
 /**
  * Finishes and adds the column.
+ *
  * @export
  */
 os.ui.data.AddColumnCtrl.prototype.finish = function() {
@@ -153,6 +158,7 @@ os.ui.data.AddColumnCtrl.prototype.finish = function() {
 
 /**
  * Launches the window for the given source.
+ *
  * @param {os.source.Vector} source
  */
 os.ui.data.AddColumnCtrl.launch = function(source) {

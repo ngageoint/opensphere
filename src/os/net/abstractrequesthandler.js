@@ -9,6 +9,7 @@ goog.require('os.net.IRequestHandler');
 
 /**
  * The base class for all handlers which make an actual URL request
+ *
  * @abstract
  * @constructor
  * @extends {goog.events.EventTarget}
@@ -126,11 +127,12 @@ os.net.AbstractRequestHandler.prototype.abort = function() {};
  * @inheritDoc
  */
 os.net.AbstractRequestHandler.prototype.execute = function(method, uri, opt_headers, opt_formatter, opt_nocache,
-    opt_responseType) {};
+  opt_responseType) {};
 
 
 /**
  * Gets a displayable error message for requests that went wrong.
+ *
  * @param {goog.net.XhrIo} request The failed request
  * @return {string} The error message
  */

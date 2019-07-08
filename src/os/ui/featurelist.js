@@ -15,6 +15,7 @@ goog.require('os.ui.window');
 
 /**
  * The `featurelist` directive. Displays vector source features in a grid.
+ *
  * @return {angular.Directive}
  */
 os.ui.featureListDirective = function() {
@@ -39,6 +40,7 @@ os.ui.Module.directive('featurelist', [os.ui.featureListDirective]);
 
 /**
  * Controller class for the feature list.
+ *
  * @param {!angular.Scope} $scope The Angular scope.
  * @param {!angular.JQLite} $element The root DOM element.
  * @extends {goog.Disposable}
@@ -147,6 +149,7 @@ os.ui.FeatureListCtrl.prototype.disposeInternal = function() {
 
 /**
  * Closes the window.
+ *
  * @export
  */
 os.ui.FeatureListCtrl.prototype.close = function() {
@@ -156,6 +159,7 @@ os.ui.FeatureListCtrl.prototype.close = function() {
 
 /**
  * Updates the row height based on the step
+ *
  * @private
  */
 os.ui.FeatureListCtrl.prototype.updateRowHeight_ = function() {
@@ -165,6 +169,7 @@ os.ui.FeatureListCtrl.prototype.updateRowHeight_ = function() {
 
 /**
  * Handles layer removed event from the map.
+ *
  * @param {os.events.LayerEvent} event The layer event.
  * @private
  */
@@ -178,6 +183,7 @@ os.ui.FeatureListCtrl.prototype.onLayerRemoved_ = function(event) {
 
 /**
  * Handles change events on the source.
+ *
  * @param {os.events.PropertyChangeEvent} e The change event.
  * @private
  */
@@ -194,6 +200,7 @@ os.ui.FeatureListCtrl.prototype.onSourceChange_ = function(e) {
 
 /**
  * Updates the status text for the current source.
+ *
  * @private
  */
 os.ui.FeatureListCtrl.prototype.updateStatus_ = function() {
@@ -241,6 +248,7 @@ os.ui.FeatureListCtrl.prototype.updateStatus_ = function() {
 
 /**
  * Launches a feature list for a source.
+ *
  * @param {!os.source.Vector} source The source.
  */
 os.ui.launchFeatureList = function(source) {

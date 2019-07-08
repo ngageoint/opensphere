@@ -6,6 +6,7 @@ goog.require('os.ui.slick.SlickTreeNode');
 
 /**
  * Loads the capabilities from an Arc server and constructs the tree.
+ *
  * @param {plugin.arc.ArcServer} server
  * @extends {os.ui.slick.LoadingNode}
  * @constructor
@@ -30,6 +31,7 @@ goog.inherits(plugin.arc.node.ArcFolderNode, os.ui.slick.LoadingNode);
 
 /**
  * Loads Arc node capabilities.
+ *
  * @param {string} url
  */
 plugin.arc.node.ArcFolderNode.prototype.load = function(url) {
@@ -43,6 +45,7 @@ plugin.arc.node.ArcFolderNode.prototype.load = function(url) {
 
 /**
  * Handler for Arc folder load success.
+ *
  * @param {goog.events.Event} event
  * @protected
  */
@@ -59,6 +62,7 @@ plugin.arc.node.ArcFolderNode.prototype.onLoad = function(event) {
 
 /**
  * Handler for Arc folder load errors.
+ *
  * @param {goog.events.Event} event
  * @protected
  */
