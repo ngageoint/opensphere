@@ -1209,7 +1209,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.addHoldBrush = function(range) {
  * @private
  */
 os.ui.timeline.AbstractTimelineCtrl.prototype.processTimelineRangeChanged_ = function(brushCollection,
-  ranges, getBrushFunction) {
+    ranges, getBrushFunction) {
   var brush;
   var range;
   var supressBrushEvents = true;

@@ -1504,7 +1504,7 @@ plugin.track.getTrackPositionAt = function(track, timestamp, index, coordinates,
  * @suppress {accessControls} To allow direct access to line string coordinates.
  */
 plugin.track.updateCurrentLine = function(track, startTime, startIndex, endTime, endIndex, coordinates, stride,
-  opt_ends) {
+    opt_ends) {
   var currentLine = /** @type {plugin.track.TrackLike|undefined} */ (track.get(plugin.track.TrackField.CURRENT_LINE));
   var layout = stride === 4 ? ol.geom.GeometryLayout.XYZM : ol.geom.GeometryLayout.XYM;
   if (!currentLine) {
