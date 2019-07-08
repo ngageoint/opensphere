@@ -135,7 +135,7 @@ os.net.SameDomainHandler.prototype.abort = function() {
  * @inheritDoc
  */
 os.net.SameDomainHandler.prototype.execute = function(
-  method, uri, opt_headers, opt_formatter, opt_nocache, opt_responseType) {
+    method, uri, opt_headers, opt_formatter, opt_nocache, opt_responseType) {
   this.errors = null;
 
   if (!this.req) {
