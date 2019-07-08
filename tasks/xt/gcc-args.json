@@ -15,7 +15,7 @@
     "src/os/alert/**.js",
     "src/os/xt/**.js",
     "src/os/structs/**.js",
-    "src/os/xt/exports.export"
+    "tasks/xt/exports.js"
   ],
   "js_output_file": "dist/opensphere/xt.min.js",
   "jscomp_error": [
