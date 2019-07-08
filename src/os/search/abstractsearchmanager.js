@@ -235,7 +235,7 @@ os.search.AbstractSearchManager.prototype.isContainer = function() {
  * @param {string=} opt_sortOrder The sort order
  */
 os.search.AbstractSearchManager.prototype.search = function(term, opt_start, opt_pageSize, opt_sortBy, opt_force,
-  opt_noFacets, opt_sortOrder) {};
+    opt_noFacets, opt_sortOrder) {};
 
 
 /**

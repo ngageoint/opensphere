@@ -70,7 +70,7 @@ os.alert.AlertManager.MAX_SAVED = 10000;
  *   by dispatching a {@code os.alert.AlertEventTypes.DISMISS_ALERT} event
  */
 os.alert.AlertManager.prototype.sendAlert = function(alert, opt_severity, opt_logger, opt_limit,
-  opt_dismissDispatcher) {
+    opt_dismissDispatcher) {
   var severity = opt_severity || os.alert.AlertEventSeverity.ERROR;
 
   // fire off the alert
@@ -108,7 +108,7 @@ os.alert.AlertManager.prototype.sendAlert = function(alert, opt_severity, opt_lo
  *   by dispatching a {@code os.alert.AlertEventTypes.DISMISS_ALERT} event
  */
 os.alert.AlertManager.prototype.sendAlertOnce = function(alert, opt_severity, opt_logger, opt_limit,
-  opt_dismissDispatcher) {
+    opt_dismissDispatcher) {
   if (this.onceMap_[alert]) {
     return;
   } else {
