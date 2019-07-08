@@ -16,6 +16,7 @@ goog.require('ol.style.Style');
 goog.require('ol.xml');
 goog.require('os.data.RecordField');
 goog.require('os.mixin');
+goog.require('os.mixin.polygon');
 goog.require('os.object');
 goog.require('os.time.TimeInstant');
 goog.require('os.time.TimeRange');

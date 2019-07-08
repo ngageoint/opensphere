@@ -34,6 +34,7 @@ goog.require('os.ui.list');
 goog.require('os.ui.text.simpleMDEDirective');
 goog.require('os.ui.util.validationMessageDirective');
 goog.require('os.ui.window');
+goog.require('os.webgl.AltitudeMode');
 
 
 /**
@@ -321,6 +322,26 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
   this['altUnitOptions'] = goog.object.getValues(os.math.Units);
 
   /**
+   * The altitude modes supported
+   * @type {Array<os.webgl.AltitudeMode>}
+   */
+  this['altitudeModes'] = ol.obj.getValues(os.webgl.AltitudeMode);
+
+
+  var webGLRenderer = os.map.mapContainer.getWebGLRenderer();
+  if (webGLRenderer) {
+    this['altitudeModes'] = webGLRenderer.getAltitudeModes();
+  }
+
+  var defaultAltMode = os.webgl.AltitudeMode.CLAMP_TO_GROUND;
+
+  /**
+   * The selected altitude mode
+   * @type {?os.webgl.AltitudeMode}
+   */
+  this['altitudeMode'] = this['altitudeModes'].indexOf(defaultAltMode) > -1 ? defaultAltMode : null;
+
+  /**
    * Configured label color.
    * @type {string}
    */
@@ -551,6 +572,7 @@ os.ui.FeatureEditCtrl.FIELDS = [
   os.Fields.LON,
   os.Fields.ALT,
   os.Fields.ALT_UNITS,
+  os.data.RecordField.ALTITUDE_MODE,
   os.Fields.LAT_DDM,
   os.Fields.LON_DDM,
   os.Fields.LAT_DMS,
@@ -895,6 +917,8 @@ os.ui.FeatureEditCtrl.prototype.loadFromFeature = function(feature) {
     this['centerShape'] = featureCenterShape;
   }
 
+  var altitudeMode = feature.get(os.data.RecordField.ALTITUDE_MODE);
+
   var config = /** @type {Object|undefined} */ (feature.get(os.style.StyleType.FEATURE));
   var featureColor;
   if (config) {
@@ -960,6 +984,7 @@ os.ui.FeatureEditCtrl.prototype.loadFromFeature = function(feature) {
   var geometry = feature.getGeometry();
   if (geometry) {
     this.originalGeometry_ = geometry;
+    altitudeMode = geometry.get(os.data.RecordField.ALTITUDE_MODE) || altitudeMode;
 
     if (geometry instanceof ol.geom.Point) {
       var clone = /** @type {!ol.geom.Point} */ (geometry.clone());
@@ -978,6 +1003,10 @@ os.ui.FeatureEditCtrl.prototype.loadFromFeature = function(feature) {
 
         this['altitude'] = os.math.convertUnits(altitude, altUnit, os.math.Units.METERS);
         this['altUnits'] = altUnit;
+
+        if (altitude && !altitudeMode) {
+          altitudeMode = os.webgl.AltitudeMode.ABSOLUTE;
+        }
       }
 
       this['semiMajor'] = this.getNumericField_(feature, os.Fields.SEMI_MAJOR);
@@ -988,6 +1017,10 @@ os.ui.FeatureEditCtrl.prototype.loadFromFeature = function(feature) {
           this['semiMinorUnits'];
       this['orientation'] = this.getNumericField_(feature, os.Fields.ORIENTATION);
     }
+  }
+
+  if (altitudeMode && this['altitudeModes'].indexOf(altitudeMode) > -1) {
+    this['altitudeMode'] = altitudeMode;
   }
 
   if (!this.isFeatureDynamic()) {
@@ -1201,6 +1234,11 @@ os.ui.FeatureEditCtrl.prototype.saveGeometry_ = function(feature) {
     }
   } else if (this.originalGeometry_) {
     feature.setGeometry(this.originalGeometry_.clone());
+  }
+
+  var geom = feature.getGeometry();
+  if (geom) {
+    geom.set(os.data.RecordField.ALTITUDE_MODE, this['altitudeMode']);
   }
 };
 
@@ -1511,3 +1549,12 @@ os.ui.FeatureEditCtrl.updateFeatureStyle = function(feature) {
     }
   }
 };
+
+
+/**
+ * Gets a human readable name for altitude mode
+ * @param {os.webgl.AltitudeMode} altitudeMode - The mode to map to a name
+ * @return {string}
+ * @export
+ */
+os.ui.FeatureEditCtrl.prototype.mapAltitudeModeToName = os.webgl.mapAltitudeModeToName;

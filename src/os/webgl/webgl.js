@@ -1,4 +1,5 @@
 goog.provide('os.webgl');
+goog.provide('os.webgl.AltitudeMode');
 
 goog.require('goog.userAgent');
 goog.require('ol.webgl');

@@ -65,6 +65,7 @@ plugin.places.EXPORT_FIELDS_ = [
   os.style.StyleField.LABEL_SIZE,
   os.Fields.ALT,
   os.Fields.ALT_UNITS,
+  os.data.RecordField.ALTITUDE_MODE,
   os.Fields.SEMI_MAJOR,
   os.Fields.SEMI_MINOR,
   os.Fields.SEMI_MAJOR_UNITS,
