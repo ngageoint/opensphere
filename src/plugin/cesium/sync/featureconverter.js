@@ -549,7 +549,8 @@ plugin.cesium.sync.FeatureConverter.prototype.olLineStringGeometryToCesium = fun
   var lineGeometryToCreate = geometry.get('extrude') ? 'WallGeometry' :
     heightReference === Cesium.HeightReference.CLAMP_TO_GROUND ? 'GroundPolylineGeometry' : 'PolylineGeometry';
   var positions = this.getLineStringPositions(geometry, opt_flatCoords, opt_offset, opt_end);
-  return this.createLinePrimitive(positions, context, style, lineGeometryToCreate);
+  var method = /** @type {os.interpolate.Method} */ (feature.get(os.interpolate.METHOD_FIELD));
+  return this.createLinePrimitive(positions, context, style, lineGeometryToCreate, method);
 };
 
 
@@ -559,12 +560,14 @@ plugin.cesium.sync.FeatureConverter.prototype.olLineStringGeometryToCesium = fun
  * @param {!plugin.cesium.VectorContext} context The vector context.
  * @param {!ol.style.Style} style The feature style.
  * @param {string=} opt_type The line geometry type.
+ * @param {os.interpolate.Method=} opt_method The interpolation method
  * @return {Cesium.Primitive}
  */
-plugin.cesium.sync.FeatureConverter.prototype.createLinePrimitive = function(positions, context, style, opt_type) {
+plugin.cesium.sync.FeatureConverter.prototype.createLinePrimitive = function(positions, context, style, opt_type,
+    opt_method) {
   var type = opt_type || 'PolylineGeometry';
   var appearance = new Cesium.PolylineColorAppearance();
-
+  opt_method = opt_method || os.interpolate.getMethod();
   var width = this.extractLineWidthFromOlStyle(style);
   var color = this.extractColorFromOlStyle(style, true);
   color.alpha *= context.layer.getOpacity();
@@ -573,6 +576,7 @@ plugin.cesium.sync.FeatureConverter.prototype.createLinePrimitive = function(pos
   var outlineGeometry = new Cesium[type]({
     positions: positions,
     vertexFormat: appearance.vertexFormat,
+    arcType: opt_method === os.interpolate.Method.RHUMB ? Cesium.ArcType.RHUMB : Cesium.ArcType.GEODESIC,
     width: width
   });
 
