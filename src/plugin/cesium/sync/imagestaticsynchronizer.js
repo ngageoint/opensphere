@@ -138,7 +138,7 @@ plugin.cesium.sync.ImageStaticSynchronizer.prototype.resetInternal = function() 
 
   if (this.primitive) {
     this.scene.primitives.remove(this.primitive);
-    this.primitve = null;
+    this.primitive = null;
   }
 };
 
